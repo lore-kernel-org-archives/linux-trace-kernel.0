@@ -2,75 +2,164 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3996BC001DF
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Aug 2023 01:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AAAC001DE
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Aug 2023 01:36:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229724AbjHABPd (ORCPT
+        id S230269AbjHABgN (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 31 Jul 2023 21:15:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59470 "EHLO
+        Mon, 31 Jul 2023 21:36:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229661AbjHABPc (ORCPT
+        with ESMTP id S229585AbjHABgM (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 31 Jul 2023 21:15:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B049210E7;
-        Mon, 31 Jul 2023 18:15:31 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4F4C861355;
-        Tue,  1 Aug 2023 01:15:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7079AC433C7;
-        Tue,  1 Aug 2023 01:15:29 +0000 (UTC)
-Date:   Mon, 31 Jul 2023 21:15:27 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v4 3/9] bpf/btf: Add a function to search a member of a
- struct/union
-Message-ID: <20230731211527.3bde484d@gandalf.local.home>
-In-Reply-To: <CAADnVQ+C64_C1w1kqScZ6C5tr6_juaWFaQdAp9Mt3uzaQp2KOw@mail.gmail.com>
-References: <169078860386.173706.3091034523220945605.stgit@devnote2>
-        <169078863449.173706.2322042687021909241.stgit@devnote2>
-        <CAADnVQ+C64_C1w1kqScZ6C5tr6_juaWFaQdAp9Mt3uzaQp2KOw@mail.gmail.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Mon, 31 Jul 2023 21:36:12 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78970114;
+        Mon, 31 Jul 2023 18:36:11 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id 2adb3069b0e04-4fe21e7f3d1so5528197e87.3;
+        Mon, 31 Jul 2023 18:36:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690853770; x=1691458570;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kTN64aQK1aLiDWyd71+xyKuSM4NGn6Hr4yVjOFLrX4Y=;
+        b=BuEGdnqVDsbrkk14K1tG6Ztj9Mi2l4o012+wxn8qUuWF0/XG7f/mKSUanj8c8KVPPf
+         6c5p6ZdK9XObNVdd0SjD0+yQJir6m0pDPmYWZBLefbuHr2UjoHWhVzZGPrETjphG4xOc
+         3NPHCL24vfW4MvA2R/fv2Z3/htkPcP/8fPYgPpKpkbLqaA08n0kZ5OpTGzMw0zIrdE/E
+         Yf6ZFuBvkTfRedDlshcL5co95VoGSev45ZEKi2Um0w7rMnxFRbaoSdZTYsZmtyYVS0gC
+         t5iHTKAthad36u9khz/tzFXDvBov+NEi6rfAEEOzqMSfg1rQu7GcnLm4G+Eo53jcTRSX
+         224w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690853770; x=1691458570;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kTN64aQK1aLiDWyd71+xyKuSM4NGn6Hr4yVjOFLrX4Y=;
+        b=NPU1y/oAyQxcN/331Wni/S02qgx6pUf+9ziAzTf34tyZrNAuBUCq7qxXUZYrNfmOTn
+         Z+XA+dYSFejPszspq0+wA3GkYzmjYF1y6skZfMLjbLAnxFMaFAqVVX1iWoZZYZw7FHTv
+         HOJR49nnlpppra/okM7RY9BusiaqEFraQd5ouvhkWfwAeH4fTxzMhMnbfmM2gqwVg2of
+         aFprrLb7zhduJP6nXRiK29ruFc9FyJ5kJ8wR5DmCfKZKXBfGA1xiRoyVWE1yw06Ehxfs
+         p6YEW5whC1It43cwDfz3D59kZWsKBKbByWyersqvM7V6YE0IyEm2RwkQ0c8SYsS4BbNG
+         HWCA==
+X-Gm-Message-State: ABy/qLbkYzeKEuWg4754aUKpho4dtjPGpIzQqGZOm/ey+y9Onvn+a/kZ
+        a/VW6oTUx06NIZv26gcbfmB5Rt206vqC0xsBN3E=
+X-Google-Smtp-Source: APBJJlFUaediJqXSE+1MQonIwaYh18YkYgKOOVYB4/tx6z3KZnFQ6py22N11b0aG6Hykpk8xq9dxOWPVIwRhDkaS4EI=
+X-Received: by 2002:ac2:4d97:0:b0:4f9:5404:af5 with SMTP id
+ g23-20020ac24d97000000b004f954040af5mr991330lfe.46.1690853769397; Mon, 31 Jul
+ 2023 18:36:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20230726121618.19198-1-zegao@tencent.com> <20230726121618.19198-2-zegao@tencent.com>
+ <20230731113807.1a4a455c@gandalf.local.home>
+In-Reply-To: <20230731113807.1a4a455c@gandalf.local.home>
+From:   Ze Gao <zegao2021@gmail.com>
+Date:   Tue, 1 Aug 2023 09:35:58 +0800
+Message-ID: <CAD8CoPAym8fuL50vevxBxPy6-RU4kU49KV+Sz4OO0+Xh_doDCQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/3] sched, tracing: add to report task state in
+ symbolic chars
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 31 Jul 2023 14:59:47 -0700
-Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+Thanks Steven,
 
-> Assuming that is addressed. How do we merge the series?
-> The first 3 patches have serious conflicts with bpf trees.
-> 
-> Maybe send the first 3 with extra selftest for above recursion
-> targeting bpf-next then we can have a merge commit that Steven can pull
-> into tracing?
+Indeed this did not consider the struct alignment. I left the field order i=
+ntact
+because I was not sure whether the order here matters for reporting or pars=
+ing.
+Now I will fix this and send a v3, and again thanks for pointing it out.
 
-Would it be possible to do this by basing it off of one of Linus's tags,
-and doing the merge and conflict resolution in your tree before it gets to
-Linus?
+Thanks,
+Ze
 
-That way we can pull in that clean branch without having to pull in
-anything else from BPF. I believe Linus prefers this over having tracing
-having extra changes from BPF that are not yet in his tree. We only need
-these particular changes, we shouldn't be pulling in anything specific for
-BPF, as I believe that will cause issues on Linus's side.
-
--- Steve
-
-
-> 
-> Or if we can have acks for patches 4-9 we can pull the whole set into bpf-next.
+On Mon, Jul 31, 2023 at 11:38=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
+g> wrote:
+>
+> On Wed, 26 Jul 2023 20:16:16 +0800
+> Ze Gao <zegao2021@gmail.com> wrote:
+>
+> > @@ -231,41 +253,29 @@ TRACE_EVENT(sched_switch,
+> >       TP_STRUCT__entry(
+> >               __array(        char,   prev_comm,      TASK_COMM_LEN   )
+> >               __field(        pid_t,  prev_pid                        )
+> > -             __field(        int,    prev_prio                       )
+> > -             __field(        long,   prev_state                      )
+> > +             __field(        short,  prev_prio                       )
+> > +             __field(        int,    prev_state                      )
+> > +             __field(        char,   prev_state_char                 )
+> >               __array(        char,   next_comm,      TASK_COMM_LEN   )
+> >               __field(        pid_t,  next_pid                        )
+> > -             __field(        int,    next_prio                       )
+> > +             __field(        short,  next_prio                       )
+> >       ),
+>
+> The above adds a bunch of holes. This needs to be reordered to condense t=
+he
+> event, we don't want to increase it. libtraceevent will handle reordering=
+.
+>
+> The above produces:
+>
+> struct {
+>         char    prev_comm[16];
+>         pid_t   prev_pid;
+>         short   prev_prio; <-- 2 character padding
+>         int     prev_state;
+>         char    prev_state_char;
+>         char    next_comm[16]; <- 3 character padding
+>         pid_t   next_pid;
+>         short   next_prio; <- 2 char padding
+> };
+>
+> (all events are at least 4 byte aligned, and are multiple of 4 bytes in
+> size, thus that last short of next_prio did nothing)
+>
+> The above is a total of 56 bytes (note, that is the same as the current
+> sched_switch event size);
+>
+> What the above should be:
+>
+>         TP_STRUCT__entry(
+>                 __field(        pid_t,  prev_pid                        )
+>                 __field(        pid_t,  next_pid                        )
+>                 __field(        short,  prev_prio                       )
+>                 __field(        short,  next_prio                       )
+>                 __field(        int,    prev_state                      )
+>                 __array(        char,   prev_comm,      TASK_COMM_LEN   )
+>                 __array(        char,   next_comm,      TASK_COMM_LEN   )
+>                 __field(        char,   prev_state_char                 )
+>         ),
+>
+>
+> Which would be:
+>
+> struct {
+>         pid_t   prev_pid;
+>         pid_t   next_pid;
+>         short   prev_prio;
+>         short   next_prio;
+>         int     prev_state;
+>         char    prev_comm[16];
+>         char    next_comm[16];
+>         char    prev_stat_char; <-- 3 characters of padding
+> }
+>
+> which would be 52 byte. Saving us 4 bytes per event. Which is a big deal!
+>
+> -- Steve
+>
