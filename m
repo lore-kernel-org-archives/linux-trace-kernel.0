@@ -2,41 +2,64 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0134C001DE
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Aug 2023 02:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E95BEB64DD
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Aug 2023 03:48:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229749AbjHACnl (ORCPT
+        id S229933AbjHADsH (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 31 Jul 2023 22:43:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38294 "EHLO
+        Mon, 31 Jul 2023 23:48:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229481AbjHACnk (ORCPT
+        with ESMTP id S229716AbjHADsG (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 31 Jul 2023 22:43:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7A3C10C3;
-        Mon, 31 Jul 2023 19:43:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 65FF2612CA;
-        Tue,  1 Aug 2023 02:43:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9319AC433C8;
-        Tue,  1 Aug 2023 02:43:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690857818;
-        bh=n4dsEw0hO1hhcpvbUzRfjMJlHkCbxkrsloRNUT6H/t4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=akFDDuctuT3hHiEMB/+rQBPuCORBi0BotJ2zv0hr8+Wuk4y98aTP6CmXMw6z7tc8v
-         EL423fcpqi+iEBQYH7tcO8+SIRVpRo2F+x2CsiEQDr2AnrnBEbzBqkiq/IH4MqOrkQ
-         17mCW9HJ70Mwb+iISagAUZix/g5dHrWRvX/XuRkUOrhstxgByzP5dnkbHVBByl5L1R
-         CsPlzcwctPldJb77u/+Cs4VNzfoTovj+QB8JJOKxmmhnNePn83SFgoiv6UzPIcMun4
-         3b4YyJoT8mG8OQ6xCNaVS0iGqWPhvOWyFQRjgGGsgTLZkzSm05xdpXa+4+/tAhmY6m
-         gFrcg2qMBADWg==
-Date:   Mon, 31 Jul 2023 19:43:36 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Leon Hwang <hffilwlqm@gmail.com>
+        Mon, 31 Jul 2023 23:48:06 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FBDA18E;
+        Mon, 31 Jul 2023 20:48:05 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-686f090310dso5213360b3a.0;
+        Mon, 31 Jul 2023 20:48:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690861684; x=1691466484;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jV8C2r+kVaNU7+6evg1ZUzf56TmpgZkWuXutDoGyoos=;
+        b=HvmpnXaGt+36Hs6XALFtVWEHOto1VVSPavgL1hfk0mIQkXxYEPcMhe+qRF3FV0bQyx
+         stficwg9nPmLIhdY+CEaeaoX13ZIjYmeIIfV9yaoQOzEoYmaydOPrmYwj/hdpcaKLKIp
+         RM+3FkiwfIDNE++n5aA8bqjcjRDOpht3WkKhwaCOOzWCV0Dyte+zSqi6YH8VXrtfpl5d
+         lBTsWY+Ib9FTdNKDg1VlYl13STqtb02meSPrdXsWDh00ES+YE0gpx09+ecJutr8gdqeR
+         eXv/GDNc48Nsnt77ZtPXxjfzKJ0gZ6RrOIWiyuuxDbmgDCTzricRH/F/H0Qi9mQZzsV/
+         MR4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690861684; x=1691466484;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jV8C2r+kVaNU7+6evg1ZUzf56TmpgZkWuXutDoGyoos=;
+        b=cZh0gNYKJvGmNCIYhW+1+DWTXThagT46Cw1R+vVlq6ge2t4c65VEHUYauyXnCtlvZG
+         tcO9riH4rzxsfAp3xUs/XOnJZnPS7mlh/7rFsGV7tG3Usi6JP7MrG085Eoem3mJKH1PH
+         GvuBo7KjTT8bcRYwCRMUaRuGgQEw5b7qeYxEPA5dufdxHAV2jUoslmjahtyyacabA4OU
+         EQ4Kf1gHj1SB9vqjWds/ZGVLnKxo47hwW54iDacUBrDE7Dvv8sv1xjOxMPqJ/tgoaCSL
+         Fsnuf6fgxQ7BdPdx6+RxqYCKHJG5r8I7X3h+e7mWzSls8hXleIjt4EjEdf753KV0U3z0
+         HF3Q==
+X-Gm-Message-State: ABy/qLaGs+oCpZbVQv3fcsPJ09MJhg9Df+bq69HrfDfmxAwtmNdi5DLs
+        +LAUxaf4DQsZKqGEuJkdyMQ=
+X-Google-Smtp-Source: APBJJlHjSMsgYDkJ43FxsVLUamk5zy3asg/j77+lCmWCJFhjD1JGMuL1Tt58uaXEshNAk5orn7XUpA==
+X-Received: by 2002:a05:6a20:85:b0:13b:cc09:a547 with SMTP id 5-20020a056a20008500b0013bcc09a547mr9985987pzg.36.1690861684538;
+        Mon, 31 Jul 2023 20:48:04 -0700 (PDT)
+Received: from [10.22.68.111] ([122.11.166.8])
+        by smtp.gmail.com with ESMTPSA id ey2-20020a056a0038c200b006829969e3b0sm8217599pfb.85.2023.07.31.20.47.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Jul 2023 20:48:04 -0700 (PDT)
+Message-ID: <b04eb1f8-b36a-9fce-5ae5-d4c770c36139@gmail.com>
+Date:   Tue, 1 Aug 2023 11:47:58 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.13.0
+Subject: Re: [PATCH bpf-next v4 1/2] bpf, xdp: Add tracepoint to xdp attaching
+ failure
+Content-Language: en-US
+To:     Jakub Kicinski <kuba@kernel.org>
 Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
         andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
         yonghong.song@linux.dev, kpsingh@kernel.org, sdf@google.com,
@@ -47,41 +70,50 @@ Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
         bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH bpf-next v4 1/2] bpf, xdp: Add tracepoint to xdp
- attaching failure
-Message-ID: <20230731194336.5b4bd065@kernel.org>
-In-Reply-To: <20230730114951.74067-2-hffilwlqm@gmail.com>
 References: <20230730114951.74067-1-hffilwlqm@gmail.com>
-        <20230730114951.74067-2-hffilwlqm@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+ <20230730114951.74067-2-hffilwlqm@gmail.com>
+ <20230731194336.5b4bd065@kernel.org>
+From:   Leon Hwang <hffilwlqm@gmail.com>
+In-Reply-To: <20230731194336.5b4bd065@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sun, 30 Jul 2023 19:49:50 +0800 Leon Hwang wrote:
-> @@ -9472,6 +9473,7 @@ int bpf_xdp_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
->  	struct bpf_link_primer link_primer;
->  	struct bpf_xdp_link *link;
->  	struct net_device *dev;
-> +	struct netlink_ext_ack extack;
 
-This is not initialized. Also, while fixing that, move it up 
-to maintain the line order by decreasing line length.
 
->  	int err, fd;
->  
->  	rtnl_lock();
-> @@ -9497,12 +9499,13 @@ int bpf_xdp_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
->  		goto unlock;
->  	}
->  
-> -	err = dev_xdp_attach_link(dev, NULL, link);
-> +	err = dev_xdp_attach_link(dev, &extack, link);
->  	rtnl_unlock();
->  
->  	if (err) {
->  		link->dev = NULL;
->  		bpf_link_cleanup(&link_primer);
-> +		trace_bpf_xdp_link_attach_failed(extack._msg);
+On 1/8/23 10:43, Jakub Kicinski wrote:
+> On Sun, 30 Jul 2023 19:49:50 +0800 Leon Hwang wrote:
+>> @@ -9472,6 +9473,7 @@ int bpf_xdp_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+>>  	struct bpf_link_primer link_primer;
+>>  	struct bpf_xdp_link *link;
+>>  	struct net_device *dev;
+>> +	struct netlink_ext_ack extack;
+> 
+> This is not initialized. Also, while fixing that, move it up 
+> to maintain the line order by decreasing line length.
+> 
+
+Thank you for your reviewing.
+
+I'll fix it by initializing extack and moving the line to its appropriate position.
+
+Thanks,
+Leon
+
+>>  	int err, fd;
+>>  
+>>  	rtnl_lock();
+>> @@ -9497,12 +9499,13 @@ int bpf_xdp_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+>>  		goto unlock;
+>>  	}
+>>  
+>> -	err = dev_xdp_attach_link(dev, NULL, link);
+>> +	err = dev_xdp_attach_link(dev, &extack, link);
+>>  	rtnl_unlock();
+>>  
+>>  	if (err) {
+>>  		link->dev = NULL;
+>>  		bpf_link_cleanup(&link_primer);
+>> +		trace_bpf_xdp_link_attach_failed(extack._msg);
