@@ -2,95 +2,183 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62425C001DF
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Aug 2023 13:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E113AC001DF
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Aug 2023 13:42:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234350AbjHANfk convert rfc822-to-8bit (ORCPT
+        id S230477AbjHANmU (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 1 Aug 2023 09:35:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43990 "EHLO
+        Tue, 1 Aug 2023 09:42:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232499AbjHANfj (ORCPT
+        with ESMTP id S230472AbjHANmS (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 1 Aug 2023 09:35:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F9642106;
-        Tue,  1 Aug 2023 06:35:31 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Tue, 1 Aug 2023 09:42:18 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E76110DB;
+        Tue,  1 Aug 2023 06:42:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=kHEuKxJGDY+7U7sNajb0X1Ns5oYmL8eJ2Q/fI659OrA=; b=ZfzWa2Uwxfx+eILLpeM4bZQsyW
+        VIHueX5vDEdDRI82cfXR4kQANxgvUU+glgIgqAKKQIrG9bU1HRUdqrb/ektsFIgbG3bvkrj1mZ78W
+        Yf4k12V2I+l7HtScf9cbmt+3Lvu9PXMKHZkQSk3eXWQ3GnGTpf6JbbGRdOANcQ5iX+rnEDO9U32Z6
+        bbAFtKqNoBfgUd63qSEeQBofnohDAxTBzpWkJ0jarhkLP2AYDpEphQqwExP3pH95RgfJJIpv/HqJu
+        uRFH98SVcUHTyuCW7hjAusHnFF2ZBmBb2nK8/kcfMNlHt5tg+EqjSFr0x6J2PEJ5aO4vL0w2LdP8i
+        rYx0aHdg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1qQpdA-00Eh3Q-0t;
+        Tue, 01 Aug 2023 13:41:44 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 31E0F61592;
-        Tue,  1 Aug 2023 13:35:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B36E6C433C8;
-        Tue,  1 Aug 2023 13:35:29 +0000 (UTC)
-Date:   Tue, 1 Aug 2023 09:35:26 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BF5D33001DD;
+        Tue,  1 Aug 2023 15:41:42 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9EE892066B201; Tue,  1 Aug 2023 15:41:42 +0200 (CEST)
+Date:   Tue, 1 Aug 2023 15:41:42 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ze Gao <zegao2021@gmail.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v4 3/9] bpf/btf: Add a function to search a member of a
- struct/union
-Message-ID: <20230801093527.369e046e@gandalf.local.home>
-In-Reply-To: <CAADnVQJz41QgpFHr3k0pndjHZ8ragH--=C_bYxrzitj7bN3bbg@mail.gmail.com>
-References: <169078860386.173706.3091034523220945605.stgit@devnote2>
-        <169078863449.173706.2322042687021909241.stgit@devnote2>
-        <CAADnVQ+C64_C1w1kqScZ6C5tr6_juaWFaQdAp9Mt3uzaQp2KOw@mail.gmail.com>
-        <20230731211527.3bde484d@gandalf.local.home>
-        <CAADnVQJz41QgpFHr3k0pndjHZ8ragH--=C_bYxrzitj7bN3bbg@mail.gmail.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
+Subject: Re: [RFC PATCH v3 3/6] sched, tracing: add to report task state in
+ symbolic chars
+Message-ID: <20230801134142.GC11704@hirez.programming.kicks-ass.net>
+References: <20230801090124.8050-1-zegao@tencent.com>
+ <20230801090124.8050-4-zegao@tencent.com>
+ <20230801113401.GC79828@hirez.programming.kicks-ass.net>
+ <CAD8CoPA-cqe+hY8dHjO+6WhcL2VKy2Wq=rYSSkwUqBFRJ4ECWg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD8CoPA-cqe+hY8dHjO+6WhcL2VKy2Wq=rYSSkwUqBFRJ4ECWg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 31 Jul 2023 19:24:25 -0700
-Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+On Tue, Aug 01, 2023 at 09:03:51PM +0800, Ze Gao wrote:
 
-> On Mon, Jul 31, 2023 at 6:15 PM Steven Rostedt <rostedt@goodmis.org>
-> wrote:
-> >
-> > On Mon, 31 Jul 2023 14:59:47 -0700
-> > Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-> >  
-> > > Assuming that is addressed. How do we merge the series?
-> > > The first 3 patches have serious conflicts with bpf trees.
-> > >
-> > > Maybe send the first 3 with extra selftest for above recursion
-> > > targeting bpf-next then we can have a merge commit that Steven can
-> > > pull into tracing?  
-> >
-> > Would it be possible to do this by basing it off of one of Linus's tags,
-> > and doing the merge and conflict resolution in your tree before it gets
-> > to Linus?
-> >
-> > That way we can pull in that clean branch without having to pull in
-> > anything else from BPF. I believe Linus prefers this over having tracing
-> > having extra changes from BPF that are not yet in his tree. We only need
-> > these particular changes, we shouldn't be pulling in anything specific
-> > for BPF, as I believe that will cause issues on Linus's side.  
+> It's just the design that exporting internal details is fundamentally wrong.
+
+This is tracing... it wasn't supposed to be ABI (although it somehow
+ended up being one). But even then, things like PF_foo get exposed in
+procfs but even that we change.
+
+The whole point of tracing is to see internals in order to figure out
+wth is going wrong.
+
+> And even worse,  I did not see any userspace tool is aware of masqueraded
+> states like TASK_REPORT_IDLE and TASK_REPORT_MAX and let alone
+> parse it correctly.
+
+That's probably because I never use tools, I just look at the raw trace
+output -- sometimes an impromptu awk script. I'm pretty sure I ran with
+something like the below when I did the freezer rewrite -- or perhaps I
+just stuck in trace_printk() and didn't even bother with the
+tracepoints, I can't remember.
+
+> > Why do we need this character anyway, why not just print the state in
+> > hex and leave it at that? These single character state things are a
+> > relic, please just let them die.
 > 
-> We can try, but I suspect git tricks won't do it.
-> Masami's changes depend on patches for kernel/bpf/btf.c that
-> are already in bpf-next, so git would have to follow all commits
+> I believe hex is ok only after having the reported task state mapping
+> appear in the uapi headers, otherwise it's still useless to userspace
+> especially for value like TASK_REPORT_IDLE and TASK_REPORT_MAX, which
+> need to dig into the kernel to see what the hell is going on here.
+> 
+> Thoughts?
 
-You mean other patches that Masami has sent are in the bpf tree already and
-these are on top of them?
+If you're tracing the kernel, you had better know what the kernel is
+doing, otherwise you get to keep the pieces.
 
--- Steve
+Anyway, if you're doing BPF then why do you care about the trace event
+at all, just attach to the raw tracepoint and consume @preemt, @prev,
+@next and @prev_state.
 
-> that touch this file. I don't think git is smart enough to
-> thread the needle and split the commit into files. If one commit touches
-> btf.c and something else that whole commit becomes a dependency
-> that pulls another commit with all files touched by
-> the previous commit and so on.
-> tbh for this set, the easiest for everyone, is to land the whole thing
-> through bpf-next, since there are no conflicts on fprobe side.
-
+---
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index fbb99a61f714..cb0c1251729e 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -186,36 +186,6 @@ DEFINE_EVENT(sched_wakeup_template, sched_wakeup_new,
+ 	     TP_PROTO(struct task_struct *p),
+ 	     TP_ARGS(p));
+ 
+-#ifdef CREATE_TRACE_POINTS
+-static inline long __trace_sched_switch_state(bool preempt,
+-					      unsigned int prev_state,
+-					      struct task_struct *p)
+-{
+-	unsigned int state;
+-
+-#ifdef CONFIG_SCHED_DEBUG
+-	BUG_ON(p != current);
+-#endif /* CONFIG_SCHED_DEBUG */
+-
+-	/*
+-	 * Preemption ignores task state, therefore preempted tasks are always
+-	 * RUNNING (we will not have dequeued if state != RUNNING).
+-	 */
+-	if (preempt)
+-		return TASK_REPORT_MAX;
+-
+-	/*
+-	 * task_state_index() uses fls() and returns a value from 0-8 range.
+-	 * Decrement it by 1 (except TASK_RUNNING state i.e 0) before using
+-	 * it for left shift operation to get the correct task->state
+-	 * mapping.
+-	 */
+-	state = __task_state_index(prev_state, p->exit_state);
+-
+-	return state ? (1 << (state - 1)) : state;
+-}
+-#endif /* CREATE_TRACE_POINTS */
+-
+ /*
+  * Tracepoint for task switches, performed by the scheduler:
+  */
+@@ -242,29 +212,16 @@ TRACE_EVENT(sched_switch,
+ 		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
+ 		__entry->prev_pid	= prev->pid;
+ 		__entry->prev_prio	= prev->prio;
+-		__entry->prev_state	= __trace_sched_switch_state(preempt, prev_state, prev);
++		__entry->prev_state	= prev_state | (preempt * TASK_STATE_MAX);
+ 		memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
+ 		__entry->next_pid	= next->pid;
+ 		__entry->next_prio	= next->prio;
+ 		/* XXX SCHED_DEADLINE */
+ 	),
+ 
+-	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%s%s ==> next_comm=%s next_pid=%d next_prio=%d",
++	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%x ==> next_comm=%s next_pid=%d next_prio=%d",
+ 		__entry->prev_comm, __entry->prev_pid, __entry->prev_prio,
+-
+-		(__entry->prev_state & (TASK_REPORT_MAX - 1)) ?
+-		  __print_flags(__entry->prev_state & (TASK_REPORT_MAX - 1), "|",
+-				{ TASK_INTERRUPTIBLE, "S" },
+-				{ TASK_UNINTERRUPTIBLE, "D" },
+-				{ __TASK_STOPPED, "T" },
+-				{ __TASK_TRACED, "t" },
+-				{ EXIT_DEAD, "X" },
+-				{ EXIT_ZOMBIE, "Z" },
+-				{ TASK_PARKED, "P" },
+-				{ TASK_DEAD, "I" }) :
+-		  "R",
+-
+-		__entry->prev_state & TASK_REPORT_MAX ? "+" : "",
++		__entry->prev_state,
+ 		__entry->next_comm, __entry->next_pid, __entry->next_prio)
+ );
+ 
