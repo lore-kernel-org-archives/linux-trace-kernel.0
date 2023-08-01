@@ -2,72 +2,122 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DABC0015E
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Aug 2023 22:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 205C7C41513
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Aug 2023 22:19:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232056AbjHAWJQ (ORCPT
+        id S232623AbjHAWTN (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 1 Aug 2023 18:09:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35576 "EHLO
+        Tue, 1 Aug 2023 18:19:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231616AbjHAWJN (ORCPT
+        with ESMTP id S231301AbjHAWTL (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 1 Aug 2023 18:09:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 935292D65;
-        Tue,  1 Aug 2023 15:08:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C419F6175A;
-        Tue,  1 Aug 2023 22:08:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E9F7C433C8;
-        Tue,  1 Aug 2023 22:08:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690927708;
-        bh=Fprg9A7lqx6rZCFEElImiV0nfq2ndvAMquua7Y1GBYY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VmtF1xVixlC/10SuowzThM4JnSZSyoXyeMnbPfptuZbeTUxYWK/VHQfsuEeEsuFzT
-         xN7SdwW3xB1/LvEe/Ysdla9MnFDqFltreJv0u4N1uWW/6ZD2CWTuHKYxnGdh3QjbPw
-         WgnfCbAve7ahVq3DLbGxj/JriRkOzYNv1uqba6jZwd9wF3Ko8PGRxRHWcoSBPZUdjL
-         k8B5SvYOj5cONSg2muK3wzWASNO1R1cC6RKPdy2XgVCupYwvfYtxEiz52Y83CFTfED
-         at7ot5/TcMBi26kaOhEUgAxt3OQiyksvAUfC5i2TouuUtZhyEkkIZCA2UMGn4kup3Y
-         HWr6qnmWazCWA==
-Date:   Tue, 1 Aug 2023 15:08:26 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Leon Hwang <hffilwlqm@gmail.com>
-Cc:     bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev,
-        song@kernel.org, yonghong.song@linux.dev, kpsingh@kernel.org,
-        sdf@google.com, haoluo@google.com, jolsa@kernel.org,
-        davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
-        hawk@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
-        mykolal@fb.com, shuah@kernel.org, tangyeechou@gmail.com,
-        kernel-patches-bot@fb.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH bpf-next v5 1/2] bpf, xdp: Add tracepoint to xdp
- attaching failure
-Message-ID: <20230801150826.6f617919@kernel.org>
-In-Reply-To: <20230801142621.7925-2-hffilwlqm@gmail.com>
-References: <20230801142621.7925-1-hffilwlqm@gmail.com>
-        <20230801142621.7925-2-hffilwlqm@gmail.com>
+        Tue, 1 Aug 2023 18:19:11 -0400
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BD2719BE;
+        Tue,  1 Aug 2023 15:19:10 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id 38308e7fff4ca-2b9c66e2e36so3570841fa.1;
+        Tue, 01 Aug 2023 15:19:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690928348; x=1691533148;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JTAMEGR1dMpo1RcXFwVXc0ZdDqdu7mLFbtcnsS1mOvo=;
+        b=BQ5mn6aE4p8kMPhYMcGlf6MKuupZ/deXnrjxgXW6aZ8uPO2X/qqFxv66c0YDdKbR7D
+         trhgVhnWLEpXSLu25uPPyCn0oBJZ7vXG0/Bo/9cAbRQPArVK/Ykwhcix5SjNA5gaPOtn
+         VUm6EWBnlUoZSc/z9aZwoeoVdQqRKhFsAOo+8mOR8GvzdOHdWA1yY/rg01AU7juBJVfv
+         pyvgxeIbLRjo3yUfD//X5W3B98p5h8TyFwiAbjGzfr7dtA0KIdFTbDQBclX3RipYOjcB
+         h8Y1jzm/I9DLD+DifdO9pkjb+fJw1c59mrj9gcfi7o09LfQO5NDHdVx+KNyWKqyGR8O9
+         ulgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690928348; x=1691533148;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JTAMEGR1dMpo1RcXFwVXc0ZdDqdu7mLFbtcnsS1mOvo=;
+        b=SoyiaUnp7cmYw+axJu9dgSV72AXejrPaXWnZkhYMFros15P+dasQRLHJ4XCRusoaR7
+         anMcddK/5Nx+YgebDRv3plMfdl7hiiFvuAIQQA4rHC4jwWY/c1GmHb8mgcJq3DgdNA4g
+         Tz6trNGekRSlT+grY4vhdAYKKfev6caTQyN3pV4jaUT9gf2BKRIraRMWKZxcfNpQY7xr
+         J23q4r/no3fDXyNbTqFhlh5cxsbd+tpF40OLmjVngCa5yWs3ap9dBv17lo/jEzLvbwid
+         6R0JGb4cJ0kSi9sFxM25k5mFjWXi3KPxACt3VWwF6o9WUI8EiR00w2i1mesYnlJgVYTd
+         UbKA==
+X-Gm-Message-State: ABy/qLYLTchMoMSsfscB+72a8M3yPoMO1pwFUN5sTsSadR3WfHNXb0VR
+        uhibbUFzsvcMMeeky/yPkeTN1Kr+K+YFXryrS6wT0Bf9VfI=
+X-Google-Smtp-Source: APBJJlHxUytOlKOoYniNbutlh4326I9M+ivY7drMz4gfXwFzhRZ6LEBJX3gxOWV01gVioABmW0v8DMtNJ4m9lTE7tkY=
+X-Received: by 2002:a05:651c:3d9:b0:2b9:d965:fbf2 with SMTP id
+ f25-20020a05651c03d900b002b9d965fbf2mr1344478ljp.22.1690928348104; Tue, 01
+ Aug 2023 15:19:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <169078860386.173706.3091034523220945605.stgit@devnote2>
+ <169078863449.173706.2322042687021909241.stgit@devnote2> <CAADnVQ+C64_C1w1kqScZ6C5tr6_juaWFaQdAp9Mt3uzaQp2KOw@mail.gmail.com>
+ <20230801085724.9bb07d2c82e5b6c6a6606848@kernel.org> <CAADnVQLaFpd2OhqP7W3xWB1b9P2GAKgrVQU1FU2yeNYKbCkT=Q@mail.gmail.com>
+ <20230802000228.158f1bd605e497351611739e@kernel.org> <20230801112036.0d4ee60d@gandalf.local.home>
+ <20230801113240.4e625020@gandalf.local.home>
+In-Reply-To: <20230801113240.4e625020@gandalf.local.home>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Tue, 1 Aug 2023 15:18:56 -0700
+Message-ID: <CAADnVQ+N7b8_0UhndjwW9-5Vx2wUVvojujFLOCFr648DUv-Y2Q@mail.gmail.com>
+Subject: Re: [PATCH v4 3/9] bpf/btf: Add a function to search a member of a struct/union
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alan Maguire <alan.maguire@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue,  1 Aug 2023 22:26:20 +0800 Leon Hwang wrote:
-> When error happens in dev_xdp_attach(), it should have a way to tell
-> users the error message like the netlink approach.
-> 
-> To avoid breaking uapi, adding a tracepoint in bpf_xdp_link_attach() is
-> an appropriate way to notify users the error message.
-> 
-> Hence, bpf libraries are able to retrieve the error message by this
-> tracepoint, and then report the error message to users.
+On Tue, Aug 1, 2023 at 8:32=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
+>
+> On Tue, 1 Aug 2023 11:20:36 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> > The solution was to come up with ftrace_regs, which just means it has a=
+ll
+> > the registers to extract the arguments of a function and nothing more. =
+Most
+>
+> This isn't 100% true. The ftrace_regs may hold a fully filled pt_regs. As
+> the FTRACE_WITH_REGS callbacks still get passed a ftrace_regs pointer. Th=
+ey
+> will do:
+>
+>         void callback(..., struct ftrace_regs *fregs) {
+>                 struct pt_regs *regs =3D ftrace_get_regs(fregs);
+>
+>
+> Where ftrace_get_regs() will return the pt_regs only if it is fully fille=
+d.
+> If it is not, then it returns NULL. This was what the x86 maintainers
+> agreed with.
 
-Whatevered-by: Jakub Kicinski <kuba@kernel.org> ?
+arch/arm64/include/asm/ftrace.h:#define arch_ftrace_get_regs(regs) NULL
+
+Ouch. That's very bad.
+We care a lot about bpf running well on arm64.
+
+If you guys decide to convert fprobe to ftrace_regs please
+make it depend on kconfig or something.
+bpf side needs full pt_regs.
+It's not about access to args.
+pt_regs is passed from bpf prog further into all kinds of perf event
+functions including stack walking.
+I think ORC unwinder might depend on availability of all registers.
+Other perf helpers might need it too. Like perf_event_output.
+bpf progs need to access arguments, no doubt about that.
+If ftrace_regs have them exactly in the same offsets as in pt_regs
+that might work transparently for bpf progs, but, I'm afraid,
+it's not the case on all archs.
+So we need full pt_regs to make sure all paths are still working.
+
+Adding Jiri and others.
