@@ -2,97 +2,72 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B70E0C04A6A
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Aug 2023 21:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DABC0015E
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Aug 2023 22:09:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229596AbjHAVLz (ORCPT
+        id S232056AbjHAWJQ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 1 Aug 2023 17:11:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39264 "EHLO
+        Tue, 1 Aug 2023 18:09:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232055AbjHAVLw (ORCPT
+        with ESMTP id S231616AbjHAWJN (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 1 Aug 2023 17:11:52 -0400
+        Tue, 1 Aug 2023 18:09:13 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89087E67;
-        Tue,  1 Aug 2023 14:11:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 935292D65;
+        Tue,  1 Aug 2023 15:08:40 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 076EC61719;
-        Tue,  1 Aug 2023 21:11:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08120C433C7;
-        Tue,  1 Aug 2023 21:11:41 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C419F6175A;
+        Tue,  1 Aug 2023 22:08:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E9F7C433C8;
+        Tue,  1 Aug 2023 22:08:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690924301;
-        bh=zx03PjfgY07UCKTT9D+a57aqd3/g+SVsstHgr2BvJBk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=sblLoR3kQGCtNkxVEW+NLWBgyfNJOVLJD1dqEJzGWiDAlpPajGeOX+9YR66py8GlS
-         h3+TDJG7WbJ9qG/Vw3xavRlmqLqqhDxttl+YTfpqpGBQPE5Uk8MWl1s9nQVlmX/ecK
-         snTPWPFHsvdLkqenjmJ/F5htbfdTu42CyWxG5Ls3RNfeXWnndeA36mJZ1DE81y9b11
-         ts1SLqVvDfbVQjjJ5ZWAoYjhJ/y4RcD+MavMdz7psXxnvkAfpfH5DIdcLqD37FmAfh
-         mH31ki9VoGdMte6bBBOingw7G3PxdVuSlVSc7g0D+rwjb/AjP5mcPDVl4xRSK9WvwH
-         x35MKBUb9+5Nw==
-Date:   Tue, 1 Aug 2023 16:11:39 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        David Gow <davidgow@google.com>,
-        Daniel Latypov <dlatypov@google.com>,
-        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Brendan Higgins <brendan.higgins@linux.dev>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v4 1/4] kernel.h: Split out COUNT_ARGS() and
- CONCATENATE() to args.h
-Message-ID: <20230801211139.GA51676@bhelgaas>
+        s=k20201202; t=1690927708;
+        bh=Fprg9A7lqx6rZCFEElImiV0nfq2ndvAMquua7Y1GBYY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VmtF1xVixlC/10SuowzThM4JnSZSyoXyeMnbPfptuZbeTUxYWK/VHQfsuEeEsuFzT
+         xN7SdwW3xB1/LvEe/Ysdla9MnFDqFltreJv0u4N1uWW/6ZD2CWTuHKYxnGdh3QjbPw
+         WgnfCbAve7ahVq3DLbGxj/JriRkOzYNv1uqba6jZwd9wF3Ko8PGRxRHWcoSBPZUdjL
+         k8B5SvYOj5cONSg2muK3wzWASNO1R1cC6RKPdy2XgVCupYwvfYtxEiz52Y83CFTfED
+         at7ot5/TcMBi26kaOhEUgAxt3OQiyksvAUfC5i2TouuUtZhyEkkIZCA2UMGn4kup3Y
+         HWr6qnmWazCWA==
+Date:   Tue, 1 Aug 2023 15:08:26 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Leon Hwang <hffilwlqm@gmail.com>
+Cc:     bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev,
+        song@kernel.org, yonghong.song@linux.dev, kpsingh@kernel.org,
+        sdf@google.com, haoluo@google.com, jolsa@kernel.org,
+        davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+        hawk@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+        mykolal@fb.com, shuah@kernel.org, tangyeechou@gmail.com,
+        kernel-patches-bot@fb.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH bpf-next v5 1/2] bpf, xdp: Add tracepoint to xdp
+ attaching failure
+Message-ID: <20230801150826.6f617919@kernel.org>
+In-Reply-To: <20230801142621.7925-2-hffilwlqm@gmail.com>
+References: <20230801142621.7925-1-hffilwlqm@gmail.com>
+        <20230801142621.7925-2-hffilwlqm@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230718211147.18647-2-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Jul 19, 2023 at 12:11:44AM +0300, Andy Shevchenko wrote:
-> kernel.h is being used as a dump for all kinds of stuff for a long time.
-> The COUNT_ARGS() and CONCATENATE() macros may be used in some places
-> without need of the full kernel.h dependency train with it.
+On Tue,  1 Aug 2023 22:26:20 +0800 Leon Hwang wrote:
+> When error happens in dev_xdp_attach(), it should have a way to tell
+> users the error message like the netlink approach.
 > 
-> Here is the attempt on cleaning it up by splitting out these macros().
+> To avoid breaking uapi, adding a tracepoint in bpf_xdp_link_attach() is
+> an appropriate way to notify users the error message.
 > 
-> While at it, include new header where it's being used.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Hence, bpf libraries are able to retrieve the error message by this
+> tracepoint, and then report the error message to users.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# PCI
-
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 0ff7500772e6..eeb2e6f6130f 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -23,7 +23,7 @@
->  #ifndef LINUX_PCI_H
->  #define LINUX_PCI_H
->  
-> -
-> +#include <linux/args.h>
->  #include <linux/mod_devicetable.h>
->  
->  #include <linux/types.h>
-
-If there's not a reason otherwise, I'd put this in the main list
-instead of the weirdly separated mod_devicetable.h.
+Whatevered-by: Jakub Kicinski <kuba@kernel.org> ?
