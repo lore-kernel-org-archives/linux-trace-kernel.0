@@ -2,107 +2,86 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 314E2C001DF
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Aug 2023 02:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0134C001DE
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Aug 2023 02:43:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230177AbjHACYk (ORCPT
+        id S229749AbjHACnl (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 31 Jul 2023 22:24:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57996 "EHLO
+        Mon, 31 Jul 2023 22:43:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjHACYj (ORCPT
+        with ESMTP id S229481AbjHACnk (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 31 Jul 2023 22:24:39 -0400
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88D9410DD;
-        Mon, 31 Jul 2023 19:24:38 -0700 (PDT)
-Received: by mail-lj1-x231.google.com with SMTP id 38308e7fff4ca-2b9f0b7af65so18920671fa.1;
-        Mon, 31 Jul 2023 19:24:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690856677; x=1691461477;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aEFUKD1oOLxuyQDAxx7RR3dAdD2sHSuaqVKiyetEloM=;
-        b=GcK+h3AjyXR7hVkxk3FIQ3Yawy76QVp0nMle6Dvzcp+1LoiywylOnsCB4zHcbweJkb
-         uk6LBWKFjgYxeTQBmALucKLbvIijuYKEpdAIbDol3OMsnATWdH3QXLRGu59YOmxu/GIR
-         U2hG1Mg/IgZMegtUzBAhK3dUI41P9p/agZsrAGGRo67UMEICDZb5fvQSEo/oZK7S7q5e
-         VVrap1OSC5gDL3tOubh25U7Ci+0QYS+f1fFv/5wB5BjwszZRFcqehOsfmuHXISa5FYfa
-         ciCLO019ebPGKWw9d24heHZLfRDZ/ynF1lF5RZlT9+oUCTya2aQ+mF5LGGcJkLzd3gqZ
-         cEzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690856677; x=1691461477;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aEFUKD1oOLxuyQDAxx7RR3dAdD2sHSuaqVKiyetEloM=;
-        b=IarF7BdV0SE2hIz+3dZOaI+rrPcZCcZNGWCT3/nvTBk2A6HlHfL4JF4opnurC5+FTo
-         N0QiKHHdxlsKmB1Vt53hUCkTiuF5+BmFcmtci/qbs8eXhYNfoK7dXlOf06cFhYfYBtnH
-         dPaMLgekeOYz2lVXIompBkfOHp7OW++hHn++KG2zP9q7Hc2T0HXiCI1mSb5ao6xuiNSq
-         J96AgnAxq+0z/qPA3yn9W/07Fs/PzmAQp2U4SLHbzXZnr2rRHMdQsIBa2nzbDwAOsu/4
-         dDksBYtCY/rUALUuE1rxSKaHKlB5NPxww8pgi1BEaxTJgxIxtsTAIsy8Wo0iOgAQaHmq
-         ryVg==
-X-Gm-Message-State: ABy/qLYuV0qA0ad3FFz1bVEWqhJ3SIuyaCpeA2Lk9Zc6QkVDfneBxlBM
-        t+M4hjZ4ts2yZRpllQRv0Lx0t8CoUf9MNPpQyPY=
-X-Google-Smtp-Source: APBJJlHgH3QJP2KHdlcqyNp44pjlSvJl7W1H2iiG5A8JZOhRbhjA3faILEXJ90An4ZJqQ3lKXPvSahkz+35hUzNYaZY=
-X-Received: by 2002:a2e:87cb:0:b0:2b5:9d78:213e with SMTP id
- v11-20020a2e87cb000000b002b59d78213emr1286950ljj.22.1690856676546; Mon, 31
- Jul 2023 19:24:36 -0700 (PDT)
+        Mon, 31 Jul 2023 22:43:40 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7A3C10C3;
+        Mon, 31 Jul 2023 19:43:39 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 65FF2612CA;
+        Tue,  1 Aug 2023 02:43:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9319AC433C8;
+        Tue,  1 Aug 2023 02:43:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690857818;
+        bh=n4dsEw0hO1hhcpvbUzRfjMJlHkCbxkrsloRNUT6H/t4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=akFDDuctuT3hHiEMB/+rQBPuCORBi0BotJ2zv0hr8+Wuk4y98aTP6CmXMw6z7tc8v
+         EL423fcpqi+iEBQYH7tcO8+SIRVpRo2F+x2CsiEQDr2AnrnBEbzBqkiq/IH4MqOrkQ
+         17mCW9HJ70Mwb+iISagAUZix/g5dHrWRvX/XuRkUOrhstxgByzP5dnkbHVBByl5L1R
+         CsPlzcwctPldJb77u/+Cs4VNzfoTovj+QB8JJOKxmmhnNePn83SFgoiv6UzPIcMun4
+         3b4YyJoT8mG8OQ6xCNaVS0iGqWPhvOWyFQRjgGGsgTLZkzSm05xdpXa+4+/tAhmY6m
+         gFrcg2qMBADWg==
+Date:   Mon, 31 Jul 2023 19:43:36 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Leon Hwang <hffilwlqm@gmail.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
+        yonghong.song@linux.dev, kpsingh@kernel.org, sdf@google.com,
+        haoluo@google.com, jolsa@kernel.org, davem@davemloft.net,
+        edumazet@google.com, pabeni@redhat.com, hawk@kernel.org,
+        rostedt@goodmis.org, mhiramat@kernel.org, mykolal@fb.com,
+        shuah@kernel.org, tangyeechou@gmail.com, kernel-patches-bot@fb.com,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH bpf-next v4 1/2] bpf, xdp: Add tracepoint to xdp
+ attaching failure
+Message-ID: <20230731194336.5b4bd065@kernel.org>
+In-Reply-To: <20230730114951.74067-2-hffilwlqm@gmail.com>
+References: <20230730114951.74067-1-hffilwlqm@gmail.com>
+        <20230730114951.74067-2-hffilwlqm@gmail.com>
 MIME-Version: 1.0
-References: <169078860386.173706.3091034523220945605.stgit@devnote2>
- <169078863449.173706.2322042687021909241.stgit@devnote2> <CAADnVQ+C64_C1w1kqScZ6C5tr6_juaWFaQdAp9Mt3uzaQp2KOw@mail.gmail.com>
- <20230731211527.3bde484d@gandalf.local.home>
-In-Reply-To: <20230731211527.3bde484d@gandalf.local.home>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Mon, 31 Jul 2023 19:24:25 -0700
-Message-ID: <CAADnVQJz41QgpFHr3k0pndjHZ8ragH--=C_bYxrzitj7bN3bbg@mail.gmail.com>
-Subject: Re: [PATCH v4 3/9] bpf/btf: Add a function to search a member of a struct/union
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Jul 31, 2023 at 6:15=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Mon, 31 Jul 2023 14:59:47 -0700
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
->
-> > Assuming that is addressed. How do we merge the series?
-> > The first 3 patches have serious conflicts with bpf trees.
-> >
-> > Maybe send the first 3 with extra selftest for above recursion
-> > targeting bpf-next then we can have a merge commit that Steven can pull
-> > into tracing?
->
-> Would it be possible to do this by basing it off of one of Linus's tags,
-> and doing the merge and conflict resolution in your tree before it gets t=
-o
-> Linus?
->
-> That way we can pull in that clean branch without having to pull in
-> anything else from BPF. I believe Linus prefers this over having tracing
-> having extra changes from BPF that are not yet in his tree. We only need
-> these particular changes, we shouldn't be pulling in anything specific fo=
-r
-> BPF, as I believe that will cause issues on Linus's side.
+On Sun, 30 Jul 2023 19:49:50 +0800 Leon Hwang wrote:
+> @@ -9472,6 +9473,7 @@ int bpf_xdp_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+>  	struct bpf_link_primer link_primer;
+>  	struct bpf_xdp_link *link;
+>  	struct net_device *dev;
+> +	struct netlink_ext_ack extack;
 
-We can try, but I suspect git tricks won't do it.
-Masami's changes depend on patches for kernel/bpf/btf.c that
-are already in bpf-next, so git would have to follow all commits
-that touch this file. I don't think git is smart enough to
-thread the needle and split the commit into files. If one commit touches
-btf.c and something else that whole commit becomes a dependency
-that pulls another commit with all files touched by
-the previous commit and so on.
-tbh for this set, the easiest for everyone, is to land the whole thing
-through bpf-next, since there are no conflicts on fprobe side.
+This is not initialized. Also, while fixing that, move it up 
+to maintain the line order by decreasing line length.
+
+>  	int err, fd;
+>  
+>  	rtnl_lock();
+> @@ -9497,12 +9499,13 @@ int bpf_xdp_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+>  		goto unlock;
+>  	}
+>  
+> -	err = dev_xdp_attach_link(dev, NULL, link);
+> +	err = dev_xdp_attach_link(dev, &extack, link);
+>  	rtnl_unlock();
+>  
+>  	if (err) {
+>  		link->dev = NULL;
+>  		bpf_link_cleanup(&link_primer);
+> +		trace_bpf_xdp_link_attach_failed(extack._msg);
