@@ -2,67 +2,31 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF5FC001E0
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  2 Aug 2023 19:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B59C00528
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  2 Aug 2023 20:12:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229795AbjHBTsb (ORCPT
+        id S229796AbjHBUM0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 2 Aug 2023 15:48:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48176 "EHLO
+        Wed, 2 Aug 2023 16:12:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230223AbjHBTs3 (ORCPT
+        with ESMTP id S229525AbjHBUMZ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 2 Aug 2023 15:48:29 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE0EF19AD;
-        Wed,  2 Aug 2023 12:48:27 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-2b9f0b7af65so2496621fa.1;
-        Wed, 02 Aug 2023 12:48:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691005706; x=1691610506;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fXpNsLUTVNX9sFjFzmjiCCJcWZd1K7Cg3XGCsj2KKNo=;
-        b=sQ2U1U8IIoBh/ny1VCsSidkVurHcchk62vCBvykv+inOZa8u3oRLhx2yX8U/YL+cEF
-         salGgBTvsOgGURhMCOzlTCrSJ6i9k3vpu1blDlBgh5UbWsFbEjyKXwVBPbGvGwwMj0SX
-         hjv2IYhdV9H42t4qX2SRiJWKkil4pmkqRZsAFDybxmgEHzbWKkIg8cauv29JByaj0Dkz
-         RXy42dGSiHmvzUa1ZKA5uvXzbr61ddy4GPW91NSl+eTtaxl7kaKBAXMMaopirhZI6GuG
-         L3BWtI/x9AryBODOIZMJfcuRkW7hTj5+h8LnefyB1RuVzHTIkQeEqPpFoylN6brBMVby
-         votA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691005706; x=1691610506;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fXpNsLUTVNX9sFjFzmjiCCJcWZd1K7Cg3XGCsj2KKNo=;
-        b=FhAIhHRG+MNNpAfre+a0P2AzWfVHw8KwmUJVW1yBLt8PPq27Wq47jAy2yUaG5kD77B
-         QmHU8IEXPiRfQQAcwh/Q1zUsqKWYMxgtN1LXT5/f56Qb9nl7HTsUVn48+3YBACbUYveh
-         y+JxY9Umeqa7cBQcoS6Ab3RAn8yI8D6wKPINBQ4aLWemAFn3h/Rer2rg0KbeVFxP5xbP
-         TQPRRMT8NsHeTzbW5P8SUYHt+7bE/pcv9OqR4XuxqE4Hfd4R6bIU4Vugt3FzcGQBeLSD
-         L/iw+GxjTf7IBYQLbGJVOMxHSfactsQakMULWxzn5hcqXhR1MSeYkA6AcdH8Sx+aumUf
-         E9Ng==
-X-Gm-Message-State: ABy/qLbxssHI+IQJhTqu5gl7Yh0iiP2c5VuRxdHaw1Pr4jLpd5yb4y1o
-        syWcj/2ap4tJlCNSSSVKlVHlNmz2Mv9hqSLln30=
-X-Google-Smtp-Source: APBJJlHlxMdggwopQssuoCt8lzP5bNn6ZIJV546T5xLie+1ywQnrCL0NC/a+gB3Z1wkMD2n3cccZnZeaIMW6H4G6OS0=
-X-Received: by 2002:a05:651c:201:b0:2b6:dd9a:e1d3 with SMTP id
- y1-20020a05651c020100b002b6dd9ae1d3mr6025265ljn.44.1691005705801; Wed, 02 Aug
- 2023 12:48:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <169078860386.173706.3091034523220945605.stgit@devnote2>
- <169078863449.173706.2322042687021909241.stgit@devnote2> <CAADnVQ+C64_C1w1kqScZ6C5tr6_juaWFaQdAp9Mt3uzaQp2KOw@mail.gmail.com>
- <20230801085724.9bb07d2c82e5b6c6a6606848@kernel.org> <CAADnVQLaFpd2OhqP7W3xWB1b9P2GAKgrVQU1FU2yeNYKbCkT=Q@mail.gmail.com>
- <20230802000228.158f1bd605e497351611739e@kernel.org> <20230801112036.0d4ee60d@gandalf.local.home>
- <20230801113240.4e625020@gandalf.local.home> <CAADnVQ+N7b8_0UhndjwW9-5Vx2wUVvojujFLOCFr648DUv-Y2Q@mail.gmail.com>
- <20230801190920.7a1abfd5@gandalf.local.home> <20230802092146.9bda5e49528e6988ab97899c@kernel.org>
- <20230801204054.3884688e@rorschach.local.home> <20230802225634.f520080cd9de759d687a2b0a@kernel.org>
- <CAADnVQLqXjJvCcuQLVz8HxF050jDHaSa2D7cehoYtjXdp3wGLQ@mail.gmail.com> <20230802143845.3ce6ed61@gandalf.local.home>
-In-Reply-To: <20230802143845.3ce6ed61@gandalf.local.home>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Wed, 2 Aug 2023 12:48:14 -0700
-Message-ID: <CAADnVQKrL3LZaRcgoTdGN-csPt=eyujPbw9qoxgv9tPYPmZiZA@mail.gmail.com>
-Subject: Re: [PATCH v4 3/9] bpf/btf: Add a function to search a member of a struct/union
-To:     Steven Rostedt <rostedt@goodmis.org>
+        Wed, 2 Aug 2023 16:12:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 916E6E75;
+        Wed,  2 Aug 2023 13:12:24 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1C2DF61AB8;
+        Wed,  2 Aug 2023 20:12:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDB70C433C7;
+        Wed,  2 Aug 2023 20:12:21 +0000 (UTC)
+Date:   Wed, 2 Aug 2023 16:12:20 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         linux-trace-kernel@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>,
@@ -77,36 +41,65 @@ Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Florent Revest <revest@chromium.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 3/9] bpf/btf: Add a function to search a member of a
+ struct/union
+Message-ID: <20230802161220.579b2220@gandalf.local.home>
+In-Reply-To: <CAADnVQKrL3LZaRcgoTdGN-csPt=eyujPbw9qoxgv9tPYPmZiZA@mail.gmail.com>
+References: <169078860386.173706.3091034523220945605.stgit@devnote2>
+        <169078863449.173706.2322042687021909241.stgit@devnote2>
+        <CAADnVQ+C64_C1w1kqScZ6C5tr6_juaWFaQdAp9Mt3uzaQp2KOw@mail.gmail.com>
+        <20230801085724.9bb07d2c82e5b6c6a6606848@kernel.org>
+        <CAADnVQLaFpd2OhqP7W3xWB1b9P2GAKgrVQU1FU2yeNYKbCkT=Q@mail.gmail.com>
+        <20230802000228.158f1bd605e497351611739e@kernel.org>
+        <20230801112036.0d4ee60d@gandalf.local.home>
+        <20230801113240.4e625020@gandalf.local.home>
+        <CAADnVQ+N7b8_0UhndjwW9-5Vx2wUVvojujFLOCFr648DUv-Y2Q@mail.gmail.com>
+        <20230801190920.7a1abfd5@gandalf.local.home>
+        <20230802092146.9bda5e49528e6988ab97899c@kernel.org>
+        <20230801204054.3884688e@rorschach.local.home>
+        <20230802225634.f520080cd9de759d687a2b0a@kernel.org>
+        <CAADnVQLqXjJvCcuQLVz8HxF050jDHaSa2D7cehoYtjXdp3wGLQ@mail.gmail.com>
+        <20230802143845.3ce6ed61@gandalf.local.home>
+        <CAADnVQKrL3LZaRcgoTdGN-csPt=eyujPbw9qoxgv9tPYPmZiZA@mail.gmail.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Aug 2, 2023 at 11:38=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Wed, 2 Aug 2023 11:24:12 -0700
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
->
-> > This is a non starter.
-> > bpf progs expect arch dependent 'struct pt_regs *' and we cannot change=
- that.
->
-> If the progs are compiled into native code, isn't there optimizations tha=
-t
-> could be done? That is, if ftrace_regs is available, and the bpf program =
-is
-> just using the subset of pt_regs, is it possible that it could be compile=
-d
-> to use ftrace_regs?
->
-> Forgive my ignorance on how BPF programs turn into executables when runni=
-ng
-> in the kernel.
+On Wed, 2 Aug 2023 12:48:14 -0700
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 
-Right. It's possible for the verifier to do an offset rewrite,
-forbid certain access, always return 0 on load from certain offset,
-and so on.
-It's all non trivial amount of work.
-ftrace_partial_regs() from ftrace_regs into pt_regs is so much simpler.
+> On Wed, Aug 2, 2023 at 11:38 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > On Wed, 2 Aug 2023 11:24:12 -0700
+> > Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+> >  
+> > > This is a non starter.
+> > > bpf progs expect arch dependent 'struct pt_regs *' and we cannot change that.  
+> >
+> > If the progs are compiled into native code, isn't there optimizations that
+> > could be done? That is, if ftrace_regs is available, and the bpf program is
+> > just using the subset of pt_regs, is it possible that it could be compiled
+> > to use ftrace_regs?
+> >
+> > Forgive my ignorance on how BPF programs turn into executables when running
+> > in the kernel.  
+> 
+> Right. It's possible for the verifier to do an offset rewrite,
+> forbid certain access, always return 0 on load from certain offset,
+> and so on.
+> It's all non trivial amount of work.
+> ftrace_partial_regs() from ftrace_regs into pt_regs is so much simpler.
+
+Sure, and the copy could be the solution we have in the near future, but if
+we could optimize it in the future, then perhaps it would be worth doing it.
+
+Also, how are the bpf programs referencing the pt_regs? Could a ftrace_regs
+API be added too? If the verifier sees that the program is using
+ftrace_regs, it could then use the lighter weight fprobes for access,
+otherwise it falls back to the kprobe version.
+
+-- Steve
