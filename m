@@ -2,104 +2,87 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B59C00528
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  2 Aug 2023 20:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 631F8C001DF
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  2 Aug 2023 21:21:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229796AbjHBUM0 convert rfc822-to-8bit (ORCPT
+        id S230350AbjHBVV3 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 2 Aug 2023 16:12:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56660 "EHLO
+        Wed, 2 Aug 2023 17:21:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229525AbjHBUMZ (ORCPT
+        with ESMTP id S231126AbjHBVV3 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 2 Aug 2023 16:12:25 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 916E6E75;
-        Wed,  2 Aug 2023 13:12:24 -0700 (PDT)
+        Wed, 2 Aug 2023 17:21:29 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FCEB2D6A;
+        Wed,  2 Aug 2023 14:20:59 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1C2DF61AB8;
-        Wed,  2 Aug 2023 20:12:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDB70C433C7;
-        Wed,  2 Aug 2023 20:12:21 +0000 (UTC)
-Date:   Wed, 2 Aug 2023 16:12:20 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Florent Revest <revest@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v4 3/9] bpf/btf: Add a function to search a member of a
- struct/union
-Message-ID: <20230802161220.579b2220@gandalf.local.home>
-In-Reply-To: <CAADnVQKrL3LZaRcgoTdGN-csPt=eyujPbw9qoxgv9tPYPmZiZA@mail.gmail.com>
-References: <169078860386.173706.3091034523220945605.stgit@devnote2>
-        <169078863449.173706.2322042687021909241.stgit@devnote2>
-        <CAADnVQ+C64_C1w1kqScZ6C5tr6_juaWFaQdAp9Mt3uzaQp2KOw@mail.gmail.com>
-        <20230801085724.9bb07d2c82e5b6c6a6606848@kernel.org>
-        <CAADnVQLaFpd2OhqP7W3xWB1b9P2GAKgrVQU1FU2yeNYKbCkT=Q@mail.gmail.com>
-        <20230802000228.158f1bd605e497351611739e@kernel.org>
-        <20230801112036.0d4ee60d@gandalf.local.home>
-        <20230801113240.4e625020@gandalf.local.home>
-        <CAADnVQ+N7b8_0UhndjwW9-5Vx2wUVvojujFLOCFr648DUv-Y2Q@mail.gmail.com>
-        <20230801190920.7a1abfd5@gandalf.local.home>
-        <20230802092146.9bda5e49528e6988ab97899c@kernel.org>
-        <20230801204054.3884688e@rorschach.local.home>
-        <20230802225634.f520080cd9de759d687a2b0a@kernel.org>
-        <CAADnVQLqXjJvCcuQLVz8HxF050jDHaSa2D7cehoYtjXdp3wGLQ@mail.gmail.com>
-        <20230802143845.3ce6ed61@gandalf.local.home>
-        <CAADnVQKrL3LZaRcgoTdGN-csPt=eyujPbw9qoxgv9tPYPmZiZA@mail.gmail.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 05FC861B29;
+        Wed,  2 Aug 2023 21:20:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 53901C433C7;
+        Wed,  2 Aug 2023 21:20:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691011221;
+        bh=r3kCRVSYFBLItWe2GV/TfNk+pBsHmyVL2Z8MBrXrPg0=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=KfzHGHMko0UeGp/f2ND5mAbBMYnRoflMYUXrOCIrcKUS2s+QQwiHjK8oIKAzyCbub
+         RKxePwuIa8y+637dazizHtwLEoUZkgCLyh03bGBDvp46nZ66fmHqG8dQnpZnPFgAF0
+         Y40jmjeZiFYBByXk5XQ/tqHpuMLg2GDMIsewf7ioYwzjOGogm6oz4AJ1ikb4JUL19e
+         OtK6eUQ0HqjrU02q8IUiqmu4N5WnPq6G6PSLAJzD8ILUzc37XkGGtO18sqFpi2l4n7
+         1HnJ00IZk+JwweFreVP19PhWZ6o5FXkBHWiuMsDxTb2TK1fP+6ChiDT7jiL7ZACtUG
+         vyJdLb+Fw4LyQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 339AFE270D7;
+        Wed,  2 Aug 2023 21:20:21 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] [v5] bpf: fix bpf_probe_read_kernel prototype mismatch
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <169101122119.28051.8597932529135437329.git-patchwork-notify@kernel.org>
+Date:   Wed, 02 Aug 2023 21:20:21 +0000
+References: <20230801111449.185301-1-arnd@kernel.org>
+In-Reply-To: <20230801111449.185301-1-arnd@kernel.org>
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+        song@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+        arnd@arndb.de, stable@vger.kernel.org, john.fastabend@gmail.com,
+        martin.lau@linux.dev, yonghong.song@linux.dev, kpsingh@kernel.org,
+        sdf@google.com, haoluo@google.com, jolsa@kernel.org,
+        memxor@gmail.com, davemarchevsky@fb.com, void@manifault.com,
+        peterz@infradead.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 2 Aug 2023 12:48:14 -0700
-Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+Hello:
 
-> On Wed, Aug 2, 2023 at 11:38 AM Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > On Wed, 2 Aug 2023 11:24:12 -0700
-> > Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-> >  
-> > > This is a non starter.
-> > > bpf progs expect arch dependent 'struct pt_regs *' and we cannot change that.  
-> >
-> > If the progs are compiled into native code, isn't there optimizations that
-> > could be done? That is, if ftrace_regs is available, and the bpf program is
-> > just using the subset of pt_regs, is it possible that it could be compiled
-> > to use ftrace_regs?
-> >
-> > Forgive my ignorance on how BPF programs turn into executables when running
-> > in the kernel.  
+This patch was applied to bpf/bpf-next.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
+
+On Tue,  1 Aug 2023 13:13:58 +0200 you wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> Right. It's possible for the verifier to do an offset rewrite,
-> forbid certain access, always return 0 on load from certain offset,
-> and so on.
-> It's all non trivial amount of work.
-> ftrace_partial_regs() from ftrace_regs into pt_regs is so much simpler.
+> bpf_probe_read_kernel() has a __weak definition in core.c and another
+> definition with an incompatible prototype in kernel/trace/bpf_trace.c,
+> when CONFIG_BPF_EVENTS is enabled.
+> 
+> Since the two are incompatible, there cannot be a shared declaration in
+> a header file, but the lack of a prototype causes a W=1 warning:
+> 
+> [...]
 
-Sure, and the copy could be the solution we have in the near future, but if
-we could optimize it in the future, then perhaps it would be worth doing it.
+Here is the summary with links:
+  - [v5] bpf: fix bpf_probe_read_kernel prototype mismatch
+    https://git.kernel.org/bpf/bpf-next/c/6a5a148aaf14
 
-Also, how are the bpf programs referencing the pt_regs? Could a ftrace_regs
-API be added too? If the verifier sees that the program is using
-ftrace_regs, it could then use the lighter weight fprobes for access,
-otherwise it falls back to the kprobe version.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
--- Steve
+
