@@ -2,121 +2,161 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B59C04E69
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  2 Aug 2023 03:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1ADFC001DF
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  2 Aug 2023 03:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231327AbjHBDSy (ORCPT
+        id S231209AbjHBDvC (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 1 Aug 2023 23:18:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55872 "EHLO
+        Tue, 1 Aug 2023 23:51:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231516AbjHBDSn (ORCPT
+        with ESMTP id S229568AbjHBDvB (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 1 Aug 2023 23:18:43 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 631031713;
-        Tue,  1 Aug 2023 20:18:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690946322; x=1722482322;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9NCM2C6plWYZlTWDXnxmxP68QKs4h7xrJfHjoOpKpzc=;
-  b=HKVScfi42mwgsATJUFTdoEF/d8ysJsHLoXgzwBGEilbCqHr8C50FUEwC
-   TPHKYD4tlYU6dfr8TU/vVnv6JOOMXOCKgV3bM+G8Kc4JzN6LPWObPfOkZ
-   0hLXJuFBXKISsCaX0ZJXXXdRMLrFAlRJWqyPJKDYobKJ0pmH5S15GP3oe
-   hBWEw87tZpOkDuux4fB6w5WXxMOZbHUvwdOP7lTIbs5uVTElHFqY1y55T
-   l2OZvigm/JmLckZ7RZRBL30rjWtYzsLI29xD5ZfjCPydP17Ux/fWcWx6J
-   YF1KT2e3eRUrBkWQyfgrk+S2TvcDBiQkhoM5nZzG9W+RVoQIhc292UsGl
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10789"; a="349773127"
-X-IronPort-AV: E=Sophos;i="6.01,248,1684825200"; 
-   d="scan'208";a="349773127"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2023 20:18:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10789"; a="794424914"
-X-IronPort-AV: E=Sophos;i="6.01,248,1684825200"; 
-   d="scan'208";a="794424914"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga008.fm.intel.com with ESMTP; 01 Aug 2023 20:18:36 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qR2Nd-00ExOt-1i;
-        Wed, 02 Aug 2023 06:18:33 +0300
-Date:   Wed, 2 Aug 2023 06:18:33 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        David Gow <davidgow@google.com>,
-        Daniel Latypov <dlatypov@google.com>,
-        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Brendan Higgins <brendan.higgins@linux.dev>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v4 1/4] kernel.h: Split out COUNT_ARGS() and
- CONCATENATE() to args.h
-Message-ID: <ZMnLCSsY83IphIrv@smile.fi.intel.com>
-References: <20230718211147.18647-2-andriy.shevchenko@linux.intel.com>
- <20230801211139.GA51676@bhelgaas>
+        Tue, 1 Aug 2023 23:51:01 -0400
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A2961BF;
+        Tue,  1 Aug 2023 20:51:00 -0700 (PDT)
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3090d3e9c92so6425962f8f.2;
+        Tue, 01 Aug 2023 20:51:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690948259; x=1691553059;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+k3JK6aQF5cAqgDoWdyK8Jvm08ED04BKfngPZoEvJSE=;
+        b=Jwrw2X5dot9pBJmQ96XrLi4dEUVZ0jSozHkT1j6vtRpdHfHrq5st8TB0n0Gqt1HN2N
+         70Osl6aBrWkYwqFMFi7+ceY3U4sFSvtCH/i2ZdwGG+jCh7H7meW5d/Qek741y43jcBmo
+         Bl/s0/bQZY5ju6yusfyC6izkw50ibbAKVZDWQTNQL8DIzn/e1XK91iXR25sTIZBxmzfk
+         x1lEqJ/zJMSO22qOEQIYUHaFbDcfd4jPF8tmkSNDNPpeYHp4NRROqkAZ1oXf+QjfG82v
+         lKG3iKRgBTNMk1ExEENu+/f718xHCaYA4jhEm6Os25EO4a36BuY8SYycmQnnI9hfoPA0
+         76Jw==
+X-Gm-Message-State: ABy/qLaf+9y/B/37R6DfYGBE4KTjkpBVGzDNWz210MsEIs77v9YpKAEx
+        W7Db17QXnrArlgIHBu483tw=
+X-Google-Smtp-Source: APBJJlGDUfus6TVLksFT3hhSFR5gvR0ULTL8x4zd7hiII1wVXyi3dIPlepaP7GyFCvgaCa9J5h9d+w==
+X-Received: by 2002:adf:e8c1:0:b0:314:4db:e0bd with SMTP id k1-20020adfe8c1000000b0031404dbe0bdmr3959882wrn.11.1690948258469;
+        Tue, 01 Aug 2023 20:50:58 -0700 (PDT)
+Received: from costa-tp.bos2.lab ([2a00:a040:199:8930:2c90:cb9e:b154:73dc])
+        by smtp.gmail.com with ESMTPSA id z8-20020adfec88000000b0031773a8e5c4sm17622152wrn.37.2023.08.01.20.50.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Aug 2023 20:50:57 -0700 (PDT)
+From:   Costa Shulyupin <costa.shul@redhat.com>
+To:     Daniel Bristot de Oliveira <bristot@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Costa Shulyupin <costa.shul@redhat.com>
+Subject: [PATCH] docs: rtla: replace dashes with spaces in titles
+Date:   Wed,  2 Aug 2023 06:50:36 +0300
+Message-ID: <20230802035037.404230-1-costa.shul@redhat.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230801211139.GA51676@bhelgaas>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Aug 01, 2023 at 04:11:39PM -0500, Bjorn Helgaas wrote:
-> On Wed, Jul 19, 2023 at 12:11:44AM +0300, Andy Shevchenko wrote:
-> > kernel.h is being used as a dump for all kinds of stuff for a long time.
-> > The COUNT_ARGS() and CONCATENATE() macros may be used in some places
-> > without need of the full kernel.h dependency train with it.
-> > 
-> > Here is the attempt on cleaning it up by splitting out these macros().
-> > 
-> > While at it, include new header where it's being used.
-> > 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# PCI
+because
+- Titles containing spaces offer better readability compared
+  to those with dashes
+- Commands and their described subcommands are separated by spaces
+- Ensure that the titles are identical to the commands with subcommands
 
-Thank you!
+Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
+---
+ Documentation/tools/rtla/rtla-hwnoise.rst       | 2 +-
+ Documentation/tools/rtla/rtla-osnoise-hist.rst  | 2 +-
+ Documentation/tools/rtla/rtla-osnoise-top.rst   | 1 -
+ Documentation/tools/rtla/rtla-osnoise.rst       | 2 +-
+ Documentation/tools/rtla/rtla-timerlat-hist.rst | 2 +-
+ Documentation/tools/rtla/rtla-timerlat-top.rst  | 2 +-
+ Documentation/tools/rtla/rtla-timerlat.rst      | 2 +-
+ 7 files changed, 6 insertions(+), 7 deletions(-)
 
-...
-
-> > -
-> > +#include <linux/args.h>
-> >  #include <linux/mod_devicetable.h>
-> >  
-> >  #include <linux/types.h>
-> 
-> If there's not a reason otherwise, I'd put this in the main list
-> instead of the weirdly separated mod_devicetable.h.
-
-The idea is to make them alphabetically ordered. currently even main list
-is a mess. And I have no idea why mod_devicetable.h is so special, a few
-bus headers (e.g., i2c, spi) consider that just as yet another header while
-actually ain't using it (in the respective _headers_).
-
-That said, I would take the sorting change as a separate one that can be
-done after this.
-
+diff --git a/Documentation/tools/rtla/rtla-hwnoise.rst b/Documentation/tools/rtla/rtla-hwnoise.rst
+index fb1c52bbc00b..1ed4ceeb4660 100644
+--- a/Documentation/tools/rtla/rtla-hwnoise.rst
++++ b/Documentation/tools/rtla/rtla-hwnoise.rst
+@@ -1,7 +1,7 @@
+ .. SPDX-License-Identifier: GPL-2.0
+ 
+ ============
+-rtla-hwnoise
++rtla hwnoise
+ ============
+ ------------------------------------------
+ Detect and quantify hardware-related noise
+diff --git a/Documentation/tools/rtla/rtla-osnoise-hist.rst b/Documentation/tools/rtla/rtla-osnoise-hist.rst
+index f2e79d22c4c4..c15ab9be07e9 100644
+--- a/Documentation/tools/rtla/rtla-osnoise-hist.rst
++++ b/Documentation/tools/rtla/rtla-osnoise-hist.rst
+@@ -1,6 +1,6 @@
+ ===================
+-rtla-osnoise-hist
+ ===================
++rtla osnoise hist
+ ------------------------------------------------------
+ Display a histogram of the osnoise tracer samples
+ ------------------------------------------------------
+diff --git a/Documentation/tools/rtla/rtla-osnoise-top.rst b/Documentation/tools/rtla/rtla-osnoise-top.rst
+index 5d75d1394516..464459e55a17 100644
+--- a/Documentation/tools/rtla/rtla-osnoise-top.rst
++++ b/Documentation/tools/rtla/rtla-osnoise-top.rst
+@@ -1,5 +1,4 @@
+ ===================
+-rtla-osnoise-top
+ ===================
+ -----------------------------------------------
+ Display a summary of the operating system noise
+diff --git a/Documentation/tools/rtla/rtla-osnoise.rst b/Documentation/tools/rtla/rtla-osnoise.rst
+index c129b206ce34..8a2e0504d737 100644
+--- a/Documentation/tools/rtla/rtla-osnoise.rst
++++ b/Documentation/tools/rtla/rtla-osnoise.rst
+@@ -1,7 +1,7 @@
+ ===============
+-rtla-osnoise
+ ===============
+ ------------------------------------------------------------------
++rtla osnoise
+ Measure the operating system noise
+ ------------------------------------------------------------------
+ 
+diff --git a/Documentation/tools/rtla/rtla-timerlat-hist.rst b/Documentation/tools/rtla/rtla-timerlat-hist.rst
+index 057db78d4095..84ab9f542ebb 100644
+--- a/Documentation/tools/rtla/rtla-timerlat-hist.rst
++++ b/Documentation/tools/rtla/rtla-timerlat-hist.rst
+@@ -1,6 +1,6 @@
+ =====================
+-rtla-timerlat-hist
+ =====================
++rtla timerlat hist
+ ------------------------------------------------
+ Histograms of the operating system timer latency
+ ------------------------------------------------
+diff --git a/Documentation/tools/rtla/rtla-timerlat-top.rst b/Documentation/tools/rtla/rtla-timerlat-top.rst
+index 1b7cf4e3eafe..8be4ccaff898 100644
+--- a/Documentation/tools/rtla/rtla-timerlat-top.rst
++++ b/Documentation/tools/rtla/rtla-timerlat-top.rst
+@@ -1,6 +1,6 @@
+ ====================
+-rtla-timerlat-top
+ ====================
++rtla timerlat top
+ -------------------------------------------
+ Measures the operating system timer latency
+ -------------------------------------------
+diff --git a/Documentation/tools/rtla/rtla-timerlat.rst b/Documentation/tools/rtla/rtla-timerlat.rst
+index 44a49e6f302b..eceb3a16af08 100644
+--- a/Documentation/tools/rtla/rtla-timerlat.rst
++++ b/Documentation/tools/rtla/rtla-timerlat.rst
+@@ -1,6 +1,6 @@
+ ================
+-rtla-timerlat
+ ================
++rtla timerlat
+ -------------------------------------------
+ Measures the operating system timer latency
+ -------------------------------------------
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.41.0
 
