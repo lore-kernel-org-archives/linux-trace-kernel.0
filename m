@@ -2,139 +2,138 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E9CC00528
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  2 Aug 2023 12:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74963C04A6A
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  2 Aug 2023 13:56:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234925AbjHBMt5 (ORCPT
+        id S234439AbjHBN4n (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 2 Aug 2023 08:49:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41634 "EHLO
+        Wed, 2 Aug 2023 09:56:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234818AbjHBMtT (ORCPT
+        with ESMTP id S234432AbjHBN4m (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 2 Aug 2023 08:49:19 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDEDA2D4A;
-        Wed,  2 Aug 2023 05:49:16 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1bbc64f9a91so57190995ad.0;
-        Wed, 02 Aug 2023 05:49:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690980556; x=1691585356;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KWetw+9fo7xpR+/Y1RDX5IOHvVHf8sfB8Rgzd3Bsv2A=;
-        b=GIHzjFSzPcLYW4yJrPyLa5ImpMP+/3NnozdLXPCWfIEItaUDWT708653DBDRF9JDF1
-         7KJP2GCIClBAH9TSQ1KVLatrwc9yTBnkpzhENvv4RrL7sEfnb7UiXjrEyIlloYFhdoPb
-         kV1D/qaJGKouufSXYhMmCQ6s3RuM7Snwrzt8TCemadIkH1WZ+Bjv5jWhtNkd1ZyZsdBX
-         V9GoTGqzCtbsRZqsjZNFncaj+eA6BDJ5scmBkGEoP4jvts/pO08/1t3W/xVXwEtFegRb
-         mzsuOG7V5o6E5TBzDQ56qCiReA6n102vgs9RiJ+P/P0i3axrYk1X/byHeLt3snHWyPwR
-         aBRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690980556; x=1691585356;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KWetw+9fo7xpR+/Y1RDX5IOHvVHf8sfB8Rgzd3Bsv2A=;
-        b=RMSoKbTxu3CpfqqqlJ8ThXzPCJWfgfEffOJ+UcwW8a6y1beW0RG+b/SnFhC7ISv7J6
-         klf1g5KJosImE4XA5lCwxTdElzxzIzEKRC0anRqfTGYZHTVq8E9nMA1Y+cABTICiWdRP
-         OHmV6+J8uJE9ck4nuSaKbeL6ikmaHwioqzGVwbM75G4EfS7TuTVPUGwD+vMBipJ9CoFJ
-         gm4BhbZQmuCudJuwOKc/M9CrGWR/WtIRyToMm4D4+1u7gP5ml1CdIZcUVMiVscAheDag
-         gb9ROKYR/7ZZ7mXxZ+GF6Ro/JyERrMXvaxUr00+8PvzN3zMaR8rEvsrP6ROALB8f1g1A
-         O51g==
-X-Gm-Message-State: ABy/qLZuDCHWBNqKL7p9vDfX2eQe2sthYRGpbuwsAicoEU7GhDk9tWvK
-        TlQSUNChgeVRSVxMwds3nks=
-X-Google-Smtp-Source: APBJJlHw4hmPYrgetk+3UmXtsG7PL5InI9GFCxvW4F0oTwPBOrp7ldLy1FZuk2Y69spe/Xv1ftUHXA==
-X-Received: by 2002:a17:902:f551:b0:1ae:8892:7d27 with SMTP id h17-20020a170902f55100b001ae88927d27mr17956049plf.42.1690980556116;
-        Wed, 02 Aug 2023 05:49:16 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.17])
-        by smtp.googlemail.com with ESMTPSA id x34-20020a17090a6c2500b00264044cca0fsm4811993pjj.1.2023.08.02.05.49.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Aug 2023 05:49:15 -0700 (PDT)
-From:   Ze Gao <zegao2021@gmail.com>
-X-Google-Original-From: Ze Gao <zegao@tencent.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Wed, 2 Aug 2023 09:56:42 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3C0C2115;
+        Wed,  2 Aug 2023 06:56:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 36AFA618F1;
+        Wed,  2 Aug 2023 13:56:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0C45C433C7;
+        Wed,  2 Aug 2023 13:56:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690984600;
+        bh=ZiBT8/57R9cm/kIxNEpf6GtRtnFrBM4/Vdwr+0paa8Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ugALy2+yCr8eRX69mZgOByVs1nn3mkSbeYZA88lApQtXAdR52l0cRdAv437Tav5Eo
+         1PMluo+JefF5Xrd0m1xLGKldl+Tsy1n+Q/HQfVfAhOUvKz8T/La9KVIJUnc9e4/B+P
+         fFTrO9M4qrJn56y+HYjW8MEndIe/Cp11rXj+qcg6ADum52ULhbjeLPrAj4awwyTpQS
+         z+yPOcGy1uiX0pS7cNrOenJp3JRLudGS+94sH5BD/5guLN1oDKfq3ztvOXhfSQ1wXN
+         j+20r6R9gpMWeyhQqODAnvW13e0ulT8IgF4jxaJrsyKFFfzMpW+eBKJcc1pFNN1xR9
+         uYz8IkvC8yxeQ==
+Date:   Wed, 2 Aug 2023 22:56:34 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         linux-trace-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Subject: [RFC PATCH v5 7/7] perf sched: prefer to use prev_state_char introduced in sched_switch
-Date:   Wed,  2 Aug 2023 08:47:30 -0400
-Message-ID: <20230802124840.335638-8-zegao@tencent.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230802124840.335638-1-zegao@tencent.com>
-References: <20230802124840.335638-1-zegao@tencent.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        LKML <linux-kernel@vger.kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florent Revest <revest@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v4 3/9] bpf/btf: Add a function to search a member of a
+ struct/union
+Message-Id: <20230802225634.f520080cd9de759d687a2b0a@kernel.org>
+In-Reply-To: <20230801204054.3884688e@rorschach.local.home>
+References: <169078860386.173706.3091034523220945605.stgit@devnote2>
+        <169078863449.173706.2322042687021909241.stgit@devnote2>
+        <CAADnVQ+C64_C1w1kqScZ6C5tr6_juaWFaQdAp9Mt3uzaQp2KOw@mail.gmail.com>
+        <20230801085724.9bb07d2c82e5b6c6a6606848@kernel.org>
+        <CAADnVQLaFpd2OhqP7W3xWB1b9P2GAKgrVQU1FU2yeNYKbCkT=Q@mail.gmail.com>
+        <20230802000228.158f1bd605e497351611739e@kernel.org>
+        <20230801112036.0d4ee60d@gandalf.local.home>
+        <20230801113240.4e625020@gandalf.local.home>
+        <CAADnVQ+N7b8_0UhndjwW9-5Vx2wUVvojujFLOCFr648DUv-Y2Q@mail.gmail.com>
+        <20230801190920.7a1abfd5@gandalf.local.home>
+        <20230802092146.9bda5e49528e6988ab97899c@kernel.org>
+        <20230801204054.3884688e@rorschach.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Since the sched_switch tracepoint introduces a new variable to
-report sched-out task state in symbolic char, we prefer to use
-it to spare from knowing internal implementations in kernel.
+On Tue, 1 Aug 2023 20:40:54 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Also we keep the old parsing logic intact but sync the state char
-array with the latest kernel.
+> On Wed, 2 Aug 2023 09:21:46 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> 
+> > > Then use kprobes. When I asked Masami what the difference between fprobes
+> > > and kprobes was, he told me that it would be that it would no longer rely
+> > > on the slower FTRACE_WITH_REGS. But currently, it still does.  
+> > 
+> > kprobes needs to keep using pt_regs because software-breakpoint exception
+> > handler gets that. And fprobe is used for bpf multi-kprobe interface,
+> > but I think it can be optional.
+> > 
+> > So until user-land tool supports the ftrace_regs, you can just disable
+> > using fprobes if CONFIG_DYNAMIC_FTRACE_WITH_REGS=n
+> 
+> I'm confused. I asked about the difference between kprobes on ftrace
+> and fprobes, and you said it was to get rid of the requirement of
+> FTRACE_WITH_REGS.
+> 
+>  https://lore.kernel.org/all/20230120205535.98998636329ca4d5f8325bc3@kernel.org/
 
-Signed-off-by: Ze Gao <zegao@tencent.com>
----
- tools/perf/builtin-sched.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+Yes, it is for enabling fprobe (and fprobe-event) on more architectures.
+I don't think it's possible to change everything at once. So, it will be
+changed step by step. At the first step, I will replace pt_regs with
+ftrace_regs, and make bpf_trace.c and fprobe_event depends on
+FTRACE_WITH_REGS.
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index eb310d1a7625..7f76ba51e36d 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -837,7 +837,7 @@ replay_wakeup_event(struct perf_sched *sched,
- 
- static inline char task_state_char(int state)
- {
--	static const char state_to_char[] = "RSDTtXZPI";
-+	static const char state_to_char[] = "RSDTtXZPIp";
- 	unsigned bit = state ? ffs(state) : 0;
- 	return bit < sizeof(state_to_char) - 1 ? state_to_char[bit] : '?';
- }
-@@ -845,8 +845,20 @@ static inline char task_state_char(int state)
- static inline char get_task_prev_state(struct evsel *evsel,
- 				       struct perf_sample *sample)
- {
--	const int prev_state = evsel__intval(evsel, sample, "prev_state");
--	return task_state_char(prev_state);
-+	char prev_state_char;
-+	int prev_state;
-+
-+	//prefer to use prev_state_char
-+	if (evsel__field(evsel, "prev_state_char"))
-+		prev_state_char = (char) evsel__intval(evsel,
-+				sample, "prev_state_char");
-+	else {
-+		prev_state = (int) evsel__intval(evsel,
-+				sample, "prev_state");
-+		prev_state_char = task_state_char(prev_state);
-+	}
-+
-+	return prev_state_char;
- }
- 
- static int replay_switch_event(struct perf_sched *sched,
-@@ -2143,7 +2155,7 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
- 		else if (r->last_time) {
- 			u64 dt_wait = tprev - r->last_time;
- 
--			if (r->last_state == 'R')
-+			if (r->last_state == 'R' || r->last_state == 'p')
- 				r->dt_preempt = dt_wait;
- 			else if (r->last_state == 'D')
- 				r->dt_iowait = dt_wait;
+At this point, we can split the problem into two, how to move bpf on
+ftrace_regs and how to move fprobe-event on ftrace_regs. fprobe-event
+change is not hard because it is closing in the kernel and I can do it.
+But for BPF, I need to ask BPF user-land tools to support ftrace_regs.
+
+> 
+> > 
+> > Then you can safely use 
+> > 
+> > struct pt_regs *regs = ftrace_get_regs(fregs);
+> > 
+> > I think we can just replace the CONFIG_FPROBE ifdefs with
+> > CONFIG_DYNAMIC_FTRACE_WITH_REGS in kernel/trace/bpf_trace.c
+> > And that will be the first version of using ftrace_regs in fprobe.
+> 
+> But it is still slow. The FTRACE_WITH_REGS gives us the full pt_regs
+> and saves all registers including flags, which is a very slow operation
+> (and noticeable in profilers).
+
+Yes, to solve this part, we need to work with BPF user-land people.
+I guess the BPF is accessing registers from pt_regs with fixed offset
+which is calculated from pt_regs layout in the user-space.
+
+> 
+> And this still doesn't work on arm64.
+
+Yes, and this makes more motivation to move on ftrace_regs.
+
+Thank you,
+
+
 -- 
-2.41.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
