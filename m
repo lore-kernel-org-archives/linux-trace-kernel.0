@@ -2,143 +2,121 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C59AAC0015E
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  2 Aug 2023 03:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B59C04E69
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  2 Aug 2023 03:18:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231923AbjHBDIa (ORCPT
+        id S231327AbjHBDSy (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 1 Aug 2023 23:08:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53190 "EHLO
+        Tue, 1 Aug 2023 23:18:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231947AbjHBDIU (ORCPT
+        with ESMTP id S231516AbjHBDSn (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 1 Aug 2023 23:08:20 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1609F1985;
-        Tue,  1 Aug 2023 20:08:18 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-4fe463420fbso2175113e87.3;
-        Tue, 01 Aug 2023 20:08:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690945696; x=1691550496;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fEHf2Vr7UcV8sRpiLYWB5RSkih+MiyH6YPF+pMyGQFU=;
-        b=Oy/Zd7LIS6lnJJ0Nursy02iCL6MGJ+RwTNgRJQ0+/8TAJbMNhq5QIXqBXDVk8y/v38
-         ZVu8oa49P+2nlDYe3iFAfIoH65wCO9OWGPaqSnh0jQOzQIwVmo7LR1wKsoi4j32f1DKP
-         49Pgut1mxJYhumvjdchH7zn1NlXVc/9ur+VfukgScGMsLSqGIpZI5tUEtZnhOuMOFbjn
-         ha/rg4lX7B+37vpWPxDPbuFVH3BbKd8hjQQUztp2KlqQbOnu/Et59tH3HdGM2NnPQhR9
-         NJtmaf8T+bwr6XlgFP1C8EhnHKoQqQMMuESkXpfkDAGdg0WC+ZXvYSK5anL5V/2+8+ff
-         HJyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690945696; x=1691550496;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fEHf2Vr7UcV8sRpiLYWB5RSkih+MiyH6YPF+pMyGQFU=;
-        b=l0uUxlLtD1sWxbS3GOBNaQkt7E9jre5GJrKeEWgXnbHAiOFYIwok5Tw59+ubBA60iF
-         ka1HzedNKJxrYmmEijklw6AlZv4WIoWjz04pRUn2wuw5REV6zVqM89UZdqbdd3oiNLi/
-         WRw3p8z4aadSZ2mAABTQg66r0zOqg8kAUSWiiAMszhleamwPluWou2zwMbDhQcAbwvDW
-         7VASKC51UELC2MCbNvSavWboQkxnPEIeUZEjOWCRYs/uJCMCINeXyL69vpyS1quJnyd2
-         eMDXUK2c+MB+ctCmmmJhKI6qewMbytbxR/eX5dY2TiPGw0LHEjpA9zBGlnk++nK5FgJS
-         scAA==
-X-Gm-Message-State: ABy/qLZnXCQMvnwuV2WHw37Qvc5mIFSTEd5cA83D3M5I9WptBnE8Jdh6
-        eJKOxrYHjZ16i5GOgWFNfzUPo0c0Gt6TCvwkoVc=
-X-Google-Smtp-Source: APBJJlF7Qn9npxJ32kpkPSSHbbBYTkYefy8YfwqVsxU5Wn64RnG+Vdcj09ZK1gOubopjg4zCJBprznkAthaKfZoE3Po=
-X-Received: by 2002:ac2:4dbb:0:b0:4fb:c657:3376 with SMTP id
- h27-20020ac24dbb000000b004fbc6573376mr3514495lfe.29.1690945695792; Tue, 01
- Aug 2023 20:08:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230801090124.8050-1-zegao@tencent.com> <20230801090124.8050-7-zegao@tencent.com>
- <20230801101908.4ccc81c8@gandalf.local.home>
-In-Reply-To: <20230801101908.4ccc81c8@gandalf.local.home>
-From:   Ze Gao <zegao2021@gmail.com>
-Date:   Wed, 2 Aug 2023 11:08:04 +0800
-Message-ID: <CAD8CoPC_vH2FtAaMEjqSmKCKq+pq5ktbbLuWHm4WD2H_t2RWKg@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 6/6] libtraceevent: prefer to use prev_state_char
- introduced in sched_switch
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Tue, 1 Aug 2023 23:18:43 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 631031713;
+        Tue,  1 Aug 2023 20:18:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1690946322; x=1722482322;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9NCM2C6plWYZlTWDXnxmxP68QKs4h7xrJfHjoOpKpzc=;
+  b=HKVScfi42mwgsATJUFTdoEF/d8ysJsHLoXgzwBGEilbCqHr8C50FUEwC
+   TPHKYD4tlYU6dfr8TU/vVnv6JOOMXOCKgV3bM+G8Kc4JzN6LPWObPfOkZ
+   0hLXJuFBXKISsCaX0ZJXXXdRMLrFAlRJWqyPJKDYobKJ0pmH5S15GP3oe
+   hBWEw87tZpOkDuux4fB6w5WXxMOZbHUvwdOP7lTIbs5uVTElHFqY1y55T
+   l2OZvigm/JmLckZ7RZRBL30rjWtYzsLI29xD5ZfjCPydP17Ux/fWcWx6J
+   YF1KT2e3eRUrBkWQyfgrk+S2TvcDBiQkhoM5nZzG9W+RVoQIhc292UsGl
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10789"; a="349773127"
+X-IronPort-AV: E=Sophos;i="6.01,248,1684825200"; 
+   d="scan'208";a="349773127"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2023 20:18:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10789"; a="794424914"
+X-IronPort-AV: E=Sophos;i="6.01,248,1684825200"; 
+   d="scan'208";a="794424914"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga008.fm.intel.com with ESMTP; 01 Aug 2023 20:18:36 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qR2Nd-00ExOt-1i;
+        Wed, 02 Aug 2023 06:18:33 +0300
+Date:   Wed, 2 Aug 2023 06:18:33 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        David Gow <davidgow@google.com>,
+        Daniel Latypov <dlatypov@google.com>,
+        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Brendan Higgins <brendan.higgins@linux.dev>,
         Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v4 1/4] kernel.h: Split out COUNT_ARGS() and
+ CONCATENATE() to args.h
+Message-ID: <ZMnLCSsY83IphIrv@smile.fi.intel.com>
+References: <20230718211147.18647-2-andriy.shevchenko@linux.intel.com>
+ <20230801211139.GA51676@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230801211139.GA51676@bhelgaas>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Fair enough! Already did this in perf fixes. Will push a v4
-to do this.
+On Tue, Aug 01, 2023 at 04:11:39PM -0500, Bjorn Helgaas wrote:
+> On Wed, Jul 19, 2023 at 12:11:44AM +0300, Andy Shevchenko wrote:
+> > kernel.h is being used as a dump for all kinds of stuff for a long time.
+> > The COUNT_ARGS() and CONCATENATE() macros may be used in some places
+> > without need of the full kernel.h dependency train with it.
+> > 
+> > Here is the attempt on cleaning it up by splitting out these macros().
+> > 
+> > While at it, include new header where it's being used.
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# PCI
 
-Thanks,
-Ze
+Thank you!
+
+...
+
+> > -
+> > +#include <linux/args.h>
+> >  #include <linux/mod_devicetable.h>
+> >  
+> >  #include <linux/types.h>
+> 
+> If there's not a reason otherwise, I'd put this in the main list
+> instead of the weirdly separated mod_devicetable.h.
+
+The idea is to make them alphabetically ordered. currently even main list
+is a mess. And I have no idea why mod_devicetable.h is so special, a few
+bus headers (e.g., i2c, spi) consider that just as yet another header while
+actually ain't using it (in the respective _headers_).
+
+That said, I would take the sorting change as a separate one that can be
+done after this.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-On Tue, Aug 1, 2023 at 10:19=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Tue,  1 Aug 2023 17:01:24 +0800
-> Ze Gao <zegao2021@gmail.com> wrote:
->
-> > Since the sched_switch tracepoint introduces a new variable to
-> > report sched-out task state in symbolic char, we prefer to use
-> > it to spare from knowing internal implementations in kernel.
-> >
-> > Also we keep the old parsing logic intact but sync the state char
-> > array with the latest kernel.
->
-> This should be two patches. First sync the state char array and then add
-> your state_char change. The two changes are agnostic to each other, and
-> should be separate commits. Same goes for the perf changes.
->
-> -- Steve
->
->
-> >
-> > Signed-off-by: Ze Gao <zegao@tencent.com>
-> > ---
-> >  plugins/plugin_sched_switch.c | 9 +++++++--
-> >  1 file changed, 7 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/plugins/plugin_sched_switch.c b/plugins/plugin_sched_switc=
-h.c
-> > index 8752cae..4c57322 100644
-> > --- a/plugins/plugin_sched_switch.c
-> > +++ b/plugins/plugin_sched_switch.c
-> > @@ -11,7 +11,7 @@
-> >
-> >  static void write_state(struct trace_seq *s, int val)
-> >  {
-> > -     const char states[] =3D "SDTtZXxW";
-> > +     const char states[] =3D "SDTtXZPIp";
-> >       int found =3D 0;
-> >       int i;
-> >
-> > @@ -99,7 +99,12 @@ static int sched_switch_handler(struct trace_seq *s,
-> >       if (tep_get_field_val(s, event, "prev_prio", record, &val, 1) =3D=
-=3D 0)
-> >               trace_seq_printf(s, "[%d] ", (int) val);
-> >
-> > -     if (tep_get_field_val(s,  event, "prev_state", record, &val, 1) =
-=3D=3D 0)
-> > +     //find if has prev_state_char, otherwise fallback to prev_state
-> > +     if (tep_find_field(event, "prev_state_char")) {
-> > +             if (tep_get_field_val(s,  event, "prev_state_char", recor=
-d, &val, 1) =3D=3D 0)
-> > +                     trace_seq_putc(s, (char) val);
-> > +     }
-> > +     else if (tep_get_field_val(s,  event, "prev_state", record, &val,=
- 1) =3D=3D 0)
-> >               write_state(s, val);
-> >
-> >       trace_seq_puts(s, " =3D=3D> ");
->
