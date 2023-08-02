@@ -2,42 +2,43 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74963C04A6A
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  2 Aug 2023 13:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF85C04FDF
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  2 Aug 2023 14:08:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234439AbjHBN4n (ORCPT
+        id S232476AbjHBOIU (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 2 Aug 2023 09:56:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45438 "EHLO
+        Wed, 2 Aug 2023 10:08:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234432AbjHBN4m (ORCPT
+        with ESMTP id S234982AbjHBOII (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 2 Aug 2023 09:56:42 -0400
+        Wed, 2 Aug 2023 10:08:08 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3C0C2115;
-        Wed,  2 Aug 2023 06:56:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 715B9359C;
+        Wed,  2 Aug 2023 07:07:46 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 36AFA618F1;
-        Wed,  2 Aug 2023 13:56:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0C45C433C7;
-        Wed,  2 Aug 2023 13:56:36 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 80307619BA;
+        Wed,  2 Aug 2023 14:07:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3DA2C433C9;
+        Wed,  2 Aug 2023 14:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690984600;
-        bh=ZiBT8/57R9cm/kIxNEpf6GtRtnFrBM4/Vdwr+0paa8Q=;
+        s=k20201202; t=1690985264;
+        bh=bJNValHUjzspsGmERMVn8LUzA2cKwOnf4DUJY1j/1pQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ugALy2+yCr8eRX69mZgOByVs1nn3mkSbeYZA88lApQtXAdR52l0cRdAv437Tav5Eo
-         1PMluo+JefF5Xrd0m1xLGKldl+Tsy1n+Q/HQfVfAhOUvKz8T/La9KVIJUnc9e4/B+P
-         fFTrO9M4qrJn56y+HYjW8MEndIe/Cp11rXj+qcg6ADum52ULhbjeLPrAj4awwyTpQS
-         z+yPOcGy1uiX0pS7cNrOenJp3JRLudGS+94sH5BD/5guLN1oDKfq3ztvOXhfSQ1wXN
-         j+20r6R9gpMWeyhQqODAnvW13e0ulT8IgF4jxaJrsyKFFfzMpW+eBKJcc1pFNN1xR9
-         uYz8IkvC8yxeQ==
-Date:   Wed, 2 Aug 2023 22:56:34 +0900
+        b=bDfKnaHt6TLKDIdJzeXIdoYUzA1Y9aEHuYTtsjNqmDcueBDleqo9LzmIqenZP41As
+         ESe1I5Outu5972eAywedMd0nX/Ut3onQEahHL7SIXffjYjWwIp5MmeDoR4F7eirofW
+         o5y5H329SMBec4sTvZ77TD9PJ/kK39Gf6LJ+Kb1lsTc1euM65Pe8O7cphvu2D11mJp
+         txoXyXBMjZrianJSkzdmxfO+kOd44W6ATTTTDUUr5MWFbGdp+AJxjL2t0lnLqzathT
+         sKyPuu9hf+ED/nJiPlcoZ+F+uh8jDm+bxcrDogP/CtJfUav2ZEPmxieevybBNFtmWI
+         es49ti3hgnRgg==
+Date:   Wed, 2 Aug 2023 23:07:38 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
         linux-trace-kernel@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>,
         Martin KaFai Lau <martin.lau@linux.dev>,
@@ -53,8 +54,8 @@ Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>
 Subject: Re: [PATCH v4 3/9] bpf/btf: Add a function to search a member of a
  struct/union
-Message-Id: <20230802225634.f520080cd9de759d687a2b0a@kernel.org>
-In-Reply-To: <20230801204054.3884688e@rorschach.local.home>
+Message-Id: <20230802230738.2b22cef561feb5d498f22f49@kernel.org>
+In-Reply-To: <CAADnVQLkVatr5BTScpuKaKAO+Cp=0KVxhqXwsjZoGhJPu3G4jA@mail.gmail.com>
 References: <169078860386.173706.3091034523220945605.stgit@devnote2>
         <169078863449.173706.2322042687021909241.stgit@devnote2>
         <CAADnVQ+C64_C1w1kqScZ6C5tr6_juaWFaQdAp9Mt3uzaQp2KOw@mail.gmail.com>
@@ -67,73 +68,57 @@ References: <169078860386.173706.3091034523220945605.stgit@devnote2>
         <20230801190920.7a1abfd5@gandalf.local.home>
         <20230802092146.9bda5e49528e6988ab97899c@kernel.org>
         <20230801204054.3884688e@rorschach.local.home>
+        <20230801204407.7b284b00@rorschach.local.home>
+        <CAADnVQLkVatr5BTScpuKaKAO+Cp=0KVxhqXwsjZoGhJPu3G4jA@mail.gmail.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 1 Aug 2023 20:40:54 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, 1 Aug 2023 19:22:01 -0700
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 
-> On Wed, 2 Aug 2023 09:21:46 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> On Tue, Aug 1, 2023 at 5:44 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > On Tue, 1 Aug 2023 20:40:54 -0400
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > > Maybe we can add a ftrace_partial_regs(fregs) that returns a
+> > > partially filled pt_regs, and the caller that uses this obviously knows
+> > > its partial (as it's in the name). But this doesn't quite help out arm64
+> > > because unlike x86, struct ftrace_regs does not contain an address
+> > > compatibility with pt_regs fields. It would need to do a copy.
+> > >
+> > >  ftrace_partial_regs(fregs, &regs) ?
+> >
+> > Well, both would be pointers so you wouldn't need the "&", but it was
+> > to stress that it would be copying one to the other.
+> >
+> >   void ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs regs);
 > 
-> > > Then use kprobes. When I asked Masami what the difference between fprobes
-> > > and kprobes was, he told me that it would be that it would no longer rely
-> > > on the slower FTRACE_WITH_REGS. But currently, it still does.  
-> > 
-> > kprobes needs to keep using pt_regs because software-breakpoint exception
-> > handler gets that. And fprobe is used for bpf multi-kprobe interface,
-> > but I think it can be optional.
-> > 
-> > So until user-land tool supports the ftrace_regs, you can just disable
-> > using fprobes if CONFIG_DYNAMIC_FTRACE_WITH_REGS=n
-> 
-> I'm confused. I asked about the difference between kprobes on ftrace
-> and fprobes, and you said it was to get rid of the requirement of
-> FTRACE_WITH_REGS.
-> 
->  https://lore.kernel.org/all/20230120205535.98998636329ca4d5f8325bc3@kernel.org/
+> Copy works, but why did you pick a different layout?
 
-Yes, it is for enabling fprobe (and fprobe-event) on more architectures.
-I don't think it's possible to change everything at once. So, it will be
-changed step by step. At the first step, I will replace pt_regs with
-ftrace_regs, and make bpf_trace.c and fprobe_event depends on
-FTRACE_WITH_REGS.
+I think it is for minimize the stack consumption. pt_regs on arm64 will
+consume 42*u64 = 336 bytes, on the other hand ftrace_regs will use
+14*unsigned long = 112 bytes. And most of the registers in pt_regs are not
+accessed usually. (as you may know RISC processors usually have many
+registers - and x86 will be if we use APX in kernel. So pt_regs is big.)
 
-At this point, we can split the problem into two, how to move bpf on
-ftrace_regs and how to move fprobe-event on ftrace_regs. fprobe-event
-change is not hard because it is closing in the kernel and I can do it.
-But for BPF, I need to ask BPF user-land tools to support ftrace_regs.
+> Why not to use pt_regs ? if save of flags is slow, just skip that part
+> and whatever else that is slow. You don't even need to zero out
+> unsaved fields. Just ask the caller to zero out pt_regs before hand.
+> Most users have per-cpu pt_regs that is being reused.
+> So there will be one zero-out in the beginning and every partial
+> save of regs will be fast.
+> Then there won't be any need for copy-converter from ftrace_regs to pt_regs.
+> Maybe too much churn at this point. copy is fine.
 
-> 
-> > 
-> > Then you can safely use 
-> > 
-> > struct pt_regs *regs = ftrace_get_regs(fregs);
-> > 
-> > I think we can just replace the CONFIG_FPROBE ifdefs with
-> > CONFIG_DYNAMIC_FTRACE_WITH_REGS in kernel/trace/bpf_trace.c
-> > And that will be the first version of using ftrace_regs in fprobe.
-> 
-> But it is still slow. The FTRACE_WITH_REGS gives us the full pt_regs
-> and saves all registers including flags, which is a very slow operation
-> (and noticeable in profilers).
-
-Yes, to solve this part, we need to work with BPF user-land people.
-I guess the BPF is accessing registers from pt_regs with fixed offset
-which is calculated from pt_regs layout in the user-space.
-
-> 
-> And this still doesn't work on arm64.
-
-Yes, and this makes more motivation to move on ftrace_regs.
+If there is no nested call, yeah, per-cpu pt_regs will work.
 
 Thank you,
-
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
