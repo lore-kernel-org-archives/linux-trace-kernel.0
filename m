@@ -2,66 +2,43 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 671C8EB64DD
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Aug 2023 23:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E95AEB64DD
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  2 Aug 2023 00:21:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229879AbjHAXok (ORCPT
+        id S229606AbjHBAVz (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 1 Aug 2023 19:44:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37726 "EHLO
+        Tue, 1 Aug 2023 20:21:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229657AbjHAXoj (ORCPT
+        with ESMTP id S229597AbjHBAVy (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 1 Aug 2023 19:44:39 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5652C1B1;
-        Tue,  1 Aug 2023 16:44:38 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id 38308e7fff4ca-2b74fa5e7d7so94579011fa.2;
-        Tue, 01 Aug 2023 16:44:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690933476; x=1691538276;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VwrhWFrL0STvLWQ/w2Am6pHectUZNMaxuCR7s7TmsPs=;
-        b=BVZd6vuNbd5uEEFwbFF8xxtnbvzhTqsFMkwqnapndb/x4MMANmKzVC87oRfVxKSdZ7
-         iWigSJ4l4baVJdsbp+zwwTmxyMxoWXzejvZ0v0r7C3TFCWb/zjz4O74nHi+RXSPs31Ch
-         iriv142DyY8aLsvq8gPKFNQjLj1J75t3GvXyK+voPQVNeh6sD7WXfExRd4NkVBuH/peq
-         FPUmJhah5QOHpaL2OZo6AQdnQc0BImoRhoE/j1eJIiRXqd5r1hYENB/jw1/0Q9dDVX+s
-         yKrxgEl/hxcLvSQb4BVupC0DXr85if/LbuI4JFj0/6VJr2CLM/C/3f+/mi1i/ODyIQg5
-         UA+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690933476; x=1691538276;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VwrhWFrL0STvLWQ/w2Am6pHectUZNMaxuCR7s7TmsPs=;
-        b=OI2nHNF4FGK3qTVBkRfwqJWAmmuceG9EtrvsuRExKrRq48coX4R6RSsCKgYp08OKnx
-         BpIWHJZ8UDlVnbN+aCayelYqQ691NGI51uUVIJmQKGyku8cnH8+BuDJdHXfPUip5TGHi
-         cBfE5NXqqtBx6S+tPzcQkmGw92ejg2V/4SlhBc7exORBBPS0tpKoi+XxPF+XrhCQwzta
-         TAKulkLfeN0yGjUys6VpIz39pp9gDugHL5MzTkYuRzu98tMLLTo1V+qe8dMJOG1gGwZV
-         LfYUEEau7gZ3pnp+McqSwibnvWtgqVCWkO1I8i1upOMk9ZlG41ACojjOz06FJyGus43d
-         1wBA==
-X-Gm-Message-State: ABy/qLZXx+jF4+7JS4bX4nZir0T0qVNhffdvuA9abLX3SPP1WoN2qhe3
-        YDIT4wAw//HEyzh/aVYSeCYAxXOsiHJEmB9SDbU=
-X-Google-Smtp-Source: APBJJlGgjHvM7HlL8CTFgXK+BeAFXQBa/Y6rrShLDW4K5b1rEe1Iav5Nl5zoU693Yn5fZYIXEChETxsmaoPrpL56Q10=
-X-Received: by 2002:a2e:2e0c:0:b0:2b9:2e85:2f9b with SMTP id
- u12-20020a2e2e0c000000b002b92e852f9bmr3788105lju.2.1690933475988; Tue, 01 Aug
- 2023 16:44:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <169078860386.173706.3091034523220945605.stgit@devnote2>
- <169078863449.173706.2322042687021909241.stgit@devnote2> <CAADnVQ+C64_C1w1kqScZ6C5tr6_juaWFaQdAp9Mt3uzaQp2KOw@mail.gmail.com>
- <20230801085724.9bb07d2c82e5b6c6a6606848@kernel.org> <CAADnVQLaFpd2OhqP7W3xWB1b9P2GAKgrVQU1FU2yeNYKbCkT=Q@mail.gmail.com>
- <20230802000228.158f1bd605e497351611739e@kernel.org> <20230801112036.0d4ee60d@gandalf.local.home>
- <20230801113240.4e625020@gandalf.local.home> <CAADnVQ+N7b8_0UhndjwW9-5Vx2wUVvojujFLOCFr648DUv-Y2Q@mail.gmail.com>
- <20230801190920.7a1abfd5@gandalf.local.home>
-In-Reply-To: <20230801190920.7a1abfd5@gandalf.local.home>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 1 Aug 2023 16:44:24 -0700
-Message-ID: <CAADnVQ+WPw0pfGAk+z=hCVrSmCBkKuh8GJm-5bkq5Ow7Md3sGA@mail.gmail.com>
-Subject: Re: [PATCH v4 3/9] bpf/btf: Add a function to search a member of a struct/union
+        Tue, 1 Aug 2023 20:21:54 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6752E2114;
+        Tue,  1 Aug 2023 17:21:53 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DFB9861782;
+        Wed,  2 Aug 2023 00:21:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C091BC433C7;
+        Wed,  2 Aug 2023 00:21:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690935712;
+        bh=jsuMr7zGC6YSdBv0CMOAaKzlrnzwchH8WRKLh2X8IuM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DWP50PnTBKAqdSk3ApfYx2NBkkf0HjjEyhme5y0SAFFZWRAgMv1mx+BuWaz/KGRw1
+         EBCbcX6slt8WonApI9qkCLOrtxrGG4p/ukM5PSPuc5TbCIUu/PiJddV4SqaZENeE6C
+         Pze9uI4/0wV5f5/leH5zNEkJXSSFDQCdbIXxL9GbhkMp0LiBoSv5mBz1qKXkHDGmqs
+         DkgAvKZw8qg618sZaTdqZzy3621y1LCDfX9sS7jt2jvBfwWHb1+X+sqCocdqM4xqIZ
+         MwVF7FBwKyd0m2mTXCYlt4hk+U2SIQxkRGkz0He7iOQMUwd0uZKtl8aqco+/tx+48B
+         z7AV8lbPWR7lA==
+Date:   Wed, 2 Aug 2023 09:21:46 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
         linux-trace-kernel@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>,
         Martin KaFai Lau <martin.lau@linux.dev>,
@@ -75,38 +52,165 @@ Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
         Florent Revest <revest@chromium.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 3/9] bpf/btf: Add a function to search a member of a
+ struct/union
+Message-Id: <20230802092146.9bda5e49528e6988ab97899c@kernel.org>
+In-Reply-To: <20230801190920.7a1abfd5@gandalf.local.home>
+References: <169078860386.173706.3091034523220945605.stgit@devnote2>
+        <169078863449.173706.2322042687021909241.stgit@devnote2>
+        <CAADnVQ+C64_C1w1kqScZ6C5tr6_juaWFaQdAp9Mt3uzaQp2KOw@mail.gmail.com>
+        <20230801085724.9bb07d2c82e5b6c6a6606848@kernel.org>
+        <CAADnVQLaFpd2OhqP7W3xWB1b9P2GAKgrVQU1FU2yeNYKbCkT=Q@mail.gmail.com>
+        <20230802000228.158f1bd605e497351611739e@kernel.org>
+        <20230801112036.0d4ee60d@gandalf.local.home>
+        <20230801113240.4e625020@gandalf.local.home>
+        <CAADnVQ+N7b8_0UhndjwW9-5Vx2wUVvojujFLOCFr648DUv-Y2Q@mail.gmail.com>
+        <20230801190920.7a1abfd5@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Aug 1, 2023 at 4:09=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
- wrote>
-> Then I recommend that you give up using fprobes and just stick with kprob=
-es
+On Tue, 1 Aug 2023 19:09:20 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> On Tue, 1 Aug 2023 15:18:56 -0700
+> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+> 
+> > On Tue, Aug 1, 2023 at 8:32 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+> > >
+> > > On Tue, 1 Aug 2023 11:20:36 -0400
+> > > Steven Rostedt <rostedt@goodmis.org> wrote:
+> > >  
+> > > > The solution was to come up with ftrace_regs, which just means it has all
+> > > > the registers to extract the arguments of a function and nothing more. Most  
+> > >
+> > > This isn't 100% true. The ftrace_regs may hold a fully filled pt_regs. As
+> > > the FTRACE_WITH_REGS callbacks still get passed a ftrace_regs pointer. They
+> > > will do:
+> > >
+> > >         void callback(..., struct ftrace_regs *fregs) {
+> > >                 struct pt_regs *regs = ftrace_get_regs(fregs);
+> > >
+> > >
+> > > Where ftrace_get_regs() will return the pt_regs only if it is fully filled.
+> > > If it is not, then it returns NULL. This was what the x86 maintainers
+> > > agreed with.  
+> > 
+> > arch/arm64/include/asm/ftrace.h:#define arch_ftrace_get_regs(regs) NULL
+> > 
+> > Ouch. That's very bad.
+> > We care a lot about bpf running well on arm64.
+> 
+> [ Adding Mark and Florent ]
+> 
+> That's because arm64 doesn't support FTRACE_WITH_REGS anymore. Their
+> function handlers only care about the arguments. If you want full regs at
+> function entry, then you need to take a breakpoint hit for a full kprobe.
+> 
+> In fact, fprobes isn't even supported on arm64 because it it doesn't have
+> DYNAMIC_FTRACE_WITH_REGS. I believe that was the reason Masami was trying
+> to get it to work with ftrace_regs. To get it to work on arm64.
+
+That's right. And I think (agree) pt_regs is too heavy for function entry/exit
+because most users needs to access the function arguments or return value.
+kprobes is a bit different because it is for instruction level inspection
+tool.
+
+> 
+> Again, ftrace_get_regs(fregs) is only suppose to return something if the
+> pt_regs is fully supplied. If they are not, then it must not be used. Are
+> you not using a fully filled pt_regs? Because that's what both Thomas and
+> Peter (also added) told me not to do!
+
+I guess that the user-land BPF tools (compliers etc.) only generates
+bytecode to access registers in pt_regs for kernel probes currently.
+This is why you are using "kprobes" as a naming. But I think you can be
+more flexible to generate the code to access registers in ftrace_regs.
+(because it's just a difference in the offset value)
+
+> 
+> Otherwise, ftrace_regs() has support on arm64 for getting to the argument
+> registers and the stack. Even live kernel patching now uses ftrace_regs().
+> 
+> > 
+> > If you guys decide to convert fprobe to ftrace_regs please
+> > make it depend on kconfig or something.
+> > bpf side needs full pt_regs.
+> 
+> Then use kprobes. When I asked Masami what the difference between fprobes
+> and kprobes was, he told me that it would be that it would no longer rely
+> on the slower FTRACE_WITH_REGS. But currently, it still does.
+
+kprobes needs to keep using pt_regs because software-breakpoint exception
+handler gets that. And fprobe is used for bpf multi-kprobe interface,
+but I think it can be optional.
+
+So until user-land tool supports the ftrace_regs, you can just disable
+using fprobes if CONFIG_DYNAMIC_FTRACE_WITH_REGS=n
+
+Then you can safely use 
+
+struct pt_regs *regs = ftrace_get_regs(fregs);
+
+I think we can just replace the CONFIG_FPROBE ifdefs with
+CONFIG_DYNAMIC_FTRACE_WITH_REGS in kernel/trace/bpf_trace.c
+And that will be the first version of using ftrace_regs in fprobe.
+
+> 
+> The reason I started the FTRACE_WITH_ARGS (which gave us ftrace_regs) in
+> the first place, was because of the overhead you reported to me with
+> ftrace_regs_caller and why you wanted to go the direct trampoline approach.
+> That's when I realized I could use a subset because those registers were
+> already being saved. The only reason FTRACE_WITH_REGS was created was it
+> had to supply full pt_regs (including flags) and emulate a breakpoint for
+> the kprobes interface. But in reality, nothing really needs all that.
+> 
+> > It's not about access to args.
+> > pt_regs is passed from bpf prog further into all kinds of perf event
+> > functions including stack walking.
+> 
+> ftrace_regs gives you the stack pointer. Basically, it gives you access to
+> anything that is required to be saved to do a function call from fentry.
+
+Yeah, for stack walking, we usually need stack pointer and instruction pointer
+or frame pointer. But Alexei made a good point, linux/stacktrace.h provides
+pt_regs interaface because pt_regs is a generic (arch-independent) data
+structure. (see arch_stack_walk()) We need a new interface for it.
+
+> 
+> > I think ORC unwinder might depend on availability of all registers.
+
+This is not correct. ORC uses limited registers (r10, r13, bp, sp, di, dx)
+on x86. Anyway, since ftrace can make a stacktrace, it should be possible
+to use ORC with ftrace_regs.
+
+> > Other perf helpers might need it too. Like perf_event_output.
+> > bpf progs need to access arguments, no doubt about that.
+> > If ftrace_regs have them exactly in the same offsets as in pt_regs
+> > that might work transparently for bpf progs, but, I'm afraid,
+> > it's not the case on all archs.
+> > So we need full pt_regs to make sure all paths are still working.
+> > 
+> > Adding Jiri and others.
+> 
+> Then I recommend that you give up using fprobes and just stick with kprobes
 > as that's guaranteed to give you full pt_regs (at the overhead of doing
-> things like filing in flags and such). And currently for arm64, fprobes c=
-an
+> things like filing in flags and such). And currently for arm64, fprobes can
 > only work with ftrace_regs, without the full pt_regs.
 
-bpf doesn't attach to fprobes directly. That was never requested.
-But Jiri's work to support multi attach
-https://lore.kernel.org/bpf/20220316122419.933957-1-jolsa@kernel.org/
-was a joint effort with Masami that relied on fprobe multi attach api.
-register_fprobe_ips() in particular, because the promise you guys
-give us that callback will get pt_regs as
-described in Documentation/trace/fprobe.rst.
-From bpf side we don't care that such pt_regs is 100% filled in or
-only partial as long as this pt_regs pointer is valid for perf_event_output
-and stack walking that consume pt_regs.
-I believe that was and still is the case for both x86 and arm64.
+I think we can continue to limit usage of fprobe(kprobe_multi) with
+CONFIG_DYNAMIC_FTRACE_WITH_REGS, which can be configured on x86. That will
+not change anything from the BPF point of view.
 
-The way I understood Masami's intent is to change that promise and
-fprobe callback will receive ftrace_regs that is incompatible with
-pt_regs and that's obviously bad.
-What you're suggesting "give up on using fprobe" is not up to us.
-We're not using them. We care about register_fprobe_ips() and what
-callback receives. Whatever internal changes to fprobe you're doing
-are ok as long as the callback receives valid pt_regs (even partially fille=
-d).
+Thank you,
+
+> 
+> -- Steve
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
