@@ -2,116 +2,103 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C70AEC001DF
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  3 Aug 2023 17:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8190C001DF
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  3 Aug 2023 20:52:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233822AbjHCRcu (ORCPT
+        id S230523AbjHCUwo (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 3 Aug 2023 13:32:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46432 "EHLO
+        Thu, 3 Aug 2023 16:52:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230408AbjHCRct (ORCPT
+        with ESMTP id S229452AbjHCUwn (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 3 Aug 2023 13:32:49 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5CD03AA3
-        for <linux-trace-kernel@vger.kernel.org>; Thu,  3 Aug 2023 10:31:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1691083916;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=V3OZMzxi9fUDHiCuups6Frg0CT+Gs83q33vmZ66OFKg=;
-        b=aYQ6x4qvQcAwYq/bt0E+Yb7IDpel6coEgj4jwjwKu9xai2vNZlLAh/jpKd7ubiyI8gfrIb
-        4X52jepTqVFZi8l1eSqgc51XlRQexo1CVKu/mFHJ6YsGs99cTPVs0w1PocvSGlGmPp2NYP
-        QpLJJ8hSzFbBb2WjjffTFSHFR9OsLyg=
-Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-683-fiEGGAMRMa22QAbY26TX0g-1; Thu, 03 Aug 2023 13:31:53 -0400
-X-MC-Unique: fiEGGAMRMa22QAbY26TX0g-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E1A5429AA38B;
-        Thu,  3 Aug 2023 17:31:52 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.23])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 8396AF7FAF;
-        Thu,  3 Aug 2023 17:31:48 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu,  3 Aug 2023 19:31:11 +0200 (CEST)
-Date:   Thu, 3 Aug 2023 19:31:06 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf probe: Show correct error about @symbol for uprobe
-Message-ID: <20230803173106.GA15866@redhat.com>
-References: <169055397023.67089.12693645664676964310.stgit@devnote2>
- <ZMkAq5yx3+EiQNkF@kernel.org>
- <20230801225618.06cb86992ae30564e5b87554@kernel.org>
+        Thu, 3 Aug 2023 16:52:43 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25544A2;
+        Thu,  3 Aug 2023 13:52:42 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id ffacd0b85a97d-316feb137a7so1234284f8f.1;
+        Thu, 03 Aug 2023 13:52:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691095960; x=1691700760;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WUsStjJpVD7qt6r5K0hLWecq0MMWSxahYThfGKl6wi8=;
+        b=qcUFyujXpeiN583AOnEqxZzKYkhUE7gwQyKGYlLhbux+5HUS66loXxVDZMtKUIWGts
+         6SeF5BoEf8I9HLoWz516J4Ve/yKd6AoRhPfwv1YdppII5Uk5DMYPoGitYTdswmiH6mE6
+         LgjTFrl63mjY7rFg6ECCnzz2eNePICw3jzuIhE+eAtLp6koU7t07Fps4l5K/q2g/aiqA
+         bZTqUh+SOT3SVBsK67X495Qj/xIeVZULq9dPnu5UDC+47AB2JgsqZ8tdogayVsezGunR
+         Ly3EBGc6/McMn19UOoz1b22QscRkDyMlN/0R6XN/Fxtx9CXZQ5RzYGeH9nn7+W5f881m
+         M2yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691095960; x=1691700760;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WUsStjJpVD7qt6r5K0hLWecq0MMWSxahYThfGKl6wi8=;
+        b=Bl8akAX0U1LEWLyiB/U/2Gx8fo9oorcKxsDLq3BvbhnykC0Zsj7F9u+/DLZGjb9uP1
+         NAgPrH3qeVi3G1k6cNs3D2W/KaljFOL1r6Zmmg8eZDpgqaNrXzcNJH5O3vrrOScDKCnF
+         JlvtBMxgvJlbCcvIc7O/yXB9ZGkLr4u46oQhQvsfeMbdsk9h2jHmbaAdcuGHypqhntCs
+         3PMnPquCT8Slw348zyToK8oL8Xjk72vxK/Xv8cP13bRkq7nXp7avWMeEOnRqka9sTAiq
+         ala8lMTdSa41UtFRLpH5LwLk3puGGdOvk/G/jXSd3eZPeQ1LC4LZdXlWqXiSLD3BKtpq
+         NHrQ==
+X-Gm-Message-State: ABy/qLaeLUVazaymZMCAYXQt0j92l5A3J1TcDjBkzXarIGiWNhxEkPzf
+        PvW4yWBz9/d2YH1laPLJgaA=
+X-Google-Smtp-Source: APBJJlHGofDiAMeTiumlODSgpgysa+cLtTW2A3pKTFFZv6cKAoH8d/TChY5XWLBuCxBR96QP9pJHfA==
+X-Received: by 2002:adf:ec05:0:b0:313:ded8:f346 with SMTP id x5-20020adfec05000000b00313ded8f346mr8657716wrn.22.1691095960055;
+        Thu, 03 Aug 2023 13:52:40 -0700 (PDT)
+Received: from localhost.localdomain (host86-140-156-29.range86-140.btcentralplus.com. [86.140.156.29])
+        by smtp.gmail.com with ESMTPSA id o10-20020a5d474a000000b003141a3c4353sm749138wrs.30.2023.08.03.13.52.39
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 03 Aug 2023 13:52:39 -0700 (PDT)
+From:   Levi Yun <ppbuk5246@gmail.com>
+To:     rostedt@goodmis.org, mhiramat@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Levi Yun <ppbuk5246@gmail.com>
+Subject: [PATCH] ftrace: Use within_module to check rec->ip within specified module.
+Date:   Thu,  3 Aug 2023 21:52:36 +0100
+Message-ID: <20230803205236.32201-1-ppbuk5246@gmail.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230801225618.06cb86992ae30564e5b87554@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Masami,
+within_module_core && within_module_init condition is same to
+within module but it's more readable.
 
-On 08/01, Masami Hiramatsu wrote:
->
-> Oleg, what do you think about accessing symbols in data section from
-> uprobes? Can we access it from user-land IP-relative address?
+Use within_module instead of former condition to check rec->ip
+within specified module area or not.
 
-Sorry, I don't I understand... I don't even understand the context, can't
-find the whole thread on lore.kernel.org/lkml. Plus I forgot EVERYTHING
-I knew about tracing/uprobes anyway ;)
+Signed-off-by: Levi Yun <ppbuk5246@gmail.com>
+---
+ kernel/trace/ftrace.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-but when I look at traceprobe_parse_probe_arg() paths it seems to me that
-uprobe can fetch the IP-relative address, not sure about the syntax but
-perhaps something like xxx=+OFFSET(%ip). The question is how tools/perf
-can calculate this OFFSET. But I am sure you understand this all much
-better than me.
-
-> > > --- a/tools/perf/util/probe-event.c
-> > > +++ b/tools/perf/util/probe-event.c
-> > > @@ -2800,13 +2800,18 @@ static void warn_uprobe_event_compat(struct probe_trace_event *tev)
-> > >  	if (!tev->uprobes || tev->nargs == 0 || !buf)
-> > >  		goto out;
-> > >
-> > > -	for (i = 0; i < tev->nargs; i++)
-> > > -		if (strglobmatch(tev->args[i].value, "[$@+-]*")) {
-> > > -			pr_warning("Please upgrade your kernel to at least "
-> > > -				   "3.14 to have access to feature %s\n",
-> > > +	for (i = 0; i < tev->nargs; i++) {
-> > > +		if (strchr(tev->args[i].value, '@')) {
-> > > +			pr_warning("%s accesses a variable by symbol name, but that is not supported for user application probe.\n",
-> > > +				   tev->args[i].value);
-> > > +			break;
-
-IIUC without this change @symbol will trigger the
-
-			/* uprobes don't support symbols */
-			if (!(ctx->flags & TPARG_FL_KERNEL)) {
-				trace_probe_log_err(ctx->offset, SYM_ON_UPROBE);
-				return -EINVAL;
-			}
-
-in parse_probe_arg(), right?
-
-So FWIW the patch looks fine to me, but as you have mentioned tools/perf
-could probably (try to) turn @symbol into @+symbol_offset_in_file...
-
-In short, sorry for spam, I can't help ;)
-
-And just in case, I am on PTO till Aug 14, won't be able to read emails
-till then.
-
-Oleg.
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 05c0024815bf..c46dd6d97afe 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -6779,8 +6779,7 @@ void ftrace_release_mod(struct module *mod)
+ 	last_pg = &ftrace_pages_start;
+ 	for (pg = ftrace_pages_start; pg; pg = *last_pg) {
+ 		rec = &pg->records[0];
+-		if (within_module_core(rec->ip, mod) ||
+-		    within_module_init(rec->ip, mod)) {
++		if (within_module(rec->ip, mod)) {
+ 			/*
+ 			 * As core pages are first, the first
+ 			 * page should never be a module page.
+@@ -6852,8 +6851,7 @@ void ftrace_module_enable(struct module *mod)
+ 		 * not part of this module, then skip this pg,
+ 		 * which the "break" will do.
+ 		 */
+-		if (!within_module_core(rec->ip, mod) &&
+-		    !within_module_init(rec->ip, mod))
++		if (!within_module(rec->ip, mod))
+ 			break;
+ 
+ 		/* Weak functions should still be ignored */
+-- 
+2.37.2
 
