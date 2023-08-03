@@ -2,56 +2,58 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 569E3C04A94
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  3 Aug 2023 12:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F7CC04A94
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  3 Aug 2023 12:51:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234689AbjHCMvx (ORCPT
+        id S235608AbjHCMv4 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 3 Aug 2023 08:51:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47636 "EHLO
+        Thu, 3 Aug 2023 08:51:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232519AbjHCMvw (ORCPT
+        with ESMTP id S235591AbjHCMvz (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 3 Aug 2023 08:51:52 -0400
-Received: from mail-wm1-x34a.google.com (mail-wm1-x34a.google.com [IPv6:2a00:1450:4864:20::34a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C928110
-        for <linux-trace-kernel@vger.kernel.org>; Thu,  3 Aug 2023 05:51:50 -0700 (PDT)
-Received: by mail-wm1-x34a.google.com with SMTP id 5b1f17b1804b1-3fd2209bde4so8512535e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 03 Aug 2023 05:51:49 -0700 (PDT)
+        Thu, 3 Aug 2023 08:51:55 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DD373588
+        for <linux-trace-kernel@vger.kernel.org>; Thu,  3 Aug 2023 05:51:54 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-583b256faf5so15426247b3.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 03 Aug 2023 05:51:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1691067108; x=1691671908;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=386r6j4QMFbfOrIdvcLgjW0KP9NvXLmpvV5c26bmV8M=;
-        b=m9ZVMP5eY+0b5z9eWP3eZHDamK+vbZ8J03CJptG9y9KX630jiL/EiWxcqk4KYB9Ixl
-         +HeEuLS8YeL2OqVKNWYTX6QShao4xucTFdAtqe2s61kEFBgwIwXp7wCJ6zsn5Jc03soz
-         R4vHoWcqweYalxbXx69J64Qb0V7SnChL152xScnq7pcG8WRs6pWfBAOM6P3mXJ6Oi3M1
-         B5a+PuIpg01BrVv7D4M+yg968ud8fgqxDxZUkEFmTJRlGWpKFgKrCjS+qlzoMKpzdyUs
-         HTRi7UgLNxg1H7Hzj81O1BWRfuAdVzebU4svc9FPJlD+sRux8LxRUO24kGEIleafqZIt
-         EuNQ==
+        d=google.com; s=20221208; t=1691067113; x=1691671913;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=J4zJKDo0qVw9nnDi02wK0gUvUvTiEvrCWmDoOMueZ+g=;
+        b=cbLncG2zOcIvXhC07TxZZ2AohsMrE3yRXBJp4hWu0igmxn9PNdu7mG8JDPT0CXS1VS
+         OcnNUUtpAwN7WZWEfdwNijwZsczhrLwPTgQ2GCqz4OdLe/u57lnxD7qBX+wpcmSFj3ek
+         gO2XX8FHNk9tUTP0UJJKmy1/zMKQfOdTnwIhwqhXOYrr8zNbOR+PlqROOrESd9N/ryzR
+         dZSu4ETnKqTgZ2WNQjucuJNZm6uszBq52rNjuoPvBt/Tlp+EQLCFJq40mMDOFkzm6Y8F
+         vPln6x71dyzK3tkwcxFWm9QhjUrjc9bhQYl0wMkSfXyNKl/UEOkcab3mFuc+Xx8/E66i
+         WELA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691067108; x=1691671908;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=386r6j4QMFbfOrIdvcLgjW0KP9NvXLmpvV5c26bmV8M=;
-        b=c9h0Vj17SWsNKTa0efXtN7KnRtSbQ2Cxpj15eEkr9FPeEuDkfhWi09ZZa3XL2rNJus
-         XraAg9etU/4ai2yGVCFVcIj71xauXLB2h7+jX0J5WaN4yjglqUEdfXZ1XDMDxam4TVWC
-         oTW/HNcFlfIL8VzswTkIUz8zeN7XWin7PQEmFzJWBaW9yN7HP3jwvTotZ+5ga29Of/Bq
-         lNSeXwWT+RJcLsqe4dQPyQk6qxIErsNkF1ZZxTFbau8A/LngrAzZnHPOEfFhxtyTxQLH
-         mjJ0VnpfcAjyd5nb7qFMzBzPsRJ1lMRgBeFaVcki0Tz6noJUhA8FMO+SYijRbzb6BGgv
-         kTWQ==
-X-Gm-Message-State: ABy/qLbqonDvdo4peQ2ubyLfEF7LHNbv6RJT6zUMdN3cY0S0MAvivU2J
-        bne5Q6Ls/DSwAK9b4tgd2VjDFKvp1KXmQ3et
-X-Google-Smtp-Source: APBJJlEMCWM5NeRkHmGQry3+/bOgGmpHiP0VNvs210IGDy1wU9DxkGtBcvjjlQX6+zmh8gXkqO9az/JjiJ+Hl4vH
+        d=1e100.net; s=20221208; t=1691067113; x=1691671913;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=J4zJKDo0qVw9nnDi02wK0gUvUvTiEvrCWmDoOMueZ+g=;
+        b=E8PuWPGg1uYYmYy7u0RBezTUyJdGqSOwM8tNyVpvdVjWoLl8s34Ncx6owohwIf6xvv
+         wG+d8PX/DEppebjRAa4JXXn2GPDdzP8R4WbxT6gXa5hJgQFekcahoerzwH8MMGeqHn/6
+         0fvJZsHTf1f6lq76AlEiAGats3uzT8mGzWikIoov+lBHQL9gZguRNw/kAu+T5uefdw//
+         nG3bHKtqEzZ9XPYUJeDpf9FqWY9yTRdhsf0cOZ5g2TF9MAVYvR5Z/k3LXYIWyury6W26
+         S9tHG9vMG+dPb/45+F0EBBwJUGC0Qkx97l3r8TagwArnyLJ6kqPxVx8GUuJrCh+lWVYC
+         WjQA==
+X-Gm-Message-State: ABy/qLYjG5T2MHay+HVittVYU7uWj4p6ghVte9EVXRi1U2MVkhXOI3jk
+        P9ImEqiWiTD6kExEC0lyf/azEfh5FluNuf7D
+X-Google-Smtp-Source: APBJJlH1og4uqd3nlr+a1kPHamVKYDX95Gpj/Lvn/1DldH8F4AoSWkXDsIn/BaJlVDRjPz5RE8ibfc80VUgKw6f7
 X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:adf:f20a:0:b0:314:1ac7:2763 with SMTP
- id p10-20020adff20a000000b003141ac72763mr52577wro.0.1691067108515; Thu, 03
- Aug 2023 05:51:48 -0700 (PDT)
-Date:   Thu,  3 Aug 2023 13:51:35 +0100
+ (user=vdonnefort job=sendgmr) by 2002:a81:c509:0:b0:583:9d8d:fb0d with SMTP
+ id k9-20020a81c509000000b005839d8dfb0dmr253224ywi.0.1691067113616; Thu, 03
+ Aug 2023 05:51:53 -0700 (PDT)
+Date:   Thu,  3 Aug 2023 13:51:37 +0100
+In-Reply-To: <20230803125137.1779474-1-vdonnefort@google.com>
 Mime-Version: 1.0
+References: <20230803125137.1779474-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.41.0.585.gd2178a4bd4-goog
-Message-ID: <20230803125137.1779474-1-vdonnefort@google.com>
-Subject: [PATCH v6 0/2] Introducing trace buffer mapping by user-space
+Message-ID: <20230803125137.1779474-3-vdonnefort@google.com>
+Subject: [PATCH v6 2/2] tracing: Allow user-space mapping of the ring-buffer
 From:   Vincent Donnefort <vdonnefort@google.com>
 To:     rostedt@goodmis.org, mhiramat@kernel.org,
         linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
@@ -61,290 +63,160 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The tracing ring-buffers can be stored on disk or sent to network without any
-copy via splice. However the later doesn't allow real time processing of the
-traces. A solution is to give access to userspace to the ring-buffer pages
-directly via a mapping. A piece of software can now become a reader of the
-ring-buffer, and drive a consuming or non-consuming read in a similar fashion to
-what trace and trace_pipe offer.
+Currently, user-space extracts data from the ring-buffer via splice,
+which is handy for storage or network sharing. However, due to splice
+limitations, it is imposible to do real-time analysis without a copy.
 
-Attached to this cover letter an example of consuming read for a ring-buffer,
-using libtracefs.
+A solution for that problem is to let the user-space map the ring-buffer
+directly.
 
-Vincent
+The mapping exposed via the per-CPU file trace_pipe_raw. The first page
+is the meta-page and is followed by each page of the ring-buffer,
+ordered by their unique page ID. It is therefore easy to translate a
+page-ID to an offset in the mapping.
 
-v5 -> v6:
-  * Rebase on next-20230802.
-  * (unsigned long) -> (void *) cast for virt_to_page().
-  * Add a wait for the GET_READER_PAGE ioctl.
-  * Move writer fields update (overrun/pages_lost/entries/pages_touched)
-    in the irq_work.
-  * Rearrange id in struct buffer_page.
-  * Rearrange the meta-page.
-  * ring_buffer_meta_page -> trace_buffer_meta_page.
-  * Add meta_struct_len into the meta-page.
+  * Meta-page -- include/uapi/linux/trace_mmap.h for a description
+  * Page ID 0
+  * Page ID 1
+     ...
 
-v4 -> v5:
-  * Trivial rebase onto 6.5-rc3 (previously 6.4-rc3)
+The mapper must then do what use to be the kernel job: swap the reader
+with the head. This is done with a newly introduced ioctl:
+TRACE_MMAP_IOCTL_GET_READER_PAGE.
 
-v3 -> v4:
-  * Add to the meta-page:
-       - pages_lost / pages_read (allow to compute how full is the
-	 ring-buffer)
-       - read (allow to compute how many entries can be read)
-       - A reader_page struct.
-  * Rename ring_buffer_meta_header -> ring_buffer_meta
-  * Rename ring_buffer_get_reader_page -> ring_buffer_map_get_reader_page
-  * Properly consume events on ring_buffer_map_get_reader_page() with
-    rb_advance_reader().
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-v2 -> v3:
-  * Remove data page list (for non-consuming read)
-    ** Implies removing order > 0 meta-page
-  * Add a new meta page field ->read
-  * Rename ring_buffer_meta_page_header into ring_buffer_meta_header
-
-v1 -> v2:
-  * Hide data_pages from the userspace struct
-  * Fix META_PAGE_MAX_PAGES
-  * Support for order > 0 meta-page
-  * Add missing page->mapping.
-
-Vincent Donnefort (2):
-  ring-buffer: Introducing ring-buffer mapping functions
-  tracing: Allow user-space mapping of the ring-buffer
-
- include/linux/ring_buffer.h     |   7 +
- include/uapi/linux/trace_mmap.h |  31 +++
- kernel/trace/ring_buffer.c      | 326 +++++++++++++++++++++++++++++++-
- kernel/trace/trace.c            |  82 +++++++-
- 4 files changed, 440 insertions(+), 6 deletions(-)
- create mode 100644 include/uapi/linux/trace_mmap.h
-
-
-base-commit: 626c67169f9972fffcdf3bc3864de421f162ebf5
+diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
+index 41759b9ad9f2..4c915f1d0065 100644
+--- a/include/uapi/linux/trace_mmap.h
++++ b/include/uapi/linux/trace_mmap.h
+@@ -26,4 +26,6 @@ struct trace_buffer_meta {
+ 	__u32		nr_data_pages;		/* Number of pages in the ring-buffer */
+ };
+ 
++#define TRACE_MMAP_IOCTL_GET_READER_PAGE	_IO('T', 0x1)
++
+ #endif /* _UAPI_TRACE_MMAP_H_ */
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index b8870078ef58..cec6f7599a2c 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6461,7 +6461,7 @@ static void tracing_set_nop(struct trace_array *tr)
+ {
+ 	if (tr->current_trace == &nop_trace)
+ 		return;
+-	
++
+ 	tr->current_trace->enabled--;
+ 
+ 	if (tr->current_trace->reset)
+@@ -8495,15 +8495,31 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
+ 	return ret;
+ }
+ 
+-/* An ioctl call with cmd 0 to the ring buffer file will wake up all waiters */
+ static long tracing_buffers_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ {
+ 	struct ftrace_buffer_info *info = file->private_data;
+ 	struct trace_iterator *iter = &info->iter;
++	int err;
+ 
+-	if (cmd)
+-		return -ENOIOCTLCMD;
++	if (cmd == TRACE_MMAP_IOCTL_GET_READER_PAGE) {
++		if (!(file->f_flags & O_NONBLOCK)) {
++			err = ring_buffer_wait(iter->array_buffer->buffer,
++					       iter->cpu_file,
++					       iter->tr->buffer_percent);
++			if (err)
++				return err;
++		}
++
++		return ring_buffer_map_get_reader_page(iter->array_buffer->buffer,
++						       iter->cpu_file);
++	} else if (cmd) {
++		return -ENOTTY;
++	}
+ 
++	/*
++	 * An ioctl call with cmd 0 to the ring buffer file will wake up all
++	 * waiters
++	 */
+ 	mutex_lock(&trace_types_lock);
+ 
+ 	iter->wait_index++;
+@@ -8516,6 +8532,63 @@ static long tracing_buffers_ioctl(struct file *file, unsigned int cmd, unsigned
+ 	return 0;
+ }
+ 
++static vm_fault_t tracing_buffers_mmap_fault(struct vm_fault *vmf)
++{
++	struct ftrace_buffer_info *info = vmf->vma->vm_file->private_data;
++	struct trace_iterator *iter = &info->iter;
++	vm_fault_t ret = VM_FAULT_SIGBUS;
++	struct page *page;
++
++	page = ring_buffer_map_fault(iter->array_buffer->buffer, iter->cpu_file,
++				     vmf->pgoff);
++	if (!page)
++		return ret;
++
++	vmf->page = page;
++
++	get_page(vmf->page);
++	vmf->page->mapping = vmf->vma->vm_file->f_mapping;
++	vmf->page->index   = vmf->pgoff;
++
++	return 0;
++}
++
++static void tracing_buffers_mmap_close(struct vm_area_struct *vma)
++{
++	struct ftrace_buffer_info *info = vma->vm_file->private_data;
++	struct trace_iterator *iter = &info->iter;
++
++	ring_buffer_unmap(iter->array_buffer->buffer, iter->cpu_file);
++}
++
++static void tracing_buffers_mmap_open(struct vm_area_struct *vma)
++{
++	struct ftrace_buffer_info *info = vma->vm_file->private_data;
++	struct trace_iterator *iter = &info->iter;
++
++	WARN_ON(ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file));
++}
++
++static const struct vm_operations_struct tracing_buffers_vmops = {
++	.open		= tracing_buffers_mmap_open,
++	.close		= tracing_buffers_mmap_close,
++	.fault		= tracing_buffers_mmap_fault,
++};
++
++static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
++{
++	struct ftrace_buffer_info *info = filp->private_data;
++	struct trace_iterator *iter = &info->iter;
++
++	if (vma->vm_flags & VM_WRITE)
++		return -EPERM;
++
++	vm_flags_mod(vma, VM_DONTCOPY | VM_DONTDUMP, VM_MAYWRITE);
++	vma->vm_ops = &tracing_buffers_vmops;
++
++	return ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file);
++}
++
+ static const struct file_operations tracing_buffers_fops = {
+ 	.open		= tracing_buffers_open,
+ 	.read		= tracing_buffers_read,
+@@ -8524,6 +8597,7 @@ static const struct file_operations tracing_buffers_fops = {
+ 	.splice_read	= tracing_buffers_splice_read,
+ 	.unlocked_ioctl = tracing_buffers_ioctl,
+ 	.llseek		= no_llseek,
++	.mmap		= tracing_buffers_mmap,
+ };
+ 
+ static ssize_t
 -- 
 2.41.0.585.gd2178a4bd4-goog
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdarg.h>
-#include <signal.h>
-#include <errno.h>
-#include <unistd.h>
-#include <tracefs.h>
-#include <kbuffer.h>
-#include <event-parse.h>
-#include <poll.h>
-
-#include <asm/types.h>
-#include <sys/mman.h>
-#include <sys/ioctl.h>
-
-#define TRACE_MMAP_IOCTL_GET_READER_PAGE	_IO('T', 0x1)
-
-/* Need to access private struct to save counters */
-struct kbuffer {
-	unsigned long long      timestamp;
-	long long               lost_events;
-	unsigned long           flags;
-	void                    *subbuffer;
-	void                    *data;
-	unsigned int            index;
-	unsigned int            curr;
-	unsigned int            next;
-	unsigned int            size;
-	unsigned int            start;
-	unsigned int            first;
-
-	unsigned int (*read_4)(void *ptr);
-	unsigned long long (*read_8)(void *ptr);
-	unsigned long long (*read_long)(struct kbuffer *kbuf, void *ptr);
-	int (*next_event)(struct kbuffer *kbuf);
-};
-
-struct trace_buffer_read_page {
-	unsigned long	lost_events;	/* Events lost at the time of the reader swap */
-	__u32	id;			/* Reader page ID from 0 to nr_data_pages - 1 */
-	__u32	read;			/* Number of bytes read on the reader page */
-};
-
-struct trace_buffer_meta {
-	unsigned long	entries;
-	unsigned long	overrun;
-	unsigned long	read;
-
-	unsigned long	pages_touched;
-	unsigned long	pages_lost;
-	unsigned long	pages_read;
-
-	struct trace_buffer_read_page reader_page;
-
-	__u32		meta_page_size;		/* Size of the meta-page */
-	__u32		meta_struct_len;	/* Len of this struct */
-	__u32		nr_data_pages;		/* Number of pages in the ring-buffer */
-};
-
-static char *argv0;
-static bool exit_requested;
-
-static char *get_this_name(void)
-{
-	static char *this_name;
-	char *arg;
-	char *p;
-
-	if (this_name)
-		return this_name;
-
-	arg = argv0;
-	p = arg+strlen(arg);
-
-	while (p >= arg && *p != '/')
-		p--;
-	p++;
-
-	this_name = p;
-	return p;
-}
-
-static void __vdie(const char *fmt, va_list ap, int err)
-{
-	int ret = errno;
-	char *p = get_this_name();
-
-	if (err && errno)
-		perror(p);
-	else
-		ret = -1;
-
-	fprintf(stderr, "  ");
-	vfprintf(stderr, fmt, ap);
-
-	fprintf(stderr, "\n");
-	exit(ret);
-}
-
-void pdie(const char *fmt, ...)
-{
-	va_list ap;
-
-	va_start(ap, fmt);
-	__vdie(fmt, ap, 1);
-	va_end(ap);
-}
-
-#define READ_ONCE(x) (*(volatile typeof(x) *)&(x))
-
-static unsigned long number_entries(struct trace_buffer_meta *meta)
-{
-	return READ_ONCE(meta->entries) - (READ_ONCE(meta->overrun) +
-					   READ_ONCE(meta->read));
-}
-
-static void read_page(struct tep_handle *tep, struct kbuffer *kbuf)
-{
-	static struct trace_seq seq;
-	struct tep_record record;
-
-	if (seq.buffer)
-		trace_seq_reset(&seq);
-	else
-		trace_seq_init(&seq);
-
-	while ((record.data = kbuffer_read_event(kbuf, &record.ts))) {
-		kbuffer_next_event(kbuf, NULL);
-		tep_print_event(tep, &seq, &record,
-				"%s-%d %9d\t%s\n", TEP_PRINT_COMM,
-				TEP_PRINT_PID, TEP_PRINT_TIME, TEP_PRINT_NAME);
-		trace_seq_do_printf(&seq);
-		trace_seq_reset(&seq);
-	}
-}
-
-static int next_reader_page(int fd, struct trace_buffer_meta *meta, unsigned long *read)
-{
-	__u32 prev_read, prev_reader, new_reader;
-
-	prev_read = READ_ONCE(meta->reader_page.read);
-	prev_reader = READ_ONCE(meta->reader_page.id);
-	if (ioctl(fd, TRACE_MMAP_IOCTL_GET_READER_PAGE) < 0)
-		pdie("ioctl");
-	new_reader = READ_ONCE(meta->reader_page.id);
-
-	if (prev_reader != new_reader)
-		*read = 0;
-	else
-		*read = prev_read;
-
-	return new_reader;
-}
-
-static void signal_handler(int unused)
-{
-	printf("Exit!\n");
-	exit_requested = true;
-}
-
-int main(int argc, char **argv)
-{
-	int page_size, meta_len, data_len, page, fd;
-	struct trace_buffer_meta *map;
-	struct tep_handle *tep;
-	struct kbuffer *kbuf;
-	unsigned long read;
-	void *meta, *data;
-	char path[32];
-	int cpu;
-
-	if (argc != 2)
-		return -EINVAL;
-
-	argv0 = argv[0];
-	cpu = atoi(argv[1]);
-	snprintf(path, 32, "per_cpu/cpu%d/trace_pipe_raw", cpu);
-
-	tep = tracefs_local_events(NULL);
-	kbuf = tep_kbuffer(tep);
-	page_size = getpagesize();
-
-	fd = tracefs_instance_file_open(NULL, path, O_RDONLY);
-	if (fd < 0)
-		pdie("raw");
-
-	meta = mmap(NULL, page_size, PROT_READ, MAP_SHARED, fd, 0);
-	if (meta == MAP_FAILED)
-		pdie("mmap");
-	map = (struct trace_buffer_meta *)meta;
-	meta_len = map->meta_page_size;
-
-	printf("entries:	%lu\n", map->entries);
-	printf("overrun:	%lu\n", map->overrun);
-	printf("read:		%lu\n", map->read);
-	printf("pages_touched:	%lu\n", map->pages_touched);
-	printf("pages_lost:	%lu\n", map->pages_lost);
-	printf("pages_read:	%lu\n", map->pages_read);
-
-	data_len = page_size * map->nr_data_pages;
-	data = mmap(NULL, data_len, PROT_READ, MAP_SHARED, fd, meta_len);
-	if (data == MAP_FAILED)
-		pdie("mmap data");
-
-	signal(SIGINT, signal_handler);
-
-	while (!exit_requested) {
-		page = next_reader_page(fd, map, &read);
-		kbuffer_load_subbuffer(kbuf, data + page_size * page);
-		while (kbuf->curr < read)
-			kbuffer_next_event(kbuf, NULL);
-
-		read_page(tep, kbuf);
-	}
-
-	munmap(data, data_len);
-	munmap(meta, page_size);
-	close(fd);
-
-	return 0;
-}
