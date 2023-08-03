@@ -2,54 +2,54 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C137C04FE2
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  3 Aug 2023 13:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CD3C001DF
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  3 Aug 2023 13:07:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235059AbjHCNGZ (ORCPT
+        id S236149AbjHCNHY (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 3 Aug 2023 09:06:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54334 "EHLO
+        Thu, 3 Aug 2023 09:07:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235936AbjHCNGD (ORCPT
+        with ESMTP id S236163AbjHCNHK (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 3 Aug 2023 09:06:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F39FD4C17;
-        Thu,  3 Aug 2023 06:04:36 -0700 (PDT)
+        Thu, 3 Aug 2023 09:07:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A609344A2;
+        Thu,  3 Aug 2023 06:05:28 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E8DD761DAF;
-        Thu,  3 Aug 2023 13:04:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84ECFC433C8;
-        Thu,  3 Aug 2023 13:04:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3E7E261D9B;
+        Thu,  3 Aug 2023 13:04:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D668CC433CA;
+        Thu,  3 Aug 2023 13:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691067868;
-        bh=JzZuwBQiE/YN2pWMNz9QL6Mq5TiFoRcCrBAJJKHCtlM=;
+        s=k20201202; t=1691067877;
+        bh=ok9sEMClnv4AaS+l9DTWNG/+j8XqpSxXFt0MtDQ+Xlk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OIz4HRMdKHHJ/owctmM2fQivXcBSac/htwVXwvulnCJxM+sE0naxU0m/sIuMSuj9U
-         /P9u59g4qENogATtzWNKix3GmPId6+z0glG7wSUO8ybEY98CFuke4BQ17+e+r3mNJV
-         mmi9VhAPS1g5DIUqihT5zCF20kbkJgRBLQ+w8b20XzD6kQ5DA6on4Tj0VZlMSsiqXY
-         M51GjzxDf0BEhymdJWn11Gz6SsCBdqxzepPyBsLhhvpfxmnMDJ0maWehiPzjR1OvQp
-         nG36vsxFP0RFYZne2iYu5h0PUudNFdpBWDe6YEM1gi7dX1u2sT48YUpZcXuWT/iNzj
-         GGmesbFJSFghw==
+        b=HaCz5Mh5ZARZij8oX7k0+g9LfCrDCnSyC18Gq71SefBiWpvapzS1MlqNHYLImGbSM
+         fDZPkioU4Y3V/yejjaFVE/0bXPo9audNdov5qb8rxPONpuFGU35d5rAa4P4mU4JpKW
+         c1HpU0JLnjsJ3oE3uBpBF1r0j/ZrYcakCqlKW/vEs9vHT+tOLLM+ktHDYW1zADozVP
+         7bRz0ohUr6yrSwmTzk0698EjqF/8CxWuSs/14jG8nPFtCtd8qISQuBYXW0DgvCswo5
+         35pm2AQnvMwpQaRe2XrxIwhcaAtXNzrHb57r7zAWVIW64qLQlSNi4WzB+jgxuG34pK
+         mJ/xl6EtXks1A==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Chen Lin <chen.lin5@zte.com.cn>,
         Steven Rostedt <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>, mhiramat@kernel.org,
         linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.4 4/4] ring-buffer: Do not swap cpu_buffer during resize process
-Date:   Thu,  3 Aug 2023 09:04:18 -0400
-Message-Id: <20230803130419.641865-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 4/4] ring-buffer: Do not swap cpu_buffer during resize process
+Date:   Thu,  3 Aug 2023 09:04:28 -0400
+Message-Id: <20230803130429.641927-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230803130419.641865-1-sashal@kernel.org>
-References: <20230803130419.641865-1-sashal@kernel.org>
+In-Reply-To: <20230803130429.641927-1-sashal@kernel.org>
+References: <20230803130429.641927-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.4.7
+X-stable-base: Linux 6.1.42
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
@@ -222,10 +222,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 15 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 14d8001140c82..de061dd473132 100644
+index c264421c4ecd8..276ab688620f8 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -536,6 +536,7 @@ struct trace_buffer {
+@@ -542,6 +542,7 @@ struct trace_buffer {
  	unsigned			flags;
  	int				cpus;
  	atomic_t			record_disabled;
@@ -233,7 +233,7 @@ index 14d8001140c82..de061dd473132 100644
  	cpumask_var_t			cpumask;
  
  	struct lock_class_key		*reader_lock_key;
-@@ -2167,7 +2168,7 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+@@ -2174,7 +2175,7 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
  
  	/* prevent another thread from changing buffer sizes */
  	mutex_lock(&buffer->mutex);
@@ -242,7 +242,7 @@ index 14d8001140c82..de061dd473132 100644
  
  	if (cpu_id == RING_BUFFER_ALL_CPUS) {
  		/*
-@@ -2322,6 +2323,7 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+@@ -2313,6 +2314,7 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
  		atomic_dec(&buffer->record_disabled);
  	}
  
@@ -250,7 +250,7 @@ index 14d8001140c82..de061dd473132 100644
  	mutex_unlock(&buffer->mutex);
  	return 0;
  
-@@ -2342,6 +2344,7 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+@@ -2333,6 +2335,7 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
  		}
  	}
   out_err_unlock:
@@ -258,7 +258,7 @@ index 14d8001140c82..de061dd473132 100644
  	mutex_unlock(&buffer->mutex);
  	return err;
  }
-@@ -5541,6 +5544,15 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
+@@ -5537,6 +5540,15 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
  	if (local_read(&cpu_buffer_b->committing))
  		goto out_dec;
  
@@ -275,10 +275,10 @@ index 14d8001140c82..de061dd473132 100644
  	buffer_b->buffers[cpu] = cpu_buffer_a;
  
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index c80ff6f5b2cc1..fd051f85efd4b 100644
+index 27bbe180a2ef2..c465b946bb944 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -1928,9 +1928,10 @@ update_max_tr_single(struct trace_array *tr, struct task_struct *tsk, int cpu)
+@@ -1885,9 +1885,10 @@ update_max_tr_single(struct trace_array *tr, struct task_struct *tsk, int cpu)
  		 * place on this CPU. We fail to record, but we reset
  		 * the max trace buffer (no one writes directly to it)
  		 * and flag that it failed.
