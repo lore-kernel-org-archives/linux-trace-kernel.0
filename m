@@ -2,226 +2,116 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1129EEB64DD
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  3 Aug 2023 16:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C70AEC001DF
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  3 Aug 2023 17:32:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232226AbjHCQiM (ORCPT
+        id S233822AbjHCRcu (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 3 Aug 2023 12:38:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41270 "EHLO
+        Thu, 3 Aug 2023 13:32:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235834AbjHCQiI (ORCPT
+        with ESMTP id S230408AbjHCRct (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 3 Aug 2023 12:38:08 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88FE3E77
-        for <linux-trace-kernel@vger.kernel.org>; Thu,  3 Aug 2023 09:38:06 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id 98e67ed59e1d1-26871992645so710777a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 03 Aug 2023 09:38:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1691080686; x=1691685486;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mu93cy9dn4sIHVLCdHM/juTYvjzyY5DvemgKanEAgs8=;
-        b=MsV1QNPcjyPkR+mIr+wJRxVAPsMf7eYSgBCaMFnNi6XHMPPQez6YvGkHX6IEV9nHaK
-         HOB8JSAzMzljpBTgLnw8FFzhQlaxUPq/uTknz05x6hTwZhzs7a3vqtu6Wo8Je8kobIFV
-         +wELZOvm59iHbgNcQUv9Uq/JgB5aV8Aif2b7g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691080686; x=1691685486;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mu93cy9dn4sIHVLCdHM/juTYvjzyY5DvemgKanEAgs8=;
-        b=Z2ldI1N4HrxERbtFgnug8R0fMNMYuKKq55uldB+WLpIsLPNvKnDZYijCjshA8Rc9Q5
-         uirvKwNOeaJFOZGw6JhhxkrYdaP/7CICyXCOFbdXKkszww8RZuKPa0ntHhvCTgyzTSIQ
-         n6t2oduboFQWorok6ohBNnhQjhE8xbYROeEHFsOZpHRdFj1oU1pWtwxpCl4LWtVp1j0a
-         fqfDcNUF0uSeObZd+fKJ7tYsrDtXeR/XcjuNXdpmTAoeaNzzb/2nRia6ejRngWoahmFw
-         yQP4i+q0MARcZvEZ+gYA5pUKMy1WPj+gUIORKpvAfsNF6IqRfGkgatSwLDgUZJFD66Ke
-         Uq9Q==
-X-Gm-Message-State: ABy/qLZObfF3oQKcmMyet1tZbSEAlTcQGrLgLXZLJwamsHNzfwClh6rL
-        QokH7d7CmIBw1g/rZFEsofoXHH1eZwc6JlPkMcci5Q==
-X-Google-Smtp-Source: APBJJlHA7N4ogAox7g539S9KJITGPahE5YRibE1yhXgbbPoa3IVnqYihGAY0bH4f2T5l/D8MJJOP0wxUSnF9XOLJgsI=
-X-Received: by 2002:a17:90b:f88:b0:268:3f4f:7bdb with SMTP id
- ft8-20020a17090b0f8800b002683f4f7bdbmr17559438pjb.18.1691080686029; Thu, 03
- Aug 2023 09:38:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <169078860386.173706.3091034523220945605.stgit@devnote2>
- <169078863449.173706.2322042687021909241.stgit@devnote2> <CAADnVQ+C64_C1w1kqScZ6C5tr6_juaWFaQdAp9Mt3uzaQp2KOw@mail.gmail.com>
- <20230801085724.9bb07d2c82e5b6c6a6606848@kernel.org> <CAADnVQLaFpd2OhqP7W3xWB1b9P2GAKgrVQU1FU2yeNYKbCkT=Q@mail.gmail.com>
- <20230802000228.158f1bd605e497351611739e@kernel.org> <20230801112036.0d4ee60d@gandalf.local.home>
- <20230801113240.4e625020@gandalf.local.home> <CAADnVQ+N7b8_0UhndjwW9-5Vx2wUVvojujFLOCFr648DUv-Y2Q@mail.gmail.com>
- <20230801190920.7a1abfd5@gandalf.local.home> <CABRcYmJjtVq-330ktqTAUiNO1=yG_aHd0xz=c550O5C7QP++UA@mail.gmail.com>
- <20230804004206.9fdfae0b9270b9acca2c096f@kernel.org>
-In-Reply-To: <20230804004206.9fdfae0b9270b9acca2c096f@kernel.org>
-From:   Florent Revest <revest@chromium.org>
-Date:   Thu, 3 Aug 2023 18:37:54 +0200
-Message-ID: <CABRcYmJPD2VUPHs3DrxS8mxstvtdBR7Z8cG7joi0Qr9O3sP6vg@mail.gmail.com>
-Subject: Re: [PATCH v4 3/9] bpf/btf: Add a function to search a member of a struct/union
+        Thu, 3 Aug 2023 13:32:49 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5CD03AA3
+        for <linux-trace-kernel@vger.kernel.org>; Thu,  3 Aug 2023 10:31:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1691083916;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=V3OZMzxi9fUDHiCuups6Frg0CT+Gs83q33vmZ66OFKg=;
+        b=aYQ6x4qvQcAwYq/bt0E+Yb7IDpel6coEgj4jwjwKu9xai2vNZlLAh/jpKd7ubiyI8gfrIb
+        4X52jepTqVFZi8l1eSqgc51XlRQexo1CVKu/mFHJ6YsGs99cTPVs0w1PocvSGlGmPp2NYP
+        QpLJJ8hSzFbBb2WjjffTFSHFR9OsLyg=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-683-fiEGGAMRMa22QAbY26TX0g-1; Thu, 03 Aug 2023 13:31:53 -0400
+X-MC-Unique: fiEGGAMRMa22QAbY26TX0g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E1A5429AA38B;
+        Thu,  3 Aug 2023 17:31:52 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.23])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 8396AF7FAF;
+        Thu,  3 Aug 2023 17:31:48 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu,  3 Aug 2023 19:31:11 +0200 (CEST)
+Date:   Thu, 3 Aug 2023 19:31:06 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
 To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf probe: Show correct error about @symbol for uprobe
+Message-ID: <20230803173106.GA15866@redhat.com>
+References: <169055397023.67089.12693645664676964310.stgit@devnote2>
+ <ZMkAq5yx3+EiQNkF@kernel.org>
+ <20230801225618.06cb86992ae30564e5b87554@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230801225618.06cb86992ae30564e5b87554@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Aug 3, 2023 at 5:42=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.or=
-g> wrote:
+Hi Masami,
+
+On 08/01, Masami Hiramatsu wrote:
 >
-> On Wed, 2 Aug 2023 16:44:09 +0200
-> Florent Revest <revest@chromium.org> wrote:
->
-> > On Wed, Aug 2, 2023 at 1:09=E2=80=AFAM Steven Rostedt <rostedt@goodmis.=
-org> wrote:
+> Oleg, what do you think about accessing symbols in data section from
+> uprobes? Can we access it from user-land IP-relative address?
+
+Sorry, I don't I understand... I don't even understand the context, can't
+find the whole thread on lore.kernel.org/lkml. Plus I forgot EVERYTHING
+I knew about tracing/uprobes anyway ;)
+
+but when I look at traceprobe_parse_probe_arg() paths it seems to me that
+uprobe can fetch the IP-relative address, not sure about the syntax but
+perhaps something like xxx=+OFFSET(%ip). The question is how tools/perf
+can calculate this OFFSET. But I am sure you understand this all much
+better than me.
+
+> > > --- a/tools/perf/util/probe-event.c
+> > > +++ b/tools/perf/util/probe-event.c
+> > > @@ -2800,13 +2800,18 @@ static void warn_uprobe_event_compat(struct probe_trace_event *tev)
+> > >  	if (!tev->uprobes || tev->nargs == 0 || !buf)
+> > >  		goto out;
 > > >
-> > > On Tue, 1 Aug 2023 15:18:56 -0700
-> > > Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-> > >
-> > > > On Tue, Aug 1, 2023 at 8:32=E2=80=AFAM Steven Rostedt <rostedt@good=
-mis.org> wrote:
-> > > > >
-> > > > > On Tue, 1 Aug 2023 11:20:36 -0400
-> > > > > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > > > >
-> > > > > > The solution was to come up with ftrace_regs, which just means =
-it has all
-> > > > > > the registers to extract the arguments of a function and nothin=
-g more. Most
-> > > > >
-> > > > > This isn't 100% true. The ftrace_regs may hold a fully filled pt_=
-regs. As
-> > > > > the FTRACE_WITH_REGS callbacks still get passed a ftrace_regs poi=
-nter. They
-> > > > > will do:
-> > > > >
-> > > > >         void callback(..., struct ftrace_regs *fregs) {
-> > > > >                 struct pt_regs *regs =3D ftrace_get_regs(fregs);
-> > > > >
-> > > > >
-> > > > > Where ftrace_get_regs() will return the pt_regs only if it is ful=
-ly filled.
-> > > > > If it is not, then it returns NULL. This was what the x86 maintai=
-ners
-> > > > > agreed with.
-> > > >
-> > > > arch/arm64/include/asm/ftrace.h:#define arch_ftrace_get_regs(regs) =
-NULL
-> > > >
-> > > > Ouch. That's very bad.
-> > > > We care a lot about bpf running well on arm64.
-> > >
-> > > [ Adding Mark and Florent ]
-> >
-> > Ah, thanks Steve! That's my favorite can of worms :) I actually
-> > consider sending a talk proposal to the tracing MC at LPC "pt_regs -
-> > the good the bad and the ugly" on this very topic because I care about
-> > unblocking BPF "multi_kprobe" (which really is fprobe) on arm64, maybe
-> > it would be interesting.
->
-> Ah, it is almost same as my talk :)
+> > > -	for (i = 0; i < tev->nargs; i++)
+> > > -		if (strglobmatch(tev->args[i].value, "[$@+-]*")) {
+> > > -			pr_warning("Please upgrade your kernel to at least "
+> > > -				   "3.14 to have access to feature %s\n",
+> > > +	for (i = 0; i < tev->nargs; i++) {
+> > > +		if (strchr(tev->args[i].value, '@')) {
+> > > +			pr_warning("%s accesses a variable by symbol name, but that is not supported for user application probe.\n",
+> > > +				   tev->args[i].value);
+> > > +			break;
 
-Oh, I didn't know! I submitted a proposal today but if the talks have
-a lot of overlap maybe it's best that only you give your talk, since
-you're the actual maintainer :) or we could co-present if there's
-something I could add but I think you have all the background anyway
+IIUC without this change @symbol will trigger the
 
-> > I pointed this out in
-> > https://lore.kernel.org/all/CABRcYm+esb8J2O1v6=3DC+h+HSa5NxraPUgo63w7-i=
-Zj0CXbpusg@mail.gmail.com/#t
-> > when Masami proposed adding calls from fprobe to perf. If every
-> > subsystem makes different assumptions about "how sparse" their pt_regs
-> > is and they call into one another, this could lead to... interesting
-> > bugs. (eg: currently, we don't populate a fake pstate in ftrace_regs.
-> > so we'd need to fake it when creating a sparse pt_regs _for Perf_,
-> > knowing that Perf specifically expects this reg to be set. this would
-> > require a struct copy anyway and some knowledge about how the data
-> > will be consumed, in an arch- and subsystem- specific way)
->
-> yeah, sorry I missed that point. I should remove it until we can fix it.
+			/* uprobes don't support symbols */
+			if (!(ctx->flags & TPARG_FL_KERNEL)) {
+				trace_probe_log_err(ctx->offset, SYM_ON_UPROBE);
+				return -EINVAL;
+			}
 
-Uh, I shouldn't have buried my important comments so far down the
-email :/ I wasn't sure whether you had missed the paragraph.
+in parse_probe_arg(), right?
 
-> > On the other hand, untangling all code paths that come from
-> > trampolines (with a light regs structure) from those that come from an
-> > exception (with a pt_regs) could lead to a lot of duplicated code, and
-> > converting between each subsystem's idea of a light regs structure
-> > (what if perf introduces a perf_regs now ?) would be tedious and slow
-> > (lots of copies ?).
->
-> This is one discussion point I think. Actually, using pt_regs in kretprob=
-e
-> (and rethook) is histrical accident. Originally, it had put a kprobe on
-> the function return trampoline to hook it. So keep the API compatiblity
-> I made the hand assembled code to save the pt_regs on the stack.
->
-> My another question is if we have the fprobe to trace (hook) the function
-> return, why we still need the kretprobe itself. I think we can remove
-> kretprobe and use fprobe exit handler, because "function" probing will
-> be done by fprobe, not kprobe. And then, we can simplify the kprobe
-> interface and clarify what it is -- "kprobe is a wrapper of software
-> breakpoint". And we don't need to think about duplicated code anymore :)
+So FWIW the patch looks fine to me, but as you have mentioned tools/perf
+could probably (try to) turn @symbol into @+symbol_offset_in_file...
 
-That sounds reasonable to me
+In short, sorry for spam, I can't help ;)
 
-> As I said, I would like to phase out the kretprobe itself because it
-> provides the same feature of fprobe, which is confusing. jprobe was
-> removed a while ago, and now kretprobe is. But we can not phase out
-> it at once. So I think we will keep current kretprobe trampoline on
-> arm64 and just add new ftrace_regs based rethook. Then remove the
-> API next release. (after all users including systemtap is moved)
+And just in case, I am on PTO till Aug 14, won't be able to read emails
+till then.
 
-Heads up to BPF folks though since they also have BPF "kretprobe"
-program types which would break in a similar fashion as multi_kprobe
-(even though BPF kretprobe programs have also been discouraged for a
-while in favor of BPF fexit programs)
+Oleg.
 
-> > > The reason I started the FTRACE_WITH_ARGS (which gave us ftrace_regs)=
- in
-> > > the first place, was because of the overhead you reported to me with
-> > > ftrace_regs_caller and why you wanted to go the direct trampoline app=
-roach.
-> > > That's when I realized I could use a subset because those registers w=
-ere
-> > > already being saved. The only reason FTRACE_WITH_REGS was created was=
- it
-> > > had to supply full pt_regs (including flags) and emulate a breakpoint=
- for
-> > > the kprobes interface. But in reality, nothing really needs all that.
-> > >
-> > > > It's not about access to args.
-> > > > pt_regs is passed from bpf prog further into all kinds of perf even=
-t
-> > > > functions including stack walking.
-> >
-> > If all accesses are done in BPF bytecode, we could (theoretically)
-> > have the verifier and JIT work together to deny accesses to
-> > unpopulated fields, or relocate pt_regs accesses to ftrace_regs
-> > accesses to keep backward compatibility with existing multi_kprobe BPF
-> > programs.
->
-> Yeah, that is what I would like to suggest, and what my patch does.
-> (let me update rethook too, it'll be a bit tricky since I don't want
-> break anything)
-
-I agree with Alexei that this is an unnecessary amount of complexity
-in the verifier just to avoid a struct copy though. It's good to know
-that we _could_ do it if we really need to someday but then again, if
-a user chooses an interface that gets a pt_regs they shouldn't expect
-high performance. Therefore, I think it's ok for BPF multi_kprobe to
-copy fields from a ftrace_regs to a pt_regs on stack, especially if it
-avoids so much additional complexity in the verifier.
