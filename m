@@ -2,71 +2,141 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4790C001DF
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  4 Aug 2023 12:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36218C04A6A
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  4 Aug 2023 16:43:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229679AbjHDMqu (ORCPT
+        id S229968AbjHDQmd (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 4 Aug 2023 08:46:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41782 "EHLO
+        Fri, 4 Aug 2023 12:42:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229961AbjHDMqb (ORCPT
+        with ESMTP id S230263AbjHDQmW (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 4 Aug 2023 08:46:31 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDE5746BD;
-        Fri,  4 Aug 2023 05:46:29 -0700 (PDT)
-Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RHQRN68QnzrS0y;
-        Fri,  4 Aug 2023 20:45:20 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Fri, 4 Aug 2023 20:46:26 +0800
-From:   Zheng Yejian <zhengyejian1@huawei.com>
-To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-        <vnagarnaik@google.com>, <shuah@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>
-Subject: [PATCH 0/2] tracing: Fix cpu buffers unavailable problem and add its testcase
-Date:   Fri, 4 Aug 2023 20:45:47 +0800
-Message-ID: <20230804124549.2562977-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 4 Aug 2023 12:42:22 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05323B2;
+        Fri,  4 Aug 2023 09:42:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691167341; x=1722703341;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Aix0fhmGUEkDVxFMY9z2Bt8WwWhM6K8bS2ydJILJ5a0=;
+  b=BycgGkIFJ1Eaw+ikFmhB73QrtDTeBpcUWFdrpD2VK4Uwm+IDwu9Hf+dR
+   Pw/c20sWihUkQBCNqM2O4qiYk0IQG0YcGwCjcCGC465liN4SkLXVzsec1
+   w94r16NzRg0TvvJxgKLZknHozhqP0IJWuxgcEJR6Tey+2Z2vktRv35zU/
+   OXWjOIxJfRM9WdMhYHymo+Jn0zOd9nYcLIAxxZsKZ36HDS1BT5PP0ZNpD
+   8OMWP6DCbYlEBqEk8emecQq/7IvgpjIosJQBO9Kq/4jOtXi2RnIXkoY2w
+   NVnoBGQk+HYdhG5IJ40IJhPvGEa4pXhKUUs9bZsVxTcPNghc4SGiAVjTk
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="372940334"
+X-IronPort-AV: E=Sophos;i="6.01,255,1684825200"; 
+   d="scan'208";a="372940334"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2023 09:42:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="733314163"
+X-IronPort-AV: E=Sophos;i="6.01,255,1684825200"; 
+   d="scan'208";a="733314163"
+Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 04 Aug 2023 09:41:42 -0700
+Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qRxry-0002zL-09;
+        Fri, 04 Aug 2023 16:41:42 +0000
+Date:   Sat, 5 Aug 2023 00:41:13 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Zheng Yejian <zhengyejian1@huawei.com>, rostedt@goodmis.org,
+        mhiramat@kernel.org, vnagarnaik@google.com, shuah@kernel.org
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 1/2] tracing: Fix cpu buffers unavailable due to
+ 'record_disabled' messed
+Message-ID: <202308050048.bUnVeBjV-lkp@intel.com>
+References: <20230804124549.2562977-2-zhengyejian1@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.175.61]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpeml500012.china.huawei.com (7.185.36.15)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230804124549.2562977-2-zhengyejian1@huawei.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi, steve,
+Hi Zheng,
 
-after some operations on file 'tracing_cpumask' and 'snapshot', trace
-ring buffer can no longer record anything. This series contain a patch
-to fix it and a constrived testcase to reproduce it.
+kernel test robot noticed the following build errors:
 
-I think the reproduction testcase is useful to help others to check if
-their version has this problem and verify the bugfix. However, currently
-in "tools/testing/selftests/ftrace/test.d", there seems no appropriate
-subdirectory to put this kind reproductions.
+[auto build test ERROR on linus/master]
+[cannot apply to rostedt-trace/for-next-urgent]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-So I now put the testcase in "00basic" because it is basicly simple. Or
-would there be a new directory to collect simple reproduction testcases?
+url:    https://github.com/intel-lab-lkp/linux/commits/Zheng-Yejian/tracing-Fix-cpu-buffers-unavailable-due-to-record_disabled-messed/20230804-204751
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20230804124549.2562977-2-zhengyejian1%40huawei.com
+patch subject: [PATCH 1/2] tracing: Fix cpu buffers unavailable due to 'record_disabled' messed
+config: i386-randconfig-r025-20230731 (https://download.01.org/0day-ci/archive/20230805/202308050048.bUnVeBjV-lkp@intel.com/config)
+compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
+reproduce: (https://download.01.org/0day-ci/archive/20230805/202308050048.bUnVeBjV-lkp@intel.com/reproduce)
 
-Zheng Yejian (2):
-  tracing: Fix cpu buffers unavailable due to 'record_disabled' messed
-  selftests/ftrace: Add a basic testcase for snapshot
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308050048.bUnVeBjV-lkp@intel.com/
 
- kernel/trace/trace.c                            |  2 ++
- .../ftrace/test.d/00basic/snapshot1.tc          | 17 +++++++++++++++++
- 2 files changed, 19 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/00basic/snapshot1.tc
+All errors (new ones prefixed by >>):
+
+>> kernel/trace/trace.c:5280:39: error: no member named 'max_buffer' in 'struct trace_array'
+                           ring_buffer_record_disable_cpu(tr->max_buffer.buffer, cpu);
+                                                          ~~  ^
+   kernel/trace/trace.c:5286:38: error: no member named 'max_buffer' in 'struct trace_array'
+                           ring_buffer_record_enable_cpu(tr->max_buffer.buffer, cpu);
+                                                         ~~  ^
+   2 errors generated.
+
+
+vim +5280 kernel/trace/trace.c
+
+  5260	
+  5261	int tracing_set_cpumask(struct trace_array *tr,
+  5262				cpumask_var_t tracing_cpumask_new)
+  5263	{
+  5264		int cpu;
+  5265	
+  5266		if (!tr)
+  5267			return -EINVAL;
+  5268	
+  5269		local_irq_disable();
+  5270		arch_spin_lock(&tr->max_lock);
+  5271		for_each_tracing_cpu(cpu) {
+  5272			/*
+  5273			 * Increase/decrease the disabled counter if we are
+  5274			 * about to flip a bit in the cpumask:
+  5275			 */
+  5276			if (cpumask_test_cpu(cpu, tr->tracing_cpumask) &&
+  5277					!cpumask_test_cpu(cpu, tracing_cpumask_new)) {
+  5278				atomic_inc(&per_cpu_ptr(tr->array_buffer.data, cpu)->disabled);
+  5279				ring_buffer_record_disable_cpu(tr->array_buffer.buffer, cpu);
+> 5280				ring_buffer_record_disable_cpu(tr->max_buffer.buffer, cpu);
+  5281			}
+  5282			if (!cpumask_test_cpu(cpu, tr->tracing_cpumask) &&
+  5283					cpumask_test_cpu(cpu, tracing_cpumask_new)) {
+  5284				atomic_dec(&per_cpu_ptr(tr->array_buffer.data, cpu)->disabled);
+  5285				ring_buffer_record_enable_cpu(tr->array_buffer.buffer, cpu);
+  5286				ring_buffer_record_enable_cpu(tr->max_buffer.buffer, cpu);
+  5287			}
+  5288		}
+  5289		arch_spin_unlock(&tr->max_lock);
+  5290		local_irq_enable();
+  5291	
+  5292		cpumask_copy(tr->tracing_cpumask, tracing_cpumask_new);
+  5293	
+  5294		return 0;
+  5295	}
+  5296	
 
 -- 
-2.25.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
