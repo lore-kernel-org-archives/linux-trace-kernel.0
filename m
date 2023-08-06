@@ -2,125 +2,105 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE5FC001DE
-	for <linux-trace-kernel@archiver.kernel.org>; Sun,  6 Aug 2023 07:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D08C0015E
+	for <linux-trace-kernel@archiver.kernel.org>; Sun,  6 Aug 2023 11:18:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229504AbjHFHwu (ORCPT
+        id S229498AbjHFLSe (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 6 Aug 2023 03:52:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51576 "EHLO
+        Sun, 6 Aug 2023 07:18:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbjHFHws (ORCPT
+        with ESMTP id S229449AbjHFLSd (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 6 Aug 2023 03:52:48 -0400
-Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7CD31BD4;
-        Sun,  6 Aug 2023 00:52:45 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 9D0ED5C0075;
-        Sun,  6 Aug 2023 03:52:42 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Sun, 06 Aug 2023 03:52:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjusaka.me; h=
-        cc:cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:message-id:mime-version:reply-to:sender:subject
-        :subject:to:to; s=fm3; t=1691308362; x=1691394762; bh=k+YpVT6VAo
-        F7F80t6KXXgq3nfq+BBYr4oC0WOTx8568=; b=awHlM6U1PzHY/fbAnP9S6KyVrX
-        ZGryZK6fH8MwBrytIk5Oe48O4WOsGZ33qUk6kXit1xX6/1HgT6xvd1R0yMf6H2qV
-        s/AwL5kHELXvH50fgTxyI/OrIyuL9f/KeJ2EXqWH8CRnldIJynVz5fWVeEuztMrO
-        W3H9emK7UGmA/DPWmUudSMs7N7GMjEYlstRkcHHfNT8n+rj4mkoQWzIumbeWmM+y
-        XA/ZhijWJ1GJJU547Revt2oIrhE99Kf4Q83e8aRxy6IJ5Jvj86oceROovQ98iBBk
-        wuFOdFqO9s+/MY7mu+Q0T5knq0QjxL2lClmTYOuH3BvDu90a/oDbDTBrdeXA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:message-id:mime-version:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; t=1691308362; x=1691394762; bh=k+YpVT6VAoF7F
-        80t6KXXgq3nfq+BBYr4oC0WOTx8568=; b=VkhKufPpRwzTrjWI5PNqXzFUTSPM+
-        GqhOVHLpCc2n89Gqcd3m8erhcwKgkhHNzS9rFky0CJhE6rWpPxSk+UNwPlYGAV1g
-        +AHn5hxi5IIlaZsB/K00JULQJ3T6Fa/TXaTNCQHIPrWq/SRai3m5U4mb8Gg06X8j
-        uvXddhGyS6CtX4cLgYjUhbeQ1+NNTaesxxt6eS/81gQVZgdzf7Soj03A+tM8IhPk
-        XO3BSjQe2S2lkNRUb9fW7LThOIh7UmGaNQiBywONs0pEvrncDN4ii3B871bziR0c
-        YDrb+24co4dJLbFEQNWcbMmKt8FUgYWRuvm1odmSRaYHNPrhUBiJJqHCA==
-X-ME-Sender: <xms:SlHPZAJmKGGS2Y11Du-X7HX0cTDrBFvXF09HomcZh-Wj2QPUjLMqmg>
-    <xme:SlHPZAJXp7faK4L6g3Ltlm-Cvx2IDGlqGg04mWMvgChwdkhJ2JRoixEVrnghUQ6Qi
-    dJRjkYUiDOunAPqsts>
-X-ME-Received: <xmr:SlHPZAswpHMbNlVgndjgacRWEQLto3pq51rYuGUNNLipGJMQKZOiLPgRHg-RsosN_INxmEI7Ww>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrkeejgdduvdehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
-    ertddtnecuhfhrohhmpeforghnjhhushgrkhgruceomhgvsehmrghnjhhushgrkhgrrdhm
-    vgeqnecuggftrfgrthhtvghrnhepvddujeetiefgheehvefhveetieeuudeutdehhedtue
-    etueehjeffhefhueeutdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
-    rghilhhfrhhomhepmhgvsehmrghnjhhushgrkhgrrdhmvg
-X-ME-Proxy: <xmx:SlHPZNbCGdnJLSbRNyNXEvwTu-HwfGm9jyNbDOBEWRtPlPJHaJkkgg>
-    <xmx:SlHPZHb9jwKkOgERgP1e5LuKgxJ4GIiesZ9K7D36_yRVmLK6BqSbAQ>
-    <xmx:SlHPZJCLtfLRPRa4Z6gJYHmNqxuCU4spymqZUPpXy3Byzs49aUIeEQ>
-    <xmx:SlHPZETZaHA1ktBka8jRiqotlKXU4V_YcprB-Ezx_p6H_oBDreSLWg>
-Feedback-ID: i3ea9498d:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 6 Aug 2023 03:52:38 -0400 (EDT)
-From:   Manjusaka <me@manjusaka.me>
-To:     edumazet@google.com, mhiramat@kernel.org, rostedt@goodmis.org,
-        davem@davemloft.net, dsahern@kernel.org, kuba@kernel.org,
-        pabeni@redhat.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Manjusaka <me@manjusaka.me>
-Subject: [PATCH] [RFC PATCH] tcp event: add new tcp:tcp_cwnd_restart event
-Date:   Sun,  6 Aug 2023 07:52:16 +0000
-Message-Id: <20230806075216.13378-1-me@manjusaka.me>
-X-Mailer: git-send-email 2.34.1
+        Sun, 6 Aug 2023 07:18:33 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72E1A11D;
+        Sun,  6 Aug 2023 04:18:32 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id 4fb4d7f45d1cf-52222562f1eso5001692a12.3;
+        Sun, 06 Aug 2023 04:18:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691320710; x=1691925510;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=je1gUzvwrqcKGyu+CaM6BhOeHMrmqE7jvTrxfdtVg+c=;
+        b=UvsSgM4LoSJAa2mNOuJ5Iv+oGAdwD62Wt2/PMYqnAp5neD4L6dS9zXu691t5xo58sN
+         +C8PqdPEik2VvfsCwtfpfai7q0JBWIzQY44Fj2ACxHdUp00GfP2S53aGEgNbX7jAzCwT
+         W4xpjwz5ElfF/Ao68gjWd5UewvEQbasIbqOcpx1Qw3Fok1mmdG64P9G1qldeIL2Nh51G
+         IlHGJqKYWi9pyUGaFWNBZELA0cWLZV/lhwxjB7A7UafOevLtAOFbuIxIznzVFSJs2fZR
+         AXAurc7zxFrnpEAVTTriOSKoVXxKOOnGNtWSJbqjaq9/vMoQ+OrMCkD+liGwkjtQG+Hw
+         sEHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691320710; x=1691925510;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=je1gUzvwrqcKGyu+CaM6BhOeHMrmqE7jvTrxfdtVg+c=;
+        b=JI+zgumFKD6tNs15MA0Nnv3DgQ+M3bSdFK3LYveJijvWtlI4sLmWzTvLPEwkd5Bu8F
+         JHR+qMysfYgqr4g74trCJEnEQyUm/945qQ6eoSvtmxeigkzz4SVQye5sXK7D7PIzjqyT
+         JXKquoQxt1JvYm5vTIOIYdeEwiSDMjKCEOxkHKGLvPdM6y4kO3cnaVl4J8inm/txQNko
+         JOEmW2PpkKeHx1X9Ka2oKssF3jUlIL8Wcx63BY2Hf69mLM2R7hSgtbtj7Fl7PSI3+NW5
+         bqWaDyL710S059rL9hQwpYIsOY5b1rqx8q8q4wQOYww1hrD8UAvTpTBxLM5vsXoB+++X
+         /nyQ==
+X-Gm-Message-State: AOJu0Yy7vESyBuEVB5pHEtzrJLUUPYpG51H1yG0+dEgqu5C2+U4bmCeE
+        C2Ja5O+k3frsLKJs7RsX0OAb8E+d/i2J7w==
+X-Google-Smtp-Source: AGHT+IFgigO3y9Y0gmsVwp0bgkTt8PTWPfzi/5MWxrUz9PiEfM72eh/jIwxL/bbaITEl5Qt+H97tpg==
+X-Received: by 2002:a05:6402:54:b0:522:30cc:a1f0 with SMTP id f20-20020a056402005400b0052230cca1f0mr5720629edu.14.1691320710452;
+        Sun, 06 Aug 2023 04:18:30 -0700 (PDT)
+Received: from nam-dell (ip-217-105-46-58.ip.prioritytelecom.net. [217.105.46.58])
+        by smtp.gmail.com with ESMTPSA id s25-20020a056402015900b0052237dfa82fsm3769409edu.64.2023.08.06.04.18.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Aug 2023 04:18:29 -0700 (PDT)
+Date:   Sun, 6 Aug 2023 13:18:28 +0200
+From:   Nam Cao <namcaov@gmail.com>
+To:     "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: confused about kprobes
+Message-ID: <ZM+BhEz9u7hrWe6e@nam-dell>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The tcp_cwnd_restart function would be called if the user has enabled the
-tcp_slow_start_after_idle configuration and would be triggered when the
-connection is idle (like LONG RTO etc.). I think it would be great to
-add a new trace event named 'tcp:tcp_cwnd_reset'; it would help people
-to monitor the TCP state in a complicated network environment(like
-overlay/underlay SDN in Kubernetes, etc)
+Hello,
 
-Signed-off-by: Manjusaka <me@manjusaka.me>
----
- include/trace/events/tcp.h | 7 +++++++
- net/ipv4/tcp_output.c      | 1 +
- 2 files changed, 8 insertions(+)
+I am struggling to understand how kprobes works. It would be very nice if someone
+can spare the time to explain to me. I'm confused about this function in particular:
 
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index bf06db8d2046..fa44191cc609 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -187,6 +187,13 @@ DEFINE_EVENT(tcp_event_sk, tcp_rcv_space_adjust,
- 	TP_ARGS(sk)
- );
- 
-+DEFINE_EVENT(tcp_event_sk, tcp_cwnd_restart,
-+
-+	TP_PROTO(struct sock *sk),
-+
-+	TP_ARGS(sk)
-+);
-+
- TRACE_EVENT(tcp_retransmit_synack,
- 
- 	TP_PROTO(const struct sock *sk, const struct request_sock *req),
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 51d8638d4b4c..e902fa74303d 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -141,6 +141,7 @@ static __u16 tcp_advertise_mss(struct sock *sk)
-  */
- void tcp_cwnd_restart(struct sock *sk, s32 delta)
- {
-+	trace_tcp_cwnd_restart(sk);
- 	struct tcp_sock *tp = tcp_sk(sk);
- 	u32 restart_cwnd = tcp_init_cwnd(tp, __sk_dst_get(sk));
- 	u32 cwnd = tcp_snd_cwnd(tp);
--- 
-2.34.1
+/*
+ * Return an optimized kprobe whose optimizing code replaces
+ * instructions including 'addr' (exclude breakpoint).
+ */
+static struct kprobe *get_optimized_kprobe(kprobe_opcode_t *addr)
+{
+	int i;
+	struct kprobe *p = NULL;
+	struct optimized_kprobe *op;
 
+	/* Don't check i == 0, since that is a breakpoint case. */
+	for (i = 1; !p && i < MAX_OPTIMIZED_LENGTH / sizeof(kprobe_opcode_t); i++)
+		p = get_kprobe(addr - i);
+
+	if (p && kprobe_optready(p)) {
+		op = container_of(p, struct optimized_kprobe, kp);
+		if (arch_within_optimized_kprobe(op, addr))
+			return p;
+	}
+
+	return NULL;
+}
+
+The document mentions something about optimizing by replacing trap instructions
+with jump instructions, so I am assuming this function is part of that. But I
+fail to see what this function is trying to do exactly. The for loop seems to
+call get_kprobe at addresses immediately before "addr". But what for? What are
+at addresses before "addr"?
+
+Can someone be so kind to give me a line-by-line explanation of this function?
+
+Thanks!
+
+Nam
