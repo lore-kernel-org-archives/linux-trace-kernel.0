@@ -2,105 +2,147 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D08C0015E
-	for <linux-trace-kernel@archiver.kernel.org>; Sun,  6 Aug 2023 11:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD3AC001DE
+	for <linux-trace-kernel@archiver.kernel.org>; Sun,  6 Aug 2023 12:32:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229498AbjHFLSe (ORCPT
+        id S230129AbjHFMcC (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 6 Aug 2023 07:18:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50814 "EHLO
+        Sun, 6 Aug 2023 08:32:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjHFLSd (ORCPT
+        with ESMTP id S229573AbjHFMcB (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 6 Aug 2023 07:18:33 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72E1A11D;
-        Sun,  6 Aug 2023 04:18:32 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id 4fb4d7f45d1cf-52222562f1eso5001692a12.3;
-        Sun, 06 Aug 2023 04:18:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691320710; x=1691925510;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=je1gUzvwrqcKGyu+CaM6BhOeHMrmqE7jvTrxfdtVg+c=;
-        b=UvsSgM4LoSJAa2mNOuJ5Iv+oGAdwD62Wt2/PMYqnAp5neD4L6dS9zXu691t5xo58sN
-         +C8PqdPEik2VvfsCwtfpfai7q0JBWIzQY44Fj2ACxHdUp00GfP2S53aGEgNbX7jAzCwT
-         W4xpjwz5ElfF/Ao68gjWd5UewvEQbasIbqOcpx1Qw3Fok1mmdG64P9G1qldeIL2Nh51G
-         IlHGJqKYWi9pyUGaFWNBZELA0cWLZV/lhwxjB7A7UafOevLtAOFbuIxIznzVFSJs2fZR
-         AXAurc7zxFrnpEAVTTriOSKoVXxKOOnGNtWSJbqjaq9/vMoQ+OrMCkD+liGwkjtQG+Hw
-         sEHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691320710; x=1691925510;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=je1gUzvwrqcKGyu+CaM6BhOeHMrmqE7jvTrxfdtVg+c=;
-        b=JI+zgumFKD6tNs15MA0Nnv3DgQ+M3bSdFK3LYveJijvWtlI4sLmWzTvLPEwkd5Bu8F
-         JHR+qMysfYgqr4g74trCJEnEQyUm/945qQ6eoSvtmxeigkzz4SVQye5sXK7D7PIzjqyT
-         JXKquoQxt1JvYm5vTIOIYdeEwiSDMjKCEOxkHKGLvPdM6y4kO3cnaVl4J8inm/txQNko
-         JOEmW2PpkKeHx1X9Ka2oKssF3jUlIL8Wcx63BY2Hf69mLM2R7hSgtbtj7Fl7PSI3+NW5
-         bqWaDyL710S059rL9hQwpYIsOY5b1rqx8q8q4wQOYww1hrD8UAvTpTBxLM5vsXoB+++X
-         /nyQ==
-X-Gm-Message-State: AOJu0Yy7vESyBuEVB5pHEtzrJLUUPYpG51H1yG0+dEgqu5C2+U4bmCeE
-        C2Ja5O+k3frsLKJs7RsX0OAb8E+d/i2J7w==
-X-Google-Smtp-Source: AGHT+IFgigO3y9Y0gmsVwp0bgkTt8PTWPfzi/5MWxrUz9PiEfM72eh/jIwxL/bbaITEl5Qt+H97tpg==
-X-Received: by 2002:a05:6402:54:b0:522:30cc:a1f0 with SMTP id f20-20020a056402005400b0052230cca1f0mr5720629edu.14.1691320710452;
-        Sun, 06 Aug 2023 04:18:30 -0700 (PDT)
-Received: from nam-dell (ip-217-105-46-58.ip.prioritytelecom.net. [217.105.46.58])
-        by smtp.gmail.com with ESMTPSA id s25-20020a056402015900b0052237dfa82fsm3769409edu.64.2023.08.06.04.18.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Aug 2023 04:18:29 -0700 (PDT)
-Date:   Sun, 6 Aug 2023 13:18:28 +0200
-From:   Nam Cao <namcaov@gmail.com>
-To:     "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Sun, 6 Aug 2023 08:32:01 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 134A8114;
+        Sun,  6 Aug 2023 05:31:55 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4E4AC6108D;
+        Sun,  6 Aug 2023 12:31:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FC15C433C7;
+        Sun,  6 Aug 2023 12:31:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691325114;
+        bh=VLwj9EaXv+Fvvx85CZU4JjWoolXLJ0yM8fecfAPaf5U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=INAA8BSr90XipNSGW0JRg0PjktcyyUvVFfH6S0Ek6xBC99L22thuVIfxHTQO+t2aH
+         oIheQcMAgoYaxRJvlLBRYQ/Z7niaLtSSP4c+VnTFZPxRHbsMcO8r/fcgyHFVePxp3l
+         zJP8cFTpXUCmPNXc9S2vv+rl/J3IgtUie5u0viOR45/zLLoS8QtmLS3Mh9281JDNlX
+         x5kVIf2SWoqkrA1mZ4NuKC/v0BlNUc2fdd6Ip++dRTzSPePQ5uXTTM9mOer87EW2V2
+         Rvd/VpSSkBid0R9FUtvJEI9ffc45PZvtWZgpRpoM5EBNi+8i8/gVaw9VWuaY+Ffpl7
+         Kf3zlDkXrGJww==
+Date:   Sun, 6 Aug 2023 21:31:50 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Nam Cao <namcaov@gmail.com>
+Cc:     "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
         Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: confused about kprobes
-Message-ID: <ZM+BhEz9u7hrWe6e@nam-dell>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: confused about kprobes
+Message-Id: <20230806213150.5571b4a7f4a0531fcb00f689@kernel.org>
+In-Reply-To: <ZM+BhEz9u7hrWe6e@nam-dell>
+References: <ZM+BhEz9u7hrWe6e@nam-dell>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hello,
+Hi Nam,
 
-I am struggling to understand how kprobes works. It would be very nice if someone
-can spare the time to explain to me. I'm confused about this function in particular:
+On Sun, 6 Aug 2023 13:18:28 +0200
+Nam Cao <namcaov@gmail.com> wrote:
 
-/*
- * Return an optimized kprobe whose optimizing code replaces
- * instructions including 'addr' (exclude breakpoint).
- */
-static struct kprobe *get_optimized_kprobe(kprobe_opcode_t *addr)
-{
-	int i;
-	struct kprobe *p = NULL;
-	struct optimized_kprobe *op;
+> Hello,
+> 
+> I am struggling to understand how kprobes works. It would be very nice if someone
+> can spare the time to explain to me. I'm confused about this function in particular:
+> 
+> /*
+>  * Return an optimized kprobe whose optimizing code replaces
+>  * instructions including 'addr' (exclude breakpoint).
+>  */
+> static struct kprobe *get_optimized_kprobe(kprobe_opcode_t *addr)
+> {
+> 	int i;
+> 	struct kprobe *p = NULL;
+> 	struct optimized_kprobe *op;
+> 
+> 	/* Don't check i == 0, since that is a breakpoint case. */
+> 	for (i = 1; !p && i < MAX_OPTIMIZED_LENGTH / sizeof(kprobe_opcode_t); i++)
+> 		p = get_kprobe(addr - i);
+> 
+> 	if (p && kprobe_optready(p)) {
+> 		op = container_of(p, struct optimized_kprobe, kp);
+> 		if (arch_within_optimized_kprobe(op, addr))
+> 			return p;
+> 	}
+> 
+> 	return NULL;
+> }
+> 
+> The document mentions something about optimizing by replacing trap instructions
+> with jump instructions, so I am assuming this function is part of that.
 
-	/* Don't check i == 0, since that is a breakpoint case. */
-	for (i = 1; !p && i < MAX_OPTIMIZED_LENGTH / sizeof(kprobe_opcode_t); i++)
-		p = get_kprobe(addr - i);
+Yes, you're right. 
 
-	if (p && kprobe_optready(p)) {
-		op = container_of(p, struct optimized_kprobe, kp);
-		if (arch_within_optimized_kprobe(op, addr))
-			return p;
-	}
+> But I
+> fail to see what this function is trying to do exactly. The for loop seems to
+> call get_kprobe at addresses immediately before "addr". But what for? What are
+> at addresses before "addr"?
 
-	return NULL;
-}
+This is for finding a jump optimized kprobe which will modify the instruction
+pointed by 'addr'. As you may know, on x86, the software-breakpoint
+instruction is 1 byte, but the jump will be 5 bytes. In that case, if we put
+something at instruction including 'addr', it will be ignored or it will break
+the jump instruction. So it is used for finding such optimized kprobe.
 
-The document mentions something about optimizing by replacing trap instructions
-with jump instructions, so I am assuming this function is part of that. But I
-fail to see what this function is trying to do exactly. The for loop seems to
-call get_kprobe at addresses immediately before "addr". But what for? What are
-at addresses before "addr"?
+For the kprobe, the jump optimization is optional and hidden from the user. We
+should prioritize adding kprobes at specified locations over optimization.
+Thus if we find such optimized kprobe, it must be unoptimized.
 
-Can someone be so kind to give me a line-by-line explanation of this function?
+> 
+> Can someone be so kind to give me a line-by-line explanation of this function?
 
-Thanks!
+> 	/* Don't check i == 0, since that is a breakpoint case. */
+> 	for (i = 1; !p && i < MAX_OPTIMIZED_LENGTH / sizeof(kprobe_opcode_t); i++)
+> 		p = get_kprobe(addr - i);
 
-Nam
+This tries to find any kprobe before the given addr whcih is possible to be
+optimized.
+
+> 
+> 	if (p && kprobe_optready(p)) {
+
+If there is a kprobe and that is ready for optimizing (including optimized)
+
+> 		op = container_of(p, struct optimized_kprobe, kp);
+
+convert the kprobe to optimized-kprobe and,
+
+> 		if (arch_within_optimized_kprobe(op, addr))
+
+check whether the optimized kprobe jump modification area is including 'addr'.
+
+> 			return p;
+
+If so, return the found kprobe.
+
+> 	}
+
+Thank you,
+
+
+> 
+> Thanks!
+> 
+> Nam
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
