@@ -2,128 +2,112 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D92C001B0
-	for <linux-trace-kernel@archiver.kernel.org>; Sun,  6 Aug 2023 14:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5E3C001DF
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  7 Aug 2023 02:54:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229515AbjHFO2N (ORCPT
+        id S229899AbjHGCyo (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 6 Aug 2023 10:28:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51388 "EHLO
+        Sun, 6 Aug 2023 22:54:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229509AbjHFO2N (ORCPT
+        with ESMTP id S229897AbjHGCyn (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 6 Aug 2023 10:28:13 -0400
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F66E9F;
-        Sun,  6 Aug 2023 07:28:12 -0700 (PDT)
-Received: by mail-lj1-x233.google.com with SMTP id 38308e7fff4ca-2b9338e4695so58510411fa.2;
-        Sun, 06 Aug 2023 07:28:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691332090; x=1691936890;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WjOqtzjiS9hMriytx4md9WAGNQMkIBNRRc2C+laXxqo=;
-        b=GZCXdTuinDdxp+PAbXVrD2C6/E4RbzF3nAUZHcD921R7oKjcEwTAL68I/Ks7yYu1GC
-         br3UoyGRCP6WXowXCDj7G74fYjvUxDIUV/HOT/JiWJQDU67qEOLTEXa71tFwYtUD3AqH
-         +bmGcAo9Ss02jOWwFfsZsF0HenAZqCeTVfom62/3MimZhq6SXaz8FfBBpWFHOgKDx+hz
-         SyNFrqzgEoaDRVHGPHJvQp6wudTwM7XcsEfz2H+z6siZuaSBTaucQWbSZatzJHOFtSKA
-         K5q82pMyR1W++pmG99GgnYu1fDerVKKt/8TPXUSMObA1UIBAjxX6JHpD8nK262FM7E5u
-         S8ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691332090; x=1691936890;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WjOqtzjiS9hMriytx4md9WAGNQMkIBNRRc2C+laXxqo=;
-        b=N7KWx1C6rjpTGz0eqXJlvQoL8qQ6sD+JkuS+BzOdqrZ/h9CcvtYTe6yJ0uuCEEQcbO
-         ZS0bGtI/qJf8zGc9ThF63YhipKb0YtKBpRuBAvHgkyFUdyN8mBWmHxtySIS31d0V5kTL
-         l2pQabhQEocChqg0PmkximgruuTaPoB6TV7Ovd2K4Q7G6CAFpcf3k0fiM2D3/6rBp3ZV
-         Mlk7q1UVjLyu+fMNT5o1VIsCscUZSyVNPSIRIYvwENLMa6RfiDPMGYNBIQioJXC1C48h
-         m/nMJQ2F3Kraz4X5QBBJr0n+3msVu45hWY+ZtJDN4HfbQPEec5/ji6AGIep7CwCjhMyy
-         Vj5A==
-X-Gm-Message-State: AOJu0YwHKbSPH58wgdVwATcVAPf5AKRUx95euQbAW5wIePiANI9Ew5cr
-        eh0KsXWKnvN1LAvBqR5Goq9yKo8LYO6XbQ==
-X-Google-Smtp-Source: AGHT+IHQS5XGNzu/GSaoZhX74O3EBI5ek2XmGXif/BZeiwcZSNC8aG/8xU72RZqu3pk51DyK4m7NyQ==
-X-Received: by 2002:a19:9103:0:b0:4fd:d6ba:73c2 with SMTP id t3-20020a199103000000b004fdd6ba73c2mr4203961lfd.54.1691332089593;
-        Sun, 06 Aug 2023 07:28:09 -0700 (PDT)
-Received: from nam-dell (ip-217-105-46-58.ip.prioritytelecom.net. [217.105.46.58])
-        by smtp.gmail.com with ESMTPSA id c21-20020aa7df15000000b005222b471dc4sm3909677edy.95.2023.08.06.07.28.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Aug 2023 07:28:09 -0700 (PDT)
-Date:   Sun, 6 Aug 2023 16:28:08 +0200
-From:   Nam Cao <namcaov@gmail.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: confused about kprobes
-Message-ID: <ZM+t+EVXIlNbKZ3u@nam-dell>
-References: <ZM+BhEz9u7hrWe6e@nam-dell>
- <20230806213150.5571b4a7f4a0531fcb00f689@kernel.org>
+        Sun, 6 Aug 2023 22:54:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05D551732;
+        Sun,  6 Aug 2023 19:54:34 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8EBB261338;
+        Mon,  7 Aug 2023 02:54:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BFEDC433C7;
+        Mon,  7 Aug 2023 02:54:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691376873;
+        bh=K/svtr178nDNGv75I/PN9a7tqopFRrIQt4KacXAcLRI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=UzKbWa7wJj4pCrkQElqAtPq+J3oXgR5U+VkpC+pBw6SBim4j/U+0C0FQYjpAhbesF
+         R0+YAKHQoY5HsQKr/rXfOmQ96M53/m4PBqR0iNvmTaILywN/uio5rPc84Fkc4C6aOA
+         ri09oNFmC5bh9wbLvmYIYU94TGyjKWyL8Ci4EvKT4TZSbbSBeFXkBJ1UL4+VhbVC3a
+         g5t5pzoUqX6y6aFV/hCdEzGYNSt0XpwU0dBU1DaA6wbijctgoiX/DaC+WmJ7BLiYE1
+         ppc9Qx0dDuD3GQF++R7ROfwkymC72cVbBEZ3WbbpAuG1dXkhf8E4GUqgpTJLjmckCy
+         Ltb2oHV/Pmqww==
+From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To:     linux-trace-kernel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        mhiramat@kernel.org, Martin KaFai Lau <martin.lau@linux.dev>,
+        bpf@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: [PATCH v5 0/9] tracing: Improbe BTF support on probe events
+Date:   Mon,  7 Aug 2023 11:54:28 +0900
+Message-Id: <169137686814.271367.11218568219311636206.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230806213150.5571b4a7f4a0531fcb00f689@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sun, Aug 06, 2023 at 09:31:50PM +0900, Masami Hiramatsu wrote:
-> Hi Nam,
-> 
-> On Sun, 6 Aug 2023 13:18:28 +0200
-> Nam Cao <namcaov@gmail.com> wrote:
-> 
-> > Hello,
-> > 
-> > I am struggling to understand how kprobes works. It would be very nice if someone
-> > can spare the time to explain to me. I'm confused about this function in particular:
-> > 
-> > /*
-> >  * Return an optimized kprobe whose optimizing code replaces
-> >  * instructions including 'addr' (exclude breakpoint).
-> >  */
-> > static struct kprobe *get_optimized_kprobe(kprobe_opcode_t *addr)
-> > {
-> > 	int i;
-> > 	struct kprobe *p = NULL;
-> > 	struct optimized_kprobe *op;
-> > 
-> > 	/* Don't check i == 0, since that is a breakpoint case. */
-> > 	for (i = 1; !p && i < MAX_OPTIMIZED_LENGTH / sizeof(kprobe_opcode_t); i++)
-> > 		p = get_kprobe(addr - i);
-> > 
-> > 	if (p && kprobe_optready(p)) {
-> > 		op = container_of(p, struct optimized_kprobe, kp);
-> > 		if (arch_within_optimized_kprobe(op, addr))
-> > 			return p;
-> > 	}
-> > 
-> > 	return NULL;
-> > }
-> > 
-> > The document mentions something about optimizing by replacing trap instructions
-> > with jump instructions, so I am assuming this function is part of that.
-> 
-> Yes, you're right. 
-> 
-> > But I
-> > fail to see what this function is trying to do exactly. The for loop seems to
-> > call get_kprobe at addresses immediately before "addr". But what for? What are
-> > at addresses before "addr"?
-> 
-> This is for finding a jump optimized kprobe which will modify the instruction
-> pointed by 'addr'. As you may know, on x86, the software-breakpoint
-> instruction is 1 byte, but the jump will be 5 bytes. In that case, if we put
-> something at instruction including 'addr', it will be ignored or it will break
-> the jump instruction. So it is used for finding such optimized kprobe.
-> 
-> For the kprobe, the jump optimization is optional and hidden from the user. We
-> should prioritize adding kprobes at specified locations over optimization.
-> Thus if we find such optimized kprobe, it must be unoptimized.
+Hi,
 
-Thank you so much for the detailed answer, it is clear now.
+Here is the 5th version of series to improve the BTF support on probe events.
+The previous series is here:
 
-Best regards,
-Nam
+https://lore.kernel.org/all/169078860386.173706.3091034523220945605.stgit@devnote2/
+
+This version introduces kernel/trace/trace_btf.c to separate the btf generic
+functions. These functions will be moved to btf.c next merge window.
+This fixes the member-search function to return the bit-offset of the
+parent anonymous union/structure. Thus the caller can calculate the real
+bit-offset from the root data structure.
+This also fixes the ftrace selftest issue which fails if the kernel
+supports only BTF args but not support field access.
+
+This series can be applied on top of "probes/core" branch of
+https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git/
+
+You can also get this series from:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git topic/fprobe-event-ext
+
+Thank you,
+
+---
+
+Masami Hiramatsu (Google) (9):
+      tracing/probes: Support BTF argument on module functions
+      tracing/probes: Move finding func-proto API and getting func-param API to trace_btf
+      tracing/probes: Add a function to search a member of a struct/union
+      tracing/probes: Support BTF based data structure field access
+      tracing/probes: Support BTF field access from $retval
+      tracing/probes: Add string type check with BTF
+      tracing/fprobe-event: Assume fprobe is a return event by $retval
+      selftests/ftrace: Add BTF fields access testcases
+      Documentation: tracing: Update fprobe event example with BTF field
+
+
+ Documentation/trace/fprobetrace.rst                |   64 ++-
+ include/linux/btf.h                                |    1 
+ kernel/bpf/btf.c                                   |    2 
+ kernel/trace/Makefile                              |    1 
+ kernel/trace/trace.c                               |    3 
+ kernel/trace/trace_btf.c                           |  109 ++++
+ kernel/trace/trace_btf.h                           |   11 
+ kernel/trace/trace_eprobe.c                        |    4 
+ kernel/trace/trace_fprobe.c                        |   59 ++
+ kernel/trace/trace_kprobe.c                        |    1 
+ kernel/trace/trace_probe.c                         |  499 +++++++++++++++-----
+ kernel/trace/trace_probe.h                         |   27 +
+ kernel/trace/trace_uprobe.c                        |    1 
+ .../ftrace/test.d/dynevent/add_remove_btfarg.tc    |   20 +
+ .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |   10 
+ 15 files changed, 637 insertions(+), 175 deletions(-)
+ create mode 100644 kernel/trace/trace_btf.c
+ create mode 100644 kernel/trace/trace_btf.h
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
