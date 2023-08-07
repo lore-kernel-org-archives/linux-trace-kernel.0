@@ -2,93 +2,120 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CEAAC001DB
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  7 Aug 2023 13:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C02AC00528
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  7 Aug 2023 13:42:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231430AbjHGN1o (ORCPT
+        id S234167AbjHGNmX (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 7 Aug 2023 09:27:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36272 "EHLO
+        Mon, 7 Aug 2023 09:42:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232849AbjHGN1e (ORCPT
+        with ESMTP id S233961AbjHGNmJ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 7 Aug 2023 09:27:34 -0400
-Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B3961FEA
-        for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Aug 2023 06:27:06 -0700 (PDT)
-Received: by mail-qt1-x836.google.com with SMTP id d75a77b69052e-40c72caec5cso444321cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 07 Aug 2023 06:27:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1691414768; x=1692019568;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aV86SNTrsedHb/4GViYCEi4y0WkKBp0siTYx3zahDc8=;
-        b=4S7gV7c2cdcuEpB2T5mX/CpOL0kpeYdnmSvNbTa56EyndJ1AvAzRNKOCHIXMgx0KOG
-         m3pW2Po9Xpwb5mBlkkTlDX7BdfoeEdLud2EtxxftfD36WTiHHe2nEeXaITwz2BDbbA0E
-         mSvp6S22gXS5JjA4PzFAz3yxbfL/xwTpchOOFlQes8Q9oNXqFc9aOWbePypmk7q1dk4A
-         a4vRst4pzFXh9rN/C4cxoJLZMGwpmyH5jRV3WLEwpNBiRYis7cS9NoowQ/CtsnQCP+xr
-         DEBbVtZs2zdvHzsuMXpeRoX/6pa4fjpkmdII9AdqLI15u6AO9N5fAAXHrXdcgBZmZLKS
-         kpZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691414768; x=1692019568;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aV86SNTrsedHb/4GViYCEi4y0WkKBp0siTYx3zahDc8=;
-        b=ajzfDs5N4OKMm/NCFH7EZBpvtUp48rhpOhCZDqEdvGypfRcc9AUPoPHXHUQ7peqSTn
-         1BWosl7pln5pGi/KRGIcsz7ZWihbqcdLDNFMqowQiSWla2ACXk0PCagmPjFrNfgCjCze
-         1Cg270Wt+l8cPUNLPiF24HGqMUj9yQDMv9vOzmUx/KuWS105DW3oPdM3hBoJu7MwtgEL
-         yeSx9rp7gg90a3Auinz2EDbSuvrxCJnCVYw2hd6kUwoeJ9tQVllZpF+iIBH2NvPwnK0k
-         bHvvOdzMzkUDTRS1Yn8EFuH310pJNsfBXAeJuM+j7O4W2w4bDiFzKeQP3zeIZcTfFyXu
-         J7Gw==
-X-Gm-Message-State: AOJu0YyDQiEtmHxoJskKBMv+Iy5FjmcKzpWzvpnvTF5w1ftGYm/FHzZU
-        +3Z7HMf/Vcu3bl+2Yk3o8zI7fVXlN/5aprSY3o4qtw==
-X-Google-Smtp-Source: AGHT+IH7l8fz/va80d2V76Roj1BsoAMY57SE1UROxLkV3dyWOxXlttc6h2gDN6ZO1f9HDD+7BbQ8h6jdtiwhSOmFGN4=
-X-Received: by 2002:a05:622a:1806:b0:403:ac17:c18a with SMTP id
- t6-20020a05622a180600b00403ac17c18amr454405qtc.14.1691414768116; Mon, 07 Aug
- 2023 06:26:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230806075216.13378-1-me@manjusaka.me> <CANn89i+bMh-xU7PCxf_O5N+vy=83S+V=23mAAmbCuhjuP5Ob9g@mail.gmail.com>
+        Mon, 7 Aug 2023 09:42:09 -0400
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF2A01738;
+        Mon,  7 Aug 2023 06:41:53 -0700 (PDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 917EC5C00D8;
+        Mon,  7 Aug 2023 09:41:12 -0400 (EDT)
+Received: from imap48 ([10.202.2.98])
+  by compute4.internal (MEProxy); Mon, 07 Aug 2023 09:41:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjusaka.me; h=
+        cc:cc:content-transfer-encoding:content-type:content-type:date
+        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to; s=fm3; t=
+        1691415672; x=1691502072; bh=+lJs9GYWBNiOAOVqXWOH5SilIPKlB6jLhY/
+        Q7PdyL5M=; b=c312f7jQA5+I9qUi7iYMuedJv8L70Agehy5ZgTGHu0Pz7W02Ppn
+        1Z0zgOZSW2+Bv0x1KO8g+qvpdX1jJY9WG7g8pnbWkBwFEqg+84zoWP6S1dnE7MOS
+        /r5DMQ22koAnK/vCle3StbOWP1xM3F5JzzvnVMv0Jvu4iwB13wo60yRWIiRPYs8s
+        dpF+gV36ExFSygq4CkMunTHg+MxRP+jvBJ3G9mvxbnZYKcq5kVzTIJ4PU2BftWrI
+        rIqavDwtv+cKnHvhLqrb9Olfx19dG+6qv4BLCUYeF3gzezjfCInoecIgUXOPFgmq
+        gKw6f8dhXk8CKVhPpBlgOGitVCq0DA2/GAw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:date:feedback-id:feedback-id
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+        1691415672; x=1691502072; bh=+lJs9GYWBNiOAOVqXWOH5SilIPKlB6jLhY/
+        Q7PdyL5M=; b=NmN9ldXHdYl8oT9Ay+qbHn3v/Q5TrM9dwmeMiGBHNbuFtqFFVdZ
+        FXsekpSzser2hjjbLWZ/LFfpy6gvCojDVo1zSsWnBWA2S9biWuK2PNGZjIUuHPaQ
+        KSOgleN5/FltuUD9QXOf+3+vgw0/wtK8mW/Muqm5QrAo3DWsiku0TZ4RO00bodPk
+        JO8BV/lilVlQWU+XpztM96iCKIKwwSDwherBuYJg/SNy7U/NlpU5YFmiFjBuAqOt
+        YAu/EGAYSG+RQAIw48t/gpQcCDKqgZivS1eVophmS2qSHNE3Y7sIO1zevL+gB6Ub
+        7+5imLaLazgqYAv+x+upwHIMgfwCiAz68lQ==
+X-ME-Sender: <xms:ePTQZFhj4BgrepeJi7gipSXbCHfnu4sfbC1YaTdukRmuHiUmlFzMQw>
+    <xme:ePTQZKB44V1VXUw48nKXZAuErKB1R2HqBUCcfQjQawoD_6-TDqFoYJYgWxegv7JZW
+    5yt_j2Yacpz42u3gWA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrledtgdeiudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpeforghn
+    jhhushgrkhgruceomhgvsehmrghnjhhushgrkhgrrdhmvgeqnecuggftrfgrthhtvghrnh
+    epffdvfeejleefjeegfedtieeuleelhffhuedufeevkeeltdelgeetiefgkefhvddvnecu
+    ffhomhgrihhnpegsohhothhlihhnrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgvsehmrghnjhhushgrkhgrrdhmvg
+X-ME-Proxy: <xmx:ePTQZFF0QHaQLh1RuKjgP3zP_kN2U6dPHVkA5Ifwxv4-qBYP4sVzRw>
+    <xmx:ePTQZKS4gf-qO2z8zRIqXaGcMLLcjMzBhUNKfyGESlz_n0btgobuwQ>
+    <xmx:ePTQZCy6kgGn8XT-ax_a7z8RwXM3cWFKhnIlooeEJoUUFKOiea6Fwg>
+    <xmx:ePTQZBkTqdOKcxNm50I0dY9yK8GyISvfGeqwQLd9PoRJs8ahLIPh1Q>
+Feedback-ID: i3ea9498d:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 4B4B831A0065; Mon,  7 Aug 2023 09:41:12 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-624-g7714e4406d-fm-20230801.001-g7714e440
+Mime-Version: 1.0
+Message-Id: <9f0abdcc-1cb2-4a4a-8348-4fcbd2be9a53@app.fastmail.com>
+In-Reply-To: <CANn89iJAu5CLq1LkRLt0qJ+ytFGXWGqymMHBnMevcPS4Z2GAXQ@mail.gmail.com>
+References: <20230806075216.13378-1-me@manjusaka.me>
+ <CANn89i+bMh-xU7PCxf_O5N+vy=83S+V=23mAAmbCuhjuP5Ob9g@mail.gmail.com>
  <8d25f9e8-9653-4e9b-b88b-c5434ce8aabf@app.fastmail.com>
-In-Reply-To: <8d25f9e8-9653-4e9b-b88b-c5434ce8aabf@app.fastmail.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Mon, 7 Aug 2023 15:25:56 +0200
-Message-ID: <CANn89iJAu5CLq1LkRLt0qJ+ytFGXWGqymMHBnMevcPS4Z2GAXQ@mail.gmail.com>
-Subject: Re: [PATCH] [RFC PATCH] tcp event: add new tcp:tcp_cwnd_restart event
-To:     Manjusaka <me@manjusaka.me>
+ <CANn89iJAu5CLq1LkRLt0qJ+ytFGXWGqymMHBnMevcPS4Z2GAXQ@mail.gmail.com>
+Date:   Mon, 07 Aug 2023 21:40:50 +0800
+From:   Manjusaka <me@manjusaka.me>
+To:     "Eric Dumazet" <edumazet@google.com>
 Cc:     mhiramat@kernel.org, rostedt@goodmis.org, davem@davemloft.net,
         dsahern@kernel.org, kuba@kernel.org, pabeni@redhat.com,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] [RFC PATCH] tcp event: add new tcp:tcp_cwnd_restart event
+Content-Type: text/plain;charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Aug 7, 2023 at 2:49=E2=80=AFPM Manjusaka <me@manjusaka.me> wrote:
->
-> > Do not include code before variable declarations.
-> Sorry about that. I will update the code later.
->
-> > I would rather add a trace in tcp_ca_event(), this would be more generi=
-c ?
->
-> https://elixir.bootlin.com/linux/latest/source/net/ipv4/tcp_cong.c#L41
->
-> I think maybe we already have the tcp_ca_event but named tcp_cong_state_s=
-et?
+Got you means! LGTM
 
-I am speaking of tcp_ca_event()...
+I will make a patch later and make a try
 
-For instance, tcp_cwnd_restart() calls tcp_ca_event(sk, CA_EVENT_CWND_RESTA=
-RT);
-
-tcp_set_ca_state() can only set icsk_ca_state to one value from enum
-tcp_ca_state:
-TCP_CA_Open, TCP_CA_Disorder, TCP_CA_CWR, TCP_CA_Recovery, TCP_CA_Loss
-
-enum tcp_ca_event has instead:
-CA_EVENT_TX_START, CA_EVENT_CWND_RESTART, CA_EVENT_COMPLETE_CWR,
-CA_EVENT_LOSS, CA_EVENT_ECN_NO_CE, CA_EVENT_ECN_IS_CE
+On Mon, Aug 7, 2023, at 9:25 PM, Eric Dumazet wrote:
+> On Mon, Aug 7, 2023 at 2:49=E2=80=AFPM Manjusaka <me@manjusaka.me> wro=
+te:
+> >
+> > > Do not include code before variable declarations.
+> > Sorry about that. I will update the code later.
+> >
+> > > I would rather add a trace in tcp_ca_event(), this would be more g=
+eneric ?
+> >
+> > https://elixir.bootlin.com/linux/latest/source/net/ipv4/tcp_cong.c#L=
+41
+> >
+> > I think maybe we already have the tcp_ca_event but named tcp_cong_st=
+ate_set?
+>=20
+> I am speaking of tcp_ca_event()...
+>=20
+> For instance, tcp_cwnd_restart() calls tcp_ca_event(sk, CA_EVENT_CWND_=
+RESTART);
+>=20
+> tcp_set_ca_state() can only set icsk_ca_state to one value from enum
+> tcp_ca_state:
+> TCP_CA_Open, TCP_CA_Disorder, TCP_CA_CWR, TCP_CA_Recovery, TCP_CA_Loss
+>=20
+> enum tcp_ca_event has instead:
+> CA_EVENT_TX_START, CA_EVENT_CWND_RESTART, CA_EVENT_COMPLETE_CWR,
+> CA_EVENT_LOSS, CA_EVENT_ECN_NO_CE, CA_EVENT_ECN_IS_CE
+>=20
