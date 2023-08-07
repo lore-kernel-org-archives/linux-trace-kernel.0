@@ -2,163 +2,120 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A4EC001DB
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  7 Aug 2023 06:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5EAC001DF
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  7 Aug 2023 12:34:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231293AbjHGGuJ (ORCPT
+        id S233583AbjHGMek (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 7 Aug 2023 02:50:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48486 "EHLO
+        Mon, 7 Aug 2023 08:34:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231375AbjHGGuA (ORCPT
+        with ESMTP id S230054AbjHGMej (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 7 Aug 2023 02:50:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38D6E1BF5;
-        Sun,  6 Aug 2023 23:49:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7A51361588;
-        Mon,  7 Aug 2023 06:49:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 560CAC433C8;
-        Mon,  7 Aug 2023 06:49:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691390979;
-        bh=zlG4XdXdEpC54rcZoPhBS/p5nrcyfvD1Z3WKRvALoqk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q4INJuoaj4RDLwYhiq+qDhUwK96mCQ5IDS6Lape7RZ73ZgbZUhVYtx3unt/mCRClf
-         k7np5U2H4wvBHj0c7fFzVxbxWYDbsJEcpNV5uB4ibxp66MJ0yb28iDCJhEWF7KWg1b
-         3s4P2ZyV7ovH/Svx20xalERpCY59ryGgBrT7K0dWKF2U54ZvJ9c5LpPiL7tjzeAEsq
-         39jYUPsTlSyvg+m3PI/8RMmyHDy0ATihAq9yAxE07QYZiiy5Q4KEZ2KzCrCLLKIs5Q
-         oFlMtbn4UG1+rDU5v0LBZVw4AHPsKUd4sSyxLfMYHpbFh5sPK1H9zt/9ZldWPTfa+T
-         S+RnhQ+eLI78g==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Florent Revest <revest@chromium.org>
-Cc:     linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [RFC PATCH v2 6/6] bpf: Enable kprobe_multi feature if CONFIG_FPROBE is enabled
-Date:   Mon,  7 Aug 2023 15:49:33 +0900
-Message-Id: <169139097360.324433.2521527070503682979.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <169139090386.324433.6412259486776991296.stgit@devnote2>
-References: <169139090386.324433.6412259486776991296.stgit@devnote2>
-User-Agent: StGit/0.19
+        Mon, 7 Aug 2023 08:34:39 -0400
+Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32FA110D9
+        for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Aug 2023 05:34:38 -0700 (PDT)
+Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-40a47e8e38dso425051cf.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 07 Aug 2023 05:34:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1691411677; x=1692016477;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0FG/UEllzNChCej8uXILncmRysAuM1vV07T2iwe42JA=;
+        b=JpyDvOlj8VBrVqf1QSAgsDbip9pZlub24NJkJgJyyKB/H/DvdYdoxmjreXhlt1XvEP
+         BP0DjmArpqwF15QAa3jz91kn+FPVNwL+cRVQ3I/BKEXs07v/DA+dOdarrrjAcNiyXf4Y
+         J59sSCESD9TIZf4sTxP8kqwazGIcloy5AMOdFtij0HlIzDpZK5rFOw+zPENKEcfIv/yu
+         3B/2arwFsiBhG4ZUeUh0EG1CNngwKQX+VkNkpwxYQodGXSONZrJngAxrxzgNj3Lk++JE
+         on7fa7ERhUJGQfqu3LEfqOVs5Rc+FljYUwIM3CcQ4stUUYTtGKEvP5N6gcfr2dKAYfOp
+         s2ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691411677; x=1692016477;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0FG/UEllzNChCej8uXILncmRysAuM1vV07T2iwe42JA=;
+        b=fLUqHUXOAy2SAE9gF+sAajYyEd44znggOYWxxYHa2AoPwYLgbmEGygRyUc+zBi7l0V
+         4ZzZmFdgQpBq1EbqHmYm+CfERk+tSkSHasJFd3Uc2mq2+lZEIj5EFa2IBk0cprZwBgjl
+         6Rhr6rY/avk/qpPmZv8A1ZFCPGgn/+cG76BjlLpL0PrvmiA+DczlW8lxU0h5BV9b2wvu
+         pjNA4MSfb0LrwXbHUv8fyJBhvp2Bv+DYxN/Q4Ya6EvMYJN4pfe8BuL5zN0Ql6+N8sOv5
+         NL+y3tuxYnb6Mf96dDUlJKkqv9+D1VOshYBjjzdtnDCEuQ04aUV+3Mvkm51X/Sz/pD+X
+         9T+w==
+X-Gm-Message-State: AOJu0YyYQN4bHCfFIglOgEIEsaKW15lQUAszIJMoNaky1ARhMOjl852I
+        GP/dPSg4agsZi+d0OruUzQi3YLT0tyuINJssN15u5A==
+X-Google-Smtp-Source: AGHT+IGFEOfPtttEqEQyisE87Q3lIx5E81ZJFnGZiNcPLZo40nfouDPJGZtep5wdJaynAYrKupNCRJJKkJYsTDd7zVc=
+X-Received: by 2002:ac8:7d8c:0:b0:405:3a65:b3d6 with SMTP id
+ c12-20020ac87d8c000000b004053a65b3d6mr369753qtd.13.1691411677157; Mon, 07 Aug
+ 2023 05:34:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20230806075216.13378-1-me@manjusaka.me>
+In-Reply-To: <20230806075216.13378-1-me@manjusaka.me>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Mon, 7 Aug 2023 14:34:24 +0200
+Message-ID: <CANn89i+bMh-xU7PCxf_O5N+vy=83S+V=23mAAmbCuhjuP5Ob9g@mail.gmail.com>
+Subject: Re: [PATCH] [RFC PATCH] tcp event: add new tcp:tcp_cwnd_restart event
+To:     Manjusaka <me@manjusaka.me>
+Cc:     mhiramat@kernel.org, rostedt@goodmis.org, davem@davemloft.net,
+        dsahern@kernel.org, kuba@kernel.org, pabeni@redhat.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Sun, Aug 6, 2023 at 9:52=E2=80=AFAM Manjusaka <me@manjusaka.me> wrote:
+>
+> The tcp_cwnd_restart function would be called if the user has enabled the
+> tcp_slow_start_after_idle configuration and would be triggered when the
+> connection is idle (like LONG RTO etc.). I think it would be great to
+> add a new trace event named 'tcp:tcp_cwnd_reset'; it would help people
+> to monitor the TCP state in a complicated network environment(like
+> overlay/underlay SDN in Kubernetes, etc)
+>
+> Signed-off-by: Manjusaka <me@manjusaka.me>
+> ---
+>  include/trace/events/tcp.h | 7 +++++++
+>  net/ipv4/tcp_output.c      | 1 +
+>  2 files changed, 8 insertions(+)
+>
+> diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+> index bf06db8d2046..fa44191cc609 100644
+> --- a/include/trace/events/tcp.h
+> +++ b/include/trace/events/tcp.h
+> @@ -187,6 +187,13 @@ DEFINE_EVENT(tcp_event_sk, tcp_rcv_space_adjust,
+>         TP_ARGS(sk)
+>  );
+>
+> +DEFINE_EVENT(tcp_event_sk, tcp_cwnd_restart,
+> +
+> +       TP_PROTO(struct sock *sk),
+> +
+> +       TP_ARGS(sk)
+> +);
+> +
+>  TRACE_EVENT(tcp_retransmit_synack,
+>
+>         TP_PROTO(const struct sock *sk, const struct request_sock *req),
+> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+> index 51d8638d4b4c..e902fa74303d 100644
+> --- a/net/ipv4/tcp_output.c
+> +++ b/net/ipv4/tcp_output.c
+> @@ -141,6 +141,7 @@ static __u16 tcp_advertise_mss(struct sock *sk)
+>   */
+>  void tcp_cwnd_restart(struct sock *sk, s32 delta)
+>  {
+> +       trace_tcp_cwnd_restart(sk);
 
-Enable kprobe_multi feature if CONFIG_FPROBE is enabled. The pt_regs is
-converted from ftrace_regs by ftrace_partial_regs(), thus some registers
-may always returns 0. But it should be enough for function entry (access
-arguments) and exit (access return value).
+Do not include code before variable declarations.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/bpf_trace.c |   22 +++++++++-------------
- 1 file changed, 9 insertions(+), 13 deletions(-)
+>         struct tcp_sock *tp =3D tcp_sk(sk);
+>         u32 restart_cwnd =3D tcp_init_cwnd(tp, __sk_dst_get(sk));
+>         u32 cwnd =3D tcp_snd_cwnd(tp);
+> --
+> 2.34.1
+>
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 99c5f95360f9..0725272a3de2 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -2460,7 +2460,7 @@ static int __init bpf_event_init(void)
- fs_initcall(bpf_event_init);
- #endif /* CONFIG_MODULES */
- 
--#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-+#ifdef CONFIG_FPROBE
- struct bpf_kprobe_multi_link {
- 	struct bpf_link link;
- 	struct fprobe fp;
-@@ -2482,6 +2482,8 @@ struct user_syms {
- 	char *buf;
- };
- 
-+static DEFINE_PER_CPU(struct pt_regs, bpf_kprobe_multi_pt_regs);
-+
- static int copy_user_syms(struct user_syms *us, unsigned long __user *usyms, u32 cnt)
- {
- 	unsigned long __user usymbol;
-@@ -2623,13 +2625,14 @@ static u64 bpf_kprobe_multi_entry_ip(struct bpf_run_ctx *ctx)
- 
- static int
- kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
--			   unsigned long entry_ip, struct pt_regs *regs)
-+			   unsigned long entry_ip, struct ftrace_regs *fregs)
- {
- 	struct bpf_kprobe_multi_run_ctx run_ctx = {
- 		.link = link,
- 		.entry_ip = entry_ip,
- 	};
- 	struct bpf_run_ctx *old_run_ctx;
-+	struct pt_regs *regs;
- 	int err;
- 
- 	if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1)) {
-@@ -2639,6 +2642,7 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
- 
- 	migrate_disable();
- 	rcu_read_lock();
-+	regs = ftrace_partial_regs(fregs, this_cpu_ptr(&bpf_kprobe_multi_pt_regs));
- 	old_run_ctx = bpf_set_run_ctx(&run_ctx.run_ctx);
- 	err = bpf_prog_run(link->link.prog, regs);
- 	bpf_reset_run_ctx(old_run_ctx);
-@@ -2656,13 +2660,9 @@ kprobe_multi_link_handler(struct fprobe *fp, unsigned long fentry_ip,
- 			  void *data)
- {
- 	struct bpf_kprobe_multi_link *link;
--	struct pt_regs *regs = ftrace_get_regs(fregs);
--
--	if (!regs)
--		return 0;
- 
- 	link = container_of(fp, struct bpf_kprobe_multi_link, fp);
--	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), regs);
-+	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), fregs);
- 	return 0;
- }
- 
-@@ -2672,13 +2672,9 @@ kprobe_multi_link_exit_handler(struct fprobe *fp, unsigned long fentry_ip,
- 			       void *data)
- {
- 	struct bpf_kprobe_multi_link *link;
--	struct pt_regs *regs = ftrace_get_regs(fregs);
--
--	if (!regs)
--		return;
- 
- 	link = container_of(fp, struct bpf_kprobe_multi_link, fp);
--	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), regs);
-+	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), fregs);
- }
- 
- static int symbols_cmp_r(const void *a, const void *b, const void *priv)
-@@ -2918,7 +2914,7 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
- 	kvfree(cookies);
- 	return err;
- }
--#else /* !CONFIG_DYNAMIC_FTRACE_WITH_REGS */
-+#else /* !CONFIG_FPROBE */
- int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
- {
- 	return -EOPNOTSUPP;
-
+I would rather add a trace in tcp_ca_event(), this would be more generic ?
