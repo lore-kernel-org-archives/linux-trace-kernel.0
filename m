@@ -2,109 +2,122 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B57ADC001B0
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  8 Aug 2023 17:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6ADC001DB
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  8 Aug 2023 18:31:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234960AbjHHRvV (ORCPT
+        id S235875AbjHHSbu (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 8 Aug 2023 13:51:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45658 "EHLO
+        Tue, 8 Aug 2023 14:31:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234963AbjHHRu4 (ORCPT
+        with ESMTP id S231886AbjHHSb2 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 8 Aug 2023 13:50:56 -0400
-Received: from mail-vs1-xe2f.google.com (mail-vs1-xe2f.google.com [IPv6:2607:f8b0:4864:20::e2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58D5CB4F32
-        for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Aug 2023 09:22:47 -0700 (PDT)
-Received: by mail-vs1-xe2f.google.com with SMTP id ada2fe7eead31-447805165e9so2250227137.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 08 Aug 2023 09:22:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1691511748; x=1692116548;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bR2OPalgZgFVCbBNZrCKIT8XHg7hgxmL/4fBXTDwklA=;
-        b=WOVCk7gZhtAMiedeD2DiyLHxTneqOaK9lQCwmkhs/xVsUHc8FstRDuVU/iYIV5tMNU
-         O+vetapoO3PVYzj1AS91/rcg4WCkNCobfeEb6dMurAQz45rFoX0NDKKgxOyu5kdTK5bt
-         GWb1OD0Mjc3Qv/SSn241MmHn/1jTcFrJAeWwY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691511748; x=1692116548;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bR2OPalgZgFVCbBNZrCKIT8XHg7hgxmL/4fBXTDwklA=;
-        b=V94xX8vewAZx0iHNjMcyylPdMEkkcQxMhZiFR59haptWOw20b+fxGQQzrwhgyUGJ6T
-         yjKP3HBdS5FB+X8JBb9lTVNaFE6Qy1acMcNNMBKeoUliB1DXZtrgCwyfrNVm7y5UgO0n
-         pYNokm+CQBcF4yK8L8LxTGdur363qtT6sPo8+GzgucRnQXPXaKV5kWJb7gcNcON8mvSS
-         QYHncVdDcAbHISsKga/L3UlDdIzpy3ZGJZCA9TAprEBTOE0ToiLmhyZ7aJ972PxgAj26
-         zOAEP00ZOoJWFluiOP94zrLSKS2NYtIwQSkiuGsk5uvOSjV17n+9z7wSUUZ7ZmZnYyWc
-         wfLA==
-X-Gm-Message-State: AOJu0Yw3xeYXvDrk2cpmeQDw93OHz/8sxFwIm1IppgQpg72XVmPt7W18
-        Qf9tC4R9wsAiOwYiginmTio8cyoFB+8xqD7ICisz1rFPKN1+QoV4VQk=
-X-Google-Smtp-Source: AGHT+IGwh0ywunatAy5MeeHk5SP91VnhUNy/5ce/vmlO7FYlLbSHZH+fvMcUcYsWZGLmPuJjjJUiwXexkRhSyiHdIdI=
-X-Received: by 2002:a17:90a:d50d:b0:268:ee6:6bdf with SMTP id
- t13-20020a17090ad50d00b002680ee66bdfmr9968391pju.47.1691504978388; Tue, 08
- Aug 2023 07:29:38 -0700 (PDT)
+        Tue, 8 Aug 2023 14:31:28 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 656FEB5E81;
+        Tue,  8 Aug 2023 10:51:58 -0700 (PDT)
+Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RKnsX1tKMzVk6Z;
+        Tue,  8 Aug 2023 17:27:44 +0800 (CST)
+Received: from localhost.localdomain (10.67.175.61) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Tue, 8 Aug 2023 17:29:37 +0800
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>
+CC:     <fweisbec@gmail.com>, <mingo@elte.hu>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <zhengyejian1@huawei.com>
+Subject: [PATCH] tracing: Fix memleak due to race between current_tracer and trace
+Date:   Tue, 8 Aug 2023 17:29:05 +0800
+Message-ID: <20230808092905.2936459-1-zhengyejian1@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <169139090386.324433.6412259486776991296.stgit@devnote2>
-In-Reply-To: <169139090386.324433.6412259486776991296.stgit@devnote2>
-From:   Florent Revest <revest@chromium.org>
-Date:   Tue, 8 Aug 2023 16:29:27 +0200
-Message-ID: <CABRcYmLYyohzVBzg-maoAwaFwj6VanWiAiv5GQnpagn2-ZDoRQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 0/6] bpf: fprobe: rethook: Use ftrace_regs instead
- of pt_regs
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.175.61]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Aug 7, 2023 at 8:48=E2=80=AFAM Masami Hiramatsu (Google)
-<mhiramat@kernel.org> wrote:
->
-> Florent, feel free to add your rethook for arm64, but please do not remov=
-e
-> kretprobe trampoline yet. It is another discussion point. We may be possi=
-ble
-> to use ftrace_regs for kretprobe by ftrace_partial_regs() but kretprobe
-> allows nest probe. (maybe we can skip that case?)
+Kmemleak report a leak in graph_trace_open():
 
-Ack :)
+  unreferenced object 0xffff0040b95f4a00 (size 128):
+    comm "cat", pid 204981, jiffies 4301155872 (age 99771.964s)
+    hex dump (first 32 bytes):
+      e0 05 e7 b4 ab 7d 00 00 0b 00 01 00 00 00 00 00 .....}..........
+      f4 00 01 10 00 a0 ff ff 00 00 00 00 65 00 10 00 ............e...
+    backtrace:
+      [<000000005db27c8b>] kmem_cache_alloc_trace+0x348/0x5f0
+      [<000000007df90faa>] graph_trace_open+0xb0/0x344
+      [<00000000737524cd>] __tracing_open+0x450/0xb10
+      [<0000000098043327>] tracing_open+0x1a0/0x2a0
+      [<00000000291c3876>] do_dentry_open+0x3c0/0xdc0
+      [<000000004015bcd6>] vfs_open+0x98/0xd0
+      [<000000002b5f60c9>] do_open+0x520/0x8d0
+      [<00000000376c7820>] path_openat+0x1c0/0x3e0
+      [<00000000336a54b5>] do_filp_open+0x14c/0x324
+      [<000000002802df13>] do_sys_openat2+0x2c4/0x530
+      [<0000000094eea458>] __arm64_sys_openat+0x130/0x1c4
+      [<00000000a71d7881>] el0_svc_common.constprop.0+0xfc/0x394
+      [<00000000313647bf>] do_el0_svc+0xac/0xec
+      [<000000002ef1c651>] el0_svc+0x20/0x30
+      [<000000002fd4692a>] el0_sync_handler+0xb0/0xb4
+      [<000000000c309c35>] el0_sync+0x160/0x180
 
->  arch/Kconfig                    |    1 +
->  arch/arm64/include/asm/ftrace.h |   11 ++++++
->  arch/loongarch/Kconfig          |    1 +
->  arch/s390/Kconfig               |    1 +
->  arch/x86/Kconfig                |    1 +
->  arch/x86/kernel/rethook.c       |    9 +++--
->  include/linux/fprobe.h          |    4 +-
->  include/linux/ftrace.h          |   56 ++++++++++++++++++-----------
->  include/linux/rethook.h         |   11 +++---
->  kernel/kprobes.c                |    9 ++++-
->  kernel/trace/Kconfig            |    9 ++++-
->  kernel/trace/bpf_trace.c        |   14 +++++--
->  kernel/trace/fprobe.c           |    8 ++--
->  kernel/trace/rethook.c          |   16 ++++----
->  kernel/trace/trace_fprobe.c     |   76 ++++++++++++++++++++++++---------=
-------
->  kernel/trace/trace_probe_tmpl.h |    2 +
->  lib/test_fprobe.c               |   10 +++--
->  samples/fprobe/fprobe_example.c |    4 +-
+The root cause is descripted as follows:
 
-I believe that Documentation/trace/fprobe.rst should also be modified
-following the API change
+  __tracing_open() {  // 1. File 'trace' is being opened;
+    ...
+    *iter->trace = *tr->current_trace;  // 2. Tracer 'function_graph' is
+                                        //    currently set;
+    ...
+    iter->trace->open(iter);  // 3. Call graph_trace_open() here,
+                              //    and memory are allocated in it;
+    ...
+  }
+
+  s_start() {  // 4. The opened file is being read;
+    ...
+    *iter->trace = *tr->current_trace;  // 5. If tracer is switched to
+                                        //    'nop' or others, then memory
+                                        //    in step 3 are leaked!!!
+    ...
+  }
+
+To fix it, in s_start(), close tracer before switching then reopen the
+new tracer after switching.
+
+Fixes: d7350c3f4569 ("tracing/core: make the read callbacks reentrants")
+Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+---
+ kernel/trace/trace.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index b8870078ef58..d50a0227baa3 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4213,8 +4213,15 @@ static void *s_start(struct seq_file *m, loff_t *pos)
+ 	 * will point to the same string as current_trace->name.
+ 	 */
+ 	mutex_lock(&trace_types_lock);
+-	if (unlikely(tr->current_trace && iter->trace->name != tr->current_trace->name))
++	if (unlikely(tr->current_trace && iter->trace->name != tr->current_trace->name)) {
++		/* Close iter->trace before switching to the new current tracer */
++		if (iter->trace->close)
++			iter->trace->close(iter);
+ 		*iter->trace = *tr->current_trace;
++		/* Reopen the new current tracer */
++		if (iter->trace->open)
++			iter->trace->open(iter);
++	}
+ 	mutex_unlock(&trace_types_lock);
+ 
+ #ifdef CONFIG_TRACER_MAX_TRACE
+-- 
+2.25.1
+
