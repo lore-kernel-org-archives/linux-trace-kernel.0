@@ -2,209 +2,198 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 105B4C001B0
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  8 Aug 2023 16:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 900E6C001B0
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  8 Aug 2023 16:58:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232697AbjHHQbH (ORCPT
+        id S233789AbjHHQ6N (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 8 Aug 2023 12:31:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58988 "EHLO
+        Tue, 8 Aug 2023 12:58:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232805AbjHHQ3R (ORCPT
+        with ESMTP id S232768AbjHHQ5W (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 8 Aug 2023 12:29:17 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9466D49F8;
-        Tue,  8 Aug 2023 08:51:19 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F4023625A4;
-        Tue,  8 Aug 2023 14:32:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB906C433C7;
-        Tue,  8 Aug 2023 14:32:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691505149;
-        bh=8oSLRbPi1UGHjtxwyw5/uxm2DNIMM6w7TI7hzgcelSs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=E2Vayy9tMZSt/kuGuKpUbXWbi/uQ5AAx94B8x+EW8/l93GmhPF2+DGjCjG8GyP9Dr
-         CCYf4bhJUxJBqz5a6YQtjj4RXvSGA4eRZIlhQgxIjsRdVws9KpVwfC10D0/1lzdFHv
-         u6Yv2GeBk+2+K61vDqiZPQ4+Y1C36EKhgIZlUBmdchmNFL6MGal/IOXXVbi4lTIX3j
-         ijDfhJIGVj7aQ+ISeHwyFgbkzTIBf0kHD3cBVXB5UZ0JP9i2vvWhetVgZeA2rXgOVV
-         pC/a8k1lHHy3fX2cCWgd1KE6aH9YYKw/LDdawIVQArSAQV0g3avY8qi2I2qlc9P58i
-         blQz6ReO5xvdQ==
-Date:   Tue, 8 Aug 2023 23:32:23 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Florent Revest <revest@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v4 3/9] bpf/btf: Add a function to search a member of a
- struct/union
-Message-Id: <20230808233223.bd2b356fb410745276ae2350@kernel.org>
-In-Reply-To: <ZNFYnbqlyOjo5dkH@krava>
-References: <CAADnVQ+C64_C1w1kqScZ6C5tr6_juaWFaQdAp9Mt3uzaQp2KOw@mail.gmail.com>
-        <20230801085724.9bb07d2c82e5b6c6a6606848@kernel.org>
-        <CAADnVQLaFpd2OhqP7W3xWB1b9P2GAKgrVQU1FU2yeNYKbCkT=Q@mail.gmail.com>
-        <20230802000228.158f1bd605e497351611739e@kernel.org>
-        <20230801112036.0d4ee60d@gandalf.local.home>
-        <20230801113240.4e625020@gandalf.local.home>
-        <CAADnVQ+N7b8_0UhndjwW9-5Vx2wUVvojujFLOCFr648DUv-Y2Q@mail.gmail.com>
-        <20230801190920.7a1abfd5@gandalf.local.home>
-        <CABRcYmJjtVq-330ktqTAUiNO1=yG_aHd0xz=c550O5C7QP++UA@mail.gmail.com>
-        <20230804004206.9fdfae0b9270b9acca2c096f@kernel.org>
-        <ZNFYnbqlyOjo5dkH@krava>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 8 Aug 2023 12:57:22 -0400
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 338C94C38;
+        Tue,  8 Aug 2023 08:42:34 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id 044825C01BA;
+        Tue,  8 Aug 2023 01:59:23 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Tue, 08 Aug 2023 01:59:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjusaka.me; h=
+        cc:cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm3; t=1691474362; x=
+        1691560762; bh=DViu5+0VvFfaGHH4bzT/NrPHRN0WXpyoHKoK6Q4aOkI=; b=k
+        5wQGPWUw4F7d0kNcULOsKRRvNERd+x8S3N/Gzh/ouKapiXE8gTWvy6iPORO0R1ho
+        8Vk5IeLuF6xTYi+QAIZXJFf2j9a9ygFnOVGnVAn+WgEfNwlSVXfgo39kJEjvf5Xa
+        jCdqj306zdf1JecU7gm5Htq93lNVnhpEUCQBL4CWiRAf2d7s3g9FAQXh5BJXpUJn
+        MMVo1l+yk4KBUF+Qfcl2i0a3ELjijJQKd1fOPdQjplLRm2vnvAmER9MBZjnMq2+2
+        I69EJmofA4RDgcOpatHODOn6zMgK33Mvd3cGZWRsO+ElIR7REV8GNXFPEdM2SmUY
+        e5IbrVupJpClUXi1KIiQw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1691474362; x=
+        1691560762; bh=DViu5+0VvFfaGHH4bzT/NrPHRN0WXpyoHKoK6Q4aOkI=; b=k
+        Ovmb2E8ZAuPC+h1pMiB3lK4QJ5WhxflTLs+Ad4JUxasXzZQzvrteJzw60xPyZncT
+        lSLiiaFsz3A/0fOVEupPP/mgpuQNzPWVuVMkUGYzUGDp8GN/o0SyOwYepo8K5XQ+
+        lFFQFDaNmlJtd8KUUeGrIi6d0866WigMF339l/i5jM3Bkt9nToQwQJRcfCBr6RCN
+        e01tOKfudxUsxf7qfAGPiCakk3sx5cdTLneCUs5zfqEUZ8fIMz3W454TaMXag0CW
+        1ZCzE2D61SC/xrfb/DhcUtbR4jzzRblGmM7vZ27ruEBt/7FaZzJH/4xpzcOZbGxt
+        N0lqpl13oBdHlMQVKz7zw==
+X-ME-Sender: <xms:utnRZBmAiPKwNTgpZEZiHeDu_knbVl_F6AxC-nV0NzKcqdkprMbEJw>
+    <xme:utnRZM0cN_Q8uiG3EhaEoVjnGMwULTzlUJtBz1sbste0oH5l2ZWy-0fKYS3Mb2hnb
+    v51mPxpVf3H_ExfpHY>
+X-ME-Received: <xmr:utnRZHrJs8luwdOd8P7K-5CamtmRUWj5Iv2eR_voaHWFGOeITBw3StjPVH4gbMHhT4qFgO0mcw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrledugdellecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvvefufffkofgjfhgggfestdekre
+    dtredttdenucfhrhhomhepofgrnhhjuhhsrghkrgcuoehmvgesmhgrnhhjuhhsrghkrgdr
+    mhgvqeenucggtffrrghtthgvrhhnpeeuhfejieefgedvvdeuhffhvedvjeegkeejveeihf
+    egueethfevfeeikedvvdffgfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
+    mhgrihhlfhhrohhmpehmvgesmhgrnhhjuhhsrghkrgdrmhgv
+X-ME-Proxy: <xmx:utnRZBnR6zWGVBJ4I24iveAG8ubLjxMsI3XVUxTs3XefEuuAHefDNw>
+    <xmx:utnRZP1BlID-dPisFNsBApjThwf_hUZxY68W-YYJfs5Dkqs8YguGOg>
+    <xmx:utnRZAsDjK6aOnLmSFgAzG0tBG0dB5LNeWFmAdebYyBXY27SE5z8Yw>
+    <xmx:utnRZIvuJCkm_lRvHB9jIqSW6ohjUnYcqHiqmOOdkPh_E8atcK-0JQ>
+Feedback-ID: i3ea9498d:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 8 Aug 2023 01:59:18 -0400 (EDT)
+From:   Manjusaka <me@manjusaka.me>
+To:     ncardwell@google.com
+Cc:     bpf@vger.kernel.org, davem@davemloft.net, dsahern@kernel.org,
+        edumazet@google.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, me@manjusaka.me,
+        mhiramat@kernel.org, netdev@vger.kernel.org, pabeni@redhat.com,
+        rostedt@goodmis.org
+Subject: [PATCH v2] tracepoint: add new `tcp:tcp_ca_event` trace event
+Date:   Tue,  8 Aug 2023 05:58:18 +0000
+Message-Id: <20230808055817.3979-1-me@manjusaka.me>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <CADVnQyn3UMa3Qx6cC1Rx97xLjQdG0eKsiF7oY9UR=b9vU4R-yA@mail.gmail.com>
+References: <CADVnQyn3UMa3Qx6cC1Rx97xLjQdG0eKsiF7oY9UR=b9vU4R-yA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 7 Aug 2023 22:48:29 +0200
-Jiri Olsa <olsajiri@gmail.com> wrote:
+In normal use case, the tcp_ca_event would be changed in high frequency.
 
-> On Fri, Aug 04, 2023 at 12:42:06AM +0900, Masami Hiramatsu wrote:
-> 
-> SNIP
-> 
-> > > 
-> > > On the other hand, untangling all code paths that come from
-> > > trampolines (with a light regs structure) from those that come from an
-> > > exception (with a pt_regs) could lead to a lot of duplicated code, and
-> > > converting between each subsystem's idea of a light regs structure
-> > > (what if perf introduces a perf_regs now ?) would be tedious and slow
-> > > (lots of copies ?).
-> > 
-> > This is one discussion point I think. Actually, using pt_regs in kretprobe
-> > (and rethook) is histrical accident. Originally, it had put a kprobe on
-> > the function return trampoline to hook it. So keep the API compatiblity
-> > I made the hand assembled code to save the pt_regs on the stack.
-> > 
-> > My another question is if we have the fprobe to trace (hook) the function
-> > return, why we still need the kretprobe itself. I think we can remove
-> > kretprobe and use fprobe exit handler, because "function" probing will
-> > be done by fprobe, not kprobe. And then, we can simplify the kprobe
-> > interface and clarify what it is -- "kprobe is a wrapper of software
-> > breakpoint". And we don't need to think about duplicated code anymore :)
-> 
-> 1+ sounds like good idea
+It's a good indicator to represent the network quanlity.
 
-Thanks! the downside will be that it requires to enable CONFIG_FPROBE
-instead of CONFIG_KPROBES, but I think it is natural that the user, who 
-wants to trace function boundary, enables CONFIG_FUNCTION_TRACER.
+So I propose to add a `tcp:tcp_ca_event` trace event
+like `tcp:tcp_cong_state_set` to help the people to
+trace the TCP connection status
 
-> > > > Otherwise, ftrace_regs() has support on arm64 for getting to the argument
-> > > > registers and the stack. Even live kernel patching now uses ftrace_regs().
-> > > >
-> > > > >
-> > > > > If you guys decide to convert fprobe to ftrace_regs please
-> > > > > make it depend on kconfig or something.
-> > > > > bpf side needs full pt_regs.
-> > > 
-> > > Some wild ideas that I brought up once in a BPF office hour: BPF
-> > > "multi_kprobe" could provide a fake pt_regs (either by constructing a
-> > > sparse one on the stack or by JIT-ing different offset accesses and/or
-> > > by having the verifier deny access to unpopulated fields) or break the
-> > > current API (is it conceivable to phase out BPF "multi_kprobe"
-> > > programs in favor of BPF "fprobe" programs that don't lie about their
-> > > API and guarantees and just provide a ftrace_regs ?)
-> > 
-> > +1 :)
-> 
-> so multi_kprobe link was created to allow fast attach of BPF kprobe-type
-> programs to multiple functions.. I don't think there's need for new fprobe
-> program
+Signed-off-by: Manjusaka <me@manjusaka.me>
+---
+ include/net/tcp.h          |  9 ++------
+ include/trace/events/tcp.h | 45 ++++++++++++++++++++++++++++++++++++++
+ net/ipv4/tcp_cong.c        | 10 +++++++++
+ 3 files changed, 57 insertions(+), 7 deletions(-)
 
-Ah, OK. So the focus point is shortening registration time.
-
-> 
-> > 
-> > > 
-> > > > Then use kprobes. When I asked Masami what the difference between fprobes
-> > > > and kprobes was, he told me that it would be that it would no longer rely
-> > > > on the slower FTRACE_WITH_REGS. But currently, it still does.
-> > > 
-> > > Actually... Moving fprobe to ftrace_regs should get even more spicy!
-> > > :) Fprobe also wraps "rethook" which is basically the same thing as
-> > > kretprobe: a return trampoline that saves a pt_regs, to the point that
-> > > on x86 kretprobe's trampoline got dropped in favor of rethook's
-> > > trampoline. But for the same reasons that we don't want ftrace to save
-> > > pt_regs on arm64, rethook should probably also just save a ftrace_regs
-> > > ? (also, to keep the fprobe callback signatures consistent between
-> > > pre- and post- handlers). But if we want fprobe "post" callbacks to
-> > > save a ftrace_regs now, either we need to re-introduce the kretprobe
-> > > trampoline or also change the API of kretprobe (and break its symmetry
-> > > with kprobe and we'd have the same problem all over again with BPF
-> > > kretprobe program types...). All of this is "beautifully" entangled...
-> > > :)
-> > 
-> > As I said, I would like to phase out the kretprobe itself because it
-> > provides the same feature of fprobe, which is confusing. jprobe was
-> > removed a while ago, and now kretprobe is. But we can not phase out
-> > it at once. So I think we will keep current kretprobe trampoline on
-> > arm64 and just add new ftrace_regs based rethook. Then remove the
-> > API next release. (after all users including systemtap is moved) 
-> > 
-> > > 
-> > > > The reason I started the FTRACE_WITH_ARGS (which gave us ftrace_regs) in
-> > > > the first place, was because of the overhead you reported to me with
-> > > > ftrace_regs_caller and why you wanted to go the direct trampoline approach.
-> > > > That's when I realized I could use a subset because those registers were
-> > > > already being saved. The only reason FTRACE_WITH_REGS was created was it
-> > > > had to supply full pt_regs (including flags) and emulate a breakpoint for
-> > > > the kprobes interface. But in reality, nothing really needs all that.
-> > > >
-> > > > > It's not about access to args.
-> > > > > pt_regs is passed from bpf prog further into all kinds of perf event
-> > > > > functions including stack walking.
-> > > 
-> > > If all accesses are done in BPF bytecode, we could (theoretically)
-> > > have the verifier and JIT work together to deny accesses to
-> > > unpopulated fields, or relocate pt_regs accesses to ftrace_regs
-> > > accesses to keep backward compatibility with existing multi_kprobe BPF
-> > > programs.
-> > 
-> > Yeah, that is what I would like to suggest, and what my patch does.
-> > (let me update rethook too, it'll be a bit tricky since I don't want
-> > break anything) 
-> > 
-> > Thanks,
-> > 
-> > > 
-> > > Is there a risk that a "multi_kprobe" program could call into a BPF
-> > > helper or kfunc that reads this pt_regs pointer and expect certain
-> > > fields to be set ? I suppose we could also deny giving that "pt_regs"
-> > > pointer to a helper... :/
-> 
-> I think Alexei answered this earlier in the thread:
-> 
->  >From bpf side we don't care that such pt_regs is 100% filled in or
->  >only partial as long as this pt_regs pointer is valid for perf_event_output
->  >and stack walking that consume pt_regs.
->  >I believe that was and still is the case for both x86 and arm64.
-
-OK, so I've made the ftrace_partial_regs() according to the idea now.
-
-Thanks,
-
-> 
-> 
-> jirka
-
-
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 0ca972ebd3dd..a68c5b61889c 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -1154,13 +1154,8 @@ static inline bool tcp_ca_needs_ecn(const struct sock *sk)
+ 	return icsk->icsk_ca_ops->flags & TCP_CONG_NEEDS_ECN;
+ }
+ 
+-static inline void tcp_ca_event(struct sock *sk, const enum tcp_ca_event event)
+-{
+-	const struct inet_connection_sock *icsk = inet_csk(sk);
+-
+-	if (icsk->icsk_ca_ops->cwnd_event)
+-		icsk->icsk_ca_ops->cwnd_event(sk, event);
+-}
++/* from tcp_cong.c */
++void tcp_ca_event(struct sock *sk, const enum tcp_ca_event event);
+ 
+ /* From tcp_cong.c */
+ void tcp_set_ca_state(struct sock *sk, const u8 ca_state);
+diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+index bf06db8d2046..b374eb636af9 100644
+--- a/include/trace/events/tcp.h
++++ b/include/trace/events/tcp.h
+@@ -416,6 +416,51 @@ TRACE_EVENT(tcp_cong_state_set,
+ 		  __entry->cong_state)
+ );
+ 
++TRACE_EVENT(tcp_ca_event,
++
++	TP_PROTO(struct sock *sk, const u8 ca_event),
++
++	TP_ARGS(sk, ca_event),
++
++	TP_STRUCT__entry(
++		__field(const void *, skaddr)
++		__field(__u16, sport)
++		__field(__u16, dport)
++		__array(__u8, saddr, 4)
++		__array(__u8, daddr, 4)
++		__array(__u8, saddr_v6, 16)
++		__array(__u8, daddr_v6, 16)
++		__field(__u8, ca_event)
++	),
++
++	TP_fast_assign(
++		struct inet_sock *inet = inet_sk(sk);
++		__be32 *p32;
++
++		__entry->skaddr = sk;
++
++		__entry->sport = ntohs(inet->inet_sport);
++		__entry->dport = ntohs(inet->inet_dport);
++
++		p32 = (__be32 *) __entry->saddr;
++		*p32 = inet->inet_saddr;
++
++		p32 = (__be32 *) __entry->daddr;
++		*p32 =  inet->inet_daddr;
++
++		TP_STORE_ADDRS(__entry, inet->inet_saddr, inet->inet_daddr,
++			   sk->sk_v6_rcv_saddr, sk->sk_v6_daddr);
++
++		__entry->ca_event = ca_event;
++	),
++
++	TP_printk("sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c ca_event=%u",
++		  __entry->sport, __entry->dport,
++		  __entry->saddr, __entry->daddr,
++		  __entry->saddr_v6, __entry->daddr_v6,
++		  __entry->ca_event)
++);
++
+ #endif /* _TRACE_TCP_H */
+ 
+ /* This part must be outside protection */
+diff --git a/net/ipv4/tcp_cong.c b/net/ipv4/tcp_cong.c
+index 1b34050a7538..fb7ec6ebbbd0 100644
+--- a/net/ipv4/tcp_cong.c
++++ b/net/ipv4/tcp_cong.c
+@@ -34,6 +34,16 @@ struct tcp_congestion_ops *tcp_ca_find(const char *name)
+ 	return NULL;
+ }
+ 
++void tcp_ca_event(struct sock *sk, const enum tcp_ca_event event)
++{
++	const struct inet_connection_sock *icsk = inet_csk(sk);
++
++	trace_tcp_ca_event(sk, (u8)event);
++
++	if (icsk->icsk_ca_ops->cwnd_event)
++		icsk->icsk_ca_ops->cwnd_event(sk, event);
++}
++
+ void tcp_set_ca_state(struct sock *sk, const u8 ca_state)
+ {
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.34.1
+
