@@ -2,193 +2,155 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FF3C001DE
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  7 Aug 2023 22:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0388C04FE1
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  8 Aug 2023 16:16:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231557AbjHGWLX (ORCPT
+        id S232257AbjHHQQC (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 7 Aug 2023 18:11:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46792 "EHLO
+        Tue, 8 Aug 2023 12:16:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231567AbjHGWLL (ORCPT
+        with ESMTP id S232128AbjHHQOZ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 7 Aug 2023 18:11:11 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70CB7448C;
-        Mon,  7 Aug 2023 15:09:10 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id 4fb4d7f45d1cf-5227e5d9d96so6641472a12.2;
-        Mon, 07 Aug 2023 15:09:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691446094; x=1692050894;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=M6+h3JPtffH3KCnU+FPVbWvNYGtSA/UOocgPTJJmPrM=;
-        b=dhwsK4bB5MaJTm9+mzIvA5OXXQvBIIJkM3LHvM0/KCirJESPqHr/1ROandY8hhMcF1
-         Ypy8TqMIwmFozUDcajbUy72oPZj2xQxT+0oJ8sz02MO9GCY+MyJ70npaJmzZK+24sBFH
-         OBDsvT0M/XL5XYy9mQV5wowXxgCvtqK+Wq7TSdrX3/d5hjMj8LiDD/yY1PtpBbgAGzJz
-         X+fmNKB+as6A60nEV0fRcHN4yM/RDpgZANcjIrRq1qxlo3TvobWe5w6o4mPncr93v6nh
-         mzCEzEJuHBg8G+09kfF8qQI59MEuXUWjhguHVj0KzUCxFHXOlExxnb3wVqBndwc4ir7z
-         Q/AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691446094; x=1692050894;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M6+h3JPtffH3KCnU+FPVbWvNYGtSA/UOocgPTJJmPrM=;
-        b=Q96FQii6I8/rbMQWhCcppCpDv6ZsSYSr0XzQCeaG25vj9Z59qtk637BEfrCahrArHv
-         Whx0gUGGQ2V9ZKrAVh+qqSzwJMr8LcjzbB884Rs54WLPVYY+ZVfDfE42dUaJP85Vro5L
-         N8sN/xcVdshSwuNVj0SI8PuQvxpuyoYzpTdCBTU5FRV0PIAeWxbjNqT47PLUWDoA+dG6
-         TbHqzQ4JQajnSHKVjEJczAKZOkOcx2jw/kDar2itm1yzcpT22Ks+98d5JwUunYYjieiH
-         kKcz6bKXs5AgxmYwRGH7iT1XO1LH7TdGqjVrxF5gng+3WtOn/9axAFrzB2t5TnEXdhfG
-         zQRA==
-X-Gm-Message-State: AOJu0Yx86rLPgd8Afs2wtJXHY65cMN96y0VeftIqLx+BlbqcbxRv+rX7
-        1Q0k43g+ajAhNcLYTHfixmk=
-X-Google-Smtp-Source: AGHT+IHcFeSC/KLA5gbHHDoZ38Wjuek7W2QjlW9lOhBV5LyfzbSNg41cd2VqVgu1h/MLxxqARpsyCQ==
-X-Received: by 2002:a05:6402:110a:b0:523:7b1:3718 with SMTP id u10-20020a056402110a00b0052307b13718mr7820189edv.14.1691446093469;
-        Mon, 07 Aug 2023 15:08:13 -0700 (PDT)
-Received: from krava ([83.240.60.134])
-        by smtp.gmail.com with ESMTPSA id d13-20020a50fe8d000000b0051e1660a34esm5637299edt.51.2023.08.07.15.08.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Aug 2023 15:08:13 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Tue, 8 Aug 2023 00:08:11 +0200
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Florent Revest <revest@chromium.org>,
-        linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC PATCH v2 6/6] bpf: Enable kprobe_multi feature if
- CONFIG_FPROBE is enabled
-Message-ID: <ZNFrS4YGcW8dyxnF@krava>
-References: <169139090386.324433.6412259486776991296.stgit@devnote2>
- <169139097360.324433.2521527070503682979.stgit@devnote2>
+        Tue, 8 Aug 2023 12:14:25 -0400
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E6E83C3A;
+        Tue,  8 Aug 2023 08:41:02 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id B749B5C0090;
+        Tue,  8 Aug 2023 00:50:54 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Tue, 08 Aug 2023 00:50:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjusaka.me; h=
+        cc:cc:content-transfer-encoding:content-type:content-type:date
+        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to; s=fm3; t=
+        1691470254; x=1691556654; bh=Wm7vgVpyNkBovEIVcDALXg67wDGyu9eYENE
+        6yQjh/qo=; b=lFQJQ6nVziMDKcES6RNB32k3lPEozvdgM/igCLTgkXuwis+6A0j
+        exxvtzVnnBL+dwILAC3txSK8K/fL5hBvHiyC9+Tr/xwaH/PYHx8cgXJ8AnRvVBp0
+        TSBS6QpkI9LCAG3gXBcsy21msfdLvP4/mvrlJ8BTIVIAgQsJwEW1WpHE0tIOEd6L
+        ugoqUUP99A+NomxQw6jPYKEZon1/yAiKbbT8igdEKdP1eyPbQZYd3RJQ+q61juoa
+        avXqO/zmcZIAzZOniWL33aoY+mBjy7B0mWv8YLW1N1qihqLr4PmHRIZsA9ySjwxZ
+        esiz/Axtdhoq7DTIztcHikKwZ87SvWaS8hA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:date:feedback-id:feedback-id
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+        1691470254; x=1691556654; bh=Wm7vgVpyNkBovEIVcDALXg67wDGyu9eYENE
+        6yQjh/qo=; b=f7g+IaoQM35PVL4ZEAIZqC7dTkKJe4xNoVSrGFjX/mN+JWQDU/n
+        OlA2aV9ipoq9wOA+a7W2siWpATxORIHGqvsVoBrWKnV/ZgMFjKfii59WeANNOgtX
+        HVyHTgZt/qKHHJW7xFGWtPc1KBXVRWANyySyeYP8e1QltIXVgoXitevHDeZgwhxd
+        S6Thnjb2NfagG2giJR15QANlvu8wEKYo7hqVMetv9hIjCmvStZhpZuzuTcmGEcAa
+        nVqGCSU324EPhk1LRoGQUXqOiCpc8hT/I3Ni+PcZcneORDHZJCP9u8e8KHlA3ta2
+        bIU3Q1d+BOyjysaTWm4Q47NJRNZ7e69JpJA==
+X-ME-Sender: <xms:rsnRZPqzCPiltoXrMJVOEvTvBKVw0UJwTTW8LR0HwQIGVKfcs6hWiQ>
+    <xme:rsnRZJpZ1WurPRRg5wbbQaT1ikGKR05gZ3okxMXavsDN6URBUAHX2wsysGIEgwnnF
+    DfhGRQH2bgfzAzoB6s>
+X-ME-Received: <xmr:rsnRZMPar7XO1sd0erjYWhwv94iatwhv_KADYrWRf_4YmN9fgkYHAxoNUnoyL_YSPYY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrledugdekhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepofgrnhhj
+    uhhsrghkrgcuoehmvgesmhgrnhhjuhhsrghkrgdrmhgvqeenucggtffrrghtthgvrhhnpe
+    duveevjefhjedvgeevvdeutdeukeeljeelhfeftdehkefhfeeivdfgudekueeileenucev
+    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmvgesmhgrnh
+    hjuhhsrghkrgdrmhgv
+X-ME-Proxy: <xmx:rsnRZC7DEmVths1EIvkBWslzaioYWGokQcRJ_Q7uWKKBnWCBfqibdA>
+    <xmx:rsnRZO4yBPMXyFzMsUIJNs9oQkvbZ3pL2dVOMS-rBgJx3u-v6C3vFw>
+    <xmx:rsnRZKgf2ha_cT9-NXG4H6EA9l0IUErBJRjj73ltnqsKJEMUHNqJAw>
+    <xmx:rsnRZLxctaBqUo9HUQTfcWSzmim_koKGN-5S-bnsbps7n8mGxr6wOA>
+Feedback-ID: i3ea9498d:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 8 Aug 2023 00:50:50 -0400 (EDT)
+Message-ID: <517d5988-2e71-4ba5-9588-15218eebc8ef@manjusaka.me>
+Date:   Tue, 8 Aug 2023 12:50:46 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <169139097360.324433.2521527070503682979.stgit@devnote2>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tracepoint: add new `tcp:tcp_ca_event_set` trace event
+Content-Language: en-US
+To:     Neal Cardwell <ncardwell@google.com>
+Cc:     edumazet@google.com, mhiramat@kernel.org, rostedt@goodmis.org,
+        davem@davemloft.net, dsahern@kernel.org, kuba@kernel.org,
+        pabeni@redhat.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
+References: <20230807183308.9015-1-me@manjusaka.me>
+ <CADVnQyn3UMa3Qx6cC1Rx97xLjQdG0eKsiF7oY9UR=b9vU4R-yA@mail.gmail.com>
+From:   Manjusaka <me@manjusaka.me>
+In-Reply-To: <CADVnQyn3UMa3Qx6cC1Rx97xLjQdG0eKsiF7oY9UR=b9vU4R-yA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Aug 07, 2023 at 03:49:33PM +0900, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+
+On 2023/8/8 04:00, Neal Cardwell wrote:
+> On Mon, Aug 7, 2023 at 2:33 PM Manjusaka <me@manjusaka.me> wrote:
+>>
+>> In normal use case, the tcp_ca_event would be changed in high frequency.
+>>
+>> It's a good indicator to represent the network quanlity.
+>>
+>> So I propose to add a `tcp:tcp_ca_event_set` trace event
+>> like `tcp:tcp_cong_state_set` to help the people to
+>> trace the TCP connection status
+>>
+>> Signed-off-by: Manjusaka <me@manjusaka.me>
+>> ---
+>>  include/net/tcp.h          |  9 ++------
+>>  include/trace/events/tcp.h | 45 ++++++++++++++++++++++++++++++++++++++
+>>  net/ipv4/tcp_cong.c        | 10 +++++++++
+>>  3 files changed, 57 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/include/net/tcp.h b/include/net/tcp.h
+>> index 0ca972ebd3dd..a68c5b61889c 100644
+>> --- a/include/net/tcp.h
+>> +++ b/include/net/tcp.h
+>> @@ -1154,13 +1154,8 @@ static inline bool tcp_ca_needs_ecn(const struct sock *sk)
+>>         return icsk->icsk_ca_ops->flags & TCP_CONG_NEEDS_ECN;
+>>  }
+>>
+>> -static inline void tcp_ca_event(struct sock *sk, const enum tcp_ca_event event)
+>> -{
+>> -       const struct inet_connection_sock *icsk = inet_csk(sk);
+>> -
+>> -       if (icsk->icsk_ca_ops->cwnd_event)
+>> -               icsk->icsk_ca_ops->cwnd_event(sk, event);
+>> -}
+>> +/* from tcp_cong.c */
+>> +void tcp_ca_event(struct sock *sk, const enum tcp_ca_event event);
+>>
+>>  /* From tcp_cong.c */
+>>  void tcp_set_ca_state(struct sock *sk, const u8 ca_state);
+>> diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+>> index bf06db8d2046..38415c5f1d52 100644
+>> --- a/include/trace/events/tcp.h
+>> +++ b/include/trace/events/tcp.h
+>> @@ -416,6 +416,51 @@ TRACE_EVENT(tcp_cong_state_set,
+>>                   __entry->cong_state)
+>>  );
+>>
+>> +TRACE_EVENT(tcp_ca_event_set,
 > 
-> Enable kprobe_multi feature if CONFIG_FPROBE is enabled. The pt_regs is
-> converted from ftrace_regs by ftrace_partial_regs(), thus some registers
-> may always returns 0. But it should be enough for function entry (access
-> arguments) and exit (access return value).
+> Regarding the proposed name, "tcp_ca_event_set"... including "set" in
+> the name is confusing, since the tcp_ca_event() function is not really
+> setting anything. :-)
 > 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  kernel/trace/bpf_trace.c |   22 +++++++++-------------
->  1 file changed, 9 insertions(+), 13 deletions(-)
+> The trace_tcp_cong_state_set() call you are using as a model has "set"
+> in the name because the function it is tracing, tcp_set_ca_state(),
+> has "set" in the name. :-)
 > 
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 99c5f95360f9..0725272a3de2 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -2460,7 +2460,7 @@ static int __init bpf_event_init(void)
->  fs_initcall(bpf_event_init);
->  #endif /* CONFIG_MODULES */
->  
-> -#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-> +#ifdef CONFIG_FPROBE
->  struct bpf_kprobe_multi_link {
->  	struct bpf_link link;
->  	struct fprobe fp;
-> @@ -2482,6 +2482,8 @@ struct user_syms {
->  	char *buf;
->  };
->  
-> +static DEFINE_PER_CPU(struct pt_regs, bpf_kprobe_multi_pt_regs);
-> +
->  static int copy_user_syms(struct user_syms *us, unsigned long __user *usyms, u32 cnt)
->  {
->  	unsigned long __user usymbol;
-> @@ -2623,13 +2625,14 @@ static u64 bpf_kprobe_multi_entry_ip(struct bpf_run_ctx *ctx)
->  
->  static int
->  kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
-> -			   unsigned long entry_ip, struct pt_regs *regs)
-> +			   unsigned long entry_ip, struct ftrace_regs *fregs)
->  {
->  	struct bpf_kprobe_multi_run_ctx run_ctx = {
->  		.link = link,
->  		.entry_ip = entry_ip,
->  	};
->  	struct bpf_run_ctx *old_run_ctx;
-> +	struct pt_regs *regs;
->  	int err;
->  
->  	if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1)) {
-> @@ -2639,6 +2642,7 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
->  
->  	migrate_disable();
->  	rcu_read_lock();
-> +	regs = ftrace_partial_regs(fregs, this_cpu_ptr(&bpf_kprobe_multi_pt_regs));
-
-you did check for !regs when returned from ftrace_get_regs, why don't we need
-to check it in here? both ftrace_partial_regs and ftrace_get_regs call
-arch_ftrace_get_regs on x86
-
-also also I can't find the place ensuring fregs->regs.cs != 0 for FL_SAVE_REGS
-flag as stated in arch_ftrace_get_regs, any hint?
-
-thanks,
-jirka
-
-
->  	old_run_ctx = bpf_set_run_ctx(&run_ctx.run_ctx);
->  	err = bpf_prog_run(link->link.prog, regs);
->  	bpf_reset_run_ctx(old_run_ctx);
-> @@ -2656,13 +2660,9 @@ kprobe_multi_link_handler(struct fprobe *fp, unsigned long fentry_ip,
->  			  void *data)
->  {
->  	struct bpf_kprobe_multi_link *link;
-> -	struct pt_regs *regs = ftrace_get_regs(fregs);
-> -
-> -	if (!regs)
-> -		return 0;
->  
->  	link = container_of(fp, struct bpf_kprobe_multi_link, fp);
-> -	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), regs);
-> +	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), fregs);
->  	return 0;
->  }
->  
-> @@ -2672,13 +2672,9 @@ kprobe_multi_link_exit_handler(struct fprobe *fp, unsigned long fentry_ip,
->  			       void *data)
->  {
->  	struct bpf_kprobe_multi_link *link;
-> -	struct pt_regs *regs = ftrace_get_regs(fregs);
-> -
-> -	if (!regs)
-> -		return;
->  
->  	link = container_of(fp, struct bpf_kprobe_multi_link, fp);
-> -	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), regs);
-> +	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), fregs);
->  }
->  
->  static int symbols_cmp_r(const void *a, const void *b, const void *priv)
-> @@ -2918,7 +2914,7 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
->  	kvfree(cookies);
->  	return err;
->  }
-> -#else /* !CONFIG_DYNAMIC_FTRACE_WITH_REGS */
-> +#else /* !CONFIG_FPROBE */
->  int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
->  {
->  	return -EOPNOTSUPP;
+> Would it work to use something like:
+>   TRACE_EVENT(tcp_ca_event,
 > 
+> thanks,
+> neal
+
+Emmmm, sorry about the confusing var name and thanks for the review. I will update my patch ASAP.
+
+best regards
+Manjusaka
