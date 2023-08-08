@@ -2,214 +2,108 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55958C001B0
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  8 Aug 2023 16:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0513C04FDF
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  8 Aug 2023 17:35:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233766AbjHHQ6w (ORCPT
+        id S233473AbjHHRf6 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 8 Aug 2023 12:58:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51428 "EHLO
+        Tue, 8 Aug 2023 13:35:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233765AbjHHQ55 (ORCPT
+        with ESMTP id S234748AbjHHRfe (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 8 Aug 2023 12:57:57 -0400
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90CEE4C33;
-        Tue,  8 Aug 2023 08:42:30 -0700 (PDT)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 5A96D5C0067;
-        Tue,  8 Aug 2023 04:46:51 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Tue, 08 Aug 2023 04:46:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjusaka.me; h=
-        cc:cc:content-transfer-encoding:content-type:content-type:date
-        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to; s=fm3; t=
-        1691484411; x=1691570811; bh=BcvV+WKIQPajFkywU4vq7mmCKoFIGw6OUUR
-        HQx3H/pQ=; b=JPGP48TZDMQQ0+1F+s66iC9WJgcLfb/8JA7fH4SgnXnlD8IjRjN
-        8wmXE7JWzsZCtgZ9li4TIoFxP+vVaTpltbgl10Gnyc8mszhhgjygBuyBf8Tv2Fyt
-        x0WYh6GJKRagucgw2DX4Aqb9kuaWyx8UqPDQ7bMqpaNn/6Pb92cD7qUN6II3wg0k
-        QeMKjIKYi60p2ZjpoLjXAzUp0evwOS1aZOitR/eKBl2LpcYgf+snnErwlkTJ/o+m
-        X5ZS8V89Qbp7KJSKyfUyn1RjH3/cYdV3iy3dlPoQhd3TZCkcMhG7cr1Jc1JOlN3H
-        Fk4VAzpFo6Imt16OE3A5kvyUuD6FwhxfISQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:date:feedback-id:feedback-id
-        :from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-        1691484411; x=1691570811; bh=BcvV+WKIQPajFkywU4vq7mmCKoFIGw6OUUR
-        HQx3H/pQ=; b=Va+Qo9KqKivkkA4vaEp6cRXcNZcJaB9iP6mrTlAEEgyAbkbmPcu
-        x9ipOaaqG95BtETWpGbAMoqd0nmO6dzg+o4vc/xFZM6+OpGElvb/YGMwKsOLBDcV
-        8j3q+/5FrQTpbEXZ0LUBaLcM3Zgz4nuulbv0CbFui4bhXgKPNFYyvA9r8xwtxBLX
-        RQbhqB5ZCDOSiDAPSrf4qXvpWfcH35SEv7boGWWft9xDr5DJn/JYXUtrfNkffmUg
-        z7QOjKiZuN+ar5DVo0drb7TyLMvPkpi86QMP/7Ezh+2vEl/Tl9JgQ2oP1paR45sA
-        Ql0dE3W86YEAYBZOPzr4q56AIZMQCY5w09w==
-X-ME-Sender: <xms:-wDSZMSv3t0uk4lc-bnFiIlnuFEKae2Gv_-3nBfThwZ3PAyz6OxRyw>
-    <xme:-wDSZJwKYdI7fKTMN96otoq-OT_B_KLt5EM6pJ8379_0yH_dCpRo8GXRjPf_zOkcr
-    4hLzwCQJxP-GNOOqkg>
-X-ME-Received: <xmr:-wDSZJ0ECso3bvQvLlnFGwUi_887xwK7nsR237EtDPgnvGakFH72swZwgRE1Romqexw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrledvgddtkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepofgrnhhj
-    uhhsrghkrgcuoehmvgesmhgrnhhjuhhsrghkrgdrmhgvqeenucggtffrrghtthgvrhhnpe
-    duveevjefhjedvgeevvdeutdeukeeljeelhfeftdehkefhfeeivdfgudekueeileenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmvgesmhgrnh
-    hjuhhsrghkrgdrmhgv
-X-ME-Proxy: <xmx:-wDSZABxCLIiajjPl08H-9NfYIlqO-dbI79W8Nd8_p2ct3wYw29r1A>
-    <xmx:-wDSZFjhYctKODNMC-EgYnk1hLZq66-RedJmGn2zTdlOV_9GPfUOCA>
-    <xmx:-wDSZMqeKBe56hfYoBbZkOzU2NPwI77fjD_n4dlzHIdDgLS9s8g19Q>
-    <xmx:-wDSZKZ54xM9a115BCmtTztLqLA8ULD6PlhshGDPccc57ZK7xXs1lw>
-Feedback-ID: i3ea9498d:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 8 Aug 2023 04:46:45 -0400 (EDT)
-Message-ID: <af02d2a9-4655-45a1-8c3a-d9921bfdbc35@manjusaka.me>
-Date:   Tue, 8 Aug 2023 16:46:41 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] tracepoint: add new `tcp:tcp_ca_event` trace event
-Content-Language: en-US
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     ncardwell@google.com, bpf@vger.kernel.org, davem@davemloft.net,
-        dsahern@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
-        netdev@vger.kernel.org, pabeni@redhat.com, rostedt@goodmis.org
-References: <CADVnQyn3UMa3Qx6cC1Rx97xLjQdG0eKsiF7oY9UR=b9vU4R-yA@mail.gmail.com>
- <20230808055817.3979-1-me@manjusaka.me>
- <CANn89iKxJThy4ZVq4do6Z1bOZsRptfN6N8ydPaHQAmYKCjtOnw@mail.gmail.com>
-From:   Manjusaka <me@manjusaka.me>
-In-Reply-To: <CANn89iKxJThy4ZVq4do6Z1bOZsRptfN6N8ydPaHQAmYKCjtOnw@mail.gmail.com>
+        Tue, 8 Aug 2023 13:35:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EE1097D5E;
+        Tue,  8 Aug 2023 09:15:30 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6760F625A6;
+        Tue,  8 Aug 2023 14:53:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26319C433CA;
+        Tue,  8 Aug 2023 14:53:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691506432;
+        bh=uwQnu9f4p3k5CfpSJXtgO6zZRF7NC7rvvkAoWiX73N0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=kWWVkBumS+i71Op3410bY/vV7U4C2J0z4eah/iV9yVXuMEHBAInHVfSo4Vr8Nn/ho
+         Ux2la/urUI7czt+QMS6s1RA5yhJPj7y0SZpiKrz1ARokPd2lWBarZnEnFD71VVQ83w
+         3jM0Ns1O5gvK/o5iGJKSf8W3tipPUS2Z3zzGfX78wzMqXx+iNmGCNpXGRE1yfT7zlj
+         rgCrpabu2SiqpwN5eryt+ZL2AzRMU4o+rcCAt8jVFMbe8cqhvIH/tCW64EBDMl67O4
+         jzw74Yy57/LlxPOXFlUY7vCvPCt6B6mQiU/Z6g6xF6pZjhURJr+Z6ASCpAsb7ZIn3l
+         t6SApgn6cNcWw==
+Date:   Tue, 8 Aug 2023 23:53:46 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Florent Revest <revest@chromium.org>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-trace-kernel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RFC PATCH v2 0/6] bpf: fprobe: rethook: Use ftrace_regs
+ instead of pt_regs
+Message-Id: <20230808235346.fdd76875c71f0806773fad74@kernel.org>
+In-Reply-To: <CABRcYmLYyohzVBzg-maoAwaFwj6VanWiAiv5GQnpagn2-ZDoRQ@mail.gmail.com>
+References: <169139090386.324433.6412259486776991296.stgit@devnote2>
+        <CABRcYmLYyohzVBzg-maoAwaFwj6VanWiAiv5GQnpagn2-ZDoRQ@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+On Tue, 8 Aug 2023 16:29:27 +0200
+Florent Revest <revest@chromium.org> wrote:
+
+> On Mon, Aug 7, 2023 at 8:48 AM Masami Hiramatsu (Google)
+> <mhiramat@kernel.org> wrote:
+> >
+> > Florent, feel free to add your rethook for arm64, but please do not remove
+> > kretprobe trampoline yet. It is another discussion point. We may be possible
+> > to use ftrace_regs for kretprobe by ftrace_partial_regs() but kretprobe
+> > allows nest probe. (maybe we can skip that case?)
+> 
+> Ack :)
+> 
+> >  arch/Kconfig                    |    1 +
+> >  arch/arm64/include/asm/ftrace.h |   11 ++++++
+> >  arch/loongarch/Kconfig          |    1 +
+> >  arch/s390/Kconfig               |    1 +
+> >  arch/x86/Kconfig                |    1 +
+> >  arch/x86/kernel/rethook.c       |    9 +++--
+> >  include/linux/fprobe.h          |    4 +-
+> >  include/linux/ftrace.h          |   56 ++++++++++++++++++-----------
+> >  include/linux/rethook.h         |   11 +++---
+> >  kernel/kprobes.c                |    9 ++++-
+> >  kernel/trace/Kconfig            |    9 ++++-
+> >  kernel/trace/bpf_trace.c        |   14 +++++--
+> >  kernel/trace/fprobe.c           |    8 ++--
+> >  kernel/trace/rethook.c          |   16 ++++----
+> >  kernel/trace/trace_fprobe.c     |   76 ++++++++++++++++++++++++---------------
+> >  kernel/trace/trace_probe_tmpl.h |    2 +
+> >  lib/test_fprobe.c               |   10 +++--
+> >  samples/fprobe/fprobe_example.c |    4 +-
+> 
+> I believe that Documentation/trace/fprobe.rst should also be modified
+> following the API change
+
+Indeed. Let me update it.
+
+Thanks!
 
 
-On 2023/8/8 16:26, Eric Dumazet wrote:
-> On Tue, Aug 8, 2023 at 7:59 AM Manjusaka <me@manjusaka.me> wrote:
->>
->> In normal use case, the tcp_ca_event would be changed in high frequency.
->>
->> It's a good indicator to represent the network quanlity.
-> 
-> quality ?
-> 
-> Honestly, it is more about TCP stack tracing than 'network quality'
-> 
->>
->> So I propose to add a `tcp:tcp_ca_event` trace event
->> like `tcp:tcp_cong_state_set` to help the people to
->> trace the TCP connection status
->>
->> Signed-off-by: Manjusaka <me@manjusaka.me>
->> ---
->>  include/net/tcp.h          |  9 ++------
->>  include/trace/events/tcp.h | 45 ++++++++++++++++++++++++++++++++++++++
->>  net/ipv4/tcp_cong.c        | 10 +++++++++
->>  3 files changed, 57 insertions(+), 7 deletions(-)
->>
->> diff --git a/include/net/tcp.h b/include/net/tcp.h
->> index 0ca972ebd3dd..a68c5b61889c 100644
->> --- a/include/net/tcp.h
->> +++ b/include/net/tcp.h
->> @@ -1154,13 +1154,8 @@ static inline bool tcp_ca_needs_ecn(const struct sock *sk)
->>         return icsk->icsk_ca_ops->flags & TCP_CONG_NEEDS_ECN;
->>  }
->>
->> -static inline void tcp_ca_event(struct sock *sk, const enum tcp_ca_event event)
->> -{
->> -       const struct inet_connection_sock *icsk = inet_csk(sk);
->> -
->> -       if (icsk->icsk_ca_ops->cwnd_event)
->> -               icsk->icsk_ca_ops->cwnd_event(sk, event);
->> -}
->> +/* from tcp_cong.c */
->> +void tcp_ca_event(struct sock *sk, const enum tcp_ca_event event);
->>
->>  /* From tcp_cong.c */
->>  void tcp_set_ca_state(struct sock *sk, const u8 ca_state);
->> diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
->> index bf06db8d2046..b374eb636af9 100644
->> --- a/include/trace/events/tcp.h
->> +++ b/include/trace/events/tcp.h
->> @@ -416,6 +416,51 @@ TRACE_EVENT(tcp_cong_state_set,
->>                   __entry->cong_state)
->>  );
->>
->> +TRACE_EVENT(tcp_ca_event,
->> +
->> +       TP_PROTO(struct sock *sk, const u8 ca_event),
->> +
->> +       TP_ARGS(sk, ca_event),
->> +
->> +       TP_STRUCT__entry(
->> +               __field(const void *, skaddr)
->> +               __field(__u16, sport)
->> +               __field(__u16, dport)
->> +               __array(__u8, saddr, 4)
->> +               __array(__u8, daddr, 4)
->> +               __array(__u8, saddr_v6, 16)
->> +               __array(__u8, daddr_v6, 16)
->> +               __field(__u8, ca_event)
->> +       ),
->> +
-> 
-> Please add the family (look at commit 3dd344ea84e1 ("net: tracepoint:
-> exposing sk_family in all tcp:tracepoints"))
-> 
-> 
-> 
->> +       TP_fast_assign(
->> +               struct inet_sock *inet = inet_sk(sk);
->> +               __be32 *p32;
->> +
->> +               __entry->skaddr = sk;
->> +
->> +               __entry->sport = ntohs(inet->inet_sport);
->> +               __entry->dport = ntohs(inet->inet_dport);
->> +
->> +               p32 = (__be32 *) __entry->saddr;
->> +               *p32 = inet->inet_saddr;
->> +
->> +               p32 = (__be32 *) __entry->daddr;
->> +               *p32 =  inet->inet_daddr;
-> 
-> We keep copying IPv4 addresses that might contain garbage for IPv6 sockets :/
-> 
->> +
->> +               TP_STORE_ADDRS(__entry, inet->inet_saddr, inet->inet_daddr,
->> +                          sk->sk_v6_rcv_saddr, sk->sk_v6_daddr);
-> 
-> I will send a cleanup, because IP_STORE_ADDRS() should really take
-> care of all details.
-> 
-> 
->> +
->> +               __entry->ca_event = ca_event;
->> +       ),
->> +
->> +       TP_printk("sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c ca_event=%u",
->> +                 __entry->sport, __entry->dport,
->> +                 __entry->saddr, __entry->daddr,
->> +                 __entry->saddr_v6, __entry->daddr_v6,
->> +                 __entry->ca_event)
-> 
-> Please print the symbol instead of numeric ca_event.
-> 
-> Look at show_tcp_state_name() for instance.
-
-Thanks for the kindness code review, I still get some issue here(Sorry for the first time to contribute):
-
-1. > We keep copying IPv4 addresses that might contain garbage for IPv6 sockets :/
-
-I'm not getting your means, would you mean that we should only save the IPv4 Address here?
-
-2. > I will send a cleanup, because IP_STORE_ADDRS() should really take care of all details.
-
-I think you will make the address assignment code in TP_fast_assign as a new function. 
-
-Should I submit the new change until you send the cleanup patch or I can make this in my patch(cleanup the address assignment)
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
