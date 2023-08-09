@@ -2,58 +2,41 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C5FC0015E
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  9 Aug 2023 10:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C68D2C41513
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  9 Aug 2023 14:10:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231185AbjHIKbk (ORCPT
+        id S232428AbjHIOKW (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 9 Aug 2023 06:31:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33306 "EHLO
+        Wed, 9 Aug 2023 10:10:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231210AbjHIKbj (ORCPT
+        with ESMTP id S229978AbjHIOKV (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 9 Aug 2023 06:31:39 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54C561BDA
-        for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Aug 2023 03:31:39 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id 98e67ed59e1d1-267f8f36a3cso3748494a91.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 09 Aug 2023 03:31:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1691577099; x=1692181899;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hrsBW/bweVeFGqbEFObsS1CtKLg/RluEI+jdzyDd8LM=;
-        b=kp02DhCnBxtJNEdhc8TGr3zPEgGJBqMF/pETbjcWuL0nXrjP+kKw0BOzXHRxFwcyAM
-         Vq8Hq5ZfzKbUUdWMo1HU5Fcs0/p6L5bWv0QDn/JdNjf17WFIdtpK+/8ZCMJ/+33eXRRQ
-         4pxdlIMTwdRerAi8Zu921N0K3QfZVD6rf2Mg8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691577099; x=1692181899;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hrsBW/bweVeFGqbEFObsS1CtKLg/RluEI+jdzyDd8LM=;
-        b=cGQY3CfbQiTjxFT9kWVWOiWKzXfC68As0RR19bsf0RO/Rpd8JQQngnvGIActJL6wrE
-         gKk5tUCSe1Bc37wAsKYq29DUVEe9wO/HQ5doqe6JNtqdMG77QNvBsAl0nKV4Cu2zpYra
-         m5avj/nfZF8kalXUscdafTgUhG45CAWE8qNKf+tC0cjPDGbovNip5QRdCIC4NpgmCTfx
-         tv+s9WMr2z3DgntCSa1wQgAe1i9kTGD/J0MLecZW6y+mRliPangQRzxKMsYmFO1Pemau
-         xORgGQCLi3zFWbmwYyuAiw/LB++i0OYjso+yqOUKQKt4/hDNsHycfRRrFqWiScchAz/p
-         ayRQ==
-X-Gm-Message-State: AOJu0YyUUwfO94IPSyjq7la7gcveHJXM3cuHYD3TBJSvniB0QwwNIIho
-        3kz391RQGRXmMfxYhpnTS+ikIODClfQXIAaGW4YpeA==
-X-Google-Smtp-Source: AGHT+IELEKsPXhWoxXahSRpjgF0fdoA/3cunXQAk8442EDq6G3fDPOSobQiaBDQ1GIXYmi9D3LoxJGNFpIcwYMYj9mI=
-X-Received: by 2002:a17:90a:6fc5:b0:268:2f2:cc88 with SMTP id
- e63-20020a17090a6fc500b0026802f2cc88mr898566pjk.12.1691577098828; Wed, 09 Aug
- 2023 03:31:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <169139090386.324433.6412259486776991296.stgit@devnote2> <169139096244.324433.7237290521765120297.stgit@devnote2>
-In-Reply-To: <169139096244.324433.7237290521765120297.stgit@devnote2>
-From:   Florent Revest <revest@chromium.org>
-Date:   Wed, 9 Aug 2023 12:31:27 +0200
-Message-ID: <CABRcYmLFwSrfsod6y8-K1memLUZiJeb2so6pD4XaFUpwbLD9AQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 5/6] ftrace: Add ftrace_partial_regs() for
- converting ftrace_regs to pt_regs
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+        Wed, 9 Aug 2023 10:10:21 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CFF21FD7;
+        Wed,  9 Aug 2023 07:10:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CB58663226;
+        Wed,  9 Aug 2023 14:10:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF941C433C8;
+        Wed,  9 Aug 2023 14:10:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691590217;
+        bh=2eEmHOtaW98wEIaTzp1lW7UBm7j4xm9z1dP/0aIC++8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=R9HffduBuPOErEDethBZPLCgOiIDoL5ALMjPA5YwJbsIEtlphtvcF5EQ1XxOQz+T5
+         bge7lkcC+E9rS8ioMfGLf1kgPPAAF/qrhkbin4oikq+BCiwUYAUbdFBoijg20wyKBG
+         EpaP3M9ZFVIjouUYix6gT0jQWzoMGJK/hY6vl4CE91QmIzkD9selukv1VTxuwaPUvD
+         ObOWf5lLnlBwExfhxAicq1Ufi+pPDzA3eme/iNZobG+vZJmLKGnRBWttFWaaJOIZQc
+         r4zW1yZnWwvEOSXW14L73xPPx+9Abe5gLLExjGgTryXBg1bsXCjCh3YmGUM0bt1JlS
+         a5GhL+hIz1AsA==
+Date:   Wed, 9 Aug 2023 23:10:11 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Florent Revest <revest@chromium.org>
 Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-trace-kernel@vger.kernel.org,
@@ -68,86 +51,88 @@ Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC PATCH v2 1/6] fprobe: Use fprobe_regs in fprobe entry
+ handler
+Message-Id: <20230809231011.b125bd68887a5659db59905e@kernel.org>
+In-Reply-To: <CABRcYmKRAbOuqNQm5mCwC9NWbtcz1JJDYL_h5x6dK77SJ5FRkA@mail.gmail.com>
+References: <169139090386.324433.6412259486776991296.stgit@devnote2>
+        <169139091575.324433.13168120610633669432.stgit@devnote2>
+        <CABRcYmKRAbOuqNQm5mCwC9NWbtcz1JJDYL_h5x6dK77SJ5FRkA@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Aug 7, 2023 at 8:49=E2=80=AFAM Masami Hiramatsu (Google)
-<mhiramat@kernel.org> wrote:
->
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->
-> Add ftrace_partial_regs() which converts the ftrace_regas to pt_regs.
+Hi Florent,
 
-ftrace_regs*
+On Wed, 9 Aug 2023 12:28:38 +0200
+Florent Revest <revest@chromium.org> wrote:
 
-> If the architecture defines its own ftrace_regs, this copies partial
-> registers to pt_regs and returns it. If not, ftrace_regs is the same as
-> pt_regs and ftrace_partial_regs() will return ftrace_regs::regs.
->
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  arch/arm64/include/asm/ftrace.h |   11 +++++++++++
->  include/linux/ftrace.h          |   11 +++++++++++
->  2 files changed, 22 insertions(+)
->
-> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftr=
-ace.h
-> index ab158196480c..b108cd6718cf 100644
-> --- a/arch/arm64/include/asm/ftrace.h
-> +++ b/arch/arm64/include/asm/ftrace.h
-> @@ -137,6 +137,17 @@ ftrace_override_function_with_return(struct ftrace_r=
-egs *fregs)
->         fregs->pc =3D fregs->lr;
->  }
->
-> +static __always_inline struct pt_regs *
-> +ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *reg=
-s)
-> +{
-> +       memcpy(regs->regs, fregs->regs, sizeof(u64) * 10);
+> On Mon, Aug 7, 2023 at 8:48 AM Masami Hiramatsu (Google)
+> <mhiramat@kernel.org> wrote:
+> >
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> >
+> > This allows fprobes to be available with CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+> > instead of CONFIG_DYNAMIC_FTRACE_WITH_REGS, then we can enable fprobe
+> > on arm64.
+> 
+> This patch lets fprobe code build on configs WITH_ARGS and !WITH_REGS
+> but fprobe wouldn't run on these builds because fprobe still registers
+> to ftrace with FTRACE_OPS_FL_SAVE_REGS, which would fail on
+> !WITH_REGS. Shouldn't we also let the fprobe_init callers decide
+> whether they want REGS or not ?
 
-Are you intentionally copying that tenth value (fregs.direct_tramp)
-into pt_regs.regs[9] ? This seems wrong and it looks like it will bite
-us back one day. Isn't it one of these cases where we can simply use
-sizeof(fregs->regs) ?
+Ah, I think you meant FPROBE_EVENTS? Yes I forgot to add the dependency
+on it. But fprobe itself can work because fprobe just pass the ftrace_regs
+to the handlers. (Note that exit callback may not work until next patch)
 
-> +       regs->sp =3D fregs->sp;
-> +       regs->pc =3D fregs->pc;
-> +       regs->x[29] =3D fregs->fp;
-> +       regs->x[30] =3D fregs->lr;
-> +       return regs;
-> +}
-> +
->  int ftrace_regs_query_register_offset(const char *name);
->
->  int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
-> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> index 3fb94a1a2461..7f45654441b7 100644
-> --- a/include/linux/ftrace.h
-> +++ b/include/linux/ftrace.h
-> @@ -155,6 +155,17 @@ static __always_inline struct pt_regs *ftrace_get_re=
-gs(struct ftrace_regs *fregs
->         return arch_ftrace_get_regs(fregs);
->  }
->
-> +#if !defined(CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS) || \
-> +       defined(CONFIG_HAVE_PT_REGS_COMPAT_FTRACE_REGS)
-> +
-> +static __always_inline struct pt_regs *
-> +ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *reg=
-s)
-> +{
-> +       return arch_ftrace_get_regs((struct ftrace_regs *)fregs);
-> +}
+> 
+> >  static int
+> >  kprobe_multi_link_handler(struct fprobe *fp, unsigned long fentry_ip,
+> > -                         unsigned long ret_ip, struct pt_regs *regs,
+> > +                         unsigned long ret_ip, struct ftrace_regs *fregs,
+> >                           void *data)
+> >  {
+> >         struct bpf_kprobe_multi_link *link;
+> > +       struct pt_regs *regs = ftrace_get_regs(fregs);
+> > +
+> > +       if (!regs)
+> > +               return 0;
+> 
+> (with the above comment addressed) this means that BPF multi_kprobe
+> would successfully attach on builds WITH_ARGS but the programs would
+> never actually run because here regs would be 0. This is a confusing
+> failure mode for the user. I think that if multi_kprobe won't work
+> (because we don't have a pt_regs conversion path yet), the user should
+> be notified at attachment time that they won't be getting any events.
 
-I don't think this works. Suppose you are on x86, WITH_ARGS, and with
-HAVE_PT_REGS_COMPAT_FTRACE_REGS. If you register to ftrace without
-FTRACE_OPS_FL_SAVE_REGS you will receive a ftrace_regs from the light
-ftrace pre-trampoline that has a CS register equal to 0 and
-arch_ftrace_get_regs will return NULL here, which should never happen.
+Yes, so I changed it will not be compiled in that case.
 
-Have you tested your series without registering as FTRACE_OPS_FL_SAVE_REGS =
-?
+@@ -2460,7 +2460,7 @@ static int __init bpf_event_init(void)
+ fs_initcall(bpf_event_init);
+ #endif /* CONFIG_MODULES */
+ 
+-#ifdef CONFIG_FPROBE
++#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+ struct bpf_kprobe_multi_link {
+ 	struct bpf_link link;
+ 	struct fprobe fp;
+
+> That's why I think kprobe_multi should inform fprobe_init that it
+> wants FTRACE_OPS_FL_SAVE_REGS and fail if that's not possible (no
+> trampoline for it for example)
+
+Yeah, that's another possibility, but in the previous thread we
+discussed and agreed to introduce the ftrace_partial_regs() which
+will copy the partial registers from ftrace_regs to pt_regs.
+
+
+Thank you,
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
