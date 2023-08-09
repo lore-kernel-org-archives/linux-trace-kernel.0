@@ -2,56 +2,57 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AA3EB64DD
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  9 Aug 2023 10:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F79EB64DD
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  9 Aug 2023 10:31:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231580AbjHIK30 (ORCPT
+        id S230352AbjHIKbB (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 9 Aug 2023 06:29:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54084 "EHLO
+        Wed, 9 Aug 2023 06:31:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230288AbjHIK30 (ORCPT
+        with ESMTP id S232195AbjHIKbA (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 9 Aug 2023 06:29:26 -0400
-Received: from mail-oo1-xc36.google.com (mail-oo1-xc36.google.com [IPv6:2607:f8b0:4864:20::c36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22B771BCF
-        for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Aug 2023 03:29:25 -0700 (PDT)
-Received: by mail-oo1-xc36.google.com with SMTP id 006d021491bc7-56c7f47ec42so4739842eaf.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 09 Aug 2023 03:29:25 -0700 (PDT)
+        Wed, 9 Aug 2023 06:31:00 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA8722109
+        for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Aug 2023 03:30:58 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-686b9964ae2so4808131b3a.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 09 Aug 2023 03:30:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1691576964; x=1692181764;
+        d=chromium.org; s=google; t=1691577058; x=1692181858;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dbRTactPL+UoTh7JhtLP7m2QS4BKZHHCNQWVDx5nQag=;
-        b=GEO0/nvBajwIJUPnEU41+WNGwH2DtulMBc4FPYU1jw1eJyQzRO1uSpXBuBH8QLOwCt
-         GwhW7UCHdaFTfMpbBv5D8LXISJFDNz6p84oe70QtyPQ0jjTGD/KZxrq2YaTVBZXBmjLX
-         O/QMcqR39ySFwSZn+/0ISTfXyj/Fu+13hAe1M=
+        bh=23g0gx1mJ/i6nRH5VGmrsxzbfsWW5yRYcO+lPEfm/DE=;
+        b=jp3VGD+7skOjlcKJcE3cOuRsgGl5UdBMGNdL81BmEfQEEYBfhLjyi5dAl2oeKpgH+s
+         mJXGjz9IbaLi2Fr4/PTORDZN5koD3RmEy7B6Y5XVG4gutxeWFG9KcfYaGa9aUEvk1vSz
+         n4l/DD9NJelfHBqVPA2LwJNhmwi0ON6Yh26Fs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691576964; x=1692181764;
+        d=1e100.net; s=20221208; t=1691577058; x=1692181858;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dbRTactPL+UoTh7JhtLP7m2QS4BKZHHCNQWVDx5nQag=;
-        b=Siu3KaJFTNuiXv5HlLpQUIZsDxlOEC6TtF9Wzwc6q6xZXqrrQK2xw9sIIXx29O9U+x
-         RbuSQxh7gEKTwEfCUxJNjEm8zphdptA+dPy7//tsZjtI2qxbjIDJZ4pA9wPW0g62s7yr
-         ICLbsQhBb6XHrQ8G3HGniBPUamxjLk7aTmToBr8vOA4uR3AJSecZD2xuJ0pSxj5f4Gdt
-         y4EaegRRpBKaGMP/NMuiVmww4xfh/SxoZFZ/DIZJn6SLbJPKcfdvpra46IwXGJuYadUI
-         C9HfOosIWkGMCgnP3tK73NaBVrTAJYHi/7afdclD09x/w9ik/yhu6ylI/ulhHJtCAmPk
-         UawQ==
-X-Gm-Message-State: AOJu0Yy4XaZRKhLA1Um7zGGLOIgIznWeeP54brruS++jUqHxgzxfgnAl
-        gK773sqiJYzzyyWnmv2cDpiTG5NnnErFYEqVHtxB2Q==
-X-Google-Smtp-Source: AGHT+IGZRaNEp0r0k3lBJzbjA9stkGRIasFKmrjd8YKrsWWFriAXqq3HukzU4wsTEvJmwBf0L3B0LsNobh4bY0RjQds=
-X-Received: by 2002:aca:2113:0:b0:3a7:4878:235a with SMTP id
- 19-20020aca2113000000b003a74878235amr2168484oiz.29.1691576964523; Wed, 09 Aug
- 2023 03:29:24 -0700 (PDT)
+        bh=23g0gx1mJ/i6nRH5VGmrsxzbfsWW5yRYcO+lPEfm/DE=;
+        b=DCWePrzTGWCeLc4qQB/6LKjTsvpgFIm9m8SYFibCsOzmaSf7nPJ9qnzh3Bg1rzAAA2
+         twXT8y509W5aYZyLz77TASOFtmiJ7QP9cH2vfhfzw+FYCFoCvEdrT1b7ntqbIMNNhoLd
+         5l+sUfFgthjAwaj4payjSSkUQuneBY/oeP5DG9ExEszRj5aW2bjJdI6O7zpBQoUM+wh6
+         5S+ojWN4ItGgXmpafVPyp8ga1kTHu9ny5pJyqdVS6N0V7YKjxzcq5SKsBmU/KoTJJndk
+         W07ATgeMQ8EmPAkUtoY8mrJHRk++S003w9S5mYjdrgFuwJv389Kq6/iHKn9oMks5Fue8
+         QO4w==
+X-Gm-Message-State: AOJu0Yyx/5FLmfLGLPSeowSVcenXgTPM7mym6QhoNPj9tevT16vU5NmW
+        zGufbnU1pjPGpbvrTToNwmQcY1KLHI7O3k/b2uAcJA==
+X-Google-Smtp-Source: AGHT+IENNhAKXc6vRR9MNsgE+lFZuSE5AnVa5gOWg0oQMGBY95PLF9PgWQzI4SkTi8qPGbQ3pRlDjdsV9zyqQh7Ab1k=
+X-Received: by 2002:a17:90a:6c05:b0:268:c5c7:f7ed with SMTP id
+ x5-20020a17090a6c0500b00268c5c7f7edmr1558772pjj.30.1691577058150; Wed, 09 Aug
+ 2023 03:30:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <169139090386.324433.6412259486776991296.stgit@devnote2> <169139092722.324433.16681957760325391475.stgit@devnote2>
-In-Reply-To: <169139092722.324433.16681957760325391475.stgit@devnote2>
+References: <169139090386.324433.6412259486776991296.stgit@devnote2> <169139093899.324433.3739544465888158332.stgit@devnote2>
+In-Reply-To: <169139093899.324433.3739544465888158332.stgit@devnote2>
 From:   Florent Revest <revest@chromium.org>
-Date:   Wed, 9 Aug 2023 12:29:13 +0200
-Message-ID: <CABRcYmJpA7tWk7pNxMy-44aoT9fFByQY3kGiEfKDbOe9WPkmNg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 2/6] tracing: Expose ftrace_regs regardless of CONFIG_FUNCTION_TRACER
+Date:   Wed, 9 Aug 2023 12:30:47 +0200
+Message-ID: <CABRcYmK6X6okNKNu9ZjgLEO+JMGL42j7idE8QPZ_EpYA9S9UZQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 3/6] fprobe: rethook: Use fprobe_regs in fprobe
+ exit handler and rethook
 To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
@@ -73,40 +74,251 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Aug 7, 2023 at 8:48=E2=80=AFAM Masami Hiramatsu (Google)
+The title says "Use fprobe_regs", I think you meant ftrace_regs (we
+have enough problems with two regs structs already! :o) ) same comment
+for patch 1
+
+On Mon, Aug 7, 2023 at 8:49=E2=80=AFAM Masami Hiramatsu (Google)
 <mhiramat@kernel.org> wrote:
-> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> index ce156c7704ee..3fb94a1a2461 100644
-> --- a/include/linux/ftrace.h
-> +++ b/include/linux/ftrace.h
-> @@ -112,11 +112,11 @@ static inline int ftrace_mod_get_kallsym(unsigned i=
-nt symnum, unsigned long *val
->  }
->  #endif
 >
-> -#ifdef CONFIG_FUNCTION_TRACER
-> -
-> -extern int ftrace_enabled;
-> -
-> -#ifndef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
-> +/*
-> + * If the architecture doesn't support FTRACE_WITH_ARGS or disable funct=
-ion
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
+> Change the fprobe exit handler and rethook to use ftrace_regs data struct=
+ure
+> instead of pt_regs. This also introduce HAVE_FTRACE_REGS_COMPATIBLE_WITH_=
+PT_REGS
 
-nit: disables*
+The macro name in the patch description doesn't match the one in the
+patch (HAVE_PT_REGS_COMPAT_FTRACE_REGS)
 
-> + * tracer, define the default(pt_regs compatible) ftrace_regs.
-> + */
-> +#if !defined(CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS) || !defined(CONFIG_FU=
-NCTION_TRACER)
+> which means the ftrace_regs is equal to the pt_regs so that those are
+> compatible. Only if it is enabled, kretprobe will use rethook since kretp=
+robe
+> requires pt_regs for backward compatibility.
+>
+> This means the archs which currently implement rethook for kretprobes nee=
+ds to
+> set that flag and it must ensure struct ftrace_regs is same as pt_regs.
 
-I wonder if we should make things simpler with:
+nit: I'm a bit confused when you say that these structures are "the
+same". Let's take x86 as an example, ftrace_regs is "the same" as
+pt_regs in the sense that they use the same space in memory and have
+the same fields alignment but my understanding of ftrace_regs is that
+it can either be a full pt_regs or a sparse pt_regs. If the trampoline
+doesn't go through ftrace_regs_caller_op_ptr, registers like CS will
+be missing and ftrace_get_regs will return NULL, I don't call it being
+"the same". I guess what you mean here is that a pt_regs can be casted
+back into a ftrace_regs. Maybe HAVE_PT_REGS_TO_FTRACE_REGS_CAST would
+be a clearer name ?
 
-#if defined(HAVE_PT_REGS_COMPAT_FTRACE_REGS) || !defined(CONFIG_FUNCTION_TR=
-ACER)
+> If not, it must be either disabling kretprobe or implementing kretprobe
+> trampoline separately from rethook trampoline.
+>
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  arch/Kconfig                    |    1 +
+>  arch/loongarch/Kconfig          |    1 +
+>  arch/s390/Kconfig               |    1 +
+>  arch/x86/Kconfig                |    1 +
+>  arch/x86/kernel/rethook.c       |    9 ++++++---
+>  include/linux/fprobe.h          |    2 +-
+>  include/linux/rethook.h         |   11 ++++++-----
+>  kernel/kprobes.c                |    9 +++++++--
+>  kernel/trace/Kconfig            |    7 +++++++
+>  kernel/trace/bpf_trace.c        |    6 +++++-
+>  kernel/trace/fprobe.c           |    6 +++---
+>  kernel/trace/rethook.c          |   16 ++++++++--------
+>  kernel/trace/trace_fprobe.c     |    6 +++++-
+>  lib/test_fprobe.c               |    6 +++---
+>  samples/fprobe/fprobe_example.c |    2 +-
+>  15 files changed, 56 insertions(+), 28 deletions(-)
+>
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index aff2746c8af2..e321bdb8b22b 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -201,6 +201,7 @@ config KRETPROBE_ON_RETHOOK
+>         def_bool y
+>         depends on HAVE_RETHOOK
+>         depends on KRETPROBES
+> +       depends on HAVE_PT_REGS_COMPAT_FTRACE_REGS || !HAVE_DYNAMIC_FTRAC=
+E_WITH_ARGS
+>         select RETHOOK
+>
+>  config USER_RETURN_NOTIFIER
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index e55511af4c77..93a4336b0a94 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -102,6 +102,7 @@ config LOONGARCH
+>         select HAVE_DMA_CONTIGUOUS
+>         select HAVE_DYNAMIC_FTRACE
+>         select HAVE_DYNAMIC_FTRACE_WITH_ARGS
+> +       select HAVE_PT_REGS_COMPAT_FTRACE_REGS
+>         select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+>         select HAVE_DYNAMIC_FTRACE_WITH_REGS
+>         select HAVE_EBPF_JIT
+> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> index 5b39918b7042..299ba17d3316 100644
+> --- a/arch/s390/Kconfig
+> +++ b/arch/s390/Kconfig
+> @@ -165,6 +165,7 @@ config S390
+>         select HAVE_DMA_CONTIGUOUS
+>         select HAVE_DYNAMIC_FTRACE
+>         select HAVE_DYNAMIC_FTRACE_WITH_ARGS
+> +       select HAVE_PT_REGS_COMPAT_FTRACE_REGS
+>         select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+>         select HAVE_DYNAMIC_FTRACE_WITH_REGS
+>         select HAVE_EBPF_JIT if HAVE_MARCH_Z196_FEATURES
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 7422db409770..df1b7a2791e8 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -207,6 +207,7 @@ config X86
+>         select HAVE_DYNAMIC_FTRACE
+>         select HAVE_DYNAMIC_FTRACE_WITH_REGS
+>         select HAVE_DYNAMIC_FTRACE_WITH_ARGS    if X86_64
+> +       select HAVE_PT_REGS_COMPAT_FTRACE_REGS  if X86_64
+>         select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+>         select HAVE_SAMPLE_FTRACE_DIRECT        if X86_64
+>         select HAVE_SAMPLE_FTRACE_DIRECT_MULTI  if X86_64
+> diff --git a/arch/x86/kernel/rethook.c b/arch/x86/kernel/rethook.c
+> index 8a1c0111ae79..79a52bfde562 100644
+> --- a/arch/x86/kernel/rethook.c
+> +++ b/arch/x86/kernel/rethook.c
+> @@ -83,7 +83,8 @@ __used __visible void arch_rethook_trampoline_callback(=
+struct pt_regs *regs)
+>          * arch_rethook_fixup_return() which called from this
+>          * rethook_trampoline_handler().
+>          */
+> -       rethook_trampoline_handler(regs, (unsigned long)frame_pointer);
+> +       rethook_trampoline_handler((struct ftrace_regs *)regs,
+> +                                  (unsigned long)frame_pointer);
+>
+>         /*
+>          * Copy FLAGS to 'pt_regs::ss' so that arch_rethook_trapmoline()
+> @@ -104,9 +105,10 @@ NOKPROBE_SYMBOL(arch_rethook_trampoline_callback);
+>  STACK_FRAME_NON_STANDARD_FP(arch_rethook_trampoline);
+>
+>  /* This is called from rethook_trampoline_handler(). */
+> -void arch_rethook_fixup_return(struct pt_regs *regs,
+> +void arch_rethook_fixup_return(struct ftrace_regs *fregs,
+>                                unsigned long correct_ret_addr)
+>  {
+> +       struct pt_regs *regs =3D ftrace_get_regs(fregs);
+>         unsigned long *frame_pointer =3D (void *)(regs + 1);
+>
+>         /* Replace fake return address with real one. */
+> @@ -114,8 +116,9 @@ void arch_rethook_fixup_return(struct pt_regs *regs,
+>  }
+>  NOKPROBE_SYMBOL(arch_rethook_fixup_return);
+>
+> -void arch_rethook_prepare(struct rethook_node *rh, struct pt_regs *regs,=
+ bool mcount)
+> +void arch_rethook_prepare(struct rethook_node *rh, struct ftrace_regs *f=
+regs, bool mcount)
+>  {
+> +       struct pt_regs *regs =3D ftrace_get_regs(fregs);
+>         unsigned long *stack =3D (unsigned long *)regs->sp;
+>
+>         rh->ret_addr =3D stack[0];
+> diff --git a/include/linux/fprobe.h b/include/linux/fprobe.h
+> index 36c0595f7b93..b9c0c216dedb 100644
+> --- a/include/linux/fprobe.h
+> +++ b/include/linux/fprobe.h
+> @@ -38,7 +38,7 @@ struct fprobe {
+>                              unsigned long ret_ip, struct ftrace_regs *re=
+gs,
+>                              void *entry_data);
+>         void (*exit_handler)(struct fprobe *fp, unsigned long entry_ip,
+> -                            unsigned long ret_ip, struct pt_regs *regs,
+> +                            unsigned long ret_ip, struct ftrace_regs *re=
+gs,
+>                              void *entry_data);
+>  };
+>
+> diff --git a/include/linux/rethook.h b/include/linux/rethook.h
+> index 26b6f3c81a76..138d64c8b67b 100644
+> --- a/include/linux/rethook.h
+> +++ b/include/linux/rethook.h
+> @@ -7,6 +7,7 @@
+>
+>  #include <linux/compiler.h>
+>  #include <linux/freelist.h>
+> +#include <linux/ftrace.h>
+>  #include <linux/kallsyms.h>
+>  #include <linux/llist.h>
+>  #include <linux/rcupdate.h>
+> @@ -14,7 +15,7 @@
+>
+>  struct rethook_node;
+>
+> -typedef void (*rethook_handler_t) (struct rethook_node *, void *, unsign=
+ed long, struct pt_regs *);
+> +typedef void (*rethook_handler_t) (struct rethook_node *, void *, unsign=
+ed long, struct ftrace_regs *);
+>
+>  /**
+>   * struct rethook - The rethook management data structure.
+> @@ -64,12 +65,12 @@ void rethook_free(struct rethook *rh);
+>  void rethook_add_node(struct rethook *rh, struct rethook_node *node);
+>  struct rethook_node *rethook_try_get(struct rethook *rh);
+>  void rethook_recycle(struct rethook_node *node);
+> -void rethook_hook(struct rethook_node *node, struct pt_regs *regs, bool =
+mcount);
+> +void rethook_hook(struct rethook_node *node, struct ftrace_regs *regs, b=
+ool mcount);
+>  unsigned long rethook_find_ret_addr(struct task_struct *tsk, unsigned lo=
+ng frame,
+>                                     struct llist_node **cur);
+>
+>  /* Arch dependent code must implement arch_* and trampoline code */
+> -void arch_rethook_prepare(struct rethook_node *node, struct pt_regs *reg=
+s, bool mcount);
+> +void arch_rethook_prepare(struct rethook_node *node, struct ftrace_regs =
+*regs, bool mcount);
+>  void arch_rethook_trampoline(void);
+>
+>  /**
+> @@ -84,11 +85,11 @@ static inline bool is_rethook_trampoline(unsigned lon=
+g addr)
+>  }
+>
+>  /* If the architecture needs to fixup the return address, implement it. =
+*/
+> -void arch_rethook_fixup_return(struct pt_regs *regs,
+> +void arch_rethook_fixup_return(struct ftrace_regs *regs,
+>                                unsigned long correct_ret_addr);
+>
+>  /* Generic trampoline handler, arch code must prepare asm stub */
+> -unsigned long rethook_trampoline_handler(struct pt_regs *regs,
+> +unsigned long rethook_trampoline_handler(struct ftrace_regs *regs,
+>                                          unsigned long frame);
+>
+>  #ifdef CONFIG_RETHOOK
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 1fc6095d502d..ccbe41c961c3 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -2120,7 +2120,7 @@ static int pre_handler_kretprobe(struct kprobe *p, =
+struct pt_regs *regs)
+>         if (rp->entry_handler && rp->entry_handler(ri, regs))
+>                 rethook_recycle(rhn);
+>         else
+> -               rethook_hook(rhn, regs, kprobe_ftrace(p));
+> +               rethook_hook(rhn, (struct ftrace_regs *)regs, kprobe_ftra=
+ce(p));
 
-And remove the ftrace_regs definitions that are copy-pastes of this
-block in arch specific headers. Then we can enforce in a single point
-that HAVE_PT_REGS_COMPAT_FTRACE_REGS holds.
+I think there are two things that can be meant with "rethook uses ftrace_re=
+gs":
 
-Maybe that's a question for Steven ?
+- rethook callbacks receive a ftrace_regs (that's what you do further down)
+- rethook can hook to a traced function using a ftrace_regs (that's
+what you use in fprobe now)
+
+But I think the second proposition shouldn't imply that rethook_hook
+can _only_ hook to ftrace_regs. For the kprobe use case, I think there
+should also be a rethook_hook_pt_regs() that operates on a pt_regs. We
+could have a default implementation of rethook_hook that calls into
+the other (or vice versa) on HAVE_FTRACE_REGS_COMPATIBLE_WITH_PT_REGS
+but I think it's good to separate these two APIs
