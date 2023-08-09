@@ -2,58 +2,58 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7CEC04A6A
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  9 Aug 2023 15:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C308C0015E
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  9 Aug 2023 16:10:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229766AbjHIPxg (ORCPT
+        id S230078AbjHIQKE (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 9 Aug 2023 11:53:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45112 "EHLO
+        Wed, 9 Aug 2023 12:10:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231256AbjHIPxf (ORCPT
+        with ESMTP id S229568AbjHIQKE (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 9 Aug 2023 11:53:35 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCDF11BD9
-        for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Aug 2023 08:53:34 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-56518bb1552so23612a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 09 Aug 2023 08:53:34 -0700 (PDT)
+        Wed, 9 Aug 2023 12:10:04 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E3EF1FCC
+        for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Aug 2023 09:10:03 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id 41be03b00d2f7-564b326185bso20033a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 09 Aug 2023 09:10:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1691596414; x=1692201214;
+        d=chromium.org; s=google; t=1691597402; x=1692202202;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RIwKDuY4Cird/U1Q4TEwDWgypIViAxxEznjv74enuWE=;
-        b=YK0mzmoUhg1/WVZtS6i8IvR/ir3WbY3Rml52xGJOadNilW86RJYMM2B1S9qtS+mNV8
-         02EqKkCgXbRPt5+IpTJAr2MJn/YLBb3P2HkVGUczy/s7EtkXYOCUyVH57NhCvoeG9/Ck
-         +xY9zswP8Z/VRCt3kljF3dnGZyZi8QXKvdLrc=
+        bh=xMpn6SbN2eaSRjTRTeLdDj+fif3mbbSQ4nc9edZTZdA=;
+        b=VTFoUM0oS3XFRrMwLsXKltkF1VN5RVPAXlncucHEJOFf93EqFusEyKe1jrKOOIKe0c
+         9mvGxd6qeO2oJoDFePnOzjXy1kGtvqGvNFrifMRnd0owBmXQHmB5sgrnFwt5mJ4ywj4H
+         vyne1muga6wEAADqA/Ur2syLuagWmg6YYBAHI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691596414; x=1692201214;
+        d=1e100.net; s=20221208; t=1691597402; x=1692202202;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RIwKDuY4Cird/U1Q4TEwDWgypIViAxxEznjv74enuWE=;
-        b=hO0WnXGcJlDgy7ZXlrgxd5GzxZRNxmA5Uo3kUlxjpJNNTOCTFJcjjI8pKqV7nvem3N
-         zU5oV46ISwjrFlil1bTOsekad3fHU+9GGb7rLSm5HzVvLtw3JdEnFv+3SdJuCJj6/ozy
-         EYYItrPD1j3gk/7uQv3wW1TM6/dLnUaCUxxNAUU8+ntZSuK1HnlngQyK37hJbEkDfPfh
-         AbZYCPaCTlCvXDLhTNey9p3S0bl418AJG7kuPc619P1s9EA3ZHK2Ihvqnx/knvpG+QFS
-         xolzy7kk4xo7qtsAHe26zRu77Uskf46eGvBzOOftxACyeubG1fsXgL+tCItHMV2YZtD4
-         D5Bg==
-X-Gm-Message-State: AOJu0Ywo3t8p3dLpn+dFizd0YT1IkfPib0t+wnWRyg8BNyZIickJZYaE
-        qwfaT2/jS0C6f/tjUPdZtBUAEOE6MwHDg/+jK3eefg==
-X-Google-Smtp-Source: AGHT+IEt0SjbBNE/0A3+xFiamsHpiZ+DozfqOsjQmlYXrs6lu/425svIyeL6FcV0FsKSoHWBUid1vMOwONcyHbRTk8I=
-X-Received: by 2002:a17:90b:2281:b0:269:621e:a673 with SMTP id
- kx1-20020a17090b228100b00269621ea673mr2333395pjb.1.1691596414341; Wed, 09 Aug
- 2023 08:53:34 -0700 (PDT)
+        bh=xMpn6SbN2eaSRjTRTeLdDj+fif3mbbSQ4nc9edZTZdA=;
+        b=BxLXaTBX/jGbCka5Lbze+dAXvnAyutKkcsicJgC6t43cIcSLoYtFI6WxVaEggd0SKK
+         FdHJjjTNXMLn8dpqPlHPDtjaf6yahW3XzW4sh5k42XrcMMr+1FDrljGSV8sLijerawNI
+         LbKFWR7jQFpl+SosRHf7Cd5FMxMd9EHD85pzMs/pZienXVeFu+WjyBQk+inmTxWz8Vlv
+         rr8Z3quvT8/qspnDQCgfgD1Z6Rb7c0IKlBlCJaPLhzhQvFax8wkKnfAvomgnFSazmirv
+         cb5lPXOjDSkgHFso8p2I/9kiRgiN9AlzV6HTdkSgW9j+XvwSM1IMF36QR2xy0aTFhvJb
+         oHZw==
+X-Gm-Message-State: AOJu0Yw8pDlm4lulZln7ZCSXHAiDtoPLM+Q6pBzeGCU42srhduz4q1qY
+        fmWsWUvsLIjCKTeZza4mBxezbec6m/gYV4zdAf5m+g==
+X-Google-Smtp-Source: AGHT+IEMGnO9kaOwJBUsDP9Hvg41gwbYDBnHKOGLLGQmbe/Vs8lyEc+Tx1Z5SksDYU6d5P9FVwop5V3adn3cw6RiBJQ=
+X-Received: by 2002:a17:90a:db90:b0:267:fe84:6647 with SMTP id
+ h16-20020a17090adb9000b00267fe846647mr2564394pjv.13.1691597402536; Wed, 09
+ Aug 2023 09:10:02 -0700 (PDT)
 MIME-Version: 1.0
 References: <169139090386.324433.6412259486776991296.stgit@devnote2>
- <169139092722.324433.16681957760325391475.stgit@devnote2> <CABRcYmJpA7tWk7pNxMy-44aoT9fFByQY3kGiEfKDbOe9WPkmNg@mail.gmail.com>
- <20230809231607.0c5c75e7c3b69fcc96d82cb4@kernel.org>
-In-Reply-To: <20230809231607.0c5c75e7c3b69fcc96d82cb4@kernel.org>
+ <169139091575.324433.13168120610633669432.stgit@devnote2> <CABRcYmKRAbOuqNQm5mCwC9NWbtcz1JJDYL_h5x6dK77SJ5FRkA@mail.gmail.com>
+ <20230809231011.b125bd68887a5659db59905e@kernel.org>
+In-Reply-To: <20230809231011.b125bd68887a5659db59905e@kernel.org>
 From:   Florent Revest <revest@chromium.org>
-Date:   Wed, 9 Aug 2023 17:53:23 +0200
-Message-ID: <CABRcYmJGPLAA+HKFA0CZkEZJ0j5GvXBDDAVA7i8Wv5PDMvYQrA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 2/6] tracing: Expose ftrace_regs regardless of CONFIG_FUNCTION_TRACER
+Date:   Wed, 9 Aug 2023 18:09:51 +0200
+Message-ID: <CABRcYmKEd=zmriE8VUnSTvybwA962r60+QaRJZK=KNqYixd_eg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/6] fprobe: Use fprobe_regs in fprobe entry handler
 To:     Masami Hiramatsu <mhiramat@kernel.org>
 Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
@@ -75,49 +75,88 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Aug 9, 2023 at 4:16=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.or=
+On Wed, Aug 9, 2023 at 4:10=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.or=
 g> wrote:
 >
-> On Wed, 9 Aug 2023 12:29:13 +0200
-> Florent Revest <revest@chromium.org> wrote:
-> > > + * tracer, define the default(pt_regs compatible) ftrace_regs.
-> > > + */
-> > > +#if !defined(CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS) || !defined(CONFI=
-G_FUNCTION_TRACER)
-> >
-> > I wonder if we should make things simpler with:
-> >
-> > #if defined(HAVE_PT_REGS_COMPAT_FTRACE_REGS) || !defined(CONFIG_FUNCTIO=
-N_TRACER)
-> >
-> > And remove the ftrace_regs definitions that are copy-pastes of this
-> > block in arch specific headers. Then we can enforce in a single point
-> > that HAVE_PT_REGS_COMPAT_FTRACE_REGS holds.
+> Hi Florent,
 >
-> Here, the "HAVE_PT_REGS_COMPAT_FTRACE_REGS" does not mean that the
-> ftrace_regs is completely compatible with pt_regs, but on the memory
-> it wraps struct pt_regs (thus we can just cast the type).
+> On Wed, 9 Aug 2023 12:28:38 +0200
+> Florent Revest <revest@chromium.org> wrote:
+>
+> > On Mon, Aug 7, 2023 at 8:48=E2=80=AFAM Masami Hiramatsu (Google)
+> > <mhiramat@kernel.org> wrote:
+> > >
+> > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > >
+> > > This allows fprobes to be available with CONFIG_DYNAMIC_FTRACE_WITH_A=
+RGS
+> > > instead of CONFIG_DYNAMIC_FTRACE_WITH_REGS, then we can enable fprobe
+> > > on arm64.
+> >
+> > This patch lets fprobe code build on configs WITH_ARGS and !WITH_REGS
+> > but fprobe wouldn't run on these builds because fprobe still registers
+> > to ftrace with FTRACE_OPS_FL_SAVE_REGS, which would fail on
+> > !WITH_REGS. Shouldn't we also let the fprobe_init callers decide
+> > whether they want REGS or not ?
+>
+> Ah, I think you meant FPROBE_EVENTS? Yes I forgot to add the dependency
+> on it. But fprobe itself can work because fprobe just pass the ftrace_reg=
+s
+> to the handlers. (Note that exit callback may not work until next patch)
 
-But in practice I think that all architectures that chose to wrap a
-pt_regs in their ftrace_regs also do:
+No, I mean that fprobe still registers its ftrace ops with the
+FTRACE_OPS_FL_SAVE_REGS flag:
 
-+#define ftrace_regs_get_instruction_pointer(fregs) \
-+       instruction_pointer(ftrace_get_regs(fregs))
-+#define ftrace_regs_get_argument(fregs, n) \
-+       regs_get_kernel_argument(ftrace_get_regs(fregs), n)
-+#define ftrace_regs_get_stack_pointer(fregs) \
-+       kernel_stack_pointer(ftrace_get_regs(fregs))
-+#define ftrace_regs_return_value(fregs) \
-+       regs_return_value(ftrace_get_regs(fregs))
-+#define ftrace_regs_set_return_value(fregs, ret) \
-+       regs_set_return_value(ftrace_get_regs(fregs), ret)
-+#define ftrace_override_function_with_return(fregs) \
-+       override_function_with_return(ftrace_get_regs(fregs))
-+#define ftrace_regs_query_register_offset(name) \
-+       regs_query_register_offset(name)
+https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/tree/ker=
+nel/trace/fprobe.c?h=3Dtopic/fprobe-ftrace-regs&id=3D2ca022b2753ae0d2a2513c=
+95f7ed5b5b727fb2c4#n185
 
-And are just careful to populate the fields that let these macros
-work. So maybe these could be factorized... But anyway, I'm not
-particularly a super fan of the idea and I don't think it should
-necessarily fit in that series. It's just something that crossed my
-mind, if you're not a fan then we should probably not do it ;)
+Which means that __register_ftrace_function will return -EINVAL on
+builds !WITH_REGS:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/tree/ker=
+nel/trace/ftrace.c?h=3Dtopic/fprobe-ftrace-regs&id=3D2ca022b2753ae0d2a2513c=
+95f7ed5b5b727fb2c4#n338
+
+As documented here:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/tree/inc=
+lude/linux/ftrace.h?h=3Dtopic/fprobe-ftrace-regs&id=3D2ca022b2753ae0d2a2513=
+c95f7ed5b5b727fb2c4#n188
+
+There are two parts to using sparse pt_regs. One is "static": having
+WITH_ARGS in the config, the second one is "dynamic": a ftrace ops
+needs to specify that it doesn't want to go through the ftrace
+trampoline that saves a full pt_regs, by not giving
+FTRACE_OPS_FL_SAVE_REGS. If we want fprobe to work on builds
+!WITH_REGS then we should both remove Kconfig dependencies to
+WITH_REGS (like you've done) but also stop passing this ftrace ops
+flag.
+
+> >
+> > >  static int
+> > >  kprobe_multi_link_handler(struct fprobe *fp, unsigned long fentry_ip=
+,
+> > > -                         unsigned long ret_ip, struct pt_regs *regs,
+> > > +                         unsigned long ret_ip, struct ftrace_regs *f=
+regs,
+> > >                           void *data)
+> > >  {
+> > >         struct bpf_kprobe_multi_link *link;
+> > > +       struct pt_regs *regs =3D ftrace_get_regs(fregs);
+> > > +
+> > > +       if (!regs)
+> > > +               return 0;
+> >
+> > (with the above comment addressed) this means that BPF multi_kprobe
+> > would successfully attach on builds WITH_ARGS but the programs would
+> > never actually run because here regs would be 0. This is a confusing
+> > failure mode for the user. I think that if multi_kprobe won't work
+> > (because we don't have a pt_regs conversion path yet), the user should
+> > be notified at attachment time that they won't be getting any events.
+>
+> Yes, so I changed it will not be compiled in that case.
+
+Ah ok I missed the CONFIG_DYNAMIC_FTRACE_WITH_REGS guard that you keep
+between patch 1 and 6 to avoid this case. (after patch 6, it's no
+longer an issue) then that's fine.
