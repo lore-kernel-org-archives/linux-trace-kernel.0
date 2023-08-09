@@ -2,41 +2,59 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32615C001B0
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  9 Aug 2023 14:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98436C001B0
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  9 Aug 2023 15:39:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234340AbjHIOwe (ORCPT
+        id S234526AbjHIPjS (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 9 Aug 2023 10:52:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33830 "EHLO
+        Wed, 9 Aug 2023 11:39:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231542AbjHIOwe (ORCPT
+        with ESMTP id S234332AbjHIPjD (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 9 Aug 2023 10:52:34 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EE371FF5;
-        Wed,  9 Aug 2023 07:52:33 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C85FB63CA6;
-        Wed,  9 Aug 2023 14:52:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAA84C433C8;
-        Wed,  9 Aug 2023 14:52:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691592752;
-        bh=di6NBnwSgy7sy24SlTR04GfQ8U9w41UQmbmsgl8CO9w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BLSLUpc6Gst0cnZcdo/R85Y77iobKXbzNgjcvhNyo5OwbewuMqQNlCrR3HuuNf5N8
-         xFZNTpUlqfLpVYRJPoenB9Mx12RSMfJ8XEXCbRmkA7AbTDAtdGBJgvKCRoV0TQcvJN
-         PpUxwl7w7E5qzbpmSybglU9uEBGWH90tBT9PB/CyHfn1764Go43D7uIWjACtquukUQ
-         VzZNfKWZQouQZxejpPC4qBzJltQx0qfKQuPuHTQebR/Nxz7yr3C1lsy5XYTqdla0fG
-         RKUcXxnZA6MMSaKV35vMocgrHv4Li3ew7lf/frR7Lajf60nUA2sSA3Euh+t/EYG6Xw
-         Ig+CNghJtGYuA==
-Date:   Wed, 9 Aug 2023 23:52:26 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Florent Revest <revest@chromium.org>
+        Wed, 9 Aug 2023 11:39:03 -0400
+Received: from mail-oo1-xc33.google.com (mail-oo1-xc33.google.com [IPv6:2607:f8b0:4864:20::c33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3DC92D73
+        for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Aug 2023 08:38:13 -0700 (PDT)
+Received: by mail-oo1-xc33.google.com with SMTP id 006d021491bc7-56ca4d7079aso4810641eaf.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 09 Aug 2023 08:38:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1691595491; x=1692200291;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Or+4Q7ioH1LO85WlhMl+Hf8sfqeAwfesSr6HY/tLZlg=;
+        b=dZcu+9OCCvDLKeSC8+efZ2t+vflJAufUebNBSxKiPMXcivRTCQnANXkWc+eUMIOfP5
+         niV3udOO9xEsykqD1etTNR21tWhoh0SdlANcSTLtFgIor0e+TCSi4toemI4fNBG24Tcs
+         mm9be/Lb7kIaAwrSUVBkeEXK+XV7nwreJY1i0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691595491; x=1692200291;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Or+4Q7ioH1LO85WlhMl+Hf8sfqeAwfesSr6HY/tLZlg=;
+        b=ERo+nC+a0nIOk+8QI/+3Vn7rNh3EwuTrgedKoQb2OtfMo9vbDn9eRwR46Pnu/sU9Jm
+         x92rybf74CmbukAaWV9VP4ZMJux5wybl5bRVFlFFGdaAHanc8Z5KBwc+VsQiU+6EXKjF
+         hRsvJVHfZg4Ti7Ct//Ms2Z9zgn4P4HOdHqVI3lBpkL3M+i8+MoQdhuc0YQsS1lKFB3NK
+         RNN7cuSlX/QQ/NWci2bfXxrjUy+IPYDWUcZEktPmnWY1QpDBaOwxxKHrd53dpBybrMYx
+         OJZjSNQj/+biuRzbeBjpWME2CXXtBapRWa73FU8pZrmAIsvDT+RiGxN7Q86YJn3t7gJN
+         NOsw==
+X-Gm-Message-State: AOJu0YyL4Rbr7tkfJ6LtPCXfYjZkLLy7ila4IJwH/Lh4L3eungbm6+tR
+        W6r5HE5hwLNHzT0XNoNbp7SNTZ1mAxpPktdb8I116w==
+X-Google-Smtp-Source: AGHT+IH+aYrEIoM4XMzeEh0db0LKZFpFauBuv8UFazpm8vaS77/zQP9gsRXuMtjL++12niCEpG3Eo4HXLokCZLkpirY=
+X-Received: by 2002:a05:6808:23c7:b0:3a7:8e1b:9d65 with SMTP id
+ bq7-20020a05680823c700b003a78e1b9d65mr3596640oib.47.1691595491693; Wed, 09
+ Aug 2023 08:38:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <169139090386.324433.6412259486776991296.stgit@devnote2>
+ <169139095066.324433.15514499924371317690.stgit@devnote2> <CABRcYm+8-zYRGjKSPtWQ8_Vq2649=vi71fGvFx2aWM1tnOMYQQ@mail.gmail.com>
+ <20230809234512.e3c39b8fffcc6297262f8fc8@kernel.org>
+In-Reply-To: <20230809234512.e3c39b8fffcc6297262f8fc8@kernel.org>
+From:   Florent Revest <revest@chromium.org>
+Date:   Wed, 9 Aug 2023 17:38:00 +0200
+Message-ID: <CABRcYm+24OLedwiLGj1RyvVg22R5NduORVsYZfXSA_OX5F+riA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 4/6] tracing/fprobe: Enable fprobe events with CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+To:     Masami Hiramatsu <mhiramat@kernel.org>
 Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-trace-kernel@vger.kernel.org,
@@ -51,110 +69,42 @@ Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC PATCH v2 5/6] ftrace: Add ftrace_partial_regs() for
- converting ftrace_regs to pt_regs
-Message-Id: <20230809235226.92ca501403a1e7ad533b869d@kernel.org>
-In-Reply-To: <CABRcYmLFwSrfsod6y8-K1memLUZiJeb2so6pD4XaFUpwbLD9AQ@mail.gmail.com>
-References: <169139090386.324433.6412259486776991296.stgit@devnote2>
-        <169139096244.324433.7237290521765120297.stgit@devnote2>
-        <CABRcYmLFwSrfsod6y8-K1memLUZiJeb2so6pD4XaFUpwbLD9AQ@mail.gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 9 Aug 2023 12:31:27 +0200
-Florent Revest <revest@chromium.org> wrote:
-
-> On Mon, Aug 7, 2023 at 8:49 AM Masami Hiramatsu (Google)
-> <mhiramat@kernel.org> wrote:
+On Wed, Aug 9, 2023 at 4:45=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.or=
+g> wrote:
+> > > --- a/kernel/trace/trace_fprobe.c
+> > > +++ b/kernel/trace/trace_fprobe.c
+> > > @@ -132,25 +132,30 @@ static int
+> > >  process_fetch_insn(struct fetch_insn *code, void *rec, void *dest,
+> > >                    void *base)
+> > >  {
+> > > -       struct pt_regs *regs =3D rec;
+> > > -       unsigned long val;
+> > > +       struct ftrace_regs *fregs =3D rec;
+> > > +       unsigned long val, *stackp;
+> > >         int ret;
+> > >
+> > >  retry:
+> > >         /* 1st stage: get value from context */
+> > >         switch (code->op) {
+> > >         case FETCH_OP_STACK:
+> > > -               val =3D regs_get_kernel_stack_nth(regs, code->param);
+> > > +               stackp =3D (unsigned long *)ftrace_regs_get_stack_poi=
+nter(fregs);
+> > > +               if (((unsigned long)(stackp + code->param) & ~(THREAD=
+_SIZE - 1)) =3D=3D
+> > > +                   ((unsigned long)stackp & ~(THREAD_SIZE - 1)))
 > >
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> >
-> > Add ftrace_partial_regs() which converts the ftrace_regas to pt_regs.
-> 
-> ftrace_regs*
+> > Maybe it'd be worth extracting a local
+> > "ftrace_regs_get_kernel_stack_nth_addr" helper function and/or
+> > "ftrace_regs_within_kernel_stack" ?
+>
+> Yeah, maybe we can make it a generic inline function in linux/ftrace.h.
 
-Oops, thanks.
-
-> 
-> > If the architecture defines its own ftrace_regs, this copies partial
-> > registers to pt_regs and returns it. If not, ftrace_regs is the same as
-> > pt_regs and ftrace_partial_regs() will return ftrace_regs::regs.
-> >
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  arch/arm64/include/asm/ftrace.h |   11 +++++++++++
-> >  include/linux/ftrace.h          |   11 +++++++++++
-> >  2 files changed, 22 insertions(+)
-> >
-> > diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
-> > index ab158196480c..b108cd6718cf 100644
-> > --- a/arch/arm64/include/asm/ftrace.h
-> > +++ b/arch/arm64/include/asm/ftrace.h
-> > @@ -137,6 +137,17 @@ ftrace_override_function_with_return(struct ftrace_regs *fregs)
-> >         fregs->pc = fregs->lr;
-> >  }
-> >
-> > +static __always_inline struct pt_regs *
-> > +ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *regs)
-> > +{
-> > +       memcpy(regs->regs, fregs->regs, sizeof(u64) * 10);
-> 
-> Are you intentionally copying that tenth value (fregs.direct_tramp)
-> into pt_regs.regs[9] ? This seems wrong and it looks like it will bite
-> us back one day. Isn't it one of these cases where we can simply use
-> sizeof(fregs->regs) ?
-
-Ah, sorry, it was my mistake. It should be "sizeof(u64) * 9".
-I would like to know how can I handle the 'direct_tramp' thing?
-Can I just ignore it?
-
-> 
-> > +       regs->sp = fregs->sp;
-> > +       regs->pc = fregs->pc;
-> > +       regs->x[29] = fregs->fp;
-> > +       regs->x[30] = fregs->lr;
-> > +       return regs;
-> > +}
-> > +
-> >  int ftrace_regs_query_register_offset(const char *name);
-> >
-> >  int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
-> > diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> > index 3fb94a1a2461..7f45654441b7 100644
-> > --- a/include/linux/ftrace.h
-> > +++ b/include/linux/ftrace.h
-> > @@ -155,6 +155,17 @@ static __always_inline struct pt_regs *ftrace_get_regs(struct ftrace_regs *fregs
-> >         return arch_ftrace_get_regs(fregs);
-> >  }
-> >
-> > +#if !defined(CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS) || \
-> > +       defined(CONFIG_HAVE_PT_REGS_COMPAT_FTRACE_REGS)
-> > +
-> > +static __always_inline struct pt_regs *
-> > +ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *regs)
-> > +{
-> > +       return arch_ftrace_get_regs((struct ftrace_regs *)fregs);
-> > +}
-> 
-> I don't think this works. Suppose you are on x86, WITH_ARGS, and with
-> HAVE_PT_REGS_COMPAT_FTRACE_REGS. If you register to ftrace without
-> FTRACE_OPS_FL_SAVE_REGS you will receive a ftrace_regs from the light
-> ftrace pre-trampoline that has a CS register equal to 0 and
-> arch_ftrace_get_regs will return NULL here, which should never happen.
-
-Yes, Jiri also pointed it. So I simply made it (also remove 'const' from fregs)
-
-return &fregs->regs;
-
-Thank you,
-
-> 
-> Have you tested your series without registering as FTRACE_OPS_FL_SAVE_REGS ?
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Or even just above this function if there are low chances it would get
+used elsewhere :)
