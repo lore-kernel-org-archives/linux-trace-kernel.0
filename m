@@ -2,383 +2,135 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E87DCC001B0
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 10 Aug 2023 06:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D5AC001B0
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 10 Aug 2023 08:25:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232686AbjHJGHX (ORCPT
+        id S231299AbjHJIZm (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 10 Aug 2023 02:07:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46434 "EHLO
+        Thu, 10 Aug 2023 04:25:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231610AbjHJGHW (ORCPT
+        with ESMTP id S229780AbjHJIZm (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 10 Aug 2023 02:07:22 -0400
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B757F10FE;
-        Wed,  9 Aug 2023 23:07:21 -0700 (PDT)
-Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-4fe0fe622c3so707942e87.2;
-        Wed, 09 Aug 2023 23:07:21 -0700 (PDT)
+        Thu, 10 Aug 2023 04:25:42 -0400
+Received: from mail-oo1-xc2d.google.com (mail-oo1-xc2d.google.com [IPv6:2607:f8b0:4864:20::c2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4F31DC;
+        Thu, 10 Aug 2023 01:25:41 -0700 (PDT)
+Received: by mail-oo1-xc2d.google.com with SMTP id 006d021491bc7-56d0d7300d9so550545eaf.1;
+        Thu, 10 Aug 2023 01:25:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691647640; x=1692252440;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E7GrkYaQlGPpZs7bElNOY2TsiAKTAjxgviOQBAktgw4=;
-        b=IVKE5TQS6XmOojjAJAWPi0hVtf+qW+qn8CZSalEHY6nt4p9VPM6aNhxNB2YOFfYHHC
-         PVu/dux2+w6wlx2dma6ElTKXCjd82nJUoUrLN28ghtRre2aJb+I70VjCey7Ny5wkzzuW
-         WbRWHx1S8sd1CcGXNLISV73LFjzMIy+lTgaC58z+KLekC8p8QYnNlDkO7cc/+7avmSTt
-         d8gyAxZOXrrxHbtYrT95KawBm6fTlx0EZdeyry0CbQySIv3q1fOia7Mo7kkdrtAu7RXr
-         j92dDSn0gb/mNK0NDUMr4/FN7kukjDYMpff4P8JmUmi7rkrP78Ov4oLNHE3IhWnOGVuy
-         RL/Q==
+        d=gmail.com; s=20221208; t=1691655941; x=1692260741;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lOP/iqFkNoqiitgBVZ/MKfSeIArQETkL/EyY1NIi8CI=;
+        b=lzstj11n7W7tK1RAmAtAKLkaG6871jLPqpAwjxlWy4KYWj3NRco6w5VBuiLdS6adJg
+         GjQDp2YuwSDfanPWR4sabzvLW9XByXFVbQKnZs7eDbT3ZIKyNu0Q96bERJP08jFY2Im/
+         +GbrGGdq1Y3g61T4W7W0OyzKVkQ60zp8Rukw4tLq/OcWayimBRZGDWBI/f7DHFhQK0Xx
+         WnqCTNC65rOuEPGVa6XWVeG+ZNlh5D237WSAcIUU55xebU2t9DEGPTf4RpT1+YWVnRpH
+         en6xZV/HNAmF7NIaMPatWCgFJFYpdr5AT8n6ihhJkjn75QWgI/7rNjAZGq8K4I8degJV
+         K7sQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691647640; x=1692252440;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=E7GrkYaQlGPpZs7bElNOY2TsiAKTAjxgviOQBAktgw4=;
-        b=E8iP8v5a8W/Q9PpFmvTfXcRXnnNCXAC3rc4nX1e8eNlqjUR2JBOu2+7v5ckY3Dngil
-         BWFGqWSEcO+RvmcAMo79sZ3J7TZvvBe3jPYL4bS+jGme/aAYs25IAoQfLvA0XL886+eC
-         57MUtdJLRLr1uA8EojIgMZXQA9HfRF5XNhRbs0i78SKer0CYaqkuuLaH36jMkOVwhc5A
-         lkwPm7Ny75Egubi6jjcfs2Bg+EJYtLA9a3CC3XHODiMm4LHu7w25+B4Sdo58KWNPv7g1
-         1kDS6ijqBzEKuCHcS23Lm8aaEB94Vw11JORaHnXyfshRO19Qgu06+BRO23j9yUPeJkvB
-         SZUg==
-X-Gm-Message-State: AOJu0YxEon8GKYR/jvyTusIaorHAldz2XNvUv/XbZzk/6g0Kt9Je3wCC
-        cPkDxuawiYyx2beoLvDzvcPDtBilWIigAVBbxthuD4mzldY=
-X-Google-Smtp-Source: AGHT+IGJvGxhkF8DJc6NSeP2lABj2mlBN6FxlKyJsI20zmtBDyr1sFi0KBVj5cJ0k7RUbjV6P2IsIqIfz45j24tXbc0=
-X-Received: by 2002:a05:6512:3e0c:b0:4fb:897e:21cc with SMTP id
- i12-20020a0565123e0c00b004fb897e21ccmr1077645lfv.67.1691647639506; Wed, 09
- Aug 2023 23:07:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230803234122.19b3d3a4@rorschach.local.home> <20230810055023.67529-2-zegao@tencent.com>
-In-Reply-To: <20230810055023.67529-2-zegao@tencent.com>
-From:   Ze Gao <zegao2021@gmail.com>
-Date:   Thu, 10 Aug 2023 14:07:08 +0800
-Message-ID: <CAD8CoPBnTnMX52FB0wiZURbF+uxmrq6cXQn2nyuE1pYkzt7VXg@mail.gmail.com>
-Subject: Re: [PATCH] perf sched: parse task state from tracepoint print format
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
+        d=1e100.net; s=20221208; t=1691655941; x=1692260741;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lOP/iqFkNoqiitgBVZ/MKfSeIArQETkL/EyY1NIi8CI=;
+        b=U6jAr4auzeI9KlelwM7c9EbIMEfCHmQD60dB8jItkksbiRkwq4RNhkO5arf38MWu93
+         3/6TaPXADIbj4GKgcbaq/2J6YZogv29SG4CR/Mmta2qH6MYa95U/jx0fXUg/d0F9/U5l
+         vvfd9QVfv3gUGgLv1K3gZ6eFnmsEihjAqlDCS9DuY+g+y9/GpCnVJw16ZL8aEzRt0OSo
+         1ouEH1A0PdfmOATvYt0cHo3635CViQxM/1/t6X6zIENDdQY6e1SuVQy9B5GwyaX27CNR
+         N3AmT35/HY37/qEPrX4gR0aK7Q8uPQARKxU0zxnP7aBgM1Zi6KBJ4igDcHUu7RO4zuSi
+         FLKA==
+X-Gm-Message-State: AOJu0Yz9FTIeeFqZF4YIwlu/VpEK49bP7NXypuOvfGfekjVL+aPXtRp3
+        Vuzjm30GOjMtGY1WWxCBMYI=
+X-Google-Smtp-Source: AGHT+IExTWszIm0qh1iBYF85XFmUgBcCpAkcqXK8fMwflik8cbgMXazfw/o0cveoaDQ0T2XoVwc0Zw==
+X-Received: by 2002:a05:6358:9041:b0:134:c1e1:3b08 with SMTP id f1-20020a056358904100b00134c1e13b08mr2490401rwf.25.1691655940893;
+        Thu, 10 Aug 2023 01:25:40 -0700 (PDT)
+Received: from localhost.localdomain ([8.210.156.175])
+        by smtp.gmail.com with ESMTPSA id n21-20020a637215000000b0056420d3cd20sm970975pgc.71.2023.08.10.01.25.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Aug 2023 01:25:40 -0700 (PDT)
+From:   Chuang Wang <nashuiliang@gmail.com>
+Cc:     Chuang Wang <nashuiliang@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ze Gao <zegao@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing/eprobe: Iterate trace_eprobe directly
+Date:   Thu, 10 Aug 2023 16:25:23 +0800
+Message-Id: <20230810082523.244397-1-nashuiliang@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-[REPLIED WITH A SUBJECT GIT-SEND-EMAIL FAILED TO PARSE]
+Refer to the description in [1], we can skip "container_of()" following
+"list_for_each_entry()" by using "list_for_each_entry()" with
+"struct trace_eprobe" and "tp.list".
 
-Regards,
-Ze
+[1] https://lore.kernel.org/all/CAHk-=wjakjw6-rDzDDBsuMoDCqd+9ogifR_EE1F0K-jYek1CdA@mail.gmail.com/
 
-On Thu, Aug 10, 2023 at 1:52=E2=80=AFPM Ze Gao <zegao2021@gmail.com> wrote:
->
-> Hi Steven,
->
-> I managed to build task state char map dynamically by parsing
-> the tracepoint print format from data recorded by perf. And
-> likewise for libtraceevent.
->
-> FYI, I tried TEP_PRINT_INFO but no shot. It turns out TEP_PRINT_INFO
-> stills relies on libtraceevent (i.e., sched_switch_handler() in
-> plugin_sched_switch.c) and we need to parse the print format on our own.
->
-> Anyway, it works now and I've tested on some perf.data in old formats
-> but not cover all the kernel releases.
->
-> Thoughts?
->
-> Regards,
-> Ze
->
->
-> From 6b2035494952efb2963e6459ae4dbfce496c3b97 Mon Sep 17 00:00:00 2001
-> From: Ze Gao <zegao@tencent.com>
-> Date: Wed, 2 Aug 2023 08:19:54 -0400
-> Subject: [PATCH] perf sched: parse task state from tracepoint print forma=
-t
->
-> As of this writing, we use prev_state to report task state,
-> which relies on both the task state macros and
-> TASK_STATE_TO_CHAR_STR in kernel to interpret its actual
-> meaning. In this way, perf gets broken literally each time
-> TASK_STATE_TO_CHAR_STR changes as kernel evolves. Counting
-> on TASK_STATE_TO_CHAR_STR gurantees no backward compatibilty.
->
-> To fix this, we build the state char map from the print
-> format parsed from perf.data on the fly and removes
-> dependencies on these internal kernel definitions.
->
-> Note that we provide an intended helper get_task_prev_state()
-> for extracting task state from perf record and passing task
-> state in char elsewhere, which helps to eliminate the need to
-> know task state macros further.
->
-> Signed-off-by: Ze Gao <zegao@tencent.com>
-> ---
->  tools/perf/builtin-sched.c | 126 +++++++++++++++++++++++--------------
->  1 file changed, 80 insertions(+), 46 deletions(-)
->
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 9ab300b6f131..9366bc0a991d 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -52,6 +52,10 @@
->  #define SYM_LEN                        129
->  #define MAX_PID                        1024000
->
-> +#define TASK_STATE_MAX 16
-> +static char state_to_char[TASK_STATE_MAX];
-> +static unsigned int num_sleep_states =3D 0;
-> +
->  static const char *cpu_list;
->  static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
->
-> @@ -92,24 +96,6 @@ struct sched_atom {
->         struct task_desc        *wakee;
->  };
->
-> -#define TASK_STATE_TO_CHAR_STR "RSDTtZXxKWP"
-> -
-> -/* task state bitmask, copied from include/linux/sched.h */
-> -#define TASK_RUNNING           0
-> -#define TASK_INTERRUPTIBLE     1
-> -#define TASK_UNINTERRUPTIBLE   2
-> -#define __TASK_STOPPED         4
-> -#define __TASK_TRACED          8
-> -/* in tsk->exit_state */
-> -#define EXIT_DEAD              16
-> -#define EXIT_ZOMBIE            32
-> -#define EXIT_TRACE             (EXIT_ZOMBIE | EXIT_DEAD)
-> -/* in tsk->state again */
-> -#define TASK_DEAD              64
-> -#define TASK_WAKEKILL          128
-> -#define TASK_WAKING            256
-> -#define TASK_PARKED            512
-> -
->  enum thread_state {
->         THREAD_SLEEPING =3D 0,
->         THREAD_WAIT_CPU,
-> @@ -266,7 +252,7 @@ struct thread_runtime {
->         u64 total_preempt_time;
->         u64 total_delay_time;
->
-> -       int last_state;
-> +       char last_state;
->
->         char shortname[3];
->         bool comm_changed;
-> @@ -436,7 +422,7 @@ static void add_sched_event_wakeup(struct perf_sched =
-*sched, struct task_desc *t
->  }
->
->  static void add_sched_event_sleep(struct perf_sched *sched, struct task_=
-desc *task,
-> -                                 u64 timestamp, u64 task_state __maybe_u=
-nused)
-> +                                 u64 timestamp, char task_state __maybe_=
-unused)
->  {
->         struct sched_atom *event =3D get_new_event(task, timestamp);
->
-> @@ -851,6 +837,72 @@ replay_wakeup_event(struct perf_sched *sched,
->         return 0;
->  }
->
-> +static struct tep_print_arg* task_state_print_flag(struct tep_event *eve=
-nt)
-> +{
-> +       struct tep_print_arg* args =3D event->print_fmt.args;
-> +
-> +       while(args)
-> +       {
-> +               if (args->type =3D=3D TEP_PRINT_FLAGS)
-> +                       return args;
-> +               if (args->type =3D=3D TEP_PRINT_OP) {
-> +                       args =3D args->op.right;
-> +                       args =3D args->op.left;
-> +                       continue;
-> +               }
-> +               args =3D args->next;
-> +       }
-> +       return NULL;
-> +}
-> +
-> +static void __parse_print_flag(struct tep_print_flag_sym *field)
-> +{
-> +
-> +       long val =3D strtol(field->value, NULL, 0);
-> +       unsigned int bit =3D val ? ffs(val) : 0;
-> +
-> +       state_to_char[bit] =3D field->str[0];
-> +       num_sleep_states++;
-> +       if(num_sleep_states > TASK_STATE_MAX - 1) {
-> +               pr_warning("too many states parsed, possibly bad format\n=
-");
-> +               return;
-> +       }
-> +       if (field->next) {
-> +               __parse_print_flag(field->next);
-> +       }
-> +}
-> +
-> +static inline void parse_print_flag(struct tep_print_arg* args)
-> +{
-> +       __parse_print_flag(args->flags.flags);
-> +}
-> +
-> +static void build_task_state_arr(struct tep_event *event)
-> +{
-> +       struct tep_print_arg* args;
-> +
-> +       args =3D task_state_print_flag(event);
-> +       if (!args)
-> +               pr_warning("print flag not found, possibly bad format\n")=
-;
-> +       else
-> +               parse_print_flag(args);
-> +}
-> +
-> +static inline char get_prev_task_state(struct evsel *evsel,
-> +               struct perf_sample *sample)
-> +{
-> +       int prev_state =3D evsel__intval(evsel, sample, "prev_state");
-> +       unsigned int bit =3D prev_state ? ffs(prev_state) : 0;
-> +       char state;
-> +
-> +       if(!num_sleep_states)
-> +               build_task_state_arr(evsel->tp_format);
-> +
-> +       state =3D (!bit || bit > num_sleep_states) ? 'R' : state_to_char[=
-bit];
-> +
-> +       return state;
-> +}
-> +
->  static int replay_switch_event(struct perf_sched *sched,
->                                struct evsel *evsel,
->                                struct perf_sample *sample,
-> @@ -860,7 +912,7 @@ static int replay_switch_event(struct perf_sched *sch=
-ed,
->                    *next_comm  =3D evsel__strval(evsel, sample, "next_com=
-m");
->         const u32 prev_pid =3D evsel__intval(evsel, sample, "prev_pid"),
->                   next_pid =3D evsel__intval(evsel, sample, "next_pid");
-> -       const u64 prev_state =3D evsel__intval(evsel, sample, "prev_state=
-");
-> +       const char prev_state =3D get_prev_task_state(evsel, sample);
->         struct task_desc *prev, __maybe_unused *next;
->         u64 timestamp0, timestamp =3D sample->time;
->         int cpu =3D sample->cpu;
-> @@ -1050,12 +1102,6 @@ static int thread_atoms_insert(struct perf_sched *=
-sched, struct thread *thread)
->         return 0;
->  }
->
-> -static char sched_out_state(u64 prev_state)
-> -{
-> -       const char *str =3D TASK_STATE_TO_CHAR_STR;
-> -
-> -       return str[prev_state];
-> -}
->
->  static int
->  add_sched_out_event(struct work_atoms *atoms,
-> @@ -1132,7 +1178,7 @@ static int latency_switch_event(struct perf_sched *=
-sched,
->  {
->         const u32 prev_pid =3D evsel__intval(evsel, sample, "prev_pid"),
->                   next_pid =3D evsel__intval(evsel, sample, "next_pid");
-> -       const u64 prev_state =3D evsel__intval(evsel, sample, "prev_state=
-");
-> +       const char prev_state =3D get_prev_task_state(evsel, sample);
->         struct work_atoms *out_events, *in_events;
->         struct thread *sched_out, *sched_in;
->         u64 timestamp0, timestamp =3D sample->time;
-> @@ -1168,7 +1214,7 @@ static int latency_switch_event(struct perf_sched *=
-sched,
->                         goto out_put;
->                 }
->         }
-> -       if (add_sched_out_event(out_events, sched_out_state(prev_state), =
-timestamp))
-> +       if (add_sched_out_event(out_events, prev_state, timestamp))
->                 return -1;
->
->         in_events =3D thread_atoms_search(&sched->atom_root, sched_in, &s=
-ched->cmp_pid);
-> @@ -2033,24 +2079,12 @@ static void timehist_header(struct perf_sched *sc=
-hed)
->         printf("\n");
->  }
->
-> -static char task_state_char(struct thread *thread, int state)
-> -{
-> -       static const char state_to_char[] =3D TASK_STATE_TO_CHAR_STR;
-> -       unsigned bit =3D state ? ffs(state) : 0;
-> -
-> -       /* 'I' for idle */
-> -       if (thread__tid(thread) =3D=3D 0)
-> -               return 'I';
-> -
-> -       return bit < sizeof(state_to_char) - 1 ? state_to_char[bit] : '?'=
-;
-> -}
-> -
->  static void timehist_print_sample(struct perf_sched *sched,
->                                   struct evsel *evsel,
->                                   struct perf_sample *sample,
->                                   struct addr_location *al,
->                                   struct thread *thread,
-> -                                 u64 t, int state)
-> +                                 u64 t, char state)
->  {
->         struct thread_runtime *tr =3D thread__priv(thread);
->         const char *next_comm =3D evsel__strval(evsel, sample, "next_comm=
-");
-> @@ -2091,7 +2125,7 @@ static void timehist_print_sample(struct perf_sched=
- *sched,
->         print_sched_time(tr->dt_run, 6);
->
->         if (sched->show_state)
-> -               printf(" %5c ", task_state_char(thread, state));
-> +               printf(" %5c ", thread->tid =3D=3D 0 ? 'I' : state);
->
->         if (sched->show_next) {
->                 snprintf(nstr, sizeof(nstr), "next: %s[%d]", next_comm, n=
-ext_pid);
-> @@ -2163,9 +2197,9 @@ static void timehist_update_runtime_stats(struct th=
-read_runtime *r,
->                 else if (r->last_time) {
->                         u64 dt_wait =3D tprev - r->last_time;
->
-> -                       if (r->last_state =3D=3D TASK_RUNNING)
-> +                       if (r->last_state =3D=3D 'R')
->                                 r->dt_preempt =3D dt_wait;
-> -                       else if (r->last_state =3D=3D TASK_UNINTERRUPTIBL=
-E)
-> +                       else if (r->last_state =3D=3D 'D')
->                                 r->dt_iowait =3D dt_wait;
->                         else
->                                 r->dt_sleep =3D dt_wait;
-> @@ -2590,7 +2624,7 @@ static int timehist_sched_change_event(struct perf_=
-tool *tool,
->         struct thread_runtime *tr =3D NULL;
->         u64 tprev, t =3D sample->time;
->         int rc =3D 0;
-> -       int state =3D evsel__intval(evsel, sample, "prev_state");
-> +       const char state =3D get_prev_task_state(evsel, sample);
->
->         addr_location__init(&al);
->         if (machine__resolve(machine, &al, sample) < 0) {
-> --
-> 2.41.0
->
+Fixes: 7491e2c44278 ("tracing: Add a probe that attaches to trace events")
+Signed-off-by: Chuang Wang <nashuiliang@gmail.com>
+---
+ kernel/trace/trace_eprobe.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
+
+diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
+index a0a704ba27db..d68d660dff7c 100644
+--- a/kernel/trace/trace_eprobe.c
++++ b/kernel/trace/trace_eprobe.c
+@@ -640,7 +640,7 @@ static int disable_eprobe(struct trace_eprobe *ep,
+ static int enable_trace_eprobe(struct trace_event_call *call,
+ 			       struct trace_event_file *file)
+ {
+-	struct trace_probe *pos, *tp;
++	struct trace_probe *tp;
+ 	struct trace_eprobe *ep;
+ 	bool enabled;
+ 	int ret = 0;
+@@ -662,8 +662,7 @@ static int enable_trace_eprobe(struct trace_event_call *call,
+ 	if (enabled)
+ 		return 0;
+ 
+-	list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
+-		ep = container_of(pos, struct trace_eprobe, tp);
++	list_for_each_entry(ep, trace_probe_probe_list(tp), tp.list) {
+ 		ret = enable_eprobe(ep, file);
+ 		if (ret)
+ 			break;
+@@ -680,8 +679,7 @@ static int enable_trace_eprobe(struct trace_event_call *call,
+ 			 */
+ 			WARN_ON_ONCE(ret != -ENOMEM);
+ 
+-			list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
+-				ep = container_of(pos, struct trace_eprobe, tp);
++			list_for_each_entry(ep, trace_probe_probe_list(tp), tp.list) {
+ 				disable_eprobe(ep, file->tr);
+ 				if (!--cnt)
+ 					break;
+@@ -699,7 +697,7 @@ static int enable_trace_eprobe(struct trace_event_call *call,
+ static int disable_trace_eprobe(struct trace_event_call *call,
+ 				struct trace_event_file *file)
+ {
+-	struct trace_probe *pos, *tp;
++	struct trace_probe *tp;
+ 	struct trace_eprobe *ep;
+ 
+ 	tp = trace_probe_primary_from_call(call);
+@@ -716,8 +714,7 @@ static int disable_trace_eprobe(struct trace_event_call *call,
+ 		trace_probe_clear_flag(tp, TP_FLAG_PROFILE);
+ 
+ 	if (!trace_probe_is_enabled(tp)) {
+-		list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
+-			ep = container_of(pos, struct trace_eprobe, tp);
++		list_for_each_entry(ep, trace_probe_probe_list(tp), tp.list) {
+ 			disable_eprobe(ep, file->tr);
+ 		}
+ 	}
+-- 
+2.39.2
+
