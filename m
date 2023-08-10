@@ -2,137 +2,86 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D198C001DB
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 10 Aug 2023 10:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED039C001DB
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 10 Aug 2023 12:39:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231640AbjHJKcM (ORCPT
+        id S231299AbjHJMji (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 10 Aug 2023 06:32:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56558 "EHLO
+        Thu, 10 Aug 2023 08:39:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230391AbjHJKcL (ORCPT
+        with ESMTP id S229631AbjHJMjh (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 10 Aug 2023 06:32:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DA4F11F;
-        Thu, 10 Aug 2023 03:32:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 04B2B657F0;
-        Thu, 10 Aug 2023 10:32:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E153EC433C8;
-        Thu, 10 Aug 2023 10:32:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691663529;
-        bh=mBnH1ljhCKtjqP0kUG+czmxlui4aCbzEBcASnfKtVPY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UCraXSTNlun0L1qNvECmnDjhtYodjVvsIUe9xTUJuEbwMUnIr7P5NVuQXLt92Ithm
-         1qZYSdinNFh4UoLu6AXogHqXSr4LML0zmGqqNIAzB+qxOUt05dZzRYSpLktA7NLQKR
-         UzxRLsP1xVZi9sw7NDuarPL5QZUeJiumwA7rMA2RQexsFUejKsTCxBEYPmsYW6YLhe
-         PeWy5V78m5fHdoTsJI8tdUhevak3ueZXWDeJ/qgKS2ppURp9hp0YoYgXwSNVFGti70
-         DJL/fl60cuOR1RKTWz+ejFidWHZQWg3WZtXrjoMUrtn6Kl5/6RGic9fChBvX88mF4V
-         LZ1sYzGA4dfKQ==
-Date:   Thu, 10 Aug 2023 19:32:04 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Chuang Wang <nashuiliang@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing/eprobe: Iterate trace_eprobe directly
-Message-Id: <20230810193204.cae5808af79bbcc80b88ff77@kernel.org>
-In-Reply-To: <20230810082523.244397-1-nashuiliang@gmail.com>
-References: <20230810082523.244397-1-nashuiliang@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 10 Aug 2023 08:39:37 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAE85212F;
+        Thu, 10 Aug 2023 05:39:36 -0700 (PDT)
+Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.54])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4RM60Z2SKrz1L9wc;
+        Thu, 10 Aug 2023 20:38:22 +0800 (CST)
+Received: from localhost.localdomain (10.67.175.61) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Thu, 10 Aug 2023 20:39:34 +0800
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>
+CC:     <laijs@cn.fujitsu.com>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <zhengyejian1@huawei.com>
+Subject: [PATCH] tracing: Fix race when concurrently splice_read trace_pipe
+Date:   Thu, 10 Aug 2023 20:39:05 +0800
+Message-ID: <20230810123905.1531061-1-zhengyejian1@huawei.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.175.61]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 10 Aug 2023 16:25:23 +0800
-Chuang Wang <nashuiliang@gmail.com> wrote:
+When concurrently splice_read file trace_pipe and per_cpu/cpu*/trace_pipe,
+there are more data being read out than expected.
 
-> Refer to the description in [1], we can skip "container_of()" following
-> "list_for_each_entry()" by using "list_for_each_entry()" with
-> "struct trace_eprobe" and "tp.list".
-> 
-> [1] https://lore.kernel.org/all/CAHk-=wjakjw6-rDzDDBsuMoDCqd+9ogifR_EE1F0K-jYek1CdA@mail.gmail.com/
-> 
+The root cause is that in tracing_splice_read_pipe(), an entry is found
+outside locks, it may be read by multiple readers or consumed by other
+reader as starting printing it.
 
-Good point. BTW, it is better to have 'for_each_eprobe(ep)' if it repeats 3 times.
+To fix it, change to find entry after holding locks.
 
+Fixes: 7e53bd42d14c ("tracing: Consolidate protection of reader access to the ring buffer")
+Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+---
+ kernel/trace/trace.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-> Fixes: 7491e2c44278 ("tracing: Add a probe that attaches to trace events")
-
-This is not a bug, so no need Fixes tag.
-
-Thank you,
-
-> Signed-off-by: Chuang Wang <nashuiliang@gmail.com>
-> ---
->  kernel/trace/trace_eprobe.c | 13 +++++--------
->  1 file changed, 5 insertions(+), 8 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-> index a0a704ba27db..d68d660dff7c 100644
-> --- a/kernel/trace/trace_eprobe.c
-> +++ b/kernel/trace/trace_eprobe.c
-> @@ -640,7 +640,7 @@ static int disable_eprobe(struct trace_eprobe *ep,
->  static int enable_trace_eprobe(struct trace_event_call *call,
->  			       struct trace_event_file *file)
->  {
-> -	struct trace_probe *pos, *tp;
-> +	struct trace_probe *tp;
->  	struct trace_eprobe *ep;
->  	bool enabled;
->  	int ret = 0;
-> @@ -662,8 +662,7 @@ static int enable_trace_eprobe(struct trace_event_call *call,
->  	if (enabled)
->  		return 0;
->  
-> -	list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
-> -		ep = container_of(pos, struct trace_eprobe, tp);
-> +	list_for_each_entry(ep, trace_probe_probe_list(tp), tp.list) {
->  		ret = enable_eprobe(ep, file);
->  		if (ret)
->  			break;
-> @@ -680,8 +679,7 @@ static int enable_trace_eprobe(struct trace_event_call *call,
->  			 */
->  			WARN_ON_ONCE(ret != -ENOMEM);
->  
-> -			list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
-> -				ep = container_of(pos, struct trace_eprobe, tp);
-> +			list_for_each_entry(ep, trace_probe_probe_list(tp), tp.list) {
->  				disable_eprobe(ep, file->tr);
->  				if (!--cnt)
->  					break;
-> @@ -699,7 +697,7 @@ static int enable_trace_eprobe(struct trace_event_call *call,
->  static int disable_trace_eprobe(struct trace_event_call *call,
->  				struct trace_event_file *file)
->  {
-> -	struct trace_probe *pos, *tp;
-> +	struct trace_probe *tp;
->  	struct trace_eprobe *ep;
->  
->  	tp = trace_probe_primary_from_call(call);
-> @@ -716,8 +714,7 @@ static int disable_trace_eprobe(struct trace_event_call *call,
->  		trace_probe_clear_flag(tp, TP_FLAG_PROFILE);
->  
->  	if (!trace_probe_is_enabled(tp)) {
-> -		list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
-> -			ep = container_of(pos, struct trace_eprobe, tp);
-> +		list_for_each_entry(ep, trace_probe_probe_list(tp), tp.list) {
->  			disable_eprobe(ep, file->tr);
->  		}
->  	}
-> -- 
-> 2.39.2
-> 
-
-
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index b8870078ef58..f169d33b948f 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -7054,14 +7054,16 @@ static ssize_t tracing_splice_read_pipe(struct file *filp,
+ 	if (ret <= 0)
+ 		goto out_err;
+ 
+-	if (!iter->ent && !trace_find_next_entry_inc(iter)) {
++	trace_event_read_lock();
++	trace_access_lock(iter->cpu_file);
++
++	if (!trace_find_next_entry_inc(iter)) {
++		trace_access_unlock(iter->cpu_file);
++		trace_event_read_unlock();
+ 		ret = -EFAULT;
+ 		goto out_err;
+ 	}
+ 
+-	trace_event_read_lock();
+-	trace_access_lock(iter->cpu_file);
+-
+ 	/* Fill as many pages as possible. */
+ 	for (i = 0, rem = len; i < spd.nr_pages_max && rem; i++) {
+ 		spd.pages[i] = alloc_page(GFP_KERNEL);
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.25.1
+
