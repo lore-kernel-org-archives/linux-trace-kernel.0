@@ -2,29 +2,29 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A04D6EB64DD
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 11 Aug 2023 15:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4734BC0015E
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 11 Aug 2023 17:10:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236490AbjHKP5T (ORCPT
+        id S236402AbjHKRKv (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 11 Aug 2023 11:57:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33138 "EHLO
+        Fri, 11 Aug 2023 13:10:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231364AbjHKP5T (ORCPT
+        with ESMTP id S235270AbjHKRKv (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 11 Aug 2023 11:57:19 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D32952712;
-        Fri, 11 Aug 2023 08:57:18 -0700 (PDT)
+        Fri, 11 Aug 2023 13:10:51 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A34AC26BC;
+        Fri, 11 Aug 2023 10:10:25 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 63F5B65C00;
-        Fri, 11 Aug 2023 15:57:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1C67C433C8;
-        Fri, 11 Aug 2023 15:57:15 +0000 (UTC)
-Date:   Fri, 11 Aug 2023 11:57:14 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B5B49677D5;
+        Fri, 11 Aug 2023 17:10:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BF09C433C8;
+        Fri, 11 Aug 2023 17:10:03 +0000 (UTC)
+Date:   Fri, 11 Aug 2023 13:10:01 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc:     Florent Revest <revest@chromium.org>,
@@ -41,16 +41,17 @@ Cc:     Florent Revest <revest@chromium.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC PATCH v2 4/6] tracing/fprobe: Enable fprobe events with
- CONFIG_DYNAMIC_FTRACE_WITH_ARGS
-Message-ID: <20230811115714.171163fc@gandalf.local.home>
-In-Reply-To: <20230810093845.7ebbe1ada897a4afe861e331@kernel.org>
+Subject: Re: [RFC PATCH v2 1/6] fprobe: Use fprobe_regs in fprobe entry
+ handler
+Message-ID: <20230811131001.7b22a17d@gandalf.local.home>
+In-Reply-To: <20230810071330.d41a728f996f76e3243f469e@kernel.org>
 References: <169139090386.324433.6412259486776991296.stgit@devnote2>
-        <169139095066.324433.15514499924371317690.stgit@devnote2>
-        <CABRcYm+8-zYRGjKSPtWQ8_Vq2649=vi71fGvFx2aWM1tnOMYQQ@mail.gmail.com>
-        <20230809234512.e3c39b8fffcc6297262f8fc8@kernel.org>
-        <CABRcYm+24OLedwiLGj1RyvVg22R5NduORVsYZfXSA_OX5F+riA@mail.gmail.com>
-        <20230810093845.7ebbe1ada897a4afe861e331@kernel.org>
+        <169139091575.324433.13168120610633669432.stgit@devnote2>
+        <CABRcYmKRAbOuqNQm5mCwC9NWbtcz1JJDYL_h5x6dK77SJ5FRkA@mail.gmail.com>
+        <20230809231011.b125bd68887a5659db59905e@kernel.org>
+        <CABRcYmKEd=zmriE8VUnSTvybwA962r60+QaRJZK=KNqYixd_eg@mail.gmail.com>
+        <CABRcYmLHfQsjwf7dk+A0Q96iANhj60M0g_xRjVyMUY9LJPybNg@mail.gmail.com>
+        <20230810071330.d41a728f996f76e3243f469e@kernel.org>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -59,18 +60,28 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 10 Aug 2023 09:38:45 +0900
+On Thu, 10 Aug 2023 07:13:30 +0900
 Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> > Or even just above this function if there are low chances it would get
-> > used elsewhere :)  
+> > 
+> > I hope that makes my thoughts clearer? It's a hairy topic ahah  
 > 
-> Thanks, but since regs_get_kernel_stack_nth() is defined in asm/ptrace.h,
-> I think ftrace_regs_get_kernel_stack_nth() is better defined in
-> linux/ftrace.h. :)
+> Ah, I see your point.
+> 
+> static void fprobe_init(struct fprobe *fp)
+> {
+>         fp->nmissed = 0;
+>         if (fprobe_shared_with_kprobes(fp))
+>                 fp->ops.func = fprobe_kprobe_handler;
+>         else
+>                 fp->ops.func = fprobe_handler;
+>         fp->ops.flags |= FTRACE_OPS_FL_SAVE_REGS; <---- This flag!
+> }
+> 
+> So it should be FTRACE_OPS_FL_ARGS. Let me fix that.
 
-I agree with Masami.
-
-Thanks,
+Yes, this was the concern that I was bringing up, where I did not see an
+advantage of fprobes over kprobes using ftrace, because they both were
+saving all registers.
 
 -- Steve
