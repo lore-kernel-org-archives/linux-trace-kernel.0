@@ -2,42 +2,40 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 736DBEB64DD
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 11 Aug 2023 17:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD7FEB64DD
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 11 Aug 2023 17:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234620AbjHKRez (ORCPT
+        id S232942AbjHKRqh (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 11 Aug 2023 13:34:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52604 "EHLO
+        Fri, 11 Aug 2023 13:46:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232083AbjHKRez (ORCPT
+        with ESMTP id S230160AbjHKRqg (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 11 Aug 2023 13:34:55 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1DC5A8;
-        Fri, 11 Aug 2023 10:34:54 -0700 (PDT)
+        Fri, 11 Aug 2023 13:46:36 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 299BEEA;
+        Fri, 11 Aug 2023 10:46:36 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4A06F67803;
-        Fri, 11 Aug 2023 17:34:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A3F3C433C8;
-        Fri, 11 Aug 2023 17:34:52 +0000 (UTC)
-Date:   Fri, 11 Aug 2023 13:34:50 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BB1A46591F;
+        Fri, 11 Aug 2023 17:46:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77D38C433C8;
+        Fri, 11 Aug 2023 17:46:34 +0000 (UTC)
+Date:   Fri, 11 Aug 2023 13:46:31 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     kernel test robot <oliver.sang@intel.com>
-Cc:     Ajay Kaher <akaher@vmware.com>, <oe-lkp@lists.linux.dev>,
-        <lkp@intel.com>, Linux Memory Management List <linux-mm@kvack.org>,
-        Ching-lin Yu <chinglinyu@google.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <ying.huang@intel.com>,
-        <feng.tang@intel.com>, <fengwei.yin@intel.com>
-Subject: Re: [linux-next:master] [eventfs]  27152bceea:
- stress-ng.getdent.ops_per_sec -8.4% regression
-Message-ID: <20230811133450.08cfa609@gandalf.local.home>
-In-Reply-To: <202308101425.8416d10d-oliver.sang@intel.com>
-References: <202308101425.8416d10d-oliver.sang@intel.com>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     Chuang Wang <nashuiliang@gmail.com>,
+        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing/eprobe: Iterate trace_eprobe directly
+Message-ID: <20230811134631.3c0c0702@gandalf.local.home>
+In-Reply-To: <20230811105102.f7c1a2d08700df1c226f096f@kernel.org>
+References: <20230810082523.244397-1-nashuiliang@gmail.com>
+        <20230810193204.cae5808af79bbcc80b88ff77@kernel.org>
+        <20230811105102.f7c1a2d08700df1c226f096f@kernel.org>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -46,58 +44,37 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 10 Aug 2023 16:35:17 +0800
-kernel test robot <oliver.sang@intel.com> wrote:
+On Fri, 11 Aug 2023 10:51:02 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> Hello,
+> On Thu, 10 Aug 2023 19:32:04 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> kernel test robot noticed a -8.4% regression of stress-ng.getdent.ops_per_sec on:
+> > On Thu, 10 Aug 2023 16:25:23 +0800
+> > Chuang Wang <nashuiliang@gmail.com> wrote:
+> >   
+> > > Refer to the description in [1], we can skip "container_of()" following
+> > > "list_for_each_entry()" by using "list_for_each_entry()" with
+> > > "struct trace_eprobe" and "tp.list".
+> > > 
+> > > [1] https://lore.kernel.org/all/CAHk-=wjakjw6-rDzDDBsuMoDCqd+9ogifR_EE1F0K-jYek1CdA@mail.gmail.com/
+> > >   
+> > 
+> > Good point. BTW, it is better to have 'for_each_eprobe(ep)' if it repeats 3 times.  
 > 
+> Wait, it is for each trace_eprobe on the trace_probe.
 > 
-> commit: 27152bceea1df27ffebb12ac9cd9adbf2c4c3f35 ("eventfs: Move tracing/events to eventfs")
+> #define for_each_trace_eprobe_on_trace_probe(ep, _tp)
+> 	list_for_each_entry(ep, trace_probe_probe_list(_tp), tp.list)
+> 
 
-This is a feature ;-)
 
-Looking at what stress-ng --getdent does (from the man page:)
+Do we need it so verbose? Why can't it just be:
 
-       --getdent N
-              start N workers that recursively read directories /proc, /dev/, /tmp, /sys and /run
-              using getdents and getdents64 (Linux only).
+ #define for_each_trace_eprobe(ep, tp)
 
-So when it looks at /sys/kernel/tracing/events
+If you are worried about consistency with the for_each_trace_kprobe() then let's call it:
 
-The event inodes and dentries are now dynamically created (like /proc
-does), and thus will take more time to look up. This is expected behavior
-as the pro to doing this is the 20 megs of memory saved (per tracing
-instance). And this savings will grow as more events are introduced.
+ #define for_each_trace_point_eprobe(ep, tp);
 
 -- Steve
-
-
-> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
-> 
-> testcase: stress-ng
-> test machine: 64 threads 2 sockets Intel(R) Xeon(R) Gold 6346 CPU @ 3.10GHz (Ice Lake) with 256G memory
-> parameters:
-> 
-> 	nr_threads: 10%
-> 	disk: 1HDD
-> 	testtime: 60s
-> 	fs: xfs
-> 	class: filesystem
-> 	test: getdent
-> 	cpufreq_governor: performance
-> 
-> 
-> 
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Closes: https://lore.kernel.org/oe-lkp/202308101425.8416d10d-oliver.sang@intel.com
-> 
-> 
-> Details are as below:
-> -------------------------------------------------------------------------------------------------->  
-> 
-> 
