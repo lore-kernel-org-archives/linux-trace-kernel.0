@@ -2,155 +2,109 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 522E9EB64DD
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 11 Aug 2023 08:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E08FEC001B0
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 11 Aug 2023 11:43:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234245AbjHKIM6 (ORCPT
+        id S229700AbjHKLnE (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 11 Aug 2023 04:12:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44706 "EHLO
+        Fri, 11 Aug 2023 07:43:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234061AbjHKIM6 (ORCPT
+        with ESMTP id S229592AbjHKLnD (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 11 Aug 2023 04:12:58 -0400
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 108D72D4F;
-        Fri, 11 Aug 2023 01:12:57 -0700 (PDT)
-Received: by mail-pg1-x530.google.com with SMTP id 41be03b00d2f7-563dfffea87so1346116a12.2;
-        Fri, 11 Aug 2023 01:12:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691741577; x=1692346377;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EElX5cZSDkZGCSK4eru5v9xsGx/NgNYUucYryIPYygo=;
-        b=NoXyAIwkt+2ACaUKK3b0LsxReqKcwIgQacAm/AZq9SvNQEBQcJwpyEBE9WZ/FQ2Wzd
-         S2V+t/wFdWprrWaWWxhCFu1sghqifnm4zYFyUjyzBZczELzirmnVyiri1CC50vj14WNM
-         CzuMYu2AOnfuwY76UdOvykjBE8+kABGod8bvlY1FqSgcudldcH/acAPzv83R8R2LbNk7
-         50wXN8BOMmO4BZa7Vx0tQXHlp2OUGuYjVcCYcNRbMsAMGxL0IKOgYnqW4KUA9Csxtnwv
-         Zk7WSF3kxjQlHA5CIp3Gc47zu7HctMPlRy21zBPfz4waeG3TrFbZjaWZcPCfRNOENuHX
-         AIwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691741577; x=1692346377;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EElX5cZSDkZGCSK4eru5v9xsGx/NgNYUucYryIPYygo=;
-        b=JWYAZab2PFlWmABQI9ibk9IDqOppfTxkWNU3KutIoYMFLWGBT76SqOr1e25ERD82YZ
-         jb7cRjeTK+MuMjsU5Hv1omsy16GELfc0zQRCZTJh2PLiqXZxETwXRKzBmooq3uUd/L6E
-         F2ScoqNr72YE9YXZZd5Qwb5jFMK+MsX1nvFqkY41+/KEqSjG35Rf5wxQwFNszv9YLTox
-         +Ng3JsDDyS2aZxuRqoK9Ur/UYWOwHR/++UTWl3hntL3TDiRtHSEfUoU1liOpGxJGRpWr
-         aJ7rCLkWqTB61a6IuvsUO2DwssSQjxi232PADkQRFqp+PL5XuKYqi6cDvokbKRDBuwR7
-         7oaw==
-X-Gm-Message-State: AOJu0YwV+zo3DbXOALixDd0aWR93p5g2yQd5iyqHyQmcyjVqckFjey+n
-        7p6YQXSdYJLhzScb1pIX1Sc=
-X-Google-Smtp-Source: AGHT+IHI4h59sn4NFRyctmflnTDfMudoRJdNY1aqlif55+tdTtygM6DZrY1o/ri5X9agn1KSAhZTTg==
-X-Received: by 2002:a17:90a:f0d6:b0:268:1d1e:baaf with SMTP id fa22-20020a17090af0d600b002681d1ebaafmr873730pjb.17.1691741577291;
-        Fri, 11 Aug 2023 01:12:57 -0700 (PDT)
-Received: from localhost.localdomain ([8.210.156.175])
-        by smtp.gmail.com with ESMTPSA id 5-20020a17090a034500b00264040322desm2942636pjf.40.2023.08.11.01.12.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Aug 2023 01:12:56 -0700 (PDT)
-From:   Chuang Wang <nashuiliang@gmail.com>
-Cc:     Chuang Wang <nashuiliang@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2] tracing/eprobe: Iterate trace_eprobe directly
-Date:   Fri, 11 Aug 2023 16:12:39 +0800
-Message-Id: <20230811081239.246365-1-nashuiliang@gmail.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 11 Aug 2023 07:43:03 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF342FA;
+        Fri, 11 Aug 2023 04:43:02 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8979465644;
+        Fri, 11 Aug 2023 11:43:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5C46C433C8;
+        Fri, 11 Aug 2023 11:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691754182;
+        bh=TQCzZnkuHpoP3dZH4vAu/XWOXP2gTQQ50jakD2TlpKw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=IgZXuvBY5QTt7Q4pQ8U7wQrHHy58ToautzIhnNzAXAuVeDALFOjGgIU5dJcd35QCO
+         awT88MoBf4W0F5QUUBJfGMh8e3eepiEB6BrYo/hIBCh0pGHzwN3jKtZuKe+WH2X41f
+         jIS9zSZbCB7v+L0CKeF/VYQkqaJpO6w4SMsItpzElLkPOs9P83iAPPXu21qIMj4d8O
+         bLhKPo1V5/5uzP9Mj8ttG2M3rHcgl5OKHKDX8B/Drs70YHaUatKufAKZPogxdVm+Ws
+         uFt+EQeRU6uqOANckN79NjGUxCSLYUIrFoM7WzFkDg/fXWY4THEkl6J8YWmjPTmsnF
+         ss1zD78PnZg6g==
+Date:   Fri, 11 Aug 2023 20:42:57 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Zheng Yejian <zhengyejian1@huawei.com>
+Cc:     <rostedt@goodmis.org>, <laijs@cn.fujitsu.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tracing: Fix race when concurrently splice_read
+ trace_pipe
+Message-Id: <20230811204257.99df8ba60d591f5bace38615@kernel.org>
+In-Reply-To: <20230810123905.1531061-1-zhengyejian1@huawei.com>
+References: <20230810123905.1531061-1-zhengyejian1@huawei.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Refer to the description in [1], we can skip "container_of()" following
-"list_for_each_entry()" by using "list_for_each_entry()" with
-"struct trace_eprobe" and "tp.list".
+On Thu, 10 Aug 2023 20:39:05 +0800
+Zheng Yejian <zhengyejian1@huawei.com> wrote:
 
-Also, this patch defines "for_each_trace_eprobe_on_trace_probe" to
-simplify the code of the same logic.
+> When concurrently splice_read file trace_pipe and per_cpu/cpu*/trace_pipe,
+> there are more data being read out than expected.
+> 
+> The root cause is that in tracing_splice_read_pipe(), an entry is found
+> outside locks, it may be read by multiple readers or consumed by other
+> reader as starting printing it.
+> 
+> To fix it, change to find entry after holding locks.
+> 
+> Fixes: 7e53bd42d14c ("tracing: Consolidate protection of reader access to the ring buffer")
+> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+> ---
+>  kernel/trace/trace.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index b8870078ef58..f169d33b948f 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -7054,14 +7054,16 @@ static ssize_t tracing_splice_read_pipe(struct file *filp,
+>  	if (ret <= 0)
+>  		goto out_err;
+>  
+> -	if (!iter->ent && !trace_find_next_entry_inc(iter)) {
+> +	trace_event_read_lock();
+> +	trace_access_lock(iter->cpu_file);
+> +
+> +	if (!trace_find_next_entry_inc(iter)) {
 
-[1] https://lore.kernel.org/all/CAHk-=wjakjw6-rDzDDBsuMoDCqd+9ogifR_EE1F0K-jYek1CdA@mail.gmail.com/
+It seems you skips '!iter->ent' check. Is there any reason for this change?
 
-Signed-off-by: Chuang Wang <nashuiliang@gmail.com>
----
-v1 -> v2:
-- add "for_each_trace_eprobe_on_trace_probe" as suggested by Masami
+Thank you,
 
-v0 -> v1:
-- remove "Fixes" in the commit information.
+> +		trace_access_unlock(iter->cpu_file);
+> +		trace_event_read_unlock();
+>  		ret = -EFAULT;
+>  		goto out_err;
+>  	}
+>  
+> -	trace_event_read_lock();
+> -	trace_access_lock(iter->cpu_file);
+> -
+>  	/* Fill as many pages as possible. */
+>  	for (i = 0, rem = len; i < spd.nr_pages_max && rem; i++) {
+>  		spd.pages[i] = alloc_page(GFP_KERNEL);
+> -- 
+> 2.25.1
+> 
 
- kernel/trace/trace_eprobe.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-index a0a704ba27db..b7c6179f8b7f 100644
---- a/kernel/trace/trace_eprobe.c
-+++ b/kernel/trace/trace_eprobe.c
-@@ -41,6 +41,10 @@ struct eprobe_data {
- 	struct trace_eprobe	*ep;
- };
- 
-+
-+#define for_each_trace_eprobe_on_trace_probe(ep, _tp) \
-+	list_for_each_entry(ep, trace_probe_probe_list(_tp), tp.list)
-+
- static int __trace_eprobe_create(int argc, const char *argv[]);
- 
- static void trace_event_probe_cleanup(struct trace_eprobe *ep)
-@@ -640,7 +644,7 @@ static int disable_eprobe(struct trace_eprobe *ep,
- static int enable_trace_eprobe(struct trace_event_call *call,
- 			       struct trace_event_file *file)
- {
--	struct trace_probe *pos, *tp;
-+	struct trace_probe *tp;
- 	struct trace_eprobe *ep;
- 	bool enabled;
- 	int ret = 0;
-@@ -662,8 +666,7 @@ static int enable_trace_eprobe(struct trace_event_call *call,
- 	if (enabled)
- 		return 0;
- 
--	list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
--		ep = container_of(pos, struct trace_eprobe, tp);
-+	for_each_trace_eprobe_on_trace_probe(ep, tp) {
- 		ret = enable_eprobe(ep, file);
- 		if (ret)
- 			break;
-@@ -680,8 +683,7 @@ static int enable_trace_eprobe(struct trace_event_call *call,
- 			 */
- 			WARN_ON_ONCE(ret != -ENOMEM);
- 
--			list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
--				ep = container_of(pos, struct trace_eprobe, tp);
-+			for_each_trace_eprobe_on_trace_probe(ep, tp) {
- 				disable_eprobe(ep, file->tr);
- 				if (!--cnt)
- 					break;
-@@ -699,7 +701,7 @@ static int enable_trace_eprobe(struct trace_event_call *call,
- static int disable_trace_eprobe(struct trace_event_call *call,
- 				struct trace_event_file *file)
- {
--	struct trace_probe *pos, *tp;
-+	struct trace_probe *tp;
- 	struct trace_eprobe *ep;
- 
- 	tp = trace_probe_primary_from_call(call);
-@@ -716,10 +718,8 @@ static int disable_trace_eprobe(struct trace_event_call *call,
- 		trace_probe_clear_flag(tp, TP_FLAG_PROFILE);
- 
- 	if (!trace_probe_is_enabled(tp)) {
--		list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
--			ep = container_of(pos, struct trace_eprobe, tp);
-+		for_each_trace_eprobe_on_trace_probe(ep, tp)
- 			disable_eprobe(ep, file->tr);
--		}
- 	}
- 
-  out:
 -- 
-2.39.2
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
