@@ -2,59 +2,76 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6533BC001B0
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 11 Aug 2023 19:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7F0C0015E
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 12 Aug 2023 01:45:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231603AbjHKTp3 (ORCPT
+        id S236695AbjHLBpz (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 11 Aug 2023 15:45:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35264 "EHLO
+        Fri, 11 Aug 2023 21:45:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229379AbjHKTp2 (ORCPT
+        with ESMTP id S229793AbjHLBpz (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 11 Aug 2023 15:45:28 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 431F2E7E;
-        Fri, 11 Aug 2023 12:45:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D16786373F;
-        Fri, 11 Aug 2023 19:45:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A566C433C7;
-        Fri, 11 Aug 2023 19:45:26 +0000 (UTC)
-Date:   Fri, 11 Aug 2023 15:45:23 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Chuang Wang <nashuiliang@gmail.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tracing/eprobe: Iterate trace_eprobe directly
-Message-ID: <20230811154523.61e67cc3@gandalf.local.home>
-In-Reply-To: <20230811081239.246365-1-nashuiliang@gmail.com>
-References: <20230811081239.246365-1-nashuiliang@gmail.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Fri, 11 Aug 2023 21:45:55 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEDE4170E;
+        Fri, 11 Aug 2023 18:45:54 -0700 (PDT)
+Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RN3PK0M9lzrRrr;
+        Sat, 12 Aug 2023 09:44:37 +0800 (CST)
+Received: from [10.67.110.218] (10.67.110.218) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Sat, 12 Aug 2023 09:45:52 +0800
+Message-ID: <52369719-dbc7-7cb5-f766-877d24c8400c@huawei.com>
+Date:   Sat, 12 Aug 2023 09:45:52 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH] tracing: Fix race when concurrently splice_read
+ trace_pipe
+Content-Language: en-US
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     <mhiramat@kernel.org>, <laijs@cn.fujitsu.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>
+References: <20230810123905.1531061-1-zhengyejian1@huawei.com>
+ <20230811152525.2511f8f0@gandalf.local.home>
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+In-Reply-To: <20230811152525.2511f8f0@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.110.218]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 11 Aug 2023 16:12:39 +0800
-Chuang Wang <nashuiliang@gmail.com> wrote:
+On 2023/8/12 03:25, Steven Rostedt wrote:
+> On Thu, 10 Aug 2023 20:39:05 +0800
+> Zheng Yejian <zhengyejian1@huawei.com> wrote:
+> 
+>> When concurrently splice_read file trace_pipe and per_cpu/cpu*/trace_pipe,
+>> there are more data being read out than expected.
 
-> +
-> +#define for_each_trace_eprobe_on_trace_probe(ep, _tp) \
-> +	list_for_each_entry(ep, trace_probe_probe_list(_tp), tp.list)
-> +
+Sorry, I didn't make clear here. It not just read more but also lost
+some data. My case is that, for example:
+   1) Inject 3 events into ring_buffer: event1, event2, event3;
+   2) Concurrently splice_read through trace_pipes;
+   3) Then actually read out: event1, event3, event3. No event2, but 2 
+event3.
 
-As I replied to the other patch, but after this one was sent (sorry, I was
-hyperfocused on my work the last couple of days and was not reading email,
-so my INBOX is a bit full). I really hate the verbosity of that name.
+> 
+> Honestly the real fix is to prevent that use case. We should probably have
+> access to trace_pipe lock all the per_cpu trace_pipes too.
 
-At a minimum, let's call it:
+Yes, we could do that, but would it seem not that effective?
+because per_cpu trace_pipe only read its own ring_buffer and not race
+with ring_buffers in other cpus.
 
-  for_each_trace_point_eprobe()
+> 
+> -- Steve
+> 
 
--- Steve
