@@ -2,104 +2,61 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3325FC001B0
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 12 Aug 2023 20:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AC4C001DB
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 12 Aug 2023 21:08:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230073AbjHLUrE (ORCPT
+        id S229490AbjHLVIq (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 12 Aug 2023 16:47:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46044 "EHLO
+        Sat, 12 Aug 2023 17:08:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229596AbjHLUrE (ORCPT
+        with ESMTP id S231292AbjHLVIq (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 12 Aug 2023 16:47:04 -0400
+        Sat, 12 Aug 2023 17:08:46 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7437510F2;
-        Sat, 12 Aug 2023 13:47:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EF3D1738;
+        Sat, 12 Aug 2023 14:08:49 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0C86A62053;
-        Sat, 12 Aug 2023 20:47:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDC07C433C8;
-        Sat, 12 Aug 2023 20:47:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691873226;
-        bh=GzC4x0klJbC6IHTc+zGY0OS5suem56P8TLoijYx/vTU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MznaNa1n2X0Hi/3u2i6WQwjzoUx+o/AngQujBm86ryw/ZwlIiSu807ptp52kuUf0/
-         VKTHWcSz24ZIsWlg6xGsz0UMxm73oEuAFrbtrv+pk6kDRdzHqq3+WokdGV8wPxSPHK
-         tCnvbtaUvvT9uWEcBN+xMTCB2onhF5LKOSshUf71Je+Vj7mmi3TdpxCMP/AWKmueih
-         B21Tz0zSIBSORnK3LuzxaarOEV8BCG6mh8YTG7Lre/qXJteKJDXG5SjDOJAw1SoN4P
-         eOthgOiJYcil279Nfpf8UvAtjiGpZIX5/UKlPMquXI2iwQiGO3U3bX1OcFRJCHOqKf
-         zWg7Yee++W7bA==
-Date:   Sun, 13 Aug 2023 05:47:02 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C31E661CF4;
+        Sat, 12 Aug 2023 21:08:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 686F6C433C7;
+        Sat, 12 Aug 2023 21:08:47 +0000 (UTC)
+Date:   Sat, 12 Aug 2023 17:08:39 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
 To:     Zheng Yejian <zhengyejian1@huawei.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
         <laijs@cn.fujitsu.com>, <linux-kernel@vger.kernel.org>,
         <linux-trace-kernel@vger.kernel.org>
 Subject: Re: [PATCH] tracing: Fix race when concurrently splice_read
  trace_pipe
-Message-Id: <20230813054702.22ce16d9191a1f6b84942a1e@kernel.org>
-In-Reply-To: <52369719-dbc7-7cb5-f766-877d24c8400c@huawei.com>
+Message-ID: <20230812170839.2e4f2f22@rorschach.local.home>
+In-Reply-To: <0b83d0e5-5fe6-0cfb-4695-23c2cb86526d@huawei.com>
 References: <20230810123905.1531061-1-zhengyejian1@huawei.com>
-        <20230811152525.2511f8f0@gandalf.local.home>
-        <52369719-dbc7-7cb5-f766-877d24c8400c@huawei.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+ <20230811204257.99df8ba60d591f5bace38615@kernel.org>
+ <f7af687f-2376-fede-fa22-f776811c48f1@huawei.com>
+ <20230811152413.76d5b72e@gandalf.local.home>
+ <0b83d0e5-5fe6-0cfb-4695-23c2cb86526d@huawei.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sat, 12 Aug 2023 09:45:52 +0800
+On Sat, 12 Aug 2023 10:22:43 +0800
 Zheng Yejian <zhengyejian1@huawei.com> wrote:
 
-> On 2023/8/12 03:25, Steven Rostedt wrote:
-> > On Thu, 10 Aug 2023 20:39:05 +0800
-> > Zheng Yejian <zhengyejian1@huawei.com> wrote:
-> > 
-> >> When concurrently splice_read file trace_pipe and per_cpu/cpu*/trace_pipe,
-> >> there are more data being read out than expected.
+> > And if it wasn't consumed? We just lost it?  
 > 
-> Sorry, I didn't make clear here. It not just read more but also lost
-> some data. My case is that, for example:
->    1) Inject 3 events into ring_buffer: event1, event2, event3;
->    2) Concurrently splice_read through trace_pipes;
->    3) Then actually read out: event1, event3, event3. No event2, but 2 
-> event3.
-> 
-> > 
-> > Honestly the real fix is to prevent that use case. We should probably have
-> > access to trace_pipe lock all the per_cpu trace_pipes too.
-> 
-> Yes, we could do that, but would it seem not that effective?
-> because per_cpu trace_pipe only read its own ring_buffer and not race
-> with ring_buffers in other cpus.
+> If 'iter->ent' was not consumed, trace_find_next_entry_inc() will find
+> it again, will it?
 
-I think Steve said that only one of below is usable.
+No it will not, because it did the "inc". That means the next time it
+is called, it will find the next item to read, thinking it already
+"consumed" the last one.
 
-- Read trace_pipe
-
-or
-
-- Read per_cpu/cpu*/trace_pipe concurrently
-
-And I think this makes sence, especially if you use splice (this *moves*
-the page from the ring_buffer to other pipe).
-
-Thank you,
-
-
-> 
-> > 
-> > -- Steve
-> > 
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+-- Steve
