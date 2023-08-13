@@ -2,94 +2,108 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E854DC0015E
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 13 Aug 2023 02:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCE8C001DB
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 13 Aug 2023 15:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229635AbjHMCIZ convert rfc822-to-8bit (ORCPT
+        id S230110AbjHMP7o (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 12 Aug 2023 22:08:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41664 "EHLO
+        Sun, 13 Aug 2023 11:59:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbjHMCIZ (ORCPT
+        with ESMTP id S229882AbjHMP7n (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 12 Aug 2023 22:08:25 -0400
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4572CB4;
-        Sat, 12 Aug 2023 19:08:27 -0700 (PDT)
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-        by unirelay08.hostedemail.com (Postfix) with ESMTP id 2925114040F;
-        Sun, 13 Aug 2023 02:08:25 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf01.hostedemail.com (Postfix) with ESMTPA id A38016000F;
-        Sun, 13 Aug 2023 02:08:21 +0000 (UTC)
-Message-ID: <a587dac9e02cfde669743fd54ab41a3c6014c5e9.camel@perches.com>
-Subject: Re: [PATCH v3] tracepoint: add new `tcp:tcp_ca_event` trace event
-From:   Joe Perches <joe@perches.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Zheao Li <me@manjusaka.me>, edumazet@google.com,
-        bpf@vger.kernel.org, davem@davemloft.net, dsahern@kernel.org,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
-        ncardwell@google.com, netdev@vger.kernel.org, pabeni@redhat.com
-Date:   Sat, 12 Aug 2023 19:08:20 -0700
-In-Reply-To: <20230812215327.1dbd30f3@rorschach.local.home>
-References: <CANn89iKQXhqgOTkSchH6Bz-xH--pAoSyEORBtawqBTvgG+dFig@mail.gmail.com>
-         <20230812201249.62237-1-me@manjusaka.me>
-         <20230812205905.016106c0@rorschach.local.home>
-         <20230812210140.117da558@rorschach.local.home>
-         <20230812210450.53464a78@rorschach.local.home>
-         <6bfa88099fe13b3fd4077bb3a3e55e3ae04c3b5d.camel@perches.com>
-         <20230812215327.1dbd30f3@rorschach.local.home>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        Sun, 13 Aug 2023 11:59:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11B4E19B1;
+        Sun, 13 Aug 2023 08:59:28 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DCF816337E;
+        Sun, 13 Aug 2023 15:53:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE6D3C433C8;
+        Sun, 13 Aug 2023 15:53:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691942003;
+        bh=QhCmGArcIGAUg7xrNAxrgEsBDLrQ7HzLiIbb2cDk0EE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GV4nCmkyaNbAEyZ+NMIJkMYHWyaqGBsKbkxbgoFo7qEXwGdE8Yefmc/wDXXPrpqOe
+         WM1RRo38/kk2Hv4kn/iy2/ndrLu5JoEFOEHJtI8fx4XYOeEEJIo7pz3jwpbIWhIZWR
+         lUZNXJMO251FeXDX7yIARhzYvGkW5PNPtuW/m0BFvM0P4wHM2rsw8VWRr//lWINfd6
+         CdAMgTzetQRvPUX04w1H27qqfysReNnrlUtPfH1Vs5DQ7PtGuGlUWiJDpvOejky/VX
+         shcPuB4mIAwzOFi76MG7szfRBMPab3rOhPS4VXyA2yN5X7xHpjXrIDbH3EMiSiE7Lf
+         yrCvYkWcR8f2w==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>, naveen.n.rao@linux.ibm.com,
+        anil.s.keshavamurthy@intel.com, davem@davemloft.net,
+        linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.4 54/54] kprobes: Prohibit probing on CFI preamble symbol
+Date:   Sun, 13 Aug 2023 11:49:33 -0400
+Message-Id: <20230813154934.1067569-54-sashal@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230813154934.1067569-1-sashal@kernel.org>
+References: <20230813154934.1067569-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: A38016000F
-X-Stat-Signature: 3k674k5cyum391tkwztpyf6dighwktqn
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1+BdS2QWQ7CIyNzWx+BfWch9SSUrvtweNk=
-X-HE-Tag: 1691892501-986183
-X-HE-Meta: U2FsdGVkX182cJZYs5TTbpuQUYTU8mHjC5KKOJSgqmulNzf/BICLAZ8euaXCM5soosuO+b1scqkNGYRwVuXEzRzlpi8cGffeI3CX5kG4aSTIe0zpDYkJQjar/Q9031i6fECnVUYg+juGws/mF6V6SKrFQu8bwXzl4WEEZ0LDSUJBjndwE5wSY/0yYBX4hHreRjJdj3seZX9VVLlouyQLP//IHyNYgDrv5hgdY4bAxQmBysF8RuPhm3kRkRfJ73d+9w2HUT+R1+YlYerbNotl3H+Z89sfLvDQkyqW0ZovCMSJtzuzUGHpUeQDFT2v5XYj6rapjWQazKtyxv9961n4a8HugqcWNPugjzm+v4u3VE3kJIdE1ns4uW85xOHGwDZe
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.4.10
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sat, 2023-08-12 at 21:53 -0400, Steven Rostedt wrote:
-> On Sat, 12 Aug 2023 18:17:17 -0700
-> Joe Perches <joe@perches.com> wrote:
-> 
-> > > I forgot to say "for TRACE_EVENT() macros". This is not about what
-> > > checkpatch says about other code.  
-> > 
-> > trace has its own code style and checkpatch needs another
-> > parsing mechanism just for it, including the alignment to
-> > open parenthesis test.
-> 
-> If you have a template patch to add the parsing mechanism, I'd be happy
-> to try to fill in the style.
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 
-There is no checkpatch mechanism per se.  It's all ad-hoc.
+[ Upstream commit de02f2ac5d8cfb311f44f2bf144cc20002f1fbbd ]
 
-Perhaps something like this though would work well enough
-as it just avoids all the other spacing checks and such.
+Do not allow to probe on "__cfi_" or "__pfx_" started symbol, because those
+are used for CFI and not executed. Probing it will break the CFI.
+
+Link: https://lore.kernel.org/all/168904024679.116016.18089228029322008512.stgit@devnote2/
+
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/checkpatch.pl | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/kprobes.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 528f619520eb9..3017f4dd09fd2 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -3947,6 +3947,9 @@ sub process {
- 			}
- 		}
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 00e177de91ccd..3da9726232ff9 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1545,6 +1545,17 @@ static int check_ftrace_location(struct kprobe *p)
+ 	return 0;
+ }
  
-+# trace include files use a completely different grammar
-+		next if ($realfile =~ m{(?:include/trace/events/|/trace\.h$/)});
++static bool is_cfi_preamble_symbol(unsigned long addr)
++{
++	char symbuf[KSYM_NAME_LEN];
 +
- # check multi-line statement indentation matches previous line
- 		if ($perl_version_ok &&
- 		    $prevline =~ /^\+([ \t]*)((?:$c90_Keywords(?:\s+if)\s*)|(?:$Declare\s*)?(?:$Ident|\(\s*\*\s*$Ident\s*\))\s*|(?:\*\s*)*$Lval\s*=\s*$Ident\s*)\(.*(\&\&|\|\||,)\s*$/) {
-
-
++	if (lookup_symbol_name(addr, symbuf))
++		return false;
++
++	return str_has_prefix("__cfi_", symbuf) ||
++		str_has_prefix("__pfx_", symbuf);
++}
++
+ static int check_kprobe_address_safe(struct kprobe *p,
+ 				     struct module **probed_mod)
+ {
+@@ -1563,7 +1574,8 @@ static int check_kprobe_address_safe(struct kprobe *p,
+ 	    within_kprobe_blacklist((unsigned long) p->addr) ||
+ 	    jump_label_text_reserved(p->addr, p->addr) ||
+ 	    static_call_text_reserved(p->addr, p->addr) ||
+-	    find_bug((unsigned long)p->addr)) {
++	    find_bug((unsigned long)p->addr) ||
++	    is_cfi_preamble_symbol((unsigned long)p->addr)) {
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+-- 
+2.40.1
 
