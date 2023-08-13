@@ -2,38 +2,38 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCE8C001DB
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 13 Aug 2023 15:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F77C001DE
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 13 Aug 2023 16:04:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230110AbjHMP7o (ORCPT
+        id S232462AbjHMQEu (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 13 Aug 2023 11:59:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56210 "EHLO
+        Sun, 13 Aug 2023 12:04:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229882AbjHMP7n (ORCPT
+        with ESMTP id S232178AbjHMQEh (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 13 Aug 2023 11:59:43 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11B4E19B1;
-        Sun, 13 Aug 2023 08:59:28 -0700 (PDT)
+        Sun, 13 Aug 2023 12:04:37 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4A3D1BD8;
+        Sun, 13 Aug 2023 09:04:18 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DCF816337E;
-        Sun, 13 Aug 2023 15:53:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE6D3C433C8;
-        Sun, 13 Aug 2023 15:53:21 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 936E863711;
+        Sun, 13 Aug 2023 16:04:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85887C433C8;
+        Sun, 13 Aug 2023 16:04:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691942003;
+        s=k20201202; t=1691942651;
         bh=QhCmGArcIGAUg7xrNAxrgEsBDLrQ7HzLiIbb2cDk0EE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GV4nCmkyaNbAEyZ+NMIJkMYHWyaqGBsKbkxbgoFo7qEXwGdE8Yefmc/wDXXPrpqOe
-         WM1RRo38/kk2Hv4kn/iy2/ndrLu5JoEFOEHJtI8fx4XYOeEEJIo7pz3jwpbIWhIZWR
-         lUZNXJMO251FeXDX7yIARhzYvGkW5PNPtuW/m0BFvM0P4wHM2rsw8VWRr//lWINfd6
-         CdAMgTzetQRvPUX04w1H27qqfysReNnrlUtPfH1Vs5DQ7PtGuGlUWiJDpvOejky/VX
-         shcPuB4mIAwzOFi76MG7szfRBMPab3rOhPS4VXyA2yN5X7xHpjXrIDbH3EMiSiE7Lf
-         yrCvYkWcR8f2w==
+        b=byplqiKkqOC/zAPkVqmy7IRosN/XBr2eIFc+GiIWhVT5zBdBiQJxJ9kUQfRP/7ARM
+         sIMWvovz+MRBaIlYUfiKubVrFbXVtw8mPaqe5xXrrW9iu8+4zgm1hiCQCQtrkaqZjy
+         4rGd4BWP709SbFIzav7K7PDu2rKzqG175FwltAKTXGsAZ8xDe6J6zAlcfhdV+rGusY
+         Utw8Nbx+RcmHlRYLf50TzOEdNX0AiBZ7A+4AICoBGRlaNY9IHHrg3Bz8bKLbEkZJmO
+         1XVmpZy+c1/aDU40uQ4ygBChpXfJruwf+UB3WwgZkNEEIZ7qRmLStNFthTL8+2mVwn
+         NxzTBpjbx/wow==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
@@ -41,16 +41,16 @@ Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
         Sasha Levin <sashal@kernel.org>, naveen.n.rao@linux.ibm.com,
         anil.s.keshavamurthy@intel.com, davem@davemloft.net,
         linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.4 54/54] kprobes: Prohibit probing on CFI preamble symbol
-Date:   Sun, 13 Aug 2023 11:49:33 -0400
-Message-Id: <20230813154934.1067569-54-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 47/47] kprobes: Prohibit probing on CFI preamble symbol
+Date:   Sun, 13 Aug 2023 11:59:42 -0400
+Message-Id: <20230813160006.1073695-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230813154934.1067569-1-sashal@kernel.org>
-References: <20230813154934.1067569-1-sashal@kernel.org>
+In-Reply-To: <20230813160006.1073695-1-sashal@kernel.org>
+References: <20230813160006.1073695-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.4.10
+X-stable-base: Linux 6.1.45
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
