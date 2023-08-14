@@ -2,139 +2,99 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D919EC001DB
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 14 Aug 2023 03:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73B6C04FDF
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 14 Aug 2023 13:33:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231657AbjHNDAk (ORCPT
+        id S230499AbjHNNdK (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 13 Aug 2023 23:00:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38370 "EHLO
+        Mon, 14 Aug 2023 09:33:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232746AbjHNDAZ (ORCPT
+        with ESMTP id S231441AbjHNNdH (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 13 Aug 2023 23:00:25 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20438A2;
-        Sun, 13 Aug 2023 20:00:21 -0700 (PDT)
-Received: from dggpemm500016.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RPJyF35jDzrSHS;
-        Mon, 14 Aug 2023 10:59:01 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpemm500016.china.huawei.com
- (7.185.36.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Mon, 14 Aug
- 2023 11:00:19 +0800
-From:   Yipeng Zou <zouyipeng@huawei.com>
-To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>, <shuah@kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>
-CC:     <zouyipeng@huawei.com>
-Subject: [PATCH] selftests/ftrace: let traceonoff_triggers testcase without md5sum
-Date:   Mon, 14 Aug 2023 10:59:18 +0800
-Message-ID: <20230814025918.2726807-1-zouyipeng@huawei.com>
-X-Mailer: git-send-email 2.34.1
+        Mon, 14 Aug 2023 09:33:07 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A1D3212D;
+        Mon, 14 Aug 2023 06:33:06 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC1A41063;
+        Mon, 14 Aug 2023 06:33:48 -0700 (PDT)
+Received: from e126311.manchester.arm.com (unknown [10.57.65.63])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD4CD3F64C;
+        Mon, 14 Aug 2023 06:33:03 -0700 (PDT)
+Date:   Mon, 14 Aug 2023 14:32:48 +0100
+From:   Kajetan Puchalski <kajetan.puchalski@arm.com>
+To:     Douglas RAILLARD <douglas.raillard@arm.com>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "open list:F2FS FILE SYSTEM" <linux-f2fs-devel@lists.sourceforge.net>,
+        "open list:TRACING" <linux-kernel@vger.kernel.org>,
+        "open list:TRACING" <linux-trace-kernel@vger.kernel.org>,
+        jstultz@google.com, qyousef@google.com, lukasz.luba@arm.com
+Subject: Re: [PATCH] f2fs: Fix f2fs_truncate_partial_nodes ftrace event
+Message-ID: <ZNotAI1T+hKfzJWV@e126311.manchester.arm.com>
+References: <20230306122549.236561-1-douglas.raillard@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.90.53.73]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm500016.china.huawei.com (7.185.36.25)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230306122549.236561-1-douglas.raillard@arm.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The func_traceonoff_triggers.tc sometimes goes to fail
-on my board, Kunpeng-920.
+On Mon, Mar 06, 2023 at 12:25:49PM +0000, Douglas RAILLARD wrote:
+> From: Douglas Raillard <douglas.raillard@arm.com>
+> 
+> Fix the nid_t field so that its size is correctly reported in the text
+> format embedded in trace.dat files. As it stands, it is reported as
+> being of size 4:
+> 
+>         field:nid_t nid[3];     offset:24;      size:4; signed:0;
+> 
+> Instead of 12:
+> 
+>         field:nid_t nid[3];     offset:24;      size:12;        signed:0;
+> 
+> This also fixes the reported offset of subsequent fields so that they
+> match with the actual struct layout.
+> 
+> 
+> Signed-off-by: Douglas Raillard <douglas.raillard@arm.com>
+> ---
+>  include/trace/events/f2fs.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+> index 31d994e6b4ca..8d053838d6cf 100644
+> --- a/include/trace/events/f2fs.h
+> +++ b/include/trace/events/f2fs.h
+> @@ -512,7 +512,7 @@ TRACE_EVENT(f2fs_truncate_partial_nodes,
+>  	TP_STRUCT__entry(
+>  		__field(dev_t,	dev)
+>  		__field(ino_t,	ino)
+> -		__field(nid_t,	nid[3])
+> +		__array(nid_t,	nid, 3)
+>  		__field(int,	depth)
+>  		__field(int,	err)
+>  	),
+> -- 
+> 2.25.1
 
-[root@localhost]# ./ftracetest ./test.d/ftrace/func_traceonoff_triggers.tc -l fail.log
-=== Ftrace unit tests ===
-[1] ftrace - test for function traceon/off triggers     [FAIL]
-[2] (instance)  ftrace - test for function traceon/off triggers [UNSUPPORTED]
+Hi,
 
-I look up the log, and it shows that the md5sum is different between csum1 and csum2.
+Just wanted to flag that I noticed this breaks Perfetto tracing on
+Android, at least as of Android 13. I'm not sure if it's been fixed in newer
+versions. Looks like the version of Perfetto in Android 13 is expecting
+the previous (ie broken) field format to be there and its entire ftrace
+collector fails as a result:
 
-++ cnt=611
-++ sleep .1
-+++ cnt_trace
-+++ grep -v '^#' trace
-+++ wc -l
-++ cnt2=611
-++ '[' 611 -ne 611 ']'
-+++ cat tracing_on
-++ on=0
-++ '[' 0 '!=' 0 ']'
-+++ md5sum trace
-++ csum1='76896aa74362fff66a6a5f3cf8a8a500  trace'
-++ sleep .1
-+++ md5sum trace
-++ csum2='ee8625a21c058818fc26e45c1ed3f6de  trace'
-++ '[' '76896aa74362fff66a6a5f3cf8a8a500  trace' '!=' 'ee8625a21c058818fc26e45c1ed3f6de  trace' ']'
-++ fail 'Tracing file is still changing'
-++ echo Tracing file is still changing
-Tracing file is still changing
-++ exit_fail
-++ exit 1
+E/perfetto( 3532): ranslation_table.cc:133 Failed to infer ftrace field type for "f2fs_truncate_partial_nodes.nid" (type:"nid_t nid[3]" size:12 signed:0) (errno: 2, No such file or directory)
+I/perfetto( 3640):            probes.cc:65 Hard resetting ftrace state.
 
-So I directly dump the trace file before md5sum, the diff shows that:
+For my own purposes I just reverted these two:
+* 0b04d4c0542e8573a837b1d81b94209e48723b25 (f2fs: Fix f2fs_truncate_partial_nodes ftrace event)
+* f82e7ca019dfad3b006fd3b772f7ac569672db55 (tracing: Error if a trace event has an array for a __field()
 
-[root@localhost]# diff trace_1.log trace_2.log -y --suppress-common-lines
-dockerd-12285   [036] d.... 18385.510290: sched_stat | <...>-12285   [036] d.... 18385.510290: sched_stat
-dockerd-12285   [036] d.... 18385.510291: sched_swit | <...>-12285   [036] d.... 18385.510291: sched_swit
-<...>-740       [044] d.... 18385.602859: sched_stat | kworker/44:1-740 [044] d.... 18385.602859: sched_stat
-<...>-740       [044] d.... 18385.602860: sched_swit | kworker/44:1-740 [044] d.... 18385.602860: sched_swit
-
-And we can see that the saved_cmdlines in kernel was changed.
-
-So Maybe there is no safe to use md5sum here to verify whether
-the file whether it has changed.
-
-From my point of view, we only need to verify traceoff event
-is valid there.
-
-Maybe it is enough to check first that the tracing_on equals 0,
-and then check that the total number of rows of trace does not
-increase?
-
-Fixes: d87b29179aa0 ("selftests: ftrace: Use md5sum to take less time of checking logs")
-Signed-off-by: Yipeng Zou <zouyipeng@huawei.com>
----
- .../test.d/ftrace/func_traceonoff_triggers.tc    | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func_traceonoff_triggers.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func_traceonoff_triggers.tc
-index aee22289536b..180c60605d7b 100644
---- a/tools/testing/selftests/ftrace/test.d/ftrace/func_traceonoff_triggers.tc
-+++ b/tools/testing/selftests/ftrace/test.d/ftrace/func_traceonoff_triggers.tc
-@@ -77,25 +77,17 @@ if [ $cnt -ne 1 ]; then
-    fail "Did not find traceoff trigger"
- fi
- 
--cnt=`cnt_trace`
--sleep $SLEEP_TIME
--cnt2=`cnt_trace`
--
--if [ $cnt -ne $cnt2 ]; then
--   fail "Tracing is not stopped"
--fi
--
- on=`cat tracing_on`
- if [ $on != "0" ]; then
-     fail "Tracing is not off"
- fi
- 
--csum1=`md5sum trace`
-+cnt=`cnt_trace`
- sleep $SLEEP_TIME
--csum2=`md5sum trace`
-+cnt2=`cnt_trace`
- 
--if [ "$csum1" != "$csum2" ]; then
--    fail "Tracing file is still changing"
-+if [ $cnt -ne $cnt2 ]; then
-+   fail "Tracing is not stopped"
- fi
- 
- clear_trace
--- 
-2.34.1
-
+and now it works fine so not the biggest deal but this should probably
+be addressed, I imagine more likely on the Perfetto side.
