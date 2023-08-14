@@ -2,154 +2,301 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E63C001B0
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 13 Aug 2023 16:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D07C04A6A
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 14 Aug 2023 02:29:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231137AbjHMQlw (ORCPT
+        id S232437AbjHNC3O (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 13 Aug 2023 12:41:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46726 "EHLO
+        Sun, 13 Aug 2023 22:29:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229522AbjHMQlv (ORCPT
+        with ESMTP id S231848AbjHNC3G (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 13 Aug 2023 12:41:51 -0400
-Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B68A491
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Aug 2023 09:41:53 -0700 (PDT)
-Received: by mail-lj1-x22d.google.com with SMTP id 38308e7fff4ca-2b9a828c920so53739321fa.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Aug 2023 09:41:53 -0700 (PDT)
+        Sun, 13 Aug 2023 22:29:06 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B55AC18F;
+        Sun, 13 Aug 2023 19:29:04 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-522dd6b6438so4760771a12.0;
+        Sun, 13 Aug 2023 19:29:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1691944912; x=1692549712;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+iDEH45PIbLPRLMGHHsGA82f2vEUhaOKwZb/xF3clyU=;
-        b=g68bNM/5q2gs3Up6oouMqZc8NydRrEzzlRLGRP2iB5kI53SInfeN1qUmUHECsUQYT1
-         s/tvB99rJSjxQUw+61peXRTHzMvsnAgcit/05/GDjMSgDxP9tf7X/feyRcnzoEAtjtGO
-         +XecthA25ht49PATsoNLIOBCuRbKQ3XS7iRHE=
+        d=gmail.com; s=20221208; t=1691980143; x=1692584943;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yvpYYiAYu1ac8b8p2kq6uk7MdUFJjCnkQ744MsBnp7Y=;
+        b=f2HyYn6/frOnX4Q8/+GhKmfLA4Ha2vgMQJ4j6wDTj4o2dHAOxWt08DLIdh/RJjW3gz
+         xN6zjeR2XOvf0tdfXSAVxQ0pXwEC+1jQ/x+WW5LemZddrdBHz6Y5unLGAFH+TmP3dbQe
+         6kQQBWGCi4xQp5FrdeMboe+tkOt7eyaoYXZTTswQrAidDtU4o0lAVHBmg11T3h+xFhKC
+         10Je9oLVKFBAdqASntzqK3eW3sSea6XtWJvMh6O59kJfMBBmP8zpgsDPBYgEq2HMfjJQ
+         zE/Ma9mIKePqd2AB095cyvBD0KWCMaqS1QvawFHah/8RIgRwCWCHHIdt4xYyARbM90aY
+         Ez4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691944912; x=1692549712;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+iDEH45PIbLPRLMGHHsGA82f2vEUhaOKwZb/xF3clyU=;
-        b=ZxgsubSNkCH1vc2nZTiL4qPNIUSp0RS35RlzKfZNjsqmUYlG/cqad24kgq/9hcMVdT
-         Mzf3EzCvir1GGZpAGGWUIM3IN0rh1Ej2zo10cCCQnKuwKVIYjXibmcTPxivfUSdiJ4bU
-         25hllep9BCQ63yWAy9oejLKUiTh0YoeCGdK+zfbH9PNBqgtb6SvcE8MylXMTn5U1Gyst
-         DYjP5kB35iwPYjw3hrFxeY0vMLMH7aiG86pmxGEjLF1km8m9yTgvnZtTtc2Bxvp0ZzV2
-         w4G68LY84ZZwQ0PDxtR57WfVgwG8cCnGSXdZjuFLWii2yY04g42OAL46YEG2ulqgcQ/j
-         lQrg==
-X-Gm-Message-State: AOJu0YxJkFsdlZPnO2tQXB2h7nEfBT70jroR54LJQqYGixiW+QY7DlHH
-        q+6oEEVbbqD8NN76LIx+UkSVjFqdbMN72lEoybnHgFpr
-X-Google-Smtp-Source: AGHT+IHh+ug3ATp3DLlSHys0EcWIvfwiR6BrelnFsWXwY1CtKVOu+xUhqj4k1f9I90abWDOxtG/yPQ==
-X-Received: by 2002:a2e:82cf:0:b0:2b9:c676:434a with SMTP id n15-20020a2e82cf000000b002b9c676434amr5010497ljh.15.1691944911900;
-        Sun, 13 Aug 2023 09:41:51 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id z5-20020a2e7e05000000b002b96a3a87d5sm1899887ljc.98.2023.08.13.09.41.50
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 13 Aug 2023 09:41:51 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2b9e6cc93c6so53594551fa.2
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Aug 2023 09:41:50 -0700 (PDT)
-X-Received: by 2002:a05:6512:708:b0:4fa:f79f:85a with SMTP id
- b8-20020a056512070800b004faf79f085amr4345430lfs.69.1691944910386; Sun, 13 Aug
- 2023 09:41:50 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1691980143; x=1692584943;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yvpYYiAYu1ac8b8p2kq6uk7MdUFJjCnkQ744MsBnp7Y=;
+        b=lLv82SrAT0w40xib3KXuTIDZ05D78jPc8Oa1myjrIb4w21DVxpOx7lyVyyAhWlEV+k
+         TI8ypjEfjeSpgo1QeSWZpjeMvq5NV1D7Q0sC1Wmn98CyEeRNfFM8RfgKbN0j5kKx3/mK
+         i4zoTRUywyd6g6rCJWtcdldZXL/5DKlCM2tdbE+pnS8iCduTI9BP0H4QpkLg2KMnqOK3
+         kPJIQTP7ayeGjpurjDzO1rkSSEnYunzfU2UwHHY0Wbzjax4azL8nCOAue9gcAGQbdhK8
+         V/aevVmbdIsj6g+OXrvdyzZ35ec0UiImtoXAMvGNl6EA+Dwws9/+i3RvOkXtRa7CWKN6
+         bu7w==
+X-Gm-Message-State: AOJu0Yy+XBuTU82y6u/6l3TAfFB0zXFkEDD8ED2SWX6YqRC16Ani7MX6
+        12nDLxZ2PQE7YSRMqWpKvqTDej/xQYofpek6h503SVVvZxOWtg==
+X-Google-Smtp-Source: AGHT+IHUsz7OSC6723JEBZPfbvLjnYW+ZxHERoC0DSuaibary1V55BQ41fqJ5z4xjmZncaGm0oaM5x0cAD239BXKDIU=
+X-Received: by 2002:a05:6402:799:b0:523:2847:fb5a with SMTP id
+ d25-20020a056402079900b005232847fb5amr5070264edy.40.1691980142883; Sun, 13
+ Aug 2023 19:29:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230810123905.1531061-1-zhengyejian1@huawei.com>
- <20230811152525.2511f8f0@gandalf.local.home> <b5dbdbeb-be3a-3434-0909-0697d8cb15bf@huawei.com>
- <20230812211317.6d015e1d@rorschach.local.home>
-In-Reply-To: <20230812211317.6d015e1d@rorschach.local.home>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 13 Aug 2023 09:41:33 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgBRFisXK0ATFsKCSsCjMNne4aJqRszAY=ex0viUkkrqQ@mail.gmail.com>
-Message-ID: <CAHk-=wgBRFisXK0ATFsKCSsCjMNne4aJqRszAY=ex0viUkkrqQ@mail.gmail.com>
-Subject: Re: [PATCH] tracing: Fix race when concurrently splice_read trace_pipe
+References: <20230803234122.19b3d3a4@rorschach.local.home> <20230810055023.67529-2-zegao@tencent.com>
+ <20230811132811.28b9b766@gandalf.local.home>
+In-Reply-To: <20230811132811.28b9b766@gandalf.local.home>
+From:   Ze Gao <zegao2021@gmail.com>
+Date:   Mon, 14 Aug 2023 10:28:51 +0800
+Message-ID: <CAD8CoPDqZrd2HOUCVkrOq9JgJEQwQnqBn9zD1A3M4aKLZ4mLvg@mail.gmail.com>
+Subject: Re: [PATCH] perf sched: parse task state from tracepoint print format
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Zheng Yejian <zhengyejian1@huawei.com>, mhiramat@kernel.org,
-        laijs@cn.fujitsu.com, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>
+Cc:     acme@kernel.org, adrian.hunter@intel.com,
+        alexander.shishkin@linux.intel.com, irogers@google.com,
+        jolsa@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, mark.rutland@arm.com,
+        mhiramat@kernel.org, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, zegao@tencent.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sat, 12 Aug 2023 at 18:13, Steven Rostedt <rostedt@goodmis.org> wrote:
+On Sat, Aug 12, 2023 at 1:28=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
 >
-> So the test case cannot be run because the "sendfile" on the
-> trace_pipe now fails?
+> On Thu, 10 Aug 2023 01:50:24 -0400
+> Ze Gao <zegao2021@gmail.com> wrote:
+>
+> > Hi Steven,
+> >
+> > I managed to build task state char map dynamically by parsing
+> > the tracepoint print format from data recorded by perf. And
+> > likewise for libtraceevent.
+> >
+> > FYI, I tried TEP_PRINT_INFO but no shot. It turns out TEP_PRINT_INFO
+> > stills relies on libtraceevent (i.e., sched_switch_handler() in
+> > plugin_sched_switch.c) and we need to parse the print format on our own=
+.
+>
+> There is a way to unload plugins:
+>
+>         tep_unload_plugins(t->plugin_list, tep);
+>
+> Hmm, I should add:
+>
+>         tep_unload_plugin(tep, t->plugin_list, "plugin-name");
+>
+> To unload a single plugin.
+>
+> I it can also just override what the plugin does by calling:
+>
+> static int sched_switch_handler(struct trace_seq *s,
+>                                 struct tep_record *record,
+>                                 struct tep_event *event, void *context)
+> {
+>         // do whatever you want.
+> }
+>
+>         tep_register_event_handler(tep, -1, "sched", "sched_switch",
+>                                    sched_switch_handler, NULL);
+>
+Yes,  I chose to fix libtraceevent in a similar way, to not break
+users of this plugin,
+like perf script, I decided to build state char mapping dynamically
+for both instead
+of overriding sched_switch_handler in libtraceevent. Here is the patch:
 
-So sendfile() has always required a seekable source, because it -
-intentionally - doesn't do the "splice to pipe and then splice from
-pipe to destination".
+From e4fae23d9538e60e75a9776fa7938102e7c26bbb Mon Sep 17 00:00:00 2001
+From: Ze Gao <zegao@tencent.com>
+Date: Wed, 2 Aug 2023 07:20:46 -0400
+Subject: [PATCH] libtraceevent: parse task state from tracepoint print form=
+at
 
-It just does a "splice from source, splice result to destination".
+As of this writing, we use prev_state to report task state, which
+relies on both the task state macros and TASK_STATE_TO_CHAR_STR
+copied from the kernel to interpret its actual meaning. In this way,
+libtraceevent gets broken literally each time TASK_STATE_TO_CHAR_STR
+changes as the kernel evolves. Counting on hardcoded
+TASK_STATE_TO_CHAR_STR gurantees no backward compatibilty.
 
-That sounds like "obviously the right thing to do", but it means that
-there is now no buffer with any extended lifetime between the two
-operations. And that's a big deal.
+To fix this, we build the state char map from the print format
+parsed from date recorded on the fly and removes dependencies on
+these internal kernel definitions.
 
- Without that buffer (ie pipe) in the middle, if the splice to
-destination fails - or is partial - and the system call is interrupted
-by a signal, then the source splice data is now gone, gone, gone.
+Signed-off-by: Ze Gao <zegao@tencent.com>
+---
+ plugins/plugin_sched_switch.c | 103 ++++++++++++++++++++++++++++------
+ 1 file changed, 87 insertions(+), 16 deletions(-)
 
-So it only works if the source can then re-create the data - ie if the
-source is seekable.
+diff --git a/plugins/plugin_sched_switch.c b/plugins/plugin_sched_switch.c
+index 8752cae..a0df138 100644
+--- a/plugins/plugin_sched_switch.c
++++ b/plugins/plugin_sched_switch.c
+@@ -6,28 +6,25 @@
+ #include <stdlib.h>
+ #include <string.h>
 
-In that case, if the destination cannot accept all the data, the
-sendfile can just go back and read again from the last successfully
-written position.
++#include "event-utils.h"
+ #include "event-parse.h"
+ #include "trace-seq.h"
 
-And if you are a data stream that can't seek, then that "from last
-successfully written position" doesn't work, and any partial writes
-will just have dropped the data.
+-static void write_state(struct trace_seq *s, int val)
+-{
+-       const char states[] =3D "SDTtZXxW";
+-       int found =3D 0;
+-       int i;
++#define TASK_STATE_MAX 16
 
-This seekability test *used* to be to test that the source was either
-a regular file or a block device.
+-       for (i =3D 0; i < (sizeof(states) - 1); i++) {
+-               if (!(val & (1 << i)))
+-                       continue;
++static char state_to_char[TASK_STATE_MAX];
++static unsigned int num_sleeping_states =3D 0;
 
-Now it literally checks "can I seek".
+-               if (found)
+-                       trace_seq_putc(s, '|');
 
-It looks like the trace_pipe fiel is *claiming* to be a regular file -
-so sendfile() used to be ok with it - but cannot actually seek - so
-sendfile would silently drop data.
+-               found =3D 1;
+-               trace_seq_putc(s, states[i]);
+-       }
++static void write_state(struct trace_seq *s, int val)
++{
++       unsigned int bit =3D val ? ffs(val) : 0;
++       char state;
 
-Now sendfile says "I'm sorry, Dave, I'm afraid I can't do that" rather
-than silently causing data loss.
+-       if (!found)
+-               trace_seq_putc(s, 'R');
++       state =3D (!bit || bit > num_sleeping_states) ? 'R' : state_to_char=
+[bit];
++       trace_seq_putc(s, state);
++       if(bit > num_sleeping_states)
++               trace_seq_putc(s, '+');
+ }
 
-Now, this is not a user-visible regression in this case, because "cat"
-will always fall back on just regular read/write when sendfile fails.
+ static void write_and_save_comm(struct tep_format_field *field,
+@@ -79,6 +76,76 @@ static int sched_wakeup_handler(struct trace_seq *s,
+        return 0;
+ }
 
-So all that changed for 'trace_pipe' is that a buggy splice now no
-longer triggers the bug that it used to (which the patch in question
-was also trying to fix).
++static const struct tep_print_arg* task_state_print_flag(const struct
+tep_event *event) {
++
++       struct tep_print_arg* args;
++
++       if (!event)
++               goto out;
++
++       args =3D event->print_fmt.args;
++       while(args)
++       {
++               if (args->type =3D=3D TEP_PRINT_FLAGS)
++                       return args;
++               if (args->type =3D=3D TEP_PRINT_OP) {
++                       args =3D args->op.right;
++                       args =3D args->op.left;
++                       continue;
++               }
++               args =3D args->next;
++       }
++out:
++       return NULL;
++}
++
++static int parse_task_state_arr(const char *value, const char *str)
++{
++       long val;
++       unsigned int bit;
++
++       if (!value || !str)
++               return -1;
++
++       val =3D strtol(value, NULL, 0);
++       bit =3D val ? ffs(val) : 0;
++       state_to_char[bit] =3D str[0];
++       num_sleeping_states++;
++       if (num_sleeping_states > TASK_STATE_MAX - 1) {
++               tep_warning("too many states parsed, possibly bad format\n"=
+);
++               return -1;
++       }
++       return 0;
++}
++
++static void parse_print_flag(const struct tep_print_flag_sym* field,
++                            int (*parser)(const char *value, const char *s=
+tr))
++{
++       int err;
++
++       if (!field || !parser)
++               return;
++       err =3D parser(field->value, field->str);
++       if (err){
++               tep_warning("parsing print flag failed, possibly bad format=
+\n");
++               return;
++       }
++       if (field->next)
++               parse_print_flag(field->next, parser);
++
++}
++
++static void build_task_state_arr(const struct tep_event *event)
++{
++       const struct tep_print_arg* args;
++
++       args =3D task_state_print_flag(event);
++       if (!args)
++               tep_warning("print flag not found, possibly bad format\n");
++       else
++               parse_print_flag(args->flags.flags, parse_task_state_arr);
++}
++
+ static int sched_switch_handler(struct trace_seq *s,
+                                struct tep_record *record,
+                                struct tep_event *event, void *context)
+@@ -99,8 +166,12 @@ static int sched_switch_handler(struct trace_seq *s,
+        if (tep_get_field_val(s, event, "prev_prio", record, &val, 1) =3D=
+=3D 0)
+                trace_seq_printf(s, "[%d] ", (int) val);
 
-End result: things in many ways work better this way.
+-       if (tep_get_field_val(s,  event, "prev_state", record, &val, 1) =3D=
+=3D 0)
++
++       if (tep_get_field_val(s,  event, "prev_state", record, &val, 1) =3D=
+=3D 0) {
++               if (!num_sleeping_states)
++                       build_task_state_arr(event);
+                write_state(s, val);
++       }
 
-So it really looks like it never really worked before either. There
-was *both* the dropped data bug because "trace_pipe" lied about being
-a regular file, *and* apparently this trace_pipe race bug that Zheng
-Yejian tried to fix.
+        trace_seq_puts(s, " =3D=3D> ");
 
-Of course, some destinations always accept a full write, so maybe we
-could relax the "source must be seekable" to be "source must be
-seekable, _OR_ destination must be something that never returns
-partial writes".
+--
+2.41.0
 
-So sendfile to a POSIX-compliant regular file could always work
-(ignoring filesystem full situations, and at that point I think we can
-say "yeah, we're done, no recovering from that in sendfile()").
 
-So if somebody really *really* want sendfile to work for this case, then you
 
- (a) do need to fix the race in tracing_splice_read_pipe (which you
-should do anyway, since you can obviously always use splice() itself,
-not sendfile()).
+> > Anyway, it works now and I've tested on some perf.data in old formats
+> > but not cover all the kernel releases.
+> >
+> > Thoughts?
+>
+> I don't maintain the perf code. You'll have to talk with the perf
+> maintainers.
 
-AND
+Roger that! Thank you very much!
 
- (b) figure out when 'splice_write()' will always succeed fully and
-convince people that we can do that "extended version" of sendfile().
+Regards,
+Ze
 
-Hmm?
-
-               Linus
+> -- Steve
