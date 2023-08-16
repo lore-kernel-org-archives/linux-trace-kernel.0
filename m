@@ -2,161 +2,201 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED32C001B0
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 16 Aug 2023 13:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C053C41513
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 16 Aug 2023 14:40:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245698AbjHPNtl (ORCPT
+        id S1343721AbjHPOjs (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 16 Aug 2023 09:49:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54208 "EHLO
+        Wed, 16 Aug 2023 10:39:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245704AbjHPNt3 (ORCPT
+        with ESMTP id S1343741AbjHPOjT (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 16 Aug 2023 09:49:29 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E20726A9;
-        Wed, 16 Aug 2023 06:49:27 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A94BF66967;
-        Wed, 16 Aug 2023 13:49:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FE16C433C8;
-        Wed, 16 Aug 2023 13:49:25 +0000 (UTC)
-Date:   Wed, 16 Aug 2023 09:49:27 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Zheng Yejian <zhengyejian1@huawei.com>
-Cc:     <fweisbec@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <mhiramat@kernel.org>
-Subject: Re: [PATCH v2] tracing: Fix memleak due to race between
- current_tracer and trace
-Message-ID: <20230816094927.2b9e9436@gandalf.local.home>
-In-Reply-To: <20230816054357.1188339-1-zhengyejian1@huawei.com>
-References: <8c853c0c-84f0-c8be-3020-561db6f87081@huawei.com>
-        <20230816054357.1188339-1-zhengyejian1@huawei.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 16 Aug 2023 10:39:19 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D36A30DE
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Aug 2023 07:38:50 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id 98e67ed59e1d1-26b4cf4f77bso2580164a91.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Aug 2023 07:38:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20221208.gappssmtp.com; s=20221208; t=1692196728; x=1692801528;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=z7kyCuHl1t/gCCGpNTbA3hwFj/lf6SuaKvtbsxGuDBs=;
+        b=dZxL0Ptmo/RfqSZAnaNdMqEON3wvqTtz9rCCZbGwRlxrXd7njXeZ9MC0HoDMQnzbMm
+         Mbp7gkbEr8As7DndYa19Nv36eYd2hToSSCFzF826MiTxJFQPanB3TDkisU5ug1n2xO0x
+         lqvfBU8gjYGcjvzm7z1KhnYi76zAKQMvLjSkKN8VKcgO7yrfcLxnnczFGmL7s8fYvGKe
+         iupXY/7su7eB4Qp8Ot15WegMitq0aXkC7C2B4amBqtpQq9iCTqbSvz7oVYvokSqAF4SL
+         qE7Cmnt2iThlim9z5xca3mEZ27llu2nfrUpa7hwX8WY7UkN0OSfjH/LjoRTW/fMpY9+M
+         GNdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692196728; x=1692801528;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z7kyCuHl1t/gCCGpNTbA3hwFj/lf6SuaKvtbsxGuDBs=;
+        b=QlOXTLOecDMLGu2AKKhqP3dbItZuuy145idldJVmtR/52ThXvYR2bbuJicv8H+HN+N
+         AYEWvB34mkEpi6QXil1/s8jEVa3eNZerBPF/jZsSv/wwfnyfomzXbmuLmH3rv6QOcxlx
+         vv1MhkkTTo69B/n3sqdLD0NWPmqk3G9LVebAme2hRJ1Ce3Sg725/qpXH+aXwGmiTvAm5
+         oU8lI9fi6XJnNSdXQ9GDl1oGF9WKbpxH7m3W4lBw+28EXUm4VB6sXM0Xhn9mHgfbCDhl
+         ixnCfCy0EnZN6z4zfQEByqQ43BWoMSEiazr5teU8cgsNiXWTQyf0wtXMU0YLycF5d7tq
+         aArw==
+X-Gm-Message-State: AOJu0Yyu8+n86oP6WCoF2P3TcQ8rZs5mSGpJHHvFVPVFo8Jp2v8uviTC
+        ikOLfvucbxRv6U34wSrBKS1v6A==
+X-Google-Smtp-Source: AGHT+IG9lm23RRLom/xb7C80klG2aDXB0ZwUgcZV4fsV/hyXYHdBd19S4I3YH9SwHqrCXPj4TdemSQ==
+X-Received: by 2002:a17:90a:f982:b0:26b:4e59:57e7 with SMTP id cq2-20020a17090af98200b0026b4e5957e7mr1730234pjb.43.1692196727793;
+        Wed, 16 Aug 2023 07:38:47 -0700 (PDT)
+Received: from localhost ([135.180.227.0])
+        by smtp.gmail.com with ESMTPSA id gi23-20020a17090b111700b0025645ce761dsm13120399pjb.35.2023.08.16.07.38.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Aug 2023 07:38:47 -0700 (PDT)
+Date:   Wed, 16 Aug 2023 07:38:47 -0700 (PDT)
+X-Google-Original-Date: Wed, 16 Aug 2023 07:38:45 PDT (-0700)
+Subject:     Re: [PATCH 00/17] -Wmissing-prototype warning fixes
+In-Reply-To: <20230810141947.1236730-1-arnd@kernel.org>
+CC:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, mattst88@gmail.com,
+        vgupta@kernel.org, linux@armlinux.org.uk,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, guoren@kernel.org,
+        bcain@quicinc.com, chenhuacai@kernel.org, kernel@xen0n.name,
+        geert@linux-m68k.org, monstr@monstr.eu, tsbogend@alpha.franken.de,
+        dinguyen@kernel.org, jonas@southpole.se,
+        stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
+        James.Bottomley@HansenPartnership.com, deller@gmx.de,
+        mpe@ellerman.id.au, christophe.leroy@csgroup.eu, hca@linux.ibm.com,
+        glaubitz@physik.fu-berlin.de, x86@kernel.org, bp@alien8.de,
+        jcmvbkbc@gmail.com, axboe@kernel.dk, sudipm.mukherjee@gmail.com,
+        martin.petersen@oracle.com, richard@nod.at, bhelgaas@google.com,
+        masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
+        linux@roeck-us.net, Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-next@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kbuild@vger.kernel.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     arnd@kernel.org
+Message-ID: <mhng-ce493a2d-71e9-440f-84d0-522a4f694bbe@palmer-ri-x1c9>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 16 Aug 2023 13:43:57 +0800
-Zheng Yejian <zhengyejian1@huawei.com> wrote:
+On Thu, 10 Aug 2023 07:19:18 PDT (-0700), arnd@kernel.org wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> Most of the patches I sent so far for the -Wmissing-prototype warnings
+> have made it into linux-next now. There are a few that I'm resending
+> now as nobody has picked them up, and then a number of fixes that I
+> found while test-building across all architectures rather than just the
+> ones I usually test.
+>
+> The first 15 patches in this series should be uncontroversial, so
+> I expect that either a subsystem maintainer or Andrew Morton can
+> apply these directly.
+>
+> For the last two patches, these might still need some debate about how
+> to handle them. I added a Kconfig option to turn off most of the missing
+> prototype warnings in the architectures that nobody has fixed yet,
+> see patch 16 for those. The last patch does cause some known warnings
+> and likely unknown ones for architectures other than x86 and arm,
+> so applying it now will bring new problems, but not applying it also
+> means that new warnings creep in, so I think this is mainly a question
+> of what the best timing is for having this in linux-next.
+>
+> Arnd Bergmann (17):
+>   [RESEND] jffs2: mark __jffs2_dbg_superblock_counts() static
+>   [RESEND] irq_work: consolidate arch_irq_work_raise prototypes
+>   [RESEND] ida: make 'ida_dump' static
+>   pci: sysfs: move declarations to linux/pci.h
+>   swim3: mark swim3_init() static
+>   macintosh/ams: mark ams_init() static
+>   scsi: qlogicpti: mark qlogicpti_info() static
+>   microblaze: mark flush_dcache_folio() inline
+>   parport: gsc: mark init function static
+>   zorro: include zorro.h in names.c
+>   scsi: gvp11: remove unused gvp11_setup() function
+>   time: make sysfs_get_uname() function visible in header
+>   stackleak: add declarations for global functions
+>   kprobes: unify kprobes_exceptions_nofify() prototypes
+>   arch: fix asm-offsets.c building with -Wmissing-prototypes
+>   [RFC] arch: turn -Wmissing-prototypes off conditionally
+>   [RFC] Makefile.extrawarn: turn on missing-prototypes again
+>
+>  arch/alpha/Kbuild                        |  2 ++
+>  arch/alpha/include/asm/pci.h             |  3 ---
+>  arch/alpha/kernel/asm-offsets.c          |  2 +-
+>  arch/alpha/lib/Makefile                  |  1 +
+>  arch/arc/Kbuild                          |  2 ++
+>  arch/arc/include/asm/kprobes.h           |  3 ---
+>  arch/arm/include/asm/irq_work.h          |  2 --
+>  arch/arm/include/asm/kprobes.h           |  2 --
+>  arch/arm64/include/asm/irq_work.h        |  2 --
+>  arch/arm64/include/asm/kprobes.h         |  2 --
+>  arch/csky/Kbuild                         |  2 ++
+>  arch/csky/include/asm/irq_work.h         |  2 +-
+>  arch/hexagon/Kbuild                      |  2 ++
+>  arch/ia64/Kbuild                         |  2 ++
+>  arch/ia64/include/asm/kprobes.h          |  2 --
+>  arch/ia64/kernel/asm-offsets.c           |  2 +-
+>  arch/ia64/lib/Makefile                   |  1 +
+>  arch/loongarch/Kbuild                    |  2 ++
+>  arch/loongarch/kernel/asm-offsets.c      | 12 ++++++++++++
+>  arch/m68k/Kbuild                         |  2 ++
+>  arch/m68k/lib/Makefile                   |  1 +
+>  arch/microblaze/Kbuild                   |  2 ++
+>  arch/microblaze/include/asm/cacheflush.h |  2 +-
+>  arch/mips/Kbuild                         |  2 ++
+>  arch/mips/boot/compressed/Makefile       |  3 ++-
+>  arch/mips/include/asm/kprobes.h          |  2 --
+>  arch/nios2/Kbuild                        |  2 ++
+>  arch/nios2/lib/Makefile                  |  1 +
+>  arch/openrisc/Kbuild                     |  2 ++
+>  arch/parisc/Kbuild                       |  2 ++
+>  arch/parisc/lib/Makefile                 |  1 +
+>  arch/powerpc/include/asm/irq_work.h      |  1 -
+>  arch/powerpc/include/asm/kprobes.h       |  2 --
+>  arch/riscv/include/asm/irq_work.h        |  2 +-
+>  arch/s390/include/asm/irq_work.h         |  2 --
+>  arch/s390/include/asm/kprobes.h          |  2 --
+>  arch/sh/Kbuild                           |  2 ++
+>  arch/sh/boot/compressed/Makefile         |  1 +
+>  arch/sh/include/asm/kprobes.h            |  2 --
+>  arch/sparc/Kbuild                        |  2 ++
+>  arch/sparc/include/asm/kprobes.h         |  2 --
+>  arch/sparc/kernel/asm-offsets.c          | 13 ++-----------
+>  arch/sparc/lib/Makefile                  |  1 +
+>  arch/sparc/prom/Makefile                 |  1 +
+>  arch/x86/include/asm/irq_work.h          |  1 -
+>  arch/x86/include/asm/kprobes.h           |  2 --
+>  arch/xtensa/Kbuild                       |  2 ++
+>  arch/xtensa/boot/lib/Makefile            |  2 ++
+>  drivers/block/swim3.c                    |  2 +-
+>  drivers/macintosh/ams/ams-core.c         |  2 +-
+>  drivers/parport/parport_gsc.c            |  2 +-
+>  drivers/scsi/gvp11.c                     |  5 -----
+>  drivers/scsi/qlogicpti.c                 |  2 +-
+>  drivers/zorro/names.c                    |  1 +
+>  fs/jffs2/debug.c                         |  2 +-
+>  include/linux/irq_work.h                 |  3 +++
+>  include/linux/kprobes.h                  |  4 ++++
+>  include/linux/pci.h                      |  5 +++++
+>  include/linux/stackleak.h                |  6 ++++++
+>  init/Kconfig                             | 10 ++++++++++
+>  kernel/time/tick-internal.h              |  3 ++-
+>  lib/test_ida.c                           |  2 +-
+>  scripts/Makefile.extrawarn               |  5 +++--
+>  63 files changed, 101 insertions(+), 63 deletions(-)
 
-> Kmemleak report a leak in graph_trace_open():
-> 
->   unreferenced object 0xffff0040b95f4a00 (size 128):
->     comm "cat", pid 204981, jiffies 4301155872 (age 99771.964s)
->     hex dump (first 32 bytes):
->       e0 05 e7 b4 ab 7d 00 00 0b 00 01 00 00 00 00 00 .....}..........
->       f4 00 01 10 00 a0 ff ff 00 00 00 00 65 00 10 00 ............e...
->     backtrace:
->       [<000000005db27c8b>] kmem_cache_alloc_trace+0x348/0x5f0
->       [<000000007df90faa>] graph_trace_open+0xb0/0x344
->       [<00000000737524cd>] __tracing_open+0x450/0xb10
->       [<0000000098043327>] tracing_open+0x1a0/0x2a0
->       [<00000000291c3876>] do_dentry_open+0x3c0/0xdc0
->       [<000000004015bcd6>] vfs_open+0x98/0xd0
->       [<000000002b5f60c9>] do_open+0x520/0x8d0
->       [<00000000376c7820>] path_openat+0x1c0/0x3e0
->       [<00000000336a54b5>] do_filp_open+0x14c/0x324
->       [<000000002802df13>] do_sys_openat2+0x2c4/0x530
->       [<0000000094eea458>] __arm64_sys_openat+0x130/0x1c4
->       [<00000000a71d7881>] el0_svc_common.constprop.0+0xfc/0x394
->       [<00000000313647bf>] do_el0_svc+0xac/0xec
->       [<000000002ef1c651>] el0_svc+0x20/0x30
->       [<000000002fd4692a>] el0_sync_handler+0xb0/0xb4
->       [<000000000c309c35>] el0_sync+0x160/0x180
-> 
-> The root cause is descripted as follows:
-> 
->   __tracing_open() {  // 1. File 'trace' is being opened;
->     ...
->     *iter->trace = *tr->current_trace;  // 2. Tracer 'function_graph' is
->                                         //    currently set;
->     ...
->     iter->trace->open(iter);  // 3. Call graph_trace_open() here,
->                               //    and memory are allocated in it;
->     ...
->   }
-> 
->   s_start() {  // 4. The opened file is being read;
->     ...
->     *iter->trace = *tr->current_trace;  // 5. If tracer is switched to
->                                         //    'nop' or others, then memory
->                                         //    in step 3 are leaked!!!
->     ...
->   }
-> 
-> To fix it, in s_start(), close tracer before switching then reopen the
-> new tracer after switching. And some tracers like 'wakeup' may not update
-> 'iter->private' in some cases when reopen, so clear 'iter->private' in
-> graph_trace_close() to avoid it being mistakenly closed again.
-> 
-> Fixes: d7350c3f4569 ("tracing/core: make the read callbacks reentrants")
-> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
-> ---
-> 
-> v2:
->   - Fix an use-after-free issue which is due to some tracers like 'wakeup'
->     may not update 'iter->private' in some cases when reopen, so clear
->     'iter->private' in graph_trace_close() to avoid it being mistakenly
->     closed again. Also update the commit message.
->     Link: https://lore.kernel.org/all/8c853c0c-84f0-c8be-3020-561db6f87081@huawei.com/
-> 
-> v1:
->   - Link: https://lore.kernel.org/all/20230808092905.2936459-1-zhengyejian1@huawei.com/
-> 
->  kernel/trace/trace.c                 | 9 ++++++++-
->  kernel/trace/trace_functions_graph.c | 1 +
->  2 files changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index b8870078ef58..d50a0227baa3 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -4213,8 +4213,15 @@ static void *s_start(struct seq_file *m, loff_t *pos)
->  	 * will point to the same string as current_trace->name.
->  	 */
->  	mutex_lock(&trace_types_lock);
-> -	if (unlikely(tr->current_trace && iter->trace->name != tr->current_trace->name))
-> +	if (unlikely(tr->current_trace && iter->trace->name != tr->current_trace->name)) {
-> +		/* Close iter->trace before switching to the new current tracer */
-> +		if (iter->trace->close)
-> +			iter->trace->close(iter);
->  		*iter->trace = *tr->current_trace;
-> +		/* Reopen the new current tracer */
-> +		if (iter->trace->open)
-> +			iter->trace->open(iter);
-> +	}
->  	mutex_unlock(&trace_types_lock);
->  
->  #ifdef CONFIG_TRACER_MAX_TRACE
-> diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-> index c35fbaab2a47..4d4808186a0f 100644
-> --- a/kernel/trace/trace_functions_graph.c
-> +++ b/kernel/trace/trace_functions_graph.c
-> @@ -1317,6 +1317,7 @@ void graph_trace_close(struct trace_iterator *iter)
->  	if (data) {
->  		free_percpu(data->cpu_data);
->  		kfree(data);
-> +		iter->private = NULL;
-
-This is the wrong place to clear private. It shouldn't be up to
-function_graph tracer to know to clear it so that it doesn't break other
-tracers.
-
-If the wakeup function requires iter->private to be NULL, then it should
-clear it on open.
-
--- Steve
-
-
-
->  	}
->  }
->  
-
+Acked-by: Palmer Dabbelt <palmer@rivosinc.com> # RISC-V
