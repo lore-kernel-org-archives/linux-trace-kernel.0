@@ -2,37 +2,39 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB0DC25B4F
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 16 Aug 2023 19:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 320FDC25B5E
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 16 Aug 2023 20:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345887AbjHPTxN (ORCPT
+        id S244033AbjHPUJX (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 16 Aug 2023 15:53:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48666 "EHLO
+        Wed, 16 Aug 2023 16:09:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345883AbjHPTwp (ORCPT
+        with ESMTP id S234641AbjHPUIt (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 16 Aug 2023 15:52:45 -0400
+        Wed, 16 Aug 2023 16:08:49 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 236A6E56;
-        Wed, 16 Aug 2023 12:52:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67B25CD;
+        Wed, 16 Aug 2023 13:08:48 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B27B564146;
-        Wed, 16 Aug 2023 19:52:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91C71C433C8;
-        Wed, 16 Aug 2023 19:52:42 +0000 (UTC)
-Date:   Wed, 16 Aug 2023 15:52:45 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 06A6766BD8;
+        Wed, 16 Aug 2023 20:08:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D20E0C433C8;
+        Wed, 16 Aug 2023 20:08:46 +0000 (UTC)
+Date:   Wed, 16 Aug 2023 16:08:50 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sishuai Gong <sishuai.system@gmail.com>
-Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     Chuang Wang <nashuiliang@gmail.com>, linux-kernel@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracefs: avoid setting i_mode to a temp value
-Message-ID: <20230816155245.6ead4384@gandalf.local.home>
-In-Reply-To: <10CFECF7-B9FC-4562-A445-4811F4C27655@gmail.com>
-References: <10CFECF7-B9FC-4562-A445-4811F4C27655@gmail.com>
+Subject: Re: [PATCH v2] tracing/eprobe: Iterate trace_eprobe directly
+Message-ID: <20230816160850.48fa95b6@gandalf.local.home>
+In-Reply-To: <20230812142019.06cb38b56287b0f068e8164f@kernel.org>
+References: <20230811081239.246365-1-nashuiliang@gmail.com>
+        <20230811154523.61e67cc3@gandalf.local.home>
+        <20230812142019.06cb38b56287b0f068e8164f@kernel.org>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -41,62 +43,22 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 10 Aug 2023 20:59:26 -0400
-Sishuai Gong <sishuai.system@gmail.com> wrote:
+On Sat, 12 Aug 2023 14:20:19 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> Right now inode->i_mode is updated twice to reach the desired value
-> in tracefs_apply_options(). Because there is no lock protecting the two
-> writes, other threads might read the intermediate value of inode->i_mode.
+> > At a minimum, let's call it:
+> > 
+> >   for_each_trace_point_eprobe()  
 > 
-> Thread-1			Thread-2
-> // tracefs_apply_options()	//e.g., acl_permission_check
-> inode->i_mode &= ~S_IALLUGO;
-> 				unsigned int mode = inode->i_mode;
-> inode->i_mode |= opts->mode;
+> OK, what about "for_each_trace_eprobe_on()"? I would like to clarify
 > 
-> I think there is no need to introduce a lock but it is better to
-> only update inode->i_mode ONCE, so the readers will either see the old
-> or latest value, rather than an intermediate/temporary value.
+> - what type is returned
+> - not all trace_eprobes, but only on the trace_probe.
 > 
-> Signed-off-by: Sishuai Gong <sishuai.system@gmail.com>
-> ---
->  fs/tracefs/inode.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-> index 57ac8aa4a724..dca84ebb62fa 100644
-> --- a/fs/tracefs/inode.c
-> +++ b/fs/tracefs/inode.c
-> @@ -297,8 +297,7 @@ static int tracefs_apply_options(struct super_block *sb, bool remount)
->  	 */
->  
->  	if (!remount || opts->opts & BIT(Opt_mode)) {
-> -		inode->i_mode &= ~S_IALLUGO;
-> -		inode->i_mode |= opts->mode;
-> +		inode->i_mode = (inode->i_mode & ~S_IALLUGO) | opts->mode;
+> Thank you,
 
-You do realize that the compiler could decide to keep the original logic
-even with this change? If it was crucial that the compiler did not, you
-would need to have:
+ for_each_trace_eprobe_tp() or for_each_trace_tp_eprobe() ?
 
-	if (!remount || opts->opts & BIT(Opt_mode)) {
-		umode_t tmp = READ_ONCE(inode->i_mode);
-
-		tmp &= ~S_IALLUGO
-		tmp |= opts->mode;
-		WRITE_ONCE(inode->i_mode, tmp);
-	}		
-
-And if you notice the !remount flag, this is only preformed when the file
-system is actually mounted. Are the files visible before then?
-
-Can you produce this race?
+As it only works for a trace_probe.
 
 -- Steve
-
-
-
->  	}
->  
->  	if (!remount || opts->opts & BIT(Opt_uid))
-
