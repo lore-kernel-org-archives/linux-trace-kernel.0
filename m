@@ -2,103 +2,105 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A49FC001E0
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 16 Aug 2023 15:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3517BC41513
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 16 Aug 2023 15:50:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343924AbjHPPCV (ORCPT
+        id S1344367AbjHPPuS (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 16 Aug 2023 11:02:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54070 "EHLO
+        Wed, 16 Aug 2023 11:50:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343940AbjHPPCI (ORCPT
+        with ESMTP id S1344432AbjHPPt7 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 16 Aug 2023 11:02:08 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 422DB10FF;
-        Wed, 16 Aug 2023 08:02:06 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CB2946247A;
-        Wed, 16 Aug 2023 15:02:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB8FCC433C7;
-        Wed, 16 Aug 2023 15:02:03 +0000 (UTC)
-Date:   Wed, 16 Aug 2023 11:02:06 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Manjusaka <me@manjusaka.me>
-Cc:     Joe Perches <joe@perches.com>, edumazet@google.com,
-        bpf@vger.kernel.org, davem@davemloft.net, dsahern@kernel.org,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
-        ncardwell@google.com, netdev@vger.kernel.org, pabeni@redhat.com
-Subject: Re: [PATCH v3] tracepoint: add new `tcp:tcp_ca_event` trace event
-Message-ID: <20230816110206.13980573@gandalf.local.home>
-In-Reply-To: <8b0f2d2b-c5a0-4654-9cc0-78873260a881@manjusaka.me>
-References: <CANn89iKQXhqgOTkSchH6Bz-xH--pAoSyEORBtawqBTvgG+dFig@mail.gmail.com>
-        <20230812201249.62237-1-me@manjusaka.me>
-        <20230812205905.016106c0@rorschach.local.home>
-        <20230812210140.117da558@rorschach.local.home>
-        <20230812210450.53464a78@rorschach.local.home>
-        <6bfa88099fe13b3fd4077bb3a3e55e3ae04c3b5d.camel@perches.com>
-        <20230812215327.1dbd30f3@rorschach.local.home>
-        <a587dac9e02cfde669743fd54ab41a3c6014c5e9.camel@perches.com>
-        <8b0f2d2b-c5a0-4654-9cc0-78873260a881@manjusaka.me>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Wed, 16 Aug 2023 11:49:59 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 149F92D55;
+        Wed, 16 Aug 2023 08:49:51 -0700 (PDT)
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37GFnBWG012362;
+        Wed, 16 Aug 2023 15:49:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=aHwaYRnkxa+7Cx2tcdB6vCxEkjdPaozZFSi/y5fWKic=;
+ b=bOWhg8QfS1CMBehNRqiXkBbSu0DcO8HHZ73cbKsnVfOzB5yANXwazf7QGuT3wIefXkmj
+ Nwfp1LZ1tpDZmhqrVNLZuYLBO8Mu5+m1NLSMXo3RbTbHWifgbv+0lphkUm9h4eFe21Qh
+ dn6uoel/quu6Y5969cY8SIswUWNOrTjV6pYMWtvxqshxELYlYI3ExuDzI3DOBhKyylNO
+ oEVVj6/tT1AIF0k4Qw224BiQs67rSiBx8F1OnVLqmEbc3eNLqBEZ7P/uLK/zNLUbC9Yy
+ WbcrzJYe7rsJdOXZhI2jc6JMffdL8boxieEUDeIBR+3jW546qlJVJFjRbwXLYSit/t0I 3Q== 
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sh1ec80y2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 16 Aug 2023 15:49:47 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37GEeEsi013223;
+        Wed, 16 Aug 2023 15:49:46 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+        by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3sepmjwkrq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 16 Aug 2023 15:49:46 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37GFnimO57475498
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Aug 2023 15:49:44 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9701520043;
+        Wed, 16 Aug 2023 15:49:44 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8391120040;
+        Wed, 16 Aug 2023 15:49:44 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Wed, 16 Aug 2023 15:49:44 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55390)
+        id 21A2CE012C; Wed, 16 Aug 2023 17:49:44 +0200 (CEST)
+From:   Sven Schnelle <svens@linux.ibm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH RESEND v3 0/3] few fixes for synthetic trace events
+Date:   Wed, 16 Aug 2023 17:49:25 +0200
+Message-Id: <20230816154928.4171614-1-svens@linux.ibm.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: arZIAlubfSFextnGlf2IW_5VZ4dIWbIl
+X-Proofpoint-GUID: arZIAlubfSFextnGlf2IW_5VZ4dIWbIl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-08-16_15,2023-08-15_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ mlxlogscore=991 phishscore=0 clxscore=1011 adultscore=0 priorityscore=1501
+ impostorscore=0 suspectscore=0 lowpriorityscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2308160135
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 16 Aug 2023 14:09:06 +0800
-Manjusaka <me@manjusaka.me> wrote:
+Hi Steven,
 
-> > +# trace include files use a completely different grammar
-> > +		next if ($realfile =~ m{(?:include/trace/events/|/trace\.h$/)});
-> > +
-> >  # check multi-line statement indentation matches previous line
-> >  		if ($perl_version_ok &&
-> >  		    $prevline =~ /^\+([ \t]*)((?:$c90_Keywords(?:\s+if)\s*)|(?:$Declare\s*)?(?:$Ident|\(\s*\*\s*$Ident\s*\))\s*|(?:\*\s*)*$Lval\s*=\s*$Ident\s*)\(.*(\&\&|\|\||,)\s*$/) {
-> > 
-> > 
-> >   
-> 
-> Actually, I'm not sure this is the checkpatch style issue or my code style issue.
-> 
-> Seems wired.
+I'm now sending these patches in one patchset, because the second patch
+has a dependeny on the union vs. cast fix.
 
-The TRACE_EVENT() macro has its own style. I need to document it, and
-perhaps one day get checkpatch to understand it as well.
+Changes in v3:
+- remove superfluous struct around union trace_synth_field
 
-The TRACE_EVENT() typically looks like:
+Changes in v2:
+- cosmetic changes
+- add struct trace_dynamic_info to include/linux/trace_events.h
 
+Sven Schnelle (3):
+  tracing/synthetic: use union instead of casts
+  tracing/synthetic: skip first entry for stack traces
+  tracing/synthetic: allocate one additional element for size
 
-TRACE_EVENT(name,
+ include/linux/trace_events.h      |  11 ++++
+ kernel/trace/trace.h              |   8 +++
+ kernel/trace/trace_events_synth.c | 103 ++++++++++++------------------
+ 3 files changed, 60 insertions(+), 62 deletions(-)
 
-	TP_PROTO(int arg1, struct foo *arg2, struct bar *arg3),
+-- 
+2.39.2
 
-	TP_ARGS(arg1, arg2, arg3),
-
-	TP_STRUCT__entry(
-		__field(	int,		field1				)
-		__array(	char,		mystring,	MYSTRLEN	)
-		__string(	filename,	arg3->name			)
-	),
-
-	TP_fast_assign(
-		__entry->field1 = arg1;
-		memcpy(__entry->mystring, arg2->string);
-		__assign_str(filename, arg3->name);
-	),
-
-	TP_printk("field1=%d mystring=%s filename=%s",
-		__entry->field1, __entry->mystring, __get_str(filename))
-);
-
-The TP_STRUCT__entry() should be considered more of a "struct" layout than
-a macro layout, and that's where checkpatch gets confused. The spacing
-makes it much easier to see the fields and their types.
-
--- Steve
