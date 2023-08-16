@@ -2,43 +2,37 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F694C19F4F
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 16 Aug 2023 19:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB0DC25B4F
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 16 Aug 2023 19:53:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345786AbjHPTXU (ORCPT
+        id S1345887AbjHPTxN (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 16 Aug 2023 15:23:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38654 "EHLO
+        Wed, 16 Aug 2023 15:53:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345650AbjHPTXI (ORCPT
+        with ESMTP id S1345883AbjHPTwp (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 16 Aug 2023 15:23:08 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6FC51FCE;
-        Wed, 16 Aug 2023 12:23:06 -0700 (PDT)
+        Wed, 16 Aug 2023 15:52:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 236A6E56;
+        Wed, 16 Aug 2023 12:52:44 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 57EBD61E0C;
-        Wed, 16 Aug 2023 19:23:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3976BC433C8;
-        Wed, 16 Aug 2023 19:23:05 +0000 (UTC)
-Date:   Wed, 16 Aug 2023 15:23:08 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B27B564146;
+        Wed, 16 Aug 2023 19:52:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91C71C433C8;
+        Wed, 16 Aug 2023 19:52:42 +0000 (UTC)
+Date:   Wed, 16 Aug 2023 15:52:45 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Zheng Yejian <zhengyejian1@huawei.com>
-Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        <laijs@cn.fujitsu.com>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tracing: Fix race when concurrently splice_read
- trace_pipe
-Message-ID: <20230816152308.5f887721@gandalf.local.home>
-In-Reply-To: <0b83d0e5-5fe6-0cfb-4695-23c2cb86526d@huawei.com>
-References: <20230810123905.1531061-1-zhengyejian1@huawei.com>
-        <20230811204257.99df8ba60d591f5bace38615@kernel.org>
-        <f7af687f-2376-fede-fa22-f776811c48f1@huawei.com>
-        <20230811152413.76d5b72e@gandalf.local.home>
-        <0b83d0e5-5fe6-0cfb-4695-23c2cb86526d@huawei.com>
+To:     Sishuai Gong <sishuai.system@gmail.com>
+Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracefs: avoid setting i_mode to a temp value
+Message-ID: <20230816155245.6ead4384@gandalf.local.home>
+In-Reply-To: <10CFECF7-B9FC-4562-A445-4811F4C27655@gmail.com>
+References: <10CFECF7-B9FC-4562-A445-4811F4C27655@gmail.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -47,78 +41,62 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sat, 12 Aug 2023 10:22:43 +0800
-Zheng Yejian <zhengyejian1@huawei.com> wrote:
+On Thu, 10 Aug 2023 20:59:26 -0400
+Sishuai Gong <sishuai.system@gmail.com> wrote:
 
->
-> >>>> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> >>>> index b8870078ef58..f169d33b948f 100644
-> >>>> --- a/kernel/trace/trace.c
-> >>>> +++ b/kernel/trace/trace.c
-> >>>> @@ -7054,14 +7054,16 @@ static ssize_t tracing_splice_read_pipe(struct file *filp,
-> >>>>    	if (ret <= 0)
-> >>>>    		goto out_err;
-> >>>>    
-> >>>> -	if (!iter->ent && !trace_find_next_entry_inc(iter)) {
-> >>>> +	trace_event_read_lock();
-> >>>> +	trace_access_lock(iter->cpu_file);
-> >>>> +
-> >>>> +	if (!trace_find_next_entry_inc(iter)) {  
-> >>>
-> >>> It seems you skips '!iter->ent' check. Is there any reason for this change?  
-> >>
-> >> IIUC, 'iter->ent' may be the entry that was found but not consumed
-> >> in last call tracing_splice_read_pipe(), and in this call, 'iter->ent'
-> >> may have being consumed, so we may should find a new 'iter->ent' before
-> >> printing it in tracing_fill_pipe_page(), see following reduced codes:  
-> > 
-> > And if it wasn't consumed? We just lost it?  
+> Right now inode->i_mode is updated twice to reach the desired value
+> in tracefs_apply_options(). Because there is no lock protecting the two
+> writes, other threads might read the intermediate value of inode->i_mode.
 > 
-> If 'iter->ent' was not consumed, trace_find_next_entry_inc() will find
-> it again, will it?
+> Thread-1			Thread-2
+> // tracefs_apply_options()	//e.g., acl_permission_check
+> inode->i_mode &= ~S_IALLUGO;
+> 				unsigned int mode = inode->i_mode;
+> inode->i_mode |= opts->mode;
 > 
-> -- Zheng Yejian
+> I think there is no need to introduce a lock but it is better to
+> only update inode->i_mode ONCE, so the readers will either see the old
+> or latest value, rather than an intermediate/temporary value.
 > 
-> >   
-> >>
-> >>     tracing_splice_read_pipe() {
-> >>       if (!iter->ent && !trace_find_next_entry_inc(iter)) {  // 1. find
-> >> entry here
-> >>           ... ...
-> >>       }
-> >>       tracing_fill_pipe_page() {
-> >>         for (;;) {
-> >>           ... ...
-> >>           ret = print_trace_line(iter);  // 2. print entry
-> >>           ... ...  
-> > 
-> > You missed:
-> > 
-> >             count = trace_seq_used(&iter->seq) - save_len;
-> >             if (rem < count) {
-> >                  rem = 0;
-> >                  iter->seq.seq.len = save_len;
-> > 
-> > Where the above just threw away what was printed in the above
-> > "print_trace_line()", and it never went to console.
-> > 
-> >                  break;
-> >             }
-> >   
+> Signed-off-by: Sishuai Gong <sishuai.system@gmail.com>
+> ---
+>  fs/tracefs/inode.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> Thanks for pointing this out!
+> diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+> index 57ac8aa4a724..dca84ebb62fa 100644
+> --- a/fs/tracefs/inode.c
+> +++ b/fs/tracefs/inode.c
+> @@ -297,8 +297,7 @@ static int tracefs_apply_options(struct super_block *sb, bool remount)
+>  	 */
+>  
+>  	if (!remount || opts->opts & BIT(Opt_mode)) {
+> -		inode->i_mode &= ~S_IALLUGO;
+> -		inode->i_mode |= opts->mode;
+> +		inode->i_mode = (inode->i_mode & ~S_IALLUGO) | opts->mode;
 
-Just to get this moving again, I believe we should add a ref count to
-trace_pipe and the per_cpu trace_pipes, where if they are opened, nothing else can read it.
+You do realize that the compiler could decide to keep the original logic
+even with this change? If it was crucial that the compiler did not, you
+would need to have:
 
-Opening trace_pipe locks all per_cpu ref counts, if any of them are open,
-then the trace_pipe open will fail (and releases any ref counts it had
-taken).
+	if (!remount || opts->opts & BIT(Opt_mode)) {
+		umode_t tmp = READ_ONCE(inode->i_mode);
 
-Opening a per_cpu trace_pipe will up the ref count for just that CPU
-buffer. This will allow multiple tasks to read different per_cpu trace_pipe
-files, but will prevent the main trace_pipe file from being opened.
+		tmp &= ~S_IALLUGO
+		tmp |= opts->mode;
+		WRITE_ONCE(inode->i_mode, tmp);
+	}		
 
-Does that work for this?
+And if you notice the !remount flag, this is only preformed when the file
+system is actually mounted. Are the files visible before then?
+
+Can you produce this race?
 
 -- Steve
+
+
+
+>  	}
+>  
+>  	if (!remount || opts->opts & BIT(Opt_uid))
+
