@@ -2,49 +2,50 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 003D5C41513
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 17 Aug 2023 05:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F33CCC41513
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 17 Aug 2023 07:51:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348028AbjHQFQl (ORCPT
+        id S1348524AbjHQHvJ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 17 Aug 2023 01:16:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53558 "EHLO
+        Thu, 17 Aug 2023 03:51:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347999AbjHQFQK (ORCPT
+        with ESMTP id S1348649AbjHQHvE (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 17 Aug 2023 01:16:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B9BE2705;
-        Wed, 16 Aug 2023 22:16:09 -0700 (PDT)
+        Thu, 17 Aug 2023 03:51:04 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69087198C;
+        Thu, 17 Aug 2023 00:51:02 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9973C61015;
-        Thu, 17 Aug 2023 05:16:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78E95C433C8;
-        Thu, 17 Aug 2023 05:16:06 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 06A14633D4;
+        Thu, 17 Aug 2023 07:51:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1FC7C433C7;
+        Thu, 17 Aug 2023 07:50:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692249368;
-        bh=a2iRAas6aW2fTEoNcwlIES30xEK+G7ikVk9QkXpcco0=;
+        s=k20201202; t=1692258661;
+        bh=OyyGocwEfh+WJN46VXnSNwi5oxgvXIO4wyboTuRfmag=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=O6VfRCpHPEZfDU5qwLAxev8EwaSMJ3Mk2VPaIyuQZOHGxj1fbtIMvVICWuEzC31Z1
-         tkQtQV38s0KKJyqkyoN5CisI7WI5bPFXaqOsHL4uE4FrVEqlWM5gSpno1hT2zw0EBu
-         92MRn8L8KSKBAJRS3lx0sRnTerRYOO1tJIpmpOsDU3aXx22mbDfaOYeaJBG8xnJ4qO
-         IlwqraYW5KijVBOlnnNOL5ri3b1qGz5wACyIBFqGDnVdjmxaL4VAjxWK2r1q5V008+
-         nwDm9LJbflD1+rLUtYc16UM37r6e/qfE9XaEUL8y7HoD9l+8v8otOlio21fD38bEdU
-         yVbG4UKfomzxQ==
-Date:   Thu, 17 Aug 2023 14:16:03 +0900
+        b=XAFtGVOlIuXDbq1rBeuuBrYe6IN3h14IE0lzysPns/72q1qS2BK9m4B+LN65AiHKw
+         oYZHyhk95YyBnEcPKDtou2+GoIkzfKTaJrp9DL139t+qSxpbsFto79L71TL67nmf+V
+         Cw5WGkeDj75BYUCiLC7FKlQdHChW+bf5NryXpdCRQbLUohWOS3irC4eHmkmC4pqbfW
+         QkPnAyVFlTsKG2Lk3geCNXUxbpBiHLepAgxPN3zN1fJ7i1WrfLz654gYboybAja+04
+         SC8EXyIRqzqQRH+PoNjKzHhZwu44t0GwkLUxlWNdik0BmJ3qG52YxQ5hTtgKGwNt6L
+         3ix46TdMW9m2g==
+Date:   Thu, 17 Aug 2023 16:50:57 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Yipeng Zou <zouyipeng@huawei.com>
-Cc:     <rostedt@goodmis.org>, <shuah@kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH v2] selftests/ftrace: traceonoff_triggers: strip off
- names
-Message-Id: <20230817141603.7815300ef7a15df1872bb603@kernel.org>
-In-Reply-To: <20230817025028.3953490-1-zouyipeng@huawei.com>
-References: <20230817025028.3953490-1-zouyipeng@huawei.com>
+To:     Francis Laniel <flaniel@linux.microsoft.com>
+Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v1 1/1] tracing/kprobe: Add multi-probe support for
+ 'perf_kprobe' PMU
+Message-Id: <20230817165057.bd073da472851462e30ef145@kernel.org>
+In-Reply-To: <20230816163517.112518-2-flaniel@linux.microsoft.com>
+References: <20230816163517.112518-1-flaniel@linux.microsoft.com>
+        <20230816163517.112518-2-flaniel@linux.microsoft.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -53,91 +54,154 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 17 Aug 2023 10:50:28 +0800
-Yipeng Zou <zouyipeng@huawei.com> wrote:
+Hi,
 
-> The func_traceonoff_triggers.tc sometimes goes to fail
-> on my board, Kunpeng-920.
-> 
-> [root@localhost]# ./ftracetest ./test.d/ftrace/func_traceonoff_triggers.tc -l fail.log
-> === Ftrace unit tests ===
-> [1] ftrace - test for function traceon/off triggers     [FAIL]
-> [2] (instance)  ftrace - test for function traceon/off triggers [UNSUPPORTED]
-> 
-> I look up the log, and it shows that the md5sum is different between csum1 and csum2.
-> 
-> ++ cnt=611
-> ++ sleep .1
-> +++ cnt_trace
-> +++ grep -v '^#' trace
-> +++ wc -l
-> ++ cnt2=611
-> ++ '[' 611 -ne 611 ']'
-> +++ cat tracing_on
-> ++ on=0
-> ++ '[' 0 '!=' 0 ']'
-> +++ md5sum trace
-> ++ csum1='76896aa74362fff66a6a5f3cf8a8a500  trace'
-> ++ sleep .1
-> +++ md5sum trace
-> ++ csum2='ee8625a21c058818fc26e45c1ed3f6de  trace'
-> ++ '[' '76896aa74362fff66a6a5f3cf8a8a500  trace' '!=' 'ee8625a21c058818fc26e45c1ed3f6de  trace' ']'
-> ++ fail 'Tracing file is still changing'
-> ++ echo Tracing file is still changing
-> Tracing file is still changing
-> ++ exit_fail
-> ++ exit 1
-> 
-> So I directly dump the trace file before md5sum, the diff shows that:
-> 
-> [root@localhost]# diff trace_1.log trace_2.log -y --suppress-common-lines
-> dockerd-12285   [036] d.... 18385.510290: sched_stat | <...>-12285   [036] d.... 18385.510290: sched_stat
-> dockerd-12285   [036] d.... 18385.510291: sched_swit | <...>-12285   [036] d.... 18385.510291: sched_swit
-> <...>-740       [044] d.... 18385.602859: sched_stat | kworker/44:1-740 [044] d.... 18385.602859: sched_stat
-> <...>-740       [044] d.... 18385.602860: sched_swit | kworker/44:1-740 [044] d.... 18385.602860: sched_swit
-> 
-> And we can see that <...> filed be filled with names.
-> 
-> We can strip off the names there to fix that.
-> 
-> After strip off the names:
-> 
-> kworker/u257:0-12 [019] d..2.  2528.758910: sched_stat | -12 [019] d..2.  2528.758910: sched_stat_runtime: comm=k
-> kworker/u257:0-12 [019] d..2.  2528.758912: sched_swit | -12 [019] d..2.  2528.758912: sched_switch: prev_comm=kw
-> <idle>-0          [000] d.s5.  2528.762318: sched_waki | -0  [000] d.s5.  2528.762318: sched_waking: comm=sshd pi
-> <idle>-0          [037] dNh2.  2528.762326: sched_wake | -0  [037] dNh2.  2528.762326: sched_wakeup: comm=sshd pi
-> <idle>-0          [037] d..2.  2528.762334: sched_swit | -0  [037] d..2.  2528.762334: sched_switch: prev_comm=sw
-> 
+On Wed, 16 Aug 2023 18:35:17 +0200
+Francis Laniel <flaniel@linux.microsoft.com> wrote:
 
-Looks good to me.
+> When using sysfs, it is possible to create kprobe for several kernel functions
+> sharing the same name, but of course with different addresses, by writing their
+> addresses in kprobe_events file.
+> 
+> When using PMU, if only the symbol name is given, the event will be created for
+> the first address which matches the symbol, as returned by
+> kallsyms_lookup_name().
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Do you mean probing the same name symbols? Yes, it is intended behavior, since
+it is not always true that the same name function has the same prototype (it is
+mostly true but is not ensured), it is better to leave user to decide which one
+is what you want to probe.
 
-Thank you!
+Have you used 'perf probe' tool? It tries to find the appropriate function by
+line number and creates the probe by 'text+OFFSET' style, not by symbol.
+I think this is the correct way to do that, because user will not know which
+'address' of the symbol is what the user want.
 
-> Fixes: d87b29179aa0 ("selftests: ftrace: Use md5sum to take less time of checking logs")
-> Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> Signed-off-by: Yipeng Zou <zouyipeng@huawei.com>
+Thought?
+
+Thank you,
+
+> The idea here is to search all kernel functions which match this symbol and
+> create a trace_kprobe for each of them.
+> All these trace_kprobes are linked together by sharing the same trace_probe.
+> 
+> Signed-off-by: Francis Laniel <flaniel@linux.microsoft.com>
 > ---
->  .../ftrace/test.d/ftrace/func_traceonoff_triggers.tc          | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  kernel/trace/trace_kprobe.c | 86 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
 > 
-> diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func_traceonoff_triggers.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func_traceonoff_triggers.tc
-> index aee22289536b..c5783999582d 100644
-> --- a/tools/testing/selftests/ftrace/test.d/ftrace/func_traceonoff_triggers.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/func_traceonoff_triggers.tc
-> @@ -90,9 +90,9 @@ if [ $on != "0" ]; then
->      fail "Tracing is not off"
->  fi
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 1b3fa7b854aa..08580f1466c7 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -1682,13 +1682,42 @@ static int unregister_kprobe_event(struct trace_kprobe *tk)
+>  }
 >  
-> -csum1=`md5sum trace`
-> +csum1=`cat trace | sed -e 's/^ *[^ ]*\(-[0-9][0-9]*\)/\1/' | md5sum`
->  sleep $SLEEP_TIME
-> -csum2=`md5sum trace`
-> +csum2=`cat trace | sed -e 's/^ *[^ ]*\(-[0-9][0-9]*\)/\1/' | md5sum`
+>  #ifdef CONFIG_PERF_EVENTS
+> +
+> +struct address_array {
+> +	unsigned long *addrs;
+> +	size_t size;
+> +};
+> +
+> +static int add_addr(void *data, unsigned long addr)
+> +{
+> +	struct address_array *array = data;
+> +	unsigned long *p;
+> +
+> +	array->size++;
+> +	p = krealloc(array->addrs,
+> +				sizeof(*array->addrs) * array->size,
+> +				GFP_KERNEL);
+> +	if (!p) {
+> +		kfree(array->addrs);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	array->addrs = p;
+> +	array->addrs[array->size - 1] = addr;
+> +
+> +	return 0;
+> +}
+> +
+>  /* create a trace_kprobe, but don't add it to global lists */
+>  struct trace_event_call *
+>  create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
+>  			  bool is_return)
+>  {
+>  	enum probe_print_type ptype;
+> +	struct address_array array;
+>  	struct trace_kprobe *tk;
+> +	unsigned long func_addr;
+> +	unsigned int i;
+>  	int ret;
+>  	char *event;
 >  
->  if [ "$csum1" != "$csum2" ]; then
->      fail "Tracing file is still changing"
+> @@ -1722,7 +1751,64 @@ create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
+>  	if (ret < 0)
+>  		goto error;
+>  
+> +	array.addrs = NULL;
+> +	array.size = 0;
+> +	ret = kallsyms_on_each_match_symbol(add_addr, func, &array);
+> +	if (ret)
+> +		goto error_free;
+> +
+> +	if (array.size == 1)
+> +		goto end;
+> +
+> +	/*
+> +	 * Below loop allocates a trace_kprobe for each function with the same
+> +	 * name in kernel source code.
+> +	 * All this differente trace_kprobes will be linked together through
+> +	 * append_trace_kprobe().
+> +	 * NOTE append_trace_kprobe() is called in register_trace_kprobe() which
+> +	 * is called when a kprobe is added through sysfs.
+> +	 */
+> +	func_addr = kallsyms_lookup_name(func);
+> +	for (i = 0; i < array.size; i++) {
+> +		struct trace_kprobe *tk_same_name;
+> +		unsigned long address;
+> +
+> +		address = array.addrs[i];
+> +		/* Skip the function address as we already registered it. */
+> +		if (address == func_addr)
+> +			continue;
+> +
+> +		/*
+> +		 * alloc_trace_kprobe() first considers symbol name, so we set
+> +		 * this to NULL to allocate this kprobe on the given address.
+> +		 */
+> +		tk_same_name = alloc_trace_kprobe(KPROBE_EVENT_SYSTEM, event,
+> +						  (void *)address, NULL, offs,
+> +						  0 /* maxactive */,
+> +						  0 /* nargs */, is_return);
+> +
+> +		if (IS_ERR(tk_same_name)) {
+> +			ret = -ENOMEM;
+> +			goto error_free;
+> +		}
+> +
+> +		init_trace_event_call(tk_same_name);
+> +
+> +		if (traceprobe_set_print_fmt(&tk_same_name->tp, ptype) < 0) {
+> +			ret = -ENOMEM;
+> +			goto error_free;
+> +		}
+> +
+> +		ret = append_trace_kprobe(tk_same_name, tk);
+> +		if (ret)
+> +			goto error_free;
+> +	}
+> +
+> +end:
+> +	kfree(array.addrs);
+>  	return trace_probe_event_call(&tk->tp);
+> +error_free:
+> +	kfree(array.addrs);
+>  error:
+>  	free_trace_kprobe(tk);
+>  	return ERR_PTR(ret);
 > -- 
 > 2.34.1
 > 
