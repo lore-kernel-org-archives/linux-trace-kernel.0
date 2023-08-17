@@ -2,117 +2,149 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF25C5320E
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 17 Aug 2023 20:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1410CC7112B
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 17 Aug 2023 23:49:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352401AbjHQUpW (ORCPT
+        id S1356240AbjHQXtO (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 17 Aug 2023 16:45:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58896 "EHLO
+        Thu, 17 Aug 2023 19:49:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354982AbjHQUoz (ORCPT
+        with ESMTP id S1356299AbjHQXst (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 17 Aug 2023 16:44:55 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 808E32698;
-        Thu, 17 Aug 2023 13:44:54 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-2b9c907bc68so3439981fa.2;
-        Thu, 17 Aug 2023 13:44:54 -0700 (PDT)
+        Thu, 17 Aug 2023 19:48:49 -0400
+Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1267A3A97;
+        Thu, 17 Aug 2023 16:48:18 -0700 (PDT)
+Received: by mail-io1-xd35.google.com with SMTP id ca18e2360f4ac-790a590237aso11626239f.3;
+        Thu, 17 Aug 2023 16:48:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692305093; x=1692909893;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1692316065; x=1692920865;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zKB2G1ShadBbwkQ3nqYgBQMx8SZjUO4UzWmh4ooX9M4=;
-        b=PnqFP9F+NfPUJ/GHt3ZuCwUBWypL49qcFmfjeLTMLQH4EmzXVx01htjP8f2ONlADrf
-         EReiqG2tRkf706TjB6pXeJibQnQ5TpguVQOYwNuiHb17/HfJjx/10GcxkNdDvBwHX7R7
-         GkjpaZ3fOCsqogo1Vbq94zzoCxum8hPDPEDZCICSDC0F49UAo86UNQU43ysr2WKh6z44
-         eGQEHbDqOzjXIGy/GDu53r1htgWy8eDrZEgRIbZoA5UU7NDl/Bwhtyub1p1xImRNGqlk
-         TsA6O9TyGX3QvomfwU1zhDTrJh79MSAyOfRbx8onlmRn+wrR+mGDYNcX+EQW4O/nSfNN
-         E3Cw==
+        bh=cEqjp8LuBAI3uvCVY4BxAGDeVICB/Rnulmk6tW27L2k=;
+        b=SkiJuTy9Q+d7EUYeDjAhEm0Brg0zNoMYTDTfsC+9G0u+NqKstqKkVMgnG7UdiFyd6w
+         u40bMrdkE+tuKidyR7AcpB5dhfRH2q+JogCd6e7B8EN1ur352YkEapirMuDXUsUPmJ5m
+         GmMEQ+LXyipplxBNEr8HJYpEyZ3IvkfskBW30HMdk889r+dfVCqetGp4qqbFBt/jmciT
+         L2iqfucMYfmFMJEvBBJ6yVVNH+OLgBtRD2/XLPCxb7zSlADTQ/qzJZeO62hDRaIDBh2b
+         pYER3WVLHShPMh8M++zL9lJngn2ua7HBoIRUQuROxP9seQatSOa491IxkMfgY0Ocnq4G
+         Ma1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692305093; x=1692909893;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1692316065; x=1692920865;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zKB2G1ShadBbwkQ3nqYgBQMx8SZjUO4UzWmh4ooX9M4=;
-        b=esUOAA2kRmrYS6DfOpBk8AIiLaPmuDOTWqDYL0sA0izSAsHZ8nSbW8zMDDvt1czLNO
-         Oh7xYpr4P46O4lninaUZbH7f25jx0oajwajdXuftawYtszabgkS3spcZSIiGzda4mFzl
-         a0mxmuqHUPS5hMlhMZ1KEDzAhGyV/TNziOKIbmpmtRdxnu+XEHcAlh6q2V5opcR2ifCu
-         u6Mbb2I6Wv+f3eEWKPsrqakZzAY2+xUKpAOkmz1eKhgyHvwBw6UCNRKNekkZ1xHu+mb0
-         U1Ftwvk4eSvW4ueINIkSlFx7It8xSxr5Ud0fwZQBp48vC6aj9F/go2KhhP6gL28yRnBi
-         2AWA==
-X-Gm-Message-State: AOJu0YwQfhigsSJ+yNK02ba22GHFHEYXPxw85WuqC83YNpCF0jWmAdRK
-        WGGdMrlr24LA295Ae1ihw04MgxfVccKQy8k3CJw=
-X-Google-Smtp-Source: AGHT+IHITINNcbw4rEEj3o7EA22/na3TQA23asdzboKEdmcOqIzxCZLfoTs8rhCRi/f0efPXPrdNSqcyzzDYyrMhj5o=
-X-Received: by 2002:a2e:88d6:0:b0:2b6:c2e4:a57a with SMTP id
- a22-20020a2e88d6000000b002b6c2e4a57amr310253ljk.38.1692305092471; Thu, 17 Aug
- 2023 13:44:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <169181859570.505132.10136520092011157898.stgit@devnote2> <169181865486.505132.6447946094827872988.stgit@devnote2>
-In-Reply-To: <169181865486.505132.6447946094827872988.stgit@devnote2>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Thu, 17 Aug 2023 13:44:41 -0700
-Message-ID: <CAADnVQ+En1sxXFrDZBefDCBSS=mChDJ3Xg_Xz+WKXmPqziSxgw@mail.gmail.com>
-Subject: Re: [PATCH v3 5/8] tracing/fprobe: Enable fprobe events with CONFIG_DYNAMIC_FTRACE_WITH_ARGS
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Florent Revest <revest@chromium.org>,
-        linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+        bh=cEqjp8LuBAI3uvCVY4BxAGDeVICB/Rnulmk6tW27L2k=;
+        b=ThPvoI9Ox8w7pf6GmDiMUhi2MysfxSbLsMnMHThC5pF6tpChY1YffJvTCY3ToaOQjQ
+         3FQNrvES+wYJdm7L6HcibBQ8GHs9ekYHPgDkmKaX6q6Yw9M0YbQrSEF8WpFCK3l5SaJk
+         XB/bbRPYk80IGvp8SKzJvXukJn16vcTWY4rfUhHhl1a07cATc0zBv34SYtCCjTaVd7Q3
+         hkJ55FxF2ZqR5vDp8BcCVUDbvEcusVD7Oh5G+Xfbn/Jzi0MB7LhRVdb/ctKk97kAW57D
+         zkYTqlYVs0sFVUPEkUmuCUfGaWXEPkt9pgKUkWXLkhYd6jiuQQu14g7bwQ5n8hK4M6jM
+         ECjA==
+X-Gm-Message-State: AOJu0Yxv/Ht6fJsTggdQan9TS1GSAxCqTazuJ+XoOLYh2/VrCGTBnewN
+        T9fDbdlv5ZNQjMeag5wJ+Qk=
+X-Google-Smtp-Source: AGHT+IGeYWvkbovGWi0ssDH9PzYvZfk6n7jROaxvM3Zv++IDrgy7v5lyujdwg2mqgDV7n7QvF6EJAg==
+X-Received: by 2002:a5e:d816:0:b0:787:1f16:53ce with SMTP id l22-20020a5ed816000000b007871f1653cemr1241031iok.18.1692316065197;
+        Thu, 17 Aug 2023 16:47:45 -0700 (PDT)
+Received: from smtpclient.apple ([195.252.220.161])
+        by smtp.gmail.com with ESMTPSA id fr11-20020a056638658b00b0042b34d4d07fsm150977jab.156.2023.08.17.16.47.44
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 17 Aug 2023 16:47:44 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
+Subject: Re: [PATCH] tracefs: avoid setting i_mode to a temp value
+From:   Sishuai Gong <sishuai.system@gmail.com>
+In-Reply-To: <20230816155245.6ead4384@gandalf.local.home>
+Date:   Thu, 17 Aug 2023 19:47:34 -0400
+Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <A9B746AC-DF36-4ED3-BBA3-2EEC1BA166C8@gmail.com>
+References: <10CFECF7-B9FC-4562-A445-4811F4C27655@gmail.com>
+ <20230816155245.6ead4384@gandalf.local.home>
+To:     Steven Rostedt <rostedt@goodmis.org>
+X-Mailer: Apple Mail (2.3731.700.6)
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Aug 11, 2023 at 10:37=E2=80=AFPM Masami Hiramatsu (Google)
-<mhiramat@kernel.org> wrote:
->
-> +#ifdef CONFIG_HAVE_REGS_AND_STACK_ACCESS_API
-> +static __always_inline unsigned long
-> +ftrace_regs_get_kernel_stack_nth(struct ftrace_regs *fregs, unsigned int=
- nth)
-> +{
-> +       unsigned long *stackp;
-> +
-> +       stackp =3D (unsigned long *)ftrace_regs_get_stack_pointer(fregs);
-> +       if (((unsigned long)(stackp + nth) & ~(THREAD_SIZE - 1)) =3D=3D
-> +           ((unsigned long)stackp & ~(THREAD_SIZE - 1)))
-> +               return *(stackp + nth);
-> +
-> +       return 0;
-> +}
-> +#endif /* CONFIG_HAVE_REGS_AND_STACK_ACCESS_API */
-...
->
-> @@ -140,17 +140,17 @@ process_fetch_insn(struct fetch_insn *code, void *r=
-ec, void *dest,
->         /* 1st stage: get value from context */
->         switch (code->op) {
->         case FETCH_OP_STACK:
-> -               val =3D regs_get_kernel_stack_nth(regs, code->param);
-> +               val =3D ftrace_regs_get_kernel_stack_nth(fregs, code->par=
-am);
->                 break;
 
-Just noticed that bit.
-You probably want to document that access to arguments and
-especially arguments on stack is not precise. It's "best effort".
-x86-64 calling convention is not as simple as it might appear.
-For example if 6th argument is a 16-byte struct like sockptr_t it will be
-passed on the stack and 7th actual argument (if it's <=3D 8 byte) will
-be the register.
+> On Aug 16, 2023, at 3:52 PM, Steven Rostedt <rostedt@goodmis.org> =
+wrote:
+>=20
+> On Thu, 10 Aug 2023 20:59:26 -0400
+> Sishuai Gong <sishuai.system@gmail.com> wrote:
+>=20
+>> Right now inode->i_mode is updated twice to reach the desired value
+>> in tracefs_apply_options(). Because there is no lock protecting the =
+two
+>> writes, other threads might read the intermediate value of =
+inode->i_mode.
+>>=20
+>> Thread-1 Thread-2
+>> // tracefs_apply_options() //e.g., acl_permission_check
+>> inode->i_mode &=3D ~S_IALLUGO;
+>> unsigned int mode =3D inode->i_mode;
+>> inode->i_mode |=3D opts->mode;
+>>=20
+>> I think there is no need to introduce a lock but it is better to
+>> only update inode->i_mode ONCE, so the readers will either see the =
+old
+>> or latest value, rather than an intermediate/temporary value.
+>>=20
+>> Signed-off-by: Sishuai Gong <sishuai.system@gmail.com>
+>> ---
+>> fs/tracefs/inode.c | 3 +--
+>> 1 file changed, 1 insertion(+), 2 deletions(-)
+>>=20
+>> diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+>> index 57ac8aa4a724..dca84ebb62fa 100644
+>> --- a/fs/tracefs/inode.c
+>> +++ b/fs/tracefs/inode.c
+>> @@ -297,8 +297,7 @@ static int tracefs_apply_options(struct =
+super_block *sb, bool remount)
+>>  */
+>>=20
+>> if (!remount || opts->opts & BIT(Opt_mode)) {
+>> - inode->i_mode &=3D ~S_IALLUGO;
+>> - inode->i_mode |=3D opts->mode;
+>> + inode->i_mode =3D (inode->i_mode & ~S_IALLUGO) | opts->mode;
+>=20
+> You do realize that the compiler could decide to keep the original =
+logic
+> even with this change? If it was crucial that the compiler did not, =
+you
+> would need to have:
+>=20
+> if (!remount || opts->opts & BIT(Opt_mode)) {
+> umode_t tmp =3D READ_ONCE(inode->i_mode);
+>=20
+> tmp &=3D ~S_IALLUGO
+> tmp |=3D opts->mode;
+> WRITE_ONCE(inode->i_mode, tmp);
+> }=20
+>=20
+You are right. This will prevent the compiler from emitting two writes.
+I will incorporate your suggestion in the new version.
 
-Things similar on 32-bit and there is a non-zero chance that
-regs_get_kernel_argument() doesn't return the actual arg.
+> And if you notice the !remount flag, this is only preformed when the =
+file
+> system is actually mounted. Are the files visible before then?
+>=20
+> Can you produce this race?
+This data race was detected when I was testing the kernel (e.g., =
+fuzzing)
+but I did not make the attempt to reproduce it.
+
+>=20
+> -- Steve
+>=20
+>=20
+>=20
+>> }
+>>=20
+>> if (!remount || opts->opts & BIT(Opt_uid))
+
+
