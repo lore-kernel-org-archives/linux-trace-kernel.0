@@ -2,56 +2,56 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F707C2FC0E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E039C41513
 	for <linux-trace-kernel@archiver.kernel.org>; Thu, 17 Aug 2023 08:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349151AbjHQI55 (ORCPT
+        id S1349163AbjHQI56 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 17 Aug 2023 04:57:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42190 "EHLO
+        Thu, 17 Aug 2023 04:57:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349157AbjHQI51 (ORCPT
+        with ESMTP id S1349197AbjHQI5r (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 17 Aug 2023 04:57:27 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49761273C
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Aug 2023 01:57:25 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id 98e67ed59e1d1-26d1a17ce06so258506a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Aug 2023 01:57:25 -0700 (PDT)
+        Thu, 17 Aug 2023 04:57:47 -0400
+Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3135B26A8
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Aug 2023 01:57:46 -0700 (PDT)
+Received: by mail-oi1-x22d.google.com with SMTP id 5614622812f47-3a800814122so3154001b6e.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Aug 2023 01:57:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692262645; x=1692867445;
+        d=chromium.org; s=google; t=1692262665; x=1692867465;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pZ4avl/mz05CnmDkZ4XRfrhEisWAciUAJmphvwfEM2A=;
-        b=Vv30KtUNN9X3DCyhblLuDc+5QN4WH17sIufZ4s2NysSZxDPAObOK+RQyUycSz2de/P
-         +5sbf5cr3N9siROdEc+KFYHwsvRTeWt/wpORXfGzN3xt6SAxiaiMDS1az3ZVhLt3Ccii
-         eHYiAasnpVcYWg5gJFYzO1+AjlDV8bzyQ2Vu4=
+        bh=gZ7NMqvFIR2et+D8JZPMfPw5WnBck106F6tUJxbT9Gg=;
+        b=b0GhhDLSM9faSxoD0WP+TXbItwqeY4LweTgfy9B593XszXNEq91tklMLWcxdjEXQrJ
+         6VMQUM+rWR/ODEx3HE1E3XuNdEIONzAUxF7ibYt1tsebrIKpHhaXHhpXBg67/rQjFrv2
+         xLI4IRptekVy+SWo0CuEz3yJxIsjTjMsIgqK8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692262645; x=1692867445;
+        d=1e100.net; s=20221208; t=1692262665; x=1692867465;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pZ4avl/mz05CnmDkZ4XRfrhEisWAciUAJmphvwfEM2A=;
-        b=D36rJ5Nlhdm+4vDmARVoHygkTKAMxy8vL3H3n/z6XwuZ99VupqOsL4LmOJsFyiFcwP
-         lyt3VE19kiXyXiDD8Lgs0gqFm790SE3ZiHWHs9rVoo7IpqDoQ+HtMtsdjynNjanz3BPI
-         zkIDMdoYHTX68gsJkpBxWSk6cVDQ5fAucWvvXrg1aLQaV7o+2WNKZfegNxwInsShUckp
-         jo84nVpQk7ZqImlfjFRl00AH4LoAZ95omm9hoBkq83MzVbGjCszARHm1rwqAFYHH0Dto
-         CZr8Y46BNf6xbM41ZuZbG1tlI0nGKmPZ/d3+kxwu3TrT1ah9wdQkS1GKh5U1VKyMdyBi
-         qj7g==
-X-Gm-Message-State: AOJu0Yynso2jljaDC4DnglC69LZR0V1U+A+w7YzO9mOZgI03LbteWgom
-        2lq44xaWRHjwxndFEAniOQkhxmRioqKn8Jy4N9XwGJryNOpc1e3C
-X-Google-Smtp-Source: AGHT+IH6xIW34cUhfbm6uS4lGucin/ng4/m/ryyfJico4mCTUTYGDYajeDn/M+ly4sI6E4iuomTaVqg6vaPiGhO2ztA=
-X-Received: by 2002:a17:90a:d34a:b0:269:3498:3bad with SMTP id
- i10-20020a17090ad34a00b0026934983badmr3496202pjx.14.1692262644742; Thu, 17
- Aug 2023 01:57:24 -0700 (PDT)
+        bh=gZ7NMqvFIR2et+D8JZPMfPw5WnBck106F6tUJxbT9Gg=;
+        b=L9XbuNYgO+EJxsI/yRq4DSkEF/dXXkSbWhA+wNrRGMQ0LbBPevgZwhFhKNBGp1K4Cq
+         LXMUBDUXb0NPzkIC8Ovvy7JP4QSCqzxsTMHEKyZeiztMLLyBwqddni/led/sNskmThrf
+         hR6BMh83BXdrYQ/jLYPvEkA0wksEnKDlq2UVyWJBUVQqiyn8M6Eu6pgt9G7v7PxSSgEc
+         EcT24QUTP0lYrr32J1xERxEGVkEIYnBrDPSxXgSz6494mZsYPI4iDcPyb3/zcCupm1gB
+         aA2SD4cV/vGFFKPdvgnjJeB0fzLCBucVqFDbK6u9GkNXR0Ze3iqqyfy13RMP8KgHx4sg
+         wCXg==
+X-Gm-Message-State: AOJu0Yzh7g3o1YvqoZoax+Djl7oMrYb6fDZWjl86KUw0j9i5ryFhg1fC
+        mbUysVjNOufYZTHaKiOz1iYsn7lmsbvI4ABE8cOa6jbD63f4n3Dg
+X-Google-Smtp-Source: AGHT+IF/lZED8EmuEUmIk6G5RS65+A7NYREGfAS6ecOd1YzcZ0v6Mx9lu+wCelzhQCnQ1D518ZnjHFgRY/sYb2/L/FQ=
+X-Received: by 2002:a05:6808:14ca:b0:3a8:3155:bc2e with SMTP id
+ f10-20020a05680814ca00b003a83155bc2emr355357oiw.0.1692262665550; Thu, 17 Aug
+ 2023 01:57:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <169181859570.505132.10136520092011157898.stgit@devnote2>
-In-Reply-To: <169181859570.505132.10136520092011157898.stgit@devnote2>
+References: <169181859570.505132.10136520092011157898.stgit@devnote2> <169181863118.505132.13233554057378608176.stgit@devnote2>
+In-Reply-To: <169181863118.505132.13233554057378608176.stgit@devnote2>
 From:   Florent Revest <revest@chromium.org>
-Date:   Thu, 17 Aug 2023 10:57:13 +0200
-Message-ID: <CABRcYmJLbb0_fs2beiNA2QE468JkxB9nHnmQcQW4dt63pPBoFA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] bpf: fprobe: rethook: Use ftrace_regs instead of pt_regs
+Date:   Thu, 17 Aug 2023 10:57:34 +0200
+Message-ID: <CABRcYm+i1PqVNUC_Hf2wsUdw8Gz-kap9YQ1zFwKKXjb7hp11bg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/8] tracing: Expose ftrace_regs regardless of CONFIG_FUNCTION_TRACER
 To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
@@ -73,28 +73,15 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sat, Aug 12, 2023 at 7:36=E2=80=AFAM Masami Hiramatsu (Google)
+On Sat, Aug 12, 2023 at 7:37=E2=80=AFAM Masami Hiramatsu (Google)
 <mhiramat@kernel.org> wrote:
 >
-> Hi,
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 >
-> Here is the 3rd version of RFC series to use ftrace_regs instead of pt_re=
-gs.
-> The previous version is here;
+> In order to be able to use ftrace_regs even from features unrelated to
+> function tracer (e.g. kretprobe), expose ftrace_regs structures and
+> APIs even if the CONFIG_FUNCTION_TRACER=3Dn.
 >
-> https://lore.kernel.org/all/169139090386.324433.6412259486776991296.stgit=
-@devnote2/
->
-> This also includes the generic part and minimum modifications of arch
-> dependent code. (e.g. not including rethook for arm64.)
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-I think that one aspect that's missing from the discussion (and maybe
-the series) so far is plans to actually save partial registers in the
-existing rethook trampolines.
-
-For now the series makes everything called by the rethook trampolines
-handle the possibility of having a sparse ftrace_regs but the rethook
-trampolines still save full ftrace_regs. I think that to rip the full
-benefits of this series, we should have the rethook trampolines save
-the equivalent ftrace_regs as the light "args" version of the ftrace
-trampoline.
+Acked-by: Florent Revest <revest@chromium.org>
