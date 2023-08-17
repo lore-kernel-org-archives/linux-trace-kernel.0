@@ -2,57 +2,56 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 543E2C2FC0E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44526C41513
 	for <linux-trace-kernel@archiver.kernel.org>; Thu, 17 Aug 2023 08:59:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349164AbjHQI6a (ORCPT
+        id S242634AbjHQI63 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 17 Aug 2023 04:58:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39784 "EHLO
+        Thu, 17 Aug 2023 04:58:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349202AbjHQI6G (ORCPT
+        with ESMTP id S1349190AbjHQI6D (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 17 Aug 2023 04:58:06 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A52D2724
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Aug 2023 01:58:05 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1bc73a2b0easo50631925ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Aug 2023 01:58:05 -0700 (PDT)
+        Thu, 17 Aug 2023 04:58:03 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC1992724
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Aug 2023 01:58:01 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1bd9b4f8e0eso47637775ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Aug 2023 01:58:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692262684; x=1692867484;
+        d=chromium.org; s=google; t=1692262681; x=1692867481;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XfLp1c4CQASb52Y25xFQC1k0yj/rlFjQOJxQJThqQmU=;
-        b=ho9t7K5YnNQvxLDVMQoh5xm1KUvC6FOjB+27q2YIWPGBsEK1xTmHG1t4a7Ee3T31Ex
-         SKeSoS63VoXvRtkhpGG+BaN/dwKaZY0js6KsiZBcoiXMgPY0a8N/kAAIeNSsjokm9WlT
-         yZI1f9uvxWx6FbPMxJ3Gl8EMiGLXjB2yWFuDU=
+        bh=POAewNlD9kdUICg1lGQG3PlYWuMy3Xojp9urFPwdlEk=;
+        b=IgrlWgQFkAtt5JGm5sm1FANwumf2xoywP7YxePvWesmAu01lrn4ateZgbevXa4fZ5k
+         EOD8zziXJPM8ETA98sHgTAwULT2vUno2nhkVEqf7FbxmCUWCuPDsJYgiIvfWLWqQAJWz
+         Lj0Q/6x9hLuvZKNyY31VptHkO39tX1aThlLi0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692262684; x=1692867484;
+        d=1e100.net; s=20221208; t=1692262681; x=1692867481;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XfLp1c4CQASb52Y25xFQC1k0yj/rlFjQOJxQJThqQmU=;
-        b=jXl0/DS5Xotg6p2GYnNQDMOgiu05Drgaf99Pl2BO2jYiXb+ZPq0ID2tS0m9NxM/nAm
-         IyAGp2EBPlKqcnGhMMhiPzsvO+zfv/1C3QsJbJKrOSiKHkMVlVu4vkiCZ63nDxQy7Lku
-         9BIWK4HnnjXe2Idp20h2cXoEllGwJjxJ8MDogD1QLieYPeqphSLvtf/gli0IMWaCN6wg
-         9FA7E5tKVecECAWiujs69ib1v6Ew9gkSTJ/mEvIEELixZ7s8A8+atDfD4eydRBT/Yrsa
-         n9wiIN1p4u0Vq1O++erCLqG/3clzKJuUacer6wpaHZb5OdFg+M6Olr+qoaz/hy8Mz7e5
-         QnSA==
-X-Gm-Message-State: AOJu0YxF+ootfmEdivZs4boHlv5EfpkDUXnHr5dqe4w3Yh1alxhR5gRG
-        s/mQI4JXSTvCgQ7Mpa8JH/Tc6oAizAOk6ULcHKWRYA==
-X-Google-Smtp-Source: AGHT+IEuEh+F6ilNeOovqEBoQx7IdH5Xb8wY6puO8xnT2cSmh5oD8u4Z75bhE+9E37pBH0xI4F70q7QRYHtpLN1LfH8=
-X-Received: by 2002:a17:90b:a12:b0:268:daa4:3a70 with SMTP id
- gg18-20020a17090b0a1200b00268daa43a70mr3495997pjb.32.1692262684544; Thu, 17
- Aug 2023 01:58:04 -0700 (PDT)
+        bh=POAewNlD9kdUICg1lGQG3PlYWuMy3Xojp9urFPwdlEk=;
+        b=SvBsFmBa4UGQje6E+V/kj41MVmKXA+n57/An24R+Kr8tQK68rn5uu+Pz/JEBrvQ9S4
+         gUWqsWAOW4cSiD2pzhM/bZD07kx+7ReTKQfb5DyPk7F4r4wfO/qknQQXtYwJ1NyrNNuy
+         Ni4G00z6p2L9bWGvPHBPPuCZsdhGXgk7ZuFj5LxXnJIoYQYy2dw2HQlq/R5UI7P6C76k
+         o5CeXdkuPnTWMPikOKRUBSZHerNF1LIiXtkeoivJDJQ/2tg/1gzw7XjiRjQXVYqTLmAT
+         Pn3dyPj2Gr7p6EFitUr9n9VaEPX5DHHaVSdzChk6ciwfBrNSzEovRRjYEvo/DsLOPGCq
+         QiOQ==
+X-Gm-Message-State: AOJu0Yw2KsOxuxHgzwZuXzRd2WOH8bnGG8A3VqSVICGWsnCB0kmpbICj
+        78Y4522+DZeT8sGuh5sBthlbV4XNQ+HMPTLhOLq30Q==
+X-Google-Smtp-Source: AGHT+IGpH+pXAk8VqxIeT35jLyW0KYHgE02yw6vcZz/n1VMizwV6Ew9p2SanWxPrmSf9km59jyqbjyFHsoS+ovVRDwM=
+X-Received: by 2002:a17:90a:9bca:b0:268:a26:d9ee with SMTP id
+ b10-20020a17090a9bca00b002680a26d9eemr3586278pjw.46.1692262681230; Thu, 17
+ Aug 2023 01:58:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <169181859570.505132.10136520092011157898.stgit@devnote2> <169181866661.505132.3229847361646568033.stgit@devnote2>
-In-Reply-To: <169181866661.505132.3229847361646568033.stgit@devnote2>
+References: <169181859570.505132.10136520092011157898.stgit@devnote2> <169181865486.505132.6447946094827872988.stgit@devnote2>
+In-Reply-To: <169181865486.505132.6447946094827872988.stgit@devnote2>
 From:   Florent Revest <revest@chromium.org>
-Date:   Thu, 17 Aug 2023 10:57:53 +0200
-Message-ID: <CABRcYm+8uASJA+=AmAFVQMO+ZEOKRBca0bYpxTKb1hGV7P0iUg@mail.gmail.com>
-Subject: Re: [PATCH v3 6/8] ftrace: Add ftrace_partial_regs() for converting
- ftrace_regs to pt_regs
+Date:   Thu, 17 Aug 2023 10:57:50 +0200
+Message-ID: <CABRcYm+ayJwS+YMaKBF9pdnHYcJvioOoOrXHWOeRAg1hPacYiA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/8] tracing/fprobe: Enable fprobe events with CONFIG_DYNAMIC_FTRACE_WITH_ARGS
 To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
@@ -77,13 +76,55 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 On Sat, Aug 12, 2023 at 7:37=E2=80=AFAM Masami Hiramatsu (Google)
 <mhiramat@kernel.org> wrote:
 >
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->
-> Add ftrace_partial_regs() which converts the ftrace_regs to pt_regs.
-> If the architecture defines its own ftrace_regs, this copies partial
-> registers to pt_regs and returns it. If not, ftrace_regs is the same as
-> pt_regs and ftrace_partial_regs() will return ftrace_regs::regs.
->
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+> index d56304276318..6fb4ecf8767d 100644
+> --- a/kernel/trace/Kconfig
+> +++ b/kernel/trace/Kconfig
+> @@ -679,7 +679,6 @@ config FPROBE_EVENTS
+>         select TRACING
+>         select PROBE_EVENTS
+>         select DYNAMIC_EVENTS
+> -       depends on DYNAMIC_FTRACE_WITH_REGS
 
-Acked-by: Florent Revest <revest@chromium.org>
+I believe that, in practice, fprobe events still rely on WITH_REGS:
+
+> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
+> index f440c97e050f..94c01dc061ec 100644
+> --- a/kernel/trace/trace_fprobe.c
+> +++ b/kernel/trace/trace_fprobe.c
+> @@ -327,14 +328,15 @@ static int fentry_dispatcher(struct fprobe *fp, uns=
+igned long entry_ip,
+>         struct pt_regs *regs =3D ftrace_get_regs(fregs);
+
+Because here you require the entry handler needs ftrace_regs that are
+full pt_regs.
+
+>         int ret =3D 0;
+>
+> +       if (trace_probe_test_flag(&tf->tp, TP_FLAG_TRACE))
+> +               fentry_trace_func(tf, entry_ip, fregs);
+> +
+> +#ifdef CONFIG_PERF_EVENTS
+>         if (!regs)
+>                 return 0;
+>
+> -       if (trace_probe_test_flag(&tf->tp, TP_FLAG_TRACE))
+> -               fentry_trace_func(tf, entry_ip, regs);
+> -#ifdef CONFIG_PERF_EVENTS
+>         if (trace_probe_test_flag(&tf->tp, TP_FLAG_PROFILE))
+> -               ret =3D fentry_perf_func(tf, entry_ip, regs);
+> +               ret =3D fentry_perf_func(tf, entry_ip, fregs, regs);
+>  #endif
+>         return ret;
+>  }
+> @@ -347,14 +349,15 @@ static void fexit_dispatcher(struct fprobe *fp, uns=
+igned long entry_ip,
+>         struct trace_fprobe *tf =3D container_of(fp, struct trace_fprobe,=
+ fp);
+>         struct pt_regs *regs =3D ftrace_get_regs(fregs);
+
+And same here with the return handler
+
+I think fprobe events would need the same sort of refactoring as
+kprobe_multi bpf: using ftrace_partial_regs so they work on build
+!WITH_REGS.
