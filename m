@@ -2,90 +2,117 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE7DC3DA58
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 17 Aug 2023 17:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF25C5320E
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 17 Aug 2023 20:45:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348116AbjHQRIx (ORCPT
+        id S1352401AbjHQUpW (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 17 Aug 2023 13:08:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55140 "EHLO
+        Thu, 17 Aug 2023 16:45:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353857AbjHQRIc (ORCPT
+        with ESMTP id S1354982AbjHQUoz (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 17 Aug 2023 13:08:32 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26FAD30F7;
-        Thu, 17 Aug 2023 10:08:28 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1bdfb11ea2aso122785ad.2;
-        Thu, 17 Aug 2023 10:08:28 -0700 (PDT)
+        Thu, 17 Aug 2023 16:44:55 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 808E32698;
+        Thu, 17 Aug 2023 13:44:54 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-2b9c907bc68so3439981fa.2;
+        Thu, 17 Aug 2023 13:44:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692292108; x=1692896908;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7NWIyxKHGTcZUh3pE/+j1hXTU1RElUSlh9m4J1oVdP0=;
-        b=XafT0oWTXXtxTncl5MhBhEkug2jSN3luOh8Zhq8IcL5f3RHZNwfr2Tb4nv1AkbTGak
-         QXfYnvUvTgxlGEDIt5WUBlHBu9ZXIixLc0w4Ljj5w7fOgoUAjyoVjimM3CQ8B4yO2QNJ
-         zUp8d15eizIQ4yewsaBmNwz2NmU2uUvqG1oIltLtbrAn6d8IMjw7py6qk6kyziFFqpIk
-         u2OZT4Shx4cond5guUG8TFA1RWgwfzhvCfxYF7eXdJKtZFMLW16k3GknxJm2JmCNa70g
-         bJrI3URMs/q9XSxVVhgrPNMdvnPfdDaT0Co0X3GTBgwJOB5+YsM5UAAX6MRDJXpuZQ0o
-         zl6A==
+        d=gmail.com; s=20221208; t=1692305093; x=1692909893;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zKB2G1ShadBbwkQ3nqYgBQMx8SZjUO4UzWmh4ooX9M4=;
+        b=PnqFP9F+NfPUJ/GHt3ZuCwUBWypL49qcFmfjeLTMLQH4EmzXVx01htjP8f2ONlADrf
+         EReiqG2tRkf706TjB6pXeJibQnQ5TpguVQOYwNuiHb17/HfJjx/10GcxkNdDvBwHX7R7
+         GkjpaZ3fOCsqogo1Vbq94zzoCxum8hPDPEDZCICSDC0F49UAo86UNQU43ysr2WKh6z44
+         eGQEHbDqOzjXIGy/GDu53r1htgWy8eDrZEgRIbZoA5UU7NDl/Bwhtyub1p1xImRNGqlk
+         TsA6O9TyGX3QvomfwU1zhDTrJh79MSAyOfRbx8onlmRn+wrR+mGDYNcX+EQW4O/nSfNN
+         E3Cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692292108; x=1692896908;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7NWIyxKHGTcZUh3pE/+j1hXTU1RElUSlh9m4J1oVdP0=;
-        b=hUEwP0dca3J3z3YveIWw3/ns4CCywLbuY3yXV9lEZeGVMZVFJdF37yTDu8/ruFx5h9
-         prgZL1j7EpoYcGMtLFLwhb9ffk0vX37kHuHag6AFDOjZnvq+EwfKBVu1gKbbAV4O5RKS
-         JTLFPAJ7aNevuFORoOWOBjAlhJjx9JRDoEk5xE4urpihSlpuLNtlTzrro0an5hOd4A1q
-         czgsZyLAa935bSdbtLdSEwgMMUF6SqVHbe7X35eIGcpsmfc9kWPTnVyXGa2xrLZOY1Hr
-         XbLS0Y6xH5K2LsAUODAZYAxa8fdThr4qJohIDu+JhzwbL1K57I5rwo6tIY8GXs1WY41J
-         q6HQ==
-X-Gm-Message-State: AOJu0Yx3m3wQjb8PTLz8+y3a56EOb7K7YD7MsG7gwf6BQlJs8Jcmrpr6
-        e2fr1v+F118OdDBBOU5ZG+A=
-X-Google-Smtp-Source: AGHT+IFr+3gG7MMJKJLLVSDApdX7jk8TogII4+aNPg9CqA42X0ljIhGCtwyPlK1gzyJ5sARF+JiFPQ==
-X-Received: by 2002:a17:902:ea02:b0:1b7:e86f:7631 with SMTP id s2-20020a170902ea0200b001b7e86f7631mr14797plg.19.1692292108334;
-        Thu, 17 Aug 2023 10:08:28 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:c009:58e9:c155:d912:d62a:88e5])
-        by smtp.gmail.com with ESMTPSA id jw4-20020a170903278400b001bf20c806adsm19106plb.50.2023.08.17.10.08.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Aug 2023 10:08:27 -0700 (PDT)
-From:   Atul Kumar Pant <atulpant.linux@gmail.com>
-To:     naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-        davem@davemloft.net, mhiramat@kernel.org
-Cc:     Atul Kumar Pant <atulpant.linux@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org, shuah@kernel.org
-Subject: [PATCH v1] samples: kprobes: Fixes a typo
-Date:   Thu, 17 Aug 2023 22:38:19 +0530
-Message-Id: <20230817170819.77857-1-atulpant.linux@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        d=1e100.net; s=20221208; t=1692305093; x=1692909893;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zKB2G1ShadBbwkQ3nqYgBQMx8SZjUO4UzWmh4ooX9M4=;
+        b=esUOAA2kRmrYS6DfOpBk8AIiLaPmuDOTWqDYL0sA0izSAsHZ8nSbW8zMDDvt1czLNO
+         Oh7xYpr4P46O4lninaUZbH7f25jx0oajwajdXuftawYtszabgkS3spcZSIiGzda4mFzl
+         a0mxmuqHUPS5hMlhMZ1KEDzAhGyV/TNziOKIbmpmtRdxnu+XEHcAlh6q2V5opcR2ifCu
+         u6Mbb2I6Wv+f3eEWKPsrqakZzAY2+xUKpAOkmz1eKhgyHvwBw6UCNRKNekkZ1xHu+mb0
+         U1Ftwvk4eSvW4ueINIkSlFx7It8xSxr5Ud0fwZQBp48vC6aj9F/go2KhhP6gL28yRnBi
+         2AWA==
+X-Gm-Message-State: AOJu0YwQfhigsSJ+yNK02ba22GHFHEYXPxw85WuqC83YNpCF0jWmAdRK
+        WGGdMrlr24LA295Ae1ihw04MgxfVccKQy8k3CJw=
+X-Google-Smtp-Source: AGHT+IHITINNcbw4rEEj3o7EA22/na3TQA23asdzboKEdmcOqIzxCZLfoTs8rhCRi/f0efPXPrdNSqcyzzDYyrMhj5o=
+X-Received: by 2002:a2e:88d6:0:b0:2b6:c2e4:a57a with SMTP id
+ a22-20020a2e88d6000000b002b6c2e4a57amr310253ljk.38.1692305092471; Thu, 17 Aug
+ 2023 13:44:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <169181859570.505132.10136520092011157898.stgit@devnote2> <169181865486.505132.6447946094827872988.stgit@devnote2>
+In-Reply-To: <169181865486.505132.6447946094827872988.stgit@devnote2>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Thu, 17 Aug 2023 13:44:41 -0700
+Message-ID: <CAADnVQ+En1sxXFrDZBefDCBSS=mChDJ3Xg_Xz+WKXmPqziSxgw@mail.gmail.com>
+Subject: Re: [PATCH v3 5/8] tracing/fprobe: Enable fprobe events with CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Florent Revest <revest@chromium.org>,
+        linux-trace-kernel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Fixes typo in a function name.
+On Fri, Aug 11, 2023 at 10:37=E2=80=AFPM Masami Hiramatsu (Google)
+<mhiramat@kernel.org> wrote:
+>
+> +#ifdef CONFIG_HAVE_REGS_AND_STACK_ACCESS_API
+> +static __always_inline unsigned long
+> +ftrace_regs_get_kernel_stack_nth(struct ftrace_regs *fregs, unsigned int=
+ nth)
+> +{
+> +       unsigned long *stackp;
+> +
+> +       stackp =3D (unsigned long *)ftrace_regs_get_stack_pointer(fregs);
+> +       if (((unsigned long)(stackp + nth) & ~(THREAD_SIZE - 1)) =3D=3D
+> +           ((unsigned long)stackp & ~(THREAD_SIZE - 1)))
+> +               return *(stackp + nth);
+> +
+> +       return 0;
+> +}
+> +#endif /* CONFIG_HAVE_REGS_AND_STACK_ACCESS_API */
+...
+>
+> @@ -140,17 +140,17 @@ process_fetch_insn(struct fetch_insn *code, void *r=
+ec, void *dest,
+>         /* 1st stage: get value from context */
+>         switch (code->op) {
+>         case FETCH_OP_STACK:
+> -               val =3D regs_get_kernel_stack_nth(regs, code->param);
+> +               val =3D ftrace_regs_get_kernel_stack_nth(fregs, code->par=
+am);
+>                 break;
 
-Signed-off-by: Atul Kumar Pant <atulpant.linux@gmail.com>
----
- samples/kprobes/kretprobe_example.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Just noticed that bit.
+You probably want to document that access to arguments and
+especially arguments on stack is not precise. It's "best effort".
+x86-64 calling convention is not as simple as it might appear.
+For example if 6th argument is a 16-byte struct like sockptr_t it will be
+passed on the stack and 7th actual argument (if it's <=3D 8 byte) will
+be the register.
 
-diff --git a/samples/kprobes/kretprobe_example.c b/samples/kprobes/kretprobe_example.c
-index cbf16542d84e..ed79fd3d48fb 100644
---- a/samples/kprobes/kretprobe_example.c
-+++ b/samples/kprobes/kretprobe_example.c
-@@ -35,7 +35,7 @@ struct my_data {
- 	ktime_t entry_stamp;
- };
- 
--/* Here we use the entry_hanlder to timestamp function entry */
-+/* Here we use the entry_handler to timestamp function entry */
- static int entry_handler(struct kretprobe_instance *ri, struct pt_regs *regs)
- {
- 	struct my_data *data;
--- 
-2.25.1
-
+Things similar on 32-bit and there is a non-zero chance that
+regs_get_kernel_argument() doesn't return the actual arg.
