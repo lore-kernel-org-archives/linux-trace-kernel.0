@@ -2,70 +2,90 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76029C3063E
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 17 Aug 2023 15:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE7DC3DA58
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 17 Aug 2023 17:09:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352926AbjHQPNF (ORCPT
+        id S1348116AbjHQRIx (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 17 Aug 2023 11:13:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46222 "EHLO
+        Thu, 17 Aug 2023 13:08:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353047AbjHQPNC (ORCPT
+        with ESMTP id S1353857AbjHQRIc (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 17 Aug 2023 11:13:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B27752705;
-        Thu, 17 Aug 2023 08:12:59 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 93C5B65C96;
-        Thu, 17 Aug 2023 15:12:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76C4DC433C8;
-        Thu, 17 Aug 2023 15:12:58 +0000 (UTC)
-Date:   Thu, 17 Aug 2023 11:13:03 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Francis Laniel <flaniel@linux.microsoft.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 1/1] tracing/kprobe: Add multi-probe support for
- 'perf_kprobe' PMU
-Message-ID: <20230817111303.47b50197@gandalf.local.home>
-In-Reply-To: <4852847.31r3eYUQgx@pwmachine>
-References: <20230816163517.112518-1-flaniel@linux.microsoft.com>
-        <20230816163517.112518-2-flaniel@linux.microsoft.com>
-        <20230816144213.0f24cc62@gandalf.local.home>
-        <4852847.31r3eYUQgx@pwmachine>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Thu, 17 Aug 2023 13:08:32 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26FAD30F7;
+        Thu, 17 Aug 2023 10:08:28 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1bdfb11ea2aso122785ad.2;
+        Thu, 17 Aug 2023 10:08:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692292108; x=1692896908;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7NWIyxKHGTcZUh3pE/+j1hXTU1RElUSlh9m4J1oVdP0=;
+        b=XafT0oWTXXtxTncl5MhBhEkug2jSN3luOh8Zhq8IcL5f3RHZNwfr2Tb4nv1AkbTGak
+         QXfYnvUvTgxlGEDIt5WUBlHBu9ZXIixLc0w4Ljj5w7fOgoUAjyoVjimM3CQ8B4yO2QNJ
+         zUp8d15eizIQ4yewsaBmNwz2NmU2uUvqG1oIltLtbrAn6d8IMjw7py6qk6kyziFFqpIk
+         u2OZT4Shx4cond5guUG8TFA1RWgwfzhvCfxYF7eXdJKtZFMLW16k3GknxJm2JmCNa70g
+         bJrI3URMs/q9XSxVVhgrPNMdvnPfdDaT0Co0X3GTBgwJOB5+YsM5UAAX6MRDJXpuZQ0o
+         zl6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692292108; x=1692896908;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7NWIyxKHGTcZUh3pE/+j1hXTU1RElUSlh9m4J1oVdP0=;
+        b=hUEwP0dca3J3z3YveIWw3/ns4CCywLbuY3yXV9lEZeGVMZVFJdF37yTDu8/ruFx5h9
+         prgZL1j7EpoYcGMtLFLwhb9ffk0vX37kHuHag6AFDOjZnvq+EwfKBVu1gKbbAV4O5RKS
+         JTLFPAJ7aNevuFORoOWOBjAlhJjx9JRDoEk5xE4urpihSlpuLNtlTzrro0an5hOd4A1q
+         czgsZyLAa935bSdbtLdSEwgMMUF6SqVHbe7X35eIGcpsmfc9kWPTnVyXGa2xrLZOY1Hr
+         XbLS0Y6xH5K2LsAUODAZYAxa8fdThr4qJohIDu+JhzwbL1K57I5rwo6tIY8GXs1WY41J
+         q6HQ==
+X-Gm-Message-State: AOJu0Yx3m3wQjb8PTLz8+y3a56EOb7K7YD7MsG7gwf6BQlJs8Jcmrpr6
+        e2fr1v+F118OdDBBOU5ZG+A=
+X-Google-Smtp-Source: AGHT+IFr+3gG7MMJKJLLVSDApdX7jk8TogII4+aNPg9CqA42X0ljIhGCtwyPlK1gzyJ5sARF+JiFPQ==
+X-Received: by 2002:a17:902:ea02:b0:1b7:e86f:7631 with SMTP id s2-20020a170902ea0200b001b7e86f7631mr14797plg.19.1692292108334;
+        Thu, 17 Aug 2023 10:08:28 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:c009:58e9:c155:d912:d62a:88e5])
+        by smtp.gmail.com with ESMTPSA id jw4-20020a170903278400b001bf20c806adsm19106plb.50.2023.08.17.10.08.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Aug 2023 10:08:27 -0700 (PDT)
+From:   Atul Kumar Pant <atulpant.linux@gmail.com>
+To:     naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
+        davem@davemloft.net, mhiramat@kernel.org
+Cc:     Atul Kumar Pant <atulpant.linux@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org, shuah@kernel.org
+Subject: [PATCH v1] samples: kprobes: Fixes a typo
+Date:   Thu, 17 Aug 2023 22:38:19 +0530
+Message-Id: <20230817170819.77857-1-atulpant.linux@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 17 Aug 2023 12:59:30 +0200
-Francis Laniel <flaniel@linux.microsoft.com> wrote:
+Fixes typo in a function name.
 
-> > Why can't you just pass in the address like sysfs does?  
-> 
-> To get the addresses from /proc/kallsyms, you need to either have CAP_SYSLOG 
-> or even CAP_SYS_ADMIN.
-> But to call perf_event_open(), you only need CAP_PERFMON.
-> This way, by giving only the name you can trace function with less privileges 
-> (i.e. without CAP_SYS_ADMIN).
-> Please correct me if I am wrong as I am not an expert in knowing the minimal 
-> set of capabilities you need to trace.
+Signed-off-by: Atul Kumar Pant <atulpant.linux@gmail.com>
+---
+ samples/kprobes/kretprobe_example.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I wonder if we should add an option to put in the non-relocated address?
-One that can be acquired by debuginfo in the vmlinux. I'm assuming that the
-kernel has access to the added offset (I haven't looked). If it does, then
-we could allow users to just add something like "+@0xffffffffdeadbeef" and
-add the relocation offset to get to the mapped address of the function.
+diff --git a/samples/kprobes/kretprobe_example.c b/samples/kprobes/kretprobe_example.c
+index cbf16542d84e..ed79fd3d48fb 100644
+--- a/samples/kprobes/kretprobe_example.c
++++ b/samples/kprobes/kretprobe_example.c
+@@ -35,7 +35,7 @@ struct my_data {
+ 	ktime_t entry_stamp;
+ };
+ 
+-/* Here we use the entry_hanlder to timestamp function entry */
++/* Here we use the entry_handler to timestamp function entry */
+ static int entry_handler(struct kretprobe_instance *ri, struct pt_regs *regs)
+ {
+ 	struct my_data *data;
+-- 
+2.25.1
 
-This would allow those without kallsym privileges to pass in kernel address
-for tracing.
-
--- Steve
