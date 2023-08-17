@@ -2,256 +2,251 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5428DC27C7A
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 17 Aug 2023 11:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE66EB64DD
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 17 Aug 2023 11:52:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350129AbjHQLGx (ORCPT
+        id S1350476AbjHQLwO (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 17 Aug 2023 07:06:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59486 "EHLO
+        Thu, 17 Aug 2023 07:52:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350117AbjHQLGZ (ORCPT
+        with ESMTP id S1350516AbjHQLvo (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 17 Aug 2023 07:06:25 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E62E8269F;
-        Thu, 17 Aug 2023 04:06:23 -0700 (PDT)
-Received: from pwmachine.localnet (85-170-34-233.rev.numericable.fr [85.170.34.233])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 5F562211F7AF;
-        Thu, 17 Aug 2023 04:06:22 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5F562211F7AF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1692270383;
-        bh=aEZe/hJNGQOBG4jfce7XO2o4mJRIPyUtsB2AKU9vS5U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gCqR3gyvK50MptEjrP213T+4WGUMp8Yvfr14KvU8/RGh40D1cDWGkqdcOJaQ5bGdk
-         Fz1iy3XwPHERZSFnNxRANWNtrHZ/YwN2CgwBwR3Xixa/8eoFuETPUumrMIAxl28xrE
-         j5F8F9jTEk2K8BO/27svBxwYVNL9gNGauBp4DQAc=
-From:   Francis Laniel <flaniel@linux.microsoft.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 1/1] tracing/kprobe: Add multi-probe support for 'perf_kprobe' PMU
-Date:   Thu, 17 Aug 2023 13:06:20 +0200
-Message-ID: <2154216.irdbgypaU6@pwmachine>
-In-Reply-To: <20230817165057.bd073da472851462e30ef145@kernel.org>
-References: <20230816163517.112518-1-flaniel@linux.microsoft.com> <20230816163517.112518-2-flaniel@linux.microsoft.com> <20230817165057.bd073da472851462e30ef145@kernel.org>
+        Thu, 17 Aug 2023 07:51:44 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 049B63593;
+        Thu, 17 Aug 2023 04:51:20 -0700 (PDT)
+Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.57])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4RRNbT0Zdnz1GDV1;
+        Thu, 17 Aug 2023 19:49:57 +0800 (CST)
+Received: from localhost.localdomain (10.67.175.61) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Thu, 17 Aug 2023 19:51:18 +0800
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+To:     <rostedt@goodmis.org>
+CC:     <laijs@cn.fujitsu.com>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <mhiramat@kernel.org>,
+        <zhengyejian1@huawei.com>
+Subject: [RFC PATCH] tracing: Introduce pipe_cpumask to avoid race on trace_pipes
+Date:   Thu, 17 Aug 2023 19:50:57 +0800
+Message-ID: <20230817115057.1637676-1-zhengyejian1@huawei.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230816152308.5f887721@gandalf.local.home>
+References: <20230816152308.5f887721@gandalf.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.175.61]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi.
+There is race issue when concurrently splice_read main trace_pipe and
+per_cpu trace_pipes which will result in data read out being different
+from what actually writen.
 
-Le jeudi 17 ao=FBt 2023, 09:50:57 CEST Masami Hiramatsu a =E9crit :
-> Hi,
->=20
-> On Wed, 16 Aug 2023 18:35:17 +0200
->=20
-> Francis Laniel <flaniel@linux.microsoft.com> wrote:
-> > When using sysfs, it is possible to create kprobe for several kernel
-> > functions sharing the same name, but of course with different addresses,
-> > by writing their addresses in kprobe_events file.
-> >=20
-> > When using PMU, if only the symbol name is given, the event will be
-> > created for the first address which matches the symbol, as returned by
-> > kallsyms_lookup_name().
->=20
-> Do you mean probing the same name symbols? Yes, it is intended behavior,
-> since it is not always true that the same name function has the same
-> prototype (it is mostly true but is not ensured), it is better to leave
-> user to decide which one is what you want to probe.
+As suggested by Steven:
+  > I believe we should add a ref count to trace_pipe and the per_cpu
+  > trace_pipes, where if they are opened, nothing else can read it.
+  >
+  > Opening trace_pipe locks all per_cpu ref counts, if any of them are
+  > open, then the trace_pipe open will fail (and releases any ref counts
+  > it had taken).
+  >
+  > Opening a per_cpu trace_pipe will up the ref count for just that
+  > CPU buffer. This will allow multiple tasks to read different per_cpu
+  > trace_pipe files, but will prevent the main trace_pipe file from
+  > being opened.
 
-This is what I meant.
-I also share your mind regarding leaving the users deciding which one they=
-=20
-want to probe but in my case (which I agree is a bit a corner one) it leade=
-d=20
-me to misunderstanding as the PMU kprobe was only added to the first=20
-ntfs_file_write_iter() which is not the one for ntfs3.
+But because we only need to know whether per_cpu trace_pipe is open or
+not, using a cpumask instead of using ref count may be easier.
 
-> Have you used 'perf probe' tool? It tries to find the appropriate function
-> by line number and creates the probe by 'text+OFFSET' style, not by symbo=
-l.
-> I think this is the correct way to do that, because user will not know
-> which 'address' of the symbol is what the user want.
+After this patch, users will find that:
+ - Main trace_pipe can be opened by only one user, and if it is
+   opened, all per_cpu trace_pipes cannot be opened;
+ - Per_cpu trace_pipes can be opened by multiple users, but each per_cpu
+   trace_pipe can only be opened by one user. And if one of them is
+   opened, main trace_pipe cannot be opened.
 
-'perf probe' perfectly does the trick, as it would find all the kernel=20
-addresses which correspond to the symbol name and create as many probes as=
-=20
-corresponding symbols [1]:
-root@vm-amd64:~# perf probe --add ntfs_file_write_iter
+Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+---
 
-Added new events:
-  probe:ntfs_file_write_iter (on ntfs_file_write_iter)
-  probe:ntfs_file_write_iter (on ntfs_file_write_iter)
+> Does that work for this?
 
-You can now use it in all perf tools, such as:
+Hi, Steven, how about using a cpumask instead of ref count?
+This patch will also prevent main trace_pipe or anyone per_cpu trace_pipe
+from being opened by multiple people at the same time.
 
-        perf record -e probe:ntfs_file_write_iter -aR sleep 1
-root@vm-amd64:~# cat /sys/kernel/tracing/kprobe_events
-p:probe/ntfs_file_write_iter _text+5088544
-p:probe/ntfs_file_write_iter _text+5278560
+ kernel/trace/trace.c | 56 ++++++++++++++++++++++++++++++++++++++------
+ kernel/trace/trace.h |  2 ++
+ 2 files changed, 51 insertions(+), 7 deletions(-)
 
-> Thought?
-
-This contribution is basically here to sort of mimic what perf does but wit=
-h=20
-PMU kprobes, as this is not possible to write in a sysfs file with this typ=
-e of=20
-probe.
-
->=20
-> Thank you,
->=20
-> > The idea here is to search all kernel functions which match this symbol
-> > and
-> > create a trace_kprobe for each of them.
-> > All these trace_kprobes are linked together by sharing the same
-> > trace_probe.
-> >=20
-> > Signed-off-by: Francis Laniel <flaniel@linux.microsoft.com>
-> > ---
-> >=20
-> >  kernel/trace/trace_kprobe.c | 86 +++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 86 insertions(+)
-> >=20
-> > diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> > index 1b3fa7b854aa..08580f1466c7 100644
-> > --- a/kernel/trace/trace_kprobe.c
-> > +++ b/kernel/trace/trace_kprobe.c
-> > @@ -1682,13 +1682,42 @@ static int unregister_kprobe_event(struct
-> > trace_kprobe *tk)>=20
-> >  }
-> > =20
-> >  #ifdef CONFIG_PERF_EVENTS
-> >=20
-> > +
-> > +struct address_array {
-> > +	unsigned long *addrs;
-> > +	size_t size;
-> > +};
-> > +
-> > +static int add_addr(void *data, unsigned long addr)
-> > +{
-> > +	struct address_array *array =3D data;
-> > +	unsigned long *p;
-> > +
-> > +	array->size++;
-> > +	p =3D krealloc(array->addrs,
-> > +				sizeof(*array->addrs) * array->size,
-> > +				GFP_KERNEL);
-> > +	if (!p) {
-> > +		kfree(array->addrs);
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	array->addrs =3D p;
-> > +	array->addrs[array->size - 1] =3D addr;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >=20
-> >  /* create a trace_kprobe, but don't add it to global lists */
-> >  struct trace_event_call *
-> >  create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
-> > =20
-> >  			  bool is_return)
-> > =20
-> >  {
-> > =20
-> >  	enum probe_print_type ptype;
-> >=20
-> > +	struct address_array array;
-> >=20
-> >  	struct trace_kprobe *tk;
-> >=20
-> > +	unsigned long func_addr;
-> > +	unsigned int i;
-> >=20
-> >  	int ret;
-> >  	char *event;
-> >=20
-> > @@ -1722,7 +1751,64 @@ create_local_trace_kprobe(char *func, void *addr,
-> > unsigned long offs,>=20
-> >  	if (ret < 0)
-> >  =09
-> >  		goto error;
-> >=20
-> > +	array.addrs =3D NULL;
-> > +	array.size =3D 0;
-> > +	ret =3D kallsyms_on_each_match_symbol(add_addr, func, &array);
-> > +	if (ret)
-> > +		goto error_free;
-> > +
-> > +	if (array.size =3D=3D 1)
-> > +		goto end;
-> > +
-> > +	/*
-> > +	 * Below loop allocates a trace_kprobe for each function with the same
-> > +	 * name in kernel source code.
-> > +	 * All this differente trace_kprobes will be linked together through
-> > +	 * append_trace_kprobe().
-> > +	 * NOTE append_trace_kprobe() is called in register_trace_kprobe()=20
-which
-> > +	 * is called when a kprobe is added through sysfs.
-> > +	 */
-> > +	func_addr =3D kallsyms_lookup_name(func);
-> > +	for (i =3D 0; i < array.size; i++) {
-> > +		struct trace_kprobe *tk_same_name;
-> > +		unsigned long address;
-> > +
-> > +		address =3D array.addrs[i];
-> > +		/* Skip the function address as we already registered it. */
-> > +		if (address =3D=3D func_addr)
-> > +			continue;
-> > +
-> > +		/*
-> > +		 * alloc_trace_kprobe() first considers symbol name, so we set
-> > +		 * this to NULL to allocate this kprobe on the given address.
-> > +		 */
-> > +		tk_same_name =3D alloc_trace_kprobe(KPROBE_EVENT_SYSTEM, event,
-> > +						  (void *)address, NULL, offs,
-> > +						  0 /* maxactive */,
-> > +						  0 /* nargs */, is_return);
-> > +
-> > +		if (IS_ERR(tk_same_name)) {
-> > +			ret =3D -ENOMEM;
-> > +			goto error_free;
-> > +		}
-> > +
-> > +		init_trace_event_call(tk_same_name);
-> > +
-> > +		if (traceprobe_set_print_fmt(&tk_same_name->tp, ptype) < 0) {
-> > +			ret =3D -ENOMEM;
-> > +			goto error_free;
-> > +		}
-> > +
-> > +		ret =3D append_trace_kprobe(tk_same_name, tk);
-> > +		if (ret)
-> > +			goto error_free;
-> > +	}
-> > +
-> > +end:
-> > +	kfree(array.addrs);
-> >=20
-> >  	return trace_probe_event_call(&tk->tp);
-> >=20
-> > +error_free:
-> > +	kfree(array.addrs);
-> >=20
-> >  error:
-> >  	free_trace_kprobe(tk);
-> >  	return ERR_PTR(ret);
-
-=2D--
-[1]: https://github.com/torvalds/linux/blob/
-57012c57536f8814dec92e74197ee96c3498d24e/tools/perf/util/probe-event.c#L298=
-9-
-L2993
-
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index b8870078ef58..73f6f4d10d43 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6705,24 +6705,54 @@ tracing_max_lat_write(struct file *filp, const char __user *ubuf,
+ 
+ #endif
+ 
++static int open_pipe_on_cpu(struct trace_array *tr, int cpu)
++{
++	if (cpu == RING_BUFFER_ALL_CPUS) {
++		if (cpumask_empty(tr->pipe_cpumask)) {
++			cpumask_setall(tr->pipe_cpumask);
++			return 0;
++		}
++	} else {
++		if (!cpumask_test_cpu(cpu, tr->pipe_cpumask)) {
++			cpumask_set_cpu(cpu, tr->pipe_cpumask);
++			return 0;
++		}
++	}
++	return -EBUSY;
++}
++
++static void close_pipe_on_cpu(struct trace_array *tr, int cpu)
++{
++	if (cpu == RING_BUFFER_ALL_CPUS) {
++		WARN_ON(!cpumask_full(tr->pipe_cpumask));
++		cpumask_clear(tr->pipe_cpumask);
++	} else {
++		WARN_ON(!cpumask_test_cpu(cpu, tr->pipe_cpumask));
++		cpumask_clear_cpu(cpu, tr->pipe_cpumask);
++	}
++}
++
+ static int tracing_open_pipe(struct inode *inode, struct file *filp)
+ {
+ 	struct trace_array *tr = inode->i_private;
+ 	struct trace_iterator *iter;
+ 	int ret;
++	int cpu = tracing_get_cpu(inode);
+ 
+ 	ret = tracing_check_open_get_tr(tr);
+ 	if (ret)
+ 		return ret;
+ 
+ 	mutex_lock(&trace_types_lock);
++	ret = open_pipe_on_cpu(tr, cpu);
++	if (ret)
++		goto fail_pipe_on_cpu;
+ 
+ 	/* create a buffer to store the information to pass to userspace */
+ 	iter = kzalloc(sizeof(*iter), GFP_KERNEL);
+ 	if (!iter) {
+ 		ret = -ENOMEM;
+-		__trace_array_put(tr);
+-		goto out;
++		goto fail_alloc_iter;
+ 	}
+ 
+ 	trace_seq_init(&iter->seq);
+@@ -6745,7 +6775,7 @@ static int tracing_open_pipe(struct inode *inode, struct file *filp)
+ 
+ 	iter->tr = tr;
+ 	iter->array_buffer = &tr->array_buffer;
+-	iter->cpu_file = tracing_get_cpu(inode);
++	iter->cpu_file = cpu;
+ 	mutex_init(&iter->mutex);
+ 	filp->private_data = iter;
+ 
+@@ -6755,12 +6785,15 @@ static int tracing_open_pipe(struct inode *inode, struct file *filp)
+ 	nonseekable_open(inode, filp);
+ 
+ 	tr->trace_ref++;
+-out:
++
+ 	mutex_unlock(&trace_types_lock);
+ 	return ret;
+ 
+ fail:
+ 	kfree(iter);
++fail_alloc_iter:
++	close_pipe_on_cpu(tr, cpu);
++fail_pipe_on_cpu:
+ 	__trace_array_put(tr);
+ 	mutex_unlock(&trace_types_lock);
+ 	return ret;
+@@ -6777,7 +6810,7 @@ static int tracing_release_pipe(struct inode *inode, struct file *file)
+ 
+ 	if (iter->trace->pipe_close)
+ 		iter->trace->pipe_close(iter);
+-
++	close_pipe_on_cpu(tr, iter->cpu_file);
+ 	mutex_unlock(&trace_types_lock);
+ 
+ 	free_cpumask_var(iter->started);
+@@ -9441,6 +9474,9 @@ static struct trace_array *trace_array_create(const char *name)
+ 	if (!alloc_cpumask_var(&tr->tracing_cpumask, GFP_KERNEL))
+ 		goto out_free_tr;
+ 
++	if (!alloc_cpumask_var(&tr->pipe_cpumask, GFP_KERNEL))
++		goto out_free_tr;
++
+ 	tr->trace_flags = global_trace.trace_flags & ~ZEROED_TRACE_FLAGS;
+ 
+ 	cpumask_copy(tr->tracing_cpumask, cpu_all_mask);
+@@ -9482,6 +9518,7 @@ static struct trace_array *trace_array_create(const char *name)
+  out_free_tr:
+ 	ftrace_free_ftrace_ops(tr);
+ 	free_trace_buffers(tr);
++	free_cpumask_var(tr->pipe_cpumask);
+ 	free_cpumask_var(tr->tracing_cpumask);
+ 	kfree(tr->name);
+ 	kfree(tr);
+@@ -9584,6 +9621,7 @@ static int __remove_instance(struct trace_array *tr)
+ 	}
+ 	kfree(tr->topts);
+ 
++	free_cpumask_var(tr->pipe_cpumask);
+ 	free_cpumask_var(tr->tracing_cpumask);
+ 	kfree(tr->name);
+ 	kfree(tr);
+@@ -10381,12 +10419,14 @@ __init static int tracer_alloc_buffers(void)
+ 	if (trace_create_savedcmd() < 0)
+ 		goto out_free_temp_buffer;
+ 
++	if (!alloc_cpumask_var(&global_trace.pipe_cpumask, GFP_KERNEL))
++		goto out_free_savedcmd;
++
+ 	/* TODO: make the number of buffers hot pluggable with CPUS */
+ 	if (allocate_trace_buffers(&global_trace, ring_buf_size) < 0) {
+ 		MEM_FAIL(1, "tracer: failed to allocate ring buffer!\n");
+-		goto out_free_savedcmd;
++		goto out_free_pipe_cpumask;
+ 	}
+-
+ 	if (global_trace.buffer_disabled)
+ 		tracing_off();
+ 
+@@ -10439,6 +10479,8 @@ __init static int tracer_alloc_buffers(void)
+ 
+ 	return 0;
+ 
++out_free_pipe_cpumask:
++	free_cpumask_var(global_trace.pipe_cpumask);
+ out_free_savedcmd:
+ 	free_saved_cmdlines_buffer(savedcmd);
+ out_free_temp_buffer:
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index e1edc2197fc8..53ac0f7780c2 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -377,6 +377,8 @@ struct trace_array {
+ 	struct list_head	events;
+ 	struct trace_event_file *trace_marker_file;
+ 	cpumask_var_t		tracing_cpumask; /* only trace on set CPUs */
++	/* one per_cpu trace_pipe can be opened by only one user */
++	cpumask_var_t		pipe_cpumask;
+ 	int			ref;
+ 	int			trace_ref;
+ #ifdef CONFIG_FUNCTION_TRACER
+-- 
+2.25.1
 
