@@ -2,38 +2,42 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D9AC30633
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 17 Aug 2023 15:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76029C3063E
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 17 Aug 2023 15:13:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352715AbjHQPGI (ORCPT
+        id S1352926AbjHQPNF (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 17 Aug 2023 11:06:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35502 "EHLO
+        Thu, 17 Aug 2023 11:13:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352743AbjHQPF7 (ORCPT
+        with ESMTP id S1353047AbjHQPNC (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 17 Aug 2023 11:05:59 -0400
+        Thu, 17 Aug 2023 11:13:02 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABFEA30E9;
-        Thu, 17 Aug 2023 08:05:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B27752705;
+        Thu, 17 Aug 2023 08:12:59 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4239B6157E;
-        Thu, 17 Aug 2023 15:05:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10394C433C8;
-        Thu, 17 Aug 2023 15:05:47 +0000 (UTC)
-Date:   Thu, 17 Aug 2023 11:05:53 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 93C5B65C96;
+        Thu, 17 Aug 2023 15:12:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76C4DC433C8;
+        Thu, 17 Aug 2023 15:12:58 +0000 (UTC)
+Date:   Thu, 17 Aug 2023 11:13:03 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sven Schnelle <svens@linux.ibm.com>
+To:     Francis Laniel <flaniel@linux.microsoft.com>
 Cc:     linux-kernel@vger.kernel.org,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH RESEND v3 0/3] few fixes for synthetic trace events
-Message-ID: <20230817110553.08dbd536@gandalf.local.home>
-In-Reply-To: <20230816154928.4171614-1-svens@linux.ibm.com>
-References: <20230816154928.4171614-1-svens@linux.ibm.com>
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v1 1/1] tracing/kprobe: Add multi-probe support for
+ 'perf_kprobe' PMU
+Message-ID: <20230817111303.47b50197@gandalf.local.home>
+In-Reply-To: <4852847.31r3eYUQgx@pwmachine>
+References: <20230816163517.112518-1-flaniel@linux.microsoft.com>
+        <20230816163517.112518-2-flaniel@linux.microsoft.com>
+        <20230816144213.0f24cc62@gandalf.local.home>
+        <4852847.31r3eYUQgx@pwmachine>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -42,37 +46,26 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 16 Aug 2023 17:49:25 +0200
-Sven Schnelle <svens@linux.ibm.com> wrote:
+On Thu, 17 Aug 2023 12:59:30 +0200
+Francis Laniel <flaniel@linux.microsoft.com> wrote:
 
-> Hi Steven,
+> > Why can't you just pass in the address like sysfs does?  
 > 
-> I'm now sending these patches in one patchset, because the second patch
-> has a dependeny on the union vs. cast fix.
+> To get the addresses from /proc/kallsyms, you need to either have CAP_SYSLOG 
+> or even CAP_SYS_ADMIN.
+> But to call perf_event_open(), you only need CAP_PERFMON.
+> This way, by giving only the name you can trace function with less privileges 
+> (i.e. without CAP_SYS_ADMIN).
+> Please correct me if I am wrong as I am not an expert in knowing the minimal 
+> set of capabilities you need to trace.
 
-Thanks. I'm currently waiting on some other fixes before running them all
-through my tests before sending them off to Linus. If they are not ready by
-tomorrow, I'll just kick off my tests without them.
+I wonder if we should add an option to put in the non-relocated address?
+One that can be acquired by debuginfo in the vmlinux. I'm assuming that the
+kernel has access to the added offset (I haven't looked). If it does, then
+we could allow users to just add something like "+@0xffffffffdeadbeef" and
+add the relocation offset to get to the mapped address of the function.
+
+This would allow those without kallsym privileges to pass in kernel address
+for tracing.
 
 -- Steve
-
-
-> 
-> Changes in v3:
-> - remove superfluous struct around union trace_synth_field
-> 
-> Changes in v2:
-> - cosmetic changes
-> - add struct trace_dynamic_info to include/linux/trace_events.h
-> 
-> Sven Schnelle (3):
->   tracing/synthetic: use union instead of casts
->   tracing/synthetic: skip first entry for stack traces
->   tracing/synthetic: allocate one additional element for size
-> 
->  include/linux/trace_events.h      |  11 ++++
->  kernel/trace/trace.h              |   8 +++
->  kernel/trace/trace_events_synth.c | 103 ++++++++++++------------------
->  3 files changed, 60 insertions(+), 62 deletions(-)
-> 
-
