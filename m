@@ -2,41 +2,41 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B3AC2FC0E
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 17 Aug 2023 11:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5428DC27C7A
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 17 Aug 2023 11:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239417AbjHQK7w (ORCPT
+        id S1350129AbjHQLGx (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 17 Aug 2023 06:59:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47936 "EHLO
+        Thu, 17 Aug 2023 07:06:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350128AbjHQK7g (ORCPT
+        with ESMTP id S1350117AbjHQLGZ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 17 Aug 2023 06:59:36 -0400
+        Thu, 17 Aug 2023 07:06:25 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1D98A2D71;
-        Thu, 17 Aug 2023 03:59:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E62E8269F;
+        Thu, 17 Aug 2023 04:06:23 -0700 (PDT)
 Received: from pwmachine.localnet (85-170-34-233.rev.numericable.fr [85.170.34.233])
-        by linux.microsoft.com (Postfix) with ESMTPSA id A5CC8211F7AC;
-        Thu, 17 Aug 2023 03:59:32 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A5CC8211F7AC
+        by linux.microsoft.com (Postfix) with ESMTPSA id 5F562211F7AF;
+        Thu, 17 Aug 2023 04:06:22 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5F562211F7AF
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1692269973;
-        bh=XYAu3PU0hi09EaHGm5pCzY46YMbfZd395y09qNxIEvY=;
+        s=default; t=1692270383;
+        bh=aEZe/hJNGQOBG4jfce7XO2o4mJRIPyUtsB2AKU9vS5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HN28jNKE3EtpWKwxq79YlaKJFwZb5oytxI4UqTL4SC3P6xqERzh1MQgWUGc8GKxHs
-         ZdRfTr91iSaJj73Skw6dfS2DWt1S8dwaHS7HYmhr0TpcvVHFjU6oMz2Dx41/6O2Mac
-         H34LKf08GokPuOHi/C53XN+zDePKTExnh6UXkhEk=
+        b=gCqR3gyvK50MptEjrP213T+4WGUMp8Yvfr14KvU8/RGh40D1cDWGkqdcOJaQ5bGdk
+         Fz1iy3XwPHERZSFnNxRANWNtrHZ/YwN2CgwBwR3Xixa/8eoFuETPUumrMIAxl28xrE
+         j5F8F9jTEk2K8BO/27svBxwYVNL9gNGauBp4DQAc=
 From:   Francis Laniel <flaniel@linux.microsoft.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org,
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         linux-trace-kernel@vger.kernel.org
 Subject: Re: [RFC PATCH v1 1/1] tracing/kprobe: Add multi-probe support for 'perf_kprobe' PMU
-Date:   Thu, 17 Aug 2023 12:59:30 +0200
-Message-ID: <4852847.31r3eYUQgx@pwmachine>
-In-Reply-To: <20230816144213.0f24cc62@gandalf.local.home>
-References: <20230816163517.112518-1-flaniel@linux.microsoft.com> <20230816163517.112518-2-flaniel@linux.microsoft.com> <20230816144213.0f24cc62@gandalf.local.home>
+Date:   Thu, 17 Aug 2023 13:06:20 +0200
+Message-ID: <2154216.irdbgypaU6@pwmachine>
+In-Reply-To: <20230817165057.bd073da472851462e30ef145@kernel.org>
+References: <20230816163517.112518-1-flaniel@linux.microsoft.com> <20230816163517.112518-2-flaniel@linux.microsoft.com> <20230817165057.bd073da472851462e30ef145@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="iso-8859-1"
@@ -44,44 +44,75 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Le mercredi 16 ao=FBt 2023, 20:42:13 CEST Steven Rostedt a =E9crit :
+Hi.
+
+Le jeudi 17 ao=FBt 2023, 09:50:57 CEST Masami Hiramatsu a =E9crit :
+> Hi,
+>=20
 > On Wed, 16 Aug 2023 18:35:17 +0200
 >=20
 > Francis Laniel <flaniel@linux.microsoft.com> wrote:
 > > When using sysfs, it is possible to create kprobe for several kernel
 > > functions sharing the same name, but of course with different addresses,
 > > by writing their addresses in kprobe_events file.
->=20
-> So this only happens if you write in the address?
-
-=46rom my understanding yes, but I will double check just in case.
-
+> >=20
 > > When using PMU, if only the symbol name is given, the event will be
 > > created for the first address which matches the symbol, as returned by
 > > kallsyms_lookup_name().
+>=20
+> Do you mean probing the same name symbols? Yes, it is intended behavior,
+> since it is not always true that the same name function has the same
+> prototype (it is mostly true but is not ensured), it is better to leave
+> user to decide which one is what you want to probe.
+
+This is what I meant.
+I also share your mind regarding leaving the users deciding which one they=
+=20
+want to probe but in my case (which I agree is a bit a corner one) it leade=
+d=20
+me to misunderstanding as the PMU kprobe was only added to the first=20
+ntfs_file_write_iter() which is not the one for ntfs3.
+
+> Have you used 'perf probe' tool? It tries to find the appropriate function
+> by line number and creates the probe by 'text+OFFSET' style, not by symbo=
+l.
+> I think this is the correct way to do that, because user will not know
+> which 'address' of the symbol is what the user want.
+
+'perf probe' perfectly does the trick, as it would find all the kernel=20
+addresses which correspond to the symbol name and create as many probes as=
+=20
+corresponding symbols [1]:
+root@vm-amd64:~# perf probe --add ntfs_file_write_iter
+
+Added new events:
+  probe:ntfs_file_write_iter (on ntfs_file_write_iter)
+  probe:ntfs_file_write_iter (on ntfs_file_write_iter)
+
+You can now use it in all perf tools, such as:
+
+        perf record -e probe:ntfs_file_write_iter -aR sleep 1
+root@vm-amd64:~# cat /sys/kernel/tracing/kprobe_events
+p:probe/ntfs_file_write_iter _text+5088544
+p:probe/ntfs_file_write_iter _text+5278560
+
+> Thought?
+
+This contribution is basically here to sort of mimic what perf does but wit=
+h=20
+PMU kprobes, as this is not possible to write in a sysfs file with this typ=
+e of=20
+probe.
+
+>=20
+> Thank you,
+>=20
 > > The idea here is to search all kernel functions which match this symbol
 > > and
 > > create a trace_kprobe for each of them.
 > > All these trace_kprobes are linked together by sharing the same
 > > trace_probe.
-> So this makes the PMU version enable all by name, so there's still a
-> disconnect between how sysfs works and how PMU does.
->=20
-> Why can't you just pass in the address like sysfs does?
-
-To get the addresses from /proc/kallsyms, you need to either have CAP_SYSLO=
-G=20
-or even CAP_SYS_ADMIN.
-But to call perf_event_open(), you only need CAP_PERFMON.
-This way, by giving only the name you can trace function with less privileg=
-es=20
-(i.e. without CAP_SYS_ADMIN).
-Please correct me if I am wrong as I am not an expert in knowing the minima=
-l=20
-set of capabilities you need to trace.
-
-> -- Steve
->=20
+> >=20
 > > Signed-off-by: Francis Laniel <flaniel@linux.microsoft.com>
 > > ---
 > >=20
@@ -217,6 +248,10 @@ which
 > >  	free_trace_kprobe(tk);
 > >  	return ERR_PTR(ret);
 
-
+=2D--
+[1]: https://github.com/torvalds/linux/blob/
+57012c57536f8814dec92e74197ee96c3498d24e/tools/perf/util/probe-event.c#L298=
+9-
+L2993
 
 
