@@ -2,56 +2,56 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E039C41513
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E155C2FC14
 	for <linux-trace-kernel@archiver.kernel.org>; Thu, 17 Aug 2023 08:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349163AbjHQI56 (ORCPT
+        id S1349160AbjHQI55 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 17 Aug 2023 04:57:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59058 "EHLO
+        Thu, 17 Aug 2023 04:57:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349197AbjHQI5r (ORCPT
+        with ESMTP id S1349189AbjHQI5i (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 17 Aug 2023 04:57:47 -0400
-Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3135B26A8
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Aug 2023 01:57:46 -0700 (PDT)
-Received: by mail-oi1-x22d.google.com with SMTP id 5614622812f47-3a800814122so3154001b6e.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Aug 2023 01:57:46 -0700 (PDT)
+        Thu, 17 Aug 2023 04:57:38 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96A262D4A
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Aug 2023 01:57:37 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id 41be03b00d2f7-565e93f80f1so1801019a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Aug 2023 01:57:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692262665; x=1692867465;
+        d=chromium.org; s=google; t=1692262657; x=1692867457;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gZ7NMqvFIR2et+D8JZPMfPw5WnBck106F6tUJxbT9Gg=;
-        b=b0GhhDLSM9faSxoD0WP+TXbItwqeY4LweTgfy9B593XszXNEq91tklMLWcxdjEXQrJ
-         6VMQUM+rWR/ODEx3HE1E3XuNdEIONzAUxF7ibYt1tsebrIKpHhaXHhpXBg67/rQjFrv2
-         xLI4IRptekVy+SWo0CuEz3yJxIsjTjMsIgqK8=
+        bh=3047fudLxdi1mO3onS+rLwsUyqFYfYLDKfiuZG4YUJM=;
+        b=HJi/DlthHTk4VrLUlzPyhRI7bxeadkjObc5oNJKYFy9eYWno7RTr7MkHbC7AqqRrQy
+         WIf23ddt+p8PwFW92IqOejdVm01tJw2gdu54JH9Q2z1EuuuNF7KoqL9bYtfHq+DR/Lg4
+         NV6asjA8HFr/zxWH2ZacRMwaJ9YlT5KSrj8mw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692262665; x=1692867465;
+        d=1e100.net; s=20221208; t=1692262657; x=1692867457;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gZ7NMqvFIR2et+D8JZPMfPw5WnBck106F6tUJxbT9Gg=;
-        b=L9XbuNYgO+EJxsI/yRq4DSkEF/dXXkSbWhA+wNrRGMQ0LbBPevgZwhFhKNBGp1K4Cq
-         LXMUBDUXb0NPzkIC8Ovvy7JP4QSCqzxsTMHEKyZeiztMLLyBwqddni/led/sNskmThrf
-         hR6BMh83BXdrYQ/jLYPvEkA0wksEnKDlq2UVyWJBUVQqiyn8M6Eu6pgt9G7v7PxSSgEc
-         EcT24QUTP0lYrr32J1xERxEGVkEIYnBrDPSxXgSz6494mZsYPI4iDcPyb3/zcCupm1gB
-         aA2SD4cV/vGFFKPdvgnjJeB0fzLCBucVqFDbK6u9GkNXR0Ze3iqqyfy13RMP8KgHx4sg
-         wCXg==
-X-Gm-Message-State: AOJu0Yzh7g3o1YvqoZoax+Djl7oMrYb6fDZWjl86KUw0j9i5ryFhg1fC
-        mbUysVjNOufYZTHaKiOz1iYsn7lmsbvI4ABE8cOa6jbD63f4n3Dg
-X-Google-Smtp-Source: AGHT+IF/lZED8EmuEUmIk6G5RS65+A7NYREGfAS6ecOd1YzcZ0v6Mx9lu+wCelzhQCnQ1D518ZnjHFgRY/sYb2/L/FQ=
-X-Received: by 2002:a05:6808:14ca:b0:3a8:3155:bc2e with SMTP id
- f10-20020a05680814ca00b003a83155bc2emr355357oiw.0.1692262665550; Thu, 17 Aug
- 2023 01:57:45 -0700 (PDT)
+        bh=3047fudLxdi1mO3onS+rLwsUyqFYfYLDKfiuZG4YUJM=;
+        b=ZAv1YpDRovzkrWuPcCVOdUP2Apu5M3/qHiCq0GsUTSny6l9FkZr2KwdCwYep2HT1PC
+         IYVm88gN9m35+62C8TCpN0IEqa3+MGUjeqTdbBldZEazBVMgGhqrftcp09TC1jQ5+9mM
+         bGvYEBZNatYoBE9ScBykCAd52Obw9wy6VRJ0N8cuAQf3ZxDhqlJ3xN5Ll28i6xpqsran
+         0jKg5vQFhiysjf/vLZNQjL7Ng/feESG/GfAL5dtuwaEk9u8rbWkMtEK/QezT8P/4yU7L
+         oOy82zjutvAjNbmnj0mZneALKMgvKsEuZ1/tAss83AUAaEhvKEhg2+uUg89/BI1a1Xln
+         Fdpw==
+X-Gm-Message-State: AOJu0YwfrG2T9D4n5QYCxpH37HNtqXYfiXSxs8RJ00wwxktbRuEqBOrE
+        /mPC8n5uxnefEPjhA6EghUpu/XoeXfIWGqzdHWO6BA==
+X-Google-Smtp-Source: AGHT+IHvsMZnwwNnaI1QyczKPAq0kpcZmxmcPZ8yv+5Kpilk9edjm2psrQLXI4TMLyfn8Fm/yzzYV0A8bXR9NKZIihk=
+X-Received: by 2002:a17:90a:c086:b0:269:1e3f:a54d with SMTP id
+ o6-20020a17090ac08600b002691e3fa54dmr3685525pjs.10.1692262657084; Thu, 17 Aug
+ 2023 01:57:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <169181859570.505132.10136520092011157898.stgit@devnote2> <169181863118.505132.13233554057378608176.stgit@devnote2>
-In-Reply-To: <169181863118.505132.13233554057378608176.stgit@devnote2>
+References: <169181859570.505132.10136520092011157898.stgit@devnote2> <169181861911.505132.8322840504168319403.stgit@devnote2>
+In-Reply-To: <169181861911.505132.8322840504168319403.stgit@devnote2>
 From:   Florent Revest <revest@chromium.org>
-Date:   Thu, 17 Aug 2023 10:57:34 +0200
-Message-ID: <CABRcYm+i1PqVNUC_Hf2wsUdw8Gz-kap9YQ1zFwKKXjb7hp11bg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/8] tracing: Expose ftrace_regs regardless of CONFIG_FUNCTION_TRACER
+Date:   Thu, 17 Aug 2023 10:57:26 +0200
+Message-ID: <CABRcYmLhVxRwMYWjTE855WMg5fV+O1tLz8HJmy_6G6LK5ZEtVA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/8] fprobe: Use fprobe_regs in fprobe entry handler
 To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
@@ -75,13 +75,21 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 On Sat, Aug 12, 2023 at 7:37=E2=80=AFAM Masami Hiramatsu (Google)
 <mhiramat@kernel.org> wrote:
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -2467,7 +2467,7 @@ static int __init bpf_event_init(void)
+>  fs_initcall(bpf_event_init);
+>  #endif /* CONFIG_MODULES */
 >
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->
-> In order to be able to use ftrace_regs even from features unrelated to
-> function tracer (e.g. kretprobe), expose ftrace_regs structures and
-> APIs even if the CONFIG_FUNCTION_TRACER=3Dn.
->
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> -#ifdef CONFIG_FPROBE
+> +#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
 
-Acked-by: Florent Revest <revest@chromium.org>
+Shouldn't this be #if defined(CONFIG_FPROBE) &&
+defined(CONFIG_DYNAMIC_FTRACE_WITH_REGS) ?
+
+I believe one could build a kernel with FTRACE_WITH_REGS and without
+FPROBE and then this code would have undefined references to fprobe
+functions, wouldn't it ?
+
+And then patch 7 should be "Enable kprobe_multi feature even if
+FTRACE_WITH_REGS is disabled"
