@@ -2,86 +2,221 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6261C2FC18
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 17 Aug 2023 08:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B3AC2FC0E
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 17 Aug 2023 11:00:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349179AbjHQI6c (ORCPT
+        id S239417AbjHQK7w (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 17 Aug 2023 04:58:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41474 "EHLO
+        Thu, 17 Aug 2023 06:59:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349215AbjHQI6O (ORCPT
+        with ESMTP id S1350128AbjHQK7g (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 17 Aug 2023 04:58:14 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DEBF210E
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Aug 2023 01:58:13 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id 98e67ed59e1d1-26b5e737191so2393638a91.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Aug 2023 01:58:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692262692; x=1692867492;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ehijAG3+DimElseOvhT2ydoS3VjVdNFUrFCVSW8Tlxc=;
-        b=hSxOPHq4BKOHG2rjMx+eCEaltK6EuVzY7bFcWGYSKFEM4Ma2nvNcu1knimN7RQYL5j
-         V6ZILhSBJ4uRpu1Yex71+JSerksuhVkWPYksqQmCYT+6Ayogq/Lkm02Xf3/T44eLdmfg
-         AYrAhWo3fORH8bOal2jmfPFbxW92+q9w3Gvtc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692262692; x=1692867492;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ehijAG3+DimElseOvhT2ydoS3VjVdNFUrFCVSW8Tlxc=;
-        b=HGfjQAtpIuFvI5+H5Mjfc9L5Wu/oWyitLXFqBPEYU7JIGlcoqOROSTj0U1GRFmdnL/
-         9mcgFowywBsoC2u2zPuMU8SyR8wrA6JsjAQj0J0upZYaQb7inDxWJLSv4UlRwPLD0gyz
-         TK/T+ZI6rb/lyKyO6HTjN7c4ykFnJUhy1c5r9Gno3xY3krQrEiE/EAXAIgj9mC5ffF5C
-         grlM8YEHMppdaMbKAT5p/75QXUbimsQ9+MjKis07kYY8C7huWOpau7maYmz32DGSzvoq
-         bwDe2BdxH4PXw57hbGu4pgZQafKXh7rQtrrS0Vvw/Zqg3Cn7gmeXlkxzBy6cJ8svtNXD
-         cSUg==
-X-Gm-Message-State: AOJu0Yz3Uv2GhOuCTHtEnRSw0njYb/5yW8P/H2ydVF9qTB2W9G8xOBPX
-        kQJZ/Jd6lr0OLwxAYK3iChv4LaPI9+Pf8l1VbaAv4g==
-X-Google-Smtp-Source: AGHT+IH7wJlK1Wn93MuV/91kwcNihtgsOunIPXO95uzJnJCqLl1ks9/sg/b2XhIGI7m4uJxhwSFPfPgEM1o0qlVcsn8=
-X-Received: by 2002:a17:90b:3b49:b0:268:1be1:745a with SMTP id
- ot9-20020a17090b3b4900b002681be1745amr3423253pjb.29.1692262692654; Thu, 17
- Aug 2023 01:58:12 -0700 (PDT)
+        Thu, 17 Aug 2023 06:59:36 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1D98A2D71;
+        Thu, 17 Aug 2023 03:59:34 -0700 (PDT)
+Received: from pwmachine.localnet (85-170-34-233.rev.numericable.fr [85.170.34.233])
+        by linux.microsoft.com (Postfix) with ESMTPSA id A5CC8211F7AC;
+        Thu, 17 Aug 2023 03:59:32 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A5CC8211F7AC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1692269973;
+        bh=XYAu3PU0hi09EaHGm5pCzY46YMbfZd395y09qNxIEvY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HN28jNKE3EtpWKwxq79YlaKJFwZb5oytxI4UqTL4SC3P6xqERzh1MQgWUGc8GKxHs
+         ZdRfTr91iSaJj73Skw6dfS2DWt1S8dwaHS7HYmhr0TpcvVHFjU6oMz2Dx41/6O2Mac
+         H34LKf08GokPuOHi/C53XN+zDePKTExnh6UXkhEk=
+From:   Francis Laniel <flaniel@linux.microsoft.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v1 1/1] tracing/kprobe: Add multi-probe support for 'perf_kprobe' PMU
+Date:   Thu, 17 Aug 2023 12:59:30 +0200
+Message-ID: <4852847.31r3eYUQgx@pwmachine>
+In-Reply-To: <20230816144213.0f24cc62@gandalf.local.home>
+References: <20230816163517.112518-1-flaniel@linux.microsoft.com> <20230816163517.112518-2-flaniel@linux.microsoft.com> <20230816144213.0f24cc62@gandalf.local.home>
 MIME-Version: 1.0
-References: <169181859570.505132.10136520092011157898.stgit@devnote2> <169181869006.505132.4695602314698748304.stgit@devnote2>
-In-Reply-To: <169181869006.505132.4695602314698748304.stgit@devnote2>
-From:   Florent Revest <revest@chromium.org>
-Date:   Thu, 17 Aug 2023 10:58:01 +0200
-Message-ID: <CABRcYmLzPRZERpF2PUru7_LJOASrGp9Q=ftdxFfJYCVd0QFDJg@mail.gmail.com>
-Subject: Re: [PATCH v3 8/8] Documentations: probes: Update fprobe document to
- use ftrace_regs
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sat, Aug 12, 2023 at 7:38=E2=80=AFAM Masami Hiramatsu (Google)
-<mhiramat@kernel.org> wrote:
->
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->
-> Update fprobe document so that the entry/exit handler uses ftrace_regs
-> instead of pt_regs.
->
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Le mercredi 16 ao=FBt 2023, 20:42:13 CEST Steven Rostedt a =E9crit :
+> On Wed, 16 Aug 2023 18:35:17 +0200
+>=20
+> Francis Laniel <flaniel@linux.microsoft.com> wrote:
+> > When using sysfs, it is possible to create kprobe for several kernel
+> > functions sharing the same name, but of course with different addresses,
+> > by writing their addresses in kprobe_events file.
+>=20
+> So this only happens if you write in the address?
 
-Acked-by: Florent Revest <revest@chromium.org>
+=46rom my understanding yes, but I will double check just in case.
+
+> > When using PMU, if only the symbol name is given, the event will be
+> > created for the first address which matches the symbol, as returned by
+> > kallsyms_lookup_name().
+> > The idea here is to search all kernel functions which match this symbol
+> > and
+> > create a trace_kprobe for each of them.
+> > All these trace_kprobes are linked together by sharing the same
+> > trace_probe.
+> So this makes the PMU version enable all by name, so there's still a
+> disconnect between how sysfs works and how PMU does.
+>=20
+> Why can't you just pass in the address like sysfs does?
+
+To get the addresses from /proc/kallsyms, you need to either have CAP_SYSLO=
+G=20
+or even CAP_SYS_ADMIN.
+But to call perf_event_open(), you only need CAP_PERFMON.
+This way, by giving only the name you can trace function with less privileg=
+es=20
+(i.e. without CAP_SYS_ADMIN).
+Please correct me if I am wrong as I am not an expert in knowing the minima=
+l=20
+set of capabilities you need to trace.
+
+> -- Steve
+>=20
+> > Signed-off-by: Francis Laniel <flaniel@linux.microsoft.com>
+> > ---
+> >=20
+> >  kernel/trace/trace_kprobe.c | 86 +++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 86 insertions(+)
+> >=20
+> > diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> > index 1b3fa7b854aa..08580f1466c7 100644
+> > --- a/kernel/trace/trace_kprobe.c
+> > +++ b/kernel/trace/trace_kprobe.c
+> > @@ -1682,13 +1682,42 @@ static int unregister_kprobe_event(struct
+> > trace_kprobe *tk)>=20
+> >  }
+> > =20
+> >  #ifdef CONFIG_PERF_EVENTS
+> >=20
+> > +
+> > +struct address_array {
+> > +	unsigned long *addrs;
+> > +	size_t size;
+> > +};
+> > +
+> > +static int add_addr(void *data, unsigned long addr)
+> > +{
+> > +	struct address_array *array =3D data;
+> > +	unsigned long *p;
+> > +
+> > +	array->size++;
+> > +	p =3D krealloc(array->addrs,
+> > +				sizeof(*array->addrs) * array->size,
+> > +				GFP_KERNEL);
+> > +	if (!p) {
+> > +		kfree(array->addrs);
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	array->addrs =3D p;
+> > +	array->addrs[array->size - 1] =3D addr;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >=20
+> >  /* create a trace_kprobe, but don't add it to global lists */
+> >  struct trace_event_call *
+> >  create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
+> > =20
+> >  			  bool is_return)
+> > =20
+> >  {
+> > =20
+> >  	enum probe_print_type ptype;
+> >=20
+> > +	struct address_array array;
+> >=20
+> >  	struct trace_kprobe *tk;
+> >=20
+> > +	unsigned long func_addr;
+> > +	unsigned int i;
+> >=20
+> >  	int ret;
+> >  	char *event;
+> >=20
+> > @@ -1722,7 +1751,64 @@ create_local_trace_kprobe(char *func, void *addr,
+> > unsigned long offs,>=20
+> >  	if (ret < 0)
+> >  =09
+> >  		goto error;
+> >=20
+> > +	array.addrs =3D NULL;
+> > +	array.size =3D 0;
+> > +	ret =3D kallsyms_on_each_match_symbol(add_addr, func, &array);
+> > +	if (ret)
+> > +		goto error_free;
+> > +
+> > +	if (array.size =3D=3D 1)
+> > +		goto end;
+> > +
+> > +	/*
+> > +	 * Below loop allocates a trace_kprobe for each function with the same
+> > +	 * name in kernel source code.
+> > +	 * All this differente trace_kprobes will be linked together through
+> > +	 * append_trace_kprobe().
+> > +	 * NOTE append_trace_kprobe() is called in register_trace_kprobe()=20
+which
+> > +	 * is called when a kprobe is added through sysfs.
+> > +	 */
+> > +	func_addr =3D kallsyms_lookup_name(func);
+> > +	for (i =3D 0; i < array.size; i++) {
+> > +		struct trace_kprobe *tk_same_name;
+> > +		unsigned long address;
+> > +
+> > +		address =3D array.addrs[i];
+> > +		/* Skip the function address as we already registered it. */
+> > +		if (address =3D=3D func_addr)
+> > +			continue;
+> > +
+> > +		/*
+> > +		 * alloc_trace_kprobe() first considers symbol name, so we set
+> > +		 * this to NULL to allocate this kprobe on the given address.
+> > +		 */
+> > +		tk_same_name =3D alloc_trace_kprobe(KPROBE_EVENT_SYSTEM, event,
+> > +						  (void *)address, NULL, offs,
+> > +						  0 /* maxactive */,
+> > +						  0 /* nargs */, is_return);
+> > +
+> > +		if (IS_ERR(tk_same_name)) {
+> > +			ret =3D -ENOMEM;
+> > +			goto error_free;
+> > +		}
+> > +
+> > +		init_trace_event_call(tk_same_name);
+> > +
+> > +		if (traceprobe_set_print_fmt(&tk_same_name->tp, ptype) < 0) {
+> > +			ret =3D -ENOMEM;
+> > +			goto error_free;
+> > +		}
+> > +
+> > +		ret =3D append_trace_kprobe(tk_same_name, tk);
+> > +		if (ret)
+> > +			goto error_free;
+> > +	}
+> > +
+> > +end:
+> > +	kfree(array.addrs);
+> >=20
+> >  	return trace_probe_event_call(&tk->tp);
+> >=20
+> > +error_free:
+> > +	kfree(array.addrs);
+> >=20
+> >  error:
+> >  	free_trace_kprobe(tk);
+> >  	return ERR_PTR(ret);
+
+
+
+
