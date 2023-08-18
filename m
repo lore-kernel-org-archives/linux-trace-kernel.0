@@ -2,117 +2,110 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE37C7112F
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 18 Aug 2023 00:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 775B2C7112B
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 18 Aug 2023 00:07:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352299AbjHRABn (ORCPT
+        id S1356478AbjHRAGc (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 17 Aug 2023 20:01:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43566 "EHLO
+        Thu, 17 Aug 2023 20:06:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356496AbjHRABN (ORCPT
+        with ESMTP id S1356621AbjHRAGZ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 17 Aug 2023 20:01:13 -0400
-Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11FC13C2F;
-        Thu, 17 Aug 2023 17:01:00 -0700 (PDT)
-Received: by mail-il1-x12b.google.com with SMTP id e9e14a558f8ab-34bae82b2ffso1301285ab.1;
-        Thu, 17 Aug 2023 17:01:00 -0700 (PDT)
+        Thu, 17 Aug 2023 20:06:25 -0400
+Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33B3E3C03;
+        Thu, 17 Aug 2023 17:05:59 -0700 (PDT)
+Received: by mail-io1-xd32.google.com with SMTP id ca18e2360f4ac-77acb04309dso12134039f.2;
+        Thu, 17 Aug 2023 17:05:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692316842; x=1692921642;
-        h=to:cc:date:message-id:subject:mime-version
-         :content-transfer-encoding:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ob2V2ZAUPHW3e5EnDvRG4L5HNwkLuIUU++tOEmo/pnY=;
-        b=qfNLK2cORHJbGfKhKLYJvJ5BuBMEKl0rtq1sM9J7FUn3jbZIscnpbKCuPJnR6FCK8N
-         4dhJfD+ZbIrYveMFrLmf+/RFGRa08H9ahn2O8TIz6Qdi0CaoBJVZp+BCsuEruuQMu0xw
-         QmGsTSTGAXcPkv8PpnfUAkLzmHEThovxWaXr5wA/Xm4XcNcwp6XhHT4VOfZOu9Qvx1ZX
-         tkc/FsyYMqsuhCACSFZW9gIjKmjdDS7C6nMYABZUA+wbxrqMMUDeEWZGgT2e6grOnwOB
-         /dlw2qELd1oP8J8tqroJRfSYrAau9qUjcIi6CJs5cdfMOXJWk2JM7Rx6sQzBHbMScDM1
-         XpHQ==
+        d=gmail.com; s=20221208; t=1692317158; x=1692921958;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RwIzvkMVcbe5KhN4zVEidAVbcmW0cSGczFrySv1jt9Y=;
+        b=XFOqiwvfsHigbIpnmkkVyyimhSErU+38ZS55U/vBGL669h9pSr9dbMbJ81jdXF0x4b
+         hNAWDr39jKDY/1YQS0KZ3zSolIbsADg3kwU/q69wpFloooI7I5sAy+XVRYKGmpftkb1P
+         YP3/hdmUgKckskoTuxer1ZnDUkfAfKzPy1jy0MG2ihJUU9ZSKi7rTpys32PIOib2AWIo
+         dwUDJPCwy9KmxofVrYQ2kD0aWwgyLOHsLCfoQ0I9Qw1PMgbtE4xUHJWQhl52Jzg5mNuf
+         guyVZLMHcbdVmAICTVpQcBsxatovBsGSJktycjX+Sr1TpSuJH1VurpGnImYVcE4H6gmZ
+         W7XA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692316842; x=1692921642;
-        h=to:cc:date:message-id:subject:mime-version
-         :content-transfer-encoding:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1692317158; x=1692921958;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ob2V2ZAUPHW3e5EnDvRG4L5HNwkLuIUU++tOEmo/pnY=;
-        b=GrAA8pvTsBP84LQ3nPfdE7eX/9nUBzM19s4eLtUaF32TGbBwwWJtMfzBHaiau7hqjf
-         RS95CQ7V8R4UG9XrP75AHPtOxBu5+IdV3Wk7FvuZCVPS7xT580YVfCgCCuVBAEA//T8T
-         8j9OXsjo8bk8Q4DaykqMiIW7YYvJkuKhB8WwObkz/dVBSo9rvkS5flReaUJt+FRNXdcU
-         WKSdVKuNV3See9m9UU6EfNCYErRaLOWAMx8dnJdcyWSxIL3M3zT/phzQZy+lVzSUzJcO
-         woxdvtB+fPS6cwvFZ+Lv8gaGKlSsyNSNGpXCXVTN8kvlhxtjYx6L8i4QJxIOZxGghtYH
-         Uc9g==
-X-Gm-Message-State: AOJu0YyQGHuIFy2ccorsNWueged7VJ4XL6VyNynOb+jR3wIPOjVWunwC
-        l7nvFR/BMtdDUNh33ek2IPTGl/bpW4Xi6g==
-X-Google-Smtp-Source: AGHT+IH1vCQkmqUZlt3Ig/EPWUsNrxZqGcu80BHC0b+Ab/TOyBl/Mxi4L7sKzKqks2Z4xpX18PJ0wg==
-X-Received: by 2002:a92:da04:0:b0:345:bfc7:d527 with SMTP id z4-20020a92da04000000b00345bfc7d527mr1156798ilm.7.1692316841815;
-        Thu, 17 Aug 2023 17:00:41 -0700 (PDT)
+        bh=RwIzvkMVcbe5KhN4zVEidAVbcmW0cSGczFrySv1jt9Y=;
+        b=VSDj55FXxG4jiNPwxKzZAma1kqgvTXl5sQSAWYd+pcj1W5OChFJsupg1HRQstBlykM
+         MGa/2Z516wT3wBTpXv6SzDDmsnmuDI/AKKctJ9siinfZ4wDQu2mKAApskqxAnuMtSJ5a
+         tVzR0KmdJkiQHDatsKKTXro8pYvTM5bhW85WYQz5Wh0BFVcs4zC5qQdc2JKgdqxQW2Ul
+         A/sUuSHLdD+UVcgUjM5y++mH7Wzrk3B9vsKuQ4X7hBJIKxg2N9JY0We043Jn7OfEJYC9
+         Xj/KIU3g9kkoRoZL7mqbimOvo7j1+qOhwAOPyW/ROx8aLbSRzdf4LQ1gBuxwHj7oFpcD
+         vY4g==
+X-Gm-Message-State: AOJu0YzCA8bXGF7fVKC0bHfXMjh3l/2IpE1Kspu6/+GnaUlp7DwyR7r9
+        ofGw8Tpvc5GfWxcR4ylDvlhGYWWx2thMOw==
+X-Google-Smtp-Source: AGHT+IHStbq3NzN6dQNQrKWqG9jcfAu3ohPaix1q5u++4r9w9pldwgzS8TcP7SxxfZu2vO8zK8EkFg==
+X-Received: by 2002:a5e:c60c:0:b0:786:f352:e3d4 with SMTP id f12-20020a5ec60c000000b00786f352e3d4mr1393419iok.7.1692317158484;
+        Thu, 17 Aug 2023 17:05:58 -0700 (PDT)
 Received: from smtpclient.apple ([195.252.220.161])
-        by smtp.gmail.com with ESMTPSA id h6-20020a02cd26000000b0042af069eeefsm164232jaq.50.2023.08.17.17.00.41
+        by smtp.gmail.com with ESMTPSA id fn11-20020a056638640b00b0042b482a8763sm167066jab.70.2023.08.17.17.05.58
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Aug 2023 17:00:41 -0700 (PDT)
-From:   Sishuai Gong <sishuai.system@gmail.com>
+        Thu, 17 Aug 2023 17:05:58 -0700 (PDT)
 Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+        charset=utf-8
 Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
-Subject: [PATCH v2] tracefs: avoid changing i_mode to a temp value
-Message-Id: <AB5B0A1C-75D9-4E82-A7F0-CF7D0715587B@gmail.com>
-Date:   Thu, 17 Aug 2023 20:00:31 -0400
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-To:     rostedt@goodmis.org, mhiramat@kernel.org
+Subject: Re: [PATCH] tracefs: avoid setting i_mode to a temp value
+From:   Sishuai Gong <sishuai.system@gmail.com>
+In-Reply-To: <20230817200044.373f9655@gandalf.local.home>
+Date:   Thu, 17 Aug 2023 20:05:47 -0400
+Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <2E3B862D-9B74-44FF-B4F9-C0D7D0030EB9@gmail.com>
+References: <10CFECF7-B9FC-4562-A445-4811F4C27655@gmail.com>
+ <20230816155245.6ead4384@gandalf.local.home>
+ <A9B746AC-DF36-4ED3-BBA3-2EEC1BA166C8@gmail.com>
+ <20230817200044.373f9655@gandalf.local.home>
+To:     Steven Rostedt <rostedt@goodmis.org>
 X-Mailer: Apple Mail (2.3731.700.6)
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Right now inode->i_mode is updated twice to reach the desired value
-in tracefs_apply_options(). Because there is no lock protecting the two
-writes, other threads might read the intermediate value of =
-inode->i_mode.
 
-Thread-1			Thread-2
-// tracefs_apply_options()	//e.g., acl_permission_check
-inode->i_mode &=3D ~S_IALLUGO;
-				unsigned int mode =3D inode->i_mode;
-inode->i_mode |=3D opts->mode;
 
-I think there is no need to introduce a lock but it is better to
-only update inode->i_mode ONCE, so the readers will either see the old
-or latest value, rather than an intermediate/temporary value.
+> On Aug 17, 2023, at 8:00 PM, Steven Rostedt <rostedt@goodmis.org> =
+wrote:
+>=20
+> On Thu, 17 Aug 2023 19:47:34 -0400
+> Sishuai Gong <sishuai.system@gmail.com> wrote:
+>=20
+>>> Can you produce this race? =20
+>> This data race was detected when I was testing the kernel (e.g., =
+fuzzing)
+>> but I did not make the attempt to reproduce it.
+>=20
+> Now, I'm curious to what exactly is this fixing? The intermediate =
+value is
+> the S_IALLUGO bits cleared. Doesn't that mean that nothing has =
+permission?
+>=20
+> It's not a big deal if that's the case, as it just means things are =
+locked
+> down a bit more than normal.
+You are right. Even if the intermediate value is read, it is unlikely to =
+cause anything
+serious. The reader I observed is acl_permission_check(), which will not =
+be affected
+by the race.
 
-Signed-off-by: Sishuai Gong <sishuai.system@gmail.com>
----
- fs/tracefs/inode.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+>=20
+> My question is, do we really care, and why should we?
+This shouldn=E2=80=99t be a serious problem. Maybe we could consider =
+this patch as an
+annotation to the race.
 
-diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-index 57ac8aa4a724..0d49922f1127 100644
---- a/fs/tracefs/inode.c
-+++ b/fs/tracefs/inode.c
-@@ -290,6 +290,7 @@ static int tracefs_apply_options(struct super_block =
-*sb, bool remount)
- 	struct tracefs_fs_info *fsi =3D sb->s_fs_info;
- 	struct inode *inode =3D d_inode(sb->s_root);
- 	struct tracefs_mount_opts *opts =3D &fsi->mount_opts;
-+	umode_t tmp_mode;
-=20
- 	/*
- 	 * On remount, only reset mode/uid/gid if they were provided as =
-mount
-@@ -297,8 +298,9 @@ static int tracefs_apply_options(struct super_block =
-*sb, bool remount)
- 	 */
-=20
- 	if (!remount || opts->opts & BIT(Opt_mode)) {
--		inode->i_mode &=3D ~S_IALLUGO;
--		inode->i_mode |=3D opts->mode;
-+		tmp_mode =3D READ_ONCE(inode->i_mode) & ~S_IALLUGO;
-+		tmp_mode |=3D opts->mode;
-+		WRITE_ONCE(inode->i_mode, tmp_mode);
- 	}
-=20
- 	if (!remount || opts->opts & BIT(Opt_uid))
---=20
-2.39.2 (Apple Git-143)
+>=20
+> -- Steve
+>=20
 
