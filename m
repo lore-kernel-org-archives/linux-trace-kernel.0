@@ -2,39 +2,39 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFE8C7113C
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 18 Aug 2023 11:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED56C678DC
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 18 Aug 2023 11:02:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358666AbjHRK7v (ORCPT
+        id S1347810AbjHRLB7 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 18 Aug 2023 06:59:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42824 "EHLO
+        Fri, 18 Aug 2023 07:01:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376474AbjHRK72 (ORCPT
+        with ESMTP id S1376534AbjHRLB6 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 18 Aug 2023 06:59:28 -0400
+        Fri, 18 Aug 2023 07:01:58 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E751E270C;
-        Fri, 18 Aug 2023 03:59:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E905230C5;
+        Fri, 18 Aug 2023 04:01:55 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 84D6165D0C;
-        Fri, 18 Aug 2023 10:59:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AA83C433C8;
-        Fri, 18 Aug 2023 10:59:22 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 85DB864A3B;
+        Fri, 18 Aug 2023 11:01:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B846C433C8;
+        Fri, 18 Aug 2023 11:01:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692356365;
-        bh=mMQ7J5RUF1JjN5MTtiE+lcfraVl3bGnc5cuVC7KgcrM=;
+        s=k20201202; t=1692356514;
+        bh=7hSNv8eDnTjtYePwvMwfe0ilLiKcuhYv/oX8ohwRoT8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KU15X0leS4QoaLFds9vHlaSvTM0c2Snk8ea0scBw6OLrz6GW1rkO59jD5ZZbBFK+Q
-         jmUSbBhco/Xrwl9ZxkkpcO453/9q4y6sNV4kckFJZ7EQcCEPKV6k3r82Fs5bX12g5m
-         zhuftcyWqroE80/m14lZqkeX++zCKgT1JaECd/HB0q03Ux7Z39LJBEFJmmJ0dqkXFK
-         zVpB83NH8Bwo7SJHik6E2hC/rTM6HVcOi/vu+eVDnfMhI9ieEQZmOlj+sbkUrgdZrd
-         gp4X2Bz/N+E11WkbfGv0tf+jFJhECOjAdfeZruZtOqkUGze3B/HZiQ5OOic/2YdwEH
-         kI4eY4sQNCJWA==
-Date:   Fri, 18 Aug 2023 19:59:18 +0900
+        b=V0/1fHV+ivD5ad5/S+EYa0zA4ukXawKVPlfQJVOK7i8X2MDyjC4Hm/FTqoFo5S5G0
+         xIjHJcxyqHfD5Lj27zk7OOAiRdRFRfV94Qr5OX/r0fgUzBk3NtS9DBiQuIMMG7rIEs
+         oEfQk5s+ejjlTb/Q8sWF1Q1ZKFvqGzqczi+sNecyxUlD+y5hgV0PNCRvi4POgqSAGG
+         vOKUqATOchaBb/apLmQHmoSw0hDqG40qCPgWfC6SGOU7Au/hZpJyb9KGR6aLpL0Vue
+         1vm/rCyhFdbsK6fRCFBdttFUn2QggLpa3chgtMKdgdFXekXbXU2KAXDoVwI86TIcWU
+         Pn+JszsTy7R/Q==
+Date:   Fri, 18 Aug 2023 20:01:48 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To:     Florent Revest <revest@chromium.org>
 Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
@@ -51,13 +51,13 @@ Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v3 1/8] Documentation: probes: Add a new ret_ip callback
- parameter
-Message-Id: <20230818195918.d0372f968ded553a8ef99932@kernel.org>
-In-Reply-To: <CABRcYm+ZuuJJGGk1cQso=4ZN+jBp2g5NODFJYq-TDqzu8KL85A@mail.gmail.com>
+Subject: Re: [PATCH v3 4/8] fprobe: rethook: Use ftrace_regs in fprobe exit
+ handler and rethook
+Message-Id: <20230818200148.66fd9878ddd32f810c6ae860@kernel.org>
+In-Reply-To: <CABRcYmK2-jiDOrTqjgg41t0T2-Uf1jbsuiV0xT37M=5cVCB+Zw@mail.gmail.com>
 References: <169181859570.505132.10136520092011157898.stgit@devnote2>
-        <169181860742.505132.14215380532909911090.stgit@devnote2>
-        <CABRcYm+ZuuJJGGk1cQso=4ZN+jBp2g5NODFJYq-TDqzu8KL85A@mail.gmail.com>
+        <169181864347.505132.7098838654251139622.stgit@devnote2>
+        <CABRcYmK2-jiDOrTqjgg41t0T2-Uf1jbsuiV0xT37M=5cVCB+Zw@mail.gmail.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -66,59 +66,41 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 17 Aug 2023 10:57:18 +0200
+On Thu, 17 Aug 2023 10:57:40 +0200
 Florent Revest <revest@chromium.org> wrote:
 
-> On Sat, Aug 12, 2023 at 7:36 AM Masami Hiramatsu (Google)
+> On Sat, Aug 12, 2023 at 7:37 AM Masami Hiramatsu (Google)
 > <mhiramat@kernel.org> wrote:
 > >
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+> > index 976fd594b446..d56304276318 100644
+> > --- a/kernel/trace/Kconfig
+> > +++ b/kernel/trace/Kconfig
+> > @@ -57,6 +57,13 @@ config HAVE_DYNAMIC_FTRACE_WITH_ARGS
+> >          This allows for use of ftrace_regs_get_argument() and
+> >          ftrace_regs_get_stack_pointer().
 > >
-> > Add a new ret_ip callback parameter description.
-> >
-> > Fixes: cb16330d1274 ("fprobe: Pass return address to the handlers")
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  Documentation/trace/fprobe.rst |    8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/trace/fprobe.rst b/Documentation/trace/fprobe.rst
-> > index 40dd2fbce861..a6d682478147 100644
-> > --- a/Documentation/trace/fprobe.rst
-> > +++ b/Documentation/trace/fprobe.rst
-> > @@ -91,9 +91,9 @@ The prototype of the entry/exit callback function are as follows:
-> >
-> >  .. code-block:: c
-> >
-> > - int entry_callback(struct fprobe *fp, unsigned long entry_ip, struct pt_regs *regs, void *entry_data);
-> > + int entry_callback(struct fprobe *fp, unsigned long entry_ip, unsigned long ret_ip, struct pt_regs *regs, void *entry_data);
-> >
-> > - void exit_callback(struct fprobe *fp, unsigned long entry_ip, struct pt_regs *regs, void *entry_data);
-> > + void exit_callback(struct fprobe *fp, unsigned long entry_ip, unsigned long ret_ip, struct pt_regs *regs, void *entry_data);
-> >
-> >  Note that the @entry_ip is saved at function entry and passed to exit handler.
-> >  If the entry callback function returns !0, the corresponding exit callback will be cancelled.
-> > @@ -108,6 +108,10 @@ If the entry callback function returns !0, the corresponding exit callback will
-> >          Note that this may not be the actual entry address of the function but
-> >          the address where the ftrace is instrumented.
-> >
-> > +@ret_ip
-> > +        This is the return address of the traced function. This can be used
-> > +        at both entry and exit.
+> > +config HAVE_PT_REGS_TO_FTRACE_REGS_CAST
+> > +       bool
+> > +       help
+> > +        If this is set, the memory layout of the ftrace_regs data structure
+> > +        is the same as the pt_regs. So the pt_regs is possible to be casted
+> > +        to ftrace_regs.
 > 
-> Maybe that's just the lack of coffee but I had to think twice to
-> understand what this paragraph meant :) On my first pass I thought
-> this meant "the address of the return instruction", which made little
-> sense since there can of course be multiple "ret"s in a function. I
-> like the name in the fprobe code "parent_ip" because I find it conveys
-> better that this is an address in the caller of the traced function.
-> I'm also fine with this "ret_ip" but I propose we modify the paragraph
-> a little bit to something like:
+> What would you think of introducing a:
 > 
-> This is the address that the traced function will return to, somewhere
-> in its caller. This can be used at both entry and exit.
+> #ifdef HAVE_PT_REGS_TO_FTRACE_REGS_CAST
+> static_assert(sizeof(struct pt_regs) == sizeof(struct ftrace_regs);
+> #endif // HAVE_PT_REGS_TO_FTRACE_REGS_CAST
+> 
+> somewhere in ftrace.h just as a small extra safety net ? It doesn't
+> exactly guarantee all we want but it should give an early warning of
+> mistakes.
 
-Thanks, that makes it more clear. I'll update it.
+That's a good idea :)
+OK, I'll add it in the next version.
+
+Thank you,
 
 
 -- 
