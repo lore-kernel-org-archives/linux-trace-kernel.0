@@ -2,103 +2,121 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED60C001DE
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 18 Aug 2023 11:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8D1C7113C
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 18 Aug 2023 12:10:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376434AbjHRLnF (ORCPT
+        id S234207AbjHRMKU (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 18 Aug 2023 07:43:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46032 "EHLO
+        Fri, 18 Aug 2023 08:10:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376462AbjHRLmq (ORCPT
+        with ESMTP id S1376771AbjHRMJ5 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 18 Aug 2023 07:42:46 -0400
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F6DB10DF;
-        Fri, 18 Aug 2023 04:42:45 -0700 (PDT)
-Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-4103393a459so5651711cf.0;
-        Fri, 18 Aug 2023 04:42:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692358964; x=1692963764;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/gUGa5pjlqkk1OcHTAGK9JwqvaQXnW1KsBKKB1vNUc4=;
-        b=OQzyOVtPUuIHuLUWDWM//tAq2FIK5olQBgFlN3vLo5agf7nKCCnwEP6/rHlulXYCHO
-         VxarFLi3dmi9woN8jgdpqomjEh9GOq4BYfTMhcI958/BTzsDLTSgg1klbSNPEx3VlLto
-         0biOSMV8TNbVxLfdPFy/oqWC4rjfqzNAdgrhKXfur/M11PjbOY+23TVhUwUeCXr1mng1
-         1pK88JsOz/eTSJVnJKkzE4HEslf2fa5HVmlq2RbfOZEs9i+CVpyWG+AUf5Nn4hyEd4ad
-         ByS5aKuJuFSNX0y3iAoVTYWjkPsq7PdkPxBbLt6PvRcwg+9LhRxfkEAbkYd6ByD65MWi
-         LZxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692358964; x=1692963764;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/gUGa5pjlqkk1OcHTAGK9JwqvaQXnW1KsBKKB1vNUc4=;
-        b=P8kvYb0d7ASKXELO9CVypsPcgLMKeXRbvsxYUC2nXn/PgcNKPHLhLxJJxAPS37mJmI
-         1mkTyYvL0Tfx45vTp2TcjWBH6/pheI185AL9C6OpsBPQeRxID+VnSNr9VZjsdCPJ1+B2
-         +4p3QP7JDszrM9IndvKpE7FX7u6LJA7CyKy03Ulp4iOWOXb8hUMt1piiyaNr3BeGcrdr
-         Q0jMfhDku0/QQ02BKCpXeXlo8hgmZfsF5pAo1sUyFceP0PC5q4cBulpFEMgWT7xdWfeg
-         wkikzqeGbUqZrcwxl4PZRiTPSd+wI3AVKsSwvlOuwo1wuriG+mqpL8RpI5UQQTF6666/
-         9ehg==
-X-Gm-Message-State: AOJu0YzlJfNC/kKoJx8vhYe0rNY3qcl6BYjwzUxX894gHCS5k7h/sOD9
-        qN7Oc2LAS1ZuE6TZdwv7t7AHow7US8outdXRIV22MtKv
-X-Google-Smtp-Source: AGHT+IFvg/PyS67P4uuGHe1pT8wHZnx17qw5h8CUsLymGEzFOoemE3zX716JAiDAc8Ql1jjXCY1HMVY1B239nY2mroM=
-X-Received: by 2002:a05:622a:341:b0:40f:d27a:4367 with SMTP id
- r1-20020a05622a034100b0040fd27a4367mr2813003qtw.58.1692358964398; Fri, 18 Aug
- 2023 04:42:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230811081239.246365-1-nashuiliang@gmail.com>
- <20230811154523.61e67cc3@gandalf.local.home> <20230812142019.06cb38b56287b0f068e8164f@kernel.org>
- <20230816160850.48fa95b6@gandalf.local.home> <20230818200258.7f318bab352508c54ed53e83@kernel.org>
-In-Reply-To: <20230818200258.7f318bab352508c54ed53e83@kernel.org>
-From:   chuang <nashuiliang@gmail.com>
-Date:   Fri, 18 Aug 2023 19:42:33 +0800
-Message-ID: <CACueBy7U9+b46YJ6Lbd-c=Nm9KhQyMoXbVOMT4esLYqq7nMt5Q@mail.gmail.com>
-Subject: Re: [PATCH v2] tracing/eprobe: Iterate trace_eprobe directly
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 18 Aug 2023 08:09:57 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA86D1FC3;
+        Fri, 18 Aug 2023 05:09:56 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3A2E86382F;
+        Fri, 18 Aug 2023 12:09:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FD8EC433C8;
+        Fri, 18 Aug 2023 12:09:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692360595;
+        bh=qRm/5BQEOqveVuPVOYC8Yu7FNSY0Aw9Zjpws7V195Mg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lgUKE5nlef6jyUQgTCNYyOWUiV8gyqOA4tQE2v5wPl42nB7U8/maPPo/B3YvKxbdC
+         n1nor5pfjj9ZIDn01Fr00qCBYurl/kNXSj9wtvtdUaeNg5q7McOnM/0IvzzxP+yIru
+         iqcL0g+rqhp4IB4PPhVp1tf3mGN4xXNKRDxwfqsMsRQu7Ym3N3pij1aRx4YcDUVyYJ
+         9oNFg2qLX29PaHT4Z23Xu8S2nUWhZS4vCvDgK11uNMWhHWIEgnPRl4oiiAdiAC8fgs
+         y9XCGiBqh+MuE5EyhTA5nmHyVYBGy+DAxr62vXck8gl0sMn7XURbpM1dhC6TVn1pcv
+         pQ8T9h23/ztZA==
+Date:   Fri, 18 Aug 2023 21:09:49 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Florent Revest <revest@chromium.org>,
+        linux-trace-kernel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v3 5/8] tracing/fprobe: Enable fprobe events with
+ CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+Message-Id: <20230818210949.e7811cb660d979e1c94a7a20@kernel.org>
+In-Reply-To: <CAADnVQ+En1sxXFrDZBefDCBSS=mChDJ3Xg_Xz+WKXmPqziSxgw@mail.gmail.com>
+References: <169181859570.505132.10136520092011157898.stgit@devnote2>
+        <169181865486.505132.6447946094827872988.stgit@devnote2>
+        <CAADnVQ+En1sxXFrDZBefDCBSS=mChDJ3Xg_Xz+WKXmPqziSxgw@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-OK, I will submit a new patch using "for_each_trace_eprobe_tp".
+On Thu, 17 Aug 2023 13:44:41 -0700
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 
-On Fri, Aug 18, 2023 at 7:03=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
-rg> wrote:
->
-> On Wed, 16 Aug 2023 16:08:50 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> > On Sat, 12 Aug 2023 14:20:19 +0900
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> On Fri, Aug 11, 2023 at 10:37 PM Masami Hiramatsu (Google)
+> <mhiramat@kernel.org> wrote:
 > >
-> > > > At a minimum, let's call it:
-> > > >
-> > > >   for_each_trace_point_eprobe()
-> > >
-> > > OK, what about "for_each_trace_eprobe_on()"? I would like to clarify
-> > >
-> > > - what type is returned
-> > > - not all trace_eprobes, but only on the trace_probe.
-> > >
-> > > Thank you,
+> > +#ifdef CONFIG_HAVE_REGS_AND_STACK_ACCESS_API
+> > +static __always_inline unsigned long
+> > +ftrace_regs_get_kernel_stack_nth(struct ftrace_regs *fregs, unsigned int nth)
+> > +{
+> > +       unsigned long *stackp;
+> > +
+> > +       stackp = (unsigned long *)ftrace_regs_get_stack_pointer(fregs);
+> > +       if (((unsigned long)(stackp + nth) & ~(THREAD_SIZE - 1)) ==
+> > +           ((unsigned long)stackp & ~(THREAD_SIZE - 1)))
+> > +               return *(stackp + nth);
+> > +
+> > +       return 0;
+> > +}
+> > +#endif /* CONFIG_HAVE_REGS_AND_STACK_ACCESS_API */
+> ...
 > >
-> >  for_each_trace_eprobe_tp() or for_each_trace_tp_eprobe() ?
->
-> for_each_trace_eprobe_tp() is OK for me.
->
-> Thanks!
->
-> >
-> > As it only works for a trace_probe.
-> >
-> > -- Steve
->
->
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > @@ -140,17 +140,17 @@ process_fetch_insn(struct fetch_insn *code, void *rec, void *dest,
+> >         /* 1st stage: get value from context */
+> >         switch (code->op) {
+> >         case FETCH_OP_STACK:
+> > -               val = regs_get_kernel_stack_nth(regs, code->param);
+> > +               val = ftrace_regs_get_kernel_stack_nth(fregs, code->param);
+> >                 break;
+> 
+> Just noticed that bit.
+> You probably want to document that access to arguments and
+> especially arguments on stack is not precise. It's "best effort".
+> x86-64 calling convention is not as simple as it might appear.
+> For example if 6th argument is a 16-byte struct like sockptr_t it will be
+> passed on the stack and 7th actual argument (if it's <= 8 byte) will
+> be the register.
+
+Yes, that's right. To access the precise arguments, the easiest way is
+using DWARF (e.g. perf probe), and another way is reconstruct the ABI
+from the type like BTF.
+
+> 
+> Things similar on 32-bit and there is a non-zero chance that
+> regs_get_kernel_argument() doesn't return the actual arg.
+
+Yeah, it is hard to get the actual argument...
+
+Let me update the document.
+
+Thank you,
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
