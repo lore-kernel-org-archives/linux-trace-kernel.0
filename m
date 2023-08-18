@@ -2,76 +2,81 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4139EE498E
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 18 Aug 2023 18:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F339CEE498F
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 18 Aug 2023 20:15:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379400AbjHRSU5 convert rfc822-to-8bit (ORCPT
+        id S1344189AbjHRUO4 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 18 Aug 2023 14:20:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41418 "EHLO
+        Fri, 18 Aug 2023 16:14:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241209AbjHRSU2 (ORCPT
+        with ESMTP id S243308AbjHRUOW (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 18 Aug 2023 14:20:28 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C03D312A;
-        Fri, 18 Aug 2023 11:20:27 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5F6E56380D;
-        Fri, 18 Aug 2023 18:20:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40FA2C433C8;
-        Fri, 18 Aug 2023 18:20:26 +0000 (UTC)
-Date:   Fri, 18 Aug 2023 14:20:33 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Francis Laniel <flaniel@linux.microsoft.com>
-Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 1/1] tracing/kprobe: Add multi-probe support for
- 'perf_kprobe' PMU
-Message-ID: <20230818142033.1d7685e9@gandalf.local.home>
-In-Reply-To: <4853240.31r3eYUQgx@pwmachine>
-References: <20230816163517.112518-1-flaniel@linux.microsoft.com>
-        <20230818213705.b4f5e18b392c4837068cba6f@kernel.org>
-        <20230818114141.2a3a75ee@gandalf.local.home>
-        <4853240.31r3eYUQgx@pwmachine>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Fri, 18 Aug 2023 16:14:22 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 752E11BD4;
+        Fri, 18 Aug 2023 13:14:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=FKu9hCXJhCudis6NHoImqT88eK3YpaDzx/CiHPdAOeo=; b=LJJAAle+t2QPSw5tbkL9l/pxrd
+        7CXcXwaJl5IopehEehAaUOUXXpyaLtRvRR19LciQvHH9d5XYc9V8d0gKwlLsAFA23CNc2t0f+DDQs
+        SvAoHhrW3v8ET6ytsKyPW4sYrXB2IOLQJJW9pM29t52lxOIrWGApX6lPs/XrgxRGxEu9d/Nqgpxbm
+        ae7sPZtE4Oc9YQ1bxPrfoSYTcaPj2KqCw1PQhKOEw89GOK/iwVSsZQv+Q6URSzN241c/GNyV1pj1j
+        AtfeB6N4/pCdm5nO8QlCJ+l1G+dE117AcKdjUYoklnVJgFeHWPstl+C0WdRNFffP02hsBz5NqB0M0
+        0ztSR5nQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qX5rO-00BS8J-A6; Fri, 18 Aug 2023 20:14:18 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-trace-kernel@vger.kernel.org, linux-docs@vger.kernel.org
+Subject: [PATCH] tracefs: Fix kernel-doc warnings
+Date:   Fri, 18 Aug 2023 21:14:13 +0100
+Message-Id: <20230818201414.2729745-1-willy@infradead.org>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 18 Aug 2023 20:13:43 +0200
-Francis Laniel <flaniel@linux.microsoft.com> wrote:
+Move the per-member documentation into the header to fix the complaints
+from kernel-doc.
 
-> Hi.
-> 
-> Le vendredi 18 août 2023, 17:41:41 CEST Steven Rostedt a écrit :
-> > On Fri, 18 Aug 2023 21:37:05 +0900
-> > 
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:  
-> > > That's why perf probe uses the offset from '_text'. Normal KASLR will just
-> > > moves all symbols. (Finer one will move all symbols randomely)
-> > > This should not need to access /proc/kallsyms but vmlinux or SystemMap.  
-> > 
-> > We could just pass in: "_text+offset" too.  
-> 
-> So, the idea would be to change the existing create_local_trace_kprobe() and 
-> above functions to indicate the user's offset is to be used against _text and 
-> not address?
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+---
+ fs/tracefs/event_inode.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-No, not to modify that function, but if you know the offset from _text (via
-the vmlinux), you can easily calculate it for that function.
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index da8d2e73cc47..7ca3857ddb89 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -37,6 +37,9 @@ struct eventfs_inode {
+  * @ei:		list of files and directories within directory
+  * @fop:	file_operations for file or directory
+  * @iop:	inode_operations for file or directory
++ * @del_list:	list of eventfs_file to delete
++ * @rcu:	eventfs_file to delete
++ * @is_freed:	Non-zero if @del_list or @rcu is active
+  * @data:	something that the caller will want to get to later on
+  * @mode:	the permission that the file or directory should have
+  */
+@@ -49,9 +52,9 @@ struct eventfs_file {
+ 	const struct file_operations	*fop;
+ 	const struct inode_operations	*iop;
+ 	union {
+-		struct list_head	del_list; /* list of eventfs_file to delete */
+-		struct rcu_head		rcu; /* eventfs_file to delete */
+-		unsigned long		is_freed; /* Freed if one of the above is set */
++		struct list_head	del_list;
++		struct rcu_head		rcu;
++		unsigned long		is_freed;
+ 	};
+ 	void				*data;
+ 	umode_t				mode;
+-- 
+2.40.1
 
-I mentioned having a way to pass in the vmlinux debug info address and
-subtract the kaslr_offset from it. But that's actually unnecessary. If you
-have the address of the function you want, and the address of _text, both
-from the debug info of vmlinux, you can simply pass in "_text+offset", and
-then use kallsyms to give you _text, and add the offset to give you the
-address for create_local_trace_kprobe().
-
--- Steve
