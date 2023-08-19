@@ -2,112 +2,122 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E225EE49AC
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 19 Aug 2023 08:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 471EAEE49A8
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 19 Aug 2023 15:23:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231997AbjHSIQQ (ORCPT
+        id S233160AbjHSPXH (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 19 Aug 2023 04:16:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59672 "EHLO
+        Sat, 19 Aug 2023 11:23:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230044AbjHSIPY (ORCPT
+        with ESMTP id S231128AbjHSPXG (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 19 Aug 2023 04:15:24 -0400
-Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C97E82710;
-        Sat, 19 Aug 2023 01:15:22 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id DD4BA320010B;
-        Sat, 19 Aug 2023 04:15:17 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Sat, 19 Aug 2023 04:15:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjusaka.me; h=
-        cc:cc:content-transfer-encoding:content-type:content-type:date
-        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to; s=fm3; t=
-        1692432917; x=1692519317; bh=mVg7+z/59hMefv6EatBj5KT4jPl/Nf37DQy
-        lbZT0lF0=; b=l7+Idw7IXTlvGLWtkX4Yk9YD3/pIkjlXypJGt7S8HC/9liI1Cdj
-        AbiC77K/z0YBVQ/FVPplg+bytdlQ+dCc6NLsE/mqDY3v3d5deNXUK+iCoPqLoR4m
-        7KEnWqflPdY4rVYIZ2nrq0D4B9axmUmMzkaWbpOCHFtDQHYcLbg7HnL9XIIq2f0a
-        mK3zqk15aTNX0cHqWpDSzQHd7FW/4LyCfysFsUH2Dm9exVtC1p5Wo5QNbC+o51R2
-        rJg3xLibAhOvJd9AOLlO0dwSv/nxgjI2n7dRMLqBJ4h5gtIzWF7nWo66Nkl2HcVZ
-        5u2GV2DhRUor71Xr+SsbHXQYqCUb3sNoSfQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:date:feedback-id:feedback-id
-        :from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-        1692432917; x=1692519317; bh=mVg7+z/59hMefv6EatBj5KT4jPl/Nf37DQy
-        lbZT0lF0=; b=t6N2GC4hYniQXEfaTz2EuUH27T0sH45C1jfxLNXZxFos7HH40gT
-        KBtE6edJ+rySMY3zSRjIO+7Ks3Pdn6URlSpydJymaYRu4IqS7rdz+hTuOSX0GrPa
-        xKP3tHtONDVXgCKm/BZKpEKPFkPZcKDiOk48Ur3IL9ysISycJdFRi1weyZmQwy3h
-        V9P4P56zaIQKJwLkFbLN29w95tx/fWeStGG89LaHLpAMdP3z5TMObUbIHBo5o0RO
-        S5dA4M6DY7W7sInbbXOGEMqSICvCzeQLTOSQs4HdjoJvLGm7r4PlLJNiQkMnpam7
-        ZRRY6EBwhtMkX+9Z6+l1qC2Xusq2Rb7AvdQ==
-X-ME-Sender: <xms:FXrgZPjnB5QfQ4PRwkdTFgVeaN_4v5hYrLgtB-SJsuYC3ocaUzD-3Q>
-    <xme:FXrgZMCwXFK_V-4i3OOVNf8ITegB7tIIpKZs8YUj1S3Fv25-7Non3G_GcgMY_6Hi6
-    7GzKbd4pYIFh-cE32Q>
-X-ME-Received: <xmr:FXrgZPEZpMAo-2JYx9rLLvwfHLhNQpGBXAIgu6gVwQYTx5VBle0A3_1kfvalUHNvSA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudduhedgtddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeforghn
-    jhhushgrkhgruceomhgvsehmrghnjhhushgrkhgrrdhmvgeqnecuggftrfgrthhtvghrnh
-    epudevveejhfejvdegvedvuedtueekleejlefhfedtheekhfefiedvgfdukeeuieelnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgvsehmrg
-    hnjhhushgrkhgrrdhmvg
-X-ME-Proxy: <xmx:FXrgZMT9PKKTCwesqnzedCRN4dcTB3WJCdpowJ9jyEKcW-jGGDCsnQ>
-    <xmx:FXrgZMzo6QRDBv_SO0sjkjULJLR_oeGvE0uv8NMAs_s9b9nyiD7Y6w>
-    <xmx:FXrgZC4DtkP2j10vgUQw1TzrGZXDMQJlTsCl6A_-0FWiMZqWSUrKPA>
-    <xmx:FXrgZBpGDKAfRw10usHn5sM9lmFylMEI84bEKe7Ptud62Aq7v7D6dQ>
-Feedback-ID: i3ea9498d:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 19 Aug 2023 04:15:13 -0400 (EDT)
-Message-ID: <3b997205-bca6-4dba-94fe-65facb84015e@manjusaka.me>
-Date:   Sat, 19 Aug 2023 16:15:10 +0800
+        Sat, 19 Aug 2023 11:23:06 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3EE6E5F;
+        Sat, 19 Aug 2023 08:23:05 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 525F661F4C;
+        Sat, 19 Aug 2023 15:23:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B55FAC433C8;
+        Sat, 19 Aug 2023 15:23:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692458584;
+        bh=/e9z6LgegEFmy9SM9L3YdCv7XOOtHVi0ffVZVDcOmks=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hyfcUfDLo8imtVG779gYrwtRbkZLBTPUTOmbu7xT1aAdyuGkbSx7g/43BLyKrNcvC
+         7+xauHDHNl3oQAZES3V3HaR3UdLKrXsoPemSKa9Zlqt0gfEcOPpJUYpmovHvWpK+Q9
+         gwf6Z2FEPKl2+G8KxJ6q7eomRriPsq1ruIZ6AwFyBSlKBs7goy7RKRp62NzvFQCUOK
+         TB+nSB8AYK0qVWN5goHK0virc1HRHMycnodNjzwLWGUbNwj4WaUDUxtJSXtdQ7D93d
+         x4SeAvM4oMiLnrr6GVGjMJOMONiXpLqTs9eiND9aIJ+UJGLZBjdxUHhltpzxNBVOWR
+         RZ8/Gy8ejRmpg==
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-4fe457ec6e7so2767743e87.3;
+        Sat, 19 Aug 2023 08:23:04 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yybst3IzEGtrWVFtR4dWYN3ShOZX8xjdJHMXEneWAGW+CGvHgO5
+        +8auJLRt8UhFY04kQSfi59j/oB3ZVyqfQ46ybKs=
+X-Google-Smtp-Source: AGHT+IFq/z/fy2n3Dt01DOzcdL/TgWsWOPcrdHYBRTt7RgiPVKxoUsXump95/jKLwhwG6+fgolARZKuOkpOXUtP9hgQ=
+X-Received: by 2002:a05:6512:2110:b0:4f8:6ac4:84 with SMTP id
+ q16-20020a056512211000b004f86ac40084mr1439941lfr.8.1692458582739; Sat, 19 Aug
+ 2023 08:23:02 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] tracepoint: add new `tcp:tcp_ca_event` trace event
-To:     Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     bpf@vger.kernel.org, davem@davemloft.net, dsahern@kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        mhiramat@kernel.org, ncardwell@google.com, netdev@vger.kernel.org,
-        pabeni@redhat.com, rostedt@goodmis.org
-References: <CANn89iKQXhqgOTkSchH6Bz-xH--pAoSyEORBtawqBTvgG+dFig@mail.gmail.com>
- <20230812201249.62237-1-me@manjusaka.me> <20230818185156.5bb662db@kernel.org>
- <CANn89iLYsfD0tFryzCn2GbhrX4n+e0CPTXB6Vc=_m=U9Qi_CzA@mail.gmail.com>
-Content-Language: en-US
-From:   Manjusaka <me@manjusaka.me>
-In-Reply-To: <CANn89iLYsfD0tFryzCn2GbhrX4n+e0CPTXB6Vc=_m=U9Qi_CzA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20230816163517.112518-1-flaniel@linux.microsoft.com>
+ <20230818213705.b4f5e18b392c4837068cba6f@kernel.org> <20230818114141.2a3a75ee@gandalf.local.home>
+ <4853240.31r3eYUQgx@pwmachine> <20230818142033.1d7685e9@gandalf.local.home> <20230819101519.568d658fbb6461cc60d348e5@kernel.org>
+In-Reply-To: <20230819101519.568d658fbb6461cc60d348e5@kernel.org>
+From:   Song Liu <song@kernel.org>
+Date:   Sat, 19 Aug 2023 08:22:50 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7d4cMi_FAtvyTn4HJWzRdocJaEVq-uYVcW43=JDE_EnA@mail.gmail.com>
+Message-ID: <CAPhsuW7d4cMi_FAtvyTn4HJWzRdocJaEVq-uYVcW43=JDE_EnA@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 1/1] tracing/kprobe: Add multi-probe support for
+ 'perf_kprobe' PMU
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Francis Laniel <flaniel@linux.microsoft.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2023/8/19 11:10, Eric Dumazet wrote:
-> On Sat, Aug 19, 2023 at 3:52 AM Jakub Kicinski <kuba@kernel.org> wrote:
->>
->> On Sat, 12 Aug 2023 20:12:50 +0000 Zheao Li wrote:
->>> In normal use case, the tcp_ca_event would be changed in high frequency.
->>>
->>> The developer can monitor the network quality more easier by tracing
->>> TCP stack with this TP event.
->>>
->>> So I propose to add a `tcp:tcp_ca_event` trace event
->>> like `tcp:tcp_cong_state_set` to help the people to
->>> trace the TCP connection status
->>
->> Ah, I completely missed v3 somehow and we got no ack from Eric so maybe
->> he missed it, too. Could you please resend not as part of this thread
->> but as a new thread?
-> 
-> I was waiting for a v4, because Steven asked for additional spaces in the macros
-> for readability ?
+On Fri, Aug 18, 2023 at 6:16=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
+rg> wrote:
+>
+> On Fri, 18 Aug 2023 14:20:33 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> > On Fri, 18 Aug 2023 20:13:43 +0200
+> > Francis Laniel <flaniel@linux.microsoft.com> wrote:
+> >
+> > > Hi.
+> > >
+> > > Le vendredi 18 ao=C3=BBt 2023, 17:41:41 CEST Steven Rostedt a =C3=A9c=
+rit :
+> > > > On Fri, 18 Aug 2023 21:37:05 +0900
+> > > >
+> > > > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> > > > > That's why perf probe uses the offset from '_text'. Normal KASLR =
+will just
+> > > > > moves all symbols. (Finer one will move all symbols randomely)
+> > > > > This should not need to access /proc/kallsyms but vmlinux or Syst=
+emMap.
+> > > >
+> > > > We could just pass in: "_text+offset" too.
+> > >
+> > > So, the idea would be to change the existing create_local_trace_kprob=
+e() and
+> > > above functions to indicate the user's offset is to be used against _=
+text and
+> > > not address?
+> >
+> > No, not to modify that function, but if you know the offset from _text =
+(via
+> > the vmlinux), you can easily calculate it for that function.
+>
+> Note that the kprobe-event PMU interface itself allows you to specify
+> FUNC+OFFSET style;
+>
+> https://lore.kernel.org/lkml/20171206224518.3598254-5-songliubraving@fb.c=
+om/
+>
+> perf_event_attr::kprobe_func =3D "_text";
+> perf_event_attr::probe_offset =3D OFFSET;
+>
+> Then, it should be able to specify the correct one. Of course you can use
+> other unique symbols around the target symbol.
 
-I think the additional spaces should not be added in this patch. Because there will
-be two code style in one file.
+Trying to catch up with the thread.
 
-I think it would be a good idea for another patch to adjust the space in this file
+Besides the CAP_* issue, we can do this with
+
+perf_event_attr::kprobe_func =3D NULL;
+perf_event_attr::kprobe_addr =3D address;
+
+Then for the CAP_*, I think we should give CAP_PERFMON access to
+/proc/kallsyms. Would this work?
+
+Thanks,
+Song
