@@ -2,90 +2,112 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BB8EE4996
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 19 Aug 2023 03:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E225EE49AC
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 19 Aug 2023 08:16:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244507AbjHSDKm (ORCPT
+        id S231997AbjHSIQQ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 18 Aug 2023 23:10:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51810 "EHLO
+        Sat, 19 Aug 2023 04:16:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244540AbjHSDKd (ORCPT
+        with ESMTP id S230044AbjHSIPY (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 18 Aug 2023 23:10:33 -0400
-Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29892420F
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Aug 2023 20:10:32 -0700 (PDT)
-Received: by mail-il1-x12d.google.com with SMTP id e9e14a558f8ab-34bf0b97811so38495ab.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Aug 2023 20:10:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692414631; x=1693019431;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FKp6btYT5XRVMc9aXFSlcjOs7uLPloeW2Zfo5kSwwzk=;
-        b=wISqlkVDp4O/Y7uHtMLqMR2wlQfr5NI58scqALE+SkUUr+XPQmGoeIg7pfghR6rfJp
-         WPEYt94qCp9uDF/jr2P3/KY/DipaVFGGaFi4fRvtSnlUIhdnkpVSd9u0REx9F7ZG7c3R
-         15MTQ4GcUYIaxilL7Nvu67lveVevfCgk6xwyb7/1Q3K7THzW+b7Q7YMWDPVz0pm0RE/8
-         ipt1J+IDUz9AUFXEZm6f0OFJcxY/69Cp7YS44LPpbIceB5B0QIobcb8NWmHQ1bp3oxPo
-         oqdK6j4fzLSnYZVvDBqPcW88PFUB2R8ubnCrZMtfcKc05CbpQlNs1EbLNTcXI8OQgY8t
-         heuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692414631; x=1693019431;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FKp6btYT5XRVMc9aXFSlcjOs7uLPloeW2Zfo5kSwwzk=;
-        b=L0dS5gXyvr8Tk8DGweXT8Pa+Ht5Km8Td/hFQTZ1P7I4Z1+UQMOA/9dPhYzf5i/PXNf
-         Tw0fJgwEvh5slxRojH6FTvY737Rxnz0nyYf3T/hBhI97iSEGyw2391MYrepFJBKaLWvp
-         P3PPrJRQDd3JiSnKUOUgo5WCZ6iprQ0ZqEMJHPSuk7cgYbwl0pJeeCaIfIk9IRZL+Zco
-         NRCc8LIncGzpnk6x+PRB5u7IOH9/N0IjoNvDztYOTx+puH/OOHPYDifpfB1cfzdPipUq
-         NfF3rCaDdLanhKhZnr9NSCOIlOpd63jABCSaBiYIZxTyAb3DJ7LdCZS0BGT9aIV+dyBR
-         tSnQ==
-X-Gm-Message-State: AOJu0YxCOrljYHOrhswbHztqskAqI8KbotDbvCc1drNtrJ9B7bV5Oh5l
-        olof/w1B/z7xbt7dVnYEKKQShs/6Rp+oPnv7yFlzew==
-X-Google-Smtp-Source: AGHT+IG4bP0F3BUXPOYYG3U0HFeiRW/UGwonFjwbc0HKd8EKeEBeFk0A4YxsVJ22ps5ELA7pZQdp9KpNLknXlv3x1QI=
-X-Received: by 2002:a05:6e02:12ee:b0:32f:7831:dea5 with SMTP id
- l14-20020a056e0212ee00b0032f7831dea5mr377963iln.8.1692414631283; Fri, 18 Aug
- 2023 20:10:31 -0700 (PDT)
+        Sat, 19 Aug 2023 04:15:24 -0400
+Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C97E82710;
+        Sat, 19 Aug 2023 01:15:22 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.west.internal (Postfix) with ESMTP id DD4BA320010B;
+        Sat, 19 Aug 2023 04:15:17 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Sat, 19 Aug 2023 04:15:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjusaka.me; h=
+        cc:cc:content-transfer-encoding:content-type:content-type:date
+        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to; s=fm3; t=
+        1692432917; x=1692519317; bh=mVg7+z/59hMefv6EatBj5KT4jPl/Nf37DQy
+        lbZT0lF0=; b=l7+Idw7IXTlvGLWtkX4Yk9YD3/pIkjlXypJGt7S8HC/9liI1Cdj
+        AbiC77K/z0YBVQ/FVPplg+bytdlQ+dCc6NLsE/mqDY3v3d5deNXUK+iCoPqLoR4m
+        7KEnWqflPdY4rVYIZ2nrq0D4B9axmUmMzkaWbpOCHFtDQHYcLbg7HnL9XIIq2f0a
+        mK3zqk15aTNX0cHqWpDSzQHd7FW/4LyCfysFsUH2Dm9exVtC1p5Wo5QNbC+o51R2
+        rJg3xLibAhOvJd9AOLlO0dwSv/nxgjI2n7dRMLqBJ4h5gtIzWF7nWo66Nkl2HcVZ
+        5u2GV2DhRUor71Xr+SsbHXQYqCUb3sNoSfQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:date:feedback-id:feedback-id
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+        1692432917; x=1692519317; bh=mVg7+z/59hMefv6EatBj5KT4jPl/Nf37DQy
+        lbZT0lF0=; b=t6N2GC4hYniQXEfaTz2EuUH27T0sH45C1jfxLNXZxFos7HH40gT
+        KBtE6edJ+rySMY3zSRjIO+7Ks3Pdn6URlSpydJymaYRu4IqS7rdz+hTuOSX0GrPa
+        xKP3tHtONDVXgCKm/BZKpEKPFkPZcKDiOk48Ur3IL9ysISycJdFRi1weyZmQwy3h
+        V9P4P56zaIQKJwLkFbLN29w95tx/fWeStGG89LaHLpAMdP3z5TMObUbIHBo5o0RO
+        S5dA4M6DY7W7sInbbXOGEMqSICvCzeQLTOSQs4HdjoJvLGm7r4PlLJNiQkMnpam7
+        ZRRY6EBwhtMkX+9Z6+l1qC2Xusq2Rb7AvdQ==
+X-ME-Sender: <xms:FXrgZPjnB5QfQ4PRwkdTFgVeaN_4v5hYrLgtB-SJsuYC3ocaUzD-3Q>
+    <xme:FXrgZMCwXFK_V-4i3OOVNf8ITegB7tIIpKZs8YUj1S3Fv25-7Non3G_GcgMY_6Hi6
+    7GzKbd4pYIFh-cE32Q>
+X-ME-Received: <xmr:FXrgZPEZpMAo-2JYx9rLLvwfHLhNQpGBXAIgu6gVwQYTx5VBle0A3_1kfvalUHNvSA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudduhedgtddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeforghn
+    jhhushgrkhgruceomhgvsehmrghnjhhushgrkhgrrdhmvgeqnecuggftrfgrthhtvghrnh
+    epudevveejhfejvdegvedvuedtueekleejlefhfedtheekhfefiedvgfdukeeuieelnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgvsehmrg
+    hnjhhushgrkhgrrdhmvg
+X-ME-Proxy: <xmx:FXrgZMT9PKKTCwesqnzedCRN4dcTB3WJCdpowJ9jyEKcW-jGGDCsnQ>
+    <xmx:FXrgZMzo6QRDBv_SO0sjkjULJLR_oeGvE0uv8NMAs_s9b9nyiD7Y6w>
+    <xmx:FXrgZC4DtkP2j10vgUQw1TzrGZXDMQJlTsCl6A_-0FWiMZqWSUrKPA>
+    <xmx:FXrgZBpGDKAfRw10usHn5sM9lmFylMEI84bEKe7Ptud62Aq7v7D6dQ>
+Feedback-ID: i3ea9498d:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 19 Aug 2023 04:15:13 -0400 (EDT)
+Message-ID: <3b997205-bca6-4dba-94fe-65facb84015e@manjusaka.me>
+Date:   Sat, 19 Aug 2023 16:15:10 +0800
 MIME-Version: 1.0
-References: <CANn89iKQXhqgOTkSchH6Bz-xH--pAoSyEORBtawqBTvgG+dFig@mail.gmail.com>
- <20230812201249.62237-1-me@manjusaka.me> <20230818185156.5bb662db@kernel.org>
-In-Reply-To: <20230818185156.5bb662db@kernel.org>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Sat, 19 Aug 2023 05:10:20 +0200
-Message-ID: <CANn89iLYsfD0tFryzCn2GbhrX4n+e0CPTXB6Vc=_m=U9Qi_CzA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v3] tracepoint: add new `tcp:tcp_ca_event` trace event
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Zheao Li <me@manjusaka.me>, bpf@vger.kernel.org,
-        davem@davemloft.net, dsahern@kernel.org,
+To:     Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     bpf@vger.kernel.org, davem@davemloft.net, dsahern@kernel.org,
         linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         mhiramat@kernel.org, ncardwell@google.com, netdev@vger.kernel.org,
         pabeni@redhat.com, rostedt@goodmis.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <CANn89iKQXhqgOTkSchH6Bz-xH--pAoSyEORBtawqBTvgG+dFig@mail.gmail.com>
+ <20230812201249.62237-1-me@manjusaka.me> <20230818185156.5bb662db@kernel.org>
+ <CANn89iLYsfD0tFryzCn2GbhrX4n+e0CPTXB6Vc=_m=U9Qi_CzA@mail.gmail.com>
+Content-Language: en-US
+From:   Manjusaka <me@manjusaka.me>
+In-Reply-To: <CANn89iLYsfD0tFryzCn2GbhrX4n+e0CPTXB6Vc=_m=U9Qi_CzA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sat, Aug 19, 2023 at 3:52=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wr=
-ote:
->
-> On Sat, 12 Aug 2023 20:12:50 +0000 Zheao Li wrote:
-> > In normal use case, the tcp_ca_event would be changed in high frequency=
-.
-> >
-> > The developer can monitor the network quality more easier by tracing
-> > TCP stack with this TP event.
-> >
-> > So I propose to add a `tcp:tcp_ca_event` trace event
-> > like `tcp:tcp_cong_state_set` to help the people to
-> > trace the TCP connection status
->
-> Ah, I completely missed v3 somehow and we got no ack from Eric so maybe
-> he missed it, too. Could you please resend not as part of this thread
-> but as a new thread?
+On 2023/8/19 11:10, Eric Dumazet wrote:
+> On Sat, Aug 19, 2023 at 3:52 AM Jakub Kicinski <kuba@kernel.org> wrote:
+>>
+>> On Sat, 12 Aug 2023 20:12:50 +0000 Zheao Li wrote:
+>>> In normal use case, the tcp_ca_event would be changed in high frequency.
+>>>
+>>> The developer can monitor the network quality more easier by tracing
+>>> TCP stack with this TP event.
+>>>
+>>> So I propose to add a `tcp:tcp_ca_event` trace event
+>>> like `tcp:tcp_cong_state_set` to help the people to
+>>> trace the TCP connection status
+>>
+>> Ah, I completely missed v3 somehow and we got no ack from Eric so maybe
+>> he missed it, too. Could you please resend not as part of this thread
+>> but as a new thread?
+> 
+> I was waiting for a v4, because Steven asked for additional spaces in the macros
+> for readability ?
 
-I was waiting for a v4, because Steven asked for additional spaces in the m=
-acros
-for readability ?
+I think the additional spaces should not be added in this patch. Because there will
+be two code style in one file.
+
+I think it would be a good idea for another patch to adjust the space in this file
