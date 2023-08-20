@@ -2,122 +2,131 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471EAEE49A8
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 19 Aug 2023 15:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04488EE49A6
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 20 Aug 2023 09:36:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233160AbjHSPXH (ORCPT
+        id S230188AbjHTJgv (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 19 Aug 2023 11:23:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44444 "EHLO
+        Sun, 20 Aug 2023 05:36:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231128AbjHSPXG (ORCPT
+        with ESMTP id S230170AbjHTJgv (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 19 Aug 2023 11:23:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3EE6E5F;
-        Sat, 19 Aug 2023 08:23:05 -0700 (PDT)
+        Sun, 20 Aug 2023 05:36:51 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55C1D12A;
+        Sun, 20 Aug 2023 02:32:23 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 525F661F4C;
-        Sat, 19 Aug 2023 15:23:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B55FAC433C8;
-        Sat, 19 Aug 2023 15:23:04 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DC5CE60EBF;
+        Sun, 20 Aug 2023 09:32:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCE5AC433C7;
+        Sun, 20 Aug 2023 09:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692458584;
-        bh=/e9z6LgegEFmy9SM9L3YdCv7XOOtHVi0ffVZVDcOmks=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hyfcUfDLo8imtVG779gYrwtRbkZLBTPUTOmbu7xT1aAdyuGkbSx7g/43BLyKrNcvC
-         7+xauHDHNl3oQAZES3V3HaR3UdLKrXsoPemSKa9Zlqt0gfEcOPpJUYpmovHvWpK+Q9
-         gwf6Z2FEPKl2+G8KxJ6q7eomRriPsq1ruIZ6AwFyBSlKBs7goy7RKRp62NzvFQCUOK
-         TB+nSB8AYK0qVWN5goHK0virc1HRHMycnodNjzwLWGUbNwj4WaUDUxtJSXtdQ7D93d
-         x4SeAvM4oMiLnrr6GVGjMJOMONiXpLqTs9eiND9aIJ+UJGLZBjdxUHhltpzxNBVOWR
-         RZ8/Gy8ejRmpg==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-4fe457ec6e7so2767743e87.3;
-        Sat, 19 Aug 2023 08:23:04 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yybst3IzEGtrWVFtR4dWYN3ShOZX8xjdJHMXEneWAGW+CGvHgO5
-        +8auJLRt8UhFY04kQSfi59j/oB3ZVyqfQ46ybKs=
-X-Google-Smtp-Source: AGHT+IFq/z/fy2n3Dt01DOzcdL/TgWsWOPcrdHYBRTt7RgiPVKxoUsXump95/jKLwhwG6+fgolARZKuOkpOXUtP9hgQ=
-X-Received: by 2002:a05:6512:2110:b0:4f8:6ac4:84 with SMTP id
- q16-20020a056512211000b004f86ac40084mr1439941lfr.8.1692458582739; Sat, 19 Aug
- 2023 08:23:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230816163517.112518-1-flaniel@linux.microsoft.com>
- <20230818213705.b4f5e18b392c4837068cba6f@kernel.org> <20230818114141.2a3a75ee@gandalf.local.home>
- <4853240.31r3eYUQgx@pwmachine> <20230818142033.1d7685e9@gandalf.local.home> <20230819101519.568d658fbb6461cc60d348e5@kernel.org>
-In-Reply-To: <20230819101519.568d658fbb6461cc60d348e5@kernel.org>
-From:   Song Liu <song@kernel.org>
-Date:   Sat, 19 Aug 2023 08:22:50 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7d4cMi_FAtvyTn4HJWzRdocJaEVq-uYVcW43=JDE_EnA@mail.gmail.com>
-Message-ID: <CAPhsuW7d4cMi_FAtvyTn4HJWzRdocJaEVq-uYVcW43=JDE_EnA@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 1/1] tracing/kprobe: Add multi-probe support for
- 'perf_kprobe' PMU
-To:     Masami Hiramatsu <mhiramat@kernel.org>
+        s=k20201202; t=1692523942;
+        bh=Mwxqh7D4alt9PiyEKqBot7zzqgVRjTW256SDQGY9m24=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YH/yGIp8OPCeVT9dHAMrD3r3oD6SzcmhDUYd0+b6iM3Eo8EmzOmUNqMzNnB4qqbz5
+         1QHukdJCXo9mygdlSLTAgvRobJyWdZJZ/HRjazvu/1GEDJf+/RqRWQK4eQBMwxl/Zh
+         tt7FjMdIIuJzCiiEByVs0Hiwml6eSukVltaKjXxsIaXkRKRZhRFv/D74yWZvem5lHd
+         pZAkYM3Qq/Frtw5icpuhW2KOZ39mn19O5CaTDiyCi2ZHzQHodq72LGg+m9DNljrhPd
+         VB8Kxigq/oLK/19OOoYjg4C86JL/xLVzQxQuYPxRZUT6X/6+SwZYsSG+3/sraTSvvy
+         JqjyQf4kSQ09g==
+Date:   Sun, 20 Aug 2023 18:32:18 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Song Liu <song@kernel.org>
 Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Francis Laniel <flaniel@linux.microsoft.com>,
         linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC PATCH v1 1/1] tracing/kprobe: Add multi-probe support for
+ 'perf_kprobe' PMU
+Message-Id: <20230820183218.bf0b04be3c0ccac5e7b2a587@kernel.org>
+In-Reply-To: <CAPhsuW7d4cMi_FAtvyTn4HJWzRdocJaEVq-uYVcW43=JDE_EnA@mail.gmail.com>
+References: <20230816163517.112518-1-flaniel@linux.microsoft.com>
+        <20230818213705.b4f5e18b392c4837068cba6f@kernel.org>
+        <20230818114141.2a3a75ee@gandalf.local.home>
+        <4853240.31r3eYUQgx@pwmachine>
+        <20230818142033.1d7685e9@gandalf.local.home>
+        <20230819101519.568d658fbb6461cc60d348e5@kernel.org>
+        <CAPhsuW7d4cMi_FAtvyTn4HJWzRdocJaEVq-uYVcW43=JDE_EnA@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Aug 18, 2023 at 6:16=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
-rg> wrote:
->
-> On Fri, 18 Aug 2023 14:20:33 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> > On Fri, 18 Aug 2023 20:13:43 +0200
-> > Francis Laniel <flaniel@linux.microsoft.com> wrote:
+On Sat, 19 Aug 2023 08:22:50 -0700
+Song Liu <song@kernel.org> wrote:
+
+> On Fri, Aug 18, 2023 at 6:16 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
 > >
-> > > Hi.
-> > >
-> > > Le vendredi 18 ao=C3=BBt 2023, 17:41:41 CEST Steven Rostedt a =C3=A9c=
-rit :
-> > > > On Fri, 18 Aug 2023 21:37:05 +0900
-> > > >
-> > > > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> > > > > That's why perf probe uses the offset from '_text'. Normal KASLR =
-will just
-> > > > > moves all symbols. (Finer one will move all symbols randomely)
-> > > > > This should not need to access /proc/kallsyms but vmlinux or Syst=
-emMap.
-> > > >
-> > > > We could just pass in: "_text+offset" too.
-> > >
-> > > So, the idea would be to change the existing create_local_trace_kprob=
-e() and
-> > > above functions to indicate the user's offset is to be used against _=
-text and
-> > > not address?
+> > On Fri, 18 Aug 2023 14:20:33 -0400
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
 > >
-> > No, not to modify that function, but if you know the offset from _text =
-(via
-> > the vmlinux), you can easily calculate it for that function.
->
-> Note that the kprobe-event PMU interface itself allows you to specify
-> FUNC+OFFSET style;
->
-> https://lore.kernel.org/lkml/20171206224518.3598254-5-songliubraving@fb.c=
-om/
->
-> perf_event_attr::kprobe_func =3D "_text";
-> perf_event_attr::probe_offset =3D OFFSET;
->
-> Then, it should be able to specify the correct one. Of course you can use
-> other unique symbols around the target symbol.
+> > > On Fri, 18 Aug 2023 20:13:43 +0200
+> > > Francis Laniel <flaniel@linux.microsoft.com> wrote:
+> > >
+> > > > Hi.
+> > > >
+> > > > Le vendredi 18 août 2023, 17:41:41 CEST Steven Rostedt a écrit :
+> > > > > On Fri, 18 Aug 2023 21:37:05 +0900
+> > > > >
+> > > > > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> > > > > > That's why perf probe uses the offset from '_text'. Normal KASLR will just
+> > > > > > moves all symbols. (Finer one will move all symbols randomely)
+> > > > > > This should not need to access /proc/kallsyms but vmlinux or SystemMap.
+> > > > >
+> > > > > We could just pass in: "_text+offset" too.
+> > > >
+> > > > So, the idea would be to change the existing create_local_trace_kprobe() and
+> > > > above functions to indicate the user's offset is to be used against _text and
+> > > > not address?
+> > >
+> > > No, not to modify that function, but if you know the offset from _text (via
+> > > the vmlinux), you can easily calculate it for that function.
+> >
+> > Note that the kprobe-event PMU interface itself allows you to specify
+> > FUNC+OFFSET style;
+> >
+> > https://lore.kernel.org/lkml/20171206224518.3598254-5-songliubraving@fb.com/
+> >
+> > perf_event_attr::kprobe_func = "_text";
+> > perf_event_attr::probe_offset = OFFSET;
+> >
+> > Then, it should be able to specify the correct one. Of course you can use
+> > other unique symbols around the target symbol.
+> 
+> Trying to catch up with the thread.
 
-Trying to catch up with the thread.
+Thanks for your reply :)
 
-Besides the CAP_* issue, we can do this with
+> 
+> Besides the CAP_* issue, we can do this with
+> 
+> perf_event_attr::kprobe_func = NULL;
+> perf_event_attr::kprobe_addr = address;
 
-perf_event_attr::kprobe_func =3D NULL;
-perf_event_attr::kprobe_addr =3D address;
+As I pointed, you don't need actual address, instead, you can specify the
+probe point via "unique symbol" + offset. 
 
-Then for the CAP_*, I think we should give CAP_PERFMON access to
-/proc/kallsyms. Would this work?
+> 
+> Then for the CAP_*, I think we should give CAP_PERFMON access to
+> /proc/kallsyms. Would this work?
 
-Thanks,
-Song
+For the "unique symbol" + offset, you don't need the kallsyms, but need to
+access the System.map or vmlinux image. In this case, we don't need to expand
+the CAP_PERFMON capabilities.
+
+Thank you,
+
+> 
+> Thanks,
+> Song
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
