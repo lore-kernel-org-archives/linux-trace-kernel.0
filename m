@@ -2,110 +2,164 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2F9EE49A4
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 20 Aug 2023 10:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E51EE49A4
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 20 Aug 2023 11:13:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230281AbjHTKHF (ORCPT
+        id S230434AbjHTLNG (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 20 Aug 2023 06:07:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44966 "EHLO
+        Sun, 20 Aug 2023 07:13:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230348AbjHTKG5 (ORCPT
+        with ESMTP id S230449AbjHTLNF (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 20 Aug 2023 06:06:57 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27BB4F0;
-        Sun, 20 Aug 2023 03:02:34 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B070360DFA;
-        Sun, 20 Aug 2023 10:02:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1510CC433C7;
-        Sun, 20 Aug 2023 10:02:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692525753;
-        bh=whLSHn+VoRRAck8v3j3Zfrs67sqU8jHElhntki+13r4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=VRIhCWWvpSMEoZXgTTmPvtJIo6cO0EUTBlWKYb6GvObPfM9+hl1ip3yb0Q71UENXE
-         7eyoasePBio10+sMuPyL1uPofVJPeXBZ0GPirLJcP6q4eLr4aMhMJRlMNqJ712jec8
-         ckVYzHr95ANe5LO18hh6+EEeL6u1zY+zqVIW3OlSYLG71Nr0CalzZgr+8DXaQORvYk
-         jyOAMbZP7iW7d69FsezOL4JsgYEt6SnyrjtJXe/i1Qbx2QcmF+xtkHC8fOB79bWIyW
-         iq2xqrsYrKLiLFVryhFkEAceoB7mNk8nO/bC1TKoBuyR7M0sxxA1hKBHY1dE8zMvzP
-         8kQV6K6vlqFEA==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-4fe27849e6aso3480228e87.1;
-        Sun, 20 Aug 2023 03:02:32 -0700 (PDT)
-X-Gm-Message-State: AOJu0YwD2MxT7XCKTAwgvmY+lvePO1HJa6Q9dlnY/GzV4DcIxtUKF0nf
-        WWBoLbW7vGSC2rZNWtUmxbNpMoK78S5+DMn30Mw=
-X-Google-Smtp-Source: AGHT+IE3Nl6HhQbImCc7HNzmXASVxJI6AlnLeAyTTLfsyTQqm8VdRyDu8xZbz1y0VAAQ8i8FgwAcSqXzr2yBpbv203U=
-X-Received: by 2002:ac2:465b:0:b0:4f6:29cf:c0dd with SMTP id
- s27-20020ac2465b000000b004f629cfc0ddmr2826750lfo.8.1692525751081; Sun, 20 Aug
- 2023 03:02:31 -0700 (PDT)
+        Sun, 20 Aug 2023 07:13:05 -0400
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B300448A;
+        Sun, 20 Aug 2023 04:10:26 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.169])
+        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4RTCZM3Nn4z4f3lK0;
+        Sun, 20 Aug 2023 19:10:19 +0800 (CST)
+Received: from ubuntu20.huawei.com (unknown [10.67.174.33])
+        by APP2 (Coremail) with SMTP id Syh0CgA3omaW9OFkMkKZBA--.3932S2;
+        Sun, 20 Aug 2023 19:10:22 +0800 (CST)
+From:   "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florent Revest <revest@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        gongruiqi1@huawei.com
+Subject: [PATCH] samples: ftrace: replace bti assembly with hint for older compiler
+Date:   Sun, 20 Aug 2023 19:15:09 +0800
+Message-Id: <20230820111509.1470826-1-gongruiqi@huaweicloud.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20230816163517.112518-1-flaniel@linux.microsoft.com>
- <20230818213705.b4f5e18b392c4837068cba6f@kernel.org> <20230818114141.2a3a75ee@gandalf.local.home>
- <4853240.31r3eYUQgx@pwmachine> <20230818142033.1d7685e9@gandalf.local.home>
- <20230819101519.568d658fbb6461cc60d348e5@kernel.org> <CAPhsuW7d4cMi_FAtvyTn4HJWzRdocJaEVq-uYVcW43=JDE_EnA@mail.gmail.com>
- <20230820183218.bf0b04be3c0ccac5e7b2a587@kernel.org>
-In-Reply-To: <20230820183218.bf0b04be3c0ccac5e7b2a587@kernel.org>
-From:   Song Liu <song@kernel.org>
-Date:   Sun, 20 Aug 2023 03:02:18 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW73yT+D9HhLhi8pafYZsgT=qsqk5foAwGRTvStnWCZwNA@mail.gmail.com>
-Message-ID: <CAPhsuW73yT+D9HhLhi8pafYZsgT=qsqk5foAwGRTvStnWCZwNA@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 1/1] tracing/kprobe: Add multi-probe support for
- 'perf_kprobe' PMU
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Francis Laniel <flaniel@linux.microsoft.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: Syh0CgA3omaW9OFkMkKZBA--.3932S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxXw17KF48Gry7Cr47KFy8Krg_yoW5uF4Upa
+        9rC3srWF1rAF4DKas7u3WfAFy7t34UXrWDCan5Z34FqasIkrykWrW7trn7Xw4xJr1fCFWx
+        XF1DAryUtF43ZwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUgCb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+        xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+        0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+        x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+        0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Y
+        z7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
+        AF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4l
+        IxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s
+        0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsG
+        vfC2KfnxnUUI43ZEXa7IU1zuWJUUUUU==
+X-CM-SenderInfo: pjrqw2pxltxq5kxd4v5lfo033gof0z/
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sun, Aug 20, 2023 at 2:32=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.o=
-rg> wrote:
->
-[...]
-> > >
-> > > perf_event_attr::kprobe_func =3D "_text";
-> > > perf_event_attr::probe_offset =3D OFFSET;
-> > >
-> > > Then, it should be able to specify the correct one. Of course you can=
- use
-> > > other unique symbols around the target symbol.
-> >
-> > Trying to catch up with the thread.
->
-> Thanks for your reply :)
->
-> >
-> > Besides the CAP_* issue, we can do this with
-> >
-> > perf_event_attr::kprobe_func =3D NULL;
-> > perf_event_attr::kprobe_addr =3D address;
->
-> As I pointed, you don't need actual address, instead, you can specify the
-> probe point via "unique symbol" + offset.
+From: "GONG, Ruiqi" <gongruiqi1@huawei.com>
 
-Technically, this works. But it is weird to me.
+When cross-building the arm64 kernel with allmodconfig using GCC 9.4,
+the following error occurs on multiple files under samples/ftrace/:
 
-> >
-> > Then for the CAP_*, I think we should give CAP_PERFMON access to
-> > /proc/kallsyms. Would this work?
->
-> For the "unique symbol" + offset, you don't need the kallsyms, but need t=
-o
-> access the System.map or vmlinux image. In this case, we don't need to ex=
-pand
-> the CAP_PERFMON capabilities.
+/tmp/ccPC1ODs.s: Assembler messages:
+/tmp/ccPC1ODs.s:8: Error: selected processor does not support `bti c'
 
-I agree this is not needed in this case. But I wonder whether it makes sens=
-e
-to give CAP_PERFMON access to /proc/kallsyms. Will this change make
-CAP_PERFMON less secure?
+Fix this issue by replacing `bti c` with `hint 34`, which is compatible
+for the older compiler.
 
-Thanks,
-Song
+Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
+---
+ samples/ftrace/ftrace-direct-modify.c       | 4 ++--
+ samples/ftrace/ftrace-direct-multi-modify.c | 4 ++--
+ samples/ftrace/ftrace-direct-multi.c        | 2 +-
+ samples/ftrace/ftrace-direct-too.c          | 2 +-
+ samples/ftrace/ftrace-direct.c              | 2 +-
+ 5 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/samples/ftrace/ftrace-direct-modify.c b/samples/ftrace/ftrace-direct-modify.c
+index e5ed08098ff3..e2a6a69352df 100644
+--- a/samples/ftrace/ftrace-direct-modify.c
++++ b/samples/ftrace/ftrace-direct-modify.c
+@@ -105,7 +105,7 @@ asm (
+ "	.type		my_tramp1, @function\n"
+ "	.globl		my_tramp1\n"
+ "   my_tramp1:"
+-"	bti	c\n"
++"	hint	34\n" // bti	c
+ "	sub	sp, sp, #16\n"
+ "	stp	x9, x30, [sp]\n"
+ "	bl	my_direct_func1\n"
+@@ -117,7 +117,7 @@ asm (
+ "	.type		my_tramp2, @function\n"
+ "	.globl		my_tramp2\n"
+ "   my_tramp2:"
+-"	bti	c\n"
++"	hint	34\n" // bti	c
+ "	sub	sp, sp, #16\n"
+ "	stp	x9, x30, [sp]\n"
+ "	bl	my_direct_func2\n"
+diff --git a/samples/ftrace/ftrace-direct-multi-modify.c b/samples/ftrace/ftrace-direct-multi-modify.c
+index 292cff2b3f5d..2e349834d63c 100644
+--- a/samples/ftrace/ftrace-direct-multi-modify.c
++++ b/samples/ftrace/ftrace-direct-multi-modify.c
+@@ -112,7 +112,7 @@ asm (
+ "	.type		my_tramp1, @function\n"
+ "	.globl		my_tramp1\n"
+ "   my_tramp1:"
+-"	bti	c\n"
++"	hint	34\n" // bti	c
+ "	sub	sp, sp, #32\n"
+ "	stp	x9, x30, [sp]\n"
+ "	str	x0, [sp, #16]\n"
+@@ -127,7 +127,7 @@ asm (
+ "	.type		my_tramp2, @function\n"
+ "	.globl		my_tramp2\n"
+ "   my_tramp2:"
+-"	bti	c\n"
++"	hint	34\n" // bti	c
+ "	sub	sp, sp, #32\n"
+ "	stp	x9, x30, [sp]\n"
+ "	str	x0, [sp, #16]\n"
+diff --git a/samples/ftrace/ftrace-direct-multi.c b/samples/ftrace/ftrace-direct-multi.c
+index b4391e08c913..9243dbfe4d0c 100644
+--- a/samples/ftrace/ftrace-direct-multi.c
++++ b/samples/ftrace/ftrace-direct-multi.c
+@@ -75,7 +75,7 @@ asm (
+ "	.type		my_tramp, @function\n"
+ "	.globl		my_tramp\n"
+ "   my_tramp:"
+-"	bti	c\n"
++"	hint	34\n" // bti	c
+ "	sub	sp, sp, #32\n"
+ "	stp	x9, x30, [sp]\n"
+ "	str	x0, [sp, #16]\n"
+diff --git a/samples/ftrace/ftrace-direct-too.c b/samples/ftrace/ftrace-direct-too.c
+index e9804c5307c0..e39c3563ae4e 100644
+--- a/samples/ftrace/ftrace-direct-too.c
++++ b/samples/ftrace/ftrace-direct-too.c
+@@ -81,7 +81,7 @@ asm (
+ "	.type		my_tramp, @function\n"
+ "	.globl		my_tramp\n"
+ "   my_tramp:"
+-"	bti	c\n"
++"	hint	34\n" // bti	c
+ "	sub	sp, sp, #48\n"
+ "	stp	x9, x30, [sp]\n"
+ "	stp	x0, x1, [sp, #16]\n"
+diff --git a/samples/ftrace/ftrace-direct.c b/samples/ftrace/ftrace-direct.c
+index 20f4a7caa810..32c477da1e9a 100644
+--- a/samples/ftrace/ftrace-direct.c
++++ b/samples/ftrace/ftrace-direct.c
+@@ -72,7 +72,7 @@ asm (
+ "	.type		my_tramp, @function\n"
+ "	.globl		my_tramp\n"
+ "   my_tramp:"
+-"	bti	c\n"
++"	hint	34\n" // bti	c
+ "	sub	sp, sp, #32\n"
+ "	stp	x9, x30, [sp]\n"
+ "	str	x0, [sp, #16]\n"
+-- 
+2.25.1
+
