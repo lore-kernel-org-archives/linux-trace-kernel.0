@@ -2,105 +2,54 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2156AEE4993
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 21 Aug 2023 14:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C6AEE4996
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 21 Aug 2023 14:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230472AbjHUOBi (ORCPT
+        id S235635AbjHUOEq (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 21 Aug 2023 10:01:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39676 "EHLO
+        Mon, 21 Aug 2023 10:04:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231825AbjHUOBi (ORCPT
+        with ESMTP id S235650AbjHUOEq (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 21 Aug 2023 10:01:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E4FBE6;
-        Mon, 21 Aug 2023 07:01:34 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9E8CE6150E;
-        Mon, 21 Aug 2023 14:01:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2852C433C8;
-        Mon, 21 Aug 2023 14:01:32 +0000 (UTC)
-Date:   Mon, 21 Aug 2023 10:01:46 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+        Mon, 21 Aug 2023 10:04:46 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36C4410C;
+        Mon, 21 Aug 2023 07:04:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=bzEiVHOrHwxgsH8/5d+D3ydaDZ0OK3YDR9Ve+FNnxZ4=; b=cQThuChSXi+tbLGRq9JRmAluiS
+        TlhpyQ5ZOKEhOcSd9FzGErQw9EU/k53vGl7PL1t7LTdEtUm59bh1sBZ84lCaaZmhivFWpgASW+T5G
+        eWjtXfrKQ13nD/1mlIRN9wev0NcLeJfCRfXnKbUd3w0Ltu3VB+o+3FROIU4ACFqvNGDS7DWN99wQb
+        IAHCG2VHukeq7B846FW9GP207/Ibdt1kB1pQMjueJBeIAL4jLvypBDil7rklkVS4g47G56z4MPipL
+        qnIiqVMc5UXa+y9Z1VxG9TUnwTGANeNcDk1lfPdhXLHf6n/2G7LS/QqTvNi9CpR/C4w3vPEDnbd71
+        LKdTQYMg==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qY5W7-00Ab04-QU; Mon, 21 Aug 2023 14:04:27 +0000
+Date:   Mon, 21 Aug 2023 15:04:27 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     linux-trace-kernel@vger.kernel.org, linux-docs@vger.kernel.org
 Subject: Re: [PATCH] tracefs: Fix kernel-doc warnings
-Message-ID: <20230821100146.5379a9c2@gandalf.local.home>
-In-Reply-To: <20230818201414.2729745-1-willy@infradead.org>
+Message-ID: <ZONu6+WAjUXNKn7l@casper.infradead.org>
 References: <20230818201414.2729745-1-willy@infradead.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <20230821100146.5379a9c2@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230821100146.5379a9c2@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 18 Aug 2023 21:14:13 +0100
-"Matthew Wilcox (Oracle)" <willy@infradead.org> wrote:
+On Mon, Aug 21, 2023 at 10:01:46AM -0400, Steven Rostedt wrote:
+> This is one of the cases I disagree with kerneldoc. I mean, this isn't a
+> public structure (it's only in this file) so I don't expect it to be
+> parsed. These three fields act as one. Having them in the kerneldoc format
+> above makes them look as three distinct fields. Perhaps the solution is to
+> get rid of the starting /** so that it's no longer in kerneldoc format.
 
-> Move the per-member documentation into the header to fix the complaints
-> from kernel-doc.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->  fs/tracefs/event_inode.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-> index da8d2e73cc47..7ca3857ddb89 100644
-> --- a/fs/tracefs/event_inode.c
-> +++ b/fs/tracefs/event_inode.c
-> @@ -37,6 +37,9 @@ struct eventfs_inode {
->   * @ei:		list of files and directories within directory
->   * @fop:	file_operations for file or directory
->   * @iop:	inode_operations for file or directory
-> + * @del_list:	list of eventfs_file to delete
-> + * @rcu:	eventfs_file to delete
-> + * @is_freed:	Non-zero if @del_list or @rcu is active
->   * @data:	something that the caller will want to get to later on
->   * @mode:	the permission that the file or directory should have
->   */
-> @@ -49,9 +52,9 @@ struct eventfs_file {
->  	const struct file_operations	*fop;
->  	const struct inode_operations	*iop;
->  	union {
-> -		struct list_head	del_list; /* list of eventfs_file to delete */
-> -		struct rcu_head		rcu; /* eventfs_file to delete */
-> -		unsigned long		is_freed; /* Freed if one of the above is set */
-> +		struct list_head	del_list;
-> +		struct rcu_head		rcu;
-> +		unsigned long		is_freed;
-
-This is one of the cases I disagree with kerneldoc. I mean, this isn't a
-public structure (it's only in this file) so I don't expect it to be
-parsed. These three fields act as one. Having them in the kerneldoc format
-above makes them look as three distinct fields. Perhaps the solution is to
-get rid of the starting /** so that it's no longer in kerneldoc format.
-
-Maybe move the comments just above the union?
-
- 	const struct file_operations	*fop;
- 	const struct inode_operations	*iop;
-	/*
-	 * @del_list:	list of eventfs_file to delete
-	 * @rcu:	eventfs_file to delete
-	 * @is_freed:	Non-zero if @del_list or @rcu is active
-	 */
-	union {
-		struct list_head	del_list;
-		struct rcu_head		rcu;
-		unsigned long		is_freed;
-	};
-
--- Steve
-
-
->  	};
->  	void				*data;
->  	umode_t				mode;
-
+Yes, take it out of kernel-doc's purview by removing that second *.
+I don't think you need me to send a v2 patch to do that ;-)
