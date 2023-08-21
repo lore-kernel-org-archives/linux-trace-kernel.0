@@ -2,102 +2,103 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93489EE49A5
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 21 Aug 2023 18:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2FDEE4996
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 21 Aug 2023 22:32:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237057AbjHUSIF (ORCPT
+        id S230043AbjHUWcR (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 21 Aug 2023 14:08:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36136 "EHLO
+        Mon, 21 Aug 2023 18:32:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232942AbjHUSIE (ORCPT
+        with ESMTP id S229445AbjHUWcQ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 21 Aug 2023 14:08:04 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0282E8
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Aug 2023 11:08:00 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1bbc87ded50so22282515ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Aug 2023 11:08:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692641280; x=1693246080;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=C9KCTyEQmTzJ2AoVVtRj2q5ensCCizslMtl245k7Oc8=;
-        b=FGcqArs7DVaZTc+xNN2N3gLmdWMq4dzsQb9+vbF9C0ph+t2g1dyAJRdhXCdIeTpeJK
-         KK2WpBM1RtYPK+YYUYQJTv9iDOK3YKFROWs72Eb8EeBDkYOb2Q728jJij3+dVfDu0WFP
-         Uh5C/4U01yJA+09Dr98qdsXJx6KQlTLBQ7ZlU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692641280; x=1693246080;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C9KCTyEQmTzJ2AoVVtRj2q5ensCCizslMtl245k7Oc8=;
-        b=eHG+JGflBaRJphN+z9Sf1xr1wSq0KAAQA2QKAuvZn0CtMPC7KGMtFOEmvzkGuXQQzU
-         Bm8HyrrsrihDLUidw/wReoASguI+p92aIoAdNMeg3f1q8OBaNLGFuN4P8nmd1nXj21ct
-         xnbvaL81o1aR4kye1asWzKZOMgLrnRTYMuDAae5251LmPly4zWXDav81PeW0A8c68898
-         zAoyV7xX5OarblYggMOngHS8hhs7eNuvGso3709qdPexuDnYGW8Hiyr+OYTyEAIK0UPf
-         7AHk4Bm0a/NCP+YijNygiKnMQwoPQrR26tGhnimyLgFMviC/v8riXf5C3Tj/S+8AwZ2+
-         tClw==
-X-Gm-Message-State: AOJu0YwtNEt+gLPkJzxcK6jAcEOBYKTUYB/ki3u1md0pDnSugg5SIoh3
-        y0lHGk8xbnzFAx3JbGWxBmr/rM409fB8Nn5mUaI=
-X-Google-Smtp-Source: AGHT+IHVVBCrzwc3bXE9J1IBDI694b58opdLYIe2kSbRwqtBExci3L9ntVkfSI6zbRYvHAcufxVwbw==
-X-Received: by 2002:a17:902:da89:b0:1bd:c956:2798 with SMTP id j9-20020a170902da8900b001bdc9562798mr6199513plx.46.1692641280381;
-        Mon, 21 Aug 2023 11:08:00 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id o12-20020a170902d4cc00b001b8a897cd26sm7337781plg.195.2023.08.21.11.07.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Aug 2023 11:07:59 -0700 (PDT)
-Date:   Mon, 21 Aug 2023 11:07:58 -0700
-From:   Kees Cook <keescook@chromium.org>
+        Mon, 21 Aug 2023 18:32:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF247E4;
+        Mon, 21 Aug 2023 15:32:07 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 63DA761811;
+        Mon, 21 Aug 2023 22:32:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A70DC433C7;
+        Mon, 21 Aug 2023 22:32:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692657126;
+        bh=H8skakv6YVucMh59g7idxop0KkgTdhMqCG9Dz2MfJ6k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=exggA+UErTO4RvT3aZOPQfBgZloJ+3bESHr2x9jayiLxserNx3uYES+bY6mzl5M0S
+         yo48tFAkt7dFRnjzTd2clBeE3UDZQkkhhnn7uezZosN2WEPFVCtQ7V0fnC378ofHf0
+         YsNlEv8nmS5jktqfTO/en7i1FUC7I6p2nU5Nvy4JdehRISvEssC2T3iJO5SpSrM3CX
+         NwcaBhi/FkCXE+8rBTxRwjSd0IAfQE/mHDbYc1pYMH6PUzjUuXMdVrjB6xVuQkH2+H
+         cai/JJrJlo6uA07pLfkxzWEbKoygMQ1ujEKN/+QlZZb+clzok2/3NpKEZ6wJscaVqv
+         XymHvHg3BwLCQ==
+Date:   Tue, 22 Aug 2023 07:32:01 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Song Liu <song@kernel.org>,
-        Francis Laniel <flaniel@linux.microsoft.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 1/1] tracing/kprobe: Add multi-probe support for
- 'perf_kprobe' PMU
-Message-ID: <202308211106.D2D2887@keescook>
-References: <4853240.31r3eYUQgx@pwmachine>
- <20230818142033.1d7685e9@gandalf.local.home>
- <20230819101519.568d658fbb6461cc60d348e5@kernel.org>
- <CAPhsuW7d4cMi_FAtvyTn4HJWzRdocJaEVq-uYVcW43=JDE_EnA@mail.gmail.com>
- <20230820183218.bf0b04be3c0ccac5e7b2a587@kernel.org>
- <CAPhsuW73yT+D9HhLhi8pafYZsgT=qsqk5foAwGRTvStnWCZwNA@mail.gmail.com>
- <20230820221612.33dfc3b3072f8bd8517f95b5@kernel.org>
- <CAPhsuW7+dRddDe9XLuM2ANnGZOa2J4MnSDkWZ_xZCGVxj02bXQ@mail.gmail.com>
- <20230821190152.c467e40a5ee3d57715600159@kernel.org>
- <20230821104550.57d60a75@gandalf.local.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230821104550.57d60a75@gandalf.local.home>
+Cc:     Zheng Yejian <zhengyejian1@huawei.com>, <laijs@cn.fujitsu.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] tracing: Introduce pipe_cpumask to avoid race on
+ trace_pipes
+Message-Id: <20230822073201.900bcfa52afae3b48755fc6d@kernel.org>
+In-Reply-To: <20230821111725.4bfbe7c5@gandalf.local.home>
+References: <20230817115057.1637676-1-zhengyejian1@huawei.com>
+        <20230818022645.1948314-1-zhengyejian1@huawei.com>
+        <20230818140309.b0a720afa87b05a2b7b27315@kernel.org>
+        <20230818094128.7cf1d58b@gandalf.local.home>
+        <20230818232301.902ad9319569379ebd7df557@kernel.org>
+        <20230818115322.3dfda470@gandalf.local.home>
+        <20230819104257.80203c3916509cc9eb9327c1@kernel.org>
+        <20230821111725.4bfbe7c5@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Aug 21, 2023 at 10:45:50AM -0400, Steven Rostedt wrote:
-> On Mon, 21 Aug 2023 19:01:52 +0900
+On Mon, 21 Aug 2023 11:17:25 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> On Sat, 19 Aug 2023 10:42:57 +0900
 > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> > > kprobe BPF program has access to pt_regs, so it can read ip of the
-> > > attached function. Can we do the same with regular kprobe (no bpf)?  
+> > >From 92242480285448360c9390a743ea7b3751bb3e61 Mon Sep 17 00:00:00 2001  
+> > From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+> > Date: Thu, 17 Aug 2023 14:08:40 +0900
+> > Subject: [PATCH 1/3] tools/virtio-trace: Ignore EAGAIN error on splice()
 > > 
-> > Yes, it can. So I think it is OK to expand CAP_PERFMON to access kallsyms.
-> > But this means CAP_PERMON itself is not safe in some case.
+> > splice() can return EAGAIN error instead of returning 0 size read.
+> > In that case, wait a while and try to call splice() again.
+> > 
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> What are the privileges that CAP_PERFMON gives. I can see why Kees told me
-> to avoid capabilities when looking at what has access to tracefs. Because
-> it becomes very difficult to know what the privileges you are giving when
-> you give out a capability. I just stick to normal ACL (file permissions)
-> and everything is much easier and simpler to know what has access to what.
+> Bah,
+> 
+> When I pulled in Zheng's patch from patchwork, it included the above
+> signed-off-by. I was confused to why it added your SoB.
 
-At the very least, having a fd-based "handle" for access work. But yeah,
-capabilities get ugly quickly.
+Oops, I didn't noticed such patchwork behavior. 
 
-Anyway... what does CAP_PERFMON have access to right now? If it is
-allowed to read arbitrary kernel memory, then resolving symbols is fine.
-If it doesn't, then no, it shouldn't: it becomes a oracle for probing
-symbol locations.
+> 
+> Probably best if we had started this conversation on another thread and
+> not hijack the discussion about this patch.
+
+Agreed. Sorry for confusion.
+
+
+> 
+> -- Steve
+> 
+> 
+> > ---
+> >  tools/virtio/virtio-trace/trace-agent-rw.c | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+
 
 -- 
-Kees Cook
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
