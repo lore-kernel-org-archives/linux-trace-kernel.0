@@ -2,56 +2,49 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2FDEE4996
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 21 Aug 2023 22:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47146EE4996
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 21 Aug 2023 23:51:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230043AbjHUWcR (ORCPT
+        id S230242AbjHUXvH (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 21 Aug 2023 18:32:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49004 "EHLO
+        Mon, 21 Aug 2023 19:51:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbjHUWcQ (ORCPT
+        with ESMTP id S229610AbjHUXvH (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 21 Aug 2023 18:32:16 -0400
+        Mon, 21 Aug 2023 19:51:07 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF247E4;
-        Mon, 21 Aug 2023 15:32:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3172AE4;
+        Mon, 21 Aug 2023 16:51:02 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 63DA761811;
-        Mon, 21 Aug 2023 22:32:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A70DC433C7;
-        Mon, 21 Aug 2023 22:32:04 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B96AE6143D;
+        Mon, 21 Aug 2023 23:51:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB915C433C7;
+        Mon, 21 Aug 2023 23:50:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692657126;
-        bh=H8skakv6YVucMh59g7idxop0KkgTdhMqCG9Dz2MfJ6k=;
+        s=k20201202; t=1692661861;
+        bh=t8ZC1/hEix5LDwCxrMqOZDOEQvYXb18PrM5aegQ/9M0=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=exggA+UErTO4RvT3aZOPQfBgZloJ+3bESHr2x9jayiLxserNx3uYES+bY6mzl5M0S
-         yo48tFAkt7dFRnjzTd2clBeE3UDZQkkhhnn7uezZosN2WEPFVCtQ7V0fnC378ofHf0
-         YsNlEv8nmS5jktqfTO/en7i1FUC7I6p2nU5Nvy4JdehRISvEssC2T3iJO5SpSrM3CX
-         NwcaBhi/FkCXE+8rBTxRwjSd0IAfQE/mHDbYc1pYMH6PUzjUuXMdVrjB6xVuQkH2+H
-         cai/JJrJlo6uA07pLfkxzWEbKoygMQ1ujEKN/+QlZZb+clzok2/3NpKEZ6wJscaVqv
-         XymHvHg3BwLCQ==
-Date:   Tue, 22 Aug 2023 07:32:01 +0900
+        b=XeZHg0GL0LyHsXU67Kyyw/C9OwjpLxNFumDun+LeQWvzGmytze4PXp7u8J6SVg11S
+         HdskExZxok3W1zxlENFQCefXioQfdANw1aBFFQ9qZLGabTGTZQ7Ahu7cQiCEaNoVAE
+         1EfyQqGgFVd5ndMQKSm2KigxjOyGQfZDFO1RXxUPiVMOBhSjjXcDeXSu/Q4jnLOYYq
+         6Vecqwxk/SkKBDXtI5e4zbUVoQsRIJuITb6LmifURT7IZXSdKwHEq0pzMgUj8ESC4p
+         1J0xxJLYRHKcYdWgIrW3PQhNp/2J+kDZisymhtFB8bwQ22IJAW29GJfQNaYlkc6jvp
+         KWI4mZP5jdpww==
+Date:   Tue, 22 Aug 2023 08:50:57 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Zheng Yejian <zhengyejian1@huawei.com>, <laijs@cn.fujitsu.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] tracing: Introduce pipe_cpumask to avoid race on
- trace_pipes
-Message-Id: <20230822073201.900bcfa52afae3b48755fc6d@kernel.org>
-In-Reply-To: <20230821111725.4bfbe7c5@gandalf.local.home>
-References: <20230817115057.1637676-1-zhengyejian1@huawei.com>
-        <20230818022645.1948314-1-zhengyejian1@huawei.com>
-        <20230818140309.b0a720afa87b05a2b7b27315@kernel.org>
-        <20230818094128.7cf1d58b@gandalf.local.home>
-        <20230818232301.902ad9319569379ebd7df557@kernel.org>
-        <20230818115322.3dfda470@gandalf.local.home>
-        <20230819104257.80203c3916509cc9eb9327c1@kernel.org>
-        <20230821111725.4bfbe7c5@gandalf.local.home>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Fix to avoid wakeup loop in splice read of
+ per-cpu buffer
+Message-Id: <20230822085057.f4d5fa6499bb3ab2a297657c@kernel.org>
+In-Reply-To: <20230821112703.23b1964b@gandalf.local.home>
+References: <169262755804.106231.8245792908363050528.stgit@devnote2>
+        <20230822001639.7a3cbedc3ad6e3938ee76e16@kernel.org>
+        <20230821112703.23b1964b@gandalf.local.home>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -60,45 +53,86 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 21 Aug 2023 11:17:25 -0400
+On Mon, 21 Aug 2023 11:27:03 -0400
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Sat, 19 Aug 2023 10:42:57 +0900
+> On Tue, 22 Aug 2023 00:16:39 +0900
 > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> > >From 92242480285448360c9390a743ea7b3751bb3e61 Mon Sep 17 00:00:00 2001  
-> > From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-> > Date: Thu, 17 Aug 2023 14:08:40 +0900
-> > Subject: [PATCH 1/3] tools/virtio-trace: Ignore EAGAIN error on splice()
+> > BTW, even with this fix, blocking splice still causes a strange behavior.
+> > If I set '400' to buffer_size_kb (so 100 pages) and '1' to buffer_percent,
+> > splice always returns 8192 (2 pages) to read. But I expected that should
+> > return 4096 (1 page). This means splice() waits longer than I thought.
 > > 
-> > splice() can return EAGAIN error instead of returning 0 size read.
-> > In that case, wait a while and try to call splice() again.
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > I think the fullfilled percentage calculation will be a bit wrong.
 > 
-> Bah,
-> 
-> When I pulled in Zheng's patch from patchwork, it included the above
-> signed-off-by. I was confused to why it added your SoB.
+> Note, the percentage is when to wake up the task. If between the wakeup and
+> the read/splice, another ring buffer page gets filled more, then it will
+> give that as well. The buffer_percent is just how long to wait, not for how
+> much to read.
 
-Oops, I didn't noticed such patchwork behavior. 
+Yes, but I used the trace_marker as Zheng did for testing, and I saw the
+buffer is filled more than 4096 bytes via tracefs/per_cpu/cpu*/stats.
 
 > 
-> Probably best if we had started this conversation on another thread and
-> not hijack the discussion about this patch.
+> Now if you test this with just adding enough to fill one page, and it
+> doesn't wake up the reader, then that would be a bug.
 
-Agreed. Sorry for confusion.
+Yes.
 
+Run trace_agent with 1% buffer_percent == 1 page;
 
-> 
-> -- Steve
-> 
-> 
-> > ---
-> >  tools/virtio/virtio-trace/trace-agent-rw.c | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
+ # echo 400 > /sys/kernel/tracing/buffer_size_kb
+ # echo 1 > /sys/kernel/tracing/buffer_percent
+ # trace-agent &
 
+Ready to read in the host side,
+
+$ for i in `seq 0 7`; do cat trace-path-cpu$i.out > trace-data.$i & done
+$ echo 1 > agent-ctl-path.in
+
+Write events on per-cpu buffer in the guest
+ # for i in `seq 1 1000`; do echo "test event data $i" | tee /sys/kernel/tracing/trace_marker > /dev/null; done 
+
+But trace_agent doesn't wake up. The data is still there.
+
+ # grep bytes /sys/kernel/tracing/per_cpu/cpu*/stats 
+/sys/kernel/tracing/per_cpu/cpu0/stats:bytes: 5936
+/sys/kernel/tracing/per_cpu/cpu1/stats:bytes: 5584
+/sys/kernel/tracing/per_cpu/cpu2/stats:bytes: 6368
+/sys/kernel/tracing/per_cpu/cpu3/stats:bytes: 4704
+/sys/kernel/tracing/per_cpu/cpu4/stats:bytes: 5972
+/sys/kernel/tracing/per_cpu/cpu5/stats:bytes: 5620
+/sys/kernel/tracing/per_cpu/cpu6/stats:bytes: 6588
+/sys/kernel/tracing/per_cpu/cpu7/stats:bytes: 3496
+
+And write more events via trace_marker again
+
+ # for i in `seq 1001 2000`; do echo "test event data $i" | tee /sys/kernel/tracing/trace_marker > /dev/null; done 
+
+The data is read;
+
+ # grep bytes /sys/kernel/tracing/per_cpu/cpu*/stats 
+/sys/kernel/tracing/per_cpu/cpu0/stats:bytes: 3220
+/sys/kernel/tracing/per_cpu/cpu1/stats:bytes: 3960
+/sys/kernel/tracing/per_cpu/cpu2/stats:bytes: 2420
+/sys/kernel/tracing/per_cpu/cpu3/stats:bytes: 2024
+/sys/kernel/tracing/per_cpu/cpu4/stats:bytes: 2912
+/sys/kernel/tracing/per_cpu/cpu5/stats:bytes: 1064
+/sys/kernel/tracing/per_cpu/cpu6/stats:bytes: 5004
+/sys/kernel/tracing/per_cpu/cpu7/stats:bytes: 2684
+
+I think this full_hit() function is somewhat wrong.
+
+static __always_inline bool full_hit(struct trace_buffer *buffer, int cpu, int full)
+{
+...
+        return (dirty * 100) > (full * nr_pages);
+}
+
+Ah, I also found a mistake on this patch too.
+
+Thanks, 
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
