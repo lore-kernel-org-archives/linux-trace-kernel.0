@@ -2,112 +2,145 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE66EE4993
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 21 Aug 2023 09:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3673EE4993
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 21 Aug 2023 10:02:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233581AbjHUJVc (ORCPT
+        id S232433AbjHUKCB (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 21 Aug 2023 05:21:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44468 "EHLO
+        Mon, 21 Aug 2023 06:02:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230106AbjHUJVc (ORCPT
+        with ESMTP id S234551AbjHUKCA (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 21 Aug 2023 05:21:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18409C4;
-        Mon, 21 Aug 2023 02:21:30 -0700 (PDT)
+        Mon, 21 Aug 2023 06:02:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6ACED8;
+        Mon, 21 Aug 2023 03:01:58 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9C16D6125C;
-        Mon, 21 Aug 2023 09:21:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40F6EC433C8;
-        Mon, 21 Aug 2023 09:21:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3FD1762F8F;
+        Mon, 21 Aug 2023 10:01:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22E9EC433C8;
+        Mon, 21 Aug 2023 10:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692609688;
-        bh=wQ823UgFqIqDfWCKZGlZx1bFLqWPzhn5niQXXjayheM=;
+        s=k20201202; t=1692612117;
+        bh=CwSv8Ylq7kff7Hh4zGeiG+OV25bfwUWFB6eJ0KOr830=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SrueoX1nq4yF7grnCq4ELgdAax8Yyi2NHJninj7vPqDUJL1PJFLCnRM1vBH37vcJJ
-         8qHyPhzLfGihfY7lfJ6p6n4AHVetJED6Es+5+JKM7dPYZvjX9ePblyAkHVVLyfI/EF
-         m580dod0Cyel63pUEIxLzHViBEfRqnqya1M0gzuJ21YhyE8JOjN8eQZO0mBvWEjzrL
-         /oGbTF8Xor1GOLUbWSgSwVizfByTB52PqUJeTwsB9TZFpD/OkUZHZMVapW53dtrziA
-         DtJI68HueRZnBepXBfRtmkskbEn2HiVEvOA/ubCTyFTNncM3bCQuOXnWTFfMoAhjDf
-         cxm1UzYPH4JOQ==
-Date:   Mon, 21 Aug 2023 18:21:24 +0900
+        b=qmTO9pEPf8bgQOHG02oUtM682WyHjXAQiZJxGc/xcOF/oVeupNQANktuCNRffa5FZ
+         Nou0VFbdHJcbQydAMYckSdAECs87ztgMssWl1cHHY16/2gAzpJlEaLS0Gb7gaA7mwY
+         1QBuCaztnJ/trIbGfsQKcgFJNOpTIc6OrGymrpq2QKfQzM2O5AHpkEQ2Hl9sD5sGSh
+         7O2kATvpcRSyPJNIRG83NjjZLX0mCJ0WZtVh8aU9NBVC+4hWisbOWobf0+sVkYR8Ar
+         EPLodjitY5zcmmCMkNWE8IN7g5t+eQBPABf9J2ZMp2YIm0rXkSeAtR8wmemC2RoRMO
+         GqdLjGsBm4uZw==
+Date:   Mon, 21 Aug 2023 19:01:52 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Zheng Yejian <zhengyejian1@huawei.com>, <laijs@cn.fujitsu.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] tracing: Introduce pipe_cpumask to avoid race on
- trace_pipes
-Message-Id: <20230821182124.a1df7e3bf57e78e761065055@kernel.org>
-In-Reply-To: <20230820223301.1a013170@rorschach.local.home>
-References: <20230817115057.1637676-1-zhengyejian1@huawei.com>
-        <20230818022645.1948314-1-zhengyejian1@huawei.com>
-        <20230818140309.b0a720afa87b05a2b7b27315@kernel.org>
-        <20230818094128.7cf1d58b@gandalf.local.home>
-        <20230818232301.902ad9319569379ebd7df557@kernel.org>
-        <20230818115322.3dfda470@gandalf.local.home>
-        <20230819104257.80203c3916509cc9eb9327c1@kernel.org>
-        <20230821111954.8ca184e9fba62940825eb0e0@kernel.org>
-        <20230820223301.1a013170@rorschach.local.home>
+To:     Song Liu <song@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Francis Laniel <flaniel@linux.microsoft.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v1 1/1] tracing/kprobe: Add multi-probe support for
+ 'perf_kprobe' PMU
+Message-Id: <20230821190152.c467e40a5ee3d57715600159@kernel.org>
+In-Reply-To: <CAPhsuW7+dRddDe9XLuM2ANnGZOa2J4MnSDkWZ_xZCGVxj02bXQ@mail.gmail.com>
+References: <20230816163517.112518-1-flaniel@linux.microsoft.com>
+        <20230818213705.b4f5e18b392c4837068cba6f@kernel.org>
+        <20230818114141.2a3a75ee@gandalf.local.home>
+        <4853240.31r3eYUQgx@pwmachine>
+        <20230818142033.1d7685e9@gandalf.local.home>
+        <20230819101519.568d658fbb6461cc60d348e5@kernel.org>
+        <CAPhsuW7d4cMi_FAtvyTn4HJWzRdocJaEVq-uYVcW43=JDE_EnA@mail.gmail.com>
+        <20230820183218.bf0b04be3c0ccac5e7b2a587@kernel.org>
+        <CAPhsuW73yT+D9HhLhi8pafYZsgT=qsqk5foAwGRTvStnWCZwNA@mail.gmail.com>
+        <20230820221612.33dfc3b3072f8bd8517f95b5@kernel.org>
+        <CAPhsuW7+dRddDe9XLuM2ANnGZOa2J4MnSDkWZ_xZCGVxj02bXQ@mail.gmail.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sun, 20 Aug 2023 22:33:01 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Sun, 20 Aug 2023 23:09:22 -0700
+Song Liu <song@kernel.org> wrote:
 
-> On Mon, 21 Aug 2023 11:19:54 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> On Sun, Aug 20, 2023 at 6:16 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >
+> > On Sun, 20 Aug 2023 03:02:18 -0700
+> > Song Liu <song@kernel.org> wrote:
+> >
+> > > On Sun, Aug 20, 2023 at 2:32 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > > >
+> > > [...]
+> > > > > >
+> > > > > > perf_event_attr::kprobe_func = "_text";
+> > > > > > perf_event_attr::probe_offset = OFFSET;
+> > > > > >
+> > > > > > Then, it should be able to specify the correct one. Of course you can use
+> > > > > > other unique symbols around the target symbol.
+> > > > >
+> > > > > Trying to catch up with the thread.
+> > > >
+> > > > Thanks for your reply :)
+> > > >
+> > > > >
+> > > > > Besides the CAP_* issue, we can do this with
+> > > > >
+> > > > > perf_event_attr::kprobe_func = NULL;
+> > > > > perf_event_attr::kprobe_addr = address;
+> > > >
+> > > > As I pointed, you don't need actual address, instead, you can specify the
+> > > > probe point via "unique symbol" + offset.
+> > >
+> > > Technically, this works. But it is weird to me.
+> >
+> > It's not so weired because it is a relative address, e.g. from _text,
+> > this means "the address in the text section". And perf probe already
+> > uses it a while.
+> >
+> > > > >
+> > > > > Then for the CAP_*, I think we should give CAP_PERFMON access to
+> > > > > /proc/kallsyms. Would this work?
+> > > >
+> > > > For the "unique symbol" + offset, you don't need the kallsyms, but need to
+> > > > access the System.map or vmlinux image. In this case, we don't need to expand
+> > > > the CAP_PERFMON capabilities.
+> > >
+> > > I agree this is not needed in this case. But I wonder whether it makes sense
+> > > to give CAP_PERFMON access to /proc/kallsyms. Will this change make
+> > > CAP_PERFMON less secure?
+> >
+> > Yes, because /proc/kallsyms will expose the real address of the all
+> > symbols, which makes KASLR useless. But on the other hand, it maybe
+> > already useless because BPF program can read any real address, right?
+> > Hmm, from this point of view, is the CAP_PERFMON meaningful?
+> > (maybe it can avoid loading modules etc.)
 > 
-> > Ah, this caused a drop. errno can be EAGAIN even if rlen > 0.
-> > I've fixed this and that works.
-> > BTW, I think this virtio-trace would be better to move under
-> > tools/tracing because it is a tracing tool.
-> 
-> I'm fine with that, as where it is, I'm very unfamiliar with this tool.
-> It is likely not taking advantage of all the tracing tooling we
-> have. I actually never even used it.
+> kprobe BPF program has access to pt_regs, so it can read ip of the
+> attached function. Can we do the same with regular kprobe (no bpf)?
 
-Actually I also used this after a long time. :P
-I think this is a kind of simplest splice support test tool.
-
-What the tool does;
-
-(guest side)
-per_cpu/cpu*/trace_pipe_raw
-     |
-   (splice)
-     |
-  anon-pipe
-     |
-   (splice)
-     |
-  virtio-serial chardev
-     |
-= virtqueue ===
-     |
-  named-fifo
-(host-side)
-
-So that we can move the traced data (page) from the ring buffer to
-virtqueue. Then host tool can read the trace data without copying.
-(The host part needs a copy to read or write to file.)
-Obviously, this requires some integration work with other tracing
-tools, because this is just a "fastest trace-data dumper".
-
-(I think Yoshihiro worked that integration, but it was not updated)
-
-https://lkml.org/lkml/2013/9/12/788
+Yes, it can. So I think it is OK to expand CAP_PERFMON to access kallsyms.
+But this means CAP_PERMON itself is not safe in some case.
 
 Thank you,
+
+> 
+> Thanks,
+> Song
+> 
+> >
+> > Thank you,
+> >
+> > >
+> > > Thanks,
+> > > Song
+> >
+> >
+> > --
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
