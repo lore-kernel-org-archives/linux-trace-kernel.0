@@ -2,103 +2,167 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A32EE4993
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 21 Aug 2023 16:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A67EEE49A6
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 21 Aug 2023 16:12:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229893AbjHUQHV (ORCPT
+        id S236220AbjHUQM6 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 21 Aug 2023 12:07:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47398 "EHLO
+        Mon, 21 Aug 2023 12:12:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232366AbjHUQHS (ORCPT
+        with ESMTP id S232788AbjHUQM6 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 21 Aug 2023 12:07:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17896F3;
-        Mon, 21 Aug 2023 09:07:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A08AF62567;
-        Mon, 21 Aug 2023 16:07:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58136C433C7;
-        Mon, 21 Aug 2023 16:07:15 +0000 (UTC)
-Date:   Mon, 21 Aug 2023 12:07:28 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+        Mon, 21 Aug 2023 12:12:58 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 24B5EA8;
+        Mon, 21 Aug 2023 09:12:56 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC8CA2F4;
+        Mon, 21 Aug 2023 09:13:36 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.4.98])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A43153F64C;
+        Mon, 21 Aug 2023 09:12:54 -0700 (PDT)
+Date:   Mon, 21 Aug 2023 17:12:51 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     "GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+        Steven Rostedt <rostedt@goodmis.org>
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Beau Belgrave <beaub@linux.microsoft.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing/user_events: Fix an erroneous usage of
- struct_size()
-Message-ID: <20230821120728.7b34266c@gandalf.local.home>
-In-Reply-To: <7a20160628fa586a74936c9212102dbf896e7332.1692543738.git.christophe.jaillet@wanadoo.fr>
-References: <7a20160628fa586a74936c9212102dbf896e7332.1692543738.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Florent Revest <revest@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        gongruiqi1@huawei.com
+Subject: Re: [PATCH] samples: ftrace: replace bti assembly with hint for
+ older compiler
+Message-ID: <ZOONA8yHeszPwdEz@FVFF77S0Q05N>
+References: <20230820111509.1470826-1-gongruiqi@huaweicloud.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230820111509.1470826-1-gongruiqi@huaweicloud.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sun, 20 Aug 2023 17:02:42 +0200
-Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
+On Sun, Aug 20, 2023 at 07:15:09PM +0800, GONG, Ruiqi wrote:
+> From: "GONG, Ruiqi" <gongruiqi1@huawei.com>
+> 
+> When cross-building the arm64 kernel with allmodconfig using GCC 9.4,
+> the following error occurs on multiple files under samples/ftrace/:
+> 
+> /tmp/ccPC1ODs.s: Assembler messages:
+> /tmp/ccPC1ODs.s:8: Error: selected processor does not support `bti c'
+> 
+> Fix this issue by replacing `bti c` with `hint 34`, which is compatible
+> for the older compiler.
+> 
+> Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
 
-> If struct_size() returns a value that does not fit in a 'int', the size
-> passed to kzalloc() is wrong.
-> 
-> Remove the intermediate 'size' variable and use struct_size() directly.
-> 
-> Fixes: 7f5a08c79df3 ("user_events: Add minimal support for trace_event into ftrace")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Sorry about this; I'd forgotten about earlier compilers when reviewing the
+original patch. It's a bit unfortunate to have to hand-code this each time, but
+I'm not sure that it'd actually be cleaner to have a macro.
+
+For the moment, I reckon this is worth taking as-is.
+
+Steve, are you happy to add:
+
+  Fixes: 8c3526fb86060cb5 ("arm64: ftrace: Add direct call trampoline samples support")
+  Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+... ?
+
+Thanks,
+Mark.
+
 > ---
-> I don't know if 'size' can get bigger than a int in the real world, but the
-> change looks safe in any cases.
+>  samples/ftrace/ftrace-direct-modify.c       | 4 ++--
+>  samples/ftrace/ftrace-direct-multi-modify.c | 4 ++--
+>  samples/ftrace/ftrace-direct-multi.c        | 2 +-
+>  samples/ftrace/ftrace-direct-too.c          | 2 +-
+>  samples/ftrace/ftrace-direct.c              | 2 +-
+>  5 files changed, 7 insertions(+), 7 deletions(-)
 > 
-> On x86_64, looking at the .s files, the previous code had an extra:
->     movslq	%r13d, %r13
-> which really looks wrong to me.
-
-If size is bigger than int, then we have much bigger problems than this allocation.
-
-That means count is over 2 billion, and the kzalloc() will fail regardless.
-
-This is an unneeded change.
-
--- Steve
-
-
-> ---
->  kernel/trace/trace_events_user.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
+> diff --git a/samples/ftrace/ftrace-direct-modify.c b/samples/ftrace/ftrace-direct-modify.c
+> index e5ed08098ff3..e2a6a69352df 100644
+> --- a/samples/ftrace/ftrace-direct-modify.c
+> +++ b/samples/ftrace/ftrace-direct-modify.c
+> @@ -105,7 +105,7 @@ asm (
+>  "	.type		my_tramp1, @function\n"
+>  "	.globl		my_tramp1\n"
+>  "   my_tramp1:"
+> -"	bti	c\n"
+> +"	hint	34\n" // bti	c
+>  "	sub	sp, sp, #16\n"
+>  "	stp	x9, x30, [sp]\n"
+>  "	bl	my_direct_func1\n"
+> @@ -117,7 +117,7 @@ asm (
+>  "	.type		my_tramp2, @function\n"
+>  "	.globl		my_tramp2\n"
+>  "   my_tramp2:"
+> -"	bti	c\n"
+> +"	hint	34\n" // bti	c
+>  "	sub	sp, sp, #16\n"
+>  "	stp	x9, x30, [sp]\n"
+>  "	bl	my_direct_func2\n"
+> diff --git a/samples/ftrace/ftrace-direct-multi-modify.c b/samples/ftrace/ftrace-direct-multi-modify.c
+> index 292cff2b3f5d..2e349834d63c 100644
+> --- a/samples/ftrace/ftrace-direct-multi-modify.c
+> +++ b/samples/ftrace/ftrace-direct-multi-modify.c
+> @@ -112,7 +112,7 @@ asm (
+>  "	.type		my_tramp1, @function\n"
+>  "	.globl		my_tramp1\n"
+>  "   my_tramp1:"
+> -"	bti	c\n"
+> +"	hint	34\n" // bti	c
+>  "	sub	sp, sp, #32\n"
+>  "	stp	x9, x30, [sp]\n"
+>  "	str	x0, [sp, #16]\n"
+> @@ -127,7 +127,7 @@ asm (
+>  "	.type		my_tramp2, @function\n"
+>  "	.globl		my_tramp2\n"
+>  "   my_tramp2:"
+> -"	bti	c\n"
+> +"	hint	34\n" // bti	c
+>  "	sub	sp, sp, #32\n"
+>  "	stp	x9, x30, [sp]\n"
+>  "	str	x0, [sp, #16]\n"
+> diff --git a/samples/ftrace/ftrace-direct-multi.c b/samples/ftrace/ftrace-direct-multi.c
+> index b4391e08c913..9243dbfe4d0c 100644
+> --- a/samples/ftrace/ftrace-direct-multi.c
+> +++ b/samples/ftrace/ftrace-direct-multi.c
+> @@ -75,7 +75,7 @@ asm (
+>  "	.type		my_tramp, @function\n"
+>  "	.globl		my_tramp\n"
+>  "   my_tramp:"
+> -"	bti	c\n"
+> +"	hint	34\n" // bti	c
+>  "	sub	sp, sp, #32\n"
+>  "	stp	x9, x30, [sp]\n"
+>  "	str	x0, [sp, #16]\n"
+> diff --git a/samples/ftrace/ftrace-direct-too.c b/samples/ftrace/ftrace-direct-too.c
+> index e9804c5307c0..e39c3563ae4e 100644
+> --- a/samples/ftrace/ftrace-direct-too.c
+> +++ b/samples/ftrace/ftrace-direct-too.c
+> @@ -81,7 +81,7 @@ asm (
+>  "	.type		my_tramp, @function\n"
+>  "	.globl		my_tramp\n"
+>  "   my_tramp:"
+> -"	bti	c\n"
+> +"	hint	34\n" // bti	c
+>  "	sub	sp, sp, #48\n"
+>  "	stp	x9, x30, [sp]\n"
+>  "	stp	x0, x1, [sp, #16]\n"
+> diff --git a/samples/ftrace/ftrace-direct.c b/samples/ftrace/ftrace-direct.c
+> index 20f4a7caa810..32c477da1e9a 100644
+> --- a/samples/ftrace/ftrace-direct.c
+> +++ b/samples/ftrace/ftrace-direct.c
+> @@ -72,7 +72,7 @@ asm (
+>  "	.type		my_tramp, @function\n"
+>  "	.globl		my_tramp\n"
+>  "   my_tramp:"
+> -"	bti	c\n"
+> +"	hint	34\n" // bti	c
+>  "	sub	sp, sp, #32\n"
+>  "	stp	x9, x30, [sp]\n"
+>  "	str	x0, [sp, #16]\n"
+> -- 
+> 2.25.1
 > 
-> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-> index 33cb6af31f39..67cc71a872b0 100644
-> --- a/kernel/trace/trace_events_user.c
-> +++ b/kernel/trace/trace_events_user.c
-> @@ -2153,7 +2153,7 @@ static int user_events_ref_add(struct user_event_file_info *info,
->  {
->  	struct user_event_group *group = info->group;
->  	struct user_event_refs *refs, *new_refs;
-> -	int i, size, count = 0;
-> +	int i, count = 0;
->  
->  	refs = rcu_dereference_protected(info->refs,
->  					 lockdep_is_held(&group->reg_mutex));
-> @@ -2166,10 +2166,8 @@ static int user_events_ref_add(struct user_event_file_info *info,
->  				return i;
->  	}
->  
-> -	size = struct_size(refs, events, count + 1);
-> -
-> -	new_refs = kzalloc(size, GFP_KERNEL_ACCOUNT);
-> -
-> +	new_refs = kzalloc(struct_size(refs, events, count + 1),
-> +			   GFP_KERNEL_ACCOUNT);
->  	if (!new_refs)
->  		return -ENOMEM;
->  
-
