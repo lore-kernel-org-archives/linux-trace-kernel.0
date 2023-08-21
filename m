@@ -2,149 +2,150 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E22EE49AA
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 20 Aug 2023 20:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F1CEE49A4
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 21 Aug 2023 02:20:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231993AbjHTUj0 (ORCPT
+        id S232487AbjHUCUB (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 20 Aug 2023 16:39:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46072 "EHLO
+        Sun, 20 Aug 2023 22:20:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231994AbjHTUjN (ORCPT
+        with ESMTP id S230271AbjHUCUB (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 20 Aug 2023 16:39:13 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2E824680;
-        Sun, 20 Aug 2023 13:35:20 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id ffacd0b85a97d-31c3df710bdso444786f8f.1;
-        Sun, 20 Aug 2023 13:35:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692563683; x=1693168483;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6zB1xiQc5Oed0ZYgipibvdeoQBgtJ6iuUAyN6A/7wco=;
-        b=bgrJ3XaE1frdvL97Bmgr3FmqTq8aRBX0tMhv7wtsR7b37LoRROybd+/WDhOqikfPX6
-         MHWZczIpLBgz8biHKdIeoJcbw0IB5xLjj+xpwxmtpEj3SO1RGmzsqUYc7D960wOLliQ2
-         IXB6cPjYixbFljB6iWF+xUM/jU3bO/V415qkuAPn0pW3r2oqVdfKfeSH2JvdtlozaN67
-         ZhBbxHL3MWpeYoGzTTA+8UdoQ2Kzj0NWfuFGG9UvCuHkB4ckBydkDcp68g87ZatgUJhD
-         LAY7xhL1KDsMjINKEaHQ8UMX6VBZrNKaLg/i4IkAih3+CgFei5tCBgob6ZRymdhFtgip
-         yd4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692563683; x=1693168483;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6zB1xiQc5Oed0ZYgipibvdeoQBgtJ6iuUAyN6A/7wco=;
-        b=kI/VE2iKNwAkTNdVKLEMY8AusJ6w7c02DoNop+SRvVytUoNg0b9ZbsMzxeB0z3ZwDA
-         SNzyqseW24oSfITR2xAIOPJ7lQ0qH475mK3QqRIx3eKMxlp1BVGEM9iol0/ckvFRdz95
-         /dB5uPb/sjUmCNCWN6v2bffJiMdX8+dGVt42A1z5qS8ZgcpuuP0EbkzWzQ6/qEUSphw3
-         8zusSKtPwyJsE4U7tY/sAil9Cy3tcTq+rZnPw5MbkDew4yt1OcEa8AyOWbLA445KqdaZ
-         Ou9Q+OMukFXJR0NmudffCPxjJ/F0nUF9xi8pSYwPSCO63yvmuzBFP31hUEYUtYkdO/Qg
-         WzMA==
-X-Gm-Message-State: AOJu0YwHisklUviPoeAUxch1o759tSCxenV1OTXaKm1flG+ASEeK5drl
-        N9ajU8aZM4Zhauj92XVXPZc=
-X-Google-Smtp-Source: AGHT+IHuPhBgSvr4phlBQzV5Q5db4sPkNhymPKcH8wDywGVQHfaJbsJe5ZW6iS3tGiRSO6Zq6odO+w==
-X-Received: by 2002:adf:f291:0:b0:318:c108:67b0 with SMTP id k17-20020adff291000000b00318c10867b0mr3439092wro.48.1692563682769;
-        Sun, 20 Aug 2023 13:34:42 -0700 (PDT)
-Received: from krava ([83.240.60.227])
-        by smtp.gmail.com with ESMTPSA id l4-20020a1709062a8400b00997e00e78e6sm5196847eje.112.2023.08.20.13.34.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Aug 2023 13:34:42 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Sun, 20 Aug 2023 22:34:40 +0200
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Francis Laniel <flaniel@linux.microsoft.com>,
-        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        linux-trace-kernel@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>, bpf@vger.kernel.org
-Subject: Re: [RFC PATCH v1 1/1] tracing/kprobe: Add multi-probe support for
- 'perf_kprobe' PMU
-Message-ID: <ZOJ44P40bsSpUmYA@krava>
-References: <20230816163517.112518-1-flaniel@linux.microsoft.com>
- <2154216.irdbgypaU6@pwmachine>
- <20230818220537.75ce8210c6a4c80a5a8d16f8@kernel.org>
- <5702263.DvuYhMxLoT@pwmachine>
- <20230819101105.b0c104ae4494a7d1f2eea742@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230819101105.b0c104ae4494a7d1f2eea742@kernel.org>
+        Sun, 20 Aug 2023 22:20:01 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 197059C;
+        Sun, 20 Aug 2023 19:20:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A402360B95;
+        Mon, 21 Aug 2023 02:19:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AFF3C433C7;
+        Mon, 21 Aug 2023 02:19:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692584399;
+        bh=J4aanHv8aL7g1z0TXMNl+0w14e+lIrlmCKs7x3Ij/r0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VN3AACFBOgao56s96+LlpA/FzBfvdDMIDqOSVvVQpjQsgQHGrEtM9P69isiuz36F/
+         JnkbvVtvGAUjrVmbTsp/8+f8KEG5K67xkTL5pzzn7mRHEg1ri2yCeLrPFw9pVa//kF
+         /enEupMCfDzL7gr4HMSxsBqOa+AbSVNBC8ZCO7+Ff7V/jJISCJH3jZFr34hVh3KrPR
+         C2qnPA/cKSzF6l0crGTj06EJ8GG7nXzqlBHVViHYDR4StSTWf9sOZ86mSc2AtPOOs7
+         71xu+g0zJopcrshp/nRYzdZITyAktfRryD1Nq5S8DtbieXWnz8HMzTMhN8KRyYA8q0
+         e1Lu1MCYkRa0w==
+Date:   Mon, 21 Aug 2023 11:19:54 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Zheng Yejian <zhengyejian1@huawei.com>, <laijs@cn.fujitsu.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] tracing: Introduce pipe_cpumask to avoid race on
+ trace_pipes
+Message-Id: <20230821111954.8ca184e9fba62940825eb0e0@kernel.org>
+In-Reply-To: <20230819104257.80203c3916509cc9eb9327c1@kernel.org>
+References: <20230817115057.1637676-1-zhengyejian1@huawei.com>
+        <20230818022645.1948314-1-zhengyejian1@huawei.com>
+        <20230818140309.b0a720afa87b05a2b7b27315@kernel.org>
+        <20230818094128.7cf1d58b@gandalf.local.home>
+        <20230818232301.902ad9319569379ebd7df557@kernel.org>
+        <20230818115322.3dfda470@gandalf.local.home>
+        <20230819104257.80203c3916509cc9eb9327c1@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sat, Aug 19, 2023 at 10:11:05AM +0900, Masami Hiramatsu wrote:
+On Sat, 19 Aug 2023 10:42:57 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-SNIP
-
-> > > > > > +	func_addr = kallsyms_lookup_name(func);
-> > > > > > +	for (i = 0; i < array.size; i++) {
-> > > > > > +		struct trace_kprobe *tk_same_name;
-> > > > > > +		unsigned long address;
-> > > > > > +
-> > > > > > +		address = array.addrs[i];
-> > > > > > +		/* Skip the function address as we already registered it. */
-> > > > > > +		if (address == func_addr)
-> > > > > > +			continue;
-> > > > > > +
-> > > > > > +		/*
-> > > > > > +		 * alloc_trace_kprobe() first considers symbol name, so we set
-> > > > > > +		 * this to NULL to allocate this kprobe on the given address.
-> > > > > > +		 */
-> > > > > > +		tk_same_name = alloc_trace_kprobe(KPROBE_EVENT_SYSTEM, event,
-> > > > > > +						  (void *)address, NULL, offs,
-> > > > > > +						  0 /* maxactive */,
-> > > > > > +						  0 /* nargs */, is_return);
-> > > > > > +
-> > > > > > +		if (IS_ERR(tk_same_name)) {
-> > > > > > +			ret = -ENOMEM;
-> > > > > > +			goto error_free;
-> > > > > > +		}
-> > > > > > +
-> > > > > > +		init_trace_event_call(tk_same_name);
-> > > > > > +
-> > > > > > +		if (traceprobe_set_print_fmt(&tk_same_name->tp, ptype) < 0) {
-> > > > > > +			ret = -ENOMEM;
-
-also are we leaking tk_same_name in here?
-
-
-> > > > > > +			goto error_free;
-> > > > > > +		}
-> > > > > > +
-> > > > > > +		ret = append_trace_kprobe(tk_same_name, tk);
-> > > > > > +		if (ret)
-
-and here?
-
-jirka
-
-> > > > > > +			goto error_free;
-> > > > > > +	}
-> > > > > > +
-> > > > > > +end:
-> > > > > > +	kfree(array.addrs);
-> > > > > > 
-> > > > > >  	return trace_probe_event_call(&tk->tp);
-> > > > > > 
-> > > > > > +error_free:
-> > > > > > +	kfree(array.addrs);
-> > > > > > 
-> > > > > >  error:
-> > > > > >  	free_trace_kprobe(tk);
-> > > > > >  	return ERR_PTR(ret);
-> > > > 
-> > > > ---
-> > > > [1]: https://github.com/torvalds/linux/blob/
-> > > > 57012c57536f8814dec92e74197ee96c3498d24e/tools/perf/util/probe-event.c#L29
-> > > > 89- L2993
+> On Fri, 18 Aug 2023 11:53:22 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > On Fri, 18 Aug 2023 23:23:01 +0900
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > > 
+> > > It uses trace_pipe_raw. I guess if splice(from trace_pipe_raw to virtio-serial)
+> > > returns -1 and errno == EAGAIN, the trace data will be lost?
 > > 
+> > It shouldn't. If it does, then there's likely a bug. The code will block
+> > and if an interrupt comes in it will return immediately without reading
+> > from the buffer.
 > > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/trace/trace.c#n8262
 > > 
+> > I don't see where it would return -EINTR and consume data, but I may be
+> > missing something.
+> 
+> Hmm, I suspect the case if the spilice_to_pipe() returns -EAGAIN.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/trace/trace.c#n8491
+> 
+> It seems not handling such case.
+> 
+> Anyway, I also think something wrong in virtio-serial (or misusing?), since
+> it can not read anything from the host sometimes. I just setup the virtio-trace
+> with below patch (ignore EAGAIN).
+> 
+> 
+> From 92242480285448360c9390a743ea7b3751bb3e61 Mon Sep 17 00:00:00 2001
+> From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+> Date: Thu, 17 Aug 2023 14:08:40 +0900
+> Subject: [PATCH 1/3] tools/virtio-trace: Ignore EAGAIN error on splice()
+> 
+> splice() can return EAGAIN error instead of returning 0 size read.
+> In that case, wait a while and try to call splice() again.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  tools/virtio/virtio-trace/trace-agent-rw.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/virtio/virtio-trace/trace-agent-rw.c b/tools/virtio/virtio-trace/trace-agent-rw.c
+> index ddfe7875eb16..e8a4c4f0c499 100644
+> --- a/tools/virtio/virtio-trace/trace-agent-rw.c
+> +++ b/tools/virtio/virtio-trace/trace-agent-rw.c
+> @@ -8,6 +8,7 @@
+>   */
+>  
+>  #define _GNU_SOURCE
+> +#include <errno.h>
+>  #include <fcntl.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> @@ -127,10 +128,10 @@ static void *rw_thread_main(void *thread_info)
+>  		rlen = splice(ts->in_fd, NULL, ts->read_pipe, NULL,
+>  				ts->pipe_size, SPLICE_F_MOVE | SPLICE_F_MORE);
+>  
+> -		if (rlen < 0) {
+> -			pr_err("Splice_read in rw-thread(%d)\n", ts->cpu_num);
+> +		if (rlen < 0 && errno != EAGAIN) {
+> +			pr_err("Splice_read error (%d) in rw-thread(%d)\n", errno, ts->cpu_num);
+>  			goto error;
+> -		} else if (rlen == 0) {
+> +		} else if (rlen == 0 || errno == EAGAIN) {
+
+Ah, this caused a drop. errno can be EAGAIN even if rlen > 0.
+I've fixed this and that works.
+BTW, I think this virtio-trace would be better to move under
+tools/tracing because it is a tracing tool.
+
+Thanks,
+
+>  			/*
+>  			 * If trace data do not exist or are unreadable not
+>  			 * for exceeding the page size, splice_read returns
+> -- 
+> 2.34.1
 > 
 > 
 > -- 
 > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
