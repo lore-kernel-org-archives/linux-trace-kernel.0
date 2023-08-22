@@ -2,99 +2,156 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75DEEE4993
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 22 Aug 2023 09:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17436EE4996
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 22 Aug 2023 11:45:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234348AbjHVJdU convert rfc822-to-8bit (ORCPT
+        id S235133AbjHVLph (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 22 Aug 2023 05:33:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36512 "EHLO
+        Tue, 22 Aug 2023 07:45:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232280AbjHVJdT (ORCPT
+        with ESMTP id S235149AbjHVLph (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 22 Aug 2023 05:33:19 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C4C31B2;
-        Tue, 22 Aug 2023 02:33:18 -0700 (PDT)
+        Tue, 22 Aug 2023 07:45:37 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D424ACD5;
+        Tue, 22 Aug 2023 04:45:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B826161A04;
-        Tue, 22 Aug 2023 09:33:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 222BBC433C8;
-        Tue, 22 Aug 2023 09:33:16 +0000 (UTC)
-Date:   Tue, 22 Aug 2023 05:33:13 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux trace kernel <linux-trace-kernel@vger.kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Subject: [PATCH] tracefs: Remove kerneldoc from struct eventfs_file
-Message-ID: <20230822053313.77aa3397@rorschach.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 91607652E7;
+        Tue, 22 Aug 2023 11:43:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47B58C433C8;
+        Tue, 22 Aug 2023 11:43:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692704631;
+        bh=wudzfjkA+EHXZH5qzkghyq8ajyMjlMf7/CcJJ8H1loo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=c08ixnTweOTEtnk7FrRu6NFWA4FtFG7ygUbW0O4N83Vkn/aJruTvsCyHJZBy9MZI5
+         N1drMLM/Uif/ij51EJg9IPd5ZNuXgnHjk81HLEQTIMgnj/9wDnztbm/5/4uC6WhDWR
+         SRkVaKvDYZ/RHGhYUb6nI52f4cag5U9HYaMrx3uHoMXx/3Tcxvd8m1pz5tEK/iZHMx
+         RmCuugBgVyh0JRzFUpNXlL8wUPubolaYWiEc+WwLHWTTAKpFNcm/aINZRlymvHDLVK
+         tR2CGsvnHyviV+z4Mrgwfj24m+NV1LU97uUDYH+lTntgRJ0nlytm7ba2iHfGqhxPUK
+         iWzBDS0DWsyeA==
+Date:   Tue, 22 Aug 2023 20:43:47 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Chuang Wang <nashuiliang@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] tracing/eprobe: Iterate trace_eprobe directly
+Message-Id: <20230822204347.8b90a8507bde3343bb1ca264@kernel.org>
+In-Reply-To: <20230822022433.262478-1-nashuiliang@gmail.com>
+References: <20230822022433.262478-1-nashuiliang@gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From d0d094090c093499380049c413b8f1c5b995ff52 Mon Sep 17 00:00:00 2001
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-Date: Tue, 22 Aug 2023 05:29:22 -0400
-Subject: [PATCH] tracefs: Remove kerneldoc from struct eventfs_file
+On Tue, 22 Aug 2023 10:24:33 +0800
+Chuang Wang <nashuiliang@gmail.com> wrote:
 
-The struct eventfs_file is a local structure and should not be parsed by
-kernel doc. It also does not fully follow the kerneldoc format and is
-causing kerneldoc to spit out errors. Replace the /** to /* so that
-kerneldoc no longer processes this structure.
+> Refer to the description in [1], we can skip "container_of()" following
+> "list_for_each_entry()" by using "list_for_each_entry()" with
+> "struct trace_eprobe" and "tp.list".
+> 
+> Also, this patch defines "for_each_trace_eprobe_tp" to simplify the code
+> of the same logic.
+> 
+> [1] https://lore.kernel.org/all/CAHk-=wjakjw6-rDzDDBsuMoDCqd+9ogifR_EE1F0K-jYek1CdA@mail.gmail.com/
+> 
+> Signed-off-by: Chuang Wang <nashuiliang@gmail.com>
 
-Also format the comments of the delete union of the structure to be a bit
-better.
+Thanks, this looks good to me.
 
-Link: https://lore.kernel.org/linux-trace-kernel/20230818201414.2729745-1-willy@infradead.org/
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Reported-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- fs/tracefs/event_inode.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+> ---
+> v2 -> v3:
+> - use "for_each_trace_eprobe_tp" instead of "for_each_trace_eprobe_on_trace_probe"
+> 
+> v1 -> v2:
+> - add "for_each_trace_eprobe_on_trace_probe" as suggested by Masami
+> 
+> v0 -> v1:
+> - remove "Fixes" in the commit information.
+> 
+>  kernel/trace/trace_eprobe.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
+> index a0a704ba27db..6a024b5912e2 100644
+> --- a/kernel/trace/trace_eprobe.c
+> +++ b/kernel/trace/trace_eprobe.c
+> @@ -41,6 +41,10 @@ struct eprobe_data {
+>  	struct trace_eprobe	*ep;
+>  };
+>  
+> +
+> +#define for_each_trace_eprobe_tp(ep, _tp) \
+> +	list_for_each_entry(ep, trace_probe_probe_list(_tp), tp.list)
+> +
+>  static int __trace_eprobe_create(int argc, const char *argv[]);
+>  
+>  static void trace_event_probe_cleanup(struct trace_eprobe *ep)
+> @@ -640,7 +644,7 @@ static int disable_eprobe(struct trace_eprobe *ep,
+>  static int enable_trace_eprobe(struct trace_event_call *call,
+>  			       struct trace_event_file *file)
+>  {
+> -	struct trace_probe *pos, *tp;
+> +	struct trace_probe *tp;
+>  	struct trace_eprobe *ep;
+>  	bool enabled;
+>  	int ret = 0;
+> @@ -662,8 +666,7 @@ static int enable_trace_eprobe(struct trace_event_call *call,
+>  	if (enabled)
+>  		return 0;
+>  
+> -	list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
+> -		ep = container_of(pos, struct trace_eprobe, tp);
+> +	for_each_trace_eprobe_tp(ep, tp) {
+>  		ret = enable_eprobe(ep, file);
+>  		if (ret)
+>  			break;
+> @@ -680,8 +683,7 @@ static int enable_trace_eprobe(struct trace_event_call *call,
+>  			 */
+>  			WARN_ON_ONCE(ret != -ENOMEM);
+>  
+> -			list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
+> -				ep = container_of(pos, struct trace_eprobe, tp);
+> +			for_each_trace_eprobe_tp(ep, tp) {
+>  				disable_eprobe(ep, file->tr);
+>  				if (!--cnt)
+>  					break;
+> @@ -699,7 +701,7 @@ static int enable_trace_eprobe(struct trace_event_call *call,
+>  static int disable_trace_eprobe(struct trace_event_call *call,
+>  				struct trace_event_file *file)
+>  {
+> -	struct trace_probe *pos, *tp;
+> +	struct trace_probe *tp;
+>  	struct trace_eprobe *ep;
+>  
+>  	tp = trace_probe_primary_from_call(call);
+> @@ -716,10 +718,8 @@ static int disable_trace_eprobe(struct trace_event_call *call,
+>  		trace_probe_clear_flag(tp, TP_FLAG_PROFILE);
+>  
+>  	if (!trace_probe_is_enabled(tp)) {
+> -		list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
+> -			ep = container_of(pos, struct trace_eprobe, tp);
+> +		for_each_trace_eprobe_tp(ep, tp)
+>  			disable_eprobe(ep, file->tr);
+> -		}
+>  	}
+>  
+>   out:
+> -- 
+> 2.39.2
+> 
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index da8d2e73cc47..237c6f370ad9 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -27,7 +27,7 @@ struct eventfs_inode {
- 	struct list_head	e_top_files;
- };
- 
--/**
-+/*
-  * struct eventfs_file - hold the properties of the eventfs files and
-  *                       directories.
-  * @name:	the name of the file or directory to create
-@@ -48,10 +48,16 @@ struct eventfs_file {
- 	struct eventfs_inode		*ei;
- 	const struct file_operations	*fop;
- 	const struct inode_operations	*iop;
-+	/*
-+	 * Union - used for deletion
-+	 * @del_list:	list of eventfs_file to delete
-+	 * @rcu:	eventfs_file to delete in RCU
-+	 * @is_freed:	node is freed if one of the above is set
-+	 */
- 	union {
--		struct list_head	del_list; /* list of eventfs_file to delete */
--		struct rcu_head		rcu; /* eventfs_file to delete */
--		unsigned long		is_freed; /* Freed if one of the above is set */
-+		struct list_head	del_list;
-+		struct rcu_head		rcu;
-+		unsigned long		is_freed;
- 	};
- 	void				*data;
- 	umode_t				mode;
+
 -- 
-2.40.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
