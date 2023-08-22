@@ -2,49 +2,48 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47146EE4996
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 21 Aug 2023 23:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A542CEE49A0
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 22 Aug 2023 00:15:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230242AbjHUXvH (ORCPT
+        id S231901AbjHVAPv (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 21 Aug 2023 19:51:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49166 "EHLO
+        Mon, 21 Aug 2023 20:15:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229610AbjHUXvH (ORCPT
+        with ESMTP id S231894AbjHVAPr (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 21 Aug 2023 19:51:07 -0400
+        Mon, 21 Aug 2023 20:15:47 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3172AE4;
-        Mon, 21 Aug 2023 16:51:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A86F18E;
+        Mon, 21 Aug 2023 17:15:45 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B96AE6143D;
-        Mon, 21 Aug 2023 23:51:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB915C433C7;
-        Mon, 21 Aug 2023 23:50:59 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CE4AA61A70;
+        Tue, 22 Aug 2023 00:15:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1069BC433C8;
+        Tue, 22 Aug 2023 00:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692661861;
-        bh=t8ZC1/hEix5LDwCxrMqOZDOEQvYXb18PrM5aegQ/9M0=;
+        s=k20201202; t=1692663344;
+        bh=n2Old7YYoUHJOORuHws8xgDm/6YhMrO0TuSlC5P3adw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=XeZHg0GL0LyHsXU67Kyyw/C9OwjpLxNFumDun+LeQWvzGmytze4PXp7u8J6SVg11S
-         HdskExZxok3W1zxlENFQCefXioQfdANw1aBFFQ9qZLGabTGTZQ7Ahu7cQiCEaNoVAE
-         1EfyQqGgFVd5ndMQKSm2KigxjOyGQfZDFO1RXxUPiVMOBhSjjXcDeXSu/Q4jnLOYYq
-         6Vecqwxk/SkKBDXtI5e4zbUVoQsRIJuITb6LmifURT7IZXSdKwHEq0pzMgUj8ESC4p
-         1J0xxJLYRHKcYdWgIrW3PQhNp/2J+kDZisymhtFB8bwQ22IJAW29GJfQNaYlkc6jvp
-         KWI4mZP5jdpww==
-Date:   Tue, 22 Aug 2023 08:50:57 +0900
+        b=pVXc7u2AyY0jrrtLJ+GvpxnTj67uMowoDpws6YlkMGiZV9+cXOHgcrfDb4HHavXhA
+         VDmPE9SfjfT0x/w313l/q+4Mkvw9ROUpRyhyDeU87HB+m232bFP77OuYmrw2mSINHW
+         ddTI3It4GoWi4iXldATHna8nh8+9FXse9bo396wINkBW6m6MnRcHJ4GNv/QVZ42AgG
+         4kgHOctFLeOUu/F0FsL5m1pRkcsnRYsuznA0Grhyaz1Gndn3lANU7lJGOJytdX5XVg
+         l6m/H6IvjGlBg1zgTyYYUInrz2CV3BAtTcntmM69+7oPYne6GPqrkxN74ZDzPYPgdf
+         R31ypKVzyvLGw==
+Date:   Tue, 22 Aug 2023 09:15:40 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH] tracing: Fix to avoid wakeup loop in splice read of
  per-cpu buffer
-Message-Id: <20230822085057.f4d5fa6499bb3ab2a297657c@kernel.org>
-In-Reply-To: <20230821112703.23b1964b@gandalf.local.home>
+Message-Id: <20230822091540.99e581b579aa790a90e335bc@kernel.org>
+In-Reply-To: <169262755804.106231.8245792908363050528.stgit@devnote2>
 References: <169262755804.106231.8245792908363050528.stgit@devnote2>
-        <20230822001639.7a3cbedc3ad6e3938ee76e16@kernel.org>
-        <20230821112703.23b1964b@gandalf.local.home>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -53,76 +52,53 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 21 Aug 2023 11:27:03 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, 21 Aug 2023 23:19:18 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> On Tue, 22 Aug 2023 00:16:39 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> > BTW, even with this fix, blocking splice still causes a strange behavior.
-> > If I set '400' to buffer_size_kb (so 100 pages) and '1' to buffer_percent,
-> > splice always returns 8192 (2 pages) to read. But I expected that should
-> > return 4096 (1 page). This means splice() waits longer than I thought.
-> > 
-> > I think the fullfilled percentage calculation will be a bit wrong.
+> ftrace user can set 0 or small number to the 'buffer_percent' for quick
+> response for the ring buffer. In that case wait_on_pipe() will return
+> before filling a page of the ring buffer. That is too soon for splice()
+> because ring_buffer_read_page() will fail again.
+> This leads unnecessary loop in tracing_buffers_splice_read().
 > 
-> Note, the percentage is when to wake up the task. If between the wakeup and
-> the read/splice, another ring buffer page gets filled more, then it will
-> give that as well. The buffer_percent is just how long to wait, not for how
-> much to read.
-
-Yes, but I used the trace_marker as Zheng did for testing, and I saw the
-buffer is filled more than 4096 bytes via tracefs/per_cpu/cpu*/stats.
-
+> Set a minimum percentage of the buffer which is enough to fill a page to
+> wait_on_pipe() to avoid this situation.
 > 
-> Now if you test this with just adding enough to fill one page, and it
-> doesn't wake up the reader, then that would be a bug.
+> Fixes: 03329f993978 ("tracing: Add tracefs file buffer_percentage")
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  kernel/trace/trace.c |   12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index b8870078ef58..88448e8d8214 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -8462,6 +8462,8 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
+>  	/* did we read anything? */
+>  	if (!spd.nr_pages) {
+>  		long wait_index;
+> +		size_t nr_pages;
+> +		size_t full;
+>  
+>  		if (ret)
+>  			goto out;
+> @@ -8472,7 +8474,15 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
+>  
+>  		wait_index = READ_ONCE(iter->wait_index);
+>  
+> -		ret = wait_on_pipe(iter, iter->tr->buffer_percent);
+> +		/* For splice, we have to ensure at least 1 page is filled */
+> +		nr_pages = ring_buffer_nr_pages(iter->array_buffer->buffer, iter->cpu_file);
+> +		if (nr_pages * iter->tr->buffer_percent < 100) {
+> +			full = nr_pages + 99;
+> +			do_div(full, nr_pages);
+> +		} else
+> +			full = iter->tr->buffer_percent;
 
-Yes.
-
-Run trace_agent with 1% buffer_percent == 1 page;
-
- # echo 400 > /sys/kernel/tracing/buffer_size_kb
- # echo 1 > /sys/kernel/tracing/buffer_percent
- # trace-agent &
-
-Ready to read in the host side,
-
-$ for i in `seq 0 7`; do cat trace-path-cpu$i.out > trace-data.$i & done
-$ echo 1 > agent-ctl-path.in
-
-Write events on per-cpu buffer in the guest
- # for i in `seq 1 1000`; do echo "test event data $i" | tee /sys/kernel/tracing/trace_marker > /dev/null; done 
-
-But trace_agent doesn't wake up. The data is still there.
-
- # grep bytes /sys/kernel/tracing/per_cpu/cpu*/stats 
-/sys/kernel/tracing/per_cpu/cpu0/stats:bytes: 5936
-/sys/kernel/tracing/per_cpu/cpu1/stats:bytes: 5584
-/sys/kernel/tracing/per_cpu/cpu2/stats:bytes: 6368
-/sys/kernel/tracing/per_cpu/cpu3/stats:bytes: 4704
-/sys/kernel/tracing/per_cpu/cpu4/stats:bytes: 5972
-/sys/kernel/tracing/per_cpu/cpu5/stats:bytes: 5620
-/sys/kernel/tracing/per_cpu/cpu6/stats:bytes: 6588
-/sys/kernel/tracing/per_cpu/cpu7/stats:bytes: 3496
-
-And write more events via trace_marker again
-
- # for i in `seq 1001 2000`; do echo "test event data $i" | tee /sys/kernel/tracing/trace_marker > /dev/null; done 
-
-The data is read;
-
- # grep bytes /sys/kernel/tracing/per_cpu/cpu*/stats 
-/sys/kernel/tracing/per_cpu/cpu0/stats:bytes: 3220
-/sys/kernel/tracing/per_cpu/cpu1/stats:bytes: 3960
-/sys/kernel/tracing/per_cpu/cpu2/stats:bytes: 2420
-/sys/kernel/tracing/per_cpu/cpu3/stats:bytes: 2024
-/sys/kernel/tracing/per_cpu/cpu4/stats:bytes: 2912
-/sys/kernel/tracing/per_cpu/cpu5/stats:bytes: 1064
-/sys/kernel/tracing/per_cpu/cpu6/stats:bytes: 5004
-/sys/kernel/tracing/per_cpu/cpu7/stats:bytes: 2684
-
-I think this full_hit() function is somewhat wrong.
+Ah I must have to take a sleep well. What I need is to ensure full >= 1.
 
 static __always_inline bool full_hit(struct trace_buffer *buffer, int cpu, int full)
 {
@@ -130,9 +106,31 @@ static __always_inline bool full_hit(struct trace_buffer *buffer, int cpu, int f
         return (dirty * 100) > (full * nr_pages);
 }
 
-Ah, I also found a mistake on this patch too.
+If dirty = 0, this always false.
+But I think if full == 0, this should return true.
 
-Thanks, 
+If dirty = 1,
+
+- nr_pages < 100, this is always true and that is good.
+
+- nr_pages > 100, even if full is 1 (smallest), it doesn't true. But that is OK
+  because dirty page number will be increased later.
+
+- nr_pages == 100 is the corner case. I think this should be
+
+  return (dirty * 100) >= (full * nr_pages);
+
+Let me update the patch.
+
+Thank you,
+
+> +
+> +		ret = wait_on_pipe(iter, full);
+>  		if (ret)
+>  			goto out;
+>  
+> 
+
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
