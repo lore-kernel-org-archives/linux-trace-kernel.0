@@ -2,158 +2,160 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDBF0EE49A0
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 22 Aug 2023 02:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E758EE49A3
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 22 Aug 2023 04:02:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232167AbjHVCYz (ORCPT
+        id S232509AbjHVEC3 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 21 Aug 2023 22:24:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34706 "EHLO
+        Tue, 22 Aug 2023 00:02:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232090AbjHVCYy (ORCPT
+        with ESMTP id S229495AbjHVEC2 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 21 Aug 2023 22:24:54 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7E27189;
-        Mon, 21 Aug 2023 19:24:50 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-68a440a8a20so1546787b3a.3;
-        Mon, 21 Aug 2023 19:24:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692671090; x=1693275890;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OWHui7UTytAd3ZHZVHjalRhUa2PgCPbw4bc+ai5jSeU=;
-        b=HcaLyE9bSSNVT6zQRuM5B1b2VMl6vqmEJgeylHrqH7ZO+oWT7p1X/OGjllKS0wZud7
-         YGLjwn/aNA+zB8bFNW9Q8dsqyYCJvnST5vzRbRUTdkOw5jRRE8PJQ8FzrQxbeyr8YmzY
-         YURL44Z4ak63WQ8RjRIOLh51QAmVvosiBrPzSLxoHDWnR3Uvve9MGYZnuRK69p32T30W
-         0utZWClej9c3q4uEeTqjDaKlWfHtsYh3HPCW/vCh0mAiLaQGAbvDEhCzqzzjWmZHzcfc
-         t7YorQFGe2UPKcqnZg0YBWmvIXyrWZdNnLXu7xmFn8rrTBepV1JPu6tVHmVyPNIizXEb
-         t6Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692671090; x=1693275890;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OWHui7UTytAd3ZHZVHjalRhUa2PgCPbw4bc+ai5jSeU=;
-        b=KqXL1ZnIZS73nASbbDzjpB4F9ZaFBXMwxcBur1YzwkLgySO7f9ZkF954gF+cVXV+75
-         g8Pv7B6gvrKIQiEuAwDh5MeQbvMo6lsdnqtpnwbnLj1bgahZbGyYKCRzg75gsA7DJzHh
-         bB9R/d6tfPJUS7CC0puAfREOo+liDglHLtQreFxBtk/vWwKZjwwt5CqZskmm52AgRtUs
-         jUr5NhfK6d9YKNV0Lnb0+3Il1cCb7qkjnS5+3SqE+T/U7qGQHt43KC3NFqY6lCriDoCh
-         BSaNFMl3nMs9KU7i1lcQgNKLDh+wGmladmpDx7+wsXzHppxWAso1ZV4q15/TCs6x1JX9
-         u2ag==
-X-Gm-Message-State: AOJu0YzSrIYbS6vCjEJlGuoQpLMQb3isGFOZ1DizZsvttu3gtK4YmX3E
-        bT2JIqDwijbNrXtkew8oRAE=
-X-Google-Smtp-Source: AGHT+IHdXbHuV6RoBpU7kyMmKhLiOaXHn69gqN/jFwMZkBadIyuwvz3FlqSC/3x6l61Aq5YPtAXAGA==
-X-Received: by 2002:a05:6a00:1788:b0:68a:6e81:60a2 with SMTP id s8-20020a056a00178800b0068a6e8160a2mr250833pfg.26.1692671089979;
-        Mon, 21 Aug 2023 19:24:49 -0700 (PDT)
-Received: from localhost.localdomain ([8.210.156.175])
-        by smtp.gmail.com with ESMTPSA id y4-20020aa78544000000b006862b2a6b0dsm6940462pfn.15.2023.08.21.19.24.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Aug 2023 19:24:49 -0700 (PDT)
-From:   Chuang Wang <nashuiliang@gmail.com>
-Cc:     Chuang Wang <nashuiliang@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Tue, 22 Aug 2023 00:02:28 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDE46187;
+        Mon, 21 Aug 2023 21:02:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692676946; x=1724212946;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=O3htJ+kFLf2fHtcw2MsI+po3ccJ4ybveNo01UE0BG8w=;
+  b=RLvpi66+/bJVvPfZTacILFBGYD+BXQEQbSshYkFXqo+pGKwt+EB5gJ/V
+   Z59bIWLRXLPY9UhTl5o5Q/LrtPziCQNffvhciDqb0z+kOZB02OMW6lKXI
+   YqUx37ZxOpIEO4xup8w/CByEIZGQ0P590Cytw6QRvM8L36Ps7BGy/19i/
+   4dyaQEsStgu8RhrYGYx6Kemc7kCJig5JPPAPcMzyx8ugdyifn3x201yec
+   EdhZM2IVvfi8zuVXHmaOXE1alebibqo2kMwjVzczP9fw4malu8HiQQFGZ
+   avT3+6RKku6Atctmk2EBiGrZbV9miWWheSp5hB382SnScNSoSE40mqw/X
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="404772012"
+X-IronPort-AV: E=Sophos;i="6.01,191,1684825200"; 
+   d="scan'208";a="404772012"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 21:02:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="850442004"
+X-IronPort-AV: E=Sophos;i="6.01,191,1684825200"; 
+   d="scan'208";a="850442004"
+Received: from lkp-server02.sh.intel.com (HELO 6809aa828f2a) ([10.239.97.151])
+  by fmsmga002.fm.intel.com with ESMTP; 21 Aug 2023 21:02:24 -0700
+Received: from kbuild by 6809aa828f2a with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qYIb1-0001KI-2U;
+        Tue, 22 Aug 2023 04:02:23 +0000
+Date:   Tue, 22 Aug 2023 12:00:25 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     oe-kbuild-all@lists.linux.dev,
         Masami Hiramatsu <mhiramat@kernel.org>,
         linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v3] tracing/eprobe: Iterate trace_eprobe directly
-Date:   Tue, 22 Aug 2023 10:24:33 +0800
-Message-Id: <20230822022433.262478-1-nashuiliang@gmail.com>
-X-Mailer: git-send-email 2.25.1
+Subject: Re: [PATCH] tracing: Fix to avoid wakeup loop in splice read of
+ per-cpu buffer
+Message-ID: <202308221154.hil5JaxI-lkp@intel.com>
+References: <169262755804.106231.8245792908363050528.stgit@devnote2>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <169262755804.106231.8245792908363050528.stgit@devnote2>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Refer to the description in [1], we can skip "container_of()" following
-"list_for_each_entry()" by using "list_for_each_entry()" with
-"struct trace_eprobe" and "tp.list".
+Hi Masami,
 
-Also, this patch defines "for_each_trace_eprobe_tp" to simplify the code
-of the same logic.
+kernel test robot noticed the following build warnings:
 
-[1] https://lore.kernel.org/all/CAHk-=wjakjw6-rDzDDBsuMoDCqd+9ogifR_EE1F0K-jYek1CdA@mail.gmail.com/
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.5-rc7 next-20230821]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Signed-off-by: Chuang Wang <nashuiliang@gmail.com>
----
-v2 -> v3:
-- use "for_each_trace_eprobe_tp" instead of "for_each_trace_eprobe_on_trace_probe"
+url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/tracing-Fix-to-avoid-wakeup-loop-in-splice-read-of-per-cpu-buffer/20230821-222307
+base:   linus/master
+patch link:    https://lore.kernel.org/r/169262755804.106231.8245792908363050528.stgit%40devnote2
+patch subject: [PATCH] tracing: Fix to avoid wakeup loop in splice read of per-cpu buffer
+config: mips-allyesconfig (https://download.01.org/0day-ci/archive/20230822/202308221154.hil5JaxI-lkp@intel.com/config)
+compiler: mips-linux-gcc (GCC) 12.3.0
+reproduce: (https://download.01.org/0day-ci/archive/20230822/202308221154.hil5JaxI-lkp@intel.com/reproduce)
 
-v1 -> v2:
-- add "for_each_trace_eprobe_on_trace_probe" as suggested by Masami
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308221154.hil5JaxI-lkp@intel.com/
 
-v0 -> v1:
-- remove "Fixes" in the commit information.
+All warnings (new ones prefixed by >>):
 
- kernel/trace/trace_eprobe.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+   In file included from arch/mips/include/asm/div64.h:89,
+                    from include/linux/math.h:6,
+                    from include/linux/math64.h:6,
+                    from include/linux/time64.h:5,
+                    from include/linux/restart_block.h:10,
+                    from include/linux/thread_info.h:14,
+                    from include/asm-generic/preempt.h:5,
+                    from ./arch/mips/include/generated/asm/preempt.h:1,
+                    from include/linux/preempt.h:79,
+                    from include/linux/spinlock.h:56,
+                    from include/linux/mmzone.h:8,
+                    from include/linux/gfp.h:7,
+                    from include/linux/mm.h:7,
+                    from include/linux/ring_buffer.h:5,
+                    from kernel/trace/trace.c:15:
+   kernel/trace/trace.c: In function 'tracing_buffers_splice_read':
+>> include/asm-generic/div64.h:222:35: warning: comparison of distinct pointer types lacks a cast
+     222 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
+         |                                   ^~
+   kernel/trace/trace.c:8481:25: note: in expansion of macro 'do_div'
+    8481 |                         do_div(full, nr_pages);
+         |                         ^~~~~~
+   In file included from arch/mips/include/asm/bug.h:5,
+                    from include/linux/bug.h:5,
+                    from include/linux/mmdebug.h:5,
+                    from include/linux/mm.h:6:
+>> include/asm-generic/div64.h:234:32: warning: right shift count >= width of type [-Wshift-count-overflow]
+     234 |         } else if (likely(((n) >> 32) == 0)) {          \
+         |                                ^~
+   include/linux/compiler.h:76:45: note: in definition of macro 'likely'
+      76 | # define likely(x)      __builtin_expect(!!(x), 1)
+         |                                             ^
+   kernel/trace/trace.c:8481:25: note: in expansion of macro 'do_div'
+    8481 |                         do_div(full, nr_pages);
+         |                         ^~~~~~
 
-diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-index a0a704ba27db..6a024b5912e2 100644
---- a/kernel/trace/trace_eprobe.c
-+++ b/kernel/trace/trace_eprobe.c
-@@ -41,6 +41,10 @@ struct eprobe_data {
- 	struct trace_eprobe	*ep;
- };
- 
-+
-+#define for_each_trace_eprobe_tp(ep, _tp) \
-+	list_for_each_entry(ep, trace_probe_probe_list(_tp), tp.list)
-+
- static int __trace_eprobe_create(int argc, const char *argv[]);
- 
- static void trace_event_probe_cleanup(struct trace_eprobe *ep)
-@@ -640,7 +644,7 @@ static int disable_eprobe(struct trace_eprobe *ep,
- static int enable_trace_eprobe(struct trace_event_call *call,
- 			       struct trace_event_file *file)
- {
--	struct trace_probe *pos, *tp;
-+	struct trace_probe *tp;
- 	struct trace_eprobe *ep;
- 	bool enabled;
- 	int ret = 0;
-@@ -662,8 +666,7 @@ static int enable_trace_eprobe(struct trace_event_call *call,
- 	if (enabled)
- 		return 0;
- 
--	list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
--		ep = container_of(pos, struct trace_eprobe, tp);
-+	for_each_trace_eprobe_tp(ep, tp) {
- 		ret = enable_eprobe(ep, file);
- 		if (ret)
- 			break;
-@@ -680,8 +683,7 @@ static int enable_trace_eprobe(struct trace_event_call *call,
- 			 */
- 			WARN_ON_ONCE(ret != -ENOMEM);
- 
--			list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
--				ep = container_of(pos, struct trace_eprobe, tp);
-+			for_each_trace_eprobe_tp(ep, tp) {
- 				disable_eprobe(ep, file->tr);
- 				if (!--cnt)
- 					break;
-@@ -699,7 +701,7 @@ static int enable_trace_eprobe(struct trace_event_call *call,
- static int disable_trace_eprobe(struct trace_event_call *call,
- 				struct trace_event_file *file)
- {
--	struct trace_probe *pos, *tp;
-+	struct trace_probe *tp;
- 	struct trace_eprobe *ep;
- 
- 	tp = trace_probe_primary_from_call(call);
-@@ -716,10 +718,8 @@ static int disable_trace_eprobe(struct trace_event_call *call,
- 		trace_probe_clear_flag(tp, TP_FLAG_PROFILE);
- 
- 	if (!trace_probe_is_enabled(tp)) {
--		list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
--			ep = container_of(pos, struct trace_eprobe, tp);
-+		for_each_trace_eprobe_tp(ep, tp)
- 			disable_eprobe(ep, file->tr);
--		}
- 	}
- 
-  out:
+
+vim +222 include/asm-generic/div64.h
+
+^1da177e4c3f41 Linus Torvalds     2005-04-16  215  
+^1da177e4c3f41 Linus Torvalds     2005-04-16  216  /* The unnecessary pointer compare is there
+^1da177e4c3f41 Linus Torvalds     2005-04-16  217   * to check for type safety (n must be 64bit)
+^1da177e4c3f41 Linus Torvalds     2005-04-16  218   */
+^1da177e4c3f41 Linus Torvalds     2005-04-16  219  # define do_div(n,base) ({				\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  220  	uint32_t __base = (base);			\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  221  	uint32_t __rem;					\
+^1da177e4c3f41 Linus Torvalds     2005-04-16 @222  	(void)(((typeof((n)) *)0) == ((uint64_t *)0));	\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  223  	if (__builtin_constant_p(__base) &&		\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  224  	    is_power_of_2(__base)) {			\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  225  		__rem = (n) & (__base - 1);		\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  226  		(n) >>= ilog2(__base);			\
+c747ce4706190e Geert Uytterhoeven 2021-08-11  227  	} else if (__builtin_constant_p(__base) &&	\
+461a5e51060c93 Nicolas Pitre      2015-10-30  228  		   __base != 0) {			\
+461a5e51060c93 Nicolas Pitre      2015-10-30  229  		uint32_t __res_lo, __n_lo = (n);	\
+461a5e51060c93 Nicolas Pitre      2015-10-30  230  		(n) = __div64_const32(n, __base);	\
+461a5e51060c93 Nicolas Pitre      2015-10-30  231  		/* the remainder can be computed with 32-bit regs */ \
+461a5e51060c93 Nicolas Pitre      2015-10-30  232  		__res_lo = (n);				\
+461a5e51060c93 Nicolas Pitre      2015-10-30  233  		__rem = __n_lo - __res_lo * __base;	\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02 @234  	} else if (likely(((n) >> 32) == 0)) {		\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  235  		__rem = (uint32_t)(n) % __base;		\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  236  		(n) = (uint32_t)(n) / __base;		\
+c747ce4706190e Geert Uytterhoeven 2021-08-11  237  	} else {					\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  238  		__rem = __div64_32(&(n), __base);	\
+c747ce4706190e Geert Uytterhoeven 2021-08-11  239  	}						\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  240  	__rem;						\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  241   })
+^1da177e4c3f41 Linus Torvalds     2005-04-16  242  
+
 -- 
-2.39.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
