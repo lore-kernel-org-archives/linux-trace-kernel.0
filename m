@@ -2,102 +2,140 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DABEE49A3
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 22 Aug 2023 12:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9037EE49A4
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 22 Aug 2023 13:13:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235847AbjHVMwD (ORCPT
+        id S234187AbjHVNNm (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 22 Aug 2023 08:52:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55782 "EHLO
+        Tue, 22 Aug 2023 09:13:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231901AbjHVMwD (ORCPT
+        with ESMTP id S234173AbjHVNNm (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 22 Aug 2023 08:52:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2E43196;
-        Tue, 22 Aug 2023 05:52:01 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7C19063A24;
-        Tue, 22 Aug 2023 12:52:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89F5CC433C7;
-        Tue, 22 Aug 2023 12:51:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692708720;
-        bh=HHS+KFzKB/4+wRIIYJAuxJ+p0HkEFOmktJAC/AvivQQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Xc8YmAYolYEKgqlEqu+wlIwELWgvho/gg8YzYuMK8scR8HxiuyKprS6z+0O3OKXdh
-         TpU3HfX0nlQxI+U0+1bgMNDHM8iUpm0xNHZUBeaI193tHVKWe7w0nbhxDD3MFrDHdV
-         JZ3SZ5dq9bU2x42aHAsz68l0zyXTtI1Tx1SLvsnnIBS7Lu3Sum0t5JWeJbGbBitjH/
-         SIQnWmdHoDuyBrkHTB9m1Qj0tavI1yYT3ALtP6Kg+69CfUPt2fxkW8H3gCe2rW7hTn
-         whtwhIuxcFRhk8AGDUlNoZzPVjjgkqBM5/wkhAYnQoeWD8VrIwdIkYqfFiIuozO+Zz
-         f+NqqcoAjp+tA==
-Date:   Tue, 22 Aug 2023 21:51:57 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Fix to avoid wakeup loop in splice read of
- per-cpu buffer
-Message-Id: <20230822215157.35002478c5e2d40b6abf5e8e@kernel.org>
-In-Reply-To: <20230822045937.3fc0da54@rorschach.local.home>
-References: <169262755804.106231.8245792908363050528.stgit@devnote2>
-        <20230822045937.3fc0da54@rorschach.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 22 Aug 2023 09:13:42 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CE1CCD4;
+        Tue, 22 Aug 2023 06:13:36 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-99357737980so588410866b.2;
+        Tue, 22 Aug 2023 06:13:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692710015; x=1693314815;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=W91Eo9iBN2pFWaKMu2gu126F7U31bTPuosbZBJlSlwo=;
+        b=CTE9V0VBcqHx5DFHf3A0UaDX1nXzQXWERofkm2i+zVb4/t7txDCDTmoZTQ5NJuDXBK
+         nVIQbPXg4IduILLIkzzqGZrFhNJHz+KJmfjQpIJTFKLYEjYW1CJvXAJDcplOvAmxSZjQ
+         tzBplnPwkmlfWIH7IZLM1GmPX5KsumZExzJzC6IreExrhqLbvz20pOxYad1j9h1quH5S
+         5YWQpK55elF/hR1QF8ndtvcfQw8znEMdc/ZEHYbDT1idfy0syzJ2qoljairrbCHlqik+
+         jCH+6eNdw9i2nwGlmmlkvTBrl0JyPQh0+rfsi9PtaYLEna470AtUj1i5ot9edteg+YyG
+         NsPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692710015; x=1693314815;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=W91Eo9iBN2pFWaKMu2gu126F7U31bTPuosbZBJlSlwo=;
+        b=eZFELUkgq+2sdhWUOzMT6BUZ9I1siCsuEYN8gV7+NWOC22Yh3kwlcCceAt2w+/6k2l
+         NcfyPt4pyjDsIW5NyjZ9l4V127kSPmIPDicB61UhrNNdw1u73Saso3sriTBTCXxFH/p9
+         3YjhoZd9Cm23klJ14ArFttM2Uqv3vCBSW6MWQYjT6VSpDR9C7eP80eBSzeTMXk/H65At
+         A9KUxzkuCcs/aYxvQHfH4HIHIyLqvX2Aa6+2tIscOWqxn3tD8QtsSpxq/w6/aprRQ43y
+         1zgIZSRCqwUmq2ajl/S/KwZUidDLOz9aQ4w/Z6+xSTcjk7TTDcxC90duQmN6kwN7nADJ
+         mwfg==
+X-Gm-Message-State: AOJu0YyAR2BPxaVzgeBlprcWGXBsREpTBZaaSk0txbMw9s9Z/AFCFa3M
+        k4cbmwiPz3BDnHCxpbDrkiY=
+X-Google-Smtp-Source: AGHT+IEwTGxMHZTVDQockitW51L2tFBWDWmFxqwz0I8jsArfMemHj/kwl3eWf75+FoebV1p2hSzY7g==
+X-Received: by 2002:a17:906:2011:b0:99b:f820:5d0e with SMTP id 17-20020a170906201100b0099bf8205d0emr7190363ejo.25.1692710014492;
+        Tue, 22 Aug 2023 06:13:34 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id rp6-20020a170906d96600b0098e2eaec395sm8203801ejb.130.2023.08.22.06.13.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Aug 2023 06:13:33 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Tue, 22 Aug 2023 15:13:32 +0200
+To:     Francis Laniel <flaniel@linux.microsoft.com>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Jiri Olsa <olsajiri@gmail.com>, linux-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-trace-kernel@vger.kernel.org,
+        Song Liu <songliubraving@fb.com>, bpf@vger.kernel.org
+Subject: Re: [RFC PATCH v1 1/1] tracing/kprobe: Add multi-probe support for
+ 'perf_kprobe' PMU
+Message-ID: <ZOS0fFjou2iRYDs+@krava>
+References: <20230816163517.112518-1-flaniel@linux.microsoft.com>
+ <20230819101105.b0c104ae4494a7d1f2eea742@kernel.org>
+ <ZOJ44P40bsSpUmYA@krava>
+ <5703175.DvuYhMxLoT@pwmachine>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5703175.DvuYhMxLoT@pwmachine>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 22 Aug 2023 04:59:37 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, Aug 21, 2023 at 02:24:06PM +0200, Francis Laniel wrote:
+> Hi.
+> 
+> Le dimanche 20 août 2023, 22:34:40 CEST Jiri Olsa a écrit :
+> > On Sat, Aug 19, 2023 at 10:11:05AM +0900, Masami Hiramatsu wrote:
+> > 
+> > SNIP
+> > 
+> > > > > > > > +	func_addr = kallsyms_lookup_name(func);
+> > > > > > > > +	for (i = 0; i < array.size; i++) {
+> > > > > > > > +		struct trace_kprobe *tk_same_name;
+> > > > > > > > +		unsigned long address;
+> > > > > > > > +
+> > > > > > > > +		address = array.addrs[i];
+> > > > > > > > +		/* Skip the function address as we already 
+> registered it. */
+> > > > > > > > +		if (address == func_addr)
+> > > > > > > > +			continue;
+> > > > > > > > +
+> > > > > > > > +		/*
+> > > > > > > > +		 * alloc_trace_kprobe() first considers symbol name, 
+> so we
+> > > > > > > > set
+> > > > > > > > +		 * this to NULL to allocate this kprobe on the given 
+> address.
+> > > > > > > > +		 */
+> > > > > > > > +		tk_same_name = 
+> alloc_trace_kprobe(KPROBE_EVENT_SYSTEM, event,
+> > > > > > > > +						  (void *)address, NULL, 
+> offs,
+> > > > > > > > +						  0 /* maxactive */,
+> > > > > > > > +						  0 /* nargs */, 
+> is_return);
+> > > > > > > > +
+> > > > > > > > +		if (IS_ERR(tk_same_name)) {
+> > > > > > > > +			ret = -ENOMEM;
+> > > > > > > > +			goto error_free;
+> > > > > > > > +		}
+> > > > > > > > +
+> > > > > > > > +		init_trace_event_call(tk_same_name);
+> > > > > > > > +
+> > > > > > > > +		if (traceprobe_set_print_fmt(&tk_same_name->tp, 
+> ptype) < 0) {
+> > > > > > > > +			ret = -ENOMEM;
+> > 
+> > also are we leaking tk_same_name in here?
+> > 
+> > > > > > > > +			goto error_free;
+> > > > > > > > +		}
+> > > > > > > > +
+> > > > > > > > +		ret = append_trace_kprobe(tk_same_name, tk);
+> > > > > > > > +		if (ret)
+> > 
+> > and here?
+> 
+> Good catch!
+> Do you know if the appended probes are automatically freed? If so, can you 
+> please indicate which function handles this?
 
-> On Mon, 21 Aug 2023 23:19:18 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> >  	if (!spd.nr_pages) {
-> >  		long wait_index;
-> > +		size_t nr_pages;
-> > +		size_t full;
-> 
-> size_t is usually considered "long" (machine word length).
-> 
-> >  
-> >  		if (ret)
-> >  			goto out;
-> > @@ -8472,7 +8474,15 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
-> >  
-> >  		wait_index = READ_ONCE(iter->wait_index);
-> >  
-> > -		ret = wait_on_pipe(iter, iter->tr->buffer_percent);
-> > +		/* For splice, we have to ensure at least 1 page is filled */
-> > +		nr_pages = ring_buffer_nr_pages(iter->array_buffer->buffer, iter->cpu_file);
-> > +		if (nr_pages * iter->tr->buffer_percent < 100) {
-> > +			full = nr_pages + 99;
-> > +			do_div(full, nr_pages);
-> 
-> No need for do_div() as full is not 64 bit on 32 bit machines.
-> 
-> That's why the kernel test robot is complaining.
+hum, I don't see the release code going through the list of appended probes,
+so I wonder you need to somehow do that in destroy_local_trace_kprobe
 
-Thanks for the comment. I decided to set full = 1, maybe we don't need to set
-the percent to be the page size because full_hit() checks it by the number
-of dirty pages. :)
-I'm testing a new one.
-
-Thanks,
-
-> 
-> -- Steve
-> 
-> > +		} else
-> > +			full = iter->tr->buffer_percent;
-> > +
-> > +		ret = wait_on_pipe(iter, full);
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+jirka
