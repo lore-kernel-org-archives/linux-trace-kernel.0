@@ -2,91 +2,107 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D031EE4993
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 22 Aug 2023 14:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5027FEE4993
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 22 Aug 2023 16:25:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236898AbjHVOqZ (ORCPT
+        id S236458AbjHVQZj (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 22 Aug 2023 10:46:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44550 "EHLO
+        Tue, 22 Aug 2023 12:25:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232957AbjHVOqZ (ORCPT
+        with ESMTP id S233230AbjHVQZj (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 22 Aug 2023 10:46:25 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA99110B;
-        Tue, 22 Aug 2023 07:46:23 -0700 (PDT)
+        Tue, 22 Aug 2023 12:25:39 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAD78137;
+        Tue, 22 Aug 2023 09:25:37 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7882662421;
-        Tue, 22 Aug 2023 14:46:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDB3EC433C8;
-        Tue, 22 Aug 2023 14:46:20 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7E3386154D;
+        Tue, 22 Aug 2023 16:25:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05F15C433C7;
+        Tue, 22 Aug 2023 16:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692715582;
-        bh=QU4HT9SfxsSAFUZSD9YpVgGZx2ZNnyPRcH1B1xpNY1U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uwGXrVnJeK0jNwUUVOtx8MDgGx82+boI8zIKr6CRFKju7xXFm56PNlbKriJ2awUeQ
-         whK2lnLpzrFtm2hByGAQpfg4/x8QYHBy/zjhW+WAPj24bXeu3kIArCIoD4lbL8JpCv
-         RF3G90dW/NZJZQ+DfjbnDrMSwcfOJXuFvG0V6TV3GjW1Qv4BSlTCXpULH+SNSQI8Xh
-         xJtdvNtqcsMmPd7xHjTVowwqvIPDg/lRFqBBHIg46LzSUt71jbB50zOjulUb5XdtkJ
-         HWFT81DMxHAZmGCoM84KEGYPBrvh1RhvkgdLkLWUm3eDyaVR7FTtOxut4EH1mQz5/L
-         HOMfBritfmfaA==
-Date:   Tue, 22 Aug 2023 23:46:18 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org,
-        Sven Schnelle <svens@linux.ibm.com>,
+        s=k20201202; t=1692721536;
+        bh=Q+r3oxlYBxRghMxUbHFTOIiX5XSGjgru9PagyxC488w=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Fh1dty56cRg3F7Cqr2mULpE6ISouwiRnFi0CVfvcb8G3CdvsD321Q/bTb2sGtx0s9
+         xGExByW+BJJfwaauZfEKyY2naTOZjdLesa1OXqgT3N6Hpi7uw9H+ZaDcVquz1zOM3o
+         g3PLEbWhXggJ1+AUO+dJ3nscQe+VxWAfR7reHk7KG7kV32fMGusWiG/Rq4IiRkgIB/
+         vzKzEnQROIIxojdgZungWqdSCPR7UZwS3W5SS3W0RQmX91KeJK4L1+OTRNGNHyr1mY
+         TrQvRMuTn7oGeLJay7PzbHZRokzcsUIYVL0sBpfb/suC5eaDJ2Wj72osI4c8gSGd0u
+         8QPVcUG2XiMNw==
+From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To:     linux-trace-kernel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        mhiramat@kernel.org, Martin KaFai Lau <martin.lau@linux.dev>,
+        bpf@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>,
         Alexei Starovoitov <ast@kernel.org>
-Subject: Re: [PATCH v5 0/9] tracing: Improbe BTF support on probe events
-Message-Id: <20230822234618.0973563d91db6702f118254f@kernel.org>
-In-Reply-To: <20230822100716.2dd867e0@rorschach.local.home>
-References: <169137686814.271367.11218568219311636206.stgit@devnote2>
-        <20230822000939.81897c0c904934bfb9156a59@kernel.org>
-        <20230822100716.2dd867e0@rorschach.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH v6 0/9] tracing: Improbe BTF support on probe events
+Date:   Wed, 23 Aug 2023 01:25:31 +0900
+Message-Id: <169272153143.160970.15584603734373446082.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+User-Agent: StGit/0.19
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 22 Aug 2023 10:07:16 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi,
 
-> On Tue, 22 Aug 2023 00:09:39 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > Hi Steve,
-> > 
-> > Can you review this series?
-> > I would like to push this to for-next.
-> > 
-> 
-> I skimmed the patches and played a little with it, but as I've just
-> started my vacation I will not be able to do a full review before the
-> next merge window. But I don't want me to be the cause of you not
-> getting it in.
-> 
-> Feel free to add:
-> 
-> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> 
-> to the entire series. I'm sure I'll be playing with it after it gets
-> in, and we can fix any bugs that come up then.
+Here is the 6th version of series to improve the BTF support on probe events.
+The previous series is here:
 
-Thank you for your Ack and have a good vacation!
-I will continue to test it and fix bugs if there is.
+https://lore.kernel.org/all/169137686814.271367.11218568219311636206.stgit@devnote2/
 
-Thanks!
+This version is adding Steve's Ack and allocate the struct btf_anon_stack
+from heap.
 
-> 
-> -- Steve
+This series can be applied on top of "probes/core" branch of
+https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git/
+
+You can also get this series from:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git topic/fprobe-event-ext
+
+Thank you,
+
+---
+
+Masami Hiramatsu (Google) (9):
+      tracing/probes: Support BTF argument on module functions
+      tracing/probes: Move finding func-proto API and getting func-param API to trace_btf
+      tracing/probes: Add a function to search a member of a struct/union
+      tracing/probes: Support BTF based data structure field access
+      tracing/probes: Support BTF field access from $retval
+      tracing/probes: Add string type check with BTF
+      tracing/fprobe-event: Assume fprobe is a return event by $retval
+      selftests/ftrace: Add BTF fields access testcases
+      Documentation: tracing: Update fprobe event example with BTF field
 
 
--- 
+ Documentation/trace/fprobetrace.rst                |   64 ++-
+ include/linux/btf.h                                |    1 
+ kernel/bpf/btf.c                                   |    2 
+ kernel/trace/Makefile                              |    1 
+ kernel/trace/trace.c                               |    3 
+ kernel/trace/trace_btf.c                           |  122 +++++
+ kernel/trace/trace_btf.h                           |   11 
+ kernel/trace/trace_eprobe.c                        |    4 
+ kernel/trace/trace_fprobe.c                        |   59 ++
+ kernel/trace/trace_kprobe.c                        |    1 
+ kernel/trace/trace_probe.c                         |  499 +++++++++++++++-----
+ kernel/trace/trace_probe.h                         |   27 +
+ kernel/trace/trace_uprobe.c                        |    1 
+ .../ftrace/test.d/dynevent/add_remove_btfarg.tc    |   20 +
+ .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |   10 
+ 15 files changed, 650 insertions(+), 175 deletions(-)
+ create mode 100644 kernel/trace/trace_btf.c
+ create mode 100644 kernel/trace/trace_btf.h
+
+--
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
