@@ -2,59 +2,144 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2119EE4993
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 22 Aug 2023 14:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBB7EE4993
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 22 Aug 2023 14:36:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233220AbjHVONb (ORCPT
+        id S233245AbjHVOgg (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 22 Aug 2023 10:13:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41226 "EHLO
+        Tue, 22 Aug 2023 10:36:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230230AbjHVONb (ORCPT
+        with ESMTP id S231316AbjHVOgg (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 22 Aug 2023 10:13:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 594A610F7
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Aug 2023 07:13:07 -0700 (PDT)
+        Tue, 22 Aug 2023 10:36:36 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CF5291;
+        Tue, 22 Aug 2023 07:36:34 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BA34D633AF
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Aug 2023 14:12:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73039C433C7;
-        Tue, 22 Aug 2023 14:12:05 +0000 (UTC)
-Date:   Tue, 22 Aug 2023 10:11:53 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Yu Liao <liaoyu15@huawei.com>
-Cc:     <linux-trace-kernel@vger.kernel.org>, <liwei391@huawei.com>,
-        <bristot@kernel.org>
-Subject: Re: [PATCH -next] rv/include: set variable 'da_mon_##name' to
- static
-Message-ID: <20230822101153.18e89373@rorschach.local.home>
-In-Reply-To: <20230809040937.1011766-1-liaoyu15@huawei.com>
-References: <20230809040937.1011766-1-liaoyu15@huawei.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2087F63513;
+        Tue, 22 Aug 2023 14:36:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF417C433C7;
+        Tue, 22 Aug 2023 14:36:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692714993;
+        bh=xQvQvrIK437NyWJbIp30mYO6bonnV3gFmgFZCl8XdxQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lZZFW4BrrEmNyruPWDJmhRl42aB1WoBTJ7fhRqGJMCZfzxyj8jU4BFI19rFELpvRE
+         9IPFwsEgiTxz6tJ9AOzMZ6i1JwxtQ8Ysr4OwqCRKRHSVUn05n3ZcA6A/bvYaiYbBA0
+         CUkMp6nvC9coz54LQB70PdVx/dhuVVHRviwS4WDPDusKbgMb1nRgy+VxyBF9AiRnz0
+         eE/XRuDf8T+r1tGAs/rKED7MVzYd7leB4BIkP8Nx8purnT2/NVp7ksjz4f6gpfpjTc
+         OhZ1sU0n5+mgkPWwkeVTKgo5gJzEME+SSi0XdeovkanNjvRehfC3NrXY9xkREF3G1M
+         BmdAk1zLNx9Hg==
+Date:   Tue, 22 Aug 2023 23:36:29 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: Re: [PATCH v5 3/9] tracing/probes: Add a function to search a
+ member of a struct/union
+Message-Id: <20230822233629.669b3a891a0155addf52f461@kernel.org>
+In-Reply-To: <20230822093720.016c3554@rorschach.local.home>
+References: <169137686814.271367.11218568219311636206.stgit@devnote2>
+        <169137689818.271367.4200174950023036516.stgit@devnote2>
+        <20230822093720.016c3554@rorschach.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 9 Aug 2023 12:09:37 +0800
-Yu Liao <liaoyu15@huawei.com> wrote:
+On Tue, 22 Aug 2023 09:37:20 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> @@ -262,7 +262,7 @@ static inline void da_monitor_destroy_##name(void)						\
->  /*												\
->   * per-cpu monitor variables									\
->   */												\
-> -DEFINE_PER_CPU(struct da_monitor, da_mon_##name);						\
-> +static DEFINE_PER_CPU(struct da_monitor, da_mon_##name);						\
+> On Mon,  7 Aug 2023 11:54:58 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > --- a/kernel/trace/trace_btf.c
+> > +++ b/kernel/trace/trace_btf.c
+> > @@ -50,3 +50,60 @@ const struct btf_param *btf_get_func_param(const struct btf_type *func_proto, s3
+> >  		return NULL;
+> >  }
+> >  
+> > +#define BTF_ANON_STACK_MAX	16
+> > +
+> > +/*
+> > + * Find a member of data structure/union by name and return it.
+> > + * Return NULL if not found, or -EINVAL if parameter is invalid.
+> > + * If the member is an member of anonymous union/structure, the offset
+> > + * of that anonymous union/structure is stored into @anon_offset. Caller
+> > + * can calculate the correct offset from the root data structure by
+> > + * adding anon_offset to the member's offset.
+> > + */
+> > +const struct btf_member *btf_find_struct_member(struct btf *btf,
+> > +						const struct btf_type *type,
+> > +						const char *member_name,
+> > +						u32 *anon_offset)
+> > +{
+> > +	struct {
+> > +		u32 tid;
+> > +		u32 offset;
+> > +	} anon_stack[BTF_ANON_STACK_MAX];
+> 
+> Where is this called as the above is 128 bytes, which is a bit large
+> for the stack. It may not be bad if it's not that generic of a
+> function. But if the stack is getting tight, this could still be an
+> issue.
 
-You need to fix the backslash when you add text.
+OK, let me allocate an array then.
 
--- Steve
+Thank you,
 
->  												\
->  /*												\
+> 
+> -- Steve
+> 
+> 
+> > +	const struct btf_member *member;
+> > +	u32 tid, cur_offset = 0;
+> > +	const char *name;
+> > +	int i, top = 0;
+> > +
+> > +retry:
+> > +	if (!btf_type_is_struct(type))
+> > +		return ERR_PTR(-EINVAL);
+> > +
+> > +	for_each_member(i, type, member) {
+> > +		if (!member->name_off) {
+> > +			/* Anonymous union/struct: push it for later use */
+> > +			type = btf_type_skip_modifiers(btf, member->type, &tid);
+> > +			if (type && top < BTF_ANON_STACK_MAX) {
+> > +				anon_stack[top].tid = tid;
+> > +				anon_stack[top++].offset =
+> > +					cur_offset + member->offset;
+> > +			}
+> > +		} else {
+> > +			name = btf_name_by_offset(btf, member->name_off);
+> > +			if (name && !strcmp(member_name, name)) {
+> > +				if (anon_offset)
+> > +					*anon_offset = cur_offset;
+> > +				return member;
+> > +			}
+> > +		}
+> > +	}
+> > +	if (top > 0) {
+> > +		/* Pop from the anonymous stack and retry */
+> > +		tid = anon_stack[--top].tid;
+> > +		cur_offset = anon_stack[top].offset;
+> > +		type = btf_type_by_id(btf, tid);
+> > +		goto retry;
+> > +	}
+> > +
+> > +	return NULL;
+> > +}
+> > +
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
