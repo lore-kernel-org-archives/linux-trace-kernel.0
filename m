@@ -2,264 +2,222 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3885EE49BD
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Aug 2023 10:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A081EEE4993
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Aug 2023 12:20:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232152AbjHWKtj (ORCPT
+        id S234637AbjHWMUB (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 23 Aug 2023 06:49:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46050 "EHLO
+        Wed, 23 Aug 2023 08:20:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236214AbjHWJ4D (ORCPT
+        with ESMTP id S234605AbjHWMUA (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 23 Aug 2023 05:56:03 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 442482130;
-        Wed, 23 Aug 2023 02:54:52 -0700 (PDT)
-Received: from pwmachine.localnet (85-170-34-233.rev.numericable.fr [85.170.34.233])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 1ACAC2127C62;
-        Wed, 23 Aug 2023 02:54:50 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1ACAC2127C62
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1692784492;
-        bh=HjJsepE5OpDXA/4yFSlmoJDdIBkq291o4bLrlkb/X2E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C2HEdjShFUhbJ5yW+tQKD58fM3ZGyAPJ8FHAw7hTERIXo60s5dNw384UlgHz/2h/2
-         wzrEH2f4dSNPV6u35TKRSF4QwAWHWy3lBpiMKq9b103tnwiXy6Es/f3UlLQMU/qEx6
-         IdxOLBS2oCBM8tasF9PzKrcdCnmhhW9t72JSlic4=
-From:   Francis Laniel <flaniel@linux.microsoft.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        linux-trace-kernel@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>, bpf@vger.kernel.org
-Subject: Re: [RFC PATCH v1 1/1] tracing/kprobe: Add multi-probe support for 'perf_kprobe' PMU
-Date:   Wed, 23 Aug 2023 11:54:48 +0200
-Message-ID: <5964493.lOV4Wx5bFT@pwmachine>
-In-Reply-To: <20230823093614.fd704a98387d0ba1d23a29fb@kernel.org>
-References: <20230816163517.112518-1-flaniel@linux.microsoft.com> <2237127.iZASKD2KPV@pwmachine> <20230823093614.fd704a98387d0ba1d23a29fb@kernel.org>
+        Wed, 23 Aug 2023 08:20:00 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C68EE9;
+        Wed, 23 Aug 2023 05:19:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692793198; x=1724329198;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=58i9UZ4uOkfxY9He9AhTZG1ivpLYgdX1oN+5EKz0+3g=;
+  b=ScHqs3GDvi57xsRiYNKKswskR2ZIZ8pIUK9FV4meVjTWbpZ+nXb8ql+q
+   7Bxp+U9hBeGFAopfMQwuunJl4t64QMNWsfT76YNd4Whiky48EmMEjw9wU
+   nxMBWCmZ4piUkZ8ZVOIknFWyIL9fE1GDoKhhBgEA2eke78/o8ZoMgj39e
+   Z7wRvyidrmi7SZ0XBBoLcj55cm0dZ8XSfZw6RgrN6g9XfJL1YgvitjFFs
+   kt/FffbQPUAldCPOhrhnoQnbMSe7aElYSJz68dQoVys6py2cvF+TUzCU/
+   /coW+2aAnprjAwpoYEgPM6x3o3azhrIsr0MJ5eUjdJ4Sbr5xcWOI2AokE
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="438081774"
+X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
+   d="scan'208";a="438081774"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 05:19:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="802086805"
+X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
+   d="scan'208";a="802086805"
+Received: from lkp-server02.sh.intel.com (HELO daf8bb0a381d) ([10.239.97.151])
+  by fmsmga008.fm.intel.com with ESMTP; 23 Aug 2023 05:19:55 -0700
+Received: from kbuild by daf8bb0a381d with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qYmq3-0001BO-0G;
+        Wed, 23 Aug 2023 12:19:55 +0000
+Date:   Wed, 23 Aug 2023 20:18:55 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     oe-kbuild-all@lists.linux.dev,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Fix to avoid wakeup loop in splice read of
+ per-cpu buffer
+Message-ID: <202308232056.401OxapL-lkp@intel.com>
+References: <169262755804.106231.8245792908363050528.stgit@devnote2>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <169262755804.106231.8245792908363050528.stgit@devnote2>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi.
+Hi Masami,
 
-Le mercredi 23 ao=FBt 2023, 02:36:14 CEST Masami Hiramatsu a =E9crit :
-> Hi,
->=20
-> On Mon, 21 Aug 2023 14:55:14 +0200
->=20
-> Francis Laniel <flaniel@linux.microsoft.com> wrote:
-> > > Could you tell me how do you use this feature, for what perpose?
-> >=20
-> > Sure (I think I detailed this in the cover letter but I only sent it to
-> > the
-> > "main" mailing list and not the tracing one, sorry for this
-> > inconvenience)!
-> >=20
-> > Basically, I was adding NTFS tracing to an existing tool which monitors
-> > slow I/Os using BPF [1].
-> > To test the tool, I compiled a kernel with both NTFS module built-in and
-> > figured out the write operations when done on ntfs3 were missing from t=
-he
-> > output of the tool.
-> > The problem comes from the library I use in the tool which does not han=
-dle
-> > well when it exists different symbols with the same name.
-> > Contrary to perf, which only handles kprobes through sysfs, the library
-> > handles it in both way (sysfs and PMU) with a preference for PMU when
-> > available [2].
-> >=20
-> > After some discussion, I thought there could be a way to handle this
-> > automatically in the kernel when using PMU kprobes, hence this patch.
-> > I totally understand the case I described above is really a corner one,
-> > but I thought this feature could be useful for other people.
-> > In the case of the library itself, we could indeed find the address in
-> > /proc/ kallsyms but it would mean having CAP_SYS_ADMIN which is not
-> > forcefully something we want to enforce.
-> > Also, if we need to read /boot/vmlinuz or /boot/System.map we also need=
- to
-> > be root as these files often belong to root and cannot be read by other=
-s.
-> > So, this patch solves the above problem while not needing specific
-> > capabilities as the kernel will solve it for us.
->=20
-> Thanks for the explanation. I got the background, and still have some
-> questions.
->=20
-> - Is the analysis tool really necessary to be used by users other than
->   CAP_SYS_ADMIN? Even if it is useful, I still doubt CAP_PERFMON is safer
->   than CAP_SYS_ADMIN, because BPF program can access any kernel register.
+kernel test robot noticed the following build warnings:
 
-=46or the tool itself, this is indeed not a problem as we rely on CAP_SYS_A=
-DMIN.
-But this one for the library, as they do not want to enforce CAP_SYS_ADMIN =
-to=20
-use the library.
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.5-rc7 next-20230823]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> - My concern about this solution (enabling kprobe PMU on all symbols which
->   have the same name) makes it hard to run the same BPF program on it.
->   This is because symbols with the same name do not necessarily have the
->   same arguments (theoretically). Also, the BPF will trace unwanted symbo=
-ls
->   at unwanted timing.
+url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/tracing-Fix-to-avoid-wakeup-loop-in-splice-read-of-per-cpu-buffer/20230821-222307
+base:   linus/master
+patch link:    https://lore.kernel.org/r/169262755804.106231.8245792908363050528.stgit%40devnote2
+patch subject: [PATCH] tracing: Fix to avoid wakeup loop in splice read of per-cpu buffer
+config: mips-randconfig-r131-20230823 (https://download.01.org/0day-ci/archive/20230823/202308232056.401OxapL-lkp@intel.com/config)
+compiler: mipsel-linux-gcc (GCC) 13.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20230823/202308232056.401OxapL-lkp@intel.com/reproduce)
 
-Good point for the same name but different arguments!
-I was too focused on my case (ntfs_file_write_iter()) and forgot about this.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308232056.401OxapL-lkp@intel.com/
 
-> - Can you expand that library to handle the same name symbols differently?
->   I think this should be done in the user space, or in the kallsyms like
->   storing symbols with source line information.
+sparse warnings: (new ones prefixed by >>)
+   kernel/trace/trace.c:446:28: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct trace_export **list @@     got struct trace_export [noderef] __rcu ** @@
+   kernel/trace/trace.c:446:28: sparse:     expected struct trace_export **list
+   kernel/trace/trace.c:446:28: sparse:     got struct trace_export [noderef] __rcu **
+   kernel/trace/trace.c:460:33: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct trace_export **list @@     got struct trace_export [noderef] __rcu ** @@
+   kernel/trace/trace.c:460:33: sparse:     expected struct trace_export **list
+   kernel/trace/trace.c:460:33: sparse:     got struct trace_export [noderef] __rcu **
+   kernel/trace/trace.c:2959:38: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct event_filter *filter @@     got struct event_filter [noderef] __rcu *filter @@
+   kernel/trace/trace.c:2959:38: sparse:     expected struct event_filter *filter
+   kernel/trace/trace.c:2959:38: sparse:     got struct event_filter [noderef] __rcu *filter
+>> kernel/trace/trace.c:8481:25: sparse: sparse: incompatible types in comparison expression (different type sizes):
+>> kernel/trace/trace.c:8481:25: sparse:    unsigned int *
+>> kernel/trace/trace.c:8481:25: sparse:    unsigned long long [usertype] *
+   kernel/trace/trace.c:400:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
+   kernel/trace/trace.c:400:9: sparse:    struct trace_export [noderef] __rcu *
+   kernel/trace/trace.c:400:9: sparse:    struct trace_export *
+   kernel/trace/trace.c:415:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
+   kernel/trace/trace.c:415:9: sparse:    struct trace_export [noderef] __rcu *
+   kernel/trace/trace.c:415:9: sparse:    struct trace_export *
+>> kernel/trace/trace.c:8481:25: sparse: sparse: shift too big (32) for type unsigned int
 
-I think we can find a way to handle this in user space by potentially=20
-abstracting the several PMU probe under one.
-Or we can simply explode if a name correspond to several symbols and ask th=
-e=20
-user to use addr + offset to precise the symbol in this case.
+vim +8481 kernel/trace/trace.c
 
-> I understand this demand, but solving that with probing *all* symbols see=
-ms
-> like a brute force solution and may cause another problem later.
->=20
-> But this is a good discussion item. Last month Alessandro sent a script
-> which makes such symbols unique. Current problem is that the numbering is
-> not enough to identify which one is from which source code.
+  8400	
+  8401		if (*ppos & (PAGE_SIZE - 1))
+  8402			return -EINVAL;
+  8403	
+  8404		if (len & (PAGE_SIZE - 1)) {
+  8405			if (len < PAGE_SIZE)
+  8406				return -EINVAL;
+  8407			len &= PAGE_MASK;
+  8408		}
+  8409	
+  8410		if (splice_grow_spd(pipe, &spd))
+  8411			return -ENOMEM;
+  8412	
+  8413	 again:
+  8414		trace_access_lock(iter->cpu_file);
+  8415		entries = ring_buffer_entries_cpu(iter->array_buffer->buffer, iter->cpu_file);
+  8416	
+  8417		for (i = 0; i < spd.nr_pages_max && len && entries; i++, len -= PAGE_SIZE) {
+  8418			struct page *page;
+  8419			int r;
+  8420	
+  8421			ref = kzalloc(sizeof(*ref), GFP_KERNEL);
+  8422			if (!ref) {
+  8423				ret = -ENOMEM;
+  8424				break;
+  8425			}
+  8426	
+  8427			refcount_set(&ref->refcount, 1);
+  8428			ref->buffer = iter->array_buffer->buffer;
+  8429			ref->page = ring_buffer_alloc_read_page(ref->buffer, iter->cpu_file);
+  8430			if (IS_ERR(ref->page)) {
+  8431				ret = PTR_ERR(ref->page);
+  8432				ref->page = NULL;
+  8433				kfree(ref);
+  8434				break;
+  8435			}
+  8436			ref->cpu = iter->cpu_file;
+  8437	
+  8438			r = ring_buffer_read_page(ref->buffer, &ref->page,
+  8439						  len, iter->cpu_file, 1);
+  8440			if (r < 0) {
+  8441				ring_buffer_free_read_page(ref->buffer, ref->cpu,
+  8442							   ref->page);
+  8443				kfree(ref);
+  8444				break;
+  8445			}
+  8446	
+  8447			page = virt_to_page(ref->page);
+  8448	
+  8449			spd.pages[i] = page;
+  8450			spd.partial[i].len = PAGE_SIZE;
+  8451			spd.partial[i].offset = 0;
+  8452			spd.partial[i].private = (unsigned long)ref;
+  8453			spd.nr_pages++;
+  8454			*ppos += PAGE_SIZE;
+  8455	
+  8456			entries = ring_buffer_entries_cpu(iter->array_buffer->buffer, iter->cpu_file);
+  8457		}
+  8458	
+  8459		trace_access_unlock(iter->cpu_file);
+  8460		spd.nr_pages = i;
+  8461	
+  8462		/* did we read anything? */
+  8463		if (!spd.nr_pages) {
+  8464			long wait_index;
+  8465			size_t nr_pages;
+  8466			size_t full;
+  8467	
+  8468			if (ret)
+  8469				goto out;
+  8470	
+  8471			ret = -EAGAIN;
+  8472			if ((file->f_flags & O_NONBLOCK) || (flags & SPLICE_F_NONBLOCK))
+  8473				goto out;
+  8474	
+  8475			wait_index = READ_ONCE(iter->wait_index);
+  8476	
+  8477			/* For splice, we have to ensure at least 1 page is filled */
+  8478			nr_pages = ring_buffer_nr_pages(iter->array_buffer->buffer, iter->cpu_file);
+  8479			if (nr_pages * iter->tr->buffer_percent < 100) {
+  8480				full = nr_pages + 99;
+> 8481				do_div(full, nr_pages);
+  8482			} else
+  8483				full = iter->tr->buffer_percent;
+  8484	
+  8485			ret = wait_on_pipe(iter, full);
+  8486			if (ret)
+  8487				goto out;
+  8488	
+  8489			/* No need to wait after waking up when tracing is off */
+  8490			if (!tracer_tracing_is_on(iter->tr))
+  8491				goto out;
+  8492	
+  8493			/* Make sure we see the new wait_index */
+  8494			smp_rmb();
+  8495			if (wait_index != iter->wait_index)
+  8496				goto out;
+  8497	
+  8498			goto again;
+  8499		}
+  8500	
+  8501		ret = splice_to_pipe(pipe, &spd);
+  8502	out:
+  8503		splice_shrink_spd(&spd);
+  8504	
+  8505		return ret;
+  8506	}
+  8507	
 
-Definitely, I wrote this specifically to create a discussion and gather som=
-e=20
-comments, hence the RFC tag.
-
-> https://lore.kernel.org/all/20230714150326.1152359-1-alessandro.carminati=
-@gm
-> ail.com/
-
-I will definitely take a look at this contribution! Thank you for sharing t=
-he=20
-link!
-
-> > > If you just need to trace/profile a specific function which has the s=
-ame
-> > > name symbols, you might be better to use `perf probe` +
-> > > `/sys/kernel/tracing` or `perf record -e EVENT`.
-> > >=20
-> > > Or if you need to run it with CAP_PERFMON, without CAP_SYS_ADMIN,
-> > > we need to change a userspace tool to find the correct address and
-> > > pass it to the perf_event_open().
-> > >=20
-> > > > > > Added new events:
-> > > > > >   probe:ntfs_file_write_iter (on ntfs_file_write_iter)
-> > > > > >   probe:ntfs_file_write_iter (on ntfs_file_write_iter)
-> > > > > >=20
-> > > > > > You can now use it in all perf tools, such as:
-> > > > > >         perf record -e probe:ntfs_file_write_iter -aR sleep 1
-> > > > > >=20
-> > > > > > root@vm-amd64:~# cat /sys/kernel/tracing/kprobe_events
-> > > > > > p:probe/ntfs_file_write_iter _text+5088544
-> > > > > > p:probe/ntfs_file_write_iter _text+5278560
-> > > > > >=20
-> > > > > > > Thought?
-> > > > > >=20
-> > > > > > This contribution is basically here to sort of mimic what perf
-> > > > > > does
-> > > > > > but
-> > > > > > with PMU kprobes, as this is not possible to write in a sysfs f=
-ile
-> > > > > > with
-> > > > > > this type of probe.
-> > > > >=20
-> > > > > OK, I see it is for BPF only. Maybe BPF program can filter correct
-> > > > > one
-> > > > > to access the argument etc.
-> > > >=20
-> > > > I am not sure I understand, can you please precise?
-> > > > The eBPF program will be run when the kprobe will be triggered, so =
-if
-> > > > the
-> > > > kprobe is armed for the function (e.g. old ntfs_file_write_iter()),
-> > > > the
-> > > > eBPF program will never be called.
-> > >=20
-> > > As I said above, it is userspace BPF loader issue, because it has to
-> > > specify the correct address via unique symbol + offset, instead of
-> > > attaching all of them. I think that will be more side-effects.
-> > >=20
-> > > But anyway, thanks for pointing this issue. I should fix kprobe event=
- to
-> > > reject the symbols which is not unique. That should be pointed by oth=
-er
-> > > unique symbols.
-> >=20
-> > You are welcome and I thank you for the discussion.
-> > Can you please precise more what you think about "reject the symbols wh=
-ich
-> > is not unique"?
->=20
-> > Basically something like this:
-> Yes, that's what I said.
-
-OK, I will write something and send it as an RFC before end of the week the=
-n.
-
-> > struct trace_event_call *
-> > create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
-> >=20
-> > 			  bool is_return)
-> >=20
-> > {
-> >=20
-> > 	...
-> > 	if (!addr && func) {
->=20
-> if (func) {  /* because anyway if user specify "func" we have to solve
->  the symbol address */
->=20
-> > 		array.addrs =3D NULL;
-> > 		array.size =3D 0;
-> > 		ret =3D kallsyms_on_each_match_symbol(add_addr, func, &array);
-> > 		if (ret)
-> > 	=09
-> > 			goto error_free;
-> > 	=09
-> > 		if (array.size !=3D 1) {
-> > 	=09
-> > 			/*
-> > 		=09
-> > 			 * Function name corresponding to several symbols must
-> > 			 * be passed by address only.
-> > 			 */
-> > 		=09
-> > 			return -EINVAL;
->=20
-> This case may return a unique error code so that the caller can notice
-> the problem.
-
-Is it OK to add a dedicated error code for such a case?
-
-> Thank you,
->=20
-> > 		}
-> > =09
-> > 	}
-> > =09
-> > =09
-> > =09
-> > 	...
-> >=20
-> > }
-> > ?
-> > If my understanding is correct, I think I can write a patch to achieve
-> > this.
-> >=20
-> >=20
-> >=20
-> > Best regards.
-> > ---
-> > [1]: https://github.com/inspektor-gadget/inspektor-gadget/pull/1879
-> > [2]: https://github.com/cilium/ebpf/blob/
-> > 270c859894bd38cdd0c7783317b16343409e4df8/link/kprobe.go#L165-L191
-
-Best regards.
-
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
