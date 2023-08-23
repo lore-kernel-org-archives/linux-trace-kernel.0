@@ -2,38 +2,38 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DE7EE4993
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2969EE49A3
 	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Aug 2023 15:18:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237034AbjHWPSE (ORCPT
+        id S237032AbjHWPSF (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 23 Aug 2023 11:18:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45566 "EHLO
+        Wed, 23 Aug 2023 11:18:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236948AbjHWPSC (ORCPT
+        with ESMTP id S237052AbjHWPSC (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Wed, 23 Aug 2023 11:18:02 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89E21171A;
-        Wed, 23 Aug 2023 08:17:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B64510F8;
+        Wed, 23 Aug 2023 08:17:41 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 78F5360E03;
-        Wed, 23 Aug 2023 15:15:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 728FDC433C8;
-        Wed, 23 Aug 2023 15:15:42 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BC273646A1;
+        Wed, 23 Aug 2023 15:16:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEE86C433C8;
+        Wed, 23 Aug 2023 15:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692803745;
-        bh=0drD+LQDmx/AHTKLGdH1kpL/kFKRrBczUa0Lao0mBUc=;
+        s=k20201202; t=1692803768;
+        bh=XUnWIvG2GF1W9eYoGRGfvmiM9wn5WNYnK+ukiZ/XFnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BHa5BB/ygXp14fJ5mlCzLHnp2z4FiKXUQhn0X611gMkzK0gRcKI25E7Ait3VmQpnF
-         sEc8LFG2fmdqrcsXdRH1QKJStOcgrHyCUVEmy25sJppLkiwv6pdGS2tiSS9gI1bCrN
-         1MlvLL3MGN8oSSD18gHH9xqd6pIH79L51VL78zeon27+Nhq/vhXTNSuBWw2zAVbmNg
-         nI8dPLPSnPshg70iA4RjBdVG0nml2s+LGyxuDEkYhK24dN5J9bSTzZ8cuUFD3QCfGQ
-         sMXoF6ewCGSHdSeeh3KjBPriZwUeQagYnxgFxfj40Uh5gNSIxfHf3nAGvc9Yix0XDW
-         R5qDiyorawPjw==
+        b=L4bTLvYAis9FElX7EW5jKDI/MZ768XYa656tzXf75Q5JWfna2O26b72HYOQ2+Fy0Z
+         X/NYFUXeMEGwoPLeFrkySgxkc0O3dEWIiu5l3AffrhksWPQ1Ten4Apa1ozEOt2H2hy
+         WTJJLmpMw9QcdlHPPu2TSy/6hIzod9RDfOaULiEduJkwNuw3TCGqeNU1vP/uAift+T
+         lt3YOQIZ3ozlunqffM3qDXRj4gKY4+Y+bJZp2/n7uVGZoUWxwaVRhStob4InVYGUv4
+         ep1CjWxl4XJCAp8Nw+GSdHe/VqFDOLTvUgXVUx9MyOYMlREk3E+FAjMXIBXgwL/E2L
+         H6yeu9UaMcs6Q==
 From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
@@ -50,9 +50,9 @@ Cc:     linux-trace-kernel@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v4 1/9] Documentation: probes: Add a new ret_ip callback parameter
-Date:   Thu, 24 Aug 2023 00:15:40 +0900
-Message-Id: <169280373992.282662.14835192462715188987.stgit@devnote2>
+Subject: [PATCH v4 3/9] tracing: Expose ftrace_regs regardless of CONFIG_FUNCTION_TRACER
+Date:   Thu, 24 Aug 2023 00:16:03 +0900
+Message-Id: <169280376296.282662.3179053699894615088.stgit@devnote2>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <169280372795.282662.9784422934484459769.stgit@devnote2>
 References: <169280372795.282662.9784422934484459769.stgit@devnote2>
@@ -66,42 +66,124 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Add a new ret_ip callback parameter description.
+In order to be able to use ftrace_regs even from features unrelated to
+function tracer (e.g. kretprobe), expose ftrace_regs structures and
+APIs even if the CONFIG_FUNCTION_TRACER=n.
 
-Fixes: cb16330d1274 ("fprobe: Pass return address to the handlers")
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Acked-by: Florent Revest <revest@chromium.org>
 ---
- Changes in v4:
-  - Update ret_ip description (Thanks Florent!)
+ Changes in v3:
+  - arch/s390/include/asm/ftrace.h: hide ftrace_regs parts if
+    CONFIG_FUNCTION_TRACER=n to avoid conflict.
+  - Fixed typo.
+  - Define accessor macros only if HAVE_REGS_AND_STACK_ACCESS_API=y
 ---
- Documentation/trace/fprobe.rst |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/s390/include/asm/ftrace.h |    4 +++
+ include/linux/ftrace.h         |   51 +++++++++++++++++++++++-----------------
+ 2 files changed, 33 insertions(+), 22 deletions(-)
 
-diff --git a/Documentation/trace/fprobe.rst b/Documentation/trace/fprobe.rst
-index 40dd2fbce861..5851a14eb893 100644
---- a/Documentation/trace/fprobe.rst
-+++ b/Documentation/trace/fprobe.rst
-@@ -91,9 +91,9 @@ The prototype of the entry/exit callback function are as follows:
+diff --git a/arch/s390/include/asm/ftrace.h b/arch/s390/include/asm/ftrace.h
+index e5c5cb1207e2..74cd2e8bf660 100644
+--- a/arch/s390/include/asm/ftrace.h
++++ b/arch/s390/include/asm/ftrace.h
+@@ -41,6 +41,8 @@ static inline unsigned long ftrace_call_adjust(unsigned long addr)
+ 	return addr;
+ }
  
- .. code-block:: c
- 
-- int entry_callback(struct fprobe *fp, unsigned long entry_ip, struct pt_regs *regs, void *entry_data);
-+ int entry_callback(struct fprobe *fp, unsigned long entry_ip, unsigned long ret_ip, struct pt_regs *regs, void *entry_data);
- 
-- void exit_callback(struct fprobe *fp, unsigned long entry_ip, struct pt_regs *regs, void *entry_data);
-+ void exit_callback(struct fprobe *fp, unsigned long entry_ip, unsigned long ret_ip, struct pt_regs *regs, void *entry_data);
- 
- Note that the @entry_ip is saved at function entry and passed to exit handler.
- If the entry callback function returns !0, the corresponding exit callback will be cancelled.
-@@ -108,6 +108,10 @@ If the entry callback function returns !0, the corresponding exit callback will
-         Note that this may not be the actual entry address of the function but
-         the address where the ftrace is instrumented.
- 
-+@ret_ip
-+        This is the return address that the traced function will return to,
-+        somewhere in the caller. This can be used at both entry and exit.
++#ifdef CONFIG_FUNCTION_TRACER
 +
- @regs
-         This is the `pt_regs` data structure at the entry and exit. Note that
-         the instruction pointer of @regs may be different from the @entry_ip
+ struct ftrace_regs {
+ 	struct pt_regs regs;
+ };
+@@ -80,6 +82,8 @@ ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
+ #define ftrace_regs_query_register_offset(name) \
+ 	regs_query_register_offset(name)
+ 
++#endif /* CONFIG_FUNCTION_TRACER */
++
+ #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+ /*
+  * When an ftrace registered caller is tracing a function that is
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index aad9cf8876b5..fe335d861f08 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -112,24 +112,44 @@ static inline int ftrace_mod_get_kallsym(unsigned int symnum, unsigned long *val
+ }
+ #endif
+ 
+-#ifdef CONFIG_FUNCTION_TRACER
+-
+-extern int ftrace_enabled;
+-
+-#ifndef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
++/*
++ * If the architecture doesn't support FTRACE_WITH_ARGS or disables function
++ * tracer, define the default(pt_regs compatible) ftrace_regs.
++ */
++#if !defined(CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS) || !defined(CONFIG_FUNCTION_TRACER)
+ 
+ struct ftrace_regs {
+ 	struct pt_regs		regs;
+ };
+ #define arch_ftrace_get_regs(fregs) (&(fregs)->regs)
+ 
++#ifdef CONFIG_HAVE_REGS_AND_STACK_ACCESS_API
++
+ /*
+  * ftrace_regs_set_instruction_pointer() is to be defined by the architecture
+  * if to allow setting of the instruction pointer from the ftrace_regs when
+  * HAVE_DYNAMIC_FTRACE_WITH_ARGS is set and it supports live kernel patching.
+  */
+ #define ftrace_regs_set_instruction_pointer(fregs, ip) do { } while (0)
+-#endif /* CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS */
++
++#define ftrace_regs_get_instruction_pointer(fregs) \
++	instruction_pointer(ftrace_get_regs(fregs))
++#define ftrace_regs_get_argument(fregs, n) \
++	regs_get_kernel_argument(ftrace_get_regs(fregs), n)
++#define ftrace_regs_get_stack_pointer(fregs) \
++	kernel_stack_pointer(ftrace_get_regs(fregs))
++#define ftrace_regs_return_value(fregs) \
++	regs_return_value(ftrace_get_regs(fregs))
++#define ftrace_regs_set_return_value(fregs, ret) \
++	regs_set_return_value(ftrace_get_regs(fregs), ret)
++#define ftrace_override_function_with_return(fregs) \
++	override_function_with_return(ftrace_get_regs(fregs))
++#define ftrace_regs_query_register_offset(name) \
++	regs_query_register_offset(name)
++
++#endif /* CONFIG_HAVE_REGS_AND_STACK_ACCESS_API */
++
++#endif /* !CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS || !CONFIG_FUNCTION_TRACER */
+ 
+ static __always_inline struct pt_regs *ftrace_get_regs(struct ftrace_regs *fregs)
+ {
+@@ -151,22 +171,9 @@ static __always_inline bool ftrace_regs_has_args(struct ftrace_regs *fregs)
+ 	return ftrace_get_regs(fregs) != NULL;
+ }
+ 
+-#ifndef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
+-#define ftrace_regs_get_instruction_pointer(fregs) \
+-	instruction_pointer(ftrace_get_regs(fregs))
+-#define ftrace_regs_get_argument(fregs, n) \
+-	regs_get_kernel_argument(ftrace_get_regs(fregs), n)
+-#define ftrace_regs_get_stack_pointer(fregs) \
+-	kernel_stack_pointer(ftrace_get_regs(fregs))
+-#define ftrace_regs_return_value(fregs) \
+-	regs_return_value(ftrace_get_regs(fregs))
+-#define ftrace_regs_set_return_value(fregs, ret) \
+-	regs_set_return_value(ftrace_get_regs(fregs), ret)
+-#define ftrace_override_function_with_return(fregs) \
+-	override_function_with_return(ftrace_get_regs(fregs))
+-#define ftrace_regs_query_register_offset(name) \
+-	regs_query_register_offset(name)
+-#endif
++#ifdef CONFIG_FUNCTION_TRACER
++
++extern int ftrace_enabled;
+ 
+ typedef void (*ftrace_func_t)(unsigned long ip, unsigned long parent_ip,
+ 			      struct ftrace_ops *op, struct ftrace_regs *fregs);
 
