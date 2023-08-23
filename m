@@ -2,287 +2,499 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2244FEE4993
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Aug 2023 13:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DEBEE4993
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Aug 2023 13:56:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235714AbjHWNpU (ORCPT
+        id S236336AbjHWN4U (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 23 Aug 2023 09:45:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50146 "EHLO
+        Wed, 23 Aug 2023 09:56:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235559AbjHWNpU (ORCPT
+        with ESMTP id S232939AbjHWN4U (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 23 Aug 2023 09:45:20 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D85019A;
-        Wed, 23 Aug 2023 06:45:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A08F661029;
-        Wed, 23 Aug 2023 13:45:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38FB2C433C7;
-        Wed, 23 Aug 2023 13:45:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692798316;
-        bh=ci9fhFEBfc2LOR3YE6dug7Bi9rUdN4KE74Fag1xJbKA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=URyvVvLx8IMphIGwz3hAGSaGP/qSBBB8To95ZF9PJLlTifOrRf5SZ3zWxkyNEB1DN
-         ed3wAa8GEjwD+MSV3cWTtJCG85PPDBTaJqvuEEyv1AbGq1tdG0fCQS0A8pJg9YJlR2
-         gSDDIdlcJYNdq7DZTtOAKvOcJjsG5AzJvr4RPYdj7bZKSfx1K1ziNq8QgpBRtoi0iP
-         i7gR21lQuYr6vPkla/K2qMS1CyRSMqefumvLUyE4WloObQpxk9bytGUl+oT/2Y9TDe
-         Qv+tgIYc1sH8nbK6AWv1FORATwCNy38NT5yQvmWSm3uFkvsOCgdw7Bniu/iNTyr4Ed
-         1fxRllDtA1JDw==
-Date:   Wed, 23 Aug 2023 22:45:12 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Francis Laniel <flaniel@linux.microsoft.com>
-Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        linux-trace-kernel@vger.kernel.org,
-        Song Liu <songliubraving@fb.com>, bpf@vger.kernel.org
-Subject: Re: [RFC PATCH v1 1/1] tracing/kprobe: Add multi-probe support for
- 'perf_kprobe' PMU
-Message-Id: <20230823224512.660dac2ff384aea739f61098@kernel.org>
-In-Reply-To: <5964493.lOV4Wx5bFT@pwmachine>
-References: <20230816163517.112518-1-flaniel@linux.microsoft.com>
-        <2237127.iZASKD2KPV@pwmachine>
-        <20230823093614.fd704a98387d0ba1d23a29fb@kernel.org>
-        <5964493.lOV4Wx5bFT@pwmachine>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Wed, 23 Aug 2023 09:56:20 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2B5F3CFE;
+        Wed, 23 Aug 2023 06:56:17 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E999E165C;
+        Wed, 23 Aug 2023 06:17:30 -0700 (PDT)
+Received: from e121798.cable.virginm.net (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC7ED3F740;
+        Wed, 23 Aug 2023 06:16:42 -0700 (PDT)
+From:   Alexandru Elisei <alexandru.elisei@arm.com>
+To:     catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
+        maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
+        yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
+        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
+        rppt@kernel.org, hughd@google.com
+Cc:     pcc@google.com, steven.price@arm.com, anshuman.khandual@arm.com,
+        vincenzo.frascino@arm.com, david@redhat.com, eugenis@google.com,
+        kcc@google.com, hyesoo.yu@samsung.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: [PATCH RFC 25/37] arm64: mte: Manage tag storage on page allocation
+Date:   Wed, 23 Aug 2023 14:13:38 +0100
+Message-Id: <20230823131350.114942-26-alexandru.elisei@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230823131350.114942-1-alexandru.elisei@arm.com>
+References: <20230823131350.114942-1-alexandru.elisei@arm.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 23 Aug 2023 11:54:48 +0200
-Francis Laniel <flaniel@linux.microsoft.com> wrote:
+Reserve tag storage for a tagged allocation by migrating the contents of
+the tag storage (if in use for data) and removing the pages from page
+allocator by using alloc_contig_range().
 
-> Hi.
-> 
-> Le mercredi 23 août 2023, 02:36:14 CEST Masami Hiramatsu a écrit :
-> > Hi,
-> > 
-> > On Mon, 21 Aug 2023 14:55:14 +0200
-> > 
-> > Francis Laniel <flaniel@linux.microsoft.com> wrote:
-> > > > Could you tell me how do you use this feature, for what perpose?
-> > > 
-> > > Sure (I think I detailed this in the cover letter but I only sent it to
-> > > the
-> > > "main" mailing list and not the tracing one, sorry for this
-> > > inconvenience)!
-> > > 
-> > > Basically, I was adding NTFS tracing to an existing tool which monitors
-> > > slow I/Os using BPF [1].
-> > > To test the tool, I compiled a kernel with both NTFS module built-in and
-> > > figured out the write operations when done on ntfs3 were missing from the
-> > > output of the tool.
-> > > The problem comes from the library I use in the tool which does not handle
-> > > well when it exists different symbols with the same name.
-> > > Contrary to perf, which only handles kprobes through sysfs, the library
-> > > handles it in both way (sysfs and PMU) with a preference for PMU when
-> > > available [2].
-> > > 
-> > > After some discussion, I thought there could be a way to handle this
-> > > automatically in the kernel when using PMU kprobes, hence this patch.
-> > > I totally understand the case I described above is really a corner one,
-> > > but I thought this feature could be useful for other people.
-> > > In the case of the library itself, we could indeed find the address in
-> > > /proc/ kallsyms but it would mean having CAP_SYS_ADMIN which is not
-> > > forcefully something we want to enforce.
-> > > Also, if we need to read /boot/vmlinuz or /boot/System.map we also need to
-> > > be root as these files often belong to root and cannot be read by others.
-> > > So, this patch solves the above problem while not needing specific
-> > > capabilities as the kernel will solve it for us.
-> > 
-> > Thanks for the explanation. I got the background, and still have some
-> > questions.
-> > 
-> > - Is the analysis tool really necessary to be used by users other than
-> >   CAP_SYS_ADMIN? Even if it is useful, I still doubt CAP_PERFMON is safer
-> >   than CAP_SYS_ADMIN, because BPF program can access any kernel register.
-> 
-> For the tool itself, this is indeed not a problem as we rely on CAP_SYS_ADMIN.
-> But this one for the library, as they do not want to enforce CAP_SYS_ADMIN to 
-> use the library.
+When all the associated tagged pages have been freed, put the tag storage
+pages back to the page allocator, where they can be used for data
+allocations.
 
-Hmm, however, that means the library also does not consider (or support) the
-same-name symbols, because there is no way to identify the address without
-accessing vmlinux. Since the address is still not clear whether one of
-the same name symbols is what the user wants to trace, it needs to access
-the vmlinux including debuginfo. It also need to use tools like 'eu-addr2line'
-or 'readelf' etc. to identify the actual symbol and address.
-The vmlinux is usually not installed to the system, because it is for the
-kernel development, it may not need to access CAP_SYS_ADMIN.
+Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+---
+ arch/arm64/include/asm/memory_metadata.h |  16 +-
+ arch/arm64/include/asm/mte.h             |  12 ++
+ arch/arm64/include/asm/mte_tag_storage.h |   8 +
+ arch/arm64/kernel/mte_tag_storage.c      | 242 ++++++++++++++++++++++-
+ fs/proc/page.c                           |   1 +
+ include/linux/kernel-page-flags.h        |   1 +
+ include/linux/page-flags.h               |   1 +
+ include/trace/events/mmflags.h           |   3 +-
+ mm/huge_memory.c                         |   1 +
+ 9 files changed, 273 insertions(+), 12 deletions(-)
 
-> 
-> > - My concern about this solution (enabling kprobe PMU on all symbols which
-> >   have the same name) makes it hard to run the same BPF program on it.
-> >   This is because symbols with the same name do not necessarily have the
-> >   same arguments (theoretically). Also, the BPF will trace unwanted symbols
-> >   at unwanted timing.
-> 
-> Good point for the same name but different arguments!
-> I was too focused on my case (ntfs_file_write_iter()) and forgot about this.
-
-Yeah, and the same reason, I think I should check the symbol is unique too
-on kprobe event. I also found that fprobe event has similar issue.
-
-> 
-> > - Can you expand that library to handle the same name symbols differently?
-> >   I think this should be done in the user space, or in the kallsyms like
-> >   storing symbols with source line information.
-> 
-> I think we can find a way to handle this in user space by potentially 
-> abstracting the several PMU probe under one.
-> Or we can simply explode if a name correspond to several symbols and ask the 
-> user to use addr + offset to precise the symbol in this case.
-
-Yeah, I think that is a better way to handle this situation.
-
-> 
-> > I understand this demand, but solving that with probing *all* symbols seems
-> > like a brute force solution and may cause another problem later.
-> > 
-> > But this is a good discussion item. Last month Alessandro sent a script
-> > which makes such symbols unique. Current problem is that the numbering is
-> > not enough to identify which one is from which source code.
-> 
-> Definitely, I wrote this specifically to create a discussion and gather some 
-> comments, hence the RFC tag.
-> 
-> > https://lore.kernel.org/all/20230714150326.1152359-1-alessandro.carminati@gm
-> > ail.com/
-> 
-> I will definitely take a look at this contribution! Thank you for sharing the 
-> link!
-
-You're welcome!
-
-> 
-> > > > If you just need to trace/profile a specific function which has the same
-> > > > name symbols, you might be better to use `perf probe` +
-> > > > `/sys/kernel/tracing` or `perf record -e EVENT`.
-> > > > 
-> > > > Or if you need to run it with CAP_PERFMON, without CAP_SYS_ADMIN,
-> > > > we need to change a userspace tool to find the correct address and
-> > > > pass it to the perf_event_open().
-> > > > 
-> > > > > > > Added new events:
-> > > > > > >   probe:ntfs_file_write_iter (on ntfs_file_write_iter)
-> > > > > > >   probe:ntfs_file_write_iter (on ntfs_file_write_iter)
-> > > > > > > 
-> > > > > > > You can now use it in all perf tools, such as:
-> > > > > > >         perf record -e probe:ntfs_file_write_iter -aR sleep 1
-> > > > > > > 
-> > > > > > > root@vm-amd64:~# cat /sys/kernel/tracing/kprobe_events
-> > > > > > > p:probe/ntfs_file_write_iter _text+5088544
-> > > > > > > p:probe/ntfs_file_write_iter _text+5278560
-> > > > > > > 
-> > > > > > > > Thought?
-> > > > > > > 
-> > > > > > > This contribution is basically here to sort of mimic what perf
-> > > > > > > does
-> > > > > > > but
-> > > > > > > with PMU kprobes, as this is not possible to write in a sysfs file
-> > > > > > > with
-> > > > > > > this type of probe.
-> > > > > > 
-> > > > > > OK, I see it is for BPF only. Maybe BPF program can filter correct
-> > > > > > one
-> > > > > > to access the argument etc.
-> > > > > 
-> > > > > I am not sure I understand, can you please precise?
-> > > > > The eBPF program will be run when the kprobe will be triggered, so if
-> > > > > the
-> > > > > kprobe is armed for the function (e.g. old ntfs_file_write_iter()),
-> > > > > the
-> > > > > eBPF program will never be called.
-> > > > 
-> > > > As I said above, it is userspace BPF loader issue, because it has to
-> > > > specify the correct address via unique symbol + offset, instead of
-> > > > attaching all of them. I think that will be more side-effects.
-> > > > 
-> > > > But anyway, thanks for pointing this issue. I should fix kprobe event to
-> > > > reject the symbols which is not unique. That should be pointed by other
-> > > > unique symbols.
-> > > 
-> > > You are welcome and I thank you for the discussion.
-> > > Can you please precise more what you think about "reject the symbols which
-> > > is not unique"?
-> > 
-> > > Basically something like this:
-> > Yes, that's what I said.
-> 
-> OK, I will write something and send it as an RFC before end of the week then.
-
-Thank you!
-
-> 
-> > > struct trace_event_call *
-> > > create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
-> > > 
-> > > 			  bool is_return)
-> > > 
-> > > {
-> > > 
-> > > 	...
-> > > 	if (!addr && func) {
-> > 
-> > if (func) {  /* because anyway if user specify "func" we have to solve
-> >  the symbol address */
-> > 
-> > > 		array.addrs = NULL;
-> > > 		array.size = 0;
-> > > 		ret = kallsyms_on_each_match_symbol(add_addr, func, &array);
-> > > 		if (ret)
-> > > 		
-> > > 			goto error_free;
-> > > 		
-> > > 		if (array.size != 1) {
-> > > 		
-> > > 			/*
-> > > 			
-> > > 			 * Function name corresponding to several symbols must
-> > > 			 * be passed by address only.
-> > > 			 */
-> > > 			
-> > > 			return -EINVAL;
-> > 
-> > This case may return a unique error code so that the caller can notice
-> > the problem.
-> 
-> Is it OK to add a dedicated error code for such a case?
-> 
-> > Thank you,
-> > 
-> > > 		}
-> > > 	
-> > > 	}
-> > > 	
-> > > 	
-> > > 	
-> > > 	...
-> > > 
-> > > }
-> > > ?
-> > > If my understanding is correct, I think I can write a patch to achieve
-> > > this.
-> > > 
-> > > 
-> > > 
-> > > Best regards.
-> > > ---
-> > > [1]: https://github.com/inspektor-gadget/inspektor-gadget/pull/1879
-> > > [2]: https://github.com/cilium/ebpf/blob/
-> > > 270c859894bd38cdd0c7783317b16343409e4df8/link/kprobe.go#L165-L191
-> 
-> Best regards.
-> 
-> 
-
-
+diff --git a/arch/arm64/include/asm/memory_metadata.h b/arch/arm64/include/asm/memory_metadata.h
+index ade37331a5c8..167b039f06cf 100644
+--- a/arch/arm64/include/asm/memory_metadata.h
++++ b/arch/arm64/include/asm/memory_metadata.h
+@@ -12,9 +12,11 @@
+ #include <asm/mte.h>
+ 
+ #ifdef CONFIG_MEMORY_METADATA
++DECLARE_STATIC_KEY_FALSE(metadata_storage_enabled_key);
++
+ static inline bool metadata_storage_enabled(void)
+ {
+-	return false;
++	return static_branch_likely(&metadata_storage_enabled_key);
+ }
+ 
+ static inline bool alloc_can_use_metadata_pages(gfp_t gfp_mask)
+@@ -34,19 +36,13 @@ static inline bool folio_has_metadata(struct folio *folio)
+ 	return page_has_metadata(&folio->page);
+ }
+ 
+-static inline int reserve_metadata_storage(struct page *page, int order, gfp_t gfp_mask)
+-{
+-	return 0;
+-}
+-
+-static inline void free_metadata_storage(struct page *page, int order)
+-{
+-}
+-
+ static inline bool vma_has_metadata(struct vm_area_struct *vma)
+ {
+ 	return vma && (vma->vm_flags & VM_MTE);
+ }
++
++int reserve_metadata_storage(struct page *page, int order, gfp_t gfp_mask);
++void free_metadata_storage(struct page *page, int order);
+ #endif /* CONFIG_MEMORY_METADATA */
+ 
+ #endif /* __ASM_MEMORY_METADATA_H  */
+diff --git a/arch/arm64/include/asm/mte.h b/arch/arm64/include/asm/mte.h
+index 246a561652f4..70cfd09b4a11 100644
+--- a/arch/arm64/include/asm/mte.h
++++ b/arch/arm64/include/asm/mte.h
+@@ -44,9 +44,21 @@ void mte_free_tags_mem(void *tags);
+ #define PG_mte_tagged	PG_arch_2
+ /* simple lock to avoid multiple threads tagging the same page */
+ #define PG_mte_lock	PG_arch_3
++/* Track if a tagged page has tag storage reserved */
++#define PG_tag_storage_reserved	PG_arch_4
++
++#ifdef CONFIG_ARM64_MTE_TAG_STORAGE
++DECLARE_STATIC_KEY_FALSE(metadata_storage_enabled_key);
++extern bool page_tag_storage_reserved(struct page *page);
++#endif
+ 
+ static inline void set_page_mte_tagged(struct page *page)
+ {
++#ifdef CONFIG_ARM64_MTE_TAG_STORAGE
++	/* Open code mte_tag_storage_enabled() */
++	WARN_ON_ONCE(static_branch_likely(&metadata_storage_enabled_key) &&
++		     !page_tag_storage_reserved(page));
++#endif
+ 	/*
+ 	 * Ensure that the tags written prior to this function are visible
+ 	 * before the page flags update.
+diff --git a/arch/arm64/include/asm/mte_tag_storage.h b/arch/arm64/include/asm/mte_tag_storage.h
+index 8f86c4f9a7c3..7b69a8af13f3 100644
+--- a/arch/arm64/include/asm/mte_tag_storage.h
++++ b/arch/arm64/include/asm/mte_tag_storage.h
+@@ -5,11 +5,19 @@
+ #ifndef __ASM_MTE_TAG_STORAGE_H
+ #define __ASM_MTE_TAG_STORAGE_H
+ 
++#include <linux/mm_types.h>
++
+ #ifdef CONFIG_ARM64_MTE_TAG_STORAGE
+ void mte_tag_storage_init(void);
++bool page_tag_storage_reserved(struct page *page);
+ #else
+ static inline void mte_tag_storage_init(void)
+ {
+ }
++static inline bool page_tag_storage_reserved(struct page *page)
++{
++	return true;
++}
+ #endif /* CONFIG_ARM64_MTE_TAG_STORAGE */
++
+ #endif /* __ASM_MTE_TAG_STORAGE_H  */
+diff --git a/arch/arm64/kernel/mte_tag_storage.c b/arch/arm64/kernel/mte_tag_storage.c
+index 3e0123aa3fb3..075231443dec 100644
+--- a/arch/arm64/kernel/mte_tag_storage.c
++++ b/arch/arm64/kernel/mte_tag_storage.c
+@@ -11,13 +11,19 @@
+ #include <linux/of_device.h>
+ #include <linux/of_fdt.h>
+ #include <linux/pageblock-flags.h>
++#include <linux/page-flags.h>
++#include <linux/page_owner.h>
+ #include <linux/range.h>
++#include <linux/sched/mm.h>
+ #include <linux/string.h>
++#include <linux/vm_event_item.h>
+ #include <linux/xarray.h>
+ 
+ #include <asm/memory_metadata.h>
+ #include <asm/mte_tag_storage.h>
+ 
++__ro_after_init DEFINE_STATIC_KEY_FALSE(metadata_storage_enabled_key);
++
+ struct tag_region {
+ 	struct range mem_range;	/* Memory associated with the tag storage, in PFNs. */
+ 	struct range tag_range;	/* Tag storage memory, in PFNs. */
+@@ -29,6 +35,30 @@ struct tag_region {
+ static struct tag_region tag_regions[MAX_TAG_REGIONS];
+ static int num_tag_regions;
+ 
++/*
++ * A note on locking. Reserving tag storage takes the tag_blocks_lock mutex,
++ * because alloc_contig_range() might sleep.
++ *
++ * Freeing tag storage takes the xa_lock spinlock with interrupts disabled
++ * because pages can be freed from non-preemptible contexts, including from an
++ * interrupt handler.
++ *
++ * Because tag storage freeing can happen from interrupt contexts, the xarray is
++ * defined with the XA_FLAGS_LOCK_IRQ flag to disable interrupts when calling
++ * xa_store() to prevent a deadlock.
++ *
++ * This means that reserve_metadata_storage() cannot run concurrently with
++ * itself (no concurrent insertions), but it can run at the same time as
++ * free_metadata_storage(). The first thing that reserve_metadata_storage() does
++ * after taking the mutex is increase the refcount on all present tag storage
++ * blocks with the xa_lock held, to serialize against freeing the blocks. This
++ * is an optimization to avoid taking and releasing the xa_lock after each
++ * iteration if the refcount operation was moved inside the loop, where it would
++ * have had to be executed for each block.
++ */
++static DEFINE_XARRAY_FLAGS(tag_blocks_reserved, XA_FLAGS_LOCK_IRQ);
++static DEFINE_MUTEX(tag_blocks_lock);
++
+ static int __init tag_storage_of_flat_get_range(unsigned long node, const __be32 *reg,
+ 						int reg_len, struct range *range)
+ {
+@@ -367,6 +397,216 @@ static int __init mte_tag_storage_activate_regions(void)
+ 		}
+ 	}
+ 
++	return ret;
++}
++core_initcall(mte_tag_storage_activate_regions);
++
++bool page_tag_storage_reserved(struct page *page)
++{
++	return test_bit(PG_tag_storage_reserved, &page->flags);
++}
++
++static int tag_storage_find_block_in_region(struct page *page, unsigned long *blockp,
++					    struct tag_region *region)
++{
++	struct range *tag_range = &region->tag_range;
++	struct range *mem_range = &region->mem_range;
++	u64 page_pfn = page_to_pfn(page);
++	u64 block, block_offset;
++
++	if (!(mem_range->start <= page_pfn && page_pfn <= mem_range->end))
++		return -ERANGE;
++
++	block_offset = (page_pfn - mem_range->start) / 32;
++	block = tag_range->start + rounddown(block_offset, region->block_size);
++
++	if (block + region->block_size - 1 > tag_range->end) {
++		pr_err("Block 0x%llx-0x%llx is outside tag region 0x%llx-0x%llx\n",
++			PFN_PHYS(block), PFN_PHYS(block + region->block_size),
++			PFN_PHYS(tag_range->start), PFN_PHYS(tag_range->end));
++		return -ERANGE;
++	}
++	*blockp = block;
++
++	return 0;
++}
++
++static int tag_storage_find_block(struct page *page, unsigned long *block,
++				  struct tag_region **region)
++{
++	int i, ret;
++
++	for (i = 0; i < num_tag_regions; i++) {
++		ret = tag_storage_find_block_in_region(page, block, &tag_regions[i]);
++		if (ret == 0) {
++			*region = &tag_regions[i];
++			return 0;
++		}
++	}
++
++	return -EINVAL;
++}
++
++static void block_ref_add(unsigned long block, struct tag_region *region, int order)
++{
++	int count;
++
++	count = min(1u << order, 32 * region->block_size);
++	page_ref_add(pfn_to_page(block), count);
++}
++
++static int block_ref_sub_return(unsigned long block, struct tag_region *region, int order)
++{
++	int count;
++
++	count = min(1u << order, 32 * region->block_size);
++	return page_ref_sub_return(pfn_to_page(block), count);
++}
++
++static bool tag_storage_block_is_reserved(unsigned long block)
++{
++	return xa_load(&tag_blocks_reserved, block) != NULL;
++}
++
++static int tag_storage_reserve_block(unsigned long block, struct tag_region *region, int order)
++{
++	int ret;
++
++	ret = xa_err(xa_store(&tag_blocks_reserved, block, pfn_to_page(block), GFP_KERNEL));
++	if (!ret)
++		block_ref_add(block, region, order);
++
++	return ret;
++}
++
++bool alloc_can_use_tag_storage(gfp_t gfp_mask)
++{
++	return !(gfp_mask & __GFP_TAGGED);
++}
++
++bool alloc_requires_tag_storage(gfp_t gfp_mask)
++{
++	return gfp_mask & __GFP_TAGGED;
++}
++
++static int order_to_num_blocks(int order)
++{
++	return max((1 << order) / 32, 1);
++}
++
++int reserve_metadata_storage(struct page *page, int order, gfp_t gfp)
++{
++	unsigned long start_block, end_block;
++	struct tag_region *region;
++	unsigned long block;
++	unsigned long flags;
++	int i, tries;
++	int ret = 0;
++
++	VM_WARN_ON_ONCE(!preemptible());
++
++	/*
++	 * __alloc_contig_migrate_range() ignores gfp when allocating the
++	 * destination page for migration. Regardless, massage gfp flags and
++	 * remove __GFP_TAGGED to avoid recursion in case gfp stops being
++	 * ignored.
++	 */
++	gfp &= ~__GFP_TAGGED;
++	if (!(gfp & __GFP_NORETRY))
++		gfp |= __GFP_RETRY_MAYFAIL;
++
++	ret = tag_storage_find_block(page, &start_block, &region);
++	if (WARN_ONCE(ret, "Missing tag storage block for pfn 0x%lx", page_to_pfn(page)))
++		return 0;
++
++	end_block = start_block + order_to_num_blocks(order) * region->block_size;
++
++	mutex_lock(&tag_blocks_lock);
++
++	/* Make sure existing entries are not freed from out under out feet. */
++	xa_lock_irqsave(&tag_blocks_reserved, flags);
++	for (block = start_block; block < end_block; block += region->block_size) {
++		if (tag_storage_block_is_reserved(block))
++			block_ref_add(block, region, order);
++	}
++	xa_unlock_irqrestore(&tag_blocks_reserved, flags);
++
++	for (block = start_block; block < end_block; block += region->block_size) {
++		/* Refcount incremented above. */
++		if (tag_storage_block_is_reserved(block))
++			continue;
++
++		tries = 5;
++		while (tries--) {
++			ret = alloc_contig_range(block, block + region->block_size, MIGRATE_METADATA, gfp);
++			if (ret == 0 || ret != -EBUSY)
++				break;
++		}
++
++		if (ret)
++			goto out_error;
++
++		ret = tag_storage_reserve_block(block, region, order);
++		if (ret) {
++			free_contig_range(block, region->block_size);
++			goto out_error;
++		}
++
++		count_vm_events(METADATA_RESERVE_SUCCESS, region->block_size);
++	}
++
++	for (i = 0; i < (1 << order); i++)
++		set_bit(PG_tag_storage_reserved, &(page + i)->flags);
++
++	mutex_unlock(&tag_blocks_lock);
++
+ 	return 0;
++
++out_error:
++	xa_lock_irqsave(&tag_blocks_reserved, flags);
++	for (block = start_block; block < end_block; block += region->block_size) {
++		if (tag_storage_block_is_reserved(block) &&
++		    block_ref_sub_return(block, region, order) == 1) {
++			__xa_erase(&tag_blocks_reserved, block);
++			free_contig_range(block, region->block_size);
++		}
++	}
++	xa_unlock_irqrestore(&tag_blocks_reserved, flags);
++
++	mutex_unlock(&tag_blocks_lock);
++
++	count_vm_events(METADATA_RESERVE_FAIL, region->block_size);
++
++	return ret;
++}
++
++void free_metadata_storage(struct page *page, int order)
++{
++	unsigned long block, start_block, end_block;
++	struct tag_region *region;
++	unsigned long flags;
++	int ret;
++
++	if (WARN_ONCE(!page_mte_tagged(page), "pfn 0x%lx is not tagged", page_to_pfn(page)))
++		return;
++
++	ret = tag_storage_find_block(page, &start_block, &region);
++	if (WARN_ONCE(ret, "Missing tag storage block for pfn 0x%lx", page_to_pfn(page)))
++		return;
++
++	end_block = start_block + order_to_num_blocks(order) * region->block_size;
++
++	xa_lock_irqsave(&tag_blocks_reserved, flags);
++	for (block = start_block; block < end_block; block += region->block_size) {
++		if (WARN_ONCE(!tag_storage_block_is_reserved(block),
++		    "Block 0x%lx is not reserved for pfn 0x%lx", block, page_to_pfn(page)))
++			continue;
++
++		if (block_ref_sub_return(block, region, order) == 1) {
++			__xa_erase(&tag_blocks_reserved, block);
++			free_contig_range(block, region->block_size);
++			count_vm_events(METADATA_RESERVE_FREE, region->block_size);
++		}
++	}
++	xa_unlock_irqrestore(&tag_blocks_reserved, flags);
+ }
+-core_initcall(mte_tag_storage_activate_regions)
+diff --git a/fs/proc/page.c b/fs/proc/page.c
+index 195b077c0fac..e7eb584a9234 100644
+--- a/fs/proc/page.c
++++ b/fs/proc/page.c
+@@ -221,6 +221,7 @@ u64 stable_page_flags(struct page *page)
+ #ifdef CONFIG_ARCH_USES_PG_ARCH_X
+ 	u |= kpf_copy_bit(k, KPF_ARCH_2,	PG_arch_2);
+ 	u |= kpf_copy_bit(k, KPF_ARCH_3,	PG_arch_3);
++	u |= kpf_copy_bit(k, KPF_ARCH_4,	PG_arch_4);
+ #endif
+ 
+ 	return u;
+diff --git a/include/linux/kernel-page-flags.h b/include/linux/kernel-page-flags.h
+index 859f4b0c1b2b..4a0d719ffdd4 100644
+--- a/include/linux/kernel-page-flags.h
++++ b/include/linux/kernel-page-flags.h
+@@ -19,5 +19,6 @@
+ #define KPF_SOFTDIRTY		40
+ #define KPF_ARCH_2		41
+ #define KPF_ARCH_3		42
++#define KPF_ARCH_4		43
+ 
+ #endif /* LINUX_KERNEL_PAGE_FLAGS_H */
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index 92a2063a0a23..42fb54cb9a54 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -135,6 +135,7 @@ enum pageflags {
+ #ifdef CONFIG_ARCH_USES_PG_ARCH_X
+ 	PG_arch_2,
+ 	PG_arch_3,
++	PG_arch_4,
+ #endif
+ 	__NR_PAGEFLAGS,
+ 
+diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
+index 4ccca8e73c93..23f1a76d66a7 100644
+--- a/include/trace/events/mmflags.h
++++ b/include/trace/events/mmflags.h
+@@ -125,7 +125,8 @@ IF_HAVE_PG_HWPOISON(hwpoison)						\
+ IF_HAVE_PG_IDLE(idle)							\
+ IF_HAVE_PG_IDLE(young)							\
+ IF_HAVE_PG_ARCH_X(arch_2)						\
+-IF_HAVE_PG_ARCH_X(arch_3)
++IF_HAVE_PG_ARCH_X(arch_3)						\
++IF_HAVE_PG_ARCH_X(arch_4)
+ 
+ #define show_page_flags(flags)						\
+ 	(flags) ? __print_flags(flags, "|",				\
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index eb3678360b97..cf5247b012de 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2458,6 +2458,7 @@ static void __split_huge_page_tail(struct page *head, int tail,
+ #ifdef CONFIG_ARCH_USES_PG_ARCH_X
+ 			 (1L << PG_arch_2) |
+ 			 (1L << PG_arch_3) |
++			 (1L << PG_arch_4) |
+ #endif
+ 			 (1L << PG_dirty) |
+ 			 LRU_GEN_MASK | LRU_REFS_MASK));
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.41.0
+
