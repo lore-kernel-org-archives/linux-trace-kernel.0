@@ -2,222 +2,350 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A081EEE4993
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Aug 2023 12:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDCAEE4993
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Aug 2023 13:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234637AbjHWMUB (ORCPT
+        id S235460AbjHWNOO (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 23 Aug 2023 08:20:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35800 "EHLO
+        Wed, 23 Aug 2023 09:14:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234605AbjHWMUA (ORCPT
+        with ESMTP id S231472AbjHWNON (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 23 Aug 2023 08:20:00 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C68EE9;
-        Wed, 23 Aug 2023 05:19:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692793198; x=1724329198;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=58i9UZ4uOkfxY9He9AhTZG1ivpLYgdX1oN+5EKz0+3g=;
-  b=ScHqs3GDvi57xsRiYNKKswskR2ZIZ8pIUK9FV4meVjTWbpZ+nXb8ql+q
-   7Bxp+U9hBeGFAopfMQwuunJl4t64QMNWsfT76YNd4Whiky48EmMEjw9wU
-   nxMBWCmZ4piUkZ8ZVOIknFWyIL9fE1GDoKhhBgEA2eke78/o8ZoMgj39e
-   Z7wRvyidrmi7SZ0XBBoLcj55cm0dZ8XSfZw6RgrN6g9XfJL1YgvitjFFs
-   kt/FffbQPUAldCPOhrhnoQnbMSe7aElYSJz68dQoVys6py2cvF+TUzCU/
-   /coW+2aAnprjAwpoYEgPM6x3o3azhrIsr0MJ5eUjdJ4Sbr5xcWOI2AokE
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="438081774"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="438081774"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 05:19:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="802086805"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="802086805"
-Received: from lkp-server02.sh.intel.com (HELO daf8bb0a381d) ([10.239.97.151])
-  by fmsmga008.fm.intel.com with ESMTP; 23 Aug 2023 05:19:55 -0700
-Received: from kbuild by daf8bb0a381d with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qYmq3-0001BO-0G;
-        Wed, 23 Aug 2023 12:19:55 +0000
-Date:   Wed, 23 Aug 2023 20:18:55 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     oe-kbuild-all@lists.linux.dev,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Fix to avoid wakeup loop in splice read of
- per-cpu buffer
-Message-ID: <202308232056.401OxapL-lkp@intel.com>
-References: <169262755804.106231.8245792908363050528.stgit@devnote2>
+        Wed, 23 Aug 2023 09:14:13 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B0A6FE51;
+        Wed, 23 Aug 2023 06:14:10 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 70FD71042;
+        Wed, 23 Aug 2023 06:14:50 -0700 (PDT)
+Received: from e121798.cable.virginm.net (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD2B13F740;
+        Wed, 23 Aug 2023 06:14:02 -0700 (PDT)
+From:   Alexandru Elisei <alexandru.elisei@arm.com>
+To:     catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
+        maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
+        yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
+        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
+        rppt@kernel.org, hughd@google.com
+Cc:     pcc@google.com, steven.price@arm.com, anshuman.khandual@arm.com,
+        vincenzo.frascino@arm.com, david@redhat.com, eugenis@google.com,
+        kcc@google.com, hyesoo.yu@samsung.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: [PATCH RFC 00/37] Add support for arm64 MTE dynamic tag storage reuse
+Date:   Wed, 23 Aug 2023 14:13:13 +0100
+Message-Id: <20230823131350.114942-1-alexandru.elisei@arm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <169262755804.106231.8245792908363050528.stgit@devnote2>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Masami,
+Introduction
+============
 
-kernel test robot noticed the following build warnings:
+Arm has implemented memory coloring in hardware, and the feature is called
+Memory Tagging Extensions (MTE). It works by embedding a 4 bit tag in bits
+59..56 of a pointer, and storing this tag to a reserved memory location.
+When the pointer is dereferenced, the hardware compares the tag embedded in
+the pointer (logical tag) with the tag stored in memory (allocation tag).
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.5-rc7 next-20230823]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The relation between memory and where the tag for that memory is stored is
+static.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/tracing-Fix-to-avoid-wakeup-loop-in-splice-read-of-per-cpu-buffer/20230821-222307
-base:   linus/master
-patch link:    https://lore.kernel.org/r/169262755804.106231.8245792908363050528.stgit%40devnote2
-patch subject: [PATCH] tracing: Fix to avoid wakeup loop in splice read of per-cpu buffer
-config: mips-randconfig-r131-20230823 (https://download.01.org/0day-ci/archive/20230823/202308232056.401OxapL-lkp@intel.com/config)
-compiler: mipsel-linux-gcc (GCC) 13.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20230823/202308232056.401OxapL-lkp@intel.com/reproduce)
+The memory where the tags are stored have been so far unaccessible to Linux.
+This series aims to change that, by adding support for using the tag storage
+memory only as data memory; tag storage memory cannot be itself tagged.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202308232056.401OxapL-lkp@intel.com/
 
-sparse warnings: (new ones prefixed by >>)
-   kernel/trace/trace.c:446:28: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct trace_export **list @@     got struct trace_export [noderef] __rcu ** @@
-   kernel/trace/trace.c:446:28: sparse:     expected struct trace_export **list
-   kernel/trace/trace.c:446:28: sparse:     got struct trace_export [noderef] __rcu **
-   kernel/trace/trace.c:460:33: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct trace_export **list @@     got struct trace_export [noderef] __rcu ** @@
-   kernel/trace/trace.c:460:33: sparse:     expected struct trace_export **list
-   kernel/trace/trace.c:460:33: sparse:     got struct trace_export [noderef] __rcu **
-   kernel/trace/trace.c:2959:38: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct event_filter *filter @@     got struct event_filter [noderef] __rcu *filter @@
-   kernel/trace/trace.c:2959:38: sparse:     expected struct event_filter *filter
-   kernel/trace/trace.c:2959:38: sparse:     got struct event_filter [noderef] __rcu *filter
->> kernel/trace/trace.c:8481:25: sparse: sparse: incompatible types in comparison expression (different type sizes):
->> kernel/trace/trace.c:8481:25: sparse:    unsigned int *
->> kernel/trace/trace.c:8481:25: sparse:    unsigned long long [usertype] *
-   kernel/trace/trace.c:400:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   kernel/trace/trace.c:400:9: sparse:    struct trace_export [noderef] __rcu *
-   kernel/trace/trace.c:400:9: sparse:    struct trace_export *
-   kernel/trace/trace.c:415:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   kernel/trace/trace.c:415:9: sparse:    struct trace_export [noderef] __rcu *
-   kernel/trace/trace.c:415:9: sparse:    struct trace_export *
->> kernel/trace/trace.c:8481:25: sparse: sparse: shift too big (32) for type unsigned int
+Implementation
+==============
 
-vim +8481 kernel/trace/trace.c
+The series is based on v6.5-rc3 with these two patches cherry picked:
 
-  8400	
-  8401		if (*ppos & (PAGE_SIZE - 1))
-  8402			return -EINVAL;
-  8403	
-  8404		if (len & (PAGE_SIZE - 1)) {
-  8405			if (len < PAGE_SIZE)
-  8406				return -EINVAL;
-  8407			len &= PAGE_MASK;
-  8408		}
-  8409	
-  8410		if (splice_grow_spd(pipe, &spd))
-  8411			return -ENOMEM;
-  8412	
-  8413	 again:
-  8414		trace_access_lock(iter->cpu_file);
-  8415		entries = ring_buffer_entries_cpu(iter->array_buffer->buffer, iter->cpu_file);
-  8416	
-  8417		for (i = 0; i < spd.nr_pages_max && len && entries; i++, len -= PAGE_SIZE) {
-  8418			struct page *page;
-  8419			int r;
-  8420	
-  8421			ref = kzalloc(sizeof(*ref), GFP_KERNEL);
-  8422			if (!ref) {
-  8423				ret = -ENOMEM;
-  8424				break;
-  8425			}
-  8426	
-  8427			refcount_set(&ref->refcount, 1);
-  8428			ref->buffer = iter->array_buffer->buffer;
-  8429			ref->page = ring_buffer_alloc_read_page(ref->buffer, iter->cpu_file);
-  8430			if (IS_ERR(ref->page)) {
-  8431				ret = PTR_ERR(ref->page);
-  8432				ref->page = NULL;
-  8433				kfree(ref);
-  8434				break;
-  8435			}
-  8436			ref->cpu = iter->cpu_file;
-  8437	
-  8438			r = ring_buffer_read_page(ref->buffer, &ref->page,
-  8439						  len, iter->cpu_file, 1);
-  8440			if (r < 0) {
-  8441				ring_buffer_free_read_page(ref->buffer, ref->cpu,
-  8442							   ref->page);
-  8443				kfree(ref);
-  8444				break;
-  8445			}
-  8446	
-  8447			page = virt_to_page(ref->page);
-  8448	
-  8449			spd.pages[i] = page;
-  8450			spd.partial[i].len = PAGE_SIZE;
-  8451			spd.partial[i].offset = 0;
-  8452			spd.partial[i].private = (unsigned long)ref;
-  8453			spd.nr_pages++;
-  8454			*ppos += PAGE_SIZE;
-  8455	
-  8456			entries = ring_buffer_entries_cpu(iter->array_buffer->buffer, iter->cpu_file);
-  8457		}
-  8458	
-  8459		trace_access_unlock(iter->cpu_file);
-  8460		spd.nr_pages = i;
-  8461	
-  8462		/* did we read anything? */
-  8463		if (!spd.nr_pages) {
-  8464			long wait_index;
-  8465			size_t nr_pages;
-  8466			size_t full;
-  8467	
-  8468			if (ret)
-  8469				goto out;
-  8470	
-  8471			ret = -EAGAIN;
-  8472			if ((file->f_flags & O_NONBLOCK) || (flags & SPLICE_F_NONBLOCK))
-  8473				goto out;
-  8474	
-  8475			wait_index = READ_ONCE(iter->wait_index);
-  8476	
-  8477			/* For splice, we have to ensure at least 1 page is filled */
-  8478			nr_pages = ring_buffer_nr_pages(iter->array_buffer->buffer, iter->cpu_file);
-  8479			if (nr_pages * iter->tr->buffer_percent < 100) {
-  8480				full = nr_pages + 99;
-> 8481				do_div(full, nr_pages);
-  8482			} else
-  8483				full = iter->tr->buffer_percent;
-  8484	
-  8485			ret = wait_on_pipe(iter, full);
-  8486			if (ret)
-  8487				goto out;
-  8488	
-  8489			/* No need to wait after waking up when tracing is off */
-  8490			if (!tracer_tracing_is_on(iter->tr))
-  8491				goto out;
-  8492	
-  8493			/* Make sure we see the new wait_index */
-  8494			smp_rmb();
-  8495			if (wait_index != iter->wait_index)
-  8496				goto out;
-  8497	
-  8498			goto again;
-  8499		}
-  8500	
-  8501		ret = splice_to_pipe(pipe, &spd);
-  8502	out:
-  8503		splice_shrink_spd(&spd);
-  8504	
-  8505		return ret;
-  8506	}
-  8507	
+- mm: Call arch_swap_restore() from unuse_pte():
+
+    https://lore.kernel.org/all/20230523004312.1807357-3-pcc@google.com/
+
+- arm64: mte: Simplify swap tag restoration logic:
+
+    https://lore.kernel.org/all/20230523004312.1807357-4-pcc@google.com/
+
+The above two patches are queued for the v6.6 merge window:
+
+    https://lore.kernel.org/all/20230702123821.04e64ea2c04dd0fdc947bda3@linux-foundation.org/
+
+The entire series, including the above patches, can be cloned with:
+
+$ git clone https://gitlab.arm.com/linux-arm/linux-ae.git \
+	-b arm-mte-dynamic-carveout-rfc-v1
+
+On the arm64 architecture side, an extension is being worked on that will
+clarify how MTE tag storage reuse should behave. The extension will be
+made public soon.
+
+On the Linux side, MTE tag storage reuse is accomplished with the
+following changes:
+
+1. The tag storage memory is exposed to the memory allocator as a new
+migratetype, MIGRATE_METADATA. It behaves similarly to MIGRATE_CMA, with
+the restriction that it cannot be used to allocate tagged memory (tag
+storage memory cannot be tagged). On tagged page allocation, the
+corresponding tag storage is reserved via alloc_contig_range().
+
+2. mprotect(PROT_MTE) is implemented by changing the pte prot to
+PAGE_METADATA_NONE. When the page is next accessed, a fault is taken and
+the corresponding tag storage is reserved.
+
+3. When the code tries to copy tags to a page which doesn't have the tag
+storage reserved, the tags are copied to an xarray and restored in
+set_pte_at(), when the page is eventually mapped with the tag storage
+reserved.
+
+KVM support has not been implemented yet, that because a non-MTE enabled VMA
+can back the memory of an MTE-enabled VM. After there is a consensus on the
+right approach on the memory management support, I will add it.
+
+Explanations for the last two changes follow. The gist of it is that they
+were added mostly because of races, and it my intention to make the code
+more robust.
+
+PAGE_METADATA_NONE was introduced to avoid races with mprotect(PROT_MTE).
+For example, migration can race with mprotect(PROT_MTE):
+- thread 0 initiates migration for a page in a non-MTE enabled VMA and a
+  destination page is allocated without tag storage.
+- thread 1 handles an mprotect(PROT_MTE), the VMA becomes tagged, and an
+  access turns the source page that is in the process of being migrated
+  into a tagged page.
+- thread 0 finishes migration and the destination page is mapped as tagged,
+  but without tag storage reserved.
+More details and examples can be found in the patches.
+
+This race is also related to how tag restoring is handled when tag storage
+is missing: when a tagged page is swapped out, the tags are saved in an
+xarray indexed by swp_entry.val. When a page is swapped back in, if there
+are tags corresponding to the swp_entry that the page will replace, the
+tags are unconditionally restored, even if the page will be mapped as
+untagged. Because the page will be mapped as untagged, tag storage was
+not reserved when the page was allocated to replace the swp_entry which has
+tags associated with it.
+
+To get around this, save the tags in a new xarray, this time indexed by
+pfn, and restore them when the same page is mapped as tagged.
+
+This also solves another race, this time with copy_highpage. In the
+scenario where migration races with mprotect(PROT_MTE), before the page is
+mapped, the contents of the source page is copied to the destination. And
+this includes tags, which will be copied to a page with missing tag
+storage, which can to data corruption if the missing tag storage is in use
+for data. So copy_highpage() has received a similar treatment to the swap
+code, and the source tags are copied in the xarray indexed by the
+destination page pfn.
+
+
+Overview of the patches
+=======================
+
+Patches 1-3 do some preparatory work by renaming a few functions and a gfp
+flag.
+
+Patches 4-12 are arch independent and introduce MIGRATE_METADATA to the
+page allocator.
+
+Patches 13-18 are arm64 specific and add support for detecting the tag
+storage region and onlining it with the MIGRATE_METADATA migratetype.
+
+Patches 19-24 are arch independent and modify the page allocator to
+callback into arch dependant functions to reserve metadata storage for an
+allocation which requires metadata.
+
+Patches 25-28 are mostly arm64 specific and implement the reservation and
+freeing of tag storage on tagged page allocation. Patch #28 ("mm: sched:
+Introduce PF_MEMALLOC_ISOLATE") adds a current flag, PF_MEMALLOC_ISOLATE,
+which ignores page isolation limits; this is used by arm64 when reserving
+tag storage in the same patch.
+
+Patches 29-30 add arch independent support for doing mprotect(PROT_MTE)
+when metadata storage is enabled.
+
+Patches 31-37 are mostly arm64 specific and handle the restoring of tags
+when tag storage is missing. The exceptions are patches 32 (adds the
+arch_swap_prepare_to_restore() function) and 35 (add PAGE_METADATA_NONE
+support for THPs).
+
+Testing
+=======
+
+To enable MTE dynamic tag storage:
+
+- CONFIG_ARM64_MTE_TAG_STORAGE=y
+- system_supports_mte() returns true
+- kasan_hw_tags_enabled() returns false
+- correct DTB node (for the specification, see commit "arm64: mte: Reserve tag
+  storage memory")
+
+Check dmesg for the message "MTE tag storage enabled" or grep for metadata
+in /proc/vmstat.
+
+I've tested the series using FVP with MTE enabled, but without support for
+dynamic tag storage reuse. To simulate it, I've added two fake tag storage
+regions in the DTB by splitting a 2GB region roughly into 33 slices of size
+0x3e0_0000, and using 32 of them for tagged memory and one slice for tag
+storage:
+
+diff --git a/arch/arm64/boot/dts/arm/fvp-base-revc.dts b/arch/arm64/boot/dts/arm/fvp-base-revc.dts
+index 60472d65a355..bd050373d6cf 100644
+--- a/arch/arm64/boot/dts/arm/fvp-base-revc.dts
++++ b/arch/arm64/boot/dts/arm/fvp-base-revc.dts
+@@ -165,10 +165,28 @@ C1_L2: l2-cache1 {
+                };
+        };
+ 
+-       memory@80000000 {
++       memory0: memory@80000000 {
+                device_type = "memory";
+-               reg = <0x00000000 0x80000000 0 0x80000000>,
+-                     <0x00000008 0x80000000 0 0x80000000>;
++               reg = <0x00 0x80000000 0x00 0x7c000000>;
++       };
++
++       metadata0: metadata@c0000000  {
++               compatible = "arm,mte-tag-storage";
++               reg = <0x00 0xfc000000 0x00 0x3e00000>;
++               block-size = <0x1000>;
++               memory = <&memory0>;
++       };
++
++       memory1: memory@880000000 {
++               device_type = "memory";
++               reg = <0x08 0x80000000 0x00 0x7c000000>;
++       };
++
++       metadata1: metadata@8c0000000  {
++               compatible = "arm,mte-tag-storage";
++               reg = <0x08 0xfc000000 0x00 0x3e00000>;
++               block-size = <0x1000>;
++               memory = <&memory1>;
+        };
+ 
+        reserved-memory {
+
+
+Alexandru Elisei (37):
+  mm: page_alloc: Rename gfp_to_alloc_flags_cma ->
+    gfp_to_alloc_flags_fast
+  arm64: mte: Rework naming for tag manipulation functions
+  arm64: mte: Rename __GFP_ZEROTAGS to __GFP_TAGGED
+  mm: Add MIGRATE_METADATA allocation policy
+  mm: Add memory statistics for the MIGRATE_METADATA allocation policy
+  mm: page_alloc: Allocate from movable pcp lists only if
+    ALLOC_FROM_METADATA
+  mm: page_alloc: Bypass pcp when freeing MIGRATE_METADATA pages
+  mm: compaction: Account for free metadata pages in
+    __compact_finished()
+  mm: compaction: Handle metadata pages as source for direct compaction
+  mm: compaction: Do not use MIGRATE_METADATA to replace pages with
+    metadata
+  mm: migrate/mempolicy: Allocate metadata-enabled destination page
+  mm: gup: Don't allow longterm pinning of MIGRATE_METADATA pages
+  arm64: mte: Reserve tag storage memory
+  arm64: mte: Expose tag storage pages to the MIGRATE_METADATA freelist
+  arm64: mte: Make tag storage depend on ARCH_KEEP_MEMBLOCK
+  arm64: mte: Move tag storage to MIGRATE_MOVABLE when MTE is disabled
+  arm64: mte: Disable dynamic tag storage management if HW KASAN is
+    enabled
+  arm64: mte: Check that tag storage blocks are in the same zone
+  mm: page_alloc: Manage metadata storage on page allocation
+  mm: compaction: Reserve metadata storage in compaction_alloc()
+  mm: khugepaged: Handle metadata-enabled VMAs
+  mm: shmem: Allocate metadata storage for in-memory filesystems
+  mm: Teach vma_alloc_folio() about metadata-enabled VMAs
+  mm: page_alloc: Teach alloc_contig_range() about MIGRATE_METADATA
+  arm64: mte: Manage tag storage on page allocation
+  arm64: mte: Perform CMOs for tag blocks on tagged page allocation/free
+  arm64: mte: Reserve tag block for the zero page
+  mm: sched: Introduce PF_MEMALLOC_ISOLATE
+  mm: arm64: Define the PAGE_METADATA_NONE page protection
+  mm: mprotect: arm64: Set PAGE_METADATA_NONE for mprotect(PROT_MTE)
+  mm: arm64: Set PAGE_METADATA_NONE in set_pte_at() if missing metadata
+    storage
+  mm: Call arch_swap_prepare_to_restore() before arch_swap_restore()
+  arm64: mte: swap/copypage: Handle tag restoring when missing tag
+    storage
+  arm64: mte: Handle fatal signal in reserve_metadata_storage()
+  mm: hugepage: Handle PAGE_METADATA_NONE faults for huge pages
+  KVM: arm64: Disable MTE is tag storage is enabled
+  arm64: mte: Enable tag storage management
+
+ arch/arm64/Kconfig                       |  13 +
+ arch/arm64/include/asm/assembler.h       |  10 +
+ arch/arm64/include/asm/memory_metadata.h |  49 ++
+ arch/arm64/include/asm/mte-def.h         |  16 +-
+ arch/arm64/include/asm/mte.h             |  40 +-
+ arch/arm64/include/asm/mte_tag_storage.h |  36 ++
+ arch/arm64/include/asm/page.h            |   5 +-
+ arch/arm64/include/asm/pgtable-prot.h    |   2 +
+ arch/arm64/include/asm/pgtable.h         |  33 +-
+ arch/arm64/kernel/Makefile               |   1 +
+ arch/arm64/kernel/elfcore.c              |  14 +-
+ arch/arm64/kernel/hibernate.c            |  46 +-
+ arch/arm64/kernel/mte.c                  |  31 +-
+ arch/arm64/kernel/mte_tag_storage.c      | 667 +++++++++++++++++++++++
+ arch/arm64/kernel/setup.c                |   7 +
+ arch/arm64/kvm/arm.c                     |   6 +-
+ arch/arm64/lib/mte.S                     |  30 +-
+ arch/arm64/mm/copypage.c                 |  26 +
+ arch/arm64/mm/fault.c                    |  35 +-
+ arch/arm64/mm/mteswap.c                  | 113 +++-
+ fs/proc/meminfo.c                        |   8 +
+ fs/proc/page.c                           |   1 +
+ include/asm-generic/Kbuild               |   1 +
+ include/asm-generic/memory_metadata.h    |  50 ++
+ include/linux/gfp.h                      |  10 +
+ include/linux/gfp_types.h                |  14 +-
+ include/linux/huge_mm.h                  |   6 +
+ include/linux/kernel-page-flags.h        |   1 +
+ include/linux/migrate_mode.h             |   1 +
+ include/linux/mm.h                       |  12 +-
+ include/linux/mmzone.h                   |  26 +-
+ include/linux/page-flags.h               |   1 +
+ include/linux/pgtable.h                  |  19 +
+ include/linux/sched.h                    |   2 +-
+ include/linux/sched/mm.h                 |  13 +
+ include/linux/vm_event_item.h            |   5 +
+ include/linux/vmstat.h                   |   2 +
+ include/trace/events/mmflags.h           |   5 +-
+ mm/Kconfig                               |   5 +
+ mm/compaction.c                          |  52 +-
+ mm/huge_memory.c                         | 109 ++++
+ mm/internal.h                            |   7 +
+ mm/khugepaged.c                          |   7 +
+ mm/memory.c                              | 180 +++++-
+ mm/mempolicy.c                           |   7 +
+ mm/migrate.c                             |   6 +
+ mm/mm_init.c                             |  23 +-
+ mm/mprotect.c                            |  46 ++
+ mm/page_alloc.c                          | 136 ++++-
+ mm/page_isolation.c                      |  19 +-
+ mm/page_owner.c                          |   3 +-
+ mm/shmem.c                               |  14 +-
+ mm/show_mem.c                            |   4 +
+ mm/swapfile.c                            |   4 +
+ mm/vmscan.c                              |   3 +
+ mm/vmstat.c                              |  13 +-
+ 56 files changed, 1834 insertions(+), 161 deletions(-)
+ create mode 100644 arch/arm64/include/asm/memory_metadata.h
+ create mode 100644 arch/arm64/include/asm/mte_tag_storage.h
+ create mode 100644 arch/arm64/kernel/mte_tag_storage.c
+ create mode 100644 include/asm-generic/memory_metadata.h
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.41.0
+
