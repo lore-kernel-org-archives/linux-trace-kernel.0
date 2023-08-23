@@ -2,142 +2,283 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AD7C7113B
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Aug 2023 20:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 315D9C7EE43
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Aug 2023 23:55:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235673AbjHWUVB (ORCPT
+        id S238878AbjHWXye (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 23 Aug 2023 16:21:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45084 "EHLO
+        Wed, 23 Aug 2023 19:54:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235830AbjHWUUf (ORCPT
+        with ESMTP id S238844AbjHWXyF (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 23 Aug 2023 16:20:35 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD1FC10D3;
-        Wed, 23 Aug 2023 13:20:33 -0700 (PDT)
+        Wed, 23 Aug 2023 19:54:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7968510E3;
+        Wed, 23 Aug 2023 16:54:03 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 72F8B63D4E;
-        Wed, 23 Aug 2023 20:20:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 241D6C433C7;
-        Wed, 23 Aug 2023 20:20:31 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E5F6A60F1B;
+        Wed, 23 Aug 2023 23:54:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66AC4C433C7;
+        Wed, 23 Aug 2023 23:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692822032;
-        bh=mWRrjgHFVNoHHu7TMf8MhELzUccfckHf08+JQ0fi1HY=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=rzGG1dM52g4MHdoa6aYpybcEJRiKIpRWJetqVfvXZziL8fxVcLfuClRN3xvfmS08Q
-         PEJfGr8vY0P/r6fjTmlYk08L7Z7ABHQFXbbebRmMFX9HMU3dk6NsprEW0xIXoW25ap
-         RoOEc/THm8X55pF/mfkICeEMqJTrx0xl3lXV+/LtLrTLKT32LpKDBLPg9aGmVrTY2n
-         8WBi6z4ArceD/6dQ00OvAvx8ehYYYsOW9jdFfqxE2GaD7fkKYDKiSSS+3jn9JSYTHl
-         oUuLK0E+mYo/KsFzU7obBgUziCTXB3Zv9gCwV7NGooKCNkYzJnFx8MDReuvpi9pIDs
-         H0NSUe17Akmzg==
-From:   =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-To:     Palmer Dabbelt <palmer@rivosinc.com>
-Cc:     suagrfillet@gmail.com, Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, rostedt@goodmis.org, mhiramat@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>, guoren@kernel.org,
-        suagrfillet@gmail.com, Bjorn Topel <bjorn@rivosinc.com>,
-        jszhang@kernel.org, Conor Dooley <conor.dooley@microchip.com>,
-        pulehui@huawei.com, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        songshuaishuai@tinylab.org, bpf@vger.kernel.org
-Subject: Re: [PATCH V11 0/5] riscv: Optimize function trace
-In-Reply-To: <mhng-a2c88f43-3cf7-4caa-8e4a-b0fc9d7e4628@palmer-ri-x1c9a>
-References: <mhng-a2c88f43-3cf7-4caa-8e4a-b0fc9d7e4628@palmer-ri-x1c9a>
-Date:   Wed, 23 Aug 2023 22:20:29 +0200
-Message-ID: <87zg2hse7m.fsf@all.your.base.are.belong.to.us>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        s=k20201202; t=1692834842;
+        bh=0QqeR1Lq7+F+rfZm2YiAD6B8qn3qmIFq6Njtx7qgkQU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=J3z97XbgN0Boa6lUTELS56Hxyl1Vjj9RYLruRdnwKVLH0QvdOxo3g1tF83Jer2l+X
+         IrQapRFHeZj8SQp1PXkTWO+ByFRN+i4zwZHBPtWdp04jdeikPrd7qNMvjt24Pgrd0O
+         iWrgx2T8pvC6mTQx/mO3Drve3DGX89hpPwSmACXHOEhMp+KmY1iTEysRVKeiHznI/Y
+         GTbGvbOs50mTVh2p/fwOmwqQa5AP1nSUnOeUySq9TsDFKF0tf3u9bpYA6OJGpfe+ev
+         A3gCD6DIhIUEJb0w0uRnKd3o0xXtihcTnsjcZ0FF2mzsXnxvK6SZQgaeTGQHnkLGgN
+         zqi9GJDUuHsMw==
+Date:   Thu, 24 Aug 2023 08:53:55 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Francis Laniel <flaniel@linux.microsoft.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [RFC PATCH v1 1/1] tracing/kprobes: Return ENAMESVRLSYMS when
+ func matches several symbols
+Message-Id: <20230824085355.4fdd6215f71b0fa5f443d76d@kernel.org>
+In-Reply-To: <20230823161410.103489-2-flaniel@linux.microsoft.com>
+References: <20230823161410.103489-1-flaniel@linux.microsoft.com>
+        <20230823161410.103489-2-flaniel@linux.microsoft.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Palmer Dabbelt <palmer@rivosinc.com> writes:
+Hi Francis,
 
-> On Wed, 12 Jul 2023 11:11:08 PDT (-0700), bjorn@kernel.org wrote:
->> Song Shuai <suagrfillet@gmail.com> writes:
->>
->> [...]
->>
->>> Add WITH_DIRECT_CALLS support [3] (patch 3, 4)
->>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>
->> We've had some offlist discussions, so here's some input for a wider
->> audience! Most importantly, this is for Palmer, so that this series is
->> not merged until a proper BPF trampoline fix is in place.
->>
->> Note that what's currently usable from BPF trampoline *works*. It's
->> when this series is added that it breaks.
->>
->> TL;DR This series adds DYNAMIC_FTRACE_WITH_DIRECT_CALLS, which enables
->> fentry/fexit BPF trampoline support. Unfortunately the
->> fexit/BPF_TRAMP_F_SKIP_FRAME parts of the RV BPF trampoline breaks
->> with this addition, and need to be addressed *prior* merging this
->> series. An easy way to reproduce, is just calling any of the kselftest
->> tests that uses fexit patching.
->>
->> The issue is around the nop seld, and how a call is done; The nop sled
->> (patchable-function-entry) size changed from 16B to 8B in commit
->> 6724a76cff85 ("riscv: ftrace: Reduce the detour code size to half"), but
->> BPF code still uses the old 16B. So it'll work for BPF programs, but not
->> for regular kernel functions.
->>
->> An example:
->>
->>   | ffffffff80fa4150 <bpf_fentry_test1>:
->>   | ffffffff80fa4150:       0001                    nop
->>   | ffffffff80fa4152:       0001                    nop
->>   | ffffffff80fa4154:       0001                    nop
->>   | ffffffff80fa4156:       0001                    nop
->>   | ffffffff80fa4158:       1141                    add     sp,sp,-16
->>   | ffffffff80fa415a:       e422                    sd      s0,8(sp)
->>   | ffffffff80fa415c:       0800                    add     s0,sp,16
->>   | ffffffff80fa415e:       6422                    ld      s0,8(sp)
->>   | ffffffff80fa4160:       2505                    addw    a0,a0,1
->>   | ffffffff80fa4162:       0141                    add     sp,sp,16
->>   | ffffffff80fa4164:       8082                    ret
->>
->> is patched to:
->>
->>   | ffffffff80fa4150:  f70c0297                     auipc   t0,-150208512
->>   | ffffffff80fa4154:  eb0282e7                     jalr    t0,t0,-336
->>
->> The return address to bpf_fentry_test1 is stored in t0 at BPF
->> trampoline entry. Return to the *parent* is in ra. The trampline has
->> to deal with this.
->>
->> For BPF_TRAMP_F_SKIP_FRAME/CALL_ORIG, the BPF trampoline will skip too
->> many bytes, and not correctly handle parent calls.
->>
->> Further; The BPF trampoline currently has a different way of patching
->> the nops for BPF programs, than what ftrace does. That should be changed
->> to match what ftrace does (auipc/jalr t0).
->>
->> To summarize:
->>  * Align BPF nop sled with patchable-function-entry: 8B.
->>  * Adapt BPF trampoline for 8B nop sleds.
->>  * Adapt BPF trampoline t0 return, ra parent scheme.
->
-> Thanks for digging into this one, I agree we need to sort out the BPF=20
-> breakages before we merge this.  Sounds like there's a rabbit hole here,=
-=20
-> but hopefully we can get it sorted out.
->
-> I've dropped this from patchwork and such, as we'll need at least=20
-> another spin.
+On Wed, 23 Aug 2023 18:14:10 +0200
+Francis Laniel <flaniel@linux.microsoft.com> wrote:
 
-Palmer,
+> Previously to this commit, if func matches several symbols, a PMU kprobe would
+> be installed for the first matching address.
+> This could lead to some misunderstanding when some BPF code was never called
+> because it was attached to a function which was indeed not call, because the
+> effectively called one has no kprobes.
+> 
+> So, this commit introduces ENAMESVRLSYMS which is returned when func matches
+> several symbols.
 
-The needed BPF patch is upstream in the bpf-next tree, and has been for
-a couple of weeks.
+The trace_kprobe part looks good to me.
+But sorry, I mislead you. I meant using an existing error code as a metaphor.
+EINVAL is used everywhere, so choose another error code, e.g. EADDRNOTAVAIL.
 
-I think this series is a candidate for RISC-V -next! It would help
-RISC-V BPF a lot in terms of completeness.
+Also, can you add this check in __trace_kprobe_create()?
+I think right before below code, at that point, 'symbol' has the symbol name.
+
+        trace_probe_log_set_index(0);
+        if (event) {
+                ret = traceprobe_parse_event_name(&event, &group, gbuf,
+                                                  event - argv[0]);
+                if (ret)
+                        goto parse_error;
+        }
 
 
-Bj=C3=B6rn
+Thank you,
+
+> This way, user needs to use addr to remove the ambiguity.
+> 
+> Suggested-by: Masami Hiramatsu <mhiramat@kernel.org>
+> Signed-off-by: Francis Laniel <flaniel@linux.microsoft.com>
+> Link: https://lore.kernel.org/lkml/20230819101105.b0c104ae4494a7d1f2eea742@kernel.org/
+> ---
+>  arch/alpha/include/uapi/asm/errno.h        |  2 ++
+>  arch/mips/include/uapi/asm/errno.h         |  2 ++
+>  arch/parisc/include/uapi/asm/errno.h       |  2 ++
+>  arch/sparc/include/uapi/asm/errno.h        |  2 ++
+>  include/uapi/asm-generic/errno.h           |  2 ++
+>  kernel/trace/trace_kprobe.c                | 26 ++++++++++++++++++++++
+>  tools/arch/alpha/include/uapi/asm/errno.h  |  2 ++
+>  tools/arch/mips/include/uapi/asm/errno.h   |  2 ++
+>  tools/arch/parisc/include/uapi/asm/errno.h |  2 ++
+>  tools/arch/sparc/include/uapi/asm/errno.h  |  2 ++
+>  tools/include/uapi/asm-generic/errno.h     |  2 ++
+>  11 files changed, 46 insertions(+)
+> 
+> diff --git a/arch/alpha/include/uapi/asm/errno.h b/arch/alpha/include/uapi/asm/errno.h
+> index 3d265f6babaf..3d9686d915f9 100644
+> --- a/arch/alpha/include/uapi/asm/errno.h
+> +++ b/arch/alpha/include/uapi/asm/errno.h
+> @@ -125,4 +125,6 @@
+> 
+>  #define EHWPOISON	139	/* Memory page has hardware error */
+> 
+> +#define ENAMESVRLSYMS	140	/* Name correspond to several symbols */
+> +
+>  #endif
+> diff --git a/arch/mips/include/uapi/asm/errno.h b/arch/mips/include/uapi/asm/errno.h
+> index 2fb714e2d6d8..1fd64ee7b629 100644
+> --- a/arch/mips/include/uapi/asm/errno.h
+> +++ b/arch/mips/include/uapi/asm/errno.h
+> @@ -124,6 +124,8 @@
+> 
+>  #define EHWPOISON	168	/* Memory page has hardware error */
+> 
+> +#define ENAMESVRLSYMS	169	/* Name correspond to several symbols */
+> +
+>  #define EDQUOT		1133	/* Quota exceeded */
+> 
+> 
+> diff --git a/arch/parisc/include/uapi/asm/errno.h b/arch/parisc/include/uapi/asm/errno.h
+> index 87245c584784..c7845ceece26 100644
+> --- a/arch/parisc/include/uapi/asm/errno.h
+> +++ b/arch/parisc/include/uapi/asm/errno.h
+> @@ -124,4 +124,6 @@
+> 
+>  #define EHWPOISON	257	/* Memory page has hardware error */
+> 
+> +#define ENAMESVRLSYMS	258	/* Name correspond to several symbols */
+> +
+>  #endif
+> diff --git a/arch/sparc/include/uapi/asm/errno.h b/arch/sparc/include/uapi/asm/errno.h
+> index 81a732b902ee..1ed065943bab 100644
+> --- a/arch/sparc/include/uapi/asm/errno.h
+> +++ b/arch/sparc/include/uapi/asm/errno.h
+> @@ -115,4 +115,6 @@
+> 
+>  #define EHWPOISON	135	/* Memory page has hardware error */
+> 
+> +#define ENAMESVRLSYMS	136	/* Name correspond to several symbols */
+> +
+>  #endif
+> diff --git a/include/uapi/asm-generic/errno.h b/include/uapi/asm-generic/errno.h
+> index cf9c51ac49f9..3d5d5740c8da 100644
+> --- a/include/uapi/asm-generic/errno.h
+> +++ b/include/uapi/asm-generic/errno.h
+> @@ -120,4 +120,6 @@
+> 
+>  #define EHWPOISON	133	/* Memory page has hardware error */
+> 
+> +#define ENAMESVRLSYMS	134	/* Name correspond to several symbols */
+> +
+>  #endif
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 23dba01831f7..53b66db1ff53 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -1699,6 +1699,16 @@ static int unregister_kprobe_event(struct trace_kprobe *tk)
+>  }
+> 
+>  #ifdef CONFIG_PERF_EVENTS
+> +
+> +static int count_symbols(void *data, unsigned long unused)
+> +{
+> +	unsigned int *count = data;
+> +
+> +	(*count)++;
+> +
+> +	return 0;
+> +}
+> +
+>  /* create a trace_kprobe, but don't add it to global lists */
+>  struct trace_event_call *
+>  create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
+> @@ -1709,6 +1719,22 @@ create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
+>  	int ret;
+>  	char *event;
+> 
+> +	/*
+> +	 * If user specifies func, we check that the function name does not
+> +	 * correspond to several symbols.
+> +	 * If this is the case, we return with error code ENAMESVRLSYMS to
+> +	 * indicate the user he/she should use addr and offs rather than func to
+> +	 * remove the ambiguity.
+> +	 */
+> +	if (func) {
+> +		unsigned int count;
+> +
+> +		count = 0;
+> +		kallsyms_on_each_match_symbol(count_symbols, func, &count);
+> +		if (count > 1)
+> +			return ERR_PTR(-ENAMESVRLSYMS);
+> +	}
+> +
+>  	/*
+>  	 * local trace_kprobes are not added to dyn_event, so they are never
+>  	 * searched in find_trace_kprobe(). Therefore, there is no concern of
+> diff --git a/tools/arch/alpha/include/uapi/asm/errno.h b/tools/arch/alpha/include/uapi/asm/errno.h
+> index 3d265f6babaf..3d9686d915f9 100644
+> --- a/tools/arch/alpha/include/uapi/asm/errno.h
+> +++ b/tools/arch/alpha/include/uapi/asm/errno.h
+> @@ -125,4 +125,6 @@
+> 
+>  #define EHWPOISON	139	/* Memory page has hardware error */
+> 
+> +#define ENAMESVRLSYMS	140	/* Name correspond to several symbols */
+> +
+>  #endif
+> diff --git a/tools/arch/mips/include/uapi/asm/errno.h b/tools/arch/mips/include/uapi/asm/errno.h
+> index 2fb714e2d6d8..1fd64ee7b629 100644
+> --- a/tools/arch/mips/include/uapi/asm/errno.h
+> +++ b/tools/arch/mips/include/uapi/asm/errno.h
+> @@ -124,6 +124,8 @@
+> 
+>  #define EHWPOISON	168	/* Memory page has hardware error */
+> 
+> +#define ENAMESVRLSYMS	169	/* Name correspond to several symbols */
+> +
+>  #define EDQUOT		1133	/* Quota exceeded */
+> 
+> 
+> diff --git a/tools/arch/parisc/include/uapi/asm/errno.h b/tools/arch/parisc/include/uapi/asm/errno.h
+> index 87245c584784..c7845ceece26 100644
+> --- a/tools/arch/parisc/include/uapi/asm/errno.h
+> +++ b/tools/arch/parisc/include/uapi/asm/errno.h
+> @@ -124,4 +124,6 @@
+> 
+>  #define EHWPOISON	257	/* Memory page has hardware error */
+> 
+> +#define ENAMESVRLSYMS	258	/* Name correspond to several symbols */
+> +
+>  #endif
+> diff --git a/tools/arch/sparc/include/uapi/asm/errno.h b/tools/arch/sparc/include/uapi/asm/errno.h
+> index 81a732b902ee..1ed065943bab 100644
+> --- a/tools/arch/sparc/include/uapi/asm/errno.h
+> +++ b/tools/arch/sparc/include/uapi/asm/errno.h
+> @@ -115,4 +115,6 @@
+> 
+>  #define EHWPOISON	135	/* Memory page has hardware error */
+> 
+> +#define ENAMESVRLSYMS	136	/* Name correspond to several symbols */
+> +
+>  #endif
+> diff --git a/tools/include/uapi/asm-generic/errno.h b/tools/include/uapi/asm-generic/errno.h
+> index cf9c51ac49f9..3d5d5740c8da 100644
+> --- a/tools/include/uapi/asm-generic/errno.h
+> +++ b/tools/include/uapi/asm-generic/errno.h
+> @@ -120,4 +120,6 @@
+> 
+>  #define EHWPOISON	133	/* Memory page has hardware error */
+> 
+> +#define ENAMESVRLSYMS	134	/* Name correspond to several symbols */
+> +
+>  #endif
+> --
+> 2.34.1
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
