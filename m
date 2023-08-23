@@ -2,240 +2,126 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 437D8EE49A3
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Aug 2023 15:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD374EE49A0
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Aug 2023 16:14:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236973AbjHWPTg (ORCPT
+        id S237472AbjHWQOf (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 23 Aug 2023 11:19:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48862 "EHLO
+        Wed, 23 Aug 2023 12:14:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236997AbjHWPRh (ORCPT
+        with ESMTP id S234519AbjHWQOf (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 23 Aug 2023 11:17:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2A02101;
-        Wed, 23 Aug 2023 08:17:14 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4F70160B54;
-        Wed, 23 Aug 2023 15:15:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5378C433C7;
-        Wed, 23 Aug 2023 15:15:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692803757;
-        bh=orZA9xUFVqFpdLvkaKF8ReMXYbDCtCeDSHjhlJ2TwQ8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OOsgWt3EMGwTrbLLgm8nSA75EMAMh2PXbjmzYKmX5K0her4Vi1X4rOkYhhBb9swbI
-         8bmRe3M2VMlCxz49OMtqysnOETx5T5YMdmBrZxv0TmxNE6EeuoEdyj9aQ5l5oBa4Qa
-         +0UaoZil4es06/8TYxgYR5k05W/RCfiV6K7s1O9EvnSavpj31dzq1sH6R5Pklp2/kz
-         0TymQxNhf8bB0hsGWpleS0iPx1buM4M+6aU2JpJq5/piHrOZfaGiMmT0wkboemsfkS
-         hJgMpUvTWu/AUo9soYj2WR9vUiq3ZzOZp/Lv2NsSGiJdmRnhMg9hYvZEGVgOUi+NoO
-         YUw/i4iB+HmCA==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Florent Revest <revest@chromium.org>
-Cc:     linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v4 2/9] fprobe: Use fprobe_regs in fprobe entry handler
-Date:   Thu, 24 Aug 2023 00:15:51 +0900
-Message-Id: <169280375109.282662.4109179404470188137.stgit@devnote2>
+        Wed, 23 Aug 2023 12:14:35 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E527EE68;
+        Wed, 23 Aug 2023 09:14:32 -0700 (PDT)
+Received: from pwmachine.numericable.fr (85-170-34-233.rev.numericable.fr [85.170.34.233])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 2BAF52126CC6;
+        Wed, 23 Aug 2023 09:14:31 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2BAF52126CC6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1692807272;
+        bh=GSsNCY8KC3V4foUT3nbiUGYLIoC98erD7H+/xMZ+8ak=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PGHxj2s3KGO/aDOT8e3A3dEB0bl4FEId6QFVk6ZDcCNTPezF/pVEj8NZ6ItuixOLq
+         ty8r3yFrD5utQiwPmbaBwXIWyRZXbBlOGcf5ZdDCdyTn9Nx0zdrvll9k/Yz2nQwizz
+         //HUw4orHvGlb8txQqMK+UeNDrZRNy2V+3FtPr48=
+From:   Francis Laniel <flaniel@linux.microsoft.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        Francis Laniel <flaniel@linux.microsoft.com>
+Subject: [RFC PATCH v1 0/1] Return ENAMESVRLSYMS when func matches several symbols during PMU kprobe creation
+Date:   Wed, 23 Aug 2023 18:14:09 +0200
+Message-Id: <20230823161410.103489-1-flaniel@linux.microsoft.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <169280372795.282662.9784422934484459769.stgit@devnote2>
-References: <169280372795.282662.9784422934484459769.stgit@devnote2>
-User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Hi.
 
-This allows fprobes to be available with CONFIG_DYNAMIC_FTRACE_WITH_ARGS
-instead of CONFIG_DYNAMIC_FTRACE_WITH_REGS, then we can enable fprobe
-on arm64.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+In the kernel source code, it exists different functions which share the same
+name but which have, of course, different addresses as they can be defined in
+different modules:
+root@vm-amd64:~# grep ntfs_file_write_iter /proc/kallsyms
+ffffffff814ce3c0 t __pfx_ntfs_file_write_iter
+ffffffff814ce3d0 t ntfs_file_write_iter
+ffffffff814fc8a0 t __pfx_ntfs_file_write_iter
+ffffffff814fc8b0 t ntfs_file_write_iter
+This can be source of troubles when you create a PMU kprobe for such a function,
+as it will only install one for the first address (e.g. 0xffffffff814ce3d0 in
+the above).
+This could lead to some troubles were BPF based tools does not report any event
+because the second function is not called:
+root@vm-amd64:/mnt# mount | grep /mnt
+/foo.img on /mnt type ntfs3 (rw,relatime,uid=0,gid=0,iocharset=utf8)
+# ig is a tool which installs a PMU kprobe on ntfs_file_write_iter().
+root@vm-amd64:/mnt# ig trace fsslower -m 0 -f ntfs3 --host &> /tmp/foo &
+[1] 207
+root@vm-amd64:/mnt# dd if=./foo of=./bar count=3
+3+0 records in
+3+0 records out
+1536 bytes (1.5 kB, 1.5 KiB) copied, 0.00543323 s, 283 kB/s
+root@vm-amd64:/mnt# fg
+ig trace fsslower -m 0 -f ntfs3 --host &> /tmp/foo
+^Croot@vm-amd64:/mnt# more /tmp/foo
+RUNTIME.CONTAINERNAME          RUNTIME.CONTAIN… PID              COMM
+  T      BYTES     OFFSET        LAT FILE
+                                                214              dd
+  R        512          0        766 foo
+                                                214              dd
+  R        512        512          9 foo
+                                                214              dd
+As you can see in the above, only read events are reported and no write because
+the kprobe is installed for the old ntfs_file_write_iter() and not the ntfs3
+one.
+
+In this contribution, I modified create_local_trace_kprobe() to test if the
+function name given as argument matches several symbols.
+If this is the case ENAMESVRLSYMS, a new error code, is returned to indicate the
+user to use addr and offs to remove this ambiguity.
+So, when the above BPF tool is run, the following error message is printed:
+root@vm-amd64:~# ig trace fsslower -m 0 -f ntfs3 --host &> /tmp/foo
+root@vm-amd64:~# more /tmp/foo
+RUNTIME.CONTAINERNAME          RUNTIME.CONTAIN… PID              COMM
+  T      BYTES     OFFSET        LAT FILE
+Error: running gadget: running gadget: installing tracer: attaching kprobe: crea
+ting perf_kprobe PMU (arch-specific fallback for "ntfs_file_write_iter"): token
+ntfs_file_write_iter: opening perf event: errno 134
+
+Note that, this contribution is the conclusion of a previous RFC which intended
+to install a PMU kprobe for all matching symbols [1, 2].
+
+If you see any way to improve this contribution, particularly if you have an
+idea to add a test for this behavior, please share your feedback.
+
+Francis Laniel (1):
+  tracing/kprobes: Return ENAMESVRLSYMS when func matches several symbols
+
+ arch/alpha/include/uapi/asm/errno.h        |  2 ++
+ arch/mips/include/uapi/asm/errno.h         |  2 ++
+ arch/parisc/include/uapi/asm/errno.h       |  2 ++
+ arch/sparc/include/uapi/asm/errno.h        |  2 ++
+ include/uapi/asm-generic/errno.h           |  2 ++
+ kernel/trace/trace_kprobe.c                | 26 ++++++++++++++++++++++
+ tools/arch/alpha/include/uapi/asm/errno.h  |  2 ++
+ tools/arch/mips/include/uapi/asm/errno.h   |  2 ++
+ tools/arch/parisc/include/uapi/asm/errno.h |  2 ++
+ tools/arch/sparc/include/uapi/asm/errno.h  |  2 ++
+ tools/include/uapi/asm-generic/errno.h     |  2 ++
+ 11 files changed, 46 insertions(+)
+
+
+Best regards and thank you in advance.
 ---
- Changes in v3:
-  - Use FTRACE_OPS_FL_SAVE_ARGS instead of FTRACE_OPS_FL_SAVE_REGS.
- Changes in v4:
-  - Keep CONFIG_FPROBE check for multi-kprobe because this depends
-    on FPROBE API.
----
- include/linux/fprobe.h          |    2 +-
- kernel/trace/Kconfig            |    3 ++-
- kernel/trace/bpf_trace.c        |   10 +++++++---
- kernel/trace/fprobe.c           |    4 ++--
- kernel/trace/trace_fprobe.c     |    6 +++++-
- lib/test_fprobe.c               |    4 ++--
- samples/fprobe/fprobe_example.c |    2 +-
- 7 files changed, 20 insertions(+), 11 deletions(-)
-
-diff --git a/include/linux/fprobe.h b/include/linux/fprobe.h
-index 3e03758151f4..36c0595f7b93 100644
---- a/include/linux/fprobe.h
-+++ b/include/linux/fprobe.h
-@@ -35,7 +35,7 @@ struct fprobe {
- 	int			nr_maxactive;
- 
- 	int (*entry_handler)(struct fprobe *fp, unsigned long entry_ip,
--			     unsigned long ret_ip, struct pt_regs *regs,
-+			     unsigned long ret_ip, struct ftrace_regs *regs,
- 			     void *entry_data);
- 	void (*exit_handler)(struct fprobe *fp, unsigned long entry_ip,
- 			     unsigned long ret_ip, struct pt_regs *regs,
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index 61c541c36596..976fd594b446 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -287,7 +287,7 @@ config DYNAMIC_FTRACE_WITH_ARGS
- config FPROBE
- 	bool "Kernel Function Probe (fprobe)"
- 	depends on FUNCTION_TRACER
--	depends on DYNAMIC_FTRACE_WITH_REGS
-+	depends on DYNAMIC_FTRACE_WITH_REGS || DYNAMIC_FTRACE_WITH_ARGS
- 	depends on HAVE_RETHOOK
- 	select RETHOOK
- 	default n
-@@ -672,6 +672,7 @@ config FPROBE_EVENTS
- 	select TRACING
- 	select PROBE_EVENTS
- 	select DYNAMIC_EVENTS
-+	depends on DYNAMIC_FTRACE_WITH_REGS
- 	default y
- 	help
- 	  This allows user to add tracing events on the function entry and
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index bd1a42b23f3f..22d00c817f1a 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -2467,7 +2467,7 @@ static int __init bpf_event_init(void)
- fs_initcall(bpf_event_init);
- #endif /* CONFIG_MODULES */
- 
--#ifdef CONFIG_FPROBE
-+#if defined(CONFIG_FPROBE) && defined(CONFIG_DYNAMIC_FTRACE_WITH_REGS)
- struct bpf_kprobe_multi_link {
- 	struct bpf_link link;
- 	struct fprobe fp;
-@@ -2659,10 +2659,14 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
- 
- static int
- kprobe_multi_link_handler(struct fprobe *fp, unsigned long fentry_ip,
--			  unsigned long ret_ip, struct pt_regs *regs,
-+			  unsigned long ret_ip, struct ftrace_regs *fregs,
- 			  void *data)
- {
- 	struct bpf_kprobe_multi_link *link;
-+	struct pt_regs *regs = ftrace_get_regs(fregs);
-+
-+	if (!regs)
-+		return 0;
- 
- 	link = container_of(fp, struct bpf_kprobe_multi_link, fp);
- 	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), regs);
-@@ -2917,7 +2921,7 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
- 	kvfree(cookies);
- 	return err;
- }
--#else /* !CONFIG_FPROBE */
-+#else /* !CONFIG_FPROBE || !CONFIG_DYNAMIC_FTRACE_WITH_REGS */
- int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
- {
- 	return -EOPNOTSUPP;
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index 3b21f4063258..07deb52df44a 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -46,7 +46,7 @@ static inline void __fprobe_handler(unsigned long ip, unsigned long parent_ip,
- 	}
- 
- 	if (fp->entry_handler)
--		ret = fp->entry_handler(fp, ip, parent_ip, ftrace_get_regs(fregs), entry_data);
-+		ret = fp->entry_handler(fp, ip, parent_ip, fregs, entry_data);
- 
- 	/* If entry_handler returns !0, nmissed is not counted. */
- 	if (rh) {
-@@ -182,7 +182,7 @@ static void fprobe_init(struct fprobe *fp)
- 		fp->ops.func = fprobe_kprobe_handler;
- 	else
- 		fp->ops.func = fprobe_handler;
--	fp->ops.flags |= FTRACE_OPS_FL_SAVE_REGS;
-+	fp->ops.flags |= FTRACE_OPS_FL_SAVE_ARGS;
- }
- 
- static int fprobe_init_rethook(struct fprobe *fp, int num)
-diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-index 8bfe23af9c73..71bf38d698f1 100644
---- a/kernel/trace/trace_fprobe.c
-+++ b/kernel/trace/trace_fprobe.c
-@@ -320,12 +320,16 @@ NOKPROBE_SYMBOL(fexit_perf_func);
- #endif	/* CONFIG_PERF_EVENTS */
- 
- static int fentry_dispatcher(struct fprobe *fp, unsigned long entry_ip,
--			     unsigned long ret_ip, struct pt_regs *regs,
-+			     unsigned long ret_ip, struct ftrace_regs *fregs,
- 			     void *entry_data)
- {
- 	struct trace_fprobe *tf = container_of(fp, struct trace_fprobe, fp);
-+	struct pt_regs *regs = ftrace_get_regs(fregs);
- 	int ret = 0;
- 
-+	if (!regs)
-+		return 0;
-+
- 	if (trace_probe_test_flag(&tf->tp, TP_FLAG_TRACE))
- 		fentry_trace_func(tf, entry_ip, regs);
- #ifdef CONFIG_PERF_EVENTS
-diff --git a/lib/test_fprobe.c b/lib/test_fprobe.c
-index 24de0e5ff859..ff607babba18 100644
---- a/lib/test_fprobe.c
-+++ b/lib/test_fprobe.c
-@@ -40,7 +40,7 @@ static noinline u32 fprobe_selftest_nest_target(u32 value, u32 (*nest)(u32))
- 
- static notrace int fp_entry_handler(struct fprobe *fp, unsigned long ip,
- 				    unsigned long ret_ip,
--				    struct pt_regs *regs, void *data)
-+				    struct ftrace_regs *fregs, void *data)
- {
- 	KUNIT_EXPECT_FALSE(current_test, preemptible());
- 	/* This can be called on the fprobe_selftest_target and the fprobe_selftest_target2 */
-@@ -81,7 +81,7 @@ static notrace void fp_exit_handler(struct fprobe *fp, unsigned long ip,
- 
- static notrace int nest_entry_handler(struct fprobe *fp, unsigned long ip,
- 				      unsigned long ret_ip,
--				      struct pt_regs *regs, void *data)
-+				      struct ftrace_regs *fregs, void *data)
- {
- 	KUNIT_EXPECT_FALSE(current_test, preemptible());
- 	return 0;
-diff --git a/samples/fprobe/fprobe_example.c b/samples/fprobe/fprobe_example.c
-index 64e715e7ed11..1545a1aac616 100644
---- a/samples/fprobe/fprobe_example.c
-+++ b/samples/fprobe/fprobe_example.c
-@@ -50,7 +50,7 @@ static void show_backtrace(void)
- 
- static int sample_entry_handler(struct fprobe *fp, unsigned long ip,
- 				unsigned long ret_ip,
--				struct pt_regs *regs, void *data)
-+				struct ftrace_regs *fregs, void *data)
- {
- 	if (use_trace)
- 		/*
+[1]: https://lore.kernel.org/lkml/20230816163517.112518-1-flaniel@linux.microsoft.com/
+[2]: https://lore.kernel.org/lkml/20230819101105.b0c104ae4494a7d1f2eea742@kernel.org/
+--
+2.34.1
 
