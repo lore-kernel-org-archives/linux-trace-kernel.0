@@ -2,167 +2,217 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E3BEE4996
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 22 Aug 2023 16:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE56EE49A3
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Aug 2023 00:36:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237778AbjHVQ1b (ORCPT
+        id S231819AbjHWAgW (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 22 Aug 2023 12:27:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33250 "EHLO
+        Tue, 22 Aug 2023 20:36:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237785AbjHVQ1a (ORCPT
+        with ESMTP id S231285AbjHWAgW (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 22 Aug 2023 12:27:30 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6478CE9;
-        Tue, 22 Aug 2023 09:27:08 -0700 (PDT)
+        Tue, 22 Aug 2023 20:36:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 363F6CF9;
+        Tue, 22 Aug 2023 17:36:20 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3C4B765C53;
-        Tue, 22 Aug 2023 16:27:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D5C4C433C7;
-        Tue, 22 Aug 2023 16:27:05 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C559F60B58;
+        Wed, 23 Aug 2023 00:36:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CD2EC433C8;
+        Wed, 23 Aug 2023 00:36:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692721627;
-        bh=uNEY/3JK2xrPukpXEkaIFZvYi1IrWnjA6w4voZ56Quo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V7C99ifSdSZsU+mw7kmns/YqzdfjCfyT7lRA13nbXKCKTnx183KWApKLkds/cVWLz
-         Hzu0y8tqZp3z+kuYGLUuCCgAW4uHHWRmQUfY4z9HuiAQ33Ubm2QCR+CU2PJoqLXYvn
-         YjCtxaMq21QlYyBlmYqDv/CMEXgeea6/NAQx2v1EHnnt5pxuJQXs+MSafE1HahQvH7
-         wzRCUb1Z4JyYQDg7W7utlsbPD0KHN3Vn50xELL8gBBLSOS8oZw70HRnr14Gu7fGli2
-         vwmMmWGMRzxekcIN++z7dE07bF77I/QihL6+VwxsCsTWxfpZIDQXNzHKCzH3LKJMiG
-         sjWRooUf/8ytg==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     linux-trace-kernel@vger.kernel.org
+        s=k20201202; t=1692750979;
+        bh=xNTKQwORwsCD8O9TsOJK6CO4peKiHi/Jma3poQjjDDY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iBLisRyxZjunYu7v+KK7zXWuQ+BiRRMSZ3jRQEN5Uh4DplCxl6r3VWUeH4eIvYKLG
+         gM7SAXFQ4mG5QbhwGHlukcKuM6gw2BYbFcoQ4+beguMOe38bAmwBDELZt/JInsr8tf
+         pK7BoTENAIyYgzAStm1aYsELWvPr/dTNYM+pH1AT8VeLWz0BCCShly6bcHJDAtvgxH
+         1eWFHAifnX5a1rCsMDvec69goQmuX0F3Gokvo0pKtC23Rbs/iy9H2SA0uzriw6V8v8
+         yTMi+l2uKpNAXlqr5eS+4p94aMxSoDhuSuTK5kV6h+kfG7zQb1jls9ZM9WZ7ZUiEUU
+         G8vbUTqnG3C9Q==
+Date:   Wed, 23 Aug 2023 09:36:14 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Francis Laniel <flaniel@linux.microsoft.com>
 Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        mhiramat@kernel.org, Martin KaFai Lau <martin.lau@linux.dev>,
-        bpf@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH v6 9/9] Documentation: tracing: Update fprobe event example with BTF field
-Date:   Wed, 23 Aug 2023 01:27:03 +0900
-Message-Id: <169272162317.160970.12282501645965083241.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <169272153143.160970.15584603734373446082.stgit@devnote2>
-References: <169272153143.160970.15584603734373446082.stgit@devnote2>
-User-Agent: StGit/0.19
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        linux-trace-kernel@vger.kernel.org,
+        Song Liu <songliubraving@fb.com>, bpf@vger.kernel.org
+Subject: Re: [RFC PATCH v1 1/1] tracing/kprobe: Add multi-probe support for
+ 'perf_kprobe' PMU
+Message-Id: <20230823093614.fd704a98387d0ba1d23a29fb@kernel.org>
+In-Reply-To: <2237127.iZASKD2KPV@pwmachine>
+References: <20230816163517.112518-1-flaniel@linux.microsoft.com>
+        <5702263.DvuYhMxLoT@pwmachine>
+        <20230819101105.b0c104ae4494a7d1f2eea742@kernel.org>
+        <2237127.iZASKD2KPV@pwmachine>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Hi,
 
-Update fprobe event example with BTF data structure field specification.
+On Mon, 21 Aug 2023 14:55:14 +0200
+Francis Laniel <flaniel@linux.microsoft.com> wrote:
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- Changes in v2:
-  - Remove 'retval' and use '$retval'.
- Changes in v3:
-  - Add description about mixture of '.' and '->' usage.
----
- Documentation/trace/fprobetrace.rst |   64 +++++++++++++++++++++++++----------
- 1 file changed, 46 insertions(+), 18 deletions(-)
+> > Could you tell me how do you use this feature, for what perpose?
+> 
+> Sure (I think I detailed this in the cover letter but I only sent it to the 
+> "main" mailing list and not the tracing one, sorry for this inconvenience)!
+> 
+> Basically, I was adding NTFS tracing to an existing tool which monitors slow 
+> I/Os using BPF [1].
+> To test the tool, I compiled a kernel with both NTFS module built-in and 
+> figured out the write operations when done on ntfs3 were missing from the 
+> output of the tool.
+> The problem comes from the library I use in the tool which does not handle 
+> well when it exists different symbols with the same name.
+> Contrary to perf, which only handles kprobes through sysfs, the library 
+> handles it in both way (sysfs and PMU) with a preference for PMU when 
+> available [2].
+> 
+> After some discussion, I thought there could be a way to handle this 
+> automatically in the kernel when using PMU kprobes, hence this patch.
+> I totally understand the case I described above is really a corner one, but I 
+> thought this feature could be useful for other people.
+> In the case of the library itself, we could indeed find the address in /proc/
+> kallsyms but it would mean having CAP_SYS_ADMIN which is not forcefully 
+> something we want to enforce.
+> Also, if we need to read /boot/vmlinuz or /boot/System.map we also need to be 
+> root as these files often belong to root and cannot be read by others.
+> So, this patch solves the above problem while not needing specific capabilities 
+> as the kernel will solve it for us.
 
-diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
-index 7297f9478459..8e9bebcf0a2e 100644
---- a/Documentation/trace/fprobetrace.rst
-+++ b/Documentation/trace/fprobetrace.rst
-@@ -79,9 +79,9 @@ automatically set by the given name. ::
-  f:fprobes/myprobe vfs_read count=count pos=pos
- 
- It also chooses the fetch type from BTF information. For example, in the above
--example, the ``count`` is unsigned long, and the ``pos`` is a pointer. Thus, both
--are converted to 64bit unsigned long, but only ``pos`` has "%Lx" print-format as
--below ::
-+example, the ``count`` is unsigned long, and the ``pos`` is a pointer. Thus,
-+both are converted to 64bit unsigned long, but only ``pos`` has "%Lx"
-+print-format as below ::
- 
-  # cat events/fprobes/myprobe/format
-  name: myprobe
-@@ -105,9 +105,47 @@ is expanded to all function arguments of the function or the tracepoint. ::
-  # cat dynamic_events
-  f:fprobes/myprobe vfs_read file=file buf=buf count=count pos=pos
- 
--BTF also affects the ``$retval``. If user doesn't set any type, the retval type is
--automatically picked from the BTF. If the function returns ``void``, ``$retval``
--is rejected.
-+BTF also affects the ``$retval``. If user doesn't set any type, the retval
-+type is automatically picked from the BTF. If the function returns ``void``,
-+``$retval`` is rejected.
-+
-+You can access the data fields of a data structure using allow operator ``->``
-+(for pointer type) and dot operator ``.`` (for data structure type.)::
-+
-+# echo 't sched_switch preempt prev_pid=prev->pid next_pid=next->pid' >> dynamic_events
-+
-+The field access operators, ``->`` and ``.`` can be combined for accessing deeper
-+members and other structure members pointed by the member. e.g. ``foo->bar.baz->qux``
-+If there is non-name union member, you can directly access it as the C code does.
-+For example::
-+
-+ struct {
-+	union {
-+	int a;
-+	int b;
-+	};
-+ } *foo;
-+
-+To access ``a`` and ``b``, use ``foo->a`` and ``foo->b`` in this case.
-+
-+This data field access is available for the return value via ``$retval``,
-+e.g. ``$retval->name``.
-+
-+For these BTF arguments and fields, ``:string`` and ``:ustring`` change the
-+behavior. If these are used for BTF argument or field, it checks whether
-+the BTF type of the argument or the data field is ``char *`` or ``char []``,
-+or not.  If not, it rejects applying the string types. Also, with the BTF
-+support, you don't need a memory dereference operator (``+0(PTR)``) for
-+accessing the string pointed by a ``PTR``. It automatically adds the memory
-+dereference operator according to the BTF type. e.g. ::
-+
-+# echo 't sched_switch prev->comm:string' >> dynamic_events
-+# echo 'f getname_flags%return $retval->name:string' >> dynamic_events
-+
-+The ``prev->comm`` is an embedded char array in the data structure, and
-+``$retval->name`` is a char pointer in the data structure. But in both
-+cases, you can use ``:string`` type to get the string.
-+
- 
- Usage examples
- --------------
-@@ -161,10 +199,10 @@ parameters. This means you can access any field values in the task
- structure pointed by the ``prev`` and ``next`` arguments.
- 
- For example, usually ``task_struct::start_time`` is not traced, but with this
--traceprobe event, you can trace it as below.
-+traceprobe event, you can trace that field as below.
- ::
- 
--  # echo 't sched_switch comm=+1896(next):string start_time=+1728(next):u64' > dynamic_events
-+  # echo 't sched_switch comm=next->comm:string next->start_time' > dynamic_events
-   # head -n 20 trace | tail
-  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-  #              | |         |   |||||     |         |
-@@ -176,13 +214,3 @@ traceprobe event, you can trace it as below.
-            <idle>-0       [000] d..3.  5606.690317: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="kworker/0:1" usage=1 start_time=137000000
-       kworker/0:1-14      [000] d..3.  5606.690339: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="swapper/0" usage=2 start_time=0
-            <idle>-0       [000] d..3.  5606.692368: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="kworker/0:1" usage=1 start_time=137000000
--
--Currently, to find the offset of a specific field in the data structure,
--you need to build kernel with debuginfo and run `perf probe` command with
--`-D` option. e.g.
--::
--
-- # perf probe -D "__probestub_sched_switch next->comm:string next->start_time"
-- p:probe/__probestub_sched_switch __probestub_sched_switch+0 comm=+1896(%cx):string start_time=+1728(%cx):u64
--
--And replace the ``%cx`` with the ``next``.
+Thanks for the explanation. I got the background, and still have some questions.
 
+- Is the analysis tool really necessary to be used by users other than
+  CAP_SYS_ADMIN? Even if it is useful, I still doubt CAP_PERFMON is safer
+  than CAP_SYS_ADMIN, because BPF program can access any kernel register.
+
+- My concern about this solution (enabling kprobe PMU on all symbols which
+  have the same name) makes it hard to run the same BPF program on it.
+  This is because symbols with the same name do not necessarily have the
+  same arguments (theoretically). Also, the BPF will trace unwanted symbols
+  at unwanted timing.
+
+- Can you expand that library to handle the same name symbols differently?
+  I think this should be done in the user space, or in the kallsyms like
+  storing symbols with source line information.
+
+I understand this demand, but solving that with probing *all* symbols seems
+like a brute force solution and may cause another problem later.
+
+But this is a good discussion item. Last month Alessandro sent a script which
+makes such symbols unique. Current problem is that the numbering is not enough
+to identify which one is from which source code.
+
+https://lore.kernel.org/all/20230714150326.1152359-1-alessandro.carminati@gmail.com/ 
+
+> 
+> > If you just need to trace/profile a specific function which has the same
+> > name symbols, you might be better to use `perf probe` +
+> > `/sys/kernel/tracing` or `perf record -e EVENT`.
+> > 
+> > Or if you need to run it with CAP_PERFMON, without CAP_SYS_ADMIN,
+> > we need to change a userspace tool to find the correct address and
+> > pass it to the perf_event_open().
+> > 
+> > > > > Added new events:
+> > > > >   probe:ntfs_file_write_iter (on ntfs_file_write_iter)
+> > > > >   probe:ntfs_file_write_iter (on ntfs_file_write_iter)
+> > > > > 
+> > > > > You can now use it in all perf tools, such as:
+> > > > >         perf record -e probe:ntfs_file_write_iter -aR sleep 1
+> > > > > 
+> > > > > root@vm-amd64:~# cat /sys/kernel/tracing/kprobe_events
+> > > > > p:probe/ntfs_file_write_iter _text+5088544
+> > > > > p:probe/ntfs_file_write_iter _text+5278560
+> > > > > 
+> > > > > > Thought?
+> > > > > 
+> > > > > This contribution is basically here to sort of mimic what perf does
+> > > > > but
+> > > > > with PMU kprobes, as this is not possible to write in a sysfs file
+> > > > > with
+> > > > > this type of probe.
+> > > > 
+> > > > OK, I see it is for BPF only. Maybe BPF program can filter correct one
+> > > > to access the argument etc.
+> > > 
+> > > I am not sure I understand, can you please precise?
+> > > The eBPF program will be run when the kprobe will be triggered, so if the
+> > > kprobe is armed for the function (e.g. old ntfs_file_write_iter()), the
+> > > eBPF program will never be called.
+> > 
+> > As I said above, it is userspace BPF loader issue, because it has to specify
+> > the correct address via unique symbol + offset, instead of attaching all of
+> > them. I think that will be more side-effects.
+> > 
+> > But anyway, thanks for pointing this issue. I should fix kprobe event to
+> > reject the symbols which is not unique. That should be pointed by other
+> > unique symbols.
+> 
+> You are welcome and I thank you for the discussion.
+> Can you please precise more what you think about "reject the symbols which is 
+> not unique"?
+> Basically something like this:
+
+Yes, that's what I said.
+
+> struct trace_event_call *
+> create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
+> 			  bool is_return)
+> {
+> 	...
+> 	if (!addr && func) {
+
+if (func) {  /* because anyway if user specify "func" we have to solve
+ the symbol address */
+
+> 		array.addrs = NULL;
+> 		array.size = 0;
+> 		ret = kallsyms_on_each_match_symbol(add_addr, func, &array);
+> 		if (ret)
+> 			goto error_free;
+> 
+> 		if (array.size != 1) {
+> 			/* 
+> 			 * Function name corresponding to several symbols must
+> 			 * be passed by address only.
+> 			 */
+> 			return -EINVAL;
+
+This case may return a unique error code so that the caller can notice
+the problem.
+
+Thank you,
+
+> 		}
+> 	}
+
+
+
+> 	...
+> }
+> ?
+> If my understanding is correct, I think I can write a patch to achieve this.
+> 
+
+> 
+> Best regards.
+> ---
+> [1]: https://github.com/inspektor-gadget/inspektor-gadget/pull/1879
+> [2]: https://github.com/cilium/ebpf/blob/
+> 270c859894bd38cdd0c7783317b16343409e4df8/link/kprobe.go#L165-L191
+> 
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
