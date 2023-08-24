@@ -2,109 +2,173 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5713BC27C40
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 24 Aug 2023 12:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F698C7113B
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 24 Aug 2023 13:03:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237231AbjHXMiL (ORCPT
+        id S231657AbjHXNC6 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 24 Aug 2023 08:38:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40758 "EHLO
+        Thu, 24 Aug 2023 09:02:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234862AbjHXMhk (ORCPT
+        with ESMTP id S237813AbjHXNCf (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 24 Aug 2023 08:37:40 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B95A1711;
-        Thu, 24 Aug 2023 05:37:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692880658; x=1724416658;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=YCu4y4VSW5d5YZsdxmOmKcQalRJ5jfj6pyX8p/LklZ0=;
-  b=ZKg6wYNBLuAiPM9tMAye0rXk/7zbT+Ki2FMxVS8+br41oYtBs5xUlo1J
-   qtGEdIPcZYd0btB5M2EO0z50xLAOc6ljXy2FZvRTNBXHf9XM+oqN6xEyy
-   DSqQdIlB5MRfmqLG0i/SCnrBDejV1DY9up8SbuSEYO1CrGkXrT40/T51N
-   0TztVbV0lvKoDhruTsyfIZvwrdsZHCFiQjwyIlHJaOkMDmohbciwwMmPx
-   IHVlLXmAh/NDGnAstC/waSCnp5LKH40LKLFSRbi9Hvvn/zGLO3gQX9Otk
-   O3rho3yT3dNJX0z+7/ay+FaBY/QmmOqZgM38fMQk4Pr+1fy7W91AqpbjD
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="373306788"
-X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
-   d="scan'208";a="373306788"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2023 05:37:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="713959516"
-X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
-   d="scan'208";a="713959516"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 24 Aug 2023 05:37:35 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 1F9A617F; Thu, 24 Aug 2023 15:37:34 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Yury Norov <yury.norov@gmail.com>, Uros Bizjak <ubizjak@gmail.com>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] bitops: Share BYTES_TO_BITS() for everyone
-Date:   Thu, 24 Aug 2023 15:37:28 +0300
-Message-Id: <20230824123728.2761663-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 24 Aug 2023 09:02:35 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8396CE79;
+        Thu, 24 Aug 2023 06:02:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 008D664AF8;
+        Thu, 24 Aug 2023 13:02:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2163C433C7;
+        Thu, 24 Aug 2023 13:02:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692882152;
+        bh=q2az01/KAgq/cnwVEoG/mArWYoVRqcX7JTqR4RkwD9o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=exrNO0cyE7+gD8isFveY8zJlFYKrFIHi+EBtj8pEu1J7XJt+8j9kFwpezxlM+4xRd
+         QQ9RjWPFwIIx8VO3lNkhUqgkcE+bOpJgSi/TJzxgdikmDVBADeucuGZ44kfEdVG6Ku
+         K34FRTCANLETF/b+Vsw6D2PTMAooRECfaqZgc9VVeVEM475v6oqfqBkEn8kg3RFEad
+         Z1cmnOKK+wEr3JRJ0rDk8lSgo8lwCa4c9wEZw6IXKjzlfm2wgdW/QHTGTdYXHA7e5w
+         Rok54at1yG/NjoYu0L5iqDGorJAy4mszNRIqP5dIfFB9Ad7EOMgy01VZ4Cd0rsUseC
+         Vy1JH8IcvvXTA==
+Date:   Thu, 24 Aug 2023 22:02:27 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Francis Laniel <flaniel@linux.microsoft.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC PATCH v2 1/1] tracing/kprobes: Return EADDRNOTAVAIL when
+ func matches several symbols
+Message-Id: <20230824220227.01c367c1d7b6219a79cf2843@kernel.org>
+In-Reply-To: <20230824103734.53453-2-flaniel@linux.microsoft.com>
+References: <20230824103734.53453-1-flaniel@linux.microsoft.com>
+        <20230824103734.53453-2-flaniel@linux.microsoft.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-It may be new callers for the same macro, share it.
+On Thu, 24 Aug 2023 12:37:34 +0200
+Francis Laniel <flaniel@linux.microsoft.com> wrote:
 
-Note, it's unknown why it's represented in the current form instead of
-simple multiplication and commit 1ff511e35ed8 ("tracing/kprobes: Add
-bitfield type") doesn't explain that neither. Let leave it as is and
-we may improve it in the future.
+> Previously to this commit, if func matches several symbols, a kprobe, being
+> either sysfs or PMU, would only be installed for the first matching address.
+> This could lead to some misunderstanding when some BPF code was never called
+> because it was attached to a function which was indeed not call, because the
+> effectively called one has no kprobes.
+> 
+> So, this commit returns EADDRNOTAVAIL when func matches several symbols.
+> This way, user needs to use addr to remove the ambiguity.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/bitops.h     | 2 ++
- kernel/trace/trace_probe.c | 3 +--
- 2 files changed, 3 insertions(+), 2 deletions(-)
+Thanks for update the patch. I have some comments there. 
 
-diff --git a/include/linux/bitops.h b/include/linux/bitops.h
-index 2ba557e067fe..66dc091e0c28 100644
---- a/include/linux/bitops.h
-+++ b/include/linux/bitops.h
-@@ -21,6 +21,8 @@
- #define BITS_TO_U32(nr)		__KERNEL_DIV_ROUND_UP(nr, BITS_PER_TYPE(u32))
- #define BITS_TO_BYTES(nr)	__KERNEL_DIV_ROUND_UP(nr, BITS_PER_TYPE(char))
- 
-+#define BYTES_TO_BITS(nb)	((BITS_PER_LONG * (nb)) / sizeof(long))
-+
- extern unsigned int __sw_hweight8(unsigned int w);
- extern unsigned int __sw_hweight16(unsigned int w);
- extern unsigned int __sw_hweight32(unsigned int w);
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index c68a72707852..da6297d24d61 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -11,6 +11,7 @@
-  */
- #define pr_fmt(fmt)	"trace_probe: " fmt
- 
-+#include <linux/bitops.h>
- #include <linux/bpf.h>
- 
- #include "trace_probe.h"
-@@ -830,8 +831,6 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
- 	return ret;
- }
- 
--#define BYTES_TO_BITS(nb)	((BITS_PER_LONG * (nb)) / sizeof(long))
--
- /* Bitfield type needs to be parsed into a fetch function */
- static int __parse_bitfield_probe_arg(const char *bf,
- 				      const struct fetch_type *t,
+> 
+> Suggested-by: Masami Hiramatsu <mhiramat@kernel.org>
+> Signed-off-by: Francis Laniel <flaniel@linux.microsoft.com>
+> Link: https://lore.kernel.org/lkml/20230819101105.b0c104ae4494a7d1f2eea742@kernel.org/
+> ---
+>  kernel/trace/trace_kprobe.c | 42 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 23dba01831f7..0c8dd6ba650b 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -705,6 +705,25 @@ static struct notifier_block trace_kprobe_module_nb = {
+>  	.priority = 1	/* Invoked after kprobe module callback */
+>  };
+>  
+> +static int count_symbols(void *data, unsigned long unused)
+> +{
+> +	unsigned int *count = data;
+> +
+> +	(*count)++;
+> +
+> +	return 0;
+> +}
+> +
+> +static unsigned int func_name_several_symbols(char *func_name)
+
+If this returns boolean, please use 'bool' for return type.
+Also, I think 'func_name_is_unique()' is more natural.
+
+> +{
+> +	unsigned int count;
+> +
+> +	count = 0;
+> +	kallsyms_on_each_match_symbol(count_symbols, func_name, &count);
+> +
+> +	return count > 1;
+> +}
+> +
+>  static int __trace_kprobe_create(int argc, const char *argv[])
+>  {
+>  	/*
+> @@ -836,6 +855,18 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+>  		}
+>  	}
+>  
+> +	/*
+> +	 * If user specifies KSYM, we check it does not correspond to several
+> +	 * symbols.
+> +	 * If this is the case, we return EADDRNOTAVAIL to indicate the user
+> +	 * he/she should use ADDR rather than KSYM to remove the ambiguity.
+> +	 */
+> +	if (symbol && func_name_several_symbols(symbol)) {
+
+Then, here  will be 
+
+	if (symbol && !func_name_is_unique(symbol)) {
+
+> +		ret = -EADDRNOTAVAIL;
+> +
+> +		goto error;
+> +	}
+> +
+>  	trace_probe_log_set_index(0);
+>  	if (event) {
+>  		ret = traceprobe_parse_event_name(&event, &group, gbuf,
+> @@ -1699,6 +1730,7 @@ static int unregister_kprobe_event(struct trace_kprobe *tk)
+>  }
+>  
+>  #ifdef CONFIG_PERF_EVENTS
+> +
+>  /* create a trace_kprobe, but don't add it to global lists */
+>  struct trace_event_call *
+>  create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
+> @@ -1709,6 +1741,16 @@ create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
+>  	int ret;
+>  	char *event;
+>  
+> +	/*
+> +	 * If user specifies func, we check that function name does not
+> +	 * correspond to several symbols.
+> +	 * If this is the case, we return EADDRNOTAVAIL to indicate the user
+> +	 * he/she should use addr and offs rather than func to remove the
+> +	 * ambiguity.
+> +	 */
+> +	if (func && func_name_several_symbols(func))
+
+Ditto.
+
+Thanks!
+
+> +		return ERR_PTR(-EADDRNOTAVAIL);
+> +
+>  	/*
+>  	 * local trace_kprobes are not added to dyn_event, so they are never
+>  	 * searched in find_trace_kprobe(). Therefore, there is no concern of
+> -- 
+> 2.34.1
+> 
+
+
 -- 
-2.40.0.1.gaa8946217a0b
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
