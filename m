@@ -2,222 +2,149 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63858C6FA8F
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 24 Aug 2023 14:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2D5C3DA6F
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 24 Aug 2023 15:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232055AbjHXOsn (ORCPT
+        id S238394AbjHXPZD (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 24 Aug 2023 10:48:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38198 "EHLO
+        Thu, 24 Aug 2023 11:25:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241820AbjHXOsW (ORCPT
+        with ESMTP id S232433AbjHXPYx (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 24 Aug 2023 10:48:22 -0400
+        Thu, 24 Aug 2023 11:24:53 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20AFE1FD7;
-        Thu, 24 Aug 2023 07:47:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BE2219B0;
+        Thu, 24 Aug 2023 08:24:51 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8458561A43;
-        Thu, 24 Aug 2023 14:47:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF710C433C8;
-        Thu, 24 Aug 2023 14:47:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692888445;
-        bh=7wEciiG/1W+7HITQ70qOkE5s3U7VWZTj6perXh1m3PQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=sP+q8ZcWq3DuP5eRGPyEnmM2OsuNYBrSubXlObY3/RmXNme/mEG9GALweqAzd9JeL
-         /4ZclqjS+Ae6RoAPNoBKRjjRkBDk8AnYWLrLZsTYTmpAYArqxzbjszJCesyYTQTlaa
-         ZSqlYpgSb3Ym/HDuUN4prnIWcbb5wz8l+0BfvDqXawAsGnmaxq6UMsh7XSgHd7+NJ1
-         x7VwjLuyxy7t5BCRNfkSTKkldK0i3ef6OICwqQzHo8KUQnfi9wVYbx/0LmhUS2aP0X
-         fs+t4LT/af+t6pRXi30TIq6VWRkspHh2U4a0yVUZfHx7uEBO1yYqpIxigcmMULcP3L
-         MafQeij4y5/rw==
-Date:   Thu, 24 Aug 2023 23:47:21 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Francis Laniel <flaniel@linux.microsoft.com>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC PATCH v2 1/1] tracing/kprobes: Return EADDRNOTAVAIL when
- func matches several symbols
-Message-Id: <20230824234721.1b481cd5d0b8bbc43a24d9a6@kernel.org>
-In-Reply-To: <12271275.O9o76ZdvQC@pwmachine>
-References: <20230824103734.53453-1-flaniel@linux.microsoft.com>
-        <20230824103734.53453-2-flaniel@linux.microsoft.com>
-        <20230824220227.01c367c1d7b6219a79cf2843@kernel.org>
-        <12271275.O9o76ZdvQC@pwmachine>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AF97667272;
+        Thu, 24 Aug 2023 15:24:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E56EC433C8;
+        Thu, 24 Aug 2023 15:24:34 +0000 (UTC)
+Date:   Thu, 24 Aug 2023 16:24:30 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Alexandru Elisei <alexandru.elisei@arm.com>, will@kernel.org,
+        oliver.upton@linux.dev, maz@kernel.org, james.morse@arm.com,
+        suzuki.poulose@arm.com, yuzenghui@huawei.com, arnd@arndb.de,
+        akpm@linux-foundation.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+        mhiramat@kernel.org, rppt@kernel.org, hughd@google.com,
+        pcc@google.com, steven.price@arm.com, anshuman.khandual@arm.com,
+        vincenzo.frascino@arm.com, eugenis@google.com, kcc@google.com,
+        hyesoo.yu@samsung.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
+        linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 00/37] Add support for arm64 MTE dynamic tag storage
+ reuse
+Message-ID: <ZOd2LvUKMguWdlgq@arm.com>
+References: <20230823131350.114942-1-alexandru.elisei@arm.com>
+ <33def4fe-fdb8-6388-1151-fabd2adc8220@redhat.com>
+ <ZOc0fehF02MohuWr@arm.com>
+ <ebd3f142-43cc-dc92-7512-8f1c99073fce@redhat.com>
+ <0b9c122a-c05a-b3df-c69f-85f520294adc@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0b9c122a-c05a-b3df-c69f-85f520294adc@redhat.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 24 Aug 2023 16:31:13 +0200
-Francis Laniel <flaniel@linux.microsoft.com> wrote:
+On Thu, Aug 24, 2023 at 01:25:41PM +0200, David Hildenbrand wrote:
+> On 24.08.23 13:06, David Hildenbrand wrote:
+> > On 24.08.23 12:44, Catalin Marinas wrote:
+> > > The way MTE is implemented currently is to have a static carve-out of
+> > > the DRAM to store the allocation tags (a.k.a. memory colour). This is
+> > > what we call the tag storage. Each 16 bytes have 4 bits of tags, so this
+> > > means 1/32 of the DRAM, roughly 3% used for the tag storage. This is
+> > > done transparently by the hardware/interconnect (with firmware setup)
+> > > and normally hidden from the OS. So a checked memory access to location
+> > > X generates a tag fetch from location Y in the carve-out and this tag is
+> > > compared with the bits 59:56 in the pointer. The correspondence from X
+> > > to Y is linear (subject to a minimum block size to deal with some
+> > > address interleaving). The software doesn't need to know about this
+> > > correspondence as we have specific instructions like STG/LDG to location
+> > > X that lead to a tag store/load to Y.
+> > > 
+> > > Now, not all memory used by applications is tagged (mmap(PROT_MTE)).
+> > > For example, some large allocations may not use PROT_MTE at all or only
+> > > for the first and last page since initialising the tags takes time. The
+> > > side-effect is that of these 3% DRAM, only part, say 1% is effectively
+> > > used. Some people want the unused tag storage to be released for normal
+> > > data usage (i.e. give it to the kernel page allocator).
+[...]
+> > So it sounds like you might want to provide that tag memory using CMA.
+> > 
+> > That way, only movable allocations can end up on that CMA memory area,
+> > and you can allocate selected tag pages on demand (similar to the
+> > alloc_contig_range() use case).
+> > 
+> > That also solves the issue that such tag memory must not be longterm-pinned.
+> > 
+> > Regarding one complication: "The kernel needs to know where to allocate
+> > a PROT_MTE page from or migrate a current page if it becomes PROT_MTE
+> > (mprotect()) and the range it is in does not support tagging.",
+> > simplified handling would be if it's in a MIGRATE_CMA pageblock, it
+> > doesn't support tagging. You have to migrate to a !CMA page (for
+> > example, not specifying GFP_MOVABLE as a quick way to achieve that).
+> 
+> Okay, I now realize that this patch set effectively duplicates some CMA
+> behavior using a new migrate-type.
 
-> Hi.
-> 
-> Le jeudi 24 août 2023, 15:02:27 CEST Masami Hiramatsu a écrit :
-> > On Thu, 24 Aug 2023 12:37:34 +0200
-> > 
-> > Francis Laniel <flaniel@linux.microsoft.com> wrote:
-> > > Previously to this commit, if func matches several symbols, a kprobe,
-> > > being
-> > > either sysfs or PMU, would only be installed for the first matching
-> > > address. This could lead to some misunderstanding when some BPF code was
-> > > never called because it was attached to a function which was indeed not
-> > > call, because the effectively called one has no kprobes.
-> > > 
-> > > So, this commit returns EADDRNOTAVAIL when func matches several symbols.
-> > > This way, user needs to use addr to remove the ambiguity.
-> > 
-> > Thanks for update the patch. I have some comments there.
-> > 
-> > > Suggested-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > > Signed-off-by: Francis Laniel <flaniel@linux.microsoft.com>
-> > > Link:
-> > > https://lore.kernel.org/lkml/20230819101105.b0c104ae4494a7d1f2eea742@kern
-> > > el.org/ ---
-> > > 
-> > >  kernel/trace/trace_kprobe.c | 42 +++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 42 insertions(+)
-> > > 
-> > > diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> > > index 23dba01831f7..0c8dd6ba650b 100644
-> > > --- a/kernel/trace/trace_kprobe.c
-> > > +++ b/kernel/trace/trace_kprobe.c
-> > > @@ -705,6 +705,25 @@ static struct notifier_block trace_kprobe_module_nb =
-> > > {> 
-> > >  	.priority = 1	/* Invoked after kprobe module callback */
-> > >  
-> > >  };
-> > > 
-> > > +static int count_symbols(void *data, unsigned long unused)
-> > > +{
-> > > +	unsigned int *count = data;
-> > > +
-> > > +	(*count)++;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static unsigned int func_name_several_symbols(char *func_name)
-> > 
-> > If this returns boolean, please use 'bool' for return type.
-> > Also, I think 'func_name_is_unique()' is more natural.
-> > 
-> 
-> This name sounds better but it means it will check count == 1.
-> I am fine with it, but please see my below comment.
-> 
-> > > +{
-> > > +	unsigned int count;
-> > > +
-> > > +	count = 0;
-> > > +	kallsyms_on_each_match_symbol(count_symbols, func_name, &count);
-> > > +
-> > > +	return count > 1;
-> > > +}
-> > > +
-> > > 
-> > >  static int __trace_kprobe_create(int argc, const char *argv[])
-> > >  {
-> > >  
-> > >  	/*
-> > > 
-> > > @@ -836,6 +855,18 @@ static int __trace_kprobe_create(int argc, const char
-> > > *argv[])> 
-> > >  		}
-> > >  	
-> > >  	}
-> > > 
-> > > +	/*
-> > > +	 * If user specifies KSYM, we check it does not correspond to several
-> > > +	 * symbols.
-> > > +	 * If this is the case, we return EADDRNOTAVAIL to indicate the user
-> > > +	 * he/she should use ADDR rather than KSYM to remove the ambiguity.
-> > > +	 */
-> > > +	if (symbol && func_name_several_symbols(symbol)) {
-> > 
-> > Then, here  will be
-> > 
-> > 	if (symbol && !func_name_is_unique(symbol)) {
-> > 
-> 
-> I am fine with the above, but it means if users gives an unknown symbol, we 
-> will return EADDRNOTAVAIL instead of currently returning ENOENT.
-> Is it OK?
+Yes, pretty much, with some additional hooks to trigger migration. The
+CMA mechanism was a great source of inspiration.
 
-Ah, good catch! Hm, then what about 'int number_of_same_symbols()' ?
+In addition, there are some races that are addressed mostly around page
+migration/copying: the source page is untagged, the destination
+allocated as untagged but before the copy an mprotect() makes the source
+tagged (PG_mte_tagged set) and the copy_highpage() mechanism not having
+anywhere to store the tags.
 
-
-if (symbol) {
-	num = number_of_same_symbols(symbol);
-	if (num > 1)
-		return -EADDRNOTAVAIL;
-	else if (num == 0)
-		return -ENOENT;
-}
-
-Thank you,
-
+> Yeah, that's probably not what we want just to identify if memory is
+> taggable or not.
 > 
-> > > +		ret = -EADDRNOTAVAIL;
-> > > +
-> > > +		goto error;
-> > > +	}
-> > > +
-> > > 
-> > >  	trace_probe_log_set_index(0);
-> > >  	if (event) {
-> > >  	
-> > >  		ret = traceprobe_parse_event_name(&event, &group, gbuf,
-> > > 
-> > > @@ -1699,6 +1730,7 @@ static int unregister_kprobe_event(struct
-> > > trace_kprobe *tk)> 
-> > >  }
-> > >  
-> > >  #ifdef CONFIG_PERF_EVENTS
-> > > 
-> > > +
-> > > 
-> > >  /* create a trace_kprobe, but don't add it to global lists */
-> > >  struct trace_event_call *
-> > >  create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
-> > > 
-> > > @@ -1709,6 +1741,16 @@ create_local_trace_kprobe(char *func, void *addr,
-> > > unsigned long offs,> 
-> > >  	int ret;
-> > >  	char *event;
-> > > 
-> > > +	/*
-> > > +	 * If user specifies func, we check that function name does not
-> > > +	 * correspond to several symbols.
-> > > +	 * If this is the case, we return EADDRNOTAVAIL to indicate the user
-> > > +	 * he/she should use addr and offs rather than func to remove the
-> > > +	 * ambiguity.
-> > > +	 */
-> > > +	if (func && func_name_several_symbols(func))
-> > 
-> > Ditto.
-> > 
-> > Thanks!
-> > 
-> > > +		return ERR_PTR(-EADDRNOTAVAIL);
-> > > +
-> > > 
-> > >  	/*
-> > >  	
-> > >  	 * local trace_kprobes are not added to dyn_event, so they are never
-> > >  	 * searched in find_trace_kprobe(). Therefore, there is no concern of
-> 
-> Best regards.
-> 
-> 
+> Maybe there is a way to just keep reusing most of CMA instead.
 
+A potential issue is that devices (mobile phones) may need a different
+CMA range as well for DMA (and not necessarily in ZONE_DMA). Can
+free_area[MIGRATE_CMA] handle multiple disjoint ranges? I don't see why
+not as it's just a list.
+
+We (Google and Arm) went through a few rounds of discussions and
+prototyping trying to find the best approach: (1) a separate free_area[]
+array in each zone (early proof of concept from Peter C and Evgenii S,
+https://github.com/google/sanitizers/tree/master/mte-dynamic-carveout),
+(2) a new ZONE_METADATA, (3) a separate CPU-less NUMA node just for the
+tag storage, (4) a new MIGRATE_METADATA type.
+
+We settled on the latter as it closely resembles CMA without interfering
+with it. I don't remember why we did not just go for MIGRATE_CMA, it may
+have been the heterogeneous memory aspect and the fact that we don't
+want PROT_MTE (VM_MTE) allocations from this range. If the hardware
+allowed this, I think the patches would have been a bit simpler.
+
+Alex can comment more next week on how we ended up with this choice but
+if we find a way to avoid VM_MTE allocations from certain areas, I think
+we can reuse the CMA infrastructure. A bigger hammer would be no VM_MTE
+allocations from any CMA range but it seems too restrictive.
+
+> Another simpler idea to get started would be to just intercept the first
+> PROT_MTE, and allocate all CMA memory. In that case, systems that don't ever
+> use PROT_MTE can have that additional 3% of memory.
+
+We had this on the table as well but the most likely deployment, at
+least initially, is only some secure services enabling MTE with various
+apps gradually moving towards this in time. So that's why the main
+pushback from vendors is having this 3% reserved permanently. Even if
+all apps use MTE, only the anonymous mappings are PROT_MTE, so still not
+fully using the tag storage.
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Catalin
