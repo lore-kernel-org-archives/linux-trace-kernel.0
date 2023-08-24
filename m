@@ -2,163 +2,324 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE33BC7113B
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 24 Aug 2023 10:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 997F9C6FA8F
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 24 Aug 2023 10:40:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238842AbjHXKiQ (ORCPT
+        id S240454AbjHXKjx (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 24 Aug 2023 06:38:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46754 "EHLO
+        Thu, 24 Aug 2023 06:39:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236975AbjHXKhy (ORCPT
+        with ESMTP id S240814AbjHXKj2 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 24 Aug 2023 06:37:54 -0400
+        Thu, 24 Aug 2023 06:39:28 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 911EA1991;
-        Thu, 24 Aug 2023 03:37:52 -0700 (PDT)
-Received: from pwmachine.numericable.fr (85-170-34-233.rev.numericable.fr [85.170.34.233])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 26A162127C7E;
-        Thu, 24 Aug 2023 03:37:50 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 26A162127C7E
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AF67719AE;
+        Thu, 24 Aug 2023 03:39:18 -0700 (PDT)
+Received: from pwmachine.localnet (85-170-34-233.rev.numericable.fr [85.170.34.233])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 12D3F2127C7E;
+        Thu, 24 Aug 2023 03:39:14 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 12D3F2127C7E
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1692873472;
-        bh=6Gcd6o6yCvK6LU4/BD30fXY+HhV4TCpzMPE/nJIAPn0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=hlIC6Xb0rNxnXnw747PebvtX33iog/TfwU5+JEpuqnndtkpEJ8B1HUaaqwhUKnyWM
-         LPM736jLbfXys8HXNndmnnY0EwwrNDpOXKPWJjwI3wpOTJo9CWhIiEu7CM2NwaeWs2
-         VcGEM1C2LYY1/RjJF/QOPgj9gA+JNy1O2Wlluxw8=
+        s=default; t=1692873558;
+        bh=sADkn8tyKPEO16o0GbANLDuNQfMjSQjCtM0kk6kWOiQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aZMTuurF26Asywaf/muB6/j1rBzPEOkfaKVzO1h/B5VAU6i2Ndv4Ac/KhfBRsopVV
+         DZApvoOfhFdgvY3KSQVOCLzXbMNz4g79KxuvCEt7bf7isr7pAZ17fsl6KSQa2jRopr
+         Ypj2lftkw5V/JRfJK+uGkYtXpTh8KitNBT0nNmls=
 From:   Francis Laniel <flaniel@linux.microsoft.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         linux-trace-kernel@vger.kernel.org,
-        Francis Laniel <flaniel@linux.microsoft.com>
-Subject: [RFC PATCH v2 0/1] Return EADDRNOTAVAIL when func matches several symbols during kprobe creation
-Date:   Thu, 24 Aug 2023 12:37:33 +0200
-Message-Id: <20230824103734.53453-1-flaniel@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [RFC PATCH v1 1/1] tracing/kprobes: Return ENAMESVRLSYMS when func matches several symbols
+Date:   Thu, 24 Aug 2023 12:39:12 +0200
+Message-ID: <2695869.mvXUDI8C0e@pwmachine>
+In-Reply-To: <20230824085355.4fdd6215f71b0fa5f443d76d@kernel.org>
+References: <20230823161410.103489-1-flaniel@linux.microsoft.com> <20230823161410.103489-2-flaniel@linux.microsoft.com> <20230824085355.4fdd6215f71b0fa5f443d76d@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 Hi.
 
+Le jeudi 24 ao=FBt 2023, 01:53:55 CEST Masami Hiramatsu a =E9crit :
+> Hi Francis,
+>=20
+> On Wed, 23 Aug 2023 18:14:10 +0200
+>=20
+> Francis Laniel <flaniel@linux.microsoft.com> wrote:
+> > Previously to this commit, if func matches several symbols, a PMU kprobe
+> > would be installed for the first matching address.
+> > This could lead to some misunderstanding when some BPF code was never
+> > called because it was attached to a function which was indeed not call,
+> > because the effectively called one has no kprobes.
+> >=20
+> > So, this commit introduces ENAMESVRLSYMS which is returned when func
+> > matches several symbols.
+>=20
+> The trace_kprobe part looks good to me.
+> But sorry, I mislead you. I meant using an existing error code as a
+> metaphor. EINVAL is used everywhere, so choose another error code, e.g.
+> EADDRNOTAVAIL.
 
-In the kernel source code, it exists different functions which share the same
-name but which have, of course, different addresses as they can be defined in
-different modules:
-# Kernel was compiled with CONFIG_NTFS_FS and CONFIG_NTFS3_FS as built-in.
-root@vm-amd64:~# grep ntfs_file_write_iter /proc/kallsyms
-ffffffff814ce3c0 t __pfx_ntfs_file_write_iter
-ffffffff814ce3d0 t ntfs_file_write_iter
-ffffffff814fc8a0 t __pfx_ntfs_file_write_iter
-ffffffff814fc8b0 t ntfs_file_write_iter
-This can be source of troubles when you create a PMU kprobe for such a function,
-as it will only install one for the first address (e.g. 0xffffffff814ce3d0 in
-the above).
-This could lead to some troubles were BPF based tools does not report any event
-because the second function is not called:
-root@vm-amd64:/mnt# mount | grep /mnt
-/foo.img on /mnt type ntfs3 (rw,relatime,uid=0,gid=0,iocharset=utf8)
-# ig is a tool which installs a PMU kprobe on ntfs_file_write_iter().
-root@vm-amd64:/mnt# ig trace fsslower -m 0 -f ntfs3 --host &> /tmp/foo &
-[1] 207
-root@vm-amd64:/mnt# dd if=./foo of=./bar count=3
-3+0 records in
-3+0 records out
-1536 bytes (1.5 kB, 1.5 KiB) copied, 0.00543323 s, 283 kB/s
-root@vm-amd64:/mnt# fg
-ig trace fsslower -m 0 -f ntfs3 --host &> /tmp/foo
-^Croot@vm-amd64:/mnt# more /tmp/foo
-RUNTIME.CONTAINERNAME          RUNTIME.CONTAIN… PID              COMM
-  T      BYTES     OFFSET        LAT FILE
-                                                214              dd
-  R        512          0        766 foo
-                                                214              dd
-  R        512        512          9 foo
-                                                214              dd
-As you can see in the above, only read events are reported and no write because
-the kprobe is installed for the old ntfs_file_write_iter() and not the ntfs3
-one.
-The same behavior occurs with sysfs kprobe:
-root@vm-amd64:/# echo 'p:probe/ntfs_file_write_iter ntfs_file_write_iter' > /sys/kernel/tracing/kprobe_events
-root@vm-amd64:/# cat /sys/kernel/tracing/kprobe_events
-p:probe/ntfs_file_write_iter ntfs_file_write_iter
-root@vm-amd64:/# mount | grep /mnt
-/foo.img on /mnt type ntfs3 (rw,relatime,uid=0,gid=0,iocharset=utf8)
-root@vm-amd64:/# perf record -e probe:ntfs_file_write_iter &
-[1] 210
-root@vm-amd64:/# cd /mnt/
-root@vm-amd64:/mnt# dd if=./foo of=./bar count=3
-3+0 records in
-3+0 records out
-1536 bytes (1.5 kB, 1.5 KiB) copied, 0.00234793 s, 654 kB/s
-root@vm-amd64:/mnt# cd -
-/
-root@vm-amd64:/# fg
-perf record -e probe:ntfs_file_write_iter
-^C[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.056 MB perf.data ]
+No problem, I was a bit in doubt regarding adding a new error code, but at=
+=20
+least I learnt how to do it if one day I need to do so!
+But yes, for this case, better to use an existing one!
 
-root@vm-amd64:/# perf report
-Error:
-The perf.data data has no samples!
-# To display the perf.data header info, please use --header/--header-only optio>
-#
+> Also, can you add this check in __trace_kprobe_create()?
+> I think right before below code, at that point, 'symbol' has the symbol
+> name.
+>=20
+>         trace_probe_log_set_index(0);
+>         if (event) {
+>                 ret =3D traceprobe_parse_event_name(&event, &group, gbuf,
+>                                                   event - argv[0]);
+>                 if (ret)
+>                         goto parse_error;
+>         }
 
-In this contribution, I modified the functions creating sysfs and PMU kprobes to
-test if the function name given as argument matches several symbols.
-In this case, these functions return EADDRNOTAVAIL to indicate the user to use
-addr and offs to remove this ambiguity.
-So, when the above BPF tool is run, the following error message is printed:
-root@vm-amd64:~# ig trace fsslower -m 0 -f ntfs3 --host &> /tmp/foo &
-[1] 228
-root@vm-amd64:~# more /tmp/foo
-RUNTIME.CONTAINERNAME          RUNTIME.CONTAIN… PID              COMM
-  T      BYTES     OFFSET        LAT FILE
-Error: running gadget: running gadget: installing tracer: attaching kprobe: crea
-ting perf_kprobe PMU (arch-specific fallback for "ntfs_file_write_iter"): token
-ntfs_file_write_iter: opening perf event: cannot assign requested address
-And the same with sysfs kprobe:
-root@vm-amd64:/# echo 'p:probe/ntfs_file_write_iter ntfs_file_write_iter' > /sys/kernel/tracing/kprobe_events
--bash: echo: write error: Cannot assign requested address
-Note that, this does not influence perf as it installs kprobes as offset on
-_text:
-root@vm-amd64:/# perf probe --add ntfs_file_write_iter
-Added new events:
-  probe:ntfs_file_write_iter (on ntfs_file_write_iter)
-  probe:ntfs_file_write_iter (on ntfs_file_write_iter)
-...
-root@vm-amd64:/# cat /sys/kernel/tracing/kprobe_events
-p:probe/ntfs_file_write_iter _text+5039088
-p:probe/ntfs_file_write_iter _text+5228752
+Addressed in v2, thank you!
 
-Note that, this contribution is the conclusion of a previous RFC which intended
-to install a PMU kprobe for all matching symbols [1, 2].
+>=20
+> Thank you,
+>=20
+> > This way, user needs to use addr to remove the ambiguity.
+> >=20
+> > Suggested-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > Signed-off-by: Francis Laniel <flaniel@linux.microsoft.com>
+> > Link:
+> > https://lore.kernel.org/lkml/20230819101105.b0c104ae4494a7d1f2eea742@ke=
+rn
+> > el.org/ ---
+> >=20
+> >  arch/alpha/include/uapi/asm/errno.h        |  2 ++
+> >  arch/mips/include/uapi/asm/errno.h         |  2 ++
+> >  arch/parisc/include/uapi/asm/errno.h       |  2 ++
+> >  arch/sparc/include/uapi/asm/errno.h        |  2 ++
+> >  include/uapi/asm-generic/errno.h           |  2 ++
+> >  kernel/trace/trace_kprobe.c                | 26 ++++++++++++++++++++++
+> >  tools/arch/alpha/include/uapi/asm/errno.h  |  2 ++
+> >  tools/arch/mips/include/uapi/asm/errno.h   |  2 ++
+> >  tools/arch/parisc/include/uapi/asm/errno.h |  2 ++
+> >  tools/arch/sparc/include/uapi/asm/errno.h  |  2 ++
+> >  tools/include/uapi/asm-generic/errno.h     |  2 ++
+> >  11 files changed, 46 insertions(+)
+> >=20
+> > diff --git a/arch/alpha/include/uapi/asm/errno.h
+> > b/arch/alpha/include/uapi/asm/errno.h index 3d265f6babaf..3d9686d915f9
+> > 100644
+> > --- a/arch/alpha/include/uapi/asm/errno.h
+> > +++ b/arch/alpha/include/uapi/asm/errno.h
+> > @@ -125,4 +125,6 @@
+> >=20
+> >  #define EHWPOISON	139	/* Memory page has hardware error */
+> >=20
+> > +#define ENAMESVRLSYMS	140	/* Name correspond to several symbols */
+> > +
+> >=20
+> >  #endif
+> >=20
+> > diff --git a/arch/mips/include/uapi/asm/errno.h
+> > b/arch/mips/include/uapi/asm/errno.h index 2fb714e2d6d8..1fd64ee7b629
+> > 100644
+> > --- a/arch/mips/include/uapi/asm/errno.h
+> > +++ b/arch/mips/include/uapi/asm/errno.h
+> > @@ -124,6 +124,8 @@
+> >=20
+> >  #define EHWPOISON	168	/* Memory page has hardware error */
+> >=20
+> > +#define ENAMESVRLSYMS	169	/* Name correspond to several symbols */
+> > +
+> >=20
+> >  #define EDQUOT		1133	/* Quota exceeded */
+> >=20
+> > diff --git a/arch/parisc/include/uapi/asm/errno.h
+> > b/arch/parisc/include/uapi/asm/errno.h index 87245c584784..c7845ceece26
+> > 100644
+> > --- a/arch/parisc/include/uapi/asm/errno.h
+> > +++ b/arch/parisc/include/uapi/asm/errno.h
+> > @@ -124,4 +124,6 @@
+> >=20
+> >  #define EHWPOISON	257	/* Memory page has hardware error */
+> >=20
+> > +#define ENAMESVRLSYMS	258	/* Name correspond to several symbols */
+> > +
+> >=20
+> >  #endif
+> >=20
+> > diff --git a/arch/sparc/include/uapi/asm/errno.h
+> > b/arch/sparc/include/uapi/asm/errno.h index 81a732b902ee..1ed065943bab
+> > 100644
+> > --- a/arch/sparc/include/uapi/asm/errno.h
+> > +++ b/arch/sparc/include/uapi/asm/errno.h
+> > @@ -115,4 +115,6 @@
+> >=20
+> >  #define EHWPOISON	135	/* Memory page has hardware error */
+> >=20
+> > +#define ENAMESVRLSYMS	136	/* Name correspond to several symbols */
+> > +
+> >=20
+> >  #endif
+> >=20
+> > diff --git a/include/uapi/asm-generic/errno.h
+> > b/include/uapi/asm-generic/errno.h index cf9c51ac49f9..3d5d5740c8da
+> > 100644
+> > --- a/include/uapi/asm-generic/errno.h
+> > +++ b/include/uapi/asm-generic/errno.h
+> > @@ -120,4 +120,6 @@
+> >=20
+> >  #define EHWPOISON	133	/* Memory page has hardware error */
+> >=20
+> > +#define ENAMESVRLSYMS	134	/* Name correspond to several symbols */
+> > +
+> >=20
+> >  #endif
+> >=20
+> > diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> > index 23dba01831f7..53b66db1ff53 100644
+> > --- a/kernel/trace/trace_kprobe.c
+> > +++ b/kernel/trace/trace_kprobe.c
+> > @@ -1699,6 +1699,16 @@ static int unregister_kprobe_event(struct
+> > trace_kprobe *tk)>=20
+> >  }
+> > =20
+> >  #ifdef CONFIG_PERF_EVENTS
+> >=20
+> > +
+> > +static int count_symbols(void *data, unsigned long unused)
+> > +{
+> > +	unsigned int *count =3D data;
+> > +
+> > +	(*count)++;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >=20
+> >  /* create a trace_kprobe, but don't add it to global lists */
+> >  struct trace_event_call *
+> >  create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
+> >=20
+> > @@ -1709,6 +1719,22 @@ create_local_trace_kprobe(char *func, void *addr,
+> > unsigned long offs,>=20
+> >  	int ret;
+> >  	char *event;
+> >=20
+> > +	/*
+> > +	 * If user specifies func, we check that the function name does not
+> > +	 * correspond to several symbols.
+> > +	 * If this is the case, we return with error code ENAMESVRLSYMS to
+> > +	 * indicate the user he/she should use addr and offs rather than func=
+=20
+to
+> > +	 * remove the ambiguity.
+> > +	 */
+> > +	if (func) {
+> > +		unsigned int count;
+> > +
+> > +		count =3D 0;
+> > +		kallsyms_on_each_match_symbol(count_symbols, func, &count);
+> > +		if (count > 1)
+> > +			return ERR_PTR(-ENAMESVRLSYMS);
+> > +	}
+> > +
+> >=20
+> >  	/*
+> >  =09
+> >  	 * local trace_kprobes are not added to dyn_event, so they are never
+> >  	 * searched in find_trace_kprobe(). Therefore, there is no concern of
+> >=20
+> > diff --git a/tools/arch/alpha/include/uapi/asm/errno.h
+> > b/tools/arch/alpha/include/uapi/asm/errno.h index
+> > 3d265f6babaf..3d9686d915f9 100644
+> > --- a/tools/arch/alpha/include/uapi/asm/errno.h
+> > +++ b/tools/arch/alpha/include/uapi/asm/errno.h
+> > @@ -125,4 +125,6 @@
+> >=20
+> >  #define EHWPOISON	139	/* Memory page has hardware error */
+> >=20
+> > +#define ENAMESVRLSYMS	140	/* Name correspond to several symbols */
+> > +
+> >=20
+> >  #endif
+> >=20
+> > diff --git a/tools/arch/mips/include/uapi/asm/errno.h
+> > b/tools/arch/mips/include/uapi/asm/errno.h index
+> > 2fb714e2d6d8..1fd64ee7b629 100644
+> > --- a/tools/arch/mips/include/uapi/asm/errno.h
+> > +++ b/tools/arch/mips/include/uapi/asm/errno.h
+> > @@ -124,6 +124,8 @@
+> >=20
+> >  #define EHWPOISON	168	/* Memory page has hardware error */
+> >=20
+> > +#define ENAMESVRLSYMS	169	/* Name correspond to several symbols */
+> > +
+> >=20
+> >  #define EDQUOT		1133	/* Quota exceeded */
+> >=20
+> > diff --git a/tools/arch/parisc/include/uapi/asm/errno.h
+> > b/tools/arch/parisc/include/uapi/asm/errno.h index
+> > 87245c584784..c7845ceece26 100644
+> > --- a/tools/arch/parisc/include/uapi/asm/errno.h
+> > +++ b/tools/arch/parisc/include/uapi/asm/errno.h
+> > @@ -124,4 +124,6 @@
+> >=20
+> >  #define EHWPOISON	257	/* Memory page has hardware error */
+> >=20
+> > +#define ENAMESVRLSYMS	258	/* Name correspond to several symbols */
+> > +
+> >=20
+> >  #endif
+> >=20
+> > diff --git a/tools/arch/sparc/include/uapi/asm/errno.h
+> > b/tools/arch/sparc/include/uapi/asm/errno.h index
+> > 81a732b902ee..1ed065943bab 100644
+> > --- a/tools/arch/sparc/include/uapi/asm/errno.h
+> > +++ b/tools/arch/sparc/include/uapi/asm/errno.h
+> > @@ -115,4 +115,6 @@
+> >=20
+> >  #define EHWPOISON	135	/* Memory page has hardware error */
+> >=20
+> > +#define ENAMESVRLSYMS	136	/* Name correspond to several symbols */
+> > +
+> >=20
+> >  #endif
+> >=20
+> > diff --git a/tools/include/uapi/asm-generic/errno.h
+> > b/tools/include/uapi/asm-generic/errno.h index cf9c51ac49f9..3d5d5740c8=
+da
+> > 100644
+> > --- a/tools/include/uapi/asm-generic/errno.h
+> > +++ b/tools/include/uapi/asm-generic/errno.h
+> > @@ -120,4 +120,6 @@
+> >=20
+> >  #define EHWPOISON	133	/* Memory page has hardware error */
+> >=20
+> > +#define ENAMESVRLSYMS	134	/* Name correspond to several symbols */
+> > +
+> >=20
+> >  #endif
+> >=20
+> > --
+> > 2.34.1
 
-If you see any way to improve this contribution, particularly if you have an
-idea to add tests or documentation for this behavior, please share your
-feedback.
+Best regards.
 
-Changes since:
- v1:
-  * Use EADDRNOTAVAIL instead of adding a new error code.
-  * Correct also this behavior for sysfs kprobe.
-
-Francis Laniel (1):
-  tracing/kprobes: Return EADDRNOTAVAIL when func matches several
-    symbols
-
- kernel/trace/trace_kprobe.c | 42 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
-
-
-Best regards and thank you in advance.
----
-[1]: https://lore.kernel.org/lkml/20230816163517.112518-1-flaniel@linux.microsoft.com/
-[2]: https://lore.kernel.org/lkml/20230819101105.b0c104ae4494a7d1f2eea742@kernel.org/
---
-2.34.1
 
