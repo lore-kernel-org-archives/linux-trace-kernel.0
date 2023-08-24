@@ -2,168 +2,232 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23783C27C40
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 24 Aug 2023 16:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A78C3DA6F
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 24 Aug 2023 16:10:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242130AbjHXQJm (ORCPT
+        id S242388AbjHXQKN (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 24 Aug 2023 12:09:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55890 "EHLO
+        Thu, 24 Aug 2023 12:10:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242402AbjHXQJW (ORCPT
+        with ESMTP id S242427AbjHXQKF (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 24 Aug 2023 12:09:22 -0400
+        Thu, 24 Aug 2023 12:10:05 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2D80119A9;
-        Thu, 24 Aug 2023 09:09:18 -0700 (PDT)
-Received: from pwmachine.numericable.fr (85-170-34-233.rev.numericable.fr [85.170.34.233])
-        by linux.microsoft.com (Postfix) with ESMTPSA id A13582127C67;
-        Thu, 24 Aug 2023 09:09:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A13582127C67
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 35FD41995;
+        Thu, 24 Aug 2023 09:10:03 -0700 (PDT)
+Received: from pwmachine.localnet (85-170-34-233.rev.numericable.fr [85.170.34.233])
+        by linux.microsoft.com (Postfix) with ESMTPSA id D3FD92127C69;
+        Thu, 24 Aug 2023 09:10:01 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D3FD92127C69
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1692893357;
-        bh=SwodwWqZOmu7Po/FHd/TR7wIuk8vbUpBuX1785tzl4c=;
-        h=From:To:Cc:Subject:Date:From;
-        b=JFdLoKizaOS2q/zabgqy37/wlQ1PFIV6VwWs53i/ttwICYyaBQlMqCXNEtVf3et+O
-         IA2ssvo5aLaLYMeMC0t2P8A2vcNLZ8M+h4hfAdvXbVa5f9mr6gBfrXO7Fcqc22Yv0o
-         BVmKUnSkD2bWT8M0CKmRXhhiVuHp8zsT333qotlA=
+        s=default; t=1692893402;
+        bh=Olop74Ds2RRFnMuhvLh1fh38MEe0raHrxEM8ELUBzcs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bZ8CUZ67oSQkysa52iR2no0FMbicRah2q+hauCQibUuhABkuiHNWZIDjVfpQ2Hd1a
+         Qhhcwj64S5nFdOdVr22XsqfA3J7cdB0sq1sWL0sL1DST8UIsI/jFodgYk8eDuW6X7N
+         h5SSVMUyAzeMEQhPmeDhmKea4sWHEy6qPk+XDcvQ=
 From:   Francis Laniel <flaniel@linux.microsoft.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
-        Francis Laniel <flaniel@linux.microsoft.com>
-Subject: [PATCH v3 0/1] Return EADDRNOTAVAIL when func matches several symbols during kprobe creation
-Date:   Thu, 24 Aug 2023 18:08:58 +0200
-Message-Id: <20230824160859.66113-1-flaniel@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC PATCH v2 1/1] tracing/kprobes: Return EADDRNOTAVAIL when func matches several symbols
+Date:   Thu, 24 Aug 2023 18:09:59 +0200
+Message-ID: <13333844.uLZWGnKmhe@pwmachine>
+In-Reply-To: <20230824234721.1b481cd5d0b8bbc43a24d9a6@kernel.org>
+References: <20230824103734.53453-1-flaniel@linux.microsoft.com> <12271275.O9o76ZdvQC@pwmachine> <20230824234721.1b481cd5d0b8bbc43a24d9a6@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi.
+Le jeudi 24 ao=FBt 2023, 16:47:21 CEST Masami Hiramatsu a =E9crit :
+> On Thu, 24 Aug 2023 16:31:13 +0200
+>=20
+> Francis Laniel <flaniel@linux.microsoft.com> wrote:
+> > Hi.
+> >=20
+> > Le jeudi 24 ao=FBt 2023, 15:02:27 CEST Masami Hiramatsu a =E9crit :
+> > > On Thu, 24 Aug 2023 12:37:34 +0200
+> > >=20
+> > > Francis Laniel <flaniel@linux.microsoft.com> wrote:
+> > > > Previously to this commit, if func matches several symbols, a kprob=
+e,
+> > > > being
+> > > > either sysfs or PMU, would only be installed for the first matching
+> > > > address. This could lead to some misunderstanding when some BPF code
+> > > > was
+> > > > never called because it was attached to a function which was indeed
+> > > > not
+> > > > call, because the effectively called one has no kprobes.
+> > > >=20
+> > > > So, this commit returns EADDRNOTAVAIL when func matches several
+> > > > symbols.
+> > > > This way, user needs to use addr to remove the ambiguity.
+> > >=20
+> > > Thanks for update the patch. I have some comments there.
+> > >=20
+> > > > Suggested-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > > > Signed-off-by: Francis Laniel <flaniel@linux.microsoft.com>
+> > > > Link:
+> > > > https://lore.kernel.org/lkml/20230819101105.b0c104ae4494a7d1f2eea74=
+2@k
+> > > > ern
+> > > > el.org/ ---
+> > > >=20
+> > > >  kernel/trace/trace_kprobe.c | 42
+> > > >  +++++++++++++++++++++++++++++++++++++
+> > > >  1 file changed, 42 insertions(+)
+> > > >=20
+> > > > diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprob=
+e.c
+> > > > index 23dba01831f7..0c8dd6ba650b 100644
+> > > > --- a/kernel/trace/trace_kprobe.c
+> > > > +++ b/kernel/trace/trace_kprobe.c
+> > > > @@ -705,6 +705,25 @@ static struct notifier_block
+> > > > trace_kprobe_module_nb =3D
+> > > > {>
+> > > >=20
+> > > >  	.priority =3D 1	/* Invoked after kprobe module callback */
+> > > > =20
+> > > >  };
+> > > >=20
+> > > > +static int count_symbols(void *data, unsigned long unused)
+> > > > +{
+> > > > +	unsigned int *count =3D data;
+> > > > +
+> > > > +	(*count)++;
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +
+> > > > +static unsigned int func_name_several_symbols(char *func_name)
+> > >=20
+> > > If this returns boolean, please use 'bool' for return type.
+> > > Also, I think 'func_name_is_unique()' is more natural.
+> >=20
+> > This name sounds better but it means it will check count =3D=3D 1.
+> > I am fine with it, but please see my below comment.
+> >=20
+> > > > +{
+> > > > +	unsigned int count;
+> > > > +
+> > > > +	count =3D 0;
+> > > > +	kallsyms_on_each_match_symbol(count_symbols, func_name, &count);
+> > > > +
+> > > > +	return count > 1;
+> > > > +}
+> > > > +
+> > > >=20
+> > > >  static int __trace_kprobe_create(int argc, const char *argv[])
+> > > >  {
+> > > > =20
+> > > >  	/*
+> > > >=20
+> > > > @@ -836,6 +855,18 @@ static int __trace_kprobe_create(int argc, con=
+st
+> > > > char
+> > > > *argv[])>
+> > > >=20
+> > > >  		}
+> > > >  =09
+> > > >  	}
+> > > >=20
+> > > > +	/*
+> > > > +	 * If user specifies KSYM, we check it does not correspond to
+> > > > several
+> > > > +	 * symbols.
+> > > > +	 * If this is the case, we return EADDRNOTAVAIL to indicate the u=
+ser
+> > > > +	 * he/she should use ADDR rather than KSYM to remove the ambiguit=
+y.
+> > > > +	 */
+> > > > +	if (symbol && func_name_several_symbols(symbol)) {
+> > >=20
+> > > Then, here  will be
+> > >=20
+> > > 	if (symbol && !func_name_is_unique(symbol)) {
+> >=20
+> > I am fine with the above, but it means if users gives an unknown symbol,
+> > we
+> > will return EADDRNOTAVAIL instead of currently returning ENOENT.
+> > Is it OK?
+>=20
+> Ah, good catch! Hm, then what about 'int number_of_same_symbols()' ?
+>=20
+>=20
+> if (symbol) {
+> 	num =3D number_of_same_symbols(symbol);
+> 	if (num > 1)
+> 		return -EADDRNOTAVAIL;
+> 	else if (num =3D=3D 0)
+> 		return -ENOENT;
+> }
+
+Done in the v3 :D!
+
+> Thank you,
+>=20
+> > > > +		ret =3D -EADDRNOTAVAIL;
+> > > > +
+> > > > +		goto error;
+> > > > +	}
+> > > > +
+> > > >=20
+> > > >  	trace_probe_log_set_index(0);
+> > > >  	if (event) {
+> > > >  =09
+> > > >  		ret =3D traceprobe_parse_event_name(&event, &group, gbuf,
+> > > >=20
+> > > > @@ -1699,6 +1730,7 @@ static int unregister_kprobe_event(struct
+> > > > trace_kprobe *tk)>
+> > > >=20
+> > > >  }
+> > > > =20
+> > > >  #ifdef CONFIG_PERF_EVENTS
+> > > >=20
+> > > > +
+> > > >=20
+> > > >  /* create a trace_kprobe, but don't add it to global lists */
+> > > >  struct trace_event_call *
+> > > >  create_local_trace_kprobe(char *func, void *addr, unsigned long of=
+fs,
+> > > >=20
+> > > > @@ -1709,6 +1741,16 @@ create_local_trace_kprobe(char *func, void
+> > > > *addr,
+> > > > unsigned long offs,>
+> > > >=20
+> > > >  	int ret;
+> > > >  	char *event;
+> > > >=20
+> > > > +	/*
+> > > > +	 * If user specifies func, we check that function name does not
+> > > > +	 * correspond to several symbols.
+> > > > +	 * If this is the case, we return EADDRNOTAVAIL to indicate the u=
+ser
+> > > > +	 * he/she should use addr and offs rather than func to remove the
+> > > > +	 * ambiguity.
+> > > > +	 */
+> > > > +	if (func && func_name_several_symbols(func))
+> > >=20
+> > > Ditto.
+> > >=20
+> > > Thanks!
+> > >=20
+> > > > +		return ERR_PTR(-EADDRNOTAVAIL);
+> > > > +
+> > > >=20
+> > > >  	/*
+> > > >  =09
+> > > >  	 * local trace_kprobes are not added to dyn_event, so they are ne=
+ver
+> > > >  	 * searched in find_trace_kprobe(). Therefore, there is no concern
+> > > >  	 of
+> >=20
+> > Best regards.
 
 
-In the kernel source code, it exists different functions which share the same
-name but which have, of course, different addresses as they can be defined in
-different modules:
-# Kernel was compiled with CONFIG_NTFS_FS and CONFIG_NTFS3_FS as built-in.
-root@vm-amd64:~# grep ntfs_file_write_iter /proc/kallsyms
-ffffffff814ce3c0 t __pfx_ntfs_file_write_iter
-ffffffff814ce3d0 t ntfs_file_write_iter
-ffffffff814fc8a0 t __pfx_ntfs_file_write_iter
-ffffffff814fc8b0 t ntfs_file_write_iter
-This can be source of troubles when you create a PMU kprobe for such a function,
-as it will only install one for the first address (e.g. 0xffffffff814ce3d0 in
-the above).
-This could lead to some troubles were BPF based tools does not report any event
-because the second function is not called:
-root@vm-amd64:/mnt# mount | grep /mnt
-/foo.img on /mnt type ntfs3 (rw,relatime,uid=0,gid=0,iocharset=utf8)
-# ig is a tool which installs a PMU kprobe on ntfs_file_write_iter().
-root@vm-amd64:/mnt# ig trace fsslower -m 0 -f ntfs3 --host &> /tmp/foo &
-[1] 207
-root@vm-amd64:/mnt# dd if=./foo of=./bar count=3
-3+0 records in
-3+0 records out
-1536 bytes (1.5 kB, 1.5 KiB) copied, 0.00543323 s, 283 kB/s
-root@vm-amd64:/mnt# fg
-ig trace fsslower -m 0 -f ntfs3 --host &> /tmp/foo
-^Croot@vm-amd64:/mnt# more /tmp/foo
-RUNTIME.CONTAINERNAME          RUNTIME.CONTAIN… PID              COMM
-  T      BYTES     OFFSET        LAT FILE
-                                                214              dd
-  R        512          0        766 foo
-                                                214              dd
-  R        512        512          9 foo
-                                                214              dd
-As you can see in the above, only read events are reported and no write because
-the kprobe is installed for the old ntfs_file_write_iter() and not the ntfs3
-one.
-The same behavior occurs with sysfs kprobe:
-root@vm-amd64:/# echo 'p:probe/ntfs_file_write_iter ntfs_file_write_iter' > /sys/kernel/tracing/kprobe_events
-root@vm-amd64:/# cat /sys/kernel/tracing/kprobe_events
-p:probe/ntfs_file_write_iter ntfs_file_write_iter
-root@vm-amd64:/# mount | grep /mnt
-/foo.img on /mnt type ntfs3 (rw,relatime,uid=0,gid=0,iocharset=utf8)
-root@vm-amd64:/# perf record -e probe:ntfs_file_write_iter &
-[1] 210
-root@vm-amd64:/# cd /mnt/
-root@vm-amd64:/mnt# dd if=./foo of=./bar count=3
-3+0 records in
-3+0 records out
-1536 bytes (1.5 kB, 1.5 KiB) copied, 0.00234793 s, 654 kB/s
-root@vm-amd64:/mnt# cd -
-/
-root@vm-amd64:/# fg
-perf record -e probe:ntfs_file_write_iter
-^C[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.056 MB perf.data ]
 
-root@vm-amd64:/# perf report
-Error:
-The perf.data data has no samples!
-# To display the perf.data header info, please use --header/--header-only optio>
-#
-
-In this contribution, I modified the functions creating sysfs and PMU kprobes to
-test if the function name given as argument matches several symbols.
-In this case, these functions return EADDRNOTAVAIL to indicate the user to use
-addr and offs to remove this ambiguity.
-So, when the above BPF tool is run, the following error message is printed:
-root@vm-amd64:~# ig trace fsslower -m 0 -f ntfs3 --host &> /tmp/foo &
-[1] 228
-root@vm-amd64:~# more /tmp/foo
-RUNTIME.CONTAINERNAME          RUNTIME.CONTAIN… PID              COMM
-  T      BYTES     OFFSET        LAT FILE
-Error: running gadget: running gadget: installing tracer: attaching kprobe: crea
-ting perf_kprobe PMU (arch-specific fallback for "ntfs_file_write_iter"): token
-ntfs_file_write_iter: opening perf event: cannot assign requested address
-And the same with sysfs kprobe:
-root@vm-amd64:/# echo 'p:probe/ntfs_file_write_iter ntfs_file_write_iter' > /sys/kernel/tracing/kprobe_events
--bash: echo: write error: Cannot assign requested address
-Note that, this does not influence perf as it installs kprobes as offset on
-_text:
-root@vm-amd64:/# perf probe --add ntfs_file_write_iter
-Added new events:
-  probe:ntfs_file_write_iter (on ntfs_file_write_iter)
-  probe:ntfs_file_write_iter (on ntfs_file_write_iter)
-...
-root@vm-amd64:/# cat /sys/kernel/tracing/kprobe_events
-p:probe/ntfs_file_write_iter _text+5039088
-p:probe/ntfs_file_write_iter _text+5228752
-
-Note that, this contribution is the conclusion of a previous RFC which intended
-to install a PMU kprobe for all matching symbols [1, 2].
-
-If you see any way to improve this contribution, particularly if you have an
-idea to add tests or documentation for this behavior, please share your
-feedback.
-
-Changes since:
- v1:
-  * Use EADDRNOTAVAIL instead of adding a new error code.
-  * Correct also this behavior for sysfs kprobe.
- v2:
-  * Count the number of symbols corresponding to function name and return
-  EADDRNOTAVAIL if higher than 1.
-  * Return ENOENT if above count is 0, as it would be returned later by while
-  registering the kprobe.
-
-Francis Laniel (1):
-  tracing/kprobes: Return EADDRNOTAVAIL when func matches several
-    symbols
-
- kernel/trace/trace_kprobe.c | 61 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
-
-
-Best regards and thank you in advance.
----
-[1]: https://lore.kernel.org/lkml/20230816163517.112518-1-flaniel@linux.microsoft.com/
-[2]: https://lore.kernel.org/lkml/20230819101105.b0c104ae4494a7d1f2eea742@kernel.org/
---
-2.34.1
 
