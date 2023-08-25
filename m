@@ -2,60 +2,64 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B64DC3DA6F
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 25 Aug 2023 16:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 966EAEE49B3
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 25 Aug 2023 21:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244146AbjHYQNK (ORCPT
+        id S230144AbjHYVuG (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 25 Aug 2023 12:13:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34468 "EHLO
+        Fri, 25 Aug 2023 17:50:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343699AbjHYQMn (ORCPT
+        with ESMTP id S230204AbjHYVuF (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 25 Aug 2023 12:12:43 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EAC81BDB
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Aug 2023 09:12:41 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id 41be03b00d2f7-56a8794b5adso624990a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Aug 2023 09:12:41 -0700 (PDT)
+        Fri, 25 Aug 2023 17:50:05 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BAED26B2;
+        Fri, 25 Aug 2023 14:50:02 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-31c5cac3ae2so1060630f8f.3;
+        Fri, 25 Aug 2023 14:50:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692979961; x=1693584761;
+        d=gmail.com; s=20221208; t=1693000200; x=1693605000;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=S3K9GAzZPmrf69JfCVKUGLeyRxUQaU+/aTKM9BOzOE0=;
-        b=cYNfp9vLbjf8tVTE47Bc7cP/0E/Xwx0j7tnAYEARoRhzTwEYc0ufZryAlt1ur8TmII
-         MLZkGn1N1dyP1dYJnuTjfLonzEgoEb0Yu+hTIQKnPlffIeyqIJhvG28i7kXPC5u0Ajcb
-         FLgj2CoL7k6bdFRKEGMADSGtdhTVmTo4OahsA=
+        bh=cINYXeZKT6Qzjs4rB6QKsa26hETCQhkT6ut7CBIDbos=;
+        b=KLS5gIxCGWPdL99OH1mH59psZ9Ey6yCTIcTR1iqbOxcqmLV3lR+gLrHumu6HCu6TF9
+         cVh6Evi81y931inKfhZX/SDVXSA5Zt6idn5Pii1YESrhnLoWm9GrfDzwtNdgfayu1o4o
+         KjiDC97LzPNrfEy5OaJBfZ+floD7mntSLLpRNBxG/qCQCPyPVfduaRMIirnllV8AeGQM
+         FNRF3x6OGhwaWNjMByUVNKfCM990pp7FyvWcrDUeJdNlO7pm6OsIj2yl3/pzQkj1ZIH3
+         GBnNLXD4C1eeWwFpAEyHBZCoONxBGWbCVbnYepQovon4p0mHWk/VoUyOPCDO7I8kXJyZ
+         0sGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692979961; x=1693584761;
+        d=1e100.net; s=20221208; t=1693000200; x=1693605000;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=S3K9GAzZPmrf69JfCVKUGLeyRxUQaU+/aTKM9BOzOE0=;
-        b=eoQZEyIC8wgMDqAPIfkcMUNTnJz5Guk6n8jAIIedyx3Mtj+Q2nTgRtRh2ZDdEI1uPF
-         HLOEMndOWo02dpw/DvEcZcoVagJC6AYL+8MZuVYDQG+gn1m7sYtj48vX2ywm6scB81Em
-         xBl8pQ03vyXFIB0ciys7fUzhCPLOXLcxf5ilk+TwyigF9dVkgCCUvtw98pLI+Z83AMCI
-         L0ek2Jsj5yU2sm1kxAq0RcNKTbh5enunuAEohlmQ24h/yBWEsfX/r54PHnrARHq/JIij
-         qKFhV7RA+mJlXuy3zeU7vILzcs3pO5g99BCC/wtC211EB8AGFJ2vmdqOQrGqCbCbHKIP
-         cCIQ==
-X-Gm-Message-State: AOJu0YwkAp1iAbSqSLRz1b80EX0utwpokSF4ZaDWS/yQXkckgAFwLAL+
-        eA/ZDe23GehZkZ0xAwhMjgEYjsk3QL6sjWyZZr/8fQ==
-X-Google-Smtp-Source: AGHT+IGVZOa2Il9SMW0TIYGfWLMiPG8S6YwqeylIfeo4abOQtStvAldvxSg6EWjVVD7VGXHSdNLWhT8f1dSEqXg4gbI=
-X-Received: by 2002:a17:90b:1486:b0:268:1dd3:695e with SMTP id
- js6-20020a17090b148600b002681dd3695emr15524004pjb.49.1692979960981; Fri, 25
- Aug 2023 09:12:40 -0700 (PDT)
+        bh=cINYXeZKT6Qzjs4rB6QKsa26hETCQhkT6ut7CBIDbos=;
+        b=EtWkP5lBMJQoVix6sHgvsVGT7tK81GNoAD/C+2/qXjgFdNYjWQdsjR31tBFXFr+Udk
+         pXgfQYl/pUaQkGMXf9A8PUsVmbgmgMMQwp8uYt1ye3w+Xrwnc9OYgSfnfp1v0rWs6CVL
+         3b0qKyhvO1PBqkdNtmpMRER7mVbl16cnEZC0hli6yksXQJJeRB0iFLPLjqYUdJ3kGExc
+         bP7b3km2k4sDqzn6CMSk86mO83aw3gX7FT565Dp72XrKue8svQK1boMGP+1ERU7B7CoD
+         j97ooP3kWHp/1uk26nIYsuU3WwzL54xzgYKWK5RfmJCg9k9OIw7IHbjLM7xtbpknucpd
+         7vjQ==
+X-Gm-Message-State: AOJu0Yz4rAO/zu+P1NmsCV7pMPnPU4G09EIUnf9xY2gVjmQFe3HnQW0S
+        o+xMeOCaXF+5U27TONBd0/9DvTGSMTKOSXKwOyQ=
+X-Google-Smtp-Source: AGHT+IH1jGiQ0aUQ/YV08xIp3r2bAqvPlfqwWjtnuTQgbEmC5MMFOZZTN37c8SjldmRDu5uUY3vHgUfFBsFKp8b9awo=
+X-Received: by 2002:a5d:4a12:0:b0:317:49a2:1f89 with SMTP id
+ m18-20020a5d4a12000000b0031749a21f89mr14661990wrq.1.1693000200321; Fri, 25
+ Aug 2023 14:50:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <169280372795.282662.9784422934484459769.stgit@devnote2> <169280382895.282662.14910495061790007288.stgit@devnote2>
-In-Reply-To: <169280382895.282662.14910495061790007288.stgit@devnote2>
-From:   Florent Revest <revest@chromium.org>
-Date:   Fri, 25 Aug 2023 18:12:14 +0200
-Message-ID: <CABRcYmJcii6UzJR+jksg9SMYAYZRNqEhKoHp=V2xiPYh76Q2vg@mail.gmail.com>
-Subject: Re: [PATCH v4 9/9] Documentation: tracing: Add a note about argument
- and retval access
+References: <169280372795.282662.9784422934484459769.stgit@devnote2> <169280378611.282662.4078983611827223131.stgit@devnote2>
+In-Reply-To: <169280378611.282662.4078983611827223131.stgit@devnote2>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 25 Aug 2023 14:49:48 -0700
+Message-ID: <CAEf4Bzb9CBnQp1_bEW-DOhw9rpDj6jt79DMmsKL2L4a_4ts9gQ@mail.gmail.com>
+Subject: Re: [PATCH v4 5/9] ftrace: Add ftrace_partial_regs() for converting
+ ftrace_regs to pt_regs
 To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
+        Florent Revest <revest@chromium.org>,
         linux-trace-kernel@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>,
         Martin KaFai Lau <martin.lau@linux.dev>,
@@ -74,26 +78,103 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Aug 23, 2023 at 5:17=E2=80=AFPM Masami Hiramatsu (Google)
+On Wed, Aug 23, 2023 at 8:16=E2=80=AFAM Masami Hiramatsu (Google)
 <mhiramat@kernel.org> wrote:
-> diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fp=
-robetrace.rst
-> index 8e9bebcf0a2e..e35e6b18df40 100644
-> --- a/Documentation/trace/fprobetrace.rst
-> +++ b/Documentation/trace/fprobetrace.rst
-> @@ -59,8 +59,12 @@ Synopsis of fprobe-events
->                    and bitfield are supported.
 >
->    (\*1) This is available only when BTF is enabled.
-> -  (\*2) only for the probe on function entry (offs =3D=3D 0).
-> -  (\*3) only for return probe.
-> +  (\*2) only for the probe on function entry (offs =3D=3D 0). Note, this=
- argument access
-> +        is best effort, because depending on the argument type, it may b=
-e passed on
-> +        the stack. But this only support the arguments via registers.
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
+> Add ftrace_partial_regs() which converts the ftrace_regs to pt_regs.
+> If the architecture defines its own ftrace_regs, this copies partial
+> registers to pt_regs and returns it. If not, ftrace_regs is the same as
+> pt_regs and ftrace_partial_regs() will return ftrace_regs::regs.
+>
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Acked-by: Florent Revest <revest@chromium.org>
+> ---
+>  Changes in v3:
+>   - Fix to use pt_regs::regs instead of x.
+>   - Return ftrace_regs::regs forcibly if HAVE_PT_REGS_COMPAT_FTRACE_REGS=
+=3Dy.
+>   - Fix typo.
+>   - Fix to copy correct registers to the pt_regs on arm64.
+>  Changes in v4:
+>   - Change the patch order in the series so that fprobe event can use thi=
+s.
+> ---
+>  arch/arm64/include/asm/ftrace.h |   11 +++++++++++
+>  include/linux/ftrace.h          |   17 +++++++++++++++++
+>  2 files changed, 28 insertions(+)
+>
+> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftr=
+ace.h
+> index ab158196480c..5ad24f315d52 100644
+> --- a/arch/arm64/include/asm/ftrace.h
+> +++ b/arch/arm64/include/asm/ftrace.h
+> @@ -137,6 +137,17 @@ ftrace_override_function_with_return(struct ftrace_r=
+egs *fregs)
+>         fregs->pc =3D fregs->lr;
+>  }
+>
+> +static __always_inline struct pt_regs *
+> +ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *reg=
+s)
+> +{
+> +       memcpy(regs->regs, fregs->regs, sizeof(u64) * 9);
+> +       regs->sp =3D fregs->sp;
+> +       regs->pc =3D fregs->pc;
+> +       regs->regs[29] =3D fregs->fp;
+> +       regs->regs[30] =3D fregs->lr;
 
-supports*
+I see that orig_x0 from pt_regs is used on arm64 to get syscall's
+first parameter. And it seems like this ftrace_regs to pt_regs
+conversion doesn't touch orig_x0 at all. Is it maintained/preserved
+somewhere else, or will we lose the ability to get the first syscall's
+argument?
 
-Otherwise:
-Acked-by: Florent Revest <revest@chromium.org>
+Looking at libbpf's bpf_tracing.h, other than orig_x0, I think all the
+other registers are still preserved, so this seems to be the only
+potential problem.
+
+
+> +       return regs;
+> +}
+> +
+>  int ftrace_regs_query_register_offset(const char *name);
+>
+>  int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
+> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> index c0a42d0860b8..a6ed2aa71efc 100644
+> --- a/include/linux/ftrace.h
+> +++ b/include/linux/ftrace.h
+> @@ -165,6 +165,23 @@ static __always_inline struct pt_regs *ftrace_get_re=
+gs(struct ftrace_regs *fregs
+>         return arch_ftrace_get_regs(fregs);
+>  }
+>
+> +#if !defined(CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS) || \
+> +       defined(CONFIG_HAVE_PT_REGS_TO_FTRACE_REGS_CAST)
+> +
+> +static __always_inline struct pt_regs *
+> +ftrace_partial_regs(struct ftrace_regs *fregs, struct pt_regs *regs)
+> +{
+> +       /*
+> +        * If CONFIG_HAVE_PT_REGS_TO_FTRACE_REGS_CAST=3Dy, ftrace_regs me=
+mory
+> +        * layout is the same as pt_regs. So always returns that address.
+> +        * Since arch_ftrace_get_regs() will check some members and may r=
+eturn
+> +        * NULL, we can not use it.
+> +        */
+> +       return &fregs->regs;
+> +}
+> +
+> +#endif /* !CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS || CONFIG_HAVE_PT_REGS_T=
+O_FTRACE_REGS_CAST */
+> +
+>  /*
+>   * When true, the ftrace_regs_{get,set}_*() functions may be used on fre=
+gs.
+>   * Note: this can be true even when ftrace_get_regs() cannot provide a p=
+t_regs.
+>
+>
