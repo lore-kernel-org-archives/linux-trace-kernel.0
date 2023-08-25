@@ -2,57 +2,56 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5553C001DB
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 25 Aug 2023 16:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 250A5EE49A3
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 25 Aug 2023 16:13:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244307AbjHYQMj (ORCPT
+        id S232504AbjHYQMH (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 25 Aug 2023 12:12:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35474 "EHLO
+        Fri, 25 Aug 2023 12:12:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244073AbjHYQMQ (ORCPT
+        with ESMTP id S244006AbjHYQMF (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 25 Aug 2023 12:12:16 -0400
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFF752128
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Aug 2023 09:12:13 -0700 (PDT)
-Received: by mail-pg1-x530.google.com with SMTP id 41be03b00d2f7-569deb93999so611836a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Aug 2023 09:12:13 -0700 (PDT)
+        Fri, 25 Aug 2023 12:12:05 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E03ED2128
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Aug 2023 09:12:01 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id 41be03b00d2f7-5657add1073so812256a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Aug 2023 09:12:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692979933; x=1693584733;
+        d=chromium.org; s=google; t=1692979921; x=1693584721;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iYfnmVl0jR/3Cs9h4eIxS2wjr6yR3DPQqFq/3LncF7k=;
-        b=QFbnh1wmRTqXWOJeQYmwJaojukZCLyiBMiTKNopr+7CveeO2lQMV+EV+kG+Vx0v2y2
-         V4eCK4kQD9wfQrs7NX/r+60aZo6ipw6kvmzDeJxz8zxjn3EAP6o3Iz4a1ez75/fFDykN
-         1TrcH+aGIcyq3wcPcrT4hW1zphbyX6J3VINk8=
+        bh=+swS0Fs+/Jidlh626yVLRTU30HTjKLYV7Eqz4GXMuk4=;
+        b=SJEctspEFKgbaE90bSPOQjkbytLN6x83WwR3Ye+Do16tmYcwlEkuikSUgw/rVAOFMw
+         ivYKoHGCtgYWydal+37rgYsnAU61pDDfJjmvgEzoSr6zh3acSOAZWRagfz6fZHa98e8R
+         yxZ2Kk1GE4LWqMUa/rm3Edmoojly0uNCid+js=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692979933; x=1693584733;
+        d=1e100.net; s=20221208; t=1692979921; x=1693584721;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iYfnmVl0jR/3Cs9h4eIxS2wjr6yR3DPQqFq/3LncF7k=;
-        b=WzAoegtwCJCFlwJ3fGm4BQb/VhgzXs5La/sDkU4uzUjyoXUUsImcxgXtcq6FYyiTg5
-         bABgWuCRnq1Hnu3dTsHFa1A35Jd7zULDEGlmzXzc2Cd4e9HZropamrutwt24w+9cLhPa
-         N8pRld0WERL1hYpBAsTPICc8t7F4MAnqor7HLxRJTyYGdtbRcUQtI7zRmJuGA0WdJTM7
-         wS8OAaMkGUBEvUDrixE/xHW6H/8rEyUIKE+hMvWN+EFyTe7iTWfr2tU/f2jAUBebMjHL
-         e5LILYb8zA+I4tSQGVf8YcY9/wBnqWGK93MkKOoAZMDmGUqxZ961n25gfsmn17YaQqUA
-         xTTg==
-X-Gm-Message-State: AOJu0YzqZy8Llfb7SH0cXDp6WKRRH9AW1tfujH2Tk8bECNqXwG9XuQK/
-        4KAanKBqDeHqtO0Re+FhG2g9P5ZO+7UJNqyUphz6aQ==
-X-Google-Smtp-Source: AGHT+IHa1afA+N+wXb1aYhgjkfrZlAddyzbUP7Mom1/uH0U2fOpHMMEZ4yGnZpurZozI9wPJAHv1bVnaNdlENLUL16s=
-X-Received: by 2002:a17:90b:1986:b0:269:851:4f00 with SMTP id
- mv6-20020a17090b198600b0026908514f00mr14045766pjb.35.1692979933334; Fri, 25
- Aug 2023 09:12:13 -0700 (PDT)
+        bh=+swS0Fs+/Jidlh626yVLRTU30HTjKLYV7Eqz4GXMuk4=;
+        b=ba9GMAXmiEvT39OB5dMFlDKivDwvZkbcSRUxgsKblyfS3k/bJoThdf6m54v6zCmjjL
+         UjqbUKYcqp97PxLeIpayoNS9MDvygDdgx7rduJTnxM8HJzio7dPC8hzUbj6sYnogQzFE
+         D//yBVEFcwK0JDDFAexM67h/AK/GlkNH9JNADkA+wtjq1L5LANvJlgxDHeKbdlDF+OIj
+         rygBc3PY75P5kkPbrkRFo3bulxgrfVDb9LStjW3oiP+yAUsU/oNwzhnZ3lelGP9zgZEG
+         SfYxlvCXGpDLcaGdVuTyyw/3hPYUDzTdMTY7Dg+PgZuDmqeb3YWWA9G/eSpwE/oaSRN1
+         zEyw==
+X-Gm-Message-State: AOJu0YwE3uNoHV9vWNWjZCXX0F+c4kbfKIXf1IEdU7SDTehH1lobI6wp
+        sr6Q48BCW+lmWj2iB1599vMnm1v/z2vfoCIj6sVkHw==
+X-Google-Smtp-Source: AGHT+IHKREHs/rd7bH+N9Ahx9JgFVYEltPJDfwl75y4CnynKUKCSELopuAPThIGR8lqkCZ3hAcygI84sWqmQKen2udg=
+X-Received: by 2002:a17:90b:2551:b0:268:808:8e82 with SMTP id
+ nw17-20020a17090b255100b0026808088e82mr28189702pjb.1.1692979921252; Fri, 25
+ Aug 2023 09:12:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <169280372795.282662.9784422934484459769.stgit@devnote2> <169280377434.282662.7610009313268953247.stgit@devnote2>
-In-Reply-To: <169280377434.282662.7610009313268953247.stgit@devnote2>
+References: <169280372795.282662.9784422934484459769.stgit@devnote2>
+In-Reply-To: <169280372795.282662.9784422934484459769.stgit@devnote2>
 From:   Florent Revest <revest@chromium.org>
-Date:   Fri, 25 Aug 2023 18:12:01 +0200
-Message-ID: <CABRcYmLCDTMCQMViP56eT13YEW247acDqQUmXY=pf4qTS_4aUw@mail.gmail.com>
-Subject: Re: [PATCH v4 4/9] fprobe: rethook: Use ftrace_regs in fprobe exit
- handler and rethook
+Date:   Fri, 25 Aug 2023 18:11:49 +0200
+Message-ID: <CABRcYmJoPiSEu_=fq5y=oLg8+VG=p5myp=aCYam_TvRmkWs4Eg@mail.gmail.com>
+Subject: Re: [PATCH v4 0/9] bpf: fprobe: rethook: Use ftrace_regs instead of pt_regs
 To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
@@ -74,24 +73,55 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Aug 23, 2023 at 5:16=E2=80=AFPM Masami Hiramatsu (Google)
+On Wed, Aug 23, 2023 at 5:15=E2=80=AFPM Masami Hiramatsu (Google)
 <mhiramat@kernel.org> wrote:
 >
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Hi,
 >
-> Change the fprobe exit handler and rethook to use ftrace_regs data struct=
-ure
-> instead of pt_regs. This also introduce HAVE_PT_REGS_TO_FTRACE_REGS_CAST
-> which means the ftrace_regs's memory layout is equal to the pt_regs so
-> that those are able to cast. Only if it is enabled, kretprobe will use
-> rethook since kretprobe requires pt_regs for backward compatibility.
+> Here is the 4th version of the series to use ftrace_regs instead of pt_re=
+gs
+> in fprobe.
+> The previous version is here;
 >
-> This means the archs which currently implement rethook for kretprobes nee=
-ds to
-> set that flag and it must ensure struct ftrace_regs is same as pt_regs.
-> If not, it must be either disabling kretprobe or implementing kretprobe
-> trampoline separately from rethook trampoline.
+> https://lore.kernel.org/all/169181859570.505132.10136520092011157898.stgi=
+t@devnote2/
 >
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> This version fixes the issues pointed in the previous series; fix documen=
+t
+> description, keep CONFIG_FPROBE dependency for multi-kprobe, add
+> static_assert check for ftrace_regs size, reorder the ftrace_partial_regs=
+()
+> patch for perf fprobe event support, introduce per-cpu pt_regs stack for
+> perf fprobe event and add Florent's Ack (Thanks!). Also this adds a new
+> documentation patch to clarify that the $argN and $retval is best effort.
+>
+>  - Document fix for the current fprobe callback prototype
+>  - Simply replace pt_regs in fprobe_entry_handler with ftrace_regs.
+>  - Expose ftrace_regs even if CONFIG_FUNCTION_TRACER=3Dn.
+>  - Introduce ftrace_partial_regs(). (This changes ARM64 which needs a cus=
+tom
+>    implementation)
+>  - Replace pt_regs in rethook and fprobe_exit_handler with ftrace_regs. T=
+his
+>    introduce a new HAVE_PT_REGS_TO_FTRACE_REGS_CAST which means ftrace_re=
+gs is
+>    just a wrapper of pt_regs (except for arm64, other architectures do th=
+is)
+>  - Update fprobe-events to use ftrace_regs natively.
+>  - Update bpf multi-kprobe handler use ftrace_partial_regs().
+>  - Update document for new fprobe callbacks.
+>  - Add notes for the $argN and $retval.
+>
+> This series can be applied against the probes/core branch on linux-trace =
+tree.
+>
+> This series can also be found below branch.
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=
+=3Dtopic/fprobe-ftrace-regs
+>
+> Thank you,
 
-Acked-by: Florent Revest <revest@chromium.org>
+FWIW, I verified that I could implement BPF multi_kprobe on arm64 on
+top of this series so the BPF multi_kprobe usecase is tested but I
+haven't tested the "trace_fprobe" or perf use cases.
