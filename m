@@ -2,182 +2,141 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 299BFC6FA8F
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 25 Aug 2023 02:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC596C3DA6F
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 25 Aug 2023 07:40:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229720AbjHYCqi (ORCPT
+        id S243211AbjHYHju convert rfc822-to-8bit (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 24 Aug 2023 22:46:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54800 "EHLO
+        Fri, 25 Aug 2023 03:39:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241070AbjHYCqh (ORCPT
+        with ESMTP id S243279AbjHYHjo (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 24 Aug 2023 22:46:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D12A6133;
-        Thu, 24 Aug 2023 19:46:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5B95562E87;
-        Fri, 25 Aug 2023 02:46:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20D81C433C7;
-        Fri, 25 Aug 2023 02:46:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692931594;
-        bh=83I67iwnJPZLEAG3UU6JFs3IemcFTcfX1RYGsDkKxVk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DImzY/yDcyNFG/FuRdA2Wz5aIPj42zxvR6+0jbr4HZ1u7YsreZRRDkPnKxihh+xMK
-         ujlOM4zzePqZmwmf5gVUAiRzcbG+HHt5lvl1mOM785opTcAHFQcz9erLDjKkjAoGyG
-         mkDHU2HB9x4zRJrHVnYUZCYbI7vN+KpmDPRFIDFUwJqj/LxAm5k7umro88TQxxZ8va
-         BfJnQOzbRjDFehS2mu37p7xCdQaHH/mmQvpQbtE0/1BI6612JSkmogBeQsrK1CGtjH
-         AGeiISX9VLDMNwN6/7cohevd6UJZvv1BVbiD87jQnm95L02o/K62SaflV+SdZb8XjC
-         rT5YcjMGRp1mw==
-Date:   Fri, 25 Aug 2023 11:46:30 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Francis Laniel <flaniel@linux.microsoft.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v3 1/1] tracing/kprobes: Return EADDRNOTAVAIL when func
- matches several symbols
-Message-Id: <20230825114630.e1fc8d2a281067d29ea140d7@kernel.org>
-In-Reply-To: <20230824160859.66113-2-flaniel@linux.microsoft.com>
-References: <20230824160859.66113-1-flaniel@linux.microsoft.com>
-        <20230824160859.66113-2-flaniel@linux.microsoft.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 25 Aug 2023 03:39:44 -0400
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA19D1FCA;
+        Fri, 25 Aug 2023 00:39:42 -0700 (PDT)
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-5921a962adfso7750207b3.1;
+        Fri, 25 Aug 2023 00:39:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692949182; x=1693553982;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E5r8bhhlGnXrx708tsGw6Ag8gm7AVkEO6BeDk4HD7tk=;
+        b=WLwKyxXquJm5Xn2E5suH9Ccdce9jLlK+GauaIf0md59SIWvBfCcZk4dC06SZ0nwQ5K
+         o8mlkO6FrAPPZ3xikK2nHElJNrNcLfVrv2YPtiaWl+//7MkAIb0Vy9SjeVnmpHyCYH4W
+         I5mObQzFhw+m1eUuyVIrzuU9uKe9VfJqoq2WCZPHWNbvYfU/7BBGvgSdw3Aj94FOHzun
+         daBwzKmfiYOEG8N743Xq7gSnARMMxTcLLRtVzpgdK587Rrb1jXfjpcGRqZ29++t0F+TH
+         kPYRW1w9pwZo8+0r6gIkcz/69x/2ENZa+/qIVHSblZZT+i08RU5Os3RvT9tGC4TBTm90
+         tNnA==
+X-Gm-Message-State: AOJu0YzJmfhWcq6vO1UlWpwHrSuIxQLbZeRqaa3IxlV4wtuvVLN03mWl
+        TT2srflCsiYRdKyAssRS2LZd8SWeNqosAGzC
+X-Google-Smtp-Source: AGHT+IG5X+1N+9gN7m2P63rFzRbifScZ6dVPHHJG1DUCTreGK5Pu6Rcf3MDfyMu9eFYv5GgCMrEEDw==
+X-Received: by 2002:a0d:cd45:0:b0:561:206a:ee52 with SMTP id p66-20020a0dcd45000000b00561206aee52mr20431530ywd.24.1692949181853;
+        Fri, 25 Aug 2023 00:39:41 -0700 (PDT)
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com. [209.85.128.172])
+        by smtp.gmail.com with ESMTPSA id l132-20020a0de28a000000b0058e430889d5sm379613ywe.10.2023.08.25.00.39.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Aug 2023 00:39:40 -0700 (PDT)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5924093a9b2so7680237b3.2;
+        Fri, 25 Aug 2023 00:39:40 -0700 (PDT)
+X-Received: by 2002:a25:34cd:0:b0:d0b:5b6:4629 with SMTP id
+ b196-20020a2534cd000000b00d0b05b64629mr19382891yba.46.1692949180028; Fri, 25
+ Aug 2023 00:39:40 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230810141947.1236730-1-arnd@kernel.org> <169292577153.789945.11297239773543112051.b4-ty@oracle.com>
+ <3956e2a4-c545-1212-e95f-3cf61a60d6a4@gmail.com>
+In-Reply-To: <3956e2a4-c545-1212-e95f-3cf61a60d6a4@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 25 Aug 2023 09:39:28 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWC2S330_Vb_NTHTDC=BakBsw4ouP-eFJv0erV1-jmvTQ@mail.gmail.com>
+Message-ID: <CAMuHMdWC2S330_Vb_NTHTDC=BakBsw4ouP-eFJv0erV1-jmvTQ@mail.gmail.com>
+Subject: Re: (subset) [PATCH 00/17] -Wmissing-prototype warning fixes
+To:     Michael Schmitz <schmitzmic@gmail.com>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Matt Turner <mattst88@gmail.com>,
+        Vineet Gupta <vgupta@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Brian Cain <bcain@quicinc.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Michal Simek <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        x86@kernel.org, Borislav Petkov <bp@alien8.de>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-next@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 24 Aug 2023 18:08:59 +0200
-Francis Laniel <flaniel@linux.microsoft.com> wrote:
+Hi Michael,
 
-> Previously to this commit, if func matches several symbols, a kprobe, being
-> either sysfs or PMU, would only be installed for the first matching address.
-> This could lead to some misunderstanding when some BPF code was never called
-> because it was attached to a function which was indeed not called, because
-> the effectively called one has no kprobes attached.
-> 
-> So, this commit returns EADDRNOTAVAIL when func matches several symbols.
-> This way, user needs to use address to remove the ambiguity.
-> 
-> Suggested-by: Masami Hiramatsu <mhiramat@kernel.org>
-> Signed-off-by: Francis Laniel <flaniel@linux.microsoft.com>
-> Link: https://lore.kernel.org/lkml/20230819101105.b0c104ae4494a7d1f2eea742@kernel.org/
+On Fri, Aug 25, 2023 at 3:31 AM Michael Schmitz <schmitzmic@gmail.com> wrote:
+> On 25/08/23 13:12, Martin K. Petersen wrote:
+> > [11/17] scsi: gvp11: remove unused gvp11_setup() function
+> >          https://git.kernel.org/mkp/scsi/c/bfaa4a0ce1bb
+>
+> I somehow missed that one ...
+>
+> The gvp11_setup() function was probably a relic from the times before
+> module parameters.
+>
+> Since gvp11_xfer_mask appears to be required for some Amiga systems to
+> set the DMA mask, I'd best send a patch to add such a module parameter ...
+>
+> Do you know any details around the use of DMA masks for Amiga WD33C93
+> drivers, Geert?
 
-Looks good to me!
+Doh, it's been a while, and I never had an affected system.
+Probably it's needed on A2000 with an accelerator card and GVP II SCSI,
+to prevent DMA to RAM banks that do not support fast DMA cycles.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Gr{oetje,eeting}s,
 
-Thank you!
-
-> ---
->  kernel/trace/trace_kprobe.c | 61 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 61 insertions(+)
-> 
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index 23dba01831f7..2f393739e8cf 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -705,6 +705,25 @@ static struct notifier_block trace_kprobe_module_nb = {
->  	.priority = 1	/* Invoked after kprobe module callback */
->  };
->  
-> +static int count_symbols(void *data, unsigned long unused)
-> +{
-> +	unsigned int *count = data;
-> +
-> +	(*count)++;
-> +
-> +	return 0;
-> +}
-> +
-> +static unsigned int number_of_same_symbols(char *func_name)
-> +{
-> +	unsigned int count;
-> +
-> +	count = 0;
-> +	kallsyms_on_each_match_symbol(count_symbols, func_name, &count);
-> +
-> +	return count;
-> +}
-> +
->  static int __trace_kprobe_create(int argc, const char *argv[])
->  {
->  	/*
-> @@ -836,6 +855,29 @@ static int __trace_kprobe_create(int argc, const char *argv[])
->  		}
->  	}
->  
-> +	if (symbol) {
-> +		unsigned int count;
-> +
-> +		count = number_of_same_symbols(symbol);
-> +		if (count > 1) {
-> +			/*
-> +			 * Users should use ADDR to remove the ambiguity of
-> +			 * using KSYM only.
-> +			 */
-> +			ret = -EADDRNOTAVAIL;
-> +
-> +			goto error;
-> +		} else if (count == 0) {
-> +			/*
-> +			 * We can return ENOENT earlier than when register the
-> +			 * kprobe.
-> +			 */
-> +			ret = -ENOENT;
-> +
-> +			goto error;
-> +		}
-> +	}
-> +
->  	trace_probe_log_set_index(0);
->  	if (event) {
->  		ret = traceprobe_parse_event_name(&event, &group, gbuf,
-> @@ -1699,6 +1741,7 @@ static int unregister_kprobe_event(struct trace_kprobe *tk)
->  }
->  
->  #ifdef CONFIG_PERF_EVENTS
-> +
->  /* create a trace_kprobe, but don't add it to global lists */
->  struct trace_event_call *
->  create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
-> @@ -1709,6 +1752,24 @@ create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
->  	int ret;
->  	char *event;
->  
-> +	if (func) {
-> +		unsigned int count;
-> +
-> +		count = number_of_same_symbols(func);
-> +		if (count > 1)
-> +			/*
-> +			 * Users should use addr to remove the ambiguity of
-> +			 * using func only.
-> +			 */
-> +			return ERR_PTR(-EADDRNOTAVAIL);
-> +		else if (count == 0)
-> +			/*
-> +			 * We can return ENOENT earlier than when register the
-> +			 * kprobe.
-> +			 */
-> +			return ERR_PTR(-ENOENT);
-> +	}
-> +
->  	/*
->  	 * local trace_kprobes are not added to dyn_event, so they are never
->  	 * searched in find_trace_kprobe(). Therefore, there is no concern of
-> -- 
-> 2.34.1
-> 
-
+                        Geert
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
