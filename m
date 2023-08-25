@@ -2,179 +2,183 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 966EAEE49B3
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 25 Aug 2023 21:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FA6C83F04
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 25 Aug 2023 22:45:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230144AbjHYVuG (ORCPT
+        id S230353AbjHYWo6 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 25 Aug 2023 17:50:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55372 "EHLO
+        Fri, 25 Aug 2023 18:44:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230204AbjHYVuF (ORCPT
+        with ESMTP id S230153AbjHYWok (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 25 Aug 2023 17:50:05 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BAED26B2;
-        Fri, 25 Aug 2023 14:50:02 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-31c5cac3ae2so1060630f8f.3;
-        Fri, 25 Aug 2023 14:50:02 -0700 (PDT)
+        Fri, 25 Aug 2023 18:44:40 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A203269F;
+        Fri, 25 Aug 2023 15:44:38 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1bdbbede5d4so11971175ad.2;
+        Fri, 25 Aug 2023 15:44:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693000200; x=1693605000;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1693003477; x=1693608277;
+        h=content-transfer-encoding:in-reply-to:mime-version:user-agent:date
+         :message-id:subject:from:references:cc:to:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cINYXeZKT6Qzjs4rB6QKsa26hETCQhkT6ut7CBIDbos=;
-        b=KLS5gIxCGWPdL99OH1mH59psZ9Ey6yCTIcTR1iqbOxcqmLV3lR+gLrHumu6HCu6TF9
-         cVh6Evi81y931inKfhZX/SDVXSA5Zt6idn5Pii1YESrhnLoWm9GrfDzwtNdgfayu1o4o
-         KjiDC97LzPNrfEy5OaJBfZ+floD7mntSLLpRNBxG/qCQCPyPVfduaRMIirnllV8AeGQM
-         FNRF3x6OGhwaWNjMByUVNKfCM990pp7FyvWcrDUeJdNlO7pm6OsIj2yl3/pzQkj1ZIH3
-         GBnNLXD4C1eeWwFpAEyHBZCoONxBGWbCVbnYepQovon4p0mHWk/VoUyOPCDO7I8kXJyZ
-         0sGA==
+        bh=+EfHZKV5Rs50FUqRYXClC9vzZD5WlxrYeYbs3IamXT4=;
+        b=YxGLOPcaOZR604IVjJRcGcoKnB33IZ0CTfYuHyWKXt+0pInUOQSMoNyJ0dS6B1KmgY
+         cxaBOMvor3UlQ6MZnz8hco99YltIQ+TVGTfUiOj3M6EtIom4aLy5Ogu10qSlU6URXk+W
+         RnRGmXEhLIg0POh+PDKptxk33OVTKsM2/52zz5494dr8R8CSNGpoqbrRI3gpmS9Q+cTN
+         hJYUsHOFyiz+AcMtmJLq8rt6PHOWgX+jhYTNJt4ghkMZ1YZYHd+UADqGIVtKxfSRzrdW
+         eHx1TWLsT9QLE3Re7SH9KzLMTXlxKvezJrH+R76CylIu77symnMHbROv+J2zJ4UP/BTK
+         7yuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693000200; x=1693605000;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cINYXeZKT6Qzjs4rB6QKsa26hETCQhkT6ut7CBIDbos=;
-        b=EtWkP5lBMJQoVix6sHgvsVGT7tK81GNoAD/C+2/qXjgFdNYjWQdsjR31tBFXFr+Udk
-         pXgfQYl/pUaQkGMXf9A8PUsVmbgmgMMQwp8uYt1ye3w+Xrwnc9OYgSfnfp1v0rWs6CVL
-         3b0qKyhvO1PBqkdNtmpMRER7mVbl16cnEZC0hli6yksXQJJeRB0iFLPLjqYUdJ3kGExc
-         bP7b3km2k4sDqzn6CMSk86mO83aw3gX7FT565Dp72XrKue8svQK1boMGP+1ERU7B7CoD
-         j97ooP3kWHp/1uk26nIYsuU3WwzL54xzgYKWK5RfmJCg9k9OIw7IHbjLM7xtbpknucpd
-         7vjQ==
-X-Gm-Message-State: AOJu0Yz4rAO/zu+P1NmsCV7pMPnPU4G09EIUnf9xY2gVjmQFe3HnQW0S
-        o+xMeOCaXF+5U27TONBd0/9DvTGSMTKOSXKwOyQ=
-X-Google-Smtp-Source: AGHT+IH1jGiQ0aUQ/YV08xIp3r2bAqvPlfqwWjtnuTQgbEmC5MMFOZZTN37c8SjldmRDu5uUY3vHgUfFBsFKp8b9awo=
-X-Received: by 2002:a5d:4a12:0:b0:317:49a2:1f89 with SMTP id
- m18-20020a5d4a12000000b0031749a21f89mr14661990wrq.1.1693000200321; Fri, 25
- Aug 2023 14:50:00 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1693003477; x=1693608277;
+        h=content-transfer-encoding:in-reply-to:mime-version:user-agent:date
+         :message-id:subject:from:references:cc:to:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+EfHZKV5Rs50FUqRYXClC9vzZD5WlxrYeYbs3IamXT4=;
+        b=cp1KRCgcYkUTSF2D8a/65bm9gqUzQihVnP8c6wC6//KEb6d0JIiky/UAp7xRjHFcih
+         8s1FHO+UQbhcKHIGH6ZyjVwvqRLBbhsB1N1lNaZ9FL0owO1HKhy/Fwso4Cvtq+DxE50o
+         vA7XJSYq98tq7HF5W5D9gEn1VMwaEF0hgGVUNno9jMKLX7vah3BgtHwPV9vdnNbsncU0
+         TFZg16oEAiXNzdM5iLR35aiSR8KTJ8GuInan1PFH3GSggW5Y8J+wCiQEH3fo8NVkPoAi
+         od40573Ua718hlQrOtxancrF5a/ztQX6HBg4R5oi+P8L7kdh3pR2ZE6vtGyfLme3mm8e
+         BgfA==
+X-Gm-Message-State: AOJu0Yx8RZpbLX9s4Wh8CoyI+NHVzTMAIgKR8W9FocKvYDSC9GX2MXs6
+        LP3g7lpzxzcizs6KrVtcVCocaJKsEpB/tg==
+X-Google-Smtp-Source: AGHT+IHfISCtSa05UGz9PT6tDA2qtVyoG70cJPjb2fBEQ6/U+mzxDHROeZB/hJ4FR5D+DwWhbVxiGA==
+X-Received: by 2002:a17:903:25d4:b0:1bd:bbc3:c87b with SMTP id jc20-20020a17090325d400b001bdbbc3c87bmr18047490plb.41.1693003477133;
+        Fri, 25 Aug 2023 15:44:37 -0700 (PDT)
+Received: from Schmitz-MacBook-Pro.local (125-236-136-221-fibre.sparkbb.co.nz. [125.236.136.221])
+        by smtp.googlemail.com with ESMTPSA id b1-20020a170902d50100b001adf6b21c77sm2280761plg.107.2023.08.25.15.44.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Aug 2023 15:44:36 -0700 (PDT)
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Matt Turner <mattst88@gmail.com>,
+        Vineet Gupta <vgupta@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Brian Cain <bcain@quicinc.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Michal Simek <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        x86@kernel.org, Borislav Petkov <bp@alien8.de>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-next@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kbuild@vger.kernel.org
+References: <20230810141947.1236730-1-arnd@kernel.org>
+ <169292577153.789945.11297239773543112051.b4-ty@oracle.com>
+ <3956e2a4-c545-1212-e95f-3cf61a60d6a4@gmail.com>
+ <CAMuHMdWC2S330_Vb_NTHTDC=BakBsw4ouP-eFJv0erV1-jmvTQ@mail.gmail.com>
+From:   Michael Schmitz <schmitzmic@gmail.com>
+Subject: Re: (subset) [PATCH 00/17] -Wmissing-prototype warning fixes
+Message-ID: <130b3b57-edb0-184d-5b5f-69b013715773@gmail.com>
+Date:   Sat, 26 Aug 2023 10:44:13 +1200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:78.0)
+ Gecko/20100101 Thunderbird/78.14.0
 MIME-Version: 1.0
-References: <169280372795.282662.9784422934484459769.stgit@devnote2> <169280378611.282662.4078983611827223131.stgit@devnote2>
-In-Reply-To: <169280378611.282662.4078983611827223131.stgit@devnote2>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 25 Aug 2023 14:49:48 -0700
-Message-ID: <CAEf4Bzb9CBnQp1_bEW-DOhw9rpDj6jt79DMmsKL2L4a_4ts9gQ@mail.gmail.com>
-Subject: Re: [PATCH v4 5/9] ftrace: Add ftrace_partial_regs() for converting
- ftrace_regs to pt_regs
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Florent Revest <revest@chromium.org>,
-        linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAMuHMdWC2S330_Vb_NTHTDC=BakBsw4ouP-eFJv0erV1-jmvTQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Aug 23, 2023 at 8:16=E2=80=AFAM Masami Hiramatsu (Google)
-<mhiramat@kernel.org> wrote:
->
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->
-> Add ftrace_partial_regs() which converts the ftrace_regs to pt_regs.
-> If the architecture defines its own ftrace_regs, this copies partial
-> registers to pt_regs and returns it. If not, ftrace_regs is the same as
-> pt_regs and ftrace_partial_regs() will return ftrace_regs::regs.
->
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> Acked-by: Florent Revest <revest@chromium.org>
-> ---
->  Changes in v3:
->   - Fix to use pt_regs::regs instead of x.
->   - Return ftrace_regs::regs forcibly if HAVE_PT_REGS_COMPAT_FTRACE_REGS=
-=3Dy.
->   - Fix typo.
->   - Fix to copy correct registers to the pt_regs on arm64.
->  Changes in v4:
->   - Change the patch order in the series so that fprobe event can use thi=
-s.
-> ---
->  arch/arm64/include/asm/ftrace.h |   11 +++++++++++
->  include/linux/ftrace.h          |   17 +++++++++++++++++
->  2 files changed, 28 insertions(+)
->
-> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftr=
-ace.h
-> index ab158196480c..5ad24f315d52 100644
-> --- a/arch/arm64/include/asm/ftrace.h
-> +++ b/arch/arm64/include/asm/ftrace.h
-> @@ -137,6 +137,17 @@ ftrace_override_function_with_return(struct ftrace_r=
-egs *fregs)
->         fregs->pc =3D fregs->lr;
->  }
->
-> +static __always_inline struct pt_regs *
-> +ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *reg=
-s)
-> +{
-> +       memcpy(regs->regs, fregs->regs, sizeof(u64) * 9);
-> +       regs->sp =3D fregs->sp;
-> +       regs->pc =3D fregs->pc;
-> +       regs->regs[29] =3D fregs->fp;
-> +       regs->regs[30] =3D fregs->lr;
+Hi Geert,
 
-I see that orig_x0 from pt_regs is used on arm64 to get syscall's
-first parameter. And it seems like this ftrace_regs to pt_regs
-conversion doesn't touch orig_x0 at all. Is it maintained/preserved
-somewhere else, or will we lose the ability to get the first syscall's
-argument?
+Am 25.08.23 um 19:39 schrieb Geert Uytterhoeven:
+> Hi Michael,
+>
+> On Fri, Aug 25, 2023 at 3:31=E2=80=AFAM Michael Schmitz <schmitzmic@gma=
+il.com> wrote:
+>> On 25/08/23 13:12, Martin K. Petersen wrote:
+>>> [11/17] scsi: gvp11: remove unused gvp11_setup() function
+>>>          https://git.kernel.org/mkp/scsi/c/bfaa4a0ce1bb
+>> I somehow missed that one ...
+>>
+>> The gvp11_setup() function was probably a relic from the times before
+>> module parameters.
+>>
+>> Since gvp11_xfer_mask appears to be required for some Amiga systems to=
 
-Looking at libbpf's bpf_tracing.h, other than orig_x0, I think all the
-other registers are still preserved, so this seems to be the only
-potential problem.
+>> set the DMA mask, I'd best send a patch to add such a module parameter=
+ ...
+>>
+>> Do you know any details around the use of DMA masks for Amiga WD33C93
+>> drivers, Geert?
+> Doh, it's been a while, and I never had an affected system.
+> Probably it's needed on A2000 with an accelerator card and GVP II SCSI,=
+
+> to prevent DMA to RAM banks that do not support fast DMA cycles.
+
+Thanks, that's good enough for me.
+
+Linux 2.0 had this comment:
+
+|/* * DMA transfer mask for GVP Series II SCSI controller. * Some
+versions can only DMA into the 24 bit address space * (0->16M). Others
+can DMA into the full 32 bit address * space. The default is to only
+allow DMA into the 24 bit * address space. The "gvp11=3D0xFFFFFFFE" setup=
+
+parameter can * be supplied to force an alternate (32 bit) mask. */ |
+
+|We now handle that (since 2.6.35) through masks defined in
+gvp11_zorro_tbl[] (though I note these don't account for unaligned
+addresses such as implied by the example in the comment. Are unaligned
+DMA buffers still possible today?). Would that cover the 'A2000 with
+accelerator' case?
+|
+
+||
+
+I'm happy to send a patch if an override to the device default DMA mask
+is still necessary.
+
+(Incidentally - did you ever publish the m68k full history tree anywhere
+in git?)
+
+Cheers,
+
+=C2=A0=C2=A0=C2=A0 Michael
 
 
-> +       return regs;
-> +}
-> +
->  int ftrace_regs_query_register_offset(const char *name);
 >
->  int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
-> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> index c0a42d0860b8..a6ed2aa71efc 100644
-> --- a/include/linux/ftrace.h
-> +++ b/include/linux/ftrace.h
-> @@ -165,6 +165,23 @@ static __always_inline struct pt_regs *ftrace_get_re=
-gs(struct ftrace_regs *fregs
->         return arch_ftrace_get_regs(fregs);
->  }
+> Gr{oetje,eeting}s,
 >
-> +#if !defined(CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS) || \
-> +       defined(CONFIG_HAVE_PT_REGS_TO_FTRACE_REGS_CAST)
-> +
-> +static __always_inline struct pt_regs *
-> +ftrace_partial_regs(struct ftrace_regs *fregs, struct pt_regs *regs)
-> +{
-> +       /*
-> +        * If CONFIG_HAVE_PT_REGS_TO_FTRACE_REGS_CAST=3Dy, ftrace_regs me=
-mory
-> +        * layout is the same as pt_regs. So always returns that address.
-> +        * Since arch_ftrace_get_regs() will check some members and may r=
-eturn
-> +        * NULL, we can not use it.
-> +        */
-> +       return &fregs->regs;
-> +}
-> +
-> +#endif /* !CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS || CONFIG_HAVE_PT_REGS_T=
-O_FTRACE_REGS_CAST */
-> +
->  /*
->   * When true, the ftrace_regs_{get,set}_*() functions may be used on fre=
-gs.
->   * Note: this can be true even when ftrace_get_regs() cannot provide a p=
-t_regs.
+>                         Geert
 >
->
+
