@@ -2,244 +2,176 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A747EC3DA66
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 25 Aug 2023 13:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4611BEE49A5
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 25 Aug 2023 14:08:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244094AbjHYNnj (ORCPT
+        id S245720AbjHYOHP (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 25 Aug 2023 09:43:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49430 "EHLO
+        Fri, 25 Aug 2023 10:07:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245167AbjHYNnR (ORCPT
+        with ESMTP id S1343514AbjHYOG7 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 25 Aug 2023 09:43:17 -0400
-Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C658D1FDE;
-        Fri, 25 Aug 2023 06:43:14 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id B2A9032009B7;
-        Fri, 25 Aug 2023 09:43:10 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Fri, 25 Aug 2023 09:43:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjusaka.me; h=
-        cc:cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:message-id:mime-version:reply-to:sender:subject
-        :subject:to:to; s=fm1; t=1692970990; x=1693057390; bh=cWLyjRrcaS
-        NB2Tn0G3Iyc+2TU5mhy5OdRlgEedNUqgs=; b=Wlt0EPZhRt18+4hLp+cTyABmV/
-        rcA8OjZR2phU7nOpBGDFJ0xMqSsQY1B73abOqxNz5/lp9jwn2CTf36Pt+IOTgOmD
-        9QpEcAf/bxNqTMP3uziR4d4WrjjGV1GL4FjD/c3+m/PeXjhY2nOvyyGYNS6zqTke
-        eoBsY+PPQHL27lUvJdxv8cTtaOUOfzqVLlqxbx9pdIHPYjkGj7uvukBPaKkJ3mzn
-        ed6QLpwS+Nbo8Paj4BBF+Z8VzGkIl7SnO0rMTkZc7Of0IUDWDBJMMxD/1CGY/FhA
-        u2rJzkevGbTRDz+k/otnKQrdVj2yz7z9i3V6IMkT8mXF3iz69UFMiuuG7Q6A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:message-id:mime-version:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; t=1692970990; x=1693057390; bh=cWLyjRrcaSNB2
-        Tn0G3Iyc+2TU5mhy5OdRlgEedNUqgs=; b=19faRVhuP58P5mFZUAw6KY9kqcKLH
-        86Ni0yIxChPTrD6BHjpINDq+UD8PK4TOyocGC8qzDqa5KhRB55H7b8lQY0Dpcac1
-        LvcftJLg34QeHtI8/5iG+EdmJq/xHkaFs0LeAgHDKTgUKuADg2ssCK5kL2KNbDkh
-        lyEq6/9lgUArHL0PfuPmRl/Gm9dglykWthRbjYKPdRRNImzW6+qUzJSxDE7GuO2J
-        U2fu38jaaWsd94L2agyFkIc9VkNJJwLvE2GNe59BjHvpIXSJRxxHQUVDa88ozGcU
-        ydg6hJ/9Akcl1NnzHIMD8jOHIvhyAgybyIENuSiQr/vwLtn6JhXW7MaCg==
-X-ME-Sender: <xms:7a_oZJ6VG1pjVuorpyoCUUjoGgIDzRcI0o7CxVDOLIHUa_HnhDaSBg>
-    <xme:7a_oZG7EyF_54juxEvm9RTjrd-qGX3wfk3GXqfcPmkMf3Zi_E890Zp5KTeeDR38Sl
-    f_pF5FfJXiwKc38nak>
-X-ME-Received: <xmr:7a_oZAfPvpmC4r9QdgqOUaNjtGDn-xkgs-Z-QM39pYvfM44ApgWktz-xAEBzgyVx52GHmxpkhg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedruddvkedgieejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
-    ertddtnecuhfhrohhmpegkhhgvrghoucfnihcuoehmvgesmhgrnhhjuhhsrghkrgdrmhgv
-    qeenucggtffrrghtthgvrhhnpeffgeeluddvveekueettdeiffefffdvhfevhffgkeelte
-    egieetfeffheffudekteenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhs
-    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgvsehmrghnjhhush
-    grkhgrrdhmvg
-X-ME-Proxy: <xmx:7a_oZCLclRUEbiVb1slwRlFGWocrjfx_NGm5r6F_oSFM84m_Ckx8lA>
-    <xmx:7a_oZNIKMXxwj_IH9fnvM6haE-fOvaMOyrlCtoBM2A6LrsHl5Vbl-g>
-    <xmx:7a_oZLzjGIclSULVr44ozt8oEcrBAeN9FIL6lqHeaX_63skPH22wIQ>
-    <xmx:7q_oZKD1FyLSLttSIGolxpoLubSTy_NMuRE8pGbnkjQMLwmm6xJgIw>
-Feedback-ID: i3ea9498d:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 25 Aug 2023 09:43:05 -0400 (EDT)
-From:   Zheao Li <me@manjusaka.me>
-To:     edumazet@google.com, mhiramat@kernel.org, rostedt@goodmis.org,
-        davem@davemloft.net, dsahern@kernel.org, kuba@kernel.org,
-        pabeni@redhat.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Zheao Li <me@manjusaka.me>
-Subject: [PATCH v4] tracepoint: add new `tcp:tcp_ca_event` trace event
-Date:   Fri, 25 Aug 2023 13:32:47 +0000
-Message-Id: <20230825133246.344364-1-me@manjusaka.me>
+        Fri, 25 Aug 2023 10:06:59 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ED2572705;
+        Fri, 25 Aug 2023 07:06:31 -0700 (PDT)
+Received: from pwmachine.numericable.fr (85-170-34-233.rev.numericable.fr [85.170.34.233])
+        by linux.microsoft.com (Postfix) with ESMTPSA id E6B1A2127C93;
+        Fri, 25 Aug 2023 07:05:39 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E6B1A2127C93
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1692972340;
+        bh=A6Q32kWnUoP12B1U5iISjSX9nYGK/jEleiZ7bCJ98ag=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XoddsejrRTgH6HXHE4cgrCL4VCIqhdE10QJrH91v+EYw49N8Gv14ulfYi+r4zl6OZ
+         g5yIV1mJnJuZvPMoISW+FhpdKeFDS2wLcS48qUQp2R1BF1svU3UOLgfcYLqXCvSz5h
+         zWzVUlSxqvSKpAeRxXtQtKT+RnM1Hpurqu6mjFmE=
+From:   Francis Laniel <flaniel@linux.microsoft.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        Francis Laniel <flaniel@linux.microsoft.com>
+Subject: [PATCH v4 0/2] Return EADDRNOTAVAIL when func matches several symbols during kprobe creation
+Date:   Fri, 25 Aug 2023 16:05:17 +0200
+Message-Id: <20230825140519.34297-1-flaniel@linux.microsoft.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hello 
+Hi.
 
-This the 4th version of the patch, the previous discusstion is here
 
-https://lore.kernel.org/linux-trace-kernel/20230807183308.9015-1-me@manjusaka.me/
+In the kernel source code, it exists different functions which share the same
+name but which have, of course, different addresses as they can be defined in
+different modules:
+# Kernel was compiled with CONFIG_NTFS_FS and CONFIG_NTFS3_FS as built-in.
+root@vm-amd64:~# grep ntfs_file_write_iter /proc/kallsyms
+ffffffff814ce3c0 t __pfx_ntfs_file_write_iter
+ffffffff814ce3d0 t ntfs_file_write_iter
+ffffffff814fc8a0 t __pfx_ntfs_file_write_iter
+ffffffff814fc8b0 t ntfs_file_write_iter
+This can be source of troubles when you create a PMU kprobe for such a function,
+as it will only install one for the first address (e.g. 0xffffffff814ce3d0 in
+the above).
+This could lead to some troubles were BPF based tools does not report any event
+because the second function is not called:
+root@vm-amd64:/mnt# mount | grep /mnt
+/foo.img on /mnt type ntfs3 (rw,relatime,uid=0,gid=0,iocharset=utf8)
+# ig is a tool which installs a PMU kprobe on ntfs_file_write_iter().
+root@vm-amd64:/mnt# ig trace fsslower -m 0 -f ntfs3 --host &> /tmp/foo &
+[1] 207
+root@vm-amd64:/mnt# dd if=./foo of=./bar count=3
+3+0 records in
+3+0 records out
+1536 bytes (1.5 kB, 1.5 KiB) copied, 0.00543323 s, 283 kB/s
+root@vm-amd64:/mnt# fg
+ig trace fsslower -m 0 -f ntfs3 --host &> /tmp/foo
+^Croot@vm-amd64:/mnt# more /tmp/foo
+RUNTIME.CONTAINERNAME          RUNTIME.CONTAIN… PID              COMM
+  T      BYTES     OFFSET        LAT FILE
+                                                214              dd
+  R        512          0        766 foo
+                                                214              dd
+  R        512        512          9 foo
+                                                214              dd
+As you can see in the above, only read events are reported and no write because
+the kprobe is installed for the old ntfs_file_write_iter() and not the ntfs3
+one.
+The same behavior occurs with sysfs kprobe:
+root@vm-amd64:/# echo 'p:probe/ntfs_file_write_iter ntfs_file_write_iter' > /sys/kernel/tracing/kprobe_events
+root@vm-amd64:/# cat /sys/kernel/tracing/kprobe_events
+p:probe/ntfs_file_write_iter ntfs_file_write_iter
+root@vm-amd64:/# mount | grep /mnt
+/foo.img on /mnt type ntfs3 (rw,relatime,uid=0,gid=0,iocharset=utf8)
+root@vm-amd64:/# perf record -e probe:ntfs_file_write_iter &
+[1] 210
+root@vm-amd64:/# cd /mnt/
+root@vm-amd64:/mnt# dd if=./foo of=./bar count=3
+3+0 records in
+3+0 records out
+1536 bytes (1.5 kB, 1.5 KiB) copied, 0.00234793 s, 654 kB/s
+root@vm-amd64:/mnt# cd -
+/
+root@vm-amd64:/# fg
+perf record -e probe:ntfs_file_write_iter
+^C[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.056 MB perf.data ]
 
-In this version of the code, here's some different:
+root@vm-amd64:/# perf report
+Error:
+The perf.data data has no samples!
+# To display the perf.data header info, please use --header/--header-only optio>
+#
 
-1. The event name has been changed from `tcp_ca_event_set` to
-`tcp_ca_event`
+In this contribution, I modified the functions creating sysfs and PMU kprobes to
+test if the function name given as argument matches several symbols.
+In this case, these functions return EADDRNOTAVAIL to indicate the user to use
+addr and offs to remove this ambiguity.
+So, when the above BPF tool is run, the following error message is printed:
+root@vm-amd64:~# ig trace fsslower -m 0 -f ntfs3 --host &> /tmp/foo &
+[1] 228
+root@vm-amd64:~# more /tmp/foo
+RUNTIME.CONTAINERNAME          RUNTIME.CONTAIN… PID              COMM
+  T      BYTES     OFFSET        LAT FILE
+Error: running gadget: running gadget: installing tracer: attaching kprobe: crea
+ting perf_kprobe PMU (arch-specific fallback for "ntfs_file_write_iter"): token
+ntfs_file_write_iter: opening perf event: cannot assign requested address
+And the same with sysfs kprobe:
+root@vm-amd64:/# echo 'p:probe/ntfs_file_write_iter ntfs_file_write_iter' > /sys/kernel/tracing/kprobe_events
+-bash: echo: write error: Cannot assign requested address
+Note that, this does not influence perf as it installs kprobes as offset on
+_text:
+root@vm-amd64:/# perf probe --add ntfs_file_write_iter
+Added new events:
+  probe:ntfs_file_write_iter (on ntfs_file_write_iter)
+  probe:ntfs_file_write_iter (on ntfs_file_write_iter)
+...
+root@vm-amd64:/# cat /sys/kernel/tracing/kprobe_events
+p:probe/ntfs_file_write_iter _text+5039088
+p:probe/ntfs_file_write_iter _text+5228752
 
-2. Output the current protocol family in TP_printk
+Note that, this contribution is the conclusion of a previous RFC which intended
+to install a PMU kprobe for all matching symbols [1, 2].
 
-3. Show the ca_event symbol instead of the original number
+If you see any way to improve this contribution, particularly if you have an
+idea to add tests or documentation for this behavior, please share your
+feedback.
 
-But the `./scripts/checkpatch.pl` has been failed to check this patch,
-because we sill have some code error in ./scripts/checkpatch.pl(in
-another world, the test would be failed when we use the 
-scripts/checkpatch.pl to check the events/tcp.h
+Changes since:
+ v1:
+  * Use EADDRNOTAVAIL instead of adding a new error code.
+  * Correct also this behavior for sysfs kprobe.
+ v2:
+  * Count the number of symbols corresponding to function name and return
+  EADDRNOTAVAIL if higher than 1.
+  * Return ENOENT if above count is 0, as it would be returned later by while
+  registering the kprobe.
+ v3:
+  * Check symbol does not contain ':' before testing its uniqueness.
+  * Add a selftest to check this is not possible to install a kprobe for a non
+  unique symbol.
 
-Feel free to ask me if you have have any issues and ideas.
+Francis Laniel (2):
+  tracing/kprobes: Return EADDRNOTAVAIL when func matches several
+    symbols
+  selftests/ftrace: Add new test case which checks non unique symbol
 
-Thanks
+ kernel/trace/trace_kprobe.c                   | 63 +++++++++++++++++++
+ kernel/trace/trace_probe.h                    |  1 +
+ .../test.d/kprobe/kprobe_non_uniq_symbol.tc   | 13 ++++
+ 3 files changed, 77 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc
 
+
+Best regards and thank you in advance.
 ---
-
-In normal use case, the tcp_ca_event would be changed in high frequency.
-
-The developer can monitor the network quality more easier by tracing
-TCP stack with this TP event.
-
-So I propose to add a `tcp:tcp_ca_event` trace event
-like `tcp:tcp_cong_state_set` to help the people to
-trace the TCP connection status
-
-Signed-off-by: Zheao Li <me@manjusaka.me>
----
- include/net/tcp.h          |  9 ++----
- include/trace/events/tcp.h | 60 ++++++++++++++++++++++++++++++++++++++
- net/ipv4/tcp_cong.c        | 10 +++++++
- 3 files changed, 72 insertions(+), 7 deletions(-)
-
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 0ca972ebd3dd..a68c5b61889c 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -1154,13 +1154,8 @@ static inline bool tcp_ca_needs_ecn(const struct sock *sk)
- 	return icsk->icsk_ca_ops->flags & TCP_CONG_NEEDS_ECN;
- }
- 
--static inline void tcp_ca_event(struct sock *sk, const enum tcp_ca_event event)
--{
--	const struct inet_connection_sock *icsk = inet_csk(sk);
--
--	if (icsk->icsk_ca_ops->cwnd_event)
--		icsk->icsk_ca_ops->cwnd_event(sk, event);
--}
-+/* from tcp_cong.c */
-+void tcp_ca_event(struct sock *sk, const enum tcp_ca_event event);
- 
- /* From tcp_cong.c */
- void tcp_set_ca_state(struct sock *sk, const u8 ca_state);
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 7b1ddffa3dfc..993eb00403ea 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -41,6 +41,18 @@
- 	TP_STORE_V4MAPPED(__entry, saddr, daddr)
- #endif
- 
-+/* The TCP CA event traced by tcp_ca_event*/
-+#define tcp_ca_event_names    \
-+		EM(CA_EVENT_TX_START)     \
-+		EM(CA_EVENT_CWND_RESTART) \
-+		EM(CA_EVENT_COMPLETE_CWR) \
-+		EM(CA_EVENT_LOSS)         \
-+		EM(CA_EVENT_ECN_NO_CE)    \
-+		EMe(CA_EVENT_ECN_IS_CE)
-+
-+#define show_tcp_ca_event_names(val) \
-+	__print_symbolic(val, tcp_ca_event_names)
-+
- /*
-  * tcp event with arguments sk and skb
-  *
-@@ -419,6 +431,54 @@ TRACE_EVENT(tcp_cong_state_set,
- 		  __entry->cong_state)
- );
- 
-+TRACE_EVENT(tcp_ca_event,
-+
-+	TP_PROTO(struct sock *sk, const u8 ca_event),
-+
-+	TP_ARGS(sk, ca_event),
-+
-+	TP_STRUCT__entry(
-+		__field(const void *, skaddr)
-+		__field(__u16, sport)
-+		__field(__u16, dport)
-+		__field(__u16, family)
-+		__array(__u8, saddr, 4)
-+		__array(__u8, daddr, 4)
-+		__array(__u8, saddr_v6, 16)
-+		__array(__u8, daddr_v6, 16)
-+		__field(__u8, ca_event)
-+	),
-+
-+	TP_fast_assign(
-+		struct inet_sock *inet = inet_sk(sk);
-+		__be32 *p32;
-+
-+		__entry->skaddr = sk;
-+
-+		__entry->sport = ntohs(inet->inet_sport);
-+		__entry->dport = ntohs(inet->inet_dport);
-+		__entry->family = sk->sk_family;
-+
-+		p32 = (__be32 *) __entry->saddr;
-+		*p32 = inet->inet_saddr;
-+
-+		p32 = (__be32 *) __entry->daddr;
-+		*p32 =  inet->inet_daddr;
-+
-+		TP_STORE_ADDRS(__entry, inet->inet_saddr, inet->inet_daddr,
-+			   sk->sk_v6_rcv_saddr, sk->sk_v6_daddr);
-+
-+		__entry->ca_event = ca_event;
-+	),
-+
-+	TP_printk("family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c ca_event=%s",
-+		  show_family_name(__entry->family),
-+		  __entry->sport, __entry->dport,
-+		  __entry->saddr, __entry->daddr,
-+		  __entry->saddr_v6, __entry->daddr_v6,
-+		  show_tcp_ca_event_names(__entry->ca_event))
-+);
-+
- #endif /* _TRACE_TCP_H */
- 
- /* This part must be outside protection */
-diff --git a/net/ipv4/tcp_cong.c b/net/ipv4/tcp_cong.c
-index 1b34050a7538..fb7ec6ebbbd0 100644
---- a/net/ipv4/tcp_cong.c
-+++ b/net/ipv4/tcp_cong.c
-@@ -34,6 +34,16 @@ struct tcp_congestion_ops *tcp_ca_find(const char *name)
- 	return NULL;
- }
- 
-+void tcp_ca_event(struct sock *sk, const enum tcp_ca_event event)
-+{
-+	const struct inet_connection_sock *icsk = inet_csk(sk);
-+
-+	trace_tcp_ca_event(sk, (u8)event);
-+
-+	if (icsk->icsk_ca_ops->cwnd_event)
-+		icsk->icsk_ca_ops->cwnd_event(sk, event);
-+}
-+
- void tcp_set_ca_state(struct sock *sk, const u8 ca_state)
- {
- 	struct inet_connection_sock *icsk = inet_csk(sk);
--- 
+[1]: https://lore.kernel.org/lkml/20230816163517.112518-1-flaniel@linux.microsoft.com/
+[2]: https://lore.kernel.org/lkml/20230819101105.b0c104ae4494a7d1f2eea742@kernel.org/
+--
 2.34.1
 
