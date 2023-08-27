@@ -2,181 +2,190 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68144C83F01
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 27 Aug 2023 00:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02613C83F11
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 27 Aug 2023 08:40:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229816AbjH0AlU (ORCPT
+        id S229841AbjH0IkN (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 26 Aug 2023 20:41:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50356 "EHLO
+        Sun, 27 Aug 2023 04:40:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229824AbjH0Aku (ORCPT
+        with ESMTP id S230319AbjH0Ij7 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 26 Aug 2023 20:40:50 -0400
+        Sun, 27 Aug 2023 04:39:59 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AF2910D;
-        Sat, 26 Aug 2023 17:40:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 148E013E;
+        Sun, 27 Aug 2023 01:39:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2A10A61EA0;
-        Sun, 27 Aug 2023 00:40:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0F7EC433C7;
-        Sun, 27 Aug 2023 00:40:46 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A47EE60F7D;
+        Sun, 27 Aug 2023 08:39:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18049C433C8;
+        Sun, 27 Aug 2023 08:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693096847;
-        bh=OVEU+9mCgeRFNww8ePJ6l3hvkB0OBAcU0yHXtNzZZ3w=;
+        s=k20201202; t=1693125595;
+        bh=YzIwPUhAIk98KSVOhAjG5Ib6wpaBGGcNghTCEj9deJU=;
         h=From:To:Cc:Subject:Date:From;
-        b=PA3hihX4jrkqeaCm7VD5UQqCiLGakqPf3cZXPo7690IMZ20lmf/pGoRNV1/ugXUQ7
-         CWmTIOz0ozXtmC1oE5t09kvxRr0mQ+PIAcMhC7AKbBRvU4qhDAOEQcpKXdEHkFtQJx
-         Opyg792baEpl5hq3O++Mqtb2RL7qh8RK+VZPRt++iJ+CrpN+qu07xPs6tD/snL3SbF
-         5uBNFRvplrqs3bfN/Qa/21P9Z5Hj7QKP+DE2sLiMGEz6KOzYPXcyM/OHeWZJPKcZwE
-         /9afwHZpMn1gCEkmLzqJ57Scn4XeyxXGFAoJ3OB0sPrJz3HYlV/LcJXVhobBekaona
-         EQIpIF4jKtIew==
-From:   SeongJae Park <sj@kernel.org>
-To:     damon@lists.linux.dev
-Cc:     SeongJae Park <sj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>, linux-mm@kvack.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] mm/damon/core: add a tracepoint for damos apply target regions
-Date:   Sun, 27 Aug 2023 00:40:45 +0000
-Message-Id: <20230827004045.49516-1-sj@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        b=HdAwxenOM8yUDMXJbFzt+mAm1X+PADXLPz55W3BtvbFqFQZedXvl3rsRofL4u62wb
+         OQ5HMt7Nv/vA4rruNXNqt3urENYWaWXnJJCJblntkww8wLRdv1MSQwjsOxdVWuosJg
+         TxzKvwUCMg4iriM6BSKNIzPfTkiUPWKO5KA1H1DRpgbAipR31UOVq7X30ECqw8q8l3
+         uyLhz6tudsOYZMUV8EU5f2Fau3ERd0yPY82gsvpUREIDkev4iu/XVR1MC1UkWbQQ/O
+         SmToHrvJYu3AwX/U5RbFEc8FOM6m9LW5EyBgwePv4pxD8SlOnJ38ZUNl2tKxXMHZvg
+         GsdrQe51zfkGw==
+From:   =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>
+To:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org, Guo Ren <guoren@kernel.org>
+Cc:     =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Nam Cao <namcaov@gmail.com>
+Subject: [PATCH] riscv: Only consider swbp/ss handlers for correct privileged mode
+Date:   Sun, 27 Aug 2023 10:39:49 +0200
+Message-Id: <20230827083949.204927-1-bjorn@kernel.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-DAMON provides damon_aggregated tracepoint, which exposes details of
-each region and its access monitoring results.  It is useful for
-getting whole monitoring results, e.g., for recording purposes.
+From: Björn Töpel <bjorn@rivosinc.com>
 
-For investigations of DAMOS, DAMON Sysfs interface provides DAMOS
-statistics and tried_regions directory.  But, those provides only
-statistics and snapshots.  If the scheme is frequently applied and if
-the user needs to know every detail of DAMOS behavior, the
-snapshot-based interface could be insufficient and expensive.
+RISC-V software breakpoint trap handlers are used for {k,u}probes.
 
-As a last resort, userspace users need to record the all monitoring
-results via damon_aggregated tracepoint and simulate how DAMOS would
-worked.  It is unnecessarily complicated.  DAMON kernel API users,
-meanwhile, can do that easily via before_damos_apply() callback field of
-'struct damon_callback', though.
+When trapping from kernelmode, only the kernelmode handlers should be
+considered. Vice versa, only usermode handlers for usermode
+traps. This is not the case on RISC-V, which can trigger a bug if a
+userspace process uses uprobes, and a WARN() is triggered from
+kernelmode (which is implemented via {c.,}ebreak).
 
-Add a tracepoint that will be called just after before_damos_apply()
-callback for more convenient investigations of DAMOS.  The tracepoint
-exposes all details about each regions, similar to damon_aggregated
-tracepoint.
+The kernel will trap on the kernelmode {c.,}ebreak, look for uprobes
+handlers, realize incorrectly that uprobes need to be handled, and
+exit the trap handler early. The trap returns to re-executing the
+{c.,}ebreak, and enter an infinite trap-loop.
 
-Please note that DAMOS is currently not only for memory management but
-also for query-like efficient monitoring results retrievals (when 'stat'
-action is used).  Until now, only statistics or snapshots were
-supported.  Addition of this tracepoint allows efficient full recording
-of DAMOS-based filtered monitoring results.
+The issue was found running the BPF selftest [1].
 
-Signed-off-by: SeongJae Park <sj@kernel.org>
+Fix this issue by only considering the swbp/ss handlers for
+kernel/usermode respectively. Also, move CONFIG ifdeffery from traps.c
+to the asm/{k,u}probes.h headers.
+
+Note that linux/uprobes.h only include asm/uprobes.h if CONFIG_UPROBES
+is defined, which is why asm/uprobes.h needs to be unconditionally
+included in traps.c
+
+Link: https://lore.kernel.org/linux-riscv/87v8d19aun.fsf@all.your.base.are.belong.to.us/ # [1]
+Fixes: 74784081aac8 ("riscv: Add uprobes supported")
+Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
 ---
- include/trace/events/damon.h | 37 ++++++++++++++++++++++++++++++++++++
- mm/damon/core.c              | 27 +++++++++++++++++++++++++-
- 2 files changed, 63 insertions(+), 1 deletion(-)
+ arch/riscv/include/asm/kprobes.h | 11 ++++++++++-
+ arch/riscv/include/asm/uprobes.h | 13 ++++++++++++-
+ arch/riscv/kernel/traps.c        | 28 ++++++++++++++++++----------
+ 3 files changed, 40 insertions(+), 12 deletions(-)
 
-diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
-index 0b8d13bde17a..c942c5033b5f 100644
---- a/include/trace/events/damon.h
-+++ b/include/trace/events/damon.h
-@@ -9,6 +9,43 @@
- #include <linux/types.h>
- #include <linux/tracepoint.h>
+diff --git a/arch/riscv/include/asm/kprobes.h b/arch/riscv/include/asm/kprobes.h
+index e7882ccb0fd4..89fbd90f16a2 100644
+--- a/arch/riscv/include/asm/kprobes.h
++++ b/arch/riscv/include/asm/kprobes.h
+@@ -40,6 +40,15 @@ void arch_remove_kprobe(struct kprobe *p);
+ int kprobe_fault_handler(struct pt_regs *regs, unsigned int trapnr);
+ bool kprobe_breakpoint_handler(struct pt_regs *regs);
+ bool kprobe_single_step_handler(struct pt_regs *regs);
+-
++#else
++static inline bool kprobe_breakpoint_handler(struct pt_regs *)
++{
++	return false;
++}
++
++static inline bool kprobe_single_step_handler(struct pt_regs *)
++{
++	return false;
++}
+ #endif /* CONFIG_KPROBES */
+ #endif /* _ASM_RISCV_KPROBES_H */
+diff --git a/arch/riscv/include/asm/uprobes.h b/arch/riscv/include/asm/uprobes.h
+index f2183e00fdd2..3fc7deda9190 100644
+--- a/arch/riscv/include/asm/uprobes.h
++++ b/arch/riscv/include/asm/uprobes.h
+@@ -34,7 +34,18 @@ struct arch_uprobe {
+ 	bool simulate;
+ };
  
-+TRACE_EVENT(damos_before_apply,
++#ifdef CONFIG_UPROBES
+ bool uprobe_breakpoint_handler(struct pt_regs *regs);
+ bool uprobe_single_step_handler(struct pt_regs *regs);
+-
++#else
++static inline bool uprobe_breakpoint_handler(struct pt_regs *regs)
++{
++	return false;
++}
 +
-+	TP_PROTO(unsigned int context_idx, unsigned int scheme_idx,
-+		unsigned int target_idx, struct damon_region *r,
-+		unsigned int nr_regions),
-+
-+	TP_ARGS(context_idx, target_idx, scheme_idx, r, nr_regions),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned int, context_idx)
-+		__field(unsigned int, scheme_idx)
-+		__field(unsigned long, target_idx)
-+		__field(unsigned int, nr_regions)
-+		__field(unsigned long, start)
-+		__field(unsigned long, end)
-+		__field(unsigned int, nr_accesses)
-+		__field(unsigned int, age)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->context_idx = context_idx;
-+		__entry->scheme_idx = scheme_idx;
-+		__entry->target_idx = target_idx;
-+		__entry->nr_regions = nr_regions;
-+		__entry->start = r->ar.start;
-+		__entry->end = r->ar.end;
-+		__entry->nr_accesses = r->nr_accesses;
-+		__entry->age = r->age;
-+	),
-+
-+	TP_printk("ctx_idx=%u scheme_idx=%u target_idx=%lu nr_regions=%u %lu-%lu: %u %u",
-+			__entry->context_idx, __entry->scheme_idx,
-+			__entry->target_idx, __entry->nr_regions,
-+			__entry->start, __entry->end,
-+			__entry->nr_accesses, __entry->age)
-+);
-+
- TRACE_EVENT(damon_aggregated,
++static inline bool uprobe_single_step_handler(struct pt_regs *regs)
++{
++	return false;
++}
++#endif /* CONFIG_UPROBES */
+ #endif /* _ASM_RISCV_UPROBES_H */
+diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+index f798c853bede..cd6f10c73a16 100644
+--- a/arch/riscv/kernel/traps.c
++++ b/arch/riscv/kernel/traps.c
+@@ -13,6 +13,8 @@
+ #include <linux/kdebug.h>
+ #include <linux/uaccess.h>
+ #include <linux/kprobes.h>
++#include <linux/uprobes.h>
++#include <asm/uprobes.h>
+ #include <linux/mm.h>
+ #include <linux/module.h>
+ #include <linux/irq.h>
+@@ -246,22 +248,28 @@ static inline unsigned long get_break_insn_length(unsigned long pc)
+ 	return GET_INSN_LENGTH(insn);
+ }
  
- 	TP_PROTO(unsigned int target_id, struct damon_region *r,
-diff --git a/mm/damon/core.c b/mm/damon/core.c
-index 83af336bb0e6..22fe81abd35d 100644
---- a/mm/damon/core.c
-+++ b/mm/damon/core.c
-@@ -963,6 +963,28 @@ static void damos_apply_scheme(struct damon_ctx *c, struct damon_target *t,
- 	struct timespec64 begin, end;
- 	unsigned long sz_applied = 0;
- 	int err = 0;
-+	/*
-+	 * We plan to support multiple context per kdamond, as DAMON sysfs
-+	 * implies with 'nr_contexts' file.  Nevertheless, only single context
-+	 * per kdamond is supported for now.  So, we can simply use '0' context
-+	 * index here.
-+	 */
-+	unsigned int cidx = 0;
-+	struct damos *siter;		/* schemes iterator */
-+	unsigned int sidx = 0;
-+	struct damon_target *titer;	/* targets iterator */
-+	unsigned int tidx = 0;
++static bool probe_single_step_handler(struct pt_regs *regs)
++{
++	bool user = user_mode(regs);
 +
-+	damon_for_each_scheme(siter, c) {
-+		if (siter == s)
-+			break;
-+		sidx++;
-+	}
-+	damon_for_each_target(titer, c) {
-+		if (titer == t)
-+			break;
-+		tidx++;
-+	}
++	return user ? uprobe_single_step_handler(regs) : kprobe_single_step_handler(regs);
++}
++
++static bool probe_breakpoint_handler(struct pt_regs *regs)
++{
++	bool user = user_mode(regs);
++
++	return user ? uprobe_breakpoint_handler(regs) : kprobe_breakpoint_handler(regs);
++}
++
+ void handle_break(struct pt_regs *regs)
+ {
+-#ifdef CONFIG_KPROBES
+-	if (kprobe_single_step_handler(regs))
++	if (probe_single_step_handler(regs))
+ 		return;
  
- 	if (c->ops.apply_scheme) {
- 		if (quota->esz && quota->charged_sz + sz > quota->esz) {
-@@ -986,8 +1008,11 @@ static void damos_apply_scheme(struct damon_ctx *c, struct damon_target *t,
- 		ktime_get_coarse_ts64(&begin);
- 		if (c->callback.before_damos_apply)
- 			err = c->callback.before_damos_apply(c, t, r, s);
--		if (!err)
-+		if (!err) {
-+			trace_damos_before_apply(cidx, sidx, tidx, r,
-+					damon_nr_regions(t));
- 			sz_applied = c->ops.apply_scheme(c, t, r, s);
-+		}
- 		ktime_get_coarse_ts64(&end);
- 		quota->total_charged_ns += timespec64_to_ns(&end) -
- 			timespec64_to_ns(&begin);
+-	if (kprobe_breakpoint_handler(regs))
+-		return;
+-#endif
+-#ifdef CONFIG_UPROBES
+-	if (uprobe_single_step_handler(regs))
++	if (probe_breakpoint_handler(regs))
+ 		return;
+ 
+-	if (uprobe_breakpoint_handler(regs))
+-		return;
+-#endif
+ 	current->thread.bad_cause = regs->cause;
+ 
+ 	if (user_mode(regs))
+
+base-commit: 7d2f353b2682dcfe5f9bc71e5b61d5b61770d98e
 -- 
-2.25.1
+2.39.2
 
