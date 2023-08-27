@@ -2,199 +2,181 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2C0C83F11
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 26 Aug 2023 12:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68144C83F01
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 27 Aug 2023 00:42:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229715AbjHZMVg (ORCPT
+        id S229816AbjH0AlU (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 26 Aug 2023 08:21:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49504 "EHLO
+        Sat, 26 Aug 2023 20:41:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229477AbjHZMVF (ORCPT
+        with ESMTP id S229824AbjH0Aku (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 26 Aug 2023 08:21:05 -0400
+        Sat, 26 Aug 2023 20:40:50 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B72BDE;
-        Sat, 26 Aug 2023 05:21:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AF2910D;
+        Sat, 26 Aug 2023 17:40:48 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9F084615C1;
-        Sat, 26 Aug 2023 12:21:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A89D2C433C8;
-        Sat, 26 Aug 2023 12:20:57 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2A10A61EA0;
+        Sun, 27 Aug 2023 00:40:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0F7EC433C7;
+        Sun, 27 Aug 2023 00:40:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693052461;
-        bh=7EXJ1LENbcLPurI5Z9dQe+9Ef/4yp4DqUevs1jxxCUM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QXrZon6mgILY3byNR5FdVO14AfRXgGliokWBj7UEH8qMyJK/L4H/fLd/0PGSstUtk
-         8AzAaWTrePhSf5jH8OmNMttFBD2vmnuAvdmelceQiZAlcrA6MORPqeCiEkB4aDK9jM
-         iSbZj8kB3KW23QR5XfS2zkchwmSvq60aY0LHMDqO6Gr931s/+D07jbYobJfPiLEXuM
-         oawV7+GlZWxvnoR6pNFUzLleWtQ/EngVNDVbY+FinkTuR120DUMCpIp3J0FUFlwXOt
-         l0/DRPNc2Nxmgg2ItwrXI1m6FR1TdOhWUaPmY3tTicHR9x6hKvylQeAyJjCPIUqlyr
-         Cx9r6xEKuuNPQ==
-Date:   Sat, 26 Aug 2023 12:38:38 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Florent Revest <revest@chromium.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v4 6/9] tracing/fprobe: Enable fprobe events with
- CONFIG_DYNAMIC_FTRACE_WITH_ARGS
-Message-Id: <20230826123838.610b3fe09b9fa1aab75f158d@kernel.org>
-In-Reply-To: <CABRcYmLcTBey7QY9Ln3aVvJPV7weeTR0FA6DOU3_QObuAM8_Zg@mail.gmail.com>
-References: <169280372795.282662.9784422934484459769.stgit@devnote2>
-        <169280379741.282662.12221517584561036597.stgit@devnote2>
-        <CABRcYmLcTBey7QY9Ln3aVvJPV7weeTR0FA6DOU3_QObuAM8_Zg@mail.gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        s=k20201202; t=1693096847;
+        bh=OVEU+9mCgeRFNww8ePJ6l3hvkB0OBAcU0yHXtNzZZ3w=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PA3hihX4jrkqeaCm7VD5UQqCiLGakqPf3cZXPo7690IMZ20lmf/pGoRNV1/ugXUQ7
+         CWmTIOz0ozXtmC1oE5t09kvxRr0mQ+PIAcMhC7AKbBRvU4qhDAOEQcpKXdEHkFtQJx
+         Opyg792baEpl5hq3O++Mqtb2RL7qh8RK+VZPRt++iJ+CrpN+qu07xPs6tD/snL3SbF
+         5uBNFRvplrqs3bfN/Qa/21P9Z5Hj7QKP+DE2sLiMGEz6KOzYPXcyM/OHeWZJPKcZwE
+         /9afwHZpMn1gCEkmLzqJ57Scn4XeyxXGFAoJ3OB0sPrJz3HYlV/LcJXVhobBekaona
+         EQIpIF4jKtIew==
+From:   SeongJae Park <sj@kernel.org>
+To:     damon@lists.linux.dev
+Cc:     SeongJae Park <sj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>, linux-mm@kvack.org,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] mm/damon/core: add a tracepoint for damos apply target regions
+Date:   Sun, 27 Aug 2023 00:40:45 +0000
+Message-Id: <20230827004045.49516-1-sj@kernel.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-(Cc: Peter)
+DAMON provides damon_aggregated tracepoint, which exposes details of
+each region and its access monitoring results.  It is useful for
+getting whole monitoring results, e.g., for recording purposes.
 
-On Fri, 25 Aug 2023 18:12:07 +0200
-Florent Revest <revest@chromium.org> wrote:
+For investigations of DAMOS, DAMON Sysfs interface provides DAMOS
+statistics and tried_regions directory.  But, those provides only
+statistics and snapshots.  If the scheme is frequently applied and if
+the user needs to know every detail of DAMOS behavior, the
+snapshot-based interface could be insufficient and expensive.
 
-> On Wed, Aug 23, 2023 at 5:16 PM Masami Hiramatsu (Google)
-> <mhiramat@kernel.org> wrote:
-> >
-> > diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-> > index c60d0d9f1a95..90ad28260a9f 100644
-> > --- a/kernel/trace/trace_fprobe.c
-> > +++ b/kernel/trace/trace_fprobe.c
-> > +#else /* CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS && !CONFIG_HAVE_PT_REGS_TO_FTRACE_REGS_CAST */
-> > +
-> > +/* Since fprobe handlers can be nested, pt_regs buffer need to be a stack */
-> > +#define PERF_FPROBE_REGS_MAX   4
-> > +
-> > +struct pt_regs_stack {
-> > +       struct pt_regs regs[PERF_FPROBE_REGS_MAX];
-> > +       int idx;
-> > +};
-> > +
-> > +static DEFINE_PER_CPU(struct pt_regs_stack, perf_fprobe_regs);
-> > +
-> > +static __always_inline
-> > +struct pt_regs *perf_fprobe_partial_regs(struct ftrace_regs *fregs)
-> > +{
-> > +       struct pt_regs_stack *stack = this_cpu_ptr(&perf_fprobe_regs);
-> > +       struct pt_regs *regs;
-> > +
-> > +       if (stack->idx < PERF_FPROBE_REGS_MAX) {
-> > +               regs = stack->regs[stack->idx++];
-> 
-> This is missing an &:
-> regs = &stack->regs[stack->idx++];
+As a last resort, userspace users need to record the all monitoring
+results via damon_aggregated tracepoint and simulate how DAMOS would
+worked.  It is unnecessarily complicated.  DAMON kernel API users,
+meanwhile, can do that easily via before_damos_apply() callback field of
+'struct damon_callback', though.
 
-Oops, good point. I'm curious it didin't cause compile error...
-(I thought I built it on arm64)
+Add a tracepoint that will be called just after before_damos_apply()
+callback for more convenient investigations of DAMOS.  The tracepoint
+exposes all details about each regions, similar to damon_aggregated
+tracepoint.
 
-> 
-> > +               return ftrace_partial_regs(fregs, regs);
-> 
-> I think this is incorrect on arm64 and will likely cause very subtle
-> failure modes down the line on other architectures too. The problem on
-> arm64 is that Perf calls "user_mode(regs)" somewhere down the line,
-> that macro tries to read the "pstate" register, which is not populated
-> in ftrace_regs, so it's not copied into a "partial" pt_regs either and
-> Perf can take wrong decisions based on that.
+Please note that DAMOS is currently not only for memory management but
+also for query-like efficient monitoring results retrievals (when 'stat'
+action is used).  Until now, only statistics or snapshots were
+supported.  Addition of this tracepoint allows efficient full recording
+of DAMOS-based filtered monitoring results.
 
-I think we can assure the ftrace_regs is always !user_mode() so in that case
-ftrace_partial_regs() should fill the 'pstate' register as kernel mode.
+Signed-off-by: SeongJae Park <sj@kernel.org>
+---
+ include/trace/events/damon.h | 37 ++++++++++++++++++++++++++++++++++++
+ mm/damon/core.c              | 27 +++++++++++++++++++++++++-
+ 2 files changed, 63 insertions(+), 1 deletion(-)
 
-> 
-> I already mentioned this problem in the past:
-> - in the third answer block of:
-> https://lore.kernel.org/all/CABRcYmJjtVq-330ktqTAUiNO1=yG_aHd0xz=c550O5C7QP++UA@mail.gmail.com/
-> - in the fourth answer block of:
-> https://lore.kernel.org/all/CABRcYm+esb8J2O1v6=C+h+HSa5NxraPUgo63w7-iZj0CXbpusg@mail.gmail.com/
-> 
-
-Oops, sorry I missed that. And I basically agreed that we need a special
-care for perf. Let me reply it.
-
-> It is quite possible that other architectures at some point introduce
-> a light ftrace "args" trampoline that misses one of the registers
-> expected by Perf because they don't realize that this trampoline calls
-> fprobe which calls Perf which has specific registers expectations.
-
-Agreed.
-
-> 
-> We got the green light from Alexei to use ftrace_partial_regs for "BPF
-> mutli_kprobe" because these BPF programs can gracefully deal with
-> sparse pt_regs but I think a similar conversation needs to happen with
-> the Perf folks.
-
-Indeed. Who is the best person to involve, Peterz? (but I think
-we need arm64 PMU part maintainer to talk)
-
-> 
-> ----
-> 
-> On a side-note, a subtle difference between ftrace_partial_regs with
-> and without HAVE_PT_REGS_TO_FTRACE_REGS_CAST is that one does a copy
-> and the other does not. If a subsystem receives a partial regs under
-> HAVE_PT_REGS_TO_FTRACE_REGS_CAST, it can modify register fields and
-> the modified values will be restored by the ftrace trampoline. Without
-> HAVE_PT_REGS_TO_FTRACE_REGS_CAST, only the copy will be modified and
-> ftrace won't restore them. I think the least we can do is to document
-> thoroughly the guarantees of the ftrace_partial_regs API: users
-> shouldn't rely on modifying the resulting regs because depending on
-> the architecture this could do different things. People shouldn't rely
-> on any register that isn't covered by one of the ftrace_regs_get_*
-> helpers because it can be unpopulated on some architectures. I believe
-> this is the case for BPF multi_kprobe but not for Perf.
-
-I agree with the documentation requirement, but since the fprobe official
-interface becomes ftrace_regs, user naturally expects it is not pt_regs.
-The problem is that the perf's case. Since the perf is natively only
-support pt_regs (and there is no reason to support ftrace_regs, yes).
-Hmm, I will recheck how the perf events on trace-event is implementd.
-
-Thank you,
-
-> 
-> > +       }
-> > +       return NULL;
-> > +}
-> > +
-> > +static __always_inline void perf_fprobe_return_regs(struct pt_regs *regs)
-> > +{
-> > +       struct pt_regs_stack *stack = this_cpu_ptr(&perf_fprobe_regs);
-> > +
-> > +       if (WARN_ON_ONCE(regs != stack->regs[stack->idx]))
-> 
-> This is missing an & too:
-> if (WARN_ON_ONCE(regs != &stack->regs[stack->idx]))
-> 
-> 
-> 
-> 
-> > +               return;
-> > +
-> > +       --stack->idx;
-> > +}
-> > +
-> > +#endif /* !CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS || CONFIG_HAVE_PT_REGS_TO_FTRACE_REGS_CAST */
-
-
+diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
+index 0b8d13bde17a..c942c5033b5f 100644
+--- a/include/trace/events/damon.h
++++ b/include/trace/events/damon.h
+@@ -9,6 +9,43 @@
+ #include <linux/types.h>
+ #include <linux/tracepoint.h>
+ 
++TRACE_EVENT(damos_before_apply,
++
++	TP_PROTO(unsigned int context_idx, unsigned int scheme_idx,
++		unsigned int target_idx, struct damon_region *r,
++		unsigned int nr_regions),
++
++	TP_ARGS(context_idx, target_idx, scheme_idx, r, nr_regions),
++
++	TP_STRUCT__entry(
++		__field(unsigned int, context_idx)
++		__field(unsigned int, scheme_idx)
++		__field(unsigned long, target_idx)
++		__field(unsigned int, nr_regions)
++		__field(unsigned long, start)
++		__field(unsigned long, end)
++		__field(unsigned int, nr_accesses)
++		__field(unsigned int, age)
++	),
++
++	TP_fast_assign(
++		__entry->context_idx = context_idx;
++		__entry->scheme_idx = scheme_idx;
++		__entry->target_idx = target_idx;
++		__entry->nr_regions = nr_regions;
++		__entry->start = r->ar.start;
++		__entry->end = r->ar.end;
++		__entry->nr_accesses = r->nr_accesses;
++		__entry->age = r->age;
++	),
++
++	TP_printk("ctx_idx=%u scheme_idx=%u target_idx=%lu nr_regions=%u %lu-%lu: %u %u",
++			__entry->context_idx, __entry->scheme_idx,
++			__entry->target_idx, __entry->nr_regions,
++			__entry->start, __entry->end,
++			__entry->nr_accesses, __entry->age)
++);
++
+ TRACE_EVENT(damon_aggregated,
+ 
+ 	TP_PROTO(unsigned int target_id, struct damon_region *r,
+diff --git a/mm/damon/core.c b/mm/damon/core.c
+index 83af336bb0e6..22fe81abd35d 100644
+--- a/mm/damon/core.c
++++ b/mm/damon/core.c
+@@ -963,6 +963,28 @@ static void damos_apply_scheme(struct damon_ctx *c, struct damon_target *t,
+ 	struct timespec64 begin, end;
+ 	unsigned long sz_applied = 0;
+ 	int err = 0;
++	/*
++	 * We plan to support multiple context per kdamond, as DAMON sysfs
++	 * implies with 'nr_contexts' file.  Nevertheless, only single context
++	 * per kdamond is supported for now.  So, we can simply use '0' context
++	 * index here.
++	 */
++	unsigned int cidx = 0;
++	struct damos *siter;		/* schemes iterator */
++	unsigned int sidx = 0;
++	struct damon_target *titer;	/* targets iterator */
++	unsigned int tidx = 0;
++
++	damon_for_each_scheme(siter, c) {
++		if (siter == s)
++			break;
++		sidx++;
++	}
++	damon_for_each_target(titer, c) {
++		if (titer == t)
++			break;
++		tidx++;
++	}
+ 
+ 	if (c->ops.apply_scheme) {
+ 		if (quota->esz && quota->charged_sz + sz > quota->esz) {
+@@ -986,8 +1008,11 @@ static void damos_apply_scheme(struct damon_ctx *c, struct damon_target *t,
+ 		ktime_get_coarse_ts64(&begin);
+ 		if (c->callback.before_damos_apply)
+ 			err = c->callback.before_damos_apply(c, t, r, s);
+-		if (!err)
++		if (!err) {
++			trace_damos_before_apply(cidx, sidx, tidx, r,
++					damon_nr_regions(t));
+ 			sz_applied = c->ops.apply_scheme(c, t, r, s);
++		}
+ 		ktime_get_coarse_ts64(&end);
+ 		quota->total_charged_ns += timespec64_to_ns(&end) -
+ 			timespec64_to_ns(&begin);
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.25.1
+
