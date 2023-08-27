@@ -2,190 +2,136 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02613C83F11
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 27 Aug 2023 08:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B782C83F01
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 27 Aug 2023 10:47:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229841AbjH0IkN (ORCPT
+        id S229536AbjH0Kr0 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 27 Aug 2023 04:40:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39344 "EHLO
+        Sun, 27 Aug 2023 06:47:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230319AbjH0Ij7 (ORCPT
+        with ESMTP id S229571AbjH0KrB (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 27 Aug 2023 04:39:59 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 148E013E;
-        Sun, 27 Aug 2023 01:39:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A47EE60F7D;
-        Sun, 27 Aug 2023 08:39:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18049C433C8;
-        Sun, 27 Aug 2023 08:39:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693125595;
-        bh=YzIwPUhAIk98KSVOhAjG5Ib6wpaBGGcNghTCEj9deJU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=HdAwxenOM8yUDMXJbFzt+mAm1X+PADXLPz55W3BtvbFqFQZedXvl3rsRofL4u62wb
-         OQ5HMt7Nv/vA4rruNXNqt3urENYWaWXnJJCJblntkww8wLRdv1MSQwjsOxdVWuosJg
-         TxzKvwUCMg4iriM6BSKNIzPfTkiUPWKO5KA1H1DRpgbAipR31UOVq7X30ECqw8q8l3
-         uyLhz6tudsOYZMUV8EU5f2Fau3ERd0yPY82gsvpUREIDkev4iu/XVR1MC1UkWbQQ/O
-         SmToHrvJYu3AwX/U5RbFEc8FOM6m9LW5EyBgwePv4pxD8SlOnJ38ZUNl2tKxXMHZvg
-         GsdrQe51zfkGw==
-From:   =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Sun, 27 Aug 2023 06:47:01 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D9DE139;
+        Sun, 27 Aug 2023 03:46:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693133218; x=1724669218;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=sDDzkQzb757ene7HMEX/SXvVxG8zNuK5WjwaRpDHGik=;
+  b=aKQ1zVQcuj+9vDYqaBLgdsrsLh/oDO/rXaUWHH4SxRs92nSncx2mzDxm
+   CvMcYdEenn24CXVkkeTmD6wxyW9Q70cB4xGijUKMsWir8m246sDN0xBdj
+   hhFUYD0eW6QlWL9fdtqPh2tsnoHJ5r1vvlsaFiwswT3+GEIxL1S5x8UHf
+   iot7eO7hf/MrP8PmLsZhFN2/mY2m5bNoc6Q6WJHqeNsfrV0LGa4gAA8/H
+   Gz7RbCM7Yiod0vP6g2OVLPMOhQI1OPEcwsxH840wu/LwpWkmMoGb8nqim
+   j/qy9MeWj6eQciU2rXBf5gONXd9Mi46/C0dR8rUjsPCjkOpW/uYDJf8Ny
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10814"; a="359926531"
+X-IronPort-AV: E=Sophos;i="6.02,205,1688454000"; 
+   d="scan'208";a="359926531"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2023 03:46:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10814"; a="731527841"
+X-IronPort-AV: E=Sophos;i="6.02,205,1688454000"; 
+   d="scan'208";a="731527841"
+Received: from lkp-server02.sh.intel.com (HELO daf8bb0a381d) ([10.239.97.151])
+  by orsmga007.jf.intel.com with ESMTP; 27 Aug 2023 03:46:54 -0700
+Received: from kbuild by daf8bb0a381d with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qaDI9-0005hL-2I;
+        Sun, 27 Aug 2023 10:46:50 +0000
+Date:   Sun, 27 Aug 2023 18:46:48 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
         linux-riscv@lists.infradead.org, Guo Ren <guoren@kernel.org>
-Cc:     =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
         linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         Nam Cao <namcaov@gmail.com>
-Subject: [PATCH] riscv: Only consider swbp/ss handlers for correct privileged mode
-Date:   Sun, 27 Aug 2023 10:39:49 +0200
-Message-Id: <20230827083949.204927-1-bjorn@kernel.org>
-X-Mailer: git-send-email 2.39.2
+Subject: Re: [PATCH] riscv: Only consider swbp/ss handlers for correct
+ privileged mode
+Message-ID: <202308271841.HlnnHFL7-lkp@intel.com>
+References: <20230827083949.204927-1-bjorn@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230827083949.204927-1-bjorn@kernel.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Björn Töpel <bjorn@rivosinc.com>
+Hi Bj�rn,
 
-RISC-V software breakpoint trap handlers are used for {k,u}probes.
+kernel test robot noticed the following build warnings:
 
-When trapping from kernelmode, only the kernelmode handlers should be
-considered. Vice versa, only usermode handlers for usermode
-traps. This is not the case on RISC-V, which can trigger a bug if a
-userspace process uses uprobes, and a WARN() is triggered from
-kernelmode (which is implemented via {c.,}ebreak).
+[auto build test WARNING on 7d2f353b2682dcfe5f9bc71e5b61d5b61770d98e]
 
-The kernel will trap on the kernelmode {c.,}ebreak, look for uprobes
-handlers, realize incorrectly that uprobes need to be handled, and
-exit the trap handler early. The trap returns to re-executing the
-{c.,}ebreak, and enter an infinite trap-loop.
+url:    https://github.com/intel-lab-lkp/linux/commits/Bj-rn-T-pel/riscv-Only-consider-swbp-ss-handlers-for-correct-privileged-mode/20230827-164313
+base:   7d2f353b2682dcfe5f9bc71e5b61d5b61770d98e
+patch link:    https://lore.kernel.org/r/20230827083949.204927-1-bjorn%40kernel.org
+patch subject: [PATCH] riscv: Only consider swbp/ss handlers for correct privileged mode
+config: riscv-randconfig-001-20230827 (https://download.01.org/0day-ci/archive/20230827/202308271841.HlnnHFL7-lkp@intel.com/config)
+compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project.git 4a5ac14ee968ff0ad5d2cc1ffa0299048db4c88a)
+reproduce: (https://download.01.org/0day-ci/archive/20230827/202308271841.HlnnHFL7-lkp@intel.com/reproduce)
 
-The issue was found running the BPF selftest [1].
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308271841.HlnnHFL7-lkp@intel.com/
 
-Fix this issue by only considering the swbp/ss handlers for
-kernel/usermode respectively. Also, move CONFIG ifdeffery from traps.c
-to the asm/{k,u}probes.h headers.
+All warnings (new ones prefixed by >>):
 
-Note that linux/uprobes.h only include asm/uprobes.h if CONFIG_UPROBES
-is defined, which is why asm/uprobes.h needs to be unconditionally
-included in traps.c
+   In file included from kernel/sched/core.c:49:
+   In file included from include/linux/kprobes.h:32:
+>> arch/riscv/include/asm/kprobes.h:44:62: warning: omitting the parameter name in a function definition is a C2x extension [-Wc2x-extensions]
+      44 | static inline bool kprobe_breakpoint_handler(struct pt_regs *)
+         |                                                              ^
+   arch/riscv/include/asm/kprobes.h:49:63: warning: omitting the parameter name in a function definition is a C2x extension [-Wc2x-extensions]
+      49 | static inline bool kprobe_single_step_handler(struct pt_regs *)
+         |                                                               ^
+   kernel/sched/core.c:3695:20: warning: unused function 'rq_has_pinned_tasks' [-Wunused-function]
+    3695 | static inline bool rq_has_pinned_tasks(struct rq *rq)
+         |                    ^
+   kernel/sched/core.c:5821:20: warning: unused function 'sched_tick_start' [-Wunused-function]
+    5821 | static inline void sched_tick_start(int cpu) { }
+         |                    ^
+   kernel/sched/core.c:5822:20: warning: unused function 'sched_tick_stop' [-Wunused-function]
+    5822 | static inline void sched_tick_stop(int cpu) { }
+         |                    ^
+   kernel/sched/core.c:6522:20: warning: unused function 'sched_core_cpu_starting' [-Wunused-function]
+    6522 | static inline void sched_core_cpu_starting(unsigned int cpu) {}
+         |                    ^
+   kernel/sched/core.c:6523:20: warning: unused function 'sched_core_cpu_deactivate' [-Wunused-function]
+    6523 | static inline void sched_core_cpu_deactivate(unsigned int cpu) {}
+         |                    ^
+   kernel/sched/core.c:6524:20: warning: unused function 'sched_core_cpu_dying' [-Wunused-function]
+    6524 | static inline void sched_core_cpu_dying(unsigned int cpu) {}
+         |                    ^
+   8 warnings generated.
 
-Link: https://lore.kernel.org/linux-riscv/87v8d19aun.fsf@all.your.base.are.belong.to.us/ # [1]
-Fixes: 74784081aac8 ("riscv: Add uprobes supported")
-Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
----
- arch/riscv/include/asm/kprobes.h | 11 ++++++++++-
- arch/riscv/include/asm/uprobes.h | 13 ++++++++++++-
- arch/riscv/kernel/traps.c        | 28 ++++++++++++++++++----------
- 3 files changed, 40 insertions(+), 12 deletions(-)
 
-diff --git a/arch/riscv/include/asm/kprobes.h b/arch/riscv/include/asm/kprobes.h
-index e7882ccb0fd4..89fbd90f16a2 100644
---- a/arch/riscv/include/asm/kprobes.h
-+++ b/arch/riscv/include/asm/kprobes.h
-@@ -40,6 +40,15 @@ void arch_remove_kprobe(struct kprobe *p);
- int kprobe_fault_handler(struct pt_regs *regs, unsigned int trapnr);
- bool kprobe_breakpoint_handler(struct pt_regs *regs);
- bool kprobe_single_step_handler(struct pt_regs *regs);
--
-+#else
-+static inline bool kprobe_breakpoint_handler(struct pt_regs *)
-+{
-+	return false;
-+}
-+
-+static inline bool kprobe_single_step_handler(struct pt_regs *)
-+{
-+	return false;
-+}
- #endif /* CONFIG_KPROBES */
- #endif /* _ASM_RISCV_KPROBES_H */
-diff --git a/arch/riscv/include/asm/uprobes.h b/arch/riscv/include/asm/uprobes.h
-index f2183e00fdd2..3fc7deda9190 100644
---- a/arch/riscv/include/asm/uprobes.h
-+++ b/arch/riscv/include/asm/uprobes.h
-@@ -34,7 +34,18 @@ struct arch_uprobe {
- 	bool simulate;
- };
- 
-+#ifdef CONFIG_UPROBES
- bool uprobe_breakpoint_handler(struct pt_regs *regs);
- bool uprobe_single_step_handler(struct pt_regs *regs);
--
-+#else
-+static inline bool uprobe_breakpoint_handler(struct pt_regs *regs)
-+{
-+	return false;
-+}
-+
-+static inline bool uprobe_single_step_handler(struct pt_regs *regs)
-+{
-+	return false;
-+}
-+#endif /* CONFIG_UPROBES */
- #endif /* _ASM_RISCV_UPROBES_H */
-diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-index f798c853bede..cd6f10c73a16 100644
---- a/arch/riscv/kernel/traps.c
-+++ b/arch/riscv/kernel/traps.c
-@@ -13,6 +13,8 @@
- #include <linux/kdebug.h>
- #include <linux/uaccess.h>
- #include <linux/kprobes.h>
-+#include <linux/uprobes.h>
-+#include <asm/uprobes.h>
- #include <linux/mm.h>
- #include <linux/module.h>
- #include <linux/irq.h>
-@@ -246,22 +248,28 @@ static inline unsigned long get_break_insn_length(unsigned long pc)
- 	return GET_INSN_LENGTH(insn);
- }
- 
-+static bool probe_single_step_handler(struct pt_regs *regs)
-+{
-+	bool user = user_mode(regs);
-+
-+	return user ? uprobe_single_step_handler(regs) : kprobe_single_step_handler(regs);
-+}
-+
-+static bool probe_breakpoint_handler(struct pt_regs *regs)
-+{
-+	bool user = user_mode(regs);
-+
-+	return user ? uprobe_breakpoint_handler(regs) : kprobe_breakpoint_handler(regs);
-+}
-+
- void handle_break(struct pt_regs *regs)
- {
--#ifdef CONFIG_KPROBES
--	if (kprobe_single_step_handler(regs))
-+	if (probe_single_step_handler(regs))
- 		return;
- 
--	if (kprobe_breakpoint_handler(regs))
--		return;
--#endif
--#ifdef CONFIG_UPROBES
--	if (uprobe_single_step_handler(regs))
-+	if (probe_breakpoint_handler(regs))
- 		return;
- 
--	if (uprobe_breakpoint_handler(regs))
--		return;
--#endif
- 	current->thread.bad_cause = regs->cause;
- 
- 	if (user_mode(regs))
+vim +44 arch/riscv/include/asm/kprobes.h
 
-base-commit: 7d2f353b2682dcfe5f9bc71e5b61d5b61770d98e
+    38	
+    39	void arch_remove_kprobe(struct kprobe *p);
+    40	int kprobe_fault_handler(struct pt_regs *regs, unsigned int trapnr);
+    41	bool kprobe_breakpoint_handler(struct pt_regs *regs);
+    42	bool kprobe_single_step_handler(struct pt_regs *regs);
+    43	#else
+  > 44	static inline bool kprobe_breakpoint_handler(struct pt_regs *)
+    45	{
+    46		return false;
+    47	}
+    48	
+
 -- 
-2.39.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
