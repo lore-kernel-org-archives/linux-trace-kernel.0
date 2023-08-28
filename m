@@ -2,72 +2,88 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E31C0C71153
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 28 Aug 2023 15:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3140EC71153
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 28 Aug 2023 19:46:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231489AbjH1Pf4 (ORCPT
+        id S232031AbjH1TqL (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 28 Aug 2023 11:35:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39784 "EHLO
+        Mon, 28 Aug 2023 15:46:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232459AbjH1Pfx (ORCPT
+        with ESMTP id S233580AbjH1TqD (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 28 Aug 2023 11:35:53 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0000DE1;
-        Mon, 28 Aug 2023 08:35:50 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-401b5516104so30800265e9.2;
-        Mon, 28 Aug 2023 08:35:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693236949; x=1693841749;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mzAX6lqqHTluclgLNh1EUElGR4QXqRqoc9259SBPLU8=;
-        b=L8tjr27q6ggRC6qCsj5TJadHQXfL8J+RdwqQn6XM0VlhObtBH2Sya6jLWcLe0R0wR3
-         xhmXjkr0kqa3760Oyg/+YD7dLCme27Hh/hZWuIPDpT5cr+Raxo4LjxUz884ZF0Si7XqY
-         nwVblkiTpx2IbBPXODPVzgrTYRNNUbyKuci0OQxTCawXtflZmsoj/tRZQ9ZxoLYjD4FF
-         P1fh6voXSQyzqhIAFf8VWyj/njtZVXsVB4k/NHM+WUAZJKcAA1bF77AyZf0jWRV5xSkp
-         9ub82sSMiS0CLd5gKNpxVu91yCSBPaBmlPlV/3vSaOask252Se3eQFhRvYwFgt2e3rp2
-         +nvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693236949; x=1693841749;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mzAX6lqqHTluclgLNh1EUElGR4QXqRqoc9259SBPLU8=;
-        b=RJkHTnPLlhcwseXX0cr67iAMp1S9KHOHhnPIcp7PEJFcRQMGGopHJQ2KXtmwi+E+GP
-         A2Jr0JEdEcxm02lMlh3cYXzy7xk9HEbr2aV9e57+Y8paFnzPlbw45Ry5sM6xXgV76hIW
-         5uAeWKVkMqj/RLkidM2ZVt5YJ//HOgIqXLxfNDR/SI4QuTHjYqmBTJCqMSMxshtEvRv2
-         2YcsdZA5Hn8nhCF50ElblUdilOz04lsWVTpiTYk3GCfGMPu6qxWrK5LoX+hz3nFJmSt+
-         n8dvsUHmfB7+z5tVIbKC1zLNkhqTZBHTwre/4gv57AQQo00f7IHbVp4ojXlQysJNnuDf
-         WrtQ==
-X-Gm-Message-State: AOJu0YyQiREAy8gpABayweQDhEDbgj4E9lh1bhGpG6Y210p8rukGRmX/
-        rV8Hvrr5akw9XgZZz9Ntle0=
-X-Google-Smtp-Source: AGHT+IEfbfIoLSEJ4mhCVMfR2RUI4/euIEv22Sb6Ji7X+ZmdVa3DlIAgd265KR9S9ErkaoL7KbDt4g==
-X-Received: by 2002:a1c:7303:0:b0:3fe:3004:1ffd with SMTP id d3-20020a1c7303000000b003fe30041ffdmr19711222wmb.4.1693236949046;
-        Mon, 28 Aug 2023 08:35:49 -0700 (PDT)
-Received: from ip-172-31-30-46.eu-west-1.compute.internal (ec2-54-170-241-106.eu-west-1.compute.amazonaws.com. [54.170.241.106])
-        by smtp.gmail.com with ESMTPSA id c1-20020a056000104100b0031aef72a021sm10680247wrx.86.2023.08.28.08.35.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Aug 2023 08:35:48 -0700 (PDT)
-From:   Puranjay Mohan <puranjay12@gmail.com>
-To:     bjorn@kernel.org
-Cc:     aou@eecs.berkeley.edu, bjorn@rivosinc.com, guoren@kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-trace-kernel@vger.kernel.org, lkp@intel.com,
-        namcaov@gmail.com, palmer@dabbelt.com, paul.walmsley@sifive.com,
-        Puranjay Mohan <puranjay12@gmail.com>
-Subject: Re: [PATCH v2] riscv: Only consider swbp/ss handlers for correct privileged mode
-Date:   Mon, 28 Aug 2023 15:35:35 +0000
-Message-Id: <20230828153535.1568230-1-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230827114003.224958-1-bjorn@kernel.org>
-References: <20230827114003.224958-1-bjorn@kernel.org>
+        Mon, 28 Aug 2023 15:46:03 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20ED7BE;
+        Mon, 28 Aug 2023 12:46:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B36AB61230;
+        Mon, 28 Aug 2023 19:45:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1C5BC433C8;
+        Mon, 28 Aug 2023 19:45:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693251959;
+        bh=yhDfpHHMTwoKf6lQHxj/LI3JfvoIJGkL3VYzwzQSSPo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ntOoDqAO4HSTdUm/9O+IxWZMHgoAovKePv+l/8lN/W/C43VzX+fklx87Jnc/Ky7/f
+         eVMNzplEf+Lo2ztDOvYdjJPp/pmyrbENd81do8XnQ6WK6VOPexIDW95Tccb317hl8q
+         LGzwXdISp5hQIIg0+LEqFW44L9eOunA5oYo4Gq80VlpMHzHlDNME/HiVZbrAxgLMz9
+         xsRgwJ9gmqq5Dfh+nvpCcYH0wbWl3L3py4QKE1o3c5TayOGg9s7B6MxTaSWFz5a0g/
+         WcciuDb3toaDbjKQQfEtSWrv6E9/MCUgmnMn25Yao6O4AW87OdWTAmDNxdD9g9QNNC
+         RxZUL8ri1U5vw==
+Date:   Mon, 28 Aug 2023 12:45:57 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Zheao Li <me@manjusaka.me>
+Cc:     edumazet@google.com, mhiramat@kernel.org, rostedt@goodmis.org,
+        davem@davemloft.net, dsahern@kernel.org, pabeni@redhat.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v4] tracepoint: add new `tcp:tcp_ca_event` trace event
+Message-ID: <20230828124557.0cc70e58@kernel.org>
+In-Reply-To: <20230825133246.344364-1-me@manjusaka.me>
+References: <20230825133246.344364-1-me@manjusaka.me>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Tested-by: Puranjay Mohan <puranjay12@gmail.com>
+On Fri, 25 Aug 2023 13:32:47 +0000 Zheao Li wrote:
+> This the 4th version of the patch, the previous discusstion is here
+> 
+> https://lore.kernel.org/linux-trace-kernel/20230807183308.9015-1-me@manjusaka.me/
+> 
+> In this version of the code, here's some different:
+> 
+> 1. The event name has been changed from `tcp_ca_event_set` to
+> `tcp_ca_event`
+> 
+> 2. Output the current protocol family in TP_printk
+> 
+> 3. Show the ca_event symbol instead of the original number
+> 
+> But the `./scripts/checkpatch.pl` has been failed to check this patch,
+> because we sill have some code error in ./scripts/checkpatch.pl(in
+> another world, the test would be failed when we use the 
+> scripts/checkpatch.pl to check the events/tcp.h
+> 
+> Feel free to ask me if you have have any issues and ideas.
+
+## Form letter - net-next-closed
+
+The merge window for v6.6 has begun and therefore net-next is closed
+for new drivers, features, code refactoring and optimizations.
+We are currently accepting bug fixes only.
+
+Please repost when net-next reopens after Sept 11th.
+
+RFC patches sent for review only are obviously welcome at any time.
+
+See: https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#development-cycle
+-- 
+pw-bot: defer
+
