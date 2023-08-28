@@ -2,112 +2,128 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06EF6C83F01
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 27 Aug 2023 20:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43557C71153
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 28 Aug 2023 06:43:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229795AbjH0Uf5 (ORCPT
+        id S229602AbjH1GnX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 27 Aug 2023 16:35:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51724 "EHLO
+        Mon, 28 Aug 2023 02:43:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229740AbjH0Uf0 (ORCPT
+        with ESMTP id S229507AbjH1Gm4 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 27 Aug 2023 16:35:26 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71EF7127;
-        Sun, 27 Aug 2023 13:35:24 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-51e28cac164so7345053a12.1;
-        Sun, 27 Aug 2023 13:35:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693168522; x=1693773322;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tdmuji/W/78o9EtHwL+JzoXBf9mqsVcxBfeCxlt2PZU=;
-        b=aKgXg3fVYHKOzKjCht8IRUo2h7TYJ/yKSoC/n3RcGVetO4Uu331be4SzHs8VbEoyZH
-         5PA2lAL3iRUp8bRAdM6e1y407h/zKUKbXy2n0gTTj0QPFLVqtKa8CMO+KT/zVTs3m/7i
-         5BAYa5IZnr4lpPbCKq35T9n+jxys3kzID4xGZmAu2tcFd5WO6STkvtr/GY7R5PsOTvGq
-         6dkFKsCdYWN9nXq1c131h/i0KIxhibsQGYfDLIagAAkkRlztQUH3VRLHdVViZpb7ue/N
-         kj5e5/2VhskRCQghd80wponTWq10ySGgxRe+npr9X4wCG2X264XEbkqpaCq/xrnaRY6W
-         wOdA==
+        Mon, 28 Aug 2023 02:42:56 -0400
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38B22C4;
+        Sun, 27 Aug 2023 23:42:54 -0700 (PDT)
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-58ca499456dso35642847b3.1;
+        Sun, 27 Aug 2023 23:42:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693168522; x=1693773322;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tdmuji/W/78o9EtHwL+JzoXBf9mqsVcxBfeCxlt2PZU=;
-        b=DrqB4CdBSKw+OGDX7UFHpy41jX8rvcZGUFjU15v+CWBPtzZnZrjBDY4UGFY/DjRr+D
-         dan5zCPW5FHdW/80BW+wDsi1qX7/75X0UETCNm/AzMEuWXY2c+SXK52PEdT6rOvWstzx
-         MddCFJ5fIoa2iljnVwFxvxY9Dp4eNx1sJ/jXL5U7Ao3bxluEH3ezNFqrvhTeMQsH/rJv
-         eWuYPNblyqNlWmvHb+onTpX7JmivOjmTdQdEioQTjl25b758B170gvdj76n4yc8OfY4r
-         pNMFf/V3y1WezMUB3bmxYHWGlfJlOFt036WHkvtzRzfwKDXWERGXJ6/uvS1T5EeJ6ruZ
-         EqFw==
-X-Gm-Message-State: AOJu0YzNjd4GfTZBQb0WrJIWC+VmTcFpVyWKmsL0iqwUDVQFHewW0MTk
-        IJEcvJEtEcWi5B2e11/zMfU=
-X-Google-Smtp-Source: AGHT+IGHniIaOVrRE2PcfpimVnCxJswxCY0hAnsvcig3JUrKxAYxOpkzgXqOvOr/2l1sAhAUOdcVZA==
-X-Received: by 2002:a17:907:e92:b0:9a2:25da:d71e with SMTP id ho18-20020a1709070e9200b009a225dad71emr8748989ejc.0.1693168522455;
-        Sun, 27 Aug 2023 13:35:22 -0700 (PDT)
-Received: from nam-dell (ip-217-105-46-58.ip.prioritytelecom.net. [217.105.46.58])
-        by smtp.gmail.com with ESMTPSA id q24-20020a17090622d800b0099d804da2e9sm3770795eja.225.2023.08.27.13.35.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Aug 2023 13:35:21 -0700 (PDT)
-Date:   Sun, 27 Aug 2023 22:35:21 +0200
-From:   Nam Cao <namcaov@gmail.com>
-To:     =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org, Guo Ren <guoren@kernel.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v2] riscv: Only consider swbp/ss handlers for correct
- privileged mode
-Message-ID: <ZOuziWaJpYV0LfB3@nam-dell>
-References: <20230827114003.224958-1-bjorn@kernel.org>
+        d=1e100.net; s=20221208; t=1693204973; x=1693809773;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1ZAs6BPn0UEnVbrYLaaDeF3O9l7Iturm7FWJFQ5jda0=;
+        b=VAz5SDZnSv/j4h6SjG4uBv8sOT0HChvsC1/jJgIQymXVjMucFLcusx1WPA5CWMaW4O
+         MaqjxMuTCIiFvFr5nIgrOxTqh2L/nVlazbCQgK6V+u6eTrU21RWq+nCzAx6EOz8QRJh2
+         oxG7ltFhQ6dZ4mRdnecCxhGpVB9FUF4jIy6Xnr09PO5FHfs0gYqM0qFVFwUYRSAC2Mex
+         OXIux5OM34WtFn1QAcGXvpYYjHluYItgsqQhUvJ7HcA/Ljnj00FinMQxGV3EXDWLGSon
+         HdEwXybrMl/OIVwdC3zrujq8ACFZZPs7Ag97MtpZSuB84rDn8exZHRVce+TdfHrZRizE
+         tpkA==
+X-Gm-Message-State: AOJu0YxMvHtIySreGZUxGNS0Aj6gbLZeGwc5gaBPrbkL3/02tJMdbBOk
+        J8zV0oAqwt18awLH3ZLcnkePgv2u0PTbxA==
+X-Google-Smtp-Source: AGHT+IEmYuCZ2oQNMpW7RRwA17Ofyq/MfcmWHEuG57kibh5t95/QQvu+3sCttxs8+iZ3o97wiO+7kA==
+X-Received: by 2002:a25:42cc:0:b0:d77:94d6:aa6f with SMTP id p195-20020a2542cc000000b00d7794d6aa6fmr14827618yba.15.1693204973092;
+        Sun, 27 Aug 2023 23:42:53 -0700 (PDT)
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
+        by smtp.gmail.com with ESMTPSA id 184-20020a2504c1000000b00c64533e4e20sm1554144ybe.33.2023.08.27.23.42.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 27 Aug 2023 23:42:51 -0700 (PDT)
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-d780bca9275so2580309276.1;
+        Sun, 27 Aug 2023 23:42:51 -0700 (PDT)
+X-Received: by 2002:a25:8502:0:b0:d7a:e348:1e47 with SMTP id
+ w2-20020a258502000000b00d7ae3481e47mr3956815ybk.36.1693204971245; Sun, 27 Aug
+ 2023 23:42:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230827114003.224958-1-bjorn@kernel.org>
+References: <20230810141947.1236730-1-arnd@kernel.org> <169292577153.789945.11297239773543112051.b4-ty@oracle.com>
+ <3956e2a4-c545-1212-e95f-3cf61a60d6a4@gmail.com> <CAMuHMdWC2S330_Vb_NTHTDC=BakBsw4ouP-eFJv0erV1-jmvTQ@mail.gmail.com>
+ <130b3b57-edb0-184d-5b5f-69b013715773@gmail.com>
+In-Reply-To: <130b3b57-edb0-184d-5b5f-69b013715773@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 28 Aug 2023 08:42:39 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUkZmkBSksvaGcDCKz2tsgkwyWgDa+WwCJm2UxFMCj1jw@mail.gmail.com>
+Message-ID: <CAMuHMdUkZmkBSksvaGcDCKz2tsgkwyWgDa+WwCJm2UxFMCj1jw@mail.gmail.com>
+Subject: Re: (subset) [PATCH 00/17] -Wmissing-prototype warning fixes
+To:     Michael Schmitz <schmitzmic@gmail.com>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Matt Turner <mattst88@gmail.com>,
+        Vineet Gupta <vgupta@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Brian Cain <bcain@quicinc.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Michal Simek <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        x86@kernel.org, Borislav Petkov <bp@alien8.de>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-next@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sun, Aug 27, 2023 at 01:40:03PM +0200, Björn Töpel wrote:
-> From: Björn Töpel <bjorn@rivosinc.com>
-> 
-> RISC-V software breakpoint trap handlers are used for {k,u}probes.
-> 
-> When trapping from kernelmode, only the kernelmode handlers should be
-> considered. Vice versa, only usermode handlers for usermode
-> traps. This is not the case on RISC-V, which can trigger a bug if a
-> userspace process uses uprobes, and a WARN() is triggered from
-> kernelmode (which is implemented via {c.,}ebreak).
-> 
-> The kernel will trap on the kernelmode {c.,}ebreak, look for uprobes
-> handlers, realize incorrectly that uprobes need to be handled, and
-> exit the trap handler early. The trap returns to re-executing the
-> {c.,}ebreak, and enter an infinite trap-loop.
-> 
-> The issue was found running the BPF selftest [1].
-> 
-> Fix this issue by only considering the swbp/ss handlers for
-> kernel/usermode respectively. Also, move CONFIG ifdeffery from traps.c
-> to the asm/{k,u}probes.h headers.
-> 
-> Note that linux/uprobes.h only include asm/uprobes.h if CONFIG_UPROBES
-> is defined, which is why asm/uprobes.h needs to be unconditionally
-> included in traps.c
-> 
-> Link: https://lore.kernel.org/linux-riscv/87v8d19aun.fsf@all.your.base.are.belong.to.us/ # [1]
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202308271841.HlnnHFL7-lkp@intel.com/
-> Reviewed-by: Guo Ren <guoren@kernel.org>
-> Fixes: 74784081aac8 ("riscv: Add uprobes supported")
-> Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
+On Sat, Aug 26, 2023 at 12:44â€¯AM Michael Schmitz <schmitzmic@gmail.com> wrote:
+> (Incidentally - did you ever publish the m68k full history tree anywhere
+> in git?)
 
-Reviewed-by: Nam Cao <namcaov@gmail.com>
+You mean the gitified version of the Linux/m68k CVS tree Ralf created
+for me because my machine wasn't powerful enough?
+No, and I should look into doing that...
 
-Best regards,
-Nam
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
