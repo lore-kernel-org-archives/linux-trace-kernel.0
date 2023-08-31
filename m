@@ -2,111 +2,88 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4ECC83F10
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 31 Aug 2023 12:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE2CC83F12
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 31 Aug 2023 13:21:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346300AbjHaMzo (ORCPT
+        id S235687AbjHaNVj (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 31 Aug 2023 08:55:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36114 "EHLO
+        Thu, 31 Aug 2023 09:21:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346297AbjHaMzn (ORCPT
+        with ESMTP id S230023AbjHaNVj (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 31 Aug 2023 08:55:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EB14CEE
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 31 Aug 2023 05:54:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1693486495;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=cMsX5nBfb23hEuPzCptzvRIDXnrXr0QfihjCT9ZyFbI=;
-        b=iAGFmW5KFGcZfanpeVjifhMjLZWbv1m7/IpF0Nd9I/Dt2S0laaylHlcp9ULvaxaCzDsXiQ
-        bb/5cHva6yxEVedM9Mff+jnOrLwkDvXNb7chRWBRqTv/ofBmbnIE3iNmS6IGLGEvNIeNnk
-        G9eue5T53KEyH8WWFSwr6iY12os3vMs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-467-SOzm8YnbNm2aPAHakOuC6g-1; Thu, 31 Aug 2023 08:54:53 -0400
-X-MC-Unique: SOzm8YnbNm2aPAHakOuC6g-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5A796858EED;
-        Thu, 31 Aug 2023 12:54:53 +0000 (UTC)
-Received: from bfoster.redhat.com (unknown [10.22.16.94])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B4D8F1121315;
-        Thu, 31 Aug 2023 12:54:52 +0000 (UTC)
-From:   Brian Foster <bfoster@redhat.com>
-To:     linux-trace-kernel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        zhengyejian1@huawei.com
-Subject: [PATCH] tracing: zero the pipe cpumask on alloc to avoid spurious -EBUSY
-Date:   Thu, 31 Aug 2023 08:55:00 -0400
-Message-ID: <20230831125500.986862-1-bfoster@redhat.com>
+        Thu, 31 Aug 2023 09:21:39 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4F7BCEB;
+        Thu, 31 Aug 2023 06:21:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693488096; x=1725024096;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HCLaDrmLaIsFO9VZ6gs0Y8FPC++yBu4gaEkTIHM/aXs=;
+  b=Cg5e3huP6dxg8UaYk1EIRx1to9Z8oL4sHAbV6AdlUJD+KC7UULZBZBDv
+   Td+jRVRjaxALvQNBdW/paqLNfJqlH4Flnym8RC9+W4el8euolRBM9aW05
+   DBJ8jyZO51WioV7ol7dJNgGlIkAhLKc6xkSrOdCbdvFkwCR/HNxwb6bQq
+   JBV82Op4tNU1seuo1z1ZYUU82b3gJUtT8+mW3PJSB1b+pnP/+dPvODmDS
+   ojZ7jW432cdObpnOaz0GZzAj8eojgvlULeHG4KemZoA/ooYuT7uwoXhXr
+   LyDY0M5goJSTWMIhRPfdfeR8ueFCIM33rlp10+T3vYandK7vV3J+5fsRQ
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="355440088"
+X-IronPort-AV: E=Sophos;i="6.02,216,1688454000"; 
+   d="scan'208";a="355440088"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2023 06:21:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10818"; a="733085316"
+X-IronPort-AV: E=Sophos;i="6.02,216,1688454000"; 
+   d="scan'208";a="733085316"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2023 06:21:33 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qbhc3-005Obk-0f;
+        Thu, 31 Aug 2023 16:21:31 +0300
+Date:   Thu, 31 Aug 2023 16:21:30 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc:     Yury Norov <yury.norov@gmail.com>, Uros Bizjak <ubizjak@gmail.com>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v1 1/1] bitops: Share BYTES_TO_BITS() for everyone
+Message-ID: <ZPCT2vV0r8l/wxim@smile.fi.intel.com>
+References: <20230824123728.2761663-1-andriy.shevchenko@linux.intel.com>
+ <a5574786-0a49-454d-67e3-571983e6a6e8@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a5574786-0a49-454d-67e3-571983e6a6e8@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The pipe cpumask used to serialize opens between the main and percpu
-trace pipes is not zeroed or initialized. This can result in
-spurious -EBUSY returns if underlying memory is not fully zeroed.
-This has been observed by immediate failure to read the main
-trace_pipe file on an otherwise newly booted and idle system:
+On Fri, Aug 25, 2023 at 04:49:07PM +0200, Alexander Lobakin wrote:
+> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Date: Thu, 24 Aug 2023 15:37:28 +0300
+> 
+> > It may be new callers for the same macro, share it.
+> > 
+> > Note, it's unknown why it's represented in the current form instead of
+> > simple multiplication and commit 1ff511e35ed8 ("tracing/kprobes: Add
+> > bitfield type") doesn't explain that neither. Let leave it as is and
+> > we may improve it in the future.
+> 
+> Maybe symmetrical change in tools/ like I did[0] an aeon ago?
 
- # cat /sys/kernel/debug/tracing/trace_pipe
- cat: /sys/kernel/debug/tracing/trace_pipe: Device or resource busy
+Hmm... Why can't you simply upstream your version? It seems better than mine.
 
-Zero the allocation of pipe_cpumask to avoid the problem.
+> [0]
+> https://github.com/alobakin/linux/commit/fd308001fe6d38837fe820427209a6a99e4850a8
 
-Fixes: c2489bb7e6be ("tracing: Introduce pipe_cpumask to avoid race on trace_pipes")
-Signed-off-by: Brian Foster <bfoster@redhat.com>
----
-
-Hi,
-
-I ran into this problem just recently on one of my test VMs immediately
-after updating to a v6.5 base. A revert of the aforementioned commit
-addressed the problem. I'm not terribly familiar with the tracing code,
-but on further inspection I noticed the cpumask doesn't appear to be
-initialized anywhere. I suppose this could alternatively do a
-cpumask_clear() or whatever after allocation, but either way this
-addresses the problem for me.
-
-Please CC on replies as I'm not subscribed to the list. Thanks.
-
-Brian
-
- kernel/trace/trace.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 8e64aaad5361..2656ca3b9b39 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -9486,7 +9486,7 @@ static struct trace_array *trace_array_create(const char *name)
- 	if (!alloc_cpumask_var(&tr->tracing_cpumask, GFP_KERNEL))
- 		goto out_free_tr;
- 
--	if (!alloc_cpumask_var(&tr->pipe_cpumask, GFP_KERNEL))
-+	if (!zalloc_cpumask_var(&tr->pipe_cpumask, GFP_KERNEL))
- 		goto out_free_tr;
- 
- 	tr->trace_flags = global_trace.trace_flags & ~ZEROED_TRACE_FLAGS;
-@@ -10431,7 +10431,7 @@ __init static int tracer_alloc_buffers(void)
- 	if (trace_create_savedcmd() < 0)
- 		goto out_free_temp_buffer;
- 
--	if (!alloc_cpumask_var(&global_trace.pipe_cpumask, GFP_KERNEL))
-+	if (!zalloc_cpumask_var(&global_trace.pipe_cpumask, GFP_KERNEL))
- 		goto out_free_savedcmd;
- 
- 	/* TODO: make the number of buffers hot pluggable with CPUS */
 -- 
-2.41.0
+With Best Regards,
+Andy Shevchenko
+
 
