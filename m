@@ -2,85 +2,108 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B60DC83F37
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 31 Aug 2023 21:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 087BACA0FE2
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 31 Aug 2023 23:20:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231658AbjHaVIg (ORCPT
+        id S1347848AbjHaXU3 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 31 Aug 2023 17:08:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47136 "EHLO
+        Thu, 31 Aug 2023 19:20:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244408AbjHaVIf (ORCPT
+        with ESMTP id S230143AbjHaXU2 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 31 Aug 2023 17:08:35 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD641107
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 31 Aug 2023 14:08:29 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-68a3b66f350so1091634b3a.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 31 Aug 2023 14:08:29 -0700 (PDT)
+        Thu, 31 Aug 2023 19:20:28 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43E7110CA
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 31 Aug 2023 16:20:14 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-307d20548adso1190092f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 31 Aug 2023 16:20:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1693516109; x=1694120909; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vdS6aEw25mYoGsnnq+Zex8meOo2Y1HUCQC1ip4dfp1s=;
-        b=kwVIlVcTfzt+KWLG+1QxfliQ0vfeuWKZs+EVHZi04zykGTKKvMn0FdK2p+8CO13npp
-         zqXju9sqeWMu24HuE1+TisbyGNK4tfwHmW4kcoBDytClrdh8Zk0AZ3WfwCYWmmjmVZ7A
-         Qo45c4AxUImEljx0m1GQCU2d10Om+PQmPUBG0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693516109; x=1694120909;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20221208; t=1693524013; x=1694128813; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vdS6aEw25mYoGsnnq+Zex8meOo2Y1HUCQC1ip4dfp1s=;
-        b=EZW7MFYSEQzp3F3LNA4wTLfg8043d5kLBs09WWfrfzd2ovQV88rQaqyuFNSrzdR2Ku
-         wb8ta0WJY/amPfXjboE8deyy0BfaRzIj2uPYp4JIxCdijd81qvvS+VLuUYIX5KNstfkB
-         KV6lJEa8F37mjOlXMMyO4ecqSDXzGsJ4wVEXPVT2UXx91lMQTo/v7/3w66d0k5V/0AR1
-         5YSyvkvW/KvT+cVevqSFGD+jOg7hSkNWijZvgaiINa71W9BG1it0LEKHsrr4WxqcJx08
-         1CLmtyX/SltooCHKrs+5Sag5Hjwt/Lr0Ap09G3OCu+X2R86Vt2+rLdm4YBqcIVAzar3N
-         7YEA==
-X-Gm-Message-State: AOJu0Yx+78wBjVk4sYQL/1Q8wIv0tBKYRAx5/PNORPoIL38N6Q+i/47L
-        LK1fY1jBxrm7Nv25A7OHRl04AA==
-X-Google-Smtp-Source: AGHT+IG3xkW1wQZbnGgPAEUzCt2GSCDdKOHcgxWVXIAe2RZ1/F3iEGAIqwPDUkiNDC9TTJhgLxQd/w==
-X-Received: by 2002:a05:6a20:978b:b0:131:c760:2a0b with SMTP id hx11-20020a056a20978b00b00131c7602a0bmr835978pzc.52.1693516109106;
-        Thu, 31 Aug 2023 14:08:29 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id j22-20020aa78016000000b00682868714fdsm1746918pfi.95.2023.08.31.14.08.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Aug 2023 14:08:28 -0700 (PDT)
-Date:   Thu, 31 Aug 2023 14:08:28 -0700
-From:   Kees Cook <keescook@chromium.org>
+        bh=CWZZJ4W2c1JEb6sxHZjM2rWbFiQYVpX5RM6za8+8n6s=;
+        b=2p7Rsowql8DWRf0YXiAUawrq76ymvQmb3JdU1QoYvxHQFP/NEKi1nRFPElq+99MZf0
+         Z8F+Nvvl4/ZXFtPytxZcqBTgit5m0QUTp5pSqj4A0hOOFfrbi3pL8cFSPzZ1OMTHrZ+3
+         y8FLwM2oHf+tWtfp1862AlMTngyYmqWfHenZtIbSrQmponF/BPrIwwipDPhz/W//1wsM
+         Qxqp7vXkgPeTVJuXUCxjGJhL1IZcV1NJDtZWD+AzkkMZ9uuIjT6EQf216eU5x8FwrjnF
+         fkH4NqpLyOv0oIO0VsmSqWvnpATcGmx3eLaMW1Rl2TRstS04wP3Ig9RgAH3QtLqW8/SK
+         neXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693524013; x=1694128813;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CWZZJ4W2c1JEb6sxHZjM2rWbFiQYVpX5RM6za8+8n6s=;
+        b=lBCTNbtTnKWRt+vuDtdA17yGXzHjEQ5l1kzeiyP1MxmiVZXwSb2oGWeiSK3uf8oFM1
+         /rZ/97/YUWH7rsey6klkl2LEsy2+tYUJoFF5Se6loOzUPreRus8z81aG+hTovw2jG6HJ
+         47gd4JIN9+aJk1nvFmM7MT1W/5xPbaeuRoYRhOnyGsDsKfzhvYc5AMRmfYMJ0PQBD2G5
+         6oJfowyMQ82N5lbVcHjcCPRoZ3Xg8WYIXVG2xvqMU5gJSv0i/DrsK8KPGJvi5SMxDLT7
+         PsCZTAJJYeJYS23f9bq7UYgnFTO8sFRA9b/C19Q7Mu9iMINjUFKnt9/WZGJgRjVr2lmM
+         +HpQ==
+X-Gm-Message-State: AOJu0Yw1RPSGC6eGgjAKa8PJMYkSSrD3UFPvN2OLb8vCHvrJxF/9y3G0
+        78xFEXYyP1MDFNK5EzVJxR3vrKS3xh4+quHwj8qjVQ==
+X-Google-Smtp-Source: AGHT+IFY/qULbZslTUFY83I+dyYF857ayC4OzKQ7adtPZGuXyLPjh4tXVAQxgl2KHb//SBEIgqvNsv53UX8QmJLJrCY=
+X-Received: by 2002:a5d:4b51:0:b0:317:5b1b:1a40 with SMTP id
+ w17-20020a5d4b51000000b003175b1b1a40mr619080wrs.49.1693524012629; Thu, 31 Aug
+ 2023 16:20:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230831194212.1529941-1-azeemshaikh38@gmail.com>
+In-Reply-To: <20230831194212.1529941-1-azeemshaikh38@gmail.com>
+From:   Justin Stitt <justinstitt@google.com>
+Date:   Thu, 31 Aug 2023 16:20:02 -0700
+Message-ID: <CAFhGd8ruFyv=eL6XXY3FQWVAa3SAy=uBebLReGog0oSwE6XUiw@mail.gmail.com>
+Subject: Re: [PATCH] trace/events/task.h: Replace strlcpy with strscpy
 To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
+Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH] trace/events/task.h: Replace strlcpy with strscpy
-Message-ID: <202308311408.A73103C41@keescook>
-References: <20230831194212.1529941-1-azeemshaikh38@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230831194212.1529941-1-azeemshaikh38@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Aug 31, 2023 at 07:42:12PM +0000, Azeem Shaikh wrote:
+On Thu, Aug 31, 2023 at 12:42=E2=80=AFPM Azeem Shaikh <azeemshaikh38@gmail.=
+com> wrote:
+>
 > strlcpy() reads the entire source buffer first.
 > This read may exceed the destination size limit.
 > This is both inefficient and can lead to linear read
 > overflows if a source string is not NUL-terminated [1].
 > In an effort to remove strlcpy() completely [2], replace
 > strlcpy() here with strscpy().
-> 
+>
 > No return values were used, so direct replacement is safe.
-> 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+>
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcp=
+y
 > [2] https://github.com/KSPP/linux/issues/89
-> 
+>
 > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Justin Stitt <justinstitt@google.com>
 
--- 
-Kees Cook
+> ---
+>  include/trace/events/task.h |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/trace/events/task.h b/include/trace/events/task.h
+> index 64d160930b0d..47b527464d1a 100644
+> --- a/include/trace/events/task.h
+> +++ b/include/trace/events/task.h
+> @@ -47,7 +47,7 @@ TRACE_EVENT(task_rename,
+>         TP_fast_assign(
+>                 __entry->pid =3D task->pid;
+>                 memcpy(entry->oldcomm, task->comm, TASK_COMM_LEN);
+> -               strlcpy(entry->newcomm, comm, TASK_COMM_LEN);
+> +               strscpy(entry->newcomm, comm, TASK_COMM_LEN);
+>                 __entry->oom_score_adj =3D task->signal->oom_score_adj;
+>         ),
+>
+> --
+> 2.42.0.283.g2d96d420d3-goog
+>
+>
