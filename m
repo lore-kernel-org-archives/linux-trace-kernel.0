@@ -2,73 +2,112 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B47CFC83F01
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 31 Aug 2023 13:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5231DC83F12
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 31 Aug 2023 13:51:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235470AbjHaNjO (ORCPT
+        id S244906AbjHaNvY (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 31 Aug 2023 09:39:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54820 "EHLO
+        Thu, 31 Aug 2023 09:51:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345173AbjHaNjK (ORCPT
+        with ESMTP id S233346AbjHaNvY (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 31 Aug 2023 09:39:10 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04689E54;
-        Thu, 31 Aug 2023 06:39:06 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id ACC20B822A0;
-        Thu, 31 Aug 2023 13:39:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CC5FC433C8;
-        Thu, 31 Aug 2023 13:39:02 +0000 (UTC)
-Date:   Thu, 31 Aug 2023 09:39:00 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ross Zwisler <zwisler@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Daniel Almeida <daniel.almeida@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Subject: Re: [PATCH] visl: use canonical ftrace path
-Message-ID: <20230831093900.1ba0bc82@rorschach.local.home>
-In-Reply-To: <20230829204600.3210276-2-zwisler@kernel.org>
-References: <20230829204600.3210276-2-zwisler@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Thu, 31 Aug 2023 09:51:24 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B65F6E47;
+        Thu, 31 Aug 2023 06:51:20 -0700 (PDT)
+Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Rc2b56rjKzrSXw;
+        Thu, 31 Aug 2023 21:49:37 +0800 (CST)
+Received: from [10.67.110.218] (10.67.110.218) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Thu, 31 Aug 2023 21:51:18 +0800
+Message-ID: <26f8fb43-6ea8-edc2-381d-3600fce261af@huawei.com>
+Date:   Thu, 31 Aug 2023 21:51:18 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH] tracing: zero the pipe cpumask on alloc to avoid spurious
+ -EBUSY
+Content-Language: en-US
+To:     Brian Foster <bfoster@redhat.com>,
+        <linux-trace-kernel@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <rostedt@goodmis.org>
+References: <20230831125500.986862-1-bfoster@redhat.com>
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+In-Reply-To: <20230831125500.986862-1-bfoster@redhat.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.110.218]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 29 Aug 2023 14:46:01 -0600
-Ross Zwisler <zwisler@kernel.org> wrote:
+On 2023/8/31 20:55, Brian Foster wrote:
+> The pipe cpumask used to serialize opens between the main and percpu
+> trace pipes is not zeroed or initialized. This can result in
+> spurious -EBUSY returns if underlying memory is not fully zeroed.
+> This has been observed by immediate failure to read the main
+> trace_pipe file on an otherwise newly booted and idle system:
+> 
+>   # cat /sys/kernel/debug/tracing/trace_pipe
+>   cat: /sys/kernel/debug/tracing/trace_pipe: Device or resource busy
+> 
+> Zero the allocation of pipe_cpumask to avoid the problem.
+> 
+> Fixes: c2489bb7e6be ("tracing: Introduce pipe_cpumask to avoid race on trace_pipes")
+> Signed-off-by: Brian Foster <bfoster@redhat.com>
+> ---
+> 
+> Hi,
+> 
+> I ran into this problem just recently on one of my test VMs immediately
+> after updating to a v6.5 base. A revert of the aforementioned commit
+> addressed the problem. I'm not terribly familiar with the tracing code,
+> but on further inspection I noticed the cpumask doesn't appear to be
+> initialized anywhere. I suppose this could alternatively do a
+> cpumask_clear() or whatever after allocation, but either way this
+> addresses the problem for me.
 
-> From: Ross Zwisler <zwisler@google.com>
-> 
-> The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
-> 
-> But, from Documentation/trace/ftrace.rst:
-> 
->   Before 4.1, all ftrace tracing control files were within the debugfs
->   file system, which is typically located at /sys/kernel/debug/tracing.
->   For backward compatibility, when mounting the debugfs file system,
->   the tracefs file system will be automatically mounted at:
-> 
->   /sys/kernel/debug/tracing
-> 
-> Update the visl decoder driver documentation to use this tracefs path.
-> 
-> Signed-off-by: Ross Zwisler <zwisler@google.com>
+Yes, pipe_cpumask must be initialized.
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+--
 
-Thanks Ross!
+Thanks,
+Zheng Yejian
 
--- Steve
+> 
+> Please CC on replies as I'm not subscribed to the list. Thanks.
+> 
+> Brian
+> 
+>   kernel/trace/trace.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 8e64aaad5361..2656ca3b9b39 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -9486,7 +9486,7 @@ static struct trace_array *trace_array_create(const char *name)
+>   	if (!alloc_cpumask_var(&tr->tracing_cpumask, GFP_KERNEL))
+>   		goto out_free_tr;
+>   
+> -	if (!alloc_cpumask_var(&tr->pipe_cpumask, GFP_KERNEL))
+> +	if (!zalloc_cpumask_var(&tr->pipe_cpumask, GFP_KERNEL))
+>   		goto out_free_tr;
+>   
+>   	tr->trace_flags = global_trace.trace_flags & ~ZEROED_TRACE_FLAGS;
+> @@ -10431,7 +10431,7 @@ __init static int tracer_alloc_buffers(void)
+>   	if (trace_create_savedcmd() < 0)
+>   		goto out_free_temp_buffer;
+>   
+> -	if (!alloc_cpumask_var(&global_trace.pipe_cpumask, GFP_KERNEL))
+> +	if (!zalloc_cpumask_var(&global_trace.pipe_cpumask, GFP_KERNEL))
+>   		goto out_free_savedcmd;
+>   
+>   	/* TODO: make the number of buffers hot pluggable with CPUS */
 
