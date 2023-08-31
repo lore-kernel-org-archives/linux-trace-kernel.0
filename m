@@ -2,171 +2,73 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0FDC83F01
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 31 Aug 2023 13:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B47CFC83F01
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 31 Aug 2023 13:39:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232199AbjHaN1t (ORCPT
+        id S235470AbjHaNjO (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 31 Aug 2023 09:27:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40966 "EHLO
+        Thu, 31 Aug 2023 09:39:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229694AbjHaN1t (ORCPT
+        with ESMTP id S1345173AbjHaNjK (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 31 Aug 2023 09:27:49 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 442FE1A2;
-        Thu, 31 Aug 2023 06:27:46 -0700 (PDT)
-Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Rc23v3QtxzrSK2;
-        Thu, 31 Aug 2023 21:26:03 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Thu, 31 Aug 2023 21:27:43 +0800
-From:   Zheng Yejian <zhengyejian1@huawei.com>
-To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <xukuohai@huawei.com>,
-        <zhengyejian1@huawei.com>
-Subject: [PATCH] tracing: Fix race issue between cpu buffer write and swap
-Date:   Thu, 31 Aug 2023 21:27:39 +0800
-Message-ID: <20230831132739.4070878-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 31 Aug 2023 09:39:10 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04689E54;
+        Thu, 31 Aug 2023 06:39:06 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id ACC20B822A0;
+        Thu, 31 Aug 2023 13:39:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CC5FC433C8;
+        Thu, 31 Aug 2023 13:39:02 +0000 (UTC)
+Date:   Thu, 31 Aug 2023 09:39:00 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Ross Zwisler <zwisler@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Daniel Almeida <daniel.almeida@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Subject: Re: [PATCH] visl: use canonical ftrace path
+Message-ID: <20230831093900.1ba0bc82@rorschach.local.home>
+In-Reply-To: <20230829204600.3210276-2-zwisler@kernel.org>
+References: <20230829204600.3210276-2-zwisler@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.175.61]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpeml500012.china.huawei.com (7.185.36.15)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Warning happened in rb_end_commit() at code:
-	if (RB_WARN_ON(cpu_buffer, !local_read(&cpu_buffer->committing)))
+On Tue, 29 Aug 2023 14:46:01 -0600
+Ross Zwisler <zwisler@kernel.org> wrote:
 
-  WARNING: CPU: 0 PID: 139 at kernel/trace/ring_buffer.c:3142
-	rb_commit+0x402/0x4a0
-  Call Trace:
-   ring_buffer_unlock_commit+0x42/0x250
-   trace_buffer_unlock_commit_regs+0x3b/0x250
-   trace_event_buffer_commit+0xe5/0x440
-   trace_event_buffer_reserve+0x11c/0x150
-   trace_event_raw_event_sched_switch+0x23c/0x2c0
-   __traceiter_sched_switch+0x59/0x80
-   __schedule+0x72b/0x1580
-   schedule+0x92/0x120
-   worker_thread+0xa0/0x6f0
+> From: Ross Zwisler <zwisler@google.com>
+> 
+> The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
+> 
+> But, from Documentation/trace/ftrace.rst:
+> 
+>   Before 4.1, all ftrace tracing control files were within the debugfs
+>   file system, which is typically located at /sys/kernel/debug/tracing.
+>   For backward compatibility, when mounting the debugfs file system,
+>   the tracefs file system will be automatically mounted at:
+> 
+>   /sys/kernel/debug/tracing
+> 
+> Update the visl decoder driver documentation to use this tracefs path.
+> 
+> Signed-off-by: Ross Zwisler <zwisler@google.com>
 
-It is because the race between writing event into cpu buffer and swapping
-cpu buffer through file per_cpu/cpu0/snapshot:
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-  Write on CPU 0             Swap buffer by per_cpu/cpu0/snapshot on CPU 1
-  --------                   --------
-                             tracing_snapshot_write()
-                               [...]
+Thanks Ross!
 
-  ring_buffer_lock_reserve()
-    cpu_buffer = buffer->buffers[cpu]; // 1. Suppose find 'cpu_buffer_a';
-    [...]
-    rb_reserve_next_event()
-      [...]
-
-                               ring_buffer_swap_cpu()
-                                 if (local_read(&cpu_buffer_a->committing))
-                                     goto out_dec;
-                                 if (local_read(&cpu_buffer_b->committing))
-                                     goto out_dec;
-                                 buffer_a->buffers[cpu] = cpu_buffer_b;
-                                 buffer_b->buffers[cpu] = cpu_buffer_a;
-                                 // 2. cpu_buffer has swapped here.
-
-      rb_start_commit(cpu_buffer);
-      if (unlikely(READ_ONCE(cpu_buffer->buffer)
-          != buffer)) { // 3. This check passed due to 'cpu_buffer->buffer'
-        [...]           //    has not changed here.
-        return NULL;
-      }
-                                 cpu_buffer_b->buffer = buffer_a;
-                                 cpu_buffer_a->buffer = buffer_b;
-                                 [...]
-
-      // 4. Reserve event from 'cpu_buffer_a'.
-
-  ring_buffer_unlock_commit()
-    [...]
-    cpu_buffer = buffer->buffers[cpu]; // 5. Now find 'cpu_buffer_b' !!!
-    rb_commit(cpu_buffer)
-      rb_end_commit()  // 6. WARN for the wrong 'committing' state !!!
-
-Based on above analysis, we can easily reproduce by following testcase:
-  ``` bash
-  #!/bin/bash
-
-  dmesg -n 7
-  sysctl -w kernel.panic_on_warn=1
-  TR=/sys/kernel/tracing
-  echo 7 > ${TR}/buffer_size_kb
-  echo "sched:sched_switch" > ${TR}/set_event
-  while [ true ]; do
-          echo 1 > ${TR}/per_cpu/cpu0/snapshot
-  done &
-  while [ true ]; do
-          echo 1 > ${TR}/per_cpu/cpu0/snapshot
-  done &
-  while [ true ]; do
-          echo 1 > ${TR}/per_cpu/cpu0/snapshot
-  done &
-  ```
-
-To fix it, IIUC, we can use smp_call_function_single() to do the swap on
-the target cpu where the buffer is located, so that above race would be
-avoided.
-
-Fixes: f1affcaaa861 ("tracing: Add snapshot in the per_cpu trace directories")
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
----
- kernel/trace/trace.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 8e64aaad5361..55bb08aaf392 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -7618,6 +7618,11 @@ static int tracing_snapshot_open(struct inode *inode, struct file *file)
- 	return ret;
- }
- 
-+static void tracing_swap_cpu_buffer(void *tr)
-+{
-+	update_max_tr_single((struct trace_array *)tr, current, smp_processor_id());
-+}
-+
- static ssize_t
- tracing_snapshot_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 		       loff_t *ppos)
-@@ -7676,13 +7681,15 @@ tracing_snapshot_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 			ret = tracing_alloc_snapshot_instance(tr);
- 		if (ret < 0)
- 			break;
--		local_irq_disable();
- 		/* Now, we're going to swap */
--		if (iter->cpu_file == RING_BUFFER_ALL_CPUS)
-+		if (iter->cpu_file == RING_BUFFER_ALL_CPUS) {
-+			local_irq_disable();
- 			update_max_tr(tr, current, smp_processor_id(), NULL);
--		else
--			update_max_tr_single(tr, current, iter->cpu_file);
--		local_irq_enable();
-+			local_irq_enable();
-+		} else {
-+			smp_call_function_single(iter->cpu_file, tracing_swap_cpu_buffer,
-+						 (void *)tr, 1);
-+		}
- 		break;
- 	default:
- 		if (tr->allocated_snapshot) {
--- 
-2.25.1
+-- Steve
 
