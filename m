@@ -2,90 +2,151 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E7FCA0FE6
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  1 Sep 2023 15:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C69FCA0FF6
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  1 Sep 2023 20:43:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350136AbjIAPMq (ORCPT
+        id S1350742AbjIAUnm (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 1 Sep 2023 11:12:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39496 "EHLO
+        Fri, 1 Sep 2023 16:43:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350114AbjIAPMp (ORCPT
+        with ESMTP id S230018AbjIAUnm (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 1 Sep 2023 11:12:45 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74D7F10F9
-        for <linux-trace-kernel@vger.kernel.org>; Fri,  1 Sep 2023 08:11:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1693581069;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6plOE05wtAOE2J15C66Bubu1b7lLRziMMVbmgfVPQXg=;
-        b=WlBoMqKaaGl2WrCpx6wxlw9VcYCcUAOpBCEgGx0V615TEx5XMGp/cQrruOlAseghLsz2Cs
-        Hu06hBi/bsEB5sExB4l6ieeaGBrg43mNPktYzLaD6QcFbWvRciHguaDw2ieiDtV5XNmHRV
-        meXGMDeLZTEhwqg+KjrwlDy6lEFtmiI=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-475-BSsqkJlyMnaqU7tQ4Cxcdw-1; Fri, 01 Sep 2023 11:11:06 -0400
-X-MC-Unique: BSsqkJlyMnaqU7tQ4Cxcdw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7C716381CC0B;
-        Fri,  1 Sep 2023 15:11:05 +0000 (UTC)
-Received: from vschneid.remote.csb (unknown [10.39.193.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BE7262012F37;
-        Fri,  1 Sep 2023 15:11:04 +0000 (UTC)
-From:   Valentin Schneider <vschneid@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH 4/4] tracing/filters: Fix coding style issues
-Date:   Fri,  1 Sep 2023 17:10:39 +0200
-Message-Id: <20230901151039.125186-5-vschneid@redhat.com>
-In-Reply-To: <20230901151039.125186-1-vschneid@redhat.com>
-References: <20230901151039.125186-1-vschneid@redhat.com>
+        Fri, 1 Sep 2023 16:43:42 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E8418E7E;
+        Fri,  1 Sep 2023 13:43:38 -0700 (PDT)
+Received: from localhost.localdomain (unknown [4.155.48.116])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 7A212212A783;
+        Fri,  1 Sep 2023 13:43:38 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7A212212A783
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1693601018;
+        bh=3z+yFv8sRqi+Qau3BLbrmhn68JlC082f944I45jGU4k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qHBSLOsH0T/AAiuxjaVpXMsM9UJQEwOCrRE0rojGwAxuYYvhOlKgGEgAp4xushbr+
+         L9ObQx1T6MVjbes+3USoRq4CXscIYKD+hOFH4DxqAN/ulkq5FHzNlTDsKR38vTicQ4
+         WPyC4J0DiKbdiaSlRVJbSWgpdwi3Yh3HQCCbLvPo=
+From:   Beau Belgrave <beaub@linux.microsoft.com>
+To:     rostedt@goodmis.org, mhiramat@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        ast@kernel.org, dcook@linux.microsoft.com
+Subject: [PATCH 1/3] tracing/user_events: Allow events to persist for perfmon_capable users
+Date:   Fri,  1 Sep 2023 20:43:30 +0000
+Message-Id: <20230901204332.159-2-beaub@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230901204332.159-1-beaub@linux.microsoft.com>
+References: <20230901204332.159-1-beaub@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Recent commits have introduced some coding style issues, fix those up.
+There are several scenarios that have come up where having a user_event
+persist even if the process that registered it exits. The main one is
+having a daemon create events on bootup that shouldn't get deleted if
+the daemon has to exit or reload. Another is within OpenTelemetry
+exporters, they wish to potentially check if a user_event exists on the
+system to determine if exporting the data out should occur. The
+user_event in this case must exist even in the absence of the owning
+process running (such as the above daemon case).
 
-Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+Expose the previously internal flag USER_EVENT_REG_PERSIST to user
+processes. Upon register or delete of events with this flag, ensure the
+user is perfmon_capable to prevent random user processes with access to
+tracefs from creating events that persist after exit.
+
+Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
 ---
- kernel/trace/trace_events_filter.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ include/uapi/linux/user_events.h | 11 ++++++++++-
+ kernel/trace/trace_events_user.c | 28 ++++++++++++++--------------
+ 2 files changed, 24 insertions(+), 15 deletions(-)
 
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 09b4733a2933d..33264e510d161 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -1360,7 +1360,7 @@ int filter_assign_type(const char *type)
- 			return FILTER_DYN_STRING;
- 		if (strstr(type, "cpumask_t"))
- 			return FILTER_CPUMASK;
--		}
-+	}
+diff --git a/include/uapi/linux/user_events.h b/include/uapi/linux/user_events.h
+index 2984aae4a2b4..f74f3aedd49c 100644
+--- a/include/uapi/linux/user_events.h
++++ b/include/uapi/linux/user_events.h
+@@ -17,6 +17,15 @@
+ /* Create dynamic location entry within a 32-bit value */
+ #define DYN_LOC(offset, size) ((size) << 16 | (offset))
  
- 	if (strstr(type, "__rel_loc") && strstr(type, "char"))
- 		return FILTER_RDYN_STRING;
-@@ -1731,7 +1731,9 @@ static int parse_pred(const char *str, void *data,
- 		maskstart = i;
- 
- 		/* Walk the cpulist until closing } */
--		for (; str[i] && str[i] != '}'; i++);
-+		for (; str[i] && str[i] != '}'; i++)
-+			;
++/* List of supported registration flags */
++enum user_reg_flag {
++	/* Event will not delete upon last reference closing */
++	USER_EVENT_REG_PERSIST		= 1U << 0,
 +
- 		if (str[i] != '}') {
- 			parse_error(pe, FILT_ERR_MISSING_BRACE_CLOSE, pos + i);
- 			goto err_free;
++	/* This value or above is currently non-ABI */
++	USER_EVENT_REG_MAX		= 1U << 1,
++};
++
+ /*
+  * Describes an event registration and stores the results of the registration.
+  * This structure is passed to the DIAG_IOCSREG ioctl, callers at a minimum
+@@ -33,7 +42,7 @@ struct user_reg {
+ 	/* Input: Enable size in bytes at address */
+ 	__u8	enable_size;
+ 
+-	/* Input: Flags for future use, set to 0 */
++	/* Input: Flags to use, if any */
+ 	__u16	flags;
+ 
+ 	/* Input: Address to update when enabled */
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index 6f046650e527..af663de93492 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -49,18 +49,6 @@
+ #define EVENT_STATUS_PERF BIT(1)
+ #define EVENT_STATUS_OTHER BIT(7)
+ 
+-/*
+- * User register flags are not allowed yet, keep them here until we are
+- * ready to expose them out to the user ABI.
+- */
+-enum user_reg_flag {
+-	/* Event will not delete upon last reference closing */
+-	USER_EVENT_REG_PERSIST		= 1U << 0,
+-
+-	/* This value or above is currently non-ABI */
+-	USER_EVENT_REG_MAX		= 1U << 1,
+-};
+-
+ /*
+  * Stores the system name, tables, and locks for a group of events. This
+  * allows isolation for events by various means.
+@@ -1888,10 +1876,16 @@ static int user_event_parse(struct user_event_group *group, char *name,
+ 	int argc = 0;
+ 	char **argv;
+ 
+-	/* User register flags are not ready yet */
+-	if (reg_flags != 0 || flags != NULL)
++	/* Currently don't support any text based flags */
++	if (flags != NULL)
+ 		return -EINVAL;
+ 
++	/* Persistent events require CAP_PERFMON / CAP_SYS_ADMIN */
++	if (reg_flags & USER_EVENT_REG_PERSIST) {
++		if (!perfmon_capable())
++			return -EPERM;
++	}
++
+ 	/* Prevent dyn_event from racing */
+ 	mutex_lock(&event_mutex);
+ 	user = find_user_event(group, name, &key);
+@@ -2024,6 +2018,12 @@ static int delete_user_event(struct user_event_group *group, char *name)
+ 	if (!user_event_last_ref(user))
+ 		return -EBUSY;
+ 
++	/* Persistent events require CAP_PERFMON / CAP_SYS_ADMIN */
++	if (user->reg_flags & USER_EVENT_REG_PERSIST) {
++		if (!perfmon_capable())
++			return -EPERM;
++	}
++
+ 	return destroy_user_event(user);
+ }
+ 
 -- 
-2.31.1
+2.34.1
 
