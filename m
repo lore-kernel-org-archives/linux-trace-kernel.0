@@ -2,115 +2,114 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6EACA0FE6
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  1 Sep 2023 07:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BCCCA0FE1
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  1 Sep 2023 14:02:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242498AbjIAH0r (ORCPT
+        id S1345316AbjIAOCS (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 1 Sep 2023 03:26:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50262 "EHLO
+        Fri, 1 Sep 2023 10:02:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229632AbjIAH0q (ORCPT
+        with ESMTP id S230454AbjIAOCR (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 1 Sep 2023 03:26:46 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC37E10CA;
-        Fri,  1 Sep 2023 00:26:43 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1c0db66af1bso11780175ad.2;
-        Fri, 01 Sep 2023 00:26:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693553203; x=1694158003; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jAGxcS0Opg+suR3IknDJWnVNGUT8oBpwETzoofGK/sw=;
-        b=UPC+suIhIevumcrWZeVZACmRV+AHVov+3oMCymq22h1SjofgoaLCHuLWzoUeDx5yPw
-         IGrwyQTVYwZYePNDptJAbbmFkoVDZ602hEVagVrpng3DF6CrULtJ2eyucG90xmQTw/B7
-         lrhnVqAzPnVayx1U8wlmB0bhx9Z4vvogLfT4G5lCOrs+oqU/qpreu2wdULu1JUggQG6a
-         wFyha2cg1Jpwuf9wQZXiNKCfkbAfOMZa0Xn8XXcB52XFXFvNKqjbXCSPN3+vjjKmY9d+
-         lmopbdBSlJtVKnudhyFM9kSWaeQvcNRAIw41O9OoO4gOIGfNToPrtnsUzVD7E62JQCDk
-         W4+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693553203; x=1694158003;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jAGxcS0Opg+suR3IknDJWnVNGUT8oBpwETzoofGK/sw=;
-        b=d7tg3gMJ2xvmPNOTnZzgmGbgAtkD5bd4NDIgjIywZeg6zX/pWEw5Ri34HFHj8lpHhA
-         h+JUG2MmzvQZ43rTHvoaLJL6qqd45zJKsr68VJyIPMXp2pHNkLiTqN+4Me7tiRAEBkHr
-         GHkzuM+ejzAl7395esyaFGb+kh3B82qQg+inyKxMb6V585jvaQYVWEuevkw5SqQfakhq
-         6+ZhV+huUXpiMcaW2pfiRCxhOpAFDRms//PDLVDKGpZ6kRKT0HdcOyjtbjSV9CHrdVV9
-         GoCOcGpbO/3h9wGWUG6RnJr3DTX3Ki13FdPuDtVmT4yKR32m+zJv5CXmznf9DD50q1g+
-         rDJQ==
-X-Gm-Message-State: AOJu0YwAaGtH9NILjOX9zlNVqsff11G8ytsDcliZBrsYzPqS3Mca+KyS
-        DrDT6NU98bAhtWCWGcxhg2LPpGGZQVE=
-X-Google-Smtp-Source: AGHT+IHr9WLh627Owj6tG8ggbr7GaKxtaT4zpm8yoG7cPq4FeRZd8DQNOOOqoLnlzDIM6NzVdGITRg==
-X-Received: by 2002:a17:902:a5c9:b0:1c0:c7ae:a8a2 with SMTP id t9-20020a170902a5c900b001c0c7aea8a2mr1668718plq.35.1693553203285;
-        Fri, 01 Sep 2023 00:26:43 -0700 (PDT)
-Received: from localhost.localdomain ([8.210.156.175])
-        by smtp.gmail.com with ESMTPSA id iz15-20020a170902ef8f00b001bdd719874esm2357971plb.168.2023.09.01.00.26.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Sep 2023 00:26:42 -0700 (PDT)
-From:   Chuang Wang <nashuiliang@gmail.com>
-Cc:     Chuang Wang <nashuiliang@gmail.com>, stable@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Fri, 1 Sep 2023 10:02:17 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFF8710EC;
+        Fri,  1 Sep 2023 07:02:14 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id F03C7CE2399;
+        Fri,  1 Sep 2023 14:02:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 957D2C433C9;
+        Fri,  1 Sep 2023 14:02:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693576931;
+        bh=xzO5OH5Qe2Y2j815wjyuTSS67nTGI2J0u9LP7ckN3VI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=D/6GSgOgfF6CcOKgPU5RN5AWuG8ROJ0vKyJHcU2JIM3qiL6CYSAFAiRRK3ym59i3C
+         BXBN6JpNHZcbELGVnd4qXScx8fnfzWZEdfDrRhTdjm/sjJg9ThzbwUWPb1AvFwPpOL
+         TlN3INvMHrZX/8CmEpIOeMqrx0+I4EKAYU7fhDyaGvIYDfxVTZYfgN1IterV450nOZ
+         1zuHdwdVuPzaU3Fm4iBVU43fgt8J81o4d0BVbXEwVm7eU6autgjskuwZquJKu18m0U
+         23Wg2EjyaTqIqKXZbHkJiPHKFuPcJehoKloiB4QTrO7U9swoxgCbobxIi11WLwPTAa
+         HNEuBoGV8vT7A==
+Date:   Fri, 1 Sep 2023 23:02:06 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Chuang Wang <nashuiliang@gmail.com>
+Cc:     stable@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Zheng Yejian <zhengyejian1@huawei.com>,
         linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] tracing: Fix the unusable problem caused by non-empty pipe_cpumask
-Date:   Fri,  1 Sep 2023 15:26:26 +0800
-Message-Id: <20230901072626.278880-1-nashuiliang@gmail.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Subject: Re: [PATCH] tracing: Fix the unusable problem caused by non-empty
+ pipe_cpumask
+Message-Id: <20230901230206.9bf0250291acd7bfbde46b53@kernel.org>
+In-Reply-To: <20230901072626.278880-1-nashuiliang@gmail.com>
+References: <20230901072626.278880-1-nashuiliang@gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-There is a problem in the linux-6.5 when I execute the following
-command:
+On Fri,  1 Sep 2023 15:26:26 +0800
+Chuang Wang <nashuiliang@gmail.com> wrote:
 
- $ perf ftrace -t irqsoff
- failed to open trace_pipe
+> There is a problem in the linux-6.5 when I execute the following
+> command:
+> 
+>  $ perf ftrace -t irqsoff
+>  failed to open trace_pipe
+> 
+> At the same time, when I open this file, the same error occurs.
+> 
+> Therefore, after carefully looking at the code, the open function of
+> 'trace_pipe' returns -EBUSY in open_pipe_on_cpu() because no clearing
+> operation was performed when 'trace_array->pipe_cpumask' was allocated.
+> 
+> With this patch, Use zalloc_cpumask_var() to ensure that
+> 'trace_array->pipe_cpumask' is reset to 0 when allocated.
 
-At the same time, when I open this file, the same error occurs.
+Good catch. This looks good to me.
 
-Therefore, after carefully looking at the code, the open function of
-'trace_pipe' returns -EBUSY in open_pipe_on_cpu() because no clearing
-operation was performed when 'trace_array->pipe_cpumask' was allocated.
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-With this patch, Use zalloc_cpumask_var() to ensure that
-'trace_array->pipe_cpumask' is reset to 0 when allocated.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: c2489bb7e6be ("tracing: Introduce pipe_cpumask to avoid race on trace_pipes")
+> Signed-off-by: Chuang Wang <nashuiliang@gmail.com>
+> ---
+>  kernel/trace/trace.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index d8233d34b5a0..c0b8a72f3466 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -9461,7 +9461,7 @@ static struct trace_array *trace_array_create(const char *name)
+>  	if (!alloc_cpumask_var(&tr->tracing_cpumask, GFP_KERNEL))
+>  		goto out_free_tr;
+>  
+> -	if (!alloc_cpumask_var(&tr->pipe_cpumask, GFP_KERNEL))
+> +	if (!zalloc_cpumask_var(&tr->pipe_cpumask, GFP_KERNEL))
+>  		goto out_free_tr;
+>  
+>  	tr->trace_flags = global_trace.trace_flags & ~ZEROED_TRACE_FLAGS;
+> @@ -10406,7 +10406,7 @@ __init static int tracer_alloc_buffers(void)
+>  	if (trace_create_savedcmd() < 0)
+>  		goto out_free_temp_buffer;
+>  
+> -	if (!alloc_cpumask_var(&global_trace.pipe_cpumask, GFP_KERNEL))
+> +	if (!zalloc_cpumask_var(&global_trace.pipe_cpumask, GFP_KERNEL))
+>  		goto out_free_savedcmd;
+>  
+>  	/* TODO: make the number of buffers hot pluggable with CPUS */
+> -- 
+> 2.39.2
+> 
 
-Cc: stable@vger.kernel.org
-Fixes: c2489bb7e6be ("tracing: Introduce pipe_cpumask to avoid race on trace_pipes")
-Signed-off-by: Chuang Wang <nashuiliang@gmail.com>
----
- kernel/trace/trace.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index d8233d34b5a0..c0b8a72f3466 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -9461,7 +9461,7 @@ static struct trace_array *trace_array_create(const char *name)
- 	if (!alloc_cpumask_var(&tr->tracing_cpumask, GFP_KERNEL))
- 		goto out_free_tr;
- 
--	if (!alloc_cpumask_var(&tr->pipe_cpumask, GFP_KERNEL))
-+	if (!zalloc_cpumask_var(&tr->pipe_cpumask, GFP_KERNEL))
- 		goto out_free_tr;
- 
- 	tr->trace_flags = global_trace.trace_flags & ~ZEROED_TRACE_FLAGS;
-@@ -10406,7 +10406,7 @@ __init static int tracer_alloc_buffers(void)
- 	if (trace_create_savedcmd() < 0)
- 		goto out_free_temp_buffer;
- 
--	if (!alloc_cpumask_var(&global_trace.pipe_cpumask, GFP_KERNEL))
-+	if (!zalloc_cpumask_var(&global_trace.pipe_cpumask, GFP_KERNEL))
- 		goto out_free_savedcmd;
- 
- 	/* TODO: make the number of buffers hot pluggable with CPUS */
 -- 
-2.39.2
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
