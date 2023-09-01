@@ -2,114 +2,76 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BCCCA0FE1
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  1 Sep 2023 14:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB70CA0FE5
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  1 Sep 2023 15:11:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345316AbjIAOCS (ORCPT
+        id S237546AbjIAPLw (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 1 Sep 2023 10:02:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40558 "EHLO
+        Fri, 1 Sep 2023 11:11:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230454AbjIAOCR (ORCPT
+        with ESMTP id S234542AbjIAPLw (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 1 Sep 2023 10:02:17 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFF8710EC;
-        Fri,  1 Sep 2023 07:02:14 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        Fri, 1 Sep 2023 11:11:52 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26EF7E65
+        for <linux-trace-kernel@vger.kernel.org>; Fri,  1 Sep 2023 08:11:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1693581062;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=PjPKhI43vIfzzZd2VhUjYTOy+VZHsBkuOPPi/NbdW0w=;
+        b=G0l86/fB9CnKCHQXlqLe/X26x1sOg1iddgL2iBCdzdWvtwHJsbr5CLRr+r9nWP5BEQaG+J
+        K3rd5IokmrVJavKakeqY0QpQduwizAbBDe/2uw45ukVsbVkucd/Mj7Bpcedj5RwlZM7gjF
+        +8Yc4TfJprB8o9+62Jj7te21ebhnPgs=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-374-u4ehhMJuNSqMc1yKj6PK3g-1; Fri, 01 Sep 2023 11:11:00 -0400
+X-MC-Unique: u4ehhMJuNSqMc1yKj6PK3g-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id F03C7CE2399;
-        Fri,  1 Sep 2023 14:02:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 957D2C433C9;
-        Fri,  1 Sep 2023 14:02:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693576931;
-        bh=xzO5OH5Qe2Y2j815wjyuTSS67nTGI2J0u9LP7ckN3VI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=D/6GSgOgfF6CcOKgPU5RN5AWuG8ROJ0vKyJHcU2JIM3qiL6CYSAFAiRRK3ym59i3C
-         BXBN6JpNHZcbELGVnd4qXScx8fnfzWZEdfDrRhTdjm/sjJg9ThzbwUWPb1AvFwPpOL
-         TlN3INvMHrZX/8CmEpIOeMqrx0+I4EKAYU7fhDyaGvIYDfxVTZYfgN1IterV450nOZ
-         1zuHdwdVuPzaU3Fm4iBVU43fgt8J81o4d0BVbXEwVm7eU6autgjskuwZquJKu18m0U
-         23Wg2EjyaTqIqKXZbHkJiPHKFuPcJehoKloiB4QTrO7U9swoxgCbobxIi11WLwPTAa
-         HNEuBoGV8vT7A==
-Date:   Fri, 1 Sep 2023 23:02:06 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Chuang Wang <nashuiliang@gmail.com>
-Cc:     stable@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Zheng Yejian <zhengyejian1@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Fix the unusable problem caused by non-empty
- pipe_cpumask
-Message-Id: <20230901230206.9bf0250291acd7bfbde46b53@kernel.org>
-In-Reply-To: <20230901072626.278880-1-nashuiliang@gmail.com>
-References: <20230901072626.278880-1-nashuiliang@gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4A14429AA382;
+        Fri,  1 Sep 2023 15:11:00 +0000 (UTC)
+Received: from vschneid.remote.csb (unknown [10.39.193.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 23C652012F37;
+        Fri,  1 Sep 2023 15:10:58 +0000 (UTC)
+From:   Valentin Schneider <vschneid@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH 0/4] Minor v6.6 trace_events_filter fixes
+Date:   Fri,  1 Sep 2023 17:10:35 +0200
+Message-Id: <20230901151039.125186-1-vschneid@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri,  1 Sep 2023 15:26:26 +0800
-Chuang Wang <nashuiliang@gmail.com> wrote:
+Hi,
 
-> There is a problem in the linux-6.5 when I execute the following
-> command:
-> 
->  $ perf ftrace -t irqsoff
->  failed to open trace_pipe
-> 
-> At the same time, when I open this file, the same error occurs.
-> 
-> Therefore, after carefully looking at the code, the open function of
-> 'trace_pipe' returns -EBUSY in open_pipe_on_cpu() because no clearing
-> operation was performed when 'trace_array->pipe_cpumask' was allocated.
-> 
-> With this patch, Use zalloc_cpumask_var() to ensure that
-> 'trace_array->pipe_cpumask' is reset to 0 when allocated.
+These are small fixes incorporating feedback on the trace filters part of [1].
 
-Good catch. This looks good to me.
+Based on top of trace-v6.6.
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cheers,
+Valentin
 
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: c2489bb7e6be ("tracing: Introduce pipe_cpumask to avoid race on trace_pipes")
-> Signed-off-by: Chuang Wang <nashuiliang@gmail.com>
-> ---
->  kernel/trace/trace.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index d8233d34b5a0..c0b8a72f3466 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -9461,7 +9461,7 @@ static struct trace_array *trace_array_create(const char *name)
->  	if (!alloc_cpumask_var(&tr->tracing_cpumask, GFP_KERNEL))
->  		goto out_free_tr;
->  
-> -	if (!alloc_cpumask_var(&tr->pipe_cpumask, GFP_KERNEL))
-> +	if (!zalloc_cpumask_var(&tr->pipe_cpumask, GFP_KERNEL))
->  		goto out_free_tr;
->  
->  	tr->trace_flags = global_trace.trace_flags & ~ZEROED_TRACE_FLAGS;
-> @@ -10406,7 +10406,7 @@ __init static int tracer_alloc_buffers(void)
->  	if (trace_create_savedcmd() < 0)
->  		goto out_free_temp_buffer;
->  
-> -	if (!alloc_cpumask_var(&global_trace.pipe_cpumask, GFP_KERNEL))
-> +	if (!zalloc_cpumask_var(&global_trace.pipe_cpumask, GFP_KERNEL))
->  		goto out_free_savedcmd;
->  
->  	/* TODO: make the number of buffers hot pluggable with CPUS */
-> -- 
-> 2.39.2
-> 
+[1]: https://lore.kernel.org/all/20230720163056.2564824-1-vschneid@redhat.com/
 
+Valentin Schneider (4):
+  tracing/filters: Fix error-handling of cpulist parsing buffer
+  tracing/filters: Fix double-free of struct filter_pred.mask
+  tracing/filters: Change parse_pred() cpulist ternary into an if block
+  tracing/filters: Fix coding style issues
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+ kernel/trace/trace_events_filter.c | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
+
+--
+2.31.1
+
