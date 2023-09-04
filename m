@@ -2,285 +2,550 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A797C83F33
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  4 Sep 2023 13:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3230C83F2C
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  4 Sep 2023 13:41:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235073AbjIDNJX (ORCPT
+        id S231450AbjIDNlY (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 4 Sep 2023 09:09:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40448 "EHLO
+        Mon, 4 Sep 2023 09:41:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230468AbjIDNJW (ORCPT
+        with ESMTP id S230012AbjIDNlX (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 4 Sep 2023 09:09:22 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E9D501AD;
-        Mon,  4 Sep 2023 06:09:18 -0700 (PDT)
-Received: from pwmachine.localnet (85-170-34-233.rev.numericable.fr [85.170.34.233])
-        by linux.microsoft.com (Postfix) with ESMTPSA id EF88E212B16B;
-        Mon,  4 Sep 2023 06:09:14 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EF88E212B16B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1693832958;
-        bh=LtAw+jVuIucYv5hspY/X06k4jJZyLR+Pai5EJWTJy8o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dy1rkeKHWA6nJgdJ6sf04+PJ9ExqJ5t3hL1YuoKT960ZsBq4jlkw4nhX380lmimqW
-         C9Ruzvcc/UXrYKL6lCh51w7mQsxHiEMTEpeQDiNWFZfhbftnC2EPoJpX5bJeVQtA36
-         73B7EfcJoD2YGG4/jdJo2eDhUOcc5HBpfPt0oByU=
-From:   Francis Laniel <flaniel@linux.microsoft.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Alessandro Carminati <alessandro.carminati@gmail.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Mon, 4 Sep 2023 09:41:23 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF9C6CE5;
+        Mon,  4 Sep 2023 06:40:46 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 856826172F;
+        Mon,  4 Sep 2023 13:40:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 377CDC433C8;
+        Mon,  4 Sep 2023 13:40:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693834844;
+        bh=t2AyraPFiOp+fyZGg4upQyAjW/BgpRhlUvEy09oyAfY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=eSQZi5lMQR9LpyoitXwM8wQuAqU0LY52UChGvY/X/9tan9CUluA21cv5TCv55S6wj
+         HzO1MTfzYL4CnlUnD7hJWPFftBHbgMV9i4+DasRFvjI8yKl5XKmR/GPnMu410YlXf7
+         JMn4LwAaqfRJmJXj5XWs4QR54HXZg9+bgYH39qmjOp2g5SAgzlb9+VirbvcGo5R5xB
+         MEjk6B9uBImIjnqtJqmLLLJDbDcM0ztgNxRAINihuo/Hf9C7bpsQuiF6DEd7dHN4ZG
+         +29Qtl4Rxv3IaXl0i/DBVsZ3q7A+DhJMIrw/kn52C5MR9uwwil4DpVaNUjVJ283vsA
+         N16aiC1zB7F2Q==
+Date:   Mon, 4 Sep 2023 22:40:38 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Bristot de Oliveira <bristot@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        Nick Alcock <nick.alcock@oracle.com>,
-        Kris Van Hees <kris.van.hees@oracle.com>,
-        Eugene Loh <eugene.loh@oracle.com>,
-        Viktor Malik <vmalik@redhat.com>, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH v3] scripts/link-vmlinux.sh: Add alias to duplicate symbols for kallsyms
-Date:   Mon, 04 Sep 2023 15:09:12 +0200
-Message-ID: <12278120.O9o76ZdvQC@pwmachine>
-In-Reply-To: <CAPp5cGTngA6_zhPpgMGsvp8T49LZEohzyRtedGSo8hkEJFRkiA@mail.gmail.com>
-References: <20230828080423.3539686-1-alessandro.carminati@gmail.com> <CAK7LNATf5zQH=qOX3HCcAoaccK1KTjoGNuXc-d2-FM-japABoQ@mail.gmail.com> <CAPp5cGTngA6_zhPpgMGsvp8T49LZEohzyRtedGSo8hkEJFRkiA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+        Florent Revest <revest@chromium.org>,
+        linux-trace-kernel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v4 4/9] fprobe: rethook: Use ftrace_regs in fprobe exit
+ handler and rethook
+Message-Id: <20230904224038.4420a76ea15931aa40179697@kernel.org>
+In-Reply-To: <169280377434.282662.7610009313268953247.stgit@devnote2>
+References: <169280372795.282662.9784422934484459769.stgit@devnote2>
+        <169280377434.282662.7610009313268953247.stgit@devnote2>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi.
+Hi,
 
-Le samedi 2 septembre 2023, 09:40:46 CEST Alessandro Carminati a =C3=A9crit=
- :
-> Il giorno sab 2 set 2023 alle ore 08:36 Masahiro Yamada
->=20
-> <masahiroy@kernel.org> ha scritto:
-> > On Mon, Aug 28, 2023 at 8:45=E2=80=AFPM Alessandro Carminati (Red Hat)
-> >=20
-> > <alessandro.carminati@gmail.com> wrote:
-> > > From: Alessandro Carminati <alessandro.carminati@gmail.com>
-> > >=20
-> > > It is not uncommon for drivers or modules related to similar peripher=
-als
-> > > to have symbols with the exact same name.
-> > > While this is not a problem for the kernel's binary itself, it becomes
-> > > an
-> > > issue when attempting to trace or probe specific functions using
-> > > infrastructure like ftrace or kprobe.
-> > >=20
-> > > The tracing subsystem relies on the `nm -n vmlinux` output, which
-> > > provides
-> > > symbol information from the kernel's ELF binary. However, when multip=
-le
-> > > symbols share the same name, the standard nm output does not
-> > > differentiate
-> > > between them. This can lead to confusion and difficulty when trying to
-> > > probe the intended symbol.
-> > >=20
-> > >  ~ # cat /proc/kallsyms | grep " name_show"
-> > >  ffffffff8c4f76d0 t name_show
-> > >  ffffffff8c9cccb0 t name_show
-> > >  ffffffff8cb0ac20 t name_show
-> > >  ffffffff8cc728c0 t name_show
-> > >  ffffffff8ce0efd0 t name_show
-> > >  ffffffff8ce126c0 t name_show
-> > >  ffffffff8ce1dd20 t name_show
-> > >  ffffffff8ce24e70 t name_show
-> > >  ffffffff8d1104c0 t name_show
-> > >  ffffffff8d1fe480 t name_show
-> > >=20
-> > > **kas_alias** addresses this challenge by extending the symbol names
-> > > with
-> > > unique suffixes during the kernel build process.
-> > > The newly created aliases for these duplicated symbols are unique nam=
-es
-> > > that can be fed to the ftracefs interface. By doing so, it enables
-> > > previously unreachable symbols to be probed.
-> > >=20
-> > >  ~ # cat /proc/kallsyms | grep " name_show"
-> > >  ffffffff974f76d0 t name_show
-> > >  ffffffff974f76d0 t name_show__alias__6340
-> > >  ffffffff979cccb0 t name_show
-> > >  ffffffff979cccb0 t name_show__alias__6341
-> > >  ffffffff97b0ac20 t name_show
-> > >  ffffffff97b0ac20 t name_show__alias__6342
-> > >  ffffffff97c728c0 t name_show
-> > >  ffffffff97c728c0 t name_show__alias__6343
-> > >  ffffffff97e0efd0 t name_show
-> > >  ffffffff97e0efd0 t name_show__alias__6344
-> > >  ffffffff97e126c0 t name_show
-> > >  ffffffff97e126c0 t name_show__alias__6345
-> > >  ffffffff97e1dd20 t name_show
-> > >  ffffffff97e1dd20 t name_show__alias__6346
-> > >  ffffffff97e24e70 t name_show
-> > >  ffffffff97e24e70 t name_show__alias__6347
-> > >  ffffffff981104c0 t name_show
-> > >  ffffffff981104c0 t name_show__alias__6348
-> > >  ffffffff981fe480 t name_show
-> > >  ffffffff981fe480 t name_show__alias__6349
-> > >  ~ # echo "p:kprobes/evnt1 name_show__alias__6349" \
-> > > =20
-> > >  > >/sys/kernel/tracing/kprobe_events
-> > > =20
-> > >  ~ # cat /sys/kernel/tracing/kprobe_events
-> > >  p:kprobes/evnt1 name_show__alias__6349
-> > >=20
-> > > Changes from v1:
-> > > - Integrated changes requested by Masami to exclude symbols with
-> > > prefixes
-> > >=20
-> > >   "_cfi" and "_pfx".
-> > >=20
-> > > - Introduced a small framework to handle patterns that need to be
-> > > excluded
-> > >=20
-> > >   from the alias production.
-> > >=20
-> > > - Excluded other symbols using the framework.
-> > > - Introduced the ability to discriminate between text and data symbol=
-s.
-> > > - Added two new config symbols in this version:
-> > > CONFIG_KALLSYMS_ALIAS_DATA,
-> > >=20
-> > >   which allows data for data, and CONFIG_KALLSYMS_ALIAS_DATA_ALL, whi=
-ch
-> > >   excludes all filters and provides an alias for each duplicated symb=
-ol.
-> > >=20
-> > > https://lore.kernel.org/all/20230711151925.1092080-1-alessandro.carmi=
-nat
-> > > i@gmail.com/
-> > >=20
-> > > Changes from v2:
-> > > - Alias tags are created by querying DWARF information from the vmlin=
-ux.
-> > > - The filename + line number is normalized and appended to the origin=
-al
-> > > name. - The tag begins with '@' to indicate the symbol source.
-> > > - Not a change, but worth mentioning, since the alias is added to the
-> > > existing> >=20
-> > >   list, the old duplicated name is preserved, and the livepatch way of
-> > >   dealing with duplicates is maintained.
-> > >=20
-> > > - Acknowledging the existence of scenarios where inlined functions
-> > > declared in> >=20
-> > >   header files may result in multiple copies due to compiler behavior,
-> > >   though
-> > >  =20
-> > >    it is not actionable as it does not pose an operational issue.
-> > >=20
-> > > - Highlighting a single exception where the same name refers to
-> > > different
-> > >=20
-> > >   functions: the case of "compat_binfmt_elf.c," which directly includ=
-es
-> > >   "binfmt_elf.c" producing identical function copies in two separate
-> > >   modules.
-> > >=20
-> > > sample from new v3
-> > >=20
-> > >  ~ # cat /proc/kallsyms | grep gic_mask_irq
-> > >  ffffd0b03c04dae4 t gic_mask_irq
-> > >  ffffd0b03c04dae4 t gic_mask_irq@_drivers_irqchip_irq-gic_c_167
-> > >  ffffd0b03c050960 t gic_mask_irq
-> > >  ffffd0b03c050960 t gic_mask_irq@_drivers_irqchip_irq-gic-v3_c_404
-> > >  ~ #
-> > >=20
-> > > https://lore.kernel.org/all/20230714150326.1152359-1-alessandro.carmi=
-nat
-> > > i@gmail.com/
-> > >=20
-> > > Signed-off-by: Alessandro Carminati (Red Hat)
-> > > <alessandro.carminati@gmail.com> ---
-> > >=20
-> > >  init/Kconfig                        |  36 ++++
-> > >  scripts/Makefile                    |   4 +
-> > >  scripts/kas_alias/Makefile          |   4 +
-> > >  scripts/kas_alias/a2l.c             | 268 ++++++++++++++++++++++++++=
-++
-> > >  scripts/kas_alias/a2l.h             |  32 ++++
-> > >  scripts/kas_alias/duplicates_list.c |  70 ++++++++
-> > >  scripts/kas_alias/duplicates_list.h |  15 ++
-> > >  scripts/kas_alias/item_list.c       | 230 ++++++++++++++++++++++++
-> > >  scripts/kas_alias/item_list.h       |  26 +++
-> > >  scripts/kas_alias/kas_alias.c       | 217 ++++++++++++++++++++++
-> > >  scripts/link-vmlinux.sh             |  11 +-
-> > >  11 files changed, 910 insertions(+), 3 deletions(-)
-> >=20
-> > I added some review comments in another thread, but
-> > one of the biggest concerns might be "910 insertions".
->=20
-> Based on the feedback I received in the reviews, I need to overhaul the
-> code, potentially reducing its size. What would be a reasonable number
-> of lines for this feature?
->=20
-> > What this program does is quite simple,
-> > "find duplicated names, and call addr2line".
-> >=20
-> > You wrote a lot of code to self-implement these:
-> >  - sort function
-> >  - parse PATH env variable to find addr2line
-> >  - fork addr2line to establish pipe communications
->=20
-> Some of these functions might become obsolete in the upcoming v4, which
-> will certainly reduce the line count.
->=20
-> > Have you considered writing the code in Python (or Perl)?
-> > Is it too slow?
-> >
-> >From my perspective, there is a concern that using Python or Perl might
->=20
-> result in slower performance. My proficiency in Python and Perl is
-> limited, so I did not initially consider them as viable options for
-> implementing this solution.
->=20
-> > Most of the functions you implemented are already
-> > available in script languages.
-> >=20
-> >=20
-> >=20
-> > I am not sure if "@<file-path>" is a good solution,
-> > but the amount of the added code looks too much to me.
->=20
-> I had reservations about using the '@' symbol to decorate the alias becau=
-se
-> it's not a character commonly found in the kallsyms output. However, after
-> careful consideration, I arrived at the conclusion that it was suitable f=
-or
-> the task because it would make the alias stand-out and be easily
-> identifiable.
-> I'm open to any suggestions or alternative approaches you may have on this
-> matter.
+On Thu, 24 Aug 2023 00:16:14 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-I am maybe over-engineering the thing, but maybe we can have a=20
-CONFIG_KALLSYMS_ALIAS_FORMAT which users would set to indicate how to=20
-differentiate between two symbols?
-=46or example, CONFIG_KALLSYMS_ALIAS_FORMAT=3D@file-lineno would lead to wh=
-at we=20
-have currently.
-If you switch to using a higher level language, you can maybe focus more on=
-=20
-this.
-Anyway, I personally like what this contribution offers currently as it per=
-mits=20
-to distinguish between same symbols.
-I will take a look at v4! Thank you again for working on this.
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Change the fprobe exit handler and rethook to use ftrace_regs data structure
+> instead of pt_regs. This also introduce HAVE_PT_REGS_TO_FTRACE_REGS_CAST
+> which means the ftrace_regs's memory layout is equal to the pt_regs so
+> that those are able to cast. Only if it is enabled, kretprobe will use
+> rethook since kretprobe requires pt_regs for backward compatibility.
+> 
+> This means the archs which currently implement rethook for kretprobes needs to
+> set that flag and it must ensure struct ftrace_regs is same as pt_regs.
+> If not, it must be either disabling kretprobe or implementing kretprobe
+> trampoline separately from rethook trampoline.
 
-> > --
-> > Best Regards
-> > Masahiro Yamada
->=20
-> Thank you
+I found that this is not enough becuase s390/loongarch already implemented
+their rethook, and as far as I can see, the s390 ftrace_regs does not save
+the required registers for rethook. Thus, for such architecture, we need
+another kconfig flag and keep using the pt_regs for rethook.
 
-Best regards.
+In this series, I would like to focus on x86_64 and arm64, and others
+will support later. What I will do is to introduce another Kconfig item
+(HAVE_RETHOOK_FTRACE_REGS_HOOK) which means that the rethook is able to
+hook a function with ftrace_regs on that architecture. Thus instead of
+replacing pt_regs with ftrace_regs here, I will just introduce another
+rethook API which uses ftrace_regs.
+
+If HAVE_RETHOOK_FTRACE_REGS_HOOK=y, that API needs to be implemented too.
+(currently, only x86_64 enables this)
 
 
+      | HAVE_PT_REGS_TO_FTRACE_REGS_CAST | HAVE_RETHOOK_FTRACE_REGS_HOOK |
+arm64 | no (keep kretprobe trampoline)   |  yes                          |
+x86   | yes                              |  yes                          |
+others| yes                              |  no (will be yes later)       |
+
+
+If HAVE_RETHOOK_FTRACE_REGS_HOOK=n, fprobe requires DYNAMIC_FTRACE_WITH_REGS
+and set the FTRACE_OPS_FL_SAVE_REGS flag so that it can get the pt_regs from
+ftrace_regs for rethook. It also calls rethook with legacy pt_regs hook API.
+
+Even though, rethook still provides the ftrace_regs callback interface for
+fprobe, so that the rethook can be implemented on the architecture which
+HAVE_PT_REGS_TO_FTRACE_REGS_CAST=n. 
+
+Let me try to implement it.
+
+Thank you,
+
+
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  Changes in v3:
+>   - Config rename to HAVE_PT_REGS_TO_FTRACE_REGS_CAST
+>   - Use ftrace_regs_* APIs instead of ftrace_get_regs().
+>  Changes in v4:
+>   - Add static_assert() to ensure at least the size of pt_regs
+>     and ftrace_regs are same if HAVE_PT_REGS_TO_FTRACE_REGS_CAST=y.
+> ---
+>  arch/Kconfig                    |    1 +
+>  arch/loongarch/Kconfig          |    1 +
+>  arch/s390/Kconfig               |    1 +
+>  arch/x86/Kconfig                |    1 +
+>  arch/x86/kernel/rethook.c       |   13 +++++++------
+>  include/linux/fprobe.h          |    2 +-
+>  include/linux/ftrace.h          |    6 ++++++
+>  include/linux/rethook.h         |   11 ++++++-----
+>  kernel/kprobes.c                |   10 ++++++++--
+>  kernel/trace/Kconfig            |    7 +++++++
+>  kernel/trace/bpf_trace.c        |    6 +++++-
+>  kernel/trace/fprobe.c           |    6 +++---
+>  kernel/trace/rethook.c          |   16 ++++++++--------
+>  kernel/trace/trace_fprobe.c     |    6 +++++-
+>  lib/test_fprobe.c               |    6 +++---
+>  samples/fprobe/fprobe_example.c |    2 +-
+>  16 files changed, 64 insertions(+), 31 deletions(-)
+> 
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index aff2746c8af2..e41a270c30bb 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -201,6 +201,7 @@ config KRETPROBE_ON_RETHOOK
+>  	def_bool y
+>  	depends on HAVE_RETHOOK
+>  	depends on KRETPROBES
+> +	depends on HAVE_PT_REGS_TO_FTRACE_REGS_CAST || !HAVE_DYNAMIC_FTRACE_WITH_ARGS
+>  	select RETHOOK
+>  
+>  config USER_RETURN_NOTIFIER
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index e71d5bf2cee0..33c3a4598ae0 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -103,6 +103,7 @@ config LOONGARCH
+>  	select HAVE_DMA_CONTIGUOUS
+>  	select HAVE_DYNAMIC_FTRACE
+>  	select HAVE_DYNAMIC_FTRACE_WITH_ARGS
+> +	select HAVE_PT_REGS_TO_FTRACE_REGS_CAST
+>  	select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+>  	select HAVE_DYNAMIC_FTRACE_WITH_REGS
+>  	select HAVE_EBPF_JIT
+> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> index 5b39918b7042..ef06c3c2b06d 100644
+> --- a/arch/s390/Kconfig
+> +++ b/arch/s390/Kconfig
+> @@ -165,6 +165,7 @@ config S390
+>  	select HAVE_DMA_CONTIGUOUS
+>  	select HAVE_DYNAMIC_FTRACE
+>  	select HAVE_DYNAMIC_FTRACE_WITH_ARGS
+> +	select HAVE_PT_REGS_TO_FTRACE_REGS_CAST
+>  	select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+>  	select HAVE_DYNAMIC_FTRACE_WITH_REGS
+>  	select HAVE_EBPF_JIT if HAVE_MARCH_Z196_FEATURES
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index e36261b4ea14..7c1f3194e209 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -207,6 +207,7 @@ config X86
+>  	select HAVE_DYNAMIC_FTRACE
+>  	select HAVE_DYNAMIC_FTRACE_WITH_REGS
+>  	select HAVE_DYNAMIC_FTRACE_WITH_ARGS	if X86_64
+> +	select HAVE_PT_REGS_TO_FTRACE_REGS_CAST	if X86_64
+>  	select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+>  	select HAVE_SAMPLE_FTRACE_DIRECT	if X86_64
+>  	select HAVE_SAMPLE_FTRACE_DIRECT_MULTI	if X86_64
+> diff --git a/arch/x86/kernel/rethook.c b/arch/x86/kernel/rethook.c
+> index 8a1c0111ae79..d714d0276c93 100644
+> --- a/arch/x86/kernel/rethook.c
+> +++ b/arch/x86/kernel/rethook.c
+> @@ -83,7 +83,8 @@ __used __visible void arch_rethook_trampoline_callback(struct pt_regs *regs)
+>  	 * arch_rethook_fixup_return() which called from this
+>  	 * rethook_trampoline_handler().
+>  	 */
+> -	rethook_trampoline_handler(regs, (unsigned long)frame_pointer);
+> +	rethook_trampoline_handler((struct ftrace_regs *)regs,
+> +				   (unsigned long)frame_pointer);
+>  
+>  	/*
+>  	 * Copy FLAGS to 'pt_regs::ss' so that arch_rethook_trapmoline()
+> @@ -104,22 +105,22 @@ NOKPROBE_SYMBOL(arch_rethook_trampoline_callback);
+>  STACK_FRAME_NON_STANDARD_FP(arch_rethook_trampoline);
+>  
+>  /* This is called from rethook_trampoline_handler(). */
+> -void arch_rethook_fixup_return(struct pt_regs *regs,
+> +void arch_rethook_fixup_return(struct ftrace_regs *fregs,
+>  			       unsigned long correct_ret_addr)
+>  {
+> -	unsigned long *frame_pointer = (void *)(regs + 1);
+> +	unsigned long *frame_pointer = (void *)(fregs + 1);
+>  
+>  	/* Replace fake return address with real one. */
+>  	*frame_pointer = correct_ret_addr;
+>  }
+>  NOKPROBE_SYMBOL(arch_rethook_fixup_return);
+>  
+> -void arch_rethook_prepare(struct rethook_node *rh, struct pt_regs *regs, bool mcount)
+> +void arch_rethook_prepare(struct rethook_node *rh, struct ftrace_regs *fregs, bool mcount)
+>  {
+> -	unsigned long *stack = (unsigned long *)regs->sp;
+> +	unsigned long *stack = (unsigned long *)ftrace_regs_get_stack_pointer(fregs);
+>  
+>  	rh->ret_addr = stack[0];
+> -	rh->frame = regs->sp;
+> +	rh->frame = (unsigned long)stack;
+>  
+>  	/* Replace the return addr with trampoline addr */
+>  	stack[0] = (unsigned long) arch_rethook_trampoline;
+> diff --git a/include/linux/fprobe.h b/include/linux/fprobe.h
+> index 36c0595f7b93..b9c0c216dedb 100644
+> --- a/include/linux/fprobe.h
+> +++ b/include/linux/fprobe.h
+> @@ -38,7 +38,7 @@ struct fprobe {
+>  			     unsigned long ret_ip, struct ftrace_regs *regs,
+>  			     void *entry_data);
+>  	void (*exit_handler)(struct fprobe *fp, unsigned long entry_ip,
+> -			     unsigned long ret_ip, struct pt_regs *regs,
+> +			     unsigned long ret_ip, struct ftrace_regs *regs,
+>  			     void *entry_data);
+>  };
+>  
+> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> index fe335d861f08..c0a42d0860b8 100644
+> --- a/include/linux/ftrace.h
+> +++ b/include/linux/ftrace.h
+> @@ -151,6 +151,12 @@ struct ftrace_regs {
+>  
+>  #endif /* !CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS || !CONFIG_FUNCTION_TRACER */
+>  
+> +#ifdef CONFIG_HAVE_PT_REGS_TO_FTRACE_REGS_CAST
+> +
+> +static_assert(sizeof(struct pt_regs) == sizeof(struct ftrace_regs));
+> +
+> +#endif /* CONFIG_HAVE_PT_REGS_TO_FTRACE_REGS_CAST */
+> +
+>  static __always_inline struct pt_regs *ftrace_get_regs(struct ftrace_regs *fregs)
+>  {
+>  	if (!fregs)
+> diff --git a/include/linux/rethook.h b/include/linux/rethook.h
+> index 26b6f3c81a76..138d64c8b67b 100644
+> --- a/include/linux/rethook.h
+> +++ b/include/linux/rethook.h
+> @@ -7,6 +7,7 @@
+>  
+>  #include <linux/compiler.h>
+>  #include <linux/freelist.h>
+> +#include <linux/ftrace.h>
+>  #include <linux/kallsyms.h>
+>  #include <linux/llist.h>
+>  #include <linux/rcupdate.h>
+> @@ -14,7 +15,7 @@
+>  
+>  struct rethook_node;
+>  
+> -typedef void (*rethook_handler_t) (struct rethook_node *, void *, unsigned long, struct pt_regs *);
+> +typedef void (*rethook_handler_t) (struct rethook_node *, void *, unsigned long, struct ftrace_regs *);
+>  
+>  /**
+>   * struct rethook - The rethook management data structure.
+> @@ -64,12 +65,12 @@ void rethook_free(struct rethook *rh);
+>  void rethook_add_node(struct rethook *rh, struct rethook_node *node);
+>  struct rethook_node *rethook_try_get(struct rethook *rh);
+>  void rethook_recycle(struct rethook_node *node);
+> -void rethook_hook(struct rethook_node *node, struct pt_regs *regs, bool mcount);
+> +void rethook_hook(struct rethook_node *node, struct ftrace_regs *regs, bool mcount);
+>  unsigned long rethook_find_ret_addr(struct task_struct *tsk, unsigned long frame,
+>  				    struct llist_node **cur);
+>  
+>  /* Arch dependent code must implement arch_* and trampoline code */
+> -void arch_rethook_prepare(struct rethook_node *node, struct pt_regs *regs, bool mcount);
+> +void arch_rethook_prepare(struct rethook_node *node, struct ftrace_regs *regs, bool mcount);
+>  void arch_rethook_trampoline(void);
+>  
+>  /**
+> @@ -84,11 +85,11 @@ static inline bool is_rethook_trampoline(unsigned long addr)
+>  }
+>  
+>  /* If the architecture needs to fixup the return address, implement it. */
+> -void arch_rethook_fixup_return(struct pt_regs *regs,
+> +void arch_rethook_fixup_return(struct ftrace_regs *regs,
+>  			       unsigned long correct_ret_addr);
+>  
+>  /* Generic trampoline handler, arch code must prepare asm stub */
+> -unsigned long rethook_trampoline_handler(struct pt_regs *regs,
+> +unsigned long rethook_trampoline_handler(struct ftrace_regs *regs,
+>  					 unsigned long frame);
+>  
+>  #ifdef CONFIG_RETHOOK
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 0c6185aefaef..821dff656149 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -2132,7 +2132,11 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
+>  	if (rp->entry_handler && rp->entry_handler(ri, regs))
+>  		rethook_recycle(rhn);
+>  	else
+> -		rethook_hook(rhn, regs, kprobe_ftrace(p));
+> +		/*
+> +		 * We can cast pt_regs to ftrace_regs because this depends on
+> +		 * HAVE_PT_REGS_TO_FTRACE_REGS_CAST.
+> +		 */
+> +		rethook_hook(rhn, (struct ftrace_regs *)regs, kprobe_ftrace(p));
+>  
+>  	return 0;
+>  }
+> @@ -2140,9 +2144,11 @@ NOKPROBE_SYMBOL(pre_handler_kretprobe);
+>  
+>  static void kretprobe_rethook_handler(struct rethook_node *rh, void *data,
+>  				      unsigned long ret_addr,
+> -				      struct pt_regs *regs)
+> +				      struct ftrace_regs *fregs)
+>  {
+>  	struct kretprobe *rp = (struct kretprobe *)data;
+> +	/* Ditto, this depends on HAVE_PT_REGS_TO_FTRACE_REGS_CAST. */
+> +	struct pt_regs *regs = (struct pt_regs *)fregs;
+>  	struct kretprobe_instance *ri;
+>  	struct kprobe_ctlblk *kcb;
+>  
+> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+> index 976fd594b446..d56304276318 100644
+> --- a/kernel/trace/Kconfig
+> +++ b/kernel/trace/Kconfig
+> @@ -57,6 +57,13 @@ config HAVE_DYNAMIC_FTRACE_WITH_ARGS
+>  	 This allows for use of ftrace_regs_get_argument() and
+>  	 ftrace_regs_get_stack_pointer().
+>  
+> +config HAVE_PT_REGS_TO_FTRACE_REGS_CAST
+> +	bool
+> +	help
+> +	 If this is set, the memory layout of the ftrace_regs data structure
+> +	 is the same as the pt_regs. So the pt_regs is possible to be casted
+> +	 to ftrace_regs.
+> +
+>  config HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
+>  	bool
+>  	help
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 22d00c817f1a..c4d57c7cdc7c 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -2675,10 +2675,14 @@ kprobe_multi_link_handler(struct fprobe *fp, unsigned long fentry_ip,
+>  
+>  static void
+>  kprobe_multi_link_exit_handler(struct fprobe *fp, unsigned long fentry_ip,
+> -			       unsigned long ret_ip, struct pt_regs *regs,
+> +			       unsigned long ret_ip, struct ftrace_regs *fregs,
+>  			       void *data)
+>  {
+>  	struct bpf_kprobe_multi_link *link;
+> +	struct pt_regs *regs = ftrace_get_regs(fregs);
+> +
+> +	if (!regs)
+> +		return;
+>  
+>  	link = container_of(fp, struct bpf_kprobe_multi_link, fp);
+>  	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), regs);
+> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> index 07deb52df44a..dfddc7e8424e 100644
+> --- a/kernel/trace/fprobe.c
+> +++ b/kernel/trace/fprobe.c
+> @@ -53,7 +53,7 @@ static inline void __fprobe_handler(unsigned long ip, unsigned long parent_ip,
+>  		if (ret)
+>  			rethook_recycle(rh);
+>  		else
+> -			rethook_hook(rh, ftrace_get_regs(fregs), true);
+> +			rethook_hook(rh, fregs, true);
+>  	}
+>  }
+>  
+> @@ -120,7 +120,7 @@ static void fprobe_kprobe_handler(unsigned long ip, unsigned long parent_ip,
+>  }
+>  
+>  static void fprobe_exit_handler(struct rethook_node *rh, void *data,
+> -				unsigned long ret_ip, struct pt_regs *regs)
+> +				unsigned long ret_ip, struct ftrace_regs *fregs)
+>  {
+>  	struct fprobe *fp = (struct fprobe *)data;
+>  	struct fprobe_rethook_node *fpr;
+> @@ -141,7 +141,7 @@ static void fprobe_exit_handler(struct rethook_node *rh, void *data,
+>  		return;
+>  	}
+>  
+> -	fp->exit_handler(fp, fpr->entry_ip, ret_ip, regs,
+> +	fp->exit_handler(fp, fpr->entry_ip, ret_ip, fregs,
+>  			 fp->entry_data_size ? (void *)fpr->data : NULL);
+>  	ftrace_test_recursion_unlock(bit);
+>  }
+> diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
+> index 5eb9b598f4e9..7c5cf9d5910c 100644
+> --- a/kernel/trace/rethook.c
+> +++ b/kernel/trace/rethook.c
+> @@ -189,7 +189,7 @@ NOKPROBE_SYMBOL(rethook_try_get);
+>  /**
+>   * rethook_hook() - Hook the current function return.
+>   * @node: The struct rethook node to hook the function return.
+> - * @regs: The struct pt_regs for the function entry.
+> + * @fregs: The struct ftrace_regs for the function entry.
+>   * @mcount: True if this is called from mcount(ftrace) context.
+>   *
+>   * Hook the current running function return. This must be called when the
+> @@ -199,9 +199,9 @@ NOKPROBE_SYMBOL(rethook_try_get);
+>   * from the real function entry (e.g. kprobes) @mcount must be set false.
+>   * This is because the way to hook the function return depends on the context.
+>   */
+> -void rethook_hook(struct rethook_node *node, struct pt_regs *regs, bool mcount)
+> +void rethook_hook(struct rethook_node *node, struct ftrace_regs *fregs, bool mcount)
+>  {
+> -	arch_rethook_prepare(node, regs, mcount);
+> +	arch_rethook_prepare(node, fregs, mcount);
+>  	__llist_add(&node->llist, &current->rethooks);
+>  }
+>  NOKPROBE_SYMBOL(rethook_hook);
+> @@ -269,7 +269,7 @@ unsigned long rethook_find_ret_addr(struct task_struct *tsk, unsigned long frame
+>  }
+>  NOKPROBE_SYMBOL(rethook_find_ret_addr);
+>  
+> -void __weak arch_rethook_fixup_return(struct pt_regs *regs,
+> +void __weak arch_rethook_fixup_return(struct ftrace_regs *fregs,
+>  				      unsigned long correct_ret_addr)
+>  {
+>  	/*
+> @@ -281,7 +281,7 @@ void __weak arch_rethook_fixup_return(struct pt_regs *regs,
+>  }
+>  
+>  /* This function will be called from each arch-defined trampoline. */
+> -unsigned long rethook_trampoline_handler(struct pt_regs *regs,
+> +unsigned long rethook_trampoline_handler(struct ftrace_regs *fregs,
+>  					 unsigned long frame)
+>  {
+>  	struct llist_node *first, *node = NULL;
+> @@ -295,7 +295,7 @@ unsigned long rethook_trampoline_handler(struct pt_regs *regs,
+>  		BUG_ON(1);
+>  	}
+>  
+> -	instruction_pointer_set(regs, correct_ret_addr);
+> +	ftrace_regs_set_instruction_pointer(fregs, correct_ret_addr);
+>  
+>  	/*
+>  	 * These loops must be protected from rethook_free_rcu() because those
+> @@ -315,7 +315,7 @@ unsigned long rethook_trampoline_handler(struct pt_regs *regs,
+>  		handler = READ_ONCE(rhn->rethook->handler);
+>  		if (handler)
+>  			handler(rhn, rhn->rethook->data,
+> -				correct_ret_addr, regs);
+> +				correct_ret_addr, fregs);
+>  
+>  		if (first == node)
+>  			break;
+> @@ -323,7 +323,7 @@ unsigned long rethook_trampoline_handler(struct pt_regs *regs,
+>  	}
+>  
+>  	/* Fixup registers for returning to correct address. */
+> -	arch_rethook_fixup_return(regs, correct_ret_addr);
+> +	arch_rethook_fixup_return(fregs, correct_ret_addr);
+>  
+>  	/* Unlink used shadow stack */
+>  	first = current->rethooks.first;
+> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
+> index 71bf38d698f1..c60d0d9f1a95 100644
+> --- a/kernel/trace/trace_fprobe.c
+> +++ b/kernel/trace/trace_fprobe.c
+> @@ -341,10 +341,14 @@ static int fentry_dispatcher(struct fprobe *fp, unsigned long entry_ip,
+>  NOKPROBE_SYMBOL(fentry_dispatcher);
+>  
+>  static void fexit_dispatcher(struct fprobe *fp, unsigned long entry_ip,
+> -			     unsigned long ret_ip, struct pt_regs *regs,
+> +			     unsigned long ret_ip, struct ftrace_regs *fregs,
+>  			     void *entry_data)
+>  {
+>  	struct trace_fprobe *tf = container_of(fp, struct trace_fprobe, fp);
+> +	struct pt_regs *regs = ftrace_get_regs(fregs);
+> +
+> +	if (!regs)
+> +		return;
+>  
+>  	if (trace_probe_test_flag(&tf->tp, TP_FLAG_TRACE))
+>  		fexit_trace_func(tf, entry_ip, ret_ip, regs);
+> diff --git a/lib/test_fprobe.c b/lib/test_fprobe.c
+> index ff607babba18..d1e80653bf0c 100644
+> --- a/lib/test_fprobe.c
+> +++ b/lib/test_fprobe.c
+> @@ -59,9 +59,9 @@ static notrace int fp_entry_handler(struct fprobe *fp, unsigned long ip,
+>  
+>  static notrace void fp_exit_handler(struct fprobe *fp, unsigned long ip,
+>  				    unsigned long ret_ip,
+> -				    struct pt_regs *regs, void *data)
+> +				    struct ftrace_regs *fregs, void *data)
+>  {
+> -	unsigned long ret = regs_return_value(regs);
+> +	unsigned long ret = ftrace_regs_return_value(fregs);
+>  
+>  	KUNIT_EXPECT_FALSE(current_test, preemptible());
+>  	if (ip != target_ip) {
+> @@ -89,7 +89,7 @@ static notrace int nest_entry_handler(struct fprobe *fp, unsigned long ip,
+>  
+>  static notrace void nest_exit_handler(struct fprobe *fp, unsigned long ip,
+>  				      unsigned long ret_ip,
+> -				      struct pt_regs *regs, void *data)
+> +				      struct ftrace_regs *fregs, void *data)
+>  {
+>  	KUNIT_EXPECT_FALSE(current_test, preemptible());
+>  	KUNIT_EXPECT_EQ(current_test, ip, target_nest_ip);
+> diff --git a/samples/fprobe/fprobe_example.c b/samples/fprobe/fprobe_example.c
+> index 1545a1aac616..d476d1f07538 100644
+> --- a/samples/fprobe/fprobe_example.c
+> +++ b/samples/fprobe/fprobe_example.c
+> @@ -67,7 +67,7 @@ static int sample_entry_handler(struct fprobe *fp, unsigned long ip,
+>  }
+>  
+>  static void sample_exit_handler(struct fprobe *fp, unsigned long ip,
+> -				unsigned long ret_ip, struct pt_regs *regs,
+> +				unsigned long ret_ip, struct ftrace_regs *regs,
+>  				void *data)
+>  {
+>  	unsigned long rip = ret_ip;
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
