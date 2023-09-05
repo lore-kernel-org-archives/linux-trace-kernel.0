@@ -2,37 +2,54 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9D2C83F2C
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  5 Sep 2023 16:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E1ECA0FF3
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  5 Sep 2023 16:45:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229882AbjIEQp3 (ORCPT
+        id S234251AbjIEQpT (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 5 Sep 2023 12:45:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54268 "EHLO
+        Tue, 5 Sep 2023 12:45:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353610AbjIEQ2s (ORCPT
+        with ESMTP id S1356595AbjIEQc5 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 5 Sep 2023 12:28:48 -0400
+        Tue, 5 Sep 2023 12:32:57 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA2F42D54;
-        Tue,  5 Sep 2023 09:18:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62B5E1FED;
+        Tue,  5 Sep 2023 09:32:12 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 08A3160A71;
-        Tue,  5 Sep 2023 16:17:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9B81C433C7;
-        Tue,  5 Sep 2023 16:17:25 +0000 (UTC)
-Date:   Tue, 5 Sep 2023 12:17:44 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7C88560B95;
+        Tue,  5 Sep 2023 16:30:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A140C433C8;
+        Tue,  5 Sep 2023 16:30:40 +0000 (UTC)
+Date:   Tue, 5 Sep 2023 12:30:58 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Zheng Yejian <zhengyejian1@huawei.com>
-Cc:     <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <yeweihua4@huawei.com>
-Subject: Re: [PATCH] tracing: Fix unexpected ring buffer expand by instance
-Message-ID: <20230905121744.538b92cc@gandalf.local.home>
-In-Reply-To: <20230905121714.3229131-1-zhengyejian1@huawei.com>
-References: <20230905121714.3229131-1-zhengyejian1@huawei.com>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Florent Revest <revest@chromium.org>,
+        linux-trace-kernel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v4 4/9] fprobe: rethook: Use ftrace_regs in fprobe exit
+ handler and rethook
+Message-ID: <20230905123058.706b12de@gandalf.local.home>
+In-Reply-To: <20230905223633.23cd4e6e8407c45b934be477@kernel.org>
+References: <169280372795.282662.9784422934484459769.stgit@devnote2>
+        <169280377434.282662.7610009313268953247.stgit@devnote2>
+        <20230904224038.4420a76ea15931aa40179697@kernel.org>
+        <yt9d5y4pozrl.fsf@linux.ibm.com>
+        <20230905223633.23cd4e6e8407c45b934be477@kernel.org>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -41,53 +58,41 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 5 Sep 2023 20:17:14 +0800
-Zheng Yejian <zhengyejian1@huawei.com> wrote:
+On Tue, 5 Sep 2023 22:36:33 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> The ring buffer of global_trace is set to the minimum size in
-> order to save memory on boot up and then it will be expand when
-> some trace feature enabled.
+> Yes, arch_rethook_trampoline() is good. It needs to save all registers.
 > 
-> However currently operations under an instance can also cause
-> global_trace ring buffer being expanded, and the expanded memory
-> would be wasted if global_trace then not being used.
+> In this series, I'm trying to change the pt_regs with ftrace_regs which will
+> reduce trampoline overhead if DYNAMIC_FTRACE_WITH_ARGS=y.
 > 
-> See following case, we enable 'sched_switch' event in instance 'A', then
-> ring buffer of global_trace is unexpectedly expanded to be 1410KB, also
-> the '(expanded: 1408)' from 'buffer_size_kb' of instance is confusing.
+> kprobe -> (pt_regs) -> rethook_try_hook()
+> fprobe -> (ftrace_regs) -> rethook_try_hook_ftrace() # new function
 > 
->   # cd /sys/kernel/tracing
->   # mkdir instances/A
->   # cat buffer_size_kb
->   7 (expanded: 1408)
->   # cat instances/A/buffer_size_kb
->   1410 (expanded: 1408)
->   # echo sched:sched_switch > instances/A/set_event
->   # cat buffer_size_kb
->   1410
->   # cat instances/A/buffer_size_kb
->   1410
+> Thus, we need to ensure that the ftrace_regs which is saved in the ftrace
+> *without* FTRACE_WITH_REGS flags, can be used for hooking the function
+> return. I saw;
 > 
-> To fix it, we can:
->   - Make 'ring_buffer_expanded' as a member of 'struct trace_array';
->   - Make 'ring_buffer_expanded' of instance is defaultly true,
->     global_trace is defaultly false;
->   - In order not to expose 'global_trace' outside of file
->     'kernel/trace/trace.c', introduce trace_set_ring_buffer_expanded()
->     to set 'ring_buffer_expanded' as 'true';
->   - Pass the expected trace_array to tracing_update_buffers().
+> void arch_rethook_prepare(struct rethook_node *rh, struct pt_regs *regs, bool mcount)
+> {
+>         rh->ret_addr = regs->gprs[14];
+>         rh->frame = regs->gprs[15];
 > 
-> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
-> ---
->  kernel/trace/trace.c        | 46 ++++++++++++++++++++-----------------
->  kernel/trace/trace.h        |  9 ++++++--
->  kernel/trace/trace_events.c | 22 ++++++++++--------
->  3 files changed, 44 insertions(+), 33 deletions(-)
+>         /* Replace the return addr with trampoline addr */
+>         regs->gprs[14] = (unsigned long)&arch_rethook_trampoline;
+> }
 > 
+> gprs[15] is a stack pointer, so it is saved in ftrace_regs too, but what about
+> gprs[14]? (I guess it is a link register)
+> We need to read the gprs[14] and ensure that is restored to gpr14 when the
+> ftrace is exit even without FTRACE_WITH_REGS flag.
+> 
+> IOW, it is ftrace save regs/restore regs code issue. I need to check how the
+> function_graph implements it.
 
-Looks good, but as the merge window is still open, it will need to wait
-till it is closed to be reviewed.
+I would argue that the link register should also be saved in ftrace_regs.
 
-Thanks,
+The thing that ftrace_regs is not suppose to save is the general purpose
+registers.
 
 -- Steve
