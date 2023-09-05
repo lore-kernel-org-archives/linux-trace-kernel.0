@@ -2,118 +2,123 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E37A9CA0FFE
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  5 Sep 2023 18:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFECC83F3E
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  5 Sep 2023 19:40:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232606AbjIES7H (ORCPT
+        id S239940AbjIETk1 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 5 Sep 2023 14:59:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53054 "EHLO
+        Tue, 5 Sep 2023 15:40:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235653AbjIES7G (ORCPT
+        with ESMTP id S238081AbjIETk1 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 5 Sep 2023 14:59:06 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15EDE1B6;
-        Tue,  5 Sep 2023 11:58:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 16D23CE128B;
-        Tue,  5 Sep 2023 16:24:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F4F9C433C7;
-        Tue,  5 Sep 2023 16:24:42 +0000 (UTC)
-Date:   Tue, 5 Sep 2023 12:25:00 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Zheng Yejian <zhengyejian1@huawei.com>
-Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Ajay Kaher <akaher@vmware.com>, <shuah@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ye Weihua <yeweihua4@huawei.com>
-Subject: Re: [PATCH] selftests/ftrace: Correctly enable event in
- instance-event.tc
-Message-ID: <20230905122500.700c75ec@gandalf.local.home>
-In-Reply-To: <1cb3aee2-19af-c472-e265-05176fe9bd84@huawei.com>
-References: <20230626001144.2635956-1-zhengyejian1@huawei.com>
-        <20230626191114.8c5a66fbaa28af3c303923bd@kernel.org>
-        <20230626191255.53baab4ed48d7111dcd44cad@kernel.org>
-        <20230710183741.78f04c68@gandalf.local.home>
-        <1cb3aee2-19af-c472-e265-05176fe9bd84@huawei.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Tue, 5 Sep 2023 15:40:27 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E01089D;
+        Tue,  5 Sep 2023 12:40:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693942821; x=1725478821;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5JMhy340COY43uhOYXZKSj7yW4IYql+k3rOX5Ml5sdk=;
+  b=enBnDDEOGR4dPf52AlQ6kUSuV4YAkkF7RFaE1Bqj/SCFUgaUuzQjxsT9
+   W0n9yE2gfc+TfMw3Jj5z5xekmU5L656G5nOTeTpdS8VlnvCDj4a1W2W4q
+   NO6hocD+mmPsPYNyJd0qQOUpP6EG+Gqorne1MRkitnJul5sN0gOt2pj3h
+   /cSwZ+tK9pG1NqJkNr6oiq32+cy9pfgM/Qic6xOolzHyTTJCzIbsHBNfK
+   kCpEZKaBaH3kGrcbDSOzozmjNQX5kNOSCsJNoAX07yESFX0+upBn4GhDD
+   mZ7FrPGERfbYZr8gOE/S+zvXn0zP2jSl9M7cGZkXsKAFjXQfPJtPPPG+H
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="357198503"
+X-IronPort-AV: E=Sophos;i="6.02,229,1688454000"; 
+   d="scan'208";a="357198503"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2023 12:40:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="744399856"
+X-IronPort-AV: E=Sophos;i="6.02,229,1688454000"; 
+   d="scan'208";a="744399856"
+Received: from lkp-server02.sh.intel.com (HELO e0b2ea88afd5) ([10.239.97.151])
+  by fmsmga007.fm.intel.com with ESMTP; 05 Sep 2023 12:40:19 -0700
+Received: from kbuild by e0b2ea88afd5 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qdbuL-00020h-1M;
+        Tue, 05 Sep 2023 19:40:17 +0000
+Date:   Wed, 6 Sep 2023 03:40:11 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Zheng Yejian <zhengyejian1@huawei.com>, rostedt@goodmis.org,
+        mhiramat@kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, yeweihua4@huawei.com,
+        zhengyejian1@huawei.com
+Subject: Re: [PATCH] tracing: Fix unexpected ring buffer expand by instance
+Message-ID: <202309060320.psgXz5VD-lkp@intel.com>
+References: <20230905121714.3229131-1-zhengyejian1@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230905121714.3229131-1-zhengyejian1@huawei.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 5 Sep 2023 20:54:40 +0800
-Zheng Yejian <zhengyejian1@huawei.com> wrote:
+Hi Zheng,
 
-> Hi, Steve, Ajay,
-> 
-> After this patch and run this testcase, I got an use-after-free report
-> by KASAN. Short log see [1], full logs see attach "panic.log".
-> 
-> And by simple bisect, I found it may be introduced by:
-> 
->    27152bceea1d ("eventfs: Move tracing/events to eventfs")
-> 
-> Link: 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=27152bceea1df27ffebb12ac9cd9adbf2c4c3f35
-> 
-> [1]
-> # ./ftracetest test.d/instances/instance-event.tc
-> === Ftrace unit tests ===
-> [1] Test creation and deletion of trace instances while setting an 
-> event[   89.472397] 
-> ==================================================================
-> [   89.475053] BUG: KASAN: slab-use-after-free in 
-> __ftrace_event_enable_disable+0x1b/0x3a0
-> [   89.480039] Read of size 8 at addr ffff88814f5b2690 by task 
-> ftracetest/392
-> [   89.483906]
-> [   89.484560] CPU: 10 PID: 392 Comm: ftracetest Tainted: G        W 
->       6.5.0+ #127
-> [   89.487033] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), 
-> BIOS rel-1.15.0-0-g2dd4b9b3f840-prebuilt.qemu.org 04/01/2014
-> [   89.489751] Call Trace:
-> [   89.490315]  <TASK>
-> [   89.490817]  dump_stack_lvl+0x4b/0x80
-> [   89.491570]  print_report+0xd0/0x620
-> [   89.492296]  ? __virt_addr_valid+0xf9/0x180
-> [   89.493134]  ? __ftrace_event_enable_disable+0x1b/0x3a0
-> [   89.494151]  kasan_report+0xb6/0xf0
-> [   89.494881]  ? __ftrace_event_enable_disable+0x1b/0x3a0
-> [   89.495878]  __ftrace_event_enable_disable+0x1b/0x3a0
-> [   89.496805]  event_enable_write+0x109/0x170
-> [   89.497631]  ? __pfx_event_enable_write+0x10/0x10
-> [   89.498618]  ? __pfx_bpf_lsm_file_permission+0x10/0x10
-> [   89.499659]  ? security_file_permission+0x51/0x2d0
-> [   89.500604]  vfs_write+0x175/0x670
-> [   89.501385]  ? __pfx_vfs_write+0x10/0x10
-> [   89.502246]  ? __pfx__raw_spin_lock+0x10/0x10
-> [   89.503187]  ? expand_files+0x9b/0x330
-> [   89.504011]  ? __pfx_expand_files+0x10/0x10
-> [   89.504898]  ? set_close_on_exec+0x7b/0xe0
-> [   89.505782]  ? __fget_light+0xae/0x1e0
-> [   89.506615]  ? _raw_spin_lock+0x85/0xe0
-> [   89.507989]  ksys_write+0xbd/0x160
-> [   89.509302]  ? __pfx_ksys_write+0x10/0x10
-> [   89.510493]  ? dnotify_flush+0x38/0x220
-> [   89.511654]  ? fpregs_assert_state_consistent+0x5a/0x70
-> [   89.513297]  ? exit_to_user_mode_prepare+0x32/0x110
-> [   89.514692]  do_syscall_64+0x3f/0x90
-> [   89.515516]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+kernel test robot noticed the following build warnings:
 
-I wonder if this is related to:
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.5 next-20230905]
+[cannot apply to rostedt-trace/for-next rostedt-trace/for-next-urgent]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-  https://lore.kernel.org/all/202309050916.58201dc6-oliver.sang@intel.com/
+url:    https://github.com/intel-lab-lkp/linux/commits/Zheng-Yejian/tracing-Fix-unexpected-ring-buffer-expand-by-instance/20230906-014353
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20230905121714.3229131-1-zhengyejian1%40huawei.com
+patch subject: [PATCH] tracing: Fix unexpected ring buffer expand by instance
+config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20230906/202309060320.psgXz5VD-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230906/202309060320.psgXz5VD-lkp@intel.com/reproduce)
 
-Which I'm currently debugging.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202309060320.psgXz5VD-lkp@intel.com/
 
--- Steve
+All warnings (new ones prefixed by >>):
+
+>> kernel/trace/trace.c:6438: warning: Function parameter or member 'tr' not described in 'tracing_update_buffers'
+
+
+vim +6438 kernel/trace/trace.c
+
+4f271a2a60c748 Vaibhav Nagarnaik 2011-06-13  6425  
+ef710e100c1068 KOSAKI Motohiro   2010-07-01  6426  
+1852fcce181faa Steven Rostedt    2009-03-11  6427  /**
+1852fcce181faa Steven Rostedt    2009-03-11  6428   * tracing_update_buffers - used by tracing facility to expand ring buffers
+1852fcce181faa Steven Rostedt    2009-03-11  6429   *
+1852fcce181faa Steven Rostedt    2009-03-11  6430   * To save on memory when the tracing is never used on a system with it
+1852fcce181faa Steven Rostedt    2009-03-11  6431   * configured in. The ring buffers are set to a minimum size. But once
+1852fcce181faa Steven Rostedt    2009-03-11  6432   * a user starts to use the tracing facility, then they need to grow
+1852fcce181faa Steven Rostedt    2009-03-11  6433   * to their default size.
+1852fcce181faa Steven Rostedt    2009-03-11  6434   *
+1852fcce181faa Steven Rostedt    2009-03-11  6435   * This function is to be called when a tracer is about to be used.
+1852fcce181faa Steven Rostedt    2009-03-11  6436   */
+625c101cac2477 Zheng Yejian      2023-09-05  6437  int tracing_update_buffers(struct trace_array *tr)
+1852fcce181faa Steven Rostedt    2009-03-11 @6438  {
+1852fcce181faa Steven Rostedt    2009-03-11  6439  	int ret = 0;
+1852fcce181faa Steven Rostedt    2009-03-11  6440  
+1027fcb206a0fb Steven Rostedt    2009-03-12  6441  	mutex_lock(&trace_types_lock);
+625c101cac2477 Zheng Yejian      2023-09-05  6442  	if (!tr->ring_buffer_expanded)
+625c101cac2477 Zheng Yejian      2023-09-05  6443  		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
+438ced1720b584 Vaibhav Nagarnaik 2012-02-02  6444  						RING_BUFFER_ALL_CPUS);
+1027fcb206a0fb Steven Rostedt    2009-03-12  6445  	mutex_unlock(&trace_types_lock);
+1852fcce181faa Steven Rostedt    2009-03-11  6446  
+1852fcce181faa Steven Rostedt    2009-03-11  6447  	return ret;
+1852fcce181faa Steven Rostedt    2009-03-11  6448  }
+1852fcce181faa Steven Rostedt    2009-03-11  6449  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
