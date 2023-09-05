@@ -2,62 +2,114 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F67ACA1009
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  5 Sep 2023 20:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF73CA100C
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  5 Sep 2023 20:08:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242188AbjIEUIm (ORCPT
+        id S242706AbjIEUIp (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 5 Sep 2023 16:08:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45604 "EHLO
+        Tue, 5 Sep 2023 16:08:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235180AbjIEUIl (ORCPT
+        with ESMTP id S242565AbjIEUIo (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 5 Sep 2023 16:08:41 -0400
-X-Greylist: delayed 3733 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 05 Sep 2023 13:08:37 PDT
+        Tue, 5 Sep 2023 16:08:44 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B728113;
-        Tue,  5 Sep 2023 13:08:36 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2B1FC433BA;
-        Tue,  5 Sep 2023 18:45:33 +0000 (UTC)
-Date:   Tue, 5 Sep 2023 14:45:52 -0400
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDD7912C;
+        Tue,  5 Sep 2023 13:08:37 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF22EC433BB;
+        Tue,  5 Sep 2023 18:26:52 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.96)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1qdalc-000zOi-0H;
+        Tue, 05 Sep 2023 14:27:12 -0400
+Message-ID: <20230905182711.899724045@goodmis.org>
+User-Agent: quilt/0.66
+Date:   Tue, 05 Sep 2023 14:26:09 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Zheng Yejian <zhengyejian1@huawei.com>
-Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Ajay Kaher <akaher@vmware.com>, <shuah@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ye Weihua <yeweihua4@huawei.com>
-Subject: Re: [PATCH] selftests/ftrace: Correctly enable event in
- instance-event.tc
-Message-ID: <20230905144552.3b390a7a@gandalf.local.home>
-In-Reply-To: <1cb3aee2-19af-c472-e265-05176fe9bd84@huawei.com>
-References: <20230626001144.2635956-1-zhengyejian1@huawei.com>
-        <20230626191114.8c5a66fbaa28af3c303923bd@kernel.org>
-        <20230626191255.53baab4ed48d7111dcd44cad@kernel.org>
-        <20230710183741.78f04c68@gandalf.local.home>
-        <1cb3aee2-19af-c472-e265-05176fe9bd84@huawei.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ajay Kaher <akaher@vmware.com>,
+        kernel test robot <oliver.sang@intel.com>,
+        Ching-lin Yu <chinglinyu@google.com>
+Subject: [PATCH 2/2] tracefs/eventfs: Add missing lockdown checks
+References: <20230905182607.505212458@goodmis.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 5 Sep 2023 20:54:40 +0800
-Zheng Yejian <zhengyejian1@huawei.com> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> Hi, Steve, Ajay,
-> 
-> After this patch and run this testcase, I got an use-after-free report
-> by KASAN. Short log see [1], full logs see attach "panic.log".
-> 
-> And by simple bisect, I found it may be introduced by:
-> 
->    27152bceea1d ("eventfs: Move tracing/events to eventfs")
+All the eventfs external functions do not check if TRACEFS_LOCKDOWN was
+set or not. This can caused some functions to return success while others
+fail, which can trigger unexpected errors.
 
-Can you send me your config?
+Add the missing lockdown checks.
 
--- Steve
+Link: https://lore.kernel.org/all/202309050916.58201dc6-oliver.sang@intel.com/
+
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/tracefs/event_inode.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 237c6f370ad9..fa1a1679a886 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -491,6 +491,9 @@ struct dentry *eventfs_create_events_dir(const char *name,
+ 	struct tracefs_inode *ti;
+ 	struct inode *inode;
+ 
++	if (security_locked_down(LOCKDOWN_TRACEFS))
++		return NULL;
++
+ 	if (IS_ERR(dentry))
+ 		return dentry;
+ 
+@@ -538,6 +541,9 @@ struct eventfs_file *eventfs_add_subsystem_dir(const char *name,
+ 	struct eventfs_inode *ei_parent;
+ 	struct eventfs_file *ef;
+ 
++	if (security_locked_down(LOCKDOWN_TRACEFS))
++		return NULL;
++
+ 	if (!parent)
+ 		return ERR_PTR(-EINVAL);
+ 
+@@ -569,6 +575,9 @@ struct eventfs_file *eventfs_add_dir(const char *name,
+ {
+ 	struct eventfs_file *ef;
+ 
++	if (security_locked_down(LOCKDOWN_TRACEFS))
++		return NULL;
++
+ 	if (!ef_parent)
+ 		return ERR_PTR(-EINVAL);
+ 
+@@ -606,6 +615,9 @@ int eventfs_add_events_file(const char *name, umode_t mode,
+ 	struct eventfs_inode *ei;
+ 	struct eventfs_file *ef;
+ 
++	if (security_locked_down(LOCKDOWN_TRACEFS))
++		return -ENODEV;
++
+ 	if (!parent)
+ 		return -EINVAL;
+ 
+@@ -654,6 +666,9 @@ int eventfs_add_file(const char *name, umode_t mode,
+ {
+ 	struct eventfs_file *ef;
+ 
++	if (security_locked_down(LOCKDOWN_TRACEFS))
++		return -ENODEV;
++
+ 	if (!ef_parent)
+ 		return -EINVAL;
+ 
+-- 
+2.40.1
