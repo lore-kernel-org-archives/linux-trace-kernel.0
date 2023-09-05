@@ -2,178 +2,357 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 396C5CA0FFC
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE1DCA1001
 	for <linux-trace-kernel@archiver.kernel.org>; Tue,  5 Sep 2023 16:19:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237696AbjIEQTP (ORCPT
+        id S229887AbjIEQTR (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 5 Sep 2023 12:19:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59118 "EHLO
+        Tue, 5 Sep 2023 12:19:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354785AbjIEOYB (ORCPT
+        with ESMTP id S1354522AbjIEMR0 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 5 Sep 2023 10:24:01 -0400
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C153D189;
-        Tue,  5 Sep 2023 07:23:56 -0700 (PDT)
-X-UUID: d4b5e6924bf711eea33bb35ae8d461a2-20230905
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=zAwm/IYGf6NFCXp4FoAerIpc2O3P6mE2ikN67xCGKfM=;
-        b=NvQdIWQmpzHE0sOdolYcSFeeHZrWsU80pO3MgdJEz42TsBQ2UKfVnzRemqKfVXoSMVR3rISh2IonYOo1ty76HU3iu4CHecF3eIPAcEBHpEBOX5QSzSlTTt8jNzhk0heWWA0wfmTADZNcYG76IW+3NKn64W8B3KL569QzG88nazU=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.31,REQID:eeb17bee-1028-4acd-8af4-b660a635af47,IP:0,U
-        RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-        :release,TS:-5
-X-CID-META: VersionHash:0ad78a4,CLOUDID:d7e9abc2-1e57-4345-9d31-31ad9818b39f,B
-        ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-        RL:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:
-        NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: d4b5e6924bf711eea33bb35ae8d461a2-20230905
-Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
-        (envelope-from <tze-nan.wu@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-        with ESMTP id 1034999915; Tue, 05 Sep 2023 22:23:49 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Tue, 5 Sep 2023 22:23:47 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Tue, 5 Sep 2023 22:23:47 +0800
-From:   Tze-nan Wu <Tze-nan.Wu@mediatek.com>
+        Tue, 5 Sep 2023 08:17:26 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17B3D1A8;
+        Tue,  5 Sep 2023 05:17:21 -0700 (PDT)
+Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.56])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Rg4G80bL8z1M97v;
+        Tue,  5 Sep 2023 20:15:28 +0800 (CST)
+Received: from localhost.localdomain (10.67.175.61) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Tue, 5 Sep 2023 20:17:14 +0800
+From:   Zheng Yejian <zhengyejian1@huawei.com>
 To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>
-CC:     <bobule.chang@mediatek.com>, <wsd_upstream@mediatek.com>,
-        <cheng-jui.wang@mediatek.com>,
-        Tze-nan Wu <Tze-nan.Wu@mediatek.com>, <stable@vger.kernel.org>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: [PATCH] ring-buffer: Do not read at &event->array[0] if it across the page
-Date:   Tue, 5 Sep 2023 22:23:15 +0800
-Message-ID: <20230905142319.32582-1-Tze-nan.Wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <yeweihua4@huawei.com>,
+        <zhengyejian1@huawei.com>
+Subject: [PATCH] tracing: Fix unexpected ring buffer expand by instance
+Date:   Tue, 5 Sep 2023 20:17:14 +0800
+Message-ID: <20230905121714.3229131-1-zhengyejian1@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.175.61]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-While reading from the tracing/trace, the ftrace reader rarely encounters
-a KASAN invalid access issue.
-It is likely that the writer has disrupted the ring_buffer that the reader
-is currently parsing. the kasan report is as below:
+The ring buffer of global_trace is set to the minimum size in
+order to save memory on boot up and then it will be expand when
+some trace feature enabled.
 
-[name:report&]BUG: KASAN: invalid-access in rb_iter_head_event+0x27c/0x3d0
-[name:report&]Read of size 4 at addr 71ffff8111a18000 by task xxxx
-[name:report_sw_tags&]Pointer tag: [71], memory tag: [0f]
-[name:report&]
-CPU: 2 PID: 380 Comm: xxxx
-Call trace:
-dump_backtrace+0x168/0x1b0
-show_stack+0x2c/0x3c
-dump_stack_lvl+0xa4/0xd4
-print_report+0x268/0x9b0
-kasan_report+0xdc/0x148
-kasan_tag_mismatch+0x28/0x3c
-__hwasan_tag_mismatch+0x2c/0x58
-rb_event_length() [inline]
-rb_iter_head_event+0x27c/0x3d0
-ring_buffer_iter_peek+0x23c/0x6e0
-__find_next_entry+0x1ac/0x3d8
-s_next+0x1f0/0x310
-seq_read_iter+0x4e8/0x77c
-seq_read+0xf8/0x150
-vfs_read+0x1a8/0x4cc
+However currently operations under an instance can also cause
+global_trace ring buffer being expanded, and the expanded memory
+would be wasted if global_trace then not being used.
 
-In some edge cases, ftrace reader could access to an invalid address,
-specifically when reading 4 bytes beyond the end of the currently page.
-While issue happened, the dump of rb_iter_head_event is shown as below:
+See following case, we enable 'sched_switch' event in instance 'A', then
+ring buffer of global_trace is unexpectedly expanded to be 1410KB, also
+the '(expanded: 1408)' from 'buffer_size_kb' of instance is confusing.
 
-    in function rb_iter_head_event:
-          - iter->head = 0xFEC
-          - iter->next_event = 0xFEC
-          - commit = 0xFF0
-          - read_stamp = 0x2955AC46DB0
-          - page_stamp = 0x2955AC2439A
-          - iter->head_page->page = 0x71FFFF8111A17000
-          - iter->head_page->time_stamp = 0x2956A142267
-          - iter->head_page->page->commit = 0xFF0
-          - the content in iter->head_page->page
-                0x71FFFF8111A17FF0: 01010075 00002421 0A123B7C FFFFFFC0
+  # cd /sys/kernel/tracing
+  # mkdir instances/A
+  # cat buffer_size_kb
+  7 (expanded: 1408)
+  # cat instances/A/buffer_size_kb
+  1410 (expanded: 1408)
+  # echo sched:sched_switch > instances/A/set_event
+  # cat buffer_size_kb
+  1410
+  # cat instances/A/buffer_size_kb
+  1410
 
-In rb_iter_head_event, reader will call rb_event_length with argument
-(struct ring_buffer_event *event = 0x71FFFF8111A17FFC).
-Since the content data start at address 0x71FFFF8111A17FFC are 0xFFFFFFC0.
-event->type will be interpret as 0x0, than the reader will try to get the
-length by accessing event->array[0], which is an invalid address:
-    &event->array[0] = 0x71FFFF8111A18000
+To fix it, we can:
+  - Make 'ring_buffer_expanded' as a member of 'struct trace_array';
+  - Make 'ring_buffer_expanded' of instance is defaultly true,
+    global_trace is defaultly false;
+  - In order not to expose 'global_trace' outside of file
+    'kernel/trace/trace.c', introduce trace_set_ring_buffer_expanded()
+    to set 'ring_buffer_expanded' as 'true';
+  - Pass the expected trace_array to tracing_update_buffers().
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Tze-nan Wu <Tze-nan.Wu@mediatek.com>
+Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
 ---
-resend again due to forget cc stable@vger.kernel.org
+ kernel/trace/trace.c        | 46 ++++++++++++++++++++-----------------
+ kernel/trace/trace.h        |  9 ++++++--
+ kernel/trace/trace_events.c | 22 ++++++++++--------
+ 3 files changed, 44 insertions(+), 33 deletions(-)
 
-Following patch may not become a solution, it merely checks if the address
-to be accessed is valid or not within the rb_event_length before access.
-And not sure if there is any side-effect it can lead to.
-
-I am curious about what a better solution for this issue would look like.
-Should we address the problem from the writer or the reader?
-
-Also I wonder if the cause of the issue is exactly as I suspected.
-Any Suggestion will be appreciated.
-
-Test below can reproduce the issue in 2 hours on kernel-6.1.24:
-    $cd /sys/kernel/tracing/
-    # make the reader and writer race more through resize the buffer to 8kb
-    $echo 8 > buffer_size_kn
-    # enable all events
-    $echo 1 > event/enable
-    # enable trace
-    $echo 1 > tracing_on
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 2b4ded753367..5360ffdf98a3 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -54,12 +54,6 @@
+ #include "trace.h"
+ #include "trace_output.h"
  
-    # write and run a script that keep reading trace
-    $./read_trace.sh
-
-    ``` read_trace.sh
-       while :
-       do
-           cat /sys/kernel/tracing/trace > /dev/null
-       done
-
-    ```
----
- kernel/trace/ring_buffer.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 78502d4c7214..ed5ddc3a134b 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -200,6 +200,8 @@ rb_event_length(struct ring_buffer_event *event)
- 		if (rb_null_event(event))
- 			/* undefined */
- 			return -1;
-+		if (((unsigned long)event & 0xfffUL) >= PAGE_SIZE - 4)
-+			return -1;
- 		return  event->array[0] + RB_EVNT_HDR_SIZE;
+-/*
+- * On boot up, the ring buffer is set to the minimum size, so that
+- * we do not waste memory on systems that are not using tracing.
+- */
+-bool ring_buffer_expanded;
+-
+ #ifdef CONFIG_FTRACE_STARTUP_TEST
+ /*
+  * We need to change this state when a selftest is running.
+@@ -202,7 +196,7 @@ static int __init set_cmdline_ftrace(char *str)
+ 	strscpy(bootup_tracer_buf, str, MAX_TRACER_SIZE);
+ 	default_bootup_tracer = bootup_tracer_buf;
+ 	/* We are using ftrace early, expand it */
+-	ring_buffer_expanded = true;
++	trace_set_ring_buffer_expanded(NULL);
+ 	return 1;
+ }
+ __setup("ftrace=", set_cmdline_ftrace);
+@@ -247,7 +241,7 @@ static int __init boot_alloc_snapshot(char *str)
+ 	} else {
+ 		allocate_snapshot = true;
+ 		/* We also need the main ring buffer expanded */
+-		ring_buffer_expanded = true;
++		trace_set_ring_buffer_expanded(NULL);
+ 	}
+ 	return 1;
+ }
+@@ -490,6 +484,13 @@ static struct trace_array global_trace = {
+ 	.trace_flags = TRACE_DEFAULT_FLAGS,
+ };
  
- 	case RINGBUF_TYPE_TIME_EXTEND:
-@@ -209,6 +211,8 @@ rb_event_length(struct ring_buffer_event *event)
- 		return RB_LEN_TIME_STAMP;
++void trace_set_ring_buffer_expanded(struct trace_array *tr)
++{
++	if (!tr)
++		tr = &global_trace;
++	tr->ring_buffer_expanded = true;
++}
++
+ LIST_HEAD(ftrace_trace_arrays);
  
- 	case RINGBUF_TYPE_DATA:
-+		if ((((unsigned long)event & 0xfffUL) >= PAGE_SIZE - 4) && !event->type_len)
-+			return -1;
- 		return rb_event_data_length(event);
- 	default:
- 		WARN_ON_ONCE(1);
+ int trace_array_get(struct trace_array *this_tr)
+@@ -2012,7 +2013,7 @@ static int run_tracer_selftest(struct tracer *type)
+ #ifdef CONFIG_TRACER_MAX_TRACE
+ 	if (type->use_max_tr) {
+ 		/* If we expanded the buffers, make sure the max is expanded too */
+-		if (ring_buffer_expanded)
++		if (tr->ring_buffer_expanded)
+ 			ring_buffer_resize(tr->max_buffer.buffer, trace_buf_size,
+ 					   RING_BUFFER_ALL_CPUS);
+ 		tr->allocated_snapshot = true;
+@@ -2038,7 +2039,7 @@ static int run_tracer_selftest(struct tracer *type)
+ 		tr->allocated_snapshot = false;
+ 
+ 		/* Shrink the max buffer again */
+-		if (ring_buffer_expanded)
++		if (tr->ring_buffer_expanded)
+ 			ring_buffer_resize(tr->max_buffer.buffer, 1,
+ 					   RING_BUFFER_ALL_CPUS);
+ 	}
+@@ -3403,7 +3404,7 @@ void trace_printk_init_buffers(void)
+ 	pr_warn("**********************************************************\n");
+ 
+ 	/* Expand the buffers to set size */
+-	tracing_update_buffers();
++	tracing_update_buffers(&global_trace);
+ 
+ 	buffers_allocated = 1;
+ 
+@@ -6347,7 +6348,7 @@ static int __tracing_resize_ring_buffer(struct trace_array *tr,
+ 	 * we use the size that was given, and we can forget about
+ 	 * expanding it later.
+ 	 */
+-	ring_buffer_expanded = true;
++	trace_set_ring_buffer_expanded(tr);
+ 
+ 	/* May be called before buffers are initialized */
+ 	if (!tr->array_buffer.buffer)
+@@ -6433,13 +6434,13 @@ ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
+  *
+  * This function is to be called when a tracer is about to be used.
+  */
+-int tracing_update_buffers(void)
++int tracing_update_buffers(struct trace_array *tr)
+ {
+ 	int ret = 0;
+ 
+ 	mutex_lock(&trace_types_lock);
+-	if (!ring_buffer_expanded)
+-		ret = __tracing_resize_ring_buffer(&global_trace, trace_buf_size,
++	if (!tr->ring_buffer_expanded)
++		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
+ 						RING_BUFFER_ALL_CPUS);
+ 	mutex_unlock(&trace_types_lock);
+ 
+@@ -6493,7 +6494,7 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
+ 
+ 	mutex_lock(&trace_types_lock);
+ 
+-	if (!ring_buffer_expanded) {
++	if (!tr->ring_buffer_expanded) {
+ 		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
+ 						RING_BUFFER_ALL_CPUS);
+ 		if (ret < 0)
+@@ -7161,7 +7162,7 @@ tracing_entries_read(struct file *filp, char __user *ubuf,
+ 		}
+ 
+ 		if (buf_size_same) {
+-			if (!ring_buffer_expanded)
++			if (!tr->ring_buffer_expanded)
+ 				r = sprintf(buf, "%lu (expanded: %lu)\n",
+ 					    size >> 10,
+ 					    trace_buf_size >> 10);
+@@ -7218,10 +7219,10 @@ tracing_total_entries_read(struct file *filp, char __user *ubuf,
+ 	mutex_lock(&trace_types_lock);
+ 	for_each_tracing_cpu(cpu) {
+ 		size += per_cpu_ptr(tr->array_buffer.data, cpu)->entries >> 10;
+-		if (!ring_buffer_expanded)
++		if (!tr->ring_buffer_expanded)
+ 			expanded_size += trace_buf_size >> 10;
+ 	}
+-	if (ring_buffer_expanded)
++	if (tr->ring_buffer_expanded)
+ 		r = sprintf(buf, "%lu\n", size);
+ 	else
+ 		r = sprintf(buf, "%lu (expanded: %lu)\n", size, expanded_size);
+@@ -7615,7 +7616,7 @@ tracing_snapshot_write(struct file *filp, const char __user *ubuf, size_t cnt,
+ 	unsigned long val;
+ 	int ret;
+ 
+-	ret = tracing_update_buffers();
++	ret = tracing_update_buffers(tr);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -9496,6 +9497,9 @@ static struct trace_array *trace_array_create(const char *name)
+ 	if (allocate_trace_buffers(tr, trace_buf_size) < 0)
+ 		goto out_free_tr;
+ 
++	/* The ring buffer is defaultly expanded */
++	trace_set_ring_buffer_expanded(tr);
++
+ 	if (ftrace_allocate_ftrace_ops(tr) < 0)
+ 		goto out_free_tr;
+ 
+@@ -10390,7 +10394,7 @@ __init static int tracer_alloc_buffers(void)
+ 		trace_printk_init_buffers();
+ 
+ 	/* To save memory, keep the ring buffer size to its minimum */
+-	if (ring_buffer_expanded)
++	if (global_trace.ring_buffer_expanded)
+ 		ring_buf_size = trace_buf_size;
+ 	else
+ 		ring_buf_size = 1;
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 5669dd1f90d9..c02ae9cbd108 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -410,6 +410,11 @@ struct trace_array {
+ 	struct cond_snapshot	*cond_snapshot;
+ #endif
+ 	struct trace_func_repeats	__percpu *last_func_repeats;
++	/*
++	 * On boot up, the ring buffer is set to the minimum size, so that
++	 * we do not waste memory on systems that are not using tracing.
++	 */
++	bool ring_buffer_expanded;
+ };
+ 
+ enum {
+@@ -759,7 +764,7 @@ extern int DYN_FTRACE_TEST_NAME(void);
+ #define DYN_FTRACE_TEST_NAME2 trace_selftest_dynamic_test_func2
+ extern int DYN_FTRACE_TEST_NAME2(void);
+ 
+-extern bool ring_buffer_expanded;
++extern void trace_set_ring_buffer_expanded(struct trace_array *tr);
+ extern bool tracing_selftest_disabled;
+ 
+ #ifdef CONFIG_FTRACE_STARTUP_TEST
+@@ -1303,7 +1308,7 @@ static inline void trace_branch_disable(void)
+ #endif /* CONFIG_BRANCH_TRACER */
+ 
+ /* set ring buffers to default size if not already done so */
+-int tracing_update_buffers(void);
++int tracing_update_buffers(struct trace_array *tr);
+ 
+ union trace_synth_field {
+ 	u8				as_u8;
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index ed367d713be0..a32d50a136d8 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -1179,7 +1179,7 @@ ftrace_event_write(struct file *file, const char __user *ubuf,
+ 	if (!cnt)
+ 		return 0;
+ 
+-	ret = tracing_update_buffers();
++	ret = tracing_update_buffers(tr);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -1410,18 +1410,20 @@ event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = tracing_update_buffers();
+-	if (ret < 0)
+-		return ret;
+-
+ 	switch (val) {
+ 	case 0:
+ 	case 1:
+ 		ret = -ENODEV;
+ 		mutex_lock(&event_mutex);
+ 		file = event_file_data(filp);
+-		if (likely(file))
++		if (likely(file)) {
++			ret = tracing_update_buffers(file->tr);
++			if (ret < 0) {
++				mutex_unlock(&event_mutex);
++				return ret;
++			}
+ 			ret = ftrace_event_enable_disable(file, val);
++		}
+ 		mutex_unlock(&event_mutex);
+ 		break;
+ 
+@@ -1495,7 +1497,7 @@ system_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = tracing_update_buffers();
++	ret = tracing_update_buffers(dir->tr);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -1969,7 +1971,7 @@ event_pid_write(struct file *filp, const char __user *ubuf,
+ 	if (!cnt)
+ 		return 0;
+ 
+-	ret = tracing_update_buffers();
++	ret = tracing_update_buffers(tr);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -2829,7 +2831,7 @@ static __init int setup_trace_triggers(char *str)
+ 	int i;
+ 
+ 	strscpy(bootup_trigger_buf, str, COMMAND_LINE_SIZE);
+-	ring_buffer_expanded = true;
++	trace_set_ring_buffer_expanded(NULL);
+ 	disable_tracing_selftest("running event triggers");
+ 
+ 	buf = bootup_trigger_buf;
+@@ -3619,7 +3621,7 @@ static char bootup_event_buf[COMMAND_LINE_SIZE] __initdata;
+ static __init int setup_trace_event(char *str)
+ {
+ 	strscpy(bootup_event_buf, str, COMMAND_LINE_SIZE);
+-	ring_buffer_expanded = true;
++	trace_set_ring_buffer_expanded(NULL);
+ 	disable_tracing_selftest("running event tracing");
+ 
+ 	return 1;
 -- 
-2.18.0
+2.25.1
 
