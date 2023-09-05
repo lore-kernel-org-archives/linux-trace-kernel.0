@@ -2,54 +2,44 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E1ECA0FF3
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  5 Sep 2023 16:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3553CC83F2C
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  5 Sep 2023 17:29:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234251AbjIEQpT (ORCPT
+        id S233451AbjIER3R (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 5 Sep 2023 12:45:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51580 "EHLO
+        Tue, 5 Sep 2023 13:29:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356595AbjIEQc5 (ORCPT
+        with ESMTP id S236885AbjIER1Q (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 5 Sep 2023 12:32:57 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62B5E1FED;
-        Tue,  5 Sep 2023 09:32:12 -0700 (PDT)
+        Tue, 5 Sep 2023 13:27:16 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BC494850B;
+        Tue,  5 Sep 2023 09:49:54 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7C88560B95;
-        Tue,  5 Sep 2023 16:30:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A140C433C8;
-        Tue,  5 Sep 2023 16:30:40 +0000 (UTC)
-Date:   Tue, 5 Sep 2023 12:30:58 -0400
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4C6B8B81107;
+        Tue,  5 Sep 2023 16:39:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EACD7C433C7;
+        Tue,  5 Sep 2023 16:39:34 +0000 (UTC)
+Date:   Tue, 5 Sep 2023 12:39:53 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Florent Revest <revest@chromium.org>,
-        linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v4 4/9] fprobe: rethook: Use ftrace_regs in fprobe exit
- handler and rethook
-Message-ID: <20230905123058.706b12de@gandalf.local.home>
-In-Reply-To: <20230905223633.23cd4e6e8407c45b934be477@kernel.org>
-References: <169280372795.282662.9784422934484459769.stgit@devnote2>
-        <169280377434.282662.7610009313268953247.stgit@devnote2>
-        <20230904224038.4420a76ea15931aa40179697@kernel.org>
-        <yt9d5y4pozrl.fsf@linux.ibm.com>
-        <20230905223633.23cd4e6e8407c45b934be477@kernel.org>
+To:     Tze-nan Wu <Tze-nan.Wu@mediatek.com>
+Cc:     <mhiramat@kernel.org>, <bobule.chang@mediatek.com>,
+        <wsd_upstream@mediatek.com>, <cheng-jui.wang@mediatek.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: Re: [PATCH] ring-buffer: Do not read at &event->array[0] if it
+ across the page
+Message-ID: <20230905123953.3c0b3d7a@gandalf.local.home>
+In-Reply-To: <20230905141245.26470-1-Tze-nan.Wu@mediatek.com>
+References: <20230905141245.26470-1-Tze-nan.Wu@mediatek.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -58,41 +48,104 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 5 Sep 2023 22:36:33 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Tue, 5 Sep 2023 22:12:45 +0800
+Tze-nan Wu <Tze-nan.Wu@mediatek.com> wrote:
 
-> Yes, arch_rethook_trampoline() is good. It needs to save all registers.
-> 
-> In this series, I'm trying to change the pt_regs with ftrace_regs which will
-> reduce trampoline overhead if DYNAMIC_FTRACE_WITH_ARGS=y.
-> 
-> kprobe -> (pt_regs) -> rethook_try_hook()
-> fprobe -> (ftrace_regs) -> rethook_try_hook_ftrace() # new function
-> 
-> Thus, we need to ensure that the ftrace_regs which is saved in the ftrace
-> *without* FTRACE_WITH_REGS flags, can be used for hooking the function
-> return. I saw;
-> 
-> void arch_rethook_prepare(struct rethook_node *rh, struct pt_regs *regs, bool mcount)
-> {
->         rh->ret_addr = regs->gprs[14];
->         rh->frame = regs->gprs[15];
-> 
->         /* Replace the return addr with trampoline addr */
->         regs->gprs[14] = (unsigned long)&arch_rethook_trampoline;
-> }
-> 
-> gprs[15] is a stack pointer, so it is saved in ftrace_regs too, but what about
-> gprs[14]? (I guess it is a link register)
-> We need to read the gprs[14] and ensure that is restored to gpr14 when the
-> ftrace is exit even without FTRACE_WITH_REGS flag.
-> 
-> IOW, it is ftrace save regs/restore regs code issue. I need to check how the
-> function_graph implements it.
+> While reading from the tracing/trace, the ftrace reader rarely encounters
+> a KASAN invalid access issue.
+> It is likely that the writer has disrupted the ring_buffer that the reader
+> is currently parsing. the kasan report is as below:
 
-I would argue that the link register should also be saved in ftrace_regs.
+What kernel are you using? There's been recent fixes that handle the race
+between reading the last entry and the writer adding to it. This looks like
+you may have hit that bug.
 
-The thing that ftrace_regs is not suppose to save is the general purpose
-registers.
+> 
+> [name:report&]BUG: KASAN: invalid-access in rb_iter_head_event+0x27c/0x3d0
+> [name:report&]Read of size 4 at addr 71ffff8111a18000 by task xxxx
+> [name:report_sw_tags&]Pointer tag: [71], memory tag: [0f]
+> [name:report&]
+> CPU: 2 PID: 380 Comm: xxxx
+> Call trace:
+> dump_backtrace+0x168/0x1b0
+> show_stack+0x2c/0x3c
+> dump_stack_lvl+0xa4/0xd4
+> print_report+0x268/0x9b0
+> kasan_report+0xdc/0x148
+> kasan_tag_mismatch+0x28/0x3c
+> __hwasan_tag_mismatch+0x2c/0x58
+> rb_event_length() [inline]
+> rb_iter_head_event+0x27c/0x3d0
+> ring_buffer_iter_peek+0x23c/0x6e0
+> __find_next_entry+0x1ac/0x3d8
+> s_next+0x1f0/0x310
+> seq_read_iter+0x4e8/0x77c
+> seq_read+0xf8/0x150
+> vfs_read+0x1a8/0x4cc
+> 
+> In some edge cases, ftrace reader could access to an invalid address,
+> specifically when reading 4 bytes beyond the end of the currently page.
+> While issue happened, the dump of rb_iter_head_event is shown as below:
+> 
+>     in function rb_iter_head_event:
+>           - iter->head = 0xFEC
+>           - iter->next_event = 0xFEC
+>           - commit = 0xFF0
+>           - read_stamp = 0x2955AC46DB0
+>           - page_stamp = 0x2955AC2439A
+>           - iter->head_page->page = 0x71FFFF8111A17000
+>           - iter->head_page->time_stamp = 0x2956A142267
+>           - iter->head_page->page->commit = 0xFF0
+>           - the content in iter->head_page->page
+>                 0x71FFFF8111A17FF0: 01010075 00002421 0A123B7C FFFFFFC0
+> 
+> In rb_iter_head_event, reader will call rb_event_length with argument
+> (struct ring_buffer_event *event = 0x71FFFF8111A17FFC).
+
+As the commit is considered the end of buffer, it should never read past
+that, which the above appears to be doing. That's why I think it hit that
+race.
+
+> Since the content data start at address 0x71FFFF8111A17FFC are 0xFFFFFFC0.
+> event->type will be interpret as 0x0, than the reader will try to get the
+> length by accessing event->array[0], which is an invalid address:
+>     &event->array[0] = 0x71FFFF8111A18000
+> 
+> Signed-off-by: Tze-nan Wu <Tze-nan.Wu@mediatek.com>
+> ---
+> Following patch may not become a solution, it merely checks if the address
+> to be accessed is valid or not within the rb_event_length before access.
+> And not sure if there is any side-effect it can lead to.
+> 
+> I am curious about what a better solution for this issue would look like.
+> Should we address the problem from the writer or the reader?
+> 
+> Also I wonder if the cause of the issue is exactly as I suspected.
+> Any Suggestion will be appreciated.
+
+I guess this depends on if you have the fixes or not?
+
+> 
+> Test below can reproduce the issue in 2 hours on kernel-6.1.24:
+>     $cd /sys/kernel/tracing/
+>     # make the reader and writer race more through resize the buffer to 8kb
+>     $echo 8 > buffer_size_kn
+>     # enable all events
+>     $echo 1 > event/enable
+>     # enable trace
+>     $echo 1 > tracing_on
+>  
+>     # write and run a script that keep reading trace
+>     $./read_trace.sh
+> 
+>     ``` read_trace.sh
+>        while :
+>        do
+>            cat /sys/kernel/tracing/trace > /dev/null
+>        done
+> 
+>     ```
+
+Thanks, I'll look at that when I finish debugging the eventfs bug.
 
 -- Steve
