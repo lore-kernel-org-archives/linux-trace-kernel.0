@@ -2,29 +2,30 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF73CA100C
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  5 Sep 2023 20:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F99ACA100E
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  5 Sep 2023 20:08:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242706AbjIEUIp (ORCPT
+        id S235180AbjIEUIq (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 5 Sep 2023 16:08:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41216 "EHLO
+        Tue, 5 Sep 2023 16:08:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242565AbjIEUIo (ORCPT
+        with ESMTP id S242569AbjIEUIl (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 5 Sep 2023 16:08:44 -0400
+        Tue, 5 Sep 2023 16:08:41 -0400
+X-Greylist: delayed 3632 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 05 Sep 2023 13:08:36 PDT
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDD7912C;
-        Tue,  5 Sep 2023 13:08:37 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF22EC433BB;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D00F5D1;
+        Tue,  5 Sep 2023 13:08:36 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AD5BC433B8;
         Tue,  5 Sep 2023 18:26:52 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.96)
         (envelope-from <rostedt@goodmis.org>)
-        id 1qdalc-000zOi-0H;
-        Tue, 05 Sep 2023 14:27:12 -0400
-Message-ID: <20230905182711.899724045@goodmis.org>
+        id 1qdalb-000zOA-2p;
+        Tue, 05 Sep 2023 14:27:11 -0400
+Message-ID: <20230905182711.692687042@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Tue, 05 Sep 2023 14:26:09 -0400
+Date:   Tue, 05 Sep 2023 14:26:08 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
@@ -32,8 +33,8 @@ Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Ajay Kaher <akaher@vmware.com>,
         kernel test robot <oliver.sang@intel.com>,
-        Ching-lin Yu <chinglinyu@google.com>
-Subject: [PATCH 2/2] tracefs/eventfs: Add missing lockdown checks
+        Ching-lin Yu <chinglinyu@google.com>, stable@vger.kernel.org
+Subject: [PATCH 1/2] tracefs: Add missing lockdown check to tracefs_create_dir()
 References: <20230905182607.505212458@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -43,73 +44,34 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-All the eventfs external functions do not check if TRACEFS_LOCKDOWN was
-set or not. This can caused some functions to return success while others
-fail, which can trigger unexpected errors.
-
-Add the missing lockdown checks.
+The function tracefs_create_dir() was missing a lockdown check and was
+called by the RV code. This gave an inconsistent behavior of this function
+returning success while other tracefs functions failed. This caused the
+inode being freed by the wrong kmem_cache.
 
 Link: https://lore.kernel.org/all/202309050916.58201dc6-oliver.sang@intel.com/
 
+Cc: stable@vger.kernel.org
+Fixes: bf8e602186ec4 ("tracing: Do not create tracefs files if tracefs lockdown is in effect")
 Reported-by: kernel test robot <oliver.sang@intel.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/tracefs/event_inode.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ fs/tracefs/inode.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 237c6f370ad9..fa1a1679a886 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -491,6 +491,9 @@ struct dentry *eventfs_create_events_dir(const char *name,
- 	struct tracefs_inode *ti;
- 	struct inode *inode;
- 
-+	if (security_locked_down(LOCKDOWN_TRACEFS))
-+		return NULL;
-+
- 	if (IS_ERR(dentry))
- 		return dentry;
- 
-@@ -538,6 +541,9 @@ struct eventfs_file *eventfs_add_subsystem_dir(const char *name,
- 	struct eventfs_inode *ei_parent;
- 	struct eventfs_file *ef;
- 
-+	if (security_locked_down(LOCKDOWN_TRACEFS))
-+		return NULL;
-+
- 	if (!parent)
- 		return ERR_PTR(-EINVAL);
- 
-@@ -569,6 +575,9 @@ struct eventfs_file *eventfs_add_dir(const char *name,
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index de5b72216b1a..3b8dd938b1c8 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -673,6 +673,9 @@ static struct dentry *__create_dir(const char *name, struct dentry *parent,
+  */
+ struct dentry *tracefs_create_dir(const char *name, struct dentry *parent)
  {
- 	struct eventfs_file *ef;
- 
 +	if (security_locked_down(LOCKDOWN_TRACEFS))
 +		return NULL;
 +
- 	if (!ef_parent)
- 		return ERR_PTR(-EINVAL);
- 
-@@ -606,6 +615,9 @@ int eventfs_add_events_file(const char *name, umode_t mode,
- 	struct eventfs_inode *ei;
- 	struct eventfs_file *ef;
- 
-+	if (security_locked_down(LOCKDOWN_TRACEFS))
-+		return -ENODEV;
-+
- 	if (!parent)
- 		return -EINVAL;
- 
-@@ -654,6 +666,9 @@ int eventfs_add_file(const char *name, umode_t mode,
- {
- 	struct eventfs_file *ef;
- 
-+	if (security_locked_down(LOCKDOWN_TRACEFS))
-+		return -ENODEV;
-+
- 	if (!ef_parent)
- 		return -EINVAL;
+ 	return __create_dir(name, parent, &simple_dir_inode_operations);
+ }
  
 -- 
 2.40.1
