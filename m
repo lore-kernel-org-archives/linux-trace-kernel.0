@@ -2,64 +2,41 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C896CA1000
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  5 Sep 2023 16:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93452CA0FFD
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  5 Sep 2023 16:19:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231384AbjIEQS5 (ORCPT
+        id S237808AbjIEQTC (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 5 Sep 2023 12:18:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56458 "EHLO
+        Tue, 5 Sep 2023 12:19:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353690AbjIEHSM (ORCPT
+        with ESMTP id S1354702AbjIENgo (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 5 Sep 2023 03:18:12 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5CD9CC2;
-        Tue,  5 Sep 2023 00:18:09 -0700 (PDT)
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38579cdT029373;
-        Tue, 5 Sep 2023 07:17:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : in-reply-to : references : date : message-id : mime-version :
- content-type; s=pp1; bh=/QXwxsZ9MuUmF1JZkwsPDaGAhWW+XIONdzVxoFAaUqg=;
- b=kQiD+xZpOziq8OMBf4qi7cxGjSFQd/OljYiLe6pOlXtyiC563ek8lv8X7qsyiSoev4UK
- G6wuNDdJzGyu/TLaKTn/Ms3/fUFFmgYpuBTwNkyKLc2gTiN6bkskZUcs38vEkSBVg1c8
- SxZSnBa/dW12K4XEtB04SaHPTrx3QIhNGfuE0d17Avg7Znez7J3EckLBaEIVzVgPt6V4
- VSeX4Y4MEBxDGr0njbmY6vzk2rGua/d7drWCSkyVjan2Qs091ZyHoIt1L5bf0pEJEGMt
- aPbOh6vnCMv+XYC7Iuso8kEEHGbUjpnyjlgvEdhR1doaRiwDlFxV9D0AZbxGwbIpQLFh IQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3swtk8dg3h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 Sep 2023 07:17:18 +0000
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38579Xcx029262;
-        Tue, 5 Sep 2023 07:17:18 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3swtk8dfxh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 Sep 2023 07:17:18 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3856L79L001614;
-        Tue, 5 Sep 2023 07:17:05 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3svfcsh1af-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 Sep 2023 07:17:04 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3857H3Hf5833376
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 Sep 2023 07:17:03 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2D53020043;
-        Tue,  5 Sep 2023 07:17:03 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9670D20040;
-        Tue,  5 Sep 2023 07:17:02 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
-        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Tue,  5 Sep 2023 07:17:02 +0000 (GMT)
-From:   Sven Schnelle <svens@linux.ibm.com>
-To:     Masami Hiramatsu (Google) <mhiramat@kernel.org>
+        Tue, 5 Sep 2023 09:36:44 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD5B0191;
+        Tue,  5 Sep 2023 06:36:40 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5320F609EB;
+        Tue,  5 Sep 2023 13:36:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5EB5C433C7;
+        Tue,  5 Sep 2023 13:36:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693920999;
+        bh=3kc77G13Twj+OR0TFxL3rm0LAU3kzvn7sJGLwOT/KyE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lRkf1G5XXsvZRREsWN72KNgh+/Ex5d9uSNWnUgW47RcKOeS/1RnvKfVRAHRWjVV9n
+         C8pI6KVoh6Sv2JZ7iMXNcazirIuStaBspyEO6wVMnPXbMjQq5eZZ3enw/w5NNaIAsL
+         VlNH8aWpJQA86cIKdTqEgsuO6uZwTb1JXdL0nG0/Zzo5eMaM/4VH8yqDchJADtf7EE
+         OQnA6Wq2hEwbRhzG1dWBS+lclquaArIHZBcR9083BoVPPV3WWfjjJFulbD2xU8MdY7
+         WVSqBWb1aeHnNlKZ204YgJZKsEysOwQ1HVfc3yIWe9xNvHm+OU5JL15iliIpVa+axQ
+         fjayyVd9IbAYA==
+Date:   Tue, 5 Sep 2023 22:36:33 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Sven Schnelle <svens@linux.ibm.com>
 Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Florent Revest <revest@chromium.org>,
@@ -76,38 +53,64 @@ Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>
 Subject: Re: [PATCH v4 4/9] fprobe: rethook: Use ftrace_regs in fprobe exit
  handler and rethook
-In-Reply-To: <20230904224038.4420a76ea15931aa40179697@kernel.org> (Masami
-        Hiramatsu's message of "Mon, 4 Sep 2023 22:40:38 +0900")
+Message-Id: <20230905223633.23cd4e6e8407c45b934be477@kernel.org>
+In-Reply-To: <yt9d5y4pozrl.fsf@linux.ibm.com>
 References: <169280372795.282662.9784422934484459769.stgit@devnote2>
         <169280377434.282662.7610009313268953247.stgit@devnote2>
         <20230904224038.4420a76ea15931aa40179697@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
-Date:   Tue, 05 Sep 2023 09:17:02 +0200
-Message-ID: <yt9d5y4pozrl.fsf@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: h6neAfUENXt_QOPhPicsniXfU8S1la4E
-X-Proofpoint-ORIG-GUID: abmBX9jCiytLwL0ak0Xh8KbMGsZGIlpS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-05_05,2023-08-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 priorityscore=1501 adultscore=0 spamscore=0 phishscore=0
- clxscore=1011 malwarescore=0 mlxscore=0 impostorscore=0 bulkscore=0
- mlxlogscore=341 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2309050062
+        <yt9d5y4pozrl.fsf@linux.ibm.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Masami Hiramatsu (Google) <mhiramat@kernel.org> writes:
+On Tue, 05 Sep 2023 09:17:02 +0200
+Sven Schnelle <svens@linux.ibm.com> wrote:
 
-> I found that this is not enough becuase s390/loongarch already implemented
-> their rethook, and as far as I can see, the s390 ftrace_regs does not save
-> the required registers for rethook. Thus, for such architecture, we need
-> another kconfig flag and keep using the pt_regs for rethook.
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> writes:
+> 
+> > I found that this is not enough becuase s390/loongarch already implemented
+> > their rethook, and as far as I can see, the s390 ftrace_regs does not save
+> > the required registers for rethook. Thus, for such architecture, we need
+> > another kconfig flag and keep using the pt_regs for rethook.
+> 
+> Looking into arch_rethook_trampoline() i think we save all required
+> registers - which register do you think are missing? Or is there another
+> function i should look at?
 
-Looking into arch_rethook_trampoline() i think we save all required
-registers - which register do you think are missing? Or is there another
-function i should look at?
+Yes, arch_rethook_trampoline() is good. It needs to save all registers.
+
+In this series, I'm trying to change the pt_regs with ftrace_regs which will
+reduce trampoline overhead if DYNAMIC_FTRACE_WITH_ARGS=y.
+
+kprobe -> (pt_regs) -> rethook_try_hook()
+fprobe -> (ftrace_regs) -> rethook_try_hook_ftrace() # new function
+
+Thus, we need to ensure that the ftrace_regs which is saved in the ftrace
+*without* FTRACE_WITH_REGS flags, can be used for hooking the function
+return. I saw;
+
+void arch_rethook_prepare(struct rethook_node *rh, struct pt_regs *regs, bool mcount)
+{
+        rh->ret_addr = regs->gprs[14];
+        rh->frame = regs->gprs[15];
+
+        /* Replace the return addr with trampoline addr */
+        regs->gprs[14] = (unsigned long)&arch_rethook_trampoline;
+}
+
+gprs[15] is a stack pointer, so it is saved in ftrace_regs too, but what about
+gprs[14]? (I guess it is a link register)
+We need to read the gprs[14] and ensure that is restored to gpr14 when the
+ftrace is exit even without FTRACE_WITH_REGS flag.
+
+IOW, it is ftrace save regs/restore regs code issue. I need to check how the
+function_graph implements it.
+
+Thank you,
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
