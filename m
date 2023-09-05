@@ -2,59 +2,62 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDD7CA100D
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  5 Sep 2023 20:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F67ACA1009
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  5 Sep 2023 20:08:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242598AbjIEUIl (ORCPT
+        id S242188AbjIEUIm (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 5 Sep 2023 16:08:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45602 "EHLO
+        Tue, 5 Sep 2023 16:08:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242565AbjIEUIl (ORCPT
+        with ESMTP id S235180AbjIEUIl (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Tue, 5 Sep 2023 16:08:41 -0400
+X-Greylist: delayed 3733 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 05 Sep 2023 13:08:37 PDT
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3825EFA;
-        Tue,  5 Sep 2023 13:08:37 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 847B1C433B6;
-        Tue,  5 Sep 2023 18:26:52 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.96)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1qdalb-000zNZ-28;
-        Tue, 05 Sep 2023 14:27:11 -0400
-Message-ID: <20230905182607.505212458@goodmis.org>
-User-Agent: quilt/0.66
-Date:   Tue, 05 Sep 2023 14:26:07 -0400
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B728113;
+        Tue,  5 Sep 2023 13:08:36 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2B1FC433BA;
+        Tue,  5 Sep 2023 18:45:33 +0000 (UTC)
+Date:   Tue, 5 Sep 2023 14:45:52 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ajay Kaher <akaher@vmware.com>,
-        kernel test robot <oliver.sang@intel.com>,
-        Ching-lin Yu <chinglinyu@google.com>
-Subject: [PATCH 0/2] tracing: Add missing LOCKDOWN_TRACEFS checking
+To:     Zheng Yejian <zhengyejian1@huawei.com>
+Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Ajay Kaher <akaher@vmware.com>, <shuah@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ye Weihua <yeweihua4@huawei.com>
+Subject: Re: [PATCH] selftests/ftrace: Correctly enable event in
+ instance-event.tc
+Message-ID: <20230905144552.3b390a7a@gandalf.local.home>
+In-Reply-To: <1cb3aee2-19af-c472-e265-05176fe9bd84@huawei.com>
+References: <20230626001144.2635956-1-zhengyejian1@huawei.com>
+        <20230626191114.8c5a66fbaa28af3c303923bd@kernel.org>
+        <20230626191255.53baab4ed48d7111dcd44cad@kernel.org>
+        <20230710183741.78f04c68@gandalf.local.home>
+        <1cb3aee2-19af-c472-e265-05176fe9bd84@huawei.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+On Tue, 5 Sep 2023 20:54:40 +0800
+Zheng Yejian <zhengyejian1@huawei.com> wrote:
 
-When LOCKDOWN_TRACEFS is activated, some of the tracefs functions can
-still return success leaving tracefs in an undefined state.
+> Hi, Steve, Ajay,
+> 
+> After this patch and run this testcase, I got an use-after-free report
+> by KASAN. Short log see [1], full logs see attach "panic.log".
+> 
+> And by simple bisect, I found it may be introduced by:
+> 
+>    27152bceea1d ("eventfs: Move tracing/events to eventfs")
 
-I broke this up into two patches. One that fixes just tracefs that
-existed before this merge window and needs to be backported to stable.
-The other fixes changes added to this merge window.
+Can you send me your config?
 
-This should fix the issue reported by kernel test robot:
-
-  https://lore.kernel.org/all/202309050916.58201dc6-oliver.sang@intel.com/
-
-Steven Rostedt (Google) (2):
-      tracefs: Add missing lockdown check to tracefs_create_dir()
-      tracefs/eventfs: Add missing lockdown checks
-
-----
- fs/tracefs/event_inode.c | 15 +++++++++++++++
- fs/tracefs/inode.c       |  3 +++
- 2 files changed, 18 insertions(+)
+-- Steve
