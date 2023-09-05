@@ -2,357 +2,220 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE1DCA1001
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  5 Sep 2023 16:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B264CA0FE2
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  5 Sep 2023 16:19:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229887AbjIEQTR (ORCPT
+        id S229714AbjIEQTU (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 5 Sep 2023 12:19:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45726 "EHLO
+        Tue, 5 Sep 2023 12:19:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354522AbjIEMR0 (ORCPT
+        with ESMTP id S245176AbjIEBxd (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 5 Sep 2023 08:17:26 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17B3D1A8;
-        Tue,  5 Sep 2023 05:17:21 -0700 (PDT)
-Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.56])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Rg4G80bL8z1M97v;
-        Tue,  5 Sep 2023 20:15:28 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Tue, 5 Sep 2023 20:17:14 +0800
-From:   Zheng Yejian <zhengyejian1@huawei.com>
-To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <yeweihua4@huawei.com>,
-        <zhengyejian1@huawei.com>
-Subject: [PATCH] tracing: Fix unexpected ring buffer expand by instance
-Date:   Tue, 5 Sep 2023 20:17:14 +0800
-Message-ID: <20230905121714.3229131-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 4 Sep 2023 21:53:33 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD258CDA
+        for <linux-trace-kernel@vger.kernel.org>; Mon,  4 Sep 2023 18:53:29 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-68c0cb00fb3so1641732b3a.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 04 Sep 2023 18:53:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1693878809; x=1694483609; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DeCI1NwP8+gNkfLZ//g6QG7eHPqu4x99wp4QGWvVdhI=;
+        b=NOx9AcKliZNOePnhEiaoAeWZJglS5Zj/1K2YXz/9Fg4EQk2nDPru3bIpizeRqqOqin
+         G9inMTbuHUff7P5qQhD5HPHxYNQle+N26loc/WBRpZjiI4YgplFB9Y1AaStfKuOxM2l7
+         BmfCEozjeqY+Izqf5d3Ab1JJ8F647qLIvu1JDeDSseTBeAcSz6Z0lWyHRtUj9okAs/H6
+         8UnFut9fi0DZ3vVTIJBA+PbnBAPNVCOviCo0IJeNJ+L2C6zVnresm6nPLvVnzhulcFdN
+         cf//31qm01CWbQ2irrImEvA3UCSzT2xHZxw28lwrFb+wa9zZeSx+DYZabDmPVxl+yMXR
+         nopA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693878809; x=1694483609;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DeCI1NwP8+gNkfLZ//g6QG7eHPqu4x99wp4QGWvVdhI=;
+        b=AJTrPT7vM6F/YQn4dieHzzwRgLWWWLxP3FzsRa24u1k4XvYHTmNFBaQlIedi0w5Xpz
+         Q0IPtZTx50+XSv7ILX+wEIDXIo+JZ3U6dCS37Sxo+u1mX+HjwezKTwuci78kUiX/c/NC
+         vJKWDyNJGffNsaQMw/0/2aDpEud1Cx9dvFpEuzsvd2lLcpQaapBshqbL5DouqHoSdEUQ
+         bU6o+6oWaIo1H+oC/xj93ZInIHQPgmLXFJVUZsF6aEfUIXC2wqxPfkmh/fGQ18IOeuU6
+         5shJAtACptJjZW4/jPDnBwPV7X0EIqvkWkH0RsCXAAK46cQRhDdWpRtrtuydRxoHmqq5
+         FTwA==
+X-Gm-Message-State: AOJu0YzqM6AuwUugm1SRJx2bHR6rB22kT5Ix4dR1lrAMZC/ZpmR2AfeA
+        VMcY7a3S85GmS6SDuwcPdvJRtfD2ni8cSH8jvrM=
+X-Google-Smtp-Source: AGHT+IEb+MdC5QmuX1vP1E88PNYHkXtGqyNFHPovzxjNaejFjyx3gru9y+Ck6zxKDFbmkmp/puqYMA==
+X-Received: by 2002:a05:6a21:7905:b0:14d:7b6:cf2f with SMTP id bg5-20020a056a21790500b0014d07b6cf2fmr13014056pzc.47.1693878809047;
+        Mon, 04 Sep 2023 18:53:29 -0700 (PDT)
+Received: from devz1.bytedance.net ([203.208.167.146])
+        by smtp.gmail.com with ESMTPSA id y5-20020aa78045000000b0064d74808738sm7910483pfm.214.2023.09.04.18.53.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Sep 2023 18:53:28 -0700 (PDT)
+From:   "wuqiang.matt" <wuqiang.matt@bytedance.com>
+To:     linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
+        davem@davemloft.net, anil.s.keshavamurthy@intel.com,
+        naveen.n.rao@linux.ibm.com, rostedt@goodmis.org,
+        peterz@infradead.org, akpm@linux-foundation.org,
+        sander@svanheule.net, ebiggers@google.com,
+        dan.j.williams@intel.com, jpoimboe@kernel.org
+Cc:     linux-kernel@vger.kernel.org, lkp@intel.com, mattwu@163.com,
+        "wuqiang.matt" <wuqiang.matt@bytedance.com>
+Subject: [PATCH v9 4/5] kprobes: freelist.h removed
+Date:   Tue,  5 Sep 2023 09:52:54 +0800
+Message-Id: <20230905015255.81545-5-wuqiang.matt@bytedance.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230905015255.81545-1-wuqiang.matt@bytedance.com>
+References: <20230905015255.81545-1-wuqiang.matt@bytedance.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.175.61]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpeml500012.china.huawei.com (7.185.36.15)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The ring buffer of global_trace is set to the minimum size in
-order to save memory on boot up and then it will be expand when
-some trace feature enabled.
+This patch will remove freelist.h from kernel source tree, since the
+only use cases (kretprobe and rethook) are converted to objpool.
 
-However currently operations under an instance can also cause
-global_trace ring buffer being expanded, and the expanded memory
-would be wasted if global_trace then not being used.
-
-See following case, we enable 'sched_switch' event in instance 'A', then
-ring buffer of global_trace is unexpectedly expanded to be 1410KB, also
-the '(expanded: 1408)' from 'buffer_size_kb' of instance is confusing.
-
-  # cd /sys/kernel/tracing
-  # mkdir instances/A
-  # cat buffer_size_kb
-  7 (expanded: 1408)
-  # cat instances/A/buffer_size_kb
-  1410 (expanded: 1408)
-  # echo sched:sched_switch > instances/A/set_event
-  # cat buffer_size_kb
-  1410
-  # cat instances/A/buffer_size_kb
-  1410
-
-To fix it, we can:
-  - Make 'ring_buffer_expanded' as a member of 'struct trace_array';
-  - Make 'ring_buffer_expanded' of instance is defaultly true,
-    global_trace is defaultly false;
-  - In order not to expose 'global_trace' outside of file
-    'kernel/trace/trace.c', introduce trace_set_ring_buffer_expanded()
-    to set 'ring_buffer_expanded' as 'true';
-  - Pass the expected trace_array to tracing_update_buffers().
-
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
 ---
- kernel/trace/trace.c        | 46 ++++++++++++++++++++-----------------
- kernel/trace/trace.h        |  9 ++++++--
- kernel/trace/trace_events.c | 22 ++++++++++--------
- 3 files changed, 44 insertions(+), 33 deletions(-)
+ include/linux/freelist.h | 129 ---------------------------------------
+ 1 file changed, 129 deletions(-)
+ delete mode 100644 include/linux/freelist.h
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 2b4ded753367..5360ffdf98a3 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -54,12 +54,6 @@
- #include "trace.h"
- #include "trace_output.h"
- 
+diff --git a/include/linux/freelist.h b/include/linux/freelist.h
+deleted file mode 100644
+index fc1842b96469..000000000000
+--- a/include/linux/freelist.h
++++ /dev/null
+@@ -1,129 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
+-#ifndef FREELIST_H
+-#define FREELIST_H
+-
+-#include <linux/atomic.h>
+-
 -/*
-- * On boot up, the ring buffer is set to the minimum size, so that
-- * we do not waste memory on systems that are not using tracing.
+- * Copyright: cameron@moodycamel.com
+- *
+- * A simple CAS-based lock-free free list. Not the fastest thing in the world
+- * under heavy contention, but simple and correct (assuming nodes are never
+- * freed until after the free list is destroyed), and fairly speedy under low
+- * contention.
+- *
+- * Adapted from: https://moodycamel.com/blog/2014/solving-the-aba-problem-for-lock-free-free-lists
 - */
--bool ring_buffer_expanded;
 -
- #ifdef CONFIG_FTRACE_STARTUP_TEST
- /*
-  * We need to change this state when a selftest is running.
-@@ -202,7 +196,7 @@ static int __init set_cmdline_ftrace(char *str)
- 	strscpy(bootup_tracer_buf, str, MAX_TRACER_SIZE);
- 	default_bootup_tracer = bootup_tracer_buf;
- 	/* We are using ftrace early, expand it */
--	ring_buffer_expanded = true;
-+	trace_set_ring_buffer_expanded(NULL);
- 	return 1;
- }
- __setup("ftrace=", set_cmdline_ftrace);
-@@ -247,7 +241,7 @@ static int __init boot_alloc_snapshot(char *str)
- 	} else {
- 		allocate_snapshot = true;
- 		/* We also need the main ring buffer expanded */
--		ring_buffer_expanded = true;
-+		trace_set_ring_buffer_expanded(NULL);
- 	}
- 	return 1;
- }
-@@ -490,6 +484,13 @@ static struct trace_array global_trace = {
- 	.trace_flags = TRACE_DEFAULT_FLAGS,
- };
- 
-+void trace_set_ring_buffer_expanded(struct trace_array *tr)
-+{
-+	if (!tr)
-+		tr = &global_trace;
-+	tr->ring_buffer_expanded = true;
-+}
-+
- LIST_HEAD(ftrace_trace_arrays);
- 
- int trace_array_get(struct trace_array *this_tr)
-@@ -2012,7 +2013,7 @@ static int run_tracer_selftest(struct tracer *type)
- #ifdef CONFIG_TRACER_MAX_TRACE
- 	if (type->use_max_tr) {
- 		/* If we expanded the buffers, make sure the max is expanded too */
--		if (ring_buffer_expanded)
-+		if (tr->ring_buffer_expanded)
- 			ring_buffer_resize(tr->max_buffer.buffer, trace_buf_size,
- 					   RING_BUFFER_ALL_CPUS);
- 		tr->allocated_snapshot = true;
-@@ -2038,7 +2039,7 @@ static int run_tracer_selftest(struct tracer *type)
- 		tr->allocated_snapshot = false;
- 
- 		/* Shrink the max buffer again */
--		if (ring_buffer_expanded)
-+		if (tr->ring_buffer_expanded)
- 			ring_buffer_resize(tr->max_buffer.buffer, 1,
- 					   RING_BUFFER_ALL_CPUS);
- 	}
-@@ -3403,7 +3404,7 @@ void trace_printk_init_buffers(void)
- 	pr_warn("**********************************************************\n");
- 
- 	/* Expand the buffers to set size */
--	tracing_update_buffers();
-+	tracing_update_buffers(&global_trace);
- 
- 	buffers_allocated = 1;
- 
-@@ -6347,7 +6348,7 @@ static int __tracing_resize_ring_buffer(struct trace_array *tr,
- 	 * we use the size that was given, and we can forget about
- 	 * expanding it later.
- 	 */
--	ring_buffer_expanded = true;
-+	trace_set_ring_buffer_expanded(tr);
- 
- 	/* May be called before buffers are initialized */
- 	if (!tr->array_buffer.buffer)
-@@ -6433,13 +6434,13 @@ ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
-  *
-  * This function is to be called when a tracer is about to be used.
-  */
--int tracing_update_buffers(void)
-+int tracing_update_buffers(struct trace_array *tr)
- {
- 	int ret = 0;
- 
- 	mutex_lock(&trace_types_lock);
--	if (!ring_buffer_expanded)
--		ret = __tracing_resize_ring_buffer(&global_trace, trace_buf_size,
-+	if (!tr->ring_buffer_expanded)
-+		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
- 						RING_BUFFER_ALL_CPUS);
- 	mutex_unlock(&trace_types_lock);
- 
-@@ -6493,7 +6494,7 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
- 
- 	mutex_lock(&trace_types_lock);
- 
--	if (!ring_buffer_expanded) {
-+	if (!tr->ring_buffer_expanded) {
- 		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
- 						RING_BUFFER_ALL_CPUS);
- 		if (ret < 0)
-@@ -7161,7 +7162,7 @@ tracing_entries_read(struct file *filp, char __user *ubuf,
- 		}
- 
- 		if (buf_size_same) {
--			if (!ring_buffer_expanded)
-+			if (!tr->ring_buffer_expanded)
- 				r = sprintf(buf, "%lu (expanded: %lu)\n",
- 					    size >> 10,
- 					    trace_buf_size >> 10);
-@@ -7218,10 +7219,10 @@ tracing_total_entries_read(struct file *filp, char __user *ubuf,
- 	mutex_lock(&trace_types_lock);
- 	for_each_tracing_cpu(cpu) {
- 		size += per_cpu_ptr(tr->array_buffer.data, cpu)->entries >> 10;
--		if (!ring_buffer_expanded)
-+		if (!tr->ring_buffer_expanded)
- 			expanded_size += trace_buf_size >> 10;
- 	}
--	if (ring_buffer_expanded)
-+	if (tr->ring_buffer_expanded)
- 		r = sprintf(buf, "%lu\n", size);
- 	else
- 		r = sprintf(buf, "%lu (expanded: %lu)\n", size, expanded_size);
-@@ -7615,7 +7616,7 @@ tracing_snapshot_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 	unsigned long val;
- 	int ret;
- 
--	ret = tracing_update_buffers();
-+	ret = tracing_update_buffers(tr);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -9496,6 +9497,9 @@ static struct trace_array *trace_array_create(const char *name)
- 	if (allocate_trace_buffers(tr, trace_buf_size) < 0)
- 		goto out_free_tr;
- 
-+	/* The ring buffer is defaultly expanded */
-+	trace_set_ring_buffer_expanded(tr);
-+
- 	if (ftrace_allocate_ftrace_ops(tr) < 0)
- 		goto out_free_tr;
- 
-@@ -10390,7 +10394,7 @@ __init static int tracer_alloc_buffers(void)
- 		trace_printk_init_buffers();
- 
- 	/* To save memory, keep the ring buffer size to its minimum */
--	if (ring_buffer_expanded)
-+	if (global_trace.ring_buffer_expanded)
- 		ring_buf_size = trace_buf_size;
- 	else
- 		ring_buf_size = 1;
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 5669dd1f90d9..c02ae9cbd108 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -410,6 +410,11 @@ struct trace_array {
- 	struct cond_snapshot	*cond_snapshot;
- #endif
- 	struct trace_func_repeats	__percpu *last_func_repeats;
-+	/*
-+	 * On boot up, the ring buffer is set to the minimum size, so that
-+	 * we do not waste memory on systems that are not using tracing.
-+	 */
-+	bool ring_buffer_expanded;
- };
- 
- enum {
-@@ -759,7 +764,7 @@ extern int DYN_FTRACE_TEST_NAME(void);
- #define DYN_FTRACE_TEST_NAME2 trace_selftest_dynamic_test_func2
- extern int DYN_FTRACE_TEST_NAME2(void);
- 
--extern bool ring_buffer_expanded;
-+extern void trace_set_ring_buffer_expanded(struct trace_array *tr);
- extern bool tracing_selftest_disabled;
- 
- #ifdef CONFIG_FTRACE_STARTUP_TEST
-@@ -1303,7 +1308,7 @@ static inline void trace_branch_disable(void)
- #endif /* CONFIG_BRANCH_TRACER */
- 
- /* set ring buffers to default size if not already done so */
--int tracing_update_buffers(void);
-+int tracing_update_buffers(struct trace_array *tr);
- 
- union trace_synth_field {
- 	u8				as_u8;
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index ed367d713be0..a32d50a136d8 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1179,7 +1179,7 @@ ftrace_event_write(struct file *file, const char __user *ubuf,
- 	if (!cnt)
- 		return 0;
- 
--	ret = tracing_update_buffers();
-+	ret = tracing_update_buffers(tr);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -1410,18 +1410,20 @@ event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 	if (ret)
- 		return ret;
- 
--	ret = tracing_update_buffers();
--	if (ret < 0)
--		return ret;
+-struct freelist_node {
+-	atomic_t		refs;
+-	struct freelist_node	*next;
+-};
 -
- 	switch (val) {
- 	case 0:
- 	case 1:
- 		ret = -ENODEV;
- 		mutex_lock(&event_mutex);
- 		file = event_file_data(filp);
--		if (likely(file))
-+		if (likely(file)) {
-+			ret = tracing_update_buffers(file->tr);
-+			if (ret < 0) {
-+				mutex_unlock(&event_mutex);
-+				return ret;
-+			}
- 			ret = ftrace_event_enable_disable(file, val);
-+		}
- 		mutex_unlock(&event_mutex);
- 		break;
- 
-@@ -1495,7 +1497,7 @@ system_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 	if (ret)
- 		return ret;
- 
--	ret = tracing_update_buffers();
-+	ret = tracing_update_buffers(dir->tr);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -1969,7 +1971,7 @@ event_pid_write(struct file *filp, const char __user *ubuf,
- 	if (!cnt)
- 		return 0;
- 
--	ret = tracing_update_buffers();
-+	ret = tracing_update_buffers(tr);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -2829,7 +2831,7 @@ static __init int setup_trace_triggers(char *str)
- 	int i;
- 
- 	strscpy(bootup_trigger_buf, str, COMMAND_LINE_SIZE);
--	ring_buffer_expanded = true;
-+	trace_set_ring_buffer_expanded(NULL);
- 	disable_tracing_selftest("running event triggers");
- 
- 	buf = bootup_trigger_buf;
-@@ -3619,7 +3621,7 @@ static char bootup_event_buf[COMMAND_LINE_SIZE] __initdata;
- static __init int setup_trace_event(char *str)
- {
- 	strscpy(bootup_event_buf, str, COMMAND_LINE_SIZE);
--	ring_buffer_expanded = true;
-+	trace_set_ring_buffer_expanded(NULL);
- 	disable_tracing_selftest("running event tracing");
- 
- 	return 1;
+-struct freelist_head {
+-	struct freelist_node	*head;
+-};
+-
+-#define REFS_ON_FREELIST 0x80000000
+-#define REFS_MASK	 0x7FFFFFFF
+-
+-static inline void __freelist_add(struct freelist_node *node, struct freelist_head *list)
+-{
+-	/*
+-	 * Since the refcount is zero, and nobody can increase it once it's
+-	 * zero (except us, and we run only one copy of this method per node at
+-	 * a time, i.e. the single thread case), then we know we can safely
+-	 * change the next pointer of the node; however, once the refcount is
+-	 * back above zero, then other threads could increase it (happens under
+-	 * heavy contention, when the refcount goes to zero in between a load
+-	 * and a refcount increment of a node in try_get, then back up to
+-	 * something non-zero, then the refcount increment is done by the other
+-	 * thread) -- so if the CAS to add the node to the actual list fails,
+-	 * decrese the refcount and leave the add operation to the next thread
+-	 * who puts the refcount back to zero (which could be us, hence the
+-	 * loop).
+-	 */
+-	struct freelist_node *head = READ_ONCE(list->head);
+-
+-	for (;;) {
+-		WRITE_ONCE(node->next, head);
+-		atomic_set_release(&node->refs, 1);
+-
+-		if (!try_cmpxchg_release(&list->head, &head, node)) {
+-			/*
+-			 * Hmm, the add failed, but we can only try again when
+-			 * the refcount goes back to zero.
+-			 */
+-			if (atomic_fetch_add_release(REFS_ON_FREELIST - 1, &node->refs) == 1)
+-				continue;
+-		}
+-		return;
+-	}
+-}
+-
+-static inline void freelist_add(struct freelist_node *node, struct freelist_head *list)
+-{
+-	/*
+-	 * We know that the should-be-on-freelist bit is 0 at this point, so
+-	 * it's safe to set it using a fetch_add.
+-	 */
+-	if (!atomic_fetch_add_release(REFS_ON_FREELIST, &node->refs)) {
+-		/*
+-		 * Oh look! We were the last ones referencing this node, and we
+-		 * know we want to add it to the free list, so let's do it!
+-		 */
+-		__freelist_add(node, list);
+-	}
+-}
+-
+-static inline struct freelist_node *freelist_try_get(struct freelist_head *list)
+-{
+-	struct freelist_node *prev, *next, *head = smp_load_acquire(&list->head);
+-	unsigned int refs;
+-
+-	while (head) {
+-		prev = head;
+-		refs = atomic_read(&head->refs);
+-		if ((refs & REFS_MASK) == 0 ||
+-		    !atomic_try_cmpxchg_acquire(&head->refs, &refs, refs+1)) {
+-			head = smp_load_acquire(&list->head);
+-			continue;
+-		}
+-
+-		/*
+-		 * Good, reference count has been incremented (it wasn't at
+-		 * zero), which means we can read the next and not worry about
+-		 * it changing between now and the time we do the CAS.
+-		 */
+-		next = READ_ONCE(head->next);
+-		if (try_cmpxchg_acquire(&list->head, &head, next)) {
+-			/*
+-			 * Yay, got the node. This means it was on the list,
+-			 * which means should-be-on-freelist must be false no
+-			 * matter the refcount (because nobody else knows it's
+-			 * been taken off yet, it can't have been put back on).
+-			 */
+-			WARN_ON_ONCE(atomic_read(&head->refs) & REFS_ON_FREELIST);
+-
+-			/*
+-			 * Decrease refcount twice, once for our ref, and once
+-			 * for the list's ref.
+-			 */
+-			atomic_fetch_add(-2, &head->refs);
+-
+-			return head;
+-		}
+-
+-		/*
+-		 * OK, the head must have changed on us, but we still need to decrement
+-		 * the refcount we increased.
+-		 */
+-		refs = atomic_fetch_add(-1, &prev->refs);
+-		if (refs == REFS_ON_FREELIST + 1)
+-			__freelist_add(prev, list);
+-	}
+-
+-	return NULL;
+-}
+-
+-#endif /* FREELIST_H */
 -- 
-2.25.1
+2.40.1
 
