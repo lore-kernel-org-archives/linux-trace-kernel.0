@@ -2,123 +2,178 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C639CA0FE2
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  5 Sep 2023 16:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 396C5CA0FFC
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  5 Sep 2023 16:19:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244372AbjIEQTN (ORCPT
+        id S237696AbjIEQTP (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 5 Sep 2023 12:19:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39746 "EHLO
+        Tue, 5 Sep 2023 12:19:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245172AbjIEBxc (ORCPT
+        with ESMTP id S1354785AbjIEOYB (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 4 Sep 2023 21:53:32 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9277CC6
-        for <linux-trace-kernel@vger.kernel.org>; Mon,  4 Sep 2023 18:53:06 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-68c0cb00fb3so1641609b3a.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 04 Sep 2023 18:53:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1693878786; x=1694483586; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=et7SVZmA/lkLwp7uaeKPmxJeL3RQa87Ve6JoBbZWATw=;
-        b=HaADGH+/Axclgv9vuJP4UqZvz6+nh2Y8hV1tmkTHuz+BXvO8XUh+bFZV1IKIfkqvEP
-         fhCmISznxDhV7sXe+qmvaSvHkEZUe0THq4tUWhZ14In/KIUBMLCUQ9kYoHiokcWxUs8Q
-         o/WeUsEkiTT3unBsHXyDX5kiLC8d5to251MW2O3BW78gQYswXAYXARixgcfmR9U3mKR2
-         95eq2gUEWLm583mpsJtcmvbJx4tzXbUgVVUg8we31Br6LtDsBymEtEFmed0feVKTsxji
-         d8KlDmZbh1+JhZCJ1I0l5mWm/FoY7Auv1UR0pOnDH3klFMj7NXwuaXVRbagtE1P4zRLO
-         AroA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693878786; x=1694483586;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=et7SVZmA/lkLwp7uaeKPmxJeL3RQa87Ve6JoBbZWATw=;
-        b=GnARvqoN+GEK9Ro7JfDCzfsYEUH4C0WCEsUVOyJtz87MuAxuokT2F3ItGNlua1ni7S
-         tccyyadKKHwR07XkDoaoSPZzVXcWpfW4eFj2tH5jag9LIVdOq70MSePG3K4qKWowCGw4
-         V+aFWa3ZIivV6iBkOuSKoC4J9AiQCLFQltIJt4czbxeyymgY0gbVahA2NKm9AKPN7dtx
-         VEMoryNeGaq2mVC5to/1e/bHvgn8BcPFIsif+Me38CYgkMOb3rNlUlVzZwCuOB65vm9Q
-         mcSBtVlYdmZB5tk8KaVu1nQQULv0is3S+X6Z/hLJdS3SOA/Ia1It+EIVdpx6Lpg28hXd
-         eYRA==
-X-Gm-Message-State: AOJu0YzfJPLj+x6bGZR4w69eNLCRbT4BXz4lPc3T5HBEA6FEbnfvx82U
-        iGq90Zs8lLoUeu6JWiJfCsSyT6VdSkqv1LtRiE0=
-X-Google-Smtp-Source: AGHT+IFzzd5Pf43c6tFiGVQEQmRfu/Fd/DBJi/+PqODcfb+FYiZ25XQC9nwA1rXeNOWLfAscB5nD0w==
-X-Received: by 2002:a05:6a00:985:b0:68b:e29c:b5d with SMTP id u5-20020a056a00098500b0068be29c0b5dmr15855959pfg.33.1693878786121;
-        Mon, 04 Sep 2023 18:53:06 -0700 (PDT)
-Received: from devz1.bytedance.net ([203.208.167.146])
-        by smtp.gmail.com with ESMTPSA id y5-20020aa78045000000b0064d74808738sm7910483pfm.214.2023.09.04.18.53.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Sep 2023 18:53:05 -0700 (PDT)
-From:   "wuqiang.matt" <wuqiang.matt@bytedance.com>
-To:     linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
-        davem@davemloft.net, anil.s.keshavamurthy@intel.com,
-        naveen.n.rao@linux.ibm.com, rostedt@goodmis.org,
-        peterz@infradead.org, akpm@linux-foundation.org,
-        sander@svanheule.net, ebiggers@google.com,
-        dan.j.williams@intel.com, jpoimboe@kernel.org
-Cc:     linux-kernel@vger.kernel.org, lkp@intel.com, mattwu@163.com,
-        "wuqiang.matt" <wuqiang.matt@bytedance.com>
-Subject: [PATCH v9 0/5] lib,kprobes: kretprobe scalability improvement
-Date:   Tue,  5 Sep 2023 09:52:50 +0800
-Message-Id: <20230905015255.81545-1-wuqiang.matt@bytedance.com>
-X-Mailer: git-send-email 2.40.1
+        Tue, 5 Sep 2023 10:24:01 -0400
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C153D189;
+        Tue,  5 Sep 2023 07:23:56 -0700 (PDT)
+X-UUID: d4b5e6924bf711eea33bb35ae8d461a2-20230905
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=zAwm/IYGf6NFCXp4FoAerIpc2O3P6mE2ikN67xCGKfM=;
+        b=NvQdIWQmpzHE0sOdolYcSFeeHZrWsU80pO3MgdJEz42TsBQ2UKfVnzRemqKfVXoSMVR3rISh2IonYOo1ty76HU3iu4CHecF3eIPAcEBHpEBOX5QSzSlTTt8jNzhk0heWWA0wfmTADZNcYG76IW+3NKn64W8B3KL569QzG88nazU=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.31,REQID:eeb17bee-1028-4acd-8af4-b660a635af47,IP:0,U
+        RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+        :release,TS:-5
+X-CID-META: VersionHash:0ad78a4,CLOUDID:d7e9abc2-1e57-4345-9d31-31ad9818b39f,B
+        ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+        RL:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:
+        NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: d4b5e6924bf711eea33bb35ae8d461a2-20230905
+Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
+        (envelope-from <tze-nan.wu@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+        with ESMTP id 1034999915; Tue, 05 Sep 2023 22:23:49 +0800
+Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Tue, 5 Sep 2023 22:23:47 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Tue, 5 Sep 2023 22:23:47 +0800
+From:   Tze-nan Wu <Tze-nan.Wu@mediatek.com>
+To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>
+CC:     <bobule.chang@mediatek.com>, <wsd_upstream@mediatek.com>,
+        <cheng-jui.wang@mediatek.com>,
+        Tze-nan Wu <Tze-nan.Wu@mediatek.com>, <stable@vger.kernel.org>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [PATCH] ring-buffer: Do not read at &event->array[0] if it across the page
+Date:   Tue, 5 Sep 2023 22:23:15 +0800
+Message-ID: <20230905142319.32582-1-Tze-nan.Wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-This patch series introduces a scalable and lockless ring-array based
-object pool and replaces the original freelist (a LIFO queue based on
-singly linked list) to improve scalability of kretprobed routines.
+While reading from the tracing/trace, the ftrace reader rarely encounters
+a KASAN invalid access issue.
+It is likely that the writer has disrupted the ring_buffer that the reader
+is currently parsing. the kasan report is as below:
 
-v9:
-  1) objpool: raw_local_irq_save/restore added to prevent interruption
+[name:report&]BUG: KASAN: invalid-access in rb_iter_head_event+0x27c/0x3d0
+[name:report&]Read of size 4 at addr 71ffff8111a18000 by task xxxx
+[name:report_sw_tags&]Pointer tag: [71], memory tag: [0f]
+[name:report&]
+CPU: 2 PID: 380 Comm: xxxx
+Call trace:
+dump_backtrace+0x168/0x1b0
+show_stack+0x2c/0x3c
+dump_stack_lvl+0xa4/0xd4
+print_report+0x268/0x9b0
+kasan_report+0xdc/0x148
+kasan_tag_mismatch+0x28/0x3c
+__hwasan_tag_mismatch+0x2c/0x58
+rb_event_length() [inline]
+rb_iter_head_event+0x27c/0x3d0
+ring_buffer_iter_peek+0x23c/0x6e0
+__find_next_entry+0x1ac/0x3d8
+s_next+0x1f0/0x310
+seq_read_iter+0x4e8/0x77c
+seq_read+0xf8/0x150
+vfs_read+0x1a8/0x4cc
 
-     To avoid possible ABA issues, we must ensure objpool_try_add_slot
-     and objpool_try_add_slot are uninterruptible. If these operations
-     are blocked or interrupted in the middle, other cores could overrun
-     the same slot's ages[] of uint32, then after resuming back, the
-     interrupted pop() or push() could see same value of ages[], which
-     is a typical ABA problem though the possibility is small.
+In some edge cases, ftrace reader could access to an invalid address,
+specifically when reading 4 bytes beyond the end of the currently page.
+While issue happened, the dump of rb_iter_head_event is shown as below:
 
-     The pair of pop()/push() costs about 8.53 cpu cycles, measured
-     by IACA (Intel Architecture Code Analyzer). That is, on a 4Ghz
-     core dedicated for pop() & push(), theoretically it would only
-     need 8.53 seconds to overflow a 32bit value. Testings upon Intel
-     i7-10700 (2.90GHz) cost 71.88 seconds to overrun a 32bit integer.
+    in function rb_iter_head_event:
+          - iter->head = 0xFEC
+          - iter->next_event = 0xFEC
+          - commit = 0xFF0
+          - read_stamp = 0x2955AC46DB0
+          - page_stamp = 0x2955AC2439A
+          - iter->head_page->page = 0x71FFFF8111A17000
+          - iter->head_page->time_stamp = 0x2956A142267
+          - iter->head_page->page->commit = 0xFF0
+          - the content in iter->head_page->page
+                0x71FFFF8111A17FF0: 01010075 00002421 0A123B7C FFFFFFC0
 
-  2) codes improvements: thanks to Masami for the thorough inspection
+In rb_iter_head_event, reader will call rb_event_length with argument
+(struct ring_buffer_event *event = 0x71FFFF8111A17FFC).
+Since the content data start at address 0x71FFFF8111A17FFC are 0xFFFFFFC0.
+event->type will be interpret as 0x0, than the reader will try to get the
+length by accessing event->array[0], which is an invalid address:
+    &event->array[0] = 0x71FFFF8111A18000
 
-v8:
-  1) objpool: refcount added for objpool lifecycle management
+Cc: stable@vger.kernel.org
+Signed-off-by: Tze-nan Wu <Tze-nan.Wu@mediatek.com>
+---
+resend again due to forget cc stable@vger.kernel.org
 
-wuqiang.matt (5):
-  lib: objpool added: ring-array based lockless MPMC
-  lib: objpool test module added
-  kprobes: kretprobe scalability improvement with objpool
-  kprobes: freelist.h removed
-  MAINTAINERS: objpool added
+Following patch may not become a solution, it merely checks if the address
+to be accessed is valid or not within the rb_event_length before access.
+And not sure if there is any side-effect it can lead to.
 
- MAINTAINERS              |   7 +
- include/linux/freelist.h | 129 --------
- include/linux/kprobes.h  |  11 +-
- include/linux/objpool.h  | 174 ++++++++++
- include/linux/rethook.h  |  16 +-
- kernel/kprobes.c         |  93 +++---
- kernel/trace/fprobe.c    |  32 +-
- kernel/trace/rethook.c   |  90 +++--
- lib/Kconfig.debug        |  11 +
- lib/Makefile             |   4 +-
- lib/objpool.c            | 338 +++++++++++++++++++
- lib/test_objpool.c       | 689 +++++++++++++++++++++++++++++++++++++++
- 12 files changed, 1320 insertions(+), 274 deletions(-)
- delete mode 100644 include/linux/freelist.h
- create mode 100644 include/linux/objpool.h
- create mode 100644 lib/objpool.c
- create mode 100644 lib/test_objpool.c
+I am curious about what a better solution for this issue would look like.
+Should we address the problem from the writer or the reader?
 
+Also I wonder if the cause of the issue is exactly as I suspected.
+Any Suggestion will be appreciated.
+
+Test below can reproduce the issue in 2 hours on kernel-6.1.24:
+    $cd /sys/kernel/tracing/
+    # make the reader and writer race more through resize the buffer to 8kb
+    $echo 8 > buffer_size_kn
+    # enable all events
+    $echo 1 > event/enable
+    # enable trace
+    $echo 1 > tracing_on
+ 
+    # write and run a script that keep reading trace
+    $./read_trace.sh
+
+    ``` read_trace.sh
+       while :
+       do
+           cat /sys/kernel/tracing/trace > /dev/null
+       done
+
+    ```
+---
+ kernel/trace/ring_buffer.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 78502d4c7214..ed5ddc3a134b 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -200,6 +200,8 @@ rb_event_length(struct ring_buffer_event *event)
+ 		if (rb_null_event(event))
+ 			/* undefined */
+ 			return -1;
++		if (((unsigned long)event & 0xfffUL) >= PAGE_SIZE - 4)
++			return -1;
+ 		return  event->array[0] + RB_EVNT_HDR_SIZE;
+ 
+ 	case RINGBUF_TYPE_TIME_EXTEND:
+@@ -209,6 +211,8 @@ rb_event_length(struct ring_buffer_event *event)
+ 		return RB_LEN_TIME_STAMP;
+ 
+ 	case RINGBUF_TYPE_DATA:
++		if ((((unsigned long)event & 0xfffUL) >= PAGE_SIZE - 4) && !event->type_len)
++			return -1;
+ 		return rb_event_data_length(event);
+ 	default:
+ 		WARN_ON_ONCE(1);
 -- 
-2.40.1
+2.18.0
 
