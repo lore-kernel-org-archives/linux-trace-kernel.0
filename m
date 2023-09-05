@@ -2,123 +2,213 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFECC83F3E
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  5 Sep 2023 19:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC609C83F3E
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  5 Sep 2023 19:50:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239940AbjIETk1 (ORCPT
+        id S230033AbjIETus (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 5 Sep 2023 15:40:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40010 "EHLO
+        Tue, 5 Sep 2023 15:50:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238081AbjIETk1 (ORCPT
+        with ESMTP id S229665AbjIETus (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 5 Sep 2023 15:40:27 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E01089D;
-        Tue,  5 Sep 2023 12:40:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693942821; x=1725478821;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5JMhy340COY43uhOYXZKSj7yW4IYql+k3rOX5Ml5sdk=;
-  b=enBnDDEOGR4dPf52AlQ6kUSuV4YAkkF7RFaE1Bqj/SCFUgaUuzQjxsT9
-   W0n9yE2gfc+TfMw3Jj5z5xekmU5L656G5nOTeTpdS8VlnvCDj4a1W2W4q
-   NO6hocD+mmPsPYNyJd0qQOUpP6EG+Gqorne1MRkitnJul5sN0gOt2pj3h
-   /cSwZ+tK9pG1NqJkNr6oiq32+cy9pfgM/Qic6xOolzHyTTJCzIbsHBNfK
-   kCpEZKaBaH3kGrcbDSOzozmjNQX5kNOSCsJNoAX07yESFX0+upBn4GhDD
-   mZ7FrPGERfbYZr8gOE/S+zvXn0zP2jSl9M7cGZkXsKAFjXQfPJtPPPG+H
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="357198503"
-X-IronPort-AV: E=Sophos;i="6.02,229,1688454000"; 
-   d="scan'208";a="357198503"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2023 12:40:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="744399856"
-X-IronPort-AV: E=Sophos;i="6.02,229,1688454000"; 
-   d="scan'208";a="744399856"
-Received: from lkp-server02.sh.intel.com (HELO e0b2ea88afd5) ([10.239.97.151])
-  by fmsmga007.fm.intel.com with ESMTP; 05 Sep 2023 12:40:19 -0700
-Received: from kbuild by e0b2ea88afd5 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qdbuL-00020h-1M;
-        Tue, 05 Sep 2023 19:40:17 +0000
-Date:   Wed, 6 Sep 2023 03:40:11 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Zheng Yejian <zhengyejian1@huawei.com>, rostedt@goodmis.org,
-        mhiramat@kernel.org
-Cc:     oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, yeweihua4@huawei.com,
-        zhengyejian1@huawei.com
-Subject: Re: [PATCH] tracing: Fix unexpected ring buffer expand by instance
-Message-ID: <202309060320.psgXz5VD-lkp@intel.com>
-References: <20230905121714.3229131-1-zhengyejian1@huawei.com>
+        Tue, 5 Sep 2023 15:50:48 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5028E90;
+        Tue,  5 Sep 2023 12:50:43 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-500c7796d8eso4635228e87.1;
+        Tue, 05 Sep 2023 12:50:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693943441; x=1694548241; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sg42cbfigBdt6o/PqgzC4zw7MyGmmlKWEgybEwI36h0=;
+        b=PufcIXdVMKgGFV7LdnrbomGiBAEq4qLxFAM/1eJbsdAGw8KVB3CUEETAGSZ8IbVUca
+         rG1maz8sIK7UdwLoWRdvrrukLhgRM0F5vQ4ya6RX6vzuI5ypeTKdH+zzqz5rswi3spkv
+         rWFQWH7Y5u9Cp7Q8bTiwToLNjZ7uW6q0I1VzKclq8EnVaDYYo12ZdYg1qvqG9u/wOjYl
+         /rZlIfv7tNdDfE118R/KgRinQngMhdrZFmMf6Rn8UASzCphogpS3bMI2w1OtRq+wZu8O
+         qPvlHPkW0zYGm7zuE9CF29uaQPW0rxjhpjveiq7Cr6/obcxg0dz+mkDHeqRVulFnS1He
+         KStQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693943441; x=1694548241;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sg42cbfigBdt6o/PqgzC4zw7MyGmmlKWEgybEwI36h0=;
+        b=TmadvMWcjfxXrEZo8Xp9vPYoHe6baGNZCtNfExqWeCyYUiPV/JLLI33xTshwcgEFDU
+         VzxGTPfF7p/w39UKWBCrcnW1THQQATnFtOBnvc5Qm/RQ6H3pn2a6cU3UzZUg29HG+rsA
+         A/uoDdJBzIVTLne837nsB1ZkyrbriWw3jgisAans9tQYPkyWKgMCtDLwpD7awxSY73xR
+         zBZqeAUDKlNDAbrVIyEwgryQ/HlA4JMtfoigZZZICmnwkW4igOno8OX+a2JQK8xHZueM
+         GY3EeP1B8OD2DZy64nnVp1S7zNoWeAAVSh7WZ1Pw0ovlgdrHaOFFfRLXCI76yj4uNhHB
+         K/Sg==
+X-Gm-Message-State: AOJu0Yxn6+vfKeARyQFToN/eZL8kSXv1mGRMbRb+7rqswIzdajXX7wQs
+        owa4+tFX8CmdexqEqYkmHypqcSAlxKZ8AUqa/B0=
+X-Google-Smtp-Source: AGHT+IF6WR559FWXLQFZoFcPQdPkC98OAi3FD7eRhhO0WNrdt335QBVGgagidnRjUoAVIKoReS3/R8R4+YmsltZEcSQ=
+X-Received: by 2002:ac2:4d99:0:b0:500:9a29:bcb0 with SMTP id
+ g25-20020ac24d99000000b005009a29bcb0mr561337lfe.42.1693943441165; Tue, 05 Sep
+ 2023 12:50:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230905121714.3229131-1-zhengyejian1@huawei.com>
+References: <169280372795.282662.9784422934484459769.stgit@devnote2>
+ <169280378611.282662.4078983611827223131.stgit@devnote2> <CAEf4Bzb9CBnQp1_bEW-DOhw9rpDj6jt79DMmsKL2L4a_4ts9gQ@mail.gmail.com>
+ <20230826105632.e3eb35fc69a65ebaf11c7741@kernel.org>
+In-Reply-To: <20230826105632.e3eb35fc69a65ebaf11c7741@kernel.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 5 Sep 2023 12:50:28 -0700
+Message-ID: <CAEf4BzY3dySkeAuOgnNCykZwowbw0ZB9FvM2rE1oBUd_=_U6oA@mail.gmail.com>
+Subject: Re: [PATCH v4 5/9] ftrace: Add ftrace_partial_regs() for converting
+ ftrace_regs to pt_regs
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Florent Revest <revest@chromium.org>,
+        linux-trace-kernel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Zheng,
+On Fri, Aug 25, 2023 at 6:56=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
+rg> wrote:
+>
+> On Fri, 25 Aug 2023 14:49:48 -0700
+> Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+>
+> > On Wed, Aug 23, 2023 at 8:16=E2=80=AFAM Masami Hiramatsu (Google)
+> > <mhiramat@kernel.org> wrote:
+> > >
+> > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > >
+> > > Add ftrace_partial_regs() which converts the ftrace_regs to pt_regs.
+> > > If the architecture defines its own ftrace_regs, this copies partial
+> > > registers to pt_regs and returns it. If not, ftrace_regs is the same =
+as
+> > > pt_regs and ftrace_partial_regs() will return ftrace_regs::regs.
+> > >
+> > > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > Acked-by: Florent Revest <revest@chromium.org>
+> > > ---
+> > >  Changes in v3:
+> > >   - Fix to use pt_regs::regs instead of x.
+> > >   - Return ftrace_regs::regs forcibly if HAVE_PT_REGS_COMPAT_FTRACE_R=
+EGS=3Dy.
+> > >   - Fix typo.
+> > >   - Fix to copy correct registers to the pt_regs on arm64.
+> > >  Changes in v4:
+> > >   - Change the patch order in the series so that fprobe event can use=
+ this.
+> > > ---
+> > >  arch/arm64/include/asm/ftrace.h |   11 +++++++++++
+> > >  include/linux/ftrace.h          |   17 +++++++++++++++++
+> > >  2 files changed, 28 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm=
+/ftrace.h
+> > > index ab158196480c..5ad24f315d52 100644
+> > > --- a/arch/arm64/include/asm/ftrace.h
+> > > +++ b/arch/arm64/include/asm/ftrace.h
+> > > @@ -137,6 +137,17 @@ ftrace_override_function_with_return(struct ftra=
+ce_regs *fregs)
+> > >         fregs->pc =3D fregs->lr;
+> > >  }
+> > >
+> > > +static __always_inline struct pt_regs *
+> > > +ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs =
+*regs)
+> > > +{
+> > > +       memcpy(regs->regs, fregs->regs, sizeof(u64) * 9);
+> > > +       regs->sp =3D fregs->sp;
+> > > +       regs->pc =3D fregs->pc;
+> > > +       regs->regs[29] =3D fregs->fp;
+> > > +       regs->regs[30] =3D fregs->lr;
+> >
+> > I see that orig_x0 from pt_regs is used on arm64 to get syscall's
+> > first parameter. And it seems like this ftrace_regs to pt_regs
+> > conversion doesn't touch orig_x0 at all. Is it maintained/preserved
+> > somewhere else, or will we lose the ability to get the first syscall's
+> > argument?
+>
+> Thanks for checking it!
+>
+> Does BPF uses kprobe probe to trace syscalls? Since we have raw_syscall
+> trace events, no need to use kprobe to do that. (and I don't recommend to
+> use kprobe to do such fixed event)
 
-kernel test robot noticed the following build warnings:
+Yeah, lots of tools and projects actually trace syscalls with kprobes.
+I don't think there is anything we can do to quickly change that, so
+we should avoid breaking all of them.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.5 next-20230905]
-[cannot apply to rostedt-trace/for-next rostedt-trace/for-next-urgent]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+So getting back to my original question, is it possible to preserve orig_x0=
+?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Zheng-Yejian/tracing-Fix-unexpected-ring-buffer-expand-by-instance/20230906-014353
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20230905121714.3229131-1-zhengyejian1%40huawei.com
-patch subject: [PATCH] tracing: Fix unexpected ring buffer expand by instance
-config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20230906/202309060320.psgXz5VD-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230906/202309060320.psgXz5VD-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202309060320.psgXz5VD-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> kernel/trace/trace.c:6438: warning: Function parameter or member 'tr' not described in 'tracing_update_buffers'
-
-
-vim +6438 kernel/trace/trace.c
-
-4f271a2a60c748 Vaibhav Nagarnaik 2011-06-13  6425  
-ef710e100c1068 KOSAKI Motohiro   2010-07-01  6426  
-1852fcce181faa Steven Rostedt    2009-03-11  6427  /**
-1852fcce181faa Steven Rostedt    2009-03-11  6428   * tracing_update_buffers - used by tracing facility to expand ring buffers
-1852fcce181faa Steven Rostedt    2009-03-11  6429   *
-1852fcce181faa Steven Rostedt    2009-03-11  6430   * To save on memory when the tracing is never used on a system with it
-1852fcce181faa Steven Rostedt    2009-03-11  6431   * configured in. The ring buffers are set to a minimum size. But once
-1852fcce181faa Steven Rostedt    2009-03-11  6432   * a user starts to use the tracing facility, then they need to grow
-1852fcce181faa Steven Rostedt    2009-03-11  6433   * to their default size.
-1852fcce181faa Steven Rostedt    2009-03-11  6434   *
-1852fcce181faa Steven Rostedt    2009-03-11  6435   * This function is to be called when a tracer is about to be used.
-1852fcce181faa Steven Rostedt    2009-03-11  6436   */
-625c101cac2477 Zheng Yejian      2023-09-05  6437  int tracing_update_buffers(struct trace_array *tr)
-1852fcce181faa Steven Rostedt    2009-03-11 @6438  {
-1852fcce181faa Steven Rostedt    2009-03-11  6439  	int ret = 0;
-1852fcce181faa Steven Rostedt    2009-03-11  6440  
-1027fcb206a0fb Steven Rostedt    2009-03-12  6441  	mutex_lock(&trace_types_lock);
-625c101cac2477 Zheng Yejian      2023-09-05  6442  	if (!tr->ring_buffer_expanded)
-625c101cac2477 Zheng Yejian      2023-09-05  6443  		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
-438ced1720b584 Vaibhav Nagarnaik 2012-02-02  6444  						RING_BUFFER_ALL_CPUS);
-1027fcb206a0fb Steven Rostedt    2009-03-12  6445  	mutex_unlock(&trace_types_lock);
-1852fcce181faa Steven Rostedt    2009-03-11  6446  
-1852fcce181faa Steven Rostedt    2009-03-11  6447  	return ret;
-1852fcce181faa Steven Rostedt    2009-03-11  6448  }
-1852fcce181faa Steven Rostedt    2009-03-11  6449  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>
+> >
+> > Looking at libbpf's bpf_tracing.h, other than orig_x0, I think all the
+> > other registers are still preserved, so this seems to be the only
+> > potential problem.
+>
+> Great!
+>
+> Thank you,
+>
+> >
+> >
+> > > +       return regs;
+> > > +}
+> > > +
+> > >  int ftrace_regs_query_register_offset(const char *name);
+> > >
+> > >  int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
+> > > diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> > > index c0a42d0860b8..a6ed2aa71efc 100644
+> > > --- a/include/linux/ftrace.h
+> > > +++ b/include/linux/ftrace.h
+> > > @@ -165,6 +165,23 @@ static __always_inline struct pt_regs *ftrace_ge=
+t_regs(struct ftrace_regs *fregs
+> > >         return arch_ftrace_get_regs(fregs);
+> > >  }
+> > >
+> > > +#if !defined(CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS) || \
+> > > +       defined(CONFIG_HAVE_PT_REGS_TO_FTRACE_REGS_CAST)
+> > > +
+> > > +static __always_inline struct pt_regs *
+> > > +ftrace_partial_regs(struct ftrace_regs *fregs, struct pt_regs *regs)
+> > > +{
+> > > +       /*
+> > > +        * If CONFIG_HAVE_PT_REGS_TO_FTRACE_REGS_CAST=3Dy, ftrace_reg=
+s memory
+> > > +        * layout is the same as pt_regs. So always returns that addr=
+ess.
+> > > +        * Since arch_ftrace_get_regs() will check some members and m=
+ay return
+> > > +        * NULL, we can not use it.
+> > > +        */
+> > > +       return &fregs->regs;
+> > > +}
+> > > +
+> > > +#endif /* !CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS || CONFIG_HAVE_PT_RE=
+GS_TO_FTRACE_REGS_CAST */
+> > > +
+> > >  /*
+> > >   * When true, the ftrace_regs_{get,set}_*() functions may be used on=
+ fregs.
+> > >   * Note: this can be true even when ftrace_get_regs() cannot provide=
+ a pt_regs.
+> > >
+> > >
+>
+>
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
