@@ -2,93 +2,108 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A24C1EE14A8
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  6 Sep 2023 15:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6ACEE14AC
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  6 Sep 2023 16:16:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241497AbjIFP5i (ORCPT
+        id S232529AbjIFQQ1 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 6 Sep 2023 11:57:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39658 "EHLO
+        Wed, 6 Sep 2023 12:16:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230126AbjIFP5h (ORCPT
+        with ESMTP id S230349AbjIFQQ1 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 6 Sep 2023 11:57:37 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 746CD1733;
-        Wed,  6 Sep 2023 08:57:32 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-40037db2fe7so399495e9.0;
-        Wed, 06 Sep 2023 08:57:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694015851; x=1694620651; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JsuWZMPlt8G6xLjmq4678LbFZ1wL4cyfQgEaRvh6t9o=;
-        b=L5mUmlh+vzi31h4MfQPeN8GROPzUBwCa2+IZ5BrINdN7Y6Osh5+89jZ4B7nhuIDYEh
-         TCekOZgy9Hru9UHR1176670Y+NERti7zk/q5riZbZj9V57nz49ZeRFMO6/VlTy74oBrh
-         hiz6ayS2/jt5jqIdsC52ZNA7XZch4hJr5re7Rc3W/5vFECaXZuIIils/Vw9oLY1u5WDa
-         edJng3ly0AWl9oSpUqyFOWHjKYNajMz91450gitG0Th1yzQ89htnEHEZltkhIPpllhMW
-         3ixxH9VRZeLHI7LlfrI97M3djgOJv6Dcw3hupLUw7NPyucx6i+LVcCjgdroSnrqrkDZk
-         mH1Q==
+        Wed, 6 Sep 2023 12:16:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 138BC198D
+        for <linux-trace-kernel@vger.kernel.org>; Wed,  6 Sep 2023 09:15:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1694016940;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ySBQ8UU2v3ruiAA4bTZ1K97iZuDORkFQAMOFS4JWWBs=;
+        b=b7TJ87aQBNI+WTsIwLyd+D1VuFx0oF5wmqrfjPA7Vj4WZBQ39Rugz/F4LKYcRxOg8BfO7U
+        LinuWfuQVlQznb2EeDAr0wLDTlp+K8lFPwBTkY7UEy+oR1xvOd4t7e9VWlydXpsbtbic0q
+        opEh4UDD15jMvC/0vKQwv48FGgphl2A=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-172-meduUwhgPKCOyXQjD-elRA-1; Wed, 06 Sep 2023 12:15:39 -0400
+X-MC-Unique: meduUwhgPKCOyXQjD-elRA-1
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-414bd030211so699341cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 06 Sep 2023 09:15:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1694015851; x=1694620651;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JsuWZMPlt8G6xLjmq4678LbFZ1wL4cyfQgEaRvh6t9o=;
-        b=AVLRfqTUH4bD1XsiDGMXWI5B2CtFbQ20JHXDptqS3q4uq4wcMogqjCvFc9MIj3oVGG
-         b1s0fj/CDexXpQIKAgfGiDgTb5RI+MGWuLrgBHMyL2xxkIDqWGKoN7CfRUDsncH8hcdp
-         HhwXE5tl+wYyW1b3Ty0AdZBQUvWI6BeGBLanRIGOBkeHVyAU6BqwOvZnr9TSDamFm1TB
-         nmykQhJCZIZsKEAMhJ7s2Zh85U5vAaC+AW3V4lXBDbKj5wO4rMElk2u43heZk6nc2ckM
-         Fum+RWuitlXmScJDRtpa+L6msLjKGRnxn3GXIhsEK8PaWrTQuHZ+5itKyg7QL5iSrHYY
-         p9cQ==
-X-Gm-Message-State: AOJu0YzAgSukONuKvGtlmTw8afHjwxT9N7nWjdxB21xSGwG1YX1dTCQi
-        DPL6MozGj3wSBi23sASGQCZjbYmnGhtMhw==
-X-Google-Smtp-Source: AGHT+IHrV7XSzdM89Pe/XFMHAhF8fRYERlymKSVl4VrKFK33vuz/lkjcnSzKqXPsTB7v0pCXOClm7Q==
-X-Received: by 2002:a1c:7408:0:b0:401:b0f2:88cb with SMTP id p8-20020a1c7408000000b00401b0f288cbmr2690990wmc.31.1694015850537;
-        Wed, 06 Sep 2023 08:57:30 -0700 (PDT)
-Received: from lab.hqhome163.com ([194.183.10.152])
-        by smtp.googlemail.com with ESMTPSA id 10-20020a05600c234a00b003fc06169ab3sm23243034wmq.20.2023.09.06.08.57.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Sep 2023 08:57:30 -0700 (PDT)
-From:   "Alessandro Carminati (Red Hat)" <alessandro.carminati@gmail.com>
-Cc:     Daniel Bristot de Oliveira <bristot@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Alessandro Carminati <alessandro.carminati@gmail.com>,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] verification/dot2k: Delete duplicate imports
-Date:   Wed,  6 Sep 2023 15:57:03 +0000
-Message-Id: <20230906155703.3917918-1-alessandro.carminati@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20221208; t=1694016938; x=1694621738;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ySBQ8UU2v3ruiAA4bTZ1K97iZuDORkFQAMOFS4JWWBs=;
+        b=MwV5gpQVcno6e4+3xJB4l7PepkU5gsXy+szvg6lkEVXlLD3kF8FSAII9GaMLf4ABYd
+         dYLQ/j6OQ/YC4tVzujgjwREYMMp5Kt5rJXu3y0a/ZeF0m7to8NNiGUt1VhQzfPJe8hIW
+         5pV73lx9w7IAL8tfMJW5P78VjpZR4bRJkawkWvaY+dx78LBKpDS15dYcYTR1y/22e9rA
+         ApgY79TDZDyOw7XOTzXFHyGZTmBa75xwLr6Le3emf5s8Tz2HawHqP0U60jVYElg+x9pI
+         fsW16DyafxUSdwhIYrVqNHlgnGhV0yGxVvl2fNd06zjtFow4M12a4P56StO8+rwmijvx
+         3xww==
+X-Gm-Message-State: AOJu0YyMEUZFoKE1quTXyz0q1kBKf3jh/y2aZaRGdlXVfWbyr6nTFIlG
+        8zgDsDx/HXGSjj66MRusaRrCI2sUzcutO/OMEfG8U7SBSPNb5PzH60uWdNDwbAkJ2ndOVf9WK+m
+        Rt3O7eouKIlYsllk/E3K7suVUSyEuqF2mBRFkmJ6p9LABJHU5iy2DuGa0
+X-Received: by 2002:ac8:7ef0:0:b0:414:ed76:bea1 with SMTP id r16-20020ac87ef0000000b00414ed76bea1mr1132369qtc.67.1694016938577;
+        Wed, 06 Sep 2023 09:15:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG008JiqeqVkvqHQZFk51x1f9Ml14ocAwGpDZbzp2uKfdk4jeAuXVQtoHjOvPCQ5l9xRL/5vzpaFT68eIIdCAA=
+X-Received: by 2002:ac8:7ef0:0:b0:414:ed76:bea1 with SMTP id
+ r16-20020ac87ef0000000b00414ed76bea1mr1132349qtc.67.1694016938191; Wed, 06
+ Sep 2023 09:15:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20230831063129.335425-1-leobras@redhat.com> <20230906140947.GA33104@noisy.programming.kicks-ass.net>
+In-Reply-To: <20230906140947.GA33104@noisy.programming.kicks-ass.net>
+From:   Leonardo Bras Soares Passos <leobras@redhat.com>
+Date:   Wed, 6 Sep 2023 13:15:27 -0300
+Message-ID: <CAJ6HWG7H1EtWRcNLc=Ka-PGnJ9MRQ0Ft8PHBRnwadRNRSUxjEA@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/1] smp: Change function signatures to use call_single_data_t
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Guo Ren <guoren@kernel.org>,
+        Valentin Schneider <vschneid@redhat.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Imran Khan <imran.f.khan@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The presence of duplicate import lines appears to be a typo.
-Removing them.
+On Wed, Sep 6, 2023 at 11:10=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> On Thu, Aug 31, 2023 at 03:31:28AM -0300, Leonardo Bras wrote:
+> > call_single_data_t is a size-aligned typedef of struct __call_single_da=
+ta.
+> >
+> > This alignment is desirable in order to have smp_call_function*() avoid
+> > bouncing an extra cacheline in case of an unaligned csd, given this
+> > would hurt performance.
+> >
+> > Since the removal of struct request->csd in commit 660e802c76c8
+> > ("blk-mq: use percpu csd to remote complete instead of per-rq csd") the=
+re
+> > are no current users of smp_call_function*() with unaligned csd.
+> >
+> > Change every 'struct __call_single_data' function parameter to
+> > 'call_single_data_t', so we have warnings if any new code tries to
+> > introduce an smp_call_function*() call with unaligned csd.
+> >
+> > Signed-off-by: Leonardo Bras <leobras@redhat.com>
+>
+> Fair enough, I'll go queue it somewhere.
+>
 
-Fixes: 24bce201d798 ("tools/rv: Add dot2k")
-Signed-off-by: Alessandro Carminati (Red Hat) <alessandro.carminati@gmail.com>
----
- tools/verification/dot2/dot2k | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/tools/verification/dot2/dot2k b/tools/verification/dot2/dot2k
-index 9dcd38abe20a..d4d7e52d549e 100644
---- a/tools/verification/dot2/dot2k
-+++ b/tools/verification/dot2/dot2k
-@@ -15,8 +15,6 @@ if __name__ == '__main__':
-     import os
-     import platform
-     import sys
--    import sys
--    import argparse
- 
-     parser = argparse.ArgumentParser(description='transform .dot file into kernel rv monitor')
-     parser.add_argument('-d', "--dot", dest="dot_file", required=True)
--- 
-2.34.1
+Thanks Peter!
 
