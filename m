@@ -2,376 +2,302 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5733EB8FB5
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  6 Sep 2023 09:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C96EB8FB6
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  6 Sep 2023 10:09:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236365AbjIFJSn (ORCPT
+        id S234217AbjIFKJz (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 6 Sep 2023 05:18:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39282 "EHLO
+        Wed, 6 Sep 2023 06:09:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232647AbjIFJSn (ORCPT
+        with ESMTP id S229947AbjIFKJz (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 6 Sep 2023 05:18:43 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54765CE2;
-        Wed,  6 Sep 2023 02:18:38 -0700 (PDT)
-Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RgcCM6wDczNnDX;
-        Wed,  6 Sep 2023 17:14:55 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Wed, 6 Sep 2023 17:18:36 +0800
-From:   Zheng Yejian <zhengyejian1@huawei.com>
-To:     <rostedt@goodmis.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <mhiramat@kernel.org>,
-        <yeweihua4@huawei.com>, <zhengyejian1@huawei.com>
-Subject: [PATCH v2] tracing: Fix unexpected ring buffer expand by instance
-Date:   Wed, 6 Sep 2023 17:18:37 +0800
-Message-ID: <20230906091837.3998020-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230905121744.538b92cc@gandalf.local.home>
-References: <20230905121744.538b92cc@gandalf.local.home>
+        Wed, 6 Sep 2023 06:09:55 -0400
+Received: from mail-oo1-xc32.google.com (mail-oo1-xc32.google.com [IPv6:2607:f8b0:4864:20::c32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D87A79E;
+        Wed,  6 Sep 2023 03:09:50 -0700 (PDT)
+Received: by mail-oo1-xc32.google.com with SMTP id 006d021491bc7-5738cb00eebso2198025eaf.2;
+        Wed, 06 Sep 2023 03:09:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693994990; x=1694599790; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1hB+PvGMU7bVonbgCU3v3Efy35gCAE3hYixxnZD/At8=;
+        b=dhF5NVxd+uiDT2QxuQsvKzqriKnOY/RST9IuW1hSKt6jbyfr0SeJSwRr9oa8Det382
+         YcJyO5ieoCu33zEkibhMuSBwZSif6Y4ctnd591ajw17ZXSHwNrcXxmpvZSbJP3ijQimW
+         1JEvXoCGcFpxa0B11+m57Inz8KqfntFVoVx7m8zeZz8pdP/kd6uUpSeT/ywhM4VkoXNA
+         F1y8NJeNGmP1QttwuJ5tYAXn1Hj5GfvHw1q81wgY/HLfhHJPO5TkWKe1jMHhJ++VR8MB
+         GVNEkpACNKxvXzhhdRFMYj1oAo23c2RzXps7rAYPa8ulkNxCUT4EsDj1In9bjnMcIy7Q
+         VW4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693994990; x=1694599790;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1hB+PvGMU7bVonbgCU3v3Efy35gCAE3hYixxnZD/At8=;
+        b=kMtyZSNQawjRq78RsR+lCO3b5S6EBkBAEipSLbENN8BIY0z1XCJ5BXUj2UzaHQe7ht
+         6Ay1fOka6fTa7QzLbBQs5SuGmZsf9PdUaibI5hJq7jydnJu0BcGheyVcsLKkjszvE1nC
+         D13QYmSpRzDrX2VM1MEVpeusaza3SPJWDTJzEKUeq5OIh1eFXHApJVlbkWwHJBzaEJtJ
+         9SACKNDuaZro1xyEab0caluGREwGC0eygcNo0QTYpmDQIaJ+a2NWq5Oxgd7S/Y8koPJ5
+         P3mUYgSb4NaQtZT+JvBta8A5hlRpogmEZ6QDT8mtZqZND4IVK3wGx34ktCOqlz/4dh9s
+         ah3w==
+X-Gm-Message-State: AOJu0YxZQuS4mYYNXA8I5ENW4jD3cHvzUTRm4Rr5VW4qxnX1HuOCKYX4
+        b8x59kw8QSoWGYnpggPXyj/G9M9eNbLR57ATMPo=
+X-Google-Smtp-Source: AGHT+IGsVIO3Wdlzdu5IoNPsgfuXEEegjy8jw54qEODMt1x9AhK2XQp2UlXOyvRNEqjuDd11FqPfJpy8H/Hf20nIUGU=
+X-Received: by 2002:a05:6820:284:b0:571:aceb:26ce with SMTP id
+ q4-20020a056820028400b00571aceb26cemr14312637ood.1.1693994989962; Wed, 06 Sep
+ 2023 03:09:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.175.61]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpeml500012.china.huawei.com (7.185.36.15)
-X-CFilter-Loop: Reflected
+References: <20230828080423.3539686-1-alessandro.carminati@gmail.com> <CAK7LNATf5zQH=qOX3HCcAoaccK1KTjoGNuXc-d2-FM-japABoQ@mail.gmail.com>
+In-Reply-To: <CAK7LNATf5zQH=qOX3HCcAoaccK1KTjoGNuXc-d2-FM-japABoQ@mail.gmail.com>
+From:   Alessandro Carminati <alessandro.carminati@gmail.com>
+Date:   Wed, 6 Sep 2023 12:09:13 +0200
+Message-ID: <CAPp5cGQgn0kfxPc+pmLMEJmHzOJ2HQQbsWSE0LFsxi4bigHOdQ@mail.gmail.com>
+Subject: Re: [PATCH v3] scripts/link-vmlinux.sh: Add alias to duplicate
+ symbols for kallsyms
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Bristot de Oliveira <bristot@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nicolas Schier <nicolas@fjasle.eu>,
+        Alexander Lobakin <aleksander.lobakin@intel.com>,
+        Nick Alcock <nick.alcock@oracle.com>,
+        Kris Van Hees <kris.van.hees@oracle.com>,
+        Eugene Loh <eugene.loh@oracle.com>,
+        Francis Laniel <flaniel@linux.microsoft.com>,
+        Viktor Malik <vmalik@redhat.com>, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        live-patching@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The ring buffer of global_trace is set to the minimum size in
-order to save memory on boot up and then it will be expand when
-some trace feature enabled.
+Hello Masahiro,
 
-However currently operations under an instance can also cause
-global_trace ring buffer being expanded, and the expanded memory
-would be wasted if global_trace then not being used.
+Thank you for your suggestions,
+Il giorno sab 2 set 2023 alle ore 08:36 Masahiro Yamada
+<masahiroy@kernel.org> ha scritto:
+>
+> On Mon, Aug 28, 2023 at 8:45=E2=80=AFPM Alessandro Carminati (Red Hat)
+> <alessandro.carminati@gmail.com> wrote:
+> >
+> > From: Alessandro Carminati <alessandro.carminati@gmail.com>
+> >
+> > It is not uncommon for drivers or modules related to similar peripheral=
+s
+> > to have symbols with the exact same name.
+> > While this is not a problem for the kernel's binary itself, it becomes =
+an
+> > issue when attempting to trace or probe specific functions using
+> > infrastructure like ftrace or kprobe.
+> >
+> > The tracing subsystem relies on the `nm -n vmlinux` output, which provi=
+des
+> > symbol information from the kernel's ELF binary. However, when multiple
+> > symbols share the same name, the standard nm output does not differenti=
+ate
+> > between them. This can lead to confusion and difficulty when trying to
+> > probe the intended symbol.
+> >
+> >  ~ # cat /proc/kallsyms | grep " name_show"
+> >  ffffffff8c4f76d0 t name_show
+> >  ffffffff8c9cccb0 t name_show
+> >  ffffffff8cb0ac20 t name_show
+> >  ffffffff8cc728c0 t name_show
+> >  ffffffff8ce0efd0 t name_show
+> >  ffffffff8ce126c0 t name_show
+> >  ffffffff8ce1dd20 t name_show
+> >  ffffffff8ce24e70 t name_show
+> >  ffffffff8d1104c0 t name_show
+> >  ffffffff8d1fe480 t name_show
+> >
+> > **kas_alias** addresses this challenge by extending the symbol names wi=
+th
+> > unique suffixes during the kernel build process.
+> > The newly created aliases for these duplicated symbols are unique names
+> > that can be fed to the ftracefs interface. By doing so, it enables
+> > previously unreachable symbols to be probed.
+> >
+> >  ~ # cat /proc/kallsyms | grep " name_show"
+> >  ffffffff974f76d0 t name_show
+> >  ffffffff974f76d0 t name_show__alias__6340
+> >  ffffffff979cccb0 t name_show
+> >  ffffffff979cccb0 t name_show__alias__6341
+> >  ffffffff97b0ac20 t name_show
+> >  ffffffff97b0ac20 t name_show__alias__6342
+> >  ffffffff97c728c0 t name_show
+> >  ffffffff97c728c0 t name_show__alias__6343
+> >  ffffffff97e0efd0 t name_show
+> >  ffffffff97e0efd0 t name_show__alias__6344
+> >  ffffffff97e126c0 t name_show
+> >  ffffffff97e126c0 t name_show__alias__6345
+> >  ffffffff97e1dd20 t name_show
+> >  ffffffff97e1dd20 t name_show__alias__6346
+> >  ffffffff97e24e70 t name_show
+> >  ffffffff97e24e70 t name_show__alias__6347
+> >  ffffffff981104c0 t name_show
+> >  ffffffff981104c0 t name_show__alias__6348
+> >  ffffffff981fe480 t name_show
+> >  ffffffff981fe480 t name_show__alias__6349
+> >  ~ # echo "p:kprobes/evnt1 name_show__alias__6349" \
+> >  > >/sys/kernel/tracing/kprobe_events
+> >  ~ # cat /sys/kernel/tracing/kprobe_events
+> >  p:kprobes/evnt1 name_show__alias__6349
+> >
+> > Changes from v1:
+> > - Integrated changes requested by Masami to exclude symbols with prefix=
+es
+> >   "_cfi" and "_pfx".
+> > - Introduced a small framework to handle patterns that need to be exclu=
+ded
+> >   from the alias production.
+> > - Excluded other symbols using the framework.
+> > - Introduced the ability to discriminate between text and data symbols.
+> > - Added two new config symbols in this version: CONFIG_KALLSYMS_ALIAS_D=
+ATA,
+> >   which allows data for data, and CONFIG_KALLSYMS_ALIAS_DATA_ALL, which
+> >   excludes all filters and provides an alias for each duplicated symbol=
+.
+> >
+> > https://lore.kernel.org/all/20230711151925.1092080-1-alessandro.carmina=
+ti@gmail.com/
+> >
+> > Changes from v2:
+> > - Alias tags are created by querying DWARF information from the vmlinux=
+.
+> > - The filename + line number is normalized and appended to the original=
+ name.
+> > - The tag begins with '@' to indicate the symbol source.
+> > - Not a change, but worth mentioning, since the alias is added to the e=
+xisting
+> >   list, the old duplicated name is preserved, and the livepatch way of =
+dealing
+> >   with duplicates is maintained.
+> > - Acknowledging the existence of scenarios where inlined functions decl=
+ared in
+> >   header files may result in multiple copies due to compiler behavior, =
+though
+> >    it is not actionable as it does not pose an operational issue.
+> > - Highlighting a single exception where the same name refers to differe=
+nt
+> >   functions: the case of "compat_binfmt_elf.c," which directly includes
+> >   "binfmt_elf.c" producing identical function copies in two separate
+> >   modules.
+> >
+> > sample from new v3
+> >
+> >  ~ # cat /proc/kallsyms | grep gic_mask_irq
+> >  ffffd0b03c04dae4 t gic_mask_irq
+> >  ffffd0b03c04dae4 t gic_mask_irq@_drivers_irqchip_irq-gic_c_167
+> >  ffffd0b03c050960 t gic_mask_irq
+> >  ffffd0b03c050960 t gic_mask_irq@_drivers_irqchip_irq-gic-v3_c_404
+> >  ~ #
+> >
+> > https://lore.kernel.org/all/20230714150326.1152359-1-alessandro.carmina=
+ti@gmail.com/
+> >
+> > Signed-off-by: Alessandro Carminati (Red Hat) <alessandro.carminati@gma=
+il.com>
+> > ---
+> >  init/Kconfig                        |  36 ++++
+> >  scripts/Makefile                    |   4 +
+> >  scripts/kas_alias/Makefile          |   4 +
+> >  scripts/kas_alias/a2l.c             | 268 ++++++++++++++++++++++++++++
+> >  scripts/kas_alias/a2l.h             |  32 ++++
+> >  scripts/kas_alias/duplicates_list.c |  70 ++++++++
+> >  scripts/kas_alias/duplicates_list.h |  15 ++
+> >  scripts/kas_alias/item_list.c       | 230 ++++++++++++++++++++++++
+> >  scripts/kas_alias/item_list.h       |  26 +++
+> >  scripts/kas_alias/kas_alias.c       | 217 ++++++++++++++++++++++
+> >  scripts/link-vmlinux.sh             |  11 +-
+> >  11 files changed, 910 insertions(+), 3 deletions(-)
+>
+>
+> I added some review comments in another thread, but
+> one of the biggest concerns might be "910 insertions".
+>
+>
+> What this program does is quite simple,
+> "find duplicated names, and call addr2line".
+>
+>
+>
+> You wrote a lot of code to self-implement these:
+>
+>  - sort function
+>  - parse PATH env variable to find addr2line
+>  - fork addr2line to establish pipe communications
+>
+>
+>
+> Have you considered writing the code in Python (or Perl)?
+> Is it too slow?
 
-See following case, we enable 'sched_switch' event in instance 'A', then
-ring buffer of global_trace is unexpectedly expanded to be 1410KB, also
-the '(expanded: 1408)' from 'buffer_size_kb' of instance is confusing.
+I have attempted to incorporate all your suggestions.
+I refactored the C code to utilize hashing instead of sorting, and I
+completely re-implemented the entire thing in Python for the purpose of
+comparison.
 
-  # cd /sys/kernel/tracing
-  # mkdir instances/A
-  # cat buffer_size_kb
-  7 (expanded: 1408)
-  # cat instances/A/buffer_size_kb
-  1410 (expanded: 1408)
-  # echo sched:sched_switch > instances/A/set_event
-  # cat buffer_size_kb
-  1410
-  # cat instances/A/buffer_size_kb
-  1410
+You are correct;
+the C version is indeed faster, but the difference is negligible when
+considering the use case and code maintainability.
 
-To fix it, we can:
-  - Make 'ring_buffer_expanded' as a member of 'struct trace_array';
-  - Make 'ring_buffer_expanded' of instance is defaultly true,
-    global_trace is defaultly false;
-  - In order not to expose 'global_trace' outside of file
-    'kernel/trace/trace.c', introduce trace_set_ring_buffer_expanded()
-    to set 'ring_buffer_expanded' as 'true';
-  - Pass the expected trace_array to tracing_update_buffers().
+Here's a direct comparison of the two.
+```
+~ $ time ./kas_alias.py -a /usr/bin/aarch64-linux-gnu-addr2line \
+                      -n linux-6.5/.tmp_vmlinux.kallsyms1.syms \
+                      -v linux-6.5/.tmp_vmlinux.kallsyms1 \
+                      -o output_py
 
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
----
+real    0m1.626s
+user    0m1.436s
+sys     0m0.185s
+$ cat kas_alias.py | wc -l
+133
+~ $ time ./kas_alias -a /usr/bin/aarch64-linux-gnu-addr2line \
+                   -v linux-6.5/.tmp_vmlinux.kallsyms1 \
+                   -n linux-6.5/.tmp_vmlinux.kallsyms1.syms \
+                   -o output_c
 
-v2:
-  - Add simple description for parameter 'tr' of tracing_update_buffers()
-    to clean warning which Reported-by: kernel test robot <lkp@intel.com>
-    Link: https://lore.kernel.org/all/202309060320.psgXz5VD-lkp@intel.com/
+real    0m1.418s
+user    0m1.262s
+sys     0m0.162s
+~ $ cat a2l.c a2l.h conf.c conf.h item_list.c item_list.h kas_alias.c | wc =
+-l
+742
+~ $ diff output_py output_c
+~ $
+```
+C version is 7/10% faster but is more than 5 times in terms of code size.
 
-v1:
-  - Link: https://lore.kernel.org/all/20230905121714.3229131-1-zhengyejian1@huawei.com/
+>
+> Most of the functions you implemented are already
+> available in script languages.
+>
+>
+>
+> I am not sure if "@<file-path>" is a good solution,
+> but the amount of the added code looks too much to me.
 
- kernel/trace/trace.c        | 47 ++++++++++++++++++++-----------------
- kernel/trace/trace.h        |  9 +++++--
- kernel/trace/trace_events.c | 22 +++++++++--------
- 3 files changed, 45 insertions(+), 33 deletions(-)
+I followed Francis's suggestion and made the separator between
+<symbol name> and <normalized filename> an argument that you can select
+using the command line. Since I'm not aware of a better choice, I set the
+default value to '@'.
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 2b4ded753367..75d5863c6be8 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -54,12 +54,6 @@
- #include "trace.h"
- #include "trace_output.h"
- 
--/*
-- * On boot up, the ring buffer is set to the minimum size, so that
-- * we do not waste memory on systems that are not using tracing.
-- */
--bool ring_buffer_expanded;
--
- #ifdef CONFIG_FTRACE_STARTUP_TEST
- /*
-  * We need to change this state when a selftest is running.
-@@ -202,7 +196,7 @@ static int __init set_cmdline_ftrace(char *str)
- 	strscpy(bootup_tracer_buf, str, MAX_TRACER_SIZE);
- 	default_bootup_tracer = bootup_tracer_buf;
- 	/* We are using ftrace early, expand it */
--	ring_buffer_expanded = true;
-+	trace_set_ring_buffer_expanded(NULL);
- 	return 1;
- }
- __setup("ftrace=", set_cmdline_ftrace);
-@@ -247,7 +241,7 @@ static int __init boot_alloc_snapshot(char *str)
- 	} else {
- 		allocate_snapshot = true;
- 		/* We also need the main ring buffer expanded */
--		ring_buffer_expanded = true;
-+		trace_set_ring_buffer_expanded(NULL);
- 	}
- 	return 1;
- }
-@@ -490,6 +484,13 @@ static struct trace_array global_trace = {
- 	.trace_flags = TRACE_DEFAULT_FLAGS,
- };
- 
-+void trace_set_ring_buffer_expanded(struct trace_array *tr)
-+{
-+	if (!tr)
-+		tr = &global_trace;
-+	tr->ring_buffer_expanded = true;
-+}
-+
- LIST_HEAD(ftrace_trace_arrays);
- 
- int trace_array_get(struct trace_array *this_tr)
-@@ -2012,7 +2013,7 @@ static int run_tracer_selftest(struct tracer *type)
- #ifdef CONFIG_TRACER_MAX_TRACE
- 	if (type->use_max_tr) {
- 		/* If we expanded the buffers, make sure the max is expanded too */
--		if (ring_buffer_expanded)
-+		if (tr->ring_buffer_expanded)
- 			ring_buffer_resize(tr->max_buffer.buffer, trace_buf_size,
- 					   RING_BUFFER_ALL_CPUS);
- 		tr->allocated_snapshot = true;
-@@ -2038,7 +2039,7 @@ static int run_tracer_selftest(struct tracer *type)
- 		tr->allocated_snapshot = false;
- 
- 		/* Shrink the max buffer again */
--		if (ring_buffer_expanded)
-+		if (tr->ring_buffer_expanded)
- 			ring_buffer_resize(tr->max_buffer.buffer, 1,
- 					   RING_BUFFER_ALL_CPUS);
- 	}
-@@ -3403,7 +3404,7 @@ void trace_printk_init_buffers(void)
- 	pr_warn("**********************************************************\n");
- 
- 	/* Expand the buffers to set size */
--	tracing_update_buffers();
-+	tracing_update_buffers(&global_trace);
- 
- 	buffers_allocated = 1;
- 
-@@ -6347,7 +6348,7 @@ static int __tracing_resize_ring_buffer(struct trace_array *tr,
- 	 * we use the size that was given, and we can forget about
- 	 * expanding it later.
- 	 */
--	ring_buffer_expanded = true;
-+	trace_set_ring_buffer_expanded(tr);
- 
- 	/* May be called before buffers are initialized */
- 	if (!tr->array_buffer.buffer)
-@@ -6425,6 +6426,7 @@ ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
- 
- /**
-  * tracing_update_buffers - used by tracing facility to expand ring buffers
-+ * @tr: The tracing instance
-  *
-  * To save on memory when the tracing is never used on a system with it
-  * configured in. The ring buffers are set to a minimum size. But once
-@@ -6433,13 +6435,13 @@ ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
-  *
-  * This function is to be called when a tracer is about to be used.
-  */
--int tracing_update_buffers(void)
-+int tracing_update_buffers(struct trace_array *tr)
- {
- 	int ret = 0;
- 
- 	mutex_lock(&trace_types_lock);
--	if (!ring_buffer_expanded)
--		ret = __tracing_resize_ring_buffer(&global_trace, trace_buf_size,
-+	if (!tr->ring_buffer_expanded)
-+		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
- 						RING_BUFFER_ALL_CPUS);
- 	mutex_unlock(&trace_types_lock);
- 
-@@ -6493,7 +6495,7 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
- 
- 	mutex_lock(&trace_types_lock);
- 
--	if (!ring_buffer_expanded) {
-+	if (!tr->ring_buffer_expanded) {
- 		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
- 						RING_BUFFER_ALL_CPUS);
- 		if (ret < 0)
-@@ -7161,7 +7163,7 @@ tracing_entries_read(struct file *filp, char __user *ubuf,
- 		}
- 
- 		if (buf_size_same) {
--			if (!ring_buffer_expanded)
-+			if (!tr->ring_buffer_expanded)
- 				r = sprintf(buf, "%lu (expanded: %lu)\n",
- 					    size >> 10,
- 					    trace_buf_size >> 10);
-@@ -7218,10 +7220,10 @@ tracing_total_entries_read(struct file *filp, char __user *ubuf,
- 	mutex_lock(&trace_types_lock);
- 	for_each_tracing_cpu(cpu) {
- 		size += per_cpu_ptr(tr->array_buffer.data, cpu)->entries >> 10;
--		if (!ring_buffer_expanded)
-+		if (!tr->ring_buffer_expanded)
- 			expanded_size += trace_buf_size >> 10;
- 	}
--	if (ring_buffer_expanded)
-+	if (tr->ring_buffer_expanded)
- 		r = sprintf(buf, "%lu\n", size);
- 	else
- 		r = sprintf(buf, "%lu (expanded: %lu)\n", size, expanded_size);
-@@ -7615,7 +7617,7 @@ tracing_snapshot_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 	unsigned long val;
- 	int ret;
- 
--	ret = tracing_update_buffers();
-+	ret = tracing_update_buffers(tr);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -9496,6 +9498,9 @@ static struct trace_array *trace_array_create(const char *name)
- 	if (allocate_trace_buffers(tr, trace_buf_size) < 0)
- 		goto out_free_tr;
- 
-+	/* The ring buffer is defaultly expanded */
-+	trace_set_ring_buffer_expanded(tr);
-+
- 	if (ftrace_allocate_ftrace_ops(tr) < 0)
- 		goto out_free_tr;
- 
-@@ -10390,7 +10395,7 @@ __init static int tracer_alloc_buffers(void)
- 		trace_printk_init_buffers();
- 
- 	/* To save memory, keep the ring buffer size to its minimum */
--	if (ring_buffer_expanded)
-+	if (global_trace.ring_buffer_expanded)
- 		ring_buf_size = trace_buf_size;
- 	else
- 		ring_buf_size = 1;
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 5669dd1f90d9..c02ae9cbd108 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -410,6 +410,11 @@ struct trace_array {
- 	struct cond_snapshot	*cond_snapshot;
- #endif
- 	struct trace_func_repeats	__percpu *last_func_repeats;
-+	/*
-+	 * On boot up, the ring buffer is set to the minimum size, so that
-+	 * we do not waste memory on systems that are not using tracing.
-+	 */
-+	bool ring_buffer_expanded;
- };
- 
- enum {
-@@ -759,7 +764,7 @@ extern int DYN_FTRACE_TEST_NAME(void);
- #define DYN_FTRACE_TEST_NAME2 trace_selftest_dynamic_test_func2
- extern int DYN_FTRACE_TEST_NAME2(void);
- 
--extern bool ring_buffer_expanded;
-+extern void trace_set_ring_buffer_expanded(struct trace_array *tr);
- extern bool tracing_selftest_disabled;
- 
- #ifdef CONFIG_FTRACE_STARTUP_TEST
-@@ -1303,7 +1308,7 @@ static inline void trace_branch_disable(void)
- #endif /* CONFIG_BRANCH_TRACER */
- 
- /* set ring buffers to default size if not already done so */
--int tracing_update_buffers(void);
-+int tracing_update_buffers(struct trace_array *tr);
- 
- union trace_synth_field {
- 	u8				as_u8;
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index ed367d713be0..a32d50a136d8 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1179,7 +1179,7 @@ ftrace_event_write(struct file *file, const char __user *ubuf,
- 	if (!cnt)
- 		return 0;
- 
--	ret = tracing_update_buffers();
-+	ret = tracing_update_buffers(tr);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -1410,18 +1410,20 @@ event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 	if (ret)
- 		return ret;
- 
--	ret = tracing_update_buffers();
--	if (ret < 0)
--		return ret;
--
- 	switch (val) {
- 	case 0:
- 	case 1:
- 		ret = -ENODEV;
- 		mutex_lock(&event_mutex);
- 		file = event_file_data(filp);
--		if (likely(file))
-+		if (likely(file)) {
-+			ret = tracing_update_buffers(file->tr);
-+			if (ret < 0) {
-+				mutex_unlock(&event_mutex);
-+				return ret;
-+			}
- 			ret = ftrace_event_enable_disable(file, val);
-+		}
- 		mutex_unlock(&event_mutex);
- 		break;
- 
-@@ -1495,7 +1497,7 @@ system_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 	if (ret)
- 		return ret;
- 
--	ret = tracing_update_buffers();
-+	ret = tracing_update_buffers(dir->tr);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -1969,7 +1971,7 @@ event_pid_write(struct file *filp, const char __user *ubuf,
- 	if (!cnt)
- 		return 0;
- 
--	ret = tracing_update_buffers();
-+	ret = tracing_update_buffers(tr);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -2829,7 +2831,7 @@ static __init int setup_trace_triggers(char *str)
- 	int i;
- 
- 	strscpy(bootup_trigger_buf, str, COMMAND_LINE_SIZE);
--	ring_buffer_expanded = true;
-+	trace_set_ring_buffer_expanded(NULL);
- 	disable_tracing_selftest("running event triggers");
- 
- 	buf = bootup_trigger_buf;
-@@ -3619,7 +3621,7 @@ static char bootup_event_buf[COMMAND_LINE_SIZE] __initdata;
- static __init int setup_trace_event(char *str)
- {
- 	strscpy(bootup_event_buf, str, COMMAND_LINE_SIZE);
--	ring_buffer_expanded = true;
-+	trace_set_ring_buffer_expanded(NULL);
- 	disable_tracing_selftest("running event tracing");
- 
- 	return 1;
--- 
-2.25.1
+>
+>
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
 
+Best regards
+Alessandro Carminati
