@@ -2,23 +2,23 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E81BEE14D4
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  6 Sep 2023 18:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF94AEE14C3
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  6 Sep 2023 21:36:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243942AbjIFSuD (ORCPT
+        id S235360AbjIFVg7 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 6 Sep 2023 14:50:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35008 "EHLO
+        Wed, 6 Sep 2023 17:36:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243911AbjIFSt4 (ORCPT
+        with ESMTP id S231613AbjIFVg7 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 6 Sep 2023 14:49:56 -0400
+        Wed, 6 Sep 2023 17:36:59 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2909172E;
-        Wed,  6 Sep 2023 11:49:48 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 776F5C433C7;
-        Wed,  6 Sep 2023 18:49:47 +0000 (UTC)
-Date:   Wed, 6 Sep 2023 14:50:00 -0400
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EB8BE7C;
+        Wed,  6 Sep 2023 14:36:55 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3B28C433C7;
+        Wed,  6 Sep 2023 21:36:53 +0000 (UTC)
+Date:   Wed, 6 Sep 2023 17:37:06 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     Naresh Kamboju <naresh.kamboju@linaro.org>
 Cc:     zhengyejian1@huawei.com, akaher@vmware.com,
@@ -27,10 +27,11 @@ Cc:     zhengyejian1@huawei.com, akaher@vmware.com,
         shuah@kernel.org, skhan@linuxfoundation.org, yeweihua4@huawei.com
 Subject: Re: "[PATCH] selftests/ftrace: Correctly enable event in
  instance-event.tc"
-Message-ID: <20230906145000.29291a1b@gandalf.local.home>
-In-Reply-To: <20230906142652.191866-1-naresh.kamboju@linaro.org>
+Message-ID: <20230906173706.7aeb8716@gandalf.local.home>
+In-Reply-To: <20230906103718.0405ccb4@gandalf.local.home>
 References: <b62e6539-7b25-c8ab-6b6c-47e723023297@huawei.com>
         <20230906142652.191866-1-naresh.kamboju@linaro.org>
+        <20230906103718.0405ccb4@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -39,34 +40,29 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed,  6 Sep 2023 19:56:52 +0530
-Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+On Wed, 6 Sep 2023 10:37:18 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> [my two cents]
+> > Log details,
+> > -------------
+> > # ok 45 ftrace - test tracing error log support
+> > <47>[ 1373.662292] systemd-journald[90]: Sent WATCHDOG=1 notification.
+> > # ok 46 Test creation and deletion of trace instances while setting an event  
 > 
-> I do see similar kernel panic while running ftrace testing on today's
-> Linux next-20230906 tag. This crash is from qemu-arm64.
+> It's definitely a race with the creation and deletion of instances.
 > 
-> Here I am providing steps to reproduced link and scripts by using tuxrun tool.
->   - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2V0OqxEZUXIPNqWhQnnsuFOGYxR/reproducer
->   
-> Script details,
-> =============
-> # To install tuxrun to your home directory at ~/.local/bin:
-> # pip3 install -U --user tuxrun==0.49.0
-> #
-> # Or install a deb/rpm depending on the running distribution
-> # See https://tuxmake.org/install-deb/ or
-> # https://tuxmake.org/install-rpm/
-> #
-> # See https://tuxrun.org/ for complete documentation.
-> #
-> #
+> I'm going to run it on my laptop VM and see if that reproduces it. My other
+> VM is on a pretty powerful machine, and perhaps that's keeping it from
+> hitting the race.
 
-BTW, when you ran these, did you apply:
+Putting in a while loop of:
 
-  https://patchwork.kernel.org/project/linux-trace-kernel/patch/20230905183332.628d7cc0@gandalf.local.home/
+  # while :; do ./ftracetest test.d/instances/instance-event.tc ; done
 
-?
+eventually triggered the bug. Looks like this is really an existing bug not
+related to the eventfs, but the eventfs code actually opened up the window
+of this race.
+
+Hopefully I'll have a fix shortly.
 
 -- Steve
