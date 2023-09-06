@@ -2,213 +2,75 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7245CEB8FAD
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  6 Sep 2023 06:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D319EB8FAD
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  6 Sep 2023 08:19:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235426AbjIFGuA (ORCPT
+        id S231364AbjIFITh (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 6 Sep 2023 02:50:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48378 "EHLO
+        Wed, 6 Sep 2023 04:19:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230104AbjIFGuA (ORCPT
+        with ESMTP id S229590AbjIFITg (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 6 Sep 2023 02:50:00 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 594CBCFA;
-        Tue,  5 Sep 2023 23:49:56 -0700 (PDT)
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3866fZu1012110;
-        Wed, 6 Sep 2023 06:49:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : references : date : in-reply-to : message-id : mime-version :
- content-type; s=pp1; bh=hpQKNfo6U16AwKtZqIESlBlwyqrKWSYpNKNB15nKW+8=;
- b=Gvd0G9e5MJiP3pNMOTbMY3r3cTW8cBTX1aeKkrNleEkVuMn33P5AIEXFPC3mhTxXAeTu
- J1IY+Sd4Cq6nsf8ljntTISL/BusDeOpxYi/HRg6FnRcLCiDtGs5L8Wq3r8EQuJn4cCPQ
- smv0H4ff9P5JDsX+9fJYlhvxH9nWOCnWS6lzrO/Ey0G+Ok63mRzvK3x1vZJWY4x3SJWP
- R/c3qyDOk8gbnBmW/xLIIcQLcCODOlMhsOe52hT8jWRAujBX9WY4PxCQVLrYpOGTtY9U
- /OTcQftNAhgpw146HLxAjYuW9QHStWyUx1+VAqsVeF+ib0gPtg0tmjR2afVKknKwaioA Kg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sxmcjr6bu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 Sep 2023 06:49:16 +0000
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3866frXm013184;
-        Wed, 6 Sep 2023 06:49:15 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sxmcjr6bb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 Sep 2023 06:49:15 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38659Njk011124;
-        Wed, 6 Sep 2023 06:49:14 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3svj31rage-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 Sep 2023 06:49:14 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3866nCK561341968
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 Sep 2023 06:49:12 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BD2372004E;
-        Wed,  6 Sep 2023 06:49:12 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4F97120040;
-        Wed,  6 Sep 2023 06:49:12 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
-        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Wed,  6 Sep 2023 06:49:12 +0000 (GMT)
-From:   Sven Schnelle <svens@linux.ibm.com>
-To:     Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Florent Revest <revest@chromium.org>,
-        linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v4 4/9] fprobe: rethook: Use ftrace_regs in fprobe exit
- handler and rethook
-References: <169280372795.282662.9784422934484459769.stgit@devnote2>
-        <169280377434.282662.7610009313268953247.stgit@devnote2>
-        <20230904224038.4420a76ea15931aa40179697@kernel.org>
-        <yt9d5y4pozrl.fsf@linux.ibm.com>
-        <20230905223633.23cd4e6e8407c45b934be477@kernel.org>
-Date:   Wed, 06 Sep 2023 08:49:11 +0200
-In-Reply-To: <20230905223633.23cd4e6e8407c45b934be477@kernel.org> (Masami
-        Hiramatsu's message of "Tue, 5 Sep 2023 22:36:33 +0900")
-Message-ID: <yt9dzg1zokyg.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+        Wed, 6 Sep 2023 04:19:36 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 422CABF;
+        Wed,  6 Sep 2023 01:19:32 -0700 (PDT)
+Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RgZtn5NTXzhZHc;
+        Wed,  6 Sep 2023 16:15:29 +0800 (CST)
+Received: from localhost.localdomain (10.67.175.61) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Wed, 6 Sep 2023 16:19:28 +0800
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <yeweihua4@huawei.com>,
+        <zhengyejian1@huawei.com>
+Subject: [PATCH] ring-buffer: Avoid softlockup in ring_buffer_resize()
+Date:   Wed, 6 Sep 2023 16:19:30 +0800
+Message-ID: <20230906081930.3939106-1-zhengyejian1@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: VfqUkRXvjBIDEgigSlkozvmCeU6UomUF
-X-Proofpoint-GUID: Pni8IGuwgJSKY-NuHenskpMz5GGOBf-A
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-05_13,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 phishscore=0 spamscore=0 priorityscore=1501 mlxscore=0
- impostorscore=0 clxscore=1015 adultscore=0 malwarescore=0 mlxlogscore=869
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2309060054
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.175.61]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Masami,
+When user resize all trace ring buffer through file 'buffer_size_kb',
+then in ring_buffer_resize(), kernel allocates buffer pages for each
+cpu in a loop.
 
-Masami Hiramatsu (Google) <mhiramat@kernel.org> writes:
+If the kernel preemption model is PREEMPT_NONE and there are many cpus
+and there are many buffer pages to be allocated, it may not give up cpu
+for a long time and finally cause a softlockup.
 
-> Thus, we need to ensure that the ftrace_regs which is saved in the ftrace
-> *without* FTRACE_WITH_REGS flags, can be used for hooking the function
-> return. I saw;
->
-> void arch_rethook_prepare(struct rethook_node *rh, struct pt_regs *regs, bool mcount)
-> {
->         rh->ret_addr = regs->gprs[14];
->         rh->frame = regs->gprs[15];
->
->         /* Replace the return addr with trampoline addr */
->         regs->gprs[14] = (unsigned long)&arch_rethook_trampoline;
-> }
->
-> gprs[15] is a stack pointer, so it is saved in ftrace_regs too, but what about
-> gprs[14]? (I guess it is a link register)
-> We need to read the gprs[14] and ensure that is restored to gpr14 when the
-> ftrace is exit even without FTRACE_WITH_REGS flag.
->
-> IOW, it is ftrace save regs/restore regs code issue. I need to check how the
-> function_graph implements it.
+To avoid it, call cond_resched() after each cpu buffer allocation.
 
-gpr2-gpr14 are always saved in ftrace_caller/ftrace_regs_caller(),
-regardless of the FTRACE_WITH_REGS flags. The only difference is that
-without the FTRACE_WITH_REGS flag the program status word (psw) is not
-saved because collecting that is a rather expensive operation.
+Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+---
+ kernel/trace/ring_buffer.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-I used the following commands to test rethook (is that the correct
-testcase?)
-
-#!/bin/bash
-cd /sys/kernel/tracing
-
-echo 'r:icmp_rcv icmp_rcv' >kprobe_events
-echo 1 >events/kprobes/icmp_rcv/enable
-ping -c 1 127.0.0.1
-cat trace
-
-which gave me:
-
-ping-686     [001] ..s1.    96.890817: icmp_rcv: (ip_protocol_deliver_rcu+0x42/0x218 <- icmp_rcv)
-
-I applied the following patch on top of your patches to make it compile,
-and rethook still seems to work:
-
-commit dab51b0a5b885660630433ac89f8e64a2de0eb86
-Author: Sven Schnelle <svens@linux.ibm.com>
-Date:   Wed Sep 6 08:06:23 2023 +0200
-
-    rethook wip
-    
-    Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-
-diff --git a/arch/s390/kernel/rethook.c b/arch/s390/kernel/rethook.c
-index af10e6bdd34e..4e86c0a1a064 100644
---- a/arch/s390/kernel/rethook.c
-+++ b/arch/s390/kernel/rethook.c
-@@ -3,8 +3,9 @@
- #include <linux/kprobes.h>
- #include "rethook.h"
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 78502d4c7214..72ccf75defd0 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -2198,6 +2198,8 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+ 				err = -ENOMEM;
+ 				goto out_err;
+ 			}
++
++			cond_resched();
+ 		}
  
--void arch_rethook_prepare(struct rethook_node *rh, struct pt_regs *regs, bool mcount)
-+void arch_rethook_prepare(struct rethook_node *rh, struct ftrace_regs *fregs, bool mcount)
- {
-+	struct pt_regs *regs = (struct pt_regs *)fregs;
- 	rh->ret_addr = regs->gprs[14];
- 	rh->frame = regs->gprs[15];
- 
-@@ -13,10 +14,11 @@ void arch_rethook_prepare(struct rethook_node *rh, struct pt_regs *regs, bool mc
- }
- NOKPROBE_SYMBOL(arch_rethook_prepare);
- 
--void arch_rethook_fixup_return(struct pt_regs *regs,
-+void arch_rethook_fixup_return(struct ftrace_regs *fregs,
- 			       unsigned long correct_ret_addr)
- {
- 	/* Replace fake return address with real one. */
-+	struct pt_regs *regs = (struct pt_regs *)fregs;
- 	regs->gprs[14] = correct_ret_addr;
- }
- NOKPROBE_SYMBOL(arch_rethook_fixup_return);
-@@ -24,9 +26,9 @@ NOKPROBE_SYMBOL(arch_rethook_fixup_return);
- /*
-  * Called from arch_rethook_trampoline
-  */
--unsigned long arch_rethook_trampoline_callback(struct pt_regs *regs)
-+unsigned long arch_rethook_trampoline_callback(struct ftrace_regs *fregs)
- {
--	return rethook_trampoline_handler(regs, regs->gprs[15]);
-+	return rethook_trampoline_handler(fregs, fregs->regs.gprs[15]);
- }
- NOKPROBE_SYMBOL(arch_rethook_trampoline_callback);
- 
-diff --git a/arch/s390/kernel/rethook.h b/arch/s390/kernel/rethook.h
-index 32f069eed3f3..0fe62424fc78 100644
---- a/arch/s390/kernel/rethook.h
-+++ b/arch/s390/kernel/rethook.h
-@@ -2,6 +2,6 @@
- #ifndef __S390_RETHOOK_H
- #define __S390_RETHOOK_H
- 
--unsigned long arch_rethook_trampoline_callback(struct pt_regs *regs);
-+unsigned long arch_rethook_trampoline_callback(struct ftrace_regs *fregs);
- 
- #endif
+ 		cpus_read_lock();
+-- 
+2.25.1
 
