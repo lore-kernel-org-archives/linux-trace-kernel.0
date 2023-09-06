@@ -2,82 +2,116 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24733CCF9FD
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  6 Sep 2023 01:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F1EEB8FAF
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  6 Sep 2023 02:52:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238180AbjIFBpQ (ORCPT
+        id S235251AbjIFCwm (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 5 Sep 2023 21:45:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57036 "EHLO
+        Tue, 5 Sep 2023 22:52:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233346AbjIFBpP (ORCPT
+        with ESMTP id S229525AbjIFCwl (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 5 Sep 2023 21:45:15 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE3741BB;
-        Tue,  5 Sep 2023 18:45:12 -0700 (PDT)
-Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.56])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4RgQ8b0RHCzMlC3;
-        Wed,  6 Sep 2023 09:41:51 +0800 (CST)
-Received: from [10.67.110.218] (10.67.110.218) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Wed, 6 Sep 2023 09:45:10 +0800
-Message-ID: <b62e6539-7b25-c8ab-6b6c-47e723023297@huawei.com>
-Date:   Wed, 6 Sep 2023 09:45:10 +0800
+        Tue, 5 Sep 2023 22:52:41 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF70CCC2;
+        Tue,  5 Sep 2023 19:52:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693968757; x=1725504757;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=b/IlaQTZB5j0he0vRsx9Okx0UXxCOU0YpQJ6T4yXngA=;
+  b=DMIibnaRFzWF1T6bqd7Pv5CQyz4p1FWdFI4dURTwximIraEr4bj5nt48
+   FOzJ1ZF9/wLWii9tO6HwsCKFQ+9TK2ZYSPvSqe7wNpUIjQmnVqjBqY7md
+   QCt8Y1vsnBhVFstZzXUVjppXRGVjLTzBCtd9RSFb6O70qmnWrriMwaKVI
+   KCNteS4HxhH9Gs/jtjNCzKGHzRXNFZ7UbQ8AlDTDC39+aFWy9FkCdRpre
+   QnZ1cVmtJkypkqdAaHzRfER70xGP1UO9OFIljX3hx8voxyxWU3LQterBL
+   HjS1W+ihEM2rDpO9IvD3dyH3jqQEkn0DT+f2Q38zsimFXTSOR053YRZwx
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="407954966"
+X-IronPort-AV: E=Sophos;i="6.02,230,1688454000"; 
+   d="scan'208";a="407954966"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2023 19:52:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="776411652"
+X-IronPort-AV: E=Sophos;i="6.02,230,1688454000"; 
+   d="scan'208";a="776411652"
+Received: from lkp-server02.sh.intel.com (HELO e0b2ea88afd5) ([10.239.97.151])
+  by orsmga001.jf.intel.com with ESMTP; 05 Sep 2023 19:52:34 -0700
+Received: from kbuild by e0b2ea88afd5 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qdiea-0002Oj-11;
+        Wed, 06 Sep 2023 02:52:29 +0000
+Date:   Wed, 6 Sep 2023 10:52:03 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     oe-kbuild-all@lists.linux.dev,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ajay Kaher <akaher@vmware.com>,
+        Zheng Yejian <zhengyejian1@huawei.com>
+Subject: Re: [PATCH] tracefs/eventfs: Use dput to free the toplevel events
+ directory
+Message-ID: <202309061055.V08YOtla-lkp@intel.com>
+References: <20230905183332.628d7cc0@gandalf.local.home>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH] selftests/ftrace: Correctly enable event in
- instance-event.tc
-Content-Language: en-US
-To:     Shuah Khan <skhan@linuxfoundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Ajay Kaher <akaher@vmware.com>
-CC:     <shuah@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, Ye Weihua <yeweihua4@huawei.com>
-References: <20230626001144.2635956-1-zhengyejian1@huawei.com>
- <20230626191114.8c5a66fbaa28af3c303923bd@kernel.org>
- <20230626191255.53baab4ed48d7111dcd44cad@kernel.org>
- <20230710183741.78f04c68@gandalf.local.home>
- <1cb3aee2-19af-c472-e265-05176fe9bd84@huawei.com>
- <602d648b-a32b-fa97-a527-d924f74578cb@linuxfoundation.org>
-From:   Zheng Yejian <zhengyejian1@huawei.com>
-In-Reply-To: <602d648b-a32b-fa97-a527-d924f74578cb@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.110.218]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500012.china.huawei.com (7.185.36.15)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230905183332.628d7cc0@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2023/9/6 06:43, Shuah Khan wrote:
-> On 9/5/23 06:54, Zheng Yejian wrote:
->> On 2023/7/11 06:37, Steven Rostedt wrote:
->>>
->>> Shuah, can you take this?
->>>
->>
->> Kindly ping and bug report :)
->>
-> 
-> I am sorry for the delay. Looks this one got buried deep
-> when I was away on vacation.
-> 
-> Applied now for my next Linux 6.6 update.
-> 
+Hi Steven,
 
-Thanks!
+kernel test robot noticed the following build warnings:
 
--- Zheng Yejian
+[auto build test WARNING on linus/master]
+[also build test WARNING on next-20230905]
+[cannot apply to v6.5]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> thanks,
-> -- Shuah
-> 
-> 
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracefs-eventfs-Use-dput-to-free-the-toplevel-events-directory/20230906-063414
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20230905183332.628d7cc0%40gandalf.local.home
+patch subject: [PATCH] tracefs/eventfs: Use dput to free the toplevel events directory
+config: sparc-allyesconfig (https://download.01.org/0day-ci/archive/20230906/202309061055.V08YOtla-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230906/202309061055.V08YOtla-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202309061055.V08YOtla-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   fs/tracefs/event_inode.c: In function 'eventfs_remove_events_dir':
+>> fs/tracefs/event_inode.c:804:31: warning: variable 'ei' set but not used [-Wunused-but-set-variable]
+     804 |         struct eventfs_inode *ei;
+         |                               ^~
+
+
+vim +/ei +804 fs/tracefs/event_inode.c
+
+5bdcd5f5331a276 Ajay Kaher 2023-07-28  794  
+5bdcd5f5331a276 Ajay Kaher 2023-07-28  795  /**
+5bdcd5f5331a276 Ajay Kaher 2023-07-28  796   * eventfs_remove_events_dir - remove eventfs dir or file from list
+5bdcd5f5331a276 Ajay Kaher 2023-07-28  797   * @dentry: events's dentry to be removed.
+5bdcd5f5331a276 Ajay Kaher 2023-07-28  798   *
+5bdcd5f5331a276 Ajay Kaher 2023-07-28  799   * This function remove events main directory
+5bdcd5f5331a276 Ajay Kaher 2023-07-28  800   */
+5bdcd5f5331a276 Ajay Kaher 2023-07-28  801  void eventfs_remove_events_dir(struct dentry *dentry)
+5bdcd5f5331a276 Ajay Kaher 2023-07-28  802  {
+5bdcd5f5331a276 Ajay Kaher 2023-07-28  803  	struct tracefs_inode *ti;
+5bdcd5f5331a276 Ajay Kaher 2023-07-28 @804  	struct eventfs_inode *ei;
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
