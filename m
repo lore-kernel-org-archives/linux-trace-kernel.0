@@ -2,64 +2,72 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63535EB8FD3
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  6 Sep 2023 13:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8095FEB8FB3
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  6 Sep 2023 13:45:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232753AbjIFNoR (ORCPT
+        id S237601AbjIFNpi (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 6 Sep 2023 09:44:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36572 "EHLO
+        Wed, 6 Sep 2023 09:45:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232463AbjIFNoR (ORCPT
+        with ESMTP id S230499AbjIFNpi (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 6 Sep 2023 09:44:17 -0400
+        Wed, 6 Sep 2023 09:45:38 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6A30CF1;
-        Wed,  6 Sep 2023 06:44:13 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A297DC433C7;
-        Wed,  6 Sep 2023 13:44:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694007853;
-        bh=CsO1YYcv1agmiKj1lvn7Vyw9BRK3mJRnLWMt81bd6zE=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=jCrby6kqmYBZdvtcg893fAjXQG7kbAeelqwwsRWhntVdAb5XUetNC2lXET5xBcq9v
-         AGUTnyb8DfydPnS1Bgw8eJa9ZbmcMnRNmeZUNyNp0o/ZF3yFw6dlTDVDltbr8OJeNH
-         qz+IV+bF6KU6AmSk41ccahqmvxUIyWn51xPh+ASBq6lYiOCzzd8/YquayZ8S62sfNy
-         4Wb+RJmOVuQuLEzElTivkei5lz2zK8dBT7cW0f2IZQLAogxQoCBaJJSWd45f9s6C/A
-         46694S+W/vRNQHCJeV6ekkP8B82+D8DUKdqodD6m1y7uVlbyz3UzFJLzObsQJ+UPIm
-         sVuH5jaPGgYHw==
-Message-ID: <bfe9768b-a67e-170d-8130-c2e3cd6357a9@kernel.org>
-Date:   Wed, 6 Sep 2023 15:44:06 +0200
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EC3DCF1;
+        Wed,  6 Sep 2023 06:45:35 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B10F3C433C8;
+        Wed,  6 Sep 2023 13:45:33 +0000 (UTC)
+Date:   Wed, 6 Sep 2023 09:45:53 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Zheng Yejian <zhengyejian1@huawei.com>
+Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Ajay Kaher <akaher@vmware.com>, <shuah@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ye Weihua <yeweihua4@huawei.com>
+Subject: Re: [PATCH] selftests/ftrace: Correctly enable event in
+ instance-event.tc
+Message-ID: <20230906094553.388cd787@gandalf.local.home>
+In-Reply-To: <20230906094306.67a51feb@gandalf.local.home>
+References: <20230626001144.2635956-1-zhengyejian1@huawei.com>
+        <20230626191114.8c5a66fbaa28af3c303923bd@kernel.org>
+        <20230626191255.53baab4ed48d7111dcd44cad@kernel.org>
+        <20230710183741.78f04c68@gandalf.local.home>
+        <1cb3aee2-19af-c472-e265-05176fe9bd84@huawei.com>
+        <20230905183638.2b539fae@gandalf.local.home>
+        <9cad73cd-1f8b-2f3f-cda4-99b89a87b931@huawei.com>
+        <20230906072759.4e8bee1c@gandalf.local.home>
+        <2667182e-691e-2ab4-4c2d-a47d76f38107@huawei.com>
+        <20230906085621.6e20db28@gandalf.local.home>
+        <20230906090252.36219543@gandalf.local.home>
+        <fcc5d688-9d58-3b4c-58de-472330160142@huawei.com>
+        <20230906094306.67a51feb@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH] tools/verification/dot2/dot2k: Delete duplicate imports
-Content-Language: en-US, pt-BR, it-IT
-To:     "Alessandro Carminati (Red Hat)" <alessandro.carminati@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230906103356.3916844-1-alessandro.carminati@gmail.com>
-From:   Daniel Bristot de Oliveira <bristot@kernel.org>
-In-Reply-To: <20230906103356.3916844-1-alessandro.carminati@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Alessandro,
+On Wed, 6 Sep 2023 09:43:06 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Do you mind changing the subject to:
-
-verification/dot2k: Delete duplicate imports
-
-
-On 9/6/23 12:33, Alessandro Carminati (Red Hat) wrote:
-> The presence of duplicate import lines appears to be a typo.
-> Removing them.
+> > also can be reproduced with the newest:
+> > 65d6e954e378 ("Merge tag 'gfs2-v6.5-rc5-fixes' of 
+> > git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2")
+> > 
+> > And revert commit 27152bceea1d ("eventfs: Move tracing/events to
+> > eventfs"), the issue just seems gone.  
 > 
-> Signed-off-by: Alessandro Carminati (Red Hat) <alessandro.carminati@gmail.com>
+> The reason I'm asking is that there could be something added that fixes it.
+> I'm testing Linus's tree at: cbb557ba92f08b945e2cb20b7ab37ef49ab53cdd
 
-and adding the Fixes: tag?
+Never mind, I just noticed that your above sha includes this one.
 
--- Daniel
+Not sure why I can't reproduce this. I'm using qemu as well.
+
+-- Steve
