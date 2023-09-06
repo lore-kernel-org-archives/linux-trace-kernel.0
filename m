@@ -2,78 +2,75 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474C7EB8FD5
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  6 Sep 2023 14:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 417A3EB8FD7
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  6 Sep 2023 14:10:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233777AbjIFOEb (ORCPT
+        id S233097AbjIFOKC (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 6 Sep 2023 10:04:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43488 "EHLO
+        Wed, 6 Sep 2023 10:10:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232210AbjIFOEb (ORCPT
+        with ESMTP id S232210AbjIFOKC (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 6 Sep 2023 10:04:31 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDEC810D3;
-        Wed,  6 Sep 2023 07:04:27 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81621C433C8;
-        Wed,  6 Sep 2023 14:04:26 +0000 (UTC)
-Date:   Wed, 6 Sep 2023 10:04:44 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Zheng Yejian <zhengyejian1@huawei.com>
-Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Ajay Kaher <akaher@vmware.com>, <shuah@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ye Weihua <yeweihua4@huawei.com>
-Subject: Re: [PATCH] selftests/ftrace: Correctly enable event in
- instance-event.tc
-Message-ID: <20230906100444.7cdf6248@gandalf.local.home>
-In-Reply-To: <77c3a142-0a03-8fa2-e5b5-cea9515065f4@huawei.com>
-References: <20230626001144.2635956-1-zhengyejian1@huawei.com>
-        <20230626191114.8c5a66fbaa28af3c303923bd@kernel.org>
-        <20230626191255.53baab4ed48d7111dcd44cad@kernel.org>
-        <20230710183741.78f04c68@gandalf.local.home>
-        <1cb3aee2-19af-c472-e265-05176fe9bd84@huawei.com>
-        <20230905183638.2b539fae@gandalf.local.home>
-        <9cad73cd-1f8b-2f3f-cda4-99b89a87b931@huawei.com>
-        <20230906072759.4e8bee1c@gandalf.local.home>
-        <2667182e-691e-2ab4-4c2d-a47d76f38107@huawei.com>
-        <20230906085621.6e20db28@gandalf.local.home>
-        <20230906090252.36219543@gandalf.local.home>
-        <fcc5d688-9d58-3b4c-58de-472330160142@huawei.com>
-        <20230906094306.67a51feb@gandalf.local.home>
-        <20230906094553.388cd787@gandalf.local.home>
-        <77c3a142-0a03-8fa2-e5b5-cea9515065f4@huawei.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Wed, 6 Sep 2023 10:10:02 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 731A3B4;
+        Wed,  6 Sep 2023 07:09:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Tt4D3SaV+KPBRyJX3TDIXz1/qOjMegHojpxvbyzkBnI=; b=SGpP4R9alvo//Vg65rp/0ue9Aw
+        s95I1yGwzMYmfGAUk3hv73Bgjhlsu78uHy24OJ1stkPjsxqQqOu+fRBJymxuEE+TX293wKm4s0AMz
+        E6CZOLY+JgIvm5TShKY7WZVVARfRifIOg0+bms6wz2j7BDvbZM0s2MQiY/7/ariuC+ujTXF15jy1i
+        Q94dIOelEIOqd8uT/wC+C3K06XQD3Fd7AOU2PyLxv8ahISq9ya4RLer9i+nlJCso0+LI7vn12oK2z
+        TuQq3sFbjz8nSmfReSU3pWtGAIj+v57PRDjo6hCthmIolfdb9oxigY0bxY1BYvpAHZb9V56bus/j+
+        lmmMKGrQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qdtE3-002vwH-KQ; Wed, 06 Sep 2023 14:09:47 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4D6FF3003F2; Wed,  6 Sep 2023 16:09:47 +0200 (CEST)
+Date:   Wed, 6 Sep 2023 16:09:47 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Leonardo Bras <leobras@redhat.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Guo Ren <guoren@kernel.org>,
+        Valentin Schneider <vschneid@redhat.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Imran Khan <imran.f.khan@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 1/1] smp: Change function signatures to use
+ call_single_data_t
+Message-ID: <20230906140947.GA33104@noisy.programming.kicks-ass.net>
+References: <20230831063129.335425-1-leobras@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230831063129.335425-1-leobras@redhat.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 6 Sep 2023 22:01:35 +0800
-Zheng Yejian <zhengyejian1@huawei.com> wrote:
-
-> Will the qemu version have an impact? Mine is:
-
-It shouldn't, but...
-
+On Thu, Aug 31, 2023 at 03:31:28AM -0300, Leonardo Bras wrote:
+> call_single_data_t is a size-aligned typedef of struct __call_single_data.
 > 
-> $ qemu-system-x86_64 --version
-> QEMU emulator version 4.2.1 (Debian 1:4.2-3ubuntu6.27)
-> Copyright (c) 2003-2019 Fabrice Bellard and the QEMU Project developers
+> This alignment is desirable in order to have smp_call_function*() avoid
+> bouncing an extra cacheline in case of an unaligned csd, given this
+> would hurt performance.
+> 
+> Since the removal of struct request->csd in commit 660e802c76c8
+> ("blk-mq: use percpu csd to remote complete instead of per-rq csd") there
+> are no current users of smp_call_function*() with unaligned csd.
+> 
+> Change every 'struct __call_single_data' function parameter to
+> 'call_single_data_t', so we have warnings if any new code tries to
+> introduce an smp_call_function*() call with unaligned csd.
+> 
+> Signed-off-by: Leonardo Bras <leobras@redhat.com>
 
-
-I'm using:
-
-$ qemu-system-x86_64 --version
-QEMU emulator version 8.0.3 (Debian 1:8.0.3+dfsg-5)
-Copyright (c) 2003-2022 Fabrice Bellard and the QEMU Project developers
-
-Maybe it's just that yours causes the race window to be bigger.
-
--- Steve
+Fair enough, I'll go queue it somewhere.
