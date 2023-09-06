@@ -2,116 +2,213 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F1EEB8FAF
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  6 Sep 2023 02:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7245CEB8FAD
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  6 Sep 2023 06:49:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235251AbjIFCwm (ORCPT
+        id S235426AbjIFGuA (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 5 Sep 2023 22:52:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36870 "EHLO
+        Wed, 6 Sep 2023 02:50:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229525AbjIFCwl (ORCPT
+        with ESMTP id S230104AbjIFGuA (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 5 Sep 2023 22:52:41 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF70CCC2;
-        Tue,  5 Sep 2023 19:52:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693968757; x=1725504757;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=b/IlaQTZB5j0he0vRsx9Okx0UXxCOU0YpQJ6T4yXngA=;
-  b=DMIibnaRFzWF1T6bqd7Pv5CQyz4p1FWdFI4dURTwximIraEr4bj5nt48
-   FOzJ1ZF9/wLWii9tO6HwsCKFQ+9TK2ZYSPvSqe7wNpUIjQmnVqjBqY7md
-   QCt8Y1vsnBhVFstZzXUVjppXRGVjLTzBCtd9RSFb6O70qmnWrriMwaKVI
-   KCNteS4HxhH9Gs/jtjNCzKGHzRXNFZ7UbQ8AlDTDC39+aFWy9FkCdRpre
-   QnZ1cVmtJkypkqdAaHzRfER70xGP1UO9OFIljX3hx8voxyxWU3LQterBL
-   HjS1W+ihEM2rDpO9IvD3dyH3jqQEkn0DT+f2Q38zsimFXTSOR053YRZwx
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="407954966"
-X-IronPort-AV: E=Sophos;i="6.02,230,1688454000"; 
-   d="scan'208";a="407954966"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2023 19:52:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="776411652"
-X-IronPort-AV: E=Sophos;i="6.02,230,1688454000"; 
-   d="scan'208";a="776411652"
-Received: from lkp-server02.sh.intel.com (HELO e0b2ea88afd5) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 05 Sep 2023 19:52:34 -0700
-Received: from kbuild by e0b2ea88afd5 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qdiea-0002Oj-11;
-        Wed, 06 Sep 2023 02:52:29 +0000
-Date:   Wed, 6 Sep 2023 10:52:03 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
+        Wed, 6 Sep 2023 02:50:00 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 594CBCFA;
+        Tue,  5 Sep 2023 23:49:56 -0700 (PDT)
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3866fZu1012110;
+        Wed, 6 Sep 2023 06:49:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=pp1; bh=hpQKNfo6U16AwKtZqIESlBlwyqrKWSYpNKNB15nKW+8=;
+ b=Gvd0G9e5MJiP3pNMOTbMY3r3cTW8cBTX1aeKkrNleEkVuMn33P5AIEXFPC3mhTxXAeTu
+ J1IY+Sd4Cq6nsf8ljntTISL/BusDeOpxYi/HRg6FnRcLCiDtGs5L8Wq3r8EQuJn4cCPQ
+ smv0H4ff9P5JDsX+9fJYlhvxH9nWOCnWS6lzrO/Ey0G+Ok63mRzvK3x1vZJWY4x3SJWP
+ R/c3qyDOk8gbnBmW/xLIIcQLcCODOlMhsOe52hT8jWRAujBX9WY4PxCQVLrYpOGTtY9U
+ /OTcQftNAhgpw146HLxAjYuW9QHStWyUx1+VAqsVeF+ib0gPtg0tmjR2afVKknKwaioA Kg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sxmcjr6bu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 Sep 2023 06:49:16 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3866frXm013184;
+        Wed, 6 Sep 2023 06:49:15 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sxmcjr6bb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 Sep 2023 06:49:15 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38659Njk011124;
+        Wed, 6 Sep 2023 06:49:14 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3svj31rage-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 Sep 2023 06:49:14 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3866nCK561341968
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 6 Sep 2023 06:49:12 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BD2372004E;
+        Wed,  6 Sep 2023 06:49:12 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4F97120040;
+        Wed,  6 Sep 2023 06:49:12 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
+        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Wed,  6 Sep 2023 06:49:12 +0000 (GMT)
+From:   Sven Schnelle <svens@linux.ibm.com>
+To:     Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Florent Revest <revest@chromium.org>,
+        linux-trace-kernel@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc:     oe-kbuild-all@lists.linux.dev,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alan Maguire <alan.maguire@oracle.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ajay Kaher <akaher@vmware.com>,
-        Zheng Yejian <zhengyejian1@huawei.com>
-Subject: Re: [PATCH] tracefs/eventfs: Use dput to free the toplevel events
- directory
-Message-ID: <202309061055.V08YOtla-lkp@intel.com>
-References: <20230905183332.628d7cc0@gandalf.local.home>
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v4 4/9] fprobe: rethook: Use ftrace_regs in fprobe exit
+ handler and rethook
+References: <169280372795.282662.9784422934484459769.stgit@devnote2>
+        <169280377434.282662.7610009313268953247.stgit@devnote2>
+        <20230904224038.4420a76ea15931aa40179697@kernel.org>
+        <yt9d5y4pozrl.fsf@linux.ibm.com>
+        <20230905223633.23cd4e6e8407c45b934be477@kernel.org>
+Date:   Wed, 06 Sep 2023 08:49:11 +0200
+In-Reply-To: <20230905223633.23cd4e6e8407c45b934be477@kernel.org> (Masami
+        Hiramatsu's message of "Tue, 5 Sep 2023 22:36:33 +0900")
+Message-ID: <yt9dzg1zokyg.fsf@linux.ibm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230905183332.628d7cc0@gandalf.local.home>
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: VfqUkRXvjBIDEgigSlkozvmCeU6UomUF
+X-Proofpoint-GUID: Pni8IGuwgJSKY-NuHenskpMz5GGOBf-A
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-05_13,2023-09-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 phishscore=0 spamscore=0 priorityscore=1501 mlxscore=0
+ impostorscore=0 clxscore=1015 adultscore=0 malwarescore=0 mlxlogscore=869
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309060054
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Steven,
+Hi Masami,
 
-kernel test robot noticed the following build warnings:
+Masami Hiramatsu (Google) <mhiramat@kernel.org> writes:
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on next-20230905]
-[cannot apply to v6.5]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> Thus, we need to ensure that the ftrace_regs which is saved in the ftrace
+> *without* FTRACE_WITH_REGS flags, can be used for hooking the function
+> return. I saw;
+>
+> void arch_rethook_prepare(struct rethook_node *rh, struct pt_regs *regs, bool mcount)
+> {
+>         rh->ret_addr = regs->gprs[14];
+>         rh->frame = regs->gprs[15];
+>
+>         /* Replace the return addr with trampoline addr */
+>         regs->gprs[14] = (unsigned long)&arch_rethook_trampoline;
+> }
+>
+> gprs[15] is a stack pointer, so it is saved in ftrace_regs too, but what about
+> gprs[14]? (I guess it is a link register)
+> We need to read the gprs[14] and ensure that is restored to gpr14 when the
+> ftrace is exit even without FTRACE_WITH_REGS flag.
+>
+> IOW, it is ftrace save regs/restore regs code issue. I need to check how the
+> function_graph implements it.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracefs-eventfs-Use-dput-to-free-the-toplevel-events-directory/20230906-063414
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20230905183332.628d7cc0%40gandalf.local.home
-patch subject: [PATCH] tracefs/eventfs: Use dput to free the toplevel events directory
-config: sparc-allyesconfig (https://download.01.org/0day-ci/archive/20230906/202309061055.V08YOtla-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230906/202309061055.V08YOtla-lkp@intel.com/reproduce)
+gpr2-gpr14 are always saved in ftrace_caller/ftrace_regs_caller(),
+regardless of the FTRACE_WITH_REGS flags. The only difference is that
+without the FTRACE_WITH_REGS flag the program status word (psw) is not
+saved because collecting that is a rather expensive operation.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202309061055.V08YOtla-lkp@intel.com/
+I used the following commands to test rethook (is that the correct
+testcase?)
 
-All warnings (new ones prefixed by >>):
+#!/bin/bash
+cd /sys/kernel/tracing
 
-   fs/tracefs/event_inode.c: In function 'eventfs_remove_events_dir':
->> fs/tracefs/event_inode.c:804:31: warning: variable 'ei' set but not used [-Wunused-but-set-variable]
-     804 |         struct eventfs_inode *ei;
-         |                               ^~
+echo 'r:icmp_rcv icmp_rcv' >kprobe_events
+echo 1 >events/kprobes/icmp_rcv/enable
+ping -c 1 127.0.0.1
+cat trace
 
+which gave me:
 
-vim +/ei +804 fs/tracefs/event_inode.c
+ping-686     [001] ..s1.    96.890817: icmp_rcv: (ip_protocol_deliver_rcu+0x42/0x218 <- icmp_rcv)
 
-5bdcd5f5331a276 Ajay Kaher 2023-07-28  794  
-5bdcd5f5331a276 Ajay Kaher 2023-07-28  795  /**
-5bdcd5f5331a276 Ajay Kaher 2023-07-28  796   * eventfs_remove_events_dir - remove eventfs dir or file from list
-5bdcd5f5331a276 Ajay Kaher 2023-07-28  797   * @dentry: events's dentry to be removed.
-5bdcd5f5331a276 Ajay Kaher 2023-07-28  798   *
-5bdcd5f5331a276 Ajay Kaher 2023-07-28  799   * This function remove events main directory
-5bdcd5f5331a276 Ajay Kaher 2023-07-28  800   */
-5bdcd5f5331a276 Ajay Kaher 2023-07-28  801  void eventfs_remove_events_dir(struct dentry *dentry)
-5bdcd5f5331a276 Ajay Kaher 2023-07-28  802  {
-5bdcd5f5331a276 Ajay Kaher 2023-07-28  803  	struct tracefs_inode *ti;
-5bdcd5f5331a276 Ajay Kaher 2023-07-28 @804  	struct eventfs_inode *ei;
+I applied the following patch on top of your patches to make it compile,
+and rethook still seems to work:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+commit dab51b0a5b885660630433ac89f8e64a2de0eb86
+Author: Sven Schnelle <svens@linux.ibm.com>
+Date:   Wed Sep 6 08:06:23 2023 +0200
+
+    rethook wip
+    
+    Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+
+diff --git a/arch/s390/kernel/rethook.c b/arch/s390/kernel/rethook.c
+index af10e6bdd34e..4e86c0a1a064 100644
+--- a/arch/s390/kernel/rethook.c
++++ b/arch/s390/kernel/rethook.c
+@@ -3,8 +3,9 @@
+ #include <linux/kprobes.h>
+ #include "rethook.h"
+ 
+-void arch_rethook_prepare(struct rethook_node *rh, struct pt_regs *regs, bool mcount)
++void arch_rethook_prepare(struct rethook_node *rh, struct ftrace_regs *fregs, bool mcount)
+ {
++	struct pt_regs *regs = (struct pt_regs *)fregs;
+ 	rh->ret_addr = regs->gprs[14];
+ 	rh->frame = regs->gprs[15];
+ 
+@@ -13,10 +14,11 @@ void arch_rethook_prepare(struct rethook_node *rh, struct pt_regs *regs, bool mc
+ }
+ NOKPROBE_SYMBOL(arch_rethook_prepare);
+ 
+-void arch_rethook_fixup_return(struct pt_regs *regs,
++void arch_rethook_fixup_return(struct ftrace_regs *fregs,
+ 			       unsigned long correct_ret_addr)
+ {
+ 	/* Replace fake return address with real one. */
++	struct pt_regs *regs = (struct pt_regs *)fregs;
+ 	regs->gprs[14] = correct_ret_addr;
+ }
+ NOKPROBE_SYMBOL(arch_rethook_fixup_return);
+@@ -24,9 +26,9 @@ NOKPROBE_SYMBOL(arch_rethook_fixup_return);
+ /*
+  * Called from arch_rethook_trampoline
+  */
+-unsigned long arch_rethook_trampoline_callback(struct pt_regs *regs)
++unsigned long arch_rethook_trampoline_callback(struct ftrace_regs *fregs)
+ {
+-	return rethook_trampoline_handler(regs, regs->gprs[15]);
++	return rethook_trampoline_handler(fregs, fregs->regs.gprs[15]);
+ }
+ NOKPROBE_SYMBOL(arch_rethook_trampoline_callback);
+ 
+diff --git a/arch/s390/kernel/rethook.h b/arch/s390/kernel/rethook.h
+index 32f069eed3f3..0fe62424fc78 100644
+--- a/arch/s390/kernel/rethook.h
++++ b/arch/s390/kernel/rethook.h
+@@ -2,6 +2,6 @@
+ #ifndef __S390_RETHOOK_H
+ #define __S390_RETHOOK_H
+ 
+-unsigned long arch_rethook_trampoline_callback(struct pt_regs *regs);
++unsigned long arch_rethook_trampoline_callback(struct ftrace_regs *fregs);
+ 
+ #endif
+
