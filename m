@@ -2,29 +2,29 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D8AEE14D4
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  7 Sep 2023 02:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 151DAEE14DB
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  7 Sep 2023 02:47:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239813AbjIGCry (ORCPT
+        id S242631AbjIGCrz (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 6 Sep 2023 22:47:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38962 "EHLO
+        Wed, 6 Sep 2023 22:47:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232049AbjIGCrx (ORCPT
+        with ESMTP id S240409AbjIGCry (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 6 Sep 2023 22:47:53 -0400
+        Wed, 6 Sep 2023 22:47:54 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C644019A6;
-        Wed,  6 Sep 2023 19:47:49 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 678C7C433CB;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1600E19A9;
+        Wed,  6 Sep 2023 19:47:50 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABAADC433D9;
         Thu,  7 Sep 2023 02:47:49 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.96)
         (envelope-from <rostedt@goodmis.org>)
-        id 1qe53r-000BHq-1P;
+        id 1qe53r-000BIx-2l;
         Wed, 06 Sep 2023 22:48:03 -0400
-Message-ID: <20230907024803.250873643@goodmis.org>
+Message-ID: <20230907024803.666889383@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Wed, 06 Sep 2023 22:47:11 -0400
+Date:   Wed, 06 Sep 2023 22:47:13 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
@@ -32,8 +32,8 @@ Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Zheng Yejian <zhengyejian1@huawei.com>,
         Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Ajay Kaher <akaher@vmware.com>
-Subject: [PATCH 1/6] tracefs/eventfs: Use dput to free the toplevel events directory
+        stable@vger.kernel.org
+Subject: [PATCH 3/6] tracing: Have tracing_max_latency inc the trace array ref count
 References: <20230907024710.866917011@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -43,124 +43,76 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Currently when rmdir on an instance is done, eventfs_remove_events_dir()
-is called and it does a dput on the dentry and then frees the
-eventfs_inode that represents the events directory.
+The tracing_max_latency file points to the trace_array max_latency field.
+For an instance, if the file is opened and the instance is deleted,
+reading or writing to the file will cause a use after free.
 
-But there's no protection against a reader reading the top level events
-directory at the same time and we can get a use after free error. Instead,
-use the dput() associated to the dentry to also free the eventfs_inode
-associated to the events directory, as that will get called when the last
-reference to the directory is released.
+Up the ref count of the trace_array when tracing_max_latency is opened.
 
 Link: https://lore.kernel.org/all/1cb3aee2-19af-c472-e265-05176fe9bd84@huawei.com/
 
-Cc: Ajay Kaher <akaher@vmware.com>
-Fixes: 5bdcd5f5331a2 eventfs: ("Implement removal of meta data from eventfs")
-Reported-by: Zheng Yejian <zhengyejian1@huawei.com>
+Cc: stable@vger.kernel.org
+Fixes: 8530dec63e7b4 ("tracing: Add tracing_check_open_get_tr()")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-Changes since v1: https://lore.kernel.org/linux-trace-kernel/20230905183332.628d7cc0@gandalf.local.home
- - Removed left over "ei" variable (kernel test robot)
+ kernel/trace/trace.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
- fs/tracefs/event_inode.c | 17 ++++++++++++-----
- fs/tracefs/inode.c       |  2 +-
- fs/tracefs/internal.h    |  5 +++--
- 3 files changed, 16 insertions(+), 8 deletions(-)
-
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index fa1a1679a886..609ccb5b7cfc 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -185,17 +185,27 @@ static struct dentry *create_dir(const char *name, struct dentry *parent, void *
- 
- /**
-  * eventfs_set_ef_status_free - set the ef->status to free
-+ * @ti: the tracefs_inode of the dentry
-  * @dentry: dentry who's status to be freed
-  *
-  * eventfs_set_ef_status_free will be called if no more
-  * references remain
-  */
--void eventfs_set_ef_status_free(struct dentry *dentry)
-+void eventfs_set_ef_status_free(struct tracefs_inode *ti, struct dentry *dentry)
- {
- 	struct tracefs_inode *ti_parent;
-+	struct eventfs_inode *ei;
- 	struct eventfs_file *ef;
- 
- 	mutex_lock(&eventfs_mutex);
-+
-+	/* The top level events directory may be freed by this */
-+	if (unlikely(ti->flags & TRACEFS_EVENT_TOP_INODE)) {
-+		ei = ti->private;
-+		kfree(ei);
-+		goto out;
-+	}
-+
- 	ti_parent = get_tracefs(dentry->d_parent->d_inode);
- 	if (!ti_parent || !(ti_parent->flags & TRACEFS_EVENT_INODE))
- 		goto out;
-@@ -510,7 +520,7 @@ struct dentry *eventfs_create_events_dir(const char *name,
- 	INIT_LIST_HEAD(&ei->e_top_files);
- 
- 	ti = get_tracefs(inode);
--	ti->flags |= TRACEFS_EVENT_INODE;
-+	ti->flags |= TRACEFS_EVENT_INODE | TRACEFS_EVENT_TOP_INODE;
- 	ti->private = ei;
- 
- 	inode->i_mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
-@@ -806,7 +816,6 @@ void eventfs_remove(struct eventfs_file *ef)
- void eventfs_remove_events_dir(struct dentry *dentry)
- {
- 	struct tracefs_inode *ti;
--	struct eventfs_inode *ei;
- 
- 	if (!dentry || !dentry->d_inode)
- 		return;
-@@ -815,8 +824,6 @@ void eventfs_remove_events_dir(struct dentry *dentry)
- 	if (!ti || !(ti->flags & TRACEFS_EVENT_INODE))
- 		return;
- 
--	ei = ti->private;
- 	d_invalidate(dentry);
- 	dput(dentry);
--	kfree(ei);
- }
-diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-index 3b8dd938b1c8..891653ba9cf3 100644
---- a/fs/tracefs/inode.c
-+++ b/fs/tracefs/inode.c
-@@ -385,7 +385,7 @@ static void tracefs_dentry_iput(struct dentry *dentry, struct inode *inode)
- 
- 	ti = get_tracefs(inode);
- 	if (ti && ti->flags & TRACEFS_EVENT_INODE)
--		eventfs_set_ef_status_free(dentry);
-+		eventfs_set_ef_status_free(ti, dentry);
- 	iput(inode);
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 0827037ee3b8..c8b8b4c6feaf 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -1772,7 +1772,7 @@ static void trace_create_maxlat_file(struct trace_array *tr,
+ 	init_irq_work(&tr->fsnotify_irqwork, latency_fsnotify_workfn_irq);
+ 	tr->d_max_latency = trace_create_file("tracing_max_latency",
+ 					      TRACE_MODE_WRITE,
+-					      d_tracer, &tr->max_latency,
++					      d_tracer, tr,
+ 					      &tracing_max_lat_fops);
  }
  
-diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index 69c2b1d87c46..4f2e49e2197b 100644
---- a/fs/tracefs/internal.h
-+++ b/fs/tracefs/internal.h
-@@ -3,7 +3,8 @@
- #define _TRACEFS_INTERNAL_H
+@@ -1805,7 +1805,7 @@ void latency_fsnotify(struct trace_array *tr)
  
- enum {
--	TRACEFS_EVENT_INODE     = BIT(1),
-+	TRACEFS_EVENT_INODE		= BIT(1),
-+	TRACEFS_EVENT_TOP_INODE		= BIT(2),
+ #define trace_create_maxlat_file(tr, d_tracer)				\
+ 	trace_create_file("tracing_max_latency", TRACE_MODE_WRITE,	\
+-			  d_tracer, &tr->max_latency, &tracing_max_lat_fops)
++			  d_tracer, tr, &tracing_max_lat_fops)
+ 
+ #endif
+ 
+@@ -6717,14 +6717,18 @@ static ssize_t
+ tracing_max_lat_read(struct file *filp, char __user *ubuf,
+ 		     size_t cnt, loff_t *ppos)
+ {
+-	return tracing_nsecs_read(filp->private_data, ubuf, cnt, ppos);
++	struct trace_array *tr = filp->private_data;
++
++	return tracing_nsecs_read(&tr->max_latency, ubuf, cnt, ppos);
+ }
+ 
+ static ssize_t
+ tracing_max_lat_write(struct file *filp, const char __user *ubuf,
+ 		      size_t cnt, loff_t *ppos)
+ {
+-	return tracing_nsecs_write(filp->private_data, ubuf, cnt, ppos);
++	struct trace_array *tr = filp->private_data;
++
++	return tracing_nsecs_write(&tr->max_latency, ubuf, cnt, ppos);
+ }
+ 
+ #endif
+@@ -7778,10 +7782,11 @@ static const struct file_operations tracing_thresh_fops = {
+ 
+ #ifdef CONFIG_TRACER_MAX_TRACE
+ static const struct file_operations tracing_max_lat_fops = {
+-	.open		= tracing_open_generic,
++	.open		= tracing_open_generic_tr,
+ 	.read		= tracing_max_lat_read,
+ 	.write		= tracing_max_lat_write,
+ 	.llseek		= generic_file_llseek,
++	.release	= tracing_release_generic_tr,
  };
+ #endif
  
- struct tracefs_inode {
-@@ -24,6 +25,6 @@ struct inode *tracefs_get_inode(struct super_block *sb);
- struct dentry *eventfs_start_creating(const char *name, struct dentry *parent);
- struct dentry *eventfs_failed_creating(struct dentry *dentry);
- struct dentry *eventfs_end_creating(struct dentry *dentry);
--void eventfs_set_ef_status_free(struct dentry *dentry);
-+void eventfs_set_ef_status_free(struct tracefs_inode *ti, struct dentry *dentry);
- 
- #endif /* _TRACEFS_INTERNAL_H */
 -- 
 2.40.1
