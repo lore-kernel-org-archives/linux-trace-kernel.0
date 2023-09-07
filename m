@@ -2,78 +2,90 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DDDEE14C3
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  7 Sep 2023 02:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3531EE14D7
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  7 Sep 2023 02:29:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237659AbjIGC3h (ORCPT
+        id S244081AbjIGC3y (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 6 Sep 2023 22:29:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34252 "EHLO
+        Wed, 6 Sep 2023 22:29:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229498AbjIGC3h (ORCPT
+        with ESMTP id S245052AbjIGC3w (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 6 Sep 2023 22:29:37 -0400
+        Wed, 6 Sep 2023 22:29:52 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D746C12C;
-        Wed,  6 Sep 2023 19:29:32 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A58E7C433C8;
-        Thu,  7 Sep 2023 02:29:31 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 683341BD3;
+        Wed,  6 Sep 2023 19:29:45 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5C04C433C9;
+        Thu,  7 Sep 2023 02:29:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694053772;
-        bh=4jvhHwmojf1N1ScmiTRSf81bUPIFUZAdFcnyTSgTh30=;
-        h=From:To:Cc:Subject:Date:From;
-        b=dp5fJs4bWQca4lDJUBnJZn7y/0m70XnX03LEKYPGjcmIO/TJ76AkgpmSJH369axGd
-         ofP7ksIhxB3n1u4kO3nkzyC7pN0y8NbgQntwcqfqWJpPt0lvSFI8k9EIwKnnYOt/Tr
-         jFBBAKaSwjJ2PxXF2naDgZcFJxN2QHtXrFCyNZrBh0UmTGa7HAQbQPY7KMlEKPSkPk
-         KGGwo+uYKxfd9NwBmgZqSGfyzG7kSPeBOlb6uhcdOabuawy27ruTmVbWl6VZLSfT/y
-         FEKDUGZHH4/RahCdsa8bgxaFqe+EFdUzYq9de/UwZU4H6+LZKu2ttvEw5+7zqWfpal
-         Xwzh0lpSPHWeg==
+        s=k20201202; t=1694053785;
+        bh=BKOeFu7T8a2LEb2S23swx71FouyPaLhdxkSplv88jDE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kW9lSKJUK8+ODGx8+zLAuwY4U8iF1ZuvoO7A+S27Q/xz6o4XPq68SwXNgzmyYnuEj
+         7WyyAtobo0uu9GfdSX6ATJ6HmrbwpUrlbRY76oIle3a7639PBD8FsDroWOedtlhvBJ
+         BprdBWHVEqzGCzw1lDqWeyDNOvDtW4K3fbPjftNElyFGevEYFcZI9LzRv05kW1qN4M
+         6PYPngTZqKcq7sHlV9uEdLmA9k+RYmpT5Y6vpkCEZmF6/KzzVksprDIJzoQbnn7lf6
+         8EYD5qEPNvxsMDKaO3Nq5KDn2d3yN6qiyuRZxCJf3DJt5CLXz0xiLjdo+Z3cOkkHoo
+         eI3cefVYuwqfg==
 From:   SeongJae Park <sj@kernel.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     SeongJae Park <sj@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+Cc:     SeongJae Park <sj@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>, damon@lists.linux.dev,
-        linux-mm@kvack.org, linux-doc@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 00/11] mm/damon: misc fixups for documents, comments and its tracepoint
-Date:   Thu,  7 Sep 2023 02:29:18 +0000
-Message-Id: <20230907022929.91361-1-sj@kernel.org>
+        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 11/11] mm/damon/core: remove 'struct target *' parameter from damon_aggregated tracepoint
+Date:   Thu,  7 Sep 2023 02:29:29 +0000
+Message-Id: <20230907022929.91361-12-sj@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230907022929.91361-1-sj@kernel.org>
+References: <20230907022929.91361-1-sj@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-This patchset contains miscellaneous simple fixups for documents, comments and
-tracepoint of DAMON.
+damon_aggregateed tracepoint is receiving 'struct target *', but doesn't
+use it.  Remove it from the prototype.
 
-SeongJae Park (11):
-  Docs/admin-guide/mm/damon/usage: fixup missed :ref: keyword
-  Docs/admin-guide/mm/damon/usage: place debugfs usage at the bottom
-  Docs/admin-guide/mm/damon/usage: move debugfs intro to the bottom of
-    the section
-  Docs/mm/damon/design: explicitly introduce ``nr_accesses``
-  Docs/admin-guide/mm/damon/usage: explain the format of damon_aggregate
-    tracepoint
-  Docs/mm/damon/design: add a section for kdamond and DAMON context
-  Docs/admin-guide/mm/damon/usage: link design doc for details of
-    kdamond and context
-  mm/damon/core: fix a comment about damon_set_attrs() call timings
-  mm/damon/core: add more comments for nr_accesses
-  mm/damon/core: remove duplicated comment for watermarks-based
-    deactivation
-  mm/damon/core: remove 'struct target *' parameter from
-    damon_aggregated tracepoint
+Signed-off-by: SeongJae Park <sj@kernel.org>
+---
+ include/trace/events/damon.h | 6 +++---
+ mm/damon/core.c              | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
- Documentation/admin-guide/mm/damon/usage.rst | 86 +++++++++++---------
- Documentation/mm/damon/design.rst            | 23 +++++-
- include/linux/damon.h                        | 22 ++---
- include/trace/events/damon.h                 |  6 +-
- mm/damon/core.c                              |  8 +-
- 5 files changed, 90 insertions(+), 55 deletions(-)
-
-
-base-commit: ac8e8303c9c11b5c2e1d2e110866eb66c9fd771e
+diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
+index c79f1d4c39af..0b8d13bde17a 100644
+--- a/include/trace/events/damon.h
++++ b/include/trace/events/damon.h
+@@ -11,10 +11,10 @@
+ 
+ TRACE_EVENT(damon_aggregated,
+ 
+-	TP_PROTO(struct damon_target *t, unsigned int target_id,
+-		struct damon_region *r, unsigned int nr_regions),
++	TP_PROTO(unsigned int target_id, struct damon_region *r,
++		unsigned int nr_regions),
+ 
+-	TP_ARGS(t, target_id, r, nr_regions),
++	TP_ARGS(target_id, r, nr_regions),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(unsigned long, target_id)
+diff --git a/mm/damon/core.c b/mm/damon/core.c
+index 1ce483a3c2b5..b895f70acb2d 100644
+--- a/mm/damon/core.c
++++ b/mm/damon/core.c
+@@ -805,7 +805,7 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
+ 		struct damon_region *r;
+ 
+ 		damon_for_each_region(r, t) {
+-			trace_damon_aggregated(t, ti, r, damon_nr_regions(t));
++			trace_damon_aggregated(ti, r, damon_nr_regions(t));
+ 			r->last_nr_accesses = r->nr_accesses;
+ 			r->nr_accesses = 0;
+ 		}
 -- 
 2.25.1
 
