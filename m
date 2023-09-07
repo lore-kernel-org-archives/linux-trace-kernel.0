@@ -2,55 +2,78 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A9EEE14A9
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  7 Sep 2023 01:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DDDEE14C3
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  7 Sep 2023 02:29:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232548AbjIGBoB (ORCPT
+        id S237659AbjIGC3h (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 6 Sep 2023 21:44:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36384 "EHLO
+        Wed, 6 Sep 2023 22:29:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231173AbjIGBoB (ORCPT
+        with ESMTP id S229498AbjIGC3h (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 6 Sep 2023 21:44:01 -0400
+        Wed, 6 Sep 2023 22:29:37 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CC1A13E;
-        Wed,  6 Sep 2023 18:43:57 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90D47C433C7;
-        Thu,  7 Sep 2023 01:43:55 +0000 (UTC)
-Date:   Wed, 6 Sep 2023 21:44:06 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Zheng Yejian <zhengyejian1@huawei.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>, <akaher@vmware.com>,
-        <linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <mhiramat@kernel.org>,
-        <shuah@kernel.org>, <skhan@linuxfoundation.org>,
-        <yeweihua4@huawei.com>
-Subject: Re: "[PATCH] selftests/ftrace: Correctly enable event in
- instance-event.tc"
-Message-ID: <20230906214406.06233b55@gandalf.local.home>
-In-Reply-To: <6b0fc12d-e6c5-4a05-a6e6-46e5e5c9ae7b@huawei.com>
-References: <b62e6539-7b25-c8ab-6b6c-47e723023297@huawei.com>
-        <20230906142652.191866-1-naresh.kamboju@linaro.org>
-        <20230906145000.29291a1b@gandalf.local.home>
-        <20230906184650.074dfdcf@gandalf.local.home>
-        <6b0fc12d-e6c5-4a05-a6e6-46e5e5c9ae7b@huawei.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D746C12C;
+        Wed,  6 Sep 2023 19:29:32 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A58E7C433C8;
+        Thu,  7 Sep 2023 02:29:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694053772;
+        bh=4jvhHwmojf1N1ScmiTRSf81bUPIFUZAdFcnyTSgTh30=;
+        h=From:To:Cc:Subject:Date:From;
+        b=dp5fJs4bWQca4lDJUBnJZn7y/0m70XnX03LEKYPGjcmIO/TJ76AkgpmSJH369axGd
+         ofP7ksIhxB3n1u4kO3nkzyC7pN0y8NbgQntwcqfqWJpPt0lvSFI8k9EIwKnnYOt/Tr
+         jFBBAKaSwjJ2PxXF2naDgZcFJxN2QHtXrFCyNZrBh0UmTGa7HAQbQPY7KMlEKPSkPk
+         KGGwo+uYKxfd9NwBmgZqSGfyzG7kSPeBOlb6uhcdOabuawy27ruTmVbWl6VZLSfT/y
+         FEKDUGZHH4/RahCdsa8bgxaFqe+EFdUzYq9de/UwZU4H6+LZKu2ttvEw5+7zqWfpal
+         Xwzh0lpSPHWeg==
+From:   SeongJae Park <sj@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     SeongJae Park <sj@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Steven Rostedt <rostedt@goodmis.org>, damon@lists.linux.dev,
+        linux-mm@kvack.org, linux-doc@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 00/11] mm/damon: misc fixups for documents, comments and its tracepoint
+Date:   Thu,  7 Sep 2023 02:29:18 +0000
+Message-Id: <20230907022929.91361-1-sj@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 7 Sep 2023 09:39:56 +0800
-Zheng Yejian <zhengyejian1@huawei.com> wrote:
+This patchset contains miscellaneous simple fixups for documents, comments and
+tracepoint of DAMON.
 
-> Hi, Steve
-> 
-> Only apply this new patch, the kasan issue seems gone.
+SeongJae Park (11):
+  Docs/admin-guide/mm/damon/usage: fixup missed :ref: keyword
+  Docs/admin-guide/mm/damon/usage: place debugfs usage at the bottom
+  Docs/admin-guide/mm/damon/usage: move debugfs intro to the bottom of
+    the section
+  Docs/mm/damon/design: explicitly introduce ``nr_accesses``
+  Docs/admin-guide/mm/damon/usage: explain the format of damon_aggregate
+    tracepoint
+  Docs/mm/damon/design: add a section for kdamond and DAMON context
+  Docs/admin-guide/mm/damon/usage: link design doc for details of
+    kdamond and context
+  mm/damon/core: fix a comment about damon_set_attrs() call timings
+  mm/damon/core: add more comments for nr_accesses
+  mm/damon/core: remove duplicated comment for watermarks-based
+    deactivation
+  mm/damon/core: remove 'struct target *' parameter from
+    damon_aggregated tracepoint
 
-I believe the other patch is required too, as the KASAN I hit pointed
-directly at that.
+ Documentation/admin-guide/mm/damon/usage.rst | 86 +++++++++++---------
+ Documentation/mm/damon/design.rst            | 23 +++++-
+ include/linux/damon.h                        | 22 ++---
+ include/trace/events/damon.h                 |  6 +-
+ mm/damon/core.c                              |  8 +-
+ 5 files changed, 90 insertions(+), 55 deletions(-)
 
--- Steve
+
+base-commit: ac8e8303c9c11b5c2e1d2e110866eb66c9fd771e
+-- 
+2.25.1
+
