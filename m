@@ -2,36 +2,31 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B859EC873E
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  7 Sep 2023 16:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9FBEC8742
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  7 Sep 2023 17:18:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233296AbjIGQhT (ORCPT
+        id S234574AbjIGRSc (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 7 Sep 2023 12:37:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59958 "EHLO
+        Thu, 7 Sep 2023 13:18:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238455AbjIGQhC (ORCPT
+        with ESMTP id S231201AbjIGRSb (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 7 Sep 2023 12:37:02 -0400
+        Thu, 7 Sep 2023 13:18:31 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6614C4ED7;
-        Thu,  7 Sep 2023 09:22:59 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74950C433AD;
-        Thu,  7 Sep 2023 16:11:10 +0000 (UTC)
-Date:   Thu, 7 Sep 2023 12:11:22 -0400
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4B311700;
+        Thu,  7 Sep 2023 10:18:08 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59BB1C433C8;
+        Thu,  7 Sep 2023 16:28:05 +0000 (UTC)
+Date:   Thu, 7 Sep 2023 12:28:20 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Zheng Yejian <zhengyejian1@huawei.com>
-Subject: Re: [PATCH 0/6] tracing: Fix removing instances while
- reading/writing to their files
-Message-ID: <20230907121122.22fc1be9@gandalf.local.home>
-In-Reply-To: <CA+G9fYt1dC7=pggtwX2D3jibbLweg+a2LnvYtxfF1nCnqELZSg@mail.gmail.com>
-References: <20230907024710.866917011@goodmis.org>
-        <CA+G9fYt1dC7=pggtwX2D3jibbLweg+a2LnvYtxfF1nCnqELZSg@mail.gmail.com>
+        Tze-nan Wu <Tze-nan.Wu@mediatek.com>
+Subject: [PATCH] ring-buffer: Do not attempt to read past "commit"
+Message-ID: <20230907122820.0899019c@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -40,16 +35,49 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 7 Sep 2023 18:54:46 +0530
-Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> This patch set applied on top of Linux next master branch and
-> tested selftests ftrace tests [1]. The test run to complete and not
-> found any crashes.
-> 
-> Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+When iterating over the ring buffer while the ring buffer is active, the
+writer can corrupt the reader. There's barriers to help detect this and
+handle it, but that code missed the case where the last event was at the
+very end of the page and has only 4 bytes left.
 
-Thanks Naresh!
+The checks to detect the corruption by the writer to reads needs to see the
+length of the event. If the length in the first 4 bytes is zero then the
+length is stored in the second 4 bytes. But if the writer is in the process
+of updating that code, there's a small window where the length in the first
+4 bytes could be zero even though the length is only 4 bytes. That will
+cause rb_event_length() to read the next 4 bytes which could happen to be off the
+allocated page.
 
--- Steve
+To protect against this, fail immediately if the next event pointer is
+less than 8 bytes from the end of the commit (last byte of data), as all
+events must be a minimum of 8 bytes anyway.
+
+Link: https://lore.kernel.org/all/20230905141245.26470-1-Tze-nan.Wu@mediatek.com/
+
+Reported-by: Tze-nan Wu <Tze-nan.Wu@mediatek.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 72ccf75defd0..a1651edc48d5 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -2390,6 +2390,11 @@ rb_iter_head_event(struct ring_buffer_iter *iter)
+ 	 */
+ 	commit = rb_page_commit(iter_head_page);
+ 	smp_rmb();
++
++	/* An event needs to be at least 8 bytes in size */
++	if (iter->head > commit - 8)
++		goto reset;
++
+ 	event = __rb_page_index(iter_head_page, iter->head);
+ 	length = rb_event_length(event);
+ 
+-- 
+2.40.1
+
