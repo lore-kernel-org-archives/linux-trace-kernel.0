@@ -2,39 +2,42 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F08E3EE57E1
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  8 Sep 2023 07:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3800EE57E1
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  8 Sep 2023 07:50:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234593AbjIHHtP (ORCPT
+        id S229574AbjIHHuo (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 8 Sep 2023 03:49:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39540 "EHLO
+        Fri, 8 Sep 2023 03:50:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234999AbjIHHtO (ORCPT
+        with ESMTP id S229715AbjIHHun (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 8 Sep 2023 03:49:14 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80DFB1BFC
-        for <linux-trace-kernel@vger.kernel.org>; Fri,  8 Sep 2023 00:48:27 -0700 (PDT)
-Received: from kwepemi500008.china.huawei.com (unknown [172.30.72.53])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Rhp8M48pZz1M9Bj
-        for <linux-trace-kernel@vger.kernel.org>; Fri,  8 Sep 2023 15:46:27 +0800 (CST)
+        Fri, 8 Sep 2023 03:50:43 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 653941FF6
+        for <linux-trace-kernel@vger.kernel.org>; Fri,  8 Sep 2023 00:50:00 -0700 (PDT)
+Received: from kwepemi500008.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Rhp6q0ZCtztSL1;
+        Fri,  8 Sep 2023 15:45:07 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemi500008.china.huawei.com
  (7.221.188.139) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Fri, 8 Sep
- 2023 15:48:17 +0800
+ 2023 15:49:07 +0800
 From:   Jinjie Ruan <ruanjinjie@huawei.com>
-To:     <linux-trace-kernel@vger.kernel.org>
+To:     <linux-trace-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ajay Kaher <akaher@vmware.com>
 CC:     <ruanjinjie@huawei.com>
 Subject: [PATCH] eventfs: Fix the NULL pointer dereference bug in eventfs_remove_rec()
-Date:   Fri, 8 Sep 2023 15:48:16 +0800
-Message-ID: <20230908074816.3724716-1-ruanjinjie@huawei.com>
+Date:   Fri, 8 Sep 2023 15:49:03 +0800
+Message-ID: <20230908074903.3724778-1-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
 X-Originating-IP: [10.90.53.73]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemi500008.china.huawei.com (7.221.188.139)
 X-CFilter-Loop: Reflected
 Precedence: bulk
