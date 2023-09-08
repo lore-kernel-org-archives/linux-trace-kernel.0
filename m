@@ -2,38 +2,32 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F85AEE7FE5
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  8 Sep 2023 12:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8324EEB570
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  8 Sep 2023 20:39:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238471AbjIHMbq (ORCPT
+        id S236743AbjIHUjk (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 8 Sep 2023 08:31:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33118 "EHLO
+        Fri, 8 Sep 2023 16:39:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234207AbjIHMbq (ORCPT
+        with ESMTP id S242000AbjIHUjk (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 8 Sep 2023 08:31:46 -0400
+        Fri, 8 Sep 2023 16:39:40 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 538FD1BF1;
-        Fri,  8 Sep 2023 05:31:42 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4040EC433CA;
-        Fri,  8 Sep 2023 12:31:40 +0000 (UTC)
-Date:   Fri, 8 Sep 2023 08:31:56 -0400
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF894B2;
+        Fri,  8 Sep 2023 13:39:15 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE3C4C433C8;
+        Fri,  8 Sep 2023 20:39:14 +0000 (UTC)
+Date:   Fri, 8 Sep 2023 16:39:29 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sven Schnelle <svens@linux.ibm.com>
-Cc:     Ajay Kaher <akaher@vmware.com>, shuah@kernel.org,
-        mhiramat@kernel.org, chinglinyu@google.com,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, lkp@intel.com,
-        namit@vmware.com, oe-lkp@lists.linux.dev, amakhalov@vmware.com,
-        er.ajay.kaher@gmail.com, srivatsa@csail.mit.edu, tkundu@vmware.com,
-        vsirnapalli@vmware.com
-Subject: Re: [PATCH v4 09/10] eventfs: Move tracing/events to eventfs
-Message-ID: <20230908083156.7d261adb@gandalf.local.home>
-In-Reply-To: <yt9dr0n8kgkj.fsf@linux.ibm.com>
-References: <1689248004-8158-1-git-send-email-akaher@vmware.com>
-        <1689248004-8158-10-git-send-email-akaher@vmware.com>
-        <yt9dr0n8kgkj.fsf@linux.ibm.com>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sven Schnelle <svens@linux.ibm.com>
+Subject: [RESEND][PATCH] tracing/synthetic: Fix order of struct
+ trace_dynamic_info
+Message-ID: <20230908163929.2c25f3dc@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -42,33 +36,87 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 08 Sep 2023 14:14:20 +0200
-Sven Schnelle <svens@linux.ibm.com> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> Ajay Kaher <akaher@vmware.com> writes:
-> 
-> > Till now /sys/kernel/debug/tracing/events is a part of tracefs,
-> > with-in this patch creating 'events' and it's sub-dir as eventfs.
-> > Basically replacing tracefs calls with eventfs calls for 'events'.
-> >
-> > Signed-off-by: Ajay Kaher <akaher@vmware.com>
-> > Co-developed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> > Tested-by: Ching-lin Yu <chinglinyu@google.com>
-> > ---
-> >  fs/tracefs/inode.c           | 18 ++++++++++
-> >  include/linux/trace_events.h |  1 +
-> >  kernel/trace/trace.h         |  2 +-
-> >  kernel/trace/trace_events.c  | 67 +++++++++++++++++++-----------------
-> >  4 files changed, 55 insertions(+), 33 deletions(-)  
-> 
-> With this patchset in next-20230908 the following crash is observed on
-> s390 while running ftracetest test.d/instances/instance-event.tc:
-> 
-> (It also crashes without KASAN, just not on every try)
+To make handling BIG and LITTLE endian better the offset/len of dynamic
+fields of the synthetic events was changed into a structure of:
 
-Yep, and I've spent the last few days fixing this :-)
+ struct trace_dynamic_info {
+ #ifdef CONFIG_CPU_BIG_ENDIAN
+	u16	offset;
+	u16	len;
+ #else
+	u16	len;
+	u16	offset;
+ #endif
+ };
 
-  https://lore.kernel.org/linux-trace-kernel/20230907024710.866917011@goodmis.org/
+to replace the manual changes of:
 
--- Steve
+ data_offset = offset & 0xffff;
+ data_offest = len << 16;
+
+But if you look closely, the above is:
+
+  <len> << 16 | offset
+
+Which in little endian would be in memory:
+
+ offset_lo offset_hi len_lo len_hi
+
+and in big endian:
+
+ len_hi len_lo offset_hi offset_lo
+
+Which if broken into a structure would be:
+
+ struct trace_dynamic_info {
+ #ifdef CONFIG_CPU_BIG_ENDIAN
+	u16	len;
+	u16	offset;
+ #else
+	u16	offset;
+	u16	len;
+ #endif
+ };
+
+Which is the opposite of what was defined.
+
+Fix this and just to be safe also add "__packed".
+
+Link: https://lore.kernel.org/all/20230908154417.5172e343@gandalf.local.home/
+
+Cc: stable@vger.kernel.org
+Fixes: ddeea494a16f3 ("tracing/synthetic: Use union instead of casts")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+
+ [ Resending to the correct mailing list this time :-p ]
+
+ include/linux/trace_events.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+index 12f875e9e69a..21ae37e49319 100644
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -62,13 +62,13 @@ void trace_event_printf(struct trace_iterator *iter, const char *fmt, ...);
+ /* Used to find the offset and length of dynamic fields in trace events */
+ struct trace_dynamic_info {
+ #ifdef CONFIG_CPU_BIG_ENDIAN
+-	u16	offset;
+ 	u16	len;
++	u16	offset;
+ #else
+-	u16	len;
+ 	u16	offset;
++	u16	len;
+ #endif
+-};
++} __packed;
+ 
+ /*
+  * The trace entry - the most basic unit of tracing. This is what
+-- 
+2.40.1
+
