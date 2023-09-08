@@ -2,107 +2,73 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C72EEEC8756
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  8 Sep 2023 01:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA74EB8FB1
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  8 Sep 2023 02:19:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238288AbjIHBkK (ORCPT
+        id S241202AbjIHCTu (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 7 Sep 2023 21:40:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33278 "EHLO
+        Thu, 7 Sep 2023 22:19:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235744AbjIHBkJ (ORCPT
+        with ESMTP id S231144AbjIHCTt (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 7 Sep 2023 21:40:09 -0400
+        Thu, 7 Sep 2023 22:19:49 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CEE919BD;
-        Thu,  7 Sep 2023 18:40:05 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74584C433C8;
-        Fri,  8 Sep 2023 01:40:04 +0000 (UTC)
-Date:   Thu, 7 Sep 2023 21:40:20 -0400
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B401D1BD5;
+        Thu,  7 Sep 2023 19:19:45 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A94DC433C7;
+        Fri,  8 Sep 2023 02:19:45 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.96)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1qeR6H-000MYU-1o;
+        Thu, 07 Sep 2023 22:20:01 -0400
+Message-ID: <20230908022001.371815239@goodmis.org>
+User-Agent: quilt/0.66
+Date:   Thu, 07 Sep 2023 22:19:11 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Zheng Yejian <zhengyejian1@huawei.com>
-Cc:     <mhiramat@kernel.org>, <shuah@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH] selftests/ftrace: Test toplevel-enable for instance
-Message-ID: <20230907214020.34981ffd@gandalf.local.home>
-In-Reply-To: <20230710175415.2ec0061f@gandalf.local.home>
-References: <20230509203659.1173917-1-zhengyejian1@huawei.com>
-        <20230609174626.66659892@gandalf.local.home>
-        <20230710175415.2ec0061f@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ajay Kaher <akaher@vmware.com>
+Subject: [PATCH 1/2] tracing: Use the new eventfs descriptor for print trigger
+References: <20230908021910.507739229@goodmis.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 10 Jul 2023 17:54:36 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> Hi Shuah,
-> 
-> I think this dropped through the cracks. Can you take this through your
-> tree?
+The check to create the print event "trigger" was using the obsolete "dir"
+value of the trace_event_file to determine if it should create the trigger
+or not. But that value will now be NULL because it uses the event file
+descriptor.
 
-ping?
+Change it to test the "ef" field of the trace_event_file structure so that
+the trace_marker "trigger" file appears again.
 
+Fixes: 27152bceea1df ("eventfs: Move tracing/events to eventfs")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> 
-> -- Steve
-> 
-> On Fri, 9 Jun 2023 17:46:26 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > On Wed, 10 May 2023 04:36:59 +0800
-> > Zheng Yejian <zhengyejian1@huawei.com> wrote:
-> >   
-> > > 'available_events' is actually not required by
-> > > 'test.d/event/toplevel-enable.tc' and its Existence has been tested in
-> > > 'test.d/00basic/basic4.tc'.
-> > > 
-> > > So the require of 'available_events' can be dropped and then we can add
-> > > 'instance' flag to test 'test.d/event/toplevel-enable.tc' for instance.
-> > > 
-> > > Test result show as below:
-> > >  # ./ftracetest test.d/event/toplevel-enable.tc
-> > >  === Ftrace unit tests ===
-> > >  [1] event tracing - enable/disable with top level files [PASS]
-> > >  [2] (instance)  event tracing - enable/disable with top level files [PASS]
-> > > 
-> > >  # of passed:  2
-> > >  # of failed:  0
-> > >  # of unresolved:  0
-> > >  # of untested:  0
-> > >  # of unsupported:  0
-> > >  # of xfailed:  0
-> > >  # of undefined(test bug):  0
-> > > 
-> > > Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>    
-> > 
-> > Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> > 
-> > -- Steve
-> >   
-> > > ---
-> > >  tools/testing/selftests/ftrace/test.d/event/toplevel-enable.tc | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/tools/testing/selftests/ftrace/test.d/event/toplevel-enable.tc b/tools/testing/selftests/ftrace/test.d/event/toplevel-enable.tc
-> > > index 93c10ea42a68..8b8e1aea985b 100644
-> > > --- a/tools/testing/selftests/ftrace/test.d/event/toplevel-enable.tc
-> > > +++ b/tools/testing/selftests/ftrace/test.d/event/toplevel-enable.tc
-> > > @@ -1,7 +1,8 @@
-> > >  #!/bin/sh
-> > >  # SPDX-License-Identifier: GPL-2.0
-> > >  # description: event tracing - enable/disable with top level files
-> > > -# requires: available_events set_event events/enable
-> > > +# requires: set_event events/enable
-> > > +# flags: instance
-> > >  
-> > >  do_reset() {
-> > >      echo > set_event    
-
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 0608ad20cf30..122c23c9eb28 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -9792,8 +9792,8 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
+ 			  tr, &tracing_mark_fops);
+ 
+ 	file = __find_event_file(tr, "ftrace", "print");
+-	if (file && file->dir)
+-		trace_create_file("trigger", TRACE_MODE_WRITE, file->dir,
++	if (file && file->ef)
++		eventfs_add_file("trigger", TRACE_MODE_WRITE, file->ef,
+ 				  file, &event_trigger_fops);
+ 	tr->trace_marker_file = file;
+ 
+-- 
+2.40.1
