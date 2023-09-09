@@ -2,134 +2,154 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DAEEEB57D
-	for <linux-trace-kernel@archiver.kernel.org>; Sat,  9 Sep 2023 03:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3FFEEB564
+	for <linux-trace-kernel@archiver.kernel.org>; Sat,  9 Sep 2023 07:28:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230318AbjIIDJg (ORCPT
+        id S242140AbjIIH21 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 8 Sep 2023 23:09:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47158 "EHLO
+        Sat, 9 Sep 2023 03:28:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjIIDJg (ORCPT
+        with ESMTP id S231202AbjIIH20 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 8 Sep 2023 23:09:36 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66B0E1FC0;
-        Fri,  8 Sep 2023 20:09:31 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D875CC433C8;
-        Sat,  9 Sep 2023 03:09:29 +0000 (UTC)
-Date:   Fri, 8 Sep 2023 23:09:47 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Zheng Yejian <zhengyejian1@huawei.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Sat, 9 Sep 2023 03:28:26 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C833198E
+        for <linux-trace-kernel@vger.kernel.org>; Sat,  9 Sep 2023 00:28:21 -0700 (PDT)
+Received: from kwepemi500008.china.huawei.com (unknown [172.30.72.55])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4RjPfp6K51z1M8ZZ;
+        Sat,  9 Sep 2023 15:26:26 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemi500008.china.huawei.com
+ (7.221.188.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Sat, 9 Sep
+ 2023 15:28:17 +0800
+From:   Jinjie Ruan <ruanjinjie@huawei.com>
+To:     <linux-trace-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Ajay Kaher <akaher@vmware.com>
-Subject: Re: [PATCH 1/6] tracefs/eventfs: Use dput to free the toplevel
- events directory
-Message-ID: <20230908230947.09e1565f@gandalf.local.home>
-In-Reply-To: <20230908164553.aff280695dd77b2b9cab35b8@kernel.org>
-References: <20230907024710.866917011@goodmis.org>
-        <20230907024803.250873643@goodmis.org>
-        <20230908164553.aff280695dd77b2b9cab35b8@kernel.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+CC:     <ruanjinjie@huawei.com>
+Subject: [PATCH v2] eventfs: Fix the NULL pointer dereference bug in eventfs_remove_rec()
+Date:   Sat, 9 Sep 2023 15:28:16 +0800
+Message-ID: <20230909072817.182846-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.90.53.73]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemi500008.china.huawei.com (7.221.188.139)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 8 Sep 2023 16:45:53 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+Inject fault while probing btrfs.ko, if kstrdup() fails in
+eventfs_prepare_ef() in eventfs_add_dir(), it will return ERR_PTR
+to assign file->ef. But the eventfs_remove() check NULL in
+trace_module_remove_events(), which causes the below NULL
+pointer dereference.
 
-> Hi, 
-> 
-> On Wed, 06 Sep 2023 22:47:11 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> > 
-> > Currently when rmdir on an instance is done, eventfs_remove_events_dir()
-> > is called and it does a dput on the dentry and then frees the
-> > eventfs_inode that represents the events directory.
-> > 
-> > But there's no protection against a reader reading the top level events
-> > directory at the same time and we can get a use after free error. Instead,
-> > use the dput() associated to the dentry to also free the eventfs_inode
-> > associated to the events directory, as that will get called when the last
-> > reference to the directory is released.
-> > 
-> > Link: https://lore.kernel.org/all/1cb3aee2-19af-c472-e265-05176fe9bd84@huawei.com/
-> > 
-> > Cc: Ajay Kaher <akaher@vmware.com>
-> > Fixes: 5bdcd5f5331a2 eventfs: ("Implement removal of meta data from eventfs")
-> > Reported-by: Zheng Yejian <zhengyejian1@huawei.com>
-> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> > ---
-> > Changes since v1: https://lore.kernel.org/linux-trace-kernel/20230905183332.628d7cc0@gandalf.local.home
-> >  - Removed left over "ei" variable (kernel test robot)
-> > 
-> >  fs/tracefs/event_inode.c | 17 ++++++++++++-----
-> >  fs/tracefs/inode.c       |  2 +-
-> >  fs/tracefs/internal.h    |  5 +++--
-> >  3 files changed, 16 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-> > index fa1a1679a886..609ccb5b7cfc 100644
-> > --- a/fs/tracefs/event_inode.c
-> > +++ b/fs/tracefs/event_inode.c
-> > @@ -185,17 +185,27 @@ static struct dentry *create_dir(const char *name, struct dentry *parent, void *
-> >  
-> >  /**
-> >   * eventfs_set_ef_status_free - set the ef->status to free
-> > + * @ti: the tracefs_inode of the dentry
-> >   * @dentry: dentry who's status to be freed
-> >   *
-> >   * eventfs_set_ef_status_free will be called if no more
-> >   * references remain
-> >   */
-> > -void eventfs_set_ef_status_free(struct dentry *dentry)
-> > +void eventfs_set_ef_status_free(struct tracefs_inode *ti, struct dentry *dentry)
-> >  {
-> >  	struct tracefs_inode *ti_parent;
-> > +	struct eventfs_inode *ei;
-> >  	struct eventfs_file *ef;
-> >  
-> >  	mutex_lock(&eventfs_mutex);
-> > +
-> > +	/* The top level events directory may be freed by this */
-> > +	if (unlikely(ti->flags & TRACEFS_EVENT_TOP_INODE)) {
-> > +		ei = ti->private;
-> > +		kfree(ei);  
-> 
-> Don't we need to clear 'ti->private' here to avoid accessing
-> (or double free) ti->private somewhare?
+As both Masami and Steven suggest, use IS_ERR_OR_NULL() to
+check ef in eventfs_remove_rec(), and fix the same issue
+in eventfs_remove().
 
-I don't think it's needed but I did add it to
+ Could not create tracefs 'raid56_write' directory
+ Btrfs loaded, zoned=no, fsverity=no
+ Unable to handle kernel NULL pointer dereference at virtual address 000000000000001c
+ Mem abort info:
+   ESR = 0x0000000096000004
+   EC = 0x25: DABT (current EL), IL = 32 bits
+   SET = 0, FnV = 0
+   EA = 0, S1PTW = 0
+   FSC = 0x04: level 0 translation fault
+ Data abort info:
+   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+ user pgtable: 4k pages, 48-bit VAs, pgdp=0000000102544000
+ [000000000000001c] pgd=0000000000000000, p4d=0000000000000000
+ Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+ Dumping ftrace buffer:
+    (ftrace buffer empty)
+ Modules linked in: btrfs(-) libcrc32c xor xor_neon raid6_pq cfg80211 rfkill 8021q garp mrp stp llc ipv6 [last unloaded: btrfs]
+ CPU: 15 PID: 1343 Comm: rmmod Tainted: G                 N 6.5.0+ #40
+ Hardware name: linux,dummy-virt (DT)
+ pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+ pc : eventfs_remove_rec+0x24/0xc0
+ lr : eventfs_remove+0x68/0x1d8
+ sp : ffff800082d63b60
+ x29: ffff800082d63b60 x28: ffffb84b80ddd00c x27: ffffb84b3054ba40
+ x26: 0000000000000002 x25: ffff800082d63bf8 x24: ffffb84b8398e440
+ x23: ffffb84b82af3000 x22: dead000000000100 x21: dead000000000122
+ x20: ffff800082d63bf8 x19: fffffffffffffff4 x18: ffffb84b82508820
+ x17: 0000000000000000 x16: 0000000000000000 x15: 000083bc876a3166
+ x14: 000000000000006d x13: 000000000000006d x12: 0000000000000000
+ x11: 0000000000000001 x10: 00000000000017e0 x9 : 0000000000000001
+ x8 : 0000000000000000 x7 : 0000000000000000 x6 : ffffb84b84289804
+ x5 : 0000000000000000 x4 : 9696969696969697 x3 : ffff33a5b7601f38
+ x2 : 0000000000000000 x1 : ffff800082d63bf8 x0 : fffffffffffffff4
+ Call trace:
+  eventfs_remove_rec+0x24/0xc0
+  eventfs_remove+0x68/0x1d8
+  remove_event_file_dir+0x88/0x100
+  event_remove+0x140/0x15c
+  trace_module_notify+0x1fc/0x230
+  notifier_call_chain+0x98/0x17c
+  blocking_notifier_call_chain+0x4c/0x74
+  __arm64_sys_delete_module+0x1a4/0x298
+  invoke_syscall+0x44/0x100
+  el0_svc_common.constprop.1+0x68/0xe0
+  do_el0_svc+0x1c/0x28
+  el0_svc+0x3c/0xc4
+  el0t_64_sync_handler+0xa0/0xc4
+  el0t_64_sync+0x174/0x178
+ Code: 5400052c a90153b3 aa0003f3 aa0103f4 (f9401400)
+ ---[ end trace 0000000000000000 ]---
+ Kernel panic - not syncing: Oops: Fatal exception
+ SMP: stopping secondary CPUs
+ Dumping ftrace buffer:
+    (ftrace buffer empty)
+ Kernel Offset: 0x384b00c00000 from 0xffff800080000000
+ PHYS_OFFSET: 0xffffcc5b80000000
+ CPU features: 0x88000203,3c020000,1000421b
+ Memory Limit: none
+ Rebooting in 1 seconds..
 
-  https://lore.kernel.org/linux-trace-kernel/20230907175859.6fedbaa2@gandalf.local.home/
+Fixes: 5bdcd5f5331a ("eventfs: Implement removal of meta data from eventfs")
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+Suggested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+---
+v2:
+- Use IS_ERR_OR_NULL() to check instead of IS_ERR() as suggested.
+- Update the commit message.
+---
+ fs/tracefs/event_inode.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Which you reviewed.
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 237c6f370ad9..c354b6013881 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -693,7 +693,7 @@ static void eventfs_remove_rec(struct eventfs_file *ef, struct list_head *head,
+ {
+ 	struct eventfs_file *ef_child;
+ 
+-	if (!ef)
++	if (IS_ERR_OR_NULL(ef))
+ 		return;
+ 	/*
+ 	 * Check recursion depth. It should never be greater than 3:
+@@ -730,7 +730,7 @@ void eventfs_remove(struct eventfs_file *ef)
+ 	struct dentry *dentry_list = NULL;
+ 	struct dentry *dentry;
+ 
+-	if (!ef)
++	if (IS_ERR_OR_NULL(ef))
+ 		return;
+ 
+ 	mutex_lock(&eventfs_mutex);
+-- 
+2.34.1
 
-> 
-> > +		goto out;
-> > +	}
-> > +
-> >  	ti_parent = get_tracefs(dentry->d_parent->d_inode);
-> >  	if (!ti_parent || !(ti_parent->flags & TRACEFS_EVENT_INODE))
-> >  		goto out;  
-> 
-> Here, I guess this "!(ti_parent->flags & TRACEFS_EVENT_INODE)" means this
-> inode is TRACEFS_EVENT_TOP_INODE, so this check may not be needed,
-> is this correct?
-
-The check isn't needed but I like to keep it because it will break things
-badly if it is every called on something that is not an EVENT_INODE.
-
-We could add a WARN() here if not, but this code is not critical if it is
-called without it set.
-
--- Steve
