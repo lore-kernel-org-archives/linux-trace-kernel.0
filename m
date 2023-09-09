@@ -2,29 +2,29 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A71F9EEB585
-	for <linux-trace-kernel@archiver.kernel.org>; Sat,  9 Sep 2023 10:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F17EEB57C
+	for <linux-trace-kernel@archiver.kernel.org>; Sat,  9 Sep 2023 10:20:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344489AbjIIKOu (ORCPT
+        id S236012AbjIIKUZ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 9 Sep 2023 06:14:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55400 "EHLO
+        Sat, 9 Sep 2023 06:20:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229529AbjIIKOu (ORCPT
+        with ESMTP id S1344595AbjIIKUY (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 9 Sep 2023 06:14:50 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE91F10DF
-        for <linux-trace-kernel@vger.kernel.org>; Sat,  9 Sep 2023 03:14:44 -0700 (PDT)
-Received: from kwepemi500008.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RjTJg4P09zNmpr;
-        Sat,  9 Sep 2023 18:10:59 +0800 (CST)
+        Sat, 9 Sep 2023 06:20:24 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC882E6B
+        for <linux-trace-kernel@vger.kernel.org>; Sat,  9 Sep 2023 03:20:19 -0700 (PDT)
+Received: from kwepemi500008.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RjTQl0WXsztRjZ;
+        Sat,  9 Sep 2023 18:16:15 +0800 (CST)
 Received: from [10.67.109.254] (10.67.109.254) by
  kwepemi500008.china.huawei.com (7.221.188.139) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Sat, 9 Sep 2023 18:14:40 +0800
-Message-ID: <bbfa54c0-bc4f-8d07-4781-4e3dd8456f03@huawei.com>
-Date:   Sat, 9 Sep 2023 18:14:40 +0800
+ 15.1.2507.31; Sat, 9 Sep 2023 18:20:17 +0800
+Message-ID: <b3939fc6-2047-3d6f-83da-0843275bcdee@huawei.com>
+Date:   Sat, 9 Sep 2023 18:20:16 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.0
@@ -42,7 +42,7 @@ In-Reply-To: <20230909184830.8a62399dbeeda70199153a37@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.67.109.254]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
  kwepemi500008.china.huawei.com (7.221.188.139)
 X-CFilter-Loop: Reflected
 Precedence: bulk
@@ -161,10 +161,10 @@ On 2023/9/9 17:48, Masami Hiramatsu (Google) wrote:
 > Of course this still cause a warning, so fix the eventfs_add_dir() too.
 > (But fixing the eventfs_add_dir() will remove the error, we may not need
 > this WARN_ON_ONCE() here.)
+
+I think fixing the eventfs_add_dir() is fine.
+
 > Or, any other path did you find which sets ef=ERR_PTR(err)?
-
-Not found so far.
-
 > 
 > Thanks,
 > 
