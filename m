@@ -2,144 +2,187 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC26EE57DF
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 11 Sep 2023 07:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BDECA0ED7
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 11 Sep 2023 22:16:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230332AbjIKH4r (ORCPT
+        id S244076AbjIKWLJ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 11 Sep 2023 03:56:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50242 "EHLO
+        Mon, 11 Sep 2023 18:11:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229606AbjIKH4p (ORCPT
+        with ESMTP id S237304AbjIKMaA (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 11 Sep 2023 03:56:45 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C0CC10EB;
-        Mon, 11 Sep 2023 00:56:05 -0700 (PDT)
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38B7Znx3031186;
-        Mon, 11 Sep 2023 07:55:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : references : date : in-reply-to : message-id : mime-version :
- content-type; s=pp1; bh=GpzhKR8/McdkmCqDKQeMo96YI3yK4SubpAdN6QgN3yE=;
- b=seVq5hwUUW756yIS6ayprp87KpRdxWhOA8u/4EbhCqv3etqFIWLb72T1MsQef3yZisGE
- sdEg4AVHA4cAwMbNMyN/gzrMfmeEct1R/otMToks4WePIBxNcpY5Gz27enfggUXYDY+d
- +1iWipcUN3NtpaXw8XuOuGnDfx+EUhor4tcaIHD0qxO11vJsF4zcv0DuUeHTTPuaTSbS
- qhEBsbn9myxS8JRYV4ZBjDuB3KLhLNBq+N2kCiseC3dE47VWsIQ2wALpW3d8thN5rF4p
- PIwAU21d/UbWW1XBTSS3Vz4QBlup99tJI1KXVfAxIF3sg03KyhYnhBEvbFBpy9DziZZM UQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t1x9v0xj0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Sep 2023 07:55:13 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38B7ZnIR031228;
-        Mon, 11 Sep 2023 07:55:12 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t1x9v0xh4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Sep 2023 07:55:12 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38B6AnIu002410;
-        Mon, 11 Sep 2023 07:55:11 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-        by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3t158jrgmu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Sep 2023 07:55:11 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38B7t9VD42074770
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Sep 2023 07:55:09 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9822B20043;
-        Mon, 11 Sep 2023 07:55:09 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 52F9E20040;
-        Mon, 11 Sep 2023 07:55:09 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
-        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Mon, 11 Sep 2023 07:55:09 +0000 (GMT)
-From:   Sven Schnelle <svens@linux.ibm.com>
-To:     Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Florent Revest <revest@chromium.org>,
-        linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v4 4/9] fprobe: rethook: Use ftrace_regs in fprobe exit
- handler and rethook
-References: <169280372795.282662.9784422934484459769.stgit@devnote2>
-        <169280377434.282662.7610009313268953247.stgit@devnote2>
-        <20230904224038.4420a76ea15931aa40179697@kernel.org>
-        <yt9d5y4pozrl.fsf@linux.ibm.com>
-        <20230905223633.23cd4e6e8407c45b934be477@kernel.org>
-        <yt9dzg1zokyg.fsf@linux.ibm.com>
-        <20230909232435.dfa15f93f1c5eef5b229a7d2@kernel.org>
-Date:   Mon, 11 Sep 2023 09:55:09 +0200
-In-Reply-To: <20230909232435.dfa15f93f1c5eef5b229a7d2@kernel.org> (Masami
-        Hiramatsu's message of "Sat, 9 Sep 2023 23:24:35 +0900")
-Message-ID: <yt9dy1hdi1pe.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+        Mon, 11 Sep 2023 08:30:00 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F2698E4B
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Sep 2023 05:29:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1694435348;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DHwDjcrul9YxmPEcQYx4HYVTPitVbFTJsMO8Jxfoen4=;
+        b=PpBbTIXDCLfnPYlUlQTZyTXWW9iko0onGiJho1tlEcuDiMQOxmdWdiKnJMf1kOZ5GqSRn/
+        sQTIuWaO+qvN4hcg84bxwHuXdPh+sqi3zqNEqm/io6/36cXj6G2Elq+/Mm+N6zUqKJjhHj
+        6evGTUoODgCaj6GeCU3pP64m2ISh9r0=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-671-FycA_-4COlqF526d1xwkPw-1; Mon, 11 Sep 2023 08:29:07 -0400
+X-MC-Unique: FycA_-4COlqF526d1xwkPw-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-401db25510fso32854055e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Sep 2023 05:29:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694435346; x=1695040146;
+        h=content-transfer-encoding:in-reply-to:subject:organization:from
+         :references:cc:to:content-language:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DHwDjcrul9YxmPEcQYx4HYVTPitVbFTJsMO8Jxfoen4=;
+        b=S62q45lBMo/ItRyEjE339pxHIe95uFQLdysmZvhfFXlDNf4sFdP2J0rP/oYJltI7py
+         c870DVTgXQZXD6lw4rNDXsE8rCXLZpYeIPKx1+ewQSqSk6WghL2tQwsH6pbvUpBT9SGY
+         Mv6HeMeibrIY9sGNC48Ir7oIgFizcBAhHbWhuq3vLUinaYAA4QF9CGsIwieLFxoXn4UR
+         yFlzxTZBMkcOicVKdDowlwQxy9eSaOaLJDvD/VJVe9IRAOGK2CEvG3o1rCOg2h2Px+bo
+         Cm0nedMfk4xqhY7K1Hej4qdQkOKojWb/0pkwtx95jyZCrhWGxrUhby9N7mD5YxWtGp9V
+         XYTg==
+X-Gm-Message-State: AOJu0YziS7dceLeNUDJpXsHNCqX7LyL8Dxoj/1necAXFwce42HKIvy/t
+        PHS+ix/QlVcip9Y1X0vglOev5Z1ylh20JpYjUO/WmhS5lVegVsM/gojlTDfYVWJbaEwytTaEDXL
+        np70ajRlZuKvf3fZJsVO2kAKwA09tk76r
+X-Received: by 2002:a05:600c:2208:b0:3fe:f667:4e4c with SMTP id z8-20020a05600c220800b003fef6674e4cmr8229329wml.12.1694435346279;
+        Mon, 11 Sep 2023 05:29:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF0LpLhNizaUMU3zKfHh49aqw4McELTtqbEdG0mSCPhvh4bG6htIZyW8h2QYhMj39he9TwHvA==
+X-Received: by 2002:a05:600c:2208:b0:3fe:f667:4e4c with SMTP id z8-20020a05600c220800b003fef6674e4cmr8229290wml.12.1694435345880;
+        Mon, 11 Sep 2023 05:29:05 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c743:5500:a9bd:94ab:74e9:782f? (p200300cbc7435500a9bd94ab74e9782f.dip0.t-ipconnect.de. [2003:cb:c743:5500:a9bd:94ab:74e9:782f])
+        by smtp.gmail.com with ESMTPSA id z18-20020a1c4c12000000b003fedcd02e2asm9929615wmf.35.2023.09.11.05.29.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Sep 2023 05:29:05 -0700 (PDT)
+Message-ID: <0cc8a118-2522-f666-5bcc-af06263fd352@redhat.com>
+Date:   Mon, 11 Sep 2023 14:29:03 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: yyI6V9BZkA0dSeZO6Ywsa0RSSWhaV24I
-X-Proofpoint-ORIG-GUID: gCtHZox0o0JrZ6J1B9AdkpN-ajnHheY0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-11_04,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- spamscore=0 impostorscore=0 phishscore=0 clxscore=1015 lowpriorityscore=0
- adultscore=0 suspectscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=646
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
- definitions=main-2309110068
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>
+Cc:     will@kernel.org, oliver.upton@linux.dev, maz@kernel.org,
+        james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
+        arnd@arndb.de, akpm@linux-foundation.org, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
+        rppt@kernel.org, hughd@google.com, pcc@google.com,
+        steven.price@arm.com, anshuman.khandual@arm.com,
+        vincenzo.frascino@arm.com, eugenis@google.com, kcc@google.com,
+        hyesoo.yu@samsung.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
+        linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+References: <20230823131350.114942-1-alexandru.elisei@arm.com>
+ <33def4fe-fdb8-6388-1151-fabd2adc8220@redhat.com> <ZOc0fehF02MohuWr@arm.com>
+ <ebd3f142-43cc-dc92-7512-8f1c99073fce@redhat.com>
+ <0b9c122a-c05a-b3df-c69f-85f520294adc@redhat.com> <ZOd2LvUKMguWdlgq@arm.com>
+ <ZPhfNVWXhabqnknK@monolith> <ZP7/e8YFiosElvTm@arm.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+Subject: Re: [PATCH RFC 00/37] Add support for arm64 MTE dynamic tag storage
+ reuse
+In-Reply-To: <ZP7/e8YFiosElvTm@arm.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Masami Hiramatsu (Google) <mhiramat@kernel.org> writes:
+On 11.09.23 13:52, Catalin Marinas wrote:
+> On Wed, Sep 06, 2023 at 12:23:21PM +0100, Alexandru Elisei wrote:
+>> On Thu, Aug 24, 2023 at 04:24:30PM +0100, Catalin Marinas wrote:
+>>> On Thu, Aug 24, 2023 at 01:25:41PM +0200, David Hildenbrand wrote:
+>>>> On 24.08.23 13:06, David Hildenbrand wrote:
+>>>>> Regarding one complication: "The kernel needs to know where to allocate
+>>>>> a PROT_MTE page from or migrate a current page if it becomes PROT_MTE
+>>>>> (mprotect()) and the range it is in does not support tagging.",
+>>>>> simplified handling would be if it's in a MIGRATE_CMA pageblock, it
+>>>>> doesn't support tagging. You have to migrate to a !CMA page (for
+>>>>> example, not specifying GFP_MOVABLE as a quick way to achieve that).
+>>>>
+>>>> Okay, I now realize that this patch set effectively duplicates some CMA
+>>>> behavior using a new migrate-type.
+> [...]
+>> I considered mixing the tag storage memory memory with normal memory and
+>> adding it to MIGRATE_CMA. But since tag storage memory cannot be tagged,
+>> this means that it's not enough anymore to have a __GFP_MOVABLE allocation
+>> request to use MIGRATE_CMA.
+>>
+>> I considered two solutions to this problem:
+>>
+>> 1. Only allocate from MIGRATE_CMA is the requested memory is not tagged =>
+>> this effectively means transforming all memory from MIGRATE_CMA into the
+>> MIGRATE_METADATA migratetype that the series introduces. Not very
+>> appealing, because that means treating normal memory that is also on the
+>> MIGRATE_CMA lists as tagged memory.
+> 
+> That's indeed not ideal. We could try this if it makes the patches
+> significantly simpler, though I'm not so sure.
+> 
+> Allocating metadata is the easier part as we know the correspondence
+> from the tagged pages (32 PROT_MTE page) to the metadata page (1 tag
+> storage page), so alloc_contig_range() does this for us. Just adding it
+> to the CMA range is sufficient.
+> 
+> However, making sure that we don't allocate PROT_MTE pages from the
+> metadata range is what led us to another migrate type. I guess we could
+> achieve something similar with a new zone or a CPU-less NUMA node,
 
->> > IOW, it is ftrace save regs/restore regs code issue. I need to check how the
->> > function_graph implements it.
->> 
->> gpr2-gpr14 are always saved in ftrace_caller/ftrace_regs_caller(),
->> regardless of the FTRACE_WITH_REGS flags. The only difference is that
->> without the FTRACE_WITH_REGS flag the program status word (psw) is not
->> saved because collecting that is a rather expensive operation.
->
-> Thanks for checking that! So s390 will recover those saved registers
-> even if FTRACE_WITH_REGS flag is not set? (I wonder what is the requirement
-> of the ftrace_regs when returning from ftrace_call() without
-> FTRACE_WITH_REGS?)
+Ideally, no significant core-mm changes to optimize for an architecture 
+oddity. That implies, no new zones and no new migratetypes -- unless it 
+is unavoidable and you are confident that you can convince core-MM 
+people that the use case (giving back 3% of system RAM at max in some 
+setups) is worth the trouble.
 
-Yes, it will recover these in all cases.
+I also had CPU-less NUMA nodes in mind when thinking about that, but not 
+sure how easy it would be to integrate it. If the tag memory has 
+actually different performance characteristics as well, a NUMA node 
+would be the right choice.
 
->> 
->> I used the following commands to test rethook (is that the correct
->> testcase?)
->> 
->> #!/bin/bash
->> cd /sys/kernel/tracing
->> 
->> echo 'r:icmp_rcv icmp_rcv' >kprobe_events
->> echo 1 >events/kprobes/icmp_rcv/enable
->> ping -c 1 127.0.0.1
->> cat trace
->
-> No, the kprobe will path pt_regs to rethook.
-> Cna you run
->
-> echo "f:icmp_rcv%return icmp_rcv" >> dynamic_events
+If we could find some way to easily support this either via CMA or 
+CPU-less NUMA nodes, that would be much preferable; even if we cannot 
+cover each and every future use case right now. I expect some issues 
+with CXL+MTE either way , but are happy to be taught otherwise :)
 
-Ah, ok. Seems to work as well:
 
-  ping-481     [001] ..s2.    53.918480: icmp_rcv: (ip_protocol_deliver_rcu+0x42/0x218 <- icmp_rcv)
-  ping-481     [001] ..s2.    53.918491: icmp_rcv: (ip_protocol_deliver_rcu+0x42/0x218 <- icmp_rcv)
+Another thought I had was adding something like CMA memory 
+characteristics. Like, asking if a given CMA area/page supports tagging 
+(i.e., flag for the CMA area set?)?
+
+When you need memory that supports tagging and have a page that does not 
+support tagging (CMA && taggable), simply migrate to !MOVABLE memory 
+(eventually we could also try adding !CMA).
+
+Was that discussed and what would be the challenges with that? Page 
+migration due to compaction comes to mind, but it might also be easy to 
+handle if we can just avoid CMA memory for that.
+
+> though the latter is not guaranteed not to allocate memory from the
+> range, only make it less likely. Both these options are less flexible in
+> terms of size/alignment/placement.
+> 
+> Maybe as a quick hack - only allow PROT_MTE from ZONE_NORMAL and
+> configure the metadata range in ZONE_MOVABLE but at some point I'd
+> expect some CXL-attached memory to support MTE with additional carveout
+> reserved.
+
+I have no idea how we could possibly cleanly support memory hotplug in 
+virtual environments (virtual DIMMs, virtio-mem) with MTE. In contrast 
+to s390x storage keys, the approach that arm64 with MTE took here 
+(exposing tag memory to the VM) makes it rather hard and complicated.
+
+-- 
+Cheers,
+
+David / dhildenb
+
