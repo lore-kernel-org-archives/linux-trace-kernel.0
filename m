@@ -2,115 +2,120 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A399EE14D8
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 10 Sep 2023 14:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCF2EE49A4
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 11 Sep 2023 00:21:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230174AbjIJOHZ (ORCPT
+        id S230391AbjIKAVP (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 10 Sep 2023 10:07:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43902 "EHLO
+        Sun, 10 Sep 2023 20:21:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjIJOHY (ORCPT
+        with ESMTP id S229453AbjIKAVP (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 10 Sep 2023 10:07:24 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C65DCC5;
-        Sun, 10 Sep 2023 07:07:20 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-68fac16ee5fso441729b3a.1;
-        Sun, 10 Sep 2023 07:07:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694354839; x=1694959639; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8rUZnx6mLwwhTM82glMGOCmCnlACgLj+v8fzObrhRhQ=;
-        b=I+ckYikP5Zvy/CQ8esGm7LKMcDu4CIZu66omSp+ci01cdrZa41l+3j1zdygHvAjgYU
-         ZjuhYeHIGpP3R876I1DeiR8Ml25lq1YvOt4K0iNfeUljKjZm9mMPgtpkXjeM5z7bF4FN
-         7Yes9yhmE14Q7sVGFi10am2zPBA+wjxXs0aIp8qPJ2y8xVxU2fwB99H0IvF09eRo9yoj
-         dNQo4biLxPm9PYsU2SjCjeqAoLaC4wCOf7i5rrixAlJs5IrcEOOj9iLtaJykHikzAwxi
-         xQHt9QBWtmHomHlLw1RBagto569zKYgw2ibNcTsw01qopqoqtLsBnFn3AolebnpsAUO6
-         PTig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694354839; x=1694959639;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8rUZnx6mLwwhTM82glMGOCmCnlACgLj+v8fzObrhRhQ=;
-        b=BYxjnCBI9Tm5vTKqctRpNtlFLGlThMKY/EtSb9MwKisX3/J6sDfAbqhtwibf/xhmuk
-         yOq3iiL9BRxt7aHT0RNKvA8m0L27YRdb5vUSJYGN3OcWxOje77by82yYsS9YDqWhCZF1
-         epZuQ2nnKO17SEYqUll1FQ3IYebkbdqd3RKUQsoMbRQTeID2ViriCfs+j1K7kjE3ESJR
-         UCg/XiRTATpGxIAtSpkwkElOKmXN/Wc7btM5X2xANQjwzgFgq8/9iR9TgqBsejNBRIK2
-         bJeomIqR2/Mjoot/J2Q5v3JvZD8n/Mwru7uSbngjCUREy1XFPfw1Uej1x9EqIggWh9et
-         hzTg==
-X-Gm-Message-State: AOJu0Yw9p/SPZEQ5fXt4KhaxCqJC0V2xxDVhV3WxWx6TAeNC7RqYOuew
-        ra/JyPQHa//HlTeegzRZGC0=
-X-Google-Smtp-Source: AGHT+IFS7cH20tn/cb9PGVHa8+VoPQGZDG2IFBUES/33lqXwnfY70hcs1yj5q8d+ZJ/Gegdkd1VGMQ==
-X-Received: by 2002:a17:902:7d89:b0:1bf:3c10:1d72 with SMTP id a9-20020a1709027d8900b001bf3c101d72mr6083942plm.66.1694354839342;
-        Sun, 10 Sep 2023 07:07:19 -0700 (PDT)
-Received: from localhost ([216.228.127.129])
-        by smtp.gmail.com with ESMTPSA id p5-20020a170902bd0500b001bba7aab822sm3917614pls.5.2023.09.10.07.07.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Sep 2023 07:07:18 -0700 (PDT)
-Date:   Sun, 10 Sep 2023 07:07:16 -0700
-From:   Yury Norov <yury.norov@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Alexander Lobakin <aleksander.lobakin@intel.com>,
-        Uros Bizjak <ubizjak@gmail.com>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v1 1/1] bitops: Share BYTES_TO_BITS() for everyone
-Message-ID: <ZP3NlPOGtbT7CGQ1@yury-ThinkPad>
-References: <20230824123728.2761663-1-andriy.shevchenko@linux.intel.com>
- <a5574786-0a49-454d-67e3-571983e6a6e8@intel.com>
- <ZPCT2vV0r8l/wxim@smile.fi.intel.com>
- <05febba8-49a5-5f9d-34b0-d85d976e1416@intel.com>
- <ZPiSogB2GdyM+oJx@smile.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZPiSogB2GdyM+oJx@smile.fi.intel.com>
+        Sun, 10 Sep 2023 20:21:15 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36FA1125;
+        Sun, 10 Sep 2023 17:21:11 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75760C433C7;
+        Mon, 11 Sep 2023 00:21:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694391670;
+        bh=seGEeW6xHTnJ7ViTCB9/tGNmeW9Z+shSBEYPh4w8L/A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=s6HxJ2xM3WjNraa4MmqjSPe/EuOlwCo63mg4MzSy9sUoDI4Q9ih47dTBLf/v9wVIF
+         ii1SqaY8wXhM7ykKqEoQt4yqHqBVu+s35FncjhKjft1GTGxBjistEedrxAxES7pXXf
+         t6iaZb6O7IELCfcQBCgcuB5I61U+40bXPRP8QCYAp6bLxHLPbxz/5aghMgD8dEIU94
+         +eWH3yiU3bB3/XgA2ICbU6Uof5u4Ii+Ywbijp97Cf9MucxuTA7uPBsweUajmJnRLFt
+         wmDwnYSDTWSkcEeujSLdOHxpacVP0o/u0mLzu8ibRsqQrWp+/acFbCiEfWIZkgwBg0
+         RraPH738J8tpg==
+Date:   Mon, 11 Sep 2023 09:21:05 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] ftrace/selftests: Add softlink to latest log directory
+Message-Id: <20230911092105.95425e2d773f79c9b3b4b94f@kernel.org>
+In-Reply-To: <20230908181721.00f7eb71@gandalf.local.home>
+References: <20230908181721.00f7eb71@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Sep 06, 2023 at 05:54:26PM +0300, Andy Shevchenko wrote:
-> On Wed, Sep 06, 2023 at 04:40:39PM +0200, Alexander Lobakin wrote:
-> > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Date: Thu, 31 Aug 2023 16:21:30 +0300
-> > > On Fri, Aug 25, 2023 at 04:49:07PM +0200, Alexander Lobakin wrote:
-> > >> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > >> Date: Thu, 24 Aug 2023 15:37:28 +0300
-> > >>
-> > >>> It may be new callers for the same macro, share it.
-> > >>>
-> > >>> Note, it's unknown why it's represented in the current form instead of
-> > >>> simple multiplication and commit 1ff511e35ed8 ("tracing/kprobes: Add
-> > >>> bitfield type") doesn't explain that neither. Let leave it as is and
-> > >>> we may improve it in the future.
-> > >>
-> > >> Maybe symmetrical change in tools/ like I did[0] an aeon ago?
-> > > 
-> > > Hmm... Why can't you simply upstream your version? It seems better than mine.
-> > 
-> > It was a part of the Netlink bigint API which is a bit on hold for now
-> > (I needed this macro available treewide).
-> > But I can send it as standalone if you're fine with that.
+On Fri, 8 Sep 2023 18:17:21 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> From: Steven Rostedt (Google) <rostedt@goodmis.org>
 > 
-> I'm fine. Yury?
+> When I'm debugging something with the ftrace selftests and need to look at
+> the logs, it becomes tedious that I need to do the following:
+> 
+>  ls -ltr logs
+>  [ copy the last directory ]
+>  ls logs/<paste-last-dir>
+> 
+> to see where the logs are.
+> 
+> Instead, do the common practice of having a "latest" softlink to the last
+> run selftest. This way after running the selftest I only need to do:
+> 
+>  ls logs/latest/
+> 
+> and it will always give me the directory of the last run selftest logs!
+> 
 
-Do we have opencoded BYTES_TO_BITS() somewhere else? If so, it should be
-fixed in the same series.
+Nice! I like this and this looks good to me.
 
-Regarding implementation, the current:
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-        #define BYTES_TO_BITS(nb)      ((BITS_PER_LONG * (nb)) / sizeof(long))
+Thank you!
 
-looks weird. Maybe there are some special considerations in a tracing
-subsystem to make it like this, but as per Masami's email - there's
-not. 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+> 
+> diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
+> index cb5f18c06593..7df8baa0f98f 100755
+> --- a/tools/testing/selftests/ftrace/ftracetest
+> +++ b/tools/testing/selftests/ftrace/ftracetest
+> @@ -124,6 +124,7 @@ parse_opts() { # opts
+>      ;;
+>      --logdir|-l)
+>        LOG_DIR=$2
+> +      LINK_PTR=
+>        shift 2
+>      ;;
+>      *.tc)
+> @@ -181,7 +182,10 @@ fi
+>  TOP_DIR=`absdir $0`
+>  TEST_DIR=$TOP_DIR/test.d
+>  TEST_CASES=`find_testcases $TEST_DIR`
+> -LOG_DIR=$TOP_DIR/logs/`date +%Y%m%d-%H%M%S`/
+> +LOG_TOP_DIR=$TOP_DIR/logs
+> +LOG_DATE=`date +%Y%m%d-%H%M%S`
+> +LOG_DIR=$LOG_TOP_DIR/$LOG_DATE/
+> +LINK_PTR=$LOG_TOP_DIR/latest
+>  KEEP_LOG=0
+>  KTAP=0
+>  DEBUG=0
+> @@ -207,6 +211,10 @@ else
+>    LOG_FILE=$LOG_DIR/ftracetest.log
+>    mkdir -p $LOG_DIR || errexit "Failed to make a log directory: $LOG_DIR"
+>    date > $LOG_FILE
+> +  if [ "x-$LINK_PTR" != "x-" ]; then
+> +    unlink $LINK_PTR
+> +    ln -fs $LOG_DATE $LINK_PTR
+> +  fi
+>  fi
+>  
+>  # Define text colors
 
-For a general purpose I'd suggest a simpler:
-        #define BYTES_TO_BITS(nb)      ((nb) * BITS_PER_BYTE)
 
-Thanks,
-Yury
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
