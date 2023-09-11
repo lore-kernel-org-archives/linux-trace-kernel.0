@@ -2,91 +2,119 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608F4CA0EC3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E91CA0ED3
 	for <linux-trace-kernel@archiver.kernel.org>; Mon, 11 Sep 2023 22:21:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359418AbjIKWQe (ORCPT
+        id S1359423AbjIKWQg (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 11 Sep 2023 18:16:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42074 "EHLO
+        Mon, 11 Sep 2023 18:16:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244434AbjIKUbS (ORCPT
+        with ESMTP id S239270AbjIKOQP (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 11 Sep 2023 16:31:18 -0400
+        Mon, 11 Sep 2023 10:16:15 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B8EF9;
-        Mon, 11 Sep 2023 13:31:13 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D09F8C433C7;
-        Mon, 11 Sep 2023 20:31:11 +0000 (UTC)
-Date:   Mon, 11 Sep 2023 16:31:27 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     SeongJae Park <sj@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, damon@lists.linux.dev,
-        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm/damon/core: add a tracepoint for damos apply
- target regions
-Message-ID: <20230911163127.167dccc2@gandalf.local.home>
-In-Reply-To: <20230911190504.102317-1-sj@kernel.org>
-References: <20230911141955.245d1397@gandalf.local.home>
-        <20230911190504.102317-1-sj@kernel.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C4A3DE;
+        Mon, 11 Sep 2023 07:16:07 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95A3BC433C7;
+        Mon, 11 Sep 2023 14:16:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694441766;
+        bh=KXMxuh2b3iJk8T/pEtBjYdbcbrbdQSKwgRi4Ihd42Cc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NsiA08LeJ2l2QqaF2Mc6EPGMtZH+dDzcgipfV7b7nC0+R82itaFMgvZHm/PC3Ag/8
+         wOkdRAEiJhReJPG82IycnW2brztwBd70iPPejBKp1KgNyVGDJxhcQd0z8yIjZNRwUX
+         R8ujtKfFqjA0bT3CTjlYrXErPATtpmyBqwOuokY3EdPHaoawjT4bZt0o1fE0IybKo/
+         8QB3w7+XEI/s2YMx3Qmg7R5zIpsUOgjdCVSy6o2eb+/Rwr/TMKBrwVPNXD124U9OCr
+         ObNs/a+bbt/g7xKzgPTtvGSapBb3o+vGb7u7T3o1wYB8NJ7Dpir2rLEwMATY/k2+gp
+         CdSFXxmQUopOQ==
+Date:   Mon, 11 Sep 2023 23:15:59 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Sven Schnelle <svens@linux.ibm.com>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Florent Revest <revest@chromium.org>,
+        linux-trace-kernel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v4 4/9] fprobe: rethook: Use ftrace_regs in fprobe exit
+ handler and rethook
+Message-Id: <20230911231559.67dc02ec42995042b7e92c58@kernel.org>
+In-Reply-To: <yt9dy1hdi1pe.fsf@linux.ibm.com>
+References: <169280372795.282662.9784422934484459769.stgit@devnote2>
+        <169280377434.282662.7610009313268953247.stgit@devnote2>
+        <20230904224038.4420a76ea15931aa40179697@kernel.org>
+        <yt9d5y4pozrl.fsf@linux.ibm.com>
+        <20230905223633.23cd4e6e8407c45b934be477@kernel.org>
+        <yt9dzg1zokyg.fsf@linux.ibm.com>
+        <20230909232435.dfa15f93f1c5eef5b229a7d2@kernel.org>
+        <yt9dy1hdi1pe.fsf@linux.ibm.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 11 Sep 2023 19:05:04 +0000
-SeongJae Park <sj@kernel.org> wrote:
+On Mon, 11 Sep 2023 09:55:09 +0200
+Sven Schnelle <svens@linux.ibm.com> wrote:
 
-> > Also, this if statement is only done when the trace event is enabled, so
-> > it's equivalent to:
-> > 
-> > 	if (trace_damos_before_apply_enabled()) {
-> > 		if (sdx >= 0)
-> > 			trace_damos_before_apply(cidx, sidx, tidx, r,
-> > 					damon_nr_regions(t));
-> > 	}  
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> writes:
 > 
-> Again, thank you very much for letting me know this awesome feature.  However,
-> sidx is supposed to be always >=0 here, since kdamond is running in single
-> thread and hence no race is expected.  If it exists, it's a bug.  So, I
-> wouldn't make this change.  Appreciate again for letting me know this very
-> useful feature, and please let me know if I'm missing something, though!
+> >> > IOW, it is ftrace save regs/restore regs code issue. I need to check how the
+> >> > function_graph implements it.
+> >> 
+> >> gpr2-gpr14 are always saved in ftrace_caller/ftrace_regs_caller(),
+> >> regardless of the FTRACE_WITH_REGS flags. The only difference is that
+> >> without the FTRACE_WITH_REGS flag the program status word (psw) is not
+> >> saved because collecting that is a rather expensive operation.
+> >
+> > Thanks for checking that! So s390 will recover those saved registers
+> > even if FTRACE_WITH_REGS flag is not set? (I wonder what is the requirement
+> > of the ftrace_regs when returning from ftrace_call() without
+> > FTRACE_WITH_REGS?)
+> 
+> Yes, it will recover these in all cases.
 
-The race isn't with your code, but the enabling of tracing.
+Thanks for the confirmation!
 
-Let's say you enable tracing just ass it passed the first:
+> 
+> >> 
+> >> I used the following commands to test rethook (is that the correct
+> >> testcase?)
+> >> 
+> >> #!/bin/bash
+> >> cd /sys/kernel/tracing
+> >> 
+> >> echo 'r:icmp_rcv icmp_rcv' >kprobe_events
+> >> echo 1 >events/kprobes/icmp_rcv/enable
+> >> ping -c 1 127.0.0.1
+> >> cat trace
+> >
+> > No, the kprobe will path pt_regs to rethook.
+> > Cna you run
+> >
+> > echo "f:icmp_rcv%return icmp_rcv" >> dynamic_events
+> 
+> Ah, ok. Seems to work as well:
+> 
+>   ping-481     [001] ..s2.    53.918480: icmp_rcv: (ip_protocol_deliver_rcu+0x42/0x218 <- icmp_rcv)
+>   ping-481     [001] ..s2.    53.918491: icmp_rcv: (ip_protocol_deliver_rcu+0x42/0x218 <- icmp_rcv)
 
-	if (trace_damos_before_apply_enabled()) {
-   
-		damon_for_each_scheme(siter, c) {
-			if (siter == s)
-				break;
-			sidx++;
-		}
-		damon_for_each_target(titer, c) {
-			if (titer == t)
-				break;
-			tidx++;
-	}  
+Nice!
+OK, then s390 is safe to use ftrace_regs :) 
 
-Now, sidx and tidx is zero (when they were not computed, thus, they
-shouldn't be zero.
+Thanks!
 
-Then tracing is fully enabled here, and now we enter:
 
- 	if (trace_damos_before_apply_enabled()) {
-		trace_damos_before_apply(cidx, sidx, tidx, r,
- 				damon_nr_regions(t));
- 	}
-
-Now the trace event is hit with sidx and tidx zero when they should not be.
-This could confuse you when looking at the report.
-
-What I suggested was to initialize sidx to zero, set it in the first
-trace_*_enabled() check, and ignore calling the tracepoint if it's not >= 0.
-
--- Steve
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
