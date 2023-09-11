@@ -2,45 +2,45 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCF2EE49A4
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 11 Sep 2023 00:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96749EE49A4
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 11 Sep 2023 00:26:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230391AbjIKAVP (ORCPT
+        id S231308AbjIKA0W (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 10 Sep 2023 20:21:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37658 "EHLO
+        Sun, 10 Sep 2023 20:26:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbjIKAVP (ORCPT
+        with ESMTP id S231332AbjIKA0V (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 10 Sep 2023 20:21:15 -0400
+        Sun, 10 Sep 2023 20:26:21 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36FA1125;
-        Sun, 10 Sep 2023 17:21:11 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75760C433C7;
-        Mon, 11 Sep 2023 00:21:08 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18BE319C;
+        Sun, 10 Sep 2023 17:26:17 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2942BC433C7;
+        Mon, 11 Sep 2023 00:26:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694391670;
-        bh=seGEeW6xHTnJ7ViTCB9/tGNmeW9Z+shSBEYPh4w8L/A=;
+        s=k20201202; t=1694391976;
+        bh=NlU/rEti1tbmCr8YAFrkbrxfNfLfiM9Akt+e5eaoOnY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=s6HxJ2xM3WjNraa4MmqjSPe/EuOlwCo63mg4MzSy9sUoDI4Q9ih47dTBLf/v9wVIF
-         ii1SqaY8wXhM7ykKqEoQt4yqHqBVu+s35FncjhKjft1GTGxBjistEedrxAxES7pXXf
-         t6iaZb6O7IELCfcQBCgcuB5I61U+40bXPRP8QCYAp6bLxHLPbxz/5aghMgD8dEIU94
-         +eWH3yiU3bB3/XgA2ICbU6Uof5u4Ii+Ywbijp97Cf9MucxuTA7uPBsweUajmJnRLFt
-         wmDwnYSDTWSkcEeujSLdOHxpacVP0o/u0mLzu8ibRsqQrWp+/acFbCiEfWIZkgwBg0
-         RraPH738J8tpg==
-Date:   Mon, 11 Sep 2023 09:21:05 +0900
+        b=IpOPMHXvh/jFYr4NJYFGMB4tpwbKYcpE46SLh8txDsLKL07HleZ3+mF52uWmmItyN
+         uuEqH/di3TrOEwDbRvyYLExIuqB/XwUShmP3Dn1FCgjAc4uJt6jYFHthczePTuoN7j
+         XiCHdSJduTYFOnYHqR8cJ5S+0M19RzAP+ZdSn27plXasyAk1vvmpDQDdJQga1xLv0g
+         PRdtWnb05VKXC0gLF/TBhC5ASUP49gG6k7umRCY7buOgyqRE13mIUWGVjK7bK28HzR
+         oLXmeUM55p1EBN7alIDLot1bdfXfqPtcQZXSqTzBg5co6lfk5Xv27fR+XiO1tnsVrA
+         wm4sNjLO+wZ+Q==
+Date:   Mon, 11 Sep 2023 09:26:12 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] ftrace/selftests: Add softlink to latest log directory
-Message-Id: <20230911092105.95425e2d773f79c9b3b4b94f@kernel.org>
-In-Reply-To: <20230908181721.00f7eb71@gandalf.local.home>
-References: <20230908181721.00f7eb71@gandalf.local.home>
+        Mark Rutland <mark.rutland@arm.com>,
+        Sven Schnelle <svens@linux.ibm.com>
+Subject: Re: [RESEND][PATCH] tracing/synthetic: Fix order of struct
+ trace_dynamic_info
+Message-Id: <20230911092612.775372d425e97da96da6f047@kernel.org>
+In-Reply-To: <20230908163929.2c25f3dc@gandalf.local.home>
+References: <20230908163929.2c25f3dc@gandalf.local.home>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -49,72 +49,101 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 8 Sep 2023 18:17:21 -0400
+On Fri, 8 Sep 2023 16:39:29 -0400
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> From: Steven Rostedt (Google) <rostedt@goodmis.org>
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> When I'm debugging something with the ftrace selftests and need to look at
-> the logs, it becomes tedious that I need to do the following:
+> To make handling BIG and LITTLE endian better the offset/len of dynamic
+> fields of the synthetic events was changed into a structure of:
 > 
->  ls -ltr logs
->  [ copy the last directory ]
->  ls logs/<paste-last-dir>
+>  struct trace_dynamic_info {
+>  #ifdef CONFIG_CPU_BIG_ENDIAN
+> 	u16	offset;
+> 	u16	len;
+>  #else
+> 	u16	len;
+> 	u16	offset;
+>  #endif
+>  };
 > 
-> to see where the logs are.
+> to replace the manual changes of:
 > 
-> Instead, do the common practice of having a "latest" softlink to the last
-> run selftest. This way after running the selftest I only need to do:
+>  data_offset = offset & 0xffff;
+>  data_offest = len << 16;
 > 
->  ls logs/latest/
+> But if you look closely, the above is:
 > 
-> and it will always give me the directory of the last run selftest logs!
+>   <len> << 16 | offset
 > 
+> Which in little endian would be in memory:
+> 
+>  offset_lo offset_hi len_lo len_hi
+> 
+> and in big endian:
+> 
+>  len_hi len_lo offset_hi offset_lo
+> 
+> Which if broken into a structure would be:
+> 
+>  struct trace_dynamic_info {
+>  #ifdef CONFIG_CPU_BIG_ENDIAN
+> 	u16	len;
+> 	u16	offset;
+>  #else
+> 	u16	offset;
+> 	u16	len;
+>  #endif
+>  };
+> 
+> Which is the opposite of what was defined.
+> 
+> Fix this and just to be safe also add "__packed".
+> 
+> Link: https://lore.kernel.org/all/20230908154417.5172e343@gandalf.local.home/
 
-Nice! I like this and this looks good to me.
+Good catch! I'm not sure why this worked. Maybe we don't have any testcase
+for this feature?
 
 Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Thank you!
+Thank you,
 
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: ddeea494a16f3 ("tracing/synthetic: Use union instead of casts")
 > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
 > 
-> diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
-> index cb5f18c06593..7df8baa0f98f 100755
-> --- a/tools/testing/selftests/ftrace/ftracetest
-> +++ b/tools/testing/selftests/ftrace/ftracetest
-> @@ -124,6 +124,7 @@ parse_opts() { # opts
->      ;;
->      --logdir|-l)
->        LOG_DIR=$2
-> +      LINK_PTR=
->        shift 2
->      ;;
->      *.tc)
-> @@ -181,7 +182,10 @@ fi
->  TOP_DIR=`absdir $0`
->  TEST_DIR=$TOP_DIR/test.d
->  TEST_CASES=`find_testcases $TEST_DIR`
-> -LOG_DIR=$TOP_DIR/logs/`date +%Y%m%d-%H%M%S`/
-> +LOG_TOP_DIR=$TOP_DIR/logs
-> +LOG_DATE=`date +%Y%m%d-%H%M%S`
-> +LOG_DIR=$LOG_TOP_DIR/$LOG_DATE/
-> +LINK_PTR=$LOG_TOP_DIR/latest
->  KEEP_LOG=0
->  KTAP=0
->  DEBUG=0
-> @@ -207,6 +211,10 @@ else
->    LOG_FILE=$LOG_DIR/ftracetest.log
->    mkdir -p $LOG_DIR || errexit "Failed to make a log directory: $LOG_DIR"
->    date > $LOG_FILE
-> +  if [ "x-$LINK_PTR" != "x-" ]; then
-> +    unlink $LINK_PTR
-> +    ln -fs $LOG_DATE $LINK_PTR
-> +  fi
->  fi
+>  [ Resending to the correct mailing list this time :-p ]
+> 
+>  include/linux/trace_events.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+> index 12f875e9e69a..21ae37e49319 100644
+> --- a/include/linux/trace_events.h
+> +++ b/include/linux/trace_events.h
+> @@ -62,13 +62,13 @@ void trace_event_printf(struct trace_iterator *iter, const char *fmt, ...);
+>  /* Used to find the offset and length of dynamic fields in trace events */
+>  struct trace_dynamic_info {
+>  #ifdef CONFIG_CPU_BIG_ENDIAN
+> -	u16	offset;
+>  	u16	len;
+> +	u16	offset;
+>  #else
+> -	u16	len;
+>  	u16	offset;
+> +	u16	len;
+>  #endif
+> -};
+> +} __packed;
 >  
->  # Define text colors
+>  /*
+>   * The trace entry - the most basic unit of tracing. This is what
+> -- 
+> 2.40.1
+> 
 
 
 -- 
