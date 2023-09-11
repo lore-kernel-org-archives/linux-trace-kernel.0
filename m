@@ -2,32 +2,35 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 835BECA0EC8
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 12 Sep 2023 02:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5D0CA0ECB
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 12 Sep 2023 03:03:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240074AbjILCmL (ORCPT
+        id S241710AbjILDEA (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 11 Sep 2023 22:42:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42034 "EHLO
+        Mon, 11 Sep 2023 23:04:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240175AbjILCl6 (ORCPT
+        with ESMTP id S241341AbjILDDx (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 11 Sep 2023 22:41:58 -0400
+        Mon, 11 Sep 2023 23:03:53 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2E80104881;
-        Mon, 11 Sep 2023 19:07:25 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31BC2C433AD;
-        Mon, 11 Sep 2023 21:09:14 +0000 (UTC)
-Date:   Mon, 11 Sep 2023 17:09:29 -0400
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E4F1FF803;
+        Mon, 11 Sep 2023 18:37:28 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C91FDC116AB;
+        Mon, 11 Sep 2023 22:02:43 +0000 (UTC)
+Date:   Mon, 11 Sep 2023 18:02:59 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: suspicious RCU usage warning on tracing/urgent
-Message-ID: <20230911170929.1b0ede14@gandalf.local.home>
-In-Reply-To: <20230911120053.ca82f545e7f46ea753deda18@kernel.org>
-References: <20230911120053.ca82f545e7f46ea753deda18@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sven Schnelle <svens@linux.ibm.com>
+Subject: Re: [RESEND][PATCH] tracing/synthetic: Fix order of struct
+ trace_dynamic_info
+Message-ID: <20230911180259.599a7909@gandalf.local.home>
+In-Reply-To: <20230911092612.775372d425e97da96da6f047@kernel.org>
+References: <20230908163929.2c25f3dc@gandalf.local.home>
+        <20230911092612.775372d425e97da96da6f047@kernel.org>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -36,33 +39,27 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 11 Sep 2023 12:00:53 +0900
+On Mon, 11 Sep 2023 09:26:12 +0900
 Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> But it seems correctly taking srcu_read_lock().
+> > Fix this and just to be safe also add "__packed".
+> > 
+> > Link: https://lore.kernel.org/all/20230908154417.5172e343@gandalf.local.home/  
 > 
->     452 
->     453         ei = ti->private;
->     454         idx = srcu_read_lock(&eventfs_srcu);
->     455         list_for_each_entry_rcu(ef, &ei->e_top_files, list) {
->     456                 create_dentry(ef, dentry, false);
->     457         }
->     458         srcu_read_unlock(&eventfs_srcu, idx);
->     459         return dcache_dir_open(inode, file);
->     460 }
->     461 
-> 
-> This may false-positive warning, or srcu_read_lock() is not enough for
-> list_for_each_entry_rcu(). In latter case, maybe we need to use a
-> mutex instead of srcu for update the ef.
+> Good catch! I'm not sure why this worked. Maybe we don't have any testcase
+> for this feature?
 
-Oops, that should be list_for_each_entry_srcu().
+We have a test case, it was broken by a change in the README :-p
+
+I noticed issues with it, and then looked at the tests, fixed the test and
+it failed. Before that, it was just reporting "unsupported", which is why I
+included that fix with this queue.
+
+  https://lore.kernel.org/linux-trace-kernel/20230614091046.2178539-1-naveen@kernel.org/
+
+> 
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 Thanks!
-
-> 
-> BTW, the ftracetest itself passed without any problem.
-
-Thanks for testing as well!
 
 -- Steve
