@@ -2,114 +2,63 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A1ACA0ED5
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 11 Sep 2023 22:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 316F1CA0ED4
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 11 Sep 2023 22:22:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359438AbjIKWQm (ORCPT
+        id S1359293AbjIKWQK (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 11 Sep 2023 18:16:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59484 "EHLO
+        Mon, 11 Sep 2023 18:16:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244446AbjIKUgt (ORCPT
+        with ESMTP id S242467AbjIKPiC (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 11 Sep 2023 16:36:49 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61ECC127;
-        Mon, 11 Sep 2023 13:36:45 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34974C433C7;
-        Mon, 11 Sep 2023 20:36:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694464604;
-        bh=yVeFYLRhbU/RAZJ0Yo6GGmsolJbZL5KOh1ydQnNikFs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n++o38YD9g0rkZTjGjoVS58Qce5RnDBBcRebGc0mzehPYzDGSOiYt3Ys8E7B6nEpV
-         grKF4Nv+NwZT1fhq1p+sIcuCTnWuzv39djNo42NCbCw+rnoWEzsmGqWS1CFyZtsOQq
-         XnCh4D5D7T4/iPOMCPScod5ytfDZ6NcGDKPVN2606C9QJ5fjEnFDiI3PRVGI87wu8B
-         +6dyKlGlZt78voQotkICd2ZNBXBwMgBGzZW6w5Sx34ztgX/fd3nKGUVL9WtvSrj9Sq
-         Y7Qiq9jBmy/Va3KfEBeO5v62EffRy94l8v8ZufAyDKODCVpg5bgwSenh8SaKeM5gSO
-         aOK/e3snuyX+g==
-From:   SeongJae Park <sj@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     SeongJae Park <sj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        damon@lists.linux.dev, linux-mm@kvack.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm/damon/core: add a tracepoint for damos apply target regions
-Date:   Mon, 11 Sep 2023 20:36:42 +0000
-Message-Id: <20230911203642.1788-1-sj@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230911163127.167dccc2@gandalf.local.home>
-References: 
+        Mon, 11 Sep 2023 11:38:02 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B939CE9;
+        Mon, 11 Sep 2023 08:37:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=sKUn8EnTz+SDHaW4B8cfnoOvswzmYO6s32I2l0TozS4=; b=Io1ANYkGCU0jFv/Kv1JcgdlKEj
+        p84gfsN9vtCJu9PsGBfsZGyd2Ubu3o5AldbQ+y3PCa01qk4bRR31agZzilAK99oybX62wevKGxrv2
+        fm3UWaQwCZu9tk8JspLHNpqfRBZjPQV/Gw6iNdzcY09YHJIr98GlJs58KvhucYzKwCeKwOo/C3ptI
+        H55O9/v8YiSpDQGfpwEJjwsCxvBmunDjFsp8c4WKDPtck48kYoWA9c9NccNCCYd2k1INNPyk0jcYd
+        k46J004G1ZIOTOf8Geytq01wGj9LDSID3QO0SQwZ2O3JW8K2Dwlcj6/qv+JDTBlU/DKa5539SH86N
+        sMxfwQ5g==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qfiyk-001ixQ-0F; Mon, 11 Sep 2023 15:37:34 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A215C3005B2; Mon, 11 Sep 2023 17:37:33 +0200 (CEST)
+Date:   Mon, 11 Sep 2023 17:37:33 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yajun Deng <yajun.deng@linux.dev>
+Cc:     corbet@lwn.net, mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched: Change the name of preempt mode from full to
+ low_latency
+Message-ID: <20230911153733.GA3880@noisy.programming.kicks-ass.net>
+References: <20230911110046.3877123-1-yajun.deng@linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230911110046.3877123-1-yajun.deng@linux.dev>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 11 Sep 2023 16:31:27 -0400 Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, Sep 11, 2023 at 07:00:46PM +0800, Yajun Deng wrote:
+> There is a similar name fully in Kconfig.preempt, but it corresponds to
+> PREEMPT_RT. In order to distinguish them, change the name of preempt mode
+> from full to low_latency.
+> 
+> Also, define a global array and variable that used to save preempt mode
+> name and size.
 
-> On Mon, 11 Sep 2023 19:05:04 +0000
-> SeongJae Park <sj@kernel.org> wrote:
-> 
-> > > Also, this if statement is only done when the trace event is enabled, so
-> > > it's equivalent to:
-> > > 
-> > > 	if (trace_damos_before_apply_enabled()) {
-> > > 		if (sdx >= 0)
-> > > 			trace_damos_before_apply(cidx, sidx, tidx, r,
-> > > 					damon_nr_regions(t));
-> > > 	}  
-> > 
-> > Again, thank you very much for letting me know this awesome feature.  However,
-> > sidx is supposed to be always >=0 here, since kdamond is running in single
-> > thread and hence no race is expected.  If it exists, it's a bug.  So, I
-> > wouldn't make this change.  Appreciate again for letting me know this very
-> > useful feature, and please let me know if I'm missing something, though!
-> 
-> The race isn't with your code, but the enabling of tracing.
-> 
-> Let's say you enable tracing just ass it passed the first:
-> 
-> 	if (trace_damos_before_apply_enabled()) {
->    
-> 		damon_for_each_scheme(siter, c) {
-> 			if (siter == s)
-> 				break;
-> 			sidx++;
-> 		}
-> 		damon_for_each_target(titer, c) {
-> 			if (titer == t)
-> 				break;
-> 			tidx++;
-> 	}  
-> 
-> Now, sidx and tidx is zero (when they were not computed, thus, they
-> shouldn't be zero.
-> 
-> Then tracing is fully enabled here, and now we enter:
-> 
->  	if (trace_damos_before_apply_enabled()) {
-> 		trace_damos_before_apply(cidx, sidx, tidx, r,
->  				damon_nr_regions(t));
->  	}
-> 
-> Now the trace event is hit with sidx and tidx zero when they should not be.
-> This could confuse you when looking at the report.
-
-Thank you so much for enlightening me with this kind explanation, Steve!  And
-this all make sense.  I will follow your suggestion in the next spin.
-
-> 
-> What I suggested was to initialize sidx to zero,
-
-Nit.  Initialize to not zero but -1, right?
-
-> set it in the first trace_*_enabled() check, and ignore calling the
-> tracepoint if it's not >= 0.
-> 
-> -- Steve
-> 
-
-
-Thanks,
-SJ
+Yeah, let's not rename this for giggles. Regular preemption is a fully
+preemptible kernel model. No need to invent new names for it.
