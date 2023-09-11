@@ -2,175 +2,144 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3EBEE57DF
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 11 Sep 2023 05:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC26EE57DF
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 11 Sep 2023 07:56:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234231AbjIKF7T (ORCPT
+        id S230332AbjIKH4r (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 11 Sep 2023 01:59:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34786 "EHLO
+        Mon, 11 Sep 2023 03:56:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229601AbjIKF7S (ORCPT
+        with ESMTP id S229606AbjIKH4p (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 11 Sep 2023 01:59:18 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B0499;
-        Sun, 10 Sep 2023 22:59:14 -0700 (PDT)
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38B5lQ8U007138;
-        Mon, 11 Sep 2023 05:59:08 GMT
+        Mon, 11 Sep 2023 03:56:45 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C0CC10EB;
+        Mon, 11 Sep 2023 00:56:05 -0700 (PDT)
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38B7Znx3031186;
+        Mon, 11 Sep 2023 07:55:13 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : references : date : in-reply-to : message-id : content-type :
- mime-version; s=pp1; bh=dZAGyFQcx1cPl/o4k8GpkwuSomaOIwoePGLjBcUC4LI=;
- b=l/KbjoxtDU4I6+RM8zPiJtydqIvAO+wiMEFJfZwZykA4TtbE8stgN5Uh8UsjBmBGP5fU
- Xm20GOlE/6/7r1EzQh1buGkjQfAmuzUTawFPcfdmDIHS0sLTQ9fRrxd0Pi3jSvv3Po6h
- Wyi1Bz54XPT4fmh5MQQsa7CxXLMrJo0Nk/aXRBNJe1PGmpaWLnUxKYECD+65OYFhH/4K
- x2134OIn10WMVCzZdeC4im6QX582QwRvi4Xj/ueBRpqQ1+9CO7n1N4EmAU3+hBnELeDS
- 4c37u/+pc48RYEBnolC9HPSfGoQGn1SagFFMs2Wk97lf5KPMiYlGyjyyI0fhLO7BB5V1 rA== 
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t1w2ag6cp-1
+ : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=pp1; bh=GpzhKR8/McdkmCqDKQeMo96YI3yK4SubpAdN6QgN3yE=;
+ b=seVq5hwUUW756yIS6ayprp87KpRdxWhOA8u/4EbhCqv3etqFIWLb72T1MsQef3yZisGE
+ sdEg4AVHA4cAwMbNMyN/gzrMfmeEct1R/otMToks4WePIBxNcpY5Gz27enfggUXYDY+d
+ +1iWipcUN3NtpaXw8XuOuGnDfx+EUhor4tcaIHD0qxO11vJsF4zcv0DuUeHTTPuaTSbS
+ qhEBsbn9myxS8JRYV4ZBjDuB3KLhLNBq+N2kCiseC3dE47VWsIQ2wALpW3d8thN5rF4p
+ PIwAU21d/UbWW1XBTSS3Vz4QBlup99tJI1KXVfAxIF3sg03KyhYnhBEvbFBpy9DziZZM UQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t1x9v0xj0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Sep 2023 05:59:07 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38B5bL0j002932;
-        Mon, 11 Sep 2023 05:59:07 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3t14hkg1xh-1
+        Mon, 11 Sep 2023 07:55:13 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38B7ZnIR031228;
+        Mon, 11 Sep 2023 07:55:12 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t1x9v0xh4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Sep 2023 05:59:07 +0000
+        Mon, 11 Sep 2023 07:55:12 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38B6AnIu002410;
+        Mon, 11 Sep 2023 07:55:11 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3t158jrgmu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Sep 2023 07:55:11 +0000
 Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38B5x5AG50856380
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38B7t9VD42074770
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Sep 2023 05:59:05 GMT
+        Mon, 11 Sep 2023 07:55:09 GMT
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1D59120043;
-        Mon, 11 Sep 2023 05:59:05 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 9822B20043;
+        Mon, 11 Sep 2023 07:55:09 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EFD8420040;
-        Mon, 11 Sep 2023 05:59:04 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 52F9E20040;
+        Mon, 11 Sep 2023 07:55:09 +0000 (GMT)
 Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
         by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Mon, 11 Sep 2023 05:59:04 +0000 (GMT)
+        Mon, 11 Sep 2023 07:55:09 +0000 (GMT)
 From:   Sven Schnelle <svens@linux.ibm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RESEND][PATCH] tracing/synthetic: Fix order of struct
- trace_dynamic_info
-References: <20230908163929.2c25f3dc@gandalf.local.home>
-Date:   Mon, 11 Sep 2023 07:59:04 +0200
-In-Reply-To: <20230908163929.2c25f3dc@gandalf.local.home> (Steven Rostedt's
-        message of "Fri, 8 Sep 2023 16:39:29 -0400")
-Message-ID: <yt9d8r9djlnb.fsf@linux.ibm.com>
+To:     Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Florent Revest <revest@chromium.org>,
+        linux-trace-kernel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v4 4/9] fprobe: rethook: Use ftrace_regs in fprobe exit
+ handler and rethook
+References: <169280372795.282662.9784422934484459769.stgit@devnote2>
+        <169280377434.282662.7610009313268953247.stgit@devnote2>
+        <20230904224038.4420a76ea15931aa40179697@kernel.org>
+        <yt9d5y4pozrl.fsf@linux.ibm.com>
+        <20230905223633.23cd4e6e8407c45b934be477@kernel.org>
+        <yt9dzg1zokyg.fsf@linux.ibm.com>
+        <20230909232435.dfa15f93f1c5eef5b229a7d2@kernel.org>
+Date:   Mon, 11 Sep 2023 09:55:09 +0200
+In-Reply-To: <20230909232435.dfa15f93f1c5eef5b229a7d2@kernel.org> (Masami
+        Hiramatsu's message of "Sat, 9 Sep 2023 23:24:35 +0900")
+Message-ID: <yt9dy1hdi1pe.fsf@linux.ibm.com>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+MIME-Version: 1.0
 Content-Type: text/plain
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 9xj_OZS3x0-UZKOZM2T07XHifNHEZLlu
-X-Proofpoint-GUID: 9xj_OZS3x0-UZKOZM2T07XHifNHEZLlu
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
-MIME-Version: 1.0
+X-Proofpoint-GUID: yyI6V9BZkA0dSeZO6Ywsa0RSSWhaV24I
+X-Proofpoint-ORIG-GUID: gCtHZox0o0JrZ6J1B9AdkpN-ajnHheY0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-11_03,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- spamscore=0 mlxscore=0 suspectscore=0 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 impostorscore=0 bulkscore=0
- clxscore=1015 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2308100000 definitions=main-2309110051
+ definitions=2023-09-11_04,2023-09-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ spamscore=0 impostorscore=0 phishscore=0 clxscore=1015 lowpriorityscore=0
+ adultscore=0 suspectscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=646
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
+ definitions=main-2309110068
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Steven,
+Masami Hiramatsu (Google) <mhiramat@kernel.org> writes:
 
-Steven Rostedt <rostedt@goodmis.org> writes:
+>> > IOW, it is ftrace save regs/restore regs code issue. I need to check how the
+>> > function_graph implements it.
+>> 
+>> gpr2-gpr14 are always saved in ftrace_caller/ftrace_regs_caller(),
+>> regardless of the FTRACE_WITH_REGS flags. The only difference is that
+>> without the FTRACE_WITH_REGS flag the program status word (psw) is not
+>> saved because collecting that is a rather expensive operation.
+>
+> Thanks for checking that! So s390 will recover those saved registers
+> even if FTRACE_WITH_REGS flag is not set? (I wonder what is the requirement
+> of the ftrace_regs when returning from ftrace_call() without
+> FTRACE_WITH_REGS?)
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
->
-> To make handling BIG and LITTLE endian better the offset/len of dynamic
-> fields of the synthetic events was changed into a structure of:
->
->  struct trace_dynamic_info {
->  #ifdef CONFIG_CPU_BIG_ENDIAN
-> 	u16	offset;
-> 	u16	len;
->  #else
-> 	u16	len;
-> 	u16	offset;
->  #endif
->  };
->
-> to replace the manual changes of:
->
->  data_offset = offset & 0xffff;
->  data_offest = len << 16;
->
-> But if you look closely, the above is:
->
->   <len> << 16 | offset
->
-> Which in little endian would be in memory:
->
->  offset_lo offset_hi len_lo len_hi
->
-> and in big endian:
->
->  len_hi len_lo offset_hi offset_lo
->
-> Which if broken into a structure would be:
->
->  struct trace_dynamic_info {
->  #ifdef CONFIG_CPU_BIG_ENDIAN
-> 	u16	len;
-> 	u16	offset;
->  #else
-> 	u16	offset;
-> 	u16	len;
->  #endif
->  };
->
-> Which is the opposite of what was defined.
->
-> Fix this and just to be safe also add "__packed".
->
-> Link: https://lore.kernel.org/all/20230908154417.5172e343@gandalf.local.home/
->
-> Cc: stable@vger.kernel.org
-> Fixes: ddeea494a16f3 ("tracing/synthetic: Use union instead of casts")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->
->  [ Resending to the correct mailing list this time :-p ]
->
->  include/linux/trace_events.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-> index 12f875e9e69a..21ae37e49319 100644
-> --- a/include/linux/trace_events.h
-> +++ b/include/linux/trace_events.h
-> @@ -62,13 +62,13 @@ void trace_event_printf(struct trace_iterator *iter, const char *fmt, ...);
->  /* Used to find the offset and length of dynamic fields in trace events */
->  struct trace_dynamic_info {
->  #ifdef CONFIG_CPU_BIG_ENDIAN
-> -	u16	offset;
->  	u16	len;
-> +	u16	offset;
->  #else
-> -	u16	len;
->  	u16	offset;
-> +	u16	len;
->  #endif
-> -};
-> +} __packed;
->  
->  /*
->   * The trace entry - the most basic unit of tracing. This is what
+Yes, it will recover these in all cases.
 
-This issue was also present on BE, but as you noted "covered" by the
-broken test case. With this patch everything works as expected. So:
+>> 
+>> I used the following commands to test rethook (is that the correct
+>> testcase?)
+>> 
+>> #!/bin/bash
+>> cd /sys/kernel/tracing
+>> 
+>> echo 'r:icmp_rcv icmp_rcv' >kprobe_events
+>> echo 1 >events/kprobes/icmp_rcv/enable
+>> ping -c 1 127.0.0.1
+>> cat trace
+>
+> No, the kprobe will path pt_regs to rethook.
+> Cna you run
+>
+> echo "f:icmp_rcv%return icmp_rcv" >> dynamic_events
 
-Tested-by: Sven Schnelle <svens@linux.ibm.com>
+Ah, ok. Seems to work as well:
 
+  ping-481     [001] ..s2.    53.918480: icmp_rcv: (ip_protocol_deliver_rcu+0x42/0x218 <- icmp_rcv)
+  ping-481     [001] ..s2.    53.918491: icmp_rcv: (ip_protocol_deliver_rcu+0x42/0x218 <- icmp_rcv)
