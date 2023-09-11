@@ -2,236 +2,175 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF98EE57DF
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 11 Sep 2023 05:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3EBEE57DF
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 11 Sep 2023 05:59:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233240AbjIKF2j (ORCPT
+        id S234231AbjIKF7T (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 11 Sep 2023 01:28:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42570 "EHLO
+        Mon, 11 Sep 2023 01:59:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232488AbjIKF2j (ORCPT
+        with ESMTP id S229601AbjIKF7S (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 11 Sep 2023 01:28:39 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF4A41B8
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 10 Sep 2023 22:28:33 -0700 (PDT)
-Received: from kwepemi500008.china.huawei.com (unknown [172.30.72.56])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4RkZst1TD4zMl7G;
-        Mon, 11 Sep 2023 13:25:06 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemi500008.china.huawei.com
- (7.221.188.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Mon, 11 Sep
- 2023 13:28:30 +0800
-From:   Jinjie Ruan <ruanjinjie@huawei.com>
-To:     <linux-trace-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Mon, 11 Sep 2023 01:59:18 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B0499;
+        Sun, 10 Sep 2023 22:59:14 -0700 (PDT)
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38B5lQ8U007138;
+        Mon, 11 Sep 2023 05:59:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : references : date : in-reply-to : message-id : content-type :
+ mime-version; s=pp1; bh=dZAGyFQcx1cPl/o4k8GpkwuSomaOIwoePGLjBcUC4LI=;
+ b=l/KbjoxtDU4I6+RM8zPiJtydqIvAO+wiMEFJfZwZykA4TtbE8stgN5Uh8UsjBmBGP5fU
+ Xm20GOlE/6/7r1EzQh1buGkjQfAmuzUTawFPcfdmDIHS0sLTQ9fRrxd0Pi3jSvv3Po6h
+ Wyi1Bz54XPT4fmh5MQQsa7CxXLMrJo0Nk/aXRBNJe1PGmpaWLnUxKYECD+65OYFhH/4K
+ x2134OIn10WMVCzZdeC4im6QX582QwRvi4Xj/ueBRpqQ1+9CO7n1N4EmAU3+hBnELeDS
+ 4c37u/+pc48RYEBnolC9HPSfGoQGn1SagFFMs2Wk97lf5KPMiYlGyjyyI0fhLO7BB5V1 rA== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t1w2ag6cp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Sep 2023 05:59:07 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38B5bL0j002932;
+        Mon, 11 Sep 2023 05:59:07 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3t14hkg1xh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Sep 2023 05:59:07 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38B5x5AG50856380
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 Sep 2023 05:59:05 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1D59120043;
+        Mon, 11 Sep 2023 05:59:05 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EFD8420040;
+        Mon, 11 Sep 2023 05:59:04 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
+        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Mon, 11 Sep 2023 05:59:04 +0000 (GMT)
+From:   Sven Schnelle <svens@linux.ibm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Ajay Kaher <akaher@vmware.com>
-CC:     <ruanjinjie@huawei.com>
-Subject: [PATCH v3] eventfs: Fix the NULL pointer dereference bug in eventfs_remove_rec()
-Date:   Mon, 11 Sep 2023 13:28:17 +0800
-Message-ID: <20230911052818.1020547-1-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RESEND][PATCH] tracing/synthetic: Fix order of struct
+ trace_dynamic_info
+References: <20230908163929.2c25f3dc@gandalf.local.home>
+Date:   Mon, 11 Sep 2023 07:59:04 +0200
+In-Reply-To: <20230908163929.2c25f3dc@gandalf.local.home> (Steven Rostedt's
+        message of "Fri, 8 Sep 2023 16:39:29 -0400")
+Message-ID: <yt9d8r9djlnb.fsf@linux.ibm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 9xj_OZS3x0-UZKOZM2T07XHifNHEZLlu
+X-Proofpoint-GUID: 9xj_OZS3x0-UZKOZM2T07XHifNHEZLlu
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.90.53.73]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemi500008.china.huawei.com (7.221.188.139)
-X-CFilter-Loop: Reflected
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-11_03,2023-09-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ spamscore=0 mlxscore=0 suspectscore=0 priorityscore=1501
+ lowpriorityscore=0 malwarescore=0 impostorscore=0 bulkscore=0
+ clxscore=1015 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2308100000 definitions=main-2309110051
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Inject fault while probing btrfs.ko, if kstrdup() fails in
-eventfs_prepare_ef() in eventfs_add_dir(), it will return ERR_PTR
-to assign file->ef. But the eventfs_remove() check NULL in
-trace_module_remove_events(), which causes the below NULL
-pointer dereference.
+Hi Steven,
 
-As both Masami and Steven suggest, allocater side should handle the
-error carefully and remove it, so fix the places where it failed.
+Steven Rostedt <rostedt@goodmis.org> writes:
 
- Could not create tracefs 'raid56_write' directory
- Btrfs loaded, zoned=no, fsverity=no
- Unable to handle kernel NULL pointer dereference at virtual address 000000000000001c
- Mem abort info:
-   ESR = 0x0000000096000004
-   EC = 0x25: DABT (current EL), IL = 32 bits
-   SET = 0, FnV = 0
-   EA = 0, S1PTW = 0
-   FSC = 0x04: level 0 translation fault
- Data abort info:
-   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
- user pgtable: 4k pages, 48-bit VAs, pgdp=0000000102544000
- [000000000000001c] pgd=0000000000000000, p4d=0000000000000000
- Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
- Dumping ftrace buffer:
-    (ftrace buffer empty)
- Modules linked in: btrfs(-) libcrc32c xor xor_neon raid6_pq cfg80211 rfkill 8021q garp mrp stp llc ipv6 [last unloaded: btrfs]
- CPU: 15 PID: 1343 Comm: rmmod Tainted: G                 N 6.5.0+ #40
- Hardware name: linux,dummy-virt (DT)
- pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
- pc : eventfs_remove_rec+0x24/0xc0
- lr : eventfs_remove+0x68/0x1d8
- sp : ffff800082d63b60
- x29: ffff800082d63b60 x28: ffffb84b80ddd00c x27: ffffb84b3054ba40
- x26: 0000000000000002 x25: ffff800082d63bf8 x24: ffffb84b8398e440
- x23: ffffb84b82af3000 x22: dead000000000100 x21: dead000000000122
- x20: ffff800082d63bf8 x19: fffffffffffffff4 x18: ffffb84b82508820
- x17: 0000000000000000 x16: 0000000000000000 x15: 000083bc876a3166
- x14: 000000000000006d x13: 000000000000006d x12: 0000000000000000
- x11: 0000000000000001 x10: 00000000000017e0 x9 : 0000000000000001
- x8 : 0000000000000000 x7 : 0000000000000000 x6 : ffffb84b84289804
- x5 : 0000000000000000 x4 : 9696969696969697 x3 : ffff33a5b7601f38
- x2 : 0000000000000000 x1 : ffff800082d63bf8 x0 : fffffffffffffff4
- Call trace:
-  eventfs_remove_rec+0x24/0xc0
-  eventfs_remove+0x68/0x1d8
-  remove_event_file_dir+0x88/0x100
-  event_remove+0x140/0x15c
-  trace_module_notify+0x1fc/0x230
-  notifier_call_chain+0x98/0x17c
-  blocking_notifier_call_chain+0x4c/0x74
-  __arm64_sys_delete_module+0x1a4/0x298
-  invoke_syscall+0x44/0x100
-  el0_svc_common.constprop.1+0x68/0xe0
-  do_el0_svc+0x1c/0x28
-  el0_svc+0x3c/0xc4
-  el0t_64_sync_handler+0xa0/0xc4
-  el0t_64_sync+0x174/0x178
- Code: 5400052c a90153b3 aa0003f3 aa0103f4 (f9401400)
- ---[ end trace 0000000000000000 ]---
- Kernel panic - not syncing: Oops: Fatal exception
- SMP: stopping secondary CPUs
- Dumping ftrace buffer:
-    (ftrace buffer empty)
- Kernel Offset: 0x384b00c00000 from 0xffff800080000000
- PHYS_OFFSET: 0xffffcc5b80000000
- CPU features: 0x88000203,3c020000,1000421b
- Memory Limit: none
- Rebooting in 1 seconds..
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+>
+> To make handling BIG and LITTLE endian better the offset/len of dynamic
+> fields of the synthetic events was changed into a structure of:
+>
+>  struct trace_dynamic_info {
+>  #ifdef CONFIG_CPU_BIG_ENDIAN
+> 	u16	offset;
+> 	u16	len;
+>  #else
+> 	u16	len;
+> 	u16	offset;
+>  #endif
+>  };
+>
+> to replace the manual changes of:
+>
+>  data_offset = offset & 0xffff;
+>  data_offest = len << 16;
+>
+> But if you look closely, the above is:
+>
+>   <len> << 16 | offset
+>
+> Which in little endian would be in memory:
+>
+>  offset_lo offset_hi len_lo len_hi
+>
+> and in big endian:
+>
+>  len_hi len_lo offset_hi offset_lo
+>
+> Which if broken into a structure would be:
+>
+>  struct trace_dynamic_info {
+>  #ifdef CONFIG_CPU_BIG_ENDIAN
+> 	u16	len;
+> 	u16	offset;
+>  #else
+> 	u16	offset;
+> 	u16	len;
+>  #endif
+>  };
+>
+> Which is the opposite of what was defined.
+>
+> Fix this and just to be safe also add "__packed".
+>
+> Link: https://lore.kernel.org/all/20230908154417.5172e343@gandalf.local.home/
+>
+> Cc: stable@vger.kernel.org
+> Fixes: ddeea494a16f3 ("tracing/synthetic: Use union instead of casts")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>
+>  [ Resending to the correct mailing list this time :-p ]
+>
+>  include/linux/trace_events.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+> index 12f875e9e69a..21ae37e49319 100644
+> --- a/include/linux/trace_events.h
+> +++ b/include/linux/trace_events.h
+> @@ -62,13 +62,13 @@ void trace_event_printf(struct trace_iterator *iter, const char *fmt, ...);
+>  /* Used to find the offset and length of dynamic fields in trace events */
+>  struct trace_dynamic_info {
+>  #ifdef CONFIG_CPU_BIG_ENDIAN
+> -	u16	offset;
+>  	u16	len;
+> +	u16	offset;
+>  #else
+> -	u16	len;
+>  	u16	offset;
+> +	u16	len;
+>  #endif
+> -};
+> +} __packed;
+>  
+>  /*
+>   * The trace entry - the most basic unit of tracing. This is what
 
-Fixes: 5bdcd5f5331a ("eventfs: Implement removal of meta data from eventfs")
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-Suggested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
----
-v3:
-- Fix the places where it failed instead of IS_ERR_OR_NULL()
-- Update the commit message.
-v2:
-- Use IS_ERR_OR_NULL() to check instead of IS_ERR() as suggested.
-- Update the commit message.
----
- fs/tracefs/event_inode.c    | 22 +++++++++++-----------
- kernel/trace/trace_events.c |  4 ++--
- 2 files changed, 13 insertions(+), 13 deletions(-)
+This issue was also present on BE, but as you noted "covered" by the
+broken test case. With this patch everything works as expected. So:
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 237c6f370ad9..72bf40484244 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -447,12 +447,12 @@ static struct eventfs_file *eventfs_prepare_ef(const char *name, umode_t mode,
- 
- 	ef = kzalloc(sizeof(*ef), GFP_KERNEL);
- 	if (!ef)
--		return ERR_PTR(-ENOMEM);
-+		return NULL;
- 
- 	ef->name = kstrdup(name, GFP_KERNEL);
- 	if (!ef->name) {
- 		kfree(ef);
--		return ERR_PTR(-ENOMEM);
-+		return NULL;
- 	}
- 
- 	if (S_ISDIR(mode)) {
-@@ -460,7 +460,7 @@ static struct eventfs_file *eventfs_prepare_ef(const char *name, umode_t mode,
- 		if (!ef->ei) {
- 			kfree(ef->name);
- 			kfree(ef);
--			return ERR_PTR(-ENOMEM);
-+			return NULL;
- 		}
- 		INIT_LIST_HEAD(&ef->ei->e_top_files);
- 	} else {
-@@ -539,14 +539,14 @@ struct eventfs_file *eventfs_add_subsystem_dir(const char *name,
- 	struct eventfs_file *ef;
- 
- 	if (!parent)
--		return ERR_PTR(-EINVAL);
-+		return NULL;
- 
- 	ti_parent = get_tracefs(parent->d_inode);
- 	ei_parent = ti_parent->private;
- 
- 	ef = eventfs_prepare_ef(name, S_IFDIR, NULL, NULL, NULL);
--	if (IS_ERR(ef))
--		return ef;
-+	if (!ef)
-+		return NULL;
- 
- 	mutex_lock(&eventfs_mutex);
- 	list_add_tail(&ef->list, &ei_parent->e_top_files);
-@@ -570,11 +570,11 @@ struct eventfs_file *eventfs_add_dir(const char *name,
- 	struct eventfs_file *ef;
- 
- 	if (!ef_parent)
--		return ERR_PTR(-EINVAL);
-+		return NULL;
- 
- 	ef = eventfs_prepare_ef(name, S_IFDIR, NULL, NULL, NULL);
--	if (IS_ERR(ef))
--		return ef;
-+	if (!ef)
-+		return NULL;
- 
- 	mutex_lock(&eventfs_mutex);
- 	list_add_tail(&ef->list, &ef_parent->ei->e_top_files);
-@@ -622,7 +622,7 @@ int eventfs_add_events_file(const char *name, umode_t mode,
- 	ei = ti->private;
- 	ef = eventfs_prepare_ef(name, mode, fop, NULL, data);
- 
--	if (IS_ERR(ef))
-+	if (!ef)
- 		return -ENOMEM;
- 
- 	mutex_lock(&eventfs_mutex);
-@@ -661,7 +661,7 @@ int eventfs_add_file(const char *name, umode_t mode,
- 		mode |= S_IFREG;
- 
- 	ef = eventfs_prepare_ef(name, mode, fop, NULL, data);
--	if (IS_ERR(ef))
-+	if (!ef)
- 		return -ENOMEM;
- 
- 	mutex_lock(&eventfs_mutex);
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index ed367d713be0..86956e23ac49 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -2330,7 +2330,7 @@ event_subsystem_dir(struct trace_array *tr, const char *name,
- 		__get_system(system);
- 
- 	dir->ef = eventfs_add_subsystem_dir(name, parent);
--	if (IS_ERR(dir->ef)) {
-+	if (!dir->ef) {
- 		pr_warn("Failed to create system directory %s\n", name);
- 		__put_system(system);
- 		goto out_free;
-@@ -2432,7 +2432,7 @@ event_create_dir(struct dentry *parent, struct trace_event_file *file)
- 
- 	name = trace_event_name(call);
- 	file->ef = eventfs_add_dir(name, ef_subsystem);
--	if (IS_ERR(file->ef)) {
-+	if (!file->ef) {
- 		pr_warn("Could not create tracefs '%s' directory\n", name);
- 		return -1;
- 	}
--- 
-2.34.1
+Tested-by: Sven Schnelle <svens@linux.ibm.com>
 
