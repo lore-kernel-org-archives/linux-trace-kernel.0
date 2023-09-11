@@ -2,165 +2,278 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 603ABCA0ED1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8EAFCA0ED5
 	for <linux-trace-kernel@archiver.kernel.org>; Mon, 11 Sep 2023 22:43:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237838AbjIKWPk (ORCPT
+        id S235643AbjIKWPi (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 11 Sep 2023 18:15:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52550 "EHLO
+        Mon, 11 Sep 2023 18:15:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244120AbjIKTFL (ORCPT
+        with ESMTP id S236639AbjIKLHh (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 11 Sep 2023 15:05:11 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10A4ED8;
-        Mon, 11 Sep 2023 12:05:07 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3F44C433C8;
-        Mon, 11 Sep 2023 19:05:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694459106;
-        bh=hJ5p3TsjWyGe3OdxMfLULkedWZ9EMmXGZBw1r4Vi72Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=caoz1Q8jo/vriTwrAeUv58MBLku2nEOL8/UhVo7wZQGVqe4qs9eGOvszaUThBXO8K
-         eygwuQv3xjXGPgYCHZlTEyi+gXH2EMDecgQRSPLCiZVOxi/YPDCMZmHhaJoTLN25E4
-         7B5acEhPsH1lGAKHbQ1XTPI/V6tTPkY6tLjcvgJR9cTcvsP6Acod9lQpWMIwwXJxpm
-         WoUhmaub8YtJdN2HGMzGE/a73XBz962VwFBy6eUxdnHSlTBRwXVT6QCt3Y65BLXb2A
-         AGQkYxO/1MVwyAn0nED4/6FNf/obpa58p85D6mmq8eV0KHbg8ARSa829KdYdzmCjEG
-         RbqIJxQvZ9reQ==
-From:   SeongJae Park <sj@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     SeongJae Park <sj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        damon@lists.linux.dev, linux-mm@kvack.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm/damon/core: add a tracepoint for damos apply target regions
-Date:   Mon, 11 Sep 2023 19:05:04 +0000
-Message-Id: <20230911190504.102317-1-sj@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230911141955.245d1397@gandalf.local.home>
-References: 
+        Mon, 11 Sep 2023 07:07:37 -0400
+X-Greylist: delayed 377 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 11 Sep 2023 04:07:31 PDT
+Received: from out-221.mta0.migadu.com (out-221.mta0.migadu.com [91.218.175.221])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D01BFCC3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Sep 2023 04:07:31 -0700 (PDT)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1694430069;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=E5yHKp0OcXp3JHJgg+0qOrM4VXGsFKESg9vuY4j64KM=;
+        b=RFgJBw48EPZafs2msT138v8SXX3p9xUpN/mvU6RgMl44mFl5tuNwYlwSB0mKtJRoeAdXUJ
+        C1g5Lk5GblE6HBE93nzpeDZldouoYN22NM8R+3AHXm+4Q85V5H++AgcpRZ8xxh5kYJFzwH
+        SMsGTEyx07SRu2mkQtSXMN2LZfpAFAE=
+From:   Yajun Deng <yajun.deng@linux.dev>
+To:     corbet@lwn.net, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+        mhiramat@kernel.org
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        Yajun Deng <yajun.deng@linux.dev>
+Subject: [PATCH] sched: Change the name of preempt mode from full to low_latency
+Date:   Mon, 11 Sep 2023 19:00:46 +0800
+Message-Id: <20230911110046.3877123-1-yajun.deng@linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Steven,
+There is a similar name fully in Kconfig.preempt, but it corresponds to
+PREEMPT_RT. In order to distinguish them, change the name of preempt mode
+from full to low_latency.
 
-On Mon, 11 Sep 2023 14:19:55 -0400 Steven Rostedt <rostedt@goodmis.org> wrote:
+Also, define a global array and variable that used to save preempt mode
+name and size.
 
-> On Mon, 11 Sep 2023 04:59:07 +0000
-> SeongJae Park <sj@kernel.org> wrote:
-> 
-> > --- a/mm/damon/core.c
-> > +++ b/mm/damon/core.c
-> > @@ -950,6 +950,28 @@ static void damos_apply_scheme(struct damon_ctx *c, struct damon_target *t,
-> >  	struct timespec64 begin, end;
-> >  	unsigned long sz_applied = 0;
-> >  	int err = 0;
-> > +	/*
-> > +	 * We plan to support multiple context per kdamond, as DAMON sysfs
-> > +	 * implies with 'nr_contexts' file.  Nevertheless, only single context
-> > +	 * per kdamond is supported for now.  So, we can simply use '0' context
-> > +	 * index here.
-> > +	 */
-> > +	unsigned int cidx = 0;
-> > +	struct damos *siter;		/* schemes iterator */
-> > +	unsigned int sidx = 0;
-> > +	struct damon_target *titer;	/* targets iterator */
-> > +	unsigned int tidx = 0;
-> > +
-> 
-> If this loop is only for passing sidx and tidx to the trace point,
+Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
+---
+ .../admin-guide/kernel-parameters.txt         |  2 +-
+ include/linux/sched.h                         |  8 ++--
+ kernel/sched/core.c                           | 43 ++++++++++---------
+ kernel/sched/debug.c                          |  5 +--
+ kernel/sched/sched.h                          |  2 +
+ kernel/trace/trace.c                          |  4 +-
+ 6 files changed, 32 insertions(+), 32 deletions(-)
 
-You're correct.
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 0a1731a0f0ef..9284fd7999d7 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4581,7 +4581,7 @@
+ 			Select preemption mode if you have CONFIG_PREEMPT_DYNAMIC
+ 			none - Limited to cond_resched() calls
+ 			voluntary - Limited to cond_resched() and might_sleep() calls
+-			full - Any section that isn't explicitly preempt disabled
++			low_latency - Any section that isn't explicitly preempt disabled
+ 			       can be preempted anytime.
+ 
+ 	print-fatal-signals=
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 6d1341b1673f..ea607a0ce6f6 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -2181,7 +2181,7 @@ static inline void cond_resched_rcu(void)
+ 
+ extern bool preempt_model_none(void);
+ extern bool preempt_model_voluntary(void);
+-extern bool preempt_model_full(void);
++extern bool preempt_model_low_latency(void);
+ 
+ #else
+ 
+@@ -2193,14 +2193,14 @@ static inline bool preempt_model_voluntary(void)
+ {
+ 	return IS_ENABLED(CONFIG_PREEMPT_VOLUNTARY);
+ }
+-static inline bool preempt_model_full(void)
++static inline bool preempt_model_low_latency(void)
+ {
+ 	return IS_ENABLED(CONFIG_PREEMPT);
+ }
+ 
+ #endif
+ 
+-static inline bool preempt_model_rt(void)
++static inline bool preempt_model_fully(void)
+ {
+ 	return IS_ENABLED(CONFIG_PREEMPT_RT);
+ }
+@@ -2215,7 +2215,7 @@ static inline bool preempt_model_rt(void)
+  */
+ static inline bool preempt_model_preemptible(void)
+ {
+-	return preempt_model_full() || preempt_model_rt();
++	return preempt_model_low_latency() || preempt_model_fully();
+ }
+ 
+ /*
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 2299a5cfbfb9..2abbc0baaae7 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -8705,7 +8705,7 @@ EXPORT_SYMBOL(__cond_resched_rwlock_write);
+  *   preempt_schedule_notrace   <- NOP
+  *   irqentry_exit_cond_resched <- NOP
+  *
+- * FULL:
++ * LOW_LATENCY:
+  *   cond_resched               <- RET0
+  *   might_resched              <- RET0
+  *   preempt_schedule           <- preempt_schedule
+@@ -8717,21 +8717,25 @@ enum {
+ 	preempt_dynamic_undefined = -1,
+ 	preempt_dynamic_none,
+ 	preempt_dynamic_voluntary,
+-	preempt_dynamic_full,
++	preempt_dynamic_low_latency,
+ };
+-
+ int preempt_dynamic_mode = preempt_dynamic_undefined;
+ 
++const char *preempt_modes[] = {
++	[preempt_dynamic_none]        = "none",
++	[preempt_dynamic_voluntary]   = "voluntary",
++	[preempt_dynamic_low_latency] = "low_latency",
++};
++int preempt_modes_size = ARRAY_SIZE(preempt_modes);
++
+ int sched_dynamic_mode(const char *str)
+ {
+-	if (!strcmp(str, "none"))
+-		return preempt_dynamic_none;
+-
+-	if (!strcmp(str, "voluntary"))
+-		return preempt_dynamic_voluntary;
++	int i;
+ 
+-	if (!strcmp(str, "full"))
+-		return preempt_dynamic_full;
++	for (i = 0; i < preempt_modes_size; i++) {
++		if (!strcmp(str, preempt_modes[i]))
++			return i;
++	}
+ 
+ 	return -EINVAL;
+ }
+@@ -8752,7 +8756,7 @@ static bool klp_override;
+ static void __sched_dynamic_update(int mode)
+ {
+ 	/*
+-	 * Avoid {NONE,VOLUNTARY} -> FULL transitions from ever ending up in
++	 * Avoid {NONE,VOLUNTARY} -> LOW_LATENCY transitions from ever ending up in
+ 	 * the ZERO state, which is invalid.
+ 	 */
+ 	if (!klp_override)
+@@ -8770,8 +8774,6 @@ static void __sched_dynamic_update(int mode)
+ 		preempt_dynamic_disable(preempt_schedule);
+ 		preempt_dynamic_disable(preempt_schedule_notrace);
+ 		preempt_dynamic_disable(irqentry_exit_cond_resched);
+-		if (mode != preempt_dynamic_mode)
+-			pr_info("Dynamic Preempt: none\n");
+ 		break;
+ 
+ 	case preempt_dynamic_voluntary:
+@@ -8781,22 +8783,21 @@ static void __sched_dynamic_update(int mode)
+ 		preempt_dynamic_disable(preempt_schedule);
+ 		preempt_dynamic_disable(preempt_schedule_notrace);
+ 		preempt_dynamic_disable(irqentry_exit_cond_resched);
+-		if (mode != preempt_dynamic_mode)
+-			pr_info("Dynamic Preempt: voluntary\n");
+ 		break;
+ 
+-	case preempt_dynamic_full:
++	case preempt_dynamic_low_latency:
+ 		if (!klp_override)
+ 			preempt_dynamic_disable(cond_resched);
+ 		preempt_dynamic_disable(might_resched);
+ 		preempt_dynamic_enable(preempt_schedule);
+ 		preempt_dynamic_enable(preempt_schedule_notrace);
+ 		preempt_dynamic_enable(irqentry_exit_cond_resched);
+-		if (mode != preempt_dynamic_mode)
+-			pr_info("Dynamic Preempt: full\n");
+ 		break;
+ 	}
+ 
++	if (mode != preempt_dynamic_mode)
++		pr_info("Dynamic Preempt: %s\n", preempt_modes[mode]);
++
+ 	preempt_dynamic_mode = mode;
+ }
+ 
+@@ -8860,8 +8861,8 @@ static void __init preempt_dynamic_init(void)
+ 		} else {
+ 			/* Default static call setting, nothing to do */
+ 			WARN_ON_ONCE(!IS_ENABLED(CONFIG_PREEMPT));
+-			preempt_dynamic_mode = preempt_dynamic_full;
+-			pr_info("Dynamic Preempt: full\n");
++			preempt_dynamic_mode = preempt_dynamic_low_latency;
++			pr_info("Dynamic Preempt: %s\n", preempt_modes[preempt_dynamic_mode]);
+ 		}
+ 	}
+ }
+@@ -8876,7 +8877,7 @@ static void __init preempt_dynamic_init(void)
+ 
+ PREEMPT_MODEL_ACCESSOR(none);
+ PREEMPT_MODEL_ACCESSOR(voluntary);
+-PREEMPT_MODEL_ACCESSOR(full);
++PREEMPT_MODEL_ACCESSOR(low_latency);
+ 
+ #else /* !CONFIG_PREEMPT_DYNAMIC */
+ 
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index 4c3d0d9f3db6..fd516dcff988 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -244,12 +244,9 @@ static ssize_t sched_dynamic_write(struct file *filp, const char __user *ubuf,
+ 
+ static int sched_dynamic_show(struct seq_file *m, void *v)
+ {
+-	static const char * preempt_modes[] = {
+-		"none", "voluntary", "full"
+-	};
+ 	int i;
+ 
+-	for (i = 0; i < ARRAY_SIZE(preempt_modes); i++) {
++	for (i = 0; i < preempt_modes_size; i++) {
+ 		if (preempt_dynamic_mode == i)
+ 			seq_puts(m, "(");
+ 		seq_puts(m, preempt_modes[i]);
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 04846272409c..6210c40f35da 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -3276,6 +3276,8 @@ extern int try_to_wake_up(struct task_struct *tsk, unsigned int state, int wake_
+ 
+ #ifdef CONFIG_PREEMPT_DYNAMIC
+ extern int preempt_dynamic_mode;
++extern const char *preempt_modes[];
++extern int preempt_modes_size;
+ extern int sched_dynamic_mode(const char *str);
+ extern void sched_dynamic_update(int mode);
+ #endif
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 2b4ded753367..3d731b4fea65 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4394,8 +4394,8 @@ print_trace_header(struct seq_file *m, struct trace_iterator *iter)
+ 		   buf->cpu,
+ 		   preempt_model_none()      ? "server" :
+ 		   preempt_model_voluntary() ? "desktop" :
+-		   preempt_model_full()      ? "preempt" :
+-		   preempt_model_rt()        ? "preempt_rt" :
++		   preempt_model_low_latency() ? "preempt" :
++		   preempt_model_fully()     ? "preempt_rt" :
+ 		   "unknown",
+ 		   /* These are reserved for later use */
+ 		   0, 0, 0, 0);
+-- 
+2.25.1
 
-> you can add around it:
-> 
-> 	if (trace_damos_before_apply_enabled()) {
-> 
-> > +	damon_for_each_scheme(siter, c) {
-> > +		if (siter == s)
-> > +			break;
-> > +		sidx++;
-> > +	}
-> > +	damon_for_each_target(titer, c) {
-> > +		if (titer == t)
-> > +			break;
-> > +		tidx++;
-> > +	}
-> 
-> 	}
-> 
-> 
-> And then this loop will only be done if that trace event is enabled.
-
-Today I learned yet another great feature of the tracing framework.  Thank you
-Steven, I will add that to the next spin of this patchset!
-
-> 
-> To prevent races, you may also want to add a third parameter, or initialize
-> them to -1:
-> 
-> 	sidx = -1;
-> 
-> 	if (trace_damo_before_apply_enabled()) {
-> 		sidx = 0;
-> 		[..]
-> 	}
-> 
-> And you can change the TRACE_EVENT() TO TRACE_EVENT_CONDITION():
-> 
-> TRACE_EVENT_CONDITION(damos_before_apply,
-> 
-> 	TP_PROTO(...),
-> 
-> 	TP_ARGS(...),
-> 
-> 	TP_CONDITION(sidx >= 0),
-> 
-> and the trace event will not be called if sidx is less than zero.
-> 
-> Also, this if statement is only done when the trace event is enabled, so
-> it's equivalent to:
-> 
-> 	if (trace_damos_before_apply_enabled()) {
-> 		if (sdx >= 0)
-> 			trace_damos_before_apply(cidx, sidx, tidx, r,
-> 					damon_nr_regions(t));
-> 	}
-
-Again, thank you very much for letting me know this awesome feature.  However,
-sidx is supposed to be always >=0 here, since kdamond is running in single
-thread and hence no race is expected.  If it exists, it's a bug.  So, I
-wouldn't make this change.  Appreciate again for letting me know this very
-useful feature, and please let me know if I'm missing something, though!
-
-
-Thanks,
-SJ
-
-> 
-> -- Steve
-> 
-> 
-> 
-> >  
-> >  	if (c->ops.apply_scheme) {
-> >  		if (quota->esz && quota->charged_sz + sz > quota->esz) {
-> > @@ -964,8 +986,11 @@ static void damos_apply_scheme(struct damon_ctx *c, struct damon_target *t,
-> >  		ktime_get_coarse_ts64(&begin);
-> >  		if (c->callback.before_damos_apply)
-> >  			err = c->callback.before_damos_apply(c, t, r, s);
-> > -		if (!err)
-> > +		if (!err) {
-> > +			trace_damos_before_apply(cidx, sidx, tidx, r,
-> > +					damon_nr_regions(t));
-> >  			sz_applied = c->ops.apply_scheme(c, t, r, s);
-> > +		}
-> >  		ktime_get_coarse_ts64(&end);
-> >  		quota->total_charged_ns += timespec64_to_ns(&end) -
-> >  			timespec64_to_ns(&begin);
-> > -- 
-> 
