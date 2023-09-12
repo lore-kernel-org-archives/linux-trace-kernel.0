@@ -2,236 +2,184 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BFEEE3F0D
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 12 Sep 2023 18:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9D7EE3F0C
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 12 Sep 2023 18:36:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232897AbjILSHR (ORCPT
+        id S237470AbjILSgJ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 12 Sep 2023 14:07:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48570 "EHLO
+        Tue, 12 Sep 2023 14:36:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237275AbjILSHP (ORCPT
+        with ESMTP id S237481AbjILSgI (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 12 Sep 2023 14:07:15 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5EE4410DF;
-        Tue, 12 Sep 2023 11:07:11 -0700 (PDT)
-Received: from localhost.localdomain (unknown [4.155.48.112])
-        by linux.microsoft.com (Postfix) with ESMTPSA id DF67C212BC1B;
-        Tue, 12 Sep 2023 11:07:10 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DF67C212BC1B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1694542030;
-        bh=9WF2llb3VqzKQ7G8ifFcjGtwVjENCP3yBl4NYTE80qk=;
+        Tue, 12 Sep 2023 14:36:08 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D10461702;
+        Tue, 12 Sep 2023 11:36:03 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED624C433C8;
+        Tue, 12 Sep 2023 18:36:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694543763;
+        bh=Ux09g9gvrxiM7e96gBaO1VxVbWHC7sVtSUZj+woij6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rClftwFP22xooyGKejncCVuE/kBwBNwEh5BfgADQ2GfdwgIvJ7+RuOsBi6lqXy2Vr
-         cBHejJwzYMulGfbIrpyh/yt9bviZDK7ZFLPQlU6lGmklcC6VJA0g71SIb2f3oNZwEm
-         ScRO541NMwekaAo2o14yiYDD5Z90P7ST4gI0YruA=
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     rostedt@goodmis.org, mhiramat@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        ast@kernel.org, dcook@linux.microsoft.com
-Subject: [PATCH v2 2/3] selftests/user_events: Test persist flag cases
-Date:   Tue, 12 Sep 2023 18:07:03 +0000
-Message-Id: <20230912180704.1284-3-beaub@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230912180704.1284-1-beaub@linux.microsoft.com>
-References: <20230912180704.1284-1-beaub@linux.microsoft.com>
+        b=bOqHbiv48YSWBMbvRN6vZU8YWfJ0YC6DosroZx3A9M/67BNe2s8yE+t+ld33U9+Ed
+         yKQ0j/iIsfTFVUpjQceMWRN4+KJ+yGz/oPfLgYD6T7ESKSy57+wsRBHH/D0fIXWTrg
+         mWwQH0/AviNOCk2et9ZKEZcf2sXer7c4xxzOofCwPLg75IkVptfYLTPbnEJVn4oBxV
+         d+0ZMia0W2b3jC6/BO5wmTuxhh14bR8DrpKf43skAtdrDpMqSa/HBGML5WUkthZEAZ
+         FqfnnIUKGKUKFyRSeTuR8eX6JU0ttzoub0B6fA3D9F0k9pTKpYsUBWMQNRWsPpmF8S
+         0qU87pY7zDxTg==
+From:   SeongJae Park <sj@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     SeongJae Park <sj@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>, damon@lists.linux.dev,
+        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] mm/damon/core: add a tracepoint for damos apply target regions
+Date:   Tue, 12 Sep 2023 18:35:58 +0000
+Message-Id: <20230912183559.4733-2-sj@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230912183559.4733-1-sj@kernel.org>
+References: <20230912183559.4733-1-sj@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Now that we have exposed USER_EVENT_REG_PERSIST events can persist both
-via the ABI and in the /sys/kernel/tracing/dynamic_events file.
+DAMON provides damon_aggregated tracepoint, which exposes details of
+each region and its access monitoring results.  It is useful for
+getting whole monitoring results, e.g., for recording purposes.
 
-Ensure both the ABI and DYN cases work by calling both during the parse
-tests. Add new flags test that ensures only USER_EVENT_REG_PERSIST is
-honored and any other flag is invalid.
+For investigations of DAMOS, DAMON Sysfs interface provides DAMOS
+statistics and tried_regions directory.  But, those provides only
+statistics and snapshots.  If the scheme is frequently applied and if
+the user needs to know every detail of DAMOS behavior, the
+snapshot-based interface could be insufficient and expensive.
 
-Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
+As a last resort, userspace users need to record the all monitoring
+results via damon_aggregated tracepoint and simulate how DAMOS would
+worked.  It is unnecessarily complicated.  DAMON kernel API users,
+meanwhile, can do that easily via before_damos_apply() callback field of
+'struct damon_callback', though.
+
+Add a tracepoint that will be called just after before_damos_apply()
+callback for more convenient investigations of DAMOS.  The tracepoint
+exposes all details about each regions, similar to damon_aggregated
+tracepoint.
+
+Please note that DAMOS is currently not only for memory management but
+also for query-like efficient monitoring results retrievals (when 'stat'
+action is used).  Until now, only statistics or snapshots were
+supported.  Addition of this tracepoint allows efficient full recording
+of DAMOS-based filtered monitoring results.
+
+Signed-off-by: SeongJae Park <sj@kernel.org>
 ---
- .../testing/selftests/user_events/abi_test.c  | 55 ++++++++++++++++++-
- .../testing/selftests/user_events/dyn_test.c  | 54 +++++++++++++++++-
- 2 files changed, 107 insertions(+), 2 deletions(-)
+ include/trace/events/damon.h | 39 ++++++++++++++++++++++++++++++++++++
+ mm/damon/core.c              | 32 ++++++++++++++++++++++++++++-
+ 2 files changed, 70 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/user_events/abi_test.c b/tools/testing/selftests/user_events/abi_test.c
-index 5125c42efe65..b95fc15496ba 100644
---- a/tools/testing/selftests/user_events/abi_test.c
-+++ b/tools/testing/selftests/user_events/abi_test.c
-@@ -23,6 +23,18 @@
- const char *data_file = "/sys/kernel/tracing/user_events_data";
- const char *enable_file = "/sys/kernel/tracing/events/user_events/__abi_event/enable";
+diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
+index 0b8d13bde17a..19930bb7af9a 100644
+--- a/include/trace/events/damon.h
++++ b/include/trace/events/damon.h
+@@ -9,6 +9,45 @@
+ #include <linux/types.h>
+ #include <linux/tracepoint.h>
  
-+static bool event_exists(void)
-+{
-+	int fd = open(enable_file, O_RDWR);
++TRACE_EVENT_CONDITION(damos_before_apply,
 +
-+	if (fd < 0)
-+		return false;
++	TP_PROTO(unsigned int context_idx, unsigned int scheme_idx,
++		unsigned int target_idx, struct damon_region *r,
++		unsigned int nr_regions, bool do_trace),
 +
-+	close(fd);
++	TP_ARGS(context_idx, target_idx, scheme_idx, r, nr_regions, do_trace),
 +
-+	return true;
-+}
++	TP_CONDITION(do_trace),
 +
- static int change_event(bool enable)
- {
- 	int fd = open(enable_file, O_RDWR);
-@@ -46,7 +58,22 @@ static int change_event(bool enable)
- 	return ret;
- }
++	TP_STRUCT__entry(
++		__field(unsigned int, context_idx)
++		__field(unsigned int, scheme_idx)
++		__field(unsigned long, target_idx)
++		__field(unsigned long, start)
++		__field(unsigned long, end)
++		__field(unsigned int, nr_accesses)
++		__field(unsigned int, age)
++		__field(unsigned int, nr_regions)
++	),
++
++	TP_fast_assign(
++		__entry->context_idx = context_idx;
++		__entry->scheme_idx = scheme_idx;
++		__entry->target_idx = target_idx;
++		__entry->start = r->ar.start;
++		__entry->end = r->ar.end;
++		__entry->nr_accesses = r->nr_accesses;
++		__entry->age = r->age;
++		__entry->nr_regions = nr_regions;
++	),
++
++	TP_printk("ctx_idx=%u scheme_idx=%u target_idx=%lu nr_regions=%u %lu-%lu: %u %u",
++			__entry->context_idx, __entry->scheme_idx,
++			__entry->target_idx, __entry->nr_regions,
++			__entry->start, __entry->end,
++			__entry->nr_accesses, __entry->age)
++);
++
+ TRACE_EVENT(damon_aggregated,
  
--static int reg_enable(long *enable, int size, int bit)
-+static int event_delete(void)
-+{
-+	int fd = open(data_file, O_RDWR);
-+	int ret;
+ 	TP_PROTO(unsigned int target_id, struct damon_region *r,
+diff --git a/mm/damon/core.c b/mm/damon/core.c
+index ca631dd88b33..3ca34a252a3c 100644
+--- a/mm/damon/core.c
++++ b/mm/damon/core.c
+@@ -950,6 +950,33 @@ static void damos_apply_scheme(struct damon_ctx *c, struct damon_target *t,
+ 	struct timespec64 begin, end;
+ 	unsigned long sz_applied = 0;
+ 	int err = 0;
++	/*
++	 * We plan to support multiple context per kdamond, as DAMON sysfs
++	 * implies with 'nr_contexts' file.  Nevertheless, only single context
++	 * per kdamond is supported for now.  So, we can simply use '0' context
++	 * index here.
++	 */
++	unsigned int cidx = 0;
++	struct damos *siter;		/* schemes iterator */
++	unsigned int sidx = 0;
++	struct damon_target *titer;	/* targets iterator */
++	unsigned int tidx = 0;
++	bool do_trace = false;
 +
-+	if (fd < 0)
-+		return -1;
-+
-+	ret = ioctl(fd, DIAG_IOCSDEL, "__abi_event");
-+
-+	close(fd);
-+
-+	return ret;
-+}
-+
-+static int reg_enable_flags(long *enable, int size, int bit, int flags)
- {
- 	struct user_reg reg = {0};
- 	int fd = open(data_file, O_RDWR);
-@@ -57,6 +84,7 @@ static int reg_enable(long *enable, int size, int bit)
++	/* get indices for trace_damos_before_apply() */
++	if (trace_damos_before_apply_enabled()) {
++		damon_for_each_scheme(siter, c) {
++			if (siter == s)
++				break;
++			sidx++;
++		}
++		damon_for_each_target(titer, c) {
++			if (titer == t)
++				break;
++			tidx++;
++		}
++		do_trace = true;
++	}
  
- 	reg.size = sizeof(reg);
- 	reg.name_args = (__u64)"__abi_event";
-+	reg.flags = flags;
- 	reg.enable_bit = bit;
- 	reg.enable_addr = (__u64)enable;
- 	reg.enable_size = size;
-@@ -68,6 +96,11 @@ static int reg_enable(long *enable, int size, int bit)
- 	return ret;
- }
- 
-+static int reg_enable(long *enable, int size, int bit)
-+{
-+	return reg_enable_flags(enable, size, bit, 0);
-+}
-+
- static int reg_disable(long *enable, int bit)
- {
- 	struct user_unreg reg = {0};
-@@ -121,6 +154,26 @@ TEST_F(user, enablement) {
- 	ASSERT_EQ(0, change_event(false));
- }
- 
-+TEST_F(user, flags) {
-+	/* USER_EVENT_REG_PERSIST is allowed */
-+	ASSERT_EQ(0, reg_enable_flags(&self->check, sizeof(int), 0,
-+				      USER_EVENT_REG_PERSIST));
-+	ASSERT_EQ(0, reg_disable(&self->check, 0));
-+
-+	/* Ensure it exists after close and disable */
-+	ASSERT_TRUE(event_exists());
-+
-+	/* Ensure we can delete it */
-+	ASSERT_EQ(0, event_delete());
-+
-+	/* USER_EVENT_REG_MAX or above is not allowed */
-+	ASSERT_EQ(-1, reg_enable_flags(&self->check, sizeof(int), 0,
-+				       USER_EVENT_REG_MAX));
-+
-+	/* Ensure it does not exist after invalid flags */
-+	ASSERT_FALSE(event_exists());
-+}
-+
- TEST_F(user, bit_sizes) {
- 	/* Allow 0-31 bits for 32-bit */
- 	ASSERT_EQ(0, reg_enable(&self->check, sizeof(int), 0));
-diff --git a/tools/testing/selftests/user_events/dyn_test.c b/tools/testing/selftests/user_events/dyn_test.c
-index 91a4444ad42b..f2a41bcb5ad8 100644
---- a/tools/testing/selftests/user_events/dyn_test.c
-+++ b/tools/testing/selftests/user_events/dyn_test.c
-@@ -16,9 +16,25 @@
- 
- #include "../kselftest_harness.h"
- 
-+const char *dyn_file = "/sys/kernel/tracing/dynamic_events";
- const char *abi_file = "/sys/kernel/tracing/user_events_data";
- const char *enable_file = "/sys/kernel/tracing/events/user_events/__test_event/enable";
- 
-+static int event_delete(void)
-+{
-+	int fd = open(abi_file, O_RDWR);
-+	int ret;
-+
-+	if (fd < 0)
-+		return -1;
-+
-+	ret = ioctl(fd, DIAG_IOCSDEL, "__test_event");
-+
-+	close(fd);
-+
-+	return ret;
-+}
-+
- static bool wait_for_delete(void)
- {
- 	int i;
-@@ -63,7 +79,31 @@ static int unreg_event(int fd, int *check, int bit)
- 	return ioctl(fd, DIAG_IOCSUNREG, &unreg);
- }
- 
--static int parse(int *check, const char *value)
-+static int parse_dyn(const char *value)
-+{
-+	int fd = open(dyn_file, O_RDWR | O_APPEND);
-+	int len = strlen(value);
-+	int ret;
-+
-+	if (fd == -1)
-+		return -1;
-+
-+	ret = write(fd, value, len);
-+
-+	if (ret == len)
-+		ret = 0;
-+	else
-+		ret = -1;
-+
-+	close(fd);
-+
-+	if (ret == 0)
-+		event_delete();
-+
-+	return ret;
-+}
-+
-+static int parse_abi(int *check, const char *value)
- {
- 	int fd = open(abi_file, O_RDWR);
- 	int ret;
-@@ -89,6 +129,18 @@ static int parse(int *check, const char *value)
- 	return ret;
- }
- 
-+static int parse(int *check, const char *value)
-+{
-+	int abi_ret = parse_abi(check, value);
-+	int dyn_ret = parse_dyn(value);
-+
-+	/* Ensure both ABI and DYN parse the same way */
-+	if (dyn_ret != abi_ret)
-+		return -1;
-+
-+	return dyn_ret;
-+}
-+
- static int check_match(int *check, const char *first, const char *second, bool *match)
- {
- 	int fd = open(abi_file, O_RDWR);
+ 	if (c->ops.apply_scheme) {
+ 		if (quota->esz && quota->charged_sz + sz > quota->esz) {
+@@ -964,8 +991,11 @@ static void damos_apply_scheme(struct damon_ctx *c, struct damon_target *t,
+ 		ktime_get_coarse_ts64(&begin);
+ 		if (c->callback.before_damos_apply)
+ 			err = c->callback.before_damos_apply(c, t, r, s);
+-		if (!err)
++		if (!err) {
++			trace_damos_before_apply(cidx, sidx, tidx, r,
++					damon_nr_regions(t), do_trace);
+ 			sz_applied = c->ops.apply_scheme(c, t, r, s);
++		}
+ 		ktime_get_coarse_ts64(&end);
+ 		quota->total_charged_ns += timespec64_to_ns(&end) -
+ 			timespec64_to_ns(&begin);
 -- 
-2.34.1
+2.25.1
 
