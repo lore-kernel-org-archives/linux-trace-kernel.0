@@ -2,38 +2,38 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C65BEE3F00
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC327EE3F0B
 	for <linux-trace-kernel@archiver.kernel.org>; Tue, 12 Sep 2023 18:07:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237304AbjILSHQ (ORCPT
+        id S237306AbjILSHQ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
         Tue, 12 Sep 2023 14:07:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48558 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237172AbjILSHP (ORCPT
+        with ESMTP id S237274AbjILSHP (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Tue, 12 Sep 2023 14:07:15 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 472CB10D8;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7845A10E6;
         Tue, 12 Sep 2023 11:07:11 -0700 (PDT)
 Received: from localhost.localdomain (unknown [4.155.48.112])
-        by linux.microsoft.com (Postfix) with ESMTPSA id C6DE2212BC1A;
-        Tue, 12 Sep 2023 11:07:10 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C6DE2212BC1A
+        by linux.microsoft.com (Postfix) with ESMTPSA id 05BA7212BC1C;
+        Tue, 12 Sep 2023 11:07:11 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 05BA7212BC1C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1694542030;
-        bh=pwgfnQGdYQ7dhrASDB16knk3pMkjAyqpomjeERDUJlc=;
+        s=default; t=1694542031;
+        bh=/6uRDgkxFJTctUG2IpL7tJpAeMqES8n2c5VEJ7ldNDY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OwdP8ZmyOXqIQfJ+1KExC6cxFh7aklIGehuRzQTeGUWv5VOHkNXtB96OAGHtHS53w
-         /PCYLQjajPdGfrPCKG+oLLGDRx7/EQuePqOlyNVugLrja72QynpBgthlz4TY3LE28I
-         P11sDV/9GOvdj7jGJ14B8olkkoGWRECPfRb2oNJI=
+        b=b+eP9QnLYCdAXodvzBc1cs54l8NN3J7LU0gHN9Y3I4hrVY0+mRjbiKAIMq640BolF
+         erX4q9x6QMNs+3lVpiMio4g3zobypEMiAX8jawSkWt0Vgm0Ys2axosoqzGapXlkrP6
+         zbHUIookLyN2lp9SMz/5wfcUOUKXIGlF5pAlIX5M=
 From:   Beau Belgrave <beaub@linux.microsoft.com>
 To:     rostedt@goodmis.org, mhiramat@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         ast@kernel.org, dcook@linux.microsoft.com
-Subject: [PATCH v2 1/3] tracing/user_events: Allow events to persist for perfmon_capable users
-Date:   Tue, 12 Sep 2023 18:07:02 +0000
-Message-Id: <20230912180704.1284-2-beaub@linux.microsoft.com>
+Subject: [PATCH v2 3/3] tracing/user_events: Document persist event flags
+Date:   Tue, 12 Sep 2023 18:07:04 +0000
+Message-Id: <20230912180704.1284-4-beaub@linux.microsoft.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230912180704.1284-1-beaub@linux.microsoft.com>
 References: <20230912180704.1284-1-beaub@linux.microsoft.com>
@@ -43,132 +43,81 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-There are several scenarios that have come up where having a user_event
-persist even if the process that registered it exits. The main one is
-having a daemon create events on bootup that shouldn't get deleted if
-the daemon has to exit or reload. Another is within OpenTelemetry
-exporters, they wish to potentially check if a user_event exists on the
-system to determine if exporting the data out should occur. The
-user_event in this case must exist even in the absence of the owning
-process running (such as the above daemon case).
+Users need to know how to make events persist now that we allow for
+that. We also now allow the dynamic_events file to create events by
+utilizing the persist flag during event register.
 
-Expose the previously internal flag USER_EVENT_REG_PERSIST to user
-processes. Upon register or delete of events with this flag, ensure the
-user is perfmon_capable to prevent random user processes with access to
-tracefs from creating events that persist after exit.
+Add back in to documentation how /sys/kernel/tracing/dynamic_events can
+be used to create persistent user_events. Add a section under registering
+for the currently supported flags (USER_EVENT_REG_PERSIST) and the
+required permissions. Add a note under deleting that deleting a
+persistent event also requires sufficient permission.
 
 Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
 ---
- include/uapi/linux/user_events.h | 11 +++++++++-
- kernel/trace/trace_events_user.c | 36 +++++++++++++++++++-------------
- 2 files changed, 32 insertions(+), 15 deletions(-)
+ Documentation/trace/user_events.rst | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/include/uapi/linux/user_events.h b/include/uapi/linux/user_events.h
-index 2984aae4a2b4..f74f3aedd49c 100644
---- a/include/uapi/linux/user_events.h
-+++ b/include/uapi/linux/user_events.h
-@@ -17,6 +17,15 @@
- /* Create dynamic location entry within a 32-bit value */
- #define DYN_LOC(offset, size) ((size) << 16 | (offset))
+diff --git a/Documentation/trace/user_events.rst b/Documentation/trace/user_events.rst
+index e7b07313550a..576d2c35f22e 100644
+--- a/Documentation/trace/user_events.rst
++++ b/Documentation/trace/user_events.rst
+@@ -14,6 +14,11 @@ Programs can view status of the events via
+ /sys/kernel/tracing/user_events_status and can both register and write
+ data out via /sys/kernel/tracing/user_events_data.
  
-+/* List of supported registration flags */
-+enum user_reg_flag {
-+	/* Event will not delete upon last reference closing */
-+	USER_EVENT_REG_PERSIST		= 1U << 0,
++Programs can also use /sys/kernel/tracing/dynamic_events to register and
++delete user based events via the u: prefix. The format of the command to
++dynamic_events is the same as the ioctl with the u: prefix applied. This
++requires CAP_PERFMON due to the event persisting, otherwise -EPERM is returned.
 +
-+	/* This value or above is currently non-ABI */
-+	USER_EVENT_REG_MAX		= 1U << 1,
-+};
+ Typically programs will register a set of events that they wish to expose to
+ tools that can read trace_events (such as ftrace and perf). The registration
+ process tells the kernel which address and bit to reflect if any tool has
+@@ -45,7 +50,7 @@ This command takes a packed struct user_reg as an argument::
+         /* Input: Enable size in bytes at address */
+         __u8 enable_size;
+ 
+-        /* Input: Flags for future use, set to 0 */
++        /* Input: Flags to use, if any */
+         __u16 flags;
+ 
+         /* Input: Address to update when enabled */
+@@ -69,7 +74,7 @@ The struct user_reg requires all the above inputs to be set appropriately.
+   This must be 4 (32-bit) or 8 (64-bit). 64-bit values are only allowed to be
+   used on 64-bit kernels, however, 32-bit can be used on all kernels.
+ 
+-+ flags: The flags to use, if any. For the initial version this must be 0.
+++ flags: The flags to use, if any.
+   Callers should first attempt to use flags and retry without flags to ensure
+   support for lower versions of the kernel. If a flag is not supported -EINVAL
+   is returned.
+@@ -80,6 +85,13 @@ The struct user_reg requires all the above inputs to be set appropriately.
+ + name_args: The name and arguments to describe the event, see command format
+   for details.
+ 
++The following flags are currently supported.
 +
- /*
-  * Describes an event registration and stores the results of the registration.
-  * This structure is passed to the DIAG_IOCSREG ioctl, callers at a minimum
-@@ -33,7 +42,7 @@ struct user_reg {
- 	/* Input: Enable size in bytes at address */
- 	__u8	enable_size;
- 
--	/* Input: Flags for future use, set to 0 */
-+	/* Input: Flags to use, if any */
- 	__u16	flags;
- 
- 	/* Input: Address to update when enabled */
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index 6f046650e527..e3f2b8d72e01 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -49,18 +49,6 @@
- #define EVENT_STATUS_PERF BIT(1)
- #define EVENT_STATUS_OTHER BIT(7)
- 
--/*
-- * User register flags are not allowed yet, keep them here until we are
-- * ready to expose them out to the user ABI.
-- */
--enum user_reg_flag {
--	/* Event will not delete upon last reference closing */
--	USER_EVENT_REG_PERSIST		= 1U << 0,
--
--	/* This value or above is currently non-ABI */
--	USER_EVENT_REG_MAX		= 1U << 1,
--};
--
- /*
-  * Stores the system name, tables, and locks for a group of events. This
-  * allows isolation for events by various means.
-@@ -191,6 +179,17 @@ static u32 user_event_key(char *name)
- 	return jhash(name, strlen(name), 0);
- }
- 
-+static bool user_event_capable(u16 reg_flags)
-+{
-+	/* Persistent events require CAP_PERFMON / CAP_SYS_ADMIN */
-+	if (reg_flags & USER_EVENT_REG_PERSIST) {
-+		if (!perfmon_capable())
-+			return false;
-+	}
+++ USER_EVENT_REG_PERSIST: The event will not delete upon the last reference
++  closing. Callers may use this if an event should exist even after the
++  process closes or unregisters the event. Requires CAP_PERFMON otherwise
++  -EPERM is returned.
 +
-+	return true;
-+}
-+
- static struct user_event *user_event_get(struct user_event *user)
- {
- 	refcount_inc(&user->refcnt);
-@@ -1773,6 +1772,9 @@ static int user_event_free(struct dyn_event *ev)
- 	if (!user_event_last_ref(user))
- 		return -EBUSY;
+ Upon successful registration the following is set.
  
-+	if (!user_event_capable(user->reg_flags))
-+		return -EPERM;
-+
- 	return destroy_user_event(user);
- }
+ + write_index: The index to use for this file descriptor that represents this
+@@ -141,7 +153,10 @@ event (in both user and kernel space). User programs should use a separate file
+ to request deletes than the one used for registration due to this.
  
-@@ -1888,10 +1890,13 @@ static int user_event_parse(struct user_event_group *group, char *name,
- 	int argc = 0;
- 	char **argv;
+ **NOTE:** By default events will auto-delete when there are no references left
+-to the event. Flags in the future may change this logic.
++to the event. If programs do not want auto-delete, they must use the
++USER_EVENT_REG_PERSIST flag when registering the event. Once that flag is used
++the event exists until DIAG_IOCSDEL is invoked. Both register and delete of an
++event that persists requires CAP_PERFMON, otherwise -EPERM is returned.
  
--	/* User register flags are not ready yet */
--	if (reg_flags != 0 || flags != NULL)
-+	/* Currently don't support any text based flags */
-+	if (flags != NULL)
- 		return -EINVAL;
- 
-+	if (!user_event_capable(reg_flags))
-+		return -EPERM;
-+
- 	/* Prevent dyn_event from racing */
- 	mutex_lock(&event_mutex);
- 	user = find_user_event(group, name, &key);
-@@ -2024,6 +2029,9 @@ static int delete_user_event(struct user_event_group *group, char *name)
- 	if (!user_event_last_ref(user))
- 		return -EBUSY;
- 
-+	if (!user_event_capable(user->reg_flags))
-+		return -EPERM;
-+
- 	return destroy_user_event(user);
- }
- 
+ Unregistering
+ -------------
 -- 
 2.34.1
 
