@@ -2,75 +2,124 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9BDCA0EC3
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 12 Sep 2023 00:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 866BFCA0EC3
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 12 Sep 2023 02:20:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229501AbjILArN (ORCPT
+        id S236491AbjILCVC (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 11 Sep 2023 20:47:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60470 "EHLO
+        Mon, 11 Sep 2023 22:21:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229989AbjILArM (ORCPT
+        with ESMTP id S235897AbjILCUC (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 11 Sep 2023 20:47:12 -0400
+        Mon, 11 Sep 2023 22:20:02 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B0E0144E9A;
-        Mon, 11 Sep 2023 17:35:46 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D738C32789;
-        Tue, 12 Sep 2023 00:06:38 +0000 (UTC)
-Date:   Mon, 11 Sep 2023 20:06:54 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ajay Kaher <akaher@vmware.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH] tracefs/eventfs: Use list_for_each_srcu() in
- dcache_dir_open_wrapper()
-Message-ID: <20230911200654.71ce927c@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E15188A49;
+        Mon, 11 Sep 2023 18:43:10 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6DFFC116A1;
+        Tue, 12 Sep 2023 01:43:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694482990;
+        bh=MZfgo6MURz3BgruLFMBLXwS/8zrB+gqE+MzIheFwuyE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Q9uNrRTYqaajPGhKYGdTDqSCvE+I3yEoL60HbVUdoQoEJ7vzKYfmNUP53+Mypx2q1
+         8OIwfqagUNN5TnPbd5zsQPJLoSvgv5bdmvWmyzpcegmaus2km+4OdqGibOxNLDgy5t
+         k4RdZ78uKAfS++llOiKcM3aTM9rEajLrrCs7gXmwPg+j71glXOaXNbtJWPF87eym0b
+         apqMKxjA67c24htXl1O76cWLhuaGPlRSk5sC7FsSVFbEupM5cwJOtiNnXoQqRqgB13
+         NO903WTV7hKDNuhOb1PEAzexCl5j0DEkNDlXmS5f3K9yBmLmp3PAEtWy9bIj+Jm4cB
+         9qAACSsgygBxQ==
+From:   SeongJae Park <sj@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     SeongJae Park <sj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        damon@lists.linux.dev, linux-mm@kvack.org,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm/damon/core: add a tracepoint for damos apply target regions
+Date:   Tue, 12 Sep 2023 01:43:08 +0000
+Message-Id: <20230912014308.38298-1-sj@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230911165144.5002a0ac@gandalf.local.home>
+References: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Mon, 11 Sep 2023 16:51:44 -0400 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-The eventfs files list is protected by SRCU. In earlier iterations it was
-protected with just RCU, but because it needed to also call sleepable
-code, it had to be switch to SRCU. The dcache_dir_open_wrapper()
-list_for_each_rcu() was missed and did not get converted over to
-list_for_each_srcu(). That needs to be fixed.
+> On Mon, 11 Sep 2023 20:36:42 +0000
+> SeongJae Park <sj@kernel.org> wrote:
+> 
+> > > Then tracing is fully enabled here, and now we enter:
+> > > 
+> > >  	if (trace_damos_before_apply_enabled()) {
+> > > 		trace_damos_before_apply(cidx, sidx, tidx, r,
+> > >  				damon_nr_regions(t));
+> > >  	}
+> > > 
+> > > Now the trace event is hit with sidx and tidx zero when they should not be.
+> > > This could confuse you when looking at the report.  
+> > 
+> > Thank you so much for enlightening me with this kind explanation, Steve!  And
+> > this all make sense.  I will follow your suggestion in the next spin.
+> > 
+> > > 
+> > > What I suggested was to initialize sidx to zero,  
+> > 
+> > Nit.  Initialize to not zero but -1, right?
+> 
+> Yeah, but I was also thinking of the reset of it too :-p
+> 
+> 	sidx = -1;
+> 
+> 	if (trace_damos_before_apply_enabled()) {
+> 		sidx = 0;
 
-Link: https://lore.kernel.org/linux-trace-kernel/20230911120053.ca82f545e7f46ea753deda18@kernel.org/
+Thank you for clarifying, Steve :)
 
-Reported-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Fixes: 63940449555e7 ("eventfs: Implement eventfs lookup, read, open functions")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
+Nevertheless, since the variable is unsigned int, I would need to use UINT_MAX
+instead.  To make the code easier to understand, I'd prefer to add a third
+parameter, as you suggested as another option at the original reply, like
+below:
 
-[ Resend to see if it gets through the mailing list backlog! ]
+--- a/mm/damon/core.c
++++ b/mm/damon/core.c
+@@ -997,6 +997,7 @@ static void damos_apply_scheme(struct damon_ctx *c, struct damon_target *t,
+        unsigned int sidx = 0;
+        struct damon_target *titer;     /* targets iterator */
+        unsigned int tidx = 0;
++       bool do_trace = false;
 
- fs/tracefs/event_inode.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+        /* get indices for trace_damos_before_apply() */
+        if (trace_damos_before_apply_enabled()) {
+@@ -1010,6 +1011,7 @@ static void damos_apply_scheme(struct damon_ctx *c, struct damon_target *t,
+                                break;
+                        tidx++;
+                }
++               do_trace = true;
+        }
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index f168aca45458..9f64e7332796 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -452,7 +452,8 @@ static int dcache_dir_open_wrapper(struct inode *inode, struct file *file)
- 
- 	ei = ti->private;
- 	idx = srcu_read_lock(&eventfs_srcu);
--	list_for_each_entry_rcu(ef, &ei->e_top_files, list) {
-+	list_for_each_entry_srcu(ef, &ei->e_top_files, list,
-+				 srcu_read_lock_held(&eventfs_srcu)) {
- 		create_dentry(ef, dentry, false);
- 	}
- 	srcu_read_unlock(&eventfs_srcu, idx);
--- 
-2.40.1
+        if (c->ops.apply_scheme) {
+@@ -1036,7 +1038,7 @@ static void damos_apply_scheme(struct damon_ctx *c, struct damon_target *t,
+                        err = c->callback.before_damos_apply(c, t, r, s);
+                if (!err) {
+                        trace_damos_before_apply(cidx, sidx, tidx, r,
+-                                       damon_nr_regions(t));
++                                       damon_nr_regions(t), do_trace);
+                        sz_applied = c->ops.apply_scheme(c, t, r, s);
+                }
+                ktime_get_coarse_ts64(&end);
 
+
+Thanks,
+SJ
+
+> 
+> -- Steve
+> 
+> 
+> > 
+> > > set it in the first trace_*_enabled() check, and ignore calling the
+> > > tracepoint if it's not >= 0.
+> > > 
