@@ -2,161 +2,161 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2A1EEAA5E
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 14 Sep 2023 17:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 968C8EEAA5E
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 14 Sep 2023 17:42:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239146AbjINRh0 (ORCPT
+        id S239714AbjINRm3 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 14 Sep 2023 13:37:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42844 "EHLO
+        Thu, 14 Sep 2023 13:42:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237398AbjINRhZ (ORCPT
+        with ESMTP id S239124AbjINRm2 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 14 Sep 2023 13:37:25 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4531B10C7;
-        Thu, 14 Sep 2023 10:37:21 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B111C433C8;
-        Thu, 14 Sep 2023 17:37:14 +0000 (UTC)
-Date:   Thu, 14 Sep 2023 18:37:12 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Kuan-Ying Lee =?utf-8?B?KOadjuWGoOepjik=?= 
-        <Kuan-Ying.Lee@mediatek.com>
-Cc:     "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
-        "hughd@google.com" <hughd@google.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "rppt@kernel.org" <rppt@kernel.org>,
-        "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "vschneid@redhat.com" <vschneid@redhat.com>,
-        "bristot@redhat.com" <bristot@redhat.com>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        "alexandru.elisei@arm.com" <alexandru.elisei@arm.com>,
-        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "bsegall@google.com" <bsegall@google.com>,
-        "mgorman@suse.de" <mgorman@suse.de>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "oliver.upton@linux.dev" <oliver.upton@linux.dev>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>,
-        Qun-wei Lin =?utf-8?B?KOael+e+pOW0tCk=?= 
-        <Qun-wei.Lin@mediatek.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "hyesoo.yu@samsung.com" <hyesoo.yu@samsung.com>,
-        "kcc@google.com" <kcc@google.com>,
-        "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
-        "david@redhat.com" <david@redhat.com>,
-        Casper Li =?utf-8?B?KOadjuS4reamrik=?= <casper.li@mediatek.com>,
-        "steven.price@arm.com" <steven.price@arm.com>,
-        Chinwen Chang =?utf-8?B?KOW8temMpuaWhyk=?= 
-        <chinwen.chang@mediatek.com>,
-        "eugenis@google.com" <eugenis@google.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "pcc@google.com" <pcc@google.com>,
-        "vincenzo.frascino@arm.com" <vincenzo.frascino@arm.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>
-Subject: Re: [PATCH RFC 00/37] Add support for arm64 MTE dynamic tag storage
- reuse
-Message-ID: <ZQNEyFOcLv+eJkAr@arm.com>
-References: <20230823131350.114942-1-alexandru.elisei@arm.com>
- <0dc2afaf8a976ef8eb9af711fd941f1bbfd71321.camel@mediatek.com>
+        Thu, 14 Sep 2023 13:42:28 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEE0A1FDA
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Sep 2023 10:42:24 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-40472fef044so1848875e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Sep 2023 10:42:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1694713343; x=1695318143; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DLq4gTAMQUNXxLZTkpUDOrOkY4rGIcpbYoF8xB6HKFM=;
+        b=Vc8ROuAzKtDKViQooBc3/JQbBm8sCF8iNhPbABsLwRct3315512ou757YC1cXa722b
+         1nabBHNemIIDMWweXrljIynnU6PhxHfqW4O9/nJY14UFAVQ5ZkiW6gTKNardlRVtNM7t
+         K+8W+g2Twyk+DtNvG3u7xqeHRAVvPjCZ1/I5Z8LwqcZyqOXUA0YV9RWujt8o4wHWixpE
+         P63uxQ+l0Fpqyimz+S/jCCDz9H9DqGT0G98H6YWjoVRaBtNc4DyWlZrsNTHuTFfF+6gy
+         LSpuOA1lCd8yWoEd7GmPaoP5WjSU9kPU2OZGzQVh7CVk1UXaXGn1grqnYZya1fFukm4C
+         mQaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694713343; x=1695318143;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DLq4gTAMQUNXxLZTkpUDOrOkY4rGIcpbYoF8xB6HKFM=;
+        b=Ev6TXm4otEHh5xBjpsbxD99zEsjiepdFkd1MBBZFPlad6gXrXfVdigh6bQMVYfea/K
+         cgaV1ir9mWdUG30iSIiym/6VPIbqfiz1S6ioUEnd6pPRX4qrSjYfYTCbwomshEwEQXV6
+         70wOngwZqDK8BJcpIuGpzixusbVo2pRGaqEPsj+STKzloALvtOxuwjT/nNA2JICxl1Pc
+         m8aJUkJnU+3ejJK+gp99C//ktMA36Ldfnv/t+Tba/MU0oKyxrWdRrp8Chq4BBYABscTb
+         IFpt0zFPneAQoULN/j7jbPnQWrCLwH/00rKelqySZ/9i6kXjhTwOLytwa6YEn2Ead8z7
+         8Ohw==
+X-Gm-Message-State: AOJu0Yzeeq0DuGX2p0ri1IsrozxVIPOWLowPTwDe/ODEbvMD1MVuRxdK
+        KDLSyM4rO13Y6eNlUM4nTPM1YA==
+X-Google-Smtp-Source: AGHT+IE6BPY12TchbzdXQm6qGz00ZV9M74r4RAvvvVEipM5FQl50j/cEJCYPGVhHTu8HXSsmHvI/Vg==
+X-Received: by 2002:a05:600c:1da2:b0:401:7d3b:cc84 with SMTP id p34-20020a05600c1da200b004017d3bcc84mr5350644wms.0.1694713342992;
+        Thu, 14 Sep 2023 10:42:22 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:999:a3a0:9f43:3ca4:162c:d540? ([2a01:e0a:999:a3a0:9f43:3ca4:162c:d540])
+        by smtp.gmail.com with ESMTPSA id 7-20020a05600c020700b003fe2de3f94fsm2526696wmi.12.2023.09.14.10.42.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Sep 2023 10:42:22 -0700 (PDT)
+Message-ID: <8bf013fa-0fa8-4ebc-9776-0cd6c134972e@rivosinc.com>
+Date:   Thu, 14 Sep 2023 19:42:21 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tracing/user_events: align uaddr on unsigned long
+ alignment
+Content-Language: en-US
+To:     Beau Belgrave <beaub@linux.microsoft.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20230914131102.179100-1-cleger@rivosinc.com>
+ <20230914164218.GA450-beaub@linux.microsoft.com>
+From:   =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <20230914164218.GA450-beaub@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <0dc2afaf8a976ef8eb9af711fd941f1bbfd71321.camel@mediatek.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Kuan-Ying,
 
-On Wed, Sep 13, 2023 at 08:11:40AM +0000, Kuan-Ying Lee (李冠穎) wrote:
-> On Wed, 2023-08-23 at 14:13 +0100, Alexandru Elisei wrote:
-> > diff --git a/arch/arm64/boot/dts/arm/fvp-base-revc.dts
-> > b/arch/arm64/boot/dts/arm/fvp-base-revc.dts
-> > index 60472d65a355..bd050373d6cf 100644
-> > --- a/arch/arm64/boot/dts/arm/fvp-base-revc.dts
-> > +++ b/arch/arm64/boot/dts/arm/fvp-base-revc.dts
-> > @@ -165,10 +165,28 @@ C1_L2: l2-cache1 {
-> >                 };
-> >         };
-> >  
-> > -       memory@80000000 {
-> > +       memory0: memory@80000000 {
-> >                 device_type = "memory";
-> > -               reg = <0x00000000 0x80000000 0 0x80000000>,
-> > -                     <0x00000008 0x80000000 0 0x80000000>;
-> > +               reg = <0x00 0x80000000 0x00 0x7c000000>;
-> > +       };
-> > +
-> > +       metadata0: metadata@c0000000  {
-> > +               compatible = "arm,mte-tag-storage";
-> > +               reg = <0x00 0xfc000000 0x00 0x3e00000>;
-> > +               block-size = <0x1000>;
-> > +               memory = <&memory0>;
-> > +       };
-> > +
-> > +       memory1: memory@880000000 {
-> > +               device_type = "memory";
-> > +               reg = <0x08 0x80000000 0x00 0x7c000000>;
-> > +       };
-> > +
-> > +       metadata1: metadata@8c0000000  {
-> > +               compatible = "arm,mte-tag-storage";
-> > +               reg = <0x08 0xfc000000 0x00 0x3e00000>;
-> > +               block-size = <0x1000>;
-> > +               memory = <&memory1>;
-> >         };
-> >  
-> 
-> AFAIK, the above memory configuration means that there are two region
-> of dram(0x80000000-0xfc000000 and 0x8_80000000-0x8_fc0000000) and this
-> is called PDD memory map.
-> 
-> Document[1] said there are some constraints of tag memory as below.
-> 
-> | The following constraints apply to the tag regions in DRAM:
-> | 1. The tag region cannot be interleaved with the data region.
-> | The tag region must also be above the data region within DRAM.
-> |
-> | 2.The tag region in the physical address space cannot straddle
-> | multiple regions of a memory map.
-> |
-> | PDD memory map is not allowed to have part of the tag region between
-> | 2GB-4GB and another part between 34GB-64GB.
-> 
-> I'm not sure if we can separate tag memory with the above
-> configuration. Or do I miss something?
-> 
-> [1] https://developer.arm.com/documentation/101569/0300/?lang=en
-> (Section 5.4.6.1)
 
-Good point, thanks. The above dts some random layout we picked as an
-example, it doesn't match any real hardware and we didn't pay attention
-to the interconnect limitations (we fake the tag storage on the model).
+On 14/09/2023 18:42, Beau Belgrave wrote:
+> On Thu, Sep 14, 2023 at 03:11:02PM +0200, Clément Léger wrote:
+>> enabler->uaddr can be aligned on 32 or 64 bits. If aligned on 32 bits,
+>> this will result in a misaligned access on 64 bits architectures since
+>> set_bit()/clear_bit() are expecting an unsigned long (aligned) pointer.
+>> On architecture that do not support misaligned access, this will crash
+>> the kernel. Align uaddr on unsigned long size to avoid such behavior.
+>> This bug was found while running kselftests on RISC-V.
+>>
+>> Fixes: 7235759084a4 ("tracing/user_events: Use remote writes for event enablement")
+>> Signed-off-by: Clément Léger <cleger@rivosinc.com>
+> 
+> Thanks for fixing! I have a few comments on this.
+> 
+> I unfortunately do not have RISC-V hardware to validate this on.
+> 
+>> ---
+>>  kernel/trace/trace_events_user.c | 12 +++++++++---
+>>  1 file changed, 9 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+>> index 6f046650e527..580c0fe4b23e 100644
+>> --- a/kernel/trace/trace_events_user.c
+>> +++ b/kernel/trace/trace_events_user.c
+>> @@ -479,7 +479,7 @@ static int user_event_enabler_write(struct user_event_mm *mm,
+>>  				    bool fixup_fault, int *attempt)
+>>  {
+>>  	unsigned long uaddr = enabler->addr;
+>> -	unsigned long *ptr;
+>> +	unsigned long *ptr, bit_offset;
+>>  	struct page *page;
+>>  	void *kaddr;
+>>  	int ret;
+>> @@ -511,13 +511,19 @@ static int user_event_enabler_write(struct user_event_mm *mm,
+>>  	}
+>>  
+>>  	kaddr = kmap_local_page(page);
+>> +
+>> +	bit_offset = uaddr & (sizeof(unsigned long) - 1);
+>> +	if (bit_offset) {
+>> +		bit_offset *= 8;
+> 
+> I think for future readers of this code it would be more clear to use
+> BITS_PER_BYTE instead of the hardcoded 8. Given we always align on a
+> "natural" boundary, I believe the bit_offset will always be 32 bits.
+> 
+> A comment here might help clarify why we do this as well in case folks
+> don't see the change description.
 
-I'll try to dig out how the mtu_tag_addr_shutter registers work and how
-the sparse DRAM space is compressed to a smaller tag range. But that's
-something done by firmware and the kernel only learns the tag storage
-location from the DT (provided by firmware). We also don't need to know
-the fine-grained mapping between 32 bytes of data and 1 byte (2 tags) in
-the tag storage, only the block size in the tag storage space that
-covers all interleaving done by the interconnect (it can be from 1 byte
-to something larger like a page; the kernel will then use the lowest
-common multiple between a page size and this tag block size to figure
-out how many pages to reserve).
+Hi Beau,
 
--- 
-Catalin
+Yes sure, I'll add a comment and use the define as well.
+
+> 
+>> +		uaddr &= ~(sizeof(unsigned long) - 1);
+> 
+> Shouldn't this uaddr change be done before calling pin_user_pages_remote()
+> to ensure things cannot go bad? (I don't think they can, but it looks a
+> little odd).
+
+Indeed, I don't think that will cause any problem since pin_user_pages
+will return a page aligned address anyway and that aligning uaddr will
+not yield any page crossing. But I'll check to be sure and move that
+before the call if needed.
+
+Clément
+
+> 
+> Thanks,
+> -Beau
+> 
+>> +	}
+>>  	ptr = kaddr + (uaddr & ~PAGE_MASK);
+>>  
+>>  	/* Update bit atomically, user tracers must be atomic as well */
+>>  	if (enabler->event && enabler->event->status)
+>> -		set_bit(ENABLE_BIT(enabler), ptr);
+>> +		set_bit(ENABLE_BIT(enabler) + bit_offset, ptr);
+>>  	else
+>> -		clear_bit(ENABLE_BIT(enabler), ptr);
+>> +		clear_bit(ENABLE_BIT(enabler) + bit_offset, ptr);
+>>  
+>>  	kunmap_local(kaddr);
+>>  	unpin_user_pages_dirty_lock(&page, 1, true);
+>> -- 
+>> 2.40.1
