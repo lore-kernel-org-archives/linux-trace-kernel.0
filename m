@@ -2,29 +2,29 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4DAEEAA56
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 14 Sep 2023 16:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 075B1EEAA58
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 14 Sep 2023 16:35:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231588AbjINQfR (ORCPT
+        id S237341AbjINQfS (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 14 Sep 2023 12:35:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56030 "EHLO
+        Thu, 14 Sep 2023 12:35:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230023AbjINQfR (ORCPT
+        with ESMTP id S229568AbjINQfR (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Thu, 14 Sep 2023 12:35:17 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FAFE1FD7;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FB6C1FDC;
         Thu, 14 Sep 2023 09:35:13 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2578C433C7;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F039BC433C9;
         Thu, 14 Sep 2023 16:35:12 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.96)
         (envelope-from <rostedt@goodmis.org>)
-        id 1qgpJX-000tV7-0l;
+        id 1qgpJX-000tWE-2A;
         Thu, 14 Sep 2023 12:35:35 -0400
-Message-ID: <20230914163504.884804272@goodmis.org>
+Message-ID: <20230914163535.487267410@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Thu, 14 Sep 2023 12:35:04 -0400
+Date:   Thu, 14 Sep 2023 12:35:06 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
@@ -34,54 +34,59 @@ Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         lkp@intel.com, namit@vmware.com, oe-lkp@lists.linux.dev,
         amakhalov@vmware.com, er.ajay.kaher@gmail.com,
         srivatsa@csail.mit.edu, tkundu@vmware.com, vsirnapalli@vmware.com
-Subject: [PATCH 0/2 v3] tracing: Remove eventfs_files by use of callbacks
+Subject: [PATCH 2/2 v3] tracing/selftests: Update kprobe args char/string to match new
+ functions
+References: <20230914163504.884804272@goodmis.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-This is a bit of a redesign of the way the eventfs is created. It no longer
-creates a descriptor representing every file but instead just the directories.
-These descriptors get an array of entries that represent the files within it
-(but not for sub directories).  Each entry has a name and a callback, where the
-name is the name of the file (used for lookup) and a callback that is used to
-create the dentry and inode for the file. This saves more memory, this approach
-may be possible to create a dynamic way of doing this for other pseudo file
-systems.
+The function that the kprobe_args_char and kprobes_arg_string attaches to
+for its test has changed its name once again. Now we need to check for
+eventfs_create_dir(), and if it exists, use that, otherwise check for
+eventfs_add_dir() and if that exists use that, otherwise use the original
+tracefs_create_dir()!
 
-The second patch fixes the kprobe selftests yet again, and the function
-that it uses to attach to was renamed once again.
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ .../selftests/ftrace/test.d/kprobe/kprobe_args_char.tc        | 4 +++-
+ .../selftests/ftrace/test.d/kprobe/kprobe_args_string.tc      | 4 +++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-Changes since v2: https://lore.kernel.org/all/20230913025855.615399273@goodmis.org/
-
- - Removed the show_eventfs_dentries patch and queued that for mainline.
-
- - Rebased on top of the queued mainline tree, as the show_eventfs_dentries
-   patch was modified.
-
- - Updated the numbers in the change log to reflect the latest code.
-   (Things actually got better!)
-
-
-Changes since v1: https://lore.kernel.org/all/20230801001349.520930329@goodmis.org/
-
- - Rebased on mainline and some minor clean ups.
- - Fixed kprobe selftest
-
-Steven Rostedt (Google) (2):
-      eventfs: Remove eventfs_file and just use eventfs_inode
-      tracing/selftests: Update kprobe args char/string to match new functions
-
-----
- fs/tracefs/event_inode.c                           | 763 +++++++++++----------
- fs/tracefs/event_show.c                            |  51 +-
- fs/tracefs/inode.c                                 |   2 +-
- fs/tracefs/internal.h                              |  54 +-
- include/linux/trace_events.h                       |   2 +-
- include/linux/tracefs.h                            |  29 +-
- kernel/trace/trace.c                               |   7 +-
- kernel/trace/trace.h                               |   4 +-
- kernel/trace/trace_events.c                        | 315 ++++++---
- .../ftrace/test.d/kprobe/kprobe_args_char.tc       |   4 +-
- .../ftrace/test.d/kprobe/kprobe_args_string.tc     |   4 +-
- 11 files changed, 691 insertions(+), 544 deletions(-)
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
+index ff7499eb98d6..c639c6c8ca03 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
+@@ -34,7 +34,9 @@ mips*)
+ esac
+ 
+ : "Test get argument (1)"
+-if grep -q eventfs_add_dir available_filter_functions; then
++if grep -q eventfs_create_dir available_filter_functions; then
++  DIR_NAME="eventfs_create_dir"
++elif grep -q eventfs_add_dir available_filter_functions; then
+   DIR_NAME="eventfs_add_dir"
+ else
+   DIR_NAME="tracefs_create_dir"
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
+index a202b2ea4baf..a5ab4d5c74ac 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
+@@ -37,7 +37,9 @@ loongarch*)
+ esac
+ 
+ : "Test get argument (1)"
+-if grep -q eventfs_add_dir available_filter_functions; then
++if grep -q eventfs_create_dir available_filter_functions; then
++  DIR_NAME="eventfs_create_dir"
++elif grep -q eventfs_add_dir available_filter_functions; then
+   DIR_NAME="eventfs_add_dir"
+ else
+   DIR_NAME="tracefs_create_dir"
+-- 
+2.40.1
