@@ -2,119 +2,99 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72680EEAA58
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 14 Sep 2023 16:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA057EEAA58
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 14 Sep 2023 16:42:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236369AbjINQmf (ORCPT
+        id S236369AbjINQmo (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 14 Sep 2023 12:42:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58024 "EHLO
+        Thu, 14 Sep 2023 12:42:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231243AbjINQme (ORCPT
+        with ESMTP id S238303AbjINQmo (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 14 Sep 2023 12:42:34 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2E8401FDC;
-        Thu, 14 Sep 2023 09:42:30 -0700 (PDT)
-Received: from DESKTOP-4OLSCEK. (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 6334D212BE5B;
-        Thu, 14 Sep 2023 09:42:29 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6334D212BE5B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1694709749;
-        bh=iDGXYNvDUZyGPqG85pC0NeOYH73MS/LV4u3HMbaEDgs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JyqKzhLZpHt8HC8NJuqoBe7StMaxqjDz/IsXqKF3Z0ou4VcRzQJ+pnrsgc7xF+73G
-         P0pn/ixo/EckvQB7WfEFbl6nlub6vAUFUxr43ceUjcTlwdMGePymFsxltSpB8D5QBp
-         Q7+YYOb0P++J2YAHTlWQadajbccfv2n067z9rK3s=
-Date:   Thu, 14 Sep 2023 09:42:18 -0700
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Thu, 14 Sep 2023 12:42:44 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A9251FE1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Sep 2023 09:42:40 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55899C433C8;
+        Thu, 14 Sep 2023 16:42:38 +0000 (UTC)
+Date:   Thu, 14 Sep 2023 12:42:59 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linyu Yuan <quic_linyyuan@quicinc.com>
+Cc:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Bin Liu <b-liu@ti.com>, Peter Chen <peter.chen@kernel.org>,
+        Pawel Laszczak <pawell@cadence.com>,
+        Roger Quadros <rogerq@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing/user_events: align uaddr on unsigned long
- alignment
-Message-ID: <20230914164218.GA450-beaub@linux.microsoft.com>
-References: <20230914131102.179100-1-cleger@rivosinc.com>
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/8] usb: gadget: reduce usb gadget trace event buffer
+ usage
+Message-ID: <20230914124259.7bc383f8@gandalf.local.home>
+In-Reply-To: <20230914100302.30274-1-quic_linyyuan@quicinc.com>
+References: <20230914100302.30274-1-quic_linyyuan@quicinc.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230914131102.179100-1-cleger@rivosinc.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Sep 14, 2023 at 03:11:02PM +0200, Clément Léger wrote:
-> enabler->uaddr can be aligned on 32 or 64 bits. If aligned on 32 bits,
-> this will result in a misaligned access on 64 bits architectures since
-> set_bit()/clear_bit() are expecting an unsigned long (aligned) pointer.
-> On architecture that do not support misaligned access, this will crash
-> the kernel. Align uaddr on unsigned long size to avoid such behavior.
-> This bug was found while running kselftests on RISC-V.
+On Thu, 14 Sep 2023 18:02:54 +0800
+Linyu Yuan <quic_linyyuan@quicinc.com> wrote:
+
+> some trace event use an interger to to save a bit field info of gadget,
+> also some trace save endpoint name in string forat, it all can be
+> chagned to other way at trace event store phase.
 > 
-> Fixes: 7235759084a4 ("tracing/user_events: Use remote writes for event enablement")
-> Signed-off-by: Clément Léger <cleger@rivosinc.com>
-
-Thanks for fixing! I have a few comments on this.
-
-I unfortunately do not have RISC-V hardware to validate this on.
-
-> ---
->  kernel/trace/trace_events_user.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
+> bit field can be replace with a union interger member which include
+> multiple bit fields.
 > 
-> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-> index 6f046650e527..580c0fe4b23e 100644
-> --- a/kernel/trace/trace_events_user.c
-> +++ b/kernel/trace/trace_events_user.c
-> @@ -479,7 +479,7 @@ static int user_event_enabler_write(struct user_event_mm *mm,
->  				    bool fixup_fault, int *attempt)
->  {
->  	unsigned long uaddr = enabler->addr;
-> -	unsigned long *ptr;
-> +	unsigned long *ptr, bit_offset;
->  	struct page *page;
->  	void *kaddr;
->  	int ret;
-> @@ -511,13 +511,19 @@ static int user_event_enabler_write(struct user_event_mm *mm,
->  	}
->  
->  	kaddr = kmap_local_page(page);
-> +
-> +	bit_offset = uaddr & (sizeof(unsigned long) - 1);
-> +	if (bit_offset) {
-> +		bit_offset *= 8;
+> ep name stringe can be replace to a interger which contaion number
+> and dir info.
+> 
+> to allow trace output stage can get bit info from save interger,
+> add DECLARE_EVENT_CLASS_PRINT_INIT() clas which allow user defined
+> operation before print.
+> 
+> v1: https://lore.kernel.org/linux-usb/20230911042843.2711-1-quic_linyyuan@quicinc.com/
+> v2: fix two compile issues that COMPILE_TEST not covered
+>     https://lore.kernel.org/linux-usb/20230911112446.1791-1-quic_linyyuan@quicinc.com/
+> v3: fix reviewer comments, allow bit fields work on both little and big endian
+>     https://lore.kernel.org/linux-usb/20230912104455.7737-1-quic_linyyuan@quicinc.com/
+> v4: add DECLARE_EVENT_CLASS_PRINT_INIT() new trace class and use it
+> 
 
-I think for future readers of this code it would be more clear to use
-BITS_PER_BYTE instead of the hardcoded 8. Given we always align on a
-"natural" boundary, I believe the bit_offset will always be 32 bits.
+All these changes make it useless for user space. :-(
 
-A comment here might help clarify why we do this as well in case folks
-don't see the change description.
+-- Steve
 
-> +		uaddr &= ~(sizeof(unsigned long) - 1);
+> Linyu Yuan (8):
+>   trace: add new DECLARE_EVENT_CLASS_PRINT_INIT class type
+>   usb: gadget: add anonymous definition in some struct for trace purpose
+>   usb: udc: trace: reduce buffer usage of trace event
+>   usb: cdns3: trace: reduce buffer usage of trace event
+>   usb: dwc3: trace: reduce buffer usage of trace event
+>   usb: cdns2: trace: reduce buffer usage of trace event
+>   usb: mtu3: trace: reduce buffer usage of trace event
+>   usb: musb: trace: reduce buffer usage of trace event
+> 
+>  drivers/usb/cdns3/cdns3-trace.h            | 201 ++++++++++++++-------
+>  drivers/usb/cdns3/cdnsp-trace.h            | 105 +++++++----
+>  drivers/usb/dwc3/trace.h                   |  99 ++++++----
+>  drivers/usb/gadget/udc/cdns2/cdns2-trace.h | 175 ++++++++++++------
+>  drivers/usb/gadget/udc/trace.h             | 154 +++++++---------
+>  drivers/usb/mtu3/mtu3_trace.h              |  76 +++++---
+>  drivers/usb/musb/musb_trace.h              |  20 +-
+>  include/linux/tracepoint.h                 |  22 +++
+>  include/linux/usb/gadget.h                 | 113 +++++++-----
+>  include/trace/bpf_probe.h                  |   4 +
+>  include/trace/perf.h                       |  43 +++++
+>  include/trace/stages/stage3_trace_output.h |   3 +
+>  include/trace/trace_events.h               | 118 ++++++++++++
+>  13 files changed, 784 insertions(+), 349 deletions(-)
+> 
 
-Shouldn't this uaddr change be done before calling pin_user_pages_remote()
-to ensure things cannot go bad? (I don't think they can, but it looks a
-little odd).
-
-Thanks,
--Beau
-
-> +	}
->  	ptr = kaddr + (uaddr & ~PAGE_MASK);
->  
->  	/* Update bit atomically, user tracers must be atomic as well */
->  	if (enabler->event && enabler->event->status)
-> -		set_bit(ENABLE_BIT(enabler), ptr);
-> +		set_bit(ENABLE_BIT(enabler) + bit_offset, ptr);
->  	else
-> -		clear_bit(ENABLE_BIT(enabler), ptr);
-> +		clear_bit(ENABLE_BIT(enabler) + bit_offset, ptr);
->  
->  	kunmap_local(kaddr);
->  	unpin_user_pages_dirty_lock(&page, 1, true);
-> -- 
-> 2.40.1
