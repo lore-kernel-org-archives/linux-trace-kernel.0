@@ -2,119 +2,177 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF37CA553C
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 14 Sep 2023 13:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96860CA553C
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 14 Sep 2023 13:16:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238587AbjINNLz (ORCPT
+        id S238847AbjINNQp (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 14 Sep 2023 09:11:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35100 "EHLO
+        Thu, 14 Sep 2023 09:16:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238781AbjINNLm (ORCPT
+        with ESMTP id S238623AbjINNQo (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 14 Sep 2023 09:11:42 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E24D51FD8
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Sep 2023 06:11:14 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-3fe4f3b5f25so2798485e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Sep 2023 06:11:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1694697073; x=1695301873; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RJomarRjaTtn3oATFqeS61pqk655aq9C7zKlWCyipu4=;
-        b=QwlULImn/vm+b+kBqoqtJVxsCj+HpcKUTCrCTVlbAgwC3nyZfjIhiQhCu/IFkUMo2u
-         ori8G1JIyt7SySCOeWp7qfX8wYGLMS6et236HC3gSG6HBGMfdGUCHUwv7EHqxPuX54A+
-         QPd0TqPCDaWus2VIM9zLP6v1Ye7j5NSFCqisw54hi2ynDDBToETgiFZL3HaWU3tlQYF8
-         pNOGXko5n69IrsGJuOYATy/qw2Kv2UxA3z7h04z2iDdUU27KIi1Plh/G6XaqQfWkhy1u
-         ySZknfplgeZ3w+pHUrZkbN0WONjKa/tDpe82f6zE86kJSbQnu+lvHQSv2dZwX7M5rv6y
-         8diw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694697073; x=1695301873;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RJomarRjaTtn3oATFqeS61pqk655aq9C7zKlWCyipu4=;
-        b=kaK87C/rs75vV5+p5ZEuY9py2IU1SWE+ii7POxUoUuOdrjJEOmnEQxoAgL2F1zvIE8
-         XOhFr71kQpSo3FhE6kRZEcwiz0un44s307LXIMfIwOrffuDHwhOsGt+LO3/fO3j6JSLS
-         FU0Qck+Cp8L7pMoOFPYnxw6W0UZZaW9lIWPhFbWVWgfUNCcxkDXXfRGij+zDlmYiFSup
-         F6p9NOklNlwqS2O41Z2VzLyR+/gHjze1dY9mfcKskpcIMxdB0n7mBT2EzAzbcxVj2Nkk
-         tSF4fhCqdJQuj7spebsTtSIRwri7Zp3jwxlQ8vv0a8OyAHxpPXT5KdFQqYjOTlyX/M8x
-         zHKQ==
-X-Gm-Message-State: AOJu0YyPNZptdCL6Q0n4ngW3JbbiqTTDREJZDxCEL8VQd9wQ+CU+w2ni
-        HDmm4I6yKBWpbDQaQDdEB7x2TUFZtPGzoZ2zzAa5KA==
-X-Google-Smtp-Source: AGHT+IHtdHXK+gKFRE1SD8BCf0eWnyuZ16lDv+k6Xh9LB7lmWJfOWwJtzph6DKcNR09TpfcagYNMkA==
-X-Received: by 2002:adf:fd4d:0:b0:317:3a23:4855 with SMTP id h13-20020adffd4d000000b003173a234855mr4676769wrs.2.1694697073094;
-        Thu, 14 Sep 2023 06:11:13 -0700 (PDT)
-Received: from carbon-x1.. ([2a01:e0a:999:a3a0:398c:d142:b5d1:4f7e])
-        by smtp.gmail.com with ESMTPSA id n11-20020a5d484b000000b00317ddccb0d1sm1747284wrs.24.2023.09.14.06.11.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Sep 2023 06:11:12 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-        Beau Belgrave <beaub@linux.microsoft.com>
-Subject: [PATCH] tracing/user_events: align uaddr on unsigned long alignment
-Date:   Thu, 14 Sep 2023 15:11:02 +0200
-Message-Id: <20230914131102.179100-1-cleger@rivosinc.com>
-X-Mailer: git-send-email 2.40.1
+        Thu, 14 Sep 2023 09:16:44 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFB9D1A5;
+        Thu, 14 Sep 2023 06:16:40 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 72EB31F459;
+        Thu, 14 Sep 2023 13:16:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1694697399; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=rAhS+FVn6ocw85psQvFvN0PR1VlmozuQ4I8i9ZtjuaY=;
+        b=rXYZHOfzaYBcmQOVenjZjswEmg6RN8Sk2V+BW7r+HfBOpYHGbbkEjxpu9Zgwo9D+tbJ4Vp
+        kmB2yLegf2zWD9jKJ3Ng7DLOqQQ9DxQc92Zd8RqQLJohLIpq9KcXUJ7v+rov8SOyDnqYj6
+        B+M40p1WYtQj6yYH4kenKUe5Ci3sMno=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1694697399;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=rAhS+FVn6ocw85psQvFvN0PR1VlmozuQ4I8i9ZtjuaY=;
+        b=w7ODrEMWKXDJyZH8yRRXjpu91JCbJkXlJ4zV31DCOedOfday7a05umNo2GtvdyBR8OgJ0B
+        HgOQEkZWGtvD7wDQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 53F3B13580;
+        Thu, 14 Sep 2023 13:16:39 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 5fDXE7cHA2U6TQAAMHmgww
+        (envelope-from <vbabka@suse.cz>); Thu, 14 Sep 2023 13:16:39 +0000
+From:   Vlastimil Babka <vbabka@suse.cz>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        patches@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
+        Hugh Dickins <hughd@google.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH 1/2] trace-vmscan-postprocess: sync with tracepoints updates
+Date:   Thu, 14 Sep 2023 15:16:38 +0200
+Message-ID: <20230914131637.12204-3-vbabka@suse.cz>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-enabler->uaddr can be aligned on 32 or 64 bits. If aligned on 32 bits,
-this will result in a misaligned access on 64 bits architectures since
-set_bit()/clear_bit() are expecting an unsigned long (aligned) pointer.
-On architecture that do not support misaligned access, this will crash
-the kernel. Align uaddr on unsigned long size to avoid such behavior.
-This bug was found while running kselftests on RISC-V.
+The script has fallen behind tracepoint changes for a while, fix it up.
 
-Fixes: 7235759084a4 ("tracing/user_events: Use remote writes for event enablement")
-Signed-off-by: Clément Léger <cleger@rivosinc.com>
+Most changes are mechanical (renames, removal of tracepoint parameters
+that are not used by the script). More notable change involves
+mm_vmscan_lru_isolate which is relying on the isolate_mode to determine
+if the inactive list is being scanned. However the parameter currently
+only indicates ISOLATE_UNMAPPED. We can use the lru parameter instead to
+determine which list is scanned, and stop checking isolate_mode.
+
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- kernel/trace/trace_events_user.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ .../postprocess/trace-vmscan-postprocess.pl   | 40 ++++++++-----------
+ 1 file changed, 17 insertions(+), 23 deletions(-)
 
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index 6f046650e527..580c0fe4b23e 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -479,7 +479,7 @@ static int user_event_enabler_write(struct user_event_mm *mm,
- 				    bool fixup_fault, int *attempt)
- {
- 	unsigned long uaddr = enabler->addr;
--	unsigned long *ptr;
-+	unsigned long *ptr, bit_offset;
- 	struct page *page;
- 	void *kaddr;
- 	int ret;
-@@ -511,13 +511,19 @@ static int user_event_enabler_write(struct user_event_mm *mm,
- 	}
+diff --git a/Documentation/trace/postprocess/trace-vmscan-postprocess.pl b/Documentation/trace/postprocess/trace-vmscan-postprocess.pl
+index e24c009789a0..725d41a8d4ef 100644
+--- a/Documentation/trace/postprocess/trace-vmscan-postprocess.pl
++++ b/Documentation/trace/postprocess/trace-vmscan-postprocess.pl
+@@ -107,14 +107,14 @@ GetOptions(
+ );
  
- 	kaddr = kmap_local_page(page);
+ # Defaults for dynamically discovered regex's
+-my $regex_direct_begin_default = 'order=([0-9]*) may_writepage=([0-9]*) gfp_flags=([A-Z_|]*)';
++my $regex_direct_begin_default = 'order=([0-9]*) gfp_flags=([A-Z_|]*)';
+ my $regex_direct_end_default = 'nr_reclaimed=([0-9]*)';
+ my $regex_kswapd_wake_default = 'nid=([0-9]*) order=([0-9]*)';
+ my $regex_kswapd_sleep_default = 'nid=([0-9]*)';
+-my $regex_wakeup_kswapd_default = 'nid=([0-9]*) zid=([0-9]*) order=([0-9]*) gfp_flags=([A-Z_|]*)';
+-my $regex_lru_isolate_default = 'isolate_mode=([0-9]*) classzone_idx=([0-9]*) order=([0-9]*) nr_requested=([0-9]*) nr_scanned=([0-9]*) nr_skipped=([0-9]*) nr_taken=([0-9]*) lru=([a-z_]*)';
++my $regex_wakeup_kswapd_default = 'nid=([0-9]*) order=([0-9]*) gfp_flags=([A-Z_|]*)';
++my $regex_lru_isolate_default = 'isolate_mode=([0-9]*) classzone=([0-9]*) order=([0-9]*) nr_requested=([0-9]*) nr_scanned=([0-9]*) nr_skipped=([0-9]*) nr_taken=([0-9]*) lru=([a-z_]*)';
+ my $regex_lru_shrink_inactive_default = 'nid=([0-9]*) nr_scanned=([0-9]*) nr_reclaimed=([0-9]*) nr_dirty=([0-9]*) nr_writeback=([0-9]*) nr_congested=([0-9]*) nr_immediate=([0-9]*) nr_activate_anon=([0-9]*) nr_activate_file=([0-9]*) nr_ref_keep=([0-9]*) nr_unmap_fail=([0-9]*) priority=([0-9]*) flags=([A-Z_|]*)';
+-my $regex_lru_shrink_active_default = 'lru=([A-Z_]*) nr_scanned=([0-9]*) nr_rotated=([0-9]*) priority=([0-9]*)';
++my $regex_lru_shrink_active_default = 'lru=([A-Z_]*) nr_taken=([0-9]*) nr_active=([0-9]*) nr_deactivated=([0-9]*) nr_referenced=([0-9]*) priority=([0-9]*) flags=([A-Z_|]*)' ;
+ my $regex_writepage_default = 'page=([0-9a-f]*) pfn=([0-9]*) flags=([A-Z_|]*)';
+ 
+ # Dyanically discovered regex
+@@ -184,8 +184,7 @@ sub generate_traceevent_regex {
+ $regex_direct_begin = generate_traceevent_regex(
+ 			"vmscan/mm_vmscan_direct_reclaim_begin",
+ 			$regex_direct_begin_default,
+-			"order", "may_writepage",
+-			"gfp_flags");
++			"order", "gfp_flags");
+ $regex_direct_end = generate_traceevent_regex(
+ 			"vmscan/mm_vmscan_direct_reclaim_end",
+ 			$regex_direct_end_default,
+@@ -201,11 +200,11 @@ $regex_kswapd_sleep = generate_traceevent_regex(
+ $regex_wakeup_kswapd = generate_traceevent_regex(
+ 			"vmscan/mm_vmscan_wakeup_kswapd",
+ 			$regex_wakeup_kswapd_default,
+-			"nid", "zid", "order", "gfp_flags");
++			"nid", "order", "gfp_flags");
+ $regex_lru_isolate = generate_traceevent_regex(
+ 			"vmscan/mm_vmscan_lru_isolate",
+ 			$regex_lru_isolate_default,
+-			"isolate_mode", "classzone_idx", "order",
++			"isolate_mode", classzone", "order",
+ 			"nr_requested", "nr_scanned", "nr_skipped", "nr_taken",
+ 			"lru");
+ $regex_lru_shrink_inactive = generate_traceevent_regex(
+@@ -218,11 +217,10 @@ $regex_lru_shrink_inactive = generate_traceevent_regex(
+ $regex_lru_shrink_active = generate_traceevent_regex(
+ 			"vmscan/mm_vmscan_lru_shrink_active",
+ 			$regex_lru_shrink_active_default,
+-			"nid", "zid",
+-			"lru",
+-			"nr_scanned", "nr_rotated", "priority");
++			"nid", "nr_taken", "nr_active", "nr_deactivated", "nr_referenced",
++			"priority", "flags");
+ $regex_writepage = generate_traceevent_regex(
+-			"vmscan/mm_vmscan_writepage",
++			"vmscan/mm_vmscan_write_folio",
+ 			$regex_writepage_default,
+ 			"page", "pfn", "flags");
+ 
+@@ -371,7 +369,7 @@ sub process_events {
+ 				print "         $regex_wakeup_kswapd\n";
+ 				next;
+ 			}
+-			my $order = $3;
++			my $order = $2;
+ 			$perprocesspid{$process_pid}->{MM_VMSCAN_WAKEUP_KSWAPD_PERORDER}[$order]++;
+ 		} elsif ($tracepoint eq "mm_vmscan_lru_isolate") {
+ 			$details = $6;
+@@ -381,18 +379,14 @@ sub process_events {
+ 				print "         $regex_lru_isolate/o\n";
+ 				next;
+ 			}
+-			my $isolate_mode = $1;
+ 			my $nr_scanned = $5;
+-			my $file = $8;
+-
+-			# To closer match vmstat scanning statistics, only count isolate_both
+-			# and isolate_inactive as scanning. isolate_active is rotation
+-			# isolate_inactive == 1
+-			# isolate_active   == 2
+-			# isolate_both     == 3
+-			if ($isolate_mode != 2) {
++			my $lru = $8;
 +
-+	bit_offset = uaddr & (sizeof(unsigned long) - 1);
-+	if (bit_offset) {
-+		bit_offset *= 8;
-+		uaddr &= ~(sizeof(unsigned long) - 1);
-+	}
- 	ptr = kaddr + (uaddr & ~PAGE_MASK);
- 
- 	/* Update bit atomically, user tracers must be atomic as well */
- 	if (enabler->event && enabler->event->status)
--		set_bit(ENABLE_BIT(enabler), ptr);
-+		set_bit(ENABLE_BIT(enabler) + bit_offset, ptr);
- 	else
--		clear_bit(ENABLE_BIT(enabler), ptr);
-+		clear_bit(ENABLE_BIT(enabler) + bit_offset, ptr);
- 
- 	kunmap_local(kaddr);
- 	unpin_user_pages_dirty_lock(&page, 1, true);
++			# To closer match vmstat scanning statistics, only count
++			# inactive lru as scanning
++			if ($lru =~ /inactive_/) {
+ 				$perprocesspid{$process_pid}->{HIGH_NR_SCANNED} += $nr_scanned;
+-				if ($file =~ /_file/) {
++				if ($lru =~ /_file/) {
+ 					$perprocesspid{$process_pid}->{HIGH_NR_FILE_SCANNED} += $nr_scanned;
+ 				} else {
+ 					$perprocesspid{$process_pid}->{HIGH_NR_ANON_SCANNED} += $nr_scanned;
 -- 
-2.40.1
+2.42.0
 
