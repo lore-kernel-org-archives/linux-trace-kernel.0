@@ -2,133 +2,86 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C97EDE989
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 15 Sep 2023 02:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 130AFEE021D
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 15 Sep 2023 06:01:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229767AbjIOCy6 (ORCPT
+        id S232120AbjIOGBL (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 14 Sep 2023 22:54:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58778 "EHLO
+        Fri, 15 Sep 2023 02:01:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231755AbjIOCy6 (ORCPT
+        with ESMTP id S230097AbjIOGBL (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 14 Sep 2023 22:54:58 -0400
+        Fri, 15 Sep 2023 02:01:11 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 024D82703;
-        Thu, 14 Sep 2023 19:54:54 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76176C433C8;
-        Fri, 15 Sep 2023 02:54:52 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F0C41BD0;
+        Thu, 14 Sep 2023 23:01:06 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A575C433C7;
+        Fri, 15 Sep 2023 06:01:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694746493;
-        bh=BaCEONwWbgZdViDwOmp0Htr99OIatdc7tnMiHomcjCw=;
+        s=k20201202; t=1694757665;
+        bh=9MYU2c3p+u08BaUZwHdx5A80Jm0GHT65ymH8UGQeY2o=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NxB8WjdQNtjwfyEehGuYUdRSjJNsIkR3oqVdYBLoFceBdnF+/Rpbmx+Bqkh0zKNj4
-         ZJFRescK9cXsVXU2WG5BjNaYHk+5OPmK/foHi8Ev74tIUR5CcglyYhevcUc76Dy1Gc
-         1HOtUl4/tYnyFe5ecdeS8nv5C/OjKVB4Fb1yWOv6owpAJl7wf1pD0EbAnTKgcND3kS
-         EN5rYsomC0JHmeoOWeeLN0F2Vwxrb8CGbBMPw76+dOvBdiDNYNalYrjR8casLMKHhg
-         VV06lxPVWcEkiCVmXBMHCN2kjkPkoqVG9AmGsnbCb5eiqOQ8/76sWYOq7PQliUANIM
-         /tASxJU7FEdCw==
-Date:   Fri, 15 Sep 2023 11:54:49 +0900
+        b=t98NC91cmHcY2SIHVVWfBpFXff3XcWNRQW00nQC8kmgcs4HPMKoaaqmsM/803h9lC
+         ZY/z/TUXMzAIj9YY5CADvBElL7X4wq/HQVs2ha3mtHcTf7BXj5dY/4AT8Ptn/E4MG9
+         KC4BlOh0zegW3Vsk4ljI4HIshSYvbLwuLeRNe/ZZ5rpPLZzdBhablGaYahVZGvaMsq
+         7wVAjueW1tum0REjgugpz10dKYl57+QySnUYfC5NlbCABkWMzo+vwBLn0JI71HGVkT
+         bnyXWj8BBNICyVOjs8Wn+Yb5yqaL6x2OAvD5bo8Yd6XEhasx9pIno5suVvuOSumsSc
+         sSnyg/tL0W6Jg==
+Date:   Fri, 15 Sep 2023 15:01:01 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        Beau Belgrave <beaub@linux.microsoft.com>
-Subject: Re: [PATCH] tracing/user_events: align uaddr on unsigned long
- alignment
-Message-Id: <20230915115449.3d7103b841cd593d1a09a129@kernel.org>
-In-Reply-To: <20230914131102.179100-1-cleger@rivosinc.com>
-References: <20230914131102.179100-1-cleger@rivosinc.com>
+To:     Tero Kristo <tero.kristo@linux.intel.com>
+Cc:     rostedt@goodmis.org, artem.bityutskiy@linux.intel.com,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] tracing/synthetic: Print out u64 values properly
+Message-Id: <20230915150101.ef50c4774ab85aa2ff7431ec@kernel.org>
+In-Reply-To: <20230911141704.3585965-1-tero.kristo@linux.intel.com>
+References: <20230911141704.3585965-1-tero.kristo@linux.intel.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 14 Sep 2023 15:11:02 +0200
-Clément Léger <cleger@rivosinc.com> wrote:
+Hi Tero,
 
-> enabler->uaddr can be aligned on 32 or 64 bits. If aligned on 32 bits,
-> this will result in a misaligned access on 64 bits architectures since
-> set_bit()/clear_bit() are expecting an unsigned long (aligned) pointer.
-> On architecture that do not support misaligned access, this will crash
-> the kernel. Align uaddr on unsigned long size to avoid such behavior.
-> This bug was found while running kselftests on RISC-V.
+On Mon, 11 Sep 2023 17:17:04 +0300
+Tero Kristo <tero.kristo@linux.intel.com> wrote:
+
+> The synth traces incorrectly print pointer to the synthetic event values
+> instead of the actual value when using u64 type. Fix by addressing the
+> contents of the union properly.
+
+Thanks for pointing it out.
+But I would like to see a new "case 8:" print code instead of changing
+"default". Can you keep the default as it is and add "case 8:" case there?
+
+Thanks,
+
 > 
-> Fixes: 7235759084a4 ("tracing/user_events: Use remote writes for event enablement")
-> Signed-off-by: Clément Léger <cleger@rivosinc.com>
+> Fixes: ddeea494a16f ("tracing/synthetic: Use union instead of casts")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Tero Kristo <tero.kristo@linux.intel.com>
 > ---
->  kernel/trace/trace_events_user.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
+>  kernel/trace/trace_events_synth.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-> index 6f046650e527..580c0fe4b23e 100644
-> --- a/kernel/trace/trace_events_user.c
-> +++ b/kernel/trace/trace_events_user.c
-> @@ -479,7 +479,7 @@ static int user_event_enabler_write(struct user_event_mm *mm,
->  				    bool fixup_fault, int *attempt)
->  {
->  	unsigned long uaddr = enabler->addr;
-> -	unsigned long *ptr;
-> +	unsigned long *ptr, bit_offset;
->  	struct page *page;
->  	void *kaddr;
->  	int ret;
-> @@ -511,13 +511,19 @@ static int user_event_enabler_write(struct user_event_mm *mm,
+> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+> index 7fff8235075f..070365959c0a 100644
+> --- a/kernel/trace/trace_events_synth.c
+> +++ b/kernel/trace/trace_events_synth.c
+> @@ -337,7 +337,7 @@ static void print_synth_event_num_val(struct trace_seq *s,
+>  		break;
+>  
+>  	default:
+> -		trace_seq_printf(s, print_fmt, name, val, space);
+> +		trace_seq_printf(s, print_fmt, name, val->as_u64, space);
+>  		break;
 >  	}
->  
->  	kaddr = kmap_local_page(page);
-> +
-> +	bit_offset = uaddr & (sizeof(unsigned long) - 1);
-> +	if (bit_offset) {
-> +		bit_offset *= 8;
-> +		uaddr &= ~(sizeof(unsigned long) - 1);
-> +	}
->  	ptr = kaddr + (uaddr & ~PAGE_MASK);
->  
->  	/* Update bit atomically, user tracers must be atomic as well */
->  	if (enabler->event && enabler->event->status)
-> -		set_bit(ENABLE_BIT(enabler), ptr);
-> +		set_bit(ENABLE_BIT(enabler) + bit_offset, ptr);
->  	else
-> -		clear_bit(ENABLE_BIT(enabler), ptr);
-> +		clear_bit(ENABLE_BIT(enabler) + bit_offset, ptr);
-
-What we need are generic set_bit_aligned() and clear_bit_aligned(), which align the ptr
-by unsigned long. (I think it should be done in set_bit/clear_bit, for architecture
-which requires aligned access...)
-
-#define LONG_ALIGN_DIFF(p)	(p) & (sizeof(long) -1)
-#define LONG_ALINGNED(p)		(p) & ~(sizeof(long) - 1)
-
-static inline void set_bit_aligned(int bit, unsigned long *ptr)
-{
-	int offs = LONG_ALIGN_DIFF(ptr) * 8;
-
-#ifdef __BIGENDIAN
-	if (bit >= offs) {
-		set_bit(bit - offs, LONG_ALIGNED(ptr));
-	} else {
-		set_bit(bit + BITS_PER_LONG - offs, LONG_ALIGNED(ptr) + 1);
-	}
-#else
-	if (bit < BITS_PER_LONG - offs) {
-		set_bit(bit + offs, LONG_ALIGNED(ptr));
-	} else {
-		set_bit(bit - BITS_PER_LONG + offs, LONG_ALIGNED(ptr) + 1);
-	}
-#endif
-}
-
-And use it.
-
-Thank you,
-
->  
->  	kunmap_local(kaddr);
->  	unpin_user_pages_dirty_lock(&page, 1, true);
+>  }
 > -- 
 > 2.40.1
 > 
