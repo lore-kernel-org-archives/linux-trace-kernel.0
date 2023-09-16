@@ -2,119 +2,77 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DECC46CA1
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 16 Sep 2023 00:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A8C5CD37B2
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 16 Sep 2023 02:10:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237231AbjIPA0Y (ORCPT
+        id S238129AbjIPCKP (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 15 Sep 2023 20:26:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60266 "EHLO
+        Fri, 15 Sep 2023 22:10:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238391AbjIPA0X (ORCPT
+        with ESMTP id S237357AbjIPCKK (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 15 Sep 2023 20:26:23 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8B403C13;
-        Fri, 15 Sep 2023 17:24:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694823889; x=1726359889;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OAJoXRpLWIJ0ZW1gEurh1Ryi/QaYjHylSLez52f4b9s=;
-  b=byWDLfTScGfrUa7BZ/yQvnprpWfWbVx5uLN71vAt067HoJlOdSQVegLj
-   plIAt52eTF3cXI0Q0HTHox4jZQnJWg/v0zS8K+hNL13Q9BskEYMhYetQC
-   XWaF9UfPWAuWzrplPFLnJczjCADIZhYvs8HZmnQ+9Aj7wfsqGCd7A6XGP
-   ouu/WKaZBGBOraJdH+OeDBY6HPPHIOU9XQZFg2Fjt0TcKYAWsQBJyDYpQ
-   +UUbX2xOemo4eMlbylsZ36qvOxDFk3YDnYp9xcKhelmkwx+q97WVBIiTe
-   NkJP+GE2/ruZJKiYql4NVAyVEVtytWdmsZClxpEoW0+G3WjYN4Jgs2Hxv
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="379281549"
-X-IronPort-AV: E=Sophos;i="6.02,150,1688454000"; 
-   d="scan'208";a="379281549"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 17:22:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="745177616"
-X-IronPort-AV: E=Sophos;i="6.02,150,1688454000"; 
-   d="scan'208";a="745177616"
-Received: from lkp-server02.sh.intel.com (HELO 9ef86b2655e5) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 15 Sep 2023 17:22:47 -0700
-Received: from kbuild by 9ef86b2655e5 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qhJ5B-0003eC-0U;
-        Sat, 16 Sep 2023 00:22:45 +0000
-Date:   Sat, 16 Sep 2023 08:21:58 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Daniel Bristot de Oliveira <bristot@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     oe-kbuild-all@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
+        Fri, 15 Sep 2023 22:10:10 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D22901FCE;
+        Fri, 15 Sep 2023 19:10:00 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E761AC433C9;
+        Sat, 16 Sep 2023 02:09:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694830200;
+        bh=JTX8roVUkoUgDpJsiDynoUw1rs0WkWhqwrFFpgZDGAc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HYpkwR/inXjdyb2gngS4f7p4SFsHSMS3VtSAcLEHye2QBHmQXeQgFFKB1NqwqQ069
+         aJfOypDmoD9vgbsIZl9SG2hsjrARJmocVcmfc/djvDJOFqWJS/uhEYh7mMfeMcasN3
+         73lPOFle6veIKb+soiMhLbfXEYO1mG/l1prQj89951ycdnVn6p3OtlOpLDZ4nd1Yj7
+         4vwABlBysLdDFobnl2b32WnWVtx24Dl+WTM0ek1K1yrfioD5GPKq1jvihIEL2IfNhB
+         tBJSx15beCsLcfE3aARUMt7pYaWx5eQrqJiM4aOxKic2a1uSGSjm3HDYEMadPWoeB3
+         9twb5KOKOqTMQ==
+From:   SeongJae Park <sj@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     SeongJae Park <sj@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>, damon@lists.linux.dev,
+        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing/timerlat: Hotplug support for the user-space
- interface
-Message-ID: <202309160854.SAw0rIUm-lkp@intel.com>
-References: <b619d9fd08a3bb47018cf40afa95783844a3c1fd.1694789910.git.bristot@kernel.org>
+Subject: [PATCH 3/9] mm/damon/core: use nr_accesses_bp as a source of damos_before_apply tracepoint
+Date:   Sat, 16 Sep 2023 02:09:39 +0000
+Message-Id: <20230916020945.47296-4-sj@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230916020945.47296-1-sj@kernel.org>
+References: <20230916020945.47296-1-sj@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b619d9fd08a3bb47018cf40afa95783844a3c1fd.1694789910.git.bristot@kernel.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Daniel,
+damos_before_apply tracepoint is exposing access rate of DAMON regions
+using nr_accesses field of regions, which was actually used by DAMOS in
+the past.  However, it has changed to use nr_accesses_bp instead.
+Update the tracepoint to expose the value that DAMOS is really using.
 
-kernel test robot noticed the following build warnings:
+Note that it doesn't expose the value as is in the basis point, but
+after converting it to the natural number by dividing it by 10,000.
+Therefore this change doesn't make user-visible behavioral differences.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.6-rc1 next-20230915]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Signed-off-by: SeongJae Park <sj@kernel.org>
+---
+ include/trace/events/damon.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Daniel-Bristot-de-Oliveira/tracing-timerlat-Hotplug-support-for-the-user-space-interface/20230915-230157
-base:   linus/master
-patch link:    https://lore.kernel.org/r/b619d9fd08a3bb47018cf40afa95783844a3c1fd.1694789910.git.bristot%40kernel.org
-patch subject: [PATCH] tracing/timerlat: Hotplug support for the user-space interface
-config: um-randconfig-002-20230916 (https://download.01.org/0day-ci/archive/20230916/202309160854.SAw0rIUm-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230916/202309160854.SAw0rIUm-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202309160854.SAw0rIUm-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> kernel/trace/trace_osnoise.c:2125:13: warning: 'timerlat_rm_per_cpu_interface' defined but not used [-Wunused-function]
-    2125 | static void timerlat_rm_per_cpu_interface(long cpu) {};
-         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> kernel/trace/trace_osnoise.c:2124:12: warning: 'timerlat_add_per_cpu_interface' defined but not used [-Wunused-function]
-    2124 | static int timerlat_add_per_cpu_interface(long cpu) { return 0; };
-         |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/timerlat_rm_per_cpu_interface +2125 kernel/trace/trace_osnoise.c
-
-  2112	
-  2113	static void timerlat_rm_per_cpu_interface(long cpu)
-  2114	{
-  2115		struct dentry *cpu_dir = per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->root;
-  2116	
-  2117		if (cpu_dir) {
-  2118			tracefs_remove(cpu_dir);
-  2119			per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->root = NULL;
-  2120			per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->timerlat_fd = NULL;
-  2121		}
-  2122	}
-  2123	#else
-> 2124	static int timerlat_add_per_cpu_interface(long cpu) { return 0; };
-> 2125	static void timerlat_rm_per_cpu_interface(long cpu) {};
-  2126	#endif
-  2127	
-
+diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
+index 19930bb7af9a..23200aabccac 100644
+--- a/include/trace/events/damon.h
++++ b/include/trace/events/damon.h
+@@ -36,7 +36,7 @@ TRACE_EVENT_CONDITION(damos_before_apply,
+ 		__entry->target_idx = target_idx;
+ 		__entry->start = r->ar.start;
+ 		__entry->end = r->ar.end;
+-		__entry->nr_accesses = r->nr_accesses;
++		__entry->nr_accesses = r->nr_accesses_bp / 10000;
+ 		__entry->age = r->age;
+ 		__entry->nr_regions = nr_regions;
+ 	),
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.25.1
+
