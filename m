@@ -2,230 +2,119 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37278EED600
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 15 Sep 2023 15:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DECC46CA1
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 16 Sep 2023 00:26:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233895AbjIOPAP (ORCPT
+        id S237231AbjIPA0Y (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 15 Sep 2023 11:00:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33908 "EHLO
+        Fri, 15 Sep 2023 20:26:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229568AbjIOPAP (ORCPT
+        with ESMTP id S238391AbjIPA0X (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 15 Sep 2023 11:00:15 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D35110D;
-        Fri, 15 Sep 2023 08:00:10 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC6F2C433C9;
-        Fri, 15 Sep 2023 15:00:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694790010;
-        bh=FqlUd/YRLEnI9bITXzGJS4ipTYUOfDz0uPKjftQZN2Q=;
-        h=From:To:Cc:Subject:Date:From;
-        b=MQbpzNDYPYhuQa28l/as2SlN2tEJNV0vEbEBwQUjbqbxor8r91qBnz7702aJ5/E4b
-         HFFTkqYaTPo7Xx0/glpwrLxZOP5KcgfAU4ey2nfRV3mFf4h68zsv4oAumyixNJoLC3
-         +lO1yjTukDJoA/Nbt1nlBU7Bq69eZ8R3vSq7+bCSuwvrQQ9879/2Qna2Q8A34sx6ik
-         cX664ASLfLfr9f8RL8QlPF9Eo9JNFm+OAmuaf3V68SD35lN9wqRCBjltLu8BmF3cWf
-         HButuETjOQWEbzgw68ws2lZa8IP21+NbmY2kDwAP/kSCF4UC1I/H/nbXnwQmEkFv0l
-         l2pnnTIJtD/Sg==
-From:   Daniel Bristot de Oliveira <bristot@kernel.org>
+        Fri, 15 Sep 2023 20:26:23 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8B403C13;
+        Fri, 15 Sep 2023 17:24:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694823889; x=1726359889;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OAJoXRpLWIJ0ZW1gEurh1Ryi/QaYjHylSLez52f4b9s=;
+  b=byWDLfTScGfrUa7BZ/yQvnprpWfWbVx5uLN71vAt067HoJlOdSQVegLj
+   plIAt52eTF3cXI0Q0HTHox4jZQnJWg/v0zS8K+hNL13Q9BskEYMhYetQC
+   XWaF9UfPWAuWzrplPFLnJczjCADIZhYvs8HZmnQ+9Aj7wfsqGCd7A6XGP
+   ouu/WKaZBGBOraJdH+OeDBY6HPPHIOU9XQZFg2Fjt0TcKYAWsQBJyDYpQ
+   +UUbX2xOemo4eMlbylsZ36qvOxDFk3YDnYp9xcKhelmkwx+q97WVBIiTe
+   NkJP+GE2/ruZJKiYql4NVAyVEVtytWdmsZClxpEoW0+G3WjYN4Jgs2Hxv
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="379281549"
+X-IronPort-AV: E=Sophos;i="6.02,150,1688454000"; 
+   d="scan'208";a="379281549"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 17:22:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="745177616"
+X-IronPort-AV: E=Sophos;i="6.02,150,1688454000"; 
+   d="scan'208";a="745177616"
+Received: from lkp-server02.sh.intel.com (HELO 9ef86b2655e5) ([10.239.97.151])
+  by orsmga002.jf.intel.com with ESMTP; 15 Sep 2023 17:22:47 -0700
+Received: from kbuild by 9ef86b2655e5 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qhJ5B-0003eC-0U;
+        Sat, 16 Sep 2023 00:22:45 +0000
+Date:   Sat, 16 Sep 2023 08:21:58 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Daniel Bristot de Oliveira <bristot@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] tracing/timerlat: Hotplug support for the user-space interface
-Date:   Fri, 15 Sep 2023 17:00:05 +0200
-Message-Id: <b619d9fd08a3bb47018cf40afa95783844a3c1fd.1694789910.git.bristot@kernel.org>
-X-Mailer: git-send-email 2.38.1
+Cc:     oe-kbuild-all@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing/timerlat: Hotplug support for the user-space
+ interface
+Message-ID: <202309160854.SAw0rIUm-lkp@intel.com>
+References: <b619d9fd08a3bb47018cf40afa95783844a3c1fd.1694789910.git.bristot@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b619d9fd08a3bb47018cf40afa95783844a3c1fd.1694789910.git.bristot@kernel.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The osnoise/per_cpu/CPU$/timerlat_fd is create for each possible
-CPU, but it might create confusion if the CPU is not online.
+Hi Daniel,
 
-Create the file only for online CPUs, also follow hotplug by
-creating and deleting as CPUs come and go.
+kernel test robot noticed the following build warnings:
 
-Fixes: e88ed227f639 ("tracing/timerlat: Add user-space interface")
-Signed-off-by: Daniel Bristot de Oliveira <bristot@kernel.org>
----
- kernel/trace/trace_osnoise.c | 101 ++++++++++++++++++++++++++---------
- 1 file changed, 77 insertions(+), 24 deletions(-)
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.6-rc1 next-20230915]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index bd0d01d00fb9..1af01eec3e36 100644
---- a/kernel/trace/trace_osnoise.c
-+++ b/kernel/trace/trace_osnoise.c
-@@ -229,6 +229,19 @@ static inline struct osnoise_variables *this_cpu_osn_var(void)
- }
- 
- #ifdef CONFIG_TIMERLAT_TRACER
-+
-+/*
-+ * osnoise/per_cpu dir
-+ */
-+static struct dentry		*osnoise_per_cpu_fd;
-+
-+struct osnoise_per_cpu_dir {
-+	struct dentry *root;
-+	struct dentry *timerlat_fd;
-+};
-+
-+static DEFINE_PER_CPU(struct osnoise_per_cpu_dir, osnoise_per_cpu_dir);
-+
- /*
-  * Runtime information for the timer mode.
-  */
-@@ -2000,6 +2013,9 @@ static int start_kthread(unsigned int cpu)
- 	char comm[24];
- 
- 	if (timerlat_enabled()) {
-+		if (!test_bit(OSN_WORKLOAD, &osnoise_options))
-+			return 0;
-+
- 		snprintf(comm, 24, "timerlat/%d", cpu);
- 		main = timerlat_main;
- 	} else {
-@@ -2065,19 +2081,64 @@ static int start_per_cpu_kthreads(void)
- 	return retval;
- }
- 
-+#ifdef CONFIG_TIMERLAT_TRACER
-+static const struct file_operations timerlat_fd_fops;
-+static int timerlat_add_per_cpu_interface(long cpu)
-+{
-+	struct dentry *timerlat_fd, *cpu_dir_fd;
-+	char cpu_str[30]; /* see trace.c: tracing_init_tracefs_percpu() */
-+
-+	if (!osnoise_per_cpu_fd)
-+		return 0;
-+
-+	snprintf(cpu_str, 30, "cpu%ld", cpu);
-+	cpu_dir_fd = tracefs_create_dir(cpu_str, osnoise_per_cpu_fd);
-+
-+	if (cpu_dir_fd) {
-+		timerlat_fd = trace_create_file("timerlat_fd", TRACE_MODE_READ,
-+					       cpu_dir_fd, NULL, &timerlat_fd_fops);
-+		WARN_ON_ONCE(!timerlat_fd);
-+		per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->root = cpu_dir_fd;
-+		per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->timerlat_fd = timerlat_fd;
-+
-+		/* Record the CPU */
-+		d_inode(timerlat_fd)->i_cdev = (void *)(cpu);
-+
-+		return 0;
-+	}
-+
-+	return -ENOMEM;
-+}
-+
-+static void timerlat_rm_per_cpu_interface(long cpu)
-+{
-+	struct dentry *cpu_dir = per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->root;
-+
-+	if (cpu_dir) {
-+		tracefs_remove(cpu_dir);
-+		per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->root = NULL;
-+		per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->timerlat_fd = NULL;
-+	}
-+}
-+#else
-+static int timerlat_add_per_cpu_interface(long cpu) { return 0; };
-+static void timerlat_rm_per_cpu_interface(long cpu) {};
-+#endif
-+
- #ifdef CONFIG_HOTPLUG_CPU
- static void osnoise_hotplug_workfn(struct work_struct *dummy)
- {
- 	unsigned int cpu = smp_processor_id();
- 
- 	mutex_lock(&trace_types_lock);
--
--	if (!osnoise_has_registered_instances())
--		goto out_unlock_trace;
--
- 	mutex_lock(&interface_lock);
- 	cpus_read_lock();
- 
-+	timerlat_add_per_cpu_interface(cpu);
-+
-+	if (!osnoise_has_registered_instances())
-+		goto out_unlock;
-+
- 	if (!cpumask_test_cpu(cpu, &osnoise_cpumask))
- 		goto out_unlock;
- 
-@@ -2086,7 +2147,6 @@ static void osnoise_hotplug_workfn(struct work_struct *dummy)
- out_unlock:
- 	cpus_read_unlock();
- 	mutex_unlock(&interface_lock);
--out_unlock_trace:
- 	mutex_unlock(&trace_types_lock);
- }
- 
-@@ -2106,6 +2166,7 @@ static int osnoise_cpu_init(unsigned int cpu)
-  */
- static int osnoise_cpu_die(unsigned int cpu)
- {
-+	timerlat_rm_per_cpu_interface(cpu);
- 	stop_kthread(cpu);
- 	return 0;
- }
-@@ -2708,10 +2769,7 @@ static int init_timerlat_stack_tracefs(struct dentry *top_dir)
- 
- static int osnoise_create_cpu_timerlat_fd(struct dentry *top_dir)
- {
--	struct dentry *timerlat_fd;
--	struct dentry *per_cpu;
--	struct dentry *cpu_dir;
--	char cpu_str[30]; /* see trace.c: tracing_init_tracefs_percpu() */
-+	int retval;
- 	long cpu;
- 
- 	/*
-@@ -2720,29 +2778,24 @@ static int osnoise_create_cpu_timerlat_fd(struct dentry *top_dir)
- 	 * Because osnoise/timerlat have a single workload, having
- 	 * multiple files like these are wast of memory.
- 	 */
--	per_cpu = tracefs_create_dir("per_cpu", top_dir);
--	if (!per_cpu)
-+	osnoise_per_cpu_fd = tracefs_create_dir("per_cpu", top_dir);
-+	if (!osnoise_per_cpu_fd)
- 		return -ENOMEM;
- 
--	for_each_possible_cpu(cpu) {
--		snprintf(cpu_str, 30, "cpu%ld", cpu);
--		cpu_dir = tracefs_create_dir(cpu_str, per_cpu);
--		if (!cpu_dir)
-+	for_each_online_cpu(cpu) {
-+		retval = timerlat_add_per_cpu_interface(cpu);
-+		if (retval < 0)
- 			goto out_clean;
--
--		timerlat_fd = trace_create_file("timerlat_fd", TRACE_MODE_READ,
--						cpu_dir, NULL, &timerlat_fd_fops);
--		if (!timerlat_fd)
--			goto out_clean;
--
--		/* Record the CPU */
--		d_inode(timerlat_fd)->i_cdev = (void *)(cpu);
- 	}
- 
- 	return 0;
- 
- out_clean:
--	tracefs_remove(per_cpu);
-+	tracefs_remove(osnoise_per_cpu_fd);
-+	/* tracefs_remove() recursively deletes all the other files */
-+	osnoise_per_cpu_fd = NULL;
-+	for_each_online_cpu(cpu)
-+		timerlat_rm_per_cpu_interface(cpu);
- 	return -ENOMEM;
- }
- 
+url:    https://github.com/intel-lab-lkp/linux/commits/Daniel-Bristot-de-Oliveira/tracing-timerlat-Hotplug-support-for-the-user-space-interface/20230915-230157
+base:   linus/master
+patch link:    https://lore.kernel.org/r/b619d9fd08a3bb47018cf40afa95783844a3c1fd.1694789910.git.bristot%40kernel.org
+patch subject: [PATCH] tracing/timerlat: Hotplug support for the user-space interface
+config: um-randconfig-002-20230916 (https://download.01.org/0day-ci/archive/20230916/202309160854.SAw0rIUm-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230916/202309160854.SAw0rIUm-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202309160854.SAw0rIUm-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> kernel/trace/trace_osnoise.c:2125:13: warning: 'timerlat_rm_per_cpu_interface' defined but not used [-Wunused-function]
+    2125 | static void timerlat_rm_per_cpu_interface(long cpu) {};
+         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> kernel/trace/trace_osnoise.c:2124:12: warning: 'timerlat_add_per_cpu_interface' defined but not used [-Wunused-function]
+    2124 | static int timerlat_add_per_cpu_interface(long cpu) { return 0; };
+         |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/timerlat_rm_per_cpu_interface +2125 kernel/trace/trace_osnoise.c
+
+  2112	
+  2113	static void timerlat_rm_per_cpu_interface(long cpu)
+  2114	{
+  2115		struct dentry *cpu_dir = per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->root;
+  2116	
+  2117		if (cpu_dir) {
+  2118			tracefs_remove(cpu_dir);
+  2119			per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->root = NULL;
+  2120			per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->timerlat_fd = NULL;
+  2121		}
+  2122	}
+  2123	#else
+> 2124	static int timerlat_add_per_cpu_interface(long cpu) { return 0; };
+> 2125	static void timerlat_rm_per_cpu_interface(long cpu) {};
+  2126	#endif
+  2127	
+
 -- 
-2.38.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
