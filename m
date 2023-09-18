@@ -2,81 +2,142 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9B8CD37B4
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 17 Sep 2023 21:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26B4CD13DF
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 18 Sep 2023 07:31:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230170AbjIQVKD (ORCPT
+        id S240171AbjIRHao (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 17 Sep 2023 17:10:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55512 "EHLO
+        Mon, 18 Sep 2023 03:30:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239413AbjIQVJo (ORCPT
+        with ESMTP id S240329AbjIRHak (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 17 Sep 2023 17:09:44 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F11F131
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 17 Sep 2023 14:09:35 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-56-EjQqs1KDO1SKbNzlqdoayA-1; Sun, 17 Sep 2023 22:09:22 +0100
-X-MC-Unique: EjQqs1KDO1SKbNzlqdoayA-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sun, 17 Sep
- 2023 22:09:13 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Sun, 17 Sep 2023 22:09:13 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     =?utf-8?B?J0Nsw6ltZW50IEzDqWdlcic=?= <cleger@rivosinc.com>,
+        Mon, 18 Sep 2023 03:30:40 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA38C19A;
+        Mon, 18 Sep 2023 00:30:24 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55C0EC43397;
+        Mon, 18 Sep 2023 07:30:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695022224;
+        bh=KSPIxmcvM6pw+gN3UxNfSb/hLNccmDr75av1M8zdRQI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=n1BsBmpfW3QKK3NJROVE3ZzVUFsmFfDjPKEBn27xuClR0kSquHorXzHaU80koKHjq
+         oZZubDbrJshf2OzAsSW/lYZeiCxCVkNHUyRKf0J25B3oyQqT68RZdj7eYC/N0Cta3F
+         s7s8WnXGl08TzUW7RJcoZTxms2v0q/MjRq68IGaI1IRBqPpLAZ6vaNChPkgshwIF5h
+         3KnstVmy4jP0LDvFd3KogmLI2XFZUpl0AY5gcnG4Aq2Zy+SxUhV393i/W7f5/3shGG
+         k9UrFYiH9x7//wdEvOIFolwWa2pPRCHkauyGN/FXYwMai04Ht7kCMou6e5Iw71dZtp
+         HuRwsr2VE4kwA==
+From:   Mike Rapoport <rppt@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Helge Deller <deller@gmx.de>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Kent Overstreet <kent.overstreet@linux.dev>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Rapoport <rppt@kernel.org>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Song Liu <song@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>
-CC:     Beau Belgrave <beaub@linux.microsoft.com>
-Subject: RE: [PATCH] tracing/user_events: align uaddr on unsigned long
- alignment
-Thread-Topic: [PATCH] tracing/user_events: align uaddr on unsigned long
- alignment
-Thread-Index: AQHZ5w0MDnN0cghZkEiZGsVL8YI6drAfhwPQ
-Date:   Sun, 17 Sep 2023 21:09:13 +0000
-Message-ID: <94183afa1fca44d18459da3d12a155d3@AcuMS.aculab.com>
-References: <20230914131102.179100-1-cleger@rivosinc.com>
-In-Reply-To: <20230914131102.179100-1-cleger@rivosinc.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-modules@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+        netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: [PATCH v3 01/13] nios2: define virtual address space for modules
+Date:   Mon, 18 Sep 2023 10:29:43 +0300
+Message-Id: <20230918072955.2507221-2-rppt@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230918072955.2507221-1-rppt@kernel.org>
+References: <20230918072955.2507221-1-rppt@kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-RnJvbTogQ2zDqW1lbnQgTMOpZ2VyDQo+IFNlbnQ6IDE0IFNlcHRlbWJlciAyMDIzIDE0OjExDQo+
-IA0KPiBlbmFibGVyLT51YWRkciBjYW4gYmUgYWxpZ25lZCBvbiAzMiBvciA2NCBiaXRzLiBJZiBh
-bGlnbmVkIG9uIDMyIGJpdHMsDQo+IHRoaXMgd2lsbCByZXN1bHQgaW4gYSBtaXNhbGlnbmVkIGFj
-Y2VzcyBvbiA2NCBiaXRzIGFyY2hpdGVjdHVyZXMgc2luY2UNCj4gc2V0X2JpdCgpL2NsZWFyX2Jp
-dCgpIGFyZSBleHBlY3RpbmcgYW4gdW5zaWduZWQgbG9uZyAoYWxpZ25lZCkgcG9pbnRlci4NCj4g
-T24gYXJjaGl0ZWN0dXJlIHRoYXQgZG8gbm90IHN1cHBvcnQgbWlzYWxpZ25lZCBhY2Nlc3MsIHRo
-aXMgd2lsbCBjcmFzaA0KPiB0aGUga2VybmVsLiBBbGlnbiB1YWRkciBvbiB1bnNpZ25lZCBsb25n
-IHNpemUgdG8gYXZvaWQgc3VjaCBiZWhhdmlvci4NCj4gVGhpcyBidWcgd2FzIGZvdW5kIHdoaWxl
-IHJ1bm5pbmcga3NlbGZ0ZXN0cyBvbiBSSVNDLVYuDQoNCllvdSBkb24ndCB3YW50IHRvIGRvIGl0
-IG9uIHg4Ni02NCBlaXRoZXIuDQpBIGxvY2tlZCBhY2Nlc3NlcyB0aGF0IGNyb3NzZXMgYSBjYWNo
-ZSBsaW5lIGJvdW5kYXJ5IGlzIGhvcnJpZC4NClNvIGhvcnJpZCB0aGF0IHJlY2VudCBjcHUncyBj
-YW4gYmUgbWFkZSB0byBmYXVsdC4NCg0KSSdkIGFsc28gZG91YnQgdGhhdCBvdGhlciBjcHUgdGhh
-dCBjYW4gZG8gbWlzYWxpZ25lZCB0cmFuc2ZlcnMNCmNhbiBldmVuIGRvIGxvY2tlZCBvbmVzLg0K
-DQpGb3IgeDg2IChhbmQgTEUpIHRoZSBsb25nW10gYml0bWFwIGNhbiBiZSB0cmVhdGVkIGFzIGNo
-YXJbXQ0KYXZvaWRpbmcgYWxsIHRoZSBwcm9ibGVtcy4NCg0KUGVyaGFwcyB0aGVyZSBvdWdodCB0
-byBiZSBiaXQgYSBiaXQtYXJyYXkgYmFzZWQgb24gY2hhcltdDQoobm90IGxvbmdbXSkgdGhhdCB3
-b3VsZCBiZSBlbmRpYW5uZXNzIGluZGVwZW5kZW50IGFuZA0KdXNlIGJ5dGUtc2l6ZWQgYXRvbWlj
-cy4NCihJSVJDIHRoYXQgaXMgc3RpbGwgYW4gaXNzdWUgb24gc3BhcmMzMi4uLikNCg0KCURhdmlk
-DQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBG
-YXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2
-IChXYWxlcykNCg==
+From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+
+nios2 uses kmalloc() to implement module_alloc() because CALL26/PCREL26
+cannot reach all of vmalloc address space.
+
+Define module space as 32MiB below the kernel base and switch nios2 to
+use vmalloc for module allocations.
+
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Dinh Nguyen <dinguyen@kernel.org>
+Acked-by: Song Liu <song@kernel.org>
+Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
+---
+ arch/nios2/include/asm/pgtable.h |  5 ++++-
+ arch/nios2/kernel/module.c       | 19 ++++---------------
+ 2 files changed, 8 insertions(+), 16 deletions(-)
+
+diff --git a/arch/nios2/include/asm/pgtable.h b/arch/nios2/include/asm/pgtable.h
+index 5144506dfa69..d2fb42fb6db8 100644
+--- a/arch/nios2/include/asm/pgtable.h
++++ b/arch/nios2/include/asm/pgtable.h
+@@ -25,7 +25,10 @@
+ #include <asm-generic/pgtable-nopmd.h>
+ 
+ #define VMALLOC_START		CONFIG_NIOS2_KERNEL_MMU_REGION_BASE
+-#define VMALLOC_END		(CONFIG_NIOS2_KERNEL_REGION_BASE - 1)
++#define VMALLOC_END		(CONFIG_NIOS2_KERNEL_REGION_BASE - SZ_32M - 1)
++
++#define MODULES_VADDR		(CONFIG_NIOS2_KERNEL_REGION_BASE - SZ_32M)
++#define MODULES_END		(CONFIG_NIOS2_KERNEL_REGION_BASE - 1)
+ 
+ struct mm_struct;
+ 
+diff --git a/arch/nios2/kernel/module.c b/arch/nios2/kernel/module.c
+index 76e0a42d6e36..9c97b7513853 100644
+--- a/arch/nios2/kernel/module.c
++++ b/arch/nios2/kernel/module.c
+@@ -21,23 +21,12 @@
+ 
+ #include <asm/cacheflush.h>
+ 
+-/*
+- * Modules should NOT be allocated with kmalloc for (obvious) reasons.
+- * But we do it for now to avoid relocation issues. CALL26/PCREL26 cannot reach
+- * from 0x80000000 (vmalloc area) to 0xc00000000 (kernel) (kmalloc returns
+- * addresses in 0xc0000000)
+- */
+ void *module_alloc(unsigned long size)
+ {
+-	if (size == 0)
+-		return NULL;
+-	return kmalloc(size, GFP_KERNEL);
+-}
+-
+-/* Free memory returned from module_alloc */
+-void module_memfree(void *module_region)
+-{
+-	kfree(module_region);
++	return __vmalloc_node_range(size, 1, MODULES_VADDR, MODULES_END,
++				    GFP_KERNEL, PAGE_KERNEL_EXEC,
++				    VM_FLUSH_RESET_PERMS, NUMA_NO_NODE,
++				    __builtin_return_address(0));
+ }
+ 
+ int apply_relocate_add(Elf32_Shdr *sechdrs, const char *strtab,
+-- 
+2.39.2
 
