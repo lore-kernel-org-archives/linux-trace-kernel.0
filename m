@@ -2,74 +2,277 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E4ACD5BBD
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 19 Sep 2023 13:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E850FCD5BC4
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 19 Sep 2023 14:08:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232741AbjISN54 (ORCPT
+        id S232571AbjISOIo (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 19 Sep 2023 09:57:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34660 "EHLO
+        Tue, 19 Sep 2023 10:08:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232758AbjISN5j (ORCPT
+        with ESMTP id S232357AbjISOIn (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 19 Sep 2023 09:57:39 -0400
+        Tue, 19 Sep 2023 10:08:43 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB740E47;
-        Tue, 19 Sep 2023 06:57:02 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB09DC433C7;
-        Tue, 19 Sep 2023 13:57:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695131822;
-        bh=1d5DP918hZxk10UdIwlD+ga9m6M7ZS6lCpvi4cE2yFk=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=Kj1AB0OOLQfr9v+8rqfBUXf6VEFtqnDrzzaLgoEbGthCXi/ehGfzmzciqkoz2EMqo
-         yxtyP2OQEG1vCk9ut6xug1fcDmCboEbNVjklWI8jRhEZSkTkq39us30H9mEq2QJ3eF
-         xqtioHnNvyU0Pa7ziifR4C054lp/ESrLT7XroYgVRY4Y/YGOc7RHk7dW6F1XXNpNXM
-         TMDM9YHiXLzb1ccA6rMesoPhTkQt2Yg2lvHK2NOYmTY08kLasm//gc5yjoy3lkiTj/
-         8e++/0sZR0BYRVppjfG458Y144ORgv0rlAs6vh2SoG7eVEb5th1W+W+Q/+wvYZU9gS
-         35ZaGDzEbYzIQ==
-Message-ID: <de5568cc-b710-ae56-710b-92eaa4fc09e8@kernel.org>
-Date:   Tue, 19 Sep 2023 15:56:58 +0200
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61D1AF2;
+        Tue, 19 Sep 2023 07:08:37 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1141C433C8;
+        Tue, 19 Sep 2023 14:08:35 +0000 (UTC)
+Date:   Tue, 19 Sep 2023 10:09:09 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Jaewon Kim <jaewon31.kim@samsung.com>
+Cc:     yuzhao@google.com, tjmercier@google.com, kaleshsingh@google.com,
+        akpm@linux-foundation.org, vbabka@suse.cz, hannes@cmpxchg.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-mm@kvack.org, jaewon31.kim@gmail.com
+Subject: Re: [PATCH] vmscan: add trace events for lru_gen
+Message-ID: <20230919095927.5a964094@gandalf.local.home>
+In-Reply-To: <20230919025216.1878-1-jaewon31.kim@samsung.com>
+References: <CGME20230919025012epcas1p2c2c57a34eea3299ef3bb643f4cbddf0b@epcas1p2.samsung.com>
+        <20230919025216.1878-1-jaewon31.kim@samsung.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH] rtla: fix a example in rtla-timerlat-hist.rst
-To:     Xie XiuQi <xiexiuqi@huaweicloud.com>, rostedt@goodmis.org,
-        corbet@lwn.net, linux-trace-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     bobo.shaobowang@huawei.com
-References: <20230919133028.697144-1-xiexiuqi@huaweicloud.com>
-Content-Language: en-US, pt-BR, it-IT
-From:   Daniel Bristot de Oliveira <bristot@kernel.org>
-In-Reply-To: <20230919133028.697144-1-xiexiuqi@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 9/19/23 15:30, Xie XiuQi wrote:
-> From: Xie XiuQi <xiexiuqi@huawei.com>
-> 
-> The following error message is reported when running the example in document.
-> 
->   # timerlat hist -d 10m -c 0-4 -P d:100us:1ms -p 1ms --no-aa
->   Failed to set timerlat period
->   Could not apply config
-> 
-> The unit of the period is microsecond, '1ms' cannot be accepted.
+On Tue, 19 Sep 2023 11:52:16 +0900
+Jaewon Kim <jaewon31.kim@samsung.com> wrote:
 
-right, but we could also parse the -p accordingly, no?
+>  /*
+>   * Now redefine the EM() and EMe() macros to map the enums to the strings
+> diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
+> index d2123dd960d5..e8f9d0452e89 100644
+> --- a/include/trace/events/vmscan.h
+> +++ b/include/trace/events/vmscan.h
+> @@ -327,6 +327,55 @@ TRACE_EVENT(mm_vmscan_lru_isolate,
+>  		__print_symbolic(__entry->lru, LRU_NAMES))
+>  );
+>  
+> +TRACE_EVENT(mm_vmscan_lru_gen_scan,
+> +	TP_PROTO(int highest_zoneidx,
+> +		int order,
+> +		unsigned long nr_requested,
+> +		unsigned long nr_scanned,
+> +		unsigned long nr_skipped,
+> +		unsigned long nr_taken,
+> +		isolate_mode_t isolate_mode,
+> +		int lru),
 
-as well as the -r for osnoise and hwnoise... and other
-us only parameters....
+This is a lot of parameter passing, can you consolidate it?
 
->   usage: [rtla] timerlat hist [-h] [-q] [-d s] [-D] [-n] [-a us] [-p us] [-i us] [-T us] [-s us] ...
->          ...
-> 	  -p/--period us: timerlat period in us
->          ...
-> 
-> Also fix another minor missleading comment.
-> 
-> Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
+(see below to where you call this)
+
+> +
+> +	TP_ARGS(highest_zoneidx, order, nr_requested, nr_scanned, nr_skipped, nr_taken, isolate_mode, lru),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(int, highest_zoneidx)
+> +		__field(int, order)
+> +		__field(unsigned long, nr_requested)
+> +		__field(unsigned long, nr_scanned)
+> +		__field(unsigned long, nr_skipped)
+> +		__field(unsigned long, nr_taken)
+> +		__field(unsigned int, isolate_mode)
+> +		__field(int, lru)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->highest_zoneidx = highest_zoneidx;
+> +		__entry->order = order;
+> +		__entry->nr_requested = nr_requested;
+> +		__entry->nr_scanned = nr_scanned;
+> +		__entry->nr_skipped = nr_skipped;
+> +		__entry->nr_taken = nr_taken;
+> +		__entry->isolate_mode = (__force unsigned int)isolate_mode;
+> +		__entry->lru = lru;
+> +	),
+> +
+> +	/*
+> +	 * classzone is previous name of the highest_zoneidx.
+> +	 * Reason not to change it is the ABI requirement of the tracepoint.
+> +	 */
+> +	TP_printk("isolate_mode=%d classzone=%d order=%d nr_requested=%lu nr_scanned=%lu nr_skipped=%lu nr_taken=%lu lru=%s",
+> +		__entry->isolate_mode,
+> +		__entry->highest_zoneidx,
+> +		__entry->order,
+> +		__entry->nr_requested,
+> +		__entry->nr_scanned,
+> +		__entry->nr_skipped,
+> +		__entry->nr_taken,
+> +		__print_symbolic(__entry->lru, LRU_GEN_NAMES))
+> +);
+> +
+>  TRACE_EVENT(mm_vmscan_write_folio,
+>  
+>  	TP_PROTO(struct folio *folio),
+> @@ -437,6 +486,53 @@ TRACE_EVENT(mm_vmscan_lru_shrink_active,
+>  		show_reclaim_flags(__entry->reclaim_flags))
+>  );
+>  
+> +TRACE_EVENT(mm_vmscan_lru_gen_evict,
+> +
+> +	TP_PROTO(int nid, unsigned long nr_reclaimed,
+> +		struct reclaim_stat *stat, int priority, int file),
+> +
+> +	TP_ARGS(nid, nr_reclaimed, stat, priority, file),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(int, nid)
+
+On 64 bit architectures, this causes a 4 byte hole in the ring buffer
+layout. Please keep 32 bit size fields paired with other 32 bit size if
+possible. That is, move the above "int nid" down where it doesn't cause a
+long field to be 4 bytes away.
+
+> +		__field(unsigned long, nr_reclaimed)
+> +		__field(unsigned long, nr_dirty)
+> +		__field(unsigned long, nr_writeback)
+> +		__field(unsigned long, nr_congested)
+> +		__field(unsigned long, nr_immediate)
+> +		__field(unsigned int, nr_activate0)
+> +		__field(unsigned int, nr_activate1)
+> +		__field(unsigned long, nr_ref_keep)
+> +		__field(unsigned long, nr_unmap_fail)
+
+		__field(int, nid)
+
+here!
+
+> +		__field(int, priority)
+> +		__field(int, reclaim_flags)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->nid = nid;
+> +		__entry->nr_reclaimed = nr_reclaimed;
+> +		__entry->nr_dirty = stat->nr_dirty;
+> +		__entry->nr_writeback = stat->nr_writeback;
+> +		__entry->nr_congested = stat->nr_congested;
+> +		__entry->nr_immediate = stat->nr_immediate;
+> +		__entry->nr_activate0 = stat->nr_activate[0];
+> +		__entry->nr_activate1 = stat->nr_activate[1];
+> +		__entry->nr_ref_keep = stat->nr_ref_keep;
+> +		__entry->nr_unmap_fail = stat->nr_unmap_fail;
+> +		__entry->priority = priority;
+> +		__entry->reclaim_flags = trace_reclaim_flags(file);
+> +	),
+> +
+> +	TP_printk("nid=%d nr_reclaimed=%ld nr_dirty=%ld nr_writeback=%ld nr_congested=%ld nr_immediate=%ld nr_activate_anon=%d nr_activate_file=%d nr_ref_keep=%ld nr_unmap_fail=%ld priority=%d flags=%s",
+> +		__entry->nid, __entry->nr_reclaimed,
+> +		__entry->nr_dirty, __entry->nr_writeback,
+> +		__entry->nr_congested, __entry->nr_immediate,
+> +		__entry->nr_activate0, __entry->nr_activate1,
+> +		__entry->nr_ref_keep, __entry->nr_unmap_fail,
+> +		__entry->priority,
+> +		show_reclaim_flags(__entry->reclaim_flags))
+> +);
+> +
+>  TRACE_EVENT(mm_vmscan_node_reclaim_begin,
+>  
+>  	TP_PROTO(int nid, int order, gfp_t gfp_flags),
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index 6f13394b112e..cc10e3fb8fa2 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -5005,6 +5005,7 @@ static int scan_folios(struct lruvec *lruvec, struct scan_control *sc,
+>  	int sorted = 0;
+>  	int scanned = 0;
+>  	int isolated = 0;
+> +	int skipped = 0;
+>  	int remaining = MAX_LRU_BATCH;
+>  	struct lru_gen_folio *lrugen = &lruvec->lrugen;
+>  	struct mem_cgroup *memcg = lruvec_memcg(lruvec);
+> @@ -5018,7 +5019,7 @@ static int scan_folios(struct lruvec *lruvec, struct scan_control *sc,
+>  
+>  	for (i = MAX_NR_ZONES; i > 0; i--) {
+>  		LIST_HEAD(moved);
+> -		int skipped = 0;
+> +		int skipped_zone = 0;
+>  		int zone = (sc->reclaim_idx + i) % MAX_NR_ZONES;
+>  		struct list_head *head = &lrugen->folios[gen][type][zone];
+>  
+> @@ -5040,16 +5041,17 @@ static int scan_folios(struct lruvec *lruvec, struct scan_control *sc,
+>  				isolated += delta;
+>  			} else {
+>  				list_move(&folio->lru, &moved);
+> -				skipped += delta;
+> +				skipped_zone += delta;
+>  			}
+>  
+> -			if (!--remaining || max(isolated, skipped) >= MIN_LRU_BATCH)
+> +			if (!--remaining || max(isolated, skipped_zone) >= MIN_LRU_BATCH)
+>  				break;
+>  		}
+>  
+> -		if (skipped) {
+> +		if (skipped_zone) {
+>  			list_splice(&moved, head);
+> -			__count_zid_vm_events(PGSCAN_SKIP, zone, skipped);
+> +			__count_zid_vm_events(PGSCAN_SKIP, zone, skipped_zone);
+> +			skipped += skipped_zone;
+>  		}
+>  
+>  		if (!remaining || isolated >= MIN_LRU_BATCH)
+> @@ -5065,6 +5067,10 @@ static int scan_folios(struct lruvec *lruvec, struct scan_control *sc,
+>  	__count_memcg_events(memcg, PGREFILL, sorted);
+>  	__count_vm_events(PGSCAN_ANON + type, isolated);
+>  
+> +	if (scanned)
+
+BTW, you can make this branch conditional with the trace event logic, so
+that it isn't tested when tracing is enabled. That is, remove the
+ "if (scanned)" test and use TRACE_EVENT_CONDITION() as I show below.
+
+> +		trace_mm_vmscan_lru_gen_scan(sc->reclaim_idx, sc->order,
+> +				MAX_LRU_BATCH, scanned, skipped, isolated,
+> +				sc->may_unmap ? 0 : ISOLATE_UNMAPPED, type);
+
+Why not pass the sc in to the trace event, and then do the assigning there?
+
+// use CONDITION to test scanned
+
+TRACE_EVENT_CONDITION(mm_vmscan_lru_gen_scan,
+
+	TP_PROTO(struct scan_control *sc,
+		unsigned long nr_requested,
+		unsigned long nr_scanned,
+		unsigned long nr_skipped,
+		unsigned long nr_taken,
+		int lru),
+
+	TP_ARGS(...)
+
+	TP_CONDITION(nr_scanned)
+
+	TP_fast_assign(
+		__entry->highest_zoneidx = sc->reclaim_idx;
+		__entry->order = sc->order;
+		__entry->nr_requested = nr_requested;
+		__entry->nr_scanned = nr_scanned;
+		__entry->nr_skipped = nr_skipped;
+		__entry->nr_taken = nr_taken;
+		__entry->isolate_mode = (__force unsigned int)(sc->may_unmap ? 0 : ISOLATE_UNMAPPED);
+		__entry->lru = lru;
+	),
+
+Lots of parameters can be expensive to pass, as it requires more copying.
+
+-- Steve
+
+
+>  	/*
+>  	 * There might not be eligible folios due to reclaim_idx. Check the
+>  	 * remaining to prevent livelock if it's not making progress.
+> @@ -5194,6 +5200,8 @@ static int evict_folios(struct lruvec *lruvec, struct scan_control *sc, int swap
+>  retry:
+>  	reclaimed = shrink_folio_list(&list, pgdat, sc, &stat, false);
+>  	sc->nr_reclaimed += reclaimed;
+> +	trace_mm_vmscan_lru_gen_evict(pgdat->node_id, reclaimed, &stat,
+> +				      sc->priority, type);
+>  
+>  	list_for_each_entry_safe_reverse(folio, next, &list, lru) {
+>  		if (!folio_evictable(folio)) {
 
