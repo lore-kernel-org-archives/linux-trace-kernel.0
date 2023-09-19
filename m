@@ -2,138 +2,99 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D259CD5BB3
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 19 Sep 2023 12:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E61CD5BBD
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 19 Sep 2023 13:34:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232099AbjISM7X (ORCPT
+        id S232377AbjISNeu (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 19 Sep 2023 08:59:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48762 "EHLO
+        Tue, 19 Sep 2023 09:34:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232202AbjISM7W (ORCPT
+        with ESMTP id S232286AbjISNet (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 19 Sep 2023 08:59:22 -0400
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13CEAFB
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 19 Sep 2023 05:59:16 -0700 (PDT)
-Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-40471c054f9so16732735e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 19 Sep 2023 05:59:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1695128354; x=1695733154; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=s30L8Cd9UzT5Qqd3APHlIpNbIqrTMch8rb7FXz6oEhI=;
-        b=GGCuQYbR0sqSN8gMIK1rrmrslsY0AEsdWKMwU2iStsyAHo54B6zKKn4IIdugmar6Ry
-         uAJLPoMU7ZwRrfQEKLrFFjDak6ttB2KZMuGRtwodtvpOpD92iKIKBTAKrV1mSe4V2Bq9
-         evMnkSUlWc8NAQ2KRXYjpUuK75J3avedggEEoro/UuA1OeflWqfY1A+oUWU95PQdPggp
-         V17eYSRP1BPvqYwyxk3UaB48eK/IDviY6xg4vGOm8n6W+E+m8dmMAAAXlnBLDCqXgVaO
-         ppx9y+agImslJeTv5ihR7VYmNgYWeEYbAHqJHzti6AlnkIORXRE6PIXTWbbh7zxY3MVN
-         +ZjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695128354; x=1695733154;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s30L8Cd9UzT5Qqd3APHlIpNbIqrTMch8rb7FXz6oEhI=;
-        b=qpiHmdwhHMMgJ/kGlkdyIYHycq9IyXTzV/9kFY3L9arsabRCGry+NQvwvrW/NM/KyZ
-         ewk70GAixURVeKR4vpw8POJBhWDNQXFrZR1TTBk+gEXw2/WNgQiEOKVMTySeXNC8LUMM
-         aquZdYDKOBpVDUttnhd2IRgCJao27HMxE33wcnJxW6++4r8Rx4+c7gGNZch1BJYGKHrB
-         kZrounX+Bx6IovEuqbu628giSDKm0Dh/W0WZErgHtl8My1+3aFc366owLBm+fMpqDFvn
-         Wexohm25/WhABHtbqs5cIQbzRycTfqBxwxrbd+9DvoTnRoKOqksuAprm1J3DXO59gVqV
-         ebNA==
-X-Gm-Message-State: AOJu0Ywm9Lb0tQeWP+tjlp+ytlPIuya8UhkkCJscnzD7zhOzJnGnDO/5
-        QdzsQjOWDCFhVk4F8VFfg1zSDA==
-X-Google-Smtp-Source: AGHT+IGVQy19vIMTiJYvnoh5+6oLkQCMGnegXStutS/GrrVLDcaqm6TLJny/0NcWOwJmQ2RfX47BZw==
-X-Received: by 2002:a05:600c:1d04:b0:401:c07f:72bd with SMTP id l4-20020a05600c1d0400b00401c07f72bdmr11470022wms.4.1695128354198;
-        Tue, 19 Sep 2023 05:59:14 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:999:a3a0:e1a5:a258:2b02:f431? ([2a01:e0a:999:a3a0:e1a5:a258:2b02:f431])
-        by smtp.gmail.com with ESMTPSA id l20-20020a1c7914000000b003fe29dc0ff2sm15353954wme.21.2023.09.19.05.59.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Sep 2023 05:59:13 -0700 (PDT)
-Message-ID: <a736f219-9a38-4f95-a874-93e1561906d5@rivosinc.com>
-Date:   Tue, 19 Sep 2023 14:59:12 +0200
+        Tue, 19 Sep 2023 09:34:49 -0400
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17F80F4;
+        Tue, 19 Sep 2023 06:34:43 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4RqjM20HRpz4f3xcD;
+        Tue, 19 Sep 2023 21:34:38 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.103.91])
+        by APP4 (Coremail) with SMTP id gCh0CgD3jd1vowll6Gp5Aw--.33633S4;
+        Tue, 19 Sep 2023 21:34:39 +0800 (CST)
+From:   Xie XiuQi <xiexiuqi@huaweicloud.com>
+To:     bristot@kernel.org, rostedt@goodmis.org, corbet@lwn.net,
+        linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     bobo.shaobowang@huawei.com
+Subject: [PATCH] rtla: fix a example in rtla-timerlat-hist.rst
+Date:   Tue, 19 Sep 2023 21:30:28 +0800
+Message-Id: <20230919133028.697144-1-xiexiuqi@huaweicloud.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing/user_events: align uaddr on unsigned long
- alignment
-Content-Language: en-US
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Beau Belgrave <beaub@linux.microsoft.com>
-References: <20230914131102.179100-1-cleger@rivosinc.com>
- <20230914131700.0ba3ee80@gandalf.local.home>
- <20230914132956.569dad45@gandalf.local.home>
-From:   =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <20230914132956.569dad45@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: gCh0CgD3jd1vowll6Gp5Aw--.33633S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kr45Gw1UAw18AryfZFW8JFb_yoW8Ar48pr
+        Wjqrna9ryDZwnrJan7JwnrXry2ya97XF4UAFs8JF1293W3C3Z5KFn7Kw45AF43uF1xCa9F
+        va1Fv3sxAw1Ik37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUgCb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+        xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+        0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+        6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+        Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCj
+        c4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
+        CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1x
+        MIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr
+        1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsG
+        vfC2KfnxnUUI43ZEXa7IUbPEf5UUUUU==
+X-CM-SenderInfo: x0lh5xhxtlqx5xdzvxpfor3voofrz/
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+From: Xie XiuQi <xiexiuqi@huawei.com>
 
+The following error message is reported when running the example in document.
 
-On 14/09/2023 19:29, Steven Rostedt wrote:
-> On Thu, 14 Sep 2023 13:17:00 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
->> Now lets look at big endian layout:
->>
->>  uaddr = 0xbeef0004
->>  enabler = 1;
->>
->>  memory at 0xbeef0000:  00 00 00 00 00 00 00 02
->>                                     ^
->>                                     addr: 0xbeef0004
->>
->> 				(enabler is set )
->>
->> 	bitoffset = uaddr & (sizeof(unsigned long) - 1); bitoffset = 4
->> 	bit_offset *= 8;				 bitoffset = 32
->> 	uaddr &= ~(sizeof(unsigned long) - 1);		 uaddr = 0xbeef0000
->>
->> 	ptr = kaddr + (uaddr & ~PAGE_MASK);
->>
->> 	clear_bit(1 + 32, ptr);
->>
->>  memory at 0xbeef0000:  00 00 00 00 00 00 00 02
->>                                   ^
->> 				bit 33 of 0xbeef0000
->>
->> I don't think that's what you expected!
-> 
-> I believe the above can be fixed with:
-> 
-> 	bit_offset = uaddr & (sizeof(unsigned long) - 1);
-> 	if (bit_offset) {
-> #ifdef CONFIG_CPU_BIG_ENDIAN
-> 		bit_offest = 0;
-> #else
-> 		bit_offset *= BITS_PER_BYTE;
-> #endif
-> 		uaddr &= ~(sizeof(unsigned long) - 1);
-> 	}
-> 
-> -- Steve
+  # timerlat hist -d 10m -c 0-4 -P d:100us:1ms -p 1ms --no-aa
+  Failed to set timerlat period
+  Could not apply config
 
+The unit of the period is microsecond, '1ms' cannot be accepted.
 
-Actually, after looking more in depth at that, it seems like there are
-actually 2 problems that can happen.
+  usage: [rtla] timerlat hist [-h] [-q] [-d s] [-D] [-n] [-a us] [-p us] [-i us] [-T us] [-s us] ...
+         ...
+	  -p/--period us: timerlat period in us
+         ...
 
-First one is atomic access misalignment due to enable_size == 4 and
-uaddr not being aligned on a (long) boundary on 64 bits architecture.
-This can generate misaligned exceptions on various architectures. This
-can be fixed in a more general way according to Masami snippet.
+Also fix another minor missleading comment.
 
-Second one that I can see is on 64 bits, big endian architectures with
-enable_size == 4. In that case, the bit provided by the userspace won't
-be correctly set since this code kind of assume that the atomic are done
-on 32bits value. Since the kernel assume long sized atomic operation, on
-big endian 64 bits architecture, the updated bit will actually be in the
-next 32 bits word.
+Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
+---
+ Documentation/tools/rtla/rtla-timerlat-hist.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Can someone confirm my understanding ?
+diff --git a/Documentation/tools/rtla/rtla-timerlat-hist.rst b/Documentation/tools/rtla/rtla-timerlat-hist.rst
+index 057db78d4095..03b7f3deb069 100644
+--- a/Documentation/tools/rtla/rtla-timerlat-hist.rst
++++ b/Documentation/tools/rtla/rtla-timerlat-hist.rst
+@@ -36,11 +36,11 @@ EXAMPLE
+ In the example below, **rtla timerlat hist** is set to run for *10* minutes,
+ in the cpus *0-4*, *skipping zero* only lines. Moreover, **rtla timerlat
+ hist** will change the priority of the *timerlat* threads to run under
+-*SCHED_DEADLINE* priority, with a *10us* runtime every *1ms* period. The
++*SCHED_DEADLINE* priority, with a *100us* runtime every *1ms* period. The
+ *1ms* period is also passed to the *timerlat* tracer. Auto-analysis is disabled
+ to reduce overhead ::
+ 
+-  [root@alien ~]# timerlat hist -d 10m -c 0-4 -P d:100us:1ms -p 1ms --no-aa
++  [root@alien ~]# timerlat hist -d 10m -c 0-4 -P d:100us:1ms -p 1000 --no-aa
+   # RTLA timerlat histogram
+   # Time unit is microseconds (us)
+   # Duration:   0 00:10:00
+-- 
+2.25.1
 
-Clément
