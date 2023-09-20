@@ -1,81 +1,201 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1D941205
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Sep 2023 20:15:41 +0000 (UTC)
-Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4CB8AB
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Sep 2023 13:15:39 -0700 (PDT)
-Received: by mail-qk1-x72e.google.com with SMTP id af79cd13be357-770ef0da4c2so9401185a.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Sep 2023 13:15:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1695240939; x=1695845739; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KjiggUyQYaXdrX5h9h6CEmaZNsBN7wNveaVEjl3faww=;
-        b=gzcneh+E/b39WZFZXupKfrJrFkgyKJK9LLcVsVadvicyjNcx3Oqe/r5Ae8yqn1Sqf6
-         aUlogDFXfVuZkuF13TiSBw9uZGqlk69veUO4L6dG75tVnFfk7zpzik86CadtK7IbzHO5
-         LWUP49N5s65Z48Fyi6pNFIOpU0lXEfIaWhOxc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695240939; x=1695845739;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KjiggUyQYaXdrX5h9h6CEmaZNsBN7wNveaVEjl3faww=;
-        b=ca8vsaw8Z8HfMFld4um3G1T72Gv/nbMkY2mTmTfwIU5cGM7v8jBe065KLP9JzGYbey
-         30lZ0YPpt+x8Pft8qx7o+dnXmTrvBrkBGAVM3Xk6Ildf2LvLMHK3Aaw08eACWXiTOeAQ
-         EqVI65hfevxZEIpJ6EBw2AOTZac3Q6bpuHG9s7cuUaFbbD/8DrO2nOqdaES8H121yzXy
-         pWccJkbv7yNP7SpZ9/Lz5zvwng8qHHdvdVGSwrXnI/6t1iv1DmHdNDMDRxJOdjEYypRA
-         Qlzu5JwmyKsJyKEp25wBmN3GT5mu/qcBjk0j363tj0LaKTW6+rDkMhjg/0Va9c1fo2qr
-         6DVg==
-X-Gm-Message-State: AOJu0YzbLJCP06H/XgsoUabQrQQeuSKEXzyPA3aOZptDBDLS4/JLuLwk
-	2jPOdvh75utuR0PDgxKqInnNqQ==
-X-Google-Smtp-Source: AGHT+IGzk01VxcNRtiMCm3IRpOiOofgFrIbB2ochwvXCEJnvd8LLC832yOxk2yPa78lhoBtatxrQnA==
-X-Received: by 2002:a05:620a:2943:b0:772:6419:89ab with SMTP id n3-20020a05620a294300b00772641989abmr4647613qkp.55.1695240938672;
-        Wed, 20 Sep 2023 13:15:38 -0700 (PDT)
-Received: from meerkat.local ([209.226.106.110])
-        by smtp.gmail.com with ESMTPSA id t2-20020a05620a034200b0076ce061f44dsm5369qkm.25.2023.09.20.13.15.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Sep 2023 13:15:38 -0700 (PDT)
-Date: Wed, 20 Sep 2023 16:15:29 -0400
-From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To: dwarves@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-rt-users@vger.kernel.org, linux-rtc@vger.kernel.org, linux-trace-devel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: This list is being migrated to new infrastructure
-Message-ID: <20230920-ligament-cortex-6344a0@meerkat>
-References: <20230920-uncouple-grime-729f33@meerkat>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFF641A94;
+	Wed, 20 Sep 2023 22:20:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38237C433C7;
+	Wed, 20 Sep 2023 22:19:59 +0000 (UTC)
+Date: Wed, 20 Sep 2023 18:20:35 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Ajay Kaher <akaher@vmware.com>, chinglinyu@google.com, lkp@intel.com,
+ namit@vmware.com, oe-lkp@lists.linux.dev, amakhalov@vmware.com,
+ er.ajay.kaher@gmail.com, srivatsa@csail.mit.edu, tkundu@vmware.com,
+ vsirnapalli@vmware.com
+Subject: Re: [PATCH 1/2 v3] eventfs: Remove eventfs_file and just use
+ eventfs_inode
+Message-ID: <20230920182035.2f2dde44@gandalf.local.home>
+In-Reply-To: <20230919211804.230edf1e@gandalf.local.home>
+References: <20230914163504.884804272@goodmis.org>
+	<20230914163535.269645249@goodmis.org>
+	<20230919000129.be4971c111300d108be97a3f@kernel.org>
+	<20230918210456.3772d4fa@gandalf.local.home>
+	<20230919184109.d2382bccfc208676c64df3fb@kernel.org>
+	<20230919211804.230edf1e@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/mixed; boundary="MP_/EXe79q9NtBArYHFv+E1tow4"
+
+--MP_/EXe79q9NtBArYHFv+E1tow4
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <20230920-uncouple-grime-729f33@meerkat>
-X-Spam-Status: No, score=2.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SORTED_RECIPS,SPF_HELO_NONE,SPF_PASS,SUSPICIOUS_RECIPS autolearn=no
-	autolearn_force=no version=3.4.6
-X-Spam-Level: **
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
 
-On Wed, Sep 20, 2023 at 03:52:05PM -0400, Konstantin Ryabitsev wrote:
-> Hello, all:
+On Tue, 19 Sep 2023 21:18:04 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> Hmm, actually looking at this, it's worse than what you stated. This is
+> called when a directory is closed. So if you had:
 > 
-> This list is being migrated to the new vger infrastructure. This should be a
-> fully transparent process and you don't need to change anything about how you
-> participate with the list or how you receive mail.
+> 	open(dir);
 > 
-> There will be a brief 20-minute delay with archives on lore.kernel.org. I will
-> follow up once the archive migration has been completed.
+> 	// look at all the content of this dir to create dentries
+> 
+> 	// another task creates a new entry and looks at it too.
+> 
+> 	close(dir);
+> 
+> Now we iterate over all the dentries of the dir and dput it.
+> 
+> I think this will cause the ref counts to get out of sync. I'll have to try
+> to create this scenario and see what happens.
 
-This work is now completed. I will monitor the performance to make
-sure that the new infrastructure is still successfully coping with the
-email traffic.
+And yes it does break :-p
 
-If you notice any problems, please report them to helpdesk at kernel.org.
+Even without this patch it breaks. That is, this bug exists currently upstream.
 
--K
+I run the attached file (requires libtracefs)
+
+and then run:
+
+  # cd /sys/kernel/tracing
+  # echo 99999999 > buffer_size_kb&
+
+Wait a bit.
+
+This will cause the ref counts to go negative.
+
+Then do a: trace-cmd reset
+
+Which will remove the kprobes created by the attached program, and will
+crash the kernel :-p
+
+I have an idea on how to fix it. Let my try it out.
+
+-- Steve
+
+--MP_/EXe79q9NtBArYHFv+E1tow4
+Content-Type: text/x-c++src
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename=test_eventfs_dir.c
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdarg.h>
+#include <getopt.h>
+#include <errno.h>
+#include <unistd.h>
+#include <tracefs.h>
+
+static char *argv0;
+
+static char *get_this_name(void)
+{
+	static char *this_name;
+	char *arg;
+	char *p;
+
+	if (this_name)
+		return this_name;
+
+	arg = argv0;
+	p = arg+strlen(arg);
+
+	while (p >= arg && *p != '/')
+		p--;
+	p++;
+
+	this_name = p;
+	return p;
+}
+
+static void usage(void)
+{
+	char *p = get_this_name();
+
+	printf("usage: %s [-c comm] trace.dat\n"
+	       "\n"
+	       "  Run this after running: trace-cmd record -e sched\n"
+	       "\n"
+	       "  Do some work and then hit Ctrl^C to stop the recording.\n"
+	       "  Run this on the resulting trace.dat file\n"
+	       "\n"
+	       "-c comm - to look at only a specific process called 'comm'\n"
+	       "\n",p);
+	exit(-1);
+}
+
+static void __vdie(const char *fmt, va_list ap, int err)
+{
+	int ret = errno;
+	char *p = get_this_name();
+
+	if (err && errno)
+		perror(p);
+	else
+		ret = -1;
+
+	fprintf(stderr, "  ");
+	vfprintf(stderr, fmt, ap);
+
+	fprintf(stderr, "\n");
+	exit(ret);
+}
+
+void die(const char *fmt, ...)
+{
+	va_list ap;
+
+	va_start(ap, fmt);
+	__vdie(fmt, ap, 0);
+	va_end(ap);
+}
+
+void pdie(const char *fmt, ...)
+{
+	va_list ap;
+
+	va_start(ap, fmt);
+	__vdie(fmt, ap, 1);
+	va_end(ap);
+}
+
+int main (int argc, char **argv)
+{
+	int dfd;
+	int ret;
+
+	ret = tracefs_kprobe_raw(NULL, "kp1", "schedule_timeout", "time=$arg1");
+	if (ret < 0)
+		pdie("Can't create schedule_timeout kprobe");
+
+	dfd = tracefs_instance_file_open(NULL, "events/kprobes", O_RDONLY);
+	if (dfd < 0)
+		pdie("Can't open events/kprobes");
+
+	if (!tracefs_file_exists(NULL, "events/kprobes/kp1/enable"))
+		pdie("kp1/enable does not exist");
+
+	ret = tracefs_kprobe_raw(NULL, "kp2", "schedule_hrtimeout", "expires=$arg1");
+	if (ret < 0)
+		pdie("Can't create schedule_hrtimeout kprobe");
+
+	if (!tracefs_file_exists(NULL, "events/kprobes/kp2/enable"))
+		pdie("kp2/enable does not exist");
+
+	close(dfd);
+
+//	tracefs_dynevent_destroy_all(TRACEFS_DYNEVENT_KPROBE, true);
+
+	return 0;
+}
+
+--MP_/EXe79q9NtBArYHFv+E1tow4--
