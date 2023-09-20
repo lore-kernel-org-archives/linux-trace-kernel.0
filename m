@@ -2,129 +2,256 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA6A0CE79DC
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 20 Sep 2023 14:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6724C04AA7
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 20 Sep 2023 15:44:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234492AbjITOcH convert rfc822-to-8bit (ORCPT
+        id S235529AbjITPoy (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 20 Sep 2023 10:32:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37368 "EHLO
+        Wed, 20 Sep 2023 11:44:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234572AbjITOcG (ORCPT
+        with ESMTP id S235478AbjITPox (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 20 Sep 2023 10:32:06 -0400
+        Wed, 20 Sep 2023 11:44:53 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C7B9D3;
-        Wed, 20 Sep 2023 07:32:00 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90317C433C7;
-        Wed, 20 Sep 2023 14:31:58 +0000 (UTC)
-Date:   Wed, 20 Sep 2023 10:32:33 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     =?UTF-8?B?6rmA7J6s7JuQ?= <jaewon31.kim@samsung.com>
-Cc:     "yuzhao@google.com" <yuzhao@google.com>,
-        "tjmercier@google.com" <tjmercier@google.com>,
-        "kaleshsingh@google.com" <kaleshsingh@google.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "vbabka@suse.cz" <vbabka@suse.cz>,
-        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "jaewon31.kim@gmail.com" <jaewon31.kim@gmail.com>
-Subject: Re: (2) [PATCH] vmscan: add trace events for lru_gen
-Message-ID: <20230920103233.145ac387@gandalf.local.home>
-In-Reply-To: <20230920074948epcms1p82d18c2f4d6a0b5699d50fc419b9ba9fe@epcms1p8>
-References: <20230919095927.5a964094@gandalf.local.home>
-        <20230919025216.1878-1-jaewon31.kim@samsung.com>
-        <CGME20230919025012epcas1p2c2c57a34eea3299ef3bb643f4cbddf0b@epcms1p8>
-        <20230920074948epcms1p82d18c2f4d6a0b5699d50fc419b9ba9fe@epcms1p8>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C763A3;
+        Wed, 20 Sep 2023 08:44:47 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CCADC433C7;
+        Wed, 20 Sep 2023 15:44:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695224686;
+        bh=RRa/kljzVI7ePl2GXpjf5f4B2/meO63ZzzO8/qNPWlI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=k0LyVu04lAJ6UgJrETfPNKruWIv6ufrNFTdi2G5FCPJZIyqdXJhKD2HOTk8ifmrma
+         JFwWo1azasocmfufW87UDx3kzeLwPBgeEGUKx6JQTmoie/05Mcc0WrWmV1ehqga6Ak
+         e1lEDuVJ0KunuooPDkhSY+6dv7SC+SFSM75w00AWZ3QSqurOD76Hvmee3mshSON2uQ
+         6pFqqXaIytrAl1pAtz/Xnrc6Ijq4jlEzLSPOTaBoiopebqCrTEiPzur1guuqcHIQCY
+         +fRL+mOVghqiMnYbSWDKOlM4WN4QNYdDWUVR5ZO2UJV6DMEAX9ErD8oHpvwQoPTSkn
+         9UeqMLCCVsT1Q==
+From:   Daniel Bristot de Oliveira <bristot@kernel.org>
+To:     Daniel Bristot de Oliveira <bristot@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V2] tracing/timerlat: Hotplug support for the user-space interface
+Date:   Wed, 20 Sep 2023 17:44:41 +0200
+Message-Id: <6b9a5f306e488bc77bf8521faeade420a0adf3e4.1695224204.git.bristot@kernel.org>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 20 Sep 2023 16:49:48 +0900
-김재원 <jaewon31.kim@samsung.com> wrote:
+The osnoise/per_cpu/CPU$/timerlat_fd is create for each possible
+CPU, but it might create confusion if the CPU is not online.
 
-> Great. Thank you for your comment.
-> 
-> For the putting the struct scan_control *sc inside the trace,
-> I couldn't do that because struct scan_control is defined in mm/vmscan.c.
-> I think I should not move it to a seperate header file.
+Create the file only for online CPUs, also follow hotplug by
+creating and deleting as CPUs come and go.
 
-Well if you ever decide to do so, one thing to do is to move the
-trace/events/vmscan.h into mm/ as trace_vmscan.h so that it would have
-access to local header files. Then all you need to do is to move the
-struct scan_control into a local mm/X.h header file.
+Fixes: e88ed227f639 ("tracing/timerlat: Add user-space interface")
+Signed-off-by: Daniel Bristot de Oliveira <bristot@kernel.org>
+---
+  Changes from V1:
+    - Fix compilation issue when !HOTPLUG
+    - Fix init interface | hotplug race
+    Link: https://lore.kernel.org/lkml/b619d9fd08a3bb47018cf40afa95783844a3c1fd.1694789910.git.bristot@kernel.org/
 
-> 
-> As you may expect, I just made this by copying the existing
-> trace_mm_vmscan_lru_isolate and trace_mm_vmscan_lru_shrink_inactive
-> 
-> I've tried to change like this.
-> Would this be good for you?
+ kernel/trace/trace_osnoise.c | 112 +++++++++++++++++++++++++++--------
+ 1 file changed, 86 insertions(+), 26 deletions(-)
 
-The below looks fine to me. Thanks.
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index bd0d01d00fb9..8422562d9864 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -229,6 +229,19 @@ static inline struct osnoise_variables *this_cpu_osn_var(void)
+ }
+ 
+ #ifdef CONFIG_TIMERLAT_TRACER
++
++/*
++ * osnoise/per_cpu dir
++ */
++static struct dentry		*osnoise_per_cpu_fd;
++
++struct osnoise_per_cpu_dir {
++	struct dentry *root;
++	struct dentry *timerlat_fd;
++};
++
++static DEFINE_PER_CPU(struct osnoise_per_cpu_dir, osnoise_per_cpu_dir);
++
+ /*
+  * Runtime information for the timer mode.
+  */
+@@ -2000,6 +2013,9 @@ static int start_kthread(unsigned int cpu)
+ 	char comm[24];
+ 
+ 	if (timerlat_enabled()) {
++		if (!test_bit(OSN_WORKLOAD, &osnoise_options))
++			return 0;
++
+ 		snprintf(comm, 24, "timerlat/%d", cpu);
+ 		main = timerlat_main;
+ 	} else {
+@@ -2065,19 +2081,64 @@ static int start_per_cpu_kthreads(void)
+ 	return retval;
+ }
+ 
++#ifdef CONFIG_TIMERLAT_TRACER
++static const struct file_operations timerlat_fd_fops;
++static int timerlat_add_per_cpu_interface(long cpu)
++{
++	struct dentry *timerlat_fd, *cpu_dir_fd;
++	char cpu_str[30]; /* see trace.c: tracing_init_tracefs_percpu() */
++
++	if (!osnoise_per_cpu_fd)
++		return 0;
++
++	snprintf(cpu_str, 30, "cpu%ld", cpu);
++	cpu_dir_fd = tracefs_create_dir(cpu_str, osnoise_per_cpu_fd);
++
++	if (cpu_dir_fd) {
++		timerlat_fd = trace_create_file("timerlat_fd", TRACE_MODE_READ,
++					       cpu_dir_fd, NULL, &timerlat_fd_fops);
++		WARN_ON_ONCE(!timerlat_fd);
++		per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->root = cpu_dir_fd;
++		per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->timerlat_fd = timerlat_fd;
++
++		/* Record the CPU */
++		d_inode(timerlat_fd)->i_cdev = (void *)(cpu);
++
++		return 0;
++	}
++
++	return -ENOMEM;
++}
++
++static void timerlat_rm_per_cpu_interface(long cpu)
++{
++	struct dentry *cpu_dir = per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->root;
++
++	if (cpu_dir) {
++		tracefs_remove(cpu_dir);
++		per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->root = NULL;
++		per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->timerlat_fd = NULL;
++	}
++}
++#elif defined(CONFIG_HOTPLUG_CPU)
++static int timerlat_add_per_cpu_interface(long cpu) { return 0; };
++static void timerlat_rm_per_cpu_interface(long cpu) {};
++#endif
++
+ #ifdef CONFIG_HOTPLUG_CPU
+ static void osnoise_hotplug_workfn(struct work_struct *dummy)
+ {
+ 	unsigned int cpu = smp_processor_id();
+ 
+ 	mutex_lock(&trace_types_lock);
+-
+-	if (!osnoise_has_registered_instances())
+-		goto out_unlock_trace;
+-
+ 	mutex_lock(&interface_lock);
+ 	cpus_read_lock();
+ 
++	timerlat_add_per_cpu_interface(cpu);
++
++	if (!osnoise_has_registered_instances())
++		goto out_unlock;
++
+ 	if (!cpumask_test_cpu(cpu, &osnoise_cpumask))
+ 		goto out_unlock;
+ 
+@@ -2086,7 +2147,6 @@ static void osnoise_hotplug_workfn(struct work_struct *dummy)
+ out_unlock:
+ 	cpus_read_unlock();
+ 	mutex_unlock(&interface_lock);
+-out_unlock_trace:
+ 	mutex_unlock(&trace_types_lock);
+ }
+ 
+@@ -2106,6 +2166,7 @@ static int osnoise_cpu_init(unsigned int cpu)
+  */
+ static int osnoise_cpu_die(unsigned int cpu)
+ {
++	timerlat_rm_per_cpu_interface(cpu);
+ 	stop_kthread(cpu);
+ 	return 0;
+ }
+@@ -2708,10 +2769,7 @@ static int init_timerlat_stack_tracefs(struct dentry *top_dir)
+ 
+ static int osnoise_create_cpu_timerlat_fd(struct dentry *top_dir)
+ {
+-	struct dentry *timerlat_fd;
+-	struct dentry *per_cpu;
+-	struct dentry *cpu_dir;
+-	char cpu_str[30]; /* see trace.c: tracing_init_tracefs_percpu() */
++	int retval;
+ 	long cpu;
+ 
+ 	/*
+@@ -2720,29 +2778,24 @@ static int osnoise_create_cpu_timerlat_fd(struct dentry *top_dir)
+ 	 * Because osnoise/timerlat have a single workload, having
+ 	 * multiple files like these are wast of memory.
+ 	 */
+-	per_cpu = tracefs_create_dir("per_cpu", top_dir);
+-	if (!per_cpu)
++	osnoise_per_cpu_fd = tracefs_create_dir("per_cpu", top_dir);
++	if (!osnoise_per_cpu_fd)
+ 		return -ENOMEM;
+ 
+-	for_each_possible_cpu(cpu) {
+-		snprintf(cpu_str, 30, "cpu%ld", cpu);
+-		cpu_dir = tracefs_create_dir(cpu_str, per_cpu);
+-		if (!cpu_dir)
+-			goto out_clean;
+-
+-		timerlat_fd = trace_create_file("timerlat_fd", TRACE_MODE_READ,
+-						cpu_dir, NULL, &timerlat_fd_fops);
+-		if (!timerlat_fd)
++	for_each_online_cpu(cpu) {
++		retval = timerlat_add_per_cpu_interface(cpu);
++		if (retval < 0)
+ 			goto out_clean;
+-
+-		/* Record the CPU */
+-		d_inode(timerlat_fd)->i_cdev = (void *)(cpu);
+ 	}
+ 
+ 	return 0;
+ 
+ out_clean:
+-	tracefs_remove(per_cpu);
++	tracefs_remove(osnoise_per_cpu_fd);
++	/* tracefs_remove() recursively deletes all the other files */
++	osnoise_per_cpu_fd = NULL;
++	for_each_online_cpu(cpu)
++		timerlat_rm_per_cpu_interface(cpu);
+ 	return -ENOMEM;
+ }
+ 
+@@ -3122,11 +3175,18 @@ __init static int init_osnoise_tracer(void)
+ 		return ret;
+ 	}
+ 
+-	osnoise_init_hotplug_support();
+-
+ 	INIT_LIST_HEAD_RCU(&osnoise_instances);
+ 
++	/*
++	 * Avoid race between creating per cpu dir and the hotplug operations
++	 * that add/rm entries.
++	 */
++	cpus_read_lock();
++
+ 	init_tracefs();
++	osnoise_init_hotplug_support();
++
++	cpus_read_unlock();
+ 
+ 	return 0;
+ }
+-- 
+2.38.1
 
--- Steve
-
-> 
-> 
-> --- a/include/trace/events/vmscan.h
-> +++ b/include/trace/events/vmscan.h
-> @@ -327,7 +327,7 @@ TRACE_EVENT(mm_vmscan_lru_isolate,
->                 __print_symbolic(__entry->lru, LRU_NAMES))
->  );
->  
-> -TRACE_EVENT(mm_vmscan_lru_gen_scan,
-> +TRACE_EVENT_CONDITION(mm_vmscan_lru_gen_scan,
->         TP_PROTO(int highest_zoneidx,
->                 int order,
->                 unsigned long nr_requested,
-> @@ -339,6 +339,8 @@ TRACE_EVENT(mm_vmscan_lru_gen_scan,
->  
->         TP_ARGS(highest_zoneidx, order, nr_requested, nr_scanned, nr_skipped, nr_taken, isolate_mode, lru),
->  
-> +       TP_CONDITION(nr_scanned),
-> +
->         TP_STRUCT__entry(
->                 __field(int, highest_zoneidx)
->                 __field(int, order)
-> @@ -494,7 +496,6 @@ TRACE_EVENT(mm_vmscan_lru_gen_evict,
->         TP_ARGS(nid, nr_reclaimed, stat, priority, file),
->  
->         TP_STRUCT__entry(
-> -               __field(int, nid)
->                 __field(unsigned long, nr_reclaimed)
->                 __field(unsigned long, nr_dirty)
->                 __field(unsigned long, nr_writeback)
-> @@ -504,6 +505,7 @@ TRACE_EVENT(mm_vmscan_lru_gen_evict,
->                 __field(unsigned int, nr_activate1)
->                 __field(unsigned long, nr_ref_keep)
->                 __field(unsigned long, nr_unmap_fail)
-> +               __field(int, nid)
->                 __field(int, priority)
->                 __field(int, reclaim_flags)
->         ),
-> 
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -5131,10 +5131,9 @@ static int scan_folios(struct lruvec *lruvec, struct scan_control *sc,
->         __count_memcg_events(memcg, PGREFILL, sorted);
->         __count_vm_events(PGSCAN_ANON + type, isolated);
->  
-> -       if (scanned)
-> -               trace_mm_vmscan_lru_gen_scan(sc->reclaim_idx, sc->order,
-> -                               MAX_LRU_BATCH, scanned, skipped, isolated,
-> -                               sc->may_unmap ? 0 : ISOLATE_UNMAPPED, type);
-> +       trace_mm_vmscan_lru_gen_scan(sc->reclaim_idx, sc->order, MAX_LRU_BATCH,
-> +                       scanned, skipped, isolated,
-> +                       sc->may_unmap ? 0 : ISOLATE_UNMAPPED, type);
-> 
-> 
-> 
-> >
