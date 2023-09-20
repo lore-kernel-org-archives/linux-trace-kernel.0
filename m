@@ -2,204 +2,405 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC50FCE79AC
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 20 Sep 2023 07:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72283CE79AC
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 20 Sep 2023 07:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233901AbjITHkj (ORCPT
+        id S233116AbjITHuN (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 20 Sep 2023 03:40:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56554 "EHLO
+        Wed, 20 Sep 2023 03:50:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233845AbjITHkZ (ORCPT
+        with ESMTP id S232073AbjITHuC (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 20 Sep 2023 03:40:25 -0400
-Received: from mail-oo1-xc2a.google.com (mail-oo1-xc2a.google.com [IPv6:2607:f8b0:4864:20::c2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29ED5130;
-        Wed, 20 Sep 2023 00:40:19 -0700 (PDT)
-Received: by mail-oo1-xc2a.google.com with SMTP id 006d021491bc7-5712b68dbc0so3735386eaf.1;
-        Wed, 20 Sep 2023 00:40:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695195618; x=1695800418; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=y//mcqepO87JWsJ0Vw521wL8mh9/ml4p7g1NN9TJbSU=;
-        b=GTXFsL/MDi3BqfWLcElBespBNa1+U6yYKpB/tS+6kE+bKn0vZnfAz1+4M1qmhXLpiM
-         RliQTATfRlOiTa0lkSmBpnwY9tLiXWra2VOPUEzm8seDUBZFgEXKRPcWJWEfsbrFwPLM
-         2ChAkV/5S0uyUxy6Rapl84cEgCqRSNbIEPaZB067IU0KTqyw3EoWriuJ+ZNJRq2cECQ8
-         S7JGiRtQPh7JoJy101ATamfDTiD1phGGTlozYoGyH6IFm/svZeDohB2irbNLi2pvSjgU
-         TLVaJxXk6FVbFf/6PUHOfHeemXAPXxKYN7WRlyB4b8RUmLNW6R3LfdIsUIuxmKlqU+Lv
-         9kkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695195618; x=1695800418;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=y//mcqepO87JWsJ0Vw521wL8mh9/ml4p7g1NN9TJbSU=;
-        b=Uaj4Nya6xMxPfKYsHjIwU0F9A7zqnh2ata79U7rEvgomPo7An7yAwhwLjaSQXqp5YT
-         b8ftzCLcN0fbFj7X79bPnvzAtzUaL8DS2zL+ezJ13cvXrJD/0nZehr+Rho6i6ljraoFG
-         4B3qy83Bp9w8Bn5ygrYUsX2OkYReO4uoZaJXH9/hYYxbWtnmuJSzMK0uFztKcF02mMh1
-         b85cF0PN9cEQeDc7zs6dv6yoXVqd9CBWxkOVxqKe3re0FpDJE2LcXjL3AX3RrO6ah4PE
-         Pb8szI5xhT1qi5PITCc8zY46+0dAx3CXtGA8weSSkKKANUuZYcu+vAluw4t6LQXxoIsK
-         Egng==
-X-Gm-Message-State: AOJu0Yz6G4U9lWM4CPz7bRbcoAa9VvXzbQ41XspCfm+xeSwr7BtNwj0x
-        tO0yUGC0XRiQyNRj5COqtlf/KqGxQ2BE+j9aibM=
-X-Google-Smtp-Source: AGHT+IGrC9bHvDUlxweLsvu/t9RjF0z84NqFOkkMPAU5RvInLk2ooXy9TaJ/PgC9TCQSq+ILRXuDc/Ka6TVeMFlqWSc=
-X-Received: by 2002:a4a:2a55:0:b0:570:fdf2:41f0 with SMTP id
- x21-20020a4a2a55000000b00570fdf241f0mr1844775oox.1.1695195617965; Wed, 20 Sep
- 2023 00:40:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230919193948.465340-1-alessandro.carminati@gmail.com> <20230920085251.a4e68173ee2539f695182810@kernel.org>
-In-Reply-To: <20230920085251.a4e68173ee2539f695182810@kernel.org>
-From:   Alessandro Carminati <alessandro.carminati@gmail.com>
-Date:   Wed, 20 Sep 2023 09:39:41 +0200
-Message-ID: <CAPp5cGS96hcv3GK5n4EdvA9eGf3YnzkCqL01eZPw_RzHMhPoyQ@mail.gmail.com>
-Subject: Re: [PATCH v4] scripts/link-vmlinux.sh: Add alias to duplicate
- symbols for kallsyms
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Bristot de Oliveira <bristot@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        Nick Alcock <nick.alcock@oracle.com>,
-        Kris Van Hees <kris.van.hees@oracle.com>,
-        Eugene Loh <eugene.loh@oracle.com>,
-        Francis Laniel <flaniel@linux.microsoft.com>,
-        Viktor Malik <vmalik@redhat.com>,
-        Petr Mladek <pmladek@suse.com>, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 20 Sep 2023 03:50:02 -0400
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69A00CE
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Sep 2023 00:49:53 -0700 (PDT)
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20230920074949epoutp011a2b758e8fa4177ec64816ea86984fd5~Gi-PlKwia2940329403epoutp01V
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Sep 2023 07:49:49 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20230920074949epoutp011a2b758e8fa4177ec64816ea86984fd5~Gi-PlKwia2940329403epoutp01V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1695196189;
+        bh=i58ZkLZkk/P5k3DKdwoGOc6L9UHO7+MgGuc1nYssIAU=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=VoZqTPP3tm6M7RExmL+pZtqtgL0C5uSOO/QNL+zXdBqgPD+SZ1oN1OAijNLWmuOES
+         gq9UbW2Fu1iOUw0KFkQNf2zzAFawK2qejLx6o3tOmFZ0CSpqFeNqYxlTbL3qmeMuW8
+         03ujYzX/HpnJQiuSBwEngANkr9RsSxbiaX7wdJOI=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20230920074948epcas1p39221f2dc9f392bfe1645a42fb03c5c77~Gi-PE7Oqg2471724717epcas1p3o;
+        Wed, 20 Sep 2023 07:49:48 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.36.225]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 4Rr9fh3Rw2z4x9Q2; Wed, 20 Sep
+        2023 07:49:48 +0000 (GMT)
+X-AuditID: b6c32a35-76dfa7000000271c-50-650aa41caa4f
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        5C.1A.10012.C14AA056; Wed, 20 Sep 2023 16:49:48 +0900 (KST)
+Mime-Version: 1.0
+Subject: RE:(2) [PATCH] vmscan: add trace events for lru_gen
+Reply-To: jaewon31.kim@samsung.com
+Sender: =?UTF-8?B?6rmA7J6s7JuQ?= <jaewon31.kim@samsung.com>
+From:   =?UTF-8?B?6rmA7J6s7JuQ?= <jaewon31.kim@samsung.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        =?UTF-8?B?6rmA7J6s7JuQ?= <jaewon31.kim@samsung.com>
+CC:     "yuzhao@google.com" <yuzhao@google.com>,
+        "tjmercier@google.com" <tjmercier@google.com>,
+        "kaleshsingh@google.com" <kaleshsingh@google.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "vbabka@suse.cz" <vbabka@suse.cz>,
+        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "jaewon31.kim@gmail.com" <jaewon31.kim@gmail.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <20230919095927.5a964094@gandalf.local.home>
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20230920074948epcms1p82d18c2f4d6a0b5699d50fc419b9ba9fe@epcms1p8>
+Date:   Wed, 20 Sep 2023 16:49:48 +0900
+X-CMS-MailID: 20230920074948epcms1p82d18c2f4d6a0b5699d50fc419b9ba9fe
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAJsWRmVeSWpSXmKPExsWy7bCmvq7MEq5Ug96tYhZz1q9hs1i9ydei
+        e/NMRove96+YLJr2zWS3uLxrDpvFvTX/WS2OrD/LYrGv4wGTxbv1X9gsZjf2MVq8m/CF1YHH
+        4/Cb98weO2fdZfdo2XeL3WPBplKPTZ8msXucmPGbxaNvyypGjzMLjrB7fN4kF8AZlW2TkZqY
+        klqkkJqXnJ+SmZduq+QdHO8cb2pmYKhraGlhrqSQl5ibaqvk4hOg65aZA3SxkkJZYk4pUCgg
+        sbhYSd/Opii/tCRVISO/uMRWKbUgJafArECvODG3uDQvXS8vtcTK0MDAyBSoMCE74+316+wF
+        L0Mrbr8Na2D85tzFyMkhIWAi8az1CFsXIxeHkMAORoltnzuZuxg5OHgFBCX+7hAGqREWsJGY
+        PX8PI4gtJKAkcfbHFXaIuLXE/kUzmEBsNgFLie03J4LViAjES3zd3sYOMpNZoItFYs+s5ewQ
+        y3glZrQ/ZYGwpSW2L98K1sAJ1Dy9vYsZIi4qcXP1W3YY+/2x+YwQtohE672zUDWCEg9+7maE
+        mfPn+HM2CLtYYlnnAyYIu0ZixblVUHFziYa3K9kg/vKVWLCkCiTMIqAqcejZBqiRLhLfTt0F
+        O41ZQF5i+9s54GBgFtCUWL9LH6JEUWLn77mMECV8Eu++9rDCfLVj3hOorWoSLc++QsVlJP7+
+        e8YKMkZCwENi2wZGSChvZpSYtPEX2wRGhVmIgJ6FZPEshMULGJlXMYqlFhTnpqcWGxYYwqM2
+        OT93EyM46WqZ7mCc+PaD3iFGJg7GQ4wSHMxKIry5alypQrwpiZVVqUX58UWlOanFhxhNgV6e
+        yCwlmpwPTPt5JfGGJpYGJmZGJhbGlsZmSuK8zI96U4QE0hNLUrNTUwtSi2D6mDg4pRqYVmjU
+        NNoIN+fJ2x9ynVny4WboE8lvEbWGrzUnrdW98u+QenfTnqvNH+/c6riowpaTW1m0zssnpe2F
+        5jLugj1h3tucnCIzjzvE8VrsdnWQdD5e0HRSxURpu/czjln7Cj4tPmbNbn6l2/RC2l0FidcC
+        Ip8vVuUpFDJtOz1R7Ef4pUvqyzIOr7rwL8ZIOafpvuj3OcKauyz/LOqbu79PV9s8Rolz38VG
+        Y5YvG2Y+mO/DenjGu8ZFB4L8vmq8mm35YNJ3fiuDN78iDz+awOnuUntv57aYrsrIYtM/qULL
+        HRxdvpiedDrUWOY0Mcm570a7esLhM6aNs2ZfUVfh/VZsGJjgmJoufbdyxZ6028YzWfqUWIoz
+        Eg21mIuKEwHhdVMUQwQAAA==
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230919025012epcas1p2c2c57a34eea3299ef3bb643f4cbddf0b
+References: <20230919095927.5a964094@gandalf.local.home>
+        <20230919025216.1878-1-jaewon31.kim@samsung.com>
+        <CGME20230919025012epcas1p2c2c57a34eea3299ef3bb643f4cbddf0b@epcms1p8>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hello Masami,
-
-Thank you for the feedback.
-
-
-Il giorno mer 20 set 2023 alle ore 01:52 Masami Hiramatsu
-<mhiramat@kernel.org> ha scritto:
+>On Tue, 19 Sep 2023 11:52:16 +0900
+>Jaewon Kim <jaewon31.kim@samsung.com> wrote:
 >
-> On Tue, 19 Sep 2023 19:39:48 +0000
-> "Alessandro Carminati (Red Hat)" <alessandro.carminati@gmail.com> wrote:
+>>  /*
+>>   * Now redefine the EM() and EMe() macros to map the enums to the strings
+>> diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
+>> index d2123dd960d5..e8f9d0452e89 100644
+>> --- a/include/trace/events/vmscan.h
+>> +++ b/include/trace/events/vmscan.h
+>> @@ -327,6 +327,55 @@ TRACE_EVENT(mm_vmscan_lru_isolate,
+>>  		__print_symbolic(__entry->lru, LRU_NAMES))
+>>  );
+>>  
+>> +TRACE_EVENT(mm_vmscan_lru_gen_scan,
+>> +	TP_PROTO(int highest_zoneidx,
+>> +		int order,
+>> +		unsigned long nr_requested,
+>> +		unsigned long nr_scanned,
+>> +		unsigned long nr_skipped,
+>> +		unsigned long nr_taken,
+>> +		isolate_mode_t isolate_mode,
+>> +		int lru),
 >
-> > It is not uncommon for drivers or modules related to similar peripherals
-> > to have symbols with the exact same name.
-> > While this is not a problem for the kernel's binary itself, it becomes an
-> > issue when attempting to trace or probe specific functions using
-> > infrastructure like ftrace or kprobe.
-> >
-> > The tracing subsystem relies on the `nm -n vmlinux` output, which provides
-> > symbol information from the kernel's ELF binary. However, when multiple
-> > symbols share the same name, the standard nm output does not differentiate
-> > between them. This can lead to confusion and difficulty when trying to
-> > probe the intended symbol.
-> >
-> >  ~ # cat /proc/kallsyms | grep " name_show"
-> >  ffffffff8c4f76d0 t name_show
-> >  ffffffff8c9cccb0 t name_show
-> >  ffffffff8cb0ac20 t name_show
-> >  ffffffff8cc728c0 t name_show
-> >  ffffffff8ce0efd0 t name_show
-> >  ffffffff8ce126c0 t name_show
-> >  ffffffff8ce1dd20 t name_show
-> >  ffffffff8ce24e70 t name_show
-> >  ffffffff8d1104c0 t name_show
-> >  ffffffff8d1fe480 t name_show
-> >
-> > kas_alias addresses this challenge by enhancing symbol names with
-> > meaningful suffixes generated from the source file and line number
-> > during the kernel build process.
-> > These newly generated aliases provide tracers with the ability to
-> > comprehend the symbols they are interacting with when utilizing the
-> > ftracefs interface.
-> > This approach may also allow for the probing by name of previously
-> > inaccessible symbols.
-> >
-> >  ~ # cat /proc/kallsyms | grep gic_mask_irq
-> >  ffffd15671e505ac t gic_mask_irq
-> >  ffffd15671e505ac t gic_mask_irq@drivers_irqchip_irq_gic_c_167
-> >  ffffd15671e532a4 t gic_mask_irq
-> >  ffffd15671e532a4 t gic_mask_irq@drivers_irqchip_irq_gic_v3_c_407
-> >  ~ #
-> >
-> > Changes from v1:
-> > - Integrated changes requested by Masami to exclude symbols with prefixes
-> >   "_cfi" and "_pfx".
-> > - Introduced a small framework to handle patterns that need to be excluded
-> >   from the alias production.
-> > - Excluded other symbols using the framework.
-> > - Introduced the ability to discriminate between text and data symbols.
-> > - Added two new config symbols in this version: CONFIG_KALLSYMS_ALIAS_DATA,
-> >   which allows data for data, and CONFIG_KALLSYMS_ALIAS_DATA_ALL, which
-> >   excludes all filters and provides an alias for each duplicated symbol.
-> >
-> > https://lore.kernel.org/all/20230711151925.1092080-1-alessandro.carminati@gmail.com/
-> >
-> > Changes from v2:
-> > - Alias tags are created by querying DWARF information from the vmlinux.
-> > - The filename + line number is normalized and appended to the original
-> >   name.
-> > - The tag begins with '@' to indicate the symbol source.
-> > - Not a change, but worth mentioning, since the alias is added to the
-> >   existing list, the old duplicated name is preserved, and the livepatch
-> >   way of dealing with duplicates is maintained.
-> > - Acknowledging the existence of scenarios where inlined functions
-> >   declared in header files may result in multiple copies due to compiler
-> >   behavior, though it is not actionable as it does not pose an operational
-> >   issue.
-> > - Highlighting a single exception where the same name refers to different
-> >   functions: the case of "compat_binfmt_elf.c," which directly includes
-> >   "binfmt_elf.c" producing identical function copies in two separate
-> >   modules.
-> >
-> > https://lore.kernel.org/all/20230714150326.1152359-1-alessandro.carminati@gmail.com/
-> >
-> > Changes from v3:
-> > - kas_alias was rewritten in Python to create a more concise and
-> >   maintainable codebase.
-> > - The previous automation process used by kas_alias to locate the vmlinux
-> >   and the addr2line has been replaced with an explicit command-line switch
-> >   for specifying these requirements.
-> > - addr2line has been added into the main Makefile.
-> > - A new command-line switch has been introduced, enabling users to extend
-> >   the alias to global data names.
-> >
-> > https://lore.kernel.org/all/20230828080423.3539686-1-alessandro.carminati@gmail.com/
-> >
-> > NOTE:
-> > About the symbols name duplication that happens as consequence of the
-> > inclusion compat_binfmt_elf.c does, it is evident that this corner is
-> > inherently challenging the addr2line approach.
-> > Attempting to conceal this limitation would be counterproductive.
-> >
-> > compat_binfmt_elf.c includes directly binfmt_elf.c, addr2line can't help
-> > but report all functions and data declared by that file, coming from
-> > binfmt_elf.c.
-> >
-> > My position is that, rather than producing a more complicated pipeline
-> > to handle this corner case, it is better to fix the compat_binfmt_elf.c
-> > anomaly.
-> >
-> > This patch does not deal with the two potentially problematic symbols
-> > defined by compat_binfmt_elf.c
+>This is a lot of parameter passing, can you consolidate it?
 >
-> Hi, it looks good but if I build with O=<build dir>, I have this error.
+>(see below to where you call this)
 >
-> /ksrc/linux/scripts/link-vmlinux.sh: 176: scripts/kas_alias.py: not found
+>> +
+>> +	TP_ARGS(highest_zoneidx, order, nr_requested, nr_scanned, nr_skipped, nr_taken, isolate_mode, lru),
+>> +
+>> +	TP_STRUCT__entry(
+>> +		__field(int, highest_zoneidx)
+>> +		__field(int, order)
+>> +		__field(unsigned long, nr_requested)
+>> +		__field(unsigned long, nr_scanned)
+>> +		__field(unsigned long, nr_skipped)
+>> +		__field(unsigned long, nr_taken)
+>> +		__field(unsigned int, isolate_mode)
+>> +		__field(int, lru)
+>> +	),
+>> +
+>> +	TP_fast_assign(
+>> +		__entry->highest_zoneidx = highest_zoneidx;
+>> +		__entry->order = order;
+>> +		__entry->nr_requested = nr_requested;
+>> +		__entry->nr_scanned = nr_scanned;
+>> +		__entry->nr_skipped = nr_skipped;
+>> +		__entry->nr_taken = nr_taken;
+>> +		__entry->isolate_mode = (__force unsigned int)isolate_mode;
+>> +		__entry->lru = lru;
+>> +	),
+>> +
+>> +	/*
+>> +	 * classzone is previous name of the highest_zoneidx.
+>> +	 * Reason not to change it is the ABI requirement of the tracepoint.
+>> +	 */
+>> +	TP_printk("isolate_mode=%d classzone=%d order=%d nr_requested=%lu nr_scanned=%lu nr_skipped=%lu nr_taken=%lu lru=%s",
+>> +		__entry->isolate_mode,
+>> +		__entry->highest_zoneidx,
+>> +		__entry->order,
+>> +		__entry->nr_requested,
+>> +		__entry->nr_scanned,
+>> +		__entry->nr_skipped,
+>> +		__entry->nr_taken,
+>> +		__print_symbolic(__entry->lru, LRU_GEN_NAMES))
+>> +);
+>> +
+>>  TRACE_EVENT(mm_vmscan_write_folio,
+>>  
+>>  	TP_PROTO(struct folio *folio),
+>> @@ -437,6 +486,53 @@ TRACE_EVENT(mm_vmscan_lru_shrink_active,
+>>  		show_reclaim_flags(__entry->reclaim_flags))
+>>  );
+>>  
+>> +TRACE_EVENT(mm_vmscan_lru_gen_evict,
+>> +
+>> +	TP_PROTO(int nid, unsigned long nr_reclaimed,
+>> +		struct reclaim_stat *stat, int priority, int file),
+>> +
+>> +	TP_ARGS(nid, nr_reclaimed, stat, priority, file),
+>> +
+>> +	TP_STRUCT__entry(
+>> +		__field(int, nid)
 >
-> Maybe something wrong with setting the path?
+>On 64 bit architectures, this causes a 4 byte hole in the ring buffer
+>layout. Please keep 32 bit size fields paired with other 32 bit size if
+>possible. That is, move the above "int nid" down where it doesn't cause a
+>long field to be 4 bytes away.
+>
+>> +		__field(unsigned long, nr_reclaimed)
+>> +		__field(unsigned long, nr_dirty)
+>> +		__field(unsigned long, nr_writeback)
+>> +		__field(unsigned long, nr_congested)
+>> +		__field(unsigned long, nr_immediate)
+>> +		__field(unsigned int, nr_activate0)
+>> +		__field(unsigned int, nr_activate1)
+>> +		__field(unsigned long, nr_ref_keep)
+>> +		__field(unsigned long, nr_unmap_fail)
+>
+>		__field(int, nid)
+>
+>here!
+>
+>> +		__field(int, priority)
+>> +		__field(int, reclaim_flags)
+>> +	),
+>> +
+>> +	TP_fast_assign(
+>> +		__entry->nid = nid;
+>> +		__entry->nr_reclaimed = nr_reclaimed;
+>> +		__entry->nr_dirty = stat->nr_dirty;
+>> +		__entry->nr_writeback = stat->nr_writeback;
+>> +		__entry->nr_congested = stat->nr_congested;
+>> +		__entry->nr_immediate = stat->nr_immediate;
+>> +		__entry->nr_activate0 = stat->nr_activate[0];
+>> +		__entry->nr_activate1 = stat->nr_activate[1];
+>> +		__entry->nr_ref_keep = stat->nr_ref_keep;
+>> +		__entry->nr_unmap_fail = stat->nr_unmap_fail;
+>> +		__entry->priority = priority;
+>> +		__entry->reclaim_flags = trace_reclaim_flags(file);
+>> +	),
+>> +
+>> +	TP_printk("nid=%d nr_reclaimed=%ld nr_dirty=%ld nr_writeback=%ld nr_congested=%ld nr_immediate=%ld nr_activate_anon=%d nr_activate_file=%d nr_ref_keep=%ld nr_unmap_fail=%ld priority=%d flags=%s",
+>> +		__entry->nid, __entry->nr_reclaimed,
+>> +		__entry->nr_dirty, __entry->nr_writeback,
+>> +		__entry->nr_congested, __entry->nr_immediate,
+>> +		__entry->nr_activate0, __entry->nr_activate1,
+>> +		__entry->nr_ref_keep, __entry->nr_unmap_fail,
+>> +		__entry->priority,
+>> +		show_reclaim_flags(__entry->reclaim_flags))
+>> +);
+>> +
+>>  TRACE_EVENT(mm_vmscan_node_reclaim_begin,
+>>  
+>>  	TP_PROTO(int nid, int order, gfp_t gfp_flags),
+>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>> index 6f13394b112e..cc10e3fb8fa2 100644
+>> --- a/mm/vmscan.c
+>> +++ b/mm/vmscan.c
+>> @@ -5005,6 +5005,7 @@ static int scan_folios(struct lruvec *lruvec, struct scan_control *sc,
+>>  	int sorted = 0;
+>>  	int scanned = 0;
+>>  	int isolated = 0;
+>> +	int skipped = 0;
+>>  	int remaining = MAX_LRU_BATCH;
+>>  	struct lru_gen_folio *lrugen = &lruvec->lrugen;
+>>  	struct mem_cgroup *memcg = lruvec_memcg(lruvec);
+>> @@ -5018,7 +5019,7 @@ static int scan_folios(struct lruvec *lruvec, struct scan_control *sc,
+>>  
+>>  	for (i = MAX_NR_ZONES; i > 0; i--) {
+>>  		LIST_HEAD(moved);
+>> -		int skipped = 0;
+>> +		int skipped_zone = 0;
+>>  		int zone = (sc->reclaim_idx + i) % MAX_NR_ZONES;
+>>  		struct list_head *head = &lrugen->folios[gen][type][zone];
+>>  
+>> @@ -5040,16 +5041,17 @@ static int scan_folios(struct lruvec *lruvec, struct scan_control *sc,
+>>  				isolated += delta;
+>>  			} else {
+>>  				list_move(&folio->lru, &moved);
+>> -				skipped += delta;
+>> +				skipped_zone += delta;
+>>  			}
+>>  
+>> -			if (!--remaining || max(isolated, skipped) >= MIN_LRU_BATCH)
+>> +			if (!--remaining || max(isolated, skipped_zone) >= MIN_LRU_BATCH)
+>>  				break;
+>>  		}
+>>  
+>> -		if (skipped) {
+>> +		if (skipped_zone) {
+>>  			list_splice(&moved, head);
+>> -			__count_zid_vm_events(PGSCAN_SKIP, zone, skipped);
+>> +			__count_zid_vm_events(PGSCAN_SKIP, zone, skipped_zone);
+>> +			skipped += skipped_zone;
+>>  		}
+>>  
+>>  		if (!remaining || isolated >= MIN_LRU_BATCH)
+>> @@ -5065,6 +5067,10 @@ static int scan_folios(struct lruvec *lruvec, struct scan_control *sc,
+>>  	__count_memcg_events(memcg, PGREFILL, sorted);
+>>  	__count_vm_events(PGSCAN_ANON + type, isolated);
+>>  
+>> +	if (scanned)
+>
+>BTW, you can make this branch conditional with the trace event logic, so
+>that it isn't tested when tracing is enabled. That is, remove the
+> "if (scanned)" test and use TRACE_EVENT_CONDITION() as I show below.
+>
+>> +		trace_mm_vmscan_lru_gen_scan(sc->reclaim_idx, sc->order,
+>> +				MAX_LRU_BATCH, scanned, skipped, isolated,
+>> +				sc->may_unmap ? 0 : ISOLATE_UNMAPPED, type);
+>
+>Why not pass the sc in to the trace event, and then do the assigning there?
+>
+>// use CONDITION to test scanned
+>
+>TRACE_EVENT_CONDITION(mm_vmscan_lru_gen_scan,
+>
+>	TP_PROTO(struct scan_control *sc,
+>		unsigned long nr_requested,
+>		unsigned long nr_scanned,
+>		unsigned long nr_skipped,
+>		unsigned long nr_taken,
+>		int lru),
+>
+>	TP_ARGS(...)
+>
+>	TP_CONDITION(nr_scanned)
+>
+>	TP_fast_assign(
+>		__entry->highest_zoneidx = sc->reclaim_idx;
+>		__entry->order = sc->order;
+>		__entry->nr_requested = nr_requested;
+>		__entry->nr_scanned = nr_scanned;
+>		__entry->nr_skipped = nr_skipped;
+>		__entry->nr_taken = nr_taken;
+>		__entry->isolate_mode = (__force unsigned int)(sc->may_unmap ? 0 : ISOLATE_UNMAPPED);
+>		__entry->lru = lru;
+>	),
+>
+>Lots of parameters can be expensive to pass, as it requires more copying.
+>
+>-- Steve
 
-You're spot on.
-Switching from C to Python for kas_alias has this little quirk where it
-doesn't end up in the target script directory anymore. So, if you're using
-a specific target build directory, you'll have to hunt down the script in
-the source tree. I'll sort this out once I've collected all the feedback.
+Great. Thank you for your comment.
 
-Regards
-Alessandro
+For the putting the struct scan_control *sc inside the trace,
+I couldn't do that because struct scan_control is defined in mm/vmscan.c.
+I think I should not move it to a seperate header file.
+
+As you may expect, I just made this by copying the existing
+trace_mm_vmscan_lru_isolate and trace_mm_vmscan_lru_shrink_inactive
+
+I've tried to change like this.
+Would this be good for you?
+
+
+--- a/include/trace/events/vmscan.h
++++ b/include/trace/events/vmscan.h
+@@ -327,7 +327,7 @@ TRACE_EVENT(mm_vmscan_lru_isolate,
+                __print_symbolic(__entry->lru, LRU_NAMES))
+ );
+ 
+-TRACE_EVENT(mm_vmscan_lru_gen_scan,
++TRACE_EVENT_CONDITION(mm_vmscan_lru_gen_scan,
+        TP_PROTO(int highest_zoneidx,
+                int order,
+                unsigned long nr_requested,
+@@ -339,6 +339,8 @@ TRACE_EVENT(mm_vmscan_lru_gen_scan,
+ 
+        TP_ARGS(highest_zoneidx, order, nr_requested, nr_scanned, nr_skipped, nr_taken, isolate_mode, lru),
+ 
++       TP_CONDITION(nr_scanned),
++
+        TP_STRUCT__entry(
+                __field(int, highest_zoneidx)
+                __field(int, order)
+@@ -494,7 +496,6 @@ TRACE_EVENT(mm_vmscan_lru_gen_evict,
+        TP_ARGS(nid, nr_reclaimed, stat, priority, file),
+ 
+        TP_STRUCT__entry(
+-               __field(int, nid)
+                __field(unsigned long, nr_reclaimed)
+                __field(unsigned long, nr_dirty)
+                __field(unsigned long, nr_writeback)
+@@ -504,6 +505,7 @@ TRACE_EVENT(mm_vmscan_lru_gen_evict,
+                __field(unsigned int, nr_activate1)
+                __field(unsigned long, nr_ref_keep)
+                __field(unsigned long, nr_unmap_fail)
++               __field(int, nid)
+                __field(int, priority)
+                __field(int, reclaim_flags)
+        ),
+
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -5131,10 +5131,9 @@ static int scan_folios(struct lruvec *lruvec, struct scan_control *sc,
+        __count_memcg_events(memcg, PGREFILL, sorted);
+        __count_vm_events(PGSCAN_ANON + type, isolated);
+ 
+-       if (scanned)
+-               trace_mm_vmscan_lru_gen_scan(sc->reclaim_idx, sc->order,
+-                               MAX_LRU_BATCH, scanned, skipped, isolated,
+-                               sc->may_unmap ? 0 : ISOLATE_UNMAPPED, type);
++       trace_mm_vmscan_lru_gen_scan(sc->reclaim_idx, sc->order, MAX_LRU_BATCH,
++                       scanned, skipped, isolated,
++                       sc->may_unmap ? 0 : ISOLATE_UNMAPPED, type);
+
+
+
+>
+>
+>>  	/*
+>>  	 * There might not be eligible folios due to reclaim_idx. Check the
+>>  	 * remaining to prevent livelock if it's not making progress.
+>> @@ -5194,6 +5200,8 @@ static int evict_folios(struct lruvec *lruvec, struct scan_control *sc, int swap
+>>  retry:
+>>  	reclaimed = shrink_folio_list(&list, pgdat, sc, &stat, false);
+>>  	sc->nr_reclaimed += reclaimed;
+>> +	trace_mm_vmscan_lru_gen_evict(pgdat->node_id, reclaimed, &stat,
+>> +				      sc->priority, type);
+>>  
+>>  	list_for_each_entry_safe_reverse(folio, next, &list, lru) {
+>>  		if (!folio_evictable(folio)) {
+>
