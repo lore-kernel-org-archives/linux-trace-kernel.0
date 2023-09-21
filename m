@@ -1,176 +1,188 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5FF19BA7
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 21 Sep 2023 17:49:22 +0000 (UTC)
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92EAA8B9B1;
-	Thu, 21 Sep 2023 10:41:48 -0700 (PDT)
-Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.56])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4RrwJv22k1z15NR6;
-	Thu, 21 Sep 2023 20:51:59 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Thu, 21 Sep 2023 20:54:06 +0800
-From: Zheng Yejian <zhengyejian1@huawei.com>
-To: <rostedt@goodmis.org>, <mhiramat@kernel.org>
-CC: <vnagarnaik@google.com>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <yeweihua4@huawei.com>,
-	<zhengyejian1@huawei.com>
-Subject: [PATCH] ring-buffer: Fix bytes info in per_cpu buffer stats
-Date: Thu, 21 Sep 2023 20:54:25 +0800
-Message-ID: <20230921125425.1708423-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7E94B22C
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 21 Sep 2023 18:11:12 +0000 (UTC)
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E6ACA5442
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 21 Sep 2023 10:58:41 -0700 (PDT)
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20230921060916epoutp04651a005ab05ec2c90a45231dc615ef6e~G1QvWu1Kn2840828408epoutp04Z
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 21 Sep 2023 06:09:16 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20230921060916epoutp04651a005ab05ec2c90a45231dc615ef6e~G1QvWu1Kn2840828408epoutp04Z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1695276556;
+	bh=I8UM2dlWqwJKF2IV08T8CuxTIF9GZtJKl3Qqt09nY/I=;
+	h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+	b=onAix5jUPMdb8CfFj2m6Y6Mjm/5GQtxT4N+q71xojyq00znsl4cFJEEK6RabXncT5
+	 zI46GIk9qPvGbXLUOSnebF+oVW6IMv4uhvGlGzJ+g+SbH5o+VIjHZWuBWGlHmLkMTT
+	 bVPExzsXaNlUqCIYrYRr2NWwZW8vhyImmArO9hrI=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20230921060916epcas1p2d7a0acf2f0d470e9710f1913d8bf209f~G1Qu23-xt3228832288epcas1p2Q;
+	Thu, 21 Sep 2023 06:09:16 +0000 (GMT)
+Received: from epsmgec1p1-new.samsung.com (unknown [182.195.36.227]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4RrlNC51KRz4x9Px; Thu, 21 Sep
+	2023 06:09:15 +0000 (GMT)
+X-AuditID: b6c32a4c-d19fe70000004a18-20-650bde0be748
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+	epsmgec1p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	27.92.18968.B0EDB056; Thu, 21 Sep 2023 15:09:15 +0900 (KST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.67.175.61]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500012.china.huawei.com (7.185.36.15)
+Mime-Version: 1.0
+Subject: RE: (2) [PATCH] vmscan: add trace events for lru_gen
+Reply-To: jaewon31.kim@samsung.com
+Sender: =?UTF-8?B?6rmA7J6s7JuQ?= <jaewon31.kim@samsung.com>
+From: =?UTF-8?B?6rmA7J6s7JuQ?= <jaewon31.kim@samsung.com>
+To: Steven Rostedt <rostedt@goodmis.org>, =?UTF-8?B?6rmA7J6s7JuQ?=
+	<jaewon31.kim@samsung.com>
+CC: "yuzhao@google.com" <yuzhao@google.com>, "tjmercier@google.com"
+	<tjmercier@google.com>, "kaleshsingh@google.com" <kaleshsingh@google.com>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "vbabka@suse.cz"
+	<vbabka@suse.cz>, "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "jaewon31.kim@gmail.com"
+	<jaewon31.kim@gmail.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <20230920103233.145ac387@gandalf.local.home>
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20230921060915epcms1p6a03b613816b2a99d75ddfd1e8c4a44f7@epcms1p6>
+Date: Thu, 21 Sep 2023 15:09:15 +0900
+X-CMS-MailID: 20230921060915epcms1p6a03b613816b2a99d75ddfd1e8c4a44f7
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGJsWRmVeSWpSXmKPExsWy7bCmgS73Pe5Ug5Y2dYs569ewWaze5GvR
+	vXkmo0Xv+1dMFk37ZrJbXN41h83i3pr/rBZH1p9lsdjX8YDJ4t36L2wWsxv7GC3eTfjC6sDj
+	cfjNe2aPnbPusnu07LvF7rFgU6nHpk+T2D1OzPjN4tG3ZRWjx5kFR9g9Pm+SC+CMyrbJSE1M
+	SS1SSM1Lzk/JzEu3VfIOjneONzUzMNQ1tLQwV1LIS8xNtVVy8QnQdcvMAbpYSaEsMacUKBSQ
+	WFyspG9nU5RfWpKqkJFfXGKrlFqQklNgVqBXnJhbXJqXrpeXWmJlaGBgZApUmJCdsfXDI5aC
+	T1IVPUemsTUw7hLuYuTkkBAwkdi4exlrFyMXh5DAHkaJ6ZebmLoYOTh4BQQl/u4AqxEWsJV4
+	c2wiO4gtJKAkcfbHFXaIuLXE/kUzmEBsNgFLie03JzKC2CIC8RJft7exg8xkFuhikdgzazk7
+	xDJeiRntT1kgbGmJ7cu3gjVwAjWfP/eQFSIuKnFz9Vt2GPv9sfmMELaIROu9s8wQtqDEg5+7
+	GWHm/Dn+nA3CLpZY1vmACcKukVhxbhVU3Fyi4e1KMJtXwFeidcpusDksAqoS8/b+gqp3kfgx
+	4RuYzSwgL7H97RxmUDgwC2hKrN+lD1GiKLHz91xGiBI+iXdfe1hh3tox7wnUGDWJlmdfoeIy
+	En//PWMFGSMh4CGxbQMjJJiXMUncurSefQKjwixESM9CsngWwuIFjMyrGKVSC4pz01OTDQsM
+	dfNSy+ERnJyfu4kRnIC1fHYwfl//V+8QIxMH4yFGCQ5mJRHe5E9cqUK8KYmVValF+fFFpTmp
+	xYcYTYHensgsJZqcD8wBeSXxhiaWBiZmRiYWxpbGZkrivDGf2lOEBNITS1KzU1MLUotg+pg4
+	OKUamIqMJ3Xf41zv+UPWn3v+P+tDNdN9rsv9ObqDx9ivo+CldJvVF9bJLw/ZO1x8IGn2wvj9
+	zWPbDx/aZln87NzavkjPeqNzs2sEs6f92S7IPmmpKb/Z54fml/cs2Png6tOr+2843vt+WqBw
+	54zUFSGZXclX+r4GTrPf63tAdY2/2VHeuKlxz/PVVpQtnzfdp17C/8Hi39qK/KsU/y8LOO43
+	+dJ2qdSwOzc/69zUkk1qYf65anHJpY7nNcan0qW10zY9mdsy6b/K3Pr/xuoC6456PSrsnMiR
+	u/3vz+1hDMU3c1u6hDO/vElv23meWTMusDF5fVK4U5IG+2srltvW7fV5fpmHp6TsiRBz8vr+
+	SmH7g+VKLMUZiYZazEXFiQCIJqZ6SQQAAA==
+DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-CMS-RootMailID: 20230919025012epcas1p2c2c57a34eea3299ef3bb643f4cbddf0b
+References: <20230920103233.145ac387@gandalf.local.home>
+	<20230919095927.5a964094@gandalf.local.home>
+	<20230919025216.1878-1-jaewon31.kim@samsung.com>
+	<20230920074948epcms1p82d18c2f4d6a0b5699d50fc419b9ba9fe@epcms1p8>
+	<CGME20230919025012epcas1p2c2c57a34eea3299ef3bb643f4cbddf0b@epcms1p6>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-The 'bytes' info in file 'per_cpu/cpu<X>/stats' means the number of
-bytes in cpu buffer that have not been consumed. However, currently
-after consuming data by reading file 'trace_pipe', the 'bytes' info
-was not changed as expected.
+>> Great. Thank you for your comment.
+>> 
+>> For the putting the struct scan_control *sc inside the trace,
+>> I couldn't do that because struct scan_control is defined in mm/vmscan.c.
+>> I think I should not move it to a seperate header file.
+>
+>Well if you ever decide to do so, one thing to do is to move the
+>trace/events/vmscan.h into mm/ as trace_vmscan.h so that it would have
+>access to local header files. Then all you need to do is to move the
+>struct scan_control into a local mm/X.h header file.
+>
+>> 
+>> As you may expect, I just made this by copying the existing
+>> trace_mm_vmscan_lru_isolate and trace_mm_vmscan_lru_shrink_inactive
+>> 
+>> I've tried to change like this.
+>> Would this be good for you?
+>
+>The below looks fine to me. Thanks.
+>
+>-- Steve
 
-  # cat per_cpu/cpu0/stats
-  entries: 0
-  overrun: 0
-  commit overrun: 0
-  bytes: 568             <--- 'bytes' is problematical !!!
-  oldest event ts:  8651.371479
-  now ts:  8653.912224
-  dropped events: 0
-  read events: 8
+Thank you for your comment.
+But I still don't know if I can move the strut scan_control into a
+new separate header file, mm/X.h. I guess it was meant to be located
+in vmscan.c only.
 
-The root cause is incorrect stat on cpu_buffer->read_bytes. To fix it:
-  1. When stat 'read_bytes', account consumed event in rb_advance_reader();
-  2. When stat 'entries_bytes', exclude the discarded padding event which
-     is smaller than minimum size because it is invisible to reader. Then
-     use rb_page_commit() instead of BUF_PAGE_SIZE at where accounting for
-     page-based read/remove/overrun.
+Let me just send v2 patch with only this change, and wait for other
+mm guys comments regarding the moving the struct scan_control thing.
 
-Also correct the comments of ring_buffer_bytes_cpu() in this patch.
+Thank you very much.
 
-Fixes: c64e148a3be3 ("trace: Add ring buffer stats to measure rate of events")
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
----
- kernel/trace/ring_buffer.c | 28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index a1651edc48d5..28daf0ce95c5 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -354,6 +354,11 @@ static void rb_init_page(struct buffer_data_page *bpage)
- 	local_set(&bpage->commit, 0);
- }
- 
-+static __always_inline unsigned int rb_page_commit(struct buffer_page *bpage)
-+{
-+	return local_read(&bpage->page->commit);
-+}
-+
- static void free_buffer_page(struct buffer_page *bpage)
- {
- 	free_page((unsigned long)bpage->page);
-@@ -2003,7 +2008,7 @@ rb_remove_pages(struct ring_buffer_per_cpu *cpu_buffer, unsigned long nr_pages)
- 			 * Increment overrun to account for the lost events.
- 			 */
- 			local_add(page_entries, &cpu_buffer->overrun);
--			local_sub(BUF_PAGE_SIZE, &cpu_buffer->entries_bytes);
-+			local_sub(rb_page_commit(to_remove_page), &cpu_buffer->entries_bytes);
- 			local_inc(&cpu_buffer->pages_lost);
- 		}
- 
-@@ -2367,11 +2372,6 @@ rb_reader_event(struct ring_buffer_per_cpu *cpu_buffer)
- 			       cpu_buffer->reader_page->read);
- }
- 
--static __always_inline unsigned rb_page_commit(struct buffer_page *bpage)
--{
--	return local_read(&bpage->page->commit);
--}
--
- static struct ring_buffer_event *
- rb_iter_head_event(struct ring_buffer_iter *iter)
- {
-@@ -2517,7 +2517,7 @@ rb_handle_head_page(struct ring_buffer_per_cpu *cpu_buffer,
- 		 * the counters.
- 		 */
- 		local_add(entries, &cpu_buffer->overrun);
--		local_sub(BUF_PAGE_SIZE, &cpu_buffer->entries_bytes);
-+		local_sub(rb_page_commit(next_page), &cpu_buffer->entries_bytes);
- 		local_inc(&cpu_buffer->pages_lost);
- 
- 		/*
-@@ -2660,9 +2660,6 @@ rb_reset_tail(struct ring_buffer_per_cpu *cpu_buffer,
- 
- 	event = __rb_page_index(tail_page, tail);
- 
--	/* account for padding bytes */
--	local_add(BUF_PAGE_SIZE - tail, &cpu_buffer->entries_bytes);
--
- 	/*
- 	 * Save the original length to the meta data.
- 	 * This will be used by the reader to add lost event
-@@ -2676,7 +2673,8 @@ rb_reset_tail(struct ring_buffer_per_cpu *cpu_buffer,
- 	 * write counter enough to allow another writer to slip
- 	 * in on this page.
- 	 * We put in a discarded commit instead, to make sure
--	 * that this space is not used again.
-+	 * that this space is not used again, and this space will
-+	 * not be accounted into 'entries_bytes'.
- 	 *
- 	 * If we are less than the minimum size, we don't need to
- 	 * worry about it.
-@@ -2701,6 +2699,9 @@ rb_reset_tail(struct ring_buffer_per_cpu *cpu_buffer,
- 	/* time delta must be non zero */
- 	event->time_delta = 1;
- 
-+	/* account for padding bytes */
-+	local_add(BUF_PAGE_SIZE - tail, &cpu_buffer->entries_bytes);
-+
- 	/* Make sure the padding is visible before the tail_page->write update */
- 	smp_wmb();
- 
-@@ -4215,7 +4216,7 @@ u64 ring_buffer_oldest_event_ts(struct trace_buffer *buffer, int cpu)
- EXPORT_SYMBOL_GPL(ring_buffer_oldest_event_ts);
- 
- /**
-- * ring_buffer_bytes_cpu - get the number of bytes consumed in a cpu buffer
-+ * ring_buffer_bytes_cpu - get the number of bytes unconsumed in a cpu buffer
-  * @buffer: The ring buffer
-  * @cpu: The per CPU buffer to read from.
-  */
-@@ -4723,6 +4724,7 @@ static void rb_advance_reader(struct ring_buffer_per_cpu *cpu_buffer)
- 
- 	length = rb_event_length(event);
- 	cpu_buffer->reader_page->read += length;
-+	cpu_buffer->read_bytes += length;
- }
- 
- static void rb_advance_iter(struct ring_buffer_iter *iter)
-@@ -5816,7 +5818,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 	} else {
- 		/* update the entry counter */
- 		cpu_buffer->read += rb_page_entries(reader);
--		cpu_buffer->read_bytes += BUF_PAGE_SIZE;
-+		cpu_buffer->read_bytes += rb_page_commit(reader);
- 
- 		/* swap the pages */
- 		rb_init_page(bpage);
--- 
-2.25.1
-
+>
+>> 
+>> 
+>> --- a/include/trace/events/vmscan.h
+>> +++ b/include/trace/events/vmscan.h
+>> @@ -327,7 +327,7 @@ TRACE_EVENT(mm_vmscan_lru_isolate,
+>>                 __print_symbolic(__entry->lru, LRU_NAMES))
+>>  );
+>>  
+>> -TRACE_EVENT(mm_vmscan_lru_gen_scan,
+>> +TRACE_EVENT_CONDITION(mm_vmscan_lru_gen_scan,
+>>         TP_PROTO(int highest_zoneidx,
+>>                 int order,
+>>                 unsigned long nr_requested,
+>> @@ -339,6 +339,8 @@ TRACE_EVENT(mm_vmscan_lru_gen_scan,
+>>  
+>>         TP_ARGS(highest_zoneidx, order, nr_requested, nr_scanned, nr_skipped, nr_taken, isolate_mode, lru),
+>>  
+>> +       TP_CONDITION(nr_scanned),
+>> +
+>>         TP_STRUCT__entry(
+>>                 __field(int, highest_zoneidx)
+>>                 __field(int, order)
+>> @@ -494,7 +496,6 @@ TRACE_EVENT(mm_vmscan_lru_gen_evict,
+>>         TP_ARGS(nid, nr_reclaimed, stat, priority, file),
+>>  
+>>         TP_STRUCT__entry(
+>> -               __field(int, nid)
+>>                 __field(unsigned long, nr_reclaimed)
+>>                 __field(unsigned long, nr_dirty)
+>>                 __field(unsigned long, nr_writeback)
+>> @@ -504,6 +505,7 @@ TRACE_EVENT(mm_vmscan_lru_gen_evict,
+>>                 __field(unsigned int, nr_activate1)
+>>                 __field(unsigned long, nr_ref_keep)
+>>                 __field(unsigned long, nr_unmap_fail)
+>> +               __field(int, nid)
+>>                 __field(int, priority)
+>>                 __field(int, reclaim_flags)
+>>         ),
+>> 
+>> --- a/mm/vmscan.c
+>> +++ b/mm/vmscan.c
+>> @@ -5131,10 +5131,9 @@ static int scan_folios(struct lruvec *lruvec, struct scan_control *sc,
+>>         __count_memcg_events(memcg, PGREFILL, sorted);
+>>         __count_vm_events(PGSCAN_ANON + type, isolated);
+>>  
+>> -       if (scanned)
+>> -               trace_mm_vmscan_lru_gen_scan(sc->reclaim_idx, sc->order,
+>> -                               MAX_LRU_BATCH, scanned, skipped, isolated,
+>> -                               sc->may_unmap ? 0 : ISOLATE_UNMAPPED, type);
+>> +       trace_mm_vmscan_lru_gen_scan(sc->reclaim_idx, sc->order, MAX_LRU_BATCH,
+>> +                       scanned, skipped, isolated,
+>> +                       sc->may_unmap ? 0 : ISOLATE_UNMAPPED, type);
+>> 
+>> 
+>> 
+>> >
