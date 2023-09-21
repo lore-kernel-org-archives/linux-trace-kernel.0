@@ -1,49 +1,45 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D019461;
-	Thu, 21 Sep 2023 17:09:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E4417996;
+	Thu, 21 Sep 2023 17:09:50 +0000 (UTC)
 Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:242:246e::2])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EC6A5FF9;
-	Thu, 21 Sep 2023 10:09:05 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3F4465A5;
+	Thu, 21 Sep 2023 10:09:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Content-Type:Sender
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=0AQbnpGz46/mpizmCCyRAg/7hwEOBwjnI7rzkRejNrw=;
-	t=1695316146; x=1696525746; b=G2QMVjnzufFtmb5P7z6Q3J/+ZBHqtVk0szWK9vtGuV0QGOG
-	Rl2rp3sat3NFCzXUBLcGFGt33bdeHBFGA4bM9k+W4y2dNeMRzqjcEyZ+JG+y0YABFh+DboCzqNl82
-	SSMff83SGx7kk711+kx9sw+/iTFRWuSmGmk9VPX06ga5nXFE8TxcW9DEzDcAlMtSrlRlCEFm8JJLB
-	wILgcdynH9Vgm4bY6l9cYzwtCl79qf3FYGesV+dEl/Z0LmN5uoZS9jFf9xvqvYpSoCCT3j2Ovr6Zp
-	1GWlEMXZDI/QQ0SP7ttzPlvuPSo/5FOG5G9PY5i+0MrtTqalVT6AexQGW4+hNc8Q==;
+	Resent-Cc:Resent-Message-ID; bh=nqDTsSYtIrtsgJfRZxQSmVfUy4UI0fM8vU1yAMBIetU=;
+	t=1695316163; x=1696525763; b=EXKAgTuPVVfy8ylWiMVnePM2S25FQbqLGHAhT1vpoj7XbtN
+	noPgP9Jg0aEsCyUWzDGafbS9LhYXtZGmWlZIHEcZ5/9Hl2KjA4Jez+eevbJN0LyTUwZyaJ2h/dFv5
+	nUADlD6Z2jmONDwwQ8LGjyibG8/cSVRhcY925jJ0P8uCjkIcSt7GeuD/wen370bqujHA+uGuKFFkj
+	lmki8Q/Vl8R7xDOJxOwFmgGXlbDxpvhyFLAJauCE6D1i/0sf9THBR/UJz4b/qdU1ZHYh6F6Czc2gE
+	OmP0MD0ktlF4pyiL4bhjTWW8EiPtkJVX4+5BsSpAvxGYWkvxkjH0637rQA7vGoxg==;
 Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.96)
 	(envelope-from <johannes@sipsolutions.net>)
-	id 1qjLQQ-00DReL-34;
-	Thu, 21 Sep 2023 17:17:07 +0200
-Message-ID: <73ddab4151160d4d30aa83fb24ba6c976125da4a.camel@sipsolutions.net>
-Subject: Re: [RFC PATCH 1/4] tracing: add __print_sym() to replace
- __print_symbolic()
+	id 1qjFPo-00D3lb-0V;
+	Thu, 21 Sep 2023 10:52:04 +0200
 From: Johannes Berg <johannes@sipsolutions.net>
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "linux-trace-kernel@vger.kernel.org"
- <linux-trace-kernel@vger.kernel.org>,  "netdev@vger.kernel.org"
- <netdev@vger.kernel.org>, "linux-wireless@vger.kernel.org"
- <linux-wireless@vger.kernel.org>
-Date: Thu, 21 Sep 2023 17:17:06 +0200
-In-Reply-To: <20230921105129.cd040deee13e.I9bd2617499f0d170df58471bc51379742190f92d@changeid>
+To: linux-kernel@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
+	Johannes Berg <johannes.berg@intel.com>
+Subject: [RFC PATCH 4/4] tracing/timer: use __print_sym()
+Date: Thu, 21 Sep 2023 10:51:34 +0200
+Message-ID: <20230921105129.e76b17c18447.I5e112e423a69704fa05db74a05a6ebaad45d4f6e@changeid>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230921085129.261556-5-johannes@sipsolutions.net>
 References: <20230921085129.261556-5-johannes@sipsolutions.net>
-	 <20230921105129.cd040deee13e.I9bd2617499f0d170df58471bc51379742190f92d@changeid>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
 	SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
@@ -51,46 +47,66 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, 2023-09-21 at 08:51 +0000, Johannes Berg wrote:
->=20
->  - Is it correct that we can assume RCU critical section when in
->    the lookup function? The SKB code currently does, but I may
->    not ever have actually run this code yet.
+From: Johannes Berg <johannes.berg@intel.com>
 
-Well, I could easily answer that myself, and no, it's incorrect.
+Use the new __print_sym() in the timer tracing, just to show
+how to convert something. This adds ~80 bytes of .text for a
+saving of ~1.5K of data in my builds.
 
-It'd be really useful though for these lookups to be able to do them
-under RCU, so I think I'll fold this?
+Note the format changes from
 
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -34,7 +34,7 @@ struct trace_eval_map {
- struct trace_sym_def {
- 	const char		*system;
- 	const char		*symbol_id;
--	/* may return NULL */
-+	/* may return NULL, called under rcu_read_lock() */
- 	const char *		(*lookup)(unsigned long long);
- 	/*
- 	 * Must print the list: ', { val, "name"}, ...'
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -155,11 +155,13 @@ trace_print_sym_seq(struct trace_seq *p, unsigned
-long long val,
- 	const char *ret =3D trace_seq_buffer_ptr(p);
- 	const char *name;
-=20
-+	rcu_read_lock();
- 	name =3D lookup(val);
- 	if (name)
- 		trace_seq_puts(p, name);
- 	else
- 		trace_seq_printf(p, "0x%llx", val);
-+	rcu_read_unlock();
-=20
- 	trace_seq_putc(p, 0);
-=20
+print fmt: "success=%d dependency=%s", REC->success, __print_symbolic(REC->dependency, { 0, "NONE" }, { (1 << 0), "POSIX_TIMER" }, { (1 << 1), "PERF_EVENTS" }, { (1 << 2), "SCHED" }, { (1 << 3), "CLOCK_UNSTABLE" }, { (1 << 4), "RCU" }, { (1 << 5), "RCU_EXP" })
 
+to
 
-johannes
+print fmt: "success=%d dependency=%s", REC->success, __print_symbolic(REC->dependency, { 0, "NONE" }, { 1, "POSIX_TIMER" }, { 2, "PERF_EVENTS" }, { 4, "SCHED" }, { 8, "CLOCK_UNSTABLE" }, { 16, "RCU" }, { 32, "RCU_EXP" })
+
+Since the values are now just printed in the show function as
+pure decimal values.
+
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+---
+ include/trace/events/timer.h | 22 +++++++---------------
+ 1 file changed, 7 insertions(+), 15 deletions(-)
+
+diff --git a/include/trace/events/timer.h b/include/trace/events/timer.h
+index b4bc2828fa09..cb8294da29d0 100644
+--- a/include/trace/events/timer.h
++++ b/include/trace/events/timer.h
+@@ -382,26 +382,18 @@ TRACE_EVENT(itimer_expire,
+ #undef tick_dep_mask_name
+ #undef tick_dep_name_end
+ 
+-/* The MASK will convert to their bits and they need to be processed too */
+-#define tick_dep_name(sdep) TRACE_DEFINE_ENUM(TICK_DEP_BIT_##sdep); \
+-	TRACE_DEFINE_ENUM(TICK_DEP_MASK_##sdep);
+-#define tick_dep_name_end(sdep)  TRACE_DEFINE_ENUM(TICK_DEP_BIT_##sdep); \
+-	TRACE_DEFINE_ENUM(TICK_DEP_MASK_##sdep);
+-/* NONE only has a mask defined for it */
+-#define tick_dep_mask_name(sdep) TRACE_DEFINE_ENUM(TICK_DEP_MASK_##sdep);
+-
+-TICK_DEP_NAMES
+-
+-#undef tick_dep_name
+-#undef tick_dep_mask_name
+-#undef tick_dep_name_end
+-
+ #define tick_dep_name(sdep) { TICK_DEP_MASK_##sdep, #sdep },
+ #define tick_dep_mask_name(sdep) { TICK_DEP_MASK_##sdep, #sdep },
+ #define tick_dep_name_end(sdep) { TICK_DEP_MASK_##sdep, #sdep }
+ 
++TRACE_DEFINE_SYM_LIST(tick_dep_names, TICK_DEP_NAMES);
++
++#undef tick_dep_name
++#undef tick_dep_mask_name
++#undef tick_dep_name_end
++
+ #define show_tick_dep_name(val)				\
+-	__print_symbolic(val, TICK_DEP_NAMES)
++	__print_sym(val, tick_dep_names)
+ 
+ TRACE_EVENT(tick_stop,
+ 
+-- 
+2.41.0
 
