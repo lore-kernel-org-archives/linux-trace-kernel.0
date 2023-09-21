@@ -1,45 +1,49 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E7B13AF1;
-	Thu, 21 Sep 2023 17:09:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D019461;
+	Thu, 21 Sep 2023 17:09:22 +0000 (UTC)
 Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:242:246e::2])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D76DAE3A4;
-	Thu, 21 Sep 2023 10:08:03 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EC6A5FF9;
+	Thu, 21 Sep 2023 10:09:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Content-Type:Sender
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=KcbEGqZWRjDRIS84NcPwJ70wJrRePDMy7FnnB2l/XTc=;
-	t=1695316084; x=1696525684; b=IQW96roGNxzONuN9PjcFsaqTedRIWrD2bO14nXq8M2es3l8
-	bnZzAgnlNO6iaNG8dZUfCxVtzGQIk7LmP08aymBYLKrVBRpBMA070wDeZbXvgFBJtc1e8tMHt8hE+
-	HKYHvfTAa1XJVyjEPdBJT4NVHQBbX1kiKr8XZxsNK7qVjLpfa5rJn2wsMYeuoqj24HR603rRzp0vx
-	WeVqVWhCvy2IAjHVj0dFk4AEnkppQMzs3yUq0/1LQMyGb16wbeJ7NDcibUv1pgYG0IUANitDQPVCU
-	kgDCgNuXOBRi7p5RKLqVnYBNBe/V6nNAB9yQWy0R4gQT+O6ZIiv44a76jalixKbA==;
+	Resent-Cc:Resent-Message-ID; bh=0AQbnpGz46/mpizmCCyRAg/7hwEOBwjnI7rzkRejNrw=;
+	t=1695316146; x=1696525746; b=G2QMVjnzufFtmb5P7z6Q3J/+ZBHqtVk0szWK9vtGuV0QGOG
+	Rl2rp3sat3NFCzXUBLcGFGt33bdeHBFGA4bM9k+W4y2dNeMRzqjcEyZ+JG+y0YABFh+DboCzqNl82
+	SSMff83SGx7kk711+kx9sw+/iTFRWuSmGmk9VPX06ga5nXFE8TxcW9DEzDcAlMtSrlRlCEFm8JJLB
+	wILgcdynH9Vgm4bY6l9cYzwtCl79qf3FYGesV+dEl/Z0LmN5uoZS9jFf9xvqvYpSoCCT3j2Ovr6Zp
+	1GWlEMXZDI/QQ0SP7ttzPlvuPSo/5FOG5G9PY5i+0MrtTqalVT6AexQGW4+hNc8Q==;
 Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.96)
 	(envelope-from <johannes@sipsolutions.net>)
-	id 1qjFPm-00D3lb-0E;
-	Thu, 21 Sep 2023 10:52:02 +0200
+	id 1qjLQQ-00DReL-34;
+	Thu, 21 Sep 2023 17:17:07 +0200
+Message-ID: <73ddab4151160d4d30aa83fb24ba6c976125da4a.camel@sipsolutions.net>
+Subject: Re: [RFC PATCH 1/4] tracing: add __print_sym() to replace
+ __print_symbolic()
 From: Johannes Berg <johannes@sipsolutions.net>
-To: linux-kernel@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	Johannes Berg <johannes.berg@intel.com>
-Subject: [RFC PATCH 2/4] net: dropreason: use new __print_sym() in tracing
-Date: Thu, 21 Sep 2023 10:51:32 +0200
-Message-ID: <20230921105129.2f2774a87760.I075de1ac698b47710b94c631afdfb328f07be961@changeid>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230921085129.261556-5-johannes@sipsolutions.net>
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "linux-trace-kernel@vger.kernel.org"
+ <linux-trace-kernel@vger.kernel.org>,  "netdev@vger.kernel.org"
+ <netdev@vger.kernel.org>, "linux-wireless@vger.kernel.org"
+ <linux-wireless@vger.kernel.org>
+Date: Thu, 21 Sep 2023 17:17:06 +0200
+In-Reply-To: <20230921105129.cd040deee13e.I9bd2617499f0d170df58471bc51379742190f92d@changeid>
 References: <20230921085129.261556-5-johannes@sipsolutions.net>
+	 <20230921105129.cd040deee13e.I9bd2617499f0d170df58471bc51379742190f92d@changeid>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-malware-bazaar: not-scanned
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
 	SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
@@ -47,132 +51,46 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-From: Johannes Berg <johannes.berg@intel.com>
+On Thu, 2023-09-21 at 08:51 +0000, Johannes Berg wrote:
+>=20
+>  - Is it correct that we can assume RCU critical section when in
+>    the lookup function? The SKB code currently does, but I may
+>    not ever have actually run this code yet.
 
-The __print_symbolic() could only ever print the core
-drop reasons, since that's the way the infrastructure
-works. Now that we have __print_sym() with all the
-advantages mentioned in that commit, convert to that
-and get all the drop reasons from all subsystems. As
-we already have a list of them, that's really easy.
+Well, I could easily answer that myself, and no, it's incorrect.
 
-This is a little bit of .text (~100 bytes in my build)
-and saves a lot of .data (~17k).
+It'd be really useful though for these lookups to be able to do them
+under RCU, so I think I'll fold this?
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
----
- include/net/dropreason.h   |  5 +++++
- include/trace/events/skb.h | 16 +++-----------
- net/core/skbuff.c          | 43 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 51 insertions(+), 13 deletions(-)
-
-diff --git a/include/net/dropreason.h b/include/net/dropreason.h
-index 56cb7be92244..c157070b5303 100644
---- a/include/net/dropreason.h
-+++ b/include/net/dropreason.h
-@@ -42,6 +42,11 @@ struct drop_reason_list {
- extern const struct drop_reason_list __rcu *
- drop_reasons_by_subsys[SKB_DROP_REASON_SUBSYS_NUM];
- 
-+#ifdef CONFIG_TRACEPOINTS
-+const char *drop_reason_lookup(unsigned long long value);
-+void drop_reason_show(struct seq_file *m);
-+#endif
-+
- void drop_reasons_register_subsys(enum skb_drop_reason_subsys subsys,
- 				  const struct drop_reason_list *list);
- void drop_reasons_unregister_subsys(enum skb_drop_reason_subsys subsys);
-diff --git a/include/trace/events/skb.h b/include/trace/events/skb.h
-index 07e0715628ec..8a1a63f9e796 100644
---- a/include/trace/events/skb.h
-+++ b/include/trace/events/skb.h
-@@ -8,15 +8,9 @@
- #include <linux/skbuff.h>
- #include <linux/netdevice.h>
- #include <linux/tracepoint.h>
-+#include <net/dropreason.h>
- 
--#undef FN
--#define FN(reason)	TRACE_DEFINE_ENUM(SKB_DROP_REASON_##reason);
--DEFINE_DROP_REASON(FN, FN)
--
--#undef FN
--#undef FNe
--#define FN(reason)	{ SKB_DROP_REASON_##reason, #reason },
--#define FNe(reason)	{ SKB_DROP_REASON_##reason, #reason }
-+TRACE_DEFINE_SYM_FNS(drop_reason, drop_reason_lookup, drop_reason_show);
- 
- /*
-  * Tracepoint for free an sk_buff:
-@@ -44,13 +38,9 @@ TRACE_EVENT(kfree_skb,
- 
- 	TP_printk("skbaddr=%p protocol=%u location=%pS reason: %s",
- 		  __entry->skbaddr, __entry->protocol, __entry->location,
--		  __print_symbolic(__entry->reason,
--				   DEFINE_DROP_REASON(FN, FNe)))
-+		  __print_sym(__entry->reason, drop_reason ))
- );
- 
--#undef FN
--#undef FNe
--
- TRACE_EVENT(consume_skb,
- 
- 	TP_PROTO(struct sk_buff *skb, void *location),
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 4eaf7ed0d1f4..415329b76921 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -132,6 +132,49 @@ drop_reasons_by_subsys[SKB_DROP_REASON_SUBSYS_NUM] = {
- };
- EXPORT_SYMBOL(drop_reasons_by_subsys);
- 
-+#ifdef CONFIG_TRACEPOINTS
-+const char *drop_reason_lookup(unsigned long long value)
-+{
-+	unsigned long long subsys_id = value >> SKB_DROP_REASON_SUBSYS_SHIFT;
-+	u32 reason = value & ~SKB_DROP_REASON_SUBSYS_MASK;
-+	const struct drop_reason_list *subsys;
-+
-+	if (subsys_id >= SKB_DROP_REASON_SUBSYS_NUM)
-+		return NULL;
-+
-+	subsys = rcu_dereference(drop_reasons_by_subsys[subsys_id]);
-+	if (!subsys)
-+		return NULL;
-+	if (reason >= subsys->n_reasons)
-+		return NULL;
-+	return subsys->reasons[reason];
-+}
-+
-+void drop_reason_show(struct seq_file *m)
-+{
-+	u32 subsys_id;
-+
+--- a/include/linux/tracepoint.h
++++ b/include/linux/tracepoint.h
+@@ -34,7 +34,7 @@ struct trace_eval_map {
+ struct trace_sym_def {
+ 	const char		*system;
+ 	const char		*symbol_id;
+-	/* may return NULL */
++	/* may return NULL, called under rcu_read_lock() */
+ 	const char *		(*lookup)(unsigned long long);
+ 	/*
+ 	 * Must print the list: ', { val, "name"}, ...'
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -155,11 +155,13 @@ trace_print_sym_seq(struct trace_seq *p, unsigned
+long long val,
+ 	const char *ret =3D trace_seq_buffer_ptr(p);
+ 	const char *name;
+=20
 +	rcu_read_lock();
-+	for (subsys_id = 0; subsys_id < SKB_DROP_REASON_SUBSYS_NUM; subsys_id++) {
-+		const struct drop_reason_list *subsys;
-+		u32 i;
-+
-+		subsys = rcu_dereference(drop_reasons_by_subsys[subsys_id]);
-+		if (!subsys)
-+			continue;
-+
-+		for (i = 0; i < subsys->n_reasons; i++) {
-+			if (!subsys->reasons[i])
-+				continue;
-+			seq_printf(m, ", { %u, \"%s\" }",
-+				   (subsys_id << SKB_DROP_REASON_SUBSYS_SHIFT) | i,
-+				   subsys->reasons[i]);
-+		}
-+	}
+ 	name =3D lookup(val);
+ 	if (name)
+ 		trace_seq_puts(p, name);
+ 	else
+ 		trace_seq_printf(p, "0x%llx", val);
 +	rcu_read_unlock();
-+}
-+#endif
-+
- /**
-  * drop_reasons_register_subsys - register another drop reason subsystem
-  * @subsys: the subsystem to register, must not be the core
--- 
-2.41.0
+=20
+ 	trace_seq_putc(p, 0);
+=20
+
+
+johannes
 
