@@ -1,189 +1,185 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298D69CA64;
-	Fri, 22 Sep 2023 10:37:27 +0000 (UTC)
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B9F999;
-	Fri, 22 Sep 2023 03:37:24 -0700 (PDT)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 85F6740004;
-	Fri, 22 Sep 2023 10:37:08 +0000 (UTC)
-Message-ID: <6d686c54-078d-8d71-d4e2-c754cf92c557@ghiti.fr>
-Date: Fri, 22 Sep 2023 12:37:07 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6EF941E32
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 22 Sep 2023 19:22:37 +0000 (UTC)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 382F9A3;
+	Fri, 22 Sep 2023 12:22:36 -0700 (PDT)
+Received: from DESKTOP-4OLSCEK. (unknown [76.135.27.212])
+	by linux.microsoft.com (Postfix) with ESMTPSA id A5489212C5CE;
+	Fri, 22 Sep 2023 12:22:35 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A5489212C5CE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1695410555;
+	bh=o0eOhrQ2qy/nejECaGDjff9cSGUav4nkz0bEC/QwN/0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bYsShCofRHECCOLxVQ4NAkSR32P54vF1Lbs3/cYhfluj2GvZsrh6UWEw/XSZDTsE/
+	 x7jfUpAvWXxxA8xo5rAnKoDsjgINWd9p9572g8ytzNjmRVlXHSyfDJtUG8aO1hkHj8
+	 T8+TLif1OhkK8zolRoR1XraRvI6T5sHU9SBrb4s8=
+Date: Fri, 22 Sep 2023 12:22:31 -0700
+From: Beau Belgrave <beaub@linux.microsoft.com>
+To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing/user_events: align uaddr on unsigned long
+ alignment
+Message-ID: <20230922192231.GA1828-beaub@linux.microsoft.com>
+References: <20230914131102.179100-1-cleger@rivosinc.com>
+ <20230914131700.0ba3ee80@gandalf.local.home>
+ <20230914132956.569dad45@gandalf.local.home>
+ <a736f219-9a38-4f95-a874-93e1561906d5@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3 08/13] riscv: extend execmem_params for generated code
- allocations
-Content-Language: en-US
-To: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, =?UTF-8?B?QmrDtnJuIFTDtnBl?=
- =?UTF-8?Q?l?= <bjorn@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- "David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>,
- Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
- Huacai Chen <chenhuacai@kernel.org>,
- Kent Overstreet <kent.overstreet@linux.dev>,
- Luis Chamberlain <mcgrof@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nadav Amit <nadav.amit@gmail.com>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Puranjay Mohan <puranjay12@gmail.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
- bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mips@vger.kernel.org, linux-mm@kvack.org,
- linux-modules@vger.kernel.org, linux-parisc@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- loongarch@lists.linux.dev, netdev@vger.kernel.org,
- sparclinux@vger.kernel.org, x86@kernel.org
-References: <20230918072955.2507221-1-rppt@kernel.org>
- <20230918072955.2507221-9-rppt@kernel.org>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20230918072955.2507221-9-rppt@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: alex@ghiti.fr
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-	RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a736f219-9a38-4f95-a874-93e1561906d5@rivosinc.com>
+X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hi Mike,
+On Tue, Sep 19, 2023 at 02:59:12PM +0200, Clément Léger wrote:
+> 
+> 
+> On 14/09/2023 19:29, Steven Rostedt wrote:
+> > On Thu, 14 Sep 2023 13:17:00 -0400
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> > 
+> >> Now lets look at big endian layout:
+> >>
+> >>  uaddr = 0xbeef0004
+> >>  enabler = 1;
+> >>
+> >>  memory at 0xbeef0000:  00 00 00 00 00 00 00 02
+> >>                                     ^
+> >>                                     addr: 0xbeef0004
+> >>
+> >> 				(enabler is set )
+> >>
+> >> 	bitoffset = uaddr & (sizeof(unsigned long) - 1); bitoffset = 4
+> >> 	bit_offset *= 8;				 bitoffset = 32
+> >> 	uaddr &= ~(sizeof(unsigned long) - 1);		 uaddr = 0xbeef0000
+> >>
+> >> 	ptr = kaddr + (uaddr & ~PAGE_MASK);
+> >>
+> >> 	clear_bit(1 + 32, ptr);
+> >>
+> >>  memory at 0xbeef0000:  00 00 00 00 00 00 00 02
+> >>                                   ^
+> >> 				bit 33 of 0xbeef0000
+> >>
+> >> I don't think that's what you expected!
+> > 
+> > I believe the above can be fixed with:
+> > 
+> > 	bit_offset = uaddr & (sizeof(unsigned long) - 1);
+> > 	if (bit_offset) {
+> > #ifdef CONFIG_CPU_BIG_ENDIAN
+> > 		bit_offest = 0;
+> > #else
+> > 		bit_offset *= BITS_PER_BYTE;
+> > #endif
+> > 		uaddr &= ~(sizeof(unsigned long) - 1);
+> > 	}
+> > 
+> > -- Steve
+> 
+> 
+> Actually, after looking more in depth at that, it seems like there are
+> actually 2 problems that can happen.
+> 
+> First one is atomic access misalignment due to enable_size == 4 and
+> uaddr not being aligned on a (long) boundary on 64 bits architecture.
+> This can generate misaligned exceptions on various architectures. This
+> can be fixed in a more general way according to Masami snippet.
+> 
+> Second one that I can see is on 64 bits, big endian architectures with
+> enable_size == 4. In that case, the bit provided by the userspace won't
+> be correctly set since this code kind of assume that the atomic are done
+> on 32bits value. Since the kernel assume long sized atomic operation, on
+> big endian 64 bits architecture, the updated bit will actually be in the
+> next 32 bits word.
+> 
+> Can someone confirm my understanding ?
+> 
 
-On 18/09/2023 09:29, Mike Rapoport wrote:
-> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
->
-> The memory allocations for kprobes and BPF on RISC-V are not placed in
-> the modules area and these custom allocations are implemented with
-> overrides of alloc_insn_page() and  bpf_jit_alloc_exec().
->
-> Slightly reorder execmem_params initialization to support both 32 and 64
-> bit variants, define EXECMEM_KPROBES and EXECMEM_BPF ranges in
-> riscv::execmem_params and drop overrides of alloc_insn_page() and
-> bpf_jit_alloc_exec().
->
-> Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
-> ---
->   arch/riscv/kernel/module.c         | 21 ++++++++++++++++++++-
->   arch/riscv/kernel/probes/kprobes.c | 10 ----------
->   arch/riscv/net/bpf_jit_core.c      | 13 -------------
->   3 files changed, 20 insertions(+), 24 deletions(-)
->
-> diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
-> index 343a0edfb6dd..31505ecb5c72 100644
-> --- a/arch/riscv/kernel/module.c
-> +++ b/arch/riscv/kernel/module.c
-> @@ -436,20 +436,39 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
->   	return 0;
->   }
->   
-> -#if defined(CONFIG_MMU) && defined(CONFIG_64BIT)
-> +#ifdef CONFIG_MMU
->   static struct execmem_params execmem_params __ro_after_init = {
->   	.ranges = {
->   		[EXECMEM_DEFAULT] = {
->   			.pgprot = PAGE_KERNEL,
->   			.alignment = 1,
->   		},
-> +		[EXECMEM_KPROBES] = {
-> +			.pgprot = PAGE_KERNEL_READ_EXEC,
-> +			.alignment = 1,
-> +		},
-> +		[EXECMEM_BPF] = {
-> +			.pgprot = PAGE_KERNEL,
-> +			.alignment = 1,
+I have a ppc 64bit BE VM I've been validating this on. If we do the
+shifting within user_events (vs a generic set_bit_aligned approach)
+64bit BE does not need additional bit manipulation. However, if we were
+to blindly pass the address and bit as is to set_bit_aligned() it
+assumes the bit number is for a long, not a 32 bit word. So for that
+approach we would need to offset the bit in the unaligned case.
 
-
-Not entirely sure it is the same alignment (sorry did not go through the 
-entire series), but if it is, the alignment above ^ is not the same that 
-is requested by our current bpf_jit_alloc_exec() implementation which is 
-PAGE_SIZE.
-
-
-> +		},
->   	},
->   };
->   
->   struct execmem_params __init *execmem_arch_params(void)
->   {
-> +#ifdef CONFIG_64BIT
->   	execmem_params.ranges[EXECMEM_DEFAULT].start = MODULES_VADDR;
->   	execmem_params.ranges[EXECMEM_DEFAULT].end = MODULES_END;
-> +#else
-> +	execmem_params.ranges[EXECMEM_DEFAULT].start = VMALLOC_START;
-> +	execmem_params.ranges[EXECMEM_DEFAULT].end = VMALLOC_END;
-> +#endif
-> +
-> +	execmem_params.ranges[EXECMEM_KPROBES].start = VMALLOC_START;
-> +	execmem_params.ranges[EXECMEM_KPROBES].end = VMALLOC_END;
-> +
-> +	execmem_params.ranges[EXECMEM_BPF].start = BPF_JIT_REGION_START;
-> +	execmem_params.ranges[EXECMEM_BPF].end = BPF_JIT_REGION_END;
->   
->   	return &execmem_params;
->   }
-> diff --git a/arch/riscv/kernel/probes/kprobes.c b/arch/riscv/kernel/probes/kprobes.c
-> index 2f08c14a933d..e64f2f3064eb 100644
-> --- a/arch/riscv/kernel/probes/kprobes.c
-> +++ b/arch/riscv/kernel/probes/kprobes.c
-> @@ -104,16 +104,6 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
->   	return 0;
->   }
->   
-> -#ifdef CONFIG_MMU
-> -void *alloc_insn_page(void)
-> -{
-> -	return  __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START, VMALLOC_END,
-> -				     GFP_KERNEL, PAGE_KERNEL_READ_EXEC,
-> -				     VM_FLUSH_RESET_PERMS, NUMA_NO_NODE,
-> -				     __builtin_return_address(0));
-> -}
-> -#endif
-> -
->   /* install breakpoint in text */
->   void __kprobes arch_arm_kprobe(struct kprobe *p)
->   {
-> diff --git a/arch/riscv/net/bpf_jit_core.c b/arch/riscv/net/bpf_jit_core.c
-> index 7b70ccb7fec3..c8a758f0882b 100644
-> --- a/arch/riscv/net/bpf_jit_core.c
-> +++ b/arch/riscv/net/bpf_jit_core.c
-> @@ -218,19 +218,6 @@ u64 bpf_jit_alloc_exec_limit(void)
->   	return BPF_JIT_REGION_SIZE;
->   }
->   
-> -void *bpf_jit_alloc_exec(unsigned long size)
-> -{
-> -	return __vmalloc_node_range(size, PAGE_SIZE, BPF_JIT_REGION_START,
-> -				    BPF_JIT_REGION_END, GFP_KERNEL,
-> -				    PAGE_KERNEL, 0, NUMA_NO_NODE,
-> -				    __builtin_return_address(0));
-> -}
-> -
-> -void bpf_jit_free_exec(void *addr)
-> -{
-> -	return vfree(addr);
-> -}
-> -
->   void *bpf_arch_text_copy(void *dst, void *src, size_t len)
->   {
->   	int ret;
-
-
-Otherwise, you can add:
-
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Here's a patch I have that I've validated on ppc64 BE, aarch64 LE, and
+x86_64 LE. I personally feel more comfortable with this approach than
+the generic set_bit_aligned() one.
 
 Thanks,
+-Beau
 
-Alex
-
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index e3f2b8d72e01..ae854374d0b7 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -162,6 +162,23 @@ struct user_event_validator {
+ 	int			flags;
+ };
+ 
++static inline void align_addr_bit(unsigned long *addr, int *bit)
++{
++	if (IS_ALIGNED(*addr, sizeof(long)))
++		return;
++
++	*addr = ALIGN_DOWN(*addr, sizeof(long));
++
++	/*
++	 * We only support 32 and 64 bit values. The only time we need
++	 * to align is a 32 bit value on a 64 bit kernel, which on LE
++	 * is always 32 bits, and on BE requires no change.
++	 */
++#ifdef __LITTLE_ENDIAN
++	*bit += 32;
++#endif
++}
++
+ typedef void (*user_event_func_t) (struct user_event *user, struct iov_iter *i,
+ 				   void *tpdata, bool *faulted);
+ 
+@@ -481,6 +498,7 @@ static int user_event_enabler_write(struct user_event_mm *mm,
+ 	unsigned long *ptr;
+ 	struct page *page;
+ 	void *kaddr;
++	int bit = ENABLE_BIT(enabler);
+ 	int ret;
+ 
+ 	lockdep_assert_held(&event_mutex);
+@@ -496,6 +514,8 @@ static int user_event_enabler_write(struct user_event_mm *mm,
+ 		     test_bit(ENABLE_VAL_FREEING_BIT, ENABLE_BITOPS(enabler))))
+ 		return -EBUSY;
+ 
++	align_addr_bit(&uaddr, &bit);
++
+ 	ret = pin_user_pages_remote(mm->mm, uaddr, 1, FOLL_WRITE | FOLL_NOFAULT,
+ 				    &page, NULL);
+ 
+@@ -514,9 +534,9 @@ static int user_event_enabler_write(struct user_event_mm *mm,
+ 
+ 	/* Update bit atomically, user tracers must be atomic as well */
+ 	if (enabler->event && enabler->event->status)
+-		set_bit(ENABLE_BIT(enabler), ptr);
++		set_bit(bit, ptr);
+ 	else
+-		clear_bit(ENABLE_BIT(enabler), ptr);
++		clear_bit(bit, ptr);
+ 
+ 	kunmap_local(kaddr);
+ 	unpin_user_pages_dirty_lock(&page, 1, true);
