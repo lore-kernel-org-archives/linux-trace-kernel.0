@@ -1,93 +1,117 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3385208BF
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 23 Sep 2023 17:30:48 +0000 (UTC)
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E06DFAF;
-	Sat, 23 Sep 2023 10:30:46 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id 41be03b00d2f7-578b407045bso3024738a12.0;
-        Sat, 23 Sep 2023 10:30:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695490246; x=1696095046; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hqVcpoe1kOppgOo9sz7e5PA+cHdVczMYuQbWhKjq+0w=;
-        b=UqTXJ/hD5JX35OKfdYk+kbE4ktlQmr/Xr34AdQGNHyI+7yhgQrq7sB4xL/kp2rVXWB
-         CVgEdXIRIq1aYMIt0FQQcLmssmbWFugMK6NtSLjH8gw4noH4SaU6f6J47N8cazrXK6Aw
-         5I29qcPis0IdZdTnxKeJieUTZczqvafJ3H5vbszsLx6/BqmTug83lXSBn7GEVVwZG0Xj
-         Kn5Q6KQCEVx14HqMJSAaoD1gl/A7pAfcpGPkw2fSsRkoWVIj9mOEg19dGY36TbtFEMab
-         7rRHCgtU7OIrcnhUL4Hm756UAQD11s04OYYpozDEKd+dTbwuipIqC1CGf/zPqquSAMiN
-         7bRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695490246; x=1696095046;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hqVcpoe1kOppgOo9sz7e5PA+cHdVczMYuQbWhKjq+0w=;
-        b=sLGsfueqKGcaSiPb8FBCthwpMKZVUaZ0gGSbdyJIdljwgTqVNAzuXqhW58UxiGhHSH
-         A+WnzBF5aqis+2kb4cqMwfysRIsUSLKe7KfCm0WkOWVZJki4NEDWngkBzBtbaS5zrhYv
-         XBNJpf21ICtAVZQpubTvdSuCes+RMCcD2nbGTcj63M/BbLt7gdSWgFL8zJ00c1MeQkxR
-         T+H7NsjzrS5VeQUmCaLeuGbKHTMuJPlfzPSIrY99hzGMXlNqb+1Zb2T0cHLKDjAX9bzG
-         MMnVJvz4Fnc+GgDj2Ra+MEfJ12HvQy5OWrbP55+61K5cv24pC1zhLO1tKAozZfa66Lcm
-         Hbqg==
-X-Gm-Message-State: AOJu0YxgtHA/xslIv8iSGw+aS0ZoYCOYV9djjVzsMUAqCc1Ssyvk7jjJ
-	72QjP17cV9m6jS63A9yCzY8=
-X-Google-Smtp-Source: AGHT+IHPdAb9M4jmm7oPBQjTAdl+QuO4EQ9Bp6jQsdh2Qe+b4XyW/HGfpl9cadv6/1o1cEmZV/rE8w==
-X-Received: by 2002:a05:6a20:4290:b0:14d:16c:2d20 with SMTP id o16-20020a056a20429000b0014d016c2d20mr3333712pzj.44.1695490246251;
-        Sat, 23 Sep 2023 10:30:46 -0700 (PDT)
-Received: from atom0118 ([2405:201:c009:52e1:3075:4405:fdad:b3f9])
-        by smtp.gmail.com with ESMTPSA id fk22-20020a056a003a9600b0068a30f6cf32sm5294269pfb.143.2023.09.23.10.30.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Sep 2023 10:30:45 -0700 (PDT)
-Date: Sat, 23 Sep 2023 23:00:40 +0530
-From: Atul Kumar Pant <atulpant.linux@gmail.com>
-To: naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-	davem@davemloft.net, mhiramat@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linuxfoundation.org, shuah@kernel.org
-Subject: Re: [PATCH v1] samples: kprobes: Fixes a typo
-Message-ID: <20230923173040.GA159038@atom0118>
-References: <20230817170819.77857-1-atulpant.linux@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1ECC8CC;
+	Sat, 23 Sep 2023 22:36:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0672C433A9;
+	Sat, 23 Sep 2023 22:36:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1695508575;
+	bh=p6KwkG6gIDCpi+5ECOWCYMC6fT/RtPXwryMv7tZb+xk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Sdoueq4M4QTiFNPfWfSloC8UKyAofVMUXLdmfW+XAUHMMD2LvJyRaeus5UjoSPFlr
+	 88Wh6CmBckFHEhnxKycvXUfGgEmVhnkNg21KC23xUdnnlxkbYasPjPKkQlrcNAebr5
+	 9pHynRgrmwdFQyLAu3/g4ssd40NJcoo3KIo3EFZJ61BFYwbJKaub/jIgdHGDYqoLbp
+	 CkKxHqxZ+lcZkLuiQ0SW3Jhlx3Q2UF/lc1lkzKluKqJLT3FIFmzOl5wuIzY8rKKn7h
+	 rcNc8n7xzQhAsBwvPQXPLNwkEJiEajEWMRQOGpAKemjtGyymfK7KXS5SUzAoMHpafQ
+	 UD9dEvhoDjHEA==
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2b9338e4695so68340991fa.2;
+        Sat, 23 Sep 2023 15:36:15 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yx6003vTGJetNVXAgkTYYVPsm5O353i0/nhni2wWF7WYIoBOkST
+	G0c0ytrTg/9PMRl6Vn8n4baU5RCn+09TRgWJah8=
+X-Google-Smtp-Source: AGHT+IHGEMyzPMP0PdtKXqSKknw0oXHfeYEIvmKQhWxGVhq9jrC3LZkcXvNIlQvBWHbanSZQKP0MnXe/fed+WldiSzw=
+X-Received: by 2002:a05:6512:250d:b0:4fb:90c6:c31a with SMTP id
+ be13-20020a056512250d00b004fb90c6c31amr2958776lfb.14.1695508573892; Sat, 23
+ Sep 2023 15:36:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230817170819.77857-1-atulpant.linux@gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+References: <20230918072955.2507221-1-rppt@kernel.org> <20230918072955.2507221-3-rppt@kernel.org>
+ <CAPhsuW5-=H1V=VXUYxyGnUdJuNUpRt44QmpwjkDUD=9i0itjuw@mail.gmail.com> <20230923153808.GI3303@kernel.org>
+In-Reply-To: <20230923153808.GI3303@kernel.org>
+From: Song Liu <song@kernel.org>
+Date: Sat, 23 Sep 2023 15:36:01 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6TxG87ZBwQ_027iiE+_UmXweZEPh8wKHkHo7wA+qXZUg@mail.gmail.com>
+Message-ID: <CAPhsuW6TxG87ZBwQ_027iiE+_UmXweZEPh8wKHkHo7wA+qXZUg@mail.gmail.com>
+Subject: Re: [PATCH v3 02/13] mm: introduce execmem_text_alloc() and execmem_free()
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	"David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nadav Amit <nadav.amit@gmail.com>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Puranjay Mohan <puranjay12@gmail.com>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Russell King <linux@armlinux.org.uk>, 
+	Steven Rostedt <rostedt@goodmis.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, bpf@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
+	linux-mm@kvack.org, linux-modules@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 17, 2023 at 10:38:19PM +0530, Atul Kumar Pant wrote:
-> Fixes typo in a function name.
-> 
-> Signed-off-by: Atul Kumar Pant <atulpant.linux@gmail.com>
-> ---
->  samples/kprobes/kretprobe_example.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/samples/kprobes/kretprobe_example.c b/samples/kprobes/kretprobe_example.c
-> index cbf16542d84e..ed79fd3d48fb 100644
-> --- a/samples/kprobes/kretprobe_example.c
-> +++ b/samples/kprobes/kretprobe_example.c
-> @@ -35,7 +35,7 @@ struct my_data {
->  	ktime_t entry_stamp;
->  };
->  
-> -/* Here we use the entry_hanlder to timestamp function entry */
-> +/* Here we use the entry_handler to timestamp function entry */
->  static int entry_handler(struct kretprobe_instance *ri, struct pt_regs *regs)
->  {
->  	struct my_data *data;
-> -- 
-> 2.25.1
-> 
+On Sat, Sep 23, 2023 at 8:39=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
+te:
+>
+> On Thu, Sep 21, 2023 at 03:34:18PM -0700, Song Liu wrote:
+> > On Mon, Sep 18, 2023 at 12:30=E2=80=AFAM Mike Rapoport <rppt@kernel.org=
+> wrote:
+> > >
+> >
+> > [...]
+> >
+> > > diff --git a/arch/s390/kernel/module.c b/arch/s390/kernel/module.c
+> > > index 42215f9404af..db5561d0c233 100644
+> > > --- a/arch/s390/kernel/module.c
+> > > +++ b/arch/s390/kernel/module.c
+> > > @@ -21,6 +21,7 @@
+> > >  #include <linux/moduleloader.h>
+> > >  #include <linux/bug.h>
+> > >  #include <linux/memory.h>
+> > > +#include <linux/execmem.h>
+> > >  #include <asm/alternative.h>
+> > >  #include <asm/nospec-branch.h>
+> > >  #include <asm/facility.h>
+> > > @@ -76,7 +77,7 @@ void *module_alloc(unsigned long size)
+> > >  #ifdef CONFIG_FUNCTION_TRACER
+> > >  void module_arch_cleanup(struct module *mod)
+> > >  {
+> > > -       module_memfree(mod->arch.trampolines_start);
+> > > +       execmem_free(mod->arch.trampolines_start);
+> > >  }
+> > >  #endif
+> > >
+> > > @@ -510,7 +511,7 @@ static int module_alloc_ftrace_hotpatch_trampolin=
+es(struct module *me,
+> > >
+> > >         size =3D FTRACE_HOTPATCH_TRAMPOLINES_SIZE(s->sh_size);
+> > >         numpages =3D DIV_ROUND_UP(size, PAGE_SIZE);
+> > > -       start =3D module_alloc(numpages * PAGE_SIZE);
+> > > +       start =3D execmem_text_alloc(EXECMEM_FTRACE, numpages * PAGE_=
+SIZE);
+> >
+> > This should be EXECMEM_MODULE_TEXT?
+>
+> This is an ftrace trampoline, so I think it should be FTRACE type of
+> allocation.
 
-	Hi all, can someone provide comments on this change.
+Yeah, I was aware of the ftrace trampoline. My point was, ftrace trampoline
+doesn't seem to have any special requirements. Therefore, it is probably no=
+t
+necessary to have a separate type just for it.
+
+AFAICT, kprobe, ftrace, and BPF (JIT and trampoline) can share the same
+execmem_type. We may need some work for some archs, but nothing is
+fundamentally different among these.
+
+Thanks,
+Song
