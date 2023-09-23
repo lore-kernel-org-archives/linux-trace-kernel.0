@@ -1,251 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39AC722F00;
-	Fri, 22 Sep 2023 20:34:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14E6AC433CA;
-	Fri, 22 Sep 2023 20:34:05 +0000 (UTC)
-Date: Fri, 22 Sep 2023 16:34:46 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Ajay Kaher <akaher@vmware.com>,
- chinglinyu@google.com, lkp@intel.com, namit@vmware.com,
- oe-lkp@lists.linux.dev, amakhalov@vmware.com, er.ajay.kaher@gmail.com,
- srivatsa@csail.mit.edu, tkundu@vmware.com, vsirnapalli@vmware.com
-Subject: [PATCH v2] eventfs: Remember what dentries were created on dir open
-Message-ID: <20230922163446.1431d4fa@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA05CA6C
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 23 Sep 2023 08:57:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87DC8C433C8;
+	Sat, 23 Sep 2023 08:57:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1695459472;
+	bh=B5iJK8d6K4hWUoky1Er/Avif20xo+seTHte0YQPQhEM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XujPLn2psJEGWQtIsNS1J7Oi5htuRC+mCdPf43HFye5Mg1FjNoldDrRh0VFSy0ERe
+	 iXvHRC8XzLjNi5iRfuocQwqCzymOSiuTN+8A44axl1JeFn5/2HeVhAuu/Pc7G143ZJ
+	 nk6EKBFyE25snL1OEDEYgWbxVmxGgc5oOo6hUYFxrcWtzhMrKSmpoXZoLy5w/biopx
+	 FfnUMAwsUIsRlzQGM0rbYHLR3u6UpigGWPe6/omjlYP69OAzSo4qjqirSgbI9WvRm0
+	 8CzqPBBRt7kFgmceWQxTqsWSzwmoe9DQm6nHwDhXNc6Q+a/t1gCsBjZPj7oCSh6fxD
+	 CIxDlQ+x6uIKQ==
+Date: Sat, 23 Sep 2023 17:57:46 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "wuqiang.matt" <wuqiang.matt@bytedance.com>
+Cc: linux-trace-kernel@vger.kernel.org, davem@davemloft.net,
+ anil.s.keshavamurthy@intel.com, naveen.n.rao@linux.ibm.com,
+ rostedt@goodmis.org, peterz@infradead.org, akpm@linux-foundation.org,
+ sander@svanheule.net, ebiggers@google.com, dan.j.williams@intel.com,
+ jpoimboe@kernel.org, linux-kernel@vger.kernel.org, lkp@intel.com,
+ mattwu@163.com
+Subject: Re: [PATCH v9 0/5] lib,kprobes: kretprobe scalability improvement
+Message-Id: <20230923175746.da3ab516a5c17c5d1897d6d6@kernel.org>
+In-Reply-To: <20230905015255.81545-1-wuqiang.matt@bytedance.com>
+References: <20230905015255.81545-1-wuqiang.matt@bytedance.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Hi Wuqiang,
 
-Using the following code with libtracefs:
+I dug my mail box and found this. Sorry for replying late.
 
-	int dfd;
+On Tue,  5 Sep 2023 09:52:50 +0800
+"wuqiang.matt" <wuqiang.matt@bytedance.com> wrote:
 
-	// create the directory events/kprobes/kp1
-	tracefs_kprobe_raw(NULL, "kp1", "schedule_timeout", "time=$arg1");
+> This patch series introduces a scalable and lockless ring-array based
+> object pool and replaces the original freelist (a LIFO queue based on
+> singly linked list) to improve scalability of kretprobed routines.
+> 
+> v9:
+>   1) objpool: raw_local_irq_save/restore added to prevent interruption
+> 
+>      To avoid possible ABA issues, we must ensure objpool_try_add_slot
+>      and objpool_try_add_slot are uninterruptible. If these operations
+>      are blocked or interrupted in the middle, other cores could overrun
+>      the same slot's ages[] of uint32, then after resuming back, the
+>      interrupted pop() or push() could see same value of ages[], which
+>      is a typical ABA problem though the possibility is small.
+> 
+>      The pair of pop()/push() costs about 8.53 cpu cycles, measured
+>      by IACA (Intel Architecture Code Analyzer). That is, on a 4Ghz
+>      core dedicated for pop() & push(), theoretically it would only
+>      need 8.53 seconds to overflow a 32bit value. Testings upon Intel
+>      i7-10700 (2.90GHz) cost 71.88 seconds to overrun a 32bit integer.
 
-	// Open the kprobes directory
-	dfd = tracefs_instance_file_open(NULL, "events/kprobes", O_RDONLY);
+What does this mean? This sounds like "There is a timing issue if it's enough fast".
 
-	// Do a lookup of the kprobes/kp1 directory (by looking at enable)
-	tracefs_file_exists(NULL, "events/kprobes/kp1/enable");
+Let me reivew the patch itself.
 
-	// Now create a new entry in the kprobes directory
-	tracefs_kprobe_raw(NULL, "kp2", "schedule_hrtimeout", "expires=$arg1");
+Thanks,
 
-	// Do another lookup to create the dentries
-	tracefs_file_exists(NULL, "events/kprobes/kp2/enable"))
+> 
+>   2) codes improvements: thanks to Masami for the thorough inspection
+> 
+> v8:
+>   1) objpool: refcount added for objpool lifecycle management
+> 
+> wuqiang.matt (5):
+>   lib: objpool added: ring-array based lockless MPMC
+>   lib: objpool test module added
+>   kprobes: kretprobe scalability improvement with objpool
+>   kprobes: freelist.h removed
+>   MAINTAINERS: objpool added
+> 
+>  MAINTAINERS              |   7 +
+>  include/linux/freelist.h | 129 --------
+>  include/linux/kprobes.h  |  11 +-
+>  include/linux/objpool.h  | 174 ++++++++++
+>  include/linux/rethook.h  |  16 +-
+>  kernel/kprobes.c         |  93 +++---
+>  kernel/trace/fprobe.c    |  32 +-
+>  kernel/trace/rethook.c   |  90 +++--
+>  lib/Kconfig.debug        |  11 +
+>  lib/Makefile             |   4 +-
+>  lib/objpool.c            | 338 +++++++++++++++++++
+>  lib/test_objpool.c       | 689 +++++++++++++++++++++++++++++++++++++++
+>  12 files changed, 1320 insertions(+), 274 deletions(-)
+>  delete mode 100644 include/linux/freelist.h
+>  create mode 100644 include/linux/objpool.h
+>  create mode 100644 lib/objpool.c
+>  create mode 100644 lib/test_objpool.c
+> 
+> -- 
+> 2.40.1
+> 
 
-	// Close the directory
-	close(dfd);
 
-What happened above, the first open (dfd) will call
-dcache_dir_open_wrapper() that will create the dentries and up their ref
-counts.
-
-Now the creation of "kp2" will add another dentry within the kprobes
-directory.
-
-Upon the close of dfd, eventfs_release() will now do a dput for all the
-entries in kprobes. But this is where the problem lies. The open only
-upped the dentry of kp1 and not kp2. Now the close is decrementing both
-kp1 and kp2, which causes kp2 to get a negative count.
-
-Doing a "trace-cmd reset" which deletes all the kprobes cause the kernel
-to crash! (due to the messed up accounting of the ref counts).
-
-To solve this, save all the dentries that are opened in the
-dcache_dir_open_wrapper() into an array, and use this array to know what
-dentries to do a dput on in eventfs_release().
-
-Since the dcache_dir_open_wrapper() calls dcache_dir_open() which uses the
-file->private_data, we need to also add a wrapper around dcache_readdir()
-that uses the cursor assigned to the file->private_data. This is because
-the dentries need to also be saved in the file->private_data. To do this
-create the structure:
-
-  struct dentry_list {
-	void		*cursor;
-	struct dentry	**dentries;
-  };
-
-Which will hold both the cursor and the dentries. Some shuffling around is
-needed to make sure that dcache_dir_open() and dcache_readdir() only see
-the cursor.
-
-Link: https://lore.kernel.org/linux-trace-kernel/20230919211804.230edf1e@gandalf.local.home/
-
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ajay Kaher <akaher@vmware.com>
-Fixes: 63940449555e7 ("eventfs: Implement eventfs lookup, read, open functions")
-Reported-by: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v1: https://lore.kernel.org/linux-trace-kernel/20230920221537.521e2562@gandalf.local.home
-
-- Had dcache_readdir_wrapper() return itself "dcache_readdir_wrapper" and
-  not call dcache_readdir()
-
- fs/tracefs/event_inode.c | 87 ++++++++++++++++++++++++++++++++--------
- 1 file changed, 70 insertions(+), 17 deletions(-)
-
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 9f64e7332796..5f1714089884 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -70,6 +70,7 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
- 					  struct dentry *dentry,
- 					  unsigned int flags);
- static int dcache_dir_open_wrapper(struct inode *inode, struct file *file);
-+static int dcache_readdir_wrapper(struct file *file, struct dir_context *ctx);
- static int eventfs_release(struct inode *inode, struct file *file);
- 
- static const struct inode_operations eventfs_root_dir_inode_operations = {
-@@ -79,7 +80,7 @@ static const struct inode_operations eventfs_root_dir_inode_operations = {
- static const struct file_operations eventfs_file_operations = {
- 	.open		= dcache_dir_open_wrapper,
- 	.read		= generic_read_dir,
--	.iterate_shared	= dcache_readdir,
-+	.iterate_shared	= dcache_readdir_wrapper,
- 	.llseek		= generic_file_llseek,
- 	.release	= eventfs_release,
- };
-@@ -396,6 +397,11 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
- 	return ret;
- }
- 
-+struct dentry_list {
-+	void			*cursor;
-+	struct dentry		**dentries;
-+};
-+
- /**
-  * eventfs_release - called to release eventfs file/dir
-  * @inode: inode to be released
-@@ -404,26 +410,25 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
- static int eventfs_release(struct inode *inode, struct file *file)
- {
- 	struct tracefs_inode *ti;
--	struct eventfs_inode *ei;
--	struct eventfs_file *ef;
--	struct dentry *dentry;
--	int idx;
-+	struct dentry_list *dlist = file->private_data;
-+	void *cursor;
-+	int i;
- 
- 	ti = get_tracefs(inode);
- 	if (!(ti->flags & TRACEFS_EVENT_INODE))
- 		return -EINVAL;
- 
--	ei = ti->private;
--	idx = srcu_read_lock(&eventfs_srcu);
--	list_for_each_entry_srcu(ef, &ei->e_top_files, list,
--				 srcu_read_lock_held(&eventfs_srcu)) {
--		mutex_lock(&eventfs_mutex);
--		dentry = ef->dentry;
--		mutex_unlock(&eventfs_mutex);
--		if (dentry)
--			dput(dentry);
-+	if (WARN_ON_ONCE(!dlist))
-+		return -EINVAL;
-+
-+	for (i = 0; dlist->dentries[i]; i++) {
-+		dput(dlist->dentries[i]);
- 	}
--	srcu_read_unlock(&eventfs_srcu, idx);
-+
-+	cursor = dlist->cursor;
-+	kfree(dlist->dentries);
-+	kfree(dlist);
-+	file->private_data = cursor;
- 	return dcache_dir_close(inode, file);
- }
- 
-@@ -442,22 +447,70 @@ static int dcache_dir_open_wrapper(struct inode *inode, struct file *file)
- 	struct tracefs_inode *ti;
- 	struct eventfs_inode *ei;
- 	struct eventfs_file *ef;
-+	struct dentry_list *dlist;
-+	struct dentry **dentries = NULL;
- 	struct dentry *dentry = file_dentry(file);
-+	struct dentry *d;
- 	struct inode *f_inode = file_inode(file);
-+	int cnt = 0;
- 	int idx;
-+	int ret;
- 
- 	ti = get_tracefs(f_inode);
- 	if (!(ti->flags & TRACEFS_EVENT_INODE))
- 		return -EINVAL;
- 
-+	if (WARN_ON_ONCE(file->private_data))
-+		return -EINVAL;
-+
-+	dlist = kmalloc(sizeof(*dlist), GFP_KERNEL);
-+	if (!dlist)
-+		return -ENOMEM;
-+
- 	ei = ti->private;
- 	idx = srcu_read_lock(&eventfs_srcu);
- 	list_for_each_entry_srcu(ef, &ei->e_top_files, list,
- 				 srcu_read_lock_held(&eventfs_srcu)) {
--		create_dentry(ef, dentry, false);
-+		d = create_dentry(ef, dentry, false);
-+		if (d) {
-+			struct dentry **tmp;
-+
-+			tmp = krealloc(dentries, sizeof(d) * (cnt + 2), GFP_KERNEL);
-+			if (!tmp)
-+				break;
-+			tmp[cnt] = d;
-+			tmp[cnt + 1] = NULL;
-+			cnt++;
-+			dentries = tmp;
-+		}
- 	}
- 	srcu_read_unlock(&eventfs_srcu, idx);
--	return dcache_dir_open(inode, file);
-+	ret = dcache_dir_open(inode, file);
-+
-+	/*
-+	 * dcache_dir_open() sets file->private_data to a dentry cursor.
-+	 * Need to save that but also save all the dentries that were
-+	 * opened by this function.
-+	 */
-+	dlist->cursor = file->private_data;
-+	dlist->dentries = dentries;
-+	file->private_data = dlist;
-+	return ret;
-+}
-+
-+/*
-+ * This just sets the file->private_data back to the cursor and back.
-+ */
-+static int dcache_readdir_wrapper(struct file *file, struct dir_context *ctx)
-+{
-+	struct dentry_list *dlist = file->private_data;
-+	int ret;
-+
-+	file->private_data = dlist->cursor;
-+	ret = dcache_readdir(file, ctx);
-+	dlist->cursor = file->private_data;
-+	file->private_data = dlist;
-+	return ret;
- }
- 
- /**
 -- 
-2.40.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
