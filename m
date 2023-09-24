@@ -1,104 +1,272 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C4ECA4C;
-	Sun, 24 Sep 2023 13:38:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE0B3C433C7;
-	Sun, 24 Sep 2023 13:38:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B06C8CC;
+	Sun, 24 Sep 2023 13:50:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EAE0C433C7;
+	Sun, 24 Sep 2023 13:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1695562700;
-	bh=Ylc3TSXa5ifgz7bjH+Ib7u/kImYYyrGh5B2vMyFRLTg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Noce4mwmQNAoIZUogYsYCHEBjWbN2VvgLO6lbPFKdhnc1rWxsAAm5qcB/hlWV7MzL
-	 6M8uaClcpljpII0+yuMjMcfoXR2E4R03fEuYY1TBanEt2HyxGqBltgcZGu2xlwMcw1
-	 GT1nBUt9ctylc2zKowKw8YXTloz3jhxqUqutXd+I1UwjeJr3Fz+fgwqCp1jn6obYvX
-	 EbnAwCmrhQ7uQFXszvaCznoy6tg4E3WMRuPOSYmv8+iowSy3I/m+5sghxqx/z/F2qm
-	 QL6KhyoirapL2JQ/JB64iPfjQKFoZV2VO2aGFRDutjDqBmqcL1+dhLeHtBXi9ik/4B
-	 gmhXMtk+X90zQ==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@chromium.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Guo Ren <guoren@kernel.org>
-Subject: [PATCH v5 12/12] Documentation: tracing: Add a note about argument and retval access
-Date: Sun, 24 Sep 2023 22:38:14 +0900
-Message-Id: <169556269377.146934.14829235476649685954.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <169556254640.146934.5654329452696494756.stgit@devnote2>
-References: <169556254640.146934.5654329452696494756.stgit@devnote2>
-User-Agent: StGit/0.19
+	s=k20201202; t=1695563453;
+	bh=vdCMjIA+d2QX5zaaLzI+lmNeBSEC2rO41zae3sOn+sk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lPmiwWFzH9szAr12Oh0Br2I63QKAsLE2GMJE6QhccIiS+Yqn8k2SGIHqjadtryFVF
+	 mdB1O07lZ+ErgVdjOViWXBWehBPnPhDH5Hj8fLtUSWytNuIWnWxFPVycRAsutchP1J
+	 oyjMdSTADVgNePPpvR+w/n/FWsvCgTLRVVNhy0qidLtrBUy2z5SrqgX8pd19x7loYw
+	 eKSrtgi3sK7YCMeUg/oWkLklqHZI5uDraDFCLVosJbH5vyi07bzLMpl5BohvMgOCGy
+	 Lhs/qQpD0epKc6JRa9y4H1H+RouPYr5d31qTGeZwGXUK7TYKg0tqc8twXlgwjzmr40
+	 oDBsO6/hJwRaA==
+Date: Sun, 24 Sep 2023 22:50:47 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ajay Kaher
+ <akaher@vmware.com>, chinglinyu@google.com, lkp@intel.com,
+ namit@vmware.com, oe-lkp@lists.linux.dev, amakhalov@vmware.com,
+ er.ajay.kaher@gmail.com, srivatsa@csail.mit.edu, tkundu@vmware.com,
+ vsirnapalli@vmware.com
+Subject: Re: [PATCH] eventfs: Remember what dentries were created on dir
+ open
+Message-Id: <20230924225047.a35c3ed15f05a35399747d56@kernel.org>
+In-Reply-To: <20230920221537.521e2562@gandalf.local.home>
+References: <20230920221537.521e2562@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Wed, 20 Sep 2023 22:15:37 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Add a note about the argument and return value accecss will be best
-effort. Depending on the type, it will be passed via stack or a
-pair of the registers, but $argN and $retval only support the
-single register access.
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> Using the following code with libtracefs:
+> 
+> 	int dfd;
+> 
+> 	// create the directory events/kprobes/kp1
+> 	tracefs_kprobe_raw(NULL, "kp1", "schedule_timeout", "time=$arg1");
+> 
+> 	// Open the kprobes directory
+> 	dfd = tracefs_instance_file_open(NULL, "events/kprobes", O_RDONLY);
+> 
+> 	// Do a lookup of the kprobes/kp1 directory (by looking at enable)
+> 	tracefs_file_exists(NULL, "events/kprobes/kp1/enable");
+> 
+> 	// Now create a new entry in the kprobes directory
+> 	tracefs_kprobe_raw(NULL, "kp2", "schedule_hrtimeout", "expires=$arg1");
+> 
+> 	// Do another lookup to create the dentries
+> 	tracefs_file_exists(NULL, "events/kprobes/kp2/enable"))
+> 
+> 	// Close the directory
+> 	close(dfd);
+> 
+> What happened above, the first open (dfd) will call
+> dcache_dir_open_wrapper() that will create the dentries and up their ref
+> counts.
+> 
+> Now the creation of "kp2" will add another dentry within the kprobes
+> directory.
+> 
+> Upon the close of dfd, eventfs_release() will now do a dput for all the
+> entries in kprobes. But this is where the problem lies. The open only
+> upped the dentry of kp1 and not kp2. Now the close is decrementing both
+> kp1 and kp2, which causes kp2 to get a negative count.
+> 
+> Doing a "trace-cmd reset" which deletes all the kprobes cause the kernel
+> to crash! (due to the messed up accounting of the ref counts).
+> 
+> To solve this, save all the dentries that are opened in the
+> dcache_dir_open_wrapper() into an array, and use this array to know what
+> dentries to do a dput on in eventfs_release().
+> 
+> Since the dcache_dir_open_wrapper() calls dcache_dir_open() which uses the
+> file->private_data, we need to also add a wrapper around dcache_readdir()
+> that uses the cursor assigned to the file->private_data. This is because
+> the dentries need to also be saved in the file->private_data. To do this
+> create the structure:
+> 
+>   struct dentry_list {
+> 	void		*cursor;
+> 	struct dentry	**dentries;
+>   };
+> 
+> Which will hold both the cursor and the dentries. Some shuffling around is
+> needed to make sure that dcache_dir_open() and dcache_readdir() only see
+> the cursor.
+> 
+> Link: https://lore.kernel.org/linux-trace-kernel/20230919211804.230edf1e@gandalf.local.home/
 
-Suggested-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Documentation/trace/fprobetrace.rst |    8 ++++++--
- Documentation/trace/kprobetrace.rst |    8 ++++++--
- 2 files changed, 12 insertions(+), 4 deletions(-)
+Looks good to me.
 
-diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
-index 8e9bebcf0a2e..e35e6b18df40 100644
---- a/Documentation/trace/fprobetrace.rst
-+++ b/Documentation/trace/fprobetrace.rst
-@@ -59,8 +59,12 @@ Synopsis of fprobe-events
-                   and bitfield are supported.
- 
-   (\*1) This is available only when BTF is enabled.
--  (\*2) only for the probe on function entry (offs == 0).
--  (\*3) only for return probe.
-+  (\*2) only for the probe on function entry (offs == 0). Note, this argument access
-+        is best effort, because depending on the argument type, it may be passed on
-+        the stack. But this only support the arguments via registers.
-+  (\*3) only for return probe. Note that this is also best effort. Depending on the
-+        return value type, it might be passed via a pair of registers. But this only
-+        accesses one register.
-   (\*4) this is useful for fetching a field of data structures.
-   (\*5) "u" means user-space dereference.
- 
-diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
-index 8a2dfee38145..bf9cecb69fc9 100644
---- a/Documentation/trace/kprobetrace.rst
-+++ b/Documentation/trace/kprobetrace.rst
-@@ -61,8 +61,12 @@ Synopsis of kprobe_events
- 		  (x8/x16/x32/x64), "char", "string", "ustring", "symbol", "symstr"
-                   and bitfield are supported.
- 
--  (\*1) only for the probe on function entry (offs == 0).
--  (\*2) only for return probe.
-+  (\*1) only for the probe on function entry (offs == 0). Note, this argument access
-+        is best effort, because depending on the argument type, it may be passed on
-+        the stack. But this only support the arguments via registers.
-+  (\*2) only for return probe. Note that this is also best effort. Depending on the
-+        return value type, it might be passed via a pair of registers. But this only
-+        accesses one register.
-   (\*3) this is useful for fetching a field of data structures.
-   (\*4) "u" means user-space dereference. See :ref:`user_mem_access`.
- 
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
+Thank you!
+
+> 
+> Fixes: 63940449555e7 ("eventfs: Implement eventfs lookup, read, open functions")
+> Reported-by: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  fs/tracefs/event_inode.c | 87 ++++++++++++++++++++++++++++++++--------
+>  1 file changed, 70 insertions(+), 17 deletions(-)
+> 
+> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+> index b23bb0957bb4..1c5c6a1ff4cc 100644
+> --- a/fs/tracefs/event_inode.c
+> +++ b/fs/tracefs/event_inode.c
+> @@ -30,6 +30,7 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+>  					  struct dentry *dentry,
+>  					  unsigned int flags);
+>  static int dcache_dir_open_wrapper(struct inode *inode, struct file *file);
+> +static int dcache_readdir_wrapper(struct file *file, struct dir_context *ctx);
+>  static int eventfs_release(struct inode *inode, struct file *file);
+>  
+>  static const struct inode_operations eventfs_root_dir_inode_operations = {
+> @@ -39,7 +40,7 @@ static const struct inode_operations eventfs_root_dir_inode_operations = {
+>  static const struct file_operations eventfs_file_operations = {
+>  	.open		= dcache_dir_open_wrapper,
+>  	.read		= generic_read_dir,
+> -	.iterate_shared	= dcache_readdir,
+> +	.iterate_shared	= dcache_readdir_wrapper,
+>  	.llseek		= generic_file_llseek,
+>  	.release	= eventfs_release,
+>  };
+> @@ -356,6 +357,11 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+>  	return ret;
+>  }
+>  
+> +struct dentry_list {
+> +	void			*cursor;
+> +	struct dentry		**dentries;
+> +};
+> +
+>  /**
+>   * eventfs_release - called to release eventfs file/dir
+>   * @inode: inode to be released
+> @@ -364,26 +370,25 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+>  static int eventfs_release(struct inode *inode, struct file *file)
+>  {
+>  	struct tracefs_inode *ti;
+> -	struct eventfs_inode *ei;
+> -	struct eventfs_file *ef;
+> -	struct dentry *dentry;
+> -	int idx;
+> +	struct dentry_list *dlist = file->private_data;
+> +	void *cursor;
+> +	int i;
+>  
+>  	ti = get_tracefs(inode);
+>  	if (!(ti->flags & TRACEFS_EVENT_INODE))
+>  		return -EINVAL;
+>  
+> -	ei = ti->private;
+> -	idx = srcu_read_lock(&eventfs_srcu);
+> -	list_for_each_entry_srcu(ef, &ei->e_top_files, list,
+> -				 srcu_read_lock_held(&eventfs_srcu)) {
+> -		mutex_lock(&eventfs_mutex);
+> -		dentry = ef->dentry;
+> -		mutex_unlock(&eventfs_mutex);
+> -		if (dentry)
+> -			dput(dentry);
+> +	if (WARN_ON_ONCE(!dlist))
+> +		return -EINVAL;
+> +
+> +	for (i = 0; dlist->dentries[i]; i++) {
+> +		dput(dlist->dentries[i]);
+>  	}
+> -	srcu_read_unlock(&eventfs_srcu, idx);
+> +
+> +	cursor = dlist->cursor;
+> +	kfree(dlist->dentries);
+> +	kfree(dlist);
+> +	file->private_data = cursor;
+>  	return dcache_dir_close(inode, file);
+>  }
+>  
+> @@ -402,22 +407,70 @@ static int dcache_dir_open_wrapper(struct inode *inode, struct file *file)
+>  	struct tracefs_inode *ti;
+>  	struct eventfs_inode *ei;
+>  	struct eventfs_file *ef;
+> +	struct dentry_list *dlist;
+> +	struct dentry **dentries = NULL;
+>  	struct dentry *dentry = file_dentry(file);
+> +	struct dentry *d;
+>  	struct inode *f_inode = file_inode(file);
+> +	int cnt = 0;
+>  	int idx;
+> +	int ret;
+>  
+>  	ti = get_tracefs(f_inode);
+>  	if (!(ti->flags & TRACEFS_EVENT_INODE))
+>  		return -EINVAL;
+>  
+> +	if (WARN_ON_ONCE(file->private_data))
+> +		return -EINVAL;
+> +
+> +	dlist = kmalloc(sizeof(*dlist), GFP_KERNEL);
+> +	if (!dlist)
+> +		return -ENOMEM;
+> +
+>  	ei = ti->private;
+>  	idx = srcu_read_lock(&eventfs_srcu);
+>  	list_for_each_entry_srcu(ef, &ei->e_top_files, list,
+>  				 srcu_read_lock_held(&eventfs_srcu)) {
+> -		create_dentry(ef, dentry, false);
+> +		d = create_dentry(ef, dentry, false);
+> +		if (d) {
+> +			struct dentry **tmp;
+> +
+> +			tmp = krealloc(dentries, sizeof(d) * (cnt + 2), GFP_KERNEL);
+> +			if (!tmp)
+> +				break;
+> +			tmp[cnt] = d;
+> +			tmp[cnt + 1] = NULL;
+> +			cnt++;
+> +			dentries = tmp;
+> +		}
+>  	}
+>  	srcu_read_unlock(&eventfs_srcu, idx);
+> -	return dcache_dir_open(inode, file);
+> +	ret = dcache_dir_open(inode, file);
+> +
+> +	/*
+> +	 * dcache_dir_open() sets file->private_data to a dentry cursor.
+> +	 * Need to save that but also save all the dentries that were
+> +	 * opened by this function.
+> +	 */
+> +	dlist->cursor = file->private_data;
+> +	dlist->dentries = dentries;
+> +	file->private_data = dlist;
+> +	return ret;
+> +}
+> +
+> +/*
+> + * This just sets the file->private_data back to the cursor and back.
+> + */
+> +static int dcache_readdir_wrapper(struct file *file, struct dir_context *ctx)
+> +{
+> +	struct dentry_list *dlist = file->private_data;
+> +	int ret;
+> +
+> +	file->private_data = dlist->cursor;
+> +	ret = dcache_readdir_wrapper;
+> +	dlist->cursor = file->private_data;
+> +	file->private_data = dlist;
+> +	return ret;
+>  }
+>  
+>  /**
+> -- 
+> 2.40.1
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
