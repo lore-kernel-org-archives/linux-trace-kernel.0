@@ -1,34 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A9563C1
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 24 Sep 2023 13:20:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AEBAC433C9;
-	Sun, 24 Sep 2023 13:20:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E0F63B4
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 24 Sep 2023 13:20:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1EA6C433B7;
+	Sun, 24 Sep 2023 13:20:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1695561628;
-	bh=Fly4wWpTO5IDypLkx4t6fiAgcBDlsgiBtf87rD/WXAw=;
+	s=k20201202; t=1695561629;
+	bh=HYpkdOOghk0zSq3UiBqB7n4oHt5uTXUL0NsH5g3Gag4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=B/svroqnyCohMFM5MIrDUILAXWXFRY1gkbDcLze2uItwS5roMp6LR/Dl7yeyS/Twd
-	 zXnxF4+KPJ1TTjVpB8EI2hcU7TKqbnoC/5I0etR/751sascPDiyubveOBSFpQ64XgF
-	 jL9eCRjFQiFFJoTImgOU1k9vCkhIqMWgJMdfzm/qCGiuzTLohlA29qjw0LbMHS0pMk
-	 YSl+SqV7CrwwIkLtb/iuDHrlxtWgccpI6JGai+HBCD3nNPMXNbiSyMHBysZ9MOWFL2
-	 ediL/STUZZFz7OzPh7O2W0S5D8CGq1DlOZXIzFkCIqHbqnqEOJM+sk1zdAfcR1FyEH
-	 kx2Q1Y4uXiaQg==
+	b=eWBvsLBxWEbMutg/kMqG5Zucketj6NS+hPqzHlF76u+1SQWQHEA7iNu0sttyHf7gD
+	 HaB7loqg9jpPjFxcpSGTlL3JLelkT8Ha6DstQl81HRIy4ef7OR2vYjRodDbGFOTBkt
+	 +T9kPkO3nWX6qO5Ls/aS7OvfiuThfYJpxBhHIXSIODVZcfSNjZuZpeQCSOp4fWteFa
+	 EBGMekx5w1Yq9dj0DoApB7b42ixXUjWsnLRSM0ews7l3LMbHmIPy2fwwF+zGn7P/In
+	 ZZfbARhcZs272uy2xJEBig1Elg1EYpC11vddds9p/YnrWqZl58rt1SHQXxshgKGoWh
+	 c5oRj13jFusPQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Zheng Yejian <zhengyejian1@huawei.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
+	mhiramat@kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>,
-	shuah@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 5/7] selftests/ftrace: Correctly enable event in instance-event.tc
-Date: Sun, 24 Sep 2023 09:20:12 -0400
-Message-Id: <20230924132015.1276811-5-sashal@kernel.org>
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 6/7] ring-buffer: Avoid softlockup in ring_buffer_resize()
+Date: Sun, 24 Sep 2023 09:20:13 -0400
+Message-Id: <20230924132015.1276811-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230924132015.1276811-1-sashal@kernel.org>
 References: <20230924132015.1276811-1-sashal@kernel.org>
@@ -45,47 +42,41 @@ Content-Transfer-Encoding: 8bit
 
 From: Zheng Yejian <zhengyejian1@huawei.com>
 
-[ Upstream commit f4e4ada586995b17f828c6d147d1800eb1471450 ]
+[ Upstream commit f6bd2c92488c30ef53b5bd80c52f0a7eee9d545a ]
 
-Function instance_set() expects to enable event 'sched_switch', so we
-should set 1 to its 'enable' file.
+When user resize all trace ring buffer through file 'buffer_size_kb',
+then in ring_buffer_resize(), kernel allocates buffer pages for each
+cpu in a loop.
 
-Testcase passed after this patch:
-  # ./ftracetest test.d/instances/instance-event.tc
-  === Ftrace unit tests ===
-  [1] Test creation and deletion of trace instances while setting an event
-  [PASS]
+If the kernel preemption model is PREEMPT_NONE and there are many cpus
+and there are many buffer pages to be allocated, it may not give up cpu
+for a long time and finally cause a softlockup.
 
-  # of passed:  1
-  # of failed:  0
-  # of unresolved:  0
-  # of untested:  0
-  # of unsupported:  0
-  # of xfailed:  0
-  # of undefined(test bug):  0
+To avoid it, call cond_resched() after each cpu buffer allocation.
 
+Link: https://lore.kernel.org/linux-trace-kernel/20230906081930.3939106-1-zhengyejian1@huawei.com
+
+Cc: <mhiramat@kernel.org>
 Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../testing/selftests/ftrace/test.d/instances/instance-event.tc | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/ring_buffer.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc b/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc
-index 4fa0f79144f4a..9473934a573a1 100644
---- a/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc
-+++ b/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc
-@@ -43,7 +43,7 @@ instance_read() {
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 445475c229b3a..2a4fb4f1e3cad 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -1821,6 +1821,8 @@ int ring_buffer_resize(struct ring_buffer *buffer, unsigned long size,
+ 				err = -ENOMEM;
+ 				goto out_err;
+ 			}
++
++			cond_resched();
+ 		}
  
- instance_set() {
-         while :; do
--                echo 1 > foo/events/sched/sched_switch
-+                echo 1 > foo/events/sched/sched_switch/enable
-         done 2> /dev/null
- }
- 
+ 		get_online_cpus();
 -- 
 2.40.1
 
