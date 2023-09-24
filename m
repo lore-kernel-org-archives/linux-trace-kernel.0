@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B4463B4
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 24 Sep 2023 13:20:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40071C433C8;
-	Sun, 24 Sep 2023 13:20:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A9563C1
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 24 Sep 2023 13:20:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AEBAC433C9;
+	Sun, 24 Sep 2023 13:20:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1695561607;
-	bh=VgzScr0MNiMapNF1req0QGLGZBlYTIuU+SYyIVQsJNE=;
+	s=k20201202; t=1695561628;
+	bh=Fly4wWpTO5IDypLkx4t6fiAgcBDlsgiBtf87rD/WXAw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nyme4kMt/+s5z0xXMZt1izEKKvSvhl0T9YpS7ZaUY5JjDdqhZmn7GxwmsnHyAjc73
-	 7bWJi95t/gvzu+YVkpVX3GoY+hoRDWimJDyDP4aaRf/Cj7uagJnoMzjuRo8YbsnLQB
-	 s7ofgF9Bm+rU/a2d7/TMerZ44jnNg3z1+4j9UpnNOKgTN+6TwQ1XBXYqkTMs2kkABn
-	 USsPOrqgWDHKpdOqmDqTgnNazKJqXE7HbtEEJhNDtSPI6E+vrP6aoobPhzQOj4eHKv
-	 haLxczVtCEcDRWwbvPl6t6I0xdXIe0aTxgqEwEj0Xno6jJP00x7Ll2GdivSRzD/3NQ
-	 Va2ua/MKp7k8Q==
+	b=B/svroqnyCohMFM5MIrDUILAXWXFRY1gkbDcLze2uItwS5roMp6LR/Dl7yeyS/Twd
+	 zXnxF4+KPJ1TTjVpB8EI2hcU7TKqbnoC/5I0etR/751sascPDiyubveOBSFpQ64XgF
+	 jL9eCRjFQiFFJoTImgOU1k9vCkhIqMWgJMdfzm/qCGiuzTLohlA29qjw0LbMHS0pMk
+	 YSl+SqV7CrwwIkLtb/iuDHrlxtWgccpI6JGai+HBCD3nNPMXNbiSyMHBysZ9MOWFL2
+	 ediL/STUZZFz7OzPh7O2W0S5D8CGq1DlOZXIzFkCIqHbqnqEOJM+sk1zdAfcR1FyEH
+	 kx2Q1Y4uXiaQg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+Cc: Zheng Yejian <zhengyejian1@huawei.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Tze-nan Wu <Tze-nan.Wu@mediatek.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>,
-	matthias.bgg@gmail.com,
+	shuah@kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.10 09/13] ring-buffer: Do not attempt to read past "commit"
-Date: Sun, 24 Sep 2023 09:19:39 -0400
-Message-Id: <20230924131945.1276562-9-sashal@kernel.org>
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 5/7] selftests/ftrace: Correctly enable event in instance-event.tc
+Date: Sun, 24 Sep 2023 09:20:12 -0400
+Message-Id: <20230924132015.1276811-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230924131945.1276562-1-sashal@kernel.org>
-References: <20230924131945.1276562-1-sashal@kernel.org>
+In-Reply-To: <20230924132015.1276811-1-sashal@kernel.org>
+References: <20230924132015.1276811-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,57 +40,51 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.197
+X-stable-base: Linux 5.4.257
 Content-Transfer-Encoding: 8bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+From: Zheng Yejian <zhengyejian1@huawei.com>
 
-[ Upstream commit 95a404bd60af6c4d9d8db01ad14fe8957ece31ca ]
+[ Upstream commit f4e4ada586995b17f828c6d147d1800eb1471450 ]
 
-When iterating over the ring buffer while the ring buffer is active, the
-writer can corrupt the reader. There's barriers to help detect this and
-handle it, but that code missed the case where the last event was at the
-very end of the page and has only 4 bytes left.
+Function instance_set() expects to enable event 'sched_switch', so we
+should set 1 to its 'enable' file.
 
-The checks to detect the corruption by the writer to reads needs to see the
-length of the event. If the length in the first 4 bytes is zero then the
-length is stored in the second 4 bytes. But if the writer is in the process
-of updating that code, there's a small window where the length in the first
-4 bytes could be zero even though the length is only 4 bytes. That will
-cause rb_event_length() to read the next 4 bytes which could happen to be off the
-allocated page.
+Testcase passed after this patch:
+  # ./ftracetest test.d/instances/instance-event.tc
+  === Ftrace unit tests ===
+  [1] Test creation and deletion of trace instances while setting an event
+  [PASS]
 
-To protect against this, fail immediately if the next event pointer is
-less than 8 bytes from the end of the commit (last byte of data), as all
-events must be a minimum of 8 bytes anyway.
+  # of passed:  1
+  # of failed:  0
+  # of unresolved:  0
+  # of untested:  0
+  # of unsupported:  0
+  # of xfailed:  0
+  # of undefined(test bug):  0
 
-Link: https://lore.kernel.org/all/20230905141245.26470-1-Tze-nan.Wu@mediatek.com/
-Link: https://lore.kernel.org/linux-trace-kernel/20230907122820.0899019c@gandalf.local.home
-
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Reported-by: Tze-nan Wu <Tze-nan.Wu@mediatek.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/ring_buffer.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../testing/selftests/ftrace/test.d/instances/instance-event.tc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 752e9549a59e8..812ec380da820 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -2260,6 +2260,11 @@ rb_iter_head_event(struct ring_buffer_iter *iter)
- 	 */
- 	commit = rb_page_commit(iter_head_page);
- 	smp_rmb();
-+
-+	/* An event needs to be at least 8 bytes in size */
-+	if (iter->head > commit - 8)
-+		goto reset;
-+
- 	event = __rb_page_index(iter_head_page, iter->head);
- 	length = rb_event_length(event);
+diff --git a/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc b/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc
+index 4fa0f79144f4a..9473934a573a1 100644
+--- a/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc
++++ b/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc
+@@ -43,7 +43,7 @@ instance_read() {
+ 
+ instance_set() {
+         while :; do
+-                echo 1 > foo/events/sched/sched_switch
++                echo 1 > foo/events/sched/sched_switch/enable
+         done 2> /dev/null
+ }
  
 -- 
 2.40.1
