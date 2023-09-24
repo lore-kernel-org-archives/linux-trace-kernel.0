@@ -1,117 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1ECC8CC;
-	Sat, 23 Sep 2023 22:36:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0672C433A9;
-	Sat, 23 Sep 2023 22:36:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6381366
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 24 Sep 2023 13:16:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47707C433C7;
+	Sun, 24 Sep 2023 13:16:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1695508575;
-	bh=p6KwkG6gIDCpi+5ECOWCYMC6fT/RtPXwryMv7tZb+xk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Sdoueq4M4QTiFNPfWfSloC8UKyAofVMUXLdmfW+XAUHMMD2LvJyRaeus5UjoSPFlr
-	 88Wh6CmBckFHEhnxKycvXUfGgEmVhnkNg21KC23xUdnnlxkbYasPjPKkQlrcNAebr5
-	 9pHynRgrmwdFQyLAu3/g4ssd40NJcoo3KIo3EFZJ61BFYwbJKaub/jIgdHGDYqoLbp
-	 CkKxHqxZ+lcZkLuiQ0SW3Jhlx3Q2UF/lc1lkzKluKqJLT3FIFmzOl5wuIzY8rKKn7h
-	 rcNc8n7xzQhAsBwvPQXPLNwkEJiEajEWMRQOGpAKemjtGyymfK7KXS5SUzAoMHpafQ
-	 UD9dEvhoDjHEA==
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2b9338e4695so68340991fa.2;
-        Sat, 23 Sep 2023 15:36:15 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yx6003vTGJetNVXAgkTYYVPsm5O353i0/nhni2wWF7WYIoBOkST
-	G0c0ytrTg/9PMRl6Vn8n4baU5RCn+09TRgWJah8=
-X-Google-Smtp-Source: AGHT+IHGEMyzPMP0PdtKXqSKknw0oXHfeYEIvmKQhWxGVhq9jrC3LZkcXvNIlQvBWHbanSZQKP0MnXe/fed+WldiSzw=
-X-Received: by 2002:a05:6512:250d:b0:4fb:90c6:c31a with SMTP id
- be13-20020a056512250d00b004fb90c6c31amr2958776lfb.14.1695508573892; Sat, 23
- Sep 2023 15:36:13 -0700 (PDT)
+	s=k20201202; t=1695561361;
+	bh=AKMbxIXU7jc1GL3a0yAsu+u13xMrK1/jx44MAxc/mTA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=roPuhkZlxt6d5YT/hOHV/C92Ld7An9KJUh5KRysIJCChWVkSnSTb9clK5NvmonjCn
+	 tEkX5X1VKFRDOtSJNxxnhgBCt16zJXcCShIJ5VVHEM6c4XEsby4QRH7Yrg6tF9SK5P
+	 W1M8Ba2l59fBkLCaM2jFpeUefYpeAC51KRya6povSfuTS/S9Kcay2//Q1vZySWm53n
+	 MfRz8n6DDfYm17AoHk6a4tPefOAYKN71ip/D4BWfzMJaTawbr8/vbl4rd+PYCfUQCq
+	 hBSTkFPOSCOuuR63jL+HOMVnXFJY03mWGZjXJ+EQIW8YWP5aJ08U4TTfqzuTjyu4ZY
+	 BBW4rKmtDOYVg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Zheng Yejian <zhengyejian1@huawei.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	shuah@kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.5 11/41] selftests/ftrace: Correctly enable event in instance-event.tc
+Date: Sun, 24 Sep 2023 09:14:59 -0400
+Message-Id: <20230924131529.1275335-11-sashal@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230924131529.1275335-1-sashal@kernel.org>
+References: <20230924131529.1275335-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230918072955.2507221-1-rppt@kernel.org> <20230918072955.2507221-3-rppt@kernel.org>
- <CAPhsuW5-=H1V=VXUYxyGnUdJuNUpRt44QmpwjkDUD=9i0itjuw@mail.gmail.com> <20230923153808.GI3303@kernel.org>
-In-Reply-To: <20230923153808.GI3303@kernel.org>
-From: Song Liu <song@kernel.org>
-Date: Sat, 23 Sep 2023 15:36:01 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW6TxG87ZBwQ_027iiE+_UmXweZEPh8wKHkHo7wA+qXZUg@mail.gmail.com>
-Message-ID: <CAPhsuW6TxG87ZBwQ_027iiE+_UmXweZEPh8wKHkHo7wA+qXZUg@mail.gmail.com>
-Subject: Re: [PATCH v3 02/13] mm: introduce execmem_text_alloc() and execmem_free()
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	"David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nadav Amit <nadav.amit@gmail.com>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Puranjay Mohan <puranjay12@gmail.com>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Russell King <linux@armlinux.org.uk>, 
-	Steven Rostedt <rostedt@goodmis.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, bpf@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
-	linux-mm@kvack.org, linux-modules@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.5.5
+Content-Transfer-Encoding: 8bit
 
-On Sat, Sep 23, 2023 at 8:39=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
-te:
->
-> On Thu, Sep 21, 2023 at 03:34:18PM -0700, Song Liu wrote:
-> > On Mon, Sep 18, 2023 at 12:30=E2=80=AFAM Mike Rapoport <rppt@kernel.org=
-> wrote:
-> > >
-> >
-> > [...]
-> >
-> > > diff --git a/arch/s390/kernel/module.c b/arch/s390/kernel/module.c
-> > > index 42215f9404af..db5561d0c233 100644
-> > > --- a/arch/s390/kernel/module.c
-> > > +++ b/arch/s390/kernel/module.c
-> > > @@ -21,6 +21,7 @@
-> > >  #include <linux/moduleloader.h>
-> > >  #include <linux/bug.h>
-> > >  #include <linux/memory.h>
-> > > +#include <linux/execmem.h>
-> > >  #include <asm/alternative.h>
-> > >  #include <asm/nospec-branch.h>
-> > >  #include <asm/facility.h>
-> > > @@ -76,7 +77,7 @@ void *module_alloc(unsigned long size)
-> > >  #ifdef CONFIG_FUNCTION_TRACER
-> > >  void module_arch_cleanup(struct module *mod)
-> > >  {
-> > > -       module_memfree(mod->arch.trampolines_start);
-> > > +       execmem_free(mod->arch.trampolines_start);
-> > >  }
-> > >  #endif
-> > >
-> > > @@ -510,7 +511,7 @@ static int module_alloc_ftrace_hotpatch_trampolin=
-es(struct module *me,
-> > >
-> > >         size =3D FTRACE_HOTPATCH_TRAMPOLINES_SIZE(s->sh_size);
-> > >         numpages =3D DIV_ROUND_UP(size, PAGE_SIZE);
-> > > -       start =3D module_alloc(numpages * PAGE_SIZE);
-> > > +       start =3D execmem_text_alloc(EXECMEM_FTRACE, numpages * PAGE_=
-SIZE);
-> >
-> > This should be EXECMEM_MODULE_TEXT?
->
-> This is an ftrace trampoline, so I think it should be FTRACE type of
-> allocation.
+From: Zheng Yejian <zhengyejian1@huawei.com>
 
-Yeah, I was aware of the ftrace trampoline. My point was, ftrace trampoline
-doesn't seem to have any special requirements. Therefore, it is probably no=
-t
-necessary to have a separate type just for it.
+[ Upstream commit f4e4ada586995b17f828c6d147d1800eb1471450 ]
 
-AFAICT, kprobe, ftrace, and BPF (JIT and trampoline) can share the same
-execmem_type. We may need some work for some archs, but nothing is
-fundamentally different among these.
+Function instance_set() expects to enable event 'sched_switch', so we
+should set 1 to its 'enable' file.
 
-Thanks,
-Song
+Testcase passed after this patch:
+  # ./ftracetest test.d/instances/instance-event.tc
+  === Ftrace unit tests ===
+  [1] Test creation and deletion of trace instances while setting an event
+  [PASS]
+
+  # of passed:  1
+  # of failed:  0
+  # of unresolved:  0
+  # of untested:  0
+  # of unsupported:  0
+  # of xfailed:  0
+  # of undefined(test bug):  0
+
+Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../testing/selftests/ftrace/test.d/instances/instance-event.tc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc b/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc
+index 0eb47fbb3f44d..42422e4251078 100644
+--- a/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc
++++ b/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc
+@@ -39,7 +39,7 @@ instance_read() {
+ 
+ instance_set() {
+         while :; do
+-                echo 1 > foo/events/sched/sched_switch
++                echo 1 > foo/events/sched/sched_switch/enable
+         done 2> /dev/null
+ }
+ 
+-- 
+2.40.1
+
