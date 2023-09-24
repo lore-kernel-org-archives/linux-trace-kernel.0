@@ -1,31 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7EB6AA7
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 24 Sep 2023 13:20:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C9C1C43395;
-	Sun, 24 Sep 2023 13:20:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B4463B4
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 24 Sep 2023 13:20:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40071C433C8;
+	Sun, 24 Sep 2023 13:20:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1695561604;
-	bh=BcrtmQRWlzDUMlGEzIUlsbuqceLXc1gKTm/UM7hh0HQ=;
+	s=k20201202; t=1695561607;
+	bh=VgzScr0MNiMapNF1req0QGLGZBlYTIuU+SYyIVQsJNE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pJbkvlIkI9mZzp5x2yZRx+uRScgA8GC/1yL8JnO9dRXUCpMW0IeUvDl1J+6zyPmEf
-	 TSNwqbBtsbZdcO6Jf5BWuowBf5cYJTKizE4BAZqLgz2jE8L7crAOgryjeigTV+Snw+
-	 dM3RRcQI8q7bifHJ6l8ddvifZQ9gUnvf4Kxff3vaJpT7AQc3b1rpZZpAt/kpwn3ZTk
-	 qAcmjLbKUGa9AVslRdpDrob1sSTTb0/sReHfozH4NzYBjBRpeG2ia+HN7wgC2vh8rE
-	 cEcTArqpFIdeg4mtN8vf6hWgANhBp5WNvCD/oOzLFXkueYI/W4M3q1viJ34nOPFZlN
-	 QNF0KhXRx4D2g==
+	b=nyme4kMt/+s5z0xXMZt1izEKKvSvhl0T9YpS7ZaUY5JjDdqhZmn7GxwmsnHyAjc73
+	 7bWJi95t/gvzu+YVkpVX3GoY+hoRDWimJDyDP4aaRf/Cj7uagJnoMzjuRo8YbsnLQB
+	 s7ofgF9Bm+rU/a2d7/TMerZ44jnNg3z1+4j9UpnNOKgTN+6TwQ1XBXYqkTMs2kkABn
+	 USsPOrqgWDHKpdOqmDqTgnNazKJqXE7HbtEEJhNDtSPI6E+vrP6aoobPhzQOj4eHKv
+	 haLxczVtCEcDRWwbvPl6t6I0xdXIe0aTxgqEwEj0Xno6jJP00x7Ll2GdivSRzD/3NQ
+	 Va2ua/MKp7k8Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Zheng Yejian <zhengyejian1@huawei.com>,
-	mhiramat@kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
+Cc: "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Tze-nan Wu <Tze-nan.Wu@mediatek.com>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 07/13] ring-buffer: Avoid softlockup in ring_buffer_resize()
-Date: Sun, 24 Sep 2023 09:19:37 -0400
-Message-Id: <20230924131945.1276562-7-sashal@kernel.org>
+	matthias.bgg@gmail.com,
+	linux-trace-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.10 09/13] ring-buffer: Do not attempt to read past "commit"
+Date: Sun, 24 Sep 2023 09:19:39 -0400
+Message-Id: <20230924131945.1276562-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230924131945.1276562-1-sashal@kernel.org>
 References: <20230924131945.1276562-1-sashal@kernel.org>
@@ -40,43 +44,55 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.197
 Content-Transfer-Encoding: 8bit
 
-From: Zheng Yejian <zhengyejian1@huawei.com>
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-[ Upstream commit f6bd2c92488c30ef53b5bd80c52f0a7eee9d545a ]
+[ Upstream commit 95a404bd60af6c4d9d8db01ad14fe8957ece31ca ]
 
-When user resize all trace ring buffer through file 'buffer_size_kb',
-then in ring_buffer_resize(), kernel allocates buffer pages for each
-cpu in a loop.
+When iterating over the ring buffer while the ring buffer is active, the
+writer can corrupt the reader. There's barriers to help detect this and
+handle it, but that code missed the case where the last event was at the
+very end of the page and has only 4 bytes left.
 
-If the kernel preemption model is PREEMPT_NONE and there are many cpus
-and there are many buffer pages to be allocated, it may not give up cpu
-for a long time and finally cause a softlockup.
+The checks to detect the corruption by the writer to reads needs to see the
+length of the event. If the length in the first 4 bytes is zero then the
+length is stored in the second 4 bytes. But if the writer is in the process
+of updating that code, there's a small window where the length in the first
+4 bytes could be zero even though the length is only 4 bytes. That will
+cause rb_event_length() to read the next 4 bytes which could happen to be off the
+allocated page.
 
-To avoid it, call cond_resched() after each cpu buffer allocation.
+To protect against this, fail immediately if the next event pointer is
+less than 8 bytes from the end of the commit (last byte of data), as all
+events must be a minimum of 8 bytes anyway.
 
-Link: https://lore.kernel.org/linux-trace-kernel/20230906081930.3939106-1-zhengyejian1@huawei.com
+Link: https://lore.kernel.org/all/20230905141245.26470-1-Tze-nan.Wu@mediatek.com/
+Link: https://lore.kernel.org/linux-trace-kernel/20230907122820.0899019c@gandalf.local.home
 
-Cc: <mhiramat@kernel.org>
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Reported-by: Tze-nan Wu <Tze-nan.Wu@mediatek.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/ring_buffer.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/trace/ring_buffer.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index f8126fa0630e2..752e9549a59e8 100644
+index 752e9549a59e8..812ec380da820 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -2080,6 +2080,8 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
- 				err = -ENOMEM;
- 				goto out_err;
- 			}
+@@ -2260,6 +2260,11 @@ rb_iter_head_event(struct ring_buffer_iter *iter)
+ 	 */
+ 	commit = rb_page_commit(iter_head_page);
+ 	smp_rmb();
 +
-+			cond_resched();
- 		}
++	/* An event needs to be at least 8 bytes in size */
++	if (iter->head > commit - 8)
++		goto reset;
++
+ 	event = __rb_page_index(iter_head_page, iter->head);
+ 	length = rb_event_length(event);
  
- 		get_online_cpus();
 -- 
 2.40.1
 
