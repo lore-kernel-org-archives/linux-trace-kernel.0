@@ -1,48 +1,48 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3D910A36
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 25 Sep 2023 07:53:21 +0000 (UTC)
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B15B9DA
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 25 Sep 2023 00:53:19 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-4051d33af1fso18081445e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 25 Sep 2023 00:53:19 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F94CA5D
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 25 Sep 2023 08:11:02 +0000 (UTC)
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6A6AAF
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 25 Sep 2023 01:11:00 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-4051d33af1fso18138735e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 25 Sep 2023 01:11:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1695628398; x=1696233198; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1695629459; x=1696234259; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=LA9aIdP6oUsEuxyES4cGO7GMfWmfd5vo+OxgnkgCK18=;
-        b=RjbWsn/+LRW9QKhuLGvdSsYEwRcEg4Mucufz8mlQOZbZC6NHIsFrxAzSvkR0jlKRqG
-         GjsiNoPfetz2xXO8VjI/Y6a8tcVtGazhdGZjrkalHs12bFQbtl3yWc5Fo8MKVpGVLhUP
-         rUyn+bKQ6/JBDTeXPbAps6UzYWJlJpbYuIY5ka6deuDK4T0f4VQV4170Eml+96/HjVKx
-         1kI0EZ2AhqdaxmL1onnUUjLEnSfn067yGCW+7UQIv9EpFm0PXV5n9JsgpiSa4m/SDcjS
-         GRltvdEsgFUNJn7EkJ9bjx5/ofiSZ3FTkrVwdDUy6PjOE4wtNqlGLElTKvTB4tRC+4xh
-         Ymlg==
+        bh=HlO0BFPodxqQgy/xN/pC3ASctYK0Q/f9lDJvY2Seqdc=;
+        b=x9m+PTS6xKJK5l1FaSEoaOSEqEOLJibRxs1cVn1gFCWfOHmYOcdDhPtQpYReM0Bbf3
+         mhFoQ4FL+QixRdg26k3oxsCtUCp2pT6hCUZxXuGjcIjLCA/GC2blTatWbYh8KK+WkyWc
+         jE3hpjL1KE3ZPjLUIlcYW3rAcUddhtkogDbBxwcxNLbnChnTVssvsG5WdTWcNKQvjDo3
+         gw4qpfILb7UNoqIsGADGGWVmsYEu2+glX/yvCaSU3TANWCHx7B8MB+jvypkcQKEvSJgM
+         VANesZOty7HAOBIs6B+Hf9+BcEi5D9eBAxSCDaiuOZPlDEYl4Wu4JNdo8GmwlIBr1sDN
+         4qaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695628398; x=1696233198;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1695629459; x=1696234259;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LA9aIdP6oUsEuxyES4cGO7GMfWmfd5vo+OxgnkgCK18=;
-        b=dF/UUrwnDNOCgRMcyC0i/WojDCwd7+WOoZwhvm+5kBOfsFAtzkCpd4pB0THjVNgi3R
-         JlWc9N4G5Qy32TR+m6VQ3mL8FDAGmqJP3AtnxSEQEZhj+ao78Co6eHEUoiR/sRumJds6
-         Qt2dXcHHtg8NAZ6K3cDcVgveXkQPughyWxqI1WGQ/8sVQ+myav2N+vG83Efg7E9JA+Cw
-         84ZZhFrm2e9eTUg1ejeWYo5KHU8+MENtO60wqC4q7eK7Iw7iamVIEY24iby0jbl58wGv
-         ylrKv0oBCy3x5KRycNCUwdo9MyHYx6NMbzE7qyB3oR/cMcLkSpsvcRdybqMWZCGETnWe
-         2amA==
-X-Gm-Message-State: AOJu0Yy4eS/Bm425D+XQPTZoPPM1jwJZOH7zgK5JQCdsPjkbbo5dC09G
-	k2L3f77H42uHRROXm7DHpHFD7Q==
-X-Google-Smtp-Source: AGHT+IFc5ZRYT1o/k/93+PlPbcsvc2QnQHbxkFnt341ov/kqaDgO7oAIY5wDGBPc4UYnKk/U4t4g8Q==
-X-Received: by 2002:a05:600c:1e18:b0:405:1ba2:4fcf with SMTP id ay24-20020a05600c1e1800b004051ba24fcfmr4899643wmb.4.1695628398043;
-        Mon, 25 Sep 2023 00:53:18 -0700 (PDT)
+        bh=HlO0BFPodxqQgy/xN/pC3ASctYK0Q/f9lDJvY2Seqdc=;
+        b=XZsqNOrHGdHL/iZFwkU5LG/F7NAvArYJ+oI6Jsg2uXzVYgx9wn1NuAB1tVMiLEbdCK
+         OQKQj7PTOhCA/sNu9PjfFHmbFrv18IEE6rGgdB/oDvhojk8k4ZkbkNcZ5kAs/Nh2Qjn9
+         bkCNoLvFI14V2Wfh16uMkTx2zHDADZwOhQRqXkjB0cIHqya4F4FBiMTxEsppOwK2HRXg
+         ZKaxXpaYyW4FNLy0u2dRdiqQs5ug9fa9aO5Lx1djeaWvfVHRD/6JNrTfmVQ9kWhpvrBc
+         8FZH3mJeG4fzYzNlWX/sx7r4Ol0sbcHkwErUBNOZzbGKXdgR7+rusMqXKV6BV+8OG5uo
+         5sVA==
+X-Gm-Message-State: AOJu0Yye/3ROFsVZou4wnhn9ycuqHKCbAUS+O6qGk0ZsL1RObejztAYR
+	P5yuwJul9EWZzvV2JJCqEvvgAw==
+X-Google-Smtp-Source: AGHT+IG6Wm4n3niNWbqpvHgjzURFEXYyn/kqXs/CLOQ9lKrclVE0BGPfD/NzTxMcHKmkToirIL5oWg==
+X-Received: by 2002:a05:600c:4f50:b0:405:39bb:38a8 with SMTP id m16-20020a05600c4f5000b0040539bb38a8mr4953600wmq.2.1695629459073;
+        Mon, 25 Sep 2023 01:10:59 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:999:a3a0:3df1:f103:36a9:423d? ([2a01:e0a:999:a3a0:3df1:f103:36a9:423d])
-        by smtp.gmail.com with ESMTPSA id 14-20020a05600c230e00b00402f7b50517sm11610774wmo.40.2023.09.25.00.53.17
+        by smtp.gmail.com with ESMTPSA id k3-20020a05600c0b4300b003fe1fe56202sm11596335wmr.33.2023.09.25.01.10.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Sep 2023 00:53:17 -0700 (PDT)
-Message-ID: <839c611d-6f13-403b-b37e-a69b589658cc@rivosinc.com>
-Date: Mon, 25 Sep 2023 09:53:16 +0200
+        Mon, 25 Sep 2023 01:10:58 -0700 (PDT)
+Message-ID: <bda1393a-9e11-4d51-8911-f038918d2ddb@rivosinc.com>
+Date: Mon, 25 Sep 2023 10:10:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -52,6 +52,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] tracing/user_events: align uaddr on unsigned long
  alignment
+Content-Language: en-US
 To: Beau Belgrave <beaub@linux.microsoft.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>,
  Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
@@ -60,21 +61,20 @@ References: <20230914131102.179100-1-cleger@rivosinc.com>
  <20230914131700.0ba3ee80@gandalf.local.home>
  <20230914132956.569dad45@gandalf.local.home>
  <a736f219-9a38-4f95-a874-93e1561906d5@rivosinc.com>
- <20230922192231.GA1828-beaub@linux.microsoft.com>
-Content-Language: en-US
+ <20230922200042.GA1981-beaub@linux.microsoft.com>
 From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <20230922192231.GA1828-beaub@linux.microsoft.com>
+In-Reply-To: <20230922200042.GA1981-beaub@linux.microsoft.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
 
 
-On 22/09/2023 21:22, Beau Belgrave wrote:
+On 22/09/2023 22:00, Beau Belgrave wrote:
 > On Tue, Sep 19, 2023 at 02:59:12PM +0200, Clément Léger wrote:
 >>
 >>
@@ -140,85 +140,26 @@ On 22/09/2023 21:22, Beau Belgrave wrote:
 >> Can someone confirm my understanding ?
 >>
 > 
-> I have a ppc 64bit BE VM I've been validating this on. If we do the
-> shifting within user_events (vs a generic set_bit_aligned approach)
-> 64bit BE does not need additional bit manipulation. However, if we were
-> to blindly pass the address and bit as is to set_bit_aligned() it
-> assumes the bit number is for a long, not a 32 bit word. So for that
-> approach we would need to offset the bit in the unaligned case.
-> 
-> Here's a patch I have that I've validated on ppc64 BE, aarch64 LE, and
-> x86_64 LE. I personally feel more comfortable with this approach than
-> the generic set_bit_aligned() one.
-> 
-> Thanks,
-> -Beau
-> 
-> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-> index e3f2b8d72e01..ae854374d0b7 100644
-> --- a/kernel/trace/trace_events_user.c
-> +++ b/kernel/trace/trace_events_user.c
-> @@ -162,6 +162,23 @@ struct user_event_validator {
->  	int			flags;
->  };
->  
-> +static inline void align_addr_bit(unsigned long *addr, int *bit)
-> +{
-> +	if (IS_ALIGNED(*addr, sizeof(long)))
-> +		return;
-> +
-> +	*addr = ALIGN_DOWN(*addr, sizeof(long));
-> +
-> +	/*
-> +	 * We only support 32 and 64 bit values. The only time we need
-> +	 * to align is a 32 bit value on a 64 bit kernel, which on LE
-> +	 * is always 32 bits, and on BE requires no change.
-> +	 */
-> +#ifdef __LITTLE_ENDIAN
-> +	*bit += 32;
-> +#endif
+> Actually, I take back some of what I said [1]. If a 32-bit on a 64-bit
+> kernel comes in on BE, and is aligned, we do need to offset the bits as
+> well (just verified on my ppc64 BE VM).
 
-Hi Beau, except the specific alignment that is basically what I ended up
-with for the BE 64bit case (ie just bit += 32). Regarding the generic
-alignment, depends on what the maintainers wishes (generic of user_event
-specific). I also feel like this shoulmd be handle specifically for
-user_events which uses set_bit in some non standard way. Any suggestion ?
+Yes, that is what I meant in my previous comment. I'll resend my series
+which handles that properly (and which includes generic
+set_bit_unaligned()).
 
 Thanks,
 
 Clément
 
-> +}
-> +
->  typedef void (*user_event_func_t) (struct user_event *user, struct iov_iter *i,
->  				   void *tpdata, bool *faulted);
->  
-> @@ -481,6 +498,7 @@ static int user_event_enabler_write(struct user_event_mm *mm,
->  	unsigned long *ptr;
->  	struct page *page;
->  	void *kaddr;
-> +	int bit = ENABLE_BIT(enabler);
->  	int ret;
->  
->  	lockdep_assert_held(&event_mutex);
-> @@ -496,6 +514,8 @@ static int user_event_enabler_write(struct user_event_mm *mm,
->  		     test_bit(ENABLE_VAL_FREEING_BIT, ENABLE_BITOPS(enabler))))
->  		return -EBUSY;
->  
-> +	align_addr_bit(&uaddr, &bit);
-> +
->  	ret = pin_user_pages_remote(mm->mm, uaddr, 1, FOLL_WRITE | FOLL_NOFAULT,
->  				    &page, NULL);
->  
-> @@ -514,9 +534,9 @@ static int user_event_enabler_write(struct user_event_mm *mm,
->  
->  	/* Update bit atomically, user tracers must be atomic as well */
->  	if (enabler->event && enabler->event->status)
-> -		set_bit(ENABLE_BIT(enabler), ptr);
-> +		set_bit(bit, ptr);
->  	else
-> -		clear_bit(ENABLE_BIT(enabler), ptr);
-> +		clear_bit(bit, ptr);
->  
->  	kunmap_local(kaddr);
->  	unpin_user_pages_dirty_lock(&page, 1, true);
+> 
+> You should be able to use that patch as a base though and add a flag to
+> struct user_event_enabler when this case occurs. Then in the
+> align_addr_bit() adjust the bits as well upon aligned cases.
+> 
+> Thanks,
+> -Beau
+> 
+> 1. https://lore.kernel.org/linux-trace-kernel/20230922192231.GA1828-beaub@linux.microsoft.com/
+> 
+>> Clément
