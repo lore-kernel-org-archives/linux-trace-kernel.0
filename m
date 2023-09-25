@@ -1,177 +1,354 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D2D1429D;
-	Mon, 25 Sep 2023 12:15:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9FF9C433C7;
-	Mon, 25 Sep 2023 12:15:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1695644122;
-	bh=7Fw7uRUWuftgMpI5JoPbFGbJmDlLGvCn25cyvj5+HIw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=EiF6f5DTN+v5PrSFYkhMEPn2qUMyLC1qTvV7CpmfgopDayMbJ+MhHH/XyuPbwDKVS
-	 eH5+bi81uTnQOZWJU2K7WmRpaaUAobIztyPtEFB62bVfrYiUni3KdCBtZqYFQiLDF5
-	 R7iBRUAC1QndlcVx2IVeccHfbNDXYEq1e2L/4xMzkq5s08kq1QcAJyHEfByA2TC1mJ
-	 NuF1VlZjEd7ldEv1NMiFXlw74wXk6bEYg7Q3At8lAE8hD+ksqxaf2iI00WsRDOCBT3
-	 48IKph3X6kTgsHyOkXM+/nBNxgr354620rERJMztWaa9R1ZeQmWHCy/rk25aXTBNJ7
-	 GWFT3GI4dETuA==
-Date: Mon, 25 Sep 2023 21:15:15 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt
- <rostedt@goodmis.org>, Florent Revest <revest@chromium.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>, Mark
- Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v5 04/12] fprobe: Use ftrace_regs in fprobe entry
- handler
-Message-Id: <20230925211515.41d26a160c546c7bce08ac64@kernel.org>
-In-Reply-To: <ZRFj97DJtbXc4naO@krava>
-References: <169556254640.146934.5654329452696494756.stgit@devnote2>
-	<169556259571.146934.4558592076420704031.stgit@devnote2>
-	<ZRFj97DJtbXc4naO@krava>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61CF61BDEC
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 25 Sep 2023 16:05:05 +0000 (UTC)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id ADCB192;
+	Mon, 25 Sep 2023 09:05:02 -0700 (PDT)
+Received: from DESKTOP-4OLSCEK. (unknown [76.135.27.212])
+	by linux.microsoft.com (Postfix) with ESMTPSA id EDAD1212C814;
+	Mon, 25 Sep 2023 09:05:01 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EDAD1212C814
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1695657902;
+	bh=tKAHqyd+HToE3M9uwWOg/AOKtWT0LUjyeGjPO0uzso4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rmbQPW+kavcE81GnbjGimOL1uHtMtFMOLPgZx2DyEhfqW31Ww0sr7Y4Zofa3GbBW2
+	 yxRs1z4ETro689/64ayKHkaSkSEKm2hgqDrs1p6e6SciDLuSmmPQ1XuMhzo4pwDMnc
+	 CEv+UVbtM0FWxgVyeFA/C7gRQY8yMmhBu9qQiUas=
+Date: Mon, 25 Sep 2023 09:04:59 -0700
+From: Beau Belgrave <beaub@linux.microsoft.com>
+To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing/user_events: align uaddr on unsigned long
+ alignment
+Message-ID: <20230925160459.GB2615-beaub@linux.microsoft.com>
+References: <20230914131102.179100-1-cleger@rivosinc.com>
+ <20230914131700.0ba3ee80@gandalf.local.home>
+ <20230914132956.569dad45@gandalf.local.home>
+ <a736f219-9a38-4f95-a874-93e1561906d5@rivosinc.com>
+ <20230922192231.GA1828-beaub@linux.microsoft.com>
+ <839c611d-6f13-403b-b37e-a69b589658cc@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <839c611d-6f13-403b-b37e-a69b589658cc@rivosinc.com>
+X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,SPF_HELO_PASS,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-Hi Jiri,
-
-On Mon, 25 Sep 2023 12:41:59 +0200
-Jiri Olsa <olsajiri@gmail.com> wrote:
-
-> On Sun, Sep 24, 2023 at 10:36:36PM +0900, Masami Hiramatsu (Google) wrote:
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > This allows fprobes to be available with CONFIG_DYNAMIC_FTRACE_WITH_ARGS
-> > instead of CONFIG_DYNAMIC_FTRACE_WITH_REGS, then we can enable fprobe
-> > on arm64.
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > Acked-by: Florent Revest <revest@chromium.org>
+On Mon, Sep 25, 2023 at 09:53:16AM +0200, Clément Léger wrote:
 > 
-> I was getting bpf selftests failures with this patchset and when
-> bisecting I'm getting crash when running on top of this change
-
-Thanks for bisecting!
-
 > 
-> looks like it's missing some of the regs NULL checks added later?
+> On 22/09/2023 21:22, Beau Belgrave wrote:
+> > On Tue, Sep 19, 2023 at 02:59:12PM +0200, Clément Léger wrote:
+> >>
+> >>
+> >> On 14/09/2023 19:29, Steven Rostedt wrote:
+> >>> On Thu, 14 Sep 2023 13:17:00 -0400
+> >>> Steven Rostedt <rostedt@goodmis.org> wrote:
+> >>>
+> >>>> Now lets look at big endian layout:
+> >>>>
+> >>>>  uaddr = 0xbeef0004
+> >>>>  enabler = 1;
+> >>>>
+> >>>>  memory at 0xbeef0000:  00 00 00 00 00 00 00 02
+> >>>>                                     ^
+> >>>>                                     addr: 0xbeef0004
+> >>>>
+> >>>> 				(enabler is set )
+> >>>>
+> >>>> 	bitoffset = uaddr & (sizeof(unsigned long) - 1); bitoffset = 4
+> >>>> 	bit_offset *= 8;				 bitoffset = 32
+> >>>> 	uaddr &= ~(sizeof(unsigned long) - 1);		 uaddr = 0xbeef0000
+> >>>>
+> >>>> 	ptr = kaddr + (uaddr & ~PAGE_MASK);
+> >>>>
+> >>>> 	clear_bit(1 + 32, ptr);
+> >>>>
+> >>>>  memory at 0xbeef0000:  00 00 00 00 00 00 00 02
+> >>>>                                   ^
+> >>>> 				bit 33 of 0xbeef0000
+> >>>>
+> >>>> I don't think that's what you expected!
+> >>>
+> >>> I believe the above can be fixed with:
+> >>>
+> >>> 	bit_offset = uaddr & (sizeof(unsigned long) - 1);
+> >>> 	if (bit_offset) {
+> >>> #ifdef CONFIG_CPU_BIG_ENDIAN
+> >>> 		bit_offest = 0;
+> >>> #else
+> >>> 		bit_offset *= BITS_PER_BYTE;
+> >>> #endif
+> >>> 		uaddr &= ~(sizeof(unsigned long) - 1);
+> >>> 	}
+> >>>
+> >>> -- Steve
+> >>
+> >>
+> >> Actually, after looking more in depth at that, it seems like there are
+> >> actually 2 problems that can happen.
+> >>
+> >> First one is atomic access misalignment due to enable_size == 4 and
+> >> uaddr not being aligned on a (long) boundary on 64 bits architecture.
+> >> This can generate misaligned exceptions on various architectures. This
+> >> can be fixed in a more general way according to Masami snippet.
+> >>
+> >> Second one that I can see is on 64 bits, big endian architectures with
+> >> enable_size == 4. In that case, the bit provided by the userspace won't
+> >> be correctly set since this code kind of assume that the atomic are done
+> >> on 32bits value. Since the kernel assume long sized atomic operation, on
+> >> big endian 64 bits architecture, the updated bit will actually be in the
+> >> next 32 bits word.
+> >>
+> >> Can someone confirm my understanding ?
+> >>
+> > 
+> > I have a ppc 64bit BE VM I've been validating this on. If we do the
+> > shifting within user_events (vs a generic set_bit_aligned approach)
+> > 64bit BE does not need additional bit manipulation. However, if we were
+> > to blindly pass the address and bit as is to set_bit_aligned() it
+> > assumes the bit number is for a long, not a 32 bit word. So for that
+> > approach we would need to offset the bit in the unaligned case.
+> > 
+> > Here's a patch I have that I've validated on ppc64 BE, aarch64 LE, and
+> > x86_64 LE. I personally feel more comfortable with this approach than
+> > the generic set_bit_aligned() one.
+> > 
+> > Thanks,
+> > -Beau
+> > 
+> > diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+> > index e3f2b8d72e01..ae854374d0b7 100644
+> > --- a/kernel/trace/trace_events_user.c
+> > +++ b/kernel/trace/trace_events_user.c
+> > @@ -162,6 +162,23 @@ struct user_event_validator {
+> >  	int			flags;
+> >  };
+> >  
+> > +static inline void align_addr_bit(unsigned long *addr, int *bit)
+> > +{
+> > +	if (IS_ALIGNED(*addr, sizeof(long)))
+> > +		return;
+> > +
+> > +	*addr = ALIGN_DOWN(*addr, sizeof(long));
+> > +
+> > +	/*
+> > +	 * We only support 32 and 64 bit values. The only time we need
+> > +	 * to align is a 32 bit value on a 64 bit kernel, which on LE
+> > +	 * is always 32 bits, and on BE requires no change.
+> > +	 */
+> > +#ifdef __LITTLE_ENDIAN
+> > +	*bit += 32;
+> > +#endif
+> 
+> Hi Beau, except the specific alignment that is basically what I ended up
+> with for the BE 64bit case (ie just bit += 32). Regarding the generic
+> alignment, depends on what the maintainers wishes (generic of user_event
+> specific). I also feel like this shoulmd be handle specifically for
+> user_events which uses set_bit in some non standard way. Any suggestion ?
+> 
 
-yeah, if the RIP (arch_rethook_prepare+0x0/0x30) is correct, 
+Looking at this deeper, user_events needs to track some of this
+alignment requirements within each enabler. This is needed because when
+enablers are disabled/removed they do not have the actual size. The size
+is needed to know if we need to update the bits, etc. (IE: If originally
+a 32-bit value was used and it's aligned and it's on BE, it needs the
+bits shifted.)
 
-void arch_rethook_prepare(struct rethook_node *rh, struct ftrace_regs *fregs, bool mcount)
+My final version that I played around with looked like this for just the
+alignment requirements:
++static inline void align_addr_bit(unsigned long *addr, int *bit,
++                                 unsigned long *flags)
++{
++       if (IS_ALIGNED(*addr, sizeof(long))) {
++#ifdef __BIG_ENDIAN
++               if (test_bit(ENABLE_VAL_32_BIT, flags))
++                       *bit += 32;
++#endif
++               return;
++       }
++
++       *addr = ALIGN_DOWN(*addr, sizeof(long));
++
++       /*
++        * We only support 32 and 64 bit values. The only time we need
++        * to align is a 32 bit value on a 64 bit kernel, which on LE
++        * is always 32 bits, and on BE requires no change.
++        */
++#ifdef __LITTLE_ENDIAN
++       *bit += 32;
++#endif
++}
 
-RSI (the 2nd argument) is NULL. This means fregs == NULL and caused the crash.
-I think ftrace_get_regs(fregs) for the entry handler may return NULL.
+Below is the full patch, which is currently appearing to pass everything
+on BE (Please note, the abi_test in selftests needs fixes that I plan to
+push out. I'd like to get Steven to take those changes along with yours
+together from tracing to ensure we can test BE with these changes
+properly).
 
-Ah, 
+As you'll see, it requires a bit more work than just a generic unaligned
+solution due to the bits having to move for 32-bit on BE and the
+tracking requirement on when to do so during delete/clear.
 
-@@ -182,7 +182,7 @@ static void fprobe_init(struct fprobe *fp)
- 		fp->ops.func = fprobe_kprobe_handler;
+Thanks,
+-Beau
+
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index 6f046650e527..b05db15eaea6 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -127,8 +127,11 @@ struct user_event_enabler {
+ /* Bit 7 is for freeing status of enablement */
+ #define ENABLE_VAL_FREEING_BIT 7
+ 
++/* Bit 8 is for marking 32-bit on 64-bit */
++#define ENABLE_VAL_32_BIT 8
++
+ /* Only duplicate the bit value */
+-#define ENABLE_VAL_DUP_MASK ENABLE_VAL_BIT_MASK
++#define ENABLE_VAL_DUP_MASK (ENABLE_VAL_BIT_MASK | 1 << ENABLE_VAL_32_BIT)
+ 
+ #define ENABLE_BITOPS(e) (&(e)->values)
+ 
+@@ -174,6 +177,29 @@ struct user_event_validator {
+ 	int			flags;
+ };
+ 
++static inline void align_addr_bit(unsigned long *addr, int *bit,
++				  unsigned long *flags)
++{
++	if (IS_ALIGNED(*addr, sizeof(long))) {
++#ifdef __BIG_ENDIAN
++		if (test_bit(ENABLE_VAL_32_BIT, flags))
++			*bit += 32;
++#endif
++		return;
++	}
++
++	*addr = ALIGN_DOWN(*addr, sizeof(long));
++
++	/*
++	 * We only support 32 and 64 bit values. The only time we need
++	 * to align is a 32 bit value on a 64 bit kernel, which on LE
++	 * is always 32 bits, and on BE requires no change.
++	 */
++#ifdef __LITTLE_ENDIAN
++	*bit += 32;
++#endif
++}
++
+ typedef void (*user_event_func_t) (struct user_event *user, struct iov_iter *i,
+ 				   void *tpdata, bool *faulted);
+ 
+@@ -482,6 +508,7 @@ static int user_event_enabler_write(struct user_event_mm *mm,
+ 	unsigned long *ptr;
+ 	struct page *page;
+ 	void *kaddr;
++	int bit = ENABLE_BIT(enabler);
+ 	int ret;
+ 
+ 	lockdep_assert_held(&event_mutex);
+@@ -497,6 +524,8 @@ static int user_event_enabler_write(struct user_event_mm *mm,
+ 		     test_bit(ENABLE_VAL_FREEING_BIT, ENABLE_BITOPS(enabler))))
+ 		return -EBUSY;
+ 
++	align_addr_bit(&uaddr, &bit, ENABLE_BITOPS(enabler));
++
+ 	ret = pin_user_pages_remote(mm->mm, uaddr, 1, FOLL_WRITE | FOLL_NOFAULT,
+ 				    &page, NULL);
+ 
+@@ -515,9 +544,9 @@ static int user_event_enabler_write(struct user_event_mm *mm,
+ 
+ 	/* Update bit atomically, user tracers must be atomic as well */
+ 	if (enabler->event && enabler->event->status)
+-		set_bit(ENABLE_BIT(enabler), ptr);
++		set_bit(bit, ptr);
  	else
- 		fp->ops.func = fprobe_handler;
--	fp->ops.flags |= FTRACE_OPS_FL_SAVE_REGS;
-+	fp->ops.flags |= FTRACE_OPS_FL_SAVE_ARGS;
+-		clear_bit(ENABLE_BIT(enabler), ptr);
++		clear_bit(bit, ptr);
+ 
+ 	kunmap_local(kaddr);
+ 	unpin_user_pages_dirty_lock(&page, 1, true);
+@@ -849,6 +878,12 @@ static struct user_event_enabler
+ 	enabler->event = user;
+ 	enabler->addr = uaddr;
+ 	enabler->values = reg->enable_bit;
++
++#if BITS_PER_LONG >= 64
++	if (reg->enable_size == 4)
++		set_bit(ENABLE_VAL_32_BIT, ENABLE_BITOPS(enabler));
++#endif
++
+ retry:
+ 	/* Prevents state changes from racing with new enablers */
+ 	mutex_lock(&event_mutex);
+@@ -2377,7 +2412,8 @@ static long user_unreg_get(struct user_unreg __user *ureg,
  }
  
- static int fprobe_init_rethook(struct fprobe *fp, int num)
-
-This may cause the issue, it should keep REGS at this point (this must be done in
-[9/12]). But after applying [9/12], it shouldn't be a problem... 
-
-Let me check it again.
-
-Thank you!
-
-> 
-> jirka
-> 
-> 
-> ---
-> [  124.089449][  T677] BUG: kernel NULL pointer dereference, address: 0000000000000098
-> [  124.090102][  T677] #PF: supervisor read access in kernel mode
-> [  124.090568][  T677] #PF: error_code(0x0000) - not-present page
-> [  124.091039][  T677] PGD 158fd8067 P4D 158fd8067 PUD 10896a067 PMD 0 
-> [  124.091482][  T677] Oops: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC NOPTI
-> [  124.091986][  T677] CPU: 1 PID: 677 Comm: test_progs Tainted: G           OE      6.6.0-rc2+ #768 1c8a8990289f2615e36dadd01915b80e8da29bf5
-> [  124.092898][  T677] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-1.fc38 04/01/2014
-> [  124.093613][  T677] RIP: 0010:arch_rethook_prepare+0x0/0x30
-> [  124.094060][  T677] Code: 90 90 90 90 90 90 90 90 90 90 48 89 b7 a8 00 00 00 c3 cc cc cc cc 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 <48> 8b 86 98 00 00 00 48 8b 10 48 89 57 20 48 8b 96 98 00 00 00 48
-> [  124.096239][  T677] RSP: 0018:ffffc90003d3bc98 EFLAGS: 00010286
-> [  124.096708][  T677] RAX: 0000000000000000 RBX: ffff88815d9fbe50 RCX: ffff88815d9fbe40
-> [  124.097332][  T677] RDX: 0000000000000001 RSI: 0000000000000000 RDI: ffff88815d9fbe40
-> [  124.097946][  T677] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000004
-> [  124.098554][  T677] R10: 0000000000000001 R11: 0000000000000000 R12: ffffffff81fbb7b0
-> [  124.099108][  T677] R13: ffffffff81fbd47b R14: fffffffffffffff7 R15: ffff88815d9fbe40
-> [  124.099720][  T677] FS:  00007f9c2063ed00(0000) GS:ffff88846d200000(0000) knlGS:0000000000000000
-> [  124.100403][  T677] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  124.100908][  T677] CR2: 0000000000000098 CR3: 0000000108e02002 CR4: 0000000000770ee0
-> [  124.101537][  T677] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [  124.102096][  T677] DR3: 0000000000000000 DR6: 00000000ffff4ff0 DR7: 0000000000000400
-> [  124.102689][  T677] PKRU: 55555554
-> [  124.102988][  T677] Call Trace:
-> [  124.103303][  T677]  <TASK>
-> [  124.103580][  T677]  ? __die+0x1f/0x70
-> [  124.103928][  T677]  ? page_fault_oops+0x176/0x4d0
-> [  124.104348][  T677]  ? __pte_offset_map_lock+0xa5/0x190
-> [  124.104818][  T677]  ? do_user_addr_fault+0x73/0x870
-> [  124.105277][  T677]  ? exc_page_fault+0x81/0x250
-> [  124.105709][  T677]  ? asm_exc_page_fault+0x22/0x30
-> [  124.106171][  T677]  ? bpf_prog_test_run_tracing+0x14b/0x2c0
-> [  124.106675][  T677]  ? __pfx_bpf_fentry_test1+0x10/0x10
-> [  124.107135][  T677]  ? __pfx_arch_rethook_prepare+0x10/0x10
-> [  124.107598][  T677]  rethook_hook+0x10/0x30
-> [  124.107966][  T677]  fprobe_handler+0x129/0x210
-> [  124.108351][  T677]  ? __pfx_bpf_fentry_test1+0x10/0x10
-> [  124.108796][  T677]  ? bpf_prog_test_run_tracing+0x14b/0x2c0
-> [  124.109276][  T677]  arch_ftrace_ops_list_func+0xf2/0x200
-> [  124.109708][  T677]  ftrace_call+0x5/0x44
-> [  124.110060][  T677]  ? bpf_fentry_test1+0x5/0x10
-> [  124.110463][  T677]  bpf_fentry_test1+0x5/0x10
-> [  124.110881][  T677]  bpf_prog_test_run_tracing+0x14b/0x2c0
-> [  124.111337][  T677]  __sys_bpf+0x305/0x2820
-> [  124.111705][  T677]  __x64_sys_bpf+0x1a/0x30
-> [  124.112053][  T677]  do_syscall_64+0x38/0x90
-> [  124.116245][  T677]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-> [  124.116688][  T677] RIP: 0033:0x7f9c20806b5d
-> [  124.117078][  T677] Code: c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 7b 92 0c 00 f7 d8 64 89 01 48
-> [  124.118487][  T677] RSP: 002b:00007ffc615e5228 EFLAGS: 00000206 ORIG_RAX: 0000000000000141
-> [  124.119090][  T677] RAX: ffffffffffffffda RBX: 00007f9c20918000 RCX: 00007f9c20806b5d
-> [  124.119698][  T677] RDX: 0000000000000050 RSI: 00007ffc615e5260 RDI: 000000000000000a
-> [  124.120298][  T677] RBP: 00007ffc615e5240 R08: 0000000000000000 R09: 00007ffc615e5260
-> [  124.120893][  T677] R10: 0000000000000064 R11: 0000000000000206 R12: 0000000000000001
-> [  124.121486][  T677] R13: 0000000000000000 R14: 00007f9c2094d000 R15: 00000000011a8db0
-> [  124.122156][  T677]  </TASK>
-> [  124.122421][  T677] Modules linked in: bpf_testmod(OE) intel_rapl_msr intel_rapl_common crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel kvm_intel rapl iTCO_wdt iTCO_vendor_support i2c_i801 i2c_smbus lpc_ich drm loop drm_panel_orientation_quirks zram
-> [  124.125064][  T677] CR2: 0000000000000098
-> [  124.125431][  T677] ---[ end trace 0000000000000000 ]---
-> [  124.125861][  T677] RIP: 0010:arch_rethook_prepare+0x0/0x30
-> [  124.126316][  T677] Code: 90 90 90 90 90 90 90 90 90 90 48 89 b7 a8 00 00 00 c3 cc cc cc cc 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 <48> 8b 86 98 00 00 00 48 8b 10 48 89 57 20 48 8b 96 98 00 00 00 48
-> [  124.127761][  T677] RSP: 0018:ffffc90003d3bc98 EFLAGS: 00010286
-> [  124.128238][  T677] RAX: 0000000000000000 RBX: ffff88815d9fbe50 RCX: ffff88815d9fbe40
-> [  124.128856][  T677] RDX: 0000000000000001 RSI: 0000000000000000 RDI: ffff88815d9fbe40
-> [  124.129502][  T677] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000004
-> [  124.130129][  T677] R10: 0000000000000001 R11: 0000000000000000 R12: ffffffff81fbb7b0
-> [  124.130767][  T677] R13: ffffffff81fbd47b R14: fffffffffffffff7 R15: ffff88815d9fbe40
-> [  124.131410][  T677] FS:  00007f9c2063ed00(0000) GS:ffff88846d200000(0000) knlGS:0000000000000000
-> [  124.132084][  T677] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  124.132600][  T677] CR2: 0000000000000098 CR3: 0000000108e02002 CR4: 0000000000770ee0
-> [  124.133128][  T677] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [  124.133698][  T677] DR3: 0000000000000000 DR6: 00000000ffff4ff0 DR7: 0000000000000400
-> [  124.134302][  T677] PKRU: 55555554
-> [  124.134584][  T677] note: test_progs[677] exited with irqs disabled
-> [  124.135192][  T677] note: test_progs[677] exited with preempt_count 2
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+ static int user_event_mm_clear_bit(struct user_event_mm *user_mm,
+-				   unsigned long uaddr, unsigned char bit)
++				   unsigned long uaddr, unsigned char bit,
++				   unsigned long flags)
+ {
+ 	struct user_event_enabler enabler;
+ 	int result;
+@@ -2385,7 +2421,7 @@ static int user_event_mm_clear_bit(struct user_event_mm *user_mm,
+ 
+ 	memset(&enabler, 0, sizeof(enabler));
+ 	enabler.addr = uaddr;
+-	enabler.values = bit;
++	enabler.values = bit | flags;
+ retry:
+ 	/* Prevents state changes from racing with new enablers */
+ 	mutex_lock(&event_mutex);
+@@ -2415,6 +2451,7 @@ static long user_events_ioctl_unreg(unsigned long uarg)
+ 	struct user_event_mm *mm = current->user_event_mm;
+ 	struct user_event_enabler *enabler, *next;
+ 	struct user_unreg reg;
++	unsigned long flags;
+ 	long ret;
+ 
+ 	ret = user_unreg_get(ureg, &reg);
+@@ -2425,6 +2462,7 @@ static long user_events_ioctl_unreg(unsigned long uarg)
+ 	if (!mm)
+ 		return -ENOENT;
+ 
++	flags = 0;
+ 	ret = -ENOENT;
+ 
+ 	/*
+@@ -2441,6 +2479,10 @@ static long user_events_ioctl_unreg(unsigned long uarg)
+ 		    ENABLE_BIT(enabler) == reg.disable_bit) {
+ 			set_bit(ENABLE_VAL_FREEING_BIT, ENABLE_BITOPS(enabler));
+ 
++			/* We must keep compat flags for the clear */
++			if (test_bit(ENABLE_VAL_32_BIT, ENABLE_BITOPS(enabler)))
++				flags |= 1 << ENABLE_VAL_32_BIT;
++
+ 			if (!test_bit(ENABLE_VAL_FAULTING_BIT, ENABLE_BITOPS(enabler)))
+ 				user_event_enabler_destroy(enabler, true);
+ 
+@@ -2454,7 +2496,7 @@ static long user_events_ioctl_unreg(unsigned long uarg)
+ 	/* Ensure bit is now cleared for user, regardless of event status */
+ 	if (!ret)
+ 		ret = user_event_mm_clear_bit(mm, reg.disable_addr,
+-					      reg.disable_bit);
++					      reg.disable_bit, flags);
+ 
+ 	return ret;
+ }
