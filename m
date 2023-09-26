@@ -1,340 +1,342 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3DB184F
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Sep 2023 04:20:25 +0000 (UTC)
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7CF4BF
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 25 Sep 2023 21:20:22 -0700 (PDT)
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20230926042020epoutp049ee59a11bfb994697d64fc24afe172a4~IWADmyciM3073430734epoutp04B
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Sep 2023 04:20:20 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20230926042020epoutp049ee59a11bfb994697d64fc24afe172a4~IWADmyciM3073430734epoutp04B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1695702020;
-	bh=/WmFXGg7pZUx8NFLP+AOrNmGh0qCRe9meJqBVWK1FUc=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=jlFIDYo2JzapBZXQlFxYHzCLS46wTWlnGfMx6Q9OtFRzA1jYDyWEQxCQFWR/unkq/
-	 Q6dRwcU4yHP4zvEWtveA+GtO0cTfeL850pQbJr0QbSj4oDI8a2z0Ii2jUQzrh3Z186
-	 nRGh/+SsanaBY6CZjL1OzZE0NQHx1lKF2lKQGWQk=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-	20230926042020epcas1p3134b9adea96fa2ada4912876dafde4d6~IWADEsMFa2349223492epcas1p3y;
-	Tue, 26 Sep 2023 04:20:20 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.38.249]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4RvmkC4Fptz4x9Q8; Tue, 26 Sep
-	2023 04:20:19 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-	epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-	92.2C.09567.30C52156; Tue, 26 Sep 2023 13:20:19 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20230926042019epcas1p11c28533f7b7db99db9f9d8a03ddd332c~IWACPlDnn2177721777epcas1p1-;
-	Tue, 26 Sep 2023 04:20:19 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20230926042019epsmtrp22e82d97492553bdf036f20248fac3c6c~IWACOxIKg2767227672epsmtrp2h;
-	Tue, 26 Sep 2023 04:20:19 +0000 (GMT)
-X-AuditID: b6c32a39-955f97000000255f-df-65125c031697
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	95.86.18916.20C52156; Tue, 26 Sep 2023 13:20:18 +0900 (KST)
-Received: from jaewon-linux.10.32.193.11 (unknown [10.253.104.99]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20230926042018epsmtip1a90d6a9fb5d350675c8749d98ccdbb68~IWAB-3M772801928019epsmtip1L;
-	Tue, 26 Sep 2023 04:20:18 +0000 (GMT)
-From: Jaewon Kim <jaewon31.kim@samsung.com>
-To: rostedt@goodmis.org, tjmercier@google.com, yuzhao@google.com,
-	kaleshsingh@google.com, akpm@linux-foundation.org, vbabka@suse.cz,
-	hannes@cmpxchg.org, sj@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org, jaewon31.kim@gmail.com, Jaewon Kim
-	<jaewon31.kim@samsung.com>
-Subject: [PATCH v4] vmscan: add trace events for lru_gen
-Date: Tue, 26 Sep 2023 13:22:50 +0900
-Message-Id: <20230926042250.6028-1-jaewon31.kim@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphk+LIzCtJLcpLzFFi42LZdlhTV5c5RijVYGKrvMWc9WvYLFZv8rXo
-	3jyT0aL3/Ssmi6Z9M9ktLu+aw2Zxb81/Vosj68+yWOzreMBkcfjrGyaLd+u/sFnMbuxjtHg3
-	4QurA6/H4TfvmT12zrrL7tGy7xa7x4JNpR6bVnWyeWz6NInd48SM3ywefVtWMXqcWXCE3ePz
-	JrkArqhsm4zUxJTUIoXUvOT8lMy8dFsl7+B453hTMwNDXUNLC3MlhbzE3FRbJRefAF23zByg
-	25UUyhJzSoFCAYnFxUr6djZF+aUlqQoZ+cUltkqpBSk5BWYFesWJucWleel6eaklVoYGBkam
-	QIUJ2RnHFhxgL2h2qJj9fhdbA+MZ0y5GTg4JAROJIwffs4PYQgI7GCXePgjvYuQCsj8xSlyZ
-	9ZMVznk2ZxsrTMf5Q+cYIRI7GSXePGxlhnC+M0pcv94MNotNQFvi/YJJYO0iAqsYJS7uaGIB
-	cZgFZjNKvN9wiQ2kSljAQqLv7Vwwm0VAVWL64slg3bwCNhLLdmxjh9gnL7F6wwFmCPsvu8Tp
-	4zYQtovErcaTLBC2sMSr41ug6qUkPr/bywZh50tcuPiKqYuRA8iukVg40RAibC+x6+sMVpAw
-	s4CmxPpd+hBhRYmdv+cygtjMAnwS7772sEJ08kp0tAlBlKhJtDz7Cg0IGYm//55B2R4SN55O
-	YYYEY6zEhlsbWCYwys5CWLCAkXEVo1hqQXFuemqxYYEpPJKS83M3MYKTo5blDsbpbz/oHWJk
-	4mA8xCjBwawkwvvrGV+qEG9KYmVValF+fFFpTmrxIUZTYGhNZJYSTc4Hpue8knhDE0sDEzMj
-	EwtjS2MzJXHec297U4QE0hNLUrNTUwtSi2D6mDg4pRqYFLvqtE/HhKhlJd9Uz+JY8+oLq0fe
-	vSrh5yzPdZ9lSb3hfHmhTHbyqrma0/dPYWQI/mJox5V38s7z6JP/YyLfuKu9C0xxZlU0vy02
-	x15Wevf1WnsR/6dxwUXmS3s6532oaVeZOHd54Fzr4wEHHdRZn61LPKxl2HYk7sOKOdwX1ae3
-	ZM+pa1/8a5rf68yfQgelL629fLUyb5/uW5WaDCdp11Y9uZiklvdBcyMZL747lWjgwd38NcRO
-	Nkt5nuPuwAg2xaCoJpYqz7rUX3utBXQsfidnihyS69Y7Gb3aYZ276LF9+z4csPJgKj244MSr
-	dWJtq6+8D1w0ZVmlf+2TOa7Jy3h7LuRM3rNPwfmeZpsSS3FGoqEWc1FxIgCJJJvbFwQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrALMWRmVeSWpSXmKPExsWy7bCSnC5TjFCqwb1WG4s569ewWaze5GvR
-	vXkmo0Xv+1dMFk37ZrJbXN41h83i3pr/rBZH1p9lsdjX8YDJ4vDXN0wW79Z/YbOY3djHaPFu
-	whdWB16Pw2/eM3vsnHWX3aNl3y12jwWbSj02repk89j0aRK7x4kZv1k8+rasYvQ4s+AIu8fn
-	TXIBXFFcNimpOZllqUX6dglcGccWHGAvaHaomP1+F1sD4xnTLkZODgkBE4nzh84xdjFycQgJ
-	bGeUmPx6OStEQkbizfmnLF2MHEC2sMThw8UQNV8ZJfY+vM0EUsMmoC3xfsEkVpCEiMAWRokn
-	B5exgySYBeYzSjyYEgBiCwtYSPS9ncsGYrMIqEpMXzwZrIZXwEZi2Y5t7BDL5CVWbzjAPIGR
-	ZwEjwypG0dSC4tz03OQCQ73ixNzi0rx0veT83E2M4EDVCtrBuGz9X71DjEwcjIcYJTiYlUR4
-	fz3jSxXiTUmsrEotyo8vKs1JLT7EKM3BoiTOq5zTmSIkkJ5YkpqdmlqQWgSTZeLglGpgmv/s
-	8V/2lf/D8tuV/E5HMu/6wmBpsNXz3XLjJIP9f7d6BmixMoTOy0hS1z9f/zZU2K1XzfyU2TnR
-	e4dZz5pYtZ+TK7eIci8peWSTvjh/k+aaHWs5Fv5YY7FE4YvlhdjernJGjT83rvLc717kuU1y
-	8l1PiZSfa9vc/t02il/pP/3AcWeX5gdXj3tfvJF0/rP/l45iz+4XzguNrZq7l53stf/XMJf/
-	3d6nUlfkL/5+11KjpW2t82Hf+rn/mgu+yJ9Q2e+4z+C98Bf7HYev9bSWFVrt50vY/WR6xMJc
-	uRderTaqyRlXbx5clzat5q+yhPzracUXWp+Z1+01uLn1ddPW8HdtnP+PZu1t7v+xc0GmnBJL
-	cUaioRZzUXEiAOex+A3DAgAA
-X-CMS-MailID: 20230926042019epcas1p11c28533f7b7db99db9f9d8a03ddd332c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230926042019epcas1p11c28533f7b7db99db9f9d8a03ddd332c
-References: <CGME20230926042019epcas1p11c28533f7b7db99db9f9d8a03ddd332c@epcas1p1.samsung.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D2C7EB
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Sep 2023 04:43:01 +0000 (UTC)
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 617D8B3
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 25 Sep 2023 21:42:59 -0700 (PDT)
+Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-418157e979eso164621cf.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 25 Sep 2023 21:42:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1695703378; x=1696308178; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hoC6U6DormUl1mocoqw5nM9OGVZ4Fofl8JzZojtmuKQ=;
+        b=dhDba4o+OfXyL3N4K8Vh4Pr+2YNfFoq1qxter94iNESepKZxL4Y+0TAPAtU4sh5qOI
+         Wb8Ig3mQ1av9kyZv5fIyPZJs0uew7ubIsjEF4TY31vZXaTE3Z4Hn5DxCUOqoacXEaD39
+         ztBD+spcIkQ186p7nIVld6C5eBVfnSosCONPH563r0p9RU2+W/F9I6LsyTCTpd6z/iw9
+         95YeXWj2fXdIp9u7cimNznSCg8GJ5Ash8H2Uf+CR70HqTRjELISpbr/q1YzEOC1mVhfD
+         5qvTKxl4sIjQCle8L+OGTpwrdSf6zHlBWpQZ+47sc1AmXwUNQhyO7GJMmbFBSuZhYn4Q
+         Xmug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695703378; x=1696308178;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hoC6U6DormUl1mocoqw5nM9OGVZ4Fofl8JzZojtmuKQ=;
+        b=ojWAugXeU7m50W+JII03OeaYYFiRmEcTpYxaJ4m/tYLkyMAWXHnhhhVIbftX4OVrqt
+         13nzRJtBJcIwYg9mmP0u1ZY4I8HaV6XkRsTfZW3BicO+AcEgPuoXc6qtvMm4jDo7RqiL
+         qId3JKLcIz5d8u5twHbI/R2S2hms3KzT+YlwM0HaT7vvIVWlbw4eicNuTdZVTNeuDtVa
+         kVV5sZfKJtNwf12cZ44Nb7j2W+v5q7eqSwW/j58omArxPfrHcjxjRTe8bFBDzxrcWt+O
+         d1cPsxCMa6BSA9CgONGXuIP96OOT9ao/0X2tT7xSmVvBp6QpiICd0bPcbHiPe1GPYFKA
+         UrTA==
+X-Gm-Message-State: AOJu0YxUY5pFYOnsnocL9WxR6VyirZVG6fB22QHGadsx1NAcg+7VRpri
+	vrBv4ppmsDYcmGfUO6IZXX6NsqSnUBuR6QooHd6nSQ==
+X-Google-Smtp-Source: AGHT+IHg9BZE9kehIkRwunfBeTpf0rW+DMKNfVOg2JTfPkGQzEpOViVbp2YQwA4/jXtxdK9JJGB6bA5dfxOG9Z9XsrE=
+X-Received: by 2002:a05:622a:5cf:b0:403:e1d1:8b63 with SMTP id
+ d15-20020a05622a05cf00b00403e1d18b63mr205845qtb.24.1695703378283; Mon, 25 Sep
+ 2023 21:42:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <CGME20230926042019epcas1p11c28533f7b7db99db9f9d8a03ddd332c@epcas1p1.samsung.com>
+ <20230926042250.6028-1-jaewon31.kim@samsung.com>
+In-Reply-To: <20230926042250.6028-1-jaewon31.kim@samsung.com>
+From: Yu Zhao <yuzhao@google.com>
+Date: Mon, 25 Sep 2023 22:42:21 -0600
+Message-ID: <CAOUHufZwLET1E9dQq15LX27v+20HwWstL4XFi+qzVuz1voLW=w@mail.gmail.com>
+Subject: Re: [PATCH v4] vmscan: add trace events for lru_gen
+To: Jaewon Kim <jaewon31.kim@samsung.com>
+Cc: rostedt@goodmis.org, tjmercier@google.com, kaleshsingh@google.com, 
+	akpm@linux-foundation.org, vbabka@suse.cz, hannes@cmpxchg.org, sj@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, jaewon31.kim@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-As the legacy lru provides, the lru_gen needs some trace events for
-debugging.
+On Mon, Sep 25, 2023 at 10:20=E2=80=AFPM Jaewon Kim <jaewon31.kim@samsung.c=
+om> wrote:
+>
+> As the legacy lru provides, the lru_gen needs some trace events for
+> debugging.
+>
+> This commit introduces 2 trace events.
+>   trace_mm_vmscan_lru_gen_scan
+>   trace_mm_vmscan_lru_gen_evict
+>
+> Each event is similar to the following legacy events.
+>   trace_mm_vmscan_lru_isolate,
+>   trace_mm_vmscan_lru_shrink_[in]active
 
-This commit introduces 2 trace events.
-  trace_mm_vmscan_lru_gen_scan
-  trace_mm_vmscan_lru_gen_evict
+We should just reuse trace_mm_vmscan_lru_isolate and
+trace_mm_vmscan_lru_shrink_inactive instead of adding new tracepoints.
 
-Each event is similar to the following legacy events.
-  trace_mm_vmscan_lru_isolate,
-  trace_mm_vmscan_lru_shrink_[in]active
+To reuse trace_mm_vmscan_lru_isolate, we'd just need to append two new
+names to LRU_NAMES.
 
-Here's an example
-  mm_vmscan_lru_gen_scan: classzone=2 order=0 nr_requested=4096 nr_scanned=64 nr_skipped=0 nr_taken=64 lru=anon
-  mm_vmscan_lru_gen_evict: nid=0 nr_reclaimed=64 nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activate_anon=0 nr_activate_file=0 nr_ref_keep=0 nr_unmap_fail=0 priority=2 flags=RECLAIM_WB_ANON|RECLAIM_WB_ASYNC
-  mm_vmscan_lru_gen_scan: classzone=1 order=0 nr_requested=4096 nr_scanned=64 nr_skipped=0 nr_taken=64 lru=file
-  mm_vmscan_lru_gen_evict: nid=0 nr_reclaimed=64 nr_dirty=0 nr_writeback=0 nr_congested=0 nr_immediate=0 nr_activate_anon=0 nr_activate_file=0 nr_ref_keep=0 nr_unmap_fail=0 priority=12 flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+The naming of trace_mm_vmscan_lru_shrink_inactive might seem confusing
+but it's how MGLRU maintains the compatibility, e.g., the existing
+active/inactive counters in /proc/vmstat.
 
-Signed-off-by: Jaewon Kim <jaewon31.kim@samsung.com>
----
-v4: wrap with #ifdef CONFIG_LRU_GEN
-v3: change printk format
-v2: use condition and make it aligned
-v1: introduce trace events
----
- include/trace/events/mmflags.h |  9 ++++
- include/trace/events/vmscan.h  | 96 ++++++++++++++++++++++++++++++++++
- mm/vmscan.c                    | 20 +++++--
- 3 files changed, 120 insertions(+), 5 deletions(-)
+> Here's an example
+>   mm_vmscan_lru_gen_scan: classzone=3D2 order=3D0 nr_requested=3D4096 nr_=
+scanned=3D64 nr_skipped=3D0 nr_taken=3D64 lru=3Danon
+>   mm_vmscan_lru_gen_evict: nid=3D0 nr_reclaimed=3D64 nr_dirty=3D0 nr_writ=
+eback=3D0 nr_congested=3D0 nr_immediate=3D0 nr_activate_anon=3D0 nr_activat=
+e_file=3D0 nr_ref_keep=3D0 nr_unmap_fail=3D0 priority=3D2 flags=3DRECLAIM_W=
+B_ANON|RECLAIM_WB_ASYNC
+>   mm_vmscan_lru_gen_scan: classzone=3D1 order=3D0 nr_requested=3D4096 nr_=
+scanned=3D64 nr_skipped=3D0 nr_taken=3D64 lru=3Dfile
+>   mm_vmscan_lru_gen_evict: nid=3D0 nr_reclaimed=3D64 nr_dirty=3D0 nr_writ=
+eback=3D0 nr_congested=3D0 nr_immediate=3D0 nr_activate_anon=3D0 nr_activat=
+e_file=3D0 nr_ref_keep=3D0 nr_unmap_fail=3D0 priority=3D12 flags=3DRECLAIM_=
+WB_FILE|RECLAIM_WB_ASYNC
+>
+> Signed-off-by: Jaewon Kim <jaewon31.kim@samsung.com>
+> ---
+> v4: wrap with #ifdef CONFIG_LRU_GEN
+> v3: change printk format
+> v2: use condition and make it aligned
+> v1: introduce trace events
+> ---
+>  include/trace/events/mmflags.h |  9 ++++
+>  include/trace/events/vmscan.h  | 96 ++++++++++++++++++++++++++++++++++
+>  mm/vmscan.c                    | 20 +++++--
+>  3 files changed, 120 insertions(+), 5 deletions(-)
+>
+> diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflag=
+s.h
+> index 1478b9dd05fa..6dfe85bd4e81 100644
+> --- a/include/trace/events/mmflags.h
+> +++ b/include/trace/events/mmflags.h
+> @@ -274,6 +274,12 @@ IF_HAVE_VM_SOFTDIRTY(VM_SOFTDIRTY, "softdirty"     )=
+               \
+>                 EM (LRU_ACTIVE_FILE, "active_file") \
+>                 EMe(LRU_UNEVICTABLE, "unevictable")
+>
+> +#ifdef CONFIG_LRU_GEN
+> +#define LRU_GEN_NAMES          \
+> +               EM (LRU_GEN_ANON, "anon") \
+> +               EMe(LRU_GEN_FILE, "file")
+> +#endif
+> +
+>  /*
+>   * First define the enums in the above macros to be exported to userspac=
+e
+>   * via TRACE_DEFINE_ENUM().
+> @@ -288,6 +294,9 @@ COMPACTION_PRIORITY
+>  /* COMPACTION_FEEDBACK are defines not enums. Not needed here. */
+>  ZONE_TYPE
+>  LRU_NAMES
+> +#ifdef CONFIG_LRU_GEN
+> +LRU_GEN_NAMES
+> +#endif
+>
+>  /*
+>   * Now redefine the EM() and EMe() macros to map the enums to the string=
+s
+> diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.=
+h
+> index d2123dd960d5..2080ef742f89 100644
+> --- a/include/trace/events/vmscan.h
+> +++ b/include/trace/events/vmscan.h
+> @@ -327,6 +327,102 @@ TRACE_EVENT(mm_vmscan_lru_isolate,
+>                 __print_symbolic(__entry->lru, LRU_NAMES))
+>  );
+>
+> +#ifdef CONFIG_LRU_GEN
+> +TRACE_EVENT_CONDITION(mm_vmscan_lru_gen_scan,
+> +       TP_PROTO(int highest_zoneidx,
+> +               int order,
+> +               unsigned long nr_requested,
+> +               unsigned long nr_scanned,
+> +               unsigned long nr_skipped,
+> +               unsigned long nr_taken,
+> +               int lru),
+> +
+> +       TP_ARGS(highest_zoneidx, order, nr_requested, nr_scanned, nr_skip=
+ped, nr_taken, lru),
+> +
+> +       TP_CONDITION(nr_scanned),
+> +
+> +       TP_STRUCT__entry(
+> +               __field(int, highest_zoneidx)
+> +               __field(int, order)
+> +               __field(unsigned long, nr_requested)
+> +               __field(unsigned long, nr_scanned)
+> +               __field(unsigned long, nr_skipped)
+> +               __field(unsigned long, nr_taken)
+> +               __field(int, lru)
+> +       ),
+> +
+> +       TP_fast_assign(
+> +               __entry->highest_zoneidx =3D highest_zoneidx;
+> +               __entry->order =3D order;
+> +               __entry->nr_requested =3D nr_requested;
+> +               __entry->nr_scanned =3D nr_scanned;
+> +               __entry->nr_skipped =3D nr_skipped;
+> +               __entry->nr_taken =3D nr_taken;
+> +               __entry->lru =3D lru;
+> +       ),
+> +
+> +       /*
+> +        * classzone is previous name of the highest_zoneidx.
+> +        * Reason not to change it is the ABI requirement of the tracepoi=
+nt.
+> +        */
+> +       TP_printk("classzone=3D%d order=3D%d nr_requested=3D%lu nr_scanne=
+d=3D%lu nr_skipped=3D%lu nr_taken=3D%lu lru=3D%s",
+> +               __entry->highest_zoneidx,
+> +               __entry->order,
+> +               __entry->nr_requested,
+> +               __entry->nr_scanned,
+> +               __entry->nr_skipped,
+> +               __entry->nr_taken,
+> +               __print_symbolic(__entry->lru, LRU_GEN_NAMES))
+> +);
+> +
+> +TRACE_EVENT(mm_vmscan_lru_gen_evict,
+> +
+> +       TP_PROTO(int nid, unsigned long nr_reclaimed,
+> +               struct reclaim_stat *stat, int priority, int file),
+> +
+> +       TP_ARGS(nid, nr_reclaimed, stat, priority, file),
+> +
+> +       TP_STRUCT__entry(
+> +               __field(unsigned long, nr_reclaimed)
+> +               __field(unsigned long, nr_dirty)
+> +               __field(unsigned long, nr_writeback)
+> +               __field(unsigned long, nr_congested)
+> +               __field(unsigned long, nr_immediate)
+> +               __field(unsigned int, nr_activate0)
+> +               __field(unsigned int, nr_activate1)
+> +               __field(unsigned long, nr_ref_keep)
+> +               __field(unsigned long, nr_unmap_fail)
+> +               __field(int, nid)
+> +               __field(int, priority)
+> +               __field(int, reclaim_flags)
+> +       ),
+> +
+> +       TP_fast_assign(
+> +               __entry->nid =3D nid;
+> +               __entry->nr_reclaimed =3D nr_reclaimed;
+> +               __entry->nr_dirty =3D stat->nr_dirty;
+> +               __entry->nr_writeback =3D stat->nr_writeback;
+> +               __entry->nr_congested =3D stat->nr_congested;
+> +               __entry->nr_immediate =3D stat->nr_immediate;
+> +               __entry->nr_activate0 =3D stat->nr_activate[0];
+> +               __entry->nr_activate1 =3D stat->nr_activate[1];
+> +               __entry->nr_ref_keep =3D stat->nr_ref_keep;
+> +               __entry->nr_unmap_fail =3D stat->nr_unmap_fail;
+> +               __entry->priority =3D priority;
+> +               __entry->reclaim_flags =3D trace_reclaim_flags(file);
+> +       ),
+> +
+> +       TP_printk("nid=3D%d nr_reclaimed=3D%lu nr_dirty=3D%lu nr_writebac=
+k=3D%lu nr_congested=3D%lu nr_immediate=3D%lu nr_activate_anon=3D%u nr_acti=
+vate_file=3D%u nr_ref_keep=3D%lu nr_unmap_fail=3D%lu priority=3D%d flags=3D=
+%s",
+> +               __entry->nid, __entry->nr_reclaimed,
+> +               __entry->nr_dirty, __entry->nr_writeback,
+> +               __entry->nr_congested, __entry->nr_immediate,
+> +               __entry->nr_activate0, __entry->nr_activate1,
+> +               __entry->nr_ref_keep, __entry->nr_unmap_fail,
+> +               __entry->priority,
+> +               show_reclaim_flags(__entry->reclaim_flags))
+> +);
+> +#endif
+> +
+>  TRACE_EVENT(mm_vmscan_write_folio,
+>
+>         TP_PROTO(struct folio *folio),
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index 6f13394b112e..0c8b48bcb461 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -5005,6 +5005,7 @@ static int scan_folios(struct lruvec *lruvec, struc=
+t scan_control *sc,
+>         int sorted =3D 0;
+>         int scanned =3D 0;
+>         int isolated =3D 0;
+> +       int skipped =3D 0;
+>         int remaining =3D MAX_LRU_BATCH;
+>         struct lru_gen_folio *lrugen =3D &lruvec->lrugen;
+>         struct mem_cgroup *memcg =3D lruvec_memcg(lruvec);
+> @@ -5018,7 +5019,7 @@ static int scan_folios(struct lruvec *lruvec, struc=
+t scan_control *sc,
+>
+>         for (i =3D MAX_NR_ZONES; i > 0; i--) {
+>                 LIST_HEAD(moved);
+> -               int skipped =3D 0;
+> +               int skipped_zone =3D 0;
+>                 int zone =3D (sc->reclaim_idx + i) % MAX_NR_ZONES;
+>                 struct list_head *head =3D &lrugen->folios[gen][type][zon=
+e];
+>
+> @@ -5040,16 +5041,17 @@ static int scan_folios(struct lruvec *lruvec, str=
+uct scan_control *sc,
+>                                 isolated +=3D delta;
+>                         } else {
+>                                 list_move(&folio->lru, &moved);
+> -                               skipped +=3D delta;
+> +                               skipped_zone +=3D delta;
+>                         }
+>
+> -                       if (!--remaining || max(isolated, skipped) >=3D M=
+IN_LRU_BATCH)
+> +                       if (!--remaining || max(isolated, skipped_zone) >=
+=3D MIN_LRU_BATCH)
+>                                 break;
+>                 }
+>
+> -               if (skipped) {
+> +               if (skipped_zone) {
+>                         list_splice(&moved, head);
+> -                       __count_zid_vm_events(PGSCAN_SKIP, zone, skipped)=
+;
+> +                       __count_zid_vm_events(PGSCAN_SKIP, zone, skipped_=
+zone);
+> +                       skipped +=3D skipped_zone;
+>                 }
+>
+>                 if (!remaining || isolated >=3D MIN_LRU_BATCH)
+> @@ -5065,6 +5067,10 @@ static int scan_folios(struct lruvec *lruvec, stru=
+ct scan_control *sc,
+>         __count_memcg_events(memcg, PGREFILL, sorted);
+>         __count_vm_events(PGSCAN_ANON + type, isolated);
+>
+> +#ifdef CONFIG_LRU_GEN
+> +       trace_mm_vmscan_lru_gen_scan(sc->reclaim_idx, sc->order, MAX_LRU_=
+BATCH,
+> +                       scanned, skipped, isolated, type);
+> +#endif
 
-diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
-index 1478b9dd05fa..6dfe85bd4e81 100644
---- a/include/trace/events/mmflags.h
-+++ b/include/trace/events/mmflags.h
-@@ -274,6 +274,12 @@ IF_HAVE_VM_SOFTDIRTY(VM_SOFTDIRTY,	"softdirty"	)		\
- 		EM (LRU_ACTIVE_FILE, "active_file") \
- 		EMe(LRU_UNEVICTABLE, "unevictable")
- 
-+#ifdef CONFIG_LRU_GEN
-+#define LRU_GEN_NAMES		\
-+		EM (LRU_GEN_ANON, "anon") \
-+		EMe(LRU_GEN_FILE, "file")
-+#endif
-+
- /*
-  * First define the enums in the above macros to be exported to userspace
-  * via TRACE_DEFINE_ENUM().
-@@ -288,6 +294,9 @@ COMPACTION_PRIORITY
- /* COMPACTION_FEEDBACK are defines not enums. Not needed here. */
- ZONE_TYPE
- LRU_NAMES
-+#ifdef CONFIG_LRU_GEN
-+LRU_GEN_NAMES
-+#endif
- 
- /*
-  * Now redefine the EM() and EMe() macros to map the enums to the strings
-diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
-index d2123dd960d5..2080ef742f89 100644
---- a/include/trace/events/vmscan.h
-+++ b/include/trace/events/vmscan.h
-@@ -327,6 +327,102 @@ TRACE_EVENT(mm_vmscan_lru_isolate,
- 		__print_symbolic(__entry->lru, LRU_NAMES))
- );
- 
-+#ifdef CONFIG_LRU_GEN
-+TRACE_EVENT_CONDITION(mm_vmscan_lru_gen_scan,
-+	TP_PROTO(int highest_zoneidx,
-+		int order,
-+		unsigned long nr_requested,
-+		unsigned long nr_scanned,
-+		unsigned long nr_skipped,
-+		unsigned long nr_taken,
-+		int lru),
-+
-+	TP_ARGS(highest_zoneidx, order, nr_requested, nr_scanned, nr_skipped, nr_taken, lru),
-+
-+	TP_CONDITION(nr_scanned),
-+
-+	TP_STRUCT__entry(
-+		__field(int, highest_zoneidx)
-+		__field(int, order)
-+		__field(unsigned long, nr_requested)
-+		__field(unsigned long, nr_scanned)
-+		__field(unsigned long, nr_skipped)
-+		__field(unsigned long, nr_taken)
-+		__field(int, lru)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->highest_zoneidx = highest_zoneidx;
-+		__entry->order = order;
-+		__entry->nr_requested = nr_requested;
-+		__entry->nr_scanned = nr_scanned;
-+		__entry->nr_skipped = nr_skipped;
-+		__entry->nr_taken = nr_taken;
-+		__entry->lru = lru;
-+	),
-+
-+	/*
-+	 * classzone is previous name of the highest_zoneidx.
-+	 * Reason not to change it is the ABI requirement of the tracepoint.
-+	 */
-+	TP_printk("classzone=%d order=%d nr_requested=%lu nr_scanned=%lu nr_skipped=%lu nr_taken=%lu lru=%s",
-+		__entry->highest_zoneidx,
-+		__entry->order,
-+		__entry->nr_requested,
-+		__entry->nr_scanned,
-+		__entry->nr_skipped,
-+		__entry->nr_taken,
-+		__print_symbolic(__entry->lru, LRU_GEN_NAMES))
-+);
-+
-+TRACE_EVENT(mm_vmscan_lru_gen_evict,
-+
-+	TP_PROTO(int nid, unsigned long nr_reclaimed,
-+		struct reclaim_stat *stat, int priority, int file),
-+
-+	TP_ARGS(nid, nr_reclaimed, stat, priority, file),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, nr_reclaimed)
-+		__field(unsigned long, nr_dirty)
-+		__field(unsigned long, nr_writeback)
-+		__field(unsigned long, nr_congested)
-+		__field(unsigned long, nr_immediate)
-+		__field(unsigned int, nr_activate0)
-+		__field(unsigned int, nr_activate1)
-+		__field(unsigned long, nr_ref_keep)
-+		__field(unsigned long, nr_unmap_fail)
-+		__field(int, nid)
-+		__field(int, priority)
-+		__field(int, reclaim_flags)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->nid = nid;
-+		__entry->nr_reclaimed = nr_reclaimed;
-+		__entry->nr_dirty = stat->nr_dirty;
-+		__entry->nr_writeback = stat->nr_writeback;
-+		__entry->nr_congested = stat->nr_congested;
-+		__entry->nr_immediate = stat->nr_immediate;
-+		__entry->nr_activate0 = stat->nr_activate[0];
-+		__entry->nr_activate1 = stat->nr_activate[1];
-+		__entry->nr_ref_keep = stat->nr_ref_keep;
-+		__entry->nr_unmap_fail = stat->nr_unmap_fail;
-+		__entry->priority = priority;
-+		__entry->reclaim_flags = trace_reclaim_flags(file);
-+	),
-+
-+	TP_printk("nid=%d nr_reclaimed=%lu nr_dirty=%lu nr_writeback=%lu nr_congested=%lu nr_immediate=%lu nr_activate_anon=%u nr_activate_file=%u nr_ref_keep=%lu nr_unmap_fail=%lu priority=%d flags=%s",
-+		__entry->nid, __entry->nr_reclaimed,
-+		__entry->nr_dirty, __entry->nr_writeback,
-+		__entry->nr_congested, __entry->nr_immediate,
-+		__entry->nr_activate0, __entry->nr_activate1,
-+		__entry->nr_ref_keep, __entry->nr_unmap_fail,
-+		__entry->priority,
-+		show_reclaim_flags(__entry->reclaim_flags))
-+);
-+#endif
-+
- TRACE_EVENT(mm_vmscan_write_folio,
- 
- 	TP_PROTO(struct folio *folio),
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 6f13394b112e..0c8b48bcb461 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -5005,6 +5005,7 @@ static int scan_folios(struct lruvec *lruvec, struct scan_control *sc,
- 	int sorted = 0;
- 	int scanned = 0;
- 	int isolated = 0;
-+	int skipped = 0;
- 	int remaining = MAX_LRU_BATCH;
- 	struct lru_gen_folio *lrugen = &lruvec->lrugen;
- 	struct mem_cgroup *memcg = lruvec_memcg(lruvec);
-@@ -5018,7 +5019,7 @@ static int scan_folios(struct lruvec *lruvec, struct scan_control *sc,
- 
- 	for (i = MAX_NR_ZONES; i > 0; i--) {
- 		LIST_HEAD(moved);
--		int skipped = 0;
-+		int skipped_zone = 0;
- 		int zone = (sc->reclaim_idx + i) % MAX_NR_ZONES;
- 		struct list_head *head = &lrugen->folios[gen][type][zone];
- 
-@@ -5040,16 +5041,17 @@ static int scan_folios(struct lruvec *lruvec, struct scan_control *sc,
- 				isolated += delta;
- 			} else {
- 				list_move(&folio->lru, &moved);
--				skipped += delta;
-+				skipped_zone += delta;
- 			}
- 
--			if (!--remaining || max(isolated, skipped) >= MIN_LRU_BATCH)
-+			if (!--remaining || max(isolated, skipped_zone) >= MIN_LRU_BATCH)
- 				break;
- 		}
- 
--		if (skipped) {
-+		if (skipped_zone) {
- 			list_splice(&moved, head);
--			__count_zid_vm_events(PGSCAN_SKIP, zone, skipped);
-+			__count_zid_vm_events(PGSCAN_SKIP, zone, skipped_zone);
-+			skipped += skipped_zone;
- 		}
- 
- 		if (!remaining || isolated >= MIN_LRU_BATCH)
-@@ -5065,6 +5067,10 @@ static int scan_folios(struct lruvec *lruvec, struct scan_control *sc,
- 	__count_memcg_events(memcg, PGREFILL, sorted);
- 	__count_vm_events(PGSCAN_ANON + type, isolated);
- 
-+#ifdef CONFIG_LRU_GEN
-+	trace_mm_vmscan_lru_gen_scan(sc->reclaim_idx, sc->order, MAX_LRU_BATCH,
-+			scanned, skipped, isolated, type);
-+#endif
- 	/*
- 	 * There might not be eligible folios due to reclaim_idx. Check the
- 	 * remaining to prevent livelock if it's not making progress.
-@@ -5194,6 +5200,10 @@ static int evict_folios(struct lruvec *lruvec, struct scan_control *sc, int swap
- retry:
- 	reclaimed = shrink_folio_list(&list, pgdat, sc, &stat, false);
- 	sc->nr_reclaimed += reclaimed;
-+#ifdef CONFIG_LRU_GEN
-+	trace_mm_vmscan_lru_gen_evict(pgdat->node_id, reclaimed, &stat,
-+				      sc->priority, type);
-+#endif
- 
- 	list_for_each_entry_safe_reverse(folio, next, &list, lru) {
- 		if (!folio_evictable(folio)) {
--- 
-2.17.1
+These functions are already within CONFIG_LRU_GEN.
 
+>         /*
+>          * There might not be eligible folios due to reclaim_idx. Check t=
+he
+>          * remaining to prevent livelock if it's not making progress.
+> @@ -5194,6 +5200,10 @@ static int evict_folios(struct lruvec *lruvec, str=
+uct scan_control *sc, int swap
+>  retry:
+>         reclaimed =3D shrink_folio_list(&list, pgdat, sc, &stat, false);
+>         sc->nr_reclaimed +=3D reclaimed;
+> +#ifdef CONFIG_LRU_GEN
+> +       trace_mm_vmscan_lru_gen_evict(pgdat->node_id, reclaimed, &stat,
+> +                                     sc->priority, type);
+> +#endif
+
+Ditto.
