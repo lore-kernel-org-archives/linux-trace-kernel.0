@@ -1,102 +1,289 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3640D4F124
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Sep 2023 14:14:31 +0000 (UTC)
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2689F10C9
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Sep 2023 07:14:00 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id ffacd0b85a97d-32337a39009so1257466f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Sep 2023 07:14:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1695996839; x=1696601639; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0oAyXAB8Kt0enGgPoo66x41kbTf1AFVvqj5ECchyAUM=;
-        b=aSMTqIrFhTn3HiOITEseOFuCDAONUERX6t6TWwOkq756TUc+lGPv+3nICCbvU2nw+f
-         OFPGdCOLa2uzlCH7t4Lqf3leqQrUDQfuJsJFBJs5sHGoFULKiJZq3VXxESagRtaShtIO
-         bJapw0oJ/a/z1bk3HWQG7YsbJgQjZ/gM/t3iSkXcCCam4TS2OskTN0Oz9mpGvSGnDo0P
-         nXyEq7gqsRDBFNRpSWw9oWkbxKnzOigzbETaMNWKnhG/GgWcpBT9SNZnmO/XvbWhv1N4
-         xYchjpm8F3QzbqlXYMYnbHPTLNbbCWqpixoT8AYhRUX4HLcBi7CmCnWw+OXybjh1e3pm
-         lKsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695996839; x=1696601639;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0oAyXAB8Kt0enGgPoo66x41kbTf1AFVvqj5ECchyAUM=;
-        b=IlDQT9Vcc4Vi7G7uqB+nS+Gz+TX6v7BJ9nGyRACRH9EuXFhXU3adSMwhfeSTiSxWb5
-         INdUGKE9jTM03Vm1d2PVYPt+6Wb4zgQYMtWX2i+5MCDUXDVFYpJpPY1p2LwsYLOGgv8B
-         xiXEUlTchl009zaV0efYi91sifIqlVsya3jRbZXtFb5bkfI8rAkm+hEUoYTZx/JxLGNO
-         WDNIX54Ao7DUqemYbU5tABnqON+JiOzXjotb/z2eIBCRwren3r7M2vP+RdDMeLhyKKea
-         8FeLxssbcF/jxHPhCVml293IHaDr0/LrpWuWGPEgtKddQFVI7MKgYtkAn12YHgHA795y
-         yTig==
-X-Gm-Message-State: AOJu0Yy/nH3bWiDRZkJG5eSLAKergY0bE+M6j5MCRc5nvPHt8PjmZhAf
-	N1kcHnnDssVyKQzelfK/Nbe4YtgQ6f/aMtLFwY9eTQ==
-X-Google-Smtp-Source: AGHT+IGFOOh5+LAteol7g3S4FPXeKfzumkk2yywvg0O2Q6EhLZtL2XAFS+ExVx+JnhpGQoOvXLTm3A==
-X-Received: by 2002:a5d:5151:0:b0:31a:e54e:c790 with SMTP id u17-20020a5d5151000000b0031ae54ec790mr3671242wrt.6.1695996838175;
-        Fri, 29 Sep 2023 07:13:58 -0700 (PDT)
-Received: from carbon-x1.. ([2a01:e0a:999:a3a0:4e67:5f1a:c933:c857])
-        by smtp.gmail.com with ESMTPSA id g12-20020a5d698c000000b0031c8a43712asm21606043wru.69.2023.09.29.07.13.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Sep 2023 07:13:57 -0700 (PDT)
-From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94DA5513CC
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Sep 2023 15:02:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B4ABC433C8;
+	Fri, 29 Sep 2023 15:02:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1695999772;
+	bh=y43geovcEZogQgO3GND3tejuh+vJKIDuqHW03nP9LR8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KYYa0vJdYom7lvX5FI0PvtM4Fse8v1qA0JKlubv5MZvelCbUQQ5C5qR+qgPUd1NY5
+	 vjYAQ66mRBHlNcImuOrpSXc/OTCoxyFcueSVBFF17G2mxQUcJQ9mPXPFMpfCiOfhSv
+	 wnRSoQPUNXycc67Ti+3ZyQQwn922JqSVWxXI3D1LWc0YHbd/IQ0czBAKHNltnpYeyi
+	 p2/cH4+A8ktm5yNmaKZPujT543Ut3o7Dj7pbA2INE++VDInigXLYqa+zexd8j+NX0O
+	 SN4yWfIYwHiVTUCDORTjc0az9GMRXJUnbDwPBuC7TdAOYDsTA3vxja4FwSa5p0r3+U
+	 TPfSEIS9WxLaA==
+From: Daniel Bristot de Oliveira <bristot@kernel.org>
+To: Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Atish Patra <atishp@rivosinc.com>
-Subject: [PATCH] tracing: relax trace_event_eval_update() execution with schedule()
-Date: Fri, 29 Sep 2023 16:13:48 +0200
-Message-Id: <20230929141348.248761-1-cleger@rivosinc.com>
-X-Mailer: git-send-email 2.40.1
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V3] tracing/timerlat: Hotplug support for the user-space interface
+Date: Fri, 29 Sep 2023 17:02:46 +0200
+Message-Id: <a1bbd57692c1a59458c4ee99999b7f83a29bc3c5.1695999408.git.bristot@kernel.org>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
 
-When kernel is compiled without preemption, the eval_map_work_func()
-(which calls trace_event_eval_update()) will not be preempted up to its
-complete execution. This can actually cause a problem since if another
-CPU call stop_machine(), the call will have to wait for the
-eval_map_work_func() function to finish executing in the workqueue
-before being able to be scheduled. This problem was observe on a SMP
-system at boot time, when the CPU calling the initcalls executed
-clocksource_done_booting() which in the end calls stop_machine(). We
-observed a 1 second delay because one CPU was executing
-eval_map_work_func() and was not preempted by the stop_machine() task.
+The osnoise/per_cpu/CPU$/timerlat_fd is create for each possible
+CPU, but it might create confusion if the CPU is not online.
 
-Adding a call to schedule() in trace_event_eval_update() allows to let
-other tasks to be executed and thus continue working asynchronously like
-before without blocking any pending task at boot time.
+Create the file only for online CPUs, also follow hotplug by
+creating and deleting as CPUs come and go.
 
-Signed-off-by: Clément Léger <cleger@rivosinc.com>
+Fixes: e88ed227f639 ("tracing/timerlat: Add user-space interface")
+Signed-off-by: Daniel Bristot de Oliveira <bristot@kernel.org>
 ---
- kernel/trace/trace_events.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 91951d038ba4..dbdf57a081c0 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -2770,6 +2770,7 @@ void trace_event_eval_update(struct trace_eval_map **map, int len)
- 				update_event_fields(call, map[i]);
- 			}
- 		}
-+		schedule();
+Changes from V2:
+  - Better split the code into the generic (per_cpu/cpu$)
+    and timerlat (/timerlat_fd) specific function (Daniel)
+  - Fixed a cpus_read_lock/unlock() usage (kbuild test)
+  Link: https://lore.kernel.org/lkml/6b9a5f306e488bc77bf8521faeade420a0adf3e4.1695224204.git.bristot@kernel.org/
+
+Changes from V1:
+  - Fix compilation issue when !HOTPLUG
+  - Fix init interface | hotplug race
+  Link: https://lore.kernel.org/lkml/b619d9fd08a3bb47018cf40afa95783844a3c1fd.1694789910.git.bristot@kernel.org/
+
+ kernel/trace/trace_osnoise.c | 149 ++++++++++++++++++++++++++++-------
+ 1 file changed, 121 insertions(+), 28 deletions(-)
+
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index bd0d01d00fb9..f375fb1e721d 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -229,6 +229,19 @@ static inline struct osnoise_variables *this_cpu_osn_var(void)
+ }
+ 
+ #ifdef CONFIG_TIMERLAT_TRACER
++
++/*
++ * osnoise/per_cpu dir
++ */
++static struct dentry		*osnoise_per_cpu_fd;
++
++struct osnoise_per_cpu_dir {
++	struct dentry *root;
++	struct dentry *timerlat_fd;
++};
++
++static DEFINE_PER_CPU(struct osnoise_per_cpu_dir, osnoise_per_cpu_dir);
++
+ /*
+  * Runtime information for the timer mode.
+  */
+@@ -2000,6 +2013,9 @@ static int start_kthread(unsigned int cpu)
+ 	char comm[24];
+ 
+ 	if (timerlat_enabled()) {
++		if (!test_bit(OSN_WORKLOAD, &osnoise_options))
++			return 0;
++
+ 		snprintf(comm, 24, "timerlat/%d", cpu);
+ 		main = timerlat_main;
+ 	} else {
+@@ -2065,19 +2081,99 @@ static int start_per_cpu_kthreads(void)
+ 	return retval;
+ }
+ 
++#ifdef CONFIG_TIMERLAT_TRACER
++static struct dentry *osnoise_get_per_cpu_dir(long cpu)
++{
++	struct dentry *cpu_dir_entry = per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->root;
++	char cpu_str[30]; /* see trace.c: tracing_init_tracefs_percpu() */
++
++	if (cpu_dir_entry)
++		return cpu_dir_entry;
++
++	if (!osnoise_per_cpu_fd)
++		return NULL;
++
++	snprintf(cpu_str, 30, "cpu%ld", cpu);
++	cpu_dir_entry = tracefs_create_dir(cpu_str, osnoise_per_cpu_fd);
++	if (!cpu_dir_entry)
++		return NULL;
++
++	per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->root = cpu_dir_entry;
++
++	return cpu_dir_entry;
++}
++
++static void osnoise_put_per_cpu_dir(long cpu)
++{
++	struct dentry *cpu_dir_entry = per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->root;
++
++	if (!cpu_dir_entry)
++		return;
++
++	tracefs_remove(cpu_dir_entry);
++
++	per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->root = NULL;
++}
++
++static const struct file_operations timerlat_fd_fops;
++
++static int timerlat_add_per_cpu_interface(long cpu)
++{
++	struct dentry *cpu_dir_entry = osnoise_get_per_cpu_dir(cpu);
++	struct dentry *timerlat_fd;
++
++	lockdep_assert_cpus_held();
++
++	if (!cpu_dir_entry)
++		return -ENOMEM;
++
++	timerlat_fd = trace_create_file("timerlat_fd", TRACE_MODE_READ, cpu_dir_entry, NULL,
++					&timerlat_fd_fops);
++	if (!timerlat_fd)
++		goto out_put;
++
++	per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->timerlat_fd = timerlat_fd;
++
++	/* Record the CPU */
++	d_inode(timerlat_fd)->i_cdev = (void *)(cpu);
++
++	return 0;
++
++out_put:
++	osnoise_put_per_cpu_dir(cpu);
++	return -ENOMEM;
++}
++
++static void timerlat_rm_per_cpu_interface(long cpu)
++{
++	struct dentry *timerlat_fd = per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->timerlat_fd;
++
++	if (timerlat_fd) {
++		tracefs_remove(timerlat_fd);
++		per_cpu_ptr(&osnoise_per_cpu_dir, cpu)->timerlat_fd = NULL;
++	}
++
++	osnoise_put_per_cpu_dir(cpu);
++}
++#elif defined(CONFIG_HOTPLUG_CPU)
++static int timerlat_add_per_cpu_interface(long cpu) { return 0; };
++static void timerlat_rm_per_cpu_interface(long cpu) {};
++#endif
++
+ #ifdef CONFIG_HOTPLUG_CPU
+ static void osnoise_hotplug_workfn(struct work_struct *dummy)
+ {
+ 	unsigned int cpu = smp_processor_id();
+ 
+ 	mutex_lock(&trace_types_lock);
+-
+-	if (!osnoise_has_registered_instances())
+-		goto out_unlock_trace;
+-
+ 	mutex_lock(&interface_lock);
+ 	cpus_read_lock();
+ 
++	timerlat_add_per_cpu_interface(cpu);
++
++	if (!osnoise_has_registered_instances())
++		goto out_unlock;
++
+ 	if (!cpumask_test_cpu(cpu, &osnoise_cpumask))
+ 		goto out_unlock;
+ 
+@@ -2086,7 +2182,6 @@ static void osnoise_hotplug_workfn(struct work_struct *dummy)
+ out_unlock:
+ 	cpus_read_unlock();
+ 	mutex_unlock(&interface_lock);
+-out_unlock_trace:
+ 	mutex_unlock(&trace_types_lock);
+ }
+ 
+@@ -2106,6 +2201,7 @@ static int osnoise_cpu_init(unsigned int cpu)
+  */
+ static int osnoise_cpu_die(unsigned int cpu)
+ {
++	timerlat_rm_per_cpu_interface(cpu);
+ 	stop_kthread(cpu);
+ 	return 0;
+ }
+@@ -2708,10 +2804,7 @@ static int init_timerlat_stack_tracefs(struct dentry *top_dir)
+ 
+ static int osnoise_create_cpu_timerlat_fd(struct dentry *top_dir)
+ {
+-	struct dentry *timerlat_fd;
+-	struct dentry *per_cpu;
+-	struct dentry *cpu_dir;
+-	char cpu_str[30]; /* see trace.c: tracing_init_tracefs_percpu() */
++	int retval;
+ 	long cpu;
+ 
+ 	/*
+@@ -2720,29 +2813,28 @@ static int osnoise_create_cpu_timerlat_fd(struct dentry *top_dir)
+ 	 * Because osnoise/timerlat have a single workload, having
+ 	 * multiple files like these are wast of memory.
+ 	 */
+-	per_cpu = tracefs_create_dir("per_cpu", top_dir);
+-	if (!per_cpu)
++	osnoise_per_cpu_fd = tracefs_create_dir("per_cpu", top_dir);
++	if (!osnoise_per_cpu_fd)
+ 		return -ENOMEM;
+ 
+-	for_each_possible_cpu(cpu) {
+-		snprintf(cpu_str, 30, "cpu%ld", cpu);
+-		cpu_dir = tracefs_create_dir(cpu_str, per_cpu);
+-		if (!cpu_dir)
+-			goto out_clean;
+-
+-		timerlat_fd = trace_create_file("timerlat_fd", TRACE_MODE_READ,
+-						cpu_dir, NULL, &timerlat_fd_fops);
+-		if (!timerlat_fd)
+-			goto out_clean;
+-
+-		/* Record the CPU */
+-		d_inode(timerlat_fd)->i_cdev = (void *)(cpu);
++	cpus_read_lock();
++	for_each_online_cpu(cpu) {
++		retval = timerlat_add_per_cpu_interface(cpu);
++		if (retval)
++			goto out_rm_cpus_locked;
  	}
- 	up_write(&trace_event_sem);
++	cpus_read_unlock();
+ 
+ 	return 0;
+ 
+-out_clean:
+-	tracefs_remove(per_cpu);
++out_rm_cpus_locked:
++	for_each_online_cpu(cpu)
++		timerlat_rm_per_cpu_interface(cpu);
++	cpus_read_lock();
++
++	tracefs_remove(osnoise_per_cpu_fd);
++	/* tracefs_remove() recursively deletes all the other files */
++	osnoise_per_cpu_fd = NULL;
+ 	return -ENOMEM;
+ }
+ 
+@@ -3122,11 +3214,12 @@ __init static int init_osnoise_tracer(void)
+ 		return ret;
+ 	}
+ 
+-	osnoise_init_hotplug_support();
+-
+ 	INIT_LIST_HEAD_RCU(&osnoise_instances);
+ 
++	mutex_lock(&trace_types_lock);
+ 	init_tracefs();
++	osnoise_init_hotplug_support();
++	mutex_unlock(&trace_types_lock);
+ 
+ 	return 0;
  }
 -- 
-2.40.1
+2.38.1
 
