@@ -1,115 +1,83 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D3BFBF4
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Sep 2023 20:14:22 +0000 (UTC)
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39839DE
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Sep 2023 13:14:15 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id 38308e7fff4ca-2b95d5ee18dso236705401fa.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Sep 2023 13:14:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1696018453; x=1696623253; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jPAXVGa1vaZNDKI9GqcxOhnuNCrtvlqJP4AnZpE32Zw=;
-        b=pouZxb7W6gqWlNn9qZf4kA4FURTPm0gEavOitK5PvNTxVQycRF4PPfVHPS1g/1LFSj
-         BWwETay+0bFf5PNZo+CdO1ami1j7EbYDBmD29l7ysUrCmkTCk6TVIEM2nM8H+PbSmFBN
-         AXk7myI4ZEmDJGbL3wfuu3vfbD11h3Ejm5HZpI+PLw15/lXW00exSyjN5OFRii0g29Ei
-         lwVqEBqMHK703n3vtNkHG9z703rFRCT1UdBnUZCSBrjLZ/33X3mB6LsvpeZuqidjs3kF
-         eWTzbvCZoFgJV7X7jxIl5JNUnpRzXVyEK5E3D2icNqiqzvlcUsyt4Ebnc7PJCQtV5QkG
-         qAVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696018453; x=1696623253;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jPAXVGa1vaZNDKI9GqcxOhnuNCrtvlqJP4AnZpE32Zw=;
-        b=MIEi+0QC7VuZTectEU31RMC7m8YR/vAksuHApfx8Vf4TxJ6dKRs9/+cUH6ehc/UK4I
-         Ux8tKyPG1+eLGxc21K28VbalNcryuM886WNByT8Hh216bO2OZUi0GafJTeuZula+itg8
-         gnax7NTuq05SmbyfQ5kL8384C++xzZGeh/CRf1FYlf3ARkLuqumEXwgN2qtZcw4+p6YB
-         ouBGC4/sNgpsfgLzcbtqPk+KyNTkSlZQedYfbx23PP+NBfIaIdbrle/cZOBaPi/GMvTs
-         6+RTiMcTPnJfJqz0r8aMZOCn5naaeZeIRtDNEkBOoqUVXrmXX14G5WIHsfA5MpZW7cKR
-         sDFA==
-X-Gm-Message-State: AOJu0YwQohU/MQduW0bReoPW9XYf3HJpZ5QzOp39HYf4xmX7KKyYOXzu
-	4PwoQBWUbchG1fJmz14oo2JsOVnHrD2aH/kskcSSSg==
-X-Google-Smtp-Source: AGHT+IFhN+RYXyZcjDZDTL4hr6PdazeWUaka8kIh6PpI3FymUyuiPqpmqLdznpukrXNVYeEHPC6w4G0weB1Yrnda2Gc=
-X-Received: by 2002:a05:6512:401a:b0:503:19bc:efb with SMTP id
- br26-20020a056512401a00b0050319bc0efbmr5920186lfb.29.1696018453380; Fri, 29
- Sep 2023 13:14:13 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856FF516F4
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Sep 2023 22:01:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1534C433C9;
+	Fri, 29 Sep 2023 22:01:17 +0000 (UTC)
+Date: Fri, 29 Sep 2023 18:01:13 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Julia Lawall <Julia.Lawall@inria.fr>
+Subject: [PATCH] ring-buffer: Update "shortest_full" in polling
+Message-ID: <20230929180113.01c2cae3@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230929191637.416931-1-cleger@rivosinc.com>
-In-Reply-To: <20230929191637.416931-1-cleger@rivosinc.com>
-From: Atish Kumar Patra <atishp@rivosinc.com>
-Date: Fri, 29 Sep 2023 13:14:02 -0700
-Message-ID: <CAHBxVyGvKLqo7vhD_jtHCH=QrMhTfmjcUW6GBvLogOrAvvm=YA@mail.gmail.com>
-Subject: Re: [PATCH v2] tracing: relax trace_event_eval_update() execution
- with cond_resched()
-To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Sep 29, 2023 at 12:17=E2=80=AFPM Cl=C3=A9ment L=C3=A9ger <cleger@ri=
-vosinc.com> wrote:
->
-> When kernel is compiled without preemption, the eval_map_work_func()
-> (which calls trace_event_eval_update()) will not be preempted up to its
-> complete execution. This can actually cause a problem since if another
-> CPU call stop_machine(), the call will have to wait for the
-> eval_map_work_func() function to finish executing in the workqueue
-> before being able to be scheduled. This problem was observe on a SMP
-> system at boot time, when the CPU calling the initcalls executed
-> clocksource_done_booting() which in the end calls stop_machine(). We
-> observed a 1 second delay because one CPU was executing
-> eval_map_work_func() and was not preempted by the stop_machine() task.
->
-> Adding a call to cond_resched() in trace_event_eval_update() allows
-> other tasks to be executed and thus continue working asynchronously
-> like before without blocking any pending task at boot time.
->
-> Signed-off-by: Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>
-> ---
->
-> Changes in v2:
->  - Use cond_resched() instead of schedule()
->
->  kernel/trace/trace_events.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index 91951d038ba4..f49d6ddb6342 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -2770,6 +2770,7 @@ void trace_event_eval_update(struct trace_eval_map =
-**map, int len)
->                                 update_event_fields(call, map[i]);
->                         }
->                 }
-> +               cond_resched();
->         }
->         up_write(&trace_event_sem);
->  }
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-(First email got rejected as gmail decided to switch back the format
-to html :(). Sorry for the noise.
-Thanks for the fix. The boot time improvement is evident in both
-spike/Qemu. FWIW
-Tested-by: Atish Patra <atishp@rivosinc.com>
-Reviewed-by: Atish Patra <atishp@rivosinc.com>
+It was discovered that the ring buffer polling was incorrectly stating
+that read would not block, but that's because polling did not take into
+account that reads will block if the "buffer-percent" was set. Instead,
+the ring buffer polling would say reads would not block if there was any
+data in the ring buffer. This was incorrect behavior from a user space
+point of view. This was fixed by commit 42fb0a1e84ff by having the polling
+code check if the ring buffer had more data than what the user specified
+"buffer percent" had.
 
-> --
-> 2.40.1
->
+The problem now is that the polling code did not register itself to the
+writer that it wanted to wait for a specific "full" value of the ring
+buffer. The result was that the writer would wake the polling waiter
+whenever there was a new event. The polling waiter would then wake up, see
+that there's not enough data in the ring buffer to notify user space and
+then go back to sleep. The next event would wake it up again.
+
+Before the polling fix was added, the code would wake up around 100 times
+for a hackbench 30 benchmark. After the "fix", due to the constant waking
+of the writer, it would wake up over 11,0000 times! It would never leave
+the kernel, so the user space behavior was still "correct", but this
+definitely is not the desired effect.
+
+To fix this, have the polling code add what it's waiting for to the
+"shortest_full" variable, to tell the writer not to wake it up if the
+buffer is not as full as it expects to be.
+
+Note, after this fix, it appears that the waiter is now woken up around 2x
+the times it was before (~200). This is a tremendous improvement from the
+11,000 times, but I will need to spend some time to see why polling is
+more aggressive in its wakeups than the read blocking code.
+
+Cc: stable@vger.kernel.org
+Fixes: 42fb0a1e84ff ("tracing/ring-buffer: Have polling block on watermark")
+Reported-by: Julia Lawall <julia.lawall@inria.fr>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 28daf0ce95c5..515cafdb18d9 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -1137,6 +1137,9 @@ __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
+ 	if (full) {
+ 		poll_wait(filp, &work->full_waiters, poll_table);
+ 		work->full_waiters_pending = true;
++		if (!cpu_buffer->shortest_full ||
++		    cpu_buffer->shortest_full > full)
++			cpu_buffer->shortest_full = full;
+ 	} else {
+ 		poll_wait(filp, &work->waiters, poll_table);
+ 		work->waiters_pending = true;
+-- 
+2.40.1
+
