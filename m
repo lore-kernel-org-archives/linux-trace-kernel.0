@@ -1,104 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7664223AA
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 30 Sep 2023 09:19:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 539E7C433C8;
-	Sat, 30 Sep 2023 09:19:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696065546;
-	bh=CVvQtHQSyndyWy/FagrIZcZBd171yHX/jAjEOxkaFf4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fcQPwglQGQcQUubS/I9/SDHwTgwAtWcUJE/A/+7/Apn5w/5MSfMm+yUXs0mGXrpcO
-	 UZvuFt3yb/qYJmKf8dOOkp1eIBGyTUQokCOp+JHlURL5jZWdi7VLTRrrYuNL2bP5PU
-	 AxsMcFnAA9B//ObS3Chbf437dPquqf9tF66fq4KZcwfaHfMSXRvgcKiIpF3KD69iAW
-	 oBx4eKq9Fpizt0UmpjIXBC4ycRKhyS3cowb1PbvufahsVkrTxnXlp9HkKaL8fTmaA6
-	 NqoSVSuLDXgJNKqYIZWlLRG8oniRZUNHxvl2StD3JL6YxvzdBNbhyJh5j3X9yPZIzF
-	 ELobq111PNfRg==
-Date: Sat, 30 Sep 2023 18:19:02 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Julia Lawall <julia.lawall@inria.fr>
-Cc: Steven Rostedt <rostedt@goodmis.org>, kernel-janitors@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing/eprobe: drop unneeded breaks
-Message-Id: <20230930181902.eb1d089243deca0017046437@kernel.org>
-In-Reply-To: <alpine.DEB.2.22.394.2309291336260.3137@hadrien>
-References: <20230928104334.41215-1-Julia.Lawall@inria.fr>
-	<20230929203259.74d4ba263b3455172ef37f06@kernel.org>
-	<alpine.DEB.2.22.394.2309291336260.3137@hadrien>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102929474
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 30 Sep 2023 13:01:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6AA5C433C7;
+	Sat, 30 Sep 2023 13:01:32 +0000 (UTC)
+Date: Sat, 30 Sep 2023 09:01:06 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Linux trace kernel <linux-trace-kernel@vger.kernel.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH] eventfs: Test for dentries array allocated in
+ eventfs_release()
+Message-ID: <20230930090106.1c3164e9@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 29 Sep 2023 13:37:08 +0200 (CEST)
-Julia Lawall <julia.lawall@inria.fr> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> 
-> 
-> On Fri, 29 Sep 2023, Masami Hiramatsu  wrote:
-> 
-> > On Thu, 28 Sep 2023 12:43:34 +0200
-> > Julia Lawall <Julia.Lawall@inria.fr> wrote:
-> >
-> > > Drop break after return.
-> > >
-> >
-> > Good catch! This looks good to me.
-> >
-> > Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> >
-> > And
-> >
-> > Fixes: 7491e2c44278 ("tracing: Add a probe that attaches to trace events")
-> 
-> Thanks.  I didn't include that because it's not a bug.  But it does break
-> Coccinelle, which is how I noticed it.
+The dcache_dir_open_wrapper() could be called when a dynamic event is
+being deleted leaving a dentry with no children. In this case the
+dlist->dentries array will never be allocated. This needs to be checked
+for in eventfs_release(), otherwise it will trigger a NULL pointer
+dereference.
 
-OK, I got it. I thought it may cause a compiler warning because the
-'break' never be executed. (maybe it is just a flow-control word,
-so it may not need to be warned, but a bit storange.)
+Fixes: ef36b4f92868 ("eventfs: Remember what dentries were created on dir open")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/tracefs/event_inode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> julia
-> 
-> >
-> > > Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
-> > >
-> > > ---
-> > >  kernel/trace/trace_eprobe.c |    5 +----
-> > >  1 file changed, 1 insertion(+), 4 deletions(-)
-> > >
-> > > diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-> > > index 72714cbf475c..03c851f57969 100644
-> > > --- a/kernel/trace/trace_eprobe.c
-> > > +++ b/kernel/trace/trace_eprobe.c
-> > > @@ -788,12 +788,9 @@ find_and_get_event(const char *system, const char *event_name)
-> > >  		name = trace_event_name(tp_event);
-> > >  		if (!name || strcmp(event_name, name))
-> > >  			continue;
-> > > -		if (!trace_event_try_get_ref(tp_event)) {
-> > > +		if (!trace_event_try_get_ref(tp_event))
-> > >  			return NULL;
-> > > -			break;
-> > > -		}
-> > >  		return tp_event;
-> > > -		break;
-> > >  	}
-> > >  	return NULL;
-> > >  }
-> > >
-> >
-> >
-> > --
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> >
-
-
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 5f1714089884..8c8d64e76103 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -421,7 +421,7 @@ static int eventfs_release(struct inode *inode, struct file *file)
+ 	if (WARN_ON_ONCE(!dlist))
+ 		return -EINVAL;
+ 
+-	for (i = 0; dlist->dentries[i]; i++) {
++	for (i = 0; dlist->dentries && dlist->dentries[i]; i++) {
+ 		dput(dlist->dentries[i]);
+ 	}
+ 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.40.1
+
