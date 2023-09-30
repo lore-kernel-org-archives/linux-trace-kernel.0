@@ -1,88 +1,123 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF823361;
-	Sat, 30 Sep 2023 00:12:21 +0000 (UTC)
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57A10AC;
-	Fri, 29 Sep 2023 17:12:20 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-406650da82bso2157915e9.3;
-        Fri, 29 Sep 2023 17:12:20 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1E717EF
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 30 Sep 2023 06:51:49 +0000 (UTC)
+Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5015D1A7;
+	Fri, 29 Sep 2023 23:51:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696032739; x=1696637539; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SClv1LlI8wah9GUgl9MuVq3kI1Q7eEXuNLYhk0MpO5c=;
-        b=i1ng1/NqxM88KnRaARjItv8/sTTYn7dgoJKBiZeHcm6ETZh5OkpfJ0Pi9npKWyowEJ
-         A1kHmZUwKBW8p8NXqNK1h+hAvNA/u+BCo1zPzzmmUB4JmwlADmFWhRmXRQIADu2ONTjA
-         SqKtiphG+zuuhA8XnvLRd9VHLgPgsOs7coPjvfKKh3/iofPJR2GPpF4u2upDPxTaGQEH
-         Y/eaGbNdlgloTImBIxAJ+su9i+vENKQU1NyGkmJjmrWK5fheQluAEJfdf1ilEUTyBr1s
-         aOXrA4XgcJYM0h/O/VRqv3oGGKVOJwOBdGEprqZmDZIvatgumMkh8+gYo4QiKJljweRX
-         eQ+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696032739; x=1696637539;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SClv1LlI8wah9GUgl9MuVq3kI1Q7eEXuNLYhk0MpO5c=;
-        b=A0mRLQyBpV/ixJYzTiM/oquPtRrCpxEGDp1UBSV1KrPoz2RgfkmmZ9xjeGeMrPvvGj
-         evYgWRu5kiJxNZjwXs8EVKGuKIl2wwooIFTBNe+lSZ/z/lI/0b4B5bP7siO25UNFz5Dn
-         AJUyFrW9TBkmgCVJlZwDwTOXpNyEV0Z7pmulNUOsvsBBSdRdsfJl7wkD3z8tmaMDBlnw
-         GJseS+G2DkDIWJw3oKy5Lkie+EtGHaDM786omPuk4yGeYcBg67pmyUTaQgYyG4f9E3hc
-         SUR70uIbfYZoceQISdCmPS2rgBsSQMAU1p5Lq6TtwJs0Vc+P5wQW5fDbVnCNXHYltkmV
-         hi5g==
-X-Gm-Message-State: AOJu0YyLFfyDGonOiiJHurXDMu6DJeKLUYSbVrSQv32XDsAomgfUqBol
-	wb4fc6dMdMTwuaNhKLTbSO8bb91x4IlPN9hosRA=
-X-Google-Smtp-Source: AGHT+IHcDmswGvT/6Qnt+++BtCsQ9K0NDC2StbSRWUKiHGBAV0LHnnBOe9f4srvOYuGY3M1TDQ0PKj62ohUfBH00+f8=
-X-Received: by 2002:a05:600c:d3:b0:401:bf56:8ba0 with SMTP id
- u19-20020a05600c00d300b00401bf568ba0mr4570782wmm.28.1696032738486; Fri, 29
- Sep 2023 17:12:18 -0700 (PDT)
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=/rOmt5SLaS7Yz0iKS8ydfKeLA81Zpo1ZPG8/8eRAUK8=;
+  b=K25GxmM7xyuuG5kAcEs455V8uqwkUzj7nQx1IdDsQvnFQMla2h44A/Tz
+   tyzXs7DCAdI0ABzglWm594TIgsVKekHvtjevyf3g4Z8r4Y97khKpmAYpy
+   /8VS+Dd/KpsZIweHNkN4/5fPPXqbQjewphzGkqFCGMCF2dY4v3ou9qYt2
+   0=;
+Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.03,189,1694728800"; 
+   d="scan'208";a="67391132"
+Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2023 08:51:46 +0200
+Date: Sat, 30 Sep 2023 08:51:45 +0200 (CEST)
+From: Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To: Steven Rostedt <rostedt@goodmis.org>
+cc: LKML <linux-kernel@vger.kernel.org>, 
+    Linux trace kernel <linux-trace-kernel@vger.kernel.org>, 
+    Masami Hiramatsu <mhiramat@kernel.org>, 
+    Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] ring-buffer: Update "shortest_full" in polling
+In-Reply-To: <20230929180113.01c2cae3@rorschach.local.home>
+Message-ID: <alpine.DEB.2.22.394.2309300850320.3082@hadrien>
+References: <20230929180113.01c2cae3@rorschach.local.home>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <169556254640.146934.5654329452696494756.stgit@devnote2> <20230929102115.09c015b9af03e188f1fbb25c@kernel.org>
-In-Reply-To: <20230929102115.09c015b9af03e188f1fbb25c@kernel.org>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 29 Sep 2023 17:12:07 -0700
-Message-ID: <CAADnVQ+HCLx+QUE88uVxeBNYFY4D=2-HADOU1C_czT1S1sRHgA@mail.gmail.com>
-Subject: Re: [PATCH v5 00/12] tracing: fprobe: rethook: Use ftrace_regs
- instead of pt_regs
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Florent Revest <revest@chromium.org>, 
-	linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, 
-	Sven Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Alan Maguire <alan.maguire@oracle.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Sep 28, 2023 at 6:21=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
-rg> wrote:
+
+
+On Fri, 29 Sep 2023, Steven Rostedt wrote:
+
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+>
+> It was discovered that the ring buffer polling was incorrectly stating
+> that read would not block, but that's because polling did not take into
+> account that reads will block if the "buffer-percent" was set. Instead,
+> the ring buffer polling would say reads would not block if there was any
+> data in the ring buffer. This was incorrect behavior from a user space
+> point of view. This was fixed by commit 42fb0a1e84ff by having the polling
+> code check if the ring buffer had more data than what the user specified
+> "buffer percent" had.
+>
+> The problem now is that the polling code did not register itself to the
+> writer that it wanted to wait for a specific "full" value of the ring
+> buffer. The result was that the writer would wake the polling waiter
+> whenever there was a new event. The polling waiter would then wake up, see
+> that there's not enough data in the ring buffer to notify user space and
+> then go back to sleep. The next event would wake it up again.
+>
+> Before the polling fix was added, the code would wake up around 100 times
+> for a hackbench 30 benchmark. After the "fix", due to the constant waking
+> of the writer, it would wake up over 11,0000 times! It would never leave
+> the kernel, so the user space behavior was still "correct", but this
+> definitely is not the desired effect.
+>
+> To fix this, have the polling code add what it's waiting for to the
+> "shortest_full" variable, to tell the writer not to wake it up if the
+> buffer is not as full as it expects to be.
+>
+> Note, after this fix, it appears that the waiter is now woken up around 2x
+> the times it was before (~200). This is a tremendous improvement from the
+> 11,000 times, but I will need to spend some time to see why polling is
+> more aggressive in its wakeups than the read blocking code.
+
+Actually, in my test it has gone from 276 wakeups in 6.0 to only 3 with
+this patch.
+
+I can do some more tests.
+
+>
+> Cc: stable@vger.kernel.org
+> Fixes: 42fb0a1e84ff ("tracing/ring-buffer: Have polling block on watermark")
+> Reported-by: Julia Lawall <julia.lawall@inria.fr>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+Tested-by: Julia Lawall <julia.lawall@inria.fr>
+
+julia
+
+> ---
+>  kernel/trace/ring_buffer.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 28daf0ce95c5..515cafdb18d9 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -1137,6 +1137,9 @@ __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
+>  	if (full) {
+>  		poll_wait(filp, &work->full_waiters, poll_table);
+>  		work->full_waiters_pending = true;
+> +		if (!cpu_buffer->shortest_full ||
+> +		    cpu_buffer->shortest_full > full)
+> +			cpu_buffer->shortest_full = full;
+>  	} else {
+>  		poll_wait(filp, &work->waiters, poll_table);
+>  		work->waiters_pending = true;
+> --
+> 2.40.1
 >
 >
-> Thus, what I need is to make fprobe to use function-graph tracer's shadow
-> stack and trampoline instead of rethook. This may need to generalize its
-> interface so that we can share it between fprobe and function-graph trace=
-r,
-> but we don't need to involve rethook and kretprobes anymore.
-
-...
-
-> And need to add patches
->
->  - Introduce a generized function exit hook interface for ftrace.
->  - Replace rethook in fprobe with the function exit hook interface.
-
-you mean that rethook will be removed after that?
