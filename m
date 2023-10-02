@@ -1,146 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644B8CA47
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Oct 2023 12:50:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28483C433C8;
-	Mon,  2 Oct 2023 12:50:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696251038;
-	bh=LhYnyuDASlXkoXmwCgKG/bRCaq518SQW1Kv1bqMglGs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=j+2iy+WOVlyl36WsTSuxjirEGB8lyjE8CGDLRfjjR349cMKXKfiUqLyFhcd+tUoQo
-	 9sXgGDP6rk4BE4Kk8pi6NYHCzOk5hP/RA6jFlOFh+oWaI3+OT1fTWmT56dOmVOl6uF
-	 nDgFIhKQIJHSvH17zUaIF3lX0+hMubXA2DmmMmM6myU1shYEtqG8Gtnt0O/dasBVoO
-	 H2QOIfycasgVhM/jCQ2oKdcoh5Pum0t5R94BBcG9LIoj3wThOcYcr3HEmPv17OADAk
-	 PQb0curuVUpyq/ZhS85aGohpXk2KL3NCnRNu23EVZNM00oL3uPdvGy8Qvb2xeRvBWa
-	 5xfZBZGX8hBWw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Palmer Dabbelt <palmerdabbelt@google.com>
-Cc: Guo Ren <guoren@linux.alibaba.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	linux-riscv@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] riscv: ftrace: Fix to pass correct ftrace_regs to ftrace_func_t functions
-Date: Mon,  2 Oct 2023 21:50:34 +0900
-Message-Id: <169625103396.278295.15281009481727023114.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-User-Agent: StGit/0.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D26EAC5
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Oct 2023 13:52:59 +0000 (UTC)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D762B4
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Oct 2023 06:52:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1696254776;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=vpLoGghBwfAF/DR0ZHV2Bh2/WPx4zdRILR3KFZtAXWE=;
+	b=M5WvZdHGQemhFIp78gr3WDtC+1X0jz1dwmabL7vwLBTPxod7T8wPnYdlkDYINIdy+9/v0S
+	hgnb5Zw3lq0MpZ4/92Q1ciVlTNO1nSGcG3FQ7juD82ywmJcsqemcTivcGsb/gbwdLKiVr4
+	U/ZZcCJ6OmxCTTDyDyb7KcgLuFb/HI8=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-607-p2jhS79bNEmnpPnmm7HB3g-1; Mon, 02 Oct 2023 09:52:48 -0400
+X-MC-Unique: p2jhS79bNEmnpPnmm7HB3g-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1F52B3C176E8;
+	Mon,  2 Oct 2023 13:52:47 +0000 (UTC)
+Received: from alecto.usersys.redhat.com (unknown [10.43.17.26])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 494FB40C6EBF;
+	Mon,  2 Oct 2023 13:52:45 +0000 (UTC)
+From: Artem Savkov <asavkov@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	bpf@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	linux-rt-users@vger.kernel.org,
+	Jiri Olsa <jolsa@kernel.org>,
+	Artem Savkov <asavkov@redhat.com>
+Subject: [RFC PATCH] tracing: change syscall number type in struct syscall_trace_*
+Date: Mon,  2 Oct 2023 15:52:42 +0200
+Message-ID: <20231002135242.247536-1-asavkov@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+	RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no
+	version=3.4.6
+X-Spam-Level: *
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+linux-rt-devel tree contains a patch that adds an extra member to struct
+trace_entry. This causes the offset of args field in struct
+trace_event_raw_sys_enter be different from the one in struct
+syscall_trace_enter:
 
-Since ftrace_func_t requires to pass 'struct ftrace_regs *' as the 4th
-argument even if FTRACE_OPS_FL_SAVE_REGS is not set, ftrace_caller must
-pass 'struct ftrace_regs *', which is a partial pt_regs, on the stack
-to the ftrace_func_t functions, so that the ftrace_func_t functions can
-access some partial registers.
+struct trace_event_raw_sys_enter {
+        struct trace_entry         ent;                  /*     0    12 */
 
-Fix to allocate 'struct ftrace_regs' (which has the same size of 'struct
-pt_regs') on the stack and save partial (argument) registers on it
-instead of reduced size custom data structure.
+        /* XXX last struct has 3 bytes of padding */
+        /* XXX 4 bytes hole, try to pack */
 
-Fixes: afc76b8b8011 ("riscv: Using PATCHABLE_FUNCTION_ENTRY instead of MCOUNT")
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+        long int                   id;                   /*    16     8 */
+        long unsigned int          args[6];              /*    24    48 */
+        /* --- cacheline 1 boundary (64 bytes) was 8 bytes ago --- */
+        char                       __data[];             /*    72     0 */
+
+        /* size: 72, cachelines: 2, members: 4 */
+        /* sum members: 68, holes: 1, sum holes: 4 */
+        /* paddings: 1, sum paddings: 3 */
+        /* last cacheline: 8 bytes */
+};
+
+struct syscall_trace_enter {
+        struct trace_entry         ent;                  /*     0    12 */
+
+        /* XXX last struct has 3 bytes of padding */
+
+        int                        nr;                   /*    12     4 */
+        long unsigned int          args[];               /*    16     0 */
+
+        /* size: 16, cachelines: 1, members: 3 */
+        /* paddings: 1, sum paddings: 3 */
+        /* last cacheline: 16 bytes */
+};
+
+This, in turn, causes perf_event_set_bpf_prog() fail while running bpf
+test_profiler testcase because max_ctx_offset is calculated based on the
+former struct, while off on the latter:
+
+  10488         if (is_tracepoint || is_syscall_tp) {
+  10489                 int off = trace_event_get_offsets(event->tp_event);
+  10490
+  10491                 if (prog->aux->max_ctx_offset > off)
+  10492                         return -EACCES;
+  10493         }
+
+This patch changes the type of nr member in syscall_trace_* structs to
+be long so that "args" offset is equal to that in struct
+trace_event_raw_sys_enter.
+
+Signed-off-by: Artem Savkov <asavkov@redhat.com>
 ---
- arch/riscv/kernel/mcount-dyn.S |   65 +++++++++++++++++-----------------------
- 1 file changed, 28 insertions(+), 37 deletions(-)
+ kernel/trace/trace.h          | 4 ++--
+ kernel/trace/trace_syscalls.c | 7 ++++---
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount-dyn.S
-index 669b8697aa38..84963680eff4 100644
---- a/arch/riscv/kernel/mcount-dyn.S
-+++ b/arch/riscv/kernel/mcount-dyn.S
-@@ -14,46 +14,37 @@
- 	.text
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 77debe53f07cf..cd1d24df85364 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -135,13 +135,13 @@ enum trace_type {
+  */
+ struct syscall_trace_enter {
+ 	struct trace_entry	ent;
+-	int			nr;
++	long			nr;
+ 	unsigned long		args[];
+ };
  
- #define FENTRY_RA_OFFSET	8
--#define ABI_SIZE_ON_STACK	80
--#define ABI_A0			0
--#define ABI_A1			8
--#define ABI_A2			16
--#define ABI_A3			24
--#define ABI_A4			32
--#define ABI_A5			40
--#define ABI_A6			48
--#define ABI_A7			56
--#define ABI_T0			64
--#define ABI_RA			72
+ struct syscall_trace_exit {
+ 	struct trace_entry	ent;
+-	int			nr;
++	long			nr;
+ 	long			ret;
+ };
  
- 	.macro SAVE_ABI
--	addi	sp, sp, -ABI_SIZE_ON_STACK
--
--	REG_S	a0, ABI_A0(sp)
--	REG_S	a1, ABI_A1(sp)
--	REG_S	a2, ABI_A2(sp)
--	REG_S	a3, ABI_A3(sp)
--	REG_S	a4, ABI_A4(sp)
--	REG_S	a5, ABI_A5(sp)
--	REG_S	a6, ABI_A6(sp)
--	REG_S	a7, ABI_A7(sp)
--	REG_S	t0, ABI_T0(sp)
--	REG_S	ra, ABI_RA(sp)
-+	addi	sp, sp, -PT_SIZE_ON_STACK
-+
-+	/* Save t0 as epc for ftrace_regs_get_instruction_pointer() */
-+	REG_S	t0, PT_EPC(sp)
-+	REG_S	a0, PT_A0(sp)
-+	REG_S	a1, PT_A1(sp)
-+	REG_S	a2, PT_A2(sp)
-+	REG_S	a3, PT_A3(sp)
-+	REG_S	a4, PT_A4(sp)
-+	REG_S	a5, PT_A5(sp)
-+	REG_S	a6, PT_A6(sp)
-+	REG_S	a7, PT_A7(sp)
-+	REG_S	t0, PT_T0(sp)
-+	REG_S	ra, PT_RA(sp)
- 	.endm
+diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
+index de753403cdafb..c26939119f2e4 100644
+--- a/kernel/trace/trace_syscalls.c
++++ b/kernel/trace/trace_syscalls.c
+@@ -101,7 +101,7 @@ find_syscall_meta(unsigned long syscall)
+ 	return NULL;
+ }
  
- 	.macro RESTORE_ABI
--	REG_L	a0, ABI_A0(sp)
--	REG_L	a1, ABI_A1(sp)
--	REG_L	a2, ABI_A2(sp)
--	REG_L	a3, ABI_A3(sp)
--	REG_L	a4, ABI_A4(sp)
--	REG_L	a5, ABI_A5(sp)
--	REG_L	a6, ABI_A6(sp)
--	REG_L	a7, ABI_A7(sp)
--	REG_L	t0, ABI_T0(sp)
--	REG_L	ra, ABI_RA(sp)
--
--	addi	sp, sp, ABI_SIZE_ON_STACK
-+	REG_L	a0, PT_A0(sp)
-+	REG_L	a1, PT_A1(sp)
-+	REG_L	a2, PT_A2(sp)
-+	REG_L	a3, PT_A3(sp)
-+	REG_L	a4, PT_A4(sp)
-+	REG_L	a5, PT_A5(sp)
-+	REG_L	a6, PT_A6(sp)
-+	REG_L	a7, PT_A7(sp)
-+	REG_L	t0, PT_T0(sp)
-+	REG_L	ra, PT_RA(sp)
-+
-+	addi	sp, sp, PT_SIZE_ON_STACK
- 	.endm
+-static struct syscall_metadata *syscall_nr_to_meta(int nr)
++static struct syscall_metadata *syscall_nr_to_meta(long nr)
+ {
+ 	if (IS_ENABLED(CONFIG_HAVE_SPARSE_SYSCALL_NR))
+ 		return xa_load(&syscalls_metadata_sparse, (unsigned long)nr);
+@@ -132,7 +132,8 @@ print_syscall_enter(struct trace_iterator *iter, int flags,
+ 	struct trace_entry *ent = iter->ent;
+ 	struct syscall_trace_enter *trace;
+ 	struct syscall_metadata *entry;
+-	int i, syscall;
++	int i;
++	long syscall;
  
- #ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-@@ -96,8 +87,8 @@ ftrace_call:
- 	call	ftrace_stub
+ 	trace = (typeof(trace))ent;
+ 	syscall = trace->nr;
+@@ -177,7 +178,7 @@ print_syscall_exit(struct trace_iterator *iter, int flags,
+ 	struct trace_seq *s = &iter->seq;
+ 	struct trace_entry *ent = iter->ent;
+ 	struct syscall_trace_exit *trace;
+-	int syscall;
++	long syscall;
+ 	struct syscall_metadata *entry;
  
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
--	addi	a0, sp, ABI_RA
--	REG_L	a1, ABI_T0(sp)
-+	addi	a0, sp, PT_RA
-+	REG_L	a1, PT_T0(sp)
- 	addi	a1, a1, -FENTRY_RA_OFFSET
- #ifdef HAVE_FUNCTION_GRAPH_FP_TEST
- 	mv	a2, s0
+ 	trace = (typeof(trace))ent;
+-- 
+2.41.0
 
