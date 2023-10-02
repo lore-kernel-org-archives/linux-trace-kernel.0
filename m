@@ -1,175 +1,212 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D26EAC5
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Oct 2023 13:52:59 +0000 (UTC)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D762B4
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Oct 2023 06:52:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1696254776;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=vpLoGghBwfAF/DR0ZHV2Bh2/WPx4zdRILR3KFZtAXWE=;
-	b=M5WvZdHGQemhFIp78gr3WDtC+1X0jz1dwmabL7vwLBTPxod7T8wPnYdlkDYINIdy+9/v0S
-	hgnb5Zw3lq0MpZ4/92Q1ciVlTNO1nSGcG3FQ7juD82ywmJcsqemcTivcGsb/gbwdLKiVr4
-	U/ZZcCJ6OmxCTTDyDyb7KcgLuFb/HI8=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-607-p2jhS79bNEmnpPnmm7HB3g-1; Mon, 02 Oct 2023 09:52:48 -0400
-X-MC-Unique: p2jhS79bNEmnpPnmm7HB3g-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1F52B3C176E8;
-	Mon,  2 Oct 2023 13:52:47 +0000 (UTC)
-Received: from alecto.usersys.redhat.com (unknown [10.43.17.26])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 494FB40C6EBF;
-	Mon,  2 Oct 2023 13:52:45 +0000 (UTC)
-From: Artem Savkov <asavkov@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	bpf@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-rt-users@vger.kernel.org,
-	Jiri Olsa <jolsa@kernel.org>,
-	Artem Savkov <asavkov@redhat.com>
-Subject: [RFC PATCH] tracing: change syscall number type in struct syscall_trace_*
-Date: Mon,  2 Oct 2023 15:52:42 +0200
-Message-ID: <20231002135242.247536-1-asavkov@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237A52106
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Oct 2023 14:01:59 +0000 (UTC)
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D357AD;
+	Mon,  2 Oct 2023 07:01:57 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id 4fb4d7f45d1cf-5363227cc80so6848651a12.3;
+        Mon, 02 Oct 2023 07:01:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696255316; x=1696860116; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UauITAAdbAizY420BZjAWNimaCBJBrxsT9/MiLYkYCY=;
+        b=cLx777u+p9Rgm634XxCEsfUxkmwTPR+uCK9KjPNx5h0u5VBoxPM5Em65NjxCYZEjwt
+         6Wu/4AqdK4sY3JnByyAtLzdn14RdObAgRa4pQAqLquOrKl+CR49+7oPFdhQtZMV+vq2C
+         1XUoHxzbcv7NH8BQMnUf9wP64C/LTiZk89xlTP0/l0kuId8e/eDNIh9WhRhN6C05aCdf
+         v9dgiuuP1YEHFUOgt3w3N33fdgTkzXrFV9f2FOu0pzm4q4fMWuC3jKn3DJW5/aVujp5a
+         loBszT6ESXK1tsYyHb72OjuyH7pTPUNre2HIu58KzUmjYDvNEL/WZ9AFmgRxQRr5nrAo
+         2ORQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696255316; x=1696860116;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UauITAAdbAizY420BZjAWNimaCBJBrxsT9/MiLYkYCY=;
+        b=BnOaHThwR5POjvfCrkBcQDeCkA+qGYjeWXpJhScbhYBvWeLL435l/5zuYnGjlG2HW5
+         aE9ld3zdxp+1gi2N5FsyFSrKvoQF6epGBSGU4nJwTm9moM+s8yOc01rxApE7oSD6+EFL
+         sWOQxVhp0FvQq5rLC5c7hO6hHAjjSYWoPawDd38kh0AK8moom6lcjIMiCGnE9E6Nn1ZX
+         at9yiZ5Vq/UV4INt+30k9lRf9kn3BN17yxOPtBC/OeqFs+VdvigHEznIz0EPQUqsD6Ly
+         0NrPw9Q2PwHwAqCQ4Z4ww9tjL8Z071e8z0Z+az5c1Z27v2OJKb2BJ/fSqD4atphMhbXY
+         whyg==
+X-Gm-Message-State: AOJu0Ywf4ERWEN1t+sg4qmeqgZgI6jdLgX8ONzGft8B0NcjkngYY1lJl
+	3QT6nKAgjlrlTq7hbyiP7py6VKnyomRXm2XxGpw=
+X-Google-Smtp-Source: AGHT+IGLhbsOrnS0Hw2Orc+D1zlEA5N7mZUlSAShX1TUFFLG/Cfr6osMBY8oG6JkUPgS7IkP2wgV1CHB2oaT9q+XGAI=
+X-Received: by 2002:aa7:db50:0:b0:52b:db31:3c5c with SMTP id
+ n16-20020aa7db50000000b0052bdb313c5cmr10272973edt.0.1696255315573; Mon, 02
+ Oct 2023 07:01:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
-X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-	RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no
-	version=3.4.6
-X-Spam-Level: *
+References: <20230926142058.1370-1-Nicholas.Lowell@gmail.com> <20230930040357.14fcbdf4@rorschach.local.home>
+In-Reply-To: <20230930040357.14fcbdf4@rorschach.local.home>
+From: Nick Lowell <nicholas.lowell@gmail.com>
+Date: Mon, 2 Oct 2023 10:01:44 -0400
+Message-ID: <CAFEqNJ0kskvj+hipFcqdhkzaFrA+bNtGX2Yk29yJoQ54_t7aVg@mail.gmail.com>
+Subject: Re: [PATCH] trace: tracing_event_filter: fast path when no subsystem filters
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Nicholas Lowell <nlowell@lexmark.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-linux-rt-devel tree contains a patch that adds an extra member to struct
-trace_entry. This causes the offset of args field in struct
-trace_event_raw_sys_enter be different from the one in struct
-syscall_trace_enter:
+Sending again in plain text mode.
+Thanks for the great feedback!  Hopefully my inline comments/questions
+aren't garbled.
 
-struct trace_event_raw_sys_enter {
-        struct trace_entry         ent;                  /*     0    12 */
+On Sat, Sep 30, 2023 at 4:04=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> On Tue, 26 Sep 2023 10:20:58 -0400
+> Nicholas Lowell <nicholas.lowell@gmail.com> wrote:
+>
+> > From: Nicholas Lowell <nlowell@lexmark.com>
+> >
+> > If there are no filters in the event subsystem, then there's no
+> > reason to continue and hit the potentially time consuming
+> > tracepoint_synchronize_unregister function.  This should give
+> > a speed up for initial disabling/configuring
+> >
+> > Signed-off-by: Nicholas Lowell <nlowell@lexmark.com>
+> > ---
+> >  kernel/trace/trace_events_filter.c | 19 ++++++++++++++-----
+> >  1 file changed, 14 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_ev=
+ents_filter.c
+> > index 33264e510d16..93653d37a132 100644
+> > --- a/kernel/trace/trace_events_filter.c
+> > +++ b/kernel/trace/trace_events_filter.c
+> > @@ -1317,22 +1317,29 @@ void free_event_filter(struct event_filter *fil=
+ter)
+> >       __free_filter(filter);
+> >  }
+> >
+> > -static inline void __remove_filter(struct trace_event_file *file)
+> > +static inline int __remove_filter(struct trace_event_file *file)
+> >  {
+> >       filter_disable(file);
+> > -     remove_filter_string(file->filter);
+> > +     if (file->filter)
+> > +             remove_filter_string(file->filter);
+> > +     else
+> > +             return 0;
+> > +
+> > +     return 1;
+>
+> The above looks awkward. What about:
+>
+>         if (!file->filter)
+>                 return 0;
+>
+>         remove_filter_string(file->filter);
+>         return 1;
+>
+> ?
+>
+> Or better yet:
+>
+>         if (!file->filter)
+>                 return false;
+>
+>         remove_filter_string(file->filter);
+>         return true;
+>
 
-        /* XXX last struct has 3 bytes of padding */
-        /* XXX 4 bytes hole, try to pack */
+Is it safe to assume you would like the function's return type to
+change from int to bool if I go with option 2?
 
-        long int                   id;                   /*    16     8 */
-        long unsigned int          args[6];              /*    24    48 */
-        /* --- cacheline 1 boundary (64 bytes) was 8 bytes ago --- */
-        char                       __data[];             /*    72     0 */
+> and ...
+>
+> >  }
+> >
+> > -static void filter_free_subsystem_preds(struct trace_subsystem_dir *di=
+r,
+> > +static int filter_free_subsystem_preds(struct trace_subsystem_dir *dir=
+,
+> >                                       struct trace_array *tr)
+> >  {
+> >       struct trace_event_file *file;
+> > +     int i =3D 0;
+>
+> We don't really need a counter. It's either do the synchronization or
+> we don't.
+>
+>         bool do_sync =3D false;
+>
+> >
+> >       list_for_each_entry(file, &tr->events, list) {
+> >               if (file->system !=3D dir)
+> >                       continue;
+> > -             __remove_filter(file);
+> > +             i +=3D __remove_filter(file);
+>
+>                 if (remove_filter(file))
+>                         do_sync =3D true;
+>
+> >       }
+>
+>         return do_sync;
+>
 
-        /* size: 72, cachelines: 2, members: 4 */
-        /* sum members: 68, holes: 1, sum holes: 4 */
-        /* paddings: 1, sum paddings: 3 */
-        /* last cacheline: 8 bytes */
-};
+Going to assume the same here--that return type should change from int to b=
+ool.
 
-struct syscall_trace_enter {
-        struct trace_entry         ent;                  /*     0    12 */
+> > +     return i;
+> >  }
+> >
+> >  static inline void __free_subsystem_filter(struct trace_event_file *fi=
+le)
+> > @@ -2411,7 +2418,9 @@ int apply_subsystem_event_filter(struct trace_sub=
+system_dir *dir,
+> >       }
+> >
+> >       if (!strcmp(strstrip(filter_string), "0")) {
+> > -             filter_free_subsystem_preds(dir, tr);
+> > +             if (filter_free_subsystem_preds(dir, tr) =3D=3D 0)
+> > +                     goto out_unlock;
+> > +
+>
+>                 /* If nothing was freed, we do not need to sync */
+>                 if (!filter_free_subsystem_preds(dir, tr))
+>                         goto out_unlock;
+>
+> And yes, add the comment.
+>
+> And actually, in that block with the goto out_unlock, we should have:
+>
+>                 if (!filter_free_subsystem_preds(dir, tr)) {
+>                         if (!(WARN_ON_ONCE(system->filter))
+>                                 goto out_unlock;
+>                 }
+>
 
-        /* XXX last struct has 3 bytes of padding */
+Can you explain why the WARN_ON_ONCE should be in a conditional?
+Don't we still want the original conditional to cause the goto regardless?
 
-        int                        nr;                   /*    12     4 */
-        long unsigned int          args[];               /*    16     0 */
+                if (!filter_free_subsystem_preds(dir, tr)) {
+                        WARN_ON_ONCE(system->filter);
+                        goto out_unlock;
+                }
 
-        /* size: 16, cachelines: 1, members: 3 */
-        /* paddings: 1, sum paddings: 3 */
-        /* last cacheline: 16 bytes */
-};
-
-This, in turn, causes perf_event_set_bpf_prog() fail while running bpf
-test_profiler testcase because max_ctx_offset is calculated based on the
-former struct, while off on the latter:
-
-  10488         if (is_tracepoint || is_syscall_tp) {
-  10489                 int off = trace_event_get_offsets(event->tp_event);
-  10490
-  10491                 if (prog->aux->max_ctx_offset > off)
-  10492                         return -EACCES;
-  10493         }
-
-This patch changes the type of nr member in syscall_trace_* structs to
-be long so that "args" offset is equal to that in struct
-trace_event_raw_sys_enter.
-
-Signed-off-by: Artem Savkov <asavkov@redhat.com>
----
- kernel/trace/trace.h          | 4 ++--
- kernel/trace/trace_syscalls.c | 7 ++++---
- 2 files changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 77debe53f07cf..cd1d24df85364 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -135,13 +135,13 @@ enum trace_type {
-  */
- struct syscall_trace_enter {
- 	struct trace_entry	ent;
--	int			nr;
-+	long			nr;
- 	unsigned long		args[];
- };
- 
- struct syscall_trace_exit {
- 	struct trace_entry	ent;
--	int			nr;
-+	long			nr;
- 	long			ret;
- };
- 
-diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
-index de753403cdafb..c26939119f2e4 100644
---- a/kernel/trace/trace_syscalls.c
-+++ b/kernel/trace/trace_syscalls.c
-@@ -101,7 +101,7 @@ find_syscall_meta(unsigned long syscall)
- 	return NULL;
- }
- 
--static struct syscall_metadata *syscall_nr_to_meta(int nr)
-+static struct syscall_metadata *syscall_nr_to_meta(long nr)
- {
- 	if (IS_ENABLED(CONFIG_HAVE_SPARSE_SYSCALL_NR))
- 		return xa_load(&syscalls_metadata_sparse, (unsigned long)nr);
-@@ -132,7 +132,8 @@ print_syscall_enter(struct trace_iterator *iter, int flags,
- 	struct trace_entry *ent = iter->ent;
- 	struct syscall_trace_enter *trace;
- 	struct syscall_metadata *entry;
--	int i, syscall;
-+	int i;
-+	long syscall;
- 
- 	trace = (typeof(trace))ent;
- 	syscall = trace->nr;
-@@ -177,7 +178,7 @@ print_syscall_exit(struct trace_iterator *iter, int flags,
- 	struct trace_seq *s = &iter->seq;
- 	struct trace_entry *ent = iter->ent;
- 	struct syscall_trace_exit *trace;
--	int syscall;
-+	long syscall;
- 	struct syscall_metadata *entry;
- 
- 	trace = (typeof(trace))ent;
--- 
-2.41.0
-
+> If there were no preds, ideally there would be no subsystem filter. But
+> if that's not the case, we need to warn about that and then continue.
+>
+> -- Steve
+>
+> >               remove_filter_string(system->filter);
+> >               filter =3D system->filter;
+> >               system->filter =3D NULL;
+>
