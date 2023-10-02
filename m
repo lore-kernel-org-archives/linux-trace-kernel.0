@@ -1,138 +1,56 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE107199D9
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Oct 2023 14:41:57 +0000 (UTC)
-Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12010AD;
-	Mon,  2 Oct 2023 07:41:54 -0700 (PDT)
-Received: by mail-qk1-x72d.google.com with SMTP id af79cd13be357-77421a47db6so858659485a.0;
-        Mon, 02 Oct 2023 07:41:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696257713; x=1696862513; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pNPJ9c/jvNp3qd70S+Vv9KklzayXCzlCTVKOVVL5zFI=;
-        b=a2RsC9qHPMHJJ5MjsOoAWX4JXLDaxd014FKXVW+iPORtMmGSWw7Um0UDm+8s2PI6h3
-         WNbDm9SQV8b6ajMe3+AoiP4O2xrSX49dAS8rEgTMMzQaqk6Q0/AF1ltYAFK/80kLU4/y
-         RdnPcmYnuKwIiOY/F6Yc8fybazsCiFryarVsKfpHslp6FY/epWmRvlLOScxJ7LLw9Vks
-         bwDszsOyNYSFX/JEmtGoYhMPTzH7Ri7B6hOiTyL2Qe+Chjw/L/S/GdZ5BjIuyFx+1UdC
-         hK8HJXr8sdglGnQcANbzzqFYTcKuVbrE37avmULbvOgMybA733I5nehTJ95sQlycRiSR
-         Xoyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696257713; x=1696862513;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pNPJ9c/jvNp3qd70S+Vv9KklzayXCzlCTVKOVVL5zFI=;
-        b=P5jWcexb1PNrltqLpO2nQT2LHgAfp1r/pO/YNksz4xseiMFwISxELX2VXtR3iBSVuq
-         T1Q80wqOqQ+ki23HlpJ2OFn8yIyTjtPIHRNa6FbanIdfQ0O8vNS8/wwcxgbio0+SpRGM
-         1sOQpvgZEfepv/q3SALaFh9Qp0i6ozMTIBSdxdwzaSCXAVoBe/F27Ky/G+vetU3KfbDM
-         1jf9Igih/hoMiUzxitbwkPbKnTAU8j1rE/TfP9HydW05VeFYt+PDRQuO0T+B9Jugge5L
-         ZOt38qz6OuF0oWiqxrzvlW7OVdR4WEvEG5Prz5NnTtQLtGSU2PwFO1AWEUHny3iqmxd+
-         oFdA==
-X-Gm-Message-State: AOJu0YwaQQVoLGJe69qijHQqB9KyHeCIqc8aIv8qULmm93j1UBNsCxlF
-	VYP0eGoQaJhikL5/T0oyoURi/2tKmpXdVw==
-X-Google-Smtp-Source: AGHT+IHT82VovXN/cxP6Jtm5WJyHTY9Fj8tKXdpVWUAwECBEMXtJcNGCjRifXQV83weytsfvHfIqMg==
-X-Received: by 2002:a05:620a:15b1:b0:775:7e16:2cdf with SMTP id f17-20020a05620a15b100b007757e162cdfmr10460875qkk.39.1696257713043;
-        Mon, 02 Oct 2023 07:41:53 -0700 (PDT)
-Received: from US-B32Y0T3.na.ds.lexmark.com (ip98-166-230-239.hr.hr.cox.net. [98.166.230.239])
-        by smtp.gmail.com with ESMTPSA id os36-20020a05620a812400b0076ceb5eb309sm9021461qkn.74.2023.10.02.07.41.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Oct 2023 07:41:52 -0700 (PDT)
-From: Nicholas Lowell <nicholas.lowell@gmail.com>
-X-Google-Original-From: Nicholas Lowell <Nicholas.Lowell@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Nicholas Lowell <nlowell@lexmark.com>
-Subject: [PATCH v2] trace: tracing_event_filter: fast path when no subsystem filters
-Date: Mon,  2 Oct 2023 10:41:48 -0400
-Message-Id: <20231002144149.1325-1-Nicholas.Lowell@gmail.com>
-X-Mailer: git-send-email 2.39.1.windows.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C85C323B
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Oct 2023 15:08:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36EC7C433C7;
+	Mon,  2 Oct 2023 15:08:33 +0000 (UTC)
+Date: Mon, 2 Oct 2023 11:09:35 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Christian Loehle <christian.loehle@arm.com>
+Cc: Zheng Yejian <zhengyejian1@huawei.com>, mhiramat@kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Subject: Re: [PATCH] tracing: document buffer_size_kb more precisely
+Message-ID: <20231002110935.2fde6637@gandalf.local.home>
+In-Reply-To: <efe41cee-42dd-290f-9ec2-ac002e2ec34e@arm.com>
+References: <cee6d5cd-e15b-3bb1-f867-de467d96d6b5@arm.com>
+	<a1ae1bc0-0677-8284-9f18-1171e1dcb175@huawei.com>
+	<efe41cee-42dd-290f-9ec2-ac002e2ec34e@arm.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Nicholas Lowell <nlowell@lexmark.com>
+On Tue, 26 Sep 2023 11:38:14 +0100
+Christian Loehle <christian.loehle@arm.com> wrote:
 
-If there are no filters in the event subsystem, then there's no
-reason to continue and hit the potentially time consuming
-tracepoint_synchronize_unregister function.  This should give
-a speed up for initial disabling/configuring
+> >> @@ -191,7 +191,7 @@ of ftrace. Here is a list of some of the key files:
+> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 A few extra pages may be allocated to a=
+ccommodate buffer management
+> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 meta-data. If the last page allocated h=
+as room for more bytes
+> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 than requested, the rest of the page wi=
+ll be used,
+> >> -=C2=A0=C2=A0=C2=A0 making the actual allocation bigger than requested=
+ or shown.
+> >> +=C2=A0=C2=A0=C2=A0 making the actual allocation bigger than requested=
+. =20
+> >=20
+> > Hi, the actual allocation should still be bigger than shown due to the
+> > loss of accuracy when doing unit conversion from bytes to kilobytes (see
+> > tracing_entries_read()).
+> >  =20
+> Right, the sysfs obviously only allows for KB aligned setting, but you're=
+ right.
+> If set on the cmdline non-KB multiples are possible and accuracy is lost.
+> Nevermind then.
 
-Signed-off-by: Nicholas Lowell <nlowell@lexmark.com>
----
+I'm assuming this patch can be dropped?
 
-Notes:
-    v2: switch from needless counting to boolean
-        WARN_ON_ONCE if no preds but filter exists
-
- kernel/trace/trace_events_filter.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 33264e510d16..baa108f88032 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -1317,22 +1317,29 @@ void free_event_filter(struct event_filter *filter)
- 	__free_filter(filter);
- }
- 
--static inline void __remove_filter(struct trace_event_file *file)
-+static inline bool __remove_filter(struct trace_event_file *file)
- {
- 	filter_disable(file);
-+	if (!file->filter)
-+		return false;
-+
- 	remove_filter_string(file->filter);
-+	return true;
- }
- 
--static void filter_free_subsystem_preds(struct trace_subsystem_dir *dir,
-+static bool filter_free_subsystem_preds(struct trace_subsystem_dir *dir,
- 					struct trace_array *tr)
- {
- 	struct trace_event_file *file;
-+	bool do_sync = false;
- 
- 	list_for_each_entry(file, &tr->events, list) {
- 		if (file->system != dir)
- 			continue;
--		__remove_filter(file);
-+		if (__remove_filter(file))
-+			do_sync = true;
- 	}
-+	return do_sync;
- }
- 
- static inline void __free_subsystem_filter(struct trace_event_file *file)
-@@ -2411,7 +2418,12 @@ int apply_subsystem_event_filter(struct trace_subsystem_dir *dir,
- 	}
- 
- 	if (!strcmp(strstrip(filter_string), "0")) {
--		filter_free_subsystem_preds(dir, tr);
-+		/* If nothing was freed, we do not need to sync */
-+		if (!filter_free_subsystem_preds(dir, tr)) {
-+			if(!(WARN_ON_ONCE(system->filter)))
-+				goto out_unlock;
-+		}
-+
- 		remove_filter_string(system->filter);
- 		filter = system->filter;
- 		system->filter = NULL;
--- 
-2.25.1
-
+-- Steve
