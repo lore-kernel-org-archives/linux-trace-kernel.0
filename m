@@ -1,24 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33020807;
-	Wed,  4 Oct 2023 01:37:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FBC9C433C7;
-	Wed,  4 Oct 2023 01:37:39 +0000 (UTC)
-Date: Tue, 3 Oct 2023 21:38:44 -0400
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E2E182
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Oct 2023 02:28:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4F06C433C8;
+	Wed,  4 Oct 2023 02:28:58 +0000 (UTC)
+Date: Tue, 3 Oct 2023 22:30:03 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Artem Savkov <asavkov@redhat.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
- <andrii@kernel.org>, bpf@vger.kernel.org, netdev@vger.kernel.org, Thomas
- Gleixner <tglx@linutronix.de>, linux-rt-users@vger.kernel.org, Jiri Olsa
- <jolsa@kernel.org>
-Subject: Re: [RFC PATCH] tracing: change syscall number type in struct
- syscall_trace_*
-Message-ID: <20231003213844.1de0c138@gandalf.local.home>
-In-Reply-To: <20231002135242.247536-1-asavkov@redhat.com>
-References: <20231002135242.247536-1-asavkov@redhat.com>
+To: Nicholas Lowell <nicholas.lowell@gmail.com>
+Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Nicholas Lowell <nlowell@lexmark.com>
+Subject: Re: [PATCH v2] trace: tracing_event_filter: fast path when no
+ subsystem filters
+Message-ID: <20231003223003.675bd888@gandalf.local.home>
+In-Reply-To: <20231002144149.1325-1-Nicholas.Lowell@gmail.com>
+References: <20231002144149.1325-1-Nicholas.Lowell@gmail.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -29,85 +25,66 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon,  2 Oct 2023 15:52:42 +0200
-Artem Savkov <asavkov@redhat.com> wrote:
+On Mon,  2 Oct 2023 10:41:48 -0400
+Nicholas Lowell <nicholas.lowell@gmail.com> wrote:
 
-> linux-rt-devel tree contains a patch that adds an extra member to struct
-> trace_entry. This causes the offset of args field in struct
-> trace_event_raw_sys_enter be different from the one in struct
-> syscall_trace_enter:
+> @@ -2411,7 +2418,12 @@ int apply_subsystem_event_filter(struct trace_subsystem_dir *dir,
+>  	}
+>  
+>  	if (!strcmp(strstrip(filter_string), "0")) {
+> -		filter_free_subsystem_preds(dir, tr);
+> +		/* If nothing was freed, we do not need to sync */
+> +		if (!filter_free_subsystem_preds(dir, tr)) {
+> +			if(!(WARN_ON_ONCE(system->filter)))
+> +				goto out_unlock;
+> +		}
+> +
+>  		remove_filter_string(system->filter);
+>  		filter = system->filter;
+>  		system->filter = NULL;
+> -- 
 
-This patch looks like it's fixing the symptom and not the issue. No code
-should rely on the two event structures to be related. That's an unwanted
-coupling, that will likely cause issues down the road (like the RT patch
-you mentioned).
+This is why I asked for the warning:
 
-
-> 
-> struct trace_event_raw_sys_enter {
->         struct trace_entry         ent;                  /*     0    12 */
-> 
->         /* XXX last struct has 3 bytes of padding */
->         /* XXX 4 bytes hole, try to pack */
-> 
->         long int                   id;                   /*    16     8 */
->         long unsigned int          args[6];              /*    24    48 */
->         /* --- cacheline 1 boundary (64 bytes) was 8 bytes ago --- */
->         char                       __data[];             /*    72     0 */
-> 
->         /* size: 72, cachelines: 2, members: 4 */
->         /* sum members: 68, holes: 1, sum holes: 4 */
->         /* paddings: 1, sum paddings: 3 */
->         /* last cacheline: 8 bytes */
-> };
-> 
-> struct syscall_trace_enter {
->         struct trace_entry         ent;                  /*     0    12 */
-> 
->         /* XXX last struct has 3 bytes of padding */
-> 
->         int                        nr;                   /*    12     4 */
->         long unsigned int          args[];               /*    16     0 */
-> 
->         /* size: 16, cachelines: 1, members: 3 */
->         /* paddings: 1, sum paddings: 3 */
->         /* last cacheline: 16 bytes */
-> };
-> 
-> This, in turn, causes perf_event_set_bpf_prog() fail while running bpf
-> test_profiler testcase because max_ctx_offset is calculated based on the
-> former struct, while off on the latter:
-
-The above appears to be pointing to the real bug. The "is calculated based
-on the former struct while off on the latter" Why are the two being used
-together? They are supposed to be *unrelated*!
+trace-cmd record -o /tmp/trace.dat -e sched -f "(common_pid == $$) || ((common_pid > 10) && common_pid < 100) || (common_pid >= 1000 && common_pid <= 1050) || (common_pid > 10000 && common_pid < 20000)" sleep 5
 
 
-> 
->   10488         if (is_tracepoint || is_syscall_tp) {
->   10489                 int off = trace_event_get_offsets(event->tp_event);
+Causes:
 
-So basically this is clumping together the raw_syscalls with the syscalls
-events as if they are the same. But the are not. They are created
-differently. It's basically like using one structure to get the offsets of
-another structure. That would be a bug anyplace else in the kernel. Sounds
-like it's a bug here too.
-
-I think the issue is with this code, not the tracing code.
-
-We could expose the struct syscall_trace_enter and syscall_trace_exit if
-the offsets to those are needed.
+------------[ cut here ]------------
+ WARNING: CPU: 5 PID: 944 at kernel/trace/trace_events_filter.c:2423 apply_subsystem_event_filter+0x18c/0x5e0
+ Modules linked in:
+ CPU: 5 PID: 944 Comm: trace-cmd Not tainted 6.6.0-rc4-test-00009-gff7cd7446fe5 #102
+ Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+ RIP: 0010:apply_subsystem_event_filter+0x18c/0x5e0
+ Code: 44 24 08 00 00 00 00 48 8b 6d 00 4c 39 f5 75 bc 48 8b 44 24 18 4c 8b 60 18 4c 89 e5 45 84 ff 75 14 48 85 ed 0f 84 37 ff ff ff <0f> 0b eb 10 e8 4b be fd ff eb b0 4d 85 e4 0f 84 a3 02 00 00 48 8b
+ RSP: 0018:ffff9b4941607db8 EFLAGS: 00010286
+ RAX: ffff8b2780a77280 RBX: ffff8b2780a77400 RCX: 0000000000000000
+ RDX: 0000000000000000 RSI: ffff8b2781c11c38 RDI: ffff8b2781c11c38
+ RBP: ffff8b28df449030 R08: ffff8b2781c11c38 R09: 0000000000000000
+ R10: ffff8b2781c11c38 R11: 0000000000000000 R12: ffff8b28df449030
+ R13: ffffffffaaf64de0 R14: ffffffffaaf66bb8 R15: 0000000000000000
+ FS:  00007fd221def3c0(0000) GS:ffff8b28f7d40000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 000056117c93e160 CR3: 000000010173a003 CR4: 0000000000170ee0
+ Call Trace:
+  <TASK>
+  ? apply_subsystem_event_filter+0x18c/0x5e0
+  ? __warn+0x81/0x130
+  ? apply_subsystem_event_filter+0x18c/0x5e0
+  ? report_bug+0x191/0x1c0
+  ? handle_bug+0x3c/0x80
+  ? exc_invalid_op+0x17/0x70
+  ? asm_exc_invalid_op+0x1a/0x20
+  ? apply_subsystem_event_filter+0x18c/0x5e0
+  ? apply_subsystem_event_filter+0x5b/0x5e0
+  ? __check_object_size+0x25b/0x2c0
+  subsystem_filter_write+0x41/0x70
+  vfs_write+0xf2/0x440
+  ? kmem_cache_free+0x22/0x350
+  ksys_write+0x6f/0xf0
+  do_syscall_64+0x3f/0xc0
+  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+ RIP: 0033:0x7fd221ee7ae0
 
 -- Steve
-
-
->   10490
->   10491                 if (prog->aux->max_ctx_offset > off)
->   10492                         return -EACCES;
->   10493         }
-> 
-> This patch changes the type of nr member in syscall_trace_* structs to
-> be long so that "args" offset is equal to that in struct
-> trace_event_raw_sys_enter.
-> 
-
