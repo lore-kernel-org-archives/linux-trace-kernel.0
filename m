@@ -1,156 +1,114 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E844429438
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Oct 2023 14:36:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED522AB53
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Oct 2023 14:49:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WE0QDp4O"
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0578C36B2
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Oct 2023 07:36:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1696516564;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+O64Js8IxZtTR27yFO6KKwoMlU4zaA+NA8IDEiNEsMA=;
-	b=WE0QDp4OkQrcFbixAbDMchgUWDU+1DTZUfdtVs7y9wj/y0v8aQ558h26wWfeU8gxeY08KG
-	rtq6i8u8rAvMhcO3F1i8Gd/iGYva4Ls01LFFFIAJhotbBpOxyYzq4kJ4IG2hUaHGPfpnBc
-	1gkoB+iiDlGGOBFN2Hir/G+C/1tzF1U=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-455-IQ-JXcVRMOuc1JjV0SXWSQ-1; Thu, 05 Oct 2023 08:34:17 -0400
-X-MC-Unique: IQ-JXcVRMOuc1JjV0SXWSQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 30E221E441DB;
-	Thu,  5 Oct 2023 12:34:17 +0000 (UTC)
-Received: from alecto.usersys.redhat.com (unknown [10.43.17.26])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 63A55140E953;
-	Thu,  5 Oct 2023 12:34:15 +0000 (UTC)
-Date: Thu, 5 Oct 2023 14:34:13 +0200
-From: Artem Savkov <asavkov@redhat.com>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Daniel Borkmann <daniel@iogearbox.net>, bpf@vger.kernel.org,
-	netdev@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	linux-rt-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [RFC PATCH] tracing: change syscall number type in struct
- syscall_trace_*
-Message-ID: <20231005123413.GA488417@alecto.usersys.redhat.com>
-References: <20231002135242.247536-1-asavkov@redhat.com>
- <20231003213844.1de0c138@gandalf.local.home>
- <20231004125547.GA409268@alecto.usersys.redhat.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OFsxPyOV"
+Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4873B25244
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Oct 2023 07:48:27 -0700 (PDT)
+Received: by mail-il1-x130.google.com with SMTP id e9e14a558f8ab-3513e84eb65so149105ab.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Oct 2023 07:48:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1696517295; x=1697122095; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xjHw1y3YE+Sfq180nstROrChF+ZzPDAn1AOFQ+gvv7o=;
+        b=OFsxPyOV3ICqqKGVZ7EEPW7478okfxMhQPQ/h9SMcyXZ8TBgvg55go+dyGcvtl7rx2
+         ZVGRtLvL5xFsvPZpTfDMHjxad+FlRNCIxTRRO7W2zNmIoUxHZI+PHaLKF7KDCbA/MS+w
+         CXUPC77ZBUJk38qFN0Xb48+0ObPQf7+465V/M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696517295; x=1697122095;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xjHw1y3YE+Sfq180nstROrChF+ZzPDAn1AOFQ+gvv7o=;
+        b=BzntaQdvah4KsvNJ8SI8qm+0GAvLYk8HnMKfKvlLIzAsT7DEiT1RCFjIKYLfVCwBbT
+         RksKpNTEJZYHhwUtGBwkJL9oU0mdMinTJ2yDZ/z/0Sj8UpHWixL9IvpMmt8HxrEuCWbT
+         oKFWE4Jn9lmCvqUonndIAkj92D5KTu9GpDGjcpSFYVO8S1RksDSrMfqC5pk15pQu4yy6
+         AO7kI1IdJFx5JSHxNz+0ybib4Tm6lm9Ugyxpr1At8F/GuFKvnMIlO1+WCF60nRZP9UsN
+         s16b/jOLi04IYf7wLfk3WvnfT1YDSNiHdh8dnQx3bl1t297wlrIWoikx0mkCYruqPl9N
+         dUvg==
+X-Gm-Message-State: AOJu0YxOo1B84XaAupqnTKk8McZM0LD6+f1owlPar51FK6ZKRAheba5u
+	TnBlhESBE0vu/J+L6w4DphxwRA==
+X-Google-Smtp-Source: AGHT+IHKSQURQp59YhmfaXMmL8a2vSGdKH4EMBlgi5ga9PQLJn1Cx5HxXwvaQcupr5NVJbtw98NqjA==
+X-Received: by 2002:a92:d1d0:0:b0:351:54db:c1bc with SMTP id u16-20020a92d1d0000000b0035154dbc1bcmr5241583ilg.0.1696517295528;
+        Thu, 05 Oct 2023 07:48:15 -0700 (PDT)
+Received: from [192.168.1.128] ([38.15.45.1])
+        by smtp.gmail.com with ESMTPSA id j9-20020a056e02014900b0034f7e365f97sm466291ilr.2.2023.10.05.07.48.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Oct 2023 07:48:15 -0700 (PDT)
+Message-ID: <c6ddb83d-acd8-47d0-8946-5a9b64c65d03@linuxfoundation.org>
+Date: Thu, 5 Oct 2023 08:48:14 -0600
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20231004125547.GA409268@alecto.usersys.redhat.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] selftests/user_events: Fix abi_test for BE archs
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>,
+ Beau Belgrave <beaub@linux.microsoft.com>
+Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, cleger@rivosinc.com,
+ linux-kselftest@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20230925230829.341-1-beaub@linux.microsoft.com>
+ <20230925230829.341-3-beaub@linux.microsoft.com>
+ <20231003205908.391d17f5@gandalf.local.home>
+ <4cc400c9-f4ad-4a30-a5fe-d02a6a4bcec0@linuxfoundation.org>
+ <20231004111437.47c80c81@gandalf.local.home>
+ <55213463-8834-4ed6-b0a2-1be69dd838d2@linuxfoundation.org>
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <55213463-8834-4ed6-b0a2-1be69dd838d2@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-	autolearn=unavailable autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Wed, Oct 04, 2023 at 02:55:47PM +0200, Artem Savkov wrote:
-> On Tue, Oct 03, 2023 at 09:38:44PM -0400, Steven Rostedt wrote:
-> > On Mon,  2 Oct 2023 15:52:42 +0200
-> > Artem Savkov <asavkov@redhat.com> wrote:
-> > 
-> > > linux-rt-devel tree contains a patch that adds an extra member to struct
-> > > trace_entry. This causes the offset of args field in struct
-> > > trace_event_raw_sys_enter be different from the one in struct
-> > > syscall_trace_enter:
-> > 
-> > This patch looks like it's fixing the symptom and not the issue. No code
-> > should rely on the two event structures to be related. That's an unwanted
-> > coupling, that will likely cause issues down the road (like the RT patch
-> > you mentioned).
+On 10/4/23 10:38, Shuah Khan wrote:
+> On 10/4/23 09:14, Steven Rostedt wrote:
+>> On Wed, 4 Oct 2023 09:10:52 -0600
+>> Shuah Khan <skhan@linuxfoundation.org> wrote:
+>>
+>>> On 10/3/23 18:59, Steven Rostedt wrote:
+>>>>
+>>>> Note, this doesn't seem to apply to my tree so I only added the first
+>>>> patch. I think this needs to go through Shuah's tree.
+>>>>
+>>>> -- Steve
+>>>>
+>>>
+>>> Yes. I sent a fix up for rc4 - I can pull these two patches into
+>>> linux-kselftest next
+>>>
+>>> Steve! Does that work for you?
+>>>
+>>
+>> I applied the first patch to my tree, I think the second patch is fine to go
+>> separately through your tree.
+>>
 > 
-> I agree, but I didn't see a better solution and that was my way of
-> starting conversation, thus the RFC.
 > 
-> > > 
-> > > struct trace_event_raw_sys_enter {
-> > >         struct trace_entry         ent;                  /*     0    12 */
-> > > 
-> > >         /* XXX last struct has 3 bytes of padding */
-> > >         /* XXX 4 bytes hole, try to pack */
-> > > 
-> > >         long int                   id;                   /*    16     8 */
-> > >         long unsigned int          args[6];              /*    24    48 */
-> > >         /* --- cacheline 1 boundary (64 bytes) was 8 bytes ago --- */
-> > >         char                       __data[];             /*    72     0 */
-> > > 
-> > >         /* size: 72, cachelines: 2, members: 4 */
-> > >         /* sum members: 68, holes: 1, sum holes: 4 */
-> > >         /* paddings: 1, sum paddings: 3 */
-> > >         /* last cacheline: 8 bytes */
-> > > };
-> > > 
-> > > struct syscall_trace_enter {
-> > >         struct trace_entry         ent;                  /*     0    12 */
-> > > 
-> > >         /* XXX last struct has 3 bytes of padding */
-> > > 
-> > >         int                        nr;                   /*    12     4 */
-> > >         long unsigned int          args[];               /*    16     0 */
-> > > 
-> > >         /* size: 16, cachelines: 1, members: 3 */
-> > >         /* paddings: 1, sum paddings: 3 */
-> > >         /* last cacheline: 16 bytes */
-> > > };
-> > > 
-> > > This, in turn, causes perf_event_set_bpf_prog() fail while running bpf
-> > > test_profiler testcase because max_ctx_offset is calculated based on the
-> > > former struct, while off on the latter:
-> > 
-> > The above appears to be pointing to the real bug. The "is calculated based
-> > on the former struct while off on the latter" Why are the two being used
-> > together? They are supposed to be *unrelated*!
-> > 
-> > 
-> > > 
-> > >   10488         if (is_tracepoint || is_syscall_tp) {
-> > >   10489                 int off = trace_event_get_offsets(event->tp_event);
-> > 
-> > So basically this is clumping together the raw_syscalls with the syscalls
-> > events as if they are the same. But the are not. They are created
-> > differently. It's basically like using one structure to get the offsets of
-> > another structure. That would be a bug anyplace else in the kernel. Sounds
-> > like it's a bug here too.
-> > 
-> > I think the issue is with this code, not the tracing code.
-> > 
-> > We could expose the struct syscall_trace_enter and syscall_trace_exit if
-> > the offsets to those are needed.
+> Yes I will apply this to linux-kselftest fixes branch once my PR
+> clears.
 > 
-> I don't think we need syscall_trace_* offsets, looks like
-> trace_event_get_offsets() should return offset trace_event_raw_sys_enter
-> instead. I am still trying to figure out how all of this works together.
-> Maybe Alexei or Andrii have more context here.
 
-Turns out it is even more confusing. The tests dereference the context as
-struct trace_event_raw_sys_enter so bpf verifier sets max_ctx_offset
-based on that, then perf_event_set_bpf_prog() checks this offset against
-the one in struct syscall_trace_enter, but what bpf prog really gets is
-a pointer to struct syscall_tp_t from kernel/trace/trace_syscalls.c.
+Hmm. Which tree is this patch based on? This doesn't apply to
+linux-kselftest fixes - I thought this was based on top of fixes
+since I sent in a fix for Linux 6.6-rc4 for user_events
 
-I don't know the history behind these decisions, but should the tests
-dereference context as struct syscall_trace_enter instead and struct
-syscall_tp_t be changed to have syscall_nr as int?
+Beau, Please rebase to the correct tree/branch and send v2 for
+this patch.
 
--- 
- Artem
+thanks,
+-- Shuah
 
