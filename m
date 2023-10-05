@@ -1,108 +1,56 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C7837C9D
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Oct 2023 17:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ljD0DSVX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69A67C433C7;
-	Thu,  5 Oct 2023 17:17:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696526269;
-	bh=o5L4igQZuUyyRkvZWeW6hIphjuPRgbdBnW7gTpA7Zqs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ljD0DSVXW7mrLs6rk+uo3OA3n8H7FoAXevG0rpTNVXlO2DhM+97akz/db9F7eliN5
-	 SNbIT+B6xWAsEWFkyhHl9KEp9sDqDYd3nOR1FdJrXGba22PQ0OtrtztDB0xiLMUv4U
-	 NsIIAYqd5gIEja/x0tSYJgWFIS1sFMR4e5JhWh+kFR6GKb4Z4eU3efb+QA+VxubfD5
-	 iJlmKXTYybduRDmv5K4UakHiSKx5UD2e7jPt8calVUcE8g2+UF9dQYAPuDmVzB9mKK
-	 RbgR4Q1HEngsKrSmb1wyPZLhT7YcBmnLC83OK62ejaUH/O5hGMEiPr7lL94GLALGEr
-	 73I98sKn9MlgQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 167D2CE0975; Thu,  5 Oct 2023 10:17:49 -0700 (PDT)
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Arnd Bergmann <arnd@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Alexey Dobriyan <adobriyan@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kees Cook <keescook@chromium.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH bootconfig 2/3] fs/proc: Add boot loader arguments as comment to /proc/bootconfig
-Date: Thu,  5 Oct 2023 10:17:46 -0700
-Message-Id: <20231005171747.541123-2-paulmck@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <6ea609a4-12e3-4266-8816-b9fca1f1f21c@paulmck-laptop>
-References: <6ea609a4-12e3-4266-8816-b9fca1f1f21c@paulmck-laptop>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DDF23AC1B
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Oct 2023 17:44:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87D7EC433C8;
+	Thu,  5 Oct 2023 17:44:51 +0000 (UTC)
+Date: Thu, 5 Oct 2023 13:46:00 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Beau Belgrave <beaub@linux.microsoft.com>
+Cc: Shuah Khan <skhan@linuxfoundation.org>, mhiramat@kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ cleger@rivosinc.com, linux-kselftest@vger.kernel.org, Shuah Khan
+ <shuah@kernel.org>
+Subject: Re: [PATCH 2/2] selftests/user_events: Fix abi_test for BE archs
+Message-ID: <20231005134600.0b309226@gandalf.local.home>
+In-Reply-To: <20231005165230.GA1247-beaub@linux.microsoft.com>
+References: <20230925230829.341-1-beaub@linux.microsoft.com>
+	<20230925230829.341-3-beaub@linux.microsoft.com>
+	<20231003205908.391d17f5@gandalf.local.home>
+	<4cc400c9-f4ad-4a30-a5fe-d02a6a4bcec0@linuxfoundation.org>
+	<20231004111437.47c80c81@gandalf.local.home>
+	<55213463-8834-4ed6-b0a2-1be69dd838d2@linuxfoundation.org>
+	<c6ddb83d-acd8-47d0-8946-5a9b64c65d03@linuxfoundation.org>
+	<20231005110816.4b68453d@gandalf.local.home>
+	<20231005165230.GA1247-beaub@linux.microsoft.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-In kernels built with CONFIG_BOOT_CONFIG_FORCE=y, /proc/cmdline will
-show all kernel boot parameters, both those supplied by the boot loader
-and those embedded in the kernel image.  This works well for those who
-just want to see all of the kernel boot parameters, but is not helpful to
-those who need to see only those parameters supplied by the boot loader.
-This is especially important when these parameters are presented to the
-boot loader by automation that might gather them from diverse sources.
-It is also useful when booting the next kernel via kexec(), in which
-case it is necessary to supply only those kernel command-line arguments
-from the boot loader, and most definitely not those that were embedded
-into the current kernel.
+On Thu, 5 Oct 2023 09:52:30 -0700
+Beau Belgrave <beaub@linux.microsoft.com> wrote:
 
-Therefore, add comments to /proc/bootconfig of the form:
 
-	# Parameters from bootloader:
-	# root=UUID=ac0f0548-a69d-43ca-a06b-7db01bcbd5ad ro quiet ...
+> It was based on tracing/for-next.
+> 
+> I'll get a v2 out rebased upon linux-kselftest, does that work?
 
-The second added line shows only those kernel boot parameters supplied
-by the boot loader.
+Hmm, then it should have applied to my tree. I didn't look too deep.
 
-Link: https://lore.kernel.org/all/CAHk-=wjpVAW3iRq_bfKnVfs0ZtASh_aT67bQBG11b4W6niYVUw@mail.gmail.com/
-Link: https://lore.kernel.org/all/20230731233130.424913-1-paulmck@kernel.org/
-Co-developed-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Arnd Bergmann <arnd@kernel.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: <linux-trace-kernel@vger.kernel.org>
-Cc: <linux-fsdevel@vger.kernel.org>
----
- fs/proc/bootconfig.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Can you see if it applies to:
 
-diff --git a/fs/proc/bootconfig.c b/fs/proc/bootconfig.c
-index 2e244ada1f97..902b326e1e56 100644
---- a/fs/proc/bootconfig.c
-+++ b/fs/proc/bootconfig.c
-@@ -62,6 +62,12 @@ static int __init copy_xbc_key_value_list(char *dst, size_t size)
- 				break;
- 			dst += ret;
- 		}
-+		if (ret >= 0 && boot_command_line[0]) {
-+			ret = snprintf(dst, rest(dst, end), "# Parameters from bootloader:\n# %s\n",
-+				       boot_command_line);
-+			if (ret > 0)
-+				dst += ret;
-+		}
- 	}
- out:
- 	kfree(key);
--- 
-2.40.1
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
 
+    trace/for-next ?
+
+Thanks,
+
+-- Steve
