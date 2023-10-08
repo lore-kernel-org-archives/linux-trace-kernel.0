@@ -1,100 +1,92 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6EFDDC8
-	for <linux-trace-kernel@vger.kernel.org>; Sat,  7 Oct 2023 15:39:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2949368
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  8 Oct 2023 00:49:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UItuVzNY"
-Received: from mail-oa1-x31.google.com (mail-oa1-x31.google.com [IPv6:2001:4860:4864:20::31])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C194B9;
-	Sat,  7 Oct 2023 08:39:10 -0700 (PDT)
-Received: by mail-oa1-x31.google.com with SMTP id 586e51a60fabf-1dd1db54d42so2051001fac.3;
-        Sat, 07 Oct 2023 08:39:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696693147; x=1697297947; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0lJN7RuCz9ZjltjJkr63VcR1vl5+W7ycDgx1Cg/Hr84=;
-        b=UItuVzNY4P+xHEgHPjwS3BSIJ7rj9Ismu4AFOMqAzNp7iC3NOUcVgcVlty0Qkvys/a
-         lvXSG+eE1H3mkIqf39LtJugAJ5pgc8I+Bs7VfSK+RgIm9WpENTZa9azlmAoc+Sy2yx0W
-         jjKR8XV5akamTkAb3wmTedIxUcrmgWpa843xCVSKgDG6EVY38cyi4MbpAN1eLpGGRxLi
-         tDnz+nDL37DQRAFX1nOGXCwrp9npvhOEeQ7rkAsryPEa6ToPkGSf791ZQqNPkry4PiBw
-         SNEuv0nyxSn1teeEbwgu2WpLpHhct1CkVwISFGvgYwWikWW0kpQNQsynAhZc2FSdgqO0
-         2RUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696693147; x=1697297947;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0lJN7RuCz9ZjltjJkr63VcR1vl5+W7ycDgx1Cg/Hr84=;
-        b=peEPSwhOiMM9oDR5hBnEL1AP1KmvAcLeoS1qpN83liqvIfmvQkEdDzkgldg3LwfM0z
-         3elLNgG4IGDN3aTvnLU843LORhfmd2V6kUvORb7RNsm9iUROEeowSMasOse05XIzUmZo
-         1rzPVEhgPtH6TXvfo8f4zVpvCnvwHDV30vGphAP1OwnQi1tYU/PWdeMAGo6H+88E/z/u
-         BD+4S21LJKcuoeayQvf7BEEPHpPrVs4yrB39AL1k+96hjD6kuCnkJ0bNIF6PBlAwiE33
-         GMwrspvmCy9VrUGIZP1Qc77tHIWbsZFNajYx7GhVGrgiw+t9InboYXJnOLX//LPV6Baa
-         frJg==
-X-Gm-Message-State: AOJu0YyTXgslbHg/VsZFC7lK8lC4u9AnbTGJcTu1aWLd1mqUM1hOhI2J
-	Bum/P4948c0I7IhxbAqbiq0=
-X-Google-Smtp-Source: AGHT+IFCF+7ptEknYG3uxPPktuAFWsMzDhdeQdX0H5Xy/UH2i3owgjFXHpdjxFEMJ3W1E/Emi9KBcg==
-X-Received: by 2002:a05:6870:d689:b0:1c8:bbd0:2fc9 with SMTP id z9-20020a056870d68900b001c8bbd02fc9mr12466971oap.49.1696693147062;
-        Sat, 07 Oct 2023 08:39:07 -0700 (PDT)
-Received: from atom0118 ([2405:201:c009:52e1:f940:d30d:8b60:5b64])
-        by smtp.gmail.com with ESMTPSA id j5-20020aa78d05000000b0068842ebfd10sm3300016pfe.160.2023.10.07.08.39.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Oct 2023 08:39:06 -0700 (PDT)
-Date: Sat, 7 Oct 2023 21:09:00 +0530
-From: Atul Kumar Pant <atulpant.linux@gmail.com>
-To: naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-	davem@davemloft.net, mhiramat@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linuxfoundation.org, shuah@kernel.org
-Subject: Re: [PATCH v1] samples: kprobes: Fixes a typo
-Message-ID: <20231007153900.GA20160@atom0118>
-References: <20230817170819.77857-1-atulpant.linux@gmail.com>
- <20230923173040.GA159038@atom0118>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMGI2PY5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57998C433CB;
+	Sun,  8 Oct 2023 00:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696726167;
+	bh=MaUCKvfjkEyRWJL8+AEXbnDxd2bXHVdvql91up3CKqY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=bMGI2PY5f++vOMGyKBMqRnfhWFziqhyBV8ZnUTm2M8cMGYmkMNuQZJ80Azof+JOHg
+	 iONpjvdjSjaVI3nMWqvj08yAkG++vG0F5EMIiKns99jRA9FSBc53zknNli2Gx4sl25
+	 nOuSpmOkPRAwvH8IyRSSJLmXnOrAt7p2UKpLifdmlqJSXe3//V9e40OsQlACORJ/3y
+	 Z3SOIfwi8wV/NMpxaWZ3DUQFuD90babK0kL82hyVpMxv7+ObiKMnEHrSJkonPXKIrI
+	 NemyxqPippENvAVG39mR2lS2r/OWoulry5pjj19euAHlTUMIElNOTCZ/XmeYoO818w
+	 rb7MVG6/dBVtQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Atish Patra <atishp@rivosinc.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.5 18/18] tracing: relax trace_event_eval_update() execution with cond_resched()
+Date: Sat,  7 Oct 2023 20:48:52 -0400
+Message-Id: <20231008004853.3767621-18-sashal@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20231008004853.3767621-1-sashal@kernel.org>
+References: <20231008004853.3767621-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230923173040.GA159038@atom0118>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.5.6
+Content-Transfer-Encoding: 8bit
 
-On Sat, Sep 23, 2023 at 11:00:46PM +0530, Atul Kumar Pant wrote:
-> On Thu, Aug 17, 2023 at 10:38:19PM +0530, Atul Kumar Pant wrote:
-> > Fixes typo in a function name.
-> > 
-> > Signed-off-by: Atul Kumar Pant <atulpant.linux@gmail.com>
-> > ---
-> >  samples/kprobes/kretprobe_example.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/samples/kprobes/kretprobe_example.c b/samples/kprobes/kretprobe_example.c
-> > index cbf16542d84e..ed79fd3d48fb 100644
-> > --- a/samples/kprobes/kretprobe_example.c
-> > +++ b/samples/kprobes/kretprobe_example.c
-> > @@ -35,7 +35,7 @@ struct my_data {
-> >  	ktime_t entry_stamp;
-> >  };
-> >  
-> > -/* Here we use the entry_hanlder to timestamp function entry */
-> > +/* Here we use the entry_handler to timestamp function entry */
-> >  static int entry_handler(struct kretprobe_instance *ri, struct pt_regs *regs)
-> >  {
-> >  	struct my_data *data;
-> > -- 
-> > 2.25.1
-> > 
-> 
-> 	Hi all, can someone provide comments on this change.
+From: Clément Léger <cleger@rivosinc.com>
 
-			Hi all, can someone please review this change. It has been not
-			reviewed for quite some time.
+[ Upstream commit 23cce5f25491968b23fb9c399bbfb25f13870cd9 ]
+
+When kernel is compiled without preemption, the eval_map_work_func()
+(which calls trace_event_eval_update()) will not be preempted up to its
+complete execution. This can actually cause a problem since if another
+CPU call stop_machine(), the call will have to wait for the
+eval_map_work_func() function to finish executing in the workqueue
+before being able to be scheduled. This problem was observe on a SMP
+system at boot time, when the CPU calling the initcalls executed
+clocksource_done_booting() which in the end calls stop_machine(). We
+observed a 1 second delay because one CPU was executing
+eval_map_work_func() and was not preempted by the stop_machine() task.
+
+Adding a call to cond_resched() in trace_event_eval_update() allows
+other tasks to be executed and thus continue working asynchronously
+like before without blocking any pending task at boot time.
+
+Link: https://lore.kernel.org/linux-trace-kernel/20230929191637.416931-1-cleger@rivosinc.com
+
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Clément Léger <cleger@rivosinc.com>
+Tested-by: Atish Patra <atishp@rivosinc.com>
+Reviewed-by: Atish Patra <atishp@rivosinc.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/trace/trace_events.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 0cf84a7449f5b..9841589b4af7f 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -2777,6 +2777,7 @@ void trace_event_eval_update(struct trace_eval_map **map, int len)
+ 				update_event_fields(call, map[i]);
+ 			}
+ 		}
++		cond_resched();
+ 	}
+ 	up_write(&trace_event_sem);
+ }
+-- 
+2.40.1
+
