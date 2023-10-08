@@ -1,22 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2949368
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  8 Oct 2023 00:49:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59DCF10E6
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  8 Oct 2023 00:49:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMGI2PY5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57998C433CB;
-	Sun,  8 Oct 2023 00:49:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y+dldeis"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E5E3C433C7;
+	Sun,  8 Oct 2023 00:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696726167;
-	bh=MaUCKvfjkEyRWJL8+AEXbnDxd2bXHVdvql91up3CKqY=;
+	s=k20201202; t=1696726188;
+	bh=6Zdobkl7veDsLK67KTzwAKoVPiIT7GYOuqAYWG8MycY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bMGI2PY5f++vOMGyKBMqRnfhWFziqhyBV8ZnUTm2M8cMGYmkMNuQZJ80Azof+JOHg
-	 iONpjvdjSjaVI3nMWqvj08yAkG++vG0F5EMIiKns99jRA9FSBc53zknNli2Gx4sl25
-	 nOuSpmOkPRAwvH8IyRSSJLmXnOrAt7p2UKpLifdmlqJSXe3//V9e40OsQlACORJ/3y
-	 Z3SOIfwi8wV/NMpxaWZ3DUQFuD90babK0kL82hyVpMxv7+ObiKMnEHrSJkonPXKIrI
-	 NemyxqPippENvAVG39mR2lS2r/OWoulry5pjj19euAHlTUMIElNOTCZ/XmeYoO818w
-	 rb7MVG6/dBVtQ==
+	b=Y+dldeiskUl22Q0J1adVSSLHyNpfy4cYeedtCHVoMu/Vb3YsmNVgzpQsRlJ0M2Ygz
+	 Vzc8QP/ZMXF5hNVozhxm+qc4Ewuu9tMgAjTPlqEUzDfY1wviEvhbCzrvJS3560gmdX
+	 vgKkDHSus1V3dx/A+ZVHU2XHVmcOnTPv2NZ2d3Hr/u29dNgnbV9gXnILx7sMyCButQ
+	 3KicfApt9CyyrxF5epGX1dibCVN2zu6+gESDB06R6XQ6lr28pX6D8A3jtl8us/fHGQ
+	 TpsVG+FMz1hH+ypexMVmUh+BMh476iHNnpzIhYpAp6yZClBlNRJext1L7x6BHCcB67
+	 txzDXFNvYG4CA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -26,12 +26,12 @@ Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.5 18/18] tracing: relax trace_event_eval_update() execution with cond_resched()
-Date: Sat,  7 Oct 2023 20:48:52 -0400
-Message-Id: <20231008004853.3767621-18-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 12/12] tracing: relax trace_event_eval_update() execution with cond_resched()
+Date: Sat,  7 Oct 2023 20:49:29 -0400
+Message-Id: <20231008004929.3767992-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20231008004853.3767621-1-sashal@kernel.org>
-References: <20231008004853.3767621-1-sashal@kernel.org>
+In-Reply-To: <20231008004929.3767992-1-sashal@kernel.org>
+References: <20231008004929.3767992-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.5.6
+X-stable-base: Linux 6.1.56
 Content-Transfer-Encoding: 8bit
 
 From: Clément Léger <cleger@rivosinc.com>
@@ -76,7 +76,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 0cf84a7449f5b..9841589b4af7f 100644
+index 9da418442a063..2e3dce5e2575e 100644
 --- a/kernel/trace/trace_events.c
 +++ b/kernel/trace/trace_events.c
 @@ -2777,6 +2777,7 @@ void trace_event_eval_update(struct trace_eval_map **map, int len)
