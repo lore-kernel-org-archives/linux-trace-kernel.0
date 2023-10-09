@@ -1,637 +1,498 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220B5F9F1
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  8 Oct 2023 23:20:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67AA78C1F
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Oct 2023 03:08:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d0VV9Vw3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F37FAC433C8;
-	Sun,  8 Oct 2023 23:20:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696807245;
-	bh=XnLGHLwfhm/jWHDAFGNvokMVxD7WaxkkTQnJc/57mMY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=d0VV9Vw3VryAMDH31NpKWW8noxi/HVTbT7ukhxwk9sKi1kmGcVoDTq3SMF5O8vRbt
-	 wKwnzmcodbLRUVTF6BKHHhA+LLUds0LSa+eMR6uhHt7lQfd8DXIcQJgs/E2VkLFu0K
-	 hCDvu3vu20RzN0NpSCEt9NuS9cuDNkv+3UIzrnsG7jxvmXXML9u3Rwk6Dy987Z/inX
-	 cACCSd6wm6OkqdDDfEQUXIX7Q2FPJ21giDhod4iZccx5oUoej227F5BJwp+dR/yZ8T
-	 yhNHZw9L7nv/7fZURlDFWRTluUblnxKpdoTKesLSlks+jZZMTvjxqcfqyARNtq8UYA
-	 gZ1/u06RPCbvQ==
-Date: Mon, 9 Oct 2023 08:20:40 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: wuqiang <wuqiang.matt@bytedance.com>
-Cc: linux-trace-kernel@vger.kernel.org, davem@davemloft.net,
- anil.s.keshavamurthy@intel.com, naveen.n.rao@linux.ibm.com,
- rostedt@goodmis.org, peterz@infradead.org, akpm@linux-foundation.org,
- sander@svanheule.net, ebiggers@google.com, dan.j.williams@intel.com,
- jpoimboe@kernel.org, linux-kernel@vger.kernel.org, lkp@intel.com,
- mattwu@163.com
-Subject: Re: [PATCH v9 3/5] kprobes: kretprobe scalability improvement with
- objpool
-Message-Id: <20231009082040.549d15e0874da039115aa340@kernel.org>
-In-Reply-To: <dded6d55-4212-54d1-4465-2e3e2634ee98@bytedance.com>
-References: <20230905015255.81545-1-wuqiang.matt@bytedance.com>
-	<20230905015255.81545-4-wuqiang.matt@bytedance.com>
-	<20231007110229.70b21d0d7610bdf304b5e355@kernel.org>
-	<dded6d55-4212-54d1-4465-2e3e2634ee98@bytedance.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZKvIrCGU"
+Received: from out-193.mta0.migadu.com (out-193.mta0.migadu.com [91.218.175.193])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A64F2A6
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  8 Oct 2023 20:08:00 -0700 (PDT)
+Message-ID: <814b5598-5284-9558-8f56-12a6f7a67187@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1696820877;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jQ8uiwjDOxp/3FZhCNKY/k9iEnrd8h0s97tdkkgKvAY=;
+	b=ZKvIrCGU3uUC+KRE6PiBQpioWPwuRy5Kur7Ffo1PyEaix3phPjRK/R6+JXjF6A29mtNaq7
+	7Gsw3aQ/POZ3+EOTnMd0eNVhL3iO513wGxYKxii9SQBze/ohnYMQ3sLFClyc1/pEozX6EC
+	54yyUbghmJgeWlA2PDrjDdr9Z0AJOlA=
+Date: Mon, 9 Oct 2023 11:07:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-
-On Mon, 9 Oct 2023 02:31:34 +0800
-wuqiang <wuqiang.matt@bytedance.com> wrote:
-
-> On 2023/10/7 10:02, Masami Hiramatsu (Google) wrote:
-> > On Tue,  5 Sep 2023 09:52:53 +0800
-> > "wuqiang.matt" <wuqiang.matt@bytedance.com> wrote:
-> > 
-> >> kretprobe is using freelist to manage return-instances, but freelist,
-> >> as LIFO queue based on singly linked list, scales badly and reduces
-> >> the overall throughput of kretprobed routines, especially for high
-> >> contention scenarios.
-> >>
-> >> Here's a typical throughput test of sys_prctl (counts in 10 seconds,
-> >> measured with perf stat -a -I 10000 -e syscalls:sys_enter_prctl):
-> >>
-> >> OS: Debian 10 X86_64, Linux 6.5rc7 with freelist
-> >> HW: XEON 8336C x 2, 64 cores/128 threads, DDR4 3200MT/s
-> >>
-> >>        1T       2T       4T       8T      16T      24T
-> >> 24150045 29317964 15446741 12494489 18287272 18287272
-> >>       32T      48T      64T      72T      96T     128T
-> >> 16200682  1620068 11645677 11269858 10470118  9931051
-> >>
-> >> This patch introduces objpool to kretprobe and rethook, with orginal
-> >> freelist replaced and brings near-linear scalability to kretprobed
-> >> routines. Tests of kretprobe throughput show the biggest ratio as
-> >> 166.7x of the original freelist. Here's the comparison:
-> >>
-> >>                    1T         2T         4T         8T        16T
-> >> native:     41186213   82336866  164250978  328662645  658810299
-> >> freelist:   24150045   29317964   15446741   12494489   18287272
-> >> objpool:    24663700   49410571   98544977  197725940  396294399
-> >>                   32T        48T        64T        96T       128T
-> >> native:   1330338351 1969957941 2512291791 1514690434 2671040914
-> >> freelist:   16200682   13737658   11645677   10470118    9931051
-> >> objpool:    78673470 1177354156 1514690434 1604472348 1655086824
-> >>
-> >> Tests on 96-core ARM64 system output similarly, but with the biggest
-> >> ratio up to 454.8x:
-> >>
-> >> OS: Debian 10 AARCH64, Linux 6.5rc7
-> >> HW: Kunpeng-920 96 cores/2 sockets/4 NUMA nodes, DDR4 2933 MT/s
-> >>
-> >>                    1T         2T         4T         8T        16T
-> >> native: .   30066096   13733813  126194076  257447289  505800181
-> >> freelist:   16152090   11064397   11124068    7215768    5663013
-> >> objpool:    13733813   27749031   56540679  112291770  223482778
-> >>                   24T        32T        48T        64T        96T
-> >> native:    763305277 1015925192 1521075123 2033009392 3021013752
-> >> freelist:    5015810    4602893    3766792    3382478    2945292
-> >> objpool:   334605663  448310646  675018951  903449904 1339693418
-> >>
-> > 
-> > This looks good to me (and I have tested with updated objpool)
-> > 
-> > Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Wuqiang, can you update the above number with the simplified
-> > objpool? I got better number (always 80% of the native performance)
-> > with 128 node/probe.
-> > (*) https://lore.kernel.org/all/20231003003923.eabc33bb3f4ffb8eac71f2af@kernel.org/
-> 
-> That's great. I'll prepare a new patch and try to spare the testbeds for
-> another round of testing.
-
-Thanks for updating! I'm looking forward to the next version :)
-
-Thank you,
-
-> 
-> > Thank you,
-> 
-> Thanks for your effort. Sorry for the late response, just back from
-> a 'long' vacation.
-> 
-> > 
-> >> Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
-> >> ---
-> >>   include/linux/kprobes.h | 11 ++---
-> >>   include/linux/rethook.h | 16 ++-----
-> >>   kernel/kprobes.c        | 93 +++++++++++++++++------------------------
-> >>   kernel/trace/fprobe.c   | 32 ++++++--------
-> >>   kernel/trace/rethook.c  | 90 ++++++++++++++++++---------------------
-> >>   5 files changed, 98 insertions(+), 144 deletions(-)
-> >>
-> >> diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
-> >> index 85a64cb95d75..365eb092e9c4 100644
-> >> --- a/include/linux/kprobes.h
-> >> +++ b/include/linux/kprobes.h
-> >> @@ -26,8 +26,7 @@
-> >>   #include <linux/rcupdate.h>
-> >>   #include <linux/mutex.h>
-> >>   #include <linux/ftrace.h>
-> >> -#include <linux/refcount.h>
-> >> -#include <linux/freelist.h>
-> >> +#include <linux/objpool.h>
-> >>   #include <linux/rethook.h>
-> >>   #include <asm/kprobes.h>
-> >>   
-> >> @@ -141,7 +140,7 @@ static inline bool kprobe_ftrace(struct kprobe *p)
-> >>    */
-> >>   struct kretprobe_holder {
-> >>   	struct kretprobe	*rp;
-> >> -	refcount_t		ref;
-> >> +	struct objpool_head	pool;
-> >>   };
-> >>   
-> >>   struct kretprobe {
-> >> @@ -154,7 +153,6 @@ struct kretprobe {
-> >>   #ifdef CONFIG_KRETPROBE_ON_RETHOOK
-> >>   	struct rethook *rh;
-> >>   #else
-> >> -	struct freelist_head freelist;
-> >>   	struct kretprobe_holder *rph;
-> >>   #endif
-> >>   };
-> >> @@ -165,10 +163,7 @@ struct kretprobe_instance {
-> >>   #ifdef CONFIG_KRETPROBE_ON_RETHOOK
-> >>   	struct rethook_node node;
-> >>   #else
-> >> -	union {
-> >> -		struct freelist_node freelist;
-> >> -		struct rcu_head rcu;
-> >> -	};
-> >> +	struct rcu_head rcu;
-> >>   	struct llist_node llist;
-> >>   	struct kretprobe_holder *rph;
-> >>   	kprobe_opcode_t *ret_addr;
-> >> diff --git a/include/linux/rethook.h b/include/linux/rethook.h
-> >> index 26b6f3c81a76..ce69b2b7bc35 100644
-> >> --- a/include/linux/rethook.h
-> >> +++ b/include/linux/rethook.h
-> >> @@ -6,11 +6,10 @@
-> >>   #define _LINUX_RETHOOK_H
-> >>   
-> >>   #include <linux/compiler.h>
-> >> -#include <linux/freelist.h>
-> >> +#include <linux/objpool.h>
-> >>   #include <linux/kallsyms.h>
-> >>   #include <linux/llist.h>
-> >>   #include <linux/rcupdate.h>
-> >> -#include <linux/refcount.h>
-> >>   
-> >>   struct rethook_node;
-> >>   
-> >> @@ -30,14 +29,12 @@ typedef void (*rethook_handler_t) (struct rethook_node *, void *, unsigned long,
-> >>   struct rethook {
-> >>   	void			*data;
-> >>   	rethook_handler_t	handler;
-> >> -	struct freelist_head	pool;
-> >> -	refcount_t		ref;
-> >> +	struct objpool_head	pool;
-> >>   	struct rcu_head		rcu;
-> >>   };
-> >>   
-> >>   /**
-> >>    * struct rethook_node - The rethook shadow-stack entry node.
-> >> - * @freelist: The freelist, linked to struct rethook::pool.
-> >>    * @rcu: The rcu_head for deferred freeing.
-> >>    * @llist: The llist, linked to a struct task_struct::rethooks.
-> >>    * @rethook: The pointer to the struct rethook.
-> >> @@ -48,20 +45,16 @@ struct rethook {
-> >>    * on each entry of the shadow stack.
-> >>    */
-> >>   struct rethook_node {
-> >> -	union {
-> >> -		struct freelist_node freelist;
-> >> -		struct rcu_head      rcu;
-> >> -	};
-> >> +	struct rcu_head		rcu;
-> >>   	struct llist_node	llist;
-> >>   	struct rethook		*rethook;
-> >>   	unsigned long		ret_addr;
-> >>   	unsigned long		frame;
-> >>   };
-> >>   
-> >> -struct rethook *rethook_alloc(void *data, rethook_handler_t handler);
-> >> +struct rethook *rethook_alloc(void *data, rethook_handler_t handler, int size, int num);
-> >>   void rethook_stop(struct rethook *rh);
-> >>   void rethook_free(struct rethook *rh);
-> >> -void rethook_add_node(struct rethook *rh, struct rethook_node *node);
-> >>   struct rethook_node *rethook_try_get(struct rethook *rh);
-> >>   void rethook_recycle(struct rethook_node *node);
-> >>   void rethook_hook(struct rethook_node *node, struct pt_regs *regs, bool mcount);
-> >> @@ -98,4 +91,3 @@ void rethook_flush_task(struct task_struct *tk);
-> >>   #endif
-> >>   
-> >>   #endif
-> >> -
-> >> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> >> index ca385b61d546..075a632e6c7c 100644
-> >> --- a/kernel/kprobes.c
-> >> +++ b/kernel/kprobes.c
-> >> @@ -1877,13 +1877,27 @@ static struct notifier_block kprobe_exceptions_nb = {
-> >>   #ifdef CONFIG_KRETPROBES
-> >>   
-> >>   #if !defined(CONFIG_KRETPROBE_ON_RETHOOK)
-> >> +
-> >> +/* callbacks for objpool of kretprobe instances */
-> >> +static int kretprobe_init_inst(void *nod, void *context)
-> >> +{
-> >> +	struct kretprobe_instance *ri = nod;
-> >> +
-> >> +	ri->rph = context;
-> >> +	return 0;
-> >> +}
-> >> +static int kretprobe_fini_pool(struct objpool_head *head, void *context)
-> >> +{
-> >> +	kfree(context);
-> >> +	return 0;
-> >> +}
-> >> +
-> >>   static void free_rp_inst_rcu(struct rcu_head *head)
-> >>   {
-> >>   	struct kretprobe_instance *ri = container_of(head, struct kretprobe_instance, rcu);
-> >> +	struct kretprobe_holder *rph = ri->rph;
-> >>   
-> >> -	if (refcount_dec_and_test(&ri->rph->ref))
-> >> -		kfree(ri->rph);
-> >> -	kfree(ri);
-> >> +	objpool_drop(ri, &rph->pool);
-> >>   }
-> >>   NOKPROBE_SYMBOL(free_rp_inst_rcu);
-> >>   
-> >> @@ -1892,7 +1906,7 @@ static void recycle_rp_inst(struct kretprobe_instance *ri)
-> >>   	struct kretprobe *rp = get_kretprobe(ri);
-> >>   
-> >>   	if (likely(rp))
-> >> -		freelist_add(&ri->freelist, &rp->freelist);
-> >> +		objpool_push(ri, &rp->rph->pool);
-> >>   	else
-> >>   		call_rcu(&ri->rcu, free_rp_inst_rcu);
-> >>   }
-> >> @@ -1929,23 +1943,12 @@ NOKPROBE_SYMBOL(kprobe_flush_task);
-> >>   
-> >>   static inline void free_rp_inst(struct kretprobe *rp)
-> >>   {
-> >> -	struct kretprobe_instance *ri;
-> >> -	struct freelist_node *node;
-> >> -	int count = 0;
-> >> -
-> >> -	node = rp->freelist.head;
-> >> -	while (node) {
-> >> -		ri = container_of(node, struct kretprobe_instance, freelist);
-> >> -		node = node->next;
-> >> -
-> >> -		kfree(ri);
-> >> -		count++;
-> >> -	}
-> >> +	struct kretprobe_holder *rph = rp->rph;
-> >>   
-> >> -	if (refcount_sub_and_test(count, &rp->rph->ref)) {
-> >> -		kfree(rp->rph);
-> >> -		rp->rph = NULL;
-> >> -	}
-> >> +	if (!rph)
-> >> +		return;
-> >> +	rp->rph = NULL;
-> >> +	objpool_fini(&rph->pool);
-> >>   }
-> >>   
-> >>   /* This assumes the 'tsk' is the current task or the is not running. */
-> >> @@ -2087,19 +2090,17 @@ NOKPROBE_SYMBOL(__kretprobe_trampoline_handler)
-> >>   static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
-> >>   {
-> >>   	struct kretprobe *rp = container_of(p, struct kretprobe, kp);
-> >> +	struct kretprobe_holder *rph = rp->rph;
-> >>   	struct kretprobe_instance *ri;
-> >> -	struct freelist_node *fn;
-> >>   
-> >> -	fn = freelist_try_get(&rp->freelist);
-> >> -	if (!fn) {
-> >> +	ri = objpool_pop(&rph->pool);
-> >> +	if (!ri) {
-> >>   		rp->nmissed++;
-> >>   		return 0;
-> >>   	}
-> >>   
-> >> -	ri = container_of(fn, struct kretprobe_instance, freelist);
-> >> -
-> >>   	if (rp->entry_handler && rp->entry_handler(ri, regs)) {
-> >> -		freelist_add(&ri->freelist, &rp->freelist);
-> >> +		objpool_push(ri, &rph->pool);
-> >>   		return 0;
-> >>   	}
-> >>   
-> >> @@ -2193,7 +2194,6 @@ int kprobe_on_func_entry(kprobe_opcode_t *addr, const char *sym, unsigned long o
-> >>   int register_kretprobe(struct kretprobe *rp)
-> >>   {
-> >>   	int ret;
-> >> -	struct kretprobe_instance *inst;
-> >>   	int i;
-> >>   	void *addr;
-> >>   
-> >> @@ -2227,20 +2227,12 @@ int register_kretprobe(struct kretprobe *rp)
-> >>   		rp->maxactive = max_t(unsigned int, 10, 2*num_possible_cpus());
-> >>   
-> >>   #ifdef CONFIG_KRETPROBE_ON_RETHOOK
-> >> -	rp->rh = rethook_alloc((void *)rp, kretprobe_rethook_handler);
-> >> -	if (!rp->rh)
-> >> -		return -ENOMEM;
-> >> +	rp->rh = rethook_alloc((void *)rp, kretprobe_rethook_handler,
-> >> +				sizeof(struct kretprobe_instance) +
-> >> +				rp->data_size, rp->maxactive);
-> >> +	if (IS_ERR(rp->rh))
-> >> +		return PTR_ERR(rp->rh);
-> >>   
-> >> -	for (i = 0; i < rp->maxactive; i++) {
-> >> -		inst = kzalloc(sizeof(struct kretprobe_instance) +
-> >> -			       rp->data_size, GFP_KERNEL);
-> >> -		if (inst == NULL) {
-> >> -			rethook_free(rp->rh);
-> >> -			rp->rh = NULL;
-> >> -			return -ENOMEM;
-> >> -		}
-> >> -		rethook_add_node(rp->rh, &inst->node);
-> >> -	}
-> >>   	rp->nmissed = 0;
-> >>   	/* Establish function entry probe point */
-> >>   	ret = register_kprobe(&rp->kp);
-> >> @@ -2249,25 +2241,18 @@ int register_kretprobe(struct kretprobe *rp)
-> >>   		rp->rh = NULL;
-> >>   	}
-> >>   #else	/* !CONFIG_KRETPROBE_ON_RETHOOK */
-> >> -	rp->freelist.head = NULL;
-> >>   	rp->rph = kzalloc(sizeof(struct kretprobe_holder), GFP_KERNEL);
-> >>   	if (!rp->rph)
-> >>   		return -ENOMEM;
-> >>   
-> >> -	rp->rph->rp = rp;
-> >> -	for (i = 0; i < rp->maxactive; i++) {
-> >> -		inst = kzalloc(sizeof(struct kretprobe_instance) +
-> >> -			       rp->data_size, GFP_KERNEL);
-> >> -		if (inst == NULL) {
-> >> -			refcount_set(&rp->rph->ref, i);
-> >> -			free_rp_inst(rp);
-> >> -			return -ENOMEM;
-> >> -		}
-> >> -		inst->rph = rp->rph;
-> >> -		freelist_add(&inst->freelist, &rp->freelist);
-> >> +	if (objpool_init(&rp->rph->pool, rp->maxactive, rp->data_size +
-> >> +			sizeof(struct kretprobe_instance), GFP_KERNEL,
-> >> +			rp->rph, kretprobe_init_inst, kretprobe_fini_pool)) {
-> >> +		kfree(rp->rph);
-> >> +		rp->rph = NULL;
-> >> +		return -ENOMEM;
-> >>   	}
-> >> -	refcount_set(&rp->rph->ref, i);
-> >> -
-> >> +	rp->rph->rp = rp;
-> >>   	rp->nmissed = 0;
-> >>   	/* Establish function entry probe point */
-> >>   	ret = register_kprobe(&rp->kp);
-> >> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> >> index 3b21f4063258..f5bf98e6b2ac 100644
-> >> --- a/kernel/trace/fprobe.c
-> >> +++ b/kernel/trace/fprobe.c
-> >> @@ -187,9 +187,9 @@ static void fprobe_init(struct fprobe *fp)
-> >>   
-> >>   static int fprobe_init_rethook(struct fprobe *fp, int num)
-> >>   {
-> >> -	int i, size;
-> >> +	int size;
-> >>   
-> >> -	if (num < 0)
-> >> +	if (num <= 0)
-> >>   		return -EINVAL;
-> >>   
-> >>   	if (!fp->exit_handler) {
-> >> @@ -202,29 +202,21 @@ static int fprobe_init_rethook(struct fprobe *fp, int num)
-> >>   		size = fp->nr_maxactive;
-> >>   	else
-> >>   		size = num * num_possible_cpus() * 2;
-> >> -	if (size < 0)
-> >> +	if (size <= 0)
-> >>   		return -E2BIG;
-> >>   
-> >> -	fp->rethook = rethook_alloc((void *)fp, fprobe_exit_handler);
-> >> -	if (!fp->rethook)
-> >> -		return -ENOMEM;
-> >> -	for (i = 0; i < size; i++) {
-> >> -		struct fprobe_rethook_node *node;
-> >> -
-> >> -		node = kzalloc(sizeof(*node) + fp->entry_data_size, GFP_KERNEL);
-> >> -		if (!node) {
-> >> -			rethook_free(fp->rethook);
-> >> -			fp->rethook = NULL;
-> >> -			return -ENOMEM;
-> >> -		}
-> >> -		rethook_add_node(fp->rethook, &node->node);
-> >> -	}
-> >> +	/* Initialize rethook */
-> >> +	fp->rethook = rethook_alloc((void *)fp, fprobe_exit_handler,
-> >> +				sizeof(struct fprobe_rethook_node), size);
-> >> +	if (IS_ERR(fp->rethook))
-> >> +		return PTR_ERR(fp->rethook);
-> >> +
-> >>   	return 0;
-> >>   }
-> >>   
-> >>   static void fprobe_fail_cleanup(struct fprobe *fp)
-> >>   {
-> >> -	if (fp->rethook) {
-> >> +	if (!IS_ERR_OR_NULL(fp->rethook)) {
-> >>   		/* Don't need to cleanup rethook->handler because this is not used. */
-> >>   		rethook_free(fp->rethook);
-> >>   		fp->rethook = NULL;
-> >> @@ -379,14 +371,14 @@ int unregister_fprobe(struct fprobe *fp)
-> >>   	if (!fprobe_is_registered(fp))
-> >>   		return -EINVAL;
-> >>   
-> >> -	if (fp->rethook)
-> >> +	if (!IS_ERR_OR_NULL(fp->rethook))
-> >>   		rethook_stop(fp->rethook);
-> >>   
-> >>   	ret = unregister_ftrace_function(&fp->ops);
-> >>   	if (ret < 0)
-> >>   		return ret;
-> >>   
-> >> -	if (fp->rethook)
-> >> +	if (!IS_ERR_OR_NULL(fp->rethook))
-> >>   		rethook_free(fp->rethook);
-> >>   
-> >>   	ftrace_free_filter(&fp->ops);
-> >> diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
-> >> index 5eb9b598f4e9..13c8e6773892 100644
-> >> --- a/kernel/trace/rethook.c
-> >> +++ b/kernel/trace/rethook.c
-> >> @@ -9,6 +9,7 @@
-> >>   #include <linux/rethook.h>
-> >>   #include <linux/slab.h>
-> >>   #include <linux/sort.h>
-> >> +#include <linux/smp.h>
-> >>   
-> >>   /* Return hook list (shadow stack by list) */
-> >>   
-> >> @@ -36,21 +37,7 @@ void rethook_flush_task(struct task_struct *tk)
-> >>   static void rethook_free_rcu(struct rcu_head *head)
-> >>   {
-> >>   	struct rethook *rh = container_of(head, struct rethook, rcu);
-> >> -	struct rethook_node *rhn;
-> >> -	struct freelist_node *node;
-> >> -	int count = 1;
-> >> -
-> >> -	node = rh->pool.head;
-> >> -	while (node) {
-> >> -		rhn = container_of(node, struct rethook_node, freelist);
-> >> -		node = node->next;
-> >> -		kfree(rhn);
-> >> -		count++;
-> >> -	}
-> >> -
-> >> -	/* The rh->ref is the number of pooled node + 1 */
-> >> -	if (refcount_sub_and_test(count, &rh->ref))
-> >> -		kfree(rh);
-> >> +	objpool_fini(&rh->pool);
-> >>   }
-> >>   
-> >>   /**
-> >> @@ -83,54 +70,62 @@ void rethook_free(struct rethook *rh)
-> >>   	call_rcu(&rh->rcu, rethook_free_rcu);
-> >>   }
-> >>   
-> >> +static int rethook_init_node(void *nod, void *context)
-> >> +{
-> >> +	struct rethook_node *node = nod;
-> >> +
-> >> +	node->rethook = context;
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static int rethook_fini_pool(struct objpool_head *head, void *context)
-> >> +{
-> >> +	kfree(context);
-> >> +	return 0;
-> >> +}
-> >> +
-> >>   /**
-> >>    * rethook_alloc() - Allocate struct rethook.
-> >>    * @data: a data to pass the @handler when hooking the return.
-> >> - * @handler: the return hook callback function.
-> >> + * @handler: the return hook callback function, must NOT be NULL
-> >> + * @size: node size: rethook node and additional data
-> >> + * @num: number of rethook nodes to be preallocated
-> >>    *
-> >>    * Allocate and initialize a new rethook with @data and @handler.
-> >> - * Return NULL if memory allocation fails or @handler is NULL.
-> >> + * Return pointer of new rethook, or error codes for failures.
-> >> + *
-> >>    * Note that @handler == NULL means this rethook is going to be freed.
-> >>    */
-> >> -struct rethook *rethook_alloc(void *data, rethook_handler_t handler)
-> >> +struct rethook *rethook_alloc(void *data, rethook_handler_t handler,
-> >> +			      int size, int num)
-> >>   {
-> >> -	struct rethook *rh = kzalloc(sizeof(struct rethook), GFP_KERNEL);
-> >> +	struct rethook *rh;
-> >>   
-> >> -	if (!rh || !handler) {
-> >> -		kfree(rh);
-> >> -		return NULL;
-> >> -	}
-> >> +	if (!handler || num <= 0 || size < sizeof(struct rethook_node))
-> >> +		return ERR_PTR(-EINVAL);
-> >> +
-> >> +	rh = kzalloc(sizeof(struct rethook), GFP_KERNEL);
-> >> +	if (!rh)
-> >> +		return ERR_PTR(-ENOMEM);
-> >>   
-> >>   	rh->data = data;
-> >>   	rh->handler = handler;
-> >> -	rh->pool.head = NULL;
-> >> -	refcount_set(&rh->ref, 1);
-> >>   
-> >> +	/* initialize the objpool for rethook nodes */
-> >> +	if (objpool_init(&rh->pool, num, size, GFP_KERNEL, rh,
-> >> +			 rethook_init_node, rethook_fini_pool)) {
-> >> +		kfree(rh);
-> >> +		return ERR_PTR(-ENOMEM);
-> >> +	}
-> >>   	return rh;
-> >>   }
-> >>   
-> >> -/**
-> >> - * rethook_add_node() - Add a new node to the rethook.
-> >> - * @rh: the struct rethook.
-> >> - * @node: the struct rethook_node to be added.
-> >> - *
-> >> - * Add @node to @rh. User must allocate @node (as a part of user's
-> >> - * data structure.) The @node fields are initialized in this function.
-> >> - */
-> >> -void rethook_add_node(struct rethook *rh, struct rethook_node *node)
-> >> -{
-> >> -	node->rethook = rh;
-> >> -	freelist_add(&node->freelist, &rh->pool);
-> >> -	refcount_inc(&rh->ref);
-> >> -}
-> >> -
-> >>   static void free_rethook_node_rcu(struct rcu_head *head)
-> >>   {
-> >>   	struct rethook_node *node = container_of(head, struct rethook_node, rcu);
-> >> +	struct rethook *rh = node->rethook;
-> >>   
-> >> -	if (refcount_dec_and_test(&node->rethook->ref))
-> >> -		kfree(node->rethook);
-> >> -	kfree(node);
-> >> +	objpool_drop(node, &rh->pool);
-> >>   }
-> >>   
-> >>   /**
-> >> @@ -145,7 +140,7 @@ void rethook_recycle(struct rethook_node *node)
-> >>   	lockdep_assert_preemption_disabled();
-> >>   
-> >>   	if (likely(READ_ONCE(node->rethook->handler)))
-> >> -		freelist_add(&node->freelist, &node->rethook->pool);
-> >> +		objpool_push(node, &node->rethook->pool);
-> >>   	else
-> >>   		call_rcu(&node->rcu, free_rethook_node_rcu);
-> >>   }
-> >> @@ -161,7 +156,6 @@ NOKPROBE_SYMBOL(rethook_recycle);
-> >>   struct rethook_node *rethook_try_get(struct rethook *rh)
-> >>   {
-> >>   	rethook_handler_t handler = READ_ONCE(rh->handler);
-> >> -	struct freelist_node *fn;
-> >>   
-> >>   	lockdep_assert_preemption_disabled();
-> >>   
-> >> @@ -178,11 +172,7 @@ struct rethook_node *rethook_try_get(struct rethook *rh)
-> >>   	if (unlikely(!rcu_is_watching()))
-> >>   		return NULL;
-> >>   
-> >> -	fn = freelist_try_get(&rh->pool);
-> >> -	if (!fn)
-> >> -		return NULL;
-> >> -
-> >> -	return container_of(fn, struct rethook_node, freelist);
-> >> +	return (struct rethook_node *)objpool_pop(&rh->pool);
-> >>   }
-> >>   NOKPROBE_SYMBOL(rethook_try_get);
-> >>   
-> >> -- 
-> >> 2.40.1
-> >>
-> > 
-> > 
-> 
-> 
+MIME-Version: 1.0
+Subject: Re: [PATCH net-next v7] net/core: Introduce netdev_core_stats_inc()
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yajun Deng <yajun.deng@linux.dev>
+To: Eric Dumazet <edumazet@google.com>, rostedt@goodmis.org,
+ mhiramat@kernel.org, dennis@kernel.org, tj@kernel.org, cl@linux.com,
+ mark.rutland@arm.com
+Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Alexander Lobakin <aleksander.lobakin@intel.com>,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20231007050621.1706331-1-yajun.deng@linux.dev>
+ <CANn89iL-zUw1FqjYRSC7BGB0hfQ5uKpJzUba3YFd--c=GdOoGg@mail.gmail.com>
+ <917708b5-cb86-f233-e878-9233c4e6c707@linux.dev>
+ <CANn89i+navyRe8-AV=ehM3qFce2hmnOEKBqvK5Xnev7KTaS5Lg@mail.gmail.com>
+ <a53a3ff6-8c66-07c4-0163-e582d88843dd@linux.dev>
+ <CANn89i+u5dXdYm_0_LwhXg5Nw+gHXx+nPUmbYhvT=k9P4+9JRQ@mail.gmail.com>
+ <9f4fb613-d63f-9b86-fe92-11bf4dfb7275@linux.dev>
+ <CANn89iK7bvQtGD=p+fHaWiiaNn=u8vWrt0YQ26pGQY=kZTdfJw@mail.gmail.com>
+ <4a747fda-2bb9-4231-66d6-31306184eec2@linux.dev>
+In-Reply-To: <4a747fda-2bb9-4231-66d6-31306184eec2@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On 2023/10/8 17:12, Yajun Deng wrote:
+>
+> On 2023/10/8 16:53, Eric Dumazet wrote:
+>> On Sun, Oct 8, 2023 at 10:44 AM Yajun Deng <yajun.deng@linux.dev> wrote:
+>>>
+>>> On 2023/10/8 15:18, Eric Dumazet wrote:
+>>>> On Sun, Oct 8, 2023 at 9:00 AM Yajun Deng <yajun.deng@linux.dev> 
+>>>> wrote:
+>>>>> On 2023/10/8 14:45, Eric Dumazet wrote:
+>>>>>> On Sat, Oct 7, 2023 at 8:34 AM Yajun Deng <yajun.deng@linux.dev> 
+>>>>>> wrote:
+>>>>>>> On 2023/10/7 13:29, Eric Dumazet wrote:
+>>>>>>>> On Sat, Oct 7, 2023 at 7:06 AM Yajun Deng 
+>>>>>>>> <yajun.deng@linux.dev> wrote:
+>>>>>>>>> Although there is a kfree_skb_reason() helper function that 
+>>>>>>>>> can be used to
+>>>>>>>>> find the reason why this skb is dropped, but most callers 
+>>>>>>>>> didn't increase
+>>>>>>>>> one of rx_dropped, tx_dropped, rx_nohandler and 
+>>>>>>>>> rx_otherhost_dropped.
+>>>>>>>>>
+>>>>>>>> ...
+>>>>>>>>
+>>>>>>>>> +
+>>>>>>>>> +void netdev_core_stats_inc(struct net_device *dev, u32 offset)
+>>>>>>>>> +{
+>>>>>>>>> +       /* This READ_ONCE() pairs with the write in 
+>>>>>>>>> netdev_core_stats_alloc() */
+>>>>>>>>> +       struct net_device_core_stats __percpu *p = 
+>>>>>>>>> READ_ONCE(dev->core_stats);
+>>>>>>>>> +       unsigned long *field;
+>>>>>>>>> +
+>>>>>>>>> +       if (unlikely(!p))
+>>>>>>>>> +               p = netdev_core_stats_alloc(dev);
+>>>>>>>>> +
+>>>>>>>>> +       if (p) {
+>>>>>>>>> +               field = (unsigned long *)((void 
+>>>>>>>>> *)this_cpu_ptr(p) + offset);
+>>>>>>>>> +               WRITE_ONCE(*field, READ_ONCE(*field) + 1);
+>>>>>>>> This is broken...
+>>>>>>>>
+>>>>>>>> As I explained earlier, dev_core_stats_xxxx(dev) can be called 
+>>>>>>>> from
+>>>>>>>> many different contexts:
+>>>>>>>>
+>>>>>>>> 1) process contexts, where preemption and migration are allowed.
+>>>>>>>> 2) interrupt contexts.
+>>>>>>>>
+>>>>>>>> Adding WRITE_ONCE()/READ_ONCE() is not solving potential races.
+>>>>>>>>
+>>>>>>>> I _think_ I already gave you how to deal with this ?
+>>>>>>> Yes, I replied in v6.
+>>>>>>>
+>>>>>>> https://lore.kernel.org/all/e25b5f3c-bd97-56f0-de86-b93a3172870d@linux.dev/ 
+>>>>>>>
+>>>>>>>
+>>>>>>>> Please try instead:
+>>>>>>>>
+>>>>>>>> +void netdev_core_stats_inc(struct net_device *dev, u32 offset)
+>>>>>>>> +{
+>>>>>>>> +       /* This READ_ONCE() pairs with the write in 
+>>>>>>>> netdev_core_stats_alloc() */
+>>>>>>>> +       struct net_device_core_stats __percpu *p = 
+>>>>>>>> READ_ONCE(dev->core_stats);
+>>>>>>>> +       unsigned long __percpu *field;
+>>>>>>>> +
+>>>>>>>> +       if (unlikely(!p)) {
+>>>>>>>> +               p = netdev_core_stats_alloc(dev);
+>>>>>>>> +               if (!p)
+>>>>>>>> +                       return;
+>>>>>>>> +       }
+>>>>>>>> +       field = (__force unsigned long __percpu *)((__force 
+>>>>>>>> void *)p + offset);
+>>>>>>>> +       this_cpu_inc(*field);
+>>>>>>>> +}
+>>>>>>> This wouldn't trace anything even the rx_dropped is in 
+>>>>>>> increasing. It
+>>>>>>> needs to add an extra operation, such as:
+>>>>>> I honestly do not know what you are talking about.
+>>>>>>
+>>>>>> Have you even tried to change your patch to use
+>>>>>>
+>>>>>> field = (__force unsigned long __percpu *)((__force void *)p + 
+>>>>>> offset);
+>>>>>> this_cpu_inc(*field);
+>>>>> Yes, I tested this code. But the following couldn't show anything 
+>>>>> even
+>>>>> if the rx_dropped is increasing.
+>>>>>
+>>>>> 'sudo python3 /usr/share/bcc/tools/trace netdev_core_stats_inc'
+>>>> Well, I am not sure about this, "bpftrace" worked for me.
+>>>>
+>>>> Make sure your toolchain generates something that looks like what I 
+>>>> got:
+>>>>
+>>>> 000000000000ef20 <netdev_core_stats_inc>:
+>>>>       ef20: f3 0f 1e fa          endbr64
+>>>>       ef24: e8 00 00 00 00        call   ef29 
+>>>> <netdev_core_stats_inc+0x9>
+>>>> ef25: R_X86_64_PLT32 __fentry__-0x4
+>>>>       ef29: 55                    push   %rbp
+>>>>       ef2a: 48 89 e5              mov    %rsp,%rbp
+>>>>       ef2d: 53                    push   %rbx
+>>>>       ef2e: 89 f3                mov    %esi,%ebx
+>>>>       ef30: 48 8b 87 f0 01 00 00 mov    0x1f0(%rdi),%rax
+>>>>       ef37: 48 85 c0              test   %rax,%rax
+>>>>       ef3a: 74 0b                je     ef47 
+>>>> <netdev_core_stats_inc+0x27>
+>>>>       ef3c: 89 d9                mov    %ebx,%ecx
+>>>>       ef3e: 65 48 ff 04 08        incq   %gs:(%rax,%rcx,1)
+>>>>       ef43: 5b                    pop    %rbx
+>>>>       ef44: 5d                    pop    %rbp
+>>>>       ef45: c3                    ret
+>>>>       ef46: cc                    int3
+>>>>       ef47: e8 00 00 00 00        call   ef4c 
+>>>> <netdev_core_stats_inc+0x2c>
+>>>> ef48: R_X86_64_PLT32 .text.unlikely.+0x13c
+>>>>       ef4c: 48 85 c0              test   %rax,%rax
+>>>>       ef4f: 75 eb                jne    ef3c 
+>>>> <netdev_core_stats_inc+0x1c>
+>>>>       ef51: eb f0                jmp    ef43 
+>>>> <netdev_core_stats_inc+0x23>
+>>>>       ef53: 66 66 66 66 2e 0f 1f data16 data16 data16 cs nopw 
+>>>> 0x0(%rax,%rax,1)
+>>>>       ef5a: 84 00 00 00 00 00
+>>>
+>>> I'll share some I can see it.
+>>>
+>>> 1.
+>>>
+>>> objdump -D vmlinux
+>>>
+>>> ffffffff81b2f170 <netdev_core_stats_inc>:
+>>> ffffffff81b2f170:    e8 8b ea 55 ff           callq ffffffff8108dc00
+>>> <__fentry__>
+>>> ffffffff81b2f175:    55                       push   %rbp
+>>> ffffffff81b2f176:    48 89 e5                 mov    %rsp,%rbp
+>>> ffffffff81b2f179:    48 83 ec 08              sub    $0x8,%rsp
+>>> ffffffff81b2f17d:    48 8b 87 e8 01 00 00     mov 0x1e8(%rdi),%rax
+>>> ffffffff81b2f184:    48 85 c0                 test   %rax,%rax
+>>> ffffffff81b2f187:    74 0d                    je ffffffff81b2f196
+>>> <netdev_core_stats_inc+0x26>
+>>> ffffffff81b2f189:    89 f6                    mov    %esi,%esi
+>>> ffffffff81b2f18b:    65 48 ff 04 30           incq %gs:(%rax,%rsi,1)
+>>> ffffffff81b2f190:    c9                       leaveq
+>>> ffffffff81b2f191:    e9 aa 31 6d 00           jmpq ffffffff82202340
+>>> <__x86_return_thunk>
+>>> ffffffff81b2f196:    89 75 fc                 mov %esi,-0x4(%rbp)
+>>> ffffffff81b2f199:    e8 82 ff ff ff           callq ffffffff81b2f120
+>>> <netdev_core_stats_alloc>
+>>> ffffffff81b2f19e:    8b 75 fc                 mov -0x4(%rbp),%esi
+>>> ffffffff81b2f1a1:    48 85 c0                 test   %rax,%rax
+>>> ffffffff81b2f1a4:    75 e3                    jne ffffffff81b2f189
+>>> <netdev_core_stats_inc+0x19>
+>>> ffffffff81b2f1a6:    c9                       leaveq
+>>> ffffffff81b2f1a7:    e9 94 31 6d 00           jmpq ffffffff82202340
+>>> <__x86_return_thunk>
+>>> ffffffff81b2f1ac:    0f 1f 40 00              nopl   0x0(%rax)
+>>>
+>>>
+>>> 2.
+>>>
+>>> sudo cat /proc/kallsyms | grep netdev_core_stats_inc
+>>>
+>>> ffffffff9c72f120 T netdev_core_stats_inc
+>>> ffffffff9ca2676c t netdev_core_stats_inc.cold
+>>> ffffffff9d5235e0 r __ksymtab_netdev_core_stats_inc
+>>>
+>>>
+>>> 3.
+>>>
+>>> ➜  ~ ifconfig enp34s0f0
+>>> enp34s0f0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST> mtu 1500
+>>>           inet 10.10.30.88  netmask 255.255.255.0  broadcast 
+>>> 10.10.30.255
+>>>           inet6 fe80::6037:806c:14b6:f1ca  prefixlen 64 scopeid 
+>>> 0x20<link>
+>>>           ether 04:d4:c4:5c:81:42  txqueuelen 1000  (Ethernet)
+>>>           RX packets 29024  bytes 3118278 (3.1 MB)
+>>>           RX errors 0  dropped 794  overruns 0  frame 0
+>>>           TX packets 16961  bytes 2662290 (2.6 MB)
+>>>           TX errors 0  dropped 0 overruns 0  carrier 0 collisions 0
+>>>           device interrupt 29  memory 0x39fff4000000-39fff47fffff
+>>>
+>>> ➜  ~ ifconfig enp34s0f0
+>>> enp34s0f0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST> mtu 1500
+>>>           inet 10.10.30.88  netmask 255.255.255.0  broadcast 
+>>> 10.10.30.255
+>>>           inet6 fe80::6037:806c:14b6:f1ca  prefixlen 64 scopeid 
+>>> 0x20<link>
+>>>           ether 04:d4:c4:5c:81:42  txqueuelen 1000  (Ethernet)
+>>>           RX packets 29272  bytes 3148997 (3.1 MB)
+>>>           RX errors 0  dropped 798  overruns 0  frame 0
+>>>           TX packets 17098  bytes 2683547 (2.6 MB)
+>>>           TX errors 0  dropped 0 overruns 0  carrier 0 collisions 0
+>>>           device interrupt 29  memory 0x39fff4000000-39fff47fffff
+>>>
+>>>
+>>> The rx_dropped is increasing.
+>>>
+>>>
+>>> 4.
+>>>
+>>> sudo python3 /usr/share/bcc/tools/trace netdev_core_stats_inc
+>>>
+>>> TIME     PID     TID     COMM            FUNC
+>>>
+>>> (Empty, I didn't see anything.)
+>>>
+>>>
+>>> 5.
+>>>
+>>> sudo trace-cmd record -p function -l netdev_core_stats_inc
+>>>
+>>> sudo trace-cmd report
+>>>
+>>> (Empty, I didn't see anything.)
+>>>
+>>>
+>>> If I add a 'pr_info("\n");'   like:
+>>>
+>>> +      pr_info("\n");
+>>>           field = (__force unsigned long __percpu *)((__force void 
+>>> *)p +
+>>> offset);
+>>>           this_cpu_inc(*field);
+>>>
+>>>
+>>> Everything is OK. The 'pr_info("\n");' can be changed to anything else,
+>>> but not
+>>>
+>>> without it.
+>> This seems to be a bug that has nothing to do with the patch.
+>>
+>> Try getting help from Steven maybe.
+>
+>
+> Hi Steven,
+>
+> Need your help.
+>
+> 1. The following code wouldn't trace anything by the command 'sudo 
+> python3 /usr/share/bcc/tools/trace netdev_core_stats_inc'
+>
+> +void netdev_core_stats_inc(struct net_device *dev, u32 offset)
+> +{
+> +       /* This READ_ONCE() pairs with the write in 
+> netdev_core_stats_alloc() */
+> +       struct net_device_core_stats __percpu *p = 
+> READ_ONCE(dev->core_stats);
+> +       unsigned long __percpu *field;
+> +
+> +       if (unlikely(!p)) {
+> +               p = netdev_core_stats_alloc(dev);
+> +               if (!p)
+> +                       return;
+> +       }
+> +       field = (__force unsigned long __percpu *)((__force void *)p + 
+> offset);
+> +       this_cpu_inc(*field);
+> +}
+> +EXPORT_SYMBOL_GPL(netdev_core_stats_inc);
+>
+> 2. If I add a 'pr_info("\n");', it would be fine. The 'pr_info("\n");' 
+> can be changed to others.
+>
+> +void netdev_core_stats_inc(struct net_device *dev, u32 offset)
+> +{
+> +       /* This READ_ONCE() pairs with the write in 
+> netdev_core_stats_alloc() */
+> +       struct net_device_core_stats __percpu *p = 
+> READ_ONCE(dev->core_stats);
+> +       unsigned long __percpu *field;
+> +
+> +       if (unlikely(!p)) {
+> +               p = netdev_core_stats_alloc(dev);
+> +               if (!p)
+> +                       return;
+> +       }
+> +    pr_info("\n");
+> +       field = (__force unsigned long __percpu *)((__force void *)p + 
+> offset);
+> +       this_cpu_inc(*field);
+> +}
+> +EXPORT_SYMBOL_GPL(netdev_core_stats_inc);
+>
+> I don't know why we need to add something in netdev_core_stats_inc, 
+> the trace will be fine.
+>
+
+I think I found something different in the assembly code.
+
+this_cpu_read:
+ffffffff81b2f120 <netdev_core_stats_inc>:
+ffffffff81b2f120:       e8 db ea 55 ff          callq ffffffff8108dc00 
+<__fentry__>
+ffffffff81b2f125:       55                      push   %rbp
+ffffffff81b2f126:       48 89 e5                mov    %rsp,%rbp
+ffffffff81b2f129:       48 83 ec 08             sub    $0x8,%rsp
+ffffffff81b2f12d:       48 8b 87 e8 01 00 00    mov 0x1e8(%rdi),%rax
+ffffffff81b2f134:       48 85 c0                test   %rax,%rax
+ffffffff81b2f137:       0f 84 2f 76 2f 00       je ffffffff81e2676c 
+<netdev_core_stats_inc.cold>
+ffffffff81b2f13d:       89 f6                   mov    %esi,%esi
+ffffffff81b2f13f:       65 48 8b 04 30          mov %gs:(%rax,%rsi,1),%rax
+ffffffff81b2f144:       c9                      leaveq
+ffffffff81b2f145:       e9 f6 31 6d 00          jmpq ffffffff82202340 
+<__x86_return_thunk>
+ffffffff81b2f14a:       66 0f 1f 44 00 00       nopw 0x0(%rax,%rax,1)
+
+
+this_cpu_write:
+ffffffff81b2f120 <netdev_core_stats_inc>:
+ffffffff81b2f120:       e8 db ea 55 ff          callq ffffffff8108dc00 
+<__fentry__>
+ffffffff81b2f125:       55                      push   %rbp
+ffffffff81b2f126:       48 89 e5                mov    %rsp,%rbp
+ffffffff81b2f129:       48 83 ec 08             sub    $0x8,%rsp
+ffffffff81b2f12d:       48 8b 87 e8 01 00 00    mov 0x1e8(%rdi),%rax
+ffffffff81b2f134:       48 85 c0                test   %rax,%rax
+ffffffff81b2f137:       0f 84 2f 76 2f 00       je ffffffff81e2676c 
+<netdev_core_stats_inc.cold>
+ffffffff81b2f13d:       89 f6                   mov    %esi,%esi
+ffffffff81b2f13f:       65 48 c7 04 30 01 00    movq $0x1,%gs:(%rax,%rsi,1)
+ffffffff81b2f146:       00 00
+ffffffff81b2f148:       c9                      leaveq
+ffffffff81b2f149:       e9 f2 31 6d 00          jmpq ffffffff82202340 
+<__x86_return_thunk>
+ffffffff81b2f14e:       66 90                   xchg   %ax,%ax
+
+
+this_cpu_read + this_cpu_write:
+ffffffff81b2f0e0 <netdev_core_stats_inc>:
+ffffffff81b2f0e0:       e8 1b eb 55 ff          callq ffffffff8108dc00 
+<__fentry__>
+ffffffff81b2f0e5:       55                      push   %rbp
+ffffffff81b2f0e6:       48 89 e5                mov    %rsp,%rbp
+ffffffff81b2f0e9:       41 55                   push   %r13
+ffffffff81b2f0eb:       41 54                   push   %r12
+ffffffff81b2f0ed:       41 89 f4                mov    %esi,%r12d
+ffffffff81b2f0f0:       53                      push   %rbx
+ffffffff81b2f0f1:       48 8b 9f e8 01 00 00    mov 0x1e8(%rdi),%rbx
+ffffffff81b2f0f8:       48 85 db                test   %rbx,%rbx
+ffffffff81b2f0fb:       0f 84 1f 76 2f 00       je ffffffff81e26720 
+<netdev_core_stats_inc.cold>
+ffffffff81b2f101:       44 89 e6                mov    %r12d,%esi
+ffffffff81b2f104:       48 01 de                add    %rbx,%rsi
+ffffffff81b2f107:       65 48 8b 06             mov %gs:(%rsi),%rax
+ffffffff81b2f10b:       65 48 c7 06 01 00 00    movq $0x1,%gs:(%rsi)
+ffffffff81b2f112:       00
+ffffffff81b2f113:       5b                      pop    %rbx
+ffffffff81b2f114:       41 5c                   pop    %r12
+ffffffff81b2f116:       41 5d                   pop    %r13
+ffffffff81b2f118:       5d                      pop    %rbp
+ffffffff81b2f119:       e9 22 32 6d 00          jmpq ffffffff82202340 
+<__x86_return_thunk>
+ffffffff81b2f11e:       66 90                   xchg   %ax,%ax
+
+
+this_cpu_inc:
+ffffffff81b2f120 <netdev_core_stats_inc>:
+ffffffff81b2f120:       e8 db ea 55 ff          callq ffffffff8108dc00 
+<__fentry__>
+ffffffff81b2f125:       55                      push   %rbp
+ffffffff81b2f126:       48 89 e5                mov    %rsp,%rbp
+ffffffff81b2f129:       48 83 ec 08             sub    $0x8,%rsp
+ffffffff81b2f12d:       48 8b 87 e8 01 00 00    mov 0x1e8(%rdi),%rax
+ffffffff81b2f134:       48 85 c0                test   %rax,%rax
+ffffffff81b2f137:       0f 84 2f 76 2f 00       je ffffffff81e2676c 
+<netdev_core_stats_inc.cold>
+ffffffff81b2f13d:       89 f6                   mov    %esi,%esi
+ffffffff81b2f13f:       65 48 ff 04 30          incq %gs:(%rax,%rsi,1)
+ffffffff81b2f144:       c9                      leaveq
+ffffffff81b2f145:       e9 f6 31 6d 00          jmpq ffffffff82202340 
+<__x86_return_thunk>
+ffffffff81b2f14a:       66 0f 1f 44 00 00       nopw 0x0(%rax,%rax,1)
+
+
+pr_info + this_cpu_inc:
+ffffffff81e26720 <netdev_core_stats_inc>:
+ffffffff81e26720:       e8 db 74 26 ff          callq ffffffff8108dc00 
+<__fentry__>
+ffffffff81e26725:       55                      push   %rbp
+ffffffff81e26726:       48 89 e5                mov    %rsp,%rbp
+ffffffff81e26729:       41 55                   push   %r13
+ffffffff81e2672b:       41 89 f5                mov    %esi,%r13d
+ffffffff81e2672e:       41 54                   push   %r12
+ffffffff81e26730:       53                      push   %rbx
+ffffffff81e26731:       48 8b 9f e8 01 00 00    mov 0x1e8(%rdi),%rbx
+ffffffff81e26738:       48 85 db                test   %rbx,%rbx
+ffffffff81e2673b:       75 43                   jne ffffffff81e26780 
+<netdev_core_stats_inc+0x60>
+ffffffff81e2673d:       49 89 fc                mov    %rdi,%r12
+ffffffff81e26740:       ba 20 2a 00 00          mov $0x2a20,%edx
+ffffffff81e26745:       bf 20 00 00 00          mov    $0x20,%edi
+ffffffff81e2674a:       be 20 00 00 00          mov    $0x20,%esi
+ffffffff81e2674f:       e8 0c 36 4f ff          callq ffffffff81319d60 
+<__alloc_percpu_gfp>
+ffffffff81e26754:       48 89 c7                mov    %rax,%rdi
+ffffffff81e26757:       48 85 c0                test   %rax,%rax
+ffffffff81e2675a:       74 17                   je ffffffff81e26773 
+<netdev_core_stats_inc+0x53>
+ffffffff81e2675c:       48 89 d8                mov    %rbx,%rax
+ffffffff81e2675f:       f0 49 0f b1 bc 24 e8    lock cmpxchg 
+%rdi,0x1e8(%r12)
+ffffffff81e26766:       01 00 00
+ffffffff81e26769:       48 85 c0                test   %rax,%rax
+ffffffff81e2676c:       74 05                   je ffffffff81e26773 
+<netdev_core_stats_inc+0x53>
+ffffffff81e2676e:       e8 1d 25 4f ff          callq ffffffff81318c90 
+<free_percpu>
+ffffffff81e26773:       49 8b 9c 24 e8 01 00    mov 0x1e8(%r12),%rbx
+ffffffff81e2677a:       00
+ffffffff81e2677b:       48 85 db                test   %rbx,%rbx
+ffffffff81e2677e:       74 11                   je ffffffff81e26791 
+<netdev_core_stats_inc+0x71>
+ffffffff81e26780:       48 c7 c7 80 cd 77 82    mov $0xffffffff8277cd80,%rdi
+ffffffff81e26787:       e8 6e 94 f6 ff          callq ffffffff81d8fbfa 
+<_printk>
+ffffffff81e2678c:       65 4a ff 04 2b          incq %gs:(%rbx,%r13,1)
+ffffffff81e26791:       5b                      pop    %rbx
+ffffffff81e26792:       41 5c                   pop    %r12
+ffffffff81e26794:       41 5d                   pop    %r13
+ffffffff81e26796:       5d                      pop    %rbp
+ffffffff81e26797:       e9 a4 bb 3d 00          jmpq ffffffff82202340 
+<__x86_return_thunk>
+
+
+'this_cpu_read + this_cpu_write' and 'pr_info + this_cpu_inc' will make 
+the trace work well.
+
+They all have 'pop' instructions in them. This may be the key to making 
+the trace work well.
+
+Hi all,
+
+I need your help on percpu and ftrace.
+
