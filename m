@@ -1,93 +1,87 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A751013FF5
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Oct 2023 07:54:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FFB14F65
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Oct 2023 08:14:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J6sWnabb"
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E23294
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Oct 2023 00:54:06 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id 4fb4d7f45d1cf-534694a9f26so9291a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 09 Oct 2023 00:54:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696838045; x=1697442845; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h352FGx59vcioNapcninHN6AK5Dc534x0lC4Q9q6E4Q=;
-        b=J6sWnabbfhIfnvC9Y0di8LroKCpamvLD1hZiq2r7M7wczIaaoXJpCF8GLQFtp23FhF
-         LqT02YiTzd7amFELoJS+bgMdWGSigHwfITw24gVzw9hmPlsGQ2IHvXGA2X3su+pq9lOy
-         U8PUn1ifJYG8JfwgZ296jnPERQ7MOB4J6BPyYx/kp4Hwz7UgnQKv/6lLB1XCZAG1yD4v
-         6vPK5MH5Kh0MuY/HgCS8fPbm7WELF1jtF9E3953fwWlaJnOiF9t/jsMPdLlmOjXC3Uul
-         ye7V0SnXbmTzsYJJR2SL80+1vxJfE8LkwU7HujahiMRBPEshUbRBgq9Go3boNXz+lyy7
-         SyvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696838045; x=1697442845;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h352FGx59vcioNapcninHN6AK5Dc534x0lC4Q9q6E4Q=;
-        b=BEheC90MrqnPqKoJLUHjgcpm2NU4kPLteEQd9h4DKn8mEk1+WpwCngYi+FA/9i4Drv
-         JaY5edeJuCYMGAflJCGnaVQnReUzwI6YU4F2fOMSYi2A8oHABn7zw2q25ru/6Y++SvTs
-         bi05w9gy8PkPN9L49rM8l4+sRrDz2gvTzmJyMTmLmdBsiceziAZrtsXky2cWiljhTkM9
-         0xr0uG24wu3h3OEm3GfeQMW22ORl1VJdfgd0qsc90vlE8fM2PMEKeFLaxHNWAi9e5sGs
-         Is50I+vYvKpFCRaiQVGgGYNWtRVe0OPnu0GuntAqGctlslgUBK6Qwe+jzjuXkpp9Gfgr
-         GkQA==
-X-Gm-Message-State: AOJu0Yx+qMJ5dtm0QxL5KRrrFb6J45wNTgxoF2ItPcYtfp/Euu7nw5Rm
-	WBSOkjRletqeJGB6nzhhISyy6fyjWwbHm5G/ZZ+QLQ==
-X-Google-Smtp-Source: AGHT+IHsQHtiO+HFnDwGdTsCR/yEkTk+9iKWYFkj3SIWhzqIW+ImmjZj3Dee+Bbo+8oUayPw878DHRaxoahjxKWxo2k=
-X-Received: by 2002:a05:6402:d4b:b0:53a:ff83:6123 with SMTP id
- ec11-20020a0564020d4b00b0053aff836123mr195876edb.3.1696838044799; Mon, 09 Oct
- 2023 00:54:04 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="reALlG5T"
+Received: from out-197.mta0.migadu.com (out-197.mta0.migadu.com [91.218.175.197])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4386F94
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Oct 2023 01:14:09 -0700 (PDT)
+Message-ID: <508b33f7-3dc0-4536-21f6-4a5e7ade2b5c@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1696839245;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k+Qv4mm4LfFHvIi8wP7qIt9+6u91CDBoXpMXVpFXU9E=;
+	b=reALlG5TnFKsumjcpqldLudAXAQgvY+Wrj9WQqyM/WC5hwXbSczKE0OnKNCpzd7x9qltXi
+	XuhawL1h2RzrmHgPEFeArKJUMFD8DeJnj8qCDpEeialpgVCmY8GIVI7yYTDGbf6JpuJsjB
+	R42q6s1hVFZ2uQMxL2EwAdno4501v6Y=
+Date: Mon, 9 Oct 2023 16:13:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH net-next v7] net/core: Introduce netdev_core_stats_inc()
+Content-Language: en-US
+To: Eric Dumazet <edumazet@google.com>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, dennis@kernel.org,
+ tj@kernel.org, cl@linux.com, mark.rutland@arm.com, davem@davemloft.net,
+ kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Alexander Lobakin <aleksander.lobakin@intel.com>,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
 References: <20231007050621.1706331-1-yajun.deng@linux.dev>
  <CANn89iL-zUw1FqjYRSC7BGB0hfQ5uKpJzUba3YFd--c=GdOoGg@mail.gmail.com>
- <917708b5-cb86-f233-e878-9233c4e6c707@linux.dev> <CANn89i+navyRe8-AV=ehM3qFce2hmnOEKBqvK5Xnev7KTaS5Lg@mail.gmail.com>
- <a53a3ff6-8c66-07c4-0163-e582d88843dd@linux.dev> <CANn89i+u5dXdYm_0_LwhXg5Nw+gHXx+nPUmbYhvT=k9P4+9JRQ@mail.gmail.com>
- <9f4fb613-d63f-9b86-fe92-11bf4dfb7275@linux.dev> <CANn89iK7bvQtGD=p+fHaWiiaNn=u8vWrt0YQ26pGQY=kZTdfJw@mail.gmail.com>
- <4a747fda-2bb9-4231-66d6-31306184eec2@linux.dev> <814b5598-5284-9558-8f56-12a6f7a67187@linux.dev>
-In-Reply-To: <814b5598-5284-9558-8f56-12a6f7a67187@linux.dev>
-From: Eric Dumazet <edumazet@google.com>
-Date: Mon, 9 Oct 2023 09:53:51 +0200
-Message-ID: <CANn89iJCTgWTu0mzwj-8_-HiWm4uErY=VASDHoYaod9Nq-ayPA@mail.gmail.com>
-Subject: Re: [PATCH net-next v7] net/core: Introduce netdev_core_stats_inc()
-To: Yajun Deng <yajun.deng@linux.dev>
-Cc: rostedt@goodmis.org, mhiramat@kernel.org, dennis@kernel.org, tj@kernel.org, 
-	cl@linux.com, mark.rutland@arm.com, davem@davemloft.net, kuba@kernel.org, 
-	pabeni@redhat.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Alexander Lobakin <aleksander.lobakin@intel.com>, linux-trace-kernel@vger.kernel.org, 
-	linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
-	autolearn_force=no version=3.4.6
+ <917708b5-cb86-f233-e878-9233c4e6c707@linux.dev>
+ <CANn89i+navyRe8-AV=ehM3qFce2hmnOEKBqvK5Xnev7KTaS5Lg@mail.gmail.com>
+ <a53a3ff6-8c66-07c4-0163-e582d88843dd@linux.dev>
+ <CANn89i+u5dXdYm_0_LwhXg5Nw+gHXx+nPUmbYhvT=k9P4+9JRQ@mail.gmail.com>
+ <9f4fb613-d63f-9b86-fe92-11bf4dfb7275@linux.dev>
+ <CANn89iK7bvQtGD=p+fHaWiiaNn=u8vWrt0YQ26pGQY=kZTdfJw@mail.gmail.com>
+ <4a747fda-2bb9-4231-66d6-31306184eec2@linux.dev>
+ <814b5598-5284-9558-8f56-12a6f7a67187@linux.dev>
+ <CANn89iJCTgWTu0mzwj-8_-HiWm4uErY=VASDHoYaod9Nq-ayPA@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yajun Deng <yajun.deng@linux.dev>
+In-Reply-To: <CANn89iJCTgWTu0mzwj-8_-HiWm4uErY=VASDHoYaod9Nq-ayPA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 9, 2023 at 5:07=E2=80=AFAM Yajun Deng <yajun.deng@linux.dev> wr=
-ote:
 
-> 'this_cpu_read + this_cpu_write' and 'pr_info + this_cpu_inc' will make
-> the trace work well.
+On 2023/10/9 15:53, Eric Dumazet wrote:
+> On Mon, Oct 9, 2023 at 5:07 AM Yajun Deng <yajun.deng@linux.dev> wrote:
 >
-> They all have 'pop' instructions in them. This may be the key to making
-> the trace work well.
+>> 'this_cpu_read + this_cpu_write' and 'pr_info + this_cpu_inc' will make
+>> the trace work well.
+>>
+>> They all have 'pop' instructions in them. This may be the key to making
+>> the trace work well.
+>>
+>> Hi all,
+>>
+>> I need your help on percpu and ftrace.
+>>
+> I do not think you made sure netdev_core_stats_inc() was never inlined.
 >
-> Hi all,
->
-> I need your help on percpu and ftrace.
->
+> Adding more code in it is simply changing how the compiler decides to
+> inline or not.
 
-I do not think you made sure netdev_core_stats_inc() was never inlined.
 
-Adding more code in it is simply changing how the compiler decides to
-inline or not.
+Yes, you are right. It needs to add the 'noinline' prefix. The 
+disassembly code will have 'pop'
+
+instruction.
+
+Thanks.
+
