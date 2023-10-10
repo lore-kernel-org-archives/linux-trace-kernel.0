@@ -1,212 +1,400 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D10182AC
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Oct 2023 11:33:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3544B1DFEC;
+	Tue, 10 Oct 2023 13:54:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="c5y4WBCI"
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B72FCC9;
-	Tue, 10 Oct 2023 04:33:11 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-	by smtp-out1.suse.de (Postfix) with ESMTP id 62C8A211DE;
-	Tue, 10 Oct 2023 11:33:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1696937590; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4Rq/0B4OylI/2x7ycpj1RG14hDbwCTG8LS/MJr+5eho=;
-	b=c5y4WBCIDAHdnLld/5hQDv5goKNNwRincOA4y5vWMXROZ6qXS8Bmbe+sTJz6zaztr2iYpS
-	9rM2oLnVvrOzZrAj+zOGOnSh4w9ZaJcsGDOweWr95lNXE0TOl5G0uUBdG27tfxEhrXxDVv
-	hUNzPZFRTlRUjJX6toshq/I4bE31nfo=
-Received: from suse.cz (pmladek.tcp.ovpn2.prg.suse.de [10.100.208.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by relay2.suse.de (Postfix) with ESMTPS id 8F9332C423;
-	Tue, 10 Oct 2023 11:33:09 +0000 (UTC)
-Date: Tue, 10 Oct 2023 13:33:09 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Alessandro Carminati <alessandro.carminati@gmail.com>
-Cc: Kris Van Hees <kris.van.hees@oracle.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WZ9crXHk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5B53C433C8;
+	Tue, 10 Oct 2023 13:54:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696946063;
+	bh=CNWvC9NpuHMARHhr8MyzieDE2CJlBdi0q9ScP3wU4Pk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WZ9crXHkqfRHOuwF5nSBT/H/QN11ggSEKBro2yDSNAM6nbU6+rc79pvijcGFsp4RK
+	 kj27z4TB/14zehVxsb1V4yLR8cg9XMwpyG4oDwxPJ42IgHsCU91qO3m01sSWdES8nY
+	 M0G03ThhjBrkEjEEQpB2olWoufBDBEC/n4ey4+C/KWh+lF2rAt9IEVzIVG6IrXzuzO
+	 NptVfj5tQgvc5lK23RAeiVWx2C4U0u3sxygBOlbffhN1v4kqn9YgENIyjU1Zkq56Ey
+	 9yX1Sc4EmlMNjCd0plo4OFfZ7f7W7Aguu5nJ+RpFjfolPgCUljrueflCbuFCMHDIyl
+	 JxT6wHCzBaC6A==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Martin KaFai Lau <martin.lau@linux.dev>,
+	Alexei Starovoitov <ast@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Nick Alcock <nick.alcock@oracle.com>,
-	Eugene Loh <eugene.loh@oracle.com>,
-	Francis Laniel <flaniel@linux.microsoft.com>,
-	Viktor Malik <vmalik@redhat.com>, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] scripts/link-vmlinux.sh: Add alias to duplicate
- symbols for kallsyms
-Message-ID: <ZSU2dTTfLqIydSQU@alley>
-References: <20230927173516.1456594-1-alessandro.carminati@gmail.com>
- <ZR7jIxh/VNT6tMVr@oracle.com>
- <CAPp5cGThN5bKsGAqiVwOV2w4tH1LgjS3eoAgucaRwty4d8JVSQ@mail.gmail.com>
+	mhiramat@kernel.org
+Subject: [PATCH] bpf/btf: Move tracing BTF APIs to the BTF library
+Date: Tue, 10 Oct 2023 22:54:19 +0900
+Message-Id: <169694605862.516358.5321950027838863987.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPp5cGThN5bKsGAqiVwOV2w4tH1LgjS3eoAgucaRwty4d8JVSQ@mail.gmail.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon 2023-10-09 15:14:28, Alessandro Carminati wrote:
-> Hello Kris,
-> 
-> Thank you for your contribution and for having your thought shared with me.
-> 
-> Allow me to begin this conversation by explaining what came to mind when
-> I decided to propose a patch that creates aliases.
-> 
-> The objective was to address a specific problem I was facing while
-> minimizing any potential impact on other aspects.
-> My initial consideration was the existence of numerous tools, both in the
-> kernel and in userspace, that rely on the current kallsyms implementation.
-> Both Nick and I shared the concern that making changes to elements upon
-> which these tools depend on could have significant consequences.
-> 
-> To the best of my knowledge, Nick's strategy has been to duplicate kallsyms
-> with something new - a new, improved kallsyms file.
-> 
-> However, even if Nick's patch were to be accepted, it wouldn't fully meet
-> my personal requirements.
-> This is because my goal was to utilize kprobe on a symbol that shares its
-> name with others. Nick's work wouldn't allow me to do this, and that's why,
-> I proposed an alternative.
-> 
-> As a result, my strategy was more modest and focused solely on creating
-> aliases for duplicate symbols.
-> By adding these aliases, existing tools would remain unaffected, and the
-> current system state and ecosystem would be preserved.
-> For instance, mechanisms like live patching could continue to use the
-> symbol hit count.
-> 
-> On the flip side, introducing these new symbols would enable tracers to
-> directly employ the new names without any modifications, and humans could
-> easily identify the symbol they are dealing with just by examining the
-> name.
-> These are the fundamental principles behind my patch - introducing aliases.
-> 
-> Il giorno gio 5 ott 2023 alle ore 18:25 Kris Van Hees
-> <kris.van.hees@oracle.com> ha scritto:
-> >
-> > On Wed, Sep 27, 2023 at 05:35:16PM +0000, Alessandro Carminati (Red Hat) wrote:
-> > > It is not uncommon for drivers or modules related to similar peripherals
-> > > to have symbols with the exact same name.
-> > > While this is not a problem for the kernel's binary itself, it becomes an
-> > > issue when attempting to trace or probe specific functions using
-> > > infrastructure like ftrace or kprobe.
-> > >
-> > > The tracing subsystem relies on the `nm -n vmlinux` output, which provides
-> > > symbol information from the kernel's ELF binary. However, when multiple
-> > > symbols share the same name, the standard nm output does not differentiate
-> > > between them. This can lead to confusion and difficulty when trying to
-> > > probe the intended symbol.
-> > >
-> > >  ~ # cat /proc/kallsyms | grep " name_show"
-> > >  ffffffff8c4f76d0 t name_show
-> > >  ffffffff8c9cccb0 t name_show
-> > >  ffffffff8cb0ac20 t name_show
-> > >  ffffffff8cc728c0 t name_show
-> > >  ffffffff8ce0efd0 t name_show
-> > >  ffffffff8ce126c0 t name_show
-> > >  ffffffff8ce1dd20 t name_show
-> > >  ffffffff8ce24e70 t name_show
-> > >  ffffffff8d1104c0 t name_show
-> > >  ffffffff8d1fe480 t name_show
-> >
-> > One problem that remains as far as I can see is that this approach does not
-> > take into consideration that there can be duplicate symbols in the core
-> > kernel, but also between core kernel and loadable modules, and even between
-> > loadable modules.  So, I think more is needed to also ensure that this
-> > approach of adding alias symbols is also done for loadable modules.
-> 
-> To identify which symbols are duplicated, including those contained in
-> modules, it requires exploring all the objects. If I were to propose a
-> complementary tool to kas_alias that operates on modules, it would need to
-> run on all objects to ascertain the state of the names.
-> Only after this assessment could it produce its output.
-> This would entail postponing the second kallsyms pass until after all
-> modules have been processed.
-> Additionally, modules would need to be processed twice: once to assess the
-> names and a second time to generate aliases for duplicated symbols.
-> I am uncertain if the community would be willing to accept such a delay in
-> the build process to introduce this feature.
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-From the livepatching POV:
+Move the BTF APIs used in tracing to the BTF library code for sharing it
+with others.
+Previously, to avoid complex dependency in a series I made it on the
+tracing tree, but now it is a good time to move it to BPF tree because
+these functions are pure BTF functions.
 
-  + It needs a way to distinguish duplicate symbols within a module.
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ include/linux/btf.h        |   24 +++++++++
+ kernel/bpf/btf.c           |  115 +++++++++++++++++++++++++++++++++++++++++
+ kernel/trace/Makefile      |    1 
+ kernel/trace/trace_btf.c   |  122 --------------------------------------------
+ kernel/trace/trace_btf.h   |   11 ----
+ kernel/trace/trace_probe.c |    2 -
+ 6 files changed, 140 insertions(+), 135 deletions(-)
+ delete mode 100644 kernel/trace/trace_btf.c
+ delete mode 100644 kernel/trace/trace_btf.h
 
-  + It does _not_ need to distinguish symbols which have the same name
-    in two modules or in a module and vmlinux.
+diff --git a/include/linux/btf.h b/include/linux/btf.h
+index 928113a80a95..8372d93ea402 100644
+--- a/include/linux/btf.h
++++ b/include/linux/btf.h
+@@ -507,6 +507,14 @@ btf_get_prog_ctx_type(struct bpf_verifier_log *log, const struct btf *btf,
+ int get_kern_ctx_btf_id(struct bpf_verifier_log *log, enum bpf_prog_type prog_type);
+ bool btf_types_are_same(const struct btf *btf1, u32 id1,
+ 			const struct btf *btf2, u32 id2);
++const struct btf_type *btf_find_func_proto(const char *func_name,
++					   struct btf **btf_p);
++const struct btf_param *btf_get_func_param(const struct btf_type *func_proto,
++					   s32 *nr);
++const struct btf_member *btf_find_struct_member(struct btf *btf,
++						const struct btf_type *type,
++						const char *member_name,
++						u32 *anon_offset);
+ #else
+ static inline const struct btf_type *btf_type_by_id(const struct btf *btf,
+ 						    u32 type_id)
+@@ -559,6 +567,22 @@ static inline bool btf_types_are_same(const struct btf *btf1, u32 id1,
+ {
+ 	return false;
+ }
++static inline const struct btf_type *btf_find_func_proto(const char *func_name,
++							 struct btf **btf_p)
++{
++	return NULL;
++}
++static inline const struct btf_param *
++btf_get_func_param(const struct btf_type *func_proto, s32 *nr)
++{
++	return NULL;
++}
++static inline const struct btf_member *
++btf_find_struct_member(struct btf *btf, const struct btf_type *type,
++		       const char *member_name, u32 *anon_offset)
++{
++	return NULL;
++}
+ #endif
+ 
+ static inline bool btf_type_is_struct_ptr(struct btf *btf, const struct btf_type *t)
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index 8090d7fb11ef..e5cbf3b31b78 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -912,6 +912,121 @@ static const struct btf_type *btf_type_skip_qualifiers(const struct btf *btf,
+ 	return t;
+ }
+ 
++/*
++ * Find a function proto type by name, and return the btf_type with its btf
++ * in *@btf_p. Return NULL if not found.
++ * Note that caller has to call btf_put(*@btf_p) after using the btf_type.
++ */
++const struct btf_type *btf_find_func_proto(const char *func_name, struct btf **btf_p)
++{
++	const struct btf_type *t;
++	s32 id;
++
++	id = bpf_find_btf_id(func_name, BTF_KIND_FUNC, btf_p);
++	if (id < 0)
++		return NULL;
++
++	/* Get BTF_KIND_FUNC type */
++	t = btf_type_by_id(*btf_p, id);
++	if (!t || !btf_type_is_func(t))
++		goto err;
++
++	/* The type of BTF_KIND_FUNC is BTF_KIND_FUNC_PROTO */
++	t = btf_type_by_id(*btf_p, t->type);
++	if (!t || !btf_type_is_func_proto(t))
++		goto err;
++
++	return t;
++err:
++	btf_put(*btf_p);
++	return NULL;
++}
++
++/*
++ * Get function parameter with the number of parameters.
++ * This can return NULL if the function has no parameters.
++ * It can return -EINVAL if the @func_proto is not a function proto type.
++ */
++const struct btf_param *btf_get_func_param(const struct btf_type *func_proto, s32 *nr)
++{
++	if (!btf_type_is_func_proto(func_proto))
++		return ERR_PTR(-EINVAL);
++
++	*nr = btf_type_vlen(func_proto);
++	if (*nr > 0)
++		return (const struct btf_param *)(func_proto + 1);
++	else
++		return NULL;
++}
++
++#define BTF_ANON_STACK_MAX	16
++
++struct btf_anon_stack {
++	u32 tid;
++	u32 offset;
++};
++
++/*
++ * Find a member of data structure/union by name and return it.
++ * Return NULL if not found, or -EINVAL if parameter is invalid.
++ * If the member is an member of anonymous union/structure, the offset
++ * of that anonymous union/structure is stored into @anon_offset. Caller
++ * can calculate the correct offset from the root data structure by
++ * adding anon_offset to the member's offset.
++ */
++const struct btf_member *btf_find_struct_member(struct btf *btf,
++						const struct btf_type *type,
++						const char *member_name,
++						u32 *anon_offset)
++{
++	struct btf_anon_stack *anon_stack;
++	const struct btf_member *member;
++	u32 tid, cur_offset = 0;
++	const char *name;
++	int i, top = 0;
++
++	anon_stack = kcalloc(BTF_ANON_STACK_MAX, sizeof(*anon_stack), GFP_KERNEL);
++	if (!anon_stack)
++		return ERR_PTR(-ENOMEM);
++
++retry:
++	if (!btf_type_is_struct(type)) {
++		member = ERR_PTR(-EINVAL);
++		goto out;
++	}
++
++	for_each_member(i, type, member) {
++		if (!member->name_off) {
++			/* Anonymous union/struct: push it for later use */
++			type = btf_type_skip_modifiers(btf, member->type, &tid);
++			if (type && top < BTF_ANON_STACK_MAX) {
++				anon_stack[top].tid = tid;
++				anon_stack[top++].offset =
++					cur_offset + member->offset;
++			}
++		} else {
++			name = btf_name_by_offset(btf, member->name_off);
++			if (name && !strcmp(member_name, name)) {
++				if (anon_offset)
++					*anon_offset = cur_offset;
++				goto out;
++			}
++		}
++	}
++	if (top > 0) {
++		/* Pop from the anonymous stack and retry */
++		tid = anon_stack[--top].tid;
++		cur_offset = anon_stack[top].offset;
++		type = btf_type_by_id(btf, tid);
++		goto retry;
++	}
++	member = NULL;
++
++out:
++	kfree(anon_stack);
++	return member;
++}
++
+ #define BTF_SHOW_MAX_ITER	10
+ 
+ #define BTF_KIND_BIT(kind)	(1ULL << kind)
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index 057cd975d014..64b61f67a403 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -99,7 +99,6 @@ obj-$(CONFIG_KGDB_KDB) += trace_kdb.o
+ endif
+ obj-$(CONFIG_DYNAMIC_EVENTS) += trace_dynevent.o
+ obj-$(CONFIG_PROBE_EVENTS) += trace_probe.o
+-obj-$(CONFIG_PROBE_EVENTS_BTF_ARGS) += trace_btf.o
+ obj-$(CONFIG_UPROBE_EVENTS) += trace_uprobe.o
+ obj-$(CONFIG_BOOTTIME_TRACING) += trace_boot.o
+ obj-$(CONFIG_FTRACE_RECORD_RECURSION) += trace_recursion_record.o
+diff --git a/kernel/trace/trace_btf.c b/kernel/trace/trace_btf.c
+deleted file mode 100644
+index ca224d53bfdc..000000000000
+--- a/kernel/trace/trace_btf.c
++++ /dev/null
+@@ -1,122 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-#include <linux/btf.h>
+-#include <linux/kernel.h>
+-#include <linux/slab.h>
+-
+-#include "trace_btf.h"
+-
+-/*
+- * Find a function proto type by name, and return the btf_type with its btf
+- * in *@btf_p. Return NULL if not found.
+- * Note that caller has to call btf_put(*@btf_p) after using the btf_type.
+- */
+-const struct btf_type *btf_find_func_proto(const char *func_name, struct btf **btf_p)
+-{
+-	const struct btf_type *t;
+-	s32 id;
+-
+-	id = bpf_find_btf_id(func_name, BTF_KIND_FUNC, btf_p);
+-	if (id < 0)
+-		return NULL;
+-
+-	/* Get BTF_KIND_FUNC type */
+-	t = btf_type_by_id(*btf_p, id);
+-	if (!t || !btf_type_is_func(t))
+-		goto err;
+-
+-	/* The type of BTF_KIND_FUNC is BTF_KIND_FUNC_PROTO */
+-	t = btf_type_by_id(*btf_p, t->type);
+-	if (!t || !btf_type_is_func_proto(t))
+-		goto err;
+-
+-	return t;
+-err:
+-	btf_put(*btf_p);
+-	return NULL;
+-}
+-
+-/*
+- * Get function parameter with the number of parameters.
+- * This can return NULL if the function has no parameters.
+- * It can return -EINVAL if the @func_proto is not a function proto type.
+- */
+-const struct btf_param *btf_get_func_param(const struct btf_type *func_proto, s32 *nr)
+-{
+-	if (!btf_type_is_func_proto(func_proto))
+-		return ERR_PTR(-EINVAL);
+-
+-	*nr = btf_type_vlen(func_proto);
+-	if (*nr > 0)
+-		return (const struct btf_param *)(func_proto + 1);
+-	else
+-		return NULL;
+-}
+-
+-#define BTF_ANON_STACK_MAX	16
+-
+-struct btf_anon_stack {
+-	u32 tid;
+-	u32 offset;
+-};
+-
+-/*
+- * Find a member of data structure/union by name and return it.
+- * Return NULL if not found, or -EINVAL if parameter is invalid.
+- * If the member is an member of anonymous union/structure, the offset
+- * of that anonymous union/structure is stored into @anon_offset. Caller
+- * can calculate the correct offset from the root data structure by
+- * adding anon_offset to the member's offset.
+- */
+-const struct btf_member *btf_find_struct_member(struct btf *btf,
+-						const struct btf_type *type,
+-						const char *member_name,
+-						u32 *anon_offset)
+-{
+-	struct btf_anon_stack *anon_stack;
+-	const struct btf_member *member;
+-	u32 tid, cur_offset = 0;
+-	const char *name;
+-	int i, top = 0;
+-
+-	anon_stack = kcalloc(BTF_ANON_STACK_MAX, sizeof(*anon_stack), GFP_KERNEL);
+-	if (!anon_stack)
+-		return ERR_PTR(-ENOMEM);
+-
+-retry:
+-	if (!btf_type_is_struct(type)) {
+-		member = ERR_PTR(-EINVAL);
+-		goto out;
+-	}
+-
+-	for_each_member(i, type, member) {
+-		if (!member->name_off) {
+-			/* Anonymous union/struct: push it for later use */
+-			type = btf_type_skip_modifiers(btf, member->type, &tid);
+-			if (type && top < BTF_ANON_STACK_MAX) {
+-				anon_stack[top].tid = tid;
+-				anon_stack[top++].offset =
+-					cur_offset + member->offset;
+-			}
+-		} else {
+-			name = btf_name_by_offset(btf, member->name_off);
+-			if (name && !strcmp(member_name, name)) {
+-				if (anon_offset)
+-					*anon_offset = cur_offset;
+-				goto out;
+-			}
+-		}
+-	}
+-	if (top > 0) {
+-		/* Pop from the anonymous stack and retry */
+-		tid = anon_stack[--top].tid;
+-		cur_offset = anon_stack[top].offset;
+-		type = btf_type_by_id(btf, tid);
+-		goto retry;
+-	}
+-	member = NULL;
+-
+-out:
+-	kfree(anon_stack);
+-	return member;
+-}
+-
+diff --git a/kernel/trace/trace_btf.h b/kernel/trace/trace_btf.h
+deleted file mode 100644
+index 4bc44bc261e6..000000000000
+--- a/kernel/trace/trace_btf.h
++++ /dev/null
+@@ -1,11 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#include <linux/btf.h>
+-
+-const struct btf_type *btf_find_func_proto(const char *func_name,
+-					   struct btf **btf_p);
+-const struct btf_param *btf_get_func_param(const struct btf_type *func_proto,
+-					   s32 *nr);
+-const struct btf_member *btf_find_struct_member(struct btf *btf,
+-						const struct btf_type *type,
+-						const char *member_name,
+-						u32 *anon_offset);
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 4dc74d73fc1d..b33c424b8ee0 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -12,7 +12,7 @@
+ #define pr_fmt(fmt)	"trace_probe: " fmt
+ 
+ #include <linux/bpf.h>
+-#include "trace_btf.h"
++#include <linux/btf.h>
+ 
+ #include "trace_probe.h"
+ 
 
-Background: The livepatch contains a structure where the livepatched
-symbols are already split per-livepatched objects: vmlinux or modules.
-I has to know whether a later loaded or removed module is livepatched
-or not and what functions need some tweaking.
-
-> > I'd be happy to work on something like this as a contribution to your work.
-> > I would envision the alias entry not needing to have the typical [module] added
-> > to it because that will already be annotated on the actual symbol entry.  So,
-> > the alias could be extended to be something like:
-> >
-> > ffffffffc0533720 t floppy_open  [floppy]
-> > ffffffffc0533720 t floppy_open@floppy:drivers_block_floppy_c_3988
-> >
-> > (absence of a name: prefix to the path would indicate the symbol is not
-> >  associated with any module)
-> >
-> > Doing this is more realistic now as a result of the clean-up patches that
-> > Nick introduced, e.g.
-> >
-> > https://lore.kernel.org/lkml/20230302211759.30135-1-nick.alcock@oracle.com/
-> >
-> 
-> Personally, I don't perceive any specific benefit in including the module name
-> as part of the decoration. Please don't get me wrong; I do recognize that it
-> enhances clarity in Nick's work.
-> In that context, a human can easily discern that a duplicated name originates
-> from a module, aiding in understanding which symbol they require as it is
-> already for duplicates coming from modules.
-> 
-> However, when it comes to my current implementation, I don't see a compelling
-> reason to include module name into the decoration I append to names aliases.
-> Please accept my apologies if I may not be taking into account any obvious use
-> cases, but as it stands, I don't find a strong rationale for incorporating
-> module names into the symbol decoration.
->
-> In any case, as you've pointed out, duplicates can arise from names in code
-> that is not intended to be a module.
-> Therefore, relying solely on the module name would not fully address the
-> problem you initially aimed to solve.
-
-From my POV:
-
-The source path and the line number is enough to distinguish duplicate
-symbols even in modules.
-
-The added module name would just add extra complexity into the kernel
-and tools parsing and using the alias. The tracing tools would need to
-handle the source path and line number anyway for symbols duplicated
-within same module/vmlinux.
-
-Adding module name for builtin modules might be misleading. It won't
-be clear which symbols are in vmlinux binary and which are in
-real modules.
-
-Best Regards,
-Petr
