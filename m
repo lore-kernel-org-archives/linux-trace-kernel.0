@@ -1,96 +1,52 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03BA84419
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Oct 2023 03:46:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291D09463
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Oct 2023 06:53:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RZopyhFg"
-Received: from out-198.mta0.migadu.com (out-198.mta0.migadu.com [91.218.175.198])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8507BA3
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Oct 2023 20:46:20 -0700 (PDT)
-Message-ID: <7fbf47bf-c26c-8eeb-f803-b9f2bafa6364@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1696909578;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hZJB97dQv1x5vY0R7LD94UsgnKYKd6vyN/0XXr9hYJc=;
-	b=RZopyhFg1RxT0Rdep5vYxJJ7xzF+Ws3zGcvSAn7BpQ/kou3o3Xdg7a/J7bbR/e/YZWTP8F
-	hpn4l064//3J3Gekd3Vhg+rG6BE31qI51cfsDXgAxxYAnPl0bsJ/tALlQo/u4ixpubQP1V
-	3f1baHkeF1EewyEU73MsCO508ivMyJ0=
-Date: Tue, 10 Oct 2023 11:46:08 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xyiq6CUp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4A44C433C7;
+	Tue, 10 Oct 2023 06:53:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696920807;
+	bh=3Xd5odMKBFBnhMasD1TN2er1RvKIMlpFiAWIcG05Rik=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Xyiq6CUp8XABAFw63iIihqEhIcKBDP9iIDfKNRnLw0bmRew0p3XykDoixzrnGvi0G
+	 SEOF25klPe33w9qu7OsWH2SBhEGKfgulUt7d52P3R5/bRAIChbNkVBhU1iIayNQAjW
+	 GBQz8hjeansSE6fVnv84zI32eKMt6riqPd+LX2Fscw9z0glptCyEk36I991coZaCSb
+	 kCvsRIDD3PCakZPebtj05z47ilhqWZjnV+pAbqRJEPOHsadljzKZ0P19YU6B7YiOlw
+	 0KxMIwqHBKfMvRzd1cd7+BiNSRN2kPfG+J+MT3qesZwUZ9DrtmaMKreGEYR7dMo5vy
+	 zxoI3kQ2zPJQA==
+Message-ID: <604a8dd9-f891-368a-3b6c-3756ee6f4f35@kernel.org>
+Date: Tue, 10 Oct 2023 08:53:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next v7] net/core: Introduce netdev_core_stats_inc()
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Eric Dumazet <edumazet@google.com>, mhiramat@kernel.org,
- dennis@kernel.org, tj@kernel.org, cl@linux.com, mark.rutland@arm.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Alexander Lobakin <aleksander.lobakin@intel.com>,
- linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20231007050621.1706331-1-yajun.deng@linux.dev>
- <CANn89i+navyRe8-AV=ehM3qFce2hmnOEKBqvK5Xnev7KTaS5Lg@mail.gmail.com>
- <a53a3ff6-8c66-07c4-0163-e582d88843dd@linux.dev>
- <CANn89i+u5dXdYm_0_LwhXg5Nw+gHXx+nPUmbYhvT=k9P4+9JRQ@mail.gmail.com>
- <9f4fb613-d63f-9b86-fe92-11bf4dfb7275@linux.dev>
- <CANn89iK7bvQtGD=p+fHaWiiaNn=u8vWrt0YQ26pGQY=kZTdfJw@mail.gmail.com>
- <4a747fda-2bb9-4231-66d6-31306184eec2@linux.dev>
- <814b5598-5284-9558-8f56-12a6f7a67187@linux.dev>
- <CANn89iJCTgWTu0mzwj-8_-HiWm4uErY=VASDHoYaod9Nq-ayPA@mail.gmail.com>
- <508b33f7-3dc0-4536-21f6-4a5e7ade2b5c@linux.dev>
- <CANn89i+r-pQGpen1mUhybmj+6ybhxSsuoaB07NFzOWyHUMFDNw@mail.gmail.com>
- <296ca17d-cff0-2d19-f620-eedab004ddde@linux.dev>
- <CANn89iL=W3fyuH_KawfhKvLyw2Cw=qhHbEZtbKgQEYhHJChy3Q@mail.gmail.com>
- <68eb65c5-1870-0776-0878-694a8b002a6d@linux.dev>
- <CANn89iJHtYJjp6zPc2PVLAWuN88BQc5OntjrAf7f6QOcqP+B=g@mail.gmail.com>
- <078f662d-a73f-766b-3a07-c82cd37026c5@linux.dev>
- <20231009102833.1b0d35e3@gandalf.local.home>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yajun Deng <yajun.deng@linux.dev>
-In-Reply-To: <20231009102833.1b0d35e3@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v1] Ftrace: make sched_wakeup can focus on the target
+ process
+To: Jinyu Tang <tangjinyu@tinylab.org>, rostedt@goodmis.org,
+ mhiramat@kernel.org
+Cc: ttjjyystupid@163.com, falcon@tinylab.org, wangjiexun@tinylab.org,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231009153714.10743-1-tangjinyu@tinylab.org>
+Content-Language: en-US, pt-BR, it-IT
+From: Daniel Bristot de Oliveira <bristot@kernel.org>
+In-Reply-To: <20231009153714.10743-1-tangjinyu@tinylab.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
 
+On 10/9/23 17:37, Jinyu Tang wrote:
+> $ cyclictest --mlockall --smp --priority=99 &
 
-On 2023/10/9 22:28, Steven Rostedt wrote:
-> On Mon, 9 Oct 2023 18:58:27 +0800
-> Yajun Deng <yajun.deng@linux.dev> wrote:
->
->>> C compiler decides to inline or not, depending on various factors.
->>>
->>> The most efficient (and small) code is generated by this_cpu_inc()
->>> version, allowing the compiler to inline it.
->>>
->>> If you copy/paste this_cpu_inc()  twenty times, then the compiler
->>> would  not inline the function anymore.
-> Yes, if you want something to be visible by ftrace, it must not be inlined
-> (as inlined functions are not function calls by definition). And as Eric
-> stated, the compiler is perfectly allowed to inline something if it
-> believes it will be more efficient. i.e. There may be code around the function
-> call that could be more efficient if it wasn't change to parameters. If you
-> want to make sure a function stays out of line, you must explicitly tell
-> the compiler you want the function not to ever be inlined (hence the
-> "noinline" attribute).
+rtla timerlat -a <the amount of latency you tolerate>
 
+will give you an structured analysis of your latency...
 
-Thanks for the details.
+https://bristot.me/linux-scheduling-latency-debug-and-analysis/
 
->>
->> Got it. Thank you.
-> Great.
->
-> -- Steve
+-- Daniel
