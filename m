@@ -1,108 +1,183 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0BB98C10
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Oct 2023 10:40:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963232421F
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Oct 2023 11:46:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AKzwN74b"
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D6E3CA
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Oct 2023 03:40:09 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-405505b07dfso12315865e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Oct 2023 03:40:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697107208; x=1697712008; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6fBGv66jYc2kP0EhTg6b4IeqJJdAfPC3InwDkFeTIyA=;
-        b=AKzwN74bLWFYfSbHpcwoInEIDR7BGv9cWxDz2cIurqZYRCSUWjyjlYcBzMMr+BJAIU
-         jO872G/bFm9/p7/p/13tuJZQQPaJLnnFvJDXYEB10CT5zPSVMRCpH7JNgqswslovxsh3
-         lB5zQ+DdOElErZxffy/oyetPq4Z1vZeRkf8gUjc/4RM0PVgQd3vkSg+HICoPNla8LRKy
-         cJbaYc26AbXcEQIrWtCIdanVNAGsk2WA4GPOZ/fchJmzCvL1WJglTbMsaG2IHYj2jeKV
-         CJxh2uOyx4pexgHhX5faDltt7DpQGfucUGKWB5OiAgSraJnZXbiOtOD44NjuoV1yNXjv
-         /hIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697107208; x=1697712008;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6fBGv66jYc2kP0EhTg6b4IeqJJdAfPC3InwDkFeTIyA=;
-        b=qr9dDEwjL6H5l1WBE/oQ1U0d1rOl99mwSTfAwWEWqT4a44+nNg4DSNmzs4HS24VYcU
-         cQZLdlqzokeztBzvFSM8CGfqvJ3uHeTtGC8XkLhtwHSolth0At16XGHrjvxF+SoyoNhC
-         kTA+y5OJhQ0EGVSmlqJdedTYtQAEweP1pUKgUOEJQNLkvaXUaiuQkYOBW31FT4h6PfZH
-         F6OovzmhTcaLZYflV0TiXCS23uE8wOywMVNZV4kHpNg4RPwHWRN4WoLlKPsd+1pgSV//
-         mv2r3Olmtjwnf8f36PqTFiJvT03xe+yA3h+nH+uhvxNl1LgJwCTASPAGdG8ztR0sh8eB
-         RGZA==
-X-Gm-Message-State: AOJu0YzA78C2bSFn+boZPh/519e3GYBqoWD3kropcPY6dtLiBmB5eBk5
-	7kG+2UvPO+/QQpWbiyXpat/BOg==
-X-Google-Smtp-Source: AGHT+IF8V6MtmrGJXfoKWdkMTLSXJ0Shox2IXfQr1G5ZzSCY11ydmvnI2OuBxMZRARrCQZrzayKNqw==
-X-Received: by 2002:a7b:c457:0:b0:401:c8b9:4b86 with SMTP id l23-20020a7bc457000000b00401c8b94b86mr19040636wmi.9.1697107207598;
-        Thu, 12 Oct 2023 03:40:07 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id a12-20020adff7cc000000b0031423a8f4f7sm18050789wrq.56.2023.10.12.03.40.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Oct 2023 03:40:07 -0700 (PDT)
-Date: Thu, 12 Oct 2023 13:40:04 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Julia Lawall <julia.lawall@inria.fr>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing/eprobe: drop unneeded breaks
-Message-ID: <ef43db1c-c50f-479e-8747-3f3a0915eb70@kadam.mountain>
-References: <20230928104334.41215-1-Julia.Lawall@inria.fr>
- <20230929203259.74d4ba263b3455172ef37f06@kernel.org>
- <alpine.DEB.2.22.394.2309291336260.3137@hadrien>
- <20230930181902.eb1d089243deca0017046437@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DMfcW0b8"
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67C40E8
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Oct 2023 04:46:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1697111183;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WIegbc1FLrrwIh2JY6As7DXUlzCdo7e3rD7xAJ0V3OI=;
+	b=DMfcW0b8oPTGdLlPNzq41VFH8Tl9gfwxJYFQgdMBINfvbWHWBnSjvqeUs2sadOoNImaiUo
+	x0l4w6DFFaOo4+iH97heYlmVwc/plkv7E0Nckj8/fHVj/zuPEOmcWA9EqTAyZbetPYGb2l
+	IZej0tui3PIkNZbEcExO7gJ0pi6koXg=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-648-3jWqN8JuMCGfw_MDG6rsJg-1; Thu, 12 Oct 2023 07:46:10 -0400
+X-MC-Unique: 3jWqN8JuMCGfw_MDG6rsJg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B1A3185530F;
+	Thu, 12 Oct 2023 11:46:09 +0000 (UTC)
+Received: from alecto.usersys.redhat.com (unknown [10.43.17.26])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id D6D462157F5A;
+	Thu, 12 Oct 2023 11:46:07 +0000 (UTC)
+From: Artem Savkov <asavkov@redhat.com>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	bpf@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	linux-rt-users@vger.kernel.org,
+	Jiri Olsa <jolsa@kernel.org>,
+	Artem Savkov <asavkov@redhat.com>
+Subject: [RFC PATCH bpf-next] bpf: change syscall_nr type to int in struct syscall_tp_t
+Date: Thu, 12 Oct 2023 13:45:50 +0200
+Message-ID: <20231012114550.152846-1-asavkov@redhat.com>
+In-Reply-To: <20231005123413.GA488417@alecto.usersys.redhat.com>
+References: <20231005123413.GA488417@alecto.usersys.redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230930181902.eb1d089243deca0017046437@kernel.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Sat, Sep 30, 2023 at 06:19:02PM +0900, Masami Hiramatsu wrote:
-> On Fri, 29 Sep 2023 13:37:08 +0200 (CEST)
-> Julia Lawall <julia.lawall@inria.fr> wrote:
-> 
-> > 
-> > 
-> > On Fri, 29 Sep 2023, Masami Hiramatsu  wrote:
-> > 
-> > > On Thu, 28 Sep 2023 12:43:34 +0200
-> > > Julia Lawall <Julia.Lawall@inria.fr> wrote:
-> > >
-> > > > Drop break after return.
-> > > >
-> > >
-> > > Good catch! This looks good to me.
-> > >
-> > > Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > >
-> > > And
-> > >
-> > > Fixes: 7491e2c44278 ("tracing: Add a probe that attaches to trace events")
-> > 
-> > Thanks.  I didn't include that because it's not a bug.  But it does break
-> > Coccinelle, which is how I noticed it.
-> 
-> OK, I got it. I thought it may cause a compiler warning because the
-> 'break' never be executed. (maybe it is just a flow-control word,
-> so it may not need to be warned, but a bit storange.)
+linux-rt-devel tree contains a patch (b1773eac3f29c ("sched: Add support
+for lazy preemption")) that adds an extra member to struct trace_entry.
+This causes the offset of args field in struct trace_event_raw_sys_enter
+be different from the one in struct syscall_trace_enter:
 
-I don't think GCC warns about unreachable code, but yeah, in Smatch
-unreachable break statements do not trigger a warning.  People like
-to add extra break statements to switch statements.
+struct trace_event_raw_sys_enter {
+        struct trace_entry         ent;                  /*     0    12 */
 
-regards,
-dan carpenter
+        /* XXX last struct has 3 bytes of padding */
+        /* XXX 4 bytes hole, try to pack */
+
+        long int                   id;                   /*    16     8 */
+        long unsigned int          args[6];              /*    24    48 */
+        /* --- cacheline 1 boundary (64 bytes) was 8 bytes ago --- */
+        char                       __data[];             /*    72     0 */
+
+        /* size: 72, cachelines: 2, members: 4 */
+        /* sum members: 68, holes: 1, sum holes: 4 */
+        /* paddings: 1, sum paddings: 3 */
+        /* last cacheline: 8 bytes */
+};
+
+struct syscall_trace_enter {
+        struct trace_entry         ent;                  /*     0    12 */
+
+        /* XXX last struct has 3 bytes of padding */
+
+        int                        nr;                   /*    12     4 */
+        long unsigned int          args[];               /*    16     0 */
+
+        /* size: 16, cachelines: 1, members: 3 */
+        /* paddings: 1, sum paddings: 3 */
+        /* last cacheline: 16 bytes */
+};
+
+This, in turn, causes perf_event_set_bpf_prog() fail while running bpf
+test_profiler testcase because max_ctx_offset is calculated based on the
+former struct, while off on the latter:
+
+  10488         if (is_tracepoint || is_syscall_tp) {
+  10489                 int off = trace_event_get_offsets(event->tp_event);
+  10490
+  10491                 if (prog->aux->max_ctx_offset > off)
+  10492                         return -EACCES;
+  10493         }
+
+What bpf program is actually getting is a pointer to struct
+syscall_tp_t, defined in kernel/trace/trace_syscalls.c. This patch fixes
+the problem by aligning struct syscall_tp_t with with struct
+syscall_trace_(enter|exit) and changing the tests to use these structs
+to dereference context.
+
+Signed-off-by: Artem Savkov <asavkov@redhat.com>
+---
+ kernel/trace/trace_syscalls.c                    | 4 ++--
+ tools/testing/selftests/bpf/progs/profiler.inc.h | 2 +-
+ tools/testing/selftests/bpf/progs/test_vmlinux.c | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
+index de753403cdafb..9c581d6da843a 100644
+--- a/kernel/trace/trace_syscalls.c
++++ b/kernel/trace/trace_syscalls.c
+@@ -556,7 +556,7 @@ static int perf_call_bpf_enter(struct trace_event_call *call, struct pt_regs *re
+ {
+ 	struct syscall_tp_t {
+ 		struct trace_entry ent;
+-		unsigned long syscall_nr;
++		int syscall_nr;
+ 		unsigned long args[SYSCALL_DEFINE_MAXARGS];
+ 	} __aligned(8) param;
+ 	int i;
+@@ -661,7 +661,7 @@ static int perf_call_bpf_exit(struct trace_event_call *call, struct pt_regs *reg
+ {
+ 	struct syscall_tp_t {
+ 		struct trace_entry ent;
+-		unsigned long syscall_nr;
++		int syscall_nr;
+ 		unsigned long ret;
+ 	} __aligned(8) param;
+ 
+diff --git a/tools/testing/selftests/bpf/progs/profiler.inc.h b/tools/testing/selftests/bpf/progs/profiler.inc.h
+index f799d87e87002..897061930cb76 100644
+--- a/tools/testing/selftests/bpf/progs/profiler.inc.h
++++ b/tools/testing/selftests/bpf/progs/profiler.inc.h
+@@ -609,7 +609,7 @@ ssize_t BPF_KPROBE(kprobe__proc_sys_write,
+ }
+ 
+ SEC("tracepoint/syscalls/sys_enter_kill")
+-int tracepoint__syscalls__sys_enter_kill(struct trace_event_raw_sys_enter* ctx)
++int tracepoint__syscalls__sys_enter_kill(struct syscall_trace_enter* ctx)
+ {
+ 	struct bpf_func_stats_ctx stats_ctx;
+ 
+diff --git a/tools/testing/selftests/bpf/progs/test_vmlinux.c b/tools/testing/selftests/bpf/progs/test_vmlinux.c
+index 4b8e37f7fd06c..78b23934d9f8f 100644
+--- a/tools/testing/selftests/bpf/progs/test_vmlinux.c
++++ b/tools/testing/selftests/bpf/progs/test_vmlinux.c
+@@ -16,12 +16,12 @@ bool kprobe_called = false;
+ bool fentry_called = false;
+ 
+ SEC("tp/syscalls/sys_enter_nanosleep")
+-int handle__tp(struct trace_event_raw_sys_enter *args)
++int handle__tp(struct syscall_trace_enter *args)
+ {
+ 	struct __kernel_timespec *ts;
+ 	long tv_nsec;
+ 
+-	if (args->id != __NR_nanosleep)
++	if (args->nr != __NR_nanosleep)
+ 		return 0;
+ 
+ 	ts = (void *)args->args[0];
+-- 
+2.41.0
 
