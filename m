@@ -1,154 +1,65 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC91F8478
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Oct 2023 09:54:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lt8cZUCT"
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93CD0A9;
-	Fri, 13 Oct 2023 02:54:21 -0700 (PDT)
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39D5HQNM015306;
-	Fri, 13 Oct 2023 09:54:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=Dd1hsR4xXjeTkRBch04KBr6UdBKUrM80WzAg32k9rwA=;
- b=lt8cZUCTnVnWipQt7GP13z1ng3kU5Rev+5HG9YDiPyAllIrR+kKm8ymzdBM1yCFiVxAs
- xE/o5KSLYsEzcTfq8rvYMWlH6rcyboom8ReIr2SusOQPNDbU57RTMDlRLnPiOHiNvR2I
- 19qKRUOLvqcEGCpmeZKr/+aX0lzh/I5Uy7d6aTgpgWuYRVTdMX9mWZDpmIfzlNsHHa8I
- uAr+cHuB3hGT5Bre0mdakZswpviz5+IJXLvmsLKR01SheCO1g+5QEssmNHRDIRboZuri
- iOoZw7PqLK8kb6cm7G3mfcIs/5ZzWcsbc8cfVkw32GX5FhdwmmUI0ytjdblXAJpc/ATe /w== 
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tpt11ha7a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 13 Oct 2023 09:54:09 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39D9riJw029261
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 13 Oct 2023 09:53:44 GMT
-Received: from [10.216.22.241] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Fri, 13 Oct
- 2023 02:53:38 -0700
-Message-ID: <4c23ee39-dc28-8883-caf6-21a316873cbd@quicinc.com>
-Date: Fri, 13 Oct 2023 15:23:33 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C929B15E94;
+	Fri, 13 Oct 2023 14:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3004EC433C7;
+	Fri, 13 Oct 2023 14:00:25 +0000 (UTC)
+Date: Fri, 13 Oct 2023 10:00:23 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Artem Savkov <asavkov@redhat.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Alexei Starovoitov
+ <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
+ <andrii@kernel.org>, bpf@vger.kernel.org, netdev@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+ linux-rt-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>
+Subject: Re: [RFC PATCH bpf-next] bpf: change syscall_nr type to int in
+ struct syscall_tp_t
+Message-ID: <20231013100023.5b0943ec@rorschach.local.home>
+In-Reply-To: <ZSjdPqQiPdqa-UTs@wtfbox.lan>
+References: <20231005123413.GA488417@alecto.usersys.redhat.com>
+	<20231012114550.152846-1-asavkov@redhat.com>
+	<20231012094444.0967fa79@gandalf.local.home>
+	<CAEf4BzZKWkJjOjw8x_eL_hsU-QzFuSzd5bkBH2EHtirN2hnEgA@mail.gmail.com>
+	<ZSjdPqQiPdqa-UTs@wtfbox.lan>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH] bus: mhi: host: Add tracing support
-Content-Language: en-US
-To: Bjorn Andersson <quic_bjorande@quicinc.com>
-CC: Manivannan Sadhasivam <mani@kernel.org>,
-        Steven Rostedt
-	<rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mhi@lists.linux.dev>, <linux-arm-msm@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <quic_vbadigan@quicinc.com>,
-        <quic_ramkri@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_skananth@quicinc.com>, <quic_parass@quicinc.com>
-References: <20231005-ftrace_support-v1-1-23a2f394fa49@quicinc.com>
- <20231005224047.GJ3553829@hu-bjorande-lv.qualcomm.com>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20231005224047.GJ3553829@hu-bjorande-lv.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: DqMvMK5U1n879R_UL4X6dVcKFXZg67yY
-X-Proofpoint-ORIG-GUID: DqMvMK5U1n879R_UL4X6dVcKFXZg67yY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-13_03,2023-10-12_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- phishscore=0 mlxlogscore=999 impostorscore=0 suspectscore=0
- priorityscore=1501 spamscore=0 adultscore=0 clxscore=1015 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2310130081
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
 
+On Fri, 13 Oct 2023 08:01:34 +0200
+Artem Savkov <asavkov@redhat.com> wrote:
 
-On 10/6/2023 4:10 AM, Bjorn Andersson wrote:
-> On Thu, Oct 05, 2023 at 03:55:20PM +0530, Krishna chaitanya chundru wrote:
->> This change adds ftrace support for following:
->> 1. mhi_intvec_threaded_handler
->> 2. mhi_process_data_event_ring
->> 3. mhi_process_ctrl_ev_ring
->> 4. mhi_gen_tre
->> 5. mhi_update_channel_state
->> 6. mhi_tryset_pm_state
->> 7. mhi_pm_st_worker
-> This is not the best "problem description".
->
->> Usage:
->> 	echo 1 > /sys/kernel/debug/tracing/events/mhi_host/enable
->> 	cat /sys/kernel/debug/tracing/trace
-> This does not need to be included in the commit message, how to use the
-> tracing framework is documented elsewhere.
-Removed this now.
-> [..]
->> diff --git a/drivers/bus/mhi/host/main.c b/drivers/bus/mhi/host/main.c
->> index dcf627b36e82..499590437e9b 100644
->> --- a/drivers/bus/mhi/host/main.c
->> +++ b/drivers/bus/mhi/host/main.c
->> @@ -491,11 +491,10 @@ irqreturn_t mhi_intvec_threaded_handler(int irq_number, void *priv)
->>   
->>   	state = mhi_get_mhi_state(mhi_cntrl);
->>   	ee = mhi_get_exec_env(mhi_cntrl);
->> -	dev_dbg(dev, "local ee: %s state: %s device ee: %s state: %s\n",
->> -		TO_MHI_EXEC_STR(mhi_cntrl->ee),
->> -		mhi_state_str(mhi_cntrl->dev_state),
->> -		TO_MHI_EXEC_STR(ee), mhi_state_str(state));
->>   
->> +	trace_mhi_intvec_threaded_handler(mhi_cntrl->mhi_dev->name, TO_MHI_EXEC_STR(mhi_cntrl->ee),
->> +					  mhi_state_str(mhi_cntrl->dev_state),
->> +					  TO_MHI_EXEC_STR(ee), mhi_state_str(state));
-> All these helper functions that translates a state to a string, pass the
-> raw state into the trace event and use __print_symbolic() in your
-> TP_printk() instead.
->
-> This will allow you to read the state, but you can have tools act of the
-> numerical value.
->
->
-> (This comment applies to all the trace events)
-changed the events as you suggested.
->>   	if (state == MHI_STATE_SYS_ERR) {
->>   		dev_dbg(dev, "System error detected\n");
->>   		pm_state = mhi_tryset_pm_state(mhi_cntrl,
-> [..]
->> diff --git a/include/trace/events/mhi_host.h b/include/trace/events/mhi_host.h
-> [..]
->> +
->> +TRACE_EVENT(mhi_pm_st_worker,
-> Why is this trace event called "worker", isn't the event a
-> "mhi_pm_state_transition"?
->
-> Don't just name your trace event based on the function that triggers
-> them, but what they represent and make sure they carry useful
-> information to understand the system.
->
-> If you want to trace the flow through your functions, you can use e.g.
-> ftrace.
->
-> Regards,
-> Bjorn
+> > But looking at [0] and briefly reading some of the discussions you,
+> > Steven, had. I'm just wondering if it would be best to avoid
+> > increasing struct trace_entry altogether? It seems like preempt_count
+> > is actually a 4-bit field in trace context, so it doesn't seem like we
+> > really need to allocate an entire byte for both preempt_count and
+> > preempt_lazy_count. Why can't we just combine them and not waste 8
+> > extra bytes for each trace event in a ring buffer?
+> > 
+> >   [0] https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git/commit/?id=b1773eac3f29cbdcdfd16e0339f1a164066e9f71  
+> 
+> I agree that avoiding increase in struct trace_entry size would be very
+> desirable, but I have no knowledge whether rt developers had reasons to
+> do it like this.
+> 
+> Nevertheless I think the issue with verifier running against a wrong
+> struct still needs to be addressed.
 
-Changed as you suggested.
+Correct. My Ack is based on the current way things are done upstream.
+It was just that linux-rt showed the issue, where the code was not as
+robust as it should have been. To me this was a correctness issue, not
+an issue that had to do with how things are done in linux-rt.
 
-- KC
+As for the changes in linux-rt, they are not upstream yet. I'll have my
+comments on that code when that happens.
 
+-- Steve
