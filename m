@@ -1,48 +1,48 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE5B1878
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Oct 2023 05:33:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F831878
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Oct 2023 05:33:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ExquvxiQ"
-Received: from mail-oo1-xc34.google.com (mail-oo1-xc34.google.com [IPv6:2607:f8b0:4864:20::c34])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B785B7
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Oct 2023 22:33:31 -0700 (PDT)
-Received: by mail-oo1-xc34.google.com with SMTP id 006d021491bc7-57bab4e9e1aso2136574eaf.3
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Oct 2023 22:33:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="OOTsVBFP"
+Received: from mail-oo1-xc2d.google.com (mail-oo1-xc2d.google.com [IPv6:2607:f8b0:4864:20::c2d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DDE6E5
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Oct 2023 22:33:36 -0700 (PDT)
+Received: by mail-oo1-xc2d.google.com with SMTP id 006d021491bc7-57b8cebf57dso1853844eaf.0
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 14 Oct 2023 22:33:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1697348010; x=1697952810; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1697348016; x=1697952816; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DeCI1NwP8+gNkfLZ//g6QG7eHPqu4x99wp4QGWvVdhI=;
-        b=ExquvxiQmCxElUhNHw0/9m+nVRxJeJJaPCIrTvajP8D9GjqlQ83Z7WEsQdfswl4ZJN
-         P/QV8Nkz3H2rAPzmKE0fO4V21SyoXNE00ddsPmpYHsWHIVQ7kOwwVf+/Isg94ZolL8Oy
-         wI7K05ZcmUbQRfB31j1R4jQWXqV1+USAWfXjlPS0xsHpuCE+lrU8NiGeFkhw/hMrwN1C
-         0v9+fXUt/ZpEN9iYcCMTLP7EUEMEbTN8Na6mpkRjj0ECaezrsNz2eXTqgwuWLTwDPmaI
-         E3YA1EtoIouGCfLpDQSgGiG/Ab/mrW8j9vxZ6QJTy8XPSl9ranO0H33hMr0OeFoq8HcF
-         7xNg==
+        bh=eW5Gw9lfx88ca1Dfq2MtXvfhvw7cUu9QhwY8xI1fswY=;
+        b=OOTsVBFP4oWmk+2kz41hYADJ0T6odHFSxmF4RASbq8wl7ZKg+I0M6O/c1Nc8Qr4kzx
+         i0sxYr0c9CHLkALas/ltv3BxVXNdthKRUGV6HMXpDpJz3oJVHz3ftpWl9cGfJTeVSzXL
+         nsbCWxLBcPNNOeej1A4GaE13Ui64nd5pRBofqYi4R6v8GbW+USl7JBEto2/GAgblocS9
+         ZzPdMS3sssqIGIuZ7jOW+Q/HJydmwPCcfTDjDJ1cvZK4ldRcC3GKOqkpGGBJyTZmBZca
+         +y03BsjrTsZLzu6nwhD8e47Ohf1gkwkyi1BYX/dQkHKl97e+nV8w/KjdBaob9ElDY+9s
+         jr+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697348010; x=1697952810;
+        d=1e100.net; s=20230601; t=1697348016; x=1697952816;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DeCI1NwP8+gNkfLZ//g6QG7eHPqu4x99wp4QGWvVdhI=;
-        b=Pxx72Z8on/MysBwX4/cnJo/QkcjFqE3MjISIUcGqRxrZMmBrCpW8b/Sq1AJHufepVT
-         2gDHJQqz7wZKiZnIBjBudxJYGkzFwSCBkqyVtSTVDDbS/tsO7oPJeLehTUxbpyNy7ydA
-         9870TdBYhj/xYwbRdM85BMDqQByXDZJaz7l/G8BEl26NLyCdLqbX9DmYXHvYwgsZOOTX
-         a/36+ZuPCMWEmwujF4o9YCpi7bSHH2KatrzE1iB8E5cJIHif+54PeHyBWKZlRvzaXX/K
-         JPjetXTRtoUtkIVfwYkK5WBWq4nNUAV3ilPw+bH+mKWVZ4+WadGmCUxrJ2Af9RChu6qu
-         YBpA==
-X-Gm-Message-State: AOJu0YytujVe3dCJaeIfZ/YmEz5jF2gZXxs5epaxCKGpPi5Md5iNMHe7
-	CoXAr753ihFxyR6QUgp33ieYtNg4oUXHkaxF6SpyfQ==
-X-Google-Smtp-Source: AGHT+IG6r0kE6RMY8l0gzwHOQxKyVYaEf3zbjZQCgHkq5CE/3d4c6N5/hWMqsYghwdxFLGFVHTRjTw==
-X-Received: by 2002:a05:6358:4291:b0:143:8601:54d with SMTP id s17-20020a056358429100b001438601054dmr29481986rwc.2.1697348010175;
-        Sat, 14 Oct 2023 22:33:30 -0700 (PDT)
+        bh=eW5Gw9lfx88ca1Dfq2MtXvfhvw7cUu9QhwY8xI1fswY=;
+        b=fwBlDnccEUMvzP+18cQAOF3Ak52X8SsOajM3+4fyk912vrlSMOX79+I3XUDOxD8MYx
+         Jgzo5H8M1iu6xwkoIt4jcIQ16yXToAQu7w6VH1TOb1pnDQBIcw60CClez8H8tDPBDkb6
+         CqDUd6qrXi1TOH+WQS1dT5nQvC6EnxXukwCV9TtKYwkswmEEQsLs05WIbQlIHcBUNdUS
+         XL1U7nuNC8l9t3Z44+4LMk8BIURgM6Velb3cmHXzkJqB3AIBHs73ng+0FkDxape9Nis8
+         nua0nVdP3AGUFiYRFV16kYYcMIYePTyCUasfEtncCGVSLJQtDh6YaUMJE02b/Lo9M6aZ
+         KmUQ==
+X-Gm-Message-State: AOJu0YzePn1dz/MPv2gquIW4TEpVtMX1EwR7ry8elVWGn3QR5dlfx+BM
+	FUYKd+z9lXuW8OhGN2A5lS8IcHeQzheeXLnFpSfFNA==
+X-Google-Smtp-Source: AGHT+IGZwVfLeI1AyGtyBJxKcT0Y5BvLq3O9dnBCaDHueY5UYLzqrCWi05KyK0QUHLr6I+1FO95MuA==
+X-Received: by 2002:a05:6358:3396:b0:132:d32d:d929 with SMTP id i22-20020a056358339600b00132d32dd929mr34182114rwd.20.1697348015684;
+        Sat, 14 Oct 2023 22:33:35 -0700 (PDT)
 Received: from devz1.bytedance.net ([203.208.167.147])
-        by smtp.gmail.com with ESMTPSA id u22-20020a62ed16000000b00690fe1c928csm16187368pfh.147.2023.10.14.22.33.25
+        by smtp.gmail.com with ESMTPSA id u22-20020a62ed16000000b00690fe1c928csm16187368pfh.147.2023.10.14.22.33.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Oct 2023 22:33:29 -0700 (PDT)
+        Sat, 14 Oct 2023 22:33:35 -0700 (PDT)
 From: "wuqiang.matt" <wuqiang.matt@bytedance.com>
 To: linux-trace-kernel@vger.kernel.org,
 	mhiramat@kernel.org,
@@ -60,9 +60,9 @@ Cc: linux-kernel@vger.kernel.org,
 	lkp@intel.com,
 	mattwu@163.com,
 	"wuqiang.matt" <wuqiang.matt@bytedance.com>
-Subject: [PATCH v10 4/5] kprobes: freelist.h removed
-Date: Sun, 15 Oct 2023 13:32:50 +0800
-Message-Id: <20231015053251.707442-5-wuqiang.matt@bytedance.com>
+Subject: [PATCH v10 5/5] MAINTAINERS: objpool added
+Date: Sun, 15 Oct 2023 13:32:51 +0800
+Message-Id: <20231015053251.707442-6-wuqiang.matt@bytedance.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231015053251.707442-1-wuqiang.matt@bytedance.com>
 References: <20231015053251.707442-1-wuqiang.matt@bytedance.com>
@@ -75,155 +75,37 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-	version=3.4.6
+	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-This patch will remove freelist.h from kernel source tree, since the
-only use cases (kretprobe and rethook) are converted to objpool.
+objpool, a scalable and lockless ring-array based object pool, was
+introduced to replace the original freelist (a LIFO queue based on
+singly linked list) to improve kretprobe scalability.
 
 Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
 ---
- include/linux/freelist.h | 129 ---------------------------------------
- 1 file changed, 129 deletions(-)
- delete mode 100644 include/linux/freelist.h
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/include/linux/freelist.h b/include/linux/freelist.h
-deleted file mode 100644
-index fc1842b96469..000000000000
---- a/include/linux/freelist.h
-+++ /dev/null
-@@ -1,129 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
--#ifndef FREELIST_H
--#define FREELIST_H
--
--#include <linux/atomic.h>
--
--/*
-- * Copyright: cameron@moodycamel.com
-- *
-- * A simple CAS-based lock-free free list. Not the fastest thing in the world
-- * under heavy contention, but simple and correct (assuming nodes are never
-- * freed until after the free list is destroyed), and fairly speedy under low
-- * contention.
-- *
-- * Adapted from: https://moodycamel.com/blog/2014/solving-the-aba-problem-for-lock-free-free-lists
-- */
--
--struct freelist_node {
--	atomic_t		refs;
--	struct freelist_node	*next;
--};
--
--struct freelist_head {
--	struct freelist_node	*head;
--};
--
--#define REFS_ON_FREELIST 0x80000000
--#define REFS_MASK	 0x7FFFFFFF
--
--static inline void __freelist_add(struct freelist_node *node, struct freelist_head *list)
--{
--	/*
--	 * Since the refcount is zero, and nobody can increase it once it's
--	 * zero (except us, and we run only one copy of this method per node at
--	 * a time, i.e. the single thread case), then we know we can safely
--	 * change the next pointer of the node; however, once the refcount is
--	 * back above zero, then other threads could increase it (happens under
--	 * heavy contention, when the refcount goes to zero in between a load
--	 * and a refcount increment of a node in try_get, then back up to
--	 * something non-zero, then the refcount increment is done by the other
--	 * thread) -- so if the CAS to add the node to the actual list fails,
--	 * decrese the refcount and leave the add operation to the next thread
--	 * who puts the refcount back to zero (which could be us, hence the
--	 * loop).
--	 */
--	struct freelist_node *head = READ_ONCE(list->head);
--
--	for (;;) {
--		WRITE_ONCE(node->next, head);
--		atomic_set_release(&node->refs, 1);
--
--		if (!try_cmpxchg_release(&list->head, &head, node)) {
--			/*
--			 * Hmm, the add failed, but we can only try again when
--			 * the refcount goes back to zero.
--			 */
--			if (atomic_fetch_add_release(REFS_ON_FREELIST - 1, &node->refs) == 1)
--				continue;
--		}
--		return;
--	}
--}
--
--static inline void freelist_add(struct freelist_node *node, struct freelist_head *list)
--{
--	/*
--	 * We know that the should-be-on-freelist bit is 0 at this point, so
--	 * it's safe to set it using a fetch_add.
--	 */
--	if (!atomic_fetch_add_release(REFS_ON_FREELIST, &node->refs)) {
--		/*
--		 * Oh look! We were the last ones referencing this node, and we
--		 * know we want to add it to the free list, so let's do it!
--		 */
--		__freelist_add(node, list);
--	}
--}
--
--static inline struct freelist_node *freelist_try_get(struct freelist_head *list)
--{
--	struct freelist_node *prev, *next, *head = smp_load_acquire(&list->head);
--	unsigned int refs;
--
--	while (head) {
--		prev = head;
--		refs = atomic_read(&head->refs);
--		if ((refs & REFS_MASK) == 0 ||
--		    !atomic_try_cmpxchg_acquire(&head->refs, &refs, refs+1)) {
--			head = smp_load_acquire(&list->head);
--			continue;
--		}
--
--		/*
--		 * Good, reference count has been incremented (it wasn't at
--		 * zero), which means we can read the next and not worry about
--		 * it changing between now and the time we do the CAS.
--		 */
--		next = READ_ONCE(head->next);
--		if (try_cmpxchg_acquire(&list->head, &head, next)) {
--			/*
--			 * Yay, got the node. This means it was on the list,
--			 * which means should-be-on-freelist must be false no
--			 * matter the refcount (because nobody else knows it's
--			 * been taken off yet, it can't have been put back on).
--			 */
--			WARN_ON_ONCE(atomic_read(&head->refs) & REFS_ON_FREELIST);
--
--			/*
--			 * Decrease refcount twice, once for our ref, and once
--			 * for the list's ref.
--			 */
--			atomic_fetch_add(-2, &head->refs);
--
--			return head;
--		}
--
--		/*
--		 * OK, the head must have changed on us, but we still need to decrement
--		 * the refcount we increased.
--		 */
--		refs = atomic_fetch_add(-1, &prev->refs);
--		if (refs == REFS_ON_FREELIST + 1)
--			__freelist_add(prev, list);
--	}
--
--	return NULL;
--}
--
--#endif /* FREELIST_H */
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 48abe1a281f2..1c0a38d763a2 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15328,6 +15328,13 @@ F:	include/linux/objagg.h
+ F:	lib/objagg.c
+ F:	lib/test_objagg.c
+ 
++OBJPOOL
++M:	Matt Wu <wuqiang.matt@bytedance.com>
++S:	Supported
++F:	include/linux/objpool.h
++F:	lib/objpool.c
++F:	lib/test_objpool.c
++
+ OBJTOOL
+ M:	Josh Poimboeuf <jpoimboe@kernel.org>
+ M:	Peter Zijlstra <peterz@infradead.org>
 -- 
 2.40.1
 
