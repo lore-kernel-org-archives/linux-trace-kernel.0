@@ -1,317 +1,345 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8016828DAB
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Oct 2023 15:04:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="hILyt+BQ"
-Received: from mail-oo1-xc29.google.com (mail-oo1-xc29.google.com [IPv6:2607:f8b0:4864:20::c29])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1F8BB4
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Oct 2023 08:04:38 -0700 (PDT)
-Received: by mail-oo1-xc29.google.com with SMTP id 006d021491bc7-57be3d8e738so2671978eaf.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Oct 2023 08:04:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1697468678; x=1698073478; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QffYa8f47+Hk7lnd37D6vR0fhcrZUpT4hXtPg8meDQQ=;
-        b=hILyt+BQ8JqmohI/AA30fdxUp+xU5gbVWZdRFcnuVuCzMAlpa1fVjVPyoqQxDsJjDw
-         gZnnmeRYLSJa1COgAC4BzMFmCcJJ8cyqPFfCOIoLNEdmxyNB9bPQWXxTIhHEikCfCCz2
-         kPUeCeM3PAEH+20yXfuZaGFOAMeM5+oNeKbhKuMtzKHZlutnBT+C5HvMdBB4WzxnfBZk
-         US8k2HTHUyWhiDKqPPAUGWMueFGB+vYG12l9bf6/yWmYL7DOGao1imuEVvmqvpMYgulP
-         cVoL5a/FJh22GEl8SFVZRecvWebMdWbdzvoNkoFyT9z/Bd2AAq49PAC4LqoalHRRgF8B
-         nw+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697468678; x=1698073478;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QffYa8f47+Hk7lnd37D6vR0fhcrZUpT4hXtPg8meDQQ=;
-        b=gQrMNwTWwVjQnY5+6VpghXweImVimnYm8X6poW0JjTwPA/sQvzxoo6hbM7WWuCxdQZ
-         bHtoJmMm3a0p79tEzuxa2ml9sST+6Iu1gJoZ+uNQgixXmUgAq+WzT625PNCjWWwasP+Y
-         p9dCQhgKnTOefE/J7KJqg+lqE21BVGMPBOBSiTcXszd7Hh8CaqChuuYkDmIYunyZhD66
-         /0PO6BGSKvR7Mnf9RN6uibzmpuZQMNoA8n5sz5Kx+TuAk9V1isfLkH/wn0n8pl+lLnjM
-         t/CKDRJWZaUefn8lubT08enAnTJvU4oXWGexhSXZdshHgklqNU/LCEJn3J6fb9inHnw/
-         FcHg==
-X-Gm-Message-State: AOJu0Ywk21QTYnMaOY9usqdADDSx676ocg2d+CPN6XULQNhmg7cRbszH
-	bL88JvhGZbGR+ggj2X6qjAeGAQ==
-X-Google-Smtp-Source: AGHT+IGEb/Q1yDgEiZkPVrhSGZgdtW5OReTQ5vXAgMHStfsssab54otQk27qGWCl6TRMBqZw9TVhJg==
-X-Received: by 2002:a05:6358:2624:b0:15b:249:b520 with SMTP id l36-20020a056358262400b0015b0249b520mr39351218rwc.7.1697468678028;
-        Mon, 16 Oct 2023 08:04:38 -0700 (PDT)
-Received: from [10.4.56.220] ([139.177.225.243])
-        by smtp.gmail.com with ESMTPSA id bl17-20020a056a00281100b006be047268d5sm2706849pfb.174.2023.10.16.08.04.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Oct 2023 08:04:37 -0700 (PDT)
-Message-ID: <77fa132c-dcc2-ebf2-bedb-7e4f3d393426@bytedance.com>
-Date: Mon, 16 Oct 2023 23:04:30 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF405262AC;
+	Mon, 16 Oct 2023 15:12:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16235C433CD;
+	Mon, 16 Oct 2023 15:12:23 +0000 (UTC)
+Date: Mon, 16 Oct 2023 11:13:57 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <mhi@lists.linux.dev>, <linux-arm-msm@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>, <quic_vbadigan@quicinc.com>,
+ <quic_ramkri@quicinc.com>, <quic_nitegupt@quicinc.com>,
+ <quic_skananth@quicinc.com>, <quic_parass@quicinc.com>
+Subject: Re: [PATCH v2] bus: mhi: host: Add tracing support
+Message-ID: <20231016111357.74b991d4@gandalf.local.home>
+In-Reply-To: <20231013-ftrace_support-v2-1-6e893ce010b5@quicinc.com>
+References: <20231013-ftrace_support-v2-1-6e893ce010b5@quicinc.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.14.0
-From: "wuqiang.matt" <wuqiang.matt@bytedance.com>
-Subject: Re: [PATCH v10 1/5] lib: objpool added: ring-array based lockless
- MPMC
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, davem@davemloft.net,
- anil.s.keshavamurthy@intel.com, naveen.n.rao@linux.ibm.com,
- rostedt@goodmis.org, peterz@infradead.org, akpm@linux-foundation.org,
- sander@svanheule.net, ebiggers@google.com, dan.j.williams@intel.com,
- jpoimboe@kernel.org, linux-kernel@vger.kernel.org, lkp@intel.com,
- mattwu@163.com
-References: <20231015053251.707442-1-wuqiang.matt@bytedance.com>
- <20231015053251.707442-2-wuqiang.matt@bytedance.com>
- <20231016004356.b5f3f815cb8d7c0994934332@kernel.org>
- <1516f7d1-e11b-3244-76b9-e6ddafc29a32@bytedance.com>
- <20231016082659.6ca94a5dff368783698753f9@kernel.org>
- <7758687f-06c1-d9b2-077a-34e79925a339@bytedance.com>
- <20231016211837.b6d425d8ed760bb3306910ae@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20231016211837.b6d425d8ed760bb3306910ae@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
 
-On 2023/10/16 20:18, Masami Hiramatsu (Google) wrote:
-> Hi Wuqiang,
-> 
-> On Mon, 16 Oct 2023 10:45:30 +0800
-> "wuqiang.matt" <wuqiang.matt@bytedance.com> wrote:
-> 
->> On 2023/10/16 07:26, Masami Hiramatsu (Google) wrote:
->>> On Mon, 16 Oct 2023 00:06:11 +0800
->>> "wuqiang.matt" <wuqiang.matt@bytedance.com> wrote:
->>>
->>>> On 2023/10/15 23:43, Masami Hiramatsu (Google) wrote:
->>>>> On Sun, 15 Oct 2023 13:32:47 +0800
->>>>> "wuqiang.matt" <wuqiang.matt@bytedance.com> wrote:
->>>>>
->>>>>> objpool is a scalable implementation of high performance queue for
->>>>>> object allocation and reclamation, such as kretprobe instances.
->>>>>>
->>>>>> With leveraging percpu ring-array to mitigate hot spots of memory
->>>>>> contention, it delivers near-linear scalability for high parallel
->>>>>> scenarios. The objpool is best suited for the following cases:
->>>>>> 1) Memory allocation or reclamation are prohibited or too expensive
->>>>>> 2) Consumers are of different priorities, such as irqs and threads
->>>>>>
->>>>>> Limitations:
->>>>>> 1) Maximum objects (capacity) is fixed after objpool creation
->>>>>> 2) All pre-allocated objects are managed in percpu ring array,
->>>>>>       which consumes more memory than linked lists
->>>>>>
->>>>>
->>>>> Thanks for updating! This looks good to me except 2 points.
->>>>>
->>>>> [...]
->>>>>> +
->>>>>> +/* initialize object pool and pre-allocate objects */
->>>>>> +int objpool_init(struct objpool_head *pool, int nr_objs, int object_size,
->>>>>> +		gfp_t gfp, void *context, objpool_init_obj_cb objinit,
->>>>>> +		objpool_fini_cb release)
->>>>>> +{
->>>>>> +	int rc, capacity, slot_size;
->>>>>> +
->>>>>> +	/* check input parameters */
->>>>>> +	if (nr_objs <= 0 || nr_objs > OBJPOOL_NR_OBJECT_MAX ||
->>>>>> +	    object_size <= 0 || object_size > OBJPOOL_OBJECT_SIZE_MAX)
->>>>>> +		return -EINVAL;
->>>>>> +
->>>>>> +	/* align up to unsigned long size */
->>>>>> +	object_size = ALIGN(object_size, sizeof(long));
->>>>>> +
->>>>>> +	/* calculate capacity of percpu objpool_slot */
->>>>>> +	capacity = roundup_pow_of_two(nr_objs);
->>>>>
->>>>> This must be 'roundup_pow_of_two(nr_objs + 1)' because if nr_objs is power
->>>>> of 2 and all objects are pushed on the same slot, tail == head. This
->>>>> means empty and full is the same.
->>>>
->>>> That won't happen. Would tail and head wrap only when >= 2^32. When all
->>>> objects are pushed to the same slot, tail will be (head + capacity).
->>>
->>> Ah, indeed. OK.
->>>
->>>>
->>>>>
->>>>>> +	if (!capacity)
->>>>>> +		return -EINVAL;
->>>>>> +
->>>>>> +	/* initialize objpool pool */
->>>>>> +	memset(pool, 0, sizeof(struct objpool_head));
->>>>>> +	pool->nr_cpus = nr_cpu_ids;
->>>>>> +	pool->obj_size = object_size;
->>>>>> +	pool->capacity = capacity;
->>>>>> +	pool->gfp = gfp & ~__GFP_ZERO;
->>>>>> +	pool->context = context;
->>>>>> +	pool->release = release;
->>>>>> +	slot_size = pool->nr_cpus * sizeof(struct objpool_slot);
->>>>>> +	pool->cpu_slots = kzalloc(slot_size, pool->gfp);
->>>>>> +	if (!pool->cpu_slots)
->>>>>> +		return -ENOMEM;
->>>>>> +
->>>>>> +	/* initialize per-cpu slots */
->>>>>> +	rc = objpool_init_percpu_slots(pool, nr_objs, context, objinit);
->>>>>> +	if (rc)
->>>>>> +		objpool_fini_percpu_slots(pool);
->>>>>> +	else
->>>>>> +		refcount_set(&pool->ref, pool->nr_objs + 1);
->>>>>> +
->>>>>> +	return rc;
->>>>>> +}
->>>>>> +EXPORT_SYMBOL_GPL(objpool_init);
->>>>>> +
->>>>>
->>>>> [...]
->>>>>
->>>>>> +
->>>>>> +/* drop unused objects and defref objpool for releasing */
->>>>>> +void objpool_fini(struct objpool_head *pool)
->>>>>> +{
->>>>>> +	void *obj;
->>>>>> +
->>>>>> +	do {
->>>>>> +		/* grab object from objpool and drop it */
->>>>>> +		obj = objpool_pop(pool);
->>>>>> +
->>>>>> +		/*
->>>>>> +		 * drop reference of objpool anyway even if
->>>>>> +		 * the obj is NULL, since one extra ref upon
->>>>>> +		 * objpool was already grabbed during pool
->>>>>> +		 * initialization in objpool_init()
->>>>>> +		 */
->>>>>> +		if (refcount_dec_and_test(&pool->ref))
->>>>>> +			objpool_free(pool);
->>>>>
->>>>> Nit: you can call objpool_drop() instead of repeating the same thing here.
->>>>
->>>> objpool_drop won't deref objpool if given obj is NULL. But here we need
->>>> drop objpool anyway even if obj is NULL.
->>>
->>> I guess you decrement for the 'objpool' itself if obj=NULL, but I think
->>> it is a bit hacky (so you added the comment).
->>> e.g. rethook is doing something like below.
->>>
->>> ---
->>> /* extra count for this pool itself */
->>> count = 1;
->>> /* make the pool empty */
->>> while (objpool_pop(pool))
->>> 	count++;
->>>
->>> if (refcount_sub_and_test(count, &pool->ref))
->>> 	objpool_free(pool);
->>> ---
->>
->> Right, that's reasonable. Better one single atomic operation than multiple.
-> 
-> I found another comment issue about a small window which this may not work.
-> This is not a real issue for this series because this doesn't happen on
-> rethook/kretprobe, but if you apply this to other use-case, it must be
-> cared.
-> 
-> Since we use reserve-commit on 'push' operation, this 'pop' loop will miss
-> an object which is under 'push' op. I mean
-> 
-> CPU0                    CPU1
-> 
-> objpool_fini() {
-> do {
->                           objpool_push() {
->                              update slot->tail; // reserve
->    obj = objpool_pop();
->                              update slot->last;  // commit
-> } while (obj);
-> 
-> In this case, the refcount can not be 0 and we can not release objpool.
-> To avoid this, we make sure all ongoing 'push()' must be finished.
-> 
-> Actually in the rethook/kretprobe, it already sync the rcu so this doesn't
-> happen. So you should document it the user must use RCU sync after stop
-> using the objpool, then call objpool_fini().
-> 
-> E.g.
-> 
-> start_using() {
-> objpool_init();
-> active = true;
-> }
-> 
-> obj_alloc() {
-> rcu_read_lock();
-> if (active)
-> 	obj = objpool_pop();
-> else
-> 	obj = NULL;
-> rcu_read_unlock();
-> }
-> 
-> /* use obj for something, it is OK to change the context */
-> 
-> obj_return() {
-> rcu_read_lock();
-> if (active)
-> 	objpool_push(obj);
-> else
-> 	objpool_drop(obj);
-> rcu_read_unlock();
-> }
-> 
-> /* kretprobe style */
-> stop_using() {
-> active = false;
-> synchronize_rcu();
-> objpool_fini();
-> }
-> 
-> /* rethook style */
-> stop_using() {
-> active = false;
-> call_rcu(objpool_fini);
-> }
-> 
-> Hmm, yeah, if we can add this 'active' flag to objpool, it is good. But
-> since kretprobe has different design of the interface, it is hard.
-> Anyway, can you add a comment that user must ensure that any 'push' including
-> ongoing one does not happen while 'fini'? objpool does not care that so user
-> must take care of that. For example using rcu_read_lock() for the 'push/pop'
-> operation and rcu-sync before 'fini' operation.
+On Fri, 13 Oct 2023 15:22:19 +0530
+Krishna chaitanya chundru <quic_krichai@quicinc.com> wrote:
 
-Sure, I'll refine the comments. I prefer that it's user's duty to make sure
-there are no outstanding objpool_push on the fly when calling objpool_fini.
-All usecases like kretprobe/rethook/test_objpool are using rcu to handle the
-asynchronous releasing of objpool. For synchronous cases, user can just call
-object_free to release the whole objpool, which is also acceptable.
+> +++ b/include/trace/events/mhi_host.h
+> @@ -0,0 +1,287 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM mhi_host
+> +
+> +#if !defined(_TRACE_EVENT_MHI_HOST_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_EVENT_MHI_HOST_H
+> +
+> +#include <linux/tracepoint.h>
+> +#define MHI_STATE						\
+> +	EM(MHI_STATE_RESET,	"RESET")			\
+> +	EM(MHI_STATE_READY,	"READY")			\
+> +	EM(MHI_STATE_M0,	"M0")				\
+> +	EM(MHI_STATE_M1,	"M1")				\
+> +	EM(MHI_STATE_M2,	"M2")				\
+> +	EM(MHI_STATE_M3,	"M3")				\
+> +	EM(MHI_STATE_M3_FAST,	"M3 FAST")			\
+> +	EM(MHI_STATE_BHI,	"BHI")				\
+> +	EMe(MHI_STATE_SYS_ERR,	"SYS ERROR")
+> +
+> +#define MHI_EE							\
+> +	EM(MHI_EE_PBL,		"PRIMARY BOOTLOADER")		\
+> +	EM(MHI_EE_SBL,		"SECONDARY BOOTLOADER")		\
+> +	EM(MHI_EE_AMSS,		"MISSION MODE")			\
+> +	EM(MHI_EE_RDDM,		"RAMDUMP DOWNLOAD MODE")	\
+> +	EM(MHI_EE_WFW,		"WLAN FIRMWARE")		\
+> +	EM(MHI_EE_PTHRU,	"PASS THROUGH")			\
+> +	EM(MHI_EE_EDL,		"EMERGENCY DOWNLOAD")		\
+> +	EM(MHI_EE_FP,		"FLASH PROGRAMMER")		\
+> +	EM(MHI_EE_DISABLE_TRANSITION,	"DISABLE")		\
+> +	EMe(MHI_EE_NOT_SUPPORTED,	"NOT SUPPORTED")
+> +
+> +#define MHI_PM_STATE							\
+> +	EM(MHI_PM_STATE_DISABLE,	"DISABLE")			\
+> +	EM(MHI_PM_STATE_POR,		"POWER ON RESET")		\
+> +	EM(MHI_PM_STATE_M0,		"M0")				\
+> +	EM(MHI_PM_STATE_M2,		"M2")				\
+> +	EM(MHI_PM_STATE_M3_ENTER,	"M?->M3")			\
+> +	EM(MHI_PM_STATE_M3,		"M3")				\
+> +	EM(MHI_PM_STATE_M3_EXIT,	"M3->M0")			\
+> +	EM(MHI_PM_STATE_FW_DL_ERR,	"Firmware Download Error")	\
+> +	EM(MHI_PM_STATE_SYS_ERR_DETECT,		"SYS ERROR Detect")	\
+> +	EM(MHI_PM_STATE_SYS_ERR_PROCESS,	"SYS ERROR Process")	\
+> +	EM(MHI_PM_STATE_SHUTDOWN_PROCESS,	"SHUTDOWN Process")	\
+> +	EMe(MHI_PM_STATE_LD_ERR_FATAL_DETECT,	"Linkdown or Error Fatal Detect")
+> +
+> +#define MHI_CH_STATE						\
+> +	EM(MHI_CH_STATE_TYPE_RESET, "RESET")			\
+> +	EM(MHI_CH_STATE_TYPE_STOP, "STOP")			\
+> +	EMe(MHI_CH_STATE_TYPE_START, "START")
+> +
+> +#define MHI_DEV_ST_TRANSITION						\
+> +	EM(DEV_ST_TRANSITION_PBL,	"PBL")				\
+> +	EM(DEV_ST_TRANSITION_READY,	"READY")			\
+> +	EM(DEV_ST_TRANSITION_SBL,	"SBL")				\
+> +	EM(DEV_ST_TRANSITION_MISSION_MODE,	"MISSION MODE")		\
+> +	EM(DEV_ST_TRANSITION_FP,		"FLASH PROGRAMMER")	\
+> +	EM(DEV_ST_TRANSITION_SYS_ERR,		"SYS ERROR")		\
+> +	EMe(DEV_ST_TRANSITION_DISABLE,		"DISABLE")
+> +
+> +/* Enums require being exported to userspace, for user tool parsing */
+> +#undef	EM
+> +#undef	EMe
+> +#define	EM(a, b)	TRACE_DEFINE_ENUM(a);
+> +#define	EMe(a, b)	TRACE_DEFINE_ENUM(a);
+> +
+> +MHI_STATE
+> +MHI_EE
+> +MHI_PM_STATE
+> +MHI_CH_STATE
+> +MHI_DEV_ST_TRANSITION
+> +
+> +/*
+> + * Now redefine the EM() and EMe() macros to map the enums to the strings
+> + * that will be printed in the output.
+> + */
+> +#undef EM
+> +#undef EMe
+> +#define EM(a, b)	{a, b},
+> +#define EMe(a, b)	{a, b}
+> +
+> +TRACE_EVENT(mhi_gen_tre,
+> +
+> +	TP_PROTO(const char *name, int ch_num, u64 wp, __le64 tre_ptr,
+> +		 __le32 dword0, __le32 dword1),
+> +
+> +	TP_ARGS(name, ch_num, wp, tre_ptr, dword0, dword1),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, name)
+> +		__field(int, ch_num)
 
-> Thanks,
-> 
->>
->>>>
->>>>> Thank you,
->>>>>
->>>>>> +	} while (obj);
->>>>>> +}
->>>>>> +EXPORT_SYMBOL_GPL(objpool_fini);
->>>>>> -- 
->>>>>> 2.40.1
->>>>>>
->>>>
->>>> Thanks for your time
->>>>
->>>>
->>>
->>>
->>
-> 
-> 
+This is fine as __string() is four bytes in the event (2 bytes for offset
+where the string exists, and 2 bytes for its length).
 
+> +		__field(u64, wp)
+> +		__field(__le64, tre_ptr)
+
+Which makes the two 8 byte fields aligned. Good!
+
+> +		__field(__le32, dword0)
+> +		__field(__le32, dword1)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, name);
+> +		__entry->ch_num = ch_num;
+> +		__entry->wp = wp;
+> +		__entry->tre_ptr = tre_ptr;
+> +		__entry->dword0 = dword0;
+> +		__entry->dword1 = dword1;
+> +	),
+> +
+> +	TP_printk("%s: Chan: %d WP: 0x%llx TRE: 0x%llx 0x%08x 0x%08x\n",
+> +		  __get_str(name), __entry->ch_num, __entry->wp, __entry->tre_ptr,
+> +		  __entry->dword0, __entry->dword1)
+> +);
+> +
+> +TRACE_EVENT(mhi_intvec_threaded_handler,
+> +
+> +	TP_PROTO(const char *name, int local_ee, int state, int dev_ee, int dev_state),
+> +
+> +	TP_ARGS(name, local_ee, state, dev_ee, dev_state),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, name)
+> +		__field(int, local_ee)
+> +		__field(int, state)
+> +		__field(int, dev_ee)
+> +		__field(int, dev_state)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, name);
+> +		__entry->local_ee = local_ee;
+> +		__entry->state = state;
+> +		__entry->dev_ee = dev_ee;
+> +		__entry->dev_state = dev_state;
+> +	),
+> +
+> +	TP_printk("%s: local ee: %s state: %s device ee: %s state: %s\n",
+> +		  __get_str(name),
+> +		  __print_symbolic(__entry->local_ee, MHI_EE),
+> +		  __print_symbolic(__entry->state, MHI_STATE),
+> +		  __print_symbolic(__entry->dev_ee, MHI_EE),
+> +		  __print_symbolic(__entry->dev_state, MHI_STATE))
+> +);
+> +
+> +TRACE_EVENT(mhi_tryset_pm_state,
+> +
+> +	TP_PROTO(const char *name, int pm_state),
+> +
+> +	TP_ARGS(name, pm_state),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, name)
+> +		__field(int, pm_state)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, name);
+> +		if (pm_state)
+> +			pm_state = __fls(pm_state);
+> +		__entry->pm_state = pm_state;
+> +	),
+> +
+> +	TP_printk("%s: PM state: %s\n", __get_str(name),
+> +		  __print_symbolic(__entry->pm_state, MHI_PM_STATE))
+> +);
+> +
+> +TRACE_EVENT(mhi_process_data_event_ring,
+> +
+> +	TP_PROTO(const char *name, __le64 ptr, __le32 dword0, __le32 dword1),
+> +
+> +	TP_ARGS(name, ptr, dword0, dword1),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, name)
+> +		__field(__le64, ptr)
+
+Here, I would switch the __field(__le64, ptr) with the __string().
+
+		__field(__le64, ptr)
+		__string(name, name)
+
+otherwise you just created a 4 byte hole in the ring buffer, wasting
+precious ring buffer space.
+
+> +		__field(__le32, dword0)
+> +		__field(__le32, dword1)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, name);
+> +		__entry->ptr = ptr;
+> +		__entry->dword0 = dword0;
+> +		__entry->dword1 = dword1;
+> +	),
+> +
+> +	TP_printk("%s: Processing Event:0x%llx 0x%08x 0x%08x\n",
+> +		  __get_str(name), __entry->ptr, __entry->dword0, __entry->dword1)
+> +);
+> +
+> +TRACE_EVENT(mhi_process_ctrl_ev_ring,
+> +
+> +	TP_PROTO(const char *name, u64 rp, __le64 ptr, __le32 dword0, __le32 dword1, int state),
+> +
+> +	TP_ARGS(name, rp, ptr, dword0, dword1, state),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, name)
+> +		__field(u64, rp)
+> +		__field(__le64, ptr)
+
+I would move __string(name, name) here (after the two 8 byte fields).
+
+-- Steve
+
+> +		__field(__le32, dword0)
+> +		__field(__le32, dword1)
+> +		__field(int, state)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, name);
+> +		__entry->rp = rp;
+> +		__entry->ptr = ptr;
+> +		__entry->dword0 = dword0;
+> +		__entry->dword1 = dword1;
+> +		__entry->state = state;
+> +	),
+> +
+> +	TP_printk("%s: RP:0x%llx Processing Event:0x%llx 0x%08x 0x%08x state:%s\n",
+> +		  __get_str(name), __entry->rp, __entry->ptr, __entry->dword0,
+> +		  __entry->dword1, __print_symbolic(__entry->state, MHI_STATE))
+> +);
+> +
+> +TRACE_EVENT(mhi_update_channel_state_start,
+> +
+> +	TP_PROTO(const char *name, int ch_num, int state),
+> +
+> +	TP_ARGS(name, ch_num, state),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, name)
+> +		__field(int, ch_num)
+> +		__field(int, state)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, name);
+> +		__entry->ch_num = ch_num;
+> +		__entry->state = state;
+> +	),
+> +
+> +	TP_printk("%s: ch%d: Updating state to: %s\n",
+> +		  __get_str(name), __entry->ch_num,
+> +		  __print_symbolic(__entry->state, MHI_CH_STATE))
+> +);
+> +
+> +TRACE_EVENT(mhi_update_channel_state_end,
+> +
+> +	TP_PROTO(const char *name, int ch_num, int state),
+> +
+> +	TP_ARGS(name, ch_num, state),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, name)
+> +		__field(int, ch_num)
+> +		__field(int, state)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, name);
+> +		__entry->ch_num = ch_num;
+> +		__entry->state = state;
+> +	),
+> +
+> +	TP_printk("%s: ch%d: Updated state to: %s\n",
+> +		  __get_str(name), __entry->ch_num,
+> +		  __print_symbolic(__entry->state, MHI_CH_STATE))
+> +);
+> +
+> +TRACE_EVENT(mhi_pm_st_transition,
+> +
+> +	TP_PROTO(const char *name, int state),
+> +
+> +	TP_ARGS(name, state),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, name)
+> +		__field(int, state)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, name);
+> +		__entry->state = state;
+> +	),
+> +
+> +	TP_printk("%s: Handling state transition: %s\n", __get_str(name),
+> +		  __print_symbolic(__entry->state, MHI_DEV_ST_TRANSITION))
+> +);
+> +
+> +#endif
+> +#include <trace/define_trace.h>
 
