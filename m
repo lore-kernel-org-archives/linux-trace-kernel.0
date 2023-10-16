@@ -1,137 +1,402 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E142F1D551
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Oct 2023 12:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5634E6
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Oct 2023 05:49:08 -0700 (PDT)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:ce84:d8c0:f79a:fa0])
-	by xavier.telenet-ops.be with bizsmtp
-	id ycp52A00G0pDX7N01cp5bl; Mon, 16 Oct 2023 14:49:06 +0200
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1qsN1q-006jX4-28;
-	Mon, 16 Oct 2023 14:49:05 +0200
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1qsN1t-00A3uN-Ck;
-	Mon, 16 Oct 2023 14:49:05 +0200
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] neighbor: tracing: Move pin6 inside CONFIG_IPV6=y section
-Date: Mon, 16 Oct 2023 14:49:04 +0200
-Message-Id: <60cb0b0c6266881e225160f80a83884607617921.1697460418.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649542773B
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Oct 2023 13:21:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fnZ0TgyF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED0D5C433C7;
+	Mon, 16 Oct 2023 13:21:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697462469;
+	bh=J6Q58EpXbHuZM0jjknhudgIUvxShktGnMt77eTwFHnk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fnZ0TgyFLEL25HEy4S4eXdcMFClOmOQD5O5DIcrrSlcfU+RIPGNpGusczDH2LYzpY
+	 f4VV/K8eh+B0yk4VBwHIWEGNjkKCZaSrKtjGpTS3ZSwla4/aoQgnk4CjA6ugp5gBJs
+	 /xIVCh+KPR4UbbOnGMVSnB2ytZhrQilstzWp+KPZSb6x9LaaF2Lx9keUCUCX7DsojI
+	 VJ0rgIYoJ8zhlZ/yCZR4P2ziBHfWlcs32lY4QusXbEZI+yW36DpgUv9OOJ1hnYo8NG
+	 BaS9fhtR+j8Be6uOQqv6a6nx8HbNrkR4bdywnk/icvjNEKrRQISamFthqGEjigIqMu
+	 mEsKI6eRzujMw==
+Date: Mon, 16 Oct 2023 22:21:03 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "wuqiang.matt" <wuqiang.matt@bytedance.com>
+Cc: linux-trace-kernel@vger.kernel.org, davem@davemloft.net,
+ anil.s.keshavamurthy@intel.com, naveen.n.rao@linux.ibm.com,
+ rostedt@goodmis.org, peterz@infradead.org, akpm@linux-foundation.org,
+ sander@svanheule.net, ebiggers@google.com, dan.j.williams@intel.com,
+ jpoimboe@kernel.org, linux-kernel@vger.kernel.org, lkp@intel.com,
+ mattwu@163.com
+Subject: Re: [PATCH v10 3/5] kprobes: kretprobe scalability improvement with
+ objpool
+Message-Id: <20231016222103.cb9f426edc60220eabd8aa6a@kernel.org>
+In-Reply-To: <20231015053251.707442-4-wuqiang.matt@bytedance.com>
+References: <20231015053251.707442-1-wuqiang.matt@bytedance.com>
+	<20231015053251.707442-4-wuqiang.matt@bytedance.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
-	autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-When CONFIG_IPV6=n, and building with W=1:
+On Sun, 15 Oct 2023 13:32:49 +0800
+"wuqiang.matt" <wuqiang.matt@bytedance.com> wrote:
 
-    In file included from include/trace/define_trace.h:102,
-		     from include/trace/events/neigh.h:255,
-		     from net/core/net-traces.c:51:
-    include/trace/events/neigh.h: In function ‘trace_event_raw_event_neigh_create’:
-    include/trace/events/neigh.h:42:34: error: variable ‘pin6’ set but not used [-Werror=unused-but-set-variable]
-       42 |                 struct in6_addr *pin6;
-	  |                                  ^~~~
-    include/trace/trace_events.h:402:11: note: in definition of macro ‘DECLARE_EVENT_CLASS’
-      402 |         { assign; }                                                     \
-	  |           ^~~~~~
-    include/trace/trace_events.h:44:30: note: in expansion of macro ‘PARAMS’
-       44 |                              PARAMS(assign),                   \
-	  |                              ^~~~~~
-    include/trace/events/neigh.h:23:1: note: in expansion of macro ‘TRACE_EVENT’
-       23 | TRACE_EVENT(neigh_create,
-	  | ^~~~~~~~~~~
-    include/trace/events/neigh.h:41:9: note: in expansion of macro ‘TP_fast_assign’
-       41 |         TP_fast_assign(
-	  |         ^~~~~~~~~~~~~~
-    In file included from include/trace/define_trace.h:103,
-		     from include/trace/events/neigh.h:255,
-		     from net/core/net-traces.c:51:
-    include/trace/events/neigh.h: In function ‘perf_trace_neigh_create’:
-    include/trace/events/neigh.h:42:34: error: variable ‘pin6’ set but not used [-Werror=unused-but-set-variable]
-       42 |                 struct in6_addr *pin6;
-	  |                                  ^~~~
-    include/trace/perf.h:51:11: note: in definition of macro ‘DECLARE_EVENT_CLASS’
-       51 |         { assign; }                                                     \
-	  |           ^~~~~~
-    include/trace/trace_events.h:44:30: note: in expansion of macro ‘PARAMS’
-       44 |                              PARAMS(assign),                   \
-	  |                              ^~~~~~
-    include/trace/events/neigh.h:23:1: note: in expansion of macro ‘TRACE_EVENT’
-       23 | TRACE_EVENT(neigh_create,
-	  | ^~~~~~~~~~~
-    include/trace/events/neigh.h:41:9: note: in expansion of macro ‘TP_fast_assign’
-       41 |         TP_fast_assign(
-	  |         ^~~~~~~~~~~~~~
+> kretprobe is using freelist to manage return-instances, but freelist,
+> as LIFO queue based on singly linked list, scales badly and reduces
+> the overall throughput of kretprobed routines, especially for high
+> contention scenarios.
+> 
+> Here's a typical throughput test of sys_prctl (counts in 10 seconds,
+> measured with perf stat -a -I 10000 -e syscalls:sys_enter_prctl):
+> 
+> OS: Debian 10 X86_64, Linux 6.5rc7 with freelist
+> HW: XEON 8336C x 2, 64 cores/128 threads, DDR4 3200MT/s
+> 
+>          1T       2T       4T       8T      16T      24T
+>    24150045 29317964 15446741 12494489 18287272 17708768
+>         32T      48T      64T      72T      96T     128T
+>    16200682 13737658 11645677 11269858 10470118  9931051
+> 
+> This patch introduces objpool to replace freelist. objpool is a
+> high performance queue, which can bring near-linear scalability
+> to kretprobed routines. Tests of kretprobe throughput show the
+> biggest ratio as 159x of original freelist. Here's the result:
+> 
+>                   1T         2T         4T         8T        16T
+> native:     41186213   82336866  164250978  328662645  658810299
+> freelist:   24150045   29317964   15446741   12494489   18287272
+> objpool:    23926730   48010314   96125218  191782984  385091769
+>                  32T        48T        64T        96T       128T
+> native:   1330338351 1969957941 2512291791 1514690434 2671040914
+> freelist:   16200682   13737658   11645677   10470118    9931051
+> objpool:   764481096 1147149781 1456220214 1502109662 1579015050
+> 
+> Testings on 96-core ARM64 output similarly, but with the biggest
+> ratio up to 336x:
+> 
+> OS: Debian 10 AARCH64, Linux 6.5rc7
+> HW: Kunpeng-920 96 cores/2 sockets/4 NUMA nodes, DDR4 2933 MT/s
+> 
+>                   1T         2T         4T         8T        16T
+> native: .   30066096   63569843  126194076  257447289  505800181
+> freelist:   16152090   11064397   11124068    7215768    5663013
+> objpool:    13997541   28032100   55726624  110099926  221498787
+>                  24T        32T        48T        64T        96T
+> native:    763305277 1015925192 1521075123 2033009392 3021013752
+> freelist:    5015810    4602893    3766792    3382478    2945292
+> objpool:   328192025  439439564  668534502  887401381  990067903
+> 
+> Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
+> ---
+>  include/linux/kprobes.h | 11 ++---
+>  include/linux/rethook.h | 16 ++-----
+>  kernel/kprobes.c        | 93 +++++++++++++++++------------------------
+>  kernel/trace/fprobe.c   | 32 ++++++--------
+>  kernel/trace/rethook.c  | 90 ++++++++++++++++++---------------------
+>  5 files changed, 98 insertions(+), 144 deletions(-)
+> 
+> diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+> index 85a64cb95d75..365eb092e9c4 100644
+> --- a/include/linux/kprobes.h
+> +++ b/include/linux/kprobes.h
+> @@ -26,8 +26,7 @@
+>  #include <linux/rcupdate.h>
+>  #include <linux/mutex.h>
+>  #include <linux/ftrace.h>
+> -#include <linux/refcount.h>
+> -#include <linux/freelist.h>
+> +#include <linux/objpool.h>
+>  #include <linux/rethook.h>
+>  #include <asm/kprobes.h>
+>  
+> @@ -141,7 +140,7 @@ static inline bool kprobe_ftrace(struct kprobe *p)
+>   */
+>  struct kretprobe_holder {
+>  	struct kretprobe	*rp;
+> -	refcount_t		ref;
+> +	struct objpool_head	pool;
+>  };
+>  
+>  struct kretprobe {
+> @@ -154,7 +153,6 @@ struct kretprobe {
+>  #ifdef CONFIG_KRETPROBE_ON_RETHOOK
+>  	struct rethook *rh;
+>  #else
+> -	struct freelist_head freelist;
+>  	struct kretprobe_holder *rph;
+>  #endif
+>  };
+> @@ -165,10 +163,7 @@ struct kretprobe_instance {
+>  #ifdef CONFIG_KRETPROBE_ON_RETHOOK
+>  	struct rethook_node node;
+>  #else
+> -	union {
+> -		struct freelist_node freelist;
+> -		struct rcu_head rcu;
+> -	};
+> +	struct rcu_head rcu;
+>  	struct llist_node llist;
+>  	struct kretprobe_holder *rph;
+>  	kprobe_opcode_t *ret_addr;
+> diff --git a/include/linux/rethook.h b/include/linux/rethook.h
+> index 26b6f3c81a76..ce69b2b7bc35 100644
+> --- a/include/linux/rethook.h
+> +++ b/include/linux/rethook.h
+> @@ -6,11 +6,10 @@
+>  #define _LINUX_RETHOOK_H
+>  
+>  #include <linux/compiler.h>
+> -#include <linux/freelist.h>
+> +#include <linux/objpool.h>
+>  #include <linux/kallsyms.h>
+>  #include <linux/llist.h>
+>  #include <linux/rcupdate.h>
+> -#include <linux/refcount.h>
+>  
+>  struct rethook_node;
+>  
+> @@ -30,14 +29,12 @@ typedef void (*rethook_handler_t) (struct rethook_node *, void *, unsigned long,
+>  struct rethook {
+>  	void			*data;
+>  	rethook_handler_t	handler;
+> -	struct freelist_head	pool;
+> -	refcount_t		ref;
+> +	struct objpool_head	pool;
+>  	struct rcu_head		rcu;
+>  };
+>  
+>  /**
+>   * struct rethook_node - The rethook shadow-stack entry node.
+> - * @freelist: The freelist, linked to struct rethook::pool.
+>   * @rcu: The rcu_head for deferred freeing.
+>   * @llist: The llist, linked to a struct task_struct::rethooks.
+>   * @rethook: The pointer to the struct rethook.
+> @@ -48,20 +45,16 @@ struct rethook {
+>   * on each entry of the shadow stack.
+>   */
+>  struct rethook_node {
+> -	union {
+> -		struct freelist_node freelist;
+> -		struct rcu_head      rcu;
+> -	};
+> +	struct rcu_head		rcu;
+>  	struct llist_node	llist;
+>  	struct rethook		*rethook;
+>  	unsigned long		ret_addr;
+>  	unsigned long		frame;
+>  };
+>  
+> -struct rethook *rethook_alloc(void *data, rethook_handler_t handler);
+> +struct rethook *rethook_alloc(void *data, rethook_handler_t handler, int size, int num);
+>  void rethook_stop(struct rethook *rh);
+>  void rethook_free(struct rethook *rh);
+> -void rethook_add_node(struct rethook *rh, struct rethook_node *node);
+>  struct rethook_node *rethook_try_get(struct rethook *rh);
+>  void rethook_recycle(struct rethook_node *node);
+>  void rethook_hook(struct rethook_node *node, struct pt_regs *regs, bool mcount);
+> @@ -98,4 +91,3 @@ void rethook_flush_task(struct task_struct *tk);
+>  #endif
+>  
+>  #endif
+> -
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index ca385b61d546..075a632e6c7c 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -1877,13 +1877,27 @@ static struct notifier_block kprobe_exceptions_nb = {
+>  #ifdef CONFIG_KRETPROBES
+>  
+>  #if !defined(CONFIG_KRETPROBE_ON_RETHOOK)
+> +
+> +/* callbacks for objpool of kretprobe instances */
+> +static int kretprobe_init_inst(void *nod, void *context)
+> +{
+> +	struct kretprobe_instance *ri = nod;
+> +
+> +	ri->rph = context;
+> +	return 0;
+> +}
+> +static int kretprobe_fini_pool(struct objpool_head *head, void *context)
+> +{
+> +	kfree(context);
+> +	return 0;
+> +}
+> +
+>  static void free_rp_inst_rcu(struct rcu_head *head)
+>  {
+>  	struct kretprobe_instance *ri = container_of(head, struct kretprobe_instance, rcu);
+> +	struct kretprobe_holder *rph = ri->rph;
+>  
+> -	if (refcount_dec_and_test(&ri->rph->ref))
+> -		kfree(ri->rph);
+> -	kfree(ri);
+> +	objpool_drop(ri, &rph->pool);
+>  }
+>  NOKPROBE_SYMBOL(free_rp_inst_rcu);
+>  
+> @@ -1892,7 +1906,7 @@ static void recycle_rp_inst(struct kretprobe_instance *ri)
+>  	struct kretprobe *rp = get_kretprobe(ri);
+>  
+>  	if (likely(rp))
+> -		freelist_add(&ri->freelist, &rp->freelist);
+> +		objpool_push(ri, &rp->rph->pool);
+>  	else
+>  		call_rcu(&ri->rcu, free_rp_inst_rcu);
+>  }
+> @@ -1929,23 +1943,12 @@ NOKPROBE_SYMBOL(kprobe_flush_task);
+>  
+>  static inline void free_rp_inst(struct kretprobe *rp)
+>  {
+> -	struct kretprobe_instance *ri;
+> -	struct freelist_node *node;
+> -	int count = 0;
+> -
+> -	node = rp->freelist.head;
+> -	while (node) {
+> -		ri = container_of(node, struct kretprobe_instance, freelist);
+> -		node = node->next;
+> -
+> -		kfree(ri);
+> -		count++;
+> -	}
+> +	struct kretprobe_holder *rph = rp->rph;
+>  
+> -	if (refcount_sub_and_test(count, &rp->rph->ref)) {
+> -		kfree(rp->rph);
+> -		rp->rph = NULL;
+> -	}
+> +	if (!rph)
+> +		return;
+> +	rp->rph = NULL;
+> +	objpool_fini(&rph->pool);
+>  }
+>  
+>  /* This assumes the 'tsk' is the current task or the is not running. */
+> @@ -2087,19 +2090,17 @@ NOKPROBE_SYMBOL(__kretprobe_trampoline_handler)
+>  static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
+>  {
+>  	struct kretprobe *rp = container_of(p, struct kretprobe, kp);
+> +	struct kretprobe_holder *rph = rp->rph;
+>  	struct kretprobe_instance *ri;
+> -	struct freelist_node *fn;
+>  
+> -	fn = freelist_try_get(&rp->freelist);
+> -	if (!fn) {
+> +	ri = objpool_pop(&rph->pool);
+> +	if (!ri) {
+>  		rp->nmissed++;
+>  		return 0;
+>  	}
+>  
+> -	ri = container_of(fn, struct kretprobe_instance, freelist);
+> -
+>  	if (rp->entry_handler && rp->entry_handler(ri, regs)) {
+> -		freelist_add(&ri->freelist, &rp->freelist);
+> +		objpool_push(ri, &rph->pool);
+>  		return 0;
+>  	}
+>  
+> @@ -2193,7 +2194,6 @@ int kprobe_on_func_entry(kprobe_opcode_t *addr, const char *sym, unsigned long o
+>  int register_kretprobe(struct kretprobe *rp)
+>  {
+>  	int ret;
+> -	struct kretprobe_instance *inst;
+>  	int i;
+>  	void *addr;
+>  
+> @@ -2227,19 +2227,12 @@ int register_kretprobe(struct kretprobe *rp)
+>  		rp->maxactive = max_t(unsigned int, 10, 2*num_possible_cpus());
+>  
+>  #ifdef CONFIG_KRETPROBE_ON_RETHOOK
+> -	rp->rh = rethook_alloc((void *)rp, kretprobe_rethook_handler);
+> -	if (!rp->rh)
+> -		return -ENOMEM;
+> +	rp->rh = rethook_alloc((void *)rp, kretprobe_rethook_handler,
+> +				sizeof(struct kretprobe_instance) +
+> +				rp->data_size, rp->maxactive);
+> +	if (IS_ERR(rp->rh))
+> +		return PTR_ERR(rp->rh);
+>  
+> -	for (i = 0; i < rp->maxactive; i++) {
+> -		inst = kzalloc(struct_size(inst, data, rp->data_size), GFP_KERNEL);
+> -		if (inst == NULL) {
+> -			rethook_free(rp->rh);
+> -			rp->rh = NULL;
+> -			return -ENOMEM;
+> -		}
+> -		rethook_add_node(rp->rh, &inst->node);
+> -	}
+>  	rp->nmissed = 0;
+>  	/* Establish function entry probe point */
+>  	ret = register_kprobe(&rp->kp);
+> @@ -2249,24 +2241,18 @@ int register_kretprobe(struct kretprobe *rp)
+>  		rp->rh = NULL;
+>  	}
+>  #else	/* !CONFIG_KRETPROBE_ON_RETHOOK */
+> -	rp->freelist.head = NULL;
+>  	rp->rph = kzalloc(sizeof(struct kretprobe_holder), GFP_KERNEL);
+>  	if (!rp->rph)
+>  		return -ENOMEM;
+>  
+> -	rp->rph->rp = rp;
+> -	for (i = 0; i < rp->maxactive; i++) {
+> -		inst = kzalloc(struct_size(inst, data, rp->data_size), GFP_KERNEL);
+> -		if (inst == NULL) {
+> -			refcount_set(&rp->rph->ref, i);
+> -			free_rp_inst(rp);
+> -			return -ENOMEM;
+> -		}
+> -		inst->rph = rp->rph;
+> -		freelist_add(&inst->freelist, &rp->freelist);
+> +	if (objpool_init(&rp->rph->pool, rp->maxactive, rp->data_size +
+> +			sizeof(struct kretprobe_instance), GFP_KERNEL,
+> +			rp->rph, kretprobe_init_inst, kretprobe_fini_pool)) {
+> +		kfree(rp->rph);
+> +		rp->rph = NULL;
+> +		return -ENOMEM;
+>  	}
+> -	refcount_set(&rp->rph->ref, i);
+> -
+> +	rp->rph->rp = rp;
+>  	rp->nmissed = 0;
+>  	/* Establish function entry probe point */
+>  	ret = register_kprobe(&rp->kp);
+> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> index 3b21f4063258..f5bf98e6b2ac 100644
+> --- a/kernel/trace/fprobe.c
+> +++ b/kernel/trace/fprobe.c
+> @@ -187,9 +187,9 @@ static void fprobe_init(struct fprobe *fp)
+>  
+>  static int fprobe_init_rethook(struct fprobe *fp, int num)
+>  {
+> -	int i, size;
+> +	int size;
+>  
+> -	if (num < 0)
+> +	if (num <= 0)
+>  		return -EINVAL;
 
-Indeed, the variable pin6 is declared and initialized unconditionally,
-while it is only used and needlessly re-initialized when support for
-IPv6 is enabled.
+Oops, this must be a bugfix. Let me fix it.
 
-Fix this by dropping the unused variable initialization, and moving the
-variable declaration inside the existing section protected by a check
-for CONFIG_IPV6.
+>  
+>  	if (!fp->exit_handler) {
+> @@ -202,29 +202,21 @@ static int fprobe_init_rethook(struct fprobe *fp, int num)
+>  		size = fp->nr_maxactive;
+>  	else
+>  		size = num * num_possible_cpus() * 2;
+> -	if (size < 0)
+> +	if (size <= 0)
+>  		return -E2BIG;
 
-Fixes: fc651001d2c5ca4f ("neighbor: Add tracepoint to __neigh_create")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-No changes in generated code.
+Here too.
 
- include/trace/events/neigh.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Except for this point, it looks good to me.
 
-diff --git a/include/trace/events/neigh.h b/include/trace/events/neigh.h
-index 5eaa1fa9917153f6..833143d0992e063b 100644
---- a/include/trace/events/neigh.h
-+++ b/include/trace/events/neigh.h
-@@ -39,7 +39,6 @@ TRACE_EVENT(neigh_create,
- 	),
- 
- 	TP_fast_assign(
--		struct in6_addr *pin6;
- 		__be32 *p32;
- 
- 		__entry->family = tbl->family;
-@@ -47,7 +46,6 @@ TRACE_EVENT(neigh_create,
- 		__entry->entries = atomic_read(&tbl->gc_entries);
- 		__entry->created = n != NULL;
- 		__entry->gc_exempt = exempt_from_gc;
--		pin6 = (struct in6_addr *)__entry->primary_key6;
- 		p32 = (__be32 *)__entry->primary_key4;
- 
- 		if (tbl->family == AF_INET)
-@@ -57,6 +55,8 @@ TRACE_EVENT(neigh_create,
- 
- #if IS_ENABLED(CONFIG_IPV6)
- 		if (tbl->family == AF_INET6) {
-+			struct in6_addr *pin6;
-+
- 			pin6 = (struct in6_addr *)__entry->primary_key6;
- 			*pin6 = *(struct in6_addr *)pkey;
- 		}
+Thanks!
+
 -- 
-2.34.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
