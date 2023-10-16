@@ -1,275 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73AE423740
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Oct 2023 12:18:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pmh9r6Gp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E5B1C433C8;
-	Mon, 16 Oct 2023 12:18:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697458724;
-	bh=z2XfNOibBFSJtXEMDbx7XhCPr9P+qBhf7ceO2ycDk9U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=pmh9r6GppRfqE5/WV1pdO64cwQR5wOAnCH5o6733A1zKXIO8z2l+IqZYvRy33Yz11
-	 frmNb3pt4hRipI7OpNE50xQzgHk87PQcqMWZ/3+oYfE8abxZxr9Amor6qPVbzLwPHo
-	 rQ7uLGwN7H9SU3jzl7FaiwjjbKdwyW+LwUV0Et52UHEE+TdB3rSCqK6UM7pyeFaZ/3
-	 8ua9bODJSl2gVLZW6FP52DoAnf1YnJ1Io0I9N4FtY+8TT5mP4LrElhfBSE7RlDo+tP
-	 DeqZn7HYJQmagSgjvecWPJ8ZqfT/XMmMgHdPOculEjguitUsFJ1vt0o6oQK6cZVBSR
-	 Bi5AUlWMNYG1w==
-Date: Mon, 16 Oct 2023 21:18:37 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "wuqiang.matt" <wuqiang.matt@bytedance.com>
-Cc: linux-trace-kernel@vger.kernel.org, davem@davemloft.net,
- anil.s.keshavamurthy@intel.com, naveen.n.rao@linux.ibm.com,
- rostedt@goodmis.org, peterz@infradead.org, akpm@linux-foundation.org,
- sander@svanheule.net, ebiggers@google.com, dan.j.williams@intel.com,
- jpoimboe@kernel.org, linux-kernel@vger.kernel.org, lkp@intel.com,
- mattwu@163.com
-Subject: Re: [PATCH v10 1/5] lib: objpool added: ring-array based lockless
- MPMC
-Message-Id: <20231016211837.b6d425d8ed760bb3306910ae@kernel.org>
-In-Reply-To: <7758687f-06c1-d9b2-077a-34e79925a339@bytedance.com>
-References: <20231015053251.707442-1-wuqiang.matt@bytedance.com>
-	<20231015053251.707442-2-wuqiang.matt@bytedance.com>
-	<20231016004356.b5f3f815cb8d7c0994934332@kernel.org>
-	<1516f7d1-e11b-3244-76b9-e6ddafc29a32@bytedance.com>
-	<20231016082659.6ca94a5dff368783698753f9@kernel.org>
-	<7758687f-06c1-d9b2-077a-34e79925a339@bytedance.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777D8273E2;
+	Mon, 16 Oct 2023 12:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9DCED1A6;
+	Mon, 16 Oct 2023 05:40:12 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD7541FB;
+	Mon, 16 Oct 2023 05:40:51 -0700 (PDT)
+Received: from monolith (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E092D3F5A1;
+	Mon, 16 Oct 2023 05:40:05 -0700 (PDT)
+Date: Mon, 16 Oct 2023 13:40:39 +0100
+From: Alexandru Elisei <alexandru.elisei@arm.com>
+To: Hyesoo Yu <hyesoo.yu@samsung.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
+	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
+	rppt@kernel.org, hughd@google.com, pcc@google.com,
+	steven.price@arm.com, anshuman.khandual@arm.com,
+	vincenzo.frascino@arm.com, david@redhat.com, eugenis@google.com,
+	kcc@google.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 04/37] mm: Add MIGRATE_METADATA allocation policy
+Message-ID: <ZS0vRz6PlUJM8MN9@monolith>
+References: <20230823131350.114942-1-alexandru.elisei@arm.com>
+ <20230823131350.114942-5-alexandru.elisei@arm.com>
+ <CGME20231012013834epcas2p28ff3162673294077caef3b0794b69e72@epcas2p2.samsung.com>
+ <20231012012824.GA2426387@tiffany>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231012012824.GA2426387@tiffany>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-Hi Wuqiang,
+Hello,
 
-On Mon, 16 Oct 2023 10:45:30 +0800
-"wuqiang.matt" <wuqiang.matt@bytedance.com> wrote:
-
-> On 2023/10/16 07:26, Masami Hiramatsu (Google) wrote:
-> > On Mon, 16 Oct 2023 00:06:11 +0800
-> > "wuqiang.matt" <wuqiang.matt@bytedance.com> wrote:
+On Thu, Oct 12, 2023 at 10:28:24AM +0900, Hyesoo Yu wrote:
+> On Wed, Aug 23, 2023 at 02:13:17PM +0100, Alexandru Elisei wrote:
+> > Some architectures implement hardware memory coloring to catch incorrect
+> > usage of memory allocation. One such architecture is arm64, which calls its
+> > hardware implementation Memory Tagging Extension.
 > > 
-> >> On 2023/10/15 23:43, Masami Hiramatsu (Google) wrote:
-> >>> On Sun, 15 Oct 2023 13:32:47 +0800
-> >>> "wuqiang.matt" <wuqiang.matt@bytedance.com> wrote:
-> >>>
-> >>>> objpool is a scalable implementation of high performance queue for
-> >>>> object allocation and reclamation, such as kretprobe instances.
-> >>>>
-> >>>> With leveraging percpu ring-array to mitigate hot spots of memory
-> >>>> contention, it delivers near-linear scalability for high parallel
-> >>>> scenarios. The objpool is best suited for the following cases:
-> >>>> 1) Memory allocation or reclamation are prohibited or too expensive
-> >>>> 2) Consumers are of different priorities, such as irqs and threads
-> >>>>
-> >>>> Limitations:
-> >>>> 1) Maximum objects (capacity) is fixed after objpool creation
-> >>>> 2) All pre-allocated objects are managed in percpu ring array,
-> >>>>      which consumes more memory than linked lists
-> >>>>
-> >>>
-> >>> Thanks for updating! This looks good to me except 2 points.
-> >>>
-> >>> [...]
-> >>>> +
-> >>>> +/* initialize object pool and pre-allocate objects */
-> >>>> +int objpool_init(struct objpool_head *pool, int nr_objs, int object_size,
-> >>>> +		gfp_t gfp, void *context, objpool_init_obj_cb objinit,
-> >>>> +		objpool_fini_cb release)
-> >>>> +{
-> >>>> +	int rc, capacity, slot_size;
-> >>>> +
-> >>>> +	/* check input parameters */
-> >>>> +	if (nr_objs <= 0 || nr_objs > OBJPOOL_NR_OBJECT_MAX ||
-> >>>> +	    object_size <= 0 || object_size > OBJPOOL_OBJECT_SIZE_MAX)
-> >>>> +		return -EINVAL;
-> >>>> +
-> >>>> +	/* align up to unsigned long size */
-> >>>> +	object_size = ALIGN(object_size, sizeof(long));
-> >>>> +
-> >>>> +	/* calculate capacity of percpu objpool_slot */
-> >>>> +	capacity = roundup_pow_of_two(nr_objs);
-> >>>
-> >>> This must be 'roundup_pow_of_two(nr_objs + 1)' because if nr_objs is power
-> >>> of 2 and all objects are pushed on the same slot, tail == head. This
-> >>> means empty and full is the same.
-> >>
-> >> That won't happen. Would tail and head wrap only when >= 2^32. When all
-> >> objects are pushed to the same slot, tail will be (head + capacity).
+> > So far, the memory which stores the metadata has been configured by
+> > firmware and hidden from Linux. For arm64, it is impossible to to have the
+> > entire system RAM allocated with metadata because executable memory cannot
+> > be tagged. Furthermore, in practice, only a chunk of all the memory that
+> > can have tags is actually used as tagged. which leaves a portion of
+> > metadata memory unused. As such, it would be beneficial to use this memory,
+> > which so far has been unaccessible to Linux, to service allocation
+> > requests. To prepare for exposing this metadata memory a new migratetype is
+> > being added to the page allocator, called MIGRATE_METADATA.
 > > 
-> > Ah, indeed. OK.
+> > One important aspect is that for arm64 the memory that stores metadata
+> > cannot have metadata associated with it, it can only be used to store
+> > metadata for other pages. This means that the page allocator will *not*
+> > allocate from this migratetype if at least one of the following is true:
 > > 
-> >>
-> >>>
-> >>>> +	if (!capacity)
-> >>>> +		return -EINVAL;
-> >>>> +
-> >>>> +	/* initialize objpool pool */
-> >>>> +	memset(pool, 0, sizeof(struct objpool_head));
-> >>>> +	pool->nr_cpus = nr_cpu_ids;
-> >>>> +	pool->obj_size = object_size;
-> >>>> +	pool->capacity = capacity;
-> >>>> +	pool->gfp = gfp & ~__GFP_ZERO;
-> >>>> +	pool->context = context;
-> >>>> +	pool->release = release;
-> >>>> +	slot_size = pool->nr_cpus * sizeof(struct objpool_slot);
-> >>>> +	pool->cpu_slots = kzalloc(slot_size, pool->gfp);
-> >>>> +	if (!pool->cpu_slots)
-> >>>> +		return -ENOMEM;
-> >>>> +
-> >>>> +	/* initialize per-cpu slots */
-> >>>> +	rc = objpool_init_percpu_slots(pool, nr_objs, context, objinit);
-> >>>> +	if (rc)
-> >>>> +		objpool_fini_percpu_slots(pool);
-> >>>> +	else
-> >>>> +		refcount_set(&pool->ref, pool->nr_objs + 1);
-> >>>> +
-> >>>> +	return rc;
-> >>>> +}
-> >>>> +EXPORT_SYMBOL_GPL(objpool_init);
-> >>>> +
-> >>>
-> >>> [...]
-> >>>
-> >>>> +
-> >>>> +/* drop unused objects and defref objpool for releasing */
-> >>>> +void objpool_fini(struct objpool_head *pool)
-> >>>> +{
-> >>>> +	void *obj;
-> >>>> +
-> >>>> +	do {
-> >>>> +		/* grab object from objpool and drop it */
-> >>>> +		obj = objpool_pop(pool);
-> >>>> +
-> >>>> +		/*
-> >>>> +		 * drop reference of objpool anyway even if
-> >>>> +		 * the obj is NULL, since one extra ref upon
-> >>>> +		 * objpool was already grabbed during pool
-> >>>> +		 * initialization in objpool_init()
-> >>>> +		 */
-> >>>> +		if (refcount_dec_and_test(&pool->ref))
-> >>>> +			objpool_free(pool);
-> >>>
-> >>> Nit: you can call objpool_drop() instead of repeating the same thing here.
-> >>
-> >> objpool_drop won't deref objpool if given obj is NULL. But here we need
-> >> drop objpool anyway even if obj is NULL.
+> > - The allocation also needs metadata to be allocated.
+> > - The allocation isn't movable. A metadata page storing data must be
+> >   able to be migrated at any given time so it can be repurposed to store
+> >   metadata.
 > > 
-> > I guess you decrement for the 'objpool' itself if obj=NULL, but I think
-> > it is a bit hacky (so you added the comment).
-> > e.g. rethook is doing something like below.
+> > Both cases are specific to arm64's implementation of memory metadata.
 > > 
+> > For now, metadata storage pages management is disabled, and it will be
+> > enabled once the architecture-specific handling is added.
+> > 
+> > Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
 > > ---
-> > /* extra count for this pool itself */
-> > count = 1;
-> > /* make the pool empty */
-> > while (objpool_pop(pool))
-> > 	count++;
-> > 
-> > if (refcount_sub_and_test(count, &pool->ref))
-> > 	objpool_free(pool);
-> > ---
+> > [..]
+> > @@ -2144,6 +2156,15 @@ __rmqueue(struct zone *zone, unsigned int order, int migratetype,
+> >  		if (alloc_flags & ALLOC_CMA)
+> >  			page = __rmqueue_cma_fallback(zone, order);
+> >  
+> > +		/*
+> > +		 * Allocate data pages from MIGRATE_METADATA only if the regular
+> > +		 * allocation path fails to increase the chance that the
+> > +		 * metadata page is available when the associated data page
+> > +		 * needs it.
+> > +		 */
+> > +		if (!page && (alloc_flags & ALLOC_FROM_METADATA))
+> > +			page = __rmqueue_metadata_fallback(zone, order);
+> > +
 > 
-> Right, that's reasonable. Better one single atomic operation than multiple.
+> Hi!
+> 
+> I guess it would cause non-movable page starving issue as CMA.
 
-I found another comment issue about a small window which this may not work.
-This is not a real issue for this series because this doesn't happen on
-rethook/kretprobe, but if you apply this to other use-case, it must be
-cared.
+I don't understand what you mean by "non-movable page starving issue as
+CMA". Would you care to elaborate?
 
-Since we use reserve-commit on 'push' operation, this 'pop' loop will miss
-an object which is under 'push' op. I mean
+> The metadata pages cannot be used for non-movable allocations.
+> Metadata pages are utilized poorly, non-movable allocations may end up
+> getting starved if all regular movable pages are allocated and the only
+> pages left are metadata. If the system has a lot of CMA pages, then
+> this problem would become more bad. I think it would be better to make
+> use of it in places where performance is not critical, including some
+> GFP_METADATA ?
 
-CPU0                    CPU1
+GFP_METADATA pages must be used only for movable allocations. The kernel
+must be able to migrate GFP_METADATA pages (if they have been allocated)
+when they are reserved to serve as tag storage for a newly allocated tagged
+page.
 
-objpool_fini() {
-do {
-                         objpool_push() {
-                            update slot->tail; // reserve
-  obj = objpool_pop();   
-                            update slot->last;  // commit
-} while (obj);
+If you are referring to the fact that GFP_METADATA pages are allocated only
+when there are no more free pages in the zone, then yes, I can understand
+that that might be an issue. However, it's worth keeping in mind that if a
+GFP_METADATA page is in use when it needs to be repurposed to serve as tag
+storage, its contents must be migrated first, and this is obviously slow.
 
-In this case, the refcount can not be 0 and we can not release objpool.
-To avoid this, we make sure all ongoing 'push()' must be finished.
+To put it another way, the more eager the page allocator is to allocate
+from GFP_METADATA, the slower it will be to allocate tagged pages because
+reserving the corresponding tag storage will be slow due to migration.
 
-Actually in the rethook/kretprobe, it already sync the rcu so this doesn't
-happen. So you should document it the user must use RCU sync after stop
-using the objpool, then call objpool_fini().
+Before making a decision, I think it would be very helpful to run
+performance tests with different allocation policies for GFP_METADATA. But I
+would say that it's a bit premature for that, and I think it would be best
+to wait until the series stabilizes.
 
-E.g.
+And thank you for the feedback!
 
-start_using() {
-objpool_init();
-active = true;
-}
-
-obj_alloc() {
-rcu_read_lock();
-if (active)
-	obj = objpool_pop();
-else
-	obj = NULL;
-rcu_read_unlock();
-}
-
-/* use obj for something, it is OK to change the context */
-
-obj_return() {
-rcu_read_lock();
-if (active)
-	objpool_push(obj);
-else
-	objpool_drop(obj);
-rcu_read_unlock();
-}
-
-/* kretprobe style */
-stop_using() {
-active = false;
-synchronize_rcu();
-objpool_fini();
-}
-
-/* rethook style */
-stop_using() {
-active = false;
-call_rcu(objpool_fini);
-}
-
-Hmm, yeah, if we can add this 'active' flag to objpool, it is good. But
-since kretprobe has different design of the interface, it is hard.
-Anyway, can you add a comment that user must ensure that any 'push' including
-ongoing one does not happen while 'fini'? objpool does not care that so user
-must take care of that. For example using rcu_read_lock() for the 'push/pop'
-operation and rcu-sync before 'fini' operation.
-
-Thanks,
+Alex
 
 > 
-> >>
-> >>> Thank you,
-> >>>
-> >>>> +	} while (obj);
-> >>>> +}
-> >>>> +EXPORT_SYMBOL_GPL(objpool_fini);
-> >>>> -- 
-> >>>> 2.40.1
-> >>>>
-> >>
-> >> Thanks for your time
-> >>
-> >>
-> > 
-> > 
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Thanks,
+> Hyesoo Yu.
