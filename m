@@ -1,50 +1,50 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EDA727EEB
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Oct 2023 15:00:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8016828DAB
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Oct 2023 15:04:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="OPd9R4BA"
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C482101
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Oct 2023 08:00:47 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1c87a85332bso39566615ad.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Oct 2023 08:00:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="hILyt+BQ"
+Received: from mail-oo1-xc29.google.com (mail-oo1-xc29.google.com [IPv6:2607:f8b0:4864:20::c29])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1F8BB4
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Oct 2023 08:04:38 -0700 (PDT)
+Received: by mail-oo1-xc29.google.com with SMTP id 006d021491bc7-57be3d8e738so2671978eaf.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Oct 2023 08:04:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1697468447; x=1698073247; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
+        d=bytedance.com; s=google; t=1697468678; x=1698073478; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
         bh=QffYa8f47+Hk7lnd37D6vR0fhcrZUpT4hXtPg8meDQQ=;
-        b=OPd9R4BAjFy/Hf7BsPucUo8+gq140S9EJxMPAQhI5IhMX0tLwpdUN8VBJ76ym2DYxP
-         S03DD+MEIt5fWzuKORDOjtPa7Fi7og+CLesqi/8P28EvdJ+UdjKXEg/FkbWZw0WJ2yFt
-         LBpcrNm1sHSVqg925m4tRJc2XlNTZH0Uq7YAgyuDoxKJ2+hrx5Y98P1jh3ZpVCxAGqQV
-         sVCIUH7/j+XLW7dcT3Soa64QPHO6Ht+NaUWjtDRLVk5nEQK6igUY0iPzn0Kc05zZyQbm
-         uwqGoiJ1wmHOJ87Xq/yFanIgwF2PB0xd8FQEOf3dL8Hq9zIemks+L8wIxkU5mGodpCpP
-         3rYg==
+        b=hILyt+BQ8JqmohI/AA30fdxUp+xU5gbVWZdRFcnuVuCzMAlpa1fVjVPyoqQxDsJjDw
+         gZnnmeRYLSJa1COgAC4BzMFmCcJJ8cyqPFfCOIoLNEdmxyNB9bPQWXxTIhHEikCfCCz2
+         kPUeCeM3PAEH+20yXfuZaGFOAMeM5+oNeKbhKuMtzKHZlutnBT+C5HvMdBB4WzxnfBZk
+         US8k2HTHUyWhiDKqPPAUGWMueFGB+vYG12l9bf6/yWmYL7DOGao1imuEVvmqvpMYgulP
+         cVoL5a/FJh22GEl8SFVZRecvWebMdWbdzvoNkoFyT9z/Bd2AAq49PAC4LqoalHRRgF8B
+         nw+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697468447; x=1698073247;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1697468678; x=1698073478;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
         bh=QffYa8f47+Hk7lnd37D6vR0fhcrZUpT4hXtPg8meDQQ=;
-        b=nkPARihBO2hScA3fkXIBBcXkubg/O3xrh3uzht9Wjmwpp51GYGcq6UfLSjx5xu9tw3
-         jVFFf2k+FGPAm9eFNhU3aVmtGsDoUN8zhyhScadqMmiQHxVcEOA6M3USxs4zjoXFW1T5
-         09bgcwQpbvhUHkP+MEb4ZkgnrfJT/ex1iG6ve35j6/5klS1ARGnW3Tt/MOUngiFBvAEI
-         yYJQpUUGhhpqZkko+ncBNFi2f0V/4qDHw3OOqSE1QHsu85IX2kgZZ+6G0HI43hX8ksIJ
-         wmRMTllHSmGXOsvruFgu/bQ71kqeLCXMThwgTdhM0hGza9wNCSvkxPGf77qeoNwLb/zb
-         hnxA==
-X-Gm-Message-State: AOJu0YzJ4/C8lhFKbWj9/ZVMO44B/bdXcH6d6yCltYfwJpy0Ftgm5QDb
-	ZNJRCg6jYtjpc45/FrB7g4hvNi8F9C1MUPX/AHY=
-X-Google-Smtp-Source: AGHT+IHKxPEZ5jm64Sthy6b0eJMKd1mmMO0rwHmS7V7YdwjOzZCUdt9CYFnWzLHLLsgbqmcyOqYUQA==
-X-Received: by 2002:a17:903:248:b0:1c7:495c:87e0 with SMTP id j8-20020a170903024800b001c7495c87e0mr41801337plh.37.1697468447051;
-        Mon, 16 Oct 2023 08:00:47 -0700 (PDT)
-Received: from [192.168.3.101] ([104.28.240.135])
-        by smtp.gmail.com with ESMTPSA id 21-20020a170902c21500b001c771740da4sm7382844pll.195.2023.10.16.08.00.36
+        b=gQrMNwTWwVjQnY5+6VpghXweImVimnYm8X6poW0JjTwPA/sQvzxoo6hbM7WWuCxdQZ
+         bHtoJmMm3a0p79tEzuxa2ml9sST+6Iu1gJoZ+uNQgixXmUgAq+WzT625PNCjWWwasP+Y
+         p9dCQhgKnTOefE/J7KJqg+lqE21BVGMPBOBSiTcXszd7Hh8CaqChuuYkDmIYunyZhD66
+         /0PO6BGSKvR7Mnf9RN6uibzmpuZQMNoA8n5sz5Kx+TuAk9V1isfLkH/wn0n8pl+lLnjM
+         t/CKDRJWZaUefn8lubT08enAnTJvU4oXWGexhSXZdshHgklqNU/LCEJn3J6fb9inHnw/
+         FcHg==
+X-Gm-Message-State: AOJu0Ywk21QTYnMaOY9usqdADDSx676ocg2d+CPN6XULQNhmg7cRbszH
+	bL88JvhGZbGR+ggj2X6qjAeGAQ==
+X-Google-Smtp-Source: AGHT+IGEb/Q1yDgEiZkPVrhSGZgdtW5OReTQ5vXAgMHStfsssab54otQk27qGWCl6TRMBqZw9TVhJg==
+X-Received: by 2002:a05:6358:2624:b0:15b:249:b520 with SMTP id l36-20020a056358262400b0015b0249b520mr39351218rwc.7.1697468678028;
+        Mon, 16 Oct 2023 08:04:38 -0700 (PDT)
+Received: from [10.4.56.220] ([139.177.225.243])
+        by smtp.gmail.com with ESMTPSA id bl17-20020a056a00281100b006be047268d5sm2706849pfb.174.2023.10.16.08.04.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Oct 2023 08:00:45 -0700 (PDT)
-Message-ID: <ebccb78c-df24-ea74-c0ee-c5f8d195290e@bytedance.com>
-Date: Mon, 16 Oct 2023 23:00:31 +0800
+        Mon, 16 Oct 2023 08:04:37 -0700 (PDT)
+Message-ID: <77fa132c-dcc2-ebf2-bedb-7e4f3d393426@bytedance.com>
+Date: Mon, 16 Oct 2023 23:04:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -53,7 +53,9 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.14.0
-Content-Language: en-US
+From: "wuqiang.matt" <wuqiang.matt@bytedance.com>
+Subject: Re: [PATCH v10 1/5] lib: objpool added: ring-array based lockless
+ MPMC
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: linux-trace-kernel@vger.kernel.org, davem@davemloft.net,
  anil.s.keshavamurthy@intel.com, naveen.n.rao@linux.ibm.com,
@@ -68,15 +70,14 @@ References: <20231015053251.707442-1-wuqiang.matt@bytedance.com>
  <20231016082659.6ca94a5dff368783698753f9@kernel.org>
  <7758687f-06c1-d9b2-077a-34e79925a339@bytedance.com>
  <20231016211837.b6d425d8ed760bb3306910ae@kernel.org>
-From: "wuqiang.matt" <wuqiang.matt@bytedance.com>
-Subject: Re: [PATCH v10 1/5] lib: objpool added: ring-array based lockless
- MPMC
+Content-Language: en-US
 In-Reply-To: <20231016211837.b6d425d8ed760bb3306910ae@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
@@ -312,4 +313,5 @@ object_free to release the whole objpool, which is also acceptable.
 >>
 > 
 > 
+
 
