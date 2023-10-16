@@ -1,345 +1,440 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF405262AC;
-	Mon, 16 Oct 2023 15:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16235C433CD;
-	Mon, 16 Oct 2023 15:12:23 +0000 (UTC)
-Date: Mon, 16 Oct 2023 11:13:57 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
- <mhi@lists.linux.dev>, <linux-arm-msm@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <quic_vbadigan@quicinc.com>,
- <quic_ramkri@quicinc.com>, <quic_nitegupt@quicinc.com>,
- <quic_skananth@quicinc.com>, <quic_parass@quicinc.com>
-Subject: Re: [PATCH v2] bus: mhi: host: Add tracing support
-Message-ID: <20231016111357.74b991d4@gandalf.local.home>
-In-Reply-To: <20231013-ftrace_support-v2-1-6e893ce010b5@quicinc.com>
-References: <20231013-ftrace_support-v2-1-6e893ce010b5@quicinc.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30AEF28DCC
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Oct 2023 15:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="H+4o5wI6"
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 139FB83
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Oct 2023 08:18:25 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1ca215cc713so10198465ad.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Oct 2023 08:18:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1697469504; x=1698074304; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=depUh3oM3g0ijxpHdZrdans7ncvwWGgqIj2UdaIj8jw=;
+        b=H+4o5wI6MH9vGkmbs3GVOXKNQJ9OlyogJxVUjOFZKPybx5O6l29e7mBmehLRpsXLLb
+         ZI0PrZOEBJHNJlPchOPWFuChALDc2bsc8ODL94ARu+UQ/b/Lb+oGa1QJynzajPNdlidx
+         zSksrvtdqj29jPDOpoICpn/jFS31kjgH8qClcImbfhsK4I68B0OCUhaCGStpfCz9Xgyr
+         Op+VG5EvqGUuvA5fLDrP7hoWo6gDlCG7A5hIO3zR3prImUvlF97cNG3TqVRMHXFTtAoN
+         ffdikMKfkVNP4zg3paAfOtOY577iXSu1AJBdXSO3WQ9jD6KTmAb0zzwrGcIsxvT+0T2e
+         69Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697469504; x=1698074304;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=depUh3oM3g0ijxpHdZrdans7ncvwWGgqIj2UdaIj8jw=;
+        b=f23kAIB/aueA9l8eR7yzfujCs0Dw/qmq8pvQH8Hj34Pu2/uiENnU+PHGbiCUKBu6tX
+         ejLp2UvhGGfF5vqcN1DYUm80K0389XhhYzGCGAiaKxqgKVuy7N1+W38gggNWXapEBAE1
+         J8c9Sope0VsAEXoXEnZdCdKoDOunkSk9JdHKzaniyJbNVKuDLPE/jiIgo3JNF80JL3GD
+         Fmou2VFuZVIhnkUu3gKwQ9rmKC+pnoF2HwE7pLnNg1CtoweJhKxS5UYpKmxCd1oydrAB
+         heJTZSzTZAzBORawV8CqL9AL+KZ0d4CUXoQSyKpcwBhJmssPJFILE3Veo8MAyZVAxM6n
+         uuXg==
+X-Gm-Message-State: AOJu0YwuxVUPsDRttwLIWCO8oCPckCuPaVmUvwt3mJcCW9I2GjChC2Zd
+	NMRS1NSeKIXPDejW8aN2tZ2mOw==
+X-Google-Smtp-Source: AGHT+IHHjIWxP/DT9llfsBGiHKdyEI2xPjxNs50pDf+Bxab1ZFzcD5iKc9qi1ICHz7XPfliqod6SLw==
+X-Received: by 2002:a17:902:fb08:b0:1c9:e5e3:c25 with SMTP id le8-20020a170902fb0800b001c9e5e30c25mr7206761plb.43.1697469504445;
+        Mon, 16 Oct 2023 08:18:24 -0700 (PDT)
+Received: from [192.168.3.101] ([104.28.240.135])
+        by smtp.gmail.com with ESMTPSA id je4-20020a170903264400b001c61901ed37sm8628106plb.191.2023.10.16.08.18.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Oct 2023 08:18:23 -0700 (PDT)
+Message-ID: <ce712a66-1b13-c9ad-52c2-c98b6c540962@bytedance.com>
+Date: Mon, 16 Oct 2023 23:18:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.14.0
+Subject: Re: [PATCH v10 3/5] kprobes: kretprobe scalability improvement with
+ objpool
+Content-Language: en-US
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, davem@davemloft.net,
+ anil.s.keshavamurthy@intel.com, naveen.n.rao@linux.ibm.com,
+ rostedt@goodmis.org, peterz@infradead.org, akpm@linux-foundation.org,
+ sander@svanheule.net, ebiggers@google.com, dan.j.williams@intel.com,
+ jpoimboe@kernel.org, linux-kernel@vger.kernel.org, lkp@intel.com,
+ mattwu@163.com
+References: <20231015053251.707442-1-wuqiang.matt@bytedance.com>
+ <20231015053251.707442-4-wuqiang.matt@bytedance.com>
+ <20231016222103.cb9f426edc60220eabd8aa6a@kernel.org>
+From: "wuqiang.matt" <wuqiang.matt@bytedance.com>
+In-Reply-To: <20231016222103.cb9f426edc60220eabd8aa6a@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-On Fri, 13 Oct 2023 15:22:19 +0530
-Krishna chaitanya chundru <quic_krichai@quicinc.com> wrote:
+On 2023/10/16 21:21, Masami Hiramatsu (Google) wrote:
+> On Sun, 15 Oct 2023 13:32:49 +0800
+> "wuqiang.matt" <wuqiang.matt@bytedance.com> wrote:
+> 
+>> kretprobe is using freelist to manage return-instances, but freelist,
+>> as LIFO queue based on singly linked list, scales badly and reduces
+>> the overall throughput of kretprobed routines, especially for high
+>> contention scenarios.
+>>
+>> Here's a typical throughput test of sys_prctl (counts in 10 seconds,
+>> measured with perf stat -a -I 10000 -e syscalls:sys_enter_prctl):
+>>
+>> OS: Debian 10 X86_64, Linux 6.5rc7 with freelist
+>> HW: XEON 8336C x 2, 64 cores/128 threads, DDR4 3200MT/s
+>>
+>>           1T       2T       4T       8T      16T      24T
+>>     24150045 29317964 15446741 12494489 18287272 17708768
+>>          32T      48T      64T      72T      96T     128T
+>>     16200682 13737658 11645677 11269858 10470118  9931051
+>>
+>> This patch introduces objpool to replace freelist. objpool is a
+>> high performance queue, which can bring near-linear scalability
+>> to kretprobed routines. Tests of kretprobe throughput show the
+>> biggest ratio as 159x of original freelist. Here's the result:
+>>
+>>                    1T         2T         4T         8T        16T
+>> native:     41186213   82336866  164250978  328662645  658810299
+>> freelist:   24150045   29317964   15446741   12494489   18287272
+>> objpool:    23926730   48010314   96125218  191782984  385091769
+>>                   32T        48T        64T        96T       128T
+>> native:   1330338351 1969957941 2512291791 1514690434 2671040914
+>> freelist:   16200682   13737658   11645677   10470118    9931051
+>> objpool:   764481096 1147149781 1456220214 1502109662 1579015050
+>>
+>> Testings on 96-core ARM64 output similarly, but with the biggest
+>> ratio up to 336x:
+>>
+>> OS: Debian 10 AARCH64, Linux 6.5rc7
+>> HW: Kunpeng-920 96 cores/2 sockets/4 NUMA nodes, DDR4 2933 MT/s
+>>
+>>                    1T         2T         4T         8T        16T
+>> native: .   30066096   63569843  126194076  257447289  505800181
+>> freelist:   16152090   11064397   11124068    7215768    5663013
+>> objpool:    13997541   28032100   55726624  110099926  221498787
+>>                   24T        32T        48T        64T        96T
+>> native:    763305277 1015925192 1521075123 2033009392 3021013752
+>> freelist:    5015810    4602893    3766792    3382478    2945292
+>> objpool:   328192025  439439564  668534502  887401381  990067903
+>>
+>> Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
+>> ---
+>>   include/linux/kprobes.h | 11 ++---
+>>   include/linux/rethook.h | 16 ++-----
+>>   kernel/kprobes.c        | 93 +++++++++++++++++------------------------
+>>   kernel/trace/fprobe.c   | 32 ++++++--------
+>>   kernel/trace/rethook.c  | 90 ++++++++++++++++++---------------------
+>>   5 files changed, 98 insertions(+), 144 deletions(-)
+>>
+>> diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+>> index 85a64cb95d75..365eb092e9c4 100644
+>> --- a/include/linux/kprobes.h
+>> +++ b/include/linux/kprobes.h
+>> @@ -26,8 +26,7 @@
+>>   #include <linux/rcupdate.h>
+>>   #include <linux/mutex.h>
+>>   #include <linux/ftrace.h>
+>> -#include <linux/refcount.h>
+>> -#include <linux/freelist.h>
+>> +#include <linux/objpool.h>
+>>   #include <linux/rethook.h>
+>>   #include <asm/kprobes.h>
+>>   
+>> @@ -141,7 +140,7 @@ static inline bool kprobe_ftrace(struct kprobe *p)
+>>    */
+>>   struct kretprobe_holder {
+>>   	struct kretprobe	*rp;
+>> -	refcount_t		ref;
+>> +	struct objpool_head	pool;
+>>   };
+>>   
+>>   struct kretprobe {
+>> @@ -154,7 +153,6 @@ struct kretprobe {
+>>   #ifdef CONFIG_KRETPROBE_ON_RETHOOK
+>>   	struct rethook *rh;
+>>   #else
+>> -	struct freelist_head freelist;
+>>   	struct kretprobe_holder *rph;
+>>   #endif
+>>   };
+>> @@ -165,10 +163,7 @@ struct kretprobe_instance {
+>>   #ifdef CONFIG_KRETPROBE_ON_RETHOOK
+>>   	struct rethook_node node;
+>>   #else
+>> -	union {
+>> -		struct freelist_node freelist;
+>> -		struct rcu_head rcu;
+>> -	};
+>> +	struct rcu_head rcu;
+>>   	struct llist_node llist;
+>>   	struct kretprobe_holder *rph;
+>>   	kprobe_opcode_t *ret_addr;
+>> diff --git a/include/linux/rethook.h b/include/linux/rethook.h
+>> index 26b6f3c81a76..ce69b2b7bc35 100644
+>> --- a/include/linux/rethook.h
+>> +++ b/include/linux/rethook.h
+>> @@ -6,11 +6,10 @@
+>>   #define _LINUX_RETHOOK_H
+>>   
+>>   #include <linux/compiler.h>
+>> -#include <linux/freelist.h>
+>> +#include <linux/objpool.h>
+>>   #include <linux/kallsyms.h>
+>>   #include <linux/llist.h>
+>>   #include <linux/rcupdate.h>
+>> -#include <linux/refcount.h>
+>>   
+>>   struct rethook_node;
+>>   
+>> @@ -30,14 +29,12 @@ typedef void (*rethook_handler_t) (struct rethook_node *, void *, unsigned long,
+>>   struct rethook {
+>>   	void			*data;
+>>   	rethook_handler_t	handler;
+>> -	struct freelist_head	pool;
+>> -	refcount_t		ref;
+>> +	struct objpool_head	pool;
+>>   	struct rcu_head		rcu;
+>>   };
+>>   
+>>   /**
+>>    * struct rethook_node - The rethook shadow-stack entry node.
+>> - * @freelist: The freelist, linked to struct rethook::pool.
+>>    * @rcu: The rcu_head for deferred freeing.
+>>    * @llist: The llist, linked to a struct task_struct::rethooks.
+>>    * @rethook: The pointer to the struct rethook.
+>> @@ -48,20 +45,16 @@ struct rethook {
+>>    * on each entry of the shadow stack.
+>>    */
+>>   struct rethook_node {
+>> -	union {
+>> -		struct freelist_node freelist;
+>> -		struct rcu_head      rcu;
+>> -	};
+>> +	struct rcu_head		rcu;
+>>   	struct llist_node	llist;
+>>   	struct rethook		*rethook;
+>>   	unsigned long		ret_addr;
+>>   	unsigned long		frame;
+>>   };
+>>   
+>> -struct rethook *rethook_alloc(void *data, rethook_handler_t handler);
+>> +struct rethook *rethook_alloc(void *data, rethook_handler_t handler, int size, int num);
+>>   void rethook_stop(struct rethook *rh);
+>>   void rethook_free(struct rethook *rh);
+>> -void rethook_add_node(struct rethook *rh, struct rethook_node *node);
+>>   struct rethook_node *rethook_try_get(struct rethook *rh);
+>>   void rethook_recycle(struct rethook_node *node);
+>>   void rethook_hook(struct rethook_node *node, struct pt_regs *regs, bool mcount);
+>> @@ -98,4 +91,3 @@ void rethook_flush_task(struct task_struct *tk);
+>>   #endif
+>>   
+>>   #endif
+>> -
+>> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+>> index ca385b61d546..075a632e6c7c 100644
+>> --- a/kernel/kprobes.c
+>> +++ b/kernel/kprobes.c
+>> @@ -1877,13 +1877,27 @@ static struct notifier_block kprobe_exceptions_nb = {
+>>   #ifdef CONFIG_KRETPROBES
+>>   
+>>   #if !defined(CONFIG_KRETPROBE_ON_RETHOOK)
+>> +
+>> +/* callbacks for objpool of kretprobe instances */
+>> +static int kretprobe_init_inst(void *nod, void *context)
+>> +{
+>> +	struct kretprobe_instance *ri = nod;
+>> +
+>> +	ri->rph = context;
+>> +	return 0;
+>> +}
+>> +static int kretprobe_fini_pool(struct objpool_head *head, void *context)
+>> +{
+>> +	kfree(context);
+>> +	return 0;
+>> +}
+>> +
+>>   static void free_rp_inst_rcu(struct rcu_head *head)
+>>   {
+>>   	struct kretprobe_instance *ri = container_of(head, struct kretprobe_instance, rcu);
+>> +	struct kretprobe_holder *rph = ri->rph;
+>>   
+>> -	if (refcount_dec_and_test(&ri->rph->ref))
+>> -		kfree(ri->rph);
+>> -	kfree(ri);
+>> +	objpool_drop(ri, &rph->pool);
+>>   }
+>>   NOKPROBE_SYMBOL(free_rp_inst_rcu);
+>>   
+>> @@ -1892,7 +1906,7 @@ static void recycle_rp_inst(struct kretprobe_instance *ri)
+>>   	struct kretprobe *rp = get_kretprobe(ri);
+>>   
+>>   	if (likely(rp))
+>> -		freelist_add(&ri->freelist, &rp->freelist);
+>> +		objpool_push(ri, &rp->rph->pool);
+>>   	else
+>>   		call_rcu(&ri->rcu, free_rp_inst_rcu);
+>>   }
+>> @@ -1929,23 +1943,12 @@ NOKPROBE_SYMBOL(kprobe_flush_task);
+>>   
+>>   static inline void free_rp_inst(struct kretprobe *rp)
+>>   {
+>> -	struct kretprobe_instance *ri;
+>> -	struct freelist_node *node;
+>> -	int count = 0;
+>> -
+>> -	node = rp->freelist.head;
+>> -	while (node) {
+>> -		ri = container_of(node, struct kretprobe_instance, freelist);
+>> -		node = node->next;
+>> -
+>> -		kfree(ri);
+>> -		count++;
+>> -	}
+>> +	struct kretprobe_holder *rph = rp->rph;
+>>   
+>> -	if (refcount_sub_and_test(count, &rp->rph->ref)) {
+>> -		kfree(rp->rph);
+>> -		rp->rph = NULL;
+>> -	}
+>> +	if (!rph)
+>> +		return;
+>> +	rp->rph = NULL;
+>> +	objpool_fini(&rph->pool);
+>>   }
+>>   
+>>   /* This assumes the 'tsk' is the current task or the is not running. */
+>> @@ -2087,19 +2090,17 @@ NOKPROBE_SYMBOL(__kretprobe_trampoline_handler)
+>>   static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
+>>   {
+>>   	struct kretprobe *rp = container_of(p, struct kretprobe, kp);
+>> +	struct kretprobe_holder *rph = rp->rph;
+>>   	struct kretprobe_instance *ri;
+>> -	struct freelist_node *fn;
+>>   
+>> -	fn = freelist_try_get(&rp->freelist);
+>> -	if (!fn) {
+>> +	ri = objpool_pop(&rph->pool);
+>> +	if (!ri) {
+>>   		rp->nmissed++;
+>>   		return 0;
+>>   	}
+>>   
+>> -	ri = container_of(fn, struct kretprobe_instance, freelist);
+>> -
+>>   	if (rp->entry_handler && rp->entry_handler(ri, regs)) {
+>> -		freelist_add(&ri->freelist, &rp->freelist);
+>> +		objpool_push(ri, &rph->pool);
+>>   		return 0;
+>>   	}
+>>   
+>> @@ -2193,7 +2194,6 @@ int kprobe_on_func_entry(kprobe_opcode_t *addr, const char *sym, unsigned long o
+>>   int register_kretprobe(struct kretprobe *rp)
+>>   {
+>>   	int ret;
+>> -	struct kretprobe_instance *inst;
+>>   	int i;
+>>   	void *addr;
+>>   
+>> @@ -2227,19 +2227,12 @@ int register_kretprobe(struct kretprobe *rp)
+>>   		rp->maxactive = max_t(unsigned int, 10, 2*num_possible_cpus());
+>>   
+>>   #ifdef CONFIG_KRETPROBE_ON_RETHOOK
+>> -	rp->rh = rethook_alloc((void *)rp, kretprobe_rethook_handler);
+>> -	if (!rp->rh)
+>> -		return -ENOMEM;
+>> +	rp->rh = rethook_alloc((void *)rp, kretprobe_rethook_handler,
+>> +				sizeof(struct kretprobe_instance) +
+>> +				rp->data_size, rp->maxactive);
+>> +	if (IS_ERR(rp->rh))
+>> +		return PTR_ERR(rp->rh);
+>>   
+>> -	for (i = 0; i < rp->maxactive; i++) {
+>> -		inst = kzalloc(struct_size(inst, data, rp->data_size), GFP_KERNEL);
+>> -		if (inst == NULL) {
+>> -			rethook_free(rp->rh);
+>> -			rp->rh = NULL;
+>> -			return -ENOMEM;
+>> -		}
+>> -		rethook_add_node(rp->rh, &inst->node);
+>> -	}
+>>   	rp->nmissed = 0;
+>>   	/* Establish function entry probe point */
+>>   	ret = register_kprobe(&rp->kp);
+>> @@ -2249,24 +2241,18 @@ int register_kretprobe(struct kretprobe *rp)
+>>   		rp->rh = NULL;
+>>   	}
+>>   #else	/* !CONFIG_KRETPROBE_ON_RETHOOK */
+>> -	rp->freelist.head = NULL;
+>>   	rp->rph = kzalloc(sizeof(struct kretprobe_holder), GFP_KERNEL);
+>>   	if (!rp->rph)
+>>   		return -ENOMEM;
+>>   
+>> -	rp->rph->rp = rp;
+>> -	for (i = 0; i < rp->maxactive; i++) {
+>> -		inst = kzalloc(struct_size(inst, data, rp->data_size), GFP_KERNEL);
+>> -		if (inst == NULL) {
+>> -			refcount_set(&rp->rph->ref, i);
+>> -			free_rp_inst(rp);
+>> -			return -ENOMEM;
+>> -		}
+>> -		inst->rph = rp->rph;
+>> -		freelist_add(&inst->freelist, &rp->freelist);
+>> +	if (objpool_init(&rp->rph->pool, rp->maxactive, rp->data_size +
+>> +			sizeof(struct kretprobe_instance), GFP_KERNEL,
+>> +			rp->rph, kretprobe_init_inst, kretprobe_fini_pool)) {
+>> +		kfree(rp->rph);
+>> +		rp->rph = NULL;
+>> +		return -ENOMEM;
+>>   	}
+>> -	refcount_set(&rp->rph->ref, i);
+>> -
+>> +	rp->rph->rp = rp;
+>>   	rp->nmissed = 0;
+>>   	/* Establish function entry probe point */
+>>   	ret = register_kprobe(&rp->kp);
+>> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+>> index 3b21f4063258..f5bf98e6b2ac 100644
+>> --- a/kernel/trace/fprobe.c
+>> +++ b/kernel/trace/fprobe.c
+>> @@ -187,9 +187,9 @@ static void fprobe_init(struct fprobe *fp)
+>>   
+>>   static int fprobe_init_rethook(struct fprobe *fp, int num)
+>>   {
+>> -	int i, size;
+>> +	int size;
+>>   
+>> -	if (num < 0)
+>> +	if (num <= 0)
+>>   		return -EINVAL;
+> 
+> Oops, this must be a bugfix. Let me fix it.
+> 
+>>   
+>>   	if (!fp->exit_handler) {
+>> @@ -202,29 +202,21 @@ static int fprobe_init_rethook(struct fprobe *fp, int num)
+>>   		size = fp->nr_maxactive;
+>>   	else
+>>   		size = num * num_possible_cpus() * 2;
+>> -	if (size < 0)
+>> +	if (size <= 0)
+>>   		return -E2BIG;
+> 
+> Here too.
+> 
+> Except for this point, it looks good to me.
 
-> +++ b/include/trace/events/mhi_host.h
-> @@ -0,0 +1,287 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
-> + */
-> +
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM mhi_host
-> +
-> +#if !defined(_TRACE_EVENT_MHI_HOST_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_EVENT_MHI_HOST_H
-> +
-> +#include <linux/tracepoint.h>
-> +#define MHI_STATE						\
-> +	EM(MHI_STATE_RESET,	"RESET")			\
-> +	EM(MHI_STATE_READY,	"READY")			\
-> +	EM(MHI_STATE_M0,	"M0")				\
-> +	EM(MHI_STATE_M1,	"M1")				\
-> +	EM(MHI_STATE_M2,	"M2")				\
-> +	EM(MHI_STATE_M3,	"M3")				\
-> +	EM(MHI_STATE_M3_FAST,	"M3 FAST")			\
-> +	EM(MHI_STATE_BHI,	"BHI")				\
-> +	EMe(MHI_STATE_SYS_ERR,	"SYS ERROR")
-> +
-> +#define MHI_EE							\
-> +	EM(MHI_EE_PBL,		"PRIMARY BOOTLOADER")		\
-> +	EM(MHI_EE_SBL,		"SECONDARY BOOTLOADER")		\
-> +	EM(MHI_EE_AMSS,		"MISSION MODE")			\
-> +	EM(MHI_EE_RDDM,		"RAMDUMP DOWNLOAD MODE")	\
-> +	EM(MHI_EE_WFW,		"WLAN FIRMWARE")		\
-> +	EM(MHI_EE_PTHRU,	"PASS THROUGH")			\
-> +	EM(MHI_EE_EDL,		"EMERGENCY DOWNLOAD")		\
-> +	EM(MHI_EE_FP,		"FLASH PROGRAMMER")		\
-> +	EM(MHI_EE_DISABLE_TRANSITION,	"DISABLE")		\
-> +	EMe(MHI_EE_NOT_SUPPORTED,	"NOT SUPPORTED")
-> +
-> +#define MHI_PM_STATE							\
-> +	EM(MHI_PM_STATE_DISABLE,	"DISABLE")			\
-> +	EM(MHI_PM_STATE_POR,		"POWER ON RESET")		\
-> +	EM(MHI_PM_STATE_M0,		"M0")				\
-> +	EM(MHI_PM_STATE_M2,		"M2")				\
-> +	EM(MHI_PM_STATE_M3_ENTER,	"M?->M3")			\
-> +	EM(MHI_PM_STATE_M3,		"M3")				\
-> +	EM(MHI_PM_STATE_M3_EXIT,	"M3->M0")			\
-> +	EM(MHI_PM_STATE_FW_DL_ERR,	"Firmware Download Error")	\
-> +	EM(MHI_PM_STATE_SYS_ERR_DETECT,		"SYS ERROR Detect")	\
-> +	EM(MHI_PM_STATE_SYS_ERR_PROCESS,	"SYS ERROR Process")	\
-> +	EM(MHI_PM_STATE_SHUTDOWN_PROCESS,	"SHUTDOWN Process")	\
-> +	EMe(MHI_PM_STATE_LD_ERR_FATAL_DETECT,	"Linkdown or Error Fatal Detect")
-> +
-> +#define MHI_CH_STATE						\
-> +	EM(MHI_CH_STATE_TYPE_RESET, "RESET")			\
-> +	EM(MHI_CH_STATE_TYPE_STOP, "STOP")			\
-> +	EMe(MHI_CH_STATE_TYPE_START, "START")
-> +
-> +#define MHI_DEV_ST_TRANSITION						\
-> +	EM(DEV_ST_TRANSITION_PBL,	"PBL")				\
-> +	EM(DEV_ST_TRANSITION_READY,	"READY")			\
-> +	EM(DEV_ST_TRANSITION_SBL,	"SBL")				\
-> +	EM(DEV_ST_TRANSITION_MISSION_MODE,	"MISSION MODE")		\
-> +	EM(DEV_ST_TRANSITION_FP,		"FLASH PROGRAMMER")	\
-> +	EM(DEV_ST_TRANSITION_SYS_ERR,		"SYS ERROR")		\
-> +	EMe(DEV_ST_TRANSITION_DISABLE,		"DISABLE")
-> +
-> +/* Enums require being exported to userspace, for user tool parsing */
-> +#undef	EM
-> +#undef	EMe
-> +#define	EM(a, b)	TRACE_DEFINE_ENUM(a);
-> +#define	EMe(a, b)	TRACE_DEFINE_ENUM(a);
-> +
-> +MHI_STATE
-> +MHI_EE
-> +MHI_PM_STATE
-> +MHI_CH_STATE
-> +MHI_DEV_ST_TRANSITION
-> +
-> +/*
-> + * Now redefine the EM() and EMe() macros to map the enums to the strings
-> + * that will be printed in the output.
-> + */
-> +#undef EM
-> +#undef EMe
-> +#define EM(a, b)	{a, b},
-> +#define EMe(a, b)	{a, b}
-> +
-> +TRACE_EVENT(mhi_gen_tre,
-> +
-> +	TP_PROTO(const char *name, int ch_num, u64 wp, __le64 tre_ptr,
-> +		 __le32 dword0, __le32 dword1),
-> +
-> +	TP_ARGS(name, ch_num, wp, tre_ptr, dword0, dword1),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(name, name)
-> +		__field(int, ch_num)
+Got it.  Would these 2 fixes catch the release window of v6.6 ?
 
-This is fine as __string() is four bytes in the event (2 bytes for offset
-where the string exists, and 2 bytes for its length).
-
-> +		__field(u64, wp)
-> +		__field(__le64, tre_ptr)
-
-Which makes the two 8 byte fields aligned. Good!
-
-> +		__field(__le32, dword0)
-> +		__field(__le32, dword1)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, name);
-> +		__entry->ch_num = ch_num;
-> +		__entry->wp = wp;
-> +		__entry->tre_ptr = tre_ptr;
-> +		__entry->dword0 = dword0;
-> +		__entry->dword1 = dword1;
-> +	),
-> +
-> +	TP_printk("%s: Chan: %d WP: 0x%llx TRE: 0x%llx 0x%08x 0x%08x\n",
-> +		  __get_str(name), __entry->ch_num, __entry->wp, __entry->tre_ptr,
-> +		  __entry->dword0, __entry->dword1)
-> +);
-> +
-> +TRACE_EVENT(mhi_intvec_threaded_handler,
-> +
-> +	TP_PROTO(const char *name, int local_ee, int state, int dev_ee, int dev_state),
-> +
-> +	TP_ARGS(name, local_ee, state, dev_ee, dev_state),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(name, name)
-> +		__field(int, local_ee)
-> +		__field(int, state)
-> +		__field(int, dev_ee)
-> +		__field(int, dev_state)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, name);
-> +		__entry->local_ee = local_ee;
-> +		__entry->state = state;
-> +		__entry->dev_ee = dev_ee;
-> +		__entry->dev_state = dev_state;
-> +	),
-> +
-> +	TP_printk("%s: local ee: %s state: %s device ee: %s state: %s\n",
-> +		  __get_str(name),
-> +		  __print_symbolic(__entry->local_ee, MHI_EE),
-> +		  __print_symbolic(__entry->state, MHI_STATE),
-> +		  __print_symbolic(__entry->dev_ee, MHI_EE),
-> +		  __print_symbolic(__entry->dev_state, MHI_STATE))
-> +);
-> +
-> +TRACE_EVENT(mhi_tryset_pm_state,
-> +
-> +	TP_PROTO(const char *name, int pm_state),
-> +
-> +	TP_ARGS(name, pm_state),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(name, name)
-> +		__field(int, pm_state)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, name);
-> +		if (pm_state)
-> +			pm_state = __fls(pm_state);
-> +		__entry->pm_state = pm_state;
-> +	),
-> +
-> +	TP_printk("%s: PM state: %s\n", __get_str(name),
-> +		  __print_symbolic(__entry->pm_state, MHI_PM_STATE))
-> +);
-> +
-> +TRACE_EVENT(mhi_process_data_event_ring,
-> +
-> +	TP_PROTO(const char *name, __le64 ptr, __le32 dword0, __le32 dword1),
-> +
-> +	TP_ARGS(name, ptr, dword0, dword1),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(name, name)
-> +		__field(__le64, ptr)
-
-Here, I would switch the __field(__le64, ptr) with the __string().
-
-		__field(__le64, ptr)
-		__string(name, name)
-
-otherwise you just created a 4 byte hole in the ring buffer, wasting
-precious ring buffer space.
-
-> +		__field(__le32, dword0)
-> +		__field(__le32, dword1)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, name);
-> +		__entry->ptr = ptr;
-> +		__entry->dword0 = dword0;
-> +		__entry->dword1 = dword1;
-> +	),
-> +
-> +	TP_printk("%s: Processing Event:0x%llx 0x%08x 0x%08x\n",
-> +		  __get_str(name), __entry->ptr, __entry->dword0, __entry->dword1)
-> +);
-> +
-> +TRACE_EVENT(mhi_process_ctrl_ev_ring,
-> +
-> +	TP_PROTO(const char *name, u64 rp, __le64 ptr, __le32 dword0, __le32 dword1, int state),
-> +
-> +	TP_ARGS(name, rp, ptr, dword0, dword1, state),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(name, name)
-> +		__field(u64, rp)
-> +		__field(__le64, ptr)
-
-I would move __string(name, name) here (after the two 8 byte fields).
-
--- Steve
-
-> +		__field(__le32, dword0)
-> +		__field(__le32, dword1)
-> +		__field(int, state)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, name);
-> +		__entry->rp = rp;
-> +		__entry->ptr = ptr;
-> +		__entry->dword0 = dword0;
-> +		__entry->dword1 = dword1;
-> +		__entry->state = state;
-> +	),
-> +
-> +	TP_printk("%s: RP:0x%llx Processing Event:0x%llx 0x%08x 0x%08x state:%s\n",
-> +		  __get_str(name), __entry->rp, __entry->ptr, __entry->dword0,
-> +		  __entry->dword1, __print_symbolic(__entry->state, MHI_STATE))
-> +);
-> +
-> +TRACE_EVENT(mhi_update_channel_state_start,
-> +
-> +	TP_PROTO(const char *name, int ch_num, int state),
-> +
-> +	TP_ARGS(name, ch_num, state),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(name, name)
-> +		__field(int, ch_num)
-> +		__field(int, state)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, name);
-> +		__entry->ch_num = ch_num;
-> +		__entry->state = state;
-> +	),
-> +
-> +	TP_printk("%s: ch%d: Updating state to: %s\n",
-> +		  __get_str(name), __entry->ch_num,
-> +		  __print_symbolic(__entry->state, MHI_CH_STATE))
-> +);
-> +
-> +TRACE_EVENT(mhi_update_channel_state_end,
-> +
-> +	TP_PROTO(const char *name, int ch_num, int state),
-> +
-> +	TP_ARGS(name, ch_num, state),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(name, name)
-> +		__field(int, ch_num)
-> +		__field(int, state)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, name);
-> +		__entry->ch_num = ch_num;
-> +		__entry->state = state;
-> +	),
-> +
-> +	TP_printk("%s: ch%d: Updated state to: %s\n",
-> +		  __get_str(name), __entry->ch_num,
-> +		  __print_symbolic(__entry->state, MHI_CH_STATE))
-> +);
-> +
-> +TRACE_EVENT(mhi_pm_st_transition,
-> +
-> +	TP_PROTO(const char *name, int state),
-> +
-> +	TP_ARGS(name, state),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(name, name)
-> +		__field(int, state)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, name);
-> +		__entry->state = state;
-> +	),
-> +
-> +	TP_printk("%s: Handling state transition: %s\n", __get_str(name),
-> +		  __print_symbolic(__entry->state, MHI_DEV_ST_TRANSITION))
-> +);
-> +
-> +#endif
-> +#include <trace/define_trace.h>
+> 
+> Thanks!
+> 
 
