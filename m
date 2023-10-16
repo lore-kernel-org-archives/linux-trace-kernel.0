@@ -1,77 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D61C1D551
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Oct 2023 12:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yl4wcWYp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 080E7C433C7;
-	Mon, 16 Oct 2023 12:42:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697460142;
-	bh=fxutcQlYAmEEzHYBSdkxdZPz6z6pMleu2JvtcW3RJA0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Yl4wcWYpL3U3in8V1PbNCTRa5+IEntDWd90AVEb+rz8vGP83frH+Go1R/D5NUKGkt
-	 ULrnZuVx7hXL4mrwbLHDBfqvlBMV9sGNVM91204moqgTOFxcaxoHcpqTU1f+6Ab7Z/
-	 LFq7/Q8qcrSbkMF+8+v/W/TpmEKD5uL7VcuBLyVuEu54HpRmEXmMEXLBDniwNv5vK7
-	 +nd4wOL1kjtsQh6FTxVwT6SyCPFkg5YXLDlUURJzDpV2tfVvJ1XRF8DRE3LffIQVSX
-	 8Q/Uz9fAEY9UNyvBSaWk/APgvqpQ1erXxraUhheFRLM3CvF8wsP5EgolpOU3F0GhBm
-	 dkV0FtlSRxHNg==
-Message-ID: <8a1c19dc-0a4f-4079-b2df-704ae647b1f8@kernel.org>
-Date: Mon, 16 Oct 2023 14:42:16 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E142F1D551
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Oct 2023 12:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5634E6
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Oct 2023 05:49:08 -0700 (PDT)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:ce84:d8c0:f79a:fa0])
+	by xavier.telenet-ops.be with bizsmtp
+	id ycp52A00G0pDX7N01cp5bl; Mon, 16 Oct 2023 14:49:06 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1qsN1q-006jX4-28;
+	Mon, 16 Oct 2023 14:49:05 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1qsN1t-00A3uN-Ck;
+	Mon, 16 Oct 2023 14:49:05 +0200
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] neighbor: tracing: Move pin6 inside CONFIG_IPV6=y section
+Date: Mon, 16 Oct 2023 14:49:04 +0200
+Message-Id: <60cb0b0c6266881e225160f80a83884607617921.1697460418.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] scripts/link-vmlinux.sh: Add alias to duplicate
- symbols for kallsyms
-Content-Language: en-US, pt-BR, it-IT
-To: Petr Mladek <pmladek@suse.com>,
- Alessandro Carminati <alessandro.carminati@gmail.com>
-Cc: Kris Van Hees <kris.van.hees@oracle.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Masahiro Yamada <masahiroy@kernel.org>, Luis Chamberlain
- <mcgrof@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>,
- Nicolas Schier <nicolas@fjasle.eu>,
- Alexander Lobakin <aleksander.lobakin@intel.com>,
- Nick Alcock <nick.alcock@oracle.com>, Eugene Loh <eugene.loh@oracle.com>,
- Francis Laniel <flaniel@linux.microsoft.com>,
- Viktor Malik <vmalik@redhat.com>, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20230927173516.1456594-1-alessandro.carminati@gmail.com>
- <ZR7jIxh/VNT6tMVr@oracle.com>
- <CAPp5cGThN5bKsGAqiVwOV2w4tH1LgjS3eoAgucaRwty4d8JVSQ@mail.gmail.com>
- <ZSU2dTTfLqIydSQU@alley>
-From: Daniel Bristot de Oliveira <bristot@kernel.org>
-In-Reply-To: <ZSU2dTTfLqIydSQU@alley>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
+	autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
+When CONFIG_IPV6=n, and building with W=1:
 
->> In any case, as you've pointed out, duplicates can arise from names in code
->> that is not intended to be a module.
->> Therefore, relying solely on the module name would not fully address the
->> problem you initially aimed to solve.
-> 
-> From my POV:
-> 
-> The source path and the line number is enough to distinguish duplicate
-> symbols even in modules.
-> 
-> The added module name would just add extra complexity into the kernel
-> and tools parsing and using the alias. The tracing tools would need to
-> handle the source path and line number anyway for symbols duplicated
-> within same module/vmlinux.
-> 
-> Adding module name for builtin modules might be misleading. It won't
-> be clear which symbols are in vmlinux binary and which are in
-> real modules.
+    In file included from include/trace/define_trace.h:102,
+		     from include/trace/events/neigh.h:255,
+		     from net/core/net-traces.c:51:
+    include/trace/events/neigh.h: In function ‘trace_event_raw_event_neigh_create’:
+    include/trace/events/neigh.h:42:34: error: variable ‘pin6’ set but not used [-Werror=unused-but-set-variable]
+       42 |                 struct in6_addr *pin6;
+	  |                                  ^~~~
+    include/trace/trace_events.h:402:11: note: in definition of macro ‘DECLARE_EVENT_CLASS’
+      402 |         { assign; }                                                     \
+	  |           ^~~~~~
+    include/trace/trace_events.h:44:30: note: in expansion of macro ‘PARAMS’
+       44 |                              PARAMS(assign),                   \
+	  |                              ^~~~~~
+    include/trace/events/neigh.h:23:1: note: in expansion of macro ‘TRACE_EVENT’
+       23 | TRACE_EVENT(neigh_create,
+	  | ^~~~~~~~~~~
+    include/trace/events/neigh.h:41:9: note: in expansion of macro ‘TP_fast_assign’
+       41 |         TP_fast_assign(
+	  |         ^~~~~~~~~~~~~~
+    In file included from include/trace/define_trace.h:103,
+		     from include/trace/events/neigh.h:255,
+		     from net/core/net-traces.c:51:
+    include/trace/events/neigh.h: In function ‘perf_trace_neigh_create’:
+    include/trace/events/neigh.h:42:34: error: variable ‘pin6’ set but not used [-Werror=unused-but-set-variable]
+       42 |                 struct in6_addr *pin6;
+	  |                                  ^~~~
+    include/trace/perf.h:51:11: note: in definition of macro ‘DECLARE_EVENT_CLASS’
+       51 |         { assign; }                                                     \
+	  |           ^~~~~~
+    include/trace/trace_events.h:44:30: note: in expansion of macro ‘PARAMS’
+       44 |                              PARAMS(assign),                   \
+	  |                              ^~~~~~
+    include/trace/events/neigh.h:23:1: note: in expansion of macro ‘TRACE_EVENT’
+       23 | TRACE_EVENT(neigh_create,
+	  | ^~~~~~~~~~~
+    include/trace/events/neigh.h:41:9: note: in expansion of macro ‘TP_fast_assign’
+       41 |         TP_fast_assign(
+	  |         ^~~~~~~~~~~~~~
 
-+1
+Indeed, the variable pin6 is declared and initialized unconditionally,
+while it is only used and needlessly re-initialized when support for
+IPv6 is enabled.
 
--- Daniel
+Fix this by dropping the unused variable initialization, and moving the
+variable declaration inside the existing section protected by a check
+for CONFIG_IPV6.
+
+Fixes: fc651001d2c5ca4f ("neighbor: Add tracepoint to __neigh_create")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+No changes in generated code.
+
+ include/trace/events/neigh.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/trace/events/neigh.h b/include/trace/events/neigh.h
+index 5eaa1fa9917153f6..833143d0992e063b 100644
+--- a/include/trace/events/neigh.h
++++ b/include/trace/events/neigh.h
+@@ -39,7 +39,6 @@ TRACE_EVENT(neigh_create,
+ 	),
+ 
+ 	TP_fast_assign(
+-		struct in6_addr *pin6;
+ 		__be32 *p32;
+ 
+ 		__entry->family = tbl->family;
+@@ -47,7 +46,6 @@ TRACE_EVENT(neigh_create,
+ 		__entry->entries = atomic_read(&tbl->gc_entries);
+ 		__entry->created = n != NULL;
+ 		__entry->gc_exempt = exempt_from_gc;
+-		pin6 = (struct in6_addr *)__entry->primary_key6;
+ 		p32 = (__be32 *)__entry->primary_key4;
+ 
+ 		if (tbl->family == AF_INET)
+@@ -57,6 +55,8 @@ TRACE_EVENT(neigh_create,
+ 
+ #if IS_ENABLED(CONFIG_IPV6)
+ 		if (tbl->family == AF_INET6) {
++			struct in6_addr *pin6;
++
+ 			pin6 = (struct in6_addr *)__entry->primary_key6;
+ 			*pin6 = *(struct in6_addr *)pkey;
+ 		}
+-- 
+2.34.1
+
