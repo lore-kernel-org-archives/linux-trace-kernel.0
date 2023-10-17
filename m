@@ -1,97 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ECED405D8;
-	Tue, 17 Oct 2023 09:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N6WsQkoT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36854C433C7;
-	Tue, 17 Oct 2023 09:59:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697536790;
-	bh=Uye4W9O8kTvER67qDMlch+hav48ZMIcnc4Vr6afxx+I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N6WsQkoTVoumk03Agu7C9q2I+hV+tebvoyvgftrwcMd6giSSM1mHugm0gaPRMWvlQ
-	 S+jKMNmjmERpRLKMFRedgawg3u0uQngxJWSY6febbMHsdHwURiRUvUZwZwIkeBlESw
-	 0Nm9xFfNNq6RNGm4/565WTkVBVkSFRDSWgPTuMHed5F/+J6MaIKRNBTz+6bOoB+uHp
-	 e8pcOe8BDoPLRat4g7g2VW0nWSNYNTUCYgd5h2h5wcWxu4jgSdxv5KnOCQ3MAzVrWF
-	 DCIsYSRxbhUbeySKfVvDTDXm4/n+dqIQQcZs+XPyJR9cZQ74WDAm+wf7SOh+XGyAgZ
-	 RuIuCgSCwDHMQ==
-Date: Tue, 17 Oct 2023 11:59:47 +0200
-From: Simon Horman <horms@kernel.org>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@gmail.com>, linux-trace-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] neighbor: tracing: Move pin6 inside CONFIG_IPV6=y section
-Message-ID: <20231017095947.GX1751252@kernel.org>
-References: <60cb0b0c6266881e225160f80a83884607617921.1697460418.git.geert+renesas@glider.be>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C084123D;
+	Tue, 17 Oct 2023 10:26:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20331C433C8;
+	Tue, 17 Oct 2023 10:26:38 +0000 (UTC)
+Date: Tue, 17 Oct 2023 11:26:36 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: Hyesoo Yu <hyesoo.yu@samsung.com>, will@kernel.org,
+	oliver.upton@linux.dev, maz@kernel.org, james.morse@arm.com,
+	suzuki.poulose@arm.com, yuzenghui@huawei.com, arnd@arndb.de,
+	akpm@linux-foundation.org, mingo@redhat.com, peterz@infradead.org,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+	mhiramat@kernel.org, rppt@kernel.org, hughd@google.com,
+	pcc@google.com, steven.price@arm.com, anshuman.khandual@arm.com,
+	vincenzo.frascino@arm.com, david@redhat.com, eugenis@google.com,
+	kcc@google.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 06/37] mm: page_alloc: Allocate from movable pcp
+ lists only if ALLOC_FROM_METADATA
+Message-ID: <ZS5hXFHs08zQOboi@arm.com>
+References: <20230823131350.114942-1-alexandru.elisei@arm.com>
+ <20230823131350.114942-7-alexandru.elisei@arm.com>
+ <CGME20231012013524epcas2p4b50f306e3e4d0b937b31f978022844e5@epcas2p4.samsung.com>
+ <20231010074823.GA2536665@tiffany>
+ <ZS0va9nICZo8bF03@monolith>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <60cb0b0c6266881e225160f80a83884607617921.1697460418.git.geert+renesas@glider.be>
+In-Reply-To: <ZS0va9nICZo8bF03@monolith>
 
-On Mon, Oct 16, 2023 at 02:49:04PM +0200, Geert Uytterhoeven wrote:
-> When CONFIG_IPV6=n, and building with W=1:
+On Mon, Oct 16, 2023 at 01:41:15PM +0100, Alexandru Elisei wrote:
+> On Thu, Oct 12, 2023 at 10:25:11AM +0900, Hyesoo Yu wrote:
+> > I don't think it would be effcient when the majority of movable pages
+> > do not use GFP_TAGGED.
+> > 
+> > Metadata pages have a low probability of being in the pcp list
+> > because metadata pages is bypassed when freeing pages.
+> > 
+> > The allocation performance of most movable pages is likely to decrease
+> > if only the request with ALLOC_FROM_METADATA could be allocated.
 > 
->     In file included from include/trace/define_trace.h:102,
-> 		     from include/trace/events/neigh.h:255,
-> 		     from net/core/net-traces.c:51:
->     include/trace/events/neigh.h: In function ‘trace_event_raw_event_neigh_create’:
->     include/trace/events/neigh.h:42:34: error: variable ‘pin6’ set but not used [-Werror=unused-but-set-variable]
->        42 |                 struct in6_addr *pin6;
-> 	  |                                  ^~~~
->     include/trace/trace_events.h:402:11: note: in definition of macro ‘DECLARE_EVENT_CLASS’
->       402 |         { assign; }                                                     \
-> 	  |           ^~~~~~
->     include/trace/trace_events.h:44:30: note: in expansion of macro ‘PARAMS’
->        44 |                              PARAMS(assign),                   \
-> 	  |                              ^~~~~~
->     include/trace/events/neigh.h:23:1: note: in expansion of macro ‘TRACE_EVENT’
->        23 | TRACE_EVENT(neigh_create,
-> 	  | ^~~~~~~~~~~
->     include/trace/events/neigh.h:41:9: note: in expansion of macro ‘TP_fast_assign’
->        41 |         TP_fast_assign(
-> 	  |         ^~~~~~~~~~~~~~
->     In file included from include/trace/define_trace.h:103,
-> 		     from include/trace/events/neigh.h:255,
-> 		     from net/core/net-traces.c:51:
->     include/trace/events/neigh.h: In function ‘perf_trace_neigh_create’:
->     include/trace/events/neigh.h:42:34: error: variable ‘pin6’ set but not used [-Werror=unused-but-set-variable]
->        42 |                 struct in6_addr *pin6;
-> 	  |                                  ^~~~
->     include/trace/perf.h:51:11: note: in definition of macro ‘DECLARE_EVENT_CLASS’
->        51 |         { assign; }                                                     \
-> 	  |           ^~~~~~
->     include/trace/trace_events.h:44:30: note: in expansion of macro ‘PARAMS’
->        44 |                              PARAMS(assign),                   \
-> 	  |                              ^~~~~~
->     include/trace/events/neigh.h:23:1: note: in expansion of macro ‘TRACE_EVENT’
->        23 | TRACE_EVENT(neigh_create,
-> 	  | ^~~~~~~~~~~
->     include/trace/events/neigh.h:41:9: note: in expansion of macro ‘TP_fast_assign’
->        41 |         TP_fast_assign(
-> 	  |         ^~~~~~~~~~~~~~
+> You're right, I hadn't considered that.
 > 
-> Indeed, the variable pin6 is declared and initialized unconditionally,
-> while it is only used and needlessly re-initialized when support for
-> IPv6 is enabled.
+> > 
+> > How about not including metadata pages in the pcp list at all ?
 > 
-> Fix this by dropping the unused variable initialization, and moving the
-> variable declaration inside the existing section protected by a check
-> for CONFIG_IPV6.
-> 
-> Fixes: fc651001d2c5ca4f ("neighbor: Add tracepoint to __neigh_create")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Sounds reasonable, I will keep it in mind for the next iteration of the
+> series.
 
-Reviewed-by: Simon Horman <horms@kernel.org>
-Tested-by: Simon Horman <horms@kernel.org> # build-tested
+BTW, I suggest for the next iteration we drop MIGRATE_METADATA, only use
+CMA and assume that the tag storage itself supports tagging. Hopefully
+it makes the patches a bit simpler.
 
+-- 
+Catalin
