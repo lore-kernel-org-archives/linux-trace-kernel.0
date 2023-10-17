@@ -1,111 +1,105 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21220436BB
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Oct 2023 13:57:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB40405C8;
+	Tue, 17 Oct 2023 14:54:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="fwtZhN5K"
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23F1510E
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Oct 2023 06:57:38 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1c9d922c039so45753275ad.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Oct 2023 06:57:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1697551058; x=1698155858; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eW5Gw9lfx88ca1Dfq2MtXvfhvw7cUu9QhwY8xI1fswY=;
-        b=fwtZhN5K9FT9toa56UrJZ5QMkXyIQyGnQvN45xRL9ZU+X/PlfepOs58IFyhvwBxaNP
-         jmxa7jhk6QgM2NSqlDHjHr76fsth1xt6NT2lKJvx4PU2Z4nTWwb3Y/AxOzJ9RgoNkKSM
-         YeAQbHjafbSaDmCacJjLnxbn1m9kduSA/P7eYlasVGLPiHa1zRKQM1TjIeVWu8FNLk3y
-         SNzmGBbX+Xm9FzUfAEdCgka1b7lTUj72nTN0AC7EysE4MVkA//1JFSCAGM8AqBeWuh6Z
-         e6H2XpUYTqAmh2bWkgDxDj3otcAjt+b1ox3F0UBpD02/3Vzk+V8uFmLsYk2IiK1mHnJT
-         1nlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697551058; x=1698155858;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eW5Gw9lfx88ca1Dfq2MtXvfhvw7cUu9QhwY8xI1fswY=;
-        b=VVM2BN++0f+V0T4oebnBcn1SMinEKzx+JLnAb5SeetqDEVdg9obk9sv+suGoMakzOj
-         NwcG0N+TC5QiZMGeuQM343EJ9MREXQ3FSRrnUQJzLlYGJDWkVyZXx+diDP5Y1SGk0ki0
-         ZR1eA8nKsvt1NX/9VSvn7T2mBAzIeq78K0ZdOHt3VnBB2aenz2C13dIX0Ia/dwrACZkv
-         bq29mYqLDmU3CUaf8TLuLZ/xdlOz0tFLty0I42ZrVclO7coRhZpUWEHarx1cOiLkaqfa
-         4paoFhjkbhgvr5rKTQcB53lVyujOsUG1lnIxasp56O3Ig+iM2MO69mDOs2pcOqWiC3JT
-         /VWA==
-X-Gm-Message-State: AOJu0YxKACfwgXzs+7glw+9YzInuFdbWuWZzJvXNVVj47c4c9P/ww12n
-	91e49HfLjxzHqM3oQDe7UgfF4GorKlnOuesw7K4=
-X-Google-Smtp-Source: AGHT+IHpKgRBA8ZM+uMeoha8LLvSfXNFnKnpOzRcQHmNdHaCoUv70KRV4I33W7Rv+6GsoAEvvSh7MQ==
-X-Received: by 2002:a17:902:ef8c:b0:1c3:4565:22f with SMTP id iz12-20020a170902ef8c00b001c34565022fmr2057058plb.21.1697551058231;
-        Tue, 17 Oct 2023 06:57:38 -0700 (PDT)
-Received: from devz1.bytedance.net ([203.208.167.147])
-        by smtp.gmail.com with ESMTPSA id b9-20020a170903228900b001b9e9edbf43sm1566634plh.171.2023.10.17.06.57.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Oct 2023 06:57:38 -0700 (PDT)
-From: "wuqiang.matt" <wuqiang.matt@bytedance.com>
-To: linux-trace-kernel@vger.kernel.org,
-	mhiramat@kernel.org,
-	davem@davemloft.net,
-	anil.s.keshavamurthy@intel.com,
-	naveen.n.rao@linux.ibm.com,
-	rostedt@goodmis.org,
-	peterz@infradead.org,
-	akpm@linux-foundation.org,
-	sander@svanheule.net,
-	ebiggers@google.com,
-	dan.j.williams@intel.com,
-	jpoimboe@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	lkp@intel.com,
-	mattwu@163.com,
-	"wuqiang.matt" <wuqiang.matt@bytedance.com>
-Subject: [PATCH v11 5/5] MAINTAINERS: objpool added
-Date: Tue, 17 Oct 2023 21:56:54 +0800
-Message-Id: <20231017135654.82270-6-wuqiang.matt@bytedance.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20231017135654.82270-1-wuqiang.matt@bytedance.com>
-References: <20231017135654.82270-1-wuqiang.matt@bytedance.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AlSrKzuH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C14BC433C7;
+	Tue, 17 Oct 2023 14:54:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697554441;
+	bh=vnsbyvUsINWA4gxAuTzBrSWt2oEb7/9dfvOu0utyd1s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=AlSrKzuHvCpqKf0Z3SUmI8IRy2tsD+kCXrOzkaMUesVzHE6W+/faz0mJmkdPBylnr
+	 9GRSNlynWwqByD5yzHwmBcAyfdECIOT+n2EA33VRYQ+e5HwWEXeHQCYE3/nFXkXMpj
+	 7DxPUf0G/FDXFFPYyFB3lLSx7F2k2SI5S1Ur+AgNp6vSV6VMh/7Cm+wJx0UNYk90PO
+	 QbdrtuSZ1BGVNVhYP1/AU8D+2Io/Cmd+dtQumHbM69iOrxNgndo8XueQhDpjjNt4vg
+	 x4BCka/S8HAYTNchm7IMkYH6pTLr8PvtKIBZZiAMTt/dLJWw6UXZMzqH3YSe8T+541
+	 PNMfvnPnY930A==
+Message-ID: <eb34b339-b4f1-aeea-ccff-cbe62fb126c9@kernel.org>
+Date: Tue, 17 Oct 2023 08:54:00 -0600
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.15.1
+Subject: Re: [PATCH] neighbor: tracing: Move pin6 inside CONFIG_IPV6=y section
+Content-Language: en-US
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, "David S . Miller" <davem@davemloft.net>,
+ David Ahern <dsahern@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <60cb0b0c6266881e225160f80a83884607617921.1697460418.git.geert+renesas@glider.be>
+From: David Ahern <dsahern@kernel.org>
+In-Reply-To: <60cb0b0c6266881e225160f80a83884607617921.1697460418.git.geert+renesas@glider.be>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
 
-objpool, a scalable and lockless ring-array based object pool, was
-introduced to replace the original freelist (a LIFO queue based on
-singly linked list) to improve kretprobe scalability.
+On 10/16/23 6:49 AM, Geert Uytterhoeven wrote:
+> When CONFIG_IPV6=n, and building with W=1:
+> 
+>     In file included from include/trace/define_trace.h:102,
+> 		     from include/trace/events/neigh.h:255,
+> 		     from net/core/net-traces.c:51:
+>     include/trace/events/neigh.h: In function ‘trace_event_raw_event_neigh_create’:
+>     include/trace/events/neigh.h:42:34: error: variable ‘pin6’ set but not used [-Werror=unused-but-set-variable]
+>        42 |                 struct in6_addr *pin6;
+> 	  |                                  ^~~~
+>     include/trace/trace_events.h:402:11: note: in definition of macro ‘DECLARE_EVENT_CLASS’
+>       402 |         { assign; }                                                     \
+> 	  |           ^~~~~~
+>     include/trace/trace_events.h:44:30: note: in expansion of macro ‘PARAMS’
+>        44 |                              PARAMS(assign),                   \
+> 	  |                              ^~~~~~
+>     include/trace/events/neigh.h:23:1: note: in expansion of macro ‘TRACE_EVENT’
+>        23 | TRACE_EVENT(neigh_create,
+> 	  | ^~~~~~~~~~~
+>     include/trace/events/neigh.h:41:9: note: in expansion of macro ‘TP_fast_assign’
+>        41 |         TP_fast_assign(
+> 	  |         ^~~~~~~~~~~~~~
+>     In file included from include/trace/define_trace.h:103,
+> 		     from include/trace/events/neigh.h:255,
+> 		     from net/core/net-traces.c:51:
+>     include/trace/events/neigh.h: In function ‘perf_trace_neigh_create’:
+>     include/trace/events/neigh.h:42:34: error: variable ‘pin6’ set but not used [-Werror=unused-but-set-variable]
+>        42 |                 struct in6_addr *pin6;
+> 	  |                                  ^~~~
+>     include/trace/perf.h:51:11: note: in definition of macro ‘DECLARE_EVENT_CLASS’
+>        51 |         { assign; }                                                     \
+> 	  |           ^~~~~~
+>     include/trace/trace_events.h:44:30: note: in expansion of macro ‘PARAMS’
+>        44 |                              PARAMS(assign),                   \
+> 	  |                              ^~~~~~
+>     include/trace/events/neigh.h:23:1: note: in expansion of macro ‘TRACE_EVENT’
+>        23 | TRACE_EVENT(neigh_create,
+> 	  | ^~~~~~~~~~~
+>     include/trace/events/neigh.h:41:9: note: in expansion of macro ‘TP_fast_assign’
+>        41 |         TP_fast_assign(
+> 	  |         ^~~~~~~~~~~~~~
+> 
+> Indeed, the variable pin6 is declared and initialized unconditionally,
+> while it is only used and needlessly re-initialized when support for
+> IPv6 is enabled.
+> 
+> Fix this by dropping the unused variable initialization, and moving the
+> variable declaration inside the existing section protected by a check
+> for CONFIG_IPV6.
+> 
+> Fixes: fc651001d2c5ca4f ("neighbor: Add tracepoint to __neigh_create")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> No changes in generated code.
+> 
+>  include/trace/events/neigh.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
 
-Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+Reviewed-by: David Ahern <dsahern@kernel.org>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 48abe1a281f2..1c0a38d763a2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15328,6 +15328,13 @@ F:	include/linux/objagg.h
- F:	lib/objagg.c
- F:	lib/test_objagg.c
- 
-+OBJPOOL
-+M:	Matt Wu <wuqiang.matt@bytedance.com>
-+S:	Supported
-+F:	include/linux/objpool.h
-+F:	lib/objpool.c
-+F:	lib/test_objpool.c
-+
- OBJTOOL
- M:	Josh Poimboeuf <jpoimboe@kernel.org>
- M:	Peter Zijlstra <peterz@infradead.org>
--- 
-2.40.1
-
+Google put your email in the spam folder, BTW.
