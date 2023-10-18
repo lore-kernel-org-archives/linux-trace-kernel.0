@@ -1,101 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 669EA18B11;
-	Wed, 18 Oct 2023 10:20:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5EA19443
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Oct 2023 14:40:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eriMRYuK"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 00117C433C9;
-	Wed, 18 Oct 2023 10:20:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697624424;
-	bh=sOgqO5PGqwB3C8z51ihJDgYx6Qkli8L//Uj/en/125s=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=eriMRYuKPHmk/+70yqXpGXDVRlULhZ2BTh7nYpTXTMMim+Qmd/If/FjPVM1MCyxZ4
-	 zLvKOFF68y1neFdxiklaOmrrsFZZ8rhawXXS7rcfn7OBi9rN+SWI0U8NP58dZVQFL9
-	 jVThbWyCSL8HSnu2OsvVxN1MaRCGX2lYkg8GfLm/8pqAzRaJplBdhd/7X5PRdu6FM1
-	 1yAgQOpuwRiMU0aobMOglS3I+NvE/X879Zci9zIFvuh0N78XTzXj5TVKLnBIh4yil1
-	 eCKjJIjinBIgbbOUESBuTbqCc6/gmGCs+tjsqvCUQdF8zbJcsj6Txz7d3GQK3E4MGR
-	 c/fOHOnN+7SWQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DC5A4C04E27;
-	Wed, 18 Oct 2023 10:20:23 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="g0MyMcG+"
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5260310E;
+	Wed, 18 Oct 2023 07:40:56 -0700 (PDT)
+Received: from pwmachine.numericable.fr (unknown [188.24.154.80])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D0E4D20B74C0;
+	Wed, 18 Oct 2023 07:40:53 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D0E4D20B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1697640055;
+	bh=rNK2ZSSkxeW+oOn8+c0A+f57gZEtJD4/megjKHpC57M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=g0MyMcG+Q5UCFxeDDHtYkiVwR8sxVZB9Mi8m8NrEfhUyNNBwhmGUnoJdQCJ082ZQY
+	 mSqtgKJoU5P4LjUXt0f7GK2v1uzDnIbMkYhaslMPMBxz+C/zeIc1gSMRpcvJ9HUHa7
+	 lD2Hpjb83YGCV+xGI2OvUw4exF8lrdUxF+fB689I=
+From: Francis Laniel <flaniel@linux.microsoft.com>
+To: linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	stable@vger.kernel.org,
+	Francis Laniel <flaniel@linux.microsoft.com>
+Subject: [PATCH v5 0/2] Return EADDRNOTAVAIL when func matches several symbols during kprobe creation
+Date: Wed, 18 Oct 2023 17:40:28 +0300
+Message-Id: <20231018144030.86885-1-flaniel@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] neighbor: tracing: Move pin6 inside CONFIG_IPV6=y section
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <169762442389.8273.11100691121228999250.git-patchwork-notify@kernel.org>
-Date: Wed, 18 Oct 2023 10:20:23 +0000
-References: <60cb0b0c6266881e225160f80a83884607617921.1697460418.git.geert+renesas@glider.be>
-In-Reply-To: <60cb0b0c6266881e225160f80a83884607617921.1697460418.git.geert+renesas@glider.be>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: rostedt@goodmis.org, mhiramat@kernel.org, davem@davemloft.net,
- dsahern@gmail.com, linux-trace-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+	autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-Hello:
+Hi.
 
-This patch was applied to netdev/net.git (main)
-by David S. Miller <davem@davemloft.net>:
 
-On Mon, 16 Oct 2023 14:49:04 +0200 you wrote:
-> When CONFIG_IPV6=n, and building with W=1:
-> 
->     In file included from include/trace/define_trace.h:102,
-> 		     from include/trace/events/neigh.h:255,
-> 		     from net/core/net-traces.c:51:
->     include/trace/events/neigh.h: In function ‘trace_event_raw_event_neigh_create’:
->     include/trace/events/neigh.h:42:34: error: variable ‘pin6’ set but not used [-Werror=unused-but-set-variable]
->        42 |                 struct in6_addr *pin6;
-> 	  |                                  ^~~~
->     include/trace/trace_events.h:402:11: note: in definition of macro ‘DECLARE_EVENT_CLASS’
->       402 |         { assign; }                                                     \
-> 	  |           ^~~~~~
->     include/trace/trace_events.h:44:30: note: in expansion of macro ‘PARAMS’
->        44 |                              PARAMS(assign),                   \
-> 	  |                              ^~~~~~
->     include/trace/events/neigh.h:23:1: note: in expansion of macro ‘TRACE_EVENT’
->        23 | TRACE_EVENT(neigh_create,
-> 	  | ^~~~~~~~~~~
->     include/trace/events/neigh.h:41:9: note: in expansion of macro ‘TP_fast_assign’
->        41 |         TP_fast_assign(
-> 	  |         ^~~~~~~~~~~~~~
->     In file included from include/trace/define_trace.h:103,
-> 		     from include/trace/events/neigh.h:255,
-> 		     from net/core/net-traces.c:51:
->     include/trace/events/neigh.h: In function ‘perf_trace_neigh_create’:
->     include/trace/events/neigh.h:42:34: error: variable ‘pin6’ set but not used [-Werror=unused-but-set-variable]
->        42 |                 struct in6_addr *pin6;
-> 	  |                                  ^~~~
->     include/trace/perf.h:51:11: note: in definition of macro ‘DECLARE_EVENT_CLASS’
->        51 |         { assign; }                                                     \
-> 	  |           ^~~~~~
->     include/trace/trace_events.h:44:30: note: in expansion of macro ‘PARAMS’
->        44 |                              PARAMS(assign),                   \
-> 	  |                              ^~~~~~
->     include/trace/events/neigh.h:23:1: note: in expansion of macro ‘TRACE_EVENT’
->        23 | TRACE_EVENT(neigh_create,
-> 	  | ^~~~~~~~~~~
->     include/trace/events/neigh.h:41:9: note: in expansion of macro ‘TP_fast_assign’
->        41 |         TP_fast_assign(
-> 	  |         ^~~~~~~~~~~~~~
-> 
-> [...]
+In the kernel source code, it exists different functions which share the same
+name but which have, of course, different addresses as they can be defined in
+different modules:
+# Kernel was compiled with CONFIG_NTFS_FS and CONFIG_NTFS3_FS as built-in.
+root@vm-amd64:~# grep ntfs_file_write_iter /proc/kallsyms
+ffffffff814ce3c0 t __pfx_ntfs_file_write_iter
+ffffffff814ce3d0 t ntfs_file_write_iter
+ffffffff814fc8a0 t __pfx_ntfs_file_write_iter
+ffffffff814fc8b0 t ntfs_file_write_iter
+This can be source of troubles when you create a PMU kprobe for such a function,
+as it will only install one for the first address (e.g. 0xffffffff814ce3d0 in
+the above).
+This could lead to some troubles were BPF based tools does not report any event
+because the second function is not called:
+root@vm-amd64:/mnt# mount | grep /mnt
+/foo.img on /mnt type ntfs3 (rw,relatime,uid=0,gid=0,iocharset=utf8)
+# ig is a tool which installs a PMU kprobe on ntfs_file_write_iter().
+root@vm-amd64:/mnt# ig trace fsslower -m 0 -f ntfs3 --host &> /tmp/foo &
+[1] 207
+root@vm-amd64:/mnt# dd if=./foo of=./bar count=3
+3+0 records in
+3+0 records out
+1536 bytes (1.5 kB, 1.5 KiB) copied, 0.00543323 s, 283 kB/s
+root@vm-amd64:/mnt# fg
+ig trace fsslower -m 0 -f ntfs3 --host &> /tmp/foo
+^Croot@vm-amd64:/mnt# more /tmp/foo
+RUNTIME.CONTAINERNAME          RUNTIME.CONTAIN… PID              COMM
+  T      BYTES     OFFSET        LAT FILE
+                                                214              dd
+  R        512          0        766 foo
+                                                214              dd
+  R        512        512          9 foo
+                                                214              dd
+As you can see in the above, only read events are reported and no write because
+the kprobe is installed for the old ntfs_file_write_iter() and not the ntfs3
+one.
+The same behavior occurs with sysfs kprobe:
+root@vm-amd64:/# echo 'p:probe/ntfs_file_write_iter ntfs_file_write_iter' > /sys/kernel/tracing/kprobe_events
+root@vm-amd64:/# cat /sys/kernel/tracing/kprobe_events
+p:probe/ntfs_file_write_iter ntfs_file_write_iter
+root@vm-amd64:/# mount | grep /mnt
+/foo.img on /mnt type ntfs3 (rw,relatime,uid=0,gid=0,iocharset=utf8)
+root@vm-amd64:/# perf record -e probe:ntfs_file_write_iter &
+[1] 210
+root@vm-amd64:/# cd /mnt/
+root@vm-amd64:/mnt# dd if=./foo of=./bar count=3
+3+0 records in
+3+0 records out
+1536 bytes (1.5 kB, 1.5 KiB) copied, 0.00234793 s, 654 kB/s
+root@vm-amd64:/mnt# cd -
+/
+root@vm-amd64:/# fg
+perf record -e probe:ntfs_file_write_iter
+^C[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.056 MB perf.data ]
 
-Here is the summary with links:
-  - neighbor: tracing: Move pin6 inside CONFIG_IPV6=y section
-    https://git.kernel.org/netdev/net/c/2915240eddba
+root@vm-amd64:/# perf report
+Error:
+The perf.data data has no samples!
+# To display the perf.data header info, please use --header/--header-only optio>
+#
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+In this contribution, I modified the functions creating sysfs and PMU kprobes to
+test if the function name given as argument matches several symbols.
+In this case, these functions return EADDRNOTAVAIL to indicate the user to use
+addr and offs to remove this ambiguity.
+So, when the above BPF tool is run, the following error message is printed:
+root@vm-amd64:~# ig trace fsslower -m 0 -f ntfs3 --host &> /tmp/foo &
+[1] 228
+root@vm-amd64:~# more /tmp/foo
+RUNTIME.CONTAINERNAME          RUNTIME.CONTAIN… PID              COMM
+  T      BYTES     OFFSET        LAT FILE
+Error: running gadget: running gadget: installing tracer: attaching kprobe: crea
+ting perf_kprobe PMU (arch-specific fallback for "ntfs_file_write_iter"): token
+ntfs_file_write_iter: opening perf event: cannot assign requested address
+And the same with sysfs kprobe:
+root@vm-amd64:/# echo 'p:probe/ntfs_file_write_iter ntfs_file_write_iter' > /sys/kernel/tracing/kprobe_events
+-bash: echo: write error: Cannot assign requested address
+Note that, this does not influence perf as it installs kprobes as offset on
+_text:
+root@vm-amd64:/# perf probe --add ntfs_file_write_iter
+Added new events:
+  probe:ntfs_file_write_iter (on ntfs_file_write_iter)
+  probe:ntfs_file_write_iter (on ntfs_file_write_iter)
+...
+root@vm-amd64:/# cat /sys/kernel/tracing/kprobe_events
+p:probe/ntfs_file_write_iter _text+5039088
+p:probe/ntfs_file_write_iter _text+5228752
 
+Note that, this contribution is the conclusion of a previous RFC which intended
+to install a PMU kprobe for all matching symbols [1, 2].
+
+If you see any way to improve this contribution, particularly if you have an
+idea to add tests or documentation for this behavior, please share your
+feedback.
+
+Changes since:
+ v1:
+  * Use EADDRNOTAVAIL instead of adding a new error code.
+  * Correct also this behavior for sysfs kprobe.
+ v2:
+  * Count the number of symbols corresponding to function name and return
+  EADDRNOTAVAIL if higher than 1.
+  * Return ENOENT if above count is 0, as it would be returned later by while
+  registering the kprobe.
+ v3:
+  * Check symbol does not contain ':' before testing its uniqueness.
+  * Add a selftest to check this is not possible to install a kprobe for a non
+  unique symbol.
+ v5:
+  * No changes, just add linux-stable as recipient.
+
+Francis Laniel (2):
+  tracing/kprobes: Return EADDRNOTAVAIL when func matches several
+    symbols
+  selftests/ftrace: Add new test case which checks non unique symbol
+
+ kernel/trace/trace_kprobe.c                   | 63 +++++++++++++++++++
+ kernel/trace/trace_probe.h                    |  1 +
+ .../test.d/kprobe/kprobe_non_uniq_symbol.tc   | 13 ++++
+ 3 files changed, 77 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc
+
+
+Best regards and thank you in advance.
+---
+[1]: https://lore.kernel.org/lkml/20230816163517.112518-1-flaniel@linux.microsoft.com/
+[2]: https://lore.kernel.org/lkml/20230819101105.b0c104ae4494a7d1f2eea742@kernel.org/
+--
+2.34.1
 
