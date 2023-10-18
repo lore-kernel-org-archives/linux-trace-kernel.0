@@ -1,89 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6543FE54;
-	Wed, 18 Oct 2023 18:10:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F543FB33
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Oct 2023 18:14:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d0NBQx/8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71AC1C433C8;
-	Wed, 18 Oct 2023 18:10:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697652642;
-	bh=LHAZNYWjlZE9o69WQzFu8+hQ8gDUBGEq47VgG8s8Jbo=;
-	h=From:Date:Subject:To:Cc:From;
-	b=d0NBQx/8FT0zlB+fVZUbNnWE/GyAwzzz7pIV+Dwma+/2ur8BYFMvKqPaXK0g+aC7k
-	 YBJVOzNaTz1DHqUKaYKtJyRRqs7LX64eod8ISgBjcZtt6WRJ1lh0csPAddtxZILqVD
-	 KH8fLCCEPUVZB3FKUQleCdKdFdvKLN4aS1tSeIWg2wfdrIKQinxiypcohiDmoIzTE6
-	 sU+cn3arw3tF62wk26PoJm8PVoYHYwUHB+pL0B2PXJAADRblAlOruQxD+F0gwD3fuv
-	 voo+23LmG60T4KDOrg2uh94e+PdZjzPVzSvnxW1XBEEAdw44g1BfP0ckogdqHE9coj
-	 htOWjJ8BuMkGw==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Wed, 18 Oct 2023 11:10:31 -0700
-Subject: [PATCH] eventfs: Use ERR_CAST() in eventfs_create_events_dir()
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZCiACGeQ"
+Received: from mail-oo1-xc32.google.com (mail-oo1-xc32.google.com [IPv6:2607:f8b0:4864:20::c32])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53357F7
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Oct 2023 11:14:24 -0700 (PDT)
+Received: by mail-oo1-xc32.google.com with SMTP id 006d021491bc7-57bce354d94so3679833eaf.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Oct 2023 11:14:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1697652863; x=1698257663; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=b5ifuSh3pAXhwmN6aI2xPo6Qr4r8ZyUW95PzWHa09WA=;
+        b=ZCiACGeQoi4k9Uczo7sPdo5KrSXFyTY/eKKYP/9yyDJHLOgwgs5M0Dj7+t9a/k2sGl
+         3GYP5PAWFfBheXCANJwQ7L2mqNvQuT3CzfFE8hF6KSks3b85N2++rfuzK0LWd1cMh7lN
+         U0H2wrhwvUw5yVZ0Pls8y3UBf3MGAWwMh228g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697652863; x=1698257663;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b5ifuSh3pAXhwmN6aI2xPo6Qr4r8ZyUW95PzWHa09WA=;
+        b=V0hYf7lByDG2GzEviwLuDWZANHJkXb+7qvwfKYzIW1dbT8NV0FIdSoS5dplzoqw2eY
+         hsYmKFqQCxwP9aBHylYURrQGkkMZT2c5e0PwnqaHXB3vWJxk2mhW00oh5s5qG1vKMjmp
+         Wvdy4fe4pNuL2aNZmynsRON4g9QGIV/dihuJ5TAtcrc0EFiVm6MzqvAiwKlJXSokDAqb
+         IiPTqb0N5kwsbv6Yf8tmXFcTP0Y1f6sUP/3uY+cuedzmptOfMa6+J/wzTVqDVC8LLY/9
+         S9PUq5J39wE9kuXc4wnOfr2ZUfn5xoVazteOK6bUsJHH2+nkg+6yIUm2KxNaiUQVafPg
+         s1kQ==
+X-Gm-Message-State: AOJu0YxDNfbUjFQfiLaPPFo9WbbJL2PqwK1gdr+PSCzqgNKp/pQmVZKP
+	pkfoRZLhzRfmuDV5rZZt64BkdQ==
+X-Google-Smtp-Source: AGHT+IF8xi8GFiUQY06uOeWqByr5z7EFVgeVDoRSw3v4/DxmzcbtqXvuu1i8IZohOlGRjH61x3+iMg==
+X-Received: by 2002:a05:6358:3a0f:b0:166:f348:a8b3 with SMTP id g15-20020a0563583a0f00b00166f348a8b3mr2010476rwe.28.1697652863564;
+        Wed, 18 Oct 2023 11:14:23 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id h26-20020aa796da000000b006bae6eea9d0sm3657643pfq.49.2023.10.18.11.14.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Oct 2023 11:14:23 -0700 (PDT)
+Date: Wed, 18 Oct 2023 11:14:22 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, ndesaulniers@google.com,
+	trix@redhat.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	patches@lists.linux.dev
+Subject: Re: [PATCH] eventfs: Use ERR_CAST() in eventfs_create_events_dir()
+Message-ID: <202310181114.55457CFE@keescook>
+References: <20231018-ftrace-fix-clang-randstruct-v1-1-338cb214abfb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20231018-ftrace-fix-clang-randstruct-v1-1-338cb214abfb@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAJYfMGUC/x3MQQqEMAxA0atI1hNoK4rOVYZZ1Bg1IJ0hrSKId
- ze4/PD4J2RW4Qzv6gTlXbL8koV/VUBLTDOjjNYQXKi98x1ORSMxTnIgrQZQYxpz0Y0KOhraru+
- bUEcCO/yVzT33z/e6bhnL/RptAAAA
-To: rostedt@goodmis.org, mhiramat@kernel.org
-Cc: keescook@chromium.org, ndesaulniers@google.com, trix@redhat.com, 
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- llvm@lists.linux.dev, patches@lists.linux.dev, 
- Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.13-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1442; i=nathan@kernel.org;
- h=from:subject:message-id; bh=LHAZNYWjlZE9o69WQzFu8+hQ8gDUBGEq47VgG8s8Jbo=;
- b=owGbwMvMwCEmm602sfCA1DTG02pJDKkG8gtn+x73+DjpvvHTQGGfrms5qe6ib3NTH/5dYsv6e
- 1MS01a2jlIWBjEOBlkxRZbqx6rHDQ3nnGW8cWoSzBxWJpAhDFycAjCRpxkM/9N3rpAIVniru/n1
- zDihy8cf228q/74i7JGmWcvNc7s/Jl9j+MNb9fT7wmWy626JpE1h/3/Q+ovP4dfuoRysIREXG2d
- 3L+EAAA==
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231018-ftrace-fix-clang-randstruct-v1-1-338cb214abfb@kernel.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-When building with clang and CONFIG_RANDSTRUCT_FULL=y, there is an error
-due to a cast in eventfs_create_events_dir():
+On Wed, Oct 18, 2023 at 11:10:31AM -0700, Nathan Chancellor wrote:
+> When building with clang and CONFIG_RANDSTRUCT_FULL=y, there is an error
+> due to a cast in eventfs_create_events_dir():
+> 
+>   fs/tracefs/event_inode.c:734:10: error: casting from randomized structure pointer type 'struct dentry *' to 'struct eventfs_inode *'
+>     734 |                 return (struct eventfs_inode *)dentry;
+>         |                        ^
+>   1 error generated.
+> 
+> Use the ERR_CAST() function to resolve the error, as it was designed for
+> this exact situation (casting an error pointer to another type).
+> 
+> Closes: https://github.com/ClangBuiltLinux/linux/issues/1947
+> Fixes: 5790b1fb3d67 ("eventfs: Remove eventfs_file and just use eventfs_inode")
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 
-  fs/tracefs/event_inode.c:734:10: error: casting from randomized structure pointer type 'struct dentry *' to 'struct eventfs_inode *'
-    734 |                 return (struct eventfs_inode *)dentry;
-        |                        ^
-  1 error generated.
+Yes, please. That's the correct method to do such casts. Thanks!
 
-Use the ERR_CAST() function to resolve the error, as it was designed for
-this exact situation (casting an error pointer to another type).
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Closes: https://github.com/ClangBuiltLinux/linux/issues/1947
-Fixes: 5790b1fb3d67 ("eventfs: Remove eventfs_file and just use eventfs_inode")
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
- fs/tracefs/event_inode.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 1ccd100bc565..9f19b6608954 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -731,7 +731,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
- 		return NULL;
- 
- 	if (IS_ERR(dentry))
--		return (struct eventfs_inode *)dentry;
-+		return ERR_CAST(dentry);
- 
- 	ei = kzalloc(sizeof(*ei), GFP_KERNEL);
- 	if (!ei)
-
----
-base-commit: 5ddd8baa4857709b4e5d84b376d735152851955b
-change-id: 20231018-ftrace-fix-clang-randstruct-0cb6899523ac
-
-Best regards,
 -- 
-Nathan Chancellor <nathan@kernel.org>
-
+Kees Cook
