@@ -1,221 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1F238BB0
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Oct 2023 15:13:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1120C31A86
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Oct 2023 16:22:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KWZ7cHYL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 206E7C433C7;
-	Wed, 18 Oct 2023 15:13:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697642000;
-	bh=QHYsrCWEAf6Rj1WInkAyV5oPIT9y9pWAyNJdsQJykTw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=KWZ7cHYL1iMGqg/LhuGkp7vLmErI62GgzuuG0C4bZugDCnj4lVCEIZoOXno70U0Cn
-	 PmrHCWIT45vm5EHLEtq2ugu9UqRhArbSxMHJ5TBc+4pVxLayeXOlByABPAC/TeyzBA
-	 Mbo6sIZfpThPICjQ/672UBLGBLlQCLx08OoP8zce+EVHbigSmUkyE06lrNoNOH1kXW
-	 GynuoJdWfzqu+PQbn4tnCFfgNtRcDmcavco3x+lnJY7BzBul3iARR5XRnfkitF3VA8
-	 D7grGFgq3ad6PgOhFeHfaKr99Zyhl0hk56dNY2gYu2SjZqesER69LL64JHPo9Z+RAz
-	 VtQF+LWzOk9Yg==
-Date: Thu, 19 Oct 2023 00:13:14 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: "wuqiang.matt" <wuqiang.matt@bytedance.com>,
- linux-trace-kernel@vger.kernel.org, davem@davemloft.net,
- anil.s.keshavamurthy@intel.com, naveen.n.rao@linux.ibm.com,
- rostedt@goodmis.org, peterz@infradead.org, akpm@linux-foundation.org,
- sander@svanheule.net, ebiggers@google.com, dan.j.williams@intel.com,
- jpoimboe@kernel.org, linux-kernel@vger.kernel.org, lkp@intel.com,
- mattwu@163.com
-Subject: Re: [PATCH v10 4/5] kprobes: freelist.h removed
-Message-Id: <20231019001314.1b27a6cb0429590abf101992@kernel.org>
-In-Reply-To: <20231016222314.291e370a53a1f1922f8182c3@kernel.org>
-References: <20231015053251.707442-1-wuqiang.matt@bytedance.com>
-	<20231015053251.707442-5-wuqiang.matt@bytedance.com>
-	<20231016222314.291e370a53a1f1922f8182c3@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qAkKjpQY"
+Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4E4FB8
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Oct 2023 09:22:25 -0700 (PDT)
+Received: by mail-qt1-x82e.google.com with SMTP id d75a77b69052e-41cb7720579so292601cf.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Oct 2023 09:22:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1697646145; x=1698250945; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1ESBoSu0Q2kOoNHH1TTBfnX4/YG198ciywvQbN8v9rE=;
+        b=qAkKjpQYe9q7oGFfKOnW7ZwiMksJrbGIpxRFd6Anm6Vb23Y6QBXxgGhdlkhfRNZRMO
+         qDgJ3XYNbPJqav4D/Q+XDYO5hSCzU5SNv4MYpLtyHEjdsCQhMFVguzQ66ikmIiK/d12O
+         vvyJXFqqJXxfElT7vW5s8b1gcORAaTmZe8caGIYq/oI4d84ds5w8Wfj1/WqC8iRaECUj
+         qZPgUv8MBkS83XmS+oChcmjyTdF0pNkR20hOYqxUu6giqPePxyvyIP3Ic/vqngEjOEuS
+         pGcVDaxEIGmqLmwQPc+z7eMLtGEXheIoSDz7/fCTvb1H/eUYh+BeedpyniaHVNJd1tQU
+         sajA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697646145; x=1698250945;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1ESBoSu0Q2kOoNHH1TTBfnX4/YG198ciywvQbN8v9rE=;
+        b=RtJ9Yz0QzuaCSZmP9Pl7K2+WZITphjwyz/OBn8B9dxyNIAtgnEK4qAnwwDMJ40CFgA
+         qV2qAKbCnYCe7XRK7GysanRka4rb8jIngKFk6vrrMtKOASwArCwSapi6d76wlv22Aqyn
+         dq8neS/RmXzOAIIt/n5EaoHlWMieSO4diXgX6NmfYFwtfZA74E65sQjpRY39tRWWAzhy
+         FGJggPwoca9c787/yyQhNda+izZryVY0um6ncUslw2Nk2twJiEXojf8PZsR/ExPFYvir
+         O/T8iPyjuRN4Pn5fQa2JBGj3cUTZqHQsDytMrEYBBW8qrswRPGvONaS5J8eIsBgZV7YK
+         CEBw==
+X-Gm-Message-State: AOJu0YyLYTPAQb4UePtAJvO/8fJgEFGLi3LTmYQuDBr9yEzubZat6Tzp
+	270Kmo1YOMX77r/i278olwTJ5PY//sIPRPt4FwxyKg==
+X-Google-Smtp-Source: AGHT+IF6mJk4QPRLAjJWI/o6MMUeKJaaas0JnbYE4DP1GoPpKt3v9snrBQH4kk0quh0gH9SuLieuXsPbaCYJn2+Gj98=
+X-Received: by 2002:a05:622a:7711:b0:41c:375b:81a3 with SMTP id
+ ki17-20020a05622a771100b0041c375b81a3mr321200qtb.18.1697646144607; Wed, 18
+ Oct 2023 09:22:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20231018082104.3918770-1-link@vivo.com> <20231018082104.3918770-3-link@vivo.com>
+In-Reply-To: <20231018082104.3918770-3-link@vivo.com>
+From: Yu Zhao <yuzhao@google.com>
+Date: Wed, 18 Oct 2023 10:21:47 -0600
+Message-ID: <CAOUHufbPiAhpvHuo=oH7Zhyoc0hR-6kpVrCEe-b0OuWYWne2=A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mm: multi-gen lru: fix stat count
+To: Huan Yang <link@vivo.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, bpf@vger.kernel.org, 
+	opensource.kernel@vivo.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-Hi,
+On Wed, Oct 18, 2023 at 2:22=E2=80=AFAM Huan Yang <link@vivo.com> wrote:
+>
+> For multi-gen lru reclaim in evict_folios, like shrink_inactive_list,
+> gather folios which isolate to reclaim, and invoke shirnk_folio_list.
+>
+> But, when complete shrink, it not gather shrink reclaim stat into sc,
+> we can't get info like nr_dirty\congested in reclaim, and then
+> control writeback, dirty number and mark as LRUVEC_CONGESTED, or
+> just bpf trace shrink and get correct sc stat.
+>
+> This patch fix this by simple copy code from shrink_inactive_list when
+> end of shrink list.
 
-On Mon, 16 Oct 2023 22:23:14 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-
-> Hi Peter,
-> 
-> This freelist has been introduced by you, is it OK to remove this because no
-> other user exists?
-
-I'll pick this on my probes/for-next branch. If there is any issue reported,
-I'll revert it.
-
-Thank you,
-
-> 
-> Thank you,
-> 
-> On Sun, 15 Oct 2023 13:32:50 +0800
-> "wuqiang.matt" <wuqiang.matt@bytedance.com> wrote:
-> 
-> > This patch will remove freelist.h from kernel source tree, since the
-> > only use cases (kretprobe and rethook) are converted to objpool.
-> > 
-> > Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
-> > ---
-> >  include/linux/freelist.h | 129 ---------------------------------------
-> >  1 file changed, 129 deletions(-)
-> >  delete mode 100644 include/linux/freelist.h
-> > 
-> > diff --git a/include/linux/freelist.h b/include/linux/freelist.h
-> > deleted file mode 100644
-> > index fc1842b96469..000000000000
-> > --- a/include/linux/freelist.h
-> > +++ /dev/null
-> > @@ -1,129 +0,0 @@
-> > -/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-> > -#ifndef FREELIST_H
-> > -#define FREELIST_H
-> > -
-> > -#include <linux/atomic.h>
-> > -
-> > -/*
-> > - * Copyright: cameron@moodycamel.com
-> > - *
-> > - * A simple CAS-based lock-free free list. Not the fastest thing in the world
-> > - * under heavy contention, but simple and correct (assuming nodes are never
-> > - * freed until after the free list is destroyed), and fairly speedy under low
-> > - * contention.
-> > - *
-> > - * Adapted from: https://moodycamel.com/blog/2014/solving-the-aba-problem-for-lock-free-free-lists
-> > - */
-> > -
-> > -struct freelist_node {
-> > -	atomic_t		refs;
-> > -	struct freelist_node	*next;
-> > -};
-> > -
-> > -struct freelist_head {
-> > -	struct freelist_node	*head;
-> > -};
-> > -
-> > -#define REFS_ON_FREELIST 0x80000000
-> > -#define REFS_MASK	 0x7FFFFFFF
-> > -
-> > -static inline void __freelist_add(struct freelist_node *node, struct freelist_head *list)
-> > -{
-> > -	/*
-> > -	 * Since the refcount is zero, and nobody can increase it once it's
-> > -	 * zero (except us, and we run only one copy of this method per node at
-> > -	 * a time, i.e. the single thread case), then we know we can safely
-> > -	 * change the next pointer of the node; however, once the refcount is
-> > -	 * back above zero, then other threads could increase it (happens under
-> > -	 * heavy contention, when the refcount goes to zero in between a load
-> > -	 * and a refcount increment of a node in try_get, then back up to
-> > -	 * something non-zero, then the refcount increment is done by the other
-> > -	 * thread) -- so if the CAS to add the node to the actual list fails,
-> > -	 * decrese the refcount and leave the add operation to the next thread
-> > -	 * who puts the refcount back to zero (which could be us, hence the
-> > -	 * loop).
-> > -	 */
-> > -	struct freelist_node *head = READ_ONCE(list->head);
-> > -
-> > -	for (;;) {
-> > -		WRITE_ONCE(node->next, head);
-> > -		atomic_set_release(&node->refs, 1);
-> > -
-> > -		if (!try_cmpxchg_release(&list->head, &head, node)) {
-> > -			/*
-> > -			 * Hmm, the add failed, but we can only try again when
-> > -			 * the refcount goes back to zero.
-> > -			 */
-> > -			if (atomic_fetch_add_release(REFS_ON_FREELIST - 1, &node->refs) == 1)
-> > -				continue;
-> > -		}
-> > -		return;
-> > -	}
-> > -}
-> > -
-> > -static inline void freelist_add(struct freelist_node *node, struct freelist_head *list)
-> > -{
-> > -	/*
-> > -	 * We know that the should-be-on-freelist bit is 0 at this point, so
-> > -	 * it's safe to set it using a fetch_add.
-> > -	 */
-> > -	if (!atomic_fetch_add_release(REFS_ON_FREELIST, &node->refs)) {
-> > -		/*
-> > -		 * Oh look! We were the last ones referencing this node, and we
-> > -		 * know we want to add it to the free list, so let's do it!
-> > -		 */
-> > -		__freelist_add(node, list);
-> > -	}
-> > -}
-> > -
-> > -static inline struct freelist_node *freelist_try_get(struct freelist_head *list)
-> > -{
-> > -	struct freelist_node *prev, *next, *head = smp_load_acquire(&list->head);
-> > -	unsigned int refs;
-> > -
-> > -	while (head) {
-> > -		prev = head;
-> > -		refs = atomic_read(&head->refs);
-> > -		if ((refs & REFS_MASK) == 0 ||
-> > -		    !atomic_try_cmpxchg_acquire(&head->refs, &refs, refs+1)) {
-> > -			head = smp_load_acquire(&list->head);
-> > -			continue;
-> > -		}
-> > -
-> > -		/*
-> > -		 * Good, reference count has been incremented (it wasn't at
-> > -		 * zero), which means we can read the next and not worry about
-> > -		 * it changing between now and the time we do the CAS.
-> > -		 */
-> > -		next = READ_ONCE(head->next);
-> > -		if (try_cmpxchg_acquire(&list->head, &head, next)) {
-> > -			/*
-> > -			 * Yay, got the node. This means it was on the list,
-> > -			 * which means should-be-on-freelist must be false no
-> > -			 * matter the refcount (because nobody else knows it's
-> > -			 * been taken off yet, it can't have been put back on).
-> > -			 */
-> > -			WARN_ON_ONCE(atomic_read(&head->refs) & REFS_ON_FREELIST);
-> > -
-> > -			/*
-> > -			 * Decrease refcount twice, once for our ref, and once
-> > -			 * for the list's ref.
-> > -			 */
-> > -			atomic_fetch_add(-2, &head->refs);
-> > -
-> > -			return head;
-> > -		}
-> > -
-> > -		/*
-> > -		 * OK, the head must have changed on us, but we still need to decrement
-> > -		 * the refcount we increased.
-> > -		 */
-> > -		refs = atomic_fetch_add(-1, &prev->refs);
-> > -		if (refs == REFS_ON_FREELIST + 1)
-> > -			__freelist_add(prev, list);
-> > -	}
-> > -
-> > -	return NULL;
-> > -}
-> > -
-> > -#endif /* FREELIST_H */
-> > -- 
-> > 2.40.1
-> > 
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+MGLRU doesn't try to write back dirt file pages in the reclaim path --
+it filters them out in sort_folio() and leaves them to the page
+writeback. (The page writeback is a dedicated component for this
+purpose). So there is nothing to fix.
