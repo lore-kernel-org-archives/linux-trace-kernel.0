@@ -1,83 +1,85 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7320815AF5
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Oct 2023 09:25:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2647B1DFD1
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Oct 2023 12:18:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rwQiAf1Q"
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3E281A3;
-	Thu, 19 Oct 2023 02:25:32 -0700 (PDT)
-Received: from pwmachine.localnet (unknown [188.24.154.80])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 9A86120B74C0;
-	Thu, 19 Oct 2023 02:25:30 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9A86120B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1697707531;
-	bh=AI1qBykrpVmfzjirY+qLYP+PIjRlyk/G8w7WrSnBnFc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rwQiAf1QcE9x2Q6L5miT2oB1ixIB3a0vuNm8wW0LH7ypMdauTsMRYpMq5YqAbHBfL
-	 K4uS2HifvX57VkIsJpARq4KxGGsCIV7k+jpvArArQsKgEfTpTJRLbMtxaWk/JqpQlq
-	 TongDoQtgsNkJ96WRNMVjvewn3Ij3xurc6lhUk+0=
-From: Francis Laniel <flaniel@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sPco6XOa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C41CC433C8;
+	Thu, 19 Oct 2023 12:18:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697717927;
+	bh=y3v4IfGSgIc8FpfyQVXiNpDGuzP2wM1wvkHAL6T5GT8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=sPco6XOa1kuZi9AoXasi2hVstQDVEouN0SHm5PKpLLDILwezdkTae7vIiBP6M6vk+
+	 7jhnmDjV3VpxXdXqxHbY6Nf01eWKbvvwF7sWczqtnXYgFGsdIzwqYu2wh9y3kvr7Gd
+	 lqlq7Iipn1EC23y+VrMasPHlyfcuJuEiE7If2EpWlqdvkHgPZ7sU+7mH6d8+yvUSs+
+	 iJKlo0GFdCUVP/DksEKP07fHRaJCkhNoI5Y1tILOEdioafZB6mjFOJjJNrClXQTDvH
+	 PM0DgR6WMErBvLRrzzeTjr/XhRF8cX5nfHEd0p0OS4+PfDrlsbiJWGb0s6hMm3Ellt
+	 3w5rGGXQ+Ez9w==
+Date: Thu, 19 Oct 2023 21:18:43 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH v5 0/2] Return EADDRNOTAVAIL when func matches several symbols during kprobe creation
-Date: Thu, 19 Oct 2023 12:25:27 +0300
-Message-ID: <2703022.mvXUDI8C0e@pwmachine>
+Cc: Francis Laniel <flaniel@linux.microsoft.com>,
+ linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ stable@vger.kernel.org
+Subject: Re: [PATCH v5 0/2] Return EADDRNOTAVAIL when func matches several
+ symbols during kprobe creation
+Message-Id: <20231019211843.56f292be3eee75cdd377e5a2@kernel.org>
 In-Reply-To: <20231018130042.3430f000@gandalf.local.home>
-References: <20231018144030.86885-1-flaniel@linux.microsoft.com> <20231018130042.3430f000@gandalf.local.home>
+References: <20231018144030.86885-1-flaniel@linux.microsoft.com>
+	<20231018130042.3430f000@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi!
+On Wed, 18 Oct 2023 13:00:42 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Le mercredi 18 octobre 2023, 20:00:42 EEST Steven Rostedt a =E9crit :
 > On Wed, 18 Oct 2023 17:40:28 +0300
->=20
 > Francis Laniel <flaniel@linux.microsoft.com> wrote:
+> 
 > > Changes since:
 > >  v1:
 > >   * Use EADDRNOTAVAIL instead of adding a new error code.
 > >   * Correct also this behavior for sysfs kprobe.
-> > =20
 > >  v2:
-> >   * Count the number of symbols corresponding to function name and retu=
-rn
+> >   * Count the number of symbols corresponding to function name and return
 > >   EADDRNOTAVAIL if higher than 1.
-> >   * Return ENOENT if above count is 0, as it would be returned later by
-> >   while
+> >   * Return ENOENT if above count is 0, as it would be returned later by while
 > >   registering the kprobe.
-> > =20
 > >  v3:
 > >   * Check symbol does not contain ':' before testing its uniqueness.
-> >   * Add a selftest to check this is not possible to install a kprobe fo=
-r a
-> >   non unique symbol.
-> > =20
+> >   * Add a selftest to check this is not possible to install a kprobe for a non
+> >   unique symbol.
 > >  v5:
 > >   * No changes, just add linux-stable as recipient.
->=20
-> So why is this adding stable? (and as Greg's form letter states, that's n=
-ot
+> 
+> So why is this adding stable? (and as Greg's form letter states, that's not
 > how you do that)
-
-Oops! Really sorry for this, I will correct everything for the next version!
-
->=20
+> 
 > I don't see this as a fix but a new feature.
 
-You mean I should add a "Fix:" in the commit description?
+I asked him to make this a fix since the current kprobe event' behavior is
+somewhat strange. It puts the probe on only the "first symbol" if user
+specifies a symbol name which has multiple instances. In this case, the
+actual probe address can not be solved by name. User must specify the
+probe address by unique name + offset. Unless, it can put a probe on
+unexpected address, especially if it specifies non-unique symbol + offset,
+the address may NOT be the instruction boundary.
+To avoid this issue, it should check the given symbol is unique.
 
->=20
+Thank you,
+
+> 
 > -- Steve
 
-Best regards.
 
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
