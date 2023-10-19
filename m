@@ -1,79 +1,43 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B1563C685;
-	Thu, 19 Oct 2023 18:36:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDB38196;
-	Thu, 19 Oct 2023 11:36:54 -0700 (PDT)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-53e07db272cso13123661a12.3;
-        Thu, 19 Oct 2023 11:36:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697740613; x=1698345413;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FpAc9JR2llpI5jbz/4KyEoDjDKwVg7PxCT40QCvua5I=;
-        b=sZKZlls9FjrlXZG8l3YYDwdt1fS0tbCDa3vOKS/MXDlitc4UHV2/BtBDTaDBSRfG2z
-         2kl6ozcE01biBe5zt3bOk8DgwSXszVxAdoWjX2N0CVtLXitexekuhJAH8xHIcoameOXe
-         /PSA2yndIAsAd4wFeLaYYRqABXWlNn+XSLCHmbSfCOLNfgH1VWfvhrl0C7rQFzZA50Y5
-         t3ylOREg1LAnV66swyWYV6Uw6SpWeJWq+VL3TjDSWFlE9oDSFKI8O4juBKIUuf8dMael
-         Mj7+1lbRWHoPF3CXlM+VAXsfZCqzrGWSC/7SpSPBIWWDfMtM8QdLzIyhISwQGRfOtZHY
-         iw7Q==
-X-Gm-Message-State: AOJu0Yy5Cora7JMDLbN0Vyw0rLb4WMM9pek9VjHvJ914GFWCzKBf2Aaz
-	UleAvqRBgo3w/AW6bWjU80E=
-X-Google-Smtp-Source: AGHT+IE4lt0hm/EIQpi1vFV/0R90YEfOuEUK0F7ZljzjTlQtUBBLLT7wATGinjmXlESRF+RJfhsPCA==
-X-Received: by 2002:a17:907:928b:b0:9bf:3c7d:5f53 with SMTP id bw11-20020a170907928b00b009bf3c7d5f53mr2290910ejc.45.1697740613060;
-        Thu, 19 Oct 2023 11:36:53 -0700 (PDT)
-Received: from localhost (fwdproxy-cln-020.fbsv.net. [2a03:2880:31ff:14::face:b00c])
-        by smtp.gmail.com with ESMTPSA id a6-20020a1709064a4600b009ae05f9eab3sm24469ejv.65.2023.10.19.11.36.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Oct 2023 11:36:52 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-To: jpoimboe@kernel.org,
-	mingo@redhat.com,
-	tglx@linutronix.de,
-	bp@alien8.de,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Nicolas Schier <nicolas@fjasle.eu>
-Cc: leit@meta.com,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Vincent Whitchurch <vincent.whitchurch@axis.com>,
-	Jinghao Jia <jinghao@linux.ibm.com>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A96A23DFE5;
+	Thu, 19 Oct 2023 21:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HvmpSS7k"
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48127BE;
+	Thu, 19 Oct 2023 14:40:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=b4HCbIcpuTf2AtCD4Gw8oaFAr3lLevKnvsjAPH9DoPw=; b=HvmpSS7kAWcYGs+Te9d8uMi2LS
+	avX/MnUrQidVGEn/cj37ZF4edJOaPxjKeng5T3EL1iVWhprMk+6WTfbOJOhFA+c8ieS8rsRbd6JFs
+	9Eus2DWJ/Effc8qVV6ed9rttxoAQBeqPvWKJZRHYLC4Zm/qDvz0YOD51PBtrL295nGb+Dv2CrjKTf
+	A7xKDWtHXzFD/bjogf+p+55FLq9ojxA1SGFBuaAPhebcAi4eL1YphFyHeVYdkyRKZM/YFQYrCQSkJ
+	9L9le5NOrlxZ2JgoyvgqE+03Tdz0i11NYmyIIebw++rR/T90G60xX900OXOs8llIPX0S+vjDbCqsD
+	gPIKZXLA==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1qtakt-009Mv5-BT; Thu, 19 Oct 2023 21:40:35 +0000
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
 	Kees Cook <keescook@chromium.org>,
-	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-	linux-trace-kernel@vger.kernel.org (open list:FUNCTION HOOKS (FTRACE)),
-	bpf@vger.kernel.org (open list:BPF [GENERAL] (Safe Dynamic Programs and Tools)),
-	netdev@vger.kernel.org (open list:NETWORKING [IPv4/IPv6])
-Subject: [PATCH v5 06/12] x86/bugs: Rename SLS to CONFIG_MITIGATION_SLS
-Date: Thu, 19 Oct 2023 11:11:52 -0700
-Message-Id: <20231019181158.1982205-7-leitao@debian.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231019181158.1982205-1-leitao@debian.org>
-References: <20231019181158.1982205-1-leitao@debian.org>
+	Christoph Hellwig <hch@lst.de>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Petr Mladek <pmladek@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCH 1/1] trace: Move readpos from seq_buf to trace_seq
+Date: Thu, 19 Oct 2023 22:40:33 +0100
+Message-Id: <20231019214033.2229099-1-willy@infradead.org>
+X-Mailer: git-send-email 2.37.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -82,140 +46,163 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-CPU mitigations config entries are inconsistent, and names are hard to
-related. There are concrete benefits for both users and developers of
-having all the mitigation config options living in the same config
-namespace.
+To make seq_buf more lightweight as a string buf, move the readpos member
+from seq_buf to its container, trace_seq.  That puts the responsibility
+of maintaining the readpos entirely in the tracing code.  If some future
+users want to package up the readpos with a seq_buf, we can define a
+new struct then.
 
-The mitigation options should have consistency and start with
-MITIGATION.
-
-Rename the Kconfig entry from SLS to MITIGATION_SLS.
-
-Suggested-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Breno Leitao <leitao@debian.org>
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- arch/x86/Kconfig               | 2 +-
- arch/x86/Makefile              | 2 +-
- arch/x86/include/asm/linkage.h | 4 ++--
- arch/x86/kernel/alternative.c  | 4 ++--
- arch/x86/kernel/ftrace.c       | 3 ++-
- arch/x86/net/bpf_jit_comp.c    | 4 ++--
- scripts/Makefile.lib           | 2 +-
- 7 files changed, 11 insertions(+), 10 deletions(-)
+ include/linux/seq_buf.h   |  5 +----
+ include/linux/trace_seq.h |  2 ++
+ kernel/trace/trace.c      | 10 +++++-----
+ kernel/trace/trace_seq.c  |  6 +++++-
+ lib/seq_buf.c             | 13 +++++--------
+ 5 files changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index f3593461ce35..9dd2fb555973 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2556,7 +2556,7 @@ config CPU_SRSO
- 	help
- 	  Enable the SRSO mitigation needed on AMD Zen1-4 machines.
- 
--config SLS
-+config MITIGATION_SLS
- 	bool "Mitigate Straight-Line-Speculation"
- 	depends on CC_HAS_SLS && X86_64
- 	select OBJTOOL if HAVE_OBJTOOL
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 3053b60f017b..1ac5d6002f5f 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -204,7 +204,7 @@ ifdef CONFIG_MITIGATION_RETPOLINE
-   endif
- endif
- 
--ifdef CONFIG_SLS
-+ifdef CONFIG_MITIGATION_SLS
-   KBUILD_CFLAGS += -mharden-sls=all
- endif
- 
-diff --git a/arch/x86/include/asm/linkage.h b/arch/x86/include/asm/linkage.h
-index c5165204c66f..09e2d026df33 100644
---- a/arch/x86/include/asm/linkage.h
-+++ b/arch/x86/include/asm/linkage.h
-@@ -43,7 +43,7 @@
- #if defined(CONFIG_RETHUNK) && !defined(__DISABLE_EXPORTS) && !defined(BUILD_VDSO)
- #define RET	jmp __x86_return_thunk
- #else /* CONFIG_MITIGATION_RETPOLINE */
--#ifdef CONFIG_SLS
-+#ifdef CONFIG_MITIGATION_SLS
- #define RET	ret; int3
- #else
- #define RET	ret
-@@ -55,7 +55,7 @@
- #if defined(CONFIG_RETHUNK) && !defined(__DISABLE_EXPORTS) && !defined(BUILD_VDSO)
- #define ASM_RET	"jmp __x86_return_thunk\n\t"
- #else /* CONFIG_MITIGATION_RETPOLINE */
--#ifdef CONFIG_SLS
-+#ifdef CONFIG_MITIGATION_SLS
- #define ASM_RET	"ret; int3\n\t"
- #else
- #define ASM_RET	"ret\n\t"
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 8932f524c935..ea9652eb455b 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -624,8 +624,8 @@ static int patch_retpoline(void *addr, struct insn *insn, u8 *bytes)
- 	/*
- 	 * The compiler is supposed to EMIT an INT3 after every unconditional
- 	 * JMP instruction due to AMD BTC. However, if the compiler is too old
--	 * or SLS isn't enabled, we still need an INT3 after indirect JMPs
--	 * even on Intel.
-+	 * or MITIGATION_SLS isn't enabled, we still need an INT3 after
-+	 * indirect JMPs even on Intel.
- 	 */
- 	if (op == JMP32_INSN_OPCODE && i < insn->length)
- 		bytes[i++] = INT3_INSN_OPCODE;
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index 0f26758c7a93..b000158b781a 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -297,7 +297,8 @@ union ftrace_op_code_union {
- 	} __attribute__((packed));
+diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
+index 515d7fcb9634..a0fb013cebdf 100644
+--- a/include/linux/seq_buf.h
++++ b/include/linux/seq_buf.h
+@@ -14,19 +14,16 @@
+  * @buffer:	pointer to the buffer
+  * @size:	size of the buffer
+  * @len:	the amount of data inside the buffer
+- * @readpos:	The next position to read in the buffer.
+  */
+ struct seq_buf {
+ 	char			*buffer;
+ 	size_t			size;
+ 	size_t			len;
+-	loff_t			readpos;
  };
  
--#define RET_SIZE	(IS_ENABLED(CONFIG_MITIGATION_RETPOLINE) ? 5 : 1 + IS_ENABLED(CONFIG_SLS))
-+#define RET_SIZE \
-+	(IS_ENABLED(CONFIG_MITIGATION_RETPOLINE) ? 5 : 1 + IS_ENABLED(CONFIG_MITIGATION_SLS))
+ static inline void seq_buf_clear(struct seq_buf *s)
+ {
+ 	s->len = 0;
+-	s->readpos = 0;
+ }
  
- static unsigned long
- create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
-diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-index ef732f323926..96a63c4386a9 100644
---- a/arch/x86/net/bpf_jit_comp.c
-+++ b/arch/x86/net/bpf_jit_comp.c
-@@ -469,7 +469,7 @@ static void emit_indirect_jump(u8 **pprog, int reg, u8 *ip)
- 			emit_jump(&prog, &__x86_indirect_thunk_array[reg], ip);
- 	} else {
- 		EMIT2(0xFF, 0xE0 + reg);	/* jmp *%\reg */
--		if (IS_ENABLED(CONFIG_MITIGATION_RETPOLINE) || IS_ENABLED(CONFIG_SLS))
-+		if (IS_ENABLED(CONFIG_MITIGATION_RETPOLINE) || IS_ENABLED(CONFIG_MITIGATION_SLS))
- 			EMIT1(0xCC);		/* int3 */
- 	}
+ static inline void
+@@ -143,7 +140,7 @@ extern __printf(2, 0)
+ int seq_buf_vprintf(struct seq_buf *s, const char *fmt, va_list args);
+ extern int seq_buf_print_seq(struct seq_file *m, struct seq_buf *s);
+ extern int seq_buf_to_user(struct seq_buf *s, char __user *ubuf,
+-			   int cnt);
++			   size_t start, int cnt);
+ extern int seq_buf_puts(struct seq_buf *s, const char *str);
+ extern int seq_buf_putc(struct seq_buf *s, unsigned char c);
+ extern int seq_buf_putmem(struct seq_buf *s, const void *mem, unsigned int len);
+diff --git a/include/linux/trace_seq.h b/include/linux/trace_seq.h
+index 6be92bf559fe..3691e0e76a1a 100644
+--- a/include/linux/trace_seq.h
++++ b/include/linux/trace_seq.h
+@@ -14,6 +14,7 @@
+ struct trace_seq {
+ 	char			buffer[PAGE_SIZE];
+ 	struct seq_buf		seq;
++	size_t			readpos;
+ 	int			full;
+ };
  
-@@ -484,7 +484,7 @@ static void emit_return(u8 **pprog, u8 *ip)
- 		emit_jump(&prog, x86_return_thunk, ip);
- 	} else {
- 		EMIT1(0xC3);		/* ret */
--		if (IS_ENABLED(CONFIG_SLS))
-+		if (IS_ENABLED(CONFIG_MITIGATION_SLS))
- 			EMIT1(0xCC);	/* int3 */
- 	}
+@@ -22,6 +23,7 @@ trace_seq_init(struct trace_seq *s)
+ {
+ 	seq_buf_init(&s->seq, s->buffer, PAGE_SIZE);
+ 	s->full = 0;
++	s->readpos = 0;
+ }
  
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index d6e157938b5f..0d5461276179 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -264,7 +264,7 @@ endif
- objtool-args-$(CONFIG_UNWINDER_ORC)			+= --orc
- objtool-args-$(CONFIG_MITIGATION_RETPOLINE)		+= --retpoline
- objtool-args-$(CONFIG_RETHUNK)				+= --rethunk
--objtool-args-$(CONFIG_SLS)				+= --sls
-+objtool-args-$(CONFIG_MITIGATION_SLS)			+= --sls
- objtool-args-$(CONFIG_STACK_VALIDATION)			+= --stackval
- objtool-args-$(CONFIG_HAVE_STATIC_CALL_INLINE)		+= --static-call
- objtool-args-$(CONFIG_HAVE_UACCESS_VALIDATION)		+= --uaccess
+ /**
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index abaaf516fcae..217cabd09c3e 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -1730,15 +1730,15 @@ static ssize_t trace_seq_to_buffer(struct trace_seq *s, void *buf, size_t cnt)
+ {
+ 	int len;
+ 
+-	if (trace_seq_used(s) <= s->seq.readpos)
++	if (trace_seq_used(s) <= s->readpos)
+ 		return -EBUSY;
+ 
+-	len = trace_seq_used(s) - s->seq.readpos;
++	len = trace_seq_used(s) - s->readpos;
+ 	if (cnt > len)
+ 		cnt = len;
+-	memcpy(buf, s->buffer + s->seq.readpos, cnt);
++	memcpy(buf, s->buffer + s->readpos, cnt);
+ 
+-	s->seq.readpos += cnt;
++	s->readpos += cnt;
+ 	return cnt;
+ }
+ 
+@@ -7006,7 +7006,7 @@ tracing_read_pipe(struct file *filp, char __user *ubuf,
+ 
+ 	/* Now copy what we have to the user */
+ 	sret = trace_seq_to_user(&iter->seq, ubuf, cnt);
+-	if (iter->seq.seq.readpos >= trace_seq_used(&iter->seq))
++	if (iter->seq.readpos >= trace_seq_used(&iter->seq))
+ 		trace_seq_init(&iter->seq);
+ 
+ 	/*
+diff --git a/kernel/trace/trace_seq.c b/kernel/trace/trace_seq.c
+index bac06ee3b98b..7be97229ddf8 100644
+--- a/kernel/trace/trace_seq.c
++++ b/kernel/trace/trace_seq.c
+@@ -370,8 +370,12 @@ EXPORT_SYMBOL_GPL(trace_seq_path);
+  */
+ int trace_seq_to_user(struct trace_seq *s, char __user *ubuf, int cnt)
+ {
++	int ret;
+ 	__trace_seq_init(s);
+-	return seq_buf_to_user(&s->seq, ubuf, cnt);
++	ret = seq_buf_to_user(&s->seq, ubuf, s->readpos, cnt);
++	if (ret > 0)
++		s->readpos += ret;
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(trace_seq_to_user);
+ 
+diff --git a/lib/seq_buf.c b/lib/seq_buf.c
+index 45c450f423fa..0d218f3835ae 100644
+--- a/lib/seq_buf.c
++++ b/lib/seq_buf.c
+@@ -340,7 +340,7 @@ int seq_buf_path(struct seq_buf *s, const struct path *path, const char *esc)
+  *
+  * Returns -EFAULT if the copy to userspace fails.
+  */
+-int seq_buf_to_user(struct seq_buf *s, char __user *ubuf, int cnt)
++int seq_buf_to_user(struct seq_buf *s, char __user *ubuf, size_t start, int cnt)
+ {
+ 	int len;
+ 	int ret;
+@@ -350,20 +350,17 @@ int seq_buf_to_user(struct seq_buf *s, char __user *ubuf, int cnt)
+ 
+ 	len = seq_buf_used(s);
+ 
+-	if (len <= s->readpos)
++	if (len <= start)
+ 		return -EBUSY;
+ 
+-	len -= s->readpos;
++	len -= start;
+ 	if (cnt > len)
+ 		cnt = len;
+-	ret = copy_to_user(ubuf, s->buffer + s->readpos, cnt);
++	ret = copy_to_user(ubuf, s->buffer + start, cnt);
+ 	if (ret == cnt)
+ 		return -EFAULT;
+ 
+-	cnt -= ret;
+-
+-	s->readpos += cnt;
+-	return cnt;
++	return cnt - ret;
+ }
+ 
+ /**
 -- 
-2.34.1
+2.40.1
 
