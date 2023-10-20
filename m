@@ -1,16 +1,21 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892E139A;
-	Fri, 20 Oct 2023 04:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43E72D5B;
-	Thu, 19 Oct 2023 21:48:58 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id B864E67373; Fri, 20 Oct 2023 06:48:54 +0200 (CEST)
-Date: Fri, 20 Oct 2023 06:48:54 +0200
-From: Christoph Hellwig <hch@lst.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7453DA41;
+	Fri, 20 Oct 2023 05:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pgtOpclt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FE50C433C8;
+	Fri, 20 Oct 2023 05:05:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1697778327;
+	bh=fkP5kKXCMlyWPz7pz7wvmEyP0oUqwxiPLe8Hc+jGjLE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pgtOpclt1U1oMhg9MqET8TC6szYa15Al9kd0jIeU8oG5z16svOE3D7r/LYKs31a1n
+	 i/VInf/SiAzumSwkkTtpCo/tgjbKO9Z/NeQFBOJkuLNx49NUmQyu8wcBVybT7Q/NyL
+	 OhPi6LcRsT0LcsspWDvPP3xXDfTHJYlyLr9Hb6MQ=
+Date: Fri, 20 Oct 2023 07:05:24 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
 To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>, Kees Cook <keescook@chromium.org>,
 	Christoph Hellwig <hch@lst.de>,
@@ -23,8 +28,9 @@ Cc: Steven Rostedt <rostedt@goodmis.org>, Kees Cook <keescook@chromium.org>,
 	Sergey Senozhatsky <senozhatsky@chromium.org>,
 	linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH v2 1/1] trace: Move readpos from seq_buf to trace_seq
-Message-ID: <20231020044854.GA12217@lst.de>
-References: <20231020033545.2587554-1-willy@infradead.org> <20231020033545.2587554-2-willy@infradead.org>
+Message-ID: <2023102012-pretense-agnostic-d377@gregkh>
+References: <20231020033545.2587554-1-willy@infradead.org>
+ <20231020033545.2587554-2-willy@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -34,8 +40,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20231020033545.2587554-2-willy@infradead.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Looks good:
+On Fri, Oct 20, 2023 at 04:35:45AM +0100, Matthew Wilcox (Oracle) wrote:
+> To make seq_buf more lightweight as a string buf, move the readpos member
+> from seq_buf to its container, trace_seq.  That puts the responsibility
+> of maintaining the readpos entirely in the tracing code.  If some future
+> users want to package up the readpos with a seq_buf, we can define a
+> new struct then.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
