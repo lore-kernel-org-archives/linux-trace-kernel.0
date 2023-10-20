@@ -1,38 +1,38 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7622FAF
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Oct 2023 08:44:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8454263D8
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Oct 2023 08:44:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="ILrDihYv"
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="TpLCD03N"
 Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2135.outbound.protection.outlook.com [40.107.255.135])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29DB2D41;
-	Fri, 20 Oct 2023 01:44:41 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5E2BD45;
+	Fri, 20 Oct 2023 01:44:42 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L/CTrKqSGvW6lQwVxBqgo518If8xzHVv6ru3brRr4ATBHefQtXPBo+Ad0L0T3FsSPvmL2F7p4NUVYAW8CiaJXeO9DfslWUTX/YCL1ORoy8wxX9SJ/R5t7H+CZyG2sMEvT8calINGwSX60twfFLf3ce+uFEwUFlayfq+PKeTsDiScQNXpytzrNMYTmtlAIYFxddNR7R8iazmPEEeXM7+ZRU07FC/bBblrmcKZLDkIbsXcIxbbxb9roetO3eAJa0ANpYVRMToWMAsRYm/YxhHvABKYUv3SNWnuzNQbRZDXJ3aktXuwcNiWpxpVlHbRGkq+nKgV6JHQBi66vRUh8cuhcQ==
+ b=WA7mEgLXLyG6XY4kFo1zUrFkFEOoK8CCiJ/R7Z8JaoIGeE2p69jPJ7R2LzAL1vXZZu7GohwZRIjP75lxgtxIkBcg0seY5DZRTjKc79fB2nbhVSw3azE8mT7ZsE9ttlNNXl0mFAfmCO6iEZI6aME5jJDwDfWnjJqkltASO52bVaS/kk/DhLTlAWjrJH1EgU6rMoBff2byIJC0oZ1Mq+vo3JqTSkbZCXMwS2bnlpTW+vJXgzNDTr7BiUIiW0T3u4XaiV04hK4fKhBYyRrt20lpKFKXbOQk/eSwdghVKtwqLJYy6bTW8yI3NRsvjDXIEulLsPoV+L8Vya8lpI1yKU+sgQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kV0FZyonkpUObozelfwSHTvjYkN2DZEjW6NLwLMed00=;
- b=NuKL65UpG5WXf4CLRJYDqrjGVE3oHZuCUXzpEfP6j5XOi7dOalY5AgitAz9sfwuft8GgkvWv3I7yn2tekWe+0FghjwTDB+NEc13UUy/YhvVp04F2Pf4PDGO50P4/suXv87StycKz73pbUrG81N8LVPDTmW+064Ti0OBBEnWqRdERXGG6nfuVAJpTFwUnBeiME7mWKAKPjWHbUIFYbPm2/6eie5bXn9AWMSW79OhTGdN8oSo3ejof+z6WPpQD43IIMib3GO1nXevA6qlNUB1P05WtRp2+fl3kuqLQ2vuVVRYw26iQCSNqU87nt57em0B2bQo2gaAnnoGmWxLneIpQ8Q==
+ bh=aT41bP8r3trBeh7cRmEwTNlaQyvK5YLUexl8IQTAjVo=;
+ b=JokubdsG+BHAxAbPj8fjkRWDmpyMyApxO/7LNB3DVdI99h9gLOIDYwdCWQkYhNb1Ih1EkCZ5+IJD5iKOw1g+L3av+tmpeveQcZSiZ8Pwt14FDK+b+WFndn7phGIJA3I1RWSsC7qtmc016c4KJV2Cukd0oqbPxGisGFZuDkzEkpKkEWtQFF5gsDZa6J31FAVQOuYtODG2JRO9uou5TyXdh07ZevWO88Fvc0ky7/MocP1xwR65LMNfKwgfaeFFCfg85M2M/K+YlfdK6c6HlMN8TAP+emF5MlWfttX4eLnmV0dOpivRsKq3VWygXfRWkRhSEYgJAUuFCsStpGxKsiqo8Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
  dkim=pass header.d=vivo.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kV0FZyonkpUObozelfwSHTvjYkN2DZEjW6NLwLMed00=;
- b=ILrDihYvV3VWkB7fpEUZAGXGYvQreSoyLkieVetinb01q4MpsI+iwYWy49noj1+Yf2OCS4NWTHd5ZJo92SD2mK9rjlTpsOu2ZnJhac2khujsXbTc1OL31FvfVgOIY1PyHIvYmSM2jR3MaSHL2wKMe6ZtQ0jUGb/kYlO113xe2jouj8elDBmg+Dwq4mOux1tfGKwJTsTNSAVPS+rsVMqUWVny6R+VmZrmq/d4LjG5+6ZUAbwB58GdR6Xy0xHHltcu7UZ1cJh6inErCev8a8LjR6BUJzsXW/mIaTACd72ZxHo+E2cFCaBEoZT77AuAKyDkx4B6iD+Q+VFx1Bl0r8Du/w==
+ bh=aT41bP8r3trBeh7cRmEwTNlaQyvK5YLUexl8IQTAjVo=;
+ b=TpLCD03NEsT447fCJhlnb/zvV3C/qFd61HnRqkYTOIJrAtKLx0hxykqQPJePOCYbgnHIDtfUojJgwZ70m1CKsKVW4AVX0Gwy0ZRvZWvAEQZcIcwD/HvCWnnq148eibSFJ5kkEPV2hQW0Iv5vPP1tHnT/jxhewbu/UyP96FVFOQhXPaL9zWwihpn5obiKZx4OyI67PVe//tygmrX1gbOpkAciCXpNYecHE6FD7ngIHX/Qou2r23fyMo3I7VXZdSeXaM0w4nMrQZk2sSmE/y6cTTEK4RBEsiRELrWD9zmTvpl7XGkICK6h3vUZgz1/fIMw5Q8xWDFEiCBdL15n5RnCcA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=vivo.com;
 Received: from PUZPR06MB5676.apcprd06.prod.outlook.com (2603:1096:301:f8::10)
  by KL1PR06MB6553.apcprd06.prod.outlook.com (2603:1096:820:f1::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6907.24; Fri, 20 Oct
- 2023 08:44:28 +0000
+ 2023 08:44:40 +0000
 Received: from PUZPR06MB5676.apcprd06.prod.outlook.com
  ([fe80::40ac:5701:4617:f503]) by PUZPR06MB5676.apcprd06.prod.outlook.com
  ([fe80::40ac:5701:4617:f503%4]) with mapi id 15.20.6907.025; Fri, 20 Oct 2023
- 08:44:28 +0000
+ 08:44:40 +0000
 From: Huan Yang <link@vivo.com>
 To: Yu Zhao <yuzhao@google.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
@@ -45,10 +45,12 @@ To: Yu Zhao <yuzhao@google.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-mm@kvack.org
 Cc: opensource.kernel@vivo.com
-Subject: [PATCH 0/2] check MGLRU promoted without hold page lock
-Date: Fri, 20 Oct 2023 16:43:49 +0800
-Message-Id: <20231020084358.463846-1-link@vivo.com>
+Subject: [PATCH 2/2] mm: multi-gen LRU: move promoted folio out of lock
+Date: Fri, 20 Oct 2023 16:43:51 +0800
+Message-Id: <20231020084358.463846-3-link@vivo.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231020084358.463846-1-link@vivo.com>
+References: <20231020084358.463846-1-link@vivo.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ClientProxiedBy: SG2PR04CA0198.apcprd04.prod.outlook.com
@@ -62,80 +64,162 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PUZPR06MB5676:EE_|KL1PR06MB6553:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5f7eeff4-8763-4b46-ac5c-08dbd148c55a
+X-MS-Office365-Filtering-Correlation-Id: a653b177-ffc0-4154-e9d7-08dbd148cc69
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	i/ST7Ofe3xqlhataChgMtooHHbbjdKgETjOenlC7GR0w6ODjri0Yk+vwWUYWO1DqAekXqowGcq3O+0Ar5xknO1h4eiQQIWoczTy51jmURILN5Jk0CYsmFlk2h31obxnWm3tp0qghA5qGERqMJtAiePrGyS0kQLTW5SEmiFDjdL7EeRExz1QYKbE+2zpKC0iTNpVkb2zBZ8WvnliN2PT41WcEqwCc7TSxkuT0qjba6EqTGa0qm/sKSfj0AO3muP310j1tSyDhEsO6GERAQCZCgoFp5YWk982Cpy08yYkBASxBxEQUAKSS3rplsqs3nf/UsiFRMyBLHjDJ3VBzM/mh3wpvu45GmNFK45tGJYnZkn5gmoydcIBfDhyP5zOYdcPin8NwRkyhm0UjR8AjxHOEw06PAIC918IciSy+PKAr+ZUoBVBovn/dVkkIRL9yrIN9q4aUE2BcnDdaNnJ9S1s1WUTR1RBThJ0ISTDn9oA65uJA95vcoyh45IGoeZ1Dyj41IOEHPC/IgsRNbF+FTdDaOITqU6cAcjlx0BU1SctO+IQSwxIXY9n8mzW6Rga5mgitdvxDivoKAf3G+TvOlhGTkpiW78VF4c0PUXMTQvb8NfspwAHkGy4Rb1vcrX0RKonF
+	guCoE3hSns7e0lNAgTfd9SDeR4ey4mamtBgAg0RhN2enVJZJVReM2BAmwtD8wavgE3OlpS2FnzEaBCBB/AKn/fb4Ox29l6xxlUHBybrT/NPMGLueymHUzSQZKSKNvk7Q2zdaxsqyHyOlFKtrIi4Ohnjq/+pYH+cWIBdYwp9cMURBHrG8z9x0tvJIoU+kzdwqRMO2ZokgzfWq2d0o48lITlzU4DRia0M1axxC1Ra1MoMBB5NIrgvLOTQRT8uyNpK08ztCHDKgeAAjhEQ9pIiRpcp9VhQIiMug83WvhexcCrgRLDsGMfvBf5ijfEC84oSemn7n+gX4y96CGSj+s5UWB4GcEp8w0BMQje5QNiHKL7bVCs31tc5owVPsI7hUa5QxOJtPktRDFanBPbMH/j/8jbXHs5HqmK5AxVqxbiBv0Nk+kcepUs8Br31qGRGHETnQeOvrfzk8GW/ahX81TnBEwFTcyMJRRiEuqHnQB7LH/2cgqmhHYf8+XuR1eyQ+iQoo6UpxCLw+D4GKvZUQxYDXXEH0nZams4gsl0HrbH+o7YwtwvCPZfGgfO8xol01zq4XfhXU8GZ5zdv/tfl3E2qBUOp04FyAMKvLDVPUAAmVMNeT7PUxa6KptoT/9gELcB2yDb1hBiY1SZTA8yP+RL+nWg==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PUZPR06MB5676.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(396003)(346002)(376002)(136003)(366004)(230922051799003)(186009)(1800799009)(64100799003)(451199024)(36756003)(38350700005)(6512007)(83380400001)(110136005)(66476007)(66556008)(38100700002)(86362001)(52116002)(2906002)(26005)(107886003)(2616005)(1076003)(6506007)(6666004)(4326008)(478600001)(6486002)(66946007)(41300700001)(316002)(8936002)(966005)(8676002)(4744005)(921008)(5660300002);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PUZPR06MB5676.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(396003)(346002)(376002)(136003)(366004)(230922051799003)(186009)(1800799009)(64100799003)(451199024)(36756003)(38350700005)(6512007)(83380400001)(110136005)(66476007)(66556008)(38100700002)(86362001)(52116002)(2906002)(26005)(107886003)(2616005)(1076003)(6506007)(6666004)(4326008)(478600001)(6486002)(66946007)(41300700001)(316002)(8936002)(8676002)(921008)(5660300002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?q/ESa6DFKnm0YvwGnxWU8FBDHlY91VVfn4od+s1k9ij0L+Wj4yyEc9UTKIKD?=
- =?us-ascii?Q?IBexsBebfVddUepLnogv42qGy7aybMNWYksRWFfSOVfsXO/221+iTYAsDFfs?=
- =?us-ascii?Q?GbswTMY4W5i7iSu7+bLuuoRdUfGDOwE10TBCv5G/6tlegdal/gV3JGq6lagT?=
- =?us-ascii?Q?aFwUmu+nP+XVK0NavX0NbRdqdOgSJZRjQXvJcRtX+MUUiCz/KssNQerhs0Oz?=
- =?us-ascii?Q?EPYKBi79s/zMhpeFbaIQYIHcsMUjON3GfXbMu6OcbGn6R29sWUq72HLlwpbm?=
- =?us-ascii?Q?EERy2VO/zBS1pVHa/rrRJPDMVQ+F3owaacovx3How4B3OrKLyQYzdqj/tjXb?=
- =?us-ascii?Q?kwegQl+xujewlXAID/OuJdoH1/gh1sFR2qugNnkITZ8KlfIJjoXxyvXNwi1v?=
- =?us-ascii?Q?nvQwvArsrlGwYQpcu8e19Uks0z060ObywGsmGvy2JvuH8kJc5+NQNp1OUhBX?=
- =?us-ascii?Q?kG4IyxNaf7JkghdqCrePrim/sx20ixkdQHJQ43t/yyQuSCY3SU0/EIoXdoDA?=
- =?us-ascii?Q?ecq6dpSsWzi3sRIsVZCaySZy5ZzhqlJb7KpunItHkkk2gaZ1x5b4d7Wop6Hg?=
- =?us-ascii?Q?g/5vGd+cOOAtzzlHLOtyKenckA++rqHO04Ldx1LX8sDC6aIPAPTA8d9zUr3S?=
- =?us-ascii?Q?7RmUFD4Y2XwrgGGCb74u6M9mPzNbufEyuNn0qPkK6z8JbPOlPxauFH9MIusR?=
- =?us-ascii?Q?/xm6b59JfbXaTeQdenh54FalD0u9ij2fN2cKLG8FQeVJHa2xLqt2mOEai/jb?=
- =?us-ascii?Q?S6gBb1pZ1vU//S4/O0BTtQfmXv598UPj6P9fTVpYZqVsjZXopG8G4DAaWi/S?=
- =?us-ascii?Q?r4JTIu2NN0NmpliSKsSUVjLOAxxTJuETcDqk0QkdlxjlD8/tbmpIYxPThAqT?=
- =?us-ascii?Q?arCv1h0tD7d0544YXDwg6/vQsWX+Srp0c51QD5ORXTxRlTnoIuf/03BnHn+u?=
- =?us-ascii?Q?h9j6BEyKEv+rj2+zlPrRaYyXG0YcLEzEHJqba53n8hNkehP0zwyDfbZ7KzJp?=
- =?us-ascii?Q?krTNiTyA5WmoPLs3EujOZNlyHJ2YdSIQa6C+2W0xdUfhOFiH28qEUm+F3+sM?=
- =?us-ascii?Q?kUWOT/5oFy+Hukzx98Q/+U4B42NnhCkBqo2XfoKFvE9dpdFgo3wSS0GI4Pgu?=
- =?us-ascii?Q?6MtbUWkuUn0WkPbry2I8imz6Aqqgk6EZb1nghvmYquAhVmopwuhwMXrZV1EK?=
- =?us-ascii?Q?keTy7PIx9IziR7TVyoiBC7bOAdrRqM8HWBxMkzNlukoeV5kD22ajAsC+2U8m?=
- =?us-ascii?Q?7mf+6Liv691iEcGjybACWFCtEj4HsCOPoRkE+nf7DLFeVZgYTyToTtet0N+u?=
- =?us-ascii?Q?F3krzZUGNs5gBrUI0hQfoMHTlypUeer8QoYMwayssr5rlnyb/57zSYrjtTEQ?=
- =?us-ascii?Q?DojkY+EQ8qiwNkscHcTqzKkY+OciH/ewWRzR4NSTmprqr0ZFbe5C5vBKqGmA?=
- =?us-ascii?Q?FaJPfGRQ1FDvN/GIqbhtUEbUfulUZ/tHlkqE1WQZNAhJonuMcF3cE/pSGPny?=
- =?us-ascii?Q?cBfJokjRh9qzNtUhM1ZaVQjzESptGWa5jCsiSQGNhqBg6altbwzzLSU7oLGW?=
- =?us-ascii?Q?l6fYoUS6dDg3Mh7W4e3kAz18rhKC3a6uKorM36aT?=
+	=?us-ascii?Q?KLCgOQgZfBWg5q7mnELhk9IhFnnUpie7aYMo0Uiq1k0oAhiXYyfH86H1nKiE?=
+ =?us-ascii?Q?qZWbYgMua9vzC5TsY9cByJgJtWznkeNu7WdzeVEK0B9zhIeUBb1/dwDe/8zl?=
+ =?us-ascii?Q?gwAp9DiC6lLR6+MlNrUgGATyloOjJTtV2TpQ1tHPNoHSnBWZSPdoKg7GqJS3?=
+ =?us-ascii?Q?RVcnzzAms/PA34p/5TPQTTi0sGc41eox+gHQ+0ySwSSbHPgN9t+kvDr7uawI?=
+ =?us-ascii?Q?MnekgPnu0cx23aT5OVem6t+nO+npOnP28n2XedqPxhykJuyzSUuBgRYMce0H?=
+ =?us-ascii?Q?prD3hv0ekgd51ZEgxjiHb7DTjFNoVrgvvj1dPGhbFVbgNxXKFXFoLUnUIOJy?=
+ =?us-ascii?Q?OODCCiCwoOlU+Sr9Ym/SXkX4DSew0COIdpDmLbBRonA6XI6W9d2v2RD/S+qd?=
+ =?us-ascii?Q?ImlPaVi6RQfYBLaNLNBD7flNLbA0jOUOVxv66qg4EB/0oZ2+kV05NY2sm7NN?=
+ =?us-ascii?Q?cp4yTlRoiTeYmed9RCpvllLO/jb3qd++rF8jIjwzzeIgdwR4ANEeqrPs99n+?=
+ =?us-ascii?Q?n0gWSq25W7IMseVvbe55b3hEF3ADBzeLugYVTdMAqazvX9KCfYa021QQRmBt?=
+ =?us-ascii?Q?VSPKpUAHTcr0JxpHWF86W18XO3HmumR8YNqVP0ojMIW6Kp8ETXu0eHf2oypu?=
+ =?us-ascii?Q?b1Gefphvb3RJOfcOHU+YrUv9rwtL2N/f6x8lVBSwJA6M5F9YPNtTxf/1qgC4?=
+ =?us-ascii?Q?rs9+VCATgpGgRG4yHjVMrJmOJRToQcPGAszuJ4HIOLu4E7BlVklfQIq5r6WC?=
+ =?us-ascii?Q?saaLuDznEOMFX5cIwBtHnMp4jN0c7zOQlTfX8Cb88o6+W1nm8ZMplU3djxOK?=
+ =?us-ascii?Q?cNcJq4k+Z/c01yVbD+PF4qiXhwM5peWrXtrvpaSAzvobM0veJcF6NMQDnb4h?=
+ =?us-ascii?Q?iSvvZtP5CCmvZe8+GhRVdu7EpRpVHGJj98q9pynitcrey/9C5wUBliAq7HRg?=
+ =?us-ascii?Q?dZukPTuyOwy1Ul0kcAFMMa0hJMyGTqhcCvKZJw+U+plWta9UOgJglFUCK+Qr?=
+ =?us-ascii?Q?dNabo5puIn5ACjk4qIRpJlbPfhurKQct+tjXkyZ4RHNy0Pq9KGydEK4twbWA?=
+ =?us-ascii?Q?C0S6NBrc7Ja/frfh1zSbIrM/JuT+hxxEPOU3ZJHG8Ofg+KyJIBeuy3WiGw/w?=
+ =?us-ascii?Q?5Rg2bPh55JhkjkN3qkUK8RLBD9+QkUL7AU+EVR05apsXD5HuS6WW9Rh3g9lw?=
+ =?us-ascii?Q?R5WeXX6edvYNmzwvuz2zPL1efoXoNXIC29VjxLti7IGC0UrJCSKxDTZUVIPg?=
+ =?us-ascii?Q?TXN+hHTxm8HeVXC5zUfzIitCSz/VvPDlL1AdZ11qs73mR7KQoXr88XkQhD0H?=
+ =?us-ascii?Q?HSNWuLxYyTHtY/DCyMyDMXfXYK7SK7RV7aTGSSD3rfO/1WcvGy1Rc3fCRL3D?=
+ =?us-ascii?Q?00VysE151T/idqt1q07oBE1MR/B1q/XweSviXT0WZFBDLfIh45Z75zVVQjJH?=
+ =?us-ascii?Q?NdaUSNasZoLoQ3H6KwC+Rq/UPprYvXAZ75Zkb8/Me8W5ccjNCvnjF/jdWrBp?=
+ =?us-ascii?Q?uUw7Pm5e+xxdiKg/83+5/SasqjE0pgPETduxMYe2Q9b/H3zxh9hWaZRtnUzP?=
+ =?us-ascii?Q?ClrlkbRYxzOnzl6Zb2vR7RQgod+ybA6KEpHMdf8U?=
 X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f7eeff4-8763-4b46-ac5c-08dbd148c55a
+X-MS-Exchange-CrossTenant-Network-Message-Id: a653b177-ffc0-4154-e9d7-08dbd148cc69
 X-MS-Exchange-CrossTenant-AuthSource: PUZPR06MB5676.apcprd06.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Oct 2023 08:44:28.4511
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Oct 2023 08:44:40.1890
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: T1sUSvzgUg+RrxhnRoC97YZwD167LJ3mQGBnomr4voYH0NDLe7qv/gS7xyxv2ei5UklfKI9lr2/Hqw868HHEMQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: V031SWY0F5NvOCCL/d6G9/bBUugs7whQJXgptuZBhuqYoohLuQe9+K4ru4lbWLrBf5zkNYexAI27glIv2mc8RQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB6553
 
-This patchset add a new reclaim_stat named nr_promote to observe
-number folios which MGLRU promoted before shrink touch, and then
-show in mm_vmscan_lru_shrink_inactive. Also, fix nr_scanned in MGLRU
-trace into nr_taken. (patch1)
+With nr_prmote trace, show that here are many folio
+promoted before shrink check.
 
-Base this trace, here are many folio promoted before shrink touch,
-so, due to the high frequence, move this check before hold page lock
-is better.(patch2)
+I just test by below cmd, and grep nr_reclaimed=0:
+```
+trace-cmd record -e vmscan:mm_vmscan_lru_shrink_inactive\
+         stressapptest -M 8096 -s 120 -m 1 -W
+trace-cmd report | grep "nr_reclaim\=0"
+```
+Then find many show like below:
+```
+<...>-9042  [001]    43.290759: mm_vmscan_lru_shrink_inactive:
+nid=0 nr_scanned=64 nr_reclaimed=0 nr_dirty=0 nr_writeback=0
+nr_congested=0 nr_immediate=0 nr_activate_anon=0 nr_activate_file=1
+nr_ref_keep=0 nr_unmap_fail=0 nr_promote=63 flags=RECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+```
 
-Due to we will not actually touch this folio, nr_promote trace is
-unnecessary, remove this trace.
+Many scanned folio is promoted ahead. So, this promoted check better
+checked before trylock folio.
 
-This patchset based on link:
-https://lore.kernel.org/all/20231018082104.3918770-1-link@vivo.com/
+And, now that promoted alread checked before touch, no need to trace it
+anymore, remove this trace.
 
-Which have many mistake pointed by Yu Zhao.(thanks)
+Signed-off-by: Huan Yang <link@vivo.com>
+---
+ include/linux/vmstat.h        |  1 -
+ include/trace/events/vmscan.h |  6 ++----
+ mm/vmscan.c                   | 12 +++++-------
+ 3 files changed, 7 insertions(+), 12 deletions(-)
 
-Huan Yang (2):
-  tracing: mm: multigen-lru: fix mglru trace
-  mm: multi-gen LRU: move promoted folio out of lock
-
- include/trace/events/vmscan.h |  3 ++-
- mm/vmscan.c                   | 31 ++++++++++++++++++++++---------
- 2 files changed, 24 insertions(+), 10 deletions(-)
-
+diff --git a/include/linux/vmstat.h b/include/linux/vmstat.h
+index a3710ce08434..fed855bae6d8 100644
+--- a/include/linux/vmstat.h
++++ b/include/linux/vmstat.h
+@@ -32,7 +32,6 @@ struct reclaim_stat {
+ 	unsigned nr_ref_keep;
+ 	unsigned nr_unmap_fail;
+ 	unsigned nr_lazyfree_fail;
+-	unsigned nr_promote;
+ };
+ 
+ enum writeback_stat_item {
+diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
+index ffcf288879e0..41964d6e8dd1 100644
+--- a/include/trace/events/vmscan.h
++++ b/include/trace/events/vmscan.h
+@@ -366,7 +366,6 @@ TRACE_EVENT(mm_vmscan_lru_shrink_inactive,
+ 		__field(unsigned int, nr_activate1)
+ 		__field(unsigned long, nr_ref_keep)
+ 		__field(unsigned long, nr_unmap_fail)
+-		__field(unsigned long, nr_promote)
+ 		__field(int, priority)
+ 		__field(int, reclaim_flags)
+ 	),
+@@ -383,20 +382,19 @@ TRACE_EVENT(mm_vmscan_lru_shrink_inactive,
+ 		__entry->nr_activate1 = stat->nr_activate[1];
+ 		__entry->nr_ref_keep = stat->nr_ref_keep;
+ 		__entry->nr_unmap_fail = stat->nr_unmap_fail;
+-		__entry->nr_promote = stat->nr_promote;
+ 		__entry->priority = priority;
+ 		__entry->reclaim_flags = trace_reclaim_flags(file);
+ 	),
+ 
+ 	TP_printk("nid=%d nr_scanned=%ld nr_reclaimed=%ld nr_dirty=%ld nr_writeback=%ld nr_congested=%ld nr_immediate=%ld nr_activate_anon=%d"
+-	" nr_activate_file=%d nr_ref_keep=%ld nr_unmap_fail=%ld nr_promote=%ld priority=%d flags=%s",
++	" nr_activate_file=%d nr_ref_keep=%ld nr_unmap_fail=%ld priority=%d flags=%s",
+ 		__entry->nid,
+ 		__entry->nr_scanned, __entry->nr_reclaimed,
+ 		__entry->nr_dirty, __entry->nr_writeback,
+ 		__entry->nr_congested, __entry->nr_immediate,
+ 		__entry->nr_activate0, __entry->nr_activate1,
+ 		__entry->nr_ref_keep, __entry->nr_unmap_fail,
+-		__entry->nr_promote, __entry->priority,
++		__entry->priority,
+ 		show_reclaim_flags(__entry->reclaim_flags))
+ );
+ 
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index fb5df298c955..98a7b0f738bd 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1045,6 +1045,11 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 		folio = lru_to_folio(folio_list);
+ 		list_del(&folio->lru);
+ 
++		/* folio_update_gen() tried to promote this page? */
++		if (lru_gen_enabled() && !ignore_references &&
++		    folio_mapped(folio) && folio_test_referenced(folio))
++			goto keep;
++
+ 		if (!folio_trylock(folio))
+ 			goto keep;
+ 
+@@ -1061,13 +1066,6 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 		if (!sc->may_unmap && folio_mapped(folio))
+ 			goto keep_locked;
+ 
+-		/* folio_update_gen() tried to promote this page? */
+-		if (lru_gen_enabled() && !ignore_references &&
+-		    folio_mapped(folio) && folio_test_referenced(folio)) {
+-			stat->nr_promote += nr_pages;
+-			goto keep_locked;
+-		}
+-
+ 		/*
+ 		 * The number of dirty pages determines if a node is marked
+ 		 * reclaim_congested. kswapd will stall and start writing
 -- 
 2.34.1
 
