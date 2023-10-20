@@ -1,187 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEA619BA6
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Oct 2023 12:12:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF251BDC5
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Oct 2023 13:52:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r63mR0I9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3690C433C8;
-	Fri, 20 Oct 2023 12:12:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697803962;
-	bh=5RyJPTQh2SZ9yQhKE8MPQtknC50z+6MymORVw2G/tZY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=r63mR0I9MvGZJdXh3ZuuXqIsWwTzgqiZZwKABXiI3Iv724kpIbJlcKNraVT0rjQ2o
-	 XG0oG99KBTalRGofHExDGZVgU3t+aCU2zW8mVE0PhzYGSRIWKD6r4DxM9bYc1YLaXE
-	 uWc7Iy83VSM26WMc+r4slC2AO03EAvjKHuDe/kz7rw6GMAv5pd+od6hBFixlatm7Mv
-	 rTEeEeaKhT6Ozwsj76lPYnDkBsssMSMAgcCZkJdINWhLdX2dZHNBPf/KGI3JcMdpHb
-	 gigUdvi5V0y7f2cAHIjCiGUqN94nDTB6GTuuQIXZXMEowyaLB/XDgKu7wSFYLgOiru
-	 4Rywv/sbm64rw==
-Date: Fri, 20 Oct 2023 21:12:39 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Francis Laniel <flaniel@linux.microsoft.com>
-Cc: linux-trace-kernel@vger.kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>
-Subject: Re: [PATCH v6 0/2] Return EADDRNOTAVAIL when func matches several
- symbols during kprobe creation
-Message-Id: <20231020211239.85855928dedb0f5128143f2a@kernel.org>
-In-Reply-To: <20231020104250.9537-1-flaniel@linux.microsoft.com>
-References: <20231020104250.9537-1-flaniel@linux.microsoft.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZR/4dEum"
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97A2BD55
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Oct 2023 06:52:37 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id 5b1f17b1804b1-4083f61322fso6786605e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Oct 2023 06:52:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1697809956; x=1698414756; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lj8TH5rSWG+7+IPUohBO3PRG8Gz3zP+8vz2fymGjsuc=;
+        b=ZR/4dEum/rGkjTRummUxpWpc8CAokCtobkWPfCtSFsG5x78fSU8EuwkSiCWo9VKPAQ
+         JmQQ3V8W0G7P42IPn2dLu/5QgbAh/mcGysrJoyr2+7fqnge6m54G2mE+XXNM7K+oDm5s
+         wlTdCsBQFdbGIJ4DwZpQl+WK858thXYIVIBwq35lqfc4Rg8vPLIP6JVcr4cdRC5xMzwq
+         n+O2aqXrhMtefT+JsTcY+NIKNSkxBvgccRJbDxhUrMHwYM2UJ8sU3QfFCBiScRpSFpuv
+         TDaM/fihlFVqrnmXrrLIn8lqzymAkPzCOV1RowMcEeDU8h0YaPi/kBn4kG5WFPTHiqy+
+         gTrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697809956; x=1698414756;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lj8TH5rSWG+7+IPUohBO3PRG8Gz3zP+8vz2fymGjsuc=;
+        b=S85U1cTtpCVwVvoMA3NdjHwID+y+nNOgEpHxPJHnDeIGtjez3YvzVjkkGCnxQ6hXO/
+         kNvdmF8MyMMiZANbCACzJaE4pYw2vOkP9zLlU7nQFgYSU1G/I3oRa5J7D/Nrhh4urRyK
+         Cildf5WCymfP+msYmQLWtIbj2f2QVIXtT7AIRdYY8sk3TQSJ+ZuJvtn71DWuPp2y5vHP
+         NB7fzzILTKQLDqSIcRNnBPx3/adVTwBm3C/BI2+hDveD9lKNzsM1nOzLJTHKglt2hW9R
+         yAqt6innvWyvLhcRFo2CLn1P0CNKk/50gm6fa77i/KHp2bWmZTgmW5P6WbB++M8ab1Qp
+         iIJw==
+X-Gm-Message-State: AOJu0YzMGXzSwjp5GFcfdNDUZyh4HXuxcgDY8aMQglZ5gLCyyxU3qIBS
+	C/ighwyPk59LsKLEKDlOFs0XJjxNS18hfNlo6xo=
+X-Google-Smtp-Source: AGHT+IHn9qc+xrMAbz0V3HGAUl/wG6DW+YS6R1vSlbBV9XgLSBBxNJOIobdVtoNC59DmuMrwIJt33g==
+X-Received: by 2002:a05:600c:5247:b0:406:4242:e7df with SMTP id fc7-20020a05600c524700b004064242e7dfmr1640353wmb.35.1697809955889;
+        Fri, 20 Oct 2023 06:52:35 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id f9-20020adff449000000b0032d81837433sm1742443wrp.30.2023.10.20.06.52.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Oct 2023 06:52:35 -0700 (PDT)
+Date: Fri, 20 Oct 2023 16:52:31 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: rostedt@goodmis.org
+Cc: linux-trace-kernel@vger.kernel.org
+Subject: [bug report] eventfs: Remove eventfs_file and just use eventfs_inode
+Message-ID: <743deff8-0ae0-4c78-94d8-b926def66eb6@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi,
+Hello Steven Rostedt (Google),
 
-Thanks for update the series. The series looks good to me.
-Let me pick those in probes/fixes.
+The patch 5790b1fb3d67: "eventfs: Remove eventfs_file and just use
+eventfs_inode" from Oct 4, 2023 (linux-next), leads to the following
+Smatch static checker warning:
 
-Thank you!
+	fs/tracefs/event_inode.c:782 eventfs_create_events_dir()
+	error: potential null dereference 'ei'.  (kzalloc returns null)
 
-On Fri, 20 Oct 2023 13:42:48 +0300
-Francis Laniel <flaniel@linux.microsoft.com> wrote:
+fs/tracefs/event_inode.c
+    721 struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry *parent,
+    722                                                 const struct eventfs_entry *entries,
+    723                                                 int size, void *data)
+    724 {
+    725         struct dentry *dentry = tracefs_start_creating(name, parent);
+    726         struct eventfs_inode *ei;
+    727         struct tracefs_inode *ti;
+    728         struct inode *inode;
+    729 
+    730         if (security_locked_down(LOCKDOWN_TRACEFS))
+    731                 return NULL;
 
-> Hi.
-> 
-> 
-> In the kernel source code, it exists different functions which share the same
-> name but which have, of course, different addresses as they can be defined in
-> different modules:
-> # Kernel was compiled with CONFIG_NTFS_FS and CONFIG_NTFS3_FS as built-in.
-> root@vm-amd64:~# grep ntfs_file_write_iter /proc/kallsyms
-> ffffffff814ce3c0 t __pfx_ntfs_file_write_iter
-> ffffffff814ce3d0 t ntfs_file_write_iter
-> ffffffff814fc8a0 t __pfx_ntfs_file_write_iter
-> ffffffff814fc8b0 t ntfs_file_write_iter
-> This can be source of troubles when you create a PMU kprobe for such a function,
-> as it will only install one for the first address (e.g. 0xffffffff814ce3d0 in
-> the above).
-> This could lead to some troubles were BPF based tools does not report any event
-> because the second function is not called:
-> root@vm-amd64:/mnt# mount | grep /mnt
-> /foo.img on /mnt type ntfs3 (rw,relatime,uid=0,gid=0,iocharset=utf8)
-> # ig is a tool which installs a PMU kprobe on ntfs_file_write_iter().
-> root@vm-amd64:/mnt# ig trace fsslower -m 0 -f ntfs3 --host &> /tmp/foo &
-> [1] 207
-> root@vm-amd64:/mnt# dd if=./foo of=./bar count=3
-> 3+0 records in
-> 3+0 records out
-> 1536 bytes (1.5 kB, 1.5 KiB) copied, 0.00543323 s, 283 kB/s
-> root@vm-amd64:/mnt# fg
-> ig trace fsslower -m 0 -f ntfs3 --host &> /tmp/foo
-> ^Croot@vm-amd64:/mnt# more /tmp/foo
-> RUNTIME.CONTAINERNAME          RUNTIME.CONTAIN… PID              COMM
->   T      BYTES     OFFSET        LAT FILE
->                                                 214              dd
->   R        512          0        766 foo
->                                                 214              dd
->   R        512        512          9 foo
->                                                 214              dd
-> As you can see in the above, only read events are reported and no write because
-> the kprobe is installed for the old ntfs_file_write_iter() and not the ntfs3
-> one.
-> The same behavior occurs with sysfs kprobe:
-> root@vm-amd64:/# echo 'p:probe/ntfs_file_write_iter ntfs_file_write_iter' > /sys/kernel/tracing/kprobe_events
-> root@vm-amd64:/# cat /sys/kernel/tracing/kprobe_events
-> p:probe/ntfs_file_write_iter ntfs_file_write_iter
-> root@vm-amd64:/# mount | grep /mnt
-> /foo.img on /mnt type ntfs3 (rw,relatime,uid=0,gid=0,iocharset=utf8)
-> root@vm-amd64:/# perf record -e probe:ntfs_file_write_iter &
-> [1] 210
-> root@vm-amd64:/# cd /mnt/
-> root@vm-amd64:/mnt# dd if=./foo of=./bar count=3
-> 3+0 records in
-> 3+0 records out
-> 1536 bytes (1.5 kB, 1.5 KiB) copied, 0.00234793 s, 654 kB/s
-> root@vm-amd64:/mnt# cd -
-> /
-> root@vm-amd64:/# fg
-> perf record -e probe:ntfs_file_write_iter
-> ^C[ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.056 MB perf.data ]
-> 
-> root@vm-amd64:/# perf report
-> Error:
-> The perf.data data has no samples!
-> # To display the perf.data header info, please use --header/--header-only optio>
-> #
-> 
-> In this contribution, I modified the functions creating sysfs and PMU kprobes to
-> test if the function name given as argument matches several symbols.
-> In this case, these functions return EADDRNOTAVAIL to indicate the user to use
-> addr and offs to remove this ambiguity.
-> So, when the above BPF tool is run, the following error message is printed:
-> root@vm-amd64:~# ig trace fsslower -m 0 -f ntfs3 --host &> /tmp/foo &
-> [1] 228
-> root@vm-amd64:~# more /tmp/foo
-> RUNTIME.CONTAINERNAME          RUNTIME.CONTAIN… PID              COMM
->   T      BYTES     OFFSET        LAT FILE
-> Error: running gadget: running gadget: installing tracer: attaching kprobe: crea
-> ting perf_kprobe PMU (arch-specific fallback for "ntfs_file_write_iter"): token
-> ntfs_file_write_iter: opening perf event: cannot assign requested address
-> And the same with sysfs kprobe:
-> root@vm-amd64:/# echo 'p:probe/ntfs_file_write_iter ntfs_file_write_iter' > /sys/kernel/tracing/kprobe_events
-> -bash: echo: write error: Cannot assign requested address
-> Note that, this does not influence perf as it installs kprobes as offset on
-> _text:
-> root@vm-amd64:/# perf probe --add ntfs_file_write_iter
-> Added new events:
->   probe:ntfs_file_write_iter (on ntfs_file_write_iter)
->   probe:ntfs_file_write_iter (on ntfs_file_write_iter)
-> ...
-> root@vm-amd64:/# cat /sys/kernel/tracing/kprobe_events
-> p:probe/ntfs_file_write_iter _text+5039088
-> p:probe/ntfs_file_write_iter _text+5228752
-> 
-> Note that, this contribution is the conclusion of a previous RFC which intended
-> to install a PMU kprobe for all matching symbols [1, 2].
-> 
-> If you see any way to improve this contribution, please share your feedback.
-> 
-> Changes since:
->  v1:
->   * Use EADDRNOTAVAIL instead of adding a new error code.
->   * Correct also this behavior for sysfs kprobe.
->  v2:
->   * Count the number of symbols corresponding to function name and return
->   EADDRNOTAVAIL if higher than 1.
->   * Return ENOENT if above count is 0, as it would be returned later by while
->   registering the kprobe.
->  v3:
->   * Check symbol does not contain ':' before testing its uniqueness.
->   * Add a selftest to check this is not possible to install a kprobe for a non
->   unique symbol.
->  v5:
->   * No changes, just add linux-stable as recipient.
->  v6:
->   * Rephrase commit message.
->   * Add "Cc:" to stable.
-> 
-> Francis Laniel (2):
->   tracing/kprobes: Return EADDRNOTAVAIL when func matches several
->     symbols
->   selftests/ftrace: Add new test case which checks non unique symbol
-> 
->  kernel/trace/trace_kprobe.c                   | 63 +++++++++++++++++++
->  kernel/trace/trace_probe.h                    |  1 +
->  .../test.d/kprobe/kprobe_non_uniq_symbol.tc   | 13 ++++
->  3 files changed, 77 insertions(+)
->  create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc
-> 
-> Best regards and thank you in advance.
-> ---
-> [1]: https://lore.kernel.org/lkml/20230816163517.112518-1-flaniel@linux.microsoft.com/
-> [2]: https://lore.kernel.org/lkml/20230819101105.b0c104ae4494a7d1f2eea742@kernel.org/
-> --
-> 2.34.1
-> 
+I think these error paths should undo the tracefs_start_creating()
+instead of returning directly.
 
+    732 
+    733         if (IS_ERR(dentry))
+    734                 return (struct eventfs_inode *)dentry;
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Same.
+
+    735 
+    736         ei = kzalloc(sizeof(*ei), GFP_KERNEL);
+    737         if (!ei)
+    738                 goto fail;
+
+"ei" is NULL
+
+    739 
+    740         inode = tracefs_get_inode(dentry->d_sb);
+    741         if (unlikely(!inode))
+    742                 goto fail;
+    743 
+    744         if (size) {
+    745                 ei->d_children = kzalloc(sizeof(*ei->d_children) * size, GFP_KERNEL);
+    746                 if (!ei->d_children)
+    747                         goto fail;
+    748         }
+    749 
+    750         ei->dentry = dentry;
+    751         ei->entries = entries;
+    752         ei->nr_entries = size;
+    753         ei->data = data;
+    754         ei->name = kstrdup_const(name, GFP_KERNEL);
+    755         if (!ei->name)
+    756                 goto fail;
+    757 
+    758         INIT_LIST_HEAD(&ei->children);
+    759         INIT_LIST_HEAD(&ei->list);
+    760 
+    761         ti = get_tracefs(inode);
+    762         ti->flags |= TRACEFS_EVENT_INODE | TRACEFS_EVENT_TOP_INODE;
+    763         ti->private = ei;
+    764 
+    765         inode->i_mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
+    766         inode->i_op = &eventfs_root_dir_inode_operations;
+    767         inode->i_fop = &eventfs_file_operations;
+    768 
+    769         /* directory inodes start off with i_nlink == 2 (for "." entry) */
+    770         inc_nlink(inode);
+    771         d_instantiate(dentry, inode);
+    772         inc_nlink(dentry->d_parent->d_inode);
+    773         fsnotify_mkdir(dentry->d_parent->d_inode, dentry);
+    774         tracefs_end_creating(dentry);
+    775 
+    776         /* Will call dput when the directory is removed */
+    777         dget(dentry);
+    778 
+    779         return ei;
+    780 
+    781  fail:
+--> 782         kfree(ei->d_children);
+                      ^^^^^^^^^^^^^^
+Crash
+
+    783         kfree(ei);
+    784         tracefs_failed_creating(dentry);
+    785         return ERR_PTR(-ENOMEM);
+    786 }
+
+regards,
+dan carpenter
