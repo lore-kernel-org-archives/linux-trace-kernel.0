@@ -1,133 +1,172 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7241DDAB
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Oct 2023 10:42:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB87DDAB
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Oct 2023 10:43:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="roXaDV5L"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="FPkIY3cY"
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 87C9F106;
-	Fri, 20 Oct 2023 03:42:48 -0700 (PDT)
-Received: from pwmachine.localnet (unknown [188.24.154.80])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 2705320B74C0;
-	Fri, 20 Oct 2023 03:42:46 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2705320B74C0
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 501D6106
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Oct 2023 03:43:13 -0700 (PDT)
+Received: from pwmachine.numericable.fr (unknown [188.24.154.80])
+	by linux.microsoft.com (Postfix) with ESMTPSA id B61BA20B74C0;
+	Fri, 20 Oct 2023 03:43:11 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B61BA20B74C0
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1697798568;
-	bh=hnnVsUjyZV+dpb5bf774eE1FJR1gw5g94Ljn0qCzUP0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=roXaDV5LOfYsc+JAum0I5rZHl38D78cVf4X+FcnrWAXr25XR75w+NNtQDGBsGtp85
-	 zznht0rHMR8+y+kMppbuYQvOjF5aMY/AQVIz57GYAo8aqtoR/xC/wzwtKs5yzAsS8j
-	 hfPuahMC6jRfskUvssxIc8XGTQJSdxMeawdkh1f8=
+	s=default; t=1697798592;
+	bh=w271IrFXDImU9dSKgRuIj+gDrf5FAAkjc4+x7GpxDuQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=FPkIY3cYixKZT8mMvOnXONgAPTcxdrAX4+GtG7p9S0xuHgE/bJzgpMrTCDUNp62Dp
+	 TdE55/TQzVzTvXtNqAZ63Swlt9EaQvWy9sHYhq1//EAd9dTJNrSuwArnp4DLHMdMPr
+	 7bbU2cXtZwZ3bhRziyBy3A7X3oaVw91WYQJ48oy4=
 From: Francis Laniel <flaniel@linux.microsoft.com>
-To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v5 0/2] Return EADDRNOTAVAIL when func matches several symbols during kprobe creation
-Date: Fri, 20 Oct 2023 13:42:44 +0300
-Message-ID: <5720486.DvuYhMxLoT@pwmachine>
-In-Reply-To: <20231020000708.e33ec727fcd322b7cde292cd@kernel.org>
-References: <20231018144030.86885-1-flaniel@linux.microsoft.com> <20231019095104.006a7252@gandalf.local.home> <20231020000708.e33ec727fcd322b7cde292cd@kernel.org>
+To: linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Francis Laniel <flaniel@linux.microsoft.com>
+Subject: [PATCH v6 0/2] Return EADDRNOTAVAIL when func matches several symbols during kprobe creation
+Date: Fri, 20 Oct 2023 13:42:48 +0300
+Message-Id: <20231020104250.9537-1-flaniel@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi!
+Hi.
 
-Le jeudi 19 octobre 2023, 18:07:08 EEST Masami Hiramatsu a =E9crit :
-> On Thu, 19 Oct 2023 09:51:04 -0400
->=20
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> > On Thu, 19 Oct 2023 21:18:43 +0900
-> >=20
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> > > > So why is this adding stable? (and as Greg's form letter states,
-> > > > that's not
-> > > > how you do that)
-> > > >=20
-> > > > I don't see this as a fix but a new feature.
-> > >=20
-> > > I asked him to make this a fix since the current kprobe event' behavi=
-or
-> > > is
-> > > somewhat strange. It puts the probe on only the "first symbol" if user
-> > > specifies a symbol name which has multiple instances. In this case, t=
-he
-> > > actual probe address can not be solved by name. User must specify the
-> > > probe address by unique name + offset. Unless, it can put a probe on
-> > > unexpected address, especially if it specifies non-unique symbol +
-> > > offset,
-> > > the address may NOT be the instruction boundary.
-> > > To avoid this issue, it should check the given symbol is unique.
-> >=20
-> > OK, so what is broken is that when you add a probe to a function that h=
-as
-> > multiple names, it will attach to the first one and not necessarily the
-> > one
-> > you want.
-> >=20
-> > The change log needs to be more explicit in what the "bug" is. It does
-> > state this in a round about way, but it is written in a way that it
-> > doesn't
-> > stand out.
-> >=20
-> >     Previously to this commit, if func matches several symbols, a kprob=
-e,
-> >     being either sysfs or PMU, would only be installed for the first
-> >     matching address. This could lead to some misunderstanding when some
-> >     BPF code was never called because it was attached to a function whi=
-ch
-> >     was indeed not called, because the effectively called one has no
-> >     kprobes attached.
-> >    =20
-> >     So, this commit returns EADDRNOTAVAIL when func matches several
-> >     symbols. This way, user needs to use address to remove the ambiguit=
-y.
-> >=20
-> > What it should say is:
-> >     When a kprobe is attached to a function that's name is not unique (=
-is
-> >     static and shares the name with other functions in the kernel), the
-> >     kprobe is attached to the first function it finds. This is a bug as
-> >     the
-> >     function that it is attaching to is not necessarily the one that the
-> >     user wants to attach to.
-> >    =20
-> >     Instead of blindly picking a function to attach to what is ambiguou=
-s,
-> >     error with EADDRNOTAVAIL to let the user know that this function is
-> >     not
-> >     unique, and that the user must use another unique function with an
-> >     address offset to get to the function they want to attach to.
->=20
-> Great!, yes this looks good to me too.
->=20
-> > And yes, it should have:
-> >=20
-> > Cc: stable@vger.kernel.org
-> >=20
-> > which is how to mark something for stable, and
-> >=20
-> > Fixes: ...
-> >=20
-> > To the commit that caused the bug.
->=20
-> Yes, this should be the first one.
->=20
-> Fixes: 413d37d1eb69 ("tracing: Add kprobe-based event tracer")
 
-Thank you! I should have thought about it nonetheless but I will take more=
-=20
-care in the future!
+In the kernel source code, it exists different functions which share the same
+name but which have, of course, different addresses as they can be defined in
+different modules:
+# Kernel was compiled with CONFIG_NTFS_FS and CONFIG_NTFS3_FS as built-in.
+root@vm-amd64:~# grep ntfs_file_write_iter /proc/kallsyms
+ffffffff814ce3c0 t __pfx_ntfs_file_write_iter
+ffffffff814ce3d0 t ntfs_file_write_iter
+ffffffff814fc8a0 t __pfx_ntfs_file_write_iter
+ffffffff814fc8b0 t ntfs_file_write_iter
+This can be source of troubles when you create a PMU kprobe for such a function,
+as it will only install one for the first address (e.g. 0xffffffff814ce3d0 in
+the above).
+This could lead to some troubles were BPF based tools does not report any event
+because the second function is not called:
+root@vm-amd64:/mnt# mount | grep /mnt
+/foo.img on /mnt type ntfs3 (rw,relatime,uid=0,gid=0,iocharset=utf8)
+# ig is a tool which installs a PMU kprobe on ntfs_file_write_iter().
+root@vm-amd64:/mnt# ig trace fsslower -m 0 -f ntfs3 --host &> /tmp/foo &
+[1] 207
+root@vm-amd64:/mnt# dd if=./foo of=./bar count=3
+3+0 records in
+3+0 records out
+1536 bytes (1.5 kB, 1.5 KiB) copied, 0.00543323 s, 283 kB/s
+root@vm-amd64:/mnt# fg
+ig trace fsslower -m 0 -f ntfs3 --host &> /tmp/foo
+^Croot@vm-amd64:/mnt# more /tmp/foo
+RUNTIME.CONTAINERNAME          RUNTIME.CONTAIN… PID              COMM
+  T      BYTES     OFFSET        LAT FILE
+                                                214              dd
+  R        512          0        766 foo
+                                                214              dd
+  R        512        512          9 foo
+                                                214              dd
+As you can see in the above, only read events are reported and no write because
+the kprobe is installed for the old ntfs_file_write_iter() and not the ntfs3
+one.
+The same behavior occurs with sysfs kprobe:
+root@vm-amd64:/# echo 'p:probe/ntfs_file_write_iter ntfs_file_write_iter' > /sys/kernel/tracing/kprobe_events
+root@vm-amd64:/# cat /sys/kernel/tracing/kprobe_events
+p:probe/ntfs_file_write_iter ntfs_file_write_iter
+root@vm-amd64:/# mount | grep /mnt
+/foo.img on /mnt type ntfs3 (rw,relatime,uid=0,gid=0,iocharset=utf8)
+root@vm-amd64:/# perf record -e probe:ntfs_file_write_iter &
+[1] 210
+root@vm-amd64:/# cd /mnt/
+root@vm-amd64:/mnt# dd if=./foo of=./bar count=3
+3+0 records in
+3+0 records out
+1536 bytes (1.5 kB, 1.5 KiB) copied, 0.00234793 s, 654 kB/s
+root@vm-amd64:/mnt# cd -
+/
+root@vm-amd64:/# fg
+perf record -e probe:ntfs_file_write_iter
+^C[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.056 MB perf.data ]
 
-> Thank you,
->=20
-> > -- Steve
+root@vm-amd64:/# perf report
+Error:
+The perf.data data has no samples!
+# To display the perf.data header info, please use --header/--header-only optio>
+#
 
-Best regards.
+In this contribution, I modified the functions creating sysfs and PMU kprobes to
+test if the function name given as argument matches several symbols.
+In this case, these functions return EADDRNOTAVAIL to indicate the user to use
+addr and offs to remove this ambiguity.
+So, when the above BPF tool is run, the following error message is printed:
+root@vm-amd64:~# ig trace fsslower -m 0 -f ntfs3 --host &> /tmp/foo &
+[1] 228
+root@vm-amd64:~# more /tmp/foo
+RUNTIME.CONTAINERNAME          RUNTIME.CONTAIN… PID              COMM
+  T      BYTES     OFFSET        LAT FILE
+Error: running gadget: running gadget: installing tracer: attaching kprobe: crea
+ting perf_kprobe PMU (arch-specific fallback for "ntfs_file_write_iter"): token
+ntfs_file_write_iter: opening perf event: cannot assign requested address
+And the same with sysfs kprobe:
+root@vm-amd64:/# echo 'p:probe/ntfs_file_write_iter ntfs_file_write_iter' > /sys/kernel/tracing/kprobe_events
+-bash: echo: write error: Cannot assign requested address
+Note that, this does not influence perf as it installs kprobes as offset on
+_text:
+root@vm-amd64:/# perf probe --add ntfs_file_write_iter
+Added new events:
+  probe:ntfs_file_write_iter (on ntfs_file_write_iter)
+  probe:ntfs_file_write_iter (on ntfs_file_write_iter)
+...
+root@vm-amd64:/# cat /sys/kernel/tracing/kprobe_events
+p:probe/ntfs_file_write_iter _text+5039088
+p:probe/ntfs_file_write_iter _text+5228752
 
+Note that, this contribution is the conclusion of a previous RFC which intended
+to install a PMU kprobe for all matching symbols [1, 2].
+
+If you see any way to improve this contribution, please share your feedback.
+
+Changes since:
+ v1:
+  * Use EADDRNOTAVAIL instead of adding a new error code.
+  * Correct also this behavior for sysfs kprobe.
+ v2:
+  * Count the number of symbols corresponding to function name and return
+  EADDRNOTAVAIL if higher than 1.
+  * Return ENOENT if above count is 0, as it would be returned later by while
+  registering the kprobe.
+ v3:
+  * Check symbol does not contain ':' before testing its uniqueness.
+  * Add a selftest to check this is not possible to install a kprobe for a non
+  unique symbol.
+ v5:
+  * No changes, just add linux-stable as recipient.
+ v6:
+  * Rephrase commit message.
+  * Add "Cc:" to stable.
+
+Francis Laniel (2):
+  tracing/kprobes: Return EADDRNOTAVAIL when func matches several
+    symbols
+  selftests/ftrace: Add new test case which checks non unique symbol
+
+ kernel/trace/trace_kprobe.c                   | 63 +++++++++++++++++++
+ kernel/trace/trace_probe.h                    |  1 +
+ .../test.d/kprobe/kprobe_non_uniq_symbol.tc   | 13 ++++
+ 3 files changed, 77 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_non_uniq_symbol.tc
+
+Best regards and thank you in advance.
+---
+[1]: https://lore.kernel.org/lkml/20230816163517.112518-1-flaniel@linux.microsoft.com/
+[2]: https://lore.kernel.org/lkml/20230819101105.b0c104ae4494a7d1f2eea742@kernel.org/
+--
+2.34.1
 
