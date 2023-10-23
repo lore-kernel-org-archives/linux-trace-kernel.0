@@ -1,113 +1,88 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A6F12B7F
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Oct 2023 11:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="aEmrYdKm"
-Received: from mail-oo1-xc35.google.com (mail-oo1-xc35.google.com [IPv6:2607:f8b0:4864:20::c35])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88BB0DD
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Oct 2023 04:25:03 -0700 (PDT)
-Received: by mail-oo1-xc35.google.com with SMTP id 006d021491bc7-57f0f81b2aeso1848752eaf.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Oct 2023 04:25:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1698060302; x=1698665102; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2192OsjXmgrld0RFvNELnPp3O3hEpjh1EJLRBwaLwjg=;
-        b=aEmrYdKmYJ5Gd/MO4IJE4sGEP48zfF+hPRpu9ZXzTzX2Wk5Q5S5X3dT+05vjCMdV2E
-         QmYf2QJIdrvHLpI442ERjDKidOjxYWY3IS9d0QYzlghSuCofMq230eSRprA0yW115xRO
-         a3zjQNCUUesJ+ImFcvSyjUz8in4bUqrIQRCC7JeyvodWbkLvdkDjAjBpm8UF008QiJNv
-         4ii93PqqL8C8ZM8pol/GNNqltTA7toe6Ng8TccIyx+UMVvkeb2d2AgqMFb3cLItWMv5j
-         dNdg1FTJVCWZGPZKNVK5QJbKgLXtKgplGQXMja7hq5pz68jrVNwJw7OPVqtm/90iEiH7
-         K1Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698060302; x=1698665102;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2192OsjXmgrld0RFvNELnPp3O3hEpjh1EJLRBwaLwjg=;
-        b=Ag+4hVgDdscDaEAWZ7cB5aeExo2VVeJCoKx9csKBlZMeaJ3qxSSVg1XEilbIlaYcam
-         6xZdsfL9bxXLaKfEm9oNiDII3CfRDrydFyJKmIw+URJ08/LsZWaXoRe0/TG/ymQdJtow
-         BXPOTjjYQAMrQmYaBq11tN9cz8NURcVTFvsrw7T1ZQeHiEDZsUPO+GPkVHg/Q5bNRqZ6
-         KdhlwOexjV1rfBl+363hkz8FFVQgrGuhouF7xjcLQ3exJezTO1gMELJM99zWQuGrHFDb
-         zR7S7pYemRRVj9BSB7z3scJqAqkMYXMIdABtoBbgoSNGr9x6GkyMiuNPIMh55WDqmZYX
-         znKw==
-X-Gm-Message-State: AOJu0YwzfBoBrEQwvOsz5fwvd25MHtAHpjwywJdztKQMhhRJHFCtAWpl
-	LsfSzKJ9Vn7AnynoWTqQbL07JM3Vc8/WyMcEEl8=
-X-Google-Smtp-Source: AGHT+IHa3uVm9uNk9uUTpXnzauQE78s8dd1IL3sNWjOcLV+AY4KgKWIXNfymZ+W3xhqQWh/kmVQ+cw==
-X-Received: by 2002:a05:6359:6c11:b0:168:e697:ce0d with SMTP id tc17-20020a0563596c1100b00168e697ce0dmr916303rwb.31.1698060302535;
-        Mon, 23 Oct 2023 04:25:02 -0700 (PDT)
-Received: from devz1.bytedance.net ([203.208.167.147])
-        by smtp.gmail.com with ESMTPSA id s10-20020a65644a000000b005781e026905sm4823298pgv.56.2023.10.23.04.24.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Oct 2023 04:25:01 -0700 (PDT)
-From: "wuqiang.matt" <wuqiang.matt@bytedance.com>
-To: linux-trace-kernel@vger.kernel.org,
-	mhiramat@kernel.org,
-	davem@davemloft.net,
-	anil.s.keshavamurthy@intel.com,
-	naveen.n.rao@linux.ibm.com,
-	rostedt@goodmis.org,
-	peterz@infradead.org,
-	akpm@linux-foundation.org,
-	sander@svanheule.net,
-	ebiggers@google.com,
-	dan.j.williams@intel.com,
-	jpoimboe@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	lkp@intel.com,
-	mattwu@163.com,
-	"wuqiang.matt" <wuqiang.matt@bytedance.com>
-Subject: [PATCH v1] lib,kprobes: using try_cmpxchg_local in objpool_push
-Date: Mon, 23 Oct 2023 19:24:52 +0800
-Message-Id: <20231023112452.6290-1-wuqiang.matt@bytedance.com>
-X-Mailer: git-send-email 2.40.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E491BDE8
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Oct 2023 15:43:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B555C433C7;
+	Mon, 23 Oct 2023 15:43:06 +0000 (UTC)
+Date: Mon, 23 Oct 2023 11:43:04 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "wuqiang.matt" <wuqiang.matt@bytedance.com>
+Cc: linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
+ davem@davemloft.net, anil.s.keshavamurthy@intel.com,
+ naveen.n.rao@linux.ibm.com, peterz@infradead.org,
+ akpm@linux-foundation.org, sander@svanheule.net, ebiggers@google.com,
+ dan.j.williams@intel.com, jpoimboe@kernel.org,
+ linux-kernel@vger.kernel.org, lkp@intel.com, mattwu@163.com
+Subject: Re: [PATCH v1] lib,kprobes: using try_cmpxchg_local in objpool_push
+Message-ID: <20231023114304.1bebb327@gandalf.local.home>
+In-Reply-To: <20231023112452.6290-1-wuqiang.matt@bytedance.com>
+References: <20231023112452.6290-1-wuqiang.matt@bytedance.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The objpool_push can only happen on local cpu node, so only the local
-cpu can touch slot->tail and slot->last, which ensures the correctness
-of using cmpxchg without lock prefix (using try_cmpxchg_local instead
-of try_cmpxchg_acquire).
+On Mon, 23 Oct 2023 19:24:52 +0800
+"wuqiang.matt" <wuqiang.matt@bytedance.com> wrote:
 
-Testing with IACA found the lock version of pop/push pair costs 16.46
-cycles and local-push version costs 15.63 cycles. Kretprobe throughput
-is improved to 1.019 times of the lock version for x86_64 systems.
+> The objpool_push can only happen on local cpu node, so only the local
+> cpu can touch slot->tail and slot->last, which ensures the correctness
+> of using cmpxchg without lock prefix (using try_cmpxchg_local instead
+> of try_cmpxchg_acquire).
+> 
+> Testing with IACA found the lock version of pop/push pair costs 16.46
+> cycles and local-push version costs 15.63 cycles. Kretprobe throughput
+> is improved to 1.019 times of the lock version for x86_64 systems.
+> 
+> OS: Debian 10 X86_64, Linux 6.6rc6 with freelist
+> HW: XEON 8336C x 2, 64 cores/128 threads, DDR4 3200MT/s
+> 
+>                  1T         2T         4T         8T        16T
+>   lock:    29909085   59865637  119692073  239750369  478005250
+>   local:   30297523   60532376  121147338  242598499  484620355
+>                 32T        48T        64T        96T       128T
+>   lock:   957553042 1435814086 1680872925 2043126796 2165424198
+>   local:  968526317 1454991286 1861053557 2059530343 2171732306
+> 
+> Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
+> ---
+>  lib/objpool.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/lib/objpool.c b/lib/objpool.c
+> index ce0087f64400..a032701beccb 100644
+> --- a/lib/objpool.c
+> +++ b/lib/objpool.c
+> @@ -166,7 +166,7 @@ objpool_try_add_slot(void *obj, struct objpool_head *pool, int cpu)
+>  		head = READ_ONCE(slot->head);
+>  		/* fault caught: something must be wrong */
+>  		WARN_ON_ONCE(tail - head > pool->nr_objs);
+> -	} while (!try_cmpxchg_acquire(&slot->tail, &tail, tail + 1));
+> +	} while (!try_cmpxchg_local(&slot->tail, &tail, tail + 1));
+>  
+>  	/* now the tail position is reserved for the given obj */
+>  	WRITE_ONCE(slot->entries[tail & slot->mask], obj);
 
-OS: Debian 10 X86_64, Linux 6.6rc6 with freelist
-HW: XEON 8336C x 2, 64 cores/128 threads, DDR4 3200MT/s
+I'm good with the change, but I don't like how "cpu" is passed to this
+function. It currently is only used in one location, which does:
 
-                 1T         2T         4T         8T        16T
-  lock:    29909085   59865637  119692073  239750369  478005250
-  local:   30297523   60532376  121147338  242598499  484620355
-                32T        48T        64T        96T       128T
-  lock:   957553042 1435814086 1680872925 2043126796 2165424198
-  local:  968526317 1454991286 1861053557 2059530343 2171732306
+	rc = objpool_try_add_slot(obj, pool, raw_smp_processor_id());
 
-Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
----
- lib/objpool.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Which makes this change fine. But there's nothing here to prevent someone
+for some reason passing another CPU to that function.
 
-diff --git a/lib/objpool.c b/lib/objpool.c
-index ce0087f64400..a032701beccb 100644
---- a/lib/objpool.c
-+++ b/lib/objpool.c
-@@ -166,7 +166,7 @@ objpool_try_add_slot(void *obj, struct objpool_head *pool, int cpu)
- 		head = READ_ONCE(slot->head);
- 		/* fault caught: something must be wrong */
- 		WARN_ON_ONCE(tail - head > pool->nr_objs);
--	} while (!try_cmpxchg_acquire(&slot->tail, &tail, tail + 1));
-+	} while (!try_cmpxchg_local(&slot->tail, &tail, tail + 1));
- 
- 	/* now the tail position is reserved for the given obj */
- 	WRITE_ONCE(slot->entries[tail & slot->mask], obj);
--- 
-2.40.1
+If we are to make that change, I would be much more comfortable with
+removing "int cpu" as a parameter to objpool_try_add_slot() and adding:
 
+	int cpu = raw_smp_processor_id();
+
+Which now shows that this function *only* deals with the current CPU.
+
+-- Steve
