@@ -1,47 +1,47 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2617815ACB
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Oct 2023 11:23:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A6F12B7F
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Oct 2023 11:25:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="MaK8FcAl"
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 313D410CC
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Oct 2023 04:22:57 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id 98e67ed59e1d1-27d18475ed4so2204420a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Oct 2023 04:22:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="aEmrYdKm"
+Received: from mail-oo1-xc35.google.com (mail-oo1-xc35.google.com [IPv6:2607:f8b0:4864:20::c35])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88BB0DD
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Oct 2023 04:25:03 -0700 (PDT)
+Received: by mail-oo1-xc35.google.com with SMTP id 006d021491bc7-57f0f81b2aeso1848752eaf.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Oct 2023 04:25:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1698060176; x=1698664976; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1698060302; x=1698665102; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/dRh+rfLET0p9qdBskbivIY2crf8jG9hQg8expagdDw=;
-        b=MaK8FcAllO/jg62yqYX8ZrcpoNfIqqVR7TLf6DvhPwEhNf4Az9KHRjIipfXQ/Yg3QA
-         a0L4PmuqwNL5NECFfO6FwB1NQE/nR5ybTtGaECzPunY3kIv+LuFWeUfP68gkTHDol1MP
-         fqxRLBbXKQwR0Id2k0m76EkCgEdvVHZ8mLu4/LLhAKgxLx9+UXt/THte1NJ3IAeIXiaC
-         YYN3enYtspXyHKvHi8gnI/TEtDHKwEWVSwG52zskDmzS76GVfsKdJNvnLSPSZpGCFNtN
-         67YI76QhTfbmQyqAaIiov13gJbeallJWDrmYiLc/kPu9DU+tsyoFl+HVuTxxffhMVVu/
-         uzuQ==
+        bh=2192OsjXmgrld0RFvNELnPp3O3hEpjh1EJLRBwaLwjg=;
+        b=aEmrYdKmYJ5Gd/MO4IJE4sGEP48zfF+hPRpu9ZXzTzX2Wk5Q5S5X3dT+05vjCMdV2E
+         QmYf2QJIdrvHLpI442ERjDKidOjxYWY3IS9d0QYzlghSuCofMq230eSRprA0yW115xRO
+         a3zjQNCUUesJ+ImFcvSyjUz8in4bUqrIQRCC7JeyvodWbkLvdkDjAjBpm8UF008QiJNv
+         4ii93PqqL8C8ZM8pol/GNNqltTA7toe6Ng8TccIyx+UMVvkeb2d2AgqMFb3cLItWMv5j
+         dNdg1FTJVCWZGPZKNVK5QJbKgLXtKgplGQXMja7hq5pz68jrVNwJw7OPVqtm/90iEiH7
+         K1Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698060176; x=1698664976;
+        d=1e100.net; s=20230601; t=1698060302; x=1698665102;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/dRh+rfLET0p9qdBskbivIY2crf8jG9hQg8expagdDw=;
-        b=ARrTnIqcyKsHcShZsiysNx6WGw1aognyIFXryvRXdbGZSkFzIxbLWjPlDstu4KN6u7
-         DCVPIAOZ0JxHqe7k9TOERETJ0SsOKXWNcSEJXnax33610ynrQ4sX2DJM0IevblkJql8y
-         AWNIe8i7G/wTDqpf3TWQ6tTAaw38YX1/u0GGax9qbjkcZkITkFrxzRH5OgHQ79c7JCCR
-         0/xrJVuH4Un5hr42uBu6TJJtJPLSa53167XUohdUoYnMAp/6PKWTKE5weefE9Spf+2op
-         ks+WckDZ/U7EbqGdTqjB6nOH7FqpR6REypPV+v/zXmqVd6YPml2LSELyi0HTJyBowo2P
-         dKXw==
-X-Gm-Message-State: AOJu0Yzsipk9Bm0okQPCn/lHjKl6zGXHbbNTaKlYPwvVlNTJ7wKKWDbW
-	x4pVq3yQ/SdK7mb4JLmincep58j71/E/gYqqn2g=
-X-Google-Smtp-Source: AGHT+IFUPprF8WH63BfMN6S8KFDiIXR8rDvOjQKwgDG5gvFN95DflbmCkixx4JnRCYSUzW8xwHd9NA==
-X-Received: by 2002:a17:90b:1490:b0:27c:edd5:6137 with SMTP id js16-20020a17090b149000b0027cedd56137mr6387590pjb.25.1698060176247;
-        Mon, 23 Oct 2023 04:22:56 -0700 (PDT)
+        bh=2192OsjXmgrld0RFvNELnPp3O3hEpjh1EJLRBwaLwjg=;
+        b=Ag+4hVgDdscDaEAWZ7cB5aeExo2VVeJCoKx9csKBlZMeaJ3qxSSVg1XEilbIlaYcam
+         6xZdsfL9bxXLaKfEm9oNiDII3CfRDrydFyJKmIw+URJ08/LsZWaXoRe0/TG/ymQdJtow
+         BXPOTjjYQAMrQmYaBq11tN9cz8NURcVTFvsrw7T1ZQeHiEDZsUPO+GPkVHg/Q5bNRqZ6
+         KdhlwOexjV1rfBl+363hkz8FFVQgrGuhouF7xjcLQ3exJezTO1gMELJM99zWQuGrHFDb
+         zR7S7pYemRRVj9BSB7z3scJqAqkMYXMIdABtoBbgoSNGr9x6GkyMiuNPIMh55WDqmZYX
+         znKw==
+X-Gm-Message-State: AOJu0YwzfBoBrEQwvOsz5fwvd25MHtAHpjwywJdztKQMhhRJHFCtAWpl
+	LsfSzKJ9Vn7AnynoWTqQbL07JM3Vc8/WyMcEEl8=
+X-Google-Smtp-Source: AGHT+IHa3uVm9uNk9uUTpXnzauQE78s8dd1IL3sNWjOcLV+AY4KgKWIXNfymZ+W3xhqQWh/kmVQ+cw==
+X-Received: by 2002:a05:6359:6c11:b0:168:e697:ce0d with SMTP id tc17-20020a0563596c1100b00168e697ce0dmr916303rwb.31.1698060302535;
+        Mon, 23 Oct 2023 04:25:02 -0700 (PDT)
 Received: from devz1.bytedance.net ([203.208.167.147])
-        by smtp.gmail.com with ESMTPSA id 25-20020a17090a031900b0026b3a86b0d5sm6048439pje.33.2023.10.23.04.22.51
+        by smtp.gmail.com with ESMTPSA id s10-20020a65644a000000b005781e026905sm4823298pgv.56.2023.10.23.04.24.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Oct 2023 04:22:55 -0700 (PDT)
+        Mon, 23 Oct 2023 04:25:01 -0700 (PDT)
 From: "wuqiang.matt" <wuqiang.matt@bytedance.com>
 To: linux-trace-kernel@vger.kernel.org,
 	mhiramat@kernel.org,
@@ -59,9 +59,9 @@ Cc: linux-kernel@vger.kernel.org,
 	lkp@intel.com,
 	mattwu@163.com,
 	"wuqiang.matt" <wuqiang.matt@bytedance.com>
-Subject: [PATCH v1] kprobes: unused header files removed
-Date: Mon, 23 Oct 2023 19:22:45 +0800
-Message-Id: <20231023112245.6112-1-wuqiang.matt@bytedance.com>
+Subject: [PATCH v1] lib,kprobes: using try_cmpxchg_local in objpool_push
+Date: Mon, 23 Oct 2023 19:24:52 +0800
+Message-Id: <20231023112452.6290-1-wuqiang.matt@bytedance.com>
 X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -71,59 +71,43 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-As kernel test robot reported, lib/test_objpool.c (trace:probes/for-next)
-has linux/version.h included, but version.h is not used at all. Then more
-unused headers are found in test_objpool.c and rethook.c, and all of them
-should be removed.
+The objpool_push can only happen on local cpu node, so only the local
+cpu can touch slot->tail and slot->last, which ensures the correctness
+of using cmpxchg without lock prefix (using try_cmpxchg_local instead
+of try_cmpxchg_acquire).
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202310191512.vvypKU5Z-lkp@intel.com/
+Testing with IACA found the lock version of pop/push pair costs 16.46
+cycles and local-push version costs 15.63 cycles. Kretprobe throughput
+is improved to 1.019 times of the lock version for x86_64 systems.
+
+OS: Debian 10 X86_64, Linux 6.6rc6 with freelist
+HW: XEON 8336C x 2, 64 cores/128 threads, DDR4 3200MT/s
+
+                 1T         2T         4T         8T        16T
+  lock:    29909085   59865637  119692073  239750369  478005250
+  local:   30297523   60532376  121147338  242598499  484620355
+                32T        48T        64T        96T       128T
+  lock:   957553042 1435814086 1680872925 2043126796 2165424198
+  local:  968526317 1454991286 1861053557 2059530343 2171732306
 
 Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
 ---
- kernel/trace/rethook.c | 2 --
- lib/test_objpool.c     | 6 ------
- 2 files changed, 8 deletions(-)
+ lib/objpool.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
-index 13c8e6773892..6fd7d4ecbbc6 100644
---- a/kernel/trace/rethook.c
-+++ b/kernel/trace/rethook.c
-@@ -8,8 +8,6 @@
- #include <linux/preempt.h>
- #include <linux/rethook.h>
- #include <linux/slab.h>
--#include <linux/sort.h>
--#include <linux/smp.h>
+diff --git a/lib/objpool.c b/lib/objpool.c
+index ce0087f64400..a032701beccb 100644
+--- a/lib/objpool.c
++++ b/lib/objpool.c
+@@ -166,7 +166,7 @@ objpool_try_add_slot(void *obj, struct objpool_head *pool, int cpu)
+ 		head = READ_ONCE(slot->head);
+ 		/* fault caught: something must be wrong */
+ 		WARN_ON_ONCE(tail - head > pool->nr_objs);
+-	} while (!try_cmpxchg_acquire(&slot->tail, &tail, tail + 1));
++	} while (!try_cmpxchg_local(&slot->tail, &tail, tail + 1));
  
- /* Return hook list (shadow stack by list) */
- 
-diff --git a/lib/test_objpool.c b/lib/test_objpool.c
-index 98b5b37b6eea..a94078402138 100644
---- a/lib/test_objpool.c
-+++ b/lib/test_objpool.c
-@@ -6,21 +6,15 @@
-  * Copyright: wuqiang.matt@bytedance.com
-  */
- 
--#include <linux/version.h>
- #include <linux/errno.h>
- #include <linux/module.h>
- #include <linux/moduleparam.h>
--#include <linux/sched.h>
--#include <linux/cpumask.h>
- #include <linux/completion.h>
- #include <linux/kthread.h>
--#include <linux/cpu.h>
--#include <linux/cpuset.h>
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
- #include <linux/delay.h>
- #include <linux/hrtimer.h>
--#include <linux/interrupt.h>
- #include <linux/objpool.h>
- 
- #define OT_NR_MAX_BULK (16)
+ 	/* now the tail position is reserved for the given obj */
+ 	WRITE_ONCE(slot->entries[tail & slot->mask], obj);
 -- 
 2.40.1
 
