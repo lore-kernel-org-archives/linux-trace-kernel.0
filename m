@@ -1,39 +1,39 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D91079E6
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Oct 2023 09:20:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B923B1FDB
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Oct 2023 09:22:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="i1HQeRgS"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="m3plG33T"
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D97D97;
-	Mon, 23 Oct 2023 02:20:31 -0700 (PDT)
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39N7X2Qm012761;
-	Mon, 23 Oct 2023 09:20:21 GMT
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 580B7DF;
+	Mon, 23 Oct 2023 02:22:57 -0700 (PDT)
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39N7ROKB001098;
+	Mon, 23 Oct 2023 09:22:50 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
  mime-version : subject : to : cc : references : from : in-reply-to :
  content-type : content-transfer-encoding; s=qcppdkim1;
- bh=/nL/msgWlvlfc6jVbUSC8tsOqCePVy5oKiXHjTdF3To=;
- b=i1HQeRgSWVo8pCfhBRXSV+zPRTDi4uyaBl74JiaKWc1Bqlu0XZp2n8ux3swJo2nFZ7lj
- 80OrDOqLxg/wesHzB88fyV38zG1LFZY5TkfB22HY9z9l8AgnPQqSpJlsejWJXlC9WVS8
- ybTIE6LF8QJt09M1mT2yk5uMlgHoDFhRVK18wCmt0iYc6lvZVtF4Dkj+7eG0j5EK1jLz
- FhGJutuXpnHQ7DHFkks/h3KRu+XDfLlDP1YKSAxDDpONbmpNUpjJq6NcHzNpRZDqQaqW
- BYY3gblheBCIlj0e3YYMb4mUpgT6o64SBGQbi5yABqXgbkN94ASi/oQXIWvat9mpT+c4 AA== 
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tv5ndumpj-1
+ bh=fwbyazHm8hZVd9PZZHKaafaMldOcy5KTgRiIiji7g5w=;
+ b=m3plG33T2A46Yjv0tmLJP7Vdt+4SKqXnHZgaxXR65sLy6/hbfPoeXV1aRkyp2cq5v+Af
+ c04HWcsNNyiZzFE2nPGIRHXiTXNgy0gkltDElvOs/HJSO832KUgur+an3EpOiVfytGiV
+ ccq5Fp6sh1KE8TboznCx/BdpY1eeBsuY7bWE1GtQc5Htjd2d51MNeyqx0Vv36ttob45O
+ G2V4iM3Bo3HP63kYhIgqf15Pi2/wAzwTBnv4TmjaTK5Rg7In9SeabfSuQL4W3oHEOT5B
+ Ak85FXoYRdoQxrcIG6x53a+yAKiIp/LzR19XY9yqI0AH2GaIVBWj/zdJ+33eC6EhruWp dw== 
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tv40ukvqx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Oct 2023 09:20:21 +0000
+	Mon, 23 Oct 2023 09:22:50 +0000
 Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39N9KKOi004084
+	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39N9MnPF021668
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 23 Oct 2023 09:20:20 GMT
+	Mon, 23 Oct 2023 09:22:49 GMT
 Received: from [10.216.32.116] (10.80.80.8) by nasanex01c.na.qualcomm.com
  (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Mon, 23 Oct
- 2023 02:20:17 -0700
-Message-ID: <5c277465-2da5-7a0b-3726-b5a88d515c92@quicinc.com>
-Date: Mon, 23 Oct 2023 14:50:14 +0530
+ 2023 02:22:46 -0700
+Message-ID: <ed5f20a5-52e5-9869-1a3f-576beb955f97@quicinc.com>
+Date: Mon, 23 Oct 2023 14:52:42 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -42,17 +42,15 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH] eventfs: Fix failure path in eventfs_create_events_dir()
+Subject: Re: [PATCH] tracefs/eventfs: Modify mismatched function name
 Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-CC: Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland
-	<mark.rutland@arm.com>,
-        Julia Lawall <julia.lawall@inria.fr>
-References: <20231019204132.6662fef0@gandalf.local.home>
+To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, <rostedt@goodmis.org>
+CC: <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>,
+        Abaci Robot <abaci@linux.alibaba.com>
+References: <20231019031353.73846-1-jiapeng.chong@linux.alibaba.com>
 From: Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <20231019204132.6662fef0@gandalf.local.home>
+In-Reply-To: <20231019031353.73846-1-jiapeng.chong@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.80.80.8]
@@ -60,58 +58,45 @@ X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nasanex01c.na.qualcomm.com (10.45.79.139)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: LT8x1amTZmXYepYXu3Q0hHbHjlX7v6ud
-X-Proofpoint-ORIG-GUID: LT8x1amTZmXYepYXu3Q0hHbHjlX7v6ud
+X-Proofpoint-GUID: tpkuJTp245L927l8gSIK4AvNj8ZIyO3H
+X-Proofpoint-ORIG-GUID: tpkuJTp245L927l8gSIK4AvNj8ZIyO3H
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-10-23_06,2023-10-19_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=667 bulkscore=0
- adultscore=0 impostorscore=0 mlxscore=0 phishscore=0 priorityscore=1501
- clxscore=1011 suspectscore=0 spamscore=0 lowpriorityscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2310170001
- definitions=main-2310230078
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ phishscore=0 adultscore=0 clxscore=1011 spamscore=0 suspectscore=0
+ impostorscore=0 priorityscore=1501 malwarescore=0 mlxlogscore=737
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2310170001 definitions=main-2310230080
 
 
 
-On 10/20/2023 6:11 AM, Steven Rostedt wrote:
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On 10/19/2023 8:43 AM, Jiapeng Chong wrote:
+> No functional modification involved.
 > 
-> The failure path of allocating ei goes to a path that dereferences ei.
-> Add another label that skips over the ei dereferences to do the rest of
-> the clean up.
+> fs/tracefs/event_inode.c:864: warning: expecting prototype for eventfs_remove(). Prototype was for eventfs_remove_dir() instead.
 > 
-> Link: https://lore.kernel.org/all/70e7bace-561c-95f-1117-706c2c220bc@inria.fr/
-> 
-> Fixes: 5790b1fb3d67 ("eventfs: Remove eventfs_file and just use eventfs_inode")
-> Reported-by: Julia Lawall <julia.lawall@inria.fr>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=6939
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 
 Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
 
 -Mukesh
-
 > ---
->   fs/tracefs/event_inode.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+>   fs/tracefs/event_inode.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-> index 9f19b6608954..1885f1f1f339 100644
+> index 1ccd100bc565..ba9d1cb0d24c 100644
 > --- a/fs/tracefs/event_inode.c
 > +++ b/fs/tracefs/event_inode.c
-> @@ -735,7 +735,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
->   
->   	ei = kzalloc(sizeof(*ei), GFP_KERNEL);
->   	if (!ei)
-> -		goto fail;
-> +		goto fail_ei;
->   
->   	inode = tracefs_get_inode(dentry->d_sb);
->   	if (unlikely(!inode))
-> @@ -781,6 +781,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
->    fail:
->   	kfree(ei->d_children);
->   	kfree(ei);
-> + fail_ei:
->   	tracefs_failed_creating(dentry);
->   	return ERR_PTR(-ENOMEM);
+> @@ -855,7 +855,7 @@ static void unhook_dentry(struct dentry **dentry, struct dentry **list)
+>   	}
 >   }
+>   /**
+> - * eventfs_remove - remove eventfs dir or file from list
+> + * eventfs_remove_dir - remove eventfs dir or file from list
+>    * @ei: eventfs_inode to be removed.
+>    *
+>    * This function acquire the eventfs_mutex lock and call eventfs_remove_rec()
