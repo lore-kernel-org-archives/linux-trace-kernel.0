@@ -1,78 +1,68 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FA113FED
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Oct 2023 15:08:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB103A28E
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Oct 2023 16:36:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 446B9BA;
-	Tue, 24 Oct 2023 08:08:22 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91BA32F4;
-	Tue, 24 Oct 2023 08:09:02 -0700 (PDT)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.29.163])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD0633F762;
-	Tue, 24 Oct 2023 08:08:18 -0700 (PDT)
-Date: Tue, 24 Oct 2023 16:08:12 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"wuqiang . matt" <wuqiang.matt@bytedance.com>,
-	Peter Zijlstra <peterz@infradead.org>, linux-sh@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] locking/atomic: sh: Use generic_cmpxchg_local for
- arch_cmpxchg_local()
-Message-ID: <ZTfd3A3Unz6SWFD3@FVFF77S0Q05N.cambridge.arm.com>
-References: <169815917362.8695.13904684741526725648.stgit@devnote2>
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BE2AC433C9;
+	Tue, 24 Oct 2023 16:36:30 +0000 (UTC)
+Date: Tue, 24 Oct 2023 12:36:28 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>
+Subject: [PATCH] eventfs: Fix WARN_ON() in create_file_dentry()
+Message-ID: <20231024123628.62b88755@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <169815917362.8695.13904684741526725648.stgit@devnote2>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Oct 24, 2023 at 11:52:54PM +0900, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Use generic_cmpxchg_local() for arch_cmpxchg_local() implementation
-> in SH architecture because it does not implement arch_cmpxchg_local().
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-I do not think this is correct.
+As the comment right above a WARN_ON() in create_file_dentry() states:
 
-The implementation in <asm-generic/cmpxchg-local.h> is UP-only (and it only
-disables interrupts), whereas arch/sh can be built SMP. We should probably add
-some guards into <asm-generic/cmpxchg-local.h> for that as we have in
-<asm-generic/cmpxchg.h>.
+  * Note, with the mutex held, the e_dentry cannot have content
+  * and the ei->is_freed be true at the same time.
 
-I think the right thing to do here is to define arch_cmpxchg_local() in terms
-of arch_cmpxchg(), i.e. at the bottom of arch/sh's <asm/cmpxchg.h> add:
+But the WARN_ON() only has:
 
-#define arch_cmpxchg_local              arch_cmpxchg
+  WARN_ON_ONCE(ei->is_free);
 
-Mark.
+Where to match the comment (and what it should actually do) is:
 
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202310241310.Ir5uukOG-lkp@intel.com/
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  arch/sh/include/asm/cmpxchg.h |    2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/sh/include/asm/cmpxchg.h b/arch/sh/include/asm/cmpxchg.h
-> index 288f6f38d98f..e920e61fb817 100644
-> --- a/arch/sh/include/asm/cmpxchg.h
-> +++ b/arch/sh/include/asm/cmpxchg.h
-> @@ -71,4 +71,6 @@ static inline unsigned long __cmpxchg(volatile void * ptr, unsigned long old,
->  				    (unsigned long)_n_, sizeof(*(ptr))); \
->    })
->  
-> +#include <asm-generic/cmpxchg-local.h>
-> +
->  #endif /* __ASM_SH_CMPXCHG_H */
-> 
+  dentry = *e_dentry;
+  WARN_ON_ONCE(dentry && ei->is_free)
+
+Also in that case, set dentry to NULL (although it should never happen).
+
+Fixes: 5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/tracefs/event_inode.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 09ab93357957..4d2da7480e5f 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -264,8 +264,9 @@ create_file_dentry(struct eventfs_inode *ei, struct dentry **e_dentry,
+ 		 * Note, with the mutex held, the e_dentry cannot have content
+ 		 * and the ei->is_freed be true at the same time.
+ 		 */
+-		WARN_ON_ONCE(ei->is_freed);
+ 		dentry = *e_dentry;
++		if (WARN_ON_ONCE(dentry && ei->is_freed))
++			dentry = NULL;
+ 		/* The lookup does not need to up the dentry refcount */
+ 		if (dentry && !lookup)
+ 			dget(dentry);
+-- 
+2.42.0
+
