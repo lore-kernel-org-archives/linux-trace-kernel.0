@@ -1,134 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454211BDFE;
-	Mon, 23 Oct 2023 17:21:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3045A7E
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Oct 2023 00:52:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZOVDksWf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 977DEC433C7;
-	Mon, 23 Oct 2023 17:21:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rDYX/pqM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D204C433C7;
+	Tue, 24 Oct 2023 00:52:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698081670;
-	bh=WQYEKm0Mc7inaH0wFnxcEUmfAmPR1JoMV7fRygVNKQQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZOVDksWfw+hV9R+Z5ZexM6NcY3xDNdzdq9AsRt4vO9wMdxWhqWWcxLwP+eW4A962q
-	 Qk6ekhq2Ipm65VVsfFxXGy8qQeQOWzCvDqLJfEU8nWaZHFbI6flnaXvlVH0CRDWH+w
-	 hIMRahts5mdD+tpF+6eXFcpVMEl1Ep7tHL5W7fbVdPmlfZ6yQugf14RafBolwJcEMn
-	 21vyDdZz0h9WC0+Q/QJBX2oIB6fGQ1kXhcFuxCsKB2tbLoPEgU/BSdSOixB9qw31iO
-	 OgDPN8A4Uqs6uFqTMJcPk6zjMZ/offJmG+hcHSxPefHsLKYd1oYsfoKs6fvoRIkbKX
-	 wMvEth+vb/+ag==
-Date: Mon, 23 Oct 2023 18:21:00 +0100
-From: Will Deacon <will@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>, bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v3 07/13] arm64, execmem: extend execmem_params for
- generated code allocations
-Message-ID: <20231023172059.GB4041@willie-the-truck>
-References: <20230918072955.2507221-1-rppt@kernel.org>
- <20230918072955.2507221-8-rppt@kernel.org>
+	s=k20201202; t=1698108747;
+	bh=Cz2C33V7rW5mFx+/r38YL53PClSvAQtbG3qbhk9hvAs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rDYX/pqMphrx0x16wq56T8zNqw7D87iDLbydIUAmF//YqfycSHqDKdN7izTfqM6u1
+	 5RgwT9aKniQfjiJ0FyyTTqy2CqREwu35OHcIxwcCNX4CvCnS6cmMVDfmZYI0TRQzeG
+	 xs9oL8ml/6eM0p8qVv22KpmipXzV2mZ3T/vklDS1zwNT7VUaltF5lYf5RNFwpywm3i
+	 92gji/oLrkEkp73Ap3oG1ae4CNbijzSvO3CLnyWokBzJMBtLcSm20unvJMB9NBjwY4
+	 kRgH1quN43rR+7s5+Axr74sFrjTBNzsOukVDrdJRlKPpZfpn5v+ibIg14951EYPaic
+	 lXpgjgYS0QoSQ==
+Date: Tue, 24 Oct 2023 09:52:21 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "wuqiang.matt" <wuqiang.matt@bytedance.com>
+Cc: linux-trace-kernel@vger.kernel.org, davem@davemloft.net,
+ anil.s.keshavamurthy@intel.com, naveen.n.rao@linux.ibm.com,
+ rostedt@goodmis.org, peterz@infradead.org, akpm@linux-foundation.org,
+ sander@svanheule.net, ebiggers@google.com, dan.j.williams@intel.com,
+ jpoimboe@kernel.org, linux-kernel@vger.kernel.org, lkp@intel.com,
+ mattwu@163.com
+Subject: Re: [PATCH v1] kprobes: unused header files removed
+Message-Id: <20231024095221.4a9ab55c6bd3abd875f0ac08@kernel.org>
+In-Reply-To: <20231023112245.6112-1-wuqiang.matt@bytedance.com>
+References: <20231023112245.6112-1-wuqiang.matt@bytedance.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230918072955.2507221-8-rppt@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Sep 18, 2023 at 10:29:49AM +0300, Mike Rapoport wrote:
-> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+On Mon, 23 Oct 2023 19:22:45 +0800
+"wuqiang.matt" <wuqiang.matt@bytedance.com> wrote:
+
+> As kernel test robot reported, lib/test_objpool.c (trace:probes/for-next)
+> has linux/version.h included, but version.h is not used at all. Then more
+> unused headers are found in test_objpool.c and rethook.c, and all of them
+> should be removed.
 > 
-> The memory allocations for kprobes and BPF on arm64 can be placed
-> anywhere in vmalloc address space and currently this is implemented with
-> overrides of alloc_insn_page() and bpf_jit_alloc_exec() in arm64.
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202310191512.vvypKU5Z-lkp@intel.com/
+
+Looks good to me.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks,
+
 > 
-> Define EXECMEM_KPROBES and EXECMEM_BPF ranges in arm64::execmem_params and
-> drop overrides of alloc_insn_page() and bpf_jit_alloc_exec().
-> 
-> Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
+> Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
 > ---
->  arch/arm64/kernel/module.c         | 13 +++++++++++++
->  arch/arm64/kernel/probes/kprobes.c |  7 -------
->  arch/arm64/net/bpf_jit_comp.c      | 11 -----------
->  3 files changed, 13 insertions(+), 18 deletions(-)
+>  kernel/trace/rethook.c | 2 --
+>  lib/test_objpool.c     | 6 ------
+>  2 files changed, 8 deletions(-)
 > 
-> diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
-> index cd6320de1c54..d27db168d2a2 100644
-> --- a/arch/arm64/kernel/module.c
-> +++ b/arch/arm64/kernel/module.c
-> @@ -116,6 +116,16 @@ static struct execmem_params execmem_params __ro_after_init = {
->  			.flags = EXECMEM_KASAN_SHADOW,
->  			.alignment = MODULE_ALIGN,
->  		},
-> +		[EXECMEM_KPROBES] = {
-> +			.start = VMALLOC_START,
-> +			.end = VMALLOC_END,
-> +			.alignment = 1,
-> +		},
-> +		[EXECMEM_BPF] = {
-> +			.start = VMALLOC_START,
-> +			.end = VMALLOC_END,
-> +			.alignment = 1,
-> +		},
->  	},
->  };
+> diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
+> index 13c8e6773892..6fd7d4ecbbc6 100644
+> --- a/kernel/trace/rethook.c
+> +++ b/kernel/trace/rethook.c
+> @@ -8,8 +8,6 @@
+>  #include <linux/preempt.h>
+>  #include <linux/rethook.h>
+>  #include <linux/slab.h>
+> -#include <linux/sort.h>
+> -#include <linux/smp.h>
 >  
-> @@ -140,6 +150,9 @@ struct execmem_params __init *execmem_arch_params(void)
->  		r->end = module_plt_base + SZ_2G;
->  	}
+>  /* Return hook list (shadow stack by list) */
 >  
-> +	execmem_params.ranges[EXECMEM_KPROBES].pgprot = PAGE_KERNEL_ROX;
-> +	execmem_params.ranges[EXECMEM_BPF].pgprot = PAGE_KERNEL;
-> +
->  	return &execmem_params;
->  }
+> diff --git a/lib/test_objpool.c b/lib/test_objpool.c
+> index 98b5b37b6eea..a94078402138 100644
+> --- a/lib/test_objpool.c
+> +++ b/lib/test_objpool.c
+> @@ -6,21 +6,15 @@
+>   * Copyright: wuqiang.matt@bytedance.com
+>   */
 >  
-> diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-> index 70b91a8c6bb3..6fccedd02b2a 100644
-> --- a/arch/arm64/kernel/probes/kprobes.c
-> +++ b/arch/arm64/kernel/probes/kprobes.c
-> @@ -129,13 +129,6 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
->  	return 0;
->  }
+> -#include <linux/version.h>
+>  #include <linux/errno.h>
+>  #include <linux/module.h>
+>  #include <linux/moduleparam.h>
+> -#include <linux/sched.h>
+> -#include <linux/cpumask.h>
+>  #include <linux/completion.h>
+>  #include <linux/kthread.h>
+> -#include <linux/cpu.h>
+> -#include <linux/cpuset.h>
+>  #include <linux/slab.h>
+>  #include <linux/vmalloc.h>
+>  #include <linux/delay.h>
+>  #include <linux/hrtimer.h>
+> -#include <linux/interrupt.h>
+>  #include <linux/objpool.h>
 >  
-> -void *alloc_insn_page(void)
-> -{
-> -	return __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START, VMALLOC_END,
-> -			GFP_KERNEL, PAGE_KERNEL_ROX, VM_FLUSH_RESET_PERMS,
-> -			NUMA_NO_NODE, __builtin_return_address(0));
-> -}
+>  #define OT_NR_MAX_BULK (16)
+> -- 
+> 2.40.1
+> 
 
-It's slightly curious that we didn't clear the tag here, so it's nice that
-it all happens magically with your series:
 
-Acked-by: Will Deacon <will@kernel.org>
-
-Will
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
