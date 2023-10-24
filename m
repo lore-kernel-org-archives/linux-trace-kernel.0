@@ -1,35 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873167E
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Oct 2023 00:56:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E58C7E
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Oct 2023 01:01:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LRXHqzNB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75ACBC433C8;
-	Tue, 24 Oct 2023 00:56:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="njclsQ+W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F60AC433C7;
+	Tue, 24 Oct 2023 01:01:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698108994;
-	bh=9JswtvnuZeTfrT6UZLP6xIqZ8XMw44neq1OfJu39tX8=;
+	s=k20201202; t=1698109300;
+	bh=4T+xR+LDVwmEK8ly7KSmvMP+Crericc0+YZiRJitUh0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=LRXHqzNBrMKDyCAdYOdYwVgT4WQyVM8fTk4yL4MHlur0W/WVUqxkMerFmrVpmy7Pz
-	 +Zuw7gKSH8Te+DuE9dmexdWyNSQNNhaWtsBSAKaxBLdPERZp0M8JjUDh6ggJBlmJzB
-	 knjsLHqxfQpya1MnCgQpYw/l/YfQWbgYmvKGrplu9T/fic/xqAnkvdB4DN6cnZZzHc
-	 63VSFYRngBPJ0j2tgymYkcpMwtAlA5OD500++zDN7WJ9WU2kOKXNXDOvJ5ld+lOYZ6
-	 baDHA9tFED6SGjJO8h69YIFo1R5uSNtgfFVsn7KuBMJjhV7DdOyPv4BQoemvPAMjTl
-	 zw4GiBtioOyUg==
-Date: Tue, 24 Oct 2023 09:56:27 +0900
+	b=njclsQ+We9PhZmkIG7IBpSJpi/EJl95BYexIR8/ISdxe+LB8HqnYDzhBrpEEgGucA
+	 18QlDqfIat66ixVU14gRfAZKr2GaDAwvhbXynmG8Sas9uKHWvUD9i2QJrLmQVVrNjJ
+	 gJDR/WDwDxbV4tug38VUbGUcWrYDHiTY1mM/vMcDIrAi31bjzNGpbH7ifFXCP//Qcr
+	 fNUbUQ77G/8vAnaikaxNGyEiGhOG/sNRZh/KoSgv+aNChREzw7Lw5OPq1tbSQ0RzPI
+	 PP48/mxUNboi226M3S9qFy47lxXi6Mu/PBa5KLEzcRYfMoKSFkpjC4s9Kz/agrysi6
+	 4nSjwXDuuC1jw==
+Date: Tue, 24 Oct 2023 10:01:34 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "wuqiang.matt" <wuqiang.matt@bytedance.com>
-Cc: linux-trace-kernel@vger.kernel.org, davem@davemloft.net,
- anil.s.keshavamurthy@intel.com, naveen.n.rao@linux.ibm.com,
- rostedt@goodmis.org, peterz@infradead.org, akpm@linux-foundation.org,
- sander@svanheule.net, ebiggers@google.com, dan.j.williams@intel.com,
- jpoimboe@kernel.org, linux-kernel@vger.kernel.org, lkp@intel.com,
- mattwu@163.com
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "wuqiang.matt" <wuqiang.matt@bytedance.com>,
+ linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
+ davem@davemloft.net, anil.s.keshavamurthy@intel.com,
+ naveen.n.rao@linux.ibm.com, peterz@infradead.org,
+ akpm@linux-foundation.org, sander@svanheule.net, ebiggers@google.com,
+ dan.j.williams@intel.com, jpoimboe@kernel.org,
+ linux-kernel@vger.kernel.org, lkp@intel.com, mattwu@163.com
 Subject: Re: [PATCH v1] lib,kprobes: using try_cmpxchg_local in objpool_push
-Message-Id: <20231024095627.0d19118925bb6d3c370671a7@kernel.org>
-In-Reply-To: <20231023112452.6290-1-wuqiang.matt@bytedance.com>
+Message-Id: <20231024100134.2dbabbf01f968a000507ba94@kernel.org>
+In-Reply-To: <20231023114304.1bebb327@gandalf.local.home>
 References: <20231023112452.6290-1-wuqiang.matt@bytedance.com>
+	<20231023114304.1bebb327@gandalf.local.home>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,56 +42,75 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 23 Oct 2023 19:24:52 +0800
-"wuqiang.matt" <wuqiang.matt@bytedance.com> wrote:
+On Mon, 23 Oct 2023 11:43:04 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> The objpool_push can only happen on local cpu node, so only the local
-> cpu can touch slot->tail and slot->last, which ensures the correctness
-> of using cmpxchg without lock prefix (using try_cmpxchg_local instead
-> of try_cmpxchg_acquire).
+> On Mon, 23 Oct 2023 19:24:52 +0800
+> "wuqiang.matt" <wuqiang.matt@bytedance.com> wrote:
 > 
-> Testing with IACA found the lock version of pop/push pair costs 16.46
-> cycles and local-push version costs 15.63 cycles. Kretprobe throughput
-> is improved to 1.019 times of the lock version for x86_64 systems.
+> > The objpool_push can only happen on local cpu node, so only the local
+> > cpu can touch slot->tail and slot->last, which ensures the correctness
+> > of using cmpxchg without lock prefix (using try_cmpxchg_local instead
+> > of try_cmpxchg_acquire).
+> > 
+> > Testing with IACA found the lock version of pop/push pair costs 16.46
+> > cycles and local-push version costs 15.63 cycles. Kretprobe throughput
+> > is improved to 1.019 times of the lock version for x86_64 systems.
+> > 
+> > OS: Debian 10 X86_64, Linux 6.6rc6 with freelist
+> > HW: XEON 8336C x 2, 64 cores/128 threads, DDR4 3200MT/s
+> > 
+> >                  1T         2T         4T         8T        16T
+> >   lock:    29909085   59865637  119692073  239750369  478005250
+> >   local:   30297523   60532376  121147338  242598499  484620355
+> >                 32T        48T        64T        96T       128T
+> >   lock:   957553042 1435814086 1680872925 2043126796 2165424198
+> >   local:  968526317 1454991286 1861053557 2059530343 2171732306
+> > 
+> > Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
+> > ---
+> >  lib/objpool.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/lib/objpool.c b/lib/objpool.c
+> > index ce0087f64400..a032701beccb 100644
+> > --- a/lib/objpool.c
+> > +++ b/lib/objpool.c
+> > @@ -166,7 +166,7 @@ objpool_try_add_slot(void *obj, struct objpool_head *pool, int cpu)
+> >  		head = READ_ONCE(slot->head);
+> >  		/* fault caught: something must be wrong */
+> >  		WARN_ON_ONCE(tail - head > pool->nr_objs);
+> > -	} while (!try_cmpxchg_acquire(&slot->tail, &tail, tail + 1));
+> > +	} while (!try_cmpxchg_local(&slot->tail, &tail, tail + 1));
+> >  
+> >  	/* now the tail position is reserved for the given obj */
+> >  	WRITE_ONCE(slot->entries[tail & slot->mask], obj);
 > 
-> OS: Debian 10 X86_64, Linux 6.6rc6 with freelist
-> HW: XEON 8336C x 2, 64 cores/128 threads, DDR4 3200MT/s
+> I'm good with the change, but I don't like how "cpu" is passed to this
+> function. It currently is only used in one location, which does:
 > 
->                  1T         2T         4T         8T        16T
->   lock:    29909085   59865637  119692073  239750369  478005250
->   local:   30297523   60532376  121147338  242598499  484620355
->                 32T        48T        64T        96T       128T
->   lock:   957553042 1435814086 1680872925 2043126796 2165424198
->   local:  968526317 1454991286 1861053557 2059530343 2171732306
+> 	rc = objpool_try_add_slot(obj, pool, raw_smp_processor_id());
 > 
+> Which makes this change fine. But there's nothing here to prevent someone
+> for some reason passing another CPU to that function.
+> 
+> If we are to make that change, I would be much more comfortable with
+> removing "int cpu" as a parameter to objpool_try_add_slot() and adding:
+> 
+> 	int cpu = raw_smp_processor_id();
+> 
+> Which now shows that this function *only* deals with the current CPU.
 
-Yeah, slot->tail is only used on the local CPU. This looks good to me.
+Oh indeed. It used to search all CPUs to push the object, but
+I asked him to stop that because there should be enough space to
+push it in the local ring. This is a remnant of that time.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Wuqiang, can you make another patch to fix it?
 
-Thanks!
+Thank you,
 
-> Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
-> ---
->  lib/objpool.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/lib/objpool.c b/lib/objpool.c
-> index ce0087f64400..a032701beccb 100644
-> --- a/lib/objpool.c
-> +++ b/lib/objpool.c
-> @@ -166,7 +166,7 @@ objpool_try_add_slot(void *obj, struct objpool_head *pool, int cpu)
->  		head = READ_ONCE(slot->head);
->  		/* fault caught: something must be wrong */
->  		WARN_ON_ONCE(tail - head > pool->nr_objs);
-> -	} while (!try_cmpxchg_acquire(&slot->tail, &tail, tail + 1));
-> +	} while (!try_cmpxchg_local(&slot->tail, &tail, tail + 1));
->  
->  	/* now the tail position is reserved for the given obj */
->  	WRITE_ONCE(slot->entries[tail & slot->mask], obj);
-> -- 
-> 2.40.1
-> 
+> -- Steve
 
 
 -- 
