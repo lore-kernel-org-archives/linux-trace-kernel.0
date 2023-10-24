@@ -1,73 +1,78 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40592C872;
-	Tue, 24 Oct 2023 14:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NTMdiJcv"
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8254F111;
-	Tue, 24 Oct 2023 07:56:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=PSnegE5ssburDqDLTAjk5xgoc42EdNbvgsI+b2wWw0s=; b=NTMdiJcv2ouSLgHvHcqXvhcZuU
-	xrl2U/Sybh5O2OX9h2UekTwi3V1sXLFZXDbYyl7XJFyzB0q1jWRzMF5YYrus1QynYo8hXYJgUoTpT
-	qvKUoXL5+UXxsvmd8uAL/oBEk5l8OQRMXPc7uZWMyWmIYZuoSBTUUX/MOMZ1F0yekxQ77hX9P6q9u
-	ZfBvbtSwmAI8u9+U8TZKi0nJPAq0n33HB6cuGFGDk7S/+xdUERCUVMIgBQXqbNblq18Y9FzUw33ho
-	oh/cqMyYFc1aKaUQ5ajIdT1jPa11BIoeBIEOTdqPDDfeSrlZZL6KZHXtOJWfJNQR+TBii53OQGmye
-	aPi7+FVA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qvIp7-0036N7-Mv; Tue, 24 Oct 2023 14:56:01 +0000
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Kees Cook <keescook@chromium.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Petr Mladek <pmladek@suse.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH] powerpc: Remove initialisation of readpos
-Date: Tue, 24 Oct 2023 15:55:59 +0100
-Message-Id: <20231024145600.739451-1-willy@infradead.org>
-X-Mailer: git-send-email 2.37.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FA113FED
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Oct 2023 15:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 446B9BA;
+	Tue, 24 Oct 2023 08:08:22 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91BA32F4;
+	Tue, 24 Oct 2023 08:09:02 -0700 (PDT)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.29.163])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD0633F762;
+	Tue, 24 Oct 2023 08:08:18 -0700 (PDT)
+Date: Tue, 24 Oct 2023 16:08:12 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"wuqiang . matt" <wuqiang.matt@bytedance.com>,
+	Peter Zijlstra <peterz@infradead.org>, linux-sh@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] locking/atomic: sh: Use generic_cmpxchg_local for
+ arch_cmpxchg_local()
+Message-ID: <ZTfd3A3Unz6SWFD3@FVFF77S0Q05N.cambridge.arm.com>
+References: <169815917362.8695.13904684741526725648.stgit@devnote2>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <169815917362.8695.13904684741526725648.stgit@devnote2>
 
-While powerpc doesn't use the seq_buf readpos, it did explicitly
-initialise it for no good reason.
+On Tue, Oct 24, 2023 at 11:52:54PM +0900, Masami Hiramatsu (Google) wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Use generic_cmpxchg_local() for arch_cmpxchg_local() implementation
+> in SH architecture because it does not implement arch_cmpxchg_local().
 
-Fixes: d0ed46b60396 ("tracing: Move readpos from seq_buf to trace_seq")
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- arch/powerpc/kernel/setup-common.c | 1 -
- 1 file changed, 1 deletion(-)
+I do not think this is correct.
 
-diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
-index 2f1026fba00d..34975532e44c 100644
---- a/arch/powerpc/kernel/setup-common.c
-+++ b/arch/powerpc/kernel/setup-common.c
-@@ -601,7 +601,6 @@ struct seq_buf ppc_hw_desc __initdata = {
- 	.buffer = ppc_hw_desc_buf,
- 	.size = sizeof(ppc_hw_desc_buf),
- 	.len = 0,
--	.readpos = 0,
- };
- 
- static __init void probe_machine(void)
--- 
-2.40.1
+The implementation in <asm-generic/cmpxchg-local.h> is UP-only (and it only
+disables interrupts), whereas arch/sh can be built SMP. We should probably add
+some guards into <asm-generic/cmpxchg-local.h> for that as we have in
+<asm-generic/cmpxchg.h>.
 
+I think the right thing to do here is to define arch_cmpxchg_local() in terms
+of arch_cmpxchg(), i.e. at the bottom of arch/sh's <asm/cmpxchg.h> add:
+
+#define arch_cmpxchg_local              arch_cmpxchg
+
+Mark.
+
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202310241310.Ir5uukOG-lkp@intel.com/
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  arch/sh/include/asm/cmpxchg.h |    2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/sh/include/asm/cmpxchg.h b/arch/sh/include/asm/cmpxchg.h
+> index 288f6f38d98f..e920e61fb817 100644
+> --- a/arch/sh/include/asm/cmpxchg.h
+> +++ b/arch/sh/include/asm/cmpxchg.h
+> @@ -71,4 +71,6 @@ static inline unsigned long __cmpxchg(volatile void * ptr, unsigned long old,
+>  				    (unsigned long)_n_, sizeof(*(ptr))); \
+>    })
+>  
+> +#include <asm-generic/cmpxchg-local.h>
+> +
+>  #endif /* __ASM_SH_CMPXCHG_H */
+> 
