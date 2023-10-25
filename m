@@ -1,105 +1,173 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242A1273D3
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Oct 2023 11:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="fBonVWPW"
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52C49132
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Oct 2023 04:26:44 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1c9fa869a63so36719665ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Oct 2023 04:26:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1698233204; x=1698838004; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jDHj8oJ2Uz1cmUueWdlI4KjOLBnm0yM7e81hC7jLmlU=;
-        b=fBonVWPW5HE86+KsFZdWKjAki1AOQBbiKH067hD5JuRp4tyCOFn3T+23jowrr2hzuD
-         VJ2nNZPoBHc6Mj8uW+HgL3kTnAZs299GjYZHCRC7WeWdSSB/2dguSJ0dOD5ibHjR5l1h
-         SViyxgI7yYFAS4Y/Oq9fexA1W0iF1KNukQVOrLdvj7pgkN1Yh2ZMQ+RH8R0qLJmwbNqR
-         zqyeHFfqtzr7F+x89aFHYMoQhqxx6fFvHwDAumuAxqno0vqgTFAKHNQ8+I/Hr/lpaBHs
-         Yn6jU7kdzLe1ZNrBc0tfeK9gGj0AL3u3b6oMFEBJ88gOJO69lvRtBB813RxI0MrFcJlJ
-         JFBw==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322AE2D61E
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Oct 2023 13:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58FBF111;
+	Wed, 25 Oct 2023 06:16:31 -0700 (PDT)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-5a86b6391e9so55982767b3.0;
+        Wed, 25 Oct 2023 06:16:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698233204; x=1698838004;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jDHj8oJ2Uz1cmUueWdlI4KjOLBnm0yM7e81hC7jLmlU=;
-        b=ggG+kHo8GWWRJ6l7pNX0lG585CR1sQFP8kl5lVUGV/z9R/Jf85gEGROl13G5dDoWVx
-         ADbvjw/LF/gHQtMiNpU7J5tWoeFxu/XBiBJEQrSz0BhJ9YCMnszDe+8I+lBg2YC70ZNA
-         Rd4Ru3KwQb4jw3/KTIK8euULm8V4U7K7+0cBKCSXxU4gy5pr6pg68WS0wkZXSpOI/V2n
-         Sk3EcUU8ZUudm3kGRMTJcrBip2yeuYXz9u6yFQmvS4pHY8w7aMHUfwwcMxp9kktSpeYx
-         O82MbEUgPH/YxQP+HfcnTSG2SC/09h83Mc8I3qAOIiri/WmtKC0TVQjV44QYEGIWZG81
-         MQjg==
-X-Gm-Message-State: AOJu0YyqbPMXedOJtywDNGdYcy5+TOkzlSaRGQg+Q8N5ZFt1FLnHwxbJ
-	wzmzADuIXYbWQ/YwaRqSXlLbxw==
-X-Google-Smtp-Source: AGHT+IHqc2uphs07Xxief3RuxCddj2AvBcvevNUlL3pWyEdSMiy37da9YdaHmnpww9QQ9NcGW+Sd0g==
-X-Received: by 2002:a17:902:d312:b0:1c9:e072:33a6 with SMTP id b18-20020a170902d31200b001c9e07233a6mr11401819plc.40.1698233203816;
-        Wed, 25 Oct 2023 04:26:43 -0700 (PDT)
-Received: from [192.168.6.6] ([203.208.167.147])
-        by smtp.gmail.com with ESMTPSA id 12-20020a170902c10c00b001b8b2a6c4a4sm8992566pli.172.2023.10.25.04.26.40
+        d=1e100.net; s=20230601; t=1698239790; x=1698844590;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bhDHPAul78LD2824BVXA4iCfuI07/2hT5EkQSJobW90=;
+        b=OFTXvQI2SUJClwdlHrZvPBexmMkmtaL8BSVfdIuWf52kyDKZwxdySFrXyZtP6KfAlI
+         GmB4J9KLwWA4AFBgrEGwpUOfLVNMNOLp8UwLtB6XwSkFdYsPMqA19kTTwMpy0LJXL5P3
+         Von5s8xtvOQuYrCvoK6vek2H68EPFRWhaitpT049owcLsKVEeEOlyrh5x3lk5jg61W8l
+         Q2fVs7u55iNSOmlSv6a90nE25vC0NesVPauUWwMVfPbRnMR61OdB/480JJKe5QrNdlGF
+         NXQIK0D2nZirp/P1hZl0qnZLna5fSE1lM8p6BB5STkpAfqqo4jF/X5Lqqu8dqS38LqOL
+         xuhQ==
+X-Gm-Message-State: AOJu0YxRf8pJk7XxVbVTgy/IEn3Q85mdC5uCUHM3XHFB86fSb2T7TaMN
+	qHaAKdp0WXpEKXIXUgNLMhaI9Vh3oZJPHA==
+X-Google-Smtp-Source: AGHT+IHqmeFX73+zk8SaC43O8gmaoGU+oEle8ITv9nU1wxnW4ln96u2XQHeAb0hp7/Rc5viCY9xqxQ==
+X-Received: by 2002:a0d:e20a:0:b0:59b:fb69:1639 with SMTP id l10-20020a0de20a000000b0059bfb691639mr16292128ywe.32.1698239790374;
+        Wed, 25 Oct 2023 06:16:30 -0700 (PDT)
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
+        by smtp.gmail.com with ESMTPSA id y83-20020a0dd656000000b0056d51c39c1fsm4989318ywd.23.2023.10.25.06.16.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Oct 2023 04:26:43 -0700 (PDT)
-Message-ID: <560f1066-cefa-2ed9-e4f6-992096e11fda@bytedance.com>
-Date: Wed, 25 Oct 2023 19:26:37 +0800
+        Wed, 25 Oct 2023 06:16:29 -0700 (PDT)
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-d84c24a810dso4890585276.2;
+        Wed, 25 Oct 2023 06:16:28 -0700 (PDT)
+X-Received: by 2002:a25:dc52:0:b0:da0:4bda:dc41 with SMTP id
+ y79-20020a25dc52000000b00da04bdadc41mr4238651ybe.37.1698239788460; Wed, 25
+ Oct 2023 06:16:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.1
-Subject: Re: [External] [PATCH] locking/atomic: sh: Use generic_cmpxchg_local
- for arch_cmpxchg_local()
-Content-Language: en-US
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra
- <peterz@infradead.org>, linux-sh@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 References: <169815917362.8695.13904684741526725648.stgit@devnote2>
-From: "wuqiang.matt" <wuqiang.matt@bytedance.com>
-In-Reply-To: <169815917362.8695.13904684741526725648.stgit@devnote2>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <ZTfd3A3Unz6SWFD3@FVFF77S0Q05N.cambridge.arm.com> <20231025084255.bc70b9d0e5af9f6f3d2d4735@kernel.org>
+ <ZTjuH074CJuLh7Zw@FVFF77S0Q05N> <1bce4bc5ccd38bf9108283535470a7a8eb7e06e9.camel@physik.fu-berlin.de>
+In-Reply-To: <1bce4bc5ccd38bf9108283535470a7a8eb7e06e9.camel@physik.fu-berlin.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 25 Oct 2023 15:16:16 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXrOt3vWrJcoVZNUSJRH4E45iJgdeXMi6ncb4vOSg6_jw@mail.gmail.com>
+Message-ID: <CAMuHMdXrOt3vWrJcoVZNUSJRH4E45iJgdeXMi6ncb4vOSg6_jw@mail.gmail.com>
+Subject: Re: [PATCH] locking/atomic: sh: Use generic_cmpxchg_local for arch_cmpxchg_local()
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	Rich Felker <dalias@libc.org>, "wuqiang . matt" <wuqiang.matt@bytedance.com>, 
+	Peter Zijlstra <peterz@infradead.org>, linux-sh@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2023/10/24 22:52, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Use generic_cmpxchg_local() for arch_cmpxchg_local() implementation
-> in SH architecture because it does not implement arch_cmpxchg_local().
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202310241310.Ir5uukOG-lkp@intel.com/
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->   arch/sh/include/asm/cmpxchg.h |    2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/sh/include/asm/cmpxchg.h b/arch/sh/include/asm/cmpxchg.h
-> index 288f6f38d98f..e920e61fb817 100644
-> --- a/arch/sh/include/asm/cmpxchg.h
-> +++ b/arch/sh/include/asm/cmpxchg.h
-> @@ -71,4 +71,6 @@ static inline unsigned long __cmpxchg(volatile void * ptr, unsigned long old,
->   				    (unsigned long)_n_, sizeof(*(ptr))); \
->     })
->   
-> +#include <asm-generic/cmpxchg-local.h>
-> +
+Hi Adrian,
 
-asm-generic/cmpxchg-local.h defines only 2 routines: __generic_cmpxchg_local
-and __generic_cmpxchg64_local.
+On Wed, Oct 25, 2023 at 12:32=E2=80=AFPM John Paul Adrian Glaubitz
+<glaubitz@physik.fu-berlin.de> wrote:
+> On Wed, 2023-10-25 at 11:30 +0100, Mark Rutland wrote:
+> > On Wed, Oct 25, 2023 at 08:42:55AM +0900, Masami Hiramatsu wrote:
+> > > On Tue, 24 Oct 2023 16:08:12 +0100
+> > > Mark Rutland <mark.rutland@arm.com> wrote:
+> > > > On Tue, Oct 24, 2023 at 11:52:54PM +0900, Masami Hiramatsu (Google)=
+ wrote:
+> > > > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > > >
+> > > > > Use generic_cmpxchg_local() for arch_cmpxchg_local() implementati=
+on
+> > > > > in SH architecture because it does not implement arch_cmpxchg_loc=
+al().
+> > > >
+> > > > I do not think this is correct.
+> > > >
+> > > > The implementation in <asm-generic/cmpxchg-local.h> is UP-only (and=
+ it only
+> > > > disables interrupts), whereas arch/sh can be built SMP. We should p=
+robably add
+> > > > some guards into <asm-generic/cmpxchg-local.h> for that as we have =
+in
+> > > > <asm-generic/cmpxchg.h>.
+> > >
+> > > Isn't cmpxchg_local for the data which only needs to ensure to do cmp=
+xchg
+> > > on local CPU?
+> > > So I think it doesn't care about the other CPUs (IOW, it should not t=
+ouched by
+> > > other CPUs), so it only considers UP case. E.g. on x86, arch_cmpxchg_=
+local() is
+> > > defined as raw "cmpxchg" without lock prefix.
+> > >
+> > > #define __cmpxchg_local(ptr, old, new, size)                         =
+   \
+> > >         __raw_cmpxchg((ptr), (old), (new), (size), "")
+> > >
+> >
+> > Yes, you're right; sorry for the noise.
+> >
+> > For your original patch:
+> >
+> > Acked-by: Mark Rutland <mark.rutland@arm.com>
+>
+> Geert, what's your opinion on this?
 
-Shall add the definition of arch_cmpxchg_local into 
-arch/sh/include/asm/cmpxchg.h, or group arch_cmpxchg_local and 
-arch_cmpxchg64_local into
-asm-generic/cmpxchg-local.h ?
+While this looks OK on first sight (ARM includes the same file, even
+on SMP), it does not seem to work?
 
->   #endif /* __ASM_SH_CMPXCHG_H */
-> 
+For sh-allnoconfig, as reported by kernel test robot:
 
+$ make ARCH=3Dsh CROSS_COMPILE=3Dsh2-linux- allnoconfig lib/objpool.o
+lib/objpool.c: In function 'objpool_try_add_slot':
+./include/linux/atomic/atomic-arch-fallback.h:384:27: error: implicit
+declaration of function 'arch_cmpxchg_local'; did you mean
+'raw_cmpxchg_local'? [-Werror=3Dimplicit-function-declaration]
+  384 | #define raw_cmpxchg_local arch_cmpxchg_local
+      |                           ^~~~~~~~~~~~~~~~~~
+./include/linux/atomic/atomic-arch-fallback.h:392:16: note: in
+expansion of macro 'raw_cmpxchg_local'
+  392 |         ___r =3D raw_cmpxchg_local((_ptr), ___o, (_new)); \
+      |                ^~~~~~~~~~~~~~~~~
+./include/linux/atomic/atomic-instrumented.h:4980:9: note: in
+expansion of macro 'raw_try_cmpxchg_local'
+ 4980 |         raw_try_cmpxchg_local(__ai_ptr, __ai_oldp, __VA_ARGS__); \
+      |         ^~~~~~~~~~~~~~~~~~~~~
+lib/objpool.c:169:19: note: in expansion of macro 'try_cmpxchg_local'
+  169 |         } while (!try_cmpxchg_local(&slot->tail, &tail, tail + 1));
+      |                   ^~~~~~~~~~~~~~~~~
+
+For an SMP defconfig:
+
+$ make ARCH=3Dsh CROSS_COMPILE=3Dsh4-linux-gnu- sdk7786_defconfig lib/objpo=
+ol.o
+
+./include/linux/atomic/atomic-arch-fallback.h:384:27: error: implicit
+declaration of function =E2=80=98arch_cmpxchg_local=E2=80=99; did you mean
+=E2=80=98try_cmpxchg_local=E2=80=99? [-Werror=3Dimplicit-function-declarati=
+on]
+  384 | #define raw_cmpxchg_local arch_cmpxchg_local
+      |                           ^~~~~~~~~~~~~~~~~~
+./include/linux/atomic/atomic-arch-fallback.h:392:16: note: in
+expansion of macro =E2=80=98raw_cmpxchg_local=E2=80=99
+  392 |         ___r =3D raw_cmpxchg_local((_ptr), ___o, (_new)); \
+      |                ^~~~~~~~~~~~~~~~~
+./include/linux/atomic/atomic-instrumented.h:4980:9: note: in
+expansion of macro =E2=80=98raw_try_cmpxchg_local=E2=80=99
+ 4980 |         raw_try_cmpxchg_local(__ai_ptr, __ai_oldp, __VA_ARGS__); \
+      |         ^~~~~~~~~~~~~~~~~~~~~
+lib/objpool.c:169:19: note: in expansion of macro =E2=80=98try_cmpxchg_loca=
+l=E2=80=99
+  169 |         } while (!try_cmpxchg_local(&slot->tail, &tail, tail + 1));
+      |                   ^~~~~~~~~~~~~~~~~
+
+Hiramatsu-san: do these build for you?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
