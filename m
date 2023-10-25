@@ -1,138 +1,105 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9122D636
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Oct 2023 05:31:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A8A1FCC
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Oct 2023 08:28:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="NU7pgaOd"
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1ED6129
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Oct 2023 22:31:43 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1c87a85332bso45268905ad.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Oct 2023 22:31:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1698211903; x=1698816703; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ktOpyXH4xJvQjTjiv4myd5jeNbk19v5L3mPK+5WZ6SE=;
-        b=NU7pgaOdmQtFzDcIrlAIpOrOJoOsBrWSARf6YtfdENDvS7C4ZK7Y2f487st1NvLZDZ
-         8DifvchcrofAMOJYA0GIQf1Ve4gF/jGVRBj75oE641NdFxJYK/iPCpMgBz2aHu5200QD
-         Y3gD1n9kakT92wbc04GZ04o1I7iDLsUczJrCBUV/4Gv/Iv+eW6wB/reJZ4Ln2q+e4g4r
-         rgIfegf6/PYCVUvkFAXSyaVfQsBzpfvFgqbTvlUmPLCWwg6bBLFHylyfNfKsNo+Hy8L4
-         Mg/h2vMG6VEeZDJbjGb/1fZw+i22RqEYL+QiPjkEPNBLi5BMyLA1eedvaLJ+8grzf0sj
-         Upjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698211903; x=1698816703;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ktOpyXH4xJvQjTjiv4myd5jeNbk19v5L3mPK+5WZ6SE=;
-        b=b9Bl3W4HjqCTgYN8tl49BXHYDeQE61xZKVih2+xdTKjZd5ITQhK47DEzolLE+glrVg
-         Vc+wFKZUeFyEMNrE6wLgIqIAyMez0hVRP9NyIkpHdLXsJauhsrFPvy+mzpeYRlWJ+6B9
-         X5v+H8nz03+Yk2ytuzgX5XMlEE3j3aNPT+l3F50zTrrl+qYfhmuh7eSUCIx6f6FSbio8
-         JTcbukxYRwGp217OXB1szwDqUDgBRjdL5xq1WmwcozlJXOGAJVrn6g7hf7KOVYNLCxL4
-         qi6m0PyF5IMoUDkwSyd2FtK4gKoNMgl/wIMNOzOu6gaaMJcOXhB7YFcm7bt5yad2fE2O
-         Rvvg==
-X-Gm-Message-State: AOJu0YwcLKeeLDvP0Q7Xi9zLrATtLLdBOxFY8W38y3bkqqPvTri7vVb6
-	fRDN9PklFiZbRRlXeP2hlDQ3+wRnbf/ZRR/7lKY=
-X-Google-Smtp-Source: AGHT+IFBNwIwfANneov1NrawUxvJ/9EtUDvFvK9xFRIKuWtX2JAggywQQ3wA2YrUCMumS8dfPYnqsA==
-X-Received: by 2002:a17:902:e5d0:b0:1bd:d911:2a85 with SMTP id u16-20020a170902e5d000b001bdd9112a85mr16244605plf.12.1698211903253;
-        Tue, 24 Oct 2023 22:31:43 -0700 (PDT)
-Received: from devz1.bytedance.net ([203.208.167.147])
-        by smtp.gmail.com with ESMTPSA id 5-20020a170902c24500b001bc2831e1a9sm8278906plg.90.2023.10.24.22.31.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Oct 2023 22:31:42 -0700 (PDT)
-From: "wuqiang.matt" <wuqiang.matt@bytedance.com>
-To: linux-trace-kernel@vger.kernel.org,
-	mhiramat@kernel.org,
-	davem@davemloft.net,
-	anil.s.keshavamurthy@intel.com,
-	naveen.n.rao@linux.ibm.com,
-	rostedt@goodmis.org,
-	peterz@infradead.org,
-	akpm@linux-foundation.org,
-	sander@svanheule.net,
-	ebiggers@google.com,
-	dan.j.williams@intel.com,
-	jpoimboe@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	lkp@intel.com,
-	mattwu@163.com,
-	"wuqiang.matt" <wuqiang.matt@bytedance.com>
-Subject: [PATCH] lib,kprobes: objpool_try_add_slot merged into objpool_push
-Date: Wed, 25 Oct 2023 13:31:33 +0800
-Message-Id: <20231025053133.343923-1-wuqiang.matt@bytedance.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CggyuL7j"
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EC8E9C;
+	Wed, 25 Oct 2023 01:28:53 -0700 (PDT)
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39P8CPvx002580;
+	Wed, 25 Oct 2023 08:28:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=pz5ftRLcbwNCRAqD8w0G+8FTklTxy2EqwiASo8zk3Tw=;
+ b=CggyuL7j8nRbFHH7g3lV/cBuN2ItS4yQE2tL2C4JkWiNKMz22NotEc6vAKFpEFZFf2Z2
+ 1wP9HfIF1FozXjo6MwA53GeBjwvcCdtkpxYCGjXTqtwuUbxRpj3hhpW4ubXFNmEdmDdv
+ Pbd0buSsl8kuf/vH/5OfVlXJaDP9u9/7qaPsrui/Q6m/tZrHvw4G/jjF4PrDK3qH8ui2
+ ctWwLshq5GLlae/s2/Gp867/z/HE4ezOtnA41xMwmzD+blfSGmkF6wtluShGDwR7xQYr
+ 7NI7q9SsohvoBWXEtYt4WXT2XAHvGAn0undKvu+7fMez82FO15y0happN7gxnrlmIBH/ Kg== 
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3txtbf0jp7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Oct 2023 08:28:47 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39P8Sk74021357
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Oct 2023 08:28:46 GMT
+Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Wed, 25 Oct
+ 2023 01:28:44 -0700
+Message-ID: <fe126ae2-ba9c-8122-1019-52876a611351@quicinc.com>
+Date: Wed, 25 Oct 2023 13:58:40 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] eventfs: Fix typo in eventfs_inode union comment
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+CC: Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland
+	<mark.rutland@arm.com>
+References: <20231024131024.5634c743@gandalf.local.home>
+From: Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <20231024131024.5634c743@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: OD9AMFvQt8gZ78OfFweyVN1mJ-J2-8dv
+X-Proofpoint-ORIG-GUID: OD9AMFvQt8gZ78OfFweyVN1mJ-J2-8dv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-25_01,2023-10-24_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 clxscore=1015 bulkscore=0 phishscore=0 adultscore=0
+ mlxlogscore=900 spamscore=0 suspectscore=0 impostorscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2310170001 definitions=main-2310250072
 
-After several rounds of objpool improvements the existence
-of inline function objpool_try_add_slot is not appropriate
-any more:
-1) push can only happen on local cpu node, the cpu param of
-   objpool_try_add_slot is misleading
-2) objpool_push is only a wrapper of objpool_try_add_slot,
-   with the original loop of all cpu nodes removed
 
-Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
----
- lib/objpool.c | 26 +++++++++-----------------
- 1 file changed, 9 insertions(+), 17 deletions(-)
 
-diff --git a/lib/objpool.c b/lib/objpool.c
-index a032701beccb..7474a3a60cad 100644
---- a/lib/objpool.c
-+++ b/lib/objpool.c
-@@ -152,13 +152,17 @@ int objpool_init(struct objpool_head *pool, int nr_objs, int object_size,
- }
- EXPORT_SYMBOL_GPL(objpool_init);
- 
--/* adding object to slot, abort if the slot was already full */
--static inline int
--objpool_try_add_slot(void *obj, struct objpool_head *pool, int cpu)
-+/* reclaim an object to object pool */
-+int objpool_push(void *obj, struct objpool_head *pool)
- {
--	struct objpool_slot *slot = pool->cpu_slots[cpu];
-+	struct objpool_slot *slot;
- 	uint32_t head, tail;
-+	unsigned long flags;
-+
-+	/* disable local irq to avoid preemption & interruption */
-+	raw_local_irq_save(flags);
- 
-+	slot = pool->cpu_slots[raw_smp_processor_id()];
- 	/* loading tail and head as a local snapshot, tail first */
- 	tail = READ_ONCE(slot->tail);
- 
-@@ -173,21 +177,9 @@ objpool_try_add_slot(void *obj, struct objpool_head *pool, int cpu)
- 	/* update sequence to make this obj available for pop() */
- 	smp_store_release(&slot->last, tail + 1);
- 
--	return 0;
--}
--
--/* reclaim an object to object pool */
--int objpool_push(void *obj, struct objpool_head *pool)
--{
--	unsigned long flags;
--	int rc;
--
--	/* disable local irq to avoid preemption & interruption */
--	raw_local_irq_save(flags);
--	rc = objpool_try_add_slot(obj, pool, raw_smp_processor_id());
- 	raw_local_irq_restore(flags);
- 
--	return rc;
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(objpool_push);
- 
--- 
-2.40.1
+On 10/24/2023 10:40 PM, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> It's eventfs_inode not eventfs_indoe. There's no deer involved!
 
+:-)
+
+> 
+> Fixes: 5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
+
+-Mukesh
+> ---
+>   fs/tracefs/internal.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+> index 298d3ecaf621..64fde9490f52 100644
+> --- a/fs/tracefs/internal.h
+> +++ b/fs/tracefs/internal.h
+> @@ -37,7 +37,7 @@ struct eventfs_inode {
+>   	/*
+>   	 * Union - used for deletion
+>   	 * @del_list:	list of eventfs_inode to delete
+> -	 * @rcu:	eventfs_indoe to delete in RCU
+> +	 * @rcu:	eventfs_inode to delete in RCU
+>   	 * @is_freed:	node is freed if one of the above is set
+>   	 */
+>   	union {
