@@ -1,110 +1,242 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7631F381AE
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Oct 2023 16:58:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE0B381D5
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Oct 2023 17:07:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MnFU/W3v"
-Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43F2A187;
-	Thu, 26 Oct 2023 09:58:43 -0700 (PDT)
-Received: by mail-oi1-x22c.google.com with SMTP id 5614622812f47-3b4145e887bso625389b6e.3;
-        Thu, 26 Oct 2023 09:58:43 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jDsHeG0e"
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17C271BB
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Oct 2023 10:07:33 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-6b36e1fcea0so1067506b3a.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Oct 2023 10:07:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698339522; x=1698944322; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2My7dzj7Sa0rgTJc/yeT+l3xQqlYTaObutNlMsCM2Jk=;
-        b=MnFU/W3vk7jj3RVRK1fLMfji3Dde0bSWQVYdbL9Un1JAhWVkOi38adM9PJ5HWe0bAN
-         mkp2kPFmhLaYBsU1TVchsj5z6Q0sDru4qyLXCYPWbMhRduW28KN9uUYQypCWW6ZyffdT
-         U6hic/0pCB/8ajML6u2TwPoK598yrjbiDeLe/9iaXiuSTC340gf5VSWRXHk8BVJb5Ury
-         d3BMjgi0/S7eP3+4Sm6PwoA9VLPe4pl+Z0M9sOIfYV/ZzOs/q7CAo/Upm6bQrrB9c5yw
-         5qHLyBiX4j+dljsmMr62HlwXHiYFA9POS5jtk/t03HDqAPeAn2TbsNjcbyRixcPkrg0n
-         f/qQ==
+        d=chromium.org; s=google; t=1698340052; x=1698944852; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=b6uwa1NQ3b5So6ZqC1jDfFnZs3E6+OcPbQsril5qkDE=;
+        b=jDsHeG0eV/PVWEpkwiV7KyjG3d+bbr4szNp1BE2YWFuVFrl0VmhMjLk34b7Iv+u0LV
+         K7WPas9ItsasMtIs28unrbP6gVrc1EWDMDW+Royy9L8iAr2LO47ivfyXsjTHB4DGgGbB
+         DMUPhDoShJr3hBckPhO3t7K54woFOBkAB6S24=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698339522; x=1698944322;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2My7dzj7Sa0rgTJc/yeT+l3xQqlYTaObutNlMsCM2Jk=;
-        b=eaCoRc8UAuGSragxdAUfORnVsP1Vi/+ohvDkE1EbtlHduXtYQEEbvKw2O8ipcWAllD
-         2PBUQTWMzoTzRsIdnQ0MYMC62uRKUIPXROqspRt788CEcaJmPHJ0/ZNVUZj8vHUY9I1X
-         dk43Sa/1x6M6aqMfDPjg1vF28RTgUx8HfuKw4vSJu03TXz11MfodbuMRXPkiS3PJupsX
-         P0j22AMXIeEIdUSHq6+u3Y2Nlj3LzrKxTZ1GPyCmQeJ5zBPOrfRspM2h2EFN9tPec0M+
-         v5P3XnuYnVm8H3nwGGFOLdC1FYScEKQ/Lpy4sJ3D5Yj4uJLSWkbsJxIxQCRSMtnOuJtV
-         b7kQ==
-X-Gm-Message-State: AOJu0YzJxSuDaAE6ffWZOnZNnhGLF16+zI0HKDDjZKTcQhoY1cYstym/
-	bZV5VdDoQGqQgcUU+uX7wgm2/oD1JjRqV1l+HcE=
-X-Google-Smtp-Source: AGHT+IHYIEtTPq49J47m7L+kP4zWLW1jW3174fCj7Z5xpN8ntf/ECHptkhk8TAFzmkQ0ZcFZSrtrZcJRSuTa9xWZ1g0=
-X-Received: by 2002:a05:6808:4d3:b0:3a7:2524:6d3b with SMTP id
- a19-20020a05680804d300b003a725246d3bmr18779047oie.12.1698339522590; Thu, 26
- Oct 2023 09:58:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1698340052; x=1698944852;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=b6uwa1NQ3b5So6ZqC1jDfFnZs3E6+OcPbQsril5qkDE=;
+        b=WCiJwLXME/lRxFMICbg+Prw9plIC2u7UD2AhLrhfGYqaIE6rMDXth7iGJkhzT9CoGQ
+         KRDRBKRhPdqk35KlV08C+G0WGiiLySA6NDewpayh2DrsRuxh5lzMXaJwxGIBmix2q3+g
+         I/Y/OtNWtMsm3XnK+8ocVYDhQVCk29dBkRgGpBR5vDgDsOkgfmPkJrJ3dJby+0+IkxiI
+         zfDChmdUd3bqthV25UAapgMYb65XTnZoaOHG7HEBQo1oPzC00bpgDAcqFublMHWDStZZ
+         9t12GEC0p5rC7bZcraln22HT+to99ZxFJpDdk3Nlb3YhyNd3iLCFGQXcZkyMYLEKHpPV
+         PlSg==
+X-Gm-Message-State: AOJu0Yx3i3IiLO7CA+N/jXDmxLi2aq3mdVBQ3LNDeCJGe60cI8CJCVOz
+	D64Nue/cS1zaynDQWdd06TJogw==
+X-Google-Smtp-Source: AGHT+IE7hpmLQqEysEfdJXUltg5QC3Oo8kQXtpDePhBsrIx9j6UHm4qiSQH81VcLVMZ/nIfcqpCBIA==
+X-Received: by 2002:a05:6a20:3d2a:b0:15d:684d:f514 with SMTP id y42-20020a056a203d2a00b0015d684df514mr537837pzi.6.1698340052455;
+        Thu, 26 Oct 2023 10:07:32 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id z16-20020a656110000000b005b929dc2d25sm1351597pgu.10.2023.10.26.10.07.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Oct 2023 10:07:32 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Justin Stitt <justinstitt@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Petr Mladek <pmladek@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Yun Zhou <yun.zhou@windriver.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Zhen Lei <thunder.leizhen@huawei.com>,
+	linux-trace-kernel@vger.kernel.org,
+	Yosry Ahmed <yosryahmed@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] seq_buf: Introduce DECLARE_SEQ_BUF and seq_buf_cstr()
+Date: Thu, 26 Oct 2023 10:07:28 -0700
+Message-Id: <20231026170722.work.638-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231024201157.748254-1-alessandro.carminati@gmail.com>
- <5776666.DvuYhMxLoT@pwmachine> <CAPp5cGToUaPCr3Fp2PUQ1yQJ8ci+wTVqgTCEs2OxvR+yTr2oOQ@mail.gmail.com>
- <2162048.irdbgypaU6@pwmachine>
-In-Reply-To: <2162048.irdbgypaU6@pwmachine>
-From: Alessandro Carminati <alessandro.carminati@gmail.com>
-Date: Thu, 26 Oct 2023 18:58:06 +0200
-Message-ID: <CAPp5cGQsm9jJw5dktGbM1EpvU1wi1c+Bt2r+Lj=Wn_pBkt6oSw@mail.gmail.com>
-Subject: Re: [PATCH v6] scripts/link-vmlinux.sh: Add alias to duplicate
- symbols for kallsyms
-To: Francis Laniel <flaniel@linux.microsoft.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Daniel Bristot de Oliveira <bristot@kernel.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Alexander Lobakin <aleksander.lobakin@intel.com>, 
-	Nick Alcock <nick.alcock@oracle.com>, Kris Van Hees <kris.van.hees@oracle.com>, 
-	Eugene Loh <eugene.loh@oracle.com>, Viktor Malik <vmalik@redhat.com>, 
-	Petr Mladek <pmladek@suse.com>, Tom Rix <trix@redhat.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4488; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=VSeNn7/RMcdVPleKpkEjvHM85UsfX0np5UVWhRNzd8U=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlOpzQ5loxdyuUGtxqQcAlDxcpVgVq53LwrCQag
+ bnMFdQY2dKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZTqc0AAKCRCJcvTf3G3A
+ JrXtD/9QYO6GmmwzvTM0xFkPaw27QP97gXGJGIxv631wEy5F56f10I8PqEzoILEJzIU9s/s/vaJ
+ 60Oxo5TGL1aMtHG3kadZSJnyOV+zj244PintWD18FXWAS/OhBKlPEYYGoWdCC+6xSQePk+m1o6H
+ 3H/U94d2dodigsjd4qCFswPoK/Ukdmt6Ks9zp5aUMHcH2IOLCHx47xag1gQ508t/+9xy43Ox8HP
+ bk0diEv0qqOKGBOnQv+cl9PhK3ciQnK3W9Fri1XapmlpesIlz/IxV3bVk+S6Y9MnYvlUi0zrLEN
+ UgJbiBxkVgsMSbNig4uQWkUh9mj/LTlPBvDKm1/nHNSu3KZb0ialmZVZE9CxEAgj0W3JL84IZfT
+ 8dEGsOw62OfrkVAuLnZc0k8K33Vhxj4QO4kLFK//Oml7I0lUdx3Abw85jgO/NJQds9CByzUnx0M
+ 51YrrF4h+edaHU1h+Qrqh5kIbOHVB5DocI4mDSrN0mZH/1E/Z6XrGxkhIo/qocyEUj00DIY5x+V
+ a4lK+sascEFpR25yMi3gIYEtSL+TE10P1zGfoBpNQYpIxKSDRiFfj7Vew7TLfQuGd+qrFqdG2/w
+ xpHdSXIUUXpgvoFOqoWGRz3qdfuOq8+qMkHIPjnnA3Rso7zZBeUDHhRfwxu9n9+JqRtL5gy5Xg8
+ juLsepS NEfQ04kA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-Hello Francis,
+Solve two ergonomic issues with struct seq_buf:
 
+1) Too much boilerplate is required to initialize:
 
-Il giorno gio 26 ott 2023 alle ore 18:01 Francis Laniel
-<flaniel@linux.microsoft.com> ha scritto:
->
-> Hi!
->
->
-> Le mercredi 25 octobre 2023, 21:33:43 EEST Alessandro Carminati a =C3=A9c=
-rit :
-> > Hi Francis,
-> > Thanks a lot for your feedback!
->
-> You are welcome!
->
-> > Il giorno mer 25 ott 2023 alle ore 15:21 Francis Laniel
-> >
-> > /* SNIP */
-> > > > debug >=3D DebugLevel.INFO.value:
-> > > Shouldn't this rather test nmdata?
-> >
-> > Not sure to understand this feedback.
->
-> Sorry, this was not clear.
-> Rather than testing vmlinux_file, shouldn't you test nmdata_file?
-Now I see your point.
-If the assumption is that scripts/kas_alias.py is triggered by
-scripts/link-vmlinux.sh I dare to say that it makes no difference.
-But, since the purpose of this work is to manipulate the nmdata_file, using
-it is probably fitting more the use case.
->
->
-> Best regards.
->
->
-Thank you for the precious suggestions.
-Regards
-Alessandro
+	struct seq_buf s;
+	char buf[32];
+
+	seq_buf_init(s, buf, sizeof(buf));
+
+Instead, we can build this directly on the stack. Provide
+DECLARE_SEQ_BUF() macro to do this:
+
+	DECLARE_SEQ_BUF(s, 32);
+
+2) %NUL termination is fragile and requires 2 steps to get a valid
+   C String (and is a layering violation exposing the "internals" of
+   seq_buf):
+
+	seq_buf_terminate(s);
+	do_something(s->buffer);
+
+Instead, we can just return s->buffer direction after terminating it
+in refactored seq_buf_terminate(), now known as seq_buf_cstr():
+
+	do_soemthing(seq_buf_cstr(s));
+
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Justin Stitt <justinstitt@google.com>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Yun Zhou <yun.zhou@windriver.com>
+Cc: Jacob Keller <jacob.e.keller@intel.com>
+Cc: Zhen Lei <thunder.leizhen@huawei.com>
+Cc: linux-trace-kernel@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ include/linux/seq_buf.h | 19 +++++++++++++++----
+ kernel/trace/trace.c    | 11 +----------
+ lib/seq_buf.c           |  4 +---
+ 3 files changed, 17 insertions(+), 17 deletions(-)
+
+diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
+index 8483e4b2d0d2..8896b830eb3d 100644
+--- a/include/linux/seq_buf.h
++++ b/include/linux/seq_buf.h
+@@ -21,9 +21,16 @@ struct seq_buf {
+ 	size_t			len;
+ };
+ 
++#define DECLARE_SEQ_BUF(NAME, SIZE)					\
++	char __ ## NAME ## _buffer[SIZE] = "";				\
++	struct seq_buf NAME = { .buffer = &__ ## NAME ## _buffer,	\
++				.size = SIZE }
++
+ static inline void seq_buf_clear(struct seq_buf *s)
+ {
+ 	s->len = 0;
++	if (s->size)
++		s->buffer[0] = '\0';
+ }
+ 
+ static inline void
+@@ -69,8 +76,8 @@ static inline unsigned int seq_buf_used(struct seq_buf *s)
+ }
+ 
+ /**
+- * seq_buf_terminate - Make sure buffer is nul terminated
+- * @s: the seq_buf descriptor to terminate.
++ * seq_buf_cstr - get %NUL-terminated C string from seq_buf
++ * @s: the seq_buf handle
+  *
+  * This makes sure that the buffer in @s is nul terminated and
+  * safe to read as a string.
+@@ -81,16 +88,20 @@ static inline unsigned int seq_buf_used(struct seq_buf *s)
+  *
+  * After this function is called, s->buffer is safe to use
+  * in string operations.
++ *
++ * Returns @s->buf after making sure it is terminated.
+  */
+-static inline void seq_buf_terminate(struct seq_buf *s)
++static inline char *seq_buf_cstr(struct seq_buf *s)
+ {
+ 	if (WARN_ON(s->size == 0))
+-		return;
++		return "";
+ 
+ 	if (seq_buf_buffer_left(s))
+ 		s->buffer[s->len] = 0;
+ 	else
+ 		s->buffer[s->size - 1] = 0;
++
++	return s->buffer;
+ }
+ 
+ /**
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index d629065c2383..d83f36dc4bf8 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3828,15 +3828,6 @@ static bool trace_safe_str(struct trace_iterator *iter, const char *str,
+ 	return false;
+ }
+ 
+-static const char *show_buffer(struct trace_seq *s)
+-{
+-	struct seq_buf *seq = &s->seq;
+-
+-	seq_buf_terminate(seq);
+-
+-	return seq->buffer;
+-}
+-
+ static DEFINE_STATIC_KEY_FALSE(trace_no_verify);
+ 
+ static int test_can_verify_check(const char *fmt, ...)
+@@ -3976,7 +3967,7 @@ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
+ 		 */
+ 		if (WARN_ONCE(!trace_safe_str(iter, str, star, len),
+ 			      "fmt: '%s' current_buffer: '%s'",
+-			      fmt, show_buffer(&iter->seq))) {
++			      fmt, seq_buf_cstr(&iter->seq.seq))) {
+ 			int ret;
+ 
+ 			/* Try to safely read the string */
+diff --git a/lib/seq_buf.c b/lib/seq_buf.c
+index b7477aefff53..165caed5a74e 100644
+--- a/lib/seq_buf.c
++++ b/lib/seq_buf.c
+@@ -109,9 +109,7 @@ void seq_buf_do_printk(struct seq_buf *s, const char *lvl)
+ 	if (s->size == 0 || s->len == 0)
+ 		return;
+ 
+-	seq_buf_terminate(s);
+-
+-	start = s->buffer;
++	start = seq_buf_cstr(s);
+ 	while ((lf = strchr(start, '\n'))) {
+ 		int len = lf - start + 1;
+ 
+-- 
+2.34.1
+
