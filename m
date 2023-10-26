@@ -1,47 +1,51 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE0B381D5
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Oct 2023 17:07:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E732E413
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Oct 2023 17:13:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jDsHeG0e"
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17C271BB
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Oct 2023 10:07:33 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-6b36e1fcea0so1067506b3a.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Oct 2023 10:07:33 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LPcaEvY2"
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29974116
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Oct 2023 10:13:52 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-6b87c1edfd5so1103337b3a.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Oct 2023 10:13:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1698340052; x=1698944852; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1698340431; x=1698945231; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=b6uwa1NQ3b5So6ZqC1jDfFnZs3E6+OcPbQsril5qkDE=;
-        b=jDsHeG0eV/PVWEpkwiV7KyjG3d+bbr4szNp1BE2YWFuVFrl0VmhMjLk34b7Iv+u0LV
-         K7WPas9ItsasMtIs28unrbP6gVrc1EWDMDW+Royy9L8iAr2LO47ivfyXsjTHB4DGgGbB
-         DMUPhDoShJr3hBckPhO3t7K54woFOBkAB6S24=
+        bh=XaUboxRO1+viinf77RQ7N/zAs2SC9fz2QEeXcJMB0SE=;
+        b=LPcaEvY2WsHosUhm9UNIJRboimWiVIPcEZY6bxci4+s3avWuyS4sveKrffJauIwfKm
+         yQSXSgC85uNhJJLuvGgMSYwBiQnGKL8EVPH9MQotftHT5E0Xv+kTRjlQAJpvpn2ePGrz
+         6pxcxZtISeNS5i70ru+tglbKD6qdWO3BGMKQQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698340052; x=1698944852;
+        d=1e100.net; s=20230601; t=1698340431; x=1698945231;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=b6uwa1NQ3b5So6ZqC1jDfFnZs3E6+OcPbQsril5qkDE=;
-        b=WCiJwLXME/lRxFMICbg+Prw9plIC2u7UD2AhLrhfGYqaIE6rMDXth7iGJkhzT9CoGQ
-         KRDRBKRhPdqk35KlV08C+G0WGiiLySA6NDewpayh2DrsRuxh5lzMXaJwxGIBmix2q3+g
-         I/Y/OtNWtMsm3XnK+8ocVYDhQVCk29dBkRgGpBR5vDgDsOkgfmPkJrJ3dJby+0+IkxiI
-         zfDChmdUd3bqthV25UAapgMYb65XTnZoaOHG7HEBQo1oPzC00bpgDAcqFublMHWDStZZ
-         9t12GEC0p5rC7bZcraln22HT+to99ZxFJpDdk3Nlb3YhyNd3iLCFGQXcZkyMYLEKHpPV
-         PlSg==
-X-Gm-Message-State: AOJu0Yx3i3IiLO7CA+N/jXDmxLi2aq3mdVBQ3LNDeCJGe60cI8CJCVOz
-	D64Nue/cS1zaynDQWdd06TJogw==
-X-Google-Smtp-Source: AGHT+IE7hpmLQqEysEfdJXUltg5QC3Oo8kQXtpDePhBsrIx9j6UHm4qiSQH81VcLVMZ/nIfcqpCBIA==
-X-Received: by 2002:a05:6a20:3d2a:b0:15d:684d:f514 with SMTP id y42-20020a056a203d2a00b0015d684df514mr537837pzi.6.1698340052455;
-        Thu, 26 Oct 2023 10:07:32 -0700 (PDT)
+        bh=XaUboxRO1+viinf77RQ7N/zAs2SC9fz2QEeXcJMB0SE=;
+        b=k2GOGlv0I2gihoDI5wg7WuNGInY1jo+mh9VS88XwZ6+RGQAyboOkOGEHzlh5yhrhDN
+         hw9BiD7Awh8QVvV+544NZH/wdD7OZDT0noWJTfsuPUwbAZksy8r6q2yBfZFfy0zEaBj4
+         yf4UioYzJAbP5xiDs8yIM5bpXLCcMQw4JN0QuPQ+YNkNWsDK0Zn+T4uijptQk7UYIdbE
+         YKubfapI5uxAa/f2akYYmP7zdIBuytRJ0SalAOnf7g/ROJytVBwUfhgXYiYHl0wA7rEg
+         hAlnLYXOd/ZlRcQexRw4/WC87VGtMdxfRVXc8gkmafadQxGaWsykfD5s1BQllk7Nv1s3
+         /vNw==
+X-Gm-Message-State: AOJu0YyuLg5Rrkl8XStcoseE0o/QBMToOaCnFt0LXeyJZnkaoB9oCmql
+	7oho69CklbU1Y53gvwGyP+lbvg==
+X-Google-Smtp-Source: AGHT+IHyR59Pg2x487W+2yP92vC6UvozxH+Vq9jfsqmXLiUPD1h2P4QuTeIdk8oTKJcNWeUXyLwVqQ==
+X-Received: by 2002:a05:6a00:3924:b0:6be:43d5:6505 with SMTP id fh36-20020a056a00392400b006be43d56505mr84131pfb.6.1698340431616;
+        Thu, 26 Oct 2023 10:13:51 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id z16-20020a656110000000b005b929dc2d25sm1351597pgu.10.2023.10.26.10.07.31
+        by smtp.gmail.com with ESMTPSA id d6-20020aa797a6000000b006b225011ee5sm11474423pfq.6.2023.10.26.10.13.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Oct 2023 10:07:32 -0700 (PDT)
+        Thu, 26 Oct 2023 10:13:51 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Steven Rostedt <rostedt@goodmis.org>
+To: Kalle Valo <kvalo@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Max Chen <mxchen@codeaurora.org>,
+	Yang Shen <shenyang39@huawei.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
 	Christoph Hellwig <hch@lst.de>,
 	Justin Stitt <justinstitt@google.com>,
@@ -58,12 +62,12 @@ Cc: Kees Cook <keescook@chromium.org>,
 	Jacob Keller <jacob.e.keller@intel.com>,
 	Zhen Lei <thunder.leizhen@huawei.com>,
 	linux-trace-kernel@vger.kernel.org,
-	Yosry Ahmed <yosryahmed@google.com>,
+	linux-wireless@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] seq_buf: Introduce DECLARE_SEQ_BUF and seq_buf_cstr()
-Date: Thu, 26 Oct 2023 10:07:28 -0700
-Message-Id: <20231026170722.work.638-kees@kernel.org>
+Subject: [RFC][PATCH] wifi: wil6210: Replace strlcat() usage with seq_buf
+Date: Thu, 26 Oct 2023 10:13:49 -0700
+Message-Id: <20231026171349.work.928-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -71,49 +75,31 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4488; i=keescook@chromium.org;
- h=from:subject:message-id; bh=VSeNn7/RMcdVPleKpkEjvHM85UsfX0np5UVWhRNzd8U=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlOpzQ5loxdyuUGtxqQcAlDxcpVgVq53LwrCQag
- bnMFdQY2dKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZTqc0AAKCRCJcvTf3G3A
- JrXtD/9QYO6GmmwzvTM0xFkPaw27QP97gXGJGIxv631wEy5F56f10I8PqEzoILEJzIU9s/s/vaJ
- 60Oxo5TGL1aMtHG3kadZSJnyOV+zj244PintWD18FXWAS/OhBKlPEYYGoWdCC+6xSQePk+m1o6H
- 3H/U94d2dodigsjd4qCFswPoK/Ukdmt6Ks9zp5aUMHcH2IOLCHx47xag1gQ508t/+9xy43Ox8HP
- bk0diEv0qqOKGBOnQv+cl9PhK3ciQnK3W9Fri1XapmlpesIlz/IxV3bVk+S6Y9MnYvlUi0zrLEN
- UgJbiBxkVgsMSbNig4uQWkUh9mj/LTlPBvDKm1/nHNSu3KZb0ialmZVZE9CxEAgj0W3JL84IZfT
- 8dEGsOw62OfrkVAuLnZc0k8K33Vhxj4QO4kLFK//Oml7I0lUdx3Abw85jgO/NJQds9CByzUnx0M
- 51YrrF4h+edaHU1h+Qrqh5kIbOHVB5DocI4mDSrN0mZH/1E/Z6XrGxkhIo/qocyEUj00DIY5x+V
- a4lK+sascEFpR25yMi3gIYEtSL+TE10P1zGfoBpNQYpIxKSDRiFfj7Vew7TLfQuGd+qrFqdG2/w
- xpHdSXIUUXpgvoFOqoWGRz3qdfuOq8+qMkHIPjnnA3Rso7zZBeUDHhRfwxu9n9+JqRtL5gy5Xg8
- juLsepS NEfQ04kA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3544; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=D2vtiEKqUsGt/Z09LYNxtKXhUwmDCO+5281guVaf7GY=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlOp5NR+tMMbDVnVZsfav6ogCPxtfc/WTZ15nO2
+ QRMEDBKLY6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZTqeTQAKCRCJcvTf3G3A
+ JqQzD/9l0E0xuPY6P0roZjkRSULXnrIXkTO42RKEmMgsVde2QhNfDm1jpgQwKYS79HR7MUy81R6
+ xuvxMMyhXUeRGa0rsA+6TA+heail3hcWvUUQjBz3mmibnTXjOleWcVee0TLju/NW4+Qi/i4VslT
+ ss+3VmN0dnlToJW9TccwpeivyT3Zwx+ZTBbtu4c8nNeNwuexL3DzygCn0ERJpGqTaXv31L44t54
+ 5CluQm2N4kAm97ajzuFbUJJup54tIxrVklY7yRjuagF8gIKfXtUmGuvENXj+wjOdIpwgFOpknt2
+ Strg8uN5CjXYpgRv8mhM+vDY7JNBAC9PqjbM8agfAHxWkEyDywHuv+RPz3cnTColqfnenVfPYl1
+ Oxbpvi4SQwK/fOsMTmnfiA/TN5Up9l031ukqov92TTse4SgYhCVO8i4hvWBhXylLBKgfKm/SwFk
+ SbVfcwbNpUwx+ZicySY48xcf1i1EZ0ydWkL137rTlcJjdvV8q7U+gubWcorg7P0UYKb7JISAlhK
+ OhAEcdoTkf8CodYwlFwOSx4/FUI84czwgddorDvN1nUkjSSg6YSzjFjqX+bNedUZYokvgv7/pMu
+ v3B3kUPSVnQ3Czc6EwGf0reFM3YSfnbATzoKYVDYHLfCvxrFfdxbaZWbTmbtNIlVfKz+ocrFry8
+ ifQRSEE 3hfkIc6w==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Solve two ergonomic issues with struct seq_buf:
+The use of strlcat() is fragile at best, and we'd like to remove it from
+the available string APIs in the kernel. Instead, use the safer seq_buf
+APIs.
 
-1) Too much boilerplate is required to initialize:
-
-	struct seq_buf s;
-	char buf[32];
-
-	seq_buf_init(s, buf, sizeof(buf));
-
-Instead, we can build this directly on the stack. Provide
-DECLARE_SEQ_BUF() macro to do this:
-
-	DECLARE_SEQ_BUF(s, 32);
-
-2) %NUL termination is fragile and requires 2 steps to get a valid
-   C String (and is a layering violation exposing the "internals" of
-   seq_buf):
-
-	seq_buf_terminate(s);
-	do_something(s->buffer);
-
-Instead, we can just return s->buffer direction after terminating it
-in refactored seq_buf_terminate(), now known as seq_buf_cstr():
-
-	do_soemthing(seq_buf_cstr(s));
-
+Cc: Kalle Valo <kvalo@kernel.org>
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: Max Chen <mxchen@codeaurora.org>
+Cc: Yang Shen <shenyang39@huawei.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 Cc: Christoph Hellwig <hch@lst.de>
@@ -131,112 +117,78 @@ Cc: Yun Zhou <yun.zhou@windriver.com>
 Cc: Jacob Keller <jacob.e.keller@intel.com>
 Cc: Zhen Lei <thunder.leizhen@huawei.com>
 Cc: linux-trace-kernel@vger.kernel.org
+Cc: linux-wireless@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/seq_buf.h | 19 +++++++++++++++----
- kernel/trace/trace.c    | 11 +----------
- lib/seq_buf.c           |  4 +---
- 3 files changed, 17 insertions(+), 17 deletions(-)
+This is mainly an example of where/how to use the ongoing seq_buf
+refactoring happening in the tracing tree:
+https://lore.kernel.org/lkml/20231026170722.work.638-kees@kernel.org/
+---
+ drivers/net/wireless/ath/wil6210/wmi.c | 23 ++++++++++-------------
+ 1 file changed, 10 insertions(+), 13 deletions(-)
 
-diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
-index 8483e4b2d0d2..8896b830eb3d 100644
---- a/include/linux/seq_buf.h
-+++ b/include/linux/seq_buf.h
-@@ -21,9 +21,16 @@ struct seq_buf {
- 	size_t			len;
- };
+diff --git a/drivers/net/wireless/ath/wil6210/wmi.c b/drivers/net/wireless/ath/wil6210/wmi.c
+index 6fdb77d4c59e..45b8c651b8e2 100644
+--- a/drivers/net/wireless/ath/wil6210/wmi.c
++++ b/drivers/net/wireless/ath/wil6210/wmi.c
+@@ -3159,36 +3159,34 @@ int wmi_suspend(struct wil6210_priv *wil)
+ 	return rc;
+ }
  
-+#define DECLARE_SEQ_BUF(NAME, SIZE)					\
-+	char __ ## NAME ## _buffer[SIZE] = "";				\
-+	struct seq_buf NAME = { .buffer = &__ ## NAME ## _buffer,	\
-+				.size = SIZE }
-+
- static inline void seq_buf_clear(struct seq_buf *s)
+-static void resume_triggers2string(u32 triggers, char *string, int str_size)
++static void resume_triggers2string(u32 triggers, struct seq_buf *s)
  {
- 	s->len = 0;
-+	if (s->size)
-+		s->buffer[0] = '\0';
- }
- 
- static inline void
-@@ -69,8 +76,8 @@ static inline unsigned int seq_buf_used(struct seq_buf *s)
- }
- 
- /**
-- * seq_buf_terminate - Make sure buffer is nul terminated
-- * @s: the seq_buf descriptor to terminate.
-+ * seq_buf_cstr - get %NUL-terminated C string from seq_buf
-+ * @s: the seq_buf handle
-  *
-  * This makes sure that the buffer in @s is nul terminated and
-  * safe to read as a string.
-@@ -81,16 +88,20 @@ static inline unsigned int seq_buf_used(struct seq_buf *s)
-  *
-  * After this function is called, s->buffer is safe to use
-  * in string operations.
-+ *
-+ * Returns @s->buf after making sure it is terminated.
-  */
--static inline void seq_buf_terminate(struct seq_buf *s)
-+static inline char *seq_buf_cstr(struct seq_buf *s)
- {
- 	if (WARN_ON(s->size == 0))
--		return;
-+		return "";
- 
- 	if (seq_buf_buffer_left(s))
- 		s->buffer[s->len] = 0;
- 	else
- 		s->buffer[s->size - 1] = 0;
-+
-+	return s->buffer;
- }
- 
- /**
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index d629065c2383..d83f36dc4bf8 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3828,15 +3828,6 @@ static bool trace_safe_str(struct trace_iterator *iter, const char *str,
- 	return false;
- }
- 
--static const char *show_buffer(struct trace_seq *s)
--{
--	struct seq_buf *seq = &s->seq;
+-	string[0] = '\0';
 -
--	seq_buf_terminate(seq);
--
--	return seq->buffer;
--}
--
- static DEFINE_STATIC_KEY_FALSE(trace_no_verify);
- 
- static int test_can_verify_check(const char *fmt, ...)
-@@ -3976,7 +3967,7 @@ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
- 		 */
- 		if (WARN_ONCE(!trace_safe_str(iter, str, star, len),
- 			      "fmt: '%s' current_buffer: '%s'",
--			      fmt, show_buffer(&iter->seq))) {
-+			      fmt, seq_buf_cstr(&iter->seq.seq))) {
- 			int ret;
- 
- 			/* Try to safely read the string */
-diff --git a/lib/seq_buf.c b/lib/seq_buf.c
-index b7477aefff53..165caed5a74e 100644
---- a/lib/seq_buf.c
-+++ b/lib/seq_buf.c
-@@ -109,9 +109,7 @@ void seq_buf_do_printk(struct seq_buf *s, const char *lvl)
- 	if (s->size == 0 || s->len == 0)
+ 	if (!triggers) {
+-		strlcat(string, " UNKNOWN", str_size);
++		seq_buf_puts(s, " UNKNOWN");
  		return;
+ 	}
  
--	seq_buf_terminate(s);
--
--	start = s->buffer;
-+	start = seq_buf_cstr(s);
- 	while ((lf = strchr(start, '\n'))) {
- 		int len = lf - start + 1;
+ 	if (triggers & WMI_RESUME_TRIGGER_HOST)
+-		strlcat(string, " HOST", str_size);
++		seq_buf_puts(s, " HOST")
  
+ 	if (triggers & WMI_RESUME_TRIGGER_UCAST_RX)
+-		strlcat(string, " UCAST_RX", str_size);
++		seq_buf_puts(s, " UCAST_RX");
+ 
+ 	if (triggers & WMI_RESUME_TRIGGER_BCAST_RX)
+-		strlcat(string, " BCAST_RX", str_size);
++		seq_buf_puts(s, " BCAST_RX");
+ 
+ 	if (triggers & WMI_RESUME_TRIGGER_WMI_EVT)
+-		strlcat(string, " WMI_EVT", str_size);
++		seq_buf_puts(s, " WMI_EVT");
+ 
+ 	if (triggers & WMI_RESUME_TRIGGER_DISCONNECT)
+-		strlcat(string, " DISCONNECT", str_size);
++		seq_buf_puts(s, " DISCONNECT");
+ }
+ 
+ int wmi_resume(struct wil6210_priv *wil)
+ {
+ 	struct wil6210_vif *vif = ndev_to_vif(wil->main_ndev);
+ 	int rc;
+-	char string[100];
++	DECLARE_SEQ_BUF(s, 100);
+ 	struct {
+ 		struct wmi_cmd_hdr wmi;
+ 		struct wmi_traffic_resume_event evt;
+@@ -3203,10 +3201,9 @@ int wmi_resume(struct wil6210_priv *wil)
+ 		      WIL_WAIT_FOR_SUSPEND_RESUME_COMP);
+ 	if (rc)
+ 		return rc;
+-	resume_triggers2string(le32_to_cpu(reply.evt.resume_triggers), string,
+-			       sizeof(string));
++	resume_triggers2string(le32_to_cpu(reply.evt.resume_triggers), s);
+ 	wil_dbg_pm(wil, "device resume %s, resume triggers:%s (0x%x)\n",
+-		   reply.evt.status ? "failed" : "passed", string,
++		   reply.evt.status ? "failed" : "passed", seq_buf_cstr(s),
+ 		   le32_to_cpu(reply.evt.resume_triggers));
+ 
+ 	return reply.evt.status;
 -- 
 2.34.1
 
