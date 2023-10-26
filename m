@@ -1,112 +1,199 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B90F17D5
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Oct 2023 08:46:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7EC3D78;
+	Thu, 26 Oct 2023 08:58:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="MeOUuEUr";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZmEwaB35"
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25DAC10E
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Oct 2023 01:46:44 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id D99E75C01EC;
-	Thu, 26 Oct 2023 04:46:41 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 26 Oct 2023 04:46:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm2; t=1698310001; x=1698396401; bh=X/
-	PijnraiQwPR6kcu71L8dm0rdDPgeFE0FVctzkVwuo=; b=MeOUuEUre5ocrDFwTt
-	oFmEu46HXztQeZrO31iEnLnock/t4cW/h7+nm5QwpqLO4R51tmboabQcHz8yXjiM
-	+RUZHThfx3LN8UQUvsM/Z4e7i3Z/CVof5HI92JHnyruiux3CJdqGX+ZjB31WUpgb
-	HvuUNTH1MwMdsqVrq0l7gwVey19/+n/nq4VZTptlZByOHzeC0c5sEXAJ2hBwJSE6
-	/xAhJsNTeOSZDSCh7WuUcw6CTqN8KR6pqWU+XdTda02t2spTxi9xDf0MSBRnLfyV
-	rIVjMfbRkECXUaZZcTa5Hvb1Tez4oP15hqFIcxb3CCx50Lr1QJe1iW5E84MuDnjc
-	/Bag==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm3; t=1698310001; x=1698396401; bh=X/PijnraiQwPR
-	6kcu71L8dm0rdDPgeFE0FVctzkVwuo=; b=ZmEwaB35RLnW5F3WltP/6ggXeh7wI
-	NxvZNzPVIU2o51J/sHR0r8X0aaqp5fC+IFnErdcdPvVxBn3QjT39ze52SilykdMN
-	Dwh4DqlPElxlVuPcRqA7IYrFNIPFmimkv19JXpvZiN7FWb+IJpB0zT0+fXt1U0MV
-	WAidgTmS9MSJDa252kGJV1uKwBNdLMKo16hJ9GazbWyltggRXuDj7ftYn+P83fTY
-	W8oXl0kh9quZVLZdasxlyCMSUeqjg0wiwkQIW7KnStfRXtHAhygZVfJPONnnLxVJ
-	Spm3NqFLRsjPtJ5u3Bu31HcyhjoMz+4c2atljdZb+c4HSU9EcLrDUROzQ==
-X-ME-Sender: <xms:cCc6ZasY7ZbhFgLLlt5t9lw3GZ8H_xtf5MMC1fw55WANOHRbaDeplw>
-    <xme:cCc6Zfc-t5btFGXqSLN05KHPktb4koHQGWipJAYDYjRVleYOpetFO--N7yjzlG8um
-    NmLnZZFNk9RCfLgrfs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrledvgddtjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeevhfffledtgeehfeffhfdtgedvheejtdfgkeeuvefgudffteettdekkeeufeeh
-    udenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:cCc6ZVwRrAN_j6zZGEGJejLmzZ7qde9IQCNuuSCaPPIZUfAqKLbuQg>
-    <xmx:cCc6ZVN4jzWNO9m4pta9SDIR_M5yR7rzxwynQOEML0sqiz1RxDY_LA>
-    <xmx:cCc6Za-R-NaZ7fm3J2m4ZWG5hMlso9u5C2frUYOGvqXivr6_kvyAaQ>
-    <xmx:cSc6ZdZTD3unRMttoYqWU2emGbRi2wmTcteJSytsjkh9Qn5cBWbyMg>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id B8B93B60089; Thu, 26 Oct 2023 04:46:40 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-1048-g9229b632c5-fm-20231019.001-g9229b632
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r2IeoKsV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9B0BC433C7;
+	Thu, 26 Oct 2023 08:58:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1698310701;
+	bh=daj1kZsVxPjd+zO39ZAev3zCXUc1FaedBgbX73nudCk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=r2IeoKsV+mJJpE6z2XsX1iIp24lKjd2VIwT/xdGbzM4QJ1z6/95hZgo8dTrbqyffN
+	 8DV48I6gafiHJ1W+sQ7xkSCEWs1Wh3ihhaTtNnOomkd5rdfUSH/VyEwenBw8FyxoGy
+	 dhmaO/Bq2xkkYLIg5jb3D7re45cnRROW7gfrE4czIzlLWldF8At6B9lE0w5M6vGi01
+	 k5USZIeXtTxyoNfpdwZ4lyaGy8S4FOFzwfuRadAU3111ZEEfuMlEZmph7ucAT6ZG1d
+	 z6H7920gFiqm1FRnq/jWuFKwHTDrcmSHuk47fqo8k/MnZWV2iXv2IEUOtl8o74ARYW
+	 oZPw5JfD44y3w==
+Date: Thu, 26 Oct 2023 11:58:00 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Will Deacon <will@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, bpf@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v3 04/13] mm/execmem, arch: convert remaining overrides
+ of module_alloc to execmem
+Message-ID: <20231026085800.GK2824@kernel.org>
+References: <20230918072955.2507221-1-rppt@kernel.org>
+ <20230918072955.2507221-5-rppt@kernel.org>
+ <20231023171420.GA4041@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <1e3aba7d-89ac-4b62-840e-992527115a70@app.fastmail.com>
-In-Reply-To: <20231026073932.702197-1-wuqiang.matt@bytedance.com>
-References: <20231026073932.702197-1-wuqiang.matt@bytedance.com>
-Date: Thu, 26 Oct 2023 10:46:20 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "wuqiang.matt" <wuqiang.matt@bytedance.com>,
- "Jonas Bonn" <jonas@southpole.se>,
- "Stefan Kristiansson" <stefan.kristiansson@saunalahti.fi>,
- "Stafford Horne" <shorne@gmail.com>, "Ingo Molnar" <mingo@kernel.org>,
- "Peter Zijlstra" <peterz@infradead.org>,
- "Andi Shyti" <andi.shyti@linux.intel.com>,
- "Palmer Dabbelt" <palmer@rivosinc.com>,
- "Andrzej Hajda" <andrzej.hajda@intel.com>
-Cc: linux-trace-kernel@vger.kernel.org,
- "Masami Hiramatsu" <mhiramat@kernel.org>, mattwu@163.com
-Subject: Re: [PATCH 3/3] locking/atomic: openrisc: use generic_cmpxchg[64]_local for
- arch_cmpxchg[64]_local
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231023171420.GA4041@willie-the-truck>
 
-On Thu, Oct 26, 2023, at 09:39, wuqiang.matt wrote:
-> arch_cmpxchg[64]_local() are not defined for openrisc. So implement
-> them with generci_cmpxchg[64]_local, advised by Masami Hiramatsu.
->
-> Closes: 
-> https://lore.kernel.org/linux-trace-kernel/169824660459.24340.14614817132696360531.stgit@devnote2
-> Closes: 
-> https://lore.kernel.org/oe-kbuild-all/202310241310.Ir5uukOG-lkp@intel.com
->
-> Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
+Hi Will,
 
-I think on architectures that have actual atomics, you
-generally want to define this to be the same as arch_cmpxchg()
-rather than the generic version.
+On Mon, Oct 23, 2023 at 06:14:20PM +0100, Will Deacon wrote:
+> Hi Mike,
+> 
+> On Mon, Sep 18, 2023 at 10:29:46AM +0300, Mike Rapoport wrote:
+> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+> > 
+> > Extend execmem parameters to accommodate more complex overrides of
+> > module_alloc() by architectures.
+> > 
+> > This includes specification of a fallback range required by arm, arm64
+> > and powerpc and support for allocation of KASAN shadow required by
+> > arm64, s390 and x86.
+> > 
+> > The core implementation of execmem_alloc() takes care of suppressing
+> > warnings when the initial allocation fails but there is a fallback range
+> > defined.
+> > 
+> > Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
+> > ---
+> >  arch/arm/kernel/module.c     | 38 ++++++++++++---------
+> >  arch/arm64/kernel/module.c   | 57 ++++++++++++++------------------
+> >  arch/powerpc/kernel/module.c | 52 ++++++++++++++---------------
+> >  arch/s390/kernel/module.c    | 52 +++++++++++------------------
+> >  arch/x86/kernel/module.c     | 64 +++++++++++-------------------------
+> >  include/linux/execmem.h      | 14 ++++++++
+> >  mm/execmem.c                 | 43 ++++++++++++++++++++++--
+> >  7 files changed, 167 insertions(+), 153 deletions(-)
+> 
+> [...]
+> 
+> > diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
+> > index dd851297596e..cd6320de1c54 100644
+> > --- a/arch/arm64/kernel/module.c
+> > +++ b/arch/arm64/kernel/module.c
+> > @@ -20,6 +20,7 @@
+> >  #include <linux/random.h>
+> >  #include <linux/scs.h>
+> >  #include <linux/vmalloc.h>
+> > +#include <linux/execmem.h>
+> >  
+> >  #include <asm/alternative.h>
+> >  #include <asm/insn.h>
+> > @@ -108,46 +109,38 @@ static int __init module_init_limits(void)
+> >  
+> >  	return 0;
+> >  }
+> > -subsys_initcall(module_init_limits);
+> >  
+> > -void *module_alloc(unsigned long size)
+> > +static struct execmem_params execmem_params __ro_after_init = {
+> > +	.ranges = {
+> > +		[EXECMEM_DEFAULT] = {
+> > +			.flags = EXECMEM_KASAN_SHADOW,
+> > +			.alignment = MODULE_ALIGN,
+> > +		},
+> > +	},
+> > +};
+> > +
+> > +struct execmem_params __init *execmem_arch_params(void)
+> >  {
+> > -	void *p = NULL;
+> > +	struct execmem_range *r = &execmem_params.ranges[EXECMEM_DEFAULT];
+> >  
+> > -	/*
+> > -	 * Where possible, prefer to allocate within direct branch range of the
+> > -	 * kernel such that no PLTs are necessary.
+> > -	 */
+> 
+> Why are you removing this comment? I think you could just move it next
+> to the part where we set a 128MiB range.
+ 
+Oops, my bad. Will add it back.
 
-It depends on the relative cost of doing one atomic compared
-to an irq-disable/enable pair, but everyone else went with
-the former if they could. The exceptions are armv4/armv5,
-sparc32 and parisc, which don't have a generic cmpxchg()
-or similar operation.
+> > -	if (module_direct_base) {
+> > -		p = __vmalloc_node_range(size, MODULE_ALIGN,
+> > -					 module_direct_base,
+> > -					 module_direct_base + SZ_128M,
+> > -					 GFP_KERNEL | __GFP_NOWARN,
+> > -					 PAGE_KERNEL, 0, NUMA_NO_NODE,
+> > -					 __builtin_return_address(0));
+> > -	}
+> > +	module_init_limits();
+> 
+> Hmm, this used to be run from subsys_initcall(), but now you're running
+> it _really_ early, before random_init(), so randomization of the module
+> space is no longer going to be very random if we don't have early entropy
+> from the firmware or the CPU, which is likely to be the case on most SoCs.
 
-You could do the thing that sparc64 and xtensa do, which
-use the native cmpxchg for supported word sizes but the
-generic version for 1- and 2-byte swaps, but that has its
-own set of problems if you end up doing operations on both
-the entire word and a sub-unit of the same thing.
+Well, it will be as random as KASLR. Won't that be enough?
+ 
+> > diff --git a/mm/execmem.c b/mm/execmem.c
+> > index f25a5e064886..a8c2f44d0133 100644
+> > --- a/mm/execmem.c
+> > +++ b/mm/execmem.c
+> > @@ -11,12 +11,46 @@ static void *execmem_alloc(size_t size, struct execmem_range *range)
+> >  {
+> >  	unsigned long start = range->start;
+> >  	unsigned long end = range->end;
+> > +	unsigned long fallback_start = range->fallback_start;
+> > +	unsigned long fallback_end = range->fallback_end;
+> >  	unsigned int align = range->alignment;
+> >  	pgprot_t pgprot = range->pgprot;
+> > +	bool kasan = range->flags & EXECMEM_KASAN_SHADOW;
+> > +	unsigned long vm_flags  = VM_FLUSH_RESET_PERMS;
+> > +	bool fallback  = !!fallback_start;
+> > +	gfp_t gfp_flags = GFP_KERNEL;
+> > +	void *p;
+> >  
+> > -	return __vmalloc_node_range(size, align, start, end,
+> > -				   GFP_KERNEL, pgprot, VM_FLUSH_RESET_PERMS,
+> > -				   NUMA_NO_NODE, __builtin_return_address(0));
+> > +	if (PAGE_ALIGN(size) > (end - start))
+> > +		return NULL;
+> > +
+> > +	if (kasan)
+> > +		vm_flags |= VM_DEFER_KMEMLEAK;
+> 
+> Hmm, I don't think we passed this before on arm64, should we have done?
 
-    Arnd
+It was there on arm64 before commit 8339f7d8e178 ("arm64: module: remove
+old !KASAN_VMALLOC logic").
+There's no need to pass VM_DEFER_KMEMLEAK when KASAN_VMALLOC is enabled and
+arm64 always selects KASAN_VMALLOC with KASAN.
+
+And for the generic case, I should have made the condition to check for
+KASAN_VMALLOC as well.
+ 
+> Will
+
+-- 
+Sincerely yours,
+Mike.
