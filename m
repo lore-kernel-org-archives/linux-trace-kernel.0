@@ -1,107 +1,146 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060FB623
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Oct 2023 07:39:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D022911C9F;
+	Thu, 26 Oct 2023 08:41:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Fquq9CpL"
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B102184
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Oct 2023 00:39:51 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id 98e67ed59e1d1-27e1eea2f0dso435632a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Oct 2023 00:39:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1698305991; x=1698910791; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=T+9VBh6cqcNium9L3qNrheT8GGQUxnbiy5WokL/gQlQ=;
-        b=Fquq9CpLRufAkQ1uF4GPQAmwtRQXaCgyyPQfJzvilPMbcqJqrT52+wVn7oIf3VGiUu
-         fLNsTCH85EUXUWNOHjSmg9LXsZTjQQkPWsXp4MfBLdwsdY8MQ9xkreHDO3gv0w18V458
-         hwFKgKgKoFkL6omujMXRszUQu/9DCmOxL+R9p7Eye0QyMljagmkK+1jK/ienUXBcXjIy
-         PlkgewxRWgXio9ZmMatTRh0xULxUdin8Dp3eTCCdVTxotUWIOnlXxklL/7yoJZtwBPl7
-         ODuIKPW4DbmWYxmCm/ctetaJxKz9nZAqhESMAQp+9ztyncKDIL+k8Z40pde+YvgEFVPv
-         SU7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698305991; x=1698910791;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=T+9VBh6cqcNium9L3qNrheT8GGQUxnbiy5WokL/gQlQ=;
-        b=E/Ki28LWympr//In2Dl2FISrr32iH2yEhNCAEQiCulm46b4TtJX6FrQr9V/rMrDqwK
-         ASELkt0WmX+P5+gemh2ePAJxTiHQqHfwbOrnxIufjQ2SNu0H8DtlQ+ofxKSfKdM7y68W
-         2AMnkMF69pMpqQNE7QxK+e0KyPh0oP14LGPip05tQhslQmSg/19WKnGP018y4/GtvDSz
-         Xm5/AJ6hv9BmPC02HGJ66RXIp/3u57hqHISBNlZP7jld0ar+emfkMTSAaevRw3o/RWCq
-         +FVltzTpdXF/avT2JVg0NCs6CVWYPzQEg2zvC+mGj42oIuYhNSsfGMZg349ZyTNGzxeK
-         Zxew==
-X-Gm-Message-State: AOJu0YxkCoYVtg0ObY62BtcHZ402BVQYiNedCBXH58vOyBIDoTZh8hWj
-	7DpfC4EQ60KAxG68pGm/vu06GA==
-X-Google-Smtp-Source: AGHT+IEyiwatpHzojQxJQqleOUfB8ZbwEsU5DLNfoM7+aZ9LaIWvETQTLE36A2blfpoBLiD0LSTAKg==
-X-Received: by 2002:a17:90a:d505:b0:27c:efe3:89dc with SMTP id t5-20020a17090ad50500b0027cefe389dcmr14429648pju.14.1698305991038;
-        Thu, 26 Oct 2023 00:39:51 -0700 (PDT)
-Received: from devz1.bytedance.net ([203.208.167.147])
-        by smtp.gmail.com with ESMTPSA id gd22-20020a17090b0fd600b0027dafa55306sm1046795pjb.40.2023.10.26.00.39.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Oct 2023 00:39:50 -0700 (PDT)
-From: "wuqiang.matt" <wuqiang.matt@bytedance.com>
-To: Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Andi Shyti <andi.shyti@linux.intel.com>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrzej Hajda <andrzej.hajda@intel.com>
-Cc: linux-trace-kernel@vger.kernel.org,
-	mhiramat@kernel.org,
-	mattwu@163.com,
-	"wuqiang.matt" <wuqiang.matt@bytedance.com>
-Subject: [PATCH 3/3] locking/atomic: openrisc: use generic_cmpxchg[64]_local for arch_cmpxchg[64]_local
-Date: Thu, 26 Oct 2023 15:39:31 +0800
-Message-Id: <20231026073932.702197-1-wuqiang.matt@bytedance.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oRC27PQC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F6AFC433C8;
+	Thu, 26 Oct 2023 08:40:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1698309661;
+	bh=CKweGyf2oPo/e/UZLG1WYH3zEQnVvPRR68BdbBl/TGo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oRC27PQC2plQ2QFtxeYNcapuTdKaVmbmEUR0m69y9zSqXieqEvU2U8HaibfItzWZF
+	 yERD96v5VwCZUJZD6El6ZorfVxYGGBw2vENxYrzOh3JNxfzIcWV8Hyo/98RmvjYp1O
+	 Ink1QwB6gOI9hZMPLodFMqMmfk4UUgDFD2PT2vR0MIfYSLtLLeyvF4ch6/DBDJ+K3Z
+	 0bfW6e3KP7yJWPzCmJpvtwgF2RV+VsKMprb/vimV6IovW84by85aPvP9y1WYUJyow3
+	 BUjvGbMWEhiJ9hRAr+vd5AhVyyu5+qGt0miVwVbaUWHgtUSofxp310DRt0OzuziAvf
+	 CCAilLzZ675cA==
+Date: Thu, 26 Oct 2023 11:40:39 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "tglx@linutronix.de" <tglx@linutronix.de>,
+	"mcgrof@kernel.org" <mcgrof@kernel.org>,
+	"deller@gmx.de" <deller@gmx.de>,
+	"bjorn@kernel.org" <bjorn@kernel.org>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"nadav.amit@gmail.com" <nadav.amit@gmail.com>,
+	"linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+	"hca@linux.ibm.com" <hca@linux.ibm.com>,
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kent.overstreet@linux.dev" <kent.overstreet@linux.dev>,
+	"puranjay12@gmail.com" <puranjay12@gmail.com>,
+	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+	"palmer@dabbelt.com" <palmer@dabbelt.com>,
+	"chenhuacai@kernel.org" <chenhuacai@kernel.org>,
+	"tsbogend@alpha.franken.de" <tsbogend@alpha.franken.de>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"mark.rutland@arm.com" <mark.rutland@arm.com>,
+	"linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+	"christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>,
+	"will@kernel.org" <will@kernel.org>,
+	"dinguyen@kernel.org" <dinguyen@kernel.org>,
+	"naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
+	"sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+	"linux-modules@vger.kernel.org" <linux-modules@vger.kernel.org>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"song@kernel.org" <song@kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 03/13] mm/execmem, arch: convert simple overrides of
+ module_alloc to execmem
+Message-ID: <20231026084039.GJ2824@kernel.org>
+References: <20230918072955.2507221-1-rppt@kernel.org>
+ <20230918072955.2507221-4-rppt@kernel.org>
+ <607927885bb8ca12d4cd5787f01207c256cc8798.camel@intel.com>
+ <00277a3acb36d2309156264c7e8484071bc91614.camel@intel.com>
+ <20231005052622.GD3303@kernel.org>
+ <b26d0a201bf631831a956450ebbccc3c16521133.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b26d0a201bf631831a956450ebbccc3c16521133.camel@intel.com>
 
-arch_cmpxchg[64]_local() are not defined for openrisc. So implement
-them with generci_cmpxchg[64]_local, advised by Masami Hiramatsu.
+Hi Rick,
 
-Closes: https://lore.kernel.org/linux-trace-kernel/169824660459.24340.14614817132696360531.stgit@devnote2
-Closes: https://lore.kernel.org/oe-kbuild-all/202310241310.Ir5uukOG-lkp@intel.com
+Sorry for the delay, I was a bit preoccupied with $stuff.
 
-Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
----
- arch/openrisc/include/asm/cmpxchg.h | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+On Thu, Oct 05, 2023 at 06:09:07PM +0000, Edgecombe, Rick P wrote:
+> On Thu, 2023-10-05 at 08:26 +0300, Mike Rapoport wrote:
+> > On Wed, Oct 04, 2023 at 03:39:26PM +0000, Edgecombe, Rick P wrote:
+> > > On Tue, 2023-10-03 at 17:29 -0700, Rick Edgecombe wrote:
+> > > > It seems a bit weird to copy all of this. Is it trying to be
+> > > > faster
+> > > > or
+> > > > something?
+> > > > 
+> > > > Couldn't it just check r->start in execmem_text/data_alloc() path
+> > > > and
+> > > > switch to EXECMEM_DEFAULT if needed then? The
+> > > > execmem_range_is_data()
+> > > > part that comes later could be added to the logic there too. So
+> > > > this
+> > > > seems like unnecessary complexity to me or I don't see the
+> > > > reason.
+> > > 
+> > > I guess this is a bad idea because if you have the full size array
+> > > sitting around anyway you might as well use it and reduce the
+> > > exec_mem_alloc() logic.
+> > 
+> > That's was the idea, indeed. :)
+> > 
+> > > Just looking at it from the x86 side (and
+> > > similar) though, where there is actually only one execmem_range and
+> > > it
+> > > building this whole array with identical data and it seems weird.
+> > 
+> > Right, most architectures have only one range, but to support all
+> > variants
+> > that we have, execmem has to maintain the whole array.
+> 
+> What about just having an index into a smaller set of ranges. The
+> module area and the extra JIT area. So ->ranges can be size 3
+> (statically allocated in the arch code) for three areas and then the
+> index array can be size EXECMEM_TYPE_MAX. The default 0 value of the
+> indexing array will point to the default area and any special areas can
+> be set in the index point to the desired range.
+> 
+> Looking at how it would do for x86 and arm64, it looks maybe a bit
+> better to me. A little bit less code and memory usage, and a bit easier
+> to trace the configuration through to the final state (IMO). What do
+> you think? Very rough, on top of this series, below.
 
-diff --git a/arch/openrisc/include/asm/cmpxchg.h b/arch/openrisc/include/asm/cmpxchg.h
-index 8ee151c072e4..7d0555257389 100644
---- a/arch/openrisc/include/asm/cmpxchg.h
-+++ b/arch/openrisc/include/asm/cmpxchg.h
-@@ -168,4 +168,18 @@ __arch_xchg(volatile void *ptr, unsigned long with, int size)
- 						 sizeof(*(ptr)));	\
- 	})
+I like your suggestion to only have definitions of actual ranges in arch
+code and index array to redirect allocation requests to the right range.
+I'll make the next version along the lines of your patch.
+
+> As I was playing around with this, I was also wondering why it needs
+> two copies of struct execmem_params: one returned from the arch code
+> and one in exec mem. 
+
+No actual reason, one copy is enough, thanks for catching this.
+
+> And why the temporary arch copy is ro_after_init,
+> but the final execmem.c copy is not ro_after_init?
+
+I just missed it, thanks for pointing out.
  
-+/*
-+ * always make arch_cmpxchg[64]_local available. __generic_cmpxchg[64]_local
-+ * are atomic with respect to current cpu.
-+ */
-+#include <asm-generic/cmpxchg-local.h>
-+
-+#define arch_cmpxchg_local(ptr, o, n) ({				\
-+	(__typeof__(*ptr))__generic_cmpxchg_local((ptr),		\
-+						(unsigned long)(o),	\
-+						(unsigned long)(n),	\
-+						sizeof(*(ptr)));	\
-+})
-+#define arch_cmpxchg64_local(ptr, o, n) __generic_cmpxchg64_local((ptr), (o), (n))
-+
- #endif /* __ASM_OPENRISC_CMPXCHG_H */
 -- 
-2.40.1
-
+Sincerely yours,
+Mike.
