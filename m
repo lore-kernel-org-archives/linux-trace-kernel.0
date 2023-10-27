@@ -1,49 +1,49 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED1337C81
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Oct 2023 15:50:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E7837158
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Oct 2023 15:56:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G9PlaRf1"
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA0C810A
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Oct 2023 08:50:46 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-6bd73395bceso1636712b3a.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Oct 2023 08:50:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CRPn1o7A"
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7AB2186
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Oct 2023 08:56:40 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-6bf03b98b9bso2478941b3a.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Oct 2023 08:56:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1698421846; x=1699026646; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3XAYQa3ufeYpImNNDp7qPpU7hHfY982hDiKyd9DINVw=;
-        b=G9PlaRf190e9ZoCeBEdFIcQvKCnRCcxb3iXxMOzH7hNkn6yW6sDMMuraO/1+2BP8Cd
-         nv54el58uu6RQ0M4gJNHUKP2zUAFtTA1+HhTRsbN6Ok1TbuQDfgaWlhlQCtLwlpKjWqs
-         ByTR4qOuW5J5lFsZIxElNvRqwsy2ti76Z7avQ=
+        d=chromium.org; s=google; t=1698422200; x=1699027000; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=40fyXIZLWl6t+j1qK/ww8o7e/vmz8aWuQu+nEtghbIE=;
+        b=CRPn1o7AzPXlGW0pjH0nQAzz0oyjEmn+qQWozrq8tZ6viB0qSGdxO7QdNUgAxPT41S
+         +lVIeXVzXYi8eFN0yQXsVZe9MfK4Ro0HfHxGErb53v9gEMkvHeBOZJlRVTlE1kzB6Ts5
+         ow5Ud3NZ65gn+fT6CGIMW2EAV2YJElVMnCjRc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698421846; x=1699026646;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3XAYQa3ufeYpImNNDp7qPpU7hHfY982hDiKyd9DINVw=;
-        b=dHgVHZoeeKdxcWTfRzhaCSvfBZtaOFexYP7y1M385h/YFrbpEqBEGczKLLtkQegoU4
-         Us7YiwixQkhBeTdbiCkp02wYsQDHss4NIU/h63yrBp+A+79tHDQI7gWSV9Hx4FsnWBo8
-         rP2DDBDaYa1YVPhWV3Vl0dOUVJ//DDaUu2wI6plyxMueuC6PJBDVzFn/xFB16ETRXAhs
-         ebIwr4poz2oqYKyHdvSUkRMCytmQZN14iFgVLsdUVo7r8XREMIdJtoX49KYtv5DhDt7E
-         VAde2+P9feRf/0YX7NCVskNOis4QK91m7wXlQo4n/klsyYx1cBiNMgxI5lDVHFakZFwU
-         LDyQ==
-X-Gm-Message-State: AOJu0YxAm4lFLZuWFnl6PUhpriCp97O/qkEyDaNb/xMw8x/zlt/P+jRS
-	yEG5eFcKnaAN1XRAQzle+kk25w==
-X-Google-Smtp-Source: AGHT+IHLDmn+AjLaF61rtsmuDfAYVnkIvtlWqCwVQhYl6dmEc/RCPXxVQIOdEbbpEEe95zK+/gUeVw==
-X-Received: by 2002:a05:6a00:28c9:b0:6b3:80f8:7e91 with SMTP id ci9-20020a056a0028c900b006b380f87e91mr6843699pfb.9.1698421846306;
-        Fri, 27 Oct 2023 08:50:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1698422200; x=1699027000;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=40fyXIZLWl6t+j1qK/ww8o7e/vmz8aWuQu+nEtghbIE=;
+        b=hzqL2pdfRf8VHCnaAS8+p7yj4qNHXiHEQORxQhw7GjTFQ6Hv8XAQ3sFXXJ42q9U0As
+         l8nh5Qi/64hNJDN/DpyF9J6ZeDqXDREEnY1TSXZx2R5MslYd355iLSOg2TGKUs0Xk9yg
+         i9pbPBeRpZGdYg99ClMgfv5YnoiMA5I8CSoi+ae+GBx+Ny+rUgVb1YEygJQ4itzKP9Cj
+         uJCysswEtYfIda+TKXqeYvgCrSaMr7i8mONjLebFWFWnBdpnoYh3v8REbkxYn0c4VGSI
+         CheetVBSLQT6qjZY3TKgHyERrPPijRD6dB9181r4B+ItseBPE8psTzvgE2jpOG0vYM5e
+         ftBA==
+X-Gm-Message-State: AOJu0Yxr0Zh8lU2RN9ivXmTG12nkF1vxPmIhTInQPgOsvWZ/n6hks3Xo
+	T62DFdGODaaVnP07sWMD6fPIhQ==
+X-Google-Smtp-Source: AGHT+IENI6l4x0rUhXCb0++j2mRLJ+co5f7HRnxct20HokNEjgiWTI/oZ8VdjqfhoUx6oXd5jnCZ+A==
+X-Received: by 2002:a05:6a21:32aa:b0:17b:2c56:70bc with SMTP id yt42-20020a056a2132aa00b0017b2c5670bcmr4314236pzb.10.1698422200183;
+        Fri, 27 Oct 2023 08:56:40 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h15-20020a63384f000000b0056c2f1a2f6bsm1249776pgn.41.2023.10.27.08.50.45
+        by smtp.gmail.com with ESMTPSA id l6-20020a056a00140600b006be484e5b9asm1545611pfu.188.2023.10.27.08.56.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Oct 2023 08:50:45 -0700 (PDT)
-Date: Fri, 27 Oct 2023 08:50:45 -0700
+        Fri, 27 Oct 2023 08:56:39 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Kees Cook <keescook@chromium.org>,
 	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Christoph Hellwig <hch@lst.de>,
 	Justin Stitt <justinstitt@google.com>,
 	Kent Overstreet <kent.overstreet@linux.dev>,
 	Petr Mladek <pmladek@suse.com>,
@@ -52,47 +52,201 @@ Cc: Steven Rostedt <rostedt@goodmis.org>,
 	Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Jonathan Corbet <corbet@lwn.net>,
 	Yun Zhou <yun.zhou@windriver.com>,
 	Jacob Keller <jacob.e.keller@intel.com>,
 	Zhen Lei <thunder.leizhen@huawei.com>,
 	linux-trace-kernel@vger.kernel.org,
-	Yosry Ahmed <yosryahmed@google.com>, linux-kernel@vger.kernel.org,
+	Yosry Ahmed <yosryahmed@google.com>,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] seq_buf: Introduce DECLARE_SEQ_BUF and seq_buf_str()
-Message-ID: <202310270849.14B83B56D@keescook>
-References: <20231026194033.it.702-kees@kernel.org>
- <20231027045451.GA7838@lst.de>
+Subject: [PATCH v3] seq_buf: Introduce DECLARE_SEQ_BUF and seq_buf_str()
+Date: Fri, 27 Oct 2023 08:56:38 -0700
+Message-Id: <20231027155634.make.260-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231027045451.GA7838@lst.de>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4859; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=3QgU2GLPGx9pQtjcPqO6cwYESMY3mYmV87vQL0flhSk=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlO922vKn2ZbYda/N+2eCxBpz/i6JD9BxvPlHI+
+ EYOwNQvs8uJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZTvdtgAKCRCJcvTf3G3A
+ JmNwD/9KM3Ah0jhY/I4rtDSfk6VKAxNnDNfdAb6bwxkU6i4DwTDv2m9bkpEJ8tOYI17VJM08pQP
+ dqiHbBRsnaXTcjX7qSYYZkiEyvtaz1aqEqfESlMMsQlG5nm3p5ydAJ0HCTNgPsRCmqWXg7ngHkw
+ U7AKCvYa8/k77glsBe2DNvwJG/iV8SxHewOBIX/RMMjXxejGUnJwcTu7WDaAoBalJSF4B6V4O+j
+ TRX9ttk89GcOeEcpA86CtE4W+PPDeatAy3KkfNM3yH9dzWtryIvODc6fenHLhc5Wzfae72h5CoW
+ 0oxEf4bfFEjxene1jXHBMNrro16JWBcSKXnbTxFcVG8wnbMnILi+338L74Pu04ADedq7T1GOSNp
+ eRO4uwHrqbLV3FN6gfdLdVtDcuSzg7JzSh1ea9jba2TmOUxv2yCgimfAAeTAH8hKV2xYbgrA853
+ hLA+F1AG58hsyZ57S3wJ5VAoXaEXaxRMozLDG+VyMp3z3729+n8oRBpfM9d+RMYm8mfi0LjoVfd
+ 1Sy0aMBBB5fKUYpLuqkSTeIy1jtimZFYyTAZyBJQASoPKrmY4RXNhm+0AJ4bGB/bXDQPrw3QQl1
+ BtG3KwDfQIQyK/1Bny3W7k4GSD9HheeC3xRVhJoya0NIYmUvNJj6A7wYgPPi6o/qjg+tU5+e9EX
+ jZhI4NB wPewSiBQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 27, 2023 at 06:54:51AM +0200, Christoph Hellwig wrote:
-> On Thu, Oct 26, 2023 at 12:40:37PM -0700, Kees Cook wrote:
-> > Solve two ergonomic issues with struct seq_buf;
-> > 
-> > 1) Too much boilerplate is required to initialize:
-> > 
-> > 	struct seq_buf s;
-> > 	char buf[32];
-> > 
-> > 	seq_buf_init(s, buf, sizeof(buf));
-> > 
-> > Instead, we can build this directly on the stack. Provide
-> > DECLARE_SEQ_BUF() macro to do this:
-> > 
-> > 	DECLARE_SEQ_BUF(s, 32);
-> 
-> DECLARE_SEQ_BUF_ONSTACK maybe?  But otherwise this looks like a good
-> concept.
+Solve two ergonomic issues with struct seq_buf;
 
-It's usable for globals too... also it's a shorter name as-is. :)
+1) Too much boilerplate is required to initialize:
 
+	struct seq_buf s;
+	char buf[32];
+
+	seq_buf_init(s, buf, sizeof(buf));
+
+Instead, we can build this directly on the stack. Provide
+DECLARE_SEQ_BUF() macro to do this:
+
+	DECLARE_SEQ_BUF(s, 32);
+
+2) %NUL termination is fragile and requires 2 steps to get a valid
+   C String (and is a layering violation exposing the "internals" of
+   seq_buf):
+
+	seq_buf_terminate(s);
+	do_something(s->buffer);
+
+Instead, we can just return s->buffer directly after terminating it in
+the refactored seq_buf_terminate(), now known as seq_buf_str():
+
+	do_something(seq_buf_str(s));
+
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Justin Stitt <justinstitt@google.com>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Yun Zhou <yun.zhou@windriver.com>
+Cc: Jacob Keller <jacob.e.keller@intel.com>
+Cc: Zhen Lei <thunder.leizhen@huawei.com>
+Cc: linux-trace-kernel@vger.kernel.org
+Link: https://lore.kernel.org/r/20231026194033.it.702-kees@kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v3
+ - fix commit log typos
+ - improve code style for DECLARE_SEQ_BUF (shevchenko)
+ - const-ify seq_bug_str() return (rostedt)
+v2 - https://lore.kernel.org/lkml/20231026194033.it.702-kees@kernel.org
+v1 - https://lore.kernel.org/lkml/20231026170722.work.638-kees@kernel.org
+---
+ include/linux/seq_buf.h | 21 +++++++++++++++++----
+ kernel/trace/trace.c    | 11 +----------
+ lib/seq_buf.c           |  4 +---
+ 3 files changed, 19 insertions(+), 17 deletions(-)
+
+diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
+index 8483e4b2d0d2..5fb1f12c33f9 100644
+--- a/include/linux/seq_buf.h
++++ b/include/linux/seq_buf.h
+@@ -21,9 +21,18 @@ struct seq_buf {
+ 	size_t			len;
+ };
+ 
++#define DECLARE_SEQ_BUF(NAME, SIZE)			\
++	char __ ## NAME ## _buffer[SIZE] = "";		\
++	struct seq_buf NAME = {				\
++		.buffer = &__ ## NAME ## _buffer,	\
++		.size = SIZE,				\
++	}
++
+ static inline void seq_buf_clear(struct seq_buf *s)
+ {
+ 	s->len = 0;
++	if (s->size)
++		s->buffer[0] = '\0';
+ }
+ 
+ static inline void
+@@ -69,8 +78,8 @@ static inline unsigned int seq_buf_used(struct seq_buf *s)
+ }
+ 
+ /**
+- * seq_buf_terminate - Make sure buffer is nul terminated
+- * @s: the seq_buf descriptor to terminate.
++ * seq_buf_str - get %NUL-terminated C string from seq_buf
++ * @s: the seq_buf handle
+  *
+  * This makes sure that the buffer in @s is nul terminated and
+  * safe to read as a string.
+@@ -81,16 +90,20 @@ static inline unsigned int seq_buf_used(struct seq_buf *s)
+  *
+  * After this function is called, s->buffer is safe to use
+  * in string operations.
++ *
++ * Returns @s->buf after making sure it is terminated.
+  */
+-static inline void seq_buf_terminate(struct seq_buf *s)
++static inline const char *seq_buf_str(struct seq_buf *s)
+ {
+ 	if (WARN_ON(s->size == 0))
+-		return;
++		return "";
+ 
+ 	if (seq_buf_buffer_left(s))
+ 		s->buffer[s->len] = 0;
+ 	else
+ 		s->buffer[s->size - 1] = 0;
++
++	return s->buffer;
+ }
+ 
+ /**
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index d629065c2383..2539cfc20a97 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3828,15 +3828,6 @@ static bool trace_safe_str(struct trace_iterator *iter, const char *str,
+ 	return false;
+ }
+ 
+-static const char *show_buffer(struct trace_seq *s)
+-{
+-	struct seq_buf *seq = &s->seq;
+-
+-	seq_buf_terminate(seq);
+-
+-	return seq->buffer;
+-}
+-
+ static DEFINE_STATIC_KEY_FALSE(trace_no_verify);
+ 
+ static int test_can_verify_check(const char *fmt, ...)
+@@ -3976,7 +3967,7 @@ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
+ 		 */
+ 		if (WARN_ONCE(!trace_safe_str(iter, str, star, len),
+ 			      "fmt: '%s' current_buffer: '%s'",
+-			      fmt, show_buffer(&iter->seq))) {
++			      fmt, seq_buf_str(&iter->seq.seq))) {
+ 			int ret;
+ 
+ 			/* Try to safely read the string */
+diff --git a/lib/seq_buf.c b/lib/seq_buf.c
+index b7477aefff53..23518f77ea9c 100644
+--- a/lib/seq_buf.c
++++ b/lib/seq_buf.c
+@@ -109,9 +109,7 @@ void seq_buf_do_printk(struct seq_buf *s, const char *lvl)
+ 	if (s->size == 0 || s->len == 0)
+ 		return;
+ 
+-	seq_buf_terminate(s);
+-
+-	start = s->buffer;
++	start = seq_buf_str(s);
+ 	while ((lf = strchr(start, '\n'))) {
+ 		int len = lf - start + 1;
+ 
 -- 
-Kees Cook
+2.34.1
+
