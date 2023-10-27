@@ -1,79 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D12405F1
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Oct 2023 22:36:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF2B3FB00
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Oct 2023 23:31:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 739ADC433C8;
-	Fri, 27 Oct 2023 22:36:43 +0000 (UTC)
-Date: Fri, 27 Oct 2023 18:36:40 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Beau Belgrave <beaub@linux.microsoft.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, "open list:KERNEL SELFTEST
- FRAMEWORK" <linux-kselftest@vger.kernel.org>, open list
- <linux-kernel@vger.kernel.org>, linux-trace-kernel@vger.kernel.org,
- lkft-triage@lists.linaro.org, Mark Brown <broonie@kernel.org>, Zheng Yejian
- <zhengyejian1@huawei.com>, Dan Carpenter <dan.carpenter@linaro.org>, Arnd
- Bergmann <arnd@arndb.de>, Zheng Yejian <zhengyejian1@huawei.com>
-Subject: Re: selftests: user_events: ftrace_test - RIP:
- 0010:tracing_update_buffers (kernel/trace/trace.c:6470)
-Message-ID: <20231027183640.2529ab68@gandalf.local.home>
-In-Reply-To: <20231027192011.GA436-beaub@linux.microsoft.com>
-References: <CA+G9fYuDP3hVQ3t7FfrBAjd_WFVSurMgCepTxunSJf=MTe=6aA@mail.gmail.com>
-	<20231027192011.GA436-beaub@linux.microsoft.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D9701B9
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Oct 2023 16:31:45 -0700 (PDT)
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39RL85wg006170
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Oct 2023 16:31:45 -0700
+Received: from mail.thefacebook.com ([163.114.132.120])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3tywry2e5y-7
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Oct 2023 16:31:45 -0700
+Received: from twshared32169.15.frc2.facebook.com (2620:10d:c085:108::8) by
+ mail.thefacebook.com (2620:10d:c085:11d::8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34; Fri, 27 Oct 2023 16:31:41 -0700
+Received: by devbig019.vll3.facebook.com (Postfix, from userid 137359)
+	id 773E33A7C8ED5; Fri, 27 Oct 2023 16:31:29 -0700 (PDT)
+From: Andrii Nakryiko <andrii@kernel.org>
+To: <linux-trace-kernel@vger.kernel.org>, <mhiramat@kernel.org>
+CC: <bpf@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+        Francis Laniel
+	<flaniel@linux.microsoft.com>,
+        <stable@vger.kernel.org>, Steven Rostedt
+	<rostedt@goodmis.org>
+Subject: [PATCH] tracing/kprobes: Fix symbol counting logic by looking at modules as well
+Date: Fri, 27 Oct 2023 16:31:26 -0700
+Message-ID: <20231027233126.2073148-1-andrii@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: OuakN4-qJjrizHdOC_UjprdOja5mnQzp
+X-Proofpoint-GUID: OuakN4-qJjrizHdOC_UjprdOja5mnQzp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-27_21,2023-10-27_01,2023-05-22_02
 
-On Fri, 27 Oct 2023 12:20:11 -0700
-Beau Belgrave <beaub@linux.microsoft.com> wrote:
+Recent changes to count number of matching symbols when creating
+a kprobe event failed to take into account kernel modules. As such, it
+breaks kprobes on kernel module symbols, by assuming there is no match.
 
-> On Fri, Oct 27, 2023 at 05:38:41PM +0530, Naresh Kamboju wrote:
-> > Following kernel crash noticed on x86_64 while running selftests: user_events:
-> > ftrace_test running 6.6.0-rc7-next-20231026.
-> > 
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> > 
-> > kselftest: Running tests in user_events
-> > TAP version 13
-> > 1..4
-> > # timeout set to 90
-> > # selftests: user_events: ftrace_test
-> > [ 2391.606817] general protection fault, probably for non-canonical
-> > address 0x6b6b6b6b6b6b8a83: 0000 [#1] PREEMPT SMP PTI
-> > [ 2391.617519] CPU: 1 PID: 34662 Comm: ftrace_test Not tainted
-> > 6.6.0-rc7-next-20231026 #1
-> > [ 2391.625428] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-> > 2.7 12/07/2021
-> > [ 2391.632811] RIP: 0010:tracing_update_buffers (kernel/trace/trace.c:6470)
-> > [ 2391.637952] Code: 90 90 90 90 90 90 90 90 90 90 90 90 66 0f 1f 00
-> > 55 31 f6 48 89 e5 41 55 41 54 53 48 89 fb 48 c7 c7 40 8c 61 94 e8 92
-> > d3 5a 01 <44> 0f b6 a3 18 1f 00 00 41 80 fc 01 0f 87 c8 dc 4e 01 45 31
+Fix this my calling module_kallsyms_on_each_symbol() in addition to
+kallsyms_on_each_match_symbol() to perform a proper counting.
 
+Cc: Francis Laniel <flaniel@linux.microsoft.com>
+Cc: stable@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Fixes: b022f0c7e404 ("tracing/kprobes: Return EADDRNOTAVAIL when func mat=
+ches several symbols")
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+---
+ kernel/trace/trace_kprobe.c | 24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
 
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index effcaede4759..1efb27f35963 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -714,14 +714,30 @@ static int count_symbols(void *data, unsigned long =
+unused)
+ 	return 0;
+ }
+=20
++struct sym_count_ctx {
++	unsigned int count;
++	const char *name;
++};
++
++static int count_mod_symbols(void *data, const char *name, unsigned long=
+ unused)
++{
++	struct sym_count_ctx *ctx =3D data;
++
++	if (strcmp(name, ctx->name) =3D=3D 0)
++		ctx->count++;
++
++	return 0;
++}
++
+ static unsigned int number_of_same_symbols(char *func_name)
+ {
+-	unsigned int count;
++	struct sym_count_ctx ctx =3D { .count =3D 0, .name =3D func_name };
++
++	kallsyms_on_each_match_symbol(count_symbols, func_name, &ctx.count);
+=20
+-	count =3D 0;
+-	kallsyms_on_each_match_symbol(count_symbols, func_name, &count);
++	module_kallsyms_on_each_symbol(NULL, count_mod_symbols, &ctx);
+=20
+-	return count;
++	return ctx.count;
+ }
+=20
+ static int __trace_kprobe_create(int argc, const char *argv[])
+--=20
+2.34.1
 
-> Warning is from this code:
-> static void __trace_array_put(struct trace_array *this_tr)
-> {
->         WARN_ON(!this_tr->ref);
->         this_tr->ref--;
-> }
-> 
-> It seems like there might be a timing window or an incorrect call to
-> trace_array_put() somewhere. Do you think this is related to the eventfs
-> work?
-
-No, I think this is was probably introduced by:
-
-  a1f157c7a3bb ("tracing: Expand all ring buffers individually")
-
-Or possibly a mixture of the two changes? But anyway I think I need to look
-at this one first.
-
--- Steve
