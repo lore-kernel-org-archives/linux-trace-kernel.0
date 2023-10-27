@@ -1,48 +1,42 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F23E8489;
-	Fri, 27 Oct 2023 10:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Iq4Hkxr2"
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DDAB129;
-	Fri, 27 Oct 2023 03:53:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=OUqZ/y2xkCm3zQNBC4e312DaqxOklBLq/b59VIOcDu4=; b=Iq4Hkxr2cxVF7xR8/dmC/adcpk
-	IBV73W7uKhjhKeObOZ/QazPcu5ZscndEmBah5eSjEEbqWVKJJZ7IF7j72BUVy2yW4OrWg4LaHHvhZ
-	XZquUvCykpawQMYkbp2TA28UCGsbRRiAbDl+TFZEBR68vcWrvPWxkTIoSW/tmTGOuC+ofqtlUfUtx
-	RwafKRtL199yq5+mVVtFEyAz2GRGkQoWDuWEMoyiySwNlDMHxnYBpr0JBOXrS4vTRXDa5qjIIIhro
-	FgelaR5Uom6vH6Ogeepx/N7bqyfG7xrT2J72NvXOgFhvQXJIEtgI4V5C3+OxKHfnTR4exGJ/iO/fG
-	U3ETQHzg==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qwKT6-002zq4-Pb; Fri, 27 Oct 2023 10:53:32 +0000
-Date: Fri, 27 Oct 2023 11:53:32 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Kees Cook <keescook@chromium.org>, Steven Rostedt <rostedt@goodmis.org>,
-	Justin Stitt <justinstitt@google.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Petr Mladek <pmladek@suse.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>,
-	Yun Zhou <yun.zhou@windriver.com>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Zhen Lei <thunder.leizhen@huawei.com>,
-	linux-trace-kernel@vger.kernel.org,
-	Yosry Ahmed <yosryahmed@google.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] seq_buf: Introduce DECLARE_SEQ_BUF and seq_buf_str()
-Message-ID: <ZTuWrDdLr16Oo6La@casper.infradead.org>
-References: <20231026194033.it.702-kees@kernel.org>
- <20231027045451.GA7838@lst.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7720179CC;
+	Fri, 27 Oct 2023 11:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CAC0C433C8;
+	Fri, 27 Oct 2023 11:04:35 +0000 (UTC)
+Date: Fri, 27 Oct 2023 12:04:33 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Hyesoo Yu <hyesoo.yu@samsung.com>
+Cc: Alexandru Elisei <alexandru.elisei@arm.com>,
+	David Hildenbrand <david@redhat.com>, will@kernel.org,
+	oliver.upton@linux.dev, maz@kernel.org, james.morse@arm.com,
+	suzuki.poulose@arm.com, yuzenghui@huawei.com, arnd@arndb.de,
+	akpm@linux-foundation.org, mingo@redhat.com, peterz@infradead.org,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+	mhiramat@kernel.org, rppt@kernel.org, hughd@google.com,
+	pcc@google.com, steven.price@arm.com, anshuman.khandual@arm.com,
+	vincenzo.frascino@arm.com, eugenis@google.com, kcc@google.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 00/37] Add support for arm64 MTE dynamic tag storage
+ reuse
+Message-ID: <ZTuZQYjcYFILtGYI@arm.com>
+References: <0b9c122a-c05a-b3df-c69f-85f520294adc@redhat.com>
+ <ZOd2LvUKMguWdlgq@arm.com>
+ <ZPhfNVWXhabqnknK@monolith>
+ <ZP7/e8YFiosElvTm@arm.com>
+ <0cc8a118-2522-f666-5bcc-af06263fd352@redhat.com>
+ <ZQHVVdlN9QQztc7Q@arm.com>
+ <CGME20231025031004epcas2p485a0b7a9247bc61d54064d7f7bdd1e89@epcas2p4.samsung.com>
+ <20231025025932.GA3953138@tiffany>
+ <ZTjWKJ0K78jeCJr-@monolith>
+ <20231025085258.GA1355131@tiffany>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -51,21 +45,24 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231027045451.GA7838@lst.de>
+In-Reply-To: <20231025085258.GA1355131@tiffany>
 
-On Fri, Oct 27, 2023 at 06:54:51AM +0200, Christoph Hellwig wrote:
-> > Instead, we can just return s->buffer direction after terminating it
-> > in refactored seq_buf_terminate(), now known as seq_buf_str():
-> > 
-> > 	do_soemthing(seq_buf_str(s));
-> 
-> Looks good.  Btw, one typical do_something would be printing it,
-> so adding a format specifier that's using this helper would also
-> probably be very useful.
+On Wed, Oct 25, 2023 at 05:52:58PM +0900, Hyesoo Yu wrote:
+> If we only avoid using ALLOC_CMA for __GFP_TAGGED, would we still be able to use
+> the next iteration even if the hardware does not support "tag of tag" ? 
 
-my hope is to get vsprintf.c completely refactored to use seq_buf
-internally, and then printsb(&sb) would actually be a primitive we'd
-have insted of printk("%pSB", &sb);
+It depends on how the next iteration looks like. The plan was not to
+support this so that we avoid another complication where a non-tagged
+page is mprotect'ed to become tagged and it would need to be migrated
+out of the CMA range. Not sure how much code it would save.
 
-this would btw let us get rid of the entire %pFOO infrastructure.
-and make dump_page() far less crap.
+> I am not sure every vendor will support tag of tag, since there is no information
+> related to that feature, like in the Google spec document.
+
+If you are aware of any vendors not supporting this, please direct them
+to the Arm support team, it would be very useful information for us.
+
+Thanks.
+
+-- 
+Catalin
