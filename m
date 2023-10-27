@@ -1,53 +1,53 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF17637C9D
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Oct 2023 15:46:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D0E37CAA
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Oct 2023 15:49:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P237Peli"
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10122CE
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Oct 2023 08:46:18 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1c9de3f66e5so17670395ad.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Oct 2023 08:46:18 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ATrAPvCK"
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07CD8121
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Oct 2023 08:49:31 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-6b3c2607d9bso2141885b3a.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Oct 2023 08:49:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1698421577; x=1699026377; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1698421770; x=1699026570; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bXwiHUF+X9lySsU8pvLVICiNMeHED6d+bcuJHhpa7Ew=;
-        b=P237PelidtcWw8WiXDkwPUhlrhdZvIsGVzdAkchjolKTLfuy0roDgRVGXmpTGvtNER
-         yO6DAxx7ehFFcsiAZUJWt4Hsii1U/+m9NMfontED91+8zliv9y/7Uul6Ba4IvMWpg+u5
-         0w1zrF7mOYMIroDDH+tSMEHYMzGKpaDXTM65Q=
+        bh=IHk29Z1bkPqek7gCeEpQVU54722xNK+qdY6dXvgVPY8=;
+        b=ATrAPvCKwjonLFj9lKdIZimwFmb/SqMTIRYvQbpVDoFLonCY9KcVaQtgjLVByQuja+
+         bB1VuSHXg/oDB1txQKVm9Rykz6n/kY4YMs8c9p2RnIkJcPpEda1IVNCoAtUKHZuURHwt
+         SM3vpwr16qmbnv+z8SIkzmxBtV5hsZNyabth0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698421577; x=1699026377;
+        d=1e100.net; s=20230601; t=1698421770; x=1699026570;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bXwiHUF+X9lySsU8pvLVICiNMeHED6d+bcuJHhpa7Ew=;
-        b=b5HMouqHoZuhsrlV7bA8g2hYa8JD2+tPWLlrLzkXEqpfwzZSDFGaCeo21MjLKh+9aw
-         pNvWPkkaTEaMMAnLXwrcE5ZvsRiVgNnq+0agQE0Tw1uzF0MeyR98HL6JiYiQt6eJHGZK
-         ewdANSfQ7093McPZArN7ZN6dpZlrUTod7xQ4HZpya9frvqhda/pT3Rskriw2rZdiaGh1
-         25ENYTjtIj3u8NCzdM5wp/wYoNd/nBCbmcRZFqN5ry2ErThe+zgrR3WMUrCcYvbbuWww
-         4/5JigfC16BDpqGSMN9VZp5gSOH8Jn6s3EkYGFM/UCXAF6FUUtTuI/OOEGOMVho/HrBq
-         6YpQ==
-X-Gm-Message-State: AOJu0Yw6ej7ww5106jyASI/g9Nje5PZGoWWFHqBFlPXCskKWSQ2oTvWR
-	PJzoUKYS531mw4wIEK8dX40KsQ==
-X-Google-Smtp-Source: AGHT+IGhmY9j5VDtwlDB7WV8OTyFMND/UgkMHgO5ObwArE+J9934qQxf7biq0pExELauYnurCtkMEw==
-X-Received: by 2002:a17:903:2448:b0:1c9:b2c1:13a3 with SMTP id l8-20020a170903244800b001c9b2c113a3mr3650635pls.49.1698421577533;
-        Fri, 27 Oct 2023 08:46:17 -0700 (PDT)
+        bh=IHk29Z1bkPqek7gCeEpQVU54722xNK+qdY6dXvgVPY8=;
+        b=RCVKltWO14r2AQzOOLeLb+9Xl+z1VQhfNiY8jL6dbgN/dW5i6kESR0eLlnG3QuzGUf
+         7C5fLYvdFoBOrNzaJUOG4HGq/xve0Ck/LTtCdlMld0By3m5c6ZepsNRLqKKLrMFbuiye
+         xqlnzIO+cspLaFejF8aWhKoTKVvwFzSiLUv95W9J92sPvjvkiImLGbsS6gMJZ3Ke+11H
+         KS12yss+zsAiYd77LtCBbR6pQ4red4dmPM5UU0TtwlMffAt4g2pbKyMaTYCbxdeDrhfH
+         tk6eja67oV4Bf87V7G+JEoaEz/YGK4/eNh/LPEtMgvpWyesLyhN9nbDosnDWFGvEvVBp
+         O7IQ==
+X-Gm-Message-State: AOJu0YwSBHSTurDwIezZ0TlMHW1v2t9JcPKfaRXTxbKGsNi7QjdM6vBP
+	PuJRssB1tQVed8+lAQH7d2kOMQ==
+X-Google-Smtp-Source: AGHT+IG8CGn3LR7gwK8EOywQp5gX/Xh8ODsLfMiXAYGBvX9k7hXCAhY6wBTnbVquWb7hZb55GSET8g==
+X-Received: by 2002:a05:6a00:814:b0:6b2:2a2d:7a26 with SMTP id m20-20020a056a00081400b006b22a2d7a26mr3566629pfk.28.1698421770505;
+        Fri, 27 Oct 2023 08:49:30 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h9-20020a170902f7c900b001b8a3e2c241sm1746323plw.14.2023.10.27.08.46.16
+        by smtp.gmail.com with ESMTPSA id g5-20020a056a00078500b006930db1e6cfsm1556618pfu.62.2023.10.27.08.49.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Oct 2023 08:46:17 -0700 (PDT)
-Date: Fri, 27 Oct 2023 08:46:16 -0700
+        Fri, 27 Oct 2023 08:49:28 -0700 (PDT)
+Date: Fri, 27 Oct 2023 08:49:28 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
 	Christoph Hellwig <hch@lst.de>,
 	Justin Stitt <justinstitt@google.com>,
 	Kent Overstreet <kent.overstreet@linux.dev>,
 	Petr Mladek <pmladek@suse.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -60,9 +60,9 @@ Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
 	Yosry Ahmed <yosryahmed@google.com>, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
 Subject: Re: [PATCH v2] seq_buf: Introduce DECLARE_SEQ_BUF and seq_buf_str()
-Message-ID: <202310270845.3D1EB44@keescook>
+Message-ID: <202310270847.87B9B46EE@keescook>
 References: <20231026194033.it.702-kees@kernel.org>
- <20231026154459.1603d750@gandalf.local.home>
+ <ZTrJ/5Jrzz5D62hh@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -71,29 +71,68 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231026154459.1603d750@gandalf.local.home>
+In-Reply-To: <ZTrJ/5Jrzz5D62hh@smile.fi.intel.com>
 
-On Thu, Oct 26, 2023 at 03:44:59PM -0400, Steven Rostedt wrote:
-> On Thu, 26 Oct 2023 12:40:37 -0700
-> Kees Cook <keescook@chromium.org> wrote:
+On Thu, Oct 26, 2023 at 11:20:15PM +0300, Andy Shevchenko wrote:
+> On Thu, Oct 26, 2023 at 12:40:37PM -0700, Kees Cook wrote:
+> > Solve two ergonomic issues with struct seq_buf;
+> > 
+> > 1) Too much boilerplate is required to initialize:
+> > 
+> > 	struct seq_buf s;
+> > 	char buf[32];
+> > 
+> > 	seq_buf_init(s, buf, sizeof(buf));
+> > 
+> > Instead, we can build this directly on the stack. Provide
+> > DECLARE_SEQ_BUF() macro to do this:
+> > 
+> > 	DECLARE_SEQ_BUF(s, 32);
+> > 
+> > 2) %NUL termination is fragile and requires 2 steps to get a valid
+> >    C String (and is a layering violation exposing the "internals" of
+> >    seq_buf):
+> > 
+> > 	seq_buf_terminate(s);
+> > 	do_something(s->buffer);
+> > 
+> > Instead, we can just return s->buffer direction after terminating it
+> > in refactored seq_buf_terminate(), now known as seq_buf_str():
+> > 
+> > 	do_soemthing(seq_buf_str(s));
 > 
-> > @@ -81,16 +88,20 @@ static inline unsigned int seq_buf_used(struct seq_buf *s)
-> >   *
-> >   * After this function is called, s->buffer is safe to use
-> >   * in string operations.
-> > + *
-> > + * Returns @s->buf after making sure it is terminated.
-> >   */
-> > -static inline void seq_buf_terminate(struct seq_buf *s)
+> ...
+> 
+> > +#define DECLARE_SEQ_BUF(NAME, SIZE)					\
+> > +	char __ ## NAME ## _buffer[SIZE] = "";				\
+> > +	struct seq_buf NAME = { .buffer = &__ ## NAME ## _buffer,	\
+> > +				.size = SIZE }
+> 
+> Hmm... Wouldn't be more readable to have it as
+> 
+> #define DECLARE_SEQ_BUF(NAME, SIZE)			\
+> 	char __ ## NAME ## _buffer[SIZE] = "";		\
+> 	struct seq_buf NAME = {				\
+> 		.buffer = &__ ## NAME ## _buffer,	\
+> 		.size = SIZE,				\
+> 	}
+> 
+> ?
+
+Yes, I don't know why I did it the smooshed way. Fixed for v3.
+
 > > +static inline char *seq_buf_str(struct seq_buf *s)
+> >  {
+> >  	if (WARN_ON(s->size == 0))
+> > -		return;
+> > +		return "";
 > 
-> Looking at show_buffer() (below), I wonder if this should be:
-> 
-> static inline const char *seq_buf_str() ?
-> 
-> I mean, it can be modified, but do we want to allow that?
+> I'm wondering why it's a problem to have an empty string?
 
-Yeah, good idea. I've updated this for v3.
+Well, it's a pathological case where "size" is 0 -- it shouldn't happen
+(hence the warn), but it's more robust to return an empty .data string
+pointer than a NULL s->buffer or an s->buffer that isn't intended to be
+used (i.e. the size == 0).
 
 -- 
 Kees Cook
