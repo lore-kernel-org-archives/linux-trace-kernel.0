@@ -1,103 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F005394
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 28 Oct 2023 02:33:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12903C433C8;
-	Sat, 28 Oct 2023 02:33:45 +0000 (UTC)
-Date: Fri, 27 Oct 2023 22:33:44 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Beau Belgrave <beaub@linux.microsoft.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, "open list:KERNEL SELFTEST
- FRAMEWORK" <linux-kselftest@vger.kernel.org>, open list
- <linux-kernel@vger.kernel.org>, linux-trace-kernel@vger.kernel.org,
- lkft-triage@lists.linaro.org, Mark Brown <broonie@kernel.org>, Zheng Yejian
- <zhengyejian1@huawei.com>, Dan Carpenter <dan.carpenter@linaro.org>, Arnd
- Bergmann <arnd@arndb.de>
-Subject: Re: selftests: user_events: ftrace_test - RIP:
- 0010:tracing_update_buffers (kernel/trace/trace.c:6470)
-Message-ID: <20231027223344.3854ac1f@rorschach.local.home>
-In-Reply-To: <20231027183640.2529ab68@gandalf.local.home>
-References: <CA+G9fYuDP3hVQ3t7FfrBAjd_WFVSurMgCepTxunSJf=MTe=6aA@mail.gmail.com>
-	<20231027192011.GA436-beaub@linux.microsoft.com>
-	<20231027183640.2529ab68@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953EC396;
+	Sat, 28 Oct 2023 03:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TcXwIpdJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1A8CC433C8;
+	Sat, 28 Oct 2023 03:18:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1698463090;
+	bh=d/Vb6DNmTEBIIjqjO5hkSt8UwYYghPzG/0GkjApsIVQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=TcXwIpdJHA9nIFKmtJNWNLw1daZ7qiOc+Mhes/nR86coS9F9wUOwYUK+OKywcMFoy
+	 Ur+QR/k5pLehHfbF6OM15xrEF/OcjooKzJWsJXjVOf1BTRt5vw4ne25G4rFQNykinG
+	 VT9wDrUMu16ughKkWxLABC7mGkZ/b5FFTO3L/dZ6W9DPPIMhopoaTX3xJ7vy0Fj3T7
+	 hnpuaYFiVFlHJ7O8QLyETjFpYbBlFwA0fUikiUFlsHgBuWDRWXnAYwXWzAN4mMpqkS
+	 ckhuXVDFXnrMvzYiB0zTCtjgLb4ctjTMMLaxADBVN1NiHQ0HnhvPBDwUYRWDTNXTQI
+	 xNzmCvR9/ENNg==
+Date: Sat, 28 Oct 2023 12:18:05 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>, Francis Laniel
+ <flaniel@linux.microsoft.com>, <stable@vger.kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>
+Subject: Re: [PATCH] tracing/kprobes: Fix symbol counting logic by looking
+ at modules as well
+Message-Id: <20231028121805.d156c41fa75cfdcf91550c33@kernel.org>
+In-Reply-To: <20231028104144.de23c2287281e9228ce92508@kernel.org>
+References: <20231027233126.2073148-1-andrii@kernel.org>
+	<20231028104144.de23c2287281e9228ce92508@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 27 Oct 2023 18:36:40 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Sat, 28 Oct 2023 10:41:44 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> On Fri, 27 Oct 2023 12:20:11 -0700
-> Beau Belgrave <beaub@linux.microsoft.com> wrote:
+> Hi,
 > 
-> > On Fri, Oct 27, 2023 at 05:38:41PM +0530, Naresh Kamboju wrote:  
-> > > Following kernel crash noticed on x86_64 while running selftests: user_events:
-> > > ftrace_test running 6.6.0-rc7-next-20231026.
-> > > 
-> > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> > > 
-> > > kselftest: Running tests in user_events
-> > > TAP version 13
-> > > 1..4
-> > > # timeout set to 90
-> > > # selftests: user_events: ftrace_test
-> > > [ 2391.606817] general protection fault, probably for non-canonical
-> > > address 0x6b6b6b6b6b6b8a83: 0000 [#1] PREEMPT SMP PTI
-> > > [ 2391.617519] CPU: 1 PID: 34662 Comm: ftrace_test Not tainted
-> > > 6.6.0-rc7-next-20231026 #1
-> > > [ 2391.625428] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-> > > 2.7 12/07/2021
-> > > [ 2391.632811] RIP: 0010:tracing_update_buffers (kernel/trace/trace.c:6470)
-> > > [ 2391.637952] Code: 90 90 90 90 90 90 90 90 90 90 90 90 66 0f 1f 00
-> > > 55 31 f6 48 89 e5 41 55 41 54 53 48 89 fb 48 c7 c7 40 8c 61 94 e8 92
-> > > d3 5a 01 <44> 0f b6 a3 18 1f 00 00 41 80 fc 01 0f 87 c8 dc 4e 01 45 31  
+> On Fri, 27 Oct 2023 16:31:26 -0700
+> Andrii Nakryiko <andrii@kernel.org> wrote:
 > 
-> 
-> 
-> > Warning is from this code:
-> > static void __trace_array_put(struct trace_array *this_tr)
-> > {
-> >         WARN_ON(!this_tr->ref);
-> >         this_tr->ref--;
-> > }
+> > Recent changes to count number of matching symbols when creating
+> > a kprobe event failed to take into account kernel modules. As such, it
+> > breaks kprobes on kernel module symbols, by assuming there is no match.
 > > 
-> > It seems like there might be a timing window or an incorrect call to
-> > trace_array_put() somewhere. Do you think this is related to the eventfs
-> > work?  
+> > Fix this my calling module_kallsyms_on_each_symbol() in addition to
+> > kallsyms_on_each_match_symbol() to perform a proper counting.
+> > 
+> > Cc: Francis Laniel <flaniel@linux.microsoft.com>
+> > Cc: stable@vger.kernel.org
+> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > Fixes: b022f0c7e404 ("tracing/kprobes: Return EADDRNOTAVAIL when func matches several symbols")
+> > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
 > 
-> No, I think this is was probably introduced by:
+> This fixes "BPF" kprobe event, but not ftrace kprobe events.
+> ftrace kprobe events only checks this if it is in the vmlinux not
+> modules and that's why my selftest passed the original one.
+
+Ah, my bad. ftrace kprobe event should accept the target symbol without
+module name. Yes, in that case it missed the count.
+
+> Hmm, I need another enhancement like this for the events on offline
+> modules.
+
+Also, I need to add another test case update without module name.
+(this one should be another fix)
+
+Thank you,
+
 > 
->   a1f157c7a3bb ("tracing: Expand all ring buffers individually")
+> Thank you,
 > 
-> Or possibly a mixture of the two changes? But anyway I think I need to look
-> at this one first.
+> > ---
+> >  kernel/trace/trace_kprobe.c | 24 ++++++++++++++++++++----
+> >  1 file changed, 20 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> > index effcaede4759..1efb27f35963 100644
+> > --- a/kernel/trace/trace_kprobe.c
+> > +++ b/kernel/trace/trace_kprobe.c
+> > @@ -714,14 +714,30 @@ static int count_symbols(void *data, unsigned long unused)
+> >  	return 0;
+> >  }
+> >  
+> > +struct sym_count_ctx {
+> > +	unsigned int count;
+> > +	const char *name;
+> > +};
+> > +
+> > +static int count_mod_symbols(void *data, const char *name, unsigned long unused)
+> > +{
+> > +	struct sym_count_ctx *ctx = data;
+> > +
+> > +	if (strcmp(name, ctx->name) == 0)
+> > +		ctx->count++;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static unsigned int number_of_same_symbols(char *func_name)
+> >  {
+> > -	unsigned int count;
+> > +	struct sym_count_ctx ctx = { .count = 0, .name = func_name };
+> > +
+> > +	kallsyms_on_each_match_symbol(count_symbols, func_name, &ctx.count);
+> >  
+> > -	count = 0;
+> > -	kallsyms_on_each_match_symbol(count_symbols, func_name, &count);
+> > +	module_kallsyms_on_each_symbol(NULL, count_mod_symbols, &ctx);
+> >  
+> > -	return count;
+> > +	return ctx.count;
+> >  }
+> >  
+> >  static int __trace_kprobe_create(int argc, const char *argv[])
+> > -- 
+> > 2.34.1
+> > 
+> 
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Not sure if the bug Beau hit is the same as this one, but the one Beau
-hit I think is fixed by this:
 
--- Steve
-
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 4d2da7480e5f..4a54493b8419 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -234,6 +234,10 @@ create_file_dentry(struct eventfs_inode *ei, struct dentry **e_dentry,
- 	bool invalidate = false;
- 
- 	mutex_lock(&eventfs_mutex);
-+	if (ei->is_freed) {
-+		mutex_unlock(&eventfs_mutex);
-+		return NULL;
-+	}
- 	/* If the e_dentry already has a dentry, use it */
- 	if (*e_dentry) {
- 		/* lookup does not need to up the ref count */
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
