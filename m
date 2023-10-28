@@ -1,21 +1,21 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D9A28F9
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 28 Oct 2023 20:37:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C4028F9
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 28 Oct 2023 20:46:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0F38C433C7;
-	Sat, 28 Oct 2023 20:37:50 +0000 (UTC)
-Date: Sat, 28 Oct 2023 16:37:49 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E37B9C433C8;
+	Sat, 28 Oct 2023 20:46:51 +0000 (UTC)
+Date: Sat, 28 Oct 2023 16:46:50 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
  <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, "Arnd Bergmann" <arnd@arndb.de>, "Naresh Kamboju"
- <naresh.kamboju@linaro.org>, Beau Belgrave <beaub@linux.microsoft.com>,
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland 
+ <mark.rutland@arm.com>, "Arnd Bergmann" <arnd@arndb.de>, "Naresh Kamboju\"
+  <naresh.kamboju@linaro.org>, Beau Belgrave <beaub@linux.microsoft.com>,
  "Ajay Kaher" <akaher@vmware.com>, Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH] eventfs: Test for ei->is_freed when accessing ei->dentry
-Message-ID: <20231028163749.0d3429a1@rorschach.local.home>
+Subject: [PATCH v2] eventfs: Test for ei->is_freed when accessing ei->dentry
+Message-ID: <20231028164650.4f5ea18a@rorschach.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,17 +47,27 @@ Link: https://lore.kernel.org/all/CA+G9fYt6pY+tMZEOg=SoEywQOe19fGP3uR15SGowkdK+_
 Link: https://lore.kernel.org/all/CA+G9fYuDP3hVQ3t7FfrBAjd_WFVSurMgCepTxunSJf=MTe=6aA@mail.gmail.com/
 
 Fixes: 5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode")
-Reported-by: Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
 Reported-by: Beau Belgrave <beaub@linux.microsoft.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/tracefs/event_inode.c | 60 ++++++++++++++++++++++++++++++++--------
+
+Changes since v1: https://lore.kernel.org/all/20231028163749.0d3429a1@rorschach.local.home/
+
+ - Add comment about ei->is_freed is a union along with ei->rcu and
+   ei->del_list so that others can find where ei->is_freed is set and
+   not get confused about why ei->dentry is being removed but ei->is_freed
+   isn't mentioned.
+
+ - And fixed change log to remove the double "Reported-by".
+
+ fs/tracefs/event_inode.c | 65 +++++++++++++++++++++++++++++++++-------
  fs/tracefs/internal.h    |  3 +-
- 2 files changed, 51 insertions(+), 12 deletions(-)
+ 2 files changed, 56 insertions(+), 12 deletions(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 4d2da7480e5f..385aab6dc982 100644
+index 4d2da7480e5f..45bddce7c747 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
 @@ -24,7 +24,20 @@
@@ -208,11 +218,16 @@ index 4d2da7480e5f..385aab6dc982 100644
  }
  
  /**
-@@ -880,7 +918,7 @@ void eventfs_remove_dir(struct eventfs_inode *ei)
+@@ -880,7 +918,12 @@ void eventfs_remove_dir(struct eventfs_inode *ei)
  		for (i = 0; i < ei->nr_entries; i++)
  			unhook_dentry(&ei->d_children[i], &dentry_list);
  		unhook_dentry(&ei->dentry, &dentry_list);
 -		call_srcu(&eventfs_srcu, &ei->rcu, free_ei);
++		/*
++		 * Note, ei->is_freed is a union along with ei->rcu
++		 * and ei->del_list. When the ei is added to either
++		 * of those lists, it automatically sets ei->is_freed.
++		 */
 +		call_srcu(&eventfs_srcu, &ei->rcu, free_rcu_ei);
  	}
  	mutex_unlock(&eventfs_mutex);
