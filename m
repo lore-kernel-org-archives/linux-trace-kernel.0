@@ -1,152 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A8B1361
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 29 Oct 2023 03:26:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC3017C3
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 29 Oct 2023 05:22:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CF8eXqsV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF026C433C7;
-	Sun, 29 Oct 2023 03:26:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698550007;
-	bh=Dxg6gKT37gNrEbIymPEkWrKefREoe2HMLWEPq1+CyG4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CF8eXqsVK3bQmCBlfBRv7gQUNyWqRIXagijv3yKwshN3DDk6N9AN61Evlyld9tsdz
-	 OZWPKJ7VMtagFHuK5W1R30GlUyiczQBei55TbKocH1GioONITN85PTtZ/ogJkUasc5
-	 VAs2tDdRTb7Zu89s93K43Z/BUPQP7ELcMEVGUeL6ujHUUPNFqkk0TpIhF+atctlTcV
-	 JwebTOnJxkxEfVUb723D40QT6TaqK8VfsApm/R4iK43cQOjJZ9C5AICuuj45WUd6q0
-	 jbDHHex0ABxo5uqB58OcdZJfr4grRCsrb8F1ZQ5YotrSxm1RjkhmxgyzcyeRyG8yYD
-	 xRs22YMJRYjQQ==
-Date: Sun, 29 Oct 2023 12:26:41 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "wuqiang.matt" <wuqiang.matt@bytedance.com>, Vineet Gupta
- <vgupta@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Jonas Bonn <jonas@southpole.se>, Stefan
- Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne
- <shorne@gmail.com>, Ingo Molnar <mingo@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Andi Shyti <andi.shyti@linux.intel.com>, Palmer
- Dabbelt <palmer@rivosinc.com>, Andrzej Hajda <andrzej.hajda@intel.com>,
- linux-trace-kernel@vger.kernel.org, mattwu@163.com,
- linux-snps-arc@lists.infradead.org
-Subject: Re: [PATCH 3/3] locking/atomic: openrisc: use
- generic_cmpxchg[64]_local for arch_cmpxchg[64]_local
-Message-Id: <20231029122641.a8c90d5e6bdfa6e7175bbe97@kernel.org>
-In-Reply-To: <99f9c3d4-0c9e-4542-9511-796f719c36e3@bytedance.com>
-References: <20231026073932.702197-1-wuqiang.matt@bytedance.com>
-	<1e3aba7d-89ac-4b62-840e-992527115a70@app.fastmail.com>
-	<66f5645c-f9f5-4c53-9503-a1f8470a9bee@bytedance.com>
-	<20231028214918.e32265f1dd2ef26fd9d2d1c2@kernel.org>
-	<99f9c3d4-0c9e-4542-9511-796f719c36e3@bytedance.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RwapE4d7"
+Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1252C6
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 28 Oct 2023 22:22:55 -0700 (PDT)
+Received: by mail-ot1-x329.google.com with SMTP id 46e09a7af769-6c4a25f6390so2311228a34.2
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 28 Oct 2023 22:22:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1698556975; x=1699161775; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=sB1j55JC/El1p0jjkjVIArkqbmShYLGKj4KmRysP+N8=;
+        b=RwapE4d7hl8Bkxl8xX035KiVZBsxWpW+02VCNltiOLygXFSFg1epUSEbUEDDLdKGgP
+         c9YXOv164yVT4uFdJlwkSiuiGdibV/srakpEIxYBts0BkVvMuuM26nHytR8SMEdb0dR5
+         o7rqGdY0XFWeoMFqSm9lgnzE21XQCiVXUNv7jgtftQem5qHDjqphSVYh4x6+gRw9jVVU
+         evnjbAX6OgXpWtQ9TBhXrjrjNS1VRGzUcPsDDJAH6mzLXtZw9kD5vPm/NuMM1bxdlQmh
+         PZNGx3wyrJmA0cWmQlq0X2qGm2Yl605+pQGA2Nf8oT43MgNLThqxM97bVn9yDVc6i1kS
+         0U/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698556975; x=1699161775;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sB1j55JC/El1p0jjkjVIArkqbmShYLGKj4KmRysP+N8=;
+        b=R+VJF18jM+m7ybYvlWEMAjH5tWaHdfXFu5cHjZu0DrLpfN+vfyBHCquCAqfpJ9oCkw
+         viq6Xg673ZMODTRVW+34BHiqwUwAf9wMJP3/gAgTLFWFQGvmoAPjYmDzX3uNBwVZ/1Ae
+         vtCeG6U/dczZI9cUAiqPaDYdwmyrTHDtAeIXjb0+oLoXAdmQv/7k9OEPcp7hpsstHlN8
+         ZZmWPiWtcaaP2LirBoUQE6wbBMUdkufnomGOM+gfa+nSfhdKIC35RwI7MrNB+CLLeqsS
+         sBXwmTWEuAvSWp+2vZOjyuM4+a3GPK5kwWNjyYMGJxUXFM+hT01X3ugvOQvVrXB15mxY
+         SjGA==
+X-Gm-Message-State: AOJu0YwKIhvXoPj3TJr5DF75XfbPYvJ7DoKcAljhAW2p+6fe/MPs1n4l
+	gr7cCsZI0i3BpI6gyp6k0HrJctEmTKbjs/Qh7tkQlg==
+X-Google-Smtp-Source: AGHT+IFD5noruhyvzyxMRl/i4pk8euQ/2NViE3YRCrT4LW+KBgiNugVIsrn+zfY8Ma/tD2zYcnXm9FZYdj+zqt5iW04=
+X-Received: by 2002:a05:6808:209a:b0:3a7:2524:6d3b with SMTP id
+ s26-20020a056808209a00b003a725246d3bmr7421000oiw.12.1698556975240; Sat, 28
+ Oct 2023 22:22:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20231028163749.0d3429a1@rorschach.local.home>
+In-Reply-To: <20231028163749.0d3429a1@rorschach.local.home>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Sun, 29 Oct 2023 10:52:43 +0530
+Message-ID: <CA+G9fYuJF42KP-j5LNa2FMqDr8wxHFMXm2pNe=SRNnXvqKrMrQ@mail.gmail.com>
+Subject: Re: [PATCH] eventfs: Test for ei->is_freed when accessing ei->dentry
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Beau Belgrave <beaub@linux.microsoft.com>, Ajay Kaher <akaher@vmware.com>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, 29 Oct 2023 00:40:17 +0800
-"wuqiang.matt" <wuqiang.matt@bytedance.com> wrote:
+On Sun, 29 Oct 2023 at 02:07, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+>
+> The eventfs_inode (ei) is protected by SRCU, but the ei->dentry is not. It
+> is protected by the eventfs_mutex. Anytime the eventfs_mutex is released,
+> and access to the ei->dentry needs to be done, it should first check if
+> ei->is_freed is set under the eventfs_mutex. If it is, then the ei->dentry
+> is invalid and must not be used. The ei->dentry must only be accessed
+> under the eventfs_mutex and after checking if ei->is_freed is set.
+>
+> When the ei is being freed, it will (under the eventfs_mutex) set is_freed
+> and at the same time move the dentry to a free list to be cleared after
+> the eventfs_mutex is released. This means that any access to the
+> ei->dentry must check first if ei->is_freed is set, because if it is, then
+> the dentry is on its way to be freed.
+>
+> Also add comments to describe this better.
+>
+> Link: https://lore.kernel.org/all/CA+G9fYt6pY+tMZEOg=SoEywQOe19fGP3uR15SGowkdK+_X85Cg@mail.gmail.com/
+> Link: https://lore.kernel.org/all/CA+G9fYuDP3hVQ3t7FfrBAjd_WFVSurMgCepTxunSJf=MTe=6aA@mail.gmail.com/
+>
+> Fixes: 5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode")
+> Reported-by: Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-> On 2023/10/28 20:49, Masami Hiramatsu (Google) wrote:
-> > Hi Wuqiang,
-> > 
-> > On Thu, 26 Oct 2023 19:05:51 +0800
-> > "wuqiang.matt" <wuqiang.matt@bytedance.com> wrote:
-> > 
-> >> On 2023/10/26 16:46, Arnd Bergmann wrote:
-> >>> On Thu, Oct 26, 2023, at 09:39, wuqiang.matt wrote:
-> >>>> arch_cmpxchg[64]_local() are not defined for openrisc. So implement
-> >>>> them with generci_cmpxchg[64]_local, advised by Masami Hiramatsu.
-> >>>>
-> >>>> Closes:
-> >>>> https://lore.kernel.org/linux-trace-kernel/169824660459.24340.14614817132696360531.stgit@devnote2
-> >>>> Closes:
-> >>>> https://lore.kernel.org/oe-kbuild-all/202310241310.Ir5uukOG-lkp@intel.com
-> >>>>
-> >>>> Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
-> >>>
-> >>> I think on architectures that have actual atomics, you
-> >>> generally want to define this to be the same as arch_cmpxchg()
-> >>> rather than the generic version.
-> >>>
-> >>> It depends on the relative cost of doing one atomic compared
-> >>> to an irq-disable/enable pair, but everyone else went with
-> >>> the former if they could. The exceptions are armv4/armv5,
-> >>> sparc32 and parisc, which don't have a generic cmpxchg()
-> >>> or similar operation.
-> >>
-> >> Sure, better native than the generic. I'll try to collect more
-> >> insights before next move.
-> > 
-> > So I will temporally remove the last change (use arch_cmpxchg_local
-> > in objpool) until these series are rewritten with arch native code,
-> > so that the next release will not break the kernel build.
-> 
-> Ok, it's fine to me. Thank you.
-> 
-> 
-> > But this must be fixed because arch_cmpxchg_local() is required
-> > for each arch anyway.
-> 
-> Yes. I'm working on the new update for arc/openrisc/hexagon. It would
-> be better resolve this issue first, then consider the objpool update
-> of using arch_cmpxchg_local.
-> 
-> >>
-> >>> You could do the thing that sparc64 and xtensa do, which
-> >>> use the native cmpxchg for supported word sizes but the
-> >>> generic version for 1- and 2-byte swaps, but that has its
-> >>> own set of problems if you end up doing operations on both
-> >>> the entire word and a sub-unit of the same thing.
-> >>
-> >> Thank you for pointing out this. I'll do some research on these
-> >> implementations.
-> > 
-> > arc also has the LL-SC instruction but depends on the core feature,
-> > so I think we can use it.
-> 
-> Right. The arc processor does have the CONFIG_ARC_HAS_LLSC option, but
-> I doubt the correctness of arch_cmpxchg_relaxed and arch_cmpxchg:
-> 
-> arch_cmpxchg_relaxed:
-> ...
->          switch(sizeof((_p_))) {
->          case 4:
-> ....
-> 
-> arch_cmpxchg:
-> ...
-> 	BUILD_BUG_ON(sizeof(_p_) != 4);		
-> ...
-> 
-> _p is the address pointer, so I'm thinking it's a typo but I couldn't
-> yet confirm. There is not much about arc processors in the web :(
+In the above line "Reported-by:" is twice.
 
-Hmm, indeed. This seems like a bug but it depends on the 'llock  %0, [%1]'
-can take a 32bit address or 32bit data register. Usually it should
-check the size of data, but need to check with ISA manual.
+> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Reported-by: Beau Belgrave <beaub@linux.microsoft.com>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Vineet, can you check this suspicious bug?
+I am running tests on this patch and will get back to you shortly.
 
-Thank you,
-
-> 
-> 
-> > Thank you,
-> > 
-> >>
-> >>>       Arnd
-> >>
-> >> Regards,
-> >> wuqiang
-> >>
-> > 
-> > 
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+- Naresh
