@@ -1,28 +1,21 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DB315487
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Oct 2023 14:41:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091EC18AE9
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Oct 2023 15:40:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1C11C433C7;
-	Mon, 30 Oct 2023 14:41:28 +0000 (UTC)
-Date: Mon, 30 Oct 2023 10:41:27 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87491C433C7;
+	Mon, 30 Oct 2023 15:40:49 +0000 (UTC)
+Date: Mon, 30 Oct 2023 11:40:47 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann
- <arnd@arndb.de>, "Naresh Kamboju <naresh.kamboju@linaro.org>, Beau Belgrave
- <beaub@linux.microsoft.com>, Ajay Kaher <akaher@vmware.com>, Andrew Morton"
- <akpm@linux-foundation.org>, lkft-triage@lists.linaro.org
-Subject: Re: [PATCH v2] eventfs: Test for ei->is_freed when accessing
- ei->dentry
-Message-ID: <20231030104127.6f32c932@gandalf.local.home>
-In-Reply-To: <CA+G9fYu9GOEbD=rR5eMR-=HJ8H6rMsbzDC2ZY5=Y50WpWAE7_Q@mail.gmail.com>
-References: <20231028164650.4f5ea18a@rorschach.local.home>
-	<CA+G9fYsL=wK_rn8ovCHtn6QXrvzv0a67oj9U3u6r9i-dxjsqwQ@mail.gmail.com>
-	<20231029091408.0179cee4@rorschach.local.home>
-	<CA+G9fYu9GOEbD=rR5eMR-=HJ8H6rMsbzDC2ZY5=Y50WpWAE7_Q@mail.gmail.com>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, "Arnd Bergmann\"  <arnd@arndb.de>,
+ naresh.kamboju@linaro.org, Beau  Belgrave <beaub@linux.microsoft.com>,
+ "Ajay Kaher" <akaher@vmware.com>, Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH] eventfs: Hold eventfs_mutex when calling callback functions
+Message-ID: <20231030114047.759c7bdf@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -33,27 +26,59 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 30 Oct 2023 12:37:08 +0530
-Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> 
-> I have tested the linux-trace.git trace/core and run selftests ftrace
-> the reported kernel panic [1] & [2] has been fixed but found
+The callback function that is used to create inodes and dentries is not
+protected by anything and the data that is passed to it could become
+stale. After eventfs_remove_dir() is called by the tracing system, it is
+free to remove the events that are associated to that directory.
+Unfortunately, that means the callbacks must not be called after that.
 
-Good to know. Can I add "Tested-by" from you for that bug fix?
+     CPU0				CPU1
+     ----				----
+ eventfs_root_lookup() {
+				 eventfs_remove_dir() {
+				      mutex_lock(&event_mutex);
+				      ei->is_freed = set;
+				      mutex_unlock(&event_mutex);
+				 }
+				 kfree(event_call);
 
-> "general protection fault"  at  kernel/trace/trace_events.c:2439.
+    for (...) {
+      entry = &ei->entries[i];
+      r = entry->callback() {
+          call = data;		// call == event_call above
+          if (call->flags ...)
 
-Can you test with the below patch?
+ [ USE AFTER FREE BUG ]
 
-Also, can I ask what are you testing this on that makes it trigger so
-easily? As I'm not able to trigger these in my tests, even though they are
-indeed bugs.
+The safest way to protect this is to wrap the callback with:
 
--- Steve
+ mutex_lock(&eventfs_mutex);
+ if (!ei->is_freed)
+     r = entry->callback();
+ else
+     r = -1;
+ mutex_unlock(&eventfs_mutex);
+
+This will make sure that the callback will not be called after it is
+freed. But now it needs to be known that the callback is called while
+holding internal eventfs locks, and that it must not call back into the
+eventfs / tracefs system. There's no reason it should anyway, but document
+that as well.
+
+Link: https://lore.kernel.org/all/CA+G9fYu9GOEbD=rR5eMR-=HJ8H6rMsbzDC2ZY5=Y50WpWAE7_Q@mail.gmail.com/
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/tracefs/event_inode.c | 22 ++++++++++++++++++--
+ include/linux/tracefs.h  | 43 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 63 insertions(+), 2 deletions(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 7ad7496bd597..7a0b54ddda24 100644
+index 7ad7496bd597..5a3cc5394294 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
 @@ -609,7 +609,13 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
@@ -86,3 +111,83 @@ index 7ad7496bd597..7a0b54ddda24 100644
  		if (r <= 0)
  			continue;
  		d = create_file_dentry(ei, i, parent, name, mode, cdata, fops, false);
+@@ -821,6 +833,10 @@ static void free_ei(struct eventfs_inode *ei)
+  *   data = A pointer to @data, and the callback may replace it, which will
+  *         cause the file created to pass the new data to the open() call.
+  *   fops = the fops to use for the created file.
++ *
++ * NB. @callback is called while holding internal locks of the eventfs
++ *     system. The callback must not call any code that might also call into
++ *     the tracefs or eventfs system or it will risk creating a deadlock.
+  */
+ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode *parent,
+ 					 const struct eventfs_entry *entries,
+@@ -880,6 +896,8 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
+  * @data: The default data to pass to the files (an entry may override it).
+  *
+  * This function creates the top of the trace event directory.
++ *
++ * See eventfs_create_dir() for use of @entries.
+  */
+ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry *parent,
+ 						const struct eventfs_entry *entries,
+diff --git a/include/linux/tracefs.h b/include/linux/tracefs.h
+index 13359b1a35d1..7a5fe17b6bf9 100644
+--- a/include/linux/tracefs.h
++++ b/include/linux/tracefs.h
+@@ -23,9 +23,52 @@ struct file_operations;
+ 
+ struct eventfs_file;
+ 
++/**
++ * eventfs_callback - A callback function to create dynamic files in eventfs
++ * @name: The name of the file that is to be created
++ * @mode: return the file mode for the file (RW access, etc)
++ * @data: data to pass to the created file ops
++ * @fops: the file operations of the created file
++ *
++ * The evetnfs files are dynamically created. The struct eventfs_entry array
++ * is passed to eventfs_create_dir() or eventfs_create_events_dir() that will
++ * be used to create the files within those directories. When a lookup
++ * or access to a file within the directory is made, the struct eventfs_entry
++ * array is used to find a callback() with the matching name that is being
++ * referenced (for lookups, the entire array is iterated and each callback
++ * will be called).
++ *
++ * The callback will be called with @name for the name of the file to create.
++ * The callback can return less than 1 to indicate  that no file should be
++ * created.
++ *
++ * If a file is to be created, then @mode should be populated with the file
++ * mode (permissions) for which the file is created for. This would be
++ * used to set the created inode i_mode field.
++ *
++ * The @data should be set to the data passed to the other file operations
++ * (read, write, etc). Note, @data will also point to the data passed in
++ * to eventfs_create_dir() or eventfs_create_events_dir(), but the callback
++ * can replace the data if it chooses to. Otherwise, the original data
++ * will be used for the file operation functions.
++ *
++ * The @fops should be set to the file operations that will be used to create
++ * the inode.
++ *
++ * NB. This callback is called while holding internal locks of the eventfs
++ *     system. The callback must not call any code that might also call into
++ *     the tracefs or eventfs system or it will risk creating a deadlock.
++ */
+ typedef int (*eventfs_callback)(const char *name, umode_t *mode, void **data,
+ 				const struct file_operations **fops);
+ 
++/**
++ * struct eventfs_entry - dynamically created eventfs file call back handler
++ * @name:	Then name of the dynamic file in an eventfs directory
++ * @callback:	The callback to get the fops of the file when it is created
++ *
++ * See evenfs_callback() typedef for how to set up @callback.
++ */
+ struct eventfs_entry {
+ 	const char			*name;
+ 	eventfs_callback		callback;
+-- 
+2.42.0
+
