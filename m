@@ -1,19 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F2319BB1
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 31 Oct 2023 18:47:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C53022307
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 31 Oct 2023 19:10:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B737C433C7;
-	Tue, 31 Oct 2023 18:47:08 +0000 (UTC)
-Date: Tue, 31 Oct 2023 14:47:03 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75CE3C433C7;
+	Tue, 31 Oct 2023 19:10:35 +0000 (UTC)
+Date: Tue, 31 Oct 2023 15:10:33 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <linux-trace-kernel@vger.kernel.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Ajay Kaher <akaher@vmware.com>
-Subject: [PATCH] eventfs: Process deletion of dentry more thoroughly
-Message-ID: <20231031144703.71eef3a0@gandalf.local.home>
+ <mark.rutland@arm.com>
+Subject: [PATCH] tracing: Have the user copy of synthetic event address use
+ correct context
+Message-ID: <20231031151033.73c42e23@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -26,73 +27,41 @@ Content-Transfer-Encoding: 7bit
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Looking at how dentry is removed via the tracefs system, I found that
-eventfs does not do everything that it did under tracefs. The tracefs
-removal of a dentry calls simple_recursive_removal() that does a lot more
-than a simple d_invalidate().
+A synthetic event is created by the synthetic event interface that can
+read both user or kernel address memory. In reality, it reads any
+arbitrary memory location from within the kernel. If the address space is
+in USER (where CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE is set) then
+it uses strncpy_from_user_nofault() to copy strings otherwise it uses
+strncpy_from_kernel_nofault().
 
-Have the same done on eventfs dentry:
+But since both functions use the same variable there's no annotation to
+what that variable is (ie. __user). This makes sparse complain.
 
- 1. Set S_DEAD for directories
- 2. Call clear_nlink() on the dentry inode
- 3. Call any notifiers about the dentry removal
+Quiet sparse by typecasting the strncpy_from_user_nofault() variable to
+a __user pointer.
 
 Cc: stable@vger.kernel.org
-Fixes: 5bdcd5f5331a2 ("eventfs: Implement removal of meta data from eventfs")
+Fixes: 0934ae9977c2 ("tracing: Fix reading strings from synthetic events");
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202311010013.fm8WTxa5-lkp@intel.com/
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/tracefs/event_inode.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ kernel/trace/trace_events_synth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 4d2da7480e5f..ab807edaf538 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -856,6 +856,7 @@ static void unhook_dentry(struct dentry **dentry, struct dentry **list)
- 		*dentry = NULL;
- 	}
- }
-+
- /**
-  * eventfs_remove_dir - remove eventfs dir or file from list
-  * @ei: eventfs_inode to be removed.
-@@ -868,6 +869,7 @@ void eventfs_remove_dir(struct eventfs_inode *ei)
- 	LIST_HEAD(ei_del_list);
- 	struct dentry *dentry_list = NULL;
- 	struct dentry *dentry;
-+	struct inode *inode;
- 	int i;
+diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+index 14cb275a0bab..846e02c0fb59 100644
+--- a/kernel/trace/trace_events_synth.c
++++ b/kernel/trace/trace_events_synth.c
+@@ -452,7 +452,7 @@ static unsigned int trace_string(struct synth_trace_event *entry,
  
- 	if (!ei)
-@@ -891,7 +893,28 @@ void eventfs_remove_dir(struct eventfs_inode *ei)
- 		ptr = (unsigned long)dentry->d_fsdata & ~1UL;
- 		dentry_list = (struct dentry *)ptr;
- 		dentry->d_fsdata = NULL;
-+
-+		inode = dentry->d_inode;
-+		inode_lock(inode);
-+		if (d_is_dir(dentry))
-+			inode->i_flags |= S_DEAD;
-+		clear_nlink(inode);
-+		inode_unlock(inode);
-+
-+		inode = dentry->d_parent->d_inode;
-+		inode_lock(inode);
-+
-+		/* Remove its visibility */
- 		d_invalidate(dentry);
-+		if (d_is_dir(dentry))
-+			fsnotify_rmdir(inode, dentry);
-+		else
-+			fsnotify_unlink(inode, dentry);
-+
-+		if (d_is_dir(dentry))
-+			drop_nlink(inode);
-+		inode_unlock(inode);
-+
- 		mutex_lock(&eventfs_mutex);
- 		/* dentry should now have at least a single reference */
- 		WARN_ONCE((int)d_count(dentry) < 1,
+ #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+ 		if ((unsigned long)str_val < TASK_SIZE)
+-			ret = strncpy_from_user_nofault(str_field, str_val, STR_VAR_LEN_MAX);
++			ret = strncpy_from_user_nofault(str_field, (const void __user *)str_val, STR_VAR_LEN_MAX);
+ 		else
+ #endif
+ 			ret = strncpy_from_kernel_nofault(str_field, str_val, STR_VAR_LEN_MAX);
 -- 
 2.42.0
 
