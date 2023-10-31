@@ -1,34 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F491DFC8
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 31 Oct 2023 14:45:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 863CA199C4
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 31 Oct 2023 15:13:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BFD4C433C8;
-	Tue, 31 Oct 2023 14:45:53 +0000 (UTC)
-Date: Tue, 31 Oct 2023 10:45:51 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0624C433C8;
+	Tue, 31 Oct 2023 15:13:26 +0000 (UTC)
+Date: Tue, 31 Oct 2023 11:13:25 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Beau Belgrave <beaub@linux.microsoft.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, "open list:KERNEL SELFTEST
- FRAMEWORK" <linux-kselftest@vger.kernel.org>, open list
- <linux-kernel@vger.kernel.org>, linux-trace-kernel@vger.kernel.org,
- lkft-triage@lists.linaro.org, Mark Brown <broonie@kernel.org>, Zheng Yejian
- <zhengyejian1@huawei.com>, Dan Carpenter <dan.carpenter@linaro.org>, Arnd
- Bergmann <arnd@arndb.de>, Masami Hiramatsu <mhiramat@kernel.org>, stable
- <stable@vger.kernel.org>
-Subject: Re: selftests: user_events: ftrace_test - RIP:
- 0010:tracing_update_buffers (kernel/trace/trace.c:6470)
-Message-ID: <20231031104551.6e0f3620@gandalf.local.home>
-In-Reply-To: <20231031000031.1e705592@gandalf.local.home>
-References: <CA+G9fYuDP3hVQ3t7FfrBAjd_WFVSurMgCepTxunSJf=MTe=6aA@mail.gmail.com>
-	<20231027192011.GA436-beaub@linux.microsoft.com>
-	<20231027183640.2529ab68@gandalf.local.home>
-	<20231027223344.3854ac1f@rorschach.local.home>
-	<20231030163102.GA1853-beaub@linux.microsoft.com>
-	<20231030124223.4e4ddeb8@gandalf.local.home>
-	<20231030173151.0631169b@gandalf.local.home>
-	<20231031002707.GA107-beaub@linux.microsoft.com>
-	<20231031000031.1e705592@gandalf.local.home>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, "Arnd Bergmann" <arnd@arndb.de>, "Ajay Kaher"
+ <akaher@vmware.com>, Andrew Morton <akpm@linux-foundation.org>, Naresh
+ Kamboju <naresh.kamboju@linaro.org>, Beau Belgrave
+ <beaub@linux.microsoft.com>
+Subject: [PATCH v3] eventfs: Test for ei->is_freed when accessing ei->dentry
+Message-ID: <20231031111325.50087cd8@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,200 +27,240 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 31 Oct 2023 00:00:31 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> But the I applied:
-> 
->   f5ca233e2e66d ("tracing: Increase trace array ref count on enable and filter files")
-> 
-> And do the above commands again and BOOM! it crashes with:
+The eventfs_inode (ei) is protected by SRCU, but the ei->dentry is not. It
+is protected by the eventfs_mutex. Anytime the eventfs_mutex is released,
+and access to the ei->dentry needs to be done, it should first check if
+ei->is_freed is set under the eventfs_mutex. If it is, then the ei->dentry
+is invalid and must not be used. The ei->dentry must only be accessed
+under the eventfs_mutex and after checking if ei->is_freed is set.
 
-The below patch appears to solve this. Care to test it?
+When the ei is being freed, it will (under the eventfs_mutex) set is_freed
+and at the same time move the dentry to a free list to be cleared after
+the eventfs_mutex is released. This means that any access to the
+ei->dentry must check first if ei->is_freed is set, because if it is, then
+the dentry is on its way to be freed.
 
--- Steve
+Also add comments to describe this better.
 
+Link: https://lore.kernel.org/all/CA+G9fYt6pY+tMZEOg=SoEywQOe19fGP3uR15SGowkdK+_X85Cg@mail.gmail.com/
+Link: https://lore.kernel.org/all/CA+G9fYuDP3hVQ3t7FfrBAjd_WFVSurMgCepTxunSJf=MTe=6aA@mail.gmail.com/
+
+Fixes: 5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode")
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Reported-by: Beau Belgrave <beaub@linux.microsoft.com>
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/linux/trace_events.h       |  4 ++++
- kernel/trace/trace.c               | 15 +++++++++++++++
- kernel/trace/trace.h               |  4 ++++
- kernel/trace/trace_events.c        | 29 +++++++++++++++++++++++++----
- kernel/trace/trace_events_filter.c |  3 +++
- 5 files changed, 51 insertions(+), 4 deletions(-)
+Changes since v2: https://lore.kernel.org/linux-trace-kernel/20231028164650.4f5ea18a@rorschach.local.home
 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 12207dc6722d..696f8dc4aa53 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -492,6 +492,7 @@ enum {
- 	EVENT_FILE_FL_TRIGGER_COND_BIT,
- 	EVENT_FILE_FL_PID_FILTER_BIT,
- 	EVENT_FILE_FL_WAS_ENABLED_BIT,
-+	EVENT_FILE_FL_FREED_BIT,
- };
+- Since I added free_ei() separately, might as well use it for where it frees the
+  top eventfs_inode too.
+
+ fs/tracefs/event_inode.c | 69 ++++++++++++++++++++++++++++++++--------
+ fs/tracefs/internal.h    |  3 +-
+ 2 files changed, 57 insertions(+), 15 deletions(-)
+
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 4d2da7480e5f..a62cb2298350 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -24,7 +24,20 @@
+ #include <linux/delay.h>
+ #include "internal.h"
  
- extern struct trace_event_file *trace_get_event_file(const char *instance,
-@@ -630,6 +631,7 @@ extern int __kprobe_event_add_fields(struct dynevent_cmd *cmd, ...);
-  *  TRIGGER_COND  - When set, one or more triggers has an associated filter
-  *  PID_FILTER    - When set, the event is filtered based on pid
-  *  WAS_ENABLED   - Set when enabled to know to clear trace on module removal
-+ *  FREED         - File descriptor is freed, all fields should be considered invalid
-  */
- enum {
- 	EVENT_FILE_FL_ENABLED		= (1 << EVENT_FILE_FL_ENABLED_BIT),
-@@ -643,6 +645,7 @@ enum {
- 	EVENT_FILE_FL_TRIGGER_COND	= (1 << EVENT_FILE_FL_TRIGGER_COND_BIT),
- 	EVENT_FILE_FL_PID_FILTER	= (1 << EVENT_FILE_FL_PID_FILTER_BIT),
- 	EVENT_FILE_FL_WAS_ENABLED	= (1 << EVENT_FILE_FL_WAS_ENABLED_BIT),
-+	EVENT_FILE_FL_FREED		= (1 << EVENT_FILE_FL_FREED_BIT),
- };
- 
- struct trace_event_file {
-@@ -671,6 +674,7 @@ struct trace_event_file {
- 	 * caching and such. Which is mostly OK ;-)
- 	 */
- 	unsigned long		flags;
-+	atomic_t		ref;	/* ref count for opened files */
- 	atomic_t		sm_ref;	/* soft-mode reference counter */
- 	atomic_t		tm_ref;	/* trigger-mode reference counter */
- };
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 2539cfc20a97..9aebf904ff97 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4978,6 +4978,20 @@ int tracing_open_file_tr(struct inode *inode, struct file *filp)
- 	if (ret)
- 		return ret;
- 
-+	mutex_lock(&event_mutex);
++/*
++ * eventfs_mutex protects the eventfs_inode (ei) dentry. Any access
++ * to the ei->dentry must be done under this mutex and after checking
++ * if ei->is_freed is not set. The ei->dentry is released under the
++ * mutex at the same time ei->is_freed is set. If ei->is_freed is set
++ * then the ei->dentry is invalid.
++ */
+ static DEFINE_MUTEX(eventfs_mutex);
 +
-+	/* Fail if the file is marked for removal */
-+	if (file->flags & EVENT_FILE_FL_FREED) {
-+		trace_array_put(file->tr);
-+		ret = -ENODEV;
-+	} else {
-+		event_file_get(file);
-+	}
-+
-+	mutex_unlock(&event_mutex);
-+	if (ret)
-+		return ret;
-+
- 	filp->private_data = inode->i_private;
++/*
++ * The eventfs_inode (ei) itself is protected by SRCU. It is released from
++ * its parent's list and will have is_freed set (under eventfs_mutex).
++ * After the SRCU grace period is over, the ei may be freed.
++ */
+ DEFINE_STATIC_SRCU(eventfs_srcu);
  
- 	return 0;
-@@ -4988,6 +5002,7 @@ int tracing_release_file_tr(struct inode *inode, struct file *filp)
- 	struct trace_event_file *file = inode->i_private;
- 
- 	trace_array_put(file->tr);
-+	event_file_put(file);
- 
- 	return 0;
+ static struct dentry *eventfs_root_lookup(struct inode *dir,
+@@ -129,6 +142,13 @@ static struct dentry *create_dir(const char *name, struct dentry *parent)
+ 	return eventfs_end_creating(dentry);
  }
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 0e1405abf4f7..4fcd293ecbd4 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1669,6 +1669,10 @@ extern void event_trigger_unregister(struct event_command *cmd_ops,
- 				     char *glob,
- 				     struct event_trigger_data *trigger_data);
  
-+extern void event_file_get(struct trace_event_file *file);
-+extern void event_file_put(struct trace_event_file *file);
-+
++static void free_ei(struct eventfs_inode *ei)
++{
++	kfree_const(ei->name);
++	kfree(ei->d_children);
++	kfree(ei);
++}
 +
  /**
-  * struct event_trigger_ops - callbacks for trace event triggers
-  *
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 70a029ae3c65..ec86f4894455 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -990,13 +990,33 @@ static void remove_subsystem(struct trace_subsystem_dir *dir)
+  * eventfs_set_ei_status_free - remove the dentry reference from an eventfs_inode
+  * @ti: the tracefs_inode of the dentry
+@@ -168,9 +188,7 @@ void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry)
+ 			eventfs_remove_dir(ei_child);
+ 		}
+ 
+-		kfree_const(ei->name);
+-		kfree(ei->d_children);
+-		kfree(ei);
++		free_ei(ei);
+ 		return;
  	}
- }
  
-+void event_file_get(struct trace_event_file *file)
-+{
-+	atomic_inc(&file->ref);
-+}
-+
-+void event_file_put(struct trace_event_file *file)
-+{
-+	if (WARN_ON_ONCE(!atomic_read(&file->ref))) {
-+		if (file->flags & EVENT_FILE_FL_FREED)
-+			kmem_cache_free(file_cachep, file);
-+		return;
+@@ -234,6 +252,10 @@ create_file_dentry(struct eventfs_inode *ei, struct dentry **e_dentry,
+ 	bool invalidate = false;
+ 
+ 	mutex_lock(&eventfs_mutex);
++	if (ei->is_freed) {
++		mutex_unlock(&eventfs_mutex);
++		return NULL;
 +	}
+ 	/* If the e_dentry already has a dentry, use it */
+ 	if (*e_dentry) {
+ 		/* lookup does not need to up the ref count */
+@@ -307,6 +329,8 @@ static void eventfs_post_create_dir(struct eventfs_inode *ei)
+ 	struct eventfs_inode *ei_child;
+ 	struct tracefs_inode *ti;
+ 
++	lockdep_assert_held(&eventfs_mutex);
 +
-+	if (atomic_dec_and_test(&file->ref) &&
-+	    (file->flags & EVENT_FILE_FL_FREED)) {
-+		kmem_cache_free(file_cachep, file);
-+	}
-+}
-+
- static void remove_event_file_dir(struct trace_event_file *file)
+ 	/* srcu lock already held */
+ 	/* fill parent-child relation */
+ 	list_for_each_entry_srcu(ei_child, &ei->children, list,
+@@ -320,6 +344,7 @@ static void eventfs_post_create_dir(struct eventfs_inode *ei)
+ 
+ /**
+  * create_dir_dentry - Create a directory dentry for the eventfs_inode
++ * @pei: The eventfs_inode parent of ei.
+  * @ei: The eventfs_inode to create the directory for
+  * @parent: The dentry of the parent of this directory
+  * @lookup: True if this is called by the lookup code
+@@ -327,12 +352,17 @@ static void eventfs_post_create_dir(struct eventfs_inode *ei)
+  * This creates and attaches a directory dentry to the eventfs_inode @ei.
+  */
+ static struct dentry *
+-create_dir_dentry(struct eventfs_inode *ei, struct dentry *parent, bool lookup)
++create_dir_dentry(struct eventfs_inode *pei, struct eventfs_inode *ei,
++		  struct dentry *parent, bool lookup)
  {
- 	eventfs_remove_dir(file->ei);
- 	list_del(&file->list);
- 	remove_subsystem(file->system);
- 	free_event_filter(file->filter);
--	kmem_cache_free(file_cachep, file);
-+	file->flags |= EVENT_FILE_FL_FREED;
-+	event_file_put(file);
+ 	bool invalidate = false;
+ 	struct dentry *dentry = NULL;
+ 
+ 	mutex_lock(&eventfs_mutex);
++	if (pei->is_freed || ei->is_freed) {
++		mutex_unlock(&eventfs_mutex);
++		return NULL;
++	}
+ 	if (ei->dentry) {
+ 		/* If the dentry already has a dentry, use it */
+ 		dentry = ei->dentry;
+@@ -435,7 +465,7 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 	 */
+ 	mutex_lock(&eventfs_mutex);
+ 	ei = READ_ONCE(ti->private);
+-	if (ei)
++	if (ei && !ei->is_freed)
+ 		ei_dentry = READ_ONCE(ei->dentry);
+ 	mutex_unlock(&eventfs_mutex);
+ 
+@@ -449,7 +479,7 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 		if (strcmp(ei_child->name, name) != 0)
+ 			continue;
+ 		ret = simple_lookup(dir, dentry, flags);
+-		create_dir_dentry(ei_child, ei_dentry, true);
++		create_dir_dentry(ei, ei_child, ei_dentry, true);
+ 		created = true;
+ 		break;
+ 	}
+@@ -583,7 +613,7 @@ static int dcache_dir_open_wrapper(struct inode *inode, struct file *file)
+ 
+ 	list_for_each_entry_srcu(ei_child, &ei->children, list,
+ 				 srcu_read_lock_held(&eventfs_srcu)) {
+-		d = create_dir_dentry(ei_child, parent, false);
++		d = create_dir_dentry(ei, ei_child, parent, false);
+ 		if (d) {
+ 			ret = add_dentries(&dentries, d, cnt);
+ 			if (ret < 0)
+@@ -700,12 +730,20 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
+ 	ei->nr_entries = size;
+ 	ei->data = data;
+ 	INIT_LIST_HEAD(&ei->children);
++	INIT_LIST_HEAD(&ei->list);
+ 
+ 	mutex_lock(&eventfs_mutex);
+-	list_add_tail(&ei->list, &parent->children);
+-	ei->d_parent = parent->dentry;
++	if (!parent->is_freed) {
++		list_add_tail(&ei->list, &parent->children);
++		ei->d_parent = parent->dentry;
++	}
+ 	mutex_unlock(&eventfs_mutex);
+ 
++	/* Was the parent freed? */
++	if (list_empty(&ei->list)) {
++		free_ei(ei);
++		ei = NULL;
++	}
+ 	return ei;
  }
  
- /*
-@@ -1369,7 +1389,7 @@ event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
- 		flags = file->flags;
- 	mutex_unlock(&event_mutex);
- 
--	if (!file)
-+	if (!file || flags & EVENT_FILE_FL_FREED)
- 		return -ENODEV;
- 
- 	if (flags & EVENT_FILE_FL_ENABLED &&
-@@ -1404,7 +1424,7 @@ event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 		ret = -ENODEV;
- 		mutex_lock(&event_mutex);
- 		file = event_file_data(filp);
--		if (likely(file)) {
-+		if (likely(file && !(file->flags & EVENT_FILE_FL_FREED))) {
- 			printk("update file = %px\n", file);
- 			printk("update tr = %px\n", file->tr);
- 			ret = tracing_update_buffers(file->tr);
-@@ -1686,7 +1706,7 @@ event_filter_read(struct file *filp, char __user *ubuf, size_t cnt,
- 
- 	mutex_lock(&event_mutex);
- 	file = event_file_data(filp);
--	if (file)
-+	if (file && !(file->flags & EVENT_FILE_FL_FREED))
- 		print_event_filter(file, s);
- 	mutex_unlock(&event_mutex);
- 
-@@ -2905,6 +2925,7 @@ trace_create_new_event(struct trace_event_call *call,
- 	atomic_set(&file->tm_ref, 0);
- 	INIT_LIST_HEAD(&file->triggers);
- 	list_add(&file->list, &tr->events);
-+	event_file_get(file);
- 
- 	return file;
+@@ -787,13 +825,11 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+ 	return ERR_PTR(-ENOMEM);
  }
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 33264e510d16..0c611b281a5b 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -2349,6 +2349,9 @@ int apply_event_filter(struct trace_event_file *file, char *filter_string)
- 	struct event_filter *filter = NULL;
- 	int err;
  
-+	if (file->flags & EVENT_FILE_FL_FREED)
-+		return -ENODEV;
-+
- 	if (!strcmp(strstrip(filter_string), "0")) {
- 		filter_disable(file);
- 		filter = event_filter(file);
+-static void free_ei(struct rcu_head *head)
++static void free_rcu_ei(struct rcu_head *head)
+ {
+ 	struct eventfs_inode *ei = container_of(head, struct eventfs_inode, rcu);
+ 
+-	kfree_const(ei->name);
+-	kfree(ei->d_children);
+-	kfree(ei);
++	free_ei(ei);
+ }
+ 
+ /**
+@@ -880,7 +916,12 @@ void eventfs_remove_dir(struct eventfs_inode *ei)
+ 		for (i = 0; i < ei->nr_entries; i++)
+ 			unhook_dentry(&ei->d_children[i], &dentry_list);
+ 		unhook_dentry(&ei->dentry, &dentry_list);
+-		call_srcu(&eventfs_srcu, &ei->rcu, free_ei);
++		/*
++		 * Note, ei->is_freed is a union along with ei->rcu
++		 * and ei->del_list. When the ei is added to either
++		 * of those lists, it automatically sets ei->is_freed.
++		 */
++		call_srcu(&eventfs_srcu, &ei->rcu, free_rcu_ei);
+ 	}
+ 	mutex_unlock(&eventfs_mutex);
+ 
+diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+index 64fde9490f52..21a1fa682b74 100644
+--- a/fs/tracefs/internal.h
++++ b/fs/tracefs/internal.h
+@@ -30,7 +30,7 @@ struct eventfs_inode {
+ 	const struct eventfs_entry	*entries;
+ 	const char			*name;
+ 	struct list_head		children;
+-	struct dentry			*dentry;
++	struct dentry			*dentry; /* Check is_freed to access */
+ 	struct dentry			*d_parent;
+ 	struct dentry			**d_children;
+ 	void				*data;
+@@ -39,6 +39,7 @@ struct eventfs_inode {
+ 	 * @del_list:	list of eventfs_inode to delete
+ 	 * @rcu:	eventfs_inode to delete in RCU
+ 	 * @is_freed:	node is freed if one of the above is set
++	 *   Note if is_freed is set, then dentry is corrupted.
+ 	 */
+ 	union {
+ 		struct list_head	del_list;
 -- 
 2.42.0
 
