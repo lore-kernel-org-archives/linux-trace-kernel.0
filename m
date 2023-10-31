@@ -1,110 +1,238 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D102D28F
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 31 Oct 2023 09:48:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="DLXA+u/j"
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3033ED;
-	Tue, 31 Oct 2023 02:48:33 -0700 (PDT)
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39V6dd7F021340;
-	Tue, 31 Oct 2023 09:48:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=4y6/UUnLiFspiisyLHIS98YUAP4Jpm3aumYKQ9G92Q0=;
- b=DLXA+u/jts1mAC9eV4SUj7EyTBXRmuHg5Tmuu/Nk7jHMfgMnmtpRL0WEQNxJ2Ch1QuMQ
- XUnA3ZSRY/2d3lcDxyW7EXzuMnwqeM5GGwaE77c42wAG5N0vyjhIgqgz4kLVcrgsX4et
- Bhpx4a/xiMjvTwwgtnWkuXp5MWErxbdLZ0/+JbQU/DkmgFDbi1F3gthuUB6Q+Zb96gdg
- sMmHHmALmjGwWRnzZcDUeVPSC/L8AifozbGtL1SPMPPqvD4cmwZWnxIyXR/5JYqEF1dy
- KOsN87rU4ESc1ZHHE+qfU2zcbEBLpiq7ntO3f9bX6QFgn16K4hH06RscHgvnhtPQlRDL XA== 
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3u2tpx0n4t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 31 Oct 2023 09:48:28 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39V9mRCQ029465
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 31 Oct 2023 09:48:27 GMT
-Received: from [10.214.225.95] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Tue, 31 Oct
- 2023 02:48:25 -0700
-Message-ID: <98413d47-986f-bf94-0793-865a5a4dc80d@quicinc.com>
-Date: Tue, 31 Oct 2023 15:18:14 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F491DFC8
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 31 Oct 2023 14:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BFD4C433C8;
+	Tue, 31 Oct 2023 14:45:53 +0000 (UTC)
+Date: Tue, 31 Oct 2023 10:45:51 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Beau Belgrave <beaub@linux.microsoft.com>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, "open list:KERNEL SELFTEST
+ FRAMEWORK" <linux-kselftest@vger.kernel.org>, open list
+ <linux-kernel@vger.kernel.org>, linux-trace-kernel@vger.kernel.org,
+ lkft-triage@lists.linaro.org, Mark Brown <broonie@kernel.org>, Zheng Yejian
+ <zhengyejian1@huawei.com>, Dan Carpenter <dan.carpenter@linaro.org>, Arnd
+ Bergmann <arnd@arndb.de>, Masami Hiramatsu <mhiramat@kernel.org>, stable
+ <stable@vger.kernel.org>
+Subject: Re: selftests: user_events: ftrace_test - RIP:
+ 0010:tracing_update_buffers (kernel/trace/trace.c:6470)
+Message-ID: <20231031104551.6e0f3620@gandalf.local.home>
+In-Reply-To: <20231031000031.1e705592@gandalf.local.home>
+References: <CA+G9fYuDP3hVQ3t7FfrBAjd_WFVSurMgCepTxunSJf=MTe=6aA@mail.gmail.com>
+	<20231027192011.GA436-beaub@linux.microsoft.com>
+	<20231027183640.2529ab68@gandalf.local.home>
+	<20231027223344.3854ac1f@rorschach.local.home>
+	<20231030163102.GA1853-beaub@linux.microsoft.com>
+	<20231030124223.4e4ddeb8@gandalf.local.home>
+	<20231030173151.0631169b@gandalf.local.home>
+	<20231031002707.GA107-beaub@linux.microsoft.com>
+	<20231031000031.1e705592@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] tracing/kprobes: Fix the order of argument descriptions
-To: Yujie Liu <yujie.liu@intel.com>, <linux-trace-kernel@vger.kernel.org>
-CC: Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt
-	<rostedt@goodmis.org>,
-        Tom Zanussi <zanussi@kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20231031041305.3363712-1-yujie.liu@intel.com>
-Content-Language: en-US
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <20231031041305.3363712-1-yujie.liu@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: lbzy1QKhATs0k3Ybj_mYhOnzIQdegUY0
-X-Proofpoint-GUID: lbzy1QKhATs0k3Ybj_mYhOnzIQdegUY0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-30_13,2023-10-31_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- priorityscore=1501 mlxscore=0 suspectscore=0 clxscore=1015 spamscore=0
- phishscore=0 malwarescore=0 adultscore=0 bulkscore=0 impostorscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2310240000 definitions=main-2310310076
 
+On Tue, 31 Oct 2023 00:00:31 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-
-On 10/31/2023 9:43 AM, Yujie Liu wrote:
-> The order of descriptions should be consistent with the argument list of
-> the function, so "kretprobe" should be the second one.
+> But the I applied:
 > 
-> int __kprobe_event_gen_cmd_start(struct dynevent_cmd *cmd, bool kretprobe,
->                                   const char *name, const char *loc, ...)
+>   f5ca233e2e66d ("tracing: Increase trace array ref count on enable and filter files")
 > 
-> Fixes: 2a588dd1d5d6 ("tracing: Add kprobe event command generation functions")
-> Suggested-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> Signed-off-by: Yujie Liu <yujie.liu@intel.com>
+> And do the above commands again and BOOM! it crashes with:
 
-Thanks.
+The below patch appears to solve this. Care to test it?
 
-Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
+-- Steve
 
--Mukesh
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/linux/trace_events.h       |  4 ++++
+ kernel/trace/trace.c               | 15 +++++++++++++++
+ kernel/trace/trace.h               |  4 ++++
+ kernel/trace/trace_events.c        | 29 +++++++++++++++++++++++++----
+ kernel/trace/trace_events_filter.c |  3 +++
+ 5 files changed, 51 insertions(+), 4 deletions(-)
 
-> ---
->   kernel/trace/trace_kprobe.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index e834f149695b..47812aa16bb5 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -1020,9 +1020,9 @@ EXPORT_SYMBOL_GPL(kprobe_event_cmd_init);
->   /**
->    * __kprobe_event_gen_cmd_start - Generate a kprobe event command from arg list
->    * @cmd: A pointer to the dynevent_cmd struct representing the new event
-> + * @kretprobe: Is this a return probe?
->    * @name: The name of the kprobe event
->    * @loc: The location of the kprobe event
-> - * @kretprobe: Is this a return probe?
->    * @...: Variable number of arg (pairs), one pair for each field
->    *
->    * NOTE: Users normally won't want to call this function directly, but
+diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+index 12207dc6722d..696f8dc4aa53 100644
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -492,6 +492,7 @@ enum {
+ 	EVENT_FILE_FL_TRIGGER_COND_BIT,
+ 	EVENT_FILE_FL_PID_FILTER_BIT,
+ 	EVENT_FILE_FL_WAS_ENABLED_BIT,
++	EVENT_FILE_FL_FREED_BIT,
+ };
+ 
+ extern struct trace_event_file *trace_get_event_file(const char *instance,
+@@ -630,6 +631,7 @@ extern int __kprobe_event_add_fields(struct dynevent_cmd *cmd, ...);
+  *  TRIGGER_COND  - When set, one or more triggers has an associated filter
+  *  PID_FILTER    - When set, the event is filtered based on pid
+  *  WAS_ENABLED   - Set when enabled to know to clear trace on module removal
++ *  FREED         - File descriptor is freed, all fields should be considered invalid
+  */
+ enum {
+ 	EVENT_FILE_FL_ENABLED		= (1 << EVENT_FILE_FL_ENABLED_BIT),
+@@ -643,6 +645,7 @@ enum {
+ 	EVENT_FILE_FL_TRIGGER_COND	= (1 << EVENT_FILE_FL_TRIGGER_COND_BIT),
+ 	EVENT_FILE_FL_PID_FILTER	= (1 << EVENT_FILE_FL_PID_FILTER_BIT),
+ 	EVENT_FILE_FL_WAS_ENABLED	= (1 << EVENT_FILE_FL_WAS_ENABLED_BIT),
++	EVENT_FILE_FL_FREED		= (1 << EVENT_FILE_FL_FREED_BIT),
+ };
+ 
+ struct trace_event_file {
+@@ -671,6 +674,7 @@ struct trace_event_file {
+ 	 * caching and such. Which is mostly OK ;-)
+ 	 */
+ 	unsigned long		flags;
++	atomic_t		ref;	/* ref count for opened files */
+ 	atomic_t		sm_ref;	/* soft-mode reference counter */
+ 	atomic_t		tm_ref;	/* trigger-mode reference counter */
+ };
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 2539cfc20a97..9aebf904ff97 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4978,6 +4978,20 @@ int tracing_open_file_tr(struct inode *inode, struct file *filp)
+ 	if (ret)
+ 		return ret;
+ 
++	mutex_lock(&event_mutex);
++
++	/* Fail if the file is marked for removal */
++	if (file->flags & EVENT_FILE_FL_FREED) {
++		trace_array_put(file->tr);
++		ret = -ENODEV;
++	} else {
++		event_file_get(file);
++	}
++
++	mutex_unlock(&event_mutex);
++	if (ret)
++		return ret;
++
+ 	filp->private_data = inode->i_private;
+ 
+ 	return 0;
+@@ -4988,6 +5002,7 @@ int tracing_release_file_tr(struct inode *inode, struct file *filp)
+ 	struct trace_event_file *file = inode->i_private;
+ 
+ 	trace_array_put(file->tr);
++	event_file_put(file);
+ 
+ 	return 0;
+ }
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 0e1405abf4f7..4fcd293ecbd4 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1669,6 +1669,10 @@ extern void event_trigger_unregister(struct event_command *cmd_ops,
+ 				     char *glob,
+ 				     struct event_trigger_data *trigger_data);
+ 
++extern void event_file_get(struct trace_event_file *file);
++extern void event_file_put(struct trace_event_file *file);
++
++
+ /**
+  * struct event_trigger_ops - callbacks for trace event triggers
+  *
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 70a029ae3c65..ec86f4894455 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -990,13 +990,33 @@ static void remove_subsystem(struct trace_subsystem_dir *dir)
+ 	}
+ }
+ 
++void event_file_get(struct trace_event_file *file)
++{
++	atomic_inc(&file->ref);
++}
++
++void event_file_put(struct trace_event_file *file)
++{
++	if (WARN_ON_ONCE(!atomic_read(&file->ref))) {
++		if (file->flags & EVENT_FILE_FL_FREED)
++			kmem_cache_free(file_cachep, file);
++		return;
++	}
++
++	if (atomic_dec_and_test(&file->ref) &&
++	    (file->flags & EVENT_FILE_FL_FREED)) {
++		kmem_cache_free(file_cachep, file);
++	}
++}
++
+ static void remove_event_file_dir(struct trace_event_file *file)
+ {
+ 	eventfs_remove_dir(file->ei);
+ 	list_del(&file->list);
+ 	remove_subsystem(file->system);
+ 	free_event_filter(file->filter);
+-	kmem_cache_free(file_cachep, file);
++	file->flags |= EVENT_FILE_FL_FREED;
++	event_file_put(file);
+ }
+ 
+ /*
+@@ -1369,7 +1389,7 @@ event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
+ 		flags = file->flags;
+ 	mutex_unlock(&event_mutex);
+ 
+-	if (!file)
++	if (!file || flags & EVENT_FILE_FL_FREED)
+ 		return -ENODEV;
+ 
+ 	if (flags & EVENT_FILE_FL_ENABLED &&
+@@ -1404,7 +1424,7 @@ event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
+ 		ret = -ENODEV;
+ 		mutex_lock(&event_mutex);
+ 		file = event_file_data(filp);
+-		if (likely(file)) {
++		if (likely(file && !(file->flags & EVENT_FILE_FL_FREED))) {
+ 			printk("update file = %px\n", file);
+ 			printk("update tr = %px\n", file->tr);
+ 			ret = tracing_update_buffers(file->tr);
+@@ -1686,7 +1706,7 @@ event_filter_read(struct file *filp, char __user *ubuf, size_t cnt,
+ 
+ 	mutex_lock(&event_mutex);
+ 	file = event_file_data(filp);
+-	if (file)
++	if (file && !(file->flags & EVENT_FILE_FL_FREED))
+ 		print_event_filter(file, s);
+ 	mutex_unlock(&event_mutex);
+ 
+@@ -2905,6 +2925,7 @@ trace_create_new_event(struct trace_event_call *call,
+ 	atomic_set(&file->tm_ref, 0);
+ 	INIT_LIST_HEAD(&file->triggers);
+ 	list_add(&file->list, &tr->events);
++	event_file_get(file);
+ 
+ 	return file;
+ }
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index 33264e510d16..0c611b281a5b 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -2349,6 +2349,9 @@ int apply_event_filter(struct trace_event_file *file, char *filter_string)
+ 	struct event_filter *filter = NULL;
+ 	int err;
+ 
++	if (file->flags & EVENT_FILE_FL_FREED)
++		return -ENODEV;
++
+ 	if (!strcmp(strstrip(filter_string), "0")) {
+ 		filter_disable(file);
+ 		filter = event_filter(file);
+-- 
+2.42.0
+
