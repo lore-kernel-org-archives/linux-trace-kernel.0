@@ -1,97 +1,62 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C05A27456
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF5627457
 	for <linux-trace-kernel@vger.kernel.org>; Tue, 31 Oct 2023 22:34:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26CF0C433C7;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19C75C433C8;
 	Tue, 31 Oct 2023 22:34:21 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.96)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1qxxJU-00EPgt-0O;
-	Tue, 31 Oct 2023 18:34:20 -0400
-Message-ID: <20231031223419.935276916@goodmis.org>
+	id 1qxxJT-00EPgI-2v;
+	Tue, 31 Oct 2023 18:34:19 -0400
+Message-ID: <20231031223326.794680978@goodmis.org>
 User-Agent: quilt/0.66
-Date: Tue, 31 Oct 2023 18:33:27 -0400
+Date: Tue, 31 Oct 2023 18:33:26 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Ajay Kaher <akaher@vmware.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- stable@vger.kernel.org
-Subject: [PATCH v5 1/7] eventfs: Remove "is_freed" union with rcu head
-References: <20231031223326.794680978@goodmis.org>
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v5 0/7] eventfs: Fixing dynamic creation
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+I found an issue with using a union between the rcu list head and
+the "is_freed" boolean (word). That is, rcu list is a single link
+list where the last element has a NULL pointer. That means, if
+the eventfs_inode is the last element (which it likely will be)
+it will not have its flag set to is_free.
 
-The eventfs_inode->is_freed was a union with the rcu_head with the
-assumption that when it was on the srcu list the head would contain a
-pointer which would make "is_freed" true. But that was a wrong assumption
-as the rcu head is a single link list where the last element is NULL.
+Instead use a bit from nr_entries to be the is_freed flag.
 
-Instead, split the nr_entries integer so that "is_freed" is one bit and
-the nr_entries is the next 31 bits. As there shouldn't be more than 10
-(currently there's at most 5 to 7 depending on the config), this should
-not be a problem.
+Changes since v4: https://lore.kernel.org/linux-trace-kernel/20231031193109.018322397@goodmis.org/
 
-Cc: stable@vger.kernel.org
-Fixes: 63940449555e7 ("eventfs: Implement eventfs lookup, read, open functions")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- fs/tracefs/event_inode.c | 2 ++
- fs/tracefs/internal.h    | 6 +++---
- 2 files changed, 5 insertions(+), 3 deletions(-)
+- Updated on top of the change to separate out is_freed from the union
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 754885dfe71c..2c2c75b2ad73 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -824,6 +824,8 @@ static void eventfs_remove_rec(struct eventfs_inode *ei, struct list_head *head,
- 		eventfs_remove_rec(ei_child, head, level + 1);
- 	}
- 
-+	ei->is_freed = 1;
-+
- 	list_del_rcu(&ei->list);
- 	list_add_tail(&ei->del_list, head);
- }
-diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index 64fde9490f52..c7d88aaa949f 100644
---- a/fs/tracefs/internal.h
-+++ b/fs/tracefs/internal.h
-@@ -23,6 +23,7 @@ struct tracefs_inode {
-  * @d_parent:   pointer to the parent's dentry
-  * @d_children: The array of dentries to represent the files when created
-  * @data:	The private data to pass to the callbacks
-+ * @is_freed:	Flag set if the eventfs is on its way to be freed
-  * @nr_entries: The number of items in @entries
-  */
- struct eventfs_inode {
-@@ -38,14 +39,13 @@ struct eventfs_inode {
- 	 * Union - used for deletion
- 	 * @del_list:	list of eventfs_inode to delete
- 	 * @rcu:	eventfs_inode to delete in RCU
--	 * @is_freed:	node is freed if one of the above is set
- 	 */
- 	union {
- 		struct list_head	del_list;
- 		struct rcu_head		rcu;
--		unsigned long		is_freed;
- 	};
--	int				nr_entries;
-+	unsigned int			is_freed:1;
-+	unsigned int			nr_entries:31;
- };
- 
- static inline struct tracefs_inode *get_tracefs(const struct inode *inode)
--- 
-2.42.0
+- Add another fix to only delete the eventfs_inode after the last
+  dentry has cleared its reference (there's more races there without
+  doing that)
+
+- Make the top level eventfs directory the same as the rest in
+  being removed.
+
+Steven Rostedt (Google) (7):
+      eventfs: Remove "is_freed" union with rcu head
+      eventfs: Have a free_ei() that just frees the eventfs_inode
+      eventfs: Test for ei->is_freed when accessing ei->dentry
+      eventfs: Save ownership and mode
+      eventfs: Hold eventfs_mutex when calling callback functions
+      eventfs: Delete eventfs_inode when the last dentry is freed
+      eventfs: Remove special processing of dput() of events directory
+
+----
+ fs/tracefs/event_inode.c | 431 +++++++++++++++++++++++++++++++----------------
+ fs/tracefs/internal.h    |  27 ++-
+ include/linux/tracefs.h  |  43 +++++
+ 3 files changed, 353 insertions(+), 148 deletions(-)
