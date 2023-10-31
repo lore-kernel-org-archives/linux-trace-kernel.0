@@ -1,19 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1735F10F3
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 31 Oct 2023 15:36:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3534B16418
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 31 Oct 2023 16:07:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2330C433C8;
-	Tue, 31 Oct 2023 15:36:29 +0000 (UTC)
-Date: Tue, 31 Oct 2023 11:36:27 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5210CC433C7;
+	Tue, 31 Oct 2023 16:07:04 +0000 (UTC)
+Date: Tue, 31 Oct 2023 12:07:02 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Ajay Kaher <akaher@vmware.com>
-Subject: [PATCH v3] eventfs: Save ownership and mode
-Message-ID: <20231031113627.2edfa83f@gandalf.local.home>
+To: Beau Belgrave <beaub@linux.microsoft.com>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, "open list:KERNEL SELFTEST
+ FRAMEWORK" <linux-kselftest@vger.kernel.org>, open list
+ <linux-kernel@vger.kernel.org>, linux-trace-kernel@vger.kernel.org,
+ lkft-triage@lists.linaro.org, Mark Brown <broonie@kernel.org>, Zheng Yejian
+ <zhengyejian1@huawei.com>, Dan Carpenter <dan.carpenter@linaro.org>, Arnd
+ Bergmann <arnd@arndb.de>, Masami Hiramatsu <mhiramat@kernel.org>, stable
+ <stable@vger.kernel.org>
+Subject: Re: selftests: user_events: ftrace_test - RIP:
+ 0010:tracing_update_buffers (kernel/trace/trace.c:6470)
+Message-ID: <20231031120702.70dbb21b@gandalf.local.home>
+In-Reply-To: <20231031104551.6e0f3620@gandalf.local.home>
+References: <CA+G9fYuDP3hVQ3t7FfrBAjd_WFVSurMgCepTxunSJf=MTe=6aA@mail.gmail.com>
+	<20231027192011.GA436-beaub@linux.microsoft.com>
+	<20231027183640.2529ab68@gandalf.local.home>
+	<20231027223344.3854ac1f@rorschach.local.home>
+	<20231030163102.GA1853-beaub@linux.microsoft.com>
+	<20231030124223.4e4ddeb8@gandalf.local.home>
+	<20231030173151.0631169b@gandalf.local.home>
+	<20231031002707.GA107-beaub@linux.microsoft.com>
+	<20231031000031.1e705592@gandalf.local.home>
+	<20231031104551.6e0f3620@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -24,346 +40,194 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Tue, 31 Oct 2023 10:45:51 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Now that inodes and dentries are created on the fly, they are also
-reclaimed on memory pressure. Since the ownership and file mode are saved
-in the inode, if they are freed, any changes to the ownership and mode
-will be lost.
+> @@ -1404,7 +1424,7 @@ event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
+>  		ret = -ENODEV;
+>  		mutex_lock(&event_mutex);
+>  		file = event_file_data(filp);
+> -		if (likely(file)) {
+> +		if (likely(file && !(file->flags & EVENT_FILE_FL_FREED))) {
+>  			printk("update file = %px\n", file);
+>  			printk("update tr = %px\n", file->tr);
+>  			ret = tracing_update_buffers(file->tr);
 
-To counter this, if the user changes the permissions or ownership, save
-them, and when creating the inodes again, restore those changes.
+Well, this won't apply because I still had debugging in it when I added
+these changes.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v2: https://lore.kernel.org/linux-trace-kernel/20231030120433.390fac5e@gandalf.local.home/
+Here's a better version:
 
-- Rebased on top of https://lore.kernel.org/linux-trace-kernel/20231031111325.50087cd8@gandalf.local.home/
-
-- Fixed some more comments and re-arranged declarations.
-
- fs/tracefs/event_inode.c | 148 +++++++++++++++++++++++++++++++++++----
- fs/tracefs/internal.h    |  16 +++++
- 2 files changed, 151 insertions(+), 13 deletions(-)
-
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index a62cb2298350..7f1358956c3a 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -33,6 +33,15 @@
+diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+index 12207dc6722d..696f8dc4aa53 100644
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -492,6 +492,7 @@ enum {
+ 	EVENT_FILE_FL_TRIGGER_COND_BIT,
+ 	EVENT_FILE_FL_PID_FILTER_BIT,
+ 	EVENT_FILE_FL_WAS_ENABLED_BIT,
++	EVENT_FILE_FL_FREED_BIT,
+ };
+ 
+ extern struct trace_event_file *trace_get_event_file(const char *instance,
+@@ -630,6 +631,7 @@ extern int __kprobe_event_add_fields(struct dynevent_cmd *cmd, ...);
+  *  TRIGGER_COND  - When set, one or more triggers has an associated filter
+  *  PID_FILTER    - When set, the event is filtered based on pid
+  *  WAS_ENABLED   - Set when enabled to know to clear trace on module removal
++ *  FREED         - File descriptor is freed, all fields should be considered invalid
   */
- static DEFINE_MUTEX(eventfs_mutex);
+ enum {
+ 	EVENT_FILE_FL_ENABLED		= (1 << EVENT_FILE_FL_ENABLED_BIT),
+@@ -643,6 +645,7 @@ enum {
+ 	EVENT_FILE_FL_TRIGGER_COND	= (1 << EVENT_FILE_FL_TRIGGER_COND_BIT),
+ 	EVENT_FILE_FL_PID_FILTER	= (1 << EVENT_FILE_FL_PID_FILTER_BIT),
+ 	EVENT_FILE_FL_WAS_ENABLED	= (1 << EVENT_FILE_FL_WAS_ENABLED_BIT),
++	EVENT_FILE_FL_FREED		= (1 << EVENT_FILE_FL_FREED_BIT),
+ };
  
-+/* Mode is unsigned short, use the upper bits for flags */
-+enum {
-+	EVENTFS_SAVE_MODE	= BIT(16),
-+	EVENTFS_SAVE_UID	= BIT(17),
-+	EVENTFS_SAVE_GID	= BIT(18),
-+};
-+
-+#define EVENTFS_MODE_MASK	(EVENTFS_SAVE_MODE - 1)
-+
- /*
-  * The eventfs_inode (ei) itself is protected by SRCU. It is released from
-  * its parent's list and will have is_freed set (under eventfs_mutex).
-@@ -47,8 +56,89 @@ static int dcache_dir_open_wrapper(struct inode *inode, struct file *file);
- static int dcache_readdir_wrapper(struct file *file, struct dir_context *ctx);
- static int eventfs_release(struct inode *inode, struct file *file);
+ struct trace_event_file {
+@@ -671,6 +674,7 @@ struct trace_event_file {
+ 	 * caching and such. Which is mostly OK ;-)
+ 	 */
+ 	unsigned long		flags;
++	atomic_t		ref;	/* ref count for opened files */
+ 	atomic_t		sm_ref;	/* soft-mode reference counter */
+ 	atomic_t		tm_ref;	/* trigger-mode reference counter */
+ };
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 2539cfc20a97..9aebf904ff97 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4978,6 +4978,20 @@ int tracing_open_file_tr(struct inode *inode, struct file *filp)
+ 	if (ret)
+ 		return ret;
  
-+static void update_attr(struct eventfs_attr *attr, struct iattr *iattr)
-+{
-+	unsigned int ia_valid = iattr->ia_valid;
++	mutex_lock(&event_mutex);
 +
-+	if (ia_valid & ATTR_MODE) {
-+		attr->mode = (attr->mode & ~EVENTFS_MODE_MASK) |
-+			(iattr->ia_mode & EVENTFS_MODE_MASK) |
-+			EVENTFS_SAVE_MODE;
-+	}
-+	if (ia_valid & ATTR_UID) {
-+		attr->mode |= EVENTFS_SAVE_UID;
-+		attr->uid = iattr->ia_uid;
-+	}
-+	if (ia_valid & ATTR_GID) {
-+		attr->mode |= EVENTFS_SAVE_GID;
-+		attr->gid = iattr->ia_gid;
-+	}
-+}
-+
-+static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
-+			    struct iattr *iattr)
-+{
-+	const struct eventfs_entry *entry;
-+	struct eventfs_inode *ei;
-+	const char *name;
-+	int ret;
-+
-+	mutex_lock(&eventfs_mutex);
-+	ei = dentry->d_fsdata;
-+	/* The LSB is set when the eventfs_inode is being freed */
-+	if (((unsigned long)ei & 1UL) || ei->is_freed) {
-+		/* Do not allow changes if the event is about to be removed. */
-+		mutex_unlock(&eventfs_mutex);
-+		return -ENODEV;
-+	}
-+
-+	/* Preallocate the children mode array if necessary */
-+	if (!(dentry->d_inode->i_mode & S_IFDIR)) {
-+		if (!ei->entry_attrs) {
-+			ei->entry_attrs = kzalloc(sizeof(*ei->entry_attrs) * ei->nr_entries,
-+						  GFP_KERNEL);
-+			if (!ei->entry_attrs) {
-+				ret = -ENOMEM;
-+				goto out;
-+			}
-+		}
-+	}
-+
-+	ret = simple_setattr(idmap, dentry, iattr);
-+	if (ret < 0)
-+		goto out;
-+
-+	/*
-+	 * If this is a dir, then update the ei cache, only the file
-+	 * mode is saved in the ei->m_children, and the ownership is
-+	 * determined by the parent directory.
-+	 */
-+	if (dentry->d_inode->i_mode & S_IFDIR) {
-+		update_attr(&ei->attr, iattr);
-+
++	/* Fail if the file is marked for removal */
++	if (file->flags & EVENT_FILE_FL_FREED) {
++		trace_array_put(file->tr);
++		ret = -ENODEV;
 +	} else {
-+		name = dentry->d_name.name;
-+
-+		for (int i = 0; i < ei->nr_entries; i++) {
-+			entry = &ei->entries[i];
-+			if (strcmp(name, entry->name) == 0) {
-+				update_attr(&ei->entry_attrs[i], iattr);
-+				break;
-+			}
-+		}
++		event_file_get(file);
 +	}
-+ out:
-+	mutex_unlock(&eventfs_mutex);
-+	return ret;
++
++	mutex_unlock(&event_mutex);
++	if (ret)
++		return ret;
++
+ 	filp->private_data = inode->i_private;
+ 
+ 	return 0;
+@@ -4988,6 +5002,7 @@ int tracing_release_file_tr(struct inode *inode, struct file *filp)
+ 	struct trace_event_file *file = inode->i_private;
+ 
+ 	trace_array_put(file->tr);
++	event_file_put(file);
+ 
+ 	return 0;
+ }
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 0e1405abf4f7..b7f4ea25a194 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1669,6 +1669,9 @@ extern void event_trigger_unregister(struct event_command *cmd_ops,
+ 				     char *glob,
+ 				     struct event_trigger_data *trigger_data);
+ 
++extern void event_file_get(struct trace_event_file *file);
++extern void event_file_put(struct trace_event_file *file);
++
+ /**
+  * struct event_trigger_ops - callbacks for trace event triggers
+  *
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index f9e3e24d8796..f29e815ca5b2 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -990,13 +990,35 @@ static void remove_subsystem(struct trace_subsystem_dir *dir)
+ 	}
+ }
+ 
++void event_file_get(struct trace_event_file *file)
++{
++	atomic_inc(&file->ref);
 +}
 +
- static const struct inode_operations eventfs_root_dir_inode_operations = {
- 	.lookup		= eventfs_root_lookup,
-+	.setattr	= eventfs_set_attr,
-+};
-+
-+static const struct inode_operations eventfs_file_inode_operations = {
-+	.setattr	= eventfs_set_attr,
- };
- 
- static const struct file_operations eventfs_file_operations = {
-@@ -59,10 +149,30 @@ static const struct file_operations eventfs_file_operations = {
- 	.release	= eventfs_release,
- };
- 
-+static void update_inode_attr(struct inode *inode, struct eventfs_attr *attr, umode_t mode)
++void event_file_put(struct trace_event_file *file)
 +{
-+	if (!attr) {
-+		inode->i_mode = mode;
++	if (WARN_ON_ONCE(!atomic_read(&file->ref))) {
++		if (file->flags & EVENT_FILE_FL_FREED)
++			kmem_cache_free(file_cachep, file);
 +		return;
 +	}
 +
-+	if (attr->mode & EVENTFS_SAVE_MODE)
-+		inode->i_mode = attr->mode & EVENTFS_MODE_MASK;
-+	else
-+		inode->i_mode = mode;
-+
-+	if (attr->mode & EVENTFS_SAVE_UID)
-+		inode->i_uid = attr->uid;
-+
-+	if (attr->mode & EVENTFS_SAVE_GID)
-+		inode->i_gid = attr->gid;
++	if (atomic_dec_and_test(&file->ref)) {
++		/* Count should only go to zero when it is freed */
++		if (WARN_ON_ONCE(!(file->flags & EVENT_FILE_FL_FREED)))
++			return;
++		kmem_cache_free(file_cachep, file);
++	}
 +}
 +
- /**
-  * create_file - create a file in the tracefs filesystem
-  * @name: the name of the file to create.
-  * @mode: the permission that the file should have.
-+ * @attr: saved attributes changed by user
-  * @parent: parent dentry for this file.
-  * @data: something that the caller will want to get to later on.
-  * @fop: struct file_operations that should be used for this file.
-@@ -72,6 +182,7 @@ static const struct file_operations eventfs_file_operations = {
-  * call.
-  */
- static struct dentry *create_file(const char *name, umode_t mode,
-+				  struct eventfs_attr *attr,
- 				  struct dentry *parent, void *data,
- 				  const struct file_operations *fop)
+ static void remove_event_file_dir(struct trace_event_file *file)
  {
-@@ -95,7 +206,10 @@ static struct dentry *create_file(const char *name, umode_t mode,
- 	if (unlikely(!inode))
- 		return eventfs_failed_creating(dentry);
- 
--	inode->i_mode = mode;
-+	/* If the user updated the directory's attributes, use them */
-+	update_inode_attr(inode, attr, mode);
-+
-+	inode->i_op = &eventfs_file_inode_operations;
- 	inode->i_fop = fop;
- 	inode->i_private = data;
- 
-@@ -108,19 +222,19 @@ static struct dentry *create_file(const char *name, umode_t mode,
- 
- /**
-  * create_dir - create a dir in the tracefs filesystem
-- * @name: the name of the file to create.
-+ * @ei: the eventfs_inode that represents the directory to create
-  * @parent: parent dentry for this file.
-  *
-  * This function will create a dentry for a directory represented by
-  * a eventfs_inode.
-  */
--static struct dentry *create_dir(const char *name, struct dentry *parent)
-+static struct dentry *create_dir(struct eventfs_inode *ei, struct dentry *parent)
- {
- 	struct tracefs_inode *ti;
- 	struct dentry *dentry;
- 	struct inode *inode;
- 
--	dentry = eventfs_start_creating(name, parent);
-+	dentry = eventfs_start_creating(ei->name, parent);
- 	if (IS_ERR(dentry))
- 		return dentry;
- 
-@@ -128,7 +242,9 @@ static struct dentry *create_dir(const char *name, struct dentry *parent)
- 	if (unlikely(!inode))
- 		return eventfs_failed_creating(dentry);
- 
--	inode->i_mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
-+	/* If the user updated the directory's attributes, use them */
-+	update_inode_attr(inode, &ei->attr, S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO);
-+
- 	inode->i_op = &eventfs_root_dir_inode_operations;
- 	inode->i_fop = &eventfs_file_operations;
- 
-@@ -146,6 +262,7 @@ static void free_ei(struct eventfs_inode *ei)
- {
- 	kfree_const(ei->name);
- 	kfree(ei->d_children);
-+	kfree(ei->entry_attrs);
- 	kfree(ei);
+ 	eventfs_remove_dir(file->ei);
+ 	list_del(&file->list);
+ 	remove_subsystem(file->system);
+ 	free_event_filter(file->filter);
+-	kmem_cache_free(file_cachep, file);
++	file->flags |= EVENT_FILE_FL_FREED;
++	event_file_put(file);
  }
  
-@@ -231,7 +348,7 @@ void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry)
- /**
-  * create_file_dentry - create a dentry for a file of an eventfs_inode
-  * @ei: the eventfs_inode that the file will be created under
-- * @e_dentry: a pointer to the d_children[] of the @ei
-+ * @idx: the index into the d_children[] of the @ei
-  * @parent: The parent dentry of the created file.
-  * @name: The name of the file to create
-  * @mode: The mode of the file.
-@@ -244,10 +361,12 @@ void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry)
-  * just do a dget() on it and return. Otherwise create the dentry and attach it.
-  */
- static struct dentry *
--create_file_dentry(struct eventfs_inode *ei, struct dentry **e_dentry,
-+create_file_dentry(struct eventfs_inode *ei, int idx,
- 		   struct dentry *parent, const char *name, umode_t mode, void *data,
- 		   const struct file_operations *fops, bool lookup)
- {
-+	struct eventfs_attr *attr = NULL;
-+	struct dentry **e_dentry = &ei->d_children[idx];
- 	struct dentry *dentry;
- 	bool invalidate = false;
- 
-@@ -264,13 +383,18 @@ create_file_dentry(struct eventfs_inode *ei, struct dentry **e_dentry,
- 		mutex_unlock(&eventfs_mutex);
- 		return *e_dentry;
- 	}
-+
-+	/* ei->entry_attrs are protected by SRCU */
-+	if (ei->entry_attrs)
-+		attr = &ei->entry_attrs[idx];
-+
- 	mutex_unlock(&eventfs_mutex);
- 
- 	/* The lookup already has the parent->d_inode locked */
- 	if (!lookup)
- 		inode_lock(parent->d_inode);
- 
--	dentry = create_file(name, mode, parent, data, fops);
-+	dentry = create_file(name, mode, attr, parent, data, fops);
- 
- 	if (!lookup)
- 		inode_unlock(parent->d_inode);
-@@ -378,7 +502,7 @@ create_dir_dentry(struct eventfs_inode *pei, struct eventfs_inode *ei,
- 	if (!lookup)
- 		inode_lock(parent->d_inode);
- 
--	dentry = create_dir(ei->name, parent);
-+	dentry = create_dir(ei, parent);
- 
- 	if (!lookup)
- 		inode_unlock(parent->d_inode);
-@@ -495,8 +619,7 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
- 			if (r <= 0)
- 				continue;
- 			ret = simple_lookup(dir, dentry, flags);
--			create_file_dentry(ei, &ei->d_children[i],
--					   ei_dentry, name, mode, cdata,
-+			create_file_dentry(ei, i, ei_dentry, name, mode, cdata,
- 					   fops, true);
- 			break;
- 		}
-@@ -629,8 +752,7 @@ static int dcache_dir_open_wrapper(struct inode *inode, struct file *file)
- 		r = entry->callback(name, &mode, &cdata, &fops);
- 		if (r <= 0)
- 			continue;
--		d = create_file_dentry(ei, &ei->d_children[i],
--				       parent, name, mode, cdata, fops, false);
-+		d = create_file_dentry(ei, i, parent, name, mode, cdata, fops, false);
- 		if (d) {
- 			ret = add_dentries(&dentries, d, cnt);
- 			if (ret < 0)
-diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index 21a1fa682b74..f1437c753a87 100644
---- a/fs/tracefs/internal.h
-+++ b/fs/tracefs/internal.h
-@@ -13,6 +13,18 @@ struct tracefs_inode {
- 	struct inode            vfs_inode;
- };
- 
-+/*
-+ * struct eventfs_attr - cache the mode and ownership of a eventfs entry
-+ * @mode:	saved mode plus flags of what is saved
-+ * @uid:	saved uid if changed
-+ * @gid:	saved gid if changed
-+ */
-+struct eventfs_attr {
-+	int				mode;
-+	kuid_t				uid;
-+	kgid_t				gid;
-+};
-+
  /*
-  * struct eventfs_inode - hold the properties of the eventfs directories.
-  * @list:	link list into the parent directory
-@@ -22,7 +34,9 @@ struct tracefs_inode {
-  * @dentry:     the dentry of the directory
-  * @d_parent:   pointer to the parent's dentry
-  * @d_children: The array of dentries to represent the files when created
-+ * @entry_attrs: Saved mode and ownership of the @d_children
-  * @data:	The private data to pass to the callbacks
-+ * @attr:	Saved mode and ownership of eventfs_inode itself
-  * @nr_entries: The number of items in @entries
-  */
- struct eventfs_inode {
-@@ -33,7 +47,9 @@ struct eventfs_inode {
- 	struct dentry			*dentry; /* Check is_freed to access */
- 	struct dentry			*d_parent;
- 	struct dentry			**d_children;
-+	struct eventfs_attr		*entry_attrs;
- 	void				*data;
-+	struct eventfs_attr		attr;
- 	/*
- 	 * Union - used for deletion
- 	 * @del_list:	list of eventfs_inode to delete
--- 
-2.42.0
-
+@@ -1369,7 +1391,7 @@ event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
+ 		flags = file->flags;
+ 	mutex_unlock(&event_mutex);
+ 
+-	if (!file)
++	if (!file || flags & EVENT_FILE_FL_FREED)
+ 		return -ENODEV;
+ 
+ 	if (flags & EVENT_FILE_FL_ENABLED &&
+@@ -1403,7 +1425,7 @@ event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
+ 		ret = -ENODEV;
+ 		mutex_lock(&event_mutex);
+ 		file = event_file_data(filp);
+-		if (likely(file)) {
++		if (likely(file && !(file->flags & EVENT_FILE_FL_FREED))) {
+ 			ret = tracing_update_buffers(file->tr);
+ 			if (ret < 0) {
+ 				mutex_unlock(&event_mutex);
+@@ -1683,7 +1705,7 @@ event_filter_read(struct file *filp, char __user *ubuf, size_t cnt,
+ 
+ 	mutex_lock(&event_mutex);
+ 	file = event_file_data(filp);
+-	if (file)
++	if (file && !(file->flags & EVENT_FILE_FL_FREED))
+ 		print_event_filter(file, s);
+ 	mutex_unlock(&event_mutex);
+ 
+@@ -2902,6 +2924,7 @@ trace_create_new_event(struct trace_event_call *call,
+ 	atomic_set(&file->tm_ref, 0);
+ 	INIT_LIST_HEAD(&file->triggers);
+ 	list_add(&file->list, &tr->events);
++	event_file_get(file);
+ 
+ 	return file;
+ }
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index 33264e510d16..0c611b281a5b 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -2349,6 +2349,9 @@ int apply_event_filter(struct trace_event_file *file, char *filter_string)
+ 	struct event_filter *filter = NULL;
+ 	int err;
+ 
++	if (file->flags & EVENT_FILE_FL_FREED)
++		return -ENODEV;
++
+ 	if (!strcmp(strstrip(filter_string), "0")) {
+ 		filter_disable(file);
+ 		filter = event_filter(file);
