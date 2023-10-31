@@ -1,35 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3534B16418
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 31 Oct 2023 16:07:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995E31F945
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 31 Oct 2023 16:24:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5210CC433C7;
-	Tue, 31 Oct 2023 16:07:04 +0000 (UTC)
-Date: Tue, 31 Oct 2023 12:07:02 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61BFDC433C7;
+	Tue, 31 Oct 2023 16:24:55 +0000 (UTC)
+Date: Tue, 31 Oct 2023 12:24:53 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Beau Belgrave <beaub@linux.microsoft.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, "open list:KERNEL SELFTEST
- FRAMEWORK" <linux-kselftest@vger.kernel.org>, open list
- <linux-kernel@vger.kernel.org>, linux-trace-kernel@vger.kernel.org,
- lkft-triage@lists.linaro.org, Mark Brown <broonie@kernel.org>, Zheng Yejian
- <zhengyejian1@huawei.com>, Dan Carpenter <dan.carpenter@linaro.org>, Arnd
- Bergmann <arnd@arndb.de>, Masami Hiramatsu <mhiramat@kernel.org>, stable
- <stable@vger.kernel.org>
-Subject: Re: selftests: user_events: ftrace_test - RIP:
- 0010:tracing_update_buffers (kernel/trace/trace.c:6470)
-Message-ID: <20231031120702.70dbb21b@gandalf.local.home>
-In-Reply-To: <20231031104551.6e0f3620@gandalf.local.home>
-References: <CA+G9fYuDP3hVQ3t7FfrBAjd_WFVSurMgCepTxunSJf=MTe=6aA@mail.gmail.com>
-	<20231027192011.GA436-beaub@linux.microsoft.com>
-	<20231027183640.2529ab68@gandalf.local.home>
-	<20231027223344.3854ac1f@rorschach.local.home>
-	<20231030163102.GA1853-beaub@linux.microsoft.com>
-	<20231030124223.4e4ddeb8@gandalf.local.home>
-	<20231030173151.0631169b@gandalf.local.home>
-	<20231031002707.GA107-beaub@linux.microsoft.com>
-	<20231031000031.1e705592@gandalf.local.home>
-	<20231031104551.6e0f3620@gandalf.local.home>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Beau Belgrave <beaub@linux.microsoft.com>
+Subject: [PATCH] tracing: Have trace_event_file have ref counters
+Message-ID: <20231031122453.7a48b923@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,23 +24,68 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 31 Oct 2023 10:45:51 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> @@ -1404,7 +1424,7 @@ event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
->  		ret = -ENODEV;
->  		mutex_lock(&event_mutex);
->  		file = event_file_data(filp);
-> -		if (likely(file)) {
-> +		if (likely(file && !(file->flags & EVENT_FILE_FL_FREED))) {
->  			printk("update file = %px\n", file);
->  			printk("update tr = %px\n", file->tr);
->  			ret = tracing_update_buffers(file->tr);
+The following can crash the kernel:
 
-Well, this won't apply because I still had debugging in it when I added
-these changes.
+ # cd /sys/kernel/tracing
+ # echo 'p:sched schedule' > kprobe_events
+ # exec 5>>events/kprobes/sched/enable
+ # > kprobe_events
+ # exec 5>&-
 
-Here's a better version:
+The above commands:
+
+ 1. Change directory to the tracefs directory
+ 2. Create a kprobe event (doesn't matter what one)
+ 3. Open bash file descriptor 5 on the enable file of the kprobe event
+ 4. Delete the kprobe event (removes the files too)
+ 5. Close the bash file descriptor 5
+
+The above causes a crash!
+
+ BUG: kernel NULL pointer dereference, address: 0000000000000028
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 0 P4D 0
+ Oops: 0000 [#1] PREEMPT SMP PTI
+ CPU: 6 PID: 877 Comm: bash Not tainted 6.5.0-rc4-test-00008-g2c6b6b1029d4-dirty #186
+ Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+ RIP: 0010:tracing_release_file_tr+0xc/0x50
+
+What happens here is that the kprobe event creates a trace_event_file
+"file" descriptor that represents the file in tracefs to the event. It
+maintains state of the event (is it enabled for the given instance?).
+Opening the "enable" file gets a reference to the event "file" descriptor
+via the open file descriptor. When the kprobe event is deleted, the file is
+also deleted from the tracefs system which also frees the event "file"
+descriptor.
+
+But as the tracefs file is still opened by user space, it will not be
+totally removed until the final dput() is called on it. But this is not
+true with the event "file" descriptor that is already freed. If the user
+does a write to or simply closes the file descriptor it will reference the
+event "file" descriptor that was just freed, causing a use-after-free bug.
+
+To solve this, add a ref count to the event "file" descriptor as well as a
+new flag called "FREED". The "file" will not be freed until the last
+reference is released. But the FREE flag will be set when the event is
+removed to prevent any more modifications to that event from happening,
+even if there's still a reference to the event "file" descriptor.
+
+Link: https://lore.kernel.org/linux-trace-kernel/20231031000031.1e705592@gandalf.local.home/
+
+Cc: stable@vger.kernel.org
+Fixes: f5ca233e2e66d ("tracing: Increase trace array ref count on enable and filter files")
+Reported-by: Beau Belgrave <beaub@linux.microsoft.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/linux/trace_events.h       |  4 ++++
+ kernel/trace/trace.c               | 15 +++++++++++++++
+ kernel/trace/trace.h               |  3 +++
+ kernel/trace/trace_events.c        | 31 ++++++++++++++++++++++++++----
+ kernel/trace/trace_events_filter.c |  3 +++
+ 5 files changed, 52 insertions(+), 4 deletions(-)
 
 diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
 index 12207dc6722d..696f8dc4aa53 100644
@@ -231,3 +260,6 @@ index 33264e510d16..0c611b281a5b 100644
  	if (!strcmp(strstrip(filter_string), "0")) {
  		filter_disable(file);
  		filter = event_filter(file);
+-- 
+2.42.0
+
