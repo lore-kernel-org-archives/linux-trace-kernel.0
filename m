@@ -1,75 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28138134C7
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Nov 2023 14:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBC28C433C8;
-	Wed,  1 Nov 2023 14:55:55 +0000 (UTC)
-Date: Wed, 1 Nov 2023 10:55:54 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ajay Kaher
- <akaher@vmware.com>
-Subject: Re: [PATCH] eventfs: Process deletion of dentry more thoroughly
-Message-ID: <20231101105554.6cd5a30f@gandalf.local.home>
-In-Reply-To: <20231101001659.1456b3d4@gandalf.local.home>
-References: <20231031144703.71eef3a0@gandalf.local.home>
-	<20231101022553.GE1957730@ZenIV>
-	<20231101001659.1456b3d4@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924405667
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Nov 2023 15:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ITbO5wnM"
+Received: from mail-vk1-xa34.google.com (mail-vk1-xa34.google.com [IPv6:2607:f8b0:4864:20::a34])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCA9BFC
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Nov 2023 08:08:46 -0700 (PDT)
+Received: by mail-vk1-xa34.google.com with SMTP id 71dfb90a1353d-49d6bd360f8so2795402e0c.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Nov 2023 08:08:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1698851326; x=1699456126; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=corqp7CfGvUyEgrD9bIV6OXcI9ow1EsKtITC795TmMQ=;
+        b=ITbO5wnM5jCLAL13+0dMybayI4hKNf4MZTGhkIMGN1kCltZOP46+fiitHtRr9Adf7H
+         aK/11F/fFY+cvC5RS8QMKKUO6M2ujeLSxAZpCMxP7/xwU9Wkzlg+OwRI4czv9WGAo2vY
+         HW72xWzqX2h8ROfRMQzROtSOJ0bZkjvVOpXbaBEXUNhC2st+JKYQEiER6L1cUjNlLtkn
+         D3zBJQm8gO/K2GqRzL1kSSgaDLP6048XRgwKeOlCRPE2BPSp9HhOneAYo6Aj74z7oFEa
+         RIyzFp8yAgCG/RW3c/fOznENzHD1eel3yeXDurJQoPT3UmyffkdtWUL76dEUp9pjsIy2
+         XTsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698851326; x=1699456126;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=corqp7CfGvUyEgrD9bIV6OXcI9ow1EsKtITC795TmMQ=;
+        b=wci6q7EEzIFMl+Eha9w3oASJDokrwKL19K6WjcUT6XTSPjgpqeSVgrDXj4Bzek1zu3
+         qGbVhdMLSrj5N1I8Yj9LxU99m85Fd7sU0cn55OCyVrX/fE1mDL3SHpF4zzUWI5mf9VLy
+         0tS7j+5zDD0NBdZCloFIZdxSMllHhU9194xlQHL3OG40SlVYPkDVFe0/Re9HoAnIPP4U
+         j9OLnHax+rg59a4NRfVoYH5Uj6vJaFwXPsmvdvHqwf4kqYtXQZWpGdUVzreWbLrEapLk
+         /RTIf4g+Fx5jbtQKMS5EQ9HLa96JRejqthYi3IJpskskVCP9WBKX314XDAuEhjbRS67e
+         9euw==
+X-Gm-Message-State: AOJu0YywKw6p4stYOEjLp8GTyJ01dlQ25g28Ebhnj3dF2R5vXZ2s2RAO
+	/TE/o1IT5YZ4B3EkFYqWzaMAf74PUcxve0lRA4VFJA==
+X-Google-Smtp-Source: AGHT+IFRP3J26J6f2G9GoOmlvDxQMUn3GJVpErAduzprqFDcGBF9BHEKiQQgZG1z2mpFGEDO+jReHPh6OMo3irT4O+Y=
+X-Received: by 2002:a1f:a047:0:b0:490:e790:a15b with SMTP id
+ j68-20020a1fa047000000b00490e790a15bmr14482637vke.10.1698851325888; Wed, 01
+ Nov 2023 08:08:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 1 Nov 2023 20:38:34 +0530
+Message-ID: <CA+G9fYt-XxvA+Fg5+htpqy8ySAtY-q+dGD_FOvmzGJOPbAySHA@mail.gmail.com>
+Subject: stable-rc: 5.4 - all builds failed - ld.lld: error: undefined symbol: kallsyms_on_each_symbol
+To: linux-stable <stable@vger.kernel.org>, 
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 1 Nov 2023 00:16:59 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi Greg,
 
-> On Wed, 1 Nov 2023 02:25:53 +0000
-> Al Viro <viro@zeniv.linux.org.uk> wrote:
-> 
-> > Umm...  Is there any reason not to use simple_recursive_removal() there?  
-> 
-> Hmm, I may be able to (I'm still a newbie with understanding of the vfs).
-> 
-> I did it this way thinking that a dentry may exist in the children but not
-> at a higher level, but I don't think that can be the case. This creates
-> dentries and inodes dynamically when they are referenced. The eventfs_inode
-> maps to each directory (the files of a directory are created from the
-> information from the eventfs_inode).
+I see the following build warning / errors everywhere on stable-rc 5.4 branch.
 
-OK, as I tried to use the simple_recursive_remove() and I failed miserably!
+ld.lld: error: undefined symbol: kallsyms_on_each_symbol
+>>> referenced by trace_kprobe.c
+>>>               trace/trace_kprobe.o:(create_local_trace_kprobe) in archive kernel/built-in.a
+>>> referenced by trace_kprobe.c
+>>>               trace/trace_kprobe.o:(__trace_kprobe_create) in archive kernel/built-in.a
+make[1]: *** [Makefile:1227: vmlinux] Error 1
 
-I think I know why. What happened was the last child would get one extra
-"dput" than it needed. That's because dentry's exist without any reference
-on them and they don't disappear until a reclaim happens. What I mean is,
-when a file is "open()'d" a dentry is created on the fly so that the user
-can access the file. When it is "close()'d" the dentry count goes to zero.
+Links,
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2XXALLRIZaXJVcqhff4ZmGTeZoQ/
 
-Then on memory reclaim, the dentries may be removed. If another open
-happens, the dentry is created again, or the one that is still cached can
-be reinstated.
-
-It looks like the simple_recursive_remove() expects all dentries to have at
-least a 1 when entering, which is not the case here.
-
-But!
-
-Now what I could do is to do a dget() when removing the eventfs_inodes (ei)
-on any dentry that is attached to them.
-
-/me goes and tries that...
-
-OK, that actually seems to work. With the assumption that there will never
-be dentry without a parent I think I can go this approach.
-
-Thanks!
-
--- Steve
+- Naresh
