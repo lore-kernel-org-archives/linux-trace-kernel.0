@@ -1,21 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574142599;
-	Wed,  1 Nov 2023 17:45:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65BA312E44
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Nov 2023 20:00:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2083DC433C8;
-	Wed,  1 Nov 2023 17:45:58 +0000 (UTC)
-Date: Wed, 1 Nov 2023 13:45:56 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A60AC433C8;
+	Wed,  1 Nov 2023 20:00:36 +0000 (UTC)
+Date: Wed, 1 Nov 2023 16:00:35 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Florent Revest
- <revest@chromium.org>, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [QUESTION] ftrace_test_recursion_trylock behaviour
-Message-ID: <20231101134556.5d4a46c3@gandalf.local.home>
-In-Reply-To: <ZUKLnmYyHpthlMEE@krava>
-References: <ZUKLnmYyHpthlMEE@krava>
+To: Mukesh Ojha <quic_mojha@quicinc.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] eventfs: Fix kerneldoc of eventfs_remove_rec()
+Message-ID: <20231101160035.12824b55@gandalf.local.home>
+In-Reply-To: <9d71fc3b-f7a9-9f23-6fbe-a7665954cd30@quicinc.com>
+References: <20231030121523.0b2225a7@gandalf.local.home>
+	<9d71fc3b-f7a9-9f23-6fbe-a7665954cd30@quicinc.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -26,56 +27,54 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 1 Nov 2023 18:32:14 +0100
-Jiri Olsa <olsajiri@gmail.com> wrote:
+On Mon, 30 Oct 2023 21:57:13 +0530
+Mukesh Ojha <quic_mojha@quicinc.com> wrote:
 
-> hi,
-> I'm doing some testing on top of fprobes and noticed that the
-> ftrace_test_recursion_trylock allows caller from the same context
-> going through twice.
+> On 10/30/2023 9:45 PM, Steven Rostedt wrote:
+> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> > 
+> > The eventfs_remove_rec() had some missing parameters in the kerneldoc
+> > comment above it. Also, rephrase the description a bit more to have a bit
+> > more correct grammar.
+> > 
+> > Fixes: 5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode");
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes: https://lore.kernel.org/oe-kbuild-all/202310052216.4SgqasWo-lkp@intel.com/
+> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>  
 > 
-> The change below adds extra fprobe on stack_trace_print, which is
-> called within the sample_entry_handler and I can see it being executed
-> with following trace output:
-> 
->            <...>-457     [003] ...1.    32.352554: sample_entry_handler:
-> Enter <kernel_clone+0x0/0x380> ip = 0xffffffff81177420 <...>-457
-> [003] ...2.    32.352578: sample_entry_handler_extra: Enter
-> <stack_trace_print+0x0/0x60> ip = 0xffffffff8127ae70
-> 
-> IOW nested ftrace_test_recursion_trylock call in the same context
-> succeeded.
-> 
-> It seems the reason is the TRACE_CTX_TRANSITION bit logic.
-> 
-> Just making sure it's intentional.. we have kprobe_multi code on top of
-> fprobe with another re-entry logic and that might behave differently based
-> on ftrace_test_recursion_trylock logic.
+> Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
 
-Yes it's intentional, as it's a work around for an issue that may be
-cleared up now with Peter Zijlstra's noinstr updates.
+Hi Mukesh!
 
-The use case for that TRACE_CTX_TRANSITION is when a function is traced
-just after an interrupt was triggered but before the preempt count was
-updated to let us know that we are in an interrupt context.
+First, I want to thank you for your reviews. We certainly need more
+reviewers.
 
-Daniel Bristot reported a regression after the trylock was first introduced
-where the interrupt entry function was traced sometimes but not always.
-That's because if the interrupt happened normally, it would be traced, but
-if the interrupt happened when another event was being traced, the recursion
-logic would see that the trace of the interrupt was happening in the same
-context as the event it interrupted and drop the interrupt trace. But after
-the preempt count was updated, the other functions in the interrupt would be
-seen. This led to very confusing trace output.
+But I need to also state that "Reviewed-by" tags should not be sent so
+lightly. The only times a Reviewed-by tag should be sent is if you
+participated in the discussion of the code, you have authored some of
+the code that is being modified, or are marked as a reviewer of the code in
+the MAINTAINERS file.
 
-The solution to that was this workaround hack, where the trace recursion
-logic would allow a single recursion (the interrupt preempting another
-trace before it set preempt count).
+For example, you added to the discussion here:
 
-But with noinstr, there should be no more instances of this problem and we
-can drop that extra bit. But the last I checked, there were a few places
-that still could be traced without the preempt_count set. I'll have to
-re-investigate.
+   https://lore.kernel.org/all/65dcdd9c-a75b-4fe7-bdcf-471a5602db20@linaro.org/
+
+And adding your Reviewed-by tag is appropriate.
+
+But when a maintainer receives a Reviewed-by from someone they don't know,
+without any discussion in the patch, it may make that maintainer think that
+the person sending the Reviewed-by is only out to get listed in the LWN
+"Reviewed-by" count.
+
+I review other developers' code all the time, and unless the code touches
+something I worked on or I'm marked as a reviewer in the MAINTAINERS file,
+I do not send a Reviewed-by tag unless I added some input to the patch in
+question.
+
+My advice to you is to keep up the reviewing, I appreciate it (I really
+do!), but don't send out Reviewed-by tags unless you are marked as a
+reviewer of the code, or participated in a discussion on that code.
+
+Thanks,
 
 -- Steve
-
