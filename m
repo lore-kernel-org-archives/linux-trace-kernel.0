@@ -1,225 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16AC8179B5
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Nov 2023 17:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B449EC433B6;
-	Wed,  1 Nov 2023 17:26:51 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.96)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1qyEzS-00EZw0-2O;
-	Wed, 01 Nov 2023 13:26:50 -0400
-Message-ID: <20231101172650.552471568@goodmis.org>
-User-Agent: quilt/0.66
-Date: Wed, 01 Nov 2023 13:25:49 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- stable@vger.kernel.org,
- Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH v6 8/8] eventfs: Use simple_recursive_removal() to clean up dentries
-References: <20231101172541.971928390@goodmis.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A085618021;
+	Wed,  1 Nov 2023 17:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JPsJKuhW"
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F41EE4;
+	Wed,  1 Nov 2023 10:32:24 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-9d0b4dfd60dso7798466b.1;
+        Wed, 01 Nov 2023 10:32:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698859942; x=1699464742; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KyjIjE8oDJiKS+8P2onJcWqcyO/pjdYH5TLyKN7Do2E=;
+        b=JPsJKuhWLuK5e6nqFuOqNkpmjmf97pa220iofzOgK4f6PgfP2w70dbj0Dpq4Bd8r9h
+         xOGmJftf4VK3NXuTRfrye5sDOBJTzo8xqX67zstZreGGJjzrrW1z+B103KTRIVjeAAaU
+         lXS5MOixPHPdr3f7KLUabHzOIj94uGzvWgRfxZBcS6jxisOrrowOAnuoAi4nSU0sIxlI
+         7KD/Yi7ovekQNceN/cmCvDapHny5LeG3Bv9z9UEK0WcnVTLJrmk8xJuzbGG3BlQEbfV1
+         U9zM5aKD+LpV9FHw1ZR/MSxHqjO8Qp+S4XSRPlW3BEHaGnlBgvuZ18Dp+/GNegCIUS8m
+         BO6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698859942; x=1699464742;
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KyjIjE8oDJiKS+8P2onJcWqcyO/pjdYH5TLyKN7Do2E=;
+        b=r85Kw1Aak9W44YURu9QJwGxhmqHJdMB1rNWpyBgZNHHCjgJbLvizPPwkBS5OubyY/s
+         YJbrBQ3HRTCNdOVNdCztbOpw/veP0uKV9OUJpkA2FE89kFQ1r8G5h+cq1PoTaLNhuQjs
+         wWq91ZakcJFPlnhGLW2LeaP/l1A6eaedN0yzckNuWu4f5yr21tczhSMzPlKqr2efg5+H
+         b9ZxNDyL1NBUupLejLGInfU57B4rxrfuYmGbvQffQUblOVtLaB4zpdS1wITLbKOsTNha
+         y7Hy7mQOZkgeNhy5UlU01oB3gIVKnYOvBVnFFlbKb0O5VrfaylxeKvBHnQMIcn0KHPVV
+         N7pg==
+X-Gm-Message-State: AOJu0YyEwSwoyNQGfodrERlardgQbanFznP9+83AaCZ944Qqx+5TbHfJ
+	DG0hngII1B+F0pyGs8TIJYLKJsOsQBBSlA==
+X-Google-Smtp-Source: AGHT+IGITewd+1U2k4AjBqiBmRhf3DHVYVVUJULjT+LS1cxPGo3XUJlZ4sDASG0woQ4kQInKCIFpdA==
+X-Received: by 2002:a17:907:72d6:b0:9bf:3be2:cc7a with SMTP id du22-20020a17090772d600b009bf3be2cc7amr2962141ejc.60.1698859942324;
+        Wed, 01 Nov 2023 10:32:22 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id c11-20020a170906d18b00b009bf7a4d591csm182540ejz.11.2023.11.01.10.32.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Nov 2023 10:32:21 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 1 Nov 2023 18:32:14 +0100
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>
+Cc: linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [QUESTION] ftrace_test_recursion_trylock behaviour
+Message-ID: <ZUKLnmYyHpthlMEE@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+hi,
+I'm doing some testing on top of fprobes and noticed that the
+ftrace_test_recursion_trylock allows caller from the same context
+going through twice.
 
-Looking at how dentry is removed via the tracefs system, I found that
-eventfs does not do everything that it did under tracefs. The tracefs
-removal of a dentry calls simple_recursive_removal() that does a lot more
-than a simple d_invalidate().
+The change below adds extra fprobe on stack_trace_print, which is
+called within the sample_entry_handler and I can see it being executed
+with following trace output:
 
-As it should be a requirement that any eventfs_inode that has a dentry, so
-does its parent. When removing a eventfs_inode, if it has a dentry, a call
-to simple_recursive_removal() on that dentry should clean up all the
-dentries underneath it.
+           <...>-457     [003] ...1.    32.352554: sample_entry_handler: Enter <kernel_clone+0x0/0x380> ip = 0xffffffff81177420
+           <...>-457     [003] ...2.    32.352578: sample_entry_handler_extra: Enter <stack_trace_print+0x0/0x60> ip = 0xffffffff8127ae70
 
-Add WARN_ON_ONCE() to check for the parent having a dentry if any children
-do.
+IOW nested ftrace_test_recursion_trylock call in the same context succeeded.
 
-Link: https://lore.kernel.org/all/20231101022553.GE1957730@ZenIV/
+It seems the reason is the TRACE_CTX_TRANSITION bit logic.
 
-Cc: stable@vger.kernel.org
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Fixes: 5bdcd5f5331a2 ("eventfs: Implement removal of meta data from eventfs")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Just making sure it's intentional.. we have kprobe_multi code on top of
+fprobe with another re-entry logic and that might behave differently based
+on ftrace_test_recursion_trylock logic.
+
+thanks,
+jirka
+
+
 ---
-Changes since the last patch: https://lore.kernel.org/linux-trace-kernel/20231031144703.71eef3a0@gandalf.local.home
-
-- Was originally called: eventfs: Process deletion of dentry more thoroughly
-
-- Al Viro pointed out that I could use simple_recursive_removal() instead.
-  I had originally thought that I could not, but looking deeper into it,
-  and realizing that if a dentry exists on any eventfs_inode, then all
-  the parent eventfs_inode of that would als have a dentry. Hence, calling
-  simple_recursive_removal() on the top dentry would clean up all the
-  children dentries as well. Doing it his way cleans up the code quite
-  a bit!
-
- fs/tracefs/event_inode.c | 77 +++++++++++++++++++++++-----------------
- fs/tracefs/internal.h    |  2 --
- 2 files changed, 44 insertions(+), 35 deletions(-)
-
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 0087a3f455f1..f8a594a50ae6 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -967,30 +967,29 @@ static void unhook_dentry(struct dentry *dentry)
- {
- 	if (!dentry)
- 		return;
--
--	/* Keep the dentry from being freed yet (see eventfs_workfn()) */
-+	/*
-+	 * Need to add a reference to the dentry that is expected by
-+	 * simple_recursive_removal(), which will include a dput().
-+	 */
- 	dget(dentry);
+diff --git a/samples/fprobe/fprobe_example.c b/samples/fprobe/fprobe_example.c
+index 64e715e7ed11..531272af0682 100644
+--- a/samples/fprobe/fprobe_example.c
++++ b/samples/fprobe/fprobe_example.c
+@@ -23,6 +23,9 @@
+ static struct fprobe sample_probe;
+ static unsigned long nhit;
  
--	dentry->d_fsdata = NULL;
--	d_invalidate(dentry);
--	mutex_lock(&eventfs_mutex);
--	/* dentry should now have at least a single reference */
--	WARN_ONCE((int)d_count(dentry) < 1,
--		  "dentry %px (%s) less than one reference (%d) after invalidate\n",
--		  dentry, dentry->d_name.name, d_count(dentry));
--	mutex_unlock(&eventfs_mutex);
-+	/*
-+	 * Also add a reference for the dput() in eventfs_workfn().
-+	 * That is required as that dput() will free the ei after
-+	 * the SRCU grace period is over.
-+	 */
-+	dget(dentry);
- }
- 
- /**
-  * eventfs_remove_rec - remove eventfs dir or file from list
-  * @ei: eventfs_inode to be removed.
-- * @head: the list head to place the deleted @ei and children
-  * @level: prevent recursion from going more than 3 levels deep.
-  *
-  * This function recursively removes eventfs_inodes which
-  * contains info of files and/or directories.
-  */
--static void eventfs_remove_rec(struct eventfs_inode *ei, struct list_head *head, int level)
-+static void eventfs_remove_rec(struct eventfs_inode *ei, int level)
- {
- 	struct eventfs_inode *ei_child;
- 
-@@ -1009,13 +1008,26 @@ static void eventfs_remove_rec(struct eventfs_inode *ei, struct list_head *head,
- 	/* search for nested folders or files */
- 	list_for_each_entry_srcu(ei_child, &ei->children, list,
- 				 lockdep_is_held(&eventfs_mutex)) {
--		eventfs_remove_rec(ei_child, head, level + 1);
-+		/* Children only have dentry if parent does */
-+		WARN_ON_ONCE(ei_child->dentry && !ei->dentry);
-+		eventfs_remove_rec(ei_child, level + 1);
- 	}
- 
++static struct fprobe sample_probe_extra;
++static char *symbol_extra = "stack_trace_print";
 +
- 	ei->is_freed = 1;
+ static char symbol[MAX_SYMBOL_LEN] = "kernel_clone";
+ module_param_string(symbol, symbol, sizeof(symbol), 0644);
+ MODULE_PARM_DESC(symbol, "Probed symbol(s), given by comma separated symbols or a wildcard pattern.");
+@@ -48,6 +51,15 @@ static void show_backtrace(void)
+ 	stack_trace_print(stacks, len, 24);
+ }
  
-+	for (int i = 0; i < ei->nr_entries; i++) {
-+		if (ei->d_children[i]) {
-+			/* Children only have dentry if parent does */
-+			WARN_ON_ONCE(!ei->dentry);
-+			unhook_dentry(ei->d_children[i]);
-+		}
-+	}
++static int sample_entry_handler_extra(struct fprobe *fp, unsigned long ip,
++				      unsigned long ret_ip,
++				      struct pt_regs *regs, void *data)
++{
++	if (use_trace)
++		trace_printk("Enter <%pS> ip = 0x%p\n", (void *)ip, (void *)ip);
++	return 0;
++}
 +
-+	unhook_dentry(ei->dentry);
+ static int sample_entry_handler(struct fprobe *fp, unsigned long ip,
+ 				unsigned long ret_ip,
+ 				struct pt_regs *regs, void *data)
+@@ -96,6 +108,8 @@ static int __init fprobe_init(void)
+ 	sample_probe.entry_handler = sample_entry_handler;
+ 	sample_probe.exit_handler = sample_exit_handler;
+ 
++	sample_probe_extra.entry_handler = sample_entry_handler_extra;
 +
- 	list_del_rcu(&ei->list);
--	list_add_tail(&ei->del_list, head);
-+	call_srcu(&eventfs_srcu, &ei->rcu, free_rcu_ei);
+ 	if (strchr(symbol, '*')) {
+ 		/* filter based fprobe */
+ 		ret = register_fprobe(&sample_probe, symbol,
+@@ -137,12 +151,19 @@ static int __init fprobe_init(void)
+ 	else
+ 		pr_info("Planted fprobe at %s\n", symbol);
+ 
++	ret = register_fprobe_syms(&sample_probe_extra, (const char **) &symbol_extra, 1);
++	if (ret < 0)
++		pr_err("register_fprobe extra failed, returned %d\n", ret);
++	else
++		pr_info("Planted extra fprobe at %s\n", symbol_extra);
++
+ 	return ret;
  }
  
- /**
-@@ -1026,30 +1038,22 @@ static void eventfs_remove_rec(struct eventfs_inode *ei, struct list_head *head,
-  */
- void eventfs_remove_dir(struct eventfs_inode *ei)
+ static void __exit fprobe_exit(void)
  {
--	struct eventfs_inode *tmp;
--	LIST_HEAD(ei_del_list);
-+	struct dentry *dentry;
+ 	unregister_fprobe(&sample_probe);
++	unregister_fprobe(&sample_probe_extra);
  
- 	if (!ei)
- 		return;
- 
--	/*
--	 * Move the deleted eventfs_inodes onto the ei_del_list
--	 * which will also set the is_freed value. Note, this has to be
--	 * done under the eventfs_mutex, but the deletions of
--	 * the dentries must be done outside the eventfs_mutex.
--	 * Hence moving them to this temporary list.
--	 */
- 	mutex_lock(&eventfs_mutex);
--	eventfs_remove_rec(ei, &ei_del_list, 0);
-+	dentry = ei->dentry;
-+	eventfs_remove_rec(ei, 0);
- 	mutex_unlock(&eventfs_mutex);
- 
--	list_for_each_entry_safe(ei, tmp, &ei_del_list, del_list) {
--		for (int i = 0; i < ei->nr_entries; i++)
--			unhook_dentry(ei->d_children[i]);
--		unhook_dentry(ei->dentry);
--		list_del(&ei->del_list);
--		call_srcu(&eventfs_srcu, &ei->rcu, free_rcu_ei);
--	}
-+	/*
-+	 * If any of the ei children has a dentry, then the ei itself
-+	 * must have a dentry.
-+	 */
-+	if (dentry)
-+		simple_recursive_removal(dentry, NULL);
- }
- 
- /**
-@@ -1060,10 +1064,17 @@ void eventfs_remove_dir(struct eventfs_inode *ei)
-  */
- void eventfs_remove_events_dir(struct eventfs_inode *ei)
- {
--	struct dentry *dentry = ei->dentry;
-+	struct dentry *dentry;
- 
-+	dentry = ei->dentry;
- 	eventfs_remove_dir(ei);
- 
--	/* Matches the dget() from eventfs_create_events_dir() */
-+	/*
-+	 * Matches the dget() done by tracefs_start_creating()
-+	 * in eventfs_create_events_dir() when it the dentry was
-+	 * created. In other words, it's a normal dentry that
-+	 * sticks around while the other ei->dentry are created
-+	 * and destroyed dynamically.
-+	 */
- 	dput(dentry);
- }
-diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index 06a1f220b901..ccee18ca66c7 100644
---- a/fs/tracefs/internal.h
-+++ b/fs/tracefs/internal.h
-@@ -55,12 +55,10 @@ struct eventfs_inode {
- 	/*
- 	 * Union - used for deletion
- 	 * @llist:	for calling dput() if needed after RCU
--	 * @del_list:	list of eventfs_inode to delete
- 	 * @rcu:	eventfs_inode to delete in RCU
- 	 */
- 	union {
- 		struct llist_node	llist;
--		struct list_head	del_list;
- 		struct rcu_head		rcu;
- 	};
- 	unsigned int			is_freed:1;
--- 
-2.42.0
+ 	pr_info("fprobe at %s unregistered. %ld times hit, %ld times missed\n",
+ 		symbol, nhit, sample_probe.nmissed);
