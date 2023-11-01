@@ -1,60 +1,223 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB041841
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Nov 2023 04:17:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 269C5C433C8;
-	Wed,  1 Nov 2023 04:17:01 +0000 (UTC)
-Date: Wed, 1 Nov 2023 00:16:59 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ajay Kaher
- <akaher@vmware.com>
-Subject: Re: [PATCH] eventfs: Process deletion of dentry more thoroughly
-Message-ID: <20231101001659.1456b3d4@gandalf.local.home>
-In-Reply-To: <20231101022553.GE1957730@ZenIV>
-References: <20231031144703.71eef3a0@gandalf.local.home>
-	<20231101022553.GE1957730@ZenIV>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFC85694
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Nov 2023 07:34:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="rJi92MvQ"
+Received: from smtp.smtpout.orange.fr (smtp-25.smtpout.orange.fr [80.12.242.25])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15A05E4
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Nov 2023 00:34:48 -0700 (PDT)
+Received: from [192.168.1.18] ([86.243.2.178])
+	by smtp.orange.fr with ESMTPA
+	id y5kGq6dQN4QsMy5kGqtze1; Wed, 01 Nov 2023 08:34:45 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1698824085;
+	bh=CUdWnEJWzIujOVoGrv8Tkry7Mv7CTElz64mfshxJTJQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=rJi92MvQ6mOofN5slXRMyPFe3eAjkqxdtVFn5nwLllDJ+SRifvbmwtuEFGh4PPrEn
+	 XZWig7/H5tOvyCLvUIML3ki8dAAF2l0LUTdLYo8z2wVm+BUy9adyNQqPE4JoLsE6a8
+	 XMHapwAXB05kVyIwSUqO+Bd5czGQDKAaBT5e1dgV8q8bC4Dtd8kQ/d7M5lmGERnauj
+	 Wr8Ub8z1xif6MnldgrdRNc9BlTzFP/muHFP1NRDGZlijltNomGTYCd47eIYcGpCyw7
+	 hKDH4HBfuWDCZoEf9to4JnB6aY9PBfPs08i8H+hpHt78XsVzqMXmmsjlWs5C0UuAzd
+	 AkH/uIyBP60MQ==
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 01 Nov 2023 08:34:45 +0100
+X-ME-IP: 86.243.2.178
+Message-ID: <2a534333-b5f6-4b1d-b4b8-a1a71f91c3ff@wanadoo.fr>
+Date: Wed, 1 Nov 2023 08:34:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] seq_buf: Introduce DECLARE_SEQ_BUF and seq_buf_str()
+Content-Language: fr
+To: Kees Cook <keescook@chromium.org>, Steven Rostedt <rostedt@goodmis.org>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Christoph Hellwig <hch@lst.de>, Justin Stitt <justinstitt@google.com>,
+ Kent Overstreet <kent.overstreet@linux.dev>, Petr Mladek <pmladek@suse.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>,
+ Yun Zhou <yun.zhou@windriver.com>, Jacob Keller <jacob.e.keller@intel.com>,
+ Zhen Lei <thunder.leizhen@huawei.com>, linux-trace-kernel@vger.kernel.org,
+ Yosry Ahmed <yosryahmed@google.com>, linux-kernel@vger.kernel.org
+References: <20231027155634.make.260-kees@kernel.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20231027155634.make.260-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 1 Nov 2023 02:25:53 +0000
-Al Viro <viro@zeniv.linux.org.uk> wrote:
-
-> On Tue, Oct 31, 2023 at 02:47:03PM -0400, Steven Rostedt wrote:
-> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> > 
-> > Looking at how dentry is removed via the tracefs system, I found that
-> > eventfs does not do everything that it did under tracefs. The tracefs
-> > removal of a dentry calls simple_recursive_removal() that does a lot more
-> > than a simple d_invalidate().  
+Le 27/10/2023 à 17:56, Kees Cook a écrit :
+> Solve two ergonomic issues with struct seq_buf;
 > 
-> Umm...  Is there any reason not to use simple_recursive_removal() there?
+> 1) Too much boilerplate is required to initialize:
+> 
+> 	struct seq_buf s;
+> 	char buf[32];
+> 
+> 	seq_buf_init(s, buf, sizeof(buf));
+> 
+> Instead, we can build this directly on the stack. Provide
+> DECLARE_SEQ_BUF() macro to do this:
+> 
+> 	DECLARE_SEQ_BUF(s, 32);
+> 
+> 2) %NUL termination is fragile and requires 2 steps to get a valid
+>     C String (and is a layering violation exposing the "internals" of
+>     seq_buf):
+> 
+> 	seq_buf_terminate(s);
+> 	do_something(s->buffer);
+> 
+> Instead, we can just return s->buffer directly after terminating it in
+> the refactored seq_buf_terminate(), now known as seq_buf_str():
+> 
+> 	do_something(seq_buf_str(s));
+> 
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Justin Stitt <justinstitt@google.com>
+> Cc: Kent Overstreet <kent.overstreet@linux.dev>
+> Cc: Petr Mladek <pmladek@suse.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Yun Zhou <yun.zhou@windriver.com>
+> Cc: Jacob Keller <jacob.e.keller@intel.com>
+> Cc: Zhen Lei <thunder.leizhen@huawei.com>
+> Cc: linux-trace-kernel@vger.kernel.org
+> Link: https://lore.kernel.org/r/20231026194033.it.702-kees@kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> v3
+>   - fix commit log typos
+>   - improve code style for DECLARE_SEQ_BUF (shevchenko)
+>   - const-ify seq_bug_str() return (rostedt)
+> v2 - https://lore.kernel.org/lkml/20231026194033.it.702-kees@kernel.org
+> v1 - https://lore.kernel.org/lkml/20231026170722.work.638-kees@kernel.org
+> ---
+>   include/linux/seq_buf.h | 21 +++++++++++++++++----
+>   kernel/trace/trace.c    | 11 +----------
+>   lib/seq_buf.c           |  4 +---
+>   3 files changed, 19 insertions(+), 17 deletions(-)
+> 
+> diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
+> index 8483e4b2d0d2..5fb1f12c33f9 100644
+> --- a/include/linux/seq_buf.h
+> +++ b/include/linux/seq_buf.h
+> @@ -21,9 +21,18 @@ struct seq_buf {
+>   	size_t			len;
+>   };
+>   
+> +#define DECLARE_SEQ_BUF(NAME, SIZE)			\
+> +	char __ ## NAME ## _buffer[SIZE] = "";		\
+> +	struct seq_buf NAME = {				\
+> +		.buffer = &__ ## NAME ## _buffer,	\
+                          ~~~
+Is the & needed here?
 
-Hmm, I may be able to (I'm still a newbie with understanding of the vfs).
+CJ
 
-I did it this way thinking that a dentry may exist in the children but not
-at a higher level, but I don't think that can be the case. This creates
-dentries and inodes dynamically when they are referenced. The eventfs_inode
-maps to each directory (the files of a directory are created from the
-information from the eventfs_inode).
+> +		.size = SIZE,				\
+> +	}
+> +
+>   static inline void seq_buf_clear(struct seq_buf *s)
+>   {
+>   	s->len = 0;
+> +	if (s->size)
+> +		s->buffer[0] = '\0';
+>   }
+>   
+>   static inline void
+> @@ -69,8 +78,8 @@ static inline unsigned int seq_buf_used(struct seq_buf *s)
+>   }
+>   
+>   /**
+> - * seq_buf_terminate - Make sure buffer is nul terminated
+> - * @s: the seq_buf descriptor to terminate.
+> + * seq_buf_str - get %NUL-terminated C string from seq_buf
+> + * @s: the seq_buf handle
+>    *
+>    * This makes sure that the buffer in @s is nul terminated and
+>    * safe to read as a string.
+> @@ -81,16 +90,20 @@ static inline unsigned int seq_buf_used(struct seq_buf *s)
+>    *
+>    * After this function is called, s->buffer is safe to use
+>    * in string operations.
+> + *
+> + * Returns @s->buf after making sure it is terminated.
+>    */
+> -static inline void seq_buf_terminate(struct seq_buf *s)
+> +static inline const char *seq_buf_str(struct seq_buf *s)
+>   {
+>   	if (WARN_ON(s->size == 0))
+> -		return;
+> +		return "";
+>   
+>   	if (seq_buf_buffer_left(s))
+>   		s->buffer[s->len] = 0;
+>   	else
+>   		s->buffer[s->size - 1] = 0;
+> +
+> +	return s->buffer;
+>   }
+>   
+>   /**
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index d629065c2383..2539cfc20a97 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -3828,15 +3828,6 @@ static bool trace_safe_str(struct trace_iterator *iter, const char *str,
+>   	return false;
+>   }
+>   
+> -static const char *show_buffer(struct trace_seq *s)
+> -{
+> -	struct seq_buf *seq = &s->seq;
+> -
+> -	seq_buf_terminate(seq);
+> -
+> -	return seq->buffer;
+> -}
+> -
+>   static DEFINE_STATIC_KEY_FALSE(trace_no_verify);
+>   
+>   static int test_can_verify_check(const char *fmt, ...)
+> @@ -3976,7 +3967,7 @@ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
+>   		 */
+>   		if (WARN_ONCE(!trace_safe_str(iter, str, star, len),
+>   			      "fmt: '%s' current_buffer: '%s'",
+> -			      fmt, show_buffer(&iter->seq))) {
+> +			      fmt, seq_buf_str(&iter->seq.seq))) {
+>   			int ret;
+>   
+>   			/* Try to safely read the string */
+> diff --git a/lib/seq_buf.c b/lib/seq_buf.c
+> index b7477aefff53..23518f77ea9c 100644
+> --- a/lib/seq_buf.c
+> +++ b/lib/seq_buf.c
+> @@ -109,9 +109,7 @@ void seq_buf_do_printk(struct seq_buf *s, const char *lvl)
+>   	if (s->size == 0 || s->len == 0)
+>   		return;
+>   
+> -	seq_buf_terminate(s);
+> -
+> -	start = s->buffer;
+> +	start = seq_buf_str(s);
+>   	while ((lf = strchr(start, '\n'))) {
+>   		int len = lf - start + 1;
+>   
 
-My thought process for doing it this way was if a child created a dentry
-but the parent did not. But I don't think that can happen, right? So all I
-may need to do is to check if the ei->dentry exists for the ei that is
-being deleted, and after marking it and all its children as "freed", I can
-then call simple_recursive_removal() on the top ei->dentry if it exists, as
-that will guarantee to get all the dentries of any of the children that
-exist. Right?
-
--- Steve
