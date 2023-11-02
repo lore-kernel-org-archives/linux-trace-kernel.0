@@ -1,250 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF93442D
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Nov 2023 06:57:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F48120F9;
+	Thu,  2 Nov 2023 08:50:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="udtGiIR5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFC3DC433C7;
-	Thu,  2 Nov 2023 06:57:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698908256;
-	bh=fLUnEkpDInr33uX+TwVh/oE8g8P7jL3sdGjLk0PAf1o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=udtGiIR5iMCHMcmwWp8oGZexRcHNJp9P2UWn9sEtk3YvaGAI4k/OQSVDdsGboFapr
-	 n8SrgdaufYGa3eSJh5xAVULdhiKiSfyWpbFdXa7Zntfj94yo6nmbdaduK0/NYc16aZ
-	 aPD+JWJQsZ32sz2jUbgduQyP3O9LAGAzTEwMySHoeaYiPzAK97fYLiABRAnV0AyTTv
-	 POJAyhy1PJDU6+hXtV8F1OoGXjwpBSkSEF8250NyCIPijsapOYd8Au5KFtaAnkFIZw
-	 a5JYwgbmXh1tofRjuZyOtemY4D3yZFVNDIzOnAe6dzgLLgz+W8EwAghvBo7jAfXxX7
-	 g34Cm/VMAGo+Q==
-Date: Thu, 2 Nov 2023 15:57:31 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EPhOH9fc"
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01EC212C;
+	Thu,  2 Nov 2023 01:50:09 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id ffacd0b85a97d-32fb190bf9bso24261f8f.1;
+        Thu, 02 Nov 2023 01:50:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698915007; x=1699519807; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yv7JujbLaP4o6hSsKOV57zb9TN8J85KbDLi3JdO3f/s=;
+        b=EPhOH9fcusYcqopUs0R93No46bvdzgvLKTj3iVsSMPu6OOfVLkRNUFIeOfuOAJ8ro8
+         naql77uzAPHbc6hMUFdXdqx5RJmUtmu71qw8q/EEBdYZ88H7cZKj9PVtdctijKo7ER3O
+         D0PDIKYgOsuDB3tsIDgYRLhEvO+VkEyOx6oZqstRMHxvhqPSZy0NKNrosQrxLU2E5fov
+         B8j/CPlIdG5zdeDd4PCWM8CD5AJokQPZcDet55S6HTUAiLCBqXSUOJrG7wwhn8750b0q
+         pF4MrcwoeOay+tn1ZYqhFWPdbu3BudBdi/y7QHjwARpDNKvBH+sPe+w+Y47WqFG6ZPgs
+         b8SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698915007; x=1699519807;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yv7JujbLaP4o6hSsKOV57zb9TN8J85KbDLi3JdO3f/s=;
+        b=A9gI6e5cgpXHxzgTirfYHjCgRC32Ovx9uLWpNdfHOq/XRHkw41/cBUDCvZcH1wIfam
+         gbYr7h8m/rmJ3xOEEhlUA8y3m4ZzVxwwBjScJklGrIe5x8we8iRgTAK8XYpBaw4eohZ4
+         nd2z2FBX7qbT4tMV2UMgU20+ACMsadMGGQOrzbSo3kYtCuI3tSyWxjaCEF5nTerKwb3h
+         K/WXypau9fm22OyQY5l4pWws21TuXhbleBrHvop7YMGNcZIwAyL4FhYBqjlw0un9ipPC
+         +utO8My2sHkP7IEhT0RxJeQwzmpfgfk0NyxbY5vg0K0BlZXh0HmkiRYi7a/kgs8kWz3s
+         Euag==
+X-Gm-Message-State: AOJu0YwmJe7wvlkh4wPWy9G72pUWKyKjTWhwVPSJHqLiSejo8j1aBzvJ
+	8PH7f384zRTLvssfI3+YBeI=
+X-Google-Smtp-Source: AGHT+IHbzB2L2tJyDeKxMrCqoZyo8l1gQNXHKEUawAhrJ+wLyhJsAc38PJ+/ORcpVT51ZZPVoLdzpQ==
+X-Received: by 2002:a05:6000:156d:b0:32d:a366:7073 with SMTP id 13-20020a056000156d00b0032da3667073mr6805024wrz.14.1698915007132;
+        Thu, 02 Nov 2023 01:50:07 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id o5-20020a5d4a85000000b0032fa66bda58sm1718607wrq.101.2023.11.02.01.50.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Nov 2023 01:50:06 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 2 Nov 2023 09:50:05 +0100
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>, stable@vger.kernel.org, Al Viro
- <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v6 8/8] eventfs: Use simple_recursive_removal() to clean
- up dentries
-Message-Id: <20231102155731.8d00498fa52617c02bdae74b@kernel.org>
-In-Reply-To: <20231101172650.552471568@goodmis.org>
-References: <20231101172541.971928390@goodmis.org>
-	<20231101172650.552471568@goodmis.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Cc: Jiri Olsa <olsajiri@gmail.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Florent Revest <revest@chromium.org>,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [QUESTION] ftrace_test_recursion_trylock behaviour
+Message-ID: <ZUNivSK2brywL0J6@krava>
+References: <ZUKLnmYyHpthlMEE@krava>
+ <20231101134556.5d4a46c3@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231101134556.5d4a46c3@gandalf.local.home>
 
-On Wed, 01 Nov 2023 13:25:49 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Wed, Nov 01, 2023 at 01:45:56PM -0400, Steven Rostedt wrote:
+> On Wed, 1 Nov 2023 18:32:14 +0100
+> Jiri Olsa <olsajiri@gmail.com> wrote:
 > 
-> Looking at how dentry is removed via the tracefs system, I found that
-> eventfs does not do everything that it did under tracefs. The tracefs
-> removal of a dentry calls simple_recursive_removal() that does a lot more
-> than a simple d_invalidate().
+> > hi,
+> > I'm doing some testing on top of fprobes and noticed that the
+> > ftrace_test_recursion_trylock allows caller from the same context
+> > going through twice.
+> > 
+> > The change below adds extra fprobe on stack_trace_print, which is
+> > called within the sample_entry_handler and I can see it being executed
+> > with following trace output:
+> > 
+> >            <...>-457     [003] ...1.    32.352554: sample_entry_handler:
+> > Enter <kernel_clone+0x0/0x380> ip = 0xffffffff81177420 <...>-457
+> > [003] ...2.    32.352578: sample_entry_handler_extra: Enter
+> > <stack_trace_print+0x0/0x60> ip = 0xffffffff8127ae70
+> > 
+> > IOW nested ftrace_test_recursion_trylock call in the same context
+> > succeeded.
+> > 
+> > It seems the reason is the TRACE_CTX_TRANSITION bit logic.
+> > 
+> > Just making sure it's intentional.. we have kprobe_multi code on top of
+> > fprobe with another re-entry logic and that might behave differently based
+> > on ftrace_test_recursion_trylock logic.
 > 
-> As it should be a requirement that any eventfs_inode that has a dentry, so
-> does its parent. When removing a eventfs_inode, if it has a dentry, a call
-> to simple_recursive_removal() on that dentry should clean up all the
-> dentries underneath it.
+> Yes it's intentional, as it's a work around for an issue that may be
+> cleared up now with Peter Zijlstra's noinstr updates.
 > 
-> Add WARN_ON_ONCE() to check for the parent having a dentry if any children
-> do.
-
-This looks good to me.
-
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks,
-
-
-
+> The use case for that TRACE_CTX_TRANSITION is when a function is traced
+> just after an interrupt was triggered but before the preempt count was
+> updated to let us know that we are in an interrupt context.
 > 
-> Link: https://lore.kernel.org/all/20231101022553.GE1957730@ZenIV/
+> Daniel Bristot reported a regression after the trylock was first introduced
+> where the interrupt entry function was traced sometimes but not always.
+> That's because if the interrupt happened normally, it would be traced, but
+> if the interrupt happened when another event was being traced, the recursion
+> logic would see that the trace of the interrupt was happening in the same
+> context as the event it interrupted and drop the interrupt trace. But after
+> the preempt count was updated, the other functions in the interrupt would be
+> seen. This led to very confusing trace output.
 > 
-> Cc: stable@vger.kernel.org
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Fixes: 5bdcd5f5331a2 ("eventfs: Implement removal of meta data from eventfs")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
-> Changes since the last patch: https://lore.kernel.org/linux-trace-kernel/20231031144703.71eef3a0@gandalf.local.home
+> The solution to that was this workaround hack, where the trace recursion
+> logic would allow a single recursion (the interrupt preempting another
+> trace before it set preempt count).
 > 
-> - Was originally called: eventfs: Process deletion of dentry more thoroughly
-> 
-> - Al Viro pointed out that I could use simple_recursive_removal() instead.
->   I had originally thought that I could not, but looking deeper into it,
->   and realizing that if a dentry exists on any eventfs_inode, then all
->   the parent eventfs_inode of that would als have a dentry. Hence, calling
->   simple_recursive_removal() on the top dentry would clean up all the
->   children dentries as well. Doing it his way cleans up the code quite
->   a bit!
-> 
->  fs/tracefs/event_inode.c | 77 +++++++++++++++++++++++-----------------
->  fs/tracefs/internal.h    |  2 --
->  2 files changed, 44 insertions(+), 35 deletions(-)
-> 
-> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-> index 0087a3f455f1..f8a594a50ae6 100644
-> --- a/fs/tracefs/event_inode.c
-> +++ b/fs/tracefs/event_inode.c
-> @@ -967,30 +967,29 @@ static void unhook_dentry(struct dentry *dentry)
->  {
->  	if (!dentry)
->  		return;
-> -
-> -	/* Keep the dentry from being freed yet (see eventfs_workfn()) */
-> +	/*
-> +	 * Need to add a reference to the dentry that is expected by
-> +	 * simple_recursive_removal(), which will include a dput().
-> +	 */
->  	dget(dentry);
->  
-> -	dentry->d_fsdata = NULL;
-> -	d_invalidate(dentry);
-> -	mutex_lock(&eventfs_mutex);
-> -	/* dentry should now have at least a single reference */
-> -	WARN_ONCE((int)d_count(dentry) < 1,
-> -		  "dentry %px (%s) less than one reference (%d) after invalidate\n",
-> -		  dentry, dentry->d_name.name, d_count(dentry));
-> -	mutex_unlock(&eventfs_mutex);
-> +	/*
-> +	 * Also add a reference for the dput() in eventfs_workfn().
-> +	 * That is required as that dput() will free the ei after
-> +	 * the SRCU grace period is over.
-> +	 */
-> +	dget(dentry);
->  }
->  
->  /**
->   * eventfs_remove_rec - remove eventfs dir or file from list
->   * @ei: eventfs_inode to be removed.
-> - * @head: the list head to place the deleted @ei and children
->   * @level: prevent recursion from going more than 3 levels deep.
->   *
->   * This function recursively removes eventfs_inodes which
->   * contains info of files and/or directories.
->   */
-> -static void eventfs_remove_rec(struct eventfs_inode *ei, struct list_head *head, int level)
-> +static void eventfs_remove_rec(struct eventfs_inode *ei, int level)
->  {
->  	struct eventfs_inode *ei_child;
->  
-> @@ -1009,13 +1008,26 @@ static void eventfs_remove_rec(struct eventfs_inode *ei, struct list_head *head,
->  	/* search for nested folders or files */
->  	list_for_each_entry_srcu(ei_child, &ei->children, list,
->  				 lockdep_is_held(&eventfs_mutex)) {
-> -		eventfs_remove_rec(ei_child, head, level + 1);
-> +		/* Children only have dentry if parent does */
-> +		WARN_ON_ONCE(ei_child->dentry && !ei->dentry);
-> +		eventfs_remove_rec(ei_child, level + 1);
->  	}
->  
-> +
->  	ei->is_freed = 1;
->  
-> +	for (int i = 0; i < ei->nr_entries; i++) {
-> +		if (ei->d_children[i]) {
-> +			/* Children only have dentry if parent does */
-> +			WARN_ON_ONCE(!ei->dentry);
-> +			unhook_dentry(ei->d_children[i]);
-> +		}
-> +	}
-> +
-> +	unhook_dentry(ei->dentry);
-> +
->  	list_del_rcu(&ei->list);
-> -	list_add_tail(&ei->del_list, head);
-> +	call_srcu(&eventfs_srcu, &ei->rcu, free_rcu_ei);
->  }
->  
->  /**
-> @@ -1026,30 +1038,22 @@ static void eventfs_remove_rec(struct eventfs_inode *ei, struct list_head *head,
->   */
->  void eventfs_remove_dir(struct eventfs_inode *ei)
->  {
-> -	struct eventfs_inode *tmp;
-> -	LIST_HEAD(ei_del_list);
-> +	struct dentry *dentry;
->  
->  	if (!ei)
->  		return;
->  
-> -	/*
-> -	 * Move the deleted eventfs_inodes onto the ei_del_list
-> -	 * which will also set the is_freed value. Note, this has to be
-> -	 * done under the eventfs_mutex, but the deletions of
-> -	 * the dentries must be done outside the eventfs_mutex.
-> -	 * Hence moving them to this temporary list.
-> -	 */
->  	mutex_lock(&eventfs_mutex);
-> -	eventfs_remove_rec(ei, &ei_del_list, 0);
-> +	dentry = ei->dentry;
-> +	eventfs_remove_rec(ei, 0);
->  	mutex_unlock(&eventfs_mutex);
->  
-> -	list_for_each_entry_safe(ei, tmp, &ei_del_list, del_list) {
-> -		for (int i = 0; i < ei->nr_entries; i++)
-> -			unhook_dentry(ei->d_children[i]);
-> -		unhook_dentry(ei->dentry);
-> -		list_del(&ei->del_list);
-> -		call_srcu(&eventfs_srcu, &ei->rcu, free_rcu_ei);
-> -	}
-> +	/*
-> +	 * If any of the ei children has a dentry, then the ei itself
-> +	 * must have a dentry.
-> +	 */
-> +	if (dentry)
-> +		simple_recursive_removal(dentry, NULL);
->  }
->  
->  /**
-> @@ -1060,10 +1064,17 @@ void eventfs_remove_dir(struct eventfs_inode *ei)
->   */
->  void eventfs_remove_events_dir(struct eventfs_inode *ei)
->  {
-> -	struct dentry *dentry = ei->dentry;
-> +	struct dentry *dentry;
->  
-> +	dentry = ei->dentry;
->  	eventfs_remove_dir(ei);
->  
-> -	/* Matches the dget() from eventfs_create_events_dir() */
-> +	/*
-> +	 * Matches the dget() done by tracefs_start_creating()
-> +	 * in eventfs_create_events_dir() when it the dentry was
-> +	 * created. In other words, it's a normal dentry that
-> +	 * sticks around while the other ei->dentry are created
-> +	 * and destroyed dynamically.
-> +	 */
->  	dput(dentry);
->  }
-> diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-> index 06a1f220b901..ccee18ca66c7 100644
-> --- a/fs/tracefs/internal.h
-> +++ b/fs/tracefs/internal.h
-> @@ -55,12 +55,10 @@ struct eventfs_inode {
->  	/*
->  	 * Union - used for deletion
->  	 * @llist:	for calling dput() if needed after RCU
-> -	 * @del_list:	list of eventfs_inode to delete
->  	 * @rcu:	eventfs_inode to delete in RCU
->  	 */
->  	union {
->  		struct llist_node	llist;
-> -		struct list_head	del_list;
->  		struct rcu_head		rcu;
->  	};
->  	unsigned int			is_freed:1;
-> -- 
-> 2.42.0
+> But with noinstr, there should be no more instances of this problem and we
+> can drop that extra bit. But the last I checked, there were a few places
+> that still could be traced without the preempt_count set. I'll have to
+> re-investigate.
 
+I see, so I'll keep in mind that it could change in the future
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+thanks,
+jirka
