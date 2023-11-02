@@ -1,96 +1,205 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4698F748E
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Nov 2023 08:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEA2DFB;
-	Thu,  2 Nov 2023 01:58:39 -0700 (PDT)
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.95)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1qyTWw-000tZu-EU; Thu, 02 Nov 2023 09:58:22 +0100
-Received: from p5dc55299.dip0.t-ipconnect.de ([93.197.82.153] helo=[192.168.178.81])
-          by inpost2.zedat.fu-berlin.de (Exim 4.95)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1qyTWw-003wP7-6h; Thu, 02 Nov 2023 09:58:22 +0100
-Message-ID: <296069ccc30a7a363c2b377aeabf67c88d7c70c1.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH v2] locking/atomic: sh: Use generic_cmpxchg_local for
- arch_cmpxchg_local()
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Yoshinori Sato
- <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Geert
- Uytterhoeven <geert@linux-m68k.org>
-Cc: "wuqiang . matt" <wuqiang.matt@bytedance.com>, Mark Rutland
-	 <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Date: Thu, 02 Nov 2023 09:58:21 +0100
-In-Reply-To: <169824660459.24340.14614817132696360531.stgit@devnote2>
-References: <169824660459.24340.14614817132696360531.stgit@devnote2>
-Autocrypt: addr=glaubitz@physik.fu-berlin.de; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.1 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67CB6FBD
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Nov 2023 09:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="P6GbUtYg"
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1AEA134
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Nov 2023 02:30:39 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1cc131e52f1so15158115ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 Nov 2023 02:30:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1698917439; x=1699522239; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=LOcfCrDkuhZUmX1+BonF5HFJ3qtHRcdHUWybtTWqJQM=;
+        b=P6GbUtYgC/Qwbpm89GeugpzPlRjLgXyMsK9H+RKGaDWn7/J/hY7r51pS2fJ8EtY9VY
+         LtljCItep3zkRchqusDQe64YcOAedzHoyiXYRh9A6Bcgw/T85+AAtjxsb8mUxEKpo7uD
+         GctULvdguPyKfw9E1kqceueY2/1vTa9f0H3LM9doUNy8051O3k3vv9OpU++tOqIVeHmJ
+         laFOayGqmIkhIxgfTajJnhsY4f1yh0ifcAIBRfUTWCVjQYmPH4lH2BU1X6cOUO4WpHFO
+         zhk0JljPCjKxz2yzC/heG/TOuUk0dYYl26bXXYrsqR8Phfl2lgeIBMQoNaNyqUqOtN5E
+         ulDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698917439; x=1699522239;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LOcfCrDkuhZUmX1+BonF5HFJ3qtHRcdHUWybtTWqJQM=;
+        b=nCORkiYNSlrOkgek9IqBuM+BaxIgGbCihUMRPhCKIuUR1y10mc15R5j7szBOiZj6OT
+         zps3+BlMKr4fdYzySCHSS5WsOAx6xKMnPJbA1mTpPi71AQUKD+yHL2g+oQ5fHe+gGMNT
+         qYSPbmrOIVgRc4WfwmTrVp3y7yR4KBJAQImOiJAIzrrvpT24pskIMdz9RxoG+rrWY5Qf
+         mx7sOSV4E7S7+5LKSTkScXu9Y6qkLLWlFGr6iw/agKZDSm1hG2gmi7w68hq3w6rYGvex
+         P1ycL788k7cpeAuJXu2+NUt3bcRDATEOY7Z3Q9uZ7wtDXxMd8wP0JH82MVA+T7tH+VA5
+         BysA==
+X-Gm-Message-State: AOJu0YzxxQg5EJpiZm9Iq9Ao8HFp7AaJ96C3EiOArzJGbSvOvcE7YGeu
+	MREqUO88MHKwmTFJp0IsN/0f3A==
+X-Google-Smtp-Source: AGHT+IFeeglhdb271Gl7rcRT410vB2+Mle9CoKzLKqQ8MknEa/nQhB2EebX9eYmPtBlmsb7UKfBxkQ==
+X-Received: by 2002:a17:903:2347:b0:1cc:4625:74e2 with SMTP id c7-20020a170903234700b001cc462574e2mr7940931plh.24.1698917439414;
+        Thu, 02 Nov 2023 02:30:39 -0700 (PDT)
+Received: from [192.168.6.6] ([203.208.167.147])
+        by smtp.gmail.com with ESMTPSA id u7-20020a170902e80700b001c444f185b4sm2661736plg.237.2023.11.02.02.30.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Nov 2023 02:30:39 -0700 (PDT)
+Message-ID: <3c7cc279-d5ea-4071-ba68-88563a6a0877@bytedance.com>
+Date: Thu, 2 Nov 2023 17:30:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-Originating-IP: 93.197.82.153
-X-ZEDAT-Hint: PO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] locking/atomic: openrisc: use
+ generic_cmpxchg[64]_local for arch_cmpxchg[64]_local
+To: Vineet Gupta <vgupta@kernel.org>,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Jonas Bonn <jonas@southpole.se>,
+ Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+ Stafford Horne <shorne@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Andi Shyti <andi.shyti@linux.intel.com>, Palmer Dabbelt
+ <palmer@rivosinc.com>, Andrzej Hajda <andrzej.hajda@intel.com>,
+ linux-trace-kernel@vger.kernel.org, mattwu@163.com,
+ linux-snps-arc@lists.infradead.org
+References: <20231026073932.702197-1-wuqiang.matt@bytedance.com>
+ <1e3aba7d-89ac-4b62-840e-992527115a70@app.fastmail.com>
+ <66f5645c-f9f5-4c53-9503-a1f8470a9bee@bytedance.com>
+ <20231028214918.e32265f1dd2ef26fd9d2d1c2@kernel.org>
+ <99f9c3d4-0c9e-4542-9511-796f719c36e3@bytedance.com>
+ <20231029122641.a8c90d5e6bdfa6e7175bbe97@kernel.org>
+ <391884b5-12b3-4377-bd44-9ae69a4a13df@kernel.org>
+ <7836be7b-ed41-4e0f-8983-9603bd6fcde0@bytedance.com>
+ <67f536b5-1b42-49b1-b219-f5fd8906495d@kernel.org>
+Content-Language: en-US
+From: "wuqiang.matt" <wuqiang.matt@bytedance.com>
+Autocrypt: addr=wuqiang.matt@bytedance.com; keydata=
+ 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
+ 4mCJUdEkdwCS
+In-Reply-To: <67f536b5-1b42-49b1-b219-f5fd8906495d@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2023-10-26 at 00:10 +0900, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->=20
-> Use __generic_cmpxchg_local() for arch_cmpxchg_local() implementation
-> in SH architecture because it does not implement arch_cmpxchg_local().
->=20
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202310241310.Ir5uukOG-lkp@i=
-ntel.com/
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  arch/sh/include/asm/cmpxchg.h |    9 +++++++++
->  1 file changed, 9 insertions(+)
->=20
-> diff --git a/arch/sh/include/asm/cmpxchg.h b/arch/sh/include/asm/cmpxchg.=
-h
-> index 288f6f38d98f..5d617b3ef78f 100644
-> --- a/arch/sh/include/asm/cmpxchg.h
-> +++ b/arch/sh/include/asm/cmpxchg.h
-> @@ -71,4 +71,13 @@ static inline unsigned long __cmpxchg(volatile void * =
-ptr, unsigned long old,
->  				    (unsigned long)_n_, sizeof(*(ptr))); \
->    })
-> =20
-> +#include <asm-generic/cmpxchg-local.h>
-> +
-> +#define arch_cmpxchg_local(ptr, o, n) ({				\
-> +	(__typeof__(*ptr))__generic_cmpxchg_local((ptr),		\
-> +						  (unsigned long)(o),	\
-> +						  (unsigned long)(n),	\
-> +						  sizeof(*(ptr)));	\
-> +})
-> +
->  #endif /* __ASM_SH_CMPXCHG_H */
+On 2023/11/2 12:53, Vineet Gupta wrote:
+> 
+> 
+> On 10/29/23 20:41, wuqiang.matt wrote:
+>>>>>
+>>>>> arch_cmpxchg_relaxed:
+>>>>> ...
+>>>>>           switch(sizeof((_p_))) {
+>>>>>           case 4:
+>>>>> ....
+>>>>>
+>>>>> arch_cmpxchg:
+>>>>> ...
+>>>>>     BUILD_BUG_ON(sizeof(_p_) != 4);
+>>>>> ...
+>>>>>
+>>>>> _p is the address pointer, so I'm thinking it's a typo but I couldn't
+>>>>> yet confirm. There is not much about arc processors in the web :(
+>>>> Hmm, indeed. This seems like a bug but it depends on the 'llock  %0, [%1]'
+>>>> can take a 32bit address or 32bit data register. Usually it should
+>>>> check the size of data, but need to check with ISA manual.
+>>>>
+>>>> Vineet, can you check this suspicious bug?
+>>>
+>>> ARCv2 is a 32-bit ISA and LLOCK/SCOND work on 32-bit data.
+>>> So the pointers will be 32-bit anyways. Is the issue that pointer/cmpxchg 
+>>> operation could be on a smaller data type ?
+>>
+>> For ARCv2 with CONFIG_ARC_HAS_LLSC, better add the data size checking and
+>> only permit 32bit data size. Even for 32-bit system, data should can be
+>> 64bit 'long long'.
+> 
+> Right, makes sense. Can you send a patch ?
 
-Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Okay, I will.
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+>>
+>> And In the case that CONFIG_ARC_HAS_LLSC is undefined, in arch_cmpxchg: the
+>> pointer size checking is unnecessary, since it's using spinlock internally:
+> 
+> Correct, I had the same thought.
+> 
+>>
+>> https://elixir.bootlin.com/linux/v6.6-rc7/source/arch/arc/include/asm/cmpxchg.h#L60:
+>>     BUILD_BUG_ON(sizeof(_p_) != 4);                    \
+>>                                     \
+>>     /*                                \
+>>      * spin lock/unlock provide the needed smp_mb() before/after    \
+>>      */                                \
+>>     atomic_ops_lock(__flags);                    \
+>>     _prev_ = *_p_;                            \
+>>     if (_prev_ == _o_)                        \
+>>         *_p_ = _n_;                        \
+>>     atomic_ops_unlock(__flags);
+> 
+> Can you do that fix in same patch as well ?
+
+Sure.
+
+>> Another question about the naming: arch_cmpxchg_relaxed() implemented if
+>> CONFIG_ARC_HAS_LLSC is configured and arch_cmpxchg() defined for the rest.
+>> Are there any reasons for difference names ?
+> 
+> Yes the atomics API consists of _relaxed, _acquire, _release and unadorned.
+> _relaxed is the most efficient, with rest having some extra barriers.
+> If arch provides _relaxed, generic code can create the rest - assuming arch 
+> hardware can support the relaxed ones.
+
+Definitely Yes! The generic cmpxchg will prefer arch_cmpxchg_relaxed rather
+than arch_cmpxchg.
+
+> That is true for LLSC.
+> 
+> However for !LLSC, spinlock versions already have full barriers due to 
+> spinlock, so relaxed variant doesn't make sense.
+> 
+>>
+>> As I checked, Synopsys has released 64bit ARC processors (HS66/HS68), but
+>> I don't know the status of Linux kernel support.
+> 
+> Yes there's an internal ARC64 port running but it is not ready for upstreaming 
+> yet.
+
+Thanks for the update.
+
+> -Vineet
+
+Regards,
+wuqiang
