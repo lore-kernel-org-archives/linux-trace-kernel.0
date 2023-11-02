@@ -1,123 +1,96 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F48120F9;
-	Thu,  2 Nov 2023 08:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EPhOH9fc"
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01EC212C;
-	Thu,  2 Nov 2023 01:50:09 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id ffacd0b85a97d-32fb190bf9bso24261f8f.1;
-        Thu, 02 Nov 2023 01:50:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698915007; x=1699519807; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yv7JujbLaP4o6hSsKOV57zb9TN8J85KbDLi3JdO3f/s=;
-        b=EPhOH9fcusYcqopUs0R93No46bvdzgvLKTj3iVsSMPu6OOfVLkRNUFIeOfuOAJ8ro8
-         naql77uzAPHbc6hMUFdXdqx5RJmUtmu71qw8q/EEBdYZ88H7cZKj9PVtdctijKo7ER3O
-         D0PDIKYgOsuDB3tsIDgYRLhEvO+VkEyOx6oZqstRMHxvhqPSZy0NKNrosQrxLU2E5fov
-         B8j/CPlIdG5zdeDd4PCWM8CD5AJokQPZcDet55S6HTUAiLCBqXSUOJrG7wwhn8750b0q
-         pF4MrcwoeOay+tn1ZYqhFWPdbu3BudBdi/y7QHjwARpDNKvBH+sPe+w+Y47WqFG6ZPgs
-         b8SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698915007; x=1699519807;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yv7JujbLaP4o6hSsKOV57zb9TN8J85KbDLi3JdO3f/s=;
-        b=A9gI6e5cgpXHxzgTirfYHjCgRC32Ovx9uLWpNdfHOq/XRHkw41/cBUDCvZcH1wIfam
-         gbYr7h8m/rmJ3xOEEhlUA8y3m4ZzVxwwBjScJklGrIe5x8we8iRgTAK8XYpBaw4eohZ4
-         nd2z2FBX7qbT4tMV2UMgU20+ACMsadMGGQOrzbSo3kYtCuI3tSyWxjaCEF5nTerKwb3h
-         K/WXypau9fm22OyQY5l4pWws21TuXhbleBrHvop7YMGNcZIwAyL4FhYBqjlw0un9ipPC
-         +utO8My2sHkP7IEhT0RxJeQwzmpfgfk0NyxbY5vg0K0BlZXh0HmkiRYi7a/kgs8kWz3s
-         Euag==
-X-Gm-Message-State: AOJu0YwmJe7wvlkh4wPWy9G72pUWKyKjTWhwVPSJHqLiSejo8j1aBzvJ
-	8PH7f384zRTLvssfI3+YBeI=
-X-Google-Smtp-Source: AGHT+IHbzB2L2tJyDeKxMrCqoZyo8l1gQNXHKEUawAhrJ+wLyhJsAc38PJ+/ORcpVT51ZZPVoLdzpQ==
-X-Received: by 2002:a05:6000:156d:b0:32d:a366:7073 with SMTP id 13-20020a056000156d00b0032da3667073mr6805024wrz.14.1698915007132;
-        Thu, 02 Nov 2023 01:50:07 -0700 (PDT)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id o5-20020a5d4a85000000b0032fa66bda58sm1718607wrq.101.2023.11.02.01.50.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Nov 2023 01:50:06 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 2 Nov 2023 09:50:05 +0100
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Florent Revest <revest@chromium.org>,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [QUESTION] ftrace_test_recursion_trylock behaviour
-Message-ID: <ZUNivSK2brywL0J6@krava>
-References: <ZUKLnmYyHpthlMEE@krava>
- <20231101134556.5d4a46c3@gandalf.local.home>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4698F748E
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Nov 2023 08:58:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEA2DFB;
+	Thu,  2 Nov 2023 01:58:39 -0700 (PDT)
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.95)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1qyTWw-000tZu-EU; Thu, 02 Nov 2023 09:58:22 +0100
+Received: from p5dc55299.dip0.t-ipconnect.de ([93.197.82.153] helo=[192.168.178.81])
+          by inpost2.zedat.fu-berlin.de (Exim 4.95)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1qyTWw-003wP7-6h; Thu, 02 Nov 2023 09:58:22 +0100
+Message-ID: <296069ccc30a7a363c2b377aeabf67c88d7c70c1.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH v2] locking/atomic: sh: Use generic_cmpxchg_local for
+ arch_cmpxchg_local()
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Yoshinori Sato
+ <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Geert
+ Uytterhoeven <geert@linux-m68k.org>
+Cc: "wuqiang . matt" <wuqiang.matt@bytedance.com>, Mark Rutland
+	 <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
+	linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Date: Thu, 02 Nov 2023 09:58:21 +0100
+In-Reply-To: <169824660459.24340.14614817132696360531.stgit@devnote2>
+References: <169824660459.24340.14614817132696360531.stgit@devnote2>
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.1 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231101134556.5d4a46c3@gandalf.local.home>
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 93.197.82.153
+X-ZEDAT-Hint: PO
 
-On Wed, Nov 01, 2023 at 01:45:56PM -0400, Steven Rostedt wrote:
-> On Wed, 1 Nov 2023 18:32:14 +0100
-> Jiri Olsa <olsajiri@gmail.com> wrote:
-> 
-> > hi,
-> > I'm doing some testing on top of fprobes and noticed that the
-> > ftrace_test_recursion_trylock allows caller from the same context
-> > going through twice.
-> > 
-> > The change below adds extra fprobe on stack_trace_print, which is
-> > called within the sample_entry_handler and I can see it being executed
-> > with following trace output:
-> > 
-> >            <...>-457     [003] ...1.    32.352554: sample_entry_handler:
-> > Enter <kernel_clone+0x0/0x380> ip = 0xffffffff81177420 <...>-457
-> > [003] ...2.    32.352578: sample_entry_handler_extra: Enter
-> > <stack_trace_print+0x0/0x60> ip = 0xffffffff8127ae70
-> > 
-> > IOW nested ftrace_test_recursion_trylock call in the same context
-> > succeeded.
-> > 
-> > It seems the reason is the TRACE_CTX_TRANSITION bit logic.
-> > 
-> > Just making sure it's intentional.. we have kprobe_multi code on top of
-> > fprobe with another re-entry logic and that might behave differently based
-> > on ftrace_test_recursion_trylock logic.
-> 
-> Yes it's intentional, as it's a work around for an issue that may be
-> cleared up now with Peter Zijlstra's noinstr updates.
-> 
-> The use case for that TRACE_CTX_TRANSITION is when a function is traced
-> just after an interrupt was triggered but before the preempt count was
-> updated to let us know that we are in an interrupt context.
-> 
-> Daniel Bristot reported a regression after the trylock was first introduced
-> where the interrupt entry function was traced sometimes but not always.
-> That's because if the interrupt happened normally, it would be traced, but
-> if the interrupt happened when another event was being traced, the recursion
-> logic would see that the trace of the interrupt was happening in the same
-> context as the event it interrupted and drop the interrupt trace. But after
-> the preempt count was updated, the other functions in the interrupt would be
-> seen. This led to very confusing trace output.
-> 
-> The solution to that was this workaround hack, where the trace recursion
-> logic would allow a single recursion (the interrupt preempting another
-> trace before it set preempt count).
-> 
-> But with noinstr, there should be no more instances of this problem and we
-> can drop that extra bit. But the last I checked, there were a few places
-> that still could be traced without the preempt_count set. I'll have to
-> re-investigate.
+On Thu, 2023-10-26 at 00:10 +0900, Masami Hiramatsu (Google) wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>=20
+> Use __generic_cmpxchg_local() for arch_cmpxchg_local() implementation
+> in SH architecture because it does not implement arch_cmpxchg_local().
+>=20
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202310241310.Ir5uukOG-lkp@i=
+ntel.com/
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  arch/sh/include/asm/cmpxchg.h |    9 +++++++++
+>  1 file changed, 9 insertions(+)
+>=20
+> diff --git a/arch/sh/include/asm/cmpxchg.h b/arch/sh/include/asm/cmpxchg.=
+h
+> index 288f6f38d98f..5d617b3ef78f 100644
+> --- a/arch/sh/include/asm/cmpxchg.h
+> +++ b/arch/sh/include/asm/cmpxchg.h
+> @@ -71,4 +71,13 @@ static inline unsigned long __cmpxchg(volatile void * =
+ptr, unsigned long old,
+>  				    (unsigned long)_n_, sizeof(*(ptr))); \
+>    })
+> =20
+> +#include <asm-generic/cmpxchg-local.h>
+> +
+> +#define arch_cmpxchg_local(ptr, o, n) ({				\
+> +	(__typeof__(*ptr))__generic_cmpxchg_local((ptr),		\
+> +						  (unsigned long)(o),	\
+> +						  (unsigned long)(n),	\
+> +						  sizeof(*(ptr)));	\
+> +})
+> +
+>  #endif /* __ASM_SH_CMPXCHG_H */
 
-I see, so I'll keep in mind that it could change in the future
+Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 
-thanks,
-jirka
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
