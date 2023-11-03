@@ -1,60 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921CD20B04
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Nov 2023 17:55:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A13A7E
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  3 Nov 2023 03:27:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YZDFWC5H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C8EDC433C8;
-	Thu,  2 Nov 2023 17:55:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1698947701;
-	bh=eNyLiJ3uo1qygaTV2uokhL8xwomApdjRSSf10+Tj/YQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YZDFWC5H4kixNGUF57cNRaMtENJ2kqLaJkHV43fFry6fzZ4nmq4Q2PVYL19DnCI+o
-	 RYTgiNXtSMhPwmF3+eCRUPQKYH7m6r3JywxDzUc6bTVCSh+bXQfUXnCcC6PEa2oN5N
-	 eHay9OqUfxVSkZpuolKrkLY0RcR8PuKDWXInB+FQ=
-Date: Thu, 2 Nov 2023 18:54:58 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: linux-stable <stable@vger.kernel.org>,
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
-	lkft-triage@lists.linaro.org, Sasha Levin <sashal@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Subject: Re: stable-rc: 5.15 - all builds failed - ld.lld: error: undefined
- symbol: kallsyms_on_each_symbol
-Message-ID: <2023110251-animal-onset-3b21@gregkh>
-References: <CA+G9fYuFUTr+riZ5bREOowR_QsspR9n_UC4pLCJQGxksU46M2Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hZEBM6jA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45865C433C7;
+	Fri,  3 Nov 2023 03:27:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1698982043;
+	bh=9LT1+qDnNn2RNVUpkmD/wQ5PnuRan+wlGSZF4IJKXj0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hZEBM6jA7kPxoqpEu7bNHQCacASE0ulPskriERVuBGaqrYc5oDBxo2EpDF/ksZvZg
+	 KAJ1QQUCXTmiom3C2rT8JPWta+B0dfFhQrQopm19u61L0h38+sY/D+UVV8c34q2+8F
+	 58LzL/Ud6/UaphDbCoSNztt9PyHXumQAJyez7hhJ/2Hv9wOhDeDvozqCnHFu4UsMRB
+	 +4G/DT0+tedMCIPe8NowyOpjUK27PQWEkoioQHbdnfxggh/weC9ehF3L/JrNUJGgY4
+	 Y/vW3iCY0qL/0XD7ngACJ3Q0+swTatxapPZKkSZN7xLC9MmcrUoOZOZs0Lf37UvA45
+	 U6mT6AJcLvJ/A==
+Date: Fri, 3 Nov 2023 12:27:19 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Francis Laniel <flaniel@linux.microsoft.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Andrii Nakryiko <andrii@kernel.org>
+Subject: Re: [PATCH for-next] tracing/kprobes: Add symbol counting check
+ when module loads
+Message-Id: <20231103122719.829de1daad83a08fe09ab2bd@kernel.org>
+In-Reply-To: <5987802.lOV4Wx5bFT@pwmachine>
+References: <169854904604.132316.12500381416261460174.stgit@devnote2>
+	<1868732.tdWV9SEqCh@pwmachine>
+	<20231101081509.605080231a2736b91331cb85@kernel.org>
+	<5987802.lOV4Wx5bFT@pwmachine>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYuFUTr+riZ5bREOowR_QsspR9n_UC4pLCJQGxksU46M2Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 01, 2023 at 08:54:56PM +0530, Naresh Kamboju wrote:
-> Hi Greg,
-> 
-> I see the following build warning / errors everywhere on stable-rc 5.15 branch.
-> 
-> ld.lld: error: undefined symbol: kallsyms_on_each_symbol
-> >>> referenced by trace_kprobe.c
-> >>>               trace/trace_kprobe.o:(create_local_trace_kprobe) in archive kernel/built-in.a
-> >>> referenced by trace_kprobe.c
-> >>>               trace/trace_kprobe.o:(__trace_kprobe_create) in archive kernel/built-in.a
-> make[1]: *** [Makefile:1227: vmlinux] Error 1
-> 
-> Links,
->  - https://storage.tuxsuite.com/public/linaro/lkft/builds/2XXALLRIZaXJVcqhff4ZmGTeZoQ/
-> 
-> - Naresh
+On Thu, 02 Nov 2023 14:57:12 +0200
+Francis Laniel <flaniel@linux.microsoft.com> wrote:
 
-Offending commit now dropped, thanks.
+> Hi!
+> 
+> Le mercredi 1 novembre 2023, 01:15:09 EET Masami Hiramatsu a écrit :
+> > Hi,
+> > 
+> > On Tue, 31 Oct 2023 23:24:43 +0200
+> > 
+> > Francis Laniel <flaniel@linux.microsoft.com> wrote:
+> > > > @@ -729,17 +744,55 @@ static int count_mod_symbols(void *data, const
+> > > > char
+> > > > *name, unsigned long unused) return 0;
+> > > > 
+> > > >  }
+> > > > 
+> > > > -static unsigned int number_of_same_symbols(char *func_name)
+> > > > +static unsigned int number_of_same_symbols(const char *mod, const char
+> > > > *func_name) {
+> > > > 
+> > > >  	struct sym_count_ctx ctx = { .count = 0, .name = func_name };
+> > > > 
+> > > > -	kallsyms_on_each_match_symbol(count_symbols, func_name, &ctx.count);
+> > > > +	if (!mod)
+> > > > +		kallsyms_on_each_match_symbol(count_symbols, func_name,
+> > > 
+> > > &ctx.count);
+> > > 
+> > > > -	module_kallsyms_on_each_symbol(NULL, count_mod_symbols, &ctx);
+> > > > +	module_kallsyms_on_each_symbol(mod, count_mod_symbols, &ctx);
+> > > 
+> > > I may be missing something here or reviewing too quickly.
+> > > Wouldn't this function return count to be 0 if func_name is only part of
+> > > the module named mod?
+> > 
+> > No, please read below.
+> > 
+> > > Indeed, if the function is not in kernel symbol,
+> > > kallsyms_on_each_match_symbol() will not loop.
+> > > And, by giving mod to module_kallsyms_on_each_symbol(), the corresponding
+> > > module will be skipped, so count_mob_symbols() would not be called.
+> > > Hence, we would have 0 as count, which would lead to ENOENT later.
+> > 
+> > Would you mean the case func_name is on the specific module?
+> > If 'mod' is specified, module_kallsyms_on_each_symbol() only loops on
+> > symbols in the module names 'mod'.
+> > 
+> > int module_kallsyms_on_each_symbol(const char *modname,
+> >                                    int (*fn)(void *, const char *, unsigned
+> > long), void *data)
+> > {
+> >         struct module *mod;
+> >         unsigned int i;
+> >         int ret = 0;
+> > 
+> >         mutex_lock(&module_mutex);
+> >         list_for_each_entry(mod, &modules, list) {
+> >                 struct mod_kallsyms *kallsyms;
+> > 
+> >                 if (mod->state == MODULE_STATE_UNFORMED)
+> >                         continue;
+> > 
+> >                 if (modname && strcmp(modname, mod->name))
+> >                         continue;
+> > ...
+> > 
+> > So with above change, 'if mod is not specified, search the symbols in kernel
+> > and all modules. If mod is sepecified, search the symbol on the specific
+> > module'.
+> > 
+> > Thus, "if func_name is only part of the module named mod", the
+> > module_kallsyms_on_each_symbol() will count the 'func_name' in 'mod' module
+> > correctly.
+> 
+> Sorry, I looked to quickly and forgot about the return value of strcmp()...
 
-greg k-h
+No problem, strcmp() always traps us :)
+
+> 
+> From the code, everything seems OK!
+> If I have some time, I will test it and potentially come back with a "Tested-
+> by" tag but without any warranty.
+
+
+Thank you!
+
+
+
+> 
+> > Thank you,
+> > 
+> > 
+> > Thank you,
+> 
+> Best regards.
+> 
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
