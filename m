@@ -1,33 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BBF029418;
-	Mon,  6 Nov 2023 16:37:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3C52E648
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Nov 2023 22:28:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1DFDC433C8;
-	Mon,  6 Nov 2023 16:37:08 +0000 (UTC)
-Date: Mon, 6 Nov 2023 11:37:10 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8908C433C7;
+	Mon,  6 Nov 2023 22:28:10 +0000 (UTC)
+Date: Mon, 6 Nov 2023 17:28:11 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Alexei Starovoitov
- <alexei.starovoitov@gmail.com>, Florent Revest <revest@chromium.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
- Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Guo Ren <guoren@kernel.org>
-Subject: Re: [RFC PATCH 24/32] x86/ftrace: Enable HAVE_FUNCTION_GRAPH_FREGS
-Message-ID: <20231106113710.3bf69211@gandalf.local.home>
-In-Reply-To: <20231106100549.33f6ce30d968906979ca3954@kernel.org>
-References: <169920038849.482486.15796387219966662967.stgit@devnote2>
-	<169920068069.482486.6540417903833579700.stgit@devnote2>
-	<20231105172536.GA7124@noisy.programming.kicks-ass.net>
-	<20231105141130.6ef7d8bd@rorschach.local.home>
-	<20231105231734.GE3818@noisy.programming.kicks-ass.net>
-	<20231105183301.38be5598@rorschach.local.home>
-	<20231106100549.33f6ce30d968906979ca3954@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: fprobe-event: Fix to check tracepoint event
+ and return
+Message-ID: <20231106172811.25066d33@gandalf.local.home>
+In-Reply-To: <169902753361.313086.6662802092416198593.stgit@devnote2>
+References: <169902753361.313086.6662802092416198593.stgit@devnote2>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,36 +25,48 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 6 Nov 2023 10:05:49 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Sat,  4 Nov 2023 01:05:34 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> So for x86-64,
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
->  - rdi, rsi, rcx, rdx, r8, r9, and rsp
->  - rax and rdx
->  - rbp
-> 
-> (BTW, why orig_rax is cleared?)
+> Fix to check the tracepoint event is not valid with $retval.
+> The commit 08c9306fc2e3 ("tracing/fprobe-event: Assume fprobe is
+> a return event by $retval") introduced automatic return probe
+> conversion with $retval. But since tracepoint event does not
+> support return probe, $retval is not acceptable.
 
-You mean from ftrace_caller?
-
-That's a "hack" to determine if we need to call the direct trampoline or
-not. When you have both a direct trampoline and ftrace functions on the
-same function, it will call ftrace_ops_list_func() to iterate all the
-registered ftrace callbacks. The direct callback helper will set "orig_rax"
-to let the return of the ftrace trampoline call the direct callback.
-
-Remember if a direct callback is by itself, the fentry will call that
-direct trampoline without going through the ftrace trampoline. This is used
-to tell the ftrace trampoline that it's attached to a direct caller and
-needs to call that and not return back to the function it is tracing.
-
-See later down in that file we have:
-
-	/*
-	 * If ORIG_RAX is anything but zero, make this a call to that.
-	 * See arch_ftrace_set_direct_caller().
-	 */
-	testq	%rax, %rax
+Can you add the command that causes this to fail.
 
 -- Steve
+
+> 
+> Fixes: 08c9306fc2e3 ("tracing/fprobe-event: Assume fprobe is a return event by $retval")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  kernel/trace/trace_fprobe.c |    9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
+> index 8bfe23af9c73..7d2ddbcfa377 100644
+> --- a/kernel/trace/trace_fprobe.c
+> +++ b/kernel/trace/trace_fprobe.c
+> @@ -927,11 +927,12 @@ static int parse_symbol_and_return(int argc, const char *argv[],
+>  	for (i = 2; i < argc; i++) {
+>  		tmp = strstr(argv[i], "$retval");
+>  		if (tmp && !isalnum(tmp[7]) && tmp[7] != '_') {
+> +			if (is_tracepoint) {
+> +				trace_probe_log_set_index(i);
+> +				trace_probe_log_err(tmp - argv[i], RETVAL_ON_PROBE);
+> +				return -EINVAL;
+> +			}
+>  			*is_return = true;
+> -			/*
+> -			 * NOTE: Don't check is_tracepoint here, because it will
+> -			 * be checked when the argument is parsed.
+> -			 */
+>  			break;
+>  		}
+>  	}
+
