@@ -1,102 +1,73 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B341A278;
-	Mon,  6 Nov 2023 12:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="myycUMlv"
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4C3CBD;
-	Mon,  6 Nov 2023 04:53:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=d7JIE/1D3Ga6c+JTVVNZxpCgazNnMt6mFtB/dDS9GUM=; b=myycUMlvg6YWS07kbUyVxY8NEg
-	i6GijSiiQz1Q5ipUKSaw6uxW520hXeuSRQZdQRO9EPC0b5+SCC0AEyRVI6kKQvSy+f+ISJ9ZKpm72
-	NeOTPm+A4VGovEsIZktwGet2L4ZyZ9Lkcf7k4oT2a07cWH6bUKILpi3GLREmlDa3bnfqzotYv0nOD
-	wW4ovbA9V6lJKrhHkCOthsv4dE0JKe0tXq0FXGgtDj1wa1MMXF9aTEe5CbOt7OUG+TbG0hW//MqBV
-	1euoqAqA2LhsyycPvIjcakbEGzyQhZKXMi3xmcV8TnnEN+D48GAFPkD2Vj+zaErLhPQA0KDbhOEvl
-	1zRJlpbw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qzz5u-0060hL-Mm; Mon, 06 Nov 2023 12:52:43 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0FCF430049D; Mon,  6 Nov 2023 13:52:43 +0100 (CET)
-Date: Mon, 6 Nov 2023 13:52:43 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Florent Revest <revest@chromium.org>,
-	linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BBF029418;
+	Mon,  6 Nov 2023 16:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1DFDC433C8;
+	Mon,  6 Nov 2023 16:37:08 +0000 (UTC)
+Date: Mon, 6 Nov 2023 11:37:10 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Alexei Starovoitov
+ <alexei.starovoitov@gmail.com>, Florent Revest <revest@chromium.org>,
+ linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
+ Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
+ Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Guo Ren <guoren@kernel.org>
 Subject: Re: [RFC PATCH 24/32] x86/ftrace: Enable HAVE_FUNCTION_GRAPH_FREGS
-Message-ID: <20231106125243.GN8262@noisy.programming.kicks-ass.net>
+Message-ID: <20231106113710.3bf69211@gandalf.local.home>
+In-Reply-To: <20231106100549.33f6ce30d968906979ca3954@kernel.org>
 References: <169920038849.482486.15796387219966662967.stgit@devnote2>
- <169920068069.482486.6540417903833579700.stgit@devnote2>
- <20231105172536.GA7124@noisy.programming.kicks-ass.net>
- <20231105141130.6ef7d8bd@rorschach.local.home>
- <20231105231734.GE3818@noisy.programming.kicks-ass.net>
- <20231105183301.38be5598@rorschach.local.home>
- <20231105183409.424bc368@rorschach.local.home>
- <20231106093850.62702d5bf1779e30cdecf1eb@kernel.org>
- <20231106101932.GJ8262@noisy.programming.kicks-ass.net>
- <20231106214708.d132cfd9984beac55e4b420e@kernel.org>
+	<169920068069.482486.6540417903833579700.stgit@devnote2>
+	<20231105172536.GA7124@noisy.programming.kicks-ass.net>
+	<20231105141130.6ef7d8bd@rorschach.local.home>
+	<20231105231734.GE3818@noisy.programming.kicks-ass.net>
+	<20231105183301.38be5598@rorschach.local.home>
+	<20231106100549.33f6ce30d968906979ca3954@kernel.org>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231106214708.d132cfd9984beac55e4b420e@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Nov 06, 2023 at 09:47:08PM +0900, Masami Hiramatsu wrote:
-> On Mon, 6 Nov 2023 11:19:32 +0100
-> Peter Zijlstra <peterz@infradead.org> wrote:
+On Mon, 6 Nov 2023 10:05:49 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+
+> So for x86-64,
 > 
-> > On Mon, Nov 06, 2023 at 09:38:50AM +0900, Masami Hiramatsu wrote:
-> > > On Sun, 5 Nov 2023 18:34:09 -0500
-> > > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > > 
-> > > > On Sun, 5 Nov 2023 18:33:01 -0500
-> > > > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > > > 
-> > > > > For x86_64, that would be:
-> > > > > 
-> > > > >   rdi, rsi, rdx, r8, r9, rsp
-> > > > 
-> > > > I missed rcx.
-> > > 
-> > > I would like to add rax to the list so that it can handle the return value too. :)
-> > 
-> > So something like so?
-> > 
-> > 
-> > diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-> > index 897cf02c20b1..71bfe27594a5 100644
-> > --- a/arch/x86/include/asm/ftrace.h
-> > +++ b/arch/x86/include/asm/ftrace.h
-> > @@ -36,6 +36,10 @@ static inline unsigned long ftrace_call_adjust(unsigned long addr)
-> >  
-> >  #ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
-> >  struct ftrace_regs {
-> > +	/*
-> > +	 * Partial, filled with:
-> > +	 *  rax, rcx, rdx, rdi, rsi, r8, r9, rsp
+>  - rdi, rsi, rcx, rdx, r8, r9, and rsp
+>  - rax and rdx
+>  - rbp
 > 
-> Don't we need rbp too? (for frame pointer)
+> (BTW, why orig_rax is cleared?)
 
-/me goes stare at ftrace_64.S, and yes it appears it fills out rbp too.
+You mean from ftrace_caller?
 
+That's a "hack" to determine if we need to call the direct trampoline or
+not. When you have both a direct trampoline and ftrace functions on the
+same function, it will call ftrace_ops_list_func() to iterate all the
+registered ftrace callbacks. The direct callback helper will set "orig_rax"
+to let the return of the ftrace trampoline call the direct callback.
 
+Remember if a direct callback is by itself, the fentry will call that
+direct trampoline without going through the ftrace trampoline. This is used
+to tell the ftrace trampoline that it's attached to a direct caller and
+needs to call that and not return back to the function it is tracing.
+
+See later down in that file we have:
+
+	/*
+	 * If ORIG_RAX is anything but zero, make this a call to that.
+	 * See arch_ftrace_set_direct_caller().
+	 */
+	testq	%rax, %rax
+
+-- Steve
