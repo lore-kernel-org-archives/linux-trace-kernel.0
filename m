@@ -1,87 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB5920E7;
-	Tue,  7 Nov 2023 05:43:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DAAFBE5;
+	Tue,  7 Nov 2023 10:44:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OjyH0wDe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79F43C433C7;
-	Tue,  7 Nov 2023 05:43:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EfHMKmIU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AF0EC433C7;
+	Tue,  7 Nov 2023 10:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699335812;
-	bh=ZjCW8mn+WzSc8W2ku8xQ1P6bpGEosFP1Q+Pzo/jsu2Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=OjyH0wDe0oDtiIOwS9+037THfI23Qg7eC47ZeuyigIfTzrLjZxQ5f2yufpj+EKPmZ
-	 /VpX+Iy2mgxC9km1jhBFskyZdf3W3rT7JRrbrOdrQDiQz54cEvPpFs8pOIswNtG0Fh
-	 CPLdbFB/M42woObZYUAIPrHAp3VFA5UA2T58ShaZyl7HdtX6z2rokmMLOGf3guySwX
-	 Kq8jCffiYPrixWIZBGmeGeYM8gPEa3+beLteCGByQ1VX9OH+37rqdEkF+8xlSeLQD/
-	 F4xsD16R7Pzw1hMF+b/IeI7AZUbIH0y8kL/MAiW0yRH4SXqewg2Ggw/zdwfr+7ffCI
-	 G+d5s0PC8CsGA==
-Date: Tue, 7 Nov 2023 14:43:28 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Alexei Starovoitov
- <alexei.starovoitov@gmail.com>, Florent Revest <revest@chromium.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
- Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Guo Ren <guoren@kernel.org>
-Subject: Re: [RFC PATCH 24/32] x86/ftrace: Enable HAVE_FUNCTION_GRAPH_FREGS
-Message-Id: <20231107144328.cc763a2a137391ceb105e9db@kernel.org>
-In-Reply-To: <20231106220617.5eb73f2f@gandalf.local.home>
-References: <169920038849.482486.15796387219966662967.stgit@devnote2>
-	<169920068069.482486.6540417903833579700.stgit@devnote2>
-	<20231105172536.GA7124@noisy.programming.kicks-ass.net>
-	<20231105141130.6ef7d8bd@rorschach.local.home>
-	<20231105231734.GE3818@noisy.programming.kicks-ass.net>
-	<20231105183301.38be5598@rorschach.local.home>
-	<20231106100549.33f6ce30d968906979ca3954@kernel.org>
-	<20231106113710.3bf69211@gandalf.local.home>
-	<20231107094258.d41a46c202197e92bc6d9656@kernel.org>
-	<20231106220617.5eb73f2f@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1699353896;
+	bh=6KvSSAyHzV1t/xzun1oJg0AqCmYPNZNoG1yjrk+2N5g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EfHMKmIUi7LClGqSTR82uTGSALdsGhooGkAQNBOKzdAx9XrKCS32CwP6rRNlINeJp
+	 fTBcOh2CbrNgz5T9wN8X4IfDIz30xCLXq2htrhQAdC3JQhS9flLyk/+pf5MtKIc1uc
+	 JGySGdYEdfIvLpVTQJXhgpJr9YrJTitMM+csMdn+xILBQI2oGOVjB/sYO87FSSlzde
+	 FSNahA1CtFFCQyIxON1Z1I4OewRIeg1rULpA/yqisw7axPef9I0RY6dTvW/rbObEf0
+	 ODLYbBKyXYy654yF6yL9+/nSFia7MKf5WBhUfT/JXvT2gH/1if2QXy5oq+hmLNVTje
+	 IOMZOtUYIwdeQ==
+Date: Tue, 7 Nov 2023 10:44:47 +0000
+From: Will Deacon <will@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>, bpf@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v3 04/13] mm/execmem, arch: convert remaining overrides
+ of module_alloc to execmem
+Message-ID: <20231107104446.GA19133@willie-the-truck>
+References: <20230918072955.2507221-1-rppt@kernel.org>
+ <20230918072955.2507221-5-rppt@kernel.org>
+ <20231023171420.GA4041@willie-the-truck>
+ <20231026085800.GK2824@kernel.org>
+ <20231026102438.GA6924@willie-the-truck>
+ <20231030070053.GL2824@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231030070053.GL2824@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, 6 Nov 2023 22:06:17 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Tue, 7 Nov 2023 09:42:58 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Mon, Oct 30, 2023 at 09:00:53AM +0200, Mike Rapoport wrote:
+> On Thu, Oct 26, 2023 at 11:24:39AM +0100, Will Deacon wrote:
+> > On Thu, Oct 26, 2023 at 11:58:00AM +0300, Mike Rapoport wrote:
+> > > On Mon, Oct 23, 2023 at 06:14:20PM +0100, Will Deacon wrote:
+> > > > On Mon, Sep 18, 2023 at 10:29:46AM +0300, Mike Rapoport wrote:
+> > > > > diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
+> > > > > index dd851297596e..cd6320de1c54 100644
+> > > > > --- a/arch/arm64/kernel/module.c
+> > > > > +++ b/arch/arm64/kernel/module.c
 > 
-> > Got it. So does ftrace_regs need a placeholder for direct trampoline?
-> > (Or, can we use a register to pass it?)
-> > I think we don't need to clear it for return_to_handler() but if
-> > `ftrace_regs` spec requires it, it is better to do so.
+> ...
 > 
-> It's per arch defined. I think I wrote somewhere that it just needs to pass
-> back something that can tell if the handler is to return to a direct
-> trampoline or not. It could be a unused register, or something else.
-
-Oh, I meant the flag (address) for "return" trampoline. If we have
-direct "return" trampoline we may use it, but currently not.
-
+> > > > > -	if (module_direct_base) {
+> > > > > -		p = __vmalloc_node_range(size, MODULE_ALIGN,
+> > > > > -					 module_direct_base,
+> > > > > -					 module_direct_base + SZ_128M,
+> > > > > -					 GFP_KERNEL | __GFP_NOWARN,
+> > > > > -					 PAGE_KERNEL, 0, NUMA_NO_NODE,
+> > > > > -					 __builtin_return_address(0));
+> > > > > -	}
+> > > > > +	module_init_limits();
+> > > > 
+> > > > Hmm, this used to be run from subsys_initcall(), but now you're running
+> > > > it _really_ early, before random_init(), so randomization of the module
+> > > > space is no longer going to be very random if we don't have early entropy
+> > > > from the firmware or the CPU, which is likely to be the case on most SoCs.
+> > > 
+> > > Well, it will be as random as KASLR. Won't that be enough?
+> > 
+> > I don't think that's true -- we have the 'kaslr-seed' property for KASLR,
+> > but I'm not seeing anything like that for the module randomisation and I
+> > also don't see why we need to set these limits so early.
 > 
-> It's only needed if an architecture supports direct trampolines.
-
-I see, and x86_64 needs it.
-OK, maybe better to keep it clear on x86-64 even on the
-return handler.
-
-Thank you,
-
+> x86 needs execmem initialized before ftrace_init() so I thought it would be
+> best to setup execmem along with most of MM in mm_core_init().
 > 
-> -- Steve
+> I'll move execmem initialization for !x86 to a later point, say
+> core_initcall.
 
+Thanks, Mike.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Will
