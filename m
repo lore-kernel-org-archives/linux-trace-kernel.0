@@ -1,120 +1,111 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EBD34CFD;
-	Tue,  7 Nov 2023 18:15:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F3B34CE7
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Nov 2023 19:55:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a1Xmw/Aq"
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DFB8AF;
-	Tue,  7 Nov 2023 10:15:52 -0800 (PST)
-Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-9a6190af24aso924343566b.0;
-        Tue, 07 Nov 2023 10:15:52 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Yx/c11xV"
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FEEF184
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Nov 2023 11:55:41 -0800 (PST)
+Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1cc938f9612so36821505ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Nov 2023 11:55:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699380951; x=1699985751; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YLCkkkRy0xyxhf2w0mzTXDWxtj3x83g3Dw/kY8liqxs=;
-        b=a1Xmw/AqoByUYLBTVTA2rinIw6h8P4ol+Yvy/FQvENFCG3EqQ6xH1Cm/iNcBZO0jF1
-         6ntGVkcoeC2mrSSq9FhCPOPbosvQBMEVCdE8kYm9VS2bJzBmXlVJ/NOJj4y1W9wLzC9g
-         Ckp6fSci94Mpbld1hwNa8+Bnpazf6uncvE4ujsvjNlJREkXnyKW65Mx12uqnb9NKDtx2
-         BSnVKGq5OnEb4KcwHMu3zkWVWJTvN9FvjY/CjxS6EhvUAHYYwiUKuV8yVufI029BEjKL
-         0i6gH+qQ6bU53BB5Nw3DGTmn8GUQgwHL7EowQqHFlazT+R6fTXOWRCTLpXLb3jINvlCN
-         93Hw==
+        d=chromium.org; s=google; t=1699386941; x=1699991741; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HNeFqgo6zpROkihy0ShoA85fAr1c1+bU52BjgzWcK1o=;
+        b=Yx/c11xV+iyISUNC4tjBoSSI8tDR682FVRusZqHd8SLKwKdyfBTM8w5vQkcXgknLJ5
+         jAgQELvmzCuVCKasvH6kMnPtHvprVKl7yqS82mCfrB/C94OMNdAzRAu1PvRDjHy91cqI
+         QScGcCYchxw00U+ge59I8ZKuiL3/85122I5rI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699380951; x=1699985751;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YLCkkkRy0xyxhf2w0mzTXDWxtj3x83g3Dw/kY8liqxs=;
-        b=oaaIsGvYCJq+jxebMWXLkO28hCt4MtTT/XzezBYCI5a37cM0HtJJ32q5/zpLKXODYd
-         E4hNw57fGTEM5fkNAKk0eBxWxMtu93pom4vDYncmsY3rVn/SLPzIvv6FdyJETSwP6BdT
-         eRAQnBDntcQGvO85lxyV0ree8USdbwHhQN5E3SAJ4iDVyj3HSgAOenJ5pHGSR/u26kit
-         K4kyuCbwrWyyXQ3ont72LQz9i9AGQuoK2Wz/RsJho64dTyJMggPvagSAF6pW9ctOCQdH
-         sapKe/leNBKSKBwymPmQr+qFOhQW0K0VdA8EMq4IE421ZWBOUkjGmxi+8J9JkD076yx9
-         Iwxw==
-X-Gm-Message-State: AOJu0YyEXEtoZAVBjqWFytOwE6KvPlHfY9pJGvOdklPXYAewW/AECRZD
-	gDk2mqS6k75MP8K22VkhVod4jgfGR7Hmb8yrn48=
-X-Google-Smtp-Source: AGHT+IEu5edPr9vVltsuODkwaa50hcmnHTRA8lKcWKQoW6T8vdFZrs7ih3QwA4MmdyUXquI2lxrp4aEhdeZvuQjGSwk=
-X-Received: by 2002:a17:907:d21:b0:9c0:eb3e:b070 with SMTP id
- gn33-20020a1709070d2100b009c0eb3eb070mr17256502ejc.69.1699380950186; Tue, 07
- Nov 2023 10:15:50 -0800 (PST)
+        d=1e100.net; s=20230601; t=1699386941; x=1699991741;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HNeFqgo6zpROkihy0ShoA85fAr1c1+bU52BjgzWcK1o=;
+        b=P5czAr/xO4xZj9mZDzkFGFxWyyr/sepskE0AmiuPufZgQWjCweGbwByk2+ZasUkcK7
+         nqYzpfAwhjUmkERjE8Wexry8eubmzZ3BxqSpfXxiu+5rR8XnJ5cDOS0SZr8k90CtbNok
+         t9v12XqFRzjm01WF61DTTWO9aAbiRTLTfbS+eN6DAfKaHiZ9yNMIqXfiLXWx1OF2/hYl
+         8cwNU6lzjb3f2h0qKiOf+g4LvTl+mCtoUTXq971R49oiQUxfdjSLNnJrhOk1YV2jQ4cf
+         EuL3ltpEs4HdMG6GF3PvkmNyp8E4YqzreNWQD9qgjd93/+fD8sUq11HkTHLLLK22AMts
+         +Grw==
+X-Gm-Message-State: AOJu0YwjnkbGYVobaonmi8uc/D7gmaF2kILwHrS8nO9VA7tEO6fh8v+g
+	kGequ9FxsJSdJhMaSXmkMBU8oA==
+X-Google-Smtp-Source: AGHT+IEZgybC45XGlQUGbU637Xhd/YQognaCWgtAXzdYdCdXOmVngLWoQt1kbfTCkOpNfx5sZXCftA==
+X-Received: by 2002:a17:903:2282:b0:1cc:ee07:1654 with SMTP id b2-20020a170903228200b001ccee071654mr35008plh.14.1699386940686;
+        Tue, 07 Nov 2023 11:55:40 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id jw24-20020a170903279800b001cc3a8af18dsm209511plb.60.2023.11.07.11.55.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Nov 2023 11:55:39 -0800 (PST)
+Date: Tue, 7 Nov 2023 11:55:38 -0800
+From: Kees Cook <keescook@chromium.org>
+To: j.granados@samsung.com
+Cc: Luis Chamberlain <mcgrof@kernel.org>, willy@infradead.org,
+	josh@joshtriplett.org, Eric Biederman <ebiederm@xmission.com>,
+	Iurii Zaikin <yzaikin@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
+	Andy Lutomirski <luto@amacapital.net>,
+	Will Drewry <wad@chromium.org>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Petr Mladek <pmladek@suse.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Balbir Singh <bsingharora@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH 05/10] seccomp: Remove the now superfluous sentinel
+ elements from ctl_table array
+Message-ID: <202311071155.EE9C0FBF@keescook>
+References: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-0-e4ce1388dfa0@samsung.com>
+ <20231107-jag-sysctl_remove_empty_elem_kernel-v1-5-e4ce1388dfa0@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-0-e4ce1388dfa0@samsung.com>
- <20231107-jag-sysctl_remove_empty_elem_kernel-v1-10-e4ce1388dfa0@samsung.com>
-In-Reply-To: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-10-e4ce1388dfa0@samsung.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 7 Nov 2023 10:15:39 -0800
-Message-ID: <CAEf4BzZY0TATP4ug54j43o=qDvHBe8xW=hKwRRTfBuLUKGjrmg@mail.gmail.com>
-Subject: Re: [PATCH 10/10] bpf: Remove the now superfluous sentinel elements
- from ctl_table array
-To: j.granados@samsung.com
-Cc: Luis Chamberlain <mcgrof@kernel.org>, willy@infradead.org, josh@joshtriplett.org, 
-	Kees Cook <keescook@chromium.org>, Eric Biederman <ebiederm@xmission.com>, 
-	Iurii Zaikin <yzaikin@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>, Petr Mladek <pmladek@suse.com>, 
-	John Ogness <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>, 
-	Balbir Singh <bsingharora@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-5-e4ce1388dfa0@samsung.com>
 
-On Tue, Nov 7, 2023 at 5:45=E2=80=AFAM Joel Granados via B4 Relay
-<devnull+j.granados.samsung.com@kernel.org> wrote:
->
+On Tue, Nov 07, 2023 at 02:45:05PM +0100, Joel Granados via B4 Relay wrote:
 > From: Joel Granados <j.granados@samsung.com>
->
+> 
 > This commit comes at the tail end of a greater effort to remove the
 > empty elements at the end of the ctl_table arrays (sentinels) which
 > will reduce the overall build time size of the kernel and run time
 > memory bloat by ~64 bytes per sentinel (further information Link :
 > https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
->
-> Remove sentinel element from bpf_syscall_table.
->
+> 
+> Remove sentinel element from seccomp_sysctl_table.
+> 
 > Signed-off-by: Joel Granados <j.granados@samsung.com>
-> ---
->  kernel/bpf/syscall.c | 1 -
->  1 file changed, 1 deletion(-)
->
 
-LGTM.
+Acked-by: Kees Cook <keescook@chromium.org>
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-
-> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> index eb01c31ed591..1cb5b852b4e7 100644
-> --- a/kernel/bpf/syscall.c
-> +++ b/kernel/bpf/syscall.c
-> @@ -5679,7 +5679,6 @@ static struct ctl_table bpf_syscall_table[] =3D {
->                 .mode           =3D 0644,
->                 .proc_handler   =3D bpf_stats_handler,
->         },
-> -       { }
->  };
->
->  static int __init bpf_syscall_sysctl_init(void)
->
-> --
-> 2.30.2
->
+-- 
+Kees Cook
