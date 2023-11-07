@@ -1,12 +1,12 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2495F30CF3;
-	Tue,  7 Nov 2023 13:48:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C3630F89;
+	Tue,  7 Nov 2023 14:09:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9E55C433C7;
-	Tue,  7 Nov 2023 13:48:45 +0000 (UTC)
-Date: Tue, 7 Nov 2023 08:48:44 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE13AC433C7;
+	Tue,  7 Nov 2023 14:09:56 +0000 (UTC)
+Date: Tue, 7 Nov 2023 09:09:59 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Alexei Starovoitov
@@ -19,8 +19,8 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Alexei Starovoitov
  Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
  Guo Ren <guoren@kernel.org>
 Subject: Re: [RFC PATCH 24/32] x86/ftrace: Enable HAVE_FUNCTION_GRAPH_FREGS
-Message-ID: <20231107084844.7a39ac3f@gandalf.local.home>
-In-Reply-To: <20231107144328.cc763a2a137391ceb105e9db@kernel.org>
+Message-ID: <20231107090959.1328bf62@gandalf.local.home>
+In-Reply-To: <20231107084844.7a39ac3f@gandalf.local.home>
 References: <169920038849.482486.15796387219966662967.stgit@devnote2>
 	<169920068069.482486.6540417903833579700.stgit@devnote2>
 	<20231105172536.GA7124@noisy.programming.kicks-ass.net>
@@ -32,6 +32,7 @@ References: <169920038849.482486.15796387219966662967.stgit@devnote2>
 	<20231107094258.d41a46c202197e92bc6d9656@kernel.org>
 	<20231106220617.5eb73f2f@gandalf.local.home>
 	<20231107144328.cc763a2a137391ceb105e9db@kernel.org>
+	<20231107084844.7a39ac3f@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,17 +43,42 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 7 Nov 2023 14:43:28 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Tue, 7 Nov 2023 08:48:44 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> > 
-> > It's only needed if an architecture supports direct trampolines.  
+> On Tue, 7 Nov 2023 14:43:28 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> I see, and x86_64 needs it.
-> OK, maybe better to keep it clear on x86-64 even on the
-> return handler.
+> > > 
+> > > It's only needed if an architecture supports direct trampolines.    
+> > 
+> > I see, and x86_64 needs it.
+> > OK, maybe better to keep it clear on x86-64 even on the
+> > return handler.  
+> 
+> As it is arch specific, I'm not sure it matters for the return handler, as
+> the return should never call a direct trampoline.
 
-As it is arch specific, I'm not sure it matters for the return handler, as
-the return should never call a direct trampoline.
+Just to clarify, the return trampoline should not bother touching that
+register. The register was cleared in the fentry trampoline before calling
+all the callbacks because the arch_ftrace_set_direct_caller() would set it.
+Then on return of calling the function callbacks, it would test if
+something set it or not.
+
+If the return trampoline is not testing it after the return from the
+callbacks, there's no reason to clear it. The fentry trampoline used it to
+communicate to itself:
+
+	orig_rax = 0;
+
+	call ftrace_ops_list_func()
+
+	/* Did something set orig_rax? */
+	if (orig_rax != 0)
+		return orig_rax;
+
+It's not setting it to communicate with the callbacks. That is, the
+callback does not expect it to be set.
 
 -- Steve
+
