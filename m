@@ -1,158 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D62641
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Nov 2023 01:04:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B195652
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Nov 2023 01:23:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nPTtD48B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BA94C433C7;
-	Wed,  8 Nov 2023 01:04:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699405494;
-	bh=Bb9XKa7jIR6VwQRh41pyRMgtodshR4fjkkH7tV2ml4A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nPTtD48BSRmCkDgS/RfJsFIi1sKbGzyo4h5xtQs7N7j5AVgSDYZ0T0CpL9g/GTRsK
-	 ewIh/QniSRBH8KRH+wUNUYe9upNv6TaotXCP1xqp5PF+Md67uxzNtEt9E1+GECdI4E
-	 wHph6U8H7Z/IFbYDb/13oWXXC6Hv25qX5f81fFCsAkGNV92zWYlAXmDiXiGOXDKwvX
-	 91t4Gqnxzi9fnAahSAw5IfBX3MOqNuXyJnyXDt1V4ye53MFp96sHVpiRxCyA4gMVvs
-	 X5lbRBW3IWsxSgK9E1ZedLDmIYCoQlFwQT9HmI7HlFzVTf1wrK1Y10freRG4la9t4/
-	 X8dDgdFJU3Kew==
-Date: Wed, 8 Nov 2023 10:04:47 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "wuqiang.matt" <wuqiang.matt@bytedance.com>
-Cc: vgupta@kernel.org, bcain@quicinc.com, jonas@southpole.se,
- stefan.kristiansson@saunalahti.fi, shorne@gmail.com, geert@linux-m68k.org,
- andi.shyti@linux.intel.com, mingo@kernel.org, palmer@rivosinc.com,
- andrzej.hajda@intel.com, arnd@arndb.de, peterz@infradead.orgm,
- linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-hexagon@vger.kernel.org, linux-openrisc@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mattwu@163.com, linux@roeck-us.ne,
- kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v2 4/4] locking/atomic: hexagon: arch_cmpxchg[64]_local
- undefined
-Message-Id: <20231108100447.8bd6ff06f59f4b41a8f3d0ec@kernel.org>
-In-Reply-To: <20231104091615.4884-5-wuqiang.matt@bytedance.com>
-References: <20231104091615.4884-1-wuqiang.matt@bytedance.com>
-	<20231104091615.4884-5-wuqiang.matt@bytedance.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="b7VdTjge"
+Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF35410C0
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Nov 2023 17:23:08 -0800 (PST)
+Received: by mail-oi1-x22c.google.com with SMTP id 5614622812f47-3b2ec5ee2e4so3681238b6e.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Nov 2023 17:23:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1699406588; x=1700011388; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kXOO76hl05hGJXvyn0Dlhgaia7Zq8+Y5vhNHIIQ2qOw=;
+        b=b7VdTjgeEEZdOBD7nqm7qAy6KOxTPbx7q2rM4wDSJ1WjF7tdfLB2Eu/xalUPbOoPzM
+         lFWtSAslqGjAC5LyOif89tXl3191dJ6A7Zh1x+sy2leS0r4jGBzSb0GzGhZTKGJmbtad
+         3sN7Sg2CPxjVjOOlUbaB6izmbfvYNEb/8/7xU22qshWkRYUzhjbEyBnkzxGsH4AlRcHC
+         yE8IHaodUjhnN1G4Wfg0V6mc1Z5ZWxz1A57BdsqZzT8NQDXuiUSb0/LLi6nLWgis8fnU
+         zqRNlzobQvUi5jwkoCZgx6uwEjL2IsYfF6GHljWRKHd0C9T0EzsF0IKdX/lItGzNvI2p
+         yaKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699406588; x=1700011388;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kXOO76hl05hGJXvyn0Dlhgaia7Zq8+Y5vhNHIIQ2qOw=;
+        b=IrtoqyJ8hnkglfYorK8MattEG75os5FN1lQj9mGcMdjmhmxZUW/M6dXxL7Z1lwP7A2
+         wERNdS0BwcrZd4H9Utmqs1rWmT/yEvfy7G3OvJo67Y0NfjinBq1szrABbuqoq97Ym5Kv
+         Tw/Qf8oVFKX5WIUV9n4fbumCzdBbDsaOs2NEUafLAB3ypYDpsVXGjikQxVMsdLsQKBM+
+         Z2fceu5pdT40tPcBRPDU7JA7mVluyxzJnQVb2XD9LJOQ0RWlZ2YLlg/qqO3vRpvnNPnI
+         AqfDrajGD29+vYm/5CIx7uOzSLApwYL+ITrQgAcjQAYjNZUPT5+RTTG507sGzIAWeqFG
+         BMfA==
+X-Gm-Message-State: AOJu0Yx934ax+SLbuSfz3Q85Qj92c40xjYxmZX4V1b+UW5edc8Otb3aS
+	qnPBbpVuo3VnhT0FnNI7NDLpcQ==
+X-Google-Smtp-Source: AGHT+IFywJIqCXeozZV9JT47PnRA6v7pNChB5NLURo3ZsVZ1TcYPwMrJlqVhsbtia6tMCZWP0acv1w==
+X-Received: by 2002:a05:6808:f03:b0:3a7:8f94:743a with SMTP id m3-20020a0568080f0300b003a78f94743amr873721oiw.10.1699406588131;
+        Tue, 07 Nov 2023 17:23:08 -0800 (PST)
+Received: from devz1.bytedance.net ([203.208.167.147])
+        by smtp.gmail.com with ESMTPSA id g24-20020aa78758000000b006c003d9897bsm7762649pfo.138.2023.11.07.17.23.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Nov 2023 17:23:07 -0800 (PST)
+From: "wuqiang.matt" <wuqiang.matt@bytedance.com>
+To: mhiramat@kernel.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lkp@intel.com,
+	mattwu@163.com,
+	"wuqiang.matt" <wuqiang.matt@bytedance.com>
+Subject: [PATCH v1] lib: test_objpool: make global variables static
+Date: Wed,  8 Nov 2023 09:22:48 +0800
+Message-Id: <20231108012248.313574-1-wuqiang.matt@bytedance.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Sat,  4 Nov 2023 17:16:15 +0800
-"wuqiang.matt" <wuqiang.matt@bytedance.com> wrote:
+Kernel test robot reported build warnings that structures g_ot_sync_ops,
+g_ot_async_ops and g_testcases should be static. These definitions are
+only used in test_objpool.c, so make them static
 
-> For architectures that support native cmpxchg, we'd like to
-> implement arch_cmpxchg[64]_local with the native variants of
-> supported data size. If not, the generci_cmpxchg[64]_local
-> will be used.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202310272207.tLPflya4-lkp@intel.com/
-> 
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202311071229.WGrWUjM1-lkp@intel.com/
 
-Looks good to me.
+Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
+---
+ lib/test_objpool.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-But I need hexagon's maintainer's comment too.
-
-Thank you,
-
-> Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
-> ---
->  arch/hexagon/include/asm/cmpxchg.h | 51 +++++++++++++++++++++++++++++-
->  1 file changed, 50 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/hexagon/include/asm/cmpxchg.h b/arch/hexagon/include/asm/cmpxchg.h
-> index bf6cf5579cf4..2b5e5bbaf807 100644
-> --- a/arch/hexagon/include/asm/cmpxchg.h
-> +++ b/arch/hexagon/include/asm/cmpxchg.h
-> @@ -8,6 +8,8 @@
->  #ifndef _ASM_CMPXCHG_H
->  #define _ASM_CMPXCHG_H
->  
-> +#include <linux/build_bug.h>
-> +
->  /*
->   * __arch_xchg - atomically exchange a register and a memory location
->   * @x: value to swap
-> @@ -51,13 +53,15 @@ __arch_xchg(unsigned long x, volatile void *ptr, int size)
->   *  variable casting.
->   */
->  
-> -#define arch_cmpxchg(ptr, old, new)				\
-> +#define __cmpxchg_32(ptr, old, new)				\
->  ({								\
->  	__typeof__(ptr) __ptr = (ptr);				\
->  	__typeof__(*(ptr)) __old = (old);			\
->  	__typeof__(*(ptr)) __new = (new);			\
->  	__typeof__(*(ptr)) __oldval = 0;			\
->  								\
-> +	BUILD_BUG_ON(sizeof(*(ptr)) != 4);			\
-> +								\
->  	asm volatile(						\
->  		"1:	%0 = memw_locked(%1);\n"		\
->  		"	{ P0 = cmp.eq(%0,%2);\n"		\
-> @@ -72,4 +76,49 @@ __arch_xchg(unsigned long x, volatile void *ptr, int size)
->  	__oldval;						\
->  })
->  
-> +#define __cmpxchg(ptr, old, val, size)				\
-> +({								\
-> +	__typeof__(*(ptr)) oldval;				\
-> +								\
-> +	switch (size) {						\
-> +	case 4:							\
-> +		oldval = __cmpxchg_32(ptr, old, val);		\
-> +		break;						\
-> +	default:						\
-> +		BUILD_BUG();					\
-> +		oldval = val;					\
-> +		break;						\
-> +	}							\
-> +								\
-> +	oldval;							\
-> +})
-> +
-> +#define arch_cmpxchg(ptr, o, n)	__cmpxchg((ptr), (o), (n), sizeof(*(ptr)))
-> +
-> +/*
-> + * always make arch_cmpxchg[64]_local available, native cmpxchg
-> + * will be used if available, then generic_cmpxchg[64]_local
-> + */
-> +#include <asm-generic/cmpxchg-local.h>
-> +
-> +#define arch_cmpxchg_local(ptr, old, val)			\
-> +({								\
-> +	__typeof__(*(ptr)) retval;				\
-> +	int size = sizeof(*(ptr));				\
-> +								\
-> +	switch (size) {						\
-> +	case 4:							\
-> +		retval = __cmpxchg_32(ptr, old, val);		\
-> +		break;						\
-> +	default:						\
-> +		retval = __generic_cmpxchg_local(ptr, old,	\
-> +						 val, size);	\
-> +		break;						\
-> +	}							\
-> +								\
-> +	retval;							\
-> +})
-> +
-> +#define arch_cmpxchg64_local(ptr, o, n) __generic_cmpxchg64_local((ptr), (o), (n))
-> +
->  #endif /* _ASM_CMPXCHG_H */
-> -- 
-> 2.40.1
-> 
-
-
+diff --git a/lib/test_objpool.c b/lib/test_objpool.c
+index a94078402138..bfdb81599832 100644
+--- a/lib/test_objpool.c
++++ b/lib/test_objpool.c
+@@ -311,7 +311,7 @@ static void ot_fini_sync(struct ot_context *sop)
+ 	ot_kfree(sop->test, sop, sizeof(*sop));
+ }
+ 
+-struct {
++static struct {
+ 	struct ot_context * (*init)(struct ot_test *oc);
+ 	void (*fini)(struct ot_context *sop);
+ } g_ot_sync_ops[] = {
+@@ -475,7 +475,7 @@ static struct ot_context *ot_init_async_m0(struct ot_test *test)
+ 	return sop;
+ }
+ 
+-struct {
++static struct {
+ 	struct ot_context * (*init)(struct ot_test *oc);
+ 	void (*fini)(struct ot_context *sop);
+ } g_ot_async_ops[] = {
+@@ -632,7 +632,7 @@ static int ot_start_async(struct ot_test *test)
+ #define NODE_COMPACT sizeof(struct ot_node)
+ #define NODE_VMALLOC (512)
+ 
+-struct ot_test g_testcases[] = {
++static struct ot_test g_testcases[] = {
+ 
+ 	/* sync & normal */
+ 	{0, 0, NODE_COMPACT, 1000, 0,  1,  0,  0, "sync: percpu objpool"},
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.40.1
+
