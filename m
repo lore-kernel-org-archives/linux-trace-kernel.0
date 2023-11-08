@@ -1,111 +1,114 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F3B34CE7
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Nov 2023 19:55:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E62D650
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  8 Nov 2023 01:02:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Yx/c11xV"
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FEEF184
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Nov 2023 11:55:41 -0800 (PST)
-Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1cc938f9612so36821505ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Nov 2023 11:55:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1699386941; x=1699991741; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HNeFqgo6zpROkihy0ShoA85fAr1c1+bU52BjgzWcK1o=;
-        b=Yx/c11xV+iyISUNC4tjBoSSI8tDR682FVRusZqHd8SLKwKdyfBTM8w5vQkcXgknLJ5
-         jAgQELvmzCuVCKasvH6kMnPtHvprVKl7yqS82mCfrB/C94OMNdAzRAu1PvRDjHy91cqI
-         QScGcCYchxw00U+ge59I8ZKuiL3/85122I5rI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699386941; x=1699991741;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HNeFqgo6zpROkihy0ShoA85fAr1c1+bU52BjgzWcK1o=;
-        b=P5czAr/xO4xZj9mZDzkFGFxWyyr/sepskE0AmiuPufZgQWjCweGbwByk2+ZasUkcK7
-         nqYzpfAwhjUmkERjE8Wexry8eubmzZ3BxqSpfXxiu+5rR8XnJ5cDOS0SZr8k90CtbNok
-         t9v12XqFRzjm01WF61DTTWO9aAbiRTLTfbS+eN6DAfKaHiZ9yNMIqXfiLXWx1OF2/hYl
-         8cwNU6lzjb3f2h0qKiOf+g4LvTl+mCtoUTXq971R49oiQUxfdjSLNnJrhOk1YV2jQ4cf
-         EuL3ltpEs4HdMG6GF3PvkmNyp8E4YqzreNWQD9qgjd93/+fD8sUq11HkTHLLLK22AMts
-         +Grw==
-X-Gm-Message-State: AOJu0YwjnkbGYVobaonmi8uc/D7gmaF2kILwHrS8nO9VA7tEO6fh8v+g
-	kGequ9FxsJSdJhMaSXmkMBU8oA==
-X-Google-Smtp-Source: AGHT+IEZgybC45XGlQUGbU637Xhd/YQognaCWgtAXzdYdCdXOmVngLWoQt1kbfTCkOpNfx5sZXCftA==
-X-Received: by 2002:a17:903:2282:b0:1cc:ee07:1654 with SMTP id b2-20020a170903228200b001ccee071654mr35008plh.14.1699386940686;
-        Tue, 07 Nov 2023 11:55:40 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id jw24-20020a170903279800b001cc3a8af18dsm209511plb.60.2023.11.07.11.55.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Nov 2023 11:55:39 -0800 (PST)
-Date: Tue, 7 Nov 2023 11:55:38 -0800
-From: Kees Cook <keescook@chromium.org>
-To: j.granados@samsung.com
-Cc: Luis Chamberlain <mcgrof@kernel.org>, willy@infradead.org,
-	josh@joshtriplett.org, Eric Biederman <ebiederm@xmission.com>,
-	Iurii Zaikin <yzaikin@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Will Drewry <wad@chromium.org>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Petr Mladek <pmladek@suse.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Balbir Singh <bsingharora@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH 05/10] seccomp: Remove the now superfluous sentinel
- elements from ctl_table array
-Message-ID: <202311071155.EE9C0FBF@keescook>
-References: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-0-e4ce1388dfa0@samsung.com>
- <20231107-jag-sysctl_remove_empty_elem_kernel-v1-5-e4ce1388dfa0@samsung.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nt2CDjhJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DE5CC433C8;
+	Wed,  8 Nov 2023 01:02:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1699405337;
+	bh=YCzRL+kVqkfECP59e1QJcGLwwNjryJJh+Cs7cpeWcEw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=nt2CDjhJwpkem9VZrZ5m/LnBJWzlcPt0G8R+/J6Om5IQsejFGlYCKYlj6udl4WwCB
+	 F2HnU4rmciaUff6HS8zKKGnwGmMcq67t/z78urCReiOgvAQB/1SFfB8qu7PMRWjmTB
+	 TObwr9QxHm4BzppdwOwlpc37JwLsGo/oaxlJ8lWFKgRDvZZtzCtOTdQZwAh471oPET
+	 4y0Da5MkH4G5zGOe+aA+mBaZnLdUC2SXDGTnCZZGaC7mHs70bVpniL6aqGjA0AObJl
+	 KVext8xhjSbkkhvbpkpZDr9Yt3UW5F8RrEbBNxal1kpzaHhsD71dCxeoQjOuqhkBnQ
+	 9oGT3NFU5cTZQ==
+Date: Wed, 8 Nov 2023 10:02:10 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "wuqiang.matt" <wuqiang.matt@bytedance.com>
+Cc: vgupta@kernel.org, bcain@quicinc.com, jonas@southpole.se,
+ stefan.kristiansson@saunalahti.fi, shorne@gmail.com, geert@linux-m68k.org,
+ andi.shyti@linux.intel.com, mingo@kernel.org, palmer@rivosinc.com,
+ andrzej.hajda@intel.com, arnd@arndb.de, peterz@infradead.orgm,
+ linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, linux-openrisc@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mattwu@163.com, linux@roeck-us.ne
+Subject: Re: [PATCH v2 1/4] locking/atomic: arc: data size checking in
+ arch_cmpxchg
+Message-Id: <20231108100210.8118bdfe6fc67317f3638f1c@kernel.org>
+In-Reply-To: <20231104091615.4884-2-wuqiang.matt@bytedance.com>
+References: <20231104091615.4884-1-wuqiang.matt@bytedance.com>
+	<20231104091615.4884-2-wuqiang.matt@bytedance.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-5-e4ce1388dfa0@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Nov 07, 2023 at 02:45:05PM +0100, Joel Granados via B4 Relay wrote:
-> From: Joel Granados <j.granados@samsung.com>
-> 
-> This commit comes at the tail end of a greater effort to remove the
-> empty elements at the end of the ctl_table arrays (sentinels) which
-> will reduce the overall build time size of the kernel and run time
-> memory bloat by ~64 bytes per sentinel (further information Link :
-> https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
-> 
-> Remove sentinel element from seccomp_sysctl_table.
-> 
-> Signed-off-by: Joel Granados <j.granados@samsung.com>
+On Sat,  4 Nov 2023 17:16:12 +0800
+"wuqiang.matt" <wuqiang.matt@bytedance.com> wrote:
 
-Acked-by: Kees Cook <keescook@chromium.org>
+> Macro __cmpxchg() renamed to __cmpxchg_32() to emphasize it's explicit
+> support of 32bit data size, BUILD_BUG_ON() added to avoid any possible
+> misuses with unsupported data types.
+> 
+> In case CONFIG_ARC_HAS_LLSC is undefined, arch_cmpxchg() uses spinlock
+> to accomplish SMP-safety, so the BUILD_BUG_ON checking is uncecessary.
+> 
+
+Looks good to me.
+
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+> Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
+> ---
+>  arch/arc/include/asm/cmpxchg.h | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arc/include/asm/cmpxchg.h b/arch/arc/include/asm/cmpxchg.h
+> index e138fde067de..bf46514f6f12 100644
+> --- a/arch/arc/include/asm/cmpxchg.h
+> +++ b/arch/arc/include/asm/cmpxchg.h
+> @@ -18,14 +18,16 @@
+>   * if (*ptr == @old)
+>   *      *ptr = @new
+>   */
+> -#define __cmpxchg(ptr, old, new)					\
+> +#define __cmpxchg_32(ptr, old, new)					\
+>  ({									\
+>  	__typeof__(*(ptr)) _prev;					\
+>  									\
+> +	BUILD_BUG_ON(sizeof(*(ptr)) != 4);				\
+> +									\
+>  	__asm__ __volatile__(						\
+> -	"1:	llock  %0, [%1]	\n"					\
+> +	"1:	llock  %0, [%1]		\n"				\
+>  	"	brne   %0, %2, 2f	\n"				\
+> -	"	scond  %3, [%1]	\n"					\
+> +	"	scond  %3, [%1]		\n"				\
+>  	"	bnz     1b		\n"				\
+>  	"2:				\n"				\
+>  	: "=&r"(_prev)	/* Early clobber prevent reg reuse */		\
+> @@ -47,7 +49,7 @@
+>  									\
+>  	switch(sizeof((_p_))) {						\
+>  	case 4:								\
+> -		_prev_ = __cmpxchg(_p_, _o_, _n_);			\
+> +		_prev_ = __cmpxchg_32(_p_, _o_, _n_);			\
+>  		break;							\
+>  	default:							\
+>  		BUILD_BUG();						\
+> @@ -65,8 +67,6 @@
+>  	__typeof__(*(ptr)) _prev_;					\
+>  	unsigned long __flags;						\
+>  									\
+> -	BUILD_BUG_ON(sizeof(_p_) != 4);					\
+> -									\
+>  	/*								\
+>  	 * spin lock/unlock provide the needed smp_mb() before/after	\
+>  	 */								\
+> -- 
+> 2.40.1
+> 
+
 
 -- 
-Kees Cook
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
