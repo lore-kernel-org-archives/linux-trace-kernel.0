@@ -1,151 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37ACB1C292;
-	Wed,  8 Nov 2023 14:30:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10372592;
+	Wed,  8 Nov 2023 15:10:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="um/Z4VP1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69A96C433C9;
-	Wed,  8 Nov 2023 14:30:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V4wNroml"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E8E3C433CC;
+	Wed,  8 Nov 2023 15:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699453826;
-	bh=8t7YVZmoVUR7dCk/2nFP4SmQbrkuMwJVZH30PnGw0sc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=um/Z4VP12HFUWkmuPyShMoCm0G+lPoTN857q+egaL/iEnWwavs9dbEvsQAnnXDmza
-	 I5ia4lvksdVJHE+CB6v8SvEGYFNXyM25b+wmslezhuBogWklC+4yaOQkUj5+jSqvuQ
-	 QByLSP1zw+BHwuPcfqJB0mkden/jGJbN4jq0z5VH+F22+umGds1OpmhHyK3VzoBuzM
-	 JEhLnFbnzIqNAvnbN1yIZWLH1BLs1AcFgNa2ZC2CfsUtN13JpLqRAhD/9Ak7GLHY/x
-	 /kdLvReSsgjjoBzzkN2FTlncQ76ZdL6PDHRynFNlXQZryxcMwXeRkJrTHU7VhI0/hy
-	 lRYo7kn7gVobw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@chromium.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Guo Ren <guoren@kernel.org>
-Subject: [RFC PATCH v2 31/31] Documentation: probes: Update fprobe on function-graph tracer
-Date: Wed,  8 Nov 2023 23:30:20 +0900
-Message-Id: <169945381975.55307.1203157634388685736.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <169945345785.55307.5003201137843449313.stgit@devnote2>
-References: <169945345785.55307.5003201137843449313.stgit@devnote2>
-User-Agent: StGit/0.19
+	s=k20201202; t=1699456248;
+	bh=ubRWv4gCHYtZyc/7EUxKBrb1M8Jq2gNnH2Iv89hahkg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=V4wNromlDBNArj+XlVHbk1Tpho83VHKj4KF3u+g8D/gDHOgmbzk9TF5F0k0bfjyJ5
+	 QAa+SJ1H1vdt9z6QLXRKqy3OD3OdIvi0IIM6oR9t+f/Qou1n/kmZp3N4Ld5+Em6SUX
+	 C152TcjhS6BX54Dd5mExY/uqbFmfwaVKqqV5higpeeV5QYXEeI2g8nKEM8QO7JpfaW
+	 oYvzN3/QTGIj+pp0Nd5j3aFNPnFwrr1RCnhA/mv97Odgb/1aJ2xdCVJdaJgtaQHSY0
+	 fqhoFzKt0Xnl3SB0XmmHuBK+2Zwe0i1mRrDK0QRCpnefsPz2sjmCZbZODNGq5w3ycl
+	 CDBBZ1wKet15w==
+Date: Wed, 8 Nov 2023 07:10:44 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Geoff Levand <geoff@infradead.org>
+Cc: Arnd Bergmann <arnd@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, Masahiro Yamada
+ <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org, Arnd Bergmann
+ <arnd@arndb.de>, Matt Turner <mattst88@gmail.com>, Vineet Gupta
+ <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Guo Ren <guoren@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, Huacai Chen
+ <chenhuacai@kernel.org>, Greg Ungerer <gerg@linux-m68k.org>, Michal Simek
+ <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Dinh
+ Nguyen <dinguyen@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
+ Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Palmer Dabbelt <palmer@dabbelt.com>, Heiko
+ Carstens <hca@linux.ibm.com>, John Paul Adrian Glaubitz
+ <glaubitz@physik.fu-berlin.de>, "David S. Miller" <davem@davemloft.net>,
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, x86@kernel.org, Helge Deller
+ <deller@gmx.de>, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Timur Tabi <timur@kernel.org>,
+ Kent Overstreet <kent.overstreet@linux.dev>, David Woodhouse
+ <dwmw2@infradead.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Anil S
+ Keshavamurthy <anil.s.keshavamurthy@intel.com>, Kees Cook
+ <keescook@chromium.org>, Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Nathan Chancellor <nathan@kernel.org>, Nick
+ Desaulniers <ndesaulniers@google.com>, Nicolas Schier <nicolas@fjasle.eu>,
+ Al Viro <viro@zeniv.linux.org.uk>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
+ <u.kleine-koenig@pengutronix.de>, linux-alpha@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-trace-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ netdev@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-bcachefs@vger.kernel.org,
+ linux-mtd@lists.infradead.org
+Subject: Re: [PATCH 17/22] powerpc: ps3: move udbg_shutdown_ps3gelic
+ prototype
+Message-ID: <20231108071044.6abdf09e@kernel.org>
+In-Reply-To: <1b3ccc4a-41f7-46ad-9c5c-5ef44a96426e@infradead.org>
+References: <20231108125843.3806765-1-arnd@kernel.org>
+	<20231108125843.3806765-18-arnd@kernel.org>
+	<1b3ccc4a-41f7-46ad-9c5c-5ef44a96426e@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Wed, 8 Nov 2023 14:18:09 +0000 Geoff Levand wrote:
+> Seems good to me.  I'll test it next chance I get.
+> 
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
 
-Update fprobe documentation for the new fprobe on function-graph
-tracer. This includes some bahvior changes and pt_regs to
-ftrace_regs interface change.
+Seems like this is best routed via powerpc:
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v2:
-  - Update @fregs parameter explanation.
----
- Documentation/trace/fprobe.rst |   42 ++++++++++++++++++++++++++--------------
- 1 file changed, 27 insertions(+), 15 deletions(-)
-
-diff --git a/Documentation/trace/fprobe.rst b/Documentation/trace/fprobe.rst
-index 196f52386aaa..f58bdc64504f 100644
---- a/Documentation/trace/fprobe.rst
-+++ b/Documentation/trace/fprobe.rst
-@@ -9,9 +9,10 @@ Fprobe - Function entry/exit probe
- Introduction
- ============
- 
--Fprobe is a function entry/exit probe mechanism based on ftrace.
--Instead of using ftrace full feature, if you only want to attach callbacks
--on function entry and exit, similar to the kprobes and kretprobes, you can
-+Fprobe is a function entry/exit probe mechanism based on the function-graph
-+tracer.
-+Instead of tracing all functions, if you want to attach callbacks on specific
-+function entry and exit, similar to the kprobes and kretprobes, you can
- use fprobe. Compared with kprobes and kretprobes, fprobe gives faster
- instrumentation for multiple functions with single handler. This document
- describes how to use fprobe.
-@@ -91,12 +92,14 @@ The prototype of the entry/exit callback function are as follows:
- 
- .. code-block:: c
- 
-- int entry_callback(struct fprobe *fp, unsigned long entry_ip, unsigned long ret_ip, struct pt_regs *regs, void *entry_data);
-+ int entry_callback(struct fprobe *fp, unsigned long entry_ip, unsigned long ret_ip, struct ftrace_regs *fregs, void *entry_data);
- 
-- void exit_callback(struct fprobe *fp, unsigned long entry_ip, unsigned long ret_ip, struct pt_regs *regs, void *entry_data);
-+ void exit_callback(struct fprobe *fp, unsigned long entry_ip, unsigned long ret_ip, struct ftrace_regs *fregs, void *entry_data);
- 
--Note that the @entry_ip is saved at function entry and passed to exit handler.
--If the entry callback function returns !0, the corresponding exit callback will be cancelled.
-+Note that the @entry_ip is saved at function entry and passed to exit
-+handler.
-+If the entry callback function returns !0, the corresponding exit callback
-+will be cancelled.
- 
- @fp
-         This is the address of `fprobe` data structure related to this handler.
-@@ -112,12 +115,10 @@ If the entry callback function returns !0, the corresponding exit callback will
-         This is the return address that the traced function will return to,
-         somewhere in the caller. This can be used at both entry and exit.
- 
--@regs
--        This is the `pt_regs` data structure at the entry and exit. Note that
--        the instruction pointer of @regs may be different from the @entry_ip
--        in the entry_handler. If you need traced instruction pointer, you need
--        to use @entry_ip. On the other hand, in the exit_handler, the instruction
--        pointer of @regs is set to the current return address.
-+@fregs
-+        This is the `ftrace_regs` data structure at the entry and exit. This
-+        includes the function parameters, or the return values. So user can
-+        access thos values via appropriate `ftrace_regs_*` APIs.
- 
- @entry_data
-         This is a local storage to share the data between entry and exit handlers.
-@@ -125,6 +126,17 @@ If the entry callback function returns !0, the corresponding exit callback will
-         and `entry_data_size` field when registering the fprobe, the storage is
-         allocated and passed to both `entry_handler` and `exit_handler`.
- 
-+Entry data size and exit handlers on the same function
-+======================================================
-+
-+Since the entry data is passed via per-task stack and it is has limited size,
-+the entry data size per probe is limited to `15 * sizeof(long)`. You also need
-+to take care that the different fprobes are probing on the same function, this
-+limit becomes smaller. The entry data size is aligned to `sizeof(long)` and
-+each fprobe which has exit handler uses a `sizeof(long)` space on the stack,
-+you should keep the number of fprobes on the same function as small as
-+possible.
-+
- Share the callbacks with kprobes
- ================================
- 
-@@ -165,8 +177,8 @@ This counter counts up when;
-  - fprobe fails to take ftrace_recursion lock. This usually means that a function
-    which is traced by other ftrace users is called from the entry_handler.
- 
-- - fprobe fails to setup the function exit because of the shortage of rethook
--   (the shadow stack for hooking the function return.)
-+ - fprobe fails to setup the function exit because of failing to allocate the
-+   data buffer from the per-task shadow stack.
- 
- The `fprobe::nmissed` field counts up in both cases. Therefore, the former
- skips both of entry and exit callback and the latter skips the exit
-
+Acked-by: Jakub Kicinski <kuba@kernel.org>
