@@ -1,40 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0BD37155;
-	Wed,  8 Nov 2023 23:17:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D334430355;
+	Wed,  8 Nov 2023 23:20:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UULKIzPs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46EFCC433C8;
-	Wed,  8 Nov 2023 23:17:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BzFtaBog"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FB6AC433C8;
+	Wed,  8 Nov 2023 23:20:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699485442;
-	bh=A61QSgAHTUidhHWNUPoLyQP/PqkIqPBtNVyUIxXzMHU=;
+	s=k20201202; t=1699485626;
+	bh=PYJW4QGKn9tJvNiaagWV7uxmfj3dj1vHSKjkB8gGQNU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=UULKIzPsczyyz8cCJQUw/8Q1tUxWoFTHW7cXMRqA2ACnlxst706WPH8w4eLMsU3pC
-	 d16rBnzR0bMGTrmdgfBUe8c8IiFgCIYMCdQUOOJVtZJAniIrsgwQgWXLyQXS5L7SKh
-	 oXLQzav6+r+fFhgmrVarqmckySccE68DjZTMo4KWVhraxqBMwKyR+aU5RrTLo6U8Bf
-	 tJUxCSi+cX8al2DgVGlR/1ZId31TSzUWl4zyRetB7qVQLqr2NIItGGlYZWA+hwI/Qw
-	 i4iitv9lfhel2ZYujY/IS8aSkJ8z5E0mw75+m9wcnj7Y0GPDOnxDLLEZpVLaXsR8Jt
-	 gd67ul8gZBLwg==
-Date: Thu, 9 Nov 2023 08:17:16 +0900
+	b=BzFtaBogfySwWTla2NJeVqR4PuaYoyopTLM2Vi9KPqLDdx3zZhWzGVJP/DnI0doAr
+	 DCysq9OUVMln4AwlnrEJVkGy7f+Qm12tVyciJjWeul+4uzovgGCKk2sMAtDMAjSHQk
+	 VewIlU9Taz4GP2QauTMdLCa7SvSTilwhfOh7tff1Ga+FrRKGb/HdT6qnkIpQd6cOAM
+	 O/27XvUeKFXk5bmEslLGwZ3jtw7QVPeQvIoDsIh/p8JjCWRipxoFk8lN/qC5a7ewR/
+	 H/tawx3cjSx2H40w4euTMdD4AcO2ZafY4Qwdj7yo9jdfRTzsx4bJpJ6lI9DE3yX0ny
+	 IuIsDgsRCUzJQ==
+Date: Thu, 9 Nov 2023 08:20:09 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt
- <rostedt@goodmis.org>, Florent Revest <revest@chromium.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [RFC PATCH v2 20/31] function_graph: Add a new exit handler
- with parent_ip and ftrace_regs
-Message-Id: <20231109081716.aecba97c4ee005250fe163c0@kernel.org>
-In-Reply-To: <169945369135.55307.16963023663631933656.stgit@devnote2>
-References: <169945345785.55307.5003201137843449313.stgit@devnote2>
-	<169945369135.55307.16963023663631933656.stgit@devnote2>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org, Arnd
+ Bergmann <arnd@arndb.de>, Matt Turner <mattst88@gmail.com>, Vineet Gupta
+ <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Guo Ren <guoren@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, Huacai Chen
+ <chenhuacai@kernel.org>, Greg Ungerer <gerg@linux-m68k.org>, Michal Simek
+ <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Dinh
+ Nguyen <dinguyen@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
+ Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Geoff Levand <geoff@infradead.org>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Heiko Carstens <hca@linux.ibm.com>, John Paul
+ Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, "David S. Miller"
+ <davem@davemloft.net>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, Helge
+ Deller <deller@gmx.de>, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Timur Tabi <timur@kernel.org>,
+ Kent Overstreet <kent.overstreet@linux.dev>, David Woodhouse
+ <dwmw2@infradead.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Anil S
+ Keshavamurthy <anil.s.keshavamurthy@intel.com>, Kees Cook
+ <keescook@chromium.org>, Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Nathan Chancellor <nathan@kernel.org>, Nick
+ Desaulniers <ndesaulniers@google.com>, Nicolas Schier <nicolas@fjasle.eu>,
+ Al Viro <viro@zeniv.linux.org.uk>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
+ <u.kleine-koenig@pengutronix.de>, linux-alpha@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-trace-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ netdev@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-bcachefs@vger.kernel.org,
+ linux-mtd@lists.infradead.org
+Subject: Re: [PATCH 03/22] [RESEND] kprobes: unify
+ kprobes_exceptions_nofify() prototypes
+Message-Id: <20231109082009.a34621399a98181ee6cde60b@kernel.org>
+In-Reply-To: <20231108125843.3806765-4-arnd@kernel.org>
+References: <20231108125843.3806765-1-arnd@kernel.org>
+	<20231108125843.3806765-4-arnd@kernel.org>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,260 +74,174 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed,  8 Nov 2023 23:28:11 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Wed,  8 Nov 2023 13:58:24 +0100
+Arnd Bergmann <arnd@kernel.org> wrote:
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> Add a new return handler to fgraph_ops as 'retregfunc'  which takes
-> parent_ip and ftrace_regs instead of ftrace_graph_ret. This handler
-> is available only if the arch support CONFIG_HAVE_FUNCTION_GRAPH_FREGS.
-> Note that the 'retfunc' and 'reregfunc' are mutual exclusive.
-> You can set only one of them.
+> Most architectures that support kprobes declare this function in their
+> own asm/kprobes.h header and provide an override, but some are missing
+> the prototype, which causes a warning for the __weak stub implementation:
 > 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> kernel/kprobes.c:1865:12: error: no previous prototype for 'kprobe_exceptions_notify' [-Werror=missing-prototypes]
+>  1865 | int __weak kprobe_exceptions_notify(struct notifier_block *self,
+> 
+> Move the prototype into linux/kprobes.h so it is visible to all
+> the definitions.
+
+Thanks, let me pick this to linux-trace tree.
+
+> 
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  arch/x86/include/asm/ftrace.h |    2 +
->  include/linux/ftrace.h        |   10 +++++-
->  kernel/trace/Kconfig          |    5 ++-
->  kernel/trace/fgraph.c         |   74 +++++++++++++++++++++++++++--------------
->  4 files changed, 63 insertions(+), 28 deletions(-)
+>  arch/arc/include/asm/kprobes.h     | 3 ---
+>  arch/arm/include/asm/kprobes.h     | 2 --
+>  arch/arm64/include/asm/kprobes.h   | 2 --
+>  arch/mips/include/asm/kprobes.h    | 2 --
+>  arch/powerpc/include/asm/kprobes.h | 2 --
+>  arch/s390/include/asm/kprobes.h    | 2 --
+>  arch/sh/include/asm/kprobes.h      | 2 --
+>  arch/sparc/include/asm/kprobes.h   | 2 --
+>  arch/x86/include/asm/kprobes.h     | 2 --
+>  include/linux/kprobes.h            | 4 ++++
+>  10 files changed, 4 insertions(+), 19 deletions(-)
 > 
-> diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-> index fc60974a1d89..4701d009c215 100644
-> --- a/arch/x86/include/asm/ftrace.h
-> +++ b/arch/x86/include/asm/ftrace.h
-> @@ -72,6 +72,8 @@ arch_ftrace_get_regs(struct ftrace_regs *fregs)
->  	override_function_with_return(&(fregs)->regs)
->  #define ftrace_regs_query_register_offset(name) \
->  	regs_query_register_offset(name)
-> +#define ftrace_regs_get_frame_pointer(fregs) \
-> +	frame_pointer(&(fregs)->regs)
+> diff --git a/arch/arc/include/asm/kprobes.h b/arch/arc/include/asm/kprobes.h
+> index de1566e32cb8..68e8301c0df2 100644
+> --- a/arch/arc/include/asm/kprobes.h
+> +++ b/arch/arc/include/asm/kprobes.h
+> @@ -32,9 +32,6 @@ struct kprobe;
 >  
->  struct ftrace_ops;
->  #define ftrace_graph_func ftrace_graph_func
-> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> index c91b234949d5..8efccd911d41 100644
-> --- a/include/linux/ftrace.h
-> +++ b/include/linux/ftrace.h
-> @@ -43,7 +43,9 @@ struct dyn_ftrace;
+>  void arch_remove_kprobe(struct kprobe *p);
 >  
->  char *arch_ftrace_match_adjust(char *str, const char *search);
->  
-> -#ifdef CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
-> +#ifdef CONFIG_HAVE_FUNCTION_GRAPH_FREGS
-> +unsigned long ftrace_return_to_handler(struct ftrace_regs *fregs);
-> +#elif defined(CONFIG_HAVE_FUNCTION_GRAPH_RETVAL)
->  struct fgraph_ret_regs;
->  unsigned long ftrace_return_to_handler(struct fgraph_ret_regs *ret_regs);
->  #else
-> @@ -156,6 +158,7 @@ struct ftrace_regs {
->  #define ftrace_regs_set_instruction_pointer(fregs, ip) do { } while (0)
->  #endif /* CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS */
->  
-> +
->  static __always_inline struct pt_regs *ftrace_get_regs(struct ftrace_regs *fregs)
->  {
->  	if (!fregs)
-> @@ -1066,6 +1069,10 @@ typedef int (*trace_func_graph_regs_ent_t)(unsigned long func,
->  					   unsigned long parent_ip,
->  					   struct ftrace_regs *fregs,
->  					   struct fgraph_ops *); /* entry w/ regs */
-> +typedef void (*trace_func_graph_regs_ret_t)(unsigned long func,
-> +					    unsigned long parent_ip,
-> +					    struct ftrace_regs *,
-> +					    struct fgraph_ops *); /* return w/ regs */
->  
->  extern int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace, struct fgraph_ops *gops);
->  
-> @@ -1075,6 +1082,7 @@ struct fgraph_ops {
->  	trace_func_graph_ent_t		entryfunc;
->  	trace_func_graph_ret_t		retfunc;
->  	trace_func_graph_regs_ent_t	entryregfunc;
-> +	trace_func_graph_regs_ret_t	retregfunc;
->  	struct ftrace_ops		ops; /* for the hash lists */
->  	void				*private;
->  	int				idx;
-> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> index 61c541c36596..308b3bec01b1 100644
-> --- a/kernel/trace/Kconfig
-> +++ b/kernel/trace/Kconfig
-> @@ -34,6 +34,9 @@ config HAVE_FUNCTION_GRAPH_TRACER
->  config HAVE_FUNCTION_GRAPH_RETVAL
->  	bool
->  
-> +config HAVE_FUNCTION_GRAPH_FREGS
-> +	bool
-> +
->  config HAVE_DYNAMIC_FTRACE
->  	bool
->  	help
-> @@ -232,7 +235,7 @@ config FUNCTION_GRAPH_TRACER
->  
->  config FUNCTION_GRAPH_RETVAL
->  	bool "Kernel Function Graph Return Value"
-> -	depends on HAVE_FUNCTION_GRAPH_RETVAL
-> +	depends on HAVE_FUNCTION_GRAPH_RETVAL || HAVE_FUNCTION_GRAPH_FREGS
->  	depends on FUNCTION_GRAPH_TRACER
->  	default n
->  	help
-> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-> index 6567b18c6c54..cf240914ef9b 100644
-> --- a/kernel/trace/fgraph.c
-> +++ b/kernel/trace/fgraph.c
-> @@ -623,8 +623,7 @@ int function_graph_enter_regs(unsigned long ret, unsigned long func,
->  
->  /* Retrieve a function return address to the trace stack on thread info.*/
->  static struct ftrace_ret_stack *
-> -ftrace_pop_return_trace(struct ftrace_graph_ret *trace, unsigned long *ret,
-> -			unsigned long frame_pointer)
-> +ftrace_pop_return_trace(unsigned long *ret, unsigned long frame_pointer)
->  {
->  	struct ftrace_ret_stack *ret_stack;
->  	int index;
-> @@ -669,10 +668,6 @@ ftrace_pop_return_trace(struct ftrace_graph_ret *trace, unsigned long *ret,
->  #endif
->  
->  	*ret = ret_stack->ret;
-> -	trace->func = ret_stack->func;
-> -	trace->calltime = ret_stack->calltime;
-> -	trace->overrun = atomic_read(&current->trace_overrun);
-> -	trace->depth = current->curr_ret_depth;
->  	/*
->  	 * We still want to trace interrupts coming in if
->  	 * max_depth is set to 1. Make sure the decrement is
-> @@ -711,22 +706,43 @@ static struct notifier_block ftrace_suspend_notifier = {
->  /* fgraph_ret_regs is not defined without CONFIG_FUNCTION_GRAPH_RETVAL */
->  struct fgraph_ret_regs;
->  
-> +static void fgraph_call_retfunc(struct ftrace_regs *fregs,
-> +				struct fgraph_ret_regs *ret_regs,
-> +				struct ftrace_ret_stack *ret_stack,
-> +				struct fgraph_ops *gops)
-> +{
-> +	struct ftrace_graph_ret trace;
-> +
-> +	trace.func = ret_stack->func;
-> +	trace.calltime = ret_stack->calltime;
-> +	trace.overrun = atomic_read(&current->trace_overrun);
-> +	trace.depth = current->curr_ret_depth;
-> +	trace.rettime = trace_clock_local();
-> +#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
-> +	if (fregs)
-> +		trace.retval = ftrace_regs_return_value(fregs);
-> +	else
-> +		trace.retval = fgraph_ret_regs_return_value(ret_regs);
-> +#endif
-> +	gops->retfunc(&trace, gops);
-> +}
-> +
->  /*
->   * Send the trace to the ring-buffer.
->   * @return the original return address.
->   */
-> -static unsigned long __ftrace_return_to_handler(struct fgraph_ret_regs *ret_regs,
-> +static unsigned long __ftrace_return_to_handler(struct ftrace_regs *fregs,
-> +						struct fgraph_ret_regs *ret_regs,
->  						unsigned long frame_pointer)
->  {
->  	struct ftrace_ret_stack *ret_stack;
-> -	struct ftrace_graph_ret trace;
-> -	unsigned long ret;
-> +	struct fgraph_ops *gops;
->  	int curr_ret_stack;
-> +	unsigned long ret;
->  	int stop_at;
->  	int index;
-> -	int idx;
->  
-> -	ret_stack = ftrace_pop_return_trace(&trace, &ret, frame_pointer);
-> +	ret_stack = ftrace_pop_return_trace(&ret, frame_pointer);
->  
->  	if (unlikely(!ret_stack)) {
->  		ftrace_graph_stop();
-> @@ -735,11 +751,6 @@ static unsigned long __ftrace_return_to_handler(struct fgraph_ret_regs *ret_regs
->  		return (unsigned long)panic;
->  	}
->  
-> -	trace.rettime = trace_clock_local();
-> -#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
-> -	trace.retval = fgraph_ret_regs_return_value(ret_regs);
-> -#endif
+> -int kprobe_exceptions_notify(struct notifier_block *self,
+> -			     unsigned long val, void *data);
 > -
-
-So, here we need
-
-	if (fregs)
-		ftrace_regs_set_instruction_pointer(fregs, ret);
-
-set return address to the instruction pointer.
-
-Thank you,
-
->  	curr_ret_stack = current->curr_ret_stack;
->  	index = get_ret_stack_index(current, curr_ret_stack - 1);
+>  struct prev_kprobe {
+>  	struct kprobe *kp;
+>  	unsigned long status;
+> diff --git a/arch/arm/include/asm/kprobes.h b/arch/arm/include/asm/kprobes.h
+> index e26a278d301a..5b8dbf1b0be4 100644
+> --- a/arch/arm/include/asm/kprobes.h
+> +++ b/arch/arm/include/asm/kprobes.h
+> @@ -40,8 +40,6 @@ struct kprobe_ctlblk {
 >  
-> @@ -752,8 +763,11 @@ static unsigned long __ftrace_return_to_handler(struct fgraph_ret_regs *ret_regs
->  		val = current->ret_stack[curr_ret_stack - 1];
->  		switch (__get_type(val)) {
->  		case FGRAPH_TYPE_ARRAY:
-> -			idx = __get_array(val);
-> -			fgraph_array[idx]->retfunc(&trace, fgraph_array[idx]);
-> +			gops = fgraph_array[__get_array(val)];
-> +			if (gops->retregfunc)
-> +				gops->retregfunc(ret_stack->func, ret, fregs, gops);
-> +			else
-> +				fgraph_call_retfunc(fregs, ret_regs, ret_stack, gops);
->  			curr_ret_stack -= __get_index(val);
->  			break;
->  		case FGRAPH_TYPE_RESERVED:
-> @@ -777,20 +791,22 @@ static unsigned long __ftrace_return_to_handler(struct fgraph_ret_regs *ret_regs
->  	return ret;
->  }
+>  void arch_remove_kprobe(struct kprobe *);
+>  int kprobe_fault_handler(struct pt_regs *regs, unsigned int fsr);
+> -int kprobe_exceptions_notify(struct notifier_block *self,
+> -			     unsigned long val, void *data);
 >  
-> -/*
-> - * After all architecures have selected HAVE_FUNCTION_GRAPH_RETVAL, we can
-> - * leave only ftrace_return_to_handler(ret_regs).
-> - */
-> -#ifdef CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
-> +#ifdef CONFIG_HAVE_FUNCTION_GRAPH_FREGS
-> +unsigned long ftrace_return_to_handler(struct ftrace_regs *fregs)
-> +{
-> +	return __ftrace_return_to_handler(fregs, NULL,
-> +				ftrace_regs_get_frame_pointer(fregs));
-> +}
-> +#elif defined(CONFIG_HAVE_FUNCTION_GRAPH_RETVAL)
->  unsigned long ftrace_return_to_handler(struct fgraph_ret_regs *ret_regs)
->  {
-> -	return __ftrace_return_to_handler(ret_regs,
-> +	return __ftrace_return_to_handler(NULL, ret_regs,
->  				fgraph_ret_regs_frame_pointer(ret_regs));
->  }
+>  /* optinsn template addresses */
+>  extern __visible kprobe_opcode_t optprobe_template_entry[];
+> diff --git a/arch/arm64/include/asm/kprobes.h b/arch/arm64/include/asm/kprobes.h
+> index 05cd82eeca13..be7a3680dadf 100644
+> --- a/arch/arm64/include/asm/kprobes.h
+> +++ b/arch/arm64/include/asm/kprobes.h
+> @@ -37,8 +37,6 @@ struct kprobe_ctlblk {
+>  
+>  void arch_remove_kprobe(struct kprobe *);
+>  int kprobe_fault_handler(struct pt_regs *regs, unsigned int fsr);
+> -int kprobe_exceptions_notify(struct notifier_block *self,
+> -			     unsigned long val, void *data);
+>  void __kretprobe_trampoline(void);
+>  void __kprobes *trampoline_probe_handler(struct pt_regs *regs);
+>  
+> diff --git a/arch/mips/include/asm/kprobes.h b/arch/mips/include/asm/kprobes.h
+> index 68b1e5d458cf..bc27d99c9436 100644
+> --- a/arch/mips/include/asm/kprobes.h
+> +++ b/arch/mips/include/asm/kprobes.h
+> @@ -71,8 +71,6 @@ struct kprobe_ctlblk {
+>  	struct prev_kprobe prev_kprobe;
+>  };
+>  
+> -extern int kprobe_exceptions_notify(struct notifier_block *self,
+> -				    unsigned long val, void *data);
+>  
+>  #endif /* CONFIG_KPROBES */
+>  #endif /* _ASM_KPROBES_H */
+> diff --git a/arch/powerpc/include/asm/kprobes.h b/arch/powerpc/include/asm/kprobes.h
+> index c8e4b4fd4e33..4525a9c68260 100644
+> --- a/arch/powerpc/include/asm/kprobes.h
+> +++ b/arch/powerpc/include/asm/kprobes.h
+> @@ -84,8 +84,6 @@ struct arch_optimized_insn {
+>  	kprobe_opcode_t *insn;
+>  };
+>  
+> -extern int kprobe_exceptions_notify(struct notifier_block *self,
+> -					unsigned long val, void *data);
+>  extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+>  extern int kprobe_handler(struct pt_regs *regs);
+>  extern int kprobe_post_handler(struct pt_regs *regs);
+> diff --git a/arch/s390/include/asm/kprobes.h b/arch/s390/include/asm/kprobes.h
+> index 21b9e5290c04..01f1682a73b7 100644
+> --- a/arch/s390/include/asm/kprobes.h
+> +++ b/arch/s390/include/asm/kprobes.h
+> @@ -73,8 +73,6 @@ struct kprobe_ctlblk {
+>  void arch_remove_kprobe(struct kprobe *p);
+>  
+>  int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+> -int kprobe_exceptions_notify(struct notifier_block *self,
+> -	unsigned long val, void *data);
+>  
+>  #define flush_insn_slot(p)	do { } while (0)
+>  
+> diff --git a/arch/sh/include/asm/kprobes.h b/arch/sh/include/asm/kprobes.h
+> index eeba83e0a7d2..65d4c3316a5b 100644
+> --- a/arch/sh/include/asm/kprobes.h
+> +++ b/arch/sh/include/asm/kprobes.h
+> @@ -46,8 +46,6 @@ struct kprobe_ctlblk {
+>  };
+>  
+>  extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+> -extern int kprobe_exceptions_notify(struct notifier_block *self,
+> -				    unsigned long val, void *data);
+>  extern int kprobe_handle_illslot(unsigned long pc);
 >  #else
->  unsigned long ftrace_return_to_handler(unsigned long frame_pointer)
->  {
-> -	return __ftrace_return_to_handler(NULL, frame_pointer);
-> +	return __ftrace_return_to_handler(NULL, NULL, frame_pointer);
->  }
->  #endif
 >  
-> @@ -1131,9 +1147,15 @@ int register_ftrace_graph(struct fgraph_ops *gops)
->  	int ret = 0;
->  	int i;
+> diff --git a/arch/sparc/include/asm/kprobes.h b/arch/sparc/include/asm/kprobes.h
+> index 06c2bc767ef7..aec742cd898f 100644
+> --- a/arch/sparc/include/asm/kprobes.h
+> +++ b/arch/sparc/include/asm/kprobes.h
+> @@ -47,8 +47,6 @@ struct kprobe_ctlblk {
+>  	struct prev_kprobe prev_kprobe;
+>  };
 >  
-> -	if (gops->entryfunc && gops->entryregfunc)
-> +	if ((gops->entryfunc && gops->entryregfunc) ||
-> +	    (gops->retfunc && gops->retregfunc))
->  		return -EINVAL;
+> -int kprobe_exceptions_notify(struct notifier_block *self,
+> -			     unsigned long val, void *data);
+>  int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+>  asmlinkage void __kprobes kprobe_trap(unsigned long trap_level,
+>  				      struct pt_regs *regs);
+> diff --git a/arch/x86/include/asm/kprobes.h b/arch/x86/include/asm/kprobes.h
+> index a2e9317aad49..5939694dfb28 100644
+> --- a/arch/x86/include/asm/kprobes.h
+> +++ b/arch/x86/include/asm/kprobes.h
+> @@ -113,8 +113,6 @@ struct kprobe_ctlblk {
+>  };
 >  
-> +#ifndef CONFIG_HAVE_FUNCTION_GRAPH_FREGS
-> +	if (gops->retregfunc)
-> +		return -EOPNOTSUPP;
-> +#endif
+>  extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+> -extern int kprobe_exceptions_notify(struct notifier_block *self,
+> -				    unsigned long val, void *data);
+>  extern int kprobe_int3_handler(struct pt_regs *regs);
+>  
+>  #else
+> diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+> index 365eb092e9c4..ab1da3142b06 100644
+> --- a/include/linux/kprobes.h
+> +++ b/include/linux/kprobes.h
+> @@ -445,6 +445,10 @@ int kprobe_get_kallsym(unsigned int symnum, unsigned long *value, char *type,
+>  
+>  int arch_kprobe_get_kallsym(unsigned int *symnum, unsigned long *value,
+>  			    char *type, char *sym);
 > +
->  	mutex_lock(&ftrace_lock);
+> +int kprobe_exceptions_notify(struct notifier_block *self,
+> +			     unsigned long val, void *data);
+> +
+>  #else /* !CONFIG_KPROBES: */
 >  
->  	if (!gops->ops.func) {
+>  static inline int kprobe_fault_handler(struct pt_regs *regs, int trapnr)
+> -- 
+> 2.39.2
 > 
 
 
