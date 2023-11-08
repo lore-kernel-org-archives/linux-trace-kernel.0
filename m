@@ -1,71 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10372592;
-	Wed,  8 Nov 2023 15:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V4wNroml"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E8E3C433CC;
-	Wed,  8 Nov 2023 15:10:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699456248;
-	bh=ubRWv4gCHYtZyc/7EUxKBrb1M8Jq2gNnH2Iv89hahkg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=V4wNromlDBNArj+XlVHbk1Tpho83VHKj4KF3u+g8D/gDHOgmbzk9TF5F0k0bfjyJ5
-	 QAa+SJ1H1vdt9z6QLXRKqy3OD3OdIvi0IIM6oR9t+f/Qou1n/kmZp3N4Ld5+Em6SUX
-	 C152TcjhS6BX54Dd5mExY/uqbFmfwaVKqqV5higpeeV5QYXEeI2g8nKEM8QO7JpfaW
-	 oYvzN3/QTGIj+pp0Nd5j3aFNPnFwrr1RCnhA/mv97Odgb/1aJ2xdCVJdaJgtaQHSY0
-	 fqhoFzKt0Xnl3SB0XmmHuBK+2Zwe0i1mRrDK0QRCpnefsPz2sjmCZbZODNGq5w3ycl
-	 CDBBZ1wKet15w==
-Date: Wed, 8 Nov 2023 07:10:44 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Geoff Levand <geoff@infradead.org>
-Cc: Arnd Bergmann <arnd@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, Masahiro Yamada
- <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org, Arnd Bergmann
- <arnd@arndb.de>, Matt Turner <mattst88@gmail.com>, Vineet Gupta
- <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Guo Ren <guoren@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, Huacai Chen
- <chenhuacai@kernel.org>, Greg Ungerer <gerg@linux-m68k.org>, Michal Simek
- <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Dinh
- Nguyen <dinguyen@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Palmer Dabbelt <palmer@dabbelt.com>, Heiko
- Carstens <hca@linux.ibm.com>, John Paul Adrian Glaubitz
- <glaubitz@physik.fu-berlin.de>, "David S. Miller" <davem@davemloft.net>,
- Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, x86@kernel.org, Helge Deller
- <deller@gmx.de>, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Timur Tabi <timur@kernel.org>,
- Kent Overstreet <kent.overstreet@linux.dev>, David Woodhouse
- <dwmw2@infradead.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Anil S
- Keshavamurthy <anil.s.keshavamurthy@intel.com>, Kees Cook
- <keescook@chromium.org>, Vincenzo Frascino <vincenzo.frascino@arm.com>,
- Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Nathan Chancellor <nathan@kernel.org>, Nick
- Desaulniers <ndesaulniers@google.com>, Nicolas Schier <nicolas@fjasle.eu>,
- Al Viro <viro@zeniv.linux.org.uk>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
- <u.kleine-koenig@pengutronix.de>, linux-alpha@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-trace-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
- netdev@vger.kernel.org, linux-parisc@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-bcachefs@vger.kernel.org,
- linux-mtd@lists.infradead.org
-Subject: Re: [PATCH 17/22] powerpc: ps3: move udbg_shutdown_ps3gelic
- prototype
-Message-ID: <20231108071044.6abdf09e@kernel.org>
-In-Reply-To: <1b3ccc4a-41f7-46ad-9c5c-5ef44a96426e@infradead.org>
-References: <20231108125843.3806765-1-arnd@kernel.org>
-	<20231108125843.3806765-18-arnd@kernel.org>
-	<1b3ccc4a-41f7-46ad-9c5c-5ef44a96426e@infradead.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0CB3D51D;
+	Wed,  8 Nov 2023 16:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE87BC433C8;
+	Wed,  8 Nov 2023 16:27:19 +0000 (UTC)
+Date: Wed, 8 Nov 2023 11:27:23 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: <j.granados@samsung.com>, Joel Granados via B4 Relay
+ <devnull+j.granados.samsung.com@kernel.org>, Luis Chamberlain
+ <mcgrof@kernel.org>, willy@infradead.org, josh@joshtriplett.org, Kees Cook
+ <keescook@chromium.org>, Eric Biederman <ebiederm@xmission.com>, Iurii
+ Zaikin <yzaikin@google.com>, Mark Rutland <mark.rutland@arm.com>, Thomas
+ Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>, Stephen
+ Boyd <sboyd@kernel.org>, Andy Lutomirski <luto@amacapital.net>, Will Drewry
+ <wad@chromium.org>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
+ <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Daniel
+ Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider
+ <vschneid@redhat.com>, Petr Mladek <pmladek@suse.com>, John Ogness
+ <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Anil S Keshavamurthy
+ <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
+ Balbir Singh <bsingharora@gmail.com>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
+ <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Martin
+ KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Yonghong Song
+ <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, Stanislav
+ Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa
+ <jolsa@kernel.org>, linux-kernel@vger.kernel.org,
+ kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 03/10] ftrace: Remove the now superfluous sentinel
+ elements from ctl_table array
+Message-ID: <20231108112723.275ae223@gandalf.local.home>
+In-Reply-To: <20231108192949.f19832c76d1cf18c5d614e72@kernel.org>
+References: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-0-e4ce1388dfa0@samsung.com>
+	<20231107-jag-sysctl_remove_empty_elem_kernel-v1-3-e4ce1388dfa0@samsung.com>
+	<20231108192949.f19832c76d1cf18c5d614e72@kernel.org>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -75,11 +51,30 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 8 Nov 2023 14:18:09 +0000 Geoff Levand wrote:
-> Seems good to me.  I'll test it next chance I get.
+On Wed, 8 Nov 2023 19:29:49 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+
+> On Tue, 07 Nov 2023 14:45:03 +0100
+> Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org> wrote:
 > 
-> Signed-off-by: Geoff Levand <geoff@infradead.org>
+> > From: Joel Granados <j.granados@samsung.com>
+> > 
+> > This commit comes at the tail end of a greater effort to remove the
+> > empty elements at the end of the ctl_table arrays (sentinels) which
+> > will reduce the overall build time size of the kernel and run time
+> > memory bloat by ~64 bytes per sentinel (further information Link :
+> > https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
+> > 
+> > Remove sentinel elements from ftrace_sysctls and user_event_sysctls
+> >   
+> 
+> Both looks good to me. (since register_sysctl_init() uses ARRAY_SIZE()
+> macro to get the array size.)
+> 
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Seems like this is best routed via powerpc:
+Agreed.
 
-Acked-by: Jakub Kicinski <kuba@kernel.org>
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+-- Steve
