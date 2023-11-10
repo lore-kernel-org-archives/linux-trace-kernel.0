@@ -1,253 +1,148 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7605A1B26F
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Nov 2023 12:31:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VFjHtKMe"
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id E86D633FAC;
-	Fri, 10 Nov 2023 04:31:25 -0800 (PST)
-Received: from pwmachine.localnet (unknown [86.120.35.5])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 95BFF20B74C0;
-	Fri, 10 Nov 2023 04:31:23 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 95BFF20B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1699619485;
-	bh=C85P1I7NvWAWo7sxjNOgFFh6UXPhwsCTC5ZmQIEklCQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VFjHtKMedyiRJ/iGCGWGolcBgG6wRUF4pr3PRElNdEg3MncR3nnJIOebdZUjCjek5
-	 zCvcXwcDK163rZCuxvIG2qsTcz+593UCFwidxW1mqLsI+tKBjk/06k9SHw9rjBl3o2
-	 UkkP2iHrfcDYlgj4PrHaPhtmq/5XNKEekpgdGHsw=
-From: Francis Laniel <flaniel@linux.microsoft.com>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel <linux-trace-kernel@vger.kernel.org>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Andrii Nakryiko <andrii@kernel.org>
-Subject: Re: [PATCH for-next] tracing/kprobes: Add symbol counting check when module loads
-Date: Fri, 10 Nov 2023 14:31:18 +0200
-Message-ID: <5726678.DvuYhMxLoT@pwmachine>
-In-Reply-To: <169854904604.132316.12500381416261460174.stgit@devnote2>
-References: <169854904604.132316.12500381416261460174.stgit@devnote2>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B811097A
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Nov 2023 12:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE2C334822
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Nov 2023 04:44:52 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1r1Qqm-0008RY-G3; Fri, 10 Nov 2023 13:43:04 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1r1Qqd-0081VE-CM; Fri, 10 Nov 2023 13:42:55 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1r1Qqd-00Gimy-0Z; Fri, 10 Nov 2023 13:42:55 +0100
+Date: Fri, 10 Nov 2023 13:41:23 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	linux-kbuild@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, Guo Ren <guoren@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Greg Ungerer <gerg@linux-m68k.org>, Michal Simek <monstr@monstr.eu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Geoff Levand <geoff@infradead.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+	Helge Deller <deller@gmx.de>,
+	Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Timur Tabi <timur@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	David Woodhouse <dwmw2@infradead.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	Kees Cook <keescook@chromium.org>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Al Viro <viro@zeniv.linux.org.uk>, linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+	netdev@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-bcachefs@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH 04/22] [RESEND] time: make sysfs_get_uname() function
+ visible in header
+Message-ID: <20231110124123.5mado2cc5vnywqfx@pengutronix.de>
+References: <20231108125843.3806765-1-arnd@kernel.org>
+ <20231108125843.3806765-5-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ljpauxr7qypfgjtq"
+Content-Disposition: inline
+In-Reply-To: <20231108125843.3806765-5-arnd@kernel.org>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-trace-kernel@vger.kernel.org
+
+
+--ljpauxr7qypfgjtq
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
 
-Hi!
+Hello Arnd,
 
+On Wed, Nov 08, 2023 at 01:58:25PM +0100, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+>=20
+> This function is defined globally in clocksource.c and used conditionally
+> in clockevent.c, which the declaration hidden when clockevent support
 
-Le dimanche 29 octobre 2023, 05:10:46 EET Masami Hiramatsu (Google) a =E9cr=
-it :
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->=20
-> Check the number of probe target symbols in the target module when
-> the module is loaded. If the probe is not on the unique name symbols
-> in the module, it will be rejected at that point.
->=20
-> Note that the symbol which has a unique name in the target module,
-> it will be accepted even if there are same-name symbols in the
-> kernel or other modules,
+s/which/with/ ?
 
-Sorry for the delay in my review, I just remember I should review your patc=
-h.
-I tested it on top of latest master and it return EINVAL instead of=20
-EADDRNOTAVAIL:
-# Behavior without the patch:
-root@vm-amd64:~# uname -r
-6.6.0-15859-g89cdf9d55601
-root@vm-amd64:~# echo 'p:myprobe name_show' > /sys/kernel/tracing/
-kprobe_events
-=2Dbash: echo: write error: Cannot assign requested address
-# With the patch:
-root@vm-amd64:~# uname -r
-6.6.0-15860-gd6a7e0f39ec5
-root@vm-amd64:~# echo 'p:myprobe name_show' > /sys/kernel/tracing/
-kprobe_events
-=2Dbash: echo: write error: Invalid argument
+> is disabled. This causes a harmless warning in the definition:
+>=20
+> kernel/time/clocksource.c:1324:9: warning: no previous prototype for 'sys=
+fs_get_uname' [-Wmissing-prototypes]
+>  1324 | ssize_t sysfs_get_uname(const char *buf, char *dst, size_t cnt)
+>=20
+> Move the declaration out of the #ifdef so it is always visible.
+>=20
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-I did not GDB to track down from where it comes (it is planned nonetheless)=
-,=20
-but is this behavior wanted?
+Other than that:
 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  kernel/trace/trace_kprobe.c |  112
-> ++++++++++++++++++++++++++----------------- 1 file changed, 68
-> insertions(+), 44 deletions(-)
->=20
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index e834f149695b..90cf2219adb4 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -670,6 +670,21 @@ static int register_trace_kprobe(struct trace_kprobe
-> *tk) return ret;
->  }
->=20
-> +static int validate_module_probe_symbol(const char *modname, const char
-> *symbol); +
-> +static int register_module_trace_kprobe(struct module *mod, struct
-> trace_kprobe *tk) +{
-> +	const char *p;
-> +	int ret =3D 0;
-> +
-> +	p =3D strchr(trace_kprobe_symbol(tk), ':');
-> +	if (p)
-> +		ret =3D validate_module_probe_symbol(module_name(mod), p++);
-> +	if (!ret)
-> +		ret =3D register_trace_kprobe(tk);
-> +	return ret;
-> +}
-> +
->  /* Module notifier call back, checking event on the module */
->  static int trace_kprobe_module_callback(struct notifier_block *nb,
->  				       unsigned long val, void *data)
-> @@ -688,7 +703,7 @@ static int trace_kprobe_module_callback(struct
-> notifier_block *nb, if (trace_kprobe_within_module(tk, mod)) {
->  			/* Don't need to check busy - this should have gone. */
->  			__unregister_trace_kprobe(tk);
-> -			ret =3D __register_trace_kprobe(tk);
-> +			ret =3D register_module_trace_kprobe(mod, tk);
->  			if (ret)
->  				pr_warn("Failed to re-register probe %s on %s:=20
-%d\n",
->  					trace_probe_name(&tk->tp),
-> @@ -729,17 +744,55 @@ static int count_mod_symbols(void *data, const char
-> *name, unsigned long unused) return 0;
->  }
->=20
-> -static unsigned int number_of_same_symbols(char *func_name)
-> +static unsigned int number_of_same_symbols(const char *mod, const char
-> *func_name) {
->  	struct sym_count_ctx ctx =3D { .count =3D 0, .name =3D func_name };
->=20
-> -	kallsyms_on_each_match_symbol(count_symbols, func_name, &ctx.count);
-> +	if (!mod)
-> +		kallsyms_on_each_match_symbol(count_symbols, func_name,=20
-&ctx.count);
->=20
-> -	module_kallsyms_on_each_symbol(NULL, count_mod_symbols, &ctx);
-> +	module_kallsyms_on_each_symbol(mod, count_mod_symbols, &ctx);
->=20
->  	return ctx.count;
->  }
->=20
-> +static int validate_module_probe_symbol(const char *modname, const char
-> *symbol) +{
-> +	unsigned int count =3D number_of_same_symbols(modname, symbol);
-> +
-> +	if (count > 1) {
-> +		/*
-> +		 * Users should use ADDR to remove the ambiguity of
-> +		 * using KSYM only.
-> +		 */
-> +		return -EADDRNOTAVAIL;
-> +	} else if (count =3D=3D 0) {
-> +		/*
-> +		 * We can return ENOENT earlier than when register the
-> +		 * kprobe.
-> +		 */
-> +		return -ENOENT;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int validate_probe_symbol(char *symbol)
-> +{
-> +	char *mod =3D NULL, *p;
-> +	int ret;
-> +
-> +	p =3D strchr(symbol, ':');
-> +	if (p) {
-> +		mod =3D symbol;
-> +		symbol =3D p + 1;
-> +		*p =3D '\0';
-> +	}
-> +	ret =3D validate_module_probe_symbol(mod, symbol);
-> +	if (p)
-> +		*p =3D ':';
-> +	return ret;
-> +}
-> +
->  static int __trace_kprobe_create(int argc, const char *argv[])
->  {
->  	/*
-> @@ -859,6 +912,14 @@ static int __trace_kprobe_create(int argc, const char
-> *argv[]) trace_probe_log_err(0, BAD_PROBE_ADDR);
->  			goto parse_error;
->  		}
-> +		ret =3D validate_probe_symbol(symbol);
-> +		if (ret) {
-> +			if (ret =3D=3D -EADDRNOTAVAIL)
-> +				trace_probe_log_err(0, NON_UNIQ_SYMBOL);
-> +			else
-> +				trace_probe_log_err(0, BAD_PROBE_ADDR);
-> +			goto parse_error;
-> +		}
->  		if (is_return)
->  			ctx.flags |=3D TPARG_FL_RETURN;
->  		ret =3D kprobe_on_func_entry(NULL, symbol, offset);
-> @@ -871,31 +932,6 @@ static int __trace_kprobe_create(int argc, const char
-> *argv[]) }
->  	}
->=20
-> -	if (symbol && !strchr(symbol, ':')) {
-> -		unsigned int count;
-> -
-> -		count =3D number_of_same_symbols(symbol);
-> -		if (count > 1) {
-> -			/*
-> -			 * Users should use ADDR to remove the ambiguity of
-> -			 * using KSYM only.
-> -			 */
-> -			trace_probe_log_err(0, NON_UNIQ_SYMBOL);
-> -			ret =3D -EADDRNOTAVAIL;
-> -
-> -			goto error;
-> -		} else if (count =3D=3D 0) {
-> -			/*
-> -			 * We can return ENOENT earlier than when register the
-> -			 * kprobe.
-> -			 */
-> -			trace_probe_log_err(0, BAD_PROBE_ADDR);
-> -			ret =3D -ENOENT;
-> -
-> -			goto error;
-> -		}
-> -	}
-> -
->  	trace_probe_log_set_index(0);
->  	if (event) {
->  		ret =3D traceprobe_parse_event_name(&event, &group, gbuf,
-> @@ -1767,21 +1803,9 @@ create_local_trace_kprobe(char *func, void *addr,
-> unsigned long offs, char *event;
->=20
->  	if (func) {
-> -		unsigned int count;
-> -
-> -		count =3D number_of_same_symbols(func);
-> -		if (count > 1)
-> -			/*
-> -			 * Users should use addr to remove the ambiguity of
-> -			 * using func only.
-> -			 */
-> -			return ERR_PTR(-EADDRNOTAVAIL);
-> -		else if (count =3D=3D 0)
-> -			/*
-> -			 * We can return ENOENT earlier than when register the
-> -			 * kprobe.
-> -			 */
-> -			return ERR_PTR(-ENOENT);
-> +		ret =3D validate_probe_symbol(func);
-> +		if (ret)
-> +			return ERR_PTR(ret);
->  	}
->=20
->  	/*
+Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-Best regards.
+--ljpauxr7qypfgjtq
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVOJO4ACgkQj4D7WH0S
+/k65EAf/UjDsSsmivHFeg9uWSJLPICzRXZuL3swrSrbDypaI8PuJaX8767ZWsiYT
+oDeWDpXzpAvyvz7WUCuFkRJIytR6EpscoR2t39XsflnxAYmcgYmiBDesY/A6xtuZ
+k2ZldHp9NVszzJP3PiXQ8JOcEFA1LEc08SjHzEz4F6QAsno6WZD/do4yBIU+ikEg
+57Rbk4CJghGfXhgOAmwcWrN91qOFQwhPpKHHDgFfYSZ3zLo+f6H9hSUkzOuLGDhx
+zbK1UnRCuRi3iiJlIqS2LzaSySmRQ9tsbtjk9aQx7+GqdGprHajLMikxQ13xn8jh
+U+F4kOqRAwsIV6i5/GUFGEGtLnMsSQ==
+=9raj
+-----END PGP SIGNATURE-----
+
+--ljpauxr7qypfgjtq--
