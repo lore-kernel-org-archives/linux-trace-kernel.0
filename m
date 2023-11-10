@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A6F1374;
-	Fri, 10 Nov 2023 03:09:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E3115C8;
+	Fri, 10 Nov 2023 07:17:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kgyhaT0q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04E6FC433C7;
-	Fri, 10 Nov 2023 03:09:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rbi08Qqr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25074C433C8;
+	Fri, 10 Nov 2023 07:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699585791;
-	bh=T5JFCl6pmHxnPp19gCV70nzGUuLkfaMSJI9G9sJJ8RE=;
+	s=k20201202; t=1699600666;
+	bh=mZiJ9Td++XlK5uAAB4qKyf/MCPDMIrq0nMmKby/gJag=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kgyhaT0qs0lzlsqe+KNr9Xx965v8ny0bpvbcDRvKzPFEjJUVERxIVB61e4tlKnM3p
-	 on+ySaG2yFlyBK5VLpRc0fBzFjL7Zpe7+STCn5W9fJyK/7R6TKmr2n2YqysqxjpERE
-	 tHsDk9EyelY6zp7gWmRHO2iNczkUGAuxHAXTrxguie3RJP6U1EaemZRyjcsu/y0oTP
-	 AQnM5qWOyfmxmOB/jVFvd0MBO63uLHoOtqlYJ4BQ3t2kMEsJJHVTSaAVpTYEz7XFzw
-	 Am96XC45QSCv0Ors/JcPlr8Eo7MuYBX/a13MmP98xiZDpvvB7IX54ubTr9gqrjcWwo
-	 xIEi07Gh3nabw==
-Date: Fri, 10 Nov 2023 12:09:45 +0900
+	b=Rbi08Qqr2TYOjwc5dSkoT6yW5Ku4Ne2FfD8IwpZR93OJiz1jWrYIox5Cnoar3kj+3
+	 lBiBZ8xC+m9BRFv1fIVcIvexFmpoBvH4yOZwMAuljOUP9cDO02npfNw/kXccfrP2Kl
+	 T22qfAchu/gD2tJkVCKHw8pKBPDrCdGQnVlcPI0DAPCp4Mj08pEsvTCOV8Vchc4xzO
+	 1hMtY62rTCv7SyL/F6seB8h3SWFqS5c+g5UqX29wbhVGUF/en0VQow0gD9XtvJxrwC
+	 S1mpeztcpbAp608Sh5ZZyrGOPbAr0i0DuI5zUBp8dr6PXVJc2QjG6ny86Lt9HSc5nL
+	 FSSqO3pckiE2Q==
+Date: Fri, 10 Nov 2023 16:17:39 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
- <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
- <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
- bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, Alexei
- Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
- Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
- <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
- Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [RFC PATCH v2 12/31] function_graph: Have the instances use
- their own ftrace_ops for filtering
-Message-Id: <20231110120945.749393c36bdee5fe9bd2d257@kernel.org>
-In-Reply-To: <20231109211848.10a5e224@gandalf.local.home>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Florent Revest <revest@chromium.org>,
+ linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
+ Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
+ Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [RFC PATCH v2 26/31] fprobe: Rewrite fprobe on function-graph
+ tracer
+Message-Id: <20231110161739.f0ff9c50f20ebcfb57be6459@kernel.org>
+In-Reply-To: <169945376173.55307.5892275268096520409.stgit@devnote2>
 References: <169945345785.55307.5003201137843449313.stgit@devnote2>
-	<169945360154.55307.2938894711228282149.stgit@devnote2>
-	<20231110105154.df937bf9f200a0c16806c522@kernel.org>
-	<20231109211848.10a5e224@gandalf.local.home>
+	<169945376173.55307.5892275268096520409.stgit@devnote2>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,50 +45,139 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 9 Nov 2023 21:18:48 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi,
 
-> On Fri, 10 Nov 2023 10:51:54 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > So this patch registers ftrace_ops for each fgraph_ops to ftrace.
-> > This means that the ftrace_graph_func() will be called twice or more
-> > on the same function.
-> > Thus should I call ftrace_startup() once when the first fgraph_ops
-> > is registered? 
-> > No, it's not enough. Actually each fgraph_ops can have different filters.
-> > We need to define a shared filter and combine new filters to one and
-> > use it. We also need to do it when a fgraph is unregistered.
-> > 
-> > Is there any function which makes a new filter from two (or more) filters?
-> 
-> So I'm guessing that we need to have a fgraph_set_filter*() operations?
-> 
-> When one gets added, it needs to update the ftrace_ops to include the added
-> functions. Or we need to have a way to create a new hash from all the
-> registered fgraph_ops, and have that for the ftrace_ops. Then when it gets
-> called, if it has more than one registered function, it needs to iterate
-> over the list?
+On Wed,  8 Nov 2023 23:29:22 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Yes, that is one option, update a global common hash and introduce a new
-common ftrace function to run function_graph_enter().
+> + */
+> +static inline int __fprobe_handler(unsigned long ip, unsigned long parent_ip,
+> +				   struct fprobe *fp, struct ftrace_regs *fregs,
+> +				   void *data)
+> +{
+> +	int ret = 0;
+>  
+> +	if (fp->entry_handler) {
+> +		if (fp->exit_handler && fp->entry_data_size)
+> +			data += sizeof(unsigned long);
+> +		else
+> +			data = NULL;
+> +		ret = fp->entry_handler(fp, ip, parent_ip, fregs, data);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static inline int __fprobe_kprobe_handler(unsigned long ip, unsigned long parent_ip,
+> +					  struct fprobe *fp, struct ftrace_regs *fregs,
+> +					  void *data)
+> +{
+> +	int ret;
+>  	/*
+>  	 * This user handler is shared with other kprobes and is not expected to be
+>  	 * called recursively. So if any other kprobe handler is running, this will
+> @@ -108,45 +210,173 @@ static void fprobe_kprobe_handler(unsigned long ip, unsigned long parent_ip,
+>  	 */
+>  	if (unlikely(kprobe_running())) {
+>  		fp->nmissed++;
+> -		goto recursion_unlock;
+> +		return 0;
+>  	}
+>  
+>  	kprobe_busy_begin();
+> -	__fprobe_handler(ip, parent_ip, ops, fregs);
+> +	ret = __fprobe_handler(ip, parent_ip, fp, fregs, data);
+>  	kprobe_busy_end();
+> -
+> -recursion_unlock:
+> -	ftrace_test_recursion_unlock(bit);
+> +	return ret;
+>  }
+>  
+> -static void fprobe_exit_handler(struct rethook_node *rh, void *data,
+> -				unsigned long ret_ip, struct pt_regs *regs)
+> +static int fprobe_entry(unsigned long func, unsigned long ret_ip,
+> +			struct ftrace_regs *fregs, struct fgraph_ops *gops)
+>  {
+> -	struct fprobe *fp = (struct fprobe *)data;
+> -	struct fprobe_rethook_node *fpr;
+> -	struct ftrace_regs *fregs = (struct ftrace_regs *)regs;
+> -	int bit;
+> +	struct fprobe_hlist_node *node, *first;
+> +	unsigned long header;
+> +	void *fgraph_data = NULL;
+> +	struct fprobe *fp;
+> +	int size, used, ret;
+>  
+> -	if (!fp || fprobe_disabled(fp))
+> -		return;
+> +	if (WARN_ON_ONCE(!fregs))
+> +		return 0;
+>  
+> -	fpr = container_of(rh, struct fprobe_rethook_node, node);
+> +	first = node = find_first_fprobe_node(func);
+> +	if (unlikely(!first))
+> +		return 0;
+> +
+> +	size = 0;
+> +	hlist_for_each_entry_from_rcu(node, hlist) {
+> +		if (node->addr != func)
+> +			break;
+> +		fp = READ_ONCE(node->fp);
+> +		/*
+> +		 * Since fprobe can be enabled until the next loop, we ignore the
+> +		 * disabled flag in this loop.
+> +		 */
+> +		if (fp && fp->exit_handler)
+> +			size += FPROBE_HEADER_SIZE + fp->entry_data_size;
+> +	}
+> +	node = first;
+> +	/* size can be 0 because fp only has entry_handler. */
+> +	if (size) {
+> +		fgraph_data = fgraph_reserve_data(size);
+> +		if (unlikely(!fgraph_data)) {
+> +			hlist_for_each_entry_from_rcu(node, hlist) {
+> +				if (node->addr != func)
+> +					break;
+> +				fp = READ_ONCE(node->fp);
+> +				if (fp && !fprobe_disabled(fp))
+> +					fp->nmissed++;
+> +			}
+> +			return 0;
+> +		}
+> +	}
+>  
+>  	/*
+> -	 * we need to assure no calls to traceable functions in-between the
+> -	 * end of fprobe_handler and the beginning of fprobe_exit_handler.
+> +	 * TODO: recursion detection has been done in the fgraph. Thus we need
+> +	 * to add a callback to increment missed counter.
+>  	 */
+> -	bit = ftrace_test_recursion_trylock(fpr->entry_ip, fpr->entry_parent_ip);
+> -	if (bit < 0) {
+> -		fp->nmissed++;
+> +	used = 0;
+> +	hlist_for_each_entry_from_rcu(node, hlist) {
+> +		if (node->addr != func)
+> +			break;
+> +		fp = READ_ONCE(node->fp);
+> +		if (!fp || fprobe_disabled(fp))
+> +			continue;
+> +
+> +		if (fprobe_shared_with_kprobes(fp))
+> +			ret = __fprobe_kprobe_handler(func, ret_ip,
+> +					fp, fregs, fgraph_data + used);
+> +		else
+> +			ret = __fprobe_handler(func, ret_ip, fp,
+> +					fregs, fgraph_data + used);
 
-Or, I think keep the current one but iterate ftrace_ops to callback the
-function_graph_enter() with ftrace_ops. Then we can get appropriate
-fgraph_ops. Ftrace push return trace can skip pushing if ret == return_to_handler.
-(maybe this is better to reuse ftrace)
+
+Since the fgraph callback is under rcu-locked but not preempt-disabled,
+fprobe unittest fails. I need to add preempt_disable_notrace() and
+preempt_enable_notrace() around this. Note that kprobe_busy_begin()/end()
+also access to per-cpu variable, so it requires to disable preemption.
 
 Thank you,
-
-> 
-> -- Steve
-> 
-> 
-> > 
-> > Or, maybe we can make the common callback to find the previous ret entry on
-> > the ret_stack and reuse it. (In this case we don't need loop on each
-> > fgraph_array entry)
-> 
 
 
 -- 
