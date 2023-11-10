@@ -1,100 +1,253 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1934814A91;
-	Fri, 10 Nov 2023 11:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id C40472D4C9;
-	Fri, 10 Nov 2023 03:11:39 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 25C32106F;
-	Fri, 10 Nov 2023 03:12:24 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.41.131])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F23BD3F7C5;
-	Fri, 10 Nov 2023 03:11:36 -0800 (PST)
-Date: Fri, 10 Nov 2023 11:11:31 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@chromium.org>,
-	linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [RFC PATCH v2 01/31] tracing: Add a comment about ftrace_regs
- definition
-Message-ID: <ZU4P45t-mDoyItg3@FVFF77S0Q05N>
-References: <169945345785.55307.5003201137843449313.stgit@devnote2>
- <169945347160.55307.1488323435914144870.stgit@devnote2>
- <20231109081452.fd6e091df9df1bc7c5ced38b@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7605A1B26F
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Nov 2023 12:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VFjHtKMe"
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id E86D633FAC;
+	Fri, 10 Nov 2023 04:31:25 -0800 (PST)
+Received: from pwmachine.localnet (unknown [86.120.35.5])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 95BFF20B74C0;
+	Fri, 10 Nov 2023 04:31:23 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 95BFF20B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1699619485;
+	bh=C85P1I7NvWAWo7sxjNOgFFh6UXPhwsCTC5ZmQIEklCQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=VFjHtKMedyiRJ/iGCGWGolcBgG6wRUF4pr3PRElNdEg3MncR3nnJIOebdZUjCjek5
+	 zCvcXwcDK163rZCuxvIG2qsTcz+593UCFwidxW1mqLsI+tKBjk/06k9SHw9rjBl3o2
+	 UkkP2iHrfcDYlgj4PrHaPhtmq/5XNKEekpgdGHsw=
+From: Francis Laniel <flaniel@linux.microsoft.com>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel <linux-trace-kernel@vger.kernel.org>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Andrii Nakryiko <andrii@kernel.org>
+Subject: Re: [PATCH for-next] tracing/kprobes: Add symbol counting check when module loads
+Date: Fri, 10 Nov 2023 14:31:18 +0200
+Message-ID: <5726678.DvuYhMxLoT@pwmachine>
+In-Reply-To: <169854904604.132316.12500381416261460174.stgit@devnote2>
+References: <169854904604.132316.12500381416261460174.stgit@devnote2>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231109081452.fd6e091df9df1bc7c5ced38b@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-On Thu, Nov 09, 2023 at 08:14:52AM +0900, Masami Hiramatsu wrote:
-> On Wed,  8 Nov 2023 23:24:32 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > To clarify what will be expected on ftrace_regs, add a comment to the
-> > architecture independent definition of the ftrace_regs.
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  Changes in v2:
-> >   - newly added.
-> > ---
-> >  include/linux/ftrace.h |   25 +++++++++++++++++++++++++
-> >  1 file changed, 25 insertions(+)
-> > 
-> > diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> > index e8921871ef9a..b174af91d8be 100644
-> > --- a/include/linux/ftrace.h
-> > +++ b/include/linux/ftrace.h
-> > @@ -118,6 +118,31 @@ extern int ftrace_enabled;
-> >  
-> >  #ifndef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
-> >  
-> > +/**
-> > + * ftrace_regs - ftrace partial/optimal register set
-> > + *
-> > + * ftrace_regs represents a group of registers which is used at the
-> > + * function entry and exit. There are three types of registers.
-> > + *
-> > + * - Registers for passing the parameters to callee, including the stack
-> > + *   pointer. (e.g. rcx, rdx, rdi, rsi, r8, r9 and rsp on x86_64)
-> > + * - Registers for passing the return values to caller.
-> > + *   (e.g. rax and rdx on x86_64)
-> > + * - Registers for hooking the function return including the frame pointer
-> > + *   (the frame pointer is architecture/config dependent)
-> > + *   (e.g. rbp and rsp for x86_64)
-> 
-> Oops, I found the program counter/instruction pointer must be saved too.
-> This is used for live patching. One question is that if the IP is modified
-> at the return handler, what should we do? Return to the specified address?
+Hi!
 
-I'm a bit confused here; currently we use fgraph_ret_regs for function returns,
-are we going to replace that with ftrace_regs?
 
-I think it makes sense for the PC/IP to be the address the return handler will
-eventually return to (and hence allowing it to be overridden), but that does
-mean we'll need to go recover the return address *before* we invoke any return
-handlers.
+Le dimanche 29 octobre 2023, 05:10:46 EET Masami Hiramatsu (Google) a =E9cr=
+it :
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>=20
+> Check the number of probe target symbols in the target module when
+> the module is loaded. If the probe is not on the unique name symbols
+> in the module, it will be rejected at that point.
+>=20
+> Note that the symbol which has a unique name in the target module,
+> it will be accepted even if there are same-name symbols in the
+> kernel or other modules,
 
-Thanks,
-Mark.
+Sorry for the delay in my review, I just remember I should review your patc=
+h.
+I tested it on top of latest master and it return EINVAL instead of=20
+EADDRNOTAVAIL:
+# Behavior without the patch:
+root@vm-amd64:~# uname -r
+6.6.0-15859-g89cdf9d55601
+root@vm-amd64:~# echo 'p:myprobe name_show' > /sys/kernel/tracing/
+kprobe_events
+=2Dbash: echo: write error: Cannot assign requested address
+# With the patch:
+root@vm-amd64:~# uname -r
+6.6.0-15860-gd6a7e0f39ec5
+root@vm-amd64:~# echo 'p:myprobe name_show' > /sys/kernel/tracing/
+kprobe_events
+=2Dbash: echo: write error: Invalid argument
+
+I did not GDB to track down from where it comes (it is planned nonetheless)=
+,=20
+but is this behavior wanted?
+
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  kernel/trace/trace_kprobe.c |  112
+> ++++++++++++++++++++++++++----------------- 1 file changed, 68
+> insertions(+), 44 deletions(-)
+>=20
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index e834f149695b..90cf2219adb4 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -670,6 +670,21 @@ static int register_trace_kprobe(struct trace_kprobe
+> *tk) return ret;
+>  }
+>=20
+> +static int validate_module_probe_symbol(const char *modname, const char
+> *symbol); +
+> +static int register_module_trace_kprobe(struct module *mod, struct
+> trace_kprobe *tk) +{
+> +	const char *p;
+> +	int ret =3D 0;
+> +
+> +	p =3D strchr(trace_kprobe_symbol(tk), ':');
+> +	if (p)
+> +		ret =3D validate_module_probe_symbol(module_name(mod), p++);
+> +	if (!ret)
+> +		ret =3D register_trace_kprobe(tk);
+> +	return ret;
+> +}
+> +
+>  /* Module notifier call back, checking event on the module */
+>  static int trace_kprobe_module_callback(struct notifier_block *nb,
+>  				       unsigned long val, void *data)
+> @@ -688,7 +703,7 @@ static int trace_kprobe_module_callback(struct
+> notifier_block *nb, if (trace_kprobe_within_module(tk, mod)) {
+>  			/* Don't need to check busy - this should have gone. */
+>  			__unregister_trace_kprobe(tk);
+> -			ret =3D __register_trace_kprobe(tk);
+> +			ret =3D register_module_trace_kprobe(mod, tk);
+>  			if (ret)
+>  				pr_warn("Failed to re-register probe %s on %s:=20
+%d\n",
+>  					trace_probe_name(&tk->tp),
+> @@ -729,17 +744,55 @@ static int count_mod_symbols(void *data, const char
+> *name, unsigned long unused) return 0;
+>  }
+>=20
+> -static unsigned int number_of_same_symbols(char *func_name)
+> +static unsigned int number_of_same_symbols(const char *mod, const char
+> *func_name) {
+>  	struct sym_count_ctx ctx =3D { .count =3D 0, .name =3D func_name };
+>=20
+> -	kallsyms_on_each_match_symbol(count_symbols, func_name, &ctx.count);
+> +	if (!mod)
+> +		kallsyms_on_each_match_symbol(count_symbols, func_name,=20
+&ctx.count);
+>=20
+> -	module_kallsyms_on_each_symbol(NULL, count_mod_symbols, &ctx);
+> +	module_kallsyms_on_each_symbol(mod, count_mod_symbols, &ctx);
+>=20
+>  	return ctx.count;
+>  }
+>=20
+> +static int validate_module_probe_symbol(const char *modname, const char
+> *symbol) +{
+> +	unsigned int count =3D number_of_same_symbols(modname, symbol);
+> +
+> +	if (count > 1) {
+> +		/*
+> +		 * Users should use ADDR to remove the ambiguity of
+> +		 * using KSYM only.
+> +		 */
+> +		return -EADDRNOTAVAIL;
+> +	} else if (count =3D=3D 0) {
+> +		/*
+> +		 * We can return ENOENT earlier than when register the
+> +		 * kprobe.
+> +		 */
+> +		return -ENOENT;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int validate_probe_symbol(char *symbol)
+> +{
+> +	char *mod =3D NULL, *p;
+> +	int ret;
+> +
+> +	p =3D strchr(symbol, ':');
+> +	if (p) {
+> +		mod =3D symbol;
+> +		symbol =3D p + 1;
+> +		*p =3D '\0';
+> +	}
+> +	ret =3D validate_module_probe_symbol(mod, symbol);
+> +	if (p)
+> +		*p =3D ':';
+> +	return ret;
+> +}
+> +
+>  static int __trace_kprobe_create(int argc, const char *argv[])
+>  {
+>  	/*
+> @@ -859,6 +912,14 @@ static int __trace_kprobe_create(int argc, const char
+> *argv[]) trace_probe_log_err(0, BAD_PROBE_ADDR);
+>  			goto parse_error;
+>  		}
+> +		ret =3D validate_probe_symbol(symbol);
+> +		if (ret) {
+> +			if (ret =3D=3D -EADDRNOTAVAIL)
+> +				trace_probe_log_err(0, NON_UNIQ_SYMBOL);
+> +			else
+> +				trace_probe_log_err(0, BAD_PROBE_ADDR);
+> +			goto parse_error;
+> +		}
+>  		if (is_return)
+>  			ctx.flags |=3D TPARG_FL_RETURN;
+>  		ret =3D kprobe_on_func_entry(NULL, symbol, offset);
+> @@ -871,31 +932,6 @@ static int __trace_kprobe_create(int argc, const char
+> *argv[]) }
+>  	}
+>=20
+> -	if (symbol && !strchr(symbol, ':')) {
+> -		unsigned int count;
+> -
+> -		count =3D number_of_same_symbols(symbol);
+> -		if (count > 1) {
+> -			/*
+> -			 * Users should use ADDR to remove the ambiguity of
+> -			 * using KSYM only.
+> -			 */
+> -			trace_probe_log_err(0, NON_UNIQ_SYMBOL);
+> -			ret =3D -EADDRNOTAVAIL;
+> -
+> -			goto error;
+> -		} else if (count =3D=3D 0) {
+> -			/*
+> -			 * We can return ENOENT earlier than when register the
+> -			 * kprobe.
+> -			 */
+> -			trace_probe_log_err(0, BAD_PROBE_ADDR);
+> -			ret =3D -ENOENT;
+> -
+> -			goto error;
+> -		}
+> -	}
+> -
+>  	trace_probe_log_set_index(0);
+>  	if (event) {
+>  		ret =3D traceprobe_parse_event_name(&event, &group, gbuf,
+> @@ -1767,21 +1803,9 @@ create_local_trace_kprobe(char *func, void *addr,
+> unsigned long offs, char *event;
+>=20
+>  	if (func) {
+> -		unsigned int count;
+> -
+> -		count =3D number_of_same_symbols(func);
+> -		if (count > 1)
+> -			/*
+> -			 * Users should use addr to remove the ambiguity of
+> -			 * using func only.
+> -			 */
+> -			return ERR_PTR(-EADDRNOTAVAIL);
+> -		else if (count =3D=3D 0)
+> -			/*
+> -			 * We can return ENOENT earlier than when register the
+> -			 * kprobe.
+> -			 */
+> -			return ERR_PTR(-ENOENT);
+> +		ret =3D validate_probe_symbol(func);
+> +		if (ret)
+> +			return ERR_PTR(ret);
+>  	}
+>=20
+>  	/*
+
+
+Best regards.
+
+
