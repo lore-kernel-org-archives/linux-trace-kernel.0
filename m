@@ -1,117 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9D01CA8D;
-	Sat, 11 Nov 2023 19:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F77EC433C8;
-	Sat, 11 Nov 2023 19:37:13 +0000 (UTC)
-Date: Sat, 11 Nov 2023 14:37:10 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
- <mhi@lists.linux.dev>, <linux-arm-msm@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <quic_vbadigan@quicinc.com>,
- <quic_ramkri@quicinc.com>, <quic_nitegupt@quicinc.com>,
- <quic_skananth@quicinc.com>, <quic_parass@quicinc.com>
-Subject: Re: [PATCH v4] bus: mhi: host: Add tracing support
-Message-ID: <20231111143710.3474e05a@rorschach.local.home>
-In-Reply-To: <20231111-ftrace_support-v4-1-c83602399461@quicinc.com>
-References: <20231111-ftrace_support-v4-1-c83602399461@quicinc.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7EE1380;
+	Sun, 12 Nov 2023 00:55:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jIrkMdFY"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 42B3DC433C7;
+	Sun, 12 Nov 2023 00:55:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1699750546;
+	bh=g6sSrrVwZDGVPiE2PDTxknYsHB0fe/FH8seuAIgjE4c=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=jIrkMdFYXfoc6646t+fgdmy4sIr1F1ywDUgFixpiXVK2S8hG40s3w/ls/pmJisSN8
+	 TDIGXkLEgC3a/4p90siHf+cDU78je3Td25ZoX2ykDajR5fyvmfG6nqTybR75s0F48X
+	 dhCva+EM+Bb/7XjWSY23pHKwDlaXUgBmmr7RUB+ArjnyC0qTvqnvuv3vHCsNL2LctV
+	 0tXOdFgW8S0nqhX62C+KuwoToju/qNBjgv4ixifAFJngU54rqK79Ui6Hb4tkBa1nhX
+	 eW82M2tmZ+GzdWlCgBnP0vPjBB3jXsurXY6nG0HHjB/zS3YwI2Qi/5HDUR9t2KdWG2
+	 HzjUf7qn1KASQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2A27BE00084;
+	Sun, 12 Nov 2023 00:55:46 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [RESEND PATCH 0/2] add loongarch and riscv support for kprobe args
+ test
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <169975054616.11360.3939944763451576227.git-patchwork-notify@kernel.org>
+Date: Sun, 12 Nov 2023 00:55:46 +0000
+References: <20231018020858.1304218-1-liaoyu15@huawei.com>
+In-Reply-To: <20231018020858.1304218-1-liaoyu15@huawei.com>
+To: Yu Liao <liaoyu15@huawei.com>
+Cc: linux-riscv@lists.infradead.org, skhan@linuxfoundation.org,
+ liwei391@huawei.com, rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, shuah@kernel.org, mhiramat@kernel.org
 
-On Sat, 11 Nov 2023 11:25:22 +0530
-Krishna chaitanya chundru <quic_krichai@quicinc.com> wrote:
-> diff --git a/drivers/bus/mhi/host/trace.h b/drivers/bus/mhi/host/trace.h
-> new file mode 100644
-> index 000000000000..0e99318f5d08
-> --- /dev/null
-> +++ b/drivers/bus/mhi/host/trace.h
-> +
-> +TRACE_EVENT(mhi_update_channel_state_start,
-> +
-> +	TP_PROTO(const char *name, int ch_num, int state),
-> +
-> +	TP_ARGS(name, ch_num, state),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(name, name)
-> +		__field(int, ch_num)
-> +		__field(int, state)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, name);
-> +		__entry->ch_num = ch_num;
-> +		__entry->state = state;
-> +	),
-> +
-> +	TP_printk("%s: ch%d: Updating state to: %s\n",
-> +		  __get_str(name), __entry->ch_num,
-> +		  TO_CH_STATE_TYPE_STR(__entry->state))
-> +);
-> +
-> +TRACE_EVENT(mhi_update_channel_state_end,
-> +
-> +	TP_PROTO(const char *name, int ch_num, int state),
-> +
-> +	TP_ARGS(name, ch_num, state),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(name, name)
-> +		__field(int, ch_num)
-> +		__field(int, state)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, name);
-> +		__entry->ch_num = ch_num;
-> +		__entry->state = state;
-> +	),
-> +
-> +	TP_printk("%s: ch%d: Updated state to: %s\n",
-> +		  __get_str(name), __entry->ch_num,
-> +		  TO_CH_STATE_TYPE_STR(__entry->state))
-> +);
-> +
+Hello:
 
-The above three events have the same format. You can save kilobytes of
-memory by converting them into a DECLARE_EVENT_CLASS() and use
-DEFINE_EVENT() for each event.
+This series was applied to riscv/linux.git (fixes)
+by Shuah Khan <skhan@linuxfoundation.org>:
 
-A TRACE_EVENT() macro is really just a wrapper around
-DECLARE_EVENT_CLASS() and DEFINE_EVENT(). The DECLARE_EVENT_CLASS()
-does the bulk of the work and adds the most memory footprint. By
-breaking it apart for several events, it does save memory.
-
-Whenever you can use a single DECLARE_EVENT_CLASS() for multiple
-events, I strongly suggest doing so.
-
-Thanks,
-
--- Steve
-
-
-> +#endif
-> +#undef TRACE_INCLUDE_PATH
-> +#define TRACE_INCLUDE_PATH .
-> +#undef TRACE_INCLUDE_FILE
-> +#define TRACE_INCLUDE_FILE trace
-> +
-> +#include <trace/define_trace.h>
+On Wed, 18 Oct 2023 10:08:56 +0800 you wrote:
+> Yu Liao (2):
+>   selftests/ftrace: add loongarch support for kprobe args char tests
+>   selftests/ftrace: Add riscv support for kprobe arg tests
 > 
-> ---
-> base-commit: 3006adf3be79cde4d14b1800b963b82b6e5572e0
-> change-id: 20231005-ftrace_support-6869d4156139
-> 
-> Best regards,
+>  .../selftests/ftrace/test.d/kprobe/kprobe_args_char.tc      | 6 ++++++
+>  .../selftests/ftrace/test.d/kprobe/kprobe_args_string.tc    | 3 +++
+>  .../selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc    | 4 ++++
+>  3 files changed, 13 insertions(+)
+
+Here is the summary with links:
+  - [RESEND,1/2] selftests/ftrace: add loongarch support for kprobe args char tests
+    https://git.kernel.org/riscv/c/2eadb3299256
+  - [RESEND,2/2] selftests/ftrace: Add riscv support for kprobe arg tests
+    https://git.kernel.org/riscv/c/11df28854bee
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
