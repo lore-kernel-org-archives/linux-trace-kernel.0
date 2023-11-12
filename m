@@ -1,134 +1,227 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B8D1FB7;
-	Sun, 12 Nov 2023 04:22:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DBA12B8D
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Nov 2023 15:00:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FacYEZCQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CF58C433AB;
-	Sun, 12 Nov 2023 04:22:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699762926;
-	bh=FJL4JNEf9Nr1DoflQgnKi0tfP9lyYuVjCmmad2iv8TA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FacYEZCQKy7zh6VsDp47yhkL+9he5Y+BzcuRtc1i6KHlTBkqaeroQJJDPLMRFLWD9
-	 QNhskha1onUHVMj2O/qk8mK8c0vJZhiTXumXWS0CGWZks5ZJFrR6dvkAIDGJkCeV/t
-	 6amg22+gEIHVdyPSQgk0L9lJZr+X87dXFazyXH2ThFIzgEMWpLCJskz/nC6CtTqsA+
-	 Z9NTC9QINWCby1hgnVCHVFMOnhZXaqZYk/4H/uttsH8za+SgromnkZZytr79DMdLq5
-	 z6fSwHr0XX/U0fb4cdcZFZDuYKieV7M2bNXh4VB6zTAsNqvA0mOlgafeRuwkTVq4La
-	 Yez2M8oVwyWiQ==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-52bd9ddb741so5252690a12.0;
-        Sat, 11 Nov 2023 20:22:06 -0800 (PST)
-X-Gm-Message-State: AOJu0Yw1fRuDc9XcvafNK/1x/b/M4Fh4EyZo0KDm9eGurcS/rIWfQqv0
-	VjXPKVOG7l2f08dG09H3CibhTWMVH9X87+xsUQs=
-X-Google-Smtp-Source: AGHT+IGKtBb4zpepnAgJWTPQf4OFL8Yxg0IypTLD7L38xtqORdph/fQnU2/w9oi/MfemCZAy/+rZ76w/2ug+y+JaBNQ=
-X-Received: by 2002:a05:6402:3d9:b0:53f:731a:e513 with SMTP id
- t25-20020a05640203d900b0053f731ae513mr2174574edw.25.1699762924720; Sat, 11
- Nov 2023 20:22:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k8nSsw4o"
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C3562D57;
+	Sun, 12 Nov 2023 07:00:47 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1cc921a4632so32174815ad.1;
+        Sun, 12 Nov 2023 07:00:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699801245; x=1700406045; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zVX7qXJ/1UNSsp24Eao/LKK7Tfj8DYCmTw98S9n23hk=;
+        b=k8nSsw4oJA1zZdAZ91WBJXyPleW+ERhIGB+Le8N2LEWQ7zYDbvMEeVfFdVJe0bklFI
+         hxH+IVyMTBsVOxXYmA6X6tRtoKwvExynAbhWzQMZBa1M+Nj/Cy0XaEqlgAFf/GZaYGr+
+         7KJG+0cOS1Oz9rGzVm4ekGioXeMM8nAKX9k/eCKiyrWhSrBHOcKdnYp8iU9cI/E07mLM
+         7v5ZB77GeX6tgevRVNuOp46BtFpd+qr6iLcuB/EKFnH9vyJmBokZIbmY5aL8K2IXzpZL
+         FFtlHdxuQIORyO/eWpbAXsrGSHM4iZ+s/VRoBTW+6P5JKTIRn4sypC/0tCQFvnIMDzFa
+         6fbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699801245; x=1700406045;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zVX7qXJ/1UNSsp24Eao/LKK7Tfj8DYCmTw98S9n23hk=;
+        b=FiWqPGihugauzuYr+p/EFYxFgOwP9rSjV04T7uP8vkcRfpQd4q4Qo7shZRb/DgvOaX
+         vDskDci21xM7KLYu0WEy7C51laMqijjkpllynzfYGIsC0FCmlnE9d/jO9MmBdvxg0AMX
+         FUrJUhaThDxgpLGumjoIDgQlO+LhQNRPd/+LSpPeHgjI+CK29ifbQZciUj6mQHapH+v+
+         MmLJaP2uSZZjf84nY6aG/lCeWP+kp+QKHeOSFxG+jQvg0i5TXzVn/wtjoDrmjdowIjhQ
+         4D980amclNsdBEz09JrnOcYeuhmriVseaPaGwt2F/pNk+8ua0rMIlKNCFvAY2tXXKuNu
+         MaSA==
+X-Gm-Message-State: AOJu0YyEsNuPHCBwnuFa2gR7105nxsTkaPOoFQvLGY0K0zyWyen0xHJN
+	GYLcpj+C3VaiPmFHxepwMn6PktMrIAaswK8X
+X-Google-Smtp-Source: AGHT+IFPJ0tH8yuHBYyKkI9XP26p2LtV9hKJsgfeIgAKCWvyUJZkGbzCLffBPMNbcTP/KntMYR/GqA==
+X-Received: by 2002:a17:903:24f:b0:1c3:6d97:e89e with SMTP id j15-20020a170903024f00b001c36d97e89emr6414948plh.58.1699801245030;
+        Sun, 12 Nov 2023 07:00:45 -0800 (PST)
+Received: from KASONG-MB2.tencent.com ([115.171.40.79])
+        by smtp.gmail.com with ESMTPSA id x3-20020a170902ec8300b001c73f3a9b88sm2653175plg.110.2023.11.12.07.00.42
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Sun, 12 Nov 2023 07:00:44 -0800 (PST)
+From: Kairui Song <ryncsn@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Zheng Yejian <zhengyejian1@huawei.com>,
+	linux-trace-kernel@vger.kernel.org,
+	Kairui Song <kasong@tencent.com>
+Subject: [PATCH] tracing: fix UAF caused by memory ordering issue
+Date: Sun, 12 Nov 2023 23:00:30 +0800
+Message-ID: <20231112150030.84609-1-ryncsn@gmail.com>
+X-Mailer: git-send-email 2.42.0
+Reply-To: Kairui Song <kasong@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231108125843.3806765-1-arnd@kernel.org> <20231108125843.3806765-13-arnd@kernel.org>
-In-Reply-To: <20231108125843.3806765-13-arnd@kernel.org>
-From: Guo Ren <guoren@kernel.org>
-Date: Sat, 11 Nov 2023 23:21:53 -0500
-X-Gmail-Original-Message-ID: <CAJF2gTSEziwKn+f6DfZXRuzW1SXaWraKL2HdXMRkEOGyuHq3MQ@mail.gmail.com>
-Message-ID: <CAJF2gTSEziwKn+f6DfZXRuzW1SXaWraKL2HdXMRkEOGyuHq3MQ@mail.gmail.com>
-Subject: Re: [PATCH 12/22] csky: fix arch_jump_label_transform_static override
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org, 
-	Arnd Bergmann <arnd@arndb.de>, Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, Greg Ungerer <gerg@linux-m68k.org>, 
-	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Dinh Nguyen <dinguyen@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Geoff Levand <geoff@infradead.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, "David S. Miller" <davem@davemloft.net>, 
-	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	x86@kernel.org, Helge Deller <deller@gmx.de>, 
-	Sudip Mukherjee <sudipm.mukherjee@gmail.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Timur Tabi <timur@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, David Woodhouse <dwmw2@infradead.org>, 
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, Kees Cook <keescook@chromium.org>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Nicolas Schier <nicolas@fjasle.eu>, 
-	Al Viro <viro@zeniv.linux.org.uk>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
-	linux-csky@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-bcachefs@vger.kernel.org, linux-mtd@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 8, 2023 at 8:02=E2=80=AFAM Arnd Bergmann <arnd@kernel.org> wrot=
-e:
->
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> The arch_jump_label_transform_static() function in csky was originally me=
-ant to
-> override the generic __weak function, but that got changed to an #ifndef =
-check.
->
-> This showed up as a missing-prototype warning:
-> arch/csky/kernel/jump_label.c:43:6: error: no previous prototype for 'arc=
-h_jump_label_transform_static' [-Werror=3Dmissing-prototypes]
->
-> Change the method to use the new method of having a #define and a prototy=
-pe
-> for the global function.
->
-> Fixes: 7e6b9db27de9 ("jump_label: make initial NOP patching the special c=
-ase")
-> Fixes: 4e8bb4ba5a55 ("csky: Add jump-label implementation")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/csky/include/asm/jump_label.h | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/arch/csky/include/asm/jump_label.h b/arch/csky/include/asm/j=
-ump_label.h
-> index d488ba6084bc..98a3f4b168bd 100644
-> --- a/arch/csky/include/asm/jump_label.h
-> +++ b/arch/csky/include/asm/jump_label.h
-> @@ -43,5 +43,10 @@ static __always_inline bool arch_static_branch_jump(st=
-ruct static_key *key,
->         return true;
->  }
->
-> +enum jump_label_type;
-> +void arch_jump_label_transform_static(struct jump_entry *entry,
-> +                                     enum jump_label_type type);
-> +#define arch_jump_label_transform_static arch_jump_label_transform_stati=
-c
-> +
->  #endif  /* __ASSEMBLY__ */
->  #endif /* __ASM_CSKY_JUMP_LABEL_H */
-> --
-> 2.39.2
->
->
-Thank you!
-Reviewed-by: Guo Ren <guoren@kernel.org>
+From: Kairui Song <kasong@tencent.com>
 
---=20
-Best Regards
- Guo Ren
+Following kernel panic was observed when doing ftrace stress test:
+
+Unable to handle kernel paging request at virtual address 9699b0f8ece28240
+Mem abort info:
+  ESR = 0x0000000096000004
+  EC = 0x25: DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+  FSC = 0x04: level 0 translation fault
+Data abort info:
+  ISV = 0, ISS = 0x00000004
+  CM = 0, WnR = 0
+[9699b0f8ece28240] address between user and kernel address ranges
+Internal error: Oops: 0000000096000004 [#1] SMP
+Modules linked in: rpcrdma rdma_cm iw_cm ib_cm ib_core rfkill vfat fat loop fuse nfsd auth_rpcgss nfs_acl lockd grace sunrpc ip_tables ext4 mbcache jbd2 sr_mod cdrom crct10dif_ce ghash_ce sha2_ce virtio_gpu virtio_dma_buf drm_shmem_helper virtio_blk drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops virtio_console sha256_arm64 sha1_ce drm virtio_scsi i2c_core virtio_net net_failover failover virtio_mmio dm_multipath dm_mod autofs4 [last unloaded: ipmi_msghandler]
+CPU: 0 PID: 499719 Comm: sh Kdump: loaded Not tainted 6.1.61+ #2
+Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
+pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : __kmem_cache_alloc_node+0x1dc/0x2e4
+lr : __kmem_cache_alloc_node+0xac/0x2e4
+sp : ffff80000ad23aa0
+x29: ffff80000ad23ab0 x28: 00000004052b8000 x27: ffffc513863b0000
+x26: 0000000000000040 x25: ffffc51384f21ca4 x24: 00000000ffffffff
+x23: d615521430b1b1a5 x22: ffffc51386044770 x21: 0000000000000000
+x20: 0000000000000cc0 x19: ffff0000c0001200 x18: 0000000000000000
+x17: 0000000000000000 x16: 0000000000000000 x15: 0000aaaae65e1630
+x14: 0000000000000004 x13: ffffc513863e67a0 x12: ffffc513863af6d8
+x11: 0000000000000001 x10: ffff80000ad23aa0 x9 : ffffc51385058078
+x8 : 0000000000000018 x7 : 0000000000000001 x6 : 0000000000000010
+x5 : ffff0000c09c2280 x4 : ffffc51384f21ca4 x3 : 0000000000000040
+x2 : 9699b0f8ece28240 x1 : ffff0000c09c2280 x0 : 9699b0f8ece28200
+Call trace:
+ __kmem_cache_alloc_node+0x1dc/0x2e4
+ __kmalloc+0x6c/0x1c0
+ func_add+0x1a4/0x200
+ tracepoint_add_func+0x70/0x230
+ tracepoint_probe_register+0x6c/0xb4
+ trace_event_reg+0x8c/0xa0
+ __ftrace_event_enable_disable+0x17c/0x440
+ __ftrace_set_clr_event_nolock+0xe0/0x150
+ system_enable_write+0xe0/0x114
+ vfs_write+0xd0/0x2dc
+ ksys_write+0x78/0x110
+ __arm64_sys_write+0x24/0x30
+ invoke_syscall.constprop.0+0x58/0xf0
+ el0_svc_common.constprop.0+0x54/0x160
+ do_el0_svc+0x2c/0x60
+ el0_svc+0x40/0x1ac
+ el0t_64_sync_handler+0xf4/0x120
+ el0t_64_sync+0x19c/0x1a0
+Code: b9402a63 f9405e77 8b030002 d5384101 (f8636803)
+
+Panic was caused by corrupted freelist pointer. After more debugging,
+I found the root cause is UAF of slab allocated object in ftrace
+introduced by commit eecb91b9f98d ("tracing: Fix memleak due to race
+between current_tracer and trace"), and so far it's only reproducible
+on some ARM64 machines, the UAF and free stack is:
+
+UAF:
+kasan_report+0xa8/0x1bc
+__asan_report_load8_noabort+0x28/0x3c
+print_graph_function_flags+0x524/0x5a0
+print_graph_function_event+0x28/0x40
+print_trace_line+0x5c4/0x1030
+s_show+0xf0/0x460
+seq_read_iter+0x930/0xf5c
+seq_read+0x130/0x1d0
+vfs_read+0x288/0x840
+ksys_read+0x130/0x270
+__arm64_sys_read+0x78/0xac
+invoke_syscall.constprop.0+0x90/0x224
+do_el0_svc+0x118/0x3dc
+el0_svc+0x54/0x120
+el0t_64_sync_handler+0xf4/0x120
+el0t_64_sync+0x19c/0x1a0
+
+Freed by:
+kasan_save_free_info+0x38/0x5c
+__kasan_slab_free+0xe8/0x154
+slab_free_freelist_hook+0xfc/0x1e0
+__kmem_cache_free+0x138/0x260
+kfree+0xd0/0x1d0
+graph_trace_close+0x60/0x90
+s_start+0x610/0x910
+seq_read_iter+0x274/0xf5c
+seq_read+0x130/0x1d0
+vfs_read+0x288/0x840
+ksys_read+0x130/0x270
+__arm64_sys_read+0x78/0xac
+invoke_syscall.constprop.0+0x90/0x224
+do_el0_svc+0x118/0x3dc
+el0_svc+0x54/0x120
+el0t_64_sync_handler+0xf4/0x120
+el0t_64_sync+0x19c/0x1a0
+
+Despite the s_start and s_show being serialized by seq_file mutex,
+the tracer struct copy in s_start introduced by the commit mentioned
+above is not atomic nor guarenteened to be seen by all CPUs. So
+following seneriao is possible (and actually happened):
+
+CPU 1                                     CPU 2
+seq_read_iter                             seq_read_iter
+  mutex_lock(&m->lock);
+  s_start
+    // iter->trace is graph_trace
+    iter->trace->close(iter);
+    graph_trace_close
+      kfree(data) <- *** data released here ***
+    // copy current_trace to iter->trace
+    // but not synced to CPU 2
+    *iter->trace = *tr->current_trace
+  ... (goes on)
+  mutex_unlock(&m->lock);
+                                          mutex_lock(&m->lock);
+                                          ... (s_start and other work)
+                                          s_show
+                                            print_trace_line(iter)
+                                              // iter->trace is still
+                                              // old value (graph_trace)
+                                              iter->trace->print_line()
+                                                print_graph_function_flags
+                                                  data->cpu_data <- *** data UAF ***
+
+The UAF corrupted the slab freelist and caused panic on another slab
+allocation.
+
+After applying the barrier, the problem is gone.
+
+Fixes: eecb91b9f98d ("tracing: Fix memleak due to race between current_tracer and trace")
+Signed-off-by: Kairui Song <kasong@tencent.com>
+---
+ kernel/trace/trace.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 9aebf904ff97..c377cdf3701b 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4182,11 +4182,14 @@ static void *s_start(struct seq_file *m, loff_t *pos)
+ 	int cpu;
+ 
+ 	mutex_lock(&trace_types_lock);
+-	if (unlikely(tr->current_trace != iter->trace)) {
+-		/* Close iter->trace before switching to the new current tracer */
+-		if (iter->trace->close)
+-			iter->trace->close(iter);
+-		iter->trace = tr->current_trace;
++	if (unlikely(tr->current_trace && iter->trace->name != tr->current_trace->name)) {
++		/* Switch to the new current tracer then close old tracer */
++		struct tracer *prev_trace = iter->trace;
++		*iter->trace = *tr->current_trace;
++		/* Make sure the switch is seen by all CPUs before closing */
++		smp_wmb();
++		if (prev_trace->close)
++			prev_trace->close(iter);
+ 		/* Reopen the new current tracer */
+ 		if (iter->trace->open)
+ 			iter->trace->open(iter);
+-- 
+2.42.0
+
