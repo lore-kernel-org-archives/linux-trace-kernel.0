@@ -1,38 +1,56 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D2713FF2
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Nov 2023 16:45:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4C02D608
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Nov 2023 22:17:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B732C433C7;
-	Sun, 12 Nov 2023 16:45:57 +0000 (UTC)
-Date: Sun, 12 Nov 2023 11:45:55 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Kairui Song <ryncsn@gmail.com>
-Cc: Kairui Song <kasong@tencent.com>, linux-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Zheng Yejian <zhengyejian1@huawei.com>,
- linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id D4CFAD71;
+	Mon, 13 Nov 2023 14:17:40 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1E119FEC;
+	Mon, 13 Nov 2023 14:18:26 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.119.34.131])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D33C3F7B4;
+	Mon, 13 Nov 2023 14:17:40 -0800 (PST)
+Date: Mon, 13 Nov 2023 17:17:31 -0500
+From: Mark Rutland <mark.rutland@arm.com>
+To: Kairui Song <kasong@tencent.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Zheng Yejian <zhengyejian1@huawei.com>,
+	linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH] tracing: fix UAF caused by memory ordering issue
-Message-ID: <20231112114555.095d9a2d@rorschach.local.home>
-In-Reply-To: <20231112150030.84609-1-ryncsn@gmail.com>
+Message-ID: <ZVKgcuCf_FbtaZrW@FVFF77S0Q05N>
 References: <20231112150030.84609-1-ryncsn@gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231112150030.84609-1-ryncsn@gmail.com>
 
-On Sun, 12 Nov 2023 23:00:30 +0800
-Kairui Song <ryncsn@gmail.com> wrote:
-
+On Sun, Nov 12, 2023 at 11:00:30PM +0800, Kairui Song wrote:
 > From: Kairui Song <kasong@tencent.com>
 > 
 > Following kernel panic was observed when doing ftrace stress test:
-> 
+
+Can you share some more details:
+
+* What test specifically are you running? Can you share this so that others can
+  try to reproduce the issue?
+
+* Which machines are you testing on (i.e. which CPU microarchitecture is this
+  seen with) ?
+
+* Which compiler are you using?
+
+* The log shows this is with v6.1.61+. Can you reproduce this with a mainline
+  kernel? e.g. v6.6 or v6.7-rc1?
+
 > Unable to handle kernel paging request at virtual address 9699b0f8ece28240
 > Mem abort info:
 >   ESR = 0x0000000096000004
@@ -84,10 +102,6 @@ Kairui Song <ryncsn@gmail.com> wrote:
 > Code: b9402a63 f9405e77 8b030002 d5384101 (f8636803)
 > 
 > Panic was caused by corrupted freelist pointer. After more debugging,
-
-So you are saying that the above is caused by the free list corruption
-(hence we can ignore the stack trace)
-
 > I found the root cause is UAF of slab allocated object in ftrace
 > introduced by commit eecb91b9f98d ("tracing: Fix memleak due to race
 > between current_tracer and trace"), and so far it's only reproducible
@@ -134,11 +148,6 @@ So you are saying that the above is caused by the free list corruption
 > the tracer struct copy in s_start introduced by the commit mentioned
 > above is not atomic nor guarenteened to be seen by all CPUs. So
 > following seneriao is possible (and actually happened):
-
-What do you mean it is not atomic? The change should be done under a
-trace_types_lock, right? Doing something under a mutex is suppose to
-protect it.
-
 > 
 > CPU 1                                     CPU 2
 > seq_read_iter                             seq_read_iter
@@ -154,18 +163,30 @@ protect it.
 >   ... (goes on)
 >   mutex_unlock(&m->lock);
 >                                           mutex_lock(&m->lock);
-
-The above mutex is trace_types_lock. If you are saying that the memory
-isn't being flushed, and we need a memory barrier *inside the mutex
-critical section* to let it be seen after the mutex is released and
-taken again, then I think that looks to be a major failure of the mutex
-implementation!
-
 >                                           ... (s_start and other work)
 >                                           s_show
 >                                             print_trace_line(iter)
 >                                               // iter->trace is still
 >                                               // old value (graph_trace)
+
+As Steve pointed out in his reply, the mutex should ensure that CPU 2 observes
+the stores from CPU 1, regardless of whether those were atomic. If this is
+seeing an old value, then either:
+
+* This description is incorrect. Either we're using the mutex incorrectly, or
+  we have accesses which are not protect by the mutex.
+
+* The memory is being corrupted elsewhere.
+ 
+  KCSAN might be able to detect this.
+ 
+* There is a bug in the mutex implementation, and it's not providing the
+  ordering it should.
+
+* The compiler is reordering memory accesses incorrectly.
+
+* There is a CPU bug.
+
 >                                               iter->trace->print_line()
 >                                                 print_graph_function_flags
 >                                                   data->cpu_data <- *** data UAF ***
@@ -174,10 +195,6 @@ implementation!
 > allocation.
 > 
 > After applying the barrier, the problem is gone.
-
-I think you just changed the race. I'm not sure you actually fixed the
-bug.
-
 > 
 > Fixes: eecb91b9f98d ("tracing: Fix memleak due to race between current_tracer and trace")
 > Signed-off-by: Kairui Song <kasong@tencent.com>
@@ -199,23 +216,28 @@ bug.
 > -			iter->trace->close(iter);
 > -		iter->trace = tr->current_trace;
 > +	if (unlikely(tr->current_trace && iter->trace->name != tr->current_trace->name)) {
-
-Why the name check?
-
 > +		/* Switch to the new current tracer then close old tracer */
 > +		struct tracer *prev_trace = iter->trace;
 > +		*iter->trace = *tr->current_trace;
 > +		/* Make sure the switch is seen by all CPUs before closing */
 > +		smp_wmb();
 
-Why? A smp_wmb() must be paired with a smp_rmb() where is that? And why
-isn't the mutex lock protecting this?
+As Steven said, I don't think that this barrier makes sense. It shouldn't be
+necessary given the mutex, and it's not pairing with a reader.
 
--- Steve
+Some of the possibilities I mentioned above would be masked by this (e.g. lack
+of mutex release ordering). If you could answer my questions at the start of
+this mail, it would help to narrow this down.
+
+Thanks,
+Mark.
 
 > +		if (prev_trace->close)
 > +			prev_trace->close(iter);
 >  		/* Reopen the new current tracer */
 >  		if (iter->trace->open)
 >  			iter->trace->open(iter);
-
+> -- 
+> 2.42.0
+> 
+> 
