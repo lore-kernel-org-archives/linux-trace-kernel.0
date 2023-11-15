@@ -1,36 +1,76 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3DA39FF8
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Nov 2023 15:49:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="kXyZKvl0"
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B35D619E;
-	Wed, 15 Nov 2023 07:49:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1700063394;
-	bh=h8BeeUtryFB1IFOqZ1UsvXGcEOQuYKR5x0QNoI3HzV4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=kXyZKvl03+gDeKUqdSSKeziCsZXarIM/oeb49dEkBTgRQB5eMYpSZ3STaUVqhFFb8
-	 +9FBDZoBK6fea9UnN7vp9RpaRmFzRHaVfiaqN0LWupVauhLpao0/Sac4vj2cP9ye4E
-	 eH4npy5YpuD31XAUD1d1nuhnVhk3EXjQ29l4JvRomuOyrUw7eo3zQsopcrgknVu4pj
-	 84Akuu6Fa9CcfRMw0BU8CNHoJBCWm5Fh2YImWSUQWpgz8eaqc+2seK7Cf77EBcu3/d
-	 SdU7QWHhI5IK/eFpSCMn2XAg/xHGJYJhqF1Ng1IVJ6ooxh2khhs09tBbKTdGdv3yQA
-	 qJWXpapjhKnPQ==
-Received: from thinkos.internal.efficios.com (unknown [12.186.190.1])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4SVnfn5vqHz1cYv;
-	Wed, 15 Nov 2023 10:49:53 -0500 (EST)
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: TRACING: Add Mathieu Desnoyers as Reviewer
-Date: Wed, 15 Nov 2023 10:50:18 -0500
-Message-Id: <20231115155018.8236-1-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Wy5tAH2Y"
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9679E6;
+	Wed, 15 Nov 2023 12:34:34 -0800 (PST)
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AFKQiFh031245;
+	Wed, 15 Nov 2023 20:34:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=CZLHkQEJKjMWj9tFsHKzWIaMVL7MbTldFAitesNVJzU=;
+ b=Wy5tAH2Y0prkmcxdkPFFzA6XO9UYiRv5ordOcL4iAmCznlmr3BEiVssqTvvupHnuNj8c
+ dKFWnlAxMwLnJCkVB6fn1PFWOR7/iHcnApou+y5k9mNyVm8mUc2hMImk08psZDf0unWQ
+ bop5Gxplx76q4Xynt+1oN3O9VRd2ZSSgk7rp/A6hlghDqL8QbcwPLR7dko41RdzhlFhL
+ kvk4H0RuXOFqpB4JoHYt/5F8vLpKeL0zMYNwv7FpSUNavhUsjM5frpDXO0OJVHpNp7Lv
+ VyC6O4Qj+ns0qcd5iGPkgpDaNdsF5d9CGX+kR0EKbXPcVsVjiUBe4oBkeX+dsjr4wwp1 1g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ud4tk8fef-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 Nov 2023 20:34:15 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AFKRO1n001546;
+	Wed, 15 Nov 2023 20:34:14 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ud4tk8fdn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 Nov 2023 20:34:14 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AFKIxY6014619;
+	Wed, 15 Nov 2023 20:34:12 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uaneksvrd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 Nov 2023 20:34:12 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AFKY9l222348470
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 15 Nov 2023 20:34:09 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8BE1E20043;
+	Wed, 15 Nov 2023 20:34:09 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 38AC620040;
+	Wed, 15 Nov 2023 20:34:08 +0000 (GMT)
+Received: from heavy.boeblingen.de.ibm.com (unknown [9.179.9.51])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 15 Nov 2023 20:34:08 +0000 (GMT)
+From: Ilya Leoshkevich <iii@linux.ibm.com>
+To: Alexander Gordeev <agordeev@linux.ibm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>
+Subject: [PATCH 01/32] ftrace: Unpoison ftrace_regs in ftrace_ops_list_func()
+Date: Wed, 15 Nov 2023 21:30:33 +0100
+Message-ID: <20231115203401.2495875-2-iii@linux.ibm.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20231115203401.2495875-1-iii@linux.ibm.com>
+References: <20231115203401.2495875-1-iii@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -38,30 +78,43 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: VJX97QA9qh-kHNZwqS0JJ63zRqdAobq3
+X-Proofpoint-GUID: t5KbkiQ6ScFLylCeNY0jbVA7We_XpEup
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-15_20,2023-11-15_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 phishscore=0 adultscore=0 clxscore=1015 mlxlogscore=999
+ mlxscore=0 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2311150163
 
-In order to make sure I get CC'd on tracing changes for which my input
-would be relevant, add my name as reviewer of the TRACING subsystem.
+Architectures use assembly code to initialize ftrace_regs and call
+ftrace_ops_list_func(). Therefore, from the KMSAN's point of view,
+ftrace_regs is poisoned on ftrace_ops_list_func entry(). This causes
+KMSAN warnings when running the ftrace testsuite.
 
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org
+Fix by trusting the architecture-specific assembly code and always
+unpoisoning ftrace_regs in ftrace_ops_list_func.
+
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
 ---
- MAINTAINERS | 1 +
+ kernel/trace/ftrace.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4cc6bf79fdd8..a7c2092d0063 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -21622,6 +21622,7 @@ F:	drivers/hwmon/pmbus/tps546d24.c
- TRACING
- M:	Steven Rostedt <rostedt@goodmis.org>
- M:	Masami Hiramatsu <mhiramat@kernel.org>
-+R:	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
- L:	linux-kernel@vger.kernel.org
- L:	linux-trace-kernel@vger.kernel.org
- S:	Maintained
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 8de8bec5f366..dfb8b26966aa 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -7399,6 +7399,7 @@ __ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
+ void arch_ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
+ 			       struct ftrace_ops *op, struct ftrace_regs *fregs)
+ {
++	kmsan_unpoison_memory(fregs, sizeof(*fregs));
+ 	__ftrace_ops_list_func(ip, parent_ip, NULL, fregs);
+ }
+ #else
 -- 
-2.39.2
+2.41.0
 
