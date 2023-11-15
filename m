@@ -1,51 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fSebvw9z"
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D561268E;
-	Wed, 15 Nov 2023 12:35:20 -0800 (PST)
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AFKWwg6031423;
-	Wed, 15 Nov 2023 20:35:03 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tM5UQApw"
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6CF31FE0;
+	Wed, 15 Nov 2023 12:35:09 -0800 (PST)
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AFKKJKW020415;
+	Wed, 15 Nov 2023 20:34:55 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=pCHaNUsH9l0hG+UVZcWLc4ZJz+vOcJVUmc7g0ZpB+XI=;
- b=fSebvw9zBk+f/fRpq/5DHbbp4pC4dbYmzHRA7yxo1mofuiTZFrYdB+nzpms08yU2CuNg
- jXRHAZ3gp1mBvTYgURemkiIY2VI8CKVugw6JhjFSG3GWk7pB1kEKy9j9Q/M1KY4bSPMJ
- 7vXO9t6lQSMOJ9+d1RvFLNIhgkTJvg4Wf2BupPSljM8i7jwfYEodhctSfi++GYX6IHvd
- EOu3Px6oHuDrMf1CZ28j1EeOusCU4CzL/iiAfY2vFvTHAVret6Q46zlCn2NmeWa3YsF6
- kptiGH6+cv8HRoW91AtI/u7pM4Wvs3DeY032+LSWwP3iNE9nq6pwow+VY3dP1ewIEv4A jw== 
+ bh=6cPRly3Y0R+ewW/cAplLp4HHPc78tqbgSvA9QXIrbXE=;
+ b=tM5UQApw2refpHW+H0do8RKQirmGTqP9fYnuojZ7XQm7M0IncvcAmhUe5V8UKDO1sK2f
+ RIK1MrFM+Clr05LXq9XzM1QHKxDTXYWm+uHGeeXHQB1l7TfvlekNBb0mLIumSHIwuNIn
+ shTRbnnZcJ33cGr7q7R7KeK5D3biE+VhiUghbSo6S39us/9OAz6BbFbRVYDz7PbDKRVX
+ GDSbMjo9fR2XAk+53u7cW5KEzJd46z/BtL1al9Fi316cf+bhCnKJ8Wuwo4UVEUtKsovG
+ QB14V3Li+kq0SSwHv+1evsflEHs1bstYubDzStqdxNjasvzqz/y+CD9emucah00Z5oAE FQ== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ud543g1um-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ud4xc8cg2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Nov 2023 20:35:03 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AFKXeXX001667;
-	Wed, 15 Nov 2023 20:35:02 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ud543g1u0-1
+	Wed, 15 Nov 2023 20:34:54 +0000
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AFKOWKf032664;
+	Wed, 15 Nov 2023 20:34:54 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ud4xc8cft-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Nov 2023 20:35:02 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AFKIuWb010012;
-	Wed, 15 Nov 2023 20:35:01 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uakxt2dyf-1
+	Wed, 15 Nov 2023 20:34:54 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AFKJ47T014688;
+	Wed, 15 Nov 2023 20:34:53 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uaneksvwk-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Nov 2023 20:35:01 +0000
+	Wed, 15 Nov 2023 20:34:53 +0000
 Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AFKYwfU15860306
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AFKYo1122151934
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 15 Nov 2023 20:34:58 GMT
+	Wed, 15 Nov 2023 20:34:50 GMT
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8B99520043;
-	Wed, 15 Nov 2023 20:34:58 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id F1E242004B;
+	Wed, 15 Nov 2023 20:34:49 +0000 (GMT)
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 290B420040;
-	Wed, 15 Nov 2023 20:34:57 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id A265920040;
+	Wed, 15 Nov 2023 20:34:48 +0000 (GMT)
 Received: from heavy.boeblingen.de.ibm.com (unknown [9.179.9.51])
 	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 15 Nov 2023 20:34:57 +0000 (GMT)
+	Wed, 15 Nov 2023 20:34:48 +0000 (GMT)
 From: Ilya Leoshkevich <iii@linux.ibm.com>
 To: Alexander Gordeev <agordeev@linux.ibm.com>,
         Alexander Potapenko <glider@google.com>,
@@ -64,11 +64,10 @@ Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Roman Gushchin <roman.gushchin@linux.dev>,
         Sven Schnelle <svens@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-Subject: [PATCH 29/32] s390/uaccess: Add KMSAN support to put_user() and get_user()
-Date: Wed, 15 Nov 2023 21:31:01 +0100
-Message-ID: <20231115203401.2495875-30-iii@linux.ibm.com>
+        Ilya Leoshkevich <iii@linux.ibm.com>
+Subject: [PATCH 24/32] s390/cpacf: Unpoison the results of cpacf_trng()
+Date: Wed, 15 Nov 2023 21:30:56 +0100
+Message-ID: <20231115203401.2495875-25-iii@linux.ibm.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20231115203401.2495875-1-iii@linux.ibm.com>
 References: <20231115203401.2495875-1-iii@linux.ibm.com>
@@ -80,235 +79,39 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: aXkXwYW8xMvzSI-lsQeWlg0pVYb5rqYU
-X-Proofpoint-GUID: T_08zhpSfGPVRxxdCdrw7y3TGl8MixS1
+X-Proofpoint-ORIG-GUID: 2hiXuR6P650rcR9fEXOk8WJoi9cn7Ipv
+X-Proofpoint-GUID: bdGq9jciuCrxPjpJhy4v0KBztKvLqzo8
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-11-15_20,2023-11-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- spamscore=0 adultscore=0 priorityscore=1501 suspectscore=0 clxscore=1015
- mlxlogscore=999 bulkscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
- definitions=main-2311150163
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 phishscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0
+ clxscore=1015 suspectscore=0 mlxlogscore=766 spamscore=0
+ priorityscore=1501 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311060000 definitions=main-2311150163
 
-put_user() uses inline assembly with precise constraints, so Clang is
-in principle capable of instrumenting it automatically. Unfortunately,
-one of the constraints contains a dereferenced user pointer, and Clang
-does not currently distinguish user and kernel pointers. Therefore
-KMSAN attempts to access shadow for user pointers, which is not a right
-thing to do.
+Prevent KMSAN from complaining about buffers filled by cpacf_trng()
+being uninitialized.
 
-An obvious fix to add __no_sanitize_memory to __put_user_fn() does not
-work, since it's __always_inline. And __always_inline cannot be removed
-due to the __put_user_bad() trick.
-
-A different obvious fix of using the "a" instead of the "+Q" constraint
-degrades the code quality, which is very important here, since it's a
-hot path.
-
-Instead, repurpose the __put_user_asm() macro to define
-__put_user_{char,short,int,long}_noinstr() functions and mark them with
-__no_sanitize_memory. For the non-KMSAN builds make them
-__always_inline in order to keep the generated code quality. Also
-define __put_user_{char,short,int,long}() functions, which call the
-aforementioned ones and which *are* instrumented, because they call
-KMSAN hooks, which may be implemented as macros.
-
-The same applies to get_user() as well.
-
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
+Tested-by: Alexander Gordeev <agordeev@linux.ibm.com>
 Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
 ---
- arch/s390/include/asm/uaccess.h | 110 ++++++++++++++++++++++----------
- 1 file changed, 78 insertions(+), 32 deletions(-)
+ arch/s390/include/asm/cpacf.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uaccess.h
-index 81ae8a98e7ec..b0715b88b55a 100644
---- a/arch/s390/include/asm/uaccess.h
-+++ b/arch/s390/include/asm/uaccess.h
-@@ -78,13 +78,23 @@ union oac {
+diff --git a/arch/s390/include/asm/cpacf.h b/arch/s390/include/asm/cpacf.h
+index b378e2b57ad8..a72b92770c4b 100644
+--- a/arch/s390/include/asm/cpacf.h
++++ b/arch/s390/include/asm/cpacf.h
+@@ -473,6 +473,8 @@ static inline void cpacf_trng(u8 *ucbuf, unsigned long ucbuf_len,
+ 		: [ucbuf] "+&d" (u.pair), [cbuf] "+&d" (c.pair)
+ 		: [fc] "K" (CPACF_PRNO_TRNG), [opc] "i" (CPACF_PRNO)
+ 		: "cc", "memory", "0");
++	kmsan_unpoison_memory(ucbuf, ucbuf_len);
++	kmsan_unpoison_memory(cbuf, cbuf_len);
+ }
  
- int __noreturn __put_user_bad(void);
- 
--#define __put_user_asm(to, from, size)					\
--({									\
-+#ifdef CONFIG_KMSAN
-+#define GET_PUT_USER_NOINSTR_ATTRIBUTES inline __no_sanitize_memory
-+#else
-+#define GET_PUT_USER_NOINSTR_ATTRIBUTES __always_inline
-+#endif
-+
-+#define DEFINE_PUT_USER(type)						\
-+static GET_PUT_USER_NOINSTR_ATTRIBUTES int				\
-+__put_user_##type##_noinstr(unsigned type __user *to,			\
-+			    unsigned type *from,			\
-+			    unsigned long size)				\
-+{									\
- 	union oac __oac_spec = {					\
- 		.oac1.as = PSW_BITS_AS_SECONDARY,			\
- 		.oac1.a = 1,						\
- 	};								\
--	int __rc;							\
-+	int rc;								\
- 									\
- 	asm volatile(							\
- 		"	lr	0,%[spec]\n"				\
-@@ -93,12 +103,28 @@ int __noreturn __put_user_bad(void);
- 		"2:\n"							\
- 		EX_TABLE_UA_STORE(0b, 2b, %[rc])			\
- 		EX_TABLE_UA_STORE(1b, 2b, %[rc])			\
--		: [rc] "=&d" (__rc), [_to] "+Q" (*(to))			\
-+		: [rc] "=&d" (rc), [_to] "+Q" (*(to))			\
- 		: [_size] "d" (size), [_from] "Q" (*(from)),		\
- 		  [spec] "d" (__oac_spec.val)				\
- 		: "cc", "0");						\
--	__rc;								\
--})
-+	return rc;							\
-+}									\
-+									\
-+static __always_inline int						\
-+__put_user_##type(unsigned type __user *to, unsigned type *from,	\
-+		  unsigned long size)					\
-+{									\
-+	int rc;								\
-+									\
-+	rc = __put_user_##type##_noinstr(to, from, size);		\
-+	instrument_put_user(*from, to, size);				\
-+	return rc;							\
-+}
-+
-+DEFINE_PUT_USER(char);
-+DEFINE_PUT_USER(short);
-+DEFINE_PUT_USER(int);
-+DEFINE_PUT_USER(long);
- 
- static __always_inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
- {
-@@ -106,24 +132,24 @@ static __always_inline int __put_user_fn(void *x, void __user *ptr, unsigned lon
- 
- 	switch (size) {
- 	case 1:
--		rc = __put_user_asm((unsigned char __user *)ptr,
--				    (unsigned char *)x,
--				    size);
-+		rc = __put_user_char((unsigned char __user *)ptr,
-+				     (unsigned char *)x,
-+				     size);
- 		break;
- 	case 2:
--		rc = __put_user_asm((unsigned short __user *)ptr,
--				    (unsigned short *)x,
--				    size);
-+		rc = __put_user_short((unsigned short __user *)ptr,
-+				      (unsigned short *)x,
-+				      size);
- 		break;
- 	case 4:
--		rc = __put_user_asm((unsigned int __user *)ptr,
-+		rc = __put_user_int((unsigned int __user *)ptr,
- 				    (unsigned int *)x,
- 				    size);
- 		break;
- 	case 8:
--		rc = __put_user_asm((unsigned long __user *)ptr,
--				    (unsigned long *)x,
--				    size);
-+		rc = __put_user_long((unsigned long __user *)ptr,
-+				     (unsigned long *)x,
-+				     size);
- 		break;
- 	default:
- 		__put_user_bad();
-@@ -134,13 +160,17 @@ static __always_inline int __put_user_fn(void *x, void __user *ptr, unsigned lon
- 
- int __noreturn __get_user_bad(void);
- 
--#define __get_user_asm(to, from, size)					\
--({									\
-+#define DEFINE_GET_USER(type)						\
-+static GET_PUT_USER_NOINSTR_ATTRIBUTES int				\
-+__get_user_##type##_noinstr(unsigned type *to,				\
-+			    unsigned type __user *from,			\
-+			    unsigned long size)				\
-+{									\
- 	union oac __oac_spec = {					\
- 		.oac2.as = PSW_BITS_AS_SECONDARY,			\
- 		.oac2.a = 1,						\
- 	};								\
--	int __rc;							\
-+	int rc;								\
- 									\
- 	asm volatile(							\
- 		"	lr	0,%[spec]\n"				\
-@@ -149,13 +179,29 @@ int __noreturn __get_user_bad(void);
- 		"2:\n"							\
- 		EX_TABLE_UA_LOAD_MEM(0b, 2b, %[rc], %[_to], %[_ksize])	\
- 		EX_TABLE_UA_LOAD_MEM(1b, 2b, %[rc], %[_to], %[_ksize])	\
--		: [rc] "=&d" (__rc), "=Q" (*(to))			\
-+		: [rc] "=&d" (rc), "=Q" (*(to))				\
- 		: [_size] "d" (size), [_from] "Q" (*(from)),		\
- 		  [spec] "d" (__oac_spec.val), [_to] "a" (to),		\
- 		  [_ksize] "K" (size)					\
- 		: "cc", "0");						\
--	__rc;								\
--})
-+	return rc;							\
-+}									\
-+									\
-+static __always_inline int						\
-+__get_user_##type(unsigned type *to, unsigned type __user *from,	\
-+		  unsigned long size)					\
-+{									\
-+	int rc;								\
-+									\
-+	rc = __get_user_##type##_noinstr(to, from, size);		\
-+	instrument_get_user(*to);					\
-+	return rc;							\
-+}
-+
-+DEFINE_GET_USER(char);
-+DEFINE_GET_USER(short);
-+DEFINE_GET_USER(int);
-+DEFINE_GET_USER(long);
- 
- static __always_inline int __get_user_fn(void *x, const void __user *ptr, unsigned long size)
- {
-@@ -163,24 +209,24 @@ static __always_inline int __get_user_fn(void *x, const void __user *ptr, unsign
- 
- 	switch (size) {
- 	case 1:
--		rc = __get_user_asm((unsigned char *)x,
--				    (unsigned char __user *)ptr,
--				    size);
-+		rc = __get_user_char((unsigned char *)x,
-+				     (unsigned char __user *)ptr,
-+				     size);
- 		break;
- 	case 2:
--		rc = __get_user_asm((unsigned short *)x,
--				    (unsigned short __user *)ptr,
--				    size);
-+		rc = __get_user_short((unsigned short *)x,
-+				      (unsigned short __user *)ptr,
-+				      size);
- 		break;
- 	case 4:
--		rc = __get_user_asm((unsigned int *)x,
-+		rc = __get_user_int((unsigned int *)x,
- 				    (unsigned int __user *)ptr,
- 				    size);
- 		break;
- 	case 8:
--		rc = __get_user_asm((unsigned long *)x,
--				    (unsigned long __user *)ptr,
--				    size);
-+		rc = __get_user_long((unsigned long *)x,
-+				     (unsigned long __user *)ptr,
-+				     size);
- 		break;
- 	default:
- 		__get_user_bad();
+ /**
 -- 
 2.41.0
 
