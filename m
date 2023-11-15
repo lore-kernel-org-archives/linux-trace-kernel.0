@@ -1,51 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SQHhPpvO"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fX7J+qpY"
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F18391FD6;
-	Wed, 15 Nov 2023 12:35:08 -0800 (PST)
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AFKFaD7001501;
-	Wed, 15 Nov 2023 20:34:48 GMT
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A285F211D;
+	Wed, 15 Nov 2023 12:35:16 -0800 (PST)
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AFKFbGw004184;
+	Wed, 15 Nov 2023 20:35:01 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=7EA0rB7Lnz119cXET77DqVvo3LoXQifKy9ond6IQu6w=;
- b=SQHhPpvOy5C8/CrRMGo2ik4gciTn5gO1RM1AvdDxC76egg3OXGxioGISNJwtO352/Q4G
- 1pQIMcI1YWAOMTAH60eh+WeJMClruwJEPyDRAvt7krgSyv1bP0oW+fV8T7ZjMUkHSqH6
- FZi+ymcIFCrhZVcYhty3fAMlxNluU+50qVx5nNi/w8lySqNcSMOT5V3DQswuK6fse15T
- t9WCttN+WRDiDcCiPu9ElXUhjsZY1N6xrzIMUyj+ZFyuHAvcWLD1WTrcIWWd5fKeKNz5
- /L5wI//E/ESP5N10f/XVCUy93U7e/SHpgXbu108vFj2/xxnIoyvv956PYvffCVH4MJQg pA== 
+ bh=vyPRs3NEGlrSEI4OyP/kyugJK7kmBP/avTMvzRTf3tE=;
+ b=fX7J+qpYXrsKl0WhCw3SJovIUB8N1Lwj01ujK3viO6O7XZNCFJw0WQ8XfQHzERI33W//
+ j+jUpWNZJKyl+I31c35IJ0yr5UFwG5RsUEAM+E/L8Owhv0s6xavhXhlKW6hxNoW1XDcC
+ u719TVJzYC/LZSNOKorAUUxjzEy/F3Q9uiUG07EDpSEmy8/z/Rf60uv/QY+12KeIhiWq
+ wUSo7MK44DbEJhCuF4GyVtUjkDCcR44drPNwM8tTeJGuokSn8vPowbZyY0QB6l7oOBBW
+ vEVlgEdIPd+FGz6rF78YLaeaA9GlV6cnddAfH70PAM8FhjzF8nJhfR8NX7ovbteHbX6v 2A== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ud4v38cxu-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ud4v30d0f-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Nov 2023 20:34:47 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AFKSBUm032287;
-	Wed, 15 Nov 2023 20:34:47 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ud4v38cxe-1
+	Wed, 15 Nov 2023 20:35:01 +0000
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AFKQNNg002471;
+	Wed, 15 Nov 2023 20:35:00 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ud4v30cyy-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Nov 2023 20:34:46 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AFKJ06o014625;
-	Wed, 15 Nov 2023 20:34:46 GMT
+	Wed, 15 Nov 2023 20:35:00 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AFKJ1Fm017525;
+	Wed, 15 Nov 2023 20:34:59 GMT
 Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uaneksvv7-1
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uamayj7es-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Nov 2023 20:34:45 +0000
+	Wed, 15 Nov 2023 20:34:59 +0000
 Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AFKYgHK64946494
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AFKYucL4391432
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 15 Nov 2023 20:34:42 GMT
+	Wed, 15 Nov 2023 20:34:56 GMT
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C055020040;
-	Wed, 15 Nov 2023 20:34:42 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id A6F6520043;
+	Wed, 15 Nov 2023 20:34:56 +0000 (GMT)
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7150720043;
-	Wed, 15 Nov 2023 20:34:41 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 59DB820040;
+	Wed, 15 Nov 2023 20:34:55 +0000 (GMT)
 Received: from heavy.boeblingen.de.ibm.com (unknown [9.179.9.51])
 	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 15 Nov 2023 20:34:41 +0000 (GMT)
+	Wed, 15 Nov 2023 20:34:55 +0000 (GMT)
 From: Ilya Leoshkevich <iii@linux.ibm.com>
 To: Alexander Gordeev <agordeev@linux.ibm.com>,
         Alexander Potapenko <glider@google.com>,
@@ -65,9 +65,9 @@ Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
         Roman Gushchin <roman.gushchin@linux.dev>,
         Sven Schnelle <svens@linux.ibm.com>,
         Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: [PATCH 20/32] s390: Turn off KMSAN for boot, vdso and purgatory
-Date: Wed, 15 Nov 2023 21:30:52 +0100
-Message-ID: <20231115203401.2495875-21-iii@linux.ibm.com>
+Subject: [PATCH 28/32] s390/traps: Unpoison the kernel_stack_overflow()'s pt_regs
+Date: Wed, 15 Nov 2023 21:31:00 +0100
+Message-ID: <20231115203401.2495875-29-iii@linux.ibm.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20231115203401.2495875-1-iii@linux.ibm.com>
 References: <20231115203401.2495875-1-iii@linux.ibm.com>
@@ -79,76 +79,45 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: sORo9VaUfpyXlGPcINpF5RzPmD7I3Yie
-X-Proofpoint-ORIG-GUID: BZ3SG3oEyN8wfwQEeBvu4En7U_68x4iH
+X-Proofpoint-GUID: dnaNBt7krqikwNotd3HVlCqxFq8337Jy
+X-Proofpoint-ORIG-GUID: 6zt5GNmg5wfDE8GufZyKD9mMXoFyxLx-
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-11-15_20,2023-11-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- suspectscore=0 impostorscore=0 malwarescore=0 adultscore=0 spamscore=0
- priorityscore=1501 lowpriorityscore=0 phishscore=0 bulkscore=0
- mlxlogscore=758 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1015
+ malwarescore=0 mlxscore=0 adultscore=0 impostorscore=0 mlxlogscore=999
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2311060000 definitions=main-2311150163
 
-All other sanitizers are disabled for these components as well.
+This is normally done by the generic entry code, but the
+kernel_stack_overflow() flow bypasses it.
 
-Reviewed-by: Alexander Gordeev <agordeev@linux.ibm.com>
 Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
 ---
- arch/s390/boot/Makefile          | 1 +
- arch/s390/kernel/vdso32/Makefile | 1 +
- arch/s390/kernel/vdso64/Makefile | 1 +
- arch/s390/purgatory/Makefile     | 1 +
- 4 files changed, 4 insertions(+)
+ arch/s390/kernel/traps.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/s390/boot/Makefile b/arch/s390/boot/Makefile
-index c7c81e5f9218..5a05c927f703 100644
---- a/arch/s390/boot/Makefile
-+++ b/arch/s390/boot/Makefile
-@@ -8,6 +8,7 @@ GCOV_PROFILE := n
- UBSAN_SANITIZE := n
- KASAN_SANITIZE := n
- KCSAN_SANITIZE := n
-+KMSAN_SANITIZE := n
+diff --git a/arch/s390/kernel/traps.c b/arch/s390/kernel/traps.c
+index 1d2aa448d103..dd7362806dbb 100644
+--- a/arch/s390/kernel/traps.c
++++ b/arch/s390/kernel/traps.c
+@@ -27,6 +27,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/cpu.h>
+ #include <linux/entry-common.h>
++#include <linux/kmsan.h>
+ #include <asm/asm-extable.h>
+ #include <asm/fpu/api.h>
+ #include <asm/vtime.h>
+@@ -260,6 +261,7 @@ static void monitor_event_exception(struct pt_regs *regs)
  
- KBUILD_AFLAGS := $(KBUILD_AFLAGS_DECOMPRESSOR)
- KBUILD_CFLAGS := $(KBUILD_CFLAGS_DECOMPRESSOR)
-diff --git a/arch/s390/kernel/vdso32/Makefile b/arch/s390/kernel/vdso32/Makefile
-index caec7db6f966..8911c55a7f07 100644
---- a/arch/s390/kernel/vdso32/Makefile
-+++ b/arch/s390/kernel/vdso32/Makefile
-@@ -37,6 +37,7 @@ GCOV_PROFILE := n
- UBSAN_SANITIZE := n
- KASAN_SANITIZE := n
- KCSAN_SANITIZE := n
-+KMSAN_SANITIZE := n
- 
- # Force dependency (incbin is bad)
- $(obj)/vdso32_wrapper.o : $(obj)/vdso32.so
-diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
-index e3c9085f8fa7..f4f75c334d59 100644
---- a/arch/s390/kernel/vdso64/Makefile
-+++ b/arch/s390/kernel/vdso64/Makefile
-@@ -41,6 +41,7 @@ GCOV_PROFILE := n
- UBSAN_SANITIZE := n
- KASAN_SANITIZE := n
- KCSAN_SANITIZE := n
-+KMSAN_SANITIZE := n
- 
- # Force dependency (incbin is bad)
- $(obj)/vdso64_wrapper.o : $(obj)/vdso64.so
-diff --git a/arch/s390/purgatory/Makefile b/arch/s390/purgatory/Makefile
-index 4e930f566878..e8402287b0cd 100644
---- a/arch/s390/purgatory/Makefile
-+++ b/arch/s390/purgatory/Makefile
-@@ -20,6 +20,7 @@ GCOV_PROFILE := n
- UBSAN_SANITIZE := n
- KASAN_SANITIZE := n
- KCSAN_SANITIZE := n
-+KMSAN_SANITIZE := n
- 
- KBUILD_CFLAGS := -fno-strict-aliasing -Wall -Wstrict-prototypes
- KBUILD_CFLAGS += -Wno-pointer-sign -Wno-sign-compare
+ void kernel_stack_overflow(struct pt_regs *regs)
+ {
++	kmsan_unpoison_entry_regs(regs);
+ 	bust_spinlocks(1);
+ 	printk("Kernel stack overflow.\n");
+ 	show_regs(regs);
 -- 
 2.41.0
 
