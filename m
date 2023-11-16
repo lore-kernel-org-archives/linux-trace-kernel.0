@@ -1,254 +1,109 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o12K6pYp"
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89294193
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Nov 2023 04:30:27 -0800 (PST)
-Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-5aa7172bafdso528233a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Nov 2023 04:30:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FNLXCl1J"
+Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7591B182
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Nov 2023 06:56:27 -0800 (PST)
+Received: by mail-qv1-xf2f.google.com with SMTP id 6a1803df08f44-66d093265dfso4654776d6.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Nov 2023 06:56:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700137826; x=1700742626; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZnxwgdyERbu++62px0Gtodzac4wTdQLjOX0jeYxZvqs=;
-        b=o12K6pYpYhZ4KL4D7HmNm4zRg/0LrK8zLIolQRZCFWOGlxHbrV+7xW1nvya4+/NMtI
-         0JDBSp8QzNt5+1SnaZ3PSq+szpCvub5tMDurm4uOLmmsrMB8thPzL3BpXIpHhQmZ+UBG
-         EJGbRF4IXUUIyLKI4BjMcGl+aEVrbObIJcZ0o22iGtf3ra8LXCzBQNvWRXIoRRjW9Hxu
-         FWBv7kWSlA3Zv0l9pIQKCnp+d6TxBafe1eP6XwMfKrGoYtn/WWXLlOH46AA1cILcwf4/
-         sbRXmaXzR7h0HcSrGDa1pm6bjSpSQ6/VCiGzoYF+0fwEGRi8VB4ORFznS1p3scIzOVAu
-         xkxA==
+        d=google.com; s=20230601; t=1700146586; x=1700751386; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tzM0stGZCClmmzmredmePw1BMrI7dq9aY1ehb48KIQU=;
+        b=FNLXCl1JfVrSP3wlr5c1EzCFRf4WU+SKRk5ziIleaUK4O05dpZtUZsJLwVwAI/76ZH
+         JHZGLZRdv6Dbz2lSp9sb3b/cA/o8QkcyXWKsz2kQ2e+6LVd+vobUDAcOd5t0XcuXqIHl
+         Fp1koZU/BZrbsvki7hCSZ7avhZooOTGOl0Nhnm2Xyc5E7K7LiuXZZJ/MyHcv6MNVqN4M
+         Vg/Zsxqm7ou5hRnI8YOos7QUrCpBV/ICrSrICeFbj/+HhCDeNmT7RCqv5+4x7R7MgMUu
+         P+lm3ysD0XGQiXYwq73x+6UR1DFOzQ52uDNhwPNmuXaMi1wY8AmrixwxvRwW7Kur73cP
+         9kOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700137826; x=1700742626;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZnxwgdyERbu++62px0Gtodzac4wTdQLjOX0jeYxZvqs=;
-        b=SLKIXB5Uem1pRzz7NRa5pSTfwmqI4Mul4KQ2hu2OUWWjcZjDI/hA3+0qFUSYiSpFxj
-         FLRkIP/eghOjSp6mND53zObkAg1sTtY13WVKlsZ8gMo77iJzr9dgg55rkPgSDQFN72DD
-         6fXlbM6765M+7L/KUfemyV3G1+3ZCicq9goLkXf6WMnxnmtMcxexIqllTd7NnZOJ+Z9Z
-         4UBmM30kM/9Twv6W1gTzt+lgaYQRZCOl1qG5zk10SOvgJXORT7qZdg1hmHLET70AczUL
-         /VD6rZZkglp1d0uI9QbUYU9/6GqZs3NsrPy3dqw59rHnzNGBY5Fe0IqnQXdQGRE5k4tt
-         1M/w==
-X-Gm-Message-State: AOJu0YzLYllg0oAWVWZT7VjrdV9P38KWA38jvBqUWnVJrLpbPVOGFH+T
-	txa4/GnW+G+9KXJ8JVaLQkMqWEQRbb5dxYKonyk=
-X-Google-Smtp-Source: AGHT+IHxiRmIbqxivJ5TnqJhPEoGk+hm1V/d0PdwMMlNWq3lbC2L5GlfqO0bYl7di3H2bQ15d+BpqQ==
-X-Received: by 2002:a17:90b:390c:b0:280:29e8:4379 with SMTP id ob12-20020a17090b390c00b0028029e84379mr14423388pjb.34.1700137826459;
-        Thu, 16 Nov 2023 04:30:26 -0800 (PST)
-Received: from localhost.localdomain ([49.206.54.243])
-        by smtp.gmail.com with ESMTPSA id 13-20020a170902c24d00b001c5fc291ef9sm9112908plg.209.2023.11.16.04.30.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Nov 2023 04:30:25 -0800 (PST)
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-To: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: mhiramat@kernel.org,
-	mark.rutland@arm.com,
-	rostedt@goodmis.org,
-	lkft@linaro.org
-Subject: selftests: ftrace: WARNING: __list_del_entry_valid_or_report (lib/list_debug.c:62 (discriminator 1))
-Date: Thu, 16 Nov 2023 18:00:16 +0530
-Message-Id: <20231116123016.140576-1-naresh.kamboju@linaro.org>
-X-Mailer: git-send-email 2.30.2
+        d=1e100.net; s=20230601; t=1700146586; x=1700751386;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tzM0stGZCClmmzmredmePw1BMrI7dq9aY1ehb48KIQU=;
+        b=Pyt72rv9PDkFtXFwfNU8A1U6+LMI2w4PssHOpPSQmB0q4R3NBpPlBqcl52LkJ0FmHf
+         2qge1eI1I0y2r4zq90naPbQFejE1wJUYK7UCSYr2hxeDSZ3pRqX8A7avtlDYHmU94NFT
+         Pp/qh+Bxi+9y+LF+9vWN94CRm5PbVaKBOsXzAFIU/jN7us/g7G8g4ZqE267ORsB2oRje
+         ntt52tgxhlTjX+yFqsGCJ/1TTOHCtIApFjTZtsXT+OxxpuR4ZhkF7+Ci3QlInLyqBAkd
+         3ISJ9iqmRn3FXJKn8gPJAFS+mF8vFKArt5s5+geE6rOC4zfaCWSZtE9IVU/TUIBlgkX3
+         AGTg==
+X-Gm-Message-State: AOJu0Yy+ToNoRtn2fuwUQJvPh9yi/2hANvbvpLeojwqiC4n85/fPcW1T
+	+OPdUcS6X0UdD0ILqX8OIWzoSEMx3yg+I6L0qauTKg==
+X-Google-Smtp-Source: AGHT+IESlLCp03SBdqseDxgs7HGGaCnWUi82EdGIBUyYoFDdg/kV3Wtu7IaPSKUrNV12K+J0pCN37EM86rUdQP7PWi8=
+X-Received: by 2002:a0c:bf02:0:b0:675:5925:7e08 with SMTP id
+ m2-20020a0cbf02000000b0067559257e08mr8062067qvi.32.1700146586474; Thu, 16 Nov
+ 2023 06:56:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231115203401.2495875-1-iii@linux.ibm.com> <20231115203401.2495875-14-iii@linux.ibm.com>
+In-Reply-To: <20231115203401.2495875-14-iii@linux.ibm.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Thu, 16 Nov 2023 15:55:45 +0100
+Message-ID: <CAG_fn=WOfRvDw3r3zcZXWr8aa6MiEuKSa1etQrGVSJP+ic7=mg@mail.gmail.com>
+Subject: Re: [PATCH 13/32] kmsan: Support SLAB_POISON
+To: Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
+	Marco Elver <elver@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Pekka Enberg <penberg@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Following kernel crash noticed while running selftests: ftrace on arm64 Juno-r2
-device running stable-rc linux-6.6.y kernel.
+On Wed, Nov 15, 2023 at 9:34=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.com=
+> wrote:
+>
+> Avoid false KMSAN negatives with SLUB_DEBUG by allowing
+> kmsan_slab_free() to poison the freed memory, and by preventing
+> init_object() from unpoisoning new allocations.
+>
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+> ---
+>  mm/kmsan/hooks.c | 2 +-
+>  mm/slub.c        | 3 ++-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/mm/kmsan/hooks.c b/mm/kmsan/hooks.c
+> index 7b5814412e9f..7a30274b893c 100644
+> --- a/mm/kmsan/hooks.c
+> +++ b/mm/kmsan/hooks.c
+> @@ -76,7 +76,7 @@ void kmsan_slab_free(struct kmem_cache *s, void *object=
+)
+>                 return;
+>
+>         /* RCU slabs could be legally used after free within the RCU peri=
+od */
+> -       if (unlikely(s->flags & (SLAB_TYPESAFE_BY_RCU | SLAB_POISON)))
+> +       if (unlikely(s->flags & SLAB_TYPESAFE_BY_RCU))
+>                 return;
+>         /*
+>          * If there's a constructor, freed memory must remain in the same=
+ state
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 63d281dfacdb..8d9aa4d7cb7e 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -1024,7 +1024,8 @@ static __printf(3, 4) void slab_err(struct kmem_cac=
+he *s, struct slab *slab,
+>         add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
+>  }
+>
+> -static void init_object(struct kmem_cache *s, void *object, u8 val)
+> +__no_sanitize_memory static void
 
-This kernel crash is hard to reproduce.
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-kselftest: Running tests in ftrace
-TAP version 13
-1..1
-# timeout set to 0
-# selftests: ftrace: ftracetest-ktap
-# unlink: cannot unlink '/opt/kselftests/default-in-kernel/ftrace/logs/latest': No such file or directory
-# TAP version 13
-# 1..130
-# ok 1 Basic trace file check
-...
-# ok 44 ftrace - test for function traceon/off triggers
-# ok 45 ftrace - test tracing error log support
-[  617.613901] ------------[ cut here ]------------
-[  617.618870] list_del corruption. prev->next should be ffff000837184758, but was ffff000837184638. (prev=ffff0008359f82e8)
-[  617.629894] WARNING: CPU: 1 PID: 13512 at lib/list_debug.c:62 __list_del_entry_valid_or_report (lib/list_debug.c:62 (discriminator 1)) 
-[  617.639496] Modules linked in: onboard_usb_hub hdlcd tda998x crct10dif_ce drm_dma_helper cec drm_kms_helper fuse drm backlight dm_mod ip_tables x_tables [last unloaded: trace_printk]
-[  617.655832] CPU: 1 PID: 13512 Comm: ls Not tainted 6.6.2-rc1 #1
-[  617.661765] Hardware name: ARM Juno development board (r2) (DT)
-[  617.667692] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[  617.674668] pc : __list_del_entry_valid_or_report (lib/list_debug.c:62 (discriminator 1)) 
-[  617.680339] lr : __list_del_entry_valid_or_report (lib/list_debug.c:62 (discriminator 1)) 
-[  617.686009] sp : ffff80008507b910
-[  617.689325] x29: ffff80008507b910 x28: 0000000000000003 x27: 0000000000000001
-[  617.696482] x26: ffff000834694788 x25: ffff000835a39c88 x24: 0000000000000000
-[  617.703637] x23: 0000000000000000 x22: ffff0008359f8248 x21: ffff000837184720
-[  617.710792] x20: ffff0008359f8248 x19: ffff000837184758 x18: 0000000000000010
-[  617.717948] x17: 20747562202c3835 x16: 3734383137333830 x15: 3030666666662065
-[  617.725102] x14: 6220646c756f6873 x13: 2938653238663935 x12: 3338303030666666
-[  617.732257] x11: 663d766572702820 x10: 2e38333634383137 x9 : ffff800080145634
-[  617.739411] x8 : ffff80008507b638 x7 : 0000000000017fe8 x6 : 0000000000057fa8
-[  617.746566] x5 : 0000000000000fff x4 : ffff00097ed27d50 x3 : ffff8008fc5d3000
-[  617.753720] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff0008010722c0
-[  617.760874] Call trace:
-[  617.763320] __list_del_entry_valid_or_report (lib/list_debug.c:62 (discriminator 1)) 
-[  617.768643] __dentry_kill (include/linux/list.h:215 (discriminator 1) fs/dcache.c:550 (discriminator 1) fs/dcache.c:603 (discriminator 1)) 
-[  617.772311] dput (fs/dcache.c:896) 
-[  617.775281] create_dentry (fs/tracefs/event_inode.c:404) 
-[  617.779040] dcache_dir_open_wrapper (fs/tracefs/event_inode.c:536) 
-[  617.783580] do_dentry_open (fs/open.c:929) 
-[  617.787424] vfs_open (fs/open.c:1064) 
-[  617.790572] path_openat (fs/namei.c:3640 fs/namei.c:3797) 
-[  617.794153] do_filp_open (fs/namei.c:3824) 
-[  617.797733] do_sys_openat2 (fs/open.c:1422) 
-[  617.801490] __arm64_sys_openat (fs/open.c:1448) 
-[  617.805508] invoke_syscall (arch/arm64/include/asm/current.h:19 arch/arm64/kernel/syscall.c:56) 
-[  617.809267] el0_svc_common.constprop.0 (include/linux/thread_info.h:127 (discriminator 2) arch/arm64/kernel/syscall.c:144 (discriminator 2)) 
-[  617.814069] do_el0_svc (arch/arm64/kernel/syscall.c:156) 
-[  617.817391] el0_svc (arch/arm64/include/asm/daifflags.h:28 arch/arm64/kernel/entry-common.c:133 arch/arm64/kernel/entry-common.c:144 arch/arm64/kernel/entry-common.c:679) 
-[  617.820454] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:697) 
-[  617.824820] el0t_64_sync (arch/arm64/kernel/entry.S:595) 
-[  617.828488] ---[ end trace 0000000000000000 ]---
-[  617.833214] ------------[ cut here ]------------
-[  617.837840] WARNING: CPU: 2 PID: 13523 at fs/dcache.c:365 dentry_free (fs/dcache.c:365 (discriminator 1)) 
-[  617.845173] Modules linked in: onboard_usb_hub hdlcd tda998x crct10dif_ce drm_dma_helper cec drm_kms_helper fuse drm backlight dm_mod ip_tables x_tables [last unloaded: trace_printk]
-[  617.861503] CPU: 2 PID: 13523 Comm: rmdir Tainted: G        W          6.6.2-rc1 #1
-[  617.869175] Hardware name: ARM Juno development board (r2) (DT)
-[  617.875102] pstate: 40000005 (nZcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[  617.882077] pc : dentry_free (fs/dcache.c:365 (discriminator 1)) 
-[  617.885835] lr : __dentry_kill (fs/dcache.c:623) 
-[  617.889937] sp : ffff800085123a30
-[  617.893252] x29: ffff800085123a30 x28: ffff0008371845a8 x27: ffff0008371845a8
-[  617.900409] x26: ffff000837184600 x25: ffff000837184638 x24: ffff0008359f82a0
-[  617.907565] x23: ffff000835a39d28 x22: ffff0008359f8248 x21: ffff000837184720
-[  617.914719] x20: ffff0008359f8248 x19: ffff0008371846c8 x18: 0000000000000000
-[  617.921874] x17: 000000040044ffff x16: 00500074b5503510 x15: 0000000000000000
-[  617.929029] x14: 0000000000000000 x13: 0000000000000030 x12: 0101010101010101
-[  617.936184] x11: 7f7f7f7f7f7f7f7f x10: 0000000000000c00 x9 : ffff80008042bce0
-[  617.943339] x8 : ffff800085123968 x7 : 0000000000000000 x6 : 00000000000001fb
-[  617.950493] x5 : 0000000000000001 x4 : ffff80008328f000 x3 : ffff80008328f2e8
-[  617.957647] x2 : 0000000000000002 x1 : ffff80008042bcd8 x0 : ffff800080428e90
-[  617.964801] Call trace:
-[  617.967246] dentry_free (fs/dcache.c:365 (discriminator 1)) 
-[  617.970656] __dentry_kill (fs/dcache.c:623) 
-[  617.974409] dput (fs/dcache.c:896) 
-[  617.977380] simple_recursive_removal (include/linux/fs.h:807 fs/libfs.c:552) 
-[  617.982008] eventfs_remove (fs/tracefs/event_inode.c:946) 
-[  617.985679] remove_event_file_dir (include/linux/list.h:124 include/linux/list.h:215 include/linux/list.h:229 kernel/trace/trace_events.c:1017) 
-[  617.989958] event_trace_del_tracer (kernel/trace/trace_events.c:3620 (discriminator 3) kernel/trace/trace_events.c:3772 (discriminator 3)) 
-[  617.994324] __remove_instance (kernel/trace/trace.c:9682 kernel/trace/trace.c:9663) 
-[  617.998344] instance_rmdir (kernel/trace/trace.c:9741) 
-[  618.002010] tracefs_syscall_rmdir (fs/tracefs/inode.c:134) 
-[  618.006289] vfs_rmdir (fs/namei.c:4204 fs/namei.c:4181) 
-[  618.009608] do_rmdir (fs/namei.c:4263 (discriminator 1)) 
-[  618.012928] __arm64_sys_unlinkat (fs/namei.c:4441 (discriminator 2) fs/namei.c:4435 (discriminator 2) fs/namei.c:4435 (discriminator 2)) 
-[  618.017118] invoke_syscall (arch/arm64/include/asm/current.h:19 arch/arm64/kernel/syscall.c:56) 
-[  618.020876] el0_svc_common.constprop.0 (include/linux/thread_info.h:127 (discriminator 2) arch/arm64/kernel/syscall.c:144 (discriminator 2)) 
-[  618.025678] do_el0_svc (arch/arm64/kernel/syscall.c:156) 
-[  618.029000] el0_svc (arch/arm64/include/asm/daifflags.h:28 arch/arm64/kernel/entry-common.c:133 arch/arm64/kernel/entry-common.c:144 arch/arm64/kernel/entry-common.c:679) 
-[  618.032060] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:697) 
-[  618.036427] el0t_64_sync (arch/arm64/kernel/entry.S:595) 
-[  618.040094] ---[ end trace 0000000000000000 ]---
-[  618.071010] Unable to handle kernel execute from non-executable memory at virtual address ffff000835b0b758
-[  618.080715] Mem abort info:
-[  618.083536]   ESR = 0x000000008600000f
-[  618.087306]   EC = 0x21: IABT (current EL), IL = 32 bits
-[  618.092646]   SET = 0, FnV = 0
-[  618.095717]   EA = 0, S1PTW = 0
-[  618.098869]   FSC = 0x0f: level 3 permission fault
-[  618.103680] swapper pgtable: 4k pages, 48-bit VAs, pgdp=00000000826a6000
-[  618.110405] [ffff000835b0b758] pgd=18000009ffdf8003, p4d=18000009ffdf8003, pud=18000009ffa0e003, pmd=18000009ff860003, pte=00680008b5b0b707
-[  618.123000] Internal error: Oops: 000000008600000f [#1] PREEMPT SMP
-[  618.129287] Modules linked in: onboard_usb_hub hdlcd tda998x crct10dif_ce drm_dma_helper cec drm_kms_helper fuse drm backlight dm_mod ip_tables x_tables [last unloaded: trace_printk]
-[  618.145624] CPU: 2 PID: 13523 Comm: rmdir Tainted: G        W          6.6.2-rc1 #1
-[  618.153298] Hardware name: ARM Juno development board (r2) (DT)
-[  618.159225] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[  618.166203] pc : 0xffff000835b0b758
-[  618.169703] lr : rcu_core (arch/arm64/include/asm/preempt.h:13 (discriminator 1) kernel/rcu/tree.c:2146 (discriminator 1) kernel/rcu/tree.c:2403 (discriminator 1)) 
-[  618.173377] sp : ffff80008394be60
-[  618.176692] x29: ffff80008394be60 x28: ffff0008278e3400 x27: 000000000000000a
-[  618.183848] x26: 0000000000000000 x25: 0000000000000000 x24: ffff80008394bf10
-[  618.191003] x23: ffff800082752008 x22: ffff80008328ea80 x21: ffff80008332f700
-[  618.198157] x20: ffff00097ed59440 x19: 0000000000000001 x18: 0000000000000000
-[  618.205311] x17: ffff8008fc5f2000 x16: ffff800083948000 x15: 0000000000000000
-[  618.212468] x14: 0000000000000000 x13: 0000000000000030 x12: 00000000000163f1
-[  618.219627] x11: 0000000000000001 x10: 000000010001369b x9 : ffff800080174e34
-[  618.226782] x8 : ffff80008394bd98 x7 : 0000000000000000 x6 : 0000000000000100
-[  618.233939] x5 : 0000000000000100 x4 : ffff80008328f000 x3 : ffff80008328f2e8
-[  618.241100] x2 : 0000000000000000 x1 : ffff000835b0b758 x0 : ffff000837184778
-[  618.248257] Call trace:
-[  618.250707]  0xffff000835b0b758
-[  618.253851] rcu_core_si (kernel/rcu/tree.c:2421) 
-[  618.257261] __do_softirq (arch/arm64/include/asm/jump_label.h:21 include/linux/jump_label.h:207 include/trace/events/irq.h:142 kernel/softirq.c:554) 
-[  618.260929] ____do_softirq (arch/arm64/kernel/irq.c:81) 
-[  618.264597] call_on_irq_stack (arch/arm64/kernel/entry.S:892) 
-[  618.268527] do_softirq_own_stack (arch/arm64/kernel/irq.c:86) 
-[  618.272717] irq_exit_rcu (arch/arm64/include/asm/percpu.h:44 kernel/softirq.c:612 kernel/softirq.c:634 kernel/softirq.c:644) 
-[  618.276299] el1_interrupt (arch/arm64/include/asm/current.h:19 arch/arm64/kernel/entry-common.c:246 arch/arm64/kernel/entry-common.c:505 arch/arm64/kernel/entry-common.c:517) 
-[  618.279883] el1h_64_irq_handler (arch/arm64/kernel/entry-common.c:523) 
-[  618.283989] el1h_64_irq (arch/arm64/kernel/entry.S:591) 
-[  618.287394] __srcu_read_unlock (kernel/rcu/srcutree.c:730) 
-[  618.291409] srcu_gp_start_if_needed (kernel/rcu/srcutree.c:1298) 
-[  618.296034] call_srcu (kernel/rcu/srcutree.c:1362) 
-[  618.299266] eventfs_remove_rec (fs/tracefs/event_inode.c:921) 
-[  618.303286] eventfs_remove_rec (fs/tracefs/event_inode.c:909 (discriminator 5)) 
-[  618.307303] eventfs_remove (fs/tracefs/event_inode.c:939) 
-[  618.310973] remove_event_file_dir (include/linux/list.h:124 include/linux/list.h:215 include/linux/list.h:229 kernel/trace/trace_events.c:1017) 
-[  618.315252] event_trace_del_tracer (kernel/trace/trace_events.c:3620 (discriminator 3) kernel/trace/trace_events.c:3772 (discriminator 3)) 
-[  618.319618] __remove_instance (kernel/trace/trace.c:9682 kernel/trace/trace.c:9663) 
-[  618.323637] instance_rmdir (kernel/trace/trace.c:9741) 
-[  618.327304] tracefs_syscall_rmdir (fs/tracefs/inode.c:134) 
-[  618.331582] vfs_rmdir (fs/namei.c:4204 fs/namei.c:4181) 
-[  618.334903] do_rmdir (fs/namei.c:4263 (discriminator 1)) 
-[  618.338223] __arm64_sys_unlinkat (fs/namei.c:4441 (discriminator 2) fs/namei.c:4435 (discriminator 2) fs/namei.c:4435 (discriminator 2)) 
-[  618.342413] invoke_syscall (arch/arm64/include/asm/current.h:19 arch/arm64/kernel/syscall.c:56) 
-[  618.346171] el0_svc_common.constprop.0 (include/linux/thread_info.h:127 (discriminator 2) arch/arm64/kernel/syscall.c:144 (discriminator 2)) 
-[  618.350973] do_el0_svc (arch/arm64/kernel/syscall.c:156) 
-[  618.354294] el0_svc (arch/arm64/include/asm/daifflags.h:28 arch/arm64/kernel/entry-common.c:133 arch/arm64/kernel/entry-common.c:144 arch/arm64/kernel/entry-common.c:679) 
-[  618.357355] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:697) 
-[  618.361721] el0t_64_sync (arch/arm64/kernel/entry.S:595) 
-[ 618.365391] Code: 35b0b748 ffff0008 35b0b748 ffff0008 (37184778)
-All code
-========
-   0:	35b0b748 	cbnz	w8, 0xfffffffffff616e8
-   4:	ffff0008 	.inst	0xffff0008 ; undefined
-   8:	35b0b748 	cbnz	w8, 0xfffffffffff616f0
-   c:	ffff0008 	.inst	0xffff0008 ; undefined
-  10:*	37184778 	tbnz	w24, #3, 0x8fc		<-- trapping instruction
-
-Code starting with the faulting instruction
-===========================================
-   0:	37184778 	tbnz	w24, #3, 0x8ec
-[  618.371494] ---[ end trace 0000000000000000 ]---
-[  618.376117] Kernel panic - not syncing: Oops: Fatal exception in interrupt
-[  618.383001] SMP: stopping secondary CPUs
-[  618.387117] Kernel Offset: disabled
-[  618.390607] CPU features: 0x1,0000020c,3c020000,0000421b
-[  618.395927] Memory Limit: none
-[  618.398986] ---[ end Kernel panic - not syncing: Oops: Fatal exception in interrupt ]---
-
-
-Links:
-- https://lkft.validation.linaro.org/scheduler/job/7030448#L4546
-
-metadata:
-git_ref: linux-6.6.y
-git_repo: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
-git_sha: df34d612fd4ef266814366c8101094b7f83b6a92
-git_describe: v6.6.1-604-gdf34d612fd4e
-kernel_version: 6.6.2-rc1
-kernel-config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2YE2AiHE0lU8S30LM8h9i7wempi/config
-artifact-location:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2YE2AiHE0lU8S30LM8h9i7wempi/
-toolchain: gcc-13
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
+__no_sanitize_memory should be used with great care, because it drops
+all instrumentation from the function, and any shadow writes will be
+lost.
+Won't it be better to add kmsan_poison() to init_object() if you want
+it to stay uninitialized?
