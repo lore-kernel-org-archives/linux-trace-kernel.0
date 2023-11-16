@@ -1,103 +1,183 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k+gERTjO"
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84347D68
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Nov 2023 11:21:30 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1cc316ccc38so10929125ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Nov 2023 11:21:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1700162490; x=1700767290; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YzF2ALYUXgtOOWHICjx/9sp3ZlXGizxmY7whZwnkVqs=;
-        b=k+gERTjO6F93q1lS3m32rhR1J28d3mpm2fohBNlGcICYiGp+WYLpMxD8T7g/NwYvkq
-         TnISjy6v2HHl9uLVBPS8As3+3N6VKqEA9rJCcxc1hfXLgupG0st4Nw0XKCMTajq+7gAC
-         fZ1sQBFKSupkE3fCKaYxdMbwZ3O33arR2wFwM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700162490; x=1700767290;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YzF2ALYUXgtOOWHICjx/9sp3ZlXGizxmY7whZwnkVqs=;
-        b=DWZGf+UWu/D/TNM7KN0cSPYM7vVjppJMqGmMXJqTHsII6Vn/9CvDSkIc1PHSzqI8xd
-         89elRnWIkmFc/dqnd6tGsjJD9j6loXJ0lQnFRO4ueKQCMjDryUljXQyLm/vkghlp35Ih
-         WnpEi4mI03fP4UcTcnY1C3GqTJpoGU8xUEM+HFNhdPARpiUnqqatSpzGveuraPQ3nL4s
-         uHGFLuiNmh7ht+zCSd5uGTJy31uh+c8pP6Vtqp1CJbODVUzK/7sd35rF9ZfuUjdL1AOh
-         DiK476lxK3XB4NqSDtR+z9B2/XGGXdcGByT1+1qMcRwPvZPMl/WI8TH/duYomaao+6rI
-         lRxg==
-X-Gm-Message-State: AOJu0YxGiulNyTIPzRmOqdlVCqkaSHtLv7yh0ATrPzf0yvnQ0xeCV9Ee
-	y5lCnFzKzxXStNO+euh6+z4w/jU3exaTK4udYnmnvg==
-X-Google-Smtp-Source: AGHT+IFOsmNi6M20q2mMZfgvvs7Ny35X8FWHOzyId2w5LMV8GyUNADT9qbMocFM5IvDg5rKoPH1waA==
-X-Received: by 2002:a17:902:f54f:b0:1cc:4eb1:edaa with SMTP id h15-20020a170902f54f00b001cc4eb1edaamr11388254plf.51.1700162489866;
-        Thu, 16 Nov 2023 11:21:29 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id t24-20020a1709028c9800b001c9bfd20d0csm17388plo.124.2023.11.16.11.21.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Nov 2023 11:21:28 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	Tejun Heo <tj@kernel.org>,
-	Azeem Shaikh <azeemshaikh38@gmail.com>,
-	Zefan Li <lizefan.x@bytedance.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Waiman Long <longman@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XfyRIGvx"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE0D2D4D;
+	Thu, 16 Nov 2023 13:43:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700171031; x=1731707031;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SwVG/jvEau5UTgAvdXPnimEGYlUsxriyeiBCVMkNrtM=;
+  b=XfyRIGvxjoFeFU4Uf1OZpPyWfkK6cBpOU/95iqVFzld5ZUy5s9u2AKSH
+   GX8Es34Qd971avt2Q7AUZ4//gwkg9c/682YODPjdx/U/4AXZSUUQnJhls
+   NrnqFWmKDc9KBYUeU7l5ZeVveg52a9/LkKuasSsN+fwu447kJyhRlJ/b7
+   yiqwRwI8htTmMX/8gCTVj5cydXEplPWNXdZCmJbvV0qtaOdb3XQoBA+Dk
+   3WUKpBck5Wcf3eBZr8CY6lpXjr7rM8nJsI1/LwdLSiU08BGAoatdj9q21
+   kAc44GnNwmsyNmwzPPWQYKQVBxuYpbRdY/QCI8HTIu7SHa+P+Ft1A1F64
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10896"; a="390043766"
+X-IronPort-AV: E=Sophos;i="6.04,205,1695711600"; 
+   d="scan'208";a="390043766"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2023 13:43:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10896"; a="835874525"
+X-IronPort-AV: E=Sophos;i="6.04,205,1695711600"; 
+   d="scan'208";a="835874525"
+Received: from lkp-server02.sh.intel.com (HELO b8de5498638e) ([10.239.97.151])
+  by fmsmga004.fm.intel.com with ESMTP; 16 Nov 2023 13:43:43 -0800
+Received: from kbuild by b8de5498638e with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1r3k9F-00025L-2N;
+	Thu, 16 Nov 2023 21:43:41 +0000
+Date: Fri, 17 Nov 2023 05:42:42 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ilya Leoshkevich <iii@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Alexander Potapenko <glider@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Lameter <cl@linux-foundation.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Marco Elver <elver@google.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org,
+	Pekka Enberg <penberg@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Vasily Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 0/3] kernfs: Convert from strlcpy() to strscpy()
-Date: Thu, 16 Nov 2023 11:21:22 -0800
-Message-Id: <20231116191718.work.246-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	Mark Rutland <mark.rutland@arm.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Ilya Leoshkevich <iii@linux.ibm.com>
+Subject: Re: [PATCH 27/32] s390/string: Add KMSAN support
+Message-ID: <202311170550.bSBo44ix-lkp@intel.com>
+References: <20231115203401.2495875-28-iii@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=805; i=keescook@chromium.org;
- h=from:subject:message-id; bh=w0GAtTzgRNL9znjaphz3FN4VQ24pFDHc0eBL30sFkpg=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlVmu11zVyAR1N094pTJIYi2lpml53vIr/7Zkfb
- zgMf4lRuPCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZVZrtQAKCRCJcvTf3G3A
- JqcUEACow96whY2PXsoj9tPefpjj3UIwlfJ3ut/35CSfyT8UK7/zYhv7KEZrBeHK/qxMRJ9+xBe
- Pc7j5tIqc68ExBPJVWjYfDJ37dsg28n4AbifgDfF4Tfr+XD/B/7zBYlbqa+YfKIoqNsie3TuEmb
- Jo5TNLzmJ+iHwLZQBg52HuTJ8IypsNdhdPUDt+GSVayHbFP8sOaZMzSgNzkWGE0EZPJVbhJkBhG
- dgaf1he3KcoFhM6lOXcJzNfLL4wP3gW0wQvCa7n53dwozdUYLAN8vAo99ju0ONbxHC5gaRy2hV1
- m8LYlDrVzBTldqKUPCwLlfworllGmywSzRyIvViY2SKCuLTEJMhrfrRT7eIc9F/TyhwKXjfWGox
- Q4MGthWvVnHSVXW26aJPBCdBexdQe0UNHIe1e9GtdPVv6/DSkPteLizTSuVXO/m6gY1q3uCYF9G
- RsrfA76ykmz8PiMZ1HwiSOUivMyMCZYd9dgBIcnKAxJdRmYQm6zmTcEY6iUR4P/ay56A0T7/tW+
- SIqHoC9vLAMJk2kagkrDUu4Q7FIjW4MKeI+Ul2jrc9WW0ggDCMFFYhz9oXzEcrakU5x04mo7l07
- mIs0IZlQmu6Y6/xTB1XcYB+9kCsQ0kxxgVUzqWsljvkctWg0ATuQ6HYRvZxRPR3AoAIvMha9INk
- Mb18F4pb gdKumXw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231115203401.2495875-28-iii@linux.ibm.com>
 
-Hi,
+Hi Ilya,
 
-One of the last users of strlcpy() is kernfs, which has some complex
-calling hierarchies that needed to be carefully examined. This series
-refactors the strlcpy() calls into strscpy() calls, and bubbles up all
-changes in return value checking for callers.
+kernel test robot noticed the following build errors:
 
--Kees
+[auto build test ERROR on s390/features]
+[also build test ERROR on akpm-mm/mm-everything linus/master vbabka-slab/for-next v6.7-rc1 next-20231116]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Kees Cook (3):
-  kernfs: Convert kernfs_walk_ns() from strlcpy() to strscpy()
-  kernfs: Convert kernfs_name_locked() from strlcpy() to strscpy()
-  kernfs: Convert kernfs_path_from_node_locked() from strlcpy() to
-    strscpy()
+url:    https://github.com/intel-lab-lkp/linux/commits/Ilya-Leoshkevich/ftrace-Unpoison-ftrace_regs-in-ftrace_ops_list_func/20231116-045608
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git features
+patch link:    https://lore.kernel.org/r/20231115203401.2495875-28-iii%40linux.ibm.com
+patch subject: [PATCH 27/32] s390/string: Add KMSAN support
+config: s390-debug_defconfig (https://download.01.org/0day-ci/archive/20231117/202311170550.bSBo44ix-lkp@intel.com/config)
+compiler: s390-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231117/202311170550.bSBo44ix-lkp@intel.com/reproduce)
 
- fs/kernfs/dir.c             | 53 ++++++++++++++++++++-----------------
- kernel/cgroup/cgroup-v1.c   |  2 +-
- kernel/cgroup/cgroup.c      |  4 +--
- kernel/cgroup/cpuset.c      |  2 +-
- kernel/trace/trace_uprobe.c |  2 +-
- 5 files changed, 33 insertions(+), 30 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311170550.bSBo44ix-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   s390-linux-ld: arch/s390/mm/vmem.o: in function `crst_table_init':
+>> arch/s390/include/asm/pgalloc.h:33:(.text+0x1ba): undefined reference to `memset64'
+   s390-linux-ld: arch/s390/mm/vmem.o: in function `vmem_pte_alloc':
+>> arch/s390/mm/vmem.c:68:(.ref.text+0x1ec): undefined reference to `memset64'
+   s390-linux-ld: arch/s390/mm/pgalloc.o: in function `base_pgt_alloc':
+>> arch/s390/mm/pgalloc.c:241:(.text+0x184): undefined reference to `memset64'
+   s390-linux-ld: arch/s390/mm/pgalloc.o: in function `crst_table_init':
+   arch/s390/include/asm/pgalloc.h:33:(.text+0x3e8): undefined reference to `memset64'
+>> s390-linux-ld: arch/s390/include/asm/pgalloc.h:33:(.text+0x568): undefined reference to `memset64'
+   s390-linux-ld: arch/s390/mm/pgalloc.o:arch/s390/include/asm/pgalloc.h:33: more undefined references to `memset64' follow
+   s390-linux-ld: lib/test_string.o: in function `memset16_selftest':
+>> lib/test_string.c:19:(.init.text+0x94): undefined reference to `memset16'
+   s390-linux-ld: lib/test_string.o: in function `memset32_selftest':
+>> lib/test_string.c:55:(.init.text+0x234): undefined reference to `memset32'
+   s390-linux-ld: lib/test_string.o: in function `memset64_selftest':
+>> lib/test_string.c:91:(.init.text+0x3c2): undefined reference to `memset64'
+   s390-linux-ld: drivers/video/fbdev/core/fbcon.o: in function `scr_memsetw':
+>> include/linux/vt_buffer.h:36:(.text+0x30f6): undefined reference to `memset16'
+>> s390-linux-ld: include/linux/vt_buffer.h:36:(.text+0x320a): undefined reference to `memset16'
+   s390-linux-ld: include/linux/vt_buffer.h:36:(.text+0x32c4): undefined reference to `memset16'
+   s390-linux-ld: include/linux/vt_buffer.h:36:(.text+0x33b8): undefined reference to `memset16'
+   s390-linux-ld: include/linux/vt_buffer.h:36:(.text+0x4f60): undefined reference to `memset16'
+   s390-linux-ld: drivers/video/fbdev/core/fbcon.o:include/linux/vt_buffer.h:36: more undefined references to `memset16' follow
+   s390-linux-ld: drivers/tty/vt/vt.o: in function `vc_uniscr_copy_area':
+>> drivers/tty/vt/vt.c:464:(.text+0x107e): undefined reference to `memset32'
+>> s390-linux-ld: drivers/tty/vt/vt.c:471:(.text+0x1104): undefined reference to `memset32'
+   s390-linux-ld: drivers/tty/vt/vt.c:471:(.text+0x1118): undefined reference to `memset32'
+   s390-linux-ld: drivers/tty/vt/vt.c:471:(.text+0x1140): undefined reference to `memset32'
+   s390-linux-ld: drivers/tty/vt/vt.o: in function `vc_uniscr_insert':
+   drivers/tty/vt/vt.c:374:(.text+0x13a4): undefined reference to `memset32'
+   s390-linux-ld: drivers/tty/vt/vt.o:drivers/tty/vt/vt.c:385: more undefined references to `memset32' follow
+   s390-linux-ld: drivers/tty/vt/vt.o: in function `scr_memsetw':
+   include/linux/vt_buffer.h:36:(.text+0x2844): undefined reference to `memset16'
+   s390-linux-ld: include/linux/vt_buffer.h:36:(.text+0x2932): undefined reference to `memset16'
+   s390-linux-ld: include/linux/vt_buffer.h:36:(.text+0x2fe8): undefined reference to `memset16'
+   s390-linux-ld: include/linux/vt_buffer.h:36:(.text+0x319c): undefined reference to `memset16'
+   s390-linux-ld: drivers/tty/vt/vt.o: in function `vc_uniscr_clear_line':
+   drivers/tty/vt/vt.c:393:(.text+0x3f78): undefined reference to `memset32'
+   s390-linux-ld: drivers/tty/vt/vt.o: in function `vc_uniscr_clear_lines':
+   drivers/tty/vt/vt.c:401:(.text+0x3fb8): undefined reference to `memset32'
+   s390-linux-ld: drivers/tty/vt/vt.c:401:(.text+0x3fe2): undefined reference to `memset32'
+   s390-linux-ld: drivers/tty/vt/vt.o: in function `scr_memsetw':
+   include/linux/vt_buffer.h:36:(.text+0x4018): undefined reference to `memset16'
+   s390-linux-ld: drivers/tty/vt/vt.o: in function `vc_uniscr_clear_lines':
+   drivers/tty/vt/vt.c:401:(.text+0x40de): undefined reference to `memset32'
+   s390-linux-ld: drivers/tty/vt/vt.c:401:(.text+0x4114): undefined reference to `memset32'
+   s390-linux-ld: drivers/tty/vt/vt.c:401:(.text+0x4134): undefined reference to `memset32'
+   s390-linux-ld: drivers/tty/vt/vt.o: in function `vc_uniscr_clear_line':
+   drivers/tty/vt/vt.c:393:(.text+0x417c): undefined reference to `memset32'
+   s390-linux-ld: drivers/tty/vt/vt.o: in function `vc_uniscr_clear_lines':
+   drivers/tty/vt/vt.c:401:(.text+0x41d6): undefined reference to `memset32'
+   s390-linux-ld: drivers/tty/vt/vt.o:drivers/tty/vt/vt.c:401: more undefined references to `memset32' follow
+   s390-linux-ld: drivers/tty/vt/vt.o: in function `scr_memsetw':
+   include/linux/vt_buffer.h:36:(.text+0x46d2): undefined reference to `memset16'
+   s390-linux-ld: drivers/tty/vt/vt.o: in function `vc_uniscr_clear_lines':
+   drivers/tty/vt/vt.c:401:(.text+0x4736): undefined reference to `memset32'
+   s390-linux-ld: drivers/tty/vt/vt.c:401:(.text+0x47b6): undefined reference to `memset32'
+   s390-linux-ld: drivers/tty/vt/vt.c:401:(.text+0x47f2): undefined reference to `memset32'
+   s390-linux-ld: drivers/tty/vt/vt.c:401:(.text+0x482e): undefined reference to `memset32'
+   s390-linux-ld: drivers/tty/vt/vt.o: in function `vc_uniscr_clear_line':
+   drivers/tty/vt/vt.c:393:(.text+0x7b1a): undefined reference to `memset32'
+   s390-linux-ld: drivers/tty/vt/vt.o: in function `scr_memsetw':
+   include/linux/vt_buffer.h:36:(.text+0x7b30): undefined reference to `memset16'
+   s390-linux-ld: drivers/tty/vt/vt.o: in function `vc_uniscr_clear_line':
+   drivers/tty/vt/vt.c:393:(.text+0x7c7a): undefined reference to `memset32'
+   s390-linux-ld: drivers/tty/vt/vt.o: in function `scr_memsetw':
+   include/linux/vt_buffer.h:36:(.text+0x7c9c): undefined reference to `memset16'
+   s390-linux-ld: drivers/block/zram/zram_drv.o: in function `memset_l':
+>> include/linux/string.h:168:(.text+0x1860): undefined reference to `memset64'
+
+
+vim +168 include/linux/string.h
+
+3b3c4babd89871 Matthew Wilcox 2017-09-08  161  
+3b3c4babd89871 Matthew Wilcox 2017-09-08  162  static inline void *memset_l(unsigned long *p, unsigned long v,
+3b3c4babd89871 Matthew Wilcox 2017-09-08  163  		__kernel_size_t n)
+3b3c4babd89871 Matthew Wilcox 2017-09-08  164  {
+3b3c4babd89871 Matthew Wilcox 2017-09-08  165  	if (BITS_PER_LONG == 32)
+3b3c4babd89871 Matthew Wilcox 2017-09-08  166  		return memset32((uint32_t *)p, v, n);
+3b3c4babd89871 Matthew Wilcox 2017-09-08  167  	else
+3b3c4babd89871 Matthew Wilcox 2017-09-08 @168  		return memset64((uint64_t *)p, v, n);
+3b3c4babd89871 Matthew Wilcox 2017-09-08  169  }
+3b3c4babd89871 Matthew Wilcox 2017-09-08  170  
 
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
