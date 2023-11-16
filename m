@@ -1,96 +1,145 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uiRBS8KO"
-Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 894E8194
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Nov 2023 07:33:21 -0800 (PST)
-Received: by mail-ot1-x331.google.com with SMTP id 46e09a7af769-6d30d9f4549so501929a34.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Nov 2023 07:33:21 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gksdvUXO"
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1352D4E
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Nov 2023 11:21:28 -0800 (PST)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-6b5cac99cfdso1110868b3a.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Nov 2023 11:21:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1700148801; x=1700753601; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1700162488; x=1700767288; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jigcuHsKegNHRurmm53lq9/67DRAvCMuAyvTeznimbI=;
-        b=uiRBS8KOnWIrrj7bdwYMb3qoAMfVlAjanY7smZKlU9JQlT9Sk08h2lAwMonYctU9zm
-         TXg56DxBbAGT4D+LPS0l6CFTNnN8u3bBHG9lsFcKOOb5BnWLbgylyEc/4YYV5B8E68U/
-         SNbBjAMmhJVcwo+84k8M8FLecbWq6aKdCTOG+zMcPwNsWRo6tD0UND1ZHCD8TkE/jws/
-         U1IdnowuhOFjaUONos+o2kZUVcV5Xo6sMVNfYIANiGGDbkH6AZN/+QWhliap7z1u3rv1
-         PeLP+ggFBbNRB/ltjKZjktaQAbMiIePvcWxeBJkuhIa9/3p4Zo0OZ/dRvYsKK2fum1p7
-         LMoQ==
+        bh=uIo7yB6lg0mEMstu2RR7JQJ7c10/IQwKA8lnXu5L+VQ=;
+        b=gksdvUXOqQfywnZfE/U/dRvbFNoqk2OdL1XDO2JtjQ5v8cHKjYv+3HHvN3Xc2t4pxx
+         jYl0X/SE/yNf57xIwCVKy9YYoToydy5pimU0FbJ9e5ILq8XV65nWX5Ry0h5f/xv0Ux/8
+         tmHpMPZUHqFGvTd83KfjtCu13x5CmwEB9NQs4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700148801; x=1700753601;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1700162488; x=1700767288;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jigcuHsKegNHRurmm53lq9/67DRAvCMuAyvTeznimbI=;
-        b=eoNYh5fmjWZmFxBXrCMJfDBxEvFKW7BQez3xUFVYFpNJsmZ8EO8wtzjNQGPZc3cSrP
-         2+/BxBY9bBvxKYnKSERhzBP8xDkJ3XoZYgeR/jKadFR9/qWSRI4TVcicIk6nlEcBm7GE
-         pTFJjPS1uY2YgkmX2CddPPyoKXMcsb4opJc2uBcZF8K892Fl2IW4gTfGlqZhwzKKgPKd
-         8yjzVYuprvPx0IMkwSPM0vqoqbFMN5+kjiFItVDSAPpocGC4O1UohkiOnAQOMXJuLs0q
-         ToLtmV2S4BQZFigjeSttnjNr+e9Z0+BEthc1UXTTI1TQuldSxGmUo1PxPzcFbNNsVOuY
-         yElA==
-X-Gm-Message-State: AOJu0Yw6Aw91DiRpSc0MHhb0bYAs4t20dvifqUzCEZg7jhcjwo/EMVQP
-	++TICWlcsoeu6kTz09Zvi0M69eBWHlJoTyueroJFZw==
-X-Google-Smtp-Source: AGHT+IHQosnCTeAt9ijWHEBylYqw8hrag8Y1HXVdGjwrtL/nmaov8l5KZvuUY+6ld7/ytSI/9Hxmk/Hk+xIdyevqHGU=
-X-Received: by 2002:a9d:4803:0:b0:6d4:733e:e3ec with SMTP id
- c3-20020a9d4803000000b006d4733ee3ecmr9485460otf.37.1700148800736; Thu, 16 Nov
- 2023 07:33:20 -0800 (PST)
+        bh=uIo7yB6lg0mEMstu2RR7JQJ7c10/IQwKA8lnXu5L+VQ=;
+        b=pkEqQ9HdfDKLziBcuueX3HA4vIFXgx2xzEhS0rIvVcPtxFqSumc8bQ2yNDXOoPW9gc
+         1fO+7cFZHi1VTZaTsoAucXCIsfu+EWKOg6GaTetgCdAscWg2BLLT+VRh0vTg/tNBnL8l
+         1TNpx5AMRLpu0p1tVHlPbnEffhFwBA5J5HGUrxViXHuSCY4Lc6OyG6f2Ww19WXQhMLEE
+         P7M84zKzEmpDBNYuTJx5ZDMell8oVVgfHiXehdj1yoddp7S5G4uIRFjLjH4P4AiuvxhI
+         RMTmgloTu9Cgz1/WUu8Hz4wgyaUTuvXHIGi2ljOW9wP1ojerxNLY47oqQ8lS6ye/ZuRh
+         iPUA==
+X-Gm-Message-State: AOJu0YydQA0mcImgjTn4cQJcL+BTiXkjIZ4g2m2gL9GNklrcM+6BLjLd
+	X5m0o0G9HIjxf50brONBZ+UjEQ==
+X-Google-Smtp-Source: AGHT+IEwPnM9Dx2nNDBuGD4lru9jT+pK5qmTq2kW6VUI6EBCZ4wKKaLw5OQNeQMU1nuyaJhO1qo8DA==
+X-Received: by 2002:a05:6a20:daa8:b0:186:6cb3:477 with SMTP id iy40-20020a056a20daa800b001866cb30477mr16580809pzb.28.1700162488340;
+        Thu, 16 Nov 2023 11:21:28 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id c9-20020a056a00008900b0066a31111cc5sm83004pfj.152.2023.11.16.11.21.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Nov 2023 11:21:27 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Tejun Heo <tj@kernel.org>,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Waiman Long <longman@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 2/3] kernfs: Convert kernfs_name_locked() from strlcpy() to strscpy()
+Date: Thu, 16 Nov 2023 11:21:24 -0800
+Message-Id: <20231116192127.1558276-2-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231116191718.work.246-kees@kernel.org>
+References: <20231116191718.work.246-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231115203401.2495875-1-iii@linux.ibm.com> <20231115203401.2495875-29-iii@linux.ibm.com>
-In-Reply-To: <20231115203401.2495875-29-iii@linux.ibm.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Thu, 16 Nov 2023 16:32:39 +0100
-Message-ID: <CAG_fn=W2t61Y-ZTgmnu78mpcpPRCzB-hk9YZoD8RXXdaKHV0MQ@mail.gmail.com>
-Subject: Re: [PATCH 28/32] s390/traps: Unpoison the kernel_stack_overflow()'s pt_regs
-To: Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
-	Marco Elver <elver@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Pekka Enberg <penberg@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2557; i=keescook@chromium.org;
+ h=from:subject; bh=LRsHUfYO0eDcNqxdqH4Irr7bDjuYf6fIiWZiwxT3W+g=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlVmu1weRodlm3lOcUmdMyw49wlyXCXGK9aCKK5
+ leBJkEo/2GJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZVZrtQAKCRCJcvTf3G3A
+ Jg/BD/wIwwRk/W4vfmpcw3JeNwWAhbL25AwyJuBta59Of8OWThCkAoKsImJQHA/3k2NBUNS2Fwi
+ S8ZiHqT8qaygVtCmErykGZeBzNtYaTjfHOBTZfiKjDX1YrdFjtjbW9VOeHR3vkDfDErswrhlklf
+ 22E55Z+V/rJHaf7jmrXD1k6ABqlVNQYs9jxxCJSSy/GwygBrxwJ1KcH4qp66EV0dcN04q/BhCOT
+ ZUqjqaD1nN4eGnS8nEUvxSuwhxKt7qAX9zWWe6r1rdjN3iNxhyXDMooCa6tKQXlSwpdVlkqdT69
+ gGSs7tLucDzx3R6aVpQsR4+s9RhM3sgsArYgpKaJEsSNmYqCAeG4/7VNNombjfWw0Bjz697xIDY
+ lN3nUchv53ibE3bW5hNhK32eWaq7fXoyhr++bVF4iWgVb1YhvxMhD4iCDFNmg7oqEMUTpWzBzdn
+ 3U631WffbyCMCgSZZdr589/vR4ATcXf61J+X20n4pRN62zGTVvn742alOwMwzeu4BbeOuux1hfr
+ lH8vjyDbNIatVWrktpNj5NZdHdoeQttsZgKMNrNjZ+y5kEKZ19+iLv1eGJl5INgxQ8Hjd/UP25K
+ eOJ34S69uiPxy6L/8n3mz4Tql8Ib5tSlG2VloXBwZBuu22BVA0p+0KJ5VufGbgJqqa3OCnwYFml 1S7SeuZU1GbAWjQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 15, 2023 at 9:35=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.com=
-> wrote:
->
-> This is normally done by the generic entry code, but the
-> kernel_stack_overflow() flow bypasses it.
->
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Reviewed-by: Alexander Potapenko <glider@google.com>
+strlcpy() reads the entire source buffer first. This read may exceed
+the destination size limit. This is both inefficient and can lead
+to linear read overflows if a source string is not NUL-terminated[1].
+Additionally, it returns the size of the source string, not the
+resulting size of the destination string. In an effort to remove strlcpy()
+completely[2], replace strlcpy() here with strscpy().
 
-> ---
->  arch/s390/kernel/traps.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/s390/kernel/traps.c b/arch/s390/kernel/traps.c
-> index 1d2aa448d103..dd7362806dbb 100644
-> --- a/arch/s390/kernel/traps.c
-> +++ b/arch/s390/kernel/traps.c
-> @@ -27,6 +27,7 @@
->  #include <linux/uaccess.h>
->  #include <linux/cpu.h>
->  #include <linux/entry-common.h>
-> +#include <linux/kmsan.h>
->  #include <asm/asm-extable.h>
->  #include <asm/fpu/api.h>
->  #include <asm/vtime.h>
-> @@ -260,6 +261,7 @@ static void monitor_event_exception(struct pt_regs *r=
-egs)
->
->  void kernel_stack_overflow(struct pt_regs *regs)
->  {
-> +       kmsan_unpoison_entry_regs(regs);
+Nothing actually checks the return value coming from kernfs_name_locked(),
+so this has no impact on error paths. The caller hierarchy is:
 
-I suggest adding a comment here.
+kernfs_name_locked()
+        kernfs_name()
+                pr_cont_kernfs_name()
+                        return value ignored
+                cgroup_name()
+                        current_css_set_cg_links_read()
+                                return value ignored
+                        print_page_owner_memcg()
+                                return value ignored
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy [1]
+Link: https://github.com/KSPP/linux/issues/89 [2]
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Azeem Shaikh <azeemshaikh38@gmail.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/kernfs/dir.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
+index 37353901ede1..8c0e5442597e 100644
+--- a/fs/kernfs/dir.c
++++ b/fs/kernfs/dir.c
+@@ -54,9 +54,9 @@ static bool kernfs_lockdep(struct kernfs_node *kn)
+ static int kernfs_name_locked(struct kernfs_node *kn, char *buf, size_t buflen)
+ {
+ 	if (!kn)
+-		return strlcpy(buf, "(null)", buflen);
++		return strscpy(buf, "(null)", buflen);
+ 
+-	return strlcpy(buf, kn->parent ? kn->name : "/", buflen);
++	return strscpy(buf, kn->parent ? kn->name : "/", buflen);
+ }
+ 
+ /* kernfs_node_depth - compute depth from @from to @to */
+@@ -182,12 +182,12 @@ static int kernfs_path_from_node_locked(struct kernfs_node *kn_to,
+  * @buflen: size of @buf
+  *
+  * Copies the name of @kn into @buf of @buflen bytes.  The behavior is
+- * similar to strlcpy().
++ * similar to strscpy().
+  *
+  * Fills buffer with "(null)" if @kn is %NULL.
+  *
+- * Return: the length of @kn's name and if @buf isn't long enough,
+- * it's filled up to @buflen-1 and nul terminated.
++ * Return: the resulting length of @buf. If @buf isn't long enough,
++ * it's filled up to @buflen-1 and nul terminated, and returns -E2BIG.
+  *
+  * This function can be called from any context.
+  */
+-- 
+2.34.1
+
