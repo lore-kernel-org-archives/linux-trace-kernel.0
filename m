@@ -1,112 +1,70 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="oMXbX3n5"
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 030AF194;
-	Fri, 17 Nov 2023 08:42:28 -0800 (PST)
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AHGcfOD021383;
-	Fri, 17 Nov 2023 16:42:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=StP4cu79FPer/ncWhUGarKu7uDEe4P30IUkZKgB8Pno=;
- b=oMXbX3n5GyfZLCltDw9T3hB63sji3rTYRx2aiONgdcwcpnWuRgc0UaDtfD/i573Ikj1A
- 6V9MX+hD7DILjp6VLLj4hiHg+6J/hbUCPqr8FP1jWUNJufvk/ikPd5I21POmO6CPtCFL
- 4BpSWLn4nTxXmW2iz7fBrpx8paIUZHIHjm74n6KPk6qFuW0g5u3fu1m3NEa+U72LVgYg
- ZzsxRSOHtHAjAASPhdYn90yowjjsJOmnSfR7bB1bnU1L6EkoozrSzhXtaqT2II1bi/uz
- F3c9vm+G3eBn1HIvzsAZ/8GdlrhS/3JAU+MV1lL76f4dj+HpQlFwpen84Yj7hAp0rJ27 hA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uebve828t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 Nov 2023 16:42:05 +0000
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AHGdXHQ023036;
-	Fri, 17 Nov 2023 16:42:04 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uebve828g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 Nov 2023 16:42:04 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AHG48xD009036;
-	Fri, 17 Nov 2023 16:42:03 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uanem75jx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 Nov 2023 16:42:03 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AHGg0dK20775522
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 17 Nov 2023 16:42:00 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 935B020043;
-	Fri, 17 Nov 2023 16:42:00 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5C1C820040;
-	Fri, 17 Nov 2023 16:41:58 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.53.3])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 17 Nov 2023 16:41:58 +0000 (GMT)
-Date: Fri, 17 Nov 2023 17:41:56 +0100
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Alexander Potapenko <glider@google.com>
-Cc: Ilya Leoshkevich <iii@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Sven Schnelle <svens@linux.ibm.com>
-Subject: Re: [PATCH 26/32] s390/mm: Define KMSAN metadata for vmalloc and
- modules
-Message-ID: <ZVeX1K6jIihnXIox@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20231115203401.2495875-1-iii@linux.ibm.com>
- <20231115203401.2495875-27-iii@linux.ibm.com>
- <CAG_fn=XSKh=AmU3mEC7dNmEFk5LaLt+y+TfsVcD0Dn5NsbTBSw@mail.gmail.com>
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2701CD79
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Nov 2023 09:44:06 -0800 (PST)
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2839a970a56so1005237a91.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Nov 2023 09:44:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700243045; x=1700847845;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tBNIQ0OyWnUUYf+IOMPIqQdftw554+6MI/vYVRG86Dc=;
+        b=UonnPi9ZA4BXqyFyXE2P0G2x4sNuoHPGg2tCzuX1buTrVb/5Ut0Gdk7z3Og3foj944
+         gtxaSq9sSlmW2WFQPOQNHpSRV6JUreU/AlSniPRIoiLoZW65ST8LohbW4lPp4qmr0i1M
+         TkGQP1VqGtfmXwiiwAXOd8FGMB0ESJRYMJm3w2hFK1Xpe0wwMXf/YqgAKlDdPfAZCfck
+         vcwtdWXRzITVE59dgxZ789IDahnBGDU58rcrBwhY42bmZ95piy0VNoY3OHQ6tWBr+tyj
+         DfI6X6wIEC84z21MbYpyYsxd9WHBuEcQP3WqJ/mmDrOSk2NhkCJVfR7M4B6k/S4gSypH
+         BcnQ==
+X-Gm-Message-State: AOJu0YzufoHxKb320kn0P0ubltxz5VLXBiilqJR2EXK9ac/SegeTuxM2
+	5x8lKfB1zxsMLC09NaVE0/FMjVTtJcwkI/lvdCMM2MfdPH9o
+X-Google-Smtp-Source: AGHT+IEGvinZzZUXWT8Abzqsa0MheB9XXEtJaQ6LA8XenYwwcXM2fxrpX1ls5/LOD52S1ncv/pPluiYNAaA8RLBBOot8+6XLgCqU
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG_fn=XSKh=AmU3mEC7dNmEFk5LaLt+y+TfsVcD0Dn5NsbTBSw@mail.gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: uOIqbaNKTfMkkRxqsp7HM2Lax2N0tjjf
-X-Proofpoint-ORIG-GUID: cilvsidISOBHr1Hvn1uIcIjCKlM8WL09
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-17_15,2023-11-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 phishscore=0 priorityscore=1501
- mlxscore=0 impostorscore=0 mlxlogscore=633 suspectscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2311170124
+X-Received: by 2002:a17:90a:be03:b0:27c:f438:70a4 with SMTP id
+ a3-20020a17090abe0300b0027cf43870a4mr26773pjs.5.1700243045768; Fri, 17 Nov
+ 2023 09:44:05 -0800 (PST)
+Date: Fri, 17 Nov 2023 09:44:05 -0800
+In-Reply-To: <0000000000009cd5bc060a430d80@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c667ce060a5cae75@google.com>
+Subject: Re: [syzbot] [kernel?] inconsistent lock state in __lock_task_sighand
+From: syzbot <syzbot+cf93299f5a30fb4c3829@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, boqun.feng@gmail.com, 
+	bpf@vger.kernel.org, brauner@kernel.org, daniel@iogearbox.net, 
+	haoluo@google.com, john.fastabend@gmail.com, jolsa@kernel.org, 
+	kpsingh@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, longman@redhat.com, martin.lau@linux.dev, 
+	mhiramat@kernel.org, michael.christie@oracle.com, mingo@redhat.com, 
+	mst@redhat.com, oleg@redhat.com, peterz@infradead.org, rostedt@goodmis.org, 
+	sdf@google.com, song@kernel.org, syzkaller-bugs@googlegroups.com, 
+	tglx@linutronix.de, wander@redhat.com, will@kernel.org, 
+	yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Nov 16, 2023 at 04:03:13PM +0100, Alexander Potapenko wrote:
+syzbot has bisected this issue to:
 
-Hi Alexander!
+commit 2d25a889601d2fbc87ec79b30ea315820f874b78
+Author: Peter Zijlstra <peterz@infradead.org>
+Date:   Sun Sep 17 11:24:21 2023 +0000
 
-> >         /* allow vmalloc area to occupy up to about 1/2 of the rest virtual space left */
-> >         vmalloc_size = min(vmalloc_size, round_down(VMALLOC_END / 2, _REGION3_SIZE));
-> > +#ifdef CONFIG_KMSAN
-> > +       /* take 2/3 of vmalloc area for KMSAN shadow and origins */
-> > +       vmalloc_size = round_down(vmalloc_size / 3, PAGE_SIZE);
-> Is it okay that vmalloc_size is only aligned on PAGE_SIZE?
-> E.g. above the alignment is _REGION3_SIZE.
+    ptrace: Convert ptrace_attach() to use lock guards
 
-Good question!
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=144ac400e80000
+start commit:   f31817cbcf48 Add linux-next specific files for 20231116
+git tree:       linux-next
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=164ac400e80000
+console output: https://syzkaller.appspot.com/x/log.txt?x=124ac400e80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f59345f1d0a928c
+dashboard link: https://syzkaller.appspot.com/bug?extid=cf93299f5a30fb4c3829
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=125ac3c0e80000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12c4d797680000
 
-This patch does not break anything, although the _REGION3_SIZE 
-alignment would be consistent here. Yet, we might rethink this
-whole code piece and the next version would reflect that.
+Reported-by: syzbot+cf93299f5a30fb4c3829@syzkaller.appspotmail.com
+Fixes: 2d25a889601d ("ptrace: Convert ptrace_attach() to use lock guards")
 
-Thanks!
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
