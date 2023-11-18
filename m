@@ -1,33 +1,33 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZJGHFzUY"
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2040.outbound.protection.outlook.com [40.107.100.40])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24C5BD58;
-	Sat, 18 Nov 2023 11:33:15 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="E7LvCEZO"
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2071.outbound.protection.outlook.com [40.107.244.71])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1777D57;
+	Sat, 18 Nov 2023 11:33:14 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lyMJxOARf4Dldi6Zq6LULBTZ9szbc3ZTGk6BfqBHW8r+V6ikXG6IsI1DWtk4cbtEhxhcAfR/IYE/KbqEXMqVQ6JgOwj6cRZB+iBZaMNAr1HFB23GHeEA8R+n8D7M3xwcCc95Aj634l3gJle4FNl0oHXda5zoFPtFii70jwRM2Go0/LaAevZcQP9ArU+8rpS/FPxIU3p/XolboV8ymT/divDCTN224hSLh8K4uNOL16RYxwGCaa5CCYVMR1pb2mlfvGpBV9JARBbwKy7YhYfZns+Tvtby5zuVscGncmtGtTC1dG0h0aDG+p1wfgqhIVBCl+wUHNAf4TNPGis4RWTbJw==
+ b=oJcdmqUtT6Z9d9ajapyKNkSKd5oN7JdE/J6c+jxl+hZ8yMfg/AXgiQ3AUe/oT0ROo8C4gwToszLwyoRXUIB1JQa9VThjxaw5RjuWMyjTIIiRvoLE71+WfBRtwpXfCx55u8gC/ZqFTv+2BvfKoAGzHu3gVSok4NB1UkicDpGaalGV6WmZS6ZwTG8jdI1n+E0pWFum8z5M46D5VAV6punVD5e/5tAwelvwUK+aDkpiO0RDzk48R+gmPFQVGvwwNGaO11oG/EmVGZRUPaID8i7FnxhVIntSlk5OVxN6MjNgLrijtkn2XrmdYlx3nRN7MA+zAuiok4pp6I9MMRJEmLdkUQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=J5HjIzhjQpQSFY2FiZ6mHxQTdgp2iYyzbTlup2dDUnQ=;
- b=iN3il7YrFeLXnQ/lSrFMjJ6ADlV+9+P7yt1wuaCrX6gAr4n2IzzobPjdffYrOLZw3iSehDOPGqfCO3gXzg5s2FICWcg1tGI95YV6w2WfMwJ5cEFAliXZWcv5mP+4CDcTbffIkBP/dQVgh3a4Rh0ATlA5mfNTNU+jqKvjqLaSzTsto3xF1Kfu3FADllWCRQvKzRzKcHPOjOSDzSeNwUSJ441SC3AbC4JTU72Wb3vN073Utzazrk8clB3zDiTefletgkQz3dd/jzPk1CU8ZT3k7sIWCfv/mlYRU/dGe9gKWRR0cg1tCl8mEPK1atZwfAU4DoIxhRglOC+azfZMlz3Yng==
+ bh=46vvSj727+xBFryn8AIsnDiQs4j6FkQnAMDhKMXIZg4=;
+ b=YvfsY59Xzx/eqakXiF31WT9/Eh9gU3C5EFvUAlLzRPtfb6tTCMGdrlnT/7gB+sW7m6NjWmBDCWAfrSN2e8EMZ47YraExLIAXqKUxsmoUNM2J9FwZdBnoJ9mlYdirrp+O285K0yT6DYDduC0Fha6Wkjmy342tBWjVLpf4yIZIc95/PXxHvUf+SY09pTD6f/V9DJNr/WRFeF7Ofp9l+1LFSZc1MSC5llOgHDuYJGUE05GI87Zm0qUYif7u2L84HZqZt1LAv+6N3DIEBKkl2/tSWJkRPEqgqBlHHt2iXhoH8YZVqQGjqoAW8Jjuo+gukMUNvDLeKJWYmYOUqHcV/TQikQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J5HjIzhjQpQSFY2FiZ6mHxQTdgp2iYyzbTlup2dDUnQ=;
- b=ZJGHFzUYxjPX3ZcxE/bNRqITz8k3psgquhh/FkdZZsgR8B4/gp91OXAI/kS8uiLB3SMZ7BdjXp8GfyKkA5/Dn7RZYKlbFCHD6NQZHXSZ/KImZKTq5+ZodjfA6xBJUfxKgibR9T5Mv0axtEY/0xZcjXsyU7QOmH/H1qN87wwhEhs=
-Received: from MN2PR10CA0025.namprd10.prod.outlook.com (2603:10b6:208:120::38)
- by DM4PR12MB7624.namprd12.prod.outlook.com (2603:10b6:8:107::11) with
+ bh=46vvSj727+xBFryn8AIsnDiQs4j6FkQnAMDhKMXIZg4=;
+ b=E7LvCEZOE1QM4JgIvj2GnmZAFKmDmthdzJKZ9LWoRLLdwTVD1LpjgfkvUcbDE1vt6CCXLS9U2kgbN2L3+cPsKHI1P3IeLTt2Z3t4IpWydQgIC3Js2uqLlZyj6Va49p+v02ljQSVVUar7b6L56CfB7fZKIQN41E3BdiKGjn6Vl2g=
+Received: from BLAP220CA0015.NAMP220.PROD.OUTLOOK.COM (2603:10b6:208:32c::20)
+ by IA0PR12MB8254.namprd12.prod.outlook.com (2603:10b6:208:408::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.26; Sat, 18 Nov
- 2023 19:33:10 +0000
-Received: from BL6PEPF0001AB4A.namprd04.prod.outlook.com
- (2603:10b6:208:120:cafe::31) by MN2PR10CA0025.outlook.office365.com
- (2603:10b6:208:120::38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.23 via Frontend
- Transport; Sat, 18 Nov 2023 19:33:09 +0000
+ 2023 19:33:07 +0000
+Received: from BL6PEPF0001AB4E.namprd04.prod.outlook.com
+ (2603:10b6:208:32c:cafe::b7) by BLAP220CA0015.outlook.office365.com
+ (2603:10b6:208:32c::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.25 via Frontend
+ Transport; Sat, 18 Nov 2023 19:33:07 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -35,22 +35,22 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF0001AB4A.mail.protection.outlook.com (10.167.242.68) with Microsoft
+ BL6PEPF0001AB4E.mail.protection.outlook.com (10.167.242.72) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7025.12 via Frontend Transport; Sat, 18 Nov 2023 19:33:09 +0000
+ 15.20.7025.12 via Frontend Transport; Sat, 18 Nov 2023 19:33:07 +0000
 Received: from quartz-7b1chost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Sat, 18 Nov
- 2023 13:33:06 -0600
+ 2023 13:33:01 -0600
 From: Yazen Ghannam <yazen.ghannam@amd.com>
 To: <linux-edac@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <tony.luck@intel.com>, <x86@kernel.org>,
 	<Avadhut.Naik@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
 	<amd-gfx@lists.freedesktop.org>, <linux-trace-kernel@vger.kernel.org>, "Yazen
  Ghannam" <yazen.ghannam@amd.com>
-Subject: [PATCH 11/20] x86/mce/amd: Simplify DFR handler setup
-Date: Sat, 18 Nov 2023 13:32:39 -0600
-Message-ID: <20231118193248.1296798-12-yazen.ghannam@amd.com>
+Subject: [PATCH 04/20] x86/mce/amd, EDAC/mce_amd: Move long names to decoder module
+Date: Sat, 18 Nov 2023 13:32:32 -0600
+Message-ID: <20231118193248.1296798-5-yazen.ghannam@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231118193248.1296798-1-yazen.ghannam@amd.com>
 References: <20231118193248.1296798-1-yazen.ghannam@amd.com>
@@ -67,113 +67,197 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4A:EE_|DM4PR12MB7624:EE_
-X-MS-Office365-Filtering-Correlation-Id: 559052a5-7495-4265-b39c-08dbe86d3274
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4E:EE_|IA0PR12MB8254:EE_
+X-MS-Office365-Filtering-Correlation-Id: da7df241-834c-4ac1-7178-08dbe86d3131
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	r5I2Pu0TekLnhb6A7SWo3IYVGFDVdllx7uUlL2S/S/yG3ETaeSTWTIVx7mo2Z+g4f+Tyqv3+k08Hu/vaFvpmMN8xWtXkQvWBK3xphvrF8Gi1bIiTggR98gEqfxJnZkCdD0Unq4NW8QiMmfJjkVOKklofSwjnFcDsXURB+n8kGkdEqfyuu4CNDcRRWfbroJtMEDpB9cneWUu1oG9o1xBB1UTmdXyzdT23/a3WuBjwjHWI/N558RKfUOtFaqMJApba9pOfcdd46Hh6bRBvnJK5USf7e8xOem43dInbJ3AuwLpuolZvX+9D2Wy6jKSJTNgs77USz/qV163ZmSIrT4CRuOL6Sx5Qb4KJUyUAPvg5bpex5JCuLxEdIzYTPlRLcZySnyc3x4I0ettA67gK9wxrVXJrtXp76qk41FLUDE5/LUGdi9IkEs7c/+irj9YbZiBLv7t22jWs6VAKf2VW/kiVh/oVe9qUOTipNuKmtB2SXo53fSPapUzyG4dntLTSPX+DJYRjbZhaD+9vqkrmtbEO7aHvDgZtXKiDNPCMTr9t/gO46aKszbUz8Bc2ihFVkY9dNeEy7vl/Zc5hfRai/mw/B+xu0sUsVieBfMRZpqrleTrbmwU2c6nSH4jRea5ULM+TN2v/aVuEvb3zykigRzYHatNP6JrVsDVTwx57iS+GN6iXOntaEei3icBqUj1qoVq2LdF7Kr0W2KRt6H72V1Vf6rpFQLZBHBvxvJnh9Nl+e7SnM0XpCOzMivnGoYV/9fd/EPM6YN6tBzRptTQ60zu11Q==
+	GYsY7oQEwYkIsduxFPhiGkY8VsBPrKEhimRMy7hXUOxOW0RoEOK+J4Wv6THmAkDEsqzV9Fqw7m1yz5j5AsrjzjCvpawaSxLLFZ3APZDJRJvG03ogZMc0nWQWrAwWnWPyIxE7rT+jO6GNTJXahMhsK12bhSKJMFD7Z7fYADmkLKRLTjFn5hiAQZmxLGk622LUTFY4BWEykC6tW8fiBBKvZnKkd39NNtob4/Ya3JvmXxleUbH8XC2otfNXzSrKPH4MpOVaooWSL+dPYGcdRf1ATHoVr10KLOyoOXn+DGRCZrEj6sZ5bMPj5fhlfORnwh/hGag1NTxOBz+57fwZAc8L/PtZwjkOURg5LTM/QP9rPKduyBQVAqDHKaZfQOkK63NbBUvsRZE/G/u25zgQYljlg7Du0LVSPyTUlI8/V0xtMZBzaxCMtnJcuG+UqT6sVlePZWpq6yEGE7UJa5WxKAICjMt3Wt096VNKxakQbIYdG6TS2YCeud4KClMNks0CFJQDJlpXsV3R5K9VR4SRRCAddhFW3NdfuzoIkpnmfL9zqJV//+Y4bEDR7EnpqkXhHgkReS3spHaD0DpyWw6qpe8E7GOfA2wLPhGDp2PMIwAI3i80WrqZXd4tsewnYYBgZJ45YaeWsJ6YS5wF7i+lquJiR7npnMyVajqKqMxeNPMAJKuxbumFvC0gbQc7Pg6ZFFjerxvZVSPfQpjv/34nDewo3e1qYjLw+z1qAVlPIxWYg4whR7jTyOqrCblZ7QAw2B69gm97uibasHJ4Gv2JXyJ/Rw==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(346002)(136003)(376002)(39860400002)(230922051799003)(451199024)(82310400011)(186009)(64100799003)(1800799012)(36840700001)(40470700004)(46966006)(47076005)(1076003)(81166007)(2616005)(356005)(7696005)(40460700003)(36860700001)(336012)(41300700001)(426003)(83380400001)(16526019)(36756003)(26005)(82740400003)(44832011)(4326008)(8676002)(8936002)(40480700001)(478600001)(5660300002)(86362001)(70206006)(6666004)(70586007)(2906002)(6916009)(316002)(54906003)(36900700001);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(136003)(396003)(346002)(376002)(230922051799003)(451199024)(82310400011)(64100799003)(186009)(1800799012)(46966006)(36840700001)(40470700004)(40460700003)(5660300002)(44832011)(2906002)(356005)(81166007)(82740400003)(86362001)(36756003)(336012)(426003)(83380400001)(1076003)(26005)(16526019)(2616005)(7696005)(36860700001)(478600001)(6666004)(47076005)(41300700001)(8676002)(8936002)(4326008)(70586007)(70206006)(316002)(6916009)(54906003)(40480700001)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2023 19:33:09.8176
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2023 19:33:07.6991
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 559052a5-7495-4265-b39c-08dbe86d3274
+X-MS-Exchange-CrossTenant-Network-Message-Id: da7df241-834c-4ac1-7178-08dbe86d3131
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB4A.namprd04.prod.outlook.com
+	BL6PEPF0001AB4E.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7624
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8254
 
-AMD systems with the SUCCOR feature can send an APIC LVT interrupt for
-deferred errors. The LVT offset is 0x2 by convention, i.e. this is the
-default as listed in hardware documentation.
+The "long names" for SMCA banks are only used by the MCE decoder module.
 
-However, the MCA registers may list a different LVT offset for this
-interrupt. The kernel should honor the value from the hardware.
-
-Simplify the enable flow by using the hardware-provided value. Any
-conflicts will be caught by setup_APIC_eilvt(). Conflicts on production
-systems can be handled as quirks, if needed.
-
-Also, rename the function using a "verb-first" style.
+Move them out of the arch code and into the decoder module.
 
 Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
 ---
- arch/x86/kernel/cpu/mce/amd.c | 33 ++++++++++-----------------------
- 1 file changed, 10 insertions(+), 23 deletions(-)
+ arch/x86/include/asm/mce.h    |  1 -
+ arch/x86/kernel/cpu/mce/amd.c | 74 ++++++++++++++---------------------
+ drivers/edac/mce_amd.c        | 41 +++++++++++++++++++
+ 3 files changed, 71 insertions(+), 45 deletions(-)
 
+diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
+index 6de6e1d95952..4ad49afca2db 100644
+--- a/arch/x86/include/asm/mce.h
++++ b/arch/x86/include/asm/mce.h
+@@ -333,7 +333,6 @@ enum smca_bank_types {
+ 	N_SMCA_BANK_TYPES
+ };
+ 
+-extern const char *smca_get_long_name(enum smca_bank_types t);
+ extern bool amd_mce_is_memory_error(struct mce *m);
+ 
+ extern int mce_threshold_create_device(unsigned int cpu);
 diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-index 4fddc5c8ae0e..9197badd9929 100644
+index f3517b8a8e91..6cf8ed9c79be 100644
 --- a/arch/x86/kernel/cpu/mce/amd.c
 +++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -48,7 +48,6 @@
- #define MSR_CU_DEF_ERR		0xC0000410
- #define MASK_DEF_LVTOFF		0x000000F0
- #define MASK_DEF_INT_TYPE	0x00000006
--#define DEF_LVT_OFF		0x2
- #define DEF_INT_TYPE_APIC	0x2
- #define INTR_TYPE_APIC			0x1
+@@ -87,42 +87,37 @@ struct smca_bank {
+ static DEFINE_PER_CPU_READ_MOSTLY(struct smca_bank[MAX_NR_BANKS], smca_banks);
+ static DEFINE_PER_CPU_READ_MOSTLY(u8[N_SMCA_BANK_TYPES], smca_bank_counts);
  
-@@ -581,19 +580,9 @@ static int setup_APIC_mce_threshold(int reserved, int new)
- 	return reserved;
- }
- 
--static int setup_APIC_deferred_error(int reserved, int new)
-+static void enable_deferred_error_interrupt(void)
- {
--	if (reserved < 0 && !setup_APIC_eilvt(new, DEFERRED_ERROR_VECTOR,
--					      APIC_EILVT_MSG_FIX, 0))
--		return new;
+-struct smca_bank_name {
+-	const char *name;	/* Short name for sysfs */
+-	const char *long_name;	/* Long name for pretty-printing */
+-};
 -
--	return reserved;
+-static struct smca_bank_name smca_names[] = {
+-	[SMCA_LS ... SMCA_LS_V2]	= { "load_store",	"Load Store Unit" },
+-	[SMCA_IF]			= { "insn_fetch",	"Instruction Fetch Unit" },
+-	[SMCA_L2_CACHE]			= { "l2_cache",		"L2 Cache" },
+-	[SMCA_DE]			= { "decode_unit",	"Decode Unit" },
+-	[SMCA_RESERVED]			= { "reserved",		"Reserved" },
+-	[SMCA_EX]			= { "execution_unit",	"Execution Unit" },
+-	[SMCA_FP]			= { "floating_point",	"Floating Point Unit" },
+-	[SMCA_L3_CACHE]			= { "l3_cache",		"L3 Cache" },
+-	[SMCA_CS ... SMCA_CS_V2]	= { "coherent_slave",	"Coherent Slave" },
+-	[SMCA_PIE]			= { "pie",		"Power, Interrupts, etc." },
++static char *smca_names[] = {
++	[SMCA_LS ... SMCA_LS_V2]	= "load_store",
++	[SMCA_IF]			= "insn_fetch",
++	[SMCA_L2_CACHE]			= "l2_cache",
++	[SMCA_DE]			= "decode_unit",
++	[SMCA_RESERVED]			= "reserved",
++	[SMCA_EX]			= "execution_unit",
++	[SMCA_FP]			= "floating_point",
++	[SMCA_L3_CACHE]			= "l3_cache",
++	[SMCA_CS ... SMCA_CS_V2]	= "coherent_slave",
++	[SMCA_PIE]			= "pie",
+ 
+ 	/* UMC v2 is separate because both of them can exist in a single system. */
+-	[SMCA_UMC]			= { "umc",		"Unified Memory Controller" },
+-	[SMCA_UMC_V2]			= { "umc_v2",		"Unified Memory Controller v2" },
+-	[SMCA_PB]			= { "param_block",	"Parameter Block" },
+-	[SMCA_PSP ... SMCA_PSP_V2]	= { "psp",		"Platform Security Processor" },
+-	[SMCA_SMU ... SMCA_SMU_V2]	= { "smu",		"System Management Unit" },
+-	[SMCA_MP5]			= { "mp5",		"Microprocessor 5 Unit" },
+-	[SMCA_MPDMA]			= { "mpdma",		"MPDMA Unit" },
+-	[SMCA_NBIO]			= { "nbio",		"Northbridge IO Unit" },
+-	[SMCA_PCIE ... SMCA_PCIE_V2]	= { "pcie",		"PCI Express Unit" },
+-	[SMCA_XGMI_PCS]			= { "xgmi_pcs",		"Ext Global Memory Interconnect PCS Unit" },
+-	[SMCA_NBIF]			= { "nbif",		"NBIF Unit" },
+-	[SMCA_SHUB]			= { "shub",		"System Hub Unit" },
+-	[SMCA_SATA]			= { "sata",		"SATA Unit" },
+-	[SMCA_USB]			= { "usb",		"USB Unit" },
+-	[SMCA_GMI_PCS]			= { "gmi_pcs",		"Global Memory Interconnect PCS Unit" },
+-	[SMCA_XGMI_PHY]			= { "xgmi_phy",		"Ext Global Memory Interconnect PHY Unit" },
+-	[SMCA_WAFL_PHY]			= { "wafl_phy",		"WAFL PHY Unit" },
+-	[SMCA_GMI_PHY]			= { "gmi_phy",		"Global Memory Interconnect PHY Unit" },
++	[SMCA_UMC]			= "umc",
++	[SMCA_UMC_V2]			= "umc_v2",
++	[SMCA_PB]			= "param_block",
++	[SMCA_PSP ... SMCA_PSP_V2]	= "psp",
++	[SMCA_SMU ... SMCA_SMU_V2]	= "smu",
++	[SMCA_MP5]			= "mp5",
++	[SMCA_MPDMA]			= "mpdma",
++	[SMCA_NBIO]			= "nbio",
++	[SMCA_PCIE ... SMCA_PCIE_V2]	= "pcie",
++	[SMCA_XGMI_PCS]			= "xgmi_pcs",
++	[SMCA_NBIF]			= "nbif",
++	[SMCA_SHUB]			= "shub",
++	[SMCA_SATA]			= "sata",
++	[SMCA_USB]			= "usb",
++	[SMCA_GMI_PCS]			= "gmi_pcs",
++	[SMCA_XGMI_PHY]			= "xgmi_phy",
++	[SMCA_WAFL_PHY]			= "wafl_phy",
++	[SMCA_GMI_PHY]			= "gmi_phy",
+ };
+ 
+ static const char *smca_get_name(enum smca_bank_types t)
+@@ -130,17 +125,8 @@ static const char *smca_get_name(enum smca_bank_types t)
+ 	if (t >= N_SMCA_BANK_TYPES)
+ 		return NULL;
+ 
+-	return smca_names[t].name;
 -}
 -
--static void deferred_error_interrupt_enable(struct cpuinfo_x86 *c)
+-const char *smca_get_long_name(enum smca_bank_types t)
 -{
--	u32 low = 0, high = 0;
--	int def_offset = -1, def_new;
-+	u32 low = 0, high = 0, def_new;
+-	if (t >= N_SMCA_BANK_TYPES)
+-		return NULL;
+-
+-	return smca_names[t].long_name;
++	return smca_names[t];
+ }
+-EXPORT_SYMBOL_GPL(smca_get_long_name);
  
- 	if (!mce_flags.succor)
- 		return;
-@@ -601,17 +590,15 @@ static void deferred_error_interrupt_enable(struct cpuinfo_x86 *c)
- 	if (rdmsr_safe(MSR_CU_DEF_ERR, &low, &high))
- 		return;
+ enum smca_bank_types smca_get_bank_type(unsigned int cpu, unsigned int bank)
+ {
+diff --git a/drivers/edac/mce_amd.c b/drivers/edac/mce_amd.c
+index 9215c06783df..b8765292d26e 100644
+--- a/drivers/edac/mce_amd.c
++++ b/drivers/edac/mce_amd.c
+@@ -1163,6 +1163,47 @@ static void decode_mc6_mce(struct mce *m)
+ 	pr_emerg(HW_ERR "Corrupted MC6 MCE info?\n");
+ }
  
-+	/*
-+	 * Trust the value from hardware.
-+	 * If there's a conflict, then setup_APIC_eilvt() will throw an error.
-+	 */
- 	def_new = (low & MASK_DEF_LVTOFF) >> 4;
--	if (!(low & MASK_DEF_LVTOFF)) {
--		pr_err(FW_BUG "Your BIOS is not setting up LVT offset 0x2 for deferred error IRQs correctly.\n");
--		def_new = DEF_LVT_OFF;
--		low = (low & ~MASK_DEF_LVTOFF) | (DEF_LVT_OFF << 4);
--	}
-+	if (setup_APIC_eilvt(def_new, DEFERRED_ERROR_VECTOR, APIC_EILVT_MSG_FIX, 0))
-+		return;
- 
--	def_offset = setup_APIC_deferred_error(def_offset, def_new);
--	if ((def_offset == def_new) &&
--	    (deferred_error_int_vector != amd_deferred_error_interrupt))
--		deferred_error_int_vector = amd_deferred_error_interrupt;
-+	deferred_error_int_vector = amd_deferred_error_interrupt;
- 
- 	if (!mce_flags.smca)
- 		low = (low & ~MASK_DEF_INT_TYPE) | DEF_INT_TYPE_APIC;
-@@ -777,7 +764,7 @@ void mce_amd_feature_init(struct cpuinfo_x86 *c)
- 	u32 low = 0, high = 0, address = 0;
- 	int offset = -1;
- 
--	deferred_error_interrupt_enable(c);
-+	enable_deferred_error_interrupt();
- 
- 	for (bank = 0; bank < this_cpu_read(mce_num_banks); ++bank) {
- 		if (mce_flags.smca)
++static  char *smca_names[] = {
++	[SMCA_LS ... SMCA_LS_V2]	= "Load Store Unit",
++	[SMCA_IF]			= "Instruction Fetch Unit",
++	[SMCA_L2_CACHE]			= "L2 Cache",
++	[SMCA_DE]			= "Decode Unit",
++	[SMCA_RESERVED]			= "Reserved",
++	[SMCA_EX]			= "Execution Unit",
++	[SMCA_FP]			= "Floating Point Unit",
++	[SMCA_L3_CACHE]			= "L3 Cache",
++	[SMCA_CS ... SMCA_CS_V2]	= "Coherent Slave",
++	[SMCA_PIE]			= "Power, Interrupts, etc.",
++
++	/* UMC v2 is separate because both of them can exist in a single system. */
++	[SMCA_UMC]			= "Unified Memory Controller",
++	[SMCA_UMC_V2]			= "Unified Memory Controller v2",
++	[SMCA_PB]			= "Parameter Block",
++	[SMCA_PSP ... SMCA_PSP_V2]	= "Platform Security Processor",
++	[SMCA_SMU ... SMCA_SMU_V2]	= "System Management Unit",
++	[SMCA_MP5]			= "Microprocessor 5 Unit",
++	[SMCA_MPDMA]			= "MPDMA Unit",
++	[SMCA_NBIO]			= "Northbridge IO Unit",
++	[SMCA_PCIE ... SMCA_PCIE_V2]	= "PCI Express Unit",
++	[SMCA_XGMI_PCS]			= "Ext Global Memory Interconnect PCS Unit",
++	[SMCA_NBIF]			= "NBIF Unit",
++	[SMCA_SHUB]			= "System Hub Unit",
++	[SMCA_SATA]			= "SATA Unit",
++	[SMCA_USB]			= "USB Unit",
++	[SMCA_GMI_PCS]			= "Global Memory Interconnect PCS Unit",
++	[SMCA_XGMI_PHY]			= "Ext Global Memory Interconnect PHY Unit",
++	[SMCA_WAFL_PHY]			= "WAFL PHY Unit",
++	[SMCA_GMI_PHY]			= "Global Memory Interconnect PHY Unit",
++};
++
++static const char *smca_get_long_name(enum smca_bank_types t)
++{
++	if (t >= N_SMCA_BANK_TYPES)
++		return NULL;
++
++	return smca_names[t];
++}
++
+ /* Decode errors according to Scalable MCA specification */
+ static void decode_smca_error(struct mce *m)
+ {
 -- 
 2.34.1
 
