@@ -1,33 +1,33 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="erQveuqU"
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2049.outbound.protection.outlook.com [40.107.220.49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D41FD192;
-	Sat, 18 Nov 2023 11:33:12 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="aIeBhpaV"
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2071.outbound.protection.outlook.com [40.107.244.71])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45CEB182;
+	Sat, 18 Nov 2023 11:33:13 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FC9NjIaFAaaEcLF8zEXJOfgUrRe1TDpU3rjKyfGDlZVKJzC+27GV/0AP1QN39T/c0xz7QTSJhPJRSuX6vMUrBW1F6SNqzU94l/OHx75dz2xf3Q74B5Ld3Tl23HKlj8gh8yxScKcd2bOpx60agNNFH9vfLWIVq6PlarYw3xs63n6ogc08q1fs1/ODY1kk+Wra4JJfEJWRrQDGPNUqytBsLF+VdRrk8PzjzkXFiFiR8cvauv88jNJKZhvKn7jirN6qvXhW4pw+IF4YpB8UT1KkmRvKQTMg99ikemCj/DNU3ydBv4bKnH//hQJPDJjVLgi9y0gt02CXd3SgaUBW4Yf8Kg==
+ b=NunpJUfVMRNONOjB6xeio5nYRuvMyzUMVxThqswf1VzTFIB2aNSz7jUet2qa6g1JjD11qiMt8me9Ds4aFwGpzJvfAQZtlWVUK9ps0U2VXoWr//ceoVX+W5bl3/n0tCx7YP4cYmgkbQ5ywnRZ3qgZ06tHM6pF8R2otE/R2yBB/Hv7DcKcCkXmHpt+oWrWwiKNQ4aPphDSgqtbOYXG+zwxfwXhHE+E9e52oWdjHPhU+Wfn3vUnrMo5JDw0BMAdVeq9FvZMzMEwQYIemnzj9vbGAhCuR2Gs70Swi591b9DJt4VISCEWlru0i0GP/K1AyQkLoHlyPAtFajHZJLI02K0W2w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=v0dxyp9FRzUePJH0nDMmW1/4cp+TAt31i7MmM/jvXNU=;
- b=F7CiSvUzgSND63BIulOh/oYXhE3ri17U4z65ulnBgVZ3OnwX2PlJsiLmHgtGjhY3zmw3oV4u4fI6HjpP0q6Ng+/NM6AoOFgjIERB54wbQDxIKqRPjQWb+daJc5oXDhLVH3oH9VRHN6NG8ANsjKanRT6Dgn2dV/BaMI5bCa5YxuVsDn5QHb+UqTbaGjyszW2ztp0wQv8IntmqCrv78VUsxUhOjcOTZ3XcjUfT9HII/VluKZOPOFei4i6D6ebevy3jUISQ9w3DO1bEetxVqE1pVCPXj6Gylg6YCBEVVbkbcmEpc16/LiDvZzRlu6TwL36PJWnjDAaHNr8C6BUfah2GPw==
+ bh=+44HoDxAcTsjWv7EzHqjBhM539PXDvFKvf4IB8D2vHs=;
+ b=dqPtX8VHe99uLKud2K4Ubt8TxXpKkL+9la16mrOtUHO8H5yU2WpC5HuWp9dm9c4KLlRVHEklmfFolN5iMjEqcfhopMY09R+eTJxmxcqDOmKx1Bmol7fZwm81he/KRwJJv0HaDAze9IRVKzCj31OXHUjKxCZh4V2zRCnLbV5IatsiosqPByAdYvgN8Zg66FDHrvs7qb9iUI5K9Ge5OEwusB2N9hthWIMjTUum3Fr3cwiEDQ8CvUmFmcm+j3A/B+8PUIgSoBqdMzgNgMcNlgj87QqHpMlKdJW6G6x8341pFUIfqPZN+sP6hGqFCKx2Ix+jXr1jERuMXGSC03RCbSdyyg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v0dxyp9FRzUePJH0nDMmW1/4cp+TAt31i7MmM/jvXNU=;
- b=erQveuqUObfkxQjAxnRMqaqTUfXs64qKcjvpYnjS4vhi0CHMdMSiohPTkAjYMav2qjOFJ5iLswfKWBOJvCT+MPvP9OwzoCxn+MLBxCV5fbrI5uBR0SISWZyRKKEbNCfZm+5SHeVopHV+5XvZREE5LZsWndxsfseI9zRwaOpgxfg=
-Received: from BLAP220CA0008.NAMP220.PROD.OUTLOOK.COM (2603:10b6:208:32c::13)
- by BN9PR12MB5275.namprd12.prod.outlook.com (2603:10b6:408:100::14) with
+ bh=+44HoDxAcTsjWv7EzHqjBhM539PXDvFKvf4IB8D2vHs=;
+ b=aIeBhpaVN/Il+5rjyX9JeFGFgUWiw6OuHW/PgRq7f20AZBjCnRCEWUB/os7MElsxJCZQfAdk5NZVmVoxErDVXlZhH2QHflzv3mOYqJFa5YaIsBHDNWrJ6X8S4QGbHCCDC08hveI64vZl8jhna56JW3TV3RCxB353pa05MUOVcEk=
+Received: from MN2PR10CA0011.namprd10.prod.outlook.com (2603:10b6:208:120::24)
+ by IA0PR12MB8254.namprd12.prod.outlook.com (2603:10b6:208:408::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.26; Sat, 18 Nov
- 2023 19:33:07 +0000
-Received: from BL6PEPF0001AB4E.namprd04.prod.outlook.com
- (2603:10b6:208:32c:cafe::b3) by BLAP220CA0008.outlook.office365.com
- (2603:10b6:208:32c::13) with Microsoft SMTP Server (version=TLS1_2,
+ 2023 19:33:10 +0000
+Received: from BL6PEPF0001AB4A.namprd04.prod.outlook.com
+ (2603:10b6:208:120:cafe::6) by MN2PR10CA0011.outlook.office365.com
+ (2603:10b6:208:120::24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.23 via Frontend
- Transport; Sat, 18 Nov 2023 19:33:07 +0000
+ Transport; Sat, 18 Nov 2023 19:33:10 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -35,22 +35,22 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF0001AB4E.mail.protection.outlook.com (10.167.242.72) with Microsoft
+ BL6PEPF0001AB4A.mail.protection.outlook.com (10.167.242.68) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7025.12 via Frontend Transport; Sat, 18 Nov 2023 19:33:07 +0000
+ 15.20.7025.12 via Frontend Transport; Sat, 18 Nov 2023 19:33:10 +0000
 Received: from quartz-7b1chost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Sat, 18 Nov
- 2023 13:33:01 -0600
+ 2023 13:33:08 -0600
 From: Yazen Ghannam <yazen.ghannam@amd.com>
 To: <linux-edac@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <tony.luck@intel.com>, <x86@kernel.org>,
 	<Avadhut.Naik@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
 	<amd-gfx@lists.freedesktop.org>, <linux-trace-kernel@vger.kernel.org>, "Yazen
  Ghannam" <yazen.ghannam@amd.com>
-Subject: [PATCH 03/20] x86/mce: Use mce_setup() helpers for apei_smca_report_x86_error()
-Date: Sat, 18 Nov 2023 13:32:31 -0600
-Message-ID: <20231118193248.1296798-4-yazen.ghannam@amd.com>
+Subject: [PATCH 15/20] x86/mce: Skip AMD threshold init if no threshold banks found
+Date: Sat, 18 Nov 2023 13:32:43 -0600
+Message-ID: <20231118193248.1296798-16-yazen.ghannam@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231118193248.1296798-1-yazen.ghannam@amd.com>
 References: <20231118193248.1296798-1-yazen.ghannam@amd.com>
@@ -67,97 +67,93 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4E:EE_|BN9PR12MB5275:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8cb3f286-3c71-4429-fd8c-08dbe86d30fc
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4A:EE_|IA0PR12MB8254:EE_
+X-MS-Office365-Filtering-Correlation-Id: be7bb09a-1a85-4696-acad-08dbe86d330f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	SmZhPYg5YHBgLEMF7CwBOz4HgPhgryYm51tdHWFl0JkvMNks5ko+VkiwP4WiayMCVHI/1kHvl5a2Z27EHJBLzeTeZ0sckgjMZJ2HLu6PuOWUcJ8Fs8AI9Rp8YyotLClqRJIptpcS7VpWwdAo368sIb9imLp+TZTKWuUM0GAtbmIcka3u1pxGJ+R6PfOhWBjQnBbiwxbnRaGXYlQWUYxkqxEHC7qnKH6CorlTYaw5G9NzyM8I1qlOuTn6zq0sFz4CNRLUReDGL/xrvmGBlwCSlN2TjKgnfMEV/aR0XbrjQj3TegYXAmfHK5rkpsKiEIYVbb6jXJ46fJxRtY7Ou1r/E9/Xg2uwQcL3KabwItAiSm8rLuNZfKA3ul1cdSozA3qRIaq5HEUHlpYvO+7Bv+gXwTyS+av8QYnQe5UMQ4COEEQaFUd/qm14wdIIDqMmsyH54cdvfWgmzFgyHDtAR0a1XHRj5qW2F6JCBhlOi7UwVZt+MPkgZSXYyUVry5keC/91gsKSfbZ3OfUX6UK1mt34gMrJ0AjkQXKMGSbxfhRJHy0hMWCBosKkilb3DU66Mkv0RpWoB3q2ZtL7axbQUw+xR+FiRDTlJAjfJTQFecyosjZqhzBrwl4DIjYcgj8buQckV/f8AfM0q10R/WylSr1atgvgAkjGW/pmoEEZv8CY0RUIK7imiySAPPKzZV+kwvfzxbik/pcFaZuo3FtT26Mx68sfDqkztbijrF1ursXknzuWDtiAEE38be5J8ZEJOCrmiGluoFKERMQCNouZU95cIA==
+	FtDKS7BzBZYN5oiHhB3qJnXb5L1kaV4qDumHeVqQxM/vCpr5R18RwrgkQrQl1rCM2ph5a0viuvV5wXw8CpoeAgC4quOuPjmryWhl3g1r7gcOfoZZDPEYJrwzL0niETyLsjIYxGlLqvo/kbul0Bi9zyYHyaIz8CbMvth8UyRIfAkaz44K3DfWKG9e/AYmCFJjQz/433PKOLII+aQc/P7xdqF60xt92Az9E7/d7p8/ysPmM+d2zuBu6zABMNApzfknJyYWVNS9Wak4Ge3fo4cGg1HYBbQbBJJeiyklzMFcKWb4tqO27Uo24IRuPQqeyqOvHIHFEu2klzLP1PScz6AINrWr5GHOhGiIYeEpCaeG1Ewv4wY6iPE7+fINdaNc3Xgtw78MBF45qGeKj0kJ1zLNJI5X0LR0DTh1otFJWi9ZPYUzY/x0qGQYIBrBgMhnX2/drHcG3SxXHVhGadCMyKZ31XHs8QNF7Tw72SJCVMlTOXSddnO8kqkrb/kAMMIqvdv4XHpENb3HYSwETNfAAPK/dKj92+mhUMYCb8NAVQooec4R0DTAbKlZgdyNOA1T8wQtrcrA2yc8diUrEgOBrhanZCp+FmcMxudi6hnF6YYwUnxhm4BoUvm28MrDuOEcx0BgNRFy3hnstZDA3Nf1T/AM9XCezLp1Ae6sBAGr4MLU2TFyOFRISFAxR9fKUqKGc3OEtsBkcij+YYqym1SrPO97IatSZUVGbnmxsNjQhVsDtfGhlHfqvLPpD+0eKOfnCYWtza/V+3afM9xigOBN5At+BgAYUqRzll5jW2juopHFHfg=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(136003)(39860400002)(376002)(346002)(230922051799003)(451199024)(64100799003)(82310400011)(186009)(1800799012)(40470700004)(46966006)(36840700001)(2906002)(41300700001)(8936002)(8676002)(4326008)(40460700003)(316002)(5660300002)(44832011)(86362001)(36756003)(2616005)(1076003)(83380400001)(16526019)(336012)(426003)(26005)(82740400003)(6666004)(7696005)(81166007)(356005)(47076005)(36860700001)(40480700001)(478600001)(6916009)(54906003)(70206006)(70586007)(36900700001);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(136003)(396003)(346002)(376002)(230922051799003)(451199024)(82310400011)(64100799003)(186009)(1800799012)(46966006)(36840700001)(40470700004)(40460700003)(5660300002)(44832011)(2906002)(15650500001)(356005)(81166007)(82740400003)(86362001)(36756003)(336012)(426003)(83380400001)(1076003)(26005)(16526019)(2616005)(7696005)(36860700001)(478600001)(6666004)(47076005)(41300700001)(8676002)(8936002)(4326008)(70586007)(70206006)(316002)(6916009)(54906003)(40480700001)(36900700001)(309714004);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2023 19:33:07.3554
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2023 19:33:10.8489
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8cb3f286-3c71-4429-fd8c-08dbe86d30fc
+X-MS-Exchange-CrossTenant-Network-Message-Id: be7bb09a-1a85-4696-acad-08dbe86d330f
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB4E.namprd04.prod.outlook.com
+	BL6PEPF0001AB4A.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5275
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8254
 
-Current AMD systems may report MCA errors using the ACPI Boot Error
-Record Table (BERT). The BERT entries for MCA errors will be an x86
-Common Platform Error Record (CPER) with an MSR register context that
-matches the MCAX/SMCA register space.
+AMD systems optionally support MCA Thresholding. This feature is
+discovered by checking capability bits in the MCA_MISC* registers.
 
-However, the BERT will not necessarily be processed on the CPU that
-reported the MCA errors. Therefore, the correct CPU number needs to be
-determined and the information saved in struct mce.
+Currently, MCA Thresholding is set up in two passes. The first is during
+CPU init where available banks are detected, and the "bank_map" variable
+is updated. The second is during sysfs/device init when the thresholding
+data structures are allocated and hardware is fully configured.
 
-The CPU number is determined by searching all possible CPUs for a Local
-APIC ID matching the value in the x86 CPER.
+During device init, the "threshold_banks" array is allocated even if no
+available banks were discovered. Furthermore, the thresholding reset
+flow checks if the top-level "threshold_banks" array is non-NULL, but it
+doesn't check if individual "threshold_bank" structures are non-NULL.
+This is avoided because the hardware interrupt is not enabled in this
+case. But this issue becomes present if enabling the interrupt when the
+thresholding data structures are not initialized.
 
-Set up the MCA record after searching for a CPU number. If no possible
-CPU was found, then return early.
-
-Gather the global MCA information first, save the found CPU number, then
-gather the per-CPU information.
+Check "bank_map" to determine if the thresholding structures should be
+allocated and initialized. Also, remove "mce_flags.amd_threshold" which
+is redundant when checking "bank_map".
 
 Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
 ---
- arch/x86/kernel/cpu/mce/apei.c     | 18 ++++++++----------
- arch/x86/kernel/cpu/mce/internal.h |  2 ++
- 2 files changed, 10 insertions(+), 10 deletions(-)
+ arch/x86/kernel/cpu/mce/amd.c      | 2 +-
+ arch/x86/kernel/cpu/mce/core.c     | 1 -
+ arch/x86/kernel/cpu/mce/internal.h | 3 ---
+ 3 files changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mce/apei.c b/arch/x86/kernel/cpu/mce/apei.c
-index 7f7309ff67d0..33cefe6157eb 100644
---- a/arch/x86/kernel/cpu/mce/apei.c
-+++ b/arch/x86/kernel/cpu/mce/apei.c
-@@ -97,20 +97,18 @@ int apei_smca_report_x86_error(struct cper_ia_proc_ctx *ctx_info, u64 lapic_id)
- 	if (ctx_info->reg_arr_size < 48)
- 		return -EINVAL;
+diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
+index b45ee297cde2..462ba9ff997b 100644
+--- a/arch/x86/kernel/cpu/mce/amd.c
++++ b/arch/x86/kernel/cpu/mce/amd.c
+@@ -1434,7 +1434,7 @@ int mce_threshold_create_device(unsigned int cpu)
+ 	struct threshold_bank **bp;
+ 	int err;
  
--	mce_setup(&m);
--
--	m.extcpu = -1;
--	m.socketid = -1;
--
- 	for_each_possible_cpu(cpu) {
--		if (cpu_data(cpu).topo.initial_apicid == lapic_id) {
--			m.extcpu = cpu;
--			m.socketid = cpu_data(m.extcpu).topo.pkg_id;
-+		if (cpu_data(cpu).topo.initial_apicid == lapic_id)
- 			break;
--		}
+-	if (!mce_flags.amd_threshold)
++	if (!this_cpu_read(bank_map))
+ 		return 0;
+ 
+ 	bp = this_cpu_read(threshold_banks);
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index a81c0df217e2..bdbc32f10a9a 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -2004,7 +2004,6 @@ static void __mcheck_cpu_init_early(struct cpuinfo_x86 *c)
+ 		mce_flags.overflow_recov = !!cpu_has(c, X86_FEATURE_OVERFLOW_RECOV);
+ 		mce_flags.succor	 = !!cpu_has(c, X86_FEATURE_SUCCOR);
+ 		mce_flags.smca		 = !!cpu_has(c, X86_FEATURE_SMCA);
+-		mce_flags.amd_threshold	 = 1;
  	}
+ }
  
--	m.apicid = lapic_id;
-+	if (!cpu_possible(cpu))
-+		return -EINVAL;
-+
-+	mce_setup_global(&m);
-+	m.cpu = m.extcpu = cpu;
-+	mce_setup_per_cpu(&m);
-+
- 	m.bank = (ctx_info->msr_addr >> 4) & 0xFF;
- 	m.status = *i_mce;
- 	m.addr = *(i_mce + 1);
 diff --git a/arch/x86/kernel/cpu/mce/internal.h b/arch/x86/kernel/cpu/mce/internal.h
-index e13a26c9c0ac..424c7461dcf9 100644
+index 8ed1035f013b..fca7499e1bf4 100644
 --- a/arch/x86/kernel/cpu/mce/internal.h
 +++ b/arch/x86/kernel/cpu/mce/internal.h
-@@ -209,6 +209,8 @@ enum mca_msr {
+@@ -162,9 +162,6 @@ struct mce_vendor_flags {
+ 	/* Zen IFU quirk */
+ 	zen_ifu_quirk		: 1,
  
- /* Decide whether to add MCE record to MCE event pool or filter it out. */
- extern bool filter_mce(struct mce *m);
-+void mce_setup_global(struct mce *m);
-+void mce_setup_per_cpu(struct mce *m);
+-	/* AMD-style error thresholding banks present. */
+-	amd_threshold		: 1,
+-
+ 	/* Pentium, family 5-style MCA */
+ 	p5			: 1,
  
- #ifdef CONFIG_X86_MCE_AMD
- extern bool amd_filter_mce(struct mce *m);
 -- 
 2.34.1
 
