@@ -1,31 +1,31 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AfgV97f5"
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2047.outbound.protection.outlook.com [40.107.237.47])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA645D4D;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="eDggnHn4"
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2052.outbound.protection.outlook.com [40.107.92.52])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B751D47;
 	Sat, 18 Nov 2023 11:33:12 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C9g6YNCAvXDSVjI5yIyVhIjqL3e4qFLecDyJI6FFdI8hdNeqBAtFIKqgwxMCoa+quaWCe8BuICKoHGqT2ZD2YCgMRSOFfriUirEz12dhbAUfelL1+E64NuYc2OJbuPJQ+EpHpTfzGM5z30PEA2oMdeVe///cQuzGTSQbWxDaLRdYXvHQhKbQr+0Q9H/SMlxOaVlpboPKEkjY3SXyGl5pDlX9sbpkrcI0hO7EV1OD5kufzqb/15nvVrlK4Wuc/on84z4CpICPD1RZsuF4vf5tVpzJGi1Zy6XlzL725KGL2+0QFIXrpwEaSDrkn6FFNIqvEeZ2AR1v1l88cXlyHIv0uw==
+ b=TB1iNoFqjBmK3mwxaq9yPUfaEJhSvP+Q1SB2uS+9hGieCI31g0QM/GfsfwXmGwZUheAed3VIIutOhGUGgSfrD1xlLy7MiiBUgCKtLVyrkKrDZQpd8vUgz04pRjwz+5brfsx66k7CxFbsfzMQUZwpO3Y9885/PKFnApfI8G+2ZB2CilzMaosbe1niFrMTEQZVofgYmf7kBDg2zGpUa/0Y5SpwhFcaDw08rv5pqs0uZua6vEgSycBAmJRz1BBxu6pkrtG+oALO40d45dd+DY4gehOgAlzv/7Ay2T1cTxlPq4kSOqFnaUWuernBcoAcY0W8uP++YjMHy693Z2o5Qt4JqA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qYB+IucDCol4XrB3njZyw4LDuS8caYEqMgMjfEntg58=;
- b=BNv6G49fEQFESKr+l7vr+P5pXj+M5slbdt771Gv7mTZE6Q2xpbHyq2Sk8caz1897hS6AG1cESttT8XChSFhpbiXgqfmzLm8jiQAITDcUoaVsjpgiw0DsJm5quwoGWDWVT317Vdn0ePdAfZpLmwofGjc8i+aVNFcuUEkMtNRz5puzWhpxdn+2denLibXkzIuJ4stv3QOuq+6lTyzbjjLWVG4khdsE5am7KeCvzLyieffRe2GzA5omQNfLBP9mfCkjRBgc1vb83SSwRVrA05ft8703uAxrvnbemPh2Sb8VPhuLTniORymtiEovZHN91SW2NVgHXSanRs+FCXZjYooHIg==
+ bh=I6oJsM7/uKjBUNpT6M/DT6f1NyV7YhKrHXcs9EK5yw8=;
+ b=Ogo61QgNWQLbSXw/mA6VlEzV7oCaXkVaob6ooZgVt4yxjYbbLI+MFx6zmDWuPNdc8/CKekPSDgC8VnMJhGIArH0hD/WQYDLogZZYOIMw+EXlChUihUr4PcGa4bweWzGvYZageLkFzogAM5Id5Bx1EwuW6exXXA1+CgojLBhPHKNdXl3B+h6NkixOZdigoO6UBXl8UjzRZ0F6+egKUpVgEfqHENjGPmr/IjLDL7lE89ag2tnWmCNnUkyS+saw1qAO9AwMJXqHAlAi7z9jSKl0mkkyh7J97/3npNIOXhQ/u4OwoCliPsGeFBhwx8/8KjY+M0ORvkIp6pOoneKerE0NbA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qYB+IucDCol4XrB3njZyw4LDuS8caYEqMgMjfEntg58=;
- b=AfgV97f5es+BXiNK4q/bnyQbsGXL592Jq2+t4G8Ov0MtrCp+0flv6VrW3d/nViqti08QpZnbLpMOyfbE2XEgaSIDSldjOTMuT2T/1dIbjhW9r9Ofc9SIuyrxA5QerK2911FaqzxbzYHCVQ2JSDIbrs/4d33E45gGL11fIwVBh9A=
-Received: from MN2PR10CA0009.namprd10.prod.outlook.com (2603:10b6:208:120::22)
- by LV3PR12MB9412.namprd12.prod.outlook.com (2603:10b6:408:211::18) with
+ bh=I6oJsM7/uKjBUNpT6M/DT6f1NyV7YhKrHXcs9EK5yw8=;
+ b=eDggnHn4LhtHNPas+9G+fECZyPMpzwmHgTcB1mt6n0vSzjtKSwfoCYFiUocv5McPqmkoJpkxnKCFawhD/x9w4JykrjbBCultXKZceniCiizceAshcG1/nWr6ZqICfqpgwlgT94qTOjLRxUW4R0UAIsGoTJptxAPFaYZdzvCfJ4Q=
+Received: from MN2PR10CA0019.namprd10.prod.outlook.com (2603:10b6:208:120::32)
+ by MN0PR12MB6149.namprd12.prod.outlook.com (2603:10b6:208:3c7::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.25; Sat, 18 Nov
  2023 19:33:09 +0000
 Received: from BL6PEPF0001AB4A.namprd04.prod.outlook.com
- (2603:10b6:208:120:cafe::97) by MN2PR10CA0009.outlook.office365.com
- (2603:10b6:208:120::22) with Microsoft SMTP Server (version=TLS1_2,
+ (2603:10b6:208:120:cafe::75) by MN2PR10CA0019.outlook.office365.com
+ (2603:10b6:208:120::32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.25 via Frontend
  Transport; Sat, 18 Nov 2023 19:33:09 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
@@ -41,16 +41,16 @@ Received: from SATLEXMB04.amd.com (165.204.84.17) by
 Received: from quartz-7b1chost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Sat, 18 Nov
- 2023 13:33:03 -0600
+ 2023 13:33:04 -0600
 From: Yazen Ghannam <yazen.ghannam@amd.com>
 To: <linux-edac@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <tony.luck@intel.com>, <x86@kernel.org>,
 	<Avadhut.Naik@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
 	<amd-gfx@lists.freedesktop.org>, <linux-trace-kernel@vger.kernel.org>, "Yazen
  Ghannam" <yazen.ghannam@amd.com>
-Subject: [PATCH 07/20] x86/mce/amd: Use fixed bank number for quirks
-Date: Sat, 18 Nov 2023 13:32:35 -0600
-Message-ID: <20231118193248.1296798-8-yazen.ghannam@amd.com>
+Subject: [PATCH 09/20] x86/mce/amd: Clean up SMCA configuration
+Date: Sat, 18 Nov 2023 13:32:37 -0600
+Message-ID: <20231118193248.1296798-10-yazen.ghannam@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231118193248.1296798-1-yazen.ghannam@amd.com>
 References: <20231118193248.1296798-1-yazen.ghannam@amd.com>
@@ -67,71 +67,162 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4A:EE_|LV3PR12MB9412:EE_
-X-MS-Office365-Filtering-Correlation-Id: a7669b20-3fb8-4a78-7df0-08dbe86d31fd
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4A:EE_|MN0PR12MB6149:EE_
+X-MS-Office365-Filtering-Correlation-Id: 96356b73-12a2-4a76-7b41-08dbe86d323b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	qk7bB5BhJxqBjhBu5qOyW8VVpK00CKlMsj0+qgQqQhQCF2f3/9LaqLw/aIOLS3X2lIq2bREDWAu4OAJ8kG4gausLMwBkaiVXZNpwuJFkqVKmSGEeCnlfPOdORTG5fXMLBkWACRMVM5C2/nfcJ0H7S9sEi0ZriSfSyellTAuTlvGvGVfe3cQMgrR0gnVWD2yoLXIXjp3AXWt3lcTQgipfhEDlyCSg4NCRZ1GNtdWQI+CX69ao+jx80gWyaQdY9QrqPKBCk/vK5GOnVjeNRK2AAQKyOqOK8IyVub3CKo+PKerVD5b6HCi6MH5XIBfyb1zTpLo00SanRlvgJwLSujwso+cOf0NzrqCgN9z32peclMo2tbL9ja26a0Xb/zPwtxfJ/fxcxqwY9M5VInSzZL1C+vRVG6MsjnkgowVqV4JFiobQK9RMXYTsH4qS6ErQ1ufbpnoHxLadBEkFALdZc1L9qidKq1xQpxdR6r2fRxUS6rugQ9K/Duux8K1jz5aj3dqBoCYFYrxNwU+BfwuajDLHHITuyE1tCzzMO8TuIgS8YJOxdm5MLz10/qiqj7Pf8MPETwJXolzXpDCM7lDq8OweixXjCQ8v6k01wQXkjDSOi9ddM6AkSmA6lUcaOqy3y7nBR/4zBzgXHbu8AFvfKnEgP7kCyi+NVmqP0C+ekB8gjVuoetozhPrIU5pvWYP5cE4M8w97Zx7iAD8Cif72pCgugmyCZRR27pCNMdU0lELNHz2lBT7W8FD2aIKG/W7ftRbIGfTau3l/BYQtyxoz7oi/dQ==
+	ruzxZSndcahK/siT3DKfzijT+Nw4LvlwjU6frmnLaQHDlr1mRMyxnHwGMdbX+YG8a7lSMG3botXMIZEXl8l7R1JbsKsUKyveacuyoNSwRWJbja69yWeOdu7SY6lQ+PVnUQwiTZy1BHK88Hp/fu0O5JLNrwpvLUAE1dhjHx4eLtFnSVXEbsNcjUyWOKTKP/iR2jvkNemU+xz2UV/JUgEk0QhSGvftScUSR0bhRR76hyjpBXbWn2eYQsWcju7q+uxpUcjdksY76XcOXZGZ+0L8t1vN9QgdXsITDqplpjiJs8p7zm1Kq3WIgh2z7wCyTxmXCKjrOr4tvWNuq9m3JGWGqkj8QthuC0n0IOhd8vJVCKq5Czf1nTwdvUY0wLyrb6Mk+7oVGFueFsDkyaLckiM4sIpEuDE1WKksRAF1tBdfER+4jqDUurQegA4kVAWEtftN22ZQsnCVNF/dV8MBuflNHDhq8+mo+om7hH0Hw9im1b4O+QgdqXvb4sRCWkGqH/nQaHqloOsE48NDMoDnyOse2muNi7MNTpX9bO0XxFEUU1WPM9G2mL2GTjVEPuf83v9ZEouMxNNdIZ5zUl6gFtKA4nJX+DTwAEqZcNgsoRJgJjBt1bIr2TML08jGRsULWQSvFVOFb11NJ+uFEAeRZ5swh9B2CUHUiEODL/ybARVSxGKS3YDolKvboD+83jG7lWvsw1CSQKB49224ZrYj5N0O7IVxeRfuwLXbZKXu8pozkXjcRU8LsFwMXTMCFsZF62BHMF+TJmwpMksPWX6WW6duNA==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(39860400002)(346002)(136003)(376002)(230922051799003)(451199024)(82310400011)(186009)(1800799012)(64100799003)(36840700001)(40470700004)(46966006)(2906002)(36860700001)(47076005)(83380400001)(15650500001)(82740400003)(356005)(81166007)(40460700003)(41300700001)(316002)(70586007)(54906003)(6916009)(70206006)(6666004)(40480700001)(7696005)(86362001)(36756003)(478600001)(26005)(44832011)(16526019)(5660300002)(336012)(426003)(1076003)(2616005)(4326008)(8676002)(8936002)(36900700001);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(136003)(376002)(346002)(39860400002)(230922051799003)(1800799012)(82310400011)(64100799003)(186009)(451199024)(46966006)(36840700001)(40470700004)(40480700001)(40460700003)(36860700001)(54906003)(70206006)(70586007)(6916009)(316002)(6666004)(478600001)(47076005)(44832011)(8936002)(8676002)(86362001)(2616005)(7696005)(1076003)(26005)(2906002)(4326008)(16526019)(5660300002)(41300700001)(336012)(356005)(36756003)(426003)(83380400001)(82740400003)(81166007)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2023 19:33:09.0520
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2023 19:33:09.4426
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a7669b20-3fb8-4a78-7df0-08dbe86d31fd
+X-MS-Exchange-CrossTenant-Network-Message-Id: 96356b73-12a2-4a76-7b41-08dbe86d323b
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	BL6PEPF0001AB4A.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9412
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6149
 
-Quirks break micro-architectural definitions. Therefore, quirk
-conditions don't need to follow micro-architectural requirements.
+The current SMCA configuration function does more than just configure
+SMCA features. It also detects and caches the SMCA bank types.
 
-Currently, there is a quirk to filter some errors from the
-Instruction Fetch (IF) unit on specific models. The IF unit is
-represented by MCA bank 1 for these models. Related to this quirk is
-code to disable MCA Thresholding for the IF bank.
+However, the bank type caching flow will be removed during the init path
+clean up.
 
-Check the bank number for the quirks instead of determining the bank
-type.
+Define a new function that only configures SMCA features. This will
+operate on the MCA_CONFIG MSR, so include updated register field
+definitions using bitops.
+
+Leave old code until init path is cleaned up.
 
 Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
 ---
- arch/x86/kernel/cpu/mce/amd.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/mce/amd.c | 84 ++++++++++++++++++++---------------
+ 1 file changed, 49 insertions(+), 35 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-index 6fc35967b11b..6e100024498a 100644
+index 95843ac7979d..c8c92e048f56 100644
 --- a/arch/x86/kernel/cpu/mce/amd.c
 +++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -616,13 +616,12 @@ prepare_threshold_block(unsigned int bank, unsigned int block, u32 addr,
+@@ -50,9 +50,16 @@
+ #define MASK_DEF_INT_TYPE	0x00000006
+ #define DEF_LVT_OFF		0x2
+ #define DEF_INT_TYPE_APIC	0x2
++#define INTR_TYPE_APIC			0x1
  
- bool amd_filter_mce(struct mce *m)
+ /* Scalable MCA: */
+ 
++/* MCA_CONFIG register, one per MCA bank */
++#define CFG_DFR_INT_TYPE		GENMASK_ULL(38, 37)
++#define CFG_MCAX_EN			BIT_ULL(32)
++#define CFG_LSB_IN_STATUS		BIT_ULL(8)
++#define CFG_DFR_INT_SUPP		BIT_ULL(5)
++
+ /* Threshold LVT offset is at MSR0xC0000410[15:12] */
+ #define SMCA_THR_LVT_OFF	0xF000
+ 
+@@ -350,45 +357,51 @@ static void smca_set_misc_banks_map(unsigned int bank, unsigned int cpu)
+ 
+ }
+ 
+-static void smca_configure(unsigned int bank, unsigned int cpu)
++/* Set appropriate bits in MCA_CONFIG. */
++static void configure_smca(unsigned int bank)
  {
--	enum smca_bank_types bank_type = smca_get_bank_type(m->extcpu, m->bank);
- 	struct cpuinfo_x86 *c = &boot_cpu_data;
+-	u8 *bank_counts = this_cpu_ptr(smca_bank_counts);
+-	const struct smca_hwid *s_hwid;
+-	unsigned int i, hwid_mcatype;
+-	u32 high, low;
+-	u32 smca_config = MSR_AMD64_SMCA_MCx_CONFIG(bank);
++	u64 mca_config;
  
- 	/* See Family 17h Models 10h-2Fh Erratum #1114. */
- 	if (c->x86 == 0x17 &&
- 	    c->x86_model >= 0x10 && c->x86_model <= 0x2F &&
--	    bank_type == SMCA_IF && XEC(m->status, 0x3f) == 10)
-+	    m->bank == 1 && XEC(m->status, 0x3f) == 10)
- 		return true;
+-	/* Set appropriate bits in MCA_CONFIG */
+-	if (!rdmsr_safe(smca_config, &low, &high)) {
+-		/*
+-		 * OS is required to set the MCAX bit to acknowledge that it is
+-		 * now using the new MSR ranges and new registers under each
+-		 * bank. It also means that the OS will configure deferred
+-		 * errors in the new MCx_CONFIG register. If the bit is not set,
+-		 * uncorrectable errors will cause a system panic.
+-		 *
+-		 * MCA_CONFIG[MCAX] is bit 32 (0 in the high portion of the MSR.)
+-		 */
+-		high |= BIT(0);
++	if (!mce_flags.smca)
++		return;
  
- 	/* NB GART TLB error reporting is disabled by default. */
-@@ -654,7 +653,7 @@ static void disable_err_thresholding(struct cpuinfo_x86 *c, unsigned int bank)
- 	} else if (c->x86 == 0x17 &&
- 		   (c->x86_model >= 0x10 && c->x86_model <= 0x2F)) {
+-		/*
+-		 * SMCA sets the Deferred Error Interrupt type per bank.
+-		 *
+-		 * MCA_CONFIG[DeferredIntTypeSupported] is bit 5, and tells us
+-		 * if the DeferredIntType bit field is available.
+-		 *
+-		 * MCA_CONFIG[DeferredIntType] is bits [38:37] ([6:5] in the
+-		 * high portion of the MSR). OS should set this to 0x1 to enable
+-		 * APIC based interrupt. First, check that no interrupt has been
+-		 * set.
+-		 */
+-		if ((low & BIT(5)) && !((high >> 5) & 0x3))
+-			high |= BIT(5);
++	if (rdmsrl_safe(MSR_AMD64_SMCA_MCx_CONFIG(bank), &mca_config))
++		return;
++
++	/*
++	 * OS is required to set the MCAX enable bit to acknowledge that it is
++	 * now using the new MSR ranges and new registers under each
++	 * bank. It also means that the OS will configure deferred
++	 * errors in the new MCA_CONFIG register. If the bit is not set,
++	 * uncorrectable errors will cause a system panic.
++	 */
++	mca_config |= FIELD_PREP(CFG_MCAX_EN, 0x1);
  
--		if (smca_get_bank_type(smp_processor_id(), bank) != SMCA_IF)
-+		if (bank != 1)
- 			return;
+-		this_cpu_ptr(mce_banks_array)[bank].lsb_in_status = !!(low & BIT(8));
++	/*
++	 * SMCA sets the Deferred Error Interrupt type per bank.
++	 *
++	 * MCA_CONFIG[DeferredIntTypeSupported] is bit 5, and tells us
++	 * if the DeferredIntType bit field is available.
++	 *
++	 * MCA_CONFIG[DeferredIntType] is bits [38:37]. OS should set
++	 * this to 0x1 to enable APIC based interrupt. First, check that
++	 * no interrupt has been set.
++	 */
++	if (FIELD_GET(CFG_DFR_INT_SUPP, mca_config) && !FIELD_GET(CFG_DFR_INT_TYPE, mca_config))
++		mca_config |= FIELD_PREP(CFG_DFR_INT_TYPE, INTR_TYPE_APIC);
  
- 		msrs[0] = MSR_AMD64_SMCA_MCx_MISC(bank);
+-		wrmsr(smca_config, low, high);
+-	}
++	if (FIELD_GET(CFG_LSB_IN_STATUS, mca_config))
++		this_cpu_ptr(mce_banks_array)[bank].lsb_in_status = true;
++
++	wrmsrl(MSR_AMD64_SMCA_MCx_CONFIG(bank), mca_config);
++}
++
++static void smca_configure_old(unsigned int bank, unsigned int cpu)
++{
++	u8 *bank_counts = this_cpu_ptr(smca_bank_counts);
++	const struct smca_hwid *s_hwid;
++	unsigned int i, hwid_mcatype;
++	u32 high, low;
+ 
+ 	smca_set_misc_banks_map(bank, cpu);
+ 
+@@ -764,8 +777,9 @@ void mce_amd_feature_init(struct cpuinfo_x86 *c)
+ 
+ 	for (bank = 0; bank < this_cpu_read(mce_num_banks); ++bank) {
+ 		if (mce_flags.smca)
+-			smca_configure(bank, cpu);
++			smca_configure_old(bank, cpu);
+ 
++		configure_smca(bank);
+ 		disable_err_thresholding(c, bank);
+ 
+ 		for (block = 0; block < NR_BLOCKS; ++block) {
 -- 
 2.34.1
 
