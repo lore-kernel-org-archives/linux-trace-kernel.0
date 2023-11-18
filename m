@@ -1,33 +1,33 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nQdWL4eb"
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2051.outbound.protection.outlook.com [40.107.100.51])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECFE6D4F;
-	Sat, 18 Nov 2023 11:33:12 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gRVr3wzb"
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2076.outbound.protection.outlook.com [40.107.93.76])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F92A1A1;
+	Sat, 18 Nov 2023 11:33:14 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GRf37yPECWfcNhYFU3g8OfFqBXzWC3JBspDDTQk9rhXnqtS43hZYZJdCll07uiZfKtO9/R9KG3qypRAyyHAx3uMA0Z2pu4HPUjl8jQXXIclm5OgnKtlRrxU4Pbxcy1crBDd732KtZOCuO7GC9Pyb62/o61KQxytFdeSWoDNBU0My5Rud3ptbhMGWsMJcV6T1xugPPacpSWI71em6w7WytsqPg94TEd8MeoqFGUHy/Yx3rC/SLAcNQMf9qHYUrNMRHo3+8rbEdPORa7EJ3PnUezRYHtqHHytMcXBkF6HfMsl7KIMhVenY4Coo/R0U9Q5wXdimCWZ7G8gq/u1bL8/JgA==
+ b=ak6fUYJ3J26xbazA7H6MR/koGtbTSGn1y14aLgGzOp0tcKDeBw+qObjcCzgjBrmTvDqnE0eP2/XuEUTp3a26t5JPQRuN9Ase/HHy3gilCZcXV7aIANIxaPZbu2v4ocsEU++Vgw238SFaXwRTsNrb2MvviWay/yHQ7KKdij0TJk+oYP8QpCKdwPChJ5u8pRkoTrYQH2fAzaoH/Mbf5NRL3Te6aCG9HIvnIq0waZRWl3F70ymeel/mbKD7+WbAka6uWEfksau9L4YjmfZxSWlV5gfL/YDksUlGHblEsOxXz1uh/jcgUFmvmGw60QNUzzoSbKdP7OBWE/Cxcn1Av9EXiA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UxeTI/jPWnrt+K9AWv7KqyXw6quRWOiAlsHSnLrFJRA=;
- b=U+n6Km1/MtMyFwogbP4jYbGwsLfvsHx5SOjHcE5wUEpJ0oPANujFGOgcufqXPUG5OH40ihyKS0V19H9PZj+kV04PLHlYE+AEMvosnMRKr21y+xhCgXUbDwV7T5rnG+1a/IMDYzpVEaKZ18sfYgPuy9La5k6Zzh4hjvrqU4gNT7wiSseyrJ7PwPHoL8RU5IUtilUJzmrmvCkdnxOBna9xMJED93Iv3oFlTYEneLqDX2CI7xP6J2E6ahVlVFtdg5UyprGhTIJpQSg/RsJjRt73bZGoA+G1J+bgbbX2LLrE3oOrcqoiWKmD/rxv8PNxdeXRwPbHggbqqoKKXlPtSy9Egg==
+ bh=K6MC8q6jZgi3r0lJ4lVQl465imiOGSgxWM0O6MSYdBU=;
+ b=mM8PdXia8ybVDL3NUpwm3UR8+jdmZrbkS51RPOMEQm3WB7t3qFY0DAm6qq/F7V8e1csY940nFRzVWazcxgRH/L5ikTZ6+fNyG2BZ9OXK4eggkHz7gpi5BfQoSWLP+aO1lMCaFWGe1AOxSb+2l0ynULcdyAApsXSBDsv7XTyOffmIyf/r/cIZ1H3ARU5qEKF+vVQHJ6f4OK9gFeVqNmOb2uA13Cp7VBPmINtrciNX7DLjdN6tCggwrtj5POsNRxb3RHysF+pm1TvmD/HRDitIkqQ0D/YG9lIXT+vxqcxod8sAxA3SO8Qw51yNNNoPeREQkDhd1Deg1DFNkYc0GNFiCA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UxeTI/jPWnrt+K9AWv7KqyXw6quRWOiAlsHSnLrFJRA=;
- b=nQdWL4ebpBuJLRQ1M0C59hZWdsmDGA/cyQ2FZt0GHpYF7VmWEhYMEceqirxcbMIT/N7bowOwcrhLOS0VSxSp7OVDEH4bh/cNE1sSt/hR05qWExRuqEAa+2YL0E7JgczBpIV/Y2o+dQqLZBngyLdefN2mJkQWuP6sDLcyDMFm+Ck=
-Received: from BLAP220CA0027.NAMP220.PROD.OUTLOOK.COM (2603:10b6:208:32c::32)
- by SN7PR12MB6837.namprd12.prod.outlook.com (2603:10b6:806:267::10) with
+ bh=K6MC8q6jZgi3r0lJ4lVQl465imiOGSgxWM0O6MSYdBU=;
+ b=gRVr3wzbjTCMaYSDtJyJoKgvF9QoradokzkHjCNYUrh0L5Z83N6PnAGdcMCevIZA2FeOlVYjTh/twJmwzRjtgIRkMc7Q27eSBVF/yfHSAU5rL22FV124Dkc13xzRQ5fUp/BlckouHdo1Hlvxc3Z8SbNq0xaGkvwqeluEc3dWsdc=
+Received: from MN2PR10CA0031.namprd10.prod.outlook.com (2603:10b6:208:120::44)
+ by IA0PR12MB8716.namprd12.prod.outlook.com (2603:10b6:208:485::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.25; Sat, 18 Nov
- 2023 19:33:09 +0000
-Received: from BL6PEPF0001AB4E.namprd04.prod.outlook.com
- (2603:10b6:208:32c:cafe::1a) by BLAP220CA0027.outlook.office365.com
- (2603:10b6:208:32c::32) with Microsoft SMTP Server (version=TLS1_2,
+ 2023 19:33:10 +0000
+Received: from BL6PEPF0001AB4A.namprd04.prod.outlook.com
+ (2603:10b6:208:120:cafe::33) by MN2PR10CA0031.outlook.office365.com
+ (2603:10b6:208:120::44) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.26 via Frontend
- Transport; Sat, 18 Nov 2023 19:33:09 +0000
+ Transport; Sat, 18 Nov 2023 19:33:10 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -35,22 +35,22 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF0001AB4E.mail.protection.outlook.com (10.167.242.72) with Microsoft
+ BL6PEPF0001AB4A.mail.protection.outlook.com (10.167.242.68) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7025.12 via Frontend Transport; Sat, 18 Nov 2023 19:33:09 +0000
+ 15.20.7025.12 via Frontend Transport; Sat, 18 Nov 2023 19:33:10 +0000
 Received: from quartz-7b1chost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Sat, 18 Nov
- 2023 13:33:04 -0600
+ 2023 13:33:07 -0600
 From: Yazen Ghannam <yazen.ghannam@amd.com>
 To: <linux-edac@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <tony.luck@intel.com>, <x86@kernel.org>,
 	<Avadhut.Naik@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
 	<amd-gfx@lists.freedesktop.org>, <linux-trace-kernel@vger.kernel.org>, "Yazen
  Ghannam" <yazen.ghannam@amd.com>
-Subject: [PATCH 08/20] x86/mce/amd: Look up bank type by IPID
-Date: Sat, 18 Nov 2023 13:32:36 -0600
-Message-ID: <20231118193248.1296798-9-yazen.ghannam@amd.com>
+Subject: [PATCH 13/20] x86/mce: Unify AMD THR handler with MCA Polling
+Date: Sat, 18 Nov 2023 13:32:41 -0600
+Message-ID: <20231118193248.1296798-14-yazen.ghannam@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231118193248.1296798-1-yazen.ghannam@amd.com>
 References: <20231118193248.1296798-1-yazen.ghannam@amd.com>
@@ -67,207 +67,198 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4E:EE_|SN7PR12MB6837:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4bbc47bd-ecd5-4949-403a-08dbe86d3203
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4A:EE_|IA0PR12MB8716:EE_
+X-MS-Office365-Filtering-Correlation-Id: c4ffbd18-ed28-40d3-c237-08dbe86d32e4
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	sSqapbTX70yzhvBAwfCQTY35ZK+0QfB5A7k/cbyD9oECQvkA+7N+Iniadf+4pJ0s5xKSHI3i7SkBp9Iu1rZExxMP3qPGOK3c+fdidqQqbsMGKVJFOnxOJoB0p+M0HPZsoBfvrozNlVXlb/AM/hgHkYDISyKRbw203yWReiJIjWTf6VQwForpzpDjN0VDbISU5XZwiTixoOm1qkeewkGpGYwWBQBQ4JxTOzQ1hPzcM12HwXThFFuccTzwLmRWM2rJIsrWWHaJjlcjFp1SpXNozA6PTtq8yjOgu4KRX5Sk1c6dTHkpsc8Ye7+VbT8b1gfw1/hE3OlLJ8Hyt+khQQtDrnA3Oz37hTW/Uob2JS83Nd35TS2UoCe9kfxYFGNR1SLT5kZzVt7ON0bgFaUOORhuCpMRPuddPVRnpsIlt8L4qy6kNrKCJeqqUHyWHlwkE1VOGpAwxOfeX1/gjMeDQV7RNZuzB7qVBkX8l5HonEiwuwOzMGtQuqIo2qMpiMtH57YAjhz+Z7awIxJmROTt+WPvGGhXI9UBzVJS1VfwUYNhTTlKP2nlAQ0AjF65CMtvjsP3HDMYCX6fsC5e2Bb34I3DXozFtq1TLBayCO7DL3Ia7Ftv5yIicYa+5wSQRnIN2lCzp5pU27XbRgj0EkFX2BYmZRSk8rgqW39v6wj1drJb7+DTMYd/Iqytnt2evDgbVSXo6j4nYToucMKszlBGNtGRHYHfBhUV08vEwNnuZiPKkbzPlsV7k26Jq6N9BgVxIyk09sBynzQIJd9GZeh/GjDU7Q==
+	3wJgmux0inkZdbYIEyBvibwyK9woPWcRR8E/aqdo6vn0eZEsx1WO/jAg2YgZQbQaBA1vpcNdCbX0cVy0bnAlMjUh2+ZLmlS0fAKhbiXYyuDbs6E8GCZWMBlzaiHioCfLDCGcrPVR9d/zzgIdCnjJBPqg5d97oeEZoBpby+l943NjNuCBRoAGv/yUAQZM8U5VkuKJGOiu7OQPNh/uPyD0IdGBdiqlcqsKKjjGRs0n9/yGSHZ4G5iSPyXzzQ3Rpl+qtosnKKis6/QDYtd3gBswx9bHvPva/EllrQg/zgLkRUgfM6kg2yX4iU7NEpVTx5KHP8HZyNHCCBAuEGZUeb6wQ3kljH7YGjrHCvMOv3TsfefrHltjuZySK+Z5eop0QU6s1BjMWYpeER+wEIxqwFvCFK8/73aRMMzqfWbt2QjXc3nkCDpDuBVbD/w5KPQVZGsebKo3DEZg844/Bb0RczIXK6PBo86cC20MvkRrQeC038wRDwDX7sqcJEp5wY4deJmec4asHhNrUq6fqzZ3J2ciKlugpO9shektviWGD+7BW5hhyRnc0dTYNc7agwuoA6po/XuPD2XPQT415r98mJ9vD01YlBeTKeI6J0T1daQ9vTqDtv5M+kZ4S6pzEv/qZyX8cn7hEu4X3njdWLtLGvw8kru9WOGc0VSa+Bw0FbRLpAapcll385eMKe2OMkETpns+haEW0Ida1NsaE2+Y6qAeEiZ3sasRk3aBVFce/1URcBi3NzIf8Xy9tZbsnKdX+0ulzJtdhnGxWON/zg3WT6pXWg==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(136003)(346002)(376002)(396003)(230922051799003)(82310400011)(64100799003)(1800799012)(451199024)(186009)(46966006)(40470700004)(36840700001)(6916009)(54906003)(316002)(40480700001)(15650500001)(2906002)(5660300002)(40460700003)(47076005)(44832011)(41300700001)(8936002)(36860700001)(478600001)(6666004)(4326008)(70206006)(70586007)(8676002)(82740400003)(356005)(81166007)(7696005)(426003)(336012)(83380400001)(16526019)(26005)(2616005)(1076003)(36756003)(86362001)(36900700001);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(346002)(396003)(136003)(39860400002)(230922051799003)(451199024)(64100799003)(186009)(82310400011)(1800799012)(36840700001)(40470700004)(46966006)(82740400003)(83380400001)(426003)(336012)(16526019)(36756003)(86362001)(40460700003)(36860700001)(81166007)(47076005)(356005)(70206006)(70586007)(54906003)(6916009)(316002)(8676002)(8936002)(4326008)(41300700001)(5660300002)(2906002)(44832011)(1076003)(40480700001)(7696005)(2616005)(26005)(478600001)(6666004)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2023 19:33:09.0741
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2023 19:33:10.5676
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4bbc47bd-ecd5-4949-403a-08dbe86d3203
+X-MS-Exchange-CrossTenant-Network-Message-Id: c4ffbd18-ed28-40d3-c237-08dbe86d32e4
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB4E.namprd04.prod.outlook.com
+	BL6PEPF0001AB4A.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6837
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8716
 
-Scalable MCA systems use values within the MCA_IPID register to describe
-a bank's type. Other information is not needed.
+AMD systems optionally support an MCA Thresholding interrupt. The
+interrupt should be used as another signal to trigger MCA polling. This
+is similar to how the Intel Corrected Machine Check interrupt (CMCI) is
+handled.
 
-Currently, the bank types are cached during boot and this information is
-used during boot and run time. The cached values are per-CPU and
-per-bank. The boot path needs the cached values, but this should be
-removed. The run time path does not need the cached values.
+AMD MCA Thresholding is managed using the MCA_MISC registers within an
+MCA bank. The OS will need to modify the hardware error count field in
+order to reset the threshold limit and rearm the interrupt. Management
+of the MCA_MISC register should be done as a follow up to the basic MCA
+polling flow. It should not be the main focus of the interrupt handler.
 
-Determine a Scalable MCA bank's type using only the MCA_IPID values. The
-only current user is the MCE decoder module. But the boot path will be
-updated to use the same helper function.
+Furthermore, future systems will have the ability to send an MCA
+Thresholding interrupt to the OS even when the OS does not manage the
+feature, i.e. MCA_MISC registers are Read-as-Zero/Locked.
 
-Keep old code until init path is cleaned up.
+Call the common MCA polling function when handling the MCA Thresholding
+interrupt. This will allow the OS to find any valid errors whether or
+not the MCA Thresholding feature is OS-managed. Also, this allows the
+common MCA polling options and kernel parameters to apply to AMD
+systems.
+
+Add a callback to the MCA polling function to handle vendor-specific
+operations. Start by handling the AMD MCA Thresholding "block reset"
+flow.
 
 Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
 ---
- arch/x86/include/asm/mce.h    |  2 +-
- arch/x86/kernel/cpu/mce/amd.c | 88 ++++++++++++++++++++++++++++++++---
- drivers/edac/mce_amd.c        |  2 +-
- 3 files changed, 84 insertions(+), 8 deletions(-)
+ arch/x86/kernel/cpu/mce/amd.c      | 57 ++++++++++++++----------------
+ arch/x86/kernel/cpu/mce/core.c     |  8 +++++
+ arch/x86/kernel/cpu/mce/internal.h |  2 ++
+ 3 files changed, 37 insertions(+), 30 deletions(-)
 
-diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
-index 012caf68dcbb..9441b89afee3 100644
---- a/arch/x86/include/asm/mce.h
-+++ b/arch/x86/include/asm/mce.h
-@@ -341,7 +341,7 @@ extern int mce_threshold_create_device(unsigned int cpu);
- extern int mce_threshold_remove_device(unsigned int cpu);
- 
- void mce_amd_feature_init(struct cpuinfo_x86 *c);
--enum smca_bank_types smca_get_bank_type(unsigned int cpu, unsigned int bank);
-+enum smca_bank_types smca_get_bank_type(u64 ipid);
- bool smca_gpu_umc_bank_type(u64 ipid);
- #else
- 
 diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-index 6e100024498a..95843ac7979d 100644
+index 83fdbf42a472..8735a8b9b7cc 100644
 --- a/arch/x86/kernel/cpu/mce/amd.c
 +++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -129,7 +129,7 @@ static const char *smca_get_name(enum smca_bank_types t)
- 	return smca_names[t];
+@@ -981,12 +981,7 @@ static void amd_deferred_error_interrupt(void)
+ 		log_error_deferred(bank);
  }
  
--enum smca_bank_types smca_get_bank_type(unsigned int cpu, unsigned int bank)
-+static enum smca_bank_types smca_get_bank_type_old(unsigned int cpu, unsigned int bank)
+-static void log_error_thresholding(unsigned int bank, u64 misc)
+-{
+-	_log_error_deferred(bank, misc);
+-}
+-
+-static void log_and_reset_block(struct threshold_block *block)
++static void reset_block(struct threshold_block *block)
  {
- 	struct smca_bank *b;
+ 	struct thresh_restart tr;
+ 	u32 low = 0, high = 0;
+@@ -1000,49 +995,51 @@ static void log_and_reset_block(struct threshold_block *block)
+ 	if (!(high & MASK_OVERFLOW_HI))
+ 		return;
  
-@@ -142,7 +142,6 @@ enum smca_bank_types smca_get_bank_type(unsigned int cpu, unsigned int bank)
- 
- 	return b->hwid->bank_type;
+-	/* Log the MCE which caused the threshold event. */
+-	log_error_thresholding(block->bank, ((u64)high << 32) | low);
+-
+ 	/* Reset threshold block after logging error. */
+ 	memset(&tr, 0, sizeof(tr));
+ 	tr.b = block;
+ 	threshold_restart_bank(&tr);
  }
--EXPORT_SYMBOL_GPL(smca_get_bank_type);
  
- /* UMCs have HWID=0x96.*/
- static bool smca_umc_bank_type(u64 ipid)
-@@ -160,7 +159,7 @@ bool smca_gpu_umc_bank_type(u64 ipid)
- }
- EXPORT_SYMBOL_GPL(smca_gpu_umc_bank_type);
+-/*
+- * Threshold interrupt handler will service THRESHOLD_APIC_VECTOR. The interrupt
+- * goes off when error_count reaches threshold_limit.
+- */
+-static void amd_threshold_interrupt(void)
++static void reset_thr_blocks(unsigned int bank)
+ {
+ 	struct threshold_block *first_block = NULL, *block = NULL, *tmp = NULL;
+ 	struct threshold_bank **bp = this_cpu_read(threshold_banks);
+-	unsigned int bank, cpu = smp_processor_id();
  
--static const struct smca_hwid smca_hwid_mcatypes[] = {
-+static const struct smca_hwid smca_hwid_mcatypes_old[] = {
- 	/* { bank_type, hwid_mcatype } */
+ 	/*
+ 	 * Validate that the threshold bank has been initialized already. The
+ 	 * handler is installed at boot time, but on a hotplug event the
+ 	 * interrupt might fire before the data has been initialized.
+ 	 */
+-	if (!bp)
++	if (!bp || !bp[bank])
+ 		return;
  
- 	/* Reserved type */
-@@ -221,6 +220,83 @@ static const struct smca_hwid smca_hwid_mcatypes[] = {
- 	{ SMCA_GMI_PHY,	 HWID_MCATYPE(0x269, 0x0)	},
- };
+-	for (bank = 0; bank < this_cpu_read(mce_num_banks); ++bank) {
+-		if (!(per_cpu(bank_map, cpu) & BIT_ULL(bank)))
+-			continue;
++	first_block = bp[bank]->blocks;
++	if (!first_block)
++		return;
  
-+/* Keep sorted first by HWID then by McaType. */
-+static const u32 smca_hwid_mcatypes[] = {
-+	/* Reserved type */
-+	[SMCA_RESERVED]		= HWID_MCATYPE(0x00, 0x0),
-+
-+	/* System Management Unit MCA type */
-+	[SMCA_SMU]		= HWID_MCATYPE(0x01, 0x0),
-+	[SMCA_SMU_V2]		= HWID_MCATYPE(0x01, 0x1),
-+
-+	/* Microprocessor 5 Unit MCA type */
-+	[SMCA_MP5]		= HWID_MCATYPE(0x01, 0x2),
-+
-+	/* MPDMA MCA type */
-+	[SMCA_MPDMA]		= HWID_MCATYPE(0x01, 0x3),
-+
-+	/* Parameter Block MCA type */
-+	[SMCA_PB]		= HWID_MCATYPE(0x05, 0x0),
-+
-+	/* Northbridge IO Unit MCA type */
-+	[SMCA_NBIO]		= HWID_MCATYPE(0x18, 0x0),
-+
-+	/* Data Fabric MCA types */
-+	[SMCA_CS]		= HWID_MCATYPE(0x2E, 0x0),
-+	[SMCA_PIE]		= HWID_MCATYPE(0x2E, 0x1),
-+	[SMCA_CS_V2]		= HWID_MCATYPE(0x2E, 0x2),
-+
-+	/* PCI Express Unit MCA type */
-+	[SMCA_PCIE]		= HWID_MCATYPE(0x46, 0x0),
-+	[SMCA_PCIE_V2]		= HWID_MCATYPE(0x46, 0x1),
-+
-+	[SMCA_XGMI_PCS]		= HWID_MCATYPE(0x50, 0x0),
-+	[SMCA_NBIF]		= HWID_MCATYPE(0x6C, 0x0),
-+	[SMCA_SHUB]		= HWID_MCATYPE(0x80, 0x0),
-+
-+	/* Unified Memory Controller MCA type */
-+	[SMCA_UMC]		= HWID_MCATYPE(0x96, 0x0),
-+	[SMCA_UMC_V2]		= HWID_MCATYPE(0x96, 0x1),
-+
-+	[SMCA_SATA]		= HWID_MCATYPE(0xA8, 0x0),
-+	[SMCA_USB]		= HWID_MCATYPE(0xAA, 0x0),
-+
-+	/* ZN Core (HWID=0xB0) MCA types */
-+	[SMCA_LS]		= HWID_MCATYPE(0xB0, 0x0),
-+	[SMCA_IF]		= HWID_MCATYPE(0xB0, 0x1),
-+	[SMCA_L2_CACHE]		= HWID_MCATYPE(0xB0, 0x2),
-+	[SMCA_DE]		= HWID_MCATYPE(0xB0, 0x3),
-+	/* HWID 0xB0 MCATYPE 0x4 is Reserved */
-+	[SMCA_EX]		= HWID_MCATYPE(0xB0, 0x5),
-+	[SMCA_FP]		= HWID_MCATYPE(0xB0, 0x6),
-+	[SMCA_L3_CACHE]		= HWID_MCATYPE(0xB0, 0x7),
-+	[SMCA_LS_V2]		= HWID_MCATYPE(0xB0, 0x10),
-+
-+	/* Platform Security Processor MCA type */
-+	[SMCA_PSP]		= HWID_MCATYPE(0xFF, 0x0),
-+	[SMCA_PSP_V2]		= HWID_MCATYPE(0xFF, 0x1),
-+
-+	[SMCA_GMI_PCS]		= HWID_MCATYPE(0x241, 0x0),
-+	[SMCA_XGMI_PHY]		= HWID_MCATYPE(0x259, 0x0),
-+	[SMCA_WAFL_PHY]		= HWID_MCATYPE(0x267, 0x0),
-+	[SMCA_GMI_PHY]		= HWID_MCATYPE(0x269, 0x0),
-+};
-+
-+enum smca_bank_types smca_get_bank_type(u64 ipid)
-+{
-+	enum smca_bank_types type;
-+	u32 hwid_mcatype = HWID_MCATYPE(FIELD_GET(MCI_IPID_HWID, ipid),
-+					FIELD_GET(MCI_IPID_MCATYPE, ipid));
-+
-+	for (type = 0; type < ARRAY_SIZE(smca_hwid_mcatypes); type++) {
-+		if (hwid_mcatype == smca_hwid_mcatypes[type])
-+			return type;
-+	}
-+
-+	return N_SMCA_BANK_TYPES;
+-		first_block = bp[bank]->blocks;
+-		if (!first_block)
+-			continue;
++	/*
++	 * The first block is also the head of the list. Check it first
++	 * before iterating over the rest.
++	 */
++	reset_block(first_block);
++	list_for_each_entry_safe(block, tmp, &first_block->miscj, miscj)
++		reset_block(block);
 +}
-+EXPORT_SYMBOL_GPL(smca_get_bank_type);
+ 
+-		/*
+-		 * The first block is also the head of the list. Check it first
+-		 * before iterating over the rest.
+-		 */
+-		log_and_reset_block(first_block);
+-		list_for_each_entry_safe(block, tmp, &first_block->miscj, miscj)
+-			log_and_reset_block(block);
+-	}
++/*
++ * Threshold interrupt handler will service THRESHOLD_APIC_VECTOR. The interrupt
++ * goes off when error_count reaches threshold_limit.
++ */
++static void amd_threshold_interrupt(void)
++{
++	/* Check all banks for now. This could be optimized in the future. */
++	machine_check_poll(MCP_TIMESTAMP, this_cpu_ptr(&mce_poll_banks));
++}
 +
++void amd_handle_error(struct mce *m)
++{
++	reset_thr_blocks(m->bank);
+ }
+ 
  /*
-  * In SMCA enabled processors, we can have multiple banks for a given IP type.
-  * So to define a unique name for each bank, we use a temp c-string to append
-@@ -324,8 +400,8 @@ static void smca_configure(unsigned int bank, unsigned int cpu)
- 	hwid_mcatype = HWID_MCATYPE(high & MCI_IPID_HWID_OLD,
- 				    (high & MCI_IPID_MCATYPE_OLD) >> 16);
- 
--	for (i = 0; i < ARRAY_SIZE(smca_hwid_mcatypes); i++) {
--		s_hwid = &smca_hwid_mcatypes[i];
-+	for (i = 0; i < ARRAY_SIZE(smca_hwid_mcatypes_old); i++) {
-+		s_hwid = &smca_hwid_mcatypes_old[i];
- 
- 		if (hwid_mcatype == s_hwid->hwid_mcatype) {
- 			this_cpu_ptr(smca_banks)[bank].hwid = s_hwid;
-@@ -1104,7 +1180,7 @@ static const char *get_name(unsigned int cpu, unsigned int bank, struct threshol
- 		return th_names[bank];
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 7e86086aa19c..040dc226c6a5 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -655,6 +655,12 @@ static noinstr void mce_read_aux(struct mce *m, int i)
  	}
+ }
  
--	bank_type = smca_get_bank_type(cpu, bank);
-+	bank_type = smca_get_bank_type_old(cpu, bank);
- 	if (bank_type >= N_SMCA_BANK_TYPES)
- 		return NULL;
++static void vendor_handle_error(struct mce *m)
++{
++	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD)
++		return amd_handle_error(m);
++}
++
+ DEFINE_PER_CPU(unsigned, mce_poll_count);
  
-diff --git a/drivers/edac/mce_amd.c b/drivers/edac/mce_amd.c
-index b8765292d26e..701bc9556414 100644
---- a/drivers/edac/mce_amd.c
-+++ b/drivers/edac/mce_amd.c
-@@ -1207,7 +1207,7 @@ static const char *smca_get_long_name(enum smca_bank_types t)
- /* Decode errors according to Scalable MCA specification */
- static void decode_smca_error(struct mce *m)
- {
--	enum smca_bank_types bank_type = smca_get_bank_type(m->extcpu, m->bank);
-+	enum smca_bank_types bank_type = smca_get_bank_type(m->ipid);
- 	const char *ip_name;
- 	u8 xec = XEC(m->status, xec_mask);
+ /*
+@@ -760,6 +766,8 @@ bool machine_check_poll(enum mcp_flags flags, mce_banks_t *b)
+ 			mce_log(&m);
+ 
+ clear_it:
++		vendor_handle_error(&m);
++
+ 		/*
+ 		 * Clear state for this bank.
+ 		 */
+diff --git a/arch/x86/kernel/cpu/mce/internal.h b/arch/x86/kernel/cpu/mce/internal.h
+index 424c7461dcf9..8ed1035f013b 100644
+--- a/arch/x86/kernel/cpu/mce/internal.h
++++ b/arch/x86/kernel/cpu/mce/internal.h
+@@ -215,6 +215,7 @@ void mce_setup_per_cpu(struct mce *m);
+ #ifdef CONFIG_X86_MCE_AMD
+ extern bool amd_filter_mce(struct mce *m);
+ bool amd_mce_usable_address(struct mce *m);
++void amd_handle_error(struct mce *m);
+ 
+ /*
+  * If MCA_CONFIG[McaLsbInStatusSupported] is set, extract ErrAddr in bits
+@@ -243,6 +244,7 @@ static __always_inline void smca_extract_err_addr(struct mce *m)
+ #else
+ static inline bool amd_filter_mce(struct mce *m) { return false; }
+ static inline bool amd_mce_usable_address(struct mce *m) { return false; }
++static inline void amd_handle_error(struct mce *m) { }
+ static inline void smca_extract_err_addr(struct mce *m) { }
+ #endif
  
 -- 
 2.34.1
