@@ -1,73 +1,135 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FOaCSrb8"
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6FF4D79
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Nov 2023 19:33:55 -0800 (PST)
-Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1cc5b705769so23683985ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Nov 2023 19:33:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1700278435; x=1700883235; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dF27M13Q5uIXKU9SuRFjuyiZuatrs8pB1vllLX+2P7M=;
-        b=FOaCSrb8llwD112mZusnkMkAgqb83MPZihaaO3g6rzb+kSoU8PpZxvEoWVw7q1OTU6
-         /g6WJJ5L7cb12/gacJfSb9lN49TnLWuJWnfzGHIKGYS/wRZH4oziKeEEYXciz4kiveDV
-         UdvwtQAVLQpz6jTn50ujtowZiKtuwbG0g8YRw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700278435; x=1700883235;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dF27M13Q5uIXKU9SuRFjuyiZuatrs8pB1vllLX+2P7M=;
-        b=mpi/HiyEcCjBeRJJh98TFoJ5FS8rpOV28e713xGiLB5WdwIM1NhR5+/sOwnBO2Ciy9
-         swFv7sd7pKpt3lzx8XneNVVH1kx2xnxyYVidsseTffv8/T9TbwsrfYjLn2OMjRCP2OYr
-         aJ8s17C2F+aRXPbAfI4o6NxMhyPQvVwJbYA0bNmr09+9jONbj1RygA1foiDdvbjSE1k8
-         8KL3otHDXe2ma2qGiMUhpQqW+j1NKrfqOrGQ7S6g9snwzzMJZUhnNLdomAsYxTEwpCC9
-         vrkj3Q2rMcAiTAgIgLVDs02XtRQWtRkxjWfC3Kgprmj+me2m65kqAzJYTu34gqaWeRRw
-         QsPg==
-X-Gm-Message-State: AOJu0Yz4zZ6mWt6pdwXF4KJewQtlV5GqapYg13ZoBGfcv47iRTdbILFy
-	KWNpNrxikrlW3e2lVueKWJKW6w==
-X-Google-Smtp-Source: AGHT+IFiVXVkJA1L9nXFiQfIL0/MD9bacMDG55+9sSwrswN9Mzf/813jB6DUKoAwLgRaC0LvRmDoEQ==
-X-Received: by 2002:a17:902:cec8:b0:1ce:5b21:5c2e with SMTP id d8-20020a170902cec800b001ce5b215c2emr1703535plg.17.1700278435110;
-        Fri, 17 Nov 2023 19:33:55 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h10-20020a170902f7ca00b001c8836a3795sm2052356plw.271.2023.11.17.19.33.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Nov 2023 19:33:54 -0800 (PST)
-Date: Fri, 17 Nov 2023 19:33:54 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Waiman Long <longman@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>, cgroups@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Azeem Shaikh <azeemshaikh38@gmail.com>,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 3/3] kernfs: Convert kernfs_path_from_node_locked() from
- strlcpy() to strscpy()
-Message-ID: <202311171933.5792E9FFFE@keescook>
-References: <20231116191718.work.246-kees@kernel.org>
- <20231116192127.1558276-3-keescook@chromium.org>
- <20231117084757.150724ed@rorschach.local.home>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wKScch4W"
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E362192;
+	Sat, 18 Nov 2023 11:33:09 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L6mLTP1ft8yO6JtQxEqMQ5PHwHY6brB8VxVmEqyNhuhD8xldQgseOBB+BJ6acYgFgVXyp89aPT7qRjzYiP7o1Ol+vOwgOYL/qsc37PmmkZBvjCMJ1YkBGctNK1jAt6YHwkuI4q+5T3QV1Yj19I517W3h8Ac4NyVW5N9qwxPoTJjqgGW8MSv3dHhsZ70QiN/+iO2Crpt5dp51yZiAoinL8BfFX9aJ3bkuJe30lwBz7u2QWNbH3jWG9mQcxMpbt2D0Z9P4U+2y6nZMYD9fqsxpW9gSMRWxuNmOrbc/zStxzzWsQcsRxkVEXGC7aFMIk5eisN0gTBgRHyHQxCVKr8yvJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rg0iIyoSMW/Eb8G+iaTwSW1S46jeE1iIteyRrub4Thg=;
+ b=AsncsHS46KiH1z0EA1xI5y8FRHtsSKG8B2LZwtI2mBCWpTCHOcwBMnZj3KV1B9la5SO7AB0ZdSPDltaV+7lRFUlDSks690z+bakEUtOQfPVkbMFEM8GtJACIL8KejDBaZs/lab9IhgnS3XH8J4DNsPmZj420LlPF1NwQTqIexMB2Qga5QZ4A8O56a5Nx03lcL4XUjp8UatzZCJUgnF2D5DyDqFlvHaumQGZohcaLsccEZGZX1o/qJWM6zXYhMKrkjvWpTzgz0yOOb0mC4jXaAeNSzMqwTib41oyYgwHc13+tP4GjEvMywd5bGlYBcSTpitam5NNp50XnpjCrw7YYoA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rg0iIyoSMW/Eb8G+iaTwSW1S46jeE1iIteyRrub4Thg=;
+ b=wKScch4W24vkJcfuUoUJAKSWCYS8VCsjhzztHIIssRPGNVMewGWLwFqxzqEFk9tzh4CJP8YISb3+J5jTdzeoLRjrMUghzDX06NdcJr/d+eyHJwMza96zCmMswroog/IBfL5xomlK+eDxj+KtwTJr17/JHP5gEKX9oXI+EhTWbKY=
+Received: from BLAP220CA0010.NAMP220.PROD.OUTLOOK.COM (2603:10b6:208:32c::15)
+ by PH7PR12MB6785.namprd12.prod.outlook.com (2603:10b6:510:1ab::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.25; Sat, 18 Nov
+ 2023 19:33:07 +0000
+Received: from BL6PEPF0001AB4E.namprd04.prod.outlook.com
+ (2603:10b6:208:32c:cafe::91) by BLAP220CA0010.outlook.office365.com
+ (2603:10b6:208:32c::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.25 via Frontend
+ Transport; Sat, 18 Nov 2023 19:33:06 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL6PEPF0001AB4E.mail.protection.outlook.com (10.167.242.72) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7025.12 via Frontend Transport; Sat, 18 Nov 2023 19:33:06 +0000
+Received: from quartz-7b1chost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Sat, 18 Nov
+ 2023 13:33:00 -0600
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+To: <linux-edac@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <tony.luck@intel.com>, <x86@kernel.org>,
+	<Avadhut.Naik@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<amd-gfx@lists.freedesktop.org>, <linux-trace-kernel@vger.kernel.org>, "Yazen
+ Ghannam" <yazen.ghannam@amd.com>
+Subject: [PATCH 01/20] x86/mce/inject: Clear test status value
+Date: Sat, 18 Nov 2023 13:32:29 -0600
+Message-ID: <20231118193248.1296798-2-yazen.ghannam@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231118193248.1296798-1-yazen.ghannam@amd.com>
+References: <20231118193248.1296798-1-yazen.ghannam@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231117084757.150724ed@rorschach.local.home>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4E:EE_|PH7PR12MB6785:EE_
+X-MS-Office365-Filtering-Correlation-Id: cbfb31ff-b962-4960-8b37-08dbe86d30a9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	F8pEkp5tF/TMTtxQqMGdQfLIsa/xjb415jSQPlD7JTpzTguvzpWapzk5PPn4iVHx4p2BM5ix9OrlmgJDP9b1KtXr39+wrz+9VmiieS3JEi6Pj1YM7p53pHG7EWfh3QIC+0RyZuhtfa7WEGf00HmuezTtje95vZg3EOVioHUP2AQxWARm92B8rFtng65IpfYDtYXfovSEFhjwAUTlmN1okICw09IUl+kh1AF4rPI/MPN98LTU5gmyYmvHYpL6mVIf9oMqyhnR7TcSo8/yV4qL1ezRJkKRrITW8vAtPaKDPmwngUtFL10PXj2pgESwjt5GA7w0GD+vGCI2gPYhG38W4uHX1B8hcuMKxAZXw36VEBPlgJwjxGDh15PlFuBaYOMIzEVtR7oaBdKBpIb/jHRq40EHR/8MuUf4LYE39pEVlirDwnc7X8eA/lWHQA+Q9RxEX5yxgUlztLbH//LTj/f60JyHU4Cvw2HN5RIFRh+fN2uNC53Oq+wpO3TeaRIh2Wj+fRIrKl5yOwoURsacgaTlJhX67DAQIazP9tVjBTL0zjcmdVl46wcKLkTu2FAqPp0mwMeul6KnW2AJFRPAs2ik1WwYng5KrSrRPCOz6F1lqkhXiQ4IPcHgJ3vopDkAiASpZbMr7nhcCnZLBcAZrOn8pGCLrFZfHQZLMAFOMcxk7tRi4s4a7Q5gZij4blO6eQmcmb/t88/4iML3tEXD39N4t6yKasPwB0nZEro6vvrjelaolESvdOmXtEGiqEvoMNGI6kzeI2DDV/LdmK3DFKaRByVlQ9OYIYmlHpRFODiw3aQ=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(396003)(376002)(346002)(136003)(230922051799003)(1800799012)(451199024)(82310400011)(186009)(64100799003)(46966006)(36840700001)(40470700004)(70206006)(54906003)(70586007)(316002)(6916009)(7696005)(478600001)(40480700001)(36860700001)(82740400003)(6666004)(40460700003)(26005)(2906002)(16526019)(2616005)(8676002)(8936002)(4326008)(5660300002)(1076003)(47076005)(36756003)(83380400001)(426003)(336012)(356005)(81166007)(41300700001)(44832011)(86362001)(3714002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2023 19:33:06.8085
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: cbfb31ff-b962-4960-8b37-08dbe86d30a9
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB4E.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6785
 
-On Fri, Nov 17, 2023 at 08:47:57AM -0500, Steven Rostedt wrote:
-> >  kernel/trace/trace_uprobe.c |  2 +-
-> 
-> trace_uprobe.c seems out of scope for this patch.
+AMD systems generally allow MCA "simulation" where MCA registers can be
+written with valid data and the full MCA handling flow can be tested by
+software.
 
-Oops. Yes, that's in the wrong patch. I will respin the series...
+However, the Platform on Scalable MCA systems, may prevent software
+from writing data to the MCA registers. There is no architectural way to
+determine this configuration. Therefore, the MCE Inject module will
+check for this behavior by writing and reading back a test status value.
+This is done during module init, and the check can run on any CPU with
+any valid MCA bank.
 
+If MCA_STATUS writes are ignored by the Platform, then there are no side
+effects on the hardware state.
+
+If the writes are not ignored, then the test status value will remain in
+the hardware MCA_STATUS register. It is likely that the value will not
+be overwritten by hardware or software, since the tested CPU and bank
+are arbitrary. Therefore, the user may see a spurious, synthetic MCA
+error reported whenever MCA is polled for this CPU.
+
+Clear the test value immediately after writing it. It is very unlikely
+that a valid MCA error is logged by hardware during the test. Errors
+that cause an #MC won't be affected.
+
+Fixes: 891e465a1bd8 ("x86/mce: Check whether writes to MCA_STATUS are getting ignored")
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+---
+ arch/x86/kernel/cpu/mce/inject.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/kernel/cpu/mce/inject.c b/arch/x86/kernel/cpu/mce/inject.c
+index 4d8d4bcf915d..72f0695c3dc1 100644
+--- a/arch/x86/kernel/cpu/mce/inject.c
++++ b/arch/x86/kernel/cpu/mce/inject.c
+@@ -746,6 +746,7 @@ static void check_hw_inj_possible(void)
+ 
+ 		wrmsrl_safe(mca_msr_reg(bank, MCA_STATUS), status);
+ 		rdmsrl_safe(mca_msr_reg(bank, MCA_STATUS), &status);
++		wrmsrl_safe(mca_msr_reg(bank, MCA_STATUS), 0);
+ 
+ 		if (!status) {
+ 			hw_injection_possible = false;
 -- 
-Kees Cook
+2.34.1
+
