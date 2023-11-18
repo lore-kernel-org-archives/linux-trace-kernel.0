@@ -1,70 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2701CD79
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Nov 2023 09:44:06 -0800 (PST)
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2839a970a56so1005237a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Nov 2023 09:44:06 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FOaCSrb8"
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6FF4D79
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Nov 2023 19:33:55 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1cc5b705769so23683985ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Nov 2023 19:33:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1700278435; x=1700883235; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dF27M13Q5uIXKU9SuRFjuyiZuatrs8pB1vllLX+2P7M=;
+        b=FOaCSrb8llwD112mZusnkMkAgqb83MPZihaaO3g6rzb+kSoU8PpZxvEoWVw7q1OTU6
+         /g6WJJ5L7cb12/gacJfSb9lN49TnLWuJWnfzGHIKGYS/wRZH4oziKeEEYXciz4kiveDV
+         UdvwtQAVLQpz6jTn50ujtowZiKtuwbG0g8YRw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700243045; x=1700847845;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tBNIQ0OyWnUUYf+IOMPIqQdftw554+6MI/vYVRG86Dc=;
-        b=UonnPi9ZA4BXqyFyXE2P0G2x4sNuoHPGg2tCzuX1buTrVb/5Ut0Gdk7z3Og3foj944
-         gtxaSq9sSlmW2WFQPOQNHpSRV6JUreU/AlSniPRIoiLoZW65ST8LohbW4lPp4qmr0i1M
-         TkGQP1VqGtfmXwiiwAXOd8FGMB0ESJRYMJm3w2hFK1Xpe0wwMXf/YqgAKlDdPfAZCfck
-         vcwtdWXRzITVE59dgxZ789IDahnBGDU58rcrBwhY42bmZ95piy0VNoY3OHQ6tWBr+tyj
-         DfI6X6wIEC84z21MbYpyYsxd9WHBuEcQP3WqJ/mmDrOSk2NhkCJVfR7M4B6k/S4gSypH
-         BcnQ==
-X-Gm-Message-State: AOJu0YzufoHxKb320kn0P0ubltxz5VLXBiilqJR2EXK9ac/SegeTuxM2
-	5x8lKfB1zxsMLC09NaVE0/FMjVTtJcwkI/lvdCMM2MfdPH9o
-X-Google-Smtp-Source: AGHT+IEGvinZzZUXWT8Abzqsa0MheB9XXEtJaQ6LA8XenYwwcXM2fxrpX1ls5/LOD52S1ncv/pPluiYNAaA8RLBBOot8+6XLgCqU
+        d=1e100.net; s=20230601; t=1700278435; x=1700883235;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dF27M13Q5uIXKU9SuRFjuyiZuatrs8pB1vllLX+2P7M=;
+        b=mpi/HiyEcCjBeRJJh98TFoJ5FS8rpOV28e713xGiLB5WdwIM1NhR5+/sOwnBO2Ciy9
+         swFv7sd7pKpt3lzx8XneNVVH1kx2xnxyYVidsseTffv8/T9TbwsrfYjLn2OMjRCP2OYr
+         aJ8s17C2F+aRXPbAfI4o6NxMhyPQvVwJbYA0bNmr09+9jONbj1RygA1foiDdvbjSE1k8
+         8KL3otHDXe2ma2qGiMUhpQqW+j1NKrfqOrGQ7S6g9snwzzMJZUhnNLdomAsYxTEwpCC9
+         vrkj3Q2rMcAiTAgIgLVDs02XtRQWtRkxjWfC3Kgprmj+me2m65kqAzJYTu34gqaWeRRw
+         QsPg==
+X-Gm-Message-State: AOJu0Yz4zZ6mWt6pdwXF4KJewQtlV5GqapYg13ZoBGfcv47iRTdbILFy
+	KWNpNrxikrlW3e2lVueKWJKW6w==
+X-Google-Smtp-Source: AGHT+IFiVXVkJA1L9nXFiQfIL0/MD9bacMDG55+9sSwrswN9Mzf/813jB6DUKoAwLgRaC0LvRmDoEQ==
+X-Received: by 2002:a17:902:cec8:b0:1ce:5b21:5c2e with SMTP id d8-20020a170902cec800b001ce5b215c2emr1703535plg.17.1700278435110;
+        Fri, 17 Nov 2023 19:33:55 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id h10-20020a170902f7ca00b001c8836a3795sm2052356plw.271.2023.11.17.19.33.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Nov 2023 19:33:54 -0800 (PST)
+Date: Fri, 17 Nov 2023 19:33:54 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Waiman Long <longman@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>, cgroups@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 3/3] kernfs: Convert kernfs_path_from_node_locked() from
+ strlcpy() to strscpy()
+Message-ID: <202311171933.5792E9FFFE@keescook>
+References: <20231116191718.work.246-kees@kernel.org>
+ <20231116192127.1558276-3-keescook@chromium.org>
+ <20231117084757.150724ed@rorschach.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a17:90a:be03:b0:27c:f438:70a4 with SMTP id
- a3-20020a17090abe0300b0027cf43870a4mr26773pjs.5.1700243045768; Fri, 17 Nov
- 2023 09:44:05 -0800 (PST)
-Date: Fri, 17 Nov 2023 09:44:05 -0800
-In-Reply-To: <0000000000009cd5bc060a430d80@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c667ce060a5cae75@google.com>
-Subject: Re: [syzbot] [kernel?] inconsistent lock state in __lock_task_sighand
-From: syzbot <syzbot+cf93299f5a30fb4c3829@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, boqun.feng@gmail.com, 
-	bpf@vger.kernel.org, brauner@kernel.org, daniel@iogearbox.net, 
-	haoluo@google.com, john.fastabend@gmail.com, jolsa@kernel.org, 
-	kpsingh@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, longman@redhat.com, martin.lau@linux.dev, 
-	mhiramat@kernel.org, michael.christie@oracle.com, mingo@redhat.com, 
-	mst@redhat.com, oleg@redhat.com, peterz@infradead.org, rostedt@goodmis.org, 
-	sdf@google.com, song@kernel.org, syzkaller-bugs@googlegroups.com, 
-	tglx@linutronix.de, wander@redhat.com, will@kernel.org, 
-	yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231117084757.150724ed@rorschach.local.home>
 
-syzbot has bisected this issue to:
+On Fri, Nov 17, 2023 at 08:47:57AM -0500, Steven Rostedt wrote:
+> >  kernel/trace/trace_uprobe.c |  2 +-
+> 
+> trace_uprobe.c seems out of scope for this patch.
 
-commit 2d25a889601d2fbc87ec79b30ea315820f874b78
-Author: Peter Zijlstra <peterz@infradead.org>
-Date:   Sun Sep 17 11:24:21 2023 +0000
+Oops. Yes, that's in the wrong patch. I will respin the series...
 
-    ptrace: Convert ptrace_attach() to use lock guards
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=144ac400e80000
-start commit:   f31817cbcf48 Add linux-next specific files for 20231116
-git tree:       linux-next
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=164ac400e80000
-console output: https://syzkaller.appspot.com/x/log.txt?x=124ac400e80000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f59345f1d0a928c
-dashboard link: https://syzkaller.appspot.com/bug?extid=cf93299f5a30fb4c3829
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=125ac3c0e80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12c4d797680000
-
-Reported-by: syzbot+cf93299f5a30fb4c3829@syzkaller.appspotmail.com
-Fixes: 2d25a889601d ("ptrace: Convert ptrace_attach() to use lock guards")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-- 
+Kees Cook
