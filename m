@@ -1,33 +1,33 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="H0Rpat76"
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2074.outbound.protection.outlook.com [40.107.92.74])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7FAD1AD;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pmcrhlks"
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2071.outbound.protection.outlook.com [40.107.220.71])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B613130;
 	Sat, 18 Nov 2023 11:33:11 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RohPjXMQPs/bPPdf/e7C3F92EBelNz1HkoA/mg1Ysuk/fAXyvxc6VMWepFV8U7835Jb8fBw76scUqMdtcyxME8adDrAl7jAHGJ4U7CZFGAYQvP0797qdPrMbh/2ENao0MRb4HjUwH68N9nJ7Z0uYPJG40P6qTkhGN7A08LELfkVEnSX4I6ihtFlZufHL3Gli4pcqsNVzzsUd5PNuIXz1hCtEbXP3RtJmX2O9II69te3F1iRnt65oI07rBz6RIr46UhBZjbecmmLKkxlPKabLm0rUK1OZZJQtrd5+wxPGjuVatuGZffnSvjdO8xvvQ+13WFDdtQoB6otNRLbeRWLPrw==
+ b=O2iKbFreCfX4/y5IAzUxEzJ4lQJddxsmCsv9jK/kr7s8BRFtaS8rXqMihFvUBN9Dr9WQK3JLOAj7LsS2B8ydYmc30Vu7YgsU8Ksv5qmZW80OBuQdj55F2fV75LS+3YW5JWVeLXLbSUXebUu3Q8zK7OI12CiUYxlWlVngnraEQYW2xtXkqQlqukvilxew15CNmNXPpxqkJw36LUW5IJWhtM9Y0LijVvQ0rUrBk0ZTcBpDhO4jf8EIrqj05lOCkPW0CV0NjKL4wRbknWDtivjkOMBe7esGAyvdJaLkaCGityy8BjgAc7UxfVf12cXTLxRPr3Nw2rO0wW6SMbKXU47MEg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=38638wKhhJmWkaGK2DALwfE5ugit3QFutWNfgrgDj+M=;
- b=S0P+SIfQRtBMSBpGT2hBCw0S0+kwPVQfwjGnC6CmDZDxYKbMmATFOWVUM80XwbfUlwkCgOaetzavObWAGu3DGY+Uc+fMhI678PJ49Bz51J5TT2UdvtwNrjhzYSxrCw6+Is1dqOncu7VOG6UJ18r2gneleEvzdZLTwqv/WVggZNvHvW1ve7F2Dgo4OyYKjzCeCkp2U0sq5+Se6zcoAEE6vShrPUNyBfysO1QADbFYwHd82IIM7JXN6dN0Rf0Xpu7JfNUpn+4jF6nNfBvZC3bPGMibNSUZS4SjNVpUlLq3U1H2aTqhIZsDgcAIwyFeAHuHd9ReMhGlsuGC6IvII2M44w==
+ bh=TLfogYxZA1xsuZQETSFyU7142XhjtoQVlHB6k2wQ2Fg=;
+ b=jblMSGB1N2YCTo+ZBnnnHnTTXl9/8SpTSlqfNlV86b7UAmuRojeMIsxyAXTuHo7GFAsPwUqNo7niH9HkZsYyTlVdBgd8uBWHxgUz3XxfzEVhYRXxcO5MS7/RT8CZJu1KiTgp8ofQJrTAQ49gmAhO4cB0+zWDdLwJbmHb5L7kLaY956f28GXAsVAXutDEuEHdw8wlpUcIOuER9oIQPtE06hsDRKmPR01GmS1DtbbVXrS8h7u5uHL8oCOjX6Ru1Ne0/wIw35Aju/MhW0p5qt2Rtn98c1/8SjoTQkpZ1Ytlk+tsP/Js5QBZpUpweBdpndkkH5r1b/iux8cxEfvv4RdGXQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=38638wKhhJmWkaGK2DALwfE5ugit3QFutWNfgrgDj+M=;
- b=H0Rpat76dz3GAN21vh/w6GV9qDJQCPclFVr147gUvwBve1ftxWchJAtTC8augzo8NrbkdRdYZXPlPWDxPwg1PyTUZGo7fm9ZSPVUc3AkZ12bN6HmoK1W0vTaBtNAUW+TLyHD03Ar2V+hHz9QD2QcTlowQQniXCqkARizq/af8NU=
-Received: from MN2PR10CA0008.namprd10.prod.outlook.com (2603:10b6:208:120::21)
- by SA3PR12MB8761.namprd12.prod.outlook.com (2603:10b6:806:312::15) with
+ bh=TLfogYxZA1xsuZQETSFyU7142XhjtoQVlHB6k2wQ2Fg=;
+ b=pmcrhlksi2ZhVyHZIYarsmae1HAjrrQJfM/JaHgv/Hp5p5E2c9ZIQjhOQOpOiSIDYxMIVqC+944GmzrFVLF5/zCy1YU1maCBL4HnXDOA3/v+Og28q+UL7IaTH9Qb74QoiqmtYueu0ZHey+L2NpDSoKy1zDCfqBU0G33Jo5NwjRE=
+Received: from MN2PR10CA0035.namprd10.prod.outlook.com (2603:10b6:208:120::48)
+ by CO6PR12MB5427.namprd12.prod.outlook.com (2603:10b6:5:358::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.17; Sat, 18 Nov
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.26; Sat, 18 Nov
  2023 19:33:08 +0000
 Received: from BL6PEPF0001AB4A.namprd04.prod.outlook.com
- (2603:10b6:208:120:cafe::45) by MN2PR10CA0008.outlook.office365.com
- (2603:10b6:208:120::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.26 via Frontend
- Transport; Sat, 18 Nov 2023 19:33:08 +0000
+ (2603:10b6:208:120:cafe::af) by MN2PR10CA0035.outlook.office365.com
+ (2603:10b6:208:120::48) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.23 via Frontend
+ Transport; Sat, 18 Nov 2023 19:33:07 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -37,20 +37,20 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  BL6PEPF0001AB4A.mail.protection.outlook.com (10.167.242.68) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7025.12 via Frontend Transport; Sat, 18 Nov 2023 19:33:08 +0000
+ 15.20.7025.12 via Frontend Transport; Sat, 18 Nov 2023 19:33:07 +0000
 Received: from quartz-7b1chost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Sat, 18 Nov
- 2023 13:33:03 -0600
+ 2023 13:33:00 -0600
 From: Yazen Ghannam <yazen.ghannam@amd.com>
 To: <linux-edac@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <tony.luck@intel.com>, <x86@kernel.org>,
 	<Avadhut.Naik@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
 	<amd-gfx@lists.freedesktop.org>, <linux-trace-kernel@vger.kernel.org>, "Yazen
  Ghannam" <yazen.ghannam@amd.com>
-Subject: [PATCH 06/20] x86/mce/amd: Use helper for GPU UMC bank type checks
-Date: Sat, 18 Nov 2023 13:32:34 -0600
-Message-ID: <20231118193248.1296798-7-yazen.ghannam@amd.com>
+Subject: [PATCH 02/20] x86/mce: Define mce_setup() helpers for global and per-CPU fields
+Date: Sat, 18 Nov 2023 13:32:30 -0600
+Message-ID: <20231118193248.1296798-3-yazen.ghannam@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231118193248.1296798-1-yazen.ghannam@amd.com>
 References: <20231118193248.1296798-1-yazen.ghannam@amd.com>
@@ -67,131 +67,100 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4A:EE_|SA3PR12MB8761:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4b71e3d8-aa50-430f-9653-08dbe86d3194
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4A:EE_|CO6PR12MB5427:EE_
+X-MS-Office365-Filtering-Correlation-Id: d276c711-0b7f-4bdc-3b5f-08dbe86d30f7
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	zzIqh3x+LfGwY33WujhQoN1VD8f8XP/JAUElH1elSVCUvVYhJPnliqlTYynkb6fu7iZJS4OJweBzVohQCxeaCaAd5gndYpKcbL9j5E9rFG99PFQ5qYeEfuOjjfSD6Tfv42e1EzguUGLaoVGrHD7Sef0PJARSO81s0dh3ijAjXEYkimFmBeW74usLSQBe6r5jrv39hLuJbCHKh6nrFgIbzQdbbfNHwMHPgqvw3ccRkSUXKqL4T7VwkzCJIjwHhh0UUmIEJI5+YuXiY+O4VXiL1/t9ivc384ETCdM1IPUThYRg02tu/78XC/YQJpE/vOm1XQ4dQLVm6xz8uCoPcwKr2Jx1Kmv6uKrqmHFX6C9AEjClSAw+Jt88+WKbWkJwNUlA+eOePzIf0A6/2ItNyE9QAzKT79rK2CaPAiPxR/b0/Zpvo/KgPz5bzNSCKCZ5lkfi9Wcs0x4Y36rlWUO0FMIYkqqQqGAP3pyZ0kWaLVeCS/ip3NxFNNQWUOiykaS9EbWDepN6MLJesEE7NPumwu8dt1USDg2mIKDdpsZ0nGKxOk+1WFz428MkITiFPEqAPXlnBcZZ/ucdmVCUT/WBOA/0CABgxd1LRJiFK5GoYxlQpgOQU++Gwg9dbP1tqyn2++33U1p6wyTlfbVPcmuP74asVNSfCSZdVXWMbXwhmVwoXA1W7XCcCkaoP0atVdxLBwQeLYwTffjv5ETaQu9jwPQwFzxbKlEWVn8wJFdpNqrB1MwKUqhtO+w5frpCkbdJ6K2ZUdMIlLl3MAitrMY2Cj2vXQ==
+	TPSQKxVrJWN05VZW7fkiIB+gWdW76GE/XMwCaUQNNBAqy1KN+nIDghzMaLtOSdm0yJsrR5O0/KpUS7+TkYCpNN2Y4Aic1ei+EHdtyh7UfN8m0TTI1t77/BMXhYgdhOm/hP47taYC9g8XXa0VUnsFf2f1bgoCYjWS7QXJZFZXP2mTD5wJrxmSGLpF63z6x070FARFu2s8z8/eL+q5s3+lA22cdrEVJ84Hgeb5w2oyqu6S4TiZwjPCbs8aNfbZMO5jbHQ2NjpqOi2NuYlRK/Hkt0ZrMpt0ES3mvDokFg0FDnDDWDjuxyqi9NofDyaETUg1FLjHPgqYLpWBcHeGgIP2LuQwvj6IL8i55JtjzKeYB5eH4yJ/wKSEkBEa7G16URQxTXH1DEZO3jdCefxFwylIvoAxH8vZDTW8a1CZKEfylhSr/CnVoeaTc9eLU1T1lQW81UxqXY0t93xHDrdWCSc8GU16RvlRekuwnLE/oaEfLmsxTyC21vQYsH4fbJtc39GaTqKFLDMYepLw71e/Rq8LA7EIHOx4qoTW4tjde6o2W0oGLNvmKz2x5mIN03HTZaNCgE73ps4PJg+SUK3p7DfD3ZiTQQBU/SOE8VtKZfeBi35wugFFvn9Md6HrEbKnaTViinW7NqaHe8s+r1dXdIlIo9nVmbHjHL/ypjJTUeUMG52Zv8yELxa8T96aoLQnLrji8zZyNs3Aef2/CZlMGd1eUCgAntu3GTvIdnTVi3IxkzAsxJMwGFxoArR1vVECth13db9bFxs1o1wEr6zSjMiyMQ==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(136003)(346002)(396003)(39860400002)(230922051799003)(186009)(82310400011)(451199024)(1800799012)(64100799003)(36840700001)(46966006)(40470700004)(36756003)(15650500001)(40460700003)(5660300002)(2906002)(54906003)(41300700001)(336012)(82740400003)(478600001)(6916009)(70206006)(36860700001)(316002)(356005)(26005)(70586007)(16526019)(1076003)(86362001)(7696005)(47076005)(6666004)(2616005)(81166007)(83380400001)(44832011)(426003)(4326008)(8676002)(8936002)(40480700001)(36900700001);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(136003)(39860400002)(376002)(346002)(230922051799003)(451199024)(64100799003)(82310400011)(186009)(1800799012)(40470700004)(46966006)(36840700001)(2906002)(41300700001)(8936002)(8676002)(4326008)(40460700003)(316002)(5660300002)(44832011)(86362001)(36756003)(2616005)(1076003)(83380400001)(16526019)(336012)(426003)(26005)(82740400003)(6666004)(7696005)(81166007)(356005)(47076005)(36860700001)(40480700001)(478600001)(6916009)(54906003)(70206006)(70586007)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2023 19:33:08.3645
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2023 19:33:07.3332
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4b71e3d8-aa50-430f-9653-08dbe86d3194
+X-MS-Exchange-CrossTenant-Network-Message-Id: d276c711-0b7f-4bdc-3b5f-08dbe86d30f7
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	BL6PEPF0001AB4A.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8761
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR12MB5427
 
-The type of an Scalable MCA bank should be determined solely using the
-values in its MCA_IPID register.
+Generally, MCA information for an error is gathered on the CPU that
+reported the error. In this case, CPU-specific information from the
+running CPU will be correct.
 
-Define and use a helper function to determine if a bank represents a GPU
-Unified Memory Controller (UMC), and where the exact bank type is not
-needed.
+However, this will be incorrect if the MCA information is gathered while
+running on a CPU that didn't report the error. One example is creating
+an MCA record using mce_setup() for errors reported from ACPI.
 
-Use bitops and rename old mask until removed.
+Split mce_setup() so that there is a helper function to gather global,
+i.e. not CPU-specific, information and another helper for CPU-specific
+information.
+
+Don't set the CPU number in either helper function. This will be set
+appropriately for each call site of the helpers.
+
+Leave mce_setup() defined as-is for the common case when running on the
+reporting CPU.
+
+Get MCG_CAP in the global helper even though the register is per-CPU.
+This value is not already cached per-CPU like other values. And it does
+not assist with any per-CPU decoding or handling.
 
 Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
 ---
- arch/x86/include/asm/mce.h              |  4 +++-
- arch/x86/kernel/cpu/mce/amd.c           | 12 +++++++++++-
- drivers/edac/amd64_edac.c               |  2 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c |  9 ++++-----
- 4 files changed, 19 insertions(+), 8 deletions(-)
+ arch/x86/kernel/cpu/mce/core.c | 31 +++++++++++++++++++++----------
+ 1 file changed, 21 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
-index c43b41677a3e..012caf68dcbb 100644
---- a/arch/x86/include/asm/mce.h
-+++ b/arch/x86/include/asm/mce.h
-@@ -59,8 +59,9 @@
-  *  - TCC bit is present in MCx_STATUS.
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 1642018dd6c9..7e86086aa19c 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -115,20 +115,31 @@ static struct irq_work mce_irq_work;
   */
- #define MCI_CONFIG_MCAX		0x1
--#define MCI_IPID_MCATYPE	0xFFFF0000
-+#define MCI_IPID_MCATYPE_OLD	0xFFFF0000
- #define MCI_IPID_HWID_OLD	0xFFF
-+#define MCI_IPID_MCATYPE	GENMASK_ULL(63, 48)
- #define MCI_IPID_HWID		GENMASK_ULL(43, 32)
+ BLOCKING_NOTIFIER_HEAD(x86_mce_decoder_chain);
  
- /*
-@@ -341,6 +342,7 @@ extern int mce_threshold_remove_device(unsigned int cpu);
- 
- void mce_amd_feature_init(struct cpuinfo_x86 *c);
- enum smca_bank_types smca_get_bank_type(unsigned int cpu, unsigned int bank);
-+bool smca_gpu_umc_bank_type(u64 ipid);
- #else
- 
- static inline int mce_threshold_create_device(unsigned int cpu)		{ return 0; };
-diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-index c8fb6c24170f..6fc35967b11b 100644
---- a/arch/x86/kernel/cpu/mce/amd.c
-+++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -150,6 +150,16 @@ static bool smca_umc_bank_type(u64 ipid)
- 	return FIELD_GET(MCI_IPID_HWID, ipid) == 0x96;
++void mce_setup_global(struct mce *m)
++{
++	memset(m, 0, sizeof(struct mce));
++
++	m->cpuid	= cpuid_eax(1);
++	m->cpuvendor	= boot_cpu_data.x86_vendor;
++	m->mcgcap	= __rdmsr(MSR_IA32_MCG_CAP);
++	/* need the internal __ version to avoid deadlocks */
++	m->time		= __ktime_get_real_seconds();
++}
++
++void mce_setup_per_cpu(struct mce *m)
++{
++	m->apicid		= cpu_data(m->extcpu).topo.initial_apicid;
++	m->microcode		= cpu_data(m->extcpu).microcode;
++	m->ppin			= cpu_data(m->extcpu).ppin;
++	m->socketid		= cpu_data(m->extcpu).topo.pkg_id;
++}
++
+ /* Do initial initialization of a struct mce */
+ void mce_setup(struct mce *m)
+ {
+-	memset(m, 0, sizeof(struct mce));
++	mce_setup_global(m);
+ 	m->cpu = m->extcpu = smp_processor_id();
+-	/* need the internal __ version to avoid deadlocks */
+-	m->time = __ktime_get_real_seconds();
+-	m->cpuvendor = boot_cpu_data.x86_vendor;
+-	m->cpuid = cpuid_eax(1);
+-	m->socketid = cpu_data(m->extcpu).topo.pkg_id;
+-	m->apicid = cpu_data(m->extcpu).topo.initial_apicid;
+-	m->mcgcap = __rdmsr(MSR_IA32_MCG_CAP);
+-	m->ppin = cpu_data(m->extcpu).ppin;
+-	m->microcode = boot_cpu_data.microcode;
++	mce_setup_per_cpu(m);
  }
  
-+/* GPU UMCs have MCATYPE=0x1.*/
-+bool smca_gpu_umc_bank_type(u64 ipid)
-+{
-+	if (!smca_umc_bank_type(ipid))
-+		return false;
-+
-+	return FIELD_GET(MCI_IPID_MCATYPE, ipid) == 0x1;
-+}
-+EXPORT_SYMBOL_GPL(smca_gpu_umc_bank_type);
-+
- static const struct smca_hwid smca_hwid_mcatypes[] = {
- 	/* { bank_type, hwid_mcatype } */
- 
-@@ -312,7 +322,7 @@ static void smca_configure(unsigned int bank, unsigned int cpu)
- 	}
- 
- 	hwid_mcatype = HWID_MCATYPE(high & MCI_IPID_HWID_OLD,
--				    (high & MCI_IPID_MCATYPE) >> 16);
-+				    (high & MCI_IPID_MCATYPE_OLD) >> 16);
- 
- 	for (i = 0; i < ARRAY_SIZE(smca_hwid_mcatypes); i++) {
- 		s_hwid = &smca_hwid_mcatypes[i];
-diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index 9b6642d00871..b593795e1e6b 100644
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -1032,7 +1032,7 @@ static int fixup_node_id(int node_id, struct mce *m)
- 	/* MCA_IPID[InstanceIdHi] give the AMD Node ID for the bank. */
- 	u8 nid = (m->ipid >> 44) & 0xF;
- 
--	if (smca_get_bank_type(m->extcpu, m->bank) != SMCA_UMC_V2)
-+	if (!smca_gpu_umc_bank_type(m->ipid))
- 		return node_id;
- 
- 	/* Nodes below the GPU base node are CPU nodes and don't need a fixup. */
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-index 84e5987b14e0..7235668b3cc2 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-@@ -3279,12 +3279,11 @@ static int amdgpu_bad_page_notifier(struct notifier_block *nb,
- 	uint32_t umc_inst = 0, ch_inst = 0;
- 
- 	/*
--	 * If the error was generated in UMC_V2, which belongs to GPU UMCs,
--	 * and error occurred in DramECC (Extended error code = 0) then only
--	 * process the error, else bail out.
-+	 * If the error was generated in a GPU UMC and error occurred in
-+	 * DramECC (Extended error code = 0) then only process the error,
-+	 * else bail out.
- 	 */
--	if (!m || !((smca_get_bank_type(m->extcpu, m->bank) == SMCA_UMC_V2) &&
--		    (XEC(m->status, 0x3f) == 0x0)))
-+	if (!m || !(smca_gpu_umc_bank_type(m->ipid) && (XEC(m->status, 0x3f) == 0x0)))
- 		return NOTIFY_DONE;
- 
- 	/*
+ DEFINE_PER_CPU(struct mce, injectm);
 -- 
 2.34.1
 
