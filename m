@@ -1,59 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hCmtaYZK"
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2050.outbound.protection.outlook.com [40.107.212.50])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56753196;
-	Sat, 18 Nov 2023 11:33:14 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KmGa02N8nDnwBR8WJJo+0xwfcOsmvZL/6qjVDCXtJMQ5Xtvgo4MydhcMPJZuW2p4VjSahHQhAO9fr8jp3XokQK2ADSx1FJd5+ngvo4m+tjEjconu2AV3kC1x+TGHc10kHmCV+qboISyE5YJTFfDtMXvvtO52I+1tGz85yXqBzSQu0Io5jEV8m/1pLzkL3dsEwL//TJkEm+H1ltRqpFl2VrG2Z5OU6C7zeNI9X5udKemhaTGqb0B5Ko3hfys+XogHJK/PSIuKC5uzAEFThdHnl1Honufc9QcRj2KUd0TOAmV77x928ReNWVuBl8cCt0DrTnkoTaEe29w0f7CW58gcXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5xZT1F1xNKehPNBhTIOiq8AfEvd7Q6G7ySBpoMDdTVs=;
- b=VA6uIbIy9IqJlCK9STQO0xEJ3yJyjXkMgX+LyrB7uk14xjt27vAacFKiZGfR1E8dASZt/ac2lc58TZIkJT7ciurUuZbCFUNZ4LrWeat5zEzdr6CIzz4jsYcEJ+JA7v4E4xwHnMnv0lFE4EIWYYrDnFniliafxIonVx2V9fgJxLeBxZxEwgqOYc0O5n8Mm/AcOVdMR5C2yI8WVr0t2KhRnngAGcMBedwnIS8vDwQNGRGqJ6hcJ5Ug4y8AocJ0n4ONlRdnRFT6incP8Ufc3RpS83Yy34GmqxCtAv/e/WFL0mPeL8UJ7wAWlqyTsrKwnWHZ/X8LNYFQbJXT9OSofwHgFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5xZT1F1xNKehPNBhTIOiq8AfEvd7Q6G7ySBpoMDdTVs=;
- b=hCmtaYZKf+PR55CTD/lk4iwc+hmjPPVv13dcgK+O3y3j3sLsD4Zl2ybG0K2eNroSSGPS0c+t0UAX+n9K0OZTVAUkIQEGPNhRbG0atQ1LmAp2uYl/lUF/dAOGKRNzBhIvhejD8rT2s8wHej/2aN+UpO59lyqRS3oPymfgR2UsVCk=
-Received: from MN2PR10CA0004.namprd10.prod.outlook.com (2603:10b6:208:120::17)
- by DS7PR12MB5911.namprd12.prod.outlook.com (2603:10b6:8:7c::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.25; Sat, 18 Nov
- 2023 19:33:11 +0000
-Received: from BL6PEPF0001AB4A.namprd04.prod.outlook.com
- (2603:10b6:208:120:cafe::eb) by MN2PR10CA0004.outlook.office365.com
- (2603:10b6:208:120::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.23 via Frontend
- Transport; Sat, 18 Nov 2023 19:33:11 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF0001AB4A.mail.protection.outlook.com (10.167.242.68) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7025.12 via Frontend Transport; Sat, 18 Nov 2023 19:33:11 +0000
-Received: from quartz-7b1chost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Sat, 18 Nov
- 2023 13:33:09 -0600
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: <linux-edac@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <tony.luck@intel.com>, <x86@kernel.org>,
-	<Avadhut.Naik@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<amd-gfx@lists.freedesktop.org>, <linux-trace-kernel@vger.kernel.org>, "Yazen
- Ghannam" <yazen.ghannam@amd.com>
-Subject: [PATCH 17/20] x86/mce: Add wrapper for struct mce to export vendor specific info
-Date: Sat, 18 Nov 2023 13:32:45 -0600
-Message-ID: <20231118193248.1296798-18-yazen.ghannam@amd.com>
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0E997C2;
+	Sun, 19 Nov 2023 08:57:40 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C605EDA7;
+	Sun, 19 Nov 2023 08:58:25 -0800 (PST)
+Received: from e121798.cable.virginm.net (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C6E83F6C4;
+	Sun, 19 Nov 2023 08:57:34 -0800 (PST)
+From: Alexandru Elisei <alexandru.elisei@arm.com>
+To: catalin.marinas@arm.com,
+	will@kernel.org,
+	oliver.upton@linux.dev,
+	maz@kernel.org,
+	james.morse@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	arnd@arndb.de,
+	akpm@linux-foundation.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	bristot@redhat.com,
+	vschneid@redhat.com,
+	mhiramat@kernel.org,
+	rppt@kernel.org,
+	hughd@google.com
+Cc: pcc@google.com,
+	steven.price@arm.com,
+	anshuman.khandual@arm.com,
+	vincenzo.frascino@arm.com,
+	david@redhat.com,
+	eugenis@google.com,
+	kcc@google.com,
+	hyesoo.yu@samsung.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH RFC v2 00/27] Add support for arm64 MTE dynamic tag storage reuse
+Date: Sun, 19 Nov 2023 16:56:54 +0000
+Message-Id: <20231119165721.9849-1-alexandru.elisei@arm.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231118193248.1296798-1-yazen.ghannam@amd.com>
-References: <20231118193248.1296798-1-yazen.ghannam@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -61,930 +57,261 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4A:EE_|DS7PR12MB5911:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2b772cc5-dedc-4501-0c28-08dbe86d3350
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	hN+e7dC/zCWZ00wcx+w2Y8wfPgx5cZmwA4T6FCnMPBM3rXkJYpxvI2LEHwXgMnTb9pIGA5vX4KG7ez6Yy/TjWARd20mNfHSZeB4R+fHK8RYtbxVeeQAs9X14Ffcc+hG+c6YHXZmn1ONZLHzaZC+R2JCEbPNeFDlljIAa3U2JSdXM5o7Jn/gaPUX/TD8HmGxxqHzPYkr/woROxpp9tm0DMUSjxiduWkSJK3vGgU2lW9jcWuw7fP1NM8f2/TZWP1oQVHlPp4ZidTpLDWcHjM0SwBoaSIqKW/itYkSs/xtpr3qywJGPyJ0bzCm/kvCgdGZrRS+3WIq2fdPwlkZff6gHZpRiKCahTfIZdnm7MLU8WyetqgPOUOsl4ZEl4cmJHL7klkiZMCy1A+BWK8ppBqKf3TQ5erx/f97o3ny75GK0jbBLHeF7WJwHwIiY3QHD+NTwPbRt9k3+DV6XPOvL3cDMXIcwL1q1iCePt54ocoBqkE4UDYpTgYpdYr7MGFk38KK+AvFJ1uazQtivANA0tR96anPTCZN5TAqypcH5/S/TBI5kIkkMGvcnGO9l63/YHdxZAwhlFSgz6qrVt5wob4jNRXGZHdoYA56dqCQKEHbrgp4S8vvzoZZwD9snCugKNa/cqe0MhoFTsYcJ+UQLp8lk4dPir6118LIzVfhH5sSfBfuwU3DUefloKPEOMn4ek4CYG+5lmgmMs4JQYy4bb+SfG8vmUG0v22yWTUJTsjFCOHPYeOAU4Lx0HRu76w+h3Rom4WtoGk0Sxy9QP3BOdnyCQw==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(396003)(376002)(346002)(136003)(230922051799003)(64100799003)(451199024)(82310400011)(186009)(1800799012)(40470700004)(46966006)(36840700001)(30864003)(40460700003)(2906002)(44832011)(4326008)(8676002)(8936002)(5660300002)(86362001)(41300700001)(36756003)(356005)(81166007)(6666004)(7696005)(47076005)(478600001)(16526019)(26005)(83380400001)(1076003)(82740400003)(426003)(336012)(2616005)(316002)(6916009)(54906003)(70586007)(70206006)(36860700001)(40480700001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2023 19:33:11.2707
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b772cc5-dedc-4501-0c28-08dbe86d3350
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB4A.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5911
 
-From: Avadhut Naik <Avadhut.Naik@amd.com>
+The series is based on v6.7-rc1 and can be cloned with:
 
-Currently, exporting new additional machine check error information
-involves adding new fields for the same at the end of the struct mce.
-This additional information can then be consumed through mcelog or
-tracepoint.
+$ git clone https://gitlab.arm.com/linux-arm/linux-ae.git \
+	-b arm-mte-dynamic-carveout-rfc-v2
 
-However, as new MSRs are being added (and will be added in the future)
-by CPU vendors on their newer CPUs with additional machine check error
-information to be exported, the size of struct mce will balloon on some
-CPUs, unnecessarily, since those fields are vendor-specific. Moreover,
-different CPU vendors may export the additional information in varying
-sizes.
+Introduction
+============
 
-The problem particularly intensifies since struct mce is exposed to
-userspace as part of UAPI. It's bloating through vendor-specific data
-should be avoided to limit the information being sent out to userspace.
+Memory Tagging Extension (MTE) is implemented currently to have a static
+carve-out of the DRAM to store the allocation tags (a.k.a. memory colour).
+This is what we call the tag storage. Each 16 bytes have 4 bits of tags, so
+this means 1/32 of the DRAM, roughly 3% used for the tag storage.  This is
+done transparently by the hardware/interconnect (with firmware setup) and
+normally hidden from the OS. So a checked memory access to location X
+generates a tag fetch from location Y in the carve-out and this tag is
+compared with the bits 59:56 in the pointer. The correspondence from X to Y
+is linear (subject to a minimum block size to deal with some address
+interleaving). The software doesn't need to know about this correspondence
+as we have specific instructions like STG/LDG to location X that lead to a
+tag store/load to Y.
 
-Add a new structure mce_hw_err to wrap the existing struct mce. The same
-will prevent its ballooning since vendor-specifc data, if any, can now be
-exported through a union within the wrapper structure and through
-__dynamic_array in mce_record tracepoint.
+Now, not all memory used by applications is tagged (mmap(PROT_MTE)).  For
+example, some large allocations may not use PROT_MTE at all or only for the
+first and last page since initialising the tags takes time. The side-effect
+is that of that 3% of DRAM, only part of it, say 1%, is effectively used.
 
-Furthermore, new internal kernel fields can be added to the wrapper
-struct without impacting the user space API.
+The series aims to take that unused tag storage and release it to the page
+allocator for normal data usage.
 
-Note: Some Checkpatch checks have been ignored to maintain coding style.
+The first complication is that a PROT_MTE page allocation at address X will
+need to reserve the tag storage page at location Y (and migrate any data in
+that page if it is in use).
 
-[Yazen: Add last commit message paragraph. Rebase on other MCA updates.]
+To make things worse, pages in the tag storage/carve-out range cannot use
+PROT_MTE themselves on current hardware, so this adds the second
+complication - a heterogeneous memory layout. The kernel needs to know
+where to allocate a PROT_MTE page from or migrate a current page if it
+becomes PROT_MTE (mprotect()) and the range it is in does not support
+tagging.
 
-Suggested-by: Borislav Petkov (AMD) <bp@alien8.de>
-Signed-off-by: Avadhut Naik <Avadhut.Naik@amd.com>
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
----
- arch/x86/include/asm/mce.h         |   6 +-
- arch/x86/kernel/cpu/mce/amd.c      |  24 ++--
- arch/x86/kernel/cpu/mce/apei.c     |  48 ++++----
- arch/x86/kernel/cpu/mce/core.c     | 174 ++++++++++++++++-------------
- arch/x86/kernel/cpu/mce/genpool.c  |  20 ++--
- arch/x86/kernel/cpu/mce/inject.c   |   4 +-
- arch/x86/kernel/cpu/mce/internal.h |   8 +-
- include/trace/events/mce.h         |  38 +++----
- 8 files changed, 178 insertions(+), 144 deletions(-)
+Some other complications are arm64-specific like cache coherency between
+tags and data accesses. There is a draft architecture spec which will be
+released soon, detailing how the hardware behaves.
 
-diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
-index 9441b89afee3..99eb72dd7d05 100644
---- a/arch/x86/include/asm/mce.h
-+++ b/arch/x86/include/asm/mce.h
-@@ -187,6 +187,10 @@ enum mce_notifier_prios {
- 	MCE_PRIO_HIGHEST = MCE_PRIO_CEC
- };
+All of this will be entirely transparent to userspace. As with the current
+kernel (without this dynamic tag storage), a user only needs to ask for
+PROT_MTE mappings to get tagged pages.
+
+Implementation
+==============
+
+MTE tag storage reuse is accomplished with the following changes to the
+Linux kernel:
+
+1. The tag storage memory is exposed to the memory allocator as
+MIGRATE_CMA. The arm64 code manages this memory directly instead of using
+cma_declare_contiguous/cma_alloc for performance reasons.
+
+There is a limitation to this approach: MIGRATE_CMA cannot be used for
+tagged allocations, even if not all MIGRATE_CMA memory is tag storage.
+
+2. mprotect(PROT_MTE) is implemented by adding a fault-on-access mechanism
+for existing pages. When a page is next accessed, a fault is taken and the
+corresponding tag storage is reserved.
+
+3. When the code tries to copy tags to a page (when swapping in a newly
+allocated page, or during migration/THP collapse) which doesn't have the
+tag storage reserved, the tags are copied to an xarray and restored when
+tag storage is reserved for the destination page.
+
+KVM support has not been implemented yet, that because a non-MTE enabled
+VMA can back the memory of an MTE-enabled VM. It will be added after there
+is a consensus on the right approach on the memory management support.
+
+Overview of the patches
+=======================
+
+For people not interested in the arm64 details, you probably want to start
+with patches 1-10, which mostly deal with adding the necessary hooks to the
+memory management code, and patches 19 and 20 which add the page
+fault-on-access mechanism for regular pages, respectively huge pages. Patch
+21 is rather invasive, it moves the definition of struct
+migration_target_control out of mm/internal.h to migrate.h, and the arm64
+code also uses isolate_lru_page() and putback_movable_pages() when
+migrating a tag storage page out of a PROT_MTE VMA. And finally patch 26 is
+an optimization for a performance regression that has been reported with
+Chrome and it introduces CONFIG_WANTS_TAKE_PAGE_OFF_BUDDY to allow arm64 to
+use take_page_off_buddy() to fast track reserving tag storage when the page
+is free.
+
+The rest of the patches are mostly arm64 specific.
+
+Patches 11-18 support for detecting the tag storage region and reserving
+tag storage when a tagged page is allocated.
+
+Patches 19-21 add the page fault-on-access on mechanism and use it to
+reserve tag storage when needed.
+
+Patches 22 and 23 handle saving tags temporarily to an xarray if the page
+doesn't have tag storage, and copying the tags over to the tagged page when
+tag storage is reserved.
+
+Changelog
+=========
+
+Changes since RFC v1 [1]:
+
+* The entire series has been reworked to remove MIGRATE_METADATA and put tag
+  storage pages on the MIGRATE_CMA freelists.
+
+* Changed how tags are saved and restored when copying them from one page to
+  another if the destination page doesn't have tag storage - now the tags are
+  restored when tag storage is reserved for the destination page instead of
+  restoring them in set_pte_at() -> mte_sync_tags().
+
+[1] https://lore.kernel.org/lkml/20230823131350.114942-1-alexandru.elisei@arm.com/
+
+Testing
+=======
+
+To enable MTE dynamic tag storage:
+
+- CONFIG_ARM64_MTE_TAG_STORAGE=y
+- system_supports_mte() returns true
+- kasan_hw_tags_enabled() returns false
+- correct DTB node (for the specification, see commit "arm64: mte: Reserve tag
+  storage memory")
+
+Check dmesg for the message "MTE tag storage region management enabled".
+
+I've tested the series using FVP with MTE enabled, but without support for
+dynamic tag storage reuse. To simulate it, I've added two fake tag storage
+regions in the DTB by splitting the upper 2GB memory region into 3: one region
+for normal RAM, followed by the tag storage for the lower 2GB of memory, then
+the tag storage for the normal RAM region. Like below:
+
+diff --git a/arch/arm64/boot/dts/arm/fvp-base-revc.dts b/arch/arm64/boot/dts/arm/fvp-base-revc.dts
+index 60472d65a355..8c719825a9b3 100644
+--- a/arch/arm64/boot/dts/arm/fvp-base-revc.dts
++++ b/arch/arm64/boot/dts/arm/fvp-base-revc.dts
+@@ -165,12 +165,30 @@ C1_L2: l2-cache1 {
+                };
+        };
  
-+struct mce_hw_err {
-+	struct mce m;
-+};
+-       memory@80000000 {
++       memory0: memory@80000000 {
+                device_type = "memory";
+-               reg = <0x00000000 0x80000000 0 0x80000000>,
+-                     <0x00000008 0x80000000 0 0x80000000>;
++               reg = <0x00000000 0x80000000 0 0x80000000>;
+        };
+ 
++       memory1: memory@880000000 {
++               device_type = "memory";
++               reg = <0x00000008 0x80000000 0 0x78000000>;
++       };
 +
- struct notifier_block;
- extern void mce_register_decode_chain(struct notifier_block *nb);
- extern void mce_unregister_decode_chain(struct notifier_block *nb);
-@@ -222,7 +226,7 @@ static inline int apei_smca_report_x86_error(struct cper_ia_proc_ctx *ctx_info,
- #endif
- 
- void mce_setup(struct mce *m);
--void mce_log(struct mce *m);
-+void mce_log(struct mce_hw_err *err);
- DECLARE_PER_CPU(struct device *, mce_device);
- 
- /* Maximum number of MCA banks per CPU. */
-diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-index 9292096787ad..cd86da38463b 100644
---- a/arch/x86/kernel/cpu/mce/amd.c
-+++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -909,9 +909,9 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_deferred_error)
-  * 3) SMCA systems check MCA_DESTAT, if error was not found in MCA_STATUS, and
-  *    log it.
-  */
--static void handle_smca_dfr_error(struct mce *m)
-+static void handle_smca_dfr_error(struct mce_hw_err *err)
- {
--	struct mce m_dfr;
-+	struct mce_hw_err err_dfr;
- 	u64 mca_destat;
- 
- 	/* Non-SMCA systems don't have MCA_DESTAT/MCA_DEADDR registers. */
-@@ -919,26 +919,26 @@ static void handle_smca_dfr_error(struct mce *m)
- 		return;
- 
- 	/* Clear MCA_DESTAT if the deferred error was logged from MCA_STATUS. */
--	if (m->status & MCI_STATUS_DEFERRED)
-+	if (err->m.status & MCI_STATUS_DEFERRED)
- 		goto out;
- 
- 	/* MCA_STATUS didn't have a deferred error, so check MCA_DESTAT for one. */
--	mca_destat = mce_rdmsrl(MSR_AMD64_SMCA_MCx_DESTAT(m->bank));
-+	mca_destat = mce_rdmsrl(MSR_AMD64_SMCA_MCx_DESTAT(err->m.bank));
- 
- 	if (!(mca_destat & MCI_STATUS_VAL))
- 		return;
- 
- 	/* Reuse the same data collected from machine_check_poll(). */
--	memcpy(&m_dfr, m, sizeof(m_dfr));
-+	memcpy(&err_dfr, err, sizeof(err_dfr));
- 
- 	/* Save the MCA_DE{STAT,ADDR} values. */
--	m_dfr.status = mca_destat;
--	m_dfr.addr = mce_rdmsrl(MSR_AMD64_SMCA_MCx_DEADDR(m_dfr.bank));
-+	err_dfr.m.status = mca_destat;
-+	err_dfr.m.addr = mce_rdmsrl(MSR_AMD64_SMCA_MCx_DEADDR(err_dfr.m.bank));
- 
--	mce_log(&m_dfr);
-+	mce_log(&err_dfr);
- 
- out:
--	wrmsrl(MSR_AMD64_SMCA_MCx_DESTAT(m->bank), 0);
-+	wrmsrl(MSR_AMD64_SMCA_MCx_DESTAT(err->m.bank), 0);
- }
- 
- static void reset_block(struct threshold_block *block)
-@@ -997,10 +997,10 @@ static void amd_mca_interrupt(void)
- 	machine_check_poll(MCP_TIMESTAMP, this_cpu_ptr(&mce_poll_banks));
- }
- 
--void amd_handle_error(struct mce *m)
-+void amd_handle_error(struct mce_hw_err *err)
- {
--	reset_thr_blocks(m->bank);
--	handle_smca_dfr_error(m);
-+	reset_thr_blocks(err->m.bank);
-+	handle_smca_dfr_error(err);
- }
- 
- /*
-diff --git a/arch/x86/kernel/cpu/mce/apei.c b/arch/x86/kernel/cpu/mce/apei.c
-index 33cefe6157eb..4820f8677460 100644
---- a/arch/x86/kernel/cpu/mce/apei.c
-+++ b/arch/x86/kernel/cpu/mce/apei.c
-@@ -28,9 +28,12 @@
- 
- void apei_mce_report_mem_error(int severity, struct cper_sec_mem_err *mem_err)
- {
--	struct mce m;
-+	struct mce_hw_err err;
-+	struct mce *m = &err.m;
- 	int lsb;
- 
-+	memset(&err, 0, sizeof(struct mce_hw_err));
++       tags0: tag-storage@8f8000000 {
++                compatible = "arm,mte-tag-storage";
++                reg = <0x00000008 0xf8000000 0 0x4000000>;
++                block-size = <0x1000>;
++                memory = <&memory0>;
++        };
 +
- 	if (!(mem_err->validation_bits & CPER_MEM_VALID_PA))
- 		return;
- 
-@@ -44,30 +47,33 @@ void apei_mce_report_mem_error(int severity, struct cper_sec_mem_err *mem_err)
- 	else
- 		lsb = PAGE_SHIFT;
- 
--	mce_setup(&m);
--	m.bank = -1;
-+	mce_setup(m);
-+	m->bank = -1;
- 	/* Fake a memory read error with unknown channel */
--	m.status = MCI_STATUS_VAL | MCI_STATUS_EN | MCI_STATUS_ADDRV | MCI_STATUS_MISCV | 0x9f;
--	m.misc = (MCI_MISC_ADDR_PHYS << 6) | lsb;
-+	m->status = MCI_STATUS_VAL | MCI_STATUS_EN | MCI_STATUS_ADDRV | MCI_STATUS_MISCV | 0x9f;
-+	m->misc = (MCI_MISC_ADDR_PHYS << 6) | lsb;
- 
- 	if (severity >= GHES_SEV_RECOVERABLE)
--		m.status |= MCI_STATUS_UC;
-+		m->status |= MCI_STATUS_UC;
- 
- 	if (severity >= GHES_SEV_PANIC) {
--		m.status |= MCI_STATUS_PCC;
--		m.tsc = rdtsc();
-+		m->status |= MCI_STATUS_PCC;
-+		m->tsc = rdtsc();
- 	}
- 
--	m.addr = mem_err->physical_addr;
--	mce_log(&m);
-+	m->addr = mem_err->physical_addr;
-+	mce_log(&err);
- }
- EXPORT_SYMBOL_GPL(apei_mce_report_mem_error);
- 
- int apei_smca_report_x86_error(struct cper_ia_proc_ctx *ctx_info, u64 lapic_id)
- {
- 	const u64 *i_mce = ((const u64 *) (ctx_info + 1));
-+	struct mce_hw_err err;
-+	struct mce *m = &err.m;
- 	unsigned int cpu;
--	struct mce m;
++        tags1: tag-storage@8fc000000 {
++                compatible = "arm,mte-tag-storage";
++                reg = <0x00000008 0xfc000000 0 0x3c00000>;
++                block-size = <0x1000>;
++                memory = <&memory1>;
++        };
 +
-+	memset(&err, 0, sizeof(struct mce_hw_err));
- 
- 	if (!boot_cpu_has(X86_FEATURE_SMCA))
- 		return -EINVAL;
-@@ -105,19 +111,19 @@ int apei_smca_report_x86_error(struct cper_ia_proc_ctx *ctx_info, u64 lapic_id)
- 	if (!cpu_possible(cpu))
- 		return -EINVAL;
- 
--	mce_setup_global(&m);
--	m.cpu = m.extcpu = cpu;
--	mce_setup_per_cpu(&m);
-+	mce_setup_global(m);
-+	m->cpu = m->extcpu = cpu;
-+	mce_setup_per_cpu(m);
- 
--	m.bank = (ctx_info->msr_addr >> 4) & 0xFF;
--	m.status = *i_mce;
--	m.addr = *(i_mce + 1);
--	m.misc = *(i_mce + 2);
-+	m->bank = (ctx_info->msr_addr >> 4) & 0xFF;
-+	m->status = *i_mce;
-+	m->addr = *(i_mce + 1);
-+	m->misc = *(i_mce + 2);
- 	/* Skipping MCA_CONFIG */
--	m.ipid = *(i_mce + 4);
--	m.synd = *(i_mce + 5);
-+	m->ipid = *(i_mce + 4);
-+	m->synd = *(i_mce + 5);
- 
--	mce_log(&m);
-+	mce_log(&err);
- 
- 	return 0;
- }
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index bdbc32f10a9a..8db8ed34b200 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -86,7 +86,7 @@ struct mca_config mca_cfg __read_mostly = {
- 	.monarch_timeout = -1
- };
- 
--static DEFINE_PER_CPU(struct mce, mces_seen);
-+static DEFINE_PER_CPU(struct mce_hw_err, hw_errs_seen);
- static unsigned long mce_need_notify;
- 
- /*
-@@ -145,9 +145,9 @@ void mce_setup(struct mce *m)
- DEFINE_PER_CPU(struct mce, injectm);
- EXPORT_PER_CPU_SYMBOL_GPL(injectm);
- 
--void mce_log(struct mce *m)
-+void mce_log(struct mce_hw_err *err)
- {
--	if (!mce_gen_pool_add(m))
-+	if (!mce_gen_pool_add(err))
- 		irq_work_queue(&mce_irq_work);
- }
- EXPORT_SYMBOL_GPL(mce_log);
-@@ -168,8 +168,10 @@ void mce_unregister_decode_chain(struct notifier_block *nb)
- }
- EXPORT_SYMBOL_GPL(mce_unregister_decode_chain);
- 
--static void __print_mce(struct mce *m)
-+static void __print_mce(struct mce_hw_err *err)
- {
-+	struct mce *m = &err->m;
-+
- 	pr_emerg(HW_ERR "CPU %d: Machine Check%s: %Lx Bank %d: %016Lx\n",
- 		 m->extcpu,
- 		 (m->mcgstatus & MCG_STATUS_MCIP ? " Exception" : ""),
-@@ -211,9 +213,11 @@ static void __print_mce(struct mce *m)
- 		m->microcode);
- }
- 
--static void print_mce(struct mce *m)
-+static void print_mce(struct mce_hw_err *err)
- {
--	__print_mce(m);
-+	struct mce *m = &err->m;
-+
-+	__print_mce(err);
- 
- 	if (m->cpuvendor != X86_VENDOR_AMD && m->cpuvendor != X86_VENDOR_HYGON)
- 		pr_emerg_ratelimited(HW_ERR "Run the above through 'mcelog --ascii'\n");
-@@ -240,7 +244,7 @@ static void wait_for_panic(void)
- 	panic("Panicing machine check CPU died");
- }
- 
--static noinstr void mce_panic(const char *msg, struct mce *final, char *exp)
-+static noinstr void mce_panic(const char *msg, struct mce_hw_err *final, char *exp)
- {
- 	struct llist_node *pending;
- 	struct mce_evt_llist *l;
-@@ -271,20 +275,22 @@ static noinstr void mce_panic(const char *msg, struct mce *final, char *exp)
- 	pending = mce_gen_pool_prepare_records();
- 	/* First print corrected ones that are still unlogged */
- 	llist_for_each_entry(l, pending, llnode) {
--		struct mce *m = &l->mce;
-+		struct mce_hw_err *err = &l->err;
-+		struct mce *m = &err->m;
- 		if (!(m->status & MCI_STATUS_UC)) {
--			print_mce(m);
-+			print_mce(err);
- 			if (!apei_err)
- 				apei_err = apei_write_mce(m);
- 		}
- 	}
- 	/* Now print uncorrected but with the final one last */
- 	llist_for_each_entry(l, pending, llnode) {
--		struct mce *m = &l->mce;
-+		struct mce_hw_err *err = &l->err;
-+		struct mce *m = &err->m;
- 		if (!(m->status & MCI_STATUS_UC))
- 			continue;
--		if (!final || mce_cmp(m, final)) {
--			print_mce(m);
-+		if (!final || mce_cmp(m, &final->m)) {
-+			print_mce(err);
- 			if (!apei_err)
- 				apei_err = apei_write_mce(m);
- 		}
-@@ -292,7 +298,7 @@ static noinstr void mce_panic(const char *msg, struct mce *final, char *exp)
- 	if (final) {
- 		print_mce(final);
- 		if (!apei_err)
--			apei_err = apei_write_mce(final);
-+			apei_err = apei_write_mce(&final->m);
- 	}
- 	if (exp)
- 		pr_emerg(HW_ERR "Machine check: %s\n", exp);
-@@ -307,8 +313,8 @@ static noinstr void mce_panic(const char *msg, struct mce *final, char *exp)
- 		 * panic.
- 		 */
- 		if (kexec_crash_loaded()) {
--			if (final && (final->status & MCI_STATUS_ADDRV)) {
--				p = pfn_to_online_page(final->addr >> PAGE_SHIFT);
-+			if (final && (final->m.status & MCI_STATUS_ADDRV)) {
-+				p = pfn_to_online_page(final->m.addr >> PAGE_SHIFT);
- 				if (p)
- 					SetPageHWPoison(p);
- 			}
-@@ -557,13 +563,13 @@ EXPORT_SYMBOL_GPL(mce_is_correctable);
- static int mce_early_notifier(struct notifier_block *nb, unsigned long val,
- 			      void *data)
- {
--	struct mce *m = (struct mce *)data;
-+	struct mce_hw_err *err = (struct mce_hw_err *)data;
- 
--	if (!m)
-+	if (!err)
- 		return NOTIFY_DONE;
- 
- 	/* Emit the trace record: */
--	trace_mce_record(m);
-+	trace_mce_record(err);
- 
- 	set_bit(0, &mce_need_notify);
- 
-@@ -607,13 +613,13 @@ static struct notifier_block mce_uc_nb = {
- static int mce_default_notifier(struct notifier_block *nb, unsigned long val,
- 				void *data)
- {
--	struct mce *m = (struct mce *)data;
-+	struct mce_hw_err *err = (struct mce_hw_err *)data;
- 
--	if (!m)
-+	if (!err)
- 		return NOTIFY_DONE;
- 
--	if (mca_cfg.print_all || !m->kflags)
--		__print_mce(m);
-+	if (mca_cfg.print_all || !(err->m.kflags))
-+		__print_mce(err);
- 
- 	return NOTIFY_DONE;
- }
-@@ -655,10 +661,10 @@ static noinstr void mce_read_aux(struct mce *m, int i)
- 	}
- }
- 
--static void vendor_handle_error(struct mce *m)
-+static void vendor_handle_error(struct mce_hw_err *err)
- {
- 	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD)
--		return amd_handle_error(m);
-+		return amd_handle_error(err);
- }
- 
- DEFINE_PER_CPU(unsigned, mce_poll_count);
-@@ -690,31 +696,34 @@ bool machine_check_poll(enum mcp_flags flags, mce_banks_t *b)
- {
- 	struct mce_bank *mce_banks = this_cpu_ptr(mce_banks_array);
- 	bool error_seen = false;
--	struct mce m;
-+	struct mce_hw_err err;
-+	struct mce *m = &err.m;
- 	int i;
- 
-+	memset(&err, 0, sizeof(struct mce_hw_err));
-+
- 	this_cpu_inc(mce_poll_count);
- 
--	mce_gather_info(&m, NULL);
-+	mce_gather_info(m, NULL);
- 
- 	if (flags & MCP_TIMESTAMP)
--		m.tsc = rdtsc();
-+		m->tsc = rdtsc();
- 
- 	for (i = 0; i < this_cpu_read(mce_num_banks); i++) {
- 		if (!mce_banks[i].ctl || !test_bit(i, *b))
- 			continue;
- 
--		m.misc = 0;
--		m.addr = 0;
--		m.bank = i;
-+		m->misc = 0;
-+		m->addr = 0;
-+		m->bank = i;
- 
- 		barrier();
--		m.status = mce_rdmsrl(mca_msr_reg(i, MCA_STATUS));
-+		m->status = mce_rdmsrl(mca_msr_reg(i, MCA_STATUS));
- 
- 		/* If this entry is not valid, ignore it */
--		if (!(m.status & MCI_STATUS_VAL)) {
-+		if (!(m->status & MCI_STATUS_VAL)) {
- 			if (smca_destat_is_valid(i)) {
--				mce_read_aux(&m, i);
-+				mce_read_aux(m, i);
- 				goto clear_it;
- 			}
- 
-@@ -725,7 +734,7 @@ bool machine_check_poll(enum mcp_flags flags, mce_banks_t *b)
- 		 * If we are logging everything (at CPU online) or this
- 		 * is a corrected error, then we must log it.
- 		 */
--		if ((flags & MCP_UC) || !(m.status & MCI_STATUS_UC))
-+		if ((flags & MCP_UC) || !(m->status & MCI_STATUS_UC))
- 			goto log_it;
- 
- 		/*
-@@ -735,20 +744,20 @@ bool machine_check_poll(enum mcp_flags flags, mce_banks_t *b)
- 		 * everything else.
- 		 */
- 		if (!mca_cfg.ser) {
--			if (m.status & MCI_STATUS_UC)
-+			if (m->status & MCI_STATUS_UC)
- 				continue;
- 			goto log_it;
- 		}
- 
- 		/* Log "not enabled" (speculative) errors */
--		if (!(m.status & MCI_STATUS_EN))
-+		if (!(m->status & MCI_STATUS_EN))
- 			goto log_it;
- 
- 		/*
- 		 * Log UCNA (SDM: 15.6.3 "UCR Error Classification")
- 		 * UC == 1 && PCC == 0 && S == 0
- 		 */
--		if (!(m.status & MCI_STATUS_PCC) && !(m.status & MCI_STATUS_S))
-+		if (!(m->status & MCI_STATUS_PCC) && !(m->status & MCI_STATUS_S))
- 			goto log_it;
- 
- 		/*
-@@ -764,23 +773,24 @@ bool machine_check_poll(enum mcp_flags flags, mce_banks_t *b)
- 		if (flags & MCP_DONTLOG)
- 			goto clear_it;
- 
--		mce_read_aux(&m, i);
--		m.severity = mce_severity(&m, NULL, NULL, false);
-+		mce_read_aux(m, i);
-+		m->severity = mce_severity(m, NULL, NULL, false);
-+
- 		/*
- 		 * Don't get the IP here because it's unlikely to
- 		 * have anything to do with the actual error location.
- 		 */
- 
--		if (mca_cfg.dont_log_ce && !mce_usable_address(&m))
-+		if (mca_cfg.dont_log_ce && !mce_usable_address(m))
- 			goto clear_it;
- 
- 		if (flags & MCP_QUEUE_LOG)
--			mce_gen_pool_add(&m);
-+			mce_gen_pool_add(&err);
- 		else
--			mce_log(&m);
-+			mce_log(&err);
- 
- clear_it:
--		vendor_handle_error(&m);
-+		vendor_handle_error(&err);
- 
- 		/*
- 		 * Clear state for this bank.
-@@ -1017,6 +1027,7 @@ static noinstr int mce_timed_out(u64 *t, const char *msg)
- static void mce_reign(void)
- {
- 	int cpu;
-+	struct mce_hw_err *err = NULL;
- 	struct mce *m = NULL;
- 	int global_worst = 0;
- 	char *msg = NULL;
-@@ -1027,11 +1038,13 @@ static void mce_reign(void)
- 	 * Grade the severity of the errors of all the CPUs.
- 	 */
- 	for_each_possible_cpu(cpu) {
--		struct mce *mtmp = &per_cpu(mces_seen, cpu);
-+		struct mce_hw_err *etmp = &per_cpu(hw_errs_seen, cpu);
-+		struct mce *mtmp = &etmp->m;
- 
- 		if (mtmp->severity > global_worst) {
- 			global_worst = mtmp->severity;
--			m = &per_cpu(mces_seen, cpu);
-+			err = &per_cpu(hw_errs_seen, cpu);
-+			m = &err->m;
- 		}
- 	}
- 
-@@ -1043,7 +1056,7 @@ static void mce_reign(void)
- 	if (m && global_worst >= MCE_PANIC_SEVERITY) {
- 		/* call mce_severity() to get "msg" for panic */
- 		mce_severity(m, NULL, &msg, true);
--		mce_panic("Fatal machine check", m, msg);
-+		mce_panic("Fatal machine check", err, msg);
- 	}
- 
- 	/*
-@@ -1060,11 +1073,11 @@ static void mce_reign(void)
- 		mce_panic("Fatal machine check from unknown source", NULL, NULL);
- 
- 	/*
--	 * Now clear all the mces_seen so that they don't reappear on
-+	 * Now clear all the hw_errs_seen so that they don't reappear on
- 	 * the next mce.
- 	 */
- 	for_each_possible_cpu(cpu)
--		memset(&per_cpu(mces_seen, cpu), 0, sizeof(struct mce));
-+		memset(&per_cpu(hw_errs_seen, cpu), 0, sizeof(struct mce_hw_err));
- }
- 
- static atomic_t global_nwo;
-@@ -1268,12 +1281,13 @@ static noinstr bool mce_check_crashing_cpu(void)
- }
- 
- static __always_inline int
--__mc_scan_banks(struct mce *m, struct pt_regs *regs, struct mce *final,
-+__mc_scan_banks(struct mce_hw_err *err, struct pt_regs *regs, struct mce *final,
- 		unsigned long *toclear, unsigned long *valid_banks, int no_way_out,
- 		int *worst)
- {
- 	struct mce_bank *mce_banks = this_cpu_ptr(mce_banks_array);
- 	struct mca_config *cfg = &mca_cfg;
-+	struct mce *m = &err->m;
- 	int severity, i, taint = 0;
- 
- 	for (i = 0; i < this_cpu_read(mce_num_banks); i++) {
-@@ -1329,7 +1343,7 @@ __mc_scan_banks(struct mce *m, struct pt_regs *regs, struct mce *final,
- 		 * done in #MC context, where instrumentation is disabled.
- 		 */
- 		instrumentation_begin();
--		mce_log(m);
-+		mce_log(err);
- 		instrumentation_end();
- 
- 		if (severity > *worst) {
-@@ -1399,8 +1413,9 @@ static void kill_me_never(struct callback_head *cb)
- 		set_mce_nospec(pfn);
- }
- 
--static void queue_task_work(struct mce *m, char *msg, void (*func)(struct callback_head *))
-+static void queue_task_work(struct mce_hw_err *err, char *msg, void (*func)(struct callback_head *))
- {
-+	struct mce *m = &err->m;
- 	int count = ++current->mce_count;
- 
- 	/* First call, save all the details */
-@@ -1414,11 +1429,12 @@ static void queue_task_work(struct mce *m, char *msg, void (*func)(struct callba
- 
- 	/* Ten is likely overkill. Don't expect more than two faults before task_work() */
- 	if (count > 10)
--		mce_panic("Too many consecutive machine checks while accessing user data", m, msg);
-+		mce_panic("Too many consecutive machine checks while accessing user data",
-+			  err, msg);
- 
- 	/* Second or later call, make sure page address matches the one from first call */
- 	if (count > 1 && (current->mce_addr >> PAGE_SHIFT) != (m->addr >> PAGE_SHIFT))
--		mce_panic("Consecutive machine checks to different user pages", m, msg);
-+		mce_panic("Consecutive machine checks to different user pages", err, msg);
- 
- 	/* Do not call task_work_add() more than once */
- 	if (count > 1)
-@@ -1467,8 +1483,14 @@ noinstr void do_machine_check(struct pt_regs *regs)
- 	int worst = 0, order, no_way_out, kill_current_task, lmce, taint = 0;
- 	DECLARE_BITMAP(valid_banks, MAX_NR_BANKS) = { 0 };
- 	DECLARE_BITMAP(toclear, MAX_NR_BANKS) = { 0 };
--	struct mce m, *final;
-+	struct mce_hw_err *final;
-+	struct mce_hw_err err;
- 	char *msg = NULL;
-+	struct mce *m;
-+
-+	memset(&err, 0, sizeof(struct mce_hw_err));
-+
-+	m = &err.m;
- 
- 	if (unlikely(mce_flags.p5))
- 		return pentium_machine_check(regs);
-@@ -1506,13 +1528,13 @@ noinstr void do_machine_check(struct pt_regs *regs)
- 
- 	this_cpu_inc(mce_exception_count);
- 
--	mce_gather_info(&m, regs);
--	m.tsc = rdtsc();
-+	mce_gather_info(m, regs);
-+	m->tsc = rdtsc();
- 
--	final = this_cpu_ptr(&mces_seen);
--	*final = m;
-+	final = this_cpu_ptr(&hw_errs_seen);
-+	final->m = *m;
- 
--	no_way_out = mce_no_way_out(&m, &msg, valid_banks, regs);
-+	no_way_out = mce_no_way_out(m, &msg, valid_banks, regs);
- 
- 	barrier();
- 
-@@ -1521,15 +1543,15 @@ noinstr void do_machine_check(struct pt_regs *regs)
- 	 * Assume the worst for now, but if we find the
- 	 * severity is MCE_AR_SEVERITY we have other options.
- 	 */
--	if (!(m.mcgstatus & MCG_STATUS_RIPV))
-+	if (!(m->mcgstatus & MCG_STATUS_RIPV))
- 		kill_current_task = 1;
- 	/*
- 	 * Check if this MCE is signaled to only this logical processor,
- 	 * on Intel, Zhaoxin only.
- 	 */
--	if (m.cpuvendor == X86_VENDOR_INTEL ||
--	    m.cpuvendor == X86_VENDOR_ZHAOXIN)
--		lmce = m.mcgstatus & MCG_STATUS_LMCES;
-+	if (m->cpuvendor == X86_VENDOR_INTEL ||
-+	    m->cpuvendor == X86_VENDOR_ZHAOXIN)
-+		lmce = m->mcgstatus & MCG_STATUS_LMCES;
- 
- 	/*
- 	 * Local machine check may already know that we have to panic.
-@@ -1540,12 +1562,12 @@ noinstr void do_machine_check(struct pt_regs *regs)
- 	 */
- 	if (lmce) {
- 		if (no_way_out)
--			mce_panic("Fatal local machine check", &m, msg);
-+			mce_panic("Fatal local machine check", &err, msg);
- 	} else {
- 		order = mce_start(&no_way_out);
- 	}
- 
--	taint = __mc_scan_banks(&m, regs, final, toclear, valid_banks, no_way_out, &worst);
-+	taint = __mc_scan_banks(&err, regs, &final->m, toclear, valid_banks, no_way_out, &worst);
- 
- 	if (!no_way_out)
- 		mce_clear_state(toclear);
-@@ -1560,7 +1582,7 @@ noinstr void do_machine_check(struct pt_regs *regs)
- 				no_way_out = worst >= MCE_PANIC_SEVERITY;
- 
- 			if (no_way_out)
--				mce_panic("Fatal machine check on current CPU", &m, msg);
-+				mce_panic("Fatal machine check on current CPU", &err, msg);
- 		}
- 	} else {
- 		/*
-@@ -1572,8 +1594,8 @@ noinstr void do_machine_check(struct pt_regs *regs)
- 		 * make sure we have the right "msg".
- 		 */
- 		if (worst >= MCE_PANIC_SEVERITY) {
--			mce_severity(&m, regs, &msg, true);
--			mce_panic("Local fatal machine check!", &m, msg);
-+			mce_severity(m, regs, &msg, true);
-+			mce_panic("Local fatal machine check!", &err, msg);
- 		}
- 	}
- 
-@@ -1591,14 +1613,14 @@ noinstr void do_machine_check(struct pt_regs *regs)
- 		goto out;
- 
- 	/* Fault was in user mode and we need to take some action */
--	if ((m.cs & 3) == 3) {
-+	if ((m->cs & 3) == 3) {
- 		/* If this triggers there is no way to recover. Die hard. */
- 		BUG_ON(!on_thread_stack() || !user_mode(regs));
- 
--		if (!mce_usable_address(&m))
--			queue_task_work(&m, msg, kill_me_now);
-+		if (!mce_usable_address(m))
-+			queue_task_work(&err, msg, kill_me_now);
- 		else
--			queue_task_work(&m, msg, kill_me_maybe);
-+			queue_task_work(&err, msg, kill_me_maybe);
- 
- 	} else {
- 		/*
-@@ -1610,13 +1632,13 @@ noinstr void do_machine_check(struct pt_regs *regs)
- 		 * corresponding exception handler which would do that is the
- 		 * proper one.
- 		 */
--		if (m.kflags & MCE_IN_KERNEL_RECOV) {
-+		if (m->kflags & MCE_IN_KERNEL_RECOV) {
- 			if (!fixup_exception(regs, X86_TRAP_MC, 0, 0))
--				mce_panic("Failed kernel mode recovery", &m, msg);
-+				mce_panic("Failed kernel mode recovery", &err, msg);
- 		}
- 
--		if (m.kflags & MCE_IN_KERNEL_COPYIN)
--			queue_task_work(&m, msg, kill_me_never);
-+		if (m->kflags & MCE_IN_KERNEL_COPYIN)
-+			queue_task_work(&err, msg, kill_me_never);
- 	}
- 
- out:
-diff --git a/arch/x86/kernel/cpu/mce/genpool.c b/arch/x86/kernel/cpu/mce/genpool.c
-index fbe8b61c3413..9a497234ad22 100644
---- a/arch/x86/kernel/cpu/mce/genpool.c
-+++ b/arch/x86/kernel/cpu/mce/genpool.c
-@@ -31,15 +31,15 @@ static char gen_pool_buf[MCE_POOLSZ];
-  */
- static bool is_duplicate_mce_record(struct mce_evt_llist *t, struct mce_evt_llist *l)
- {
-+	struct mce_hw_err *err1, *err2;
- 	struct mce_evt_llist *node;
--	struct mce *m1, *m2;
- 
--	m1 = &t->mce;
-+	err1 = &t->err;
- 
- 	llist_for_each_entry(node, &l->llnode, llnode) {
--		m2 = &node->mce;
-+		err2 = &node->err;
- 
--		if (!mce_cmp(m1, m2))
-+		if (!mce_cmp(&err1->m, &err2->m))
- 			return true;
- 	}
- 	return false;
-@@ -73,9 +73,9 @@ struct llist_node *mce_gen_pool_prepare_records(void)
- 
- void mce_gen_pool_process(struct work_struct *__unused)
- {
-+	struct mce_hw_err *err;
- 	struct llist_node *head;
- 	struct mce_evt_llist *node, *tmp;
--	struct mce *mce;
- 
- 	head = llist_del_all(&mce_event_llist);
- 	if (!head)
-@@ -83,8 +83,8 @@ void mce_gen_pool_process(struct work_struct *__unused)
- 
- 	head = llist_reverse_order(head);
- 	llist_for_each_entry_safe(node, tmp, head, llnode) {
--		mce = &node->mce;
--		blocking_notifier_call_chain(&x86_mce_decoder_chain, 0, mce);
-+		err = &node->err;
-+		blocking_notifier_call_chain(&x86_mce_decoder_chain, 0, err);
- 		gen_pool_free(mce_evt_pool, (unsigned long)node, sizeof(*node));
- 	}
- }
-@@ -94,11 +94,11 @@ bool mce_gen_pool_empty(void)
- 	return llist_empty(&mce_event_llist);
- }
- 
--int mce_gen_pool_add(struct mce *mce)
-+int mce_gen_pool_add(struct mce_hw_err *err)
- {
- 	struct mce_evt_llist *node;
- 
--	if (filter_mce(mce))
-+	if (filter_mce(&err->m))
- 		return -EINVAL;
- 
- 	if (!mce_evt_pool)
-@@ -110,7 +110,7 @@ int mce_gen_pool_add(struct mce *mce)
- 		return -ENOMEM;
- 	}
- 
--	memcpy(&node->mce, mce, sizeof(*mce));
-+	memcpy(&node->err, err, sizeof(*err));
- 	llist_add(&node->llnode, &mce_event_llist);
- 
- 	return 0;
-diff --git a/arch/x86/kernel/cpu/mce/inject.c b/arch/x86/kernel/cpu/mce/inject.c
-index 72f0695c3dc1..3b064a2bb247 100644
---- a/arch/x86/kernel/cpu/mce/inject.c
-+++ b/arch/x86/kernel/cpu/mce/inject.c
-@@ -500,6 +500,7 @@ static void prepare_msrs(void *info)
- 
- static void do_inject(void)
- {
-+	struct mce_hw_err err;
- 	u64 mcg_status = 0;
- 	unsigned int cpu = i_mce.extcpu;
- 	u8 b = i_mce.bank;
-@@ -515,7 +516,8 @@ static void do_inject(void)
- 		i_mce.status |= MCI_STATUS_SYNDV;
- 
- 	if (inj_type == SW_INJ) {
--		mce_log(&i_mce);
-+		err.m = i_mce;
-+		mce_log(&err);
- 		return;
- 	}
- 
-diff --git a/arch/x86/kernel/cpu/mce/internal.h b/arch/x86/kernel/cpu/mce/internal.h
-index fca7499e1bf4..e74e142d4703 100644
---- a/arch/x86/kernel/cpu/mce/internal.h
-+++ b/arch/x86/kernel/cpu/mce/internal.h
-@@ -26,12 +26,12 @@ extern struct blocking_notifier_head x86_mce_decoder_chain;
- 
- struct mce_evt_llist {
- 	struct llist_node llnode;
--	struct mce mce;
-+	struct mce_hw_err err;
- };
- 
- void mce_gen_pool_process(struct work_struct *__unused);
- bool mce_gen_pool_empty(void);
--int mce_gen_pool_add(struct mce *mce);
-+int mce_gen_pool_add(struct mce_hw_err *err);
- int mce_gen_pool_init(void);
- struct llist_node *mce_gen_pool_prepare_records(void);
- 
-@@ -212,7 +212,7 @@ void mce_setup_per_cpu(struct mce *m);
- #ifdef CONFIG_X86_MCE_AMD
- extern bool amd_filter_mce(struct mce *m);
- bool amd_mce_usable_address(struct mce *m);
--void amd_handle_error(struct mce *m);
-+void amd_handle_error(struct mce_hw_err *err);
- 
- /*
-  * If MCA_CONFIG[McaLsbInStatusSupported] is set, extract ErrAddr in bits
-@@ -241,7 +241,7 @@ static __always_inline void smca_extract_err_addr(struct mce *m)
- #else
- static inline bool amd_filter_mce(struct mce *m) { return false; }
- static inline bool amd_mce_usable_address(struct mce *m) { return false; }
--static inline void amd_handle_error(struct mce *m) { }
-+static inline void amd_handle_error(struct mce_hw_err *err) { }
- static inline void smca_extract_err_addr(struct mce *m) { }
- #endif
- 
-diff --git a/include/trace/events/mce.h b/include/trace/events/mce.h
-index 1391ada0da3b..b093cb28f6dd 100644
---- a/include/trace/events/mce.h
-+++ b/include/trace/events/mce.h
-@@ -11,9 +11,9 @@
- 
- TRACE_EVENT(mce_record,
- 
--	TP_PROTO(struct mce *m),
-+	TP_PROTO(struct mce_hw_err *err),
- 
--	TP_ARGS(m),
-+	TP_ARGS(err),
- 
- 	TP_STRUCT__entry(
- 		__field(	u64,		mcgcap		)
-@@ -36,23 +36,23 @@ TRACE_EVENT(mce_record,
- 	),
- 
- 	TP_fast_assign(
--		__entry->mcgcap		= m->mcgcap;
--		__entry->mcgstatus	= m->mcgstatus;
--		__entry->status		= m->status;
--		__entry->addr		= m->addr;
--		__entry->misc		= m->misc;
--		__entry->synd		= m->synd;
--		__entry->ipid		= m->ipid;
--		__entry->ip		= m->ip;
--		__entry->tsc		= m->tsc;
--		__entry->walltime	= m->time;
--		__entry->cpu		= m->extcpu;
--		__entry->cpuid		= m->cpuid;
--		__entry->apicid		= m->apicid;
--		__entry->socketid	= m->socketid;
--		__entry->cs		= m->cs;
--		__entry->bank		= m->bank;
--		__entry->cpuvendor	= m->cpuvendor;
-+		__entry->mcgcap		= err->m.mcgcap;
-+		__entry->mcgstatus	= err->m.mcgstatus;
-+		__entry->status		= err->m.status;
-+		__entry->addr		= err->m.addr;
-+		__entry->misc		= err->m.misc;
-+		__entry->synd		= err->m.synd;
-+		__entry->ipid		= err->m.ipid;
-+		__entry->ip		= err->m.ip;
-+		__entry->tsc		= err->m.tsc;
-+		__entry->walltime	= err->m.time;
-+		__entry->cpu		= err->m.extcpu;
-+		__entry->cpuid		= err->m.cpuid;
-+		__entry->apicid		= err->m.apicid;
-+		__entry->socketid	= err->m.socketid;
-+		__entry->cs		= err->m.cs;
-+		__entry->bank		= err->m.bank;
-+		__entry->cpuvendor	= err->m.cpuvendor;
- 	),
- 
- 	TP_printk("CPU: %d, MCGc/s: %llx/%llx, MC%d: %016Lx, IPID: %016Lx, ADDR/MISC/SYND: %016Lx/%016Lx/%016Lx, RIP: %02x:<%016Lx>, TSC: %llx, PROCESSOR: %u:%x, TIME: %llu, SOCKET: %u, APIC: %x",
+        reserved-memory {
+                #address-cells = <2>;
+                #size-cells = <2>;
+
+
+
+Alexandru Elisei (27):
+  arm64: mte: Rework naming for tag manipulation functions
+  arm64: mte: Rename __GFP_ZEROTAGS to __GFP_TAGGED
+  mm: cma: Make CMA_ALLOC_SUCCESS/FAIL count the number of pages
+  mm: migrate/mempolicy: Add hook to modify migration target gfp
+  mm: page_alloc: Add an arch hook to allow prep_new_page() to fail
+  mm: page_alloc: Allow an arch to hook early into free_pages_prepare()
+  mm: page_alloc: Add an arch hook to filter MIGRATE_CMA allocations
+  mm: page_alloc: Partially revert "mm: page_alloc: remove stale CMA
+    guard code"
+  mm: Allow an arch to hook into folio allocation when VMA is known
+  mm: Call arch_swap_prepare_to_restore() before arch_swap_restore()
+  arm64: mte: Reserve tag storage memory
+  arm64: mte: Add tag storage pages to the MIGRATE_CMA migratetype
+  arm64: mte: Make tag storage depend on ARCH_KEEP_MEMBLOCK
+  arm64: mte: Disable dynamic tag storage management if HW KASAN is
+    enabled
+  arm64: mte: Check that tag storage blocks are in the same zone
+  arm64: mte: Manage tag storage on page allocation
+  arm64: mte: Perform CMOs for tag blocks on tagged page allocation/free
+  arm64: mte: Reserve tag block for the zero page
+  mm: mprotect: Introduce PAGE_FAULT_ON_ACCESS for mprotect(PROT_MTE)
+  mm: hugepage: Handle huge page fault on access
+  mm: arm64: Handle tag storage pages mapped before mprotect(PROT_MTE)
+  arm64: mte: swap: Handle tag restoring when missing tag storage
+  arm64: mte: copypage: Handle tag restoring when missing tag storage
+  arm64: mte: Handle fatal signal in reserve_tag_storage()
+  KVM: arm64: Disable MTE if tag storage is enabled
+  arm64: mte: Fast track reserving tag storage when the block is free
+  arm64: mte: Enable dynamic tag storage reuse
+
+ arch/arm64/Kconfig                       |  16 +
+ arch/arm64/include/asm/assembler.h       |  10 +
+ arch/arm64/include/asm/mte-def.h         |  16 +-
+ arch/arm64/include/asm/mte.h             |  43 +-
+ arch/arm64/include/asm/mte_tag_storage.h |  75 +++
+ arch/arm64/include/asm/page.h            |   5 +-
+ arch/arm64/include/asm/pgtable-prot.h    |   2 +
+ arch/arm64/include/asm/pgtable.h         |  96 +++-
+ arch/arm64/kernel/Makefile               |   1 +
+ arch/arm64/kernel/elfcore.c              |  14 +-
+ arch/arm64/kernel/hibernate.c            |  46 +-
+ arch/arm64/kernel/mte.c                  |  12 +-
+ arch/arm64/kernel/mte_tag_storage.c      | 686 +++++++++++++++++++++++
+ arch/arm64/kernel/setup.c                |   7 +
+ arch/arm64/kvm/arm.c                     |   6 +-
+ arch/arm64/lib/mte.S                     |  34 +-
+ arch/arm64/mm/copypage.c                 |  59 ++
+ arch/arm64/mm/fault.c                    | 261 ++++++++-
+ arch/arm64/mm/mteswap.c                  | 162 +++++-
+ fs/proc/page.c                           |   1 +
+ include/linux/gfp_types.h                |  14 +-
+ include/linux/huge_mm.h                  |   2 +
+ include/linux/kernel-page-flags.h        |   1 +
+ include/linux/migrate.h                  |  12 +-
+ include/linux/migrate_mode.h             |   1 +
+ include/linux/mmzone.h                   |   5 +
+ include/linux/page-flags.h               |  16 +-
+ include/linux/pgtable.h                  |  54 ++
+ include/trace/events/mmflags.h           |   5 +-
+ mm/Kconfig                               |   7 +
+ mm/cma.c                                 |   4 +-
+ mm/huge_memory.c                         |   5 +-
+ mm/internal.h                            |   9 -
+ mm/memory-failure.c                      |   8 +-
+ mm/memory.c                              |  10 +
+ mm/mempolicy.c                           |   3 +
+ mm/migrate.c                             |   3 +
+ mm/page_alloc.c                          | 118 +++-
+ mm/shmem.c                               |  14 +-
+ mm/swapfile.c                            |   7 +
+ 40 files changed, 1668 insertions(+), 182 deletions(-)
+ create mode 100644 arch/arm64/include/asm/mte_tag_storage.h
+ create mode 100644 arch/arm64/kernel/mte_tag_storage.c
+
+
+base-commit: b85ea95d086471afb4ad062012a4d73cd328fa86
 -- 
-2.34.1
+2.42.1
 
