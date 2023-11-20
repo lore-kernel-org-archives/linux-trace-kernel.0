@@ -1,32 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629B310E7
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Nov 2023 04:57:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24121C27
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Nov 2023 05:18:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ap4gfEVJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05502C433C7;
-	Mon, 20 Nov 2023 04:57:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eggb3mR8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38BB1C433C8;
+	Mon, 20 Nov 2023 05:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700456266;
-	bh=D8GkFkadiMvyfeHxVlRTuBngO0W+nbZFP1V6zF4gWgY=;
+	s=k20201202; t=1700457508;
+	bh=jTkec1My+k2Nb+O4UyEnt0cpJFuDZeq1tJWMDiq4ZQQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Ap4gfEVJl+R+eIh1mutUrAjpACp5P0jiwpxn/rx78T/sultv9oQKN/7Da6gpCcusv
-	 037av/hc14u38aufL6LrpScArXelj8mceylftyLmIlYfBu9bD1y9OHR6TnG320DooP
-	 dFOZrgzVGRmYh6/j4UCu2mgfyElARiKd9UvsnL8bP/rWoiogK5tSngLLZ8hg8iiQ1t
-	 V+ygjmbszOjGa+qvtEEgtT0yec1c5TNAYr6H9jF0lSBj+UpheeqtLEKMTsxnEO41jG
-	 9Cj6UpuJVeoFqa5HQpp8kyr0G7GOEDKMUa2EFhwkEYto150rFFDFSgFqWbxAjKOg8n
-	 SuxGIQYEf86FA==
-Date: Mon, 20 Nov 2023 13:57:42 +0900
+	b=Eggb3mR8aFO270UnAPvPxXNK9dURaVGSEnvuJL0OaqP7qG0qQk3bzuJgFdodeV+ba
+	 wkt379fxHlgiLH7v9+DD14voxmI2JOmcR6XW0jqiJdDCCpLxpBkmxNU2Fj5QPQ9vtn
+	 rcWX727W7UGM0VqFPD9ulNQNeF4/kyCXQyClx7RSlatND7UUB5IiePk1bcKGoGR7v6
+	 5hl7lAxCO9BMYZLYp7EzL1UTuK33YhBt6gG4JbfiOZCTyVqexkYq+QKadEzDafSnQE
+	 YO4OqKe8BAA/WCPi+imGNvf7W8Us57Yi/oLYj1EQCVmoRIdHdGIbZnP7ADaMhq4E3M
+	 Mx/KP8bk8KJqw==
+Date: Mon, 20 Nov 2023 14:18:24 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Yuran Pereira <yuran.pereira@hotmail.com>
-Cc: linux-trace-kernel@vger.kernel.org, mark.rutland@arm.com,
- rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] ftrace: Replaces simple_strtoul in ftrace
-Message-Id: <20231120135742.0abfc6bb7ccdd985990c68a4@kernel.org>
-In-Reply-To: <GV1PR10MB656333529A8D7B8AFB28D238E8B4A@GV1PR10MB6563.EURPRD10.PROD.OUTLOOK.COM>
-References: <GV1PR10MB656333529A8D7B8AFB28D238E8B4A@GV1PR10MB6563.EURPRD10.PROD.OUTLOOK.COM>
+To: "wuqiang.matt" <wuqiang.matt@bytedance.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ mattwu@163.com
+Subject: Re: [PATCH v1] lib: objpool: fix head overrun on RK3588 SBC
+Message-Id: <20231120141824.86bda7ae184baf331e3175d9@kernel.org>
+In-Reply-To: <20231114115148.298821-1-wuqiang.matt@bytedance.com>
+References: <20231114115148.298821-1-wuqiang.matt@bytedance.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,81 +36,126 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 20 Nov 2023 05:46:13 +0530
-Yuran Pereira <yuran.pereira@hotmail.com> wrote:
+On Tue, 14 Nov 2023 19:51:48 +0800
+"wuqiang.matt" <wuqiang.matt@bytedance.com> wrote:
 
-> The function simple_strtoul performs no error checking in scenarios
-> where the input value overflows the intended output variable.
-> This results in this function successfully returning, even when the
-> output does not match the input string (aka the function returns
-> successfully even when the result is wrong).
+> objpool overrun stress with test_objpool on OrangePi5+ SBC triggered the
+> following kernel warnings:
 > 
-> Or as it was mentioned [1], "...simple_strtol(), simple_strtoll(),
-> simple_strtoul(), and simple_strtoull() functions explicitly ignore
-> overflows, which may lead to unexpected results in callers."
-> Hence, the use of those functions is discouraged.
+>     WARNING: CPU: 6 PID: 3115 at lib/objpool.c:168 objpool_push+0xc0/0x100
 > 
-> This patch replaces all uses of the simple_strtoul with the safer
-> alternatives kstrtoul and kstruint.
+> This message is from objpool.c:168:
 > 
-> Callers affected:
-> - add_rec_by_index
-> - set_graph_max_depth_function
+>     WARN_ON_ONCE(tail - head > pool->nr_objs);
 > 
-> Side effects of this patch:
-> - Since `fgraph_max_depth` is an `unsigned int`, this patch uses
->   kstrtouint instead of kstrtoul to avoid any compiler warnings
->   that could originate from calling the latter.
-> - This patch ensures that the callers of kstrtou* return accordingly
->   when kstrtoul and kstruint fail for some reason.
->   In this case, both callers this patch is addressing return 0 on error.
+> The overrun test case is to validate the case that pre-allocated objects
+> are insufficient: 8 objects are pre-allocated for each node and consumer
+> thread per node tries to grab 16 objects in a row. The testing system is
+> OrangePI 5+, with RK3588, a big.LITTLE SOC with 4x A76 and 4x A55. When
+> disabling either all 4 big or 4 little cores, the overrun tests run well,
+> and once with big and little cores mixed together, the overrun test would
+> always cause an overrun loop. It's likely the memory timing differences
+> of big and little cores cause this trouble. Here are the debugging data
+> of objpool_try_get_slot after try_cmpxchg_release:
 > 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#simple-strtol-simple-strtoll-simple-strtoul-simple-strtoull
+>     objpool_pop: cpu: 4/0 0:0 head: 278/279 tail:278 last:276/278
+> 
+> The local copies of 'head' and 'last' were 278 and 276, and reloading of
+> 'slot->head' and 'slot->last' got 279 and 278. After try_cmpxchg_release
+> 'slot->head' became 'head + 1', which is correct. But what's wrong here
+> is the stale value of 'last', and that stale value of 'last' finally led
+> the overrun of 'head'.
+
+Ah, good catch! So even if the ring size is enough, the head/tail update
+value is not updated locally, it can cause the overrun!
+
+> 
+> Memory updating of 'last' and 'head' are performed in push() and pop()
+> independently, which could be the culprit leading this out of order
+> visibility of 'last' and 'head'. So for objpool_try_get_slot(), it's
+> not enough only checking the condition of 'head != slot', the implicit
+> condition 'last - head <= nr_objs' must also be explicitly asserted to
+> guarantee 'last' is always behind 'head' before the object retrieving.
+
+Indeed. Thanks for the investigation!
+
+> 
+> This patch will check and try reloading of 'head' and 'last' to ensure
+> 'last' is behind 'head' at the time of object retrieving. Performance
+> testings show the average impact is about 0.1% for X86_64 and 1.12% for
+> ARM64. Here are the results:
+> 
+>     OS: Debian 10 X86_64, Linux 6.6rc
+>     HW: XEON 8336C x 2, 64 cores/128 threads, DDR4 3200MT/s
+>                       1T         2T         4T         8T        16T
+>     native:     49543304   99277826  199017659  399070324  795185848
+>     objpool:    29909085   59865637  119692073  239750369  478005250
+>     objpool+:   29879313   59230743  119609856  239067773  478509029
+>                      32T        48T        64T        96T       128T
+>     native:   1596927073 2390099988 2929397330 3183875848 3257546602
+>     objpool:   957553042 1435814086 1680872925 2043126796 2165424198
+>     objpool+:  956476281 1434491297 1666055740 2041556569 2157415622
+> 
+>     OS: Debian 11 AARCH64, Linux 6.6rc
+>     HW: Kunpeng-920 96 cores/2 sockets/4 NUMA nodes, DDR4 2933 MT/s
+>                       1T         2T         4T         8T        16T
+>     native:     30890508   60399915  123111980  242257008  494002946
+>     objpool:    14742531   28883047   57739948  115886644  232455421
+>     objpool+:   14107220   29032998   57286084  113730493  232232850
+>                      24T        32T        48T        64T        96T
+>     native:    746406039 1000174750 1493236240 1998318364 2942911180
+>     objpool:   349164852  467284332  702296756  934459713 1387898285
+>     objpool+:  348388180  462750976  696606096  927865887 1368402195
 > 
 
-This looks good to me.
+OK, looks good to me.
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+And let me pick it. 
+
+> Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
+
+BTW, this is a real bugfix, so it should have Fixes tag :)
+
+Fixes: b4edb8d2d464 ("lib: objpool added: ring-array based lockless MPMC")
 
 Thank you!
 
-> Signed-off-by: Yuran Pereira <yuran.pereira@hotmail.com>
 > ---
->  kernel/trace/ftrace.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
+>  lib/objpool.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
 > 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 8de8bec5f366..70217ee97322 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -4233,12 +4233,12 @@ static int
->  add_rec_by_index(struct ftrace_hash *hash, struct ftrace_glob *func_g,
->  		 int clear_filter)
->  {
-> -	long index = simple_strtoul(func_g->search, NULL, 0);
-> +	long index;
->  	struct ftrace_page *pg;
->  	struct dyn_ftrace *rec;
+> diff --git a/lib/objpool.c b/lib/objpool.c
+> index ce0087f64400..cfdc02420884 100644
+> --- a/lib/objpool.c
+> +++ b/lib/objpool.c
+> @@ -201,6 +201,23 @@ static inline void *objpool_try_get_slot(struct objpool_head *pool, int cpu)
+>  	while (head != READ_ONCE(slot->last)) {
+>  		void *obj;
 >  
->  	/* The index starts at 1 */
-> -	if (--index < 0)
-> +	if (kstrtoul(func_g->search, 0, &index) || --index < 0)
->  		return 0;
+> +		/*
+> +		 * data visibility of 'last' and 'head' could be out of
+> +		 * order since memory updating of 'last' and 'head' are
+> +		 * performed in push() and pop() independently
+> +		 *
+> +		 * before any retrieving attempts, pop() must guarantee
+> +		 * 'last' is behind 'head', that is to say, there must
+> +		 * be available objects in slot, which could be ensured
+> +		 * by condition 'last != head && last - head <= nr_objs'
+> +		 * that is equivalent to 'last - head - 1 < nr_objs' as
+> +		 * 'last' and 'head' are both unsigned int32
+> +		 */
+> +		if (READ_ONCE(slot->last) - head - 1 >= pool->nr_objs) {
+> +			head = READ_ONCE(slot->head);
+> +			continue;
+> +		}
+> +
+>  		/* obj must be retrieved before moving forward head */
+>  		obj = READ_ONCE(slot->entries[head & slot->mask]);
 >  
->  	do_for_each_ftrace_rec(pg, rec) {
-> @@ -5810,9 +5810,8 @@ __setup("ftrace_graph_notrace=", set_graph_notrace_function);
->  
->  static int __init set_graph_max_depth_function(char *str)
->  {
-> -	if (!str)
-> +	if (!str || kstrtouint(str, 0, &fgraph_max_depth))
->  		return 0;
-> -	fgraph_max_depth = simple_strtoul(str, NULL, 0);
->  	return 1;
->  }
->  __setup("ftrace_graph_max_depth=", set_graph_max_depth_function);
 > -- 
-> 2.25.1
+> 2.40.1
 > 
 
 
