@@ -1,101 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83104374ED
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Nov 2023 20:36:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6476331581
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Nov 2023 23:51:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2022BC433C8;
-	Mon, 20 Nov 2023 20:36:10 +0000 (UTC)
-Date: Mon, 20 Nov 2023 15:36:23 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA214C433C7;
+	Mon, 20 Nov 2023 23:51:38 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97-RC3)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1r5E3W-00000002PmX-11ek;
+	Mon, 20 Nov 2023 18:51:54 -0500
+Message-ID: <20231120235105.834774147@goodmis.org>
+User-Agent: quilt/0.67
+Date: Mon, 20 Nov 2023 18:51:05 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- mhiramat@kernel.org, mark.rutland@arm.com, lkft@linaro.org
-Subject: Re: selftests: ftrace: WARNING: __list_del_entry_valid_or_report
- (lib/list_debug.c:62 (discriminator 1))
-Message-ID: <20231120153623.49c5119b@gandalf.local.home>
-In-Reply-To: <20231116123016.140576-1-naresh.kamboju@linaro.org>
-References: <20231116123016.140576-1-naresh.kamboju@linaro.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH 0/2] eventfs: Fixes for v6.7-rc2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Thu, 16 Nov 2023 18:00:16 +0530
-Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+[ Resend to trigger my patchwork updates, and Cc linux-trace-kernel ]
 
-> Following kernel crash noticed while running selftests: ftrace on arm64 Juno-r2
-> device running stable-rc linux-6.6.y kernel.
-> 
-> This kernel crash is hard to reproduce.
-> 
+A couple of fixes to eventfs:
 
-Can you test this patch.
+- With the usage of simple_recursive_remove() recommended by Al Viro,
+  the code should not be calling "d_invalidate()" itself. Doing so
+  is causing crashes. The code was calling d_invalidate() on the race
+  of trying to look up a file while the parent was being deleted.
+  This was detected, and the added dentry was having d_invalidate() called
+  on it, but the deletion of the directory was also calling d_invalidate()
+  on that same dentry.
 
-Note, there's a similar bug on 6.7-rc1 which I'll fix first. And when
-that's accepted, I'll push this one for v6.6. This may be two patches as
-one if the d_invalidate() issue, and another is a memory leak fix.
+- A fix to not free the eventfs_inode (ei) until the last dput() was called
+  on its ei->dentry made the ei->dentry exist even after it was marked
+  for free by setting the ei->is_freed. But code elsewhere still was
+  checking if ei->dentry was NULL if ei->is_freed is set and would
+  trigger WARN_ON if that was the case. That's no longer true and there
+  should not be any warnings when it is true.
 
--- Steve
+Steven Rostedt (Google) (2):
+      eventfs: Remove expectation that ei->is_freed means ei->dentry == NULL
+      eventfs: Do not invalidate dentry in create_file/dir_dentry()
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 5fcfb634fec2..b60048469df1 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -289,6 +289,8 @@ void eventfs_set_ef_status_free(struct tracefs_inode *ti, struct dentry *dentry)
- 		ef = dentry->d_fsdata;
- 		if (ef)
- 			free_ef(ef);
-+		else
-+			kfree(ei);
- 		return;
- 	}
- 
-@@ -342,7 +344,6 @@ static void eventfs_post_create_dir(struct eventfs_file *ef)
- static struct dentry *
- create_dentry(struct eventfs_file *ef, struct dentry *parent, bool lookup)
- {
--	bool invalidate = false;
- 	struct dentry *dentry;
- 
- 	mutex_lock(&eventfs_mutex);
-@@ -387,23 +388,24 @@ create_dentry(struct eventfs_file *ef, struct dentry *parent, bool lookup)
- 			eventfs_post_create_dir(ef);
- 		dentry->d_fsdata = ef;
- 	} else {
--		/* A race here, should try again (unless freed) */
--		invalidate = true;
--
- 		/*
-+		 * If we are here then the directory is being freed.
-+		 * The simple_recursive_removal() will get rid of the dentry
-+		 * here.
-+		 */
-+		dentry = NULL;
-+		 /*
- 		 * Should never happen unless we get here due to being freed.
- 		 * Otherwise it means two dentries exist with the same name.
- 		 */
- 		WARN_ON_ONCE(!ef->is_freed);
- 	}
- 	mutex_unlock(&eventfs_mutex);
--	if (invalidate)
--		d_invalidate(dentry);
- 
--	if (lookup || invalidate)
-+	if (lookup)
- 		dput(dentry);
- 
--	return invalidate ? NULL : dentry;
-+	return dentry;
- }
- 
- static bool match_event_file(struct eventfs_file *ef, const char *name)
--- 
-2.42.0
-
+----
+ fs/tracefs/event_inode.c | 41 ++++++++++++++++++-----------------------
+ 1 file changed, 18 insertions(+), 23 deletions(-)
