@@ -1,111 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B273B2BF
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Nov 2023 23:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BB41C433CA;
-	Mon, 20 Nov 2023 23:51:39 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97-RC3)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1r5E3W-00000002PnN-1h4t;
-	Mon, 20 Nov 2023 18:51:54 -0500
-Message-ID: <20231120235154.265826243@goodmis.org>
-User-Agent: quilt/0.67
-Date: Mon, 20 Nov 2023 18:51:06 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 1/2] eventfs: Remove expectation that ei->is_freed means ei->dentry ==
- NULL
-References: <20231120235105.834774147@goodmis.org>
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Su4WUHIM"
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84FCEBD
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Nov 2023 20:49:44 -0800 (PST)
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1cf5ceadfd8so130805ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Nov 2023 20:49:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1700542184; x=1701146984; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ci0fDn2VKn2ROb4P5+ApgEIrDRCxD8DQOtt7YsYQPr8=;
+        b=Su4WUHIMCW5vgmjCrvzfT1brcn69WD4tmllN/No3RpWiu/dY+VIm69olbgkXfqmL8/
+         gOJpYAs43dvdKXRxpkrVCt+OmvyRdF4Tui4hhE3VHIHKe/rb7SbhPYtfgMN/I1YSHbJH
+         PG+L+lS2ynwiZ6Vu3ABEUDoF0vNHqWTuM5ALk4AhSCFqvoo2qMipExgbJKOecAyq6hb6
+         5GBmYqhpr6MjNVsy2cRWILQQxFlUcfPtw6yTX2u5KPcas+jcwU8OKDaqc/cXDPaKHWD6
+         URg/b4ZfloAQTGexxpDjAiOCsQWpDeirCYzurENszf+fHTaGDiBj1KfK/2CwDsAbggBP
+         P/Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700542184; x=1701146984;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ci0fDn2VKn2ROb4P5+ApgEIrDRCxD8DQOtt7YsYQPr8=;
+        b=YedH1WlBZOUozX371jPNdAGCxPLAGc2hhunHzocIRm8xhflH5omyIlwRxfkvenO5G+
+         /jB5BUhxiS1YGB/ENd1Z/+HFvxl8D/mXAKDWY0AVwUwC0UVHlpx/6UkVNc6BchXiEvXZ
+         mmSBfNffapCQkkeTUJF+SQaVecBpgxe3sN86LTbzePC91VUiW0cnP+pa5FeAxrLscenC
+         P3kbgVg95wooGJmJmsbs7HazKt+rQw5iicv18+9IlTjJS+Q5NRb7Fly15GMp6kYMAv2s
+         1uJofjyjItfVyS1H9xCPIH+iY6IJsriZ93WM36ztfFuYKiCm0cnWlCgGOBr6CIjMYwTy
+         hlNg==
+X-Gm-Message-State: AOJu0YxUIoSGuEzhQsJv/uzZgtrG5B4vbALZC7c96VMqUrNwTPMmSRZu
+	Bfy+LhMe+DsKXeQ2b9gP52P1iQ0fkee33l2Y2p5ygQ==
+X-Google-Smtp-Source: AGHT+IEjrSf5kIzKqR8y96cakBbXvSTNzic/DeMBLkOBk4msBIIG12CS40E/lkAesfcKoKMOnN0ye5jmEfxbmJlxJ94=
+X-Received: by 2002:a17:902:c454:b0:1cf:6d46:9f2b with SMTP id
+ m20-20020a170902c45400b001cf6d469f2bmr136702plm.23.1700542183669; Mon, 20 Nov
+ 2023 20:49:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20230823131350.114942-1-alexandru.elisei@arm.com> <20230823131350.114942-21-alexandru.elisei@arm.com>
+In-Reply-To: <20230823131350.114942-21-alexandru.elisei@arm.com>
+From: Peter Collingbourne <pcc@google.com>
+Date: Mon, 20 Nov 2023 20:49:32 -0800
+Message-ID: <CAMn1gO67Lz_Xw5SCrq3fF4rOCSw3sXYK8qC77TTGnJeWd0b0Sg@mail.gmail.com>
+Subject: Re: [PATCH RFC 20/37] mm: compaction: Reserve metadata storage in compaction_alloc()
+To: Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, 
+	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, 
+	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org, 
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
+	bsegall@google.com, mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, 
+	mhiramat@kernel.org, rppt@kernel.org, hughd@google.com, steven.price@arm.com, 
+	anshuman.khandual@arm.com, vincenzo.frascino@arm.com, david@redhat.com, 
+	eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Hi Alexandru,
 
-The logic to free the eventfs_inode (ei) use to set is_freed and clear the
-"dentry" field under the eventfs_mutex. But that changed when a race was
-found where the ei->dentry needed to be cleared when the last dput() was
-called on it. But there was still logic that checked if ei->dentry was not
-NULL and is_freed is set, and would warn if it was.
+On Wed, Aug 23, 2023 at 6:16=E2=80=AFAM Alexandru Elisei
+<alexandru.elisei@arm.com> wrote:
+>
+> If the source page being migrated has metadata associated with it, make
+> sure to reserve the metadata storage when choosing a suitable destination
+> page from the free list.
+>
+> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> ---
+>  mm/compaction.c | 9 +++++++++
+>  mm/internal.h   | 1 +
+>  2 files changed, 10 insertions(+)
+>
+> diff --git a/mm/compaction.c b/mm/compaction.c
+> index cc0139fa0cb0..af2ee3085623 100644
+> --- a/mm/compaction.c
+> +++ b/mm/compaction.c
+> @@ -570,6 +570,7 @@ static unsigned long isolate_freepages_block(struct c=
+ompact_control *cc,
+>         bool locked =3D false;
+>         unsigned long blockpfn =3D *start_pfn;
+>         unsigned int order;
+> +       int ret;
+>
+>         /* Strict mode is for isolation, speed is secondary */
+>         if (strict)
+> @@ -626,6 +627,11 @@ static unsigned long isolate_freepages_block(struct =
+compact_control *cc,
+>
+>                 /* Found a free page, will break it into order-0 pages */
+>                 order =3D buddy_order(page);
+> +               if (metadata_storage_enabled() && cc->reserve_metadata) {
+> +                       ret =3D reserve_metadata_storage(page, order, cc-=
+>gfp_mask);
 
-But since that situation was changed and the ei->dentry isn't cleared
-until the last dput() is called on it while the ei->is_freed is set, do
-not test for that condition anymore, and change the comments to reflect
-that.
+At this point the zone lock is held and preemption is disabled, which
+makes it invalid to call reserve_metadata_storage.
 
-Fixes: 020010fbfa20 ("eventfs: Delete eventfs_inode when the last dentry is freed")
-Reported-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- fs/tracefs/event_inode.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+Peter
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index f8a594a50ae6..f239b2b507a4 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -27,16 +27,16 @@
- /*
-  * eventfs_mutex protects the eventfs_inode (ei) dentry. Any access
-  * to the ei->dentry must be done under this mutex and after checking
-- * if ei->is_freed is not set. The ei->dentry is released under the
-- * mutex at the same time ei->is_freed is set. If ei->is_freed is set
-- * then the ei->dentry is invalid.
-+ * if ei->is_freed is not set. When ei->is_freed is set, the dentry
-+ * is on its way to being freed after the last dput() is made on it.
-  */
- static DEFINE_MUTEX(eventfs_mutex);
- 
- /*
-  * The eventfs_inode (ei) itself is protected by SRCU. It is released from
-  * its parent's list and will have is_freed set (under eventfs_mutex).
-- * After the SRCU grace period is over, the ei may be freed.
-+ * After the SRCU grace period is over and the last dput() is called
-+ * the ei is freed.
-  */
- DEFINE_STATIC_SRCU(eventfs_srcu);
- 
-@@ -365,12 +365,14 @@ create_file_dentry(struct eventfs_inode *ei, int idx,
- 		 * created the dentry for this e_dentry. In which case
- 		 * use that one.
- 		 *
--		 * Note, with the mutex held, the e_dentry cannot have content
--		 * and the ei->is_freed be true at the same time.
-+		 * If ei->is_freed is set, the e_dentry is currently on its
-+		 * way to being freed, don't return it. If e_dentry is NULL
-+		 * it means it was already freed.
- 		 */
--		dentry = *e_dentry;
--		if (WARN_ON_ONCE(dentry && ei->is_freed))
-+		if (ei->is_freed)
- 			dentry = NULL;
-+		else
-+			dentry = *e_dentry;
- 		/* The lookup does not need to up the dentry refcount */
- 		if (dentry && !lookup)
- 			dget(dentry);
-@@ -473,8 +475,8 @@ create_dir_dentry(struct eventfs_inode *pei, struct eventfs_inode *ei,
- 		 * created the dentry for this e_dentry. In which case
- 		 * use that one.
- 		 *
--		 * Note, with the mutex held, the e_dentry cannot have content
--		 * and the ei->is_freed be true at the same time.
-+		 * If ei->is_freed is set, the e_dentry is currently on its
-+		 * way to being freed.
- 		 */
- 		dentry = ei->dentry;
- 		if (dentry && !lookup)
--- 
-2.42.0
-
-
+> +                       if (ret)
+> +                               goto isolate_fail;
+> +               }
+>                 isolated =3D __isolate_free_page(page, order);
+>                 if (!isolated)
+>                         break;
+> @@ -1757,6 +1763,9 @@ static struct folio *compaction_alloc(struct folio =
+*src, unsigned long data)
+>         struct compact_control *cc =3D (struct compact_control *)data;
+>         struct folio *dst;
+>
+> +       if (metadata_storage_enabled())
+> +               cc->reserve_metadata =3D folio_has_metadata(src);
+> +
+>         if (list_empty(&cc->freepages)) {
+>                 isolate_freepages(cc);
+>
+> diff --git a/mm/internal.h b/mm/internal.h
+> index d28ac0085f61..046cc264bfbe 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -492,6 +492,7 @@ struct compact_control {
+>                                          */
+>         bool alloc_contig;              /* alloc_contig_range allocation =
+*/
+>         bool source_has_metadata;       /* source pages have associated m=
+etadata */
+> +       bool reserve_metadata;
+>  };
+>
+>  /*
+> --
+> 2.41.0
+>
