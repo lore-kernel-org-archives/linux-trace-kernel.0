@@ -1,18 +1,18 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E09BB38DEA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7FA13D97A;
 	Tue, 21 Nov 2023 23:10:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58720C433C9;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D1B0C433CA;
 	Tue, 21 Nov 2023 23:10:56 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97-RC3)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1r5Ztg-00000002dDc-27wd;
+	id 1r5Ztg-00000002dEb-3Uvn;
 	Tue, 21 Nov 2023 18:11:12 -0500
-Message-ID: <20231121231112.373501894@goodmis.org>
+Message-ID: <20231121231112.693841807@goodmis.org>
 User-Agent: quilt/0.67
-Date: Tue, 21 Nov 2023 18:10:04 -0500
+Date: Tue, 21 Nov 2023 18:10:06 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -20,7 +20,7 @@ To: linux-kernel@vger.kernel.org,
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 1/4] eventfs: Use GFP_NOFS for allocation when eventfs_mutex is held
+Subject: [PATCH 3/4] eventfs: Do not allow NULL parent to eventfs_start_creating()
 References: <20231121231003.516999942@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -32,41 +32,45 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-If memory reclaim happens, it can reclaim file system pages. The file
-system pages from eventfs may take the eventfs_mutex on reclaim. This
-means that allocation while holding the eventfs_mutex must not call into
-filesystem reclaim. A lockdep splat uncovered this.
+The eventfs directory is dynamically created via the meta data supplied by
+the existing trace events. All files and directories in eventfs has a
+parent. Do not allow NULL to be passed into eventfs_start_creating() as
+the parent because that should never happen. Warn if it does.
 
-Fixes: 28e12c09f5aa0 ("eventfs: Save ownership and mode")
-Fixes: 5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode")
-Reported-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/tracefs/event_inode.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/tracefs/inode.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 3eb6c622a74d..56d192f0ead8 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -95,7 +95,7 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
- 	if (!(dentry->d_inode->i_mode & S_IFDIR)) {
- 		if (!ei->entry_attrs) {
- 			ei->entry_attrs = kzalloc(sizeof(*ei->entry_attrs) * ei->nr_entries,
--						  GFP_KERNEL);
-+						  GFP_NOFS);
- 			if (!ei->entry_attrs) {
- 				ret = -ENOMEM;
- 				goto out;
-@@ -627,7 +627,7 @@ static int add_dentries(struct dentry ***dentries, struct dentry *d, int cnt)
- {
- 	struct dentry **tmp;
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index 5b54948514fe..ae648deed019 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -509,20 +509,15 @@ struct dentry *eventfs_start_creating(const char *name, struct dentry *parent)
+ 	struct dentry *dentry;
+ 	int error;
  
--	tmp = krealloc(*dentries, sizeof(d) * (cnt + 2), GFP_KERNEL);
-+	tmp = krealloc(*dentries, sizeof(d) * (cnt + 2), GFP_NOFS);
- 	if (!tmp)
- 		return -1;
- 	tmp[cnt] = d;
++	/* Must always have a parent. */
++	if (WARN_ON_ONCE(!parent))
++		return ERR_PTR(-EINVAL);
++
+ 	error = simple_pin_fs(&trace_fs_type, &tracefs_mount,
+ 			      &tracefs_mount_count);
+ 	if (error)
+ 		return ERR_PTR(error);
+ 
+-	/*
+-	 * If the parent is not specified, we create it in the root.
+-	 * We need the root dentry to do this, which is in the super
+-	 * block. A pointer to that is in the struct vfsmount that we
+-	 * have around.
+-	 */
+-	if (!parent)
+-		parent = tracefs_mount->mnt_root;
+-
+ 	if (unlikely(IS_DEADDIR(parent->d_inode)))
+ 		dentry = ERR_PTR(-ENOENT);
+ 	else
 -- 
 2.42.0
 
