@@ -1,142 +1,164 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Su4WUHIM"
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84FCEBD
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Nov 2023 20:49:44 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1cf5ceadfd8so130805ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Nov 2023 20:49:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="iGsC9TOi"
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DEEA90
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Nov 2023 22:31:29 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id 98e67ed59e1d1-2853347502aso982171a91.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Nov 2023 22:31:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1700542184; x=1701146984; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=bytedance.com; s=google; t=1700548289; x=1701153089; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ci0fDn2VKn2ROb4P5+ApgEIrDRCxD8DQOtt7YsYQPr8=;
-        b=Su4WUHIMCW5vgmjCrvzfT1brcn69WD4tmllN/No3RpWiu/dY+VIm69olbgkXfqmL8/
-         gOJpYAs43dvdKXRxpkrVCt+OmvyRdF4Tui4hhE3VHIHKe/rb7SbhPYtfgMN/I1YSHbJH
-         PG+L+lS2ynwiZ6Vu3ABEUDoF0vNHqWTuM5ALk4AhSCFqvoo2qMipExgbJKOecAyq6hb6
-         5GBmYqhpr6MjNVsy2cRWILQQxFlUcfPtw6yTX2u5KPcas+jcwU8OKDaqc/cXDPaKHWD6
-         URg/b4ZfloAQTGexxpDjAiOCsQWpDeirCYzurENszf+fHTaGDiBj1KfK/2CwDsAbggBP
-         P/Ag==
+        bh=Id8ujeGpIkTWnBgsbrdjWqBN1vyTocw7BJ8Bs4CExAE=;
+        b=iGsC9TOiz+JS6ON5xJ5Fq6d0daSnIWtBi1Gg2QBxtU21+kMTf6SDj8JJsOFb/34Uoa
+         vzwK3Gv0Ic1ZX9VP67RMJXSqIgV6Hf6Bw0NYcRu1hdyHYe/xCtUI2wgsdmev9mg/NOjM
+         Of2P1a8UQsmxqO0XGl0ZqxGgzmf0F6QfGyT51uiQMSs7YvIaqzukKkt9bzGqlYw9+MwL
+         qVJ2dJUZ76/fiEA2GJ+W3WSs9dKDMdPoeKMdr0CPr2J7+scZalVKmY4Lm42WOW2gyp+i
+         jeEyocybcR620u5p1SzVNp0bUG07YgyrFxPovgwxdw4Xpgw7p/F7Gx7L+TveAlWGg3V/
+         wlQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700542184; x=1701146984;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1700548289; x=1701153089;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ci0fDn2VKn2ROb4P5+ApgEIrDRCxD8DQOtt7YsYQPr8=;
-        b=YedH1WlBZOUozX371jPNdAGCxPLAGc2hhunHzocIRm8xhflH5omyIlwRxfkvenO5G+
-         /jB5BUhxiS1YGB/ENd1Z/+HFvxl8D/mXAKDWY0AVwUwC0UVHlpx/6UkVNc6BchXiEvXZ
-         mmSBfNffapCQkkeTUJF+SQaVecBpgxe3sN86LTbzePC91VUiW0cnP+pa5FeAxrLscenC
-         P3kbgVg95wooGJmJmsbs7HazKt+rQw5iicv18+9IlTjJS+Q5NRb7Fly15GMp6kYMAv2s
-         1uJofjyjItfVyS1H9xCPIH+iY6IJsriZ93WM36ztfFuYKiCm0cnWlCgGOBr6CIjMYwTy
-         hlNg==
-X-Gm-Message-State: AOJu0YxUIoSGuEzhQsJv/uzZgtrG5B4vbALZC7c96VMqUrNwTPMmSRZu
-	Bfy+LhMe+DsKXeQ2b9gP52P1iQ0fkee33l2Y2p5ygQ==
-X-Google-Smtp-Source: AGHT+IEjrSf5kIzKqR8y96cakBbXvSTNzic/DeMBLkOBk4msBIIG12CS40E/lkAesfcKoKMOnN0ye5jmEfxbmJlxJ94=
-X-Received: by 2002:a17:902:c454:b0:1cf:6d46:9f2b with SMTP id
- m20-20020a170902c45400b001cf6d469f2bmr136702plm.23.1700542183669; Mon, 20 Nov
- 2023 20:49:43 -0800 (PST)
+        bh=Id8ujeGpIkTWnBgsbrdjWqBN1vyTocw7BJ8Bs4CExAE=;
+        b=QWbkvWI01eblNFexNamP+Nh/Hs8V655IlkP/on2yP/CnYaRQlz/YWYA9q5qhUiFfCZ
+         fe1Yh8npUIlxQWCeSHzaY/4QdDq//Gd3WKAc34KSWHpcCPGdLBL5Fvh+Tds5oGHl14oT
+         syFaxF1i4hHahpzv5XJ9vHOhqx0xm3Nghlh9pyyDjiHhJcu5g1lqcTeZbxOaphahSfoZ
+         gUddHxZBMeKVmL1LojMfYmDKFB8tsj23HCgrMU9SDg2XnjtuSSj4C/oqx1AyvaCmN6Y4
+         HpLaxeO79OK1ClLe0eqC8ditjbBhgA/HFdxZuPKoBbtQ5+7a+Z3647QNW2SmsrUSt2+5
+         c3/Q==
+X-Gm-Message-State: AOJu0Ywx46gs5V3252Rrk9IKPYHuuqehsph7yA52NSCC/3hhdVKk342l
+	1RSY+JpqD06a6DXeBnBzt3Y1aQ==
+X-Google-Smtp-Source: AGHT+IGaL/ZBmNB4muHdNpaLOjY2/y5nWcYnCFXfIwuPy+jxxgaoeX0bqx5IKCWaJevo0BKKWLn/dg==
+X-Received: by 2002:a17:90b:3e85:b0:27d:882f:e6c5 with SMTP id rj5-20020a17090b3e8500b0027d882fe6c5mr7905600pjb.9.1700548288861;
+        Mon, 20 Nov 2023 22:31:28 -0800 (PST)
+Received: from devz1.bytedance.net ([203.208.167.146])
+        by smtp.gmail.com with ESMTPSA id b19-20020a17090a8c9300b00280070a2613sm8334414pjo.51.2023.11.20.22.31.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Nov 2023 22:31:28 -0800 (PST)
+From: "wuqiang.matt" <wuqiang.matt@bytedance.com>
+To: mhiramat@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	wuqiang.matt@bytedance.com
+Subject: [PATCH v2] lib: objpool: fix head overrun on big.LITTLE system
+Date: Tue, 21 Nov 2023 14:31:12 +0800
+Message-Id: <20231121063112.541940-1-wuqiang.matt@bytedance.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20231120141824.86bda7ae184baf331e3175d9@kernel.org>
+References: <20231120141824.86bda7ae184baf331e3175d9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230823131350.114942-1-alexandru.elisei@arm.com> <20230823131350.114942-21-alexandru.elisei@arm.com>
-In-Reply-To: <20230823131350.114942-21-alexandru.elisei@arm.com>
-From: Peter Collingbourne <pcc@google.com>
-Date: Mon, 20 Nov 2023 20:49:32 -0800
-Message-ID: <CAMn1gO67Lz_Xw5SCrq3fF4rOCSw3sXYK8qC77TTGnJeWd0b0Sg@mail.gmail.com>
-Subject: Re: [PATCH RFC 20/37] mm: compaction: Reserve metadata storage in compaction_alloc()
-To: Alexandru Elisei <alexandru.elisei@arm.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, 
-	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, 
-	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org, 
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
-	bsegall@google.com, mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, 
-	mhiramat@kernel.org, rppt@kernel.org, hughd@google.com, steven.price@arm.com, 
-	anshuman.khandual@arm.com, vincenzo.frascino@arm.com, david@redhat.com, 
-	eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Alexandru,
+objpool overrun stress with test_objpool on OrangePi5+ SBC triggered the
+following kernel warnings:
 
-On Wed, Aug 23, 2023 at 6:16=E2=80=AFAM Alexandru Elisei
-<alexandru.elisei@arm.com> wrote:
->
-> If the source page being migrated has metadata associated with it, make
-> sure to reserve the metadata storage when choosing a suitable destination
-> page from the free list.
->
-> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
-> ---
->  mm/compaction.c | 9 +++++++++
->  mm/internal.h   | 1 +
->  2 files changed, 10 insertions(+)
->
-> diff --git a/mm/compaction.c b/mm/compaction.c
-> index cc0139fa0cb0..af2ee3085623 100644
-> --- a/mm/compaction.c
-> +++ b/mm/compaction.c
-> @@ -570,6 +570,7 @@ static unsigned long isolate_freepages_block(struct c=
-ompact_control *cc,
->         bool locked =3D false;
->         unsigned long blockpfn =3D *start_pfn;
->         unsigned int order;
-> +       int ret;
->
->         /* Strict mode is for isolation, speed is secondary */
->         if (strict)
-> @@ -626,6 +627,11 @@ static unsigned long isolate_freepages_block(struct =
-compact_control *cc,
->
->                 /* Found a free page, will break it into order-0 pages */
->                 order =3D buddy_order(page);
-> +               if (metadata_storage_enabled() && cc->reserve_metadata) {
-> +                       ret =3D reserve_metadata_storage(page, order, cc-=
->gfp_mask);
+    WARNING: CPU: 6 PID: 3115 at lib/objpool.c:168 objpool_push+0xc0/0x100
 
-At this point the zone lock is held and preemption is disabled, which
-makes it invalid to call reserve_metadata_storage.
+This message is from objpool.c:168:
 
-Peter
+    WARN_ON_ONCE(tail - head > pool->nr_objs);
 
-> +                       if (ret)
-> +                               goto isolate_fail;
-> +               }
->                 isolated =3D __isolate_free_page(page, order);
->                 if (!isolated)
->                         break;
-> @@ -1757,6 +1763,9 @@ static struct folio *compaction_alloc(struct folio =
-*src, unsigned long data)
->         struct compact_control *cc =3D (struct compact_control *)data;
->         struct folio *dst;
->
-> +       if (metadata_storage_enabled())
-> +               cc->reserve_metadata =3D folio_has_metadata(src);
-> +
->         if (list_empty(&cc->freepages)) {
->                 isolate_freepages(cc);
->
-> diff --git a/mm/internal.h b/mm/internal.h
-> index d28ac0085f61..046cc264bfbe 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -492,6 +492,7 @@ struct compact_control {
->                                          */
->         bool alloc_contig;              /* alloc_contig_range allocation =
-*/
->         bool source_has_metadata;       /* source pages have associated m=
-etadata */
-> +       bool reserve_metadata;
->  };
->
->  /*
-> --
-> 2.41.0
->
+The overrun test case is to validate the case that pre-allocated objects
+are insufficient: 8 objects are pre-allocated for each node and consumer
+thread per node tries to grab 16 objects in a row. The testing system is
+OrangePI 5+, with RK3588, a big.LITTLE SOC with 4x A76 and 4x A55. When
+disabling either all 4 big or 4 little cores, the overrun tests run well,
+and once with big and little cores mixed together, the overrun test would
+always cause an overrun loop. It's likely the memory timing differences
+of big and little cores cause this trouble. Here are the debugging data
+of objpool_try_get_slot after try_cmpxchg_release:
+
+    objpool_pop: cpu: 4/0 0:0 head: 278/279 tail:278 last:276/278
+
+The local copies of 'head' and 'last' were 278 and 276, and reloading of
+'slot->head' and 'slot->last' got 279 and 278. After try_cmpxchg_release
+'slot->head' became 'head + 1', which is correct. But what's wrong here
+is the stale value of 'last', and that stale value of 'last' finally led
+the overrun of 'head'.
+
+Memory updating of 'last' and 'head' are performed in push() and pop()
+independently, which could be the culprit leading this out of order
+visibility of 'last' and 'head'. So for objpool_try_get_slot(), it's
+not enough only checking the condition of 'head != slot', the implicit
+condition 'last - head <= nr_objs' must also be explicitly asserted to
+guarantee 'last' is always behind 'head' before the object retrieving.
+
+This patch will check and try reloading of 'head' and 'last' to ensure
+'last' is behind 'head' at the time of object retrieving. Performance
+testings show the average impact is about 0.1% for X86_64 and 1.12% for
+ARM64. Here are the results:
+
+    OS: Debian 10 X86_64, Linux 6.6rc
+    HW: XEON 8336C x 2, 64 cores/128 threads, DDR4 3200MT/s
+                      1T         2T         4T         8T        16T
+    native:     49543304   99277826  199017659  399070324  795185848
+    objpool:    29909085   59865637  119692073  239750369  478005250
+    objpool+:   29879313   59230743  119609856  239067773  478509029
+                     32T        48T        64T        96T       128T
+    native:   1596927073 2390099988 2929397330 3183875848 3257546602
+    objpool:   957553042 1435814086 1680872925 2043126796 2165424198
+    objpool+:  956476281 1434491297 1666055740 2041556569 2157415622
+
+    OS: Debian 11 AARCH64, Linux 6.6rc
+    HW: Kunpeng-920 96 cores/2 sockets/4 NUMA nodes, DDR4 2933 MT/s
+                      1T         2T         4T         8T        16T
+    native:     30890508   60399915  123111980  242257008  494002946
+    objpool:    14742531   28883047   57739948  115886644  232455421
+    objpool+:   14107220   29032998   57286084  113730493  232232850
+                     24T        32T        48T        64T        96T
+    native:    746406039 1000174750 1493236240 1998318364 2942911180
+    objpool:   349164852  467284332  702296756  934459713 1387898285
+    objpool+:  348388180  462750976  696606096  927865887 1368402195
+
+Fixes: b4edb8d2d464 ("lib: objpool added: ring-array based lockless MPMC")
+
+v1 -> v2:
+    - Title updated since it's a common issue of objpool for big.LITTLE
+      systems, verified on Rockchip RK3588 and Amlogic A311D
+    - Fixes tag added, as reminded by Masami Hiramatsu
+
+Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ lib/objpool.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/lib/objpool.c b/lib/objpool.c
+index 1ab49b897b2e..e8c9a30e485f 100644
+--- a/lib/objpool.c
++++ b/lib/objpool.c
+@@ -199,6 +199,23 @@ static inline void *objpool_try_get_slot(struct objpool_head *pool, int cpu)
+ 	while (head != READ_ONCE(slot->last)) {
+ 		void *obj;
+ 
++		/*
++		 * data visibility of 'last' and 'head' could be out of
++		 * order since memory updating of 'last' and 'head' are
++		 * performed in push() and pop() independently
++		 *
++		 * before any retrieving attempts, pop() must guarantee
++		 * 'last' is behind 'head', that is to say, there must
++		 * be available objects in slot, which could be ensured
++		 * by condition 'last != head && last - head <= nr_objs'
++		 * that is equivalent to 'last - head - 1 < nr_objs' as
++		 * 'last' and 'head' are both unsigned int32
++		 */
++		if (READ_ONCE(slot->last) - head - 1 >= pool->nr_objs) {
++			head = READ_ONCE(slot->head);
++			continue;
++		}
++
+ 		/* obj must be retrieved before moving forward head */
+ 		obj = READ_ONCE(slot->entries[head & slot->mask]);
+ 
+-- 
+2.40.1
+
