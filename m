@@ -1,101 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCAE1C2AD
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Nov 2023 21:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7866AC433C7;
-	Wed, 22 Nov 2023 21:20:35 +0000 (UTC)
-Date: Wed, 22 Nov 2023 16:20:51 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Nick Lowell <nicholas.lowell@gmail.com>
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Nicholas Lowell <nlowell@lexmark.com>
-Subject: Re: [PATCH v2] trace: tracing_event_filter: fast path when no
- subsystem filters
-Message-ID: <20231122162051.661981fe@gandalf.local.home>
-In-Reply-To: <CAFEqNJ3PE6_u-q41Jw=-p7PrNBLT0Lr_n87WiY_2UctOJrDmZA@mail.gmail.com>
-References: <20231002144149.1325-1-Nicholas.Lowell@gmail.com>
-	<20231003223003.675bd888@gandalf.local.home>
-	<CAFEqNJ2=rt5KaDaAah1t8gGbLViW7VZEDq+81drvuWUz4CKR2w@mail.gmail.com>
-	<20231004105339.5f948a96@gandalf.local.home>
-	<CAFEqNJ3PE6_u-q41Jw=-p7PrNBLT0Lr_n87WiY_2UctOJrDmZA@mail.gmail.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TytTOb0H"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3CF2AD;
+	Wed, 22 Nov 2023 14:17:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700691438; x=1732227438;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yeWZ3BdyhhUuU0VGr46b+afl1WUFwAC0SYpHXwdB+Hk=;
+  b=TytTOb0Hvr0RYxSd5pH2lysLrVqd5uo8v66ICqCi48x3GtIV5NFlhx7B
+   Ucq8MsPCTD/JNfk35ybIBxw8vxYtGnDvYkqdksOlZQpy897d5MqfuHncG
+   KjE7ngxMnhPrGFhG8NtKdF0gyC5JXRf2wSyVbLJyy6+Qjwl9f2lwUw72N
+   dwxL/VKf3BitDRUocQUlo+4Wj/6r9nOk5prorxq7y8IoC6+aFUqZyEMn2
+   pjoAUMvx+huD3kNCJrqR+Np2CkOWxEFdhGKBu16+74BIM2YfWjH0IdJHr
+   QEmVQ+KcwHg2VIHAf7NLzUnVaCMwQMxWK/4neudT/tMP4OTHhNiFwoy99
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="382553921"
+X-IronPort-AV: E=Sophos;i="6.04,219,1695711600"; 
+   d="scan'208";a="382553921"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 14:17:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="770797680"
+X-IronPort-AV: E=Sophos;i="6.04,219,1695711600"; 
+   d="scan'208";a="770797680"
+Received: from aconradi-mobl.ger.corp.intel.com (HELO intel.com) ([10.251.221.156])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 14:17:10 -0800
+Date: Wed, 22 Nov 2023 23:17:07 +0100
+From: Andi Shyti <andi.shyti@linux.intel.com>
+To: "wuqiang.matt" <wuqiang.matt@bytedance.com>
+Cc: ubizjak@gmail.com, mark.rutland@arm.com, vgupta@kernel.org,
+	bcain@quicinc.com, jonas@southpole.se,
+	stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
+	chris@zankel.net, jcmvbkbc@gmail.com, geert@linux-m68k.org,
+	andi.shyti@linux.intel.com, mingo@kernel.org, palmer@rivosinc.com,
+	andrzej.hajda@intel.com, arnd@arndb.de, peterz@infradead.org,
+	mhiramat@kernel.org, linux-arch@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, mattwu@163.com,
+	linux@roeck-us.net
+Subject: Re: [PATCH v3 1/5] arch,locking/atomic: arc: arch_cmpxchg should
+ check data size
+Message-ID: <ZV594z0bNQR-vo2b@ashyti-mobl2.lan>
+References: <20231121142347.241356-1-wuqiang.matt@bytedance.com>
+ <20231121142347.241356-2-wuqiang.matt@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231121142347.241356-2-wuqiang.matt@bytedance.com>
 
-On Thu, 12 Oct 2023 16:37:35 -0400
-Nick Lowell <nicholas.lowell@gmail.com> wrote:
+Hi Wuqiang,
 
-Sorry, I was traveling when this was sent, and I missed it.
-
-
-> I really appreciate the continued feedback.  I was able to reproduce.
-> I think I'm understanding better but still need some help.
-> I am actually wondering if remove_filter_string(system->filter) should
-
-You mean to return true if filter->filter_string was not NULL?
-
-> also return bool as an OR'd input for sync.
-> Should it be something like this?
+On Tue, Nov 21, 2023 at 10:23:43PM +0800, wuqiang.matt wrote:
+> arch_cmpxchg() should check data size rather than pointer size in case
+> CONFIG_ARC_HAS_LLSC is defined. So rename __cmpxchg to __cmpxchg_32 to
+> emphasize it's explicit support of 32bit data size with BUILD_BUG_ON()
+> added to avoid any possible misuses with unsupported data types.
 > 
->         if (!strcmp(strstrip(filter_string), "0")) {
-> -               filter_free_subsystem_preds(dir, tr);
-> -               remove_filter_string(system->filter);
-> +              bool sync;
-
-I would just make this an int;
-
-> +
-> +              sync = filter_free_subsystem_preds(dir, tr);
-> +              sync = sync || remove_filter_string(system->filter);
-
-And then just have:
-
-		sync |= remove_filter_string(system->filter);
-
->                 filter = system->filter;
->                 system->filter = NULL;
-> -               /* Ensure all filters are no longer used */
-> -               tracepoint_synchronize_unregister();
-> +              /* If nothing was freed, we do not need to sync */
-> +              if(sync) {
-> +                      /* Ensure all filters are no longer used */
-> +                      tracepoint_synchronize_unregister();
-> +              }
->                 filter_free_subsystem_filters(dir, tr);
->                 __free_filter(filter);
->                 goto out_unlock;
+> In case CONFIG_ARC_HAS_LLSC is undefined, arch_cmpxchg() uses spinlock
+> to accomplish SMP-safety, so the BUILD_BUG_ON checking is uncecessary.
 > 
-> > Maybe even pass in "sync" to the filter_free_subsystem_filters() to make
-> > sure there were nothing to be freed, and do the WARN_ON_ONCE() then.
-> >
-> >                 __free_filter(filter);
-> >                 goto out_unlock;
-> >         }
-> >
-> > -- Steve  
+> v2 -> v3:
+>   - Patches regrouped and has the improvement for xtensa included
+>   - Comments refined to address why these changes are needed
 > 
-> I'm not sure if I see the reasoning for the WARN_ON_ONCE() in
-> filter_free_subsystem_filters()
-> because it ends up checking the same if(!filter) just like
-> filter_free_subsystem_preds() did earlier. It doesn't
-> seem to do anything with system->filter.  I actually wonder if !sync,
-> could filter_free_subsystem_filters()
-> be skipped altogether.  Help me if I'm missing something.
+> v1 -> v2:
+>   - Try using native cmpxchg variants if avaialble, as Arnd advised
+> 
+> Signed-off-by: wuqiang.matt <wuqiang.matt@bytedance.com>
+> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  arch/arc/include/asm/cmpxchg.h | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arc/include/asm/cmpxchg.h b/arch/arc/include/asm/cmpxchg.h
+> index e138fde067de..bf46514f6f12 100644
+> --- a/arch/arc/include/asm/cmpxchg.h
+> +++ b/arch/arc/include/asm/cmpxchg.h
+> @@ -18,14 +18,16 @@
+>   * if (*ptr == @old)
+>   *      *ptr = @new
+>   */
+> -#define __cmpxchg(ptr, old, new)					\
+> +#define __cmpxchg_32(ptr, old, new)					\
+>  ({									\
+>  	__typeof__(*(ptr)) _prev;					\
+>  									\
+> +	BUILD_BUG_ON(sizeof(*(ptr)) != 4);				\
+> +									\
+>  	__asm__ __volatile__(						\
+> -	"1:	llock  %0, [%1]	\n"					\
+> +	"1:	llock  %0, [%1]		\n"				\
+>  	"	brne   %0, %2, 2f	\n"				\
+> -	"	scond  %3, [%1]	\n"					\
+> +	"	scond  %3, [%1]		\n"				\
+>  	"	bnz     1b		\n"				\
+>  	"2:				\n"				\
+>  	: "=&r"(_prev)	/* Early clobber prevent reg reuse */		\
+> @@ -47,7 +49,7 @@
+>  									\
+>  	switch(sizeof((_p_))) {						\
+>  	case 4:								\
+> -		_prev_ = __cmpxchg(_p_, _o_, _n_);			\
+> +		_prev_ = __cmpxchg_32(_p_, _o_, _n_);			\
+>  		break;							\
+>  	default:							\
+>  		BUILD_BUG();						\
+> @@ -65,8 +67,6 @@
+>  	__typeof__(*(ptr)) _prev_;					\
+>  	unsigned long __flags;						\
+>  									\
+> -	BUILD_BUG_ON(sizeof(_p_) != 4);					\
+> -									\
 
-The point is, code always changes. It's a bug if one of the filters had
-content in filter_free_subsystem_filters() and sync is 0, hence the
-WARN_ON_ONCE() if it does.
+I think I made some comments here that have not been addressed or
+replied.
 
-WARN_ON*()s are added to make sure the code is acting the way it is expected
-to act. Yes, it should never trigger, but if it does, we know there's a bug
-somewhere.
+Thanks,
+Andi
 
--- Steve
+>  	/*								\
+>  	 * spin lock/unlock provide the needed smp_mb() before/after	\
+>  	 */								\
+> -- 
+> 2.40.1
