@@ -1,70 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F735A11B;
-	Tue, 21 Nov 2023 23:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5607C433C7;
-	Tue, 21 Nov 2023 23:10:57 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97-RC3)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1r5Ztg-00000002dF5-4BCs;
-	Tue, 21 Nov 2023 18:11:12 -0500
-Message-ID: <20231121231112.853962542@goodmis.org>
-User-Agent: quilt/0.67
-Date: Tue, 21 Nov 2023 18:10:07 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 4/4] eventfs: Make sure that parent->d_inode is locked in creating
- files/dirs
-References: <20231121231003.516999942@goodmis.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899D3188
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Nov 2023 00:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RAfudj74"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BBAAC433C8;
+	Wed, 22 Nov 2023 00:04:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700611444;
+	bh=5oAfyrQ54eQP95rCl5KFP1aGqc2no3aE5cb5/AYs2mY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RAfudj746OLK8bT5EoA0b8TJUszsB11Wrbf856H0urW/Hlz/0v+bl2IElv0nQ0I3a
+	 hzt0bDPB/w3pXh3ynlyvXBBJxs4Kn4LY6tnryG8g+zrCYb2k0OTrKDK5IP8SAN6dJW
+	 OwpM4yEe6a9/Yh692WViISP/wfle8dJcY7IrMLyJglZ9fuACqW20myLe9KaZ8ZQZfG
+	 d1NUquMumhtK89p1i3vt3UweR5/hphaW0N26Bo+YPcLC8vYNSbzXytuX8lezlF7XTD
+	 ZJuXjerdCnQv+KCkzwQKM/J1VYLAxLncilqxShybZ4UzVe19z8tKoCbFI1xuQoEETK
+	 DQv27B7Gg2XVQ==
+Date: Wed, 22 Nov 2023 09:04:00 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: TRACING: Add Mathieu Desnoyers as Reviewer
+Message-Id: <20231122090400.b6af7c22775db1f7daa9c45b@kernel.org>
+In-Reply-To: <20231115155018.8236-1-mathieu.desnoyers@efficios.com>
+References: <20231115155018.8236-1-mathieu.desnoyers@efficios.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Wed, 15 Nov 2023 10:50:18 -0500
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-Since the locking of the parent->d_inode has been moved outside the
-creation of the files and directories (as it use to be locked via a
-conditional), add a WARN_ON_ONCE() to the case that it's not locked.
+> In order to make sure I get CC'd on tracing changes for which my input
+> would be relevant, add my name as reviewer of the TRACING subsystem.
+> 
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- fs/tracefs/event_inode.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Yes, you should be a reviewer for tracing subsystem :) 
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 590e8176449b..0b90869fd805 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -327,6 +327,8 @@ create_file_dentry(struct eventfs_inode *ei, int idx,
- 	struct dentry **e_dentry = &ei->d_children[idx];
- 	struct dentry *dentry;
- 
-+	WARN_ON_ONCE(!inode_is_locked(parent->d_inode));
-+
- 	mutex_lock(&eventfs_mutex);
- 	if (ei->is_freed) {
- 		mutex_unlock(&eventfs_mutex);
-@@ -430,6 +432,8 @@ create_dir_dentry(struct eventfs_inode *pei, struct eventfs_inode *ei,
- {
- 	struct dentry *dentry = NULL;
- 
-+	WARN_ON_ONCE(!inode_is_locked(parent->d_inode));
-+
- 	mutex_lock(&eventfs_mutex);
- 	if (pei->is_freed || ei->is_freed) {
- 		mutex_unlock(&eventfs_mutex);
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks!
+
+> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: linux-trace-kernel@vger.kernel.org
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 4cc6bf79fdd8..a7c2092d0063 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -21622,6 +21622,7 @@ F:	drivers/hwmon/pmbus/tps546d24.c
+>  TRACING
+>  M:	Steven Rostedt <rostedt@goodmis.org>
+>  M:	Masami Hiramatsu <mhiramat@kernel.org>
+> +R:	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+>  L:	linux-kernel@vger.kernel.org
+>  L:	linux-trace-kernel@vger.kernel.org
+>  S:	Maintained
+> -- 
+> 2.39.2
+> 
+
+
 -- 
-2.42.0
-
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
