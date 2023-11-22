@@ -1,104 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F36810E6
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Nov 2023 00:21:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HHKNtHtl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 695D5C433C8;
-	Wed, 22 Nov 2023 00:21:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700612511;
-	bh=BnR6X0Q7DGCHjbTUHgy48LejflGPA3huJww1dkcGm00=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=HHKNtHtlPHMzRl0iipUo/yapcMhQIgayRS7gwnH7wuM5zycq6qRzObamt2Odoe8t7
-	 ioH7qeQarX05jXIPuCNGoF+7gHT6Gc2L6kFTYT9Y29FiK7q5WSCe6tYQkBGDbg9Xml
-	 Lt0aoWO2g0V/XDbGRYXYNHBtXI/0VFXTz3ay77ehDbZnGDt4Bn+xx9+EnOikM1mX+M
-	 fD2nA8aojhoU1HFOhu88DQq5IWqcpXz/vuRrZ2Fj6yjkrRkldU5RQega0aYkoS/6WB
-	 gsfoDwUEBS24mAqfs/FTkqY1fIngRehKYOORM26uLO9iInx5ZE3PF6smLhCunP7/nZ
-	 /8eqERFA7SVMw==
-Date: Wed, 22 Nov 2023 09:21:46 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: tomer samara <tomer.samara@morphisec.com>
-Cc: "naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
- "anil.s.keshavamurthy@intel.com" <anil.s.keshavamurthy@intel.com>,
- "davem@davemloft.net" <davem@davemloft.net>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Subject: Re: Sleepable kprobes
-Message-Id: <20231122092146.4416e5350e3701a812147373@kernel.org>
-In-Reply-To: <VI1PR10MB2157FAE5EB3BC27824B4529F83B0A@VI1PR10MB2157.EURPRD10.PROD.OUTLOOK.COM>
-References: <VI1PR10MB21574FD4B09A4EB8171F10B683ABA@VI1PR10MB2157.EURPRD10.PROD.OUTLOOK.COM>
-	<VI1PR10MB2157FAE5EB3BC27824B4529F83B0A@VI1PR10MB2157.EURPRD10.PROD.OUTLOOK.COM>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="bydf/Wr5"
+Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B06BF197
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Nov 2023 16:57:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1700614640; bh=gzvxNaFgXpUPDEUAHkQPkAaRXyYwT0flcIsNk4lBtvw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=bydf/Wr57W130zpjqAuyDXzOfoT4NwBBaUlKHfx5H2b8gAMKY3/wpVJhAUEW/cUy1
+	 xWpwpDXHQhhfBExDF3jcuXRj1DBt5Qoj3wP8CzUdJ2v0b/975K54Mfn1kWIUmtdEwC
+	 aZrOMgJ8LVtOz1hXsqssaLIpFBThvI0wubma1rKA=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.56])
+	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
+	id CB7B5A80; Wed, 22 Nov 2023 08:50:55 +0800
+X-QQ-mid: xmsmtpt1700614255tc8djfbyw
+Message-ID: <tencent_884D1773977426D9D3600371696883B6A405@qq.com>
+X-QQ-XMAILINFO: NQR8mRxMnur9ovjyRgGNqgtMh6Va05ELoy2/HMi6IsAkx4szUMBjSpTD+efd4/
+	 ov9kgVGiM/scZ0CutViE1B97RX0XHB6K3ewEpzAtd9+yFfRbnUj9WEZ9Bd1lW+hdhIgoT7knR5P5
+	 AvmevPfcyOb8Q1Pf283rP6fxMoSMzU7esdpmXZ8Nw7+U2f3Dmxurp9W5yaPNyvAmgVub4v/eqKPc
+	 M0n9sOEYAc952p7plqJG51dsVJL/zmgo2nmNzO7R//sBQciI767tEoe2ZI9bg9FZ5jfnE4RM9NRF
+	 OlXoz1B1E0jZUuMDBvM29dczwMpbGZ0STD33HBb+W2+7nV8RBvsEsVQpmJ0HflOKUYabAwkmf4Mp
+	 e0FqFZyRF2qNK2busSQMv6ptOwaa/Yxk59a2I86AHNjmzA64Py5Tgd0i86qYtJURLsWvTOLx29hS
+	 IOd1qWY35fn7Vx4eN1iUWZz0fg6u26iClnu+NEhuiLJQ9vjOnCMv3Isj8uENMLNs5RB6Wz9eaEU4
+	 yEUQ2/i4j8I/roydVJb8XztnEWTZYtTuW4MawdgY4tPLIcubZR4G+JkZamrR1GTK9B0DupfCiGTQ
+	 Peofz4F2gAN3we5PJEc0KceR61ZLBnnOG470q6tkhwrsT7+fNBnpW4QKQrWU+/Sror7Gs7cymUgw
+	 08pvkKMFOIyOyN2OgEofXAYVW4EDmY5W+r4ThwO7Tkxi+AqnvNdXnFwiFlqMKT+8P/WrIfyQpeKd
+	 Bp7fQeJQv5wSKhGjSa6wLMYuq5J6znE+3634ZZ5Odg1g4mlO46H1cUHd3TtUbHTqfoPRiitmgbhx
+	 TU35ZDjq0D8B/eP+748ZE1n646xOLLxoIJlE9TJk6bpIZnQrFde8ch+1artGe9yRoXz+VjDrouC1
+	 4JFfLqg/YJiaSnBXpDH2IFKP0tBbKiUQLvrYVZ2KVUzPZP65cm3wWPDdU5fOd9UFu9bNusK+Il
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+e2c932aec5c8a6e1d31c@syzkaller.appspotmail.com
+Cc: andrii@kernel.org,
+	ast@kernel.org,
+	bpf@vger.kernel.org,
+	daniel@iogearbox.net,
+	davem@davemloft.net,
+	edumazet@google.com,
+	haoluo@google.com,
+	hawk@kernel.org,
+	john.fastabend@gmail.com,
+	jolsa@kernel.org,
+	kpsingh@kernel.org,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	martin.lau@kernel.org,
+	martin.lau@linux.dev,
+	mhiramat@kernel.org,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	rostedt@goodmis.org,
+	sdf@google.com,
+	song@kernel.org,
+	syzkaller-bugs@googlegroups.com,
+	yhs@fb.com,
+	yonghong.song@linux.dev
+Subject: [PATCH net] bpf: test_run: fix WARNING in format_decode
+Date: Wed, 22 Nov 2023 08:50:56 +0800
+X-OQ-MSGID: <20231122005055.3594477-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <0000000000004b6de5060ab1545b@google.com>
+References: <0000000000004b6de5060ab1545b@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-(Cc: linux-trace-kernel@vger.kernel.org)
-Hello Tomer,
+Confirm that skb->len is not 0 to ensure that skb length is valid.
 
-Sorry, last weeks I was busy for LPC23.
+Fixes: 114039b34201 ("bpf: Move skb->len == 0 checks into __bpf_redirect")
+Reported-by: syzbot+e2c932aec5c8a6e1d31c@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ net/bpf/test_run.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-As far as I can see (and IIUC), this hacks the ftrace's fentry to just
-call the probe? (BTW, that is very x86 specific feature.)
-
-In that case, unlike the kprobe, it does not probe the function body
-thus it is not kprobes, and it can not work with ftrace and fgraph.
-
-Moreover, since the probe is not called from fixed point, the probed
-function can be called under non-preemptive section. Thus it is not
-generically able to sleep.
-
-If you need to do I/O inside the kernel, you need to do it carefully.
-I recommend you to use deferred work (workqueu or different threads)
-to do I/O asynchronously. That will be safer and generic way.
-And also, new feature needs to co-exist with the feature already
-exists in maintenanceable way. I meant using ftrace fentry directly
-is not recommended because it breaks ftrace.
-
-Anyway, what you need to do is starting discussion on the mailing list
-instead of pushing your change. 'Why' I/O in the probe is needed inside
-probe callback, and propose your solution. (My suggestion is above, but
-maybe other people have other opinions.)
-
-Thank you,
-
-
-On Thu, 16 Nov 2023 05:38:57 +0000
-tomer samara <tomer.samara@morphisec.com> wrote:
-
-> Hi,
-> Just bumping up this message in case got lost,
-> 
-> Thanks,
-> Tomer
-> 
-> 
-> ________________________________
-> From: tomer samara <tomer.samara@morphisec.com>
-> Sent: Sunday, November 5, 2023 5:42 PM
-> To: naveen.n.rao@linux.ibm.com <naveen.n.rao@linux.ibm.com>; anil.s.keshavamurthy@intel.com <anil.s.keshavamurthy@intel.com>; davem@davemloft.net <davem@davemloft.net>; mhiramat@kernel.org <mhiramat@kernel.org>
-> Subject: Sleepable kprobes
-> 
-> Hi,
-> 
-> My name is Tomer and in the last few weeks I worked on a side project that will create a sleepable kprobes.
-> As you know kprobes is using PERCPU variables and can’t schedule or sleep.
-> The motivation behind this is to allow the user to preform operation like I/O operations, put the task in sleep so it will be inspected in user-mode with easier tools or just call kmalloc without GFP_NOWAIT.
-> 
-> The code is very similar to parts kprobe itself since the idea is the same.
-> You can see the full code here: https://github.com/Tsn0w/frogprobe
-> The core logic is under src/frogprobe.c while other are just helpers.
-> If you think this can be a good change to the current kprobe or as a different subsystem, what can I push this? (beside support more archs, support LKM symbols, blacklist symbols, …).
-> 
-> Thanks for your time and looking forward to your reply,
-> Tomer Samara,
-
-
+diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
+index c9fdcc5cdce1..78258a822a5c 100644
+--- a/net/bpf/test_run.c
++++ b/net/bpf/test_run.c
+@@ -845,6 +845,9 @@ static int convert___skb_to_skb(struct sk_buff *skb, struct __sk_buff *__skb)
+ {
+ 	struct qdisc_skb_cb *cb = (struct qdisc_skb_cb *)skb->cb;
+ 
++	if (!skb->len)
++		return -EINVAL;
++
+ 	if (!__skb)
+ 		return 0;
+ 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.26.1
+
