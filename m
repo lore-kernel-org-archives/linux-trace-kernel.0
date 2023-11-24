@@ -1,158 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C7B1EB42;
-	Fri, 24 Nov 2023 12:04:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ASSOqFUT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C12FAC433C7;
-	Fri, 24 Nov 2023 12:04:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700827484;
-	bh=iYS7ANsuZ6vwOLgQk5XN795HJ5oXfHcHZNUjCJ6SXCw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ASSOqFUTTJHCjKWaYnDmAWOsdJx6xpTr/qPcu1HB+Fm5a/QclWrV0vncK2Q3Q7xX2
-	 aCCX9KBbw2Az9X58fZvG86NOH/nrOeX7BVzsNXr5gajrQU9ziayJ62atPHT8DwDcCc
-	 ahgZtb/ixwvuzDrehPu48aUVx6G2ccUCRb+KcZHUWGGyWnosZcOgffotJMEG6Q3zmg
-	 BKh8HHr1sjhFvHUZ1Iby4sERa66rD1silvF54u1GkmzyyDomzoGyssBaqUowuIrSEm
-	 G36HFkUDw4hjv0/b3iAj4rjrfH4/y0Ks3nDD/1Xr+xB/Qamv83b+9r9W6Jyz43KFdu
-	 6MPuY/CW+rmPA==
-Date: Fri, 24 Nov 2023 12:04:40 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	linux-kbuild@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Guo Ren <guoren@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Greg Ungerer <gerg@linux-m68k.org>, Michal Simek <monstr@monstr.eu>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Geoff Levand <geoff@infradead.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-	Helge Deller <deller@gmx.de>,
-	Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Timur Tabi <timur@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	David Woodhouse <dwmw2@infradead.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	Kees Cook <keescook@chromium.org>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-	netdev@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-bcachefs@vger.kernel.org,
-	linux-mtd@lists.infradead.org,
-	Aishwarya TCV <aishwarya.tcv@arm.com>
-Subject: Re: [PATCH 15/22] arch: vdso: consolidate gettime prototypes
-Message-ID: <ZWCRWArzbTYUjvon@finisterre.sirena.org.uk>
-References: <20231108125843.3806765-1-arnd@kernel.org>
- <20231108125843.3806765-16-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UKu3pAix"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 861851998;
+	Fri, 24 Nov 2023 07:41:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700840484; x=1732376484;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=c2Vqe3x33aE9kTCdbYkqqP9jPVzZrJzKmfGmmqpORXA=;
+  b=UKu3pAixytuP9mXP+dVovdcu4prB5K0S0sf8xDG9pxdtoJ2FhQLm2Rsm
+   thpV+hHN9KbYVqN590wnOqCs6Cm+Ikz0xpQUSlesSq8g8yD/SgJD6cUBK
+   XUpWJ23SWGXb9i6dEwkhFbyWBfbUReqo4njc3BEOWIMxAOGAsRarY7Xad
+   ytxEKJMQMMUPPHYfjw6Sd34Z3UfrRlusxaigGklUFTe0+lX8Ks2aYYfek
+   p6kQlxBbWFYB/Wp8yyIvfw5q4/LN21oMVLprxbCqY9MNGbX8PW/JAf9F3
+   cRFl8fLdX3Tcougam8F1EWLGMfGse3xtXJ1mRzCFYPQX/aFn417h8+o7U
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10904"; a="423577097"
+X-IronPort-AV: E=Sophos;i="6.04,224,1695711600"; 
+   d="scan'208";a="423577097"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2023 07:41:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10904"; a="833714362"
+X-IronPort-AV: E=Sophos;i="6.04,224,1695711600"; 
+   d="scan'208";a="833714362"
+Received: from lkp-server01.sh.intel.com (HELO d584ee6ebdcc) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 24 Nov 2023 07:41:21 -0800
+Received: from kbuild by d584ee6ebdcc with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1r6YIx-0002xm-2k;
+	Fri, 24 Nov 2023 15:41:19 +0000
+Date: Fri, 24 Nov 2023 23:40:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, JP Kobryn <inwardvessel@gmail.com>,
+	bpf@vger.kernel.org, kernel-team@meta.com, rostedt@goodmis.org,
+	peterz@infradead.org
+Subject: Re: [PATCH] rethook: Use __rcu pointer for rethook::handler
+Message-ID: <202311241808.rv9ceuAh-lkp@intel.com>
+References: <170078778632.209874.7893551840863388753.stgit@devnote2>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="woSdJmrFfLwaS8m2"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231108125843.3806765-16-arnd@kernel.org>
-X-Cookie: Am I in GRADUATE SCHOOL yet?
+In-Reply-To: <170078778632.209874.7893551840863388753.stgit@devnote2>
 
+Hi Masami,
 
---woSdJmrFfLwaS8m2
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+kernel test robot noticed the following build warnings:
 
-On Wed, Nov 08, 2023 at 01:58:36PM +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
->=20
-> The VDSO functions are defined as globals in the kernel sources but inten=
-ded
-> to be called from userspace, so there is no need to declare them in a ker=
-nel
-> side header.
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.7-rc2 next-20231124]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-This is in -next as commit 42874e4eb35bdfc54f8514685e50434098ba4f6c and
-breaks an arm64 defconfig build, the 32 bit vDSO build is broken:
+url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/rethook-Use-__rcu-pointer-for-rethook-handler/20231124-090634
+base:   linus/master
+patch link:    https://lore.kernel.org/r/170078778632.209874.7893551840863388753.stgit%40devnote2
+patch subject: [PATCH] rethook: Use __rcu pointer for rethook::handler
+config: x86_64-randconfig-r113-20231124 (https://download.01.org/0day-ci/archive/20231124/202311241808.rv9ceuAh-lkp@intel.com/config)
+compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231124/202311241808.rv9ceuAh-lkp@intel.com/reproduce)
 
-/build/stage/linux/arch/arm64/kernel/vdso32/vgettimeofday.c:10:5: error: co=
-nflic
-ting types for =E2=80=98__vdso_clock_gettime=E2=80=99; have =E2=80=98int(cl=
-ockid_t,  struct old_timespec
-32 *)=E2=80=99 {aka =E2=80=98int(int,  struct old_timespec32 *)=E2=80=99}
-   10 | int __vdso_clock_gettime(clockid_t clock,
-      |     ^~~~~~~~~~~~~~~~~~~~
-In file included from /build/stage/linux/arch/arm64/kernel/vdso32/vgettimeo=
-fday.
-c:8:
-/build/stage/linux/include/vdso/gettime.h:16:5: note: previous declaration =
-of =E2=80=98__vdso_clock_gettime=E2=80=99 with type =E2=80=98int(clockid_t,=
-  struct __kernel_timespec *)=E2=80=99 {aka =E2=80=98int(int,  struct __ker=
-nel_timespec *)=E2=80=99}
-   16 | int __vdso_clock_gettime(clockid_t clock, struct __kernel_timespec =
-*ts);
-      |     ^~~~~~~~~~~~~~~~~~~~
-/build/stage/linux/arch/arm64/kernel/vdso32/vgettimeofday.c:28:5: error: co=
-nflicting types for =E2=80=98__vdso_clock_getres=E2=80=99; have =E2=80=98in=
-t(clockid_t,  struct old_timespec32 *)=E2=80=99 {aka =E2=80=98int(int,  str=
-uct old_timespec32 *)=E2=80=99}
-   28 | int __vdso_clock_getres(clockid_t clock_id,
-      |     ^~~~~~~~~~~~~~~~~~~
-/build/stage/linux/include/vdso/gettime.h:15:5: note: previous declaration =
-of =E2=80=98__vdso_clock_getres=E2=80=99 with type =E2=80=98int(clockid_t, =
- struct __kernel_timespec *)=E2=80=99 {aka =E2=80=98int(int,  struct __kern=
-el_timespec *)=E2=80=99}
-   15 | int __vdso_clock_getres(clockid_t clock, struct __kernel_timespec *=
-res);
-      |     ^~~~~~~~~~~~~~~~~~~
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311241808.rv9ceuAh-lkp@intel.com/
 
---woSdJmrFfLwaS8m2
-Content-Type: application/pgp-signature; name="signature.asc"
+sparse warnings: (new ones prefixed by >>)
+>> kernel/trace/rethook.c:51:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
+>> kernel/trace/rethook.c:51:9: sparse:    void ( [noderef] __rcu * )( ... )
+>> kernel/trace/rethook.c:51:9: sparse:    void ( * )( ... )
+   kernel/trace/rethook.c:66:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
+   kernel/trace/rethook.c:66:9: sparse:    void ( [noderef] __rcu * )( ... )
+   kernel/trace/rethook.c:66:9: sparse:    void ( * )( ... )
+   kernel/trace/rethook.c:110:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
+   kernel/trace/rethook.c:110:9: sparse:    void ( [noderef] __rcu * )( ... )
+   kernel/trace/rethook.c:110:9: sparse:    void ( * )( ... )
+   kernel/trace/rethook.c:140:19: sparse: sparse: incompatible types in comparison expression (different address spaces):
+   kernel/trace/rethook.c:140:19: sparse:    void ( [noderef] __rcu * )( ... )
+   kernel/trace/rethook.c:140:19: sparse:    void ( * )( ... )
+   kernel/trace/rethook.c:161:19: sparse: sparse: incompatible types in comparison expression (different address spaces):
+   kernel/trace/rethook.c:161:19: sparse:    void ( [noderef] __rcu * )( ... )
+   kernel/trace/rethook.c:161:19: sparse:    void ( * )( ... )
+   kernel/trace/rethook.c:305:27: sparse: sparse: incompatible types in comparison expression (different address spaces):
+   kernel/trace/rethook.c:305:27: sparse:    void ( [noderef] __rcu * )( ... )
+   kernel/trace/rethook.c:305:27: sparse:    void ( * )( ... )
 
------BEGIN PGP SIGNATURE-----
+vim +51 kernel/trace/rethook.c
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmVgkVgACgkQJNaLcl1U
-h9Dz9gf/VMa1PvhU/bO1IxdTJVCJWAk44qPipqzqyUg2pLaBosU5v8Dx8eAPyIg0
-DgxKA9Cycd3l3JSSqWIwJ1xEztqi2CvdmV5Ljrml8UqOvqHNPtg16JgCCOZ+Ssww
-82B8fl93C3CmUtTLFx3u3lZRKd7FjyeOiiemekfHvdbZSOn+K6Dk9zvPAE63gI0I
-5m6xp+q1eJ7Uyq7o4kCOnJOo/y9eDGX3lGqOsVQ7bnQAH6Id5y32aplMkStvzLKI
-TrSlxBsnU/wry1msxEbcgmhN2YebA1wWGNC0j6fT4xg0MzuHevZwPTSm/2sK5Exc
-fOQ/QL09MCXtNwNJ3QpItc8VaAFrVQ==
-=sHT7
------END PGP SIGNATURE-----
+    40	
+    41	/**
+    42	 * rethook_stop() - Stop using a rethook.
+    43	 * @rh: the struct rethook to stop.
+    44	 *
+    45	 * Stop using a rethook to prepare for freeing it. If you want to wait for
+    46	 * all running rethook handler before calling rethook_free(), you need to
+    47	 * call this first and wait RCU, and call rethook_free().
+    48	 */
+    49	void rethook_stop(struct rethook *rh)
+    50	{
+  > 51		rcu_assign_pointer(rh->handler, NULL);
+    52	}
+    53	
 
---woSdJmrFfLwaS8m2--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
