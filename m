@@ -1,52 +1,52 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BwHINJue"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zm2gslpG"
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9A701985
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Nov 2023 11:54:19 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C01B91733
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Nov 2023 11:57:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1700855659;
+	s=mimecast20190719; t=1700855827;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=2aD4V5XajwRwwlAZD0wppKRQVOaKEloeJFytUj8ci/Y=;
-	b=BwHINJuenxZ3G+FqH+pTY2uqMoCgcu3r0oLECmnxa2OEJVLIg7qzXIl8P/tgC4k+LId1EH
-	E7Vv+wKM1cYpUYkU97k9ivd6iE3+Yd2qBWhestAv88GAzsgipdxPZeAfAhfSYwbtZXAz6L
-	vfnBFwCBCg5pG+uVHgacKMXcyk5PCAo=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Ah4fZH2rG3znuoLxPelnFV7M3I6wQ3yjilDYXu8uVGw=;
+	b=Zm2gslpGu+KmgYSBGA8Wn8asPSbNrhov3HRO/3uhy0ZdbUklCFLDRG2Mwewa4b9tpztlmS
+	sLbB+Mvlvnj+xv4Ad0dhWoEqR+eHn+rnhp8+AUXlxGrAnSuq2CHJshmjZa7dEmIFjGr/IB
+	P7DKgiyaW3V6ET0MMdAfWSiJhFChobQ=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-680-b64kNJSpPUaxaG9rlWpUpw-1; Fri, 24 Nov 2023 14:54:16 -0500
-X-MC-Unique: b64kNJSpPUaxaG9rlWpUpw-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-40b23aef363so12495375e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Nov 2023 11:54:16 -0800 (PST)
+ us-mta-678-ZgqwfgiuPG6AC571syAs3Q-1; Fri, 24 Nov 2023 14:57:03 -0500
+X-MC-Unique: ZgqwfgiuPG6AC571syAs3Q-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-407da05ee50so12090155e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Nov 2023 11:57:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700855655; x=1701460455;
+        d=1e100.net; s=20230601; t=1700855822; x=1701460622;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
          :references:cc:to:content-language:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2aD4V5XajwRwwlAZD0wppKRQVOaKEloeJFytUj8ci/Y=;
-        b=szhz4LtcTHMNwHUwKmoVQBC/1kyVHuSX8lGBMVC8i6wZ2uHxuddnuTTh+wQPWTiFAc
-         5fjtAiFxRXyNBl/T+J3i3N28ECrd2lNOqRrJ8zi5IirGXjnXVMtzKratCFgfkLfyiFfl
-         Q5Ng29aEJhCiP3IpRo4edS0elMKm8dZO4sJ6GqyitTxzN0jqpT6e+tjT2PzcJ4LnLpWj
-         70Cvt8iaySu55kzm9iYeSjh38DpdFrPkfa0l/bnmL9WQ6XDdWRsF1F0x/P5FUWEWE4C4
-         dRNvXvPKX6AYz9Bgs7bJL+9ZbB0q7yeRB+bD895S5EVIVIaFBRI/W9OntzOhvh+0fhUE
-         GmtA==
-X-Gm-Message-State: AOJu0YzbI7539oUeIMqS3BxXLfsXkO7divUNz/BYXTIJeBl+TO7IxGfh
-	trjuN313dknH5SabyKVBR2xcXR4Z/QE7h6zJCoXQQbTHBW0AAZGFyxJdqb5gDVmSDnpsldoZAty
-	/R0rieBnP9zbn9GZxP6Im0wQ62LzJT1pi
-X-Received: by 2002:a05:600c:450b:b0:40b:37ec:377f with SMTP id t11-20020a05600c450b00b0040b37ec377fmr3391424wmo.25.1700855655557;
-        Fri, 24 Nov 2023 11:54:15 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHKN3Lz0pYG8Jzm3vhntf1mlUMYOj5+ccwMDb3v3i90nxxYQYVdKDrq6cN4gBKWUEMI1OraiA==
-X-Received: by 2002:a05:600c:450b:b0:40b:37ec:377f with SMTP id t11-20020a05600c450b00b0040b37ec377fmr3391395wmo.25.1700855654995;
-        Fri, 24 Nov 2023 11:54:14 -0800 (PST)
+        bh=Ah4fZH2rG3znuoLxPelnFV7M3I6wQ3yjilDYXu8uVGw=;
+        b=Be2GwYuD7W+KojCsi0ueXPFV2vgGeop6JOml2Gw08SLxqd/SwT+/GL+QQoh/97qdE/
+         Wn+hSGIYLqqZsJRrz2/OCb8yjp1Q3bTLiEdOI5nQdEO9KIwjzYYCQ6f/2po5KkzleuAL
+         PUUQ6dkFj2znxmdtWZIsGwc0g1r7ogz8TR2AYogoY3PVAE7vVl3a+N33Jc13tfhIuX83
+         z/A43KIoSM1tBfM3lrMwRDLX5LxZoCXIQ+Tt5r8E6U+BPaPOG6aEKNIfvT3ZsKkyHrXK
+         V8BPGXcaVHPRsSktzB1rNyjH6I8KZsvSf7y26yFDoMgg5hqKD3A3VWbo1npB2cJiN7hX
+         bnkg==
+X-Gm-Message-State: AOJu0YwL8Xyr0bh1Ehno9xotgSdSKu9/kVikZSiXMsriHR4rOI2sUcJX
+	DpnB+eeR5jjiEd9uJFBswoGOKTnRs4h9nho5ioeAc73cleYThGe5z69VBA3sdrjoNaUPRy5H5An
+	dJOU1km+3NainD7KgPsGwltCAYDLZqEbM
+X-Received: by 2002:a05:600c:19ce:b0:40a:3750:46ff with SMTP id u14-20020a05600c19ce00b0040a375046ffmr3323948wmq.11.1700855822520;
+        Fri, 24 Nov 2023 11:57:02 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF1d4T9f+8Iyu5sUe469U00u24oarcwXll3DohGRevtiGHnwrX87OT3cuyRpkpD7jPIlddBhA==
+X-Received: by 2002:a05:600c:19ce:b0:40a:3750:46ff with SMTP id u14-20020a05600c19ce00b0040a375046ffmr3323936wmq.11.1700855822127;
+        Fri, 24 Nov 2023 11:57:02 -0800 (PST)
 Received: from ?IPV6:2003:cb:c721:a000:7426:f6b4:82a3:c6ab? (p200300cbc721a0007426f6b482a3c6ab.dip0.t-ipconnect.de. [2003:cb:c721:a000:7426:f6b4:82a3:c6ab])
-        by smtp.gmail.com with ESMTPSA id w21-20020a05600c475500b0040b2976eb02sm5902588wmo.10.2023.11.24.11.54.13
+        by smtp.gmail.com with ESMTPSA id f9-20020a0560001b0900b0032196c508e3sm5072190wrz.53.2023.11.24.11.57.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Nov 2023 11:54:14 -0800 (PST)
-Message-ID: <e8f7d855-e5e7-48dd-adce-7c641a561e2b@redhat.com>
-Date: Fri, 24 Nov 2023 20:54:12 +0100
+        Fri, 24 Nov 2023 11:57:01 -0800 (PST)
+Message-ID: <eb28b2fb-1480-4db0-a7e6-792716421f3d@redhat.com>
+Date: Fri, 24 Nov 2023 20:56:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -54,8 +54,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v2 14/27] arm64: mte: Disable dynamic tag storage
- management if HW KASAN is enabled
+Subject: Re: [PATCH RFC v2 15/27] arm64: mte: Check that tag storage blocks
+ are in the same zone
 To: Alexandru Elisei <alexandru.elisei@arm.com>, catalin.marinas@arm.com,
  will@kernel.org, oliver.upton@linux.dev, maz@kernel.org,
  james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
@@ -71,7 +71,7 @@ Cc: pcc@google.com, steven.price@arm.com, anshuman.khandual@arm.com,
  linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
  linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
 References: <20231119165721.9849-1-alexandru.elisei@arm.com>
- <20231119165721.9849-15-alexandru.elisei@arm.com>
+ <20231119165721.9849-16-alexandru.elisei@arm.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -118,7 +118,7 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20231119165721.9849-15-alexandru.elisei@arm.com>
+In-Reply-To: <20231119165721.9849-16-alexandru.elisei@arm.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
@@ -126,15 +126,58 @@ Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 19.11.23 17:57, Alexandru Elisei wrote:
-> To be able to reserve the tag storage associated with a page requires that
-> the tag storage page can be migrated.
+> alloc_contig_range() requires that the requested pages are in the same
+> zone. Check that this is indeed the case before initializing the tag
+> storage blocks.
 > 
-> When HW KASAN is enabled, the kernel allocates pages, which are now tagged,
-> in non-preemptible contexts, which can make reserving the associate tag
-> storage impossible.
+> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> ---
+>   arch/arm64/kernel/mte_tag_storage.c | 33 +++++++++++++++++++++++++++++
+>   1 file changed, 33 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/mte_tag_storage.c b/arch/arm64/kernel/mte_tag_storage.c
+> index 8b9bedf7575d..fd63430d4dc0 100644
+> --- a/arch/arm64/kernel/mte_tag_storage.c
+> +++ b/arch/arm64/kernel/mte_tag_storage.c
+> @@ -265,6 +265,35 @@ void __init mte_tag_storage_init(void)
+>   	}
+>   }
+>   
+> +/* alloc_contig_range() requires all pages to be in the same zone. */
+> +static int __init mte_tag_storage_check_zone(void)
+> +{
+> +	struct range *tag_range;
+> +	struct zone *zone;
+> +	unsigned long pfn;
+> +	u32 block_size;
+> +	int i, j;
+> +
+> +	for (i = 0; i < num_tag_regions; i++) {
+> +		block_size = tag_regions[i].block_size;
+> +		if (block_size == 1)
+> +			continue;
+> +
+> +		tag_range = &tag_regions[i].tag_range;
+> +		for (pfn = tag_range->start; pfn <= tag_range->end; pfn += block_size) {
+> +			zone = page_zone(pfn_to_page(pfn));
+> +			for (j = 1; j < block_size; j++) {
+> +				if (page_zone(pfn_to_page(pfn + j)) != zone) {
+> +					pr_err("Tag storage block pages in different zones");
+> +					return -EINVAL;
+> +				}
+> +			}
+> +		}
+> +	}
+> +
+> +	 return 0;
+> +}
+> +
 
-I assume that it's the only in-kernel user that actually requires tagged 
-memory (besides for user space), correct?
+Looks like something that ordinary CMA provides. See cma_activate_area().
+
+Can't we find a way to let CMA do CMA thingies and only be a user of 
+that? What would be required to make the performance issue you spelled 
+out in the cover letter be gone and not have to open-code that in arch code?
 
 -- 
 Cheers,
