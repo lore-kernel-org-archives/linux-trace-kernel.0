@@ -1,52 +1,52 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hYZnUyJC"
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98762172A
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Nov 2023 11:35:53 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E7HQOsiC"
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC47BCE
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Nov 2023 11:36:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1700854552;
+	s=mimecast20190719; t=1700854616;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WpgGA1S9tEUCceeDcgeme0U/Hx75ujMCHkDsInmVnz8=;
-	b=hYZnUyJCtuxBJF3BJhLagfPVn9Du7PDIAMMowAboQjEov7BA1gd/fhhJZNwKa/3wA38+Tu
-	tn2PDd/VxHGnHmIoBPo2s6d4pnLnJve/WdlNYItwEsADxdPAK1YLyiXVHDduSXk2jtxFfT
-	NmOIpiqHKnFTm5vpXQ+a8ysSFTZVDpY=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=yhz7X34rtir/QI6I24qRvGRWw3KId1ROlCi2joxVTvo=;
+	b=E7HQOsiCfixZLmXewFJGUrBeD3gHW2OSjAQGy5dFD0uNOYaWqZ9EKorLT8S9PS8b0xyI8x
+	ijTuh86cUwzjYnR3z/tSYSdK9zK8w0tgWdpVBetHLcnfhFq+1OmxRK+KwZCRByAI6NleNR
+	ed1CVG3iPg4JDmPNjOTJ8KMALfH0fgc=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-612-pC5GjrWWPFWcN5LQ6loc1g-1; Fri, 24 Nov 2023 14:35:51 -0500
-X-MC-Unique: pC5GjrWWPFWcN5LQ6loc1g-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-332eecd96feso145706f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Nov 2023 11:35:51 -0800 (PST)
+ us-mta-417-TwF8eo46OvSkwJStXWqFPg-1; Fri, 24 Nov 2023 14:36:55 -0500
+X-MC-Unique: TwF8eo46OvSkwJStXWqFPg-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-332ee20a3f0so245522f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Nov 2023 11:36:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700854550; x=1701459350;
+        d=1e100.net; s=20230601; t=1700854614; x=1701459414;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
          :references:cc:to:content-language:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WpgGA1S9tEUCceeDcgeme0U/Hx75ujMCHkDsInmVnz8=;
-        b=SNG0FnG8kYoTTmsaA7RyX43tqQQ6YNkwOgTOU/YkvAWG1mQWlreKTAwher3Ja/ot01
-         7WHgI3sGqeUQnACPaI1FYSaaalmSGnovWbkXxMWFnhSPIphEDeP0gNbPWltajIYNqvot
-         5nHd7UIVqjsGZM+PhF0L7gJWQJrHVWVYJXn07jigdOE63PyHr5Nci2PiPKog3qyDoI9l
-         tYQ7oCcAi2zsaowOXLSPn/7M/0U174jHs1MsCTUjj3Q8duz8IaghKbz6tOt8iJLsFBnc
-         X4YIxp5jNtL9rWwovuz5peQbHPgHSSTp4JJYPJWScA0p6U8dMVuU2jcLGH0yr08cFHLh
-         UaBQ==
-X-Gm-Message-State: AOJu0YzsELVrLCL7KdM3zWv9xL86Kb/vBuEcjOB6j5dUA8lPTKe1BZ5O
-	kyya3FT0p9WjyxOJB29RuS1QT2MXl/ivWg2vL7HQEjsFUEerp8ZcLszEIj9ypwr8ZbtiQpPgxeY
-	xAqJ8vceuxQKeMxNweOma0CrzPCFYXu5R
-X-Received: by 2002:a5d:484b:0:b0:331:82c4:929f with SMTP id n11-20020a5d484b000000b0033182c4929fmr2558515wrs.27.1700854550043;
-        Fri, 24 Nov 2023 11:35:50 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGgpR5xD7cIvx/57aWOuiJdZd42w0gDGPcl6JL7MayZiXmJSxWmriDosq0n4Yf76TvU+Hgk/Q==
-X-Received: by 2002:a5d:484b:0:b0:331:82c4:929f with SMTP id n11-20020a5d484b000000b0033182c4929fmr2558467wrs.27.1700854549666;
-        Fri, 24 Nov 2023 11:35:49 -0800 (PST)
+        bh=yhz7X34rtir/QI6I24qRvGRWw3KId1ROlCi2joxVTvo=;
+        b=FKrny+wPAqNSDBI8AswBYTzw1C616oyDgf0GsMafJQyuScOG4P7z3SLZTvGpcEgKnn
+         x5MmsNjtZ27/ZegE7A/2BT1hzk0eip9AUTmwcWvQOdspY8aT9hH34Ei+i/gCITcH1UlV
+         srAejG3Lf7XVhb7NJZ++yMoAKoKAgqVxZT3ET6cszX0wVwSdEJ1YBLy7W1vQNL/pmpgj
+         IqboLIL7fI4xxrxNTWdL6t28B3QnLtrqS1suEN+hO52i0sRO1FPFIQ+2tOxX0I8sJpnH
+         qQkPF+SX+i795Sc+G9j5axje512D89jo49s7otW4qHdYyNxd5bgjKMryKFcLcbo2edic
+         jCGg==
+X-Gm-Message-State: AOJu0YwMHUg7QCyJAF7khBZjSjm+SJw6rXbKrvS9eNVnd5e5HGGZxL4m
+	8ZACJE6XYm4dNdnXWLWZjA60Gzzprk3SRPVXrlNjOE5ULBPbgBpQsod5Wp9Z0hPFwx2RABi6Afe
+	z8CPHYS+QtN2Sir9TT3AOI/5IQPzEQMl2
+X-Received: by 2002:a05:6000:b8b:b0:332:c699:f7b0 with SMTP id dl11-20020a0560000b8b00b00332c699f7b0mr3529171wrb.31.1700854614556;
+        Fri, 24 Nov 2023 11:36:54 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEtWiibCD3+vrVp4mDgf1cyQncOLRSHqFl89/CuHG7jW1X5In5uJNqN36gsj25aPlrpopXgNQ==
+X-Received: by 2002:a05:6000:b8b:b0:332:c699:f7b0 with SMTP id dl11-20020a0560000b8b00b00332c699f7b0mr3529146wrb.31.1700854614204;
+        Fri, 24 Nov 2023 11:36:54 -0800 (PST)
 Received: from ?IPV6:2003:cb:c721:a000:7426:f6b4:82a3:c6ab? (p200300cbc721a0007426f6b482a3c6ab.dip0.t-ipconnect.de. [2003:cb:c721:a000:7426:f6b4:82a3:c6ab])
-        by smtp.gmail.com with ESMTPSA id r5-20020a5d4985000000b00332d3b89561sm1764366wrq.97.2023.11.24.11.35.47
+        by smtp.gmail.com with ESMTPSA id r5-20020a5d4985000000b00332d3b89561sm1764366wrq.97.2023.11.24.11.36.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Nov 2023 11:35:49 -0800 (PST)
-Message-ID: <dadc9d17-f311-47f1-a264-28b42bed0ab0@redhat.com>
-Date: Fri, 24 Nov 2023 20:35:47 +0100
+        Fri, 24 Nov 2023 11:36:53 -0800 (PST)
+Message-ID: <45466b05-d620-41e5-8a2b-05c420b8fa7b@redhat.com>
+Date: Fri, 24 Nov 2023 20:36:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -54,8 +54,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v2 05/27] mm: page_alloc: Add an arch hook to allow
- prep_new_page() to fail
+Subject: Re: [PATCH RFC v2 06/27] mm: page_alloc: Allow an arch to hook early
+ into free_pages_prepare()
 To: Alexandru Elisei <alexandru.elisei@arm.com>, catalin.marinas@arm.com,
  will@kernel.org, oliver.upton@linux.dev, maz@kernel.org,
  james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
@@ -71,7 +71,7 @@ Cc: pcc@google.com, steven.price@arm.com, anshuman.khandual@arm.com,
  linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
  linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
 References: <20231119165721.9849-1-alexandru.elisei@arm.com>
- <20231119165721.9849-6-alexandru.elisei@arm.com>
+ <20231119165721.9849-7-alexandru.elisei@arm.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -118,24 +118,20 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20231119165721.9849-6-alexandru.elisei@arm.com>
+In-Reply-To: <20231119165721.9849-7-alexandru.elisei@arm.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 19.11.23 17:56, Alexandru Elisei wrote:
-> Introduce arch_prep_new_page(), which will be used by arm64 to reserve tag
-> storage for an allocated page. Reserving tag storage can fail, for example,
-> if the tag storage page has a short pin on it, so allow prep_new_page() ->
-> arch_prep_new_page() to similarly fail.
+On 19.11.23 17:57, Alexandru Elisei wrote:
+> Add arch_free_pages_prepare() hook that is called before that page flags
+> are cleared. This will be used by arm64 when explicit management of tag
+> storage pages is enabled.
 
-But what are the side-effects of this? How does the calling code recover?
-
-E.g., what if we need to populate a page into user space, but that 
-particular page we allocated fails to be prepared? So we inject a signal 
-into that poor process?
+Can you elaborate a bit what exactly will be done by that code with that 
+information?
 
 -- 
 Cheers,
