@@ -1,264 +1,157 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 235A8189;
-	Thu, 23 Nov 2023 09:50:46 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE3FE1042;
-	Thu, 23 Nov 2023 09:51:31 -0800 (PST)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.26.148])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 43FCC3F7A6;
-	Thu, 23 Nov 2023 09:50:44 -0800 (PST)
-Date: Thu, 23 Nov 2023 17:50:41 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mhiramat@kernel.org, lkft@linaro.org, lkft-triage@lists.linaro.org
-Subject: Re: selftests: ftrace: WARNING: __list_del_entry_valid_or_report
- (lib/list_debug.c:62 (discriminator 1))
-Message-ID: <ZV-Q8e-gAwiO0oZF@FVFF77S0Q05N.cambridge.arm.com>
-References: <20231116123016.140576-1-naresh.kamboju@linaro.org>
- <20231120153623.49c5119b@gandalf.local.home>
- <CA+G9fYsDAOPBVyBhxKMuHW_YUGA0KZTZiZ2pT_msyGuRNsbw8w@mail.gmail.com>
- <20231122101251.22d6fa2e@gandalf.local.home>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B5D639;
+	Fri, 24 Nov 2023 01:03:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DuOxk/DR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7454C433C8;
+	Fri, 24 Nov 2023 01:03:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700787791;
+	bh=MK5tjkjB52MplO5zrLGX/U/QKetESX/No8t7aMgG+PE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DuOxk/DRRLcNBbp2QjtM0XWSEBjeNGb3i/iSFwfdsRhmFFcZ4J/kMkEAlTVwMA5wc
+	 IWAg2Iux0WS3sJAnKFWuet3UQsfQt0/WxY3MXcSRqk2IIUnBY9/zKNVgj89K6mWPsy
+	 6TFrUBPY3bMsYNwqxySVEdx0OT1OGnBwQ9KLfGGuvc++4zjT84wGAf3Tx2PEa7HjIx
+	 eCjSJd0Ls67dDcSR8FhPlJ+6CLYNYClJCSmdjixCWA5gYEs1kGTScRoqWLncyYwKqO
+	 no//WB50pWt1jwcGPjIR3gd7dNKQMXE6GJZMrnYcm66XwlxHMbJky32mNDIlgcre3E
+	 DcM+dZO8WQYcw==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: JP Kobryn <inwardvessel@gmail.com>,
+	bpf@vger.kernel.org,
+	kernel-team@meta.com,
+	rostedt@goodmis.org,
+	peterz@infradead.org
+Subject: [PATCH] rethook: Use __rcu pointer for rethook::handler
+Date: Fri, 24 Nov 2023 10:03:06 +0900
+Message-Id: <170078778632.209874.7893551840863388753.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231122101251.22d6fa2e@gandalf.local.home>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 22, 2023 at 10:12:51AM -0500, Steven Rostedt wrote:
-> On Wed, 22 Nov 2023 19:49:43 +0530
-> Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> 
-> > Hi Steven,
-> > 
-> > 
-> > 
-> > On Tue, 21 Nov 2023 at 02:06, Steven Rostedt <rostedt@goodmis.org> wrote:
-> > >
-> > > On Thu, 16 Nov 2023 18:00:16 +0530
-> > > Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> > [  282.726999] Unexpected kernel BRK exception at EL1
-> 
-> What's a "BRK exception"?
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-That's triggered by a BRK instruction (software breakpoint), we use it like UD2
-on x86.
+Since the rethook::handler is an RCU-maganged pointer so that it will
+notice readers the rethook is stopped (unregistered) or not, it should
+be an __rcu pointer and use appropriate functions to be accessed. This
+will use appropriate memory barrier when accessing it. OTOH, rethook::data
+is never changed, so we don't need to check it in get_kretprobe().
 
-> > [  282.731840] Internal error: BRK handler: 00000000f20003e8 [#1] PREEMPT SMP
+Fixes: 54ecbe6f1ed5 ("rethook: Add a generic return hook")
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ include/linux/kprobes.h |    6 ++----
+ include/linux/rethook.h |    2 +-
+ kernel/trace/rethook.c  |   21 ++++++++++++---------
+ 3 files changed, 15 insertions(+), 14 deletions(-)
 
-That lump of hex here means "this was triggered by a BRK #1000" instruction.
+diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+index 64672bace560..0ff44d6633e3 100644
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -197,10 +197,8 @@ extern int arch_trampoline_kprobe(struct kprobe *p);
+ #ifdef CONFIG_KRETPROBE_ON_RETHOOK
+ static nokprobe_inline struct kretprobe *get_kretprobe(struct kretprobe_instance *ri)
+ {
+-	RCU_LOCKDEP_WARN(!rcu_read_lock_any_held(),
+-		"Kretprobe is accessed from instance under preemptive context");
+-
+-	return (struct kretprobe *)READ_ONCE(ri->node.rethook->data);
++	/* rethook::data is non-changed field, so that you can access it freely. */
++	return (struct kretprobe *)ri->node.rethook->data;
+ }
+ static nokprobe_inline unsigned long get_kretprobe_retaddr(struct kretprobe_instance *ri)
+ {
+diff --git a/include/linux/rethook.h b/include/linux/rethook.h
+index ce69b2b7bc35..164cd32c25cd 100644
+--- a/include/linux/rethook.h
++++ b/include/linux/rethook.h
+@@ -28,7 +28,7 @@ typedef void (*rethook_handler_t) (struct rethook_node *, void *, unsigned long,
+  */
+ struct rethook {
+ 	void			*data;
+-	rethook_handler_t	handler;
++	rethook_handler_t __rcu handler;
+ 	struct objpool_head	pool;
+ 	struct rcu_head		rcu;
+ };
+diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
+index 6fd7d4ecbbc6..77f0e987bbff 100644
+--- a/kernel/trace/rethook.c
++++ b/kernel/trace/rethook.c
+@@ -48,7 +48,7 @@ static void rethook_free_rcu(struct rcu_head *head)
+  */
+ void rethook_stop(struct rethook *rh)
+ {
+-	WRITE_ONCE(rh->handler, NULL);
++	rcu_assign_pointer(rh->handler, NULL);
+ }
+ 
+ /**
+@@ -63,7 +63,7 @@ void rethook_stop(struct rethook *rh)
+  */
+ void rethook_free(struct rethook *rh)
+ {
+-	WRITE_ONCE(rh->handler, NULL);
++	rcu_assign_pointer(rh->handler, NULL);
+ 
+ 	call_rcu(&rh->rcu, rethook_free_rcu);
+ }
+@@ -107,7 +107,7 @@ struct rethook *rethook_alloc(void *data, rethook_handler_t handler,
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	rh->data = data;
+-	rh->handler = handler;
++	rcu_assign_pointer(rh->handler, handler);
+ 
+ 	/* initialize the objpool for rethook nodes */
+ 	if (objpool_init(&rh->pool, num, size, GFP_KERNEL, rh,
+@@ -135,9 +135,12 @@ static void free_rethook_node_rcu(struct rcu_head *head)
+  */
+ void rethook_recycle(struct rethook_node *node)
+ {
+-	lockdep_assert_preemption_disabled();
++	rethook_handler_t handler;
++
++	handler = rcu_dereference_check(node->rethook->handler,
++					rcu_read_lock_any_held());
+ 
+-	if (likely(READ_ONCE(node->rethook->handler)))
++	if (likely(handler))
+ 		objpool_push(node, &node->rethook->pool);
+ 	else
+ 		call_rcu(&node->rcu, free_rethook_node_rcu);
+@@ -153,10 +156,9 @@ NOKPROBE_SYMBOL(rethook_recycle);
+  */
+ struct rethook_node *rethook_try_get(struct rethook *rh)
+ {
+-	rethook_handler_t handler = READ_ONCE(rh->handler);
+-
+-	lockdep_assert_preemption_disabled();
++	rethook_handler_t handler;
+ 
++	handler = rcu_dereference_check(rh->handler, rcu_read_lock_any_held());
+ 	/* Check whether @rh is going to be freed. */
+ 	if (unlikely(!handler))
+ 		return NULL;
+@@ -300,7 +302,8 @@ unsigned long rethook_trampoline_handler(struct pt_regs *regs,
+ 		rhn = container_of(first, struct rethook_node, llist);
+ 		if (WARN_ON_ONCE(rhn->frame != frame))
+ 			break;
+-		handler = READ_ONCE(rhn->rethook->handler);
++		handler = rcu_dereference_check(rhn->rethook->handler,
++						rcu_read_lock_any_held());
+ 		if (handler)
+ 			handler(rhn, rhn->rethook->data,
+ 				correct_ret_addr, regs);
 
-That immediate (0x3e8 / 1000) is what GCC/Clang use for __builtin_trap(), which
-is generated for a bunch of reasons, usually a sanitizer like UBSAN, or options
-to trap on runtime issues.
-
-Naresh, where can I find the config used for this run? I can try to reproduce
-this and investigate.
-
-Thanks,
-Mark.
-
-> > [  282.738752] Modules linked in: ftrace_direct ftrace_direct_too
-> > hdlcd tda998x onboard_usb_hub drm_dma_helper cec crct10dif_ce
-> > drm_kms_helper fuse drm backlight dm_mod ip_tables x_tables [last
-> > unloaded: ftrace_direct]
-> > [  282.758152] CPU: 0 PID: 987 Comm: rmmod Not tainted 6.6.2-rc1 #1
-> 
-> So this happened on removing a module? Unloading ftrace_direct?
-> 
-> This could be a direct trampoline bug.
-> 
-> But it doesn't look to be related to eventfs, so I'm going with my other patches.
-> 
-> Thanks,
-> 
-> -- Steve
-> 
-> 
-> > [  282.764191] Hardware name: ARM Juno development board (r2) (DT)
-> > [  282.770138] pstate: a00000c5 (NzCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> > [  282.777133] pc : ring_buffer_lock_reserve
-> > (kernel/trace/ring_buffer.c:3304 (discriminator 1)
-> > kernel/trace/ring_buffer.c:3819 (discriminator 1))
-> > [  282.782230] lr : trace_function (kernel/trace/trace.c:992
-> > kernel/trace/trace.c:3078)
-> > [  282.786360] sp : ffff80008428ba20
-> > [  282.789695] x29: ffff80008428ba20 x28: ffff00082bb367c0 x27: 0000000000000000
-> > [  282.796898] x26: ffff800080371d84 x25: 0000000000000000 x24: ffff00097ed1e4b0
-> > [  282.804100] x23: ffff000800018400 x22: 0000000000000000 x21: 0000000000000018
-> > [  282.811302] x20: ffff000800018400 x19: ffff000800041400 x18: ffffffffffffffff
-> > [  282.818504] x17: 0000000000000000 x16: 0000000000000000 x15: ffff800081d2ec58
-> > [  282.825706] x14: ffffffffffffffff x13: ffff80008428beb0 x12: 000002550000ffff
-> > [  282.832908] x11: ffff800083343078 x10: ffff80008428bbc0 x9 : ffff8000803e3110
-> > [  282.840110] x8 : ffff80008428ba98 x7 : 0000000000000000 x6 : 0000000000000009
-> > [  282.847311] x5 : 0000000000000081 x4 : fffffffffffffffb x3 : 0000000000000001
-> > [  282.854513] x2 : ffffffffffffffff x1 : 0000000000000000 x0 : 0000000000000000
-> > [  282.861715] Call trace:
-> > [  282.864179] ring_buffer_lock_reserve
-> > (kernel/trace/ring_buffer.c:3304 (discriminator 1)
-> > kernel/trace/ring_buffer.c:3819 (discriminator 1))
-> > [  282.868920] trace_function (kernel/trace/trace.c:992
-> > kernel/trace/trace.c:3078)
-> > [  282.872702] tracer_hardirqs_off (kernel/trace/trace_irqsoff.c:279
-> > kernel/trace/trace_irqsoff.c:397 kernel/trace/trace_irqsoff.c:619
-> > kernel/trace/trace_irqsoff.c:616)
-> > [  282.877009] trace_hardirqs_off.part.0
-> > (kernel/trace/trace_preemptirq.c:78 (discriminator 1))
-> > [  282.881748] trace_hardirqs_off (kernel/trace/trace_preemptirq.c:94)
-> > [  282.885791] obj_cgroup_charge (mm/memcontrol.c:3236 (discriminator
-> > 1) mm/memcontrol.c:3364 (discriminator 1))
-> > [  282.889918] kmem_cache_alloc (mm/slab.h:503 (discriminator 2)
-> > mm/slab.h:714 (discriminator 2) mm/slub.c:3460 (discriminator 2)
-> > mm/slub.c:3486 (discriminator 2) mm/slub.c:3493 (discriminator 2)
-> > mm/slub.c:3502 (discriminator 2))
-> > [  282.893873] __anon_vma_prepare (mm/rmap.c:197)
-> > [  282.897999] __handle_mm_fault (mm/memory.c:4111 (discriminator 2)
-> > mm/memory.c:3670 (discriminator 2) mm/memory.c:4981 (discriminator 2)
-> > mm/memory.c:5122 (discriminator 2))
-> > [  282.902213] handle_mm_fault (mm/memory.c:5287)
-> > [  282.906077] do_page_fault (arch/arm64/mm/fault.c:513
-> > arch/arm64/mm/fault.c:626)
-> > [  282.909856] do_translation_fault (arch/arm64/mm/fault.c:714)
-> > [  282.914068] do_mem_abort (arch/arm64/mm/fault.c:846 (discriminator 1))
-> > [  282.917591] el0_da (arch/arm64/include/asm/daifflags.h:28
-> > arch/arm64/kernel/entry-common.c:133
-> > arch/arm64/kernel/entry-common.c:144
-> > arch/arm64/kernel/entry-common.c:547)
-> > [  282.920590] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:700)
-> > [  282.924894] el0t_64_sync (arch/arm64/kernel/entry.S:595)
-> > [ 282.928593] Code: 88037c22 35ffffa3 17fffff8 94549eb9 (d4207d00)
-> > All code
-> > ========
-> >    0: 88037c22 stxr w3, w2, [x1]
-> >    4: 35ffffa3 cbnz w3, 0xfffffffffffffff8
-> >    8: 17fffff8 b 0xffffffffffffffe8
-> >    c: 94549eb9 bl 0x1527af0
-> >   10:* d4207d00 brk #0x3e8 <-- trapping instruction
-> > 
-> > Code starting with the faulting instruction
-> > ===========================================
-> >    0: d4207d00 brk #0x3e8
-> > [  282.934716] ---[ end trace 0000000000000000 ]---
-> > [  282.939358] note: rmmod[987] exited with irqs disabled
-> > [  282.945441] note: rmmod[987] exited with preempt_count 2
-> > [  282.951337] ------------[ cut here ]------------
-> > [  282.955980] WARNING: CPU: 0 PID: 0 at kernel/context_tracking.c:128
-> > ct_kernel_exit.constprop.0 (kernel/context_tracking.c:128
-> > (discriminator 1))
-> > [  282.965683] Modules linked in: ftrace_direct ftrace_direct_too
-> > hdlcd tda998x onboard_usb_hub drm_dma_helper cec crct10dif_ce
-> > drm_kms_helper fuse drm backlight dm_mod ip_tables x_tables [last
-> > unloaded: ftrace_direct]
-> > [  282.985075] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G      D
-> >    6.6.2-rc1 #1
-> > [  282.992767] Hardware name: ARM Juno development board (r2) (DT)
-> > [  282.998713] pstate: 200003c5 (nzCv DAIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> > [  283.005708] pc : ct_kernel_exit.constprop.0
-> > (kernel/context_tracking.c:128 (discriminator 1))
-> > [  283.010965] lr : ct_idle_enter (kernel/context_tracking.c:321)
-> > [  283.014915] sp : ffff800083283b90
-> > [  283.018249] x29: ffff800083283b90 x28: 00000000826a40ac x27: 0000000000000000
-> > [  283.025452] x26: 00000000fef770dc x25: 0000000000000001 x24: ffff000822878880
-> > [  283.032654] x23: 0000000000000001 x22: 00000000000003c0 x21: 0000000000010000
-> > [  283.039856] x20: ffff80008172c118 x19: ffff00097ed16da0 x18: 0000000000000010
-> > [  283.047059] x17: 0000000000000000 x16: 3030303030303020 x15: 0000000000000000
-> > [  283.054260] x14: 0000000000000000 x13: 3220746e756f635f x12: 0000000000000003
-> > [  283.061462] x11: ffff800083343078 x10: ffff800083283bc0 x9 : ffff800080039620
-> > [  283.068665] x8 : ffff800083283af8 x7 : 0000000000000000 x6 : 000000000000003f
-> > [  283.075867] x5 : 4000000000000002 x4 : ffff8008fc5b4000 x3 : ffff800083283b90
-> > [  283.083069] x2 : ffff800082762da0 x1 : 4000000000000000 x0 : ffff800082762da0
-> > [  283.090271] Call trace:
-> > [  283.092736] ct_kernel_exit.constprop.0
-> > (kernel/context_tracking.c:128 (discriminator 1))
-> > [  283.097646] ct_idle_enter (kernel/context_tracking.c:321)
-> > [  283.101249] cpu_suspend (arch/arm64/kernel/suspend.c:130)
-> > [  283.104854] psci_cpu_suspend_enter (drivers/firmware/psci/psci.c:488)
-> > [  283.109244] psci_enter_idle_state
-> > (drivers/cpuidle/cpuidle-psci.c:190 (discriminator 10))
-> > [  283.113544] cpuidle_enter_state (drivers/cpuidle/cpuidle.c:267)
-> > [  283.117757] cpuidle_enter (drivers/cpuidle/cpuidle.c:390 (discriminator 2))
-> > [  283.121361] do_idle (kernel/sched/idle.c:134
-> > kernel/sched/idle.c:215 kernel/sched/idle.c:282)
-> > [  283.124619] cpu_startup_entry (kernel/sched/idle.c:380 (discriminator 1))
-> > [  283.128572] rest_init (include/linux/cpumask.h:1058 init/main.c:700)
-> > [  283.131913] arch_call_rest_init+0x18/0x20
-> > [  283.136042] start_kernel (init/main.c:882 (discriminator 1))
-> > [  283.139734] __primary_switched (arch/arm64/kernel/head.S:524)
-> > [  283.143775] ---[ end trace 0000000000000000 ]---
-> > 
-> > Links:
-> > - https://lkft.validation.linaro.org/scheduler/job/7043802#L1756
-> > 
-> > --
-> > Linaro LKFT
-> > https://lkft.linaro.org
-> > 
-> > > Note, there's a similar bug on 6.7-rc1 which I'll fix first. And when
-> > > that's accepted, I'll push this one for v6.6. This may be two patches as
-> > > one if the d_invalidate() issue, and another is a memory leak fix.
-> > >
-> > > -- Steve
-> > >
-> > > diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-> > > index 5fcfb634fec2..b60048469df1 100644
-> > > --- a/fs/tracefs/event_inode.c
-> > > +++ b/fs/tracefs/event_inode.c
-> > > @@ -289,6 +289,8 @@ void eventfs_set_ef_status_free(struct tracefs_inode *ti, struct dentry *dentry)
-> > >                 ef = dentry->d_fsdata;
-> > >                 if (ef)
-> > >                         free_ef(ef);
-> > > +               else
-> > > +                       kfree(ei);
-> > >                 return;
-> > >         }
-> > >
-> > > @@ -342,7 +344,6 @@ static void eventfs_post_create_dir(struct eventfs_file *ef)
-> > >  static struct dentry *
-> > >  create_dentry(struct eventfs_file *ef, struct dentry *parent, bool lookup)
-> > >  {
-> > > -       bool invalidate = false;
-> > >         struct dentry *dentry;
-> > >
-> > >         mutex_lock(&eventfs_mutex);
-> > > @@ -387,23 +388,24 @@ create_dentry(struct eventfs_file *ef, struct dentry *parent, bool lookup)
-> > >                         eventfs_post_create_dir(ef);
-> > >                 dentry->d_fsdata = ef;
-> > >         } else {
-> > > -               /* A race here, should try again (unless freed) */
-> > > -               invalidate = true;
-> > > -
-> > >                 /*
-> > > +                * If we are here then the directory is being freed.
-> > > +                * The simple_recursive_removal() will get rid of the dentry
-> > > +                * here.
-> > > +                */
-> > > +               dentry = NULL;
-> > > +                /*
-> > >                  * Should never happen unless we get here due to being freed.
-> > >                  * Otherwise it means two dentries exist with the same name.
-> > >                  */
-> > >                 WARN_ON_ONCE(!ef->is_freed);
-> > >         }
-> > >         mutex_unlock(&eventfs_mutex);
-> > > -       if (invalidate)
-> > > -               d_invalidate(dentry);
-> > >
-> > > -       if (lookup || invalidate)
-> > > +       if (lookup)
-> > >                 dput(dentry);
-> > >
-> > > -       return invalidate ? NULL : dentry;
-> > > +       return dentry;
-> > >  }
-> > >
-> > >  static bool match_event_file(struct eventfs_file *ef, const char *name)
-> > > --
-> > > 2.42.0
-> > >  
-> 
