@@ -1,14 +1,14 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7AF2BEA;
-	Mon, 27 Nov 2023 04:10:07 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 31C2F10F;
+	Mon, 27 Nov 2023 05:03:13 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA2DA2F4;
-	Mon, 27 Nov 2023 04:10:54 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82C4A2F4;
+	Mon, 27 Nov 2023 05:04:00 -0800 (PST)
 Received: from raptor (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 39E373F73F;
-	Mon, 27 Nov 2023 04:10:02 -0800 (PST)
-Date: Mon, 27 Nov 2023 12:09:59 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B14753F73F;
+	Mon, 27 Nov 2023 05:03:07 -0800 (PST)
+Date: Mon, 27 Nov 2023 13:03:04 +0000
 From: Alexandru Elisei <alexandru.elisei@arm.com>
 To: David Hildenbrand <david@redhat.com>
 Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
@@ -25,12 +25,12 @@ Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
 	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
 	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
 	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v2 05/27] mm: page_alloc: Add an arch hook to allow
- prep_new_page() to fail
-Message-ID: <ZWSHF2hVOPTBIQLY@raptor>
+Subject: Re: [PATCH RFC v2 06/27] mm: page_alloc: Allow an arch to hook early
+ into free_pages_prepare()
+Message-ID: <ZWSTiCghf8nMFy4G@raptor>
 References: <20231119165721.9849-1-alexandru.elisei@arm.com>
- <20231119165721.9849-6-alexandru.elisei@arm.com>
- <dadc9d17-f311-47f1-a264-28b42bed0ab0@redhat.com>
+ <20231119165721.9849-7-alexandru.elisei@arm.com>
+ <45466b05-d620-41e5-8a2b-05c420b8fa7b@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -39,48 +39,38 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dadc9d17-f311-47f1-a264-28b42bed0ab0@redhat.com>
+In-Reply-To: <45466b05-d620-41e5-8a2b-05c420b8fa7b@redhat.com>
 
 Hi,
 
-Thank you so much for your comments, there are genuinely useful.
-
-On Fri, Nov 24, 2023 at 08:35:47PM +0100, David Hildenbrand wrote:
-> On 19.11.23 17:56, Alexandru Elisei wrote:
-> > Introduce arch_prep_new_page(), which will be used by arm64 to reserve tag
-> > storage for an allocated page. Reserving tag storage can fail, for example,
-> > if the tag storage page has a short pin on it, so allow prep_new_page() ->
-> > arch_prep_new_page() to similarly fail.
+On Fri, Nov 24, 2023 at 08:36:52PM +0100, David Hildenbrand wrote:
+> On 19.11.23 17:57, Alexandru Elisei wrote:
+> > Add arch_free_pages_prepare() hook that is called before that page flags
+> > are cleared. This will be used by arm64 when explicit management of tag
+> > storage pages is enabled.
 > 
-> But what are the side-effects of this? How does the calling code recover?
-> 
-> E.g., what if we need to populate a page into user space, but that
-> particular page we allocated fails to be prepared? So we inject a signal
-> into that poor process?
+> Can you elaborate a bit what exactly will be done by that code with that
+> information?
 
-When the page fails to be prepared, it is put back to the tail of the
-freelist with __free_one_page(.., FPI_TO_TAIL). If all the allocation paths
-are exhausted and no page has been found for which tag storage has been
-reserved, then that's treated like an OOM situation.
+Of course.
 
-I have been thinking about this, and I think I can simplify the code by
-making tag reservation a best effort approach. The page can be allocated
-even if reserving tag storage fails, but the page is marked as invalid in
-set_pte_at() (PAGE_NONE + an extra bit to tell arm64 that it needs tag
-storage) and next time it is accessed, arm64 will reserve tag storage in
-the fault handling code (the mechanism for that is implemented in patch #19
-of the series, "mm: mprotect: Introduce PAGE_FAULT_ON_ACCESS for
-mprotect(PROT_MTE)").
+The MTE code that is in the kernel today uses the PG_arch_2 page flag, which it
+renames to PG_mte_tagged, to track if a page has been mapped with tagging
+enabled. That flag is cleared by free_pages_prepare() when it does:
 
-With this new approach, prep_new_page() stays the way it is, and no further
-changes are required for the page allocator, as there are already arch
-callbacks that can be used for that, for example tag_clear_highpage() and
-arch_alloc_page(). The downside is extra page faults, which might impact
-performance.
+	page->flags &= ~PAGE_FLAGS_CHECK_AT_PREP;
 
-What do you think?
+When tag storage management is enabled, tag storage is reserved for a page if
+and only if the page is mapped as tagged. When a page is freed, the code looks
+at the PG_mte_tagged flag to determine if the page was mapped as tagged, and
+therefore has tag storage reserved, to determine if the corresponding tag
+storage should also be freed.
 
-Thanks,
+I have considered using arch_free_page(), but free_pages_prepare() calls the
+function after the flags are cleared.
+
+Does that answer your question?
+
 Alex
 
 > 
