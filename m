@@ -1,157 +1,212 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="c2Gvn9NW"
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2056.outbound.protection.outlook.com [40.107.220.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 127D2A8;
-	Mon, 27 Nov 2023 07:00:06 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=drtO6lKZGcWG33X7pUiZq1CoiXJtIzPB/Ywy2UvGvuqLtw2WisQsYnd4jIfCiiRO7dHAVeU3e3sD6e8Xcw/fXUjevxI2HA/v7Cmk/7eL8Mdj/A2j8qp1KE2NjcdHleLTqQ9VRXJObuL1I6PEUeiItFKjYf4ugFEIFuFnCshUBjIc1/6dZCA06nBAuD9GF3xoVImcket4DFamtqjteO30JjUS+2lA+xZGp/DtAxZZ8Hmh7wYH+KSqpcIbaqnyp4C4+dJoOXgJqyzjRSMyJKX4qfrE2gaZ14I2K/KuqX2DxVOvRwwazPw3eROOw9afazmCmP4Yx0+ysW/Na21LrDUesg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yA0uhSJgnP48ukMxecgWGXXl+f8IoJF64sm9P1OzB8k=;
- b=Iukc0kiqlScFaRnJtbG0BjuaxWa8guK+bjst9VV0eyK9PzHoXlWH0LLunKqWF9qegQ3sVb39U26uexq2542GvJQa1tlg/mYgFBefy5EWxVripRdxZhf/x646fr2qr/2yBEeZMW/L3oHKOruwW37hg1+em8HQSk+QHKjV5QIjcc9BGJn2HZES2E/bFJsGWj/gpSTf52ZmEPOkSVwKaSaZkMrJykmz2lEDjh+6/UK5R89wx1MuHKuTX0MZdmPjV8VMT5sxw9m+QJQd/6yuf+6nzK6CJQs5O8AAZRt1yAecDEqUb2hawpudSFmoiozZgSIgZYdDNSINdU1aOxRXqOQzLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yA0uhSJgnP48ukMxecgWGXXl+f8IoJF64sm9P1OzB8k=;
- b=c2Gvn9NWqwy1au1q854HOhAfamuPLKdU44F5FpG+GLwn5xAU/KWaagiPgLZHclKA72LjQMCD1YirElsSrKDbM6hSIBI87avxsP9VqzVjli9EQrmdUEAahPMmnnkFTELE0rZXuQOguhqv1L97DvNXH/SX79DDxxBbTd8puciFjWA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BN8PR12MB3108.namprd12.prod.outlook.com (2603:10b6:408:40::20)
- by SA1PR12MB8644.namprd12.prod.outlook.com (2603:10b6:806:384::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.28; Mon, 27 Nov
- 2023 15:00:03 +0000
-Received: from BN8PR12MB3108.namprd12.prod.outlook.com
- ([fe80::a9cf:f8b8:27bd:74d0]) by BN8PR12MB3108.namprd12.prod.outlook.com
- ([fe80::a9cf:f8b8:27bd:74d0%3]) with mapi id 15.20.7025.022; Mon, 27 Nov 2023
- 15:00:03 +0000
-Message-ID: <7b6d0d32-c1c5-4c57-a34c-81c9699c0d49@amd.com>
-Date: Mon, 27 Nov 2023 10:00:00 -0500
-User-Agent: Mozilla Thunderbird
-Cc: yazen.ghannam@amd.com, linux-edac@vger.kernel.org,
- linux-kernel@vger.kernel.org, tony.luck@intel.com, x86@kernel.org,
- Avadhut.Naik@amd.com, Smita.KoralahalliChannabasappa@amd.com,
- amd-gfx@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/20] x86/mce/amd: Use helper for UMC bank type check
-Content-Language: en-US
-To: Borislav Petkov <bp@alien8.de>
-References: <20231118193248.1296798-1-yazen.ghannam@amd.com>
- <20231118193248.1296798-6-yazen.ghannam@amd.com>
- <20231127114349.GMZWSA9QADGqCXnTYe@fat_crate.local>
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-In-Reply-To: <20231127114349.GMZWSA9QADGqCXnTYe@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BN9PR03CA0507.namprd03.prod.outlook.com
- (2603:10b6:408:130::32) To BN8PR12MB3108.namprd12.prod.outlook.com
- (2603:10b6:408:40::20)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 38867AA;
+	Mon, 27 Nov 2023 07:01:14 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CEEE2F4;
+	Mon, 27 Nov 2023 07:02:01 -0800 (PST)
+Received: from raptor (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 947493F6C4;
+	Mon, 27 Nov 2023 07:01:08 -0800 (PST)
+Date: Mon, 27 Nov 2023 15:01:05 +0000
+From: Alexandru Elisei <alexandru.elisei@arm.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
+	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
+	rppt@kernel.org, hughd@google.com, pcc@google.com,
+	steven.price@arm.com, anshuman.khandual@arm.com,
+	vincenzo.frascino@arm.com, eugenis@google.com, kcc@google.com,
+	hyesoo.yu@samsung.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v2 12/27] arm64: mte: Add tag storage pages to the
+ MIGRATE_CMA migratetype
+Message-ID: <ZWSvMYMjFLFZ-abv@raptor>
+References: <20231119165721.9849-1-alexandru.elisei@arm.com>
+ <20231119165721.9849-13-alexandru.elisei@arm.com>
+ <c49cd89d-41cf-495b-9b96-4434ab407967@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3108:EE_|SA1PR12MB8644:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2addec44-46fe-4d08-ae48-08dbef598914
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	BBU5cjUrg9RkHKBbXHmuf+2Da9azrBMGO5gpNNVVv8ra8PP7/+POQshH9phrLE8t/tjazsQ7T9i8D8fn418hF0L/1ta70kUnUkxJrr0PBBXrTGmvoydFSl17tGYyrxLyIAeSmhE7cDVvvqb4xYHmKV7xJfT3CI3dklTREM06uQN8Xi99ObL0iwsqG6U9JMhU5ItqhIswd8NxEpEPKyBdrCoOIezWUDloxgYIFIzARJ3yBHfa+VCaop8ghmYx7wfJpiyLBndYzy7s2cyMoRQ+thnE6iSoUeIOJVI7LFfsxNhNIqPWYLne2quFevcUh7eSmEuZXuSWgLjQb/k/B6ms/1rwSyidwKLzL1mNkNqXxuHga2tBzef0LI57LJ/n5JW5xavAuONOCcVVCO7T6QDfoOV/IbYbEBvAZiYweTEdlMhCxoaQ3LHCTUB2EW7C/bS2v/0Q2NBiPil6tNyq3EIBfoNKPkUBgIhdTIe4dPdCbIMPfbH7nbD1ruHESwXuuaWL4lBPr7Pj3RNoBzFEW/7PTl8A3mRRNatSjYv1PQda2ykwSZycmCNG33VdE7CiDb/tOuCRWdfSmc52XSaPZBSQH8KNjlTg62VFjZxDF2JG+ZeEV0wRhdMN1p+/UxNhRMyDxmjJi0LuwJWqmD86VXLndA==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3108.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(366004)(376002)(136003)(396003)(230922051799003)(451199024)(186009)(64100799003)(1800799012)(2616005)(26005)(6506007)(6512007)(53546011)(4326008)(8676002)(8936002)(5660300002)(15650500001)(6486002)(31696002)(44832011)(86362001)(478600001)(316002)(66946007)(66556008)(6916009)(66476007)(38100700002)(83380400001)(31686004)(41300700001)(36756003)(2906002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?REo3RStoV0tSZFVRdVYxUThuZFV4NlVWNWtZdVdIbS9XTXNIQUg1ZnZTcW4v?=
- =?utf-8?B?MUFhSXhDNWNyUis1TDA2d2dmMHk5V1hETnB6bjlsajhyOFFQejNqc0ZHcFlY?=
- =?utf-8?B?NnZDOTRLUWdFWHMyaWpxZ3hKREJ5RTV2S0FhdG9qZlN6ekF3ZG1WaytRS2RF?=
- =?utf-8?B?Zzh0L2Z4RjVBUksrZ2VNOTlYSkdhSE5GSlFxMHFlQ1RFcWt4V3pKaUdGSWgr?=
- =?utf-8?B?dUxYc1JtVU9SQ1NxYWp0MFE3N1FDQTBIWitnT09aSjBaRTBDREtwWktoVnRF?=
- =?utf-8?B?OTh4YnFoSGZKMk9pdWUvMjVWbXJzdE9qSDZOS09RRXJvUTVTdzdTM0ZnTm8y?=
- =?utf-8?B?eGZyaGJ4ejJNRlJYSnJXeHgvKzJ6WmxOczRxNmljSlB5NFBRRnN3OWdMQVI3?=
- =?utf-8?B?eHN1anVEaDV5Y0ViWW9STjRkeHllZkVlWWZsWWRNbWJBREFlcXVJdmVNSXRs?=
- =?utf-8?B?NDNWUGtPZ1hCYzZRRThGU1I0YXA3SklUVVN6QlBpVFlBK3ZTb250b3hkcU1H?=
- =?utf-8?B?MVRYMVAzS3k5b1o3ZGJSaGdIaS9EQThqc0E0blRPZUhYeDFCV290ZFhwWHJE?=
- =?utf-8?B?R0YxclcvZzRDcXhuQVFZeEhSdG04cXBHNFhnLzZQdXBWaTdmZzdKU2dSWjdS?=
- =?utf-8?B?VjdZcHFqZGdKQ0wyMTlXNlNkb2hZL2ZDdUZqbTFMWWhPN3ZWeG5obk4vc29F?=
- =?utf-8?B?QnA2Vk5SaHhzMHYrcWxVdS9NMU9scDhNdUlMZmpValdXVUdyZXZyWHlKUjB0?=
- =?utf-8?B?UTRyWXdOUU1TOEpkMmlKemdFUVovbXJ0WStmVkxRRzVZSGROVk1adTRvZ0sy?=
- =?utf-8?B?M2V1TTNlYlFKZFBEMEFMazZVRmRMaUYwWUdibGhYT1B5c1A1RFgrUjZiSWpJ?=
- =?utf-8?B?Rjc4TW4zM0VYVmkwYk9janE1VTZ0aHdpOUJDU3FHVGxqb291blZqSjA2QWZI?=
- =?utf-8?B?K1lPSUVEdFBMdkhHYmR1WVVEa1pxSkhCRk5FdkRXTFJkME9abnh0NktuZTFv?=
- =?utf-8?B?OTVseEJMU1E2c1I4ZjdpNC84MGFNZFEzN2lZMW9kMjhCenN4N1huaEU4YTlN?=
- =?utf-8?B?cnh5bUxWRTMxZUJlcEFpdGpDWmFQNUdrQWJHeDlob3dhYy8vVGd0T0JWTGI2?=
- =?utf-8?B?Q2x2NHM0NWtaWS9ZR01IY1lSR09XTDhyNFNaYTMyNzBTNFpXREJOVzBtR1Bn?=
- =?utf-8?B?Y1ptcjJybHlvamNGYU9kaktDZm1kS2JUQ1hDdVJCeWNCVkNYZncybGNnVXdO?=
- =?utf-8?B?L1VTOTBQN01ZYy9FYStLY016a1BLbFg0Z0JsNXNxRU56elFYQngwclloTldi?=
- =?utf-8?B?UjBxMDFwMFRyaHIySzRwSnh0cHhzQzR0UC9nTkg5RlpqTFJXdWlMRVJEYnRH?=
- =?utf-8?B?QmJndUtwN3M4NWNlMDhXUlJpZVozdFMwbDR2djl1MlZ3NDNGK2xsY3FxNklM?=
- =?utf-8?B?Z0xXc3MrU3VobXN4VUtZOU8yNldmenVDd2tEbjVtTUV2YzRCbkxiQVk2eVJZ?=
- =?utf-8?B?ZS8zbVczTG52ZlIrZ1ArNmE5cHdPajNLek9LekRJTlJZQ0lzV0YvcHoxOFUy?=
- =?utf-8?B?a1V2OGtnbmtXQ2lsb3I2eU10V0ErYVZ5TEt5aTc3U2QxdU8zbUdNK0dnOVYy?=
- =?utf-8?B?ZHpzb2MvaC90Y3JiRXdjeitWNEY0WVFZVjNlN3FLZ2orOHZERHR2STBEbVQ2?=
- =?utf-8?B?WUhBa2QrUUdSdUZoUUtMelUwTHhKR05rVGtCSmJ5bWp3alArbFI2L05IbnVB?=
- =?utf-8?B?UnVxbWY5ZHRpM2pnYlR5ckZiM0pFc1NFeXR3QzY3eExsMGpmTGVTN1gwRDZa?=
- =?utf-8?B?SlozdWhsWk04dXBxUVZ6Q1ZlMkUwMVloVUZxcTFjOVFxSWlYZDJJRkdXTldS?=
- =?utf-8?B?U2ZiT1pGeDF0Q2l6blJnRDEzaGdXOUtsRWJuVGNFRDhBMU9TbCtyNzdjNXVl?=
- =?utf-8?B?NUsvZmZ6UWY4MGY2dTMvN1ZkM1hQVUR5bHNvU2VhdkJtUTZ2cmJoOGpSQ21N?=
- =?utf-8?B?bnJTZVJYRXRKQ3pDb3AvaGpXODRNL0lieGVYUU80UlZDYk9mR0dYTExTMmtk?=
- =?utf-8?B?ZDlNNFhPQm9wYnpFWEF6UitzWXc3RU9tc0ZDSXgvZGhibTRhMHdBU0tZS0ov?=
- =?utf-8?Q?jCKkZTwj24OtlJfrGpq5wiGIk?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2addec44-46fe-4d08-ae48-08dbef598914
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3108.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Nov 2023 15:00:03.5060
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: F+0ufRzDEZQmJpdVDQexdBygeigvM+qHZbbExvJAk/57oiEj7ieN2S/cWI5O7xSQpmIWW6Oz7HMfBOfNa7741A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8644
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c49cd89d-41cf-495b-9b96-4434ab407967@redhat.com>
 
-On 11/27/2023 6:43 AM, Borislav Petkov wrote:
-> On Sat, Nov 18, 2023 at 01:32:33PM -0600, Yazen Ghannam wrote:
->> @@ -714,14 +721,10 @@ static bool legacy_mce_is_memory_error(struct mce *m)
->>    */
->>   static bool smca_mce_is_memory_error(struct mce *m)
->>   {
->> -	enum smca_bank_types bank_type;
->> -
->>   	if (XEC(m->status, 0x3f))
->>   		return false;
->>   
->> -	bank_type = smca_get_bank_type(m->extcpu, m->bank);
->> -
->> -	return bank_type == SMCA_UMC || bank_type == SMCA_UMC_V2;
->> +	return smca_umc_bank_type(m->ipid);
-> 
-> 	return FIELD_GET(MCI_IPID_HWID, ipid) == IPID_TYPE_UMC;
-> 
-> after having done:
-> 
-> #define IPID_TYPE_UMC	0x96;
-> 
-> and you don't need that silly helper.
+Hi David,
 
-The helper is also used in the following patch. But in any case, it may 
-be overkill. So I'll drop it.
+On Fri, Nov 24, 2023 at 08:40:55PM +0100, David Hildenbrand wrote:
+> On 19.11.23 17:57, Alexandru Elisei wrote:
+> > Add the MTE tag storage pages to the MIGRATE_CMA migratetype, which allows
+> > the page allocator to manage them like regular pages.
+> > 
+> > Ths migratype lends the pages some very desirable properties:
+> > 
+> > * They cannot be longterm pinned, meaning they will always be migratable.
+> > 
+> > * The pages can be allocated explicitely by using their PFN (with
+> >    alloc_contig_range()) when they are needed to store tags.
+> > 
+> > Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> > ---
+> >   arch/arm64/Kconfig                  |  1 +
+> >   arch/arm64/kernel/mte_tag_storage.c | 68 +++++++++++++++++++++++++++++
+> >   include/linux/mmzone.h              |  5 +++
+> >   mm/internal.h                       |  3 --
+> >   4 files changed, 74 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > index fe8276fdc7a8..047487046e8f 100644
+> > --- a/arch/arm64/Kconfig
+> > +++ b/arch/arm64/Kconfig
+> > @@ -2065,6 +2065,7 @@ config ARM64_MTE
+> >   if ARM64_MTE
+> >   config ARM64_MTE_TAG_STORAGE
+> >   	bool "Dynamic MTE tag storage management"
+> > +	select CONFIG_CMA
+> >   	help
+> >   	  Adds support for dynamic management of the memory used by the hardware
+> >   	  for storing MTE tags. This memory, unlike normal memory, cannot be
+> > diff --git a/arch/arm64/kernel/mte_tag_storage.c b/arch/arm64/kernel/mte_tag_storage.c
+> > index fa6267ef8392..427f4f1909f3 100644
+> > --- a/arch/arm64/kernel/mte_tag_storage.c
+> > +++ b/arch/arm64/kernel/mte_tag_storage.c
+> > @@ -5,10 +5,12 @@
+> >    * Copyright (C) 2023 ARM Ltd.
+> >    */
+> > +#include <linux/cma.h>
+> >   #include <linux/memblock.h>
+> >   #include <linux/mm.h>
+> >   #include <linux/of_device.h>
+> >   #include <linux/of_fdt.h>
+> > +#include <linux/pageblock-flags.h>
+> >   #include <linux/range.h>
+> >   #include <linux/string.h>
+> >   #include <linux/xarray.h>
+> > @@ -189,6 +191,14 @@ static int __init fdt_init_tag_storage(unsigned long node, const char *uname,
+> >   		return ret;
+> >   	}
+> > +	/* Pages are managed in pageblock_nr_pages chunks */
+> > +	if (!IS_ALIGNED(tag_range->start | range_len(tag_range), pageblock_nr_pages)) {
+> > +		pr_err("Tag storage region 0x%llx-0x%llx not aligned to pageblock size 0x%llx",
+> > +		       PFN_PHYS(tag_range->start), PFN_PHYS(tag_range->end),
+> > +		       PFN_PHYS(pageblock_nr_pages));
+> > +		return -EINVAL;
+> > +	}
+> > +
+> >   	ret = tag_storage_get_memory_node(node, &mem_node);
+> >   	if (ret)
+> >   		return ret;
+> > @@ -254,3 +264,61 @@ void __init mte_tag_storage_init(void)
+> >   		pr_info("MTE tag storage region management disabled");
+> >   	}
+> >   }
+> > +
+> > +static int __init mte_tag_storage_activate_regions(void)
+> > +{
+> > +	phys_addr_t dram_start, dram_end;
+> > +	struct range *tag_range;
+> > +	unsigned long pfn;
+> > +	int i, ret;
+> > +
+> > +	if (num_tag_regions == 0)
+> > +		return 0;
+> > +
+> > +	dram_start = memblock_start_of_DRAM();
+> > +	dram_end = memblock_end_of_DRAM();
+> > +
+> > +	for (i = 0; i < num_tag_regions; i++) {
+> > +		tag_range = &tag_regions[i].tag_range;
+> > +		/*
+> > +		 * Tag storage region was clipped by arm64_bootmem_init()
+> > +		 * enforcing addressing limits.
+> > +		 */
+> > +		if (PFN_PHYS(tag_range->start) < dram_start ||
+> > +				PFN_PHYS(tag_range->end) >= dram_end) {
+> > +			pr_err("Tag storage region 0x%llx-0x%llx outside addressable memory",
+> > +			       PFN_PHYS(tag_range->start), PFN_PHYS(tag_range->end));
+> > +			ret = -EINVAL;
+> > +			goto out_disabled;
+> > +		}
+> > +	}
+> > +
+> > +	/*
+> > +	 * MTE disabled, tag storage pages can be used like any other pages. The
+> > +	 * only restriction is that the pages cannot be used by kexec because
+> > +	 * the memory remains marked as reserved in the memblock allocator.
+> > +	 */
+> > +	if (!system_supports_mte()) {
+> > +		for (i = 0; i< num_tag_regions; i++) {
+> > +			tag_range = &tag_regions[i].tag_range;
+> > +			for (pfn = tag_range->start; pfn <= tag_range->end; pfn++)
+> > +				free_reserved_page(pfn_to_page(pfn));
+> > +		}
+> > +		ret = 0;
+> > +		goto out_disabled;
+> > +	}
+> > +
+> > +	for (i = 0; i < num_tag_regions; i++) {
+> > +		tag_range = &tag_regions[i].tag_range;
+> > +		for (pfn = tag_range->start; pfn <= tag_range->end; pfn += pageblock_nr_pages)
+> > +			init_cma_reserved_pageblock(pfn_to_page(pfn));
+> > +		totalcma_pages += range_len(tag_range);
+> > +	}
+> 
+> You shouldn't be doing that manually in arm code. Likely you want some cma.c
+> helper for something like that.
+
+If you referring to the last loop (the one that does
+ini_cma_reserved_pageblock()), indeed, there's already a function which
+does that, cma_init_reserved_areas() -> cma_activate_area().
 
 > 
-> And then you can do more cleanups ontop by doing
-> 
->          /* Unified Memory Controller MCA type */
->          { SMCA_UMC,      HWID_MCATYPE(IPID_TYPE_UMC, 0x0)        },
->          { SMCA_UMC_V2,   HWID_MCATYPE(IPID_TYPE_UMC, 0x1)        },
-> 
-> and have all the numbering properly defined and abstracted away.
->
+> But, can you elaborate on why you took this hacky (sorry) approach as
+> documented in the cover letter:
 
-Yep, agreed. Thanks for the suggestion.
+No worries, it is indeed a bit hacky :)
+
+> 
+> "The arm64 code manages this memory directly instead of using
+> cma_declare_contiguous/cma_alloc for performance reasons."
+> 
+> What is the exact problem?
+
+I am referring to the performance degredation that is fixed in patch #26,
+"arm64: mte: Fast track reserving tag storage when the block is free" [1].
+The issue is that alloc_contig_range() -> __alloc_contig_migrate_range()
+calls lru_cache_disable(), which IPIs all the CPUs in the system, and that
+leads to a 10-20% performance degradation on Chrome. It has been observed
+that most of the time the tag storage pages are free, and the
+lru_cache_disable() calls are unnecessary.
+
+The performance degradation is almost entirely eliminated by having the code
+take the tag storage page directly from the free list if it's free, instead
+of calling alloc_contig_range().
+
+Do you believe it would be better to use the cma code, and modify it to use
+this fast path to take the page drectly from the buddy allocator?
+
+I can definitely try to integrate the code with cma_alloc(), but I think
+keeping the fast path for reserving tag storage is extremely desirable,
+since it makes such a huge difference to performance.
+
+[1] https://lore.kernel.org/linux-trace-kernel/20231119165721.9849-27-alexandru.elisei@arm.com/
 
 Thanks,
-Yazen
+Alex
+
+> 
+> -- 
+> Cheers,
+> 
+> David / dhildenb
+> 
+> 
