@@ -1,92 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FE83E490
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Nov 2023 22:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9B4FC433C7;
-	Mon, 27 Nov 2023 22:50:00 +0000 (UTC)
-Date: Mon, 27 Nov 2023 17:50:21 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- dmaluka@google.com, Sean Paul <seanpaul@chromium.org>, Arun Easi
- <aeasi@marvell.com>, Daniel Wagner <dwagner@suse.de>
-Subject: Re: [RFC][PATCH] tracing: Allow creating instances with specified
- system events
-Message-ID: <20231127175021.0c0edc53@gandalf.local.home>
-In-Reply-To: <20231127174108.3c331c9c@gandalf.local.home>
-References: <20231127174108.3c331c9c@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7A62D05C;
+	Mon, 27 Nov 2023 23:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I8C5RHR6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33008C433C7;
+	Mon, 27 Nov 2023 23:02:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701126148;
+	bh=YLLMZKQjdvs7uz96PPE8o23RNDSBJoI1RZLjOJeLQMI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=I8C5RHR6EFDKcBVX3nje6O6EJvUbNDCsMTBoso5bENtaBBA1jHF0aQZtI6JtptfiE
+	 wo1Nwx4a3wkB5Mi05gtOh2NWro+X3ZUmpR46MNx4iopyoB7z+XjnMdw25yaAeC7rvU
+	 sX5l9pl7+vJ8u1vY/3N1ovxT3baJP/HSyAsnXPBqVv4uthCy2j75YxoxZYU5FMkrM/
+	 648PCIzkaRri7Ar+DZyGpZV4ERXtvoA5hhY8V8Mr1lV94pXuDcNAHRj5fRSyTtWE8b
+	 uAA5Bt0WBhz4TmoIGGlRFWI0soZMvWE11aAlwrc/axPfbOxx3DC57vT8cHXl9NfnTA
+	 oSzQDKtJAuLIw==
+Date: Tue, 28 Nov 2023 08:02:23 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: kernel test robot <lkp@intel.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ oe-kbuild-all@lists.linux.dev, JP Kobryn <inwardvessel@gmail.com>,
+ bpf@vger.kernel.org, kernel-team@meta.com, rostedt@goodmis.org,
+ peterz@infradead.org
+Subject: Re: [PATCH] rethook: Use __rcu pointer for rethook::handler
+Message-Id: <20231128080223.2c0bfdbe0738983b38250333@kernel.org>
+In-Reply-To: <202311241808.rv9ceuAh-lkp@intel.com>
+References: <170078778632.209874.7893551840863388753.stgit@devnote2>
+	<202311241808.rv9ceuAh-lkp@intel.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 27 Nov 2023 17:41:08 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Fri, 24 Nov 2023 23:40:57 +0800
+kernel test robot <lkp@intel.com> wrote:
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> Hi Masami,
 > 
-> A trace instance may only need to enable specific events. As the eventfs
-> directory of an instance currently creates all events which adds overhead,
-> allow internal instances to be created with just the events in systems
-> that they care about. This currently only deals with systems and not
-> individual events, but this should bring down the overhead of creating
-> instances for specific use cases quite bit.
+> kernel test robot noticed the following build warnings:
+> 
+> [auto build test WARNING on linus/master]
+> [also build test WARNING on v6.7-rc2 next-20231124]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/rethook-Use-__rcu-pointer-for-rethook-handler/20231124-090634
+> base:   linus/master
+> patch link:    https://lore.kernel.org/r/170078778632.209874.7893551840863388753.stgit%40devnote2
+> patch subject: [PATCH] rethook: Use __rcu pointer for rethook::handler
+> config: x86_64-randconfig-r113-20231124 (https://download.01.org/0day-ci/archive/20231124/202311241808.rv9ceuAh-lkp@intel.com/config)
+> compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231124/202311241808.rv9ceuAh-lkp@intel.com/reproduce)
 
-This change log is not very good. I didn't actually state what was done :-p
+Let me fix this issue. It seems that sparse with function pointer
+needs a special care.
 
-Anyway, function trace_array_get_by_name() has an added parameter "systems"
-(and I forgot to update its kerneldoc). This parameter is a string of
-comma, or space, or commas and spaces deliminators of event system names.
-If it's not NULL, then it will only create the event system directories of
-those event systems that match the systems parameter.
-
-That is:
-
- trace_array_get_by_name("qla2xxx", "qla");
-
-Will create an instance called "qla2xxx" and only have "qla" system events
-in it.
-
-Note, trace_array_printk() will still write into this instance, and it can
-be read via trace-cmd with no problems.
-
--- Steve
-
+Thank you,
 
 > 
-> The qla2xxx instance could just enable the systems it cares about, but that
-> should be a separate patch.
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202311241808.rv9ceuAh-lkp@intel.com/
 > 
-> Note that kprobes and synthetic events created after the creation of these
-> instances, will be added to these instances, but those that are created
-> before the creation of the instance will not be included.
+> sparse warnings: (new ones prefixed by >>)
+> >> kernel/trace/rethook.c:51:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
+> >> kernel/trace/rethook.c:51:9: sparse:    void ( [noderef] __rcu * )( ... )
+> >> kernel/trace/rethook.c:51:9: sparse:    void ( * )( ... )
+>    kernel/trace/rethook.c:66:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
+>    kernel/trace/rethook.c:66:9: sparse:    void ( [noderef] __rcu * )( ... )
+>    kernel/trace/rethook.c:66:9: sparse:    void ( * )( ... )
+>    kernel/trace/rethook.c:110:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
+>    kernel/trace/rethook.c:110:9: sparse:    void ( [noderef] __rcu * )( ... )
+>    kernel/trace/rethook.c:110:9: sparse:    void ( * )( ... )
+>    kernel/trace/rethook.c:140:19: sparse: sparse: incompatible types in comparison expression (different address spaces):
+>    kernel/trace/rethook.c:140:19: sparse:    void ( [noderef] __rcu * )( ... )
+>    kernel/trace/rethook.c:140:19: sparse:    void ( * )( ... )
+>    kernel/trace/rethook.c:161:19: sparse: sparse: incompatible types in comparison expression (different address spaces):
+>    kernel/trace/rethook.c:161:19: sparse:    void ( [noderef] __rcu * )( ... )
+>    kernel/trace/rethook.c:161:19: sparse:    void ( * )( ... )
+>    kernel/trace/rethook.c:305:27: sparse: sparse: incompatible types in comparison expression (different address spaces):
+>    kernel/trace/rethook.c:305:27: sparse:    void ( [noderef] __rcu * )( ... )
+>    kernel/trace/rethook.c:305:27: sparse:    void ( * )( ... )
 > 
-> Note, this may also be useful for creating instances in the eventfs, but
-> I'm not sure how to do this there. I could add a deliminator:
+> vim +51 kernel/trace/rethook.c
 > 
->   mkdir /sys/kernel/tracing/instances/foo::sched,timer
+>     40	
+>     41	/**
+>     42	 * rethook_stop() - Stop using a rethook.
+>     43	 * @rh: the struct rethook to stop.
+>     44	 *
+>     45	 * Stop using a rethook to prepare for freeing it. If you want to wait for
+>     46	 * all running rethook handler before calling rethook_free(), you need to
+>     47	 * call this first and wait RCU, and call rethook_free().
+>     48	 */
+>     49	void rethook_stop(struct rethook *rh)
+>     50	{
+>   > 51		rcu_assign_pointer(rh->handler, NULL);
+>     52	}
+>     53	
 > 
-> But if a tool already uses "::" as a deliminator, then this will break it.
-> I could just have it work if all the events after the deliminator exist.
-> 
->   Thoughts?
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  drivers/scsi/qla2xxx/qla_os.c       |  2 +-
->  include/linux/trace.h               |  4 ++--
->  kernel/trace/trace.c                | 22 ++++++++++++--------
->  kernel/trace/trace.h                |  3 ++-
->  kernel/trace/trace_boot.c           |  2 +-
->  kernel/trace/trace_events.c         | 31 ++++++++++++++++++++++++++---
->  samples/ftrace/sample-trace-array.c |  2 +-
->  7 files changed, 49 insertions(+), 17 deletions(-)
+> -- 
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
