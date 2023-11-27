@@ -1,151 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50BCB30D11;
-	Mon, 27 Nov 2023 13:59:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tELN8aoX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD5DCC433A9;
-	Mon, 27 Nov 2023 13:59:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701093589;
-	bh=8t7YVZmoVUR7dCk/2nFP4SmQbrkuMwJVZH30PnGw0sc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tELN8aoX40aJ3lB0DKKykbLK1uUy9V1D77TNJxxYCctsNRWVqd4ZCfCPBYhEmziqX
-	 jOeVOFDjwIT+EhAtfa4M1NgVS6HyZ5WdhnI4APV3AC4QltCobFb3RcuUYL8vxxHo8g
-	 Yxy5A8KBGBs3lwyfQFRHcS5DQX5KuRQQK07WL9NbkSnnVATphZ1LXOShQRQBoBfz3u
-	 DcDf21AsHeMNJ95Ny8KeSlYk0vUq86dXxGoALbnlTTTWGPZHAJs/m2Nwei/1No74mm
-	 9YOSV0/4zsemgvLdfBBJrLIZIajJxa0e7arsmg5240Zp4FmFlxtSAoVH03+uFWWtTG
-	 hMMAtrxpDYfDQ==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@chromium.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Guo Ren <guoren@kernel.org>
-Subject: [PATCH v3 33/33] Documentation: probes: Update fprobe on function-graph tracer
-Date: Mon, 27 Nov 2023 22:59:42 +0900
-Message-Id: <170109358189.343914.13273695712450878884.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <170109317214.343914.4784420430328654397.stgit@devnote2>
-References: <170109317214.343914.4784420430328654397.stgit@devnote2>
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="JAg3NTCQ"
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EF711FE5;
+	Mon, 27 Nov 2023 06:11:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=yMC1fr9zFr/aFbPIXFs2B98BYpQenlWqGbcREQeOEDM=; b=JAg3NTCQBfivlXVjbi5yc6w5nN
+	OH9xE0Xb0p4xAYGVUKhJE+55+hIn3EVOPzrV992PsVxVFj25vj5Vdq5xJIT9R1ME1eTAp0Pp3B5mq
+	lPjV9EtqsCnAs8Y2MmAR9gX+gA4wdAU8Yz+0navJ9BmK2oOHC00NdBrOGUjWi53MvQC8sG81Lldbd
+	qwD0TXLNj+SmvUibAPXGVXdvDlAOd9X3PdfN08KYy6ZYrHIMTIedINIn3rfV1JOYvCuHWo0J8RUEG
+	txzJg7gAr7Bs1FQl/xxc2q2U5DTGz7Y89PAVu/6DjQ03ruIyHy2NklKrQjZcFyzgcmCQ0c4x3CUo8
+	M4AD6glw==;
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1r7cK7-000ABW-7v; Mon, 27 Nov 2023 15:10:55 +0100
+Received: from [85.1.206.226] (helo=linux.home)
+	by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1r7cK5-0001fA-I6; Mon, 27 Nov 2023 15:10:53 +0100
+Subject: Re: [PATCH net] bpf: test_run: fix WARNING in format_decode
+To: Yonghong Song <yonghong.song@linux.dev>,
+ Edward Adam Davis <eadavis@qq.com>,
+ syzbot+e2c932aec5c8a6e1d31c@syzkaller.appspotmail.com
+Cc: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
+ davem@davemloft.net, edumazet@google.com, haoluo@google.com,
+ hawk@kernel.org, john.fastabend@gmail.com, jolsa@kernel.org,
+ kpsingh@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, martin.lau@kernel.org,
+ martin.lau@linux.dev, mhiramat@kernel.org, netdev@vger.kernel.org,
+ pabeni@redhat.com, rostedt@goodmis.org, sdf@google.com, song@kernel.org,
+ syzkaller-bugs@googlegroups.com, yhs@fb.com
+References: <0000000000004b6de5060ab1545b@google.com>
+ <tencent_884D1773977426D9D3600371696883B6A405@qq.com>
+ <4f832b6f-97b1-45b1-a210-b497ee6e55d5@linux.dev>
+From: Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <8821dd97-3aed-1d3d-6c12-f5bc4fb88d5a@iogearbox.net>
+Date: Mon, 27 Nov 2023 15:10:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <4f832b6f-97b1-45b1-a210-b497ee6e55d5@linux.dev>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27106/Mon Nov 27 09:39:12 2023)
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On 11/22/23 6:28 AM, Yonghong Song wrote:
+> On 11/21/23 7:50 PM, Edward Adam Davis wrote:
+>> Confirm that skb->len is not 0 to ensure that skb length is valid.
+>>
+>> Fixes: 114039b34201 ("bpf: Move skb->len == 0 checks into __bpf_redirect")
+>> Reported-by: syzbot+e2c932aec5c8a6e1d31c@syzkaller.appspotmail.com
+>> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+> 
+> Stan, Could you take a look at this patch?
 
-Update fprobe documentation for the new fprobe on function-graph
-tracer. This includes some bahvior changes and pt_regs to
-ftrace_regs interface change.
+I think this only papers over the bug.. also BPF selftests seem to break
+with this change.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v2:
-  - Update @fregs parameter explanation.
----
- Documentation/trace/fprobe.rst |   42 ++++++++++++++++++++++++++--------------
- 1 file changed, 27 insertions(+), 15 deletions(-)
+Looking again at the syzkaller trace :
 
-diff --git a/Documentation/trace/fprobe.rst b/Documentation/trace/fprobe.rst
-index 196f52386aaa..f58bdc64504f 100644
---- a/Documentation/trace/fprobe.rst
-+++ b/Documentation/trace/fprobe.rst
-@@ -9,9 +9,10 @@ Fprobe - Function entry/exit probe
- Introduction
- ============
- 
--Fprobe is a function entry/exit probe mechanism based on ftrace.
--Instead of using ftrace full feature, if you only want to attach callbacks
--on function entry and exit, similar to the kprobes and kretprobes, you can
-+Fprobe is a function entry/exit probe mechanism based on the function-graph
-+tracer.
-+Instead of tracing all functions, if you want to attach callbacks on specific
-+function entry and exit, similar to the kprobes and kretprobes, you can
- use fprobe. Compared with kprobes and kretprobes, fprobe gives faster
- instrumentation for multiple functions with single handler. This document
- describes how to use fprobe.
-@@ -91,12 +92,14 @@ The prototype of the entry/exit callback function are as follows:
- 
- .. code-block:: c
- 
-- int entry_callback(struct fprobe *fp, unsigned long entry_ip, unsigned long ret_ip, struct pt_regs *regs, void *entry_data);
-+ int entry_callback(struct fprobe *fp, unsigned long entry_ip, unsigned long ret_ip, struct ftrace_regs *fregs, void *entry_data);
- 
-- void exit_callback(struct fprobe *fp, unsigned long entry_ip, unsigned long ret_ip, struct pt_regs *regs, void *entry_data);
-+ void exit_callback(struct fprobe *fp, unsigned long entry_ip, unsigned long ret_ip, struct ftrace_regs *fregs, void *entry_data);
- 
--Note that the @entry_ip is saved at function entry and passed to exit handler.
--If the entry callback function returns !0, the corresponding exit callback will be cancelled.
-+Note that the @entry_ip is saved at function entry and passed to exit
-+handler.
-+If the entry callback function returns !0, the corresponding exit callback
-+will be cancelled.
- 
- @fp
-         This is the address of `fprobe` data structure related to this handler.
-@@ -112,12 +115,10 @@ If the entry callback function returns !0, the corresponding exit callback will
-         This is the return address that the traced function will return to,
-         somewhere in the caller. This can be used at both entry and exit.
- 
--@regs
--        This is the `pt_regs` data structure at the entry and exit. Note that
--        the instruction pointer of @regs may be different from the @entry_ip
--        in the entry_handler. If you need traced instruction pointer, you need
--        to use @entry_ip. On the other hand, in the exit_handler, the instruction
--        pointer of @regs is set to the current return address.
-+@fregs
-+        This is the `ftrace_regs` data structure at the entry and exit. This
-+        includes the function parameters, or the return values. So user can
-+        access thos values via appropriate `ftrace_regs_*` APIs.
- 
- @entry_data
-         This is a local storage to share the data between entry and exit handlers.
-@@ -125,6 +126,17 @@ If the entry callback function returns !0, the corresponding exit callback will
-         and `entry_data_size` field when registering the fprobe, the storage is
-         allocated and passed to both `entry_handler` and `exit_handler`.
- 
-+Entry data size and exit handlers on the same function
-+======================================================
-+
-+Since the entry data is passed via per-task stack and it is has limited size,
-+the entry data size per probe is limited to `15 * sizeof(long)`. You also need
-+to take care that the different fprobes are probing on the same function, this
-+limit becomes smaller. The entry data size is aligned to `sizeof(long)` and
-+each fprobe which has exit handler uses a `sizeof(long)` space on the stack,
-+you should keep the number of fprobes on the same function as small as
-+possible.
-+
- Share the callbacks with kprobes
- ================================
- 
-@@ -165,8 +177,8 @@ This counter counts up when;
-  - fprobe fails to take ftrace_recursion lock. This usually means that a function
-    which is traced by other ftrace users is called from the entry_handler.
- 
-- - fprobe fails to setup the function exit because of the shortage of rethook
--   (the shadow stack for hooking the function return.)
-+ - fprobe fails to setup the function exit because of failing to allocate the
-+   data buffer from the per-task shadow stack.
- 
- The `fprobe::nmissed` field counts up in both cases. Therefore, the former
- skips both of entry and exit callback and the latter skips the exit
+   [...]
+   Please remove unsupported %\0 in format string
+   WARNING: CPU: 0 PID: 5068 at lib/vsprintf.c:2675 format_decode+0xa03/0xba0 lib/vsprintf.c:2675
+   [...]
+
+We need to fix bpf_bprintf_prepare() instead to reject invalid fmts such
+as %0 and similar.
+
+>>   net/bpf/test_run.c | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
+>> index c9fdcc5cdce1..78258a822a5c 100644
+>> --- a/net/bpf/test_run.c
+>> +++ b/net/bpf/test_run.c
+>> @@ -845,6 +845,9 @@ static int convert___skb_to_skb(struct sk_buff *skb, struct __sk_buff *__skb)
+>>   {
+>>       struct qdisc_skb_cb *cb = (struct qdisc_skb_cb *)skb->cb;
+>> +    if (!skb->len)
+>> +        return -EINVAL;
+>> +
+>>       if (!__skb)
+>>           return 0;
 
