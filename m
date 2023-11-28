@@ -1,41 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12EA44F8B0;
-	Tue, 28 Nov 2023 12:22:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10AA4F88F;
+	Tue, 28 Nov 2023 12:29:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RR7f6n2P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 635FCC433C8;
-	Tue, 28 Nov 2023 12:22:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bYIpG9V/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED0C7C433C8;
+	Tue, 28 Nov 2023 12:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701174173;
-	bh=DXX2yyZV07cfawdxMHdycC1Xx/lp1zrsIhlOIBHIVfM=;
+	s=k20201202; t=1701174560;
+	bh=v96cDEV9MbfByYb9NPNlCmqYfiufZsErCbYgMwu2BUQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RR7f6n2PxMOFQyeu21keut9EcMLkqoasl9Ot7S6MYIuDmXdN7qJFnhMFTdg9149fh
-	 ZDIVdt9H2VRkT/IG4BODcbsU4p6fZpPOBnPWHcgaciDqy8WPkhBb3nA4yjZ9NEeXVT
-	 BNYi3bnu+jQmW+pfEMn/iEqxAmXUQnAOBC9nuRzGuazCVbAXDSFw6OWq6mdxYiBVXk
-	 ekKVhu3U61kQtNIgMwHyXrTVZyi34aXbyirKMFFV5OgkLLVacqKt0Pl8sUHNi8NSVo
-	 a7gUBUmY5uyb6Ufob/2svRwgGwXSRaSSIvXLrkNaWYYTM5YgPUyhOHOcqW2PvNcdSq
-	 6N9PG+K4PW4tg==
-Date: Tue, 28 Nov 2023 21:22:46 +0900
+	b=bYIpG9V/nf16+T5XBA728TfpOgEY1YAkYZ5VUPY0UvOjZgEP1I1LSurFgUEOq+uNf
+	 TSw1sGxFTlz5qx5gDhX04GcZYad2N+h50lL+nJDgWSxo74WFVsV1D+gI4UjPh9+8Dc
+	 V6hWK+c2zLUEj+PbtFCu8M1AFHhF8G+3fexrvWHW8AWj0U++JyQipVEail4tbp9fRY
+	 i75kHG9Qc1KhG9z1PVSFw0pxST3jPz5cHqRi+QA5JWmdcsov6YkVJmwhtZCjjkC1Uh
+	 7nQpVHVLfSzTnyY8VNa1qESRGpLHdFTG5sN9NLhXEd9y5n6o3MgpKbDGdUXEdsfpxY
+	 sbhHZAbdFH2VA==
+Date: Tue, 28 Nov 2023 21:29:15 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt
- <rostedt@goodmis.org>, Florent Revest <revest@chromium.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>, Mark
- Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v3 28/33] fprobe: Rewrite fprobe on function-graph
- tracer
-Message-Id: <20231128212246.db6a3dafdab190cc745c4364@kernel.org>
-In-Reply-To: <ZWXGn3_5pN-0fniR@krava>
-References: <170109317214.343914.4784420430328654397.stgit@devnote2>
-	<170109352014.343914.17580314660854847955.stgit@devnote2>
-	<ZWXGn3_5pN-0fniR@krava>
+To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: kernel test robot <lkp@intel.com>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, oe-kbuild-all@lists.linux.dev, JP Kobryn
+ <inwardvessel@gmail.com>, bpf@vger.kernel.org, kernel-team@meta.com,
+ rostedt@goodmis.org, peterz@infradead.org
+Subject: Re: [PATCH] rethook: Use __rcu pointer for rethook::handler
+Message-Id: <20231128212915.75a0b550c34d5094894d8cb2@kernel.org>
+In-Reply-To: <20231128080223.2c0bfdbe0738983b38250333@kernel.org>
+References: <170078778632.209874.7893551840863388753.stgit@devnote2>
+	<202311241808.rv9ceuAh-lkp@intel.com>
+	<20231128080223.2c0bfdbe0738983b38250333@kernel.org>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,44 +40,128 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 28 Nov 2023 11:53:19 +0100
-Jiri Olsa <olsajiri@gmail.com> wrote:
+On Tue, 28 Nov 2023 08:02:23 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> On Mon, Nov 27, 2023 at 10:58:40PM +0900, Masami Hiramatsu (Google) wrote:
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> On Fri, 24 Nov 2023 23:40:57 +0800
+> kernel test robot <lkp@intel.com> wrote:
+> 
+> > Hi Masami,
 > > 
-> > Rewrite fprobe implementation on function-graph tracer.
-> > Major API changes are:
-> >  -  'nr_maxactive' field is deprecated.
-> >  -  This depends on CONFIG_DYNAMIC_FTRACE_WITH_ARGS or
-> >     !CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS, and
-> >     CONFIG_HAVE_FUNCTION_GRAPH_FREGS. So currently works only
-> >     on x86_64.
-> >  -  Currently the entry size is limited in 15 * sizeof(long).
-> >  -  If there is too many fprobe exit handler set on the same
-> >     function, it will fail to probe.
+> > kernel test robot noticed the following build warnings:
 > > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  Changes in v3:
-> >   - Update for new reserve_data/retrieve_data API.
-> >   - Fix internal push/pop on fgraph data logic so that it can
-> >     correctly save/restore the returning fprobes.
+> > [auto build test WARNING on linus/master]
+> > [also build test WARNING on v6.7-rc2 next-20231124]
+> > [If your patch is applied to the wrong git tree, kindly drop us a note.
+> > And when submitting patch, we suggest to use '--base' as documented in
+> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > 
+> > url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/rethook-Use-__rcu-pointer-for-rethook-handler/20231124-090634
+> > base:   linus/master
+> > patch link:    https://lore.kernel.org/r/170078778632.209874.7893551840863388753.stgit%40devnote2
+> > patch subject: [PATCH] rethook: Use __rcu pointer for rethook::handler
+> > config: x86_64-randconfig-r113-20231124 (https://download.01.org/0day-ci/archive/20231124/202311241808.rv9ceuAh-lkp@intel.com/config)
+> > compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
+> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231124/202311241808.rv9ceuAh-lkp@intel.com/reproduce)
 > 
-> hi,
-> looks like this one conflicts with recent:
+> Let me fix this issue. It seems that sparse with function pointer
+> needs a special care.
+
+Hmm, I think we need to ignore some warnings from sparse for function pointer.
+
+struct rethook {
+	rethook_handler_t __rcu handler;
+};
+
+This doesn't work because the handler is not a pointer but a value type from
+the sparse point of view(?)
+
+So if we change the rethook_handler_t as below, most of the sparse warnings
+are gone.
+
+typedef void (__rcu *rethook_handler_t) (struct rethook_node *, void *, unsigned long, struct pt_regs *);
+                  ^^^^^^
+
+However, I found that this causes another warnings on the init function call
+which requires rethook_handler_t as a parameter.
+
+kernel/trace/fprobe.c:209:49: warning: incorrect type in argument 2 (different address spaces)
+kernel/trace/fprobe.c:209:49:    expected void ( [noderef] __rcu *[usertype] handler )( ... )
+kernel/trace/fprobe.c:209:49:    got void ( * )( ... )
+
+        fp->rethook = rethook_alloc((void *)fp, fprobe_exit_handler,
+							      ^^^^^^^^^^^^^^^^^^^^^^^^^
+                                sizeof(struct fprobe_rethook_node), size);
+
+Why? because fprobe_exit_handler() has no "__rcu"! Of course we can fix this
+warning with force casting, e.g.
+
+        fp->rethook = rethook_alloc((void *)fp, (rethook_handler_t)fprobe_exit_handler,
+
+But this is totally wrong because it disables the compiler's type check!
+
+One possible solution is to use a raw function pointer type for the
+rethook_alloc() but that will be redundant or, just ignore
+the sparse warnings as Documentation/RCU/rcu_dereference.rst said.
+
+(Another tricky hack is to use a union just for rcu_assign_pointer/rcu_derefernce)
+
+Thank you,
+
+
 > 
->   4bbd93455659 kprobes: kretprobe scalability improvement
-
-Thanks for reporting!
-
-I also found some other patches conflicts with recent commits.
-Let me rebase it on the recent branch.
-
-Thank!
-
+> Thank you,
 > 
-> jirka
+> > 
+> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Closes: https://lore.kernel.org/oe-kbuild-all/202311241808.rv9ceuAh-lkp@intel.com/
+> > 
+> > sparse warnings: (new ones prefixed by >>)
+> > >> kernel/trace/rethook.c:51:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
+> > >> kernel/trace/rethook.c:51:9: sparse:    void ( [noderef] __rcu * )( ... )
+> > >> kernel/trace/rethook.c:51:9: sparse:    void ( * )( ... )
+> >    kernel/trace/rethook.c:66:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
+> >    kernel/trace/rethook.c:66:9: sparse:    void ( [noderef] __rcu * )( ... )
+> >    kernel/trace/rethook.c:66:9: sparse:    void ( * )( ... )
+> >    kernel/trace/rethook.c:110:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
+> >    kernel/trace/rethook.c:110:9: sparse:    void ( [noderef] __rcu * )( ... )
+> >    kernel/trace/rethook.c:110:9: sparse:    void ( * )( ... )
+> >    kernel/trace/rethook.c:140:19: sparse: sparse: incompatible types in comparison expression (different address spaces):
+> >    kernel/trace/rethook.c:140:19: sparse:    void ( [noderef] __rcu * )( ... )
+> >    kernel/trace/rethook.c:140:19: sparse:    void ( * )( ... )
+> >    kernel/trace/rethook.c:161:19: sparse: sparse: incompatible types in comparison expression (different address spaces):
+> >    kernel/trace/rethook.c:161:19: sparse:    void ( [noderef] __rcu * )( ... )
+> >    kernel/trace/rethook.c:161:19: sparse:    void ( * )( ... )
+> >    kernel/trace/rethook.c:305:27: sparse: sparse: incompatible types in comparison expression (different address spaces):
+> >    kernel/trace/rethook.c:305:27: sparse:    void ( [noderef] __rcu * )( ... )
+> >    kernel/trace/rethook.c:305:27: sparse:    void ( * )( ... )
+> > 
+> > vim +51 kernel/trace/rethook.c
+> > 
+> >     40	
+> >     41	/**
+> >     42	 * rethook_stop() - Stop using a rethook.
+> >     43	 * @rh: the struct rethook to stop.
+> >     44	 *
+> >     45	 * Stop using a rethook to prepare for freeing it. If you want to wait for
+> >     46	 * all running rethook handler before calling rethook_free(), you need to
+> >     47	 * call this first and wait RCU, and call rethook_free().
+> >     48	 */
+> >     49	void rethook_stop(struct rethook *rh)
+> >     50	{
+> >   > 51		rcu_assign_pointer(rh->handler, NULL);
+> >     52	}
+> >     53	
+> > 
+> > -- 
+> > 0-DAY CI Kernel Test Service
+> > https://github.com/intel/lkp-tests/wiki
+> 
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 
 -- 
