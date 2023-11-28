@@ -1,52 +1,52 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jLirQ2Q1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VnfFcmdp"
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAB2C2D5F
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Nov 2023 09:55:25 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AA6D93
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Nov 2023 09:56:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701194124;
+	s=mimecast20190719; t=1701194199;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=6IpfI+5hX9oWAaqFKgR7pMHL53l1oeTSERZKZMVDwEk=;
-	b=jLirQ2Q16v35ZzL2k/uk3lnHhjMdSrHPEvZKRjrkI5qi3Gu6qo0DmqiOuyMrECStRz2Cq0
-	eHMMEXkePL0KO323veEt1uiGNFeu+4RBGYf2cUlB0aRJyW7KIozdmZ/yVfz4uqcc+Zx32n
-	/jRXfstkiA53SEm9ackOdIjvd2UM5b4=
+	bh=mb/SELaNzaD9twNmu/FD3NMqayq4NlkgR97UOh62crI=;
+	b=VnfFcmdpkSV1rvb7MrA82y3pM4jUPyZXxCdhmZ5M0WmIApQQNkth6tBB5aXntOi6czhmbn
+	CmqPjfg4A09bFjweeRI7FuWC9rRHd6ZNRfUv0NaB/x4/4pcLh1Fwhi+Ubp6fn9ghSwg6vb
+	LXmb9I9lfkDyZhPxcbIFzP7zNqdRdAc=
 Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
  [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-692-UGZjsPGZO5-fwIIiGwsNog-1; Tue, 28 Nov 2023 12:55:23 -0500
-X-MC-Unique: UGZjsPGZO5-fwIIiGwsNog-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-333112c1e72so18761f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Nov 2023 09:55:21 -0800 (PST)
+ us-mta-638-kc133DbANHai-Q9n3lzsXg-1; Tue, 28 Nov 2023 12:56:37 -0500
+X-MC-Unique: kc133DbANHai-Q9n3lzsXg-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-332e06036b5so4242257f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Nov 2023 09:56:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701194121; x=1701798921;
+        d=1e100.net; s=20230601; t=1701194196; x=1701798996;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
          :references:cc:to:content-language:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6IpfI+5hX9oWAaqFKgR7pMHL53l1oeTSERZKZMVDwEk=;
-        b=bg5Mkc6V9Tp720ZiTFD0QlV06ZrI9jhQvpaLXtxNK9DVWiIy6EUvGKiavbeHqUY/ZI
-         mPRiJo3/DlLo5nkZ/3RxBJngZopdSc7uve3tIHKMFx5784ZYuMOVGDAgvOPtgTb+DUOt
-         jmaVb6yN3hl3oBYIvhK7a+l/zU4ns1RrzDNPg/3cWl5fHPv3zwFwdIFjAOBSZCzoEvVE
-         ZFYWTBtSEkVexxw3Tb5wSKk7Ft4xfPQ/vi/iOzo3sq2WM1dj/n5ye4U+9oZF+QE3xMK3
-         4Eel/XH0vYN6ZtlvlNc5kFpzAvfxj/0KF5cYVCdxuJpicf32CAPC3Vi2OyO2fj1iaGsb
-         Y/vA==
-X-Gm-Message-State: AOJu0Yz/IpvM05NTK+nkTgTcOB6U+7bCcFYbWqtVFrFsN44IQm7YGZIh
-	ryjmkUHOpx/gFIE0c9Dg0HUw2bXiEQVU9UC+QahJAYjNsVOaZ9S2Wf/skAaEZERBTevdC8Xk8oZ
-	zGj/rXwZbAoJLtB1X9l2l8lvkxM+LFPUN
-X-Received: by 2002:adf:e9c6:0:b0:332:ff64:ff50 with SMTP id l6-20020adfe9c6000000b00332ff64ff50mr6720298wrn.3.1701194120768;
-        Tue, 28 Nov 2023 09:55:20 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFxtIUmo/xgDPU+4SynBCZAKg3hJMQbTbqo7KrIGmu/9sGiONimAtj8MpqI83o1bVOsygmqVw==
-X-Received: by 2002:adf:e9c6:0:b0:332:ff64:ff50 with SMTP id l6-20020adfe9c6000000b00332ff64ff50mr6720265wrn.3.1701194120413;
-        Tue, 28 Nov 2023 09:55:20 -0800 (PST)
+        bh=mb/SELaNzaD9twNmu/FD3NMqayq4NlkgR97UOh62crI=;
+        b=IqRKAA2Gq1XwPjgRLBRYkDwFmqPht/q4w9dp8jCsIEr6b/Uedg8s0lRYBGoOu+WEhH
+         2Oihk7ruIGxzFgsqBWONN/ssgqf85ftrn0lWPhIzLM6sL2I87iJJ7v09dmMKebWk0ndL
+         8jeH+X++fSzIfh0Qo73S+YAgX0rVfZ7NSad59gjL+QAIQBBSgnYarKGHHtjHb6Qfm4M9
+         +IbsOtqOgOc4iXOz77MNPuXZT4C9jmWbSxwE1PnwhBfSkSuvgfRdzBMQ5ROrN76jhdzB
+         oGBzqEbTV2tOcPEWa5CWdfStFLFr44Vbg4pRRl3BOXYH441K7ysVe9jQlCV06zA74svH
+         nvRQ==
+X-Gm-Message-State: AOJu0Yz3Ovs42BYS5rTAq/V4dp9DBGeKTAfnFfYTm42O1TfIJ5uqXTCf
+	bVAaqDIP0iaU+IdMpHquVEitFyKFkoybyMGDNlh+aJS80aHe2jhAuyPZrUgQPQJVcm2DfvsMjJ9
+	b1IfsHh9GVbQEgQg09i4UzJfs94Tqg19N
+X-Received: by 2002:a5d:4947:0:b0:332:fe86:7f64 with SMTP id r7-20020a5d4947000000b00332fe867f64mr5843131wrs.43.1701194196611;
+        Tue, 28 Nov 2023 09:56:36 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGj+3zYY7VsSNyNUu8sA5/8Eh+WYvSczsybLrcFtvaAm0lZ2m/9N/KercXdu/KmAUvDHpd7Iw==
+X-Received: by 2002:a5d:4947:0:b0:332:fe86:7f64 with SMTP id r7-20020a5d4947000000b00332fe867f64mr5843119wrs.43.1701194196186;
+        Tue, 28 Nov 2023 09:56:36 -0800 (PST)
 Received: from ?IPV6:2003:cb:c708:1d00:99ec:9656:7475:678d? (p200300cbc7081d0099ec96567475678d.dip0.t-ipconnect.de. [2003:cb:c708:1d00:99ec:9656:7475:678d])
-        by smtp.gmail.com with ESMTPSA id x1-20020adfec01000000b00332cfd83b8dsm15601843wrn.96.2023.11.28.09.55.18
+        by smtp.gmail.com with ESMTPSA id x1-20020adfec01000000b00332cfd83b8dsm15601843wrn.96.2023.11.28.09.56.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Nov 2023 09:55:20 -0800 (PST)
-Message-ID: <1c79ad05-cb52-4820-b2aa-bbe07ff82b19@redhat.com>
-Date: Tue, 28 Nov 2023 18:55:18 +0100
+        Tue, 28 Nov 2023 09:56:35 -0800 (PST)
+Message-ID: <2cb6090d-b71f-472f-ab89-715b75dba067@redhat.com>
+Date: Tue, 28 Nov 2023 18:56:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -54,8 +54,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v2 19/27] mm: mprotect: Introduce PAGE_FAULT_ON_ACCESS
- for mprotect(PROT_MTE)
+Subject: Re: [PATCH RFC v2 20/27] mm: hugepage: Handle huge page fault on
+ access
 To: Alexandru Elisei <alexandru.elisei@arm.com>, catalin.marinas@arm.com,
  will@kernel.org, oliver.upton@linux.dev, maz@kernel.org,
  james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
@@ -71,7 +71,7 @@ Cc: pcc@google.com, steven.price@arm.com, anshuman.khandual@arm.com,
  linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
  linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
 References: <20231119165721.9849-1-alexandru.elisei@arm.com>
- <20231119165721.9849-20-alexandru.elisei@arm.com>
+ <20231119165721.9849-21-alexandru.elisei@arm.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -118,7 +118,7 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20231119165721.9849-20-alexandru.elisei@arm.com>
+In-Reply-To: <20231119165721.9849-21-alexandru.elisei@arm.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
@@ -126,30 +126,13 @@ Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 19.11.23 17:57, Alexandru Elisei wrote:
-> To enable tagging on a memory range, userspace can use mprotect() with the
-> PROT_MTE access flag. Pages already mapped in the VMA don't have the
-> associated tag storage block reserved, so mark the PTEs as
-> PAGE_FAULT_ON_ACCESS to trigger a fault next time they are accessed, and
-> reserve the tag storage on the fault path.
+> Handle PAGE_FAULT_ON_ACCESS faults for huge pages in a similar way to
+> regular pages.
+> 
+> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> ---
 
-That sounds alot like fake PROT_NONE. Would there be a way to unify hat 
-handling and simply reuse pte_protnone()? For example, could we special 
-case on VMA flags?
-
-Like, don't do NUMA hinting in these special VMAs. Then, have something 
-like:
-
-if (pte_protnone(vmf->orig_pte))
-	return handle_pte_protnone(vmf);
-
-In there, special case on the VMA flags.
-
-I *suspect* that handle_page_missing_tag_storage() stole (sorry :P) some 
-code from the prot_none handling path. At least the recovery path and 
-writability handling looks like it better be located shared in 
-handle_pte_protnone() as well.
-
-That might take some magic out of this patch.
+Same comments :)
 
 -- 
 Cheers,
