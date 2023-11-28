@@ -1,168 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10AA4F88F;
-	Tue, 28 Nov 2023 12:29:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bYIpG9V/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED0C7C433C8;
-	Tue, 28 Nov 2023 12:29:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701174560;
-	bh=v96cDEV9MbfByYb9NPNlCmqYfiufZsErCbYgMwu2BUQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bYIpG9V/nf16+T5XBA728TfpOgEY1YAkYZ5VUPY0UvOjZgEP1I1LSurFgUEOq+uNf
-	 TSw1sGxFTlz5qx5gDhX04GcZYad2N+h50lL+nJDgWSxo74WFVsV1D+gI4UjPh9+8Dc
-	 V6hWK+c2zLUEj+PbtFCu8M1AFHhF8G+3fexrvWHW8AWj0U++JyQipVEail4tbp9fRY
-	 i75kHG9Qc1KhG9z1PVSFw0pxST3jPz5cHqRi+QA5JWmdcsov6YkVJmwhtZCjjkC1Uh
-	 7nQpVHVLfSzTnyY8VNa1qESRGpLHdFTG5sN9NLhXEd9y5n6o3MgpKbDGdUXEdsfpxY
-	 sbhHZAbdFH2VA==
-Date: Tue, 28 Nov 2023 21:29:15 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: kernel test robot <lkp@intel.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, oe-kbuild-all@lists.linux.dev, JP Kobryn
- <inwardvessel@gmail.com>, bpf@vger.kernel.org, kernel-team@meta.com,
- rostedt@goodmis.org, peterz@infradead.org
-Subject: Re: [PATCH] rethook: Use __rcu pointer for rethook::handler
-Message-Id: <20231128212915.75a0b550c34d5094894d8cb2@kernel.org>
-In-Reply-To: <20231128080223.2c0bfdbe0738983b38250333@kernel.org>
-References: <170078778632.209874.7893551840863388753.stgit@devnote2>
-	<202311241808.rv9ceuAh-lkp@intel.com>
-	<20231128080223.2c0bfdbe0738983b38250333@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RNTpJRNc"
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35F8ED60
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Nov 2023 05:14:38 -0800 (PST)
+Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-5094cb3a036so7427299e87.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Nov 2023 05:14:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1701177276; x=1701782076; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=D3lzwLwPre7wvnqsdFYx09a6rbeV9XRoBcce+xZPKf0=;
+        b=RNTpJRNcNnEb5YFU00RErkxk3Q938Q0YMiV1OCgISy7pscuhklxpap21xy+bca9FuX
+         EufNZX45lM5ALVc3We2A//Qhxc3tdyo1A+oQdrpJnJb6dMFAX3h8y2RGSAdLkhlEFZm8
+         IZGENb7cXFoWZS/4ZIB6c6WQt6Uk5HsspDVuM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701177276; x=1701782076;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D3lzwLwPre7wvnqsdFYx09a6rbeV9XRoBcce+xZPKf0=;
+        b=anzI+ThzmdXqS7xQgsqY04SmDGdeGGpff98dcOxz0qttirG2wt2ZKwpM+b1XcVF4xh
+         xP1I06YyJf2AbpTA+D9q0stXK1IT2fGdIvQgH4Kx668kb2+GzuVk4lW1TfL0rp5x+mT+
+         x8VH0wOPrJnIBczkU5ivcRSvEu/3l8+G5rgeKALdcEGI4sY3UCeiF9ndJqyvqwJHtRGX
+         +qAybSR4XCQz/AaxIvbqpXcLCFG93GYf7z/mMN29bYn+Ayc/OGVsOri+c4OtY/xKYGmC
+         c/Dj4BEK4XvSGdABjherXMTl3z4lm50KIiSGjOMUojEqYF7CoYwEdoL3xNV/1UgLpEpW
+         tFeQ==
+X-Gm-Message-State: AOJu0Yw9daRVNwUxvMVWMwaRwS/O1FMuTQg8xYMMbEeqAcPArcjWYkUm
+	bh5Qs6JlCfk/cRQmOkY03EkIbQ==
+X-Google-Smtp-Source: AGHT+IE0Vi+lZpGWrs8F+Q6TthkcHLrt1LW8Dss/9F153YJg4v3hb9ZeesPR9HQID+L/IE0mA2CkQQ==
+X-Received: by 2002:ac2:5619:0:b0:507:9f51:acee with SMTP id v25-20020ac25619000000b005079f51aceemr9291885lfd.22.1701177275725;
+        Tue, 28 Nov 2023 05:14:35 -0800 (PST)
+Received: from google.com ([83.142.187.84])
+        by smtp.gmail.com with ESMTPSA id k9-20020ac24f09000000b0050ba6e480fdsm1352362lfr.248.2023.11.28.05.14.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Nov 2023 05:14:35 -0800 (PST)
+Date: Tue, 28 Nov 2023 14:14:29 +0100
+From: Dmytro Maluka <dmaluka@chromium.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Sean Paul <seanpaul@chromium.org>, Arun Easi <aeasi@marvell.com>,
+	Daniel Wagner <dwagner@suse.de>
+Subject: Re: [RFC][PATCH] tracing: Allow creating instances with specified
+ system events
+Message-ID: <ZWXntcHNflkbrxd7@google.com>
+References: <20231127174108.3c331c9c@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231127174108.3c331c9c@gandalf.local.home>
 
-On Tue, 28 Nov 2023 08:02:23 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-
-> On Fri, 24 Nov 2023 23:40:57 +0800
-> kernel test robot <lkp@intel.com> wrote:
+On Mon, Nov 27, 2023 at 05:41:08PM -0500, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> > Hi Masami,
-> > 
-> > kernel test robot noticed the following build warnings:
-> > 
-> > [auto build test WARNING on linus/master]
-> > [also build test WARNING on v6.7-rc2 next-20231124]
-> > [If your patch is applied to the wrong git tree, kindly drop us a note.
-> > And when submitting patch, we suggest to use '--base' as documented in
-> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> > 
-> > url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/rethook-Use-__rcu-pointer-for-rethook-handler/20231124-090634
-> > base:   linus/master
-> > patch link:    https://lore.kernel.org/r/170078778632.209874.7893551840863388753.stgit%40devnote2
-> > patch subject: [PATCH] rethook: Use __rcu pointer for rethook::handler
-> > config: x86_64-randconfig-r113-20231124 (https://download.01.org/0day-ci/archive/20231124/202311241808.rv9ceuAh-lkp@intel.com/config)
-> > compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
-> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231124/202311241808.rv9ceuAh-lkp@intel.com/reproduce)
+> A trace instance may only need to enable specific events. As the eventfs
+> directory of an instance currently creates all events which adds overhead,
+> allow internal instances to be created with just the events in systems
+> that they care about. This currently only deals with systems and not
+> individual events, but this should bring down the overhead of creating
+> instances for specific use cases quite bit.
 > 
-> Let me fix this issue. It seems that sparse with function pointer
-> needs a special care.
-
-Hmm, I think we need to ignore some warnings from sparse for function pointer.
-
-struct rethook {
-	rethook_handler_t __rcu handler;
-};
-
-This doesn't work because the handler is not a pointer but a value type from
-the sparse point of view(?)
-
-So if we change the rethook_handler_t as below, most of the sparse warnings
-are gone.
-
-typedef void (__rcu *rethook_handler_t) (struct rethook_node *, void *, unsigned long, struct pt_regs *);
-                  ^^^^^^
-
-However, I found that this causes another warnings on the init function call
-which requires rethook_handler_t as a parameter.
-
-kernel/trace/fprobe.c:209:49: warning: incorrect type in argument 2 (different address spaces)
-kernel/trace/fprobe.c:209:49:    expected void ( [noderef] __rcu *[usertype] handler )( ... )
-kernel/trace/fprobe.c:209:49:    got void ( * )( ... )
-
-        fp->rethook = rethook_alloc((void *)fp, fprobe_exit_handler,
-							      ^^^^^^^^^^^^^^^^^^^^^^^^^
-                                sizeof(struct fprobe_rethook_node), size);
-
-Why? because fprobe_exit_handler() has no "__rcu"! Of course we can fix this
-warning with force casting, e.g.
-
-        fp->rethook = rethook_alloc((void *)fp, (rethook_handler_t)fprobe_exit_handler,
-
-But this is totally wrong because it disables the compiler's type check!
-
-One possible solution is to use a raw function pointer type for the
-rethook_alloc() but that will be redundant or, just ignore
-the sparse warnings as Documentation/RCU/rcu_dereference.rst said.
-
-(Another tricky hack is to use a union just for rcu_assign_pointer/rcu_derefernce)
-
-Thank you,
-
-
+> The qla2xxx instance could just enable the systems it cares about, but that
+> should be a separate patch.
 > 
-> Thank you,
-> 
-> > 
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202311241808.rv9ceuAh-lkp@intel.com/
-> > 
-> > sparse warnings: (new ones prefixed by >>)
-> > >> kernel/trace/rethook.c:51:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
-> > >> kernel/trace/rethook.c:51:9: sparse:    void ( [noderef] __rcu * )( ... )
-> > >> kernel/trace/rethook.c:51:9: sparse:    void ( * )( ... )
-> >    kernel/trace/rethook.c:66:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
-> >    kernel/trace/rethook.c:66:9: sparse:    void ( [noderef] __rcu * )( ... )
-> >    kernel/trace/rethook.c:66:9: sparse:    void ( * )( ... )
-> >    kernel/trace/rethook.c:110:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
-> >    kernel/trace/rethook.c:110:9: sparse:    void ( [noderef] __rcu * )( ... )
-> >    kernel/trace/rethook.c:110:9: sparse:    void ( * )( ... )
-> >    kernel/trace/rethook.c:140:19: sparse: sparse: incompatible types in comparison expression (different address spaces):
-> >    kernel/trace/rethook.c:140:19: sparse:    void ( [noderef] __rcu * )( ... )
-> >    kernel/trace/rethook.c:140:19: sparse:    void ( * )( ... )
-> >    kernel/trace/rethook.c:161:19: sparse: sparse: incompatible types in comparison expression (different address spaces):
-> >    kernel/trace/rethook.c:161:19: sparse:    void ( [noderef] __rcu * )( ... )
-> >    kernel/trace/rethook.c:161:19: sparse:    void ( * )( ... )
-> >    kernel/trace/rethook.c:305:27: sparse: sparse: incompatible types in comparison expression (different address spaces):
-> >    kernel/trace/rethook.c:305:27: sparse:    void ( [noderef] __rcu * )( ... )
-> >    kernel/trace/rethook.c:305:27: sparse:    void ( * )( ... )
-> > 
-> > vim +51 kernel/trace/rethook.c
-> > 
-> >     40	
-> >     41	/**
-> >     42	 * rethook_stop() - Stop using a rethook.
-> >     43	 * @rh: the struct rethook to stop.
-> >     44	 *
-> >     45	 * Stop using a rethook to prepare for freeing it. If you want to wait for
-> >     46	 * all running rethook handler before calling rethook_free(), you need to
-> >     47	 * call this first and wait RCU, and call rethook_free().
-> >     48	 */
-> >     49	void rethook_stop(struct rethook *rh)
-> >     50	{
-> >   > 51		rcu_assign_pointer(rh->handler, NULL);
-> >     52	}
-> >     53	
-> > 
-> > -- 
-> > 0-DAY CI Kernel Test Service
-> > https://github.com/intel/lkp-tests/wiki
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Note that kprobes and synthetic events created after the creation of these
+> instances, will be added to these instances, but those that are created
+> before the creation of the instance will not be included.
 
+This limitation will cause (unrelated) events created by modules that
+are insmoded after creating the instance to be also added to the
+instance. Why not filter those as well?
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Besides that, the change looks nice to me.
+
+> Note, this may also be useful for creating instances in the eventfs, but
+> I'm not sure how to do this there. I could add a deliminator:
+> 
+>   mkdir /sys/kernel/tracing/instances/foo::sched,timer
+> 
+> But if a tool already uses "::" as a deliminator, then this will break it.
+> I could just have it work if all the events after the deliminator exist.
+> 
+>   Thoughts?
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  drivers/scsi/qla2xxx/qla_os.c       |  2 +-
+>  include/linux/trace.h               |  4 ++--
+>  kernel/trace/trace.c                | 22 ++++++++++++--------
+>  kernel/trace/trace.h                |  3 ++-
+>  kernel/trace/trace_boot.c           |  2 +-
+>  kernel/trace/trace_events.c         | 31 ++++++++++++++++++++++++++---
+>  samples/ftrace/sample-trace-array.c |  2 +-
+>  7 files changed, 49 insertions(+), 17 deletions(-)
