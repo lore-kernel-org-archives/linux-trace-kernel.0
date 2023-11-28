@@ -1,53 +1,67 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RNTpJRNc"
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35F8ED60
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Nov 2023 05:14:38 -0800 (PST)
-Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-5094cb3a036so7427299e87.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Nov 2023 05:14:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1701177276; x=1701782076; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=D3lzwLwPre7wvnqsdFYx09a6rbeV9XRoBcce+xZPKf0=;
-        b=RNTpJRNcNnEb5YFU00RErkxk3Q938Q0YMiV1OCgISy7pscuhklxpap21xy+bca9FuX
-         EufNZX45lM5ALVc3We2A//Qhxc3tdyo1A+oQdrpJnJb6dMFAX3h8y2RGSAdLkhlEFZm8
-         IZGENb7cXFoWZS/4ZIB6c6WQt6Uk5HsspDVuM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701177276; x=1701782076;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D3lzwLwPre7wvnqsdFYx09a6rbeV9XRoBcce+xZPKf0=;
-        b=anzI+ThzmdXqS7xQgsqY04SmDGdeGGpff98dcOxz0qttirG2wt2ZKwpM+b1XcVF4xh
-         xP1I06YyJf2AbpTA+D9q0stXK1IT2fGdIvQgH4Kx668kb2+GzuVk4lW1TfL0rp5x+mT+
-         x8VH0wOPrJnIBczkU5ivcRSvEu/3l8+G5rgeKALdcEGI4sY3UCeiF9ndJqyvqwJHtRGX
-         +qAybSR4XCQz/AaxIvbqpXcLCFG93GYf7z/mMN29bYn+Ayc/OGVsOri+c4OtY/xKYGmC
-         c/Dj4BEK4XvSGdABjherXMTl3z4lm50KIiSGjOMUojEqYF7CoYwEdoL3xNV/1UgLpEpW
-         tFeQ==
-X-Gm-Message-State: AOJu0Yw9daRVNwUxvMVWMwaRwS/O1FMuTQg8xYMMbEeqAcPArcjWYkUm
-	bh5Qs6JlCfk/cRQmOkY03EkIbQ==
-X-Google-Smtp-Source: AGHT+IE0Vi+lZpGWrs8F+Q6TthkcHLrt1LW8Dss/9F153YJg4v3hb9ZeesPR9HQID+L/IE0mA2CkQQ==
-X-Received: by 2002:ac2:5619:0:b0:507:9f51:acee with SMTP id v25-20020ac25619000000b005079f51aceemr9291885lfd.22.1701177275725;
-        Tue, 28 Nov 2023 05:14:35 -0800 (PST)
-Received: from google.com ([83.142.187.84])
-        by smtp.gmail.com with ESMTPSA id k9-20020ac24f09000000b0050ba6e480fdsm1352362lfr.248.2023.11.28.05.14.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Nov 2023 05:14:35 -0800 (PST)
-Date: Tue, 28 Nov 2023 14:14:29 +0100
-From: Dmytro Maluka <dmaluka@chromium.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="T6qJw7IS"
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57396D53;
+	Tue, 28 Nov 2023 06:07:50 -0800 (PST)
+Received: from relay2.suse.de (unknown [149.44.160.134])
+	by smtp-out1.suse.de (Postfix) with ESMTP id 0799F2199D;
+	Tue, 28 Nov 2023 14:07:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1701180468; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Szd0kfLvWrSYQ3QHqmPI1rgK3WdJ32bLnGKR57G4N6w=;
+	b=T6qJw7ISXA7Fi4iKSgAIz3Ci3iO4Hj5dsdiOgi/iNjyE2l49xviNFjkJbyvwWJqBPV0TQj
+	ucjBzs5PCwMb0LE/FC9ZrB/jEgLhJLFQ5yjPSkdON+6JAzmGsS2+s+ToTdB34n3Wv8cMKL
+	kQb+PuFAw5fQHCwHaszJUvKiMw0Ob1o=
+Received: from suse.cz (pmladek.tcp.ovpn2.prg.suse.de [10.100.208.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by relay2.suse.de (Postfix) with ESMTPS id 24C2F2C153;
+	Tue, 28 Nov 2023 14:07:43 +0000 (UTC)
+Date: Tue, 28 Nov 2023 15:07:43 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: j.granados@samsung.com
+Cc: Luis Chamberlain <mcgrof@kernel.org>, willy@infradead.org,
+	josh@joshtriplett.org, Kees Cook <keescook@chromium.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Iurii Zaikin <yzaikin@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Sean Paul <seanpaul@chromium.org>, Arun Easi <aeasi@marvell.com>,
-	Daniel Wagner <dwagner@suse.de>
-Subject: Re: [RFC][PATCH] tracing: Allow creating instances with specified
- system events
-Message-ID: <ZWXntcHNflkbrxd7@google.com>
-References: <20231127174108.3c331c9c@gandalf.local.home>
+	Thomas Gleixner <tglx@linutronix.de>,
+	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
+	Andy Lutomirski <luto@amacapital.net>,
+	Will Drewry <wad@chromium.org>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Balbir Singh <bsingharora@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH 07/10] printk: Remove the now superfluous sentinel
+ elements from ctl_table array
+Message-ID: <ZWX0L4lV8TWOgcpv@alley>
+References: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-0-e4ce1388dfa0@samsung.com>
+ <20231107-jag-sysctl_remove_empty_elem_kernel-v1-7-e4ce1388dfa0@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -56,48 +70,72 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231127174108.3c331c9c@gandalf.local.home>
+In-Reply-To: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-7-e4ce1388dfa0@samsung.com>
+X-Spamd-Bar: +++++++++++++++++++++++++
+X-Spam-Score: 26.00
+X-Rspamd-Server: rspamd1
+Authentication-Results: smtp-out1.suse.de;
+	dkim=none;
+	spf=fail (smtp-out1.suse.de: domain of pmladek@suse.com does not designate 149.44.160.134 as permitted sender) smtp.mailfrom=pmladek@suse.com;
+	dmarc=fail reason="No valid SPF, No valid DKIM" header.from=suse.com (policy=quarantine)
+X-Rspamd-Queue-Id: 0799F2199D
+X-Spamd-Result: default: False [26.00 / 50.00];
+	 RDNS_NONE(1.00)[];
+	 SPAMHAUS_XBL(0.00)[149.44.160.134:from];
+	 TO_DN_SOME(0.00)[];
+	 RWL_MAILSPIKE_GOOD(0.00)[149.44.160.134:from];
+	 HFILTER_HELO_IP_A(1.00)[relay2.suse.de];
+	 HFILTER_HELO_NORES_A_OR_MX(0.30)[relay2.suse.de];
+	 R_RATELIMIT(0.00)[rip(RLa6h5sh378tcam5q78u)];
+	 MX_GOOD(-0.01)[];
+	 RCVD_NO_TLS_LAST(0.10)[];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 R_DKIM_NA(2.20)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FORGED_RECIPIENTS(2.00)[m:mgorman@suse.de,s:mgorman@imap.suse.de];
+	 BAYES_HAM(-0.00)[29.52%];
+	 RDNS_DNSFAIL(0.00)[];
+	 ARC_NA(0.00)[];
+	 R_SPF_FAIL(1.00)[-all];
+	 FROM_HAS_DN(0.00)[];
+	 DMARC_POLICY_QUARANTINE(1.50)[suse.com : No valid SPF, No valid DKIM,quarantine];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 NEURAL_SPAM_SHORT(3.00)[1.000];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 TO_MATCH_ENVRCPT_SOME(0.00)[];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 VIOLATED_DIRECT_SPF(3.50)[];
+	 NEURAL_SPAM_LONG(3.50)[1.000];
+	 RCPT_COUNT_TWELVE(0.00)[46];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[kernel.org,infradead.org,joshtriplett.org,chromium.org,xmission.com,google.com,goodmis.org,arm.com,linutronix.de,amacapital.net,redhat.com,linaro.org,suse.de,linux.ibm.com,intel.com,davemloft.net,gmail.com,iogearbox.net,linux.dev,vger.kernel.org,lists.infradead.org];
+	 HFILTER_HOSTNAME_UNKNOWN(2.50)[];
+	 SUSPICIOUS_RECIPS(1.50)[];
+	 RCVD_COUNT_TWO(0.00)[2]
 
-On Mon, Nov 27, 2023 at 05:41:08PM -0500, Steven Rostedt wrote:
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Tue 2023-11-07 14:45:07, Joel Granados via B4 Relay wrote:
+> From: Joel Granados <j.granados@samsung.com>
 > 
-> A trace instance may only need to enable specific events. As the eventfs
-> directory of an instance currently creates all events which adds overhead,
-> allow internal instances to be created with just the events in systems
-> that they care about. This currently only deals with systems and not
-> individual events, but this should bring down the overhead of creating
-> instances for specific use cases quite bit.
+> This commit comes at the tail end of a greater effort to remove the
+> empty elements at the end of the ctl_table arrays (sentinels) which
+> will reduce the overall build time size of the kernel and run time
+> memory bloat by ~64 bytes per sentinel (further information Link :
+> https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
 > 
-> The qla2xxx instance could just enable the systems it cares about, but that
-> should be a separate patch.
+> rm sentinel element from printk_sysctls
 > 
-> Note that kprobes and synthetic events created after the creation of these
-> instances, will be added to these instances, but those that are created
-> before the creation of the instance will not be included.
+> Signed-off-by: Joel Granados <j.granados@samsung.com>
 
-This limitation will cause (unrelated) events created by modules that
-are insmoded after creating the instance to be also added to the
-instance. Why not filter those as well?
+I am a bit sceptical if the size and time reduction is worth the
+effort. I feel that this change makes the access a bit less secure.
 
-Besides that, the change looks nice to me.
+Well, almost all arrays are static so that it should just work.
+The patch does what it says. Feel free to use:
 
-> Note, this may also be useful for creating instances in the eventfs, but
-> I'm not sure how to do this there. I could add a deliminator:
-> 
->   mkdir /sys/kernel/tracing/instances/foo::sched,timer
-> 
-> But if a tool already uses "::" as a deliminator, then this will break it.
-> I could just have it work if all the events after the deliminator exist.
-> 
->   Thoughts?
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  drivers/scsi/qla2xxx/qla_os.c       |  2 +-
->  include/linux/trace.h               |  4 ++--
->  kernel/trace/trace.c                | 22 ++++++++++++--------
->  kernel/trace/trace.h                |  3 ++-
->  kernel/trace/trace_boot.c           |  2 +-
->  kernel/trace/trace_events.c         | 31 ++++++++++++++++++++++++++---
->  samples/ftrace/sample-trace-array.c |  2 +-
->  7 files changed, 49 insertions(+), 17 deletions(-)
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+
+Best Regards,
+Petr
