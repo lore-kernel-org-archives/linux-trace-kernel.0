@@ -1,53 +1,64 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FEUGpzRy";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="rz5+lGrW"
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27878A7;
-	Tue, 28 Nov 2023 00:47:03 -0800 (PST)
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B1D312196E;
-	Tue, 28 Nov 2023 08:47:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1701161221; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mAPSrIdxMutGqOgHy9I5KLLkgBk3CDdDoYEnmVJ1EvI=;
-	b=FEUGpzRyu91W+4DUyreQTfLkK+XD/iQpmpFMYF0FhmVAYY7/4MdbR0Zo+JJUSh8NYmsjPc
-	GWq8vmJEe9HsqJImDK0s3f4BtH88lEwXPCyBBnxlANejfs1GWVOxRg2HfBBfu46ctN8Ejo
-	Ki+LXFVg/hz55HboRRG0z5TNYdPeb9M=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1701161221;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mAPSrIdxMutGqOgHy9I5KLLkgBk3CDdDoYEnmVJ1EvI=;
-	b=rz5+lGrWzTmWLBcOncceK7BEolS0FQu3CVgPMl9O6gAJTTsQrzGP2GzcdonOmDXSBnFIId
-	iFEYM6iRohBLUBBg==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 9EB2F139FC;
-	Tue, 28 Nov 2023 08:47:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id ur1KJQWpZWVKRQAAn2gu4w
-	(envelope-from <dwagner@suse.de>); Tue, 28 Nov 2023 08:47:01 +0000
-Date: Tue, 28 Nov 2023 09:49:14 +0100
-From: Daniel Wagner <dwagner@suse.de>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	dmaluka@google.com, Sean Paul <seanpaul@chromium.org>, Arun Easi <aeasi@marvell.com>
-Subject: Re: [RFC][PATCH] tracing: Allow creating instances with specified
- system events
-Message-ID: <o7zzg7i5jpso2x5rp3mawsjja3j52lomqyx2k2jgp54nrtf4gc@qhqv2ubkvubf>
-References: <20231127174108.3c331c9c@gandalf.local.home>
- <20231127175021.0c0edc53@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RGAJf/G2"
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E965182;
+	Tue, 28 Nov 2023 02:53:23 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-40b399a6529so22920475e9.1;
+        Tue, 28 Nov 2023 02:53:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701168802; x=1701773602; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jHeRUHjNgcHkAoNUOrB2gZOKHhIEPCIVSV2fuslJNro=;
+        b=RGAJf/G2Po5XSEGRT1DGAbV0DxzhtijBRa98A6qAJyfQt5Qi3dDkbuAQIrV6omSjT+
+         1Ee8kx3XiZM+F+FcR9WukkVfuXw/PqcUXnE7Pv7UhMGsqA7KDTV1F+owebyfNg/Diab4
+         QkAPvirezS/iSOY0j287UDZydKjl3QJLwUd22AwMb3DMIlypBQc6yOJGrOWP99w/1qFO
+         YTyiKRIXynoq1m0VSZM2mrieav6VH3RYGutWFoBVx+rRzp/2S0fSUS49GQB1qCInn+vd
+         0OZ4TPGV8yO2ExylpPRSS/Vkih7jGTFL75UmGfYkgcERTX8RNPgbFxFw8Ow5ztfPklyu
+         kroQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701168802; x=1701773602;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jHeRUHjNgcHkAoNUOrB2gZOKHhIEPCIVSV2fuslJNro=;
+        b=cw1wef+vFgRtZMmdtn89Mq4bJBWp40G/b0rCn/MlvavttB/k/kpf9KxXOL4eBmAjP2
+         ajoXMpDPx3ScPS53kczsjsQqH7wsvwuW+aksXfdYT4cQKB/atRwVeNIBW8ipBPF/7FG3
+         KNkxsuvyhUrC6+y+yaToM06pfpLK6JqtLlfLTQiwrmZ7N5I1+zyAJv259gLZs7Cyqb06
+         +cmEAxtWKXEm57lxwSirB5iOMhFOYi+ufqTXKQWCuyGDq/8uhTi18AEzN5tlxKQr+2LK
+         Ackom6pQeE6j+roaGixpuV2vVIn//7oy+EPgxCGzwkMvrRnM8lNo0ggA1eUNRXTXblKS
+         I46Q==
+X-Gm-Message-State: AOJu0YzssKV8T0N93CuQqkenzP9QKwJ7AhGAl+tdLrPbnuedmsDFDCOs
+	2uS0zfCoT0R2JXPwm641Ito=
+X-Google-Smtp-Source: AGHT+IHAtXvi+k2SNzavvcAHSEfDOl1eBAxYx48aeh6/aYmJAhtMVGM/zG7vKgoWiQ3XVkMolR/AzQ==
+X-Received: by 2002:a5d:40cd:0:b0:333:224:48d with SMTP id b13-20020a5d40cd000000b003330224048dmr4670459wrq.33.1701168801641;
+        Tue, 28 Nov 2023 02:53:21 -0800 (PST)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id d15-20020adff84f000000b00333097fc050sm2112498wrq.1.2023.11.28.02.53.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Nov 2023 02:53:21 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 28 Nov 2023 11:53:19 +0100
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>,
+	linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v3 28/33] fprobe: Rewrite fprobe on function-graph tracer
+Message-ID: <ZWXGn3_5pN-0fniR@krava>
+References: <170109317214.343914.4784420430328654397.stgit@devnote2>
+ <170109352014.343914.17580314660854847955.stgit@devnote2>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -56,56 +67,32 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231127175021.0c0edc53@gandalf.local.home>
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -0.60
-X-Spamd-Result: default: False [-0.60 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_SEVEN(0.00)[9];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.00)[19.90%]
+In-Reply-To: <170109352014.343914.17580314660854847955.stgit@devnote2>
 
-On Mon, Nov 27, 2023 at 05:50:21PM -0500, Steven Rostedt wrote:
-> On Mon, 27 Nov 2023 17:41:08 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, Nov 27, 2023 at 10:58:40PM +0900, Masami Hiramatsu (Google) wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> > 
-> > A trace instance may only need to enable specific events. As the eventfs
-> > directory of an instance currently creates all events which adds overhead,
-> > allow internal instances to be created with just the events in systems
-> > that they care about. This currently only deals with systems and not
-> > individual events, but this should bring down the overhead of creating
-> > instances for specific use cases quite bit.
+> Rewrite fprobe implementation on function-graph tracer.
+> Major API changes are:
+>  -  'nr_maxactive' field is deprecated.
+>  -  This depends on CONFIG_DYNAMIC_FTRACE_WITH_ARGS or
+>     !CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS, and
+>     CONFIG_HAVE_FUNCTION_GRAPH_FREGS. So currently works only
+>     on x86_64.
+>  -  Currently the entry size is limited in 15 * sizeof(long).
+>  -  If there is too many fprobe exit handler set on the same
+>     function, it will fail to probe.
 > 
-> This change log is not very good. I didn't actually state what was done :-p
-> 
-> Anyway, function trace_array_get_by_name() has an added parameter "systems"
-> (and I forgot to update its kerneldoc). This parameter is a string of
-> comma, or space, or commas and spaces deliminators of event system names.
-> If it's not NULL, then it will only create the event system directories of
-> those event systems that match the systems parameter.
-> 
-> That is:
-> 
->  trace_array_get_by_name("qla2xxx", "qla");
-> 
-> Will create an instance called "qla2xxx" and only have "qla" system events
-> in it.
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  Changes in v3:
+>   - Update for new reserve_data/retrieve_data API.
+>   - Fix internal push/pop on fgraph data logic so that it can
+>     correctly save/restore the returning fprobes.
 
-Makes sense to me. The qla2xxx driver is interested only in its own
-trace events. This should be fine, at least as far I understand it.
+hi,
+looks like this one conflicts with recent:
+
+  4bbd93455659 kprobes: kretprobe scalability improvement
+
+jirka
