@@ -1,154 +1,340 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19E05C914
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Nov 2023 15:17:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Kg9T3354"
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2087.outbound.protection.outlook.com [40.107.6.87])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1088D41;
-	Tue, 28 Nov 2023 07:06:06 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=my+qser1rx9D1Yvxe56rRSPouLebXqCENBR/zXnQrnTyzPX6GwdNYVGq3rh/ElIlLOAYKD0xjNaMkK4jWcz+l6GX1N7Ej/TaJVgGXLOLIVmyd3Cex+NBWnF0VCDMDJARmOS1Mc3NF1s8nDu7YfXxXf7o3zgslPG0xvryhOznwqgMlQGkAbQDYaJ6t3d98BqTsLlHmU0H0YskVrbclhMkIJgcliOJzDBoxcsh7GwJnNNecL/vA48xp1xrOlXQrJJ6oPg8UTosSG1ZktsAkHlQ/jtbryKuuNmoKDnoNoxqC4Fq02TNmZO+LxCA39WcNRddasFeOtW46kap41P1PufxtA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Dyc2sQDoHVh8VfYCiEsMXXzJ0SZaJAIs8mkRinfIibM=;
- b=AZEkTGbCWuf8mR7uqQf/CCPkcf1WboOBwvgapV8ms/BNk1gnWhSJ2VEYlHm4m1ygyUNa3cY3pX0oaf+uBCYLj6+PrCCc1vrH8vLR1EO5KyNFCc2f2qlnhTXMUsKOBft4HeHH69ohYmNuXROiTFAkpMVYNkBI2HEerL/V2Km5V8JID8yZE4UrQgoHYKmqbMLSS9LtBMgPcuwKNSp+GqSsZJ3/OBhVTUmiUfOQNtfQYsAnrgxofoSwemBWDta9GCrlW808UedFSIbxVrve54Mst9y5f/mQOCCF+PlJM+taidfgSGR/jTQGoxGvLj2Yw1V1sUjwNaDo/U6WV+VhX3Tkzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dyc2sQDoHVh8VfYCiEsMXXzJ0SZaJAIs8mkRinfIibM=;
- b=Kg9T3354Vi7yzOzvtl0EUHKoq/FtZHgF+oxgl0mV7+IaR3FC8es3NQRHaG04p7Gfi0cUUDHRG1UUNFF6mEW+A6gdnCD3NYmQVzVSssznQA3Q502KnSK35xbmjtMFLTCoZTSXiOAFTJZMBqOlEPJ15ZoFaOJZFo8Qji5IXiZfZVwthgSOHagh0JhqfBZdb8Ry3bATqXEu+Itu8B7bg2vNRLswizQr7CQpHOIV0/C0ljZk08k0zIEjCNqOSAccCTPDsBZx0yHqJ0gizo6juVrPdI0OR1KU7m/gSI8aXZKNeDNI3cy9W3umwCGU2UHxoz+rqwD/hopTBpm/39QqhjSCtw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from AM0PR0402MB3395.eurprd04.prod.outlook.com
- (2603:10a6:208:1a::16) by PAXPR04MB8672.eurprd04.prod.outlook.com
- (2603:10a6:102:21f::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.21; Tue, 28 Nov
- 2023 15:06:04 +0000
-Received: from AM0PR0402MB3395.eurprd04.prod.outlook.com
- ([fe80::14c8:fc35:a9ae:9c9d]) by AM0PR0402MB3395.eurprd04.prod.outlook.com
- ([fe80::14c8:fc35:a9ae:9c9d%4]) with mapi id 15.20.7046.015; Tue, 28 Nov 2023
- 15:06:04 +0000
-Message-ID: <1ef6c0a0-4d82-4fdc-8007-87e054a4c08d@suse.com>
-Date: Tue, 28 Nov 2023 16:06:03 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] tracing: Disable events in reverse order of their
- enable operation
-Content-Language: en-US
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M5FhcpqW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 185B4C433C7;
+	Tue, 28 Nov 2023 15:17:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701184663;
+	bh=JxTiC2/pHqKRcO7pIH/J23k4YSH4V5N4dUr8JnjOdek=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=M5FhcpqWTArLBNAWue0LZ6I3Ts52em/nuo/3wG0GLaHf8xZ2KEfjV7c7ZfIy74ppW
+	 m953KJSddGJvt0ZlsTGap6wECyfV/9iVBpvCTPBc/mU1bfEW3NUeF7nulOWQuRh4OU
+	 rcCjL7CdiIBVhkoskNlk0dTDRjgcN4q+ksrxeBQdYEeucDjAZCAdh4eTw/ZWD3G7J4
+	 LJTINHDDVGkSD93qSAhd3n4ZzpCv1zPPenqhYvpLndnMdF9INQ0YzX2xm8oMWb6zPy
+	 Uu/9zjQmDhod+HdsEob0F4aF709hhod0VPgQD8euac3YvHLi2LQ3Ry0L6jIYtU0Jfg
+	 K8rQ2+YXXTLAQ==
+Date: Wed, 29 Nov 2023 00:17:38 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- zhengyejian1@huawei.com, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20231127151248.7232-1-petr.pavlu@suse.com>
- <20231127151248.7232-3-petr.pavlu@suse.com>
- <20231127125815.4a4d06c6@gandalf.local.home>
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20231127125815.4a4d06c6@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: VI1PR0902CA0052.eurprd09.prod.outlook.com
- (2603:10a6:802:1::41) To AM0PR0402MB3395.eurprd04.prod.outlook.com
- (2603:10a6:208:1a::16)
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, dmaluka@google.com, Sean Paul
+ <seanpaul@chromium.org>, Arun Easi <aeasi@marvell.com>, Daniel Wagner
+ <dwagner@suse.de>
+Subject: Re: [RFC][PATCH] tracing: Allow creating instances with specified
+ system events
+Message-Id: <20231129001738.5041154000c4c1df58f6c7a1@kernel.org>
+In-Reply-To: <20231127174108.3c331c9c@gandalf.local.home>
+References: <20231127174108.3c331c9c@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM0PR0402MB3395:EE_|PAXPR04MB8672:EE_
-X-MS-Office365-Filtering-Correlation-Id: 93bfbb58-c0b2-4635-f032-08dbf0238a47
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	NQ4YB7YUDnCAbDoxOC+ZoXn6i0iqRsVhvSqyjW58pvAotis10ZS2WFfAYTikf9rHRTT1e4PpyJ8Iy9mZhTfPb8HkaaQtW7yND6fGlR9mWt+fk1rjsAuGdWwIfd23JNwkhUkr9xY89c1qqcZwId2Xi02mfUln6zLm7tv5NOFQIizaYa7KCKAg2f0gZMUN8q5u3gLpoQFvXTYp83iWEVb77i40yjUyIm7Srw5d+eK2TfVrPOVHdc0tW8qymo7H1piewRn9XIm1VBjUKgzfMKob744AF9/2J9Ja1Kdu/K5AuLiZpP2X7zwNRZAhCdu8YgUcV8qjHEXRxf8Fm8GCzSbXOk6yWKelLLt2TZaaZJbHRbBziyNIc1yaEwKnfHU7S/T2scWAJYA/lzg252YW8xCFJU19LQ2W2f5rGvU3LMM01B09jMTDeIuGdc2jZWJTfLb+AIZug4OyaZ1P0tbFBDWKj2Jrb4w3ji4No4YlRQQ0zq4GyzKRqjMkbofcdkXj9QG4ti+UfgOyHMwh4z8vArGW7Nr48leRpHCft2Wvw2Z805ZuawqP+uFn0lvwSourBIivBHpzzsTxMBBiHPEs5ioGFdyZw3nz8KPD4t2IF1ELpCGKwB2cXWttD03mrMcGfM0/3W3be1b7MrdnueKnn+eFBA==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR0402MB3395.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(396003)(136003)(39860400002)(366004)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(86362001)(31696002)(2616005)(83380400001)(26005)(53546011)(6506007)(55236004)(6512007)(31686004)(36756003)(38100700002)(316002)(44832011)(4326008)(66556008)(6916009)(66476007)(66946007)(478600001)(6486002)(5660300002)(2906002)(41300700001)(8676002)(8936002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?U2RDWkwyYVVxRkdNUUEvMG16a0NwcHgxWUI2MHhFVkdiYnRZYmJqcVJ6L2ZQ?=
- =?utf-8?B?U0RPSmVsSjY4MkExNHhwUUg5MGhzeC9TNU8rMVhyUmxDUnhpQTN2RS9nSkk2?=
- =?utf-8?B?WU10dzVNeEdia01wc2pRZldzNUI1L2ExVWlYZzhrOWJUTEdhYkF0NWpJMmJs?=
- =?utf-8?B?cjQyaWNLVXN6Zmx4TG9nQUFGVCtXZ2ZYSHhRcjBUeEZtUStoVHZ5dTJrMVlV?=
- =?utf-8?B?KytkQmdjcHliNnJkK2ZSc1pxNGdmK3dxelMxaDRmV3ZJUWhxY3ptNXpDeEdk?=
- =?utf-8?B?dU5mdXFwSnA4MVZHYXF4Tm1MV3laU0c1eVBlRWppWnRQeUIwSWIrUElhRGpH?=
- =?utf-8?B?TWFFR0xSTFozN2I2ZjVzWS9SWkFNQkFicW5aRzBQbVlBS29GYURHZlF2bytP?=
- =?utf-8?B?T2FOL3JYZ21tdzM1akgvVGRWWHJaa3lxaGpwemVITHJ0Z1drT2dvdDRJMzJu?=
- =?utf-8?B?ZTZpN01EbTdOak9XeE1ja1lWekhVWHFXUnlmd2FsUmc1WUI3dTJ4NFRHcjNN?=
- =?utf-8?B?M1BsZC9zQlFJcit2NHlPRW9HTVFlNTJ3QnpXQ2JkVkZxUFIwQmR1QkkwZDBB?=
- =?utf-8?B?ZWg2K0QvUnVSQ1dtcHhVUGlnWHFuT3BDTE1idVYreFViY3NlVGpDYUVDN1pk?=
- =?utf-8?B?YWNvQ3F6cytHQno5RHovWmdVL1lFNWhreFRFZWI0bmlieXo0SCsxbVhpdTdE?=
- =?utf-8?B?OFpKSWdQTmtXK1BMdDlOUEJzK0ZFS0ZGY25hdzVkSU0wUDdnVHltQXUwZ0Fj?=
- =?utf-8?B?cERoL0w0QVBqRThiNlNpRGZqRlV3Qmh5M2hFWHFRV05kOXloWElDZWpUdFQv?=
- =?utf-8?B?UzlwN2FxT1BGUzFnU2liWWx4R3dpM01XRE5XRWQvc0tOSnVlS09ucUxJS3lC?=
- =?utf-8?B?NVJ2MDFqQVU5cmtPSW4wTC9hbVNuL1E1bTBYN2lPd2JxUXVDL29pVmhHOGZj?=
- =?utf-8?B?RmhQUitoQTJEWnlnOHd1SFU0VzdBcWpQWnpIb3JNQXIyeUVEWDIvRVBWc0pP?=
- =?utf-8?B?dkhrK2xMaXdkT05pZ3F1VVJVTytIWDFyQlBHbVVJSmFVMEpUZFI4dzVSTURZ?=
- =?utf-8?B?cFBHeVVOcDJYTUJSMzdMY2FGZnVja3BDV1hiZno1UkZwN1RIYnh1RnZXN24w?=
- =?utf-8?B?ZlVseHpNaTFzK1dEOE1hNlFoRlBNOUxMT3J3NnFKdXdXSU1PWGg5RHF1aTRp?=
- =?utf-8?B?S0ZMNk5td2gyNXVRWjhkT01MSUovZVIvckVkNkRtSStka3Z3WHBrT0Mwa20v?=
- =?utf-8?B?dEozamZwaVJnRlo5UnFDdzNuU1drdTdJcEkvTDdXTnd6eXBSTzN3UExEb3lK?=
- =?utf-8?B?dSt2ZUF3K1YycmhxUFg1eXN6QzdROGgwUm5nRThlMUZ3WGx2V0xMQzlHWGlB?=
- =?utf-8?B?SlBOYTBzR0pEK2lrSXdQY1J2SWlFbG9YMUhON0VpdW9rUVh2WHlPRzBTQWRo?=
- =?utf-8?B?K3RCbFd5bm81YVVtY2NBZmt3MmF6eUcxQm1LeXUzVzhEcmppQVZOMVF1MGU5?=
- =?utf-8?B?WWI1d2JXL1VtOWppNWQzY1NpekZVVU5MQWdHUFpsNjYySUJxQ1JzQXp6NVRN?=
- =?utf-8?B?RWdaQ2ZpSXcwNUs0NDRvbHViWnVmblVxTFgwdTNndVVUQlA1NmZHTVEvSVJC?=
- =?utf-8?B?czdOY2o5UFJiVlZxK1JCdDNWUG5GZEF2Q0lidEp5akpiLytubkhrWFJuVTky?=
- =?utf-8?B?SEQ3YzVUelZ1a0hheEF5L25odmx6cDBqOVdiTzdIOE5KOURSc25nMVNqdGt3?=
- =?utf-8?B?ZlZQazRYSjdVRUFLWFNqRHk0OHJDbmRpMjE5OHV5dDNOMzBDUW05dUxwQytM?=
- =?utf-8?B?YXBBUjV6NGQvTEpOT1kwZnNwUnJKR3JDMkMzeW9XR0RRazFjN1NHRWRBU2hT?=
- =?utf-8?B?OUszaU9sSTJaK3IwaUwwT0VkMTA4WmEzVGhVNk10bllWcXVOVlMvSGkzQ3Ey?=
- =?utf-8?B?MnFrWUZ2N0xHRDhPSXIxSWdzTjQvM01IdFdyYmgyc1pSUjdteklhdy9IV1lz?=
- =?utf-8?B?WlJ1b2xjcXV6cVJURHNSMHZiZ3B6amFlOWZYN2dIQXdoM3QxbC83ZzMvRVpm?=
- =?utf-8?B?RDQzS0h6eWVwZ3RJenA0cHV6NDJ2T1orOEoxN3FsQUp2TlVpbTdqdmF0ak9O?=
- =?utf-8?Q?glhx7e6DLLsJW7YSoQ1qTLfn3?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93bfbb58-c0b2-4635-f032-08dbf0238a47
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR0402MB3395.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Nov 2023 15:06:03.9756
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tBVLvvAMNOsrVkvRcg8jZFL64mRIQxnrty/muBm1qG4yBaTPm9A9ni2Cw1NhsDCoMDGFJ6G8Mmg3RmtdH5J9DQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8672
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 11/27/23 18:58, Steven Rostedt wrote:
-> On Mon, 27 Nov 2023 16:12:48 +0100
-> Petr Pavlu <petr.pavlu@suse.com> wrote:
-> 
->> Make the disable operation in __ftrace_event_enable_disable() use the
->> reverse order of the respective enable operation.
->>
->> This has two minor benefits:
->> * Disabling of buffered events via trace_buffered_event_disable() is
->>   done after unregistering the trace event. It closes a small window
->>   where an event would be still registered and could be hit, but would
->>   unnecessarily go directly to a ring buffer.
-> 
-> There's little benefit to the above. Going to the ring buffer and reverting
-> it is just a bit more expensive, but should not be an issue with this small
-> window.
-> 
->> * The SOFT_DISABLED flag is now consistently set only when SOFT_MODE is
->>   also set.
-> 
-> This code is a bit fragile, and I rather not change the logic. There's a
-> lot of corner cases.
-> 
-> I'm not saying that this is a bad change, I just don't want to add it and
-> find out later it broke one of the corner cases. To add this would require
-> an analysis that every input produces the same output with and without this
-> change.
-> 
-> If you want to make a table showing all inputs between soft_disable and the
-> flags, and show that the result produces the same updates, I'll then
-> reconsidered applying this.
+Hi Steve,
 
-Ok, that is fair. It looked to me as a reasonable change but I don't
-feel strongly about it and I understand your concern. I guess I'll drop
-it in v2.
+On Mon, 27 Nov 2023 17:41:08 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Thanks,
-Petr
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> A trace instance may only need to enable specific events. As the eventfs
+> directory of an instance currently creates all events which adds overhead,
+> allow internal instances to be created with just the events in systems
+> that they care about. This currently only deals with systems and not
+> individual events, but this should bring down the overhead of creating
+> instances for specific use cases quite bit.
+
+This sounds good, but can the eventfs reduce such overhead because
+if the user doesn't touch the actual event, the event dentry will
+be released soon?
+
+> 
+> The qla2xxx instance could just enable the systems it cares about, but that
+> should be a separate patch.
+> 
+> Note that kprobes and synthetic events created after the creation of these
+> instances, will be added to these instances, but those that are created
+> before the creation of the instance will not be included.
+> 
+> Note, this may also be useful for creating instances in the eventfs, but
+> I'm not sure how to do this there. I could add a deliminator:
+> 
+>   mkdir /sys/kernel/tracing/instances/foo::sched,timer
+
+Can we limit this after making an instance? In that case, we can use
+rmdir to remove unused "systems" directories. Or, maybe we can create
+it afterwards with mkdir or use comand to a pseudo file.
+
+echo sched:* timer:* > instances/foo/available_events
+
+Thank you,
+
+> 
+> But if a tool already uses "::" as a deliminator, then this will break it.
+> I could just have it work if all the events after the deliminator exist.
+> 
+>   Thoughts?
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  drivers/scsi/qla2xxx/qla_os.c       |  2 +-
+>  include/linux/trace.h               |  4 ++--
+>  kernel/trace/trace.c                | 22 ++++++++++++--------
+>  kernel/trace/trace.h                |  3 ++-
+>  kernel/trace/trace_boot.c           |  2 +-
+>  kernel/trace/trace_events.c         | 31 ++++++++++++++++++++++++++---
+>  samples/ftrace/sample-trace-array.c |  2 +-
+>  7 files changed, 49 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+> index 03348f605c2e..dd674378f2f3 100644
+> --- a/drivers/scsi/qla2xxx/qla_os.c
+> +++ b/drivers/scsi/qla2xxx/qla_os.c
+> @@ -2889,7 +2889,7 @@ static void qla2x00_iocb_work_fn(struct work_struct *work)
+>  static void
+>  qla_trace_init(void)
+>  {
+> -	qla_trc_array = trace_array_get_by_name("qla2xxx");
+> +	qla_trc_array = trace_array_get_by_name("qla2xxx", NULL);
+>  	if (!qla_trc_array) {
+>  		ql_log(ql_log_fatal, NULL, 0x0001,
+>  		       "Unable to create qla2xxx trace instance, instance logging will be disabled.\n");
+> diff --git a/include/linux/trace.h b/include/linux/trace.h
+> index 2a70a447184c..fdcd76b7be83 100644
+> --- a/include/linux/trace.h
+> +++ b/include/linux/trace.h
+> @@ -51,7 +51,7 @@ int trace_array_printk(struct trace_array *tr, unsigned long ip,
+>  		       const char *fmt, ...);
+>  int trace_array_init_printk(struct trace_array *tr);
+>  void trace_array_put(struct trace_array *tr);
+> -struct trace_array *trace_array_get_by_name(const char *name);
+> +struct trace_array *trace_array_get_by_name(const char *name, const char *systems);
+>  int trace_array_destroy(struct trace_array *tr);
+>  
+>  /* For osnoise tracer */
+> @@ -84,7 +84,7 @@ static inline int trace_array_init_printk(struct trace_array *tr)
+>  static inline void trace_array_put(struct trace_array *tr)
+>  {
+>  }
+> -static inline struct trace_array *trace_array_get_by_name(const char *name)
+> +static inline struct trace_array *trace_array_get_by_name(const char *name, const char *systems)
+>  {
+>  	return NULL;
+>  }
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 9aebf904ff97..3a5637ccabfd 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -9500,7 +9500,7 @@ struct trace_array *trace_array_find_get(const char *instance)
+>  	return tr;
+>  }
+>  
+> -static int trace_array_create_dir(struct trace_array *tr)
+> +static int trace_array_create_dir(struct trace_array *tr, const char *systems)
+>  {
+>  	int ret;
+>  
+> @@ -9508,7 +9508,7 @@ static int trace_array_create_dir(struct trace_array *tr)
+>  	if (!tr->dir)
+>  		return -EINVAL;
+>  
+> -	ret = event_trace_add_tracer(tr->dir, tr);
+> +	ret = event_trace_add_tracer(tr->dir, tr, systems);
+>  	if (ret) {
+>  		tracefs_remove(tr->dir);
+>  		return ret;
+> @@ -9520,7 +9520,8 @@ static int trace_array_create_dir(struct trace_array *tr)
+>  	return ret;
+>  }
+>  
+> -static struct trace_array *trace_array_create(const char *name)
+> +static struct trace_array *
+> +trace_array_create_systems(const char *name, const char *systems)
+>  {
+>  	struct trace_array *tr;
+>  	int ret;
+> @@ -9569,7 +9570,7 @@ static struct trace_array *trace_array_create(const char *name)
+>  	init_trace_flags_index(tr);
+>  
+>  	if (trace_instance_dir) {
+> -		ret = trace_array_create_dir(tr);
+> +		ret = trace_array_create_dir(tr, systems);
+>  		if (ret)
+>  			goto out_free_tr;
+>  	} else
+> @@ -9592,6 +9593,11 @@ static struct trace_array *trace_array_create(const char *name)
+>  	return ERR_PTR(ret);
+>  }
+>  
+> +static struct trace_array *trace_array_create(const char *name)
+> +{
+> +	return trace_array_create_systems(name, NULL);
+> +}
+> +
+>  static int instance_mkdir(const char *name)
+>  {
+>  	struct trace_array *tr;
+> @@ -9630,7 +9636,7 @@ static int instance_mkdir(const char *name)
+>   * trace_array_put() is called, user space can not delete it.
+>   *
+>   */
+> -struct trace_array *trace_array_get_by_name(const char *name)
+> +struct trace_array *trace_array_get_by_name(const char *name, const char *systems)
+>  {
+>  	struct trace_array *tr;
+>  
+> @@ -9642,7 +9648,7 @@ struct trace_array *trace_array_get_by_name(const char *name)
+>  			goto out_unlock;
+>  	}
+>  
+> -	tr = trace_array_create(name);
+> +	tr = trace_array_create_systems(name, systems);
+>  
+>  	if (IS_ERR(tr))
+>  		tr = NULL;
+> @@ -9758,7 +9764,7 @@ static __init void create_trace_instances(struct dentry *d_tracer)
+>  	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
+>  		if (!tr->name)
+>  			continue;
+> -		if (MEM_FAIL(trace_array_create_dir(tr) < 0,
+> +		if (MEM_FAIL(trace_array_create_dir(tr, NULL) < 0,
+>  			     "Failed to create instance directory\n"))
+>  			break;
+>  	}
+> @@ -10407,7 +10413,7 @@ __init static void enable_instances(void)
+>  		if (IS_ENABLED(CONFIG_TRACER_MAX_TRACE))
+>  			do_allocate_snapshot(tok);
+>  
+> -		tr = trace_array_get_by_name(tok);
+> +		tr = trace_array_get_by_name(tok, NULL);
+>  		if (!tr) {
+>  			pr_warn("Failed to create instance buffer %s\n", curr_str);
+>  			continue;
+> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> index b7f4ea25a194..eb1bc1c572c3 100644
+> --- a/kernel/trace/trace.h
+> +++ b/kernel/trace/trace.h
+> @@ -1540,7 +1540,8 @@ extern void trace_event_enable_tgid_record(bool enable);
+>  
+>  extern int event_trace_init(void);
+>  extern int init_events(void);
+> -extern int event_trace_add_tracer(struct dentry *parent, struct trace_array *tr);
+> +extern int event_trace_add_tracer(struct dentry *parent, struct trace_array *tr,
+> +				  const char *system);
+>  extern int event_trace_del_tracer(struct trace_array *tr);
+>  extern void __trace_early_add_events(struct trace_array *tr);
+>  
+> diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+> index 7ccc7a8e155b..dbe29b4c6a7a 100644
+> --- a/kernel/trace/trace_boot.c
+> +++ b/kernel/trace/trace_boot.c
+> @@ -633,7 +633,7 @@ trace_boot_init_instances(struct xbc_node *node)
+>  		if (!p || *p == '\0')
+>  			continue;
+>  
+> -		tr = trace_array_get_by_name(p);
+> +		tr = trace_array_get_by_name(p, NULL);
+>  		if (!tr) {
+>  			pr_err("Failed to get trace instance %s\n", p);
+>  			continue;
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index f29e815ca5b2..9a1d91a7edf2 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -3205,14 +3205,37 @@ static struct notifier_block trace_module_nb = {
+>  };
+>  #endif /* CONFIG_MODULES */
+>  
+> +static bool event_in_systems(struct trace_event_call *call,
+> +			     const char *systems)
+> +{
+> +	const char *system;
+> +	const char *p;
+> +
+> +	if (!systems)
+> +		return true;
+> +
+> +	system = call->class->system;
+> +	p = strstr(systems, system);
+> +	if (!p)
+> +		return false;
+> +
+> +	if (p != systems && !isspace(*(p - 1)) && *(p - 1) != ',')
+> +		return false;
+> +
+> +	p += strlen(system);
+> +	return !*p || isspace(*p) || *p == ',';
+> +}
+> +
+>  /* Create a new event directory structure for a trace directory. */
+>  static void
+> -__trace_add_event_dirs(struct trace_array *tr)
+> +__trace_add_event_dirs(struct trace_array *tr, const char *systems)
+>  {
+>  	struct trace_event_call *call;
+>  	int ret;
+>  
+>  	list_for_each_entry(call, &ftrace_events, list) {
+> +		if (!event_in_systems(call, systems))
+> +			continue;
+>  		ret = __trace_add_new_event(call, tr);
+>  		if (ret < 0)
+>  			pr_warn("Could not create directory for event %s\n",
+> @@ -3820,6 +3843,7 @@ create_event_toplevel_files(struct dentry *parent, struct trace_array *tr)
+>   * event_trace_add_tracer - add a instance of a trace_array to events
+>   * @parent: The parent dentry to place the files/directories for events in
+>   * @tr: The trace array associated with these events
+> + * @systems: comma separated list of event systems to create (NULL for all)
+>   *
+>   * When a new instance is created, it needs to set up its events
+>   * directory, as well as other files associated with events. It also
+> @@ -3829,7 +3853,8 @@ create_event_toplevel_files(struct dentry *parent, struct trace_array *tr)
+>   *
+>   * Must be called with event_mutex held.
+>   */
+> -int event_trace_add_tracer(struct dentry *parent, struct trace_array *tr)
+> +int event_trace_add_tracer(struct dentry *parent, struct trace_array *tr,
+> +			   const char *systems)
+>  {
+>  	int ret;
+>  
+> @@ -3844,7 +3869,7 @@ int event_trace_add_tracer(struct dentry *parent, struct trace_array *tr)
+>  	if (unlikely(!list_empty(&tr->events)))
+>  		__trace_early_add_event_dirs(tr);
+>  	else
+> -		__trace_add_event_dirs(tr);
+> +		__trace_add_event_dirs(tr, systems);
+>  	up_write(&trace_event_sem);
+>  
+>   out:
+> diff --git a/samples/ftrace/sample-trace-array.c b/samples/ftrace/sample-trace-array.c
+> index 6aba02a31c96..89b72957e687 100644
+> --- a/samples/ftrace/sample-trace-array.c
+> +++ b/samples/ftrace/sample-trace-array.c
+> @@ -105,7 +105,7 @@ static int __init sample_trace_array_init(void)
+>  	 * NOTE: This function increments the reference counter
+>  	 * associated with the trace array - "tr".
+>  	 */
+> -	tr = trace_array_get_by_name("sample-instance");
+> +	tr = trace_array_get_by_name("sample-instance", "sched,timer");
+>  
+>  	if (!tr)
+>  		return -1;
+> -- 
+> 2.42.0
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
