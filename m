@@ -1,807 +1,553 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2452744360
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Nov 2023 21:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E17A0C433C8;
-	Tue, 28 Nov 2023 21:38:09 +0000 (UTC)
-Date: Tue, 28 Nov 2023 16:38:29 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc: Yordan Karadzhov <y.karadz@gmail.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>, Ross Zwisler
- <zwisler@google.com>
-Subject: [PATCH v4] libtracecmd: Use an rbtree for mapping of cache pages
-Message-ID: <20231128163829.1d3fe2d3@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="errNq7QE"
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC91E111;
+	Wed, 29 Nov 2023 00:55:55 -0800 (PST)
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20231129085553epoutp046018296c42d7434ded80274d4c3eb47e~cDC6xYt2N0030700307epoutp04L;
+	Wed, 29 Nov 2023 08:55:53 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20231129085553epoutp046018296c42d7434ded80274d4c3eb47e~cDC6xYt2N0030700307epoutp04L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1701248153;
+	bh=cxuo0rjgsu822iymiSVM9UwW6HOQ3HapEo/i2G5CNCM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=errNq7QExsGeCygRBZ7d2cbkwZBlRsZi2XQTGjHABdOtGDtdWzQQpikPRb+qoDQ3F
+	 WK+Jl9PoqhqlhUqlF7s5sXWOYskuWArJKsPf0fWfP7kK3O3X2FF2y1hyY7kSvtJT8k
+	 jnKNllksQ3CgINriCXOHmMVgyhEvetcxxJNSI9ig=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+	20231129085553epcas2p2e1745bc34017fc6e2280cdd18f576254~cDC6enMIt1962319623epcas2p2n;
+	Wed, 29 Nov 2023 08:55:53 +0000 (GMT)
+Received: from epsmges2p4.samsung.com (unknown [182.195.36.89]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4SgCpc6D37z4x9Py; Wed, 29 Nov
+	2023 08:55:52 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+	epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+	E2.AA.09607.89CF6656; Wed, 29 Nov 2023 17:55:52 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
+	20231129085552epcas2p259a8df24ee5866fe93c16f706c031649~cDC5QGPwv1502015020epcas2p2S;
+	Wed, 29 Nov 2023 08:55:52 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20231129085552epsmtrp252e8f494c1d7aa96fdba6d44f146167c~cDC5Ow1bm0843708437epsmtrp2S;
+	Wed, 29 Nov 2023 08:55:52 +0000 (GMT)
+X-AuditID: b6c32a48-bcdfd70000002587-37-6566fc98cf9b
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	80.DA.07368.79CF6656; Wed, 29 Nov 2023 17:55:52 +0900 (KST)
+Received: from tiffany (unknown [10.229.95.142]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20231129085551epsmtip1d362d9bf85f6070615fc4e6cda6e80f9~cDC40frex0824008240epsmtip1_;
+	Wed, 29 Nov 2023 08:55:51 +0000 (GMT)
+Date: Wed, 29 Nov 2023 17:44:24 +0900
+From: Hyesoo Yu <hyesoo.yu@samsung.com>
+To: Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
+	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+	bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+	vschneid@redhat.com, mhiramat@kernel.org, rppt@kernel.org, hughd@google.com,
+	pcc@google.com, steven.price@arm.com, anshuman.khandual@arm.com,
+	vincenzo.frascino@arm.com, david@redhat.com, eugenis@google.com,
+	kcc@google.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v2 11/27] arm64: mte: Reserve tag storage memory
+Message-ID: <20231129084424.GA2988384@tiffany>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20231119165721.9849-12-alexandru.elisei@arm.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Te1ATVxTGvbubTXQEF3z0QkcbIoimJSSUx6Uq0xmZznZoK53O1A7/hEi2
+	kEIezSbWx1Rji5hSFURRgkhjQUBFcQKKUEiVhxCxrUXE8qwiUqRRFBQCFtuExY7//e4333fv
+	uefMEeC+v/L9BSqNgdFrFGkicgFxsXFNZEjeP58z0m8fiFFBRTmJjp66SSJ7axKaybnKR+33
+	brmlB7sJNFqyD6BnFdM4up99AUdXrI8IdH/sAIH+tJdiqC8rl0DVQw8xNFLVSCBz7TMC2e51
+	8lBdvYNAN2sLSNRf/i8PNVX8QqCaAgcPHXo0BFBR6SrUftmKodwpJ4myem+TqGX/ZQzZzXcw
+	t7caQ7ubRklk6ekByNw0gaP6F1MEutA8yUfpvRGo6+R5/rtBdHlhOaCfT+cAOt3ezaetNiOd
+	3vSQR1eWiWnb6e9I2jaWw6d7O+tIujXvOUGfMOXidGXxLnq40gLoUfstkq5s20GP21bEUwmp
+	61IYhZLRCxlNklap0iSvF8V9It8gj4iUykJk0ShKJNQo1Mx6UewH8SHvqdLczRQJtyjSjG4p
+	XsGyotCYdXqt0cAIU7SsYb2I0SnTdFE6CatQs0ZNskTDGN6RSaVhEW5jYmqKydXB1x1Xb31c
+	t8UE/v40E8wXQCocThUXER72pS4B2OJckgkWuHkMwJzO0yR3mACw2FlGvEwU/VFNcol6ADsm
+	gznTfQBrTb/NmggqCOad7eV5mKSCYWtVCfDwEioUDlwYAZ4ATl0jYd+x61gmEAgWUzSsHpR5
+	PF6UBDac6ME59oEOy+DsnfOpGDjTZya5InIXwGaHguNYeL5qAnC8GI60VPE59ofjj+rn/Kmw
+	70n2HBvgueumOc/bMH9o72wWp1LgnjMPgKccSK2ETd0EJ3tDc+MMn5O9oDnDl0uuhD+XFM61
+	xA8OnN3L45iGXWXTfK4lTQDWZ/cT2WBF/iu/yX/lNY7fgtafxsh89xM49TosfSHgcA2sqA21
+	At5psIzRsepkhg3Thf8/3SSt2gZmF0tMXwLHHj6WNABMABoAFOCiJV6SJ0mMr5dSsW07o9fK
+	9cY0hm0AEe7RHMT9lyZp3ZupMchl4dHS8MhIWVRYhDRK9JpX/57jSl8qWWFgUhlGx+hf5jDB
+	fH8T5mgtl3olBg63OfDgRfJFua2qydbeyY3Y+a7BeZtPiQs/Nj+PhmvvqmLedEgOh3V9WZPj
+	nRj42WT6jvcDNlmdlUf8rriybvTXKJ/+WCe6a3clDoJLN1TgHH+oq8QpGFv4Vd7WzJnggoC/
+	pPmDO7JWHXlaeLQnZKdrQ8fyhI3eo9k792u/lwh/397Wfi1wl98+/EDKF4svnh2ShyQGDR8T
+	Xg2SHdomUc+LTbSN3zD0Zn9IsVVxZ3w6DrcVp25Wdn69bNdt4ckB8Wqjs7n/mzPd/u1M7Rst
+	FpfFGQDZtXHY0oSpj+7E1RzR2+WYN7g1lDDY7bOFyrBsWp3hMi6HexbCHyqKRASbopCJcT2r
+	+A/yJFfF4QQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUwTZxzH99xdr0eV7XYQeIBgshrY0tRidZpfhhIWN71lMTOZ2zKmcQWO
+	ItDCWtjYZgSWBjtAJGyEtmOjioJCGezKi6J2rnRa5tt8walQJYBEDJUIMkVHHYUs879PPt/v
+	93n++TEkVyuJZnbq8wWDXpMjp2VUV6982QrLPxnCyo4LBNS1OWioPXKFBpc3DeaqT0vh8kj/
+	vBovoWCysQLBTNsTEu5UdZLwm/0+BXemKim47WoiwLevhoLuMT8B9zp6KTD3zFAgjlyTwImT
+	fRRc6amj4ZbjmQQ8becpOFbXJ4Hv7o8haGiKh8un7ATUzE7QsG/wLxrO7D1FgMs8RMx3uwko
+	8UzSYB0YQGD2/E3CycAsBZ2/P5KCaXAN3DjULk2O4x0/ORD/9Ek14k2um1LeLhbwJo9fwjsP
+	K3ix+VuaF6eqpfzgtRM077U8pfj9xTUk7zxYxN91WhE/6eqneefZr/lpcdkWNkW2Ll3I2fm5
+	YEhI+lSW6TvjIfN8WYXm9qvSYuTZWoZCGMy+jhuud9NlSMZw7HGEy/ZWSBaDKGyb7iMWOQzf
+	NnkWPMeOIFz5TWyQKTYOW1oHFzzNvoq9HY0oyOFsAh7uvIeCj5LsORpXttjmSwwTxvK4e1Qd
+	7ISyKuzeP0AufuxBePpquWQxeBn3WUepIJOsAl8PjBPBLcnG4KYAE9QhbBKe85npKsTanlvY
+	nlvY/l/YEdmMooQ8o06rS1PnqfXCFyqjRmcs0GtVabk6ES3cjuK1o+hWfUDlRgSD3AgzpDw8
+	VPUgTeBC0zVffiUYcncYCnIEoxvFMJQ8MlRt+SGdY7WafCFbEPIEw38pwYREFxP1E1M+dPzG
+	Z++cf7yxoqq0PGyWcw5s8D9UpsztjthUqk0aToht3OVNFWqJetmBwk8iehXhNWvWZl7avpla
+	sZRpWF/kNWUVJi+5hA/syfoYtSzNfojeyhWevbdN/GD5+rOy1gxyS1bycPlmf+QfKdvF1c3v
+	Bl6M64+I3pjKFr2wMj7qcftHyq2pb7+i2PZnTORs5mqtjzkq7hhd2/P9xbulpw8nkvEO7eiv
+	5KqEWN+HXdJfLviHpt7PnrlYHa5sVf68pERtpOcSuXSlUfZGS8au5kfEEXdX76qZifE9XvO6
+	HMvQcpvem8/RcbKbPbvNY/ZziW82bdAd44YrrT9ueumBVmWVU8ZMjVpBGoyafwGA3DRxqgMA
+	AA==
+X-CMS-MailID: 20231129085552epcas2p259a8df24ee5866fe93c16f706c031649
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----enUWWt6WoF-Ggb2-rjyEux7skZ5dSWJ5iC_e377tM680ja-K=_376fa_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20231119165840epcas2p2c99f1dd358f716c103c16f47cc23bf2a
+References: <20231119165721.9849-1-alexandru.elisei@arm.com>
+	<CGME20231119165840epcas2p2c99f1dd358f716c103c16f47cc23bf2a@epcas2p2.samsung.com>
+	<20231119165721.9849-12-alexandru.elisei@arm.com>
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+------enUWWt6WoF-Ggb2-rjyEux7skZ5dSWJ5iC_e377tM680ja-K=_376fa_
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
-I was loading a very large trace.dat file into kernelshark when it just
-stopped near the end off the load and hung there for a very long time. I
-ran it under gdb and hit Ctrl^C when it hit the hang to see what it was
-doing and found that it was spinning in:
+Hello.
 
-  libtracecmd trace-input.c: free_zpage
+On Sun, Nov 19, 2023 at 04:57:05PM +0000, Alexandru Elisei wrote:
+> Allow the kernel to get the size and location of the MTE tag storage
+> regions from the DTB. This memory is marked as reserved for now.
+> 
+> The DTB node for the tag storage region is defined as:
+> 
+>         tags0: tag-storage@8f8000000 {
+>                 compatible = "arm,mte-tag-storage";
+>                 reg = <0x08 0xf8000000 0x00 0x4000000>;
+>                 block-size = <0x1000>;
+>                 memory = <&memory0>;	// Associated tagged memory node
+>         };
+>
 
-static void free_zpage(struct cpu_data *cpu_data, void *map)
-{
-	struct zchunk_cache *cache;
+How about using compatible = "shared-dma-pool" like below ?
 
-	list_for_each_entry(cache, &cpu_data->compress.cache, list) {
-		if (map <= cache->map && map > (cache->map + cache->chunk->size))
-			goto found;
-	}
-	return;
+&reserved_memory {
+	tags0: tag0@8f8000000 {
+		compatible = "arm,mte-tag-storage";
+        	reg = <0x08 0xf8000000 0x00 0x4000000>;
+	};
+}
 
-found:
+tag-storage {
+        compatible = "arm,mte-tag-storage";
+	memory-region = <&tag>;
+        memory = <&memory0>;
+	block-size = <0x1000>;
+}
 
-It seems that there can be over 10 thousand cache pages in that link
-list and that kernelshark is constantly hitting that. So it's doing a
-linear search for the mapped page to free it.
+And then, the activation of CMA would be performed in the CMA code.
+We just can get the region information from memory-region and allocate it directly
+like alloc_contig_range, take_page_off_buddy. It seems like we can remove a lots of code.
 
-I ran:  time kernelshark trace.dat
+> The tag storage region represents the largest contiguous memory region that
+> holds all the tags for the associated contiguous memory region which can be
+> tagged. For example, for a 32GB contiguous tagged memory the corresponding
+> tag storage region is 1GB of contiguous memory, not two adjacent 512M of
+> tag storage memory.
+> 
+> "block-size" represents the minimum multiple of 4K of tag storage where all
+> the tags stored in the block correspond to a contiguous memory region. This
+> is needed for platforms where the memory controller interleaves tag writes
+> to memory. For example, if the memory controller interleaves tag writes for
+> 256KB of contiguous memory across 8K of tag storage (2-way interleave),
+> then the correct value for "block-size" is 0x2000. This value is a hardware
+> property, independent of the selected kernel page size.
+>
 
-And exited out when it finished loading and the result was:
-
-real    6m14.772s
-user    6m0.649s
-sys     0m12.718s
-
-That's over 6 minutes to load the trace.dat file!!!
-
-I ran perf record on it and it showed 77% of the time was in free_zpage().
-
-I pulled out my old algorithms book and wrote up a rbtree for internal use
-of libtracecmd. Then I switched the cache into a binary rbtree to do the
-look ups. As the lookups used both where the memory of the compressed page
-is mapped as well as the offset depending on how the search was done, I
-found that it only used the memory allocation address in one location.
-Luckily, the memory allocation mapping lookup also had access to the
-offset of the file the memory represented. That allowed me to make all
-lookups use the file offset.
-
-After converting the cache to an rbtree lookup, I ran kernelshark again on
-opening that file and exited out as soon as it finished loading and the
-timings was:
-
-real    1m22.356s
-user    1m10.532s
-sys     0m10.901s
-
-Still a bit long, but it dropped from over 6 minutes to under 1 1/2
-minutes. Also, free_zpages() was no longer in the perf record output.
-
-Running the same file under trace-cmd produced:
-
-Without this change:
-
-  $ time trace-cmd report trace.dat > /dev/null
- real    9m20.390s
- user    9m16.391s
- sys     0m3.529s
-
-With this change:
-
-  $ time trace-cmd report trace.dat > /dev/null
- real    6m22.935s
- user    6m19.537s
- sys     0m3.139s
-
-Not as drastic as the KernelShark speedup, but still brings it down by a
-third.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changse since v3: https://lore.kernel.org/all/20231019165205.371e8092@gandalf.local.home/
-
-- Check for node not NULL before checking node->left
-
-Changes since v2: https://lore.kernel.org/all/20231017104307.662aaa5e@gandalf.local.home/
-
- - Fixed a few more bugs
- - Added a nice little iterator (although not used)
- - Added a "check_tree()" routine in case I need to debug it again
-   This is #if out but nice to keep in the code anyway.
-
-Changes since v1: https://lore.kernel.org/linux-trace-devel/20231016230058.2f0e95b1@gandalf.local.home/
-
-- Removed some leftover debug
-- Fix deletion in setting the color of the node that replaces the deleted
-  node.
+Is it considered for kernel page size like 16K page, 64K page ? The comment says
+it should be a multiple of 4K, but it should be a multiple of the "page size" more accurately.
+Please let me know if there's anything I misunderstood. :-)
 
 
- lib/trace-cmd/Makefile                       |   1 +
- lib/trace-cmd/include/private/trace-rbtree.h |  34 ++
- lib/trace-cmd/trace-input.c                  |  81 +++-
- lib/trace-cmd/trace-rbtree.c                 | 440 +++++++++++++++++++
- 4 files changed, 533 insertions(+), 23 deletions(-)
- create mode 100644 lib/trace-cmd/include/private/trace-rbtree.h
- create mode 100644 lib/trace-cmd/trace-rbtree.c
+> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> ---
+>  arch/arm64/Kconfig                       |  12 ++
+>  arch/arm64/include/asm/mte_tag_storage.h |  15 ++
+>  arch/arm64/kernel/Makefile               |   1 +
+>  arch/arm64/kernel/mte_tag_storage.c      | 256 +++++++++++++++++++++++
+>  arch/arm64/kernel/setup.c                |   7 +
+>  5 files changed, 291 insertions(+)
+>  create mode 100644 arch/arm64/include/asm/mte_tag_storage.h
+>  create mode 100644 arch/arm64/kernel/mte_tag_storage.c
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 7b071a00425d..fe8276fdc7a8 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -2062,6 +2062,18 @@ config ARM64_MTE
+>  
+>  	  Documentation/arch/arm64/memory-tagging-extension.rst.
+>  
+> +if ARM64_MTE
+> +config ARM64_MTE_TAG_STORAGE
+> +	bool "Dynamic MTE tag storage management"
+> +	help
+> +	  Adds support for dynamic management of the memory used by the hardware
+> +	  for storing MTE tags. This memory, unlike normal memory, cannot be
+> +	  tagged. When it is used to store tags for another memory location it
+> +	  cannot be used for any type of allocation.
+> +
+> +	  If unsure, say N
+> +endif # ARM64_MTE
+> +
+>  endmenu # "ARMv8.5 architectural features"
+>  
+>  menu "ARMv8.7 architectural features"
+> diff --git a/arch/arm64/include/asm/mte_tag_storage.h b/arch/arm64/include/asm/mte_tag_storage.h
+> new file mode 100644
+> index 000000000000..8f86c4f9a7c3
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/mte_tag_storage.h
+> @@ -0,0 +1,15 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2023 ARM Ltd.
+> + */
+> +#ifndef __ASM_MTE_TAG_STORAGE_H
+> +#define __ASM_MTE_TAG_STORAGE_H
+> +
+> +#ifdef CONFIG_ARM64_MTE_TAG_STORAGE
+> +void mte_tag_storage_init(void);
+> +#else
+> +static inline void mte_tag_storage_init(void)
+> +{
+> +}
+> +#endif /* CONFIG_ARM64_MTE_TAG_STORAGE */
+> +#endif /* __ASM_MTE_TAG_STORAGE_H  */
+> diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+> index d95b3d6b471a..5f031bf9f8f1 100644
+> --- a/arch/arm64/kernel/Makefile
+> +++ b/arch/arm64/kernel/Makefile
+> @@ -70,6 +70,7 @@ obj-$(CONFIG_CRASH_CORE)		+= crash_core.o
+>  obj-$(CONFIG_ARM_SDE_INTERFACE)		+= sdei.o
+>  obj-$(CONFIG_ARM64_PTR_AUTH)		+= pointer_auth.o
+>  obj-$(CONFIG_ARM64_MTE)			+= mte.o
+> +obj-$(CONFIG_ARM64_MTE_TAG_STORAGE)	+= mte_tag_storage.o
+>  obj-y					+= vdso-wrap.o
+>  obj-$(CONFIG_COMPAT_VDSO)		+= vdso32-wrap.o
+>  obj-$(CONFIG_UNWIND_PATCH_PAC_INTO_SCS)	+= patch-scs.o
+> diff --git a/arch/arm64/kernel/mte_tag_storage.c b/arch/arm64/kernel/mte_tag_storage.c
+> new file mode 100644
+> index 000000000000..fa6267ef8392
+> --- /dev/null
+> +++ b/arch/arm64/kernel/mte_tag_storage.c
+> @@ -0,0 +1,256 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Support for dynamic tag storage.
+> + *
+> + * Copyright (C) 2023 ARM Ltd.
+> + */
+> +
+> +#include <linux/memblock.h>
+> +#include <linux/mm.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_fdt.h>
+> +#include <linux/range.h>
+> +#include <linux/string.h>
+> +#include <linux/xarray.h>
+> +
+> +#include <asm/mte_tag_storage.h>
+> +
+> +struct tag_region {
+> +	struct range mem_range;	/* Memory associated with the tag storage, in PFNs. */
+> +	struct range tag_range;	/* Tag storage memory, in PFNs. */
+> +	u32 block_size;		/* Tag block size, in pages. */
+> +};
+> +
+> +#define MAX_TAG_REGIONS	32
+> +
+> +static struct tag_region tag_regions[MAX_TAG_REGIONS];
+> +static int num_tag_regions;
+> +
+> +static int __init tag_storage_of_flat_get_range(unsigned long node, const __be32 *reg,
+> +						int reg_len, struct range *range)
+> +{
+> +	int addr_cells = dt_root_addr_cells;
+> +	int size_cells = dt_root_size_cells;
+> +	u64 size;
+> +
+> +	if (reg_len / 4 > addr_cells + size_cells)
+> +		return -EINVAL;
+> +
+> +	range->start = PHYS_PFN(of_read_number(reg, addr_cells));
+> +	size = PHYS_PFN(of_read_number(reg + addr_cells, size_cells));
+> +	if (size == 0) {
+> +		pr_err("Invalid node");
+> +		return -EINVAL;
+> +	}
+> +	range->end = range->start + size - 1;
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init tag_storage_of_flat_get_tag_range(unsigned long node,
+> +						    struct range *tag_range)
+> +{
+> +	const __be32 *reg;
+> +	int reg_len;
+> +
+> +	reg = of_get_flat_dt_prop(node, "reg", &reg_len);
+> +	if (reg == NULL) {
+> +		pr_err("Invalid metadata node");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return tag_storage_of_flat_get_range(node, reg, reg_len, tag_range);
+> +}
+> +
+> +static int __init tag_storage_of_flat_get_memory_range(unsigned long node, struct range *mem)
+> +{
+> +	const __be32 *reg;
+> +	int reg_len;
+> +
+> +	reg = of_get_flat_dt_prop(node, "linux,usable-memory", &reg_len);
+> +	if (reg == NULL)
+> +		reg = of_get_flat_dt_prop(node, "reg", &reg_len);
+> +
+> +	if (reg == NULL) {
+> +		pr_err("Invalid memory node");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return tag_storage_of_flat_get_range(node, reg, reg_len, mem);
+> +}
+> +
+> +struct find_memory_node_arg {
+> +	unsigned long node;
+> +	u32 phandle;
+> +};
+> +
+> +static int __init fdt_find_memory_node(unsigned long node, const char *uname,
+> +				       int depth, void *data)
+> +{
+> +	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
+> +	struct find_memory_node_arg *arg = data;
+> +
+> +	if (depth != 1 || !type || strcmp(type, "memory") != 0)
+> +		return 0;
+> +
+> +	if (of_get_flat_dt_phandle(node) == arg->phandle) {
+> +		arg->node = node;
+> +		return 1;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init tag_storage_get_memory_node(unsigned long tag_node, unsigned long *mem_node)
+> +{
+> +	struct find_memory_node_arg arg = { 0 };
+> +	const __be32 *memory_prop;
+> +	u32 mem_phandle;
+> +	int ret, reg_len;
+> +
+> +	memory_prop = of_get_flat_dt_prop(tag_node, "memory", &reg_len);
+> +	if (!memory_prop) {
+> +		pr_err("Missing 'memory' property in the tag storage node");
+> +		return -EINVAL;
+> +	}
+> +
+> +	mem_phandle = be32_to_cpup(memory_prop);
+> +	arg.phandle = mem_phandle;
+> +
+> +	ret = of_scan_flat_dt(fdt_find_memory_node, &arg);
+> +	if (ret != 1) {
+> +		pr_err("Associated memory node not found");
+> +		return -EINVAL;
+> +	}
+> +
+> +	*mem_node = arg.node;
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init tag_storage_of_flat_read_u32(unsigned long node, const char *propname,
+> +					       u32 *retval)
+> +{
+> +	const __be32 *reg;
+> +
+> +	reg = of_get_flat_dt_prop(node, propname, NULL);
+> +	if (!reg)
+> +		return -EINVAL;
+> +
+> +	*retval = be32_to_cpup(reg);
+> +	return 0;
+> +}
+> +
+> +static u32 __init get_block_size_pages(u32 block_size_bytes)
+> +{
+> +	u32 a = PAGE_SIZE;
+> +	u32 b = block_size_bytes;
+> +	u32 r;
+> +
+> +	/* Find greatest common divisor using the Euclidian algorithm. */
+> +	do {
+> +		r = a % b;
+> +		a = b;
+> +		b = r;
+> +	} while (b != 0);
+> +
+> +	return PHYS_PFN(PAGE_SIZE * block_size_bytes / a);
+> +}
+> +
+> +static int __init fdt_init_tag_storage(unsigned long node, const char *uname,
+> +				       int depth, void *data)
+> +{
+> +	struct tag_region *region;
+> +	unsigned long mem_node;
+> +	struct range *mem_range;
+> +	struct range *tag_range;
+> +	u32 block_size_bytes;
+> +	u32 nid = 0;
+> +	int ret;
+> +
+> +	if (depth != 1 || !strstr(uname, "tag-storage"))
+> +		return 0;
+> +
+> +	if (!of_flat_dt_is_compatible(node, "arm,mte-tag-storage"))
+> +		return 0;
+> +
+> +	if (num_tag_regions == MAX_TAG_REGIONS) {
+> +		pr_err("Maximum number of tag storage regions exceeded");
+> +		return -EINVAL;
+> +	}
+> +
+> +	region = &tag_regions[num_tag_regions];
+> +	mem_range = &region->mem_range;
+> +	tag_range = &region->tag_range;
+> +
+> +	ret = tag_storage_of_flat_get_tag_range(node, tag_range);
+> +	if (ret) {
+> +		pr_err("Invalid tag storage node");
+> +		return ret;
+> +	}
+> +
+> +	ret = tag_storage_get_memory_node(node, &mem_node);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = tag_storage_of_flat_get_memory_range(mem_node, mem_range);
+> +	if (ret) {
+> +		pr_err("Invalid address for associated data memory node");
+> +		return ret;
+> +	}
+> +
+> +	/* The tag region must exactly match the corresponding memory. */
+> +	if (range_len(tag_range) * 32 != range_len(mem_range)) {
+> +		pr_err("Tag storage region 0x%llx-0x%llx does not cover the memory region 0x%llx-0x%llx",
+> +		       PFN_PHYS(tag_range->start), PFN_PHYS(tag_range->end),
+> +		       PFN_PHYS(mem_range->start), PFN_PHYS(mem_range->end));
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = tag_storage_of_flat_read_u32(node, "block-size", &block_size_bytes);
+> +	if (ret || block_size_bytes == 0) {
+> +		pr_err("Invalid or missing 'block-size' property");
+> +		return -EINVAL;
+> +	}
+> +	region->block_size = get_block_size_pages(block_size_bytes);
+> +	if (range_len(tag_range) % region->block_size != 0) {
+> +		pr_err("Tag storage region size 0x%llx is not a multiple of block size %u",
+> +		       PFN_PHYS(range_len(tag_range)), region->block_size);
+> +		return -EINVAL;
+> +	}
+> +
 
-diff --git a/lib/trace-cmd/Makefile b/lib/trace-cmd/Makefile
-index e9d26b2bb367..aba6fda5b0f6 100644
---- a/lib/trace-cmd/Makefile
-+++ b/lib/trace-cmd/Makefile
-@@ -9,6 +9,7 @@ DEFAULT_TARGET = $(LIBTRACECMD_STATIC)
- 
- OBJS =
- OBJS += trace-hash.o
-+OBJS += trace-rbtree.o
- OBJS += trace-hooks.o
- OBJS += trace-input.o
- OBJS += trace-output.o
-diff --git a/lib/trace-cmd/include/private/trace-rbtree.h b/lib/trace-cmd/include/private/trace-rbtree.h
-new file mode 100644
-index 000000000000..822111998e7a
---- /dev/null
-+++ b/lib/trace-cmd/include/private/trace-rbtree.h
-@@ -0,0 +1,34 @@
-+/* SPDX-License-Identifier: LGPL-2.1 */
-+/*
-+ * Copyright (C) 2023 Google, Steven Rostedt <rostedt@goodmis.org>
-+ *
-+ */
-+#ifndef _TRACE_RBTREE_H
-+#define _TRACE_RBTREE_H
-+
-+struct trace_rbtree_node {
-+	struct trace_rbtree_node	*parent;
-+	struct trace_rbtree_node	*left;
-+	struct trace_rbtree_node	*right;
-+	int				color;
-+};
-+
-+typedef int (*trace_rbtree_cmp_fn)(const struct trace_rbtree_node *A, const struct trace_rbtree_node *B);
-+
-+typedef int (*trace_rbtree_search_fn)(const struct trace_rbtree_node *n, const void *data);
-+
-+struct trace_rbtree {
-+	struct trace_rbtree_node	*node;
-+	trace_rbtree_search_fn		search;
-+	trace_rbtree_cmp_fn		cmp;
-+	size_t				nr_nodes;
-+};
-+
-+void trace_rbtree_init(struct trace_rbtree *tree, trace_rbtree_cmp_fn cmp_fn,
-+		       trace_rbtree_search_fn search_fn);
-+struct trace_rbtree_node *trace_rbtree_find(struct trace_rbtree *tree, const void *data);
-+void trace_rbtree_delete(struct trace_rbtree *tree, struct trace_rbtree_node *node);
-+int trace_rbtree_insert(struct trace_rbtree *tree, struct trace_rbtree_node *node);
-+struct trace_rbtree_node *trace_rbtree_pop_nobalance(struct trace_rbtree *tree);
-+
-+#endif /* _TRACE_RBTREE_H */
-diff --git a/lib/trace-cmd/trace-input.c b/lib/trace-cmd/trace-input.c
-index af51b3d71e1a..42c8312f8395 100644
---- a/lib/trace-cmd/trace-input.c
-+++ b/lib/trace-cmd/trace-input.c
-@@ -16,6 +16,7 @@
- 
- #include "trace-write-local.h"
- #include "trace-cmd-local.h"
-+#include "trace-rbtree.h"
- #include "trace-local.h"
- #include "kbuffer.h"
- #include "list.h"
-@@ -66,7 +67,7 @@ struct page {
- };
- 
- struct zchunk_cache {
--	struct list_head		list;
-+	struct trace_rbtree_node	node;
- 	struct tracecmd_compress_chunk *chunk;
- 	void				*map;
- 	int				ref;
-@@ -78,7 +79,7 @@ struct cpu_zdata {
- 	char			file[26]; /* strlen(COMPR_TEMP_FILE) */
- 	unsigned int		count;
- 	unsigned int		last_chunk;
--	struct list_head	cache;
-+	struct trace_rbtree	cache;
- 	struct tracecmd_compress_chunk	*chunks;
- };
- 
-@@ -1378,21 +1379,24 @@ static struct tracecmd_compress_chunk *get_zchunk(struct cpu_data *cpu, off_t of
- 	return chunk;
- }
- 
--static void free_zpage(struct cpu_data *cpu_data, void *map)
-+static void free_zpage(struct cpu_data *cpu_data, off_t offset)
- {
-+	struct trace_rbtree_node *node;
- 	struct zchunk_cache *cache;
- 
--	list_for_each_entry(cache, &cpu_data->compress.cache, list) {
--		if (map <= cache->map && map > (cache->map + cache->chunk->size))
--			goto found;
--	}
--	return;
-+	node = trace_rbtree_find(&cpu_data->compress.cache, (void *)&offset);
-+
-+	if (!node)
-+		return;
-+
-+	cache = container_of(node, struct zchunk_cache, node);
- 
--found:
- 	cache->ref--;
- 	if (cache->ref)
- 		return;
--	list_del(&cache->list);
-+
-+	trace_rbtree_delete(&cpu_data->compress.cache, node);
-+
- 	free(cache->map);
- 	free(cache);
- }
-@@ -1401,6 +1405,7 @@ static void *read_zpage(struct tracecmd_input *handle, int cpu, off_t offset)
- {
- 	struct cpu_data *cpu_data = &handle->cpu_data[cpu];
- 	struct tracecmd_compress_chunk *chunk;
-+	struct trace_rbtree_node *node;
- 	struct zchunk_cache *cache;
- 	void *map = NULL;
- 	int pindex;
-@@ -1409,11 +1414,11 @@ static void *read_zpage(struct tracecmd_input *handle, int cpu, off_t offset)
- 	offset -= cpu_data->file_offset;
- 
- 	/* Look in the cache of already loaded chunks */
--	list_for_each_entry(cache, &cpu_data->compress.cache, list) {
--		if (CHUNK_CHECK_OFFSET(cache->chunk, offset)) {
--			cache->ref++;
--			goto out;
--		}
-+	node = trace_rbtree_find(&cpu_data->compress.cache, (void *)&offset);
-+	if (node) {
-+		cache = container_of(node, struct zchunk_cache, node);
-+		cache->ref++;
-+		goto out;
- 	}
- 
- 	chunk =  get_zchunk(cpu_data, offset);
-@@ -1435,7 +1440,7 @@ static void *read_zpage(struct tracecmd_input *handle, int cpu, off_t offset)
- 	cache->ref = 1;
- 	cache->chunk = chunk;
- 	cache->map = map;
--	list_add(&cache->list, &cpu_data->compress.cache);
-+	trace_rbtree_insert(&cpu_data->compress.cache, &cache->node);
- 
- 	/* a chunk can hold multiple pages, get the requested one */
- out:
-@@ -1606,7 +1611,7 @@ static void __free_page(struct tracecmd_input *handle, struct page *page)
- 	if (handle->read_page)
- 		free(page->map);
- 	else if (handle->read_zpage)
--		free_zpage(cpu_data, page->map);
-+		free_zpage(cpu_data, page->offset);
- 	else
- 		free_page_map(page->page_map);
- 
-@@ -2102,7 +2107,7 @@ tracecmd_read_cpu_first(struct tracecmd_input *handle, int cpu)
- 	/* If the page was already mapped, we need to reset it */
- 	if (ret)
- 		update_page_info(handle, cpu);
--		
-+
- 	free_next(handle, cpu);
- 
- 	return tracecmd_read_data(handle, cpu);
-@@ -3348,6 +3353,35 @@ static int init_cpu_zpage(struct tracecmd_input *handle, int cpu)
- 	return 0;
- }
- 
-+static int compress_cmp(const struct trace_rbtree_node *A,
-+			const struct trace_rbtree_node *B)
-+{
-+	const struct zchunk_cache *cacheA;
-+	const struct zchunk_cache *cacheB;
-+
-+	cacheA = container_of(A, struct zchunk_cache, node);
-+	cacheB = container_of(B, struct zchunk_cache, node);
-+
-+	return chunk_cmp(cacheA->chunk, cacheB->chunk);
-+}
-+
-+static int compress_search(const struct trace_rbtree_node *A,
-+			   const void *data)
-+{
-+	const struct zchunk_cache *cache;
-+	off_t offset = *(off_t *)data;
-+
-+	cache = container_of(A, struct zchunk_cache, node);
-+
-+	if (CHUNK_CHECK_OFFSET(cache->chunk, offset))
-+		return 0;
-+
-+	if (cache->chunk->offset < offset)
-+		return -1;
-+
-+	return 1;
-+}
-+
- static int init_cpu(struct tracecmd_input *handle, int cpu)
- {
- 	struct cpu_data *cpu_data = &handle->cpu_data[cpu];
-@@ -3368,7 +3402,8 @@ static int init_cpu(struct tracecmd_input *handle, int cpu)
- 	cpu_data->timestamp = 0;
- 
- 	list_head_init(&cpu_data->page_maps);
--	list_head_init(&cpu_data->compress.cache);
-+
-+	trace_rbtree_init(&cpu_data->compress.cache, compress_cmp, compress_search);
- 
- 	if (!cpu_data->size) {
- 		tracecmd_info("CPU %d is empty", cpu);
-@@ -5131,10 +5166,10 @@ void tracecmd_close(struct tracecmd_input *handle)
- 				close(cpu_data->compress.fd);
- 				unlink(cpu_data->compress.file);
- 			}
--			while (!list_empty(&cpu_data->compress.cache)) {
--				cache = container_of(cpu_data->compress.cache.next,
--						     struct zchunk_cache, list);
--				list_del(&cache->list);
-+			while (cpu_data->compress.cache.node) {
-+				struct trace_rbtree_node *node;
-+				node = trace_rbtree_pop_nobalance(&cpu_data->compress.cache);
-+				cache = container_of(node, struct zchunk_cache, node);
- 				free(cache->map);
- 				free(cache);
- 			}
-diff --git a/lib/trace-cmd/trace-rbtree.c b/lib/trace-cmd/trace-rbtree.c
-new file mode 100644
-index 000000000000..24beabeccb8e
---- /dev/null
-+++ b/lib/trace-cmd/trace-rbtree.c
-@@ -0,0 +1,440 @@
-+// SPDX-License-Identifier: LGPL-2.1
-+/*
-+ * Copyright (C) 2023 Google, Steven Rostedt <rostedt@goodmis.org>
-+ *
-+ */
-+#include <stdlib.h>
-+#include <stdbool.h>
-+#include "trace-local.h"
-+#include "trace-rbtree.h"
-+
-+enum {
-+	RED,
-+	BLACK,
-+};
-+
-+void __hidden trace_rbtree_init(struct trace_rbtree *tree, trace_rbtree_cmp_fn cmp_fn,
-+				trace_rbtree_search_fn search_fn)
-+{
-+	memset(tree, 0, sizeof(*tree));
-+	tree->search = search_fn;
-+	tree->cmp = cmp_fn;
-+}
-+
-+static bool is_left(struct trace_rbtree_node *node)
-+{
-+	return node == node->parent->left;
-+}
-+
-+static struct trace_rbtree_node **get_parent_ptr(struct trace_rbtree *tree,
-+						 struct trace_rbtree_node *node)
-+{
-+	if (!node->parent)
-+		return &tree->node;
-+	else if (is_left(node))
-+		return &node->parent->left;
-+	else
-+		return &node->parent->right;
-+}
-+
-+static void rotate_left(struct trace_rbtree *tree,
-+			struct trace_rbtree_node *node)
-+{
-+	struct trace_rbtree_node **parent_ptr = get_parent_ptr(tree, node);
-+	struct trace_rbtree_node *parent = node->parent;
-+	struct trace_rbtree_node *old_right = node->right;
-+
-+	*parent_ptr = old_right;
-+	node->right = old_right->left;
-+	old_right->left = node;
-+
-+	if (node->right)
-+		node->right->parent = node;
-+	node->parent = old_right;
-+	old_right->parent = parent;
-+}
-+
-+static void rotate_right(struct trace_rbtree *tree,
-+			 struct trace_rbtree_node *node)
-+{
-+	struct trace_rbtree_node **parent_ptr = get_parent_ptr(tree, node);
-+	struct trace_rbtree_node *parent = node->parent;
-+	struct trace_rbtree_node *old_left = node->left;
-+
-+	*parent_ptr = old_left;
-+	node->left = old_left->right;
-+	old_left->right = node;
-+
-+	if (node->left)
-+		node->left->parent = node;
-+	node->parent = old_left;
-+	old_left->parent = parent;
-+}
-+
-+static void insert_tree(struct trace_rbtree *tree,
-+			struct trace_rbtree_node *node)
-+{
-+	struct trace_rbtree_node *next = tree->node;
-+	struct trace_rbtree_node *last_next = NULL;
-+	bool went_left = false;
-+
-+	while (next) {
-+		last_next = next;
-+		if (tree->cmp(next, node) > 0) {
-+			next = next->right;
-+			went_left = false;
-+		} else {
-+			next = next->left;
-+			went_left = true;
-+		}
-+	}
-+
-+	if (!last_next) {
-+		tree->node = node;
-+		return;
-+	}
-+
-+	if (went_left)
-+		last_next->left = node;
-+	else
-+		last_next->right = node;
-+
-+	node->parent = last_next;
-+}
-+
-+#if 0
-+static int check_node(struct trace_rbtree *tree, struct trace_rbtree_node *node)
-+{
-+	if (!node->parent) {
-+		if (tree->node != node)
-+			goto fail;
-+	} else {
-+		if (!is_left(node)) {
-+			if (node->parent->right != node)
-+				goto fail;
-+		}
-+	}
-+	return 0;
-+fail:
-+	printf("FAILED ON NODE!");
-+	breakpoint();
-+	return -1;
-+}
-+
-+static void check_tree(struct trace_rbtree *tree)
-+{
-+	struct trace_rbtree_node *node = tree->node;
-+
-+	if (node) {
-+		if (check_node(tree, node))
-+			return;
-+		while (node->left) {
-+			node = node->left;
-+			if (check_node(tree, node))
-+				return;
-+		}
-+	}
-+
-+	while (node) {
-+		if (check_node(tree, node))
-+			return;
-+		if (node->right) {
-+			node = node->right;
-+			if (check_node(tree, node))
-+				return;
-+			while (node->left) {
-+				node = node->left;
-+				if (check_node(tree, node))
-+				    return;
-+			}
-+			continue;
-+		}
-+		while (node->parent) {
-+			if (is_left(node))
-+				break;
-+			node = node->parent;
-+			if (check_node(tree, node))
-+				return;
-+		}
-+		node = node->parent;
-+	}
-+}
-+#else
-+static inline void check_tree(struct trace_rbtree *tree) { }
-+#endif
-+
-+int __hidden trace_rbtree_insert(struct trace_rbtree *tree,
-+				 struct trace_rbtree_node *node)
-+{
-+	struct trace_rbtree_node *uncle;
-+
-+	memset(node, 0, sizeof(*node));
-+
-+	insert_tree(tree, node);
-+	node->color = RED;
-+	while (node && node->parent && node->parent->color == RED) {
-+		if (is_left(node->parent)) {
-+			uncle = node->parent->parent->right;
-+			if (uncle && uncle->color == RED) {
-+				node->parent->color = BLACK;
-+				uncle->color = BLACK;
-+				node->parent->parent->color = RED;
-+				node = node->parent->parent;
-+			} else {
-+				if (!is_left(node)) {
-+					node = node->parent;
-+					rotate_left(tree, node);
-+					check_tree(tree);
-+				}
-+				node->parent->color = BLACK;
-+				node->parent->parent->color = RED;
-+				rotate_right(tree, node->parent->parent);
-+				check_tree(tree);
-+			}
-+		} else {
-+			uncle = node->parent->parent->left;
-+			if (uncle && uncle->color == RED) {
-+				node->parent->color = BLACK;
-+				uncle->color = BLACK;
-+				node->parent->parent->color = RED;
-+				node = node->parent->parent;
-+			} else {
-+				if (is_left(node)) {
-+					node = node->parent;
-+					rotate_right(tree, node);
-+					check_tree(tree);
-+				}
-+				node->parent->color = BLACK;
-+				node->parent->parent->color = RED;
-+				rotate_left(tree, node->parent->parent);
-+				check_tree(tree);
-+			}
-+		}
-+	}
-+	check_tree(tree);
-+	tree->node->color = BLACK;
-+	tree->nr_nodes++;
-+	return 0;
-+}
-+
-+struct trace_rbtree_node *trace_rbtree_find(struct trace_rbtree *tree, const void *data)
-+{
-+	struct trace_rbtree_node *node = tree->node;
-+	int ret;
-+
-+	while (node) {
-+		ret = tree->search(node, data);
-+		if (!ret)
-+			return node;
-+		if (ret > 0)
-+			node = node->right;
-+		else
-+			node = node->left;
-+	}
-+	return NULL;
-+}
-+
-+static struct trace_rbtree_node *next_node(struct trace_rbtree_node *node)
-+{
-+	if (node->right) {
-+		node = node->right;
-+		while (node->left)
-+			node = node->left;
-+		return node;
-+	}
-+
-+	while (node->parent && !is_left(node))
-+		node = node->parent;
-+
-+	return node->parent;
-+}
-+
-+static void tree_fixup(struct trace_rbtree *tree, struct trace_rbtree_node *node)
-+{
-+	while (node->parent && node->color == BLACK) {
-+		if (is_left(node)) {
-+			struct trace_rbtree_node *old_right = node->parent->right;
-+
-+			if (old_right->color == RED) {
-+				old_right->color = BLACK;
-+				node->parent->color = RED;
-+				rotate_left(tree, node->parent);
-+				old_right = node->parent->right;
-+			}
-+			if (old_right->left->color == BLACK &&
-+			    old_right->right->color == BLACK) {
-+				old_right->color = RED;
-+				node = node->parent;
-+			} else {
-+				if (old_right->right->color == BLACK) {
-+					old_right->left->color = BLACK;
-+					old_right->color = RED;
-+					rotate_right(tree, old_right);
-+					old_right = node->parent->right;
-+				}
-+				old_right->color = node->parent->color;
-+				node->parent->color = BLACK;
-+				old_right->right->color = BLACK;
-+				rotate_left(tree, node->parent);
-+				node = tree->node;
-+			}
-+		} else {
-+			struct trace_rbtree_node *old_left = node->parent->left;
-+
-+			if (old_left->color == RED) {
-+				old_left->color = BLACK;
-+				node->parent->color = RED;
-+				rotate_right(tree, node->parent);
-+				old_left = node->parent->left;
-+			}
-+			if (old_left->right->color == BLACK &&
-+			    old_left->left->color == BLACK) {
-+				old_left->color = RED;
-+				node = node->parent;
-+			} else {
-+				if (old_left->left->color == BLACK) {
-+					old_left->right->color = BLACK;
-+					old_left->color = RED;
-+					rotate_left(tree, old_left);
-+					old_left = node->parent->left;
-+				}
-+				old_left->color = node->parent->color;
-+				node->parent->color = BLACK;
-+				old_left->left->color = BLACK;
-+				rotate_right(tree, node->parent);
-+				node = tree->node;
-+			}
-+		}
-+	}
-+	node->color = BLACK;
-+}
-+
-+void trace_rbtree_delete(struct trace_rbtree *tree, struct trace_rbtree_node *node)
-+{
-+	struct trace_rbtree_node *x, *y;
-+	bool do_fixup = false;
-+
-+	if (!node->left && !node->right) {
-+		tree->node = NULL;
-+		goto out;
-+	}
-+
-+	if (!node->left || !node->right)
-+		y = node;
-+	else
-+		y = next_node(node);
-+
-+	if (y->left)
-+		x = y->left;
-+	else
-+		x = y->right;
-+
-+	x->parent = y->parent;
-+
-+	if (!x->parent) {
-+		tree->node = x;
-+	} else {
-+		if (is_left(y))
-+			y->parent->left = x;
-+		else
-+			y->parent->right = x;
-+	}
-+
-+	do_fixup = y->color == BLACK;
-+
-+	if (y != node) {
-+		y->color = node->color;
-+		y->parent = node->parent;
-+		y->left = node->left;
-+		y->right = node->right;
-+		if (y->left)
-+			y->left->parent = y;
-+		if (y->right)
-+			y->right->parent = y;
-+		if (!y->parent) {
-+			tree->node = y;
-+		} else {
-+			if (is_left(node))
-+				y->parent->left = y;
-+			else
-+				y->parent->right = y;
-+		}
-+	}
-+
-+	if (do_fixup)
-+		tree_fixup(tree, x);
-+
-+ out:
-+	node->parent = node->left = node->right = NULL;
-+	tree->nr_nodes--;
-+}
-+
-+__hidden struct trace_rbtree_node *trace_rbtree_next(struct trace_rbtree *tree,
-+						     struct trace_rbtree_node *node)
-+{
-+	check_tree(tree);
-+	/*
-+	 * When either starting or the previous iteration returned a
-+	 * node with a right branch, then go to the first node (if starting)
-+	 * or the right node, and then return the left most node.
-+	 */
-+	if (!node || node->right) {
-+		if (!node)
-+			node = tree->node;
-+		else
-+			node = node->right;
-+		while (node && node->left)
-+			node = node->left;
-+		return node;
-+	}
-+
-+	/*
-+	 * If we are here, then the previous iteration returned the
-+	 * left most node of the tree or the right branch. If this
-+	 * is a left node, then simply return the parent. If this
-+	 * is a right node, then keep going up until its a left node,
-+	 * or we finished the iteration.
-+	 *
-+	 * If we are here and are the top node, then there is no right
-+	 * node, and this is finished (return NULL).
-+	 */
-+	if (!node->parent || is_left(node))
-+		return node->parent;
-+
-+	do {
-+		node = node->parent;
-+	} while (node->parent && !is_left(node));
-+
-+	return node->parent;
-+}
-+
-+/*
-+ * Used for freeing a tree, just quickly pop off the children in
-+ * no particular order. This will corrupt the tree! That is,
-+ * do not do any inserting or deleting of this tree after calling
-+ * this function.
-+ */
-+struct trace_rbtree_node *trace_rbtree_pop_nobalance(struct trace_rbtree *tree)
-+{
-+	struct trace_rbtree_node *node = tree->node;
-+
-+	if (!node)
-+		return NULL;
-+
-+	while (node->left)
-+		node = node->left;
-+
-+	while (node->right)
-+		node = node->right;
-+
-+	if (node->parent) {
-+		if (is_left(node))
-+			node->parent->left = NULL;
-+		else
-+			node->parent->right = NULL;
-+	} else {
-+		tree->node = NULL;
-+	}
-+
-+	return node;
-+}
--- 
-2.42.0
+I was confused about the variable "block_size", The block size declared in the device tree is
+in bytes, but the actual block size used is in pages. I think the term "block_size" can cause
+confusion as it might be interpreted as bytes. If possible, I suggest changing the term "block_size"
+to something more readable, such as "block_nr_pages" (This is just a example!)
 
+Thanks,
+Regards.
+
+> +	ret = tag_storage_of_flat_read_u32(mem_node, "numa-node-id", &nid);
+> +	if (ret)
+> +		nid = numa_node_id();
+> +
+> +	ret = memblock_add_node(PFN_PHYS(tag_range->start), PFN_PHYS(range_len(tag_range)),
+> +				nid, MEMBLOCK_NONE);
+> +	if (ret) {
+> +		pr_err("Error adding tag memblock (%d)", ret);
+> +		return ret;
+> +	}
+> +	memblock_reserve(PFN_PHYS(tag_range->start), PFN_PHYS(range_len(tag_range)));
+> +
+> +	pr_info("Found tag storage region 0x%llx-0x%llx, block size %u pages",
+> +		PFN_PHYS(tag_range->start), PFN_PHYS(tag_range->end), region->block_size);
+> +
+> +	num_tag_regions++;
+> +
+> +	return 0;
+> +}
+> +
+> +void __init mte_tag_storage_init(void)
+> +{
+> +	struct range *tag_range;
+> +	int i, ret;
+> +
+> +	ret = of_scan_flat_dt(fdt_init_tag_storage, NULL);
+> +	if (ret) {
+> +		for (i = 0; i < num_tag_regions; i++) {
+> +			tag_range = &tag_regions[i].tag_range;
+> +			memblock_remove(PFN_PHYS(tag_range->start), PFN_PHYS(range_len(tag_range)));
+> +		}
+> +		num_tag_regions = 0;
+> +		pr_info("MTE tag storage region management disabled");
+> +	}
+> +}
+> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> index 417a8a86b2db..1b77138c1aa5 100644
+> --- a/arch/arm64/kernel/setup.c
+> +++ b/arch/arm64/kernel/setup.c
+> @@ -42,6 +42,7 @@
+>  #include <asm/cpufeature.h>
+>  #include <asm/cpu_ops.h>
+>  #include <asm/kasan.h>
+> +#include <asm/mte_tag_storage.h>
+>  #include <asm/numa.h>
+>  #include <asm/scs.h>
+>  #include <asm/sections.h>
+> @@ -342,6 +343,12 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
+>  			   FW_BUG "Booted with MMU enabled!");
+>  	}
+>  
+> +	/*
+> +	 * Must be called before memory limits are enforced by
+> +	 * arm64_memblock_init().
+> +	 */
+> +	mte_tag_storage_init();
+> +
+>  	arm64_memblock_init();
+>  
+>  	paging_init();
+> -- 
+> 2.42.1
+> 
+> 
+
+------enUWWt6WoF-Ggb2-rjyEux7skZ5dSWJ5iC_e377tM680ja-K=_376fa_
+Content-Type: text/plain; charset="utf-8"
+
+
+------enUWWt6WoF-Ggb2-rjyEux7skZ5dSWJ5iC_e377tM680ja-K=_376fa_--
