@@ -1,118 +1,234 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RYnmXqyq"
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8206419A6;
-	Wed, 29 Nov 2023 01:59:14 -0800 (PST)
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AT8lip4006099;
-	Wed, 29 Nov 2023 09:58:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=Hv358qHkkkSpvNupSHYh3b+P8ZW0/9o2ISigxsZiDRc=;
- b=RYnmXqyqNjkB3uPhASHqAqrdeBHCZVBTxp4yZ1GDyirYoq5bC5pBhSa++iFQeyh0as9s
- BM4domMZ6U2OkVj7juZTPWO+mwaRVwfeDNQWEZhxb9/dsC7YsQVPSCEs8aaHrSw2gSFq
- wE94DR9pxWA9RoQA06NyL0WvwBuwpuN4YLn735gp/NBHE5y8oSgj0Yx4sFfu1dnihdeX
- d40OOZHROD0R3ypUCpJRh6r+UPlCkzc4FoFYaEbpHm4JdJYCtZPkTPVk2zQ/P5+ElFLW
- YDR2jmwA3SiO3MWDFCWY7tAwn2mKybltZq+SUcjruM5urKbfrRicmqFu2Iby1OnGFX7J Fw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3up23phqtg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Nov 2023 09:58:52 +0000
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AT9hwi3002169;
-	Wed, 29 Nov 2023 09:58:51 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3up23phqsh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Nov 2023 09:58:51 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AT8VHNw012197;
-	Wed, 29 Nov 2023 09:58:49 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ukvrkp9tm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Nov 2023 09:58:49 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AT9wkHg16057068
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 Nov 2023 09:58:46 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9F79A20043;
-	Wed, 29 Nov 2023 09:58:46 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 646F820040;
-	Wed, 29 Nov 2023 09:58:45 +0000 (GMT)
-Received: from [9.171.93.155] (unknown [9.171.93.155])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 29 Nov 2023 09:58:45 +0000 (GMT)
-Message-ID: <edd48d556f3951384f9ac72462f16ee9309a739e.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 33/33] kmsan: Enable on s390
-From: Ilya Leoshkevich <iii@linux.ibm.com>
-To: Alexander Potapenko <glider@google.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Andrew Morton
- <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        David
- Rientjes <rientjes@google.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Joonsoo
- Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
-        Masami
- Hiramatsu <mhiramat@kernel.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Steven
- Rostedt <rostedt@goodmis.org>,
-        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil
- Babka <vbabka@suse.cz>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Sven Schnelle
- <svens@linux.ibm.com>
-Date: Wed, 29 Nov 2023 10:58:45 +0100
-In-Reply-To: <CAG_fn=XCeE7JF5hbpzXu2A0Cae3R16_hnDwF0==oJMX320wBHQ@mail.gmail.com>
-References: <20231121220155.1217090-1-iii@linux.ibm.com>
-	 <20231121220155.1217090-34-iii@linux.ibm.com>
-	 <CAG_fn=XCeE7JF5hbpzXu2A0Cae3R16_hnDwF0==oJMX320wBHQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: bHuUrUxcKhPwsCQNukrG6dt9RnefPY2L
-X-Proofpoint-ORIG-GUID: XkNrh_4ciRiXY49x-H9GVRo1-JXJIiVh
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id DF7D5DC;
+	Wed, 29 Nov 2023 02:44:35 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BB5532F4;
+	Wed, 29 Nov 2023 02:45:22 -0800 (PST)
+Received: from raptor (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B7453F5A1;
+	Wed, 29 Nov 2023 02:44:30 -0800 (PST)
+Date: Wed, 29 Nov 2023 10:44:27 +0000
+From: Alexandru Elisei <alexandru.elisei@arm.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
+	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
+	rppt@kernel.org, hughd@google.com, pcc@google.com,
+	steven.price@arm.com, anshuman.khandual@arm.com,
+	vincenzo.frascino@arm.com, eugenis@google.com, kcc@google.com,
+	hyesoo.yu@samsung.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v2 12/27] arm64: mte: Add tag storage pages to the
+ MIGRATE_CMA migratetype
+Message-ID: <ZWcWC5x4mYpov1SL@raptor>
+References: <20231119165721.9849-1-alexandru.elisei@arm.com>
+ <20231119165721.9849-13-alexandru.elisei@arm.com>
+ <c49cd89d-41cf-495b-9b96-4434ab407967@redhat.com>
+ <ZWSvMYMjFLFZ-abv@raptor>
+ <2aafd53f-af1f-45f3-a08c-d11962254315@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-29_07,2023-11-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 suspectscore=0 mlxscore=0 malwarescore=0 adultscore=0
- phishscore=0 mlxlogscore=832 priorityscore=1501 spamscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2311290073
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2aafd53f-af1f-45f3-a08c-d11962254315@redhat.com>
 
-On Wed, 2023-11-29 at 10:19 +0100, Alexander Potapenko wrote:
-> Hi Ilya,
->=20
-> Sorry for this taking so long, I'll probably take a closer look next
-> week.
-> Overall, the s390 part looks good to me, but I wanted to check the
-> x86
-> behavior once again (and perhaps figure out how to avoid introducing
-> another way to disable KMSAN).
-> Do you happen to have a Git repo with your patches somewhere?
+Hi,
 
-Hi, yes, the latest version of the patches is available at [1].
+On Tue, Nov 28, 2023 at 06:03:52PM +0100, David Hildenbrand wrote:
+> On 27.11.23 16:01, Alexandru Elisei wrote:
+> > Hi David,
+> > 
+> > On Fri, Nov 24, 2023 at 08:40:55PM +0100, David Hildenbrand wrote:
+> > > On 19.11.23 17:57, Alexandru Elisei wrote:
+> > > > Add the MTE tag storage pages to the MIGRATE_CMA migratetype, which allows
+> > > > the page allocator to manage them like regular pages.
+> > > > 
+> > > > Ths migratype lends the pages some very desirable properties:
+> > > > 
+> > > > * They cannot be longterm pinned, meaning they will always be migratable.
+> > > > 
+> > > > * The pages can be allocated explicitely by using their PFN (with
+> > > >     alloc_contig_range()) when they are needed to store tags.
+> > > > 
+> > > > Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> > > > ---
+> > > >    arch/arm64/Kconfig                  |  1 +
+> > > >    arch/arm64/kernel/mte_tag_storage.c | 68 +++++++++++++++++++++++++++++
+> > > >    include/linux/mmzone.h              |  5 +++
+> > > >    mm/internal.h                       |  3 --
+> > > >    4 files changed, 74 insertions(+), 3 deletions(-)
+> > > > 
+> > > > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > > > index fe8276fdc7a8..047487046e8f 100644
+> > > > --- a/arch/arm64/Kconfig
+> > > > +++ b/arch/arm64/Kconfig
+> > > > @@ -2065,6 +2065,7 @@ config ARM64_MTE
+> > > >    if ARM64_MTE
+> > > >    config ARM64_MTE_TAG_STORAGE
+> > > >    	bool "Dynamic MTE tag storage management"
+> > > > +	select CONFIG_CMA
+> > > >    	help
+> > > >    	  Adds support for dynamic management of the memory used by the hardware
+> > > >    	  for storing MTE tags. This memory, unlike normal memory, cannot be
+> > > > diff --git a/arch/arm64/kernel/mte_tag_storage.c b/arch/arm64/kernel/mte_tag_storage.c
+> > > > index fa6267ef8392..427f4f1909f3 100644
+> > > > --- a/arch/arm64/kernel/mte_tag_storage.c
+> > > > +++ b/arch/arm64/kernel/mte_tag_storage.c
+> > > > @@ -5,10 +5,12 @@
+> > > >     * Copyright (C) 2023 ARM Ltd.
+> > > >     */
+> > > > +#include <linux/cma.h>
+> > > >    #include <linux/memblock.h>
+> > > >    #include <linux/mm.h>
+> > > >    #include <linux/of_device.h>
+> > > >    #include <linux/of_fdt.h>
+> > > > +#include <linux/pageblock-flags.h>
+> > > >    #include <linux/range.h>
+> > > >    #include <linux/string.h>
+> > > >    #include <linux/xarray.h>
+> > > > @@ -189,6 +191,14 @@ static int __init fdt_init_tag_storage(unsigned long node, const char *uname,
+> > > >    		return ret;
+> > > >    	}
+> > > > +	/* Pages are managed in pageblock_nr_pages chunks */
+> > > > +	if (!IS_ALIGNED(tag_range->start | range_len(tag_range), pageblock_nr_pages)) {
+> > > > +		pr_err("Tag storage region 0x%llx-0x%llx not aligned to pageblock size 0x%llx",
+> > > > +		       PFN_PHYS(tag_range->start), PFN_PHYS(tag_range->end),
+> > > > +		       PFN_PHYS(pageblock_nr_pages));
+> > > > +		return -EINVAL;
+> > > > +	}
+> > > > +
+> > > >    	ret = tag_storage_get_memory_node(node, &mem_node);
+> > > >    	if (ret)
+> > > >    		return ret;
+> > > > @@ -254,3 +264,61 @@ void __init mte_tag_storage_init(void)
+> > > >    		pr_info("MTE tag storage region management disabled");
+> > > >    	}
+> > > >    }
+> > > > +
+> > > > +static int __init mte_tag_storage_activate_regions(void)
+> > > > +{
+> > > > +	phys_addr_t dram_start, dram_end;
+> > > > +	struct range *tag_range;
+> > > > +	unsigned long pfn;
+> > > > +	int i, ret;
+> > > > +
+> > > > +	if (num_tag_regions == 0)
+> > > > +		return 0;
+> > > > +
+> > > > +	dram_start = memblock_start_of_DRAM();
+> > > > +	dram_end = memblock_end_of_DRAM();
+> > > > +
+> > > > +	for (i = 0; i < num_tag_regions; i++) {
+> > > > +		tag_range = &tag_regions[i].tag_range;
+> > > > +		/*
+> > > > +		 * Tag storage region was clipped by arm64_bootmem_init()
+> > > > +		 * enforcing addressing limits.
+> > > > +		 */
+> > > > +		if (PFN_PHYS(tag_range->start) < dram_start ||
+> > > > +				PFN_PHYS(tag_range->end) >= dram_end) {
+> > > > +			pr_err("Tag storage region 0x%llx-0x%llx outside addressable memory",
+> > > > +			       PFN_PHYS(tag_range->start), PFN_PHYS(tag_range->end));
+> > > > +			ret = -EINVAL;
+> > > > +			goto out_disabled;
+> > > > +		}
+> > > > +	}
+> > > > +
+> > > > +	/*
+> > > > +	 * MTE disabled, tag storage pages can be used like any other pages. The
+> > > > +	 * only restriction is that the pages cannot be used by kexec because
+> > > > +	 * the memory remains marked as reserved in the memblock allocator.
+> > > > +	 */
+> > > > +	if (!system_supports_mte()) {
+> > > > +		for (i = 0; i< num_tag_regions; i++) {
+> > > > +			tag_range = &tag_regions[i].tag_range;
+> > > > +			for (pfn = tag_range->start; pfn <= tag_range->end; pfn++)
+> > > > +				free_reserved_page(pfn_to_page(pfn));
+> > > > +		}
+> > > > +		ret = 0;
+> > > > +		goto out_disabled;
+> > > > +	}
+> > > > +
+> > > > +	for (i = 0; i < num_tag_regions; i++) {
+> > > > +		tag_range = &tag_regions[i].tag_range;
+> > > > +		for (pfn = tag_range->start; pfn <= tag_range->end; pfn += pageblock_nr_pages)
+> > > > +			init_cma_reserved_pageblock(pfn_to_page(pfn));
+> > > > +		totalcma_pages += range_len(tag_range);
+> > > > +	}
+> > > 
+> > > You shouldn't be doing that manually in arm code. Likely you want some cma.c
+> > > helper for something like that.
+> > 
+> > If you referring to the last loop (the one that does
+> > ini_cma_reserved_pageblock()), indeed, there's already a function which
+> > does that, cma_init_reserved_areas() -> cma_activate_area().
+> > 
+> > > 
+> > > But, can you elaborate on why you took this hacky (sorry) approach as
+> > > documented in the cover letter:
+> > 
+> > No worries, it is indeed a bit hacky :)
+> > 
+> > > 
+> > > "The arm64 code manages this memory directly instead of using
+> > > cma_declare_contiguous/cma_alloc for performance reasons."
+> > > 
+> > > What is the exact problem?
+> > 
+> > I am referring to the performance degredation that is fixed in patch #26,
+> > "arm64: mte: Fast track reserving tag storage when the block is free" [1].
+> > The issue is that alloc_contig_range() -> __alloc_contig_migrate_range()
+> > calls lru_cache_disable(), which IPIs all the CPUs in the system, and that
+> > leads to a 10-20% performance degradation on Chrome. It has been observed
+> > that most of the time the tag storage pages are free, and the
+> > lru_cache_disable() calls are unnecessary.
+> 
+> This sounds like something eventually worth integrating into
+> CMA/alloc_contig_range(). Like, a fast path to check if we are only
+> allocating something small (e.g., falls within a single pageblock), and if
+> the page is free.
+> 
+> > 
+> > The performance degradation is almost entirely eliminated by having the code
+> > take the tag storage page directly from the free list if it's free, instead
+> > of calling alloc_contig_range().
+> > 
+> > Do you believe it would be better to use the cma code, and modify it to use
+> > this fast path to take the page drectly from the buddy allocator?
+> 
+> That sounds reasonable yes. Do you see any blockers for that?
 
-[1] https://github.com/iii-i/linux/tree/kmsan
+I have been looking at the CMA code, and nothing stands out. I'll try changing
+the code to use cma_alloc/cma_release for the next iteration.
+
+> 
+> > 
+> > I can definitely try to integrate the code with cma_alloc(), but I think
+> > keeping the fast path for reserving tag storage is extremely desirable,
+> > since it makes such a huge difference to performance.
+> 
+> Yes, but let's try finding a way to optimize common code, to eventually
+> improve some CMA cases as well? :)
+
+Sounds good, I'll try to integrate the fast path code to cma_alloc(), that way
+existing callers can benefit from it immediately.
+
+Thanks,
+Alex
+
+> 
+> -- 
+> Cheers,
+> 
+> David / dhildenb
+> 
