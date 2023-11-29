@@ -1,52 +1,52 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dp2IxfAg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ffXp4DMY"
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06AE410DD
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Nov 2023 04:48:56 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0DB810A
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Nov 2023 05:13:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701262136;
+	s=mimecast20190719; t=1701263635;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=3SvqkGKhkhbr5E/QgNHUmxR2NH2z++nAn+Ad162nVUI=;
-	b=Dp2IxfAgfjg2i6YPaRU6eCNZ172t12yTDHgvNm3UPqOazuvcYL78JoQpItqcJ0RD8IPO0e
-	xmRclSUG5dFCmD37/dx05KMJVMXCno0J7EoLY1WJoaQqqRRO78fUDL3H8sWWC+raoMGguN
-	BL2znbBxOpn6+RtsZyk0gVj9SzK7MjU=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=3TayWcGEHdK+3ZI0qKU3Neqs2Q8oviWSNuzQtqoO+JM=;
+	b=ffXp4DMYHiY5LkeOD5kJktYT5dFFXopo0NP+y9L/pzqwdX4INbas4OlEflBqRIsYshEfl8
+	7hDf0Pbomal+Qbeenc/sMdJKXoEGCYKvmZdOSjCoI8mXPwAjtwg7Y53F4qyYmtFCf1r828
+	UpJfAS7Sv+wRBkIlJ3+z53CW5nCSPs8=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-113--vKCQU1ENIWL9SYOydkWnA-1; Wed, 29 Nov 2023 07:48:54 -0500
-X-MC-Unique: -vKCQU1ENIWL9SYOydkWnA-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-40b357e2a01so42090045e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Nov 2023 04:48:54 -0800 (PST)
+ us-mta-517-4xFteEFWP5qlv4AteMAIfQ-1; Wed, 29 Nov 2023 08:13:54 -0500
+X-MC-Unique: 4xFteEFWP5qlv4AteMAIfQ-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-40b40234b64so27768945e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Nov 2023 05:13:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701262134; x=1701866934;
+        d=1e100.net; s=20230601; t=1701263633; x=1701868433;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
          :references:cc:to:content-language:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3SvqkGKhkhbr5E/QgNHUmxR2NH2z++nAn+Ad162nVUI=;
-        b=UhNwMteOCqFg1sAYNU/yIzv5DkJ18vxXRrYK38fnAUX8Aj0PXWWN3shMEVDBclegA2
-         1TPJCTMglGKu3o3y4j7ECTGA0HbfZpwGdTlkoOuBoLIL9S+/m3/1HV8Svrdi5yrZxtwc
-         BHfcR5oUWNt5mQxC8PR28SxMpXPgORnjQNyUgUp6fS4HuC8rRF5PBvjjIegxWg0f+Bo8
-         db3vDfx97S9ZrEAbTSQFspRZmsw95f2Ef4C/H8npr339nHFMbP3U6fBVgh/HXRYjWTcL
-         RD9dHSNW/4FSgT0ZB11AaI0hvZl531C+qZqYzUepliK63RSRhLIaCLl1JlRZ2sA2z/+K
-         zOlw==
-X-Gm-Message-State: AOJu0YxDuo90lYYkZi9ijhsXsomGNfV51hSMxD4S6A0+dD7V8KCEZalj
-	jJlhoW2W77GdnK8tqdQ2ZgVAkBNrdez/wle6ZpY6MxbW5rMxB0wvqW2v9mzSnBuWOZ2oFfEs4vC
-	D2U5iqmIw1VbXzOuwR5DG/ri+aZA8dNJw
-X-Received: by 2002:a05:600c:4444:b0:40b:2a69:6c38 with SMTP id v4-20020a05600c444400b0040b2a696c38mr12962163wmn.20.1701262133711;
-        Wed, 29 Nov 2023 04:48:53 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH/GvtkSi+X8gkjupkbSZUxXcDP9aiKyH7RkbFc+bdVSZqXF9jIt9LVVfG/zAvruGlNfPRVhg==
-X-Received: by 2002:a05:600c:4444:b0:40b:2a69:6c38 with SMTP id v4-20020a05600c444400b0040b2a696c38mr12962123wmn.20.1701262133260;
-        Wed, 29 Nov 2023 04:48:53 -0800 (PST)
+        bh=3TayWcGEHdK+3ZI0qKU3Neqs2Q8oviWSNuzQtqoO+JM=;
+        b=QlhtLQ5qkxShWQzO9gmomMnAlQ10vblYHQ3yus6YcdWRyDBtonpeShXe7RBYqTLW/3
+         bGSUwgeNByVL7uXtI/rzQmgvOXGu5wtA1vExM2zfZUtymWBS75Oar4y6E90NSNbkZaBW
+         0VtRJIaj+wBiSp8oHsVS3dl1SlhrEvUZVIqXGcKvJ5uMAJJyfSsQE6uMuK1eTKoSnlvY
+         XF5/CmvW5yD4uYkgxL51npjkivBwv5jW9nJqjiEOx4eMRI7wakBf5+YDWjfX5o4hXMg0
+         5Y0B7vDmbdBLQG0aVPOeZh3TiMpIwwMCxZ/xHiYZLHUWK02Z0YLw3FMAnOSqh3bZss/u
+         0yRg==
+X-Gm-Message-State: AOJu0YygrGY06WtizaPLpocVSehh7uoT9FzRg+yR/H4U+NfHiepDCp9k
+	ETWuxN37B//9enA3rvN9LTdvnC5kJ8ZMO0toggJMC0I0biAOTpzLVJDQrLPPzkEcccb0/xv+aPk
+	O+Lc7tSGHlNdxudNNGE2qgNsLie7yr3Q1
+X-Received: by 2002:a05:600c:3505:b0:40b:3863:3ae7 with SMTP id h5-20020a05600c350500b0040b38633ae7mr12727476wmq.29.1701263633145;
+        Wed, 29 Nov 2023 05:13:53 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFAenEk0ful78cqcgDqr5yEhN1IHEYs4BnB7QTGSL8iBBCUEunft6kHFnY4NVoVwHn69jJU/w==
+X-Received: by 2002:a05:600c:3505:b0:40b:3863:3ae7 with SMTP id h5-20020a05600c350500b0040b38633ae7mr12727431wmq.29.1701263632730;
+        Wed, 29 Nov 2023 05:13:52 -0800 (PST)
 Received: from ?IPV6:2003:cb:c710:f600:634b:35f:ffa8:475b? (p200300cbc710f600634b035fffa8475b.dip0.t-ipconnect.de. [2003:cb:c710:f600:634b:35f:ffa8:475b])
-        by smtp.gmail.com with ESMTPSA id p17-20020a05600c469100b003fee6e170f9sm2174737wmo.45.2023.11.29.04.48.51
+        by smtp.gmail.com with ESMTPSA id t2-20020a5d4602000000b0032da4c98ab2sm18135574wrq.35.2023.11.29.05.13.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Nov 2023 04:48:52 -0800 (PST)
-Message-ID: <ca069bdf-3d53-41d9-adf1-f7a8b245f57b@redhat.com>
-Date: Wed, 29 Nov 2023 13:48:51 +0100
+        Wed, 29 Nov 2023 05:13:52 -0800 (PST)
+Message-ID: <930b6fba-43bf-4784-9bc9-1c83c1adc30c@redhat.com>
+Date: Wed, 29 Nov 2023 14:13:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -54,8 +54,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v2 19/27] mm: mprotect: Introduce PAGE_FAULT_ON_ACCESS
- for mprotect(PROT_MTE)
+Subject: Re: [PATCH RFC v2 18/27] arm64: mte: Reserve tag block for the zero
+ page
 To: Alexandru Elisei <alexandru.elisei@arm.com>
 Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
  maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
@@ -71,8 +71,8 @@ Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
  linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
  linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
 References: <20231119165721.9849-1-alexandru.elisei@arm.com>
- <20231119165721.9849-20-alexandru.elisei@arm.com>
- <1c79ad05-cb52-4820-b2aa-bbe07ff82b19@redhat.com> <ZWcmuzUcpVeUnlk2@raptor>
+ <20231119165721.9849-19-alexandru.elisei@arm.com>
+ <c027ea00-a955-4c3c-b1ea-2c3f6906790d@redhat.com> <ZWcgzPcld1YksCtZ@raptor>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -119,57 +119,88 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <ZWcmuzUcpVeUnlk2@raptor>
+In-Reply-To: <ZWcgzPcld1YksCtZ@raptor>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 29.11.23 12:55, Alexandru Elisei wrote:
-> Hi,
-> 
-> On Tue, Nov 28, 2023 at 06:55:18PM +0100, David Hildenbrand wrote:
+On 29.11.23 12:30, Alexandru Elisei wrote:
+> On Tue, Nov 28, 2023 at 06:06:54PM +0100, David Hildenbrand wrote:
 >> On 19.11.23 17:57, Alexandru Elisei wrote:
->>> To enable tagging on a memory range, userspace can use mprotect() with the
->>> PROT_MTE access flag. Pages already mapped in the VMA don't have the
->>> associated tag storage block reserved, so mark the PTEs as
->>> PAGE_FAULT_ON_ACCESS to trigger a fault next time they are accessed, and
->>> reserve the tag storage on the fault path.
+>>> On arm64, the zero page receives special treatment by having the tagged
+>>> flag set on MTE initialization, not when the page is mapped in a process
+>>> address space. Reserve the corresponding tag block when tag storage
+>>> management is being activated.
 >>
->> That sounds alot like fake PROT_NONE. Would there be a way to unify hat
+>> Out of curiosity: why does the shared zeropage require tagged storage? What
+>> about the huge zeropage?
 > 
-> Yes, arm64 basically defines PAGE_FAULT_ON_ACCESS as PAGE_NONE |
-> PTE_TAG_STORAGE_NONE.
-> 
->> handling and simply reuse pte_protnone()? For example, could we special case
->> on VMA flags?
->>
->> Like, don't do NUMA hinting in these special VMAs. Then, have something
->> like:
->>
->> if (pte_protnone(vmf->orig_pte))
->> 	return handle_pte_protnone(vmf);
->>
->> In there, special case on the VMA flags.
-> 
-> Your suggestion from the follow-up reply that an arch should know if it needs to
-> do something was spot on, arm64 can use the software bit in the translation
-> table entry for that.
-> 
-> So what you are proposing is this:
-> 
-> * Rename do_numa_page->handle_pte_protnone
-> * At some point in the do_numa_page (now renamed to handle_pte_protnone) flow,
->    decide if pte_protnone() has been set for an arch specific reason or because
->    of automatic NUMA balancing.
-> * if pte_protnone() has been set by an architecture, then let the architecture
->    handle the fault.
-> 
-> If I understood you correctly, that's a good idea, and should be easy to
-> implement.
+> There are two different tags that are used for tag checking: the logical
+> tag, the tag embedded in bits 59:56 of an address, and the physical tag
+> corresponding to the address. This tag is stored in a separate memory
+> location, called tag storage. When an access is performed, hardware
+> compares the logical tag (from the address) with the physical tag (from the
+> tag storage). If they match, the access is permitted.
 
-yes! :)
+Ack, matches my understanding.
+
+> 
+> The physical tag is set with special instructions.
+> 
+> Userspace pointers have bits 59:56 zero. If the pointer is in a VMA with
+> MTE enabled, then for userspace to be able to access this address, the
+> physical tag must also be 0b0000.
+> 
+> To make it easier on userspace, when a page is first mapped as tagged, its
+> tags are cleared by the kernel; this way, userspace can access the address
+> immediately, without clearing the physical tags beforehand. Another reason
+> for clearing the physical tags when a page is mapped as tagged would be to
+> avoid leaking uninitialized tags to userspace.
+
+Make sense. Zero it just like we zero page content.
+
+> 
+> The zero page is special, because the physical tags are not zeroed every
+> time the page is mapped in a process; instead, the zero page is marked as
+> tagged (by setting a page flag) and the physical tags are zeroed only once,
+> when MTE is enabled at boot.
+
+Makes sense.
+
+> 
+> All of this means that when tag storage is enabled, which happens after MTE
+> is enabled, the tag storage corresponding to the zero page is already in
+> use and must be rezerved, and it can never be used for data allocations.
+> 
+> I hope all of the above makes sense. I can also put it in the commit
+> message :)
+
+Yes, makes sense!
+
+> 
+> As for the zero huge page, the MTE code in the kernel treats it like a
+> regular page, and it zeroes the tags when it is mapped as tagged in a
+> process. I agree that this might not be the best solution from a
+> performance perspective, but it has worked so far.
+
+What if user space were to change the tag of that shared resource?
+
+Having a tag != 0 doesn't make sense for such a shared resource, so I 
+suspect modifying the tag is like a write event: trigger write-fault -> COW.
+
+> 
+> With tag storage management enabled, set_pte_at()->mte_sync_tags() will
+> discover that the huge zero page doesn't have tag storage reserved, the
+> table entry will be mapped as invalid to use the page fault-on-access
+> mechanism that I introduce later in the series [1] to reserve tag storage,
+
+I assume (without looking at the code) that you took proper care of 
+possible races.
+
+Thanks for goind into detail!
+
 
 -- 
 Cheers,
