@@ -1,639 +1,387 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="DuWrSyTL"
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E25F31A5;
-	Wed, 29 Nov 2023 01:22:09 -0800 (PST)
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20231129092207epoutp0349785934307c24d34c3d7116c05a60df~cDZ0nRvmd1512115121epoutp031;
-	Wed, 29 Nov 2023 09:22:07 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20231129092207epoutp0349785934307c24d34c3d7116c05a60df~cDZ0nRvmd1512115121epoutp031
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1701249727;
-	bh=djxFfe2UUjmCn0d0Tv91ov/Tu2cEgO6ZCjTHEc0ZOLo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=DuWrSyTL+9CuCL/ygNvlyr4pTDXsvSWXBZTRXJfVOssTsB+nzL3sr9qskqeqg4AUt
-	 8V6FPYw5mh7ZM6SqBbv8tV+9fdvAuCLRnyLty4vgTxMBfogsWn9+erYG+za01wH/Jl
-	 SChNBXtv5I5FcEstMahgx+LHeeC6wq/aUyLWYMXA=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTP id
-	20231129092207epcas2p31dce9553783ab44712383937c8009c9d~cDZ0aP7Zx0786507865epcas2p3R;
-	Wed, 29 Nov 2023 09:22:07 +0000 (GMT)
-Received: from epsmges2p4.samsung.com (unknown [182.195.36.90]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4SgDNv0PY2z4x9QB; Wed, 29 Nov
-	2023 09:22:07 +0000 (GMT)
-Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
-	epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-	DD.54.09607.EB207656; Wed, 29 Nov 2023 18:22:06 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-	20231129092206epcas2p300f71058467dbffcd46d02b7a938bd0a~cDZzZCRNj0512805128epcas2p34;
-	Wed, 29 Nov 2023 09:22:06 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20231129092206epsmtrp1df9d539cc950d879de1b7f9c92e0b3cc~cDZzTPH5I2616726167epsmtrp1c;
-	Wed, 29 Nov 2023 09:22:06 +0000 (GMT)
-X-AuditID: b6c32a48-bcdfd70000002587-8e-656702be3136
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	54.9D.07368.EB207656; Wed, 29 Nov 2023 18:22:06 +0900 (KST)
-Received: from tiffany (unknown [10.229.95.142]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20231129092206epsmtip16f96f60be85046f00315d9f84473022e~cDZy9HP332678126781epsmtip1Q;
-	Wed, 29 Nov 2023 09:22:06 +0000 (GMT)
-Date: Wed, 29 Nov 2023 18:10:40 +0900
-From: Hyesoo Yu <hyesoo.yu@samsung.com>
-To: Alexandru Elisei <alexandru.elisei@arm.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
-	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
-	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
-	bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-	vschneid@redhat.com, mhiramat@kernel.org, rppt@kernel.org, hughd@google.com,
-	pcc@google.com, steven.price@arm.com, anshuman.khandual@arm.com,
-	vincenzo.frascino@arm.com, david@redhat.com, eugenis@google.com,
-	kcc@google.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v2 16/27] arm64: mte: Manage tag storage on page
- allocation
-Message-ID: <20231129091040.GC2988384@tiffany>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="YHzSHfIn"
+Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2085.outbound.protection.outlook.com [40.107.241.85])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 359C319B6;
+	Wed, 29 Nov 2023 01:22:29 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W8ZXOgZhFqm0HJOHiWF2PzwDSfqbNjh7Qkx/G15/xSh/i2MrDz8RpcLmc53DtHxyxWHF/JSo9B6hGjmCMUfn0czqGUc/sTfWAW6pkAkxWGCOeEq6zfDrgQJZfJpvrNKVwI2a25HfhPq0qRyatKCH1Yy6amRLCQjedeaU8aCfoa+KPt24wxt3oY6rwu8Qf7U+nMw9W5X1P8U+SfJ5K+bBTcWCLXIoSuelYE/gjpKv0MuDEQxqVfwhWMbhLT5CK3e2aPOfr+ONCw6XCmX7P6nvwmm8bMcH6fNySO247o5acZe5ilBWyFESqoSrHqAfG51u75l2ooBsX/w8+f55xiTSog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4RPbuiEIS+3q0KHipXHbgz2K7RFcq9LHLjm0S4XRiSQ=;
+ b=gA0jM0VEdzfIjfRKjoMTIKQj0xPRtASTY0hHDfH9SzuA7frekIrEV+CEwMKfB3bE1fWuvGYTNJAP1M1UIXlUf6WP5rp33hDEa7mJ2Dvna6F0iXZywqaX8bU6q7OXiDfp9jdGWSxkIs7/tkXHjjdyydXn6Z4SmScrhoGrfMRjNwoHgwiD0dE3T1jU7z1mmVJWSgFYrGaGdnBNEhOLSfbw0aolzXQw248XK8elSJfGrCukuzonEzXqflEmEPiIkOrttrsoYwuvQw4ElfIlOPUk/Hlr8z8O9NcMSMJB7vjJ6hXC+vkRhHXTBPe31pK+dCjRZTQgCvtWiwCetC8SeycY/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4RPbuiEIS+3q0KHipXHbgz2K7RFcq9LHLjm0S4XRiSQ=;
+ b=YHzSHfIn5qna7Ic1nLY7njORTSEvieFRHlNixGN7rvYsl4yofpt/SONg+tULjmVY8lLVF2hrlvjjxD4ciW7LAL1PmT57iriuPC5Z0coQOtG52EYGOhWsvAAJOYWNHJqpARZE19IDdXJr5KaoW28FiCcDDdKorCF6s0xWGc94okFjc7tpE4b6kCQ3QBmRk2gF9xpam8SFWckt38KwiAnK5xfSbP8FoKTJvoFnOYDimQ9K3l3uPg8QArXHIxRXVQVp/3ZK6iwQUYfw9YAlUlnB9ypavU/RQeLt4vjZKuKJLfQh14+MLLnECzU73XIQ4Camaus7PlIq+l9lgtsohMZSBQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from AM0PR0402MB3395.eurprd04.prod.outlook.com
+ (2603:10a6:208:1a::16) by AS8PR04MB8707.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42a::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.22; Wed, 29 Nov
+ 2023 09:22:25 +0000
+Received: from AM0PR0402MB3395.eurprd04.prod.outlook.com
+ ([fe80::14c8:fc35:a9ae:9c9d]) by AM0PR0402MB3395.eurprd04.prod.outlook.com
+ ([fe80::14c8:fc35:a9ae:9c9d%4]) with mapi id 15.20.7046.015; Wed, 29 Nov 2023
+ 09:22:25 +0000
+Message-ID: <bb6c9771-1a7c-4367-bb14-63524d9c560a@suse.com>
+Date: Wed, 29 Nov 2023 10:22:23 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] tracing: Simplify and fix "buffered event"
+ synchronization
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ zhengyejian1@huawei.com, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20231127151248.7232-1-petr.pavlu@suse.com>
+ <20231127151248.7232-2-petr.pavlu@suse.com>
+ <20231127124130.1041ffd4@gandalf.local.home>
+ <77037ca1-8116-4bc6-b286-67059db0848e@suse.com>
+ <20231128102748.23328618@gandalf.local.home>
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20231128102748.23328618@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: VI1P195CA0063.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:802:59::16) To AM0PR0402MB3395.eurprd04.prod.outlook.com
+ (2603:10a6:208:1a::16)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20231119165721.9849-17-alexandru.elisei@arm.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xTVxzHd+69vfdKUndXfBxroqxEDExr61p7MOKmY8tN3APnjI6ZYUNv
-	ioE+1hYDukVcUGtlvIwDCnMQHaCr1rQwO6HV8cbHppJixsMHLxEFRn0sQIS1Xl3873O+v9/3
-	/M75/fKjcdF1Skzv0ls4k16dJiHDiN8ao5UrfZiWk1WcQ6jM6SBR0akOEvnaktHzwhYK3ez3
-	B6UH+wk0XpkD0FPnFI4G82tx9Ef5GIEGA7kEuuOrwlBv3jECnR8axdBITSOBrBeeEsjV3ylA
-	9d52AnVcKCPRbcesADU5rxHo97J2ATo6NgTQiaoodPNSOYaOTT4iUV7PLRK1/nAJQz7rXSyY
-	ex5D+5vGSVTS3Q2QtekZjrwzkwSqbf6XQtk9SvT3L+eo95exjuMOwE5PFQI229dFseWudDa7
-	aVTAuqtjWNfpwyTrChRSbE9nPcm2FU8TbEXWMZx1n9zHDrtLADvu85Os+8pe9rFrSQKTmLou
-	hVNrOFMEp082aHbptXGSTVuSPkhSrpHJV8pjkUoSoVfruDhJ/McJKz/alRZspiRitzotPSgl
-	qM1myar160yGdAsXkWIwW+IknFGTZlQZpWa1zpyu10r1nGWtXCZbrQwm7kxNcT8rpoxeG8jI
-	zn+MZwG30Qbm0JBRwFOz7YQNhNEixgNgYasf4w8BAEcGhqhQloh5BmDXaNQrR3/tmZe6F8CW
-	77/jDYMAdp/7lQwFCGYZbC4dASEmmeWwrabyBc9jVsG+2pAeRuPMZRL2ll7FQoFwZis8fesO
-	bgM0LWSksHr87ZAsZN6C7SUDRIjnMOuh97JfEPJCJjcMeg7nglA+ZOLhjwcB/7hwONJaQ/Es
-	hg/yDr7kVNg7kU/ybIFnr2a91N+F9qFDL7w4kwK7js5g/JWRsKmL4OW50Nr4nOJlIbQeFPHO
-	SHix8jjB8yLYd+aQgGcWzngqKb4lTQBWDRVQ+WCJ/bXf2F+rxvMKWF4XIO3BEjizGFbN0DxG
-	Q+eFVeVAcBos4IxmnZYzrzYq/p9vskHnAi9WK4b1gNLRf6QNAKNBA4A0LpknlE4kcyKhRp25
-	hzMZkkzpaZy5ASiDoynAxfOTDcHd1FuS5IpYmWLNGrlqtVKmkiwU3j7wk0bEaNUWLpXjjJzp
-	lQ+j54izsL33An68+SberVobUOyk723MoRWbT1i6d9AZX8V3vlN/2dMRXbbbm7izzrAg99Ce
-	ZcW02Oyo3kd/OV2EBjqmJrZ5NF9fjd14JFEpWfi57rrwM3t47s/SuMUzPrFQNr7BFtAO37Dv
-	rTvwV1SPCV96auCSNTMW/zT/LP7NJ5X+KyC+ufHemycr8C2t9+Ov7aiumipNVqywOpfOd3xY
-	Er41dvs2e13me5MPl1qyN2Us3h8jnJ28+IZuJKFvs0WWZfDHCUTOoYa8BM+j7es2PHnyxY3W
-	uTmqPLxIkWI7cj0yqjj6juv4sGv5WC/z8Nu7i/4syMdn61uKcpjbWk1t5/L7keoCpYQwp6jl
-	MbjJrP4PPp84yuMEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sf1CTdRzH7/s8z549W+16GFZfwJvXFO3mNSGp+2gceXbZIxXXRcrBndEO
-	nkOSjbVBPygPqBWEhAqSbJJsGUzHEh0sUmDhGAYR/8wDUiZ4DbzEYDklg+mMwXX53+te7/f7
-	Pv98GFL6tSCWydcU8TqNqkBOi6kf+uSyZ1xEHp9gPBwNjW12Go6eukSDayAH7tdeFILXP7Kk
-	bpRTEGipRjDftkjC9CEnCRfMcxRMB2somHRZCbh6sJ6CzuuzBMx09FFQeX6eAod/VADdPYMU
-	XDrfSMOE/YEAPG3DFJxrHBRA3dx1BCes68HbayagfuFPGg76xmj4+ateAlyV14ilbicB5Z4A
-	DcbxcQSVnr9J6AkvUODsvysEg+85uNx8RrgtnrMftyMutFiLOIPripAzO4o5g2dWwLWfVHAO
-	25c05wjWCjnfaDfNDTSEKM5SVk9y7d+Vcn+0GxEXcI3QXPvQx9xth+wNNkucnMsX5L/P6zal
-	vCPee+SvUaS9X4E+HP7psTJUralCIgazSdjv/F4YYSnbhfCJeztWfAw23R4kVjgaTxo8giok
-	Xur4Eb45UIMiAcXG4/5jM8tMsxvwQEfLMq9iN+HfnREvZkj2VxrXtJoEkSCa3YVtY5NkFWIY
-	CavEJwNPrRz2IPxFFY6whI3Cg8YpKsIkq8C/hW8QkTrJxmFrmIloEZuCe34ZERxCrOmhhemh
-	hen/hRmRNhTDa/XqPHVOojZRw3+g1KvU+mJNnjKnUO1Ay6+jePpHNNEUVroRwSA3wgwpXyVR
-	3srhpZJc1UclvK4wW1dcwOvdKI6h5E9KEhuO5UrZPFURv4/ntbzuv5RgRLFlxNrsJ2SpdrXq
-	zoPmNWtWby2eOH2qKOHdONcCWThs67KWM95p77mdQ7sVwbPqkgmMkt3XmC3W2agXK652jm7J
-	qG7ek5pV592+Tv78ImwrsXPBXfvvFnJ9Tb7Uocx6Kv2AYn2LO23ss5ZGw4J4UdHacfHAJxn+
-	2LVzhm+bP2+49834o1qvpCY9PylZ/vJLlqKN/0zaHhe9yeAjsoy35m+GbJtffaS7zOLruqM4
-	WvpK9+pMC2yPSwjxUwUV763bEJMlE73gvrz12bA6P01jQTOlgXSqVRo1b76VNRW/b3Pd7v4L
-	itCnmfDa4VTtxv3l2b07gilNvuDbx5OSnEqj6fUrO9PklH6vKlFB6vSqfwGtSHvfqQMAAA==
-X-CMS-MailID: 20231129092206epcas2p300f71058467dbffcd46d02b7a938bd0a
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----enUWWt6WoF-Ggb2-rjyEux7skZ5dSWJ5iC_e377tM680ja-K=_37b70_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20231119165906epcas2p4c6691d274bec428329b193b99119a8d1
-References: <20231119165721.9849-1-alexandru.elisei@arm.com>
-	<CGME20231119165906epcas2p4c6691d274bec428329b193b99119a8d1@epcas2p4.samsung.com>
-	<20231119165721.9849-17-alexandru.elisei@arm.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM0PR0402MB3395:EE_|AS8PR04MB8707:EE_
+X-MS-Office365-Filtering-Correlation-Id: d0fb19be-14de-4fcf-f9e0-08dbf0bcb2bb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	s5wRcmiUxDcZ8mnG79DFHwEjK+g3oM0UIYggzeh7QgE4rdEpB+6E6JgdXjKMovdFwwE5zeD3mTuESvcaHDtRUB4kmRYVccW2tU4b9UEivfoBglFBwdPl9W5hX9NL5W+RPQUrDOeIk577a4sPeMTi4OU00cd0qmFAUPRbGV4yv16P+KkCevXGHdbgxAggBdXx5MQNtfaUn1SBlLaYW7AlAZ9W1P2kBQ/hzHm3F3oYuB7DVhLwyc/tHmsFCHJL7ugtkezauGJqSFtStL7RsCtR4MEjdy6jgJpQH3cMgG9LHjBMkFcH2tuirXCXQN9C++qj8oSJrahBNv7dTnYHjllIMZPGNOotSnLpWBwB+kfTeOkSTLlKkWKfeJOXrZrfMV9Ib2T7nSpZGsuKpvQKqukspFYdGBq2wA8WpyN+0s6OsNRtn8y331nLOHN+sp662OZqXJDFrAtb8lf0UVsksDHqAG72bOYomvWWeBMxn5p++z1uLlrhfxD6UT6beVLmPWTgEGftx8ln9HdRIIey6UfLM5nOZl4dx4XXXJIShxFVxag3E+rwLXenbwrFtpol9Efn2C9W+w71zUxXdkEWDC7dP/PTTFY6mmqCyhpdNujtcHI9KU9JXv7iFxaFUZU+kttN9c8kCwdiklgFRmDBirBEBQ7aCC+7ei1vXtNFzKKy628=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR0402MB3395.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(396003)(346002)(136003)(376002)(366004)(230173577357003)(230273577357003)(230922051799003)(1800799012)(64100799003)(186009)(451199024)(83380400001)(38100700002)(31696002)(86362001)(41300700001)(4326008)(66556008)(6916009)(316002)(66476007)(8936002)(5660300002)(8676002)(66946007)(2906002)(478600001)(30864003)(6512007)(2616005)(55236004)(44832011)(966005)(6506007)(53546011)(6486002)(26005)(36756003)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TTRLaTNCZC9ERy95My9SdG5wajlPTWZGU0xVUXpDNmx3RlU1V01ZVXcwYk9M?=
+ =?utf-8?B?UmdNdVc4dWVKcnJZUjRBeWtlcEdCbEROQXZ6ODUxZjUrUzYrRENDM0xRem5l?=
+ =?utf-8?B?MU1RUWdTZnhSeGVodDFNekllNitwcnpTa3BRbkFZa1hZRXBsRnRWb2RnRzRZ?=
+ =?utf-8?B?dW9SaVowdFFON1hQRVE2dHE1Y0k4NmF4ZDF6NjhCSy8zbEZ4ZFdQTVUwR092?=
+ =?utf-8?B?WWhPRDJGaEhiRnoxZGw3TCsyc2JsRHhQQlRsdDBHRUFpODAwK2dwMVF6ek8y?=
+ =?utf-8?B?UExPenJTU2s5ZGxVdGZFa1J2SXhBZWF0eXRlb3BiVi9tVVVHcXZuZnZNQi9O?=
+ =?utf-8?B?YytMb3pzSWJaWUt4aVltQlVqNjNvMm9Lc1E0K1c5Rm4vYTFVcmpWQTNwNHNI?=
+ =?utf-8?B?UUd0amJEZk50cTZKRVU3ekxNVGdGTGxOa2tVSmpGSzNmYWJnM3krSmJoSGpu?=
+ =?utf-8?B?WW1lWFY5YTBSekpraEtoaVcvbkFHc3hucVlEWlRQUXUweFF3dVFWeVd3R2hX?=
+ =?utf-8?B?NkhqM3U1dlJrT3A3ektxUkl4ZXNzSVRJWU1ZcFJkUDAyYjlJaTVva1BpYSs4?=
+ =?utf-8?B?S0JxVld0OHpDSlBLQWRadTBxa0pmM09JQ2YvV0prMmEvWWtsZkJMMEJRM3l2?=
+ =?utf-8?B?eXI5V05BaW9Ib2pveUtNYzR1eHdMR1NuQVo4TXp2b1Z1K1pFREorM0wzQ0ZR?=
+ =?utf-8?B?eC9XVDZHTENIeld0M0dnQm9nMzJFSlcwczhKV0NCTzJGck9HeEhPdjlVSGNq?=
+ =?utf-8?B?aHJOUTEwK1BxbXlmbTBpWEFYQ2FVdVJlU0l3cFBPYUQ4TklaNzZaaVlxbG5M?=
+ =?utf-8?B?MjBXWDVhQTdOOWFLdUR4SSsvcUVOMlhnTTkxYWpEaGtFVXJGbVorUE5HZmFJ?=
+ =?utf-8?B?enhvd2hjdXlVZXRVY3JhS0ZmaGVOK05icnNmdzRUUWxSYXNsMGh6cHUyR0Q0?=
+ =?utf-8?B?K0QyMjBVQlB1dTdUdE50LzZ5bUUwMEdwZS8wc1lqMEFBSFhZTmdWeEZDem1R?=
+ =?utf-8?B?OWNscEltUkFML3pycHl5eDNZSk5NcjNyU2tQb3NjNk9DdlRlaDVoUlo4TlZL?=
+ =?utf-8?B?aFFhZTBNZC9ZVUJHdUlxNlRXekx3bm5IZ1kybmxOSW5ZMnVBL2RoaGUxc2VT?=
+ =?utf-8?B?bXdBSEowTDFmNUhvSDM1U3JXQzFLVDNrZ0ZYQ2NZZys3ZXdLOWJyRFFWcHY4?=
+ =?utf-8?B?TFJzTHczMmk3OE56YTVSbkhqNSthTnVJZnRSSVpqMGpZdkk5WTc4ZDVqeGh0?=
+ =?utf-8?B?cXAyLzYrUUhmTTNXSDA0SDhIenhhQ2VRT21wUzhjNkdrQmZ3RXRmdktmMnNO?=
+ =?utf-8?B?eDZMNS80TTFJeDJuSVQ4UUxqdExRRXRibUV1a2hZN0pCc1FzOS9OeGFqNXBi?=
+ =?utf-8?B?NXk2Q3NJdkExdHRYSUsrRnJPZWl4SjJxYU1OYVBQY2tqNFRoMHZJS1ZzS2FB?=
+ =?utf-8?B?NVFOQWRwUEZ5NlZ4SEVsUkhkWS9TRmhzSVBOWDJpUHdtbW5jK3pOVEM1ZVFY?=
+ =?utf-8?B?TGV6TkJwZWpsTXpZeXQ4U09RK3hsUi9NQy92NXJ0RGg5NWV0dXZHeFpzU0t3?=
+ =?utf-8?B?TzFXNnFESXR3UXNvSFd5RHhPVm9HY2QxdThVcjVSMkczV2JiQzMxUk8wM3E4?=
+ =?utf-8?B?RnJTQ09HcHROUjYydXFuUS83SXBUdDk3RlJ3c0ZoUWwzNzJqOWFOTU45Q1Zv?=
+ =?utf-8?B?NGtYSjJVVi9RL3lXTHplVXg2VzRtUEc3bVQxWlQ2VW9ESUZsQTNFMmxtTm9V?=
+ =?utf-8?B?QVc2eWhuU2VUOVZxekN3VTN3cmxjQ0U2NTY5OFRCNlRxMHcxT1VmdHdCMGtn?=
+ =?utf-8?B?UWRxRGdyUXVMcGFZZHVkVEsrN1F0bVRnYWJVczdrVlh1SjlOWFhtM3oraTJ3?=
+ =?utf-8?B?MDdXU1NtYW1GbWhULzVVK25XRmV5Yk1yaVVUaklMRG83bExEZmVVSUZET2lu?=
+ =?utf-8?B?UFlJa2dpYzQ3WEhNcTR1ekxsQXh6VzB3Mm12VnNhdWdJc01Id2FobXZxV0V6?=
+ =?utf-8?B?VXFNY0U3MER3b3h4c1M2T3BGODVKR3NCVTdHSFFLY1l0WlFJRWdBdmVaZkVW?=
+ =?utf-8?B?c1h6RnNRRWJPUmtENFp4aG9qelRVdFo5aisxN2c4Rk8wNHZIekRhQ1lXMVpL?=
+ =?utf-8?Q?TPaUPmsKXds62Zbacyzyrz0Sq?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d0fb19be-14de-4fcf-f9e0-08dbf0bcb2bb
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR0402MB3395.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Nov 2023 09:22:25.3587
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: m7FTHzk3MNR5jAsgEb2cTDEyisPRkHugQYGk4ic8W62WAOcV5HZBawbB1cocg/Kjl5OZJGrnvdeZtPE6mISRJA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8707
 
-------enUWWt6WoF-Ggb2-rjyEux7skZ5dSWJ5iC_e377tM680ja-K=_37b70_
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-
-On Sun, Nov 19, 2023 at 04:57:10PM +0000, Alexandru Elisei wrote:
-> Reserve tag storage for a tagged page by migrating the contents of the tag
-> storage (if in use for data) and removing the tag storage pages from the
-> page allocator by calling alloc_contig_range().
+On 11/28/23 16:27, Steven Rostedt wrote:
+> On Tue, 28 Nov 2023 16:05:00 +0100
+> Petr Pavlu <petr.pavlu@suse.com> wrote:
 > 
-> When all the associated tagged pages have been freed, return the tag
-> storage pages back to the page allocator, where they can be used again for
-> data allocations.
+>> On 11/27/23 18:41, Steven Rostedt wrote:
+>>> On Mon, 27 Nov 2023 16:12:47 +0100
+>>> Petr Pavlu <petr.pavlu@suse.com> wrote:
+>>>   
+>>>> The following warning appears when using buffered events:
+>>>> [  203.556451] WARNING: CPU: 53 PID: 10220 at kernel/trace/ring_buffer.c:3912 ring_buffer_discard_commit+0x2eb/0x420  
+>>>
+>>> Hmm, I don't have a waring on line 3912, do you have extra code (debugging)
+>>> in your version?  
+>>
+>> The series is based on 2cc14f52aeb7 (tag: v6.7-rc3). It is the following
+>> code and RB_WARN_ON():
 > 
-> Tag storage pages cannot be tagged, so disallow allocations from
-> MIGRATE_CMA when the allocation is tagged.
+> Interesting.
 > 
-> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
-> ---
->  arch/arm64/include/asm/mte.h             |  16 +-
->  arch/arm64/include/asm/mte_tag_storage.h |  45 +++++
->  arch/arm64/include/asm/pgtable.h         |  27 +++
->  arch/arm64/kernel/mte_tag_storage.c      | 241 +++++++++++++++++++++++
->  fs/proc/page.c                           |   1 +
->  include/linux/kernel-page-flags.h        |   1 +
->  include/linux/page-flags.h               |   1 +
->  include/trace/events/mmflags.h           |   3 +-
->  mm/huge_memory.c                         |   1 +
->  9 files changed, 333 insertions(+), 3 deletions(-)
+>>   3895  void ring_buffer_discard_commit(struct trace_buffer *buffer,
+>>   3896                                  struct ring_buffer_event *event)
+>>   3897  {
+>> [...]
+>>   3908           * This must only be called if the event has not been
+>>   3909           * committed yet. Thus we can assume that preemption
+>>   3910           * is still disabled.
+>>   3911           */
+>>   3912          RB_WARN_ON(buffer, !local_read(&cpu_buffer->committing));
+>>   3913  
+>>   3914          rb_decrement_entry(cpu_buffer, event);
+>>   3915          if (rb_try_to_discard(cpu_buffer, event))
+>>   3916                  goto out;
+>>
+>> https://github.com/torvalds/linux/blob/2cc14f52aeb78ce3f29677c2de1f06c0e91471ab/kernel/trace/ring_buffer.c#L3912
+>>
+>>>> [...]
+>>>> [  203.670690] CPU: 53 PID: 10220 Comm: stress-ng-sysin Tainted: G            E      6.7.0-rc2-default #4 56e6d0fcf5581e6e51eaaecbdaec2a2338c80f3a
 > 
-> diff --git a/arch/arm64/include/asm/mte.h b/arch/arm64/include/asm/mte.h
-> index 8034695b3dd7..6457b7899207 100644
-> --- a/arch/arm64/include/asm/mte.h
-> +++ b/arch/arm64/include/asm/mte.h
-> @@ -40,12 +40,24 @@ void mte_free_tag_buf(void *buf);
->  #ifdef CONFIG_ARM64_MTE
->  
->  /* track which pages have valid allocation tags */
-> -#define PG_mte_tagged	PG_arch_2
-> +#define PG_mte_tagged		PG_arch_2
->  /* simple lock to avoid multiple threads tagging the same page */
-> -#define PG_mte_lock	PG_arch_3
-> +#define PG_mte_lock		PG_arch_3
-> +/* Track if a tagged page has tag storage reserved */
-> +#define PG_tag_storage_reserved	PG_arch_4
-> +
-> +#ifdef CONFIG_ARM64_MTE_TAG_STORAGE
-> +DECLARE_STATIC_KEY_FALSE(tag_storage_enabled_key);
-> +extern bool page_tag_storage_reserved(struct page *page);
-> +#endif
->  
->  static inline void set_page_mte_tagged(struct page *page)
->  {
-> +#ifdef CONFIG_ARM64_MTE_TAG_STORAGE
-> +	/* Open code mte_tag_storage_enabled() */
-> +	WARN_ON_ONCE(static_branch_likely(&tag_storage_enabled_key) &&
-> +		     !page_tag_storage_reserved(page));
-> +#endif
->  	/*
->  	 * Ensure that the tags written prior to this function are visible
->  	 * before the page flags update.
-> diff --git a/arch/arm64/include/asm/mte_tag_storage.h b/arch/arm64/include/asm/mte_tag_storage.h
-> index 8f86c4f9a7c3..cab033b184ab 100644
-> --- a/arch/arm64/include/asm/mte_tag_storage.h
-> +++ b/arch/arm64/include/asm/mte_tag_storage.h
-> @@ -5,11 +5,56 @@
->  #ifndef __ASM_MTE_TAG_STORAGE_H
->  #define __ASM_MTE_TAG_STORAGE_H
->  
-> +#ifndef __ASSEMBLY__
-> +
-> +#include <linux/mm_types.h>
-> +
-> +#include <asm/mte.h>
-> +
->  #ifdef CONFIG_ARM64_MTE_TAG_STORAGE
-> +
-> +DECLARE_STATIC_KEY_FALSE(tag_storage_enabled_key);
-> +
-> +static inline bool tag_storage_enabled(void)
-> +{
-> +	return static_branch_likely(&tag_storage_enabled_key);
-> +}
-> +
-> +static inline bool alloc_requires_tag_storage(gfp_t gfp)
-> +{
-> +	return gfp & __GFP_TAGGED;
-> +}
-> +
->  void mte_tag_storage_init(void);
-> +
-> +int reserve_tag_storage(struct page *page, int order, gfp_t gfp);
-> +void free_tag_storage(struct page *page, int order);
-> +
-> +bool page_tag_storage_reserved(struct page *page);
->  #else
-> +static inline bool tag_storage_enabled(void)
-> +{
-> +	return false;
-> +}
-> +static inline bool alloc_requires_tag_storage(struct page *page)
-> +{
-> +	return false;
-> +}
->  static inline void mte_tag_storage_init(void)
->  {
->  }
-> +static inline int reserve_tag_storage(struct page *page, int order, gfp_t gfp)
-> +{
-> +	return 0;
-> +}
-> +static inline void free_tag_storage(struct page *page, int order)
-> +{
-> +}
-> +static inline bool page_tag_storage_reserved(struct page *page)
-> +{
-> +	return true;
-> +}
->  #endif /* CONFIG_ARM64_MTE_TAG_STORAGE */
-> +
-> +#endif /* !__ASSEMBLY__ */
->  #endif /* __ASM_MTE_TAG_STORAGE_H  */
-> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-> index cd5dacd1be3a..20e8de853f5d 100644
-> --- a/arch/arm64/include/asm/pgtable.h
-> +++ b/arch/arm64/include/asm/pgtable.h
-> @@ -10,6 +10,7 @@
->  
->  #include <asm/memory.h>
->  #include <asm/mte.h>
-> +#include <asm/mte_tag_storage.h>
->  #include <asm/pgtable-hwdef.h>
->  #include <asm/pgtable-prot.h>
->  #include <asm/tlbflush.h>
-> @@ -1063,6 +1064,32 @@ static inline void arch_swap_restore(swp_entry_t entry, struct folio *folio)
->  		mte_restore_page_tags_by_swp_entry(entry, &folio->page);
->  }
->  
-> +#ifdef CONFIG_ARM64_MTE_TAG_STORAGE
-> +
-> +#define __HAVE_ARCH_PREP_NEW_PAGE
-> +static inline int arch_prep_new_page(struct page *page, int order, gfp_t gfp)
-> +{
-> +	if (tag_storage_enabled() && alloc_requires_tag_storage(gfp))
-> +		return reserve_tag_storage(page, order, gfp);
-> +	return 0;
-> +}
-> +
-> +#define __HAVE_ARCH_FREE_PAGES_PREPARE
-> +static inline void arch_free_pages_prepare(struct page *page, int order)
-> +{
-> +	if (tag_storage_enabled() && page_mte_tagged(page))
-> +		free_tag_storage(page, order);
-> +}
-> +
-> +#define __HAVE_ARCH_ALLOC_CMA
-> +static inline bool arch_alloc_cma(gfp_t gfp_mask)
-> +{
-> +	if (tag_storage_enabled() && alloc_requires_tag_storage(gfp_mask))
-> +		return false;
-> +	return true;
-> +}
-> +
-> +#endif /* CONFIG_ARM64_MTE_TAG_STORAGE */
->  #endif /* CONFIG_ARM64_MTE */
->  
->  #define __HAVE_ARCH_CALC_VMA_GFP
-> diff --git a/arch/arm64/kernel/mte_tag_storage.c b/arch/arm64/kernel/mte_tag_storage.c
-> index fd63430d4dc0..9f8ef3116fc3 100644
-> --- a/arch/arm64/kernel/mte_tag_storage.c
-> +++ b/arch/arm64/kernel/mte_tag_storage.c
-> @@ -11,12 +11,18 @@
->  #include <linux/of_device.h>
->  #include <linux/of_fdt.h>
->  #include <linux/pageblock-flags.h>
-> +#include <linux/page-flags.h>
-> +#include <linux/page_owner.h>
->  #include <linux/range.h>
-> +#include <linux/sched/mm.h>
->  #include <linux/string.h>
-> +#include <linux/vm_event_item.h>
->  #include <linux/xarray.h>
->  
->  #include <asm/mte_tag_storage.h>
->  
-> +__ro_after_init DEFINE_STATIC_KEY_FALSE(tag_storage_enabled_key);
-> +
->  struct tag_region {
->  	struct range mem_range;	/* Memory associated with the tag storage, in PFNs. */
->  	struct range tag_range;	/* Tag storage memory, in PFNs. */
-> @@ -28,6 +34,31 @@ struct tag_region {
->  static struct tag_region tag_regions[MAX_TAG_REGIONS];
->  static int num_tag_regions;
->  
-> +/*
-> + * A note on locking. Reserving tag storage takes the tag_blocks_lock mutex,
-> + * because alloc_contig_range() might sleep.
-> + *
-> + * Freeing tag storage takes the xa_lock spinlock with interrupts disabled
-> + * because pages can be freed from non-preemptible contexts, including from an
-> + * interrupt handler.
-> + *
-> + * Because tag storage can be freed from interrupt contexts, the xarray is
-> + * defined with the XA_FLAGS_LOCK_IRQ flag to disable interrupts when calling
-> + * xa_store(). This is done to prevent a deadlock with free_tag_storage() being
-> + * called from an interrupt raised before xa_store() releases the xa_lock.
-> + *
-> + * All of the above means that reserve_tag_storage() cannot run concurrently
-> + * with itself (no concurrent insertions), but it can run at the same time as
-> + * free_tag_storage(). The first thing that reserve_tag_storage() does after
-> + * taking the mutex is increase the refcount on all present tag storage blocks
-> + * with the xa_lock held, to serialize against freeing the blocks. This is an
-> + * optimization to avoid taking and releasing the xa_lock after each iteration
-> + * if the refcount operation was moved inside the loop, where it would have had
-> + * to be executed for each block.
-> + */
-> +static DEFINE_XARRAY_FLAGS(tag_blocks_reserved, XA_FLAGS_LOCK_IRQ);
-> +static DEFINE_MUTEX(tag_blocks_lock);
-> +
->  static int __init tag_storage_of_flat_get_range(unsigned long node, const __be32 *reg,
->  						int reg_len, struct range *range)
->  {
-> @@ -368,3 +399,213 @@ static int __init mte_tag_storage_activate_regions(void)
->  	return ret;
->  }
->  arch_initcall(mte_tag_storage_activate_regions);
-> +
-> +static void page_set_tag_storage_reserved(struct page *page, int order)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < (1 << order); i++)
-> +		set_bit(PG_tag_storage_reserved, &(page + i)->flags);
-> +}
-> +
-> +static void block_ref_add(unsigned long block, struct tag_region *region, int order)
-> +{
-> +	int count;
-> +
-> +	count = min(1u << order, 32 * region->block_size);
-> +	page_ref_add(pfn_to_page(block), count);
-> +}
-> +
-> +static int block_ref_sub_return(unsigned long block, struct tag_region *region, int order)
-> +{
-> +	int count;
-> +
-> +	count = min(1u << order, 32 * region->block_size);
-> +	return page_ref_sub_return(pfn_to_page(block), count);
-> +}
-> +
-> +static bool tag_storage_block_is_reserved(unsigned long block)
-> +{
-> +	return xa_load(&tag_blocks_reserved, block) != NULL;
-> +}
-> +
-> +static int tag_storage_reserve_block(unsigned long block, struct tag_region *region, int order)
-> +{
-> +	int ret;
-> +
-> +	ret = xa_err(xa_store(&tag_blocks_reserved, block, pfn_to_page(block), GFP_KERNEL));
-> +	if (!ret)
-> +		block_ref_add(block, region, order);
-> +
-> +	return ret;
-> +}
-> +
-> +static int order_to_num_blocks(int order)
-> +{
-> +	return max((1 << order) / 32, 1);
-> +}
-> +
-> +static int tag_storage_find_block_in_region(struct page *page, unsigned long *blockp,
-> +					    struct tag_region *region)
-> +{
-> +	struct range *tag_range = &region->tag_range;
-> +	struct range *mem_range = &region->mem_range;
-> +	u64 page_pfn = page_to_pfn(page);
-> +	u64 block, block_offset;
-> +
-> +	if (!(mem_range->start <= page_pfn && page_pfn <= mem_range->end))
-> +		return -ERANGE;
-> +
-> +	block_offset = (page_pfn - mem_range->start) / 32;
-> +	block = tag_range->start + rounddown(block_offset, region->block_size);
-> +
-> +	if (block + region->block_size - 1 > tag_range->end) {
-> +		pr_err("Block 0x%llx-0x%llx is outside tag region 0x%llx-0x%llx\n",
-> +			PFN_PHYS(block), PFN_PHYS(block + region->block_size),
-> +			PFN_PHYS(tag_range->start), PFN_PHYS(tag_range->end));
-> +		return -ERANGE;
-> +	}
-> +	*blockp = block;
-> +
-> +	return 0;
-> +
-> +}
-> +
-> +static int tag_storage_find_block(struct page *page, unsigned long *block,
-> +				  struct tag_region **region)
-> +{
-> +	int i, ret;
-> +
-> +	for (i = 0; i < num_tag_regions; i++) {
-> +		ret = tag_storage_find_block_in_region(page, block, &tag_regions[i]);
-> +		if (ret == 0) {
-> +			*region = &tag_regions[i];
-> +			return 0;
-> +		}
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +bool page_tag_storage_reserved(struct page *page)
-> +{
-> +	return test_bit(PG_tag_storage_reserved, &page->flags);
-> +}
-> +
-> +int reserve_tag_storage(struct page *page, int order, gfp_t gfp)
-> +{
-> +	unsigned long start_block, end_block;
-> +	struct tag_region *region;
-> +	unsigned long block;
-> +	unsigned long flags;
-> +	unsigned int tries;
-> +	int ret = 0;
-> +
-> +	VM_WARN_ON_ONCE(!preemptible());
-> +
-> +	if (page_tag_storage_reserved(page))
-> +		return 0;
-> +
-> +	/*
-> +	 * __alloc_contig_migrate_range() ignores gfp when allocating the
-> +	 * destination page for migration. Regardless, massage gfp flags and
-> +	 * remove __GFP_TAGGED to avoid recursion in case gfp stops being
-> +	 * ignored.
-> +	 */
-> +	gfp &= ~__GFP_TAGGED;
-> +	if (!(gfp & __GFP_NORETRY))
-> +		gfp |= __GFP_RETRY_MAYFAIL;
-> +
-> +	ret = tag_storage_find_block(page, &start_block, &region);
-> +	if (WARN_ONCE(ret, "Missing tag storage block for pfn 0x%lx", page_to_pfn(page)))
-> +		return 0;
-> +	end_block = start_block + order_to_num_blocks(order) * region->block_size;
-> +
+> I was looking at the above 6.7.0-rc2-default, which made me somewhat confused.
+> 
+> 
+>>>> [  203.670704] Hardware name: Intel Corp. GROVEPORT/GROVEPORT, BIOS GVPRCRB1.86B.0016.D04.1705030402 05/03/2017
+>>>> [  203.670709] RIP: 0010:ring_buffer_discard_commit+0x2eb/0x420
+>>>> [  203.735721] Code: 4c 8b 4a 50 48 8b 42 48 49 39 c1 0f 84 b3 00 00 00 49 83 e8 01 75 b1 48 8b 42 10 f0 ff 40 08 0f 0b e9 fc fe ff ff f0 ff 47 08 <0f> 0b e9 77 
+> 
+>>>> * Function trace_buffered_event_enable() initializes memory of each
+>>>>   allocated trace_buffered_event to zero but no memory barrier is
+>>>>   present to ensure this operation is completed before publishing its
+>>>>   pointer for use in trace_event_buffer_lock_reserve().  
+>>>
+>>> Yes, a wmb() may be helpful, but as the reader will see either the
+>>> allocated page or NULL, and can handle both cases. I decided not to add it
+>>> because it really doesn't matter if we do.  
+>>
+>> My concern is about the earlier call "memset(event, 0, sizeof(*event));"
+>> in trace_buffered_event_enable() which writes the obtained event page
+>> prior to publishing it via "per_cpu(trace_buffered_event, cpu) = event;".
+>> I think another CPU running trace_event_buffer_lock_reserve() could see
+>> already the valid event pointer, write to the event page and only then
+>> the memory could see the memset() write coming from
+>> trace_buffered_event_enable(). The event data would then become
+>> corrupted.
+> 
+> OK, I'll buy that. Feel free to send an patch that adds that wmb with a
+> comment explaining the above.
 
-Hello.
+Sure, I can do that. A nice thing about my proposed patch is that it
+requires only one smp_wmb() in this case, while the current code will
+require adding this barrier in the allocation loop prior to writing
+trace_buffered_event.
 
-If the page size is 4K,  block size is 2 (block size bytes 8K), and order is 6,
-then we need 2 pages for the tag. However according to the equation, order_to_num_blocks
-is 2 and block_size is also 2, so end block will be incremented by 4.
+>>>   
+>>>> * Calling function trace_buffered_event_enable() normally requires
+>>>>   pairing it with trace_buffered_event_disable(). However, the function
+>>>>   has no error return code and in case of a failure decrements back
+>>>>   trace_buffered_event_ref. This results in underflow of the counter
+>>>>   when trace_buffered_event_disable() gets called later.  
+>>>
+>>> Not an issue.
+>>>
+>>> Even on failure the ref count will be greater than zero, where 
+>>> trace_buffered_event_disable() handles it properly, and the freeing can
+>>> handle no pages being allocated.
+>>>
+>>> That is:
+>>>
+>>> 	free_page((unsigned long)per_cpu(trace_buffered_event, cpu));
+>>>
+>>> would be the same as: free_page((unsigned long)NULL);
+>>>
+>>> Which is perfectly fine to do.  
+>>
+>> The situation that I have on my mind is the following:
+>> * The counter trace_buffered_event_ref is at 0.
+>> * The soft mode gets enabled for some event and
+>>   trace_buffered_event_enable() is called. The function increments
+>>   trace_buffered_event_ref to 1 and starts allocating event pages.
+>> * The allocation fails for some page and trace_buffered_event_disable()
+>>   is called for cleanup.
+>> * Function trace_buffered_event_disable() decrements
+>>   trace_buffered_event_ref back to 0, recognizes that it was the last
+>>   use of buffered events and frees all allocated pages.
+>> * The control goes back to trace_buffered_event_enable() which returns.
+>>   The caller of trace_buffered_event_enable() has no information that
+>>   the function actually failed.
+>> * Some time later, the soft mode is disabled for the same event.
+>>   Function trace_buffered_event_disable() is called. It warns on
+>>   "WARN_ON_ONCE(!trace_buffered_event_ref)" and returns.
+>>
+>> The end result is only an ugly warning but I think it is still good to
+>> fix.
+> 
+> Ah, I missed the call to trace_buffered_event_disable() in the failure
+> path. Actually, since the trace_buffered_event is only an optimization, I
+> think the best thing to do is to just return without the clean up,
+> expecting that the other caller will do the clean up. We could even not
+> even stop the loop!
+> 
+> That is, just have:
+> 
+> void trace_buffered_event_enable(void)
+> {
+> 	struct ring_buffer_event *event;
+> 	struct page *page;
+> 	int cpu;
+> 
+> 	WARN_ON_ONCE(!mutex_is_locked(&event_mutex));
+> 
+> 	if (trace_buffered_event_ref++)
+> 		return;
+> 
+> 	for_each_tracing_cpu(cpu) {
+> 		page = alloc_pages_node(cpu_to_node(cpu),
+> 					GFP_KERNEL | __GFP_NORETRY, 0);
+> 
+> 		/* This is just an optimization and can handle failures */
+> 		if (!page) {
+> 			pr_err("Failed to create event buffer\n");
+> 			break;
+> 		}
+> 
+> 		event = page_address(page);
+> 		memset(event, 0, sizeof(*event));
+> 
+> 		per_cpu(trace_buffered_event, cpu) = event;
+> 
+> 		preempt_disable();
+> 		if (cpu == smp_processor_id() &&
+> 		    __this_cpu_read(trace_buffered_event) !=
+> 		    per_cpu(trace_buffered_event, cpu))
+> 			WARN_ON_ONCE(1);
+> 		preempt_enable();
+> 	}
+> }
 
-However we actually only need 8K of tag, right for 256K ?
-Could you explain order_to_num_blocks * region->block_size more detail ?
+The current behavior is that if the allocation in one call to
+trace_buffered_event_enable() fails then another call to the same
+function results in a new attempt to allocate the event pages.
+
+The code above changes it. As long trace_buffered_event_ref doesn't go
+back to 0 and then 1 again, no new allocation attempt is made. It means
+that trace_buffered_event can be left in this "half-initialized" state
+for a while.
+
+This is possibly ok, it is an unlikely corner case anyway. My patch
+nonetheless preserves the current behavior of retrying the allocation.
+
+> 
+>>>
+>>> Now, the reason you found the crash was from the first issue you mentioned.
+>>> That is, we didn't disable the current CPU and if we migrated, things would
+>>> get really messed up. The only fix here is to make sure all CPUs have their
+>>> trace_buffered_event_cnt get incremented.  
+>>
+>> The potential race that I see is the following:
+>> * Function trace_buffered_event_disable() is called on CPU 0. It
+>>   increments trace_buffered_event_cnt on each CPU and waits via
+>>   synchronize_rcu() for each user of trace_buffered_event to complete.
+> 
+>> * After synchronize_rcu() is already finished, the situation is that all
+>>   counters trace_buffered_event_cnt are at 1 and all pointers
+>>   trace_buffered_event are still valid.
+> 
+>> * At this point, on a different CPU 1, the execution reaches
+>>   trace_event_buffer_lock_reserve(). The function calls
+>>   preempt_disable_notrace() and enters an RCU read-side critical section
+>>   but that is not important because all RCU stuff is already performed
+>>   and completed in trace_buffered_event_disable(). The function proceeds
+>>   and reads a still valid pointer from trace_buffered_event[CPU1] into
+>>   the local variable "entry". However, it doesn't yet read
+>>   trace_buffered_event_cnt[CPU1] which happens later.
+> 
+>> * Function trace_buffered_event_disable() continues. It frees
+>>   trace_buffered_event[CPU1] and decrements
+>>   trace_buffered_event_cnt[CPU1] back to 0.
+> 
+>> * Function trace_event_buffer_lock_reserve() continues. It reads and
+>>   increments trace_buffered_event_cnt[CPU1] from 0 to 1. This makes it
+>>   believe that it can use the "entry" that it already obtained but the
+>>   pointer is now invalid and any access results in a use-after-free.
+> 
+> OK, so you are saying we need another synchronize_rcu() after we set the
+> trace_buffered_event to NULL?
+> 
+> 
+> void trace_buffered_event_disable(void)
+> {
+> 	int cpu;
+> 
+> 	WARN_ON_ONCE(!mutex_is_locked(&event_mutex));
+> 
+> 	if (WARN_ON_ONCE(!trace_buffered_event_ref))
+> 		return;
+> 
+> 	if (--trace_buffered_event_ref)
+> 		return;
+> 
+> 	preempt_disable();
+> 	/* For each CPU, set the buffer as used. */
+> 	smp_call_function_many(tracing_buffer_mask,
+> 			       disable_trace_buffered_event, NULL, 1);
+> 	preempt_enable();
+> 
+> 	/* Wait for all current users to finish */
+> 	synchronize_rcu();
+> 
+> 	for_each_tracing_cpu(cpu) {
+> 		free_page((unsigned long)per_cpu(trace_buffered_event, cpu));
+> 		per_cpu(trace_buffered_event, cpu) = NULL;
+> 	}
+> 	/*
+> 	 * Make sure trace_buffered_event is NULL before clearing
+> 	 * trace_buffered_event_cnt.
+> 	 */
+> -	smp_wmb();
+> +	synchronize_rcu();
+> 
+> 	preempt_disable();
+> 	/* Do the work on each cpu */
+> 	smp_call_function_many(tracing_buffer_mask,
+> 			       enable_trace_buffered_event, NULL, 1);
+> 	preempt_enable();
+> }
+> 
+> I agree with that.
+
+Yes, I believe this should address this potential race condition.
+
+An alternative would be instead to update
+trace_event_buffer_lock_reserve() as follows:
+
+	if (this_cpu_inc_return(trace_buffered_event_cnt) == 1) {
+		smp_rmb();
+		if ((entry = __this_cpu_read(trace_buffered_event))) {
+			[...]
+
+That saves the synchronize_rcu() call but additionally modifies
+trace_buffered_event_cnt even if trace_buffered_event is currently NULL.
+
+Another alternative is the approach taken by my patch which avoids more
+RCU work and unnecessary memory modifications.
+
+I'd be interested if you could have a look again at what I'm proposing
+in my patch. I think it simplifies the code while addressing these
+problems as well. However, if you have reservations about that approach
+then it is ok, I can fix the found problems individually as discussed.
 
 Thanks,
-Regards.
-
-> +	mutex_lock(&tag_blocks_lock);
-> +
-> +	/* Check again, this time with the lock held. */
-> +	if (page_tag_storage_reserved(page))
-> +		goto out_unlock;
-> +
-> +	/* Make sure existing entries are not freed from out under out feet. */
-> +	xa_lock_irqsave(&tag_blocks_reserved, flags);
-> +	for (block = start_block; block < end_block; block += region->block_size) {
-> +		if (tag_storage_block_is_reserved(block))
-> +			block_ref_add(block, region, order);
-> +	}
-> +	xa_unlock_irqrestore(&tag_blocks_reserved, flags);
-> +
-> +	for (block = start_block; block < end_block; block += region->block_size) {
-> +		/* Refcount incremented above. */
-> +		if (tag_storage_block_is_reserved(block))
-> +			continue;
-> +
-> +		tries = 3;
-> +		while (tries--) {
-> +			ret = alloc_contig_range(block, block + region->block_size, MIGRATE_CMA, gfp);
-> +			if (ret == 0 || ret != -EBUSY)
-> +				break;
-> +		}
-> +
-> +		if (ret)
-> +			goto out_error;
-> +
-> +		ret = tag_storage_reserve_block(block, region, order);
-> +		if (ret) {
-> +			free_contig_range(block, region->block_size);
-> +			goto out_error;
-> +		}
-> +
-> +		count_vm_events(CMA_ALLOC_SUCCESS, region->block_size);
-> +	}
-> +
-> +	page_set_tag_storage_reserved(page, order);
-> +out_unlock:
-> +	mutex_unlock(&tag_blocks_lock);
-> +
-> +	return 0;
-> +
-> +out_error:
-> +	xa_lock_irqsave(&tag_blocks_reserved, flags);
-> +	for (block = start_block; block < end_block; block += region->block_size) {
-> +		if (tag_storage_block_is_reserved(block) &&
-> +		    block_ref_sub_return(block, region, order) == 1) {
-> +			__xa_erase(&tag_blocks_reserved, block);
-> +			free_contig_range(block, region->block_size);
-> +		}
-> +	}
-> +	xa_unlock_irqrestore(&tag_blocks_reserved, flags);
-> +
-> +	mutex_unlock(&tag_blocks_lock);
-> +
-> +	count_vm_events(CMA_ALLOC_FAIL, region->block_size);
-> +
-> +	return ret;
-> +}
-> +
-> +void free_tag_storage(struct page *page, int order)
-> +{
-> +	unsigned long block, start_block, end_block;
-> +	struct tag_region *region;
-> +	unsigned long flags;
-> +	int ret;
-> +
-> +	ret = tag_storage_find_block(page, &start_block, &region);
-> +	if (WARN_ONCE(ret, "Missing tag storage block for pfn 0x%lx", page_to_pfn(page)))
-> +		return;
-> +
-> +	end_block = start_block + order_to_num_blocks(order) * region->block_size;
-> +
-> +	xa_lock_irqsave(&tag_blocks_reserved, flags);
-> +	for (block = start_block; block < end_block; block += region->block_size) {
-> +		if (WARN_ONCE(!tag_storage_block_is_reserved(block),
-> +		    "Block 0x%lx is not reserved for pfn 0x%lx", block, page_to_pfn(page)))
-> +			continue;
-> +
-> +		if (block_ref_sub_return(block, region, order) == 1) {
-> +			__xa_erase(&tag_blocks_reserved, block);
-> +			free_contig_range(block, region->block_size);
-> +		}
-> +	}
-> +	xa_unlock_irqrestore(&tag_blocks_reserved, flags);
-> +}
-> diff --git a/fs/proc/page.c b/fs/proc/page.c
-> index 195b077c0fac..e7eb584a9234 100644
-> --- a/fs/proc/page.c
-> +++ b/fs/proc/page.c
-> @@ -221,6 +221,7 @@ u64 stable_page_flags(struct page *page)
->  #ifdef CONFIG_ARCH_USES_PG_ARCH_X
->  	u |= kpf_copy_bit(k, KPF_ARCH_2,	PG_arch_2);
->  	u |= kpf_copy_bit(k, KPF_ARCH_3,	PG_arch_3);
-> +	u |= kpf_copy_bit(k, KPF_ARCH_4,	PG_arch_4);
->  #endif
->  
->  	return u;
-> diff --git a/include/linux/kernel-page-flags.h b/include/linux/kernel-page-flags.h
-> index 859f4b0c1b2b..4a0d719ffdd4 100644
-> --- a/include/linux/kernel-page-flags.h
-> +++ b/include/linux/kernel-page-flags.h
-> @@ -19,5 +19,6 @@
->  #define KPF_SOFTDIRTY		40
->  #define KPF_ARCH_2		41
->  #define KPF_ARCH_3		42
-> +#define KPF_ARCH_4		43
->  
->  #endif /* LINUX_KERNEL_PAGE_FLAGS_H */
-> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> index a88e64acebfe..7915165a51bd 100644
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-> @@ -135,6 +135,7 @@ enum pageflags {
->  #ifdef CONFIG_ARCH_USES_PG_ARCH_X
->  	PG_arch_2,
->  	PG_arch_3,
-> +	PG_arch_4,
->  #endif
->  	__NR_PAGEFLAGS,
->  
-> diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
-> index 6ca0d5ed46c0..ba962fd10a2c 100644
-> --- a/include/trace/events/mmflags.h
-> +++ b/include/trace/events/mmflags.h
-> @@ -125,7 +125,8 @@ IF_HAVE_PG_HWPOISON(hwpoison)						\
->  IF_HAVE_PG_IDLE(idle)							\
->  IF_HAVE_PG_IDLE(young)							\
->  IF_HAVE_PG_ARCH_X(arch_2)						\
-> -IF_HAVE_PG_ARCH_X(arch_3)
-> +IF_HAVE_PG_ARCH_X(arch_3)						\
-> +IF_HAVE_PG_ARCH_X(arch_4)
->  
->  #define show_page_flags(flags)						\
->  	(flags) ? __print_flags(flags, "|",				\
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index f31f02472396..9beead961a65 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -2474,6 +2474,7 @@ static void __split_huge_page_tail(struct folio *folio, int tail,
->  #ifdef CONFIG_ARCH_USES_PG_ARCH_X
->  			 (1L << PG_arch_2) |
->  			 (1L << PG_arch_3) |
-> +			 (1L << PG_arch_4) |
->  #endif
->  			 (1L << PG_dirty) |
->  			 LRU_GEN_MASK | LRU_REFS_MASK));
-> -- 
-> 2.42.1
-> 
-> 
-
-------enUWWt6WoF-Ggb2-rjyEux7skZ5dSWJ5iC_e377tM680ja-K=_37b70_
-Content-Type: text/plain; charset="utf-8"
-
-
-------enUWWt6WoF-Ggb2-rjyEux7skZ5dSWJ5iC_e377tM680ja-K=_37b70_--
+Petr
