@@ -1,122 +1,167 @@
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBBD810E5;
-	Thu, 30 Nov 2023 07:26:18 -0800 (PST)
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2F54721B21;
-	Thu, 30 Nov 2023 15:26:15 +0000 (UTC)
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F24E713AB1;
-	Thu, 30 Nov 2023 15:26:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id cXTBOpapaGXbYQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 30 Nov 2023 15:26:14 +0000
-Message-ID: <414847ea-b7e7-aa05-5e2d-de50788d9b4d@suse.cz>
-Date: Thu, 30 Nov 2023 16:26:14 +0100
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id A1EE4131;
+	Thu, 30 Nov 2023 09:43:09 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0867A1756;
+	Thu, 30 Nov 2023 09:43:56 -0800 (PST)
+Received: from raptor (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 526A93F6C4;
+	Thu, 30 Nov 2023 09:43:04 -0800 (PST)
+Date: Thu, 30 Nov 2023 17:43:01 +0000
+From: Alexandru Elisei <alexandru.elisei@arm.com>
+To: Peter Collingbourne <pcc@google.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
+	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
+	rppt@kernel.org, hughd@google.com, steven.price@arm.com,
+	anshuman.khandual@arm.com, vincenzo.frascino@arm.com,
+	david@redhat.com, eugenis@google.com, kcc@google.com,
+	hyesoo.yu@samsung.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v2 21/27] mm: arm64: Handle tag storage pages mapped
+ before mprotect(PROT_MTE)
+Message-ID: <ZWjJpaSahUUM3GKs@raptor>
+References: <20231119165721.9849-1-alexandru.elisei@arm.com>
+ <20231119165721.9849-22-alexandru.elisei@arm.com>
+ <CAMn1gO5WYC5Xx7LfBxN_j-xqkVT+tjXP5PqDfrvhgqPOa0ZCsA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 16/33] mm: slub: Let KMSAN access metadata
-Content-Language: en-US
-To: Ilya Leoshkevich <iii@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Alexander Potapenko <glider@google.com>,
- Andrew Morton <akpm@linux-foundation.org>, Christoph Lameter <cl@linux.com>,
- David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>,
- Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
- Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>,
- kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-s390@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Sven Schnelle <svens@linux.ibm.com>
-References: <20231121220155.1217090-1-iii@linux.ibm.com>
- <20231121220155.1217090-17-iii@linux.ibm.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20231121220155.1217090-17-iii@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Bar: ++++++++++++
-X-Spam-Score: 12.69
-X-Rspamd-Server: rspamd1
-Authentication-Results: smtp-out1.suse.de;
-	dkim=none;
-	spf=softfail (smtp-out1.suse.de: 2a07:de40:b281:104:10:150:64:97 is neither permitted nor denied by domain of vbabka@suse.cz) smtp.mailfrom=vbabka@suse.cz;
-	dmarc=none
-X-Rspamd-Queue-Id: 2F54721B21
-X-Spamd-Result: default: False [12.69 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 TO_DN_SOME(0.00)[];
-	 R_SPF_SOFTFAIL(4.60)[~all];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 MX_GOOD(-0.01)[];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 R_DKIM_NA(2.20)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 BAYES_HAM(-0.00)[20.85%];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 DMARC_NA(1.20)[suse.cz];
-	 NEURAL_SPAM_LONG(3.50)[1.000];
-	 RCPT_COUNT_TWELVE(0.00)[24];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FREEMAIL_CC(0.00)[linux.ibm.com,google.com,gmail.com,googlegroups.com,vger.kernel.org,kvack.org,arm.com,linux.dev];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMn1gO5WYC5Xx7LfBxN_j-xqkVT+tjXP5PqDfrvhgqPOa0ZCsA@mail.gmail.com>
 
-On 11/21/23 23:01, Ilya Leoshkevich wrote:
-> Building the kernel with CONFIG_SLUB_DEBUG and CONFIG_KMSAN causes
-> KMSAN to complain about touching redzones in kfree().
+Hi Peter,
+
+On Mon, Nov 27, 2023 at 09:39:17PM -0800, Peter Collingbourne wrote:
+> Hi Alexandru,
 > 
-> Fix by extending the existing KASAN-related metadata_access_enable()
-> and metadata_access_disable() functions to KMSAN.
+> On Sun, Nov 19, 2023 at 8:59 AM Alexandru Elisei
+> <alexandru.elisei@arm.com> wrote:
+> >
+> > Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> > ---
+> >  arch/arm64/include/asm/mte_tag_storage.h |  1 +
+> >  arch/arm64/kernel/mte_tag_storage.c      | 15 +++++++
+> >  arch/arm64/mm/fault.c                    | 55 ++++++++++++++++++++++++
+> >  include/linux/migrate.h                  |  8 +++-
+> >  include/linux/migrate_mode.h             |  1 +
+> >  mm/internal.h                            |  6 ---
+> >  6 files changed, 78 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/arch/arm64/include/asm/mte_tag_storage.h b/arch/arm64/include/asm/mte_tag_storage.h
+> > index b97406d369ce..6a8b19a6a758 100644
+> > --- a/arch/arm64/include/asm/mte_tag_storage.h
+> > +++ b/arch/arm64/include/asm/mte_tag_storage.h
+> > @@ -33,6 +33,7 @@ int reserve_tag_storage(struct page *page, int order, gfp_t gfp);
+> >  void free_tag_storage(struct page *page, int order);
+> >
+> >  bool page_tag_storage_reserved(struct page *page);
+> > +bool page_is_tag_storage(struct page *page);
+> >
+> >  vm_fault_t handle_page_missing_tag_storage(struct vm_fault *vmf);
+> >  vm_fault_t handle_huge_page_missing_tag_storage(struct vm_fault *vmf);
+> > diff --git a/arch/arm64/kernel/mte_tag_storage.c b/arch/arm64/kernel/mte_tag_storage.c
+> > index a1cc239f7211..5096ce859136 100644
+> > --- a/arch/arm64/kernel/mte_tag_storage.c
+> > +++ b/arch/arm64/kernel/mte_tag_storage.c
+> > @@ -500,6 +500,21 @@ bool page_tag_storage_reserved(struct page *page)
+> >         return test_bit(PG_tag_storage_reserved, &page->flags);
+> >  }
+> >
+> > +bool page_is_tag_storage(struct page *page)
+> > +{
+> > +       unsigned long pfn = page_to_pfn(page);
+> > +       struct range *tag_range;
+> > +       int i;
+> > +
+> > +       for (i = 0; i < num_tag_regions; i++) {
+> > +               tag_range = &tag_regions[i].tag_range;
+> > +               if (tag_range->start <= pfn && pfn <= tag_range->end)
+> > +                       return true;
+> > +       }
+> > +
+> > +       return false;
+> > +}
+> > +
+> >  int reserve_tag_storage(struct page *page, int order, gfp_t gfp)
+> >  {
+> >         unsigned long start_block, end_block;
+> > diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+> > index 6730a0812a24..964c5ae161a3 100644
+> > --- a/arch/arm64/mm/fault.c
+> > +++ b/arch/arm64/mm/fault.c
+> > @@ -12,6 +12,7 @@
+> >  #include <linux/extable.h>
+> >  #include <linux/kfence.h>
+> >  #include <linux/signal.h>
+> > +#include <linux/migrate.h>
+> >  #include <linux/mm.h>
+> >  #include <linux/hardirq.h>
+> >  #include <linux/init.h>
+> > @@ -956,6 +957,50 @@ void tag_clear_highpage(struct page *page)
+> >  }
+> >
+> >  #ifdef CONFIG_ARM64_MTE_TAG_STORAGE
+> > +
+> > +#define MR_TAGGED_TAG_STORAGE  MR_ARCH_1
+> > +
+> > +extern bool isolate_lru_page(struct page *page);
+> > +extern void putback_movable_pages(struct list_head *l);
 > 
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+> Could we move these declarations to a non-mm-internal header and
+> #include it instead of manually declaring them here?
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Yes, that's better than this hackish way of doing it.
 
-> ---
->  mm/slub.c | 2 ++
->  1 file changed, 2 insertions(+)
 > 
-> diff --git a/mm/slub.c b/mm/slub.c
-> index 169e5f645ea8..6e61c27951a4 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -700,10 +700,12 @@ static int disable_higher_order_debug;
->  static inline void metadata_access_enable(void)
->  {
->  	kasan_disable_current();
-> +	kmsan_disable_current();
->  }
->  
->  static inline void metadata_access_disable(void)
->  {
-> +	kmsan_enable_current();
->  	kasan_enable_current();
->  }
->  
+> > +
+> > +/* Returns with the page reference dropped. */
+> > +static void migrate_tag_storage_page(struct page *page)
+> > +{
+> > +       struct migration_target_control mtc = {
+> > +               .nid = NUMA_NO_NODE,
+> > +               .gfp_mask = GFP_HIGHUSER_MOVABLE | __GFP_TAGGED,
+> > +       };
+> > +       unsigned long i, nr_pages = compound_nr(page);
+> > +       LIST_HEAD(pagelist);
+> > +       int ret, tries;
+> > +
+> > +       lru_cache_disable();
+> > +
+> > +       for (i = 0; i < nr_pages; i++) {
+> > +               if (!isolate_lru_page(page + i)) {
+> > +                       ret = -EAGAIN;
+> > +                       goto out;
+> > +               }
+> > +               /* Isolate just grabbed another reference, drop ours. */
+> > +               put_page(page + i);
+> > +               list_add_tail(&(page + i)->lru, &pagelist);
+> > +       }
+> > +
+> > +       tries = 5;
+> > +       while (tries--) {
+> > +               ret = migrate_pages(&pagelist, alloc_migration_target, NULL, (unsigned long)&mtc,
+> > +                                   MIGRATE_SYNC, MR_TAGGED_TAG_STORAGE, NULL);
+> > +               if (ret == 0 || ret != -EBUSY)
+> 
+> This could be simplified to:
+> 
+> if (ret != -EBUSY)
 
+Indeed! I can do the same thing in reserve_tag_storage(), in the loop where I
+call alloc_contig_range().
+
+Thanks,
+Alex
