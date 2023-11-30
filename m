@@ -1,108 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBBD810E5;
+	Thu, 30 Nov 2023 07:26:18 -0800 (PST)
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A3551C2B
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Nov 2023 14:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j8Gc1JD6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CE65C433C8;
-	Thu, 30 Nov 2023 14:58:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701356338;
-	bh=Fi+PXbFeaElSMsJ85ZgC4fiBmvsEM9ElGQ2yDWOBSwg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=j8Gc1JD6u2c5eeZjTJtjzejxJmsZctNa2jWwdImxvAN12/Rho7yWrgwCjDMhUveyS
-	 Fb9MpgGkdd2Dgmk1b1EG5qcDy+HXt+dFAWGui91lsvLoDmfUl7kg2ufIF0L6d3D7wX
-	 zaenxtk7LJU8Pvf4/eBaPu1vYn537Xw8KE+uJiIf/cVhMDLceCDN1IDz5nbXlZBFhe
-	 cC4Cq2jSoseytIw6D2xXwojtRKawIJDpHncBhhbdA/tVcn8QKBv486TUEyZyLY+Byq
-	 7rIA2JyqUJk90QyWN/i8Ie31x+y16U7GYx4KU+TM2Etl3/zqaOn5RBgpv6pzj813Xu
-	 O2rwI6tIYSOfg==
-Date: Thu, 30 Nov 2023 23:58:53 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, dmaluka@google.com,
- Sean Paul <seanpaul@chromium.org>, Arun Easi <aeasi@marvell.com>, Daniel
- Wagner <dwagner@suse.de>
-Subject: Re: [PATCH] tracing: Allow creating instances with specified system
- events
-Message-Id: <20231130235853.0d41c12583548472c9df8dcd@kernel.org>
-In-Reply-To: <20231129102545.56901df5@gandalf.local.home>
-References: <20231128122117.2276f4a7@gandalf.local.home>
-	<20231129235821.d99da161644525a2fa988938@kernel.org>
-	<20231129102545.56901df5@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2F54721B21;
+	Thu, 30 Nov 2023 15:26:15 +0000 (UTC)
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F24E713AB1;
+	Thu, 30 Nov 2023 15:26:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id cXTBOpapaGXbYQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Thu, 30 Nov 2023 15:26:14 +0000
+Message-ID: <414847ea-b7e7-aa05-5e2d-de50788d9b4d@suse.cz>
+Date: Thu, 30 Nov 2023 16:26:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2 16/33] mm: slub: Let KMSAN access metadata
+Content-Language: en-US
+To: Ilya Leoshkevich <iii@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Alexander Potapenko <glider@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Christoph Lameter <cl@linux.com>,
+ David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>,
+ Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+ kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-s390@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Sven Schnelle <svens@linux.ibm.com>
+References: <20231121220155.1217090-1-iii@linux.ibm.com>
+ <20231121220155.1217090-17-iii@linux.ibm.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20231121220155.1217090-17-iii@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Spamd-Bar: ++++++++++++
+X-Spam-Score: 12.69
+X-Rspamd-Server: rspamd1
+Authentication-Results: smtp-out1.suse.de;
+	dkim=none;
+	spf=softfail (smtp-out1.suse.de: 2a07:de40:b281:104:10:150:64:97 is neither permitted nor denied by domain of vbabka@suse.cz) smtp.mailfrom=vbabka@suse.cz;
+	dmarc=none
+X-Rspamd-Queue-Id: 2F54721B21
+X-Spamd-Result: default: False [12.69 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 TO_DN_SOME(0.00)[];
+	 R_SPF_SOFTFAIL(4.60)[~all];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 MX_GOOD(-0.01)[];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 R_DKIM_NA(2.20)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 BAYES_HAM(-0.00)[20.85%];
+	 ARC_NA(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DMARC_NA(1.20)[suse.cz];
+	 NEURAL_SPAM_LONG(3.50)[1.000];
+	 RCPT_COUNT_TWELVE(0.00)[24];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FREEMAIL_CC(0.00)[linux.ibm.com,google.com,gmail.com,googlegroups.com,vger.kernel.org,kvack.org,arm.com,linux.dev];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
 
-On Wed, 29 Nov 2023 10:25:45 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On 11/21/23 23:01, Ilya Leoshkevich wrote:
+> Building the kernel with CONFIG_SLUB_DEBUG and CONFIG_KMSAN causes
+> KMSAN to complain about touching redzones in kfree().
+> 
+> Fix by extending the existing KASAN-related metadata_access_enable()
+> and metadata_access_disable() functions to KMSAN.
+> 
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
 
-> On Wed, 29 Nov 2023 23:58:21 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > > - Dynamic events had to be specified directly to still allow them to be
-> > >   created.  
-> > 
-> > I have a question about this point. Does this mean the dynamic event files
-> > will be created in the instance which limits the "system"?
-> > For this point, I would like to allow limiting dynamic events on instance too.
-> > If user needs to use specific one, e.g. synthetic, then it is possible to
-> > add it to the filter.
-> 
-> I'm going back and forth on this. Here's my thoughts about it.
-> 
-> Arguments for allowing all dynamic events:
-> 
-> 1. There's not many. This code is basically a way to keep the overhead of
->    an instance down. By removing all static events, it can substantially lower
->    the memory footprint.
-> 
->    As synthetic events are user created, there shouldn't be too many that
->    would cause a memory foot print issue, and the user also has a bit of
->    control of what events are created.
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-Sometimes synthetic event user != instance user. (Only the privileged user
-will do, but maybe done by different program.)
-
-> 2. We have no idea what a user may want to do with those events. What if
->    the user wants to see an event in that buffer and creates a synthetic
->    event for it? Should the kernel create a policy for that?
-
-I think it is enough to give a choice to user. User can enable events
-under synthetic, probes, etc. by mkdir later. IIUC, current implementation
-forcibly exposes all dynamic events.
-
+> ---
+>  mm/slub.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> Arguments against defaulting dynamic events in:
-> 
-> 1. The list is created in the kernel. The instance is not created by the
->    user and thus the kernel could have more control over it.
-> 
-> 2. If the user really wants to have dynamic events, they can create another
->    instance with the needed events or use the top level.
-> 
-> Hmm, writing this out, I am now leaning more toward not defaulting dynamic
-> events in. And if we can create a way to dynamically add and remove events
-> systems from an instance (via mkdir and rmdir), this should not be an issue.
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 169e5f645ea8..6e61c27951a4 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -700,10 +700,12 @@ static int disable_higher_order_debug;
+>  static inline void metadata_access_enable(void)
+>  {
+>  	kasan_disable_current();
+> +	kmsan_disable_current();
+>  }
+>  
+>  static inline void metadata_access_disable(void)
+>  {
+> +	kmsan_enable_current();
+>  	kasan_enable_current();
+>  }
+>  
 
-Yeah, that's my point. If we allow all dynamic events, it needs to change the
-default behavior later. That will not be consistent.
-
-Thank you,
-
-> 
-> Anyone else have any thoughts about this?
-> 
-> -- Steve
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
