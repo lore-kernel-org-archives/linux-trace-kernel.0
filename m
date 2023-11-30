@@ -1,482 +1,167 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 87F0FD48;
-	Thu, 30 Nov 2023 04:06:30 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CCA7F1042;
-	Thu, 30 Nov 2023 04:07:16 -0800 (PST)
-Received: from raptor (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B8243F5A1;
-	Thu, 30 Nov 2023 04:06:25 -0800 (PST)
-Date: Thu, 30 Nov 2023 12:06:22 +0000
-From: Alexandru Elisei <alexandru.elisei@arm.com>
-To: Hyesoo Yu <hyesoo.yu@samsung.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
-	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
-	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
-	rppt@kernel.org, hughd@google.com, pcc@google.com,
-	steven.price@arm.com, anshuman.khandual@arm.com,
-	vincenzo.frascino@arm.com, david@redhat.com, eugenis@google.com,
-	kcc@google.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v2 19/27] mm: mprotect: Introduce
- PAGE_FAULT_ON_ACCESS for mprotect(PROT_MTE)
-Message-ID: <ZWh6vl8DfXQbKo9O@raptor>
-References: <20231119165721.9849-1-alexandru.elisei@arm.com>
- <CGME20231119165921epcas2p3dce0532847d59a9c3973b4e41102e27d@epcas2p3.samsung.com>
- <20231119165721.9849-20-alexandru.elisei@arm.com>
- <20231129092725.GD2988384@tiffany>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE9F20DCF
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Nov 2023 12:15:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UraiEC+0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0995C433C7;
+	Thu, 30 Nov 2023 12:15:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701346544;
+	bh=1NPXRHfCmv3muigvSa8lBUFSABkyhpUQba/UEEWr/rM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=UraiEC+0QfcuybZdyWf77r8dRXNuwqKPlsmovyA/HvHKNSE2PDXUCtfDBU8T68jqW
+	 zxEKr4hNGcnDOaPXu4C4xhfi7mP5vO+f09oHk4/lej/LLoB6WRdZw3jZvmrbiyF3u1
+	 And2p+iR8RhiMbB1QbhwONyweWsjl/QRfK+uA51E2i/GyaDi7anOFcRdyHT2Z8sjmi
+	 mpGED66jC56FrIQO0aSqBzezxrvITqL5riM9hDjkARae3MWYZ1iS6j4z0sV2PqwXB9
+	 ZvT5apIey29b7b8eA04UgAvV/wEH2ePnTo8UCSwxB0gq54z3vMhY3a58/T9VyzcKaO
+	 F9zd6U4HJufEw==
+From: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Song Shuai <suagrfillet@gmail.com>,
+	Guo Ren <guoren@kernel.org>,
+	linux-riscv@lists.infradead.org
+Cc: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	songshuaishuai@tinylab.org
+Subject: [PATCH v12 for-next 0/4] riscv: ftrace: Miscellaneous ftrace improvements
+Date: Thu, 30 Nov 2023 13:15:27 +0100
+Message-Id: <20231130121531.1178502-1-bjorn@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231129092725.GD2988384@tiffany>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Björn Töpel <bjorn@rivosinc.com>
 
-On Wed, Nov 29, 2023 at 06:27:25PM +0900, Hyesoo Yu wrote:
-> On Sun, Nov 19, 2023 at 04:57:13PM +0000, Alexandru Elisei wrote:
-> > To enable tagging on a memory range, userspace can use mprotect() with the
-> > PROT_MTE access flag. Pages already mapped in the VMA don't have the
-> > associated tag storage block reserved, so mark the PTEs as
-> > PAGE_FAULT_ON_ACCESS to trigger a fault next time they are accessed, and
-> > reserve the tag storage on the fault path.
-> > 
-> > This has several benefits over reserving the tag storage as part of the
-> > mprotect() call handling:
-> > 
-> > - Tag storage is reserved only for those pages in the VMA that are
-> >   accessed, instead of for all the pages already mapped in the VMA.
-> > - Reduces the latency of the mprotect() call.
-> > - Eliminates races with page migration.
-> > 
-> > But all of this is at the expense of an extra page fault per page until the
-> > pages being accessed all have their corresponding tag storage reserved.
-> > 
-> > For arm64, the PAGE_FAULT_ON_ACCESS protection is created by defining a new
-> > page table entry software bit, PTE_TAG_STORAGE_NONE. Linux doesn't set any
-> > of the PBHA bits in entries from the last level of the translation table
-> > and it doesn't use the TCR_ELx.HWUxx bits; also, the first PBHA bit, bit
-> > 59, is already being used as a software bit for PMD_PRESENT_INVALID.
-> > 
-> > This is only implemented for PTE mappings; PMD mappings will follow.
-> > 
-> > Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
-> > ---
-> >  arch/arm64/Kconfig                       |   1 +
-> >  arch/arm64/include/asm/mte.h             |   4 +-
-> >  arch/arm64/include/asm/mte_tag_storage.h |   2 +
-> >  arch/arm64/include/asm/pgtable-prot.h    |   2 +
-> >  arch/arm64/include/asm/pgtable.h         |  40 ++++++---
-> >  arch/arm64/kernel/mte.c                  |  12 ++-
-> >  arch/arm64/mm/fault.c                    | 101 +++++++++++++++++++++++
-> >  include/linux/pgtable.h                  |  17 ++++
-> >  mm/Kconfig                               |   3 +
-> >  mm/memory.c                              |   3 +
-> >  10 files changed, 170 insertions(+), 15 deletions(-)
-> > 
-> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> > index efa5b7958169..3b9c435eaafb 100644
-> > --- a/arch/arm64/Kconfig
-> > +++ b/arch/arm64/Kconfig
-> > @@ -2066,6 +2066,7 @@ if ARM64_MTE
-> >  config ARM64_MTE_TAG_STORAGE
-> >  	bool "Dynamic MTE tag storage management"
-> >  	depends on ARCH_KEEP_MEMBLOCK
-> > +	select ARCH_HAS_FAULT_ON_ACCESS
-> >  	select CONFIG_CMA
-> >  	help
-> >  	  Adds support for dynamic management of the memory used by the hardware
-> > diff --git a/arch/arm64/include/asm/mte.h b/arch/arm64/include/asm/mte.h
-> > index 6457b7899207..70dc2e409070 100644
-> > --- a/arch/arm64/include/asm/mte.h
-> > +++ b/arch/arm64/include/asm/mte.h
-> > @@ -107,7 +107,7 @@ static inline bool try_page_mte_tagging(struct page *page)
-> >  }
-> >  
-> >  void mte_zero_clear_page_tags(void *addr);
-> > -void mte_sync_tags(pte_t pte, unsigned int nr_pages);
-> > +void mte_sync_tags(pte_t *pteval, unsigned int nr_pages);
-> >  void mte_copy_page_tags(void *kto, const void *kfrom);
-> >  void mte_thread_init_user(void);
-> >  void mte_thread_switch(struct task_struct *next);
-> > @@ -139,7 +139,7 @@ static inline bool try_page_mte_tagging(struct page *page)
-> >  static inline void mte_zero_clear_page_tags(void *addr)
-> >  {
-> >  }
-> > -static inline void mte_sync_tags(pte_t pte, unsigned int nr_pages)
-> > +static inline void mte_sync_tags(pte_t *pteval, unsigned int nr_pages)
-> >  {
-> >  }
-> >  static inline void mte_copy_page_tags(void *kto, const void *kfrom)
-> > diff --git a/arch/arm64/include/asm/mte_tag_storage.h b/arch/arm64/include/asm/mte_tag_storage.h
-> > index 6e5d28e607bb..c70ced60a0cd 100644
-> > --- a/arch/arm64/include/asm/mte_tag_storage.h
-> > +++ b/arch/arm64/include/asm/mte_tag_storage.h
-> > @@ -33,6 +33,8 @@ int reserve_tag_storage(struct page *page, int order, gfp_t gfp);
-> >  void free_tag_storage(struct page *page, int order);
-> >  
-> >  bool page_tag_storage_reserved(struct page *page);
-> > +
-> > +vm_fault_t handle_page_missing_tag_storage(struct vm_fault *vmf);
-> >  #else
-> >  static inline bool tag_storage_enabled(void)
-> >  {
-> > diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
-> > index e9624f6326dd..85ebb3e352ad 100644
-> > --- a/arch/arm64/include/asm/pgtable-prot.h
-> > +++ b/arch/arm64/include/asm/pgtable-prot.h
-> > @@ -19,6 +19,7 @@
-> >  #define PTE_SPECIAL		(_AT(pteval_t, 1) << 56)
-> >  #define PTE_DEVMAP		(_AT(pteval_t, 1) << 57)
-> >  #define PTE_PROT_NONE		(_AT(pteval_t, 1) << 58) /* only when !PTE_VALID */
-> > +#define PTE_TAG_STORAGE_NONE	(_AT(pteval_t, 1) << 60) /* only when PTE_PROT_NONE */
-> >  
-> >  /*
-> >   * This bit indicates that the entry is present i.e. pmd_page()
-> > @@ -94,6 +95,7 @@ extern bool arm64_use_ng_mappings;
-> >  	 })
-> >  
-> >  #define PAGE_NONE		__pgprot(((_PAGE_DEFAULT) & ~PTE_VALID) | PTE_PROT_NONE | PTE_RDONLY | PTE_NG | PTE_PXN | PTE_UXN)
-> > +#define PAGE_FAULT_ON_ACCESS	__pgprot(((_PAGE_DEFAULT) & ~PTE_VALID) | PTE_PROT_NONE | PTE_TAG_STORAGE_NONE | PTE_RDONLY | PTE_NG | PTE_PXN | PTE_UXN)
-> >  /* shared+writable pages are clean by default, hence PTE_RDONLY|PTE_WRITE */
-> >  #define PAGE_SHARED		__pgprot(_PAGE_SHARED)
-> >  #define PAGE_SHARED_EXEC	__pgprot(_PAGE_SHARED_EXEC)
-> > diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-> > index 20e8de853f5d..8cc135f1c112 100644
-> > --- a/arch/arm64/include/asm/pgtable.h
-> > +++ b/arch/arm64/include/asm/pgtable.h
-> > @@ -326,10 +326,10 @@ static inline void __check_safe_pte_update(struct mm_struct *mm, pte_t *ptep,
-> >  		     __func__, pte_val(old_pte), pte_val(pte));
-> >  }
-> >  
-> > -static inline void __sync_cache_and_tags(pte_t pte, unsigned int nr_pages)
-> > +static inline void __sync_cache_and_tags(pte_t *pteval, unsigned int nr_pages)
-> >  {
-> > -	if (pte_present(pte) && pte_user_exec(pte) && !pte_special(pte))
-> > -		__sync_icache_dcache(pte);
-> > +	if (pte_present(*pteval) && pte_user_exec(*pteval) && !pte_special(*pteval))
-> > +		__sync_icache_dcache(*pteval);
-> >  
-> >  	/*
-> >  	 * If the PTE would provide user space access to the tags associated
-> > @@ -337,9 +337,9 @@ static inline void __sync_cache_and_tags(pte_t pte, unsigned int nr_pages)
-> >  	 * pte_access_permitted() returns false for exec only mappings, they
-> >  	 * don't expose tags (instruction fetches don't check tags).
-> >  	 */
-> > -	if (system_supports_mte() && pte_access_permitted(pte, false) &&
-> > -	    !pte_special(pte) && pte_tagged(pte))
-> > -		mte_sync_tags(pte, nr_pages);
-> > +	if (system_supports_mte() && pte_access_permitted(*pteval, false) &&
-> > +	    !pte_special(*pteval) && pte_tagged(*pteval))
-> > +		mte_sync_tags(pteval, nr_pages);
-> >  }
-> >  
-> >  static inline void set_ptes(struct mm_struct *mm,
-> > @@ -347,7 +347,7 @@ static inline void set_ptes(struct mm_struct *mm,
-> >  			    pte_t *ptep, pte_t pte, unsigned int nr)
-> >  {
-> >  	page_table_check_ptes_set(mm, ptep, pte, nr);
-> > -	__sync_cache_and_tags(pte, nr);
-> > +	__sync_cache_and_tags(&pte, nr);
-> >  
-> >  	for (;;) {
-> >  		__check_safe_pte_update(mm, ptep, pte);
-> > @@ -459,6 +459,26 @@ static inline int pmd_protnone(pmd_t pmd)
-> >  }
-> >  #endif
-> >  
-> > +#ifdef CONFIG_ARCH_HAS_FAULT_ON_ACCESS
-> > +static inline bool fault_on_access_pte(pte_t pte)
-> > +{
-> > +	return (pte_val(pte) & (PTE_PROT_NONE | PTE_TAG_STORAGE_NONE | PTE_VALID)) ==
-> > +		(PTE_PROT_NONE | PTE_TAG_STORAGE_NONE);
-> > +}
-> > +
-> > +static inline bool fault_on_access_pmd(pmd_t pmd)
-> > +{
-> > +	return fault_on_access_pte(pmd_pte(pmd));
-> > +}
-> > +
-> > +static inline vm_fault_t arch_do_page_fault_on_access(struct vm_fault *vmf)
-> > +{
-> > +	if (tag_storage_enabled())
-> > +		return handle_page_missing_tag_storage(vmf);
-> > +	return VM_FAULT_SIGBUS;
-> > +}
-> > +#endif /* CONFIG_ARCH_HAS_FAULT_ON_ACCESS */
-> > +
-> >  #define pmd_present_invalid(pmd)     (!!(pmd_val(pmd) & PMD_PRESENT_INVALID))
-> >  
-> >  static inline int pmd_present(pmd_t pmd)
-> > @@ -533,7 +553,7 @@ static inline void __set_pte_at(struct mm_struct *mm,
-> >  				unsigned long __always_unused addr,
-> >  				pte_t *ptep, pte_t pte, unsigned int nr)
-> >  {
-> > -	__sync_cache_and_tags(pte, nr);
-> > +	__sync_cache_and_tags(&pte, nr);
-> >  	__check_safe_pte_update(mm, ptep, pte);
-> >  	set_pte(ptep, pte);
-> >  }
-> > @@ -828,8 +848,8 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
-> >  	 * in MAIR_EL1. The mask below has to include PTE_ATTRINDX_MASK.
-> >  	 */
-> >  	const pteval_t mask = PTE_USER | PTE_PXN | PTE_UXN | PTE_RDONLY |
-> > -			      PTE_PROT_NONE | PTE_VALID | PTE_WRITE | PTE_GP |
-> > -			      PTE_ATTRINDX_MASK;
-> > +			      PTE_PROT_NONE | PTE_TAG_STORAGE_NONE | PTE_VALID |
-> > +			      PTE_WRITE | PTE_GP | PTE_ATTRINDX_MASK;
-> >  	/* preserve the hardware dirty information */
-> >  	if (pte_hw_dirty(pte))
-> >  		pte = set_pte_bit(pte, __pgprot(PTE_DIRTY));
-> > diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
-> > index a41ef3213e1e..5962bab1d549 100644
-> > --- a/arch/arm64/kernel/mte.c
-> > +++ b/arch/arm64/kernel/mte.c
-> > @@ -21,6 +21,7 @@
-> >  #include <asm/barrier.h>
-> >  #include <asm/cpufeature.h>
-> >  #include <asm/mte.h>
-> > +#include <asm/mte_tag_storage.h>
-> >  #include <asm/ptrace.h>
-> >  #include <asm/sysreg.h>
-> >  
-> > @@ -35,13 +36,18 @@ DEFINE_STATIC_KEY_FALSE(mte_async_or_asymm_mode);
-> >  EXPORT_SYMBOL_GPL(mte_async_or_asymm_mode);
-> >  #endif
-> >  
-> > -void mte_sync_tags(pte_t pte, unsigned int nr_pages)
-> > +void mte_sync_tags(pte_t *pteval, unsigned int nr_pages)
-> >  {
-> > -	struct page *page = pte_page(pte);
-> > +	struct page *page = pte_page(*pteval);
-> >  	unsigned int i;
-> >  
-> > -	/* if PG_mte_tagged is set, tags have already been initialised */
-> >  	for (i = 0; i < nr_pages; i++, page++) {
-> > +		if (tag_storage_enabled() && unlikely(!page_tag_storage_reserved(page))) {
-> > +			*pteval = pte_modify(*pteval, PAGE_FAULT_ON_ACCESS);
-> > +			continue;
-> > +		}
-> > +
-> > +		/* if PG_mte_tagged is set, tags have already been initialised */
-> >  		if (try_page_mte_tagging(page)) {
-> >  			mte_clear_page_tags(page_address(page));
-> >  			set_page_mte_tagged(page);
-> > diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-> > index acbc7530d2b2..f5fa583acf18 100644
-> > --- a/arch/arm64/mm/fault.c
-> > +++ b/arch/arm64/mm/fault.c
-> > @@ -19,6 +19,7 @@
-> >  #include <linux/kprobes.h>
-> >  #include <linux/uaccess.h>
-> >  #include <linux/page-flags.h>
-> > +#include <linux/page-isolation.h>
-> >  #include <linux/sched/signal.h>
-> >  #include <linux/sched/debug.h>
-> >  #include <linux/highmem.h>
-> > @@ -953,3 +954,103 @@ void tag_clear_highpage(struct page *page)
-> >  	mte_zero_clear_page_tags(page_address(page));
-> >  	set_page_mte_tagged(page);
-> >  }
-> > +
-> > +#ifdef CONFIG_ARM64_MTE_TAG_STORAGE
-> > +vm_fault_t handle_page_missing_tag_storage(struct vm_fault *vmf)
-> > +{
-> > +	struct vm_area_struct *vma = vmf->vma;
-> > +	struct page *page = NULL;
-> > +	pte_t new_pte, old_pte;
-> > +	bool writable = false;
-> > +	vm_fault_t err;
-> > +	int ret;
-> > +
-> > +	spin_lock(vmf->ptl);
-> > +	if (unlikely(!pte_same(*vmf->pte, vmf->orig_pte))) {
-> > +		pte_unmap_unlock(vmf->pte, vmf->ptl);
-> > +		return 0;
-> > +	}
-> > +
-> > +	/* Get the normal PTE  */
-> > +	old_pte = ptep_get(vmf->pte);
-> > +	new_pte = pte_modify(old_pte, vma->vm_page_prot);
-> > +
-> > +	/*
-> > +	 * Detect now whether the PTE could be writable; this information
-> > +	 * is only valid while holding the PT lock.
-> > +	 */
-> > +	writable = pte_write(new_pte);
-> > +	if (!writable && vma_wants_manual_pte_write_upgrade(vma) &&
-> > +	    can_change_pte_writable(vma, vmf->address, new_pte))
-> > +		writable = true;
-> > +
-> > +	page = vm_normal_page(vma, vmf->address, new_pte);
-> > +	if (!page || is_zone_device_page(page))
-> > +		goto out_map;
-> > +
-> > +	/*
-> > +	 * This should never happen, once a VMA has been marked as tagged, that
-> > +	 * cannot be changed.
-> > +	 */
-> > +	if (!(vma->vm_flags & VM_MTE))
-> > +		goto out_map;
-> > +
-> > +	/* Prevent the page from being unmapped from under us. */
-> > +	get_page(page);
-> > +	vma_set_access_pid_bit(vma);
-> > +
-> > +	/*
-> > +	 * Pairs with pte_offset_map_nolock(), which takes the RCU read lock,
-> > +	 * and spin_lock() above which takes the ptl lock. Both locks should be
-> > +	 * balanced after this point.
-> > +	 */
-> > +	pte_unmap_unlock(vmf->pte, vmf->ptl);
-> > +
-> > +	/*
-> > +	 * Probably the page is being isolated for migration, replay the fault
-> > +	 * to give time for the entry to be replaced by a migration pte.
-> > +	 */
-> > +	if (unlikely(is_migrate_isolate_page(page)))
-> > +		goto out_retry;
-> > +
-> > +	ret = reserve_tag_storage(page, 0, GFP_HIGHUSER_MOVABLE);
-> > +	if (ret)
-> > +		goto out_retry;
-> > +
-> > +	put_page(page);
-> > +
-> > +	vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, vmf->address, &vmf->ptl);
-> > +	if (unlikely(!pte_same(*vmf->pte, vmf->orig_pte))) {
-> > +		pte_unmap_unlock(vmf->pte, vmf->ptl);
-> > +		return 0;
-> > +	}
-> > +
-> > +out_map:
-> > +	/*
-> > +	 * Make it present again, depending on how arch implements
-> > +	 * non-accessible ptes, some can allow access by kernel mode.
-> > +	 */
-> > +	old_pte = ptep_modify_prot_start(vma, vmf->address, vmf->pte);
-> > +	new_pte = pte_modify(old_pte, vma->vm_page_prot);
-> > +	new_pte = pte_mkyoung(new_pte);
-> > +	if (writable)
-> > +		new_pte = pte_mkwrite(new_pte, vma);
-> > +	ptep_modify_prot_commit(vma, vmf->address, vmf->pte, old_pte, new_pte);
-> > +	update_mmu_cache(vma, vmf->address, vmf->pte);
-> > +	pte_unmap_unlock(vmf->pte, vmf->ptl);
-> > +
-> > +	return 0;
-> > +
-> > +out_retry:
-> > +	put_page(page);
-> > +	if (vmf->flags & FAULT_FLAG_VMA_LOCK)
-> > +		vma_end_read(vma);
-> > +	if (fault_flag_allow_retry_first(vmf->flags)) {
-> > +		err = VM_FAULT_RETRY;
-> > +	} else {
-> > +		/* Replay the fault. */
-> > +		err = 0;
-> 
-> Hello!
-> 
-> Unfortunately, if the page continues to be pinned, it seems like fault will continue to occur.
-> I guess it makes system stability issue. (but I'm not familiar with that, so please let me know if I'm mistaken!)
-> 
-> How about migrating the page when migration problem repeats.
+NB! Song told me that he would not have the time work on this series,
+so I picked it up.
 
-Yes, I had the same though in the previous iteration of the series, the
-page was migrated out of the VMA if tag storage couldn't be reserved.
+This series includes a three ftrace improvements for RISC-V:
 
-Only short term pins are allowed on MIGRATE_CMA pages, so I expect that the
-pin will be released before the fault is replayed. Because of this, and
-because it makes the code simpler, I chose not to migrate the page if tag
-storage couldn't be reserved.
+1. Do not require to run recordmcount at build time (patch 1)
+2. Simplification of the function graph functionality (patch 2)
+3. Enable DYNAMIC_FTRACE_WITH_DIRECT_CALLS (patch 3 and 4)
 
-I'd be happy to revisit this if it turns out that in the real world
-replaying the fault happens often enough that migrating the page is faster.
+The series has been tested on Qemu/rv64 virt/Debian sid with the
+following test configs:
+  CONFIG_FTRACE_SELFTEST=y
+  CONFIG_FTRACE_STARTUP_TEST=y
+  CONFIG_SAMPLE_FTRACE_DIRECT=m
+  CONFIG_SAMPLE_FTRACE_DIRECT_MULTI=m
+  CONFIG_SAMPLE_FTRACE_OPS=m
 
-In fact, statistics about how often the fault is replayed and how long that
-takes would be very helpful.
+All tests pass.
 
-Thanks,
-Alex
 
-> 
-> Thanks,
-> Regards.
-> 
-> > +	}
-> > +	return err;
-> > +}
-> > +#endif
-> > diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> > index ffdb9b6bed6c..e2c761dd6c41 100644
-> > --- a/include/linux/pgtable.h
-> > +++ b/include/linux/pgtable.h
-> > @@ -1458,6 +1458,23 @@ static inline int pmd_protnone(pmd_t pmd)
-> >  }
-> >  #endif /* CONFIG_NUMA_BALANCING */
-> >  
-> > +#ifndef CONFIG_ARCH_HAS_FAULT_ON_ACCESS
-> > +static inline bool fault_on_access_pte(pte_t pte)
-> > +{
-> > +	return false;
-> > +}
-> > +
-> > +static inline bool fault_on_access_pmd(pmd_t pmd)
-> > +{
-> > +	return false;
-> > +}
-> > +
-> > +static inline vm_fault_t arch_do_page_fault_on_access(struct vm_fault *vmf)
-> > +{
-> > +	return VM_FAULT_SIGBUS;
-> > +}
-> > +#endif
-> > +
-> >  #endif /* CONFIG_MMU */
-> >  
-> >  #ifdef CONFIG_HAVE_ARCH_HUGE_VMAP
-> > diff --git a/mm/Kconfig b/mm/Kconfig
-> > index 89971a894b60..a90eefc3ee80 100644
-> > --- a/mm/Kconfig
-> > +++ b/mm/Kconfig
-> > @@ -1019,6 +1019,9 @@ config IDLE_PAGE_TRACKING
-> >  config ARCH_HAS_CACHE_LINE_SIZE
-> >  	bool
-> >  
-> > +config ARCH_HAS_FAULT_ON_ACCESS
-> > +	bool
-> > +
-> >  config ARCH_HAS_CURRENT_STACK_POINTER
-> >  	bool
-> >  	help
-> > diff --git a/mm/memory.c b/mm/memory.c
-> > index e137f7673749..a04a971200b9 100644
-> > --- a/mm/memory.c
-> > +++ b/mm/memory.c
-> > @@ -5044,6 +5044,9 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
-> >  	if (!pte_present(vmf->orig_pte))
-> >  		return do_swap_page(vmf);
-> >  
-> > +	if (fault_on_access_pte(vmf->orig_pte) && vma_is_accessible(vmf->vma))
-> > +		return arch_do_page_fault_on_access(vmf);
-> > +
-> >  	if (pte_protnone(vmf->orig_pte) && vma_is_accessible(vmf->vma))
-> >  		return do_numa_page(vmf);
-> >  
-> > -- 
-> > 2.42.1
-> > 
-> > 
+Cheers,
+Björn
 
+
+Changes in v12:
+- Massaged the commit messages a bit.
+- Squashed the samples patches, so that the rv32 support is included
+  from the start.
+- Minor whitespace changes in the mcount-dyn.S.
+- Minor style changes.
+
+Changes in v11:
+https://lore.kernel.org/linux-riscv/20230627111612.761164-1-suagrfillet@gmail.com/
+
+- append a patch that makes the DIRECT_CALL samples support RV32I in
+  this series fixing the rv32 build failure reported by Palmer
+- validated with ftrace boottime selftest and manual sample modules test
+  in qemu-system for RV32I and RV64I
+
+Changes in v10:
+https://lore.kernel.org/all/20230511093234.3123181-1-suagrfillet@gmail.com/
+
+- add Acked-by from Björn Töpel in patch 2 and patch 4 
+- replace `move` with `mv` in patch3 
+- prettify patch 2/4 with proper tabs
+
+Changes in v9:
+https://lore.kernel.org/linux-riscv/20230510101857.2953955-1-suagrfillet@gmail.com/
+
+1. add Acked-by from Björn Töpel in patch 1
+
+2. rebase patch2/patch3 on Linux v6.4-rc1
+
+  - patch 2: to make the `SAVE_ABI_REGS` configurable, revert the
+    modification of mcount-dyn.S from commit (45b32b946a97 "riscv:
+entry: Consolidate general regs saving/restoring")
+
+  - patch 3: to pass the trace_selftest, add the implement of
+    `ftrace_stub_direct_tramp` from commit (fee86a4ed536 "ftrace:
+selftest: remove broken trace_direct_tramp") ; and fixup the context
+conflict in Kconfig 
+
+Changes in v8:
+https://lore.kernel.org/linux-riscv/20230324033342.3177979-1-suagrfillet@gmail.com/
+ - Fix incorrect address values in the 4nd patch 
+ - Rebased on v6.3-rc2
+
+Changes in v7:
+https://lore.kernel.org/linux-riscv/20230112090603.1295340-1-guoren@kernel.org/
+ - Fixup RESTORE_ABI_REGS by remove PT_T0(sp) overwrite.
+ - Add FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY [1]
+ - Fixup kconfig with HAVE_SAMPLE_FTRACE_DIRECT &
+   HAVE_SAMPLE_FTRACE_DIRECT_MULTI
+
+Changes in v6:
+https://lore.kernel.org/linux-riscv/20230107133549.4192639-1-guoren@kernel.org/
+ - Replace 8 with MCOUNT_INSN_SIZE
+ - Replace "REG_L a1, PT_RA(sp)" with "mv a1, ra"
+ - Add Evgenii Shatokhin comment
+
+Changes in v5:
+https://lore.kernel.org/linux-riscv/20221208091244.203407-1-guoren@kernel.org/
+ - Sort Kconfig entries in alphabetical order.
+
+Changes in v4:
+https://lore.kernel.org/linux-riscv/20221129033230.255947-1-guoren@kernel.org/
+ - Include [3] for maintenance. [Song Shuai]
+
+Changes in V3:
+https://lore.kernel.org/linux-riscv/20221123153950.2911981-1-guoren@kernel.org/
+ - Include [2] for maintenance. [Song Shuai]
+
+[1]: https://lore.kernel.org/linux-riscv/CAAYs2=j3Eak9vU6xbAw0zPuoh00rh8v5C2U3fePkokZFibWs2g@mail.gmail.com/T/#t
+[2]: https://lore.kernel.org/lkml/20221120084230.910152-1-suagrfillet@gmail.com/
+[3]: https://lore.kernel.org/linux-riscv/20221123142025.1504030-1-suagrfillet@gmail.com/ 
+
+
+Song Shuai (4):
+  riscv: select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY
+  riscv: ftrace: Make function graph use ftrace directly
+  riscv: ftrace: Add DYNAMIC_FTRACE_WITH_DIRECT_CALLS support
+  samples: ftrace: Add RISC-V support for SAMPLE_FTRACE_DIRECT[_MULTI]
+
+ arch/riscv/Kconfig                          |   4 +
+ arch/riscv/include/asm/ftrace.h             |  18 +-
+ arch/riscv/kernel/ftrace.c                  |  30 ++-
+ arch/riscv/kernel/mcount-dyn.S              | 198 ++++++++++++++++----
+ samples/ftrace/ftrace-direct-modify.c       |  35 ++++
+ samples/ftrace/ftrace-direct-multi-modify.c |  41 ++++
+ samples/ftrace/ftrace-direct-multi.c        |  25 +++
+ samples/ftrace/ftrace-direct-too.c          |  28 +++
+ samples/ftrace/ftrace-direct.c              |  24 +++
+ 9 files changed, 348 insertions(+), 55 deletions(-)
+
+
+base-commit: 3ca112b71f35dd5d99fc4571a56b5fc6f0c15814
+-- 
+2.40.1
 
