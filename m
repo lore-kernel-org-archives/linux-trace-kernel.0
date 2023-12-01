@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6706883B;
-	Fri,  1 Dec 2023 05:51:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C2FD2E6;
+	Fri,  1 Dec 2023 06:27:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j9ftvqxc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A89C3C433C7;
-	Fri,  1 Dec 2023 05:51:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Je1LOd7Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA9D6C433C8;
+	Fri,  1 Dec 2023 06:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701409893;
-	bh=u4fezI674MfIiRcaNlHhXBBvjWBXFe/Vu9dKNlCWKL8=;
+	s=k20201202; t=1701412050;
+	bh=xwy7BCCRY25CuNdlNIR9LwJI9+brUDxnwlzmTmnS0iA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=j9ftvqxc9QdhdMf9LvQAOFNLl5/DfDGD+5eO1gkcTof4dlFfhaa/DxzCv/MlYci2K
-	 nVKKlUNYr/rvetf5rUY7HUvCQGKpO3AnsFXhajtth5JZ4z12/acd/VY0f8acKdgHiD
-	 6FtrGZZneu8RZrC7lz9q/61uZv6kRVQ/SlX9Bs1p11qCa3h5SQ8oM8d9Txch0ST9a/
-	 Z0NMn0ggsiueRagWdsunV+KemTtgT63qU80cn26YguBY/2HicuBnGAqH/Nn+YeuRI3
-	 g0kTrHFXrxSRhhzLl7NOlqB54QtPToPdTZ74TkajfvJ5fMY0x4JwHOmyD4GP1e5h5u
-	 pM05lgAImQnaA==
-Date: Fri, 1 Dec 2023 14:51:29 +0900
+	b=Je1LOd7ZCPaGuQlDPrkVlPlLLd1YvK2ugR4B0YEHCeLusKv6vNtUU0wmHD4yKpm81
+	 ac623VzTcwDJ1u4r4hxxw9Ax3LYX1TgtnN5BJubUUIshLMLfnZ09enpykRfzsHhGZR
+	 u7Pto96X05N0DRW2WFu1G/A2hZB5fukUjb6S+UrmohONmOg98q6iKCaotRtaIiqLDr
+	 heAotKjZTFVYHQ9u+1BP0v5j460EEi6f3qpAzi9Jqr8jLkQS8n9htn6mzIBssRtgc7
+	 0GSbv+7c8UZ3WZ4+ctuVGw0mdAP+AmTiR3WQu9Nt+4oHd7TmJTB3O76s5zWSgRVJ03
+	 pDGIx0uuoxJKA==
+Date: Fri, 1 Dec 2023 15:27:26 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Kees Cook <keescook@chromium.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
  <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] tracing/uprobe: Replace strlcpy() with strscpy()
-Message-Id: <20231201145129.30fcaf1b762a9b496ac44a2f@kernel.org>
+Message-Id: <20231201152726.91421003ccd64eb5e369043c@kernel.org>
 In-Reply-To: <20231130205607.work.463-kees@kernel.org>
 References: <20231130205607.work.463-kees@kernel.org>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
@@ -57,9 +57,18 @@ Kees Cook <keescook@chromium.org> wrote:
 > Cc: linux-trace-kernel@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Thanks for reporting! Let me pick this.
+Hi Kees,
 
-Thanks!
+As same as sample's change, should I ask you to pick this to your tree?
+Since it is a kind of a part of series patch. I'm OK for it since this
+does not change the code so much.
+
+In that case, please feel free to add my Ack.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thank you,
+
 
 > ---
 >  kernel/trace/trace_uprobe.c | 2 +-
