@@ -1,42 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Hihgs8m2"
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CF029A
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  1 Dec 2023 10:23:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=8KvERjRQqiKIU2aozT18Qav8ul+lZde50rCvSyjwtek=; b=Hihgs8m2gRe3YqPtkP4UV6i4zD
-	idJQaOTXNDkBg7qgQFrjf8yGfv8yRBWIjg0u1kAMKJeT52nDJ4atWT66uw6p5gyl8Fxw+2HlLzpVX
-	52BIzC3hUX6nwUAtSj3DdDlpXHxPsZqF7rBdjSLh8dPYsVhRWiFU2H06PFXeTXeaP7+VPkrheSW8C
-	j+d3Vq5+Fxc2xAIKkrCX7oXUpLxvfIrnHz4v/OyV59HHXtfx9mafF/km6o2b3DYaeBHVsmo4m7Y5u
-	AlO+oCXXJQ5n2wB5UdWZwTSw7JmUtwNg6HV06aWNNDWoY9/WKYqiFTeHVlPuENUEO18YVMa6/7+2B
-	PO0px6zw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:40058)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1r98AA-0003Qx-2q;
-	Fri, 01 Dec 2023 18:22:56 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1r98AA-0006F7-GW; Fri, 01 Dec 2023 18:22:54 +0000
-Date: Fri, 1 Dec 2023 18:22:54 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Justin Chen <justin.chen@broadcom.com>, rostedt@goodmis.org,
-	mhiramat@kernel.org, mark.rutland@arm.com,
-	linux-trace-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Doug Berger <doug.berger@broadcom.com>
-Subject: Re: ARM Ftrace Function Graph Fails With UNWINDER_FRAME_POINTER
-Message-ID: <ZWokflhL8cG7JiCN@shell.armlinux.org.uk>
-References: <d870c149-4363-43de-b0ea-7125dec5608e@broadcom.com>
- <CAMj1kXGST7uH530hB0i-rzisNesNrUGsJ5a5eC9805Udi5msrQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TdPdaFZZ"
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9751115
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  1 Dec 2023 10:24:54 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1d05e4a94c3so5633625ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 01 Dec 2023 10:24:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1701455094; x=1702059894; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4XGfXIS6HVXe6/e9l+81iwua90KgKcNdbupUOWB7Nz4=;
+        b=TdPdaFZZ3WviX3IKVUi4jbog10SuoD+yCPANUZKGvaaShxGJwBbme9EtbtTmynM59y
+         UFJfAYfnXr+N+oGV/aZIyHaI09G6n242oOl7SQs1Elm0pHOtU1GsfAlR0T/fCkjFoTWn
+         AZwww81WmkWbCcHy6EuK4/yFZBOieZW47fpmc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701455094; x=1702059894;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4XGfXIS6HVXe6/e9l+81iwua90KgKcNdbupUOWB7Nz4=;
+        b=qGsafGWtVUquwtAGBTtVKGh5JX0vIXtYGG5wTxQvjMiu/UWz9g8kNEhCHroERvE1uq
+         ThcCpwdMdGr1Y1kWsITpW5ag+mLtsaDAxY476WLoDfP+WTUbK5SPl5ha0wy87msegMS8
+         qdaGjUX0P76F3tizCsK7K4oSOl5zttbmdXxXsHc21tKNMogNMayokLWEGg3y6KfExWOr
+         lSQX7iduNy3TQDU2cd3gXadtT22bUp6gDyy6MlSSXadlWgnjSBNu//8mzGmT/mvC6Ia9
+         ryPOm5JUehFCMe0EdSo5RWqsw27eRT/FkaCjShHhBCw5wuSbtfg4mu1oiEd+e20bwTtH
+         st5w==
+X-Gm-Message-State: AOJu0YyPkLgIFu4XxWnG7yB+Q8szFQsLOMUFqSagIELNj9m4YdSGkEPl
+	knbNraT6yoFfUgav1P5ERGfhAw==
+X-Google-Smtp-Source: AGHT+IEKh1U4LPfxGBUf3mJlHka+NhvaJ2NeciUnM51C148o06P3qKGJSwZ6cx5VsvdxmcRwKotuZA==
+X-Received: by 2002:a17:902:8e8c:b0:1cc:6cc3:d9eb with SMTP id bg12-20020a1709028e8c00b001cc6cc3d9ebmr24187576plb.68.1701455094201;
+        Fri, 01 Dec 2023 10:24:54 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id h2-20020a170902f7c200b001cf7bd9ade5sm344223plw.3.2023.12.01.10.24.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Dec 2023 10:24:53 -0800 (PST)
+Date: Fri, 1 Dec 2023 10:24:52 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] tracing/uprobe: Replace strlcpy() with strscpy()
+Message-ID: <202312011024.8FD7DD329F@keescook>
+References: <20231130205607.work.463-kees@kernel.org>
+ <20231201152726.91421003ccd64eb5e369043c@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -45,36 +52,45 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMj1kXGST7uH530hB0i-rzisNesNrUGsJ5a5eC9805Udi5msrQ@mail.gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <20231201152726.91421003ccd64eb5e369043c@kernel.org>
 
-On Fri, Dec 01, 2023 at 10:12:48AM +0100, Ard Biesheuvel wrote:
-> It appears the sub instruction at 0x6dd0 correctly accounts for the
-> extra 8 bytes, so the frame pointer is valid. So it is our assumption
-> that there are no gaps between the stack frames is invalid.
+On Fri, Dec 01, 2023 at 03:27:26PM +0900, Masami Hiramatsu wrote:
+> On Thu, 30 Nov 2023 12:56:08 -0800
+> Kees Cook <keescook@chromium.org> wrote:
 > 
-> Could you try the following change please?
+> > strlcpy() reads the entire source buffer first. This read may exceed
+> > the destination size limit. This is both inefficient and can lead
+> > to linear read overflows if a source string is not NUL-terminated[1].
+> > Additionally, it returns the size of the source string, not the
+> > resulting size of the destination string. In an effort to remove strlcpy()
+> > completely[2], replace strlcpy() here with strscpy().
+> > 
+> > The negative return value is already handled by this code so no new
+> > handling is needed here.
+> > 
+> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy [1]
+> > Link: https://github.com/KSPP/linux/issues/89 [2]
+> > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > Cc: linux-trace-kernel@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
 > 
-> --- a/arch/arm/kernel/ftrace.c
-> +++ b/arch/arm/kernel/ftrace.c
-> @@ -235,8 +235,12 @@
->                 return;
+> Hi Kees,
 > 
->         if (IS_ENABLED(CONFIG_UNWINDER_FRAME_POINTER)) {
-> -               /* FP points one word below parent's top of stack */
-> -               frame_pointer += 4;
-> +               /*
-> +                * The top of stack of the parent is recorded in the stack
-> +                * frame at offset [fp, #-8].
-> +                */
-> +               get_kernel_nofault(frame_pointer,
-> +                                  (unsigned long *)(frame_pointer - 8));
+> As same as sample's change, should I ask you to pick this to your tree?
+> Since it is a kind of a part of series patch. I'm OK for it since this
+> does not change the code so much.
+> 
+> In that case, please feel free to add my Ack.
+> 
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Yes, this will get the value of the stack pointer when the function
-was entered - which may be the bottom of the parent function's stack
-_or_ the start of non-register arguments to this function. So your
-replacement has always been more correct.
+Either way is fine, but I can take it since I've got a few others
+already too. :)
+
+Thanks!
+
+-Kees
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Kees Cook
