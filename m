@@ -1,62 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B5D25742
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  1 Dec 2023 18:07:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75B3FC433C7;
-	Fri,  1 Dec 2023 18:07:16 +0000 (UTC)
-Date: Fri, 1 Dec 2023 13:07:37 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Justin Chen <justin.chen@broadcom.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>, mhiramat@kernel.org,
- mark.rutland@arm.com, linux@armlinux.org.uk,
- linux-trace-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Florian Fainelli <florian.fainelli@broadcom.com>, Doug Berger
- <doug.berger@broadcom.com>
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Hihgs8m2"
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CF029A
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  1 Dec 2023 10:23:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=8KvERjRQqiKIU2aozT18Qav8ul+lZde50rCvSyjwtek=; b=Hihgs8m2gRe3YqPtkP4UV6i4zD
+	idJQaOTXNDkBg7qgQFrjf8yGfv8yRBWIjg0u1kAMKJeT52nDJ4atWT66uw6p5gyl8Fxw+2HlLzpVX
+	52BIzC3hUX6nwUAtSj3DdDlpXHxPsZqF7rBdjSLh8dPYsVhRWiFU2H06PFXeTXeaP7+VPkrheSW8C
+	j+d3Vq5+Fxc2xAIKkrCX7oXUpLxvfIrnHz4v/OyV59HHXtfx9mafF/km6o2b3DYaeBHVsmo4m7Y5u
+	AlO+oCXXJQ5n2wB5UdWZwTSw7JmUtwNg6HV06aWNNDWoY9/WKYqiFTeHVlPuENUEO18YVMa6/7+2B
+	PO0px6zw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:40058)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1r98AA-0003Qx-2q;
+	Fri, 01 Dec 2023 18:22:56 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1r98AA-0006F7-GW; Fri, 01 Dec 2023 18:22:54 +0000
+Date: Fri, 1 Dec 2023 18:22:54 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Justin Chen <justin.chen@broadcom.com>, rostedt@goodmis.org,
+	mhiramat@kernel.org, mark.rutland@arm.com,
+	linux-trace-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Doug Berger <doug.berger@broadcom.com>
 Subject: Re: ARM Ftrace Function Graph Fails With UNWINDER_FRAME_POINTER
-Message-ID: <20231201130702.2824115c@gandalf.local.home>
-In-Reply-To: <81af85b4-5274-4362-9413-890425c60524@broadcom.com>
+Message-ID: <ZWokflhL8cG7JiCN@shell.armlinux.org.uk>
 References: <d870c149-4363-43de-b0ea-7125dec5608e@broadcom.com>
-	<CAMj1kXGST7uH530hB0i-rzisNesNrUGsJ5a5eC9805Udi5msrQ@mail.gmail.com>
-	<81af85b4-5274-4362-9413-890425c60524@broadcom.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <CAMj1kXGST7uH530hB0i-rzisNesNrUGsJ5a5eC9805Udi5msrQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGST7uH530hB0i-rzisNesNrUGsJ5a5eC9805Udi5msrQ@mail.gmail.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Fri, 1 Dec 2023 09:25:59 -0800
-Justin Chen <justin.chen@broadcom.com> wrote:
-
-> > It appears the sub instruction at 0x6dd0 correctly accounts for the
-> > extra 8 bytes, so the frame pointer is valid. So it is our assumption
-> > that there are no gaps between the stack frames is invalid.  
+On Fri, Dec 01, 2023 at 10:12:48AM +0100, Ard Biesheuvel wrote:
+> It appears the sub instruction at 0x6dd0 correctly accounts for the
+> extra 8 bytes, so the frame pointer is valid. So it is our assumption
+> that there are no gaps between the stack frames is invalid.
 > 
-> Thanks for the assistance. The gap between the stack frame depends on 
-> the function. Most do not have a gap. Some have 8 (as shown above), some 
-> have 12. A single assumption here is not going to work. I'm having a 
-> hard time finding out the reasoning for this gap. I tried disabling a 
-> bunch of gcc flags as well as -O2 and the gap still exists.
+> Could you try the following change please?
+> 
+> --- a/arch/arm/kernel/ftrace.c
+> +++ b/arch/arm/kernel/ftrace.c
+> @@ -235,8 +235,12 @@
+>                 return;
+> 
+>         if (IS_ENABLED(CONFIG_UNWINDER_FRAME_POINTER)) {
+> -               /* FP points one word below parent's top of stack */
+> -               frame_pointer += 4;
+> +               /*
+> +                * The top of stack of the parent is recorded in the stack
+> +                * frame at offset [fp, #-8].
+> +                */
+> +               get_kernel_nofault(frame_pointer,
+> +                                  (unsigned long *)(frame_pointer - 8));
 
-That code was originally added because of some strange things that gcc did
-with mcount (for example, it made a copy of the stack frame that it passed
-to mcount, where the function graph tracer replaced the copy of the return
-stack making the shadow stack go out of sync and crash). This was very hard
-to debug and I added this code to detect it if it happened again.
+Yes, this will get the value of the stack pointer when the function
+was entered - which may be the bottom of the parent function's stack
+_or_ the start of non-register arguments to this function. So your
+replacement has always been more correct.
 
-Well it's been over a decade since that happened (2009).
-
-  71e308a239c09 ("function-graph: add stack frame test")
-
-I'm happy assuming that the compiler folks are aware of our tricks with
-hijacking return calls and I don't expect it to happen again. We can just
-rip out those checks. That is, if it's only causing false positives, I
-don't think it's worth keeping around.
-
-Has it detected any real issues on the Arm platforms?
-
--- Steve
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
