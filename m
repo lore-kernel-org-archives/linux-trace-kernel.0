@@ -1,145 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D834BFC04
-	for <linux-trace-kernel@vger.kernel.org>; Sat,  2 Dec 2023 09:27:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLbYEE/G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B1F6C433C8
-	for <linux-trace-kernel@vger.kernel.org>; Sat,  2 Dec 2023 09:27:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701509229;
-	bh=YfoUk0rwbXkKt7a7go5TxbaxbQRDIswTymi2vdlhOYE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=TLbYEE/GEcFJqJY+ApSohb7otAt/OlJutem4iBFEaxwmF+43mxEcq/UZO7rUJ3IL1
-	 eBsMUEdYT0SaB4EDPv6zuIBm0ABPZKgOuQ22jONwF6rotSoOe0ckPuq5RAVhBrGBtd
-	 uPh1B/0VvZMcBKGFc1ZDtCZI7Hj+aCzzWIs7ZRi8t8o5f0YX/S/pRmogbIZqQKj9X2
-	 JMAgP/5BYexm4gwinGEeBOSvxsilhnsvzpvvBdITdY3GIu/D/q7rd779Cde0XGtkal
-	 5kbqRaDmjo3IrU8OjXccuyJL7GLNJY+LahOfmwBrrWvjyQCffO/wLI/a16gBukf4wy
-	 N9x3ZTgXCzIzg==
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2c9c18e7990so38831321fa.2
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 02 Dec 2023 01:27:09 -0800 (PST)
-X-Gm-Message-State: AOJu0YzybLLdCfxnb9N4jAihnAeN5z8vCdugQNnJ+aii/oiJ7wG7u0TX
-	knOoDRoSoD4tWqmnLKfcWWiKYYY4UQmyFmGPwM8=
-X-Google-Smtp-Source: AGHT+IH50vKoBeJxgiPew2Ap3weeq51LZwq4YLQEFlbWKhDAdqLJU1ByIdCXNoWpNjkXD2XeW7UfYuxz+S7Yv2NE1f0=
-X-Received: by 2002:a05:6512:2345:b0:50b:d764:8029 with SMTP id
- p5-20020a056512234500b0050bd7648029mr1949142lfu.92.1701509227461; Sat, 02 Dec
- 2023 01:27:07 -0800 (PST)
+	dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b="VmJxgIZo"
+X-Greylist: delayed 2539 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 02 Dec 2023 05:48:05 PST
+Received: from kylie.crudebyte.com (kylie.crudebyte.com [5.189.157.229])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1A42107;
+	Sat,  2 Dec 2023 05:48:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=crudebyte.com; s=kylie; h=Content-Type:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Content-ID:Content-Description;
+	bh=vrA/Bsu18m2ZIdNoKhXm9iuia2igasRXnU26BS1yMLQ=; b=VmJxgIZo3RvcJSB9PQVIeyXX0z
+	6v0Y7/0qzTn5XFM1waGWXpe2MTjYmfhlBCQ+ETuA86F1xDHf2WHGyy5WiM3ZVw2OP94w6/PsHK6yH
+	v0y1E6BsJxhA3DuRqbw2Py81WlDygFp1OlacSPL+5GewB4r98+EUQiKFFABLHV+ZY7hRU2mZiQ+eb
+	F9Yg2drrwWzCjT1oM2nogxi+yfhObS/43JYgU/aNT2bq5ghtXNZpdspSxZOllLCYTXQqXMDpAHa95
+	bGBa6HB+EjUeI7n9sIKAnzXB+G90+3Z5suUmVBsglW3csewUK74/GC0pEl61sPwfT/2CYYbZp9ACl
+	1UKZWrgefXpMcmZptV0tICoDtXII0J7BW7TfPE5hbxRHljbu7dNeRWQHtl8tYHHRW3FClhXcJO4As
+	r/w1Ge2eHlXPhpMYKUpwTUa4+ALE3B7/TPKL5BnBBEqBMK7s7LdlJ+AJkiPQDuk00vdQIVMcBe9os
+	Dy3zqWQoyOmA60smpvBl4DIKAfT1ghEihPXzQgW/gEr6kUXL1HSkTWOGBYHP1pBMNpbW7KO+OCVtD
+	K19KWSAy3uq6izJUK00PEQu4u2U4l84bD1emFjho603PUVkGCyGASYVSQuF14wGJHs6O9Cy5YKfwa
+	yzU0Uu1E5zTl9FzOp1+wRCEK1BcU++YxJg8ni3YvE=;
+From: Christian Schoenebeck <linux_oss@crudebyte.com>
+To: JP Kobryn <inwardvessel@gmail.com>, asmadeus@codewreck.org
+Cc: ericvh@kernel.org, lucho@ionkov.net, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, v9fs@lists.linux.dev,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH] 9p: prevent read overrun in protocol dump tracepoint
+Date: Sat, 02 Dec 2023 14:05:24 +0100
+Message-ID: <1881630.VfuOzHrogK@silver>
+In-Reply-To: <ZWq0BvPGYMTi-WfC@codewreck.org>
+References:
+ <20231202030410.61047-1-inwardvessel@gmail.com>
+ <ZWq0BvPGYMTi-WfC@codewreck.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <d870c149-4363-43de-b0ea-7125dec5608e@broadcom.com>
- <CAMj1kXGST7uH530hB0i-rzisNesNrUGsJ5a5eC9805Udi5msrQ@mail.gmail.com>
- <81af85b4-5274-4362-9413-890425c60524@broadcom.com> <20231201130702.2824115c@gandalf.local.home>
- <4597db06-dabc-4bb2-9f24-bd30e07ff86d@broadcom.com> <CAMj1kXFMy0=DP3-Ycsj+XCHWxvqNqddBkEm71Nrr-m9gVca21w@mail.gmail.com>
- <dc1dd584-1970-4460-b76c-3cd9300a23e4@broadcom.com>
-In-Reply-To: <dc1dd584-1970-4460-b76c-3cd9300a23e4@broadcom.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Sat, 2 Dec 2023 10:26:54 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXFRknpr+gASm-mMcWzLqVQnWXf3UK+SbD3ouMgdOtCAzA@mail.gmail.com>
-Message-ID: <CAMj1kXFRknpr+gASm-mMcWzLqVQnWXf3UK+SbD3ouMgdOtCAzA@mail.gmail.com>
-Subject: Re: ARM Ftrace Function Graph Fails With UNWINDER_FRAME_POINTER
-To: Justin Chen <justin.chen@broadcom.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, mhiramat@kernel.org, mark.rutland@arm.com, 
-	linux@armlinux.org.uk, linux-trace-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Doug Berger <doug.berger@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Sat, 2 Dec 2023 at 09:49, Justin Chen <justin.chen@broadcom.com> wrote:
->
->
->
-> On 12/1/23 10:53 PM, Ard Biesheuvel wrote:
-> > On Fri, 1 Dec 2023 at 23:59, Justin Chen <justin.chen@broadcom.com> wrote:
-> >>
-> >>
-> >>
-> >> On 12/1/23 10:07 AM, Steven Rostedt wrote:
-> >>> On Fri, 1 Dec 2023 09:25:59 -0800
-> >>> Justin Chen <justin.chen@broadcom.com> wrote:
-> >>>
-> >>>>> It appears the sub instruction at 0x6dd0 correctly accounts for the
-> >>>>> extra 8 bytes, so the frame pointer is valid. So it is our assumption
-> >>>>> that there are no gaps between the stack frames is invalid.
-> >>>>
-> >>>> Thanks for the assistance. The gap between the stack frame depends on
-> >>>> the function. Most do not have a gap. Some have 8 (as shown above), some
-> >>>> have 12. A single assumption here is not going to work. I'm having a
-> >>>> hard time finding out the reasoning for this gap. I tried disabling a
-> >>>> bunch of gcc flags as well as -O2 and the gap still exists.
-> >>>
-> >>> That code was originally added because of some strange things that gcc did
-> >>> with mcount (for example, it made a copy of the stack frame that it passed
-> >>> to mcount, where the function graph tracer replaced the copy of the return
-> >>> stack making the shadow stack go out of sync and crash). This was very hard
-> >>> to debug and I added this code to detect it if it happened again.
-> >>>
-> >>> Well it's been over a decade since that happened (2009).
-> >>>
-> >>>     71e308a239c09 ("function-graph: add stack frame test")
-> >>>
-> >>> I'm happy assuming that the compiler folks are aware of our tricks with
-> >>> hijacking return calls and I don't expect it to happen again. We can just
-> >>> rip out those checks. That is, if it's only causing false positives, I
-> >>> don't think it's worth keeping around.
-> >>>
-> >>> Has it detected any real issues on the Arm platforms?
-> >>>
-> >>> -- Steve
-> >>
-> >> I am not familiar enough to make a call. But from my limited testing
-> >> with ARM, I didn't see any issues. If you would like me to, I can submit
-> >> a patch to remove the check entirely. Or maybe only disable it for ARM?
-> >>
-> >
-> > Please try the fix I proposed first.
->
-> Just tested it. Seems to do the trick.
+On Saturday, December 2, 2023 5:35:18 AM CET asmadeus@codewreck.org wrote:
+> JP Kobryn wrote on Fri, Dec 01, 2023 at 07:04:10PM -0800:
+> > An out of bounds read can occur within the tracepoint 9p_protocol_dump().
+> > In the fast assign, there is a memcpy that uses a constant size of 32
+> > (macro definition as P9_PROTO_DUMP_SZ). When the copy is invoked, the
+> > source buffer is not guaranteed match this size. It was found that in some
+> > cases the source buffer size is less than 32, resulting in a read that
+> > overruns.
+> > 
+> > The size of the source buffer seems to be known at the time of the
+> > tracepoint being invoked. The allocations happen within p9_fcall_init(),
+> > where the capacity field is set to the allocated size of the payload
+> > buffer. This patch tries to fix the overrun by using the minimum of that
+> > field (size of source buffer) and the size of destination buffer when
+> > performing the copy.
+> 
+> Good catch; this is a regression due to a semi-recent optimization in
+> commit 60ece0833b6c ("net/9p: allocate appropriate reduced message
+> buffers")
 
-Thanks
+Indeed, didn't have this one on screen! Thanks!
 
-> Either solution works for me.
->
+> For some reason I thought we rounded up small messages alloc to 4k but
+> I've just confirmed we don't, so these overruns are quite frequent.
+> I'll add the fixes tag and cc to stable if there's no other comment.
 
-Given that this discussion is taking place in the context of the
-report of an issue identified by GRAPH_FP_TEST, I don't see how
-removing that would be a reasonable conclusion.
+Yeah, in p9_msg_buf_size() [net/9p/protocol.c] the smallest allocation size
+for message types known to be small (at compile-time) is hard coded to 4k.
 
-> FWIW I also experimented with LLVM, looks like function_graph just
-> crashes regardless of the issue being discussed. The disassemble of
-> LLVM[1] does something completely different.
->
+However for all variable-size message types the size is calculated at runtime
+exactly as needed for that particular message being sent. So these 9p message
+types can trigger this case (<32). They are currently never rounded up.
+
+[...]
+> > diff --git a/include/trace/events/9p.h b/include/trace/events/9p.h
+> > index 4dfa6d7f83ba..8690a7086252 100644
+> > --- a/include/trace/events/9p.h
+> > +++ b/include/trace/events/9p.h
+> > @@ -185,7 +185,8 @@ TRACE_EVENT(9p_protocol_dump,
+> >  		    __entry->clnt   =  clnt;
+> >  		    __entry->type   =  pdu->id;
+> >  		    __entry->tag    =  pdu->tag;
+> > -		    memcpy(__entry->line, pdu->sdata, P9_PROTO_DUMP_SZ);
+> > +		    memcpy(__entry->line, pdu->sdata,
+> > +				min(pdu->capacity, P9_PROTO_DUMP_SZ));
+> >  		    ),
+> >  	    TP_printk("clnt %lu %s(tag = %d)\n%.3x: %16ph\n%.3x: %16ph\n",
+> >  		      (unsigned long)__entry->clnt, show_9p_op(__entry->type),
+
+AFAICS __entry is a local variable on stack, and array __entry->line not
+intialized with zeros, i.e. the dump would contain trash at the end. Maybe
+prepending memset() before memcpy()?
+
+/Christian
 
 
-LLVM does not support CONFIG_UNWINDER_FRAME_POINTER so the fact that
-the prologue looks different is expected.
-
-In the case below, the FP {r11} is correctly made to point to a {r11,
-lr} tuple on the stack, so the codegen is correct AFAICT. But IIRC we
-rely on unwind information for ftrace in this case, not the frame
-pointer.
-
-Could you be more specific about the crash?
-
-
->
-> [1]
-> LLVM dump
-> c0c6faa0 <sk_getsockopt>:
-> c0c6faa0: f0 4f 2d e9   push    {r4, r5, r6, r7, r8, r9, r10, r11, lr}
-> c0c6faa4: 1c b0 8d e2   add     r11, sp, #28
-> c0c6faa8: ac d0 4d e2   sub     sp, sp, #172
-> c0c6faac: 00 70 a0 e1   mov     r7, r0
-> c0c6fab0: c8 0c 04 e3   movw    r0, #19656
-> c0c6fab4: 80 02 4c e3   movt    r0, #49792
-> c0c6fab8: 03 50 a0 e1   mov     r5, r3
-> c0c6fabc: 00 00 90 e5   ldr     r0, [r0]
-> c0c6fac0: 02 a0 a0 e1   mov     r10, r2
-> c0c6fac4: 20 00 0b e5   str     r0, [r11, #-32]
-> c0c6fac8: 00 40 2d e9   stmdb   sp!, {lr}
-> c0c6facc: 4b 8b d6 eb   bl      0xc0212800 <__gnu_mcount_nc> @ imm =
-> #-10867412
