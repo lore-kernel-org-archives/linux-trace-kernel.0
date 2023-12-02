@@ -1,115 +1,145 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF99D181;
-	Sat,  2 Dec 2023 01:19:31 -0800 (PST)
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Sj4BP5ZLTz4f3kFv;
-	Sat,  2 Dec 2023 17:19:25 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id CFE961A07F3;
-	Sat,  2 Dec 2023 17:19:27 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP1 (Coremail) with SMTP id cCh0CgA3iA6d9mpldVEZCg--.44620S3;
-	Sat, 02 Dec 2023 17:19:27 +0800 (CST)
-Subject: Re: [PATCH next] trace/blktrace: fix task hung in blk_trace_ioctl
-To: Edward Adam Davis <eadavis@qq.com>,
- syzbot+ed812ed461471ab17a0c@syzkaller.appspotmail.com
-Cc: akpm@linux-foundation.org, axboe@kernel.dk, dvyukov@google.com,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
- pengfei.xu@intel.com, rostedt@goodmis.org, syzkaller-bugs@googlegroups.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <00000000000047eb7e060b652d9a@google.com>
- <tencent_6537E04AAC74F976B567603CEB377A96FA09@qq.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <5116cbb4-2c85-2459-5499-56c95bb42d16@huaweicloud.com>
-Date: Sat, 2 Dec 2023 17:19:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D834BFC04
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  2 Dec 2023 09:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLbYEE/G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B1F6C433C8
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  2 Dec 2023 09:27:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701509229;
+	bh=YfoUk0rwbXkKt7a7go5TxbaxbQRDIswTymi2vdlhOYE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TLbYEE/GEcFJqJY+ApSohb7otAt/OlJutem4iBFEaxwmF+43mxEcq/UZO7rUJ3IL1
+	 eBsMUEdYT0SaB4EDPv6zuIBm0ABPZKgOuQ22jONwF6rotSoOe0ckPuq5RAVhBrGBtd
+	 uPh1B/0VvZMcBKGFc1ZDtCZI7Hj+aCzzWIs7ZRi8t8o5f0YX/S/pRmogbIZqQKj9X2
+	 JMAgP/5BYexm4gwinGEeBOSvxsilhnsvzpvvBdITdY3GIu/D/q7rd779Cde0XGtkal
+	 5kbqRaDmjo3IrU8OjXccuyJL7GLNJY+LahOfmwBrrWvjyQCffO/wLI/a16gBukf4wy
+	 N9x3ZTgXCzIzg==
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2c9c18e7990so38831321fa.2
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 02 Dec 2023 01:27:09 -0800 (PST)
+X-Gm-Message-State: AOJu0YzybLLdCfxnb9N4jAihnAeN5z8vCdugQNnJ+aii/oiJ7wG7u0TX
+	knOoDRoSoD4tWqmnLKfcWWiKYYY4UQmyFmGPwM8=
+X-Google-Smtp-Source: AGHT+IH50vKoBeJxgiPew2Ap3weeq51LZwq4YLQEFlbWKhDAdqLJU1ByIdCXNoWpNjkXD2XeW7UfYuxz+S7Yv2NE1f0=
+X-Received: by 2002:a05:6512:2345:b0:50b:d764:8029 with SMTP id
+ p5-20020a056512234500b0050bd7648029mr1949142lfu.92.1701509227461; Sat, 02 Dec
+ 2023 01:27:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <tencent_6537E04AAC74F976B567603CEB377A96FA09@qq.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgA3iA6d9mpldVEZCg--.44620S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7AFW7Jw1xXw1ktFyUZrW8JFb_yoW8CrW5pa
-	yUGrsIkr95Ars8ta409w1fu397J3yv9FWUJr98Xr1rZ34DAryagF1Ivr4UurW8Kry8tFZ2
-	yFy5Zr1F9w4UXFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS
-	07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-	02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
-	GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-	CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAF
-	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
-	7IU1zuWJUUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+References: <d870c149-4363-43de-b0ea-7125dec5608e@broadcom.com>
+ <CAMj1kXGST7uH530hB0i-rzisNesNrUGsJ5a5eC9805Udi5msrQ@mail.gmail.com>
+ <81af85b4-5274-4362-9413-890425c60524@broadcom.com> <20231201130702.2824115c@gandalf.local.home>
+ <4597db06-dabc-4bb2-9f24-bd30e07ff86d@broadcom.com> <CAMj1kXFMy0=DP3-Ycsj+XCHWxvqNqddBkEm71Nrr-m9gVca21w@mail.gmail.com>
+ <dc1dd584-1970-4460-b76c-3cd9300a23e4@broadcom.com>
+In-Reply-To: <dc1dd584-1970-4460-b76c-3cd9300a23e4@broadcom.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sat, 2 Dec 2023 10:26:54 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXFRknpr+gASm-mMcWzLqVQnWXf3UK+SbD3ouMgdOtCAzA@mail.gmail.com>
+Message-ID: <CAMj1kXFRknpr+gASm-mMcWzLqVQnWXf3UK+SbD3ouMgdOtCAzA@mail.gmail.com>
+Subject: Re: ARM Ftrace Function Graph Fails With UNWINDER_FRAME_POINTER
+To: Justin Chen <justin.chen@broadcom.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, mhiramat@kernel.org, mark.rutland@arm.com, 
+	linux@armlinux.org.uk, linux-trace-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Doug Berger <doug.berger@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+On Sat, 2 Dec 2023 at 09:49, Justin Chen <justin.chen@broadcom.com> wrote:
+>
+>
+>
+> On 12/1/23 10:53 PM, Ard Biesheuvel wrote:
+> > On Fri, 1 Dec 2023 at 23:59, Justin Chen <justin.chen@broadcom.com> wrote:
+> >>
+> >>
+> >>
+> >> On 12/1/23 10:07 AM, Steven Rostedt wrote:
+> >>> On Fri, 1 Dec 2023 09:25:59 -0800
+> >>> Justin Chen <justin.chen@broadcom.com> wrote:
+> >>>
+> >>>>> It appears the sub instruction at 0x6dd0 correctly accounts for the
+> >>>>> extra 8 bytes, so the frame pointer is valid. So it is our assumption
+> >>>>> that there are no gaps between the stack frames is invalid.
+> >>>>
+> >>>> Thanks for the assistance. The gap between the stack frame depends on
+> >>>> the function. Most do not have a gap. Some have 8 (as shown above), some
+> >>>> have 12. A single assumption here is not going to work. I'm having a
+> >>>> hard time finding out the reasoning for this gap. I tried disabling a
+> >>>> bunch of gcc flags as well as -O2 and the gap still exists.
+> >>>
+> >>> That code was originally added because of some strange things that gcc did
+> >>> with mcount (for example, it made a copy of the stack frame that it passed
+> >>> to mcount, where the function graph tracer replaced the copy of the return
+> >>> stack making the shadow stack go out of sync and crash). This was very hard
+> >>> to debug and I added this code to detect it if it happened again.
+> >>>
+> >>> Well it's been over a decade since that happened (2009).
+> >>>
+> >>>     71e308a239c09 ("function-graph: add stack frame test")
+> >>>
+> >>> I'm happy assuming that the compiler folks are aware of our tricks with
+> >>> hijacking return calls and I don't expect it to happen again. We can just
+> >>> rip out those checks. That is, if it's only causing false positives, I
+> >>> don't think it's worth keeping around.
+> >>>
+> >>> Has it detected any real issues on the Arm platforms?
+> >>>
+> >>> -- Steve
+> >>
+> >> I am not familiar enough to make a call. But from my limited testing
+> >> with ARM, I didn't see any issues. If you would like me to, I can submit
+> >> a patch to remove the check entirely. Or maybe only disable it for ARM?
+> >>
+> >
+> > Please try the fix I proposed first.
+>
+> Just tested it. Seems to do the trick.
 
-ÔÚ 2023/12/02 17:01, Edward Adam Davis Ð´µÀ:
-> The reproducer involves running test programs on multiple processors separately,
-> in order to enter blkdev_ioctl() and ultimately reach blk_trace_ioctl() through
-> two different paths, triggering an AA deadlock.
-> 
-> 	CPU0						CPU1
-> 	---						---
-> 	mutex_lock(&q->debugfs_mutex)			mutex_lock(&q->debugfs_mutex)
-> 	mutex_lock(&q->debugfs_mutex)			mutex_lock(&q->debugfs_mutex)
-> 
-> 
-> The first path:
-> blkdev_ioctl()->
-> 	blk_trace_ioctl()->
-> 		mutex_lock(&q->debugfs_mutex)
-> 
-> The second path:
-> blkdev_ioctl()->				
-> 	blkdev_common_ioctl()->
-> 		blk_trace_ioctl()->
-> 			mutex_lock(&q->debugfs_mutex)
-I still don't understand how this AA deadlock is triggered, does the
-'debugfs_mutex' already held before calling blk_trace_ioctl()?
+Thanks
 
-> 
-> The solution I have proposed is to exit blk_trace_ioctl() to avoid AA locks if
-> a task has already obtained debugfs_mutex.
-> 
-> Fixes: 0d345996e4cb ("x86/kernel: increase kcov coverage under arch/x86/kernel folder")
-> Reported-and-tested-by: syzbot+ed812ed461471ab17a0c@syzkaller.appspotmail.com
-> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-> ---
->   kernel/trace/blktrace.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-> index 54ade89a1ad2..34e5bce42b1e 100644
-> --- a/kernel/trace/blktrace.c
-> +++ b/kernel/trace/blktrace.c
-> @@ -735,7 +735,8 @@ int blk_trace_ioctl(struct block_device *bdev, unsigned cmd, char __user *arg)
->   	int ret, start = 0;
->   	char b[BDEVNAME_SIZE];
->   
-> -	mutex_lock(&q->debugfs_mutex);
-> +	if (!mutex_trylock(&q->debugfs_mutex))
-> +		return -EBUSY;
+> Either solution works for me.
+>
 
-This is absolutely not a proper fix, a lot of user case will fail after
-this patch.
+Given that this discussion is taking place in the context of the
+report of an issue identified by GRAPH_FP_TEST, I don't see how
+removing that would be a reasonable conclusion.
 
-Thanks,
-Kuai
+> FWIW I also experimented with LLVM, looks like function_graph just
+> crashes regardless of the issue being discussed. The disassemble of
+> LLVM[1] does something completely different.
+>
 
->   
->   	switch (cmd) {
->   	case BLKTRACESETUP:
-> 
 
+LLVM does not support CONFIG_UNWINDER_FRAME_POINTER so the fact that
+the prologue looks different is expected.
+
+In the case below, the FP {r11} is correctly made to point to a {r11,
+lr} tuple on the stack, so the codegen is correct AFAICT. But IIRC we
+rely on unwind information for ftrace in this case, not the frame
+pointer.
+
+Could you be more specific about the crash?
+
+
+>
+> [1]
+> LLVM dump
+> c0c6faa0 <sk_getsockopt>:
+> c0c6faa0: f0 4f 2d e9   push    {r4, r5, r6, r7, r8, r9, r10, r11, lr}
+> c0c6faa4: 1c b0 8d e2   add     r11, sp, #28
+> c0c6faa8: ac d0 4d e2   sub     sp, sp, #172
+> c0c6faac: 00 70 a0 e1   mov     r7, r0
+> c0c6fab0: c8 0c 04 e3   movw    r0, #19656
+> c0c6fab4: 80 02 4c e3   movt    r0, #49792
+> c0c6fab8: 03 50 a0 e1   mov     r5, r3
+> c0c6fabc: 00 00 90 e5   ldr     r0, [r0]
+> c0c6fac0: 02 a0 a0 e1   mov     r10, r2
+> c0c6fac4: 20 00 0b e5   str     r0, [r11, #-32]
+> c0c6fac8: 00 40 2d e9   stmdb   sp!, {lr}
+> c0c6facc: 4b 8b d6 eb   bl      0xc0212800 <__gnu_mcount_nc> @ imm =
+> #-10867412
