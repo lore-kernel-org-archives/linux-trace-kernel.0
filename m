@@ -1,139 +1,93 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71EC5BE4E
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  2 Dec 2023 06:54:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="BGBZrvSG";
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="jheFlFzO"
-Received: from nautica.notk.org (ipv6.notk.org [IPv6:2001:41d0:1:7a93::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6871B1A8;
-	Fri,  1 Dec 2023 20:35:44 -0800 (PST)
-Received: by nautica.notk.org (Postfix, from userid 108)
-	id D506FC021; Sat,  2 Dec 2023 05:35:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-	t=1701491740; bh=EHtuY+ZTQozc/pAxW1sLN8rUDRz7/Fs/l38w+xtirgg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BGBZrvSGPoBSb+7CEuliH0XuPPca4bYOvO/7Y9xCh71Vs1L1EG4pJwy6Bctt6xMwL
-	 td5rxZBBMq/pd5bfodfOJK3I0he2PRM/zU+OeIW6iBYuzJBa+qaN2J08RMZ5YgNJdv
-	 WKhvMYFTvvq1AvqibeV/0I6jiReVYlIzY2ppwHIc/l1Es0AipYzTZJP11tj8TLAO/4
-	 Wf5kA6k6v0mTmFHuGVsDE0ZLeV2wNgatF7zfrt4/9xLu9Vf71PhMRRhQrY8NQLy2Q3
-	 KGzf0qkoeVhgGrrBjaOTgo879toGjlfiX+Yh/5b4lU9+uZhC6W57nzv2Dte7yTnl3Z
-	 ljqBZwzJtJyFA==
-X-Spam-Level: 
-Received: from gaia (localhost [127.0.0.1])
-	by nautica.notk.org (Postfix) with ESMTPS id B4D1CC009;
-	Sat,  2 Dec 2023 05:35:36 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-	t=1701491739; bh=EHtuY+ZTQozc/pAxW1sLN8rUDRz7/Fs/l38w+xtirgg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jheFlFzOb3OcVyhkYRH7zb3WFZij7taRROQrfocw0Apx3F68tOpey6Fu6adJmYI/N
-	 jli+PjVcJosvb7bXdKYufhjI1VF9Bf1aj3Hne3KSru4mGdaSrzHvsHD5zO1Qp6Hgxb
-	 nAASEEFzGHMEKbJYOOP1gYLET5uAF5LbNonwyFonDL79Y3CtH/LKctlKpSdFipd40F
-	 W+9ABwq6il30TLZsZVkM7BbvgxE+sTApxs/H1XH6yjQhuo61lqpxuDYRUiwYHjgmpQ
-	 mWP1m3z8p3gk8YeZJOIiO+4dd/orKgQgLlmguPw5jAwPnNdIz0Oq6xrCVulENFnIL2
-	 wpowXciMxBLhA==
-Received: from localhost (gaia [local])
-	by gaia (OpenSMTPD) with ESMTPA id 784fdc4a;
-	Sat, 2 Dec 2023 04:35:33 +0000 (UTC)
-Date: Sat, 2 Dec 2023 13:35:18 +0900
-From: asmadeus@codewreck.org
-To: JP Kobryn <inwardvessel@gmail.com>
-Cc: ericvh@kernel.org, lucho@ionkov.net, linux_oss@crudebyte.com,
-	rostedt@goodmis.org, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, v9fs@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH] 9p: prevent read overrun in protocol dump tracepoint
-Message-ID: <ZWq0BvPGYMTi-WfC@codewreck.org>
-References: <20231202030410.61047-1-inwardvessel@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gl3+7BsM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0070C433CC
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  2 Dec 2023 06:54:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701500051;
+	bh=4GSi6OT8Z/c7LHsP3xxBSy6fMBjXgVEy1+bdnjL0xgo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Gl3+7BsMgtbWPRe9wip6FiQgAVHy+GK1/FcSNR4JOItmOmDiT3UeIpdoBFB3oDFC/
+	 fdM4liUCMuQCH2rwJcB2AuzvfzM9+8ZAwzOF/VnfpXoS/vg33NzDwfz4/Qa4D2Gs99
+	 lI/aPGceHwM2p0c8QIcTCky4GG0mEBtVX9fK4QwaINYUJ7Anb+jRSAnku3H1rIJ0kS
+	 9jsuEDUqJNMgrZO/3z5nfyUeVVG8BIEfkqgXp2y+Y6Rl0lYLjYPZXBsGdEUnhbv/WJ
+	 ec7RnDdbZggs79gI9Vf+SRTXeUPyTtgvKfXM8xFw1z1klzED11pA3hkPxNLzkQZvVU
+	 comUMOTU46rcQ==
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-50bc8a9503fso4010324e87.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 01 Dec 2023 22:54:11 -0800 (PST)
+X-Gm-Message-State: AOJu0Yz7t4dD96RUeCrspUHcBLHKaMbWLjvr3pRyx1FQkoBDryLla22l
+	oeuhWDCLcMf+uaUFoOLCtPTJ0U6zmZLXXin8U8c=
+X-Google-Smtp-Source: AGHT+IF4Y6qCw08C5cPJo3xLm3SlVu5jtphGtdGtnPu70XfmT+RBquqe+JuJGwuvUgFxa97T+Hr0ZqPY/tbmRaPrFWo=
+X-Received: by 2002:ac2:59c1:0:b0:50b:d764:882a with SMTP id
+ x1-20020ac259c1000000b0050bd764882amr1443331lfn.118.1701500050048; Fri, 01
+ Dec 2023 22:54:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20231202030410.61047-1-inwardvessel@gmail.com>
+References: <d870c149-4363-43de-b0ea-7125dec5608e@broadcom.com>
+ <CAMj1kXGST7uH530hB0i-rzisNesNrUGsJ5a5eC9805Udi5msrQ@mail.gmail.com>
+ <81af85b4-5274-4362-9413-890425c60524@broadcom.com> <20231201130702.2824115c@gandalf.local.home>
+ <4597db06-dabc-4bb2-9f24-bd30e07ff86d@broadcom.com>
+In-Reply-To: <4597db06-dabc-4bb2-9f24-bd30e07ff86d@broadcom.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sat, 2 Dec 2023 07:53:58 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXFMy0=DP3-Ycsj+XCHWxvqNqddBkEm71Nrr-m9gVca21w@mail.gmail.com>
+Message-ID: <CAMj1kXFMy0=DP3-Ycsj+XCHWxvqNqddBkEm71Nrr-m9gVca21w@mail.gmail.com>
+Subject: Re: ARM Ftrace Function Graph Fails With UNWINDER_FRAME_POINTER
+To: Justin Chen <justin.chen@broadcom.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, mhiramat@kernel.org, mark.rutland@arm.com, 
+	linux@armlinux.org.uk, linux-trace-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Doug Berger <doug.berger@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 
-JP Kobryn wrote on Fri, Dec 01, 2023 at 07:04:10PM -0800:
-> An out of bounds read can occur within the tracepoint 9p_protocol_dump().
-> In the fast assign, there is a memcpy that uses a constant size of 32
-> (macro definition as P9_PROTO_DUMP_SZ). When the copy is invoked, the
-> source buffer is not guaranteed match this size. It was found that in some
-> cases the source buffer size is less than 32, resulting in a read that
-> overruns.
-> 
-> The size of the source buffer seems to be known at the time of the
-> tracepoint being invoked. The allocations happen within p9_fcall_init(),
-> where the capacity field is set to the allocated size of the payload
-> buffer. This patch tries to fix the overrun by using the minimum of that
-> field (size of source buffer) and the size of destination buffer when
-> performing the copy.
+On Fri, 1 Dec 2023 at 23:59, Justin Chen <justin.chen@broadcom.com> wrote:
+>
+>
+>
+> On 12/1/23 10:07 AM, Steven Rostedt wrote:
+> > On Fri, 1 Dec 2023 09:25:59 -0800
+> > Justin Chen <justin.chen@broadcom.com> wrote:
+> >
+> >>> It appears the sub instruction at 0x6dd0 correctly accounts for the
+> >>> extra 8 bytes, so the frame pointer is valid. So it is our assumption
+> >>> that there are no gaps between the stack frames is invalid.
+> >>
+> >> Thanks for the assistance. The gap between the stack frame depends on
+> >> the function. Most do not have a gap. Some have 8 (as shown above), some
+> >> have 12. A single assumption here is not going to work. I'm having a
+> >> hard time finding out the reasoning for this gap. I tried disabling a
+> >> bunch of gcc flags as well as -O2 and the gap still exists.
+> >
+> > That code was originally added because of some strange things that gcc did
+> > with mcount (for example, it made a copy of the stack frame that it passed
+> > to mcount, where the function graph tracer replaced the copy of the return
+> > stack making the shadow stack go out of sync and crash). This was very hard
+> > to debug and I added this code to detect it if it happened again.
+> >
+> > Well it's been over a decade since that happened (2009).
+> >
+> >    71e308a239c09 ("function-graph: add stack frame test")
+> >
+> > I'm happy assuming that the compiler folks are aware of our tricks with
+> > hijacking return calls and I don't expect it to happen again. We can just
+> > rip out those checks. That is, if it's only causing false positives, I
+> > don't think it's worth keeping around.
+> >
+> > Has it detected any real issues on the Arm platforms?
+> >
+> > -- Steve
+>
+> I am not familiar enough to make a call. But from my limited testing
+> with ARM, I didn't see any issues. If you would like me to, I can submit
+> a patch to remove the check entirely. Or maybe only disable it for ARM?
+>
 
-Good catch; this is a regression due to a semi-recent optimization in
-commit 60ece0833b6c ("net/9p: allocate appropriate reduced message
-buffers")
-For some reason I thought we rounded up small messages alloc to 4k but
-I've just confirmed we don't, so these overruns are quite frequent.
-I'll add the fixes tag and cc to stable if there's no other comment.
-
-Thanks!
-
-> 
-> A repro can be performed by different ways. The simplest might just be
-> mounting a shared filesystem (between host and guest vm) using the plan
-> 9 protocol while the tracepoint is enabled.
-> 
-> mount -t 9p -o trans=virtio <mount_tag> <mount_path>
-> 
-> The bpftrace program below can be used to show the out of bounds read.
-> Note that a recent version of bpftrace is needed for the raw tracepoint
-> support. The script was tested using v0.19.0.
-> 
-> /* from include/net/9p/9p.h */
-> struct p9_fcall {
->     u32 size;
->     u8 id;
->     u16 tag;
->     size_t offset;
->     size_t capacity;
->     struct kmem_cache *cache;
->     u8 *sdata;
->     bool zc;
-> };
-> 
-> tracepoint:9p:9p_protocol_dump
-> {
->     /* out of bounds read can happen when this tracepoint is enabled */
-> }
-> 
-> rawtracepoint:9p_protocol_dump
-> {
->     $pdu = (struct p9_fcall *)arg1;
->     $dump_sz = (uint64)32;
-> 
->     if ($dump_sz > $pdu->capacity) {
->         printf("reading %zu bytes from src buffer of %zu bytes\n",
->             $dump_sz, $pdu->capacity);
->     }
-> }
-> 
-> Signed-off-by: JP Kobryn <inwardvessel@gmail.com>
-> ---
->  include/trace/events/9p.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/trace/events/9p.h b/include/trace/events/9p.h
-> index 4dfa6d7f83ba..8690a7086252 100644
-> --- a/include/trace/events/9p.h
-> +++ b/include/trace/events/9p.h
-> @@ -185,7 +185,8 @@ TRACE_EVENT(9p_protocol_dump,
->  		    __entry->clnt   =  clnt;
->  		    __entry->type   =  pdu->id;
->  		    __entry->tag    =  pdu->tag;
-> -		    memcpy(__entry->line, pdu->sdata, P9_PROTO_DUMP_SZ);
-> +		    memcpy(__entry->line, pdu->sdata,
-> +				min(pdu->capacity, P9_PROTO_DUMP_SZ));
->  		    ),
->  	    TP_printk("clnt %lu %s(tag = %d)\n%.3x: %16ph\n%.3x: %16ph\n",
->  		      (unsigned long)__entry->clnt, show_9p_op(__entry->type),
-
--- 
-Dominique Martinet | Asmadeus
+Please try the fix I proposed first.
