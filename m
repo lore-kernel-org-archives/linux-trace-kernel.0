@@ -1,93 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71EC5BE4E
-	for <linux-trace-kernel@vger.kernel.org>; Sat,  2 Dec 2023 06:54:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gl3+7BsM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0070C433CC
-	for <linux-trace-kernel@vger.kernel.org>; Sat,  2 Dec 2023 06:54:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701500051;
-	bh=4GSi6OT8Z/c7LHsP3xxBSy6fMBjXgVEy1+bdnjL0xgo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Gl3+7BsMgtbWPRe9wip6FiQgAVHy+GK1/FcSNR4JOItmOmDiT3UeIpdoBFB3oDFC/
-	 fdM4liUCMuQCH2rwJcB2AuzvfzM9+8ZAwzOF/VnfpXoS/vg33NzDwfz4/Qa4D2Gs99
-	 lI/aPGceHwM2p0c8QIcTCky4GG0mEBtVX9fK4QwaINYUJ7Anb+jRSAnku3H1rIJ0kS
-	 9jsuEDUqJNMgrZO/3z5nfyUeVVG8BIEfkqgXp2y+Y6Rl0lYLjYPZXBsGdEUnhbv/WJ
-	 ec7RnDdbZggs79gI9Vf+SRTXeUPyTtgvKfXM8xFw1z1klzED11pA3hkPxNLzkQZvVU
-	 comUMOTU46rcQ==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-50bc8a9503fso4010324e87.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 01 Dec 2023 22:54:11 -0800 (PST)
-X-Gm-Message-State: AOJu0Yz7t4dD96RUeCrspUHcBLHKaMbWLjvr3pRyx1FQkoBDryLla22l
-	oeuhWDCLcMf+uaUFoOLCtPTJ0U6zmZLXXin8U8c=
-X-Google-Smtp-Source: AGHT+IF4Y6qCw08C5cPJo3xLm3SlVu5jtphGtdGtnPu70XfmT+RBquqe+JuJGwuvUgFxa97T+Hr0ZqPY/tbmRaPrFWo=
-X-Received: by 2002:ac2:59c1:0:b0:50b:d764:882a with SMTP id
- x1-20020ac259c1000000b0050bd764882amr1443331lfn.118.1701500050048; Fri, 01
- Dec 2023 22:54:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="bUN1wjHO";
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="uVp9Vc0/"
+X-Greylist: delayed 9838 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 01 Dec 2023 23:19:40 PST
+Received: from nautica.notk.org (nautica.notk.org [91.121.71.147])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E898C1B2;
+	Fri,  1 Dec 2023 23:19:40 -0800 (PST)
+Received: by nautica.notk.org (Postfix, from userid 108)
+	id 7E84BC01F; Sat,  2 Dec 2023 08:19:39 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
+	t=1701501579; bh=uj47G2ezwiDNNC0q8ArJKjE+ShMruYh4/IQySt2Q1kU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bUN1wjHOSw5o0/eviawkv+AlSLeshOFFp3xAGtkACAOwmo7t1M0fMJhxN8e3x6d2K
+	 na9JJegTD/QySIbJlXHXg6BBdnqdBTeXozwO3byK+2+i9gZUlqbOl44hsZEHzSkLCa
+	 s4JCT5gLxtIikPOZ5kCYcaLrG9zTonkscSyAhGoDoFQ1KjCsxiBtAQWP2J9OJ785wk
+	 E75gu8ENQ9jw9hWTmGlzEIeXfHkF4mXVKqTuJqXF+qBUxaTt6RAAfFk6n+ukCfu3SX
+	 gwwTwIlAGPmo4WQrHEyqMVJIp5e5b9qPpmM6kRSXpC3v+C9xa+3+mVWVY0ycW3wlJq
+	 U0X0sdH6YNldg==
+X-Spam-Level: 
+Received: from gaia (localhost [127.0.0.1])
+	by nautica.notk.org (Postfix) with ESMTPS id 8F83FC009;
+	Sat,  2 Dec 2023 08:19:35 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
+	t=1701501578; bh=uj47G2ezwiDNNC0q8ArJKjE+ShMruYh4/IQySt2Q1kU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uVp9Vc0/KRnvmopALf4G/0UPptouI1+n9IgRRlCjiQFAGQLv8nPyTNhRIsQsB2Oyp
+	 bGvszI4hInYNjSjOYoaktMrurw6RhrCZUul44kbFra3LtAb1FZpPBL9doWLuc2WqJP
+	 5H6oIqqd54rDAjJXJy5ix2xVqXC2vVHXGo3/u2fDhvjXFPpO2mgudjjXJ+nUz/4z23
+	 NuCGmOpEUR5wO33WZjuNeVFXQ07zRWsDx8FB2nzJyxJDFOfdyhGW4T7mxoj+7z24xm
+	 CrHJ3+u+OJqVk1SpPqSPGACMvlEyEoqwIFedua2m3u7lPjK8juhoyk9gbEH6Gwb4D7
+	 oZpnbuqgLYvqA==
+Received: from localhost (gaia [local])
+	by gaia (OpenSMTPD) with ESMTPA id 767761df;
+	Sat, 2 Dec 2023 07:19:31 +0000 (UTC)
+Date: Sat, 2 Dec 2023 16:19:16 +0900
+From: asmadeus@codewreck.org
+To: JP Kobryn <inwardvessel@gmail.com>
+Cc: ericvh@kernel.org, lucho@ionkov.net, linux_oss@crudebyte.com,
+	rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, v9fs@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH] 9p: prevent read overrun in protocol dump tracepoint
+Message-ID: <ZWradOa-e1SM8MDZ@codewreck.org>
+References: <20231202030410.61047-1-inwardvessel@gmail.com>
+ <ZWq0BvPGYMTi-WfC@codewreck.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <d870c149-4363-43de-b0ea-7125dec5608e@broadcom.com>
- <CAMj1kXGST7uH530hB0i-rzisNesNrUGsJ5a5eC9805Udi5msrQ@mail.gmail.com>
- <81af85b4-5274-4362-9413-890425c60524@broadcom.com> <20231201130702.2824115c@gandalf.local.home>
- <4597db06-dabc-4bb2-9f24-bd30e07ff86d@broadcom.com>
-In-Reply-To: <4597db06-dabc-4bb2-9f24-bd30e07ff86d@broadcom.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Sat, 2 Dec 2023 07:53:58 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXFMy0=DP3-Ycsj+XCHWxvqNqddBkEm71Nrr-m9gVca21w@mail.gmail.com>
-Message-ID: <CAMj1kXFMy0=DP3-Ycsj+XCHWxvqNqddBkEm71Nrr-m9gVca21w@mail.gmail.com>
-Subject: Re: ARM Ftrace Function Graph Fails With UNWINDER_FRAME_POINTER
-To: Justin Chen <justin.chen@broadcom.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, mhiramat@kernel.org, mark.rutland@arm.com, 
-	linux@armlinux.org.uk, linux-trace-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Doug Berger <doug.berger@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZWq0BvPGYMTi-WfC@codewreck.org>
 
-On Fri, 1 Dec 2023 at 23:59, Justin Chen <justin.chen@broadcom.com> wrote:
->
->
->
-> On 12/1/23 10:07 AM, Steven Rostedt wrote:
-> > On Fri, 1 Dec 2023 09:25:59 -0800
-> > Justin Chen <justin.chen@broadcom.com> wrote:
-> >
-> >>> It appears the sub instruction at 0x6dd0 correctly accounts for the
-> >>> extra 8 bytes, so the frame pointer is valid. So it is our assumption
-> >>> that there are no gaps between the stack frames is invalid.
-> >>
-> >> Thanks for the assistance. The gap between the stack frame depends on
-> >> the function. Most do not have a gap. Some have 8 (as shown above), some
-> >> have 12. A single assumption here is not going to work. I'm having a
-> >> hard time finding out the reasoning for this gap. I tried disabling a
-> >> bunch of gcc flags as well as -O2 and the gap still exists.
-> >
-> > That code was originally added because of some strange things that gcc did
-> > with mcount (for example, it made a copy of the stack frame that it passed
-> > to mcount, where the function graph tracer replaced the copy of the return
-> > stack making the shadow stack go out of sync and crash). This was very hard
-> > to debug and I added this code to detect it if it happened again.
-> >
-> > Well it's been over a decade since that happened (2009).
-> >
-> >    71e308a239c09 ("function-graph: add stack frame test")
-> >
-> > I'm happy assuming that the compiler folks are aware of our tricks with
-> > hijacking return calls and I don't expect it to happen again. We can just
-> > rip out those checks. That is, if it's only causing false positives, I
-> > don't think it's worth keeping around.
-> >
-> > Has it detected any real issues on the Arm platforms?
-> >
-> > -- Steve
->
-> I am not familiar enough to make a call. But from my limited testing
-> with ARM, I didn't see any issues. If you would like me to, I can submit
-> a patch to remove the check entirely. Or maybe only disable it for ARM?
->
+asmadeus@codewreck.org wrote on Sat, Dec 02, 2023 at 01:35:18PM +0900:
+> > diff --git a/include/trace/events/9p.h b/include/trace/events/9p.h
+> > index 4dfa6d7f83ba..8690a7086252 100644
+> > --- a/include/trace/events/9p.h
+> > +++ b/include/trace/events/9p.h
+> > @@ -185,7 +185,8 @@ TRACE_EVENT(9p_protocol_dump,
+> >  		    __entry->clnt   =  clnt;
+> >  		    __entry->type   =  pdu->id;
+> >  		    __entry->tag    =  pdu->tag;
+> > -		    memcpy(__entry->line, pdu->sdata, P9_PROTO_DUMP_SZ);
+> > +		    memcpy(__entry->line, pdu->sdata,
+> > +				min(pdu->capacity, P9_PROTO_DUMP_SZ));
 
-Please try the fix I proposed first.
+Building with W=1 yields a warning:
+./include/linux/minmax.h:21:35: warning: comparison of distinct pointer types lacks a cast
+...
+./include/trace/events/9p.h:189:33: note: in expansion of macro ‘min’
+  189 |                                 min(pdu->capacity, P9_PROTO_DUMP_SZ));
+
+I've updated the patch to:
++				min_t(size_t, pdu->capacity, P9_PROTO_DUMP_SZ));
+
+and pushed to my -next branch:
+https://github.com/martinetd/linux/commits/9p-next
+
+-- 
+Dominique Martinet | Asmadeus
