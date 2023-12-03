@@ -1,118 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="dF+iWg1W";
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="2J/MlFY1"
-Received: from nautica.notk.org (nautica.notk.org [91.121.71.147])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5E55FB;
-	Sat,  2 Dec 2023 17:33:55 -0800 (PST)
-Received: by nautica.notk.org (Postfix, from userid 108)
-	id 924ACC01F; Sun,  3 Dec 2023 02:33:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-	t=1701567234; bh=ECgSr30p8KK6xp1lQByvmsYjnpt14zgJu5/41PhPXB4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dF+iWg1WlOt6+enLiLI3H4Qjsnshsqw7Q4XHjtf8E4pf+4m/XEnzfoZeCwNK4Bz65
-	 XGYGjtwkJFvjrsurRwBHt+URQMVGv+sFnCsFWzfR9onuEanSgKyWKzijjHtn1e152y
-	 u8TJPZXUf3i/Y7Wcx2EFCd+LfDPBnJvzRmx8BNw655DCZHGVZmgw3sJeJnntwJzME9
-	 nN9YIPycEBihrfy2dIlINKvFD1894Az0labxEjp/o9KjoVr+gZb4hqQHi7E31wdOk3
-	 dLMZ20DeUXRGr5nHb21dPEkItEKiSGQ9NYwlD5//0A6AS0LipMzoqza8PVKRSH6jbp
-	 W0JCk1AnxcaAQ==
-X-Spam-Level: 
-Received: from gaia (localhost [127.0.0.1])
-	by nautica.notk.org (Postfix) with ESMTPS id 7EF83C009;
-	Sun,  3 Dec 2023 02:33:50 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-	t=1701567233; bh=ECgSr30p8KK6xp1lQByvmsYjnpt14zgJu5/41PhPXB4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=2J/MlFY1zZTnaaeAiYHSQsIo249YUO3MmgdVkDwLdulVpdfdFI0ywkI+GqG3rd4ba
-	 qIH3qFFVFFPtrFLjCPPdDwrDUgUyvvumyCDczCH5aBsCtzBLJ3vU8xW7x+QRo2AMqv
-	 8pn7ELCiGo4YlElD2fpB350hVp6HltGNixDH1fnOdMzJpXCsl4djnAlHWZCqs8K8EK
-	 +SRBk2L8LnzS+XTOWDo32VihIdExN0KSs54Hx6fOlyVGrOGVGxp+sokz8P8sHs7vpm
-	 TGsQ+bEkYjrFDDIrZeiHvcmsMazZO76iR2tYu89nz8gnjdZ4z7Atefty0QTcF272Ix
-	 feF+FKr4Qh6ZA==
-Received: from localhost (gaia [local])
-	by gaia (OpenSMTPD) with ESMTPA id 575af7a3;
-	Sun, 3 Dec 2023 01:33:47 +0000 (UTC)
-Date: Sun, 3 Dec 2023 10:33:32 +0900
-From: Dominique Martinet <asmadeus@codewreck.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Christian Schoenebeck <linux_oss@crudebyte.com>,
-	JP Kobryn <inwardvessel@gmail.com>, ericvh@kernel.org,
-	lucho@ionkov.net, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, v9fs@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	kernel-team@meta.com
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6610381A;
+	Sun,  3 Dec 2023 04:15:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93E80C433C8;
+	Sun,  3 Dec 2023 04:15:01 +0000 (UTC)
+Date: Sat, 2 Dec 2023 23:15:24 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Dominique Martinet <asmadeus@codewreck.org>
+Cc: Christian Schoenebeck <linux_oss@crudebyte.com>, JP Kobryn
+ <inwardvessel@gmail.com>, ericvh@kernel.org, lucho@ionkov.net,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, v9fs@lists.linux.dev,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ kernel-team@meta.com
 Subject: Re: [PATCH] 9p: prevent read overrun in protocol dump tracepoint
-Message-ID: <ZWva7DYTPUG95xv8@codewreck.org>
+Message-ID: <20231202231524.4ce1d342@gandalf.local.home>
+In-Reply-To: <ZWva7DYTPUG95xv8@codewreck.org>
 References: <20231202030410.61047-1-inwardvessel@gmail.com>
- <ZWq0BvPGYMTi-WfC@codewreck.org>
- <1881630.VfuOzHrogK@silver>
- <20231202201409.10223677@rorschach.local.home>
+	<ZWq0BvPGYMTi-WfC@codewreck.org>
+	<1881630.VfuOzHrogK@silver>
+	<20231202201409.10223677@rorschach.local.home>
+	<ZWva7DYTPUG95xv8@codewreck.org>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20231202201409.10223677@rorschach.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Steven Rostedt wrote on Sat, Dec 02, 2023 at 08:14:09PM -0500:
-> > AFAICS __entry is a local variable on stack, and array __entry->line not
-> > intialized with zeros, i.e. the dump would contain trash at the end. Maybe
-> > prepending memset() before memcpy()?
+On Sun, 3 Dec 2023 10:33:32 +0900
+Dominique Martinet <asmadeus@codewreck.org> wrote:
 
-Well spotted!
-Now I'm thinking about it we weren't initializing the source buffer
-either back when we had (>32) msize allocations, so these already had
-been printing garbage, but might as well get this sorted out while we're
-here.
 
-> __entry is a macro that points into the ring buffer that gets allocated
-> before this is called. TRACE_EVENT() has a __dynamic_array() field that
-> can handle variable length arrays. What you can do is turn this into
-> something like:
+> >             TP_printk("clnt %lu %s(tag = %d)\n%.3x: %16ph\n%.3x: %16ph\n",
+> >                       (unsigned long)__entry->clnt, show_9p_op(__entry->type),
+> >                       __entry->tag, 0, __get_dynamic_array(line), 16,
+> > 		      __get_dynamic_array(line) + 16)  
 > 
-> TRACE_EVENT(9p_protocol_dump,
->             TP_PROTO(struct p9_client *clnt, struct p9_fcall *pdu),
+> This was just printing garbage in the previous version but %16ph with a
+> dynamic alloc would be out of range (even the start of the next buffer,
+> _get_dynamic_array(line) + 16, can be out of range)
 > 
->             TP_ARGS(clnt, pdu),
-> 
->             TP_STRUCT__entry(
->                     __field(    void *,         clnt                            )
->                     __field(    __u8,           type                            )
->                     __field(    __u16,          tag                             )
->                     __dynamic_array(unsigned char,  line, min(pdu->capacity, P9_PROTO_DUMP_SZ) )
->                     ),
-> 
->             TP_fast_assign(
->                     __entry->clnt   =  clnt;
->                     __entry->type   =  pdu->id;
->                     __entry->tag    =  pdu->tag;
->                     memcpy(__get_dynamic_array(line), pdu->sdata,
-> 			   min(pdu->capacity, P9_PROTO_DUMP_SZ));
->                     ),
->             TP_printk("clnt %lu %s(tag = %d)\n%.3x: %16ph\n%.3x: %16ph\n",
->                       (unsigned long)__entry->clnt, show_9p_op(__entry->type),
->                       __entry->tag, 0, __get_dynamic_array(line), 16,
-> 		      __get_dynamic_array(line) + 16)
+> Also, for custom tracepoints e.g. bpftrace the program needs to know how
+> many bytes can be read safely even if it's just for dumping -- unless
+> dynamic_array is a "fat pointer" that conveys its own size?
+> (Sorry didn't take the time to check)
 
-This was just printing garbage in the previous version but %16ph with a
-dynamic alloc would be out of range (even the start of the next buffer,
-_get_dynamic_array(line) + 16, can be out of range)
+Yes, there's also a __get_dynamic_array_len(line) that will return the
+allocated length of the line. Is that what you need?
 
-Also, for custom tracepoints e.g. bpftrace the program needs to know how
-many bytes can be read safely even if it's just for dumping -- unless
-dynamic_array is a "fat pointer" that conveys its own size?
-(Sorry didn't take the time to check)
+-- Steve
 
-So I see two ways forward:
- - We can give up on the 16 bytes split here, add the size in one of the
-fields, and print with %*ph using that size.
- - Or just give up and zero the tail; I'm surprised there's no "memcpy
-up to x bytes and zero up to y bytes if required" helper but Christian's
-suggestion of always doing memset first is probably not that bad
-performance-wise if someone's dumping these out already.
 
-I don't have a hard preference here, what do you think?
--- 
-Dominique Martinet | Asmadeus
