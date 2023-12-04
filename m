@@ -1,200 +1,402 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="H5q2Dmz8"
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACD09FD;
-	Mon,  4 Dec 2023 00:56:33 -0800 (PST)
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20231204085631euoutp016a240434f45d9e7636d711aefd006cc2~dlR5hufzV1564315643euoutp01a;
-	Mon,  4 Dec 2023 08:56:31 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20231204085631euoutp016a240434f45d9e7636d711aefd006cc2~dlR5hufzV1564315643euoutp01a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1701680192;
-	bh=u5ANKrFOExU1KsjAsnD9uwlOV/7Kro3AtqZhq74Bz2E=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=H5q2Dmz8YbYW6HDuVxHJFTBQ750+njvkBd+kNR/cQIRXJCoP3s9LE17vWc0expRGf
-	 zkLEfnyEsJLvTppqN4ePO9ILunthWdlyfBuilsHn6Nc8vkzc5pCSEwjZTyBvRyIRbX
-	 MNlAQC1rB/12jRnNU4fZrP78QFg78wskifY9eZ6Q=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20231204085631eucas1p2162e2397cad033945a4f9963fd768b57~dlR5U3MvS2294222942eucas1p2E;
-	Mon,  4 Dec 2023 08:56:31 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges2new.samsung.com (EUCPMTA) with SMTP id 3B.2D.09814.F349D656; Mon,  4
-	Dec 2023 08:56:31 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20231204085631eucas1p1df3dd15338e0357dedfcc0b8aa64c2c8~dlR4zmVq01870318703eucas1p1Y;
-	Mon,  4 Dec 2023 08:56:31 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20231204085631eusmtrp223eb7e06b481cedd1f0e528a502c34c1~dlR4wvyTd0289802898eusmtrp2C;
-	Mon,  4 Dec 2023 08:56:31 +0000 (GMT)
-X-AuditID: cbfec7f4-727ff70000002656-d9-656d943f2436
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id FC.4E.09274.E349D656; Mon,  4
-	Dec 2023 08:56:30 +0000 (GMT)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20231204085630eusmtip21962b3da8cd158ad7892bdaee280e817~dlR4etFaf2690626906eusmtip2b;
-	Mon,  4 Dec 2023 08:56:30 +0000 (GMT)
-Received: from localhost (106.110.32.133) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Mon, 4 Dec 2023 08:56:30 +0000
-Date: Mon, 4 Dec 2023 09:56:28 +0100
-From: Joel Granados <j.granados@samsung.com>
-To: Petr Mladek <pmladek@suse.com>
-CC: Luis Chamberlain <mcgrof@kernel.org>, <willy@infradead.org>,
-	<josh@joshtriplett.org>, Kees Cook <keescook@chromium.org>, Eric Biederman
-	<ebiederm@xmission.com>, Iurii Zaikin <yzaikin@google.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, John Stultz
-	<jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, Andy Lutomirski
-	<luto@amacapital.net>, Will Drewry <wad@chromium.org>, Ingo Molnar
-	<mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri Lelli
-	<juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
-	<bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Daniel Bristot de
-	Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>,
-	John Ogness <john.ogness@linutronix.de>, Sergey Senozhatsky
-	<senozhatsky@chromium.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, "David S. Miller"
-	<davem@davemloft.net>, Balbir Singh <bsingharora@gmail.com>, Alexei
-	Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, John
-	Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa
-	<jolsa@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<kexec@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>
-Subject: Re: [PATCH 07/10] printk: Remove the now superfluous sentinel
- elements from ctl_table array
-Message-ID: <20231204085628.pf7yxppacf4pm2cv@localhost>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kGya+9pt"
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B751CD;
+	Mon,  4 Dec 2023 01:32:56 -0800 (PST)
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B48O3Lv010901;
+	Mon, 4 Dec 2023 09:32:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=+2dzB1mYFGyLCkmougLVhYk5OsIZ0RK8nGP0PrVepZE=;
+ b=kGya+9ptpy9hTZd09o2xmeuZ4Gua94FAaAq38pjB6wJE9PGY5pxqmWfUOQdp5IeLfMq2
+ r07K6kNj7PGNO2ACgwE+bzQh/jXmQ4AmuGmuzWEjh4gvZtOKZmPZIqxeViAjxgycD6p7
+ xuDy1Qf1L4xKdNuUbunGjEvx29IJYHKee0hYosuQeQiDUnLNkcYwlSf5Qmnm+agnsxPY
+ alTSU4yhtaG0NPcidxvmWlrpdmbuvgP/JOwySlvImJv8MgVmLidGMeirXtLS/NBbTGjG
+ xJHkv8dFCIWj0cFZ6AeuYma0qcr45nFicT/+ugGqHmls7hADhZSOTq6Zt0b+EEnXqCSC ig== 
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3uqv673jbg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Dec 2023 09:32:42 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3B49WfsV002441
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 4 Dec 2023 09:32:41 GMT
+Received: from [10.217.219.216] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 4 Dec
+ 2023 01:32:36 -0800
+Message-ID: <42b34fbc-7db6-b7de-c3d4-fd20e8df3a90@quicinc.com>
+Date: Mon, 4 Dec 2023 15:02:33 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="m334zefgib4niiyw"
-Content-Disposition: inline
-In-Reply-To: <ZWX0L4lV8TWOgcpv@alley>
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA2WTa0xTZxzG955z2lNwuENx+ApGl4osY8DELPAuG+IiiScxsi2azfBBh+sR
-	HFAclQ1Z3IrigDIccqcyrkqhRe4UWREYYxQERK4iBQYKIlCZCJUaLl3Lwblk337/y/O8z//D
-	y8P5DaQd77ToLBMq8gsScC0JVcuLLhev5GBmT4HWAS0tX8WR+rGWQIsvtCRaaNZwUc/Dfi5K
-	m44kUOZ0B4nyc5/jKLMrikCTCdU4MqqiSNSkaSDRhZuFGFL1ZQPUnCwzDXJC0EprOReN/JJC
-	oI64YKRu12Noqj4eQ3W32gjU+1smFzWXdhJIeUPCQdfvdWOoOLaIgwYTJgFKmnsEUL7cEfU0
-	5mBImbxKIk18I4aMD/UcVB8zhqG1gXIC9RhmCaQuz+MijXyViyorUnAU02xKWP3nEom0UiOJ
-	lg2md8aUKg4qqPXZ70r/pVsl6OKsYkBflXQTdFXRfYyulY2QdFT9EEnnVITRlYVOdH7dNEZL
-	B3twemjWk65QxHLp4YE6Lj135w5J50pScDohrxF8autr+ZGQCTr9LRP63r4vLQMeKUrJMzes
-	w42GMkwCpjdLgQUPUu/D0pJajpn5VCGAWXFuUmBp4kUAr5WscNhiAcCL90vwl4pKtRxnB3IA
-	G7OmyX+3oh4bAFtUApi28JQ0SwjKAda2PgBm5lLOsEs3vG61hRLAmeyRdSucKrSCxoSC9SQ2
-	1CmYnaFeF1hRHrAl/9IGW8O2jAlCCngmQTjMG/Zi0R7K13jmDQtqNxxMatlIKoB6XTyH5fPw
-	dtUQxvLUJlhz94BZCilvqBrfz7Zt4IymimR5OzTWZmPmZJBKArBh7SnJFkoACyL1G0Yfwqi+
-	iQ3Fx/Da8CTJmm6Gg0+szW3chImqNJxtW8GYn/jstiNUjuqIBLBL9p+7ZK/ukr26S7bu4wxz
-	1M+4/2u/CwtyZ3GWPWFJyd9EDiAVYCsTJg72Z8R7Rcx3rmK/YHGYyN/1q5DgCmD6V+1rmsWb
-	QD4z79oEMB5oAg4m8YMy5V1gR4hCRIxgi1XWUCDDtxL6nYtgQkNOhIYFMeImYM8jBFutdgt3
-	MnzK3+8sE8gwZ5jQl1OMZ2EnwSQ2O3JGrRUi78/jL/ePf6/udb+yPeabwXdupffrEoYdPNP7
-	4nZoAw5lyBeOJOoPpwmPOS51EkWxVJpBSu58ezpVYC+8ODtX6TufeMTtcEdGoNPRMosfRdGa
-	CM96jYrv07+vjjn4+nH76E2yQcmvsb4rv2e6nNROXFZsq3YZz2p11R8aBScbrngvH3jTvzA1
-	reqDT54c9VAeO26Y74Q/6K//XHywXiDXR0qKLj372te9zsc25ISn9J7ijeWWauVYdKrXF8/b
-	pyz8ubV2e7S7+FWfbetknC+cUupuM+Fv1eydqTZWnbc45/tHjHt6d02brUoz5e0h7x1QDPDF
-	2RHPVijha2UCQhzg5+aEh4r9/gGs7rVC0gQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA2VTe0xTVxzeuff2tnXpVh7OOzRqihCDs1Cehw3IXnGXjWwY4Y+NKXZyBwba
-	krbgNCOpDBPowqgRdBRGi4hQCkhbJGB5dIiAAwRB3o9VGCCPSYwg77JCWWay/77zfb/v+305
-	OYeB2ptxJ8Z5oZQSC/lxHHwP1mZpGTselCmgPJJHAuDyeg4Kjc+GMbi4OkyHL5tacNg90YvD
-	GzOXMZg7006HBfmvUJjbmYLBScVdFG5VpdBhY0sDHSZXFyOw6okKwKZMpVVQi+BGqw6HoxlZ
-	GGz/WQCNbUsInK5PR2Bt3UMM9tzLxWHTnQ4MastkNFjY/xiBpWkaGhxQTAJ47fkUgAVFrrDb
-	pEagNnOTDlvSTQjcmliiwfpUMwItfToMdq/MYdCou4nDlqJNHBr0WShMbbI2vPtgmQ6H5Vt0
-	uL5i3WPWVtHg7ZovP+SSf85vYmRpXikgc2SPMbJSM4iQNcpROplSP0Qn1foE0lDsRhbUziCk
-	fKAbJYfmAkl9SRpOjvTV4uTzR4/oZL4sCyUVN00g9J1vuAFiUYKUOhwjkkgDORE86Mnl+UOu
-	p7c/l+fld/p9Tx+Oe1BAFBV3PpESuwed5cbMJ/fT47V2P/ySt0CTgem35IDJINjehMFYhMrB
-	HoY9uxAQg/OvaDbhAKFb7N3FDsRGnxy3Db0ARMV0J7AdDIAwrtWh21MY+whR0zoOtjHOfo/o
-	nB/Z4R3ZHGJWNbqzAmUXs4gK9dWdWAf294Qq27hjYLH9iOaCK7up1xFi7PICZhPsiIfZf+1g
-	lJ1I9Go1VjPDivcTRRbGNs1kuxAD15pRW1UOsTSfvls7iXi5OQUUwEH5WpLytSTlf0k22o0Y
-	sMwg/6OPEbfz51AbDiTKyxcwNaCXAEcqQSKIFkg8uRK+QJIgjOaeEwn0wPq8q5pXK6uBZvYF
-	txEgDNAIjlid4xXaLuCECUVCiuPIyhuKpexZUfyLlyixKFKcEEdJGoGP9Rqvok57z4msf0Uo
-	jeT5evjwvH39PXz8fb04+1jB8al8e3Y0X0rFUlQ8Jf7XhzCYTjLkHi5N05TN/FhS1l349QXp
-	qXKD3Up+p/fnzxRffZut+cjFXa+eilT9NBBSfD+F2Q5PyEz3R5x5q4fMycODJPdogPwO+XHw
-	d8379/kd//3gk8lTISdrNe9KHfIzTjuHn5SGtY05Rzh+4pURUZaunO5v+OKzX5PWXHMOCPCD
-	PHYW0zB7bPypncteAQhgdq09CF8R1kVcMi9Pxwf3qGLbLqZ+amo9m3wrJTZ3Yi7cYglKr4ks
-	XwsLSbx1FFW8nXhmw/GNQ+FS9+scVivhXH0l7Y/WhiTxYVXliVBOqGnU883oLtehmqceHTfO
-	cGv/jvugB/ntgmkjTJu6uN5h9tDrCqJ0geIiDiaJ4fPcULGE/w/p9W0ycwQAAA==
-X-CMS-MailID: 20231204085631eucas1p1df3dd15338e0357dedfcc0b8aa64c2c8
-X-Msg-Generator: CA
-X-RootMTR: 20231128140754eucas1p2cf2c17554954e94d0dc14967e1f5e750
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20231128140754eucas1p2cf2c17554954e94d0dc14967e1f5e750
-References: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-0-e4ce1388dfa0@samsung.com>
-	<20231107-jag-sysctl_remove_empty_elem_kernel-v1-7-e4ce1388dfa0@samsung.com>
-	<CGME20231128140754eucas1p2cf2c17554954e94d0dc14967e1f5e750@eucas1p2.samsung.com>
-	<ZWX0L4lV8TWOgcpv@alley>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v5] bus: mhi: host: Add tracing support
+Content-Language: en-US
+To: Jeffrey Hugo <quic_jhugo@quicinc.com>,
+        Manivannan Sadhasivam
+	<mani@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu
+	<mhiramat@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <mhi@lists.linux.dev>,
+        <linux-arm-msm@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <quic_vbadigan@quicinc.com>, <quic_ramkri@quicinc.com>,
+        <quic_nitegupt@quicinc.com>, <quic_skananth@quicinc.com>,
+        <quic_parass@quicinc.com>
+References: <20231127-ftrace_support-v5-1-eb67daead4f1@quicinc.com>
+ <15c0130a-1a4b-c08b-714b-05166f48d23b@quicinc.com>
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <15c0130a-1a4b-c08b-714b-05166f48d23b@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 7zP8B4q8ArXludJpvWcneSwCVTCz_XLU
+X-Proofpoint-GUID: 7zP8B4q8ArXludJpvWcneSwCVTCz_XLU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-04_06,2023-11-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 priorityscore=1501 malwarescore=0 bulkscore=0
+ clxscore=1011 mlxscore=0 spamscore=0 suspectscore=0 adultscore=0
+ mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311060000 definitions=main-2312040071
 
---m334zefgib4niiyw
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hey Petr
+On 12/1/2023 10:31 PM, Jeffrey Hugo wrote:
+> On 11/27/2023 4:09 AM, Krishna chaitanya chundru wrote:
+>> This change adds ftrace support for following functions which
+>> helps in debugging the issues when there is Channel state & MHI
+>> state change and also when we receive data and control events:
+>> 1. mhi_intvec_mhi_states
+>> 2. mhi_process_data_event_ring
+>> 3. mhi_process_ctrl_ev_ring
+>> 4. mhi_gen_tre
+>> 5. mhi_update_channel_state
+>> 6. mhi_tryset_pm_state
+>> 7. mhi_pm_st_worker
+>>
+>> Where ever the trace events are added, debug messages are removed.
+>>
+>> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+>> ---
+>> Changes in v5:
+>> - Use DECLARE_EVENT_CLASS for multiple events as suggested by steve.
+>> - Instead of converting to u64 to print address, use %px to print the 
+>> address to avoid
+>> - warnings in some platforms.
+>> - Link to v4: 
+>> https://lore.kernel.org/r/20231111-ftrace_support-v4-1-c83602399461@quicinc.com
+>>
+>> Changes in v4:
+>> - Fix compilation issues in previous patch which happended due to 
+>> rebasing.
+>> - In the defconfig FTRACE config is not enabled due to that the 
+>> compilation issue is not
+>> - seen in my workspace.
+>> - Link to v3: 
+>> https://lore.kernel.org/r/20231111-ftrace_support-v3-1-f358d2911a74@quicinc.com
+>>
+>> Changes in v3:
+>> - move trace header file from include/trace/events to 
+>> drivers/bus/mhi/host/ so that
+>> - we can include driver header files.
+>> - Use macros directly in the trace events as suggested Jeffrey Hugo.
+>> - Reorder the structure in the events as suggested by steve to avoid 
+>> holes in the buffer.
+>> - removed the mhi_to_physical function as this can give security issues.
+>> - removed macros to define strings as we can get those from driver 
+>> headers.
+>> - Link to v2: 
+>> https://lore.kernel.org/r/20231013-ftrace_support-v2-1-6e893ce010b5@quicinc.com
+>>
+>> Changes in v2:
+>> - Passing the raw state into the trace event and using 
+>> __print_symbolic() as suggested by bjorn.
+>> - Change mhi_pm_st_worker to mhi_pm_st_transition as suggested by bjorn.
+>> - Fixed the kernel test rebot issues.
+>> - Link to v1: 
+>> https://lore.kernel.org/r/20231005-ftrace_support-v1-1-23a2f394fa49@quicinc.com
+>> ---
+>>   drivers/bus/mhi/host/init.c     |   3 +
+>>   drivers/bus/mhi/host/internal.h |   1 +
+>>   drivers/bus/mhi/host/main.c     |  23 +++--
+>>   drivers/bus/mhi/host/pm.c       |   6 +-
+>>   drivers/bus/mhi/host/trace.h    | 208 
+>> ++++++++++++++++++++++++++++++++++++++++
+>>   5 files changed, 228 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
+>> index f78aefd2d7a3..6acb85f4c5f8 100644
+>> --- a/drivers/bus/mhi/host/init.c
+>> +++ b/drivers/bus/mhi/host/init.c
+>> @@ -20,6 +20,9 @@
+>>   #include <linux/wait.h>
+>>   #include "internal.h"
+>>   +#define CREATE_TRACE_POINTS
+>> +#include "trace.h"
+>> +
+>>   static DEFINE_IDA(mhi_controller_ida);
+>>     const char * const mhi_ee_str[MHI_EE_MAX] = {
+>> diff --git a/drivers/bus/mhi/host/internal.h 
+>> b/drivers/bus/mhi/host/internal.h
+>> index 2e139e76de4c..a02a71605907 100644
+>> --- a/drivers/bus/mhi/host/internal.h
+>> +++ b/drivers/bus/mhi/host/internal.h
+>> @@ -7,6 +7,7 @@
+>>   #ifndef _MHI_INT_H
+>>   #define _MHI_INT_H
+>>   +#include "trace.h"
+>>   #include "../common.h"
+>>     extern struct bus_type mhi_bus_type;
+>> diff --git a/drivers/bus/mhi/host/main.c b/drivers/bus/mhi/host/main.c
+>> index dcf627b36e82..0d7e068e713a 100644
+>> --- a/drivers/bus/mhi/host/main.c
+>> +++ b/drivers/bus/mhi/host/main.c
+>> @@ -491,11 +491,9 @@ irqreturn_t mhi_intvec_threaded_handler(int 
+>> irq_number, void *priv)
+>>         state = mhi_get_mhi_state(mhi_cntrl);
+>>       ee = mhi_get_exec_env(mhi_cntrl);
+>> -    dev_dbg(dev, "local ee: %s state: %s device ee: %s state: %s\n",
+>> -        TO_MHI_EXEC_STR(mhi_cntrl->ee),
+>> -        mhi_state_str(mhi_cntrl->dev_state),
+>> -        TO_MHI_EXEC_STR(ee), mhi_state_str(state));
+>>   +    trace_mhi_intvec_states(mhi_cntrl->mhi_dev->name, mhi_cntrl->ee,
+>> +                mhi_cntrl->dev_state, ee, state);
+>>       if (state == MHI_STATE_SYS_ERR) {
+>>           dev_dbg(dev, "System error detected\n");
+>>           pm_state = mhi_tryset_pm_state(mhi_cntrl,
+>> @@ -832,6 +830,10 @@ int mhi_process_ctrl_ev_ring(struct 
+>> mhi_controller *mhi_cntrl,
+>>       while (dev_rp != local_rp) {
+>>           enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
+>>   +        trace_mhi_ctrl_event(mhi_cntrl->mhi_dev->name, local_rp,
+>> +                     local_rp->ptr, local_rp->dword[0],
+>> +                     local_rp->dword[1]);
+>> +
+>>           switch (type) {
+>>           case MHI_PKT_TYPE_BW_REQ_EVENT:
+>>           {
+>> @@ -997,6 +999,9 @@ int mhi_process_data_event_ring(struct 
+>> mhi_controller *mhi_cntrl,
+>>       while (dev_rp != local_rp && event_quota > 0) {
+>>           enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
+>>   +        trace_mhi_data_event(mhi_cntrl->mhi_dev->name, local_rp, 
+>> local_rp->ptr,
+>> +                     local_rp->dword[0], local_rp->dword[1]);
+>> +
+>>           chan = MHI_TRE_GET_EV_CHID(local_rp);
+>>             WARN_ON(chan >= mhi_cntrl->max_chan);
+>> @@ -1235,6 +1240,8 @@ int mhi_gen_tre(struct mhi_controller 
+>> *mhi_cntrl, struct mhi_chan *mhi_chan,
+>>       mhi_tre->dword[0] = MHI_TRE_DATA_DWORD0(info->len);
+>>       mhi_tre->dword[1] = MHI_TRE_DATA_DWORD1(bei, eot, eob, chain);
+>>   +    trace_mhi_gen_tre(mhi_cntrl->mhi_dev->name, mhi_chan->chan, 
+>> mhi_tre,
+>> +              mhi_tre->ptr, mhi_tre->dword[0], mhi_tre->dword[1]);
+>>       /* increment WP */
+>>       mhi_add_ring_element(mhi_cntrl, tre_ring);
+>>       mhi_add_ring_element(mhi_cntrl, buf_ring);
+>> @@ -1327,9 +1334,7 @@ static int mhi_update_channel_state(struct 
+>> mhi_controller *mhi_cntrl,
+>>       enum mhi_cmd_type cmd = MHI_CMD_NOP;
+>>       int ret;
+>>   -    dev_dbg(dev, "%d: Updating channel state to: %s\n", 
+>> mhi_chan->chan,
+>> -        TO_CH_STATE_TYPE_STR(to_state));
+>> -
+>> + trace_mhi_channel_command_start(mhi_cntrl->mhi_dev->name, 
+>> mhi_chan->chan, to_state);
+>>       switch (to_state) {
+>>       case MHI_CH_STATE_TYPE_RESET:
+>>           write_lock_irq(&mhi_chan->lock);
+>> @@ -1396,9 +1401,7 @@ static int mhi_update_channel_state(struct 
+>> mhi_controller *mhi_cntrl,
+>>           write_unlock_irq(&mhi_chan->lock);
+>>       }
+>>   -    dev_dbg(dev, "%d: Channel state change to %s successful\n",
+>> -        mhi_chan->chan, TO_CH_STATE_TYPE_STR(to_state));
+>> -
+>> + trace_mhi_channel_command_end(mhi_cntrl->mhi_dev->name, 
+>> mhi_chan->chan, to_state);
+>>   exit_channel_update:
+>>       mhi_cntrl->runtime_put(mhi_cntrl);
+>>       mhi_device_put(mhi_cntrl->mhi_dev);
+>> diff --git a/drivers/bus/mhi/host/pm.c b/drivers/bus/mhi/host/pm.c
+>> index 8a4362d75fc4..e32afdc92fde 100644
+>> --- a/drivers/bus/mhi/host/pm.c
+>> +++ b/drivers/bus/mhi/host/pm.c
+>> @@ -123,6 +123,7 @@ enum mhi_pm_state __must_check 
+>> mhi_tryset_pm_state(struct mhi_controller *mhi_cn
+>>       if (unlikely(!(dev_state_transitions[index].to_states & state)))
+>>           return cur_state;
+>>   +    trace_mhi_tryset_pm_state(mhi_cntrl->mhi_dev->name, state);
+>>       mhi_cntrl->pm_state = state;
+>>       return mhi_cntrl->pm_state;
+>>   }
+>> @@ -753,7 +754,6 @@ void mhi_pm_st_worker(struct work_struct *work)
+>>       struct mhi_controller *mhi_cntrl = container_of(work,
+>>                               struct mhi_controller,
+>>                               st_worker);
+>> -    struct device *dev = &mhi_cntrl->mhi_dev->dev;
+>>         spin_lock_irq(&mhi_cntrl->transition_lock);
+>>       list_splice_tail_init(&mhi_cntrl->transition_list, &head);
+>> @@ -761,8 +761,8 @@ void mhi_pm_st_worker(struct work_struct *work)
+>>         list_for_each_entry_safe(itr, tmp, &head, node) {
+>>           list_del(&itr->node);
+>> -        dev_dbg(dev, "Handling state transition: %s\n",
+>> -            TO_DEV_STATE_TRANS_STR(itr->state));
+>> +
+>> + trace_mhi_pm_st_transition(mhi_cntrl->mhi_dev->name, itr->state);
+>>             switch (itr->state) {
+>>           case DEV_ST_TRANSITION_PBL:
+>> diff --git a/drivers/bus/mhi/host/trace.h b/drivers/bus/mhi/host/trace.h
+>> new file mode 100644
+>> index 000000000000..3bfac529c6b7
+>> --- /dev/null
+>> +++ b/drivers/bus/mhi/host/trace.h
+>> @@ -0,0 +1,208 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights 
+>> reserved.
+>> + */
+>> +
+>> +#undef TRACE_SYSTEM
+>> +#define TRACE_SYSTEM mhi_host
+>> +
+>> +#if !defined(_TRACE_EVENT_MHI_HOST_H) || 
+>> defined(TRACE_HEADER_MULTI_READ)
+>> +#define _TRACE_EVENT_MHI_HOST_H
+>> +
+>> +#include <linux/tracepoint.h>
+>> +#include <linux/trace_seq.h>
+>> +#include "../common.h"
+>> +#include "internal.h"
+>> +
+>> +TRACE_EVENT(mhi_gen_tre,
+>> +
+>> +    TP_PROTO(const char *name, int ch_num, void *wp, __le64 tre_ptr,
+>> +         __le32 dword0, __le32 dword1),
+>> +
+>> +    TP_ARGS(name, ch_num, wp, tre_ptr, dword0, dword1),
+>> +
+>> +    TP_STRUCT__entry(
+>> +        __string(name, name)
+>> +        __field(int, ch_num)
+>> +        __field(void *, wp)
+>> +        __field(__le64, tre_ptr)
+>> +        __field(__le32, dword0)
+>> +        __field(__le32, dword1)
+>> +    ),
+>> +
+>> +    TP_fast_assign(
+>> +        __assign_str(name, name);
+>> +        __entry->ch_num = ch_num;
+>> +        __entry->wp = wp;
+>> +        __entry->tre_ptr = tre_ptr;
+>> +        __entry->dword0 = dword0;
+>> +        __entry->dword1 = dword1;
+>> +    ),
+>> +
+>> +    TP_printk("%s: Chan: %d WP: 0x%p TRE: 0x%llx 0x%08x 0x%08x\n",
+>> +          __get_str(name), __entry->ch_num, __entry->wp, 
+>> __entry->tre_ptr,
+>> +          __entry->dword0, __entry->dword1)
+>> +);
+>> +
+>> +TRACE_EVENT(mhi_intvec_states,
+>> +
+>> +    TP_PROTO(const char *name, int local_ee, int state, int dev_ee, 
+>> int dev_state),
+>> +
+>> +    TP_ARGS(name, local_ee, state, dev_ee, dev_state),
+>> +
+>> +    TP_STRUCT__entry(
+>> +        __string(name, name)
+>> +        __field(int, local_ee)
+>> +        __field(int, state)
+>> +        __field(int, dev_ee)
+>> +        __field(int, dev_state)
+>> +    ),
+>> +
+>> +    TP_fast_assign(
+>> +        __assign_str(name, name);
+>> +        __entry->local_ee = local_ee;
+>> +        __entry->state = state;
+>> +        __entry->dev_ee = dev_ee;
+>> +        __entry->dev_state = dev_state;
+>> +    ),
+>> +
+>> +    TP_printk("%s: local ee: %s state: %s device ee: %s state: %s\n",
+>> +          __get_str(name),
+>> +          TO_MHI_EXEC_STR(__entry->local_ee),
+>> +          mhi_state_str(__entry->state),
+>> +          TO_MHI_EXEC_STR(__entry->dev_ee),
+>> +          mhi_state_str(__entry->dev_state))
+>> +);
+>> +
+>> +TRACE_EVENT(mhi_tryset_pm_state,
+>> +
+>> +    TP_PROTO(const char *name, int pm_state),
+>> +
+>> +    TP_ARGS(name, pm_state),
+>> +
+>> +    TP_STRUCT__entry(
+>> +        __string(name, name)
+>> +        __field(int, pm_state)
+>> +    ),
+>> +
+>> +    TP_fast_assign(
+>> +        __assign_str(name, name);
+>> +        if (pm_state)
+>> +            pm_state = __fls(pm_state);
+>> +        __entry->pm_state = pm_state;
+>> +    ),
+>> +
+>> +    TP_printk("%s: PM state: %s\n", __get_str(name),
+>> +          to_mhi_pm_state_str(__entry->pm_state))
+>> +);
+>> +
+>> +DECLARE_EVENT_CLASS(mhi_process_event_ring,
+>> +
+>> +    TP_PROTO(const char *name, void *rp, __le64 ptr,
+>> +         __le32 dword0, __le32 dword1),
+>> +
+>> +    TP_ARGS(name, rp, ptr, dword0, dword1),
+>> +
+>> +    TP_STRUCT__entry(
+>> +        __string(name, name)
+>> +        __field(__le32, dword0)
+>> +        __field(__le32, dword1)
+>> +        __field(int, state)
+>> +        __field(__le64, ptr)
+>> +        __field(void *, rp)
+>> +    ),
+>> +
+>> +    TP_fast_assign(
+>> +        __assign_str(name, name);
+>> +        __entry->rp = rp;
+>> +        __entry->ptr = ptr;
+>> +        __entry->dword0 = dword0;
+>> +        __entry->dword1 = dword1;
+>> +        __entry->state = MHI_TRE_GET_EV_STATE((struct 
+>> mhi_ring_element *)entry->rp);
+>
+> "entry"?
+> Also, you have the "rp" that was passed into the trace, why not just 
+> directly use that?
+>
+I will update as suggested in the next patch.
 
-I missed this message somehow....
+- Krishna Chaitanya.
 
-On Tue, Nov 28, 2023 at 03:07:43PM +0100, Petr Mladek wrote:
-> On Tue 2023-11-07 14:45:07, Joel Granados via B4 Relay wrote:
-> > From: Joel Granados <j.granados@samsung.com>
-> >=20
-> > This commit comes at the tail end of a greater effort to remove the
-> > empty elements at the end of the ctl_table arrays (sentinels) which
-> > will reduce the overall build time size of the kernel and run time
-> > memory bloat by ~64 bytes per sentinel (further information Link :
-> > https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
-> >=20
-> > rm sentinel element from printk_sysctls
-> >=20
-> > Signed-off-by: Joel Granados <j.granados@samsung.com>
->=20
-> I am a bit sceptical if the size and time reduction is worth the
-> effort. I feel that this change makes the access a bit less secure.
-In what way "less secure"? Can you expand on that?
-
-Notice that if you pass a pointer to the register functions, you will
-get a warning/error on compilation.
-
->=20
-> Well, almost all arrays are static so that it should just work.
-> The patch does what it says. Feel free to use:
-Thx for the review. will do.
-
->=20
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
->=20
-> Best Regards,
-> Petr
-
---=20
-
-Joel Granados
-
---m334zefgib4niiyw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGyBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmVtlDwACgkQupfNUreW
-QU/0vwv4mRGhlKpI+9BXVTufcXHymQXIplwD2Pt0XmXATxwELEZSDrAhkOMuZnOE
-w+JGFka7O9MPuE5kHhtxfBDqZd2olH0zzMSxkXsHAd6nNXCdAXLpkPojlYwSfSNC
-xDaXiEtaHhAaW/U0WpLEBHL539sYYukjf5P9qha6XORNvA5y1B1g1pUWMrBUXiyF
-S5+txanFQmwulj1Kre/SFy95147+/UPo4SPAYl+9GIyN9KLKQ0++EKLLIRRRV09v
-I2zJYqkDyyZpbIPq7jj9XIceNk7MDhNdMIUP1pN4djlrt3IKWYnuJXBuiRWFIJ28
-LbpVTzIGfnH5IzaRU0547P/5U7QlIVSuUnh7l1cSdarm+sk3k4uRTogeaDtWKgho
-wBL9rnHITIlj7ZhLtFlm4CMWbed0rTeph4Vq1p/vvE9HFnaNQMtmM5GYBV7C5L5P
-cCpdN9/VZ9i32K8zh9jLFAk7xDBwqTd1yM07kFfUE1CZ/kk2LUrxLLgw8LbipU/z
-lmG1tIc=
-=c3TB
------END PGP SIGNATURE-----
-
---m334zefgib4niiyw--
