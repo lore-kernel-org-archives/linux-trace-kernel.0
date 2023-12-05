@@ -1,83 +1,116 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZyFjcWOx"
-Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D09CED5;
-	Mon,  4 Dec 2023 19:54:58 -0800 (PST)
-Received: by mail-qk1-x736.google.com with SMTP id af79cd13be357-77d645c0e06so337282785a.3;
-        Mon, 04 Dec 2023 19:54:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701748498; x=1702353298; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bwazqnNeub5DZ+rw7fMsVgByjnDtf2+w+fCVgKk8Ybo=;
-        b=ZyFjcWOxbOFkMt3X7t7x9+dbdscYunMuWj8a4yWis488CkVDl0IMr8V8RMwKs8jFtT
-         1kxvgDWW8z3HETz89hbQam7+kPdYqhSun7Xw5s5Wjsq544mmi1xieQqdqOuIu43secmx
-         fVuzwvFPK8c309szmI/yTdlsl0b/sL3VLrL+6Ku+KGe0xECarfOITuTVlrxcQJUJpWXE
-         G+jWJxEbHnOVIaPrqflcWYhPzXu5VNep3ymXwWIxnx0/Z4YWjhj+vlo69pzkDQrPY9vA
-         n5UvM3PZDMJoVpF/ORRkm1nVxcH+XTzaha5QNwr30+0cMgRJ6ZEA/WFsgVNnhNp2BKsr
-         LMFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701748498; x=1702353298;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bwazqnNeub5DZ+rw7fMsVgByjnDtf2+w+fCVgKk8Ybo=;
-        b=UbcDyALycvKVuD7iOOgbuDn6jCQ/iDKqRmBjhKQAfACHmh+1WWRI820+Beq0ETTX3k
-         DkGGvHqDLAwyZuWY1u6dQ7+E/9RZlRATBxNomllWs/CtcTeypKZJDnqnojR71VJPLzRO
-         bqYvtXP7EIePksROBdOh6kXgxx0QnREguECEYiBgj/658E92RWRyYLSFs3RCW+++nXl7
-         BPz8ycMvpMa6WQ7VyO9rc5eUpI+Kk2PqN0hoV8pDsQoSPFLEVLwpRpveEs6uwDlqgDnL
-         cnU0JpTbr8SrE2zhd4bN8XvikekUDGi+91VtWdV1IDk7/WXumIt0nFfvOOy67ZFinw1K
-         IL7A==
-X-Gm-Message-State: AOJu0YwExUMeVs/V1n5NaYFPWynmddE7DZuKi3vY3T5OdcTIBmf5Tlkj
-	plpfUt5CmQj3k0DrZPWadQqOZUQe78g=
-X-Google-Smtp-Source: AGHT+IGrXuNd26CC92+UKforEnNgXpfQsAOCq+zgDCHvKGn5kXp78v53PsNa1+LPIetle08f0af8hA==
-X-Received: by 2002:a05:620a:12c2:b0:77e:fba3:5909 with SMTP id e2-20020a05620a12c200b0077efba35909mr605638qkl.154.1701748497850;
-        Mon, 04 Dec 2023 19:54:57 -0800 (PST)
-Received: from Slackware.localdomain ([154.16.192.47])
-        by smtp.gmail.com with ESMTPSA id br31-20020a05620a461f00b0077dcfc63c8asm4785137qkb.78.2023.12.04.19.54.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Dec 2023 19:54:57 -0800 (PST)
-From: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mark.rutland@arm.com,
-	corbet@lwn.net,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Cc: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Subject: [PATCH] Documentaion:trace Add the git web link to view it on the browser
-Date: Tue,  5 Dec 2023 09:25:17 +0530
-Message-Id: <20231205035517.30534-1-unixbhaskar@gmail.com>
-X-Mailer: git-send-email 2.35.8
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="oIqpz0ck";
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="XzSMYI0b"
+Received: from nautica.notk.org (nautica.notk.org [91.121.71.147])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CBA511F;
+	Tue,  5 Dec 2023 01:11:26 -0800 (PST)
+Received: by nautica.notk.org (Postfix, from userid 108)
+	id A4DF8C009; Tue,  5 Dec 2023 10:11:24 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
+	t=1701767484; bh=3iZ63APZbX61CIoo6gLzcv9i84+2PmzaZ9wPzVma8C0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oIqpz0ckW2yM5dz1Eb84uzefLbmlslS3T8HBWGHYwytNSfBw7uX72y60wtA5R4F/e
+	 QiiYfCYVBU8ClgdWICRtFiDIaZtkuMNq4An4reGDHCNCrSK8h7XzwDx17gCe8GGbXU
+	 vMUNhKCTBHQK2Q2ofpRlmTj/pFDSVR2fXS6BaLEgJ75ftPdjFoo0mMq6SAVRyMiRIG
+	 uuUT7xHZVU2YZfaQAe34CRnTSNq5CMt9nSkhJL9uLjWvXJrdwDwZszF1Tk3v5wAktJ
+	 dBq99DGdKt0MTniutgIGt7JBaZegTrGXMB3WXc3FzkKRkn1GsoEjbbpJ0Eq5QX7ZnS
+	 BTX1zRae9D/ZQ==
+X-Spam-Level: 
+Received: from gaia (localhost [127.0.0.1])
+	by nautica.notk.org (Postfix) with ESMTPS id 86018C009;
+	Tue,  5 Dec 2023 10:11:20 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
+	t=1701767483; bh=3iZ63APZbX61CIoo6gLzcv9i84+2PmzaZ9wPzVma8C0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XzSMYI0bof0n+WYjxYrYL6gOwmwkBPBUDi4iIqhYEJhiPNvvplUQbz6BGjUof3ZTJ
+	 40TKfb9qqi0LqG2SagX6rRgOUOUfLxUMqyViDSBtDOfTWy2TEFoTo5/w2x8rOHDiqE
+	 zmZJMfj2DCeVsbeJip84/EAXDm7sPkAVmaxHLehc76b7CQM702UxxkRm3pRzv4aRBQ
+	 LmF5zKHegx/GHRhGjwU4pdwnWNwDUZoblJiCMuuqc5Zh7JyR1dkys/twxRtZkx7Hwa
+	 T7fToNgHSZDwyCSuYBrhLfLHJ92nftiJFKEqtLQgR4npu+vMIeQ0WgVWOvowNo6W3W
+	 OzKv2QL1nHKBg==
+Received: from localhost (gaia [local])
+	by gaia (OpenSMTPD) with ESMTPA id 27fad260;
+	Tue, 5 Dec 2023 09:11:17 +0000 (UTC)
+Date: Tue, 5 Dec 2023 18:11:02 +0900
+From: asmadeus@codewreck.org
+To: JP Kobryn <inwardvessel@gmail.com>
+Cc: ericvh@kernel.org, lucho@ionkov.net, linux_oss@crudebyte.com,
+	rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, v9fs@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH v2] 9p: prevent read overrun in protocol dump tracepoint
+Message-ID: <ZW7pJvNLtObyglZW@codewreck.org>
+References: <20231204202321.22730-1-inwardvessel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: *
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20231204202321.22730-1-inwardvessel@gmail.com>
 
-Thought this might help people to see the entire source tree on browser and
-explore.
+JP Kobryn wrote on Mon, Dec 04, 2023 at 12:23:20PM -0800:
+> An out of bounds read can occur within the tracepoint 9p_protocol_dump. In
+> the fast assign, there is a memcpy that uses a constant size of 32 (macro
+> named P9_PROTO_DUMP_SZ). When the copy is invoked, the source buffer is not
+> guaranteed match this size.  It was found that in some cases the source
+> buffer size is less than 32, resulting in a read that overruns.
+> 
+> The size of the source buffer seems to be known at the time of the
+> tracepoint being invoked. The allocations happen within p9_fcall_init(),
+> where the capacity field is set to the allocated size of the payload
+> buffer. This patch tries to fix the overrun by changing the fixed array to
+> a dynamically sized array and using the minimum of the capacity value or
+> P9_PROTO_DUMP_SZ as its length. The trace log statement is adjusted to
+> account for this. Note that the trace log no longer splits the payload on
+> the first 16 bytes. The full payload is now logged to a single line.
+> 
+> To repro the orignal problem, operations to a plan 9 managed resource can
+> be used. The simplest approach might just be mounting a shared filesystem
+> (between host and guest vm) using the plan 9 protocol while the tracepoint
+> is enabled.
+> 
+> mount -t 9p -o trans=virtio <mount_tag> <mount_path>
+> 
+> The bpftrace program below can be used to show the out of bounds read.
+> Note that a recent version of bpftrace is needed for the raw tracepoint
+> support. The script was tested using v0.19.0.
+> 
+> /* from include/net/9p/9p.h */
+> struct p9_fcall {
+>     u32 size;
+>     u8 id;
+>     u16 tag;
+>     size_t offset;
+>     size_t capacity;
+>     struct kmem_cache *cache;
+>     u8 *sdata;
+>     bool zc;
+> };
+> 
+> tracepoint:9p:9p_protocol_dump
+> {
+>     /* out of bounds read can happen when this tracepoint is enabled */
+> }
+> 
+> rawtracepoint:9p_protocol_dump
+> {
+>     $pdu = (struct p9_fcall *)arg1;
+>     $dump_sz = (uint64)32;
+> 
+>     if ($dump_sz > $pdu->capacity) {
+>         printf("reading %zu bytes from src buffer of %zu bytes\n",
+>             $dump_sz, $pdu->capacity);
+>     }
+> }
+> 
+> Signed-off-by: JP Kobryn <inwardvessel@gmail.com>
 
-Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
----
- Documentation/trace/ftrace.rst | 2 ++
- 1 file changed, 2 insertions(+)
+Thanks, I've updated the patch locally; will push to -next after testing
+later tonight and to Linus next week.
 
-diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-index 23572f6697c0..e768a4c91452 100644
---- a/Documentation/trace/ftrace.rst
-+++ b/Documentation/trace/ftrace.rst
-@@ -3731,3 +3731,5 @@ Currently, -mfentry is used by gcc 4.6.0 and above on x86 only.
- More
- ----
- More details can be found in the source code, in the `kernel/trace/*.c` files.
-+Also you can see the trace source tree on browser `Git Link
-+<https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/trace>`__.
---
-2.35.8
-
+-- 
+Dominique Martinet | Asmadeus
