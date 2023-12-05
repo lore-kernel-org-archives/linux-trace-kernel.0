@@ -1,46 +1,32 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="oIqpz0ck";
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="XzSMYI0b"
-Received: from nautica.notk.org (nautica.notk.org [91.121.71.147])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CBA511F;
-	Tue,  5 Dec 2023 01:11:26 -0800 (PST)
-Received: by nautica.notk.org (Postfix, from userid 108)
-	id A4DF8C009; Tue,  5 Dec 2023 10:11:24 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-	t=1701767484; bh=3iZ63APZbX61CIoo6gLzcv9i84+2PmzaZ9wPzVma8C0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oIqpz0ckW2yM5dz1Eb84uzefLbmlslS3T8HBWGHYwytNSfBw7uX72y60wtA5R4F/e
-	 QiiYfCYVBU8ClgdWICRtFiDIaZtkuMNq4An4reGDHCNCrSK8h7XzwDx17gCe8GGbXU
-	 vMUNhKCTBHQK2Q2ofpRlmTj/pFDSVR2fXS6BaLEgJ75ftPdjFoo0mMq6SAVRyMiRIG
-	 uuUT7xHZVU2YZfaQAe34CRnTSNq5CMt9nSkhJL9uLjWvXJrdwDwZszF1Tk3v5wAktJ
-	 dBq99DGdKt0MTniutgIGt7JBaZegTrGXMB3WXc3FzkKRkn1GsoEjbbpJ0Eq5QX7ZnS
-	 BTX1zRae9D/ZQ==
-X-Spam-Level: 
-Received: from gaia (localhost [127.0.0.1])
-	by nautica.notk.org (Postfix) with ESMTPS id 86018C009;
-	Tue,  5 Dec 2023 10:11:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-	t=1701767483; bh=3iZ63APZbX61CIoo6gLzcv9i84+2PmzaZ9wPzVma8C0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XzSMYI0bof0n+WYjxYrYL6gOwmwkBPBUDi4iIqhYEJhiPNvvplUQbz6BGjUof3ZTJ
-	 40TKfb9qqi0LqG2SagX6rRgOUOUfLxUMqyViDSBtDOfTWy2TEFoTo5/w2x8rOHDiqE
-	 zmZJMfj2DCeVsbeJip84/EAXDm7sPkAVmaxHLehc76b7CQM702UxxkRm3pRzv4aRBQ
-	 LmF5zKHegx/GHRhGjwU4pdwnWNwDUZoblJiCMuuqc5Zh7JyR1dkys/twxRtZkx7Hwa
-	 T7fToNgHSZDwyCSuYBrhLfLHJ92nftiJFKEqtLQgR4npu+vMIeQ0WgVWOvowNo6W3W
-	 OzKv2QL1nHKBg==
-Received: from localhost (gaia [local])
-	by gaia (OpenSMTPD) with ESMTPA id 27fad260;
-	Tue, 5 Dec 2023 09:11:17 +0000 (UTC)
-Date: Tue, 5 Dec 2023 18:11:02 +0900
-From: asmadeus@codewreck.org
-To: JP Kobryn <inwardvessel@gmail.com>
-Cc: ericvh@kernel.org, lucho@ionkov.net, linux_oss@crudebyte.com,
-	rostedt@goodmis.org, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, v9fs@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	kernel-team@meta.com
+	dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b="ipQCrbT6"
+Received: from kylie.crudebyte.com (kylie.crudebyte.com [5.189.157.229])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 587979A;
+	Tue,  5 Dec 2023 03:42:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=crudebyte.com; s=kylie; h=Content-Type:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Content-ID:Content-Description;
+	bh=zwVfOTnPEwMgV+Q6MmlQtNUwKyYyS/fNwYtgjSme1Lg=; b=ipQCrbT6+r4M4gb9FBhdBPne78
+	+9Befd+d/sTIdIwcuYCPdQNiDNa/t93zfRQHdj6mdyL/9Nz38bFxxsZ1kwuoqW+zTFnyacw0yDUMZ
+	UgwcpQcYKUib7a35fJdtQTRkRtljJnkWtVfd3ZUMJLOBSgl1xl9E2Zg8f82RlCJiORmsLu3iFmFYZ
+	Z78vXT0qoaX4z7y4Orn5eTQEszzfQBKgHyGgjU/ww9Tr+3jofAD6gDOYhXRSNTIzpyyNNHcRZHK/I
+	/K4Gkfd9GL+1IYz6CzFxdMMgy/+rM93NDbRLH4vNOY/TezY8a9N9HYXDFCQmvAYxNBU9pRqfkrMEm
+	794jlWl8me9VrvL93e3oGCc3a+hcp6eN3mr9DS9O1HxSc6X9ADYFtpQjhx73OmXCl6isgcZs/jmfJ
+	a4xyk/ZfrE8EEhGwu+oeA7+VnF44hqWewQrnOzfH60RtHNcL3fmQTRI52BRxv8Hdn4uGhkX17IYPR
+	9sVByoButV6zZe3NoKlJWk7G+gYtxuev0xROyNQM6czLB6iEjyJocVG/eSowlc8K1Ef0H0e674fV9
+	ymCqhmNPl1npLw/xxBclISKhEVXv5lRislNBrw9s334umXEKETQw6mBhsR8ys17PYe04SkemZwDeY
+	bJT7yzNPpAJgZ8CmGnzBTeVemzPWYz6V/C8DFskOo=;
+From: Christian Schoenebeck <linux_oss@crudebyte.com>
+To: ericvh@kernel.org, lucho@ionkov.net, asmadeus@codewreck.org,
+ rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ JP Kobryn <inwardvessel@gmail.com>
+Cc: v9fs@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, kernel-team@meta.com
 Subject: Re: [PATCH v2] 9p: prevent read overrun in protocol dump tracepoint
-Message-ID: <ZW7pJvNLtObyglZW@codewreck.org>
+Date: Tue, 05 Dec 2023 12:41:49 +0100
+Message-ID: <8864880.fcQpaHM20G@silver>
+In-Reply-To: <20231204202321.22730-1-inwardvessel@gmail.com>
 References: <20231204202321.22730-1-inwardvessel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -48,11 +34,10 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20231204202321.22730-1-inwardvessel@gmail.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-JP Kobryn wrote on Mon, Dec 04, 2023 at 12:23:20PM -0800:
+On Monday, December 4, 2023 9:23:20 PM CET JP Kobryn wrote:
 > An out of bounds read can occur within the tracepoint 9p_protocol_dump. In
 > the fast assign, there is a memcpy that uses a constant size of 32 (macro
 > named P9_PROTO_DUMP_SZ). When the copy is invoked, the source buffer is not
@@ -108,9 +93,43 @@ JP Kobryn wrote on Mon, Dec 04, 2023 at 12:23:20PM -0800:
 > }
 > 
 > Signed-off-by: JP Kobryn <inwardvessel@gmail.com>
+> ---
 
-Thanks, I've updated the patch locally; will push to -next after testing
-later tonight and to Linus next week.
+Reviewed-by: Christian Schoenebeck <linux_oss@crudebyte.com>
 
--- 
-Dominique Martinet | Asmadeus
+>  include/trace/events/9p.h | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/trace/events/9p.h b/include/trace/events/9p.h
+> index 4dfa6d7f83ba..cd104a1343e2 100644
+> --- a/include/trace/events/9p.h
+> +++ b/include/trace/events/9p.h
+> @@ -178,18 +178,21 @@ TRACE_EVENT(9p_protocol_dump,
+>  		    __field(	void *,		clnt				)
+>  		    __field(	__u8,		type				)
+>  		    __field(	__u16,		tag				)
+> -		    __array(	unsigned char,	line,	P9_PROTO_DUMP_SZ	)
+> +		    __dynamic_array(unsigned char, line,
+> +				min_t(size_t, pdu->capacity, P9_PROTO_DUMP_SZ))
+>  		    ),
+>  
+>  	    TP_fast_assign(
+>  		    __entry->clnt   =  clnt;
+>  		    __entry->type   =  pdu->id;
+>  		    __entry->tag    =  pdu->tag;
+> -		    memcpy(__entry->line, pdu->sdata, P9_PROTO_DUMP_SZ);
+> +		    memcpy(__get_dynamic_array(line), pdu->sdata,
+> +				__get_dynamic_array_len(line));
+>  		    ),
+> -	    TP_printk("clnt %lu %s(tag = %d)\n%.3x: %16ph\n%.3x: %16ph\n",
+> +	    TP_printk("clnt %lu %s(tag = %d)\n%*ph\n",
+>  		      (unsigned long)__entry->clnt, show_9p_op(__entry->type),
+> -		      __entry->tag, 0, __entry->line, 16, __entry->line + 16)
+> +		      __entry->tag, __get_dynamic_array_len(line),
+> +		      __get_dynamic_array(line))
+>   );
+>  
+>  
+> 
+
+
