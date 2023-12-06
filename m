@@ -1,155 +1,131 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="FKeU3LMZ"
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2a07:de40:b251:101:10:150:64:1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3C24109;
-	Wed,  6 Dec 2023 01:56:03 -0800 (PST)
-Received: from relay2.suse.de (unknown [149.44.160.134])
-	by smtp-out1.suse.de (Postfix) with ESMTP id 42E7E21F3E;
-	Wed,  6 Dec 2023 09:55:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1701856557; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=38oqPwid60kS6euzFAYt5HgeBK7Z4xKSWiLADq6sPMY=;
-	b=FKeU3LMZDT6YmQll0fLvK+UGD/SN8T7VGmFqsMDJZ9gc7NNDpRzn0VjFzbOasPnTTTwXm8
-	xPVqFHyCbTZoR93GW8VwteHKafJJLTvb8OSsW9IsNoI+X0Eqqx1X8Q9Bl9H/XbIz9boQoX
-	ZDeYZXSjELH22O3pRsNY1WMUbqC3LoU=
-Received: from suse.cz (unknown [10.100.201.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by relay2.suse.de (Postfix) with ESMTPS id 2839E2C153;
-	Wed,  6 Dec 2023 09:55:51 +0000 (UTC)
-Date: Wed, 6 Dec 2023 10:55:51 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Joel Granados <j.granados@samsung.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, willy@infradead.org,
-	josh@joshtriplett.org, Kees Cook <keescook@chromium.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Iurii Zaikin <yzaikin@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Will Drewry <wad@chromium.org>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Balbir Singh <bsingharora@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH 07/10] printk: Remove the now superfluous sentinel
- elements from ctl_table array
-Message-ID: <ZXBFJ3G9ERfI55Sc@alley>
-References: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-0-e4ce1388dfa0@samsung.com>
- <20231107-jag-sysctl_remove_empty_elem_kernel-v1-7-e4ce1388dfa0@samsung.com>
- <CGME20231128140754eucas1p2cf2c17554954e94d0dc14967e1f5e750@eucas1p2.samsung.com>
- <ZWX0L4lV8TWOgcpv@alley>
- <20231204085628.pf7yxppacf4pm2cv@localhost>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aWHzB67H"
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DF18DC
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  6 Dec 2023 03:37:57 -0800 (PST)
+Received: by mail-wr1-x42c.google.com with SMTP id ffacd0b85a97d-3333a3a599fso355734f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 06 Dec 2023 03:37:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1701862675; x=1702467475; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=UsKZRR7fb35TZGm9xzU+NNHL9tg4Q2nzB0Mt74LhSX4=;
+        b=aWHzB67HWlNZRZogXA9OZ7sLsBjI5xY+Gz2o2kO+y0Au6TJfeBL+XAwHHGnf4Te5Lk
+         iIivZlFDDlrKu5llEmWU/g/K7v7H3YkMhDnFR1VTd9inPqGVE0YvVeWhxTrtvFYjy9v4
+         IZ1zTjk2+f3K5glsXDNGf+Q1HBncRzdXdxv4nAiLjN5pUZnpP1GDFZLwD+6Vc9KPTRgP
+         pTUjHj/dpBXmT1VxfxH5VhI4AOZiwfKS8SWgyOrX2D5eifY+9gYRxHkYje/0s+hzUztF
+         gj30LtmbBKzdDcwpQCiO6IDXhecPdHCdpmgRqjMCJFCsWo84LgGnotELeDMDBsAxmkbN
+         te3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701862675; x=1702467475;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UsKZRR7fb35TZGm9xzU+NNHL9tg4Q2nzB0Mt74LhSX4=;
+        b=PoDk2abuvF1Hi6CMsimg2RJCM3HZ55cZmMpNO071QxyN7wDBb7Qdi5SvQc+tVxgED7
+         XpoXmHN25TVVxD8DYqZO3VZYGzOMR5f+x1jRugeFRsonTzb2sQSf6GGQDVpIN23zl8Q/
+         3RncA13PLBRPryjYr06I6rZ/It5Qp4RYgSTmtEawj1wUCXqZvmiJevxWyeNMaoYzbi0M
+         vAP/KrhwqQmrN6ltnbqsZ9QB2X5e0rHDK/2zm8ciKlzJOmF2JLFYLEI4qZWiJaPP3mvZ
+         dl8x5XXc0KEgO42BfH5/QfBdOyPR19o+5G+jfdHfMaoYrtVY//CCnQkeGmfrws3C8GUK
+         y6pw==
+X-Gm-Message-State: AOJu0Yytv1VmHT+qlXJiKkGvYlrx5sKab0md6oZ1oNjpwNJeYbG52oQV
+	D1EMVyCPD/FK0sEJpcASse5M+w==
+X-Google-Smtp-Source: AGHT+IGtAUsYbhUVYEL0MZxwr4M0sLnELDMNsFle3FJdHz2OEGubCuMsgvDyo+NQ/Uio0wU7tRjUGg==
+X-Received: by 2002:a05:600c:4749:b0:40b:5e26:2379 with SMTP id w9-20020a05600c474900b0040b5e262379mr1281084wmo.42.1701862675544;
+        Wed, 06 Dec 2023 03:37:55 -0800 (PST)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id bh6-20020a05600c3d0600b0040b54335d57sm17055244wmb.17.2023.12.06.03.37.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Dec 2023 03:37:55 -0800 (PST)
+Date: Wed, 6 Dec 2023 11:37:53 +0000
+From: Daniel Thompson <daniel.thompson@linaro.org>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Yuran Pereira <yuran.pereira@hotmail.com>,
+	kgdb-bugreport@lists.sourceforge.net,
+	linux-trace-kernel@vger.kernel.org, jason.wessel@windriver.com,
+	rostedt@goodmis.org, mhiramat@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH 2/2] trace: kdb: Replace simple_strtoul with kstrtoul in
+ kdb_ftdump
+Message-ID: <20231206113753.GB81045@aspen.lan>
+References: <GV1PR10MB65635561FB160078C3744B5FE8B4A@GV1PR10MB6563.EURPRD10.PROD.OUTLOOK.COM>
+ <GV1PR10MB6563DC208657E86715361E94E8B4A@GV1PR10MB6563.EURPRD10.PROD.OUTLOOK.COM>
+ <CAD=FV=XpK0T-oPi2Q6-9jELFseSsvgkFtRuXP1LXK6PbV_MwCg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231204085628.pf7yxppacf4pm2cv@localhost>
-X-Spam-Score: 22.12
-X-Spamd-Result: default: False [22.12 / 50.00];
-	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[149.44.160.134:from];
-	 RDNS_NONE(1.00)[];
-	 TO_DN_SOME(0.00)[];
-	 RWL_MAILSPIKE_GOOD(0.00)[149.44.160.134:from];
-	 HFILTER_HELO_IP_A(1.00)[relay2.suse.de];
-	 HFILTER_HELO_NORES_A_OR_MX(0.30)[relay2.suse.de];
-	 MX_GOOD(-0.01)[];
-	 RCVD_NO_TLS_LAST(0.10)[];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 R_DKIM_NA(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FORGED_RECIPIENTS(2.00)[m:mgorman@suse.de,s:mgorman@imap.suse.de];
-	 BAYES_HAM(-3.00)[100.00%];
-	 RDNS_DNSFAIL(0.00)[];
-	 ARC_NA(0.00)[];
-	 R_SPF_FAIL(1.00)[-all];
-	 FROM_HAS_DN(0.00)[];
-	 DMARC_POLICY_QUARANTINE(1.50)[suse.com : No valid SPF, No valid DKIM,quarantine];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 NEURAL_SPAM_SHORT(2.12)[0.707];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 TO_MATCH_ENVRCPT_SOME(0.00)[];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 VIOLATED_DIRECT_SPF(3.50)[];
-	 NEURAL_SPAM_LONG(3.50)[1.000];
-	 RCPT_COUNT_TWELVE(0.00)[46];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 FREEMAIL_CC(0.00)[kernel.org,infradead.org,joshtriplett.org,chromium.org,xmission.com,google.com,goodmis.org,arm.com,linutronix.de,amacapital.net,redhat.com,linaro.org,suse.de,linux.ibm.com,intel.com,davemloft.net,gmail.com,iogearbox.net,linux.dev,vger.kernel.org,lists.infradead.org];
-	 HFILTER_HOSTNAME_UNKNOWN(2.50)[];
-	 SUSPICIOUS_RECIPS(1.50)[];
-	 RCVD_COUNT_TWO(0.00)[2]
-X-Spamd-Bar: ++++++++++++++++++++++
-X-Rspamd-Server: rspamd1
-Authentication-Results: smtp-out1.suse.de;
-	dkim=none;
-	dmarc=fail reason="No valid SPF, No valid DKIM" header.from=suse.com (policy=quarantine);
-	spf=fail (smtp-out1.suse.de: domain of pmladek@suse.com does not designate 149.44.160.134 as permitted sender) smtp.mailfrom=pmladek@suse.com
-X-Rspamd-Queue-Id: 42E7E21F3E
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD=FV=XpK0T-oPi2Q6-9jELFseSsvgkFtRuXP1LXK6PbV_MwCg@mail.gmail.com>
 
-On Mon 2023-12-04 09:56:28, Joel Granados wrote:
-> Hey Petr
-> 
-> I missed this message somehow....
-> 
-> On Tue, Nov 28, 2023 at 03:07:43PM +0100, Petr Mladek wrote:
-> > On Tue 2023-11-07 14:45:07, Joel Granados via B4 Relay wrote:
-> > > From: Joel Granados <j.granados@samsung.com>
-> > > 
-> > > This commit comes at the tail end of a greater effort to remove the
-> > > empty elements at the end of the ctl_table arrays (sentinels) which
-> > > will reduce the overall build time size of the kernel and run time
-> > > memory bloat by ~64 bytes per sentinel (further information Link :
-> > > https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
-> > > 
-> > > rm sentinel element from printk_sysctls
-> > > 
-> > > Signed-off-by: Joel Granados <j.granados@samsung.com>
-> > 
-> > I am a bit sceptical if the size and time reduction is worth the
-> > effort. I feel that this change makes the access a bit less secure.
-> In what way "less secure"? Can you expand on that?
-> 
-> Notice that if you pass a pointer to the register functions, you will
-> get a warning/error on compilation.
+On Tue, Dec 05, 2023 at 01:41:57PM -0800, Doug Anderson wrote:
+> Hi,
+>
+> On Sun, Nov 19, 2023 at 4:10 PM Yuran Pereira <yuran.pereira@hotmail.com> wrote:
+> >
+> > The function simple_strtoul performs no error checking in scenarios
+> > where the input value overflows the intended output variable.
+> > This results in this function successfully returning, even when the
+> > output does not match the input string (aka the function returns
+> > successfully even when the result is wrong).
+> >
+> > Or as it was mentioned [1], "...simple_strtol(), simple_strtoll(),
+> > simple_strtoul(), and simple_strtoull() functions explicitly ignore
+> > overflows, which may lead to unexpected results in callers."
+> > Hence, the use of those functions is discouraged.
+> >
+> > This patch replaces all uses of the simple_strtoul with the safer
+> > alternatives kstrtoint and kstrtol.
+> >
+> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#simple-strtol-simple-strtoll-simple-strtoul-simple-strtoull
+> >
+> > Signed-off-by: Yuran Pereira <yuran.pereira@hotmail.com>
+> > ---
+> >  kernel/trace/trace_kdb.c | 14 ++++++--------
+> >  1 file changed, 6 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
+> > index 59857a1ee44c..3891f885e4a6 100644
+> > --- a/kernel/trace/trace_kdb.c
+> > +++ b/kernel/trace/trace_kdb.c
+> > @@ -96,23 +96,21 @@ static int kdb_ftdump(int argc, const char **argv)
+> >  {
+> >         int skip_entries = 0;
+> >         long cpu_file;
+> > -       char *cp;
+> > +       int err;
+> >         int cnt;
+> >         int cpu;
+> >
+> >         if (argc > 2)
+> >                 return KDB_ARGCOUNT;
+> >
+> > -       if (argc) {
+> > -               skip_entries = simple_strtol(argv[1], &cp, 0);
+> > -               if (*cp)
+> > +       if (argc)
+> > +               if (kstrtoint(argv[1], 0, &skip_entries))
+> >                         skip_entries = 0;
+> > -       }
+>
+> Similar nit about braces as in patch #1. tl;dr is change the above to:
+>
+> if (argc && kstrtoint(argv[1], 0, &skip_entries))
+>   skip_entries = 0;
 
-I have vague memories that some arrays were not static or the length
-has been somehow manipulated. But I might be wrong.
+Surely that should be:
 
-You are right that it should be safe with the static arrays.
-And the NULL sentinel might be more error-prone after all.
+if (...)
+	return KDB_BADINT;
 
-Let's forget my mumbles.
+There seems little point switching to a "safer" API if we just ignore the
+errors it provides us.
 
-Best Regards,
-Petr
+
+Daniel.
