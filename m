@@ -1,311 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="FKeU3LMZ"
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2a07:de40:b251:101:10:150:64:1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3C24109;
+	Wed,  6 Dec 2023 01:56:03 -0800 (PST)
+Received: from relay2.suse.de (unknown [149.44.160.134])
+	by smtp-out1.suse.de (Postfix) with ESMTP id 42E7E21F3E;
+	Wed,  6 Dec 2023 09:55:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1701856557; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=38oqPwid60kS6euzFAYt5HgeBK7Z4xKSWiLADq6sPMY=;
+	b=FKeU3LMZDT6YmQll0fLvK+UGD/SN8T7VGmFqsMDJZ9gc7NNDpRzn0VjFzbOasPnTTTwXm8
+	xPVqFHyCbTZoR93GW8VwteHKafJJLTvb8OSsW9IsNoI+X0Eqqx1X8Q9Bl9H/XbIz9boQoX
+	ZDeYZXSjELH22O3pRsNY1WMUbqC3LoU=
+Received: from suse.cz (unknown [10.100.201.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B2853B8
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  6 Dec 2023 02:18:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E18FEC433C8;
-	Wed,  6 Dec 2023 02:18:09 +0000 (UTC)
-Date: Tue, 5 Dec 2023 21:18:36 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- dmaluka@google.com, Sean Paul <seanpaul@chromium.org>, Arun Easi  
- <aeasi@marvell.com>, Daniel Wagner <dwagner@suse.de>
-Subject: [PATCH v2] tracing: Allow creating instances with specified system
- events
-Message-ID: <20231205211836.458fc57d@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by relay2.suse.de (Postfix) with ESMTPS id 2839E2C153;
+	Wed,  6 Dec 2023 09:55:51 +0000 (UTC)
+Date: Wed, 6 Dec 2023 10:55:51 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Joel Granados <j.granados@samsung.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, willy@infradead.org,
+	josh@joshtriplett.org, Kees Cook <keescook@chromium.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Iurii Zaikin <yzaikin@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
+	Andy Lutomirski <luto@amacapital.net>,
+	Will Drewry <wad@chromium.org>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Balbir Singh <bsingharora@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH 07/10] printk: Remove the now superfluous sentinel
+ elements from ctl_table array
+Message-ID: <ZXBFJ3G9ERfI55Sc@alley>
+References: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-0-e4ce1388dfa0@samsung.com>
+ <20231107-jag-sysctl_remove_empty_elem_kernel-v1-7-e4ce1388dfa0@samsung.com>
+ <CGME20231128140754eucas1p2cf2c17554954e94d0dc14967e1f5e750@eucas1p2.samsung.com>
+ <ZWX0L4lV8TWOgcpv@alley>
+ <20231204085628.pf7yxppacf4pm2cv@localhost>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231204085628.pf7yxppacf4pm2cv@localhost>
+X-Spam-Score: 22.12
+X-Spamd-Result: default: False [22.12 / 50.00];
+	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[149.44.160.134:from];
+	 RDNS_NONE(1.00)[];
+	 TO_DN_SOME(0.00)[];
+	 RWL_MAILSPIKE_GOOD(0.00)[149.44.160.134:from];
+	 HFILTER_HELO_IP_A(1.00)[relay2.suse.de];
+	 HFILTER_HELO_NORES_A_OR_MX(0.30)[relay2.suse.de];
+	 MX_GOOD(-0.01)[];
+	 RCVD_NO_TLS_LAST(0.10)[];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 R_DKIM_NA(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FORGED_RECIPIENTS(2.00)[m:mgorman@suse.de,s:mgorman@imap.suse.de];
+	 BAYES_HAM(-3.00)[100.00%];
+	 RDNS_DNSFAIL(0.00)[];
+	 ARC_NA(0.00)[];
+	 R_SPF_FAIL(1.00)[-all];
+	 FROM_HAS_DN(0.00)[];
+	 DMARC_POLICY_QUARANTINE(1.50)[suse.com : No valid SPF, No valid DKIM,quarantine];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 NEURAL_SPAM_SHORT(2.12)[0.707];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 TO_MATCH_ENVRCPT_SOME(0.00)[];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 VIOLATED_DIRECT_SPF(3.50)[];
+	 NEURAL_SPAM_LONG(3.50)[1.000];
+	 RCPT_COUNT_TWELVE(0.00)[46];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[kernel.org,infradead.org,joshtriplett.org,chromium.org,xmission.com,google.com,goodmis.org,arm.com,linutronix.de,amacapital.net,redhat.com,linaro.org,suse.de,linux.ibm.com,intel.com,davemloft.net,gmail.com,iogearbox.net,linux.dev,vger.kernel.org,lists.infradead.org];
+	 HFILTER_HOSTNAME_UNKNOWN(2.50)[];
+	 SUSPICIOUS_RECIPS(1.50)[];
+	 RCVD_COUNT_TWO(0.00)[2]
+X-Spamd-Bar: ++++++++++++++++++++++
+X-Rspamd-Server: rspamd1
+Authentication-Results: smtp-out1.suse.de;
+	dkim=none;
+	dmarc=fail reason="No valid SPF, No valid DKIM" header.from=suse.com (policy=quarantine);
+	spf=fail (smtp-out1.suse.de: domain of pmladek@suse.com does not designate 149.44.160.134 as permitted sender) smtp.mailfrom=pmladek@suse.com
+X-Rspamd-Queue-Id: 42E7E21F3E
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Mon 2023-12-04 09:56:28, Joel Granados wrote:
+> Hey Petr
+> 
+> I missed this message somehow....
+> 
+> On Tue, Nov 28, 2023 at 03:07:43PM +0100, Petr Mladek wrote:
+> > On Tue 2023-11-07 14:45:07, Joel Granados via B4 Relay wrote:
+> > > From: Joel Granados <j.granados@samsung.com>
+> > > 
+> > > This commit comes at the tail end of a greater effort to remove the
+> > > empty elements at the end of the ctl_table arrays (sentinels) which
+> > > will reduce the overall build time size of the kernel and run time
+> > > memory bloat by ~64 bytes per sentinel (further information Link :
+> > > https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
+> > > 
+> > > rm sentinel element from printk_sysctls
+> > > 
+> > > Signed-off-by: Joel Granados <j.granados@samsung.com>
+> > 
+> > I am a bit sceptical if the size and time reduction is worth the
+> > effort. I feel that this change makes the access a bit less secure.
+> In what way "less secure"? Can you expand on that?
+> 
+> Notice that if you pass a pointer to the register functions, you will
+> get a warning/error on compilation.
 
-A trace instance may only need to enable specific events. As the eventfs
-directory of an instance currently creates all events which adds overhead,
-allow internal instances to be created with just the events in systems
-that they care about. This currently only deals with systems and not
-individual events, but this should bring down the overhead of creating
-instances for specific use cases quite bit.
+I have vague memories that some arrays were not static or the length
+has been somehow manipulated. But I might be wrong.
 
-The trace_array_get_by_name() now has another parameter "systems". This
-parameter is a const string pointer of a comma/space separated list of
-event systems that should be created by the trace_array. (Note if the
-trace_array already exists, this parameter is ignored).
+You are right that it should be safe with the static arrays.
+And the NULL sentinel might be more error-prone after all.
 
-The list of systems is saved and if a module is loaded, its events will
-not be added unless the system for those events also match the systems
-string.
+Let's forget my mumbles.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v1: https://lore.kernel.org/all/20231128122117.2276f4a7@gandalf.local.home/
-
-- Made it so that dynamic events need to be specified in order to add
-  to the instance. They are no longer automatically allowed.
-
- drivers/scsi/qla2xxx/qla_os.c       |  2 +-
- include/linux/trace.h               |  4 +--
- kernel/trace/trace.c                | 23 +++++++++++---
- kernel/trace/trace.h                |  1 +
- kernel/trace/trace_boot.c           |  2 +-
- kernel/trace/trace_events.c         | 48 +++++++++++++++++++++++++++--
- samples/ftrace/sample-trace-array.c |  2 +-
- 7 files changed, 70 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 03348f605c2e..dd674378f2f3 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -2889,7 +2889,7 @@ static void qla2x00_iocb_work_fn(struct work_struct *work)
- static void
- qla_trace_init(void)
- {
--	qla_trc_array = trace_array_get_by_name("qla2xxx");
-+	qla_trc_array = trace_array_get_by_name("qla2xxx", NULL);
- 	if (!qla_trc_array) {
- 		ql_log(ql_log_fatal, NULL, 0x0001,
- 		       "Unable to create qla2xxx trace instance, instance logging will be disabled.\n");
-diff --git a/include/linux/trace.h b/include/linux/trace.h
-index 2a70a447184c..fdcd76b7be83 100644
---- a/include/linux/trace.h
-+++ b/include/linux/trace.h
-@@ -51,7 +51,7 @@ int trace_array_printk(struct trace_array *tr, unsigned long ip,
- 		       const char *fmt, ...);
- int trace_array_init_printk(struct trace_array *tr);
- void trace_array_put(struct trace_array *tr);
--struct trace_array *trace_array_get_by_name(const char *name);
-+struct trace_array *trace_array_get_by_name(const char *name, const char *systems);
- int trace_array_destroy(struct trace_array *tr);
- 
- /* For osnoise tracer */
-@@ -84,7 +84,7 @@ static inline int trace_array_init_printk(struct trace_array *tr)
- static inline void trace_array_put(struct trace_array *tr)
- {
- }
--static inline struct trace_array *trace_array_get_by_name(const char *name)
-+static inline struct trace_array *trace_array_get_by_name(const char *name, const char *systems)
- {
- 	return NULL;
- }
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index fbcd3bafb93e..31fb03d105e9 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -9480,7 +9480,8 @@ static int trace_array_create_dir(struct trace_array *tr)
- 	return ret;
- }
- 
--static struct trace_array *trace_array_create(const char *name)
-+static struct trace_array *
-+trace_array_create_systems(const char *name, const char *systems)
- {
- 	struct trace_array *tr;
- 	int ret;
-@@ -9500,6 +9501,12 @@ static struct trace_array *trace_array_create(const char *name)
- 	if (!zalloc_cpumask_var(&tr->pipe_cpumask, GFP_KERNEL))
- 		goto out_free_tr;
- 
-+	if (systems) {
-+		tr->system_names = kstrdup_const(systems, GFP_KERNEL);
-+		if (!tr->system_names)
-+			goto out_free_tr;
-+	}
-+
- 	tr->trace_flags = global_trace.trace_flags & ~ZEROED_TRACE_FLAGS;
- 
- 	cpumask_copy(tr->tracing_cpumask, cpu_all_mask);
-@@ -9546,12 +9553,18 @@ static struct trace_array *trace_array_create(const char *name)
- 	free_trace_buffers(tr);
- 	free_cpumask_var(tr->pipe_cpumask);
- 	free_cpumask_var(tr->tracing_cpumask);
-+	kfree_const(tr->system_names);
- 	kfree(tr->name);
- 	kfree(tr);
- 
- 	return ERR_PTR(ret);
- }
- 
-+static struct trace_array *trace_array_create(const char *name)
-+{
-+	return trace_array_create_systems(name, NULL);
-+}
-+
- static int instance_mkdir(const char *name)
- {
- 	struct trace_array *tr;
-@@ -9577,6 +9590,7 @@ static int instance_mkdir(const char *name)
- /**
-  * trace_array_get_by_name - Create/Lookup a trace array, given its name.
-  * @name: The name of the trace array to be looked up/created.
-+ * @system: A list of systems to create event directories for (NULL for all)
-  *
-  * Returns pointer to trace array with given name.
-  * NULL, if it cannot be created.
-@@ -9590,7 +9604,7 @@ static int instance_mkdir(const char *name)
-  * trace_array_put() is called, user space can not delete it.
-  *
-  */
--struct trace_array *trace_array_get_by_name(const char *name)
-+struct trace_array *trace_array_get_by_name(const char *name, const char *systems)
- {
- 	struct trace_array *tr;
- 
-@@ -9602,7 +9616,7 @@ struct trace_array *trace_array_get_by_name(const char *name)
- 			goto out_unlock;
- 	}
- 
--	tr = trace_array_create(name);
-+	tr = trace_array_create_systems(name, systems);
- 
- 	if (IS_ERR(tr))
- 		tr = NULL;
-@@ -9649,6 +9663,7 @@ static int __remove_instance(struct trace_array *tr)
- 
- 	free_cpumask_var(tr->pipe_cpumask);
- 	free_cpumask_var(tr->tracing_cpumask);
-+	kfree_const(tr->system_names);
- 	kfree(tr->name);
- 	kfree(tr);
- 
-@@ -10367,7 +10382,7 @@ __init static void enable_instances(void)
- 		if (IS_ENABLED(CONFIG_TRACER_MAX_TRACE))
- 			do_allocate_snapshot(tok);
- 
--		tr = trace_array_get_by_name(tok);
-+		tr = trace_array_get_by_name(tok, NULL);
- 		if (!tr) {
- 			pr_warn("Failed to create instance buffer %s\n", curr_str);
- 			continue;
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index b7f4ea25a194..97b01dfd7070 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -377,6 +377,7 @@ struct trace_array {
- 	unsigned char		trace_flags_index[TRACE_FLAGS_MAX_SIZE];
- 	unsigned int		flags;
- 	raw_spinlock_t		start_lock;
-+	const char		*system_names;
- 	struct list_head	err_log;
- 	struct dentry		*dir;
- 	struct dentry		*options;
-diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-index 7ccc7a8e155b..dbe29b4c6a7a 100644
---- a/kernel/trace/trace_boot.c
-+++ b/kernel/trace/trace_boot.c
-@@ -633,7 +633,7 @@ trace_boot_init_instances(struct xbc_node *node)
- 		if (!p || *p == '\0')
- 			continue;
- 
--		tr = trace_array_get_by_name(p);
-+		tr = trace_array_get_by_name(p, NULL);
- 		if (!tr) {
- 			pr_err("Failed to get trace instance %s\n", p);
- 			continue;
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index f29e815ca5b2..b70d03818038 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -2896,6 +2896,27 @@ void trace_event_eval_update(struct trace_eval_map **map, int len)
- 	up_write(&trace_event_sem);
- }
- 
-+static bool event_in_systems(struct trace_event_call *call,
-+			     const char *systems)
-+{
-+	const char *system;
-+	const char *p;
-+
-+	if (!systems)
-+		return true;
-+
-+	system = call->class->system;
-+	p = strstr(systems, system);
-+	if (!p)
-+		return false;
-+
-+	if (p != systems && !isspace(*(p - 1)) && *(p - 1) != ',')
-+		return false;
-+
-+	p += strlen(system);
-+	return !*p || isspace(*p) || *p == ',';
-+}
-+
- static struct trace_event_file *
- trace_create_new_event(struct trace_event_call *call,
- 		       struct trace_array *tr)
-@@ -2905,9 +2926,12 @@ trace_create_new_event(struct trace_event_call *call,
- 	struct trace_event_file *file;
- 	unsigned int first;
- 
-+	if (!event_in_systems(call, tr->system_names))
-+		return NULL;
-+
- 	file = kmem_cache_alloc(file_cachep, GFP_TRACE);
- 	if (!file)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 
- 	pid_list = rcu_dereference_protected(tr->filtered_pids,
- 					     lockdep_is_held(&event_mutex));
-@@ -2972,8 +2996,17 @@ __trace_add_new_event(struct trace_event_call *call, struct trace_array *tr)
- 	struct trace_event_file *file;
- 
- 	file = trace_create_new_event(call, tr);
-+	/*
-+	 * trace_create_new_event() returns ERR_PTR(-ENOMEM) if failed
-+	 * allocation, or NULL if the event is not part of the tr->system_names.
-+	 * When the event is not part of the tr->system_names, return zero, not
-+	 * an error.
-+	 */
- 	if (!file)
--		return -ENOMEM;
-+		return 0;
-+
-+	if (IS_ERR(file))
-+		return PTR_ERR(file);
- 
- 	if (eventdir_initialized)
- 		return event_create_dir(tr->event_dir, file);
-@@ -3012,8 +3045,17 @@ __trace_early_add_new_event(struct trace_event_call *call,
- 	int ret;
- 
- 	file = trace_create_new_event(call, tr);
-+	/*
-+	 * trace_create_new_event() returns ERR_PTR(-ENOMEM) if failed
-+	 * allocation, or NULL if the event is not part of the tr->system_names.
-+	 * When the event is not part of the tr->system_names, return zero, not
-+	 * an error.
-+	 */
- 	if (!file)
--		return -ENOMEM;
-+		return 0;
-+
-+	if (IS_ERR(file))
-+		return PTR_ERR(file);
- 
- 	ret = event_define_fields(call);
- 	if (ret)
-diff --git a/samples/ftrace/sample-trace-array.c b/samples/ftrace/sample-trace-array.c
-index 6aba02a31c96..d0ee9001c7b3 100644
---- a/samples/ftrace/sample-trace-array.c
-+++ b/samples/ftrace/sample-trace-array.c
-@@ -105,7 +105,7 @@ static int __init sample_trace_array_init(void)
- 	 * NOTE: This function increments the reference counter
- 	 * associated with the trace array - "tr".
- 	 */
--	tr = trace_array_get_by_name("sample-instance");
-+	tr = trace_array_get_by_name("sample-instance", "sched,timer,kprobes");
- 
- 	if (!tr)
- 		return -1;
--- 
-2.42.0
-
+Best Regards,
+Petr
