@@ -1,131 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aWHzB67H"
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DF18DC
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  6 Dec 2023 03:37:57 -0800 (PST)
-Received: by mail-wr1-x42c.google.com with SMTP id ffacd0b85a97d-3333a3a599fso355734f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 06 Dec 2023 03:37:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701862675; x=1702467475; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=UsKZRR7fb35TZGm9xzU+NNHL9tg4Q2nzB0Mt74LhSX4=;
-        b=aWHzB67HWlNZRZogXA9OZ7sLsBjI5xY+Gz2o2kO+y0Au6TJfeBL+XAwHHGnf4Te5Lk
-         iIivZlFDDlrKu5llEmWU/g/K7v7H3YkMhDnFR1VTd9inPqGVE0YvVeWhxTrtvFYjy9v4
-         IZ1zTjk2+f3K5glsXDNGf+Q1HBncRzdXdxv4nAiLjN5pUZnpP1GDFZLwD+6Vc9KPTRgP
-         pTUjHj/dpBXmT1VxfxH5VhI4AOZiwfKS8SWgyOrX2D5eifY+9gYRxHkYje/0s+hzUztF
-         gj30LtmbBKzdDcwpQCiO6IDXhecPdHCdpmgRqjMCJFCsWo84LgGnotELeDMDBsAxmkbN
-         te3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701862675; x=1702467475;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UsKZRR7fb35TZGm9xzU+NNHL9tg4Q2nzB0Mt74LhSX4=;
-        b=PoDk2abuvF1Hi6CMsimg2RJCM3HZ55cZmMpNO071QxyN7wDBb7Qdi5SvQc+tVxgED7
-         XpoXmHN25TVVxD8DYqZO3VZYGzOMR5f+x1jRugeFRsonTzb2sQSf6GGQDVpIN23zl8Q/
-         3RncA13PLBRPryjYr06I6rZ/It5Qp4RYgSTmtEawj1wUCXqZvmiJevxWyeNMaoYzbi0M
-         vAP/KrhwqQmrN6ltnbqsZ9QB2X5e0rHDK/2zm8ciKlzJOmF2JLFYLEI4qZWiJaPP3mvZ
-         dl8x5XXc0KEgO42BfH5/QfBdOyPR19o+5G+jfdHfMaoYrtVY//CCnQkeGmfrws3C8GUK
-         y6pw==
-X-Gm-Message-State: AOJu0Yytv1VmHT+qlXJiKkGvYlrx5sKab0md6oZ1oNjpwNJeYbG52oQV
-	D1EMVyCPD/FK0sEJpcASse5M+w==
-X-Google-Smtp-Source: AGHT+IGtAUsYbhUVYEL0MZxwr4M0sLnELDMNsFle3FJdHz2OEGubCuMsgvDyo+NQ/Uio0wU7tRjUGg==
-X-Received: by 2002:a05:600c:4749:b0:40b:5e26:2379 with SMTP id w9-20020a05600c474900b0040b5e262379mr1281084wmo.42.1701862675544;
-        Wed, 06 Dec 2023 03:37:55 -0800 (PST)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id bh6-20020a05600c3d0600b0040b54335d57sm17055244wmb.17.2023.12.06.03.37.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Dec 2023 03:37:55 -0800 (PST)
-Date: Wed, 6 Dec 2023 11:37:53 +0000
-From: Daniel Thompson <daniel.thompson@linaro.org>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Yuran Pereira <yuran.pereira@hotmail.com>,
-	kgdb-bugreport@lists.sourceforge.net,
-	linux-trace-kernel@vger.kernel.org, jason.wessel@windriver.com,
-	rostedt@goodmis.org, mhiramat@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH 2/2] trace: kdb: Replace simple_strtoul with kstrtoul in
- kdb_ftdump
-Message-ID: <20231206113753.GB81045@aspen.lan>
-References: <GV1PR10MB65635561FB160078C3744B5FE8B4A@GV1PR10MB6563.EURPRD10.PROD.OUTLOOK.COM>
- <GV1PR10MB6563DC208657E86715361E94E8B4A@GV1PR10MB6563.EURPRD10.PROD.OUTLOOK.COM>
- <CAD=FV=XpK0T-oPi2Q6-9jELFseSsvgkFtRuXP1LXK6PbV_MwCg@mail.gmail.com>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E427154A9
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  6 Dec 2023 15:00:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FCF0C433C7;
+	Wed,  6 Dec 2023 15:00:23 +0000 (UTC)
+Date: Wed, 6 Dec 2023 10:00:50 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] ring-buffer: Test last update in 32bit version of
+ __rb_time_read()
+Message-ID: <20231206100050.3100b7bb@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=XpK0T-oPi2Q6-9jELFseSsvgkFtRuXP1LXK6PbV_MwCg@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Dec 05, 2023 at 01:41:57PM -0800, Doug Anderson wrote:
-> Hi,
->
-> On Sun, Nov 19, 2023 at 4:10 PM Yuran Pereira <yuran.pereira@hotmail.com> wrote:
-> >
-> > The function simple_strtoul performs no error checking in scenarios
-> > where the input value overflows the intended output variable.
-> > This results in this function successfully returning, even when the
-> > output does not match the input string (aka the function returns
-> > successfully even when the result is wrong).
-> >
-> > Or as it was mentioned [1], "...simple_strtol(), simple_strtoll(),
-> > simple_strtoul(), and simple_strtoull() functions explicitly ignore
-> > overflows, which may lead to unexpected results in callers."
-> > Hence, the use of those functions is discouraged.
-> >
-> > This patch replaces all uses of the simple_strtoul with the safer
-> > alternatives kstrtoint and kstrtol.
-> >
-> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#simple-strtol-simple-strtoll-simple-strtoul-simple-strtoull
-> >
-> > Signed-off-by: Yuran Pereira <yuran.pereira@hotmail.com>
-> > ---
-> >  kernel/trace/trace_kdb.c | 14 ++++++--------
-> >  1 file changed, 6 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
-> > index 59857a1ee44c..3891f885e4a6 100644
-> > --- a/kernel/trace/trace_kdb.c
-> > +++ b/kernel/trace/trace_kdb.c
-> > @@ -96,23 +96,21 @@ static int kdb_ftdump(int argc, const char **argv)
-> >  {
-> >         int skip_entries = 0;
-> >         long cpu_file;
-> > -       char *cp;
-> > +       int err;
-> >         int cnt;
-> >         int cpu;
-> >
-> >         if (argc > 2)
-> >                 return KDB_ARGCOUNT;
-> >
-> > -       if (argc) {
-> > -               skip_entries = simple_strtol(argv[1], &cp, 0);
-> > -               if (*cp)
-> > +       if (argc)
-> > +               if (kstrtoint(argv[1], 0, &skip_entries))
-> >                         skip_entries = 0;
-> > -       }
->
-> Similar nit about braces as in patch #1. tl;dr is change the above to:
->
-> if (argc && kstrtoint(argv[1], 0, &skip_entries))
->   skip_entries = 0;
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Surely that should be:
+Since 64 bit cmpxchg() is very expensive on 32bit architectures, the
+timestamp used by the ring buffer does some interesting tricks to be able
+to still have an atomic 64 bit number. It originally just used 60 bits and
+broke it up into two 32 bit words where the extra 2 bits were used for
+synchronization. But this was not enough for all use cases, and all 64
+bits were required.
 
-if (...)
-	return KDB_BADINT;
+The 32bit version of the ring buffer timestamp was then broken up into 3
+32bit words using the same counter trick. But one update was not done. The
+check to see if the read operation was done without interruption only
+checked the first two words and not last one (like it had before this
+update). Fix it by making sure all three updates happen without
+interruption by comparing the initial counter with the last updated
+counter.
 
-There seems little point switching to a "safer" API if we just ignore the
-errors it provides us.
+Cc: stable@vger.kernel.org
+Fixes: f03f2abce4f39 ("ring-buffer: Have 32 bit time stamps use all 64 bits")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index a6da2d765c78..8d2a4f00eca9 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -644,8 +644,8 @@ static inline bool __rb_time_read(rb_time_t *t, u64 *ret, unsigned long *cnt)
+ 
+ 	*cnt = rb_time_cnt(top);
+ 
+-	/* If top and bottom counts don't match, this interrupted a write */
+-	if (*cnt != rb_time_cnt(bottom))
++	/* If top and msb counts don't match, this interrupted a write */
++	if (*cnt != rb_time_cnt(msb))
+ 		return false;
+ 
+ 	/* The shift to msb will lose its cnt bits */
+-- 
+2.42.0
 
-Daniel.
