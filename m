@@ -1,486 +1,347 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="irr3zkl1"
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB5D9122;
-	Wed,  6 Dec 2023 20:31:21 -0800 (PST)
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B73AvCi030969;
-	Thu, 7 Dec 2023 04:31:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : date :
- subject : mime-version : content-type : content-transfer-encoding :
- message-id : to : cc; s=qcppdkim1;
- bh=RRYiRvg44kqJY0HeCJrELMFEXS2XOo1KP29GHVAPePs=;
- b=irr3zkl1aIzskFPutJDVuLgfPWQSVf0cs1mkW92sMvBe6ahXRxd/MSxkS6LLhlncruVb
- ungW/7BdTQDJrd7RzfVUTYzs6lAs03bBqoifqVXeKcZfJBg20WxzxTLO+yZVcAN2716a
- 47HJT/cnWbL+T6xVvS48YWbstQlq20sVIGTaJO2jLZOtVEDzoyyOUjUkWSKSWNWu9yzk
- /DHleSiC1Nc3AMUaZlSxW0bdZhDXgq36yy8koWrEdnDrtgkms6VOsaeoF6K92AlRbcUG
- uaFLdaGgpyDg12RbDtG8Wh58QyOMByx5G9ci11g1y9+AfdA5gEGjtxzEN2m5G4yGqcs/ lg== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3utynu0u25-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Dec 2023 04:31:13 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3B74VBiO002306
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 7 Dec 2023 04:31:11 GMT
-Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 6 Dec 2023 20:31:07 -0800
-From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Date: Thu, 7 Dec 2023 10:00:47 +0530
-Subject: [PATCH v8] bus: mhi: host: Add tracing support
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i+PGeRI6"
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7822D5B
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  7 Dec 2023 04:34:19 -0800 (PST)
+Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-548f853fc9eso1155290a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 07 Dec 2023 04:34:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1701952458; x=1702557258; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7nHFCSoykipQEmCj8hQwpCIFTC70cXf0WMwKnvHVHck=;
+        b=i+PGeRI6tTfibLXrYjQ6fCWPb6JMVQGLmNfjRBE2p4n/AxPe6glVVbKOu0C/xpqrF0
+         6yN+uxOarnVkG2Mv1M6QO0b3gGK+k51EPciqyYDv7V1jsBRiGkgpzguheEon70GD1ZA1
+         AFCiOoFD4J4fxEvyHTufTmY/Y9nJoxqMzFwG0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701952458; x=1702557258;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7nHFCSoykipQEmCj8hQwpCIFTC70cXf0WMwKnvHVHck=;
+        b=XKtwjkeBxMW3/JnFYPfhoBQHdQ58yEk53ybQ7MMpvGm2KdyCf09AANHjaQKafNVZWb
+         9XGL9eghibd3ZWFVyvbLOQGOMOeWhqGVsIqhY0F8W7vDmalPf6x0eiby987sx0orl6rE
+         4ITAfTra4KjgUOLe9ODcwGHRuTDOkWAUHL1Q/3m9EUxR8XlZArKBlLuknkIU3mMj0A/e
+         TILWeK9ck18I3nDmPTw6+m6aTz/oxtgJhO5hwchjd94PsEzIw5fEIMCyHiJQMo7M03fT
+         OmO/PAyxSfTF+JMnp3/NglFCOYMBRZE/hBwoVfMLSDmOoUisvGt/K7MJ/qqqyon+s1TQ
+         Qb5A==
+X-Gm-Message-State: AOJu0YyyDQgM6KLfWNhYW/LQd0hLmdwcdMBPAknRttyDnqkD3uvG9uli
+	lRXAlel/3/0fP2LceseZwLlxUA==
+X-Google-Smtp-Source: AGHT+IHo8BKhzAxDRvmTGLMczsRNke4hUfelHBwWA/IdI59sgCIIKmP3XLsQEpNN5e3aXTt/vGwMBA==
+X-Received: by 2002:a17:906:6b8f:b0:a19:d40a:d202 with SMTP id l15-20020a1709066b8f00b00a19d40ad202mr815443ejr.206.1701952458119;
+        Thu, 07 Dec 2023 04:34:18 -0800 (PST)
+Received: from google.com ([83.142.187.84])
+        by smtp.gmail.com with ESMTPSA id lo15-20020a170906fa0f00b009a19701e7b5sm774189ejb.96.2023.12.07.04.34.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Dec 2023 04:34:17 -0800 (PST)
+Date: Thu, 7 Dec 2023 13:34:12 +0100
+From: Dmytro Maluka <dmaluka@chromium.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Sean Paul <seanpaul@chromium.org>, Arun Easi <aeasi@marvell.com>,
+	Daniel Wagner <dwagner@suse.de>
+Subject: Re: [PATCH v2] tracing: Allow creating instances with specified
+ system events
+Message-ID: <ZXG7xAXkKvQkpaRn@google.com>
+References: <20231205211836.458fc57d@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20231207-ftrace_support-v8-1-7f62d4558555@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAHdKcWUC/33QTU7DMBAF4KtUXmNkj+2J3RX3QAg5/qFekAQnj
- UBV7s60mwYZmN2bp/kWc2FzqiXN7Hi4sJrWMpdxoGAfDiyc/PCWeImUGQhQUgjD81J9SK/zeZr
- GunC06KKWBqVyjI6mmnL5vIHPL5RPZV7G+nXzV3nd/kmtkksOykNWTmev3dPHuYQyhMcwvrMrt
- sIOkKoBgABM1qmQhBS9aQF1B2gaQBGQlbERnJS+0y2g/wc0AcEqpN45jbIFzA6ArgEMAanHLvr
- ko86/AHgHQOgGQAJcDwKNxugDtEC3B7ABOgJ8oPd7oQFt/xPYtu0bGXp6wDQCAAA=
-To: Manivannan Sadhasivam <mani@kernel.org>,
-        Steven Rostedt
-	<rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <mhi@lists.linux.dev>,
-        <linux-arm-msm@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <quic_vbadigan@quicinc.com>,
-        <quic_ramkri@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_skananth@quicinc.com>, <quic_parass@quicinc.com>,
-        "Krishna chaitanya
- chundru" <quic_krichai@quicinc.com>
-X-Mailer: b4 0.13-dev-83828
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1701923467; l=13234;
- i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
- bh=Yr3QcgWdbi49SF8VeleeS3NLuuhbhwig8Bkfv7hhz6k=;
- b=f5O5UrsufygVGUJPYWyy/q9H0cxfTCsDKtLxI0OQ0uCP0+KyuvKZ1wRHX9tyUFFBy7HkZ78b1
- 76J1AvVQJ93CYm/qJc2lFjmD5ZDHlkqpd8hduB8VvYHGV18JFPIpNdu
-X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: DVzWbtffI8GerOO0QQgbAWpKE0yveKWb
-X-Proofpoint-ORIG-GUID: DVzWbtffI8GerOO0QQgbAWpKE0yveKWb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-07_01,2023-12-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- clxscore=1015 priorityscore=1501 lowpriorityscore=0 bulkscore=0
- phishscore=0 malwarescore=0 spamscore=0 impostorscore=0 suspectscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2312070035
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231205211836.458fc57d@gandalf.local.home>
 
-This change adds ftrace support for following functions which
-helps in debugging the issues when there is Channel state & MHI
-state change and also when we receive data and control events:
-1. mhi_intvec_mhi_states
-2. mhi_process_data_event_ring
-3. mhi_process_ctrl_ev_ring
-4. mhi_gen_tre
-5. mhi_update_channel_state
-6. mhi_tryset_pm_state
-7. mhi_pm_st_worker
+On Tue, Dec 05, 2023 at 09:18:36PM -0500, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> A trace instance may only need to enable specific events. As the eventfs
+> directory of an instance currently creates all events which adds overhead,
+> allow internal instances to be created with just the events in systems
+> that they care about. This currently only deals with systems and not
+> individual events, but this should bring down the overhead of creating
+> instances for specific use cases quite bit.
+> 
+> The trace_array_get_by_name() now has another parameter "systems". This
+> parameter is a const string pointer of a comma/space separated list of
+> event systems that should be created by the trace_array. (Note if the
+> trace_array already exists, this parameter is ignored).
+> 
+> The list of systems is saved and if a module is loaded, its events will
+> not be added unless the system for those events also match the systems
+> string.
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
 
-Where ever the trace events are added, debug messages are removed.
+Tested-by: Dmytro Maluka <dmaluka@chromium.org>
 
-Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
----
-Changes in v8:
-- Pass the structure and derefernce the variables in TP_fast_assign as suggested by steve
-- Link to v7: https://lore.kernel.org/r/20231206-ftrace_support-v7-1-aca49a04268b@quicinc.com
-
-Changes in v7:
-- change log format as pointed by mani.
-- Link to v6: https://lore.kernel.org/r/20231204-ftrace_support-v6-1-9b206546dac2@quicinc.com
-
-Changes in v6:
-- use 'rp' directly as suggested by jeffrey.
-- Link to v5: https://lore.kernel.org/r/20231127-ftrace_support-v5-1-eb67daead4f1@quicinc.com
-
-Changes in v5:
-- Use DECLARE_EVENT_CLASS for multiple events as suggested by steve.
-- Instead of converting to u64 to print address, use %px to print the address to avoid
-- warnings in some platforms.
-- Link to v4: https://lore.kernel.org/r/20231111-ftrace_support-v4-1-c83602399461@quicinc.com
-
-Changes in v4:
-- Fix compilation issues in previous patch which happended due to rebasing.
-- In the defconfig FTRACE config is not enabled due to that the compilation issue is not
-- seen in my workspace.
-- Link to v3: https://lore.kernel.org/r/20231111-ftrace_support-v3-1-f358d2911a74@quicinc.com
-
-Changes in v3:
-- move trace header file from include/trace/events to drivers/bus/mhi/host/ so that
-- we can include driver header files.
-- Use macros directly in the trace events as suggested Jeffrey Hugo.
-- Reorder the structure in the events as suggested by steve to avoid holes in the buffer.
-- removed the mhi_to_physical function as this can give security issues.
-- removed macros to define strings as we can get those from driver headers.
-- Link to v2: https://lore.kernel.org/r/20231013-ftrace_support-v2-1-6e893ce010b5@quicinc.com
-
-Changes in v2:
-- Passing the raw state into the trace event and using  __print_symbolic() as suggested by bjorn.
-- Change mhi_pm_st_worker to mhi_pm_st_transition as suggested by bjorn.
-- Fixed the kernel test rebot issues.
-- Link to v1: https://lore.kernel.org/r/20231005-ftrace_support-v1-1-23a2f394fa49@quicinc.com
----
- drivers/bus/mhi/host/init.c  |   3 +
- drivers/bus/mhi/host/main.c  |  19 ++--
- drivers/bus/mhi/host/pm.c    |   7 +-
- drivers/bus/mhi/host/trace.h | 205 +++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 221 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
-index f78aefd2d7a3..6acb85f4c5f8 100644
---- a/drivers/bus/mhi/host/init.c
-+++ b/drivers/bus/mhi/host/init.c
-@@ -20,6 +20,9 @@
- #include <linux/wait.h>
- #include "internal.h"
- 
-+#define CREATE_TRACE_POINTS
-+#include "trace.h"
-+
- static DEFINE_IDA(mhi_controller_ida);
- 
- const char * const mhi_ee_str[MHI_EE_MAX] = {
-diff --git a/drivers/bus/mhi/host/main.c b/drivers/bus/mhi/host/main.c
-index dcf627b36e82..189f4786403e 100644
---- a/drivers/bus/mhi/host/main.c
-+++ b/drivers/bus/mhi/host/main.c
-@@ -15,6 +15,7 @@
- #include <linux/skbuff.h>
- #include <linux/slab.h>
- #include "internal.h"
-+#include "trace.h"
- 
- int __must_check mhi_read_reg(struct mhi_controller *mhi_cntrl,
- 			      void __iomem *base, u32 offset, u32 *out)
-@@ -491,11 +492,8 @@ irqreturn_t mhi_intvec_threaded_handler(int irq_number, void *priv)
- 
- 	state = mhi_get_mhi_state(mhi_cntrl);
- 	ee = mhi_get_exec_env(mhi_cntrl);
--	dev_dbg(dev, "local ee: %s state: %s device ee: %s state: %s\n",
--		TO_MHI_EXEC_STR(mhi_cntrl->ee),
--		mhi_state_str(mhi_cntrl->dev_state),
--		TO_MHI_EXEC_STR(ee), mhi_state_str(state));
- 
-+	trace_mhi_intvec_states(mhi_cntrl, ee, state);
- 	if (state == MHI_STATE_SYS_ERR) {
- 		dev_dbg(dev, "System error detected\n");
- 		pm_state = mhi_tryset_pm_state(mhi_cntrl,
-@@ -832,6 +830,8 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
- 	while (dev_rp != local_rp) {
- 		enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
- 
-+		trace_mhi_ctrl_event(mhi_cntrl, local_rp);
-+
- 		switch (type) {
- 		case MHI_PKT_TYPE_BW_REQ_EVENT:
- 		{
-@@ -997,6 +997,8 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
- 	while (dev_rp != local_rp && event_quota > 0) {
- 		enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
- 
-+		trace_mhi_data_event(mhi_cntrl, local_rp);
-+
- 		chan = MHI_TRE_GET_EV_CHID(local_rp);
- 
- 		WARN_ON(chan >= mhi_cntrl->max_chan);
-@@ -1235,6 +1237,7 @@ int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
- 	mhi_tre->dword[0] = MHI_TRE_DATA_DWORD0(info->len);
- 	mhi_tre->dword[1] = MHI_TRE_DATA_DWORD1(bei, eot, eob, chain);
- 
-+	trace_mhi_gen_tre(mhi_cntrl, mhi_chan, mhi_tre);
- 	/* increment WP */
- 	mhi_add_ring_element(mhi_cntrl, tre_ring);
- 	mhi_add_ring_element(mhi_cntrl, buf_ring);
-@@ -1327,9 +1330,7 @@ static int mhi_update_channel_state(struct mhi_controller *mhi_cntrl,
- 	enum mhi_cmd_type cmd = MHI_CMD_NOP;
- 	int ret;
- 
--	dev_dbg(dev, "%d: Updating channel state to: %s\n", mhi_chan->chan,
--		TO_CH_STATE_TYPE_STR(to_state));
--
-+	trace_mhi_channel_command_start(mhi_cntrl, mhi_chan, to_state);
- 	switch (to_state) {
- 	case MHI_CH_STATE_TYPE_RESET:
- 		write_lock_irq(&mhi_chan->lock);
-@@ -1396,9 +1397,7 @@ static int mhi_update_channel_state(struct mhi_controller *mhi_cntrl,
- 		write_unlock_irq(&mhi_chan->lock);
- 	}
- 
--	dev_dbg(dev, "%d: Channel state change to %s successful\n",
--		mhi_chan->chan, TO_CH_STATE_TYPE_STR(to_state));
--
-+	trace_mhi_channel_command_end(mhi_cntrl, mhi_chan, to_state);
- exit_channel_update:
- 	mhi_cntrl->runtime_put(mhi_cntrl);
- 	mhi_device_put(mhi_cntrl->mhi_dev);
-diff --git a/drivers/bus/mhi/host/pm.c b/drivers/bus/mhi/host/pm.c
-index 8a4362d75fc4..5a2394b5b2e1 100644
---- a/drivers/bus/mhi/host/pm.c
-+++ b/drivers/bus/mhi/host/pm.c
-@@ -15,6 +15,7 @@
- #include <linux/slab.h>
- #include <linux/wait.h>
- #include "internal.h"
-+#include "trace.h"
- 
- /*
-  * Not all MHI state transitions are synchronous. Transitions like Linkdown,
-@@ -123,6 +124,7 @@ enum mhi_pm_state __must_check mhi_tryset_pm_state(struct mhi_controller *mhi_cn
- 	if (unlikely(!(dev_state_transitions[index].to_states & state)))
- 		return cur_state;
- 
-+	trace_mhi_tryset_pm_state(mhi_cntrl, state);
- 	mhi_cntrl->pm_state = state;
- 	return mhi_cntrl->pm_state;
- }
-@@ -753,7 +755,6 @@ void mhi_pm_st_worker(struct work_struct *work)
- 	struct mhi_controller *mhi_cntrl = container_of(work,
- 							struct mhi_controller,
- 							st_worker);
--	struct device *dev = &mhi_cntrl->mhi_dev->dev;
- 
- 	spin_lock_irq(&mhi_cntrl->transition_lock);
- 	list_splice_tail_init(&mhi_cntrl->transition_list, &head);
-@@ -761,8 +762,8 @@ void mhi_pm_st_worker(struct work_struct *work)
- 
- 	list_for_each_entry_safe(itr, tmp, &head, node) {
- 		list_del(&itr->node);
--		dev_dbg(dev, "Handling state transition: %s\n",
--			TO_DEV_STATE_TRANS_STR(itr->state));
-+
-+		trace_mhi_pm_st_transition(mhi_cntrl, itr->state);
- 
- 		switch (itr->state) {
- 		case DEV_ST_TRANSITION_PBL:
-diff --git a/drivers/bus/mhi/host/trace.h b/drivers/bus/mhi/host/trace.h
-new file mode 100644
-index 000000000000..73c129bb91d9
---- /dev/null
-+++ b/drivers/bus/mhi/host/trace.h
-@@ -0,0 +1,205 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM mhi_host
-+
-+#if !defined(_TRACE_EVENT_MHI_HOST_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_EVENT_MHI_HOST_H
-+
-+#include <linux/tracepoint.h>
-+#include <linux/trace_seq.h>
-+#include "../common.h"
-+#include "internal.h"
-+
-+TRACE_EVENT(mhi_gen_tre,
-+
-+	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
-+		 struct mhi_ring_element *mhi_tre),
-+
-+	TP_ARGS(mhi_cntrl, mhi_chan, mhi_tre),
-+
-+	TP_STRUCT__entry(
-+		__string(name, mhi_cntrl->mhi_dev->name)
-+		__field(int, ch_num)
-+		__field(void *, wp)
-+		__field(__le64, tre_ptr)
-+		__field(__le32, dword0)
-+		__field(__le32, dword1)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(name, mhi_cntrl->mhi_dev->name);
-+		__entry->ch_num = mhi_chan->chan;
-+		__entry->wp = mhi_tre;
-+		__entry->tre_ptr = mhi_tre->ptr;
-+		__entry->dword0 = mhi_tre->dword[0];
-+		__entry->dword1 = mhi_tre->dword[1];
-+	),
-+
-+	TP_printk("%s: Chan: %d Tre: 0x%p Tre buf: 0x%llx dword0: 0x%08x dword1: 0x%08x\n",
-+		  __get_str(name), __entry->ch_num, __entry->wp, __entry->tre_ptr,
-+		  __entry->dword0, __entry->dword1)
-+);
-+
-+TRACE_EVENT(mhi_intvec_states,
-+
-+	TP_PROTO(struct mhi_controller *mhi_cntrl, int dev_ee, int dev_state),
-+
-+	TP_ARGS(mhi_cntrl, dev_ee, dev_state),
-+
-+	TP_STRUCT__entry(
-+		__string(name, mhi_cntrl->mhi_dev->name)
-+		__field(int, local_ee)
-+		__field(int, state)
-+		__field(int, dev_ee)
-+		__field(int, dev_state)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(name, mhi_cntrl->mhi_dev->name);
-+		__entry->local_ee = mhi_cntrl->ee;
-+		__entry->state = mhi_cntrl->dev_state;
-+		__entry->dev_ee = dev_ee;
-+		__entry->dev_state = dev_state;
-+	),
-+
-+	TP_printk("%s: local ee: %s state: %s device ee: %s state: %s\n",
-+		  __get_str(name),
-+		  TO_MHI_EXEC_STR(__entry->local_ee),
-+		  mhi_state_str(__entry->state),
-+		  TO_MHI_EXEC_STR(__entry->dev_ee),
-+		  mhi_state_str(__entry->dev_state))
-+);
-+
-+TRACE_EVENT(mhi_tryset_pm_state,
-+
-+	TP_PROTO(struct mhi_controller *mhi_cntrl, int pm_state),
-+
-+	TP_ARGS(mhi_cntrl, pm_state),
-+
-+	TP_STRUCT__entry(
-+		__string(name, mhi_cntrl->mhi_dev->name)
-+		__field(int, pm_state)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(name, mhi_cntrl->mhi_dev->name);
-+		if (pm_state)
-+			pm_state = __fls(pm_state);
-+		__entry->pm_state = pm_state;
-+	),
-+
-+	TP_printk("%s: PM state: %s\n", __get_str(name),
-+		  to_mhi_pm_state_str(__entry->pm_state))
-+);
-+
-+DECLARE_EVENT_CLASS(mhi_process_event_ring,
-+
-+	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_ring_element *rp),
-+
-+	TP_ARGS(mhi_cntrl, rp),
-+
-+	TP_STRUCT__entry(
-+		__string(name, mhi_cntrl->mhi_dev->name)
-+		__field(__le32, dword0)
-+		__field(__le32, dword1)
-+		__field(int, state)
-+		__field(__le64, ptr)
-+		__field(void *, rp)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(name, mhi_cntrl->mhi_dev->name);
-+		__entry->rp = rp;
-+		__entry->ptr = rp->ptr;
-+		__entry->dword0 = rp->dword[0];
-+		__entry->dword1 = rp->dword[1];
-+		__entry->state = MHI_TRE_GET_EV_STATE(rp);
-+	),
-+
-+	TP_printk("%s: Tre: 0x%p Tre buf: 0x%llx dword0: 0x%08x dword1: 0x%08x state: %s\n",
-+		  __get_str(name), __entry->rp, __entry->ptr, __entry->dword0,
-+		  __entry->dword1, mhi_state_str(__entry->state))
-+);
-+
-+DEFINE_EVENT(mhi_process_event_ring, mhi_data_event,
-+
-+	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_ring_element *rp),
-+
-+	TP_ARGS(mhi_cntrl, rp)
-+);
-+
-+DEFINE_EVENT(mhi_process_event_ring, mhi_ctrl_event,
-+
-+	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_ring_element *rp),
-+
-+	TP_ARGS(mhi_cntrl, rp)
-+);
-+
-+DECLARE_EVENT_CLASS(mhi_update_channel_state,
-+
-+	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan, int state),
-+
-+	TP_ARGS(mhi_cntrl, mhi_chan, state),
-+
-+	TP_STRUCT__entry(
-+		__string(name, mhi_cntrl->mhi_dev->name)
-+		__field(int, ch_num)
-+		__field(int, state)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(name, mhi_cntrl->mhi_dev->name);
-+		__entry->ch_num = mhi_chan->chan;
-+		__entry->state = state;
-+	),
-+
-+	TP_printk("%s: chan%d: Updating state to: %s\n",
-+		  __get_str(name), __entry->ch_num,
-+		  TO_CH_STATE_TYPE_STR(__entry->state))
-+);
-+
-+DEFINE_EVENT(mhi_update_channel_state, mhi_channel_command_start,
-+
-+	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan, int state),
-+
-+	TP_ARGS(mhi_cntrl, mhi_chan, state)
-+);
-+
-+DEFINE_EVENT(mhi_update_channel_state, mhi_channel_command_end,
-+
-+	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan, int state),
-+
-+	TP_ARGS(mhi_cntrl, mhi_chan, state)
-+);
-+
-+TRACE_EVENT(mhi_pm_st_transition,
-+
-+	TP_PROTO(struct mhi_controller *mhi_cntrl, int state),
-+
-+	TP_ARGS(mhi_cntrl, state),
-+
-+	TP_STRUCT__entry(
-+		__string(name, mhi_cntrl->mhi_dev->name)
-+		__field(int, state)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(name, mhi_cntrl->mhi_dev->name);
-+		__entry->state = state;
-+	),
-+
-+	TP_printk("%s: Handling state transition: %s\n", __get_str(name),
-+		  TO_DEV_STATE_TRANS_STR(__entry->state))
-+);
-+
-+#endif
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH ../../drivers/bus/mhi/host
-+#undef TRACE_INCLUDE_FILE
-+#define TRACE_INCLUDE_FILE trace
-+
-+#include <trace/define_trace.h>
-
----
-base-commit: 3006adf3be79cde4d14b1800b963b82b6e5572e0
-change-id: 20231005-ftrace_support-6869d4156139
-
-Best regards,
--- 
-Krishna chaitanya chundru <quic_krichai@quicinc.com>
-
+> Changes since v1: https://lore.kernel.org/all/20231128122117.2276f4a7@gandalf.local.home/
+> 
+> - Made it so that dynamic events need to be specified in order to add
+>   to the instance. They are no longer automatically allowed.
+> 
+>  drivers/scsi/qla2xxx/qla_os.c       |  2 +-
+>  include/linux/trace.h               |  4 +--
+>  kernel/trace/trace.c                | 23 +++++++++++---
+>  kernel/trace/trace.h                |  1 +
+>  kernel/trace/trace_boot.c           |  2 +-
+>  kernel/trace/trace_events.c         | 48 +++++++++++++++++++++++++++--
+>  samples/ftrace/sample-trace-array.c |  2 +-
+>  7 files changed, 70 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+> index 03348f605c2e..dd674378f2f3 100644
+> --- a/drivers/scsi/qla2xxx/qla_os.c
+> +++ b/drivers/scsi/qla2xxx/qla_os.c
+> @@ -2889,7 +2889,7 @@ static void qla2x00_iocb_work_fn(struct work_struct *work)
+>  static void
+>  qla_trace_init(void)
+>  {
+> -	qla_trc_array = trace_array_get_by_name("qla2xxx");
+> +	qla_trc_array = trace_array_get_by_name("qla2xxx", NULL);
+>  	if (!qla_trc_array) {
+>  		ql_log(ql_log_fatal, NULL, 0x0001,
+>  		       "Unable to create qla2xxx trace instance, instance logging will be disabled.\n");
+> diff --git a/include/linux/trace.h b/include/linux/trace.h
+> index 2a70a447184c..fdcd76b7be83 100644
+> --- a/include/linux/trace.h
+> +++ b/include/linux/trace.h
+> @@ -51,7 +51,7 @@ int trace_array_printk(struct trace_array *tr, unsigned long ip,
+>  		       const char *fmt, ...);
+>  int trace_array_init_printk(struct trace_array *tr);
+>  void trace_array_put(struct trace_array *tr);
+> -struct trace_array *trace_array_get_by_name(const char *name);
+> +struct trace_array *trace_array_get_by_name(const char *name, const char *systems);
+>  int trace_array_destroy(struct trace_array *tr);
+>  
+>  /* For osnoise tracer */
+> @@ -84,7 +84,7 @@ static inline int trace_array_init_printk(struct trace_array *tr)
+>  static inline void trace_array_put(struct trace_array *tr)
+>  {
+>  }
+> -static inline struct trace_array *trace_array_get_by_name(const char *name)
+> +static inline struct trace_array *trace_array_get_by_name(const char *name, const char *systems)
+>  {
+>  	return NULL;
+>  }
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index fbcd3bafb93e..31fb03d105e9 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -9480,7 +9480,8 @@ static int trace_array_create_dir(struct trace_array *tr)
+>  	return ret;
+>  }
+>  
+> -static struct trace_array *trace_array_create(const char *name)
+> +static struct trace_array *
+> +trace_array_create_systems(const char *name, const char *systems)
+>  {
+>  	struct trace_array *tr;
+>  	int ret;
+> @@ -9500,6 +9501,12 @@ static struct trace_array *trace_array_create(const char *name)
+>  	if (!zalloc_cpumask_var(&tr->pipe_cpumask, GFP_KERNEL))
+>  		goto out_free_tr;
+>  
+> +	if (systems) {
+> +		tr->system_names = kstrdup_const(systems, GFP_KERNEL);
+> +		if (!tr->system_names)
+> +			goto out_free_tr;
+> +	}
+> +
+>  	tr->trace_flags = global_trace.trace_flags & ~ZEROED_TRACE_FLAGS;
+>  
+>  	cpumask_copy(tr->tracing_cpumask, cpu_all_mask);
+> @@ -9546,12 +9553,18 @@ static struct trace_array *trace_array_create(const char *name)
+>  	free_trace_buffers(tr);
+>  	free_cpumask_var(tr->pipe_cpumask);
+>  	free_cpumask_var(tr->tracing_cpumask);
+> +	kfree_const(tr->system_names);
+>  	kfree(tr->name);
+>  	kfree(tr);
+>  
+>  	return ERR_PTR(ret);
+>  }
+>  
+> +static struct trace_array *trace_array_create(const char *name)
+> +{
+> +	return trace_array_create_systems(name, NULL);
+> +}
+> +
+>  static int instance_mkdir(const char *name)
+>  {
+>  	struct trace_array *tr;
+> @@ -9577,6 +9590,7 @@ static int instance_mkdir(const char *name)
+>  /**
+>   * trace_array_get_by_name - Create/Lookup a trace array, given its name.
+>   * @name: The name of the trace array to be looked up/created.
+> + * @system: A list of systems to create event directories for (NULL for all)
+>   *
+>   * Returns pointer to trace array with given name.
+>   * NULL, if it cannot be created.
+> @@ -9590,7 +9604,7 @@ static int instance_mkdir(const char *name)
+>   * trace_array_put() is called, user space can not delete it.
+>   *
+>   */
+> -struct trace_array *trace_array_get_by_name(const char *name)
+> +struct trace_array *trace_array_get_by_name(const char *name, const char *systems)
+>  {
+>  	struct trace_array *tr;
+>  
+> @@ -9602,7 +9616,7 @@ struct trace_array *trace_array_get_by_name(const char *name)
+>  			goto out_unlock;
+>  	}
+>  
+> -	tr = trace_array_create(name);
+> +	tr = trace_array_create_systems(name, systems);
+>  
+>  	if (IS_ERR(tr))
+>  		tr = NULL;
+> @@ -9649,6 +9663,7 @@ static int __remove_instance(struct trace_array *tr)
+>  
+>  	free_cpumask_var(tr->pipe_cpumask);
+>  	free_cpumask_var(tr->tracing_cpumask);
+> +	kfree_const(tr->system_names);
+>  	kfree(tr->name);
+>  	kfree(tr);
+>  
+> @@ -10367,7 +10382,7 @@ __init static void enable_instances(void)
+>  		if (IS_ENABLED(CONFIG_TRACER_MAX_TRACE))
+>  			do_allocate_snapshot(tok);
+>  
+> -		tr = trace_array_get_by_name(tok);
+> +		tr = trace_array_get_by_name(tok, NULL);
+>  		if (!tr) {
+>  			pr_warn("Failed to create instance buffer %s\n", curr_str);
+>  			continue;
+> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> index b7f4ea25a194..97b01dfd7070 100644
+> --- a/kernel/trace/trace.h
+> +++ b/kernel/trace/trace.h
+> @@ -377,6 +377,7 @@ struct trace_array {
+>  	unsigned char		trace_flags_index[TRACE_FLAGS_MAX_SIZE];
+>  	unsigned int		flags;
+>  	raw_spinlock_t		start_lock;
+> +	const char		*system_names;
+>  	struct list_head	err_log;
+>  	struct dentry		*dir;
+>  	struct dentry		*options;
+> diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+> index 7ccc7a8e155b..dbe29b4c6a7a 100644
+> --- a/kernel/trace/trace_boot.c
+> +++ b/kernel/trace/trace_boot.c
+> @@ -633,7 +633,7 @@ trace_boot_init_instances(struct xbc_node *node)
+>  		if (!p || *p == '\0')
+>  			continue;
+>  
+> -		tr = trace_array_get_by_name(p);
+> +		tr = trace_array_get_by_name(p, NULL);
+>  		if (!tr) {
+>  			pr_err("Failed to get trace instance %s\n", p);
+>  			continue;
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index f29e815ca5b2..b70d03818038 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -2896,6 +2896,27 @@ void trace_event_eval_update(struct trace_eval_map **map, int len)
+>  	up_write(&trace_event_sem);
+>  }
+>  
+> +static bool event_in_systems(struct trace_event_call *call,
+> +			     const char *systems)
+> +{
+> +	const char *system;
+> +	const char *p;
+> +
+> +	if (!systems)
+> +		return true;
+> +
+> +	system = call->class->system;
+> +	p = strstr(systems, system);
+> +	if (!p)
+> +		return false;
+> +
+> +	if (p != systems && !isspace(*(p - 1)) && *(p - 1) != ',')
+> +		return false;
+> +
+> +	p += strlen(system);
+> +	return !*p || isspace(*p) || *p == ',';
+> +}
+> +
+>  static struct trace_event_file *
+>  trace_create_new_event(struct trace_event_call *call,
+>  		       struct trace_array *tr)
+> @@ -2905,9 +2926,12 @@ trace_create_new_event(struct trace_event_call *call,
+>  	struct trace_event_file *file;
+>  	unsigned int first;
+>  
+> +	if (!event_in_systems(call, tr->system_names))
+> +		return NULL;
+> +
+>  	file = kmem_cache_alloc(file_cachep, GFP_TRACE);
+>  	if (!file)
+> -		return NULL;
+> +		return ERR_PTR(-ENOMEM);
+>  
+>  	pid_list = rcu_dereference_protected(tr->filtered_pids,
+>  					     lockdep_is_held(&event_mutex));
+> @@ -2972,8 +2996,17 @@ __trace_add_new_event(struct trace_event_call *call, struct trace_array *tr)
+>  	struct trace_event_file *file;
+>  
+>  	file = trace_create_new_event(call, tr);
+> +	/*
+> +	 * trace_create_new_event() returns ERR_PTR(-ENOMEM) if failed
+> +	 * allocation, or NULL if the event is not part of the tr->system_names.
+> +	 * When the event is not part of the tr->system_names, return zero, not
+> +	 * an error.
+> +	 */
+>  	if (!file)
+> -		return -ENOMEM;
+> +		return 0;
+> +
+> +	if (IS_ERR(file))
+> +		return PTR_ERR(file);
+>  
+>  	if (eventdir_initialized)
+>  		return event_create_dir(tr->event_dir, file);
+> @@ -3012,8 +3045,17 @@ __trace_early_add_new_event(struct trace_event_call *call,
+>  	int ret;
+>  
+>  	file = trace_create_new_event(call, tr);
+> +	/*
+> +	 * trace_create_new_event() returns ERR_PTR(-ENOMEM) if failed
+> +	 * allocation, or NULL if the event is not part of the tr->system_names.
+> +	 * When the event is not part of the tr->system_names, return zero, not
+> +	 * an error.
+> +	 */
+>  	if (!file)
+> -		return -ENOMEM;
+> +		return 0;
+> +
+> +	if (IS_ERR(file))
+> +		return PTR_ERR(file);
+>  
+>  	ret = event_define_fields(call);
+>  	if (ret)
+> diff --git a/samples/ftrace/sample-trace-array.c b/samples/ftrace/sample-trace-array.c
+> index 6aba02a31c96..d0ee9001c7b3 100644
+> --- a/samples/ftrace/sample-trace-array.c
+> +++ b/samples/ftrace/sample-trace-array.c
+> @@ -105,7 +105,7 @@ static int __init sample_trace_array_init(void)
+>  	 * NOTE: This function increments the reference counter
+>  	 * associated with the trace array - "tr".
+>  	 */
+> -	tr = trace_array_get_by_name("sample-instance");
+> +	tr = trace_array_get_by_name("sample-instance", "sched,timer,kprobes");
+>  
+>  	if (!tr)
+>  		return -1;
+> -- 
+> 2.42.0
+> 
