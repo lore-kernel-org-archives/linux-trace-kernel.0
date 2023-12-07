@@ -1,172 +1,198 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1314D4B;
-	Wed,  6 Dec 2023 18:33:35 -0800 (PST)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R591e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0Vy-5ywS_1701916412;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0Vy-5ywS_1701916412)
-          by smtp.aliyun-inc.com;
-          Thu, 07 Dec 2023 10:33:33 +0800
-Message-ID: <1701916081.917355-1-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH net-next] tcp: add tracepoints for data send/recv/acked
-Date: Thu, 7 Dec 2023 10:28:01 +0800
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To: Eric Dumazet <edumazet@google.com>
-Cc: netdev@vger.kernel.org,
- rostedt@goodmis.org,
- mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com,
- davem@davemloft.net,
- dsahern@kernel.org,
- kuba@kernel.org,
- pabeni@redhat.com,
- martin.lau@linux.dev,
- linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org,
- dust.li@linux.alibaba.com,
- alibuda@linux.alibaba.com,
- guwen@linux.alibaba.com,
- hengqi@linux.alibaba.com,
- Philo Lu <lulie@linux.alibaba.com>
-References: <20231204114322.9218-1-lulie@linux.alibaba.com>
- <CANn89iKUHQHA2wHw9k1SiazJf7ag7i4Tz+FPutgu870teVw_Bg@mail.gmail.com>
- <1701740897.6795166-1-xuanzhuo@linux.alibaba.com>
- <CANn89i+Xs3sSDQcub9p=YGUp1_XainGQpS=0RVpYTiDjvRN1rw@mail.gmail.com>
-In-Reply-To: <CANn89i+Xs3sSDQcub9p=YGUp1_XainGQpS=0RVpYTiDjvRN1rw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cRripPac"
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CA4CA9;
+	Wed,  6 Dec 2023 20:24:55 -0800 (PST)
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B73n22l002295;
+	Thu, 7 Dec 2023 04:24:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=+uVVnTaG7rhfM4bok7/Z3eGUhDAuQhQDo6QT/KosfdE=;
+ b=cRripPacbR7wIABG1R6NhuTjuBO3w002qurkB1Mdm/yMSGbhPsmsUfhGCN5lC3ijAEjL
+ czX7aLTUx+NqADOn8pTbfSjNv7JP3l6nqsiym9vywbWDQM+SKBOHjq7VekswWdQBt6gw
+ 8hAY9pjp5zQ9FLMYgcUoQ+yELrOgy9Olwlnm2RzMSeiLuMb129iaqAKbPkP2CupeZ+9s
+ ZY3KxOVu21UXZq6lZWO3xc26n88d+WZHral8Lry92o0xw/NgmJe683uGV+I2A36kdEKg
+ Fbg9051LNGl8J8gFESq1KztYLFZt8Fl8YaDymE34gB3fOib7hvReKL5roGxpBRjaS4WF qw== 
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3utynu0tpj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Dec 2023 04:24:42 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3B74Ofxg002617
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 7 Dec 2023 04:24:41 GMT
+Received: from [10.216.5.119] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 6 Dec
+ 2023 20:24:36 -0800
+Message-ID: <4e84d302-b2a1-d57b-7a1a-8ad5d7380ce7@quicinc.com>
+Date: Thu, 7 Dec 2023 09:54:31 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-
-On Tue, 5 Dec 2023 20:39:28 +0100, Eric Dumazet <edumazet@google.com> wrote:
-> On Tue, Dec 5, 2023 at 3:11=E2=80=AFAM Xuan Zhuo <xuanzhuo@linux.alibaba.=
-com> wrote:
-> >
-> > On Mon, 4 Dec 2023 13:28:21 +0100, Eric Dumazet <edumazet@google.com> w=
-rote:
-> > > On Mon, Dec 4, 2023 at 12:43=E2=80=AFPM Philo Lu <lulie@linux.alibaba=
-.com> wrote:
-> > > >
-> > > > Add 3 tracepoints, namely tcp_data_send/tcp_data_recv/tcp_data_acke=
-d,
-> > > > which will be called every time a tcp data packet is sent, received=
-, and
-> > > > acked.
-> > > > tcp_data_send: called after a data packet is sent.
-> > > > tcp_data_recv: called after a data packet is receviced.
-> > > > tcp_data_acked: called after a valid ack packet is processed (some =
-sent
-> > > > data are ackknowledged).
-> > > >
-> > > > We use these callbacks for fine-grained tcp monitoring, which colle=
-cts
-> > > > and analyses every tcp request/response event information. The whole
-> > > > system has been described in SIGMOD'18 (see
-> > > > https://dl.acm.org/doi/pdf/10.1145/3183713.3190659 for details). To
-> > > > achieve this with bpf, we require hooks for data events that call b=
-pf
-> > > > prog (1) when any data packet is sent/received/acked, and (2) after
-> > > > critical tcp state variables have been updated (e.g., snd_una, snd_=
-nxt,
-> > > > rcv_nxt). However, existing bpf hooks cannot meet our requirements.
-> > > > Besides, these tracepoints help to debug tcp when data send/recv/ac=
-ked.
-> > >
-> > > This I do not understand.
-> > >
-> > > >
-> > > > Though kretprobe/fexit can also be used to collect these informatio=
-n,
-> > > > they will not work if the kernel functions get inlined. Considering=
- the
-> > > > stability, we prefer tracepoint as the solution.
-> > >
-> > > I dunno, this seems quite weak to me. I see many patches coming to add
-> > > tracing in the stack, but no patches fixing any issues.
-> >
-> >
-> > We have implemented a mechanism to split the request and response from =
-the TCP
-> > connection using these "hookers", which can handle various protocols su=
-ch as
-> > HTTP, HTTPS, Redis, and MySQL. This mechanism allows us to record impor=
-tant
-> > information about each request and response, including the amount of da=
-ta
-> > uploaded, the time taken by the server to handle the request, and the t=
-ime taken
-> > for the client to receive the response. This mechanism has been running
-> > internally for many years and has proven to be very useful.
-> >
-> > One of the main benefits of this mechanism is that it helps in locating=
- the
-> > source of any issues or problems that may arise. For example, if there =
-is a
-> > problem with the network, the application, or the machine, we can use t=
-his
-> > mechanism to identify and isolate the issue.
-> >
-> > TCP has long been a challenge when it comes to tracking the transmissio=
-n of data
-> > on the network. The application can only confirm that it has sent a cer=
-tain
-> > amount of data to the kernel, but it has limited visibility into whethe=
-r the
-> > client has actually received this data. Our mechanism addresses this is=
-sue by
-> > providing insights into the amount of data received by the client and t=
-he time
-> > it was received. Furthermore, we can also detect any packet loss or del=
-ays
-> > caused by the server.
-> >
-> > https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7912288961=
-/9732df025beny.svg
-> >
-> > So, we do not want to add some tracepoint to do some unknow debug.
-> > We have a clear goal. debugging is just an incidental capability.
-> >
->
-> We have powerful mechanisms in the stack already that ordinary (no
-> privilege requested) applications can readily use.
->
-> We have been using them for a while.
->
-> If existing mechanisms are missing something you need, please expand them.
->
-> For reference, start looking at tcp_get_timestamping_opt_stats() history.
->
-> Sender side can for instance get precise timestamps.
->
-> Combinations of these timestamps reveal different parts of the overall
-> network latency,
->
-> T0: sendmsg() enters TCP
-> T1: first byte enters qdisc
-> T2: first byte sent to the NIC
-> T3: first byte ACKed in TCP
-> T4: last byte sent to the NIC
-> T5: last byte ACKed
-> T1 - T0: how long the first byte was blocked in the TCP layer ("Head
-> of Line Blocking" latency).
-> T2 - T1: how long the first byte was blocked in the Linux traffic
-> shaping layer (known as QDisc).
-> T3 - T2: the network =E2=80=98distance=E2=80=99 (propagation delay + curr=
-ent queuing
-> delay along the network path and at the receiver).
-> T5 - T2: how fast the sent chunk was delivered.
-> Message Size / (T5 - T0): goodput (from application=E2=80=99s perspective)
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v7] bus: mhi: host: Add tracing support
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>
+CC: Manivannan Sadhasivam <mani@kernel.org>,
+        Masami Hiramatsu
+	<mhiramat@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <mhi@lists.linux.dev>,
+        <linux-arm-msm@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <quic_vbadigan@quicinc.com>, <quic_ramkri@quicinc.com>,
+        <quic_nitegupt@quicinc.com>, <quic_skananth@quicinc.com>,
+        <quic_parass@quicinc.com>
+References: <20231206-ftrace_support-v7-1-aca49a04268b@quicinc.com>
+ <20231206105500.148ea367@gandalf.local.home>
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <20231206105500.148ea367@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: NZhU8o6duAfLY1SvUpnUHKox5XoAYWiy
+X-Proofpoint-ORIG-GUID: NZhU8o6duAfLY1SvUpnUHKox5XoAYWiy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-07_01,2023-12-06_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ clxscore=1015 priorityscore=1501 lowpriorityscore=0 bulkscore=0
+ phishscore=0 malwarescore=0 spamscore=0 impostorscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2312070034
 
 
-The key point is that using our mechanism, the application does not need to=
- be
-modified.
+On 12/6/2023 9:25 PM, Steven Rostedt wrote:
+> On Wed, 6 Dec 2023 21:12:57 +0530
+> Krishna chaitanya chundru <quic_krichai@quicinc.com> wrote:
+>
+>> diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
+>> index f78aefd2d7a3..6acb85f4c5f8 100644
+>> --- a/drivers/bus/mhi/host/init.c
+>> +++ b/drivers/bus/mhi/host/init.c
+>> @@ -20,6 +20,9 @@
+>>   #include <linux/wait.h>
+>>   #include "internal.h"
+>>   
+>> +#define CREATE_TRACE_POINTS
+>> +#include "trace.h"
+>> +
+>>   static DEFINE_IDA(mhi_controller_ida);
+>>   
+>>   const char * const mhi_ee_str[MHI_EE_MAX] = {
+>> diff --git a/drivers/bus/mhi/host/main.c b/drivers/bus/mhi/host/main.c
+>> index dcf627b36e82..507cf3351a97 100644
+>> --- a/drivers/bus/mhi/host/main.c
+>> +++ b/drivers/bus/mhi/host/main.c
+>> @@ -15,6 +15,7 @@
+>>   #include <linux/skbuff.h>
+>>   #include <linux/slab.h>
+>>   #include "internal.h"
+>> +#include "trace.h"
+>>   
+>>   int __must_check mhi_read_reg(struct mhi_controller *mhi_cntrl,
+>>   			      void __iomem *base, u32 offset, u32 *out)
+>> @@ -491,11 +492,9 @@ irqreturn_t mhi_intvec_threaded_handler(int irq_number, void *priv)
+>>   
+>>   	state = mhi_get_mhi_state(mhi_cntrl);
+>>   	ee = mhi_get_exec_env(mhi_cntrl);
+>> -	dev_dbg(dev, "local ee: %s state: %s device ee: %s state: %s\n",
+>> -		TO_MHI_EXEC_STR(mhi_cntrl->ee),
+>> -		mhi_state_str(mhi_cntrl->dev_state),
+>> -		TO_MHI_EXEC_STR(ee), mhi_state_str(state));
+>>   
+>> +	trace_mhi_intvec_states(mhi_cntrl->mhi_dev->name, mhi_cntrl->ee,
+>> +				mhi_cntrl->dev_state, ee, state);
+> I'm not sure if this was discussed before, but why not just pass in the
+> mhi_cntrl pointer and do the assigning in the TRACE_EVENT()
+> TP_fast_assign() portion?
+>
+> It will save on setting up the parameters.
+>
+>>   	if (state == MHI_STATE_SYS_ERR) {
+>>   		dev_dbg(dev, "System error detected\n");
+>>   		pm_state = mhi_tryset_pm_state(mhi_cntrl,
+>> @@ -832,6 +831,10 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
+>>   	while (dev_rp != local_rp) {
+>>   		enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
+>>   
+>> +		trace_mhi_ctrl_event(mhi_cntrl->mhi_dev->name, local_rp,
+>> +				     local_rp->ptr, local_rp->dword[0],
+>> +				     local_rp->dword[1]);
+> And here..
+>
+>> +
+>>   		switch (type) {
+>>   		case MHI_PKT_TYPE_BW_REQ_EVENT:
+>>   		{
+>> @@ -997,6 +1000,9 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
+>>   	while (dev_rp != local_rp && event_quota > 0) {
+>>   		enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
+>>   
+>> +		trace_mhi_data_event(mhi_cntrl->mhi_dev->name, local_rp, local_rp->ptr,
+>> +				     local_rp->dword[0], local_rp->dword[1]);
+> and here..
+>
+> for the local_rp. Especially since you are just repeating what you send
+> into the two events. You can consolidate it down to just adding that in the
+> TP_fast_assign() of the shared DECLARE_EVENT_CLASS().
+>
+>> +
+>>   		chan = MHI_TRE_GET_EV_CHID(local_rp);
+>>   
+>>   		WARN_ON(chan >= mhi_cntrl->max_chan);
+>> @@ -1235,6 +1241,8 @@ int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+>>   	mhi_tre->dword[0] = MHI_TRE_DATA_DWORD0(info->len);
+>>   	mhi_tre->dword[1] = MHI_TRE_DATA_DWORD1(bei, eot, eob, chain);
+>>   
+>> +	trace_mhi_gen_tre(mhi_cntrl->mhi_dev->name, mhi_chan->chan, mhi_tre,
+>> +			  mhi_tre->ptr, mhi_tre->dword[0], mhi_tre->dword[1]);
+> Same here. You can pass in the mhi_tre pointer.
+>
+>>   	/* increment WP */
+>>   	mhi_add_ring_element(mhi_cntrl, tre_ring);
+>>   	mhi_add_ring_element(mhi_cntrl, buf_ring);
+>> @@ -1327,9 +1335,7 @@ static int mhi_update_channel_state(struct mhi_controller *mhi_cntrl,
+>>   	enum mhi_cmd_type cmd = MHI_CMD_NOP;
+>>   	int ret;
+>>   
+>> -	dev_dbg(dev, "%d: Updating channel state to: %s\n", mhi_chan->chan,
+>> -		TO_CH_STATE_TYPE_STR(to_state));
+>> -
+>> +	trace_mhi_channel_command_start(mhi_cntrl->mhi_dev->name, mhi_chan->chan, to_state);
+> And here..
+>
+>>   	switch (to_state) {
+>>   	case MHI_CH_STATE_TYPE_RESET:
+>>   		write_lock_irq(&mhi_chan->lock);
+>> @@ -1396,9 +1402,7 @@ static int mhi_update_channel_state(struct mhi_controller *mhi_cntrl,
+>>   		write_unlock_irq(&mhi_chan->lock);
+>>   	}
+>>   
+>> -	dev_dbg(dev, "%d: Channel state change to %s successful\n",
+>> -		mhi_chan->chan, TO_CH_STATE_TYPE_STR(to_state));
+>> -
+>> +	trace_mhi_channel_command_end(mhi_cntrl->mhi_dev->name, mhi_chan->chan, to_state);
+> and here..
+>
+> Where you can also update the DECLARE_EVENT_CLASS() to directly access the
+> mhi_cntrl and mhi_chan pointers. Sometimes it's better to do the
+> dereference from inside the TP_fast_assign. That way, things like eprobes
+> and bpf tracing can also have access to the full structure if needed.
+>
+> -- Steve
 
-As long as the app's network protocol is request-response, we can trace tcp
-connection at any time to analyze the request and response. And record the =
-start
-and end times of request and response. Of course there is some ttl and other
-information.
+Hi Steve,
 
-Thanks.
+I will make changes as suggested in the next patch series.
+
+- Krishna Chaitanya.
+
