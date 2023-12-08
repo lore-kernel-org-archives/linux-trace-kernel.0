@@ -1,87 +1,75 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PmK2XbxC"
-Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1D29D54
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  8 Dec 2023 08:57:05 -0800 (PST)
-Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-4258b8482feso14284921cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 08 Dec 2023 08:57:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702054625; x=1702659425; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p7eBdMYz2oO1gCYv2gO3b03vyzDyBixdRfjwy6xmbYk=;
-        b=PmK2XbxCIv3dIWNCXiX6whjWumGAUc6xF5Vo/I/DNguZMP6/AsTyAAF33DgKQjsU69
-         Hy+a+8Vsqf1eFR+dvvO4N0R8iA3lHLf2z2xLk2ioso4X+JVX7PvxpNZk9aA861nTMOGC
-         ozE1gdUK5vTQESIwfQS8jZHFUp8l9inF7ABOzL1Q06E/iNKqmcDt80fC495/+NtimrBa
-         PkeRnJKPT8ws4rzxnaIZVHfwnvDf0NtKq+CoACtgp7v+RMfUSdJv4tCLgrf46MJ4eATg
-         oiopZPdry7Iuxvi2BJFBMxINisVddJ4Ue5X1R7GgwP/WJppiEA2XEMD7yYx8/KMD50y0
-         XnBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702054625; x=1702659425;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p7eBdMYz2oO1gCYv2gO3b03vyzDyBixdRfjwy6xmbYk=;
-        b=krQhyz1G+ErxjVPEhFFq1r2d+/UYH2HQTJSUFvhaWr2WO7MWKIv2qEDhByL4ezV1Uo
-         yRwpb5hf9uCkZa5a69wQitrwjG1/C6jUIi5FFwW7KNv87ujGSF6FAJMld6+mv5GgZGJT
-         GR8FQ2kpjarAxpDiOmSS9Bzu0NDMBFC0xzGMLqsLLxra4mGNWEieBzjn2MNMkusGD0LJ
-         KdERJ2bV/+OHvyERQdswSs3MSXdk8fQc/yjdOILZAs1xAyLTcDhXKAaZVwVa/3QPLi9N
-         vDxT3YKe22kFR25A3XKojMHLmpEaZ0y4nKJ9gWnt3ikyk3FO+8Dk+AL4jFW+59o/2A1s
-         3fhw==
-X-Gm-Message-State: AOJu0YzcKCM4tK/PVnyChJP/jreMp0lxAIyWkrGAOyrTUfisbTMXwniP
-	2L+m5UcF/HfUNlgvyyXDWbd9/BC31vOutSFwU0ceUw==
-X-Google-Smtp-Source: AGHT+IFqYgMXAGDwUGZm2GmXNNwAMogbqw1hEfBIGvEGXG3bN5nU/GorXmHvariAzFFNL09Kz1paH2mUu+0Ssar9SoY=
-X-Received: by 2002:a05:6214:d0:b0:67a:49c5:8cc3 with SMTP id
- f16-20020a05621400d000b0067a49c58cc3mr269853qvs.32.1702054625028; Fri, 08 Dec
- 2023 08:57:05 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="deRMERS6"
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id A8A2F118
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  8 Dec 2023 10:36:06 -0800 (PST)
+Received: from CPC-beaub-VBQ1L. (unknown [4.155.48.118])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 2286820B74C0;
+	Fri,  8 Dec 2023 10:36:06 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2286820B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1702060566;
+	bh=9qiw0ud3VQ9Dax7D3Cck7ZTuYdOLgNSzI8OXY5I9+3k=;
+	h=Date:From:To:Cc:Subject:From;
+	b=deRMERS6hW1B6uJU7Psfzhn0gxwkDUrywl7AjojfASC52Om3wZP4nmVpIaJBZ+ik3
+	 disrTu+XElu0hAJ8357Zhk1rgnPGmjVDovgFv/8T7phiXtSaH7tCMHzZN9lx3mxZOP
+	 1CpNIlgBigk7r1v8lb0R8+2GlhpoSLYKVbcgKJJk=
+Date: Fri, 8 Dec 2023 18:36:01 +0000
+From: Beau Belgrave <beaub@linux.microsoft.com>
+To: rostedt@goodmis.org
+Cc: linux-trace-kernel@vger.kernel.org
+Subject: trace_event names with more than NAME_MAX chars
+Message-ID: <20231208183601.GA46-beaub@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231121220155.1217090-1-iii@linux.ibm.com> <20231121220155.1217090-24-iii@linux.ibm.com>
-In-Reply-To: <20231121220155.1217090-24-iii@linux.ibm.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Fri, 8 Dec 2023 17:56:29 +0100
-Message-ID: <CAG_fn=UBt2A75bOgZmh7q_dS08d0PD8wJRHpoJyUDXRPRk_exA@mail.gmail.com>
-Subject: Re: [PATCH v2 23/33] s390/boot: Add the KMSAN runtime stub
-To: Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, Nov 21, 2023 at 11:02=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.co=
-m> wrote:
->
-> It should be possible to have inline functions in the s390 header
-> files, which call kmsan_unpoison_memory(). The problem is that these
-> header files might be included by the decompressor, which does not
-> contain KMSAN runtime, causing linker errors.
->
-> Not compiling these calls if __SANITIZE_MEMORY__ is not defined -
-> either by changing kmsan-checks.h or at the call sites - may cause
-> unintended side effects, since calling these functions from an
-> uninstrumented code that is linked into the kernel is valid use case.
->
-> One might want to explicitly distinguish between the kernel and the
-> decompressor. Checking for a decompressor-specific #define is quite
-> heavy-handed, and will have to be done at all call sites.
->
-> A more generic approach is to provide a dummy kmsan_unpoison_memory()
-> definition. This produces some runtime overhead, but only when building
-> with CONFIG_KMSAN. The benefit is that it does not disturb the existing
-> KMSAN build logic and call sites don't need to be changed.
->
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Reviewed-by: Alexander Potapenko <glider@google.com>
+While developing some unrelated features I happened to create a
+trace_event that was more than NAME_MAX (255) characters. When this
+happened the creation worked, but tracefs would hang any task that tried
+to list the directory of the trace_event or remove it.
+
+I followed the code down to the reason being eventfs would call
+simple_lookup(), and if it failed, it would still try to create the
+dentry. In this case DCACHE_PAR_LOOKUP would get set and never cleared.
+This caused d_wait_lookup() to loop forever, since that flag is used in
+d_in_lookup().
+
+Both tracefs and eventfs use simple_lookup() and it fails for
+dentries that exceed NAME_MAX. Should we even allow trace_events to
+be created that exceed this limit? Or should tracefs/eventfs allow
+this but somehow represent these differently?
+
+I have a fix that appears to work for myself, but unsure if there are
+other locations (attached at the end of this mail).
+
+Thanks,
+-Beau
+
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index f8a594a50ae6..d2c06ba26db4 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -561,6 +561,8 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+                if (strcmp(ei_child->name, name) != 0)
+                        continue;
+                ret = simple_lookup(dir, dentry, flags);
++               if (IS_ERR(ret))
++                       goto out;
+                create_dir_dentry(ei, ei_child, ei_dentry, true);
+                created = true;
+                break;
+@@ -583,6 +585,8 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+                        if (r <= 0)
+                                continue;
+                        ret = simple_lookup(dir, dentry, flags);
++                       if (IS_ERR(ret))
++                               goto out;
+                        create_file_dentry(ei, i, ei_dentry, name, mode, cdata,
+                                           fops, true);
+                        break;
