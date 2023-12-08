@@ -1,113 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6363A14A89
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  8 Dec 2023 11:07:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TFx7SVah"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64603C433C7;
-	Fri,  8 Dec 2023 11:07:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702033662;
-	bh=FOXTguR/9YRg7/ngZ594YyeO27u4zSeFjK8XdGbtK6s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TFx7SVahayfgCB5aSPjSUK4La85oKQauc0/m9Awlm5xYRnHGDmJPAsVds/YsHMtez
-	 NKyjWBlznIIO2MVvC8yNILoSmB6asBGXGhQ5FTS9ahUWwJE7EEEccZQwG+Pg28Vxfl
-	 eoCL9JC2OMpV6gyjuH2zJGJ6XetuUrh9hbrDnddIWP1WibFUEbFEaxjcfPeOzkKlLr
-	 TguUEvYrwIfr2LJYKY3w1yPHP7uhawsSp5msNH0ljyMwm95paf858FVtEqg/tH49CY
-	 zHzT5ynIJctjZWtlrt6s/WdgMew713nxXTzv7YZGGxUv9pj/kaR9xQbztcT0Lb29BE
-	 OpKEgGMQaNn0Q==
-Date: Fri, 8 Dec 2023 20:07:38 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH v2] ring-buffer: Add offset of events in dump on
- mismatch
-Message-Id: <20231208200738.8931aef2857866baf469505a@kernel.org>
-In-Reply-To: <20231207173108.484b912c@gandalf.local.home>
-References: <20231207173108.484b912c@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c/VfjS1S"
+Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0B7B1710
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  8 Dec 2023 04:54:24 -0800 (PST)
+Received: by mail-yb1-xb2a.google.com with SMTP id 3f1490d57ef6-db53f8cf4afso2085418276.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 08 Dec 2023 04:54:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1702040064; x=1702644864; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ByI2BmM76fDl6CBfV37McPabf7tQNlC2zWfp5P+Us7w=;
+        b=c/VfjS1SUuwPa0ud1rF722pXq7krjTYGiyAE8nZHfGfjZDzA3ClrvBBuQ6yUccZEi6
+         /bZoXwdzaqzTm+CoxnSe2Cabmorok2OW1nZ7TOZKAG1E/fUC+sfpYpw1eynWF5d3pJo8
+         sC3wBfO2dKliegsZpEq/ZgpjepQHKUATQPJWV267UIYH+T6XWMO6DS7DtYpyXyPoCZkF
+         mHTGgLAiLNnMGGejmdOT+zTHHjOoBf0u3kUbJ44QN1it0+cms9+IPimtcqpICtrTfzaC
+         h5I9+liC5GdvGp2HvVPgmddd/Hn9iHVyQmSD3rQt4iw2tS2509s5Bqf7eXqb34M3k1GC
+         h1uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702040064; x=1702644864;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ByI2BmM76fDl6CBfV37McPabf7tQNlC2zWfp5P+Us7w=;
+        b=vYTOtjQkhc4DDFBgKYyD5s1PTv5GNyfvlIx9nzjnjUZZKHEGDEXU4ikwH0W+2bwRMu
+         COPradW7xxtljij09FNsmrzu467dyOyx+9ONBYBlHfy12Vic3Qa+3kqNKBjG2IxLCbKa
+         DgZ4OV1fSFIUISKE/PA9VgNcL7fTJcLPBqONaIqYQ/FK+G7uT2W5HaoqzX4LBhlBxd85
+         vDiTw9xncOcKg+dpB5idU6X93TV6rartGr26JX36x3Pi7tZbXfsDbFUD16MhVg/mVceH
+         VSZ2vfQe3utkWAvnD7sdqK86BLLNcy/HdrjJw8XR5d6CUzjprXzi7GxM1MwM1yHcDOJ0
+         fx3A==
+X-Gm-Message-State: AOJu0YytMc4+/oaG1jQFExpcSQNqga9lpuVnTaARSKGQpFloo4Qw34ix
+	owgNgPyX3VBVDEWKZfvgQz22uNOGH8JfK8LMMKNYhg==
+X-Google-Smtp-Source: AGHT+IF5iZ4loNbrkDEVIKN0ZuOOKoVeFsgMMcs4UNMekY672SG41YIpWxGAUfSzwyEW89VxsHniMNAuYOLaquPgO8c=
+X-Received: by 2002:a25:2395:0:b0:db7:dad0:76dd with SMTP id
+ j143-20020a252395000000b00db7dad076ddmr3075741ybj.121.1702040063846; Fri, 08
+ Dec 2023 04:54:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20231121220155.1217090-1-iii@linux.ibm.com> <20231121220155.1217090-18-iii@linux.ibm.com>
+In-Reply-To: <20231121220155.1217090-18-iii@linux.ibm.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Fri, 8 Dec 2023 13:53:41 +0100
+Message-ID: <CAG_fn=Ug6MFyoj=J_yabfd-V+3vGYNS3-CS+fhW9Tsc847xMtw@mail.gmail.com>
+Subject: Re: [PATCH v2 17/33] mm: kfence: Disable KMSAN when checking the canary
+To: Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 7 Dec 2023 17:31:08 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> On bugs that have the ring buffer timestamp get out of sync, the config
-> CONFIG_RING_BUFFER_VALIDATE_TIME_DELTAS, that checks for it and if it is
-> detected it causes a dump of the bad sub buffer.
-> 
-> It shows each event and their timestamp as well as the delta in the event.
-> But it's also good to see the offset into the subbuffer for that event to
-> know if how close to the end it is.
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
-Looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks!
-
-> ---
-> Changes since v1: https://lore.kernel.org/linux-trace-kernel/20231207171613.0592087d@gandalf.local.home
-> 
-> - Add "0x" before the "%x" to make the print less confusing (Mathieu Desnoyers)
-> 
->  kernel/trace/ring_buffer.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 8d2a4f00eca9..09d4b1aa8820 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -3424,23 +3424,27 @@ static void dump_buffer_page(struct buffer_data_page *bpage,
->  		case RINGBUF_TYPE_TIME_EXTEND:
->  			delta = rb_event_time_stamp(event);
->  			ts += delta;
-> -			pr_warn("  [%lld] delta:%lld TIME EXTEND\n", ts, delta);
-> +			pr_warn(" 0x%x: [%lld] delta:%lld TIME EXTEND\n",
-> +				e, ts, delta);
->  			break;
->  
->  		case RINGBUF_TYPE_TIME_STAMP:
->  			delta = rb_event_time_stamp(event);
->  			ts = rb_fix_abs_ts(delta, ts);
-> -			pr_warn("  [%lld] absolute:%lld TIME STAMP\n", ts, delta);
-> +			pr_warn(" 0x%x:  [%lld] absolute:%lld TIME STAMP\n",
-> +				e, ts, delta);
->  			break;
->  
->  		case RINGBUF_TYPE_PADDING:
->  			ts += event->time_delta;
-> -			pr_warn("  [%lld] delta:%d PADDING\n", ts, event->time_delta);
-> +			pr_warn(" 0x%x:  [%lld] delta:%d PADDING\n",
-> +				e, ts, event->time_delta);
->  			break;
->  
->  		case RINGBUF_TYPE_DATA:
->  			ts += event->time_delta;
-> -			pr_warn("  [%lld] delta:%d\n", ts, event->time_delta);
-> +			pr_warn(" 0x%x:  [%lld] delta:%d\n",
-> +				e, ts, event->time_delta);
->  			break;
->  
->  		default:
-> -- 
-> 2.42.0
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Tue, Nov 21, 2023 at 11:02=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.co=
+m> wrote:
+>
+> KMSAN warns about check_canary() accessing the canary.
+>
+> The reason is that, even though set_canary() is properly instrumented
+> and sets shadow, slub explicitly poisons the canary's address range
+> afterwards.
+>
+> Unpoisoning the canary is not the right thing to do: only
+> check_canary() is supposed to ever touch it. Instead, disable KMSAN
+> checks around canary read accesses.
+>
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Reviewed-by: Alexander Potapenko <glider@google.com>
