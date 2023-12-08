@@ -1,52 +1,53 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sosVTcFy"
-Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE7BDFA
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  8 Dec 2023 06:18:53 -0800 (PST)
-Received: by mail-qk1-x733.google.com with SMTP id af79cd13be357-77f4b8bbe0eso44618385a.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 08 Dec 2023 06:18:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="et9XLQ8Z"
+Received: from mail-oo1-xc2d.google.com (mail-oo1-xc2d.google.com [IPv6:2607:f8b0:4864:20::c2d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91BE31723
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  8 Dec 2023 06:25:58 -0800 (PST)
+Received: by mail-oo1-xc2d.google.com with SMTP id 006d021491bc7-58d12b53293so1061277eaf.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 08 Dec 2023 06:25:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702045133; x=1702649933; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1702045558; x=1702650358; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=b4aUU7dNjS/w6j2yOU1hBuNM/NL6fqAI1SOBM3IICMA=;
-        b=sosVTcFyu2GzDo3ZpJ9JYMr9x8cL+nfMjaYe5l6NX8B6UjAvCK8scD//SXdLHsQqws
-         8jver1uwXhTGs3Brw/1qWLHLetD5hgsBf5HaZTlga6jQWFov3IlLaBKBU+g/++aPAvka
-         IkhhPdieQJvvQduKvns0CaQ6/T1tVGY7TVWPzKdgWurcQ+bqI3XAVicUoqyyXYeES7Yr
-         sy7h2SbV5iGg5IC/090vF8bmTMkF1ByDo0Qhtgg3TcDBqOqm7apNDxsla22HOA4c7fl0
-         W03DqmLDlqNMuXrHeiy14+TMGkKSbv9dfog+IzqfpOO/JlXiLVEPPaxhI94SW8xe9ml5
-         lB2Q==
+        bh=gMzKOjsadOdlzFzBDSAqUHFYwgT1E5TMaJuAbqx/ofA=;
+        b=et9XLQ8ZqQT+MVCjxwENauz7zGRsz7y+sf/oinfJ9dSLA6+risywteuJ0+D458LWYO
+         MwigzbeYVmMop8fjsJOtrzqEMEzsSR/M4PN1AK8vKb6u0TxVVPCAhqZJkgwxkVyMbMTq
+         SObTOJyJ2hSepeJ+g7TfRlF13ita9TzNVJBv7QEOW3eFgyphBF4hWJRLP3RvmOc3eIdn
+         T/N5cAHLbcch8sE5N9LZLgXKK7Lcwxen3VCPL4zjHtjUIEREoSySmPiwNYK1xMPE+JQ5
+         W/gZZnIKJ40pOd8zBIQCdzpyY5+sHuRgcY4QSbZngUj5UvQNefCXC7ltDno2DSir7rOw
+         p2MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702045133; x=1702649933;
+        d=1e100.net; s=20230601; t=1702045558; x=1702650358;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=b4aUU7dNjS/w6j2yOU1hBuNM/NL6fqAI1SOBM3IICMA=;
-        b=DIjdt9KaBVxmakHFevLC0xIIlH1MmdMepwKSWgxFMJy84ERlxHnzgB/7pHscuwdH/w
-         LAJRtw/26dwpceOykgmmQp+udjLCqjqj5TINMcQHKq1vmLfJRqbRig0tpfBz47UKhkca
-         4tJ05lGdV6Hh/9qHVMGQzYWuEiHp/9yky4AwcPKB2Y8ll48n6vjcwYyyD+jqLZqO/jTA
-         GXULpQfsw0nqC2ujQHppnSxcP+/F5dt4Qa+hK3WXypuUtN5kLbnbFY4I/jLqwJs13Oho
-         UDHl6M03G457ZQekr9UN1TWMfAoQHXiV3aESc/hHpCec8oXSiNM3kMYVNjHq8Krf3GtM
-         gOEQ==
-X-Gm-Message-State: AOJu0YxAoK++pAYvcEMnvS08qEw3bEFBbVnUGHo22V6n8TxVIY8xKqfy
-	qwdCQmdIxolpWwb20U7esEoA7ztkPlLM2gatfEIHSw==
-X-Google-Smtp-Source: AGHT+IH8EMqb7H0OjwmlXGKXc/KMyqDWbzvWyGHpM5I7Qm/vaxWs0Al1SPzWhhi4fZH80FWJcx2+zkplz4DLr+7aWfs=
-X-Received: by 2002:a05:6214:1023:b0:67a:be9a:e9df with SMTP id
- k3-20020a056214102300b0067abe9ae9dfmr23702qvr.17.1702045132939; Fri, 08 Dec
- 2023 06:18:52 -0800 (PST)
+        bh=gMzKOjsadOdlzFzBDSAqUHFYwgT1E5TMaJuAbqx/ofA=;
+        b=dOd1v5pudTygcE2utBfNeNw/Ih3+z2zLy8YVS7eo+gg7/4JdABGuHXMM6yWl/SOgxe
+         FcptJLY9Xy1cEJdA38OstFKXhQ1QXY+rxyiTyp8MbKL+3WqWa0bp8rS10/VdqGZbYHCG
+         OpN+tTZ+GOlAYCppyf3nby9iACXHMEoi/Ndsx9NoN/zjgfUaNBARlqfZUJgsQn331JzS
+         ADJZoEnG2JVTyYRwe+5JXFQU0L5GuESQOruaz1WAaOrR5fBzHvgRCK2VP8z8uv3U+fNy
+         BGkoP4uhfbn95vBqiAHNd0WX46GaXkLU9bukFvmsq6jbq9pgIn9T5apMKhArBDCWIAn5
+         a3vw==
+X-Gm-Message-State: AOJu0Yy/bH4TzBjMlEQK70N4MFQow8AuYb6izTX1Af7Z+NtGt6UCyzOI
+	Uq+MHnmqojVHeUy5lnqmks+vwAko9Ce4RzyYYaRWxg==
+X-Google-Smtp-Source: AGHT+IE/E5Zk6lpM+Q8iq+g4LL35DztvA78a9rnsgBC2xnye70UOmh2YC4gbKyaDqDSFpsQYE13Fz8eacxBaFlVCob8=
+X-Received: by 2002:a05:6358:10c:b0:170:4403:83a6 with SMTP id
+ f12-20020a056358010c00b00170440383a6mr3947511rwa.52.1702045557641; Fri, 08
+ Dec 2023 06:25:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231121220155.1217090-1-iii@linux.ibm.com> <20231121220155.1217090-27-iii@linux.ibm.com>
-In-Reply-To: <20231121220155.1217090-27-iii@linux.ibm.com>
+References: <20231121220155.1217090-1-iii@linux.ibm.com> <20231121220155.1217090-20-iii@linux.ibm.com>
+ <CAG_fn=WiT7C2QMCwq_nBg9FXZrJ2-mSyJuM1uVz_3Mag8xBHJg@mail.gmail.com> <4f0eb4b4d4f6830f39555dc8a35f6ff88d6f8e63.camel@linux.ibm.com>
+In-Reply-To: <4f0eb4b4d4f6830f39555dc8a35f6ff88d6f8e63.camel@linux.ibm.com>
 From: Alexander Potapenko <glider@google.com>
-Date: Fri, 8 Dec 2023 15:18:16 +0100
-Message-ID: <CAG_fn=UBaF8SnvJ4t4wbBZKbNEBWRyGBY=FA+CTB+k2+pa2qEw@mail.gmail.com>
-Subject: Re: [PATCH v2 26/33] s390/ftrace: Unpoison ftrace_regs in kprobe_ftrace_handler()
+Date: Fri, 8 Dec 2023 15:25:21 +0100
+Message-ID: <CAG_fn=XUSfppyVMZO5K2kaii+OSLxV_UbHcn3cuH3zBt9J3g1g@mail.gmail.com>
+Subject: Re: [PATCH v2 19/33] lib/zlib: Unpoison DFLTCC output buffers
 To: Ilya Leoshkevich <iii@linux.ibm.com>
 Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
 	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
@@ -57,20 +58,40 @@ Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-founda
 	Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com, 
 	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org, 
 	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
+	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>, 
+	Mikhail Zaslonko <zaslonko@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 21, 2023 at 11:02=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.co=
-m> wrote:
+On Fri, Dec 8, 2023 at 3:14=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.com>=
+ wrote:
 >
-> s390 uses assembly code to initialize ftrace_regs and call
-> kprobe_ftrace_handler(). Therefore, from the KMSAN's point of view,
-> ftrace_regs is poisoned on kprobe_ftrace_handler() entry. This causes
-> KMSAN warnings when running the ftrace testsuite.
+> On Fri, 2023-12-08 at 14:32 +0100, Alexander Potapenko wrote:
+> > On Tue, Nov 21, 2023 at 11:07=E2=80=AFPM Ilya Leoshkevich <iii@linux.ib=
+m.com>
+> > wrote:
+> > >
+> > > The constraints of the DFLTCC inline assembly are not precise: they
+> > > do not communicate the size of the output buffers to the compiler,
+> > > so
+> > > it cannot automatically instrument it.
+> >
+> > KMSAN usually does a poor job instrumenting inline assembly.
+> > Wouldn't be it better to switch to pure C ZLIB implementation, making
+> > ZLIB_DFLTCC depend on !KMSAN?
 >
-> Fix by trusting the assembly code and always unpoisoning ftrace_regs in
-> kprobe_ftrace_handler().
->
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Reviewed-by: Alexander Potapenko <glider@google.com>
+> Normally I would agree, but the kernel DFLTCC code base is synced with
+> the zlib-ng code base to the extent that it uses the zlib-ng code style
+> instead of the kernel code style, and MSAN annotations are already a
+> part of the zlib-ng code base. So I would prefer to keep them for
+> consistency.
+
+Hm, I didn't realize this code is being taken from elsewhere.
+If so, maybe we should come up with an annotation that can be
+contributed to zlib-ng, so that it doesn't cause merge conflicts every
+time Mikhail is doing an update?
+(leaving this up to you to decide).
+
+If you decide to go with the current solution, please consider adding
+an #include for kmsan-checks.h, which introduces
+kmsan_unpoison_memory().
