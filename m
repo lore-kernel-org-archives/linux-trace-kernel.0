@@ -1,175 +1,401 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hwf3UPQd";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="WtQbxuq+"
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 099F61729;
-	Thu,  7 Dec 2023 21:12:17 -0800 (PST)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B82fWMN000448;
-	Fri, 8 Dec 2023 05:11:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references :
- content-transfer-encoding : content-type : mime-version;
- s=corp-2023-11-20; bh=6ARSjib6yqzossKjmNlVRIb13i1DqVdFKeCdUj/UnLQ=;
- b=hwf3UPQd90VNNkeL5lems1SxKjDQ0E0NPUTHHCujDBmwGYMZAW1PmxwBpXp3kHjhufJz
- D6vdKYtaVvws9VZf+KONzUQ7MgNUUm9+WER0l4J2o2ums0UAmrpnIxeiIn1BuJI+/9ub
- 1z8qpDSodWN2bURcX0AZ/MvuMEcT8wA2mH58ZGjeE2D12nA0Ij4eQO50NopNvVZ+w85I
- wweanWAWi1gwdgbEDRHlNEWGw1RrVrfMrrxwvi5u8vEej7O00amv96OABbqTGEmoeQfR
- EsKxKvDkQdCR/8bVffz1+J0+lR/rAVZ671rEGHRqs99SBWKlzl049+GS+CUWgS6smxc/ eg== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3utdabw6fm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 08 Dec 2023 05:11:46 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3B84PJfd037455;
-	Fri, 8 Dec 2023 05:11:45 GMT
-Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2040.outbound.protection.outlook.com [104.47.57.40])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3utan8efgy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 08 Dec 2023 05:11:45 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bkdzQ54hDmvoUT+1dSH5PrK22zX0NjdJfX8y+r5o8Qz7YJQ16KGfZg5o0CzjTCCXlMQrWSyk5E6cwRUyk+J71jbPFaFA/Nh1idLZlWcp0BvPgJpvfMt9Dhxty1BPWzr/IRgP6PLF+QJQ41TcK9L63rIzhHRCDIbLUGT7Dz96CzxyX+/vIBgPQHUD7P38/AGR49TH5zXKA3pMzmM+UvKOV5EOCpholP5zrBHAlCTM0ikWzWE59D5TYF3Cty8ebdwc5HMVROs/rt/kjOQMzOGUfeEiOkpdNbrtPdgGaDcBFKVhRtUjYj9wxw90zFy1N+NdrWXHHchC3On1v8d0CYBKgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6ARSjib6yqzossKjmNlVRIb13i1DqVdFKeCdUj/UnLQ=;
- b=JHoyPJaY9CTZ/BvnmA6vkNv77XwWYlnqsty/9vTYXpudWokLlKPtaQeezb4ZS7rcLvcxuhiBei3hpGSMcgBGPHZMb4V9wVzux2NuN3pOHSux8Qlcd+LWEVoKR0BHNWMW8ofwUUc8IQ6V4pk5ke+BqmP2apzHO7naUZ3p0Nz3m+a9zusMTmvxt93XlmH9dtAgKYWEkXJFwacIORsY+22NsJ/jnLPAuNAuhPSG1WX3qD5+ByYC9zM2eQS6JuXEFVBAU0jkQiM6myrAnOO08huXDunvWuPdOpw4YW/D690EdgF9g/oDXds9ybaRjdh2flQQFp4ScJB4tNJNuztDa1ol1g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6ARSjib6yqzossKjmNlVRIb13i1DqVdFKeCdUj/UnLQ=;
- b=WtQbxuq+8zdbhuKl3PzrLIHBLH06ca/oRoAlmYaX5nqZxuJIbUF37t2+nKn7eYEqSQ3OHk3OVBbHjFiVdD35/Lwz+88tcW29xoxHDv9/Di4fBR6bJQhPTl9qrK7XQ/IBkpcqeujvK4F9dNJqPs+oIQSjBXkWanZ0KsVZfkHToc4=
-Received: from SN6PR10MB2975.namprd10.prod.outlook.com (2603:10b6:805:d2::10)
- by BLAPR10MB5316.namprd10.prod.outlook.com (2603:10b6:208:326::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.28; Fri, 8 Dec
- 2023 05:11:43 +0000
-Received: from SN6PR10MB2975.namprd10.prod.outlook.com
- ([fe80::de47:3c1f:a55b:58d0]) by SN6PR10MB2975.namprd10.prod.outlook.com
- ([fe80::de47:3c1f:a55b:58d0%7]) with mapi id 15.20.7068.028; Fri, 8 Dec 2023
- 05:11:43 +0000
-From: Kris Van Hees <kris.van.hees@oracle.com>
-To: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc: Kris Van Hees <kris.van.hees@oracle.com>,
-        Nick Alcock <nick.alcock@oracle.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jiri Olsa <olsajiri@gmail.com>
-Subject: [PATCH 3/6] kbuild: generate a linker map for vmlinux.o
-Date: Fri,  8 Dec 2023 00:07:49 -0500
-Message-ID: <20231208050752.2787575-4-kris.van.hees@oracle.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231208050752.2787575-1-kris.van.hees@oracle.com>
-References: <20231208050752.2787575-1-kris.van.hees@oracle.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR03CA0241.namprd03.prod.outlook.com
- (2603:10b6:a03:3a0::6) To SN6PR10MB2975.namprd10.prod.outlook.com
- (2603:10b6:805:d2::10)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vFi4gQ/k"
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A271A10F1;
+	Thu,  7 Dec 2023 21:15:33 -0800 (PST)
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20231208051528epoutp02f62a22e4a1f9a0a100e07eed1efdcf05~ew2BpykZD0396703967epoutp02L;
+	Fri,  8 Dec 2023 05:15:28 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20231208051528epoutp02f62a22e4a1f9a0a100e07eed1efdcf05~ew2BpykZD0396703967epoutp02L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1702012528;
+	bh=h/zNPKebJjgO3x5YIRu6IEuCHAp9uLbx3pzG4mbKSf4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=vFi4gQ/kmltJ31PjSs93GXeTc4zEQJ8EUPB8wtUye4DSZ8ye4Z84KJhU4VLa1tdbW
+	 n82Cm9mKUZCC7uB0WwZczZQij8Ka6ubfVZ2WSzO9GFY1C7E0Wq1zsjlKzBEfZWPYtj
+	 BJmfAd+Q+26HxX+xxcd4rIcqrMvx79FS4oSWW7YU=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+	20231208051527epcas2p47b86be684c740372ea3f5c271c6a602e~ew2A9XM9o1077210772epcas2p4c;
+	Fri,  8 Dec 2023 05:15:27 +0000 (GMT)
+Received: from epsmgec2p1-new.samsung.com (unknown [182.195.36.69]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4SmfV62jDmz4x9Q3; Fri,  8 Dec
+	2023 05:15:26 +0000 (GMT)
+Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
+	epsmgec2p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	E7.2F.18994.E66A2756; Fri,  8 Dec 2023 14:15:26 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+	20231208051525epcas2p3dabd33e6844640d4cec22b13d3d5b03c~ew1-bHXo_2679126791epcas2p3H;
+	Fri,  8 Dec 2023 05:15:25 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20231208051525epsmtrp100d30e5016e029475cf483a79abdde32~ew1-ZZi1j1106611066epsmtrp1g;
+	Fri,  8 Dec 2023 05:15:25 +0000 (GMT)
+X-AuditID: b6c32a4d-743ff70000004a32-09-6572a66e29b0
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	1B.E5.07368.D66A2756; Fri,  8 Dec 2023 14:15:25 +0900 (KST)
+Received: from tiffany (unknown [10.229.95.142]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20231208051525epsmtip2180f600b636fbdc8a47553f868a430be~ew1-CImH-2215922159epsmtip2F;
+	Fri,  8 Dec 2023 05:15:25 +0000 (GMT)
+Date: Fri, 8 Dec 2023 14:03:44 +0900
+From: Hyesoo Yu <hyesoo.yu@samsung.com>
+To: Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
+	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+	bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+	vschneid@redhat.com, mhiramat@kernel.org, rppt@kernel.org, hughd@google.com,
+	pcc@google.com, steven.price@arm.com, anshuman.khandual@arm.com,
+	vincenzo.frascino@arm.com, david@redhat.com, eugenis@google.com,
+	kcc@google.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v2 11/27] arm64: mte: Reserve tag storage memory
+Message-ID: <20231208050340.GA1359878@tiffany>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR10MB2975:EE_|BLAPR10MB5316:EE_
-X-MS-Office365-Filtering-Correlation-Id: 54287107-f3d9-42c9-2d11-08dbf7ac2b1e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	AK60n9p18VAvZ9Z0ct3CYwmAJWv6lPqO4BpQd6n16/F76+PHa93L9Cw3IlRVwYMLJR21HVo99HRLtAAo+5LXLHJadY/vz7f/+EjEkuSp+FKTcIcwegvVr3dRi7YvfEey+EQ+i7AvIbgNpFFv1RMDH96ASSUrZ23Lzz5pWSnktFidPmDaxKBqWyagCjIa4Hl2j6FkwkYg4Q1NRcNq2kyS5ygju4KQhccKOXNA8yyrwy//2uGrtrrUBahO7dcwlpkWJ7y/uoK2rtbxs11C2q2PrW/ymtMePs5gu81vyLyxa57gbvQ+yfNqSNui2EKwsVt8aAX37b38WRfDZcOrWCyqJDGfNtGJGkX59vm/Qt+f4WD2PhAUj3Va9QZQnX3yUvEmNXcsNv77Xk3QULo5itLKP0d/7uz+VrAMR32qGh69WZZIUz26PQjE7fRDDvWWRzHmAtIQbenAufTLtU3RrEbFpdczy4CP9B4FmyIkMuV+Q/YTzdUxG8z9jWyEoMV+6fZ8hGxS+5fR18jxpV/xvicLGUF5DU99UUc87143w/LMyLpPtMhgGc0eJKUg4grbOG9e
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR10MB2975.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(39860400002)(136003)(346002)(366004)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(6486002)(478600001)(66556008)(66476007)(54906003)(66946007)(38100700002)(6512007)(26005)(316002)(6506007)(2616005)(1076003)(2906002)(8936002)(8676002)(86362001)(4326008)(5660300002)(103116003)(36756003)(41300700001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?FpnhyhPWb/QmsPq+ZlSuxbMZVFnNhVt2K6bxO65XOIcZ4Ded/wSF1yS31Bfk?=
- =?us-ascii?Q?vNK3x3mZyHfWwX0kL7H4JEDVRh4a3WeEnv2SrorbGjU2zx37VudUrDgJ2vlZ?=
- =?us-ascii?Q?LO7zCjyVVvQbfgGOdYwx9lgNQ3USB3CgP9u5JnEjCauDgpP06ZM7RNWVWlzs?=
- =?us-ascii?Q?kc7yTrdiqqnzB/F+E7WGIjOYtATqtSHt27PLs5IoSua2Dn/+zRdy0cRMMkvj?=
- =?us-ascii?Q?5iIxsmyuh5I5ifLNSGjCgwEgGYbfRAB5BK1r34AD9Vj9EuR8hil6AZT7xOCP?=
- =?us-ascii?Q?cM9M9fa6Jbou2TfZuw8vO1jRAf6NVVhbBnZDEP3gzExXvS1++M76XSNZbfNF?=
- =?us-ascii?Q?FdT4WzwltA7+fU586UmLkbk0Fng1c3XTl9EwxHsC7AphbISTviG5hDaNyeQw?=
- =?us-ascii?Q?4PlUF/rZ61EkxvYDAUtZzVYmwiWjswSFNWuyh4q+R7aCBBTKVRcohtp6PgB8?=
- =?us-ascii?Q?n9WVgegkH5CNt5IkQV87wxWb+oLHgSERncY6ZN2xRrgJk+6ODVHAkrB6ombk?=
- =?us-ascii?Q?HIMfa1upbuHLKrlHYmmEcM9kyLIqEZpf+uzFweDvQmmjjYEFhxqOZZZxdQxw?=
- =?us-ascii?Q?HIn/SyiBH8o1HuRC5qEee6OmBAqOgXZGJo6DCUTpxpCQo/3kAlSVazTAn/LI?=
- =?us-ascii?Q?NSoblslfLFcmBc9Ms5H3bPHAT8+K3TE+zv2+O1pwECpg0VjVpgBlO0IZe5o4?=
- =?us-ascii?Q?x181uKveEKlJG36smBrhZnqpVGnzymkrrX2obeBcFfY1bvDRNzd6b14xBuCp?=
- =?us-ascii?Q?IbTelwKJz/1Irny56S5vRrpu7qw8XZfDnUaO7eq5bu9j6Q1q405FBrHNAeRb?=
- =?us-ascii?Q?IUfpVuo2RsV7y+2/3Zw/jtM3FYn9bE/Ux98cg7xfvoPu52h/ahRu7wbUo89V?=
- =?us-ascii?Q?kFnWRGIVYqs25GczhTS5I/anGoE9LRYoUhoyHKdz47UHyqHIdsvzlY6UR3gl?=
- =?us-ascii?Q?Cs8cHwVyKqNy2tCZglG6o92qfA/L+JdTlORiezumLDdJREgdk/vRiY1YIhEd?=
- =?us-ascii?Q?kMkOHpGvntJeASx52VlDUrkbeS0roelBPe39YTrFQ8CNzJV/Pd74C085AT5F?=
- =?us-ascii?Q?tEMTdMATYLfeGbPNTd1rYEFQ83MI59XbljlGqQD7DIHhtT6pIFhZ1QbRjXtQ?=
- =?us-ascii?Q?keRNJXolZWnA6/VcYmG+MUgR3vUi02RLiRd+WzDh9PSKyneOk8G4GCxVP1jA?=
- =?us-ascii?Q?lmjoKNagNCccMvjhSe8MqGWD02doKE0KGlSGrgkwWATiCBNwRVDZhbDp99FA?=
- =?us-ascii?Q?amNZrkiyyOmPqhNswWBOhXzSJFdC20pBWf0H3G5FGnpquGD9YhB1U5rluOsJ?=
- =?us-ascii?Q?QeYeKzyelY0yxqhTuMqmgbt8AnWk6tje+SqNqzc9/3yrab51I2JEcx5Nfw4j?=
- =?us-ascii?Q?iHvRX/UL68tBbVbRf09Gm5g0mlFtiW2c+slMzoI7nLSTlRnd+O5mbNP4CVU/?=
- =?us-ascii?Q?2LDcsrwUvPjEm2ru/6haSHHqfjsQdydUB2hu/aLCBt0O20qS4DXNi8e64ePX?=
- =?us-ascii?Q?TNmIj+cKjAr9x/bkJx4EaGWRYx6qYxVfKtLZgvqCN/0Ft/+0dfpwTkvyHjEP?=
- =?us-ascii?Q?kK0C+QkzeSDo/dmnUCdMYnqXaPfQxszO/0LObxcyGc3wjWQxVyWfwzHuhTzJ?=
- =?us-ascii?Q?6w=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	D/uc7Rrlqiz2aDGZ+HgKF46/12alpueRm5SPERloh+hgyaVqZCzj8oYjiCV54J1WY77XqDb2pr3bVYVoaevlntfHO2PUFliWpfrzQ78zsgwPiSRYYB9CXiy/zRjW9oNeQrl38tAaLKr9973igVURCorwVT5/J8sdslGjoR8CHdk1JGnOcwb5YYWLFwadgLOuoYEywXLpAZmQgQgxkw+bhwj2ScbZqy39xFCs1dXqOcLAoESlD1wv4eXPsbdAO4beG2iv7JLqGuZGYclGR8l+zmahPj6NwH71Sim/T5YywwNJ1nWnPo7xA8prJlKsyf1Qfd/PHltWCLRnD4EO5zO8HIyBoe1mzG5iBONDacoU5VR4YxKJuvvlY0oQVRqUw+nxt6E1RfDz+OrTA9R9mWOhZHYUEo6/HgRVVVBKNMz35J2T7IJapGDFBdVqZZ/Sqn5G6j/2xZ50Fjc23DOAPAlM+NhuuBHK1/fdRVbGjVR2buDVLRf3+NT9WRzeNVRUriB2w+ktsI9vrkbVr3B3ao+2rm2b8560OsHHAbJuGVRydnvFdpqJZ+gvP8a5ZV1jRnPS00m9fYuPyRm7+lPXga+uQPhe/bI07jW28bmGXs5LEhWRexwWDDo9nJiZzOiCUndgOAr56KKQVtznsvqSYO/OoCmYitDj1MKHpNYfNfDAPNqtf7c5aC65rDekluF+qHd9mSZZ3JCtzeG1lMeE1lhm4VoJ05GjJPcqAp3zJ7ZN5cp+3Ingym6XFEznOBZVIXtQYMNNbBC2eeXXym7b6TTmXQNscrz36/akmD3sHUK8mCSb36khOH6lx0RyWeAmIwQlUysElqCEY1c1EdkrykHNZ2Dpw59Jm5QpFyNkiWyxe0isrt2jJ5VXJrQaeaRIFwv/
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54287107-f3d9-42c9-2d11-08dbf7ac2b1e
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR10MB2975.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2023 05:11:43.3732
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 83Slb0J/yZC3mcxreUN0+FXbKGLPiRHYX3QMbF2MwykNv43TtX2+VnsLeXS3IQhBWBqd+TtyAiafUEuUx4UP4ZPXDP1z/7HjsNoX5mJYXio=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB5316
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-08_02,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 malwarescore=0
- suspectscore=0 mlxscore=0 adultscore=0 bulkscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2312080038
-X-Proofpoint-ORIG-GUID: ren_IUvTaxd3WHG9thAsW5G7zbcgekLp
-X-Proofpoint-GUID: ren_IUvTaxd3WHG9thAsW5G7zbcgekLp
+In-Reply-To: <ZWxxJipc2STxHHKn@raptor>
+X-Brightmail-Tracker: H4sIAAAAAAAAA02TfUwTdxjH/d1drwUtOarG36pjpDo3UKB1VH6oEJcZc8aNkS3bZEvEWi6A
+	lrbplTlGArgxZKggKDgqkjqgoNaUtKCzQGVQedsMkTcjqGwqRJkUVleZILrWw8X/Pvk+zzfP
+	Wx4BLhriiwWpaj2jUytUEtKfuNgeIg9Tm3SMtK54CaqwmEl08mw/iRxdSjRf0sFHffcGvdLD
+	gwSaMh0ByGOZxdHYsUYc/Wp0EWjMXUigUUcthm4XlRLo0vgkhiYa2gmUb/cQyHpviIeaW7oJ
+	1G+vINEd8wseclquEehyRTcPHXeNA1RVuxb1tRoxVPr0EYmKbt0gUefRVgw58v/AvLmXMHTQ
+	OUWi8pERgPKdT3DU8vwpgRqvzvBR7i05ullTz9/6Nm2uNAN6brYE0LmOYT5ttKbTuc5JHm2r
+	C6Wt534kaau7hE/fGmom6a6f5gj6TE4pTtuqs+kHtnJATzkGSdr2Wyb92BoUT325f0sKo0hi
+	dMGMWqlJSlUnx0h2fpr4QaJ8o1QWJotGUZJgtSKNiZFs+zA+bHuqyrtMSfDXClW6V4pXsKwk
+	InaLTpOuZ4JTNKw+RsJok1TaKG04q0hj09XJ4WpGv0kmlW6QexP37E85Mp5Hau3x31xsN5I5
+	wBhTAPwEkIqEdtcNvAD4C0RUM4DNfxtwX0BEuQF84YzjAk8ALLPN4K8czprzBBdoAdD1oHjB
+	PgZg7UAe8GUR1BronjXwfUxS78CuBtNLfRkVAe82TgCfAad6SHj71O9YARAIllI0vHRf5ssR
+	UuGwoqeXx3Eg7C6/T/jYj1oLh11NfJ8XUoX+sKrVDLiWtsGqE/8s8FI40dnA51gMHxblLTAL
+	L1a1Y5w5B0Bb/ujCPO9Bw/ihl2acSoF3XScIX0OQWg2dwwQnB8D89nk+Jwthfp6Ic66GV0yV
+	BMdvwLsXDvE4puHNulk+t5TvMTjyrAw/BoIMr81jeK0ax+uhsclNGrwlcGolrH0u4DAEWuwR
+	RsA7B8SMlk1LZpQbtLIwNXPg/ysrNWlW8PLBQj/6BfxlmQ9vA5gAtAEowCXLhKpeDSMSJiky
+	vmV0mkRduoph24Dce6BiXLxcqfF+qFqfKIuMlkZu3CiL2iCXRklWCO/8cDpJRCUr9Mx+htEy
+	ulc+TOAnzsFwsswTCE9svRq/aNusuMdiWfdFbMSfozXHF+/N2l2XkaqJ3tGGwMrFWX6ZCRmD
+	11IPdIwmlD87Ff0wwFgXFDytO9RbMr48e9Ve3cDRot3lrYsc9Z9Mny92v7lml2M0avHPS/q/
+	W9/Xd3hdS+y/ecKmwsGg+abAPd3KkI7krMdXLuwMmNG+Jeyd7MI3denj5q4Mac646cMrPjfl
+	1VTb2WCZudqm2rfPdPL08K64j5+umdzc3Tb4yEBfEBdWzoiE2QNW9Vfg7LtHRuyeGXfL0JR/
+	TJWt5vpY+ZMdns0rMqer2c+W96/yRAZqIzPlvbPre0o6FSECR8W96/v0uWP17OX3E64OSAg2
+	RSELxXWs4j8GZoSn6QQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sf1CTdRzH7/s8z549zDgf0OoBT6tl07gER3Z9Qvx5dH077ZdH3eU/uYNH
+	Zm5jbYAFZuBRN7ychMcx1lKkZDnWoRuDGGwqDBikKTJ/8EOsppxo22oE3jBmTOryv/e936/X
+	568PQyYaBMnMLlUBr1HJFGJaRLV0iZ9apWzQ8KtdXUvB1GSloebEIA1ubw7MVvUI4ZL/8lw1
+	UUZBqOFLBFNNMyTcqnSQcLYuSMGtsJ6CG24zAdcPVVPQOh4g4E5zFwU65xQFNv8VAXS4+igY
+	dJpoGLM+EICn6TwFbaY+ARwOjiP41iyBS2fqCKiO/E7DodGrNPQePEOAW/cLMce2ElDmCdFQ
+	OzKCQOeZJsEVjVDg6L4nhPLRl2Do+Enhxuew9YgV4fszVQiXu4eFuM5WiMs9AQG2f5+CbZYK
+	GtvCVUI8eqWDxl7DfQofK60msf27z/Btey3CIfdlGtt/KsGTtmVvs9tFmbm8YlcRr0lbv0Mk
+	P/dVG62eeePjlou9glIUyTiA4hiOXcN5jjdSB5CISWTbEddk6KbnhyTOONlHzOdF3I1yj2Ae
+	8iNuyt7/EKLY5Vx4xiiMZZpdwXmbG1AsL2bTuN8cd1BMINlzNKdvNM7ZDLOIxVzrTWmMiWdT
+	OVP/hX+Pfk5ws/WHifkhgeurvUnFMsmmcNeiE0TMJdklnDnKxOo4VsINB9uFlYg1PmIYHzGM
+	/xt1iLSgJF6tVeYpc6RqqYrfk6qVKbWFqrzUnHylDT18npSVP6Kxo9HUTkQwqBNxDCleHK+4
+	kM8nxufKPinmNfkfaAoVvLYTLWEo8ZPxUsPXuYlsnqyA383zal7z30owccmlxKa3HhPtfMcy
+	XVGCnMqRHf7te36QXNy31rV8tW9an57eu8399O2sL8Lm7op7qL5G9nORdXe2aYO5bY0mOtQ1
+	9ffpDZbxN4s3nX91TJ695dn2glNZEtf7gScWLm35yB36Q1f6q6/Z7u1NWud9RiUfqFqv3bbW
+	WRSxTgZO6jdLiLKVlfZh0Z+qiX5fx/70dcvuWg5if/31uy++cOTDVZW5K/4q9iSoIXmjIjN0
+	dSz53fZswueoURDvDeNrNSULF7z+/Cnr0Kc7z57uyay18obwy4GELeMDqozm1xQPOnxBvc6x
+	+cQrWZ1y17Gtk8yChowRdcQ/4Exr3P/N4z37yvZOhPcGB2fFlFYuk6aQGq3sHz+TVwurAwAA
+X-CMS-MailID: 20231208051525epcas2p3dabd33e6844640d4cec22b13d3d5b03c
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----enUWWt6WoF-Ggb2-rjyEux7skZ5dSWJ5iC_e377tM680ja-K=_931d8_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20231119165840epcas2p2c99f1dd358f716c103c16f47cc23bf2a
+References: <20231119165721.9849-1-alexandru.elisei@arm.com>
+	<CGME20231119165840epcas2p2c99f1dd358f716c103c16f47cc23bf2a@epcas2p2.samsung.com>
+	<20231119165721.9849-12-alexandru.elisei@arm.com>
+	<20231129084424.GA2988384@tiffany> <ZWxxJipc2STxHHKn@raptor>
 
-When CONFIG_BUILTIN_RANGES is set, a linker map for vmlinux.o needs to
-be generated.  The generation of offset range data for builtin modules
-depends on that linker map to know what offsets in an ELF section belong
-to an object file for a particular builtin module.
+------enUWWt6WoF-Ggb2-rjyEux7skZ5dSWJ5iC_e377tM680ja-K=_931d8_
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
-Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
-Reviewed-by: Nick Alcock <nick.alcock@oracle.com>
----
- scripts/Makefile.vmlinux_o | 3 +++
- 1 file changed, 3 insertions(+)
+Hi, 
 
-diff --git a/scripts/Makefile.vmlinux_o b/scripts/Makefile.vmlinux_o
-index bfb84efcef39..9e35cb0ed862 100644
---- a/scripts/Makefile.vmlinux_o
-+++ b/scripts/Makefile.vmlinux_o
-@@ -45,9 +45,12 @@ objtool-args = $(vmlinux-objtool-args-y) --link
- # Link of vmlinux.o used for section mismatch analysis
- # ---------------------------------------------------------------------------
- 
-+vmlinux-o-ld-args-$(CONFIG_BUILTIN_RANGES)		+= -Map=$@.map
-+
- quiet_cmd_ld_vmlinux.o = LD      $@
-       cmd_ld_vmlinux.o = \
- 	$(LD) ${KBUILD_LDFLAGS} -r -o $@ \
-+	$(vmlinux-o-ld-args-y) \
- 	$(addprefix -T , $(initcalls-lds)) \
- 	--whole-archive vmlinux.a --no-whole-archive \
- 	--start-group $(KBUILD_VMLINUX_LIBS) --end-group \
--- 
-2.42.0
+I'm sorry for the late response, I was on vacation.
 
+On Sun, Dec 03, 2023 at 12:14:30PM +0000, Alexandru Elisei wrote:
+> Hi,
+> 
+> On Wed, Nov 29, 2023 at 05:44:24PM +0900, Hyesoo Yu wrote:
+> > Hello.
+> > 
+> > On Sun, Nov 19, 2023 at 04:57:05PM +0000, Alexandru Elisei wrote:
+> > > Allow the kernel to get the size and location of the MTE tag storage
+> > > regions from the DTB. This memory is marked as reserved for now.
+> > > 
+> > > The DTB node for the tag storage region is defined as:
+> > > 
+> > >         tags0: tag-storage@8f8000000 {
+> > >                 compatible = "arm,mte-tag-storage";
+> > >                 reg = <0x08 0xf8000000 0x00 0x4000000>;
+> > >                 block-size = <0x1000>;
+> > >                 memory = <&memory0>;	// Associated tagged memory node
+> > >         };
+> > >
+> > 
+> > How about using compatible = "shared-dma-pool" like below ?
+> > 
+> > &reserved_memory {
+> > 	tags0: tag0@8f8000000 {
+> > 		compatible = "arm,mte-tag-storage";
+> >         	reg = <0x08 0xf8000000 0x00 0x4000000>;
+> > 	};
+> > }
+> > 
+> > tag-storage {
+> >         compatible = "arm,mte-tag-storage";
+> > 	memory-region = <&tag>;
+> >         memory = <&memory0>;
+> > 	block-size = <0x1000>;
+> > }
+> > 
+> > And then, the activation of CMA would be performed in the CMA code.
+> > We just can get the region information from memory-region and allocate it directly
+> > like alloc_contig_range, take_page_off_buddy. It seems like we can remove a lots of code.
+>
+
+Sorry, that example was my mistake. Actually I wanted to write like this. 
+
+&reserved_memory {
+	tags0: tag0@8f8000000 {
+		compatible = "shared-dma-pool";
+        	reg = <0x08 0xf8000000 0x00 0x4000000>;
+		reusable;
+	};
+}
+
+tag-storage {
+        compatible = "arm,mte-tag-storage";
+ 	memory-region = <&tag>;
+        memory = <&memory0>;
+	block-size = <0x1000>;
+}
+
+
+> Played with reserved_mem a bit. I don't think that's the correct path
+> forward.
+> 
+> The location of the tag storage is a hardware property, independent of how
+> Linux is configured.
+> 
+> early_init_fdt_scan_reserved_mem() is called from arm64_memblock_init(),
+> **after** the kernel enforces an upper address for various reasons. One of
+> the reasons can be that it's been compiled with 39 bits VA.
+> 
+
+I'm not sure about this part. What is the upper address enforced by the kernel ?
+Where can I check the code ? Do you means that memblock_end_of_DRAM() ?  
+
+> After early_init_fdt_scan_reserved_mem() returns, the kernel sets the
+> maximum address, stored in the variable "high_memory".
+>
+> What can happen is that tag storage is present at an address above the
+> maximum addressable by the kernel, and the CMA code will trigger an
+> unrecovrable page fault.
+> 
+> I was able to trigger this with the dts change:
+> 
+> diff --git a/arch/arm64/boot/dts/arm/fvp-base-revc.dts b/arch/arm64/boot/dts/arm/fvp-base-revc.dts
+> index 60472d65a355..201359d014e4 100644
+> --- a/arch/arm64/boot/dts/arm/fvp-base-revc.dts
+> +++ b/arch/arm64/boot/dts/arm/fvp-base-revc.dts
+> @@ -183,6 +183,13 @@ vram: vram@18000000 {
+>                         reg = <0x00000000 0x18000000 0 0x00800000>;
+>                         no-map;
+>                 };
+> +
+> +
+> +               linux,cma {
+> +                       compatible = "shared-dma-pool";
+> +                       reg = <0x100 0x0 0x00 0x4000000>;
+> +                       reusable;
+> +               };
+>         };
+> 
+>         gic: interrupt-controller@2f000000 {
+> 
+> And the error I got:
+> 
+> [    0.000000] Reserved memory: created CMA memory pool at 0x0000010000000000, size 64 MiB
+> [    0.000000] OF: reserved mem: initialized node linux,cma, compatible id shared-dma-pool
+> [    0.000000] OF: reserved mem: 0x0000010000000000..0x0000010003ffffff (65536 KiB) map reusable linux,cma
+> [..]
+> [    0.793193] WARNING: CPU: 0 PID: 1 at mm/cma.c:111 cma_init_reserved_areas+0xa8/0x378
+> [..]
+> [    0.806945] Unable to handle kernel paging request at virtual address 00000001fe000000
+> [    0.807277] Mem abort info:
+> [    0.807277]   ESR = 0x0000000096000005
+> [    0.807693]   EC = 0x25: DABT (current EL), IL = 32 bits
+> [    0.808110]   SET = 0, FnV = 0
+> [    0.808443]   EA = 0, S1PTW = 0
+> [    0.808526]   FSC = 0x05: level 1 translation fault
+> [    0.808943] Data abort info:
+> [    0.808943]   ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
+> [    0.809360]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> [    0.809776]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> [    0.810221] [00000001fe000000] user address but active_mm is swapper
+> [..]
+> [    0.820887] Call trace:
+> [    0.821027]  cma_init_reserved_areas+0xc4/0x378
+> [    0.821443]  do_one_initcall+0x7c/0x1c0
+> [    0.821860]  kernel_init_freeable+0x1bc/0x284
+> [    0.822277]  kernel_init+0x24/0x1dc
+> [    0.822693]  ret_from_fork+0x10/0x20
+> [    0.823554] Code: 9127a29a cb813321 d37ae421 8b030020 (f8636822)
+> [    0.823554] ---[ end trace 0000000000000000 ]---
+> [    0.824360] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+> [    0.824443] SMP: stopping secondary CPUs
+> [    0.825193] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]---
+> 
+> Should reserved mem check if the reserved memory is actually addressable by
+> the kernel if it's not "no-map"? Should cma fail gracefully if
+> !pfn_valid(base_pfn)? Shold early_init_fdt_scan_reserved_mem() be moved
+> because arm64_bootmem_init()? I don't have the answer to any of those. And
+> I got a kernel panic because the kernel cannot address that memory (39 bits
+> VA). I don't know what would happen if the upper limit is reduced for
+> another reason.
+> 
+
+My answer may not be accurate because I don't understand what this upper limit is.
+Is this a problem caused by the tag storage area not being included in the memory node ?
+
+The reason for not including it in the memory node is to enable static mte when dmte
+initilization fails, right ? I think I missed that. I thought the tag storage is included
+in the memory node and registered as cma.
+
+> What I think should happen:
+> 
+> 1. Add the tag storage memory before any limits are enforced by
+> arm64_bootmem_init().
+>
+> 2. Call cma_declare_contiguous_nid() after arm64_bootmem_init(), because
+> the function will check the memory limit.
+> 
+> 3. Have an arch initcall that checks that the CMA regions corresponding to
+> the tag storage have been activated successfully (cma_init_reserved_areas()
+> is a core initcall). If not, then don't enable tag storage.
+> 
+> How does that sound to you?
+> 
+> Thanks,
+> Alex
+> 
+
+I think this is a good way to utilize the cma code !
+
+Thanks,
+Regards.
+
+> > > +	ret = tag_storage_of_flat_read_u32(node, "block-size", &block_size_bytes);
+> > > +	if (ret || block_size_bytes == 0) {
+> > > +		pr_err("Invalid or missing 'block-size' property");
+> > > +		return -EINVAL;
+> > > +	}
+> > > +	region->block_size = get_block_size_pages(block_size_bytes);
+> > > +	if (range_len(tag_range) % region->block_size != 0) {
+> > > +		pr_err("Tag storage region size 0x%llx is not a multiple of block size %u",
+> > > +		       PFN_PHYS(range_len(tag_range)), region->block_size);
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > 
+> > I was confused about the variable "block_size", The block size declared in the device tree is
+> > in bytes, but the actual block size used is in pages. I think the term "block_size" can cause
+> > confusion as it might be interpreted as bytes. If possible, I suggest changing the term "block_size"
+> > to something more readable, such as "block_nr_pages" (This is just a example!)
+> > 
+> > Thanks,
+> > Regards.
+>>
+
+What do you think about this ?
+
+Thanks,
+Regards.
+
+> > > +	ret = tag_storage_of_flat_read_u32(mem_node, "numa-node-id", &nid);
+> > > +	if (ret)
+> > > +		nid = numa_node_id();
+> > > +
+> > > +	ret = memblock_add_node(PFN_PHYS(tag_range->start), PFN_PHYS(range_len(tag_range)),
+> > > +				nid, MEMBLOCK_NONE);
+> > > +	if (ret) {
+> > > +		pr_err("Error adding tag memblock (%d)", ret);
+> > > +		return ret;
+> > > +	}
+> > > +	memblock_reserve(PFN_PHYS(tag_range->start), PFN_PHYS(range_len(tag_range)));
+> > > +
+> > > +	pr_info("Found tag storage region 0x%llx-0x%llx, block size %u pages",
+> > > +		PFN_PHYS(tag_range->start), PFN_PHYS(tag_range->end), region->block_size);
+> > > +
+> > > +	num_tag_regions++;
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +void __init mte_tag_storage_init(void)
+> > > +{
+> > > +	struct range *tag_range;
+> > > +	int i, ret;
+> > > +
+> > > +	ret = of_scan_flat_dt(fdt_init_tag_storage, NULL);
+> > > +	if (ret) {
+> > > +		for (i = 0; i < num_tag_regions; i++) {
+> > > +			tag_range = &tag_regions[i].tag_range;
+> > > +			memblock_remove(PFN_PHYS(tag_range->start), PFN_PHYS(range_len(tag_range)));
+> > > +		}
+> > > +		num_tag_regions = 0;
+> > > +		pr_info("MTE tag storage region management disabled");
+> > > +	}
+> > > +}
+> > > diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> > > index 417a8a86b2db..1b77138c1aa5 100644
+> > > --- a/arch/arm64/kernel/setup.c
+> > > +++ b/arch/arm64/kernel/setup.c
+> > > @@ -42,6 +42,7 @@
+> > >  #include <asm/cpufeature.h>
+> > >  #include <asm/cpu_ops.h>
+> > >  #include <asm/kasan.h>
+> > > +#include <asm/mte_tag_storage.h>
+> > >  #include <asm/numa.h>
+> > >  #include <asm/scs.h>
+> > >  #include <asm/sections.h>
+> > > @@ -342,6 +343,12 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
+> > >  			   FW_BUG "Booted with MMU enabled!");
+> > >  	}
+> > >  
+> > > +	/*
+> > > +	 * Must be called before memory limits are enforced by
+> > > +	 * arm64_memblock_init().
+> > > +	 */
+> > > +	mte_tag_storage_init();
+> > > +
+> > >  	arm64_memblock_init();
+> > >  
+> > >  	paging_init();
+> > > -- 
+> > > 2.42.1
+> > > 
+> > > 
+> 
+> 
+> 
+
+------enUWWt6WoF-Ggb2-rjyEux7skZ5dSWJ5iC_e377tM680ja-K=_931d8_
+Content-Type: text/plain; charset="utf-8"
+
+
+------enUWWt6WoF-Ggb2-rjyEux7skZ5dSWJ5iC_e377tM680ja-K=_931d8_--
