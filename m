@@ -1,172 +1,238 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YcjPqF6H";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="tm1oBfaK"
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96EF710F1;
-	Thu,  7 Dec 2023 21:21:44 -0800 (PST)
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B82Sm53019457;
-	Fri, 8 Dec 2023 05:21:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references :
- content-transfer-encoding : content-type : mime-version;
- s=corp-2023-11-20; bh=NoFuyu/t9Pec//WyeQ5g/V4mc5VpN86s9d9kKvgGrf8=;
- b=YcjPqF6HVshSbOyOV1PQgHXItFzdfnuZ5BHI7gkDW/q6fur731Xw14KxRGUStguvSTlO
- NXWrZo6WXXwBUpZXHS3UwmAUSIaZlNcOi+QwM0lcfO5KWJY10FVHfGjRlP7wNOf19jTD
- IJPGKIjhhMKsGaw+S+x21jLjH/h+IUISZYkMGLEYr2R5CTSjqkn+haEwtPm73NYcoaVi
- NKZsoNRiIoGlsxyNq4fsWklaEPlN2xXoj34PED353DGnJFje0II7bP8hiaIjHrNq8dZJ
- 1e2nKnNJnBNR/KuuCgPWSTU4sjKVa90P9n36Awvj7yPYYiWK3vkmAnx2BueEtjtP7xp9 pQ== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3utdmbnddv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 08 Dec 2023 05:21:39 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3B84b0xZ037433;
-	Fri, 8 Dec 2023 05:21:38 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2168.outbound.protection.outlook.com [104.47.55.168])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3utan8epup-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 08 Dec 2023 05:21:38 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BOC+dvVJ8T5chBkWiE2wCVMSQR7laQU8j9Gb/fzbB5JA11PSJ3Fz3J9vJBHgE4iNzWUxe4g3fHOuhGYMZjvTSwWJuDYb0Z4ZrvPDZSistZWaQB1gi+K1CaSv3QgjQZ2DIWTc0BuVGnLOmlLFrf+Eiq8+NFyxDX+HF3HPkMcxMsL8I1Guh1JDBEYzQN8smBBM6fxgIzOEA2F9tIirnl2/bcgIJ6Iz67N08uTffm89nx3c7jv7sJgVhTwU0tHyvPWLW56VIjNQzgyqJGAFbJxocoppXnZ7FOtE0EUHW6SMUCD/gc7sBhjAtLUIJ8UV+5n99eBxbYWn9TAdhzj76rXHGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NoFuyu/t9Pec//WyeQ5g/V4mc5VpN86s9d9kKvgGrf8=;
- b=dkNa2NACJYq+OmdXqmlZ89Lit1h7Ylf1/BvmPIlewKESwfqEz1LoLg10UvzGbXoLi0t2j0hdgdu34+zNLAlv11L/2BGCGw9mT6sC22iN24WGd5nuviNzcsWn2jTBEt5qighoDU0KxMtFnyUzuJxkksoI2HlA+wpol5deZtK1gvCSaNPEAWNcpe/to7dKHkiHY51LNKTs57H8//SK3uKoM85Gwy0U1+s1HL+ANZStTxQGb0oqvrgFMy6KhUTcKnlgR5kIHrwVVIHjqu9QzY624/01Q55F4n0Hxygc9yHdZXIKl9ALu4Vl+I3+Jf0jWR1/iW63BU+ktxw8nPJxhggjKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NoFuyu/t9Pec//WyeQ5g/V4mc5VpN86s9d9kKvgGrf8=;
- b=tm1oBfaKo8qUWv5UVssdVH0iTZow1naLp8PdFr8xVNcO5ezaZjcxDaCIEqbuBVGXIzDJP8Ddfi86ahXaxhniw4j3i6YZOO7wLA3TsQ+FLOGREgf/TlbwpjSqwfJIF61lGDmPFpSUr2BZ2FwpBY9x2EPAw1AW0406X49d2Bz44yY=
-Received: from SN6PR10MB2975.namprd10.prod.outlook.com (2603:10b6:805:d2::10)
- by SJ0PR10MB6325.namprd10.prod.outlook.com (2603:10b6:a03:44a::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.27; Fri, 8 Dec
- 2023 05:21:35 +0000
-Received: from SN6PR10MB2975.namprd10.prod.outlook.com
- ([fe80::de47:3c1f:a55b:58d0]) by SN6PR10MB2975.namprd10.prod.outlook.com
- ([fe80::de47:3c1f:a55b:58d0%7]) with mapi id 15.20.7068.028; Fri, 8 Dec 2023
- 05:21:35 +0000
-From: Kris Van Hees <kris.van.hees@oracle.com>
-To: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc: Kris Van Hees <kris.van.hees@oracle.com>,
-        Nick Alcock <nick.alcock@oracle.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jiri Olsa <olsajiri@gmail.com>
-Subject: [PATCH 6/6] module: add install target for modules.builtin.ranges
-Date: Fri,  8 Dec 2023 00:07:52 -0500
-Message-ID: <20231208050752.2787575-7-kris.van.hees@oracle.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231208050752.2787575-1-kris.van.hees@oracle.com>
-References: <20231208050752.2787575-1-kris.van.hees@oracle.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR13CA0165.namprd13.prod.outlook.com
- (2603:10b6:a03:2c7::20) To SN6PR10MB2975.namprd10.prod.outlook.com
- (2603:10b6:805:d2::10)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jex/enZ+"
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DD41171C;
+	Thu,  7 Dec 2023 21:39:22 -0800 (PST)
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20231208053920epoutp0108610d4bffc289b8801cfbe4687de767~exK3VjBDb0681006810epoutp01G;
+	Fri,  8 Dec 2023 05:39:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20231208053920epoutp0108610d4bffc289b8801cfbe4687de767~exK3VjBDb0681006810epoutp01G
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1702013960;
+	bh=a9SzkBB0LEpQmzUH0qCc/2HzgkvZOhyaAeKEGrhz5ps=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jex/enZ+dylgtXCvv6kls24noB9SFdLnofHHu+4WYyasi7Tzb7jWpLrrz1CvKjSK3
+	 +jwFqONJHjFv1ikWV2QLMJ6MVXqkCWABL10VtBMBjJ1exBEewOOgyo+mZm+gI+2aO0
+	 M9oYLOK7+6DwTvODHZCi+WVWcXorzaW+6UB58dRE=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+	20231208053919epcas2p44cfb65876ff22dafd91b51d26c59cc0e~exK3EuTok2742427424epcas2p4G;
+	Fri,  8 Dec 2023 05:39:19 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.36.92]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4Smg1g1WDxz4x9QG; Fri,  8 Dec
+	2023 05:39:19 +0000 (GMT)
+Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
+	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	80.34.10006.70CA2756; Fri,  8 Dec 2023 14:39:19 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+	20231208053918epcas2p3b3b14464cfaf4906f09bccce59a50ce9~exK17ecSy2469724697epcas2p3E;
+	Fri,  8 Dec 2023 05:39:18 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20231208053918epsmtrp2b7a6676ba19ddc4c06ac7a36b96675dc~exK15GY552373123731epsmtrp2h;
+	Fri,  8 Dec 2023 05:39:18 +0000 (GMT)
+X-AuditID: b6c32a45-3ebfd70000002716-a4-6572ac07480e
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	79.6C.08755.60CA2756; Fri,  8 Dec 2023 14:39:18 +0900 (KST)
+Received: from tiffany (unknown [10.229.95.142]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20231208053918epsmtip1d5b1cb1fa46d6cf791f4f107d621ecc4~exK1lwyLD0309703097epsmtip1M;
+	Fri,  8 Dec 2023 05:39:18 +0000 (GMT)
+Date: Fri, 8 Dec 2023 14:27:39 +0900
+From: Hyesoo Yu <hyesoo.yu@samsung.com>
+To: Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
+	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+	bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+	vschneid@redhat.com, mhiramat@kernel.org, rppt@kernel.org, hughd@google.com,
+	pcc@google.com, steven.price@arm.com, anshuman.khandual@arm.com,
+	vincenzo.frascino@arm.com, david@redhat.com, eugenis@google.com,
+	kcc@google.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v2 15/27] arm64: mte: Check that tag storage blocks
+ are in the same zone
+Message-ID: <20231208052739.GB1359878@tiffany>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR10MB2975:EE_|SJ0PR10MB6325:EE_
-X-MS-Office365-Filtering-Correlation-Id: e545ea73-48c6-4c1c-7695-08dbf7ad8c14
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	xdiz/i4YM8uO5AMcp30Xlcn6q5BY8xGdwtXIRJg7toUiPVvaRahavzEr+gfljPUTEKHZ+RfJfcMyNprEHiPIqDp4+UNx5s0yjk02X6iWJOVQbC7XQtYPt+vKN5ZEhn1cpOYkMv1IIcPVHDsSmPzTeWyghaOwQ5Jtrig9u9zaE3HLjZ7Q9lUADIug4SkosTqHLj1jbP9eH6drlqaqNM1v6xl+Ov1cNFvPM1tRMic34iz6unf10JoakP0cZZzMCrqeI/2tQECyJzpZ874tfDpzI+ic7ha7s242Jz9ZBUiG1ZEpNvzVxQwv9Ho1um6DslLq6aDY6IpztKC2tfg0QuI3RlCJhDjQm67q3pwCeTV8HItkNoJwE5mMIwGa7gGyf9cSjVMUqs4zB/78+GV5NHB95BvBP8gZlGe1jnB2y0ij8H1Yc7fEgg7/ibH3uYFED4/ai5APHDRluUHd0vlyEeAKJsSAKyff9q5Mt7yqlZvaLlK764jYhnDgCnsYGhQSoNob0E+KgxSUIXguhIxeq2dw4TMY30FvT/lmTQB2aBezgEERHMAd/PghuGQtAx1RnX6o
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR10MB2975.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(39860400002)(346002)(366004)(136003)(396003)(230922051799003)(451199024)(64100799003)(1800799012)(186009)(4744005)(4326008)(8676002)(8936002)(103116003)(2906002)(86362001)(5660300002)(36756003)(41300700001)(83380400001)(6512007)(6666004)(6506007)(1076003)(2616005)(26005)(38100700002)(54906003)(478600001)(66556008)(66476007)(66946007)(6486002)(316002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?au/9Kunh1itviq4mdtbhpXDd/n8W4P2LhDU80hWKZ8tMSBNTFlAf3NIZE1i1?=
- =?us-ascii?Q?c5ioLtaK59ER07bD2h30PVQNl/9gPiHy4ioWO+7hTFN6j9xqji/J7XDmuvCU?=
- =?us-ascii?Q?XXIYvN5KldJ37T97CqyI2FTkp4BLn1qA4R+lBqF8MM0bLBnB/IPs0gYl48y7?=
- =?us-ascii?Q?p96u5eC/3hKtk4R49iWQUOhRzhU43pF8RmTRfIMdci5+zhCB86n5mRU4tQk+?=
- =?us-ascii?Q?xq0eyliKxQx0ae8Z282Vj1L7ixXokU3mX1p5ptG3s2EIHXrRcKZOB+SFxI6F?=
- =?us-ascii?Q?5ruQgiFOe4f3GlP0xH3NN4GH2tiyTSgNSfRnAOxVa7eAF6c0KE2YVpf7DQvL?=
- =?us-ascii?Q?JmV47c+DaR2Sgfxf+7cTpnNxPU4LlaFJI3pwje+ps69iCon0YuYTd87pigDA?=
- =?us-ascii?Q?4CL/i1bxg2blHdP3/3bcF7oOHLgaUw6z0lW+cWCA16LaEIg+OWvZ1K1Pdt7e?=
- =?us-ascii?Q?4EnVooHYbFqpeYTFi96OUkGefRf5WyXVmr0ie9JnY32mvo4Ldh5W7q/E0tHQ?=
- =?us-ascii?Q?Uj2VrypriL3ocgg8goxRJZb0iEjtqvLAeDrOEAPDbMAQLyT6YAtdZHKDLWXb?=
- =?us-ascii?Q?2vdH/innP5av2xy3E3yqw0MeZZZqZ0IXV65q52MP6sDXyLDqwA1t7jQYydKX?=
- =?us-ascii?Q?T0jZmd5S+himBoBfAhuCL7Lwx18i9Mf/uZci0bLH6vDjgAPys9eNturjYppI?=
- =?us-ascii?Q?QYp8Mgh8sfJOZ2/R0quKQQ1S9ZhsbcfYjx1/1Y00afsD9VGcjtY07onkiZCP?=
- =?us-ascii?Q?/t4xvYOonWcJvVJAWxtM7emhzw6uN9H0ZKfe/tNDz522t8Zf4Su/5t2ndFup?=
- =?us-ascii?Q?7od0e9ReWVnfpjokm0o7NKyleir68MkFKD3FxdE3s8o5aTlWPR0BKRAhDjO4?=
- =?us-ascii?Q?MqoVXxH5Ay0E6hH5X2MgxWSDOZbKFFC4D6Ng4Z4+S5JSUykqIiQzBj7yPneq?=
- =?us-ascii?Q?bn5v6w+B6BEqwmiUxqH5xWWyvQv+wzBMZ1iFN3LtLwZ36OcfPE43zajlK4mH?=
- =?us-ascii?Q?36zs7mhWP1d1iXmg/xqfNmzB8ZaMZBP4oqunaGPtfh3WQ8kgB2cKO7LSG7uU?=
- =?us-ascii?Q?8di6XHXqvCTvjJLSlcsjaNcXNsGwPQbMp6Edajn57Qb55cLCu6iv5Pc6xXgY?=
- =?us-ascii?Q?u48sI5hlrZhAz7Neaep86RuZZSxXnu8IlktnTxmDO2okFvI9ag3MWpKsGU79?=
- =?us-ascii?Q?3ejJ4VnbhD83ZZfX2NqiRluFrZyPwPa6dOXt/VWpI2sxIDntIY11mNxMl/Oi?=
- =?us-ascii?Q?PWMuE5f4hgyZ3W8mpDD2tfdeEQz3qGjFki2TcxyqNhc0LfaB0tUm46cUyjCd?=
- =?us-ascii?Q?P0SqnddYp9m+fS/oYd1T9ruMS6UPeKcwGKnUqA46kRqgZ5pZZOaSmnPXLgaD?=
- =?us-ascii?Q?LPF6/Wo+0f+utXoJEP6J2rdpknIIsdRGn3oIK1uGEun9k1UTrhBnwwEkUmfQ?=
- =?us-ascii?Q?P2+WbY9liIHxWV4UDYLOliUicuKwT4k1zsU9JcqTF6GormLFdUT09xISg/Di?=
- =?us-ascii?Q?NQW002YnLKZgxKu8GZYgdjbkECA9ABi8klUEzT/jQfHWDWuvBKOUOCYsk0Ec?=
- =?us-ascii?Q?fERAGmvDLHFUqDjpv9iL81jAKtWRTcAdT1KrlgF5A/PiculuGD+bSXMLk4S5?=
- =?us-ascii?Q?ig=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	GiL3q+Xmtwd8YSocyeftn4cyw0ZcSOZW0zH+iR5fVYTk75y35cv9Vc1RReKdqkb3hb8mQh1tHGI7P/xWn4Eva0pCMiXORacokRc15K5GZWFDz/sR3JdWLm/N7eXxS12dJvHLgVNIB2+nRxuZ/XH2CPIxHGJAZ09brvqIfdIWrCWZHLiqVEbqQB6ArGCm1JSG5w+PNNc8phhC51kYndoGZDLZBLnenaiVIUyUCLJkzo+ga+v3w87eJ3l8ZfEIt0diK3tirO5st/KkjAWXzYbhssoR/aP8frvg2CErvruXNhJYD1drhfErXIJDfafaPnu9zkXzdMDFIpWFofiLmBpVzFHjGgnOczJcRZTOXxt8/cztpO2j1oERCaXDajyc0ZPMQA7RncSkmRn59GU9ceXt6s2PhPrlC47V9BNiBwD1tua+8GErGDr+fvhxLEFrP8XtwmRnyYvkEoeUmbMhFXu55Ry/BQMXqipJh96O8B+BwdoZFq4LDbhtSWO3qqt30loIc8x0VNxpbLIVudNTUE3dFwcw0T50tpT42AKEyBF1q5sEjITRliUdEIlnZ8UUt+ypjvJNog/RNEb4ZmHXES3CfrsjSwCluS/KxwgaMLkSf6XihtpUnEgleCZSYeRE2A9wXh4+AROts9W3fRrS8VE3dVtfTb4V74uI+7Pu8meRByEoYcCshySCjybBVzTy+Y2Q2htuqDCQ04F92qlDA6FSLck0vzELDIe8SH6Fen0FqUM39T5QdwCKMfmyjdFApRmrhQfHTdTAmKZBEj4k+Nr8HXwbRd/eumtmWOGg+LUK12fGPnhYrSeLGET35vPG0F6X+cOO6U10gb5SrFW4kPMdm86mJptcxNi7fQnQWelcKwxRLij60aU5sxlTRz8CJiFT
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e545ea73-48c6-4c1c-7695-08dbf7ad8c14
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR10MB2975.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2023 05:21:35.5641
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yo9THaOVaDXaSv1sFLb3KaLsWJ0yKUxMekVYZxe/Eh+Iv8JTBoBuW3qenCHkpE1RivB9FQ0mkuoF/QFdSlhQDh/p1KrH/qQyWE6XeH3ddz4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB6325
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-08_02,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 malwarescore=0
- suspectscore=0 mlxscore=0 adultscore=0 bulkscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2312080040
-X-Proofpoint-ORIG-GUID: CHbh5dGH6rJs2PdgbKRxX0PZQpt2WAId
-X-Proofpoint-GUID: CHbh5dGH6rJs2PdgbKRxX0PZQpt2WAId
+In-Reply-To: <ZWh5S9BoO5bG5nQM@raptor>
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Ta1ATVxjt3d1sAjNxVqTllqplQtXCCCSUx8URp7W0s6X+wDrax3SkK+wA
+	JSRpNtRH6QiIJUaRdy0UEYYSkAmEEpD3m/Joq45opCIog0IlFCixIghiE9Y+/p3vfOfc7zVX
+	hDtdEbqKYhQaVq1g5BLSkbjU7RHoJTSoWam+UYAKjAYSnbt4nURt/RHoaVavEA3eM9uoqSQC
+	zenPAPTI+ARHExl1OOosmiXQhPUsge62lWFoND2XQPWTMxiy1HYTSNv0iEA1924KUEvrAIGu
+	NxWQ6I7hmQD1GC8TqLFgQICyZycBKinbigY7ijCUu/QHidJHhkjUl9aBoTbtGGbT1mMoqWeO
+	RHm3bwOk7VnAUevqEoHqfnosRCkj/uhWabXwzS20odAA6OUnWYBOaRsW0kU18XRKz4yANpV7
+	0jUVp0i6xpolpEdutpB0/3fLBF2cmIvTph+O0w9MeYCeazOTtOmXr+iHNZvDqE9id0azTCSr
+	dmMVEcrIGEVUsOT9feFvh/sHSGVesiAUKHFTMHFssCRkT5jXuzFy2zIlbl8y8ngbFcZwnMRn
+	1061Ml7DukUrOU2whFVFylWBKm+OiePiFVHeClazQyaV+vrbhJ/FRicnVwJVyeYjKYkdZCIo
+	d9EBkQhSfjC3I1gHHEROVAOApkpGBxxt2ApgszkJ54MFAEcmrgjsKrthYchC8olWAMceWAk+
+	mACwtLifsD9LUK/B1MljdgNJbYP9tXpgx86UDxyvswC7Hqd+JuHo979i9sQG6hBMNf61JhJT
+	3jD76imSx+vhQN59wo4dqK0wrWxxrSVI5TrCipMnSL6lEKirLsR5vAFa+mqFPHaFD2dbn2s4
+	eKmkG+PNibZBtXefG96A+ZOpwN41TkVDa30svxd32DO8Vhen1kFt91MhT4uh9hsn3ugO2/WF
+	BI9fhuOVqQJeQsOl03J+JScwuDJqARlgc/7/psn/r1b+WoHtsKjZSvL0K7BsVcRDD2hs8ikC
+	ggrwEqvi4qJYzlcl+/e6Ecq4GrD2sTzfaQDZM396dwFMBLoAFOESZ7H8qpJ1EkcyR4+xamW4
+	Ol7Ocl3A33aZTNz1xQil7WcqNOEyvyCpX0CALNDXXxoocRHfOXk+0omKYjRsLMuqWPU/Pkzk
+	4JqIVeMEpwtaXPzdIdnlUJwJFkS1XyiYd0ubtuhWTkodfOaGN3VmnF/aeSCaea9pY56i21VK
+	X+zfmDAtOBhrFtd/0fd4/45udM68d12/v2bWzGXmHf+gPMTHkH7rmcfsjYTeVbHX5/kj+xuq
+	MksHDgoYY7O7c2RlyzWnvvMH6jTKO8npU2fFRfMxxEZR9scOr370NaHevXtL+LUPE6saf8uu
+	DjW80C4+HJYbnzOU5rs3Zzn025ldh+9jdVNW7dDreZLpo2E38u85pp8JCqg9Ylrp8di0nWg0
+	Fudcpis+JQfHhZaq9NCxbVsv1A7X79HPm13eqi/Un15aXu7U9epl+2IT6n5cLyG4aEbmias5
+	5m/j/7z54QQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUxbZRjF89779vZS03gtNbvA0phGmLJJRybkTQC3KFlu5uKcJsT4ka2j
+	dxRtS3MvHw7MBMHREVkRgqOVYadAB3aWtUAnH5VBN6kyRwYddVQxdCVAYOg6mBsOpaBx/52c
+	8zs5zx8PiUsaBLFkri6f5XRKjZwQwe4huew5wsaxO8trYlGj3Uag021jBHIPZ6OHtVeE6HrQ
+	t27NlUG01PoJQMv2BzgK1XTh6JLlNkShO6cgmnJbMfSLsR4i18wihuY7hyAy9CxD5AjeEKC+
+	fi9EYz2NBPrV9rcAeexXIfq20StAdbdnAPrKmoCuD1gwVH9/gUDGwASBvq8ewJDb8Bu2zrow
+	VOZZIpBpchIgg2cFR/1r9yHqunxPiCoCKejnlg7hnnjG1mQDzOqDWsBUuG8KGYujgKnwLAoY
+	57lExtF+kmAcd2qFTOBGH8EMN6xC5mxpPc44mz9kZp0mwCy5fQTj/LGECTtkr1JvitJVrCa3
+	kOUULxwWqUNnRoE+GPd+l7MfloKyJ6tAFElTz9MrE/NEFRCREqoX0F+eqIObQQxtDnuxTR1N
+	T1V4BJtQENAOS/M6RJKQepqunCmOMAS1jR7ubAURLaUU9HTXPIjwODVC0Ke+NgsiQTR1hK60
+	392AxFQSXXft5L/LH2O09e44sRk8QXtNtzauwKlE2r82h0XGcCqOtq6RETuKSqCrrX/iNYAy
+	P9IwP9Iw/9+wALwdxLB6Xpuj5ZP1yTq2KIlXavkCXU5Sdp7WATaeJ/HZi8DV/nvSIMBIMAho
+	EpdLxZpreaxErFIeK2a5vENcgYblB0EcCeVbxFtmq1USKkeZz77HsnqW+y/FyKjYUsxoWFnY
+	V69THC0+8Ub7yF8pI1c6M4teK8zIgKoCTpEl6RVhGoZvyDKWxcu4osckUsnNA+MdzYHlPaYf
+	zNPd6fqj3fcmzFVzav/WF5tSQkuyC++4vKrTs/jCgcIdpsxtfZk130gnX0/TDapvBfwto0d2
+	hssNYfXQ6q6XLzfprgrSK32K1HfP7gg/nj9r2/72wO7ogGtm7/l90/HH3trvaPtOv32r6eBH
+	lx5m8H+k+cqfOm75PHjm0CsvLfZkpcmytSVtqeOE3ZR7MKbFt9oqzE39CfVcTPCP7Yqamt4L
+	sRS84wPj+f79o6PiC8qS7k+fOXw8dG733Gcmp/QL0m9N6y30ySGvViYn4hyv/AcLkeWFqwMA
+	AA==
+X-CMS-MailID: 20231208053918epcas2p3b3b14464cfaf4906f09bccce59a50ce9
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----jVQIulvRnesfT.0dBTaAFRklTpdxk.gFV3lmrScQ3G3ZF59d=_93327_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20231119165900epcas2p3efd0f3ac19b7bcf7883e8d3945e63326
+References: <20231119165721.9849-1-alexandru.elisei@arm.com>
+	<CGME20231119165900epcas2p3efd0f3ac19b7bcf7883e8d3945e63326@epcas2p3.samsung.com>
+	<20231119165721.9849-16-alexandru.elisei@arm.com>
+	<20231129085744.GB2988384@tiffany> <ZWh5S9BoO5bG5nQM@raptor>
 
-When CONFIG_BUILTIN_RANGES is enable, the modules.builtin.ranges file
-should be installed in the module install location.
+------jVQIulvRnesfT.0dBTaAFRklTpdxk.gFV3lmrScQ3G3ZF59d=_93327_
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
-Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
-Reviewed-by: Nick Alcock <nick.alcock@oracle.com>
----
- scripts/Makefile.modinst | 5 +++++
- 1 file changed, 5 insertions(+)
+Hi~
 
-diff --git a/scripts/Makefile.modinst b/scripts/Makefile.modinst
-index b45586aa1de4..f30f5ea04566 100644
---- a/scripts/Makefile.modinst
-+++ b/scripts/Makefile.modinst
-@@ -36,6 +36,11 @@ install-y += $(addprefix $(MODLIB)/, modules.builtin modules.builtin.modinfo mod
- $(addprefix $(MODLIB)/, modules.builtin modules.builtin.modinfo modules.builtin.objs): $(MODLIB)/%: % FORCE
- 	$(call cmd,install)
- 
-+install-$(CONFIG_BUILTIN_RANGES) += $(MODLIB)/modules.builtin.ranges
-+
-+$(MODLIB)/modules.builtin.ranges: modules.builtin.ranges FORCE
-+	$(call cmd,install)
-+
- endif
- 
- modules := $(call read-file, $(MODORDER))
--- 
-2.42.0
+On Thu, Nov 30, 2023 at 12:00:11PM +0000, Alexandru Elisei wrote:
+> Hi,
+> 
+> On Wed, Nov 29, 2023 at 05:57:44PM +0900, Hyesoo Yu wrote:
+> > On Sun, Nov 19, 2023 at 04:57:09PM +0000, Alexandru Elisei wrote:
+> > > alloc_contig_range() requires that the requested pages are in the same
+> > > zone. Check that this is indeed the case before initializing the tag
+> > > storage blocks.
+> > > 
+> > > Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> > > ---
+> > >  arch/arm64/kernel/mte_tag_storage.c | 33 +++++++++++++++++++++++++++++
+> > >  1 file changed, 33 insertions(+)
+> > > 
+> > > diff --git a/arch/arm64/kernel/mte_tag_storage.c b/arch/arm64/kernel/mte_tag_storage.c
+> > > index 8b9bedf7575d..fd63430d4dc0 100644
+> > > --- a/arch/arm64/kernel/mte_tag_storage.c
+> > > +++ b/arch/arm64/kernel/mte_tag_storage.c
+> > > @@ -265,6 +265,35 @@ void __init mte_tag_storage_init(void)
+> > >  	}
+> > >  }
+> > >  
+> > > +/* alloc_contig_range() requires all pages to be in the same zone. */
+> > > +static int __init mte_tag_storage_check_zone(void)
+> > > +{
+> > > +	struct range *tag_range;
+> > > +	struct zone *zone;
+> > > +	unsigned long pfn;
+> > > +	u32 block_size;
+> > > +	int i, j;
+> > > +
+> > > +	for (i = 0; i < num_tag_regions; i++) {
+> > > +		block_size = tag_regions[i].block_size;
+> > > +		if (block_size == 1)
+> > > +			continue;
+> > > +
+> > > +		tag_range = &tag_regions[i].tag_range;
+> > > +		for (pfn = tag_range->start; pfn <= tag_range->end; pfn += block_size) {
+> > > +			zone = page_zone(pfn_to_page(pfn));
+> > 
+> > Hello.
+> > 
+> > Since the blocks within the tag_range must all be in the same zone, can we move the "page_zone"
+> > out of the loop ?
+> `
+> Hmm.. why do you say that the pages in a tag_range must be in the same
+> zone? I am not very familiar with how the memory management code puts pages
+> into zones, but I would imagine that pages in a tag range straddling the
+> 4GB limit (so, let's say, from 3GB to 5GB) will end up in both ZONE_DMA and
+> ZONE_NORMAL.
+> 
+> Thanks,
+> Alex
+> 
 
+Oh, I see that reserve_tag_storage only calls alloc_contig_rnage in units of block_size,
+I thought it could be called for the entire range the page needed at once.
+(Maybe it could be a bit faster ? It doesn't seem like unnecessary drain and
+other operation are repeated.)
+
+If we use the cma code when activating the tag storage, it will be error if the
+entire area of tag region is not in the same zone, so there should be a constraint
+that it must be in the same zone when defining the tag region on device tree.
+
+Thanks,
+Regards.
+
+> > 
+> > Thanks,
+> > Regards.
+> > 
+> > > +			for (j = 1; j < block_size; j++) {
+> > > +				if (page_zone(pfn_to_page(pfn + j)) != zone) {
+> > > +					pr_err("Tag storage block pages in different zones");
+> > > +					return -EINVAL;
+> > > +				}
+> > > +			}
+> > > +		}
+> > > +	}
+> > > +
+> > > +	 return 0;
+> > > +}
+> > > +
+> > >  static int __init mte_tag_storage_activate_regions(void)
+> > >  {
+> > >  	phys_addr_t dram_start, dram_end;
+> > > @@ -321,6 +350,10 @@ static int __init mte_tag_storage_activate_regions(void)
+> > >  		goto out_disabled;
+> > >  	}
+> > >  
+> > > +	ret = mte_tag_storage_check_zone();
+> > > +	if (ret)
+> > > +		goto out_disabled;
+> > > +
+> > >  	for (i = 0; i < num_tag_regions; i++) {
+> > >  		tag_range = &tag_regions[i].tag_range;
+> > >  		for (pfn = tag_range->start; pfn <= tag_range->end; pfn += pageblock_nr_pages)
+> > > -- 
+> > > 2.42.1
+> > > 
+> > > 
+> 
+> 
+> 
+
+------jVQIulvRnesfT.0dBTaAFRklTpdxk.gFV3lmrScQ3G3ZF59d=_93327_
+Content-Type: text/plain; charset="utf-8"
+
+
+------jVQIulvRnesfT.0dBTaAFRklTpdxk.gFV3lmrScQ3G3ZF59d=_93327_--
