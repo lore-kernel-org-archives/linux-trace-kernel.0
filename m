@@ -1,19 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B91D522
-	for <linux-trace-kernel@vger.kernel.org>; Sat,  9 Dec 2023 14:49:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66F8FC433C8;
-	Sat,  9 Dec 2023 14:49:26 +0000 (UTC)
-Date: Sat, 9 Dec 2023 09:49:24 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFB3168C1
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  9 Dec 2023 22:01:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D161C433C7;
+	Sat,  9 Dec 2023 22:01:04 +0000 (UTC)
+Date: Sat, 9 Dec 2023 17:01:39 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Beau Belgrave <beaub@linux.microsoft.com>
-Cc: linux-trace-kernel@vger.kernel.org
-Subject: Re: trace_event names with more than NAME_MAX chars
-Message-ID: <20231209094924.3996dfb8@rorschach.local.home>
-In-Reply-To: <20231208183601.GA46-beaub@linux.microsoft.com>
-References: <20231208183601.GA46-beaub@linux.microsoft.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Kent Overstreet <kent.overstreet@linux.dev>
+Subject: [PATCH] ring-buffer: Fix buffer max_data_size with max_event_size
+Message-ID: <20231209170139.33c1b452@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -23,61 +24,73 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 8 Dec 2023 18:36:01 +0000
-Beau Belgrave <beaub@linux.microsoft.com> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> While developing some unrelated features I happened to create a
-> trace_event that was more than NAME_MAX (255) characters. When this
-> happened the creation worked, but tracefs would hang any task that tried
-> to list the directory of the trace_event or remove it.
-> 
-> I followed the code down to the reason being eventfs would call
-> simple_lookup(), and if it failed, it would still try to create the
-> dentry. In this case DCACHE_PAR_LOOKUP would get set and never cleared.
-> This caused d_wait_lookup() to loop forever, since that flag is used in
-> d_in_lookup().
-> 
-> Both tracefs and eventfs use simple_lookup() and it fails for
-> dentries that exceed NAME_MAX. Should we even allow trace_events to
-> be created that exceed this limit? Or should tracefs/eventfs allow
-> this but somehow represent these differently?
+The maximum ring buffer data size is the maximum size of data that can be
+recorded on the ring buffer. Events must be smaller than the sub buffer
+data size minus any meta data. This size is checked before trying to
+allocate from the ring buffer because the allocation assumes that the size
+will fit on the sub buffer.
 
-Yeah I think it's easiest to just prevent dentries from exceeding
-NAME_MAX, and yes the patch below should be added. Care to send a real
-patch?
+The maximum size was calculated as the size of a sub buffer page (which is
+currently PAGE_SIZE minus the sub buffer header) minus the size of the
+meta data of an individual event. But it missed the possible adding of a
+time stamp for events that are added long enough apart that the event meta
+data can't hold the time delta.
 
-Thanks,
+When an event is added that is greater than the current BUF_MAX_DATA_SIZE
+minus the size of a time stamp, but still less than or equal to
+BUF_MAX_DATA_SIZE, the ring buffer would go into an infinite loop, looking
+for a page that can hold the event. Luckily, there's a check for this loop
+and after 1000 iterations and a warning is emitted and the ring buffer is
+disabled. But this should never happen.
 
--- Steve
+This can happen when a large event is added first, or after a long period
+where an absolute timestamp is prefixed to the event, increasing its size
+by 8 bytes. This passes the check and then goes into the algorithm that
+causes the infinite loop.
 
+Fix this by creating a BUF_MAX_EVENT_SIZE to be used to determine if the
+passed in event is too big for the buffer.
 
-> 
-> I have a fix that appears to work for myself, but unsure if there are
-> other locations (attached at the end of this mail).
-> 
-> Thanks,
-> -Beau
-> 
-> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-> index f8a594a50ae6..d2c06ba26db4 100644
-> --- a/fs/tracefs/event_inode.c
-> +++ b/fs/tracefs/event_inode.c
-> @@ -561,6 +561,8 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
->                 if (strcmp(ei_child->name, name) != 0)
->                         continue;
->                 ret = simple_lookup(dir, dentry, flags);
-> +               if (IS_ERR(ret))
-> +                       goto out;
->                 create_dir_dentry(ei, ei_child, ei_dentry, true);
->                 created = true;
->                 break;
-> @@ -583,6 +585,8 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
->                         if (r <= 0)
->                                 continue;
->                         ret = simple_lookup(dir, dentry, flags);
-> +                       if (IS_ERR(ret))
-> +                               goto out;
->                         create_file_dentry(ei, i, ei_dentry, name, mode, cdata,
->                                            fops, true);
->                         break;
+Reported-by: Kent Overstreet <kent.overstreet@linux.dev> # (on IRC)
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 8d2a4f00eca9..a38e5a3c6803 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -378,6 +378,9 @@ static inline bool test_time_stamp(u64 delta)
+ /* Max payload is BUF_PAGE_SIZE - header (8bytes) */
+ #define BUF_MAX_DATA_SIZE (BUF_PAGE_SIZE - (sizeof(u32) * 2))
+ 
++/* Events may have a time stamp attached to them */
++#define BUF_MAX_EVENT_SIZE (BUF_MAX_DATA_SIZE - RB_LEN_TIME_EXTEND)
++
+ int ring_buffer_print_page_header(struct trace_seq *s)
+ {
+ 	struct buffer_data_page field;
+@@ -3810,7 +3813,7 @@ ring_buffer_lock_reserve(struct trace_buffer *buffer, unsigned long length)
+ 	if (unlikely(atomic_read(&cpu_buffer->record_disabled)))
+ 		goto out;
+ 
+-	if (unlikely(length > BUF_MAX_DATA_SIZE))
++	if (unlikely(length > BUF_MAX_EVENT_SIZE))
+ 		goto out;
+ 
+ 	if (unlikely(trace_recursive_lock(cpu_buffer)))
+@@ -3960,7 +3963,7 @@ int ring_buffer_write(struct trace_buffer *buffer,
+ 	if (atomic_read(&cpu_buffer->record_disabled))
+ 		goto out;
+ 
+-	if (length > BUF_MAX_DATA_SIZE)
++	if (length > BUF_MAX_EVENT_SIZE)
+ 		goto out;
+ 
+ 	if (unlikely(trace_recursive_lock(cpu_buffer)))
+-- 
+2.42.0
 
