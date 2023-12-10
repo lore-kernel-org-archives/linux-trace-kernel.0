@@ -1,115 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="GjReLuVp"
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC165E1;
-	Sun, 10 Dec 2023 09:28:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1702229313;
-	bh=1sxAue1XcnwrHliRU3dD99r4/Lzb8pcdMONvaCHfTVU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GjReLuVpP94+KS1Vlcj4pqXgnF6dqhh8iYWfUa2wjhB2OOxtkqk82gnqkvWCC/UBo
-	 IwPIXQ6jmvu/FlBQu16pMPlI9KmRkhUArIxzoI2Lf9ySWQ5c+DC+alg9yU08ATabag
-	 li/PamLxlee3uBuXw0D74XYht4TKLx1xbrKFU1wH55xATBfusm/dhUaAEIdSxOCoqW
-	 kZ0Hg1R/+lwKYLT7WxHTCJ76Jf963yzjjRYRRl0UDuzEMNiOK95VJnVSgbprscbJcA
-	 GQuFWxgQiVa0J80sC24xbepSKAp7uWSU5ByFb2UbJbjOnazfQwwlQiboea7es0uzCK
-	 mk0Pp5s7PFK0Q==
-Received: from [IPV6:2606:6d00:100:4000:cacb:9855:de1f:ded2] (unknown [IPv6:2606:6d00:100:4000:cacb:9855:de1f:ded2])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4SpBg555pvzG4T;
-	Sun, 10 Dec 2023 12:28:33 -0500 (EST)
-Message-ID: <c5c39d2a-a841-4a27-b072-7b190e6838cb@efficios.com>
-Date: Sun, 10 Dec 2023 12:28:32 -0500
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9267D6FAD
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 10 Dec 2023 17:59:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56A5CC433C7;
+	Sun, 10 Dec 2023 17:59:10 +0000 (UTC)
+Date: Sun, 10 Dec 2023 12:59:08 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] tracing: Allow for max buffer data size trace_marker
+ writes
+Message-ID: <20231210125908.5bf1cf7a@rorschach.local.home>
+In-Reply-To: <c5c39d2a-a841-4a27-b072-7b190e6838cb@efficios.com>
+References: <20231209175003.63db40ab@gandalf.local.home>
+	<2683467e-cadb-4bb8-8c50-87ef052edacb@efficios.com>
+	<20231210103009.29010d00@gandalf.local.home>
+	<a684a5f8-9a60-4e16-93f5-747117d08371@efficios.com>
+	<20231210113829.780c7097@gandalf.local.home>
+	<c5c39d2a-a841-4a27-b072-7b190e6838cb@efficios.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing: Allow for max buffer data size trace_marker
- writes
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-References: <20231209175003.63db40ab@gandalf.local.home>
- <2683467e-cadb-4bb8-8c50-87ef052edacb@efficios.com>
- <20231210103009.29010d00@gandalf.local.home>
- <a684a5f8-9a60-4e16-93f5-747117d08371@efficios.com>
- <20231210113829.780c7097@gandalf.local.home>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-In-Reply-To: <20231210113829.780c7097@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 2023-12-10 11:38, Steven Rostedt wrote:
-> On Sun, 10 Dec 2023 11:07:22 -0500
-> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+On Sun, 10 Dec 2023 12:28:32 -0500
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+
+> > Again, it's not a requirement, it's just an enhancement.  
 > 
->>> It just allows more to be written in one go.
->>>
->>> I don't see why the tests need to cover this or detect this change.
->>
->> If the purpose of this change is to ensure that the entire
->> trace marker payload is shown within a single event, then
->> there should be a test which exercises this, and which
->> validates that the end result is that the entire payload
->> is indeed shown within a single event record.
-> 
-> No, the purpose of the change is not to do that, because there can always
-> be a bigger trace marker write than a single event can hold. This is the
-> way it has always worked. This is an optimization or "enhancement". The 1KB
-> restriction was actually because of a previous implementation years ago
-> (before selftests even existed) that wrote into a temp buffer before
-> copying into the ring buffer. But since we now can copy directly into the
-> ring buffer, there's no reason not to use the maximum that the ring buffer
-> can accept.
+> How does this have anything to do with dispensing from testing the
+> new behavior ? If the new behavior has a bug that causes it to
+> silently truncate the trace marker payloads, how do you catch it
+> with the current tests ?
 
-My point is that the difference between the new "enhanced" behavior
-and the previous behavior is not tested for.
+I'm not disagreeing with you, but honestly, writing tests that can be
+submitted, take up time I simply do not have. So it's either I get this
+working and manually test it, or not apply it at all. This was a simple
+change which is why I added it. The tests will take much longer to
+write than the enhancement itself.
 
-> 
->>
->> Otherwise there is no permanent validation that this change
->> indeed does what it is intended to do, so it can regress
->> at any time without any test noticing it.
-> 
-> What regress? The amount of a trace_marker write that can make it into a
-> the buffer in one go? Now, I agree that we should have a test to make sure
-> that all of the trace marker write gets into the buffer.
+If someone wants to submit patches that test this further, I'd be more
+than happy to apply them!
 
-Yes. This is pretty much my point.
+It may be several more months before I get the time to work on this any
+further, and there's still several other features that are in my queue
+to apply, where some of them will be affected by these changes.
 
+Right now I'm just focused on that any of these changes do not cause
+regressions in the workflow that others have. The trace_marker usage
+that I've ever seen has been simple writes that are never more than a
+couple of hundred bytes. The main reason I added this change was to
+be able to test the subbuffer change. Otherwise I would never had made
+this change.
 
-> But it's always
-> been allowed to break up that write however it wanted to.
+Adding more tests is on my todo list, and not just for this, but for
+other features. I do have a bunch of tests I run locally that are not
+upsteam, but they are mostly hacks that require a lot of clean up
+before being added to selftests.
 
-And the enhanced behavior extends the amount of data that can get
-written into a single sub-buffer, and this is not tested.
-
-> 
-> Note, because different architectures have different page sizes, how much
-> that can make it in one go is architecture dependent. So you can have a
-> "regression" by simply running your application on a different architecture.
-
-Which is why in the following patches you have expressing the subbuffer
-size as bytes rather than pages is important at the ABI level. It
-facilitates portability of tests, and decreases documentation / user
-burden.
-
-> Again, it's not a requirement, it's just an enhancement.
-
-How does this have anything to do with dispensing from testing the
-new behavior ? If the new behavior has a bug that causes it to
-silently truncate the trace marker payloads, how do you catch it
-with the current tests ?
-
-Thanks,
-
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
-
+-- Steve
