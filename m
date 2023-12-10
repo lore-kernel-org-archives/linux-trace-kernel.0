@@ -1,23 +1,23 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="SmGi6NmM"
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9209F4;
-	Sun, 10 Dec 2023 06:17:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="P73w9OEd"
+Received: from smtpout.efficios.com (unknown [IPv6:2607:5300:203:b2ee::31e5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 485A0C2;
+	Sun, 10 Dec 2023 06:26:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1702217865;
-	bh=95FOqqEVlvMpVu60xKcTVHAxKd+ad692k9vCay/7OIc=;
+	s=smtpout1; t=1702218374;
+	bh=WfOzir+oTf44dYxvkiIaqqI0cQqL7L27KViNh2TxyJg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SmGi6NmMr8M8UM9SD93vDg7+H16lkzxZdbVZdUOSatOmwq0RRnP7D8ItJLGmLth6g
-	 MuRFqYbO0B82vEExpJ8fjRpe/ahu15CUQfWpiZotn1/7fDIuMY0J+76xyM45/VOx/r
-	 VcD9qhLu1WR9H1yb89kYapLAQ5zXCgpevNlfFXL5t8A3wIiNvIhY1tcc96gPnH4Eoi
-	 TBKnN5iSi1etbYHoDHF3WQdCCFW9lvHbjvH6CfxrZbBWQfDlxb6pLDucIV1bTM8dKm
-	 617ArDJcUam1f3728aghyIvZQkMVkT+qGlKP96QLDbr6le4gJ5gPgZmXld0Pjxfqah
-	 WShryYQuXOS7g==
+	b=P73w9OEdofIgWwoJOf+aGtqyasboZtm4H22KuOFqIxcVDEjFLFo+WEYCqP3PG7hFL
+	 TpFPDKBbWvs2KNmsnUrO8ZoySvKipzM7vM/uI6/FHdTB34H90C7CO42qADbpec61qG
+	 5tAqaFKGh8aJFp5bFRCcsUUS0pKUOZLTlzmF5qlkwMHCOoKL/cvLNUz1wxrBRjLlSz
+	 LEO4p9YXoyiRjyPj/A2Kr7ta0fWLVzXMjc92VtElsOAGhVMts7oBGbOHIWk9HVsZid
+	 Nn7S5k7QOQ28IknFY4fB1k0yvFHicO3Wpc0XDNMb+6zVw8fGqyDC1JiQnmd2eyP1KD
+	 3HJkBDv72HDyw==
 Received: from [IPV6:2606:6d00:100:4000:cacb:9855:de1f:ded2] (unknown [IPv6:2606:6d00:100:4000:cacb:9855:de1f:ded2])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4Sp6Qw6jlVzFr3;
-	Sun, 10 Dec 2023 09:17:44 -0500 (EST)
-Message-ID: <76797ddd-bb87-4af9-9703-1ec00a0d318c@efficios.com>
-Date: Sun, 10 Dec 2023 09:17:44 -0500
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4Sp6ck3NNyzG77;
+	Sun, 10 Dec 2023 09:26:14 -0500 (EST)
+Message-ID: <3b45bdf6-234d-4859-8344-c18b48c8b415@efficios.com>
+Date: Sun, 10 Dec 2023 09:26:13 -0500
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -25,8 +25,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/14] ring-buffer/tracing: Allow ring buffer to have
- bigger sub buffers
+Subject: Re: [PATCH 14/14] ringbuffer/selftest: Add basic selftest to test
+ chaning subbuf order
 Content-Language: en-US
 To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -37,31 +37,54 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Vincent Donnefort <vdonnefort@google.com>,
  Kent Overstreet <kent.overstreet@gmail.com>
 References: <20231210035404.053677508@goodmis.org>
+ <20231210040452.274868572@goodmis.org>
 From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-In-Reply-To: <20231210035404.053677508@goodmis.org>
+In-Reply-To: <20231210040452.274868572@goodmis.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 2023-12-09 22:54, Steven Rostedt wrote:
 [...]
-> 
-> Basically, events to the tracing subsystem are limited to just under a
-> PAGE_SIZE, as the ring buffer is split into "sub buffers" of one page
-> size, and an event can not be bigger than a sub buffer. This allows users
-> to change the size of a sub buffer by the order:
-> 
->    echo 3 > /sys/kernel/tracing/buffer_subbuf_order
-> 
-> Will make each sub buffer a size of 8 pages, allowing events to be almost
-> as big as 8 pages in size (sub buffers do have meta data on them as
-> well, keeping an event from reaching the same size as a sub buffer).
+> +get_buffer_data_size() {
+> +	sed -ne 's/^.*data.*size:\([0-9][0-9]*\).*/\1/p' events/header_page
+> +}
+> +
+> +a="1234567890"
+> +
+> +make_str() {
+> +        cnt=$1
+> +        s=""
+> +        while [ $cnt -gt 10 ]; do
+> +                s="${s}${a}"
+> +                cnt=$((cnt-10))
+> +        done
+> +        while [ $cnt -gt 0 ]; do
+> +                s="${s}X"
+> +                cnt=$((cnt-1))
+> +        done
+> +        echo -n $s
+> +}
+> +
+> +test_buffer() {
+> +
+> +	size=`get_buffer_data_size`
+> +
+> +	str=`make_str $size`
+> +
+> +	echo $str > trace_marker
+> +
+> +	grep -q $a trace
 
-Specifying the "order" of subbuffer size as a power of two of
-number of pages is a poor UX choice for a user-facing ABI.
+This test has no clue if the record was truncated or not.
 
-I would recommend allowing the user to specify the size in bytes, and
-internally bump to size to the next power of 2, with a minimum of
-PAGE_SIZE.
+It basically repeats the string
+
+"1234567890" until it fills the subbuffer size and pads with
+XXXX as needed as trace marker payload, but the grep looks for the
+"1234567890" pattern only.
+
+The test should be extended to validate whether the trace marker
+payload was truncated or not, otherwise it is of limited value.
 
 Thanks,
 
