@@ -1,83 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522EC749D
-	for <linux-trace-kernel@vger.kernel.org>; Sat,  9 Dec 2023 22:56:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3089EC433C7;
-	Sat,  9 Dec 2023 22:56:41 +0000 (UTC)
-Date: Sat, 9 Dec 2023 17:57:16 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3CF15AC
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 10 Dec 2023 04:04:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C25C3C433C7;
+	Sun, 10 Dec 2023 04:04:11 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1rCB3g-000000021LJ-21zR;
+	Sat, 09 Dec 2023 23:04:48 -0500
+Message-ID: <20231210035404.053677508@goodmis.org>
+User-Agent: quilt/0.67
+Date: Sat, 09 Dec 2023 22:54:04 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] tracing: Increase size of trace_marker_raw to max ring
- buffer entry
-Message-ID: <20231209175716.09ac455b@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+ Vincent Donnefort <vdonnefort@google.com>,
+ Kent Overstreet <kent.overstreet@gmail.com>
+Subject: [PATCH 00/14] ring-buffer/tracing: Allow ring buffer to have bigger sub buffers
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Note, this has been on my todo list since the ring buffer was created back
+in 2008.
 
-There's no reason to give an arbitrary limit to the size of a raw trace
-marker. Just let it be as big as the size that is allowed by the ring
-buffer itself.
+Tzvetomir last worked on this in 2020 and I need to finally get it in.
 
-And there's also no reason to artificially break up the write to
-TRACE_BUF_SIZE, as that's not even used.
+His last series was:
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-[
-  Depends on: https://lore.kernel.org/linux-trace-kernel/20231209175003.63db40ab@gandalf.local.home/
-]
- kernel/trace/trace.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+  https://lore.kernel.org/linux-trace-devel/20211213094825.61876-1-tz.stoyanov@gmail.com/
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index da837119a446..077b20e83e7c 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -7351,9 +7351,6 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
- 	return written;
- }
- 
--/* Limit it for now to 3K (including tag) */
--#define RAW_DATA_MAX_SIZE (1024*3)
--
- static ssize_t
- tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
- 					size_t cnt, loff_t *fpos)
-@@ -7375,18 +7372,16 @@ tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
- 		return -EINVAL;
- 
- 	/* The marker must at least have a tag id */
--	if (cnt < sizeof(unsigned int) || cnt > RAW_DATA_MAX_SIZE)
-+	if (cnt < sizeof(unsigned int))
- 		return -EINVAL;
- 
--	if (cnt > TRACE_BUF_SIZE)
--		cnt = TRACE_BUF_SIZE;
--
--	BUILD_BUG_ON(TRACE_BUF_SIZE >= PAGE_SIZE);
--
- 	size = sizeof(*entry) + cnt;
- 	if (cnt < FAULT_SIZE_ID)
- 		size += FAULT_SIZE_ID - cnt;
- 
-+	if (size > ring_buffer_max_event_size(buffer))
-+		return -EINVAL;
-+
- 	buffer = tr->array_buffer.buffer;
- 	event = __trace_buffer_lock_reserve(buffer, TRACE_RAW_DATA, size,
- 					    tracing_gen_ctx());
--- 
-2.42.0
+With the description of:
 
+   Currently the size of one sub buffer page is global for all buffers and
+   it is hard coded to one system page. The patch set introduces configurable
+   ring buffer sub page size, per ring buffer. A new user space interface is
+   introduced, which allows to change the sub page size of the ftrace buffer,
+   per ftrace instance.
+
+I'm pulling in his patches mostly untouched, except that I had to tweak
+a few things to forward port them.
+
+The issues I found I added as the last 7 patches to the series, and then
+I added documentation and a selftest.
+
+Basically, events to the tracing subsystem are limited to just under a
+PAGE_SIZE, as the ring buffer is split into "sub buffers" of one page
+size, and an event can not be bigger than a sub buffer. This allows users
+to change the size of a sub buffer by the order:
+
+  echo 3 > /sys/kernel/tracing/buffer_subbuf_order
+
+Will make each sub buffer a size of 8 pages, allowing events to be almost
+as big as 8 pages in size (sub buffers do have meta data on them as
+well, keeping an event from reaching the same size as a sub buffer).
+
+
+
+Steven Rostedt (Google) (9):
+      ring-buffer: Clear pages on error in ring_buffer_subbuf_order_set() failure
+      ring-buffer: Do no swap cpu buffers if order is different
+      ring-buffer: Make sure the spare sub buffer used for reads has same size
+      tracing: Update snapshot order along with main buffer order
+      tracing: Stop the tracing while changing the ring buffer subbuf size
+      ring-buffer: Keep the same size when updating the order
+      ring-buffer: Just update the subbuffers when changing their allocation order
+      ring-buffer: Add documentation on the buffer_subbuf_order file
+      ringbuffer/selftest: Add basic selftest to test chaning subbuf order
+
+Tzvetomir Stoyanov (VMware) (5):
+      ring-buffer: Refactor ring buffer implementation
+      ring-buffer: Page size per ring buffer
+      ring-buffer: Add interface for configuring trace sub buffer size
+      ring-buffer: Set new size of the ring buffer sub page
+      ring-buffer: Read and write to ring buffers with custom sub buffer size
+
+----
+ Documentation/trace/ftrace.rst                     |  27 ++
+ include/linux/ring_buffer.h                        |  17 +-
+ kernel/trace/ring_buffer.c                         | 406 ++++++++++++++++-----
+ kernel/trace/ring_buffer_benchmark.c               |  10 +-
+ kernel/trace/trace.c                               | 143 +++++++-
+ kernel/trace/trace.h                               |   1 +
+ kernel/trace/trace_events.c                        |  59 ++-
+ .../ftrace/test.d/00basic/ringbuffer_order.tc      |  46 +++
+ 8 files changed, 588 insertions(+), 121 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_order.tc
