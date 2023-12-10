@@ -1,101 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B59A17D9
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 10 Dec 2023 04:04:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C84EC433C9;
-	Sun, 10 Dec 2023 04:04:15 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1rCB3k-000000021SI-24ci;
-	Sat, 09 Dec 2023 23:04:52 -0500
-Message-ID: <20231210040452.274868572@goodmis.org>
-User-Agent: quilt/0.67
-Date: Sat, 09 Dec 2023 22:54:18 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
- Vincent Donnefort <vdonnefort@google.com>,
- Kent Overstreet <kent.overstreet@gmail.com>
-Subject: [PATCH 14/14] ringbuffer/selftest: Add basic selftest to test chaning subbuf order
-References: <20231210035404.053677508@goodmis.org>
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ZJ2XbjqK"
+Received: from smtpout.efficios.com (unknown [IPv6:2607:5300:203:b2ee::31e5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70D5DF3;
+	Sun, 10 Dec 2023 06:09:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1702217348;
+	bh=yQG9FMKSExq+UqrKqtA7z6rfOEhxv5CjsSfxjoOFKGc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZJ2XbjqK9himh+fH+YjfkR7z5g0yuwyX/4+HU+3o3aCqiVUlP7oi3ve1RDbJYTxXA
+	 ink4c0if+BfjeY42azfKaPP8MogUVuMlzTHskOCeqxSWu5rhiDxz+mPBhogVgvDC5q
+	 L0AvS7xOEtTD07AwFlH0EOf/OLlfoq1yAwAQJvT5YmX1YFYtMAA5GQgo5zKHWL3hV3
+	 54r9etPzTC3EdZXGCVoc5aAK51AwEB6vDygvRg/cZHIhxmKpKf85xhz5kHZLM98Y5N
+	 UqRgug0gGEBNEPBJdXtI8aS3HR18wACxAc2zK43kPnlCtMF0YG5Gbc5DzrROX2cAGY
+	 uS8GY+aghcHwQ==
+Received: from [IPV6:2606:6d00:100:4000:cacb:9855:de1f:ded2] (unknown [IPv6:2606:6d00:100:4000:cacb:9855:de1f:ded2])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4Sp6F02BljzG0H;
+	Sun, 10 Dec 2023 09:09:08 -0500 (EST)
+Message-ID: <2683467e-cadb-4bb8-8c50-87ef052edacb@efficios.com>
+Date: Sun, 10 Dec 2023 09:09:06 -0500
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tracing: Allow for max buffer data size trace_marker
+ writes
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>
+References: <20231209175003.63db40ab@gandalf.local.home>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+In-Reply-To: <20231209175003.63db40ab@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On 2023-12-09 17:50, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> Allow a trace write to be as big as the ring buffer tracing data will
+> allow. Currently, it only allows writes of 1KB in size, but there's no
+> reason that it cannot allow what the ring buffer can hold.
 
-Add a self test that will write into the trace buffer with differ trace
-sub buffer order sizes.
+I would expect the tests under tools/testing/selftests/ftrace/* to
+be affected by those changes. If they are not, then it's a hole in
+the test coverage and should be taken care of as this behavior is
+modified.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- .../ftrace/test.d/00basic/ringbuffer_order.tc | 46 +++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_order.tc
+Thanks,
 
-diff --git a/tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_order.tc b/tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_order.tc
-new file mode 100644
-index 000000000000..c0d76dc724d3
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_order.tc
-@@ -0,0 +1,46 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Change the ringbuffer size
-+# requires: buffer_subbuf_order
-+# flags: instance
-+
-+get_buffer_data_size() {
-+	sed -ne 's/^.*data.*size:\([0-9][0-9]*\).*/\1/p' events/header_page
-+}
-+
-+a="1234567890"
-+
-+make_str() {
-+        cnt=$1
-+        s=""
-+        while [ $cnt -gt 10 ]; do
-+                s="${s}${a}"
-+                cnt=$((cnt-10))
-+        done
-+        while [ $cnt -gt 0 ]; do
-+                s="${s}X"
-+                cnt=$((cnt-1))
-+        done
-+        echo -n $s
-+}
-+
-+test_buffer() {
-+
-+	size=`get_buffer_data_size`
-+
-+	str=`make_str $size`
-+
-+	echo $str > trace_marker
-+
-+	grep -q $a trace
-+}
-+
-+ORIG=`cat buffer_subbuf_order`
-+
-+for a in `seq 0 4`; do
-+	echo 0 > buffer_subbuf_order
-+	test_buffer
-+done
-+
-+echo $ORIG > buffer_subbuf_order
-+
+Mathieu
+
 -- 
-2.42.0
-
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
 
