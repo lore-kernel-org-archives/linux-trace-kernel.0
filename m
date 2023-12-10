@@ -1,17 +1,17 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E492F17D9
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 10 Dec 2023 04:04:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBF91C433CB;
-	Sun, 10 Dec 2023 04:04:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA0417D9
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 10 Dec 2023 04:04:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B427C433B7;
+	Sun, 10 Dec 2023 04:04:14 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rCB3i-000000021PH-3FLz;
-	Sat, 09 Dec 2023 23:04:50 -0500
-Message-ID: <20231210040450.561181051@goodmis.org>
+	id 1rCB3j-000000021Pm-0Gbc;
+	Sat, 09 Dec 2023 23:04:51 -0500
+Message-ID: <20231210040450.846348590@goodmis.org>
 User-Agent: quilt/0.67
-Date: Sat, 09 Dec 2023 22:54:12 -0500
+Date: Sat, 09 Dec 2023 22:54:13 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -22,8 +22,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
  Vincent Donnefort <vdonnefort@google.com>,
  Kent Overstreet <kent.overstreet@gmail.com>
-Subject: [PATCH 08/14] ring-buffer: Make sure the spare sub buffer used for reads has same
- size
+Subject: [PATCH 09/14] tracing: Update snapshot order along with main buffer order
 References: <20231210035404.053677508@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -35,52 +34,100 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Now that the ring buffer specifies the size of its sub buffers, they all
-need to be the same size. When doing a read, a swap is done with a spare
-page. Make sure they are the same size before doing the swap, otherwise
-the read will fail.
+When updating the order of the sub buffers for the main buffer, make sure
+that if the snapshot buffer exists, that it gets its order updated as
+well.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ kernel/trace/trace.c | 45 ++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 43 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 8e9853d38c8d..b3b36d7f1201 100644
+index b3b36d7f1201..7faaaf29b504 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -7567,6 +7567,7 @@ struct ftrace_buffer_info {
- 	struct trace_iterator	iter;
- 	void			*spare;
- 	unsigned int		spare_cpu;
-+	unsigned int		spare_size;
- 	unsigned int		read;
- };
+@@ -1263,10 +1263,17 @@ static void set_buffer_entries(struct array_buffer *buf, unsigned long val);
  
-@@ -8286,6 +8287,15 @@ tracing_buffers_read(struct file *filp, char __user *ubuf,
+ int tracing_alloc_snapshot_instance(struct trace_array *tr)
+ {
++	int order;
+ 	int ret;
  
- 	page_size = ring_buffer_subbuf_size_get(iter->array_buffer->buffer);
+ 	if (!tr->allocated_snapshot) {
  
-+	/* Make sure the spare matches the current sub buffer size */
-+	if (info->spare) {
-+		if (page_size != info->spare_size) {
-+			ring_buffer_free_read_page(iter->array_buffer->buffer,
-+						   info->spare_cpu, info->spare);
-+			info->spare = NULL;
-+		}
-+	}
++		/* Make the snapshot buffer have the same order as main buffer */
++		order = ring_buffer_subbuf_order_get(tr->array_buffer.buffer);
++		ret = ring_buffer_subbuf_order_set(tr->max_buffer.buffer, order);
++		if (ret < 0)
++			return ret;
 +
- 	if (!info->spare) {
- 		info->spare = ring_buffer_alloc_read_page(iter->array_buffer->buffer,
- 							  iter->cpu_file);
-@@ -8294,6 +8304,7 @@ tracing_buffers_read(struct file *filp, char __user *ubuf,
- 			info->spare = NULL;
- 		} else {
- 			info->spare_cpu = iter->cpu_file;
-+			info->spare_size = page_size;
- 		}
- 	}
- 	if (!info->spare)
+ 		/* allocate spare buffer */
+ 		ret = resize_buffer_duplicate_size(&tr->max_buffer,
+ 				   &tr->array_buffer, RING_BUFFER_ALL_CPUS);
+@@ -1286,6 +1293,7 @@ static void free_snapshot(struct trace_array *tr)
+ 	 * The max_tr ring buffer has some state (e.g. ring->clock) and
+ 	 * we want preserve it.
+ 	 */
++	ring_buffer_subbuf_order_set(tr->max_buffer.buffer, 0);
+ 	ring_buffer_resize(tr->max_buffer.buffer, 1, RING_BUFFER_ALL_CPUS);
+ 	set_buffer_entries(&tr->max_buffer, 1);
+ 	tracing_reset_online_cpus(&tr->max_buffer);
+@@ -9378,6 +9386,7 @@ buffer_order_write(struct file *filp, const char __user *ubuf,
+ {
+ 	struct trace_array *tr = filp->private_data;
+ 	unsigned long val;
++	int old_order;
+ 	int ret;
+ 
+ 	ret = kstrtoul_from_user(ubuf, cnt, 10, &val);
+@@ -9388,12 +9397,44 @@ buffer_order_write(struct file *filp, const char __user *ubuf,
+ 	if (val < 0 || val > 7)
+ 		return -EINVAL;
+ 
++	old_order = ring_buffer_subbuf_order_get(tr->array_buffer.buffer);
++	if (old_order == val)
++		return 0;
++
+ 	ret = ring_buffer_subbuf_order_set(tr->array_buffer.buffer, val);
+ 	if (ret)
+-		return ret;
++		return 0;
+ 
+-	(*ppos)++;
++#ifdef CONFIG_TRACER_MAX_TRACE
+ 
++	if (!tr->allocated_snapshot)
++		goto out_max;
++
++	ret = ring_buffer_subbuf_order_set(tr->max_buffer.buffer, val);
++	if (ret) {
++		/* Put back the old order */
++		cnt = ring_buffer_subbuf_order_set(tr->array_buffer.buffer, old_order);
++		if (WARN_ON_ONCE(cnt)) {
++			/*
++			 * AARGH! We are left with different orders!
++			 * The max buffer is our "snapshot" buffer.
++			 * When a tracer needs a snapshot (one of the
++			 * latency tracers), it swaps the max buffer
++			 * with the saved snap shot. We succeeded to
++			 * update the order of the main buffer, but failed to
++			 * update the order of the max buffer. But when we tried
++			 * to reset the main buffer to the original size, we
++			 * failed there too. This is very unlikely to
++			 * happen, but if it does, warn and kill all
++			 * tracing.
++			 */
++			tracing_disabled = 1;
++		}
++		return ret;
++	}
++ out_max:
++#endif
++	(*ppos)++;
+ 	return cnt;
+ }
+ 
 -- 
 2.42.0
 
