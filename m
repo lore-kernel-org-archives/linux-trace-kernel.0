@@ -1,136 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F1B2AF13
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 11:40:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hp/BPQfy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFBA2C433C8;
-	Mon, 11 Dec 2023 11:40:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702294839;
-	bh=3gaOmYRIZfbiVmht0OPzyhJS1d5RxKW/OEhIAR90v1o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Hp/BPQfyYMdM+/l1B7ToTZogugssKh2805pDfssVpBiMrpztnBm3IxhG0xX6GS4Ne
-	 3rnDUW6FCt13YNi6nHSWM2gqNtWEvmdB7+gU2OSZSHRXJKGwMCdCITXV5Cx4iyUfsM
-	 MExdTDBqrNSzDjXhrF02RprgNGtivSRedj3mcsSI7ADcY8MbOZ2MxGUITILnohRvGr
-	 ne9T+4+mP4tf8dtfJuBUmA0uq/RD2UQLZb29CYbBEMfix86hBRSQugXpkK9WJ/JqHJ
-	 aKGRIgmco9nGhO71B8s0XHI1xIcIB/xSORD9NBAqGB37NTR4Y3kX6CacxY54nSiQpH
-	 iFYgqWEmxsihQ==
-Date: Mon, 11 Dec 2023 20:40:33 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Kent Overstreet
- <kent.overstreet@linux.dev>
-Subject: Re: [PATCH] ring-buffer: Fix buffer max_data_size with
- max_event_size
-Message-Id: <20231211204033.a3658f5f497f0c7541dee025@kernel.org>
-In-Reply-To: <20231209170925.71d4e02e@gandalf.local.home>
-References: <20231209170139.33c1b452@gandalf.local.home>
-	<20231209170925.71d4e02e@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u17OW6FU"
+Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13E3EC7
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 03:51:04 -0800 (PST)
+Received: by mail-qv1-xf2f.google.com with SMTP id 6a1803df08f44-67ea7dbd51cso23345096d6.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 03:51:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1702295463; x=1702900263; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eFlOaOKOFTUGeU3hihhI0E9Jv6p6CgBMgpCcvHMWbLI=;
+        b=u17OW6FU+I47r/XfAcb5vP+2Le80pD6d5wdDVFKE2j5qnRsm+J0UIuKmqaMMryr1M+
+         CjsaO3aTGMFOawVCEqypHSyz6TV6RHpCuu4Fxi9ZTvs5umRG801QflWNLjzkR4OEYt3Z
+         4M9YKCjq3rygkxRn4mxKpPYVQsnXYwy2zxJ+8xtCTzArc4HSlyh5z1Yu7qkV3KLrapuV
+         30AzzCqO5sh4QRiWlJ5xW2C/dNKvDpkVSkC49ezfICTW5OpDSdk7mPmL4esqg+xsEdb8
+         zRezW5po+CbeFBVl6pOlTzs6HdwBER4EZPEAGvxtsISuAbxBJ5UBfI0crUGleB2ViKRy
+         J5Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702295463; x=1702900263;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eFlOaOKOFTUGeU3hihhI0E9Jv6p6CgBMgpCcvHMWbLI=;
+        b=UawK/IzoKNituWFl/bdESWoUEL3H9GcW4B12zecYElLLXdTfM6PKOn5HUt0uxlZw6j
+         YJmOT0R/+0x872IndAm9MX6Qiw4S/GJT0B6CDWOgK/sBXz9qaAnxsng+qW1Atf3/vmdX
+         dHgd82HwgNZoo3QLtCPiBmG0DTf6UrAHx7H6WOL07TxQmJ83sBA0/AaREDtV7JirivcQ
+         qcwfUNJeb0OTGi2GmyEFvLEgRL6u9/ykY3axRV3xUmGzKIOVAt0onNHugge4oZU0VrhL
+         A1IzUjEktkIKdosowzCRTTVL6T3xy8CVshRaJSApJotpVtc3trP8p1aC+y0kPRvEYYVx
+         mQUQ==
+X-Gm-Message-State: AOJu0YysLtyIX+nNc/HVTOna14K/yKf0ocDCPAQ2PugTQxFGBSlbmAbM
+	2IWM8mTubZmr30i7JmPJ+Fq+ozyU9UpI+2eayBS0TQ==
+X-Google-Smtp-Source: AGHT+IESpOk1+13dVI9Xc1VuCWEKnD2SuIEKb3OpBVqsUwAw0LqpvmwqlMYZQkeY3oFDarm5X4BCzXvYf66ohaO4eV0=
+X-Received: by 2002:a05:6214:2626:b0:67a:b923:6ae2 with SMTP id
+ gv6-20020a056214262600b0067ab9236ae2mr6255559qvb.23.1702295463057; Mon, 11
+ Dec 2023 03:51:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20231121220155.1217090-1-iii@linux.ibm.com> <20231121220155.1217090-13-iii@linux.ibm.com>
+In-Reply-To: <20231121220155.1217090-13-iii@linux.ibm.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Mon, 11 Dec 2023 12:50:22 +0100
+Message-ID: <CAG_fn=VaJtMogdmehJoYmZRNrs5AXYs+ZwBTu3TQQVaSkFNzcw@mail.gmail.com>
+Subject: Re: [PATCH v2 12/33] kmsan: Allow disabling KMSAN checks for the
+ current task
+To: Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 9 Dec 2023 17:09:25 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, Nov 21, 2023 at 11:06=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.co=
+m> wrote:
+>
+> Like for KASAN, it's useful to temporarily disable KMSAN checks around,
+> e.g., redzone accesses. Introduce kmsan_disable_current() and
+> kmsan_enable_current(), which are similar to their KASAN counterparts.
 
-> On Sat, 9 Dec 2023 17:01:39 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> > 
-> > The maximum ring buffer data size is the maximum size of data that can be
-> > recorded on the ring buffer. Events must be smaller than the sub buffer
-> > data size minus any meta data. This size is checked before trying to
-> > allocate from the ring buffer because the allocation assumes that the size
-> > will fit on the sub buffer.
-> > 
-> > The maximum size was calculated as the size of a sub buffer page (which is
-> > currently PAGE_SIZE minus the sub buffer header) minus the size of the
-> > meta data of an individual event. But it missed the possible adding of a
-> > time stamp for events that are added long enough apart that the event meta
-> > data can't hold the time delta.
-> > 
-> > When an event is added that is greater than the current BUF_MAX_DATA_SIZE
-> > minus the size of a time stamp, but still less than or equal to
-> > BUF_MAX_DATA_SIZE, the ring buffer would go into an infinite loop, looking
-> > for a page that can hold the event. Luckily, there's a check for this loop
-> > and after 1000 iterations and a warning is emitted and the ring buffer is
-> > disabled. But this should never happen.
-> > 
-> > This can happen when a large event is added first, or after a long period
-> > where an absolute timestamp is prefixed to the event, increasing its size
-> > by 8 bytes. This passes the check and then goes into the algorithm that
-> > causes the infinite loop.
-> > 
-> > Fix this by creating a BUF_MAX_EVENT_SIZE to be used to determine if the
-> > passed in event is too big for the buffer.
-> > 
-> 
-> Forgot to add:
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: a4543a2fa9ef3 ("ring-buffer: Get timestamp after event is allocated")
+Initially we used to have this disablement counter in KMSAN, but
+adding it uncontrollably can result in KMSAN not functioning properly.
+E.g. forgetting to call kmsan_disable_current() or underflowing the
+counter will break reporting.
+We'd better put this API in include/linux/kmsan.h to indicate it
+should be discouraged.
 
-Looks good to me.
+> Even though it's not strictly necessary, make them reentrant, in order
+> to match the KASAN behavior.
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks,
-> 
-> -- Steve
-> 
-> 
-> > Reported-by: Kent Overstreet <kent.overstreet@linux.dev> # (on IRC)
-> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> > ---
-> >  kernel/trace/ring_buffer.c | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > index 8d2a4f00eca9..a38e5a3c6803 100644
-> > --- a/kernel/trace/ring_buffer.c
-> > +++ b/kernel/trace/ring_buffer.c
-> > @@ -378,6 +378,9 @@ static inline bool test_time_stamp(u64 delta)
-> >  /* Max payload is BUF_PAGE_SIZE - header (8bytes) */
-> >  #define BUF_MAX_DATA_SIZE (BUF_PAGE_SIZE - (sizeof(u32) * 2))
-> >  
-> > +/* Events may have a time stamp attached to them */
-> > +#define BUF_MAX_EVENT_SIZE (BUF_MAX_DATA_SIZE - RB_LEN_TIME_EXTEND)
-> > +
-> >  int ring_buffer_print_page_header(struct trace_seq *s)
-> >  {
-> >  	struct buffer_data_page field;
-> > @@ -3810,7 +3813,7 @@ ring_buffer_lock_reserve(struct trace_buffer *buffer, unsigned long length)
-> >  	if (unlikely(atomic_read(&cpu_buffer->record_disabled)))
-> >  		goto out;
-> >  
-> > -	if (unlikely(length > BUF_MAX_DATA_SIZE))
-> > +	if (unlikely(length > BUF_MAX_EVENT_SIZE))
-> >  		goto out;
-> >  
-> >  	if (unlikely(trace_recursive_lock(cpu_buffer)))
-> > @@ -3960,7 +3963,7 @@ int ring_buffer_write(struct trace_buffer *buffer,
-> >  	if (atomic_read(&cpu_buffer->record_disabled))
-> >  		goto out;
-> >  
-> > -	if (length > BUF_MAX_DATA_SIZE)
-> > +	if (length > BUF_MAX_EVENT_SIZE)
-> >  		goto out;
-> >  
-> >  	if (unlikely(trace_recursive_lock(cpu_buffer)))
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Until this becomes strictly necessary, I think we'd better
+KMSAN_WARN_ON if the counter is re-entered.
