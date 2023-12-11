@@ -1,36 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1839C38FA2
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 12:08:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1E91F612
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 12:14:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UPAKLlpA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8F69C433C8;
-	Mon, 11 Dec 2023 12:08:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eS+9lWp6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07A81C433C8;
+	Mon, 11 Dec 2023 12:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702296503;
-	bh=H48TlKvi4BGnZcxJ7Nx9B60tEixMLubEf6s1qwzEUuA=;
+	s=k20201202; t=1702296868;
+	bh=ZmV8Ia6tQOoQryqALYfwSQzG28bMYMh8bIDdDdQzgtw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=UPAKLlpAij5Mf2DLLVZoINgoQGRex/xDfJR7/eZsus5A8CNzh2phm2unAjVKrbZMu
-	 jWAW4MT516TOaj6fzNPz8p6FZBXNid1u3zgSbE9hUs9SYC2EjuxdZeSdbhCXPmpOHP
-	 LJliGFzHUgMBJueF8P6FfF9jwGW3LMNkFiy6Q3nQd+FicBqKF3u7Ioipkr9YbVfOLK
-	 hDTtkhGRM6auhxiSP5rWLDU7eItiCnRRjIj5Rweo9FsF0SbcQFRX8EBpFOk8QX4RPU
-	 56QzGuPISVuUEDZ5Y4tdRawpfjb3ev3Qxc3NRiO/c5beVLure3Kg1/0pW2z33lD1wX
-	 M1eTpFKtH2i5w==
-Date: Mon, 11 Dec 2023 21:08:19 +0900
+	b=eS+9lWp6lze+Q/NrEuIUBv6mTuFpDlg2/HlEsR7/VQH8qMKf2tk62BTK8CMp39bNj
+	 EdkCvUbx9XSH/dHM57bDnUsd2dQoPWzGwM/Tv0y4SRGfGmt+l0kMr849Xup3wGyqkz
+	 +eeELeRDTTP7wP8gaK2BRoBdBxftVieU7SHmCrdkgV+PGS0lXiYLvqvSO8/QjIg6JT
+	 2ESpNondZeRvJy/CRblaNyTC/lfe3rgfbEZ00XoqsZNSh3bKwMsZelleR4PrADsuLX
+	 YXXJ4NdWmi3Jmqy/bk5kH5KHaR9RmZBUGqvu8pMCJE9UpVc/ai4+iYEA9ZJTxpvKmT
+	 i5RvFjI0drlBg==
+Date: Mon, 11 Dec 2023 21:14:24 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, LKML
- <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] tracing: Have large events show up as '[LINE TOO BIG]'
- instead of nothing
-Message-Id: <20231211210819.cd4f7b3df09cf0eb584e51b9@kernel.org>
-In-Reply-To: <20231210103415.5afd45ca@gandalf.local.home>
-References: <20231209171058.78c1a026@gandalf.local.home>
-	<18d6a5e5-f7a5-4a86-aa0b-eec38652c0d5@efficios.com>
-	<20231210103415.5afd45ca@gandalf.local.home>
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] tracing: Increase size of trace_marker_raw to max ring
+ buffer entry
+Message-Id: <20231211211424.e58f9b9abb9594f671d1d0ed@kernel.org>
+In-Reply-To: <20231209175716.09ac455b@gandalf.local.home>
+References: <20231209175716.09ac455b@gandalf.local.home>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,52 +39,72 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sun, 10 Dec 2023 10:34:15 -0500
+On Sat, 9 Dec 2023 17:57:16 -0500
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Sun, 10 Dec 2023 09:11:40 -0500
-> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> > On 2023-12-09 17:10, Steven Rostedt wrote:
-> > [...]
-> > >              <...>-852     [001] .....   121.550551: tracing_mark_write[LINE TOO BIG]
-> > >              <...>-852     [001] .....   121.550581: tracing_mark_write: 78901234  
-> > 
-> > Failing to print an entire message because it does not fit in the
-> > buffer size is rather inconvenient.
+> There's no reason to give an arbitrary limit to the size of a raw trace
+> marker. Just let it be as big as the size that is allowed by the ring
+> buffer itself.
 > 
-> Yes I agree, and luckily it hasn't been called out as an issue. Note, I hit
-> this because I extended the trace_marker buffer before increasing the
-> trace_seq size. Otherwise, the trace_marker just breaks it up. This can now
-> only be triggered by internal changes.
+> And there's also no reason to artificially break up the write to
+> TRACE_BUF_SIZE, as that's not even used.
 
-Rather than the broken output, I would perfer this output.
+Looks good to me.
+
+Reivewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks!
 
 > 
-> > 
-> > It would be better to print the partial line, and end the line with
-> > a <TRUNCATED LINE> tag.
-
-But how long the partial line length is good enough? I think that big (and long)
-user marker maybe not for human, so we don't need to care about readability.
-I think current one is one of better solutions.
-
-So I'll give my Reviewed-by. :)
-
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you,
-
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+> [
+>   Depends on: https://lore.kernel.org/linux-trace-kernel/20231209175003.63db40ab@gandalf.local.home/
+> ]
+>  kernel/trace/trace.c | 13 ++++---------
+>  1 file changed, 4 insertions(+), 9 deletions(-)
 > 
-> Agreed, but I don't have time to do that (I already spent way too much time
-> on this than I had allocated). I decided to just do what the trace_pipe
-> currently does, and leave "print partial line" to another day when I can
-> allocate time on this.
-> 
-> Hmm, this could be added to the "TODO" list that was talked about in
-> ksummit-discuss.
-> 
-> -- Steve
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index da837119a446..077b20e83e7c 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -7351,9 +7351,6 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
+>  	return written;
+>  }
+>  
+> -/* Limit it for now to 3K (including tag) */
+> -#define RAW_DATA_MAX_SIZE (1024*3)
+> -
+>  static ssize_t
+>  tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
+>  					size_t cnt, loff_t *fpos)
+> @@ -7375,18 +7372,16 @@ tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
+>  		return -EINVAL;
+>  
+>  	/* The marker must at least have a tag id */
+> -	if (cnt < sizeof(unsigned int) || cnt > RAW_DATA_MAX_SIZE)
+> +	if (cnt < sizeof(unsigned int))
+>  		return -EINVAL;
+>  
+> -	if (cnt > TRACE_BUF_SIZE)
+> -		cnt = TRACE_BUF_SIZE;
+> -
+> -	BUILD_BUG_ON(TRACE_BUF_SIZE >= PAGE_SIZE);
+> -
+>  	size = sizeof(*entry) + cnt;
+>  	if (cnt < FAULT_SIZE_ID)
+>  		size += FAULT_SIZE_ID - cnt;
+>  
+> +	if (size > ring_buffer_max_event_size(buffer))
+> +		return -EINVAL;
+> +
+>  	buffer = tr->array_buffer.buffer;
+>  	event = __trace_buffer_lock_reserve(buffer, TRACE_RAW_DATA, size,
+>  					    tracing_gen_ctx());
+> -- 
+> 2.42.0
 > 
 
 
