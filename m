@@ -1,53 +1,53 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LswbF9ZK"
-Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6C9A12E
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 02:46:03 -0800 (PST)
-Received: by mail-qv1-xf2b.google.com with SMTP id 6a1803df08f44-67ab41956f8so17452396d6.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 02:46:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dEzGdL7x"
+Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 974E112E
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 02:46:59 -0800 (PST)
+Received: by mail-qv1-xf2c.google.com with SMTP id 6a1803df08f44-67a9b393f53so17529886d6.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 02:46:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702291563; x=1702896363; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1702291619; x=1702896419; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7oGkQuUWo91ye44C9IpsxZC6+sJmmo7+c+5R/ZoMYnk=;
-        b=LswbF9ZKpTmZcrwlg+PykPudsQPWHEl9tXtc0PW4cE+POJn4SWIJI0n7WgNsQqiPj/
-         TE2JI0zG91KQdpHgFRW+uNe50j1jMrWDf1vGKfwuQGoTgqUwYpzO2V7nmJZI0d9AT840
-         aDBR1E9WFF/bk8ZWF5LEeNmJejGTI2WViwllDFXo93mo5inV+WrpgVE2pmQOYJ0CTBq2
-         17dgA6Nx9egJa0xiihyG6YnvxOiaE/ne56XuOK4PhN3P8Go/hBNQ0/WRlxrC0hZSikOL
-         iTKUzUtOinVi/MpF9rQKkGvkRxYUkTP8L78zeslrYPPRsYfh7PRuE/uInqTgI8Dt6nAF
-         n7mw==
+        bh=dbONbDTwPKE3MiL/eslKI++k2YglZ6miec7hwk3eDBk=;
+        b=dEzGdL7xlsXH7EW80M8rGghMQumaP3K/HrcnondofZ92PBvX8AaCloCQeoqF5Oaj/e
+         ULWt6O+3bKyauH/UFXMlKz6jp+L2yV81Jdm2qhNtmaQO7YZYfeGqYYK27qiViP08fc4t
+         +aoHzfs9g5cT4R8xx+bsUJL57zR/hXlqJP2/h5JwpcogXcsb+4fOaRpvfzMCRPMZq/t9
+         J7FLUhsE7q1ITm2IXEZR1fFZsPJcJD/hQWO6PRb7QtwkAB4U/tXvaSfbKx+fERn6Rwv6
+         1kfoHUFmRDMrIip/3t1PW4Qs/0QxTx3QorOCqvh5wzdMahgmJ6qpzshkEywnpQYanMsv
+         jH5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702291563; x=1702896363;
+        d=1e100.net; s=20230601; t=1702291619; x=1702896419;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7oGkQuUWo91ye44C9IpsxZC6+sJmmo7+c+5R/ZoMYnk=;
-        b=go8LgfOK84h9QAqtXzuEDOAVeEJPAxXiRWPGJ7iI8NA7d4uOLRZgrQsumOa/fhjsQL
-         Dshxc4TkZKpjff7kpLjacV698x2joUi8Sin+RuyvEUJz3wGSacLLuBxK23fnYRY5YZHL
-         O6IWBPPGc+yAMeqocsjT0cLfWzu/X2dtt5Q9bRbXe6gHU//e+YjYLdYq0b7SoaWf/La7
-         5KVv8IEnEiOGOMh1XXb6aMztVlguoKJnimBUsOplCHAm+BjbntpK6T/S6SrgakDpJlp/
-         VlgZ6FlpNiX4s4LmeWuVl1yCG52WWQKjyJBd3oSLW+SHZU1N2B6TuceJTgvQf4nZ7mwZ
-         NYDg==
-X-Gm-Message-State: AOJu0YywmzEjctvsgH3E5NRCTmIJB7pB1UTkjmRJ57pbVzd6Ostb7/iY
-	JJkXoYMiO8K/SPU1eZDJrCV5jafl9Sa0AQTc/yummQ==
-X-Google-Smtp-Source: AGHT+IH22X94i2ts8pfDTl+UHUOVSQbvWaHqW1ewv6yn/pgryYwSlV5ZdHdef/3tWsAKN8+sgj14JcXabg2oblYSeP4=
-X-Received: by 2002:a0c:fc48:0:b0:67a:a721:ec3f with SMTP id
- w8-20020a0cfc48000000b0067aa721ec3fmr2421212qvp.131.1702291562839; Mon, 11
- Dec 2023 02:46:02 -0800 (PST)
+        bh=dbONbDTwPKE3MiL/eslKI++k2YglZ6miec7hwk3eDBk=;
+        b=cA8qQblVWRSW6JoXY9dLLHU8SxBElzqdwVjAJMv/BieJqeRVR6Z0EX0Mx0K8oFANbs
+         oTpko0gxX05oCt+aoRz7rfFy7Uuc/m/18ZIhlPlMqih77+KJiMChH4FtFIn57WyvOzIO
+         ZoM8YfCx/RcjKfXCfHDcTV81fEjW1wo3bEcdxp+usjQP04vdAUF5sJZ9TWaA0MpwAqEp
+         dE+IdUy7CsqNAkqsj6UQvgt5REt49aZKKiK3uB/ojAE8zW5C1EX57m+UI6xCiuye/8T6
+         iVOOoRiNOeyFEN/seoDnnPdJNu0YmTLvjUKlqsT9cPNJJQOyBB6c3IWzRoSjUxV141A0
+         5XDA==
+X-Gm-Message-State: AOJu0YwyuerenPWPtqLkMdpQBOVdU1PwT1v3+yFF97BIadwLfTcuTkUN
+	JpbzGsqpxp+7oI6dahDW0fWnnB1VQY4utjzEqSv5iQ==
+X-Google-Smtp-Source: AGHT+IE5iESTgLHPyjCFsdOQibZaw2Ip1V5W7Ud/9oJ2fo3N5TyPUEV+pEprZ6kielHId9pGivF+X38bX3Nk/2TuZAE=
+X-Received: by 2002:a05:6214:20ee:b0:67a:d8ce:8e88 with SMTP id
+ 14-20020a05621420ee00b0067ad8ce8e88mr3089154qvk.110.1702291618597; Mon, 11
+ Dec 2023 02:46:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231121220155.1217090-1-iii@linux.ibm.com> <20231121220155.1217090-33-iii@linux.ibm.com>
- <CAG_fn=V5zMxGUQ=KmJh-ghTUHa-AZYn1CPTQNbf3x7Lu0w=HvA@mail.gmail.com> <13e3e073f6ed6aa48b39ec16add85baa677d17b4.camel@linux.ibm.com>
-In-Reply-To: <13e3e073f6ed6aa48b39ec16add85baa677d17b4.camel@linux.ibm.com>
+References: <20231121220155.1217090-1-iii@linux.ibm.com> <20231121220155.1217090-31-iii@linux.ibm.com>
+In-Reply-To: <20231121220155.1217090-31-iii@linux.ibm.com>
 From: Alexander Potapenko <glider@google.com>
-Date: Mon, 11 Dec 2023 11:45:22 +0100
-Message-ID: <CAG_fn=UX=8HrFzCSxmPgMn=H4cVmZ4GHE0Z+qZbpysOZwuH=aw@mail.gmail.com>
-Subject: Re: [PATCH v2 32/33] s390: Implement the architecture-specific kmsan functions
+Date: Mon, 11 Dec 2023 11:46:22 +0100
+Message-ID: <CAG_fn=XyTZHU45EhinUSm-+Thux4VPCpT-jyf=cP7hNPcTbK8g@mail.gmail.com>
+Subject: Re: [PATCH v2 30/33] s390/uaccess: Add KMSAN support to put_user()
+ and get_user()
 To: Ilya Leoshkevich <iii@linux.ibm.com>
 Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
 	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
@@ -62,25 +62,36 @@ Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-founda
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-> > Is there a possibility for infinite recursion here? E.g. can
-> > `lowcore_ptr[raw_smp_processor_id()]` point somewhere in between
-> > `(void *)&S390_lowcore` and `(void *)(&S390_lowcore + 1))`?
+On Tue, Nov 21, 2023 at 11:03=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.co=
+m> wrote:
 >
-> No, it's allocated with __get_free_pages() or memblock_alloc_low().
-> But since this question came up, I should probably add a check and
-> a WARN_ON_ONCE() here.
+> put_user() uses inline assembly with precise constraints, so Clang is
+> in principle capable of instrumenting it automatically. Unfortunately,
+> one of the constraints contains a dereferenced user pointer, and Clang
+> does not currently distinguish user and kernel pointers. Therefore
+> KMSAN attempts to access shadow for user pointers, which is not a right
+> thing to do.
+>
+> An obvious fix to add __no_sanitize_memory to __put_user_fn() does not
+> work, since it's __always_inline. And __always_inline cannot be removed
+> due to the __put_user_bad() trick.
+>
+> A different obvious fix of using the "a" instead of the "+Q" constraint
+> degrades the code quality, which is very important here, since it's a
+> hot path.
+>
+> Instead, repurpose the __put_user_asm() macro to define
+> __put_user_{char,short,int,long}_noinstr() functions and mark them with
+> __no_sanitize_memory. For the non-KMSAN builds make them
+> __always_inline in order to keep the generated code quality. Also
+> define __put_user_{char,short,int,long}() functions, which call the
+> aforementioned ones and which *are* instrumented, because they call
+> KMSAN hooks, which may be implemented as macros.
+>
+> The same applies to get_user() as well.
+>
+> Acked-by: Heiko Carstens <hca@linux.ibm.com>
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
 
-Yes, please.
-
-
---=20
-Alexander Potapenko
-Software Engineer
-
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
-
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Liana Sebastian
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
+I think this patch makes sense, but I don't feel myself qualified
+enough to stamp it. Hope Heiko's ack is enough.
