@@ -1,127 +1,185 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bgie8C/f"
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 655A0D6;
-	Mon, 11 Dec 2023 05:01:47 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-40c38de1ee4so25150425e9.0;
-        Mon, 11 Dec 2023 05:01:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702299706; x=1702904506; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=JNQm7s7g+d3XsjrBpIIxNcsMxJriHJmGupSKhGUX004=;
-        b=bgie8C/f4rYdCXEZ2VEzJvw6hR8ck/TDPMvaf5sTGzI9zQwb5r8sZhLo1rHh+th87w
-         NLtdU4D1c9U+Gb2G4crLMwOAEg6XOklMwrVu7X3JA9lQb972Dp+OHDT3Rv0gkwFQXhr0
-         A/nEV8vW0la38Y44Hb7Y3UqENT2HT6ZlH/x4EGjqpnGpaiiOAXERkAUulf8j3aO57S2H
-         ZB1wJxCSo/gslUUqaEhwOkUBkqTBqarPnr2X8JAz5jF4m7Qn3nsZMavNwqSJc1X6dSH2
-         lbWJ9UEopr+oH3OOC0S8ZBPmj8vzgGpGlIt/t6ovvyuziYFrOkuyGYthF/p/iB+kv+d6
-         MVFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702299706; x=1702904506;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JNQm7s7g+d3XsjrBpIIxNcsMxJriHJmGupSKhGUX004=;
-        b=rtci17TF9I/yqpmhQQdTg9OLg02/3VfEoU7IbPIAkmnGB9AXl7xdK5jt6qHog5iVRg
-         wOpJ2QZVACBHYay3NPHNdao+gOijHohyRoLXAkMPpBFYS7fKUhR14bpnxW9AZp4PduPY
-         ys55UVD70UQ76vJ/NBKb5Rb89SS2wEwDwX4X4e9d0F/1r479WcmHlZpR7OLMwk8cvEjB
-         BupidrIKlff5MN9EmOr2zJrgY/VngxlAWOA47/6iOW2ti85V006T2vnZHp6Kppyn3/He
-         +xH1mY8paOdrNd9rJtXoEgMvSfwWqyNWL6HlF/6ydHtfCrLEEEeq4E8jcurBG7xbOq+a
-         sITQ==
-X-Gm-Message-State: AOJu0YxekNGBpVCFxQIVIVvPWF931MiJrgXiqI7tJf5Eji9DfvbVdCDx
-	ss4fbJVHOPusdFlCVdvBR4E=
-X-Google-Smtp-Source: AGHT+IHjKWmDs3sZutxGzBuNiu10ay7qVurMNNIwk/X7cleo8EvKj5YyFDjjZgy2yMPRiBqnyjrV+g==
-X-Received: by 2002:a05:600c:20d:b0:40c:3915:be5a with SMTP id 13-20020a05600c020d00b0040c3915be5amr2511796wmi.118.1702299705590;
-        Mon, 11 Dec 2023 05:01:45 -0800 (PST)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id t14-20020a5d42ce000000b003333b0d603bsm8497641wrr.42.2023.12.11.05.01.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Dec 2023 05:01:45 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 11 Dec 2023 14:01:43 +0100
-To: Hou Tao <houtao@huaweicloud.com>, mhiramat@kernel.org
-Cc: xingwei lee <xrivendell7@gmail.com>, ast@kernel.org,
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
-	song@kernel.org, yonghong.song@linux.dev, john.fastabend@gmail.com,
-	kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
-	rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: WARNING: kmalloc bug in bpf_uprobe_multi_link_attach
-Message-ID: <ZXcIN-odFOCWX8Ox@krava>
-References: <CABOYnLwwJY=yFAGie59LFsUsBAgHfroVqbzZ5edAXbFE3YiNVA@mail.gmail.com>
- <689db41e-90f5-c5ba-b690-00586f22d616@huaweicloud.com>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 366931BF6;
+	Mon, 11 Dec 2023 06:21:45 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C2ECFEC;
+	Mon, 11 Dec 2023 06:22:31 -0800 (PST)
+Received: from raptor (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 613B73F738;
+	Mon, 11 Dec 2023 06:21:39 -0800 (PST)
+Date: Mon, 11 Dec 2023 14:21:36 +0000
+From: Alexandru Elisei <alexandru.elisei@arm.com>
+To: Hyesoo Yu <hyesoo.yu@samsung.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
+	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
+	rppt@kernel.org, hughd@google.com, pcc@google.com,
+	steven.price@arm.com, anshuman.khandual@arm.com,
+	vincenzo.frascino@arm.com, david@redhat.com, eugenis@google.com,
+	kcc@google.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v2 15/27] arm64: mte: Check that tag storage blocks
+ are in the same zone
+Message-ID: <ZXca8B6a3HPRrdNP@raptor>
+References: <20231119165721.9849-1-alexandru.elisei@arm.com>
+ <CGME20231119165900epcas2p3efd0f3ac19b7bcf7883e8d3945e63326@epcas2p3.samsung.com>
+ <20231119165721.9849-16-alexandru.elisei@arm.com>
+ <20231129085744.GB2988384@tiffany>
+ <ZWh5S9BoO5bG5nQM@raptor>
+ <20231208052739.GB1359878@tiffany>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <689db41e-90f5-c5ba-b690-00586f22d616@huaweicloud.com>
+In-Reply-To: <20231208052739.GB1359878@tiffany>
 
-On Mon, Dec 11, 2023 at 07:29:40PM +0800, Hou Tao wrote:
+Hi,
 
-SNIP
+On Fri, Dec 08, 2023 at 02:27:39PM +0900, Hyesoo Yu wrote:
+> Hi~
+> 
+> On Thu, Nov 30, 2023 at 12:00:11PM +0000, Alexandru Elisei wrote:
+> > Hi,
+> > 
+> > On Wed, Nov 29, 2023 at 05:57:44PM +0900, Hyesoo Yu wrote:
+> > > On Sun, Nov 19, 2023 at 04:57:09PM +0000, Alexandru Elisei wrote:
+> > > > alloc_contig_range() requires that the requested pages are in the same
+> > > > zone. Check that this is indeed the case before initializing the tag
+> > > > storage blocks.
+> > > > 
+> > > > Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> > > > ---
+> > > >  arch/arm64/kernel/mte_tag_storage.c | 33 +++++++++++++++++++++++++++++
+> > > >  1 file changed, 33 insertions(+)
+> > > > 
+> > > > diff --git a/arch/arm64/kernel/mte_tag_storage.c b/arch/arm64/kernel/mte_tag_storage.c
+> > > > index 8b9bedf7575d..fd63430d4dc0 100644
+> > > > --- a/arch/arm64/kernel/mte_tag_storage.c
+> > > > +++ b/arch/arm64/kernel/mte_tag_storage.c
+> > > > @@ -265,6 +265,35 @@ void __init mte_tag_storage_init(void)
+> > > >  	}
+> > > >  }
+> > > >  
+> > > > +/* alloc_contig_range() requires all pages to be in the same zone. */
+> > > > +static int __init mte_tag_storage_check_zone(void)
+> > > > +{
+> > > > +	struct range *tag_range;
+> > > > +	struct zone *zone;
+> > > > +	unsigned long pfn;
+> > > > +	u32 block_size;
+> > > > +	int i, j;
+> > > > +
+> > > > +	for (i = 0; i < num_tag_regions; i++) {
+> > > > +		block_size = tag_regions[i].block_size;
+> > > > +		if (block_size == 1)
+> > > > +			continue;
+> > > > +
+> > > > +		tag_range = &tag_regions[i].tag_range;
+> > > > +		for (pfn = tag_range->start; pfn <= tag_range->end; pfn += block_size) {
+> > > > +			zone = page_zone(pfn_to_page(pfn));
+> > > 
+> > > Hello.
+> > > 
+> > > Since the blocks within the tag_range must all be in the same zone, can we move the "page_zone"
+> > > out of the loop ?
+> > `
+> > Hmm.. why do you say that the pages in a tag_range must be in the same
+> > zone? I am not very familiar with how the memory management code puts pages
+> > into zones, but I would imagine that pages in a tag range straddling the
+> > 4GB limit (so, let's say, from 3GB to 5GB) will end up in both ZONE_DMA and
+> > ZONE_NORMAL.
+> > 
+> > Thanks,
+> > Alex
+> > 
+> 
+> Oh, I see that reserve_tag_storage only calls alloc_contig_rnage in units of block_size,
+> I thought it could be called for the entire range the page needed at once.
+> (Maybe it could be a bit faster ? It doesn't seem like unnecessary drain and
+> other operation are repeated.)
+
+Yes, that might be useful to do. Worth keeping in mind is that:
+
+- a number of block size pages at the start and end of the range might
+  already be reserved for other tagged pages, so the actual range that is
+  being reserved might end up being smaller that what we are expecting.
+
+- the most common allocation order is smaller or equal to
+  PAGE_ALLOC_COSTLY_ORDER, which is 3, which means that the most common
+  case is that reserve_tag_storage reserves only one tag storage block.
+
+I will definitely keep this optimization in mind, but I would prefer to get
+the series into a more stable shape before looking at performance
+optimizations.
 
 > 
-> It seems a big attr->link_create.uprobe_multi.cnt is passed to
-> bpf_uprobe_multi_link_attach(). Could you please try the first patch in
-> the following patch set ?
-> 
-> https://lore.kernel.org/bpf/20231211112843.4147157-1-houtao@huaweicloud.com/T/#t
-> > [   68.389633][ T8223]  ? __might_fault+0x13f/0x1a0
-> > [   68.390129][ T8223]  ? bpf_kprobe_multi_link_attach+0x10/0x10
-> 
-> SNIP
-> >   res = syscall(__NR_bpf, /*cmd=*/5ul, /*arg=*/0x20000140ul, /*size=*/0x90ul);
-> >   if (res != -1) r[0] = res;
-> >   memcpy((void*)0x20000000, "./file0\000", 8);
-> >   syscall(__NR_creat, /*file=*/0x20000000ul, /*mode=*/0ul);
-> >   *(uint32_t*)0x20000340 = r[0];
-> >   *(uint32_t*)0x20000344 = 0;
-> >   *(uint32_t*)0x20000348 = 0x30;
-> >   *(uint32_t*)0x2000034c = 0;
-> >   *(uint64_t*)0x20000350 = 0x20000080;
-> >   memcpy((void*)0x20000080, "./file0\000", 8);
-> 
-> 0x20000350 is the address of attr->link_create.uprobe_multi.path.
-> >   *(uint64_t*)0x20000358 = 0x200000c0;
-> >   *(uint64_t*)0x200000c0 = 0;
-> >   *(uint64_t*)0x20000360 = 0;
-> >   *(uint64_t*)0x20000368 = 0;
-> >   *(uint32_t*)0x20000370 = 0xffffff1f;
-> 
-> The value of attr->link_create.uprobe_multi.cnt is 0xffffff1f, so 
-> 0xffffff1f * sizeof(bpf_uprobe) will be greater than INT_MAX, and
-> triggers the warning in mm/util.c:
-> 
->         /* Don't even allow crazy sizes */
->         if (unlikely(size > INT_MAX)) {
->                 WARN_ON_ONCE(!(flags & __GFP_NOWARN));
->                 return NULL;
->         }
-> 
-> Adding __GFP_NOWARN when doing kvcalloc() can fix the warning.
+> If we use the cma code when activating the tag storage, it will be error if the
+> entire area of tag region is not in the same zone, so there should be a constraint
+> that it must be in the same zone when defining the tag region on device tree.
 
-hi,
-looks like that's the case.. thanks for fixing that
+I don't think that's the best approach, because the device tree describes
+the hardware, which does not change, and this is a software limitation
+(i.e, CMA doesn't work if a CMA region spans different zones), which might
+get fixed in a future version of Linux.
 
-btw while checking on that I found kprobe_multi bench attach test
-takes forever on latest bpf-next/master
+In my opinion, the simplest solution would be to check that all tag storage
+regions have been activated successfully by CMA before enabling tag
+storage. Another alternative would be to split the tag storage region into
+several CMA regions at a zone boundary, and add it as distinct CMA regions.
 
-	test_kprobe_multi_bench_attach:PASS:bpf_program__attach_kprobe_multi_opts 0 nsec
-	test_kprobe_multi_bench_attach: found 56140 functions
-	test_kprobe_multi_bench_attach: attached in  89.174s
-	test_kprobe_multi_bench_attach: detached in  13.245s
-	#113/1   kprobe_multi_bench_attach/kernel:OK
+Thanks,
+Alex
 
-Masami,
-any idea of any change on fprobe/ftrace side recently? I'm going to check ;-)
+> 
+> Thanks,
+> Regards.
+> 
+> > > 
+> > > Thanks,
+> > > Regards.
+> > > 
+> > > > +			for (j = 1; j < block_size; j++) {
+> > > > +				if (page_zone(pfn_to_page(pfn + j)) != zone) {
+> > > > +					pr_err("Tag storage block pages in different zones");
+> > > > +					return -EINVAL;
+> > > > +				}
+> > > > +			}
+> > > > +		}
+> > > > +	}
+> > > > +
+> > > > +	 return 0;
+> > > > +}
+> > > > +
+> > > >  static int __init mte_tag_storage_activate_regions(void)
+> > > >  {
+> > > >  	phys_addr_t dram_start, dram_end;
+> > > > @@ -321,6 +350,10 @@ static int __init mte_tag_storage_activate_regions(void)
+> > > >  		goto out_disabled;
+> > > >  	}
+> > > >  
+> > > > +	ret = mte_tag_storage_check_zone();
+> > > > +	if (ret)
+> > > > +		goto out_disabled;
+> > > > +
+> > > >  	for (i = 0; i < num_tag_regions; i++) {
+> > > >  		tag_range = &tag_regions[i].tag_range;
+> > > >  		for (pfn = tag_range->start; pfn <= tag_range->end; pfn += pageblock_nr_pages)
+> > > > -- 
+> > > > 2.42.1
+> > > > 
+> > > > 
+> > 
+> > 
+> > 
 
-thanks,
-jirka
+
