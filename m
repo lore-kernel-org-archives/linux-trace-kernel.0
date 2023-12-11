@@ -1,194 +1,106 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="vmV0GKJ1"
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE76DC;
-	Mon, 11 Dec 2023 12:13:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1702325605;
-	bh=MvVyKw/x+yVjAm3vE1F1gu66BqT0E/W/bARjFgMbliw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=vmV0GKJ1rOjQY5SnrMb0zU+FNuvpCJXSliUZCWUZMDsH1vzEpSlT+jfeFu16ldkTq
-	 xSQ4mMjPS50qdRcyDMHp9fCo4evqL2dtUJlJVykukrR21tOEPem8iTT1PDJSz1JsP0
-	 YDy85b3xc9oDozuVFXW0Z4xxL4oCtm4MgqZUKwcJck0BcXOL5PXB7L9laA06L/Y6g6
-	 ByXYrMJ7u/ExSg5zCTdQJvIZUI0yrXNRebOrgxp4h4T+wqAo8rEAu1jHeNyTb1s9aa
-	 GVUktYykV6lOQ0vrccU27+wifpCO/4Gk6C9lz2NM8G7rQxmW5qSZ+XO/a1cK5poDIV
-	 M+hdNtsGw5upQ==
-Received: from thinkos.internal.efficios.com (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4SptGs4nGDzGRs;
-	Mon, 11 Dec 2023 15:13:25 -0500 (EST)
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: [RFC PATCH] ring-buffer: Fix and comment ring buffer rb_time functions on 32-bit
-Date: Mon, 11 Dec 2023 15:13:24 -0500
-Message-Id: <20231211201324.652870-1-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SCvV/7Lx"
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F4DEB5;
+	Mon, 11 Dec 2023 12:51:16 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1d30141d108so8396155ad.2;
+        Mon, 11 Dec 2023 12:51:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702327875; x=1702932675; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OckqF+ycLHzYHFxbjXbvIz3Ml946FujF+AQK5q5s1sM=;
+        b=SCvV/7Lxz/d7iohJx9GUmFTtOF+/EU8OesVEO8ST5BFekp/E3yD+Wbe10dFUheBAkD
+         BbfgNWP1S+kQNooerLH/ldznzvhLzVOsOJMi7ySrp0RkDrlwZrRuWgt/oL2TbqN5iwHP
+         jEMf4GHvEIW3GS8zP73VNbZZ19pvFASmnIhJBPY/IY7BIcq8iIzc5YcFXSp4hs2HYwMO
+         E1pRL0jo/zoEY82xz5apKbZErFrN15UmYBwTiUbaIl4HyUyGsKXZ/3+tls5LHKtSgBVl
+         FGp9rr2Kv/5tYZxyu5kAi6cL1WwDals9YHtWLuw9snV0UsrPSUF4/UFGAIfBh1NydT+g
+         qOwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702327875; x=1702932675;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OckqF+ycLHzYHFxbjXbvIz3Ml946FujF+AQK5q5s1sM=;
+        b=tGEGF/3Rnq1TgzZ3wxTJpfPtrCHuudVk4qx2GZPn5VnpCzqDQm53sxALqoKA1qwraK
+         BanmuK90A4XweWcHi2O6+hrLPExMomHUt2AiNcXZU1E18b66d6T8RWCavijJnfstxA0B
+         z+Uo9o9Jga0+x5YbYNWATtgi9dmyFt0eaHRGfRZNqeIQ6w22gJtlPi27P17Y8MqpMOsf
+         BPFWzTmqBaeTL80vVVtDdfjUl8tffQZvJdnAkE91Pf76xc35cawnD/WOkZ7tJ096hZwT
+         0R4isZS/NSTaqaA20RbB+lVk3Q92DCjQnDxV0dCNNkFAf50qGKJ0X/5BCmUGeWan8u9m
+         6+gw==
+X-Gm-Message-State: AOJu0YzPVDvSlhw+mYZ2qxF2CKME/gyiSWwwL1nSsUAiaoApNzRWGX1u
+	rOD+lIm1eg0az73IxbiTPvxQu1Ti5Znp4LnbGjo=
+X-Google-Smtp-Source: AGHT+IEPBlm9uKygnaPDOIUZllJHKtTnroaHPRNtiorenP4WwZXATO18QCas7C3jxxvCCX276R3QqwSsVLgr1jR8DCI=
+X-Received: by 2002:a17:90a:34c1:b0:286:6cc0:b918 with SMTP id
+ m1-20020a17090a34c100b002866cc0b918mr2228620pjf.79.1702327875595; Mon, 11 Dec
+ 2023 12:51:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAMn1gO7Ve4-d6vP4jvASQsTZ2maHsMF6gKHL3RXSuD9N3tAOfQ@mail.gmail.com>
+ <CANpmjNNvGL--j-20UxqX_WjeXGiAcjfDAQpfds+Orajz0ZeBsg@mail.gmail.com>
+ <CAMn1gO6reT+MTmogLOrOVoNqzLH+fKmQ2JRAGy-tDOTLx-fpyw@mail.gmail.com>
+ <CANpmjNN7Gf_aeX+Y6g0UBL-cmTGEF9zgE7hQ1VK8F+0Yeg5Rvg@mail.gmail.com>
+ <20230215143306.2d563215@rorschach.local.home> <CAMn1gO4_+-0x4ibpcASy4bLeZ+7rsmjx=0AYKGVDUApUbanSrQ@mail.gmail.com>
+ <CAMn1gO6heXaovFy6jvpWS8TFLBhTomqNuxJmt_chrd5sYtskvw@mail.gmail.com>
+ <20230505095805.759153de@gandalf.local.home> <n37j6cbsogluma25crzruaiq7qcslnjeoroyybsy3vw2cokpcm@mh7r3ocp24cb>
+ <CA+fCnZebmy-fZdNonrgLofepTPL5hU6P8R37==sygTLBSRoa+w@mail.gmail.com> <fv7fn3jivqcgw7mum6zadfcy2fbn73lygtxyy5p3zqpelfiken@5bmhbdufxgez>
+In-Reply-To: <fv7fn3jivqcgw7mum6zadfcy2fbn73lygtxyy5p3zqpelfiken@5bmhbdufxgez>
+From: Andrey Konovalov <andreyknvl@gmail.com>
+Date: Mon, 11 Dec 2023 21:51:04 +0100
+Message-ID: <CA+fCnZfQEueCifc-8d5NVWEUtAiOG1eRW-LFKbOhab_Y7jqU0Q@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] kasan: switch kunit tests to console tracepoints
+To: =?UTF-8?Q?Paul_Heidekr=C3=BCger?= <paul.heidekrueger@tum.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Collingbourne <pcc@google.com>, Marco Elver <elver@google.com>, 
+	andrey.konovalov@linux.dev, Andrew Morton <akpm@linux-foundation.org>, 
+	Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>, kasan-dev@googlegroups.com, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Going through a review of the ring buffer rb_time functions for 32-bit
-architectures, I updated the comments to match the code, and identified
-the following issues:
+On Mon, Dec 11, 2023 at 7:59=E2=80=AFPM Paul Heidekr=C3=BCger
+<paul.heidekrueger@tum.de> wrote:
+>
+> > Hi Paul,
+> >
+> > I've been successfully running KASAN tests with CONFIG_TRACEPOINTS
+> > enabled on arm64 since this patch landed.
+>
+> Interesting ...
+>
+> > What happens when you try running the tests with .kunitconfig? Does
+> > CONFIG_TRACEPOINTS or CONFIG_KASAN_KUNIT_TEST get disabled during
+> > kernel building?
+>
+> Yes, exactly, that's what's happening.
+>
+> Here's the output kunit.py is giving me. I replaced CONFIG_DEBUG_KERNEL w=
+ith
+> CONFIG_TRACEPOINTS in my .kunitconfig. Otherwise, it's identical with the=
+ one I
+> posted above.
+>
+>         =E2=9E=9C   ./tools/testing/kunit/kunit.py run --kunitconfig=3Dmm=
+/kasan/.kunitconfig --arch=3Darm64
+>         Configuring KUnit Kernel ...
+>         Regenerating .config ...
+>         Populating config with:
+>         $ make ARCH=3Darm64 O=3D.kunit olddefconfig
+>         ERROR:root:Not all Kconfig options selected in kunitconfig were i=
+n the generated .config.
+>         This is probably due to unsatisfied dependencies.
+>         Missing: CONFIG_KASAN_KUNIT_TEST=3Dy, CONFIG_TRACEPOINTS=3Dy
+>
+> Does CONFIG_TRACEPOINTS have some dependency I'm not seeing? I couldn't f=
+ind a
+> reason why it would get disabled, but I could definitely be wrong.
 
-- rb_time_cmpxchg() needs to update the msb last, so it matches
-  the validation of top and msb by __rb_time_read(). This is fixed by
-  this patch.
-
-- A cmpxchg interrupted by 4 writes or cmpxchg overflows the counter
-  and produces corrupted time stamps. This is _not_ fixed by this patch.
-
-- After a cmpxchg fails between updates to top and msb, a write is
-  needed before read and cmpxchg can succeed again. I am not entirely
-  sure the rest of the ring buffer handles this correctly.
-
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org
----
- kernel/trace/ring_buffer.c | 64 +++++++++++++++++++++++++++-----------
- 1 file changed, 46 insertions(+), 18 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 8d2a4f00eca9..f6ed699947cd 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -576,34 +576,50 @@ struct ring_buffer_iter {
- #ifdef RB_TIME_32
- 
- /*
-- * On 32 bit machines, local64_t is very expensive. As the ring
-- * buffer doesn't need all the features of a true 64 bit atomic,
-- * on 32 bit, it uses these functions (64 still uses local64_t).
-+ * On 32-bit machines, local64_t is very expensive. As the ring
-+ * buffer doesn't need all the features of a true 64-bit atomic,
-+ * on 32-bit, it uses these functions (64-bit still uses local64_t).
-  *
-- * For the ring buffer, 64 bit required operations for the time is
-- * the following:
-+ * For the ring buffer, the operations required to manipulate 64-bit
-+ * time stamps are the following:
-  *
-- *  - Reads may fail if it interrupted a modification of the time stamp.
-+ *  - Read may fail if it interrupted a modification of the time stamp.
-  *      It will succeed if it did not interrupt another write even if
-  *      the read itself is interrupted by a write.
-+ *      A read will fail if it follows a cmpxchg which failed between
-+ *      updates to its top and msb bits, until a write is performed.
-+ *      (note: this limitation may be unexpected in parts of the
-+ *      ring buffer algorithm)
-  *      It returns whether it was successful or not.
-  *
-- *  - Writes always succeed and will overwrite other writes and writes
-+ *  - Write always succeeds and will overwrite other writes and writes
-  *      that were done by events interrupting the current write.
-  *
-  *  - A write followed by a read of the same time stamp will always succeed,
-  *      but may not contain the same value.
-  *
-  *  - A cmpxchg will fail if it interrupted another write or cmpxchg.
-+ *      A cmpxchg will fail if it follows a cmpxchg which failed between
-+ *      updates to its top and msb bits, until a write is performed.
-+ *      (note: this limitation may be unexpected in parts of the
-+ *      ring buffer algorithm)
-  *      Other than that, it acts like a normal cmpxchg.
-  *
-- * The 60 bit time stamp is broken up by 30 bits in a top and bottom half
-- *  (bottom being the least significant 30 bits of the 60 bit time stamp).
-+ * The 64-bit time stamp is broken up, from most to least significant,
-+ * in: msb, top and bottom fields, of respectively 4, 30, and 30 bits.
-  *
-- * The two most significant bits of each half holds a 2 bit counter (0-3).
-+ * The two most significant bits of each field hold a 2-bit counter (0-3).
-  * Each update will increment this counter by one.
-- * When reading the top and bottom, if the two counter bits match then the
-- *  top and bottom together make a valid 60 bit number.
-+ * When reading the top, bottom, and msb fields, if the two counter bits
-+ *   match, then the combined values make a valid 64-bit number.
-+ *
-+ * Counter limits. The following situations can generate overflows that
-+ * produce corrupted time stamps:
-+ *
-+ * - A read or a write interrupted by 2^32 writes or cmpxchg.
-+ *
-+ * - A cmpxchg interrupted by 4 writes or cmpxchg.
-+ *   (note: this is not sufficient and should be fixed)
-  */
- #define RB_TIME_SHIFT	30
- #define RB_TIME_VAL_MASK ((1 << RB_TIME_SHIFT) - 1)
-@@ -632,7 +648,7 @@ static inline bool __rb_time_read(rb_time_t *t, u64 *ret, unsigned long *cnt)
- 
- 	/*
- 	 * If the read is interrupted by a write, then the cnt will
--	 * be different. Loop until both top and bottom have been read
-+	 * be different. Loop until top, bottom and msb have been read
- 	 * without interruption.
- 	 */
- 	do {
-@@ -644,7 +660,12 @@ static inline bool __rb_time_read(rb_time_t *t, u64 *ret, unsigned long *cnt)
- 
- 	*cnt = rb_time_cnt(top);
- 
--	/* If top and msb counts don't match, this interrupted a write */
-+	/*
-+	 * If top and msb counts don't match, this either interrupted a
-+	 * write or follows a failed cmpxchg.
-+	 * This requires the update to bottom to be enclosed between
-+	 * updates to top and msb.
-+	 */
- 	if (*cnt != rb_time_cnt(msb))
- 		return false;
- 
-@@ -685,9 +706,10 @@ static void rb_time_set(rb_time_t *t, u64 val)
- 
- 	rb_time_split(val, &top, &bottom, &msb);
- 
--	/* Writes always succeed with a valid number even if it gets interrupted. */
-+	/* Write always succeeds with a valid number even if it gets interrupted. */
- 	do {
- 		cnt = local_inc_return(&t->cnt);
-+		/* The top and msb updates surround bottom update. */
- 		rb_time_val_set(&t->top, top, cnt);
- 		rb_time_val_set(&t->bottom, bottom, cnt);
- 		rb_time_val_set(&t->msb, val >> RB_TIME_MSB_SHIFT, cnt);
-@@ -706,7 +728,12 @@ static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
- 	unsigned long cnt2, top2, bottom2, msb2;
- 	u64 val;
- 
--	/* The cmpxchg always fails if it interrupted an update */
-+	/*
-+	 * The cmpxchg always fails if it interrupted an update or if it
-+	 * follows a cmpxchg that fails between updates to top and msb.
-+	 * A rb_time_set() is needed after a failed cmpxchg to reset to
-+	 * a state where cmpxchg can succeed again.
-+	 */
- 	 if (!__rb_time_read(t, &val, &cnt2))
- 		 return false;
- 
-@@ -729,12 +756,13 @@ static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
- 
- 	if (!rb_time_read_cmpxchg(&t->cnt, cnt, cnt2))
- 		return false;
--	if (!rb_time_read_cmpxchg(&t->msb, msb, msb2))
--		return false;
-+	/* The top and msb updates surround bottom update. */
- 	if (!rb_time_read_cmpxchg(&t->top, top, top2))
- 		return false;
- 	if (!rb_time_read_cmpxchg(&t->bottom, bottom, bottom2))
- 		return false;
-+	if (!rb_time_read_cmpxchg(&t->msb, msb, msb2))
-+		return false;
- 	return true;
- }
- 
--- 
-2.39.2
-
+Does your .kunitconfig include CONFIG_TRACEPOINTS=3Dy? I don't see it in
+the listing that you sent earlier.
