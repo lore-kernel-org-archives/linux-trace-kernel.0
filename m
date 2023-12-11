@@ -1,123 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3130856456;
-	Mon, 11 Dec 2023 23:14:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OLdRvGEC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F889C433C7;
-	Mon, 11 Dec 2023 23:14:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702336458;
-	bh=TjroB8MQohW/qXBzN/75T8H6mvlVZuzk+Zd9agPIoH0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=OLdRvGECLv7RQj1DPTbISv0ich2vzvNj09wIzcaN3Ahd1wXiWL34OBYOG0wB4/XRZ
-	 /367XRi863iFhA/i4z35+DafbYKzBz5bY1S6DM2dXNkiDnD9nDvZYw67eMNCfNHwbw
-	 80b6o8ZoYMTJO61/HU7kgLeMeQraTJRj3t1xxhpe5fYRQ2PXcNuVEIUHS8ui/2wdVP
-	 wusuqmuFWKzKU9xHKXgneRVVjhPwEgR1VS5yDZXsHEOiaynqb5tFVo5XrLuOQnaGEF
-	 iEVq9hUb5CKNtrTCmtxuTGZsSjcyPK7bRRuxRrzwXwcrqtyd8gJrazoVNaaix5pH+5
-	 bE1rUby2yj8mg==
-Date: Tue, 12 Dec 2023 08:14:13 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Dan Carpenter
- <dan.carpenter@linaro.org>, outreachy@lists.linux.dev,
- kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] tracing: Update snapshot buffer on resize if it is
- allocated
-Message-Id: <20231212081413.c4710c1b643ac4e0b975a122@kernel.org>
-In-Reply-To: <20231211125152.045f8b8a@gandalf.local.home>
-References: <20231210225447.48476a6a@rorschach.local.home>
-	<20231211213134.bd21cf745b8c5a0892891946@kernel.org>
-	<20231211125152.045f8b8a@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=tum.de header.i=@tum.de header.b="XT23O3A2"
+Received: from postout1.mail.lrz.de (postout1.mail.lrz.de [129.187.255.137])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 368D8CD;
+	Mon, 11 Dec 2023 15:35:21 -0800 (PST)
+Received: from lxmhs51.srv.lrz.de (localhost [127.0.0.1])
+	by postout1.mail.lrz.de (Postfix) with ESMTP id 4Spylm6qCGzyTp;
+	Tue, 12 Dec 2023 00:35:16 +0100 (CET)
+Authentication-Results: postout.lrz.de (amavisd-new); dkim=pass (2048-bit key)
+	reason="pass (just generated, assumed good)" header.d=tum.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tum.de; h=
+	in-reply-to:content-transfer-encoding:content-disposition
+	:content-type:content-type:mime-version:references:message-id
+	:subject:subject:from:from:date:date:received:received; s=
+	tu-postout21; t=1702337716; bh=hk0tuevZEoLDrYcG31rsdQ9GPMxog11sQ
+	YsjOeuOlI8=; b=XT23O3A2DE9rX1e2iLgAYb42zO3ksg2FiIQsZRad0HZCTwWC0
+	usp9rXYFgx2LzBIj0FHbpEZ9tghtY8gsUOpRJXyg1XOGEj1ewsA5/mZbhr9UICbS
+	R1hRot9yXH014E2HSJ+E8Z54MctMgv1DYfZpwtPRlOe3md016seOEzGBCbJb5+/+
+	rPFDJr1IOXVYuhEtoDNjesPywHOtmrZ2GToQB/GCMz1uQxjnHAokeR8NZyun1KMr
+	mmESRYe9oUus1hWPZEKgtkB7/dIlfLdw85Jr8oUBAPjV7CQ5KbYlq+je/IaESULf
+	01l+cY2MBiFO/w/aY2fHLeakCbonAP+KWLtqw==
+X-Virus-Scanned: by amavisd-new at lrz.de in lxmhs51.srv.lrz.de
+X-Spam-Score: -2.881
+X-Spam-Level:
+Received: from postout1.mail.lrz.de ([127.0.0.1])
+	by lxmhs51.srv.lrz.de (lxmhs51.srv.lrz.de [127.0.0.1]) (amavisd-new, port 20024)
+	with LMTP id Cuu56KEaV5jm; Tue, 12 Dec 2023 00:35:16 +0100 (CET)
+Received: from cerulean.fritz.box (unknown [IPv6:2001:a61:245c:a01:443b:cc34:8ae7:6ede])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by postout1.mail.lrz.de (Postfix) with ESMTPSA id 4Spyll4BFKzyTb;
+	Tue, 12 Dec 2023 00:35:15 +0100 (CET)
+Date: Tue, 12 Dec 2023 00:35:12 +0100
+From: Paul =?utf-8?Q?Heidekr=C3=BCger?= <paul.heidekrueger@tum.de>
+To: Marco Elver <elver@google.com>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Peter Collingbourne <pcc@google.com>, andrey.konovalov@linux.dev, 
+	Andrew Morton <akpm@linux-foundation.org>, Alexander Potapenko <glider@google.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+	kasan-dev@googlegroups.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Andrey Konovalov <andreyknvl@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	linux-trace-kernel@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH v3 1/3] kasan: switch kunit tests to console tracepoints
+Message-ID: <rbcdbilhh67fvjdgnstu25v4jnfeesthoxstnzzglynbngu5bk@5ozwgzaulbsx>
+References: <20230215143306.2d563215@rorschach.local.home>
+ <CAMn1gO4_+-0x4ibpcASy4bLeZ+7rsmjx=0AYKGVDUApUbanSrQ@mail.gmail.com>
+ <CAMn1gO6heXaovFy6jvpWS8TFLBhTomqNuxJmt_chrd5sYtskvw@mail.gmail.com>
+ <20230505095805.759153de@gandalf.local.home>
+ <n37j6cbsogluma25crzruaiq7qcslnjeoroyybsy3vw2cokpcm@mh7r3ocp24cb>
+ <CA+fCnZebmy-fZdNonrgLofepTPL5hU6P8R37==sygTLBSRoa+w@mail.gmail.com>
+ <fv7fn3jivqcgw7mum6zadfcy2fbn73lygtxyy5p3zqpelfiken@5bmhbdufxgez>
+ <CA+fCnZfQEueCifc-8d5NVWEUtAiOG1eRW-LFKbOhab_Y7jqU0Q@mail.gmail.com>
+ <osqmp2j6gsmgbkle6mwhoaf65mjn4a4w3e5hsfbyob6f44wcg6@7rihb5otzl2z>
+ <CANpmjNMw3N09x06Q+0mFCEeTKfUsDdXwXM2hdgAQ+wwbZGpB9w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANpmjNMw3N09x06Q+0mFCEeTKfUsDdXwXM2hdgAQ+wwbZGpB9w@mail.gmail.com>
 
-On Mon, 11 Dec 2023 12:51:52 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Mon, 11 Dec 2023 21:31:34 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On 11.12.2023 23:56, Marco Elver wrote:
+> On Mon, 11 Dec 2023 at 23:48, Paul Heidekrüger <paul.heidekrueger@tum.de> wrote:
+> >
+> > On 11.12.2023 21:51, Andrey Konovalov wrote:
+> > > On Mon, Dec 11, 2023 at 7:59 PM Paul Heidekrüger
+> > > <paul.heidekrueger@tum.de> wrote:
+> > > >
+> > > > > Hi Paul,
+> > > > >
+> > > > > I've been successfully running KASAN tests with CONFIG_TRACEPOINTS
+> > > > > enabled on arm64 since this patch landed.
+> > > >
+> > > > Interesting ...
+> > > >
+> > > > > What happens when you try running the tests with .kunitconfig? Does
+> > > > > CONFIG_TRACEPOINTS or CONFIG_KASAN_KUNIT_TEST get disabled during
+> > > > > kernel building?
+> > > >
+> > > > Yes, exactly, that's what's happening.
+> > > >
+> > > > Here's the output kunit.py is giving me. I replaced CONFIG_DEBUG_KERNEL with
+> > > > CONFIG_TRACEPOINTS in my .kunitconfig. Otherwise, it's identical with the one I
+> > > > posted above.
+> > > >
+> > > >         ➜   ./tools/testing/kunit/kunit.py run --kunitconfig=mm/kasan/.kunitconfig --arch=arm64
+> > > >         Configuring KUnit Kernel ...
+> > > >         Regenerating .config ...
+> > > >         Populating config with:
+> > > >         $ make ARCH=arm64 O=.kunit olddefconfig
+> > > >         ERROR:root:Not all Kconfig options selected in kunitconfig were in the generated .config.
+> > > >         This is probably due to unsatisfied dependencies.
+> > > >         Missing: CONFIG_KASAN_KUNIT_TEST=y, CONFIG_TRACEPOINTS=y
+> > > >
+> > > > Does CONFIG_TRACEPOINTS have some dependency I'm not seeing? I couldn't find a
+> > > > reason why it would get disabled, but I could definitely be wrong.
+> > >
+> > > Does your .kunitconfig include CONFIG_TRACEPOINTS=y? I don't see it in
+> > > the listing that you sent earlier.
+> >
+> > Yes. For the kunit.py output from my previous email, I replaced
+> > CONFIG_DEBUG_KERNEL=y with CONFIG_TRACEPOINTS=y. So, the .kunitconfig I used to
+> > produce the output above was:
+> >
+> >         CONFIG_KUNIT=y
+> >         CONFIG_KUNIT_ALL_TESTS=n
+> >         CONFIG_TRACEPOINTS=y
+> >         CONFIG_KASAN=y
+> >         CONFIG_KASAN_GENERIC=y
+> >         CONFIG_KASAN_KUNIT_TEST=y
+> >
+> > This more or less mirrors what mm/kfence/.kunitconfig is doing, which also isn't
+> > working on my side; kunit.py reports the same error.
 > 
-> > On Sun, 10 Dec 2023 22:54:47 -0500
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > 
-> > > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> > > 
-> > > The snapshot buffer is to mimic the main buffer so that when a snapshot is
-> > > needed, the snapshot and main buffer are swapped. When the snapshot buffer
-> > > is allocated, it is set to the minimal size that the ring buffer may be at
-> > > and still functional. When it is allocated it becomes the same size as the
-> > > main ring buffer, and when the main ring buffer changes in size, it should
-> > > do.  
-> > 
-> > nit: There seems two "when the snapshot buffer is allocated" case, maybe latter
-> > "it" means main buffer?
-> 
-> I changed the paragraph to be:
-> 
->     The snapshot buffer is to mimic the main buffer so that when a snapshot is
->     needed, the snapshot and main buffer are swapped. When the snapshot buffer
->     is allocated, it is set to the minimal size that the ring buffer may be at
->     and still functional. When it is allocated it becomes the same size as the
->     main ring buffer, and when the main ring buffer changes in size, the
->     snapshot should also change in size if it is allocated.
+> mm/kfence/.kunitconfig does CONFIG_FTRACE=y. TRACEPOINTS is not user
+> selectable. I don't think any of this has changed since the initial
+> discussion above, so CONFIG_FTRACE=y is still needed.
 
-Yeah, this makes clearer.
+Using CONFIG_FTRACE=y instead of CONFIG_TRACEPOINTS=y produces the same error 
+for me. 
 
-> 
-> > 
-> > > 
-> > > Currently, the resize only updates the snapshot buffer if it's used by the
-> > > current tracer (ie. the preemptirqsoff tracer). But it needs to be updated
-> > > anytime it is allocated.
-> > > 
-> > > When changing the size of the main buffer, instead of looking to see if
-> > > the current tracer is utilizing the snapshot buffer, just check if it is
-> > > allocated to know if it should be updated or not.
-> > > 
-> > > Also fix typo in comment just above the code change.
-> > >   
-> > 
-> > Looks good to me.
-> > 
-> > Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Thanks!
-> 
-> > 
-> > BTW, the historical naming leads this kind of issues.
-> > Maybe we'd better to rename 'max_buffer' to 'snapshot_buffer'?
-> 
-> Agreed. But that's a cleanup for another day. Hmm, maybe that too should be
-> marked as "KTODO"?
+So
 
-Yes!
+	CONFIG_KUNIT=y
+	CONFIG_KUNIT_ALL_TESTS=n
+	CONFIG_FTRACE=y
+	CONFIG_KASAN=y
+	CONFIG_KASAN_GENERIC=y
+	CONFIG_KASAN_KUNIT_TEST=y
 
-> 
->   https://lore.kernel.org/all/369bc919-1a1d-4f37-9cc9-742a86a41282@kadam.mountain/
-> 
+produces
 
-Ah, this is a good idea.
+	➜   ./tools/testing/kunit/kunit.py run --kunitconfig=mm/kasan/.kunitconfig --arch=arm64
+	Configuring KUnit Kernel ...
+	Regenerating .config ...
+	Populating config with:
+	$ make ARCH=arm64 O=.kunit olddefconfig CC=clang
+	ERROR:root:Not all Kconfig options selected in kunitconfig were in the generated .config.
+	This is probably due to unsatisfied dependencies.
+	Missing: CONFIG_KASAN_KUNIT_TEST=y
+	
+By that error message, CONFIG_FTRACE appears to be present in the generated 
+config, but CONFIG_KASAN_KUNIT_TEST still isn't. Presumably, 
+CONFIG_KASAN_KUNIT_TEST is missing because of an unsatisfied dependency, which 
+must be CONFIG_TRACEPOINTS, unless I'm missing something ...
 
-> 
-> There's a lot of things that we have been discussing on these ring-buffer
-> patches that could be KTODO items.
+If I just generate an arm64 defconfig and select CONFIG_FTRACE=y, 
+CONFIG_TRACEPOINTS=y shows up in my .config. So, maybe this is kunit.py-related 
+then?
 
-Thanks,
+Andrey, you said that the tests have been working for you; are you running them 
+with kunit.py?
 
-> 
-> -- Steve
+Many thanks,
+Paul
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
