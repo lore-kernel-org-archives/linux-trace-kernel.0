@@ -1,24 +1,18 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08FF851024;
-	Mon, 11 Dec 2023 17:51:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A085C433C9;
-	Mon, 11 Dec 2023 17:51:12 +0000 (UTC)
-Date: Mon, 11 Dec 2023 12:51:52 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6424F20D
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 18:05:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCC54C433C7;
+	Mon, 11 Dec 2023 18:05:34 +0000 (UTC)
+Date: Mon, 11 Dec 2023 13:06:14 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Dan Carpenter
- <dan.carpenter@linaro.org>, outreachy@lists.linux.dev,
- kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] tracing: Update snapshot buffer on resize if it is
- allocated
-Message-ID: <20231211125152.045f8b8a@gandalf.local.home>
-In-Reply-To: <20231211213134.bd21cf745b8c5a0892891946@kernel.org>
-References: <20231210225447.48476a6a@rorschach.local.home>
-	<20231211213134.bd21cf745b8c5a0892891946@kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH v2] ring-buffer: Add offset of events in dump on mismatch
+Message-ID: <20231211130614.43ff4462@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -29,63 +23,73 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 11 Dec 2023 21:31:34 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> On Sun, 10 Dec 2023 22:54:47 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> > 
-> > The snapshot buffer is to mimic the main buffer so that when a snapshot is
-> > needed, the snapshot and main buffer are swapped. When the snapshot buffer
-> > is allocated, it is set to the minimal size that the ring buffer may be at
-> > and still functional. When it is allocated it becomes the same size as the
-> > main ring buffer, and when the main ring buffer changes in size, it should
-> > do.  
-> 
-> nit: There seems two "when the snapshot buffer is allocated" case, maybe latter
-> "it" means main buffer?
+On bugs that have the ring buffer timestamp get out of sync, the config
+CONFIG_RING_BUFFER_VALIDATE_TIME_DELTAS, that checks for it and if it is
+detected it causes a dump of the bad sub buffer.
 
-I changed the paragraph to be:
+It shows each event and their timestamp as well as the delta in the event.
+But it's also good to see the offset into the subbuffer for that event to
+know if how close to the end it is.
 
-    The snapshot buffer is to mimic the main buffer so that when a snapshot is
-    needed, the snapshot and main buffer are swapped. When the snapshot buffer
-    is allocated, it is set to the minimal size that the ring buffer may be at
-    and still functional. When it is allocated it becomes the same size as the
-    main ring buffer, and when the main ring buffer changes in size, the
-    snapshot should also change in size if it is allocated.
+Also print where the last event actually ended compared to where it was
+expected to end.
 
-> 
-> > 
-> > Currently, the resize only updates the snapshot buffer if it's used by the
-> > current tracer (ie. the preemptirqsoff tracer). But it needs to be updated
-> > anytime it is allocated.
-> > 
-> > When changing the size of the main buffer, instead of looking to see if
-> > the current tracer is utilizing the snapshot buffer, just check if it is
-> > allocated to know if it should be updated or not.
-> > 
-> > Also fix typo in comment just above the code change.
-> >   
-> 
-> Looks good to me.
-> 
-> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v1: https://lore.kernel.org/linux-trace-kernel/20231207173108.484b912c@gandalf.local.home
 
-Thanks!
-
-> 
-> BTW, the historical naming leads this kind of issues.
-> Maybe we'd better to rename 'max_buffer' to 'snapshot_buffer'?
-
-Agreed. But that's a cleanup for another day. Hmm, maybe that too should be
-marked as "KTODO"?
-
-  https://lore.kernel.org/all/369bc919-1a1d-4f37-9cc9-742a86a41282@kadam.mountain/
+- Also show where the last event added and where it expected to end.
 
 
-There's a lot of things that we have been discussing on these ring-buffer
-patches that could be KTODO items.
+ kernel/trace/ring_buffer.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
--- Steve
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index bc70cb9bbdb7..c28513624ab3 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -3429,29 +3429,34 @@ static void dump_buffer_page(struct buffer_data_page *bpage,
+ 		case RINGBUF_TYPE_TIME_EXTEND:
+ 			delta = rb_event_time_stamp(event);
+ 			ts += delta;
+-			pr_warn("  [%lld] delta:%lld TIME EXTEND\n", ts, delta);
++			pr_warn(" 0x%x: [%lld] delta:%lld TIME EXTEND\n",
++				e, ts, delta);
+ 			break;
+ 
+ 		case RINGBUF_TYPE_TIME_STAMP:
+ 			delta = rb_event_time_stamp(event);
+ 			ts = rb_fix_abs_ts(delta, ts);
+-			pr_warn("  [%lld] absolute:%lld TIME STAMP\n", ts, delta);
++			pr_warn(" 0x%x:  [%lld] absolute:%lld TIME STAMP\n",
++				e, ts, delta);
+ 			break;
+ 
+ 		case RINGBUF_TYPE_PADDING:
+ 			ts += event->time_delta;
+-			pr_warn("  [%lld] delta:%d PADDING\n", ts, event->time_delta);
++			pr_warn(" 0x%x:  [%lld] delta:%d PADDING\n",
++				e, ts, event->time_delta);
+ 			break;
+ 
+ 		case RINGBUF_TYPE_DATA:
+ 			ts += event->time_delta;
+-			pr_warn("  [%lld] delta:%d\n", ts, event->time_delta);
++			pr_warn(" 0x%x:  [%lld] delta:%d\n",
++				e, ts, event->time_delta);
+ 			break;
+ 
+ 		default:
+ 			break;
+ 		}
+ 	}
++	pr_warn("expected end:%ld last event actually ended at:%d\n", tail, e);
+ }
+ 
+ static DEFINE_PER_CPU(atomic_t, checking);
+-- 
+2.42.0
+
