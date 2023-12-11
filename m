@@ -1,169 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBC91D6A2
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 12:46:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Syringvq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5ADEC433C7;
-	Mon, 11 Dec 2023 12:46:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702298791;
-	bh=JQ2o4bswOLI0VG1kbn//h0fFBpjxy8snq+Qxqqghh0s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Syringvqd/XP6XWsNwRyFQTfhiFBvxhD9hHTce4bs4W53HSKyqeyBhiZ8U8vLTSgi
-	 7HMuSoh5JkyMEG48+MYby+085nLqTc60sxzo9MOZLzTssL7kiEqEIsGDdv1hURSwHP
-	 4D/k+r7i3vgVe7XioX8URQkE0m2SSNnXeOFOT0BMAqZY+cEYiM0SDjCpaUPe9E7ZTZ
-	 aVRsu5+jmw0qft9Jfcou9OJEe0n2gG0gpX72YfxKlQYmHlVO8kTirj8pBy60ha4xtn
-	 qjVBMzQFVgxkzks6KsD6CvApglj3h08xCm91G3dQqW8FjtH/N9zgEjV0Mkn5umEasj
-	 J4y/00m0kkagg==
-Date: Mon, 11 Dec 2023 21:46:27 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] trace_seq: Increase the buffer size to almost two pages
-Message-Id: <20231211214627.cff4ecfead14029ef22cd3ef@kernel.org>
-In-Reply-To: <20231209175220.19867af4@gandalf.local.home>
-References: <20231209175220.19867af4@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bgie8C/f"
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 655A0D6;
+	Mon, 11 Dec 2023 05:01:47 -0800 (PST)
+Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-40c38de1ee4so25150425e9.0;
+        Mon, 11 Dec 2023 05:01:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702299706; x=1702904506; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=JNQm7s7g+d3XsjrBpIIxNcsMxJriHJmGupSKhGUX004=;
+        b=bgie8C/f4rYdCXEZ2VEzJvw6hR8ck/TDPMvaf5sTGzI9zQwb5r8sZhLo1rHh+th87w
+         NLtdU4D1c9U+Gb2G4crLMwOAEg6XOklMwrVu7X3JA9lQb972Dp+OHDT3Rv0gkwFQXhr0
+         A/nEV8vW0la38Y44Hb7Y3UqENT2HT6ZlH/x4EGjqpnGpaiiOAXERkAUulf8j3aO57S2H
+         ZB1wJxCSo/gslUUqaEhwOkUBkqTBqarPnr2X8JAz5jF4m7Qn3nsZMavNwqSJc1X6dSH2
+         lbWJ9UEopr+oH3OOC0S8ZBPmj8vzgGpGlIt/t6ovvyuziYFrOkuyGYthF/p/iB+kv+d6
+         MVFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702299706; x=1702904506;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JNQm7s7g+d3XsjrBpIIxNcsMxJriHJmGupSKhGUX004=;
+        b=rtci17TF9I/yqpmhQQdTg9OLg02/3VfEoU7IbPIAkmnGB9AXl7xdK5jt6qHog5iVRg
+         wOpJ2QZVACBHYay3NPHNdao+gOijHohyRoLXAkMPpBFYS7fKUhR14bpnxW9AZp4PduPY
+         ys55UVD70UQ76vJ/NBKb5Rb89SS2wEwDwX4X4e9d0F/1r479WcmHlZpR7OLMwk8cvEjB
+         BupidrIKlff5MN9EmOr2zJrgY/VngxlAWOA47/6iOW2ti85V006T2vnZHp6Kppyn3/He
+         +xH1mY8paOdrNd9rJtXoEgMvSfwWqyNWL6HlF/6ydHtfCrLEEEeq4E8jcurBG7xbOq+a
+         sITQ==
+X-Gm-Message-State: AOJu0YxekNGBpVCFxQIVIVvPWF931MiJrgXiqI7tJf5Eji9DfvbVdCDx
+	ss4fbJVHOPusdFlCVdvBR4E=
+X-Google-Smtp-Source: AGHT+IHjKWmDs3sZutxGzBuNiu10ay7qVurMNNIwk/X7cleo8EvKj5YyFDjjZgy2yMPRiBqnyjrV+g==
+X-Received: by 2002:a05:600c:20d:b0:40c:3915:be5a with SMTP id 13-20020a05600c020d00b0040c3915be5amr2511796wmi.118.1702299705590;
+        Mon, 11 Dec 2023 05:01:45 -0800 (PST)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id t14-20020a5d42ce000000b003333b0d603bsm8497641wrr.42.2023.12.11.05.01.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Dec 2023 05:01:45 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 11 Dec 2023 14:01:43 +0100
+To: Hou Tao <houtao@huaweicloud.com>, mhiramat@kernel.org
+Cc: xingwei lee <xrivendell7@gmail.com>, ast@kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
+	song@kernel.org, yonghong.song@linux.dev, john.fastabend@gmail.com,
+	kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+	rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: WARNING: kmalloc bug in bpf_uprobe_multi_link_attach
+Message-ID: <ZXcIN-odFOCWX8Ox@krava>
+References: <CABOYnLwwJY=yFAGie59LFsUsBAgHfroVqbzZ5edAXbFE3YiNVA@mail.gmail.com>
+ <689db41e-90f5-c5ba-b690-00586f22d616@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <689db41e-90f5-c5ba-b690-00586f22d616@huaweicloud.com>
 
-On Sat, 9 Dec 2023 17:52:20 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, Dec 11, 2023 at 07:29:40PM +0800, Hou Tao wrote:
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> Now that trace_marker can hold more than 1KB string, and can write as much
-> as the ring buffer can hold, the trace_seq is not big enough to hold
-> writes:
-> 
->  ~# a="1234567890"
->  ~# cnt=4080
->  ~# s=""
->  ~# while [ $cnt -gt 10 ]; do
->  ~#	s="${s}${a}"
->  ~#	cnt=$((cnt-10))
->  ~# done
->  ~# echo $s > trace_marker
->  ~# cat trace
->  # tracer: nop
->  #
->  # entries-in-buffer/entries-written: 2/2   #P:8
->  #
->  #                                _-----=> irqs-off/BH-disabled
->  #                               / _----=> need-resched
->  #                              | / _---=> hardirq/softirq
->  #                              || / _--=> preempt-depth
->  #                              ||| / _-=> migrate-disable
->  #                              |||| /     delay
->  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
->  #              | |         |   |||||     |         |
->             <...>-860     [002] .....   105.543465: tracing_mark_write[LINE TOO BIG]
->             <...>-860     [002] .....   105.543496: tracing_mark_write: 789012345678901234567890
-> 
-> By increasing the trace_seq buffer to almost two pages, it can now print
-> out the first line.
-> 
-> This also subtracts the rest of the trace_seq fields from the buffer, so
-> that the entire trace_seq is now PAGE_SIZE aligned.
-
-Ok, but I just a bit concern about the memory consumption.
-Since this is very specific case, can we make it configurable later?
-
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks,
+SNIP
 
 > 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  include/linux/trace_seq.h | 9 ++++++---
->  kernel/trace/trace.c      | 6 +++---
->  kernel/trace/trace_seq.c  | 3 ---
->  3 files changed, 9 insertions(+), 9 deletions(-)
+> It seems a big attr->link_create.uprobe_multi.cnt is passed to
+> bpf_uprobe_multi_link_attach(). Could you please try the first patch in
+> the following patch set ?
 > 
-> diff --git a/include/linux/trace_seq.h b/include/linux/trace_seq.h
-> index 3691e0e76a1a..9ec229dfddaa 100644
-> --- a/include/linux/trace_seq.h
-> +++ b/include/linux/trace_seq.h
-> @@ -8,11 +8,14 @@
->  
->  /*
->   * Trace sequences are used to allow a function to call several other functions
-> - * to create a string of data to use (up to a max of PAGE_SIZE).
-> + * to create a string of data to use.
->   */
->  
-> +#define TRACE_SEQ_BUFFER_SIZE	(PAGE_SIZE * 2 - \
-> +	(sizeof(struct seq_buf) + sizeof(size_t) + sizeof(int)))
-> +
->  struct trace_seq {
-> -	char			buffer[PAGE_SIZE];
-> +	char			buffer[TRACE_SEQ_BUFFER_SIZE];
->  	struct seq_buf		seq;
->  	size_t			readpos;
->  	int			full;
-> @@ -21,7 +24,7 @@ struct trace_seq {
->  static inline void
->  trace_seq_init(struct trace_seq *s)
->  {
-> -	seq_buf_init(&s->seq, s->buffer, PAGE_SIZE);
-> +	seq_buf_init(&s->seq, s->buffer, TRACE_SEQ_BUFFER_SIZE);
->  	s->full = 0;
->  	s->readpos = 0;
->  }
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 83393c65ec71..da837119a446 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -3753,7 +3753,7 @@ static bool trace_safe_str(struct trace_iterator *iter, const char *str,
->  
->  	/* OK if part of the temp seq buffer */
->  	if ((addr >= (unsigned long)iter->tmp_seq.buffer) &&
-> -	    (addr < (unsigned long)iter->tmp_seq.buffer + PAGE_SIZE))
-> +	    (addr < (unsigned long)iter->tmp_seq.buffer + TRACE_SEQ_BUFFER_SIZE))
->  		return true;
->  
->  	/* Core rodata can not be freed */
-> @@ -6926,8 +6926,8 @@ tracing_read_pipe(struct file *filp, char __user *ubuf,
->  		goto out;
->  	}
->  
-> -	if (cnt >= PAGE_SIZE)
-> -		cnt = PAGE_SIZE - 1;
-> +	if (cnt >= TRACE_SEQ_BUFFER_SIZE)
-> +		cnt = TRACE_SEQ_BUFFER_SIZE - 1;
->  
->  	/* reset all but tr, trace, and overruns */
->  	trace_iterator_reset(iter);
-> diff --git a/kernel/trace/trace_seq.c b/kernel/trace/trace_seq.c
-> index 7be97229ddf8..c158d65a8a88 100644
-> --- a/kernel/trace/trace_seq.c
-> +++ b/kernel/trace/trace_seq.c
-> @@ -13,9 +13,6 @@
->   * trace_seq_init() more than once to reset the trace_seq to start
->   * from scratch.
->   * 
-> - * The buffer size is currently PAGE_SIZE, although it may become dynamic
-> - * in the future.
-> - *
->   * A write to the buffer will either succeed or fail. That is, unlike
->   * sprintf() there will not be a partial write (well it may write into
->   * the buffer but it wont update the pointers). This allows users to
-> -- 
-> 2.42.0
+> https://lore.kernel.org/bpf/20231211112843.4147157-1-houtao@huaweicloud.com/T/#t
+> > [   68.389633][ T8223]  ? __might_fault+0x13f/0x1a0
+> > [   68.390129][ T8223]  ? bpf_kprobe_multi_link_attach+0x10/0x10
 > 
+> SNIP
+> >   res = syscall(__NR_bpf, /*cmd=*/5ul, /*arg=*/0x20000140ul, /*size=*/0x90ul);
+> >   if (res != -1) r[0] = res;
+> >   memcpy((void*)0x20000000, "./file0\000", 8);
+> >   syscall(__NR_creat, /*file=*/0x20000000ul, /*mode=*/0ul);
+> >   *(uint32_t*)0x20000340 = r[0];
+> >   *(uint32_t*)0x20000344 = 0;
+> >   *(uint32_t*)0x20000348 = 0x30;
+> >   *(uint32_t*)0x2000034c = 0;
+> >   *(uint64_t*)0x20000350 = 0x20000080;
+> >   memcpy((void*)0x20000080, "./file0\000", 8);
+> 
+> 0x20000350 is the address of attr->link_create.uprobe_multi.path.
+> >   *(uint64_t*)0x20000358 = 0x200000c0;
+> >   *(uint64_t*)0x200000c0 = 0;
+> >   *(uint64_t*)0x20000360 = 0;
+> >   *(uint64_t*)0x20000368 = 0;
+> >   *(uint32_t*)0x20000370 = 0xffffff1f;
+> 
+> The value of attr->link_create.uprobe_multi.cnt is 0xffffff1f, so 
+> 0xffffff1f * sizeof(bpf_uprobe) will be greater than INT_MAX, and
+> triggers the warning in mm/util.c:
+> 
+>         /* Don't even allow crazy sizes */
+>         if (unlikely(size > INT_MAX)) {
+>                 WARN_ON_ONCE(!(flags & __GFP_NOWARN));
+>                 return NULL;
+>         }
+> 
+> Adding __GFP_NOWARN when doing kvcalloc() can fix the warning.
 
+hi,
+looks like that's the case.. thanks for fixing that
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+btw while checking on that I found kprobe_multi bench attach test
+takes forever on latest bpf-next/master
+
+	test_kprobe_multi_bench_attach:PASS:bpf_program__attach_kprobe_multi_opts 0 nsec
+	test_kprobe_multi_bench_attach: found 56140 functions
+	test_kprobe_multi_bench_attach: attached in  89.174s
+	test_kprobe_multi_bench_attach: detached in  13.245s
+	#113/1   kprobe_multi_bench_attach/kernel:OK
+
+Masami,
+any idea of any change on fprobe/ftrace side recently? I'm going to check ;-)
+
+thanks,
+jirka
