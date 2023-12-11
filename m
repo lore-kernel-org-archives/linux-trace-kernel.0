@@ -1,51 +1,52 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3oPM32MW"
-Received: from mail-qv1-xf31.google.com (mail-qv1-xf31.google.com [IPv6:2607:f8b0:4864:20::f31])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 198F2FC
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 02:07:50 -0800 (PST)
-Received: by mail-qv1-xf31.google.com with SMTP id 6a1803df08f44-67ad531686eso42533246d6.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 02:07:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NCSFYlSx"
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FF18D2
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 02:14:03 -0800 (PST)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-5d8a772157fso35301707b3.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 02:14:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702289269; x=1702894069; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=iQbib7KuYZwXSs7TOXR8fysQbrU5Bbc58V4j1zKqFv0=;
-        b=3oPM32MWcY8r3m5sBp4v1VNAomGU5lj7AxiNK+O0xMiSzwfAKUPlxDcrC+x4vbKYAO
-         l+9pCqXKq6sYAqeISnCZbUM4m+Uri3nTRbYWK4WQZde9bOze32l/RvDvTo7isRHBj2/O
-         qB+hUTqacDqDX9ZzpI37vdz/0kEQQMRq1FHHwNwD/3vOuNGG/yJ5mWfAIKhtZrCZtDLu
-         yenJ+mFitN/m4aQa5b7eHtBO8CG9/lHSOuS0wGV30J0s44Ugwkzw482n9PzRd9ZJqS9r
-         rSnnUIn2rtyZXDfLdZtQGsO23nSg315limxo8LprB6eNTM9s0KKcaagGr6IVXzyz34Fs
-         GNLg==
+        d=google.com; s=20230601; t=1702289643; x=1702894443; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5Z6zY4c0Tb5+ieU4d3Nz6Jn4MLK8nHKOQpLlbBpEjKg=;
+        b=NCSFYlSxaMBXjGEeo9r58onG6AqzMDuUvTpfYB7xy1IT+ia+GZbt7Y3b7ivuFErQis
+         qGzAtEYfMDOI0O+bMzCTklMFkQI8m36CqZHD9qClzyaVvPFR0XU6tXeYei0SfuIohZA3
+         g5YRmTWwUZx8vZdTGOcw5Aknqj2f6oh1Nsbyo5OKXYMcUoc0nDYv91KoSDBJyZ3rnZlm
+         Ntiku1i/R5DHBday/ia+Nj31jiwNxr6l3QT3rpYE2y2TbVRrO6dKcB9cbtSLUehEUlLV
+         oGEkH7ngxQqx14u/IaWe1SuX9yJ73+lXUab+jhwxMg+yDau9RZUnmzqfRBTmJbGubwyb
+         XETw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702289269; x=1702894069;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iQbib7KuYZwXSs7TOXR8fysQbrU5Bbc58V4j1zKqFv0=;
-        b=Z6iqWXO8DCBKwatae64ttLv70B/Hl2S/pHHAEQwn7Cn7aZTqXMOv7pGhheZw7hkvN1
-         b0uPYOXM+OYnUMw9nqFkyDYEpQMP3maSq00mEXYm1m+S5SDkOcH8JDL2vvCECXfvuz52
-         VkzvIEe0YhJYJFWu/74Io8tOhNsoDooDnV+tiSifPhf497zhQzJCw0rsSv2Stt1wtNyi
-         N41Zhchyx8N6qJe7ReA4TZxbNCijX1Tp0rL3ggY8P9BmtifpBnZGwnfSBDVCN/LhpsMd
-         FJNWu0YE5m6TtBj++TJPPApI3rttHmOLn/5jvsgUKB22M5oBGMxZmDZvfbHXFJqX75Bx
-         Ha9w==
-X-Gm-Message-State: AOJu0YwX3SCu4G6Zk/GreHJp28P3epkUiEyiNgFGysQAzWsY6oorclja
-	7TGlNgCiE/HeCMMCfVElqCId3C2wmfl2bnVryJVWJg==
-X-Google-Smtp-Source: AGHT+IEy7sdK9NHIsRzMOTl1p7qUMH4EfMKrMOKxVRFyC96ArAp5QDcDdvRP7e3vCBuus6OXQDRK9VpDPAJXYCPOaGo=
-X-Received: by 2002:a0c:cdce:0:b0:67a:9440:2b26 with SMTP id
- a14-20020a0ccdce000000b0067a94402b26mr7123627qvn.20.1702289269049; Mon, 11
- Dec 2023 02:07:49 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702289643; x=1702894443;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5Z6zY4c0Tb5+ieU4d3Nz6Jn4MLK8nHKOQpLlbBpEjKg=;
+        b=K21HxtT1jWtRInmeOC2IpFEG4ETOvEUooF0O9u2+1/Alkkv1UHqnrnbIE1XFMNX6/x
+         QStQ+62UYfDZAH2zDj6R66849n0EvyNkCbAUEwINBSPCRUKv6lF4CeyKl4t+p/8b0HqT
+         fyP4lxBvb3t/2CqV9rj4ltw8lwdq4MdbvxKtoP6Cn1qOPWKAqCAUQN1HKqv419c8ay0o
+         EHi5EYQhG9uH7bJomMC/BYtc5yhoXQW0J+P6fAFv/LtMiSXk5dBeEFXPMFHwN5f2+7Vs
+         wM65B/shQ9b+uBGrFthy+a5bcq2wGc0tObEB47lBaVi5lMCk3f9UJ9bfIq+WHDw/G2iM
+         t8cg==
+X-Gm-Message-State: AOJu0YxDQmdOJdBp7Q4vi9FXKXkDY8xnXwWv04umybKxb8z6yQAc5tKw
+	mqSHaOu+gpHn99hVxj+skDoLV6m2NPLqcL63pYeq9Q==
+X-Google-Smtp-Source: AGHT+IEk5OVTZiB661DV5dZOhAvgOHAleqdnumLHRqN/Lk2fp+rcFjIzeAHjQGdOci45RI7ZRYsN0u4klnWKa7xixF4=
+X-Received: by 2002:a05:690c:3249:b0:5df:4992:9f90 with SMTP id
+ fg9-20020a05690c324900b005df49929f90mr2222920ywb.34.1702289642775; Mon, 11
+ Dec 2023 02:14:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231121220155.1217090-1-iii@linux.ibm.com> <20231121220155.1217090-11-iii@linux.ibm.com>
-In-Reply-To: <20231121220155.1217090-11-iii@linux.ibm.com>
+References: <20231121220155.1217090-1-iii@linux.ibm.com> <20231121220155.1217090-28-iii@linux.ibm.com>
+In-Reply-To: <20231121220155.1217090-28-iii@linux.ibm.com>
 From: Alexander Potapenko <glider@google.com>
-Date: Mon, 11 Dec 2023 11:07:13 +0100
-Message-ID: <CAG_fn=WVfh_E+5uFs1GXfQCVMj3EBvNGFTrJ6_DxVb4t3WnVPA@mail.gmail.com>
-Subject: Re: [PATCH v2 10/33] kmsan: Expose kmsan_get_metadata()
+Date: Mon, 11 Dec 2023 11:13:26 +0100
+Message-ID: <CAG_fn=VE7M590AqPceT1qjtf7qS1QGBfvnprz9s=0U2WgRmK6w@mail.gmail.com>
+Subject: Re: [PATCH v2 27/33] s390/mm: Define KMSAN metadata for vmalloc and modules
 To: Ilya Leoshkevich <iii@linux.ibm.com>
 Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
 	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
@@ -58,13 +59,22 @@ Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-founda
 	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
 	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> +static inline void *kmsan_get_metadata(void *addr, bool is_origin)
-> +{
-> +       return NULL;
-> +}
-> +
->  #endif
+On Tue, Nov 21, 2023 at 11:07=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.co=
+m> wrote:
+>
+> The pages for the KMSAN metadata associated with most kernel mappings
+> are taken from memblock by the common code. However, vmalloc and module
+> metadata needs to be defined by the architectures.
+>
+> Be a little bit more careful than x86: allocate exactly MODULES_LEN
+> for the module shadow and origins, and then take 2/3 of vmalloc for
+> the vmalloc shadow and origins. This ensures that users passing small
+> vmalloc=3D values on the command line do not cause module metadata
+> collisions.
+>
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Reviewed-by: Alexander Potapenko <glider@google.com>
 
-We shouldn't need this part, as kmsan_get_metadata() should never be
-called in non-KMSAN builds.
+(hope some s390 maintainer acks this as well)
