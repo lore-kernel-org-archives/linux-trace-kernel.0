@@ -1,420 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88BAE55C26
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 22:58:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 594EFC433C8;
-	Mon, 11 Dec 2023 22:58:24 +0000 (UTC)
-Date: Mon, 11 Dec 2023 17:59:04 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] ring-buffer: Fix and comment ring buffer rb_time
- functions on 32-bit
-Message-ID: <20231211175904.29e01e8b@gandalf.local.home>
-In-Reply-To: <20231211201324.652870-1-mathieu.desnoyers@efficios.com>
-References: <20231211201324.652870-1-mathieu.desnoyers@efficios.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BEBF9F0
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 23:07:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pAyWQ8pg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27CCBC433C8;
+	Mon, 11 Dec 2023 23:07:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702336050;
+	bh=BElgQv8/npTSDU2dFL+JufzC4ciRNU6YqmHa3dc12DI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pAyWQ8pgDKHPBv3dj1xjaMrnr2k+U0DA1EpGk7u6/znbiQgAeXsuvQaAMXDMoYA/z
+	 Xee5VdIeb2OOw460rxC7hL2YxgyXKySTqpi7/hED543BFBQX4d6iLrnt3u6WZWRsVC
+	 Ykr71wo0h+38RSKjrF0Rg0ejIoTfzmX5Vpce71u4PPTdX21Xqkd+HAlwUKh/jE21gk
+	 o9BwHHBvs8w15PZC4Yx9y+7h+6yW5sUzkUqVUs0cBoyjLT6Wku555G0l72D08YG28p
+	 i5X1M7TNN1vvX+cuMG4wfd+ocZyd6NjMXq+N/ZFyyDIm3Xcsg+wfxiZxNxIxkddDez
+	 yuWFhFuWtY6Mg==
+Date: Tue, 12 Dec 2023 08:07:26 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] trace_seq: Increase the buffer size to almost two pages
+Message-Id: <20231212080726.a8d1f614e65c3b49ff1d9fbd@kernel.org>
+In-Reply-To: <20231211132837.24488ec1@gandalf.local.home>
+References: <20231209175220.19867af4@gandalf.local.home>
+	<20231211214627.cff4ecfead14029ef22cd3ef@kernel.org>
+	<20231211132837.24488ec1@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 11 Dec 2023 15:13:24 -0500
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+On Mon, 11 Dec 2023 13:28:37 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> Going through a review of the ring buffer rb_time functions for 32-bit
-> architectures, I updated the comments to match the code, and identified
-> the following issues:
+> On Mon, 11 Dec 2023 21:46:27 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> 
+> > > 
+> > > By increasing the trace_seq buffer to almost two pages, it can now print
+> > > out the first line.
+> > > 
+> > > This also subtracts the rest of the trace_seq fields from the buffer, so
+> > > that the entire trace_seq is now PAGE_SIZE aligned.  
+> > 
+> > Ok, but I just a bit concern about the memory consumption.
+> > Since this is very specific case, can we make it configurable later?
+> 
+> I was concerned about this too, but it looks like it's allocated and later
+> freed in every location except for a couple of instances.
+> 
+> One is "tracepoint_print_iter" which is used to pipe tracepoints to printk.
+> I think we can possibly make that allocated too.
+> 
+> The other is in ftrace_dump, which I don't think we can easily allocate
+> that. Although, we could have it allocated at boot up if
+> ftrace_dump_on_oops() is enabled.
 
-Thanks Mathieu!
+Can we reallocate it when we detect such bigger event entry in the path
+of trace_marker write? If any issue happens in the reallocation, we will
+not finish (commit) such big event in dumping buffer anyway.
 
 > 
-> - rb_time_cmpxchg() needs to update the msb last, so it matches
->   the validation of top and msb by __rb_time_read(). This is fixed by
->   this patch.
+> Another KTODO?
 
-Hmm, does it? This is not parallel programming, it's only protecting
-against interrupts.
+Yes, I think so.
 
-BTW, it's best not to have a fix like this with a comment change this big,
-as the comment change is highly likely to cause conflicts in any backport.
-
-Although, for consistency, I wonder if everything else should be changed to go:
-
-  bottom, top, msb
-
-as it would match the order of the bits, as msb has the highest order, top
-the next, and bottom the least. Doing it as:
-
-  top, bottom, msb
-
-seems out of order. I did that because msb was an after thought :-/
+Thanks,
 
 > 
-> - A cmpxchg interrupted by 4 writes or cmpxchg overflows the counter
->   and produces corrupted time stamps. This is _not_ fixed by this patch.
-
-Except that it's not 4 bits that is compared, but 32 bits.
-
-struct rb_time_struct {
-	local_t		cnt;
-	local_t		top;
-	local_t		bottom;
-	local_t		msb;
-};
-
-The full local_t (32 bits) is used for synchronization. But the other
-elements do get extra bits and there still might be some issues, but not as
-severe as you stated here.
-
-Although, I should also change this to be:
-
-struct rb_time_struct {
-	local_t		cnt;
-	local_t		msb;
-	local_t		top;
-	local_t		bottom;
-};
-
-To match the order of bits as mentioned above.
-
-static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
-{
-	unsigned long cnt, top, bottom, msb;
-	unsigned long cnt2, top2, bottom2, msb2;
-	u64 val;
-
-	/* The cmpxchg always fails if it interrupted an update */
-	 if (!__rb_time_read(t, &val, &cnt2))
-
-## So the value has to succeed to continue. This is why I don't think order
-## matters between them.
-
-		 return false;
-
-	 if (val != expect)
-
-## Must also be what was expected
-
-		 return false;
-
-	 cnt = local_read(&t->cnt);
-
-## We read the full 32 bits here.
-
-	 if ((cnt & 3) != cnt2)
-
-## This is mostly a paranoid check. For this to fail, the interrupting
-## context had to write a full timestamp that this context expected,
-## otherwise the (val != expect) would be true.
-
-		 return false;
-
-	 cnt2 = cnt + 1;
-
-## We take the 32 bit number and add 1 to it
-
-	 rb_time_split(val, &top, &bottom, &msb);
-	 top = rb_time_val_cnt(top, cnt);
-	 bottom = rb_time_val_cnt(bottom, cnt);
-
-	 rb_time_split(set, &top2, &bottom2, &msb2);
-	 top2 = rb_time_val_cnt(top2, cnt2);
-	 bottom2 = rb_time_val_cnt(bottom2, cnt2);
-
-## Now the above takes the value to what was expected and sprinkles the cnt
-## on it as "salt"
-
-	if (!rb_time_read_cmpxchg(&t->cnt, cnt, cnt2))
-		return false;
-
-## if something came in here, we fail immediately with no corruption. This
-## cmpxchg() is not affected by 4 writes
-
-	if (!rb_time_read_cmpxchg(&t->msb, msb, msb2))
-		return false;
-
-## if we fail here, it means that something came in and wrote all values
-## making everything correct again.
-
-	if (!rb_time_read_cmpxchg(&t->top, top, top2))
-		return false;
-	if (!rb_time_read_cmpxchg(&t->bottom, bottom, bottom2))
-		return false;
-
-## The same is true for all the above.
-
-	return true;
-}
-
-
-The 2 bits in the top, bottom and msb, are basically salt to help out the
-cmpxchg, but it does suffer from the 4 writes you mention, but only if the
-writes wrote the same thing 4 times and then cmpxchg() wants to update it
-to something different. The point is that a cmpxchg() should not corrupt a
-write that was done by an interrupting context. The logic can fail if the
-cmpxchg wants to update one of the fields to a new number, but the
-interrupting write kept it the same 4 times. That is, it did not update the
-number.
-
-That is, to fail; the old value is to be the same for a multiple of 4
-writes in an interrupting event, and the interrupted event wants to update
-it to a new number. This is probably not even feasible, because that would
-also require the interruption to happen before the value to write was read.
-That is, in practice, it may not be possible to hit this race. These are
-monotonic time stamps, so the values do not go backwards. That means its
-highly unlikely (if not impossible) for the cmpxchg to be putting in a newer
-time stamp than what the interrupting context would be adding, as the
-interruption would happen after the new timestamp was read. This means that
-the interrupting context would likely have the new values and not the old.
-
-For this to fail we need to have:
-
-
-  timestamp.bottom = old_ts.bottom;
-
-  new_timestamp = read_ts();
-
-  cmpxchg() {
-
-	>>>>>> INTERRUPT
-
-	ts = read_ts()
-	// This needs to match the old number
-
-	timestamp.bottom = ts.bottom
-
-	[ repeat 3 more times ]
-
- 
-   if (!rb_time_read_cmpxchg(&t->bottom, bottom, bottom2))
- 	return false;
-
-The cmpxchg() requires t->bottom to incorrectly match bottom, which is the
-new_timestamp.bottom. But if the interrupt happened, it would need to write
-the old number 4 times as well.
-
-Hmm, the most likely way for this to hit, is if bottom were to wrap. Which
-means it would have to be interrupted for over 1 second (2^30ns is just
-over a 1 second), and have the value be exactly the same. Possible, but you
-are probably more likely to be hit by lightning while being attacked by a
-shark in the desert.
-
-
-If we really want to fix this properly, what could work here is to have the
-two bits in top, bottom and msb be the context level of the write.
-
-But bits 0 and 1 would represent the 4 contexts.
-
- 0 0 : task context
- 0 1 : softirq context
- 1 0 : interrupt context
- 1 1 : NMI context
-
-As the there will be no interruptions between the context themselves. The
-only thing that is needed is to test to make sure the read wasn't
-interrupted by a higher context. These bits are just to note the level of
-the write, it doesn't need the counter. That is separate as "cnt".
-
-Another KTODO: :-)
-
+> > 
+> > Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
 > 
-> - After a cmpxchg fails between updates to top and msb, a write is
->   needed before read and cmpxchg can succeed again. I am not entirely
->   sure the rest of the ring buffer handles this correctly.
-
-Note, a cmpxchg() can only fail if it was interrupted by a higher context.
-The higher context would be doing a write for the cmpxchg() to fail. If a
-cmpxchg() fails, it means that a higher context has already modified it and
-in fact, if a cmpxchg() fails, a read should be guaranteed to succeed if
-done after the failure, because the higher context already did the write.
-
-The cmpxchg() is only protecting against being interrupted, not for
-parallel programming.
-
-For part of the cmpxchg() to succeed and another part to fail, it requires
-that it was interrupted between the succeeding part and the failing part.
-And the interruption would have written to the value making it valid again.
-
+> Thanks!
 > 
-> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: linux-trace-kernel@vger.kernel.org
-> ---
->  kernel/trace/ring_buffer.c | 64 +++++++++++++++++++++++++++-----------
->  1 file changed, 46 insertions(+), 18 deletions(-)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 8d2a4f00eca9..f6ed699947cd 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -576,34 +576,50 @@ struct ring_buffer_iter {
->  #ifdef RB_TIME_32
->  
->  /*
-> - * On 32 bit machines, local64_t is very expensive. As the ring
-> - * buffer doesn't need all the features of a true 64 bit atomic,
-> - * on 32 bit, it uses these functions (64 still uses local64_t).
-> + * On 32-bit machines, local64_t is very expensive. As the ring
-> + * buffer doesn't need all the features of a true 64-bit atomic,
-> + * on 32-bit, it uses these functions (64-bit still uses local64_t).
->   *
-> - * For the ring buffer, 64 bit required operations for the time is
-> - * the following:
-> + * For the ring buffer, the operations required to manipulate 64-bit
-> + * time stamps are the following:
->   *
-> - *  - Reads may fail if it interrupted a modification of the time stamp.
-> + *  - Read may fail if it interrupted a modification of the time stamp.
->   *      It will succeed if it did not interrupt another write even if
->   *      the read itself is interrupted by a write.
-> + *      A read will fail if it follows a cmpxchg which failed between
-> + *      updates to its top and msb bits, until a write is performed.
-> + *      (note: this limitation may be unexpected in parts of the
-> + *      ring buffer algorithm)
->   *      It returns whether it was successful or not.
->   *
-> - *  - Writes always succeed and will overwrite other writes and writes
-> + *  - Write always succeeds and will overwrite other writes and writes
-
-Hmm, Not sure I agree with the above. It should be plural, as in "All
-writes".
-
->   *      that were done by events interrupting the current write.
->   *
->   *  - A write followed by a read of the same time stamp will always succeed,
->   *      but may not contain the same value.
->   *
->   *  - A cmpxchg will fail if it interrupted another write or cmpxchg.
-> + *      A cmpxchg will fail if it follows a cmpxchg which failed between
-> + *      updates to its top and msb bits, until a write is performed.
-> + *      (note: this limitation may be unexpected in parts of the
-> + *      ring buffer algorithm)
-
-The above is incorrect, as to fail a cmpxchg() means a write *was*
-performed, by a higher context, and the value is now correct.
+> -- Steve
 
 
->   *      Other than that, it acts like a normal cmpxchg.
->   *
-> - * The 60 bit time stamp is broken up by 30 bits in a top and bottom half
-> - *  (bottom being the least significant 30 bits of the 60 bit time stamp).
-> + * The 64-bit time stamp is broken up, from most to least significant,
-> + * in: msb, top and bottom fields, of respectively 4, 30, and 30 bits.
->   *
-> - * The two most significant bits of each half holds a 2 bit counter (0-3).
-> + * The two most significant bits of each field hold a 2-bit counter (0-3).
->   * Each update will increment this counter by one.
-> - * When reading the top and bottom, if the two counter bits match then the
-> - *  top and bottom together make a valid 60 bit number.
-> + * When reading the top, bottom, and msb fields, if the two counter bits
-> + *   match, then the combined values make a valid 64-bit number.
-> + *
-> + * Counter limits. The following situations can generate overflows that
-> + * produce corrupted time stamps:
-> + *
-> + * - A read or a write interrupted by 2^32 writes or cmpxchg.
-> + *
-> + * - A cmpxchg interrupted by 4 writes or cmpxchg.
-> + *   (note: this is not sufficient and should be fixed)
-
-Remember, it's not just 4 writes that cause it to fail, but also those 4
-writes must have the same value, as the cmpxchg() doesn't just look at the
-2 bits, it looks at the rest of the value too.
-
-But even that rare case can be fixed by using context level instead of a
-counter.
-
-
->   */
->  #define RB_TIME_SHIFT	30
->  #define RB_TIME_VAL_MASK ((1 << RB_TIME_SHIFT) - 1)
-> @@ -632,7 +648,7 @@ static inline bool __rb_time_read(rb_time_t *t, u64 *ret, unsigned long *cnt)
->  
->  	/*
->  	 * If the read is interrupted by a write, then the cnt will
-> -	 * be different. Loop until both top and bottom have been read
-> +	 * be different. Loop until top, bottom and msb have been read
->  	 * without interruption.
->  	 */
->  	do {
-> @@ -644,7 +660,12 @@ static inline bool __rb_time_read(rb_time_t *t, u64 *ret, unsigned long *cnt)
->  
->  	*cnt = rb_time_cnt(top);
->  
-> -	/* If top and msb counts don't match, this interrupted a write */
-> +	/*
-> +	 * If top and msb counts don't match, this either interrupted a
-> +	 * write or follows a failed cmpxchg.
-
-Incorrect. A read following a failed cmpxchg() should always succeed.
-
-> +	 * This requires the update to bottom to be enclosed between
-> +	 * updates to top and msb.
-> +	 */
->  	if (*cnt != rb_time_cnt(msb))
->  		return false;
->  
-> @@ -685,9 +706,10 @@ static void rb_time_set(rb_time_t *t, u64 val)
->  
->  	rb_time_split(val, &top, &bottom, &msb);
->  
-> -	/* Writes always succeed with a valid number even if it gets interrupted. */
-> +	/* Write always succeeds with a valid number even if it gets interrupted. */
-
-I think we have a different way of looking at this. I'm thinking "Writes"
-as in all writes. Saying "Write always succeeds" sounds funny to me. "A
-write always succeeds" would sound better.
-
->  	do {
->  		cnt = local_inc_return(&t->cnt);
-> +		/* The top and msb updates surround bottom update. */
->  		rb_time_val_set(&t->top, top, cnt);
->  		rb_time_val_set(&t->bottom, bottom, cnt);
->  		rb_time_val_set(&t->msb, val >> RB_TIME_MSB_SHIFT, cnt);
-> @@ -706,7 +728,12 @@ static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
->  	unsigned long cnt2, top2, bottom2, msb2;
->  	u64 val;
->  
-> -	/* The cmpxchg always fails if it interrupted an update */
-> +	/*
-> +	 * The cmpxchg always fails if it interrupted an update or if it
-> +	 * follows a cmpxchg that fails between updates to top and msb.
-> +	 * A rb_time_set() is needed after a failed cmpxchg to reset to
-> +	 * a state where cmpxchg can succeed again.
-
-Again, the above isn't correct. Remember *why* a cmpxchg() would fail. It
-means it was interrupted by a write, that would make the variable valid again.
-
-> +	 */
->  	 if (!__rb_time_read(t, &val, &cnt2))
->  		 return false;
->  
-> @@ -729,12 +756,13 @@ static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
->  
->  	if (!rb_time_read_cmpxchg(&t->cnt, cnt, cnt2))
->  		return false;
-> -	if (!rb_time_read_cmpxchg(&t->msb, msb, msb2))
-> -		return false;
-> +	/* The top and msb updates surround bottom update. */
->  	if (!rb_time_read_cmpxchg(&t->top, top, top2))
->  		return false;
->  	if (!rb_time_read_cmpxchg(&t->bottom, bottom, bottom2))
->  		return false;
-> +	if (!rb_time_read_cmpxchg(&t->msb, msb, msb2))
-> +		return false;
->  	return true;
->  }
->  
-
-Thanks Mathieu for spending the time to look into this. Even if I disagree
-with your analysis ;-)
-
--- Steve
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
