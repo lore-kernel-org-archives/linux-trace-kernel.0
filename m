@@ -1,125 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tum.de header.i=@tum.de header.b="mlVfJUG6"
-X-Greylist: delayed 441 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 11 Dec 2023 08:45:20 PST
-Received: from postout2.mail.lrz.de (postout2.mail.lrz.de [129.187.255.138])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 846B5D2;
-	Mon, 11 Dec 2023 08:45:20 -0800 (PST)
-Received: from lxmhs52.srv.lrz.de (localhost [127.0.0.1])
-	by postout2.mail.lrz.de (Postfix) with ESMTP id 4SpnV85qdXzyVM;
-	Mon, 11 Dec 2023 17:37:52 +0100 (CET)
-Authentication-Results: postout.lrz.de (amavisd-new); dkim=pass (2048-bit key)
-	reason="pass (just generated, assumed good)" header.d=tum.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tum.de; h=
-	in-reply-to:content-disposition:content-type:content-type
-	:mime-version:references:message-id:subject:subject:from:from
-	:date:date:received:received; s=tu-postout21; t=1702312671; bh=I
-	QZ37jqHjRiCVAog/SxFby9In37jtg4+0rtjT7Qm7bQ=; b=mlVfJUG6uMk6HCn0w
-	GE8s0S6afNDFSYXDag/1mnxPJU83BIHAt5ccF6i6+x4q+kPHXTfqbpKUI9Ps+DAF
-	7D8eu4qS/ue6gZ+7mSqzxmc2IjIlsroDoEui4w3/8jgYSWMiAGjcFqJnh/DPmCFp
-	Q7CQReOfLxA6F1jgf5NtgCYPReIDWM0YfYvjGSgEGEnhblaq/CUnk9ORGvG5I7F0
-	kwCPNTX2zDiMKPtA3/f7awuim9OgqtxoQ7x9Fp6M++kSsdq2glcx6ocd8eQ8FnQx
-	Nkhv+Ky1mpE0itBEcrGbXhyyAWvWyBF7TMZjun8sFCHHOrMNirXCaG80D1y6x/K9
-	eW/BA==
-X-Virus-Scanned: by amavisd-new at lrz.de in lxmhs52.srv.lrz.de
-X-Spam-Score: -2.883
-X-Spam-Level:
-Received: from postout2.mail.lrz.de ([127.0.0.1])
-	by lxmhs52.srv.lrz.de (lxmhs52.srv.lrz.de [127.0.0.1]) (amavisd-new, port 20024)
-	with LMTP id qxvPLSwCoF-F; Mon, 11 Dec 2023 17:37:51 +0100 (CET)
-Received: from Monitor.dos.cit.tum.de (Monitor.dos.cit.tum.de [IPv6:2a09:80c0:38::165])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by postout2.mail.lrz.de (Postfix) with ESMTPSA id 4SpnV65Z38zyTN;
-	Mon, 11 Dec 2023 17:37:50 +0100 (CET)
-Date: Mon, 11 Dec 2023 17:37:38 +0100
-From: Paul =?utf-8?Q?Heidekr=C3=BCger?= <paul.heidekrueger@tum.de>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Peter Collingbourne <pcc@google.com>, Marco Elver <elver@google.com>, 
-	andrey.konovalov@linux.dev, Andrew Morton <akpm@linux-foundation.org>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Alexander Potapenko <glider@google.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-	kasan-dev@googlegroups.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Andrey Konovalov <andreyknvl@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v3 1/3] kasan: switch kunit tests to console tracepoints
-Message-ID: <n37j6cbsogluma25crzruaiq7qcslnjeoroyybsy3vw2cokpcm@mh7r3ocp24cb>
-References: <ebf96ea600050f00ed567e80505ae8f242633640.1666113393.git.andreyknvl@google.com>
- <CAMn1gO7Ve4-d6vP4jvASQsTZ2maHsMF6gKHL3RXSuD9N3tAOfQ@mail.gmail.com>
- <CANpmjNNvGL--j-20UxqX_WjeXGiAcjfDAQpfds+Orajz0ZeBsg@mail.gmail.com>
- <CAMn1gO6reT+MTmogLOrOVoNqzLH+fKmQ2JRAGy-tDOTLx-fpyw@mail.gmail.com>
- <CANpmjNN7Gf_aeX+Y6g0UBL-cmTGEF9zgE7hQ1VK8F+0Yeg5Rvg@mail.gmail.com>
- <20230215143306.2d563215@rorschach.local.home>
- <CAMn1gO4_+-0x4ibpcASy4bLeZ+7rsmjx=0AYKGVDUApUbanSrQ@mail.gmail.com>
- <CAMn1gO6heXaovFy6jvpWS8TFLBhTomqNuxJmt_chrd5sYtskvw@mail.gmail.com>
- <20230505095805.759153de@gandalf.local.home>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A733B785
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 16:59:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0FE0C433C7;
+	Mon, 11 Dec 2023 16:59:09 +0000 (UTC)
+Date: Mon, 11 Dec 2023 11:59:49 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] ring-buffer: Never use absolute timestamp for start event
+Message-ID: <20231211115949.4692e429@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230505095805.759153de@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi all!
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-On 05.05.2023 09:58, Steven Rostedt wrote:
-> On Mon, 1 May 2023 15:02:37 -0700
-> Peter Collingbourne <pcc@google.com> wrote:
-> 
-> > > > "ftrace" is really for just the function tracing, but CONFIG_FTRACE
-> > > > really should just be for the function tracing infrastructure, and
-> > > > perhaps not even include trace events :-/ But at the time it was
-> > > > created, it was for all the "tracers" (this was added before trace
-> > > > events).  
-> > >
-> > > It would be great to see this cleaned up. I found this aspect of how
-> > > tracing works rather confusing.
-> > >
-> > > So do you think it makes sense for the KASAN tests to "select TRACING"
-> > > for now if the code depends on the trace event infrastructure?  
-> > 
-> > Any thoughts? It looks like someone else got tripped up by this:
-> > https://reviews.llvm.org/D144057
-> 
-> Yeah, it really does need to get cleaned up, but unfortunately it's not
-> going to be a trivial change. We need to make sure it's done in a way that
-> an old .config still keeps the same things enabled with the new config
-> settings. That takes some trickery in the dependency.
-> 
-> I'll add this to my todo list, hopefully it doesn't fall into the abyss
-> portion of that list :-p
-> 
-> -- Steve
+On 32bit machines, the 64 bit timestamps are broken up into 32 bit words
+to keep from using local64_cmpxchg(), as that is very expensive on 32 bit
+architectures.
 
-Just adding to Peter's concern re: CONFIG_KASAN_KUNIT_TEST's dependency on 
-CONFIG_TRACEPOINTS.
+On 32 bit architectures, reading these timestamps can happen in a middle
+of an update. In this case, the read returns "false", telling the caller
+that the timestamp is in the middle of an update, and it needs to assume
+it is corrupted. The code then accommodates this.
 
-I'm having no luck running the KASan KUnit tests on arm64 with the following 
-.kunitconfig on v6.6.0:
+When first reserving space on the ring buffer, a "before_stamp" and
+"write_stamp" are read. If they do not match, or if either is in the
+process of being updated (false was returned from the read), an absolute
+timestamp is added and the delta is not used, as that requires reading
+theses timestamps without being corrupted.
 
-	CONFIG_KUNIT=y
-	CONFIG_KUNIT_ALL_TESTS=n
-	CONFIG_DEBUG_KERNEL=y
-	CONFIG_KASAN=y
-	CINFIG_KASAN_GENERIC=y
-	CONFIG_KASAN_KUNIT_TEST=y
+The one case that this does not matter is if the event is the first event
+on the sub-buffer, in which case, the event uses the sub-buffer's
+timestamp and doesn't need the other stamps for calculating them.
 
-CONFIG_TRACEPOINTS, which CONFIG_KASAN_TEST relies on since the patch this 
-thread is based on, isn't defined for arm64, AFAICT.
+After some work to consolidate the code, if the before or write stamps are
+in the process of updating, an absolute timestamp will be added regardless
+if the event is the first event on the sub-buffer. This is wrong as it
+should not care about the success of these reads if it is the first event
+on the sub-buffer.
 
-If I comment out the dependency on CONFIG_TRACEPOINTS, the tests appear to run, 
-but KUnit isn't picking up the KASan output.
+Fix up the parenthesis so that even if the timestamps are corrupted, if
+the event is the first event on the sub-buffer (w == 0) it still does not
+force an absolute timestamp.
 
-If I revert the patch, the above .kunitconfig appears to work fine on arm64 and 
-the tests pass.
+Cc: stable@vger.kernel.org
+Fixes: 58fbc3c63275c ("ring-buffer: Consolidate add_timestamp to remove some branches")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The above .kunitconfig works as intended on X86, no changes necessary. 
-
-Am I missing something?
-
-Many thanks,
-Paul
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 02bc9986fe0d..bc70cb9bbdb7 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -3584,7 +3584,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+ 		 * absolute timestamp.
+ 		 * Don't bother if this is the start of a new page (w == 0).
+ 		 */
+-		if (unlikely(!a_ok || !b_ok || (info->before != info->after && w))) {
++		if (unlikely((!a_ok || !b_ok || info->before != info->after) && w)) {
+ 			info->add_timestamp |= RB_ADD_STAMP_FORCE | RB_ADD_STAMP_EXTEND;
+ 			info->length += RB_LEN_TIME_EXTEND;
+ 		} else {
+-- 
+2.42.0
 
