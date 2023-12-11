@@ -1,34 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1E91F612
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 12:14:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B617A39AE5
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 12:23:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eS+9lWp6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07A81C433C8;
-	Mon, 11 Dec 2023 12:14:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G8bjNRV0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0E20C433C9;
+	Mon, 11 Dec 2023 12:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702296868;
-	bh=ZmV8Ia6tQOoQryqALYfwSQzG28bMYMh8bIDdDdQzgtw=;
+	s=k20201202; t=1702297403;
+	bh=INgnFW8etgV5ZIh4mW5/XEKlS7hMzbp3XuZeXyAoM9o=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=eS+9lWp6lze+Q/NrEuIUBv6mTuFpDlg2/HlEsR7/VQH8qMKf2tk62BTK8CMp39bNj
-	 EdkCvUbx9XSH/dHM57bDnUsd2dQoPWzGwM/Tv0y4SRGfGmt+l0kMr849Xup3wGyqkz
-	 +eeELeRDTTP7wP8gaK2BRoBdBxftVieU7SHmCrdkgV+PGS0lXiYLvqvSO8/QjIg6JT
-	 2ESpNondZeRvJy/CRblaNyTC/lfe3rgfbEZ00XoqsZNSh3bKwMsZelleR4PrADsuLX
-	 YXXJ4NdWmi3Jmqy/bk5kH5KHaR9RmZBUGqvu8pMCJE9UpVc/ai4+iYEA9ZJTxpvKmT
-	 i5RvFjI0drlBg==
-Date: Mon, 11 Dec 2023 21:14:24 +0900
+	b=G8bjNRV0LvIU863tb8KVtoxG8lyDFUp8S2oo5ny5C8ybqubDzRAq4p2CbaD6ZjRKQ
+	 fZ6kC51R7INERKA1npILXWAowZEQkZr8mtF/6vERIluNWAHPd4M6PAQPFdRKIIPFgB
+	 t5Mg8tcyTEFknbZHdJig9JZWf7allB8Gqjztc3DWW+LQIekOL5CyvMpzz/kONQ5w4z
+	 MLLptuAel/uEoMsLDP09Jrw6NSzUZWnoKdT7PzD3qSpl0L8vGr6m+LIyMEZjxl8erD
+	 nv/LYQr6uCLkZFPDcRECriAYxA9kUI1MhD6tytZynbuU4FIPhoP5naRzyMLynGD0ZI
+	 lnH+J1WlZAZPw==
+Date: Mon, 11 Dec 2023 21:23:19 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
  <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
  <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
  Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] tracing: Increase size of trace_marker_raw to max ring
- buffer entry
-Message-Id: <20231211211424.e58f9b9abb9594f671d1d0ed@kernel.org>
-In-Reply-To: <20231209175716.09ac455b@gandalf.local.home>
-References: <20231209175716.09ac455b@gandalf.local.home>
+Subject: Re: [PATCH] ring-buffer: Fix memory leak of free page
+Message-Id: <20231211212319.d1a714d0139e4fd893183b9e@kernel.org>
+In-Reply-To: <20231210221250.7b9cc83c@rorschach.local.home>
+References: <20231210221250.7b9cc83c@rorschach.local.home>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,70 +38,53 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sat, 9 Dec 2023 17:57:16 -0500
+On Sun, 10 Dec 2023 22:12:50 -0500
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
 > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> There's no reason to give an arbitrary limit to the size of a raw trace
-> marker. Just let it be as big as the size that is allowed by the ring
-> buffer itself.
+> Reading the ring buffer does a swap of a sub-buffer within the ring buffer
+> with a empty sub-buffer. This allows the reader to have full access to the
+> content of the sub-buffer that was swapped out without having to worry
+> about contention with the writer.
 > 
-> And there's also no reason to artificially break up the write to
-> TRACE_BUF_SIZE, as that's not even used.
-
-Looks good to me.
-
-Reivewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks!
-
+> The readers call ring_buffer_alloc_read_page() to allocate a page that
+> will be used to swap with the ring buffer. When the code is finished with
+> the reader page, it calls ring_buffer_free_read_page(). Instead of freeing
+> the page, it stores it as a spare. Then next call to
+> ring_buffer_alloc_read_page() will return this spare instead of calling
+> into the memory management system to allocate a new page.
 > 
+> Unfortunately, on freeing of the ring buffer, this spare page is not
+> freed, and causes a memory leak.
+> 
+
+Oops, Looks good to me.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks,
+
+> Cc: stable@vger.kernel.org
+> Fixes: 73a757e63114d ("ring-buffer: Return reader page back into existing ring buffer")
 > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
-> [
->   Depends on: https://lore.kernel.org/linux-trace-kernel/20231209175003.63db40ab@gandalf.local.home/
-> ]
->  kernel/trace/trace.c | 13 ++++---------
->  1 file changed, 4 insertions(+), 9 deletions(-)
+>  kernel/trace/ring_buffer.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index da837119a446..077b20e83e7c 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -7351,9 +7351,6 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
->  	return written;
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index a38e5a3c6803..dd37d21d6e55 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -1790,6 +1790,8 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
+>  		free_buffer_page(bpage);
+>  	}
+>  
+> +	free_page((unsigned long)cpu_buffer->free_page);
+> +
+>  	kfree(cpu_buffer);
 >  }
 >  
-> -/* Limit it for now to 3K (including tag) */
-> -#define RAW_DATA_MAX_SIZE (1024*3)
-> -
->  static ssize_t
->  tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
->  					size_t cnt, loff_t *fpos)
-> @@ -7375,18 +7372,16 @@ tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
->  		return -EINVAL;
->  
->  	/* The marker must at least have a tag id */
-> -	if (cnt < sizeof(unsigned int) || cnt > RAW_DATA_MAX_SIZE)
-> +	if (cnt < sizeof(unsigned int))
->  		return -EINVAL;
->  
-> -	if (cnt > TRACE_BUF_SIZE)
-> -		cnt = TRACE_BUF_SIZE;
-> -
-> -	BUILD_BUG_ON(TRACE_BUF_SIZE >= PAGE_SIZE);
-> -
->  	size = sizeof(*entry) + cnt;
->  	if (cnt < FAULT_SIZE_ID)
->  		size += FAULT_SIZE_ID - cnt;
->  
-> +	if (size > ring_buffer_max_event_size(buffer))
-> +		return -EINVAL;
-> +
->  	buffer = tr->array_buffer.buffer;
->  	event = __trace_buffer_lock_reserve(buffer, TRACE_RAW_DATA, size,
->  					    tracing_gen_ctx());
 > -- 
 > 2.42.0
 > 
