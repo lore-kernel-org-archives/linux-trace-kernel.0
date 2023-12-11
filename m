@@ -1,53 +1,52 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dEzGdL7x"
-Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 974E112E
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 02:46:59 -0800 (PST)
-Received: by mail-qv1-xf2c.google.com with SMTP id 6a1803df08f44-67a9b393f53so17529886d6.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 02:46:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z82uxumJ"
+Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 584001BC
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 02:49:55 -0800 (PST)
+Received: by mail-yb1-xb35.google.com with SMTP id 3f1490d57ef6-db4422fff15so3329478276.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 02:49:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702291619; x=1702896419; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1702291794; x=1702896594; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dbONbDTwPKE3MiL/eslKI++k2YglZ6miec7hwk3eDBk=;
-        b=dEzGdL7xlsXH7EW80M8rGghMQumaP3K/HrcnondofZ92PBvX8AaCloCQeoqF5Oaj/e
-         ULWt6O+3bKyauH/UFXMlKz6jp+L2yV81Jdm2qhNtmaQO7YZYfeGqYYK27qiViP08fc4t
-         +aoHzfs9g5cT4R8xx+bsUJL57zR/hXlqJP2/h5JwpcogXcsb+4fOaRpvfzMCRPMZq/t9
-         J7FLUhsE7q1ITm2IXEZR1fFZsPJcJD/hQWO6PRb7QtwkAB4U/tXvaSfbKx+fERn6Rwv6
-         1kfoHUFmRDMrIip/3t1PW4Qs/0QxTx3QorOCqvh5wzdMahgmJ6qpzshkEywnpQYanMsv
-         jH5w==
+        bh=tcKQpflfU4B5TCVP/h08UJJZWjI+RvIJpIXiYwS5E2M=;
+        b=Z82uxumJs410fLvWZ+MsX7MAn/uD3m9CJEIHdCGkswx4mTsRZFKb+t68brB8HGfQf6
+         z4wEczY3Uk4d5Lt2iCfDm2IAqNr9HQXrEga+T+mUe3Ognhs0xW7fidenVB5zF5/3N1qL
+         lf9QAOGAepwBq/jcUuOfrnRLZomaaR3W0waBr6Oa5Idx1t9Tju3wAFhC16vq2hmiBbpX
+         IxqSFt1scuLNfZlxlc8Sv1x5ezO8E4xn25TX8Z7N37sOS7fyiq6z39BR1O50L/Aj3NKN
+         4rtlIBEpkIcTCflcA7E1PErLN0oRWTNK/RcEw0dSE19MIVJmUUrtCUF+D2h138JZH5i0
+         PhNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702291619; x=1702896419;
+        d=1e100.net; s=20230601; t=1702291794; x=1702896594;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dbONbDTwPKE3MiL/eslKI++k2YglZ6miec7hwk3eDBk=;
-        b=cA8qQblVWRSW6JoXY9dLLHU8SxBElzqdwVjAJMv/BieJqeRVR6Z0EX0Mx0K8oFANbs
-         oTpko0gxX05oCt+aoRz7rfFy7Uuc/m/18ZIhlPlMqih77+KJiMChH4FtFIn57WyvOzIO
-         ZoM8YfCx/RcjKfXCfHDcTV81fEjW1wo3bEcdxp+usjQP04vdAUF5sJZ9TWaA0MpwAqEp
-         dE+IdUy7CsqNAkqsj6UQvgt5REt49aZKKiK3uB/ojAE8zW5C1EX57m+UI6xCiuye/8T6
-         iVOOoRiNOeyFEN/seoDnnPdJNu0YmTLvjUKlqsT9cPNJJQOyBB6c3IWzRoSjUxV141A0
-         5XDA==
-X-Gm-Message-State: AOJu0YwyuerenPWPtqLkMdpQBOVdU1PwT1v3+yFF97BIadwLfTcuTkUN
-	JpbzGsqpxp+7oI6dahDW0fWnnB1VQY4utjzEqSv5iQ==
-X-Google-Smtp-Source: AGHT+IE5iESTgLHPyjCFsdOQibZaw2Ip1V5W7Ud/9oJ2fo3N5TyPUEV+pEprZ6kielHId9pGivF+X38bX3Nk/2TuZAE=
-X-Received: by 2002:a05:6214:20ee:b0:67a:d8ce:8e88 with SMTP id
- 14-20020a05621420ee00b0067ad8ce8e88mr3089154qvk.110.1702291618597; Mon, 11
- Dec 2023 02:46:58 -0800 (PST)
+        bh=tcKQpflfU4B5TCVP/h08UJJZWjI+RvIJpIXiYwS5E2M=;
+        b=cPH9d44Wwlav/FLB7A1IRS0EdTUjbkvFJry0KwnGIB2ca0ZtWujjBrMLJIsO1wHegZ
+         L9N1oTfg0ca/MZhEYQlvOQDrIjuPZdSg24N0WR30qfny1EkDaRAM71x7o2z1/Iy9dZnS
+         p//+ML/ukSyQTZlmhgWhP2bCqoWx9Xq7c4Brl96ox0lAsN81EE2AYH3n64QrlAKUcINa
+         ETE1IzYFlSVkvKlTzINPtDdd8KgFz7biPlO4jueBBnTiLUlLEGm3eCLDdrKFm1k/lh4N
+         /RhDitHieMFdL5K5EblvsO4+j/EaG8TUed2RSFeFOcjaJjBmcvAfr+IJOgr42yZHhwev
+         MVYQ==
+X-Gm-Message-State: AOJu0Yw81/rB/YvlxnItCS+hQl8zHaJp4gulMuLZSlZA6KsdA3lQiaVo
+	yO3/LV3wqyf6jsRbn5ZZFytdxa2V8Gm1k7Zfj2FfOA==
+X-Google-Smtp-Source: AGHT+IGxEQoVh4ByA2qBjx0LydjxUGju9YawLR3Q97ogewINErRGg6NuNwBnUwitc38zjtVfZw57S5a8HV/G/pvaPFA=
+X-Received: by 2002:a05:6902:1aca:b0:dbc:5dfc:9d6 with SMTP id
+ db10-20020a0569021aca00b00dbc5dfc09d6mr2177747ybb.35.1702291794335; Mon, 11
+ Dec 2023 02:49:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231121220155.1217090-1-iii@linux.ibm.com> <20231121220155.1217090-31-iii@linux.ibm.com>
-In-Reply-To: <20231121220155.1217090-31-iii@linux.ibm.com>
+References: <20231121220155.1217090-1-iii@linux.ibm.com> <20231121220155.1217090-29-iii@linux.ibm.com>
+In-Reply-To: <20231121220155.1217090-29-iii@linux.ibm.com>
 From: Alexander Potapenko <glider@google.com>
-Date: Mon, 11 Dec 2023 11:46:22 +0100
-Message-ID: <CAG_fn=XyTZHU45EhinUSm-+Thux4VPCpT-jyf=cP7hNPcTbK8g@mail.gmail.com>
-Subject: Re: [PATCH v2 30/33] s390/uaccess: Add KMSAN support to put_user()
- and get_user()
+Date: Mon, 11 Dec 2023 11:49:18 +0100
+Message-ID: <CAG_fn=WjEV4CP2RTX1xeuG=kd9Lj5X1Tf4QCRuNW-vzDUpzBGw@mail.gmail.com>
+Subject: Re: [PATCH v2 28/33] s390/string: Add KMSAN support
 To: Ilya Leoshkevich <iii@linux.ibm.com>
 Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
 	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
@@ -65,33 +64,18 @@ Content-Transfer-Encoding: quoted-printable
 On Tue, Nov 21, 2023 at 11:03=E2=80=AFPM Ilya Leoshkevich <iii@linux.ibm.co=
 m> wrote:
 >
-> put_user() uses inline assembly with precise constraints, so Clang is
-> in principle capable of instrumenting it automatically. Unfortunately,
-> one of the constraints contains a dereferenced user pointer, and Clang
-> does not currently distinguish user and kernel pointers. Therefore
-> KMSAN attempts to access shadow for user pointers, which is not a right
-> thing to do.
+> Add KMSAN support for the s390 implementations of the string functions.
+> Do this similar to how it's already done for KASAN, except that the
+> optimized memset{16,32,64}() functions need to be disabled: it's
+> important for KMSAN to know that they initialized something.
 >
-> An obvious fix to add __no_sanitize_memory to __put_user_fn() does not
-> work, since it's __always_inline. And __always_inline cannot be removed
-> due to the __put_user_bad() trick.
+> The way boot code is built with regard to string functions is
+> problematic, since most files think it's configured with sanitizers,
+> but boot/string.c doesn't. This creates various problems with the
+> memset64() definitions, depending on whether the code is built with
+> sanitizers or fortify. This should probably be streamlined, but in the
+> meantime resolve the issues by introducing the IN_BOOT_STRING_C macro,
+> similar to the existing IN_ARCH_STRING_C macro.
 >
-> A different obvious fix of using the "a" instead of the "+Q" constraint
-> degrades the code quality, which is very important here, since it's a
-> hot path.
->
-> Instead, repurpose the __put_user_asm() macro to define
-> __put_user_{char,short,int,long}_noinstr() functions and mark them with
-> __no_sanitize_memory. For the non-KMSAN builds make them
-> __always_inline in order to keep the generated code quality. Also
-> define __put_user_{char,short,int,long}() functions, which call the
-> aforementioned ones and which *are* instrumented, because they call
-> KMSAN hooks, which may be implemented as macros.
->
-> The same applies to get_user() as well.
->
-> Acked-by: Heiko Carstens <hca@linux.ibm.com>
 > Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-
-I think this patch makes sense, but I don't feel myself qualified
-enough to stamp it. Hope Heiko's ack is enough.
+Reviewed-by: Alexander Potapenko <glider@google.com>
