@@ -1,170 +1,136 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B9C4B8;
-	Mon, 11 Dec 2023 03:29:49 -0800 (PST)
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4SpffY5cv3z4f3lVy;
-	Mon, 11 Dec 2023 19:29:41 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id A7C131A0713;
-	Mon, 11 Dec 2023 19:29:46 +0800 (CST)
-Received: from [10.174.176.117] (unknown [10.174.176.117])
-	by APP2 (Coremail) with SMTP id Syh0CgBX+0mk8nZlT0rRDQ--.30712S2;
-	Mon, 11 Dec 2023 19:29:44 +0800 (CST)
-Subject: Re: WARNING: kmalloc bug in bpf_uprobe_multi_link_attach
-To: xingwei lee <xrivendell7@gmail.com>, ast@kernel.org
-Cc: daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
- song@kernel.org, yonghong.song@linux.dev, john.fastabend@gmail.com,
- kpsingh@kernel.org, sdf@google.com, haoluo@google.com, jolsa@kernel.org,
- rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <CABOYnLwwJY=yFAGie59LFsUsBAgHfroVqbzZ5edAXbFE3YiNVA@mail.gmail.com>
-From: Hou Tao <houtao@huaweicloud.com>
-Message-ID: <689db41e-90f5-c5ba-b690-00586f22d616@huaweicloud.com>
-Date: Mon, 11 Dec 2023 19:29:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F1B2AF13
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 11:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hp/BPQfy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFBA2C433C8;
+	Mon, 11 Dec 2023 11:40:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702294839;
+	bh=3gaOmYRIZfbiVmht0OPzyhJS1d5RxKW/OEhIAR90v1o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Hp/BPQfyYMdM+/l1B7ToTZogugssKh2805pDfssVpBiMrpztnBm3IxhG0xX6GS4Ne
+	 3rnDUW6FCt13YNi6nHSWM2gqNtWEvmdB7+gU2OSZSHRXJKGwMCdCITXV5Cx4iyUfsM
+	 MExdTDBqrNSzDjXhrF02RprgNGtivSRedj3mcsSI7ADcY8MbOZ2MxGUITILnohRvGr
+	 ne9T+4+mP4tf8dtfJuBUmA0uq/RD2UQLZb29CYbBEMfix86hBRSQugXpkK9WJ/JqHJ
+	 aKGRIgmco9nGhO71B8s0XHI1xIcIB/xSORD9NBAqGB37NTR4Y3kX6CacxY54nSiQpH
+	 iFYgqWEmxsihQ==
+Date: Mon, 11 Dec 2023 20:40:33 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Kent Overstreet
+ <kent.overstreet@linux.dev>
+Subject: Re: [PATCH] ring-buffer: Fix buffer max_data_size with
+ max_event_size
+Message-Id: <20231211204033.a3658f5f497f0c7541dee025@kernel.org>
+In-Reply-To: <20231209170925.71d4e02e@gandalf.local.home>
+References: <20231209170139.33c1b452@gandalf.local.home>
+	<20231209170925.71d4e02e@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <CABOYnLwwJY=yFAGie59LFsUsBAgHfroVqbzZ5edAXbFE3YiNVA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:Syh0CgBX+0mk8nZlT0rRDQ--.30712S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxWr1UWr13ur4DWFWkCFyDZFb_yoW7Gryrpr
-	WrJF4YkrW8JryxJF17ta15trZxArZ8C3WDJwsrGFyFvF18WFyjqF4qqw1F9ry5JrWvyr13
-	tF1DXr4jvr1UW3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvab4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a
-	6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6x
-	kF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE
-	14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyT
-	uYvjxUFDGOUUUUU
-X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On Sat, 9 Dec 2023 17:09:25 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-On 12/11/2023 4:12 PM, xingwei lee wrote:
-> Sorry for containing HTML part, repeat the mail
-> Hello I found a bug in net/bpf in the lastest upstream linux and
-> lastest net tree.
-> WARNING: kmalloc bug in bpf_uprobe_multi_link_attach
->
-> kernel: net 28a7cb045ab700de5554193a1642917602787784
-> Kernel config: https://github.com/google/syzkaller/commits/fc59b78e3174009510ed15f20665e7ab2435ebee
->
-> in the lastest net tree, the crash like:
->
-> [   68.363836][ T8223] ------------[ cut here ]------------
-> [   68.364967][ T8223] WARNING: CPU: 2 PID: 8223 at mm/util.c:632
-> kvmalloc_node+0x18a/0x1a0
-> [   68.366527][ T8223] Modules linked in:
-> [   68.367882][ T8223] CPU: 2 PID: 8223 Comm: 36d Not tainted
-> 6.7.0-rc4-00146-g28a7cb045ab7 #2
-> [   68.369260][ T8223] Hardware name: QEMU Standard PC (i440FX + PIIX,
-> 1996), BIOS 1.16.2-1.fc38 04/014
-> [   68.370811][ T8223] RIP: 0010:kvmalloc_node+0x18a/0x1a0
-> [   68.371689][ T8223] Code: dc 1c 00 eb aa e8 86 33 c6 ff 41 81 e4 00
-> 20 00 00 31 ff 44 89 e6 e8 e5 20
-> [   68.375001][ T8223] RSP: 0018:ffffc9001088fb68 EFLAGS: 00010293
-> [   68.375989][ T8223] RAX: 0000000000000000 RBX: 00000037ffffcec8
-> RCX: ffffffff81c1a32b
-> [   68.377154][ T8223] RDX: ffff88802cc00040 RSI: ffffffff81c1a339
-> RDI: 0000000000000005
-> [   68.377950][ T8223] RBP: 0000000000000400 R08: 0000000000000005
-> R09: 0000000000000000
-> [   68.378744][ T8223] R10: 0000000000000000 R11: 0000000000000000
-> R12: 0000000000000000
-> [   68.379523][ T8223] R13: 00000000ffffffff R14: ffff888017eb4a28
-> R15: 0000000000000000
-> [   68.380307][ T8223] FS:  0000000000827380(0000)
-> GS:ffff8880b9900000(0000) knlGS:0000000000000000
-> [   68.381185][ T8223] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   68.381843][ T8223] CR2: 0000000020000140 CR3: 00000000204d2000
-> CR4: 0000000000750ef0
-> [   68.382624][ T8223] PKRU: 55555554
-> [   68.382978][ T8223] Call Trace:
-> [   68.383312][ T8223]  <TASK>
-> [   68.383608][ T8223]  ? show_regs+0x8f/0xa0
-> [   68.384052][ T8223]  ? __warn+0xe6/0x390
-> [   68.384470][ T8223]  ? kvmalloc_node+0x18a/0x1a0
-> [   68.385111][ T8223]  ? report_bug+0x3b9/0x580
-> [   68.385585][ T8223]  ? handle_bug+0x67/0x90
-> [   68.386032][ T8223]  ? exc_invalid_op+0x17/0x40
-> [   68.386503][ T8223]  ? asm_exc_invalid_op+0x1a/0x20
-> [   68.387065][ T8223]  ? kvmalloc_node+0x17b/0x1a0
-> [   68.387551][ T8223]  ? kvmalloc_node+0x189/0x1a0
-> [   68.388051][ T8223]  ? kvmalloc_node+0x18a/0x1a0
-> [   68.388537][ T8223]  ? kvmalloc_node+0x189/0x1a0
-> [   68.389038][ T8223]  bpf_uprobe_multi_link_attach+0x436/0xfb0
+> On Sat, 9 Dec 2023 17:01:39 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> > 
+> > The maximum ring buffer data size is the maximum size of data that can be
+> > recorded on the ring buffer. Events must be smaller than the sub buffer
+> > data size minus any meta data. This size is checked before trying to
+> > allocate from the ring buffer because the allocation assumes that the size
+> > will fit on the sub buffer.
+> > 
+> > The maximum size was calculated as the size of a sub buffer page (which is
+> > currently PAGE_SIZE minus the sub buffer header) minus the size of the
+> > meta data of an individual event. But it missed the possible adding of a
+> > time stamp for events that are added long enough apart that the event meta
+> > data can't hold the time delta.
+> > 
+> > When an event is added that is greater than the current BUF_MAX_DATA_SIZE
+> > minus the size of a time stamp, but still less than or equal to
+> > BUF_MAX_DATA_SIZE, the ring buffer would go into an infinite loop, looking
+> > for a page that can hold the event. Luckily, there's a check for this loop
+> > and after 1000 iterations and a warning is emitted and the ring buffer is
+> > disabled. But this should never happen.
+> > 
+> > This can happen when a large event is added first, or after a long period
+> > where an absolute timestamp is prefixed to the event, increasing its size
+> > by 8 bytes. This passes the check and then goes into the algorithm that
+> > causes the infinite loop.
+> > 
+> > Fix this by creating a BUF_MAX_EVENT_SIZE to be used to determine if the
+> > passed in event is too big for the buffer.
+> > 
+> 
+> Forgot to add:
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: a4543a2fa9ef3 ("ring-buffer: Get timestamp after event is allocated")
 
-It seems a big attr->link_create.uprobe_multi.cnt is passed to
-bpf_uprobe_multi_link_attach(). Could you please try the first patch in
-the following patch set ?
+Looks good to me.
 
-https://lore.kernel.org/bpf/20231211112843.4147157-1-houtao@huaweicloud.com/T/#t
-> [   68.389633][ T8223]  ? __might_fault+0x13f/0x1a0
-> [   68.390129][ T8223]  ? bpf_kprobe_multi_link_attach+0x10/0x10
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-SNIP
->   res = syscall(__NR_bpf, /*cmd=*/5ul, /*arg=*/0x20000140ul, /*size=*/0x90ul);
->   if (res != -1) r[0] = res;
->   memcpy((void*)0x20000000, "./file0\000", 8);
->   syscall(__NR_creat, /*file=*/0x20000000ul, /*mode=*/0ul);
->   *(uint32_t*)0x20000340 = r[0];
->   *(uint32_t*)0x20000344 = 0;
->   *(uint32_t*)0x20000348 = 0x30;
->   *(uint32_t*)0x2000034c = 0;
->   *(uint64_t*)0x20000350 = 0x20000080;
->   memcpy((void*)0x20000080, "./file0\000", 8);
+Thanks,
+> 
+> -- Steve
+> 
+> 
+> > Reported-by: Kent Overstreet <kent.overstreet@linux.dev> # (on IRC)
+> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > ---
+> >  kernel/trace/ring_buffer.c | 7 +++++--
+> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> > index 8d2a4f00eca9..a38e5a3c6803 100644
+> > --- a/kernel/trace/ring_buffer.c
+> > +++ b/kernel/trace/ring_buffer.c
+> > @@ -378,6 +378,9 @@ static inline bool test_time_stamp(u64 delta)
+> >  /* Max payload is BUF_PAGE_SIZE - header (8bytes) */
+> >  #define BUF_MAX_DATA_SIZE (BUF_PAGE_SIZE - (sizeof(u32) * 2))
+> >  
+> > +/* Events may have a time stamp attached to them */
+> > +#define BUF_MAX_EVENT_SIZE (BUF_MAX_DATA_SIZE - RB_LEN_TIME_EXTEND)
+> > +
+> >  int ring_buffer_print_page_header(struct trace_seq *s)
+> >  {
+> >  	struct buffer_data_page field;
+> > @@ -3810,7 +3813,7 @@ ring_buffer_lock_reserve(struct trace_buffer *buffer, unsigned long length)
+> >  	if (unlikely(atomic_read(&cpu_buffer->record_disabled)))
+> >  		goto out;
+> >  
+> > -	if (unlikely(length > BUF_MAX_DATA_SIZE))
+> > +	if (unlikely(length > BUF_MAX_EVENT_SIZE))
+> >  		goto out;
+> >  
+> >  	if (unlikely(trace_recursive_lock(cpu_buffer)))
+> > @@ -3960,7 +3963,7 @@ int ring_buffer_write(struct trace_buffer *buffer,
+> >  	if (atomic_read(&cpu_buffer->record_disabled))
+> >  		goto out;
+> >  
+> > -	if (length > BUF_MAX_DATA_SIZE)
+> > +	if (length > BUF_MAX_EVENT_SIZE)
+> >  		goto out;
+> >  
+> >  	if (unlikely(trace_recursive_lock(cpu_buffer)))
+> 
 
-0x20000350 is the address of attr->link_create.uprobe_multi.path.
->   *(uint64_t*)0x20000358 = 0x200000c0;
->   *(uint64_t*)0x200000c0 = 0;
->   *(uint64_t*)0x20000360 = 0;
->   *(uint64_t*)0x20000368 = 0;
->   *(uint32_t*)0x20000370 = 0xffffff1f;
 
-The value of attr->link_create.uprobe_multi.cnt is 0xffffff1f, so 
-0xffffff1f * sizeof(bpf_uprobe) will be greater than INT_MAX, and
-triggers the warning in mm/util.c:
-
-        /* Don't even allow crazy sizes */
-        if (unlikely(size > INT_MAX)) {
-                WARN_ON_ONCE(!(flags & __GFP_NOWARN));
-                return NULL;
-        }
-
-Adding __GFP_NOWARN when doing kvcalloc() can fix the warning.
->   *(uint32_t*)0x20000374 = 0;
->   *(uint32_t*)0x20000378 = 0;
->   syscall(__NR_bpf, /*cmd=*/0x1cul, /*arg=*/0x20000340ul, /*size=*/0x40ul);
->   return 0;
-> }
->
-> =* repro.txt =*
-> r0 = bpf$PROG_LOAD(0x5, &(0x7f0000000140)={0x2, 0x3,
-> &(0x7f0000000200)=@framed, &(0x7f0000000240)='GPL\x00', 0x0, 0x0, 0x0,
-> 0x0, 0x0, '\x00', 0x0, 0x30, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-> 0x0, 0x0, 0x0, 0x0, 0x0}, 0x90)
-> creat(&(0x7f0000000000)='./file0\x00', 0x0)
-> bpf$BPF_LINK_CREATE_XDP(0x1c, &(0x7f0000000340)={r0, 0x0, 0x30, 0x0,
-> @val=@uprobe_multi={&(0x7f0000000080)='./file0\x00',
-> &(0x7f00000000c0)=[0x0], 0x0, 0x0, 0xffffff1f}}, 0x40
->
->
-> See aslo https://gist.github.com/xrivendell7/15d43946c73aa13247b4b20b68798aaa
->
-> .
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
