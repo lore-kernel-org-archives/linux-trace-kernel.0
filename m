@@ -1,76 +1,65 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Q0yqQ06D"
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id D7EE7CF;
-	Sun, 10 Dec 2023 13:35:39 -0800 (PST)
-Received: from localhost.localdomain (unknown [4.155.48.117])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 0B1F620B74C0;
-	Sun, 10 Dec 2023 13:35:39 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0B1F620B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1702244139;
-	bh=AwLPxkWSQ+xItqIkFFnflTbsJwcL70eHM305+He6/Pg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Q0yqQ06DL6j6eJXGiMYqLMRzH0Z35EwyGtwfYeQo39pIavtQQswP9U9W+Y2C4mnK5
-	 4DOQl4iBwB/Fdjj1Twp+REAOorZvSpve6dVXFD+7rnWCyPFshu2X+bO0PC3bT60Jod
-	 +u8XHr4jdJl+or4ylxmDlOSB7qLan3taIGygsXug=
-From: Beau Belgrave <beaub@linux.microsoft.com>
-To: rostedt@goodmis.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] eventfs: Fix events beyond NAME_MAX blocking tasks
-Date: Sun, 10 Dec 2023 21:35:34 +0000
-Message-Id: <20231210213534.497-1-beaub@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D76F11CAD
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Dec 2023 03:12:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C81DCC433C8;
+	Mon, 11 Dec 2023 03:12:51 +0000 (UTC)
+Date: Sun, 10 Dec 2023 22:12:50 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] ring-buffer: Fix memory leak of free page
+Message-ID: <20231210221250.7b9cc83c@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Eventfs uses simple_lookup(), however, it will fail if the name of the
-entry is beyond NAME_MAX length. When this error is encountered, eventfs
-still tries to create dentries instead of skipping the dentry creation.
-When the dentry is attempted to be created in this state d_wait_lookup()
-will loop forever, waiting for the lookup to be removed.
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Fix eventfs to return the error in simple_lookup() back to the caller
-instead of continuing to try to create the dentry.
+Reading the ring buffer does a swap of a sub-buffer within the ring buffer
+with a empty sub-buffer. This allows the reader to have full access to the
+content of the sub-buffer that was swapped out without having to worry
+about contention with the writer.
 
-Fixes: 63940449555e ("eventfs: Implement eventfs lookup, read, open functions")
-Link: https://lore.kernel.org/linux-trace-kernel/20231208183601.GA46-beaub@linux.microsoft.com/
-Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
+The readers call ring_buffer_alloc_read_page() to allocate a page that
+will be used to swap with the ring buffer. When the code is finished with
+the reader page, it calls ring_buffer_free_read_page(). Instead of freeing
+the page, it stores it as a spare. Then next call to
+ring_buffer_alloc_read_page() will return this spare instead of calling
+into the memory management system to allocate a new page.
+
+Unfortunately, on freeing of the ring buffer, this spare page is not
+freed, and causes a memory leak.
+
+Cc: stable@vger.kernel.org
+Fixes: 73a757e63114d ("ring-buffer: Return reader page back into existing ring buffer")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-Please note the fixes tag is the first add of simple_lookup logic, there
-have been other changes beyond that may be a better fit to targetting.
+ kernel/trace/ring_buffer.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
- fs/tracefs/event_inode.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index f8a594a50ae6..d2c06ba26db4 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -561,6 +561,8 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
- 		if (strcmp(ei_child->name, name) != 0)
- 			continue;
- 		ret = simple_lookup(dir, dentry, flags);
-+		if (IS_ERR(ret))
-+			goto out;
- 		create_dir_dentry(ei, ei_child, ei_dentry, true);
- 		created = true;
- 		break;
-@@ -583,6 +585,8 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
- 			if (r <= 0)
- 				continue;
- 			ret = simple_lookup(dir, dentry, flags);
-+			if (IS_ERR(ret))
-+				goto out;
- 			create_file_dentry(ei, i, ei_dentry, name, mode, cdata,
- 					   fops, true);
- 			break;
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index a38e5a3c6803..dd37d21d6e55 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -1790,6 +1790,8 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
+ 		free_buffer_page(bpage);
+ 	}
+ 
++	free_page((unsigned long)cpu_buffer->free_page);
++
+ 	kfree(cpu_buffer);
+ }
+ 
 -- 
-2.34.1
+2.42.0
 
