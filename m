@@ -1,106 +1,126 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Aepfzeil"
-Received: from smtpout.efficios.com (unknown [IPv6:2607:5300:203:b2ee::31e5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA4BD99;
-	Tue, 12 Dec 2023 06:23:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1702391035;
-	bh=USEuixjU2fIwlYaRovUecQIYEQq4YyOBnS594yyopqg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Aepfzeilvp/gNBYsgSBllAS2dR4H7lS0IsyIBuPRbqfGK0o8o6GXQIlxVuecPRHAb
-	 GcWH0w7cWxDQYb7UYhLodUFssnGMVTDF1i3TZEfRd7CInFC71BROE0Jy+JzU1AY7Vq
-	 OM1cIn3tztCpi6NE+veTJj8HpeWmN8kL5vdF/Pp7PYaGBWVoOBJKmoWbohAiGlx+Be
-	 ErUZPOQr9erPjyafiIv/DYC4phNjrfAUTKYyVeGsYzHRjtPMv0Edj+ZzheqL7lrm92
-	 YwYPgw82jVimjyQusDBGSFO4E7zRuFh794i8xsxJDRdfRAJW1pB1v+dzjNp3oNFjeY
-	 JRosiQg5/UBaA==
-Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4SqLT70XlKzGGr;
-	Tue, 12 Dec 2023 09:23:55 -0500 (EST)
-Message-ID: <148974c2-df17-4c71-a59a-6e056e10910e@efficios.com>
-Date: Tue, 12 Dec 2023 09:23:54 -0500
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="md5jkMNp"
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F148DE9
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 12 Dec 2023 06:27:37 -0800 (PST)
+Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-50dfac6c0beso3142902e87.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 12 Dec 2023 06:27:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1702391256; x=1702996056; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oi89GvlAHEHZg03UHqAC2QcBZtFXzQljGaUkYEpdYRQ=;
+        b=md5jkMNpMSFt0c3//Hc+vHwemgL/u0RoKjbdEOW9c9g9HkXXfDVf25KBq1h9ZttbHI
+         vkDq6Z+nLffOYg3cJj5Kb7hCDiXC1H32oLVT482XNQy93E85ylok1FNSfdrDRQlUff95
+         rlKB5XLlIDlpuQ9LnW0Hnu0P75HO0LNid3m3AN+TF2EWuIHZeHu/IyX9ic/00lumnlVf
+         VHencOhvLRD5KDGeDhrpsSRQH7zbvRBUsD+9Wdy344RnqhCZpv0ZV4W2PTnelSheSTHw
+         irCQVNW+61s7TyEIesbvHcSZQyE6I4m7Pv/Hnz441BTHUhOkjKHMLdiI3o5YQ96uaAed
+         OFSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702391256; x=1702996056;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oi89GvlAHEHZg03UHqAC2QcBZtFXzQljGaUkYEpdYRQ=;
+        b=g70P4vYbQLaKNR7YkuTQTlYivKoReVkXYL3UgaUBbCjKztsdnOKr5yLdqnc4E4edZP
+         wIUeFnP03ZdTHyQ9gOS5QoHY6OaRU+kcihrceUV7b+FUIphfoRaWaIGIPo0AFOuQXyLW
+         jkW1ZrqUtM6nk7N0yIq0s2ZeSbZc1VoBD4n+NBKOIxQlWk4VG+jhyk+hKDHomDzVZ/iI
+         /P8/Fu9ndSQz09wb+3Xq2FqkEeJOve6X3hYDrhqFJahoI/PAPkmFsF62PcHD5KVEb+O6
+         0x2lnkwUcSsTyYvndnyb17WlUge1y9Sx6ByHW6Cl4Sb4lv+x/jgJhgxfBBfmNQajaLJU
+         xfGw==
+X-Gm-Message-State: AOJu0YyEJS2sRup5dw+UqJ0omA5ktrMwlBSaPD0992It0YFgCViOgI8P
+	UDM6XxeaBcjW5DyYft7waQocTA==
+X-Google-Smtp-Source: AGHT+IHyo1axms+ckhodl2KbZ/1My7NcqxxzmO0EEcz3ZK+X3IOJxW78U3l56AhQYBvpEUAbefnwcQ==
+X-Received: by 2002:a05:6512:a8c:b0:50b:f84b:9b0f with SMTP id m12-20020a0565120a8c00b0050bf84b9b0fmr4113837lfu.25.1702391256066;
+        Tue, 12 Dec 2023 06:27:36 -0800 (PST)
+Received: from vingu-book.. ([2a01:e0a:f:6020:a004:6e24:43ee:dd81])
+        by smtp.gmail.com with ESMTPSA id fc7-20020a05600c524700b0040c44cb251dsm9078291wmb.46.2023.12.12.06.27.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Dec 2023 06:27:35 -0800 (PST)
+From: Vincent Guittot <vincent.guittot@linaro.org>
+To: catalin.marinas@arm.com,
+	will@kernel.org,
+	sudeep.holla@arm.com,
+	rafael@kernel.org,
+	viresh.kumar@linaro.org,
+	agross@kernel.org,
+	andersson@kernel.org,
+	konrad.dybcio@linaro.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	bristot@redhat.com,
+	vschneid@redhat.com,
+	lukasz.luba@arm.com,
+	rui.zhang@intel.com,
+	mhiramat@kernel.org,
+	daniel.lezcano@linaro.org,
+	amit.kachhap@gmail.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH 0/5] Rework system pressure interface to the scheduler
+Date: Tue, 12 Dec 2023 15:27:26 +0100
+Message-Id: <20231212142730.998913-1-vincent.guittot@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing: Add size check when printing trace_marker output
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>
-References: <20231212084444.4619b8ce@gandalf.local.home>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-In-Reply-To: <20231212084444.4619b8ce@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2023-12-12 08:44, Steven Rostedt wrote:
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> If for some reason the trace_marker write does not have a nul byte for the
-> string, it will overflow the print:
+Following the consolidation and cleanup of CPU capacity in [1], this serie
+reworks how the scheduler gets the pressures on CPUs. We need to take into
+account all pressures applied by cpufreq on the compute capacity of a CPU
+for dozens of ms or more and not only cpufreq cooling device or HW
+mitigiations. we split the pressure applied on CPU's capacity in 2 parts:
+- one from cpufreq and freq_qos
+- one from HW high freq mitigiation.
 
-Does this result in leaking kernel memory to userspace ? If so, it
-should state "Fixes..." and CC stable.
+The next step will be to add a dedicated interface for long standing
+capping of the CPU capacity (i.e. for seconds or more) like the
+scaling_max_freq of cpufreq sysfs. The latter is already taken into
+account by this serie but as a temporary pressure which is not always the
+best choice when we know that it will happen for seconds or more.
 
-Thanks,
+[1] https://lore.kernel.org/lkml/20231211104855.558096-1-vincent.guittot@linaro.org/
 
-Mathieu
+Vincent Guittot (4):
+  cpufreq: Add a cpufreq pressure feedback for the scheduler
+  sched: Take cpufreq feedback into account
+  thermal/cpufreq: Remove arch_update_thermal_pressure()
+  sched: Rename arch_update_thermal_pressure into
+    arch_update_hw_pressure
 
-> 
->    trace_seq_printf(s, ": %s", field->buf);
-> 
-> The field->buf could be missing the nul byte. To prevent overflow, add the
-> max size that the buf can be by using the event size and the field
-> location.
-> 
->    int max = iter->ent_size - offsetof(struct print_entry, buf);
-> 
->    trace_seq_printf(s, ": %*s", max, field->buf);
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->   kernel/trace/trace_output.c | 6 ++++--
->   1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-> index d8b302d01083..e11fb8996286 100644
-> --- a/kernel/trace/trace_output.c
-> +++ b/kernel/trace/trace_output.c
-> @@ -1587,11 +1587,12 @@ static enum print_line_t trace_print_print(struct trace_iterator *iter,
->   {
->   	struct print_entry *field;
->   	struct trace_seq *s = &iter->seq;
-> +	int max = iter->ent_size - offsetof(struct print_entry, buf);
->   
->   	trace_assign_type(field, iter->ent);
->   
->   	seq_print_ip_sym(s, field->ip, flags);
-> -	trace_seq_printf(s, ": %s", field->buf);
-> +	trace_seq_printf(s, ": %*s", max, field->buf);
->   
->   	return trace_handle_return(s);
->   }
-> @@ -1600,10 +1601,11 @@ static enum print_line_t trace_print_raw(struct trace_iterator *iter, int flags,
->   					 struct trace_event *event)
->   {
->   	struct print_entry *field;
-> +	int max = iter->ent_size - offsetof(struct print_entry, buf);
->   
->   	trace_assign_type(field, iter->ent);
->   
-> -	trace_seq_printf(&iter->seq, "# %lx %s", field->ip, field->buf);
-> +	trace_seq_printf(&iter->seq, "# %lx %*s", field->ip, max, field->buf);
->   
->   	return trace_handle_return(&iter->seq);
->   }
+ arch/arm/include/asm/topology.h               |  6 +--
+ arch/arm64/include/asm/topology.h             |  6 +--
+ drivers/base/arch_topology.c                  | 26 ++++-----
+ drivers/cpufreq/cpufreq.c                     | 48 +++++++++++++++++
+ drivers/cpufreq/qcom-cpufreq-hw.c             |  4 +-
+ drivers/thermal/cpufreq_cooling.c             |  3 --
+ include/linux/arch_topology.h                 |  8 +--
+ include/linux/cpufreq.h                       | 10 ++++
+ include/linux/sched/topology.h                |  8 +--
+ .../{thermal_pressure.h => hw_pressure.h}     | 14 ++---
+ include/trace/events/sched.h                  |  2 +-
+ init/Kconfig                                  | 12 ++---
+ kernel/sched/core.c                           |  8 +--
+ kernel/sched/fair.c                           | 53 ++++++++++---------
+ kernel/sched/pelt.c                           | 18 +++----
+ kernel/sched/pelt.h                           | 16 +++---
+ kernel/sched/sched.h                          |  4 +-
+ 17 files changed, 152 insertions(+), 94 deletions(-)
+ rename include/trace/events/{thermal_pressure.h => hw_pressure.h} (55%)
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
-
+2.34.1
+ 
