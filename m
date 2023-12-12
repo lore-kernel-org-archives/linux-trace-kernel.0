@@ -1,158 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5255D4BD
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 12 Dec 2023 11:43:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B701C433C7;
-	Tue, 12 Dec 2023 11:43:54 +0000 (UTC)
-Date: Tue, 12 Dec 2023 06:44:35 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Kent Overstreet
- <kent.overstreet@linux.dev>
-Subject: Re: [PATCH] ring-buffer: Fix buffer max_data_size with
- max_event_size
-Message-ID: <20231212064435.58522007@gandalf.local.home>
-In-Reply-To: <20231211204033.a3658f5f497f0c7541dee025@kernel.org>
-References: <20231209170139.33c1b452@gandalf.local.home>
-	<20231209170925.71d4e02e@gandalf.local.home>
-	<20231211204033.a3658f5f497f0c7541dee025@kernel.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+X-Greylist: delayed 1181 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 12 Dec 2023 03:52:18 PST
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 277F7109;
+	Tue, 12 Dec 2023 03:52:17 -0800 (PST)
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4SqGf74fmNz1kv72;
+	Tue, 12 Dec 2023 19:31:27 +0800 (CST)
+Received: from dggpeml500012.china.huawei.com (unknown [7.185.36.15])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1D5A81800C8;
+	Tue, 12 Dec 2023 19:32:34 +0800 (CST)
+Received: from localhost.localdomain (10.67.175.61) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 12 Dec 2023 19:32:33 +0800
+From: Zheng Yejian <zhengyejian1@huawei.com>
+To: <rostedt@goodmis.org>, <mhiramat@kernel.org>
+CC: <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <yeweihua4@huawei.com>,
+	<zhengyejian1@huawei.com>
+Subject: [PATCH] tracing: Fix uaf issue when open the hist or hist_debug file
+Date: Tue, 12 Dec 2023 19:33:17 +0800
+Message-ID: <20231212113317.4159890-1-zhengyejian1@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
 
-On Mon, 11 Dec 2023 20:40:33 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+KASAN report following issue. The root cause is when opening 'hist'
+file of an instance and accessing 'trace_event_file' in hist_show(),
+but 'trace_event_file' has been freed due to the instance being removed.
+'hist_debug' file has the same problem. To fix it, use
+tracing_{open, release}_file_tr() as instead when open these two files.
 
-> On Sat, 9 Dec 2023 17:09:25 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > On Sat, 9 Dec 2023 17:01:39 -0500
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> >   
-> > > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> > > 
-> > > The maximum ring buffer data size is the maximum size of data that can be
-> > > recorded on the ring buffer. Events must be smaller than the sub buffer
-> > > data size minus any meta data. This size is checked before trying to
-> > > allocate from the ring buffer because the allocation assumes that the size
-> > > will fit on the sub buffer.
-> > > 
-> > > The maximum size was calculated as the size of a sub buffer page (which is
-> > > currently PAGE_SIZE minus the sub buffer header) minus the size of the
-> > > meta data of an individual event. But it missed the possible adding of a
-> > > time stamp for events that are added long enough apart that the event meta
-> > > data can't hold the time delta.
-> > > 
-> > > When an event is added that is greater than the current BUF_MAX_DATA_SIZE
-> > > minus the size of a time stamp, but still less than or equal to
-> > > BUF_MAX_DATA_SIZE, the ring buffer would go into an infinite loop, looking
-> > > for a page that can hold the event. Luckily, there's a check for this loop
-> > > and after 1000 iterations and a warning is emitted and the ring buffer is
-> > > disabled. But this should never happen.
-> > > 
-> > > This can happen when a large event is added first, or after a long period
-> > > where an absolute timestamp is prefixed to the event, increasing its size
-> > > by 8 bytes. This passes the check and then goes into the algorithm that
-> > > causes the infinite loop.
-> > > 
-> > > Fix this by creating a BUF_MAX_EVENT_SIZE to be used to determine if the
-> > > passed in event is too big for the buffer.
-> > >   
-> > 
-> > Forgot to add:
-> > 
-> > Cc: stable@vger.kernel.org
-> > Fixes: a4543a2fa9ef3 ("ring-buffer: Get timestamp after event is allocated")  
-> 
-> Looks good to me.
-> 
-> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+  BUG: KASAN: slab-use-after-free in hist_show+0x11e0/0x1278
+  Read of size 8 at addr ffff242541e336b8 by task head/190
 
-Actually, I found out that this can be fixed with:
+  CPU: 4 PID: 190 Comm: head Not tainted 6.7.0-rc5-g26aff849438c #133
+  Hardware name: linux,dummy-virt (DT)
+  Call trace:
+   dump_backtrace+0x98/0xf8
+   show_stack+0x1c/0x30
+   dump_stack_lvl+0x44/0x58
+   print_report+0xf0/0x5a0
+   kasan_report+0x80/0xc0
+   __asan_report_load8_noabort+0x1c/0x28
+   hist_show+0x11e0/0x1278
+   seq_read_iter+0x344/0xd78
+   seq_read+0x128/0x1c0
+   vfs_read+0x198/0x6c8
+   ksys_read+0xf4/0x1e0
+   __arm64_sys_read+0x70/0xa8
+   invoke_syscall+0x70/0x260
+   el0_svc_common.constprop.0+0xb0/0x280
+   do_el0_svc+0x44/0x60
+   el0_svc+0x34/0x68
+   el0t_64_sync_handler+0xb8/0xc0
+   el0t_64_sync+0x168/0x170
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 86a60a0eb279..aaad104a1707 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -3594,7 +3594,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
- 			info->length += RB_LEN_TIME_EXTEND;
- 		} else {
- 			info->delta = info->ts - info->after;
--			if (unlikely(test_time_stamp(info->delta))) {
-+			if (w && unlikely(test_time_stamp(info->delta))) {
- 				info->add_timestamp |= RB_ADD_STAMP_EXTEND;
- 				info->length += RB_LEN_TIME_EXTEND;
- 			}
+  Allocated by task 188:
+   kasan_save_stack+0x28/0x50
+   kasan_set_track+0x28/0x38
+   kasan_save_alloc_info+0x20/0x30
+   __kasan_slab_alloc+0x6c/0x80
+   kmem_cache_alloc+0x15c/0x4a8
+   trace_create_new_event+0x84/0x348
+   __trace_add_new_event+0x18/0x88
+   event_trace_add_tracer+0xc4/0x1a0
+   trace_array_create_dir+0x6c/0x100
+   trace_array_create+0x2e8/0x568
+   instance_mkdir+0x48/0x80
+   tracefs_syscall_mkdir+0x90/0xe8
+   vfs_mkdir+0x3c4/0x610
+   do_mkdirat+0x144/0x200
+   __arm64_sys_mkdirat+0x8c/0xc0
+   invoke_syscall+0x70/0x260
+   el0_svc_common.constprop.0+0xb0/0x280
+   do_el0_svc+0x44/0x60
+   el0_svc+0x34/0x68
+   el0t_64_sync_handler+0xb8/0xc0
+   el0t_64_sync+0x168/0x170
 
-The bug that this patch fixed was that the size that was acceptable did not take
-into account the added time stamp. But the time stamp should *not* be added
-if it's the first event on the sub buffer. And once it goes to the next
-buffer, it should be the first event.
+  Freed by task 191:
+   kasan_save_stack+0x28/0x50
+   kasan_set_track+0x28/0x38
+   kasan_save_free_info+0x34/0x58
+   __kasan_slab_free+0xe4/0x158
+   kmem_cache_free+0x19c/0x508
+   event_file_put+0xa0/0x120
+   remove_event_file_dir+0x180/0x320
+   event_trace_del_tracer+0xb0/0x180
+   __remove_instance+0x224/0x508
+   instance_rmdir+0x44/0x78
+   tracefs_syscall_rmdir+0xbc/0x140
+   vfs_rmdir+0x1cc/0x4c8
+   do_rmdir+0x220/0x2b8
+   __arm64_sys_unlinkat+0xc0/0x100
+   invoke_syscall+0x70/0x260
+   el0_svc_common.constprop.0+0xb0/0x280
+   do_el0_svc+0x44/0x60
+   el0_svc+0x34/0x68
+   el0t_64_sync_handler+0xb8/0xc0
+   el0t_64_sync+0x168/0x170
 
-I ran the same tests with this change, and it works just as well. I believe
-this is the proper fix.
+Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+---
+ kernel/trace/trace_events_hist.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-I'll send a v2.
-
-Thanks!
-
--- Steve
-
-
-> 
-> Thanks,
-> > 
-> > -- Steve
-> > 
-> >   
-> > > Reported-by: Kent Overstreet <kent.overstreet@linux.dev> # (on IRC)
-> > > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> > > ---
-> > >  kernel/trace/ring_buffer.c | 7 +++++--
-> > >  1 file changed, 5 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > > index 8d2a4f00eca9..a38e5a3c6803 100644
-> > > --- a/kernel/trace/ring_buffer.c
-> > > +++ b/kernel/trace/ring_buffer.c
-> > > @@ -378,6 +378,9 @@ static inline bool test_time_stamp(u64 delta)
-> > >  /* Max payload is BUF_PAGE_SIZE - header (8bytes) */
-> > >  #define BUF_MAX_DATA_SIZE (BUF_PAGE_SIZE - (sizeof(u32) * 2))
-> > >  
-> > > +/* Events may have a time stamp attached to them */
-> > > +#define BUF_MAX_EVENT_SIZE (BUF_MAX_DATA_SIZE - RB_LEN_TIME_EXTEND)
-> > > +
-> > >  int ring_buffer_print_page_header(struct trace_seq *s)
-> > >  {
-> > >  	struct buffer_data_page field;
-> > > @@ -3810,7 +3813,7 @@ ring_buffer_lock_reserve(struct trace_buffer *buffer, unsigned long length)
-> > >  	if (unlikely(atomic_read(&cpu_buffer->record_disabled)))
-> > >  		goto out;
-> > >  
-> > > -	if (unlikely(length > BUF_MAX_DATA_SIZE))
-> > > +	if (unlikely(length > BUF_MAX_EVENT_SIZE))
-> > >  		goto out;
-> > >  
-> > >  	if (unlikely(trace_recursive_lock(cpu_buffer)))
-> > > @@ -3960,7 +3963,7 @@ int ring_buffer_write(struct trace_buffer *buffer,
-> > >  	if (atomic_read(&cpu_buffer->record_disabled))
-> > >  		goto out;
-> > >  
-> > > -	if (length > BUF_MAX_DATA_SIZE)
-> > > +	if (length > BUF_MAX_EVENT_SIZE)
-> > >  		goto out;
-> > >  
-> > >  	if (unlikely(trace_recursive_lock(cpu_buffer)))  
-> >   
-> 
-> 
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 1abc07fba1b9..00447ea7dabd 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -5623,10 +5623,12 @@ static int event_hist_open(struct inode *inode, struct file *file)
+ {
+ 	int ret;
+ 
+-	ret = security_locked_down(LOCKDOWN_TRACEFS);
++	ret = tracing_open_file_tr(inode, file);
+ 	if (ret)
+ 		return ret;
+ 
++	/* Clear private_data to avoid warning in single_open */
++	file->private_data = NULL;
+ 	return single_open(file, hist_show, file);
+ }
+ 
+@@ -5634,7 +5636,7 @@ const struct file_operations event_hist_fops = {
+ 	.open = event_hist_open,
+ 	.read = seq_read,
+ 	.llseek = seq_lseek,
+-	.release = single_release,
++	.release = tracing_release_file_tr,
+ };
+ 
+ #ifdef CONFIG_HIST_TRIGGERS_DEBUG
+@@ -5900,10 +5902,12 @@ static int event_hist_debug_open(struct inode *inode, struct file *file)
+ {
+ 	int ret;
+ 
+-	ret = security_locked_down(LOCKDOWN_TRACEFS);
++	ret = tracing_open_file_tr(inode, file);
+ 	if (ret)
+ 		return ret;
+ 
++	/* Clear private_data to avoid warning in single_open */
++	file->private_data = NULL;
+ 	return single_open(file, hist_debug_show, file);
+ }
+ 
+@@ -5911,7 +5915,7 @@ const struct file_operations event_hist_debug_fops = {
+ 	.open = event_hist_debug_open,
+ 	.read = seq_read,
+ 	.llseek = seq_lseek,
+-	.release = single_release,
++	.release = tracing_release_file_tr,
+ };
+ #endif
+ 
+-- 
+2.25.1
 
