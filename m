@@ -1,200 +1,168 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jA6Nr7J6"
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4B29D1;
-	Mon, 11 Dec 2023 18:05:50 -0800 (PST)
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BBNMuXi032321;
-	Tue, 12 Dec 2023 02:05:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=Ot8KKoxIBjGSb3I4fQ0uzOZ3rMDzR3TKxD9TleX3+9A=;
- b=jA6Nr7J6zehZADQRYlcgUNAParhcaZLMCIynCWSG4T1CCxcihjha9ijlOh55MCgJCiHb
- YbmTeSWM7nuRUvzi/PVuH/z+crlzjAITEIJ6jP1R1yPOk8mBrpQTpdDE2uL30sFUbNmQ
- dStZsKVeOTKgII52Uolt5PA0MRPxnmPgh9v2NQV+uowdrwavs33HEC7MMrwKh8k0zSuw
- TPd5UToK+7GiHDFZhsifwqyE86lRogocOZ8d8tw2qboBlgSjOdNLXtPGyrHdYXd1gOEW
- ZUkA4EFrqGmCQcxhpe1SjlVZ38QF50SdTjUlCkNvSX6xr0zYg7KxY0C2o8usxqI+K44Y yg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uxc1tjy2r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Dec 2023 02:05:32 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BC1oHKZ006324;
-	Tue, 12 Dec 2023 02:05:31 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uxc1tjy27-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Dec 2023 02:05:31 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BBN2wVU013869;
-	Tue, 12 Dec 2023 02:05:30 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uw591w85a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Dec 2023 02:05:30 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BC25RGr46989760
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 12 Dec 2023 02:05:27 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 601A520043;
-	Tue, 12 Dec 2023 02:05:27 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0EA7920040;
-	Tue, 12 Dec 2023 02:05:26 +0000 (GMT)
-Received: from [9.171.76.38] (unknown [9.171.76.38])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 12 Dec 2023 02:05:25 +0000 (GMT)
-Message-ID: <3897a38ef97742f7f51fb4c84c5ddeb4e36dae79.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 01/33] ftrace: Unpoison ftrace_regs in
- ftrace_ops_list_func()
-From: Ilya Leoshkevich <iii@linux.ibm.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-        Alexander Potapenko
-	 <glider@google.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Andrew Morton
- <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        David
- Rientjes <rientjes@google.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Joonsoo
- Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
-        Masami
- Hiramatsu <mhiramat@kernel.org>,
-        Pekka Enberg <penberg@kernel.org>, Vasily
- Gorbik <gor@linux.ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christian
- Borntraeger <borntraeger@linux.ibm.com>,
-        Dmitry Vyukov
- <dvyukov@google.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Sven Schnelle
- <svens@linux.ibm.com>
-Date: Tue, 12 Dec 2023 03:05:25 +0100
-In-Reply-To: <20231208093133.62aae274@gandalf.local.home>
-References: <20231121220155.1217090-1-iii@linux.ibm.com>
-	 <20231121220155.1217090-2-iii@linux.ibm.com>
-	 <CAG_fn=WHf0t=-OJL0031D+X7cX_D25G7TG0TqROsT34QcEnqsw@mail.gmail.com>
-	 <20231208093133.62aae274@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="br1Y6eWT"
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2101.outbound.protection.outlook.com [40.107.117.101])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BA72B3;
+	Mon, 11 Dec 2023 19:27:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XBQ8Gjg/i46dNUNb3rEYhis0DWKNXPB41Mp9C9BetYrJRplk/vndXXHf0dQrdA29FRHj7wMAPlwhWqWxkdwhmWADUxZ3uDEJhnqJx50R5+fKOxQPuzm4wH3NBMSretgfoWfsdSisMZ+KJPh/k9psbrLLjjr8h15QGPYBVEQ9aOTFnmLSWqXhlvbKH7igYq8BBZF5iDb9a+rWrn7tybagWL+mWFs4Gbmrl2cGoa2lc4yV6ilkKczb3pl+TrE3N2x62SaAtDIgnqGh3HOEWyu2IK4l7t0Icg4ZJq4xpnEh2yuSFAhlLuIK4i3gHD91LVWYMHRct1o6xVWBHZ5Hkh5U0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TlgI34ih4Dumy8MRMg0Cnfnx8aIt/zvSGFFBqfCuqT0=;
+ b=NG1n+HLJ5y7y0HHh/0mEFchixfUmnDCfQ/E0MH8eDV1uamZrPf8B8Jz/kpvautBMteUIHcXMdTxf1cv9OJghtnT2BsSimXJ5qgpMXWkjyxwhtdX155Yl/NHo5uVJ6MdZ0XG9ghTtvqtNmJr2DiuMBgBWdGU2eEtosZ8daYUpLWkyUQxk9XOEggU13mQ8EuMsmcAVpUH9mdC64FOKnvtq/im0LjopYAmS/6bRZrrXmQacBt98dk4S8GcjxwpAIu3kGtkboE+vDnmOQUpITK8eaT8cc2n1G+FWcCx4ZPhCOkkHxaUWbo9lrR5oZkknRJrtVMMMpJdSfAaSnSp04RA/pA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TlgI34ih4Dumy8MRMg0Cnfnx8aIt/zvSGFFBqfCuqT0=;
+ b=br1Y6eWTio96d9Tux+RBmhKWrRF+fvVQ4oRE8556/hVt/YWLZ0ZROY7qb4p++mTE9rXgigCaPmzGXPRvSdvapNXKCbIbBItIh2/LCi6jCS7fOTAHMBiW/ZRWNl9B4Q2gGiuW3utPHYtUE9Oc/cQ+aG+Iw3gJ5848jdlq0yBfs4yCLtZvQ42Zk7qfjc9ly5BYabypg7M0559uInHQjcCqeTsOvBjwdRG08rMXCqVMCBgWu737NuyZ+lCS+OndTx9aPwtBt8UcTdE1kpxBnvjnqwLnaYV5vgsdUEBaSyiRZGCNprsU9JuBM9yDT1SULDOnrxltU/hR47rPXqcqOb2f2w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from TYZPR06MB4045.apcprd06.prod.outlook.com (2603:1096:400:21::8)
+ by TY0PR06MB6839.apcprd06.prod.outlook.com (2603:1096:405:10::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.32; Tue, 12 Dec
+ 2023 03:26:58 +0000
+Received: from TYZPR06MB4045.apcprd06.prod.outlook.com
+ ([fe80::9925:32d7:c818:3c5]) by TYZPR06MB4045.apcprd06.prod.outlook.com
+ ([fe80::9925:32d7:c818:3c5%7]) with mapi id 15.20.7068.033; Tue, 12 Dec 2023
+ 03:26:58 +0000
+From: Bixuan Cui <cuibixuan@vivo.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	cuibixuan@vivo.com,
+	opensource.kernel@vivo.com
+Subject: [PATCH -next 0/2] Make memory reclamation measurable
+Date: Mon, 11 Dec 2023 19:26:38 -0800
+Message-Id: <20231212032640.6968-1-cuibixuan@vivo.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SGBP274CA0012.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::24)
+ To TYZPR06MB4045.apcprd06.prod.outlook.com (2603:1096:400:21::8)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: LdRjikzPVMkLwO_P5tClkpAJCESuoSPy
-X-Proofpoint-GUID: LtJfjO66RfKFUX7oxZBtF4AB6-D3cx5W
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-11_11,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=884
- lowpriorityscore=0 adultscore=0 priorityscore=1501 mlxscore=0 bulkscore=0
- impostorscore=0 malwarescore=0 clxscore=1015 phishscore=0 spamscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2312120015
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZPR06MB4045:EE_|TY0PR06MB6839:EE_
+X-MS-Office365-Filtering-Correlation-Id: ed4b0beb-2099-478a-da55-08dbfac23250
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	81mw9v2s2ABSb87KW2XXMEC7cM61ahNS3wL0H4iYuXIhpNNyh9lmawhyMoz4IrEj8sWqTMFsYI+MxX/GEN6sY1yCjvLu2e+ASG6AQ9ORgRN5porPhciuR38NXhDJ2RV+vA5EPIplaWiiiMygW3g896WefpH40BizT4PcGTBwmAXTehsZ69bcCt6Mm0K2l+Z0Z75b3CwYm1hBHsxvTNwkNvcYdvWoKQYgnX6aw8Mcbg4aj/536hAA/OBMSp2qgvee8qLnXSVBaO8aNh6HDi/+TzPGQRF5rvMAiXBinqvuurOU9Ma7WBgy9ryQBx8El/bQ+yWD95fdQ2fpLTl7yXo86A5XFJ6EAxG8XfgQxJ72JiTfB65JI7/fXrwNkmCOLqptAgM0SAZg9CmNkEjCZqkp0/01e3UnuxHZIc+SrOidJ0MXIkr5hw3VJEq61QKBiLmzvfUvcTOe+do/vnUzsN55tc8tfFrdUVFMbtWjkkdZqoaGypY56+jgRea8ja6OWKajFsqqN3kVZuMgMKHAxEitjyEVjK1lqmFBFIVhzIGbVhE19a3nRLE2zcxBfisEHGyw5kfkXHuB42EW1/981NryKqfui+oso83bac/mWhetkqENZIMtTEUrXZ8nLJ8Y1md6
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB4045.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(136003)(396003)(39860400002)(366004)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(2616005)(26005)(1076003)(107886003)(316002)(38350700005)(86362001)(36756003)(38100700002)(83380400001)(5660300002)(52116002)(6512007)(6506007)(6666004)(66556008)(66946007)(8936002)(8676002)(6486002)(66476007)(4326008)(2906002)(41300700001)(478600001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?xBs3z3510o0TdFDuiwCt+FSgRHD2RzHltf4Jb+3iKB00ymStJQGTMOHmJS78?=
+ =?us-ascii?Q?dnYYfAqCJwIGwEadr1PXPJn+tm04sp3RVN2M+VWfVtETHHDDIEmpGzgakYMF?=
+ =?us-ascii?Q?Hyr/+wo2kAuB5to/gn2S+MyuPZ83KMJ2DNv9fksrxmKHoKB5KOAITYRjmjv/?=
+ =?us-ascii?Q?gJgR0Ozv/qU1275z98jxUfVUkOLrRs6SxNoRCt4MW655hoJKFQjV6qmfpEJP?=
+ =?us-ascii?Q?z7c+6DOu56Vz05ek+kEz4HfwMoEjTGBc6PsRT3oyvyLMml4RhldJXXLut2PL?=
+ =?us-ascii?Q?LAUDn4lRJIwsyWYZvSoys9VLHK2l2jWOPgAbbH47JFvScSDpb4JitM9b8F8b?=
+ =?us-ascii?Q?CX3w8+Mu2oyGVaA5P3QCAULnbQcrUrCLCgYjpGfArT30SPzIKTHZoUqJQ04+?=
+ =?us-ascii?Q?1LnoWay3hH7uQUUew6eQ2jefEucKdYAXDk5yqnrN+2ggmU8dPyIr5HP487E8?=
+ =?us-ascii?Q?IBy1wwi2RUen7Bp3SDUNdxluhNbhTYlv58MXfYGnPIvGnJJHMrH/Q85XnEdc?=
+ =?us-ascii?Q?PX8ONWnUQdn9V6yd2eo8Nd9jexQdZl+EQaZDbCEciMgyGmmaNyuwxYHv9CC2?=
+ =?us-ascii?Q?9PoL77SB/CrTT0PUpTrg3SnfV70UNvIzFWqTjTzFtB+y3Ch7p75K0W4zPHd4?=
+ =?us-ascii?Q?flHb1dNu4iyTvQsneMswAJTtGJUUKKMrxp3BKiFzp5tj7f7hcEZg5mi1H2AQ?=
+ =?us-ascii?Q?EuqwBqt+ymxbkesPRUsPjuGTfBCclEg7Zck6uxJi4wPG4EoI084y4I8vFPqO?=
+ =?us-ascii?Q?C04sgLHjvI9hOvKNx1cR3S4MwaWqw6pXWNPa8pD/qfD2xsesWOi1qkuoCWqz?=
+ =?us-ascii?Q?k+PdTAkqClwyBvOhVThQ5FvqknTsAa1vbjAZLDK9TCm2xuBWKBF4IHpfSrqA?=
+ =?us-ascii?Q?EDlMuxFzoEYljgBhzOCaq3DCwQA/euTuIPRvLAivg6k+gRAMDgvbU9CeuPd+?=
+ =?us-ascii?Q?KmGINgMFqEHOKlFbpU/lkujIP7SSf3fdj640R41Drmd8qs7jPkxm2zbnwPn9?=
+ =?us-ascii?Q?0IZiS5t4pH/KmswhJVJN0mJe8kuGTTyBqKXi2gKKTTfBa5ml1MkDsKN2DvQ1?=
+ =?us-ascii?Q?P3qhkZNsvFrK6H5jSmYB8pHvZDlEWTVG0RC3FPux/vO9yY3p8VJo0asfDkV0?=
+ =?us-ascii?Q?/G881JYOk9m9bTXnWSgxPASx0vaYaXSLii7kkEVN88dRqSwxoINunbJvyBr1?=
+ =?us-ascii?Q?4p3cAxZBe9XwMzljTCZRjti5EjwV6S3zkb3f6MWye6+5wl6suaf90MEQwHRn?=
+ =?us-ascii?Q?ftLy1Kl07hYVpqNV8xBLAvOjb9+yyqbi6T0VuyWgrBLrbbSEJepjJBCxEkmb?=
+ =?us-ascii?Q?ahx3qiJx6dMuDCq/27WXcXk5PSQ2Wa1APVELVcfXWmlT9Nr4o80jEFsJMA4z?=
+ =?us-ascii?Q?yRmMEywhgIv1G7krD79JO2xFNfQPjjTm57DqZm+mIuVvE5Qzhn+97ujNPAZE?=
+ =?us-ascii?Q?6QVVjfPr6gjeUyQX5CM9coQ2I/suHvbQmdNrqBCMNO8lEBWPQVh7Y8YVBMlQ?=
+ =?us-ascii?Q?5+5y9sSOKqZMSEYaKDPh0l4bA/60Aa7R4YqjTUrKUP+GeI0sRnI2EqKjI+is?=
+ =?us-ascii?Q?y1OMwJmYOg2fLbyP1Mc/TU5bbwEAlTmUAlbC9ZTO?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed4b0beb-2099-478a-da55-08dbfac23250
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB4045.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2023 03:26:57.9248
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: z+waUGiq4mEdIY61ecD0Jn/hIU5jTJ1Xn4y8Cty90PKBT0hzMFbT9ZVrElvqCJMUBNC8BmlPhMpuox8p5pGDxg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY0PR06MB6839
 
-On Fri, 2023-12-08 at 09:31 -0500, Steven Rostedt wrote:
-> On Fri, 8 Dec 2023 15:16:10 +0100
-> Alexander Potapenko <glider@google.com> wrote:
->=20
-> > On Tue, Nov 21, 2023 at 11:02=E2=80=AFPM Ilya Leoshkevich
-> > <iii@linux.ibm.com> wrote:
-> > >=20
-> > > Architectures use assembly code to initialize ftrace_regs and
-> > > call
-> > > ftrace_ops_list_func(). Therefore, from the KMSAN's point of
-> > > view,
-> > > ftrace_regs is poisoned on ftrace_ops_list_func entry(). This
-> > > causes
-> > > KMSAN warnings when running the ftrace testsuite.=C2=A0=20
-> >=20
-> > I couldn't reproduce these warnings on x86, hope you really need
-> > this
-> > change on s390 :)
+From: cuibixuan <cuibixuan@vivo.com>
 
-I just double-checked, and it's still needed. Without it, I get:
+When the system memory is low, kswapd reclaims the memory. The key steps
+of memory reclamation include
+1.shrink_lruvec
+  * shrink_active_list, moves folios from the active LRU to the inactive LRU
+  * shrink_inactive_list, shrink lru from inactive LRU list
+2.shrink_slab
+  * shrinker->count_objects(), calculates the freeable memory
+  * shrinker->scan_objects(), reclaims the slab memory
 
-[    4.140184] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D =20
-[    4.140416] BUG: KMSAN: uninit-value in
-arch_ftrace_ops_list_func+0x8e6/0x14b0           =20
-[    4.140484]  arch_ftrace_ops_list_func+0x8e6/0x14b0               =20
-[    4.140546]  ftrace_graph_caller+0x0/0x34                         =20
-[    4.140614]  read_tod_clock+0x6/0x1e0                             =20
-[    4.140671]  ktime_get+0x3a4/0x670                                =20
-[    4.140727]  clockevents_program_event+0x1c8/0xb10                =20
-[    4.140785]  tick_program_event+0x11e/0x230                       =20
-[    4.140842]  hrtimer_interrupt+0x118a/0x1d10                      =20
-[    4.140898]  do_IRQ+0x108/0x150                                   =20
-[    4.140959]  do_irq_async+0xfc/0x270                              =20
-[    4.141021]  do_ext_irq+0x98/0x120                                =20
-[    4.141080]  ext_int_handler+0xc4/0xf0                            =20
-[    4.141141]  _raw_spin_unlock_irqrestore+0xfa/0x190               =20
-[    4.141207]  _raw_spin_unlock_irqrestore+0xf6/0x190               =20
-[    4.141271]  s390_kernel_write+0x218/0x250                        =20
-[    4.141328]  ftrace_make_call+0x362/0x4a0                         =20
-[    4.141386]  __ftrace_replace_code+0xb44/0xbd0                    =20
-[    4.141442]  ftrace_replace_code+0x1d8/0x440                      =20
-[    4.141497]  ftrace_modify_all_code+0xfe/0x510                    =20
-[    4.141555]  ftrace_startup+0x4f0/0xcf0                           =20
-[    4.141609]  register_ftrace_function+0x1316/0x1440               =20
-[    4.141670]  function_trace_init+0x2c0/0x3d0                      =20
-[    4.141732]  tracer_init+0x282/0x370                              =20
-[    4.141789]  trace_selftest_startup_function+0x104/0x19d0         =20
-[    4.141857]  run_tracer_selftest+0x7c8/0xab0                      =20
-[    4.141918]  init_trace_selftests+0x200/0x820
-[    4.141977]  do_one_initcall+0x35e/0x1090
-[    4.142032]  do_initcall_level+0x276/0x660
-[    4.142095]  do_initcalls+0x16a/0x2d0
-[    4.142153]  kernel_init_freeable+0x632/0x960
-[    4.142216]  kernel_init+0x36/0x1810
-[    4.142277]  __ret_from_fork+0xc0/0x180
-[    4.142333]  ret_from_fork+0xa/0x30
-[    4.142431] Local variable agg.tmp.i.i created at:                =20
-02:06:55 [30/1836]
-[    4.142476]  timekeeping_advance+0x79a/0x2870
-[    4.142394]=20
-[    4.142431] Local variable agg.tmp.i.i created at:
-[    4.142476]  timekeeping_advance+0x79a/0x2870
-[    4.142534]=20
-[    4.142573] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W     =20
-6.7.0-rc4-g7657d31dc545 #4
-[    4.142638] Hardware name: IBM 3931 A01 704 (KVM/Linux)
-[    4.142686] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
-[    4.142734] Kernel panic - not syncing: kmsan.panic set ...
-[    4.142734] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
+The existing tracers in the vmscan are as follows:
 
-> On x86, ftrace_regs sits on the stack. And IIUC, s390 doesn't have
-> the same
-> concept of a "stack" as other architectures. Perhaps that's the
-> reason s390
-> needs this?
+--do_try_to_free_pages
+--shrink_zones
+--trace_mm_vmscan_node_reclaim_begin (tracer)
+--shrink_node
+--shrink_node_memcgs
+  --trace_mm_vmscan_memcg_shrink_begin (tracer)
+  --shrink_lruvec
+    --shrink_list
+      --shrink_active_list
+	  --trace_mm_vmscan_lru_shrink_active (tracer)
+      --shrink_inactive_list
+	  --trace_mm_vmscan_lru_shrink_inactive (tracer)
+    --shrink_active_list
+  --shrink_slab
+    --do_shrink_slab
+    --shrinker->count_objects()
+    --trace_mm_shrink_slab_start (tracer)
+    --shrinker->scan_objects()
+    --trace_mm_shrink_slab_end (tracer)
+  --trace_mm_vmscan_memcg_shrink_end (tracer)
+--trace_mm_vmscan_node_reclaim_end (tracer)
 
-It's not that different on s390x. There is indeed no architecture-
-mandated stack pointer and no push/pop, but other than that it's fairly
-normal. Linux uses %r15 as a stack pointer.
+If we get the duration and quantity of shrink lru and slab,
+then we can measure the memory recycling, as follows
 
-On s390x ftrace_regs is allocated on stack by mcount.S. From what I can
-see, Intel's ftrace_64.S does the same thing, so I don't immediately
-see why uninit-value is not detected on Intel, even though I think it
-should.
+Measuring memory reclamation with bpf:
+  LRU FILE:
+	CPU COMM 	ShrinkActive(us) ShrinkInactive(us)  Reclaim(page)
+	7   kswapd0	 	26		51		32
+	7   kswapd0		52		47		13
+  SLAB:
+	CPU COMM 		OBJ_NAME		Count_Dur(us) Freeable(page) Scan_Dur(us) Reclaim(page)
+	 1  kswapd0		super_cache_scan.cfi_jt     2		    341		   3225		128
+	 7  kswapd0		super_cache_scan.cfi_jt     0		    2247	   8524		1024
+	 7  kswapd0	        super_cache_scan.cfi_jt     2367	    0		   0		0
 
-> -- Steve
+For this, add the new tracer to shrink_active_list/shrink_inactive_list
+and shrinker->count_objects().
+
+cuibixuan (2):
+  mm: shrinker: add new event to trace shrink count
+  mm: vmscan: add new event to trace shrink lru
+
+ include/trace/events/vmscan.h | 87 ++++++++++++++++++++++++++++++++++-
+ mm/shrinker.c                 |  4 ++
+ mm/vmscan.c                   |  8 +++-
+ 3 files changed, 95 insertions(+), 4 deletions(-)
+
+-- 
+2.39.0
 
