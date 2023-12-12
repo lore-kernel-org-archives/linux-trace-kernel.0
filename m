@@ -1,126 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6232573177
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 12 Dec 2023 14:20:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="igwB604A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21DE8C433C8;
-	Tue, 12 Dec 2023 14:20:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702390812;
-	bh=32D5OibO0S828mD8/iI+qNHoBvt9+ZXoMSHftKjKbcg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=igwB604Aqp997pDV3+MxQMAZQ8IXZXq1CqOBA77lXN+g4O9RD5iF+PYljarvD0ncU
-	 jdk7NfWgqwlRa3FRPA6Rs1evDijZ+/w91IrGXq42omc5sizXOFzbOeETGSbXBg/KP+
-	 4eIwFRbLWO6CtzCzLCX7TZktFG3YR0w19MW7Ii1kCdmMhy2WcFp9OJ+1/0NfMb9Cpr
-	 TNznoeq9hT94hdn8f1UPN31RwvbF5QhcqcAX8h9bqKvuiQBLRXFJhb92bJ/BiifWSX
-	 UcED2EHvD6ss0IYeauDQwL3g8PWNHtJhTbt4BexGrPd8OHEBP6okSRhLf/Jakrg9Pp
-	 coC3ECf/UFCLQ==
-Date: Tue, 12 Dec 2023 23:20:08 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH v2] ring-buffer: Never use absolute timestamp for first
- event
-Message-Id: <20231212232008.5b79e5d7fcb8967604ae5c3a@kernel.org>
-In-Reply-To: <20231212071837.5fdd6c13@gandalf.local.home>
-References: <20231212071837.5fdd6c13@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Aepfzeil"
+Received: from smtpout.efficios.com (unknown [IPv6:2607:5300:203:b2ee::31e5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA4BD99;
+	Tue, 12 Dec 2023 06:23:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1702391035;
+	bh=USEuixjU2fIwlYaRovUecQIYEQq4YyOBnS594yyopqg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Aepfzeilvp/gNBYsgSBllAS2dR4H7lS0IsyIBuPRbqfGK0o8o6GXQIlxVuecPRHAb
+	 GcWH0w7cWxDQYb7UYhLodUFssnGMVTDF1i3TZEfRd7CInFC71BROE0Jy+JzU1AY7Vq
+	 OM1cIn3tztCpi6NE+veTJj8HpeWmN8kL5vdF/Pp7PYaGBWVoOBJKmoWbohAiGlx+Be
+	 ErUZPOQr9erPjyafiIv/DYC4phNjrfAUTKYyVeGsYzHRjtPMv0Edj+ZzheqL7lrm92
+	 YwYPgw82jVimjyQusDBGSFO4E7zRuFh794i8xsxJDRdfRAJW1pB1v+dzjNp3oNFjeY
+	 JRosiQg5/UBaA==
+Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4SqLT70XlKzGGr;
+	Tue, 12 Dec 2023 09:23:55 -0500 (EST)
+Message-ID: <148974c2-df17-4c71-a59a-6e056e10910e@efficios.com>
+Date: Tue, 12 Dec 2023 09:23:54 -0500
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tracing: Add size check when printing trace_marker output
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>
+References: <20231212084444.4619b8ce@gandalf.local.home>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+In-Reply-To: <20231212084444.4619b8ce@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Tue, 12 Dec 2023 07:18:37 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
+On 2023-12-12 08:44, Steven Rostedt wrote:
 > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> On 32bit machines, the 64 bit timestamps are broken up into 32 bit words
-> to keep from using local64_cmpxchg(), as that is very expensive on 32 bit
-> architectures.
+> If for some reason the trace_marker write does not have a nul byte for the
+> string, it will overflow the print:
+
+Does this result in leaking kernel memory to userspace ? If so, it
+should state "Fixes..." and CC stable.
+
+Thanks,
+
+Mathieu
+
 > 
-> On 32 bit architectures, reading these timestamps can happen in a middle
-> of an update. In this case, the read returns "false", telling the caller
-> that the timestamp is in the middle of an update, and it needs to assume
-> it is corrupted. The code then accommodates this.
+>    trace_seq_printf(s, ": %s", field->buf);
 > 
-> When first reserving space on the ring buffer, a "before_stamp" and
-> "write_stamp" are read. If they do not match, or if either is in the
-> process of being updated (false was returned from the read), an absolute
-> timestamp is added and the delta is not used, as that requires reading
-> theses timestamps without being corrupted.
+> The field->buf could be missing the nul byte. To prevent overflow, add the
+> max size that the buf can be by using the event size and the field
+> location.
 > 
-> The one case that this does not matter is if the event is the first event
-> on the sub-buffer, in which case, the event uses the sub-buffer's
-> timestamp and doesn't need the other stamps for calculating them.
+>    int max = iter->ent_size - offsetof(struct print_entry, buf);
 > 
-> After some work to consolidate the code, if the before or write stamps are
-> in the process of updating, an absolute timestamp will be added regardless
-> if the event is the first event on the sub-buffer. This is wrong as it
-> should not care about the success of these reads if it is the first event
-> on the sub-buffer.
+>    trace_seq_printf(s, ": %*s", max, field->buf);
 > 
-> Fix up the parenthesis so that even if the timestamps are corrupted, if
-> the event is the first event on the sub-buffer (w == 0) it still does not
-> force an absolute timestamp.
-> 
-> It's actually likely that w is not zero, but move it out of the unlikeyl()
-> and test it first. It should be in hot cache anyway, and there's no reason
-> to do the rest of the test for the first event on the sub-buffer. And this
-> prevents having to test all the 'or' statements in that case.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 58fbc3c63275c ("ring-buffer: Consolidate add_timestamp to remove some branches")
 > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
-> Changes since v2: https://lore.kernel.org/linux-trace-kernel/20231211115949.4692e429@gandalf.local.home
+>   kernel/trace/trace_output.c | 6 ++++--
+>   1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> - Move the test to 'w' out of the unlikely and do it first.
->   It's already in hot cache, and the rest of test shouldn't be done
->   if 'w' is zero.
-> 
->  kernel/trace/ring_buffer.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index b416bdf6c44a..095b86081ea8 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -3581,7 +3581,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
->  		 * absolute timestamp.
->  		 * Don't bother if this is the start of a new page (w == 0).
->  		 */
-> -		if (unlikely(!a_ok || !b_ok || (info->before != info->after && w))) {
-> +		if (w && unlikely(!a_ok || !b_ok || info->before != info->after)) {
->  			info->add_timestamp |= RB_ADD_STAMP_FORCE | RB_ADD_STAMP_EXTEND;
->  			info->length += RB_LEN_TIME_EXTEND;
->  		} else {
-
-After this else,
-
-                } else {
-                        info->delta = info->ts - info->after;
-
-The code is using info_after, but it is not sure 'a_ok'. Does this mean if
-'w == 0 && !a_ok' this doesn't work correctly?
-What will be the expected behavior when w == 0 here?
-
-Thank you,
-
-
-> -- 
-> 2.42.0
-> 
-
+> diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+> index d8b302d01083..e11fb8996286 100644
+> --- a/kernel/trace/trace_output.c
+> +++ b/kernel/trace/trace_output.c
+> @@ -1587,11 +1587,12 @@ static enum print_line_t trace_print_print(struct trace_iterator *iter,
+>   {
+>   	struct print_entry *field;
+>   	struct trace_seq *s = &iter->seq;
+> +	int max = iter->ent_size - offsetof(struct print_entry, buf);
+>   
+>   	trace_assign_type(field, iter->ent);
+>   
+>   	seq_print_ip_sym(s, field->ip, flags);
+> -	trace_seq_printf(s, ": %s", field->buf);
+> +	trace_seq_printf(s, ": %*s", max, field->buf);
+>   
+>   	return trace_handle_return(s);
+>   }
+> @@ -1600,10 +1601,11 @@ static enum print_line_t trace_print_raw(struct trace_iterator *iter, int flags,
+>   					 struct trace_event *event)
+>   {
+>   	struct print_entry *field;
+> +	int max = iter->ent_size - offsetof(struct print_entry, buf);
+>   
+>   	trace_assign_type(field, iter->ent);
+>   
+> -	trace_seq_printf(&iter->seq, "# %lx %s", field->ip, field->buf);
+> +	trace_seq_printf(&iter->seq, "# %lx %*s", field->ip, max, field->buf);
+>   
+>   	return trace_handle_return(&iter->seq);
+>   }
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
+
