@@ -1,744 +1,483 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E35D2E1
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 12 Dec 2023 04:38:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17832C433C8;
-	Tue, 12 Dec 2023 04:38:15 +0000 (UTC)
-Date: Mon, 11 Dec 2023 23:38:56 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] ring-buffer: Fix and comment ring buffer rb_time
- functions on 32-bit
-Message-ID: <20231211233856.7ee6eba1@gandalf.local.home>
-In-Reply-To: <5529ad68-ffd2-41fe-9dff-2568e71b940b@efficios.com>
-References: <20231211201324.652870-1-mathieu.desnoyers@efficios.com>
-	<20231211175904.29e01e8b@gandalf.local.home>
-	<5529ad68-ffd2-41fe-9dff-2568e71b940b@efficios.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YJOMNVDO"
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45E4EA1;
+	Mon, 11 Dec 2023 23:27:24 -0800 (PST)
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BC6l4vm010724;
+	Tue, 12 Dec 2023 07:27:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=XU9zbZUcaCV50YCOtsO/5zfvVKw4GV2S5Ux9FdjDCKo=; b=YJ
+	OMNVDOzEA9P30e5teFerRldJRt+ufsTVjAW+ppBgCWDJ26sUm480uhZ88NfKs1ex
+	mXJsLMr0eZDYUjME3fjTEgJ8pdr6xJplHSs2TAYAAJxuRRkHezI2Qm3G6lmMB3Ji
+	0vzOGs8K7L01InoFTSD1KUQkvteR1S+80bx4qUOyWI0dfLk47AcWM0Ox/DsMU4tK
+	pvixq2oJ93AfKqpE/ljFJfDzCFNPICW5zwx5ogG1oV1AZBsR3eGFeRMO8BxF97t3
+	Uqk+ta5AQgUp2zSItkNYUb28hNqpjkAkKNBMWXuXwa8aZIBSPNGkYFtsIWCjL8B1
+	qVo82BZOsD4lRnI+x/AQ==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3uxctarsbc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Dec 2023 07:27:04 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3BC7R3cF013349
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Dec 2023 07:27:03 GMT
+Received: from [10.217.219.216] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 11 Dec
+ 2023 23:27:00 -0800
+Message-ID: <2fff7374-2865-7a95-d699-619f37ed98d4@quicinc.com>
+Date: Tue, 12 Dec 2023 12:56:57 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v8] bus: mhi: host: Add tracing support
+Content-Language: en-US
+To: Manivannan Sadhasivam <mani@kernel.org>,
+        Steven Rostedt
+	<rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <mhi@lists.linux.dev>,
+        <linux-arm-msm@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <quic_vbadigan@quicinc.com>, <quic_ramkri@quicinc.com>,
+        <quic_nitegupt@quicinc.com>, <quic_skananth@quicinc.com>,
+        <quic_parass@quicinc.com>
+References: <20231207-ftrace_support-v8-1-7f62d4558555@quicinc.com>
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <20231207-ftrace_support-v8-1-7f62d4558555@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-
-On Mon, 11 Dec 2023 22:51:04 -0500
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-
-> On 2023-12-11 17:59, Steven Rostedt wrote:
-> > On Mon, 11 Dec 2023 15:13:24 -0500
-> > Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-> >   
-> >> Going through a review of the ring buffer rb_time functions for 32-bit
-> >> architectures, I updated the comments to match the code, and identified
-> >> the following issues:  
-> > 
-> > Thanks Mathieu!
-> >   
-> >>
-> >> - rb_time_cmpxchg() needs to update the msb last, so it matches
-> >>    the validation of top and msb by __rb_time_read(). This is fixed by
-> >>    this patch.  
-> > 
-> > Hmm, does it? This is not parallel programming, it's only protecting
-> > against interrupts.  
-> 
-> Understood, this is indeed the model I had in mind during my review
-> (nested interruption only from local cpu) because preemption is disabled
-> around use of the ring buffer.
-> 
-> For this first issue, here is the race:
-> 
-> rb_time_cmpxchg()
-> [...]
->          if (!rb_time_read_cmpxchg(&t->msb, msb, msb2))
->                  return false;
->          if (!rb_time_read_cmpxchg(&t->top, top, top2))
->                  return false;
-> <interrupted before updating bottom>
-> __rb_time_read()
-> [...]
->          do {
->                  c = local_read(&t->cnt);
->                  top = local_read(&t->top);
->                  bottom = local_read(&t->bottom);
->                  msb = local_read(&t->msb);
->          } while (c != local_read(&t->cnt));
-> 
->          *cnt = rb_time_cnt(top);
-> 
->          /* If top and msb counts don't match, this interrupted a write */
->          if (*cnt != rb_time_cnt(msb))
->                  return false;
->            ^ this check fails to catch that "bottom" is still not updated.
-> 
-> So the old "bottom" value is returned, which is wrong.
-
-Ah, OK that makes more sense. Yeah, if I had the three words from the
-beginning, I would have tested to make sure they all match an not just the
-two :-p
-
-As this would fix a commit that tried to fix this before!
-
-  f458a1453424e ("ring-buffer: Test last update in 32bit version of __rb_time_read()")
-
-FYI, that would be the "Fixes" for this patch.
-
-> 
-> > 
-> > BTW, it's best not to have a fix like this with a comment change this big,
-> > as the comment change is highly likely to cause conflicts in any backport.  
-> 
-> I wanted to start the discussion without having a N-patches series, but I agree
-> that this first fix should be split into a separate patch.
-> 
-> > 
-> > Although, for consistency, I wonder if everything else should be changed to go:
-> > 
-> >    bottom, top, msb
-> > 
-> > as it would match the order of the bits, as msb has the highest order, top
-> > the next, and bottom the least. Doing it as:
-> > 
-> >    top, bottom, msb
-> > 
-> > seems out of order. I did that because msb was an after thought :-/  
-> 
-> Agreed on the order change, but I suspect this would belong to another
-> patch (not the fix).
-
-Agreed.
-
-> 
-> >   
-> >>
-> >> - A cmpxchg interrupted by 4 writes or cmpxchg overflows the counter
-> >>    and produces corrupted time stamps. This is _not_ fixed by this patch.  
-> > 
-> > Except that it's not 4 bits that is compared, but 32 bits.
-> > 
-> > struct rb_time_struct {
-> > 	local_t		cnt;
-> > 	local_t		top;
-> > 	local_t		bottom;
-> > 	local_t		msb;
-> > };
-> > 
-> > The full local_t (32 bits) is used for synchronization. But the other
-> > elements do get extra bits and there still might be some issues, but not as
-> > severe as you stated here.  
-> 
-> Let's bring up the race scenario I spotted:
-> 
-> rb_time_cmpxchg()
-> [...]
->          /* The cmpxchg always fails if it interrupted an update */
->           if (!__rb_time_read(t, &val, &cnt2))
->                   return false;
-> 
->           if (val != expect)
->                   return false;
-> <interrupted by 4x rb_time_set() or rb_time_cmpxchg()>
-> <iret>
->           cnt = local_read(&t->cnt);
->           if ((cnt & 3) != cnt2)
->                   return false;
->           ^ here (cnt & 3) == cnt2, but @val contains outdated data. This
->             means the piecewise rb_time_read_cmpxchg() that follow will
->             derive expected values from the outdated @val.
-
-Ah. Of course this would be fixed if we did the local_read(&t->cnt)
-*before* everything else.
-
-> 
->           cnt2 = cnt + 1;
-> 
->           rb_time_split(val, &top, &bottom, &msb);
->           top = rb_time_val_cnt(top, cnt);
->           bottom = rb_time_val_cnt(bottom, cnt);
->          ^ top, bottom, and msb contain outdated data, which do not
->            match cnt due to 2-bit overflow.
-> 
->           rb_time_split(set, &top2, &bottom2, &msb2);
->           top2 = rb_time_val_cnt(top2, cnt2);
->           bottom2 = rb_time_val_cnt(bottom2, cnt2);
-> 
->          if (!rb_time_read_cmpxchg(&t->cnt, cnt, cnt2))
->                  return false;
->          ^ This @cnt cmpxchg succeeds because it uses the re-read cnt
->            is used as expected value.
-
-Sure. And I believe you did find another bug. If we read the cnt first,
-before reading val, then it would not be outdated.
-
->          if (!rb_time_read_cmpxchg(&t->msb, msb, msb2))
->                  return false;
->          if (!rb_time_read_cmpxchg(&t->top, top, top2))
->                  return false;
->          if (!rb_time_read_cmpxchg(&t->bottom, bottom, bottom2))
->                  return false;
->          ^ these cmpxchg have just used the outdated @val as expected
->            values, even though the content of the rb_time was modified
->            by 4 consecutive rb_time_set() or rb_time_cmpxchg(). This
->            means those cmpxchg can fail not only due to being interrupted
->            by another write or cmpxchg, but also simply due to expected
->            value mismatch in any of the fields, which will then cause
-
-Yes, it is expected that this will fail for being interrupt any time during
-this operation. So it can only fail for being interrupted. How else would
-the value be mismatched if this function had not been interrupted?
-
->            following __rb_time_read() to fail until a rb_time_set() is done.
-
-How so?  If this had failed, it's because it was interrupted by something
-that did the write. The point here is to not modify the value if any of
-these failed. If any of the cmpxchg() failed, it means whatever interrupted
-it did a rb_time_set(), and that means the value will be valid if a
-__rb_time_read() was done on it again.
-
-It doesn't need a rb_time_set() in this context to make it valid again.
-That's because an interrupting context had already done that.
-
-> 
->          return true;
-> 
-> So this overflow scenario on top of cmpxchg does not cause corrupted
-> time stamps, but does cause subsequent __rb_time_read() and rb_time_cmpxchg()
-> to fail until an eventual rb_time_set().
-
-I still don't see that.
-
-> 
-> > 
-> > Although, I should also change this to be:
-> > 
-> > struct rb_time_struct {
-> > 	local_t		cnt;
-> > 	local_t		msb;
-> > 	local_t		top;
-> > 	local_t		bottom;
-> > };
-> > 
-> > To match the order of bits as mentioned above.
-> > 
-> > static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
-> > {
-> > 	unsigned long cnt, top, bottom, msb;
-> > 	unsigned long cnt2, top2, bottom2, msb2;
-> > 	u64 val;
-> > 
-> > 	/* The cmpxchg always fails if it interrupted an update */
-> > 	 if (!__rb_time_read(t, &val, &cnt2))
-> > 
-> > ## So the value has to succeed to continue. This is why I don't think order
-> > ## matters between them.
-> > 
-> > 		 return false;
-> > 
-> > 	 if (val != expect)
-> > 
-> > ## Must also be what was expected
-> > 
-> > 		 return false;
-> > 
-> > 	 cnt = local_read(&t->cnt);
-> > 
-> > ## We read the full 32 bits here.
-> > 
-> > 	 if ((cnt & 3) != cnt2)
-> > 
-> > ## This is mostly a paranoid check. For this to fail, the interrupting
-> > ## context had to write a full timestamp that this context expected,
-> > ## otherwise the (val != expect) would be true.  
-> 
-> As I state in my scenario above, the interrupting context can happen
-> after the (val != expect) check.
-
-Which I agree should be fixed. That is, we need to have:
-
-static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
-{
-	unsigned long cnt, top, bottom, msb;
-	unsigned long cnt2, top2, bottom2, msb2;
-	u64 val;
-
-+	/* Interrupting writes should make this function fail */
-+	 cnt = local_read(&t->cnt);
-+
-	/* The cmpxchg always fails if it interrupted an update */
-	 if (!__rb_time_read(t, &val, &cnt2))
-		 return false;
-
-	 if (val != expect)
-		 return false;
-
--	 cnt = local_read(&t->cnt);
-	 if ((cnt & 3) != cnt2)
-		 return false;
-
-	[..]
-
-> 
-> > 
-> > 		 return false;
-> > 
-> > 	 cnt2 = cnt + 1;
-> > 
-> > ## We take the 32 bit number and add 1 to it
-> > 
-> > 	 rb_time_split(val, &top, &bottom, &msb);
-> > 	 top = rb_time_val_cnt(top, cnt);
-> > 	 bottom = rb_time_val_cnt(bottom, cnt);
-> > 
-> > 	 rb_time_split(set, &top2, &bottom2, &msb2);
-> > 	 top2 = rb_time_val_cnt(top2, cnt2);
-> > 	 bottom2 = rb_time_val_cnt(bottom2, cnt2);
-> > 
-> > ## Now the above takes the value to what was expected and sprinkles the cnt
-> > ## on it as "salt"
-> > 
-> > 	if (!rb_time_read_cmpxchg(&t->cnt, cnt, cnt2))
-> > 		return false;
-> > 
-> > ## if something came in here, we fail immediately with no corruption. This
-> > ## cmpxchg() is not affected by 4 writes
-> > 
-> > 	if (!rb_time_read_cmpxchg(&t->msb, msb, msb2))
-> > 		return false;
-> > 
-> > ## if we fail here, it means that something came in and wrote all values
-> > ## making everything correct again.
-> > 
-> > 	if (!rb_time_read_cmpxchg(&t->top, top, top2))
-> > 		return false;
-> > 	if (!rb_time_read_cmpxchg(&t->bottom, bottom, bottom2))
-> > 		return false;
-> > 
-> > ## The same is true for all the above.  
-> 
-> Not if the interrupting context happens right after the (val != expect) check,
-> as stated in my scenario.
-
-And is fixed with what I mentioned.
-
-> 
-> > 
-> > 	return true;
-> > }
-> > 
-> > 
-> > The 2 bits in the top, bottom and msb, are basically salt to help out the
-> > cmpxchg, but it does suffer from the 4 writes you mention, but only if the
-> > writes wrote the same thing 4 times and then cmpxchg() wants to update it
-> > to something different.  
-> I suspect only the content of the last of those 4 writes actually matters.
-
-Actually, it's the content of the last write that matters. It just needs 4
-times to make the counting bits match.
-
-> 
-> >. The point is that a cmpxchg() should not corrupt a
-> > write that was done by an interrupting context. The logic can fail if the
-> > cmpxchg wants to update one of the fields to a new number, but the
-> > interrupting write kept it the same 4 times. That is, it did not update the
-> > number.  
-> 
-> I'm failing to see how letting a cmpxchg succeed in a case where a store
-> just happened to write all of its expected values would be a bug ?
-
-Because it could be:
-
-	top = 0x1
-	bottom = 0xffff0000
-
-And the interrupt caused that to be:
-
-	top = 0x2
-	bottom = 0x00000000
-
-But the lower context wanted it to be:
-
-	top = 0x1
-	bottom = 0xffffff00
-
-We don't want the end result to be:
-
-	top = 0x1
-	bottom = 0x00000000
-
-Because of a false positive "match". (Note, the above isn't a good example,
-but I'm too tired to think of one that will actually cause the problem. But
-I think you can get the gist of it).
-
-
-> 
-> And if the nested writes happen bewtween the cmpxchg to top and bottom, and
-> the cmpxchg bottom happen to expect exactly the content of the write, then
-> it would increment the 2-bit cnt of bottom to a value which won't match
-> top/msb, which would cause following reads to fail.
-
-Yes, if there's a false match (a match that should not have happened), then
-yes, it will corrupt the counter and make reads fail. But currently it's
-near impossible to get that false match. But I think we should make it
-totally impossible to do so.
-
-> 
-> > 
-> > That is, to fail; the old value is to be the same for a multiple of 4
-> > writes in an interrupting event, and the interrupted event wants to update
-> > it to a new number. This is probably not even feasible, because that would
-> > also require the interruption to happen before the value to write was read.
-> > That is, in practice, it may not be possible to hit this race. These are
-> > monotonic time stamps, so the values do not go backwards. That means its
-> > highly unlikely (if not impossible) for the cmpxchg to be putting in a newer
-> > time stamp than what the interrupting context would be adding, as the
-> > interruption would happen after the new timestamp was read. This means that
-> > the interrupting context would likely have the new values and not the old.
-> > 
-> > For this to fail we need to have:
-> > 
-> > 
-> >    timestamp.bottom = old_ts.bottom;
-> > 
-> >    new_timestamp = read_ts();
-> > 
-> >    cmpxchg() {
-> >   
-> > 	>>>>>> INTERRUPT  
-> > 
-> > 	ts = read_ts()
-> > 	// This needs to match the old number
-> > 
-> > 	timestamp.bottom = ts.bottom
-> > 
-> > 	[ repeat 3 more times ]
-> > 
-> >   
-> >     if (!rb_time_read_cmpxchg(&t->bottom, bottom, bottom2))
-> >   	return false;
-> > 
-> > The cmpxchg() requires t->bottom to incorrectly match bottom, which is the
-> > new_timestamp.bottom. But if the interrupt happened, it would need to write
-> > the old number 4 times as well.
-> > 
-> > Hmm, the most likely way for this to hit, is if bottom were to wrap. Which
-> > means it would have to be interrupted for over 1 second (2^30ns is just
-> > over a 1 second), and have the value be exactly the same. Possible, but you
-> > are probably more likely to be hit by lightning while being attacked by a
-> > shark in the desert.
-> > 
-> > 
-> > If we really want to fix this properly, what could work here is to have the
-> > two bits in top, bottom and msb be the context level of the write.
-> > 
-> > But bits 0 and 1 would represent the 4 contexts.
-> > 
-> >   0 0 : task context
-> >   0 1 : softirq context
-> >   1 0 : interrupt context
-> >   1 1 : NMI context
-> > 
-> > As the there will be no interruptions between the context themselves. The
-> > only thing that is needed is to test to make sure the read wasn't
-> > interrupted by a higher context. These bits are just to note the level of
-> > the write, it doesn't need the counter. That is separate as "cnt".
-> > 
-> > Another KTODO: :-)  
-> 
-> Yes, the nesting approach might work better than a 2-bit counter for tracking
-> interruption of reads/cmpxchg by stores/cmpxchg.
-
-Although, it may need at least the LSB of the count too, and we make it
-three bits, where the LSB is the LSB of the count and bits 1 and 2 are the
-context level. That's because we still need to have the interrupting
-context know that the words are in the process of being updated. All it
-needs is a toggle, because that bit will go from 0 to 1 in any given
-context.
-
-That way, if a irq interrupts a soft irq, it may see:
-
-	msb:	0 1 0
-	top:	0 1 0
-	bottom:	0 1 1
-
-And know that it interrupted it between top and bottom.
-
-> 
-> >   
-> >>
-> >> - After a cmpxchg fails between updates to top and msb, a write is
-> >>    needed before read and cmpxchg can succeed again. I am not entirely
-> >>    sure the rest of the ring buffer handles this correctly.  
-> > 
-> > Note, a cmpxchg() can only fail if it was interrupted by a higher context.
-> > The higher context would be doing a write for the cmpxchg() to fail. If a
-> > cmpxchg() fails, it means that a higher context has already modified it and
-> > in fact, if a cmpxchg() fails, a read should be guaranteed to succeed if
-> > done after the failure, because the higher context already did the write.  
-> 
-> Not in the 2-bit overflow scenario I detailed above.
-
-I still see moving the read of cnt to the beginning as fixing that.
-
-> 
-> > 
-> > The cmpxchg() is only protecting against being interrupted, not for
-> > parallel programming.  
-> 
-> Of course.
-> 
-> > 
-> > For part of the cmpxchg() to succeed and another part to fail, it requires
-> > that it was interrupted between the succeeding part and the failing part.
-> > And the interruption would have written to the value making it valid again.  
-> 
-> Except for the 2-bit cnt overflow scenario.
-
-And the fix I suggested ;-)
-
-> 
-> >   
-> >>
-> >> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> >> Cc: Steven Rostedt <rostedt@goodmis.org>
-> >> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> >> Cc: linux-trace-kernel@vger.kernel.org
-> >> ---
-> >>   kernel/trace/ring_buffer.c | 64 +++++++++++++++++++++++++++-----------
-> >>   1 file changed, 46 insertions(+), 18 deletions(-)
-> >>
-> >> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> >> index 8d2a4f00eca9..f6ed699947cd 100644
-> >> --- a/kernel/trace/ring_buffer.c
-> >> +++ b/kernel/trace/ring_buffer.c
-> >> @@ -576,34 +576,50 @@ struct ring_buffer_iter {
-> >>   #ifdef RB_TIME_32
-> >>   
-> >>   /*
-> >> - * On 32 bit machines, local64_t is very expensive. As the ring
-> >> - * buffer doesn't need all the features of a true 64 bit atomic,
-> >> - * on 32 bit, it uses these functions (64 still uses local64_t).
-> >> + * On 32-bit machines, local64_t is very expensive. As the ring
-> >> + * buffer doesn't need all the features of a true 64-bit atomic,
-> >> + * on 32-bit, it uses these functions (64-bit still uses local64_t).
-> >>    *
-> >> - * For the ring buffer, 64 bit required operations for the time is
-> >> - * the following:
-> >> + * For the ring buffer, the operations required to manipulate 64-bit
-> >> + * time stamps are the following:
-> >>    *
-> >> - *  - Reads may fail if it interrupted a modification of the time stamp.
-> >> + *  - Read may fail if it interrupted a modification of the time stamp.
-> >>    *      It will succeed if it did not interrupt another write even if
-> >>    *      the read itself is interrupted by a write.
-> >> + *      A read will fail if it follows a cmpxchg which failed between
-> >> + *      updates to its top and msb bits, until a write is performed.
-> >> + *      (note: this limitation may be unexpected in parts of the
-> >> + *      ring buffer algorithm)
-> >>    *      It returns whether it was successful or not.
-> >>    *
-> >> - *  - Writes always succeed and will overwrite other writes and writes
-> >> + *  - Write always succeeds and will overwrite other writes and writes  
-> > 
-> > Hmm, Not sure I agree with the above. It should be plural, as in "All
-> > writes".  
-> 
-> Then we should pick either "writes/reads" and "they", or "A write/A read"
-> and "it", but not a mix.
-
-Where do you see it mixed?
-
-> 
-> >   
-> >>    *      that were done by events interrupting the current write.
-> >>    *
-> >>    *  - A write followed by a read of the same time stamp will always succeed,
-> >>    *      but may not contain the same value.
-> >>    *
-> >>    *  - A cmpxchg will fail if it interrupted another write or cmpxchg.
-> >> + *      A cmpxchg will fail if it follows a cmpxchg which failed between
-> >> + *      updates to its top and msb bits, until a write is performed.
-> >> + *      (note: this limitation may be unexpected in parts of the
-> >> + *      ring buffer algorithm)  
-> > 
-> > The above is incorrect, as to fail a cmpxchg() means a write *was*
-> > performed, by a higher context, and the value is now correct.  
-> 
-> Except for the 2-bit overflow scenario, which can cause the partial
-> cmpxchg to fail due to expected value mismatch.
-
-And my proposed fix!
-
-> 
-> > 
-> >   
-> >>    *      Other than that, it acts like a normal cmpxchg.
-> >>    *
-> >> - * The 60 bit time stamp is broken up by 30 bits in a top and bottom half
-> >> - *  (bottom being the least significant 30 bits of the 60 bit time stamp).
-> >> + * The 64-bit time stamp is broken up, from most to least significant,
-> >> + * in: msb, top and bottom fields, of respectively 4, 30, and 30 bits.
-> >>    *
-> >> - * The two most significant bits of each half holds a 2 bit counter (0-3).
-> >> + * The two most significant bits of each field hold a 2-bit counter (0-3).
-> >>    * Each update will increment this counter by one.
-> >> - * When reading the top and bottom, if the two counter bits match then the
-> >> - *  top and bottom together make a valid 60 bit number.
-> >> + * When reading the top, bottom, and msb fields, if the two counter bits
-> >> + *   match, then the combined values make a valid 64-bit number.
-> >> + *
-> >> + * Counter limits. The following situations can generate overflows that
-> >> + * produce corrupted time stamps:
-> >> + *
-> >> + * - A read or a write interrupted by 2^32 writes or cmpxchg.
-> >> + *
-> >> + * - A cmpxchg interrupted by 4 writes or cmpxchg.
-> >> + *   (note: this is not sufficient and should be fixed)  
-> > 
-> > Remember, it's not just 4 writes that cause it to fail, but also those 4
-> > writes must have the same value, as the cmpxchg() doesn't just look at the
-> > 2 bits, it looks at the rest of the value too.  
-> 
-> It would not require all 4 of the writes to store the same value, just the
-> last one.
-> 
-> Although I detailed an overflow scenario that causes reads to fail after a
-> partially successful cmpxchg, I'm currently failing to understand how the 4
-> writes would cause a read to observe an actual corrupted value.
-
-reads detect happening within a write. So there is no "4 writes" when doing
-a read. The read cares about what it interrupted, not what interrupted it.
-
-The order of the cmpxchg that your patch fixed does affect this, because it
-missed the "bottom" update.
-
-> 
-> > 
-> > But even that rare case can be fixed by using context level instead of a
-> > counter.
-> > 
-> >   
-> >>    */
-> >>   #define RB_TIME_SHIFT	30
-> >>   #define RB_TIME_VAL_MASK ((1 << RB_TIME_SHIFT) - 1)
-> >> @@ -632,7 +648,7 @@ static inline bool __rb_time_read(rb_time_t *t, u64 *ret, unsigned long *cnt)
-> >>   
-> >>   	/*
-> >>   	 * If the read is interrupted by a write, then the cnt will
-> >> -	 * be different. Loop until both top and bottom have been read
-> >> +	 * be different. Loop until top, bottom and msb have been read
-> >>   	 * without interruption.
-> >>   	 */
-> >>   	do {
-> >> @@ -644,7 +660,12 @@ static inline bool __rb_time_read(rb_time_t *t, u64 *ret, unsigned long *cnt)
-> >>   
-> >>   	*cnt = rb_time_cnt(top);
-> >>   
-> >> -	/* If top and msb counts don't match, this interrupted a write */
-> >> +	/*
-> >> +	 * If top and msb counts don't match, this either interrupted a
-> >> +	 * write or follows a failed cmpxchg.  
-> > 
-> > Incorrect. A read following a failed cmpxchg() should always succeed.
-> >   
-> >> +	 * This requires the update to bottom to be enclosed between
-> >> +	 * updates to top and msb.
-> >> +	 */
-> >>   	if (*cnt != rb_time_cnt(msb))
-> >>   		return false;
-> >>   
-> >> @@ -685,9 +706,10 @@ static void rb_time_set(rb_time_t *t, u64 val)
-> >>   
-> >>   	rb_time_split(val, &top, &bottom, &msb);
-> >>   
-> >> -	/* Writes always succeed with a valid number even if it gets interrupted. */
-> >> +	/* Write always succeeds with a valid number even if it gets interrupted. */  
-> > 
-> > I think we have a different way of looking at this. I'm thinking "Writes"
-> > as in all writes. Saying "Write always succeeds" sounds funny to me. "A
-> > write always succeeds" would sound better.  
-> 
-> Agreed on "A write".
-> 
-> >   
-> >>   	do {
-> >>   		cnt = local_inc_return(&t->cnt);
-> >> +		/* The top and msb updates surround bottom update. */
-> >>   		rb_time_val_set(&t->top, top, cnt);
-> >>   		rb_time_val_set(&t->bottom, bottom, cnt);
-> >>   		rb_time_val_set(&t->msb, val >> RB_TIME_MSB_SHIFT, cnt);
-> >> @@ -706,7 +728,12 @@ static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
-> >>   	unsigned long cnt2, top2, bottom2, msb2;
-> >>   	u64 val;
-> >>   
-> >> -	/* The cmpxchg always fails if it interrupted an update */
-> >> +	/*
-> >> +	 * The cmpxchg always fails if it interrupted an update or if it
-> >> +	 * follows a cmpxchg that fails between updates to top and msb.
-> >> +	 * A rb_time_set() is needed after a failed cmpxchg to reset to
-> >> +	 * a state where cmpxchg can succeed again.  
-> > 
-> > Again, the above isn't correct. Remember *why* a cmpxchg() would fail. It
-> > means it was interrupted by a write, that would make the variable valid again.  
-> 
-> Except for 2-bit overflow.
-
-Not a problem with my proposed fix.
-
-> 
-> >   
-> >> +	 */
-> >>   	 if (!__rb_time_read(t, &val, &cnt2))
-> >>   		 return false;
-> >>   
-> >> @@ -729,12 +756,13 @@ static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
-> >>   
-> >>   	if (!rb_time_read_cmpxchg(&t->cnt, cnt, cnt2))
-> >>   		return false;
-> >> -	if (!rb_time_read_cmpxchg(&t->msb, msb, msb2))
-> >> -		return false;
-> >> +	/* The top and msb updates surround bottom update. */
-> >>   	if (!rb_time_read_cmpxchg(&t->top, top, top2))
-> >>   		return false;
-> >>   	if (!rb_time_read_cmpxchg(&t->bottom, bottom, bottom2))
-> >>   		return false;
-> >> +	if (!rb_time_read_cmpxchg(&t->msb, msb, msb2))
-> >> +		return false;
-> >>   	return true;
-> >>   }
-> >>     
-> > 
-> > Thanks Mathieu for spending the time to look into this. Even if I disagree
-> > with your analysis ;-)  
-> 
-> Your reply got me wondering whether the 2-bit overflow can actually cause
-> corrupted time-stamps. Unfortunately the partial scenarios you mentioned lack
-> information to allow me to fully understand them, and I just ran out of brain
-> for tonight. What scenario for corruption of bottom field by cmpxchg
-> you have in mind exactly ?
-> 
-> One approach we could take to improve the 2-bit overflow would be to extend
-> this cnt to 10 bits like so:
-> 
-> msb:      10-bit cnt, 2-bit unused, 20-bit counter
-> top:      10-bit cnt, 22-bit counter
-> bottom:   10-bit cnt, 22-bit counter
-> 
-> or to 16 bits like so:
-> 
-> [0]:      16-bit cnt, 16-bit counter
-> [1]:      16-bit cnt, 16-bit counter
-> [2]:      16-bit cnt, 16-bit counter
-> [3]:      16-bit cnt, 16-bit counter
-
-Having a single toggle and the context level should be sufficient. As two
-bits will tell you which context updated the timestamp, which is useful for
-knowing it got interrupted, and the toggle bit is to let interrupting
-context know the timestamp is being updated.
-
--- Steve
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: JjxY7hN5y9C1Z8LD42wJ1DPwjGOuqUcD
+X-Proofpoint-ORIG-GUID: JjxY7hN5y9C1Z8LD42wJ1DPwjGOuqUcD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
+ lowpriorityscore=0 phishscore=0 impostorscore=0 bulkscore=0 mlxscore=0
+ adultscore=0 suspectscore=0 priorityscore=1501 clxscore=1015
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2312120057
+
+Hi Steven,
+
+Can you review it once.
+
+Thanks & Regards,
+
+Krishna Chaitanya.
+
+On 12/7/2023 10:00 AM, Krishna chaitanya chundru wrote:
+> This change adds ftrace support for following functions which
+> helps in debugging the issues when there is Channel state & MHI
+> state change and also when we receive data and control events:
+> 1. mhi_intvec_mhi_states
+> 2. mhi_process_data_event_ring
+> 3. mhi_process_ctrl_ev_ring
+> 4. mhi_gen_tre
+> 5. mhi_update_channel_state
+> 6. mhi_tryset_pm_state
+> 7. mhi_pm_st_worker
+>
+> Where ever the trace events are added, debug messages are removed.
+>
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> ---
+> Changes in v8:
+> - Pass the structure and derefernce the variables in TP_fast_assign as suggested by steve
+> - Link to v7: https://lore.kernel.org/r/20231206-ftrace_support-v7-1-aca49a04268b@quicinc.com
+>
+> Changes in v7:
+> - change log format as pointed by mani.
+> - Link to v6: https://lore.kernel.org/r/20231204-ftrace_support-v6-1-9b206546dac2@quicinc.com
+>
+> Changes in v6:
+> - use 'rp' directly as suggested by jeffrey.
+> - Link to v5: https://lore.kernel.org/r/20231127-ftrace_support-v5-1-eb67daead4f1@quicinc.com
+>
+> Changes in v5:
+> - Use DECLARE_EVENT_CLASS for multiple events as suggested by steve.
+> - Instead of converting to u64 to print address, use %px to print the address to avoid
+> - warnings in some platforms.
+> - Link to v4: https://lore.kernel.org/r/20231111-ftrace_support-v4-1-c83602399461@quicinc.com
+>
+> Changes in v4:
+> - Fix compilation issues in previous patch which happended due to rebasing.
+> - In the defconfig FTRACE config is not enabled due to that the compilation issue is not
+> - seen in my workspace.
+> - Link to v3: https://lore.kernel.org/r/20231111-ftrace_support-v3-1-f358d2911a74@quicinc.com
+>
+> Changes in v3:
+> - move trace header file from include/trace/events to drivers/bus/mhi/host/ so that
+> - we can include driver header files.
+> - Use macros directly in the trace events as suggested Jeffrey Hugo.
+> - Reorder the structure in the events as suggested by steve to avoid holes in the buffer.
+> - removed the mhi_to_physical function as this can give security issues.
+> - removed macros to define strings as we can get those from driver headers.
+> - Link to v2: https://lore.kernel.org/r/20231013-ftrace_support-v2-1-6e893ce010b5@quicinc.com
+>
+> Changes in v2:
+> - Passing the raw state into the trace event and using  __print_symbolic() as suggested by bjorn.
+> - Change mhi_pm_st_worker to mhi_pm_st_transition as suggested by bjorn.
+> - Fixed the kernel test rebot issues.
+> - Link to v1: https://lore.kernel.org/r/20231005-ftrace_support-v1-1-23a2f394fa49@quicinc.com
+> ---
+>   drivers/bus/mhi/host/init.c  |   3 +
+>   drivers/bus/mhi/host/main.c  |  19 ++--
+>   drivers/bus/mhi/host/pm.c    |   7 +-
+>   drivers/bus/mhi/host/trace.h | 205 +++++++++++++++++++++++++++++++++++++++++++
+>   4 files changed, 221 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
+> index f78aefd2d7a3..6acb85f4c5f8 100644
+> --- a/drivers/bus/mhi/host/init.c
+> +++ b/drivers/bus/mhi/host/init.c
+> @@ -20,6 +20,9 @@
+>   #include <linux/wait.h>
+>   #include "internal.h"
+>   
+> +#define CREATE_TRACE_POINTS
+> +#include "trace.h"
+> +
+>   static DEFINE_IDA(mhi_controller_ida);
+>   
+>   const char * const mhi_ee_str[MHI_EE_MAX] = {
+> diff --git a/drivers/bus/mhi/host/main.c b/drivers/bus/mhi/host/main.c
+> index dcf627b36e82..189f4786403e 100644
+> --- a/drivers/bus/mhi/host/main.c
+> +++ b/drivers/bus/mhi/host/main.c
+> @@ -15,6 +15,7 @@
+>   #include <linux/skbuff.h>
+>   #include <linux/slab.h>
+>   #include "internal.h"
+> +#include "trace.h"
+>   
+>   int __must_check mhi_read_reg(struct mhi_controller *mhi_cntrl,
+>   			      void __iomem *base, u32 offset, u32 *out)
+> @@ -491,11 +492,8 @@ irqreturn_t mhi_intvec_threaded_handler(int irq_number, void *priv)
+>   
+>   	state = mhi_get_mhi_state(mhi_cntrl);
+>   	ee = mhi_get_exec_env(mhi_cntrl);
+> -	dev_dbg(dev, "local ee: %s state: %s device ee: %s state: %s\n",
+> -		TO_MHI_EXEC_STR(mhi_cntrl->ee),
+> -		mhi_state_str(mhi_cntrl->dev_state),
+> -		TO_MHI_EXEC_STR(ee), mhi_state_str(state));
+>   
+> +	trace_mhi_intvec_states(mhi_cntrl, ee, state);
+>   	if (state == MHI_STATE_SYS_ERR) {
+>   		dev_dbg(dev, "System error detected\n");
+>   		pm_state = mhi_tryset_pm_state(mhi_cntrl,
+> @@ -832,6 +830,8 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
+>   	while (dev_rp != local_rp) {
+>   		enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
+>   
+> +		trace_mhi_ctrl_event(mhi_cntrl, local_rp);
+> +
+>   		switch (type) {
+>   		case MHI_PKT_TYPE_BW_REQ_EVENT:
+>   		{
+> @@ -997,6 +997,8 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
+>   	while (dev_rp != local_rp && event_quota > 0) {
+>   		enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
+>   
+> +		trace_mhi_data_event(mhi_cntrl, local_rp);
+> +
+>   		chan = MHI_TRE_GET_EV_CHID(local_rp);
+>   
+>   		WARN_ON(chan >= mhi_cntrl->max_chan);
+> @@ -1235,6 +1237,7 @@ int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+>   	mhi_tre->dword[0] = MHI_TRE_DATA_DWORD0(info->len);
+>   	mhi_tre->dword[1] = MHI_TRE_DATA_DWORD1(bei, eot, eob, chain);
+>   
+> +	trace_mhi_gen_tre(mhi_cntrl, mhi_chan, mhi_tre);
+>   	/* increment WP */
+>   	mhi_add_ring_element(mhi_cntrl, tre_ring);
+>   	mhi_add_ring_element(mhi_cntrl, buf_ring);
+> @@ -1327,9 +1330,7 @@ static int mhi_update_channel_state(struct mhi_controller *mhi_cntrl,
+>   	enum mhi_cmd_type cmd = MHI_CMD_NOP;
+>   	int ret;
+>   
+> -	dev_dbg(dev, "%d: Updating channel state to: %s\n", mhi_chan->chan,
+> -		TO_CH_STATE_TYPE_STR(to_state));
+> -
+> +	trace_mhi_channel_command_start(mhi_cntrl, mhi_chan, to_state);
+>   	switch (to_state) {
+>   	case MHI_CH_STATE_TYPE_RESET:
+>   		write_lock_irq(&mhi_chan->lock);
+> @@ -1396,9 +1397,7 @@ static int mhi_update_channel_state(struct mhi_controller *mhi_cntrl,
+>   		write_unlock_irq(&mhi_chan->lock);
+>   	}
+>   
+> -	dev_dbg(dev, "%d: Channel state change to %s successful\n",
+> -		mhi_chan->chan, TO_CH_STATE_TYPE_STR(to_state));
+> -
+> +	trace_mhi_channel_command_end(mhi_cntrl, mhi_chan, to_state);
+>   exit_channel_update:
+>   	mhi_cntrl->runtime_put(mhi_cntrl);
+>   	mhi_device_put(mhi_cntrl->mhi_dev);
+> diff --git a/drivers/bus/mhi/host/pm.c b/drivers/bus/mhi/host/pm.c
+> index 8a4362d75fc4..5a2394b5b2e1 100644
+> --- a/drivers/bus/mhi/host/pm.c
+> +++ b/drivers/bus/mhi/host/pm.c
+> @@ -15,6 +15,7 @@
+>   #include <linux/slab.h>
+>   #include <linux/wait.h>
+>   #include "internal.h"
+> +#include "trace.h"
+>   
+>   /*
+>    * Not all MHI state transitions are synchronous. Transitions like Linkdown,
+> @@ -123,6 +124,7 @@ enum mhi_pm_state __must_check mhi_tryset_pm_state(struct mhi_controller *mhi_cn
+>   	if (unlikely(!(dev_state_transitions[index].to_states & state)))
+>   		return cur_state;
+>   
+> +	trace_mhi_tryset_pm_state(mhi_cntrl, state);
+>   	mhi_cntrl->pm_state = state;
+>   	return mhi_cntrl->pm_state;
+>   }
+> @@ -753,7 +755,6 @@ void mhi_pm_st_worker(struct work_struct *work)
+>   	struct mhi_controller *mhi_cntrl = container_of(work,
+>   							struct mhi_controller,
+>   							st_worker);
+> -	struct device *dev = &mhi_cntrl->mhi_dev->dev;
+>   
+>   	spin_lock_irq(&mhi_cntrl->transition_lock);
+>   	list_splice_tail_init(&mhi_cntrl->transition_list, &head);
+> @@ -761,8 +762,8 @@ void mhi_pm_st_worker(struct work_struct *work)
+>   
+>   	list_for_each_entry_safe(itr, tmp, &head, node) {
+>   		list_del(&itr->node);
+> -		dev_dbg(dev, "Handling state transition: %s\n",
+> -			TO_DEV_STATE_TRANS_STR(itr->state));
+> +
+> +		trace_mhi_pm_st_transition(mhi_cntrl, itr->state);
+>   
+>   		switch (itr->state) {
+>   		case DEV_ST_TRANSITION_PBL:
+> diff --git a/drivers/bus/mhi/host/trace.h b/drivers/bus/mhi/host/trace.h
+> new file mode 100644
+> index 000000000000..73c129bb91d9
+> --- /dev/null
+> +++ b/drivers/bus/mhi/host/trace.h
+> @@ -0,0 +1,205 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM mhi_host
+> +
+> +#if !defined(_TRACE_EVENT_MHI_HOST_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_EVENT_MHI_HOST_H
+> +
+> +#include <linux/tracepoint.h>
+> +#include <linux/trace_seq.h>
+> +#include "../common.h"
+> +#include "internal.h"
+> +
+> +TRACE_EVENT(mhi_gen_tre,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+> +		 struct mhi_ring_element *mhi_tre),
+> +
+> +	TP_ARGS(mhi_cntrl, mhi_chan, mhi_tre),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, mhi_cntrl->mhi_dev->name)
+> +		__field(int, ch_num)
+> +		__field(void *, wp)
+> +		__field(__le64, tre_ptr)
+> +		__field(__le32, dword0)
+> +		__field(__le32, dword1)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
+> +		__entry->ch_num = mhi_chan->chan;
+> +		__entry->wp = mhi_tre;
+> +		__entry->tre_ptr = mhi_tre->ptr;
+> +		__entry->dword0 = mhi_tre->dword[0];
+> +		__entry->dword1 = mhi_tre->dword[1];
+> +	),
+> +
+> +	TP_printk("%s: Chan: %d Tre: 0x%p Tre buf: 0x%llx dword0: 0x%08x dword1: 0x%08x\n",
+> +		  __get_str(name), __entry->ch_num, __entry->wp, __entry->tre_ptr,
+> +		  __entry->dword0, __entry->dword1)
+> +);
+> +
+> +TRACE_EVENT(mhi_intvec_states,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, int dev_ee, int dev_state),
+> +
+> +	TP_ARGS(mhi_cntrl, dev_ee, dev_state),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, mhi_cntrl->mhi_dev->name)
+> +		__field(int, local_ee)
+> +		__field(int, state)
+> +		__field(int, dev_ee)
+> +		__field(int, dev_state)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
+> +		__entry->local_ee = mhi_cntrl->ee;
+> +		__entry->state = mhi_cntrl->dev_state;
+> +		__entry->dev_ee = dev_ee;
+> +		__entry->dev_state = dev_state;
+> +	),
+> +
+> +	TP_printk("%s: local ee: %s state: %s device ee: %s state: %s\n",
+> +		  __get_str(name),
+> +		  TO_MHI_EXEC_STR(__entry->local_ee),
+> +		  mhi_state_str(__entry->state),
+> +		  TO_MHI_EXEC_STR(__entry->dev_ee),
+> +		  mhi_state_str(__entry->dev_state))
+> +);
+> +
+> +TRACE_EVENT(mhi_tryset_pm_state,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, int pm_state),
+> +
+> +	TP_ARGS(mhi_cntrl, pm_state),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, mhi_cntrl->mhi_dev->name)
+> +		__field(int, pm_state)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
+> +		if (pm_state)
+> +			pm_state = __fls(pm_state);
+> +		__entry->pm_state = pm_state;
+> +	),
+> +
+> +	TP_printk("%s: PM state: %s\n", __get_str(name),
+> +		  to_mhi_pm_state_str(__entry->pm_state))
+> +);
+> +
+> +DECLARE_EVENT_CLASS(mhi_process_event_ring,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_ring_element *rp),
+> +
+> +	TP_ARGS(mhi_cntrl, rp),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, mhi_cntrl->mhi_dev->name)
+> +		__field(__le32, dword0)
+> +		__field(__le32, dword1)
+> +		__field(int, state)
+> +		__field(__le64, ptr)
+> +		__field(void *, rp)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
+> +		__entry->rp = rp;
+> +		__entry->ptr = rp->ptr;
+> +		__entry->dword0 = rp->dword[0];
+> +		__entry->dword1 = rp->dword[1];
+> +		__entry->state = MHI_TRE_GET_EV_STATE(rp);
+> +	),
+> +
+> +	TP_printk("%s: Tre: 0x%p Tre buf: 0x%llx dword0: 0x%08x dword1: 0x%08x state: %s\n",
+> +		  __get_str(name), __entry->rp, __entry->ptr, __entry->dword0,
+> +		  __entry->dword1, mhi_state_str(__entry->state))
+> +);
+> +
+> +DEFINE_EVENT(mhi_process_event_ring, mhi_data_event,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_ring_element *rp),
+> +
+> +	TP_ARGS(mhi_cntrl, rp)
+> +);
+> +
+> +DEFINE_EVENT(mhi_process_event_ring, mhi_ctrl_event,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_ring_element *rp),
+> +
+> +	TP_ARGS(mhi_cntrl, rp)
+> +);
+> +
+> +DECLARE_EVENT_CLASS(mhi_update_channel_state,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan, int state),
+> +
+> +	TP_ARGS(mhi_cntrl, mhi_chan, state),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, mhi_cntrl->mhi_dev->name)
+> +		__field(int, ch_num)
+> +		__field(int, state)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
+> +		__entry->ch_num = mhi_chan->chan;
+> +		__entry->state = state;
+> +	),
+> +
+> +	TP_printk("%s: chan%d: Updating state to: %s\n",
+> +		  __get_str(name), __entry->ch_num,
+> +		  TO_CH_STATE_TYPE_STR(__entry->state))
+> +);
+> +
+> +DEFINE_EVENT(mhi_update_channel_state, mhi_channel_command_start,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan, int state),
+> +
+> +	TP_ARGS(mhi_cntrl, mhi_chan, state)
+> +);
+> +
+> +DEFINE_EVENT(mhi_update_channel_state, mhi_channel_command_end,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan, int state),
+> +
+> +	TP_ARGS(mhi_cntrl, mhi_chan, state)
+> +);
+> +
+> +TRACE_EVENT(mhi_pm_st_transition,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, int state),
+> +
+> +	TP_ARGS(mhi_cntrl, state),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, mhi_cntrl->mhi_dev->name)
+> +		__field(int, state)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
+> +		__entry->state = state;
+> +	),
+> +
+> +	TP_printk("%s: Handling state transition: %s\n", __get_str(name),
+> +		  TO_DEV_STATE_TRANS_STR(__entry->state))
+> +);
+> +
+> +#endif
+> +#undef TRACE_INCLUDE_PATH
+> +#define TRACE_INCLUDE_PATH ../../drivers/bus/mhi/host
+> +#undef TRACE_INCLUDE_FILE
+> +#define TRACE_INCLUDE_FILE trace
+> +
+> +#include <trace/define_trace.h>
+>
+> ---
+> base-commit: 3006adf3be79cde4d14b1800b963b82b6e5572e0
+> change-id: 20231005-ftrace_support-6869d4156139
+>
+> Best regards,
