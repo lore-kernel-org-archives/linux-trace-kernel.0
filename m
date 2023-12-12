@@ -1,134 +1,158 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.b="OT4OnGfp"
-Received: from tarta.nabijaczleweli.xyz (tarta.nabijaczleweli.xyz [139.28.40.42])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC15C10B;
-	Tue, 12 Dec 2023 02:12:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nabijaczleweli.xyz;
-	s=202305; t=1702375963;
-	bh=Lx01uUzZBLjfFlGQlKARFoT+Vf/QEeNIG29aSuy6Lf8=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=OT4OnGfpCidozTgeKJqlenrtbf0JerI1R/jU8yP204BjK4j3qeUs4ZqZNwq+f6H//
-	 wKV4HqXL7mYXXFJBLq2OKLvweJzrd2nRxE/rO5JGD4Ud/xGcZeyQuVEh6jmP1Udhog
-	 F1sTysJ+py9xrbtTHlxfK1QRFaZU0qzUB2Zj4tlnMrRM/ceBvOATJsNlsbAVtek1xP
-	 ouydr8agHAM56ic655re4rEW/1CWxSZE2nbSX6g89ldVK3ux4shwpRzDKF+qQVtqQd
-	 ph+hT5GDTBF728he4SOcBE2bdo9J9iPxtaP3Xf5qRpwFLPN20bh99gPmenALHXd0Oz
-	 N1dY4hhdd8a4Q==
-Received: from tarta.nabijaczleweli.xyz (unknown [192.168.1.250])
-	by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id 0700D12A7C;
-	Tue, 12 Dec 2023 11:12:43 +0100 (CET)
-Date: Tue, 12 Dec 2023 11:12:42 +0100
-From: 
-	Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
-To: Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [PATCH RESEND 04/11] tracing: tracing_buffers_splice_read: behave
- as-if non-blocking I/O
-Message-ID: <11b84f2e4e5eaad501ff7b2bb03e2ad2f25ecdf14.1697486714.git.nabijaczleweli@nabijaczleweli.xyz>
-User-Agent: NeoMutt/20231103
-References: <cover.1697486714.git.nabijaczleweli@nabijaczleweli.xyz>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5255D4BD
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 12 Dec 2023 11:43:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B701C433C7;
+	Tue, 12 Dec 2023 11:43:54 +0000 (UTC)
+Date: Tue, 12 Dec 2023 06:44:35 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Kent Overstreet
+ <kent.overstreet@linux.dev>
+Subject: Re: [PATCH] ring-buffer: Fix buffer max_data_size with
+ max_event_size
+Message-ID: <20231212064435.58522007@gandalf.local.home>
+In-Reply-To: <20231211204033.a3658f5f497f0c7541dee025@kernel.org>
+References: <20231209170139.33c1b452@gandalf.local.home>
+	<20231209170925.71d4e02e@gandalf.local.home>
+	<20231211204033.a3658f5f497f0c7541dee025@kernel.org>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hv3lx7g2ikvzxdyu"
-Content-Disposition: inline
-In-Reply-To: <1cover.1697486714.git.nabijaczleweli@nabijaczleweli.xyz>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+
+On Mon, 11 Dec 2023 20:40:33 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+
+> On Sat, 9 Dec 2023 17:09:25 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > On Sat, 9 Dec 2023 17:01:39 -0500
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> >   
+> > > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> > > 
+> > > The maximum ring buffer data size is the maximum size of data that can be
+> > > recorded on the ring buffer. Events must be smaller than the sub buffer
+> > > data size minus any meta data. This size is checked before trying to
+> > > allocate from the ring buffer because the allocation assumes that the size
+> > > will fit on the sub buffer.
+> > > 
+> > > The maximum size was calculated as the size of a sub buffer page (which is
+> > > currently PAGE_SIZE minus the sub buffer header) minus the size of the
+> > > meta data of an individual event. But it missed the possible adding of a
+> > > time stamp for events that are added long enough apart that the event meta
+> > > data can't hold the time delta.
+> > > 
+> > > When an event is added that is greater than the current BUF_MAX_DATA_SIZE
+> > > minus the size of a time stamp, but still less than or equal to
+> > > BUF_MAX_DATA_SIZE, the ring buffer would go into an infinite loop, looking
+> > > for a page that can hold the event. Luckily, there's a check for this loop
+> > > and after 1000 iterations and a warning is emitted and the ring buffer is
+> > > disabled. But this should never happen.
+> > > 
+> > > This can happen when a large event is added first, or after a long period
+> > > where an absolute timestamp is prefixed to the event, increasing its size
+> > > by 8 bytes. This passes the check and then goes into the algorithm that
+> > > causes the infinite loop.
+> > > 
+> > > Fix this by creating a BUF_MAX_EVENT_SIZE to be used to determine if the
+> > > passed in event is too big for the buffer.
+> > >   
+> > 
+> > Forgot to add:
+> > 
+> > Cc: stable@vger.kernel.org
+> > Fixes: a4543a2fa9ef3 ("ring-buffer: Get timestamp after event is allocated")  
+> 
+> Looks good to me.
+> 
+> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Actually, I found out that this can be fixed with:
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 86a60a0eb279..aaad104a1707 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -3594,7 +3594,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+ 			info->length += RB_LEN_TIME_EXTEND;
+ 		} else {
+ 			info->delta = info->ts - info->after;
+-			if (unlikely(test_time_stamp(info->delta))) {
++			if (w && unlikely(test_time_stamp(info->delta))) {
+ 				info->add_timestamp |= RB_ADD_STAMP_EXTEND;
+ 				info->length += RB_LEN_TIME_EXTEND;
+ 			}
+
+The bug that this patch fixed was that the size that was acceptable did not take
+into account the added time stamp. But the time stamp should *not* be added
+if it's the first event on the sub buffer. And once it goes to the next
+buffer, it should be the first event.
+
+I ran the same tests with this change, and it works just as well. I believe
+this is the proper fix.
+
+I'll send a v2.
+
+Thanks!
+
+-- Steve
 
 
---hv3lx7g2ikvzxdyu
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> 
+> Thanks,
+> > 
+> > -- Steve
+> > 
+> >   
+> > > Reported-by: Kent Overstreet <kent.overstreet@linux.dev> # (on IRC)
+> > > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > > ---
+> > >  kernel/trace/ring_buffer.c | 7 +++++--
+> > >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> > > index 8d2a4f00eca9..a38e5a3c6803 100644
+> > > --- a/kernel/trace/ring_buffer.c
+> > > +++ b/kernel/trace/ring_buffer.c
+> > > @@ -378,6 +378,9 @@ static inline bool test_time_stamp(u64 delta)
+> > >  /* Max payload is BUF_PAGE_SIZE - header (8bytes) */
+> > >  #define BUF_MAX_DATA_SIZE (BUF_PAGE_SIZE - (sizeof(u32) * 2))
+> > >  
+> > > +/* Events may have a time stamp attached to them */
+> > > +#define BUF_MAX_EVENT_SIZE (BUF_MAX_DATA_SIZE - RB_LEN_TIME_EXTEND)
+> > > +
+> > >  int ring_buffer_print_page_header(struct trace_seq *s)
+> > >  {
+> > >  	struct buffer_data_page field;
+> > > @@ -3810,7 +3813,7 @@ ring_buffer_lock_reserve(struct trace_buffer *buffer, unsigned long length)
+> > >  	if (unlikely(atomic_read(&cpu_buffer->record_disabled)))
+> > >  		goto out;
+> > >  
+> > > -	if (unlikely(length > BUF_MAX_DATA_SIZE))
+> > > +	if (unlikely(length > BUF_MAX_EVENT_SIZE))
+> > >  		goto out;
+> > >  
+> > >  	if (unlikely(trace_recursive_lock(cpu_buffer)))
+> > > @@ -3960,7 +3963,7 @@ int ring_buffer_write(struct trace_buffer *buffer,
+> > >  	if (atomic_read(&cpu_buffer->record_disabled))
+> > >  		goto out;
+> > >  
+> > > -	if (length > BUF_MAX_DATA_SIZE)
+> > > +	if (length > BUF_MAX_EVENT_SIZE)
+> > >  		goto out;
+> > >  
+> > >  	if (unlikely(trace_recursive_lock(cpu_buffer)))  
+> >   
+> 
+> 
 
-Otherwise we risk sleeping with the pipe locked for indeterminate
-lengths of time.
-
-Link: https://lore.kernel.org/linux-fsdevel/qk6hjuam54khlaikf2ssom6custxf5i=
-s2ekkaequf4hvode3ls@zgf7j5j4ubvw/t/#u
-Signed-off-by: Ahelenia Ziemia=C5=84ska <nabijaczleweli@nabijaczleweli.xyz>
----
- kernel/trace/trace.c | 32 ++++----------------------------
- 1 file changed, 4 insertions(+), 28 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index abaaf516fcae..9be7a4c0a3ca 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8477,7 +8477,6 @@ tracing_buffers_splice_read(struct file *file, loff_t=
- *ppos,
- 	if (splice_grow_spd(pipe, &spd))
- 		return -ENOMEM;
-=20
-- again:
- 	trace_access_lock(iter->cpu_file);
- 	entries =3D ring_buffer_entries_cpu(iter->array_buffer->buffer, iter->cpu=
-_file);
-=20
-@@ -8528,35 +8527,12 @@ tracing_buffers_splice_read(struct file *file, loff=
-_t *ppos,
-=20
- 	/* did we read anything? */
- 	if (!spd.nr_pages) {
--		long wait_index;
--
--		if (ret)
--			goto out;
--
--		ret =3D -EAGAIN;
--		if ((file->f_flags & O_NONBLOCK) || (flags & SPLICE_F_NONBLOCK))
--			goto out;
--
--		wait_index =3D READ_ONCE(iter->wait_index);
--
--		ret =3D wait_on_pipe(iter, iter->tr->buffer_percent);
--		if (ret)
--			goto out;
--
--		/* No need to wait after waking up when tracing is off */
--		if (!tracer_tracing_is_on(iter->tr))
--			goto out;
--
--		/* Make sure we see the new wait_index */
--		smp_rmb();
--		if (wait_index !=3D iter->wait_index)
--			goto out;
--
--		goto again;
-+		if (!ret)
-+			ret =3D -EAGAIN;
-+	} else {
-+		ret =3D splice_to_pipe(pipe, &spd);
- 	}
-=20
--	ret =3D splice_to_pipe(pipe, &spd);
--out:
- 	splice_shrink_spd(&spd);
-=20
- 	return ret;
---=20
-2.39.2
-
---hv3lx7g2ikvzxdyu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAmV4MhoACgkQvP0LAY0m
-WPEQ4w/+LmJ9g+sTLdWI+2h/NDpBO07CFF47oOhsehFB7o3yH8UophMOzrOdxYZQ
-NYzzY+11ga72QE+rwRD3yLxdbQfZzDE2PUNT4eJdgAXA/3hsKqkw4VbuTN4tlrPP
-5MTyjKC3GX5LjeBO32neK8SYUhZkabu108eflv+8XcpE32cW22gGuA71YcajuDj1
-3Y9jblVjAT8acO0Zec6ZHOB6ZYBggwMMYyA0M+Me16sqxmBR1JToqNLeZkSh2Nfn
-1IR1tzixc82NRPkFDYormthq5PEg3w/VIj0yvCEDRJKU1DqPrmYRBxahOe3JjKMI
-54oQTopZEFK7vR9m0Vv31wmeXjw4da15elHNYE9FJj24URAJuCqMsHObwyt2BRmp
-GOwcWPL89TVL4sN/lywa5Vb0A+DqxwCT0mfdrbhzAtwiBfnWbFCe3znyA+Jzcvwi
-ube6KYote7bsLxDbbogcptP0RoL5+++cWissl4jGp2taZntQ6YWwx1P7qEyyKKvO
-GZ94AXF4Vy159bJYlVdMp1JHzibVtC0XkRlzgrmU976HE0ycbz4eW5/Bjc7lYJqh
-H0hlrwy8yUL6nnAjEfq6FEXo/rFJg5/s8ocWOMxHw/z+qUgv2+vP1bmt896AeL94
-lCjPfm9DK0AA9/8wzdStv8q26yvVepmBROjWiQhsaGM4Vplx7Uk=
-=KLoG
------END PGP SIGNATURE-----
-
---hv3lx7g2ikvzxdyu--
