@@ -1,100 +1,115 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ZWoJVipT"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="hNGpYvN4"
 Received: from smtpout.efficios.com (unknown [IPv6:2607:5300:203:b2ee::31e5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365509B;
-	Tue, 12 Dec 2023 11:30:54 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67EECCE;
+	Tue, 12 Dec 2023 11:39:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1702409453;
-	bh=JC9adTWZwBSZVelSEFs2mzk1j8rxdsp3rdKp4J6yU38=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ZWoJVipTq1MIF0HapIaNLUU7o2LalgeTONDkP3Ud7TG+/QLgmYQTHuWwA/2ih/ixi
-	 35ap4wQyoXdBSuyHfPstlXeD83mhuZatwL0bhGi1Sq7bEbbKSC3GGFGFjtqrJ+LF1z
-	 +tQ98gDpW7DZmiSGr5BX9G175h7r/6H6/SYUCi3Xdp2QYoAd32dV7g33Pyu2M0FEWs
-	 aCMOOPjpI0od3vTKk01tVvLdCqMDXKAs2hIwBtV64zBNN4OYIQnobYvrT1hISDlcvN
-	 0Z3whjVSOjf0fXFenZHxFPoQvR/Za4jy7vECXByW/KDhvp9QdVbG0exzUwaRt3J6A1
-	 faWFbhokkwZiQ==
-Received: from thinkos.internal.efficios.com (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4SqTHJ6x6LzGKJ;
-	Tue, 12 Dec 2023 14:30:52 -0500 (EST)
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] ring-buffer: Fix 32-bit rb_time_read() race with rb_time_cmpxchg()
-Date: Tue, 12 Dec 2023 14:30:49 -0500
-Message-Id: <20231212193049.680122-1-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.39.2
+	s=smtpout1; t=1702409969;
+	bh=NcnbNTopFnVXj6ayAjrFagAgkOJOw+5lSqAYTa5IGNM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hNGpYvN44nzEB5dOOxATG/fKvpkH7T4beuh0KCrhCVxLX02ZQZhAsY7s/FWvk27ZY
+	 1gVcXIBNC5usisuxr3bgKQFD2BQ7GWBMgbqNaykbKxdf5FtfGbVDtxFdCoAnoZsdHc
+	 tNoLL3o3phK8B2Zb1V/TAboyvDmu4n5Z+D3mSTG4RJ+cItZDZmKJfw3S5/fOqFHiQu
+	 S2F8rpHQiL99JEU8EifaSoxZQIx+rF0BNhqr5ZwuVLCM6Ts3B3STc18hw82QzZY/Km
+	 HQkNoqXKtYi2IxLf88/tLLqpLjEnjAB0c9L0jGuqBFg+aBuM5uzjJjjyHoUDNg22Ol
+	 7rdpVxk/xWf/w==
+Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4SqTTF3S4wzGKL;
+	Tue, 12 Dec 2023 14:39:29 -0500 (EST)
+Message-ID: <572ab085-ce40-4110-9296-99b136582eba@efficios.com>
+Date: Tue, 12 Dec 2023 14:39:29 -0500
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ring-buffer: Fix a race in rb_time_cmpxchg() for 32 bit
+ archs
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>
+References: <20231212115301.7a9c9a64@gandalf.local.home>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+In-Reply-To: <20231212115301.7a9c9a64@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The following race can cause rb_time_read() to observe a corrupted time
-stamp:
+On 2023-12-12 11:53, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> Mathieu Desnoyers pointed out an issue in the rb_time_cmpxchg() for 32 bit
+> architectures. That is:
+> 
+>   static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
+>   {
+> 	unsigned long cnt, top, bottom, msb;
+> 	unsigned long cnt2, top2, bottom2, msb2;
+> 	u64 val;
+> 
+> 	/* The cmpxchg always fails if it interrupted an update */
+> 	 if (!__rb_time_read(t, &val, &cnt2))
+> 		 return false;
+> 
+> 	 if (val != expect)
+> 		 return false;
+> 
+> <<<< interrupted here!
+> 
+> 	 cnt = local_read(&t->cnt);
+> 
+> The problem is that the synchronization counter in the rb_time_t is read
+> *after* the value of the timestamp is read. That means if an interrupt
+> were to come in between the value being read and the counter being read,
+> it can change the value and the counter and the interrupted process would
+> be clueless about it!
+> 
+> The counter needs to be read first and then the value. That way it is easy
+> to tell if the value is stale or not. If the counter hasn't been updated,
+> then the value is still good.
+> 
+> Link: https://lore.kernel.org/linux-trace-kernel/20231211201324.652870-1-mathieu.desnoyers@efficios.com/
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 10464b4aa605e ("ring-buffer: Add rb_time_t 64 bit operations for speeding up 32 bit")
+> Reported-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-rb_time_cmpxchg()
-[...]
-        if (!rb_time_read_cmpxchg(&t->msb, msb, msb2))
-                return false;
-        if (!rb_time_read_cmpxchg(&t->top, top, top2))
-                return false;
-<interrupted before updating bottom>
-__rb_time_read()
-[...]
-        do {
-                c = local_read(&t->cnt);
-                top = local_read(&t->top);
-                bottom = local_read(&t->bottom);
-                msb = local_read(&t->msb);
-        } while (c != local_read(&t->cnt));
+Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-        *cnt = rb_time_cnt(top);
+> ---
+>   kernel/trace/ring_buffer.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 1d9caee7f542..e110cde685ea 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -706,6 +706,9 @@ static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
+>   	unsigned long cnt2, top2, bottom2, msb2;
+>   	u64 val;
+>   
+> +	/* Any interruptions in this function should cause a failure */
+> +	cnt = local_read(&t->cnt);
+> +
+>   	/* The cmpxchg always fails if it interrupted an update */
+>   	 if (!__rb_time_read(t, &val, &cnt2))
+>   		 return false;
+> @@ -713,7 +716,6 @@ static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
+>   	 if (val != expect)
+>   		 return false;
+>   
+> -	 cnt = local_read(&t->cnt);
+>   	 if ((cnt & 3) != cnt2)
+>   		 return false;
+>   
 
-        /* If top and msb counts don't match, this interrupted a write */
-        if (*cnt != rb_time_cnt(msb))
-                return false;
-          ^ this check fails to catch that "bottom" is still not updated.
-
-So the old "bottom" value is returned, which is wrong.
-
-Fix this by checking that all three of msb, top, and bottom 2-bit cnt
-values match.
-
-The reason to favor checking all three fields over requiring a specific
-update order for both rb_time_set() and rb_time_cmpxchg() is because
-checking all three fields is more robust to handle partial failures of
-rb_time_cmpxchg() when interrupted by nested rb_time_set().
-
-Link: https://lore.kernel.org/lkml/20231211201324.652870-1-mathieu.desnoyers@efficios.com/
-Fixes: f458a1453424e ("ring-buffer: Test last update in 32bit version of __rb_time_read()")
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org
----
- kernel/trace/ring_buffer.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 8d2a4f00eca9..71c225ca2a2b 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -644,8 +644,8 @@ static inline bool __rb_time_read(rb_time_t *t, u64 *ret, unsigned long *cnt)
- 
- 	*cnt = rb_time_cnt(top);
- 
--	/* If top and msb counts don't match, this interrupted a write */
--	if (*cnt != rb_time_cnt(msb))
-+	/* If top, msb or bottom counts don't match, this interrupted a write */
-+	if (*cnt != rb_time_cnt(msb) || *cnt != rb_time_cnt(bottom))
- 		return false;
- 
- 	/* The shift to msb will lose its cnt bits */
 -- 
-2.39.2
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
 
