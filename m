@@ -1,125 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F375C7FBD3
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 13 Dec 2023 23:02:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K/JIejC/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3535C433C7;
-	Wed, 13 Dec 2023 23:02:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702508534;
-	bh=ck0Wks3vinKRdAVQfZzby7MfciSNYq3TfXc0lwo7c7A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=K/JIejC/pPEqia4F7UFTTZiVgdmB/Q0wjqZ3W3Smm4+CbfCCwQ2bsJS9PoPiygCXx
-	 lRG4cOzO4386tW05bwNOlI+nIt2nBf8z7LpLDqoSRq2FMaVKqLy3Od2uGmwvharY44
-	 h6zJsJRBPjWsBuVdQDN6MPlB5ibtLO4moElRt+VnKl3VhdRKBX0Hm2ua+MNXgd19kD
-	 3JfUrVyqDCBUiwH0XFeR2pKzRmY5WtlgOe22AURlyuLdv+vGiySD6fBAUMRbgk/oDR
-	 g9kNXDcFcnA96XE+M5Zx9usubzLFYY2QRbsxRcDgCl1jgzf/RKsGY4P5mPGbNdBdue
-	 QXK9GjskOT3qA==
-Date: Thu, 14 Dec 2023 08:02:10 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Naveen N Rao <naveen@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Srikar Dronamraju <srikar@linux.ibm.com>
-Subject: Re: [PATCH v3] trace/kprobe: Display the actual notrace function
- when rejecting a probe
-Message-Id: <20231214080210.99ff94d956307b036208520d@kernel.org>
-In-Reply-To: <20231213143914.1591175-1-naveen@kernel.org>
-References: <20231213143914.1591175-1-naveen@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="K18a8ymh"
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA681DD;
+	Wed, 13 Dec 2023 15:36:35 -0800 (PST)
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BDMNOxK009329;
+	Wed, 13 Dec 2023 23:36:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=HCJ4ovbZnIIhG/tz7ek6pM+enuYe8MKDEM9fD4TOUak=;
+ b=K18a8ymhua5yCPu8uJrOswvViNqKfMR8+6hF0wkFlRekc25ZLI3drA8mJSn8cb3/btq9
+ QdE3huxKShDrnljdnT59EL+T6fRR3Hw/t5BnoLpK1ih57683jgHbtZ+Z40Id1QL1/xQf
+ m9G9cC7YvR7oOB3sNnUZZnNDZHbf1FWaTtIsO9xK52y6uHgYjzIuSX6L/oulAmCWvs0n
+ 260KcBtlSa4mak4YbglgmS4IrzdLU1T4OBZ5Ifv44TzsDA/A4pHIWd/o21qLcT/N/Koe
+ dWpN1sW6808GKBb9M/j4BRTbdjDwyTbAQ5s7O1cfix4ZXV1UDUckRn5O1ulvX7aV9/YI PQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uynbt1crg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Dec 2023 23:36:16 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BDNNrDs011977;
+	Wed, 13 Dec 2023 23:36:15 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uynbt1cqt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Dec 2023 23:36:15 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BDKnidd008455;
+	Wed, 13 Dec 2023 23:36:14 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uw2jtmvjg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Dec 2023 23:36:14 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BDNaBEJ45220106
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 13 Dec 2023 23:36:11 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9C28020043;
+	Wed, 13 Dec 2023 23:36:11 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3484320040;
+	Wed, 13 Dec 2023 23:36:10 +0000 (GMT)
+Received: from heavy.boeblingen.de.ibm.com (unknown [9.171.70.156])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 13 Dec 2023 23:36:10 +0000 (GMT)
+From: Ilya Leoshkevich <iii@linux.ibm.com>
+To: Alexander Gordeev <agordeev@linux.ibm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>
+Subject: [PATCH v3 01/34] ftrace: Unpoison ftrace_regs in ftrace_ops_list_func()
+Date: Thu, 14 Dec 2023 00:24:21 +0100
+Message-ID: <20231213233605.661251-2-iii@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20231213233605.661251-1-iii@linux.ibm.com>
+References: <20231213233605.661251-1-iii@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: vwgPzb35f7_0sFL9c7WaIyD4dFBVqbRG
+X-Proofpoint-ORIG-GUID: DHoU4-V1fZhM-XryCwlBGJOxj1RlRN2I
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-13_14,2023-12-13_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 clxscore=1015 bulkscore=0 mlxscore=0 spamscore=0
+ suspectscore=0 impostorscore=0 mlxlogscore=999 phishscore=0
+ lowpriorityscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311290000 definitions=main-2312130166
 
-On Wed, 13 Dec 2023 20:09:14 +0530
-Naveen N Rao <naveen@kernel.org> wrote:
+Architectures use assembly code to initialize ftrace_regs and call
+ftrace_ops_list_func(). Therefore, from the KMSAN's point of view,
+ftrace_regs is poisoned on ftrace_ops_list_func entry(). This causes
+KMSAN warnings when running the ftrace testsuite.
 
-> Trying to probe update_sd_lb_stats() using perf results in the below
-> message in the kernel log:
->   trace_kprobe: Could not probe notrace function _text
-> 
-> This is because 'perf probe' specifies the kprobe location as an offset
-> from '_text':
->   $ sudo perf probe -D update_sd_lb_stats
->   p:probe/update_sd_lb_stats _text+1830728
-> 
-> However, the error message is misleading and doesn't help convey the
-> actual notrace function that is being probed. Fix this by looking up the
-> actual function name that is being probed. With this fix, we now get the
-> below message in the kernel log:
->   trace_kprobe: Could not probe notrace function update_sd_lb_stats.constprop.0
-> 
-> Signed-off-by: Naveen N Rao <naveen@kernel.org>
-> ---
-> v3: Remove tk parameter from within_notrace_func() as suggested by 
-> Masami
-> 
->  kernel/trace/trace_kprobe.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index 3d7a180a8427..dc36c6ed6131 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -449,9 +449,8 @@ static bool __within_notrace_func(unsigned long addr)
->  	return !ftrace_location_range(addr, addr + size - 1);
->  }
->  
-> -static bool within_notrace_func(struct trace_kprobe *tk)
-> +static bool within_notrace_func(unsigned long addr)
->  {
-> -	unsigned long addr = trace_kprobe_address(tk);
->  	char symname[KSYM_NAME_LEN], *p;
->  
->  	if (!__within_notrace_func(addr))
-> @@ -471,12 +470,14 @@ static bool within_notrace_func(struct trace_kprobe *tk)
->  	return true;
->  }
->  #else
-> -#define within_notrace_func(tk)	(false)
-> +#define within_notrace_func(addr)	(false)
->  #endif
->  
->  /* Internal register function - just handle k*probes and flags */
->  static int __register_trace_kprobe(struct trace_kprobe *tk)
->  {
-> +	unsigned long addr = trace_kprobe_address(tk);
-> +	char symname[KSYM_NAME_LEN];
->  	int i, ret;
->  
->  	ret = security_locked_down(LOCKDOWN_KPROBES);
-> @@ -486,9 +487,9 @@ static int __register_trace_kprobe(struct trace_kprobe *tk)
->  	if (trace_kprobe_is_registered(tk))
->  		return -EINVAL;
->  
-> -	if (within_notrace_func(tk)) {
-> +	if (within_notrace_func(addr)) {
->  		pr_warn("Could not probe notrace function %s\n",
-> -			trace_kprobe_symbol(tk));
-> +			lookup_symbol_name(addr, symname) ? trace_kprobe_symbol(tk) : symname);
+Fix by trusting the architecture-specific assembly code and always
+unpoisoning ftrace_regs in ftrace_ops_list_func.
 
-Can we just use %ps and (void *)trace_kprobe_address(tk) here?
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Reviewed-by: Alexander Potapenko <glider@google.com>
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+---
+ kernel/trace/ftrace.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-That will be simpler.
-
-Thank you,
-
->  		return -EINVAL;
->  	}
->  
-> 
-> base-commit: 4758560fa268cecfa1144f015aa9f2525d164b7e
-> -- 
-> 2.43.0
-> 
-
-
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 8de8bec5f366..dfb8b26966aa 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -7399,6 +7399,7 @@ __ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
+ void arch_ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
+ 			       struct ftrace_ops *op, struct ftrace_regs *fregs)
+ {
++	kmsan_unpoison_memory(fregs, sizeof(*fregs));
+ 	__ftrace_ops_list_func(ip, parent_ip, NULL, fregs);
+ }
+ #else
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.43.0
+
