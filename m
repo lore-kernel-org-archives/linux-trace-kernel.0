@@ -1,204 +1,198 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wBcyXsS3"
-Received: from mail-oo1-xc32.google.com (mail-oo1-xc32.google.com [IPv6:2607:f8b0:4864:20::c32])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1896B2
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 13 Dec 2023 00:06:10 -0800 (PST)
-Received: by mail-oo1-xc32.google.com with SMTP id 006d021491bc7-590a2a963baso2796319eaf.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 13 Dec 2023 00:06:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="El4NDQuG"
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49DA1B2;
+	Wed, 13 Dec 2023 00:10:27 -0800 (PST)
+Received: by mail-yb1-xb33.google.com with SMTP id 3f1490d57ef6-db4422fff15so5468537276.1;
+        Wed, 13 Dec 2023 00:10:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702454770; x=1703059570; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=J9mdWEzAG/9B8MCr9zuWWWlq43lPTrGVYB8WYYi38CU=;
-        b=wBcyXsS3VLLMZzv6mh2T6+9UP9DbW22sYycB2IGiwfFltk3f1QtcQwm4kg/eaCbpfK
-         6a853NgEUCQww3GbYSMDYvUirWHYUFNUYQiw3KHHAx++3DXEJ78oWHcTTsaJOTdundpe
-         jeDy6zL3LKVQeD6b23UgDa6+3HgE7UAoD5LanXoZTK2t2su4xgprwML9mWnJidWVeSwv
-         /t6id/RUiTpp6e29g693iZ3YMUnU2NOM/Vn4B3PZWohunN3N6Gd3zWmCdW2HvOW2kx3J
-         YfK/HqHmxn6YChzN4ZbG9lw72Sw5iOracIR5v/O52DS84pmu37aHGYkD4dtJpWDRQJ3t
-         U1tA==
+        d=gmail.com; s=20230601; t=1702455026; x=1703059826; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iUkMcrhywTTNY4STrYR47RlN3P1eamS17VyWAZKRyOk=;
+        b=El4NDQuGxT1pSeNmGDq4bNA5jnYOjjTs3bKViinEU/Fo6iCDWYY2a2yWtpNK9Ri8WN
+         JAq1cIK04wvy5yLCPK5MBXQjGXJbxZ3pz3qJStt612w2C5GOO807OypzavHHbbZkqNhK
+         e8jZm/neKPscNRDE8kW6lqN+nR5g7P+ma9L5H2WchqY3zsBa8hVGVbzAq0AwDi+04pB8
+         uZq0Ly/Wbh+JtYtpZnHDq2AOd0qd+kJ9+s62skHyAgbqB8el4qPilU66QbjAStlEVanm
+         2GCBycoQDfZdPqcCrrE8kfpYVbQu8zxhFM38n6EG2DotKaDmeRfkQ3UuxXE0K8iu5bWU
+         iASA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702454770; x=1703059570;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=J9mdWEzAG/9B8MCr9zuWWWlq43lPTrGVYB8WYYi38CU=;
-        b=gR5NPUXB+7E4dUvShEaxywPNFVqOAJPKBllxSy5NGurZdhPLblwN3k+aOYgZlqeiE2
-         ltkxZdnJ4QnFxuVZFQWm3ao1GdCJHiZguLcPiu9E7ra1If5v3p72uZRuexV0dAOYZelA
-         n9q3KX9V1DPnt8trSdKKBWg2VTtvpigQ6n1YAXB/u7Ehh4MYTP4pfAuPn48xVgqfIMAJ
-         XL6PYEhdbUjUTzhBbu9qTI/77NqxG3e7jSv+MxIEoe/9Pmrn1ocbpMfyctDbMNPDzJhk
-         T0QOxUJZMd8UaIEy04JLOUDUw/cfV55cGS7uPDbL/taApN6fLXkvZV/vTRda0NGQ7tL0
-         8gIA==
-X-Gm-Message-State: AOJu0Yzl9iJX4nk9CDK5jgC4gzzYQ8EkyCMtJWhKPVxo0W/ymODUIhMl
-	uIZP+YeZo8OE45a1YzlTJ0dDe8JDU1vJqWCBA69iJQ==
-X-Google-Smtp-Source: AGHT+IGPgs3V4zKi7zlA4zBph0PJYT5cticd6roWHX31QolvnAMu5tV34TepBxpazBzOHiCzl+aZKfaUZeUBEZiKtP8=
-X-Received: by 2002:a05:6359:6006:b0:170:2013:c8f5 with SMTP id
- rw6-20020a056359600600b001702013c8f5mr3758020rwb.53.1702454769816; Wed, 13
- Dec 2023 00:06:09 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702455026; x=1703059826;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iUkMcrhywTTNY4STrYR47RlN3P1eamS17VyWAZKRyOk=;
+        b=nO6BZODLgU7ijIPmj95YceuwGWLRbyJRFNOGCSNcl2XU0baIiNDKCiF8m4hG3IR3+/
+         F1CGn+pfBVanzcA7RSFRqrGb18qKgz5GV+onZZ6+pqzS6JBNDfIrnKxFKUz6lcEDptAM
+         iVDwiPu8NDNcz0qPE7jVuxJea6oMk0CoBuFw1qYeNdh+PkeWQGHc2r1lPXUxMbzuMyuv
+         eHf9ydvxklo4kR8wF1XH9YYZIZpFqq/oxwhrdP28LiUjrRgHMltscY/YgxLjs5zDShV4
+         dtlxMAjfIqKs9fzOE08PJBF6WcHlBwT5AVq/W/c7wDybAPRSmA+fw2VEGIclQL17YQNs
+         rIcg==
+X-Gm-Message-State: AOJu0Yzrdy9NGt0ez8oOu4i4h9SfHM00H8l+pG6DDfqm2EJV5ZRAGQl2
+	Sm8vWNOKCCiZDSLpBpATQ8Tmr/LW4vqmfFbgmTaXcIQaKqA=
+X-Google-Smtp-Source: AGHT+IG0KG2PWQfUyp+qm9XnN8+mADRLGM9Lneo7CHAvt+CzxmHLJcyOXhmnLVqPaHhyr3dP3xJPPdpd0WFZR94TsuA=
+X-Received: by 2002:a25:7797:0:b0:dbc:d349:5625 with SMTP id
+ s145-20020a257797000000b00dbcd3495625mr136624ybc.82.1702455026353; Wed, 13
+ Dec 2023 00:10:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231212142730.998913-1-vincent.guittot@linaro.org>
- <20231212142730.998913-2-vincent.guittot@linaro.org> <20231213071722.u6n2fokrfs7hf3nb@vireshk-i7>
-In-Reply-To: <20231213071722.u6n2fokrfs7hf3nb@vireshk-i7>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Wed, 13 Dec 2023 09:05:57 +0100
-Message-ID: <CAKfTPtC=C3ERO_RDUxxe_Nvq1NuLcNsCsdj=G=vinXmhfpUQZw@mail.gmail.com>
-Subject: Re: [PATCH 1/4] cpufreq: Add a cpufreq pressure feedback for the scheduler
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: catalin.marinas@arm.com, will@kernel.org, sudeep.holla@arm.com, 
-	rafael@kernel.org, agross@kernel.org, andersson@kernel.org, 
-	konrad.dybcio@linaro.org, mingo@redhat.com, peterz@infradead.org, 
-	juri.lelli@redhat.com, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
-	bsegall@google.com, mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, 
-	lukasz.luba@arm.com, rui.zhang@intel.com, mhiramat@kernel.org, 
-	daniel.lezcano@linaro.org, amit.kachhap@gmail.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
+References: <20231212192317.0fb6b101@gandalf.local.home>
+In-Reply-To: <20231212192317.0fb6b101@gandalf.local.home>
+From: Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Date: Wed, 13 Dec 2023 10:09:50 +0200
+Message-ID: <CAJ1xhMXuxGHfD8oRfbna_drpHmNv0RUXFrvuVv6rtt-KeCM9fQ@mail.gmail.com>
+Subject: Re: [PATCH v3] tracing/selftests: Add test to test the trace_marker
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 13 Dec 2023 at 08:17, Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 12-12-23, 15:27, Vincent Guittot wrote:
-> > Provide to the scheduler a feedback about the temporary max available
-> > capacity. Unlike arch_update_thermal_pressure, this doesn't need to be
-> > filtered as the pressure will happen for dozens ms or more.
-> >
-> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > ---
-> >  drivers/cpufreq/cpufreq.c | 48 +++++++++++++++++++++++++++++++++++++++
-> >  include/linux/cpufreq.h   | 10 ++++++++
-> >  2 files changed, 58 insertions(+)
-> >
-> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > index 44db4f59c4cc..7d5f71be8d29 100644
-> > --- a/drivers/cpufreq/cpufreq.c
-> > +++ b/drivers/cpufreq/cpufreq.c
-> > @@ -2563,6 +2563,50 @@ int cpufreq_get_policy(struct cpufreq_policy *policy, unsigned int cpu)
-> >  }
-> >  EXPORT_SYMBOL(cpufreq_get_policy);
-> >
-> > +DEFINE_PER_CPU(unsigned long, cpufreq_pressure);
-> > +EXPORT_PER_CPU_SYMBOL_GPL(cpufreq_pressure);
-> > +
-> > +/**
-> > + * cpufreq_update_pressure() - Update cpufreq pressure for CPUs
-> > + * @cpus        : The related CPUs for which max capacity has been reduced
-> > + * @capped_freq : The maximum allowed frequency that CPUs can run at
-> > + *
-> > + * Update the value of cpufreq pressure for all @cpus in the mask. The
-> > + * cpumask should include all (online+offline) affected CPUs, to avoid
-> > + * operating on stale data when hot-plug is used for some CPUs. The
-> > + * @capped_freq reflects the currently allowed max CPUs frequency due to
-> > + * freq_qos capping. It might be also a boost frequency value, which is bigger
-> > + * than the internal 'capacity_freq_ref' max frequency. In such case the
-> > + * pressure value should simply be removed, since this is an indication that
-> > + * there is no capping. The @capped_freq must be provided in kHz.
-> > + */
-> > +static void cpufreq_update_pressure(const struct cpumask *cpus,
->
-> Since this is defined as 'static', why not just pass policy here ?
+The REs used in the sed commands below may be simplified as shown if desire=
+d.
 
-Mainly because we only need the cpumask and also because this follows
-the same pattern as other place like arch_topology.c
+On Wed, Dec 13, 2023 at 2:22=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+>
+> Add a test that writes longs strings, some over the size of the sub buffe=
+r
+> and make sure that the entire content is there.
+>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+> Changes since v2: https://lore.kernel.org/linux-trace-kernel/202312121516=
+32.25c9b67d@gandalf.local.home
+>
+> - Realized with the upcoming change of the dynamic subbuffer sizes, that
+>   this test will fail if the subbuffer is bigger than what the trace_seq
+>   can hold. Now the trace_marker does not always utilize the full subbuff=
+er
+>   but the size of the trace_seq instead. As that size isn't available to
+>   user space, we can only just make sure all content is there.
+>
+>  .../ftrace/test.d/00basic/trace_marker.tc     | 82 +++++++++++++++++++
+>  1 file changed, 82 insertions(+)
+>  create mode 100755 tools/testing/selftests/ftrace/test.d/00basic/trace_m=
+arker.tc
+>
+> diff --git a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker.t=
+c b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker.tc
+> new file mode 100755
+> index 000000000000..b24aff5807df
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker.tc
+> @@ -0,0 +1,82 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# description: Basic tests on writing to trace_marker
+> +# requires: trace_marker
+> +# flags: instance
+> +
+> +get_buffer_data_size() {
+> +       sed -ne 's/^.*data.*size:\([0-9][0-9]*\).*/\1/p' events/header_pa=
+ge
+            sed -n 's!.*data.*size:\([^;]*\).*!\1!p' events/header_page
+> +}
+> +
+> +get_buffer_data_offset() {
+> +       sed -ne 's/^.*data.*offset:\([0-9][0-9]*\).*/\1/p' events/header_=
+page
+            sed -n 's!.*data.*offset:\([^;]*\).*!\1!p' events/header_page
+> +}
+> +
+> +get_event_header_size() {
+> +       type_len=3D`sed -ne 's/^.*type_len.*:[^0-9]*\([0-9][0-9]*\).*/\1/=
+p' events/header_event`
+            type_len=3D`sed -n '/type_len.*bits/s![^0-9]*!!gp'
+events/header_event`
 
->
-> > +                                   unsigned long capped_freq)
-> > +{
-> > +     unsigned long max_capacity, capacity, pressure;
-> > +     u32 max_freq;
-> > +     int cpu;
-> > +
-> > +     cpu = cpumask_first(cpus);
-> > +     max_capacity = arch_scale_cpu_capacity(cpu);
->
-> This anyway expects all of them to be from the same policy ..
->
-> > +     max_freq = arch_scale_freq_ref(cpu);
-> > +
-> > +     /*
-> > +      * Handle properly the boost frequencies, which should simply clean
-> > +      * the thermal pressure value.
-> > +      */
-> > +     if (max_freq <= capped_freq)
-> > +             capacity = max_capacity;
-> > +     else
-> > +             capacity = mult_frac(max_capacity, capped_freq, max_freq);
-> > +
-> > +     pressure = max_capacity - capacity;
-> > +
->
-> Extra blank line here.
->
-> > +
-> > +     for_each_cpu(cpu, cpus)
-> > +             WRITE_ONCE(per_cpu(cpufreq_pressure, cpu), pressure);
-> > +}
-> > +
-> >  /**
-> >   * cpufreq_set_policy - Modify cpufreq policy parameters.
-> >   * @policy: Policy object to modify.
-> > @@ -2584,6 +2628,7 @@ static int cpufreq_set_policy(struct cpufreq_policy *policy,
-> >  {
-> >       struct cpufreq_policy_data new_data;
-> >       struct cpufreq_governor *old_gov;
-> > +     struct cpumask *cpus;
-> >       int ret;
-> >
-> >       memcpy(&new_data.cpuinfo, &policy->cpuinfo, sizeof(policy->cpuinfo));
-> > @@ -2618,6 +2663,9 @@ static int cpufreq_set_policy(struct cpufreq_policy *policy,
-> >       policy->max = __resolve_freq(policy, policy->max, CPUFREQ_RELATION_H);
-> >       trace_cpu_frequency_limits(policy);
-> >
-> > +     cpus = policy->related_cpus;
->
-> You don't need the extra variable anyway, but lets just pass policy
-> instead to the routine.
+> +       time_len=3D`sed -ne 's/^.*time_delta.*:[^0-9]*\([0-9][0-9]*\).*/\=
+1/p' events/header_event`
+            time_len=3D`sed -n '/time_delta/s![^0-9]*!!gp' events/header_ev=
+ent`
 
-In fact I have followed what was done in cpufreq_cooling.c with
-arch_update_thermal_pressure().
+> +       array_len=3D`sed -ne 's/^.*array.*:[^0-9]*\([0-9][0-9]*\).*/\1/p'=
+ events/header_event`
+            array_len=3D`sed -n '/array/s![^0-9]*!!gp' events/header_event`
 
-Will remove it
-
->
-> > +     cpufreq_update_pressure(cpus, policy->max);
-> > +
-> >       policy->cached_target_freq = UINT_MAX;
-> >
-> >       pr_debug("new min and max freqs are %u - %u kHz\n",
-> > diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-> > index afda5f24d3dd..b1d97edd3253 100644
-> > --- a/include/linux/cpufreq.h
-> > +++ b/include/linux/cpufreq.h
-> > @@ -241,6 +241,12 @@ struct kobject *get_governor_parent_kobj(struct cpufreq_policy *policy);
-> >  void cpufreq_enable_fast_switch(struct cpufreq_policy *policy);
-> >  void cpufreq_disable_fast_switch(struct cpufreq_policy *policy);
-> >  bool has_target_index(void);
-> > +
-> > +DECLARE_PER_CPU(unsigned long, cpufreq_pressure);
-> > +static inline unsigned long cpufreq_get_pressure(int cpu)
-> > +{
-> > +     return per_cpu(cpufreq_pressure, cpu);
-> > +}
-> >  #else
-> >  static inline unsigned int cpufreq_get(unsigned int cpu)
-> >  {
-> > @@ -263,6 +269,10 @@ static inline bool cpufreq_supports_freq_invariance(void)
-> >       return false;
-> >  }
-> >  static inline void disable_cpufreq(void) { }
-> > +static inline unsigned long cpufreq_get_pressure(int cpu)
-> > +{
-> > +     return 0;
-> > +}
-> >  #endif
-> >
-> >  #ifdef CONFIG_CPU_FREQ_STAT
-> > --
-> > 2.34.1
->
+> +       total_bits=3D$((type_len+time_len+array_len))
+> +       total_bits=3D$((total_bits+7))
+> +       echo $((total_bits/8))
+> +}
+> +
+> +get_print_event_buf_offset() {
+> +       sed -ne 's/^.*buf.*offset:\([0-9][0-9]*\).*/\1/p' events/ftrace/p=
+rint/format
+            sed -n 's!.*buf.*offset:\([^;]*\).*!\1!p' events/ftrace/print/f=
+ormat
+> +}
+> +
+> +event_header_size=3D`get_event_header_size`
+> +print_header_size=3D`get_print_event_buf_offset`
+> +
+> +data_offset=3D`get_buffer_data_offset`
+> +
+> +marker_meta=3D$((event_header_size+print_header_size))
+> +
+> +make_str() {
+> +        cnt=3D$1
+> +       # subtract two for \n\0 as marker adds these
+> +       cnt=3D$((cnt-2))
+> +       printf -- 'X%.0s' $(seq $cnt)
+> +}
+> +
+> +write_buffer() {
+> +       size=3D$1
+> +
+> +       str=3D`make_str $size`
+> +
+> +       # clear the buffer
+> +       echo > trace
+> +
+> +       # write the string into the marker
+> +       echo -n $str > trace_marker
+> +
+> +       echo $str
+> +}
+> +
+> +test_buffer() {
+> +
+> +       size=3D`get_buffer_data_size`
+> +       oneline_size=3D$((size-marker_meta))
+> +       echo size =3D $size
+> +       echo meta size =3D $marker_meta
+> +
+> +       # Now add a little more the meta data overhead will overflow
+> +
+> +       str=3D`write_buffer $size`
+> +
+> +       # Make sure the line was broken
+> +       new_str=3D`awk ' /tracing_mark_write:/ { sub(/^.*tracing_mark_wri=
+te: /,"");printf "%s", $0; exit}' trace`
+> +
+> +       if [ "$new_str" =3D "$str" ]; then
+> +               exit fail;
+> +       fi
+> +
+> +       # Make sure the entire line can be found
+> +       new_str=3D`awk ' /tracing_mark_write:/ { sub(/^.*tracing_mark_wri=
+te: */,"");printf "%s", $0; }' trace`
+> +
+> +       if [ "$new_str" !=3D "$str" ]; then
+> +               exit fail;
+> +       fi
+> +}
+> +
+> +test_buffer
 > --
-> viresh
+> 2.42.0
+>
