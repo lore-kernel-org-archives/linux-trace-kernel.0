@@ -1,130 +1,311 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719432E626;
-	Wed, 13 Dec 2023 14:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c9zQEcvQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFC2AC433CA;
-	Wed, 13 Dec 2023 14:06:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702476419;
-	bh=tm2PI5P6o9KPIR9RVFv5cihdxeSVXN3uEt/yiTzKpe0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=c9zQEcvQ/I/2TrO3daFju8Q2xvsVxymZ1J7YViFzMZ22+GvhKczCBu8rrJUDo+TO1
-	 Anc8NUN4dA8ow4LVobcs6qb1jWphf9bw+jELBUPJqudNn/xWmkIMxcrIKvu8XEBcOa
-	 WGHuZ4mBaB1rMvlvIqSSVkfP8pw0u8oJznFFXHh/0RHC1S6PyvN8OnGfzj5MLKjOEg
-	 HySg5HD2tSeAL5m4LdWat8MD42qViAcfpBu0xgVl4Hr5NLzfEv0Y0pYxVLkLYlhamB
-	 Yq4b1VHB5b6j9M45TKb0UiSQxQhkgwHVuLjWoh+MIYvXWbVA5RP95pk6+8WdFm9kYM
-	 Og9EiU/75zGdQ==
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-50c0f13ea11so7992931e87.3;
-        Wed, 13 Dec 2023 06:06:58 -0800 (PST)
-X-Gm-Message-State: AOJu0YxucbavZ/Qjy1Vb5DUJJ0bNooCEMlRyYWncESP3UVIaMT1itJwG
-	eoFJ3D54/QAFW0wqvhMXjfTn4/wgZTTOcI9qkw==
-X-Google-Smtp-Source: AGHT+IEHGprK2wtm9q9hd2ZZLdtHsMouVaTGmtumsX7/XD4d3zOhREC7oFbL/aoRWTZ5IHg9+YH7vjYm3B+d1JvtS+g=
-X-Received: by 2002:a19:8c5b:0:b0:50d:1733:ceba with SMTP id
- i27-20020a198c5b000000b0050d1733cebamr3208254lfj.58.1702476417164; Wed, 13
- Dec 2023 06:06:57 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95AAE2E857
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 13 Dec 2023 14:36:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00CBFC433C8;
+	Wed, 13 Dec 2023 14:36:16 +0000 (UTC)
+Date: Wed, 13 Dec 2023 09:37:01 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Sean Paul <seanpaul@chromium.org>, Arun Easi   <aeasi@marvell.com>, Daniel
+ Wagner <dwagner@suse.de>, Dmytro Maluka <dmaluka@chromium.org>
+Subject: [PATCH v3] tracing: Allow creating instances with specified system
+ events
+Message-ID: <20231213093701.03fddec0@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231119165721.9849-1-alexandru.elisei@arm.com>
- <20231119165721.9849-12-alexandru.elisei@arm.com> <CAL_Jsq+k5BeM9+u12AQvWQ0b4Uv5Cy0vPOpK_uLcYtRnunq4iQ@mail.gmail.com>
- <ZXiMiLz9ZyUdxUP8@raptor> <CAL_Jsq+U_GR=mOK3-phnd4jeJKf79aOmhPwDOSj+f=s-7fZZWQ@mail.gmail.com>
- <ZXmr-Kl9L2SO13--@raptor>
-In-Reply-To: <ZXmr-Kl9L2SO13--@raptor>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 13 Dec 2023 08:06:44 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL=P1Y6w38LD_xw+vK4CNqt22FW_FE9oi_XTLHVQEne7Q@mail.gmail.com>
-Message-ID: <CAL_JsqL=P1Y6w38LD_xw+vK4CNqt22FW_FE9oi_XTLHVQEne7Q@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 11/27] arm64: mte: Reserve tag storage memory
-To: Alexandru Elisei <alexandru.elisei@arm.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, 
-	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, 
-	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org, 
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
-	bsegall@google.com, mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, 
-	mhiramat@kernel.org, rppt@kernel.org, hughd@google.com, pcc@google.com, 
-	steven.price@arm.com, anshuman.khandual@arm.com, vincenzo.frascino@arm.com, 
-	david@redhat.com, eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Dec 13, 2023 at 7:05=E2=80=AFAM Alexandru Elisei
-<alexandru.elisei@arm.com> wrote:
->
-> Hi Rob,
->
-> On Tue, Dec 12, 2023 at 12:44:06PM -0600, Rob Herring wrote:
-> > On Tue, Dec 12, 2023 at 10:38=E2=80=AFAM Alexandru Elisei
-> > <alexandru.elisei@arm.com> wrote:
-> > >
-> > > Hi Rob,
-> > >
-> > > Thank you so much for the feedback, I'm not very familiar with device=
- tree,
-> > > and any comments are very useful.
-> > >
-> > > On Mon, Dec 11, 2023 at 11:29:40AM -0600, Rob Herring wrote:
-> > > > On Sun, Nov 19, 2023 at 10:59=E2=80=AFAM Alexandru Elisei
-> > > > <alexandru.elisei@arm.com> wrote:
-> > > > >
-> > > > > Allow the kernel to get the size and location of the MTE tag stor=
-age
-> > > > > regions from the DTB. This memory is marked as reserved for now.
-> > > > >
-> > > > > The DTB node for the tag storage region is defined as:
-> > > > >
-> > > > >         tags0: tag-storage@8f8000000 {
-> > > > >                 compatible =3D "arm,mte-tag-storage";
-> > > > >                 reg =3D <0x08 0xf8000000 0x00 0x4000000>;
-> > > > >                 block-size =3D <0x1000>;
-> > > > >                 memory =3D <&memory0>;    // Associated tagged me=
-mory node
-> > > > >         };
-> > > >
-> > > > I skimmed thru the discussion some. If this memory range is within
-> > > > main RAM, then it definitely belongs in /reserved-memory.
-> > >
-> > > Ok, will do that.
-> > >
-> > > If you don't mind, why do you say that it definitely belongs in
-> > > reserved-memory? I'm not trying to argue otherwise, I'm curious about=
- the
-> > > motivation.
-> >
-> > Simply so that /memory nodes describe all possible memory and
-> > /reserved-memory is just adding restrictions. It's also because
-> > /reserved-memory is what gets handled early, and we don't need
-> > multiple things to handle early.
-> >
-> > > Tag storage is not DMA and can live anywhere in memory.
-> >
-> > Then why put it in DT at all? The only reason CMA is there is to set
-> > the size. It's not even clear to me we need CMA in DT either. The
-> > reasoning long ago was the kernel didn't do a good job of moving and
-> > reclaiming contiguous space, but that's supposed to be better now (and
-> > most h/w figured out they need IOMMUs).
-> >
-> > But for tag storage you know the size as it is a function of the
-> > memory size, right? After all, you are validating the size is correct.
-> > I guess there is still the aspect of whether you want enable MTE or
-> > not which could be done in a variety of ways.
->
-> Oh, sorry, my bad, I should have been clearer about this. I don't want to
-> put it in the DT as a "linux,cma" node. But I want it to be managed by CM=
-A.
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Yes, I understand, but my point remains. Why do you need this in DT?
-If the location doesn't matter and you can calculate the size from the
-memory size, what else is there to add to the DT?
+A trace instance may only need to enable specific events. As the eventfs
+directory of an instance currently creates all events which adds overhead,
+allow internal instances to be created with just the events in systems
+that they care about. This currently only deals with systems and not
+individual events, but this should bring down the overhead of creating
+instances for specific use cases quite bit.
 
-Rob
+The trace_array_get_by_name() now has another parameter "systems". This
+parameter is a const string pointer of a comma/space separated list of
+event systems that should be created by the trace_array. (Note if the
+trace_array already exists, this parameter is ignored).
+
+The list of systems is saved and if a module is loaded, its events will
+not be added unless the system for those events also match the systems
+string.
+
+Tested-by: Dmytro Maluka <dmaluka@chromium.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v2: https://lore.kernel.org/linux-trace-kernel/20231205211836.458fc57d@gandalf.local.home
+
+- Fixed parameter kerneldoc comment from "system" to "systems" (kernel test robot)
+
+ drivers/scsi/qla2xxx/qla_os.c       |  2 +-
+ include/linux/trace.h               |  4 +--
+ kernel/trace/trace.c                | 23 +++++++++++---
+ kernel/trace/trace.h                |  1 +
+ kernel/trace/trace_boot.c           |  2 +-
+ kernel/trace/trace_events.c         | 48 +++++++++++++++++++++++++++--
+ samples/ftrace/sample-trace-array.c |  2 +-
+ 7 files changed, 70 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 03348f605c2e..dd674378f2f3 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -2889,7 +2889,7 @@ static void qla2x00_iocb_work_fn(struct work_struct *work)
+ static void
+ qla_trace_init(void)
+ {
+-	qla_trc_array = trace_array_get_by_name("qla2xxx");
++	qla_trc_array = trace_array_get_by_name("qla2xxx", NULL);
+ 	if (!qla_trc_array) {
+ 		ql_log(ql_log_fatal, NULL, 0x0001,
+ 		       "Unable to create qla2xxx trace instance, instance logging will be disabled.\n");
+diff --git a/include/linux/trace.h b/include/linux/trace.h
+index 2a70a447184c..fdcd76b7be83 100644
+--- a/include/linux/trace.h
++++ b/include/linux/trace.h
+@@ -51,7 +51,7 @@ int trace_array_printk(struct trace_array *tr, unsigned long ip,
+ 		       const char *fmt, ...);
+ int trace_array_init_printk(struct trace_array *tr);
+ void trace_array_put(struct trace_array *tr);
+-struct trace_array *trace_array_get_by_name(const char *name);
++struct trace_array *trace_array_get_by_name(const char *name, const char *systems);
+ int trace_array_destroy(struct trace_array *tr);
+ 
+ /* For osnoise tracer */
+@@ -84,7 +84,7 @@ static inline int trace_array_init_printk(struct trace_array *tr)
+ static inline void trace_array_put(struct trace_array *tr)
+ {
+ }
+-static inline struct trace_array *trace_array_get_by_name(const char *name)
++static inline struct trace_array *trace_array_get_by_name(const char *name, const char *systems)
+ {
+ 	return NULL;
+ }
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 6c79548f9574..ce708cd6e0ec 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -9484,7 +9484,8 @@ static int trace_array_create_dir(struct trace_array *tr)
+ 	return ret;
+ }
+ 
+-static struct trace_array *trace_array_create(const char *name)
++static struct trace_array *
++trace_array_create_systems(const char *name, const char *systems)
+ {
+ 	struct trace_array *tr;
+ 	int ret;
+@@ -9504,6 +9505,12 @@ static struct trace_array *trace_array_create(const char *name)
+ 	if (!zalloc_cpumask_var(&tr->pipe_cpumask, GFP_KERNEL))
+ 		goto out_free_tr;
+ 
++	if (systems) {
++		tr->system_names = kstrdup_const(systems, GFP_KERNEL);
++		if (!tr->system_names)
++			goto out_free_tr;
++	}
++
+ 	tr->trace_flags = global_trace.trace_flags & ~ZEROED_TRACE_FLAGS;
+ 
+ 	cpumask_copy(tr->tracing_cpumask, cpu_all_mask);
+@@ -9550,12 +9557,18 @@ static struct trace_array *trace_array_create(const char *name)
+ 	free_trace_buffers(tr);
+ 	free_cpumask_var(tr->pipe_cpumask);
+ 	free_cpumask_var(tr->tracing_cpumask);
++	kfree_const(tr->system_names);
+ 	kfree(tr->name);
+ 	kfree(tr);
+ 
+ 	return ERR_PTR(ret);
+ }
+ 
++static struct trace_array *trace_array_create(const char *name)
++{
++	return trace_array_create_systems(name, NULL);
++}
++
+ static int instance_mkdir(const char *name)
+ {
+ 	struct trace_array *tr;
+@@ -9581,6 +9594,7 @@ static int instance_mkdir(const char *name)
+ /**
+  * trace_array_get_by_name - Create/Lookup a trace array, given its name.
+  * @name: The name of the trace array to be looked up/created.
++ * @systems: A list of systems to create event directories for (NULL for all)
+  *
+  * Returns pointer to trace array with given name.
+  * NULL, if it cannot be created.
+@@ -9594,7 +9608,7 @@ static int instance_mkdir(const char *name)
+  * trace_array_put() is called, user space can not delete it.
+  *
+  */
+-struct trace_array *trace_array_get_by_name(const char *name)
++struct trace_array *trace_array_get_by_name(const char *name, const char *systems)
+ {
+ 	struct trace_array *tr;
+ 
+@@ -9606,7 +9620,7 @@ struct trace_array *trace_array_get_by_name(const char *name)
+ 			goto out_unlock;
+ 	}
+ 
+-	tr = trace_array_create(name);
++	tr = trace_array_create_systems(name, systems);
+ 
+ 	if (IS_ERR(tr))
+ 		tr = NULL;
+@@ -9653,6 +9667,7 @@ static int __remove_instance(struct trace_array *tr)
+ 
+ 	free_cpumask_var(tr->pipe_cpumask);
+ 	free_cpumask_var(tr->tracing_cpumask);
++	kfree_const(tr->system_names);
+ 	kfree(tr->name);
+ 	kfree(tr);
+ 
+@@ -10371,7 +10386,7 @@ __init static void enable_instances(void)
+ 		if (IS_ENABLED(CONFIG_TRACER_MAX_TRACE))
+ 			do_allocate_snapshot(tok);
+ 
+-		tr = trace_array_get_by_name(tok);
++		tr = trace_array_get_by_name(tok, NULL);
+ 		if (!tr) {
+ 			pr_warn("Failed to create instance buffer %s\n", curr_str);
+ 			continue;
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index b7f4ea25a194..97b01dfd7070 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -377,6 +377,7 @@ struct trace_array {
+ 	unsigned char		trace_flags_index[TRACE_FLAGS_MAX_SIZE];
+ 	unsigned int		flags;
+ 	raw_spinlock_t		start_lock;
++	const char		*system_names;
+ 	struct list_head	err_log;
+ 	struct dentry		*dir;
+ 	struct dentry		*options;
+diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+index 7ccc7a8e155b..dbe29b4c6a7a 100644
+--- a/kernel/trace/trace_boot.c
++++ b/kernel/trace/trace_boot.c
+@@ -633,7 +633,7 @@ trace_boot_init_instances(struct xbc_node *node)
+ 		if (!p || *p == '\0')
+ 			continue;
+ 
+-		tr = trace_array_get_by_name(p);
++		tr = trace_array_get_by_name(p, NULL);
+ 		if (!tr) {
+ 			pr_err("Failed to get trace instance %s\n", p);
+ 			continue;
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index f29e815ca5b2..b70d03818038 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -2896,6 +2896,27 @@ void trace_event_eval_update(struct trace_eval_map **map, int len)
+ 	up_write(&trace_event_sem);
+ }
+ 
++static bool event_in_systems(struct trace_event_call *call,
++			     const char *systems)
++{
++	const char *system;
++	const char *p;
++
++	if (!systems)
++		return true;
++
++	system = call->class->system;
++	p = strstr(systems, system);
++	if (!p)
++		return false;
++
++	if (p != systems && !isspace(*(p - 1)) && *(p - 1) != ',')
++		return false;
++
++	p += strlen(system);
++	return !*p || isspace(*p) || *p == ',';
++}
++
+ static struct trace_event_file *
+ trace_create_new_event(struct trace_event_call *call,
+ 		       struct trace_array *tr)
+@@ -2905,9 +2926,12 @@ trace_create_new_event(struct trace_event_call *call,
+ 	struct trace_event_file *file;
+ 	unsigned int first;
+ 
++	if (!event_in_systems(call, tr->system_names))
++		return NULL;
++
+ 	file = kmem_cache_alloc(file_cachep, GFP_TRACE);
+ 	if (!file)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	pid_list = rcu_dereference_protected(tr->filtered_pids,
+ 					     lockdep_is_held(&event_mutex));
+@@ -2972,8 +2996,17 @@ __trace_add_new_event(struct trace_event_call *call, struct trace_array *tr)
+ 	struct trace_event_file *file;
+ 
+ 	file = trace_create_new_event(call, tr);
++	/*
++	 * trace_create_new_event() returns ERR_PTR(-ENOMEM) if failed
++	 * allocation, or NULL if the event is not part of the tr->system_names.
++	 * When the event is not part of the tr->system_names, return zero, not
++	 * an error.
++	 */
+ 	if (!file)
+-		return -ENOMEM;
++		return 0;
++
++	if (IS_ERR(file))
++		return PTR_ERR(file);
+ 
+ 	if (eventdir_initialized)
+ 		return event_create_dir(tr->event_dir, file);
+@@ -3012,8 +3045,17 @@ __trace_early_add_new_event(struct trace_event_call *call,
+ 	int ret;
+ 
+ 	file = trace_create_new_event(call, tr);
++	/*
++	 * trace_create_new_event() returns ERR_PTR(-ENOMEM) if failed
++	 * allocation, or NULL if the event is not part of the tr->system_names.
++	 * When the event is not part of the tr->system_names, return zero, not
++	 * an error.
++	 */
+ 	if (!file)
+-		return -ENOMEM;
++		return 0;
++
++	if (IS_ERR(file))
++		return PTR_ERR(file);
+ 
+ 	ret = event_define_fields(call);
+ 	if (ret)
+diff --git a/samples/ftrace/sample-trace-array.c b/samples/ftrace/sample-trace-array.c
+index 6aba02a31c96..d0ee9001c7b3 100644
+--- a/samples/ftrace/sample-trace-array.c
++++ b/samples/ftrace/sample-trace-array.c
+@@ -105,7 +105,7 @@ static int __init sample_trace_array_init(void)
+ 	 * NOTE: This function increments the reference counter
+ 	 * associated with the trace array - "tr".
+ 	 */
+-	tr = trace_array_get_by_name("sample-instance");
++	tr = trace_array_get_by_name("sample-instance", "sched,timer,kprobes");
+ 
+ 	if (!tr)
+ 		return -1;
+-- 
+2.42.0
+
