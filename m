@@ -1,140 +1,130 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719432E626;
+	Wed, 13 Dec 2023 14:06:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PeNtitCG"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D310BF5;
-	Wed, 13 Dec 2023 05:41:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702474884; x=1734010884;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=UHu+07MBRevDOSW1Tf5iIKC4rfKnsAW4POR/WWx6Gr0=;
-  b=PeNtitCGHo6Z2DxOgHaRJwMCX92KgQ8uTtXwWfm0S4XQnWdi+sOyD1Sx
-   JdwaQqEn5PQ+OAYsVTm2xWxEL6YYBH+H9dATGqP2eObOumQ5Ll7m0kWyi
-   VvP6ZdyTQPFwyKumVwaBd+XfSxXiw4AmyYBoWO+xMqGsOkft6mIOXHXig
-   gMxRLNIerquzOzFZbIGbDAewSWc9I7qA+3pMh40oh/jlKj3kxLiDLAUmn
-   j1JqT5OhhqNEyZvfwx75VDmCebcSuM3LH1DmNjlk4zMwoEj4URqQigLSM
-   4DLI3aVoIJiX+In3OZalr1Gh1RKRAl2LPLZlCaaiV3J8egsuL10FotVw6
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="461439317"
-X-IronPort-AV: E=Sophos;i="6.04,272,1695711600"; 
-   d="scan'208";a="461439317"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 05:41:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="892023724"
-X-IronPort-AV: E=Sophos;i="6.04,272,1695711600"; 
-   d="scan'208";a="892023724"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 13 Dec 2023 05:41:17 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rDPUB-000Kcx-1a;
-	Wed, 13 Dec 2023 13:41:15 +0000
-Date: Wed, 13 Dec 2023 21:41:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: Alexander Graf <graf@amazon.com>, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org,
-	linux-doc@vger.kernel.org, x86@kernel.org,
-	Eric Biederman <ebiederm@xmission.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>,
-	James Gowans <jgowans@amazon.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	arnd@arndb.de, pbonzini@redhat.com, madvenka@linux.microsoft.com,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH 06/15] arm64: Add KHO support
-Message-ID: <202312132139.g2NKV67G-lkp@intel.com>
-References: <20231213000452.88295-7-graf@amazon.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c9zQEcvQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFC2AC433CA;
+	Wed, 13 Dec 2023 14:06:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702476419;
+	bh=tm2PI5P6o9KPIR9RVFv5cihdxeSVXN3uEt/yiTzKpe0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=c9zQEcvQ/I/2TrO3daFju8Q2xvsVxymZ1J7YViFzMZ22+GvhKczCBu8rrJUDo+TO1
+	 Anc8NUN4dA8ow4LVobcs6qb1jWphf9bw+jELBUPJqudNn/xWmkIMxcrIKvu8XEBcOa
+	 WGHuZ4mBaB1rMvlvIqSSVkfP8pw0u8oJznFFXHh/0RHC1S6PyvN8OnGfzj5MLKjOEg
+	 HySg5HD2tSeAL5m4LdWat8MD42qViAcfpBu0xgVl4Hr5NLzfEv0Y0pYxVLkLYlhamB
+	 Yq4b1VHB5b6j9M45TKb0UiSQxQhkgwHVuLjWoh+MIYvXWbVA5RP95pk6+8WdFm9kYM
+	 Og9EiU/75zGdQ==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-50c0f13ea11so7992931e87.3;
+        Wed, 13 Dec 2023 06:06:58 -0800 (PST)
+X-Gm-Message-State: AOJu0YxucbavZ/Qjy1Vb5DUJJ0bNooCEMlRyYWncESP3UVIaMT1itJwG
+	eoFJ3D54/QAFW0wqvhMXjfTn4/wgZTTOcI9qkw==
+X-Google-Smtp-Source: AGHT+IEHGprK2wtm9q9hd2ZZLdtHsMouVaTGmtumsX7/XD4d3zOhREC7oFbL/aoRWTZ5IHg9+YH7vjYm3B+d1JvtS+g=
+X-Received: by 2002:a19:8c5b:0:b0:50d:1733:ceba with SMTP id
+ i27-20020a198c5b000000b0050d1733cebamr3208254lfj.58.1702476417164; Wed, 13
+ Dec 2023 06:06:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231213000452.88295-7-graf@amazon.com>
+References: <20231119165721.9849-1-alexandru.elisei@arm.com>
+ <20231119165721.9849-12-alexandru.elisei@arm.com> <CAL_Jsq+k5BeM9+u12AQvWQ0b4Uv5Cy0vPOpK_uLcYtRnunq4iQ@mail.gmail.com>
+ <ZXiMiLz9ZyUdxUP8@raptor> <CAL_Jsq+U_GR=mOK3-phnd4jeJKf79aOmhPwDOSj+f=s-7fZZWQ@mail.gmail.com>
+ <ZXmr-Kl9L2SO13--@raptor>
+In-Reply-To: <ZXmr-Kl9L2SO13--@raptor>
+From: Rob Herring <robh@kernel.org>
+Date: Wed, 13 Dec 2023 08:06:44 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL=P1Y6w38LD_xw+vK4CNqt22FW_FE9oi_XTLHVQEne7Q@mail.gmail.com>
+Message-ID: <CAL_JsqL=P1Y6w38LD_xw+vK4CNqt22FW_FE9oi_XTLHVQEne7Q@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 11/27] arm64: mte: Reserve tag storage memory
+To: Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, 
+	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, 
+	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org, 
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
+	bsegall@google.com, mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, 
+	mhiramat@kernel.org, rppt@kernel.org, hughd@google.com, pcc@google.com, 
+	steven.price@arm.com, anshuman.khandual@arm.com, vincenzo.frascino@arm.com, 
+	david@redhat.com, eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Alexander,
+On Wed, Dec 13, 2023 at 7:05=E2=80=AFAM Alexandru Elisei
+<alexandru.elisei@arm.com> wrote:
+>
+> Hi Rob,
+>
+> On Tue, Dec 12, 2023 at 12:44:06PM -0600, Rob Herring wrote:
+> > On Tue, Dec 12, 2023 at 10:38=E2=80=AFAM Alexandru Elisei
+> > <alexandru.elisei@arm.com> wrote:
+> > >
+> > > Hi Rob,
+> > >
+> > > Thank you so much for the feedback, I'm not very familiar with device=
+ tree,
+> > > and any comments are very useful.
+> > >
+> > > On Mon, Dec 11, 2023 at 11:29:40AM -0600, Rob Herring wrote:
+> > > > On Sun, Nov 19, 2023 at 10:59=E2=80=AFAM Alexandru Elisei
+> > > > <alexandru.elisei@arm.com> wrote:
+> > > > >
+> > > > > Allow the kernel to get the size and location of the MTE tag stor=
+age
+> > > > > regions from the DTB. This memory is marked as reserved for now.
+> > > > >
+> > > > > The DTB node for the tag storage region is defined as:
+> > > > >
+> > > > >         tags0: tag-storage@8f8000000 {
+> > > > >                 compatible =3D "arm,mte-tag-storage";
+> > > > >                 reg =3D <0x08 0xf8000000 0x00 0x4000000>;
+> > > > >                 block-size =3D <0x1000>;
+> > > > >                 memory =3D <&memory0>;    // Associated tagged me=
+mory node
+> > > > >         };
+> > > >
+> > > > I skimmed thru the discussion some. If this memory range is within
+> > > > main RAM, then it definitely belongs in /reserved-memory.
+> > >
+> > > Ok, will do that.
+> > >
+> > > If you don't mind, why do you say that it definitely belongs in
+> > > reserved-memory? I'm not trying to argue otherwise, I'm curious about=
+ the
+> > > motivation.
+> >
+> > Simply so that /memory nodes describe all possible memory and
+> > /reserved-memory is just adding restrictions. It's also because
+> > /reserved-memory is what gets handled early, and we don't need
+> > multiple things to handle early.
+> >
+> > > Tag storage is not DMA and can live anywhere in memory.
+> >
+> > Then why put it in DT at all? The only reason CMA is there is to set
+> > the size. It's not even clear to me we need CMA in DT either. The
+> > reasoning long ago was the kernel didn't do a good job of moving and
+> > reclaiming contiguous space, but that's supposed to be better now (and
+> > most h/w figured out they need IOMMUs).
+> >
+> > But for tag storage you know the size as it is a function of the
+> > memory size, right? After all, you are validating the size is correct.
+> > I guess there is still the aspect of whether you want enable MTE or
+> > not which could be done in a variety of ways.
+>
+> Oh, sorry, my bad, I should have been clearer about this. I don't want to
+> put it in the DT as a "linux,cma" node. But I want it to be managed by CM=
+A.
 
-kernel test robot noticed the following build warnings:
+Yes, I understand, but my point remains. Why do you need this in DT?
+If the location doesn't matter and you can calculate the size from the
+memory size, what else is there to add to the DT?
 
-[auto build test WARNING on tip/x86/core]
-[also build test WARNING on arm64/for-next/core akpm-mm/mm-everything linus/master v6.7-rc5 next-20231213]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Alexander-Graf/mm-memblock-Add-support-for-scratch-memory/20231213-080941
-base:   tip/x86/core
-patch link:    https://lore.kernel.org/r/20231213000452.88295-7-graf%40amazon.com
-patch subject: [PATCH 06/15] arm64: Add KHO support
-config: microblaze-randconfig-r133-20231213 (https://download.01.org/0day-ci/archive/20231213/202312132139.g2NKV67G-lkp@intel.com/config)
-compiler: microblaze-linux-gcc (GCC) 13.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20231213/202312132139.g2NKV67G-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312132139.g2NKV67G-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/of/fdt.c:1012:13: sparse: sparse: symbol 'early_init_dt_check_kho' was not declared. Should it be static?
-
-vim +/early_init_dt_check_kho +1012 drivers/of/fdt.c
-
-  1008	
-  1009	/**
-  1010	 * early_init_dt_check_kho - Decode info required for kexec handover from DT
-  1011	 */
-> 1012	void __init early_init_dt_check_kho(void)
-  1013	{
-  1014	#ifdef CONFIG_KEXEC_KHO
-  1015		unsigned long node = chosen_node_offset;
-  1016		u64 kho_start, scratch_start, scratch_size, mem_start, mem_size;
-  1017		const __be32 *p;
-  1018		int l;
-  1019	
-  1020		if ((long)node < 0)
-  1021			return;
-  1022	
-  1023		p = of_get_flat_dt_prop(node, "linux,kho-dt", &l);
-  1024		if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
-  1025			return;
-  1026	
-  1027		kho_start = dt_mem_next_cell(dt_root_addr_cells, &p);
-  1028	
-  1029		p = of_get_flat_dt_prop(node, "linux,kho-scratch", &l);
-  1030		if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
-  1031			return;
-  1032	
-  1033		scratch_start = dt_mem_next_cell(dt_root_addr_cells, &p);
-  1034		scratch_size = dt_mem_next_cell(dt_root_addr_cells, &p);
-  1035	
-  1036		p = of_get_flat_dt_prop(node, "linux,kho-mem", &l);
-  1037		if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
-  1038			return;
-  1039	
-  1040		mem_start = dt_mem_next_cell(dt_root_addr_cells, &p);
-  1041		mem_size = dt_mem_next_cell(dt_root_addr_cells, &p);
-  1042	
-  1043		kho_populate(kho_start, scratch_start, scratch_size, mem_start, mem_size);
-  1044	#endif
-  1045	}
-  1046	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Rob
