@@ -1,141 +1,192 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Fnt0wkfy"
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCBB3B2;
-	Tue, 12 Dec 2023 17:32:34 -0800 (PST)
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BD0pBG0012640;
-	Wed, 13 Dec 2023 01:32:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=KMCbxYyj6q/VXSfTdo3NzbZtbBOQtb6Yz6XeblWpLIY=;
- b=Fnt0wkfyFieKdF3BGCpAe9eOVN3w6kqCa+XnTateb0CBsl9vHY4Ed7RLw8Ehy/iWt9pt
- 3FoOz0fnaJ3WMqwSIBwSLuomeAcpEMnsrPxJJCHpVFIxdWvoFUI6svDcc2AA+9CiqcDb
- ILz9iNmsMYLcxE2+MtNt2GvdlEig+h21gCdjgp9QARG89M2T2sm226TOniD6YS6FOERU
- y+/qSjf0FmpIy+ooCJGhannVqNe3FMHXtr5saUEXEk0QpO9Z9FjSRw9VeVy2+9puzKNr
- Y1JgZBvvvlLxwoOwh4X74m3X7JX3eD+lFD33Uq2czTmtl0AlN8oTGIjrm8GQMw1uVrDl nA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uy2361d6q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Dec 2023 01:32:06 +0000
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BD0pIkx013397;
-	Wed, 13 Dec 2023 01:32:05 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uy2361d65-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Dec 2023 01:32:05 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BD1SnXL005066;
-	Wed, 13 Dec 2023 01:32:04 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uw4skd26c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Dec 2023 01:32:04 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BD1W1q015074038
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 13 Dec 2023 01:32:01 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 75E0220043;
-	Wed, 13 Dec 2023 01:32:01 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2758620040;
-	Wed, 13 Dec 2023 01:32:00 +0000 (GMT)
-Received: from [9.171.70.156] (unknown [9.171.70.156])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 13 Dec 2023 01:32:00 +0000 (GMT)
-Message-ID: <626be6deb066627a77470bf80bb76c27222a5e3e.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 13/33] kmsan: Introduce memset_no_sanitize_memory()
-From: Ilya Leoshkevich <iii@linux.ibm.com>
-To: Alexander Potapenko <glider@google.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Andrew Morton
- <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        David
- Rientjes <rientjes@google.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Joonsoo
- Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
-        Masami
- Hiramatsu <mhiramat@kernel.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Steven
- Rostedt <rostedt@goodmis.org>,
-        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil
- Babka <vbabka@suse.cz>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Sven Schnelle
- <svens@linux.ibm.com>
-Date: Wed, 13 Dec 2023 02:31:59 +0100
-In-Reply-To: <CAG_fn=UbJ+z8Gmfjodu-jBQz75HApXADw8Abj38BCLHmY_ZW9w@mail.gmail.com>
-References: <20231121220155.1217090-1-iii@linux.ibm.com>
-	 <20231121220155.1217090-14-iii@linux.ibm.com>
-	 <CAG_fn=Vaj3hTRAMxUwofpSMPhFBOizDOWR_An-V9qLNQv-suYw@mail.gmail.com>
-	 <69e7bc8e8c8a38c429a793e991e0509cb97a53e1.camel@linux.ibm.com>
-	 <CAG_fn=UbJ+z8Gmfjodu-jBQz75HApXADw8Abj38BCLHmY_ZW9w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F881AD;
+	Tue, 12 Dec 2023 17:50:56 -0800 (PST)
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Sqdjf4hdXzsSGS;
+	Wed, 13 Dec 2023 09:50:46 +0800 (CST)
+Received: from dggpeml500012.china.huawei.com (unknown [7.185.36.15])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0D2D6180032;
+	Wed, 13 Dec 2023 09:50:54 +0800 (CST)
+Received: from localhost.localdomain (10.67.175.61) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 13 Dec 2023 09:50:53 +0800
+From: Zheng Yejian <zhengyejian1@huawei.com>
+To: <rostedt@goodmis.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<mathieu.desnoyers@efficios.com>, <mhiramat@kernel.org>,
+	<yeweihua4@huawei.com>, <zhengyejian1@huawei.com>
+Subject: [PATCH v2] tracing: Fix uaf issue when open the hist or hist_debug file
+Date: Wed, 13 Dec 2023 09:51:38 +0800
+Message-ID: <20231213015138.281888-1-zhengyejian1@huawei.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20231212113546.6a51d359@gandalf.local.home>
+References: <20231212113546.6a51d359@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: uqRL-_gQFksj6cXf_VfQabVl2MwU5Zww
-X-Proofpoint-ORIG-GUID: MvszSTT3P12rTHdpiLBCqdmC1cvhFx41
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-12_14,2023-12-12_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=802
- malwarescore=0 spamscore=0 clxscore=1015 impostorscore=0 suspectscore=0
- phishscore=0 adultscore=0 lowpriorityscore=0 mlxscore=0 priorityscore=1501
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2312130009
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
 
-On Fri, 2023-12-08 at 16:25 +0100, Alexander Potapenko wrote:
-> > A problem with __memset() is that, at least for me, it always ends
-> > up being a call. There is a use case where we need to write only 1
-> > byte, so I thought that introducing a call there (when compiling
-> > without KMSAN) would be unacceptable.
->=20
-> Wonder what happens with that use case if we e.g. build with fortify-
-> source.
-> Calling memset() for a single byte might be indicating the code is
-> not hot.
+KASAN report following issue. The root cause is when opening 'hist'
+file of an instance and accessing 'trace_event_file' in hist_show(),
+but 'trace_event_file' has been freed due to the instance being removed.
+'hist_debug' file has the same problem. To fix it, call
+tracing_{open,release}_file_tr() in file_operations callback to have
+the ref count and avoid 'trace_event_file' being freed.
 
-The original code has a simple assignment. Here is the relevant diff:
+  BUG: KASAN: slab-use-after-free in hist_show+0x11e0/0x1278
+  Read of size 8 at addr ffff242541e336b8 by task head/190
 
-        if (s->flags & __OBJECT_POISON) {
--               memset(p, POISON_FREE, poison_size - 1);
--               p[poison_size - 1] =3D POISON_END;
-+               memset_no_sanitize_memory(p, POISON_FREE, poison_size -
-1);
-+               memset_no_sanitize_memory(p + poison_size - 1,
-POISON_END, 1);
-        }
+  CPU: 4 PID: 190 Comm: head Not tainted 6.7.0-rc5-g26aff849438c #133
+  Hardware name: linux,dummy-virt (DT)
+  Call trace:
+   dump_backtrace+0x98/0xf8
+   show_stack+0x1c/0x30
+   dump_stack_lvl+0x44/0x58
+   print_report+0xf0/0x5a0
+   kasan_report+0x80/0xc0
+   __asan_report_load8_noabort+0x1c/0x28
+   hist_show+0x11e0/0x1278
+   seq_read_iter+0x344/0xd78
+   seq_read+0x128/0x1c0
+   vfs_read+0x198/0x6c8
+   ksys_read+0xf4/0x1e0
+   __arm64_sys_read+0x70/0xa8
+   invoke_syscall+0x70/0x260
+   el0_svc_common.constprop.0+0xb0/0x280
+   do_el0_svc+0x44/0x60
+   el0_svc+0x34/0x68
+   el0t_64_sync_handler+0xb8/0xc0
+   el0t_64_sync+0x168/0x170
 
-[...]
+  Allocated by task 188:
+   kasan_save_stack+0x28/0x50
+   kasan_set_track+0x28/0x38
+   kasan_save_alloc_info+0x20/0x30
+   __kasan_slab_alloc+0x6c/0x80
+   kmem_cache_alloc+0x15c/0x4a8
+   trace_create_new_event+0x84/0x348
+   __trace_add_new_event+0x18/0x88
+   event_trace_add_tracer+0xc4/0x1a0
+   trace_array_create_dir+0x6c/0x100
+   trace_array_create+0x2e8/0x568
+   instance_mkdir+0x48/0x80
+   tracefs_syscall_mkdir+0x90/0xe8
+   vfs_mkdir+0x3c4/0x610
+   do_mkdirat+0x144/0x200
+   __arm64_sys_mkdirat+0x8c/0xc0
+   invoke_syscall+0x70/0x260
+   el0_svc_common.constprop.0+0xb0/0x280
+   do_el0_svc+0x44/0x60
+   el0_svc+0x34/0x68
+   el0t_64_sync_handler+0xb8/0xc0
+   el0t_64_sync+0x168/0x170
 
+  Freed by task 191:
+   kasan_save_stack+0x28/0x50
+   kasan_set_track+0x28/0x38
+   kasan_save_free_info+0x34/0x58
+   __kasan_slab_free+0xe4/0x158
+   kmem_cache_free+0x19c/0x508
+   event_file_put+0xa0/0x120
+   remove_event_file_dir+0x180/0x320
+   event_trace_del_tracer+0xb0/0x180
+   __remove_instance+0x224/0x508
+   instance_rmdir+0x44/0x78
+   tracefs_syscall_rmdir+0xbc/0x140
+   vfs_rmdir+0x1cc/0x4c8
+   do_rmdir+0x220/0x2b8
+   __arm64_sys_unlinkat+0xc0/0x100
+   invoke_syscall+0x70/0x260
+   el0_svc_common.constprop.0+0xb0/0x280
+   do_el0_svc+0x44/0x60
+   el0_svc+0x34/0x68
+   el0t_64_sync_handler+0xb8/0xc0
+   el0t_64_sync+0x168/0x170
 
-> As stated above, I don't think this is more or less working as
-> intended.
-> If we really want the ability to inline __memset(), we could
-> transform
-> it into memset() in non-sanitizer builds, but perhaps having a call
-> is
-> also acceptable?
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+---
+ kernel/trace/trace_events_hist.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-Thanks for the detailed explanation and analysis. I will post
-a version with a __memset() and let the slab maintainers decide if
-the additional overhead is acceptable.
+Steve, thanks for your review!
+
+v2:
+  - Introduce tracing_single_release_file_tr() to add the missing call for
+    single_release() as suggested by Steve;
+    Link: https://lore.kernel.org/all/20231212113546.6a51d359@gandalf.local.home/
+  - Slightly modify the commit message and comments.
+
+v1:
+  Link: https://lore.kernel.org/all/20231212113317.4159890-1-zhengyejian1@huawei.com/
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 1abc07fba1b9..5296a08c0641 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -5619,14 +5619,22 @@ static int hist_show(struct seq_file *m, void *v)
+ 	return ret;
+ }
+ 
++static int tracing_single_release_file_tr(struct inode *inode, struct file *filp)
++{
++	tracing_release_file_tr(inode, filp);
++	return single_release(inode, filp);
++}
++
+ static int event_hist_open(struct inode *inode, struct file *file)
+ {
+ 	int ret;
+ 
+-	ret = security_locked_down(LOCKDOWN_TRACEFS);
++	ret = tracing_open_file_tr(inode, file);
+ 	if (ret)
+ 		return ret;
+ 
++	/* Clear private_data to avoid warning in single_open() */
++	file->private_data = NULL;
+ 	return single_open(file, hist_show, file);
+ }
+ 
+@@ -5634,7 +5642,7 @@ const struct file_operations event_hist_fops = {
+ 	.open = event_hist_open,
+ 	.read = seq_read,
+ 	.llseek = seq_lseek,
+-	.release = single_release,
++	.release = tracing_single_release_file_tr,
+ };
+ 
+ #ifdef CONFIG_HIST_TRIGGERS_DEBUG
+@@ -5900,10 +5908,12 @@ static int event_hist_debug_open(struct inode *inode, struct file *file)
+ {
+ 	int ret;
+ 
+-	ret = security_locked_down(LOCKDOWN_TRACEFS);
++	ret = tracing_open_file_tr(inode, file);
+ 	if (ret)
+ 		return ret;
+ 
++	/* Clear private_data to avoid warning in single_open() */
++	file->private_data = NULL;
+ 	return single_open(file, hist_debug_show, file);
+ }
+ 
+@@ -5911,7 +5921,7 @@ const struct file_operations event_hist_debug_fops = {
+ 	.open = event_hist_debug_open,
+ 	.read = seq_read,
+ 	.llseek = seq_lseek,
+-	.release = single_release,
++	.release = tracing_single_release_file_tr,
+ };
+ #endif
+ 
+-- 
+2.25.1
+
