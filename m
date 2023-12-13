@@ -1,34 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5FDBA49;
-	Wed, 13 Dec 2023 22:59:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F375C7FBD3
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 13 Dec 2023 23:02:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hY36A9Cw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0881C433C9;
-	Wed, 13 Dec 2023 22:59:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K/JIejC/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3535C433C7;
+	Wed, 13 Dec 2023 23:02:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702508370;
-	bh=tu87z2m0yzSYCrpZUb09UJnCb9MAH5ku9bxrta7xiXw=;
+	s=k20201202; t=1702508534;
+	bh=ck0Wks3vinKRdAVQfZzby7MfciSNYq3TfXc0lwo7c7A=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hY36A9CwjW4Ty/pXdnOweeE+wQ0Ya22fO53ILzsQPxdcW0Jf/Y3ErRLmtdDojdFLp
-	 tOlP/tEgGDdQnxEqcVMB8djOZl8lHOfONUmdxWkIt9wTDtQt7X4ytnR28UZyMNu0od
-	 s8K4uM4/C8ohD8dgVoiiSZYs9+1p2cJyMU5+GWhzT2UCBHABuY6jH1zhKZdgeRM72x
-	 394b4GfPamjk/Rf+YqlH/xT1n+Gh1vxETzAy+2bOr/W1X4adoHGsS6PjDyAfbD3L74
-	 lyGW1M7BGXGcCKS/Yfjx4o59TPoWdNfy37S6w7cQwgiM/g1e5UeakK88leErFezb8l
-	 jOzra2NCdG2DA==
-Date: Thu, 14 Dec 2023 07:59:26 +0900
+	b=K/JIejC/pPEqia4F7UFTTZiVgdmB/Q0wjqZ3W3Smm4+CbfCCwQ2bsJS9PoPiygCXx
+	 lRG4cOzO4386tW05bwNOlI+nIt2nBf8z7LpLDqoSRq2FMaVKqLy3Od2uGmwvharY44
+	 h6zJsJRBPjWsBuVdQDN6MPlB5ibtLO4moElRt+VnKl3VhdRKBX0Hm2ua+MNXgd19kD
+	 3JfUrVyqDCBUiwH0XFeR2pKzRmY5WtlgOe22AURlyuLdv+vGiySD6fBAUMRbgk/oDR
+	 g9kNXDcFcnA96XE+M5Zx9usubzLFYY2QRbsxRcDgCl1jgzf/RKsGY4P5mPGbNdBdue
+	 QXK9GjskOT3qA==
+Date: Thu, 14 Dec 2023 08:02:10 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Shuah Khan <shuah@kernel.org>,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v4] tracing/selftests: Add test to test the trace_marker
-Message-Id: <20231214075926.e3969c8746068953fe910ed0@kernel.org>
-In-Reply-To: <20231213111527.6a4c9b58@gandalf.local.home>
-References: <20231213111527.6a4c9b58@gandalf.local.home>
+To: Naveen N Rao <naveen@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Srikar Dronamraju <srikar@linux.ibm.com>
+Subject: Re: [PATCH v3] trace/kprobe: Display the actual notrace function
+ when rejecting a probe
+Message-Id: <20231214080210.99ff94d956307b036208520d@kernel.org>
+In-Reply-To: <20231213143914.1591175-1-naveen@kernel.org>
+References: <20231213143914.1591175-1-naveen@kernel.org>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,124 +38,86 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 13 Dec 2023 11:15:27 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, 13 Dec 2023 20:09:14 +0530
+Naveen N Rao <naveen@kernel.org> wrote:
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> Trying to probe update_sd_lb_stats() using perf results in the below
+> message in the kernel log:
+>   trace_kprobe: Could not probe notrace function _text
 > 
-> Add a test that writes longs strings, some over the size of the sub buffer
-> and make sure that the entire content is there.
+> This is because 'perf probe' specifies the kprobe location as an offset
+> from '_text':
+>   $ sudo perf probe -D update_sd_lb_stats
+>   p:probe/update_sd_lb_stats _text+1830728
+> 
+> However, the error message is misleading and doesn't help convey the
+> actual notrace function that is being probed. Fix this by looking up the
+> actual function name that is being probed. With this fix, we now get the
+> below message in the kernel log:
+>   trace_kprobe: Could not probe notrace function update_sd_lb_stats.constprop.0
+> 
+> Signed-off-by: Naveen N Rao <naveen@kernel.org>
+> ---
+> v3: Remove tk parameter from within_notrace_func() as suggested by 
+> Masami
+> 
+>  kernel/trace/trace_kprobe.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 3d7a180a8427..dc36c6ed6131 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -449,9 +449,8 @@ static bool __within_notrace_func(unsigned long addr)
+>  	return !ftrace_location_range(addr, addr + size - 1);
+>  }
+>  
+> -static bool within_notrace_func(struct trace_kprobe *tk)
+> +static bool within_notrace_func(unsigned long addr)
+>  {
+> -	unsigned long addr = trace_kprobe_address(tk);
+>  	char symname[KSYM_NAME_LEN], *p;
+>  
+>  	if (!__within_notrace_func(addr))
+> @@ -471,12 +470,14 @@ static bool within_notrace_func(struct trace_kprobe *tk)
+>  	return true;
+>  }
+>  #else
+> -#define within_notrace_func(tk)	(false)
+> +#define within_notrace_func(addr)	(false)
+>  #endif
+>  
+>  /* Internal register function - just handle k*probes and flags */
+>  static int __register_trace_kprobe(struct trace_kprobe *tk)
+>  {
+> +	unsigned long addr = trace_kprobe_address(tk);
+> +	char symname[KSYM_NAME_LEN];
+>  	int i, ret;
+>  
+>  	ret = security_locked_down(LOCKDOWN_KPROBES);
+> @@ -486,9 +487,9 @@ static int __register_trace_kprobe(struct trace_kprobe *tk)
+>  	if (trace_kprobe_is_registered(tk))
+>  		return -EINVAL;
+>  
+> -	if (within_notrace_func(tk)) {
+> +	if (within_notrace_func(addr)) {
+>  		pr_warn("Could not probe notrace function %s\n",
+> -			trace_kprobe_symbol(tk));
+> +			lookup_symbol_name(addr, symname) ? trace_kprobe_symbol(tk) : symname);
 
-This looks good to me. and tested.
+Can we just use %ps and (void *)trace_kprobe_address(tk) here?
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Tested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+That will be simpler.
 
 Thank you,
 
+>  		return -EINVAL;
+>  	}
+>  
 > 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
-> Changes since v3: https://lore.kernel.org/linux-trace-kernel/20231212192317.0fb6b101@gandalf.local.home
-> 
-> - Removed / */ from regex, to catch more than one space added to the
->   beginning of the print. This would have caught the bug of using "%*s"
->   instead of "%.*s". Luckily, the trace_printk test caught that.
-> 
->  .../ftrace/test.d/00basic/trace_marker.tc     | 82 +++++++++++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100755 tools/testing/selftests/ftrace/test.d/00basic/trace_marker.tc
-> 
-> diff --git a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker.tc b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker.tc
-> new file mode 100755
-> index 000000000000..9aa0db2b84fc
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker.tc
-> @@ -0,0 +1,82 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +# description: Basic tests on writing to trace_marker
-> +# requires: trace_marker
-> +# flags: instance
-> +
-> +get_buffer_data_size() {
-> +	sed -ne 's/^.*data.*size:\([0-9][0-9]*\).*/\1/p' events/header_page
-> +}
-> +
-> +get_buffer_data_offset() {
-> +	sed -ne 's/^.*data.*offset:\([0-9][0-9]*\).*/\1/p' events/header_page
-> +}
-> +
-> +get_event_header_size() {
-> +	type_len=`sed -ne 's/^.*type_len.*:[^0-9]*\([0-9][0-9]*\).*/\1/p' events/header_event`
-> +	time_len=`sed -ne 's/^.*time_delta.*:[^0-9]*\([0-9][0-9]*\).*/\1/p' events/header_event`
-> +	array_len=`sed -ne 's/^.*array.*:[^0-9]*\([0-9][0-9]*\).*/\1/p' events/header_event`
-> +	total_bits=$((type_len+time_len+array_len))
-> +	total_bits=$((total_bits+7))
-> +	echo $((total_bits/8))
-> +}
-> +
-> +get_print_event_buf_offset() {
-> +	sed -ne 's/^.*buf.*offset:\([0-9][0-9]*\).*/\1/p' events/ftrace/print/format
-> +}
-> +
-> +event_header_size=`get_event_header_size`
-> +print_header_size=`get_print_event_buf_offset`
-> +
-> +data_offset=`get_buffer_data_offset`
-> +
-> +marker_meta=$((event_header_size+print_header_size))
-> +
-> +make_str() {
-> +        cnt=$1
-> +	# subtract two for \n\0 as marker adds these
-> +	cnt=$((cnt-2))
-> +	printf -- 'X%.0s' $(seq $cnt)
-> +}
-> +
-> +write_buffer() {
-> +	size=$1
-> +
-> +	str=`make_str $size`
-> +
-> +	# clear the buffer
-> +	echo > trace
-> +
-> +	# write the string into the marker
-> +	echo -n $str > trace_marker
-> +
-> +	echo $str
-> +}
-> +
-> +test_buffer() {
-> +
-> +	size=`get_buffer_data_size`
-> +	oneline_size=$((size-marker_meta))
-> +	echo size = $size
-> +	echo meta size = $marker_meta
-> +
-> +	# Now add a little more the meta data overhead will overflow
-> +
-> +	str=`write_buffer $size`
-> +
-> +	# Make sure the line was broken
-> +	new_str=`awk ' /tracing_mark_write:/ { sub(/^.*tracing_mark_write: /,"");printf "%s", $0; exit}' trace`
-> +
-> +	if [ "$new_str" = "$str" ]; then
-> +		exit fail;
-> +	fi
-> +
-> +	# Make sure the entire line can be found
-> +	new_str=`awk ' /tracing_mark_write:/ { sub(/^.*tracing_mark_write: /,"");printf "%s", $0; }' trace`
-> +
-> +	if [ "$new_str" != "$str" ]; then
-> +		exit fail;
-> +	fi
-> +}
-> +
-> +test_buffer
+> base-commit: 4758560fa268cecfa1144f015aa9f2525d164b7e
 > -- 
-> 2.42.0
+> 2.43.0
 > 
 
 
