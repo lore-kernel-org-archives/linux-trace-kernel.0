@@ -1,37 +1,37 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="JRKZgNVJ"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="X9Yt1Xsm"
 Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6E1AB7;
-	Tue, 12 Dec 2023 16:05:10 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DB79E8;
+	Tue, 12 Dec 2023 16:05:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1702425911; x=1733961911;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=fB4jNKUlRe6N2loXV8PJj2wVQgaVapDNdKtj8FKjX38=;
-  b=JRKZgNVJUNYUti32279vCmCNyO2uZKI/zvxQWBcVxZo5csvR8D+dpDBB
-   BF1/Y2OdHlk5rUQrCb4DuGHDqQPtu29EHMVseAZGMZAdWMbn4CVNCilO1
-   NXPqDVBqkdgGIIFGK3GgEWxJ0EFE6KRUgBMrxzblM6sgD4Ga9WI7saqqz
-   E=;
+  t=1702425919; x=1733961919;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=omkZqOlO4bdGSVCdXn2us+8UWaNPdUSggP3ul/1DY+c=;
+  b=X9Yt1XsmBO8hon59sSvxtQj8sudWqrFA2eMdbdpBcQ7uvQVRzlSxKrQO
+   OgbmJ+MikfkjHekk6fTOHfUOOaW5/W3wi27SdbsmJK7gFp6xC4x6MaBSN
+   +v/6pCqlkBiJmxKg2mK6bWWImATRTVukCgdh4ubZa9hSTvH9GZbvI2+t8
+   Y=;
 X-IronPort-AV: E=Sophos;i="6.04,271,1695686400"; 
-   d="scan'208";a="258636760"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-iad-1e-m6i4x-3e1fab07.us-east-1.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 00:05:07 +0000
+   d="scan'208";a="258636775"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-iad-1d-m6i4x-d23e07e8.us-east-1.amazon.com) ([10.25.36.214])
+  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 00:05:16 +0000
 Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan3.iad.amazon.com [10.32.235.38])
-	by email-inbound-relay-iad-1e-m6i4x-3e1fab07.us-east-1.amazon.com (Postfix) with ESMTPS id 2F16D80559;
-	Wed, 13 Dec 2023 00:04:58 +0000 (UTC)
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.38.20:24714]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.33.64:2525] with esmtp (Farcaster)
- id a315ff1a-1500-42c3-9aab-085b45d8541a; Wed, 13 Dec 2023 00:04:58 +0000 (UTC)
-X-Farcaster-Flow-ID: a315ff1a-1500-42c3-9aab-085b45d8541a
+	by email-inbound-relay-iad-1d-m6i4x-d23e07e8.us-east-1.amazon.com (Postfix) with ESMTPS id 8651A80643;
+	Wed, 13 Dec 2023 00:05:07 +0000 (UTC)
+Received: from EX19MTAUWA001.ant.amazon.com [10.0.21.151:38785]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.34.165:2525] with esmtp (Farcaster)
+ id ac23c6ff-3564-413c-9f1d-e68dec397645; Wed, 13 Dec 2023 00:05:06 +0000 (UTC)
+X-Farcaster-Flow-ID: ac23c6ff-3564-413c-9f1d-e68dec397645
 Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ EX19MTAUWA001.ant.amazon.com (10.250.64.204) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 13 Dec 2023 00:04:58 +0000
+ 15.2.1118.40; Wed, 13 Dec 2023 00:05:06 +0000
 Received: from dev-dsk-graf-1a-5ce218e4.eu-west-1.amazon.com (10.253.83.51) by
  EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 13 Dec 2023 00:04:54 +0000
+ 15.2.1118.40; Wed, 13 Dec 2023 00:05:02 +0000
 From: Alexander Graf <graf@amazon.com>
 To: <linux-kernel@vger.kernel.org>
 CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -48,10 +48,12 @@ CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
 	<anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, David
  Woodhouse <dwmw@amazon.co.uk>, Benjamin Herrenschmidt
 	<benh@kernel.crashing.org>
-Subject: [PATCH 00/15] kexec: Allow preservation of ftrace buffers
-Date: Wed, 13 Dec 2023 00:04:37 +0000
-Message-ID: <20231213000452.88295-1-graf@amazon.com>
+Subject: [PATCH 02/15] memblock: Declare scratch memory as CMA
+Date: Wed, 13 Dec 2023 00:04:39 +0000
+Message-ID: <20231213000452.88295-3-graf@amazon.com>
 X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20231213000452.88295-1-graf@amazon.com>
+References: <20231213000452.88295-1-graf@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -63,168 +65,81 @@ X-ClientProxiedBy: EX19D031UWC001.ant.amazon.com (10.13.139.241) To
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 
-Kexec today considers itself purely a boot loader: When we enter the new
-kernel, any state the previous kernel left behind is irrelevant and the
-new kernel reinitializes the system.
+When we finish populating our memory, we don't want to lose the scratch
+region as memory we can use for useful data. Do do that, we mark it as
+CMA memory. That means that any allocation within it only happens with
+movable memory which we can then happily discard for the next kexec.
 
-However, there are use cases where this mode of operation is not what we
-actually want. In virtualization hosts for example, we want to use kexec
-to update the host kernel while virtual machine memory stays untouched.
-When we add device assignment to the mix, we also need to ensure that
-IOMMU and VFIO states are untouched. If we add PCIe peer to peer DMA, we
-need to do the same for the PCI subsystem. If we want to kexec while an
-SEV-SNP enabled virtual machine is running, we need to preserve the VM
-context pages and physical memory. See James' and my Linux Plumbers
-Conference 2023 presentation for details:
+That way we don't lose the scratch region's memory anymore for
+allocations after boot.
 
-  https://lpc.events/event/17/contributions/1485/
+Signed-off-by: Alexander Graf <graf@amazon.com>
+---
+ mm/memblock.c | 30 ++++++++++++++++++++++++++----
+ 1 file changed, 26 insertions(+), 4 deletions(-)
 
-To start us on the journey to support all the use cases above, this
-patch implements basic infrastructure to allow hand over of kernel state
-across kexec (Kexec HandOver, aka KHO). As example target, we use ftrace:
-With this patch set applied, you can read ftrace records from the
-pre-kexec environment in your post-kexec one. This creates a very powerful
-debugging and performance analysis tool for kexec. It's also slightly
-easier to reason about than full blown VFIO state preservation.
-
-== Alternatives ==
-
-There are alternative approaches to (parts of) the problems above:
-
-  * Memory Pools [1] - preallocated persistent memory region + allocator
-  * PRMEM [2] - resizable persistent memory regions with fixed metadata
-                pointer on the kernel command line + allocator
-  * Pkernfs [3] - preallocated file system for in-kernel data with fixed
-                  address location on the kernel command line
-  * PKRAM [4] - handover of user space pages using a fixed metadata page
-                specified via command line
-
-All of the approaches above fundamentally have the same problem: They
-require the administrator to explicitly carve out a physical memory
-location because they have no mechanism outside of the kernel command
-line to pass data (including memory reservations) between kexec'ing
-kernels.
-
-KHO provides that base foundation. We will determine later whether we
-still need any of the approaches above for fast bulk memory handover of for
-example IOMMU page tables. But IMHO they would all be users of KHO, with
-KHO providing the foundational primitive to pass metadata and bulk memory
-reservations as well as provide easy versioning for data.
-
-== Documentation ==
-
-If people are happy with the approach in this patch set, I will write up
-conclusive documentation including schemas for the metadata as part of its
-next iteration. For now, here's a rudimentary overview:
-
-We introduce a metadata file that the kernels pass between each other. How
-they pass it is architecture specific. The file's format is a Flattened
-Device Tree (fdt) which has a generator and parser already included in
-Linux. When the root user enables KHO through /sys/kernel/kho/active, the
-kernel invokes callbacks to every driver that supports KHO to serialize
-its state. When the actual kexec happens, the fdt is part of the image
-set that we boot into. In addition, we keep a "scratch region" available
-for kexec: A physically contiguous memory region that is guaranteed to
-not have any memory that KHO would preserve.  The new kernel bootstraps
-itself using the scratch region and sets all handed over memory as in use.
-When drivers initialize that support KHO, they introspect the fdt and
-recover their state from it. This includes memory reservations, where the
-driver can either discard or claim reservations.
-
-== Limitations ==
-
-I currently only implemented file based kexec. The kernel interfaces
-in the patch set are already in place to support user space kexec as well,
-but I have not implemented it yet.
-
-== How to Use ==
-
-To use the code, please boot the kernel with the "kho_scratch=" command
-line parameter set: "kho_scratch=512M". KHO requires a scratch region.
-
-Make sure to fill ftrace with contents that you want to observe after
-kexec.  Then, before you invoke file based "kexec -l", activate KHO:
-
-  # echo 1 > /sys/kernel/kho/active
-  # kexec -l Image --initrd=initrd -s
-  # kexec -e
-
-The new kernel will boot up and contain the previous kernel's trace
-buffers in /sys/kernel/debug/tracing/trace.
-
-
-
-Alex
-
-[1] https://lore.kernel.org/all/169645773092.11424.7258549771090599226.stgit@skinsburskii./
-[2] https://lore.kernel.org/all/20231016233215.13090-1-madvenka@linux.microsoft.com/
-[3] https://lpc.events/event/17/contributions/1485/attachments/1296/2650/jgowans-preserving-across-kexec.pdf
-[4] https://lore.kernel.org/kexec/1682554137-13938-1-git-send-email-anthony.yznaga@oracle.com/
-
-
-Alexander Graf (15):
-  mm,memblock: Add support for scratch memory
-  memblock: Declare scratch memory as CMA
-  kexec: Add Kexec HandOver (KHO) generation helpers
-  kexec: Add KHO parsing support
-  kexec: Add KHO support to kexec file loads
-  arm64: Add KHO support
-  x86: Add KHO support
-  tracing: Introduce names for ring buffers
-  tracing: Introduce names for events
-  tracing: Introduce kho serialization
-  tracing: Add kho serialization of trace buffers
-  tracing: Recover trace buffers from kexec handover
-  tracing: Add kho serialization of trace events
-  tracing: Recover trace events from kexec handover
-  tracing: Add config option for kexec handover
-
- Documentation/ABI/testing/sysfs-firmware-kho  |   9 +
- Documentation/ABI/testing/sysfs-kernel-kho    |  53 ++
- .../admin-guide/kernel-parameters.txt         |  10 +
- MAINTAINERS                                   |   2 +
- arch/arm64/Kconfig                            |  12 +
- arch/arm64/kernel/setup.c                     |   2 +
- arch/arm64/mm/init.c                          |   8 +
- arch/x86/Kconfig                              |  12 +
- arch/x86/boot/compressed/kaslr.c              |  55 ++
- arch/x86/include/uapi/asm/bootparam.h         |  15 +-
- arch/x86/kernel/e820.c                        |   9 +
- arch/x86/kernel/kexec-bzimage64.c             |  39 ++
- arch/x86/kernel/setup.c                       |  46 ++
- arch/x86/mm/init_32.c                         |   7 +
- arch/x86/mm/init_64.c                         |   7 +
- drivers/of/fdt.c                              |  41 ++
- drivers/of/kexec.c                            |  36 ++
- include/linux/kexec.h                         |  56 ++
- include/linux/memblock.h                      |  19 +
- include/linux/ring_buffer.h                   |   9 +-
- include/linux/trace_events.h                  |   1 +
- include/trace/trace_events.h                  |   2 +
- include/uapi/linux/kexec.h                    |   6 +
- kernel/Makefile                               |   2 +
- kernel/kexec_file.c                           |  41 ++
- kernel/kexec_kho_in.c                         | 298 ++++++++++
- kernel/kexec_kho_out.c                        | 526 ++++++++++++++++++
- kernel/trace/Kconfig                          |  13 +
- kernel/trace/blktrace.c                       |   1 +
- kernel/trace/ring_buffer.c                    | 267 ++++++++-
- kernel/trace/trace.c                          |  76 ++-
- kernel/trace/trace_branch.c                   |   1 +
- kernel/trace/trace_events.c                   |   3 +
- kernel/trace/trace_functions_graph.c          |   4 +-
- kernel/trace/trace_output.c                   | 106 +++-
- kernel/trace/trace_output.h                   |   1 +
- kernel/trace/trace_probe.c                    |   3 +
- kernel/trace/trace_syscalls.c                 |  29 +
- mm/Kconfig                                    |   4 +
- mm/memblock.c                                 |  83 ++-
- 40 files changed, 1901 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-firmware-kho
- create mode 100644 Documentation/ABI/testing/sysfs-kernel-kho
- create mode 100644 kernel/kexec_kho_in.c
- create mode 100644 kernel/kexec_kho_out.c
-
+diff --git a/mm/memblock.c b/mm/memblock.c
+index e89e6c8f9d75..44741424dab7 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -16,6 +16,7 @@
+ #include <linux/kmemleak.h>
+ #include <linux/seq_file.h>
+ #include <linux/memblock.h>
++#include <linux/page-isolation.h>
+ 
+ #include <asm/sections.h>
+ #include <linux/io.h>
+@@ -1100,10 +1101,6 @@ static bool should_skip_region(struct memblock_type *type,
+ 	if ((flags & MEMBLOCK_SCRATCH) && !memblock_is_scratch(m))
+ 		return true;
+ 
+-	/* Leave scratch memory alone after scratch-only phase */
+-	if (!(flags & MEMBLOCK_SCRATCH) && memblock_is_scratch(m))
+-		return true;
+-
+ 	return false;
+ }
+ 
+@@ -2153,6 +2150,20 @@ static void __init __free_pages_memory(unsigned long start, unsigned long end)
+ 	}
+ }
+ 
++static void reserve_scratch_mem(phys_addr_t start, phys_addr_t end)
++{
++#ifdef CONFIG_MEMBLOCK_SCRATCH
++	ulong start_pfn = pageblock_start_pfn(PFN_DOWN(start));
++	ulong end_pfn = pageblock_align(PFN_UP(end));
++	ulong pfn;
++
++	for (pfn = start_pfn; pfn < end_pfn; pfn += pageblock_nr_pages) {
++		/* Mark as CMA to prevent kernel allocations in it */
++		set_pageblock_migratetype(pfn_to_page(pfn), MIGRATE_CMA);
++	}
++#endif
++}
++
+ static unsigned long __init __free_memory_core(phys_addr_t start,
+ 				 phys_addr_t end)
+ {
+@@ -2214,6 +2225,17 @@ static unsigned long __init free_low_memory_core_early(void)
+ 
+ 	memmap_init_reserved_pages();
+ 
++#ifdef CONFIG_MEMBLOCK_SCRATCH
++	/*
++	 * Mark scratch mem as CMA before we return it. That way we ensure that
++	 * no kernel allocations happen on it. That means we can reuse it as
++	 * scratch memory again later.
++	 */
++	__for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
++			     MEMBLOCK_SCRATCH, &start, &end, NULL)
++		reserve_scratch_mem(start, end);
++#endif
++
+ 	/*
+ 	 * We need to use NUMA_NO_NODE instead of NODE_DATA(0)->node_id
+ 	 *  because in some case like Node0 doesn't have RAM installed
 -- 
 2.40.1
 
