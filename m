@@ -1,108 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D84826AC7
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 13 Dec 2023 14:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fVHXWomn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B862C433C8;
-	Wed, 13 Dec 2023 14:44:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702478675;
-	bh=ScXFnHPrze8ODr/xbGNGVp/Vqi3ITeCzD4ijg53p57A=;
-	h=From:To:Cc:Subject:Date:From;
-	b=fVHXWomnuIObu5UCEj2AcN68mEiE5qSkTczJucIZ8tWkIJLBFkWme0DBwjqlTEY9v
-	 PnSMoV07SPwT/DJYzYhif5O2VzEWuyA95K9Nv9vonAVrGhSefPTLKxOjoOVKp09yh/
-	 C/qywDaeGa8pa40h4E5O6dA9AOAbzZx6ia6hx69A6Vek5tZmkiSoq6opI1yivpQuMQ
-	 E2WGGs9ThuK412+jtIwWZ1KktLjGLv8uzf0TwzA8JP3DN3H3tJJrA0Cct67yPGbZbr
-	 Qvb+nSysvsfaH+vQmzicwnB73dTn36RgxXrw1JZbNqzRKNzxBDOd7qMyeZEBmyhB+Z
-	 YeJwE7ezwz6fg==
-From: Naveen N Rao <naveen@kernel.org>
-To: <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Srikar Dronamraju <srikar@linux.ibm.com>
-Subject: [PATCH v3] trace/kprobe: Display the actual notrace function when rejecting a probe
-Date: Wed, 13 Dec 2023 20:09:14 +0530
-Message-ID: <20231213143914.1591175-1-naveen@kernel.org>
-X-Mailer: git-send-email 2.43.0
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id B518DB9;
+	Wed, 13 Dec 2023 06:51:23 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65AAEC15;
+	Wed, 13 Dec 2023 06:52:09 -0800 (PST)
+Received: from raptor (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5CAFA3F738;
+	Wed, 13 Dec 2023 06:51:18 -0800 (PST)
+Date: Wed, 13 Dec 2023 14:51:11 +0000
+From: Alexandru Elisei <alexandru.elisei@arm.com>
+To: Rob Herring <robh@kernel.org>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
+	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
+	rppt@kernel.org, hughd@google.com, pcc@google.com,
+	steven.price@arm.com, anshuman.khandual@arm.com,
+	vincenzo.frascino@arm.com, david@redhat.com, eugenis@google.com,
+	kcc@google.com, hyesoo.yu@samsung.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v2 11/27] arm64: mte: Reserve tag storage memory
+Message-ID: <ZXnE3724jYYSg4o6@raptor>
+References: <20231119165721.9849-1-alexandru.elisei@arm.com>
+ <20231119165721.9849-12-alexandru.elisei@arm.com>
+ <CAL_Jsq+k5BeM9+u12AQvWQ0b4Uv5Cy0vPOpK_uLcYtRnunq4iQ@mail.gmail.com>
+ <ZXiMiLz9ZyUdxUP8@raptor>
+ <CAL_Jsq+U_GR=mOK3-phnd4jeJKf79aOmhPwDOSj+f=s-7fZZWQ@mail.gmail.com>
+ <ZXmr-Kl9L2SO13--@raptor>
+ <CAL_JsqL=P1Y6w38LD_xw+vK4CNqt22FW_FE9oi_XTLHVQEne7Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqL=P1Y6w38LD_xw+vK4CNqt22FW_FE9oi_XTLHVQEne7Q@mail.gmail.com>
 
-Trying to probe update_sd_lb_stats() using perf results in the below
-message in the kernel log:
-  trace_kprobe: Could not probe notrace function _text
+Hi,
 
-This is because 'perf probe' specifies the kprobe location as an offset
-from '_text':
-  $ sudo perf probe -D update_sd_lb_stats
-  p:probe/update_sd_lb_stats _text+1830728
+On Wed, Dec 13, 2023 at 08:06:44AM -0600, Rob Herring wrote:
+> On Wed, Dec 13, 2023 at 7:05 AM Alexandru Elisei
+> <alexandru.elisei@arm.com> wrote:
+> >
+> > Hi Rob,
+> >
+> > On Tue, Dec 12, 2023 at 12:44:06PM -0600, Rob Herring wrote:
+> > > On Tue, Dec 12, 2023 at 10:38 AM Alexandru Elisei
+> > > <alexandru.elisei@arm.com> wrote:
+> > > >
+> > > > Hi Rob,
+> > > >
+> > > > Thank you so much for the feedback, I'm not very familiar with device tree,
+> > > > and any comments are very useful.
+> > > >
+> > > > On Mon, Dec 11, 2023 at 11:29:40AM -0600, Rob Herring wrote:
+> > > > > On Sun, Nov 19, 2023 at 10:59 AM Alexandru Elisei
+> > > > > <alexandru.elisei@arm.com> wrote:
+> > > > > >
+> > > > > > Allow the kernel to get the size and location of the MTE tag storage
+> > > > > > regions from the DTB. This memory is marked as reserved for now.
+> > > > > >
+> > > > > > The DTB node for the tag storage region is defined as:
+> > > > > >
+> > > > > >         tags0: tag-storage@8f8000000 {
+> > > > > >                 compatible = "arm,mte-tag-storage";
+> > > > > >                 reg = <0x08 0xf8000000 0x00 0x4000000>;
+> > > > > >                 block-size = <0x1000>;
+> > > > > >                 memory = <&memory0>;    // Associated tagged memory node
+> > > > > >         };
+> > > > >
+> > > > > I skimmed thru the discussion some. If this memory range is within
+> > > > > main RAM, then it definitely belongs in /reserved-memory.
+> > > >
+> > > > Ok, will do that.
+> > > >
+> > > > If you don't mind, why do you say that it definitely belongs in
+> > > > reserved-memory? I'm not trying to argue otherwise, I'm curious about the
+> > > > motivation.
+> > >
+> > > Simply so that /memory nodes describe all possible memory and
+> > > /reserved-memory is just adding restrictions. It's also because
+> > > /reserved-memory is what gets handled early, and we don't need
+> > > multiple things to handle early.
+> > >
+> > > > Tag storage is not DMA and can live anywhere in memory.
+> > >
+> > > Then why put it in DT at all? The only reason CMA is there is to set
+> > > the size. It's not even clear to me we need CMA in DT either. The
+> > > reasoning long ago was the kernel didn't do a good job of moving and
+> > > reclaiming contiguous space, but that's supposed to be better now (and
+> > > most h/w figured out they need IOMMUs).
+> > >
+> > > But for tag storage you know the size as it is a function of the
+> > > memory size, right? After all, you are validating the size is correct.
+> > > I guess there is still the aspect of whether you want enable MTE or
+> > > not which could be done in a variety of ways.
+> >
+> > Oh, sorry, my bad, I should have been clearer about this. I don't want to
+> > put it in the DT as a "linux,cma" node. But I want it to be managed by CMA.
+> 
+> Yes, I understand, but my point remains. Why do you need this in DT?
+> If the location doesn't matter and you can calculate the size from the
+> memory size, what else is there to add to the DT?
 
-However, the error message is misleading and doesn't help convey the
-actual notrace function that is being probed. Fix this by looking up the
-actual function name that is being probed. With this fix, we now get the
-below message in the kernel log:
-  trace_kprobe: Could not probe notrace function update_sd_lb_stats.constprop.0
+I am afraid there has been a misunderstanding. What do you mean by
+"location doesn't matter"?
 
-Signed-off-by: Naveen N Rao <naveen@kernel.org>
----
-v3: Remove tk parameter from within_notrace_func() as suggested by 
-Masami
+At the very least, Linux needs to know the address and size of a memory
+region to use it. The series is about using the tag storage memory for
+data. Tag storage cannot be described as a regular memory node because it
+cannot be tagged (and normal memory can).
 
- kernel/trace/trace_kprobe.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+Then there's the matter of the tag storage block size (explained in this
+commit message), and also knowing the memory range for which a tag storage
+region stores the tags. This is explained in the cover letter.
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 3d7a180a8427..dc36c6ed6131 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -449,9 +449,8 @@ static bool __within_notrace_func(unsigned long addr)
- 	return !ftrace_location_range(addr, addr + size - 1);
- }
- 
--static bool within_notrace_func(struct trace_kprobe *tk)
-+static bool within_notrace_func(unsigned long addr)
- {
--	unsigned long addr = trace_kprobe_address(tk);
- 	char symname[KSYM_NAME_LEN], *p;
- 
- 	if (!__within_notrace_func(addr))
-@@ -471,12 +470,14 @@ static bool within_notrace_func(struct trace_kprobe *tk)
- 	return true;
- }
- #else
--#define within_notrace_func(tk)	(false)
-+#define within_notrace_func(addr)	(false)
- #endif
- 
- /* Internal register function - just handle k*probes and flags */
- static int __register_trace_kprobe(struct trace_kprobe *tk)
- {
-+	unsigned long addr = trace_kprobe_address(tk);
-+	char symname[KSYM_NAME_LEN];
- 	int i, ret;
- 
- 	ret = security_locked_down(LOCKDOWN_KPROBES);
-@@ -486,9 +487,9 @@ static int __register_trace_kprobe(struct trace_kprobe *tk)
- 	if (trace_kprobe_is_registered(tk))
- 		return -EINVAL;
- 
--	if (within_notrace_func(tk)) {
-+	if (within_notrace_func(addr)) {
- 		pr_warn("Could not probe notrace function %s\n",
--			trace_kprobe_symbol(tk));
-+			lookup_symbol_name(addr, symname) ? trace_kprobe_symbol(tk) : symname);
- 		return -EINVAL;
- 	}
- 
+Is there something that you feel that is not clear enough? I am more than
+happy to go into details.
 
-base-commit: 4758560fa268cecfa1144f015aa9f2525d164b7e
--- 
-2.43.0
-
+Thanks,
+Alex
