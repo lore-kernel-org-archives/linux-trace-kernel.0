@@ -1,158 +1,130 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id CF63193;
-	Wed, 13 Dec 2023 09:44:53 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4703EC15;
-	Wed, 13 Dec 2023 09:45:39 -0800 (PST)
-Received: from raptor (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 37DBF3F762;
-	Wed, 13 Dec 2023 09:44:48 -0800 (PST)
-Date: Wed, 13 Dec 2023 17:44:37 +0000
-From: Alexandru Elisei <alexandru.elisei@arm.com>
-To: Rob Herring <robh@kernel.org>
-Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
-	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
-	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
-	rppt@kernel.org, hughd@google.com, pcc@google.com,
-	steven.price@arm.com, anshuman.khandual@arm.com,
-	vincenzo.frascino@arm.com, david@redhat.com, eugenis@google.com,
-	kcc@google.com, hyesoo.yu@samsung.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v2 11/27] arm64: mte: Reserve tag storage memory
-Message-ID: <ZXnthcg0BkEd-RgK@raptor>
-References: <20231119165721.9849-1-alexandru.elisei@arm.com>
- <20231119165721.9849-12-alexandru.elisei@arm.com>
- <CAL_Jsq+k5BeM9+u12AQvWQ0b4Uv5Cy0vPOpK_uLcYtRnunq4iQ@mail.gmail.com>
- <ZXiMiLz9ZyUdxUP8@raptor>
- <CAL_Jsq+U_GR=mOK3-phnd4jeJKf79aOmhPwDOSj+f=s-7fZZWQ@mail.gmail.com>
- <ZXmr-Kl9L2SO13--@raptor>
- <CAL_JsqL=P1Y6w38LD_xw+vK4CNqt22FW_FE9oi_XTLHVQEne7Q@mail.gmail.com>
- <ZXnE3724jYYSg4o6@raptor>
- <CAL_JsqJgTnuQjo13cKo1Ebm5j9tCRT8GhNavdqu5vwp+fdnTLw@mail.gmail.com>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A0F59540
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 13 Dec 2023 18:20:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2601AC433CC;
+	Wed, 13 Dec 2023 18:20:37 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1rDTrG-00000002a6J-20UT;
+	Wed, 13 Dec 2023 13:21:22 -0500
+Message-ID: <20231213182122.260163713@goodmis.org>
+User-Agent: quilt/0.67
+Date: Wed, 13 Dec 2023 13:17:38 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+ Vincent Donnefort <vdonnefort@google.com>,
+ Kent Overstreet <kent.overstreet@gmail.com>
+Subject: [PATCH v3 01/15] ring-buffer: Refactor ring buffer implementation
+References: <20231213181737.791847466@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqJgTnuQjo13cKo1Ebm5j9tCRT8GhNavdqu5vwp+fdnTLw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 
-On Wed, Dec 13, 2023 at 11:22:17AM -0600, Rob Herring wrote:
-> On Wed, Dec 13, 2023 at 8:51 AM Alexandru Elisei
-> <alexandru.elisei@arm.com> wrote:
-> >
-> > Hi,
-> >
-> > On Wed, Dec 13, 2023 at 08:06:44AM -0600, Rob Herring wrote:
-> > > On Wed, Dec 13, 2023 at 7:05 AM Alexandru Elisei
-> > > <alexandru.elisei@arm.com> wrote:
-> > > >
-> > > > Hi Rob,
-> > > >
-> > > > On Tue, Dec 12, 2023 at 12:44:06PM -0600, Rob Herring wrote:
-> > > > > On Tue, Dec 12, 2023 at 10:38 AM Alexandru Elisei
-> > > > > <alexandru.elisei@arm.com> wrote:
-> > > > > >
-> > > > > > Hi Rob,
-> > > > > >
-> > > > > > Thank you so much for the feedback, I'm not very familiar with device tree,
-> > > > > > and any comments are very useful.
-> > > > > >
-> > > > > > On Mon, Dec 11, 2023 at 11:29:40AM -0600, Rob Herring wrote:
-> > > > > > > On Sun, Nov 19, 2023 at 10:59 AM Alexandru Elisei
-> > > > > > > <alexandru.elisei@arm.com> wrote:
-> > > > > > > >
-> > > > > > > > Allow the kernel to get the size and location of the MTE tag storage
-> > > > > > > > regions from the DTB. This memory is marked as reserved for now.
-> > > > > > > >
-> > > > > > > > The DTB node for the tag storage region is defined as:
-> > > > > > > >
-> > > > > > > >         tags0: tag-storage@8f8000000 {
-> > > > > > > >                 compatible = "arm,mte-tag-storage";
-> > > > > > > >                 reg = <0x08 0xf8000000 0x00 0x4000000>;
-> > > > > > > >                 block-size = <0x1000>;
-> > > > > > > >                 memory = <&memory0>;    // Associated tagged memory node
-> > > > > > > >         };
-> > > > > > >
-> > > > > > > I skimmed thru the discussion some. If this memory range is within
-> > > > > > > main RAM, then it definitely belongs in /reserved-memory.
-> > > > > >
-> > > > > > Ok, will do that.
-> > > > > >
-> > > > > > If you don't mind, why do you say that it definitely belongs in
-> > > > > > reserved-memory? I'm not trying to argue otherwise, I'm curious about the
-> > > > > > motivation.
-> > > > >
-> > > > > Simply so that /memory nodes describe all possible memory and
-> > > > > /reserved-memory is just adding restrictions. It's also because
-> > > > > /reserved-memory is what gets handled early, and we don't need
-> > > > > multiple things to handle early.
-> > > > >
-> > > > > > Tag storage is not DMA and can live anywhere in memory.
-> > > > >
-> > > > > Then why put it in DT at all? The only reason CMA is there is to set
-> > > > > the size. It's not even clear to me we need CMA in DT either. The
-> > > > > reasoning long ago was the kernel didn't do a good job of moving and
-> > > > > reclaiming contiguous space, but that's supposed to be better now (and
-> > > > > most h/w figured out they need IOMMUs).
-> > > > >
-> > > > > But for tag storage you know the size as it is a function of the
-> > > > > memory size, right? After all, you are validating the size is correct.
-> > > > > I guess there is still the aspect of whether you want enable MTE or
-> > > > > not which could be done in a variety of ways.
-> > > >
-> > > > Oh, sorry, my bad, I should have been clearer about this. I don't want to
-> > > > put it in the DT as a "linux,cma" node. But I want it to be managed by CMA.
-> > >
-> > > Yes, I understand, but my point remains. Why do you need this in DT?
-> > > If the location doesn't matter and you can calculate the size from the
-> > > memory size, what else is there to add to the DT?
-> >
-> > I am afraid there has been a misunderstanding. What do you mean by
-> > "location doesn't matter"?
-> 
-> You said:
-> > Tag storage is not DMA and can live anywhere in memory.
-> 
-> Which I took as the kernel can figure out where to put it. But maybe
-> you meant the h/w platform can hard code it to be anywhere in memory?
-> If so, then yes, DT is needed.
+From: "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
 
-Ah, I see, sorry for not being clear enough, you are correct: tag storage
-is a hardware property, and software needs a mechanism (in this case, the
-dt) to discover its properties.
+In order to introduce sub-buffer size per ring buffer, some internal
+refactoring is needed. As ring_buffer_print_page_header() will depend on
+the trace_buffer structure, it is moved after the structure definition.
 
-> 
-> > At the very least, Linux needs to know the address and size of a memory
-> > region to use it. The series is about using the tag storage memory for
-> > data. Tag storage cannot be described as a regular memory node because it
-> > cannot be tagged (and normal memory can).
-> 
-> If the tag storage lives in the middle of memory, then it would be
-> described in the memory node, but removed by being in reserved-memory
-> node.
+Link: https://lore.kernel.org/linux-trace-devel/20211213094825.61876-2-tz.stoyanov@gmail.com
 
-I don't follow. Would you mind going into more details?
+Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 60 +++++++++++++++++++-------------------
+ 1 file changed, 30 insertions(+), 30 deletions(-)
 
-> 
-> > Then there's the matter of the tag storage block size (explained in this
-> > commit message), and also knowing the memory range for which a tag storage
-> > region stores the tags. This is explained in the cover letter.
-> 
-> Honestly, I just forgot about that part.
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 8f8887f025c9..eee36f90ae25 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -378,36 +378,6 @@ static inline bool test_time_stamp(u64 delta)
+ /* Max payload is BUF_PAGE_SIZE - header (8bytes) */
+ #define BUF_MAX_DATA_SIZE (BUF_PAGE_SIZE - (sizeof(u32) * 2))
+ 
+-int ring_buffer_print_page_header(struct trace_seq *s)
+-{
+-	struct buffer_data_page field;
+-
+-	trace_seq_printf(s, "\tfield: u64 timestamp;\t"
+-			 "offset:0;\tsize:%u;\tsigned:%u;\n",
+-			 (unsigned int)sizeof(field.time_stamp),
+-			 (unsigned int)is_signed_type(u64));
+-
+-	trace_seq_printf(s, "\tfield: local_t commit;\t"
+-			 "offset:%u;\tsize:%u;\tsigned:%u;\n",
+-			 (unsigned int)offsetof(typeof(field), commit),
+-			 (unsigned int)sizeof(field.commit),
+-			 (unsigned int)is_signed_type(long));
+-
+-	trace_seq_printf(s, "\tfield: int overwrite;\t"
+-			 "offset:%u;\tsize:%u;\tsigned:%u;\n",
+-			 (unsigned int)offsetof(typeof(field), commit),
+-			 1,
+-			 (unsigned int)is_signed_type(long));
+-
+-	trace_seq_printf(s, "\tfield: char data;\t"
+-			 "offset:%u;\tsize:%u;\tsigned:%u;\n",
+-			 (unsigned int)offsetof(typeof(field), data),
+-			 (unsigned int)BUF_PAGE_SIZE,
+-			 (unsigned int)is_signed_type(char));
+-
+-	return !trace_seq_has_overflowed(s);
+-}
+-
+ struct rb_irq_work {
+ 	struct irq_work			work;
+ 	wait_queue_head_t		waiters;
+@@ -573,6 +543,36 @@ struct ring_buffer_iter {
+ 	int				missed_events;
+ };
+ 
++int ring_buffer_print_page_header(struct trace_seq *s)
++{
++	struct buffer_data_page field;
++
++	trace_seq_printf(s, "\tfield: u64 timestamp;\t"
++			 "offset:0;\tsize:%u;\tsigned:%u;\n",
++			 (unsigned int)sizeof(field.time_stamp),
++			 (unsigned int)is_signed_type(u64));
++
++	trace_seq_printf(s, "\tfield: local_t commit;\t"
++			 "offset:%u;\tsize:%u;\tsigned:%u;\n",
++			 (unsigned int)offsetof(typeof(field), commit),
++			 (unsigned int)sizeof(field.commit),
++			 (unsigned int)is_signed_type(long));
++
++	trace_seq_printf(s, "\tfield: int overwrite;\t"
++			 "offset:%u;\tsize:%u;\tsigned:%u;\n",
++			 (unsigned int)offsetof(typeof(field), commit),
++			 1,
++			 (unsigned int)is_signed_type(long));
++
++	trace_seq_printf(s, "\tfield: char data;\t"
++			 "offset:%u;\tsize:%u;\tsigned:%u;\n",
++			 (unsigned int)offsetof(typeof(field), data),
++			 (unsigned int)BUF_PAGE_SIZE,
++			 (unsigned int)is_signed_type(char));
++
++	return !trace_seq_has_overflowed(s);
++}
++
+ #ifdef RB_TIME_32
+ 
+ /*
+-- 
+2.42.0
 
-I totally understand, there are a lot of things to consider at the same
-time.
 
-Thanks,
-Alex
