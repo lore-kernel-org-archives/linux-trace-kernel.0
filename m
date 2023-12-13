@@ -1,37 +1,37 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="FnOcI0xG"
-Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C01E810E0;
-	Tue, 12 Dec 2023 16:07:26 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="a1vPSAn4"
+Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70463D4D;
+	Tue, 12 Dec 2023 16:08:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1702426047; x=1733962047;
+  t=1702426083; x=1733962083;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=mc8BtMBoJccPwXhN5lfGmopEl26ZPwt65Ef0Tkxcd1Y=;
-  b=FnOcI0xGSqHXF1IumCe7s2J3qekB/hoJrmN/2OgRnXsHHDROP/5rRwky
-   ificEcPRknowG5k4oTm3djXQsxV/VkzrJzqssOywUQ/eUc5ZeAlsJyCem
-   oeBXX1OPquiqqSaCUxRVTVdPCzdkJLN5oGMO/GzSpQTKMedUSRlxrg+dv
-   s=;
+  bh=8E5gYeBn7LzFXeE9t3+WWJhfPWwonViYFj973oiYUIk=;
+  b=a1vPSAn4RN5MYIpsd3DyyRCkJuBHnCOBZooVN6/fJapR6P9VnnkYiZDS
+   1vd8AU/P7+v6f0O8Dzt4xCJuMNWr6H27HNgYhSjG9x5NzAiItEAdByflx
+   5JxfSMdqz0mSchn+8natHOk8lS7fixALyrIXy89rim6IuNE5YAMbj/jnk
+   0=;
 X-IronPort-AV: E=Sophos;i="6.04,271,1695686400"; 
-   d="scan'208";a="368122532"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-iad-1d-m6i4x-e651a362.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 00:07:24 +0000
+   d="scan'208";a="621371857"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-iad-1a-m6i4x-bbc6e425.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 00:08:01 +0000
 Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan3.iad.amazon.com [10.32.235.38])
-	by email-inbound-relay-iad-1d-m6i4x-e651a362.us-east-1.amazon.com (Postfix) with ESMTPS id 5BC7680493;
-	Wed, 13 Dec 2023 00:07:16 +0000 (UTC)
-Received: from EX19MTAUWB002.ant.amazon.com [10.0.21.151:32184]
+	by email-inbound-relay-iad-1a-m6i4x-bbc6e425.us-east-1.amazon.com (Postfix) with ESMTPS id EF61380632;
+	Wed, 13 Dec 2023 00:07:52 +0000 (UTC)
+Received: from EX19MTAUWB001.ant.amazon.com [10.0.21.151:16104]
  by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.43.236:2525] with esmtp (Farcaster)
- id 342278a3-113e-4653-a12d-678bc8408d80; Wed, 13 Dec 2023 00:07:15 +0000 (UTC)
-X-Farcaster-Flow-ID: 342278a3-113e-4653-a12d-678bc8408d80
+ id 3bda4ab2-5ec6-4d32-90c9-2880fbf14c72; Wed, 13 Dec 2023 00:07:51 +0000 (UTC)
+X-Farcaster-Flow-ID: 3bda4ab2-5ec6-4d32-90c9-2880fbf14c72
 Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 13 Dec 2023 00:07:15 +0000
+ 15.2.1118.40; Wed, 13 Dec 2023 00:07:44 +0000
 Received: from dev-dsk-graf-1a-5ce218e4.eu-west-1.amazon.com (10.253.83.51) by
  EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 13 Dec 2023 00:07:11 +0000
+ 15.2.1118.40; Wed, 13 Dec 2023 00:07:40 +0000
 From: Alexander Graf <graf@amazon.com>
 To: <linux-kernel@vger.kernel.org>
 CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -48,9 +48,9 @@ CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
 	<anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, David
  Woodhouse <dwmw@amazon.co.uk>, Benjamin Herrenschmidt
 	<benh@kernel.crashing.org>
-Subject: [PATCH 13/15] tracing: Add kho serialization of trace events
-Date: Wed, 13 Dec 2023 00:04:50 +0000
-Message-ID: <20231213000452.88295-14-graf@amazon.com>
+Subject: [PATCH 15/15] tracing: Add config option for kexec handover
+Date: Wed, 13 Dec 2023 00:04:52 +0000
+Message-ID: <20231213000452.88295-16-graf@amazon.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231213000452.88295-1-graf@amazon.com>
 References: <20231213000452.88295-1-graf@amazon.com>
@@ -60,104 +60,44 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ClientProxiedBy: EX19D037UWB002.ant.amazon.com (10.13.138.121) To
+X-ClientProxiedBy: EX19D033UWA001.ant.amazon.com (10.13.139.103) To
  EX19D020UWC004.ant.amazon.com (10.13.138.149)
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 
-Events and thus their parsing handle in ftrace have dynamic IDs that get
-assigned whenever the event is added to the system. If we want to parse
-trace events after kexec, we need to link event IDs back to the original
-trace event that existed before we kexec'ed.
-
-There are broadly 2 paths we could take for that:
-
-  1) Save full event description across KHO, restore after kexec,
-     merge identical trace events into a single identifier.
-  2) Recover the ID of post-kexec added events so they get the same
-     ID after kexec that they had before kexec
-
-This patch implements the second option. It's simpler and thus less
-intrusive. However, it means we can not fully parse affected events
-when the kernel removes or modifies trace events across a kho kexec.
+Now that all bits are in place to allow ftrace to pass its trace data
+into the next kernel on kexec, let's give users a kconfig option to
+enable the functionality.
 
 Signed-off-by: Alexander Graf <graf@amazon.com>
 ---
- kernel/trace/trace.c        |  1 +
- kernel/trace/trace_output.c | 28 ++++++++++++++++++++++++++++
- kernel/trace/trace_output.h |  1 +
- 3 files changed, 30 insertions(+)
+ kernel/trace/Kconfig | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 71c249cc5b43..26edfd2a85fd 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -10639,6 +10639,7 @@ static int trace_kho_notifier(struct notifier_block *self,
- 	err |= fdt_begin_node(fdt, "ftrace");
- 	err |= fdt_property(fdt, "compatible", compatible, sizeof(compatible));
- 	err |= trace_kho_write_trace_array(fdt, &global_trace);
-+	err |= trace_kho_write_events(fdt);
- 	err |= fdt_end_node(fdt);
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 61c541c36596..af83ee755b9e 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -1169,6 +1169,19 @@ config HIST_TRIGGERS_DEBUG
  
- 	if (!err) {
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index f3677e0da795..113de40c616f 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -12,6 +12,7 @@
- #include <linux/sched/clock.h>
- #include <linux/sched/mm.h>
- #include <linux/idr.h>
-+#include <linux/kexec.h>
+           If unsure, say N.
  
- #include "trace_output.h"
++config FTRACE_KHO
++	bool "Ftrace Kexec handover support"
++	depends on KEXEC_KHO
++	help
++          Enable support for ftrace to pass metadata across kexec so the new
++	  kernel continues to use the previous kernel's trace buffers.
++
++	  This can be useful when debugging kexec performance or correctness
++	  issues: The new kernel can dump the old kernel's trace buffer which
++	  contains all events until reboot.
++
++	  If unsure, say N.
++
+ source "kernel/trace/rv/Kconfig"
  
-@@ -669,6 +670,33 @@ int trace_print_lat_context(struct trace_iterator *iter)
- 	return !trace_seq_has_overflowed(s);
- }
- 
-+int trace_kho_write_events(void *fdt)
-+{
-+#ifdef CONFIG_FTRACE_KHO
-+	const char compatible[] = "ftrace,events-v1";
-+	const char *name = "events";
-+	struct trace_event *event;
-+	unsigned key;
-+	int err = 0;
-+
-+	err |= fdt_begin_node(fdt, name);
-+	err |= fdt_property(fdt, "compatible", compatible, sizeof(compatible));
-+
-+	for (key = 0; key < EVENT_HASHSIZE; key++) {
-+		hlist_for_each_entry(event, &event_hash[key], node)
-+			err |= fdt_property(fdt, event->name, &event->type,
-+					    sizeof(event->type));
-+	}
-+
-+	err |= fdt_end_node(fdt);
-+
-+	return err;
-+#else
-+	return 0;
-+#endif
-+}
-+
-+
- /**
-  * ftrace_find_event - find a registered event
-  * @type: the type of event to look for
-diff --git a/kernel/trace/trace_output.h b/kernel/trace/trace_output.h
-index dca40f1f1da4..36dc7963269e 100644
---- a/kernel/trace/trace_output.h
-+++ b/kernel/trace/trace_output.h
-@@ -25,6 +25,7 @@ extern enum print_line_t print_event_fields(struct trace_iterator *iter,
- extern void trace_event_read_lock(void);
- extern void trace_event_read_unlock(void);
- extern struct trace_event *ftrace_find_event(int type);
-+extern int trace_kho_write_events(void *fdt);
- 
- extern enum print_line_t trace_nop_print(struct trace_iterator *iter,
- 					 int flags, struct trace_event *event);
+ endif # FTRACE
 -- 
 2.40.1
 
