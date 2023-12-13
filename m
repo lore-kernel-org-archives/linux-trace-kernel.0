@@ -1,133 +1,90 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UI9uSlKl"
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C32E10F;
-	Wed, 13 Dec 2023 15:36:52 -0800 (PST)
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BDKbG6K023678;
-	Wed, 13 Dec 2023 23:36:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=/+H88J6LmzDuOxLHJftJTV19pkCYIO+glC/rLzGPGs8=;
- b=UI9uSlKlNddsJj1tCJnNBZJDnRjsMrinNpqtmQWnZUSd4it6tU+K5xw+EAtN3MFqI/zX
- HU8Tn1ERHyiG6sLflTO1HzzbaWBvtKu2VRvG8tYweqyPVkFbI2SZkWMcJ6392GrFeNI4
- jfVqMkYqet5tqNMN0XTeOgs7uoJ2x1HzQBUr4hYVFfvZ2yABdooPQA0qRH4e6mUYOSro
- 9CkJ3I88ja987Sh763ERHrwEkOgTR1SybfMoFUM5kqHQmiWXq7LMw4xHEnCE/Nrxhvsd
- jyjw0TQcACHKbGiZt3zpXc3EvNNjgGMxbOCFOTujyOIgG72Wh5wEU4jjBfnLW0sBZL3P Uw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uyktbv0vc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Dec 2023 23:36:38 +0000
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BDNLHVw018587;
-	Wed, 13 Dec 2023 23:36:38 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uyktbv0uu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Dec 2023 23:36:37 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BDGpBKh014833;
-	Wed, 13 Dec 2023 23:36:36 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uw42kg1xm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Dec 2023 23:36:36 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BDNaX8n4653612
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 13 Dec 2023 23:36:33 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4F08920043;
-	Wed, 13 Dec 2023 23:36:33 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DCEF820040;
-	Wed, 13 Dec 2023 23:36:31 +0000 (GMT)
-Received: from heavy.boeblingen.de.ibm.com (unknown [9.171.70.156])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 13 Dec 2023 23:36:31 +0000 (GMT)
-From: Ilya Leoshkevich <iii@linux.ibm.com>
-To: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: [PATCH v3 15/34] mm: slub: Unpoison the memchr_inv() return value
-Date: Thu, 14 Dec 2023 00:24:35 +0100
-Message-ID: <20231213233605.661251-16-iii@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231213233605.661251-1-iii@linux.ibm.com>
-References: <20231213233605.661251-1-iii@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ZEbblJwa"
+Received: from smtp-fw-33001.amazon.com (smtp-fw-33001.amazon.com [207.171.190.10])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD81DB;
+	Wed, 13 Dec 2023 15:36:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1702510616; x=1734046616;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=uhcOfQRbinzPEwd7PFn+5HZ7ZrYv/GL0E6TNEd2zF1E=;
+  b=ZEbblJwaGxqLUn09tej+FOS0JpRaYNKsLJhkMVp5ABlllF3Xo0P9mayw
+   OEMPMPOoYbEDzdT+ao77aSAkBOjBArMCmrdm2TxZFK6MG1R+WdnBWBeOv
+   nU05nInXPcbZ7cBGMLkby279QDgFSIcKIjwpiM+1GOYyUS1shKGWPzrrQ
+   4=;
+X-IronPort-AV: E=Sophos;i="6.04,274,1695686400"; 
+   d="scan'208";a="317067437"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-pdx-2c-m6i4x-dc7c3f8b.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-33001.sea14.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 23:36:46 +0000
+Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (pdx2-ws-svc-p26-lb5-vlan2.pdx.amazon.com [10.39.38.66])
+	by email-inbound-relay-pdx-2c-m6i4x-dc7c3f8b.us-west-2.amazon.com (Postfix) with ESMTPS id BC6F1A0F68;
+	Wed, 13 Dec 2023 23:36:41 +0000 (UTC)
+Received: from EX19MTAUWA001.ant.amazon.com [10.0.38.20:7953]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.33.64:2525] with esmtp (Farcaster)
+ id f9b5748f-49e6-459d-89c3-cedde6930958; Wed, 13 Dec 2023 23:36:41 +0000 (UTC)
+X-Farcaster-Flow-ID: f9b5748f-49e6-459d-89c3-cedde6930958
+Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
+ EX19MTAUWA001.ant.amazon.com (10.250.64.217) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Wed, 13 Dec 2023 23:36:40 +0000
+Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
+ (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 13 Dec
+ 2023 23:36:34 +0000
+Message-ID: <6748dc7e-534e-4b45-8fa9-052fae591534@amazon.com>
+Date: Thu, 14 Dec 2023 00:36:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: kPY9E1UvYdSAN4yA0WGECmQaAwtxBTWd
-X-Proofpoint-ORIG-GUID: zPDn9MZkVLtny7zKhboJlYnQt5V5Co18
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-13_14,2023-12-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 impostorscore=0 clxscore=1015 adultscore=0 phishscore=0
- mlxscore=0 bulkscore=0 suspectscore=0 spamscore=0 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2312130167
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 03/15] kexec: Add Kexec HandOver (KHO) generation helpers
+Content-Language: en-US
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kexec@lists.infradead.org>,
+	<linux-doc@vger.kernel.org>, <x86@kernel.org>, Eric Biederman
+	<ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski
+	<luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring
+	<robh+dt@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Andrew Morton
+	<akpm@linux-foundation.org>, Mark Rutland <mark.rutland@arm.com>, "Tom
+ Lendacky" <thomas.lendacky@amd.com>, Ashish Kalra <ashish.kalra@amd.com>,
+	James Gowans <jgowans@amazon.com>, <arnd@arndb.de>, <pbonzini@redhat.com>,
+	<madvenka@linux.microsoft.com>, Anthony Yznaga <anthony.yznaga@oracle.com>,
+	Usama Arif <usama.arif@bytedance.com>, David Woodhouse <dwmw@amazon.co.uk>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>
+References: <20231213000452.88295-1-graf@amazon.com>
+ <20231213000452.88295-4-graf@amazon.com>
+ <20231213183614.GA14669@skinsburskii.>
+From: Alexander Graf <graf@amazon.com>
+In-Reply-To: <20231213183614.GA14669@skinsburskii.>
+X-ClientProxiedBy: EX19D044UWA002.ant.amazon.com (10.13.139.11) To
+ EX19D020UWC004.ant.amazon.com (10.13.138.149)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 
-Even though the KMSAN warnings generated by memchr_inv() are suppressed
-by metadata_access_enable(), its return value may still be poisoned.
-
-The reason is that the last iteration of memchr_inv() returns
-`*start != value ? start : NULL`, where *start is poisoned. Because of
-this, somewhat counterintuitively, the shadow value computed by
-visitSelectInst() is equal to `(uintptr_t)start`.
-
-The intention behind guarding memchr_inv() behind
-metadata_access_enable() is to touch poisoned metadata without
-triggering KMSAN, so unpoison its return value.
-
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
----
- mm/slub.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/mm/slub.c b/mm/slub.c
-index 2d29d368894c..802702748925 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -1076,6 +1076,7 @@ static int check_bytes_and_report(struct kmem_cache *s, struct slab *slab,
- 	metadata_access_enable();
- 	fault = memchr_inv(kasan_reset_tag(start), value, bytes);
- 	metadata_access_disable();
-+	kmsan_unpoison_memory(&fault, sizeof(fault));
- 	if (!fault)
- 		return 1;
- 
-@@ -1182,6 +1183,7 @@ static void slab_pad_check(struct kmem_cache *s, struct slab *slab)
- 	metadata_access_enable();
- 	fault = memchr_inv(kasan_reset_tag(pad), POISON_INUSE, remainder);
- 	metadata_access_disable();
-+	kmsan_unpoison_memory(&fault, sizeof(fault));
- 	if (!fault)
- 		return;
- 	while (end > fault && end[-1] == POISON_INUSE)
--- 
-2.43.0
+Ck9uIDEzLjEyLjIzIDE5OjM2LCBTdGFuaXNsYXYgS2luc2J1cnNraWkgd3JvdGU6Cj4gT24gV2Vk
+LCBEZWMgMTMsIDIwMjMgYXQgMTI6MDQ6NDBBTSArMDAwMCwgQWxleGFuZGVyIEdyYWYgd3JvdGU6
+Cj4+ICtpbnQgcmVnaXN0ZXJfa2hvX25vdGlmaWVyKHN0cnVjdCBub3RpZmllcl9ibG9jayAqbmIp
+Cj4+ICt7Cj4+ICsgICAgIHJldHVybiBibG9ja2luZ19ub3RpZmllcl9jaGFpbl9yZWdpc3Rlcigm
+a2hvLmNoYWluX2hlYWQsIG5iKTsKPj4gK30KPj4gK0VYUE9SVF9TWU1CT0xfR1BMKHJlZ2lzdGVy
+X2tob19ub3RpZmllcik7Cj4+ICsKPj4gK2ludCB1bnJlZ2lzdGVyX2tob19ub3RpZmllcihzdHJ1
+Y3Qgbm90aWZpZXJfYmxvY2sgKm5iKQo+PiArewo+PiArICAgICByZXR1cm4gYmxvY2tpbmdfbm90
+aWZpZXJfY2hhaW5fdW5yZWdpc3Rlcigma2hvLmNoYWluX2hlYWQsIG5iKTsKPj4gK30KPj4gK0VY
+UE9SVF9TWU1CT0xfR1BMKHVucmVnaXN0ZXJfa2hvX25vdGlmaWVyKTsKPj4gKwo+PiArYm9vbCBr
+aG9faXNfYWN0aXZlKHZvaWQpCj4+ICt7Cj4+ICsgICAgIHJldHVybiBraG8uYWN0aXZlOwo+PiAr
+fQo+PiArRVhQT1JUX1NZTUJPTF9HUEwoa2hvX2lzX2FjdGl2ZSk7Cj4+ICsKPiBXaHkgc2hvdWxk
+IHRoZXNlIGhlbHBlcnMgYmUgcmVzdHJpY3RlZCB0byBHUEwgY29kZT8KCgpUaGF0J3MgYSBzaW1w
+bGUgb25lOiBFdmVyeXRoaW5nIHNob3VsZCBiZSBFWFBPUlRfU1lNQk9MX0dQTCBieSBkZWZhdWx0
+LiAKWW91IG5lZWQgdG8gaGF2ZSByZWFsbHkgZ29vZCByZWFzb25zIHRvIGV4cG9ydCBhbnl0aGlu
+ZyBmb3Igbm9uLUdQTCAKbW9kdWxlcy4gSSBkb24ndCBoYXZlIGEgZ29vZCByZWFzb24gZm9yIHRo
+ZW0sIHNvIGl0J3MgR1BMIG9ubHkgOikKCgpBbGV4CgoKCgoKQW1hem9uIERldmVsb3BtZW50IENl
+bnRlciBHZXJtYW55IEdtYkgKS3JhdXNlbnN0ci4gMzgKMTAxMTcgQmVybGluCkdlc2NoYWVmdHNm
+dWVocnVuZzogQ2hyaXN0aWFuIFNjaGxhZWdlciwgSm9uYXRoYW4gV2Vpc3MKRWluZ2V0cmFnZW4g
+YW0gQW10c2dlcmljaHQgQ2hhcmxvdHRlbmJ1cmcgdW50ZXIgSFJCIDE0OTE3MyBCClNpdHo6IEJl
+cmxpbgpVc3QtSUQ6IERFIDI4OSAyMzcgODc5CgoK
 
