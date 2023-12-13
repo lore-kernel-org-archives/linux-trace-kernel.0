@@ -1,126 +1,198 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="ZVRCCwDi"
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2137.outbound.protection.outlook.com [40.107.117.137])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EFB1DB;
-	Tue, 12 Dec 2023 22:31:04 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fUWVKpI8+0DkBKrBFzoQ4vOcDvlIM961SxsNFzMA6xRfAoAFRJuTN3J9APIpZMGL+7HMKHqHvTFK4et/lEabOWt7BUejAXn0CiC4UmKcvYKhOJF6CKFOP8n4Ak5gMcCoYb9NmUUin18AKn6ncOTFUKLMnEpNAiyDkEDr7LLnDSdsn4r052ke0DS0Yb+FR9Q5UORgYnC1o3mnbamGC18xERRrJ7L2/sI6CNRzeXN3vgJwqTcG0K3mlJy00Ru4CpdHvmHXeDeLxWCFPPbIeuuLaxg+RNewktmOlAqYm7YeLUUNMWxEr+XncEcKCkFNwHjh9tPozAmHjrkpJDAeGsnYDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+GCoNET/avIqWbOa3eBzxDwWI2etPtPUrgzcodj4r1E=;
- b=klWxDpJqb9ar1dTj+mrSitTA6aA1QM5O5Wn09aUvsrFeGXHGJms54W1Pw2B2aykz69nJuMNRNuI2QXLgDMx6jnB1ELSQ+lr34mqTwNzV/MBq/0nleAoUHvPKM/36b2NYqsFLqAC9SC1Gx6F1iCGinDH3RNOuxc64XVmpWAM5rrePxn8w5k2hp+1Ms6IQ1Czb/b/SP8AS5AOW/Epo5TimmNcxjyWuepGxAOX0TXmQ7NDLIdAI4Arr40JJOa5lOrZMzlZgf0VSh7BESyX2l6i/7AN9bNU3YCNwxSKk+57Mi2Yir585zQ2x81fQQAxrOGnfMvnNrmZRor+dCSJrqOUOKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+GCoNET/avIqWbOa3eBzxDwWI2etPtPUrgzcodj4r1E=;
- b=ZVRCCwDi55X102v9f0/OJtLo5EdEVPniS93fans0Zl2rbeW04DO6cSUUq6avvN0eG+rJNB/OvO2W8SMzkxbyWmhzhWTtoB2Vgx+n4KzHE6ztbBH+3dsuPqE8VRLthKPks+FWjNmVxXnw+Mkhz5rDp119ExXuR03iJS0Eoqx4He1HpJSnWwsZNvi1wywyBv3MRmXYWOBSRPJWScY7wTDugdEpf9PMp6o/ohbmB1aaoEyMC4BYfOXhiISc3RIyHc1V1osC0/GnJo0PwhNNMM1aekGxrOAON/uw1HvsVK5K5k5+Pz/vcbAPv59Omhp+YWb8zCR1icCzLjDbfpXap0HREg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from TYZPR06MB4045.apcprd06.prod.outlook.com (2603:1096:400:21::8)
- by SEYPR06MB6184.apcprd06.prod.outlook.com (2603:1096:101:c5::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.26; Wed, 13 Dec
- 2023 06:30:58 +0000
-Received: from TYZPR06MB4045.apcprd06.prod.outlook.com
- ([fe80::9925:32d7:c818:3c5]) by TYZPR06MB4045.apcprd06.prod.outlook.com
- ([fe80::9925:32d7:c818:3c5%7]) with mapi id 15.20.7068.033; Wed, 13 Dec 2023
- 06:30:58 +0000
-Message-ID: <471060ec-2fa7-4a5c-8e8d-8b2082c77bda@vivo.com>
-Date: Wed, 13 Dec 2023 14:30:26 +0800
-User-Agent: Mozilla Thunderbird
-From: Bixuan Cui <cuibixuan@vivo.com>
-Subject: Re: [PATCH -next 2/2] mm: vmscan: add new event to trace shrink lru
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org, opensource.kernel@vivo.com
-References: <20231212032640.6968-1-cuibixuan@vivo.com>
- <20231212032640.6968-3-cuibixuan@vivo.com>
- <20231212190326.899a71c20ecfb143b84e93a6@linux-foundation.org>
-In-Reply-To: <20231212190326.899a71c20ecfb143b84e93a6@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SI2PR02CA0033.apcprd02.prod.outlook.com
- (2603:1096:4:195::20) To TYZPR06MB4045.apcprd06.prod.outlook.com
- (2603:1096:400:21::8)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CPy5F8oW"
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FB41E4
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 12 Dec 2023 23:17:25 -0800 (PST)
+Received: by mail-pg1-x533.google.com with SMTP id 41be03b00d2f7-5c6b9583dcbso5574868a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 12 Dec 2023 23:17:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1702451845; x=1703056645; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=tQkVZRL9vpSyDVIXwSM3uoJy33pbVTo1JnWRzA8kmd0=;
+        b=CPy5F8oWeEkRUHaaCAJanMmk4DosUapS/0hH5Cwk6zrNQt7QsT3rJZHq7MZGn1QX2Q
+         Z3wPIcCaZeOjp3v7EovIrQ/2Zm9ULT2gynm64I1meiyDH9BiUPWuUqeO45UtGiUjAgRi
+         T8dyokWzbIupOof7oAj8WaYAYY8ayXQZwfw7WzPF2w8S77IYrQa5tJeR7ndpe/7CcMZ7
+         90mqZ8tuqibMQxA07gIMQk8dSFs2z3AOhm9QJ+wf6Fh7lhfRMZ3SFHQwE8FKxq1MaQTf
+         vwnU2XbWNUdkFhCUJ5dAfebaeSrL5/khUNeh4gfiqACJxOQd5nUMTVWqpLhALHuCcm9c
+         kOWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702451845; x=1703056645;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tQkVZRL9vpSyDVIXwSM3uoJy33pbVTo1JnWRzA8kmd0=;
+        b=AJ/hof44RQho9Ue62UjSlIu00Pc7sJXCLY5OJ9A30MHn5QXbl/cOIve9KXWSM2O31g
+         xep4S6fbaYkQ2weh64ZQKQ3UP5F71NaLyUEZh1UvLtEeTn+q/HWHPTyOqkaa+Ys/40Ml
+         8+dvOHtRkwnx/vg33svthM9MuKizjTSs76n2Yu/+o8nli65T/GrSHCxher5CpXuJpnCd
+         qSNY6LjfC6F3ajvLu97CrtWJj9DeeJ9dVvbuKihv7BL/l4uzLTPuzl0rHxubCsQtu05c
+         V1NDCw/GQpd27u1ejm2AhygEuIqtY1QscaEcWzH+dYFenVaHYrht16o/FJixc7VtcwZO
+         bmyg==
+X-Gm-Message-State: AOJu0YypEA9CyzYKoyFqgH0lluYFdwQ2ZykgThCNFCaSdn65O0SvvGKo
+	cEE4zlSGMf52WC9VGZY8B6qa5g==
+X-Google-Smtp-Source: AGHT+IHiSXnDOemeyZyy/MLSWRxebQTdjMVtSLqQL6fptF1l9M0iOoG2O2S+n9eONFJnbFjX7Mf0dw==
+X-Received: by 2002:a05:6a21:a586:b0:18f:97c:975d with SMTP id gd6-20020a056a21a58600b0018f097c975dmr12961474pzc.69.1702451845050;
+        Tue, 12 Dec 2023 23:17:25 -0800 (PST)
+Received: from localhost ([122.172.82.6])
+        by smtp.gmail.com with ESMTPSA id so3-20020a17090b1f8300b0028ae8495d47sm571658pjb.21.2023.12.12.23.17.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Dec 2023 23:17:24 -0800 (PST)
+Date: Wed, 13 Dec 2023 12:47:22 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: catalin.marinas@arm.com, will@kernel.org, sudeep.holla@arm.com,
+	rafael@kernel.org, agross@kernel.org, andersson@kernel.org,
+	konrad.dybcio@linaro.org, mingo@redhat.com, peterz@infradead.org,
+	juri.lelli@redhat.com, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, lukasz.luba@arm.com,
+	rui.zhang@intel.com, mhiramat@kernel.org, daniel.lezcano@linaro.org,
+	amit.kachhap@gmail.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] cpufreq: Add a cpufreq pressure feedback for the
+ scheduler
+Message-ID: <20231213071722.u6n2fokrfs7hf3nb@vireshk-i7>
+References: <20231212142730.998913-1-vincent.guittot@linaro.org>
+ <20231212142730.998913-2-vincent.guittot@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYZPR06MB4045:EE_|SEYPR06MB6184:EE_
-X-MS-Office365-Filtering-Correlation-Id: e3158577-b0d8-48cf-ad47-08dbfba51171
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	MzlcXvXPV2n//uy8dGveY9TpGIz3QHeGp8rMR3ypR88o3IyFRxwSFL9SVAShaUzfnJSE+4b60AFelMII+9RnKJ0a/qPOcfOU0BKA0u4lq/zI6tChv1/aPp4HjjMqSDYMda+9JQo/G52fuHaox9azoUdYJtY0dc0mLpZhnDkiEJ/0PxDhLxrXuXhB+GlDrGQOwA3Y49VMSuPCvPeUHUaTSI+WgEtqjnDHHA2nV5/zaL3nSHyIDq+ztKHQwsENQDPmbYIQ7psDlEjsFHMkKEocOhFbq/ZkZVZWCXgk5z0u+7Ejz3+jtlaZrkP3mBxS+DySig5rguFu4IYkD/GAeqmCgUIjtx4kNmWsKfFfWuXgF7iFy8Xo3w1V6iboLEgWdCdxk38xiEaFUEva327Dz4oIhA7BA8PB3OG6H2lSB5ncIgzRu0JijXQCbfAIDhPppV/ZDZJLAKHksY7whgY2Bl/0Qsuvfw5Br6fjyAx2jcv/CU5jiWQnxi/jKftRKyj89Iwv26+s/sToUGHjfjKmbaQ6gvF3W/0s3N1X0POO7nFdlNmF6ZbLPMErPrre/J5DvcCZS77Wi6nmfNM4M2VlV7VXYS1LMx6RJ0vBVmdqDDoDSSh5LyMLK9oRz8d8D1lUYzsxCFSrwLiANrCbW0Vp1BV9fmcyxaPFoSu6GAjUqmxpbYk=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB4045.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(136003)(346002)(39860400002)(376002)(230922051799003)(186009)(1800799012)(451199024)(64100799003)(26005)(6666004)(52116002)(478600001)(6486002)(6512007)(2616005)(107886003)(6506007)(41300700001)(4326008)(8936002)(8676002)(38100700002)(5660300002)(31686004)(4744005)(36756003)(2906002)(66476007)(6916009)(66556008)(31696002)(66946007)(86362001)(38350700005)(316002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ajV3THRIYU13S0puZGFRTVpvRHlnU2o3enVKQ284TUw5S05XTjE5RlBHWFln?=
- =?utf-8?B?ckNCeWRsSTVuMnlEd2lPSkxhWEpGeTZtZS8wblc0bno3Q1I2N1pGSEFNbU1D?=
- =?utf-8?B?aWlJWm41V0swTWZGY1Q1Zlc1S0pmSDR6N2xkZ3doRGlWNld1V1ZISTZPaUg0?=
- =?utf-8?B?M0hwSmxTYkIzUmJJWlBxUEdjUW1SRkdZNnZJdTVzYkE4MFJCbTB6Z3RIUTd4?=
- =?utf-8?B?RDBXMXdQRksrb09hdE42RWtiY3F2aGxSN0dZQm9XM3IydXNleTNscEQxQWdD?=
- =?utf-8?B?dGk3Z05BR0dCYURtZXUrelFMSFZ1V1NFbU9NSm54bHB1aGZzNmtCTW0zUlhn?=
- =?utf-8?B?MFVzdDhibDRjZ3ArMDJMY2VESTBmdFlZdkxJYnA0SGluYlUyWFlqUm9GV09L?=
- =?utf-8?B?MklYUmpqdm12Z0paRkEyakg2V2RpRGp1Q3FRNTBSRFhRdlNZUk5keTEvRGdB?=
- =?utf-8?B?MmR3VG9BSGlZS1JUV0RFRitHbWJkYWcvVHQzR0NyZWtTbUhMbHZMRno0Vk16?=
- =?utf-8?B?VWo0T3hSZHVkcTlqQmJhcyt2WXJFZDBYcjJqOENkVGF3RVhwcEdDOW1NYXp4?=
- =?utf-8?B?VHR4ZnNQZXF5cU5JVDNaVnNRcFZiUkZQK05hbUNWMFlrczhvdjJrN0FOL2Z2?=
- =?utf-8?B?TmVuVVQ5NWdhUzl1aHFYajVPcW8vVkQ2a2tMdjFyc05uY2tWaTc3Ty9PYXVo?=
- =?utf-8?B?aGt6OXJtYnBYak1vb1pWY1ByMGZnQjZxSWxMMU1qcEtLaG9KWDc2cWtNVjEx?=
- =?utf-8?B?cnlMNDVVcXQ0RUtoaUowS0tWR2ZwYkRESk1hRDlLOEZTZU1KbDYxcUxFQnZi?=
- =?utf-8?B?blB5OFhpVi9Dalo1L1dTNlVzek53SnBTOHZZRnYwTFFGQzA0RW9pSTc4VE5t?=
- =?utf-8?B?dmlKeW5NbkpoVHpSTjBnWWo2RVIrZkxkRm51TTZEVFJUMnVJeFBBV2huWjdt?=
- =?utf-8?B?Y0ZLL01DNGdVcFhOL2dGMUlEV21zZ3hHelk3azJBNHlFVnVBSkZ6S3hxbEZz?=
- =?utf-8?B?M1k5dCtzOCs5azhiUFk3NC92QnRkcUdTenA5K2pKTHVTNTZOU3QxQVV4K2lu?=
- =?utf-8?B?c01ETG1ObERLTVdWc210WitqYmlBVitxd1BtVDNsWFJxNGQwaWNMRk4raUdJ?=
- =?utf-8?B?VnRpMEhaeWc2WDdIbGhPQTJ2cVF5WHB4WE1RZWFMbkVITXZGNmMyQzc4RU1K?=
- =?utf-8?B?MmpEL1g2R2hrOFJDa281dFNiRysrYVJRaEVHTEJsSm1icUNOM2NkbEl5NTVh?=
- =?utf-8?B?dWVjTk42UlgwU0NmTGlTVWpWelNSYXZ1SXNGYTdqQk15Wmt5VHd6RlhmdEJ0?=
- =?utf-8?B?YzBCczdtamJPb1ZlcnAzQWd0dXE5QzlWZGViMTA3NDRwb2xVQ1ZMZWo1VU5P?=
- =?utf-8?B?S2haaFhFYzNhaElmS1R3Mk16TUcwSUVzSlhDTFNQU0VvcER0VHFVQzVTYmlV?=
- =?utf-8?B?aGJuWk9hd0VVOXVqeWZlZDIwd2hjaE5wemJoSzdQcWc1RVVkR2t1b3Ewem9M?=
- =?utf-8?B?UThUcHpLZFliMC9wOVdxN05OSkRGK0JUUnhUbW16ZE9WWEtuelQweWhLQWhv?=
- =?utf-8?B?MldSdTI5bkZhUGhXMFFwb2JvYXBHR3hvRmRwaWRRdVNiS1Z3QWdpRDM4OHQ4?=
- =?utf-8?B?blFqeTRuMmVCa2l6QlBXd3A0RG03TVVMT2EzcVUvWFJDUC80MENJc1VuWUR5?=
- =?utf-8?B?d2NDelNMQ0ZBdEVobERsb3dnNjdRV3IvL0FhYTQwcVhkTWVLVDhjSjJxV0tj?=
- =?utf-8?B?L1g5Mk54RTdTNFNkMU1iSFNCSTVzYkdKakFJRzZVSHlOMFV3alFQQkRES0ho?=
- =?utf-8?B?clZ6WUcrVXZVWTJmMmkyNnZoZWFaVjNuSUFEYzNSeFI5d2Z2aytseFJwUWJa?=
- =?utf-8?B?dkZZR0lhTURzbWVjRkNjZjBranNPMGt4V2pKQXdIOXhwNHY4cEVTbUVSUmNG?=
- =?utf-8?B?dk0vUkMwbUVoUmtJekRzRnk0R2JQWCtVMDY2ZzJhZEZsQkloSE93VVFMUFg4?=
- =?utf-8?B?WHZiK1J3RzZ2TG5NSDJnd2E4TlJUV0gyL2YzOUpyMEQ5UWNTTjJ0Tjg1V21v?=
- =?utf-8?B?andzdGVDaTBBWWFlbkx5dVNZeThOT0FGbTAvWkUwaHJndXQzTnl5b3Rlb2Fl?=
- =?utf-8?Q?vU/7yy4VD7NxGH9pky/OPE6Me?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e3158577-b0d8-48cf-ad47-08dbfba51171
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB4045.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Dec 2023 06:30:58.6023
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nHVI+3QhEogYVl52wgoW4MU2AHKWfhZpgrx54XzEZKC3gtwe67A0HenvkUv6RcrL0LHSD7+IZqZ4bwIRwCrm9A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB6184
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231212142730.998913-2-vincent.guittot@linaro.org>
+X-Spam-Level: *
 
+On 12-12-23, 15:27, Vincent Guittot wrote:
+> Provide to the scheduler a feedback about the temporary max available
+> capacity. Unlike arch_update_thermal_pressure, this doesn't need to be
+> filtered as the pressure will happen for dozens ms or more.
+> 
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
+>  drivers/cpufreq/cpufreq.c | 48 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/cpufreq.h   | 10 ++++++++
+>  2 files changed, 58 insertions(+)
+> 
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 44db4f59c4cc..7d5f71be8d29 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -2563,6 +2563,50 @@ int cpufreq_get_policy(struct cpufreq_policy *policy, unsigned int cpu)
+>  }
+>  EXPORT_SYMBOL(cpufreq_get_policy);
+>  
+> +DEFINE_PER_CPU(unsigned long, cpufreq_pressure);
+> +EXPORT_PER_CPU_SYMBOL_GPL(cpufreq_pressure);
+> +
+> +/**
+> + * cpufreq_update_pressure() - Update cpufreq pressure for CPUs
+> + * @cpus        : The related CPUs for which max capacity has been reduced
+> + * @capped_freq : The maximum allowed frequency that CPUs can run at
+> + *
+> + * Update the value of cpufreq pressure for all @cpus in the mask. The
+> + * cpumask should include all (online+offline) affected CPUs, to avoid
+> + * operating on stale data when hot-plug is used for some CPUs. The
+> + * @capped_freq reflects the currently allowed max CPUs frequency due to
+> + * freq_qos capping. It might be also a boost frequency value, which is bigger
+> + * than the internal 'capacity_freq_ref' max frequency. In such case the
+> + * pressure value should simply be removed, since this is an indication that
+> + * there is no capping. The @capped_freq must be provided in kHz.
+> + */
+> +static void cpufreq_update_pressure(const struct cpumask *cpus,
 
+Since this is defined as 'static', why not just pass policy here ?
 
-在 2023/12/13 11:03, Andrew Morton 写道:
->> -TRACE_EVENT(mm_vmscan_lru_shrink_inactive,
->> +TRACE_EVENT(mm_vmscan_lru_shrink_inactive_start,
-> Current kernels have a call to trace_mm_vmscan_lru_shrink_inactive() in
-> evict_folios(), so this renaming broke the build.
-Sorry, I did not enable CONFIG_LRU_GEN when compiling and testing.
-I will double check my patches.
+> +				      unsigned long capped_freq)
+> +{
+> +	unsigned long max_capacity, capacity, pressure;
+> +	u32 max_freq;
+> +	int cpu;
+> +
+> +	cpu = cpumask_first(cpus);
+> +	max_capacity = arch_scale_cpu_capacity(cpu);
 
-Thanks
-Bixuan Cui
+This anyway expects all of them to be from the same policy ..
+
+> +	max_freq = arch_scale_freq_ref(cpu);
+> +
+> +	/*
+> +	 * Handle properly the boost frequencies, which should simply clean
+> +	 * the thermal pressure value.
+> +	 */
+> +	if (max_freq <= capped_freq)
+> +		capacity = max_capacity;
+> +	else
+> +		capacity = mult_frac(max_capacity, capped_freq, max_freq);
+> +
+> +	pressure = max_capacity - capacity;
+> +
+
+Extra blank line here.
+
+> +
+> +	for_each_cpu(cpu, cpus)
+> +		WRITE_ONCE(per_cpu(cpufreq_pressure, cpu), pressure);
+> +}
+> +
+>  /**
+>   * cpufreq_set_policy - Modify cpufreq policy parameters.
+>   * @policy: Policy object to modify.
+> @@ -2584,6 +2628,7 @@ static int cpufreq_set_policy(struct cpufreq_policy *policy,
+>  {
+>  	struct cpufreq_policy_data new_data;
+>  	struct cpufreq_governor *old_gov;
+> +	struct cpumask *cpus;
+>  	int ret;
+>  
+>  	memcpy(&new_data.cpuinfo, &policy->cpuinfo, sizeof(policy->cpuinfo));
+> @@ -2618,6 +2663,9 @@ static int cpufreq_set_policy(struct cpufreq_policy *policy,
+>  	policy->max = __resolve_freq(policy, policy->max, CPUFREQ_RELATION_H);
+>  	trace_cpu_frequency_limits(policy);
+>  
+> +	cpus = policy->related_cpus;
+
+You don't need the extra variable anyway, but lets just pass policy
+instead to the routine.
+
+> +	cpufreq_update_pressure(cpus, policy->max);
+> +
+>  	policy->cached_target_freq = UINT_MAX;
+>  
+>  	pr_debug("new min and max freqs are %u - %u kHz\n",
+> diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+> index afda5f24d3dd..b1d97edd3253 100644
+> --- a/include/linux/cpufreq.h
+> +++ b/include/linux/cpufreq.h
+> @@ -241,6 +241,12 @@ struct kobject *get_governor_parent_kobj(struct cpufreq_policy *policy);
+>  void cpufreq_enable_fast_switch(struct cpufreq_policy *policy);
+>  void cpufreq_disable_fast_switch(struct cpufreq_policy *policy);
+>  bool has_target_index(void);
+> +
+> +DECLARE_PER_CPU(unsigned long, cpufreq_pressure);
+> +static inline unsigned long cpufreq_get_pressure(int cpu)
+> +{
+> +	return per_cpu(cpufreq_pressure, cpu);
+> +}
+>  #else
+>  static inline unsigned int cpufreq_get(unsigned int cpu)
+>  {
+> @@ -263,6 +269,10 @@ static inline bool cpufreq_supports_freq_invariance(void)
+>  	return false;
+>  }
+>  static inline void disable_cpufreq(void) { }
+> +static inline unsigned long cpufreq_get_pressure(int cpu)
+> +{
+> +	return 0;
+> +}
+>  #endif
+>  
+>  #ifdef CONFIG_CPU_FREQ_STAT
+> -- 
+> 2.34.1
+
+-- 
+viresh
