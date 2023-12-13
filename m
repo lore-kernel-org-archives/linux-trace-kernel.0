@@ -1,198 +1,186 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="El4NDQuG"
-Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49DA1B2;
-	Wed, 13 Dec 2023 00:10:27 -0800 (PST)
-Received: by mail-yb1-xb33.google.com with SMTP id 3f1490d57ef6-db4422fff15so5468537276.1;
-        Wed, 13 Dec 2023 00:10:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702455026; x=1703059826; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iUkMcrhywTTNY4STrYR47RlN3P1eamS17VyWAZKRyOk=;
-        b=El4NDQuGxT1pSeNmGDq4bNA5jnYOjjTs3bKViinEU/Fo6iCDWYY2a2yWtpNK9Ri8WN
-         JAq1cIK04wvy5yLCPK5MBXQjGXJbxZ3pz3qJStt612w2C5GOO807OypzavHHbbZkqNhK
-         e8jZm/neKPscNRDE8kW6lqN+nR5g7P+ma9L5H2WchqY3zsBa8hVGVbzAq0AwDi+04pB8
-         uZq0Ly/Wbh+JtYtpZnHDq2AOd0qd+kJ9+s62skHyAgbqB8el4qPilU66QbjAStlEVanm
-         2GCBycoQDfZdPqcCrrE8kfpYVbQu8zxhFM38n6EG2DotKaDmeRfkQ3UuxXE0K8iu5bWU
-         iASA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702455026; x=1703059826;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iUkMcrhywTTNY4STrYR47RlN3P1eamS17VyWAZKRyOk=;
-        b=nO6BZODLgU7ijIPmj95YceuwGWLRbyJRFNOGCSNcl2XU0baIiNDKCiF8m4hG3IR3+/
-         F1CGn+pfBVanzcA7RSFRqrGb18qKgz5GV+onZZ6+pqzS6JBNDfIrnKxFKUz6lcEDptAM
-         iVDwiPu8NDNcz0qPE7jVuxJea6oMk0CoBuFw1qYeNdh+PkeWQGHc2r1lPXUxMbzuMyuv
-         eHf9ydvxklo4kR8wF1XH9YYZIZpFqq/oxwhrdP28LiUjrRgHMltscY/YgxLjs5zDShV4
-         dtlxMAjfIqKs9fzOE08PJBF6WcHlBwT5AVq/W/c7wDybAPRSmA+fw2VEGIclQL17YQNs
-         rIcg==
-X-Gm-Message-State: AOJu0Yzrdy9NGt0ez8oOu4i4h9SfHM00H8l+pG6DDfqm2EJV5ZRAGQl2
-	Sm8vWNOKCCiZDSLpBpATQ8Tmr/LW4vqmfFbgmTaXcIQaKqA=
-X-Google-Smtp-Source: AGHT+IG0KG2PWQfUyp+qm9XnN8+mADRLGM9Lneo7CHAvt+CzxmHLJcyOXhmnLVqPaHhyr3dP3xJPPdpd0WFZR94TsuA=
-X-Received: by 2002:a25:7797:0:b0:dbc:d349:5625 with SMTP id
- s145-20020a257797000000b00dbcd3495625mr136624ybc.82.1702455026353; Wed, 13
- Dec 2023 00:10:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T/ocUh/l"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE839B2;
+	Wed, 13 Dec 2023 03:23:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702466591; x=1734002591;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0vG05tOcWt8hNkb/0MfvDKdSwDkxJN+d9TF+RoFO0kI=;
+  b=T/ocUh/leKYo2oyLn+Mo20tfV37e76tTsRtvMumf8G22yxVdlQP8AatP
+   8NM9IKGt4U6Fu6559IEwHrhTUrM/jvWEQ1NJDS1I9AEjGYLzWYCEvbtew
+   PP+xb4/aN5af7wH9fsfmZV0Bpi+i58FhRtBD3Pf19+250Zb+96/5LwM8P
+   463IotjCD9jlnX5Hos1J8BE3YYc+pjWPQXj+PYycxAE8vQCTUit0yWy9n
+   NL81+M9+Ze79gi4RWCU1Jf2yJtvrcJktjPPrApwwSnclsE8cpPgrQJ8u/
+   /hAE4ANv0lOw/nN1zehRDo0AX6mxn7jbx89WKEJNUMu9rBGyZZqWaNdNB
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="398793300"
+X-IronPort-AV: E=Sophos;i="6.04,272,1695711600"; 
+   d="scan'208";a="398793300"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 03:23:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="864592315"
+X-IronPort-AV: E=Sophos;i="6.04,272,1695711600"; 
+   d="scan'208";a="864592315"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by FMSMGA003.fm.intel.com with ESMTP; 13 Dec 2023 03:23:03 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rDNKP-000KTd-1U;
+	Wed, 13 Dec 2023 11:23:01 +0000
+Date: Wed, 13 Dec 2023 19:22:32 +0800
+From: kernel test robot <lkp@intel.com>
+To: Alexander Graf <graf@amazon.com>, linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	x86@kernel.org, Eric Biederman <ebiederm@xmission.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Ashish Kalra <ashish.kalra@amd.com>,
+	James Gowans <jgowans@amazon.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	arnd@arndb.de, pbonzini@redhat.com, madvenka@linux.microsoft.com,
+	Anthony Yznaga <anthony.yznaga@oracle.com>,
+	Usama Arif <usama.arif@bytedance.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH 08/15] tracing: Introduce names for ring buffers
+Message-ID: <202312131922.5dJORQu4-lkp@intel.com>
+References: <20231213000452.88295-9-graf@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231212192317.0fb6b101@gandalf.local.home>
-In-Reply-To: <20231212192317.0fb6b101@gandalf.local.home>
-From: Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Date: Wed, 13 Dec 2023 10:09:50 +0200
-Message-ID: <CAJ1xhMXuxGHfD8oRfbna_drpHmNv0RUXFrvuVv6rtt-KeCM9fQ@mail.gmail.com>
-Subject: Re: [PATCH v3] tracing/selftests: Add test to test the trace_marker
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231213000452.88295-9-graf@amazon.com>
 
-The REs used in the sed commands below may be simplified as shown if desire=
-d.
+Hi Alexander,
 
-On Wed, Dec 13, 2023 at 2:22=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
->
-> Add a test that writes longs strings, some over the size of the sub buffe=
-r
-> and make sure that the entire content is there.
->
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
-> Changes since v2: https://lore.kernel.org/linux-trace-kernel/202312121516=
-32.25c9b67d@gandalf.local.home
->
-> - Realized with the upcoming change of the dynamic subbuffer sizes, that
->   this test will fail if the subbuffer is bigger than what the trace_seq
->   can hold. Now the trace_marker does not always utilize the full subbuff=
-er
->   but the size of the trace_seq instead. As that size isn't available to
->   user space, we can only just make sure all content is there.
->
->  .../ftrace/test.d/00basic/trace_marker.tc     | 82 +++++++++++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100755 tools/testing/selftests/ftrace/test.d/00basic/trace_m=
-arker.tc
->
-> diff --git a/tools/testing/selftests/ftrace/test.d/00basic/trace_marker.t=
-c b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker.tc
-> new file mode 100755
-> index 000000000000..b24aff5807df
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/test.d/00basic/trace_marker.tc
-> @@ -0,0 +1,82 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +# description: Basic tests on writing to trace_marker
-> +# requires: trace_marker
-> +# flags: instance
-> +
-> +get_buffer_data_size() {
-> +       sed -ne 's/^.*data.*size:\([0-9][0-9]*\).*/\1/p' events/header_pa=
-ge
-            sed -n 's!.*data.*size:\([^;]*\).*!\1!p' events/header_page
-> +}
-> +
-> +get_buffer_data_offset() {
-> +       sed -ne 's/^.*data.*offset:\([0-9][0-9]*\).*/\1/p' events/header_=
-page
-            sed -n 's!.*data.*offset:\([^;]*\).*!\1!p' events/header_page
-> +}
-> +
-> +get_event_header_size() {
-> +       type_len=3D`sed -ne 's/^.*type_len.*:[^0-9]*\([0-9][0-9]*\).*/\1/=
-p' events/header_event`
-            type_len=3D`sed -n '/type_len.*bits/s![^0-9]*!!gp'
-events/header_event`
+kernel test robot noticed the following build errors:
 
-> +       time_len=3D`sed -ne 's/^.*time_delta.*:[^0-9]*\([0-9][0-9]*\).*/\=
-1/p' events/header_event`
-            time_len=3D`sed -n '/time_delta/s![^0-9]*!!gp' events/header_ev=
-ent`
+[auto build test ERROR on tip/x86/core]
+[also build test ERROR on arm64/for-next/core akpm-mm/mm-everything linus/master v6.7-rc5 next-20231213]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> +       array_len=3D`sed -ne 's/^.*array.*:[^0-9]*\([0-9][0-9]*\).*/\1/p'=
- events/header_event`
-            array_len=3D`sed -n '/array/s![^0-9]*!!gp' events/header_event`
+url:    https://github.com/intel-lab-lkp/linux/commits/Alexander-Graf/mm-memblock-Add-support-for-scratch-memory/20231213-080941
+base:   tip/x86/core
+patch link:    https://lore.kernel.org/r/20231213000452.88295-9-graf%40amazon.com
+patch subject: [PATCH 08/15] tracing: Introduce names for ring buffers
+config: i386-buildonly-randconfig-003-20231213 (https://download.01.org/0day-ci/archive/20231213/202312131922.5dJORQu4-lkp@intel.com/config)
+compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231213/202312131922.5dJORQu4-lkp@intel.com/reproduce)
 
-> +       total_bits=3D$((type_len+time_len+array_len))
-> +       total_bits=3D$((total_bits+7))
-> +       echo $((total_bits/8))
-> +}
-> +
-> +get_print_event_buf_offset() {
-> +       sed -ne 's/^.*buf.*offset:\([0-9][0-9]*\).*/\1/p' events/ftrace/p=
-rint/format
-            sed -n 's!.*buf.*offset:\([^;]*\).*!\1!p' events/ftrace/print/f=
-ormat
-> +}
-> +
-> +event_header_size=3D`get_event_header_size`
-> +print_header_size=3D`get_print_event_buf_offset`
-> +
-> +data_offset=3D`get_buffer_data_offset`
-> +
-> +marker_meta=3D$((event_header_size+print_header_size))
-> +
-> +make_str() {
-> +        cnt=3D$1
-> +       # subtract two for \n\0 as marker adds these
-> +       cnt=3D$((cnt-2))
-> +       printf -- 'X%.0s' $(seq $cnt)
-> +}
-> +
-> +write_buffer() {
-> +       size=3D$1
-> +
-> +       str=3D`make_str $size`
-> +
-> +       # clear the buffer
-> +       echo > trace
-> +
-> +       # write the string into the marker
-> +       echo -n $str > trace_marker
-> +
-> +       echo $str
-> +}
-> +
-> +test_buffer() {
-> +
-> +       size=3D`get_buffer_data_size`
-> +       oneline_size=3D$((size-marker_meta))
-> +       echo size =3D $size
-> +       echo meta size =3D $marker_meta
-> +
-> +       # Now add a little more the meta data overhead will overflow
-> +
-> +       str=3D`write_buffer $size`
-> +
-> +       # Make sure the line was broken
-> +       new_str=3D`awk ' /tracing_mark_write:/ { sub(/^.*tracing_mark_wri=
-te: /,"");printf "%s", $0; exit}' trace`
-> +
-> +       if [ "$new_str" =3D "$str" ]; then
-> +               exit fail;
-> +       fi
-> +
-> +       # Make sure the entire line can be found
-> +       new_str=3D`awk ' /tracing_mark_write:/ { sub(/^.*tracing_mark_wri=
-te: */,"");printf "%s", $0; }' trace`
-> +
-> +       if [ "$new_str" !=3D "$str" ]; then
-> +               exit fail;
-> +       fi
-> +}
-> +
-> +test_buffer
-> --
-> 2.42.0
->
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202312131922.5dJORQu4-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> kernel/trace/ring_buffer_benchmark.c:435:53: error: too few arguments provided to function-like macro invocation
+           buffer = ring_buffer_alloc(1000000, RB_FL_OVERWRITE);
+                                                              ^
+   include/linux/ring_buffer.h:96:9: note: macro 'ring_buffer_alloc' defined here
+   #define ring_buffer_alloc(name, size, flags)                    \
+           ^
+>> kernel/trace/ring_buffer_benchmark.c:435:11: error: use of undeclared identifier 'ring_buffer_alloc'; did you mean '__ring_buffer_alloc'?
+           buffer = ring_buffer_alloc(1000000, RB_FL_OVERWRITE);
+                    ^~~~~~~~~~~~~~~~~
+                    __ring_buffer_alloc
+   include/linux/ring_buffer.h:88:1: note: '__ring_buffer_alloc' declared here
+   __ring_buffer_alloc(const char *name, unsigned long size, unsigned flags,
+   ^
+   2 errors generated.
+--
+>> kernel/trace/ring_buffer.c:6096:65: error: too few arguments provided to function-like macro invocation
+           buffer = ring_buffer_alloc(RB_TEST_BUFFER_SIZE, RB_FL_OVERWRITE);
+                                                                          ^
+   include/linux/ring_buffer.h:96:9: note: macro 'ring_buffer_alloc' defined here
+   #define ring_buffer_alloc(name, size, flags)                    \
+           ^
+>> kernel/trace/ring_buffer.c:6096:11: error: use of undeclared identifier 'ring_buffer_alloc'; did you mean '__ring_buffer_alloc'?
+           buffer = ring_buffer_alloc(RB_TEST_BUFFER_SIZE, RB_FL_OVERWRITE);
+                    ^~~~~~~~~~~~~~~~~
+                    __ring_buffer_alloc
+   kernel/trace/ring_buffer.c:1873:19: note: '__ring_buffer_alloc' declared here
+   EXPORT_SYMBOL_GPL(__ring_buffer_alloc);
+                     ^
+   2 errors generated.
+
+
+vim +435 kernel/trace/ring_buffer_benchmark.c
+
+5092dbc96f3acd Steven Rostedt 2009-05-05  429  
+5092dbc96f3acd Steven Rostedt 2009-05-05  430  static int __init ring_buffer_benchmark_init(void)
+5092dbc96f3acd Steven Rostedt 2009-05-05  431  {
+5092dbc96f3acd Steven Rostedt 2009-05-05  432  	int ret;
+5092dbc96f3acd Steven Rostedt 2009-05-05  433  
+5092dbc96f3acd Steven Rostedt 2009-05-05  434  	/* make a one meg buffer in overwite mode */
+5092dbc96f3acd Steven Rostedt 2009-05-05 @435  	buffer = ring_buffer_alloc(1000000, RB_FL_OVERWRITE);
+5092dbc96f3acd Steven Rostedt 2009-05-05  436  	if (!buffer)
+5092dbc96f3acd Steven Rostedt 2009-05-05  437  		return -ENOMEM;
+5092dbc96f3acd Steven Rostedt 2009-05-05  438  
+5092dbc96f3acd Steven Rostedt 2009-05-05  439  	if (!disable_reader) {
+5092dbc96f3acd Steven Rostedt 2009-05-05  440  		consumer = kthread_create(ring_buffer_consumer_thread,
+5092dbc96f3acd Steven Rostedt 2009-05-05  441  					  NULL, "rb_consumer");
+5092dbc96f3acd Steven Rostedt 2009-05-05  442  		ret = PTR_ERR(consumer);
+5092dbc96f3acd Steven Rostedt 2009-05-05  443  		if (IS_ERR(consumer))
+5092dbc96f3acd Steven Rostedt 2009-05-05  444  			goto out_fail;
+5092dbc96f3acd Steven Rostedt 2009-05-05  445  	}
+5092dbc96f3acd Steven Rostedt 2009-05-05  446  
+5092dbc96f3acd Steven Rostedt 2009-05-05  447  	producer = kthread_run(ring_buffer_producer_thread,
+5092dbc96f3acd Steven Rostedt 2009-05-05  448  			       NULL, "rb_producer");
+5092dbc96f3acd Steven Rostedt 2009-05-05  449  	ret = PTR_ERR(producer);
+5092dbc96f3acd Steven Rostedt 2009-05-05  450  
+5092dbc96f3acd Steven Rostedt 2009-05-05  451  	if (IS_ERR(producer))
+5092dbc96f3acd Steven Rostedt 2009-05-05  452  		goto out_kill;
+5092dbc96f3acd Steven Rostedt 2009-05-05  453  
+98e4833ba3c314 Ingo Molnar    2009-11-23  454  	/*
+98e4833ba3c314 Ingo Molnar    2009-11-23  455  	 * Run them as low-prio background tasks by default:
+98e4833ba3c314 Ingo Molnar    2009-11-23  456  	 */
+7ac07434048001 Steven Rostedt 2009-11-25  457  	if (!disable_reader) {
+4fd5750af02ab7 Peter Zijlstra 2020-07-20  458  		if (consumer_fifo >= 2)
+4fd5750af02ab7 Peter Zijlstra 2020-07-20  459  			sched_set_fifo(consumer);
+4fd5750af02ab7 Peter Zijlstra 2020-07-20  460  		else if (consumer_fifo == 1)
+4fd5750af02ab7 Peter Zijlstra 2020-07-20  461  			sched_set_fifo_low(consumer);
+4fd5750af02ab7 Peter Zijlstra 2020-07-20  462  		else
+7ac07434048001 Steven Rostedt 2009-11-25  463  			set_user_nice(consumer, consumer_nice);
+7ac07434048001 Steven Rostedt 2009-11-25  464  	}
+7ac07434048001 Steven Rostedt 2009-11-25  465  
+4fd5750af02ab7 Peter Zijlstra 2020-07-20  466  	if (producer_fifo >= 2)
+4fd5750af02ab7 Peter Zijlstra 2020-07-20  467  		sched_set_fifo(producer);
+4fd5750af02ab7 Peter Zijlstra 2020-07-20  468  	else if (producer_fifo == 1)
+4fd5750af02ab7 Peter Zijlstra 2020-07-20  469  		sched_set_fifo_low(producer);
+4fd5750af02ab7 Peter Zijlstra 2020-07-20  470  	else
+7ac07434048001 Steven Rostedt 2009-11-25  471  		set_user_nice(producer, producer_nice);
+98e4833ba3c314 Ingo Molnar    2009-11-23  472  
+5092dbc96f3acd Steven Rostedt 2009-05-05  473  	return 0;
+5092dbc96f3acd Steven Rostedt 2009-05-05  474  
+5092dbc96f3acd Steven Rostedt 2009-05-05  475   out_kill:
+5092dbc96f3acd Steven Rostedt 2009-05-05  476  	if (consumer)
+5092dbc96f3acd Steven Rostedt 2009-05-05  477  		kthread_stop(consumer);
+5092dbc96f3acd Steven Rostedt 2009-05-05  478  
+5092dbc96f3acd Steven Rostedt 2009-05-05  479   out_fail:
+5092dbc96f3acd Steven Rostedt 2009-05-05  480  	ring_buffer_free(buffer);
+5092dbc96f3acd Steven Rostedt 2009-05-05  481  	return ret;
+5092dbc96f3acd Steven Rostedt 2009-05-05  482  }
+5092dbc96f3acd Steven Rostedt 2009-05-05  483  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
