@@ -1,46 +1,59 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D67B1C2F
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 13 Dec 2023 03:03:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Mb8yokjf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C302DC433C7;
-	Wed, 13 Dec 2023 03:03:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1702436607;
-	bh=KL+YGefPMQWTJUJcgEiowZLLsMSBdN8/Uc2RwgmG8Fw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Mb8yokjfhmyagSO86j/flHconRVGwvnZRvEmkn87TiHpnoDWMlcNw0uHeU4RdvE2V
-	 5g/pUbK2OkMCGmRz1Vvnnlco40uP4s0TLvn4sfeMyCajnldHB898CkCfSnharG9ciO
-	 AiZIKqD0vUTfJWDQKS3jjPvQ/fzi55h9qFtl7RFA=
-Date: Tue, 12 Dec 2023 19:03:26 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Bixuan Cui <cuibixuan@vivo.com>
-Cc: rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
- opensource.kernel@vivo.com
-Subject: Re: [PATCH -next 2/2] mm: vmscan: add new event to trace shrink lru
-Message-Id: <20231212190326.899a71c20ecfb143b84e93a6@linux-foundation.org>
-In-Reply-To: <20231212032640.6968-3-cuibixuan@vivo.com>
-References: <20231212032640.6968-1-cuibixuan@vivo.com>
-	<20231212032640.6968-3-cuibixuan@vivo.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43A26111
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 13 Dec 2023 03:09:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B41CC433C8;
+	Wed, 13 Dec 2023 03:09:27 +0000 (UTC)
+Date: Tue, 12 Dec 2023 22:10:10 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] tracing: Add size check when printing trace_marker
+ output
+Message-ID: <20231212221010.70c84d2d@gandalf.local.home>
+In-Reply-To: <20231212084444.4619b8ce@gandalf.local.home>
+References: <20231212084444.4619b8ce@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 11 Dec 2023 19:26:40 -0800 Bixuan Cui <cuibixuan@vivo.com> wrote:
+On Tue, 12 Dec 2023 08:44:44 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> -TRACE_EVENT(mm_vmscan_lru_shrink_inactive,
-> +TRACE_EVENT(mm_vmscan_lru_shrink_inactive_start,
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> If for some reason the trace_marker write does not have a nul byte for the
+> string, it will overflow the print:
+> 
+>   trace_seq_printf(s, ": %s", field->buf);
+> 
+> The field->buf could be missing the nul byte. To prevent overflow, add the
+> max size that the buf can be by using the event size and the field
+> location.
+> 
+>   int max = iter->ent_size - offsetof(struct print_entry, buf);
+> 
+>   trace_seq_printf(s, ": %*s", max, field->buf);
 
-Current kernels have a call to trace_mm_vmscan_lru_shrink_inactive() in
-evict_folios(), so this renaming broke the build.
+Bah, this needs to be:
+
+   trace_seq_printf(s, ": %.*s", max, field->buf);
+
+Note the '.' between % and *. Otherwise it right aligns the output.
+
+This did fail the selftest for trace_printk(), but I modified the new one
+to add " *" to accommodate it :-p
+
+Sending out v2.
+
+-- Steve
 
