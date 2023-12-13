@@ -1,17 +1,17 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F4DB59E29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB52B59E29
 	for <linux-trace-kernel@vger.kernel.org>; Wed, 13 Dec 2023 18:20:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F96DC433C8;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8E96C433CA;
 	Wed, 13 Dec 2023 18:20:38 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rDTrH-00000002a8l-3nb3;
-	Wed, 13 Dec 2023 13:21:23 -0500
-Message-ID: <20231213182123.691123886@goodmis.org>
+	id 1rDTrI-00000002a9H-0piW;
+	Wed, 13 Dec 2023 13:21:24 -0500
+Message-ID: <20231213182123.973261257@goodmis.org>
 User-Agent: quilt/0.67
-Date: Wed, 13 Dec 2023 13:17:43 -0500
+Date: Wed, 13 Dec 2023 13:17:44 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -22,8 +22,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
  Vincent Donnefort <vdonnefort@google.com>,
  Kent Overstreet <kent.overstreet@gmail.com>
-Subject: [PATCH v3 06/15] ring-buffer: Clear pages on error in ring_buffer_subbuf_order_set()
- failure
+Subject: [PATCH v3 07/15] ring-buffer: Do no swap cpu buffers if order is different
 References: <20231213181737.791847466@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -35,28 +34,33 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-On failure to allocate ring buffer pages, the pointer to the CPU buffer
-pages is freed, but the pages that were allocated previously were not.
-Make sure they are freed too.
+As all the subbuffer order (subbuffer sizes) must be the same throughout
+the ring buffer, check the order of the buffers that are doing a CPU
+buffer swap in ring_buffer_swap_cpu() to make sure they are the same.
 
-Fixes: TBD ("tracing: Set new size of the ring buffer sub page")
+If the are not the same, then fail to do the swap, otherwise the ring
+buffer will think the CPU buffer has a specific subbuffer size when it
+does not.
+
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ring_buffer.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/trace/ring_buffer.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 729fd4f07c1e..ea3c217e4e43 100644
+index ea3c217e4e43..2c908b4f3f68 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -6069,6 +6069,7 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- 	for_each_buffer_cpu(buffer, cpu) {
- 		if (!cpu_buffers[cpu])
- 			continue;
-+		rb_free_cpu_buffer(cpu_buffers[cpu]);
- 		kfree(cpu_buffers[cpu]);
- 	}
- 	kfree(cpu_buffers);
+@@ -5559,6 +5559,9 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
+ 	if (cpu_buffer_a->nr_pages != cpu_buffer_b->nr_pages)
+ 		goto out;
+ 
++	if (buffer_a->subbuf_order != buffer_b->subbuf_order)
++		goto out;
++
+ 	ret = -EAGAIN;
+ 
+ 	if (atomic_read(&buffer_a->record_disabled))
 -- 
 2.42.0
 
