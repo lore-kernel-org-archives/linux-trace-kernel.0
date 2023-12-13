@@ -1,37 +1,37 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="tDAMyHkz"
-Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F01910F1;
-	Tue, 12 Dec 2023 16:07:27 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="R7NSmQrU"
+Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF7DC171F;
+	Tue, 12 Dec 2023 16:07:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1702426048; x=1733962048;
+  t=1702426050; x=1733962050;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=DMVF+g90vjiGQ2+mH0UneD/R5uFZpo7f74QocXGx4Fo=;
-  b=tDAMyHkzpGHvBkdyysb06lS0YYGx5ezQ6YbmvJ3XqhoDtF8wFG5ExLIa
-   RMHdlLPnUnHCLj64VSqYAJy6umccZXapJtArq5ntEeM77Yngc5N+or+UQ
-   HU2rKyBdkvz+RjqvKqZvDnxglCgiJlUKECb4SEMcl4Xi1W7AhkWzyoZUS
-   U=;
+  bh=ijxY/skruFfgxp/KO2yhFBX0a87YYNVgJHNp25q/K2g=;
+  b=R7NSmQrUAop5SGqsD8840QQUTTgeEG6R8+wfoNYtOjYuIbwvdLvde1VW
+   5d+VaOun9FxuUzm6mgBiYxJCAbrImxyXOx0apfhi3NCOUk9CjJGeu+nYh
+   HdTUt24cbcxcal1AevcOQhzmzyDXmDfkEkXBCI622UVvK0RppoC1zKDlZ
+   Y=;
 X-IronPort-AV: E=Sophos;i="6.04,271,1695686400"; 
-   d="scan'208";a="259290097"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-iad-1a-m6i4x-bbc6e425.us-east-1.amazon.com) ([10.25.36.210])
-  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 00:07:24 +0000
+   d="scan'208";a="50248355"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-iad-1d-m6i4x-00fceed5.us-east-1.amazon.com) ([10.25.36.210])
+  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 00:07:28 +0000
 Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan3.iad.amazon.com [10.32.235.38])
-	by email-inbound-relay-iad-1a-m6i4x-bbc6e425.us-east-1.amazon.com (Postfix) with ESMTPS id 9684F806AE;
-	Wed, 13 Dec 2023 00:07:12 +0000 (UTC)
-Received: from EX19MTAUWC001.ant.amazon.com [10.0.38.20:42528]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.34.165:2525] with esmtp (Farcaster)
- id d4eed612-db0d-44d2-b4c4-2cf51a2e8457; Wed, 13 Dec 2023 00:07:11 +0000 (UTC)
-X-Farcaster-Flow-ID: d4eed612-db0d-44d2-b4c4-2cf51a2e8457
+	by email-inbound-relay-iad-1d-m6i4x-00fceed5.us-east-1.amazon.com (Postfix) with ESMTPS id 96E81A0B0F;
+	Wed, 13 Dec 2023 00:07:20 +0000 (UTC)
+Received: from EX19MTAUWA002.ant.amazon.com [10.0.21.151:13591]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.2.31:2525] with esmtp (Farcaster)
+ id d7626d9c-b144-446f-b11a-bed8a3932442; Wed, 13 Dec 2023 00:07:19 +0000 (UTC)
+X-Farcaster-Flow-ID: d7626d9c-b144-446f-b11a-bed8a3932442
 Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 13 Dec 2023 00:07:11 +0000
+ 15.2.1118.40; Wed, 13 Dec 2023 00:07:19 +0000
 Received: from dev-dsk-graf-1a-5ce218e4.eu-west-1.amazon.com (10.253.83.51) by
  EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 13 Dec 2023 00:07:07 +0000
+ 15.2.1118.40; Wed, 13 Dec 2023 00:07:15 +0000
 From: Alexander Graf <graf@amazon.com>
 To: <linux-kernel@vger.kernel.org>
 CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -48,9 +48,9 @@ CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
 	<anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, David
  Woodhouse <dwmw@amazon.co.uk>, Benjamin Herrenschmidt
 	<benh@kernel.crashing.org>
-Subject: [PATCH 12/15] tracing: Recover trace buffers from kexec handover
-Date: Wed, 13 Dec 2023 00:04:49 +0000
-Message-ID: <20231213000452.88295-13-graf@amazon.com>
+Subject: [PATCH 14/15] tracing: Recover trace events from kexec handover
+Date: Wed, 13 Dec 2023 00:04:51 +0000
+Message-ID: <20231213000452.88295-15-graf@amazon.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231213000452.88295-1-graf@amazon.com>
 References: <20231213000452.88295-1-graf@amazon.com>
@@ -65,260 +65,100 @@ X-ClientProxiedBy: EX19D037UWB002.ant.amazon.com (10.13.138.121) To
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 
-When kexec handover is in place, we now know the location of all
-previous buffers for ftrace rings. With this patch applied, ftrace
-reassembles any new trace buffer that carries the same name as a
-previous one with the same data pages that the previous buffer had.
-
-That way, a buffer that we had in place before kexec becomes readable
-after kexec again as soon as it gets initialized with the same name.
+This patch implements all logic necessary to match a new trace event
+that we add against preserved trace events from kho. If we find a match,
+we give the new trace event the old event's identifier. That way, trace
+read-outs are able to make sense of buffer contents again because the
+parsing code for events looks at the same identifiers.
 
 Signed-off-by: Alexander Graf <graf@amazon.com>
 ---
- kernel/trace/ring_buffer.c | 173 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 171 insertions(+), 2 deletions(-)
+ kernel/trace/trace_output.c | 65 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 64 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 691d1236eeb1..f3d07cb90762 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -575,6 +575,28 @@ struct ring_buffer_iter {
- 	int				missed_events;
- };
- 
-+struct trace_kho_cpu {
-+	const struct kho_mem *mem;
-+	uint32_t nr_mems;
-+};
-+
-+#ifdef CONFIG_FTRACE_KHO
-+static int trace_kho_replace_buffers(struct ring_buffer_per_cpu *cpu_buffer,
-+				     struct trace_kho_cpu *kho);
-+static int trace_kho_read_cpu(const char *name, int cpu, struct trace_kho_cpu *kho);
-+#else
-+static int trace_kho_replace_buffers(struct ring_buffer_per_cpu *cpu_buffer,
-+				     struct trace_kho_cpu *kho)
-+{
-+	return -EINVAL;
-+}
-+
-+static int trace_kho_read_cpu(const char *name, int cpu, struct trace_kho_cpu *kho)
-+{
-+	return -EINVAL;
-+}
-+#endif
-+
- #ifdef RB_TIME_32
- 
- /*
-@@ -1807,10 +1829,12 @@ struct trace_buffer *__ring_buffer_alloc(const char *name,
- 					unsigned long size, unsigned flags,
- 					struct lock_class_key *key)
- {
-+	int cpu = raw_smp_processor_id();
-+	struct trace_kho_cpu kho = {};
- 	struct trace_buffer *buffer;
-+	bool use_kho = false;
- 	long nr_pages;
- 	int bsize;
--	int cpu;
- 	int ret;
- 
- 	/* keep it in its own cache line */
-@@ -1823,6 +1847,12 @@ struct trace_buffer *__ring_buffer_alloc(const char *name,
- 		goto fail_free_buffer;
- 
- 	nr_pages = DIV_ROUND_UP(size, BUF_PAGE_SIZE);
-+	if (!trace_kho_read_cpu(name, cpu, &kho) && kho.nr_mems > 4) {
-+		nr_pages = kho.nr_mems / 2;
-+		use_kho = true;
-+		pr_debug("Using kho for buffer '%s' on CPU [%03d]", name, cpu);
-+	}
-+
- 	buffer->flags = flags;
- 	buffer->clock = trace_clock_local;
- 	buffer->reader_lock_key = key;
-@@ -1843,12 +1873,14 @@ struct trace_buffer *__ring_buffer_alloc(const char *name,
- 	if (!buffer->buffers)
- 		goto fail_free_cpumask;
- 
--	cpu = raw_smp_processor_id();
- 	cpumask_set_cpu(cpu, buffer->cpumask);
- 	buffer->buffers[cpu] = rb_allocate_cpu_buffer(buffer, nr_pages, cpu);
- 	if (!buffer->buffers[cpu])
- 		goto fail_free_buffers;
- 
-+	if (use_kho && trace_kho_replace_buffers(buffer->buffers[cpu], &kho))
-+		pr_warn("Could not revive all previous trace data");
-+
- 	ret = cpuhp_state_add_instance(CPUHP_TRACE_RB_PREPARE, &buffer->node);
- 	if (ret < 0)
- 		goto fail_free_buffers;
-@@ -5886,7 +5918,9 @@ EXPORT_SYMBOL_GPL(ring_buffer_read_page);
-  */
- int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node)
- {
-+	struct trace_kho_cpu kho = {};
- 	struct trace_buffer *buffer;
-+	bool use_kho = false;
- 	long nr_pages_same;
- 	int cpu_i;
- 	unsigned long nr_pages;
-@@ -5910,6 +5944,12 @@ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node)
- 	/* allocate minimum pages, user can later expand it */
- 	if (!nr_pages_same)
- 		nr_pages = 2;
-+
-+	if (!trace_kho_read_cpu(buffer->name, cpu, &kho) && kho.nr_mems > 4) {
-+		nr_pages = kho.nr_mems / 2;
-+		use_kho = true;
-+	}
-+
- 	buffer->buffers[cpu] =
- 		rb_allocate_cpu_buffer(buffer, nr_pages, cpu);
- 	if (!buffer->buffers[cpu]) {
-@@ -5917,12 +5957,141 @@ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node)
- 		     cpu);
- 		return -ENOMEM;
- 	}
-+
-+	if (use_kho && trace_kho_replace_buffers(buffer->buffers[cpu], &kho))
-+		pr_warn("Could not revive all previous trace data");
-+
- 	smp_wmb();
- 	cpumask_set_cpu(cpu, buffer->cpumask);
- 	return 0;
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index 113de40c616f..d2e2a6346322 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -749,6 +749,67 @@ void trace_event_read_unlock(void)
+ 	up_read(&trace_event_sem);
  }
  
- #ifdef CONFIG_FTRACE_KHO
-+static int trace_kho_replace_buffers(struct ring_buffer_per_cpu *cpu_buffer,
-+				     struct trace_kho_cpu *kho)
++/**
++ * trace_kho_fill_event_type - restore event type info from KHO
++ * @event: the event type to enumerate
++ *
++ * Event types are semi-dynamically generated. To ensure that
++ * their identifiers match before and after kexec with KHO,
++ * let's match up unique name identifiers and fill in the
++ * respective ID information if we booted with KHO.
++ */
++static bool trace_kho_fill_event_type(struct trace_event *event)
 +{
-+	bool first_loop = true;
-+	struct list_head *tmp;
-+	int err = 0;
-+	int i = 0;
-+
-+	if (kho->nr_mems != cpu_buffer->nr_pages * 2)
-+		return -EINVAL;
-+
-+	for (tmp = rb_list_head(cpu_buffer->pages);
-+	     tmp != rb_list_head(cpu_buffer->pages) || first_loop;
-+	     tmp = rb_list_head(tmp->next), first_loop = false) {
-+		struct buffer_page *bpage = (struct buffer_page *)tmp;
-+		const struct kho_mem *mem_bpage = &kho->mem[i++];
-+		const struct kho_mem *mem_page = &kho->mem[i++];
-+		const uint64_t rb_page_head = 1;
-+		struct buffer_page *old_bpage;
-+		void *old_page;
-+
-+		old_bpage = __va(mem_bpage->addr);
-+		if (!bpage)
-+			goto out;
-+
-+		if ((ulong)old_bpage->list.next & rb_page_head) {
-+			struct list_head *new_lhead;
-+			struct buffer_page *new_head;
-+
-+			new_lhead = rb_list_head(bpage->list.next);
-+			new_head = (struct buffer_page *)new_lhead;
-+
-+			/* Assume the buffer is completely full */
-+			cpu_buffer->tail_page = bpage;
-+			cpu_buffer->commit_page = bpage;
-+			/* Set the head pointers to what they were before */
-+			cpu_buffer->head_page->list.prev->next = (struct list_head *)
-+				((ulong)cpu_buffer->head_page->list.prev->next & ~rb_page_head);
-+			cpu_buffer->head_page = new_head;
-+			bpage->list.next = (struct list_head *)((ulong)new_lhead | rb_page_head);
-+		}
-+
-+		if (rb_page_entries(old_bpage) || rb_page_write(old_bpage)) {
-+			/*
-+			 * We want to recycle the pre-kho page, it contains
-+			 * trace data. To do so, we unreserve it and swap the
-+			 * current data page with the pre-kho one
-+			 */
-+			old_page = kho_claim_mem(mem_page);
-+
-+			/* Recycle the old page, it contains data */
-+			free_page((ulong)bpage->page);
-+			bpage->page = old_page;
-+
-+			bpage->write = old_bpage->write;
-+			bpage->entries = old_bpage->entries;
-+			bpage->real_end = old_bpage->real_end;
-+
-+			local_inc(&cpu_buffer->pages_touched);
-+		} else {
-+			kho_return_mem(mem_page);
-+		}
-+
-+		kho_return_mem(mem_bpage);
-+	}
-+
-+out:
-+	return err;
-+}
-+
-+static int trace_kho_read_cpu(const char *name, int cpu,
-+			      struct trace_kho_cpu *kho)
-+{
++#ifdef CONFIG_FTRACE_KHO
++	const char *path = "/ftrace/events";
 +	void *fdt = kho_get_fdt();
-+	int mem_len;
-+	int err = 0;
-+	char *path;
-+	int off;
++	int err, len, off, id;
++	const void *p;
 +
 +	if (!fdt)
-+		return -ENOENT;
++		return false;
 +
-+	if (!kho)
-+		return -EINVAL;
++	if (WARN_ON(!event->name))
++		return false;
 +
-+	path = kasprintf(GFP_KERNEL, "/ftrace/%s/buffer/cpu%x", name, cpu);
-+	if (!path)
-+		return -ENOMEM;
-+
-+	pr_debug("Trying to revive trace buffer '%s'", path);
++	pr_debug("Trying to revive event '%s'", event->name);
 +
 +	off = fdt_path_offset(fdt, path);
 +	if (off < 0) {
 +		pr_debug("Could not find '%s' in DT", path);
-+		err = -ENOENT;
-+		goto out;
++		return false;
 +	}
 +
-+	err = fdt_node_check_compatible(fdt, off, "ftrace,cpu-v1");
++	err = fdt_node_check_compatible(fdt, off, "ftrace,events-v1");
 +	if (err) {
 +		pr_warn("Node '%s' has invalid compatible", path);
-+		err = -EINVAL;
-+		goto out;
++		return false;
 +	}
 +
-+	kho->mem = fdt_getprop(fdt, off, "mem", &mem_len);
-+	if (!kho->mem) {
-+		pr_warn("Node '%s' has invalid mem property", path);
-+		err = -EINVAL;
-+		goto out;
++	p = fdt_getprop(fdt, off, event->name, &len);
++	if (!p) {
++		pr_warn("Event '%s' not found", event->name);
++		return false;
 +	}
 +
-+	kho->nr_mems = mem_len / sizeof(*kho->mem);
-+
-+	/* Should follow "bpage 0, page 0, bpage 1, page 1, ..." pattern */
-+	if ((kho->nr_mems & 1)) {
-+		err = -EINVAL;
-+		goto out;
++	if (len != sizeof(event->type)) {
++		pr_warn("Event '%s' has invalid length", event->name);
++		return false;
 +	}
 +
-+out:
-+	kfree(path);
-+	return err;
++	id = *(const u32 *)p;
++
++	/* Mark ID as in use */
++	if (ida_alloc_range(&trace_event_ida, id, id, GFP_KERNEL) != id)
++		return false;
++
++	event->type = id;
++	return true;
++#endif
++
++	return false;
 +}
 +
- static int trace_kho_write_cpu(void *fdt, struct trace_buffer *buffer, int cpu)
- {
- 	int i = 0;
+ /**
+  * register_trace_event - register output for an event type
+  * @event: the event type to register
+@@ -777,7 +838,9 @@ int register_trace_event(struct trace_event *event)
+ 	if (WARN_ON(!event->funcs))
+ 		goto out;
+ 
+-	if (!event->type) {
++	if (trace_kho_fill_event_type(event)) {
++		pr_debug("Recovered '%s' as id=%d", event->name, event->type);
++	} else if (!event->type) {
+ 		event->type = alloc_trace_event_type();
+ 		if (!event->type)
+ 			goto out;
 -- 
 2.40.1
 
