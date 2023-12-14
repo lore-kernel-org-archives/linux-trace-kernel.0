@@ -1,422 +1,349 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CF7F60B8F;
-	Thu, 14 Dec 2023 17:53:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2886CC433C8;
-	Thu, 14 Dec 2023 17:53:47 +0000 (UTC)
-Date: Thu, 14 Dec 2023 12:54:33 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Linux Arch
- <linux-arch@vger.kernel.org>
-Subject: [PATCH v3] ring-buffer: Remove 32bit timestamp logic
-Message-ID: <20231214125433.03091e5e@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.b="EJuhZJJX"
+Received: from tarta.nabijaczleweli.xyz (tarta.nabijaczleweli.xyz [139.28.40.42])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F280FB;
+	Thu, 14 Dec 2023 10:44:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nabijaczleweli.xyz;
+	s=202305; t=1702579482;
+	bh=Tt8d4xrtB4yfD/JplK2SRdSv44/6Xoalp7RmY8hdBr0=;
+	h=Date:From:Cc:Subject:From;
+	b=EJuhZJJXD3J5WCMABIDkLrpumuIpblG3ICHpjx1uCCtLhnPtwfVDN+pCutwnzkQm3
+	 iSQjvAG3jiUjBT53o7s6TTQQFZYYi8PJ9mIJ29L4DlYeJ1iM+ALb86EHVXQXEQTrUr
+	 QaBjxIIQjzC+A2Cx62SlY1vvjlIjN76ocI4MpuNAALxopWIMHdPNYhDojRaax5UhU6
+	 HxUdeqdNuh4u0nKh53R7VNqU32yFDNpLDxUPEJqmyCGpaQtaxUZRI2v/ur3akvAOFB
+	 +5jecMEHDee0AZIphoiMTT5oULseGAeVQUJ2KkXNKG9xtTPsg0ThZH9i/vWKDykCUT
+	 YyWrvJAleuzow==
+Received: from tarta.nabijaczleweli.xyz (unknown [192.168.1.250])
+	by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id 2F3C313076;
+	Thu, 14 Dec 2023 19:44:42 +0100 (CET)
+Date: Thu, 14 Dec 2023 19:44:41 +0100
+From: 
+	Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
+Cc: Jens Axboe <axboe@kernel.dk>, Christian Brauner <brauner@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, 
+	"D. Wythe" <alibuda@linux.alibaba.com>, "David S. Miller" <davem@davemloft.net>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Alexander Mikhalitsyn <alexander@mihalicyn.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Boris Pismenny <borisp@nvidia.com>, 
+	Cong Wang <cong.wang@bytedance.com>, David Ahern <dsahern@kernel.org>, 
+	David Howells <dhowells@redhat.com>, Eric Dumazet <edumazet@google.com>, 
+	Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Jan Karcher <jaka@linux.ibm.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Karsten Graul <kgraul@linux.ibm.com>, Kirill Tkhai <tkhai@ya.ru>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, Li kunyu <kunyu@nfschina.com>, linux-kernel@vger.kernel.org, 
+	linux-s390@vger.kernel.org, netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>, netdev@vger.kernel.org, 
+	Paolo Abeni <pabeni@redhat.com>, Pengcheng Yang <yangpc@wangsu.com>, 
+	Shigeru Yoshida <syoshida@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Tony Lu <tonylu@linux.alibaba.com>, 
+	Wen Gu <guwen@linux.alibaba.com>, Wenjia Zhang <wenjia@linux.ibm.com>, 
+	Xu Panda <xu.panda@zte.com.cn>, Zhang Zhengming <zhang.zhengming@h3c.com>
+Subject: [PATCH RERESEND 00/11] splice(file<>pipe) I/O on file as-if
+ O_NONBLOCK
+Message-ID: <2cover.1697486714.git.nabijaczleweli@nabijaczleweli.xyz>
+User-Agent: NeoMutt/20231103
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="4xtajew35rjsbkjt"
+Content-Disposition: inline
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Each event has a 27 bit timestamp delta that is used to hold the delta
-from the last event. If the time between events is greater than 2^27, then
-a timestamp is added that holds a 59 bit absolute timestamp.
+--4xtajew35rjsbkjt
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Until a389d86f7fd09 ("ring-buffer: Have nested events still record running
-time stamp"), if an interrupt interrupted an event in progress, all the
-events delta would be zero to not deal with the races that need to be
-handled. The commit a389d86f7fd09 changed that to handle the races giving
-all events, even those that preempt other events, still have an accurate
-timestamp.
+First:  https://lore.kernel.org/lkml/cover.1697486714.git.nabijaczleweli@na=
+bijaczleweli.xyz/t/#u
+Resend: https://lore.kernel.org/lkml/1cover.1697486714.git.nabijaczleweli@n=
+abijaczleweli.xyz/t/#u
+Resending again per https://lore.kernel.org/lkml/20231214093859.01f6e2cd@ke=
+rnel.org/t/#u
 
-To handle those races requires performing 64-bit cmpxchg on the
-timestamps. But doing 64-bit cmpxchg on 32-bit architectures is considered
-very slow. To try to deal with this the timestamp logic was broken into
-two and then three 32-bit cmpxchgs, with the thought that two (or three)
-32-bit cmpxchgs are still faster than a single 64-bit cmpxchg on 32-bit
-architectures.
+Hi!
 
-Part of the problem with this is that I didn't have any 32-bit
-architectures to test on. After hitting several subtle bugs in this code,
-an effort was made to try and see if three 32-bit cmpxchgs are indeed
-faster than a single 64-bit. After a few people brushed off the dust of
-their old 32-bit machines, tests were done, and even though 32-bit cmpxchg
-was faster than a single 64-bit, it was in the order of 50% at best, not
-300%.
+As it stands, splice(file -> pipe):
+1. locks the pipe,
+2. does a read from the file,
+3. unlocks the pipe.
 
-This means that this complex code is not only complex but also not even
-faster than just using 64-bit cmpxchg.
+For reading from regular files and blcokdevs this makes no difference.
+But if the file is a tty or a socket, for example, this means that until
+data appears, which it may never do, every process trying to read from
+or open the pipe enters an uninterruptible sleep,
+and will only exit it if the splicing process is killed.
 
-Nuke it!
+This trivially denies service to:
+* any hypothetical pipe-based log collexion system
+* all nullmailer installations
+* me, personally, when I'm pasting stuff into qemu -serial chardev:pipe
 
-This is basically a revert of 10464b4aa605e ("ring-buffer: Add rb_time_t
-64 bit operations for speeding up 32 bit").
+This follows:
+1. https://lore.kernel.org/linux-fsdevel/qk6hjuam54khlaikf2ssom6custxf5is2e=
+kkaequf4hvode3ls@zgf7j5j4ubvw/t/#u
+2. a security@ thread rooted in
+   <irrrblivicfc7o3lfq7yjm2lrxq35iyya4gyozlohw24gdzyg7@azmluufpdfvu>
+3. https://nabijaczleweli.xyz/content/blogn_t/011-linux-splice-exclusion.ht=
+ml
 
-Cc: stable@vger.kernel.org
-Fixes: 10464b4aa605e ("ring-buffer: Add rb_time_t 64 bit operations for speeding up 32 bit")
-Acked-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v2: https://lore.kernel.org/linux-trace-kernel/20231213232957.498cd339@gandalf.local.home
+Patches were posted and then discarded on principle or funxionality,
+all in all terminating in Linus posting
+> But it is possible that we need to just bite the bullet and say
+> "copy_splice_read() needs to use a non-blocking kiocb for the IO".
 
--- Added check for architectures that can not handle cmpxchg in NMI or
-   x86 architectures that do not support true 64bit cmpxchg, and for
-   them, to bail out of tracing if in NMI context.
+This does that, effectively making splice(file -> pipe)
+request (and require) O_NONBLOCK on reads fron the file:
+this doesn't affect splicing from regular files and blockdevs,
+since they're always non-blocking
+(and requesting the stronger "no kernel sleep" IOCB_NOWAIT is non-sensical),
+but always returns -EINVAL for ttys.
+Sockets behave as expected from O_NONBLOCK reads:
+splice if there's data available else -EAGAIN.
 
- kernel/trace/ring_buffer.c | 232 ++++---------------------------------
- 1 file changed, 22 insertions(+), 210 deletions(-)
+This should all pretty much behave as-expected.
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 1d9caee7f542..9fdbd08af72f 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -27,6 +27,7 @@
- #include <linux/cpu.h>
- #include <linux/oom.h>
- 
-+#include <asm/local64.h>
- #include <asm/local.h>
- 
- /*
-@@ -463,27 +464,9 @@ enum {
- 	RB_CTX_MAX
- };
- 
--#if BITS_PER_LONG == 32
--#define RB_TIME_32
--#endif
--
--/* To test on 64 bit machines */
--//#define RB_TIME_32
--
--#ifdef RB_TIME_32
--
--struct rb_time_struct {
--	local_t		cnt;
--	local_t		top;
--	local_t		bottom;
--	local_t		msb;
--};
--#else
--#include <asm/local64.h>
- struct rb_time_struct {
- 	local64_t	time;
- };
--#endif
- typedef struct rb_time_struct rb_time_t;
- 
- #define MAX_NEST	5
-@@ -573,179 +556,9 @@ struct ring_buffer_iter {
- 	int				missed_events;
- };
- 
--#ifdef RB_TIME_32
--
--/*
-- * On 32 bit machines, local64_t is very expensive. As the ring
-- * buffer doesn't need all the features of a true 64 bit atomic,
-- * on 32 bit, it uses these functions (64 still uses local64_t).
-- *
-- * For the ring buffer, 64 bit required operations for the time is
-- * the following:
-- *
-- *  - Reads may fail if it interrupted a modification of the time stamp.
-- *      It will succeed if it did not interrupt another write even if
-- *      the read itself is interrupted by a write.
-- *      It returns whether it was successful or not.
-- *
-- *  - Writes always succeed and will overwrite other writes and writes
-- *      that were done by events interrupting the current write.
-- *
-- *  - A write followed by a read of the same time stamp will always succeed,
-- *      but may not contain the same value.
-- *
-- *  - A cmpxchg will fail if it interrupted another write or cmpxchg.
-- *      Other than that, it acts like a normal cmpxchg.
-- *
-- * The 60 bit time stamp is broken up by 30 bits in a top and bottom half
-- *  (bottom being the least significant 30 bits of the 60 bit time stamp).
-- *
-- * The two most significant bits of each half holds a 2 bit counter (0-3).
-- * Each update will increment this counter by one.
-- * When reading the top and bottom, if the two counter bits match then the
-- *  top and bottom together make a valid 60 bit number.
-- */
--#define RB_TIME_SHIFT	30
--#define RB_TIME_VAL_MASK ((1 << RB_TIME_SHIFT) - 1)
--#define RB_TIME_MSB_SHIFT	 60
--
--static inline int rb_time_cnt(unsigned long val)
--{
--	return (val >> RB_TIME_SHIFT) & 3;
--}
--
--static inline u64 rb_time_val(unsigned long top, unsigned long bottom)
--{
--	u64 val;
--
--	val = top & RB_TIME_VAL_MASK;
--	val <<= RB_TIME_SHIFT;
--	val |= bottom & RB_TIME_VAL_MASK;
--
--	return val;
--}
--
--static inline bool __rb_time_read(rb_time_t *t, u64 *ret, unsigned long *cnt)
--{
--	unsigned long top, bottom, msb;
--	unsigned long c;
--
--	/*
--	 * If the read is interrupted by a write, then the cnt will
--	 * be different. Loop until both top and bottom have been read
--	 * without interruption.
--	 */
--	do {
--		c = local_read(&t->cnt);
--		top = local_read(&t->top);
--		bottom = local_read(&t->bottom);
--		msb = local_read(&t->msb);
--	} while (c != local_read(&t->cnt));
--
--	*cnt = rb_time_cnt(top);
--
--	/* If top and msb counts don't match, this interrupted a write */
--	if (*cnt != rb_time_cnt(msb))
--		return false;
--
--	/* The shift to msb will lose its cnt bits */
--	*ret = rb_time_val(top, bottom) | ((u64)msb << RB_TIME_MSB_SHIFT);
--	return true;
--}
--
--static bool rb_time_read(rb_time_t *t, u64 *ret)
--{
--	unsigned long cnt;
--
--	return __rb_time_read(t, ret, &cnt);
--}
--
--static inline unsigned long rb_time_val_cnt(unsigned long val, unsigned long cnt)
--{
--	return (val & RB_TIME_VAL_MASK) | ((cnt & 3) << RB_TIME_SHIFT);
--}
--
--static inline void rb_time_split(u64 val, unsigned long *top, unsigned long *bottom,
--				 unsigned long *msb)
--{
--	*top = (unsigned long)((val >> RB_TIME_SHIFT) & RB_TIME_VAL_MASK);
--	*bottom = (unsigned long)(val & RB_TIME_VAL_MASK);
--	*msb = (unsigned long)(val >> RB_TIME_MSB_SHIFT);
--}
--
--static inline void rb_time_val_set(local_t *t, unsigned long val, unsigned long cnt)
--{
--	val = rb_time_val_cnt(val, cnt);
--	local_set(t, val);
--}
--
--static void rb_time_set(rb_time_t *t, u64 val)
--{
--	unsigned long cnt, top, bottom, msb;
--
--	rb_time_split(val, &top, &bottom, &msb);
--
--	/* Writes always succeed with a valid number even if it gets interrupted. */
--	do {
--		cnt = local_inc_return(&t->cnt);
--		rb_time_val_set(&t->top, top, cnt);
--		rb_time_val_set(&t->bottom, bottom, cnt);
--		rb_time_val_set(&t->msb, val >> RB_TIME_MSB_SHIFT, cnt);
--	} while (cnt != local_read(&t->cnt));
--}
--
--static inline bool
--rb_time_read_cmpxchg(local_t *l, unsigned long expect, unsigned long set)
--{
--	return local_try_cmpxchg(l, &expect, set);
--}
--
--static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
--{
--	unsigned long cnt, top, bottom, msb;
--	unsigned long cnt2, top2, bottom2, msb2;
--	u64 val;
--
--	/* The cmpxchg always fails if it interrupted an update */
--	 if (!__rb_time_read(t, &val, &cnt2))
--		 return false;
--
--	 if (val != expect)
--		 return false;
--
--	 cnt = local_read(&t->cnt);
--	 if ((cnt & 3) != cnt2)
--		 return false;
--
--	 cnt2 = cnt + 1;
--
--	 rb_time_split(val, &top, &bottom, &msb);
--	 top = rb_time_val_cnt(top, cnt);
--	 bottom = rb_time_val_cnt(bottom, cnt);
--
--	 rb_time_split(set, &top2, &bottom2, &msb2);
--	 top2 = rb_time_val_cnt(top2, cnt2);
--	 bottom2 = rb_time_val_cnt(bottom2, cnt2);
--
--	if (!rb_time_read_cmpxchg(&t->cnt, cnt, cnt2))
--		return false;
--	if (!rb_time_read_cmpxchg(&t->msb, msb, msb2))
--		return false;
--	if (!rb_time_read_cmpxchg(&t->top, top, top2))
--		return false;
--	if (!rb_time_read_cmpxchg(&t->bottom, bottom, bottom2))
--		return false;
--	return true;
--}
--
--#else /* 64 bits */
--
--/* local64_t always succeeds */
--
--static inline bool rb_time_read(rb_time_t *t, u64 *ret)
-+static inline void rb_time_read(rb_time_t *t, u64 *ret)
- {
- 	*ret = local64_read(&t->time);
--	return true;
- }
- static void rb_time_set(rb_time_t *t, u64 val)
- {
-@@ -756,7 +569,6 @@ static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
- {
- 	return local64_try_cmpxchg(&t->time, &expect, set);
- }
--#endif
- 
- /*
-  * Enable this to make sure that the event passed to
-@@ -863,10 +675,7 @@ u64 ring_buffer_event_time_stamp(struct trace_buffer *buffer,
- 	WARN_ONCE(1, "nest (%d) greater than max", nest);
- 
-  fail:
--	/* Can only fail on 32 bit */
--	if (!rb_time_read(&cpu_buffer->write_stamp, &ts))
--		/* Screw it, just read the current time */
--		ts = rb_time_stamp(cpu_buffer->buffer);
-+	rb_time_read(&cpu_buffer->write_stamp, &ts);
- 
- 	return ts;
- }
-@@ -2863,7 +2672,7 @@ rb_check_timestamp(struct ring_buffer_per_cpu *cpu_buffer,
- 		  (unsigned long long)info->ts,
- 		  (unsigned long long)info->before,
- 		  (unsigned long long)info->after,
--		  (unsigned long long)(rb_time_read(&cpu_buffer->write_stamp, &write_stamp) ? write_stamp : 0),
-+		  (unsigned long long)({rb_time_read(&cpu_buffer->write_stamp, &write_stamp); write_stamp;}),
- 		  sched_clock_stable() ? "" :
- 		  "If you just came from a suspend/resume,\n"
- 		  "please switch to the trace global clock:\n"
-@@ -3021,8 +2830,7 @@ rb_try_to_discard(struct ring_buffer_per_cpu *cpu_buffer,
- 
- 	delta = rb_time_delta(event);
- 
--	if (!rb_time_read(&cpu_buffer->write_stamp, &write_stamp))
--		return false;
-+	rb_time_read(&cpu_buffer->write_stamp, &write_stamp);
- 
- 	/* Make sure the write stamp is read before testing the location */
- 	barrier();
-@@ -3560,16 +3368,14 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
- 	struct ring_buffer_event *event;
- 	struct buffer_page *tail_page;
- 	unsigned long tail, write, w;
--	bool a_ok;
--	bool b_ok;
- 
- 	/* Don't let the compiler play games with cpu_buffer->tail_page */
- 	tail_page = info->tail_page = READ_ONCE(cpu_buffer->tail_page);
- 
-  /*A*/	w = local_read(&tail_page->write) & RB_WRITE_MASK;
- 	barrier();
--	b_ok = rb_time_read(&cpu_buffer->before_stamp, &info->before);
--	a_ok = rb_time_read(&cpu_buffer->write_stamp, &info->after);
-+	rb_time_read(&cpu_buffer->before_stamp, &info->before);
-+	rb_time_read(&cpu_buffer->write_stamp, &info->after);
- 	barrier();
- 	info->ts = rb_time_stamp(cpu_buffer->buffer);
- 
-@@ -3584,7 +3390,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
- 		if (!w) {
- 			/* Use the sub-buffer timestamp */
- 			info->delta = 0;
--		} else if (unlikely(!a_ok || !b_ok || info->before != info->after)) {
-+		} else if (unlikely(info->before != info->after)) {
- 			info->add_timestamp |= RB_ADD_STAMP_FORCE | RB_ADD_STAMP_EXTEND;
- 			info->length += RB_LEN_TIME_EXTEND;
- 		} else {
-@@ -3613,13 +3419,11 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
- 
- 	if (likely(tail == w)) {
- 		u64 save_before;
--		bool s_ok;
- 
- 		/* Nothing interrupted us between A and C */
-  /*D*/		rb_time_set(&cpu_buffer->write_stamp, info->ts);
- 		barrier();
-- /*E*/		s_ok = rb_time_read(&cpu_buffer->before_stamp, &save_before);
--		RB_WARN_ON(cpu_buffer, !s_ok);
-+ /*E*/		rb_time_read(&cpu_buffer->before_stamp, &save_before);
- 		if (likely(!(info->add_timestamp &
- 			     (RB_ADD_STAMP_FORCE | RB_ADD_STAMP_ABSOLUTE))))
- 			/* This did not interrupt any time update */
-@@ -3632,8 +3436,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
- 		if (unlikely(info->ts != save_before)) {
- 			/* SLOW PATH - Interrupted between C and E */
- 
--			a_ok = rb_time_read(&cpu_buffer->write_stamp, &info->after);
--			RB_WARN_ON(cpu_buffer, !a_ok);
-+			rb_time_read(&cpu_buffer->write_stamp, &info->after);
- 
- 			/* Write stamp must only go forward */
- 			if (save_before > info->after) {
-@@ -3648,9 +3451,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
- 	} else {
- 		u64 ts;
- 		/* SLOW PATH - Interrupted between A and C */
--		a_ok = rb_time_read(&cpu_buffer->write_stamp, &info->after);
--		/* Was interrupted before here, write_stamp must be valid */
--		RB_WARN_ON(cpu_buffer, !a_ok);
-+		rb_time_read(&cpu_buffer->write_stamp, &info->after);
- 		ts = rb_time_stamp(cpu_buffer->buffer);
- 		barrier();
-  /*E*/		if (write == (local_read(&tail_page->write) & RB_WRITE_MASK) &&
-@@ -3712,6 +3513,17 @@ rb_reserve_next_event(struct trace_buffer *buffer,
- 	int nr_loops = 0;
- 	int add_ts_default;
- 
-+	/*
-+	 * For architectures that can not do cmpxchg() in NMI, or require
-+	 * disabling interrupts to do 64-bit cmpxchg(), do not allow them
-+	 * to record in NMI context.
-+	 */
-+	if ((!IS_ENABLED(CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG) ||
-+	     (IS_ENABLED(CONFIG_X86_32) && !IS_ENABLED(CONFIG_X86_CMPXCHG64))) &&
-+	    unlikely(in_nmi())) {
-+		return NULL;
-+	}
-+
- 	rb_start_commit(cpu_buffer);
- 	/* The commit page can not change after this */
- 
--- 
-2.42.0
+Mostly a re-based version of the summary diff from
+<gnj4drf7llod4voaaasoh5jdlq545gduishrbc3ql3665pw7qy@ytd5ykxc4gsr>.
 
+Bisexion yields commit 8924feff66f35fe22ce77aafe3f21eb8e5cff881
+("splice: lift pipe_lock out of splice_to_pipe()") as first bad.
+
+
+The patchset is made quite wide due to the many implementations
+of the splice_read callback, and was based entirely on results from
+  $ git grep '\.splice_read.*=3D' | cut -d=3D -f2 |
+      tr -s ',;[:space:]' '\n' | sort -u
+
+I'm assuming this is exhaustive, but it's 27 distinct implementations.
+Of these, I've classified these as trivial delegating wrappers:
+  nfs_file_splice_read               filemap_splice_read
+  afs_file_splice_read               filemap_splice_read
+  ceph_splice_read                   filemap_splice_read
+  ecryptfs_splice_read_update_atime  filemap_splice_read
+  ext4_file_splice_read              filemap_splice_read
+  f2fs_file_splice_read              filemap_splice_read
+  ntfs_file_splice_read              filemap_splice_read
+  ocfs2_file_splice_read             filemap_splice_read
+  orangefs_file_splice_read          filemap_splice_read
+  v9fs_file_splice_read              filemap_splice_read
+  xfs_file_splice_read               filemap_splice_read
+  zonefs_file_splice_read            filemap_splice_read
+  sock_splice_read                   copy_splice_read or a socket-specific =
+one
+  coda_file_splice_read              vfs_splice_read
+  ovl_splice_read                    vfs_splice_read
+
+
+filemap_splice_read() is used for regular files and blockdevs,
+and thus needs no changes, and is thus unchanged.
+
+vfs_splice_read() delegates to copy_splice_read() or f_op->splice_read().
+
+
+The rest are fixed, in patch order:
+01. copy_splice_read() by simply doing the I/O with IOCB_NOWAIT;
+    diff from Linus:
+      https://lore.kernel.org/lkml/5osglsw36dla3mubtpsmdwdid4fsdacplyd6acx2=
+igo4atogdg@yur3idyim3cc/t/#ee67de5a9ec18886c434113637d7eff6cd7acac4b
+02. unix_stream_splice_read() by unconditionally passing MSG_DONTWAIT
+03. fuse_dev_splice_read() by behaving as-if O_NONBLOCK
+04. tracing_buffers_splice_read() by behaving as-if O_NONBLOCK
+    (this also removes the retry loop)
+05. relay_file_splice_read() by behaving as-if SPLICE_F_NONBLOCK
+    (this just means EAGAINing unconditionally for an empty transfer)
+06. smc_splice_read() by unconditionally passing MSG_DONTWAIT
+07. kcm_splice_read() by unconditionally passing MSG_DONTWAIT
+08. tls_sw_splice_read() by behaving as-if SPLICE_F_NONBLOCK
+09. tcp_splice_read() by behaving as-if O_NONBLOCK
+    (this also removes the retry loop)
+
+10. EINVALs on files that neither have FMODE_NOWAIT nor are S_ISREG
+
+    We don't want this to be just FMODE_NOWAIT since most regular files
+    don't have it set and that's not the right semantic anyway,
+    as noted at the top of this mail,
+
+    But this allows blockdevs "by accident", effectively,
+    since they have FMODE_NOWAIT (at least the ones I tried),
+    even though they're just like regular files:
+    handled by filemap_splice_read(),
+    thus not dispatched with IOCB_NOWAIT. since always non-blocking.
+
+    Should this be a check for FMODE_NOWAIT && (S_ISREG || S_ISBLK)?
+    Should it remain FMODE_NOWAIT && S_ISREG?
+    Is there an even better way of spelling this?
+
+
+In net/kcm, this also fixes kcm_splice_read() passing SPLICE_F_*-style
+flags to skb_recv_datagram(), which takes MSG_*-style flags.
+I don't think they did anything anyway? But.
+
+
+
+I would of course be remiss to not analyse splice(pipe -> file) as well:
+  gfs2_file_splice_write  iter_file_splice_write
+  ovl_splice_write        iter_file_splice_write
+  splice_write_null       splice_from_pipe(pipe_to_null), does nothing
+
+fuse_dev_splice_write() locks, copies the iovs, unlocks, does I/O,
+                        locks, frees the pipe's iovs, unlocks
+port_fops_splice_write() locks, steals or copies pages, unlocks, does I/O
+
+
+11. splice_to_socket():
+    has sock_sendmsg() inside the pipe lock;
+    filling the socket buffer sleeps in splice with the pipe locked,
+    and this is trivial to trigger with
+      ./af_unix_ptf ./splicing-cat < fifo &
+      cat > fifo &
+      cp 64k fifo a couple times
+    patch does unconditional MSG_DONTWAIT, tests sensibly
+
+
+iter_file_splice_write():
+  has vfs_iter_write() inside the pipe lock,
+  but appears to be attached to regular files and blockdevs,
+  but also random_fops & urandom_fops (looks like not an issue)
+  and tty_fops & console_fops
+  (this only means non-pty ttys so no issue with a full buffer?
+   idk if there's a situation where a tty or the discipline can block forev=
+er
+   or if it's guaranteed forward progress, however slow?
+   still kinda ass to have the pipe lock hard-held for, say,
+   (64*1024)/(300/8)s=3D30min if the pipe has 64k in the buffer?
+   this predixion aligns precisely with what I measured:
+    1# stty 300 < /dev/ttyS0
+    1# ./splicing-cat < fifo > /dev/ttyS0
+
+    2$ cat > fifo    # and typing works
+    3$ cp 64k fifo   # uninterrupitbly sleeps in write(4, "SzmprOmdIIkciMwb=
+pxhsEyFVORaPGbRQ"..., 66560
+    1: now sleeping in splice
+    2: typing more into the cat uninterruptibly sleeps in write
+    4$ : > /tmp/fifo # uninterruptibly hangs in open
+
+   similarly, "cp 10k fifo" uninterruptibly sleeps in close,
+   with the same effects on other (potential) writers,
+   and woke up after around five minutes, which matches my maths
+
+   so presumably something should be done about this as well?
+   just idk what)
+
+So. AFAIK, just iter_file_splice_write() on ttys remains.
+
+
+This needs a man-pages patch as well,
+but I'd go rabid if I were to write it rn.
+
+
+For the samples above, af_unix_ptf.c:
+-- >8 --
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <sys/un.h>
+#include <unistd.h>
+
+int main(int argc, char ** argv) {
+  int fds[2];
+  if(socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, fds))
+    abort();
+
+  if(!vfork()) {
+    dup2(fds[1], 1);
+    _exit(execvp(argv[1], argv + 1));
+  }
+  dup2(fds[0], 0);
+  for(;;) {
+    char buf[16];
+    int r =3D read(0, buf, 16);
+    fprintf(stderr, "read %d\n", r);
+    sleep(10);
+  }
+}
+-- >8 --
+
+splicing-cat.c:
+-- >8 --
+#define _GNU_SOURCE
+#include <fcntl.h>
+#include <stdio.h>
+#include <errno.h>
+int main() {
+  int lasterr =3D -1;
+  unsigned ctr =3D 0;
+  for(;;) {
+    errno =3D 0;
+    ssize_t ret =3D splice(0, 0, 1, 0, 128 * 1024 * 1024, 0);
+    if(ret >=3D 0 || errno !=3D lasterr) {
+      fprintf(stderr, "\n\t%m" + (lasterr =3D=3D -1));
+      lasterr =3D errno;
+      ctr =3D 0;
+    }
+    if(ret =3D=3D -1) {
+      ++ctr;
+      fprintf(stderr, "\r%u", ctr);
+    } else
+      fprintf(stderr, "\r%zu", ret);
+    if(!ret)
+      break;
+  }
+  fprintf(stderr, "\n");
+}
+-- >8 --
+
+Ahelenia Ziemia=C5=84ska (11):
+  splice: copy_splice_read: do the I/O with IOCB_NOWAIT
+  af_unix: unix_stream_splice_read: always request MSG_DONTWAIT
+  fuse: fuse_dev_splice_read: use nonblocking I/O
+  tracing: tracing_buffers_splice_read: behave as-if non-blocking I/O
+  relayfs: relay_file_splice_read: always return -EAGAIN for no data
+  net/smc: smc_splice_read: always request MSG_DONTWAIT
+  kcm: kcm_splice_read: always request MSG_DONTWAIT
+  tls/sw: tls_sw_splice_read: always request non-blocking I/O
+  net/tcp: tcp_splice_read: always do non-blocking reads
+  splice: file->pipe: -EINVAL for non-regular files w/o FMODE_NOWAIT
+  splice: splice_to_socket: always request MSG_DONTWAIT
+
+ fs/fuse/dev.c        | 10 ++++++----
+ fs/splice.c          |  7 ++++---
+ kernel/relay.c       |  3 +--
+ kernel/trace/trace.c | 32 ++++----------------------------
+ net/ipv4/tcp.c       | 30 +++---------------------------
+ net/kcm/kcmsock.c    |  2 +-
+ net/smc/af_smc.c     |  6 +-----
+ net/tls/tls_sw.c     |  5 ++---
+ net/unix/af_unix.c   |  5 +----
+ 9 files changed, 23 insertions(+), 77 deletions(-)
+
+
+base-commit: 58720809f52779dc0f08e53e54b014209d13eebb
+--
+2.39.2
+
+--4xtajew35rjsbkjt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAmV7TRIACgkQvP0LAY0m
+WPFtcg//ZZuncGdsGUh1ml2FHo+lUg68ci6uQ6JLiq80TXxRqOoTiOz+3oGo3lBJ
+EiuJRzk4o569+Sgl023ZpctJbocw0zC9t4pmfxNSEOrnZwfMvxFe7OW7lTpNg23i
+KD+U3i58i/WlFDldKlY9dxw4YZEkW56MfgSEwTia4d1Iv4peXQwToHK5d+msOukg
+TsXfthKx7DramMtmmnzOk7G9tHQ0g0QZW6f0peWsnPQCaPdVA5GWYIdUcZg2VzzP
+41zBhEUSXZbLWjlbGiFaUA8rXy+e4jWduVN/++6pjE7ESwcWZNtnSV6qSzhCrxD3
+zTDHZURU21W1bU6/UvByOoZVFYZQ2LwmioHwkGXP1C/TsRxPC5U8oj7aFKjXOSdJ
+ngec8fx+86TA+Y/C5UP3DlrJDHEMnwwK5IUDs6MtZyvWNW/0LI1/dCYirKfpw8TE
+IGaRdLD75Qol9ilNfMQdj6ol063WJN3qX9CI37C0ObvhEWM1SCsdgfjLOCVNwQO+
+1OQBTP1kV453z+Kjkt5+d/SDP71uGTDvlcTxCyfqNaSujd+klak/Txhijpehlt4w
+FCtnymrYQ0ny4yFUUVgI1C1diTCvE1rPsMBbLNL2unmWU7WEzo2oOK5XaGIzuOA/
+dmYSnsGbTOFzYwbbPDaEo8zc4i45M+GyFuUvS/Tv6mOgTnZdvi8=
+=Netu
+-----END PGP SIGNATURE-----
+
+--4xtajew35rjsbkjt--
