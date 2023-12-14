@@ -1,93 +1,185 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DBL1zKoG"
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7337112F
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Dec 2023 03:06:35 -0800 (PST)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-6ceba6c4b8dso6810122b3a.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Dec 2023 03:06:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702551995; x=1703156795; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FkFcM58ORD2DTnC5dDqDGqkLUNpEfcQ7GjcBvDad/9k=;
-        b=DBL1zKoGQAAJUU8LkqPk3CmA5Izw/fZZxJEmeDoNPHE48FeSZ8KsFewNCS6sk2GPqK
-         NOZ6U34jepYTaT7MY5F2VjA6DSMOA36bro2mbZZ2xylUSU9HKZy0IDV0N4uUOAEmFmZK
-         P7gfsPrAi5ffogereHikFjh8JErqRGrEMkNzkNkbfEQiTI0txN8OWVThAd/L/wroszJG
-         z+CwVBLXNGK9riPo5oMOgV16uTK5Hzgwmnhond+WUukuKjk8qehXXlndczDBxHYEcsWd
-         ME8SnhLf4B9VCJrsL0q4xisYZzacVpoxOu0FaZVBukZZR41n0P9X8M6iC9IPTikR/HJa
-         YgUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702551995; x=1703156795;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FkFcM58ORD2DTnC5dDqDGqkLUNpEfcQ7GjcBvDad/9k=;
-        b=qweViIsc6C+LFJjl8txR+d6nLPSZmSyOMblEgGXe+txVe7aDSEcUkY4Q95R+mygcKY
-         s78i5lPyuKBYq6YBQ5Rp6rrG1hhreCMsyrmNH+lwWYgMHjYfCMypp+FcIcrO/pD7WGai
-         TUrXuG4r2L8pmZ2OvWG1zblbcz5C88LjMaaE/rcqBRsq9nMqLSM4PZ3pDX+pcV4oUoTk
-         tPuvEzZcNVBg4ls+jZK/HvitYEplEl/7u44mZwxXYWjLu+6RfEoXho0zlZKWRpyan1cc
-         KEz390BTOsk5l02VDhVgsH4BMnjdnB7K2gDyDCmvFRoAZhR+3KmkAi7xHC1ENm3++bQE
-         zwZg==
-X-Gm-Message-State: AOJu0YwX7V3VWz0Zy50QjOn3YdChDKJbTnLentJ1Wf9Dqmy6E2Klw0kC
-	EXFTK5dl7PxoVPX5hnEEm6c/w5Xq20cmyaDuhFLPFw==
-X-Google-Smtp-Source: AGHT+IGybyxiB7nTBs9dM8tY5oppuZjVzJ6FLWefF8o/CeO7/SBsLNR8gOeQrxQdYOWN3qivMYDL4ZJHrfh5hqtPofo=
-X-Received: by 2002:a05:6a00:10c1:b0:6cb:a1fe:5217 with SMTP id
- d1-20020a056a0010c100b006cba1fe5217mr10062758pfu.16.1702551994935; Thu, 14
- Dec 2023 03:06:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fW7/P2lI"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC123A7;
+	Thu, 14 Dec 2023 06:29:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702564176; x=1734100176;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Y3yjRwJvTwe+dd+AJdN7EHilGx+zyRX1/RseVtZQirY=;
+  b=fW7/P2lIhW08gUCNfKuccFfHhmW56YrDWBrzqHNuYxfFY0d5zPIBjFif
+   9DkyJUvRuLSpylmBTNFozc1kn4nDKpx78CIdHKVjmg9Fo/I475B87xG1q
+   jwC37u7FvLZ44tfGHH8egm3FRlH2wmSjSi4jEjmMyoifFJ3xJzsJgFtGa
+   DVO+C9rtu/+kQnPUYAvogO4ltkLdEzJb51x/fhwlhGI1UcInkkDQGYvkE
+   69rvXhb8uVJewSHiauh6RHFB1OB3D1Djv55LEpdpgtspbEedOQ7Q/z8L3
+   Tw/MDCWBopiskm+2L3RDdYQHTByIR+OKERuZbqSRfyLRrtmJzSO9AMF/k
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="375281546"
+X-IronPort-AV: E=Sophos;i="6.04,275,1695711600"; 
+   d="scan'208";a="375281546"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 06:29:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="803299973"
+X-IronPort-AV: E=Sophos;i="6.04,275,1695711600"; 
+   d="scan'208";a="803299973"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by orsmga008.jf.intel.com with ESMTP; 14 Dec 2023 06:29:33 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rDmiR-000MAi-0O;
+	Thu, 14 Dec 2023 14:29:31 +0000
+Date: Thu, 14 Dec 2023 22:29:17 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bixuan Cui <cuibixuan@vivo.com>, rostedt@goodmis.org,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	akpm@linux-foundation.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+	cuibixuan@vivo.com, opensource.kernel@vivo.com
+Subject: Re: [PATCH -next 2/2] mm: vmscan: add new event to trace shrink lru
+Message-ID: <202312142212.vbSe7CMs-lkp@intel.com>
+References: <20231212032640.6968-3-cuibixuan@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231212142730.998913-1-vincent.guittot@linaro.org>
- <20231212142730.998913-2-vincent.guittot@linaro.org> <af7b67d1-c4a3-44e3-a632-5f0a4ea6eb25@arm.com>
-In-Reply-To: <af7b67d1-c4a3-44e3-a632-5f0a4ea6eb25@arm.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Thu, 14 Dec 2023 12:06:23 +0100
-Message-ID: <CAKfTPtApsWeEbbV03sx8vQTGc3i+oFsAWRNsLnyHjYCSrRMqhg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] cpufreq: Add a cpufreq pressure feedback for the scheduler
-To: Lukasz Luba <lukasz.luba@arm.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, daniel.lezcano@linaro.org, 
-	mhiramat@kernel.org, rui.zhang@intel.com, vschneid@redhat.com, 
-	bristot@redhat.com, bsegall@google.com, dietmar.eggemann@arm.com, 
-	juri.lelli@redhat.com, peterz@infradead.org, mingo@redhat.com, 
-	linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, agross@kernel.org, 
-	konrad.dybcio@linaro.org, andersson@kernel.org, viresh.kumar@linaro.org, 
-	sudeep.holla@arm.com, rafael@kernel.org, rostedt@goodmis.org, mgorman@suse.de, 
-	amit.kachhap@gmail.com, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231212032640.6968-3-cuibixuan@vivo.com>
 
-On Thu, 14 Dec 2023 at 10:20, Lukasz Luba <lukasz.luba@arm.com> wrote:
->
->
->
-> On 12/12/23 14:27, Vincent Guittot wrote:
-> > Provide to the scheduler a feedback about the temporary max available
-> > capacity. Unlike arch_update_thermal_pressure, this doesn't need to be
-> > filtered as the pressure will happen for dozens ms or more.
-> >
-> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > ---
-> >   drivers/cpufreq/cpufreq.c | 48 +++++++++++++++++++++++++++++++++++++++
-> >   include/linux/cpufreq.h   | 10 ++++++++
-> >   2 files changed, 58 insertions(+)
-> >
-> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > index 44db4f59c4cc..7d5f71be8d29 100644
-> > --- a/drivers/cpufreq/cpufreq.c
-> > +++ b/drivers/cpufreq/cpufreq.c
-> > @@ -2563,6 +2563,50 @@ int cpufreq_get_policy(struct cpufreq_policy *policy, unsigned int cpu)
-> >   }
-> >   EXPORT_SYMBOL(cpufreq_get_policy);
-> >
-> > +DEFINE_PER_CPU(unsigned long, cpufreq_pressure);
-> > +EXPORT_PER_CPU_SYMBOL_GPL(cpufreq_pressure);
->
-> Why do we export this variable when we have get/update functions?
-> Do we expect modules would manipulate those per-cpu variables
-> independently and not like we do per-cpumask in the update func.?
+Hi Bixuan,
 
-No, I will remove the EXPORT_PER_CPU_SYMBOL_GPL
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on next-20231211]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Bixuan-Cui/mm-shrinker-add-new-event-to-trace-shrink-count/20231212-112824
+base:   next-20231211
+patch link:    https://lore.kernel.org/r/20231212032640.6968-3-cuibixuan%40vivo.com
+patch subject: [PATCH -next 2/2] mm: vmscan: add new event to trace shrink lru
+config: i386-buildonly-randconfig-003-20231214 (https://download.01.org/0day-ci/archive/20231214/202312142212.vbSe7CMs-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231214/202312142212.vbSe7CMs-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202312142212.vbSe7CMs-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   mm/vmscan.c: In function 'evict_folios':
+>> mm/vmscan.c:4533:9: error: implicit declaration of function 'trace_mm_vmscan_lru_shrink_inactive'; did you mean 'trace_mm_vmscan_lru_shrink_inactive_end'? [-Werror=implicit-function-declaration]
+    4533 |         trace_mm_vmscan_lru_shrink_inactive(pgdat->node_id,
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |         trace_mm_vmscan_lru_shrink_inactive_end
+   cc1: some warnings being treated as errors
+
+
+vim +4533 mm/vmscan.c
+
+ac35a490237446 Yu Zhao                 2022-09-18  4500  
+a579086c99ed70 Yu Zhao                 2022-12-21  4501  static int evict_folios(struct lruvec *lruvec, struct scan_control *sc, int swappiness)
+ac35a490237446 Yu Zhao                 2022-09-18  4502  {
+ac35a490237446 Yu Zhao                 2022-09-18  4503  	int type;
+ac35a490237446 Yu Zhao                 2022-09-18  4504  	int scanned;
+ac35a490237446 Yu Zhao                 2022-09-18  4505  	int reclaimed;
+ac35a490237446 Yu Zhao                 2022-09-18  4506  	LIST_HEAD(list);
+359a5e1416caaf Yu Zhao                 2022-11-15  4507  	LIST_HEAD(clean);
+ac35a490237446 Yu Zhao                 2022-09-18  4508  	struct folio *folio;
+359a5e1416caaf Yu Zhao                 2022-11-15  4509  	struct folio *next;
+ac35a490237446 Yu Zhao                 2022-09-18  4510  	enum vm_event_item item;
+ac35a490237446 Yu Zhao                 2022-09-18  4511  	struct reclaim_stat stat;
+bd74fdaea14602 Yu Zhao                 2022-09-18  4512  	struct lru_gen_mm_walk *walk;
+359a5e1416caaf Yu Zhao                 2022-11-15  4513  	bool skip_retry = false;
+ac35a490237446 Yu Zhao                 2022-09-18  4514  	struct mem_cgroup *memcg = lruvec_memcg(lruvec);
+ac35a490237446 Yu Zhao                 2022-09-18  4515  	struct pglist_data *pgdat = lruvec_pgdat(lruvec);
+ac35a490237446 Yu Zhao                 2022-09-18  4516  
+ac35a490237446 Yu Zhao                 2022-09-18  4517  	spin_lock_irq(&lruvec->lru_lock);
+ac35a490237446 Yu Zhao                 2022-09-18  4518  
+ac35a490237446 Yu Zhao                 2022-09-18  4519  	scanned = isolate_folios(lruvec, sc, swappiness, &type, &list);
+ac35a490237446 Yu Zhao                 2022-09-18  4520  
+ac35a490237446 Yu Zhao                 2022-09-18  4521  	scanned += try_to_inc_min_seq(lruvec, swappiness);
+ac35a490237446 Yu Zhao                 2022-09-18  4522  
+ac35a490237446 Yu Zhao                 2022-09-18  4523  	if (get_nr_gens(lruvec, !swappiness) == MIN_NR_GENS)
+ac35a490237446 Yu Zhao                 2022-09-18  4524  		scanned = 0;
+ac35a490237446 Yu Zhao                 2022-09-18  4525  
+ac35a490237446 Yu Zhao                 2022-09-18  4526  	spin_unlock_irq(&lruvec->lru_lock);
+ac35a490237446 Yu Zhao                 2022-09-18  4527  
+ac35a490237446 Yu Zhao                 2022-09-18  4528  	if (list_empty(&list))
+ac35a490237446 Yu Zhao                 2022-09-18  4529  		return scanned;
+359a5e1416caaf Yu Zhao                 2022-11-15  4530  retry:
+49fd9b6df54e61 Matthew Wilcox (Oracle  2022-09-02  4531) 	reclaimed = shrink_folio_list(&list, pgdat, sc, &stat, false);
+359a5e1416caaf Yu Zhao                 2022-11-15  4532  	sc->nr_reclaimed += reclaimed;
+8c2214fc9a470a Jaewon Kim              2023-10-03 @4533  	trace_mm_vmscan_lru_shrink_inactive(pgdat->node_id,
+8c2214fc9a470a Jaewon Kim              2023-10-03  4534  			scanned, reclaimed, &stat, sc->priority,
+8c2214fc9a470a Jaewon Kim              2023-10-03  4535  			type ? LRU_INACTIVE_FILE : LRU_INACTIVE_ANON);
+359a5e1416caaf Yu Zhao                 2022-11-15  4536  
+359a5e1416caaf Yu Zhao                 2022-11-15  4537  	list_for_each_entry_safe_reverse(folio, next, &list, lru) {
+359a5e1416caaf Yu Zhao                 2022-11-15  4538  		if (!folio_evictable(folio)) {
+359a5e1416caaf Yu Zhao                 2022-11-15  4539  			list_del(&folio->lru);
+359a5e1416caaf Yu Zhao                 2022-11-15  4540  			folio_putback_lru(folio);
+359a5e1416caaf Yu Zhao                 2022-11-15  4541  			continue;
+359a5e1416caaf Yu Zhao                 2022-11-15  4542  		}
+ac35a490237446 Yu Zhao                 2022-09-18  4543  
+359a5e1416caaf Yu Zhao                 2022-11-15  4544  		if (folio_test_reclaim(folio) &&
+359a5e1416caaf Yu Zhao                 2022-11-15  4545  		    (folio_test_dirty(folio) || folio_test_writeback(folio))) {
+ac35a490237446 Yu Zhao                 2022-09-18  4546  			/* restore LRU_REFS_FLAGS cleared by isolate_folio() */
+ac35a490237446 Yu Zhao                 2022-09-18  4547  			if (folio_test_workingset(folio))
+ac35a490237446 Yu Zhao                 2022-09-18  4548  				folio_set_referenced(folio);
+359a5e1416caaf Yu Zhao                 2022-11-15  4549  			continue;
+359a5e1416caaf Yu Zhao                 2022-11-15  4550  		}
+ac35a490237446 Yu Zhao                 2022-09-18  4551  
+359a5e1416caaf Yu Zhao                 2022-11-15  4552  		if (skip_retry || folio_test_active(folio) || folio_test_referenced(folio) ||
+359a5e1416caaf Yu Zhao                 2022-11-15  4553  		    folio_mapped(folio) || folio_test_locked(folio) ||
+359a5e1416caaf Yu Zhao                 2022-11-15  4554  		    folio_test_dirty(folio) || folio_test_writeback(folio)) {
+359a5e1416caaf Yu Zhao                 2022-11-15  4555  			/* don't add rejected folios to the oldest generation */
+359a5e1416caaf Yu Zhao                 2022-11-15  4556  			set_mask_bits(&folio->flags, LRU_REFS_MASK | LRU_REFS_FLAGS,
+359a5e1416caaf Yu Zhao                 2022-11-15  4557  				      BIT(PG_active));
+359a5e1416caaf Yu Zhao                 2022-11-15  4558  			continue;
+359a5e1416caaf Yu Zhao                 2022-11-15  4559  		}
+359a5e1416caaf Yu Zhao                 2022-11-15  4560  
+359a5e1416caaf Yu Zhao                 2022-11-15  4561  		/* retry folios that may have missed folio_rotate_reclaimable() */
+359a5e1416caaf Yu Zhao                 2022-11-15  4562  		list_move(&folio->lru, &clean);
+359a5e1416caaf Yu Zhao                 2022-11-15  4563  		sc->nr_scanned -= folio_nr_pages(folio);
+ac35a490237446 Yu Zhao                 2022-09-18  4564  	}
+ac35a490237446 Yu Zhao                 2022-09-18  4565  
+ac35a490237446 Yu Zhao                 2022-09-18  4566  	spin_lock_irq(&lruvec->lru_lock);
+ac35a490237446 Yu Zhao                 2022-09-18  4567  
+49fd9b6df54e61 Matthew Wilcox (Oracle  2022-09-02  4568) 	move_folios_to_lru(lruvec, &list);
+ac35a490237446 Yu Zhao                 2022-09-18  4569  
+bd74fdaea14602 Yu Zhao                 2022-09-18  4570  	walk = current->reclaim_state->mm_walk;
+bd74fdaea14602 Yu Zhao                 2022-09-18  4571  	if (walk && walk->batched)
+bd74fdaea14602 Yu Zhao                 2022-09-18  4572  		reset_batch_size(lruvec, walk);
+bd74fdaea14602 Yu Zhao                 2022-09-18  4573  
+57e9cc50f4dd92 Johannes Weiner         2022-10-26  4574  	item = PGSTEAL_KSWAPD + reclaimer_offset();
+ac35a490237446 Yu Zhao                 2022-09-18  4575  	if (!cgroup_reclaim(sc))
+ac35a490237446 Yu Zhao                 2022-09-18  4576  		__count_vm_events(item, reclaimed);
+ac35a490237446 Yu Zhao                 2022-09-18  4577  	__count_memcg_events(memcg, item, reclaimed);
+ac35a490237446 Yu Zhao                 2022-09-18  4578  	__count_vm_events(PGSTEAL_ANON + type, reclaimed);
+ac35a490237446 Yu Zhao                 2022-09-18  4579  
+ac35a490237446 Yu Zhao                 2022-09-18  4580  	spin_unlock_irq(&lruvec->lru_lock);
+ac35a490237446 Yu Zhao                 2022-09-18  4581  
+ac35a490237446 Yu Zhao                 2022-09-18  4582  	mem_cgroup_uncharge_list(&list);
+ac35a490237446 Yu Zhao                 2022-09-18  4583  	free_unref_page_list(&list);
+ac35a490237446 Yu Zhao                 2022-09-18  4584  
+359a5e1416caaf Yu Zhao                 2022-11-15  4585  	INIT_LIST_HEAD(&list);
+359a5e1416caaf Yu Zhao                 2022-11-15  4586  	list_splice_init(&clean, &list);
+359a5e1416caaf Yu Zhao                 2022-11-15  4587  
+359a5e1416caaf Yu Zhao                 2022-11-15  4588  	if (!list_empty(&list)) {
+359a5e1416caaf Yu Zhao                 2022-11-15  4589  		skip_retry = true;
+359a5e1416caaf Yu Zhao                 2022-11-15  4590  		goto retry;
+359a5e1416caaf Yu Zhao                 2022-11-15  4591  	}
+ac35a490237446 Yu Zhao                 2022-09-18  4592  
+ac35a490237446 Yu Zhao                 2022-09-18  4593  	return scanned;
+ac35a490237446 Yu Zhao                 2022-09-18  4594  }
+ac35a490237446 Yu Zhao                 2022-09-18  4595  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
