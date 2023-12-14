@@ -1,217 +1,406 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B7BBD62;
-	Wed, 13 Dec 2023 17:21:10 -0800 (PST)
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4SrDzh0kCQz1Q6Pg;
-	Thu, 14 Dec 2023 09:20:00 +0800 (CST)
-Received: from dggpeml500012.china.huawei.com (unknown [7.185.36.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id 749E018001A;
-	Thu, 14 Dec 2023 09:21:08 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 14 Dec 2023 09:21:08 +0800
-From: Zheng Yejian <zhengyejian1@huawei.com>
-To: <rostedt@goodmis.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<mathieu.desnoyers@efficios.com>, <mhiramat@kernel.org>,
-	<yeweihua4@huawei.com>, <zhengyejian1@huawei.com>
-Subject: [PATCH v3] tracing: Fix uaf issue when open the hist or hist_debug file
-Date: Thu, 14 Dec 2023 09:21:53 +0800
-Message-ID: <20231214012153.676155-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20231213080127.6ef26247@gandalf.local.home>
-References: <20231213080127.6ef26247@gandalf.local.home>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D9B7EE
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Dec 2023 02:10:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D6FEC433C7;
+	Thu, 14 Dec 2023 02:10:41 +0000 (UTC)
+Date: Wed, 13 Dec 2023 21:11:26 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] ring-buffer: Remove 32bit timestamp logic
+Message-ID: <20231213211126.24f8c1dd@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpeml500012.china.huawei.com (7.185.36.15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-KASAN report following issue. The root cause is when opening 'hist'
-file of an instance and accessing 'trace_event_file' in hist_show(),
-but 'trace_event_file' has been freed due to the instance being removed.
-'hist_debug' file has the same problem. To fix it, call
-tracing_{open,release}_file_tr() in file_operations callback to have
-the ref count and avoid 'trace_event_file' being freed.
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-  BUG: KASAN: slab-use-after-free in hist_show+0x11e0/0x1278
-  Read of size 8 at addr ffff242541e336b8 by task head/190
+Each event has a 27 bit timestamp delta that is used to hold the delta
+from the last event. If the time between events is greater than 2^27, then
+a timestamp is added that holds a 59 bit absolute timestamp.
 
-  CPU: 4 PID: 190 Comm: head Not tainted 6.7.0-rc5-g26aff849438c #133
-  Hardware name: linux,dummy-virt (DT)
-  Call trace:
-   dump_backtrace+0x98/0xf8
-   show_stack+0x1c/0x30
-   dump_stack_lvl+0x44/0x58
-   print_report+0xf0/0x5a0
-   kasan_report+0x80/0xc0
-   __asan_report_load8_noabort+0x1c/0x28
-   hist_show+0x11e0/0x1278
-   seq_read_iter+0x344/0xd78
-   seq_read+0x128/0x1c0
-   vfs_read+0x198/0x6c8
-   ksys_read+0xf4/0x1e0
-   __arm64_sys_read+0x70/0xa8
-   invoke_syscall+0x70/0x260
-   el0_svc_common.constprop.0+0xb0/0x280
-   do_el0_svc+0x44/0x60
-   el0_svc+0x34/0x68
-   el0t_64_sync_handler+0xb8/0xc0
-   el0t_64_sync+0x168/0x170
+Until a389d86f7fd09 ("ring-buffer: Have nested events still record running
+time stamp"), if an interrupt interrupted an event in progress, all the
+events delta would be zero to not deal with the races that need to be
+handled. The commit a389d86f7fd09 changed that to handle the races giving
+all events, even those that preempt other events, still have an accurate
+timestamp.
 
-  Allocated by task 188:
-   kasan_save_stack+0x28/0x50
-   kasan_set_track+0x28/0x38
-   kasan_save_alloc_info+0x20/0x30
-   __kasan_slab_alloc+0x6c/0x80
-   kmem_cache_alloc+0x15c/0x4a8
-   trace_create_new_event+0x84/0x348
-   __trace_add_new_event+0x18/0x88
-   event_trace_add_tracer+0xc4/0x1a0
-   trace_array_create_dir+0x6c/0x100
-   trace_array_create+0x2e8/0x568
-   instance_mkdir+0x48/0x80
-   tracefs_syscall_mkdir+0x90/0xe8
-   vfs_mkdir+0x3c4/0x610
-   do_mkdirat+0x144/0x200
-   __arm64_sys_mkdirat+0x8c/0xc0
-   invoke_syscall+0x70/0x260
-   el0_svc_common.constprop.0+0xb0/0x280
-   do_el0_svc+0x44/0x60
-   el0_svc+0x34/0x68
-   el0t_64_sync_handler+0xb8/0xc0
-   el0t_64_sync+0x168/0x170
+To handle those races requires performing 64-bit cmpxchg on the
+timestamps. But doing 64-bit cmpxchg on 32-bit architectures is considered
+very slow. To try to deal with this the timestamp logic was broken into
+two and then three 32-bit cmpxchgs, with the thought that two (or three)
+32-bit cmpxchgs are still faster than a single 64-bit cmpxchg on 32-bit
+architectures.
 
-  Freed by task 191:
-   kasan_save_stack+0x28/0x50
-   kasan_set_track+0x28/0x38
-   kasan_save_free_info+0x34/0x58
-   __kasan_slab_free+0xe4/0x158
-   kmem_cache_free+0x19c/0x508
-   event_file_put+0xa0/0x120
-   remove_event_file_dir+0x180/0x320
-   event_trace_del_tracer+0xb0/0x180
-   __remove_instance+0x224/0x508
-   instance_rmdir+0x44/0x78
-   tracefs_syscall_rmdir+0xbc/0x140
-   vfs_rmdir+0x1cc/0x4c8
-   do_rmdir+0x220/0x2b8
-   __arm64_sys_unlinkat+0xc0/0x100
-   invoke_syscall+0x70/0x260
-   el0_svc_common.constprop.0+0xb0/0x280
-   do_el0_svc+0x44/0x60
-   el0_svc+0x34/0x68
-   el0t_64_sync_handler+0xb8/0xc0
-   el0t_64_sync+0x168/0x170
+Part of the problem with this is that I didn't have any 32-bit
+architectures to test on. After hitting several subtle bugs in this code,
+an effort was made to try and see if three 32-bit cmpxchgs are indeed
+faster than a single 64-bit. After a few people brushed off the dust of
+their old 32-bit machines, tests were done, and even though 32-bit cmpxchg
+was faster than a single 64-bit, it was in the order of 50% at best, not
+300%.
 
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+This means that this complex code is not only complex but also not even
+faster than just using 64-bit cmpxchg.
+
+Nuke it!
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c             |  6 ++++++
- kernel/trace/trace.h             |  1 +
- kernel/trace/trace_events_hist.c | 12 ++++++++----
- 3 files changed, 15 insertions(+), 4 deletions(-)
+[
+   Should we just push this now and mark it for stable?
+   That is, just get rid of this logic for all kernels.
+]
+ kernel/trace/ring_buffer.c | 226 ++-----------------------------------
+ 1 file changed, 12 insertions(+), 214 deletions(-)
 
-v3:
-  - As suggested by Steve, put the tracing_single_release_file_tr() into
-    trace.c as a non static function, put the prototype in trace.h.
-    Link: https://lore.kernel.org/all/20231213080127.6ef26247@gandalf.local.home/
-
-v2:
-  - Introduce tracing_single_release_file_tr() to add the missing call for
-    single_release() as suggested by Steve;
-    Link: https://lore.kernel.org/all/20231212113546.6a51d359@gandalf.local.home/
-  - Slightly modify the commit message and comments.
-  - Link: https://lore.kernel.org/all/20231213015138.281888-1-zhengyejian1@huawei.com/
-
-v1:
-  Link: https://lore.kernel.org/all/20231212113317.4159890-1-zhengyejian1@huawei.com/
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index fbcd3bafb93e..fc1b2ada98a5 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4964,6 +4964,12 @@ int tracing_release_file_tr(struct inode *inode, struct file *filp)
- 	return 0;
- }
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 3fce5e4b4f2b..b05416e14cb6 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -27,6 +27,7 @@
+ #include <linux/cpu.h>
+ #include <linux/oom.h>
  
-+int tracing_single_release_file_tr(struct inode *inode, struct file *filp)
-+{
-+	tracing_release_file_tr(inode, filp);
-+	return single_release(inode, filp);
-+}
-+
- static int tracing_mark_open(struct inode *inode, struct file *filp)
- {
- 	stream_open(inode, filp);
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index b7f4ea25a194..0489e72c8169 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -617,6 +617,7 @@ int tracing_open_generic(struct inode *inode, struct file *filp);
- int tracing_open_generic_tr(struct inode *inode, struct file *filp);
- int tracing_open_file_tr(struct inode *inode, struct file *filp);
- int tracing_release_file_tr(struct inode *inode, struct file *filp);
-+int tracing_single_release_file_tr(struct inode *inode, struct file *filp);
- bool tracing_is_disabled(void);
- bool tracer_tracing_is_on(struct trace_array *tr);
- void tracer_tracing_on(struct trace_array *tr);
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 1abc07fba1b9..5ecf3c8bde20 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -5623,10 +5623,12 @@ static int event_hist_open(struct inode *inode, struct file *file)
- {
- 	int ret;
++#include <asm/local64.h>
+ #include <asm/local.h>
  
--	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	ret = tracing_open_file_tr(inode, file);
- 	if (ret)
- 		return ret;
- 
-+	/* Clear private_data to avoid warning in single_open() */
-+	file->private_data = NULL;
- 	return single_open(file, hist_show, file);
- }
- 
-@@ -5634,7 +5636,7 @@ const struct file_operations event_hist_fops = {
- 	.open = event_hist_open,
- 	.read = seq_read,
- 	.llseek = seq_lseek,
--	.release = single_release,
-+	.release = tracing_single_release_file_tr,
+ /*
+@@ -463,27 +464,9 @@ enum {
+ 	RB_CTX_MAX
  };
  
- #ifdef CONFIG_HIST_TRIGGERS_DEBUG
-@@ -5900,10 +5902,12 @@ static int event_hist_debug_open(struct inode *inode, struct file *file)
- {
- 	int ret;
- 
--	ret = security_locked_down(LOCKDOWN_TRACEFS);
-+	ret = tracing_open_file_tr(inode, file);
- 	if (ret)
- 		return ret;
- 
-+	/* Clear private_data to avoid warning in single_open() */
-+	file->private_data = NULL;
- 	return single_open(file, hist_debug_show, file);
- }
- 
-@@ -5911,7 +5915,7 @@ const struct file_operations event_hist_debug_fops = {
- 	.open = event_hist_debug_open,
- 	.read = seq_read,
- 	.llseek = seq_lseek,
--	.release = single_release,
-+	.release = tracing_single_release_file_tr,
+-#if BITS_PER_LONG == 32
+-#define RB_TIME_32
+-#endif
+-
+-/* To test on 64 bit machines */
+-//#define RB_TIME_32
+-
+-#ifdef RB_TIME_32
+-
+-struct rb_time_struct {
+-	local_t		cnt;
+-	local_t		top;
+-	local_t		bottom;
+-	local_t		msb;
+-};
+-#else
+-#include <asm/local64.h>
+ struct rb_time_struct {
+ 	local64_t	time;
  };
- #endif
+-#endif
+ typedef struct rb_time_struct rb_time_t;
  
+ #define MAX_NEST	5
+@@ -573,183 +556,9 @@ struct ring_buffer_iter {
+ 	int				missed_events;
+ };
+ 
+-#ifdef RB_TIME_32
+-
+-/*
+- * On 32 bit machines, local64_t is very expensive. As the ring
+- * buffer doesn't need all the features of a true 64 bit atomic,
+- * on 32 bit, it uses these functions (64 still uses local64_t).
+- *
+- * For the ring buffer, 64 bit required operations for the time is
+- * the following:
+- *
+- *  - Reads may fail if it interrupted a modification of the time stamp.
+- *      It will succeed if it did not interrupt another write even if
+- *      the read itself is interrupted by a write.
+- *      It returns whether it was successful or not.
+- *
+- *  - Writes always succeed and will overwrite other writes and writes
+- *      that were done by events interrupting the current write.
+- *
+- *  - A write followed by a read of the same time stamp will always succeed,
+- *      but may not contain the same value.
+- *
+- *  - A cmpxchg will fail if it interrupted another write or cmpxchg.
+- *      Other than that, it acts like a normal cmpxchg.
+- *
+- * The 60 bit time stamp is broken up by 30 bits in a top and bottom half
+- *  (bottom being the least significant 30 bits of the 60 bit time stamp).
+- *
+- * The two most significant bits of each half holds a 2 bit counter (0-3).
+- * Each update will increment this counter by one.
+- * When reading the top and bottom, if the two counter bits match then the
+- *  top and bottom together make a valid 60 bit number.
+- */
+-#define RB_TIME_SHIFT	30
+-#define RB_TIME_VAL_MASK ((1 << RB_TIME_SHIFT) - 1)
+-#define RB_TIME_MSB_SHIFT	 60
+-
+-static inline int rb_time_cnt(unsigned long val)
+-{
+-	return (val >> RB_TIME_SHIFT) & 3;
+-}
+-
+-static inline u64 rb_time_val(unsigned long top, unsigned long bottom)
+-{
+-	u64 val;
+-
+-	val = top & RB_TIME_VAL_MASK;
+-	val <<= RB_TIME_SHIFT;
+-	val |= bottom & RB_TIME_VAL_MASK;
+-
+-	return val;
+-}
+-
+-static inline bool __rb_time_read(rb_time_t *t, u64 *ret, unsigned long *cnt)
+-{
+-	unsigned long top, bottom, msb;
+-	unsigned long c;
+-
+-	/*
+-	 * If the read is interrupted by a write, then the cnt will
+-	 * be different. Loop until both top and bottom have been read
+-	 * without interruption.
+-	 */
+-	do {
+-		c = local_read(&t->cnt);
+-		top = local_read(&t->top);
+-		bottom = local_read(&t->bottom);
+-		msb = local_read(&t->msb);
+-	} while (c != local_read(&t->cnt));
+-
+-	*cnt = rb_time_cnt(top);
+-
+-	/* If top, msb or bottom counts don't match, this interrupted a write */
+-	if (*cnt != rb_time_cnt(msb) || *cnt != rb_time_cnt(bottom))
+-		return false;
+-
+-	/* The shift to msb will lose its cnt bits */
+-	*ret = rb_time_val(top, bottom) | ((u64)msb << RB_TIME_MSB_SHIFT);
+-	return true;
+-}
+-
+-static bool rb_time_read(rb_time_t *t, u64 *ret)
+-{
+-	unsigned long cnt;
+-
+-	return __rb_time_read(t, ret, &cnt);
+-}
+-
+-static inline unsigned long rb_time_val_cnt(unsigned long val, unsigned long cnt)
+-{
+-	return (val & RB_TIME_VAL_MASK) | ((cnt & 3) << RB_TIME_SHIFT);
+-}
+-
+-static inline void rb_time_split(u64 val, unsigned long *top, unsigned long *bottom,
+-				 unsigned long *msb)
+-{
+-	*top = (unsigned long)((val >> RB_TIME_SHIFT) & RB_TIME_VAL_MASK);
+-	*bottom = (unsigned long)(val & RB_TIME_VAL_MASK);
+-	*msb = (unsigned long)(val >> RB_TIME_MSB_SHIFT);
+-}
+-
+-static inline void rb_time_val_set(local_t *t, unsigned long val, unsigned long cnt)
+-{
+-	val = rb_time_val_cnt(val, cnt);
+-	local_set(t, val);
+-}
+-
+-static void rb_time_set(rb_time_t *t, u64 val)
+-{
+-	unsigned long cnt, top, bottom, msb;
+-
+-	rb_time_split(val, &top, &bottom, &msb);
+-
+-	/* Writes always succeed with a valid number even if it gets interrupted. */
+-	do {
+-		cnt = local_inc_return(&t->cnt);
+-		rb_time_val_set(&t->top, top, cnt);
+-		rb_time_val_set(&t->bottom, bottom, cnt);
+-		rb_time_val_set(&t->msb, val >> RB_TIME_MSB_SHIFT, cnt);
+-	} while (cnt != local_read(&t->cnt));
+-}
+-
+-static inline bool
+-rb_time_read_cmpxchg(local_t *l, unsigned long expect, unsigned long set)
+-{
+-	return local_try_cmpxchg(l, &expect, set);
+-}
+-
+-static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
+-{
+-	unsigned long cnt, top, bottom, msb;
+-	unsigned long cnt2, top2, bottom2, msb2;
+-	u64 val;
+-
+-	/* Any interruptions in this function should cause a failure */
+-	cnt = local_read(&t->cnt);
+-
+-	/* The cmpxchg always fails if it interrupted an update */
+-	 if (!__rb_time_read(t, &val, &cnt2))
+-		 return false;
+-
+-	 if (val != expect)
+-		 return false;
+-
+-	 if ((cnt & 3) != cnt2)
+-		 return false;
+-
+-	 cnt2 = cnt + 1;
+-
+-	 rb_time_split(val, &top, &bottom, &msb);
+-	 msb = rb_time_val_cnt(msb, cnt);
+-	 top = rb_time_val_cnt(top, cnt);
+-	 bottom = rb_time_val_cnt(bottom, cnt);
+-
+-	 rb_time_split(set, &top2, &bottom2, &msb2);
+-	 msb2 = rb_time_val_cnt(msb2, cnt);
+-	 top2 = rb_time_val_cnt(top2, cnt2);
+-	 bottom2 = rb_time_val_cnt(bottom2, cnt2);
+-
+-	if (!rb_time_read_cmpxchg(&t->cnt, cnt, cnt2))
+-		return false;
+-	if (!rb_time_read_cmpxchg(&t->msb, msb, msb2))
+-		return false;
+-	if (!rb_time_read_cmpxchg(&t->top, top, top2))
+-		return false;
+-	if (!rb_time_read_cmpxchg(&t->bottom, bottom, bottom2))
+-		return false;
+-	return true;
+-}
+-
+-#else /* 64 bits */
+-
+-/* local64_t always succeeds */
+-
+-static inline bool rb_time_read(rb_time_t *t, u64 *ret)
++static inline void rb_time_read(rb_time_t *t, u64 *ret)
+ {
+ 	*ret = local64_read(&t->time);
+-	return true;
+ }
+ static void rb_time_set(rb_time_t *t, u64 val)
+ {
+@@ -760,7 +569,6 @@ static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
+ {
+ 	return local64_try_cmpxchg(&t->time, &expect, set);
+ }
+-#endif
+ 
+ /*
+  * Enable this to make sure that the event passed to
+@@ -867,10 +675,7 @@ u64 ring_buffer_event_time_stamp(struct trace_buffer *buffer,
+ 	WARN_ONCE(1, "nest (%d) greater than max", nest);
+ 
+  fail:
+-	/* Can only fail on 32 bit */
+-	if (!rb_time_read(&cpu_buffer->write_stamp, &ts))
+-		/* Screw it, just read the current time */
+-		ts = rb_time_stamp(cpu_buffer->buffer);
++	rb_time_read(&cpu_buffer->write_stamp, &ts);
+ 
+ 	return ts;
+ }
+@@ -2867,7 +2672,7 @@ rb_check_timestamp(struct ring_buffer_per_cpu *cpu_buffer,
+ 		  (unsigned long long)info->ts,
+ 		  (unsigned long long)info->before,
+ 		  (unsigned long long)info->after,
+-		  (unsigned long long)(rb_time_read(&cpu_buffer->write_stamp, &write_stamp) ? write_stamp : 0),
++		  (unsigned long long)({rb_time_read(&cpu_buffer->write_stamp, &write_stamp); write_stamp;}),
+ 		  sched_clock_stable() ? "" :
+ 		  "If you just came from a suspend/resume,\n"
+ 		  "please switch to the trace global clock:\n"
+@@ -3025,8 +2830,7 @@ rb_try_to_discard(struct ring_buffer_per_cpu *cpu_buffer,
+ 
+ 	delta = rb_time_delta(event);
+ 
+-	if (!rb_time_read(&cpu_buffer->write_stamp, &write_stamp))
+-		return false;
++	rb_time_read(&cpu_buffer->write_stamp, &write_stamp);
+ 
+ 	/* Make sure the write stamp is read before testing the location */
+ 	barrier();
+@@ -3569,16 +3373,14 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+ 	struct ring_buffer_event *event;
+ 	struct buffer_page *tail_page;
+ 	unsigned long tail, write, w;
+-	bool a_ok;
+-	bool b_ok;
+ 
+ 	/* Don't let the compiler play games with cpu_buffer->tail_page */
+ 	tail_page = info->tail_page = READ_ONCE(cpu_buffer->tail_page);
+ 
+  /*A*/	w = local_read(&tail_page->write) & RB_WRITE_MASK;
+ 	barrier();
+-	b_ok = rb_time_read(&cpu_buffer->before_stamp, &info->before);
+-	a_ok = rb_time_read(&cpu_buffer->write_stamp, &info->after);
++	rb_time_read(&cpu_buffer->before_stamp, &info->before);
++	rb_time_read(&cpu_buffer->write_stamp, &info->after);
+ 	barrier();
+ 	info->ts = rb_time_stamp(cpu_buffer->buffer);
+ 
+@@ -3593,7 +3395,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+ 		if (!w) {
+ 			/* Use the sub-buffer timestamp */
+ 			info->delta = 0;
+-		} else if (unlikely(!a_ok || !b_ok || info->before != info->after)) {
++		} else if (unlikely(info->before != info->after)) {
+ 			info->add_timestamp |= RB_ADD_STAMP_FORCE | RB_ADD_STAMP_EXTEND;
+ 			info->length += RB_LEN_TIME_EXTEND;
+ 		} else {
+@@ -3622,13 +3424,11 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+ 
+ 	if (likely(tail == w)) {
+ 		u64 save_before;
+-		bool s_ok;
+ 
+ 		/* Nothing interrupted us between A and C */
+  /*D*/		rb_time_set(&cpu_buffer->write_stamp, info->ts);
+ 		barrier();
+- /*E*/		s_ok = rb_time_read(&cpu_buffer->before_stamp, &save_before);
+-		RB_WARN_ON(cpu_buffer, !s_ok);
++ /*E*/		rb_time_read(&cpu_buffer->before_stamp, &save_before);
+ 		if (likely(!(info->add_timestamp &
+ 			     (RB_ADD_STAMP_FORCE | RB_ADD_STAMP_ABSOLUTE))))
+ 			/* This did not interrupt any time update */
+@@ -3641,8 +3441,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+ 		if (unlikely(info->ts != save_before)) {
+ 			/* SLOW PATH - Interrupted between C and E */
+ 
+-			a_ok = rb_time_read(&cpu_buffer->write_stamp, &info->after);
+-			RB_WARN_ON(cpu_buffer, !a_ok);
++			rb_time_read(&cpu_buffer->write_stamp, &info->after);
+ 
+ 			/* Write stamp must only go forward */
+ 			if (save_before > info->after) {
+@@ -3657,9 +3456,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+ 	} else {
+ 		u64 ts;
+ 		/* SLOW PATH - Interrupted between A and C */
+-		a_ok = rb_time_read(&cpu_buffer->write_stamp, &info->after);
+-		/* Was interrupted before here, write_stamp must be valid */
+-		RB_WARN_ON(cpu_buffer, !a_ok);
++		rb_time_read(&cpu_buffer->write_stamp, &info->after);
+ 		ts = rb_time_stamp(cpu_buffer->buffer);
+ 		barrier();
+  /*E*/		if (write == (local_read(&tail_page->write) & RB_WRITE_MASK) &&
+@@ -3720,6 +3517,7 @@ rb_reserve_next_event(struct trace_buffer *buffer,
+ 	struct rb_event_info info;
+ 	int nr_loops = 0;
+ 	int add_ts_default;
++	static int once;
+ 
+ 	/* ring buffer does cmpxchg, make sure it is safe in NMI context */
+ 	if (!IS_ENABLED(CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG) &&
 -- 
-2.25.1
+2.42.0
 
