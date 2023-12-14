@@ -1,90 +1,93 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8FBAC11B;
-	Thu, 14 Dec 2023 02:40:07 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B5180C15;
-	Thu, 14 Dec 2023 02:40:52 -0800 (PST)
-Received: from [10.57.85.242] (unknown [10.57.85.242])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B810C3F738;
-	Thu, 14 Dec 2023 02:40:02 -0800 (PST)
-Message-ID: <fe8f8d00-1720-4a47-83ae-1aa4c005c4f5@arm.com>
-Date: Thu, 14 Dec 2023 10:41:05 +0000
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DBL1zKoG"
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7337112F
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Dec 2023 03:06:35 -0800 (PST)
+Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-6ceba6c4b8dso6810122b3a.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Dec 2023 03:06:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1702551995; x=1703156795; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=FkFcM58ORD2DTnC5dDqDGqkLUNpEfcQ7GjcBvDad/9k=;
+        b=DBL1zKoGQAAJUU8LkqPk3CmA5Izw/fZZxJEmeDoNPHE48FeSZ8KsFewNCS6sk2GPqK
+         NOZ6U34jepYTaT7MY5F2VjA6DSMOA36bro2mbZZ2xylUSU9HKZy0IDV0N4uUOAEmFmZK
+         P7gfsPrAi5ffogereHikFjh8JErqRGrEMkNzkNkbfEQiTI0txN8OWVThAd/L/wroszJG
+         z+CwVBLXNGK9riPo5oMOgV16uTK5Hzgwmnhond+WUukuKjk8qehXXlndczDBxHYEcsWd
+         ME8SnhLf4B9VCJrsL0q4xisYZzacVpoxOu0FaZVBukZZR41n0P9X8M6iC9IPTikR/HJa
+         YgUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702551995; x=1703156795;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FkFcM58ORD2DTnC5dDqDGqkLUNpEfcQ7GjcBvDad/9k=;
+        b=qweViIsc6C+LFJjl8txR+d6nLPSZmSyOMblEgGXe+txVe7aDSEcUkY4Q95R+mygcKY
+         s78i5lPyuKBYq6YBQ5Rp6rrG1hhreCMsyrmNH+lwWYgMHjYfCMypp+FcIcrO/pD7WGai
+         TUrXuG4r2L8pmZ2OvWG1zblbcz5C88LjMaaE/rcqBRsq9nMqLSM4PZ3pDX+pcV4oUoTk
+         tPuvEzZcNVBg4ls+jZK/HvitYEplEl/7u44mZwxXYWjLu+6RfEoXho0zlZKWRpyan1cc
+         KEz390BTOsk5l02VDhVgsH4BMnjdnB7K2gDyDCmvFRoAZhR+3KmkAi7xHC1ENm3++bQE
+         zwZg==
+X-Gm-Message-State: AOJu0YwX7V3VWz0Zy50QjOn3YdChDKJbTnLentJ1Wf9Dqmy6E2Klw0kC
+	EXFTK5dl7PxoVPX5hnEEm6c/w5Xq20cmyaDuhFLPFw==
+X-Google-Smtp-Source: AGHT+IGybyxiB7nTBs9dM8tY5oppuZjVzJ6FLWefF8o/CeO7/SBsLNR8gOeQrxQdYOWN3qivMYDL4ZJHrfh5hqtPofo=
+X-Received: by 2002:a05:6a00:10c1:b0:6cb:a1fe:5217 with SMTP id
+ d1-20020a056a0010c100b006cba1fe5217mr10062758pfu.16.1702551994935; Thu, 14
+ Dec 2023 03:06:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] cpufreq: Add a cpufreq pressure feedback for the
- scheduler
-Content-Language: en-US
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, catalin.marinas@arm.com,
- will@kernel.org, sudeep.holla@arm.com, agross@kernel.org,
- andersson@kernel.org, konrad.dybcio@linaro.org, mingo@redhat.com,
- peterz@infradead.org, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
- rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
- bristot@redhat.com, vschneid@redhat.com, rui.zhang@intel.com,
- mhiramat@kernel.org, daniel.lezcano@linaro.org, amit.kachhap@gmail.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
 References: <20231212142730.998913-1-vincent.guittot@linaro.org>
- <20231212142730.998913-2-vincent.guittot@linaro.org>
- <20231214054307.axl33gagxacidjbn@vireshk-i7>
- <CAKfTPtDam5eQO1DHxALsCaU53Rtawbfrvswy+z2unnV_eXeVLA@mail.gmail.com>
- <54f3b98c-1f7d-4205-9e3c-a4a19ad3d941@arm.com>
- <CAJZ5v0gD-utGhM3vN7JmPia1CVcSQa6RPnk2xMBXXc6asRTn=g@mail.gmail.com>
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <CAJZ5v0gD-utGhM3vN7JmPia1CVcSQa6RPnk2xMBXXc6asRTn=g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+ <20231212142730.998913-2-vincent.guittot@linaro.org> <af7b67d1-c4a3-44e3-a632-5f0a4ea6eb25@arm.com>
+In-Reply-To: <af7b67d1-c4a3-44e3-a632-5f0a4ea6eb25@arm.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Thu, 14 Dec 2023 12:06:23 +0100
+Message-ID: <CAKfTPtApsWeEbbV03sx8vQTGc3i+oFsAWRNsLnyHjYCSrRMqhg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] cpufreq: Add a cpufreq pressure feedback for the scheduler
+To: Lukasz Luba <lukasz.luba@arm.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, daniel.lezcano@linaro.org, 
+	mhiramat@kernel.org, rui.zhang@intel.com, vschneid@redhat.com, 
+	bristot@redhat.com, bsegall@google.com, dietmar.eggemann@arm.com, 
+	juri.lelli@redhat.com, peterz@infradead.org, mingo@redhat.com, 
+	linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, agross@kernel.org, 
+	konrad.dybcio@linaro.org, andersson@kernel.org, viresh.kumar@linaro.org, 
+	sudeep.holla@arm.com, rafael@kernel.org, rostedt@goodmis.org, mgorman@suse.de, 
+	amit.kachhap@gmail.com, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Thu, 14 Dec 2023 at 10:20, Lukasz Luba <lukasz.luba@arm.com> wrote:
+>
+>
+>
+> On 12/12/23 14:27, Vincent Guittot wrote:
+> > Provide to the scheduler a feedback about the temporary max available
+> > capacity. Unlike arch_update_thermal_pressure, this doesn't need to be
+> > filtered as the pressure will happen for dozens ms or more.
+> >
+> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> > ---
+> >   drivers/cpufreq/cpufreq.c | 48 +++++++++++++++++++++++++++++++++++++++
+> >   include/linux/cpufreq.h   | 10 ++++++++
+> >   2 files changed, 58 insertions(+)
+> >
+> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > index 44db4f59c4cc..7d5f71be8d29 100644
+> > --- a/drivers/cpufreq/cpufreq.c
+> > +++ b/drivers/cpufreq/cpufreq.c
+> > @@ -2563,6 +2563,50 @@ int cpufreq_get_policy(struct cpufreq_policy *policy, unsigned int cpu)
+> >   }
+> >   EXPORT_SYMBOL(cpufreq_get_policy);
+> >
+> > +DEFINE_PER_CPU(unsigned long, cpufreq_pressure);
+> > +EXPORT_PER_CPU_SYMBOL_GPL(cpufreq_pressure);
+>
+> Why do we export this variable when we have get/update functions?
+> Do we expect modules would manipulate those per-cpu variables
+> independently and not like we do per-cpumask in the update func.?
 
-
-On 12/14/23 09:40, Rafael J. Wysocki wrote:
-> On Thu, Dec 14, 2023 at 10:07 AM Lukasz Luba <lukasz.luba@arm.com> wrote:
->>
->> On 12/14/23 07:57, Vincent Guittot wrote:
->>> On Thu, 14 Dec 2023 at 06:43, Viresh Kumar <viresh.kumar@linaro.org> wrote:
->>>>
->>>> On 12-12-23, 15:27, Vincent Guittot wrote:
->>>>> @@ -2618,6 +2663,9 @@ static int cpufreq_set_policy(struct cpufreq_policy *policy,
->>>>>         policy->max = __resolve_freq(policy, policy->max, CPUFREQ_RELATION_H);
->>>>>         trace_cpu_frequency_limits(policy);
->>>>>
->>>>> +     cpus = policy->related_cpus;
->>>>> +     cpufreq_update_pressure(cpus, policy->max);
->>>>> +
->>>>>         policy->cached_target_freq = UINT_MAX;
->>>>
->>>> One more question, why are you doing this from cpufreq_set_policy ? If
->>>> due to cpufreq cooling or from userspace, we end up limiting the
->>>> maximum possible frequency, will this routine always get called ?
->>>
->>> Yes, any update of a FREQ_QOS_MAX ends up calling cpufreq_set_policy()
->>> to update the policy->max
->>>
->>
->> Agree, cpufreq sysfs scaling_max_freq is also important to handle
->> in this new design. Currently we don't reflect that as reduced CPU
->> capacity in the scheduler. There was discussion when I proposed to feed
->> that CPU frequency reduction into thermal_pressure [1].
->>
->> The same applies for the DTPM which is missing currently the proper
->> impact to the CPU reduced capacity in the scheduler.
->>
->> IMHO any limit set into FREQ_QOS_MAX should be visible in this
->> new design of capacity reduction signaling.
->>
->> [1] https://lore.kernel.org/lkml/20220930094821.31665-2-lukasz.luba@arm.com/
-> 
-> Actually, freq_qos_read_value(&policy->constraints, FREQ_QOS_MAX) will
-> return the requisite limit.
-
-Yes, but we need to translate that information from freq domain
-into capacity domain and plumb ii into scheduler as stolen CPU capacity.
-Ideally, w/o any 'smoothing' but just instant value.
-That's the hope of this patch set re-design.
+No, I will remove the EXPORT_PER_CPU_SYMBOL_GPL
