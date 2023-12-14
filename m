@@ -1,85 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pLRY7/iP"
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99063114
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 13 Dec 2023 23:57:26 -0800 (PST)
-Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-6ce7632b032so4289800b3a.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 13 Dec 2023 23:57:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702540646; x=1703145446; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0d8h/X+8AJFqMWZqP9wn96fliaxprL1waPmEflLUD64=;
-        b=pLRY7/iPobQt8nc/XA/Lr3Uj3wYFQMDpqZMrDv9trjYqrFRNT0Qvx8xpOSwywYqmoM
-         TiDc0cqFx06eUlQRG38RgSix7R4SGPrJwwuq4sJRFRBb6XOX1CwX4mXgaFHlzkFFIqV2
-         jSroyziipH+xBENtpTH2Qq1/JlbHGlriL92QeWbhFeQ0fE0FH5S5Ri5NONCcmvgtU2R8
-         Kw4EMwXYaSpfgyPN4qE5uw9dKjofIzbOV0kNRuvHo5Ib9qdwPb+b6uexzVTbsFSrZHpO
-         DO3lxPEy+gjPu005kUYaIsk0XnroXVUM48AgoTUan0kNaRIoJMQBx4QTnn480HXAfQ67
-         Z2Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702540646; x=1703145446;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0d8h/X+8AJFqMWZqP9wn96fliaxprL1waPmEflLUD64=;
-        b=jqyKkTQwGr5h+v6/Jx4GyEkeUMbFbtddWMaskks9mAG3e6tnpjQw1acJ09ybzZqYXR
-         akvb2p5xSgOgQBZyjVEvYKgyiJliZu/taBjWsaXNjdjdqjSKgA/gESDHUrd84iYnHmzZ
-         iz+Bi7PTxiFusPYA8EBW9IwTZBgb5sjYlB72XzN9xfnGkPiNuBoXy/1S6Ehctn5xu8UL
-         ngx67yOIzLj/ia+Z49g/FrDMmrLRyHqyfVtl5ikoat8huwk7IUXxbdAaislucUVrnKtA
-         P1lbo6AmWffHL8yljWUtRnkfR5E5/Q6xGFpGRiutvLRirQVoTRewNyOU464AqmfB1ZAk
-         Nk4A==
-X-Gm-Message-State: AOJu0Yz0xfjSrgHb8HILbsDpJktxmb/N7cjuL67bliwos4c4nwUFaJ1D
-	e4F0MvjTeRbU4jGAr7OyQzLs03FRCnlfgvE19zFYiA==
-X-Google-Smtp-Source: AGHT+IH5msB4lU5jvSKJG7KJS2c617v2cRX1YY8AQGHuGj64nDRHWqiH3MAFEuK6zjh/HPsVVTafJEwFkKzRP1G3l/M=
-X-Received: by 2002:a05:6a00:b8e:b0:6ce:751c:c943 with SMTP id
- g14-20020a056a000b8e00b006ce751cc943mr4858088pfj.7.1702540645901; Wed, 13 Dec
- 2023 23:57:25 -0800 (PST)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id A3AA8E0;
+	Thu, 14 Dec 2023 00:21:12 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0371CC15;
+	Thu, 14 Dec 2023 00:21:58 -0800 (PST)
+Received: from [10.57.85.242] (unknown [10.57.85.242])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF95D3F5A1;
+	Thu, 14 Dec 2023 00:21:07 -0800 (PST)
+Message-ID: <47b4cbcb-d33d-4699-a148-0108cf734e23@arm.com>
+Date: Thu, 14 Dec 2023 08:22:10 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/5] Rework system pressure interface to the scheduler
+Content-Language: en-US
+To: Vincent Guittot <vincent.guittot@linaro.org>
 References: <20231212142730.998913-1-vincent.guittot@linaro.org>
- <20231212142730.998913-2-vincent.guittot@linaro.org> <20231214054307.axl33gagxacidjbn@vireshk-i7>
-In-Reply-To: <20231214054307.axl33gagxacidjbn@vireshk-i7>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Thu, 14 Dec 2023 08:57:14 +0100
-Message-ID: <CAKfTPtDam5eQO1DHxALsCaU53Rtawbfrvswy+z2unnV_eXeVLA@mail.gmail.com>
-Subject: Re: [PATCH 1/4] cpufreq: Add a cpufreq pressure feedback for the scheduler
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: catalin.marinas@arm.com, will@kernel.org, sudeep.holla@arm.com, 
-	rafael@kernel.org, agross@kernel.org, andersson@kernel.org, 
-	konrad.dybcio@linaro.org, mingo@redhat.com, peterz@infradead.org, 
-	juri.lelli@redhat.com, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
-	bsegall@google.com, mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, 
-	lukasz.luba@arm.com, rui.zhang@intel.com, mhiramat@kernel.org, 
-	daniel.lezcano@linaro.org, amit.kachhap@gmail.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc: catalin.marinas@arm.com, will@kernel.org,
+ linux-trace-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+ daniel.lezcano@linaro.org, mhiramat@kernel.org, vschneid@redhat.com,
+ bristot@redhat.com, mgorman@suse.de, bsegall@google.com,
+ juri.lelli@redhat.com, peterz@infradead.org, mingo@redhat.com,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ konrad.dybcio@linaro.org, andersson@kernel.org, agross@kernel.org,
+ rui.zhang@intel.com, viresh.kumar@linaro.org, rafael@kernel.org,
+ sudeep.holla@arm.com, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+ linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <20231212142730.998913-1-vincent.guittot@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 14 Dec 2023 at 06:43, Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 12-12-23, 15:27, Vincent Guittot wrote:
-> > @@ -2618,6 +2663,9 @@ static int cpufreq_set_policy(struct cpufreq_policy *policy,
-> >       policy->max = __resolve_freq(policy, policy->max, CPUFREQ_RELATION_H);
-> >       trace_cpu_frequency_limits(policy);
-> >
-> > +     cpus = policy->related_cpus;
-> > +     cpufreq_update_pressure(cpus, policy->max);
-> > +
-> >       policy->cached_target_freq = UINT_MAX;
->
-> One more question, why are you doing this from cpufreq_set_policy ? If
-> due to cpufreq cooling or from userspace, we end up limiting the
-> maximum possible frequency, will this routine always get called ?
+Hi Vincent,
 
-Yes, any update of a FREQ_QOS_MAX ends up calling cpufreq_set_policy()
-to update the policy->max
+I've been waiting for this feature, thanks!
 
 
->
-> --
-> viresh
+On 12/12/23 14:27, Vincent Guittot wrote:
+> Following the consolidation and cleanup of CPU capacity in [1], this serie
+> reworks how the scheduler gets the pressures on CPUs. We need to take into
+> account all pressures applied by cpufreq on the compute capacity of a CPU
+> for dozens of ms or more and not only cpufreq cooling device or HW
+> mitigiations. we split the pressure applied on CPU's capacity in 2 parts:
+> - one from cpufreq and freq_qos
+> - one from HW high freq mitigiation.
+> 
+> The next step will be to add a dedicated interface for long standing
+> capping of the CPU capacity (i.e. for seconds or more) like the
+> scaling_max_freq of cpufreq sysfs. The latter is already taken into
+> account by this serie but as a temporary pressure which is not always the
+> best choice when we know that it will happen for seconds or more.
+> 
+> [1] https://lore.kernel.org/lkml/20231211104855.558096-1-vincent.guittot@linaro.org/
+> 
+> Vincent Guittot (4):
+>    cpufreq: Add a cpufreq pressure feedback for the scheduler
+>    sched: Take cpufreq feedback into account
+>    thermal/cpufreq: Remove arch_update_thermal_pressure()
+>    sched: Rename arch_update_thermal_pressure into
+>      arch_update_hw_pressure
+> 
+>   arch/arm/include/asm/topology.h               |  6 +--
+>   arch/arm64/include/asm/topology.h             |  6 +--
+>   drivers/base/arch_topology.c                  | 26 ++++-----
+>   drivers/cpufreq/cpufreq.c                     | 48 +++++++++++++++++
+>   drivers/cpufreq/qcom-cpufreq-hw.c             |  4 +-
+>   drivers/thermal/cpufreq_cooling.c             |  3 --
+>   include/linux/arch_topology.h                 |  8 +--
+>   include/linux/cpufreq.h                       | 10 ++++
+>   include/linux/sched/topology.h                |  8 +--
+>   .../{thermal_pressure.h => hw_pressure.h}     | 14 ++---
+>   include/trace/events/sched.h                  |  2 +-
+>   init/Kconfig                                  | 12 ++---
+>   kernel/sched/core.c                           |  8 +--
+>   kernel/sched/fair.c                           | 53 ++++++++++---------
+>   kernel/sched/pelt.c                           | 18 +++----
+>   kernel/sched/pelt.h                           | 16 +++---
+>   kernel/sched/sched.h                          |  4 +-
+>   17 files changed, 152 insertions(+), 94 deletions(-)
+>   rename include/trace/events/{thermal_pressure.h => hw_pressure.h} (55%)
+> 
+
+I would like to test it, but something worries me. Why there is 0/5 in
+this subject and only 4 patches?
+
+Could you tell me your base branch that I can apply this, please?
+
+Regards,
+Lukasz
