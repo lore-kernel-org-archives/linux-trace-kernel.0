@@ -1,185 +1,154 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fW7/P2lI"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC123A7;
-	Thu, 14 Dec 2023 06:29:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702564176; x=1734100176;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Y3yjRwJvTwe+dd+AJdN7EHilGx+zyRX1/RseVtZQirY=;
-  b=fW7/P2lIhW08gUCNfKuccFfHhmW56YrDWBrzqHNuYxfFY0d5zPIBjFif
-   9DkyJUvRuLSpylmBTNFozc1kn4nDKpx78CIdHKVjmg9Fo/I475B87xG1q
-   jwC37u7FvLZ44tfGHH8egm3FRlH2wmSjSi4jEjmMyoifFJ3xJzsJgFtGa
-   DVO+C9rtu/+kQnPUYAvogO4ltkLdEzJb51x/fhwlhGI1UcInkkDQGYvkE
-   69rvXhb8uVJewSHiauh6RHFB1OB3D1Djv55LEpdpgtspbEedOQ7Q/z8L3
-   Tw/MDCWBopiskm+2L3RDdYQHTByIR+OKERuZbqSRfyLRrtmJzSO9AMF/k
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="375281546"
-X-IronPort-AV: E=Sophos;i="6.04,275,1695711600"; 
-   d="scan'208";a="375281546"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 06:29:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="803299973"
-X-IronPort-AV: E=Sophos;i="6.04,275,1695711600"; 
-   d="scan'208";a="803299973"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 14 Dec 2023 06:29:33 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rDmiR-000MAi-0O;
-	Thu, 14 Dec 2023 14:29:31 +0000
-Date: Thu, 14 Dec 2023 22:29:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bixuan Cui <cuibixuan@vivo.com>, rostedt@goodmis.org,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	akpm@linux-foundation.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
-	cuibixuan@vivo.com, opensource.kernel@vivo.com
-Subject: Re: [PATCH -next 2/2] mm: vmscan: add new event to trace shrink lru
-Message-ID: <202312142212.vbSe7CMs-lkp@intel.com>
-References: <20231212032640.6968-3-cuibixuan@vivo.com>
+X-Greylist: delayed 1359 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 14 Dec 2023 07:22:00 PST
+Received: from out03.mta.xmission.com (out03.mta.xmission.com [166.70.13.233])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C3D6120;
+	Thu, 14 Dec 2023 07:22:00 -0800 (PST)
+Received: from in01.mta.xmission.com ([166.70.13.51]:55106)
+	by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1rDnBD-00298x-8O; Thu, 14 Dec 2023 07:59:15 -0700
+Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:48054 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1rDnBC-009bes-10; Thu, 14 Dec 2023 07:59:14 -0700
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Alexander Graf <graf@amazon.com>
+Cc: <linux-kernel@vger.kernel.org>,  <linux-trace-kernel@vger.kernel.org>,
+  <linux-mm@kvack.org>,  <devicetree@vger.kernel.org>,
+  <linux-arm-kernel@lists.infradead.org>,  <kexec@lists.infradead.org>,
+  <linux-doc@vger.kernel.org>,  <x86@kernel.org>,  "H. Peter Anvin"
+ <hpa@zytor.com>,  Andy Lutomirski <luto@kernel.org>,  Peter Zijlstra
+ <peterz@infradead.org>,  "Rob Herring" <robh+dt@kernel.org>,  Steven
+ Rostedt <rostedt@goodmis.org>,  "Andrew Morton"
+ <akpm@linux-foundation.org>,  Mark Rutland <mark.rutland@arm.com>,  "Tom
+ Lendacky" <thomas.lendacky@amd.com>,  Ashish Kalra <ashish.kalra@amd.com>,
+  James Gowans <jgowans@amazon.com>,  Stanislav Kinsburskii
+ <skinsburskii@linux.microsoft.com>,  <arnd@arndb.de>,
+  <pbonzini@redhat.com>,  <madvenka@linux.microsoft.com>,  Anthony Yznaga
+ <anthony.yznaga@oracle.com>,  Usama Arif <usama.arif@bytedance.com>,
+  David Woodhouse <dwmw@amazon.co.uk>,  Benjamin Herrenschmidt
+ <benh@kernel.crashing.org>
+References: <20231213000452.88295-1-graf@amazon.com>
+Date: Thu, 14 Dec 2023 08:58:49 -0600
+In-Reply-To: <20231213000452.88295-1-graf@amazon.com> (Alexander Graf's
+	message of "Wed, 13 Dec 2023 00:04:37 +0000")
+Message-ID: <87r0jo7rva.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231212032640.6968-3-cuibixuan@vivo.com>
+Content-Type: text/plain
+X-XM-SPF: eid=1rDnBC-009bes-10;;;mid=<87r0jo7rva.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX1/OhbNhEazZ4D40H/sN4yD6DjQIF1U06u0=
+X-SA-Exim-Connect-IP: 68.227.168.167
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-Spam-DCC: XMission; sa04 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: **;Alexander Graf <graf@amazon.com>
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 587 ms - load_scoreonly_sql: 0.05 (0.0%),
+	signal_user_changed: 11 (1.9%), b_tie_ro: 10 (1.6%), parse: 1.07
+	(0.2%), extract_message_metadata: 12 (2.1%), get_uri_detail_list: 2.7
+	(0.5%), tests_pri_-2000: 4.8 (0.8%), tests_pri_-1000: 3.8 (0.6%),
+	tests_pri_-950: 1.19 (0.2%), tests_pri_-900: 1.01 (0.2%),
+	tests_pri_-90: 68 (11.7%), check_bayes: 67 (11.4%), b_tokenize: 12
+	(2.0%), b_tok_get_all: 13 (2.3%), b_comp_prob: 3.8 (0.7%),
+	b_tok_touch_all: 34 (5.8%), b_finish: 0.86 (0.1%), tests_pri_0: 461
+	(78.6%), check_dkim_signature: 0.63 (0.1%), check_dkim_adsp: 2.2
+	(0.4%), poll_dns_idle: 0.70 (0.1%), tests_pri_10: 2.4 (0.4%),
+	tests_pri_500: 16 (2.8%), rewrite_mail: 0.00 (0.0%)
+Subject: Re: [PATCH 00/15] kexec: Allow preservation of ftrace buffers
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 
-Hi Bixuan,
+Alexander Graf <graf@amazon.com> writes:
 
-kernel test robot noticed the following build errors:
+> Kexec today considers itself purely a boot loader: When we enter the new
+> kernel, any state the previous kernel left behind is irrelevant and the
+> new kernel reinitializes the system.
+>
+> However, there are use cases where this mode of operation is not what we
+> actually want. In virtualization hosts for example, we want to use kexec
+> to update the host kernel while virtual machine memory stays untouched.
+> When we add device assignment to the mix, we also need to ensure that
+> IOMMU and VFIO states are untouched. If we add PCIe peer to peer DMA, we
+> need to do the same for the PCI subsystem. If we want to kexec while an
+> SEV-SNP enabled virtual machine is running, we need to preserve the VM
+> context pages and physical memory. See James' and my Linux Plumbers
+> Conference 2023 presentation for details:
+>
+>   https://lpc.events/event/17/contributions/1485/
+>
+> To start us on the journey to support all the use cases above, this
+> patch implements basic infrastructure to allow hand over of kernel state
+> across kexec (Kexec HandOver, aka KHO). As example target, we use ftrace:
+> With this patch set applied, you can read ftrace records from the
+> pre-kexec environment in your post-kexec one. This creates a very powerful
+> debugging and performance analysis tool for kexec. It's also slightly
+> easier to reason about than full blown VFIO state preservation.
+>
+> == Alternatives ==
+>
+> There are alternative approaches to (parts of) the problems above:
+>
+>   * Memory Pools [1] - preallocated persistent memory region + allocator
+>   * PRMEM [2] - resizable persistent memory regions with fixed metadata
+>                 pointer on the kernel command line + allocator
+>   * Pkernfs [3] - preallocated file system for in-kernel data with fixed
+>                   address location on the kernel command line
+>   * PKRAM [4] - handover of user space pages using a fixed metadata page
+>                 specified via command line
+>
+> All of the approaches above fundamentally have the same problem: They
+> require the administrator to explicitly carve out a physical memory
+> location because they have no mechanism outside of the kernel command
+> line to pass data (including memory reservations) between kexec'ing
+> kernels.
+>
+> KHO provides that base foundation. We will determine later whether we
+> still need any of the approaches above for fast bulk memory handover of for
+> example IOMMU page tables. But IMHO they would all be users of KHO, with
+> KHO providing the foundational primitive to pass metadata and bulk memory
+> reservations as well as provide easy versioning for data.
 
-[auto build test ERROR on next-20231211]
+What you are describe in many ways is the same problem as
+kexec-on-panic.  The goal of leaving devices running absolutely requires
+carving out memory for the new kernel to live in while it is coming up
+so that DMA from a device that was not shutdown down does not stomp the
+kernel coming up.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bixuan-Cui/mm-shrinker-add-new-event-to-trace-shrink-count/20231212-112824
-base:   next-20231211
-patch link:    https://lore.kernel.org/r/20231212032640.6968-3-cuibixuan%40vivo.com
-patch subject: [PATCH -next 2/2] mm: vmscan: add new event to trace shrink lru
-config: i386-buildonly-randconfig-003-20231214 (https://download.01.org/0day-ci/archive/20231214/202312142212.vbSe7CMs-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231214/202312142212.vbSe7CMs-lkp@intel.com/reproduce)
+If I understand the virtualization case some of those virtual machines
+are going to have virtual NICs that are going to want to DMA memory to
+the host system.  Which if I understand things correctly means that
+among the devices you explicitly want to keep running there is a not
+a way to avoid the chance of DMA coming in while the kernel is being
+changed.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312142212.vbSe7CMs-lkp@intel.com/
+There is also a huge maintenance challenge associated with all of this.
 
-All errors (new ones prefixed by >>):
+If you go with something that is essentially kexec-on-panic and then
+add a little bit to help find things in the memory of the previous
+kernel while the new kernel is coming up I can see it as a possibility.
 
-   mm/vmscan.c: In function 'evict_folios':
->> mm/vmscan.c:4533:9: error: implicit declaration of function 'trace_mm_vmscan_lru_shrink_inactive'; did you mean 'trace_mm_vmscan_lru_shrink_inactive_end'? [-Werror=implicit-function-declaration]
-    4533 |         trace_mm_vmscan_lru_shrink_inactive(pgdat->node_id,
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-         |         trace_mm_vmscan_lru_shrink_inactive_end
-   cc1: some warnings being treated as errors
+As an example I think preserving ftrace data of kexec seems bizarre.
+I don't see how that is an interesting use case at all.  Not in
+the situation of preserving virtual machines, and not in the situation
+of kexec on panic.
 
+If you are doing an orderly shutdown and kernel switch you should be
+able to manually change the memory.  If you are not doing an orderly
+shutdown then I really don't get it.
 
-vim +4533 mm/vmscan.c
+I don't hate the capability you are trying to build.
 
-ac35a490237446 Yu Zhao                 2022-09-18  4500  
-a579086c99ed70 Yu Zhao                 2022-12-21  4501  static int evict_folios(struct lruvec *lruvec, struct scan_control *sc, int swappiness)
-ac35a490237446 Yu Zhao                 2022-09-18  4502  {
-ac35a490237446 Yu Zhao                 2022-09-18  4503  	int type;
-ac35a490237446 Yu Zhao                 2022-09-18  4504  	int scanned;
-ac35a490237446 Yu Zhao                 2022-09-18  4505  	int reclaimed;
-ac35a490237446 Yu Zhao                 2022-09-18  4506  	LIST_HEAD(list);
-359a5e1416caaf Yu Zhao                 2022-11-15  4507  	LIST_HEAD(clean);
-ac35a490237446 Yu Zhao                 2022-09-18  4508  	struct folio *folio;
-359a5e1416caaf Yu Zhao                 2022-11-15  4509  	struct folio *next;
-ac35a490237446 Yu Zhao                 2022-09-18  4510  	enum vm_event_item item;
-ac35a490237446 Yu Zhao                 2022-09-18  4511  	struct reclaim_stat stat;
-bd74fdaea14602 Yu Zhao                 2022-09-18  4512  	struct lru_gen_mm_walk *walk;
-359a5e1416caaf Yu Zhao                 2022-11-15  4513  	bool skip_retry = false;
-ac35a490237446 Yu Zhao                 2022-09-18  4514  	struct mem_cgroup *memcg = lruvec_memcg(lruvec);
-ac35a490237446 Yu Zhao                 2022-09-18  4515  	struct pglist_data *pgdat = lruvec_pgdat(lruvec);
-ac35a490237446 Yu Zhao                 2022-09-18  4516  
-ac35a490237446 Yu Zhao                 2022-09-18  4517  	spin_lock_irq(&lruvec->lru_lock);
-ac35a490237446 Yu Zhao                 2022-09-18  4518  
-ac35a490237446 Yu Zhao                 2022-09-18  4519  	scanned = isolate_folios(lruvec, sc, swappiness, &type, &list);
-ac35a490237446 Yu Zhao                 2022-09-18  4520  
-ac35a490237446 Yu Zhao                 2022-09-18  4521  	scanned += try_to_inc_min_seq(lruvec, swappiness);
-ac35a490237446 Yu Zhao                 2022-09-18  4522  
-ac35a490237446 Yu Zhao                 2022-09-18  4523  	if (get_nr_gens(lruvec, !swappiness) == MIN_NR_GENS)
-ac35a490237446 Yu Zhao                 2022-09-18  4524  		scanned = 0;
-ac35a490237446 Yu Zhao                 2022-09-18  4525  
-ac35a490237446 Yu Zhao                 2022-09-18  4526  	spin_unlock_irq(&lruvec->lru_lock);
-ac35a490237446 Yu Zhao                 2022-09-18  4527  
-ac35a490237446 Yu Zhao                 2022-09-18  4528  	if (list_empty(&list))
-ac35a490237446 Yu Zhao                 2022-09-18  4529  		return scanned;
-359a5e1416caaf Yu Zhao                 2022-11-15  4530  retry:
-49fd9b6df54e61 Matthew Wilcox (Oracle  2022-09-02  4531) 	reclaimed = shrink_folio_list(&list, pgdat, sc, &stat, false);
-359a5e1416caaf Yu Zhao                 2022-11-15  4532  	sc->nr_reclaimed += reclaimed;
-8c2214fc9a470a Jaewon Kim              2023-10-03 @4533  	trace_mm_vmscan_lru_shrink_inactive(pgdat->node_id,
-8c2214fc9a470a Jaewon Kim              2023-10-03  4534  			scanned, reclaimed, &stat, sc->priority,
-8c2214fc9a470a Jaewon Kim              2023-10-03  4535  			type ? LRU_INACTIVE_FILE : LRU_INACTIVE_ANON);
-359a5e1416caaf Yu Zhao                 2022-11-15  4536  
-359a5e1416caaf Yu Zhao                 2022-11-15  4537  	list_for_each_entry_safe_reverse(folio, next, &list, lru) {
-359a5e1416caaf Yu Zhao                 2022-11-15  4538  		if (!folio_evictable(folio)) {
-359a5e1416caaf Yu Zhao                 2022-11-15  4539  			list_del(&folio->lru);
-359a5e1416caaf Yu Zhao                 2022-11-15  4540  			folio_putback_lru(folio);
-359a5e1416caaf Yu Zhao                 2022-11-15  4541  			continue;
-359a5e1416caaf Yu Zhao                 2022-11-15  4542  		}
-ac35a490237446 Yu Zhao                 2022-09-18  4543  
-359a5e1416caaf Yu Zhao                 2022-11-15  4544  		if (folio_test_reclaim(folio) &&
-359a5e1416caaf Yu Zhao                 2022-11-15  4545  		    (folio_test_dirty(folio) || folio_test_writeback(folio))) {
-ac35a490237446 Yu Zhao                 2022-09-18  4546  			/* restore LRU_REFS_FLAGS cleared by isolate_folio() */
-ac35a490237446 Yu Zhao                 2022-09-18  4547  			if (folio_test_workingset(folio))
-ac35a490237446 Yu Zhao                 2022-09-18  4548  				folio_set_referenced(folio);
-359a5e1416caaf Yu Zhao                 2022-11-15  4549  			continue;
-359a5e1416caaf Yu Zhao                 2022-11-15  4550  		}
-ac35a490237446 Yu Zhao                 2022-09-18  4551  
-359a5e1416caaf Yu Zhao                 2022-11-15  4552  		if (skip_retry || folio_test_active(folio) || folio_test_referenced(folio) ||
-359a5e1416caaf Yu Zhao                 2022-11-15  4553  		    folio_mapped(folio) || folio_test_locked(folio) ||
-359a5e1416caaf Yu Zhao                 2022-11-15  4554  		    folio_test_dirty(folio) || folio_test_writeback(folio)) {
-359a5e1416caaf Yu Zhao                 2022-11-15  4555  			/* don't add rejected folios to the oldest generation */
-359a5e1416caaf Yu Zhao                 2022-11-15  4556  			set_mask_bits(&folio->flags, LRU_REFS_MASK | LRU_REFS_FLAGS,
-359a5e1416caaf Yu Zhao                 2022-11-15  4557  				      BIT(PG_active));
-359a5e1416caaf Yu Zhao                 2022-11-15  4558  			continue;
-359a5e1416caaf Yu Zhao                 2022-11-15  4559  		}
-359a5e1416caaf Yu Zhao                 2022-11-15  4560  
-359a5e1416caaf Yu Zhao                 2022-11-15  4561  		/* retry folios that may have missed folio_rotate_reclaimable() */
-359a5e1416caaf Yu Zhao                 2022-11-15  4562  		list_move(&folio->lru, &clean);
-359a5e1416caaf Yu Zhao                 2022-11-15  4563  		sc->nr_scanned -= folio_nr_pages(folio);
-ac35a490237446 Yu Zhao                 2022-09-18  4564  	}
-ac35a490237446 Yu Zhao                 2022-09-18  4565  
-ac35a490237446 Yu Zhao                 2022-09-18  4566  	spin_lock_irq(&lruvec->lru_lock);
-ac35a490237446 Yu Zhao                 2022-09-18  4567  
-49fd9b6df54e61 Matthew Wilcox (Oracle  2022-09-02  4568) 	move_folios_to_lru(lruvec, &list);
-ac35a490237446 Yu Zhao                 2022-09-18  4569  
-bd74fdaea14602 Yu Zhao                 2022-09-18  4570  	walk = current->reclaim_state->mm_walk;
-bd74fdaea14602 Yu Zhao                 2022-09-18  4571  	if (walk && walk->batched)
-bd74fdaea14602 Yu Zhao                 2022-09-18  4572  		reset_batch_size(lruvec, walk);
-bd74fdaea14602 Yu Zhao                 2022-09-18  4573  
-57e9cc50f4dd92 Johannes Weiner         2022-10-26  4574  	item = PGSTEAL_KSWAPD + reclaimer_offset();
-ac35a490237446 Yu Zhao                 2022-09-18  4575  	if (!cgroup_reclaim(sc))
-ac35a490237446 Yu Zhao                 2022-09-18  4576  		__count_vm_events(item, reclaimed);
-ac35a490237446 Yu Zhao                 2022-09-18  4577  	__count_memcg_events(memcg, item, reclaimed);
-ac35a490237446 Yu Zhao                 2022-09-18  4578  	__count_vm_events(PGSTEAL_ANON + type, reclaimed);
-ac35a490237446 Yu Zhao                 2022-09-18  4579  
-ac35a490237446 Yu Zhao                 2022-09-18  4580  	spin_unlock_irq(&lruvec->lru_lock);
-ac35a490237446 Yu Zhao                 2022-09-18  4581  
-ac35a490237446 Yu Zhao                 2022-09-18  4582  	mem_cgroup_uncharge_list(&list);
-ac35a490237446 Yu Zhao                 2022-09-18  4583  	free_unref_page_list(&list);
-ac35a490237446 Yu Zhao                 2022-09-18  4584  
-359a5e1416caaf Yu Zhao                 2022-11-15  4585  	INIT_LIST_HEAD(&list);
-359a5e1416caaf Yu Zhao                 2022-11-15  4586  	list_splice_init(&clean, &list);
-359a5e1416caaf Yu Zhao                 2022-11-15  4587  
-359a5e1416caaf Yu Zhao                 2022-11-15  4588  	if (!list_empty(&list)) {
-359a5e1416caaf Yu Zhao                 2022-11-15  4589  		skip_retry = true;
-359a5e1416caaf Yu Zhao                 2022-11-15  4590  		goto retry;
-359a5e1416caaf Yu Zhao                 2022-11-15  4591  	}
-ac35a490237446 Yu Zhao                 2022-09-18  4592  
-ac35a490237446 Yu Zhao                 2022-09-18  4593  	return scanned;
-ac35a490237446 Yu Zhao                 2022-09-18  4594  }
-ac35a490237446 Yu Zhao                 2022-09-18  4595  
+I have not read or looked at most of this so I am probably
+missing subtle details.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+As you are currently describing things I have the sense you have
+completely misframed the problem and are trying to solve the wrong parts
+of the problem.
+
+Eric
