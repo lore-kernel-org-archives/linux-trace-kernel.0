@@ -1,146 +1,93 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB706979D
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Dec 2023 19:45:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A05697AB
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Dec 2023 19:47:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="dDSEl6v/"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a1f8510883aso787409466b.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Dec 2023 11:45:15 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Z3QNh04C"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-551ee7d5214so1973596a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Dec 2023 11:47:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1702583113; x=1703187913; darn=vger.kernel.org;
+        d=linux-foundation.org; s=google; t=1702583234; x=1703188034; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=MpUjOoTdCqNzayaiwbixMLyZUnTZjhFDCaA6n5v3lDM=;
-        b=dDSEl6v/M30epCXcAY1R4AfnWJ0Y9Rv5feREx5G/OGXKQJIr7SIQEfxlZp7yh7ifJE
-         piG+jenbdrIVKGmy8zSyUPkmtSq2+f5CgI4kfcUV7f4Ogjt+DuQg+4goWlJ0x+ErpiF+
-         jfkDVTw6DNsR97TBL9mDmjyWbrzFbXt1imYjQ=
+        bh=sjcQO6QUwn6LlRQi3EB5uy3LvsThnC1DrE9jgfSqzKY=;
+        b=Z3QNh04CazCSd6G4OWax9HDBWX8m2ZnhHXBsMXgxTPvUXFbRq+q0q/NvEDTh03FWh4
+         BbHUq8xVt5hXNxcRlkPc7D/rYp9eckL88i6XKKq2QfPqLcP8zHAjJ8tuZl8KzvdxLVre
+         aZIEv9ExIETQPGA9RZookHs/Ngh8mZOYTa9mo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702583113; x=1703187913;
+        d=1e100.net; s=20230601; t=1702583234; x=1703188034;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=MpUjOoTdCqNzayaiwbixMLyZUnTZjhFDCaA6n5v3lDM=;
-        b=p7Wg/v2OMwrfKQUzGV9dt18Hf4Pjg6pGcKS8SUZMLEYNdvUxIATazRc1U1irWqLkEq
-         FK2RSoEjmUyBJN0V92OcDHEtCx3AN/5FMEFFFUv31Ft6iDSvlSGyYCydL5Ivvs2ke9+2
-         HYlqVCyvQtqBcZdcMNaf7YI4tlX1uev3xXrRmsl1BIChrZGgPb5ctNxwMTTNARLzfboF
-         a+R4ue67msxGcN5AXi8dQWUAAaSk4/Est8//qLoFgnJ0mdp3M0d61QoM27r0Agvlwnsi
-         mY07M7GYsb1z3WoScCaAxfF6BcJ7R4xwGUOrrym4RKd++K6spsiO1vsqoRbACJtyYnti
-         4M3A==
-X-Gm-Message-State: AOJu0YwNtM2XBY+EZuvNzBxYv5PiKegMzVKCQ6GqqeN84uZeLlnT8qiP
-	jz2MKGadttm/6cSpYTWdxVA0ejMM7HCA+qjdYMByGw==
-X-Google-Smtp-Source: AGHT+IGfmMrfULrA4NjEg+ax6niwSjfrlMc9r7UgBf3ieesgmzgLdOzqUkO/8J+9iwHgQRfGRUGYRw==
-X-Received: by 2002:a17:907:cbc8:b0:a19:a1ba:baed with SMTP id vk8-20020a170907cbc800b00a19a1babaedmr3231546ejc.147.1702583113519;
-        Thu, 14 Dec 2023 11:45:13 -0800 (PST)
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
-        by smtp.gmail.com with ESMTPSA id ry9-20020a1709068d8900b00a1f744953c1sm9138608ejc.105.2023.12.14.11.45.12
+        bh=sjcQO6QUwn6LlRQi3EB5uy3LvsThnC1DrE9jgfSqzKY=;
+        b=EAAlOKWyFqGzjn1rJj2My8pED9uL35EdkEdeYla08yuGNUSlr+aCEr6xAUdgrH90Bi
+         oKdx5iDX2wKTP3dB3qm2Xmk76kI3/IVrlvZC1l2uTh+DH0whzY8SQlUz6sGLNJalYBGt
+         GZsHpUsVefiHksSMiMktY8mr/5LKPSHvvoLkiU8OTB23jKRW9yVXK+m0nF6cGukepmkB
+         70UIxlX0j488gTWNVYVvf/whXhOIytZm+dj38btLYThlGDMH6ssA9bCnAJIKJtY1n8Mc
+         jd1LJhpZvNBBfnSwBZo8Bagf9Pg9q7eKd2VR/Z9wxT6TM/rtj3JAxWHee4p1h0krYrI6
+         DJXw==
+X-Gm-Message-State: AOJu0Yxs3KBQlQJWlh66l+A+H0trwCtX1CW6E4C/eh0Ku/abHlD/1AWq
+	tF0yKgRp8JKOvNALGJoxiiBKVo18XX2Ci01cbNdWjw==
+X-Google-Smtp-Source: AGHT+IGWJfbFH1WqQ1SBs1Evb2xgNZ6TBc+vlp0pKHXptErl1YNDbwVgGXdKN5NPf8oOlKYA/XczTw==
+X-Received: by 2002:a17:906:782:b0:a1d:2f59:81a4 with SMTP id l2-20020a170906078200b00a1d2f5981a4mr10756909ejc.62.1702583233833;
+        Thu, 14 Dec 2023 11:47:13 -0800 (PST)
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
+        by smtp.gmail.com with ESMTPSA id sa16-20020a1709076d1000b00a1da72b8752sm9773050ejc.212.2023.12.14.11.47.12
         for <linux-trace-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Dec 2023 11:45:12 -0800 (PST)
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a1f653e3c3dso956093566b.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Dec 2023 11:45:12 -0800 (PST)
-X-Received: by 2002:a17:907:3ac2:b0:a19:d40a:d21f with SMTP id
- fi2-20020a1709073ac200b00a19d40ad21fmr2222801ejc.235.1702583112429; Thu, 14
- Dec 2023 11:45:12 -0800 (PST)
+        Thu, 14 Dec 2023 11:47:12 -0800 (PST)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a1ca24776c3so201116966b.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Dec 2023 11:47:12 -0800 (PST)
+X-Received: by 2002:a17:906:109c:b0:a1a:5397:b67f with SMTP id
+ u28-20020a170906109c00b00a1a5397b67fmr11674986eju.4.1702583232499; Thu, 14
+ Dec 2023 11:47:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231213211126.24f8c1dd@gandalf.local.home> <20231213214632.15047c40@gandalf.local.home>
- <CAHk-=whESMW2v0cd0Ye+AnV0Hp9j+Mm4BO2xJo93eQcC1xghUA@mail.gmail.com> <20231214115614.2cf5a40e@gandalf.local.home>
-In-Reply-To: <20231214115614.2cf5a40e@gandalf.local.home>
+References: <20231214125433.03091e5e@gandalf.local.home>
+In-Reply-To: <20231214125433.03091e5e@gandalf.local.home>
 From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 14 Dec 2023 11:44:55 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjjGEc0f4LLDxCTYvgD98kWqKy=89u=42JLRz5Qs3KKyA@mail.gmail.com>
-Message-ID: <CAHk-=wjjGEc0f4LLDxCTYvgD98kWqKy=89u=42JLRz5Qs3KKyA@mail.gmail.com>
-Subject: Re: [PATCH] ring-buffer: Remove 32bit timestamp logic
+Date: Thu, 14 Dec 2023 11:46:55 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiKooX5vOu6TgGPEwdX--k0DyE4ntJDU4QzbVFMWGVXFw@mail.gmail.com>
+Message-ID: <CAHk-=wiKooX5vOu6TgGPEwdX--k0DyE4ntJDU4QzbVFMWGVXFw@mail.gmail.com>
+Subject: Re: [PATCH v3] ring-buffer: Remove 32bit timestamp logic
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+Cc: LKML <linux-kernel@vger.kernel.org>, 
 	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Linux Arch <linux-arch@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 14 Dec 2023 at 08:55, Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu, 14 Dec 2023 at 09:53, Steven Rostedt <rostedt@goodmis.org> wrote:
 >
-> And yes, this does get called in NMI context.
-
-Not on an i486-class machine they won't. You don't have a local apic
-on those, and they won't have any NMI sources under our control (ie
-NMI does exist, but we're talking purely legacy NMI for "motherboard
-problems" like RAM parity errors etc)
-
-> I had a patch that added:
->
-> +       /* ring buffer does cmpxchg, make sure it is safe in NMI context */
-> +       if (!IS_ENABLED(CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG) &&
-> +           (unlikely(in_nmi()))) {
+> +       /*
+> +        * For architectures that can not do cmpxchg() in NMI, or require
+> +        * disabling interrupts to do 64-bit cmpxchg(), do not allow them
+> +        * to record in NMI context.
+> +        */
+> +       if ((!IS_ENABLED(CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG) ||
+> +            (IS_ENABLED(CONFIG_X86_32) && !IS_ENABLED(CONFIG_X86_CMPXCHG64))) &&
+> +           unlikely(in_nmi())) {
 > +               return NULL;
 > +       }
 
-CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG doesn't work on x86 in this context,
-because the issue is that yes, there's a safe 'cmpxchg', but that's
-not what you want.
+Again, this is COMPLETE GARBAGE.
 
-You want the save cmpxchg64, which is an entirely different beast.
+You're using "ARCH_HAVE_NMI_SAFE_CMPXCHG" to test something that just
+isn't what it's about.
 
-And honestly, I don't think that NMI_SAFE_CMPXCHG covers the
-double-word case anywhere else either, except purely by luck.
+Having a NMI-safe cmpxchg does *not* mean that you actualyl have a
+NMI-safe 64-bit version.
 
-In mm/slab.c, we also use a double-wide cmpxchg, and there the rule
-has literally been that it's conditional on
+You can't test it that way.
 
- (a) system_has_cmpxchg64() existing as a macro
+Stop making random changes that just happen to work on the one machine
+you tested it on.
 
- (b) using that macro to then gate - at runtime - whether it actually
-works or not
-
-I think - but didn't check - that we essentially only enable the
-two-word case on x86 as a result, and fall back to the slow case on
-all other architectures - and on the i486 case.
-
-That said, other architectures *do* have a working double-word
-cmpxchg, but I wouldn't guarantee it. For example, 32-bit arm does
-have one using ldrexd/strexd, but that only exists on arm v6+.
-
-And guess what? You'll silently get a "disable interrupts, do it as a
-non-atomic load-store" on arm too for that case. And again, pre-v6 arm
-is about as relevant as i486 is, but my point is, that double-word
-cmpxchg you rely on simply DOES NOT EXIST on 32-bit platforms except
-under special circumstances.
-
-So this isn't a "x86 is the odd man out". This is literally generic.
-
-> Now back to my original question. Are you OK with me sending this to you
-> now, or should I send you just the subtle fixes to the 32-bit rb_time_*
-> code and keep this patch for the merge window?
-
-I'm absolutely not taking some untested random "let's do 64-bit
-cmpxchg that we know is broken on 32-bit using broken conditionals"
-shit.
-
-What *would* work is that slab approach, which is essentially
-
-  #ifndef system_has_cmpxchg64
-      #define system_has_cmpxchg64() false
-  #endif
-
-        ...
-        if (!system_has_cmpxchg64())
-                return error or slow case
-
-        do_64bit_cmpxchg_case();
-
-(although the slub case is much more indirect, and uses a
-__CMPXCHG_DOUBLE flag that only gets set when that define exists etc).
-
-But that would literally cut off support for all non-x86 32-bit architectures.
-
-So no. You need to forget about the whole "do a 64-bit cmpxchg on
-32-bit architectures" as being some kind of solution in the short
-term.
-
-               Linus
+           Linus
