@@ -1,154 +1,213 @@
-X-Greylist: delayed 1359 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 14 Dec 2023 07:22:00 PST
-Received: from out03.mta.xmission.com (out03.mta.xmission.com [166.70.13.233])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C3D6120;
-	Thu, 14 Dec 2023 07:22:00 -0800 (PST)
-Received: from in01.mta.xmission.com ([166.70.13.51]:55106)
-	by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1rDnBD-00298x-8O; Thu, 14 Dec 2023 07:59:15 -0700
-Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:48054 helo=email.froward.int.ebiederm.org.xmission.com)
-	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1rDnBC-009bes-10; Thu, 14 Dec 2023 07:59:14 -0700
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-To: Alexander Graf <graf@amazon.com>
-Cc: <linux-kernel@vger.kernel.org>,  <linux-trace-kernel@vger.kernel.org>,
-  <linux-mm@kvack.org>,  <devicetree@vger.kernel.org>,
-  <linux-arm-kernel@lists.infradead.org>,  <kexec@lists.infradead.org>,
-  <linux-doc@vger.kernel.org>,  <x86@kernel.org>,  "H. Peter Anvin"
- <hpa@zytor.com>,  Andy Lutomirski <luto@kernel.org>,  Peter Zijlstra
- <peterz@infradead.org>,  "Rob Herring" <robh+dt@kernel.org>,  Steven
- Rostedt <rostedt@goodmis.org>,  "Andrew Morton"
- <akpm@linux-foundation.org>,  Mark Rutland <mark.rutland@arm.com>,  "Tom
- Lendacky" <thomas.lendacky@amd.com>,  Ashish Kalra <ashish.kalra@amd.com>,
-  James Gowans <jgowans@amazon.com>,  Stanislav Kinsburskii
- <skinsburskii@linux.microsoft.com>,  <arnd@arndb.de>,
-  <pbonzini@redhat.com>,  <madvenka@linux.microsoft.com>,  Anthony Yznaga
- <anthony.yznaga@oracle.com>,  Usama Arif <usama.arif@bytedance.com>,
-  David Woodhouse <dwmw@amazon.co.uk>,  Benjamin Herrenschmidt
- <benh@kernel.crashing.org>
-References: <20231213000452.88295-1-graf@amazon.com>
-Date: Thu, 14 Dec 2023 08:58:49 -0600
-In-Reply-To: <20231213000452.88295-1-graf@amazon.com> (Alexander Graf's
-	message of "Wed, 13 Dec 2023 00:04:37 +0000")
-Message-ID: <87r0jo7rva.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6ADFB9A;
+	Thu, 14 Dec 2023 07:45:37 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9BF2AC15;
+	Thu, 14 Dec 2023 07:46:22 -0800 (PST)
+Received: from raptor (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA4D93F5A1;
+	Thu, 14 Dec 2023 07:45:31 -0800 (PST)
+Date: Thu, 14 Dec 2023 15:45:25 +0000
+From: Alexandru Elisei <alexandru.elisei@arm.com>
+To: Rob Herring <robh@kernel.org>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
+	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
+	rppt@kernel.org, hughd@google.com, pcc@google.com,
+	steven.price@arm.com, anshuman.khandual@arm.com,
+	vincenzo.frascino@arm.com, david@redhat.com, eugenis@google.com,
+	kcc@google.com, hyesoo.yu@samsung.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v2 11/27] arm64: mte: Reserve tag storage memory
+Message-ID: <ZXsjFYKHkJM_JLCy@raptor>
+References: <20231119165721.9849-12-alexandru.elisei@arm.com>
+ <CAL_Jsq+k5BeM9+u12AQvWQ0b4Uv5Cy0vPOpK_uLcYtRnunq4iQ@mail.gmail.com>
+ <ZXiMiLz9ZyUdxUP8@raptor>
+ <CAL_Jsq+U_GR=mOK3-phnd4jeJKf79aOmhPwDOSj+f=s-7fZZWQ@mail.gmail.com>
+ <ZXmr-Kl9L2SO13--@raptor>
+ <CAL_JsqL=P1Y6w38LD_xw+vK4CNqt22FW_FE9oi_XTLHVQEne7Q@mail.gmail.com>
+ <ZXnE3724jYYSg4o6@raptor>
+ <CAL_JsqJgTnuQjo13cKo1Ebm5j9tCRT8GhNavdqu5vwp+fdnTLw@mail.gmail.com>
+ <ZXnthcg0BkEd-RgK@raptor>
+ <CAL_JsqLAW0--F8R0oTaajN3YpbK2KgE6Ypn8tk4_pf_s=xC+aw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1rDnBC-009bes-10;;;mid=<87r0jo7rva.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX1/OhbNhEazZ4D40H/sN4yD6DjQIF1U06u0=
-X-SA-Exim-Connect-IP: 68.227.168.167
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-X-Spam-DCC: XMission; sa04 1397; Body=1 Fuz1=1 Fuz2=1 
-X-Spam-Combo: **;Alexander Graf <graf@amazon.com>
-X-Spam-Relay-Country: 
-X-Spam-Timing: total 587 ms - load_scoreonly_sql: 0.05 (0.0%),
-	signal_user_changed: 11 (1.9%), b_tie_ro: 10 (1.6%), parse: 1.07
-	(0.2%), extract_message_metadata: 12 (2.1%), get_uri_detail_list: 2.7
-	(0.5%), tests_pri_-2000: 4.8 (0.8%), tests_pri_-1000: 3.8 (0.6%),
-	tests_pri_-950: 1.19 (0.2%), tests_pri_-900: 1.01 (0.2%),
-	tests_pri_-90: 68 (11.7%), check_bayes: 67 (11.4%), b_tokenize: 12
-	(2.0%), b_tok_get_all: 13 (2.3%), b_comp_prob: 3.8 (0.7%),
-	b_tok_touch_all: 34 (5.8%), b_finish: 0.86 (0.1%), tests_pri_0: 461
-	(78.6%), check_dkim_signature: 0.63 (0.1%), check_dkim_adsp: 2.2
-	(0.4%), poll_dns_idle: 0.70 (0.1%), tests_pri_10: 2.4 (0.4%),
-	tests_pri_500: 16 (2.8%), rewrite_mail: 0.00 (0.0%)
-Subject: Re: [PATCH 00/15] kexec: Allow preservation of ftrace buffers
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqLAW0--F8R0oTaajN3YpbK2KgE6Ypn8tk4_pf_s=xC+aw@mail.gmail.com>
 
-Alexander Graf <graf@amazon.com> writes:
+Hi,
 
-> Kexec today considers itself purely a boot loader: When we enter the new
-> kernel, any state the previous kernel left behind is irrelevant and the
-> new kernel reinitializes the system.
->
-> However, there are use cases where this mode of operation is not what we
-> actually want. In virtualization hosts for example, we want to use kexec
-> to update the host kernel while virtual machine memory stays untouched.
-> When we add device assignment to the mix, we also need to ensure that
-> IOMMU and VFIO states are untouched. If we add PCIe peer to peer DMA, we
-> need to do the same for the PCI subsystem. If we want to kexec while an
-> SEV-SNP enabled virtual machine is running, we need to preserve the VM
-> context pages and physical memory. See James' and my Linux Plumbers
-> Conference 2023 presentation for details:
->
->   https://lpc.events/event/17/contributions/1485/
->
-> To start us on the journey to support all the use cases above, this
-> patch implements basic infrastructure to allow hand over of kernel state
-> across kexec (Kexec HandOver, aka KHO). As example target, we use ftrace:
-> With this patch set applied, you can read ftrace records from the
-> pre-kexec environment in your post-kexec one. This creates a very powerful
-> debugging and performance analysis tool for kexec. It's also slightly
-> easier to reason about than full blown VFIO state preservation.
->
-> == Alternatives ==
->
-> There are alternative approaches to (parts of) the problems above:
->
->   * Memory Pools [1] - preallocated persistent memory region + allocator
->   * PRMEM [2] - resizable persistent memory regions with fixed metadata
->                 pointer on the kernel command line + allocator
->   * Pkernfs [3] - preallocated file system for in-kernel data with fixed
->                   address location on the kernel command line
->   * PKRAM [4] - handover of user space pages using a fixed metadata page
->                 specified via command line
->
-> All of the approaches above fundamentally have the same problem: They
-> require the administrator to explicitly carve out a physical memory
-> location because they have no mechanism outside of the kernel command
-> line to pass data (including memory reservations) between kexec'ing
-> kernels.
->
-> KHO provides that base foundation. We will determine later whether we
-> still need any of the approaches above for fast bulk memory handover of for
-> example IOMMU page tables. But IMHO they would all be users of KHO, with
-> KHO providing the foundational primitive to pass metadata and bulk memory
-> reservations as well as provide easy versioning for data.
+On Wed, Dec 13, 2023 at 02:30:42PM -0600, Rob Herring wrote:
+> On Wed, Dec 13, 2023 at 11:44 AM Alexandru Elisei
+> <alexandru.elisei@arm.com> wrote:
+> >
+> > On Wed, Dec 13, 2023 at 11:22:17AM -0600, Rob Herring wrote:
+> > > On Wed, Dec 13, 2023 at 8:51 AM Alexandru Elisei
+> > > <alexandru.elisei@arm.com> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Wed, Dec 13, 2023 at 08:06:44AM -0600, Rob Herring wrote:
+> > > > > On Wed, Dec 13, 2023 at 7:05 AM Alexandru Elisei
+> > > > > <alexandru.elisei@arm.com> wrote:
+> > > > > >
+> > > > > > Hi Rob,
+> > > > > >
+> > > > > > On Tue, Dec 12, 2023 at 12:44:06PM -0600, Rob Herring wrote:
+> > > > > > > On Tue, Dec 12, 2023 at 10:38 AM Alexandru Elisei
+> > > > > > > <alexandru.elisei@arm.com> wrote:
+> > > > > > > >
+> > > > > > > > Hi Rob,
+> > > > > > > >
+> > > > > > > > Thank you so much for the feedback, I'm not very familiar with device tree,
+> > > > > > > > and any comments are very useful.
+> > > > > > > >
+> > > > > > > > On Mon, Dec 11, 2023 at 11:29:40AM -0600, Rob Herring wrote:
+> > > > > > > > > On Sun, Nov 19, 2023 at 10:59 AM Alexandru Elisei
+> > > > > > > > > <alexandru.elisei@arm.com> wrote:
+> > > > > > > > > >
+> > > > > > > > > > Allow the kernel to get the size and location of the MTE tag storage
+> > > > > > > > > > regions from the DTB. This memory is marked as reserved for now.
+> > > > > > > > > >
+> > > > > > > > > > The DTB node for the tag storage region is defined as:
+> > > > > > > > > >
+> > > > > > > > > >         tags0: tag-storage@8f8000000 {
+> > > > > > > > > >                 compatible = "arm,mte-tag-storage";
+> > > > > > > > > >                 reg = <0x08 0xf8000000 0x00 0x4000000>;
+> > > > > > > > > >                 block-size = <0x1000>;
+> > > > > > > > > >                 memory = <&memory0>;    // Associated tagged memory node
+> > > > > > > > > >         };
+> > > > > > > > >
+> > > > > > > > > I skimmed thru the discussion some. If this memory range is within
+> > > > > > > > > main RAM, then it definitely belongs in /reserved-memory.
+> > > > > > > >
+> > > > > > > > Ok, will do that.
+> > > > > > > >
+> > > > > > > > If you don't mind, why do you say that it definitely belongs in
+> > > > > > > > reserved-memory? I'm not trying to argue otherwise, I'm curious about the
+> > > > > > > > motivation.
+> > > > > > >
+> > > > > > > Simply so that /memory nodes describe all possible memory and
+> > > > > > > /reserved-memory is just adding restrictions. It's also because
+> > > > > > > /reserved-memory is what gets handled early, and we don't need
+> > > > > > > multiple things to handle early.
+> > > > > > >
+> > > > > > > > Tag storage is not DMA and can live anywhere in memory.
+> > > > > > >
+> > > > > > > Then why put it in DT at all? The only reason CMA is there is to set
+> > > > > > > the size. It's not even clear to me we need CMA in DT either. The
+> > > > > > > reasoning long ago was the kernel didn't do a good job of moving and
+> > > > > > > reclaiming contiguous space, but that's supposed to be better now (and
+> > > > > > > most h/w figured out they need IOMMUs).
+> > > > > > >
+> > > > > > > But for tag storage you know the size as it is a function of the
+> > > > > > > memory size, right? After all, you are validating the size is correct.
+> > > > > > > I guess there is still the aspect of whether you want enable MTE or
+> > > > > > > not which could be done in a variety of ways.
+> > > > > >
+> > > > > > Oh, sorry, my bad, I should have been clearer about this. I don't want to
+> > > > > > put it in the DT as a "linux,cma" node. But I want it to be managed by CMA.
+> > > > >
+> > > > > Yes, I understand, but my point remains. Why do you need this in DT?
+> > > > > If the location doesn't matter and you can calculate the size from the
+> > > > > memory size, what else is there to add to the DT?
+> > > >
+> > > > I am afraid there has been a misunderstanding. What do you mean by
+> > > > "location doesn't matter"?
+> > >
+> > > You said:
+> > > > Tag storage is not DMA and can live anywhere in memory.
+> > >
+> > > Which I took as the kernel can figure out where to put it. But maybe
+> > > you meant the h/w platform can hard code it to be anywhere in memory?
+> > > If so, then yes, DT is needed.
+> >
+> > Ah, I see, sorry for not being clear enough, you are correct: tag storage
+> > is a hardware property, and software needs a mechanism (in this case, the
+> > dt) to discover its properties.
+> >
+> > >
+> > > > At the very least, Linux needs to know the address and size of a memory
+> > > > region to use it. The series is about using the tag storage memory for
+> > > > data. Tag storage cannot be described as a regular memory node because it
+> > > > cannot be tagged (and normal memory can).
+> > >
+> > > If the tag storage lives in the middle of memory, then it would be
+> > > described in the memory node, but removed by being in reserved-memory
+> > > node.
+> >
+> > I don't follow. Would you mind going into more details?
+> 
+> It goes back to what I said earlier about /memory nodes describing all
+> the memory. There's no reason to reserve memory if you haven't
+> described that range as memory to begin with. One could presumably
+> just have a memory node for each contiguous chunk and not need
+> /reserved-memory (ignoring the need to say what things are reserved
+> for). That would become very difficult to adjust. Note that the kernel
+> has a hardcoded limit of 64 reserved regions currently and that is not
+> enough for some people. Seems like a lot, but I have no idea how they
+> are (ab)using /reserved-memory.
 
-What you are describe in many ways is the same problem as
-kexec-on-panic.  The goal of leaving devices running absolutely requires
-carving out memory for the new kernel to live in while it is coming up
-so that DMA from a device that was not shutdown down does not stomp the
-kernel coming up.
+Ah, I see what you mean, reserved memory is about marking existing memory
+(from a /memory node) as special, not about adding new memory.
 
-If I understand the virtualization case some of those virtual machines
-are going to have virtual NICs that are going to want to DMA memory to
-the host system.  Which if I understand things correctly means that
-among the devices you explicitly want to keep running there is a not
-a way to avoid the chance of DMA coming in while the kernel is being
-changed.
+After the memblock allocator is initialized, the kernel can use it for its
+own allocations. Kernel allocations are not movable.
 
-There is also a huge maintenance challenge associated with all of this.
+When a page is allocated as tagged, the associated tag storage cannot be
+used for data, otherwise the tags would corrupt that data. To avoid this,
+the requirement is that tag storage pages are only used for movable
+allocations. When a page is allocated as tagged, the data in the associated
+tag storage is migrated and the tag storage is taken from the page
+allocator (via alloc_contig_range()).
 
-If you go with something that is essentially kexec-on-panic and then
-add a little bit to help find things in the memory of the previous
-kernel while the new kernel is coming up I can see it as a possibility.
+My understanding is that the memblock allocator can use all the memory from
+a /memory node. If the tags storage memory is declared in a /memory node,
+there exists the possibility that Linux will use tag storage memory for its
+own allocation, which would make that tags storage memory unmovable, and
+thus unusable for storing tags.
 
-As an example I think preserving ftrace data of kexec seems bizarre.
-I don't see how that is an interesting use case at all.  Not in
-the situation of preserving virtual machines, and not in the situation
-of kexec on panic.
+Looking at early_init_dt_scan_memory(), even if a /memory node if marked at
+hotpluggable, memblock will still use it, unless "movable_node" is set on
+the kernel command line.
 
-If you are doing an orderly shutdown and kernel switch you should be
-able to manually change the memory.  If you are not doing an orderly
-shutdown then I really don't get it.
+That's the reason why I'm not describing tag storage in a /memory node.  Is
+there way to tell the memblock allocator not to use memory from a /memory
+node?
 
-I don't hate the capability you are trying to build.
+> 
+> Let me give an example. Presumably using MTE at all is configurable.
+> If you boot a kernel with MTE disabled (or older and not supporting
+> it), then I'd assume you'd want to use the tag storage for regular
+> memory. Well, If tag storage is already part of /memory, then all you
+> have to do is ignore the tag reserved-memory region. Tweaking the
+> memory nodes would be more work.
 
-I have not read or looked at most of this so I am probably
-missing subtle details.
+Right now, memory is added via memblock_reserve(), and if MTE is disabled
+(for example, via the kernel command line), the code calls
+free_reserved_page() for each tag storage page. I find that straightfoward
+to implement.
 
-As you are currently describing things I have the sense you have
-completely misframed the problem and are trying to solve the wrong parts
-of the problem.
+Thanks,
+Alex
 
-Eric
+> 
+> 
+> Also, I should point out that /memory and /reserved-memory nodes are
+> not used for UEFI boot.
+> 
+> Rob
+> 
