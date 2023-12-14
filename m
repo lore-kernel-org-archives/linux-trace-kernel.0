@@ -1,42 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1F0814
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Dec 2023 02:48:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5218AC433C8;
-	Thu, 14 Dec 2023 02:48:45 +0000 (UTC)
-Date: Wed, 13 Dec 2023 21:49:30 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] ring-buffer: Remove 32bit timestamp logic
-Message-ID: <20231213214930.5a501584@gandalf.local.home>
-In-Reply-To: <20231213211126.24f8c1dd@gandalf.local.home>
-References: <20231213211126.24f8c1dd@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="oUm9ZVrJ"
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2909109;
+	Wed, 13 Dec 2023 19:05:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1702523131;
+	bh=LrxU6sQ+dsyjQREDT4BqariJas1wB0ELeUtGmLjt5hk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oUm9ZVrJjcgL8ANF1i/wuYUqFY9lGp0W9fEF+9BL7i68tUgB4WB35mDspLiNR77ze
+	 0sSzjP1Off+usSCenz/w3y9zm6QPrwJFWseeHFDRTmTp1TizwYU1fuRe5iKdksR0g/
+	 exuSnIzu9cp9Ehjoq2gKuAMCVP7ko/4xjB7l42sz3VvUE/l/WOhlfVDKVmhZNOREJ7
+	 QNe2U8Df5bwkxoEHVVAdqy2tARarPCr68bq1gaMute0JzlzDy/GoCu5sN0KJA1QTrw
+	 lbKxMFN/HSqor5XL14SexTrP7RdasHf9Y/flN4sbR8crJAgWtJLcfwlTksMj+fNErl
+	 mqLbcxwwJDKiw==
+Received: from [IPV6:2606:6d00:100:4000:cacb:9855:de1f:ded2] (unknown [IPv6:2606:6d00:100:4000:cacb:9855:de1f:ded2])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4SrHKR27VRzGcN;
+	Wed, 13 Dec 2023 22:05:31 -0500 (EST)
+Message-ID: <c36473f6-6633-498c-897e-6513513bea2e@efficios.com>
+Date: Wed, 13 Dec 2023 22:05:29 -0500
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ring-buffer: Remove 32bit timestamp logic
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>
+References: <20231213211126.24f8c1dd@gandalf.local.home>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+In-Reply-To: <20231213211126.24f8c1dd@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Wed, 13 Dec 2023 21:11:26 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On 2023-12-13 21:11, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> Each event has a 27 bit timestamp delta that is used to hold the delta
+> from the last event. If the time between events is greater than 2^27, then
+> a timestamp is added that holds a 59 bit absolute timestamp.
+> 
+> Until a389d86f7fd09 ("ring-buffer: Have nested events still record running
+> time stamp"), if an interrupt interrupted an event in progress, all the
+> events delta would be zero to not deal with the races that need to be
+> handled. The commit a389d86f7fd09 changed that to handle the races giving
+> all events, even those that preempt other events, still have an accurate
+> timestamp.
+> 
+> To handle those races requires performing 64-bit cmpxchg on the
+> timestamps. But doing 64-bit cmpxchg on 32-bit architectures is considered
+> very slow. To try to deal with this the timestamp logic was broken into
+> two and then three 32-bit cmpxchgs, with the thought that two (or three)
+> 32-bit cmpxchgs are still faster than a single 64-bit cmpxchg on 32-bit
+> architectures.
+> 
+> Part of the problem with this is that I didn't have any 32-bit
+> architectures to test on. After hitting several subtle bugs in this code,
+> an effort was made to try and see if three 32-bit cmpxchgs are indeed
+> faster than a single 64-bit. After a few people brushed off the dust of
+> their old 32-bit machines, tests were done, and even though 32-bit cmpxchg
+> was faster than a single 64-bit, it was in the order of 50% at best, not
+> 300%.
+
+I literally had to dust off my old Eee PC for this :)
+
+> 
+> This means that this complex code is not only complex but also not even
+> faster than just using 64-bit cmpxchg.
+> 
+> Nuke it!
+> 
+
+Acked-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
 > @@ -3720,6 +3517,7 @@ rb_reserve_next_event(struct trace_buffer *buffer,
->  	struct rb_event_info info;
->  	int nr_loops = 0;
->  	int add_ts_default;
+>   	struct rb_event_info info;
+>   	int nr_loops = 0;
+>   	int add_ts_default;
 > +	static int once;
->  
->  	/* ring buffer does cmpxchg, make sure it is safe in NMI context */
->  	if (!IS_ENABLED(CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG) &&
 
-Oops, some debug code got committed!
+(as you spotted, should be removed)
 
--- Steve
+Thanks,
+
+Mathieu
+
+>   
+>   	/* ring buffer does cmpxchg, make sure it is safe in NMI context */
+>   	if (!IS_ENABLED(CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG) &&
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
+
