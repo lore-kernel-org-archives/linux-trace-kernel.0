@@ -1,213 +1,216 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6ADFB9A;
-	Thu, 14 Dec 2023 07:45:37 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9BF2AC15;
-	Thu, 14 Dec 2023 07:46:22 -0800 (PST)
-Received: from raptor (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA4D93F5A1;
-	Thu, 14 Dec 2023 07:45:31 -0800 (PST)
-Date: Thu, 14 Dec 2023 15:45:25 +0000
-From: Alexandru Elisei <alexandru.elisei@arm.com>
-To: Rob Herring <robh@kernel.org>
-Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
-	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
-	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
-	rppt@kernel.org, hughd@google.com, pcc@google.com,
-	steven.price@arm.com, anshuman.khandual@arm.com,
-	vincenzo.frascino@arm.com, david@redhat.com, eugenis@google.com,
-	kcc@google.com, hyesoo.yu@samsung.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v2 11/27] arm64: mte: Reserve tag storage memory
-Message-ID: <ZXsjFYKHkJM_JLCy@raptor>
-References: <20231119165721.9849-12-alexandru.elisei@arm.com>
- <CAL_Jsq+k5BeM9+u12AQvWQ0b4Uv5Cy0vPOpK_uLcYtRnunq4iQ@mail.gmail.com>
- <ZXiMiLz9ZyUdxUP8@raptor>
- <CAL_Jsq+U_GR=mOK3-phnd4jeJKf79aOmhPwDOSj+f=s-7fZZWQ@mail.gmail.com>
- <ZXmr-Kl9L2SO13--@raptor>
- <CAL_JsqL=P1Y6w38LD_xw+vK4CNqt22FW_FE9oi_XTLHVQEne7Q@mail.gmail.com>
- <ZXnE3724jYYSg4o6@raptor>
- <CAL_JsqJgTnuQjo13cKo1Ebm5j9tCRT8GhNavdqu5vwp+fdnTLw@mail.gmail.com>
- <ZXnthcg0BkEd-RgK@raptor>
- <CAL_JsqLAW0--F8R0oTaajN3YpbK2KgE6Ypn8tk4_pf_s=xC+aw@mail.gmail.com>
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="NQHjGDu6"
+Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7E7510A;
+	Thu, 14 Dec 2023 08:03:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1702569802; x=1734105802;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=pDhGMsdbTPhZPhAbCsDPbEbUZg1RUebxvn8D4u7VLXY=;
+  b=NQHjGDu671PdMNokjA5KBn09iqX/LWQREhIsXd5J/t3IzfP87xU2USd6
+   G1ZVptdk47S+k23Nct99rC0z9CV0qKeNcyThNIlU45MM+OfUJz/2FKGHf
+   IMr8PQKlcU8QmQUeQttu7ctElifjK4pFwgYd/igQfZHxF95jiMVt+tI/o
+   Q=;
+X-IronPort-AV: E=Sophos;i="6.04,276,1695686400"; 
+   d="scan'208";a="691149109"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-iad-1box-1dm6-7f722725.us-east-1.amazon.com) ([10.25.36.210])
+  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 16:03:00 +0000
+Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan2.iad.amazon.com [10.32.235.34])
+	by email-inbound-relay-iad-1box-1dm6-7f722725.us-east-1.amazon.com (Postfix) with ESMTPS id 5CCD1EA853;
+	Thu, 14 Dec 2023 16:02:52 +0000 (UTC)
+Received: from EX19MTAUWA002.ant.amazon.com [10.0.7.35:2741]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.11.243:2525] with esmtp (Farcaster)
+ id 8718254b-3303-4f97-9d78-8bc42d03c88f; Thu, 14 Dec 2023 16:02:51 +0000 (UTC)
+X-Farcaster-Flow-ID: 8718254b-3303-4f97-9d78-8bc42d03c88f
+Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 14 Dec 2023 16:02:48 +0000
+Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
+ (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 14 Dec
+ 2023 16:02:42 +0000
+Message-ID: <c0f89d9d-98c3-4b04-9077-d92a863db088@amazon.com>
+Date: Thu, 14 Dec 2023 17:02:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqLAW0--F8R0oTaajN3YpbK2KgE6Ypn8tk4_pf_s=xC+aw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/15] kexec: Allow preservation of ftrace buffers
+Content-Language: en-US
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kexec@lists.infradead.org>,
+	<linux-doc@vger.kernel.org>, <x86@kernel.org>, "H. Peter Anvin"
+	<hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra
+	<peterz@infradead.org>, Rob Herring <robh+dt@kernel.org>, Steven Rostedt
+	<rostedt@goodmis.org>, Andrew Morton <akpm@linux-foundation.org>, "Mark
+ Rutland" <mark.rutland@arm.com>, Tom Lendacky <thomas.lendacky@amd.com>,
+	Ashish Kalra <ashish.kalra@amd.com>, James Gowans <jgowans@amazon.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, <arnd@arndb.de>,
+	<pbonzini@redhat.com>, <madvenka@linux.microsoft.com>, Anthony Yznaga
+	<anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, "David
+ Woodhouse" <dwmw@amazon.co.uk>, Benjamin Herrenschmidt
+	<benh@kernel.crashing.org>
+References: <20231213000452.88295-1-graf@amazon.com>
+ <87r0jo7rva.fsf@email.froward.int.ebiederm.org>
+From: Alexander Graf <graf@amazon.com>
+In-Reply-To: <87r0jo7rva.fsf@email.froward.int.ebiederm.org>
+X-ClientProxiedBy: EX19D044UWB004.ant.amazon.com (10.13.139.134) To
+ EX19D020UWC004.ant.amazon.com (10.13.138.149)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 
-Hi,
+SGV5IEVyaWMsCgpPbiAxNC4xMi4yMyAxNTo1OCwgRXJpYyBXLiBCaWVkZXJtYW4gd3JvdGU6Cj4g
+QWxleGFuZGVyIEdyYWYgPGdyYWZAYW1hem9uLmNvbT4gd3JpdGVzOgo+Cj4+IEtleGVjIHRvZGF5
+IGNvbnNpZGVycyBpdHNlbGYgcHVyZWx5IGEgYm9vdCBsb2FkZXI6IFdoZW4gd2UgZW50ZXIgdGhl
+IG5ldwo+PiBrZXJuZWwsIGFueSBzdGF0ZSB0aGUgcHJldmlvdXMga2VybmVsIGxlZnQgYmVoaW5k
+IGlzIGlycmVsZXZhbnQgYW5kIHRoZQo+PiBuZXcga2VybmVsIHJlaW5pdGlhbGl6ZXMgdGhlIHN5
+c3RlbS4KPj4KPj4gSG93ZXZlciwgdGhlcmUgYXJlIHVzZSBjYXNlcyB3aGVyZSB0aGlzIG1vZGUg
+b2Ygb3BlcmF0aW9uIGlzIG5vdCB3aGF0IHdlCj4+IGFjdHVhbGx5IHdhbnQuIEluIHZpcnR1YWxp
+emF0aW9uIGhvc3RzIGZvciBleGFtcGxlLCB3ZSB3YW50IHRvIHVzZSBrZXhlYwo+PiB0byB1cGRh
+dGUgdGhlIGhvc3Qga2VybmVsIHdoaWxlIHZpcnR1YWwgbWFjaGluZSBtZW1vcnkgc3RheXMgdW50
+b3VjaGVkLgo+PiBXaGVuIHdlIGFkZCBkZXZpY2UgYXNzaWdubWVudCB0byB0aGUgbWl4LCB3ZSBh
+bHNvIG5lZWQgdG8gZW5zdXJlIHRoYXQKPj4gSU9NTVUgYW5kIFZGSU8gc3RhdGVzIGFyZSB1bnRv
+dWNoZWQuIElmIHdlIGFkZCBQQ0llIHBlZXIgdG8gcGVlciBETUEsIHdlCj4+IG5lZWQgdG8gZG8g
+dGhlIHNhbWUgZm9yIHRoZSBQQ0kgc3Vic3lzdGVtLiBJZiB3ZSB3YW50IHRvIGtleGVjIHdoaWxl
+IGFuCj4+IFNFVi1TTlAgZW5hYmxlZCB2aXJ0dWFsIG1hY2hpbmUgaXMgcnVubmluZywgd2UgbmVl
+ZCB0byBwcmVzZXJ2ZSB0aGUgVk0KPj4gY29udGV4dCBwYWdlcyBhbmQgcGh5c2ljYWwgbWVtb3J5
+LiBTZWUgSmFtZXMnIGFuZCBteSBMaW51eCBQbHVtYmVycwo+PiBDb25mZXJlbmNlIDIwMjMgcHJl
+c2VudGF0aW9uIGZvciBkZXRhaWxzOgo+Pgo+PiAgICBodHRwczovL2xwYy5ldmVudHMvZXZlbnQv
+MTcvY29udHJpYnV0aW9ucy8xNDg1Lwo+Pgo+PiBUbyBzdGFydCB1cyBvbiB0aGUgam91cm5leSB0
+byBzdXBwb3J0IGFsbCB0aGUgdXNlIGNhc2VzIGFib3ZlLCB0aGlzCj4+IHBhdGNoIGltcGxlbWVu
+dHMgYmFzaWMgaW5mcmFzdHJ1Y3R1cmUgdG8gYWxsb3cgaGFuZCBvdmVyIG9mIGtlcm5lbCBzdGF0
+ZQo+PiBhY3Jvc3Mga2V4ZWMgKEtleGVjIEhhbmRPdmVyLCBha2EgS0hPKS4gQXMgZXhhbXBsZSB0
+YXJnZXQsIHdlIHVzZSBmdHJhY2U6Cj4+IFdpdGggdGhpcyBwYXRjaCBzZXQgYXBwbGllZCwgeW91
+IGNhbiByZWFkIGZ0cmFjZSByZWNvcmRzIGZyb20gdGhlCj4+IHByZS1rZXhlYyBlbnZpcm9ubWVu
+dCBpbiB5b3VyIHBvc3Qta2V4ZWMgb25lLiBUaGlzIGNyZWF0ZXMgYSB2ZXJ5IHBvd2VyZnVsCj4+
+IGRlYnVnZ2luZyBhbmQgcGVyZm9ybWFuY2UgYW5hbHlzaXMgdG9vbCBmb3Iga2V4ZWMuIEl0J3Mg
+YWxzbyBzbGlnaHRseQo+PiBlYXNpZXIgdG8gcmVhc29uIGFib3V0IHRoYW4gZnVsbCBibG93biBW
+RklPIHN0YXRlIHByZXNlcnZhdGlvbi4KPj4KPj4gPT0gQWx0ZXJuYXRpdmVzID09Cj4+Cj4+IFRo
+ZXJlIGFyZSBhbHRlcm5hdGl2ZSBhcHByb2FjaGVzIHRvIChwYXJ0cyBvZikgdGhlIHByb2JsZW1z
+IGFib3ZlOgo+Pgo+PiAgICAqIE1lbW9yeSBQb29scyBbMV0gLSBwcmVhbGxvY2F0ZWQgcGVyc2lz
+dGVudCBtZW1vcnkgcmVnaW9uICsgYWxsb2NhdG9yCj4+ICAgICogUFJNRU0gWzJdIC0gcmVzaXph
+YmxlIHBlcnNpc3RlbnQgbWVtb3J5IHJlZ2lvbnMgd2l0aCBmaXhlZCBtZXRhZGF0YQo+PiAgICAg
+ICAgICAgICAgICAgIHBvaW50ZXIgb24gdGhlIGtlcm5lbCBjb21tYW5kIGxpbmUgKyBhbGxvY2F0
+b3IKPj4gICAgKiBQa2VybmZzIFszXSAtIHByZWFsbG9jYXRlZCBmaWxlIHN5c3RlbSBmb3IgaW4t
+a2VybmVsIGRhdGEgd2l0aCBmaXhlZAo+PiAgICAgICAgICAgICAgICAgICAgYWRkcmVzcyBsb2Nh
+dGlvbiBvbiB0aGUga2VybmVsIGNvbW1hbmQgbGluZQo+PiAgICAqIFBLUkFNIFs0XSAtIGhhbmRv
+dmVyIG9mIHVzZXIgc3BhY2UgcGFnZXMgdXNpbmcgYSBmaXhlZCBtZXRhZGF0YSBwYWdlCj4+ICAg
+ICAgICAgICAgICAgICAgc3BlY2lmaWVkIHZpYSBjb21tYW5kIGxpbmUKPj4KPj4gQWxsIG9mIHRo
+ZSBhcHByb2FjaGVzIGFib3ZlIGZ1bmRhbWVudGFsbHkgaGF2ZSB0aGUgc2FtZSBwcm9ibGVtOiBU
+aGV5Cj4+IHJlcXVpcmUgdGhlIGFkbWluaXN0cmF0b3IgdG8gZXhwbGljaXRseSBjYXJ2ZSBvdXQg
+YSBwaHlzaWNhbCBtZW1vcnkKPj4gbG9jYXRpb24gYmVjYXVzZSB0aGV5IGhhdmUgbm8gbWVjaGFu
+aXNtIG91dHNpZGUgb2YgdGhlIGtlcm5lbCBjb21tYW5kCj4+IGxpbmUgdG8gcGFzcyBkYXRhIChp
+bmNsdWRpbmcgbWVtb3J5IHJlc2VydmF0aW9ucykgYmV0d2VlbiBrZXhlYydpbmcKPj4ga2VybmVs
+cy4KPj4KPj4gS0hPIHByb3ZpZGVzIHRoYXQgYmFzZSBmb3VuZGF0aW9uLiBXZSB3aWxsIGRldGVy
+bWluZSBsYXRlciB3aGV0aGVyIHdlCj4+IHN0aWxsIG5lZWQgYW55IG9mIHRoZSBhcHByb2FjaGVz
+IGFib3ZlIGZvciBmYXN0IGJ1bGsgbWVtb3J5IGhhbmRvdmVyIG9mIGZvcgo+PiBleGFtcGxlIElP
+TU1VIHBhZ2UgdGFibGVzLiBCdXQgSU1ITyB0aGV5IHdvdWxkIGFsbCBiZSB1c2VycyBvZiBLSE8s
+IHdpdGgKPj4gS0hPIHByb3ZpZGluZyB0aGUgZm91bmRhdGlvbmFsIHByaW1pdGl2ZSB0byBwYXNz
+IG1ldGFkYXRhIGFuZCBidWxrIG1lbW9yeQo+PiByZXNlcnZhdGlvbnMgYXMgd2VsbCBhcyBwcm92
+aWRlIGVhc3kgdmVyc2lvbmluZyBmb3IgZGF0YS4KPiBXaGF0IHlvdSBhcmUgZGVzY3JpYmUgaW4g
+bWFueSB3YXlzIGlzIHRoZSBzYW1lIHByb2JsZW0gYXMKPiBrZXhlYy1vbi1wYW5pYy4gIFRoZSBn
+b2FsIG9mIGxlYXZpbmcgZGV2aWNlcyBydW5uaW5nIGFic29sdXRlbHkgcmVxdWlyZXMKPiBjYXJ2
+aW5nIG91dCBtZW1vcnkgZm9yIHRoZSBuZXcga2VybmVsIHRvIGxpdmUgaW4gd2hpbGUgaXQgaXMg
+Y29taW5nIHVwCj4gc28gdGhhdCBETUEgZnJvbSBhIGRldmljZSB0aGF0IHdhcyBub3Qgc2h1dGRv
+d24gZG93biBkb2VzIG5vdCBzdG9tcCB0aGUKPiBrZXJuZWwgY29taW5nIHVwLgoKClllcywgcGFy
+dCBvZiB0aGUgcHJvYmxlbSBpcyBzaW1pbGFyOiBXZSBuZWVkIGEgc2FmZSBzcGFjZSB0byBib290
+IGZyb20gCnRoYXQgZG9lc24ndCBvdmVyd3JpdGUgZXhpc3RpbmcgZGF0YS4gV2hhdCBoYXBwZW5z
+IGFmdGVyIGlzIGRpZmZlcmVudDogCldpdGggcGFuaWNzLCB5b3UncmUgdHJ5aW5nIHRvIHJlc2N1
+ZSBwcmV2aW91cyBzdGF0ZSBmb3IgcG9zdC1tb3J0ZW0gCmFuYWx5c2lzLiBZb3UgbWF5IGV2ZW4g
+aGF2ZSBpbnRyaW5zaWMga25vd2xlZGdlIG9mIHRoZSBlbnZpcm9ubWVudCB5b3UgCmNhbWUgZnJv
+bSwgc28geW91IGNhbiBvcHRpbWl6ZSB0aGF0IHJlc2N1aW5nLiBOb2JvZHkgd2FudHMgdG8gY29u
+dGludWUgCnJ1bm5pbmcgdGhlIHN5c3RlbSBhcyBpZiBub3RoaW5nIGhhcHBlbmVkIGFmdGVyIGEg
+cGFuaWMuCgpXaXRoIEtITywgdGhlIGtlcm5lbHMgZXN0YWJsaXNoIGFuIEFCSSBiZXR3ZWVuIGVh
+Y2ggb3RoZXIgdG8gY29tbXVuaWNhdGUgCmFueSBzdGF0ZSB0aGF0IG5lZWRzIHRvIGdldCBwcmVz
+ZXJ2ZWQgYW5kIHRoZSByZXN0IGdldHMgcmVpbml0aWFsaXplZC4gCkFmdGVyIEtITywgdGhlIG5l
+dyBrZXJuZWwgY29udGludWVzIGV4ZWN1dGluZyB3b3JrbG9hZHMgdGhhdCB3ZXJlIApydW5uaW5n
+IGJlZm9yZS4KClRoZSBBQkkgaXMgaW1wb3J0YW50IGJlY2F1c2UgdGhlIG5leHQgZW52aXJvbm1l
+bnQgbWF5IG5vdCBoYXZlIGEgY2hhbmNlIAp0byBrbm93IGFib3V0IHRoZSBwcmV2aW91cyBlbnZp
+cm9ubWVudCdzIHNldHVwLiBUaGluayBmb3IgZXhhbXBsZSBvZiAKcm9sbC1vdXQgYW5kIHJvbGwt
+YmFjayBzY2VuYXJpb3M6IElmIEkgcm9sbCBiYWNrIGludG8gbXkgcHJldmlvdXMgCmVudmlyb25t
+ZW50IGJlY2F1c2UgSSBkZXRlcm1pbmVkIHNvbWV0aGluZyBkaWRuJ3Qgd29yayBhcyBleHBlY3Rl
+ZCBhZnRlciAKdXBkYXRlLCBJJ20gbW92aW5nIHRoZSBzeXN0ZW0gaW50byBhbiBlbnZpcm9ubWVu
+dCB0aGF0IHdhcyBidWlsdCB3aGVuIAp0aGUga2V4ZWMgc291cmNlIGVudmlyb25tZW50IGRpZG4n
+dCBldmVuIGV4aXN0IHlldC4KCgo+IElmIEkgdW5kZXJzdGFuZCB0aGUgdmlydHVhbGl6YXRpb24g
+Y2FzZSBzb21lIG9mIHRob3NlIHZpcnR1YWwgbWFjaGluZXMKPiBhcmUgZ29pbmcgdG8gaGF2ZSB2
+aXJ0dWFsIE5JQ3MgdGhhdCBhcmUgZ29pbmcgdG8gd2FudCB0byBETUEgbWVtb3J5IHRvCj4gdGhl
+IGhvc3Qgc3lzdGVtLiAgV2hpY2ggaWYgSSB1bmRlcnN0YW5kIHRoaW5ncyBjb3JyZWN0bHkgbWVh
+bnMgdGhhdAoKCk5vLCB0byB0aGUgKmd1ZXN0KiBzeXN0ZW0uIFRoaXMgaXMgYWJvdXQgZGV2aWNl
+IGFzc2lnbm1lbnQ6IFRoZSBndWVzdCBpcyAKaW4gZnVsbCBjb250cm9sIG9mIHRoZSBOSUNzIHRo
+YXQgZG8gRE1BLCBzbyB3ZSBoYXZlIG5vIGNoYW5jZSB0byBxdWllc2NlIAp0aGVtLgoKCj4gYW1v
+bmcgdGhlIGRldmljZXMgeW91IGV4cGxpY2l0bHkgd2FudCB0byBrZWVwIHJ1bm5pbmcgdGhlcmUg
+aXMgYSBub3QKPiBhIHdheSB0byBhdm9pZCB0aGUgY2hhbmNlIG9mIERNQSBjb21pbmcgaW4gd2hp
+bGUgdGhlIGtlcm5lbCBpcyBiZWluZwo+IGNoYW5nZWQuCgoKQ29ycmVjdCwgYmVjYXVzZSB0aGUg
+aG9zdCBkb2Vzbid0IG93biB0aGUgZHJpdmVyIDopLgoKCj4gVGhlcmUgaXMgYWxzbyBhIGh1Z2Ug
+bWFpbnRlbmFuY2UgY2hhbGxlbmdlIGFzc29jaWF0ZWQgd2l0aCBhbGwgb2YgdGhpcy4KPgo+IElm
+IHlvdSBnbyB3aXRoIHNvbWV0aGluZyB0aGF0IGlzIGVzc2VudGlhbGx5IGtleGVjLW9uLXBhbmlj
+IGFuZCB0aGVuCj4gYWRkIGEgbGl0dGxlIGJpdCB0byBoZWxwIGZpbmQgdGhpbmdzIGluIHRoZSBt
+ZW1vcnkgb2YgdGhlIHByZXZpb3VzCj4ga2VybmVsIHdoaWxlIHRoZSBuZXcga2VybmVsIGlzIGNv
+bWluZyB1cCBJIGNhbiBzZWUgaXQgYXMgYSBwb3NzaWJpbGl0eS4KCgpUaGF0J3Mgcm91Z2hseSB3
+aGF0IHRoZSBwYXRjaCBzZXQgaXMgZG9pbmcsIHllcy4gSXQgYXZvaWRzIGEgc3RhdGljIAphbGxv
+Y2F0aW9uIGFoZWFkIG9mIHRpbWUgZm9yIG5leHQta2VybmVsIG1lbW9yeSwgYmVjYXVzZSBJIG9u
+bHkga25vdyB0aGUgCnNpemUgb2YgYWxsIGNvbXBvbmVudHMgd2hlbiB3ZSdyZSBhY3R1YWxseSBk
+b2luZyB0aGUga2V4ZWMuIEJ1dCB0aGUgCnByaW5jaXBsZSBpcyBzaW1pbGFyLgoKVGhlIGJpdCB3
+aGVyZSB0aGUgbmV3IGtlcm5lbCBmaW5kcyBiaXRzIGluIHRoZSBvbGQgbWVtb3J5IGlzIHRoZSBL
+SE8gRFQ6IApBIGZsYXR0ZW5lZCBkZXZpY2UgdHJlZSBzdHJ1Y3R1cmUgdGhlIG9sZCBrZXJuZWwg
+cGFzc2VzIHRvIHRoZSBuZXcgCmtlcm5lbC4gVGhhdCBjb250YWlucyBhbGwgbWVtb3J5IGxvY2F0
+aW9ucyBhcyB3ZWxsIGFzIGFkZGl0aW9uYWwgCm1ldGFkYXRhIHRvICJoZWxwIGZpbmQgdGhpbmdz
+IiBpbiBhIHdheSB0aGF0IGRvZXNuJ3QgaW1tZWRpYXRlbHkgYnJlYWsgCm9uIGV2ZXJ5IGtlcm5l
+bCBjaGFuZ2UuCgoKPiBBcyBhbiBleGFtcGxlIEkgdGhpbmsgcHJlc2VydmluZyBmdHJhY2UgZGF0
+YSBvZiBrZXhlYyBzZWVtcyBiaXphcnJlLgo+IEkgZG9uJ3Qgc2VlIGhvdyB0aGF0IGlzIGFuIGlu
+dGVyZXN0aW5nIHVzZSBjYXNlIGF0IGFsbC4gIE5vdCBpbgo+IHRoZSBzaXR1YXRpb24gb2YgcHJl
+c2VydmluZyB2aXJ0dWFsIG1hY2hpbmVzLCBhbmQgbm90IGluIHRoZSBzaXR1YXRpb24KPiBvZiBr
+ZXhlYyBvbiBwYW5pYy4KCgpJdCdzIHN1cGVyIHVzZWZ1bCBhcyBzZWxmIGRlYnVnZ2luZyBhaWQ6
+IEkgYWxyZWFkeSB1c2VkIGl0IHRvIHByb2ZpbGUgCnRoZSBrZXhlYyBwYXRoIHRvIGZpbmQgYSBm
+ZXcgcGVyZm9ybWFuY2UgaXNzdWVzIDopLiBJdCdzIGFsc28gcmVhbGx5IApoZWxwZnVsIC0gZXZl
+biB3aXRob3V0IGRldmljZSBhc3NpZ25tZW50IHN1cHBvcnQgeWV0IC0gd2hlbiB5b3UgdXNlIGl0
+IAppbiBjb21iaW5hdGlvbiB3aXRoIEtWTSB0cmFjZSBwb2ludHM6IFlvdSBoYXZlIGEgVk0gcnVu
+bmluZyBiYWNrZWQgYnkgYSAKREFYIHBtZW0gZGV2aWNlLCB0aGVuIHNlcmlhbGl6ZSBpdHMgdmly
+dHVhbCBkZXZpY2Ugc3RhdGUsIGtleGVjLCByZXN0b3JlIApmcm9tIHRoZSB2aXJ0dWFsIGRldmlj
+ZSBzdGF0ZSwgdGhlbiB0aGUgVk0gbWlzYmVoYXZlcy4KCldpdGggZnRyYWNlIGhhbmRvdmVyIGlu
+IHBsYWNlLCB5b3UgZ2V0IGEgZnVsbCB0cmFjZSBvZiB0aGUgZmxvdyB3aGljaCAKc2ltcGxpZmll
+cyBkZWJ1Z2dpbmcgb2YgaXNzdWVzIHRoYXQgaGFwcGVuIGR1cmluZy9iZWNhdXNlIG9mIHRoZSAK
+c2VyaWFsaXphdGlvbi9kZXNlcmlhbGl6YXRpb24gZmxvdyBvZiBLVk0gc3RhdGUuCgpCdXQgdGhl
+IG1haW4gcmVhc29uIEkgY2hvc2UgZnRyYWNlIHRvIHN0YXJ0IHdpdGggaXMgdGhhdCBhbGwgb3Ro
+ZXIgdXNlIApjYXNlcyByZXF1aXJlIGFub3RoZXIgY29uY2VwdDogZmQgcHJlc2VydmF0aW9uLiBB
+bGwgdGhlIHR5cGljYWwgCiJvYmplY3RzIiB5b3Ugd2FudCB0byBwcmVzZXJ2ZSBhY3Jvc3Mga2V4
+ZWMgYXJlIGFub255bW91cyBmaWxlIApkZXNjcmlwdG9ycy4gU28gd2UgbmVlZCB0byBhbHNvIGJ1
+aWxkIGEgd2F5IGluIExpbnV4IHRoYXQgYWxsb3dzIHVzZXIgCnNwYWNlIHRvIHJlcXVlc3QgdGhl
+IGtlcm5lbCB0byBwcmVzZXJ2ZSBhbiBmZCB1c2luZyB0aGUga2V4ZWMgaGFuZG92ZXIgCmZyYW1l
+d29yayBpbiB0aGlzIHBhdGNoIHNldC4gQnV0IHRoYXQgaXMgYW5vdGhlciBiaWcgZGlzY3Vzc2lv
+biBJIHdhbnRlZCAKdG8ga2VlcCBzZXBhcmF0ZTogRnRyYWNlIGlzIGZyb20ga2VybmVsLCB0byBr
+ZXJuZWwgYW5kIGhlbmNlICJlYXN5Ii4KCgo+IElmIHlvdSBhcmUgZG9pbmcgYW4gb3JkZXJseSBz
+aHV0ZG93biBhbmQga2VybmVsIHN3aXRjaCB5b3Ugc2hvdWxkIGJlCj4gYWJsZSB0byBtYW51YWxs
+eSBjaGFuZ2UgdGhlIG1lbW9yeS4gIElmIHlvdSBhcmUgbm90IGRvaW5nIGFuIG9yZGVybHkKPiBz
+aHV0ZG93biB0aGVuIEkgcmVhbGx5IGRvbid0IGdldCBpdC4KCgpJIGRvbid0IGZvbGxvdyB0aGUg
+cGFyYWdyYXBoIGFib3ZlPwoKCj4gSSBkb24ndCBoYXRlIHRoZSBjYXBhYmlsaXR5IHlvdSBhcmUg
+dHJ5aW5nIHRvIGJ1aWxkLgo+Cj4gSSBoYXZlIG5vdCByZWFkIG9yIGxvb2tlZCBhdCBtb3N0IG9m
+IHRoaXMgc28gSSBhbSBwcm9iYWJseQo+IG1pc3Npbmcgc3VidGxlIGRldGFpbHMuCj4KPiBBcyB5
+b3UgYXJlIGN1cnJlbnRseSBkZXNjcmliaW5nIHRoaW5ncyBJIGhhdmUgdGhlIHNlbnNlIHlvdSBo
+YXZlCj4gY29tcGxldGVseSBtaXNmcmFtZWQgdGhlIHByb2JsZW0gYW5kIGFyZSB0cnlpbmcgdG8g
+c29sdmUgdGhlIHdyb25nIHBhcnRzCj4gb2YgdGhlIHByb2JsZW0uCgoKVmVyeSB3ZWxsIHBvc3Np
+YmxlIDopLiBJIGhvcGUgdGhlIGFib3ZlIGNsYXJpZmllcyBpdCBhIGJpdC4gSWYgbm90LCAKcGxl
+YXNlIGxldCBtZSBrbm93IHdoZXJlIGV4YWN0bHkgaXQncyB1bmNsZWFyIHNvIEkgY2FuIGVsYWJv
+cmF0ZS4KCklmIHlvdSBoYXZlIGEgZmV3IG1pbnV0ZXMsIGl0IHdvdWxkIGFsc28gYmUgZ3JlYXQg
+aWYgeW91IGNvdWxkIGhhdmUgYSAKbG9vayBhdCBvdXIgc2xpZGVzIFsxXSBvciBldmVuIHZpZGVv
+IFsyXSBmcm9tIExQQyAyMDIzIHdoaWNoIGdvIGludG8gCmRldGFpbCBvZiB0aGUgZW5kIHByb2Js
+ZW0uIEJld2FyZSB0aGF0IEknbSBjb25zY2lvdXNseSAqbm90KiB0cnlpbmcgdG8gCnNvbHZlIHRo
+ZSBlbmQgcHJvYmxlbSB5ZXQ6IEkgd2FudCB0byB0YWtlIGJhYnkgc3RlcHMgdG93YXJkcyBpdC4g
+Tm9ib2R5IAp3YW50cyB0byByZXZpZXcgYW4gODAgcGF0Y2hlcyBwYXRjaCBzZXQgd2hlcmUgZXZl
+cnl0aGluZyBkZXBlbmRzIG9uIApldmVyeXRoaW5nIGVsc2UuCgoKQWxleAoKClsxXSAKaHR0cHM6
+Ly9scGMuZXZlbnRzL2V2ZW50LzE3L2NvbnRyaWJ1dGlvbnMvMTQ4NS9hdHRhY2htZW50cy8xMjk2
+LzI2NTAvamdvd2Fucy1wcmVzZXJ2aW5nLWFjcm9zcy1rZXhlYy5wZGYKWzJdIGh0dHBzOi8vd3d3
+LnlvdXR1YmUuY29tL3dhdGNoP3Y9Y1lybFY0YksxWTQKCgoKCkFtYXpvbiBEZXZlbG9wbWVudCBD
+ZW50ZXIgR2VybWFueSBHbWJICktyYXVzZW5zdHIuIDM4CjEwMTE3IEJlcmxpbgpHZXNjaGFlZnRz
+ZnVlaHJ1bmc6IENocmlzdGlhbiBTY2hsYWVnZXIsIEpvbmF0aGFuIFdlaXNzCkVpbmdldHJhZ2Vu
+IGFtIEFtdHNnZXJpY2h0IENoYXJsb3R0ZW5idXJnIHVudGVyIEhSQiAxNDkxNzMgQgpTaXR6OiBC
+ZXJsaW4KVXN0LUlEOiBERSAyODkgMjM3IDg3OQoKCg==
 
-On Wed, Dec 13, 2023 at 02:30:42PM -0600, Rob Herring wrote:
-> On Wed, Dec 13, 2023 at 11:44 AM Alexandru Elisei
-> <alexandru.elisei@arm.com> wrote:
-> >
-> > On Wed, Dec 13, 2023 at 11:22:17AM -0600, Rob Herring wrote:
-> > > On Wed, Dec 13, 2023 at 8:51 AM Alexandru Elisei
-> > > <alexandru.elisei@arm.com> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > On Wed, Dec 13, 2023 at 08:06:44AM -0600, Rob Herring wrote:
-> > > > > On Wed, Dec 13, 2023 at 7:05 AM Alexandru Elisei
-> > > > > <alexandru.elisei@arm.com> wrote:
-> > > > > >
-> > > > > > Hi Rob,
-> > > > > >
-> > > > > > On Tue, Dec 12, 2023 at 12:44:06PM -0600, Rob Herring wrote:
-> > > > > > > On Tue, Dec 12, 2023 at 10:38 AM Alexandru Elisei
-> > > > > > > <alexandru.elisei@arm.com> wrote:
-> > > > > > > >
-> > > > > > > > Hi Rob,
-> > > > > > > >
-> > > > > > > > Thank you so much for the feedback, I'm not very familiar with device tree,
-> > > > > > > > and any comments are very useful.
-> > > > > > > >
-> > > > > > > > On Mon, Dec 11, 2023 at 11:29:40AM -0600, Rob Herring wrote:
-> > > > > > > > > On Sun, Nov 19, 2023 at 10:59 AM Alexandru Elisei
-> > > > > > > > > <alexandru.elisei@arm.com> wrote:
-> > > > > > > > > >
-> > > > > > > > > > Allow the kernel to get the size and location of the MTE tag storage
-> > > > > > > > > > regions from the DTB. This memory is marked as reserved for now.
-> > > > > > > > > >
-> > > > > > > > > > The DTB node for the tag storage region is defined as:
-> > > > > > > > > >
-> > > > > > > > > >         tags0: tag-storage@8f8000000 {
-> > > > > > > > > >                 compatible = "arm,mte-tag-storage";
-> > > > > > > > > >                 reg = <0x08 0xf8000000 0x00 0x4000000>;
-> > > > > > > > > >                 block-size = <0x1000>;
-> > > > > > > > > >                 memory = <&memory0>;    // Associated tagged memory node
-> > > > > > > > > >         };
-> > > > > > > > >
-> > > > > > > > > I skimmed thru the discussion some. If this memory range is within
-> > > > > > > > > main RAM, then it definitely belongs in /reserved-memory.
-> > > > > > > >
-> > > > > > > > Ok, will do that.
-> > > > > > > >
-> > > > > > > > If you don't mind, why do you say that it definitely belongs in
-> > > > > > > > reserved-memory? I'm not trying to argue otherwise, I'm curious about the
-> > > > > > > > motivation.
-> > > > > > >
-> > > > > > > Simply so that /memory nodes describe all possible memory and
-> > > > > > > /reserved-memory is just adding restrictions. It's also because
-> > > > > > > /reserved-memory is what gets handled early, and we don't need
-> > > > > > > multiple things to handle early.
-> > > > > > >
-> > > > > > > > Tag storage is not DMA and can live anywhere in memory.
-> > > > > > >
-> > > > > > > Then why put it in DT at all? The only reason CMA is there is to set
-> > > > > > > the size. It's not even clear to me we need CMA in DT either. The
-> > > > > > > reasoning long ago was the kernel didn't do a good job of moving and
-> > > > > > > reclaiming contiguous space, but that's supposed to be better now (and
-> > > > > > > most h/w figured out they need IOMMUs).
-> > > > > > >
-> > > > > > > But for tag storage you know the size as it is a function of the
-> > > > > > > memory size, right? After all, you are validating the size is correct.
-> > > > > > > I guess there is still the aspect of whether you want enable MTE or
-> > > > > > > not which could be done in a variety of ways.
-> > > > > >
-> > > > > > Oh, sorry, my bad, I should have been clearer about this. I don't want to
-> > > > > > put it in the DT as a "linux,cma" node. But I want it to be managed by CMA.
-> > > > >
-> > > > > Yes, I understand, but my point remains. Why do you need this in DT?
-> > > > > If the location doesn't matter and you can calculate the size from the
-> > > > > memory size, what else is there to add to the DT?
-> > > >
-> > > > I am afraid there has been a misunderstanding. What do you mean by
-> > > > "location doesn't matter"?
-> > >
-> > > You said:
-> > > > Tag storage is not DMA and can live anywhere in memory.
-> > >
-> > > Which I took as the kernel can figure out where to put it. But maybe
-> > > you meant the h/w platform can hard code it to be anywhere in memory?
-> > > If so, then yes, DT is needed.
-> >
-> > Ah, I see, sorry for not being clear enough, you are correct: tag storage
-> > is a hardware property, and software needs a mechanism (in this case, the
-> > dt) to discover its properties.
-> >
-> > >
-> > > > At the very least, Linux needs to know the address and size of a memory
-> > > > region to use it. The series is about using the tag storage memory for
-> > > > data. Tag storage cannot be described as a regular memory node because it
-> > > > cannot be tagged (and normal memory can).
-> > >
-> > > If the tag storage lives in the middle of memory, then it would be
-> > > described in the memory node, but removed by being in reserved-memory
-> > > node.
-> >
-> > I don't follow. Would you mind going into more details?
-> 
-> It goes back to what I said earlier about /memory nodes describing all
-> the memory. There's no reason to reserve memory if you haven't
-> described that range as memory to begin with. One could presumably
-> just have a memory node for each contiguous chunk and not need
-> /reserved-memory (ignoring the need to say what things are reserved
-> for). That would become very difficult to adjust. Note that the kernel
-> has a hardcoded limit of 64 reserved regions currently and that is not
-> enough for some people. Seems like a lot, but I have no idea how they
-> are (ab)using /reserved-memory.
-
-Ah, I see what you mean, reserved memory is about marking existing memory
-(from a /memory node) as special, not about adding new memory.
-
-After the memblock allocator is initialized, the kernel can use it for its
-own allocations. Kernel allocations are not movable.
-
-When a page is allocated as tagged, the associated tag storage cannot be
-used for data, otherwise the tags would corrupt that data. To avoid this,
-the requirement is that tag storage pages are only used for movable
-allocations. When a page is allocated as tagged, the data in the associated
-tag storage is migrated and the tag storage is taken from the page
-allocator (via alloc_contig_range()).
-
-My understanding is that the memblock allocator can use all the memory from
-a /memory node. If the tags storage memory is declared in a /memory node,
-there exists the possibility that Linux will use tag storage memory for its
-own allocation, which would make that tags storage memory unmovable, and
-thus unusable for storing tags.
-
-Looking at early_init_dt_scan_memory(), even if a /memory node if marked at
-hotpluggable, memblock will still use it, unless "movable_node" is set on
-the kernel command line.
-
-That's the reason why I'm not describing tag storage in a /memory node.  Is
-there way to tell the memblock allocator not to use memory from a /memory
-node?
-
-> 
-> Let me give an example. Presumably using MTE at all is configurable.
-> If you boot a kernel with MTE disabled (or older and not supporting
-> it), then I'd assume you'd want to use the tag storage for regular
-> memory. Well, If tag storage is already part of /memory, then all you
-> have to do is ignore the tag reserved-memory region. Tweaking the
-> memory nodes would be more work.
-
-Right now, memory is added via memblock_reserve(), and if MTE is disabled
-(for example, via the kernel command line), the code calls
-free_reserved_page() for each tag storage page. I find that straightfoward
-to implement.
-
-Thanks,
-Alex
-
-> 
-> 
-> Also, I should point out that /memory and /reserved-memory nodes are
-> not used for UEFI boot.
-> 
-> Rob
-> 
