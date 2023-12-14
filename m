@@ -1,115 +1,130 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Y2y+vBrI"
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3547219A7;
-	Wed, 13 Dec 2023 15:40:41 -0800 (PST)
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BDMdHfe017114;
-	Wed, 13 Dec 2023 23:39:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=gYyFgOCVso5JtRE0tmyb4wuw79KiFxJvcJzKqQ9U3hM=;
- b=Y2y+vBrIpCcMGXF3NRSV10FFkPdM73O3qLUMGvHbcQyh8ta3xGTfLZrNiyo87jvc8syI
- FRzeqomhRZduRUtY/dUzVfgr0fdV7LA0rZVKTDSw/1sTDbiGFyrwBX91oYj0bL30cQj7
- C9LxCEbYprnIvqxvcgSgJUSumx9hQn0hhNCHWiJqGUm9oUvyMqxLAtaN2ANhdetotDxi
- WGlcfKBGWtKeeihq80fcGT9w3VJGA+z54azbD+YRIsygeblUzMxfBFeEehKa5F46Q4jG
- gz3InB755FjlQc3o7JxlN7j/nixnoujlyi/9Kk4UHCXwpJueAUy563ZLRGOKLh0BcL7m 1Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uykvmuvsd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Dec 2023 23:39:29 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BDNdSJk015295;
-	Wed, 13 Dec 2023 23:39:29 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uykvmuvp5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Dec 2023 23:39:28 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BDLX5Hc012593;
-	Wed, 13 Dec 2023 23:37:05 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uw3jp4ndc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Dec 2023 23:37:05 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BDNb2jL7471776
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 13 Dec 2023 23:37:02 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7A00620043;
-	Wed, 13 Dec 2023 23:37:02 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 153A920040;
-	Wed, 13 Dec 2023 23:37:01 +0000 (GMT)
-Received: from heavy.boeblingen.de.ibm.com (unknown [9.171.70.156])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 13 Dec 2023 23:37:00 +0000 (GMT)
-From: Ilya Leoshkevich <iii@linux.ibm.com>
-To: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: [PATCH v3 34/34] kmsan: Enable on s390
-Date: Thu, 14 Dec 2023 00:24:54 +0100
-Message-ID: <20231213233605.661251-35-iii@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231213233605.661251-1-iii@linux.ibm.com>
-References: <20231213233605.661251-1-iii@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i9JAIAzv"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E214FAC;
+	Wed, 13 Dec 2023 16:41:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702514465; x=1734050465;
+  h=message-id:subject:from:to:date:in-reply-to:references:
+   content-transfer-encoding:mime-version;
+  bh=k1qSf+lV25zr0Dwp3/EooJ11sf1fNhwipYU+ucC77pE=;
+  b=i9JAIAzv7k0/yolUo9D3yjzKN8Tb2IqPrKxATvzlLGablmQ2QVp+7aqM
+   mLHUS5KTWWsgMSf631dVv3BE31FN7YLtum+Zr/RqUY62f0ZyjF2ED4Md2
+   0Def/5Lx5lJ/ha/lEVj1tl4db2HAY+amMIemgAbf2RcexZzBlSNbvELne
+   k/MRyvz3uUx1pzrAffEr6Tq4la+gnU2X17V3i6vmXTqn3N/e5PhJxCe72
+   y4L87nJoAGgC/6JaAt0ebcuRdVmtn1jdBRTKbVW45gHwUNrEJyyV4CbEN
+   KRjcThqyvyre/38Fh3QaOU78JSNRCq+nqQ1f4A8nKXb0ZC8hzzYszu1Rb
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="426180857"
+X-IronPort-AV: E=Sophos;i="6.04,274,1695711600"; 
+   d="scan'208";a="426180857"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 16:41:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="947367819"
+X-IronPort-AV: E=Sophos;i="6.04,274,1695711600"; 
+   d="scan'208";a="947367819"
+Received: from wanghuan-mobl1.amr.corp.intel.com (HELO [10.212.178.119]) ([10.212.178.119])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 16:41:04 -0800
+Message-ID: <2e8807b68133f4b3a72227122a9d9a05f3fbf9d8.camel@linux.intel.com>
+Subject: Re: [PATCH 1/4] cpufreq: Add a cpufreq pressure feedback for the
+ scheduler
+From: Tim Chen <tim.c.chen@linux.intel.com>
+To: Vincent Guittot <vincent.guittot@linaro.org>, catalin.marinas@arm.com, 
+ will@kernel.org, sudeep.holla@arm.com, rafael@kernel.org,
+ viresh.kumar@linaro.org,  agross@kernel.org, andersson@kernel.org,
+ konrad.dybcio@linaro.org,  mingo@redhat.com, peterz@infradead.org,
+ juri.lelli@redhat.com,  dietmar.eggemann@arm.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de,  bristot@redhat.com,
+ vschneid@redhat.com, lukasz.luba@arm.com, rui.zhang@intel.com, 
+ mhiramat@kernel.org, daniel.lezcano@linaro.org, amit.kachhap@gmail.com, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org
+Date: Wed, 13 Dec 2023 16:41:04 -0800
+In-Reply-To: <20231212142730.998913-2-vincent.guittot@linaro.org>
+References: <20231212142730.998913-1-vincent.guittot@linaro.org>
+	 <20231212142730.998913-2-vincent.guittot@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: CTCQr_1RVlp-5vBpdhAQv5G_JXLdChBk
-X-Proofpoint-ORIG-GUID: FOlLAufKv9YIP5YH16oRSkto3lOlE6sn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-13_14,2023-12-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 mlxscore=0 adultscore=0 spamscore=0 mlxlogscore=755
- clxscore=1015 priorityscore=1501 suspectscore=0 impostorscore=0
- malwarescore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2312130167
 
-Now that everything else is in place, enable KMSAN in Kconfig.
+On Tue, 2023-12-12 at 15:27 +0100, Vincent Guittot wrote:
+> Provide to the scheduler a feedback about the temporary max available
+> capacity. Unlike arch_update_thermal_pressure, this doesn't need to be
+> filtered as the pressure will happen for dozens ms or more.
+>=20
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
+>  drivers/cpufreq/cpufreq.c | 48 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/cpufreq.h   | 10 ++++++++
+>  2 files changed, 58 insertions(+)
+>=20
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 44db4f59c4cc..7d5f71be8d29 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -2563,6 +2563,50 @@ int cpufreq_get_policy(struct cpufreq_policy *poli=
+cy, unsigned int cpu)
+>  }
+>  EXPORT_SYMBOL(cpufreq_get_policy);
+> =20
+> +DEFINE_PER_CPU(unsigned long, cpufreq_pressure);
+> +EXPORT_PER_CPU_SYMBOL_GPL(cpufreq_pressure);
+> +
+> +/**
+> + * cpufreq_update_pressure() - Update cpufreq pressure for CPUs
+> + * @cpus        : The related CPUs for which max capacity has been reduc=
+ed
+> + * @capped_freq : The maximum allowed frequency that CPUs can run at
+> + *
+> + * Update the value of cpufreq pressure for all @cpus in the mask. The
+> + * cpumask should include all (online+offline) affected CPUs, to avoid
+> + * operating on stale data when hot-plug is used for some CPUs. The
+> + * @capped_freq reflects the currently allowed max CPUs frequency due to
+> + * freq_qos capping. It might be also a boost frequency value, which is =
+bigger
+> + * than the internal 'capacity_freq_ref' max frequency. In such case the
+> + * pressure value should simply be removed, since this is an indication =
+that
+> + * there is no capping. The @capped_freq must be provided in kHz.
+> + */
+> +static void cpufreq_update_pressure(const struct cpumask *cpus,
+> +				      unsigned long capped_freq)
+> +{
+> +	unsigned long max_capacity, capacity, pressure;
+> +	u32 max_freq;
+> +	int cpu;
+> +
+> +	cpu =3D cpumask_first(cpus);
+> +	max_capacity =3D arch_scale_cpu_capacity(cpu);
+> +	max_freq =3D arch_scale_freq_ref(cpu);
+> +
+> +	/*
+> +	 * Handle properly the boost frequencies, which should simply clean
+> +	 * the thermal pressure value.
+> +	 */
+> +	if (max_freq <=3D capped_freq)
+> +		capacity =3D max_capacity;
+> +	else
+> +		capacity =3D mult_frac(max_capacity, capped_freq, max_freq);
+> +
+> +	pressure =3D max_capacity - capacity;
+> +
+> +
+> +	for_each_cpu(cpu, cpus)
+> +		WRITE_ONCE(per_cpu(cpufreq_pressure, cpu), pressure);
 
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
----
- arch/s390/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Seems like the pressure value computed from the first CPU applies to all CP=
+U.
+Will this be valid for non-homogeneous CPUs that could have different
+max_freq and max_capacity?
 
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index 3bec98d20283..160ad2220c53 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -153,6 +153,7 @@ config S390
- 	select HAVE_ARCH_KASAN
- 	select HAVE_ARCH_KASAN_VMALLOC
- 	select HAVE_ARCH_KCSAN
-+	select HAVE_ARCH_KMSAN
- 	select HAVE_ARCH_KFENCE
- 	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
- 	select HAVE_ARCH_SECCOMP_FILTER
--- 
-2.43.0
-
+Tim
