@@ -1,278 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A97208BD;
-	Thu, 14 Dec 2023 18:55:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gNQWZJxL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50A97C433CA;
-	Thu, 14 Dec 2023 18:55:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702580129;
-	bh=nci52wgEP29pe93sJfvh7z3E961dOjZ6XELoPwO7AJ0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=gNQWZJxLGAyg3thh8sppsdtne0S14JwyQcivHbHv7WO114nKNzDxo48NPc6NwYych
-	 LICtIuEwziEeq/jC1lhaXr9ngYWoZaqo8fUMS/56euTdwBx/kPmE7C+R0ZGJ1IKzrC
-	 tVwMMIGyAkxdOTcUZeHtX/oH7Bydean26t2VSLflEoxoggGkGn/iOrGO8984m5MjWF
-	 6g6HOVwqpoozuR4ruL1FZairOzZ7r/I7gsRUbrIno5RR1LH/MvdqsoVIm43vGmBRJL
-	 vDwFwwCLWushNGNgEe0Jm42brbIwAIz/lHY9dFRME70eLb5XNXSRgbJ4ah8tKyaXMg
-	 S4KZ7ptfgHhzQ==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-50bf32c0140so9612505e87.1;
-        Thu, 14 Dec 2023 10:55:29 -0800 (PST)
-X-Gm-Message-State: AOJu0YxiTCAhY2AQ5BIIh/0VUE3tqq/dEH7sH5AZSHS4ZPq4T1cnOoUl
-	5RhUfBRWtEf53n4Cfx0PVrbTm5G1zO+vPPMMhA==
-X-Google-Smtp-Source: AGHT+IHH/MtbPf3CsSHjCsaUiPlKJlfOgEPCUUPp4Ha+UDKvnOS4RB7kkEQUG6S8vXVoP3f52VmIHsLn4Hf6iJQk34o=
-X-Received: by 2002:ac2:51b0:0:b0:50b:fd52:e629 with SMTP id
- f16-20020ac251b0000000b0050bfd52e629mr4153621lfk.125.1702580127399; Thu, 14
- Dec 2023 10:55:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="bL4awJd2"
+Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12950115
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Dec 2023 11:07:01 -0800 (PST)
+Received: by mail-io1-xd34.google.com with SMTP id ca18e2360f4ac-7b709f8ba01so74421539f.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Dec 2023 11:07:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1702580820; x=1703185620; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qqOs0PUF8MGjM25NmW96fbAjdjE87kFFPmbKKuRqHvQ=;
+        b=bL4awJd2dj3qHosM8eBvoUaKpIe1R+kn55itYPM3IVqAvSHqJw9d+91EGPeS7RKeYU
+         vnx4DZHxVDHCcdHZPVLk0qcpmPAVpr3HMed/irDPnw3qZxQi9/NJXpDjJziweXtuh9Qu
+         qtb9fTusD/I0ygf18zlLDFKT62D6vnx1cuk+RAfudjbnjNrskRZzfq/IznpAOvI4ZVJd
+         1Ygx6KHrmApvRgvJ/bSriDn8uQgLjfMFCVafQNsuzInCI2e2GtYNRhhq2UcoJMGtsuRl
+         l+yCW/FxdjKwCN28crOix8XijxZpGk4dlgjofVDxXRP7w4SEKD546srkx3WCeB7UJ2hD
+         xriA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702580820; x=1703185620;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qqOs0PUF8MGjM25NmW96fbAjdjE87kFFPmbKKuRqHvQ=;
+        b=bNJZYzfxQX/msBcGIZSym1Whx/YwKxSUugi0uMzkRIcLY/PAGWXes7o7iy3+bijqi6
+         MGsQd2lW33dnMW7rwioWgUmBczR2bQxAXfapEOtZff7UcSJz/meHIVe4h90yk2pA1Trr
+         q4QSTJVTKfkSGoy4MfQ5REAOirkuSkN4mFvGuwfsTI25Jo4UFou/dB6tgqBjLylRD42a
+         a6f4HVsSsvSnXwp5UawGOLjBlNtdESe0T4Mtciql++ur6gUk9lF1i6K00FaGhLDlQWs/
+         GvxZKUtCs5+pkrRiYFLf5fyOwzwILIpjM19Czq92+yfsu66e/alkjhxK5NvmB6/KnhMJ
+         Eybw==
+X-Gm-Message-State: AOJu0YzYC8qME7QB+xcEegiWTDzRvDmL2JPofXhnHzgUU0rdpvCAJyob
+	8ZMEzYjvyk6SGxdVsoYqNbJ4hg==
+X-Google-Smtp-Source: AGHT+IE3qnRY0GPW/oTuXUJK/CBtuYMJpexJ/Mxt7AcR4ZY9+DxMzO/BMx+55mB/jlMVfnrfp5mTbA==
+X-Received: by 2002:a05:6e02:1c05:b0:35f:847c:1e5c with SMTP id l5-20020a056e021c0500b0035f847c1e5cmr1655231ilh.0.1702580820321;
+        Thu, 14 Dec 2023 11:07:00 -0800 (PST)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id e6-20020a028606000000b00469010b6cc7sm3588131jai.114.2023.12.14.11.06.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Dec 2023 11:06:59 -0800 (PST)
+Message-ID: <500557ed-3967-455e-8a79-d64711045b70@kernel.dk>
+Date: Thu, 14 Dec 2023 12:06:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231119165721.9849-12-alexandru.elisei@arm.com>
- <CAL_Jsq+k5BeM9+u12AQvWQ0b4Uv5Cy0vPOpK_uLcYtRnunq4iQ@mail.gmail.com>
- <ZXiMiLz9ZyUdxUP8@raptor> <CAL_Jsq+U_GR=mOK3-phnd4jeJKf79aOmhPwDOSj+f=s-7fZZWQ@mail.gmail.com>
- <ZXmr-Kl9L2SO13--@raptor> <CAL_JsqL=P1Y6w38LD_xw+vK4CNqt22FW_FE9oi_XTLHVQEne7Q@mail.gmail.com>
- <ZXnE3724jYYSg4o6@raptor> <CAL_JsqJgTnuQjo13cKo1Ebm5j9tCRT8GhNavdqu5vwp+fdnTLw@mail.gmail.com>
- <ZXnthcg0BkEd-RgK@raptor> <CAL_JsqLAW0--F8R0oTaajN3YpbK2KgE6Ypn8tk4_pf_s=xC+aw@mail.gmail.com>
- <ZXsjFYKHkJM_JLCy@raptor>
-In-Reply-To: <ZXsjFYKHkJM_JLCy@raptor>
-From: Rob Herring <robh@kernel.org>
-Date: Thu, 14 Dec 2023 12:55:14 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJF7Bs6nGt0hdP25YTMpzPK8V3h6C5Thkh=PnzPbwFEkQ@mail.gmail.com>
-Message-ID: <CAL_JsqJF7Bs6nGt0hdP25YTMpzPK8V3h6C5Thkh=PnzPbwFEkQ@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 11/27] arm64: mte: Reserve tag storage memory
-To: Alexandru Elisei <alexandru.elisei@arm.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, 
-	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, 
-	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org, 
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
-	bsegall@google.com, mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, 
-	mhiramat@kernel.org, rppt@kernel.org, hughd@google.com, pcc@google.com, 
-	steven.price@arm.com, anshuman.khandual@arm.com, vincenzo.frascino@arm.com, 
-	david@redhat.com, eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RERESEND 00/11] splice(file<>pipe) I/O on file as-if
+ O_NONBLOCK
+Content-Language: en-US
+To: =?UTF-8?Q?Ahelenia_Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
+Cc: Christian Brauner <brauner@kernel.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
+ "D. Wythe" <alibuda@linux.alibaba.com>, "David S. Miller"
+ <davem@davemloft.net>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Boris Pismenny
+ <borisp@nvidia.com>, Cong Wang <cong.wang@bytedance.com>,
+ David Ahern <dsahern@kernel.org>, David Howells <dhowells@redhat.com>,
+ Eric Dumazet <edumazet@google.com>, Gavrilov Ilia
+ <Ilia.Gavrilov@infotecs.ru>, Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+ Jakub Kicinski <kuba@kernel.org>, Jan Karcher <jaka@linux.ibm.com>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Karsten Graul <kgraul@linux.ibm.com>, Kirill Tkhai <tkhai@ya.ru>,
+ Kuniyuki Iwashima <kuniyu@amazon.com>, Li kunyu <kunyu@nfschina.com>,
+ linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+ netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>,
+ Paolo Abeni <pabeni@redhat.com>, Pengcheng Yang <yangpc@wangsu.com>,
+ Shigeru Yoshida <syoshida@redhat.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Suren Baghdasaryan <surenb@google.com>, Tony Lu <tonylu@linux.alibaba.com>,
+ Wen Gu <guwen@linux.alibaba.com>, Wenjia Zhang <wenjia@linux.ibm.com>,
+ Xu Panda <xu.panda@zte.com.cn>, Zhang Zhengming <zhang.zhengming@h3c.com>
+References: <2cover.1697486714.git.nabijaczleweli@nabijaczleweli.xyz>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <2cover.1697486714.git.nabijaczleweli@nabijaczleweli.xyz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Dec 14, 2023 at 9:45=E2=80=AFAM Alexandru Elisei
-<alexandru.elisei@arm.com> wrote:
->
-> Hi,
->
-> On Wed, Dec 13, 2023 at 02:30:42PM -0600, Rob Herring wrote:
-> > On Wed, Dec 13, 2023 at 11:44=E2=80=AFAM Alexandru Elisei
-> > <alexandru.elisei@arm.com> wrote:
-> > >
-> > > On Wed, Dec 13, 2023 at 11:22:17AM -0600, Rob Herring wrote:
-> > > > On Wed, Dec 13, 2023 at 8:51=E2=80=AFAM Alexandru Elisei
-> > > > <alexandru.elisei@arm.com> wrote:
-> > > > >
-> > > > > Hi,
-> > > > >
-> > > > > On Wed, Dec 13, 2023 at 08:06:44AM -0600, Rob Herring wrote:
-> > > > > > On Wed, Dec 13, 2023 at 7:05=E2=80=AFAM Alexandru Elisei
-> > > > > > <alexandru.elisei@arm.com> wrote:
-> > > > > > >
-> > > > > > > Hi Rob,
-> > > > > > >
-> > > > > > > On Tue, Dec 12, 2023 at 12:44:06PM -0600, Rob Herring wrote:
-> > > > > > > > On Tue, Dec 12, 2023 at 10:38=E2=80=AFAM Alexandru Elisei
-> > > > > > > > <alexandru.elisei@arm.com> wrote:
-> > > > > > > > >
-> > > > > > > > > Hi Rob,
-> > > > > > > > >
-> > > > > > > > > Thank you so much for the feedback, I'm not very familiar=
- with device tree,
-> > > > > > > > > and any comments are very useful.
-> > > > > > > > >
-> > > > > > > > > On Mon, Dec 11, 2023 at 11:29:40AM -0600, Rob Herring wro=
-te:
-> > > > > > > > > > On Sun, Nov 19, 2023 at 10:59=E2=80=AFAM Alexandru Elis=
-ei
-> > > > > > > > > > <alexandru.elisei@arm.com> wrote:
-> > > > > > > > > > >
-> > > > > > > > > > > Allow the kernel to get the size and location of the =
-MTE tag storage
-> > > > > > > > > > > regions from the DTB. This memory is marked as reserv=
-ed for now.
-> > > > > > > > > > >
-> > > > > > > > > > > The DTB node for the tag storage region is defined as=
-:
-> > > > > > > > > > >
-> > > > > > > > > > >         tags0: tag-storage@8f8000000 {
-> > > > > > > > > > >                 compatible =3D "arm,mte-tag-storage";
-> > > > > > > > > > >                 reg =3D <0x08 0xf8000000 0x00 0x40000=
-00>;
-> > > > > > > > > > >                 block-size =3D <0x1000>;
-> > > > > > > > > > >                 memory =3D <&memory0>;    // Associat=
-ed tagged memory node
-> > > > > > > > > > >         };
-> > > > > > > > > >
-> > > > > > > > > > I skimmed thru the discussion some. If this memory rang=
-e is within
-> > > > > > > > > > main RAM, then it definitely belongs in /reserved-memor=
-y.
-> > > > > > > > >
-> > > > > > > > > Ok, will do that.
-> > > > > > > > >
-> > > > > > > > > If you don't mind, why do you say that it definitely belo=
-ngs in
-> > > > > > > > > reserved-memory? I'm not trying to argue otherwise, I'm c=
-urious about the
-> > > > > > > > > motivation.
-> > > > > > > >
-> > > > > > > > Simply so that /memory nodes describe all possible memory a=
-nd
-> > > > > > > > /reserved-memory is just adding restrictions. It's also bec=
-ause
-> > > > > > > > /reserved-memory is what gets handled early, and we don't n=
-eed
-> > > > > > > > multiple things to handle early.
-> > > > > > > >
-> > > > > > > > > Tag storage is not DMA and can live anywhere in memory.
-> > > > > > > >
-> > > > > > > > Then why put it in DT at all? The only reason CMA is there =
-is to set
-> > > > > > > > the size. It's not even clear to me we need CMA in DT eithe=
-r. The
-> > > > > > > > reasoning long ago was the kernel didn't do a good job of m=
-oving and
-> > > > > > > > reclaiming contiguous space, but that's supposed to be bett=
-er now (and
-> > > > > > > > most h/w figured out they need IOMMUs).
-> > > > > > > >
-> > > > > > > > But for tag storage you know the size as it is a function o=
-f the
-> > > > > > > > memory size, right? After all, you are validating the size =
-is correct.
-> > > > > > > > I guess there is still the aspect of whether you want enabl=
-e MTE or
-> > > > > > > > not which could be done in a variety of ways.
-> > > > > > >
-> > > > > > > Oh, sorry, my bad, I should have been clearer about this. I d=
-on't want to
-> > > > > > > put it in the DT as a "linux,cma" node. But I want it to be m=
-anaged by CMA.
-> > > > > >
-> > > > > > Yes, I understand, but my point remains. Why do you need this i=
-n DT?
-> > > > > > If the location doesn't matter and you can calculate the size f=
-rom the
-> > > > > > memory size, what else is there to add to the DT?
-> > > > >
-> > > > > I am afraid there has been a misunderstanding. What do you mean b=
-y
-> > > > > "location doesn't matter"?
-> > > >
-> > > > You said:
-> > > > > Tag storage is not DMA and can live anywhere in memory.
-> > > >
-> > > > Which I took as the kernel can figure out where to put it. But mayb=
-e
-> > > > you meant the h/w platform can hard code it to be anywhere in memor=
-y?
-> > > > If so, then yes, DT is needed.
-> > >
-> > > Ah, I see, sorry for not being clear enough, you are correct: tag sto=
-rage
-> > > is a hardware property, and software needs a mechanism (in this case,=
- the
-> > > dt) to discover its properties.
-> > >
-> > > >
-> > > > > At the very least, Linux needs to know the address and size of a =
-memory
-> > > > > region to use it. The series is about using the tag storage memor=
-y for
-> > > > > data. Tag storage cannot be described as a regular memory node be=
-cause it
-> > > > > cannot be tagged (and normal memory can).
-> > > >
-> > > > If the tag storage lives in the middle of memory, then it would be
-> > > > described in the memory node, but removed by being in reserved-memo=
-ry
-> > > > node.
-> > >
-> > > I don't follow. Would you mind going into more details?
-> >
-> > It goes back to what I said earlier about /memory nodes describing all
-> > the memory. There's no reason to reserve memory if you haven't
-> > described that range as memory to begin with. One could presumably
-> > just have a memory node for each contiguous chunk and not need
-> > /reserved-memory (ignoring the need to say what things are reserved
-> > for). That would become very difficult to adjust. Note that the kernel
-> > has a hardcoded limit of 64 reserved regions currently and that is not
-> > enough for some people. Seems like a lot, but I have no idea how they
-> > are (ab)using /reserved-memory.
->
-> Ah, I see what you mean, reserved memory is about marking existing memory
-> (from a /memory node) as special, not about adding new memory.
->
-> After the memblock allocator is initialized, the kernel can use it for it=
-s
-> own allocations. Kernel allocations are not movable.
->
-> When a page is allocated as tagged, the associated tag storage cannot be
-> used for data, otherwise the tags would corrupt that data. To avoid this,
-> the requirement is that tag storage pages are only used for movable
-> allocations. When a page is allocated as tagged, the data in the associat=
-ed
-> tag storage is migrated and the tag storage is taken from the page
-> allocator (via alloc_contig_range()).
->
-> My understanding is that the memblock allocator can use all the memory fr=
-om
-> a /memory node. If the tags storage memory is declared in a /memory node,
-> there exists the possibility that Linux will use tag storage memory for i=
-ts
-> own allocation, which would make that tags storage memory unmovable, and
-> thus unusable for storing tags.
+On 12/14/23 11:44 AM, Ahelenia Ziemia?ska wrote:
+> First:  https://lore.kernel.org/lkml/cover.1697486714.git.nabijaczleweli@nabijaczleweli.xyz/t/#u
+> Resend: https://lore.kernel.org/lkml/1cover.1697486714.git.nabijaczleweli@nabijaczleweli.xyz/t/#u
+> Resending again per https://lore.kernel.org/lkml/20231214093859.01f6e2cd@kernel.org/t/#u
+> 
+> Hi!
+> 
+> As it stands, splice(file -> pipe):
+> 1. locks the pipe,
+> 2. does a read from the file,
+> 3. unlocks the pipe.
+> 
+> For reading from regular files and blcokdevs this makes no difference.
+> But if the file is a tty or a socket, for example, this means that until
+> data appears, which it may never do, every process trying to read from
+> or open the pipe enters an uninterruptible sleep,
+> and will only exit it if the splicing process is killed.
+> 
+> This trivially denies service to:
+> * any hypothetical pipe-based log collexion system
+> * all nullmailer installations
+> * me, personally, when I'm pasting stuff into qemu -serial chardev:pipe
+> 
+> This follows:
+> 1. https://lore.kernel.org/linux-fsdevel/qk6hjuam54khlaikf2ssom6custxf5is2ekkaequf4hvode3ls@zgf7j5j4ubvw/t/#u
+> 2. a security@ thread rooted in
+>    <irrrblivicfc7o3lfq7yjm2lrxq35iyya4gyozlohw24gdzyg7@azmluufpdfvu>
+> 3. https://nabijaczleweli.xyz/content/blogn_t/011-linux-splice-exclusion.html
+> 
+> Patches were posted and then discarded on principle or funxionality,
+> all in all terminating in Linus posting
+>> But it is possible that we need to just bite the bullet and say
+>> "copy_splice_read() needs to use a non-blocking kiocb for the IO".
+> 
+> This does that, effectively making splice(file -> pipe)
+> request (and require) O_NONBLOCK on reads fron the file:
+> this doesn't affect splicing from regular files and blockdevs,
+> since they're always non-blocking
+> (and requesting the stronger "no kernel sleep" IOCB_NOWAIT is non-sensical),
 
-No, because the tag storage would be reserved in /reserved-memory.
+Not sure how you got the idea that regular files or block devices is
+always non-blocking, this is certainly not true without IOCB_NOWAIT.
+Without IOCB_NOWAIT, you can certainly be waiting for previous IO to
+complete.
 
-Of course, the arch code could do something between scanning /memory
-nodes and /reserved-memory, but that would be broken arch code.
-Ideally, there wouldn't be any arch code in between those 2 points,
-but it's complicated. It used to mainly be powerpc, but we keep adding
-to the complexity on arm64.
+> but always returns -EINVAL for ttys.
+> Sockets behave as expected from O_NONBLOCK reads:
+> splice if there's data available else -EAGAIN.
+> 
+> This should all pretty much behave as-expected.
 
-> Looking at early_init_dt_scan_memory(), even if a /memory node if marked =
-at
-> hotpluggable, memblock will still use it, unless "movable_node" is set on
-> the kernel command line.
->
-> That's the reason why I'm not describing tag storage in a /memory node.  =
-Is
-> there way to tell the memblock allocator not to use memory from a /memory
-> node?
->
-> >
-> > Let me give an example. Presumably using MTE at all is configurable.
-> > If you boot a kernel with MTE disabled (or older and not supporting
-> > it), then I'd assume you'd want to use the tag storage for regular
-> > memory. Well, If tag storage is already part of /memory, then all you
-> > have to do is ignore the tag reserved-memory region. Tweaking the
-> > memory nodes would be more work.
->
-> Right now, memory is added via memblock_reserve(), and if MTE is disabled
-> (for example, via the kernel command line), the code calls
-> free_reserved_page() for each tag storage page. I find that straightfowar=
-d
-> to implement.
+Should it? Seems like there's a very high risk of breaking existing use
+cases here.
 
-But better to just not reserve the region in the first place. Also, it
-needs to be simple enough to back port.
+Have you at all looked into the approach of enabling splice to/from
+_without_ holding the pipe lock? That, to me, would seem like a much
+saner approach, with the caveat that I have not looked into that at all
+so there may indeed be reasons why this is not feasible.
 
-Also, does free_reserved_page() work on ranges outside of memblock
-range (e.g. beyond end_of_DRAM())? If the tag storage happened to live
-at the end of DRAM and you shorten the /memory node size to remove tag
-storage, is it still going to work?
+-- 
+Jens Axboe
 
-Rob
