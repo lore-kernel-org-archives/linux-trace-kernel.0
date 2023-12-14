@@ -1,143 +1,146 @@
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB706979D
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Dec 2023 19:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="bL4awJd2"
-Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12950115
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Dec 2023 11:07:01 -0800 (PST)
-Received: by mail-io1-xd34.google.com with SMTP id ca18e2360f4ac-7b709f8ba01so74421539f.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Dec 2023 11:07:01 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="dDSEl6v/"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a1f8510883aso787409466b.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Dec 2023 11:45:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1702580820; x=1703185620; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qqOs0PUF8MGjM25NmW96fbAjdjE87kFFPmbKKuRqHvQ=;
-        b=bL4awJd2dj3qHosM8eBvoUaKpIe1R+kn55itYPM3IVqAvSHqJw9d+91EGPeS7RKeYU
-         vnx4DZHxVDHCcdHZPVLk0qcpmPAVpr3HMed/irDPnw3qZxQi9/NJXpDjJziweXtuh9Qu
-         qtb9fTusD/I0ygf18zlLDFKT62D6vnx1cuk+RAfudjbnjNrskRZzfq/IznpAOvI4ZVJd
-         1Ygx6KHrmApvRgvJ/bSriDn8uQgLjfMFCVafQNsuzInCI2e2GtYNRhhq2UcoJMGtsuRl
-         l+yCW/FxdjKwCN28crOix8XijxZpGk4dlgjofVDxXRP7w4SEKD546srkx3WCeB7UJ2hD
-         xriA==
+        d=linux-foundation.org; s=google; t=1702583113; x=1703187913; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=MpUjOoTdCqNzayaiwbixMLyZUnTZjhFDCaA6n5v3lDM=;
+        b=dDSEl6v/M30epCXcAY1R4AfnWJ0Y9Rv5feREx5G/OGXKQJIr7SIQEfxlZp7yh7ifJE
+         piG+jenbdrIVKGmy8zSyUPkmtSq2+f5CgI4kfcUV7f4Ogjt+DuQg+4goWlJ0x+ErpiF+
+         jfkDVTw6DNsR97TBL9mDmjyWbrzFbXt1imYjQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702580820; x=1703185620;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qqOs0PUF8MGjM25NmW96fbAjdjE87kFFPmbKKuRqHvQ=;
-        b=bNJZYzfxQX/msBcGIZSym1Whx/YwKxSUugi0uMzkRIcLY/PAGWXes7o7iy3+bijqi6
-         MGsQd2lW33dnMW7rwioWgUmBczR2bQxAXfapEOtZff7UcSJz/meHIVe4h90yk2pA1Trr
-         q4QSTJVTKfkSGoy4MfQ5REAOirkuSkN4mFvGuwfsTI25Jo4UFou/dB6tgqBjLylRD42a
-         a6f4HVsSsvSnXwp5UawGOLjBlNtdESe0T4Mtciql++ur6gUk9lF1i6K00FaGhLDlQWs/
-         GvxZKUtCs5+pkrRiYFLf5fyOwzwILIpjM19Czq92+yfsu66e/alkjhxK5NvmB6/KnhMJ
-         Eybw==
-X-Gm-Message-State: AOJu0YzYC8qME7QB+xcEegiWTDzRvDmL2JPofXhnHzgUU0rdpvCAJyob
-	8ZMEzYjvyk6SGxdVsoYqNbJ4hg==
-X-Google-Smtp-Source: AGHT+IE3qnRY0GPW/oTuXUJK/CBtuYMJpexJ/Mxt7AcR4ZY9+DxMzO/BMx+55mB/jlMVfnrfp5mTbA==
-X-Received: by 2002:a05:6e02:1c05:b0:35f:847c:1e5c with SMTP id l5-20020a056e021c0500b0035f847c1e5cmr1655231ilh.0.1702580820321;
-        Thu, 14 Dec 2023 11:07:00 -0800 (PST)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id e6-20020a028606000000b00469010b6cc7sm3588131jai.114.2023.12.14.11.06.58
+        d=1e100.net; s=20230601; t=1702583113; x=1703187913;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MpUjOoTdCqNzayaiwbixMLyZUnTZjhFDCaA6n5v3lDM=;
+        b=p7Wg/v2OMwrfKQUzGV9dt18Hf4Pjg6pGcKS8SUZMLEYNdvUxIATazRc1U1irWqLkEq
+         FK2RSoEjmUyBJN0V92OcDHEtCx3AN/5FMEFFFUv31Ft6iDSvlSGyYCydL5Ivvs2ke9+2
+         HYlqVCyvQtqBcZdcMNaf7YI4tlX1uev3xXrRmsl1BIChrZGgPb5ctNxwMTTNARLzfboF
+         a+R4ue67msxGcN5AXi8dQWUAAaSk4/Est8//qLoFgnJ0mdp3M0d61QoM27r0Agvlwnsi
+         mY07M7GYsb1z3WoScCaAxfF6BcJ7R4xwGUOrrym4RKd++K6spsiO1vsqoRbACJtyYnti
+         4M3A==
+X-Gm-Message-State: AOJu0YwNtM2XBY+EZuvNzBxYv5PiKegMzVKCQ6GqqeN84uZeLlnT8qiP
+	jz2MKGadttm/6cSpYTWdxVA0ejMM7HCA+qjdYMByGw==
+X-Google-Smtp-Source: AGHT+IGfmMrfULrA4NjEg+ax6niwSjfrlMc9r7UgBf3ieesgmzgLdOzqUkO/8J+9iwHgQRfGRUGYRw==
+X-Received: by 2002:a17:907:cbc8:b0:a19:a1ba:baed with SMTP id vk8-20020a170907cbc800b00a19a1babaedmr3231546ejc.147.1702583113519;
+        Thu, 14 Dec 2023 11:45:13 -0800 (PST)
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
+        by smtp.gmail.com with ESMTPSA id ry9-20020a1709068d8900b00a1f744953c1sm9138608ejc.105.2023.12.14.11.45.12
+        for <linux-trace-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Dec 2023 11:06:59 -0800 (PST)
-Message-ID: <500557ed-3967-455e-8a79-d64711045b70@kernel.dk>
-Date: Thu, 14 Dec 2023 12:06:57 -0700
+        Thu, 14 Dec 2023 11:45:12 -0800 (PST)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a1f653e3c3dso956093566b.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Dec 2023 11:45:12 -0800 (PST)
+X-Received: by 2002:a17:907:3ac2:b0:a19:d40a:d21f with SMTP id
+ fi2-20020a1709073ac200b00a19d40ad21fmr2222801ejc.235.1702583112429; Thu, 14
+ Dec 2023 11:45:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RERESEND 00/11] splice(file<>pipe) I/O on file as-if
- O_NONBLOCK
-Content-Language: en-US
-To: =?UTF-8?Q?Ahelenia_Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
-Cc: Christian Brauner <brauner@kernel.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
- "D. Wythe" <alibuda@linux.alibaba.com>, "David S. Miller"
- <davem@davemloft.net>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Alexander Mikhalitsyn <alexander@mihalicyn.com>,
- Andrew Morton <akpm@linux-foundation.org>, Boris Pismenny
- <borisp@nvidia.com>, Cong Wang <cong.wang@bytedance.com>,
- David Ahern <dsahern@kernel.org>, David Howells <dhowells@redhat.com>,
- Eric Dumazet <edumazet@google.com>, Gavrilov Ilia
- <Ilia.Gavrilov@infotecs.ru>, Hyeonggon Yoo <42.hyeyoo@gmail.com>,
- Jakub Kicinski <kuba@kernel.org>, Jan Karcher <jaka@linux.ibm.com>,
- John Fastabend <john.fastabend@gmail.com>,
- Karsten Graul <kgraul@linux.ibm.com>, Kirill Tkhai <tkhai@ya.ru>,
- Kuniyuki Iwashima <kuniyu@amazon.com>, Li kunyu <kunyu@nfschina.com>,
- linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
- netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>,
- Paolo Abeni <pabeni@redhat.com>, Pengcheng Yang <yangpc@wangsu.com>,
- Shigeru Yoshida <syoshida@redhat.com>, Steven Rostedt <rostedt@goodmis.org>,
- Suren Baghdasaryan <surenb@google.com>, Tony Lu <tonylu@linux.alibaba.com>,
- Wen Gu <guwen@linux.alibaba.com>, Wenjia Zhang <wenjia@linux.ibm.com>,
- Xu Panda <xu.panda@zte.com.cn>, Zhang Zhengming <zhang.zhengming@h3c.com>
-References: <2cover.1697486714.git.nabijaczleweli@nabijaczleweli.xyz>
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <2cover.1697486714.git.nabijaczleweli@nabijaczleweli.xyz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20231213211126.24f8c1dd@gandalf.local.home> <20231213214632.15047c40@gandalf.local.home>
+ <CAHk-=whESMW2v0cd0Ye+AnV0Hp9j+Mm4BO2xJo93eQcC1xghUA@mail.gmail.com> <20231214115614.2cf5a40e@gandalf.local.home>
+In-Reply-To: <20231214115614.2cf5a40e@gandalf.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 14 Dec 2023 11:44:55 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjjGEc0f4LLDxCTYvgD98kWqKy=89u=42JLRz5Qs3KKyA@mail.gmail.com>
+Message-ID: <CAHk-=wjjGEc0f4LLDxCTYvgD98kWqKy=89u=42JLRz5Qs3KKyA@mail.gmail.com>
+Subject: Re: [PATCH] ring-buffer: Remove 32bit timestamp logic
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 12/14/23 11:44 AM, Ahelenia Ziemia?ska wrote:
-> First:  https://lore.kernel.org/lkml/cover.1697486714.git.nabijaczleweli@nabijaczleweli.xyz/t/#u
-> Resend: https://lore.kernel.org/lkml/1cover.1697486714.git.nabijaczleweli@nabijaczleweli.xyz/t/#u
-> Resending again per https://lore.kernel.org/lkml/20231214093859.01f6e2cd@kernel.org/t/#u
-> 
-> Hi!
-> 
-> As it stands, splice(file -> pipe):
-> 1. locks the pipe,
-> 2. does a read from the file,
-> 3. unlocks the pipe.
-> 
-> For reading from regular files and blcokdevs this makes no difference.
-> But if the file is a tty or a socket, for example, this means that until
-> data appears, which it may never do, every process trying to read from
-> or open the pipe enters an uninterruptible sleep,
-> and will only exit it if the splicing process is killed.
-> 
-> This trivially denies service to:
-> * any hypothetical pipe-based log collexion system
-> * all nullmailer installations
-> * me, personally, when I'm pasting stuff into qemu -serial chardev:pipe
-> 
-> This follows:
-> 1. https://lore.kernel.org/linux-fsdevel/qk6hjuam54khlaikf2ssom6custxf5is2ekkaequf4hvode3ls@zgf7j5j4ubvw/t/#u
-> 2. a security@ thread rooted in
->    <irrrblivicfc7o3lfq7yjm2lrxq35iyya4gyozlohw24gdzyg7@azmluufpdfvu>
-> 3. https://nabijaczleweli.xyz/content/blogn_t/011-linux-splice-exclusion.html
-> 
-> Patches were posted and then discarded on principle or funxionality,
-> all in all terminating in Linus posting
->> But it is possible that we need to just bite the bullet and say
->> "copy_splice_read() needs to use a non-blocking kiocb for the IO".
-> 
-> This does that, effectively making splice(file -> pipe)
-> request (and require) O_NONBLOCK on reads fron the file:
-> this doesn't affect splicing from regular files and blockdevs,
-> since they're always non-blocking
-> (and requesting the stronger "no kernel sleep" IOCB_NOWAIT is non-sensical),
+On Thu, 14 Dec 2023 at 08:55, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> And yes, this does get called in NMI context.
 
-Not sure how you got the idea that regular files or block devices is
-always non-blocking, this is certainly not true without IOCB_NOWAIT.
-Without IOCB_NOWAIT, you can certainly be waiting for previous IO to
-complete.
+Not on an i486-class machine they won't. You don't have a local apic
+on those, and they won't have any NMI sources under our control (ie
+NMI does exist, but we're talking purely legacy NMI for "motherboard
+problems" like RAM parity errors etc)
 
-> but always returns -EINVAL for ttys.
-> Sockets behave as expected from O_NONBLOCK reads:
-> splice if there's data available else -EAGAIN.
-> 
-> This should all pretty much behave as-expected.
+> I had a patch that added:
+>
+> +       /* ring buffer does cmpxchg, make sure it is safe in NMI context */
+> +       if (!IS_ENABLED(CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG) &&
+> +           (unlikely(in_nmi()))) {
+> +               return NULL;
+> +       }
 
-Should it? Seems like there's a very high risk of breaking existing use
-cases here.
+CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG doesn't work on x86 in this context,
+because the issue is that yes, there's a safe 'cmpxchg', but that's
+not what you want.
 
-Have you at all looked into the approach of enabling splice to/from
-_without_ holding the pipe lock? That, to me, would seem like a much
-saner approach, with the caveat that I have not looked into that at all
-so there may indeed be reasons why this is not feasible.
+You want the save cmpxchg64, which is an entirely different beast.
 
--- 
-Jens Axboe
+And honestly, I don't think that NMI_SAFE_CMPXCHG covers the
+double-word case anywhere else either, except purely by luck.
 
+In mm/slab.c, we also use a double-wide cmpxchg, and there the rule
+has literally been that it's conditional on
+
+ (a) system_has_cmpxchg64() existing as a macro
+
+ (b) using that macro to then gate - at runtime - whether it actually
+works or not
+
+I think - but didn't check - that we essentially only enable the
+two-word case on x86 as a result, and fall back to the slow case on
+all other architectures - and on the i486 case.
+
+That said, other architectures *do* have a working double-word
+cmpxchg, but I wouldn't guarantee it. For example, 32-bit arm does
+have one using ldrexd/strexd, but that only exists on arm v6+.
+
+And guess what? You'll silently get a "disable interrupts, do it as a
+non-atomic load-store" on arm too for that case. And again, pre-v6 arm
+is about as relevant as i486 is, but my point is, that double-word
+cmpxchg you rely on simply DOES NOT EXIST on 32-bit platforms except
+under special circumstances.
+
+So this isn't a "x86 is the odd man out". This is literally generic.
+
+> Now back to my original question. Are you OK with me sending this to you
+> now, or should I send you just the subtle fixes to the 32-bit rb_time_*
+> code and keep this patch for the merge window?
+
+I'm absolutely not taking some untested random "let's do 64-bit
+cmpxchg that we know is broken on 32-bit using broken conditionals"
+shit.
+
+What *would* work is that slab approach, which is essentially
+
+  #ifndef system_has_cmpxchg64
+      #define system_has_cmpxchg64() false
+  #endif
+
+        ...
+        if (!system_has_cmpxchg64())
+                return error or slow case
+
+        do_64bit_cmpxchg_case();
+
+(although the slub case is much more indirect, and uses a
+__CMPXCHG_DOUBLE flag that only gets set when that define exists etc).
+
+But that would literally cut off support for all non-x86 32-bit architectures.
+
+So no. You need to forget about the whole "do a 64-bit cmpxchg on
+32-bit architectures" as being some kind of solution in the short
+term.
+
+               Linus
