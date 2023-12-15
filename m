@@ -1,150 +1,206 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E364AF9F;
-	Fri, 15 Dec 2023 17:54:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79EC7C433CA;
-	Fri, 15 Dec 2023 17:54:57 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1rECPb-00000002wUI-2DGG;
-	Fri, 15 Dec 2023 12:55:47 -0500
-Message-ID: <20231215175547.301853276@goodmis.org>
-User-Agent: quilt/0.67
-Date: Fri, 15 Dec 2023 12:55:16 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED46E41846;
+	Fri, 15 Dec 2023 18:25:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0040AC433C7;
+	Fri, 15 Dec 2023 18:25:03 +0000 (UTC)
+Date: Fri, 15 Dec 2023 13:25:02 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
- Vincent Donnefort <vdonnefort@google.com>,
- Kent Overstreet <kent.overstreet@gmail.com>
-Subject: [PATCH v4 14/15] ringbuffer/selftest: Add basic selftest to test changing subbuf order
-References: <20231215175502.106587604@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH v2] tracing: Add filter-buffer option
+Message-ID: <20231215132502.1ae9c1a6@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+=46rom 62a1de0f0f9d942934565e625a7880fd85ae216a Mon Sep 17 00:00:00 2001
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Date: Fri, 15 Dec 2023 10:26:33 -0500
+Subject: [PATCH] tracing: Add filter-buffer option
 
-Add a self test that will write into the trace buffer with differ trace
-sub buffer order sizes.
+Normally, when the filter is enabled, a temporary buffer is created to
+copy the event data into it to perform the filtering logic. If the filter
+passes and the event should be recorded, then the event is copied from the
+temporary buffer into the ring buffer. If the event is to be discarded
+then it is simply dropped. If another event comes in via an interrupt, it
+will not use the temporary buffer as it is busy and will write directly
+into the ring buffer.
+
+The filter-buffer option will allow the user to disable this feature. By
+default, it is enabled. When disabled, it disables the temporary buffer
+and always writes into the ring buffer. This will avoid the copy when the
+event is to be recorded, but also adds a bit more overhead on the discard,
+and if another event were to interrupt the event that is to be discarded,
+then the event will not be removed from the ring buffer but instead
+converted to padding that will not be read by the reader. Padding will
+still take up space on the ring buffer.
+
+This option can be beneficial if most events are recorded and not
+discarded, or simply for debugging the discard functionality of the ring
+buffer.
+
+Also fix some whitespace (that was fixed by editing this in vscode).
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- .../ftrace/test.d/00basic/ringbuffer_order.tc | 95 +++++++++++++++++++
- 1 file changed, 95 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_order.tc
+Changes since v1: https://lore.kernel.org/linux-trace-kernel/20231215102633=
+.7a24cb77@rorschach.local.home
 
-diff --git a/tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_order.tc b/tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_order.tc
-new file mode 100644
-index 000000000000..ecbcc810e6c1
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_order.tc
-@@ -0,0 +1,95 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Change the ringbuffer sub-buffer order
-+# requires: buffer_subbuf_order
-+# flags: instance
+- Renamed "disable-filter-buffer" to "filter-buffer" and made it
+  default enabled, where the user needs to disable it. (Mathieu Desnoyers)
+
+
+ Documentation/trace/ftrace.rst | 23 ++++++++++++++++++++
+ kernel/trace/trace.c           | 39 ++++++++++++++++++++--------------
+ kernel/trace/trace.h           |  1 +
+ 3 files changed, 47 insertions(+), 16 deletions(-)
+
+diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+index 23572f6697c0..7ec26eb814e9 100644
+--- a/Documentation/trace/ftrace.rst
++++ b/Documentation/trace/ftrace.rst
+@@ -1239,6 +1239,29 @@ Here are the available options:
+ 	When the free_buffer is closed, tracing will
+ 	stop (tracing_on set to 0).
+=20
++  filter-buffer
++	Normally, when the filter is enabled, a temporary buffer is
++	created to copy the event data into it to perform the
++	filtering logic. If the filter passes and the event should
++	be recorded, then the event is copied from the temporary
++	buffer into the ring buffer. If the event is to be discarded
++	then it is simply dropped. If another event comes in via
++	an interrupt, it will not use the temporary buffer as it is
++	busy and will write directly into the ring buffer.
 +
-+get_buffer_data_size() {
-+	sed -ne 's/^.*data.*size:\([0-9][0-9]*\).*/\1/p' events/header_page
++	This option, when cleared, will disable the temporary buffer and always
++	write into the ring buffer. This will avoid the copy when
++	the event is to be recorded, but also adds a bit more
++	overhead on the discard, and if another event were to interrupt
++	the event that is to be discarded, then the event will not
++	be removed from the ring buffer but instead converted to
++	padding that will not be read by the reader. Padding will
++	still take up space on the ring buffer.
++
++	This option can be beneficial if most events are recorded and
++	not discarded, or simply for debugging the discard functionality
++	of the ring buffer.
++
+   irq-info
+ 	Shows the interrupt, preempt count, need resched data.
+ 	When disabled, the trace looks like::
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 55dabee4c78b..e18c83104e24 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -466,7 +466,7 @@ EXPORT_SYMBOL_GPL(unregister_ftrace_export);
+ 	 TRACE_ITER_ANNOTATE | TRACE_ITER_CONTEXT_INFO |		\
+ 	 TRACE_ITER_RECORD_CMD | TRACE_ITER_OVERWRITE |			\
+ 	 TRACE_ITER_IRQ_INFO | TRACE_ITER_MARKERS |			\
+-	 TRACE_ITER_HASH_PTR)
++	 TRACE_ITER_HASH_PTR | TRACE_ITER_FILTER_BUF)
+=20
+ /* trace_options that are only supported by global_trace */
+ #define TOP_LEVEL_TRACE_FLAGS (TRACE_ITER_PRINTK |			\
+@@ -5398,6 +5398,8 @@ int trace_keep_overwrite(struct tracer *tracer, u32 m=
+ask, int set)
+ 	return 0;
+ }
+=20
++static int __tracing_set_filter_buffering(struct trace_array *tr, bool set=
+);
++
+ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
+ {
+ 	int *map;
+@@ -5451,6 +5453,9 @@ int set_tracer_flag(struct trace_array *tr, unsigned =
+int mask, int enabled)
+ 	if (mask =3D=3D TRACE_ITER_FUNC_FORK)
+ 		ftrace_pid_follow_fork(tr, enabled);
+=20
++	if (mask =3D=3D TRACE_ITER_FILTER_BUF)
++		__tracing_set_filter_buffering(tr, !enabled);
++
+ 	if (mask =3D=3D TRACE_ITER_OVERWRITE) {
+ 		ring_buffer_change_overwrite(tr->array_buffer.buffer, enabled);
+ #ifdef CONFIG_TRACER_MAX_TRACE
+@@ -6464,7 +6469,7 @@ static void tracing_set_nop(struct trace_array *tr)
+ {
+ 	if (tr->current_trace =3D=3D &nop_trace)
+ 		return;
+-=09
++
+ 	tr->current_trace->enabled--;
+=20
+ 	if (tr->current_trace->reset)
+@@ -7552,27 +7557,29 @@ u64 tracing_event_time_stamp(struct trace_buffer *b=
+uffer, struct ring_buffer_eve
+ 	return ring_buffer_event_time_stamp(buffer, rbe);
+ }
+=20
+-/*
+- * Set or disable using the per CPU trace_buffer_event when possible.
+- */
+-int tracing_set_filter_buffering(struct trace_array *tr, bool set)
++static int __tracing_set_filter_buffering(struct trace_array *tr, bool set)
+ {
+-	int ret =3D 0;
+-
+-	mutex_lock(&trace_types_lock);
+-
+ 	if (set && tr->no_filter_buffering_ref++)
+-		goto out;
++		return 0;
+=20
+ 	if (!set) {
+-		if (WARN_ON_ONCE(!tr->no_filter_buffering_ref)) {
+-			ret =3D -EINVAL;
+-			goto out;
+-		}
++		if (WARN_ON_ONCE(!tr->no_filter_buffering_ref))
++			return -EINVAL;
+=20
+ 		--tr->no_filter_buffering_ref;
+ 	}
+- out:
++	return 0;
 +}
 +
-+get_buffer_data_offset() {
-+	sed -ne 's/^.*data.*offset:\([0-9][0-9]*\).*/\1/p' events/header_page
-+}
++/*
++ * Set or disable using the per CPU trace_buffer_event when possible.
++ */
++int tracing_set_filter_buffering(struct trace_array *tr, bool set)
++{
++	int ret;
 +
-+get_event_header_size() {
-+	type_len=`sed -ne 's/^.*type_len.*:[^0-9]*\([0-9][0-9]*\).*/\1/p' events/header_event`
-+	time_len=`sed -ne 's/^.*time_delta.*:[^0-9]*\([0-9][0-9]*\).*/\1/p' events/header_event`
-+	array_len=`sed -ne 's/^.*array.*:[^0-9]*\([0-9][0-9]*\).*/\1/p' events/header_event`
-+	total_bits=$((type_len+time_len+array_len))
-+	total_bits=$((total_bits+7))
-+	echo $((total_bits/8))
-+}
-+
-+get_print_event_buf_offset() {
-+	sed -ne 's/^.*buf.*offset:\([0-9][0-9]*\).*/\1/p' events/ftrace/print/format
-+}
-+
-+event_header_size=`get_event_header_size`
-+print_header_size=`get_print_event_buf_offset`
-+
-+data_offset=`get_buffer_data_offset`
-+
-+marker_meta=$((event_header_size+print_header_size))
-+
-+make_str() {
-+        cnt=$1
-+	printf -- 'X%.0s' $(seq $cnt)
-+}
-+
-+write_buffer() {
-+	size=$1
-+
-+	str=`make_str $size`
-+
-+	# clear the buffer
-+	echo > trace
-+
-+	# write the string into the marker
-+	echo $str > trace_marker
-+
-+	echo $str
-+}
-+
-+test_buffer() {
-+	orde=$1
-+	page_size=$((4096<<order))
-+
-+	size=`get_buffer_data_size`
-+
-+	# the size must be greater than or equal to page_size - data_offset
-+	page_size=$((page_size-data_offset))
-+	if [ $size -lt $page_size ]; then
-+		exit fail
-+	fi
-+
-+	# Now add a little more the meta data overhead will overflow
-+
-+	str=`write_buffer $size`
-+
-+	# Make sure the line was broken
-+	new_str=`awk ' /tracing_mark_write:/ { sub(/^.*tracing_mark_write: /,"");printf "%s", $0; exit}' trace`
-+
-+	if [ "$new_str" = "$str" ]; then
-+		exit fail;
-+	fi
-+
-+	# Make sure the entire line can be found
-+	new_str=`awk ' /tracing_mark_write:/ { sub(/^.*tracing_mark_write: /,"");printf "%s", $0; }' trace`
-+
-+	if [ "$new_str" != "$str" ]; then
-+		exit fail;
-+	fi
-+}
-+
-+ORIG=`cat buffer_subbuf_order`
-+
-+# Could test bigger orders than 3, but then creating the string
-+# to write into the ring buffer takes too long
-+for a in 0 1 2 3 ; do
-+	echo $a > buffer_subbuf_order
-+	test_buffer $a
-+done
-+
-+echo $ORIG > buffer_subbuf_order
-+
--- 
++	mutex_lock(&trace_types_lock);
++	ret =3D __tracing_set_filter_buffering(tr, set);
+ 	mutex_unlock(&trace_types_lock);
+=20
+ 	return ret;
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 79180aed13ee..f82dce7ea3ff 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1251,6 +1251,7 @@ extern int trace_get_user(struct trace_parser *parser=
+, const char __user *ubuf,
+ 		C(EVENT_FORK,		"event-fork"),		\
+ 		C(PAUSE_ON_TRACE,	"pause-on-trace"),	\
+ 		C(HASH_PTR,		"hash-ptr"),	/* Print hashed pointer */ \
++		C(FILTER_BUF,		"filter-buffer"),	\
+ 		FUNCTION_FLAGS					\
+ 		FGRAPH_FLAGS					\
+ 		STACK_FLAGS					\
+--=20
 2.42.0
-
 
