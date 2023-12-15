@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6315F46A0;
-	Fri, 15 Dec 2023 03:17:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E822FC433C7;
-	Fri, 15 Dec 2023 03:17:15 +0000 (UTC)
-Date: Thu, 14 Dec 2023 22:18:03 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52CD3CA70;
+	Fri, 15 Dec 2023 03:28:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF97AC433C8;
+	Fri, 15 Dec 2023 03:28:33 +0000 (UTC)
+Date: Thu, 14 Dec 2023 22:29:21 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <linux-trace-kernel@vger.kernel.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
  <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Joel Fernandes <joel@joelfernandes.org>, Vincent Donnefort
+ Joel Fernandes <joel@joelfernandes.org>, Vincent Donnefort 
  <vdonnefort@google.com>
-Subject: [PATCH] ring-buffer: Do not try to put back write_stamp
-Message-ID: <20231214221803.1a923e10@gandalf.local.home>
+Subject: [PATCH v2] ring-buffer: Do not try to put back write_stamp
+Message-ID: <20231214222921.193037a7@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -51,29 +51,34 @@ again in this case. If this race happens, then just leave with the invalid
 write_stamp and the next event to come along will just add a absolute
 timestamp and validate everything again.
 
-Bonus points: This gets rid of another cmpxchg64!
-
 Cc: stable@vger.kernel.org
 Fixes: a389d86f7fd09 ("ring-buffer: Have nested events still record running time stamp")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ring_buffer.c | 26 ++++++--------------------
- 1 file changed, 6 insertions(+), 20 deletions(-)
+Changes since v1: https://lore.kernel.org/all/20231214221803.1a923e10@gandalf.local.home/
+
+- I forgot to remove the commit that deletes the rb_time_* logic.
+  Had to rebase the patch.
+
+ kernel/trace/ring_buffer.c | 29 ++++++-----------------------
+ 1 file changed, 6 insertions(+), 23 deletions(-)
 
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 9fdbd08af72f..378ff9e53fe6 100644
+index 1d9caee7f542..2668dde23343 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -3418,12 +3418,14 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+@@ -3612,14 +3612,14 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
  	}
  
  	if (likely(tail == w)) {
 -		u64 save_before;
+-		bool s_ok;
 -
  		/* Nothing interrupted us between A and C */
   /*D*/		rb_time_set(&cpu_buffer->write_stamp, info->ts);
 -		barrier();
-- /*E*/		rb_time_read(&cpu_buffer->before_stamp, &save_before);
+- /*E*/		s_ok = rb_time_read(&cpu_buffer->before_stamp, &save_before);
+-		RB_WARN_ON(cpu_buffer, !s_ok);
 +		/*
 +		 * If something came in between C and D, the write stamp
 +		 * may now not be in sync. But that's fine as the before_stamp
@@ -83,7 +88,7 @@ index 9fdbd08af72f..378ff9e53fe6 100644
  		if (likely(!(info->add_timestamp &
  			     (RB_ADD_STAMP_FORCE | RB_ADD_STAMP_ABSOLUTE))))
  			/* This did not interrupt any time update */
-@@ -3431,23 +3433,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+@@ -3627,24 +3627,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
  		else
  			/* Just use full timestamp for interrupting event */
  			info->delta = info->ts;
@@ -92,7 +97,8 @@ index 9fdbd08af72f..378ff9e53fe6 100644
 -		if (unlikely(info->ts != save_before)) {
 -			/* SLOW PATH - Interrupted between C and E */
 -
--			rb_time_read(&cpu_buffer->write_stamp, &info->after);
+-			a_ok = rb_time_read(&cpu_buffer->write_stamp, &info->after);
+-			RB_WARN_ON(cpu_buffer, !a_ok);
 -
 -			/* Write stamp must only go forward */
 -			if (save_before > info->after) {
