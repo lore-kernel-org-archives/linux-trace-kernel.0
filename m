@@ -1,33 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C771849;
-	Sun, 17 Dec 2023 07:18:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73471FAD;
+	Sun, 17 Dec 2023 08:10:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s2ERO6rX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBCC2C433C7;
-	Sun, 17 Dec 2023 07:18:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OeKtYiVP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63056C433C7;
+	Sun, 17 Dec 2023 08:10:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702797485;
-	bh=X6xpH21gdd4WYGs0usyDoYV2mF1KI4snptAZ8ED9dFE=;
+	s=k20201202; t=1702800650;
+	bh=Wiirgn3qwjpQfMRM2pz85BzmEPDW3beth3oqlsva2GY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=s2ERO6rXkv/Uv6ozdFecOVOeBxANLoarwv9SEJiOWQ8ij0sBCfRLfAK0JFBkzP1XR
-	 1vwvW+ZjGdGd+YP3KcFWSnZQtSlTIejbmp+oDyCbgcM/SXaRe2HOPysgA3bsLabTxx
-	 1TyruoFuNkv3zOIHSBkz/o339La5elklUJckzjxAVOr+O0FJuAj0+LK/O684PkWhYi
-	 Un+7DCss85FydP2Kex1HmSFFOw1YzCP8szf5OZejs3TGF30BFQPLsLg/2cyzel6R4H
-	 MrvA7wXSjB40LQeSJf5Il8piTtHeMAmCGtFjpjAcM74ZK871MUSpgRwQSmBtLxqHih
-	 DA7rUuk5EKC9w==
-Date: Sun, 17 Dec 2023 16:18:01 +0900
+	b=OeKtYiVPHH0ZJBYmVGHNVHTZQlVASmncjQoYPil5k/POlw24BEvDTBF9b7nXIbXbz
+	 Hrz04y1j7hlMNdiB2e8UKZUdS85WcOy52/+03Cp68fvMK7UlaOj6zx+Q3PytEMSDPw
+	 5XCZATVXOqBbkWHe2d+ntmuB7lIzHz4RjKc9O+OI0F41XXzBr0J8tgpA/7YZETYjgJ
+	 YnJ751ZpqAd2qJLo8lQz6jrXuH0h96LG/mgrdSGYJvW0Ck7bNw5sfIdVxVXXpOfFHI
+	 V4GaY+J1KB+bA6WVk06xrBhlsTs0aIRBWG6uueyUs0mdOa3bCI15fodYEC/SUllANX
+	 8bHmdNWUOnzww==
+Date: Sun, 17 Dec 2023 17:10:45 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Naveen N Rao <naveen@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Srikar Dronamraju <srikar@linux.ibm.com>
-Subject: Re: [PATCH v4] trace/kprobe: Display the actual notrace function
- when rejecting a probe
-Message-Id: <20231217161801.ec0121c047c163a772cfce1c@kernel.org>
-In-Reply-To: <20231214051702.1687300-1-naveen@kernel.org>
-References: <20231214051702.1687300-1-naveen@kernel.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] tracing: Add disable-filter-buf option
+Message-Id: <20231217171045.21e0bd95c26f17f1f19f6733@kernel.org>
+In-Reply-To: <368d36b2-e5ea-46d4-b214-6d04cf20685a@efficios.com>
+References: <20231215102633.7a24cb77@rorschach.local.home>
+	<21936075-3858-446a-9391-a38e8d8968e7@efficios.com>
+	<20231215120417.567d5ea4@rorschach.local.home>
+	<fbf8991a-ce83-462c-b87a-b60c6635d223@efficios.com>
+	<20231215123458.63f57238@rorschach.local.home>
+	<f1a75239-341e-4611-a48d-88e10407dcd4@efficios.com>
+	<20231215134335.2388aba5@rorschach.local.home>
+	<368d36b2-e5ea-46d4-b214-6d04cf20685a@efficios.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,58 +45,71 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 14 Dec 2023 10:47:02 +0530
-Naveen N Rao <naveen@kernel.org> wrote:
+On Fri, 15 Dec 2023 14:08:40 -0500
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-> Trying to probe update_sd_lb_stats() using perf results in the below
-> message in the kernel log:
-> 	trace_kprobe: Could not probe notrace function _text
+> On 2023-12-15 13:43, Steven Rostedt wrote:
+> > On Fri, 15 Dec 2023 13:25:07 -0500
+> > Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+> >>
+> >> I am not against exposing an ABI that allows userspace to alter the
+> >> filter behavior. I disagree on the way you plan to expose the ABI.
+> > 
+> > These are no different than the knobs for sched_debug
 > 
-> This is because 'perf probe' specifies the kprobe location as an offset
-> from '_text':
-> 	$ sudo perf probe -D update_sd_lb_stats
-> 	p:probe/update_sd_lb_stats _text+1830728
+> These are very much different. The sched features are enabled at
+> build-time by modifying kernel/sched/features.h. There is no userspace
+> ABI involved.
 > 
-> However, the error message is misleading and doesn't help convey the
-> actual notrace function that is being probed. Fix this by looking up the
-> actual function name that is being probed. With this fix, we now get the
-> below message in the kernel log:
-> 	trace_kprobe: Could not probe notrace function update_sd_lb_stats.constprop.0
+> > 
+> >>
+> >> Exposing this option as an ABI in this way exposes too much internal
+> >> ring buffer implementation details to userspace.
+> > 
+> > There's already lots of exposure using options. The options are just
+> > knobs, nothing more.
+> > 
+> >>
+> >> It exposes the following details which IMHO should be hidden or
+> >> configurable in a way that allows moving to a whole new mechanism
+> >> which will have significantly different characteristics in the
+> >> future:
+> >>
+> >> It exposes that:
+> >>
+> >> - filtering uses a copy to a temporary buffer, and
+> >> - that this copy is enabled by default.
+> >>
+> >> Once exposed, those design constraints become immutable due to ABI.
+> > 
+> > No it is not. There is no such thing as "immutable ABI". The rule is
+> > "don't break user space" If this functionality in the kernel goes away,
+> > the knob could become a nop, and I doubt any user space will break
+> > because of it.
+> > 
+> > That is, the only burden is keeping this option exposed. But it could
+> > be just like that light switch that has nothing connected to it. It's
+> > still there, but does nothing if you switch it. This knob can act the
+> > same way. This does not in anyway prevent future innovation.
 > 
+> I am not comfortable with exposing internal ring buffer implementation
+> details to userspace which may or may not be deprecated as no-ops
+> in the future. This will lead to useless clutter.
 
-OK, this looks good to me. let me pick this.
+Hmm, but this may change the ring buffer consumption rate if the filter
+is enabled. The ring buffer may be filled quickly than the user expected.
+Thus if user specifies the rare condition, most of the events on the ring
+buffer is filled with garbage. And user will know the buffer size *seems*
+smaller than the setting.
+I think copying overhead will be a secondary effect, the biggest noticable
+difference is how many events are recorded in the ring buffer. Thus, what
+about naming the option as "filter-on-buffer"?
 
-Thank you!
+If we introduce filtering on input directly, at that point we will use
+it if "filter-on-buffer = no", because this is also not noticable from
+users.
 
-> Signed-off-by: Naveen N Rao <naveen@kernel.org>
-> ---
-> v4: Use printk format specifier %ps with probe address to lookup the 
-> symbol, as suggested by Masami.
-> 
->  kernel/trace/trace_kprobe.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index 3d7a180a8427..0017404d6e8d 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -487,8 +487,8 @@ static int __register_trace_kprobe(struct trace_kprobe *tk)
->  		return -EINVAL;
->  
->  	if (within_notrace_func(tk)) {
-> -		pr_warn("Could not probe notrace function %s\n",
-> -			trace_kprobe_symbol(tk));
-> +		pr_warn("Could not probe notrace function %ps\n",
-> +			(void *)trace_kprobe_address(tk));
->  		return -EINVAL;
->  	}
->  
-> 
-> base-commit: 4758560fa268cecfa1144f015aa9f2525d164b7e
-> -- 
-> 2.43.0
-> 
-
+Thank you,
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
