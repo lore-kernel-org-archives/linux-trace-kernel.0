@@ -1,75 +1,111 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063BB4652B
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 17 Dec 2023 17:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-7-Jk6djIywNsumAmg5dYKSIA-1; Sun, 17 Dec 2023 17:40:38 +0000
-X-MC-Unique: Jk6djIywNsumAmg5dYKSIA-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sun, 17 Dec
- 2023 17:40:19 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Sun, 17 Dec 2023 17:40:19 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Linus Torvalds' <torvalds@linux-foundation.org>, Steven Rostedt
-	<rostedt@goodmis.org>
-CC: "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, LKML
-	<linux-kernel@vger.kernel.org>, Linux Trace Kernel
-	<linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
-	<mathieu.desnoyers@efficios.com>
-Subject: RE: [PATCH] ring-buffer: Remove 32bit timestamp logic
-Thread-Topic: [PATCH] ring-buffer: Remove 32bit timestamp logic
-Thread-Index: AQHaLs9iaE2zzzBpbUiUb4MLlBIx7bCtvF7A
-Date: Sun, 17 Dec 2023 17:40:19 +0000
-Message-ID: <d3e5ab37839047a483212c8b3fc667e5@AcuMS.aculab.com>
-References: <20231213211126.24f8c1dd@gandalf.local.home>
- <20231213214632.15047c40@gandalf.local.home>
- <CAHk-=whESMW2v0cd0Ye+AnV0Hp9j+Mm4BO2xJo93eQcC1xghUA@mail.gmail.com>
- <20231214115614.2cf5a40e@gandalf.local.home>
- <CAHk-=wjjGEc0f4LLDxCTYvgD98kWqKy=89u=42JLRz5Qs3KKyA@mail.gmail.com>
- <20231214153636.655e18ce@gandalf.local.home>
- <CAHk-=wieVSfyjTpe8L5kmwC4mk9dRge9dvyJiMZEkyz4-tOvow@mail.gmail.com>
-In-Reply-To: <CAHk-=wieVSfyjTpe8L5kmwC4mk9dRge9dvyJiMZEkyz4-tOvow@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665B74B12A;
+	Sun, 17 Dec 2023 23:56:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CB8EC433C8;
+	Sun, 17 Dec 2023 23:56:55 +0000 (UTC)
+Date: Sun, 17 Dec 2023 18:56:52 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, LKML
+ <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] tracing: Add disable-filter-buf option
+Message-ID: <20231217185652.0cd0f10c@rorschach.local.home>
+In-Reply-To: <20231217171045.21e0bd95c26f17f1f19f6733@kernel.org>
+References: <20231215102633.7a24cb77@rorschach.local.home>
+	<21936075-3858-446a-9391-a38e8d8968e7@efficios.com>
+	<20231215120417.567d5ea4@rorschach.local.home>
+	<fbf8991a-ce83-462c-b87a-b60c6635d223@efficios.com>
+	<20231215123458.63f57238@rorschach.local.home>
+	<f1a75239-341e-4611-a48d-88e10407dcd4@efficios.com>
+	<20231215134335.2388aba5@rorschach.local.home>
+	<368d36b2-e5ea-46d4-b214-6d04cf20685a@efficios.com>
+	<20231217171045.21e0bd95c26f17f1f19f6733@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Li4uDQo+IE15IGd1ZXNzIGlzIHRoYXQgKm1vc3QqIDMyLWJpdCBhcmNoaXRlY3R1cmVzIGRvIG5v
-dCBoYXZlIGEgNjQtYml0DQo+IGNtcHhjaGcgLSBub3QgZXZlbiB0aGUgaXJxLXNhZmUgb25lLg0K
-DQpEb2VzIGFueSBzcGFyYzMyIGV2ZW4gaGF2ZSBhIDMyLWJpdCBjbXB4Y2hnPw0KVGhlIG9yaWdp
-bmFsIHZlcnNpb25zICh3aGljaCB3ZXJlIGRlZmluaXRlbHkgU01QIGNhcGFibGUpDQpvbmx5IGhh
-ZCBhIGJ5dGUgc2l6ZWQgYXRvbWljIGV4Y2hhbmdlIHRoYXQgYWx3YXlzIHdyb3RlIDB4ZmYuDQoN
-ClNwYXJjMzIgZG9lcyBoYXZlICdsb2FkL3N0b3JlIGRvdWJsZScgKHR3byAzMmJpdCByZWdpc3Rl
-cnMpDQpidXQgMzJiaXQgY3B1IGxpa2UgbmlvczIgYW5kIChJIHRoaW5rKSBSSVNDViAoYW5kIHBy
-b2JhYmx5DQphbnl0aGluZyBlbHNlIGxvb3NlbHkgYmFzZWQgb24gTUlQUykgb25seSBoYXZlIHNp
-bmdsZSByZWdpc3Rlcg0KbG9hZC9zdG9yZSBpbnN0cnVjdGlvbnMuDQpUaGV5J2xsIG1haW5seSBi
-ZSBVUCBvbmx5LCBJJ3ZlIG5vdCBsb29rZWQgYXQgUklTQ1YgZW5vdWdoIHRvDQpzZWUgd2hhdCBp
-dCBoYXMgd2hlbiBzdXBwb3J0aW5nIFNNUC4NCg0KPiBGb3IgdGhlIFVQIGNhc2UgeW91IGNhbiBk
-byB5b3VyIG93biwgb2YgY291cnNlLg0KDQpBIGdlbmVyaWMgdmVyc2lvbiBvZiB0aGUgc29mdCBp
-bnRlcnJ1cHQgZGlzYWJsZSBjb2RlIHdvdWxkIGhlbHAuDQpUaGVuIGl0IHdvdWxkIGp1c3QgYmUg
-YW4gaW5jL2RlYyBvZiBtZW1vcnkgcmF0aGVyIHRoYW4gaGF2aW5nDQp0byBzYXZlIHRoZSBjdXJy
-ZW50IGludGVycnVwdCBlbmFibGUgc3RhdGUuDQpFc3BlY2lhbGx5IGZvciBjb2RlIHRoYXQgb25s
-eSBkaXNhYmxlcyBpbnRlcnJ1cHRzIGZvciBhIGZldw0KaW5zdHJ1Y3Rpb25zIC0gc28gdGhlIGNv
-c3RzIG9mIGRlZmVycmluZyB0aGUgaW50ZXJydXB0IGRvbid0DQpoYXBwZW4gb2Z0ZW4uDQoNCglE
-YXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91
-bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5
-NzM4NiAoV2FsZXMpDQo=
+On Sun, 17 Dec 2023 17:10:45 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> > >> It exposes the following details which IMHO should be hidden or
+> > >> configurable in a way that allows moving to a whole new mechanism
+> > >> which will have significantly different characteristics in the
+> > >> future:
+> > >>
+> > >> It exposes that:
+> > >>
+> > >> - filtering uses a copy to a temporary buffer, and
+> > >> - that this copy is enabled by default.
+> > >>
+> > >> Once exposed, those design constraints become immutable due to ABI.  
+> > > 
+> > > No it is not. There is no such thing as "immutable ABI". The rule is
+> > > "don't break user space" If this functionality in the kernel goes away,
+> > > the knob could become a nop, and I doubt any user space will break
+> > > because of it.
+> > > 
+> > > That is, the only burden is keeping this option exposed. But it could
+> > > be just like that light switch that has nothing connected to it. It's
+> > > still there, but does nothing if you switch it. This knob can act the
+> > > same way. This does not in anyway prevent future innovation.  
+> > 
+> > I am not comfortable with exposing internal ring buffer implementation
+> > details to userspace which may or may not be deprecated as no-ops
+> > in the future. This will lead to useless clutter.  
+> 
+> Hmm, but this may change the ring buffer consumption rate if the filter
+> is enabled. The ring buffer may be filled quickly than the user expected.
 
+WHich it has been since 0fc1b09ff1ff4 ("tracing: Use temp buffer when
+filtering events"), and before that commit, things were a bit slower.
+That commit sped things up. But, even with that commit, there's no
+guarantee that you will get to use the temp buffer and just write
+directly into the ring buffer.
+
+And I found that currently histograms (and sythetic events!) also write
+directly into the buffer :-p
+
+
+> Thus if user specifies the rare condition, most of the events on the ring
+> buffer is filled with garbage. And user will know the buffer size *seems*
+> smaller than the setting.
+
+Not sure what you mean by that. The event on the buffer is removed
+unless another event sneaks in and makes it impossible to reset the
+next write location before the discarded event.
+
+> I think copying overhead will be a secondary effect, the biggest noticable
+> difference is how many events are recorded in the ring buffer. Thus, what
+> about naming the option as "filter-on-buffer"?
+
+I'm not sure I understand that. How about just call it "filter_direct",
+which means to write directly on the buffer, and default that off.
+
+> 
+> If we introduce filtering on input directly, at that point we will use
+> it if "filter-on-buffer = no", because this is also not noticable from
+> users.
+
+The "filter on input" will be a different interface, as the current
+filter is only on the output of TRACE_EVENT() fields. The input
+parameters isn't exposed at all, and may never be, as that would make
+peterz and others keep all tracepoints from their subsystems.
+
+As my main motivation for this was to create a kselftest that can
+stress test the filtering directly into the ring buffer (like it use
+to, and like it does for interrupting events and histograms and
+synthetic events), we can still add tests to make sure that part works.
+
+I'm fine slapping a Kconfig of CONFIG_TRACE_FORCE_DIRECT_KNOB and
+place the documentation in the help content saying it adds a knob to
+allow kselftest stress test the direct to ring buffer filtering.
+
+-- Steve
