@@ -1,151 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C2B1D129;
-	Mon, 18 Dec 2023 13:18:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7EE129EFB;
+	Mon, 18 Dec 2023 14:25:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gdptaZoH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1BAFC433C7;
-	Mon, 18 Dec 2023 13:18:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fx6rk/Y8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CA25C433C8;
+	Mon, 18 Dec 2023 14:24:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702905510;
-	bh=8t7YVZmoVUR7dCk/2nFP4SmQbrkuMwJVZH30PnGw0sc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gdptaZoHvqangQBY2bqHwuw2opQxeFkeZFx9In24WN3WXOAIwlqy3DmY0kAtz6FTJ
-	 G+q4NbNA93rX+F+0UbpBJJXwEDD3pXoGYWcQ3V+M4q6X4qrYHwSPvXmBTLjHiFnFi7
-	 /q5NeaHXbUuysuw2nR05yhjcKI241e45McSOD6a6YawpVzKv7y9iHFVZW/PGy8xpcy
-	 dtma6kDEv1SuXSRh1StcmAhzi4I3x6sFmWIunRS4/U63KEDZ9rlRca+MYH+4HHVFbq
-	 doF4JsL472c0c0NZIbvTcPKMxOAx8LWmZH64LU1uGIS21o1A68M8UtCPXmD0iOVlwD
-	 btUodJNv1lOhA==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@chromium.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Guo Ren <guoren@kernel.org>
-Subject: [PATCH v5 34/34] Documentation: probes: Update fprobe on function-graph tracer
-Date: Mon, 18 Dec 2023 22:18:24 +0900
-Message-Id: <170290550413.220107.2534299881433621951.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <170290509018.220107.1347127510564358608.stgit@devnote2>
-References: <170290509018.220107.1347127510564358608.stgit@devnote2>
-User-Agent: StGit/0.19
+	s=k20201202; t=1702909500;
+	bh=SUEB88NGJGLKREuACm730d4dCH16uYesDGk4fSzM/pI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fx6rk/Y84L5VDkdCG25uAnfxUxGjEcOFVXTvOGMBCVS/6FOHNblv75dzsh5kQ0B3d
+	 9d7tRccUF0l2vUl5jHiukNqelBSbN2uwowEfcAngwvLwsDVxoOGv0SNtidnjjKh7Vm
+	 AooJ+1b1GALB9Uq9CIdoGnEhJC1Xw50ZBICpwBseGudCoDvc3UPgsl0HTfZ3VKL6t7
+	 EGw0VNhhNHimWD/KiqGfKAekZ9msIZTf+5naPVywq+NnClHzinDEt8KEy3QIUeGHGk
+	 9tilaN5KFJxpn/h1959jo/3Bzp5lZbwJqmRGi8X9f6mdposr3ud7Jxe5TQEuqoMsHR
+	 oqstgebKZ++lQ==
+Date: Mon, 18 Dec 2023 23:24:55 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 1/2] ring-buffer: Replace rb_time_cmpxchg() with
+ rb_time_cmp_and_update()
+Message-Id: <20231218232455.03aa6506f855109476e34212@kernel.org>
+In-Reply-To: <20231215165628.096822746@goodmis.org>
+References: <20231215165512.280088765@goodmis.org>
+	<20231215165628.096822746@goodmis.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Fri, 15 Dec 2023 11:55:13 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Update fprobe documentation for the new fprobe on function-graph
-tracer. This includes some bahvior changes and pt_regs to
-ftrace_regs interface change.
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> There's only one place that performs a 64-bit cmpxchg for the timestamp
+> processing. The cmpxchg is only to set the write_stamp equal to the
+> before_stamp, and if it doesn't get set, then the next event will simply
+> be forced to add an absolute timestamp.
+> 
+> Given that 64-bit cmpxchg is expensive on 32-bit, and the current
+> workaround uses 3 consecutive 32-bit cmpxchg doesn't make it any faster.
+> It's best to just not do the cmpxchg as a simple compare works for the
+> accuracy of the timestamp. The only thing that will happen without the
+> cmpxchg is the prepended absolute timestamp on the next event which is not
+> that big of a deal as the path where this happens is seldom hit because it
+> requires an interrupt to happen between a few lines of code that also
+> writes an event into the same buffer.
+> 
+> With this change, the 32-bit rb_time_t workaround can be removed.
+> 
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v2:
-  - Update @fregs parameter explanation.
----
- Documentation/trace/fprobe.rst |   42 ++++++++++++++++++++++++++--------------
- 1 file changed, 27 insertions(+), 15 deletions(-)
+Hmm, but this patch itself is just moving rb_time_cmpxchg() in the new
+rb_time_cmp_and_update() function. The actual change has been done
+in the next patch. I think there is no reason to split this from the
+second one...
 
-diff --git a/Documentation/trace/fprobe.rst b/Documentation/trace/fprobe.rst
-index 196f52386aaa..f58bdc64504f 100644
---- a/Documentation/trace/fprobe.rst
-+++ b/Documentation/trace/fprobe.rst
-@@ -9,9 +9,10 @@ Fprobe - Function entry/exit probe
- Introduction
- ============
- 
--Fprobe is a function entry/exit probe mechanism based on ftrace.
--Instead of using ftrace full feature, if you only want to attach callbacks
--on function entry and exit, similar to the kprobes and kretprobes, you can
-+Fprobe is a function entry/exit probe mechanism based on the function-graph
-+tracer.
-+Instead of tracing all functions, if you want to attach callbacks on specific
-+function entry and exit, similar to the kprobes and kretprobes, you can
- use fprobe. Compared with kprobes and kretprobes, fprobe gives faster
- instrumentation for multiple functions with single handler. This document
- describes how to use fprobe.
-@@ -91,12 +92,14 @@ The prototype of the entry/exit callback function are as follows:
- 
- .. code-block:: c
- 
-- int entry_callback(struct fprobe *fp, unsigned long entry_ip, unsigned long ret_ip, struct pt_regs *regs, void *entry_data);
-+ int entry_callback(struct fprobe *fp, unsigned long entry_ip, unsigned long ret_ip, struct ftrace_regs *fregs, void *entry_data);
- 
-- void exit_callback(struct fprobe *fp, unsigned long entry_ip, unsigned long ret_ip, struct pt_regs *regs, void *entry_data);
-+ void exit_callback(struct fprobe *fp, unsigned long entry_ip, unsigned long ret_ip, struct ftrace_regs *fregs, void *entry_data);
- 
--Note that the @entry_ip is saved at function entry and passed to exit handler.
--If the entry callback function returns !0, the corresponding exit callback will be cancelled.
-+Note that the @entry_ip is saved at function entry and passed to exit
-+handler.
-+If the entry callback function returns !0, the corresponding exit callback
-+will be cancelled.
- 
- @fp
-         This is the address of `fprobe` data structure related to this handler.
-@@ -112,12 +115,10 @@ If the entry callback function returns !0, the corresponding exit callback will
-         This is the return address that the traced function will return to,
-         somewhere in the caller. This can be used at both entry and exit.
- 
--@regs
--        This is the `pt_regs` data structure at the entry and exit. Note that
--        the instruction pointer of @regs may be different from the @entry_ip
--        in the entry_handler. If you need traced instruction pointer, you need
--        to use @entry_ip. On the other hand, in the exit_handler, the instruction
--        pointer of @regs is set to the current return address.
-+@fregs
-+        This is the `ftrace_regs` data structure at the entry and exit. This
-+        includes the function parameters, or the return values. So user can
-+        access thos values via appropriate `ftrace_regs_*` APIs.
- 
- @entry_data
-         This is a local storage to share the data between entry and exit handlers.
-@@ -125,6 +126,17 @@ If the entry callback function returns !0, the corresponding exit callback will
-         and `entry_data_size` field when registering the fprobe, the storage is
-         allocated and passed to both `entry_handler` and `exit_handler`.
- 
-+Entry data size and exit handlers on the same function
-+======================================================
-+
-+Since the entry data is passed via per-task stack and it is has limited size,
-+the entry data size per probe is limited to `15 * sizeof(long)`. You also need
-+to take care that the different fprobes are probing on the same function, this
-+limit becomes smaller. The entry data size is aligned to `sizeof(long)` and
-+each fprobe which has exit handler uses a `sizeof(long)` space on the stack,
-+you should keep the number of fprobes on the same function as small as
-+possible.
-+
- Share the callbacks with kprobes
- ================================
- 
-@@ -165,8 +177,8 @@ This counter counts up when;
-  - fprobe fails to take ftrace_recursion lock. This usually means that a function
-    which is traced by other ftrace users is called from the entry_handler.
- 
-- - fprobe fails to setup the function exit because of the shortage of rethook
--   (the shadow stack for hooking the function return.)
-+ - fprobe fails to setup the function exit because of failing to allocate the
-+   data buffer from the per-task shadow stack.
- 
- The `fprobe::nmissed` field counts up in both cases. Therefore, the former
- skips both of entry and exit callback and the latter skips the exit
+Isn't this part actual change?
 
+>  static bool rb_time_cmp_and_update(rb_time_t *t, u64 expect, u64 set)
+>  {
+> -	return rb_time_cmpxchg(t, expect, set);
+> +#ifdef RB_TIME_32
+> +	return expect == READ_ONCE(t->time);
+> +#else
+> +	return local64_try_cmpxchg(&t->time, &expect, set);
+> +#endif
+>  }
+
+Thank you,
+
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/ring_buffer.c | 23 ++++++++++++++++++++---
+>  1 file changed, 20 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 1a26b3a1901f..c6842a4331a9 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -762,6 +762,15 @@ static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
+>  }
+>  #endif
+>  
+> +/*
+> + * Returns true if t == expect, and if possible will update with set,
+> + * but t is not guaranteed to be updated even if this returns true
+> + */
+> +static bool rb_time_cmp_and_update(rb_time_t *t, u64 expect, u64 set)
+> +{
+> +	return rb_time_cmpxchg(t, expect, set);
+> +}
+> +
+>  /*
+>   * Enable this to make sure that the event passed to
+>   * ring_buffer_event_time_stamp() is not committed and also
+> @@ -3622,9 +3631,17 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+>  		barrier();
+>   /*E*/		if (write == (local_read(&tail_page->write) & RB_WRITE_MASK) &&
+>  		    info->after < ts &&
+> -		    rb_time_cmpxchg(&cpu_buffer->write_stamp,
+> -				    info->after, ts)) {
+> -			/* Nothing came after this event between C and E */
+> +		    rb_time_cmp_and_update(&cpu_buffer->write_stamp,
+> +					   info->after, ts)) {
+> +			/*
+> +			 * Nothing came after this event between C and E it is
+> +			 * safe to use info->after for the delta.
+> +			 * The above rb_time_cmp_and_update() may or may not
+> +			 * have updated the write_stamp. If it did not then
+> +			 * the next event will simply add an absolute timestamp
+> +			 * as the write_stamp will be different than the
+> +			 * before_stamp.
+> +			 */
+>  			info->delta = ts - info->after;
+>  		} else {
+>  			/*
+> -- 
+> 2.42.0
+> 
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
