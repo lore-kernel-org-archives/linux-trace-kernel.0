@@ -1,85 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2433B71451;
-	Mon, 18 Dec 2023 19:42:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC713C433C8;
-	Mon, 18 Dec 2023 19:42:39 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1rFJWZ-000000038ki-3IfJ;
-	Mon, 18 Dec 2023 14:43:35 -0500
-Message-ID: <20231218194247.018725743@goodmis.org>
-User-Agent: quilt/0.67
-Date: Mon, 18 Dec 2023 14:42:47 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH v2 0/2] tracing: Replace final 64-bit cmpxchg with compare and update if available
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 785977207F
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 Dec 2023 20:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="R97vqgmz"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-35faacfc938so1705765ab.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 18 Dec 2023 12:49:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1702932563; x=1703537363; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hYPt88pj2T74K9fmBn4rP1VeeeJodupmtqgeHgWnKoY=;
+        b=R97vqgmz/b02wNEWRBKir3DI/FbxOGk4ua+P1Puz2MInhnsmj9x/cs062uv+iDFG07
+         S3qfJ2M2BwtJXc4u9cVWLRirGlEPn/00wYT3uXaSCmBo+7z8WcEZ2yBFkZE9BK5UwHGv
+         KxtYmM9DdZ4IrCHfYPndPG427RtR7NnqgcbBs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702932563; x=1703537363;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hYPt88pj2T74K9fmBn4rP1VeeeJodupmtqgeHgWnKoY=;
+        b=VbYCqOYSYJHFvX/lj4lOL0wWrRHuLr2zZVnB4+mPsOPJgki3DO2KIChQ9MUn4IvXJH
+         u5kUJc2tXKr9phYCeTv9PrTR2b5iq+fjOgO3VI+VpoG1b0oOmedyMa2nw+PftfCDXBA3
+         eYouwrSmBq7VbJOQXh6vG1TWCqXFsfORqYYMhKnVhewjyr+oqva0in0YTSsQHmcdGVv9
+         AnhFNJHG6qce7hjWd2E+YqSf9DSFiLfOUu2Od44XKtMEfgaP4VWjEQeikscTJ95f9Vxo
+         o775WNUyDlkD18xuffUrVIlSORfP1tUX/JRRGx52NuAw6jeDKrhdW+Crh5o3owouX62D
+         o9UA==
+X-Gm-Message-State: AOJu0YxqVm4NCcF43Nem8jkF+1wgcpuFJeV7pgfwzmKdsjFRTnS6IX6Q
+	TiyWuKxW6LzvL+7soQbKsV4EcF4CzWs5Fg9EP1c=
+X-Google-Smtp-Source: AGHT+IFBKoR4bA6tNRKQfsEUuZjiVZaEpX3AtmKcSCIhUu+SMSZYs4QztVBPBrDNi84cG3Bhx8Ua/Q==
+X-Received: by 2002:a6b:a0d:0:b0:7b6:f0b4:92aa with SMTP id z13-20020a6b0a0d000000b007b6f0b492aamr28614854ioi.0.1702932563645;
+        Mon, 18 Dec 2023 12:49:23 -0800 (PST)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id f36-20020a05663832a400b00469262e9f14sm5557049jav.130.2023.12.18.12.49.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Dec 2023 12:49:23 -0800 (PST)
+Message-ID: <9978c0db-ec37-4d99-847b-86098bb0ba98@linuxfoundation.org>
+Date: Mon, 18 Dec 2023 13:49:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] tracing/selftests: Add test to test the trace_marker
+Content-Language: en-US
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20231213111527.6a4c9b58@gandalf.local.home>
+ <20231214075926.e3969c8746068953fe910ed0@kernel.org>
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20231214075926.e3969c8746068953fe910ed0@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 12/13/23 15:59, Masami Hiramatsu (Google) wrote:
+> On Wed, 13 Dec 2023 11:15:27 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+>> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+>>
+>> Add a test that writes longs strings, some over the size of the sub buffer
+>> and make sure that the entire content is there.
+> 
+> This looks good to me. and tested.
+> 
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Tested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
 
-With the introduction of a389d86f7fd09 ("ring-buffer: Have nested events
-still record running time stamp"), the timestamps required needing 64-bit
-cmpxchg. As some architectures do no even have a 64-bit cmpxchg, the code
-for 32-bit architectures used 3 32-bit words that represented the 64-bit
-timestamp and this also required performing 3 32-bit cmpxchg where a single
-64-bit would do.
+Assuming this is going through tracing:
 
-While debugging the ring-buffer, it was found that the locations of 3 of the
-4 cmpxchg() were actually causing bugs, and the code was restructured to
-remove them! See:
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
 
-     https://lore.kernel.org/linux-trace-kernel/20231211114420.36dde01b@gandalf.local.home
-     https://lore.kernel.org/linux-trace-kernel/20231214222921.193037a7@gandalf.local.home
-     https://lore.kernel.org/linux-trace-kernel/20231215081810.1f4f38fe@rorschach.local.home
+If not just let me know, I will take this through kselftest tree.
 
-The only remaining cmpcxhg() is in a slow path that gets hit if an interrupt
-were to come in during the allocation of an event and itself would right an
-event to the same buffer. The interrupted event would detect this, and use
-the cmpxchg for two purposes. One was to know if the interrupt happened
-before it allocated its space (where it can use the timestamp that was
-found), and the other is to set the write_stamp back to matching the
-before_stamp, where the event after the interrupted event would not need to
-add an absolute timestamp (it's 8 bytes added to the ring buffer).
+thanks,
+-- Shuah
 
-The first purpose of the cmpxchg could also be done with a simple compare.
-The second purpose (avoiding the addition of the absolute timestamp)
-requires the cmpxchg. Considering the complexity of the 32-bit version of
-the 64-bit cmpxchg, avoiding an added absolute timestamp doesn't justify it.
-
-The first patch replaces the last 64-bit cmpxchg() with a
-rb_time_cmp_and_update() that will return true if the timestamp matches the
-expected result. It will optionally update the timestamp with the "set"
-parameter if cmpxchg is available.
-
-The second patch removes the 32-bit version of the 64-bit cmpxchg and simply
-does the compare. This also removes the complex logic of that code. The
-difference now is that 32-bit architectures will have to add an absolute
-timestamp to an event that follows an event that suffered the race
-condition.
-
-
-Changes since v1: https://lore.kernel.org/all/20231215165512.280088765@goodmis.org/
-
-- Restructured the rb_time_cmpxchg() to work the same for both 64-bit
-  and 32-bit.
-
-- Fixed reading t->time to use local64_read() and not READ_ONCE().
-
-Steven Rostedt (Google) (2):
-      ring-buffer: Replace rb_time_cmpxchg() with rb_time_cmp_and_update()
-      ring-buffer: Remove 32bit timestamp logic
-
-----
- kernel/trace/ring_buffer.c | 262 +++++++++------------------------------------
- 1 file changed, 53 insertions(+), 209 deletions(-)
