@@ -1,210 +1,212 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8134FF62
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 Dec 2023 15:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QfLqC/oo"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-332ee20a3f0so2803403f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 18 Dec 2023 07:15:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702912503; x=1703517303; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2cHFqrs/DsZSfDXX/TXsRzQWk2JL/c6Rao0A3y+tqak=;
-        b=QfLqC/ooHWvd3efRI7Ab8hrRGvvhllBRzKUbJ3JZpRHUH32NvJUuvu/je8STkAwrHF
-         IgCxtGxsPtjKy+9Bsr4uKULyfvQbaGz4J0rQG0SsuE5DNcxr+g0uuCGHNcI2zw9kTwTp
-         TyE84tendjMpFwI0Vs9hj86lLdHr9k34REWZPgG8xEKSySTKkoo4jkMad6W6KMMNEMUy
-         EBuZEGKktzF0cWDN6jSNU56b7xhRaWhCtohoWX9WK4mqjp73pODwEeUEGudrlkOjJRRB
-         882EE26q/2kJ+1zSC1OXUtpx9Izzbul0NP4FoHCvPn5MbIzWTU/E8tg30pTChZamRS9g
-         Ucbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702912503; x=1703517303;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2cHFqrs/DsZSfDXX/TXsRzQWk2JL/c6Rao0A3y+tqak=;
-        b=AyyYwuRL0bjxQsDHcNDQ6LE3r7uV20jCtyg0/nrAJqIJ5FMg2CCnrRz3JMOeOoWYCY
-         3TsJemPuMkAeQYJGt0MDBR6pFFqY4FELpBAzwiHpRXHuJ6QGXXpR5p4UYOL0g66sihX/
-         hSHVy3Tjo5oprGVEeZ6BgUVgFFMVo8x70eFiGt/5exSTQE7fG7cBc9tnx71raoW/ejY6
-         7bi4hvgZx6aG60xG1OSK4o07A6IwTIw0VmRMXXFTv7uP2t2EJnng3CVIgZfsUovDo0RV
-         LvzeFyzLBdoCRMgoDSSHAkmSzBNYREM8foADpwWL3m9HSi0GNK/vVX9gFGnUshL5+rly
-         VnNA==
-X-Gm-Message-State: AOJu0Yygt73NObbLjS6jvIzeyi/fGUZMENs86Qb3GxgA/jLHkv1NQEMC
-	0l3tfegmqYDxfm8Lx3/KvcCDH1r03mIsThHm
-X-Google-Smtp-Source: AGHT+IGJ1ng+FumU7x/d3GFAZllpeKu8HFIvaDFD0TBdIKC5mo6H2+zZNW7ahX5/aXuPipXP3jTFra7TJ0ads3Ec
-X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:a5d:6c6f:0:b0:333:3c3f:a496 with SMTP
- id r15-20020a5d6c6f000000b003333c3fa496mr83919wrz.14.1702912502553; Mon, 18
- Dec 2023 07:15:02 -0800 (PST)
-Date: Mon, 18 Dec 2023 15:14:51 +0000
-In-Reply-To: <20231218151451.944907-1-vdonnefort@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2883B1D137;
+	Mon, 18 Dec 2023 15:32:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08CBCC433C7;
+	Mon, 18 Dec 2023 15:32:02 +0000 (UTC)
+Date: Mon, 18 Dec 2023 10:32:59 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH v3] tracing: Add filter-direct option
+Message-ID: <20231218103259.75f1ac6a@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20231218151451.944907-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
-Message-ID: <20231218151451.944907-3-vdonnefort@google.com>
-Subject: [PATCH v7 2/2] tracing: Allow user-space mapping of the ring-buffer
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: kernel-team@android.com, Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Currently, user-space extracts data from the ring-buffer via splice,
-which is handy for storage or network sharing. However, due to splice
-limitations, it is imposible to do real-time analysis without a copy.
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-A solution for that problem is to let the user-space map the ring-buffer
-directly.
+Normally, when the filter is enabled, a temporary buffer is created to
+copy the event data into it to perform the filtering logic. If the filter
+passes and the event should be recorded, then the event is copied from the
+temporary buffer into the ring buffer. If the event is to be discarded
+then it is simply dropped. If another event comes in via an interrupt, it
+will not use the temporary buffer as it is busy and will write directly
+into the ring buffer.
 
-The mapping is exposed via the per-CPU file trace_pipe_raw. The first
-element of the mapping is the meta-page. It is followed by each
-bpage constituting the ring-buffer, ordered by their unique page ID:
+The filter-direct option will allow the user to disable this feature. By
+default, it is disabled. When enabled, it disables the temporary buffer
+and always writes into the ring buffer. This will avoid the copy when the
+event is to be recorded, but also adds a bit more overhead on the discard,
+and if another event were to interrupt the event that is to be discarded,
+then the event will not be removed from the ring buffer but instead
+converted to padding that will not be read by the reader. Padding will
+still take up space on the ring buffer.
 
-  * Meta-page -- include/uapi/linux/trace_mmap.h for a description
-  * buffer-page ID 0
-  * buffer-page ID 1
-     ...
+This option is mainly used for kselftests to stress test the ring buffer
+discard logic.
 
-It is therefore easy to translate a buffer page ID into an offset in the
-mapping:
+Also fix some whitespace (that was fixed by editing this in vscode).
 
-  reader_id = meta->reader->id;
-  reader_offset = meta->meta_page_size + reader_id * meta->bpage_size;
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v2: https://lore.kernel.org/linux-trace-kernel/20231215132502.1ae9c1a6@rorschach.local.home
 
-When new data is available, the mapper must call a newly introduced ioctl:
-TRACE_MMAP_IOCTL_GET_READER. This will update the Meta-page reader ID to
-point to the next reader containing unread data.
+- Changed the option name to filter-direct
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+- Added the config option CONFIG_TRACE_FILTER_DIRECT
 
-diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
-index 9536f0b7c094..e44563cf5ede 100644
---- a/include/uapi/linux/trace_mmap.h
-+++ b/include/uapi/linux/trace_mmap.h
-@@ -26,4 +26,6 @@ struct trace_buffer_meta {
- 	__u32		meta_struct_len;	/* Len of this struct */
- };
+- Moved the documentation from Documentation and into tho Kconfig
+  This is because the option is focused on being used for kselftest
+  purposes
+
+ kernel/trace/Kconfig | 28 ++++++++++++++++++++++++++++
+ kernel/trace/trace.c | 39 ++++++++++++++++++++++++---------------
+ kernel/trace/trace.h |  8 ++++++++
+ 3 files changed, 60 insertions(+), 15 deletions(-)
+
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 61c541c36596..5362206e6e82 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -949,6 +949,34 @@ config TRACE_EVAL_MAP_FILE
  
-+#define TRACE_MMAP_IOCTL_GET_READER		_IO('T', 0x1)
+ 	If unsure, say N.
+ 
++config TRACE_FILTER_DIRECT
++	bool "Add filter-direct option to test direct ring buffer filtering"
++	help
++	  Normally, when the filter is enabled, a temporary buffer is
++	  created to copy the event data into it to perform the
++	  filtering logic. If the filter passes and the event should
++	  be recorded, then the event is copied from the temporary
++	  buffer into the ring buffer. If the event is to be discarded
++	  then it is simply dropped. If another event comes in via
++	  an interrupt, it will not use the temporary buffer as it is
++	  busy and will write directly into the ring buffer.
 +
- #endif /* _UAPI_TRACE_MMAP_H_ */
++	  Enabling this config will create a trace option "filter-direct",
++	  that, when enabled, will disable the temporary buffer and always
++	  write directly into the ring buffer. This will avoid the copy when
++	  the event is to be recorded, but also adds a bit more
++	  overhead on the discard, and if another event were to interrupt
++	  the event that is to be discarded, then the event will not
++	  be removed from the ring buffer but instead converted to
++	  padding that will not be read by the reader. Padding will
++	  still take up space on the ring buffer.
++
++	  This option is to allow kselftest to test the ring buffer filter
++	  direct functionality that sometimes gets performed. This option
++	  degrades the performance of trace filtering.
++
++	  Unless you are running kselftests, say N
++
+ config FTRACE_RECORD_RECURSION
+ 	bool "Record functions that recurse in function tracing"
+ 	depends on FUNCTION_TRACER
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index c17dd849e6f1..0a4927e56315 100644
+index 55dabee4c78b..36df0364cb9e 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -8590,15 +8590,31 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
- 	return ret;
- }
- 
--/* An ioctl call with cmd 0 to the ring buffer file will wake up all waiters */
- static long tracing_buffers_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- {
- 	struct ftrace_buffer_info *info = file->private_data;
- 	struct trace_iterator *iter = &info->iter;
-+	int err;
- 
--	if (cmd)
--		return -ENOIOCTLCMD;
-+	if (cmd == TRACE_MMAP_IOCTL_GET_READER) {
-+		if (!(file->f_flags & O_NONBLOCK)) {
-+			err = ring_buffer_wait(iter->array_buffer->buffer,
-+					       iter->cpu_file,
-+					       iter->tr->buffer_percent);
-+			if (err)
-+				return err;
-+		}
- 
-+		return ring_buffer_map_get_reader(iter->array_buffer->buffer,
-+						  iter->cpu_file);
-+	} else if (cmd) {
-+		return -ENOTTY;
-+	}
-+
-+	/*
-+	 * An ioctl call with cmd 0 to the ring buffer file will wake up all
-+	 * waiters
-+	 */
- 	mutex_lock(&trace_types_lock);
- 
- 	iter->wait_index++;
-@@ -8611,6 +8627,62 @@ static long tracing_buffers_ioctl(struct file *file, unsigned int cmd, unsigned
+@@ -5398,6 +5398,8 @@ int trace_keep_overwrite(struct tracer *tracer, u32 mask, int set)
  	return 0;
  }
  
-+static vm_fault_t tracing_buffers_mmap_fault(struct vm_fault *vmf)
-+{
-+	struct ftrace_buffer_info *info = vmf->vma->vm_file->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+	vm_fault_t ret = VM_FAULT_SIGBUS;
-+	struct page *page;
++static int __tracing_set_filter_buffering(struct trace_array *tr, bool set);
 +
-+	page = ring_buffer_map_fault(iter->array_buffer->buffer, iter->cpu_file,
-+				     vmf->pgoff);
-+	if (!page)
-+		return ret;
+ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
+ {
+ 	int *map;
+@@ -5451,6 +5453,11 @@ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
+ 	if (mask == TRACE_ITER_FUNC_FORK)
+ 		ftrace_pid_follow_fork(tr, enabled);
+ 
++#ifdef CONFIG_TRACE_FILTER_DIRECT
++	if (mask == TRACE_ITER_FILTER_DIRECT)
++		__tracing_set_filter_buffering(tr, enabled);
++#endif
 +
-+	get_page(page);
-+	vmf->page = page;
-+	vmf->page->mapping = vmf->vma->vm_file->f_mapping;
-+	vmf->page->index = vmf->pgoff;
+ 	if (mask == TRACE_ITER_OVERWRITE) {
+ 		ring_buffer_change_overwrite(tr->array_buffer.buffer, enabled);
+ #ifdef CONFIG_TRACER_MAX_TRACE
+@@ -6464,7 +6471,7 @@ static void tracing_set_nop(struct trace_array *tr)
+ {
+ 	if (tr->current_trace == &nop_trace)
+ 		return;
+-	
 +
+ 	tr->current_trace->enabled--;
+ 
+ 	if (tr->current_trace->reset)
+@@ -7552,27 +7559,29 @@ u64 tracing_event_time_stamp(struct trace_buffer *buffer, struct ring_buffer_eve
+ 	return ring_buffer_event_time_stamp(buffer, rbe);
+ }
+ 
+-/*
+- * Set or disable using the per CPU trace_buffer_event when possible.
+- */
+-int tracing_set_filter_buffering(struct trace_array *tr, bool set)
++static int __tracing_set_filter_buffering(struct trace_array *tr, bool set)
+ {
+-	int ret = 0;
+-
+-	mutex_lock(&trace_types_lock);
+-
+ 	if (set && tr->no_filter_buffering_ref++)
+-		goto out;
++		return 0;
+ 
+ 	if (!set) {
+-		if (WARN_ON_ONCE(!tr->no_filter_buffering_ref)) {
+-			ret = -EINVAL;
+-			goto out;
+-		}
++		if (WARN_ON_ONCE(!tr->no_filter_buffering_ref))
++			return -EINVAL;
+ 
+ 		--tr->no_filter_buffering_ref;
+ 	}
+- out:
 +	return 0;
 +}
 +
-+static void tracing_buffers_mmap_close(struct vm_area_struct *vma)
++/*
++ * Set or disable using the per CPU trace_buffer_event when possible.
++ */
++int tracing_set_filter_buffering(struct trace_array *tr, bool set)
 +{
-+	struct ftrace_buffer_info *info = vma->vm_file->private_data;
-+	struct trace_iterator *iter = &info->iter;
++	int ret;
 +
-+	ring_buffer_unmap(iter->array_buffer->buffer, iter->cpu_file);
-+}
-+
-+static void tracing_buffers_mmap_open(struct vm_area_struct *vma)
-+{
-+	struct ftrace_buffer_info *info = vma->vm_file->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+
-+	WARN_ON(ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file));
-+}
-+
-+static const struct vm_operations_struct tracing_buffers_vmops = {
-+	.open		= tracing_buffers_mmap_open,
-+	.close		= tracing_buffers_mmap_close,
-+	.fault		= tracing_buffers_mmap_fault,
-+};
-+
-+static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
-+{
-+	struct ftrace_buffer_info *info = filp->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+
-+	if (vma->vm_flags & VM_WRITE)
-+		return -EPERM;
-+
-+	vm_flags_mod(vma, VM_DONTCOPY | VM_DONTDUMP, VM_MAYWRITE);
-+	vma->vm_ops = &tracing_buffers_vmops;
-+
-+	return ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file);
-+}
-+
- static const struct file_operations tracing_buffers_fops = {
- 	.open		= tracing_buffers_open,
- 	.read		= tracing_buffers_read,
-@@ -8619,6 +8691,7 @@ static const struct file_operations tracing_buffers_fops = {
- 	.splice_read	= tracing_buffers_splice_read,
- 	.unlocked_ioctl = tracing_buffers_ioctl,
- 	.llseek		= no_llseek,
-+	.mmap		= tracing_buffers_mmap,
- };
++	mutex_lock(&trace_types_lock);
++	ret = __tracing_set_filter_buffering(tr, set);
+ 	mutex_unlock(&trace_types_lock);
  
- static ssize_t
+ 	return ret;
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 79180aed13ee..53ab9ef847e9 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1218,6 +1218,13 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
+ # define STACK_FLAGS
+ #endif
+ 
++#ifdef CONFIG_TRACE_FILTER_DIRECT
++# define DIRECT_FILTER				\
++		C(FILTER_DIRECT,	"filter-direct"),
++#else
++# define DIRECT_FILTER
++#endif
++
+ /*
+  * trace_iterator_flags is an enumeration that defines bit
+  * positions into trace_flags that controls the output.
+@@ -1254,6 +1261,7 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
+ 		FUNCTION_FLAGS					\
+ 		FGRAPH_FLAGS					\
+ 		STACK_FLAGS					\
++		DIRECT_FILTER					\
+ 		BRANCH_FLAGS
+ 
+ /*
 -- 
-2.43.0.472.g3155946c3a-goog
+2.42.0
 
