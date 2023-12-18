@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1998E7207A;
-	Mon, 18 Dec 2023 12:45:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A06B76098;
+	Mon, 18 Dec 2023 12:46:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BvQ5qAOU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA73AC433C8;
-	Mon, 18 Dec 2023 12:45:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XL4wiqj4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE770C433C7;
+	Mon, 18 Dec 2023 12:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702903544;
-	bh=iHyai20E/r86yJPGPdiYPXOfuNCXzvwNV8ooESph5J0=;
+	s=k20201202; t=1702903574;
+	bh=ivbs5pTD8vjpc5EWl8vdFge86i9YxTK1Ee2w1HNuikU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BvQ5qAOURx+VjDivTJHMQFmmmQKrfMWaJilqix0XG6uLpcH68rrCC12gEbyhfDfZI
-	 xPsEFyxXDVK7Li1OAUvL3Mna1FftkXzttaXt0sU+UR8xZM6fsJlM5DGQ4V0r7pZa2B
-	 xy8I8kj12iwpD/ZJSigDKi9D7vva5/EvSjIgDSPXldQa7EnMJjauWuXprMh7Bu+L/J
-	 d9FLCvioX7OvxbzSKtC4KMb7pZ5KIeYU/dKvL12jUooTQiX4r7+qfkczPmfvfqHwnN
-	 VzRIzTZspMUxOPl4LQ8VJFXrEDUgz8USE+tengSBJiPnsEH5DzmMQmj82Qq6ATPQY1
-	 hQOIR6PtSgaPQ==
+	b=XL4wiqj4HC1BNChshTay5r46MWVwJin7yByg+9E5OQsHrMfibnhwD4CDvM/m9Kqbe
+	 tZJ77mclucYWXqjYDdw5eye1H6hOcwPGnxsCeyWTiaN+KX4YL2eqdSO3O0KoN7FHAh
+	 Kh3fQYLEEatj72ux0CspXxCoTj1XgW8VJD1p4A27awYhev4+QCu7nHxRgOYegwDB/g
+	 pLm8etrcr84OToKDDxDe1mXa5hlfUzhsbnzWD3YCobl7I0dRE5b+MXCBtzFT/9iWAY
+	 flY+xIojaZjPx14UZXuCNyyjiDBou6Sd+x9u2Ce7tI8IIWVPSFEt2FhEXttgABBBy5
+	 T1GS8Bgro3nSg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: "Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 15/15] ring-buffer: Do not record in NMI if the arch does not support cmpxchg in NMI
-Date: Mon, 18 Dec 2023 07:45:02 -0500
-Message-ID: <20231218124513.1380056-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 08/13] tracing: Have large events show up as '[LINE TOO BIG]' instead of nothing
+Date: Mon, 18 Dec 2023 07:45:41 -0500
+Message-ID: <20231218124557.1380724-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231218124513.1380056-1-sashal@kernel.org>
-References: <20231218124513.1380056-1-sashal@kernel.org>
+In-Reply-To: <20231218124557.1380724-1-sashal@kernel.org>
+References: <20231218124557.1380724-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -40,45 +40,79 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.68
+X-stable-base: Linux 5.15.143
 Content-Transfer-Encoding: 8bit
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-[ Upstream commit 712292308af2265cd9b126aedfa987f10f452a33 ]
+[ Upstream commit b55b0a0d7c4aa2dac3579aa7e6802d1f57445096 ]
 
-As the ring buffer recording requires cmpxchg() to work, if the
-architecture does not support cmpxchg in NMI, then do not do any recording
-within an NMI.
+If a large event was added to the ring buffer that is larger than what the
+trace_seq can handle, it just drops the output:
 
-Link: https://lore.kernel.org/linux-trace-kernel/20231213175403.6fc18540@gandalf.local.home
+ ~# cat /sys/kernel/tracing/trace
+ # tracer: nop
+ #
+ # entries-in-buffer/entries-written: 2/2   #P:8
+ #
+ #                                _-----=> irqs-off/BH-disabled
+ #                               / _----=> need-resched
+ #                              | / _---=> hardirq/softirq
+ #                              || / _--=> preempt-depth
+ #                              ||| / _-=> migrate-disable
+ #                              |||| /     delay
+ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+ #              | |         |   |||||     |         |
+            <...>-859     [001] .....   141.118951: tracing_mark_write           <...>-859     [001] .....   141.148201: tracing_mark_write: 78901234
 
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Instead, catch this case and add some context:
+
+ ~# cat /sys/kernel/tracing/trace
+ # tracer: nop
+ #
+ # entries-in-buffer/entries-written: 2/2   #P:8
+ #
+ #                                _-----=> irqs-off/BH-disabled
+ #                               / _----=> need-resched
+ #                              | / _---=> hardirq/softirq
+ #                              || / _--=> preempt-depth
+ #                              ||| / _-=> migrate-disable
+ #                              |||| /     delay
+ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+ #              | |         |   |||||     |         |
+            <...>-852     [001] .....   121.550551: tracing_mark_write[LINE TOO BIG]
+            <...>-852     [001] .....   121.550581: tracing_mark_write: 78901234
+
+This now emulates the same output as trace_pipe.
+
+Link: https://lore.kernel.org/linux-trace-kernel/20231209171058.78c1a026@gandalf.local.home
+
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/ring_buffer.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ kernel/trace/trace.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index c02a4cb879913..c821b618a622f 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -3711,6 +3711,12 @@ rb_reserve_next_event(struct trace_buffer *buffer,
- 	int nr_loops = 0;
- 	int add_ts_default;
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 657ecb8f03545..79b1bc4501dce 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4653,7 +4653,11 @@ static int s_show(struct seq_file *m, void *v)
+ 		iter->leftover = ret;
  
-+	/* ring buffer does cmpxchg, make sure it is safe in NMI context */
-+	if (!IS_ENABLED(CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG) &&
-+	    (unlikely(in_nmi()))) {
-+		return NULL;
-+	}
-+
- 	rb_start_commit(cpu_buffer);
- 	/* The commit page can not change after this */
- 
+ 	} else {
+-		print_trace_line(iter);
++		ret = print_trace_line(iter);
++		if (ret == TRACE_TYPE_PARTIAL_LINE) {
++			iter->seq.full = 0;
++			trace_seq_puts(&iter->seq, "[LINE TOO BIG]\n");
++		}
+ 		ret = trace_print_seq(m, &iter->seq);
+ 		/*
+ 		 * If we overflow the seq_file buffer, then it will
 -- 
 2.43.0
 
