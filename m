@@ -1,20 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79FF73460;
-	Mon, 18 Dec 2023 22:00:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07C78C433C9;
-	Mon, 18 Dec 2023 22:00:09 +0000 (UTC)
-Date: Mon, 18 Dec 2023 17:01:06 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CB503D557;
+	Mon, 18 Dec 2023 22:51:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B3D7C433C8;
+	Mon, 18 Dec 2023 22:51:32 +0000 (UTC)
+Date: Mon, 18 Dec 2023 17:52:29 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Joel Fernandes <joel@joelfernandes.org>
-Subject: [PATCH v2] ring-buffer: Add interrupt information to dump of data
- sub-buffer
-Message-ID: <20231218170106.46fe24a7@gandalf.local.home>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 1/2] ring-buffer: Replace rb_time_cmpxchg() with
+ rb_time_cmp_and_update()
+Message-ID: <20231218175229.58ec3daf@gandalf.local.home>
+In-Reply-To: <20231218134240.4ed0ecbd@gandalf.local.home>
+References: <20231215165512.280088765@goodmis.org>
+	<20231215165628.096822746@goodmis.org>
+	<20231218232455.03aa6506f855109476e34212@kernel.org>
+	<20231218101531.63d138df@gandalf.local.home>
+	<20231218134240.4ed0ecbd@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -25,161 +31,176 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Mon, 18 Dec 2023 13:42:40 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-When the ring buffer timestamp verifier triggers, it dumps the content of
-the sub-buffer. But currently it only dumps the timestamps and the offset
-of the data as well as the deltas. It would be even more informative if
-the event data also showed the interrupt context level it was in.
+> > >     
+> > > >  static bool rb_time_cmp_and_update(rb_time_t *t, u64 expect, u64 set)
+> > > >  {
+> > > > -	return rb_time_cmpxchg(t, expect, set);
+> > > > +#ifdef RB_TIME_32
+> > > > +	return expect == READ_ONCE(t->time);    
+> > 
+> > And I need to make a v2 as the above is wrong. It should have been:
+> > 
+> > 	return expect == local64_read(&t->time);  
+> 
+> 
+> My v2 version will also make 64 bit not guaranteed to update on return of
+> true. Which adds even more reason to separate out the two.
 
-That is, if each event showed that the event was written in normal,
-softirq, irq or NMI context. Then a better idea about how the events may
-have been interrupted from each other.
+This code was failing my tests, and after figuring out why, I realized I
+can remove this 64-bit cmpxchg for both 64-bit and 32-bit architectures!
 
-As the payload of the ring buffer is really a black box of the ring
-buffer, just assume that if the payload is larger than a trace entry, that
-it is a trace entry. As trace entries have the interrupt context
-information saved in a flags field, look at that location and report the
-output of the flags.
+I was thinking that the 64-bit cmpxchg() was to keep from adding an
+absolute timestamp to after the slowpath. But that was not the case. It was
+actually going to *add* a absolute timestamp if it succeeded. Well, not in
+every case, but in some cases.
 
-If the payload is not a trace entry, there's no way to really know, and
-the information will be garbage. But that's OK, because this is for
-debugging only (this output is not used in production as the buffer check
-that calls it causes a huge overhead to the tracing). This information,
-when available, is crucial for debugging timestamp issues. If it's
-garbage, it will also be pretty obvious that its garbage too.
+First let me explain the purpose of this last 64-bit cmpxchg:
 
-As this output usually happens in kselftests of the tracing code, the user
-will know what the payload is at the time.
-
-Suggested-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v1: https://lore.kernel.org/all/20231218163117.74292291@gandalf.local.home/
-
-- Added irq context for the current context (where the warning is printed)
+Before reserving the data on the ring buffer, we do:
 
 
- kernel/trace/ring_buffer.c | 82 +++++++++++++++++++++++++++++++++++---
- 1 file changed, 77 insertions(+), 5 deletions(-)
+ /*A*/	w = local_read(&tail_page->write) & RB_WRITE_MASK;
+	barrier();
+	b_ok = rb_time_read(&cpu_buffer->before_stamp, &info->before);
+	a_ok = rb_time_read(&cpu_buffer->write_stamp, &info->after);
+	barrier();
+	info->ts = rb_time_stamp(cpu_buffer->buffer);
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 3eda81ed7d7e..7841d6520998 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -3225,6 +3225,76 @@ EXPORT_SYMBOL_GPL(ring_buffer_unlock_commit);
- #define CHECK_FULL_PAGE		1L
- 
- #ifdef CONFIG_RING_BUFFER_VALIDATE_TIME_DELTAS
-+
-+static const char *show_irq_str(int bits)
-+{
-+	const char *type[] = {
-+		".",	// 0
-+		"s",	// 1
-+		"h",	// 2
-+		"Hs",	// 3
-+		"n",	// 4
-+		"Ns",	// 5
-+		"Nh",	// 6
-+		"NHs",	// 7
-+	};
-+
-+	return type[bits];
-+}
-+
-+/* Assume this is an trace event */
-+static const char *show_flags(struct ring_buffer_event *event)
-+{
-+	struct trace_entry *entry;
-+	int bits = 0;
-+
-+	if (rb_event_data_length(event) - RB_EVNT_HDR_SIZE < sizeof(*entry))
-+		return "X";
-+
-+	entry = ring_buffer_event_data(event);
-+
-+	if (entry->flags & TRACE_FLAG_SOFTIRQ)
-+		bits |= 1;
-+
-+	if (entry->flags & TRACE_FLAG_HARDIRQ)
-+		bits |= 2;
-+
-+	if (entry->flags & TRACE_FLAG_NMI)
-+		bits |= 4;
-+
-+	return show_irq_str(bits);
-+}
-+
-+static const char *show_irq(struct ring_buffer_event *event)
-+{
-+	struct trace_entry *entry;
-+
-+	if (rb_event_data_length(event) - RB_EVNT_HDR_SIZE < sizeof(*entry))
-+		return "";
-+
-+	entry = ring_buffer_event_data(event);
-+	if (entry->flags & TRACE_FLAG_IRQS_OFF)
-+		return "d";
-+	return "";
-+}
-+
-+static const char *show_interrupt_level(void)
-+{
-+	unsigned long pc = preempt_count();
-+	unsigned char level = 0;
-+
-+	if (pc & SOFTIRQ_OFFSET)
-+		level |= 1;
-+
-+	if (pc & HARDIRQ_MASK)
-+		level |= 2;
-+
-+	if (pc & NMI_MASK)
-+		level |= 4;
-+
-+	return show_irq_str(level);
-+}
-+
- static void dump_buffer_page(struct buffer_data_page *bpage,
- 			     struct rb_event_info *info,
- 			     unsigned long tail)
-@@ -3264,8 +3334,9 @@ static void dump_buffer_page(struct buffer_data_page *bpage,
- 
- 		case RINGBUF_TYPE_DATA:
- 			ts += event->time_delta;
--			pr_warn(" 0x%x:  [%lld] delta:%d\n",
--				e, ts, event->time_delta);
-+			pr_warn(" 0x%x:  [%lld] delta:%d %s%s\n",
-+				e, ts, event->time_delta,
-+				show_flags(event), show_irq(event));
- 			break;
- 
- 		default:
-@@ -3347,7 +3418,8 @@ static void check_buffer(struct ring_buffer_per_cpu *cpu_buffer,
- 		}
- 	}
- 	if ((full && ts > info->ts) ||
--	    (!full && ts + info->delta != info->ts)) {
-+	    (!full && ts + info->delta != info->ts) ||
-+		e > 0xfa0) {
- 		/* If another report is happening, ignore this one */
- 		if (atomic_inc_return(&ts_dump) != 1) {
- 			atomic_dec(&ts_dump);
-@@ -3356,11 +3428,11 @@ static void check_buffer(struct ring_buffer_per_cpu *cpu_buffer,
- 		atomic_inc(&cpu_buffer->record_disabled);
- 		/* There's some cases in boot up that this can happen */
- 		WARN_ON_ONCE(system_state != SYSTEM_BOOTING);
--		pr_warn("[CPU: %d]TIME DOES NOT MATCH expected:%lld actual:%lld delta:%lld before:%lld after:%lld%s\n",
-+		pr_warn("[CPU: %d]TIME DOES NOT MATCH expected:%lld actual:%lld delta:%lld before:%lld after:%lld%s context:%s\n",
- 			cpu_buffer->cpu,
- 			ts + info->delta, info->ts, info->delta,
- 			info->before, info->after,
--			full ? " (full)" : "");
-+			full ? " (full)" : "", show_interrupt_level());
- 		dump_buffer_page(bpage, info, tail);
- 		atomic_dec(&ts_dump);
- 		/* Do not re-enable checking */
--- 
-2.42.0
+The 'w' is the location we expect to have our data on.
 
+Then we read the two timestamps "before_stamp" and "write_stamp" and save
+them locally on the stack (info is a stack item).
+
+Then we read the current timestamp and place it into info->ts.
+
+ /*B*/	rb_time_set(&cpu_buffer->before_stamp, info->ts);
+
+All events written into the ring buffer will write into the "before_stamp"
+before reserving the ring buffer. I cut out the logic above that makes sure
+that "before_stamp" matches "write_stamp", as if they do not match, the
+"write_stamp" can not be trusted. As soon as the "before_stamp" is written
+to, then any interrupting events will not trust the "write_stamp" and add
+its own absolute timestamp, but also update the write_stamp to its
+before_stamp so that later events can be trusted.
+
+Now reserve the data for this event on the ring buffer:
+
+ /*C*/	write = local_add_return(info->length, &tail_page->write);
+
+	tail = write - info->length;
+
+	if (likely(tail == w)) {
+
+The above reserves the data for the event on the ring buffer, and then
+checks to see if where it was reserved matches where it expected to be
+reserved at the start of the operations above.
+
+		[...]
+
+	} else {
+
+Now we go into the slow path of where some thing snucked in between /*A*/
+and /*C*/
+
+		a_ok = rb_time_read(&cpu_buffer->write_stamp, &info->after);
+
+Read the write_stamp again.
+
+		ts = rb_time_stamp(cpu_buffer->buffer);
+
+Get the current timestamp
+
+		barrier();
+ /*E*/		if (write == (local_read(&tail_page->write) & RB_WRITE_MASK) &&
+		    info->after < ts &&
+
+If "write" from /*C*/ still matches the current location on the ring
+buffer, we know that nothing came in between /*C*/ and /*E*/
+
+
+		    rb_time_cmpxchg(&cpu_buffer->write_stamp,
+				    info->after, ts)) {
+
+			info->delta = ts - info->after;
+
+Now the above cmpxchg() is needed in this code because we need to update
+the write_stamp to the current timestamp so that we can safely calculate the
+delta.
+
+But by writing to the write_stamp via the cmpxchg() we are actually making
+it different than the before_stamp, as the interruption could have been
+between /*B*/ and /*C*/, and this would also force the next event to use an
+absolute timestamp. Of course, if it happened between /*A*/ and /*B*/ it is
+actually validating the write_stamp again by making it match the
+before_stamp.
+
+The real reason we need to do the cmpxchg() is because of a possible
+interruption after /*E*/ above. The write_stamp needs to be updated
+atomically, otherwise the interrupting event that comes after /*E*/, will
+be using the previous interruption write_stamp to calculate its delta from.
+
+For example:
+
+ /*B*/	rb_time_set(&cpu_buffer->before_stamp, info->ts);
+
+  ---> interrupt, updates before_stamp and write_stamp to its own ts
+
+ /*C*/	write = local_add_return(info->length, &tail_page->write);
+
+/* Allocated memory, any interruptions here, will be using the previous
+   interrupt ts and not this event */
+
+ /*E*/		if (write == (local_read(&tail_page->write) & RB_WRITE_MASK) &&
+		    info->after < ts &&
+
+If write == tail_page->write than nothing came in, so it is still safe to
+add a delta, but only if we atomically update the write_stamp, forcing
+interrupting events to add an absolute timestamp. If it is not done
+atomically, then there's a race that another interrupt could come in, and
+use the previous interrupt event to calculate its delta, even though, this
+event is in between the two.
+
+BUT! we can also do this instead without the cmpcxchg! Especially as
+success of cmpxchg could possibly force a absolute timestamp. If we always
+force the absolute timestamp, then there's no need for the cmpxchg at all.
+
+By doing:
+
+		/*
+		 * Read a new timestamp and update before_stamp with it.
+		 * Any new event coming in now will use an absolute timestamp
+		 */
+		ts = rb_time_stamp(cpu_buffer->buffer);
+		rb_time_set(&cpu_buffer->before_stamp, ts);
+
+		/* Next event will force an absolute timestamp */
+
+		barrier();
+		a_ok = rb_time_read(&cpu_buffer->write_stamp, &info->after);
+		barrier();
+
+ /*E*/		if (write == (local_read(&tail_page->write) & RB_WRITE_MASK) &&
+		    info->after < ts) {
+
+			/*
+			 * If nothing came in between C and E, it is safe
+			 * to use the write_stamp as the delta.
+			 */
+			info->delta = ts - info->after;
+		} else {
+			/*
+			 * Interrupted twice and the second interruption is possibly
+			 * using the first interruption to calculate its delta. Just
+			 * set our delta to zero to not mess the event that came in
+			 * after up.
+			 */
+			info->delta = 0;
+		}
+
+
+With this logic, we do not need any 64-bit cmpxchg() at all!
+
+-- Steve
