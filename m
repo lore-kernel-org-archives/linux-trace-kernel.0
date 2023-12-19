@@ -1,210 +1,113 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6B138DF6
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 19 Dec 2023 18:46:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZFXvRT0h"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5e5bf8a6f06so34042927b3.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 19 Dec 2023 10:46:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1703011565; x=1703616365; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KnjLD9o+zCR/Wg+pSriHXGpRwOKeR8rxdX2If5Ac4sc=;
-        b=ZFXvRT0hDMAfRDqXk4kEUtjK1pTthM3k6PbDIE6NUMllvnjPQ1GbWpE1gnpSWb0dNz
-         nhm6KQtgHZPGGnpPDadAcVZRwZjG0hTAFSKvwbPn4S1B9CdpkciS1cK2LahROHC4FnxN
-         PMLY2x/I/cUGiBlbpJvygmjT/MxIr5jmZTHFG5ccs9TOTYw4gtK6KsDtJ7wnaJ3mOTNW
-         yUdS2PJT3YtAFK8aXX/+q7Tatiix7VtgR+rl45UlJaTue3+3eg0uYrCIWG2gYYMM4TW3
-         FE98GjUV0diHvglrrFJSo/FoyACJWGBg5Y1rf917nXE1xmhroT+cniprGFcEs0qisfqs
-         Piww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703011565; x=1703616365;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KnjLD9o+zCR/Wg+pSriHXGpRwOKeR8rxdX2If5Ac4sc=;
-        b=WlrsNozG385bhTwtBYog0gGUe1afxkQeIHy350OnZza9XCV9EWiDN3tVdi9X3B1rxX
-         0MGq7/8DaT+/TbePr7GL6B8LxFFZuhIDXEyVRLTWZ8pep08XKWpeA62D9cZUtiDBkw6A
-         N7gyCDSUoOeh8HAJI0Tn39cl8iH9D0YiJ7wWRW4mx+dOJhy6HEOMWoEiEZoUbWPHf7F+
-         hTZZtH8lKJcANeNqncEBlzhq9zPuvR+BArtWA51Eyvv6qB93HH+HnqpytsYbffxeDnj2
-         pRwyfiEo03eYlbgE2mGBQKCSoJi6dFns42lrGEWkbYCN9sc2BRQrz/gGvmtsdc+8bIgN
-         ptEA==
-X-Gm-Message-State: AOJu0Yx5Airjp5NnqezMjJzTooPbrmheR2vMK2XMBKbS86MztmtZrhbQ
-	vN8CW8XtlwqqsCyp6+tkqBa2IozUCoqs8JNgF6wu+Qg=
-X-Google-Smtp-Source: AGHT+IHDUtHUkPR0nksNUvh7+LH/jQfAqHJLgtnuqPrkFYlOkW63X/06bkNDZOzzEBWtzcHgKOgMBSmuEaVvcnvZ
-X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:a05:690c:2f86:b0:5e7:cd0b:7940 with
- SMTP id ew6-20020a05690c2f8600b005e7cd0b7940mr395499ywb.4.1703011565362; Tue,
- 19 Dec 2023 10:46:05 -0800 (PST)
-Date: Tue, 19 Dec 2023 18:45:56 +0000
-In-Reply-To: <20231219184556.1552951-1-vdonnefort@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B176D38DFA;
+	Tue, 19 Dec 2023 18:55:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 481CBC433C7;
+	Tue, 19 Dec 2023 18:55:28 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1rFfGV-00000003QzN-2fpf;
+	Tue, 19 Dec 2023 13:56:27 -0500
+Message-ID: <20231219185414.474197117@goodmis.org>
+User-Agent: quilt/0.67
+Date: Tue, 19 Dec 2023 13:54:14 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+ Vincent Donnefort <vdonnefort@google.com>,
+ Kent Overstreet <kent.overstreet@gmail.com>
+Subject: [PATCH v5 00/15] ring-buffer/tracing: Allow ring buffer to have bigger sub buffers
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20231219184556.1552951-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
-Message-ID: <20231219184556.1552951-3-vdonnefort@google.com>
-Subject: [PATCH v8 2/2] tracing: Allow user-space mapping of the ring-buffer
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: kernel-team@android.com, Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
 
-Currently, user-space extracts data from the ring-buffer via splice,
-which is handy for storage or network sharing. However, due to splice
-limitations, it is imposible to do real-time analysis without a copy.
 
-A solution for that problem is to let the user-space map the ring-buffer
-directly.
+Note, this has been on my todo list since the ring buffer was created back
+in 2008.
 
-The mapping is exposed via the per-CPU file trace_pipe_raw. The first
-element of the mapping is the meta-page. It is followed by each
-subbuffer constituting the ring-buffer, ordered by their unique page ID:
+Tzvetomir last worked on this in 2021 and I need to finally get it in.
 
-  * Meta-page -- include/uapi/linux/trace_mmap.h for a description
-  * Subbuf ID 0
-  * Subbuf ID 1
-     ...
+His last series was:
 
-It is therefore easy to translate a subbuf ID into an offset in the
-mapping:
+  https://lore.kernel.org/linux-trace-devel/20211213094825.61876-1-tz.stoyanov@gmail.com/
 
-  reader_id = meta->reader->id;
-  reader_offset = meta->meta_page_size + reader_id * meta->subbuf_size;
+With the description of:
 
-When new data is available, the mapper must call a newly introduced ioctl:
-TRACE_MMAP_IOCTL_GET_READER. This will update the Meta-page reader ID to
-point to the next reader containing unread data.
+   Currently the size of one sub buffer page is global for all buffers and
+   it is hard coded to one system page. The patch set introduces configurable
+   ring buffer sub page size, per ring buffer. A new user space interface is
+   introduced, which allows to change the sub page size of the ftrace buffer,
+   per ftrace instance.
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+I'm pulling in his patches mostly untouched, except that I had to tweak
+a few things to forward port them.
 
-diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
-index f950648b0ba9..8c49489c5867 100644
---- a/include/uapi/linux/trace_mmap.h
-+++ b/include/uapi/linux/trace_mmap.h
-@@ -26,4 +26,6 @@ struct trace_buffer_meta {
- 	__u32		meta_struct_len;	/* Len of this struct */
- };
- 
-+#define TRACE_MMAP_IOCTL_GET_READER		_IO('T', 0x1)
-+
- #endif /* _UAPI_TRACE_MMAP_H_ */
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index b35c85edbb49..8dee225cf977 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8590,15 +8590,31 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
- 	return ret;
- }
- 
--/* An ioctl call with cmd 0 to the ring buffer file will wake up all waiters */
- static long tracing_buffers_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- {
- 	struct ftrace_buffer_info *info = file->private_data;
- 	struct trace_iterator *iter = &info->iter;
-+	int err;
- 
--	if (cmd)
--		return -ENOIOCTLCMD;
-+	if (cmd == TRACE_MMAP_IOCTL_GET_READER) {
-+		if (!(file->f_flags & O_NONBLOCK)) {
-+			err = ring_buffer_wait(iter->array_buffer->buffer,
-+					       iter->cpu_file,
-+					       iter->tr->buffer_percent);
-+			if (err)
-+				return err;
-+		}
- 
-+		return ring_buffer_map_get_reader(iter->array_buffer->buffer,
-+						  iter->cpu_file);
-+	} else if (cmd) {
-+		return -ENOTTY;
-+	}
-+
-+	/*
-+	 * An ioctl call with cmd 0 to the ring buffer file will wake up all
-+	 * waiters
-+	 */
- 	mutex_lock(&trace_types_lock);
- 
- 	iter->wait_index++;
-@@ -8611,6 +8627,62 @@ static long tracing_buffers_ioctl(struct file *file, unsigned int cmd, unsigned
- 	return 0;
- }
- 
-+static vm_fault_t tracing_buffers_mmap_fault(struct vm_fault *vmf)
-+{
-+	struct ftrace_buffer_info *info = vmf->vma->vm_file->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+	vm_fault_t ret = VM_FAULT_SIGBUS;
-+	struct page *page;
-+
-+	page = ring_buffer_map_fault(iter->array_buffer->buffer, iter->cpu_file,
-+				     vmf->pgoff);
-+	if (!page)
-+		return ret;
-+
-+	get_page(page);
-+	vmf->page = page;
-+	vmf->page->mapping = vmf->vma->vm_file->f_mapping;
-+	vmf->page->index = vmf->pgoff;
-+
-+	return 0;
-+}
-+
-+static void tracing_buffers_mmap_close(struct vm_area_struct *vma)
-+{
-+	struct ftrace_buffer_info *info = vma->vm_file->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+
-+	ring_buffer_unmap(iter->array_buffer->buffer, iter->cpu_file);
-+}
-+
-+static void tracing_buffers_mmap_open(struct vm_area_struct *vma)
-+{
-+	struct ftrace_buffer_info *info = vma->vm_file->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+
-+	WARN_ON(ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file));
-+}
-+
-+static const struct vm_operations_struct tracing_buffers_vmops = {
-+	.open		= tracing_buffers_mmap_open,
-+	.close		= tracing_buffers_mmap_close,
-+	.fault		= tracing_buffers_mmap_fault,
-+};
-+
-+static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
-+{
-+	struct ftrace_buffer_info *info = filp->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+
-+	if (vma->vm_flags & VM_WRITE)
-+		return -EPERM;
-+
-+	vm_flags_mod(vma, VM_DONTCOPY | VM_DONTDUMP, VM_MAYWRITE);
-+	vma->vm_ops = &tracing_buffers_vmops;
-+
-+	return ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file);
-+}
-+
- static const struct file_operations tracing_buffers_fops = {
- 	.open		= tracing_buffers_open,
- 	.read		= tracing_buffers_read,
-@@ -8619,6 +8691,7 @@ static const struct file_operations tracing_buffers_fops = {
- 	.splice_read	= tracing_buffers_splice_read,
- 	.unlocked_ioctl = tracing_buffers_ioctl,
- 	.llseek		= no_llseek,
-+	.mmap		= tracing_buffers_mmap,
- };
- 
- static ssize_t
--- 
-2.43.0.472.g3155946c3a-goog
+The issues I found I added as the last 7 patches to the series, and then
+I added documentation and a selftest, and then changed the UI file
+from buffer_subbuf_order to buffer_subbuf_size_kb.
+
+Basically, events to the tracing subsystem are limited to just under a
+PAGE_SIZE, as the ring buffer is split into "sub buffers" of one page
+size, and an event can not be bigger than a sub buffer. This allows users
+to change the size of a sub buffer by the order:
+
+  echo 3 > /sys/kernel/tracing/buffer_subbuf_order
+
+[
+  last patch updates this to:
+
+  echo 32 > /sys/kernel/tracing/buffer_subbuf_size_kb
+
+]
+  
+
+Will make each sub buffer a size of 8 pages (32KB), allowing events to be
+almost as big as 8 pages in size (sub buffers do have meta data on them as
+well, keeping an event from reaching the same size as a sub buffer).
+
+Changes since v4: https://lore.kernel.org/linux-trace-kernel/20231215175502.106587604@goodmis.org/
+
+- Rebase on latest trace/core
+
+- Fixed a kerneldoc issues reported by kernel test robot
+
+
+Changes since v3: https://lore.kernel.org/all/20231213181737.791847466@goodmis.org/
+
+- Rebase on trace/core:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git/commit/?h=trace/core&id=59c28cc95f0a9f5556561e2416af4ecf86184b71
+
+Changes since v2: https://lore.kernel.org/all/20231213021914.361709558@goodmis.org/
+
+- Fixed up the subbuf tests to ignore multiple spaces after before the
+  'buf' string (same fix as was done for the trace_marker test).
+
+- This time include Cc'ing linux-trace-kernel :-p
+
+Changes since v1: https://lore.kernel.org/all/20231210040448.569462486@goodmis.org/
+
+- Add the last patch that changes the ABI from a file called:
+
+  buffer_subbuf_order  to   buffer_subbuf_size_kb
+
+  That is, I kept the old interface the same, but then added the last
+  patch that converts the interface into the one that makes more sense.
+  I like keeping this in the git history, especially because of the
+  way the implemantion is.
+
+- I rebased on top of trace/core in the:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+
+- I made the tests a bit more advanced. Still a smoke test, but it
+  now checks if the string written is the same as the string read.
 
