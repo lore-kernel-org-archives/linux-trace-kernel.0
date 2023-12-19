@@ -1,19 +1,23 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECEC91DFEF;
-	Tue, 19 Dec 2023 20:38:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC630C433C8;
-	Tue, 19 Dec 2023 20:38:26 +0000 (UTC)
-Date: Tue, 19 Dec 2023 15:39:24 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8B23D0AE;
+	Tue, 19 Dec 2023 22:37:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDD11C433C8;
+	Tue, 19 Dec 2023 22:37:01 +0000 (UTC)
+Date: Tue, 19 Dec 2023 17:38:00 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH v8 0/2] Introducing trace buffer mapping by user-space
-Message-ID: <20231219153924.2ff9c132@gandalf.local.home>
-In-Reply-To: <20231219184556.1552951-1-vdonnefort@google.com>
-References: <20231219184556.1552951-1-vdonnefort@google.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Tzvetomir Stoyanov
+ <tz.stoyanov@gmail.com>, Vincent Donnefort <vdonnefort@google.com>, Kent
+ Overstreet <kent.overstreet@gmail.com>
+Subject: [PATCH v5 16/15] ring-buffer: Use subbuf_order for buffer page
+ masking
+Message-ID: <20231219173800.66eefb7a@gandalf.local.home>
+In-Reply-To: <20231219185414.474197117@goodmis.org>
+References: <20231219185414.474197117@goodmis.org>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -24,79 +28,91 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 19 Dec 2023 18:45:54 +0000
-Vincent Donnefort <vdonnefort@google.com> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> The tracing ring-buffers can be stored on disk or sent to network
-> without any copy via splice. However the later doesn't allow real time
-> processing of the traces. A solution is to give userspace direct access
-> to the ring-buffer pages via a mapping. An application can now become a
-> consumer of the ring-buffer, in a similar fashion to what trace_pipe
-> offers.
-> 
-> Attached to this cover letter an example of consuming read for a
-> ring-buffer, using libtracefs.
-> 
+The comparisons to PAGE_SIZE were all converted to use the
+buffer->subbuf_order, but the use of PAGE_MASK was missed.
 
-I'm still testing this, but I needed to add this patch to fix two bugs. One
-is that you are calling rb_wakeup_waiters() for both the buffer and the
-cpu_buffer, and it needs to know which one to use the container_of() macro.
+Convert all the PAGE_MASK usages over to:
 
-The other is a "goto unlock" that unlocks two locks where only one was taken.
+  (PAGE_SIZE << cpu_buffer->buffer->subbuf_order) - 1
 
--- Steve
+Fixes: TBD ("ring-buffer: Page size per ring buffer")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 35f3736f660b..987ad7bd1e8b 100644
+index 7ee6779bf292..173d2595ce2d 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -389,6 +389,7 @@ struct rb_irq_work {
- 	bool				waiters_pending;
- 	bool				full_waiters_pending;
- 	bool				wakeup_full;
-+	bool				is_cpu_buffer;
- };
+@@ -2269,11 +2269,13 @@ rb_commit_index(struct ring_buffer_per_cpu *cpu_buffer)
+ }
  
- /*
-@@ -771,10 +772,20 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
- static void rb_wake_up_waiters(struct irq_work *work)
+ static __always_inline unsigned
+-rb_event_index(struct ring_buffer_event *event)
++rb_event_index(struct ring_buffer_per_cpu *cpu_buffer, struct ring_buffer_event *event)
  {
- 	struct rb_irq_work *rbwork = container_of(work, struct rb_irq_work, work);
--	struct ring_buffer_per_cpu *cpu_buffer =
--		container_of(rbwork, struct ring_buffer_per_cpu, irq_work);
-+	struct ring_buffer_per_cpu *cpu_buffer;
-+	struct trace_buffer *buffer;
-+	int cpu;
+ 	unsigned long addr = (unsigned long)event;
  
--	rb_update_meta_page(cpu_buffer);
-+	if (rbwork->is_cpu_buffer) {
-+		cpu_buffer = container_of(rbwork, struct ring_buffer_per_cpu, irq_work);
-+		rb_update_meta_page(cpu_buffer);
-+	} else {
-+		buffer = container_of(rbwork, struct trace_buffer, irq_work);
-+		for_each_buffer_cpu(buffer, cpu) {
-+			cpu_buffer = buffer->buffers[cpu];
-+			rb_update_meta_page(cpu_buffer);
-+		}
-+	}
+-	return (addr & ~PAGE_MASK) - BUF_PAGE_HDR_SIZE;
++	addr &= (PAGE_SIZE << cpu_buffer->buffer->subbuf_order) - 1;
++
++	return addr - BUF_PAGE_HDR_SIZE;
+ }
  
- 	wake_up_all(&rbwork->waiters);
- 	if (rbwork->full_waiters_pending || rbwork->wakeup_full) {
-@@ -1569,6 +1580,7 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
- 	init_waitqueue_head(&cpu_buffer->irq_work.waiters);
- 	init_waitqueue_head(&cpu_buffer->irq_work.full_waiters);
- 	mutex_init(&cpu_buffer->mapping_lock);
-+	cpu_buffer->irq_work.is_cpu_buffer = true;
+ static void rb_inc_iter(struct ring_buffer_iter *iter)
+@@ -2646,7 +2648,8 @@ rb_move_tail(struct ring_buffer_per_cpu *cpu_buffer,
  
- 	bpage = kzalloc_node(ALIGN(sizeof(*bpage), cache_line_size()),
- 			    GFP_KERNEL, cpu_to_node(cpu));
-@@ -6209,7 +6221,8 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu)
+ /* Slow path */
+ static struct ring_buffer_event *
+-rb_add_time_stamp(struct ring_buffer_event *event, u64 delta, bool abs)
++rb_add_time_stamp(struct ring_buffer_per_cpu *cpu_buffer,
++		  struct ring_buffer_event *event, u64 delta, bool abs)
+ {
+ 	if (abs)
+ 		event->type_len = RINGBUF_TYPE_TIME_STAMP;
+@@ -2654,7 +2657,7 @@ rb_add_time_stamp(struct ring_buffer_event *event, u64 delta, bool abs)
+ 		event->type_len = RINGBUF_TYPE_TIME_EXTEND;
  
- 	if (cpu_buffer->mapped) {
- 		WRITE_ONCE(cpu_buffer->mapped, cpu_buffer->mapped + 1);
--		goto unlock;
-+		mutex_unlock(&cpu_buffer->mapping_lock);
-+		return 0;
+ 	/* Not the first event on the page, or not delta? */
+-	if (abs || rb_event_index(event)) {
++	if (abs || rb_event_index(cpu_buffer, event)) {
+ 		event->time_delta = delta & TS_MASK;
+ 		event->array[0] = delta >> TS_SHIFT;
+ 	} else {
+@@ -2728,7 +2731,7 @@ static void rb_add_timestamp(struct ring_buffer_per_cpu *cpu_buffer,
+ 		if (!abs)
+ 			info->delta = 0;
  	}
+-	*event = rb_add_time_stamp(*event, info->delta, abs);
++	*event = rb_add_time_stamp(cpu_buffer, *event, info->delta, abs);
+ 	*length -= RB_LEN_TIME_EXTEND;
+ 	*delta = 0;
+ }
+@@ -2812,10 +2815,10 @@ rb_try_to_discard(struct ring_buffer_per_cpu *cpu_buffer,
+ 	struct buffer_page *bpage;
+ 	unsigned long addr;
  
- 	/* prevent another thread from changing buffer sizes */
+-	new_index = rb_event_index(event);
++	new_index = rb_event_index(cpu_buffer, event);
+ 	old_index = new_index + rb_event_ts_length(event);
+ 	addr = (unsigned long)event;
+-	addr &= PAGE_MASK;
++	addr &= ~((PAGE_SIZE << cpu_buffer->buffer->subbuf_order) - 1);
+ 
+ 	bpage = READ_ONCE(cpu_buffer->tail_page);
+ 
+@@ -3726,7 +3729,7 @@ rb_decrement_entry(struct ring_buffer_per_cpu *cpu_buffer,
+ 	struct buffer_page *bpage = cpu_buffer->commit_page;
+ 	struct buffer_page *start;
+ 
+-	addr &= PAGE_MASK;
++	addr &= ~((PAGE_SIZE << cpu_buffer->buffer->subbuf_order) - 1);
+ 
+ 	/* Do the likely case first */
+ 	if (likely(bpage->page == (void *)addr)) {
+-- 
+2.42.0
+
