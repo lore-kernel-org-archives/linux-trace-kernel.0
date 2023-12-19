@@ -1,206 +1,360 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB891BDE4;
-	Tue, 19 Dec 2023 13:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06CE734568;
+	Tue, 19 Dec 2023 14:37:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SM5u7iyT"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a1fae88e66eso506047066b.3;
-        Tue, 19 Dec 2023 05:23:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702992231; x=1703597031; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ohwYq5yvCWylGOCoc6Y4haRzMcah4GL3U4oOACkoFzA=;
-        b=SM5u7iyTBNgorQl5b5reRwNHUYurdglIVUzCKJE0zHEem/+otcJq5ul9k/soESdCTR
-         VOtutIy5a66iETJ2fg1zSjz/ETRUuu8I44OTCuk9yEd3OGNjA/7TQxOCGdyU+aG1C4dT
-         FvTfZ60Iz+3LsEOuCXjLkOEECa3ldgC/Ip+w+1pQygdhr6N/jMMlNTO1OvYD7Un9ahrQ
-         ZBdCE/PT2aL7vygAvF8DtluHDE3dBrjU3u1Vhp4RKvoX/OvEEQeta1M1y+G9i5uWCATG
-         Mj2NINyxUVwREfXpGp9pGmQRxyrpMzFmjQ7SyYSIQ3zz/9hAtfQk6/APd+vhPZ2Li73F
-         FKaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702992231; x=1703597031;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ohwYq5yvCWylGOCoc6Y4haRzMcah4GL3U4oOACkoFzA=;
-        b=iK45I26RlyHEANcEn+AngsQ4u+lQ03hTSI612w+Hed5Ndto9TPOv8hhpiQQEt7jFQt
-         NXboPJ2zdD+rp4RstAXzEuUiHqDwtrTu1ikhmk4x8nA7ybRGOv8uB8PpEm7SB/wj/gsM
-         oFQmYa2JTzOHTwDfN+dEC1/CCdySteRkJn/OEORm+srhWmzxDTInltx3AReHyo17OMxz
-         eBA+XyOgMn+6+ctLs0J/EVD9mvoYXelJ53DXTRnO6yBgZpUFJLwbw2sHzNNz9fowFAiM
-         WHJHcriIL6F72vb+Dx6TPZMNaU7xgd2aPgfpKvhOJsEeGmFwYs+bFCiQXD/N82kNTq1m
-         bx1Q==
-X-Gm-Message-State: AOJu0Yz6dQIGyEwUHZpq2H0Li6I+dSCrAbbcYMOUgrBiqGRwab0K1o/x
-	wSYbigC0t5yL+tuiYLVGq85PRLWtRJp/KA==
-X-Google-Smtp-Source: AGHT+IGRuUI5sjGWayqzk1nu+YcOF+NdSZNg0993gxhNqRabSi0YpJqlMgSlxTmgC+d4nSCVRZI+Fw==
-X-Received: by 2002:a17:906:21d:b0:a23:59ea:1065 with SMTP id 29-20020a170906021d00b00a2359ea1065mr1815968ejd.55.1702992231231;
-        Tue, 19 Dec 2023 05:23:51 -0800 (PST)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id vt6-20020a170907a60600b00a1ce98016b6sm15544493ejc.97.2023.12.19.05.23.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Dec 2023 05:23:50 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 19 Dec 2023 14:23:48 +0100
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@chromium.org>,
-	linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v5 24/34] fprobe: Use ftrace_regs in fprobe entry handler
-Message-ID: <ZYGZZES--JmqQN_v@krava>
-References: <170290509018.220107.1347127510564358608.stgit@devnote2>
- <170290538307.220107.14964448383069008953.stgit@devnote2>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CUveShWS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99E9DC433C8;
+	Tue, 19 Dec 2023 14:37:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702996634;
+	bh=dt3Vkwbmgo6+aUzUtSM3/E9hO5HxGX/FfRFljhsgTsU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=CUveShWSsyN/5X/hyeC96wTtLuYjOgrC12CwTxIB9lGzjqH9re+FOS1pR3NR201Ua
+	 JiG/JWJ+EvnDoFryM9hL+yLbD1bp8P8NPN7YE0iz9vsY3fxtQgop66eM7ZrZUX3lqT
+	 EvwEE62/Ch22parcfAzxXIpfQgV6ArdJwp7UNAcgSAlZbienbNNCPN/OiHB3Q28Y+9
+	 NoUbB5JZBiY+VVyqUE+NDSWg2ImkBJTQRbC7nGXg33gO+JfgNO1bukTUkrh6IEF3PC
+	 BYerdEt3KiwwnPlXxS6mdRzPzVWqGMRXRH37N6koj92w0sW2hJ0dhK5oFrRBGIH6lt
+	 WC4jQ9E5uRnyA==
+Date: Tue, 19 Dec 2023 23:37:10 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] ring-buffer: Fix slowpath of interrupted event
+Message-Id: <20231219233710.21b48850676e65da2a37fe22@kernel.org>
+In-Reply-To: <20231218230712.3a76b081@gandalf.local.home>
+References: <20231218230712.3a76b081@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <170290538307.220107.14964448383069008953.stgit@devnote2>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Dec 18, 2023 at 10:16:23PM +0900, Masami Hiramatsu (Google) wrote:
+On Mon, 18 Dec 2023 23:07:12 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-SNIP
-
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 84e8a0f6e4e0..d3f8745d8ead 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -2503,7 +2503,7 @@ static int __init bpf_event_init(void)
->  fs_initcall(bpf_event_init);
->  #endif /* CONFIG_MODULES */
->  
-> -#ifdef CONFIG_FPROBE
-> +#if defined(CONFIG_FPROBE) && defined(CONFIG_DYNAMIC_FTRACE_WITH_REGS)
->  struct bpf_kprobe_multi_link {
->  	struct bpf_link link;
->  	struct fprobe fp;
-> @@ -2733,10 +2733,14 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
->  
->  static int
->  kprobe_multi_link_handler(struct fprobe *fp, unsigned long fentry_ip,
-> -			  unsigned long ret_ip, struct pt_regs *regs,
-> +			  unsigned long ret_ip, struct ftrace_regs *fregs,
->  			  void *data)
->  {
->  	struct bpf_kprobe_multi_link *link;
-> +	struct pt_regs *regs = ftrace_get_regs(fregs);
-> +
-> +	if (!regs)
-> +		return 0;
->  
->  	link = container_of(fp, struct bpf_kprobe_multi_link, fp);
->  	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), regs);
-> @@ -3008,7 +3012,7 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
->  	kvfree(cookies);
->  	return err;
->  }
-> -#else /* !CONFIG_FPROBE */
-> +#else /* !CONFIG_FPROBE || !CONFIG_DYNAMIC_FTRACE_WITH_REGS */
->  int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
->  {
->  	return -EOPNOTSUPP;
-> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> index 6cd2a4e3afb8..f12569494d8a 100644
-> --- a/kernel/trace/fprobe.c
-> +++ b/kernel/trace/fprobe.c
-> @@ -46,7 +46,7 @@ static inline void __fprobe_handler(unsigned long ip, unsigned long parent_ip,
->  	}
->  
->  	if (fp->entry_handler)
-> -		ret = fp->entry_handler(fp, ip, parent_ip, ftrace_get_regs(fregs), entry_data);
-> +		ret = fp->entry_handler(fp, ip, parent_ip, fregs, entry_data);
->  
->  	/* If entry_handler returns !0, nmissed is not counted. */
->  	if (rh) {
-> @@ -182,7 +182,7 @@ static void fprobe_init(struct fprobe *fp)
->  		fp->ops.func = fprobe_kprobe_handler;
->  	else
->  		fp->ops.func = fprobe_handler;
-> -	fp->ops.flags |= FTRACE_OPS_FL_SAVE_REGS;
-> +	fp->ops.flags |= FTRACE_OPS_FL_SAVE_ARGS;
-
-so with this change you move to ftrace_caller trampoline,
-but we need ftrace_regs_caller right?
-
-otherwise the (!regs) check in kprobe_multi_link_handler
-will be allways true IIUC
-
-jirka
-
->  }
->  
->  static int fprobe_init_rethook(struct fprobe *fp, int num)
-> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-> index 7d2ddbcfa377..ef6b36fd05ae 100644
-> --- a/kernel/trace/trace_fprobe.c
-> +++ b/kernel/trace/trace_fprobe.c
-> @@ -320,12 +320,16 @@ NOKPROBE_SYMBOL(fexit_perf_func);
->  #endif	/* CONFIG_PERF_EVENTS */
->  
->  static int fentry_dispatcher(struct fprobe *fp, unsigned long entry_ip,
-> -			     unsigned long ret_ip, struct pt_regs *regs,
-> +			     unsigned long ret_ip, struct ftrace_regs *fregs,
->  			     void *entry_data)
->  {
->  	struct trace_fprobe *tf = container_of(fp, struct trace_fprobe, fp);
-> +	struct pt_regs *regs = ftrace_get_regs(fregs);
->  	int ret = 0;
->  
-> +	if (!regs)
-> +		return 0;
-> +
->  	if (trace_probe_test_flag(&tf->tp, TP_FLAG_TRACE))
->  		fentry_trace_func(tf, entry_ip, regs);
->  #ifdef CONFIG_PERF_EVENTS
-> diff --git a/lib/test_fprobe.c b/lib/test_fprobe.c
-> index 24de0e5ff859..ff607babba18 100644
-> --- a/lib/test_fprobe.c
-> +++ b/lib/test_fprobe.c
-> @@ -40,7 +40,7 @@ static noinline u32 fprobe_selftest_nest_target(u32 value, u32 (*nest)(u32))
->  
->  static notrace int fp_entry_handler(struct fprobe *fp, unsigned long ip,
->  				    unsigned long ret_ip,
-> -				    struct pt_regs *regs, void *data)
-> +				    struct ftrace_regs *fregs, void *data)
->  {
->  	KUNIT_EXPECT_FALSE(current_test, preemptible());
->  	/* This can be called on the fprobe_selftest_target and the fprobe_selftest_target2 */
-> @@ -81,7 +81,7 @@ static notrace void fp_exit_handler(struct fprobe *fp, unsigned long ip,
->  
->  static notrace int nest_entry_handler(struct fprobe *fp, unsigned long ip,
->  				      unsigned long ret_ip,
-> -				      struct pt_regs *regs, void *data)
-> +				      struct ftrace_regs *fregs, void *data)
->  {
->  	KUNIT_EXPECT_FALSE(current_test, preemptible());
->  	return 0;
-> diff --git a/samples/fprobe/fprobe_example.c b/samples/fprobe/fprobe_example.c
-> index 64e715e7ed11..1545a1aac616 100644
-> --- a/samples/fprobe/fprobe_example.c
-> +++ b/samples/fprobe/fprobe_example.c
-> @@ -50,7 +50,7 @@ static void show_backtrace(void)
->  
->  static int sample_entry_handler(struct fprobe *fp, unsigned long ip,
->  				unsigned long ret_ip,
-> -				struct pt_regs *regs, void *data)
-> +				struct ftrace_regs *fregs, void *data)
->  {
->  	if (use_trace)
->  		/*
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
+> To synchronize the timestamps with the ring buffer reservation, there are
+> two timestamps that are saved in the buffer meta data.
+> 
+> 1. before_stamp
+> 2. write_stamp
+> 
+> When the two are equal, the write_stamp is considered valid, as in, it may
+> be used to calculate the delta of the next event as the write_stamp is the
+> timestamp of the previous reserved event on the buffer.
+> 
+> This is done by the following:
+> 
+>  /*A*/	w = current position on the ring buffer
+> 	before = before_stamp
+> 	after = write_stamp
+> 	ts = read current timestamp
+> 
+> 	if (before != after) {
+> 		write_stamp is not valid, force adding an absolute
+> 		timestamp.
+
+(additional comment)
+This happens if this caller interrupts another reservation process's B to E.
+(thus the original one only updates "before_stamp", but "write_stamp" is old.)
+
+> 	}
+> 
+>  /*B*/	before_stamp = ts
+> 
+>  /*C*/	write = local_add_return(event length, position on ring buffer)
+> 
+> 	if (w == write - event length) {
+> 		/* Nothing interrupted between A and C */
+>  /*E*/		write_stamp = ts;
+> 		delta = ts - after
+> 		/*
+> 		 * If nothing interrupted again,
+> 		 * before_stamp == write_stamp and write_stamp
+> 		 * can be used to calculate the delta for
+> 		 * events that come in after this one.
+> 		 */
+
+(additional comment)
+If something interrupts between C and E, the write_stamp goes backward
+because interrupted one updates the before_stamp and write_stamp with
+new timestamp. But in this case, write_stamp(=ts) != before_stamp(=new ts).
+Thus anyway the next entry will use absolute time stamp forcibly.
+
+> 	} else {
+> 
+> 		/*
+> 		 * The slow path!
+> 		 * Was interrupted between A and C.
+> 		 */
+> 
+> This is the place that there's a bug. We currently have:
+> 
+> 		after = write_stamp
+> 		ts = read current timestamp
+> 
+>  /*F*/		if (write == current position on the ring buffer &&
+> 		    after < ts && cmpxchg(write_stamp, after, ts)) {
+> 
+> 			delta = ts - after;
+> 
+> 		} else {
+> 			delta = 0;
+> 		}
+> 
+> The assumption is that if the current position on the ring buffer hasn't
+> moved between C and F, then it also was not interrupted, and that the last
+> event written has a timestamp that matches the write_stamp. That is the
+> write_stamp is valid.
+> 
+> But this may not be the case:
+> 
+> If a task context event was interrupted by softirq between B and C.
+> 
+> And the softirq wrote an event that got interrupted by a hard irq between
+> C and E.
+> 
+> and the hard irq wrote an event (does not need to be interrupted)
+> 
+> We have:
+> 
+>  /*B*/ before_stamp = ts of normal context
+> 
+>    ---> interrupted by softirq
+> 
+> 	/*B*/ before_stamp = ts of softirq context
+> 
+> 	  ---> interrupted by hardirq
+> 
+> 		/*B*/ before_stamp = ts of hard irq context
+> 		/*E*/ write_stamp = ts of hard irq context
+> 
+> 		/* matches and write_stamp valid */
+> 	  <----
+> 
+> 	/*E*/ write_stamp = ts of softirq context
+> 
+> 	/* No longer matches before_stamp, write_stamp is not valid! */
+> 
+>    <---
+> 
+>  w != write - length, go to slow path
+> 
+> // Right now the order of events in the ring buffer is:
+> //
+> // |-- softirq event --|-- hard irq event --|-- normal context event --|
+> //
+> 
+>  after = write_stamp (this is the ts of softirq)
+>  ts = read current timestamp
+> 
+>  if (write == current position on the ring buffer [true] &&
+>      after < ts [true] && cmpxchg(write_stamp, after, ts) [true]) {
+> 
+> 	delta = ts - after  [Wrong!]
+> 
+> The delta is to be between the hard irq event and the normal context
+> event, but the above logic made the delta between the softirq event and
+> the normal context event, where the hard irq event is between the two. This
+> will shift all the remaining event timestamps on the sub-buffer
+> incorrectly.
+> 
+> The write_stamp is only valid if it matches the before_stamp. The cmpxchg
+> does nothing to help this.
+
+That's right. Even if someone interrupts between A and C, we can write
+the ts to write_stamp. In this case, write_stamp(old) != before_stamp(new)
+so the next entry will forcibly record the absolute timestamp.
+In this case, what we need to do here is using the absolute timestamp instead
+of delta.
+
+> 
+> Instead, the following logic can be done to fix this:
+> 
+> 	before = before_stamp
+> 	ts = read current timestamp
+> 	before_stamp = ts
+> 
+> 	after = write_stamp
+> 
+> 	if (write == current position on the ring buffer &&
+> 	    after == before && after < ts) {
+> 
+> 		delta = ts - after
+> 
+> 	} else {
+> 		delta = 0;
+> 	}
+
+Ah, this is a good idea. Instead of using the old timestamp, use
+delta = 0, thus it will reuse the interrupted timestamp if someone
+interrupts between A and C.
+
+Yeah the above works, but my question is, do we really need this
+really slow path? I mean;
+
+> 	if (w == write - event length) {
+> 		/* Nothing interrupted between A and C */
+>  /*E*/		write_stamp = ts;
+> 		delta = ts - after
+
+	} else {
+		/*
+		  Something interrupted between A and C, which should record
+		  a new entry before this reserved entry with newer timestamp.
+		  we reuse it.
+		 */
+	 	ts = after = write_stamp;
+		delta = 0;
+	}
+
+Isn't this enough?
+
+Thank you,
+
+> 
+> The above will only use the write_stamp if it still matches before_stamp
+> and was tested to not have changed since C.
+> 
+> As a bonus, with this logic we do not need any 64-bit cmpxchg() at all!
+> 
+> This mean the 32-bit rb_time_t workaround can finally be removed. But
+> that's for a later time.
+> 
+> Link: https://lore.kernel.org/linux-trace-kernel/20231218175229.58ec3daf@gandalf.local.home/
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: dd93942570789 ("ring-buffer: Do not try to put back write_stamp")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/ring_buffer.c | 79 ++++++++++++--------------------------
+>  1 file changed, 24 insertions(+), 55 deletions(-)
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 5a114e752f11..e7055f52afe0 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -700,48 +700,6 @@ rb_time_read_cmpxchg(local_t *l, unsigned long expect, unsigned long set)
+>  	return local_try_cmpxchg(l, &expect, set);
+>  }
+>  
+> -static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
+> -{
+> -	unsigned long cnt, top, bottom, msb;
+> -	unsigned long cnt2, top2, bottom2, msb2;
+> -	u64 val;
+> -
+> -	/* Any interruptions in this function should cause a failure */
+> -	cnt = local_read(&t->cnt);
+> -
+> -	/* The cmpxchg always fails if it interrupted an update */
+> -	 if (!__rb_time_read(t, &val, &cnt2))
+> -		 return false;
+> -
+> -	 if (val != expect)
+> -		 return false;
+> -
+> -	 if ((cnt & 3) != cnt2)
+> -		 return false;
+> -
+> -	 cnt2 = cnt + 1;
+> -
+> -	 rb_time_split(val, &top, &bottom, &msb);
+> -	 msb = rb_time_val_cnt(msb, cnt);
+> -	 top = rb_time_val_cnt(top, cnt);
+> -	 bottom = rb_time_val_cnt(bottom, cnt);
+> -
+> -	 rb_time_split(set, &top2, &bottom2, &msb2);
+> -	 msb2 = rb_time_val_cnt(msb2, cnt);
+> -	 top2 = rb_time_val_cnt(top2, cnt2);
+> -	 bottom2 = rb_time_val_cnt(bottom2, cnt2);
+> -
+> -	if (!rb_time_read_cmpxchg(&t->cnt, cnt, cnt2))
+> -		return false;
+> -	if (!rb_time_read_cmpxchg(&t->msb, msb, msb2))
+> -		return false;
+> -	if (!rb_time_read_cmpxchg(&t->top, top, top2))
+> -		return false;
+> -	if (!rb_time_read_cmpxchg(&t->bottom, bottom, bottom2))
+> -		return false;
+> -	return true;
+> -}
+> -
+>  #else /* 64 bits */
+>  
+>  /* local64_t always succeeds */
+> @@ -755,11 +713,6 @@ static void rb_time_set(rb_time_t *t, u64 val)
+>  {
+>  	local64_set(&t->time, val);
+>  }
+> -
+> -static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
+> -{
+> -	return local64_try_cmpxchg(&t->time, &expect, set);
+> -}
+>  #endif
+>  
+>  /*
+> @@ -3610,20 +3563,36 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+>  	} else {
+>  		u64 ts;
+>  		/* SLOW PATH - Interrupted between A and C */
+> -		a_ok = rb_time_read(&cpu_buffer->write_stamp, &info->after);
+> -		/* Was interrupted before here, write_stamp must be valid */
+> +
+> +		/* Save the old before_stamp */
+> +		a_ok = rb_time_read(&cpu_buffer->before_stamp, &info->before);
+>  		RB_WARN_ON(cpu_buffer, !a_ok);
+> +
+> +		/*
+> +		 * Read a new timestamp and update the before_stamp to make
+> +		 * the next event after this one force using an absolute
+> +		 * timestamp. This is in case an interrupt were to come in
+> +		 * between E and F.
+> +		 */
+>  		ts = rb_time_stamp(cpu_buffer->buffer);
+> +		rb_time_set(&cpu_buffer->before_stamp, ts);
+> +
+> +		barrier();
+> + /*E*/		a_ok = rb_time_read(&cpu_buffer->write_stamp, &info->after);
+> +		/* Was interrupted before here, write_stamp must be valid */
+> +		RB_WARN_ON(cpu_buffer, !a_ok);
+>  		barrier();
+> - /*E*/		if (write == (local_read(&tail_page->write) & RB_WRITE_MASK) &&
+> -		    info->after < ts &&
+> -		    rb_time_cmpxchg(&cpu_buffer->write_stamp,
+> -				    info->after, ts)) {
+> -			/* Nothing came after this event between C and E */
+> + /*F*/		if (write == (local_read(&tail_page->write) & RB_WRITE_MASK) &&
+> +		    info->after == info->before && info->after < ts) {
+> +			/*
+> +			 * Nothing came after this event between C and F, it is
+> +			 * safe to use info->after for the delta as it
+> +			 * matched info->before and is still valid.
+> +			 */
+>  			info->delta = ts - info->after;
+>  		} else {
+>  			/*
+> -			 * Interrupted between C and E:
+> +			 * Interrupted between C and F:
+>  			 * Lost the previous events time stamp. Just set the
+>  			 * delta to zero, and this will be the same time as
+>  			 * the event this event interrupted. And the events that
+> -- 
+> 2.42.0
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
