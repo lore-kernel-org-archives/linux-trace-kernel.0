@@ -1,121 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4910199AD;
-	Tue, 19 Dec 2023 12:46:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B191AC433C7;
-	Tue, 19 Dec 2023 12:46:34 +0000 (UTC)
-Date: Tue, 19 Dec 2023 07:47:32 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] ring-buffer: Check if absolute timestamp goes backwards
-Message-ID: <20231219074732.18b092d4@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C57D18E13;
+	Tue, 19 Dec 2023 13:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GQTVaq0p"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a2340c803c6so324060166b.0;
+        Tue, 19 Dec 2023 05:23:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702992207; x=1703597007; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YwcaPbKi8QnFAxKSbYWNRfJwjYBPl0UD3EkTy1k1RjI=;
+        b=GQTVaq0p6ubvFbGrjS1/OLKzkdoxKaQ7MTuSrIP1jrseBWILFfPLH0l25e7O31voRI
+         HDDYdXKimX1uXkw2+ajQCA2OR8SyJrQdkESq4/WSBNj2GSuTtfD7sZTc7+ZFbNBANM/n
+         QPElhVvWhZAlc6YDTb1zAvp0ygSKazLDqmbvUhr3SuXZGxCGujotutWTL/PvurcmAEDX
+         FGIyWrq8oggYS2hjnv7fFDzSAwPFyWKUaw1vC9h3q/lDykmOjD6ouXaVvcrHWDgo8472
+         S8/y1vIaDGYYOzfo629QsJMy8GnJIbHgUwKCzpiT9adawPZJD/6Qc8wV75vSrKq7w3Ly
+         41EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702992207; x=1703597007;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YwcaPbKi8QnFAxKSbYWNRfJwjYBPl0UD3EkTy1k1RjI=;
+        b=mQbD4QIboqJeFUNp0xqjXRWayjskSA/tRhVIxpMoJMw4Da0uFH4lpPw3FN2Lgbb/Bh
+         EwJUGTcS02AwaghtFmVrh/pSK4lLoZdfIazB9yli5+GKaVv5bi+oC4KEdGtbc8cPPeOt
+         Yrw5DpOoxMWs+J0tDORdX4THf5HKAw/yVLty+CumpVmVhr1aF2Zp1oeXuEoSzp+3UCqf
+         XlizFZlEtskScJ4wAt0WRAkR3Z7rIHWDwI5sUwRgVVc0hmbAbkEvIwdObY4CQp00U3En
+         l2DTkoXBeHtTR9CsGZ3Wsb5mI7ddaKlDO8EUk2MLA4fXohsAdLEhJxagy6BCK4PF7evt
+         df2Q==
+X-Gm-Message-State: AOJu0YxuFm0CYGRN8j08gXhfZ8ddaqh4gP33R5Y9ll19bGqWc9SnoufN
+	mdl/7xKvMFOYSier1lSOYYA=
+X-Google-Smtp-Source: AGHT+IEZ1Amm7e+11O4wvzisyYuM6SsjCmPFI7PGFSWOcJR3aOzCoXHG/Pwh8lzOtiMuJM/qi5IQ1g==
+X-Received: by 2002:a17:906:bc56:b0:a23:5f70:a5f with SMTP id s22-20020a170906bc5600b00a235f700a5fmr1354003ejv.92.1702992206554;
+        Tue, 19 Dec 2023 05:23:26 -0800 (PST)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id kt17-20020a1709079d1100b00a015eac52dcsm15306406ejc.108.2023.12.19.05.23.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Dec 2023 05:23:26 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 19 Dec 2023 14:23:23 +0100
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>,
+	linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v5 24/34] fprobe: Use ftrace_regs in fprobe entry handler
+Message-ID: <ZYGZS190qqH-zUAB@krava>
+References: <170290509018.220107.1347127510564358608.stgit@devnote2>
+ <170290538307.220107.14964448383069008953.stgit@devnote2>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <170290538307.220107.14964448383069008953.stgit@devnote2>
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Mon, Dec 18, 2023 at 10:16:23PM +0900, Masami Hiramatsu (Google) wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> This allows fprobes to be available with CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+> instead of CONFIG_DYNAMIC_FTRACE_WITH_REGS, then we can enable fprobe
+> on arm64.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Acked-by: Florent Revest <revest@chromium.org>
 
-The check_buffer() which checks the timestamps of the ring buffer
-sub-buffer page, when enabled, only checks if the adding of deltas of the
-events from the last absolute timestamp or the timestamp of the sub-buffer
-page adds up to the current event.
+this change breaks kprobe multi bpf tests (crash below), which are
+partially fixed by [1] later on, but I think we have to keep
+bisecting crash free
 
-What it does not check is if the absolute timestamp causes the time of the
-events to go backwards, as that can cause issues elsewhere.
+it looks like the rethook will get wrong pointer.. I'm still trying
+to digest the whole thing, so I might have some updates later ;-)
 
-Test for the timestamp going backwards too.
+jirka
 
-This also fixes a slight issue where if the warning triggers at boot up
-(because of the resetting of the tsc), it will disable all further checks,
-even those that are after boot Have it continue checking if the warning
-was ignored during boot up.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+[1] fprobe: Rewrite fprobe on function-graph tracer
 ---
- kernel/trace/ring_buffer.c | 46 +++++++++++++++++++++++---------------
- 1 file changed, 28 insertions(+), 18 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index c0cc45482e1e..f7dc74e45ebf 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -3309,6 +3309,23 @@ static void dump_buffer_page(struct buffer_data_page *bpage,
- static DEFINE_PER_CPU(atomic_t, checking);
- static atomic_t ts_dump;
- 
-+#define buffer_warn_return(fmt, ...)					\
-+	do {								\
-+		/* If another report is happening, ignore this one */	\
-+		if (atomic_inc_return(&ts_dump) != 1) {			\
-+			atomic_dec(&ts_dump);				\
-+			goto out;					\
-+		}							\
-+		atomic_inc(&cpu_buffer->record_disabled);		\
-+		pr_warn(fmt, ##__VA_ARGS__);				\
-+		dump_buffer_page(bpage, info, tail);			\
-+		atomic_dec(&ts_dump);					\
-+		/* There's some cases in boot up that this can happen */ \
-+		if (WARN_ON_ONCE(system_state != SYSTEM_BOOTING))	\
-+			/* Do not re-enable checking */			\
-+			return;						\
-+	} while (0)
-+
- /*
-  * Check if the current event time stamp matches the deltas on
-  * the buffer page.
-@@ -3362,7 +3379,12 @@ static void check_buffer(struct ring_buffer_per_cpu *cpu_buffer,
- 
- 		case RINGBUF_TYPE_TIME_STAMP:
- 			delta = rb_event_time_stamp(event);
--			ts = rb_fix_abs_ts(delta, ts);
-+			delta = rb_fix_abs_ts(delta, ts);
-+			if (delta < ts) {
-+				buffer_warn_return("[CPU: %d]ABSOLUTE TIME WENT BACKWARDS: last ts: %lld absolute ts: %lld\n",
-+						   cpu_buffer->cpu, ts, delta);
-+			}
-+			ts = delta;
- 			break;
- 
- 		case RINGBUF_TYPE_PADDING:
-@@ -3379,23 +3401,11 @@ static void check_buffer(struct ring_buffer_per_cpu *cpu_buffer,
- 	}
- 	if ((full && ts > info->ts) ||
- 	    (!full && ts + info->delta != info->ts)) {
--		/* If another report is happening, ignore this one */
--		if (atomic_inc_return(&ts_dump) != 1) {
--			atomic_dec(&ts_dump);
--			goto out;
--		}
--		atomic_inc(&cpu_buffer->record_disabled);
--		/* There's some cases in boot up that this can happen */
--		WARN_ON_ONCE(system_state != SYSTEM_BOOTING);
--		pr_warn("[CPU: %d]TIME DOES NOT MATCH expected:%lld actual:%lld delta:%lld before:%lld after:%lld%s context:%s\n",
--			cpu_buffer->cpu,
--			ts + info->delta, info->ts, info->delta,
--			info->before, info->after,
--			full ? " (full)" : "", show_interrupt_level());
--		dump_buffer_page(bpage, info, tail);
--		atomic_dec(&ts_dump);
--		/* Do not re-enable checking */
--		return;
-+		buffer_warn_return("[CPU: %d]TIME DOES NOT MATCH expected:%lld actual:%lld delta:%lld before:%lld after:%lld%s context:%s\n",
-+				   cpu_buffer->cpu,
-+				   ts + info->delta, info->ts, info->delta,
-+				   info->before, info->after,
-+				   full ? " (full)" : "", show_interrupt_level());
- 	}
- out:
- 	atomic_dec(this_cpu_ptr(&checking));
--- 
-2.42.0
-
+Dec 19 13:50:04 qemu kernel: BUG: kernel NULL pointer dereference, address: 0000000000000098
+Dec 19 13:50:04 qemu kernel: #PF: supervisor read access in kernel mode
+Dec 19 13:50:04 qemu kernel: #PF: error_code(0x0000) - not-present page
+Dec 19 13:50:04 qemu kernel: PGD 10955f067 P4D 10955f067 PUD 103113067 PMD 0 
+Dec 19 13:50:04 qemu kernel: Oops: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC KASAN NOPTI
+Dec 19 13:50:04 qemu kernel: CPU: 1 PID: 747 Comm: test_progs Tainted: G    B      OE      6.7.0-rc3+ #194 85bc8297edbc7f21acfc743dabbd52cac073a6bf
+Dec 19 13:50:04 qemu kernel: Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-1.fc38 04/01/2014
+Dec 19 13:50:04 qemu kernel: RIP: 0010:arch_rethook_prepare+0x18/0x60
+Dec 19 13:50:04 qemu kernel: Code: 1f 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 41 55 41 54 55 48 89 f5 53 48 89 fb 48 8d be 98 00 00 00 e8 68 8f 59 >
+Dec 19 13:50:04 qemu kernel: RSP: 0018:ffff888125f97a88 EFLAGS: 00010286
+Dec 19 13:50:04 qemu kernel: RAX: 0000000000000001 RBX: ffff88818a231410 RCX: ffffffff812190b6
+Dec 19 13:50:04 qemu kernel: RDX: fffffbfff0c42e95 RSI: 0000000000000008 RDI: ffffffff862174a0
+Dec 19 13:50:04 qemu kernel: RBP: 0000000000000000 R08: 0000000000000001 R09: fffffbfff0c42e94
+Dec 19 13:50:04 qemu kernel: R10: ffffffff862174a7 R11: 0000000000000000 R12: ffff88818a231420
+Dec 19 13:50:04 qemu kernel: R13: ffffffff8283ee8e R14: ffff88818a231410 R15: fffffffffffffff7
+Dec 19 13:50:04 qemu kernel: FS:  00007ff8a16cfd00(0000) GS:ffff88842c600000(0000) knlGS:0000000000000000
+Dec 19 13:50:05 qemu kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+Dec 19 13:50:05 qemu kernel: CR2: 0000000000000098 CR3: 000000010633c005 CR4: 0000000000770ef0
+Dec 19 13:50:05 qemu kernel: PKRU: 55555554
+Dec 19 13:50:05 qemu kernel: Call Trace:
+Dec 19 13:50:05 qemu kernel:  <TASK>
+Dec 19 13:50:05 qemu kernel:  ? __die+0x1f/0x70
+Dec 19 13:50:05 qemu kernel:  ? page_fault_oops+0x215/0x620
+Dec 19 13:50:05 qemu kernel:  ? rcu_is_watching+0x34/0x60
+Dec 19 13:50:05 qemu kernel:  ? __pfx_page_fault_oops+0x10/0x10
+Dec 19 13:50:05 qemu kernel:  ? asm_sysvec_apic_timer_interrupt+0x16/0x20
+Dec 19 13:50:05 qemu kernel:  ? do_user_addr_fault+0x4b3/0x910
+Dec 19 13:50:05 qemu kernel:  ? exc_page_fault+0x77/0x130
+Dec 19 13:50:05 qemu kernel:  ? asm_exc_page_fault+0x22/0x30
+Dec 19 13:50:05 qemu kernel:  ? bpf_prog_test_run_tracing+0x1ce/0x2d0
+Dec 19 13:50:05 qemu kernel:  ? add_taint+0x26/0x90
+Dec 19 13:50:05 qemu kernel:  ? arch_rethook_prepare+0x18/0x60
+Dec 19 13:50:05 qemu kernel:  ? arch_rethook_prepare+0x18/0x60
+Dec 19 13:50:05 qemu kernel:  ? bpf_prog_test_run_tracing+0x1ce/0x2d0
+Dec 19 13:50:05 qemu kernel:  rethook_hook+0x1e/0x50
+Dec 19 13:50:05 qemu kernel:  ? __pfx_bpf_fentry_test1+0x10/0x10
+Dec 19 13:50:05 qemu kernel:  ? bpf_prog_test_run_tracing+0x1ce/0x2d0
+Dec 19 13:50:05 qemu kernel:  fprobe_handler+0x1ca/0x350
+Dec 19 13:50:05 qemu kernel:  ? __pfx_bpf_fentry_test1+0x10/0x10
+Dec 19 13:50:05 qemu kernel:  arch_ftrace_ops_list_func+0x143/0x2e0
+Dec 19 13:50:05 qemu kernel:  ? bpf_prog_test_run_tracing+0x1ce/0x2d0
+Dec 19 13:50:05 qemu kernel:  ftrace_call+0x5/0x44
+Dec 19 13:50:05 qemu kernel:  ? __pfx_lock_release+0x10/0x10
+Dec 19 13:50:05 qemu kernel:  ? rcu_is_watching+0x34/0x60
+Dec 19 13:50:05 qemu kernel:  ? bpf_prog_test_run_tracing+0xcd/0x2d0
+Dec 19 13:50:05 qemu kernel:  ? bpf_fentry_test1+0x5/0x10
+Dec 19 13:50:05 qemu kernel:  ? rcu_is_watching+0x34/0x60
+Dec 19 13:50:05 qemu kernel:  bpf_fentry_test1+0x5/0x10
+Dec 19 13:50:05 qemu kernel:  bpf_prog_test_run_tracing+0x1ce/0x2d0
+Dec 19 13:50:05 qemu kernel:  ? __pfx_lock_release+0x10/0x10
+Dec 19 13:50:05 qemu kernel:  ? __pfx_bpf_prog_test_run_tracing+0x10/0x10
+Dec 19 13:50:05 qemu kernel:  ? __pfx_lock_release+0x10/0x10
+Dec 19 13:50:05 qemu kernel:  ? __fget_light+0xdf/0x100
+Dec 19 13:50:05 qemu kernel:  ? __bpf_prog_get+0x107/0x150
+Dec 19 13:50:05 qemu kernel:  __sys_bpf+0x552/0x2ef0
+Dec 19 13:50:05 qemu kernel:  ? rcu_is_watching+0x34/0x60
+Dec 19 13:50:05 qemu kernel:  ? __pfx___sys_bpf+0x10/0x10
+Dec 19 13:50:05 qemu kernel:  ? __pfx_lock_release+0x10/0x10
+Dec 19 13:50:05 qemu kernel:  ? vfs_write+0x1fa/0x740
+Dec 19 13:50:05 qemu kernel:  ? rcu_is_watching+0x34/0x60
+Dec 19 13:50:05 qemu kernel:  ? rcu_is_watching+0x34/0x60
+Dec 19 13:50:05 qemu kernel:  ? lockdep_hardirqs_on_prepare+0xe/0x250
+Dec 19 13:50:05 qemu kernel:  ? seqcount_lockdep_reader_access.constprop.0+0x105/0x120
+Dec 19 13:50:05 qemu kernel:  ? seqcount_lockdep_reader_access.constprop.0+0xb2/0x120
+Dec 19 13:50:05 qemu kernel:  __x64_sys_bpf+0x44/0x60
+Dec 19 13:50:05 qemu kernel:  do_syscall_64+0x3f/0xf0
+Dec 19 13:50:05 qemu kernel:  entry_SYSCALL_64_after_hwframe+0x6e/0x76
+Dec 19 13:50:05 qemu kernel: RIP: 0033:0x7ff8a1897b4d
+Dec 19 13:50:05 qemu kernel: Code: c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f >
+Dec 19 13:50:05 qemu kernel: RSP: 002b:00007fff34f7d158 EFLAGS: 00000206 ORIG_RAX: 0000000000000141
+Dec 19 13:50:05 qemu kernel: RAX: ffffffffffffffda RBX: 00007ff8a19aa000 RCX: 00007ff8a1897b4d
+Dec 19 13:50:05 qemu kernel: RDX: 0000000000000050 RSI: 00007fff34f7d190 RDI: 000000000000000a
+Dec 19 13:50:05 qemu kernel: RBP: 00007fff34f7d170 R08: 0000000000000000 R09: 00007fff34f7d190
+Dec 19 13:50:05 qemu kernel: R10: 0000000000000064 R11: 0000000000000206 R12: 0000000000000004
+Dec 19 13:50:05 qemu kernel: R13: 0000000000000000 R14: 00007ff8a19df000 R15: 0000000000e56db0
+Dec 19 13:50:05 qemu kernel:  </TASK>
+Dec 19 13:50:05 qemu kernel: Modules linked in: bpf_testmod(OE) intel_rapl_msr intel_rapl_common crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_inte>
+Dec 19 13:50:05 qemu kernel: CR2: 0000000000000098
+Dec 19 13:50:05 qemu kernel: ---[ end trace 0000000000000000 ]---
