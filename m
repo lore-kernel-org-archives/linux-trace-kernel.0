@@ -1,17 +1,17 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10513BB55;
-	Tue, 19 Dec 2023 18:55:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1089C433CC;
-	Tue, 19 Dec 2023 18:55:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719AC3DBA0;
+	Tue, 19 Dec 2023 18:55:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44510C433CA;
+	Tue, 19 Dec 2023 18:55:32 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rFfGZ-00000003R5M-0fTL;
+	id 1rFfGZ-00000003R6M-35m7;
 	Tue, 19 Dec 2023 13:56:31 -0500
-Message-ID: <20231219185630.944104939@goodmis.org>
+Message-ID: <20231219185631.520496304@goodmis.org>
 User-Agent: quilt/0.67
-Date: Tue, 19 Dec 2023 13:54:26 -0500
+Date: Tue, 19 Dec 2023 13:54:28 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -22,8 +22,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
  Vincent Donnefort <vdonnefort@google.com>,
  Kent Overstreet <kent.overstreet@gmail.com>
-Subject: [PATCH v5 12/15] ring-buffer: Just update the subbuffers when changing their
- allocation order
+Subject: [PATCH v5 14/15] ringbuffer/selftest: Add basic selftest to test changing subbuf order
 References: <20231219185414.474197117@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -35,199 +34,116 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-The ring_buffer_subbuf_order_set() was creating ring_buffer_per_cpu
-cpu_buffers with the new subbuffers with the updated order, and if they
-all successfully were created, then they the ring_buffer's per_cpu buffers
-would be freed and replaced by them.
+Add a self test that will write into the trace buffer with differ trace
+sub buffer order sizes.
 
-The problem is that the freed per_cpu buffers contains state that would be
-lost. Running the following commands:
-
-1. # echo 3 > /sys/kernel/tracing/buffer_subbuf_order
-2. # echo 0 > /sys/kernel/tracing/tracing_cpumask
-3. # echo 1 > /sys/kernel/tracing/snapshot
-4. # echo ff > /sys/kernel/tracing/tracing_cpumask
-5. # echo test > /sys/kernel/tracing/trace_marker
-
-Would result in:
-
- -bash: echo: write error: Bad file descriptor
-
-That's because the state of the per_cpu buffers of the snapshot buffer is
-lost when the order is changed (the order of a freed snapshot buffer goes
-to 0 to save memory, and when the snapshot buffer is allocated again, it
-goes back to what the main buffer is).
-
-In operation 2, the snapshot buffers were set to "disable" (as all the
-ring buffers CPUs were disabled).
-
-In operation 3, the snapshot is allocated and a call to
-ring_buffer_subbuf_order_set() replaced the per_cpu buffers losing the
-"record_disable" count.
-
-When it was enabled again, the atomic_dec(&cpu_buffer->record_disable) was
-decrementing a zero, setting it to -1. Writing 1 into the snapshot would
-swap the snapshot buffer with the main buffer, so now the main buffer is
-"disabled", and nothing can write to the ring buffer anymore.
-
-Instead of creating new per_cpu buffers and losing the state of the old
-buffers, basically do what the resize does and just allocate new subbuf
-pages into the new_pages link list of the per_cpu buffer and if they all
-succeed, then replace the old sub buffers with the new ones. This keeps
-the per_cpu buffer descriptor in tact and by doing so, keeps its state.
-
-Fixes: TBD ("ring-buffer: Set new size of the ring buffer sub page")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ring_buffer.c | 88 ++++++++++++++++++++++++++++++--------
- 1 file changed, 71 insertions(+), 17 deletions(-)
+ .../ftrace/test.d/00basic/ringbuffer_order.tc | 95 +++++++++++++++++++
+ 1 file changed, 95 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_order.tc
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 23ead7602da0..7ee6779bf292 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -5856,11 +5856,11 @@ EXPORT_SYMBOL_GPL(ring_buffer_subbuf_order_get);
-  */
- int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- {
--	struct ring_buffer_per_cpu **cpu_buffers;
-+	struct ring_buffer_per_cpu *cpu_buffer;
-+	struct buffer_page *bpage, *tmp;
- 	int old_order, old_size;
- 	int nr_pages;
- 	int psize;
--	int bsize;
- 	int err;
- 	int cpu;
- 
-@@ -5874,11 +5874,6 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- 	if (psize <= BUF_PAGE_HDR_SIZE)
- 		return -EINVAL;
- 
--	bsize = sizeof(void *) * buffer->cpus;
--	cpu_buffers = kzalloc(bsize, GFP_KERNEL);
--	if (!cpu_buffers)
--		return -ENOMEM;
--
- 	old_order = buffer->subbuf_order;
- 	old_size = buffer->subbuf_size;
- 
-@@ -5894,33 +5889,88 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- 
- 	/* Make sure all new buffers are allocated, before deleting the old ones */
- 	for_each_buffer_cpu(buffer, cpu) {
+diff --git a/tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_order.tc b/tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_order.tc
+new file mode 100644
+index 000000000000..ecbcc810e6c1
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_order.tc
+@@ -0,0 +1,95 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: Change the ringbuffer sub-buffer order
++# requires: buffer_subbuf_order
++# flags: instance
 +
- 		if (!cpumask_test_cpu(cpu, buffer->cpumask))
- 			continue;
- 
-+		cpu_buffer = buffer->buffers[cpu];
++get_buffer_data_size() {
++	sed -ne 's/^.*data.*size:\([0-9][0-9]*\).*/\1/p' events/header_page
++}
 +
- 		/* Update the number of pages to match the new size */
- 		nr_pages = old_size * buffer->buffers[cpu]->nr_pages;
- 		nr_pages = DIV_ROUND_UP(nr_pages, buffer->subbuf_size);
- 
--		cpu_buffers[cpu] = rb_allocate_cpu_buffer(buffer, nr_pages, cpu);
--		if (!cpu_buffers[cpu]) {
-+		/* we need a minimum of two pages */
-+		if (nr_pages < 2)
-+			nr_pages = 2;
++get_buffer_data_offset() {
++	sed -ne 's/^.*data.*offset:\([0-9][0-9]*\).*/\1/p' events/header_page
++}
 +
-+		cpu_buffer->nr_pages_to_update = nr_pages;
++get_event_header_size() {
++	type_len=`sed -ne 's/^.*type_len.*:[^0-9]*\([0-9][0-9]*\).*/\1/p' events/header_event`
++	time_len=`sed -ne 's/^.*time_delta.*:[^0-9]*\([0-9][0-9]*\).*/\1/p' events/header_event`
++	array_len=`sed -ne 's/^.*array.*:[^0-9]*\([0-9][0-9]*\).*/\1/p' events/header_event`
++	total_bits=$((type_len+time_len+array_len))
++	total_bits=$((total_bits+7))
++	echo $((total_bits/8))
++}
 +
-+		/* Include the reader page */
-+		nr_pages++;
++get_print_event_buf_offset() {
++	sed -ne 's/^.*buf.*offset:\([0-9][0-9]*\).*/\1/p' events/ftrace/print/format
++}
 +
-+		/* Allocate the new size buffer */
-+		INIT_LIST_HEAD(&cpu_buffer->new_pages);
-+		if (__rb_allocate_pages(cpu_buffer, nr_pages,
-+					&cpu_buffer->new_pages)) {
-+			/* not enough memory for new pages */
- 			err = -ENOMEM;
- 			goto error;
- 		}
- 	}
- 
- 	for_each_buffer_cpu(buffer, cpu) {
++event_header_size=`get_event_header_size`
++print_header_size=`get_print_event_buf_offset`
 +
- 		if (!cpumask_test_cpu(cpu, buffer->cpumask))
- 			continue;
- 
--		rb_free_cpu_buffer(buffer->buffers[cpu]);
--		buffer->buffers[cpu] = cpu_buffers[cpu];
-+		cpu_buffer = buffer->buffers[cpu];
++data_offset=`get_buffer_data_offset`
 +
-+		/* Clear the head bit to make the link list normal to read */
-+		rb_head_page_deactivate(cpu_buffer);
++marker_meta=$((event_header_size+print_header_size))
 +
-+		/* Now walk the list and free all the old sub buffers */
-+		list_for_each_entry_safe(bpage, tmp, cpu_buffer->pages, list) {
-+			list_del_init(&bpage->list);
-+			free_buffer_page(bpage);
-+		}
-+		/* The above loop stopped an the last page needing to be freed */
-+		bpage = list_entry(cpu_buffer->pages, struct buffer_page, list);
-+		free_buffer_page(bpage);
++make_str() {
++        cnt=$1
++	printf -- 'X%.0s' $(seq $cnt)
++}
 +
-+		/* Free the current reader page */
-+		free_buffer_page(cpu_buffer->reader_page);
++write_buffer() {
++	size=$1
 +
-+		/* One page was allocated for the reader page */
-+		cpu_buffer->reader_page = list_entry(cpu_buffer->new_pages.next,
-+						     struct buffer_page, list);
-+		list_del_init(&cpu_buffer->reader_page->list);
++	str=`make_str $size`
 +
-+		/* The cpu_buffer pages are a link list with no head */
-+		cpu_buffer->pages = cpu_buffer->new_pages.next;
-+		cpu_buffer->new_pages.next->prev = cpu_buffer->new_pages.prev;
-+		cpu_buffer->new_pages.prev->next = cpu_buffer->new_pages.next;
++	# clear the buffer
++	echo > trace
 +
-+		/* Clear the new_pages list */
-+		INIT_LIST_HEAD(&cpu_buffer->new_pages);
++	# write the string into the marker
++	echo $str > trace_marker
 +
-+		cpu_buffer->head_page
-+			= list_entry(cpu_buffer->pages, struct buffer_page, list);
-+		cpu_buffer->tail_page = cpu_buffer->commit_page = cpu_buffer->head_page;
++	echo $str
++}
 +
-+		cpu_buffer->nr_pages = cpu_buffer->nr_pages_to_update;
-+		cpu_buffer->nr_pages_to_update = 0;
++test_buffer() {
++	orde=$1
++	page_size=$((4096<<order))
 +
-+		free_pages((unsigned long)cpu_buffer->free_page, old_order);
-+		cpu_buffer->free_page = NULL;
++	size=`get_buffer_data_size`
 +
-+		rb_head_page_activate(cpu_buffer);
++	# the size must be greater than or equal to page_size - data_offset
++	page_size=$((page_size-data_offset))
++	if [ $size -lt $page_size ]; then
++		exit fail
++	fi
 +
-+		rb_check_pages(cpu_buffer);
- 	}
- 
- 	atomic_dec(&buffer->record_disabled);
- 	mutex_unlock(&buffer->mutex);
- 
--	kfree(cpu_buffers);
--
- 	return 0;
- 
- error:
-@@ -5931,12 +5981,16 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- 	mutex_unlock(&buffer->mutex);
- 
- 	for_each_buffer_cpu(buffer, cpu) {
--		if (!cpu_buffers[cpu])
-+		cpu_buffer = buffer->buffers[cpu];
++	# Now add a little more the meta data overhead will overflow
 +
-+		if (!cpu_buffer->nr_pages_to_update)
- 			continue;
--		rb_free_cpu_buffer(cpu_buffers[cpu]);
--		kfree(cpu_buffers[cpu]);
++	str=`write_buffer $size`
 +
-+		list_for_each_entry_safe(bpage, tmp, &cpu_buffer->new_pages, list) {
-+			list_del_init(&bpage->list);
-+			free_buffer_page(bpage);
-+		}
- 	}
--	kfree(cpu_buffers);
- 
- 	return err;
- }
++	# Make sure the line was broken
++	new_str=`awk ' /tracing_mark_write:/ { sub(/^.*tracing_mark_write: /,"");printf "%s", $0; exit}' trace`
++
++	if [ "$new_str" = "$str" ]; then
++		exit fail;
++	fi
++
++	# Make sure the entire line can be found
++	new_str=`awk ' /tracing_mark_write:/ { sub(/^.*tracing_mark_write: /,"");printf "%s", $0; }' trace`
++
++	if [ "$new_str" != "$str" ]; then
++		exit fail;
++	fi
++}
++
++ORIG=`cat buffer_subbuf_order`
++
++# Could test bigger orders than 3, but then creating the string
++# to write into the ring buffer takes too long
++for a in 0 1 2 3 ; do
++	echo $a > buffer_subbuf_order
++	test_buffer $a
++done
++
++echo $ORIG > buffer_subbuf_order
++
 -- 
 2.42.0
 
