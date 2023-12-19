@@ -1,17 +1,17 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606A238FB6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08C039879;
 	Tue, 19 Dec 2023 18:55:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B35DDC433CB;
-	Tue, 19 Dec 2023 18:55:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97A9AC433B7;
+	Tue, 19 Dec 2023 18:55:29 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rFfGW-00000003R0N-0wng;
-	Tue, 19 Dec 2023 13:56:28 -0500
-Message-ID: <20231219185628.009147038@goodmis.org>
+	id 1rFfGX-00000003R1q-0Spd;
+	Tue, 19 Dec 2023 13:56:29 -0500
+Message-ID: <20231219185628.875145995@goodmis.org>
 User-Agent: quilt/0.67
-Date: Tue, 19 Dec 2023 13:54:16 -0500
+Date: Tue, 19 Dec 2023 13:54:19 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -22,7 +22,8 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
  Vincent Donnefort <vdonnefort@google.com>,
  Kent Overstreet <kent.overstreet@gmail.com>
-Subject: [PATCH v5 02/15] ring-buffer: Page size per ring buffer
+Subject: [PATCH v5 05/15] ring-buffer: Read and write to ring buffers with custom sub buffer
+ size
 References: <20231219185414.474197117@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -34,414 +35,389 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
 
-Currently the size of one sub buffer page is global for all buffers and
-it is hard coded to one system page. In order to introduce configurable
-ring buffer sub page size, the internal logic should be refactored to
-work with sub page size per ring buffer.
+As the size of the ring sub buffer page can be changed dynamically,
+the logic that reads and writes to the buffer should be fixed to take
+that into account. Some internal ring buffer APIs are changed:
+ ring_buffer_alloc_read_page()
+ ring_buffer_free_read_page()
+ ring_buffer_read_page()
+A new API is introduced:
+ ring_buffer_read_page_data()
 
-Link: https://lore.kernel.org/linux-trace-devel/20211213094825.61876-3-tz.stoyanov@gmail.com
+Link: https://lore.kernel.org/linux-trace-devel/20211213094825.61876-6-tz.stoyanov@gmail.com
 
 Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
+[ Fixed kerneldoc on data_page parameter in ring_buffer_free_read_page() ]
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/linux/ring_buffer.h |  2 +-
- kernel/trace/ring_buffer.c  | 68 +++++++++++++++++++++----------------
- kernel/trace/trace.c        |  2 +-
- kernel/trace/trace.h        |  1 +
- kernel/trace/trace_events.c | 59 ++++++++++++++++++++++++--------
- 5 files changed, 86 insertions(+), 46 deletions(-)
+ include/linux/ring_buffer.h          | 11 ++--
+ kernel/trace/ring_buffer.c           | 75 ++++++++++++++++++++--------
+ kernel/trace/ring_buffer_benchmark.c | 10 ++--
+ kernel/trace/trace.c                 | 34 +++++++------
+ 4 files changed, 89 insertions(+), 41 deletions(-)
 
 diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index b1b03b2c0f08..ce46218ce46d 100644
+index 12573306b889..fa802db216f9 100644
 --- a/include/linux/ring_buffer.h
 +++ b/include/linux/ring_buffer.h
-@@ -200,7 +200,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer, void **data_page,
+@@ -192,10 +192,15 @@ bool ring_buffer_time_stamp_abs(struct trace_buffer *buffer);
+ size_t ring_buffer_nr_pages(struct trace_buffer *buffer, int cpu);
+ size_t ring_buffer_nr_dirty_pages(struct trace_buffer *buffer, int cpu);
+ 
+-void *ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu);
+-void ring_buffer_free_read_page(struct trace_buffer *buffer, int cpu, void *data);
+-int ring_buffer_read_page(struct trace_buffer *buffer, void **data_page,
++struct buffer_data_read_page;
++struct buffer_data_read_page *
++ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu);
++void ring_buffer_free_read_page(struct trace_buffer *buffer, int cpu,
++				struct buffer_data_read_page *page);
++int ring_buffer_read_page(struct trace_buffer *buffer,
++			  struct buffer_data_read_page *data_page,
+ 			  size_t len, int cpu, int full);
++void *ring_buffer_read_page_data(struct buffer_data_read_page *page);
+ 
  struct trace_seq;
  
- int ring_buffer_print_entry_header(struct trace_seq *s);
--int ring_buffer_print_page_header(struct trace_seq *s);
-+int ring_buffer_print_page_header(struct trace_buffer *buffer, struct trace_seq *s);
- 
- enum ring_buffer_flags {
- 	RB_FL_OVERWRITE		= 1 << 0,
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 2400c8e68fd3..d9f656502400 100644
+index b928bd03dd0e..c2afcf98ea91 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -374,11 +374,6 @@ static inline bool test_time_stamp(u64 delta)
- 	return !!(delta & TS_DELTA_TEST);
- }
- 
--#define BUF_PAGE_SIZE (PAGE_SIZE - BUF_PAGE_HDR_SIZE)
--
--/* Max payload is BUF_PAGE_SIZE - header (8bytes) */
--#define BUF_MAX_DATA_SIZE (BUF_PAGE_SIZE - (sizeof(u32) * 2))
--
- struct rb_irq_work {
- 	struct irq_work			work;
- 	wait_queue_head_t		waiters;
-@@ -510,6 +505,9 @@ struct trace_buffer {
- 
- 	struct rb_irq_work		irq_work;
- 	bool				time_stamp_abs;
-+
-+	unsigned int			subbuf_size;
-+	unsigned int			max_data_size;
+@@ -318,6 +318,11 @@ struct buffer_data_page {
+ 	unsigned char	 data[] RB_ALIGN_DATA;	/* data of buffer page */
  };
  
- struct ring_buffer_iter {
-@@ -523,10 +521,11 @@ struct ring_buffer_iter {
- 	u64				read_stamp;
- 	u64				page_stamp;
- 	struct ring_buffer_event	*event;
-+	size_t				event_size;
- 	int				missed_events;
- };
- 
--int ring_buffer_print_page_header(struct trace_seq *s)
-+int ring_buffer_print_page_header(struct trace_buffer *buffer, struct trace_seq *s)
- {
- 	struct buffer_data_page field;
- 
-@@ -550,7 +549,7 @@ int ring_buffer_print_page_header(struct trace_seq *s)
- 	trace_seq_printf(s, "\tfield: char data;\t"
- 			 "offset:%u;\tsize:%u;\tsigned:%u;\n",
- 			 (unsigned int)offsetof(typeof(field), data),
--			 (unsigned int)BUF_PAGE_SIZE,
-+			 (unsigned int)buffer->subbuf_size,
- 			 (unsigned int)is_signed_type(char));
- 
- 	return !trace_seq_has_overflowed(s);
-@@ -1625,7 +1624,13 @@ struct trace_buffer *__ring_buffer_alloc(unsigned long size, unsigned flags,
- 	if (!zalloc_cpumask_var(&buffer->cpumask, GFP_KERNEL))
- 		goto fail_free_buffer;
- 
--	nr_pages = DIV_ROUND_UP(size, BUF_PAGE_SIZE);
-+	/* Default buffer page size - one system page */
-+	buffer->subbuf_size = PAGE_SIZE - BUF_PAGE_HDR_SIZE;
-+
-+	/* Max payload is buffer page size - header (8bytes) */
-+	buffer->max_data_size = buffer->subbuf_size - (sizeof(u32) * 2);
-+
-+	nr_pages = DIV_ROUND_UP(size, buffer->subbuf_size);
- 	buffer->flags = flags;
- 	buffer->clock = trace_clock_local;
- 	buffer->reader_lock_key = key;
-@@ -1944,7 +1949,7 @@ static void update_pages_handler(struct work_struct *work)
-  * @size: the new size.
-  * @cpu_id: the cpu buffer to resize
-  *
-- * Minimum size is 2 * BUF_PAGE_SIZE.
-+ * Minimum size is 2 * buffer->subbuf_size.
-  *
-  * Returns 0 on success and < 0 on failure.
-  */
-@@ -1966,7 +1971,7 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
- 	    !cpumask_test_cpu(cpu_id, buffer->cpumask))
- 		return 0;
- 
--	nr_pages = DIV_ROUND_UP(size, BUF_PAGE_SIZE);
-+	nr_pages = DIV_ROUND_UP(size, buffer->subbuf_size);
- 
- 	/* we need a minimum of two pages */
- 	if (nr_pages < 2)
-@@ -2213,7 +2218,7 @@ rb_iter_head_event(struct ring_buffer_iter *iter)
- 	 */
- 	barrier();
- 
--	if ((iter->head + length) > commit || length > BUF_PAGE_SIZE)
-+	if ((iter->head + length) > commit || length > iter->event_size)
- 		/* Writer corrupted the read? */
- 		goto reset;
- 
-@@ -2446,6 +2451,7 @@ static inline void
- rb_reset_tail(struct ring_buffer_per_cpu *cpu_buffer,
- 	      unsigned long tail, struct rb_event_info *info)
- {
-+	unsigned long bsize = READ_ONCE(cpu_buffer->buffer->subbuf_size);
- 	struct buffer_page *tail_page = info->tail_page;
- 	struct ring_buffer_event *event;
- 	unsigned long length = info->length;
-@@ -2454,13 +2460,13 @@ rb_reset_tail(struct ring_buffer_per_cpu *cpu_buffer,
- 	 * Only the event that crossed the page boundary
- 	 * must fill the old tail_page with padding.
- 	 */
--	if (tail >= BUF_PAGE_SIZE) {
-+	if (tail >= bsize) {
- 		/*
- 		 * If the page was filled, then we still need
- 		 * to update the real_end. Reset it to zero
- 		 * and the reader will ignore it.
- 		 */
--		if (tail == BUF_PAGE_SIZE)
-+		if (tail == bsize)
- 			tail_page->real_end = 0;
- 
- 		local_sub(length, &tail_page->write);
-@@ -2488,7 +2494,7 @@ rb_reset_tail(struct ring_buffer_per_cpu *cpu_buffer,
- 	 * If we are less than the minimum size, we don't need to
- 	 * worry about it.
- 	 */
--	if (tail > (BUF_PAGE_SIZE - RB_EVNT_MIN_SIZE)) {
-+	if (tail > (bsize - RB_EVNT_MIN_SIZE)) {
- 		/* No room for any events */
- 
- 		/* Mark the rest of the page with padding */
-@@ -2503,19 +2509,19 @@ rb_reset_tail(struct ring_buffer_per_cpu *cpu_buffer,
- 	}
- 
- 	/* Put in a discarded event */
--	event->array[0] = (BUF_PAGE_SIZE - tail) - RB_EVNT_HDR_SIZE;
-+	event->array[0] = (bsize - tail) - RB_EVNT_HDR_SIZE;
- 	event->type_len = RINGBUF_TYPE_PADDING;
- 	/* time delta must be non zero */
- 	event->time_delta = 1;
- 
- 	/* account for padding bytes */
--	local_add(BUF_PAGE_SIZE - tail, &cpu_buffer->entries_bytes);
-+	local_add(bsize - tail, &cpu_buffer->entries_bytes);
- 
- 	/* Make sure the padding is visible before the tail_page->write update */
- 	smp_wmb();
- 
- 	/* Set write to end of buffer */
--	length = (tail + length) - BUF_PAGE_SIZE;
-+	length = (tail + length) - bsize;
- 	local_sub(length, &tail_page->write);
- }
- 
-@@ -3469,7 +3475,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
- 	tail = write - info->length;
- 
- 	/* See if we shot pass the end of this buffer page */
--	if (unlikely(write > BUF_PAGE_SIZE)) {
-+	if (unlikely(write > cpu_buffer->buffer->subbuf_size)) {
- 		check_buffer(cpu_buffer, info, CHECK_FULL_PAGE);
- 		return rb_move_tail(cpu_buffer, tail, info);
- 	}
-@@ -3600,7 +3606,7 @@ rb_reserve_next_event(struct trace_buffer *buffer,
- 	if (ring_buffer_time_stamp_abs(cpu_buffer->buffer)) {
- 		add_ts_default = RB_ADD_STAMP_ABSOLUTE;
- 		info.length += RB_LEN_TIME_EXTEND;
--		if (info.length > BUF_MAX_DATA_SIZE)
-+		if (info.length > cpu_buffer->buffer->max_data_size)
- 			goto out_fail;
- 	} else {
- 		add_ts_default = RB_ADD_STAMP_NONE;
-@@ -3675,7 +3681,7 @@ ring_buffer_lock_reserve(struct trace_buffer *buffer, unsigned long length)
- 	if (unlikely(atomic_read(&cpu_buffer->record_disabled)))
- 		goto out;
- 
--	if (unlikely(length > BUF_MAX_DATA_SIZE))
-+	if (unlikely(length > buffer->max_data_size))
- 		goto out;
- 
- 	if (unlikely(trace_recursive_lock(cpu_buffer)))
-@@ -3825,7 +3831,7 @@ int ring_buffer_write(struct trace_buffer *buffer,
- 	if (atomic_read(&cpu_buffer->record_disabled))
- 		goto out;
- 
--	if (length > BUF_MAX_DATA_SIZE)
-+	if (length > buffer->max_data_size)
- 		goto out;
- 
- 	if (unlikely(trace_recursive_lock(cpu_buffer)))
-@@ -4405,6 +4411,7 @@ static struct buffer_page *
- rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
- {
- 	struct buffer_page *reader = NULL;
-+	unsigned long bsize = READ_ONCE(cpu_buffer->buffer->subbuf_size);
- 	unsigned long overwrite;
- 	unsigned long flags;
- 	int nr_loops = 0;
-@@ -4540,7 +4547,7 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
- #define USECS_WAIT	1000000
-         for (nr_loops = 0; nr_loops < USECS_WAIT; nr_loops++) {
- 		/* If the write is past the end of page, a writer is still updating it */
--		if (likely(!reader || rb_page_write(reader) <= BUF_PAGE_SIZE))
-+		if (likely(!reader || rb_page_write(reader) <= bsize))
- 			break;
- 
- 		udelay(1);
-@@ -4984,7 +4991,8 @@ ring_buffer_read_prepare(struct trace_buffer *buffer, int cpu, gfp_t flags)
- 		return NULL;
- 
- 	/* Holds the entire event: data and meta data */
--	iter->event = kmalloc(BUF_PAGE_SIZE, flags);
-+	iter->event_size = buffer->subbuf_size;
-+	iter->event = kmalloc(iter->event_size, flags);
- 	if (!iter->event) {
- 		kfree(iter);
- 		return NULL;
-@@ -5102,14 +5110,14 @@ unsigned long ring_buffer_size(struct trace_buffer *buffer, int cpu)
- {
- 	/*
- 	 * Earlier, this method returned
--	 *	BUF_PAGE_SIZE * buffer->nr_pages
-+	 *	buffer->subbuf_size * buffer->nr_pages
- 	 * Since the nr_pages field is now removed, we have converted this to
- 	 * return the per cpu buffer value.
- 	 */
- 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
- 		return 0;
- 
--	return BUF_PAGE_SIZE * buffer->buffers[cpu]->nr_pages;
-+	return buffer->subbuf_size * buffer->buffers[cpu]->nr_pages;
- }
- EXPORT_SYMBOL_GPL(ring_buffer_size);
- 
-@@ -5123,8 +5131,8 @@ unsigned long ring_buffer_max_event_size(struct trace_buffer *buffer)
- {
- 	/* If abs timestamp is requested, events have a timestamp too */
- 	if (ring_buffer_time_stamp_abs(buffer))
--		return BUF_MAX_DATA_SIZE - RB_LEN_TIME_EXTEND;
--	return BUF_MAX_DATA_SIZE;
-+		return buffer->max_data_size - RB_LEN_TIME_EXTEND;
-+	return buffer->max_data_size;
- }
- EXPORT_SYMBOL_GPL(ring_buffer_max_event_size);
- 
-@@ -5730,7 +5738,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 		/* If there is room at the end of the page to save the
- 		 * missed events, then record it there.
- 		 */
--		if (BUF_PAGE_SIZE - commit >= sizeof(missed_events)) {
-+		if (buffer->subbuf_size - commit >= sizeof(missed_events)) {
- 			memcpy(&bpage->data[commit], &missed_events,
- 			       sizeof(missed_events));
- 			local_add(RB_MISSED_STORED, &bpage->commit);
-@@ -5742,8 +5750,8 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 	/*
- 	 * This page may be off to user land. Zero it out here.
- 	 */
--	if (commit < BUF_PAGE_SIZE)
--		memset(&bpage->data[commit], 0, BUF_PAGE_SIZE - commit);
-+	if (commit < buffer->subbuf_size)
-+		memset(&bpage->data[commit], 0, buffer->subbuf_size - commit);
- 
-  out_unlock:
- 	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 55dabee4c78b..76dd0a4c8cb5 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5018,7 +5018,7 @@ static int tracing_release(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
--static int tracing_release_generic_tr(struct inode *inode, struct file *file)
-+int tracing_release_generic_tr(struct inode *inode, struct file *file)
- {
- 	struct trace_array *tr = inode->i_private;
- 
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 79180aed13ee..00f873910c5d 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -616,6 +616,7 @@ void tracing_reset_all_online_cpus(void);
- void tracing_reset_all_online_cpus_unlocked(void);
- int tracing_open_generic(struct inode *inode, struct file *filp);
- int tracing_open_generic_tr(struct inode *inode, struct file *filp);
-+int tracing_release_generic_tr(struct inode *inode, struct file *file);
- int tracing_open_file_tr(struct inode *inode, struct file *filp);
- int tracing_release_file_tr(struct inode *inode, struct file *filp);
- int tracing_single_release_file_tr(struct inode *inode, struct file *filp);
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index b70d03818038..7c364b87352e 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1893,9 +1893,9 @@ subsystem_filter_write(struct file *filp, const char __user *ubuf, size_t cnt,
- }
- 
- static ssize_t
--show_header(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
-+show_header_page_file(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
- {
--	int (*func)(struct trace_seq *s) = filp->private_data;
-+	struct trace_array *tr = filp->private_data;
- 	struct trace_seq *s;
- 	int r;
- 
-@@ -1908,7 +1908,31 @@ show_header(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
- 
- 	trace_seq_init(s);
- 
--	func(s);
-+	ring_buffer_print_page_header(tr->array_buffer.buffer, s);
-+	r = simple_read_from_buffer(ubuf, cnt, ppos,
-+				    s->buffer, trace_seq_used(s));
-+
-+	kfree(s);
-+
-+	return r;
-+}
-+
-+static ssize_t
-+show_header_event_file(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
-+{
-+	struct trace_seq *s;
-+	int r;
-+
-+	if (*ppos)
-+		return 0;
-+
-+	s = kmalloc(sizeof(*s), GFP_KERNEL);
-+	if (!s)
-+		return -ENOMEM;
-+
-+	trace_seq_init(s);
-+
-+	ring_buffer_print_entry_header(s);
- 	r = simple_read_from_buffer(ubuf, cnt, ppos,
- 				    s->buffer, trace_seq_used(s));
- 
-@@ -2165,10 +2189,18 @@ static const struct file_operations ftrace_tr_enable_fops = {
- 	.release = subsystem_release,
- };
- 
--static const struct file_operations ftrace_show_header_fops = {
--	.open = tracing_open_generic,
--	.read = show_header,
-+static const struct file_operations ftrace_show_header_page_fops = {
-+	.open = tracing_open_generic_tr,
-+	.read = show_header_page_file,
- 	.llseek = default_llseek,
-+	.release = tracing_release_generic_tr,
++struct buffer_data_read_page {
++	unsigned		order;	/* order of the page */
++	struct buffer_data_page	*data;	/* actual data, stored in this page */
 +};
 +
-+static const struct file_operations ftrace_show_header_event_fops = {
-+	.open = tracing_open_generic_tr,
-+	.read = show_header_event_file,
-+	.llseek = default_llseek,
-+	.release = tracing_release_generic_tr,
- };
+ /*
+  * Note, the buffer_page list must be first. The buffer pages
+  * are allocated in cache lines, which means that each buffer
+@@ -5483,40 +5488,48 @@ EXPORT_SYMBOL_GPL(ring_buffer_swap_cpu);
+  * Returns:
+  *  The page allocated, or ERR_PTR
+  */
+-void *ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu)
++struct buffer_data_read_page *
++ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+-	struct buffer_data_page *bpage = NULL;
++	struct buffer_data_read_page *bpage = NULL;
+ 	unsigned long flags;
+ 	struct page *page;
  
- static int
-@@ -3794,17 +3826,16 @@ static int events_callback(const char *name, umode_t *mode, void **data,
- 		return 1;
+ 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+ 		return ERR_PTR(-ENODEV);
+ 
++	bpage = kzalloc(sizeof(*bpage), GFP_KERNEL);
++	if (!bpage)
++		return ERR_PTR(-ENOMEM);
++
++	bpage->order = buffer->subbuf_order;
+ 	cpu_buffer = buffer->buffers[cpu];
+ 	local_irq_save(flags);
+ 	arch_spin_lock(&cpu_buffer->lock);
+ 
+ 	if (cpu_buffer->free_page) {
+-		bpage = cpu_buffer->free_page;
++		bpage->data = cpu_buffer->free_page;
+ 		cpu_buffer->free_page = NULL;
  	}
  
--	if (strcmp(name, "header_page") == 0)
--		*data = ring_buffer_print_page_header;
--
--	else if (strcmp(name, "header_event") == 0)
--		*data = ring_buffer_print_entry_header;
-+	if (strcmp(name, "header_page") == 0) {
-+		*mode = TRACE_MODE_READ;
-+		*fops = &ftrace_show_header_page_fops;
+ 	arch_spin_unlock(&cpu_buffer->lock);
+ 	local_irq_restore(flags);
  
--	else
-+	} else if (strcmp(name, "header_event") == 0) {
-+		*mode = TRACE_MODE_READ;
-+		*fops = &ftrace_show_header_event_fops;
-+	} else
- 		return 0;
+-	if (bpage)
++	if (bpage->data)
+ 		goto out;
  
--	*mode = TRACE_MODE_READ;
--	*fops = &ftrace_show_header_fops;
- 	return 1;
+ 	page = alloc_pages_node(cpu_to_node(cpu), GFP_KERNEL | __GFP_NORETRY,
+ 				cpu_buffer->buffer->subbuf_order);
+-	if (!page)
++	if (!page) {
++		kfree(bpage);
+ 		return ERR_PTR(-ENOMEM);
++	}
+ 
+-	bpage = page_address(page);
++	bpage->data = page_address(page);
+ 
+  out:
+-	rb_init_page(bpage);
++	rb_init_page(bpage->data);
+ 
+ 	return bpage;
  }
+@@ -5526,14 +5539,15 @@ EXPORT_SYMBOL_GPL(ring_buffer_alloc_read_page);
+  * ring_buffer_free_read_page - free an allocated read page
+  * @buffer: the buffer the page was allocate for
+  * @cpu: the cpu buffer the page came from
+- * @data: the page to free
++ * @data_page: the page to free
+  *
+  * Free a page allocated from ring_buffer_alloc_read_page.
+  */
+-void ring_buffer_free_read_page(struct trace_buffer *buffer, int cpu, void *data)
++void ring_buffer_free_read_page(struct trace_buffer *buffer, int cpu,
++				struct buffer_data_read_page *data_page)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+-	struct buffer_data_page *bpage = data;
++	struct buffer_data_page *bpage = data_page->data;
+ 	struct page *page = virt_to_page(bpage);
+ 	unsigned long flags;
  
+@@ -5542,8 +5556,12 @@ void ring_buffer_free_read_page(struct trace_buffer *buffer, int cpu, void *data
+ 
+ 	cpu_buffer = buffer->buffers[cpu];
+ 
+-	/* If the page is still in use someplace else, we can't reuse it */
+-	if (page_ref_count(page) > 1)
++	/*
++	 * If the page is still in use someplace else, or order of the page
++	 * is different from the subbuffer order of the buffer -
++	 * we can't reuse it
++	 */
++	if (page_ref_count(page) > 1 || data_page->order != buffer->subbuf_order)
+ 		goto out;
+ 
+ 	local_irq_save(flags);
+@@ -5558,7 +5576,8 @@ void ring_buffer_free_read_page(struct trace_buffer *buffer, int cpu, void *data
+ 	local_irq_restore(flags);
+ 
+  out:
+-	free_pages((unsigned long)bpage, buffer->subbuf_order);
++	free_pages((unsigned long)bpage, data_page->order);
++	kfree(data_page);
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_free_read_page);
+ 
+@@ -5579,9 +5598,10 @@ EXPORT_SYMBOL_GPL(ring_buffer_free_read_page);
+  *	rpage = ring_buffer_alloc_read_page(buffer, cpu);
+  *	if (IS_ERR(rpage))
+  *		return PTR_ERR(rpage);
+- *	ret = ring_buffer_read_page(buffer, &rpage, len, cpu, 0);
++ *	ret = ring_buffer_read_page(buffer, rpage, len, cpu, 0);
+  *	if (ret >= 0)
+- *		process_page(rpage, ret);
++ *		process_page(ring_buffer_read_page_data(rpage), ret);
++ *	ring_buffer_free_read_page(buffer, cpu, rpage);
+  *
+  * When @full is set, the function will not return true unless
+  * the writer is off the reader page.
+@@ -5596,7 +5616,8 @@ EXPORT_SYMBOL_GPL(ring_buffer_free_read_page);
+  *  <0 if no data has been transferred.
+  */
+ int ring_buffer_read_page(struct trace_buffer *buffer,
+-			  void **data_page, size_t len, int cpu, int full)
++			  struct buffer_data_read_page *data_page,
++			  size_t len, int cpu, int full)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer = buffer->buffers[cpu];
+ 	struct ring_buffer_event *event;
+@@ -5621,10 +5642,12 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+ 
+ 	len -= BUF_PAGE_HDR_SIZE;
+ 
+-	if (!data_page)
++	if (!data_page || !data_page->data)
++		goto out;
++	if (data_page->order != buffer->subbuf_order)
+ 		goto out;
+ 
+-	bpage = *data_page;
++	bpage = data_page->data;
+ 	if (!bpage)
+ 		goto out;
+ 
+@@ -5718,11 +5741,11 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+ 		/* swap the pages */
+ 		rb_init_page(bpage);
+ 		bpage = reader->page;
+-		reader->page = *data_page;
++		reader->page = data_page->data;
+ 		local_set(&reader->write, 0);
+ 		local_set(&reader->entries, 0);
+ 		reader->read = 0;
+-		*data_page = bpage;
++		data_page->data = bpage;
+ 
+ 		/*
+ 		 * Use the real_end for the data size,
+@@ -5767,6 +5790,18 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_read_page);
+ 
++/**
++ * ring_buffer_read_page_data - get pointer to the data in the page.
++ * @page:  the page to get the data from
++ *
++ * Returns pointer to the actual data in this page.
++ */
++void *ring_buffer_read_page_data(struct buffer_data_read_page *page)
++{
++	return page->data;
++}
++EXPORT_SYMBOL_GPL(ring_buffer_read_page_data);
++
+ /**
+  * ring_buffer_subbuf_size_get - get size of the sub buffer.
+  * @buffer: the buffer to get the sub buffer size from
+diff --git a/kernel/trace/ring_buffer_benchmark.c b/kernel/trace/ring_buffer_benchmark.c
+index aef34673d79d..008187ebd7fe 100644
+--- a/kernel/trace/ring_buffer_benchmark.c
++++ b/kernel/trace/ring_buffer_benchmark.c
+@@ -104,10 +104,11 @@ static enum event_status read_event(int cpu)
+ 
+ static enum event_status read_page(int cpu)
+ {
++	struct buffer_data_read_page *bpage;
+ 	struct ring_buffer_event *event;
+ 	struct rb_page *rpage;
+ 	unsigned long commit;
+-	void *bpage;
++	int page_size;
+ 	int *entry;
+ 	int ret;
+ 	int inc;
+@@ -117,14 +118,15 @@ static enum event_status read_page(int cpu)
+ 	if (IS_ERR(bpage))
+ 		return EVENT_DROPPED;
+ 
+-	ret = ring_buffer_read_page(buffer, &bpage, PAGE_SIZE, cpu, 1);
++	page_size = ring_buffer_subbuf_size_get(buffer);
++	ret = ring_buffer_read_page(buffer, bpage, page_size, cpu, 1);
+ 	if (ret >= 0) {
+-		rpage = bpage;
++		rpage = ring_buffer_read_page_data(bpage);
+ 		/* The commit may have missed event flags set, clear them */
+ 		commit = local_read(&rpage->commit) & 0xfffff;
+ 		for (i = 0; i < commit && !test_error ; i += inc) {
+ 
+-			if (i >= (PAGE_SIZE - offsetof(struct rb_page, data))) {
++			if (i >= (page_size - offsetof(struct rb_page, data))) {
+ 				TEST_ERROR();
+ 				break;
+ 			}
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index a010aba4c4a4..711095aa731d 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -8286,6 +8286,8 @@ tracing_buffers_read(struct file *filp, char __user *ubuf,
+ {
+ 	struct ftrace_buffer_info *info = filp->private_data;
+ 	struct trace_iterator *iter = &info->iter;
++	void *trace_data;
++	int page_size;
+ 	ssize_t ret = 0;
+ 	ssize_t size;
+ 
+@@ -8297,6 +8299,8 @@ tracing_buffers_read(struct file *filp, char __user *ubuf,
+ 		return -EBUSY;
+ #endif
+ 
++	page_size = ring_buffer_subbuf_size_get(iter->array_buffer->buffer);
++
+ 	if (!info->spare) {
+ 		info->spare = ring_buffer_alloc_read_page(iter->array_buffer->buffer,
+ 							  iter->cpu_file);
+@@ -8311,13 +8315,13 @@ tracing_buffers_read(struct file *filp, char __user *ubuf,
+ 		return ret;
+ 
+ 	/* Do we have previous read data to read? */
+-	if (info->read < PAGE_SIZE)
++	if (info->read < page_size)
+ 		goto read;
+ 
+  again:
+ 	trace_access_lock(iter->cpu_file);
+ 	ret = ring_buffer_read_page(iter->array_buffer->buffer,
+-				    &info->spare,
++				    info->spare,
+ 				    count,
+ 				    iter->cpu_file, 0);
+ 	trace_access_unlock(iter->cpu_file);
+@@ -8338,11 +8342,11 @@ tracing_buffers_read(struct file *filp, char __user *ubuf,
+ 
+ 	info->read = 0;
+  read:
+-	size = PAGE_SIZE - info->read;
++	size = page_size - info->read;
+ 	if (size > count)
+ 		size = count;
+-
+-	ret = copy_to_user(ubuf, info->spare + info->read, size);
++	trace_data = ring_buffer_read_page_data(info->spare);
++	ret = copy_to_user(ubuf, trace_data + info->read, size);
+ 	if (ret == size)
+ 		return -EFAULT;
+ 
+@@ -8453,6 +8457,7 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
+ 		.spd_release	= buffer_spd_release,
+ 	};
+ 	struct buffer_ref *ref;
++	int page_size;
+ 	int entries, i;
+ 	ssize_t ret = 0;
+ 
+@@ -8461,13 +8466,14 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
+ 		return -EBUSY;
+ #endif
+ 
+-	if (*ppos & (PAGE_SIZE - 1))
++	page_size = ring_buffer_subbuf_size_get(iter->array_buffer->buffer);
++	if (*ppos & (page_size - 1))
+ 		return -EINVAL;
+ 
+-	if (len & (PAGE_SIZE - 1)) {
+-		if (len < PAGE_SIZE)
++	if (len & (page_size - 1)) {
++		if (len < page_size)
+ 			return -EINVAL;
+-		len &= PAGE_MASK;
++		len &= (~(page_size - 1));
+ 	}
+ 
+ 	if (splice_grow_spd(pipe, &spd))
+@@ -8477,7 +8483,7 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
+ 	trace_access_lock(iter->cpu_file);
+ 	entries = ring_buffer_entries_cpu(iter->array_buffer->buffer, iter->cpu_file);
+ 
+-	for (i = 0; i < spd.nr_pages_max && len && entries; i++, len -= PAGE_SIZE) {
++	for (i = 0; i < spd.nr_pages_max && len && entries; i++, len -= page_size) {
+ 		struct page *page;
+ 		int r;
+ 
+@@ -8498,7 +8504,7 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
+ 		}
+ 		ref->cpu = iter->cpu_file;
+ 
+-		r = ring_buffer_read_page(ref->buffer, &ref->page,
++		r = ring_buffer_read_page(ref->buffer, ref->page,
+ 					  len, iter->cpu_file, 1);
+ 		if (r < 0) {
+ 			ring_buffer_free_read_page(ref->buffer, ref->cpu,
+@@ -8507,14 +8513,14 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
+ 			break;
+ 		}
+ 
+-		page = virt_to_page(ref->page);
++		page = virt_to_page(ring_buffer_read_page_data(ref->page));
+ 
+ 		spd.pages[i] = page;
+-		spd.partial[i].len = PAGE_SIZE;
++		spd.partial[i].len = page_size;
+ 		spd.partial[i].offset = 0;
+ 		spd.partial[i].private = (unsigned long)ref;
+ 		spd.nr_pages++;
+-		*ppos += PAGE_SIZE;
++		*ppos += page_size;
+ 
+ 		entries = ring_buffer_entries_cpu(iter->array_buffer->buffer, iter->cpu_file);
+ 	}
 -- 
 2.42.0
 
