@@ -1,17 +1,17 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719AC3DBA0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A2D3DBA3;
 	Tue, 19 Dec 2023 18:55:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44510C433CA;
-	Tue, 19 Dec 2023 18:55:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECCB1C433C9;
+	Tue, 19 Dec 2023 18:55:31 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rFfGZ-00000003R6M-35m7;
+	id 1rFfGZ-00000003R5q-1toW;
 	Tue, 19 Dec 2023 13:56:31 -0500
-Message-ID: <20231219185631.520496304@goodmis.org>
+Message-ID: <20231219185631.230636734@goodmis.org>
 User-Agent: quilt/0.67
-Date: Tue, 19 Dec 2023 13:54:28 -0500
+Date: Tue, 19 Dec 2023 13:54:27 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -22,7 +22,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
  Vincent Donnefort <vdonnefort@google.com>,
  Kent Overstreet <kent.overstreet@gmail.com>
-Subject: [PATCH v5 14/15] ringbuffer/selftest: Add basic selftest to test changing subbuf order
+Subject: [PATCH v5 13/15] ring-buffer: Add documentation on the buffer_subbuf_order file
 References: <20231219185414.474197117@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -34,116 +34,52 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Add a self test that will write into the trace buffer with differ trace
-sub buffer order sizes.
+Add to the documentation how to use the buffer_subbuf_order file to change
+the size and how it affects what events can be added to the ring buffer.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- .../ftrace/test.d/00basic/ringbuffer_order.tc | 95 +++++++++++++++++++
- 1 file changed, 95 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_order.tc
+ Documentation/trace/ftrace.rst | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_order.tc b/tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_order.tc
-new file mode 100644
-index 000000000000..ecbcc810e6c1
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_order.tc
-@@ -0,0 +1,95 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Change the ringbuffer sub-buffer order
-+# requires: buffer_subbuf_order
-+# flags: instance
+diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+index 23572f6697c0..231d26ceedb0 100644
+--- a/Documentation/trace/ftrace.rst
++++ b/Documentation/trace/ftrace.rst
+@@ -203,6 +203,33 @@ of ftrace. Here is a list of some of the key files:
+ 
+ 	This displays the total combined size of all the trace buffers.
+ 
++  buffer_subbuf_order:
 +
-+get_buffer_data_size() {
-+	sed -ne 's/^.*data.*size:\([0-9][0-9]*\).*/\1/p' events/header_page
-+}
++	This sets or displays the sub buffer page size order. The ring buffer
++	is broken up into several same size "sub buffers". An event can not be
++	bigger than the size of the sub buffer. Normally, the sub buffer is
++	the size of the architecture's page (4K on x86). The sub buffer also
++	contains meta data at the start which also limits the size of an event.
++	That means when the sub buffer is a page size, no event can be larger
++	than the page size minus the sub buffer meta data.
 +
-+get_buffer_data_offset() {
-+	sed -ne 's/^.*data.*offset:\([0-9][0-9]*\).*/\1/p' events/header_page
-+}
++	The buffer_subbuf_order allows the user to change the size of the sub
++	buffer. As the sub buffer is a set of pages by the power of 2, thus
++	the sub buffer total size is defined by the order:
 +
-+get_event_header_size() {
-+	type_len=`sed -ne 's/^.*type_len.*:[^0-9]*\([0-9][0-9]*\).*/\1/p' events/header_event`
-+	time_len=`sed -ne 's/^.*time_delta.*:[^0-9]*\([0-9][0-9]*\).*/\1/p' events/header_event`
-+	array_len=`sed -ne 's/^.*array.*:[^0-9]*\([0-9][0-9]*\).*/\1/p' events/header_event`
-+	total_bits=$((type_len+time_len+array_len))
-+	total_bits=$((total_bits+7))
-+	echo $((total_bits/8))
-+}
++	order		size
++	----		----
++	0		PAGE_SIZE
++	1		PAGE_SIZE * 2
++	2		PAGE_SIZE * 4
++	3		PAGE_SIZE * 8
 +
-+get_print_event_buf_offset() {
-+	sed -ne 's/^.*buf.*offset:\([0-9][0-9]*\).*/\1/p' events/ftrace/print/format
-+}
++	Changing the order will change the sub buffer size allowing for events
++	to be larger than the page size.
 +
-+event_header_size=`get_event_header_size`
-+print_header_size=`get_print_event_buf_offset`
++	Note: When changing the order, tracing is stopped and any data in the
++	ring buffer and the snapshot buffer will be discarded.
 +
-+data_offset=`get_buffer_data_offset`
-+
-+marker_meta=$((event_header_size+print_header_size))
-+
-+make_str() {
-+        cnt=$1
-+	printf -- 'X%.0s' $(seq $cnt)
-+}
-+
-+write_buffer() {
-+	size=$1
-+
-+	str=`make_str $size`
-+
-+	# clear the buffer
-+	echo > trace
-+
-+	# write the string into the marker
-+	echo $str > trace_marker
-+
-+	echo $str
-+}
-+
-+test_buffer() {
-+	orde=$1
-+	page_size=$((4096<<order))
-+
-+	size=`get_buffer_data_size`
-+
-+	# the size must be greater than or equal to page_size - data_offset
-+	page_size=$((page_size-data_offset))
-+	if [ $size -lt $page_size ]; then
-+		exit fail
-+	fi
-+
-+	# Now add a little more the meta data overhead will overflow
-+
-+	str=`write_buffer $size`
-+
-+	# Make sure the line was broken
-+	new_str=`awk ' /tracing_mark_write:/ { sub(/^.*tracing_mark_write: /,"");printf "%s", $0; exit}' trace`
-+
-+	if [ "$new_str" = "$str" ]; then
-+		exit fail;
-+	fi
-+
-+	# Make sure the entire line can be found
-+	new_str=`awk ' /tracing_mark_write:/ { sub(/^.*tracing_mark_write: /,"");printf "%s", $0; }' trace`
-+
-+	if [ "$new_str" != "$str" ]; then
-+		exit fail;
-+	fi
-+}
-+
-+ORIG=`cat buffer_subbuf_order`
-+
-+# Could test bigger orders than 3, but then creating the string
-+# to write into the ring buffer takes too long
-+for a in 0 1 2 3 ; do
-+	echo $a > buffer_subbuf_order
-+	test_buffer $a
-+done
-+
-+echo $ORIG > buffer_subbuf_order
-+
+   free_buffer:
+ 
+ 	If a process is performing tracing, and the ring buffer	should be
 -- 
 2.42.0
 
