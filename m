@@ -1,360 +1,680 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06CE734568;
-	Tue, 19 Dec 2023 14:37:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230571CA84;
+	Tue, 19 Dec 2023 14:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CUveShWS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99E9DC433C8;
-	Tue, 19 Dec 2023 14:37:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702996634;
-	bh=dt3Vkwbmgo6+aUzUtSM3/E9hO5HxGX/FfRFljhsgTsU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CUveShWSsyN/5X/hyeC96wTtLuYjOgrC12CwTxIB9lGzjqH9re+FOS1pR3NR201Ua
-	 JiG/JWJ+EvnDoFryM9hL+yLbD1bp8P8NPN7YE0iz9vsY3fxtQgop66eM7ZrZUX3lqT
-	 EvwEE62/Ch22parcfAzxXIpfQgV6ArdJwp7UNAcgSAlZbienbNNCPN/OiHB3Q28Y+9
-	 NoUbB5JZBiY+VVyqUE+NDSWg2ImkBJTQRbC7nGXg33gO+JfgNO1bukTUkrh6IEF3PC
-	 BYerdEt3KiwwnPlXxS6mdRzPzVWqGMRXRH37N6koj92w0sW2hJ0dhK5oFrRBGIH6lt
-	 WC4jQ9E5uRnyA==
-Date: Tue, 19 Dec 2023 23:37:10 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Linus Torvalds
- <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] ring-buffer: Fix slowpath of interrupted event
-Message-Id: <20231219233710.21b48850676e65da2a37fe22@kernel.org>
-In-Reply-To: <20231218230712.3a76b081@gandalf.local.home>
-References: <20231218230712.3a76b081@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzLJLGl3"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a234139b725so353669466b.3;
+        Tue, 19 Dec 2023 06:39:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702996746; x=1703601546; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KCYuataRQgXoc1YQkgEEVBGJBr58nw2hRZs26iZ3l4k=;
+        b=hzLJLGl3oMSBbaxYXGt9ySqvf3SK2nz8AI9LpPXy2Q1jgx2P4LhAg+R2fezXErrZYK
+         Mx4UEUjCXIQujWsfSaRHNOaVblR+N5a2vRNgiNVGoKXU+6G8exFBTnIlo5fGQrF5MFrJ
+         MdmlO1Ae6c9yvDz0PFlLGW8xTsccP9ZIJJbyb+v44hFkYv4fLYsr/F3kjfEkh+4Av5+N
+         mWrFv5b+6s3jOicudt4bm3XiBiB1zz2QflUwOs9Um/9YcgznlyD7ZHkArOTlqHT9NmyD
+         NPc5fdYYYOa+GBZ4YClIugphWEIAbSQ+ipTWCkPwqSVZQl8EE9dRzQ1AS39aYSbY1CRM
+         br3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702996746; x=1703601546;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KCYuataRQgXoc1YQkgEEVBGJBr58nw2hRZs26iZ3l4k=;
+        b=GO63UeBqxXe2DnP8gAgA+7jRlte3yXMIIWcBqwhLASwOhvIJC2X69SHHODFUC4bb7n
+         5gFhFd2LE34pml3E/mDOI1KvFjBmr+XZO+6+JTmcrcz3iJeQohMCRoY5wKSHtuyMeija
+         SQRf/wVTGbqhiOgZCxMXvsdviZWvrFktwLv+gvXVUDh3srUYd0M30su1EcRTd0UQDcNp
+         JA26RtZaqfaNZ0lmzpQ1FwnnZp1eajlwzqpWaQfMG42utoUtKG2LhHr94f2RxRELQMni
+         oA4Gq0eoTTZQ/qGpQKYgbCOIZOzWZJnWuI6kdRsi2SffD8CJzDJwKnq/vmV1qdwI92WJ
+         f2og==
+X-Gm-Message-State: AOJu0YzGo8l/HWrhS22vNrbXpOjQGEPVB4o9ehCGkf4sC9ceaM0kle6Y
+	lN/4TYYjhafKkQVTzhRj6Cg=
+X-Google-Smtp-Source: AGHT+IG5a5aZa0ytfiDPoQYWo5AOxcsDCqi2QEnyn5m3+Zpe6BdYQp0+129t9BvKxutcdz3NX7XTWA==
+X-Received: by 2002:a17:906:4099:b0:a23:3515:b200 with SMTP id u25-20020a170906409900b00a233515b200mr1099426ejj.246.1702996745939;
+        Tue, 19 Dec 2023 06:39:05 -0800 (PST)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id jw23-20020a17090776b700b00a23365f1290sm3538144ejc.218.2023.12.19.06.39.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Dec 2023 06:39:05 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 19 Dec 2023 15:39:03 +0100
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>,
+	linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v5 28/34] fprobe: Rewrite fprobe on function-graph tracer
+Message-ID: <ZYGrB7NsDEWk2liL@krava>
+References: <170290509018.220107.1347127510564358608.stgit@devnote2>
+ <170290542972.220107.9135357273431693988.stgit@devnote2>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <170290542972.220107.9135357273431693988.stgit@devnote2>
 
-On Mon, 18 Dec 2023 23:07:12 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, Dec 18, 2023 at 10:17:10PM +0900, Masami Hiramatsu (Google) wrote:
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> To synchronize the timestamps with the ring buffer reservation, there are
-> two timestamps that are saved in the buffer meta data.
-> 
-> 1. before_stamp
-> 2. write_stamp
-> 
-> When the two are equal, the write_stamp is considered valid, as in, it may
-> be used to calculate the delta of the next event as the write_stamp is the
-> timestamp of the previous reserved event on the buffer.
-> 
-> This is done by the following:
-> 
->  /*A*/	w = current position on the ring buffer
-> 	before = before_stamp
-> 	after = write_stamp
-> 	ts = read current timestamp
-> 
-> 	if (before != after) {
-> 		write_stamp is not valid, force adding an absolute
-> 		timestamp.
+SNIP
 
-(additional comment)
-This happens if this caller interrupts another reservation process's B to E.
-(thus the original one only updates "before_stamp", but "write_stamp" is old.)
-
-> 	}
-> 
->  /*B*/	before_stamp = ts
-> 
->  /*C*/	write = local_add_return(event length, position on ring buffer)
-> 
-> 	if (w == write - event length) {
-> 		/* Nothing interrupted between A and C */
->  /*E*/		write_stamp = ts;
-> 		delta = ts - after
-> 		/*
-> 		 * If nothing interrupted again,
-> 		 * before_stamp == write_stamp and write_stamp
-> 		 * can be used to calculate the delta for
-> 		 * events that come in after this one.
-> 		 */
-
-(additional comment)
-If something interrupts between C and E, the write_stamp goes backward
-because interrupted one updates the before_stamp and write_stamp with
-new timestamp. But in this case, write_stamp(=ts) != before_stamp(=new ts).
-Thus anyway the next entry will use absolute time stamp forcibly.
-
-> 	} else {
-> 
-> 		/*
-> 		 * The slow path!
-> 		 * Was interrupted between A and C.
-> 		 */
-> 
-> This is the place that there's a bug. We currently have:
-> 
-> 		after = write_stamp
-> 		ts = read current timestamp
-> 
->  /*F*/		if (write == current position on the ring buffer &&
-> 		    after < ts && cmpxchg(write_stamp, after, ts)) {
-> 
-> 			delta = ts - after;
-> 
-> 		} else {
-> 			delta = 0;
-> 		}
-> 
-> The assumption is that if the current position on the ring buffer hasn't
-> moved between C and F, then it also was not interrupted, and that the last
-> event written has a timestamp that matches the write_stamp. That is the
-> write_stamp is valid.
-> 
-> But this may not be the case:
-> 
-> If a task context event was interrupted by softirq between B and C.
-> 
-> And the softirq wrote an event that got interrupted by a hard irq between
-> C and E.
-> 
-> and the hard irq wrote an event (does not need to be interrupted)
-> 
-> We have:
-> 
->  /*B*/ before_stamp = ts of normal context
-> 
->    ---> interrupted by softirq
-> 
-> 	/*B*/ before_stamp = ts of softirq context
-> 
-> 	  ---> interrupted by hardirq
-> 
-> 		/*B*/ before_stamp = ts of hard irq context
-> 		/*E*/ write_stamp = ts of hard irq context
-> 
-> 		/* matches and write_stamp valid */
-> 	  <----
-> 
-> 	/*E*/ write_stamp = ts of softirq context
-> 
-> 	/* No longer matches before_stamp, write_stamp is not valid! */
-> 
->    <---
-> 
->  w != write - length, go to slow path
-> 
-> // Right now the order of events in the ring buffer is:
-> //
-> // |-- softirq event --|-- hard irq event --|-- normal context event --|
-> //
-> 
->  after = write_stamp (this is the ts of softirq)
->  ts = read current timestamp
-> 
->  if (write == current position on the ring buffer [true] &&
->      after < ts [true] && cmpxchg(write_stamp, after, ts) [true]) {
-> 
-> 	delta = ts - after  [Wrong!]
-> 
-> The delta is to be between the hard irq event and the normal context
-> event, but the above logic made the delta between the softirq event and
-> the normal context event, where the hard irq event is between the two. This
-> will shift all the remaining event timestamps on the sub-buffer
-> incorrectly.
-> 
-> The write_stamp is only valid if it matches the before_stamp. The cmpxchg
-> does nothing to help this.
-
-That's right. Even if someone interrupts between A and C, we can write
-the ts to write_stamp. In this case, write_stamp(old) != before_stamp(new)
-so the next entry will forcibly record the absolute timestamp.
-In this case, what we need to do here is using the absolute timestamp instead
-of delta.
-
-> 
-> Instead, the following logic can be done to fix this:
-> 
-> 	before = before_stamp
-> 	ts = read current timestamp
-> 	before_stamp = ts
-> 
-> 	after = write_stamp
-> 
-> 	if (write == current position on the ring buffer &&
-> 	    after == before && after < ts) {
-> 
-> 		delta = ts - after
-> 
-> 	} else {
-> 		delta = 0;
-> 	}
-
-Ah, this is a good idea. Instead of using the old timestamp, use
-delta = 0, thus it will reuse the interrupted timestamp if someone
-interrupts between A and C.
-
-Yeah the above works, but my question is, do we really need this
-really slow path? I mean;
-
-> 	if (w == write - event length) {
-> 		/* Nothing interrupted between A and C */
->  /*E*/		write_stamp = ts;
-> 		delta = ts - after
-
-	} else {
-		/*
-		  Something interrupted between A and C, which should record
-		  a new entry before this reserved entry with newer timestamp.
-		  we reuse it.
-		 */
-	 	ts = after = write_stamp;
-		delta = 0;
-	}
-
-Isn't this enough?
-
-Thank you,
-
-> 
-> The above will only use the write_stamp if it still matches before_stamp
-> and was tested to not have changed since C.
-> 
-> As a bonus, with this logic we do not need any 64-bit cmpxchg() at all!
-> 
-> This mean the 32-bit rb_time_t workaround can finally be removed. But
-> that's for a later time.
-> 
-> Link: https://lore.kernel.org/linux-trace-kernel/20231218175229.58ec3daf@gandalf.local.home/
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: dd93942570789 ("ring-buffer: Do not try to put back write_stamp")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/ring_buffer.c | 79 ++++++++++++--------------------------
->  1 file changed, 24 insertions(+), 55 deletions(-)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 5a114e752f11..e7055f52afe0 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -700,48 +700,6 @@ rb_time_read_cmpxchg(local_t *l, unsigned long expect, unsigned long set)
->  	return local_try_cmpxchg(l, &expect, set);
->  }
->  
-> -static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
-> -{
-> -	unsigned long cnt, top, bottom, msb;
-> -	unsigned long cnt2, top2, bottom2, msb2;
-> -	u64 val;
-> -
-> -	/* Any interruptions in this function should cause a failure */
-> -	cnt = local_read(&t->cnt);
-> -
-> -	/* The cmpxchg always fails if it interrupted an update */
-> -	 if (!__rb_time_read(t, &val, &cnt2))
-> -		 return false;
-> -
-> -	 if (val != expect)
-> -		 return false;
-> -
-> -	 if ((cnt & 3) != cnt2)
-> -		 return false;
-> -
-> -	 cnt2 = cnt + 1;
-> -
-> -	 rb_time_split(val, &top, &bottom, &msb);
-> -	 msb = rb_time_val_cnt(msb, cnt);
-> -	 top = rb_time_val_cnt(top, cnt);
-> -	 bottom = rb_time_val_cnt(bottom, cnt);
-> -
-> -	 rb_time_split(set, &top2, &bottom2, &msb2);
-> -	 msb2 = rb_time_val_cnt(msb2, cnt);
-> -	 top2 = rb_time_val_cnt(top2, cnt2);
-> -	 bottom2 = rb_time_val_cnt(bottom2, cnt2);
-> -
-> -	if (!rb_time_read_cmpxchg(&t->cnt, cnt, cnt2))
-> -		return false;
-> -	if (!rb_time_read_cmpxchg(&t->msb, msb, msb2))
-> -		return false;
-> -	if (!rb_time_read_cmpxchg(&t->top, top, top2))
-> -		return false;
-> -	if (!rb_time_read_cmpxchg(&t->bottom, bottom, bottom2))
-> -		return false;
-> -	return true;
-> -}
-> -
->  #else /* 64 bits */
->  
->  /* local64_t always succeeds */
-> @@ -755,11 +713,6 @@ static void rb_time_set(rb_time_t *t, u64 val)
+> -static void fprobe_exit_handler(struct rethook_node *rh, void *data,
+> -				unsigned long ret_ip, struct pt_regs *regs)
+> +static int fprobe_entry(unsigned long func, unsigned long ret_ip,
+> +			struct ftrace_regs *fregs, struct fgraph_ops *gops)
 >  {
->  	local64_set(&t->time, val);
->  }
-> -
-> -static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
-> -{
-> -	return local64_try_cmpxchg(&t->time, &expect, set);
-> -}
->  #endif
+> -	struct fprobe *fp = (struct fprobe *)data;
+> -	struct fprobe_rethook_node *fpr;
+> -	struct ftrace_regs *fregs = (struct ftrace_regs *)regs;
+> -	int bit;
+> +	struct fprobe_hlist_node *node, *first;
+> +	unsigned long *fgraph_data = NULL;
+> +	unsigned long header;
+> +	int reserved_words;
+> +	struct fprobe *fp;
+> +	int used, ret;
 >  
->  /*
-> @@ -3610,20 +3563,36 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
->  	} else {
->  		u64 ts;
->  		/* SLOW PATH - Interrupted between A and C */
-> -		a_ok = rb_time_read(&cpu_buffer->write_stamp, &info->after);
-> -		/* Was interrupted before here, write_stamp must be valid */
+> -	if (!fp || fprobe_disabled(fp))
+> -		return;
+> +	if (WARN_ON_ONCE(!fregs))
+> +		return 0;
+>  
+> -	fpr = container_of(rh, struct fprobe_rethook_node, node);
+> +	first = node = find_first_fprobe_node(func);
+> +	if (unlikely(!first))
+> +		return 0;
 > +
-> +		/* Save the old before_stamp */
-> +		a_ok = rb_time_read(&cpu_buffer->before_stamp, &info->before);
->  		RB_WARN_ON(cpu_buffer, !a_ok);
-> +
+> +	reserved_words = 0;
+> +	hlist_for_each_entry_from_rcu(node, hlist) {
+> +		if (node->addr != func)
+> +			break;
+> +		fp = READ_ONCE(node->fp);
+> +		if (!fp || !fp->exit_handler)
+> +			continue;
 > +		/*
-> +		 * Read a new timestamp and update the before_stamp to make
-> +		 * the next event after this one force using an absolute
-> +		 * timestamp. This is in case an interrupt were to come in
-> +		 * between E and F.
+> +		 * Since fprobe can be enabled until the next loop, we ignore the
+> +		 * fprobe's disabled flag in this loop.
 > +		 */
->  		ts = rb_time_stamp(cpu_buffer->buffer);
-> +		rb_time_set(&cpu_buffer->before_stamp, ts);
+> +		reserved_words +=
+> +			DIV_ROUND_UP(fp->entry_data_size, sizeof(long)) + 1;
+> +	}
+> +	node = first;
+> +	if (reserved_words) {
+> +		fgraph_data = fgraph_reserve_data(gops->idx, reserved_words * sizeof(long));
+> +		if (unlikely(!fgraph_data)) {
+> +			hlist_for_each_entry_from_rcu(node, hlist) {
+> +				if (node->addr != func)
+> +					break;
+> +				fp = READ_ONCE(node->fp);
+> +				if (fp && !fprobe_disabled(fp))
+> +					fp->nmissed++;
+> +			}
+> +			return 0;
+> +		}
+> +	}
+
+this looks expensive compared to what we do now.. IIUC due to the graph
+ops limitations (16 ctive ops), you have just single graph ops for fprobe
+and each fprobe registration stores ips into hash which you need to search
+in here to get registered callbacks..?
+
+I wonder would it make sense to allow arbitrary number of active graph_ops
+with the price some callback might fail because there's no stack space so
+each fprobe instance would have its own graph_ops.. and we would get rid
+of the code above (and below) ?
+
+jirka
+
+>  
+>  	/*
+> -	 * we need to assure no calls to traceable functions in-between the
+> -	 * end of fprobe_handler and the beginning of fprobe_exit_handler.
+> +	 * TODO: recursion detection has been done in the fgraph. Thus we need
+> +	 * to add a callback to increment missed counter.
+>  	 */
+> -	bit = ftrace_test_recursion_trylock(fpr->entry_ip, fpr->entry_parent_ip);
+> -	if (bit < 0) {
+> -		fp->nmissed++;
+> +	used = 0;
+> +	hlist_for_each_entry_from_rcu(node, hlist) {
+> +		void *data;
 > +
-> +		barrier();
-> + /*E*/		a_ok = rb_time_read(&cpu_buffer->write_stamp, &info->after);
-> +		/* Was interrupted before here, write_stamp must be valid */
-> +		RB_WARN_ON(cpu_buffer, !a_ok);
->  		barrier();
-> - /*E*/		if (write == (local_read(&tail_page->write) & RB_WRITE_MASK) &&
-> -		    info->after < ts &&
-> -		    rb_time_cmpxchg(&cpu_buffer->write_stamp,
-> -				    info->after, ts)) {
-> -			/* Nothing came after this event between C and E */
-> + /*F*/		if (write == (local_read(&tail_page->write) & RB_WRITE_MASK) &&
-> +		    info->after == info->before && info->after < ts) {
-> +			/*
-> +			 * Nothing came after this event between C and F, it is
-> +			 * safe to use info->after for the delta as it
-> +			 * matched info->before and is still valid.
-> +			 */
->  			info->delta = ts - info->after;
->  		} else {
->  			/*
-> -			 * Interrupted between C and E:
-> +			 * Interrupted between C and F:
->  			 * Lost the previous events time stamp. Just set the
->  			 * delta to zero, and this will be the same time as
->  			 * the event this event interrupted. And the events that
-> -- 
-> 2.42.0
+> +		if (node->addr != func)
+> +			break;
+> +		fp = READ_ONCE(node->fp);
+> +		if (!fp || fprobe_disabled(fp))
+> +			continue;
+> +
+> +		if (fp->entry_data_size && fp->exit_handler)
+> +			data = fgraph_data + used + 1;
+> +		else
+> +			data = NULL;
+> +
+> +		if (fprobe_shared_with_kprobes(fp))
+> +			ret = __fprobe_kprobe_handler(func, ret_ip, fp, fregs, data);
+> +		else
+> +			ret = __fprobe_handler(func, ret_ip, fp, fregs, data);
+> +		/* If entry_handler returns !0, nmissed is not counted but skips exit_handler. */
+> +		if (!ret && fp->exit_handler) {
+> +			int size_words = DIV_ROUND_UP(fp->entry_data_size, sizeof(long));
+> +
+> +			header = encode_fprobe_header(fp, size_words);
+> +			if (likely(header)) {
+> +				fgraph_data[used] = header;
+> +				used += size_words + 1;
+> +			}
+> +		}
+> +	}
+> +	if (used < reserved_words)
+> +		memset(fgraph_data + used, 0, reserved_words - used);
+> +
+> +	/* If any exit_handler is set, data must be used. */
+> +	return used != 0;
+> +}
+> +NOKPROBE_SYMBOL(fprobe_entry);
+> +
+> +static void fprobe_return(unsigned long func, unsigned long ret_ip,
+> +			  struct ftrace_regs *fregs, struct fgraph_ops *gops)
+> +{
+> +	unsigned long *fgraph_data = NULL;
+> +	unsigned long val;
+> +	struct fprobe *fp;
+> +	int size, curr;
+> +	int size_words;
+> +
+> +	fgraph_data = (unsigned long *)fgraph_retrieve_data(gops->idx, &size);
+> +	if (!fgraph_data)
+> +		return;
+> +	size_words = DIV_ROUND_UP(size, sizeof(long));
+> +
+> +	preempt_disable();
+> +
+> +	curr = 0;
+> +	while (size_words > curr) {
+> +		val = fgraph_data[curr++];
+> +		if (!val)
+> +			break;
+> +
+> +		size = decode_fprobe_header(val, &fp);
+> +		if (fp && is_fprobe_still_exist(fp) && !fprobe_disabled(fp)) {
+> +			if (WARN_ON_ONCE(curr + size > size_words))
+> +				break;
+> +			fp->exit_handler(fp, func, ret_ip, fregs,
+> +					 size ? fgraph_data + curr : NULL);
+> +		}
+> +		curr += size + 1;
+> +	}
+> +	preempt_enable();
+> +}
+> +NOKPROBE_SYMBOL(fprobe_return);
+> +
+> +static struct fgraph_ops fprobe_graph_ops = {
+> +	.entryregfunc	= fprobe_entry,
+> +	.retregfunc	= fprobe_return,
+> +};
+> +static int fprobe_graph_active;
+> +
+> +/* Add @addrs to the ftrace filter and register fgraph if needed. */
+> +static int fprobe_graph_add_ips(unsigned long *addrs, int num)
+> +{
+> +	int ret;
+> +
+> +	lockdep_assert_held(&fprobe_mutex);
+> +
+> +	ret = ftrace_set_filter_ips(&fprobe_graph_ops.ops, addrs, num, 0, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!fprobe_graph_active) {
+> +		ret = register_ftrace_graph(&fprobe_graph_ops);
+> +		if (WARN_ON_ONCE(ret)) {
+> +			ftrace_free_filter(&fprobe_graph_ops.ops);
+> +			return ret;
+> +		}
+> +	}
+> +	fprobe_graph_active++;
+> +	return 0;
+> +}
+> +
+> +/* Remove @addrs from the ftrace filter and unregister fgraph if possible. */
+> +static void fprobe_graph_remove_ips(unsigned long *addrs, int num)
+> +{
+> +	lockdep_assert_held(&fprobe_mutex);
+> +
+> +	fprobe_graph_active--;
+> +	if (!fprobe_graph_active) {
+> +		/* Q: should we unregister it ? */
+> +		unregister_ftrace_graph(&fprobe_graph_ops);
+>  		return;
+>  	}
+>  
+> -	fp->exit_handler(fp, fpr->entry_ip, ret_ip, fregs,
+> -			 fp->entry_data_size ? (void *)fpr->data : NULL);
+> -	ftrace_test_recursion_unlock(bit);
+> +	ftrace_set_filter_ips(&fprobe_graph_ops.ops, addrs, num, 1, 0);
+>  }
+> -NOKPROBE_SYMBOL(fprobe_exit_handler);
+>  
+>  static int symbols_cmp(const void *a, const void *b)
+>  {
+> @@ -176,55 +406,97 @@ static unsigned long *get_ftrace_locations(const char **syms, int num)
+>  	return ERR_PTR(-ENOENT);
+>  }
+>  
+> -static void fprobe_init(struct fprobe *fp)
+> -{
+> -	fp->nmissed = 0;
+> -	if (fprobe_shared_with_kprobes(fp))
+> -		fp->ops.func = fprobe_kprobe_handler;
+> -	else
+> -		fp->ops.func = fprobe_handler;
+> -	fp->ops.flags |= FTRACE_OPS_FL_SAVE_ARGS;
+> -}
+> +struct filter_match_data {
+> +	const char *filter;
+> +	const char *notfilter;
+> +	size_t index;
+> +	size_t size;
+> +	unsigned long *addrs;
+> +};
+>  
+> -static int fprobe_init_rethook(struct fprobe *fp, int num)
+> +static int filter_match_callback(void *data, const char *name, unsigned long addr)
+>  {
+> -	int size;
+> +	struct filter_match_data *match = data;
+>  
+> -	if (num <= 0)
+> -		return -EINVAL;
+> +	if (!glob_match(match->filter, name) ||
+> +	    (match->notfilter && glob_match(match->notfilter, name)))
+> +		return 0;
+>  
+> -	if (!fp->exit_handler) {
+> -		fp->rethook = NULL;
+> +	if (!ftrace_location(addr))
+>  		return 0;
+> -	}
+>  
+> -	/* Initialize rethook if needed */
+> -	if (fp->nr_maxactive)
+> -		size = fp->nr_maxactive;
+> -	else
+> -		size = num * num_possible_cpus() * 2;
+> -	if (size <= 0)
+> -		return -EINVAL;
+> +	if (match->addrs)
+> +		match->addrs[match->index] = addr;
+>  
+> -	/* Initialize rethook */
+> -	fp->rethook = rethook_alloc((void *)fp, fprobe_exit_handler,
+> -				sizeof(struct fprobe_rethook_node), size);
+> -	if (IS_ERR(fp->rethook))
+> -		return PTR_ERR(fp->rethook);
+> +	match->index++;
+> +	return match->index == match->size;
+> +}
+>  
+> -	return 0;
+> +/*
+> + * Make IP list from the filter/no-filter glob patterns.
+> + * Return the number of matched symbols, or -ENOENT.
+> + */
+> +static int ip_list_from_filter(const char *filter, const char *notfilter,
+> +			       unsigned long *addrs, size_t size)
+> +{
+> +	struct filter_match_data match = { .filter = filter, .notfilter = notfilter,
+> +		.index = 0, .size = size, .addrs = addrs};
+> +	int ret;
+> +
+> +	ret = kallsyms_on_each_symbol(filter_match_callback, &match);
+> +	if (ret < 0)
+> +		return ret;
+> +	ret = module_kallsyms_on_each_symbol(NULL, filter_match_callback, &match);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return match.index ?: -ENOENT;
+>  }
+>  
+>  static void fprobe_fail_cleanup(struct fprobe *fp)
+>  {
+> -	if (!IS_ERR_OR_NULL(fp->rethook)) {
+> -		/* Don't need to cleanup rethook->handler because this is not used. */
+> -		rethook_free(fp->rethook);
+> -		fp->rethook = NULL;
+> +	kfree(fp->hlist_array);
+> +	fp->hlist_array = NULL;
+> +}
+> +
+> +/* Initialize the fprobe data structure. */
+> +static int fprobe_init(struct fprobe *fp, unsigned long *addrs, int num)
+> +{
+> +	struct fprobe_hlist *hlist_array;
+> +	unsigned long addr;
+> +	int size, i;
+> +
+> +	if (!fp || !addrs || num <= 0)
+> +		return -EINVAL;
+> +
+> +	size = ALIGN(fp->entry_data_size, sizeof(long));
+> +	if (size > MAX_FPROBE_DATA_SIZE)
+> +		return -E2BIG;
+> +	fp->entry_data_size = size;
+> +
+> +	hlist_array = kzalloc(struct_size(hlist_array, array, num), GFP_KERNEL);
+> +	if (!hlist_array)
+> +		return -ENOMEM;
+> +
+> +	fp->nmissed = 0;
+> +
+> +	hlist_array->size = num;
+> +	fp->hlist_array = hlist_array;
+> +	hlist_array->fp = fp;
+> +	for (i = 0; i < num; i++) {
+> +		hlist_array->array[i].fp = fp;
+> +		addr = ftrace_location(addrs[i]);
+> +		if (!addr) {
+> +			fprobe_fail_cleanup(fp);
+> +			return -ENOENT;
+> +		}
+> +		hlist_array->array[i].addr = addr;
+>  	}
+> -	ftrace_free_filter(&fp->ops);
+> +	return 0;
+>  }
+>  
+> +#define FPROBE_IPS_MAX	INT_MAX
+> +
+>  /**
+>   * register_fprobe() - Register fprobe to ftrace by pattern.
+>   * @fp: A fprobe data structure to be registered.
+> @@ -238,46 +510,24 @@ static void fprobe_fail_cleanup(struct fprobe *fp)
+>   */
+>  int register_fprobe(struct fprobe *fp, const char *filter, const char *notfilter)
+>  {
+> -	struct ftrace_hash *hash;
+> -	unsigned char *str;
+> -	int ret, len;
+> +	unsigned long *addrs;
+> +	int ret;
+>  
+>  	if (!fp || !filter)
+>  		return -EINVAL;
+>  
+> -	fprobe_init(fp);
+> -
+> -	len = strlen(filter);
+> -	str = kstrdup(filter, GFP_KERNEL);
+> -	ret = ftrace_set_filter(&fp->ops, str, len, 0);
+> -	kfree(str);
+> -	if (ret)
+> +	ret = ip_list_from_filter(filter, notfilter, NULL, FPROBE_IPS_MAX);
+> +	if (ret < 0)
+>  		return ret;
+>  
+> -	if (notfilter) {
+> -		len = strlen(notfilter);
+> -		str = kstrdup(notfilter, GFP_KERNEL);
+> -		ret = ftrace_set_notrace(&fp->ops, str, len, 0);
+> -		kfree(str);
+> -		if (ret)
+> -			goto out;
+> -	}
+> -
+> -	/* TODO:
+> -	 * correctly calculate the total number of filtered symbols
+> -	 * from both filter and notfilter.
+> -	 */
+> -	hash = rcu_access_pointer(fp->ops.local_hash.filter_hash);
+> -	if (WARN_ON_ONCE(!hash))
+> -		goto out;
+> -
+> -	ret = fprobe_init_rethook(fp, (int)hash->count);
+> -	if (!ret)
+> -		ret = register_ftrace_function(&fp->ops);
+> +	addrs = kcalloc(ret, sizeof(unsigned long), GFP_KERNEL);
+> +	if (!addrs)
+> +		return -ENOMEM;
+> +	ret = ip_list_from_filter(filter, notfilter, addrs, ret);
+> +	if (ret > 0)
+> +		ret = register_fprobe_ips(fp, addrs, ret);
+>  
+> -out:
+> -	if (ret)
+> -		fprobe_fail_cleanup(fp);
+> +	kfree(addrs);
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(register_fprobe);
+> @@ -285,7 +535,7 @@ EXPORT_SYMBOL_GPL(register_fprobe);
+>  /**
+>   * register_fprobe_ips() - Register fprobe to ftrace by address.
+>   * @fp: A fprobe data structure to be registered.
+> - * @addrs: An array of target ftrace location addresses.
+> + * @addrs: An array of target function address.
+>   * @num: The number of entries of @addrs.
+>   *
+>   * Register @fp to ftrace for enabling the probe on the address given by @addrs.
+> @@ -297,23 +547,27 @@ EXPORT_SYMBOL_GPL(register_fprobe);
+>   */
+>  int register_fprobe_ips(struct fprobe *fp, unsigned long *addrs, int num)
+>  {
+> -	int ret;
+> -
+> -	if (!fp || !addrs || num <= 0)
+> -		return -EINVAL;
+> -
+> -	fprobe_init(fp);
+> +	struct fprobe_hlist *hlist_array;
+> +	int ret, i;
+>  
+> -	ret = ftrace_set_filter_ips(&fp->ops, addrs, num, 0, 0);
+> +	ret = fprobe_init(fp, addrs, num);
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = fprobe_init_rethook(fp, num);
+> -	if (!ret)
+> -		ret = register_ftrace_function(&fp->ops);
+> +	mutex_lock(&fprobe_mutex);
+> +
+> +	hlist_array = fp->hlist_array;
+> +	ret = fprobe_graph_add_ips(addrs, num);
+> +	if (!ret) {
+> +		add_fprobe_hash(fp);
+> +		for (i = 0; i < hlist_array->size; i++)
+> +			insert_fprobe_node(&hlist_array->array[i]);
+> +	}
+> +	mutex_unlock(&fprobe_mutex);
+>  
+>  	if (ret)
+>  		fprobe_fail_cleanup(fp);
+> +
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(register_fprobe_ips);
+> @@ -351,14 +605,13 @@ EXPORT_SYMBOL_GPL(register_fprobe_syms);
+>  
+>  bool fprobe_is_registered(struct fprobe *fp)
+>  {
+> -	if (!fp || (fp->ops.saved_func != fprobe_handler &&
+> -		    fp->ops.saved_func != fprobe_kprobe_handler))
+> +	if (!fp || !fp->hlist_array)
+>  		return false;
+>  	return true;
+>  }
+>  
+>  /**
+> - * unregister_fprobe() - Unregister fprobe from ftrace
+> + * unregister_fprobe() - Unregister fprobe.
+>   * @fp: A fprobe data structure to be unregistered.
+>   *
+>   * Unregister fprobe (and remove ftrace hooks from the function entries).
+> @@ -367,23 +620,40 @@ bool fprobe_is_registered(struct fprobe *fp)
+>   */
+>  int unregister_fprobe(struct fprobe *fp)
+>  {
+> -	int ret;
+> +	struct fprobe_hlist *hlist_array;
+> +	unsigned long *addrs = NULL;
+> +	int ret = 0, i, count;
+>  
+> -	if (!fprobe_is_registered(fp))
+> -		return -EINVAL;
+> +	mutex_lock(&fprobe_mutex);
+> +	if (!fp || !is_fprobe_still_exist(fp)) {
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+>  
+> -	if (!IS_ERR_OR_NULL(fp->rethook))
+> -		rethook_stop(fp->rethook);
+> +	hlist_array = fp->hlist_array;
+> +	addrs = kcalloc(hlist_array->size, sizeof(unsigned long), GFP_KERNEL);
+> +	if (!addrs) {
+> +		ret = -ENOMEM;	/* TODO: Fallback to one-by-one loop */
+> +		goto out;
+> +	}
+>  
+> -	ret = unregister_ftrace_function(&fp->ops);
+> -	if (ret < 0)
+> -		return ret;
+> +	/* Remove non-synonim ips from table and hash */
+> +	count = 0;
+> +	for (i = 0; i < hlist_array->size; i++) {
+> +		if (!delete_fprobe_node(&hlist_array->array[i]))
+> +			addrs[count++] = hlist_array->array[i].addr;
+> +	}
+> +	del_fprobe_hash(fp);
+>  
+> -	if (!IS_ERR_OR_NULL(fp->rethook))
+> -		rethook_free(fp->rethook);
+> +	fprobe_graph_remove_ips(addrs, count);
+>  
+> -	ftrace_free_filter(&fp->ops);
+> +	kfree_rcu(hlist_array, rcu);
+> +	fp->hlist_array = NULL;
+>  
+> +out:
+> +	mutex_unlock(&fprobe_mutex);
+> +
+> +	kfree(addrs);
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(unregister_fprobe);
+> diff --git a/lib/test_fprobe.c b/lib/test_fprobe.c
+> index 271ce0caeec0..cf92111b5c79 100644
+> --- a/lib/test_fprobe.c
+> +++ b/lib/test_fprobe.c
+> @@ -17,10 +17,8 @@ static u32 rand1, entry_val, exit_val;
+>  /* Use indirect calls to avoid inlining the target functions */
+>  static u32 (*target)(u32 value);
+>  static u32 (*target2)(u32 value);
+> -static u32 (*target_nest)(u32 value, u32 (*nest)(u32));
+>  static unsigned long target_ip;
+>  static unsigned long target2_ip;
+> -static unsigned long target_nest_ip;
+>  static int entry_return_value;
+>  
+>  static noinline u32 fprobe_selftest_target(u32 value)
+> @@ -33,11 +31,6 @@ static noinline u32 fprobe_selftest_target2(u32 value)
+>  	return (value / div_factor) + 1;
+>  }
+>  
+> -static noinline u32 fprobe_selftest_nest_target(u32 value, u32 (*nest)(u32))
+> -{
+> -	return nest(value + 2);
+> -}
+> -
+>  static notrace int fp_entry_handler(struct fprobe *fp, unsigned long ip,
+>  				    unsigned long ret_ip,
+>  				    struct ftrace_regs *fregs, void *data)
+> @@ -79,22 +72,6 @@ static notrace void fp_exit_handler(struct fprobe *fp, unsigned long ip,
+>  		KUNIT_EXPECT_NULL(current_test, data);
+>  }
+>  
+> -static notrace int nest_entry_handler(struct fprobe *fp, unsigned long ip,
+> -				      unsigned long ret_ip,
+> -				      struct ftrace_regs *fregs, void *data)
+> -{
+> -	KUNIT_EXPECT_FALSE(current_test, preemptible());
+> -	return 0;
+> -}
+> -
+> -static notrace void nest_exit_handler(struct fprobe *fp, unsigned long ip,
+> -				      unsigned long ret_ip,
+> -				      struct ftrace_regs *fregs, void *data)
+> -{
+> -	KUNIT_EXPECT_FALSE(current_test, preemptible());
+> -	KUNIT_EXPECT_EQ(current_test, ip, target_nest_ip);
+> -}
+> -
+>  /* Test entry only (no rethook) */
+>  static void test_fprobe_entry(struct kunit *test)
+>  {
+> @@ -191,25 +168,6 @@ static void test_fprobe_data(struct kunit *test)
+>  	KUNIT_EXPECT_EQ(test, 0, unregister_fprobe(&fp));
+>  }
+>  
+> -/* Test nr_maxactive */
+> -static void test_fprobe_nest(struct kunit *test)
+> -{
+> -	static const char *syms[] = {"fprobe_selftest_target", "fprobe_selftest_nest_target"};
+> -	struct fprobe fp = {
+> -		.entry_handler = nest_entry_handler,
+> -		.exit_handler = nest_exit_handler,
+> -		.nr_maxactive = 1,
+> -	};
+> -
+> -	current_test = test;
+> -	KUNIT_EXPECT_EQ(test, 0, register_fprobe_syms(&fp, syms, 2));
+> -
+> -	target_nest(rand1, target);
+> -	KUNIT_EXPECT_EQ(test, 1, fp.nmissed);
+> -
+> -	KUNIT_EXPECT_EQ(test, 0, unregister_fprobe(&fp));
+> -}
+> -
+>  static void test_fprobe_skip(struct kunit *test)
+>  {
+>  	struct fprobe fp = {
+> @@ -247,10 +205,8 @@ static int fprobe_test_init(struct kunit *test)
+>  	rand1 = get_random_u32_above(div_factor);
+>  	target = fprobe_selftest_target;
+>  	target2 = fprobe_selftest_target2;
+> -	target_nest = fprobe_selftest_nest_target;
+>  	target_ip = get_ftrace_location(target);
+>  	target2_ip = get_ftrace_location(target2);
+> -	target_nest_ip = get_ftrace_location(target_nest);
+>  
+>  	return 0;
+>  }
+> @@ -260,7 +216,6 @@ static struct kunit_case fprobe_testcases[] = {
+>  	KUNIT_CASE(test_fprobe),
+>  	KUNIT_CASE(test_fprobe_syms),
+>  	KUNIT_CASE(test_fprobe_data),
+> -	KUNIT_CASE(test_fprobe_nest),
+>  	KUNIT_CASE(test_fprobe_skip),
+>  	{}
+>  };
 > 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
