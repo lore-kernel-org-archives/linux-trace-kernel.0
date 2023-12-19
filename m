@@ -1,118 +1,197 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8B23D0AE;
-	Tue, 19 Dec 2023 22:37:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDD11C433C8;
-	Tue, 19 Dec 2023 22:37:01 +0000 (UTC)
-Date: Tue, 19 Dec 2023 17:38:00 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Tzvetomir Stoyanov
- <tz.stoyanov@gmail.com>, Vincent Donnefort <vdonnefort@google.com>, Kent
- Overstreet <kent.overstreet@gmail.com>
-Subject: [PATCH v5 16/15] ring-buffer: Use subbuf_order for buffer page
- masking
-Message-ID: <20231219173800.66eefb7a@gandalf.local.home>
-In-Reply-To: <20231219185414.474197117@goodmis.org>
-References: <20231219185414.474197117@goodmis.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98EF33DB8C;
+	Tue, 19 Dec 2023 22:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T6xev0+F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20FADC433C7;
+	Tue, 19 Dec 2023 22:52:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703026326;
+	bh=3d5e2aUYMvcozpuqzXim5hohQZk4N3N4SmHcyRdCntc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=T6xev0+FV3fDb/mYUfcl5Fmn8BtiZ468wXbAb/2c6ecNu9SAKggagRcWZY7DU4BBI
+	 6PNDDEVEaW07keZLg21OseWmJGb/+sz0GN/KnB5mOpHWfyuBxrApnnNij7Maksf9Zi
+	 ja5m+cfCSsWf3VoeCiHYrSovHe7wYCQgLC4NZmRB6BPCCq23mB7XFxpsQTlMGoUIWY
+	 tcSuUirvRD747eZUmD/16B6qTTUS0QIO9+7Ix4XH3WIPBmrxXAXN9a9opmie35dSYc
+	 U2t6A7yooWn0Ta4uCpR/TPzAqd2ML79AK6EFzxxL0KNAbi3HgU+vLtWO1TiqkhAdTO
+	 RiazzkQJhSORQ==
+Date: Wed, 20 Dec 2023 07:51:59 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Florent Revest <revest@chromium.org>,
+ linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
+ Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>, Mark
+ Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v5 24/34] fprobe: Use ftrace_regs in fprobe entry
+ handler
+Message-Id: <20231220075159.a999e25dbf56f0334ba79249@kernel.org>
+In-Reply-To: <ZYGZZES--JmqQN_v@krava>
+References: <170290509018.220107.1347127510564358608.stgit@devnote2>
+	<170290538307.220107.14964448383069008953.stgit@devnote2>
+	<ZYGZZES--JmqQN_v@krava>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Tue, 19 Dec 2023 14:23:48 +0100
+Jiri Olsa <olsajiri@gmail.com> wrote:
 
-The comparisons to PAGE_SIZE were all converted to use the
-buffer->subbuf_order, but the use of PAGE_MASK was missed.
+> On Mon, Dec 18, 2023 at 10:16:23PM +0900, Masami Hiramatsu (Google) wrote:
+> 
+> SNIP
+> 
+> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> > index 84e8a0f6e4e0..d3f8745d8ead 100644
+> > --- a/kernel/trace/bpf_trace.c
+> > +++ b/kernel/trace/bpf_trace.c
+> > @@ -2503,7 +2503,7 @@ static int __init bpf_event_init(void)
+> >  fs_initcall(bpf_event_init);
+> >  #endif /* CONFIG_MODULES */
+> >  
+> > -#ifdef CONFIG_FPROBE
+> > +#if defined(CONFIG_FPROBE) && defined(CONFIG_DYNAMIC_FTRACE_WITH_REGS)
+> >  struct bpf_kprobe_multi_link {
+> >  	struct bpf_link link;
+> >  	struct fprobe fp;
+> > @@ -2733,10 +2733,14 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
+> >  
+> >  static int
+> >  kprobe_multi_link_handler(struct fprobe *fp, unsigned long fentry_ip,
+> > -			  unsigned long ret_ip, struct pt_regs *regs,
+> > +			  unsigned long ret_ip, struct ftrace_regs *fregs,
+> >  			  void *data)
+> >  {
+> >  	struct bpf_kprobe_multi_link *link;
+> > +	struct pt_regs *regs = ftrace_get_regs(fregs);
+> > +
+> > +	if (!regs)
+> > +		return 0;
+> >  
+> >  	link = container_of(fp, struct bpf_kprobe_multi_link, fp);
+> >  	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), regs);
+> > @@ -3008,7 +3012,7 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+> >  	kvfree(cookies);
+> >  	return err;
+> >  }
+> > -#else /* !CONFIG_FPROBE */
+> > +#else /* !CONFIG_FPROBE || !CONFIG_DYNAMIC_FTRACE_WITH_REGS */
+> >  int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+> >  {
+> >  	return -EOPNOTSUPP;
+> > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> > index 6cd2a4e3afb8..f12569494d8a 100644
+> > --- a/kernel/trace/fprobe.c
+> > +++ b/kernel/trace/fprobe.c
+> > @@ -46,7 +46,7 @@ static inline void __fprobe_handler(unsigned long ip, unsigned long parent_ip,
+> >  	}
+> >  
+> >  	if (fp->entry_handler)
+> > -		ret = fp->entry_handler(fp, ip, parent_ip, ftrace_get_regs(fregs), entry_data);
+> > +		ret = fp->entry_handler(fp, ip, parent_ip, fregs, entry_data);
+> >  
+> >  	/* If entry_handler returns !0, nmissed is not counted. */
+> >  	if (rh) {
+> > @@ -182,7 +182,7 @@ static void fprobe_init(struct fprobe *fp)
+> >  		fp->ops.func = fprobe_kprobe_handler;
+> >  	else
+> >  		fp->ops.func = fprobe_handler;
+> > -	fp->ops.flags |= FTRACE_OPS_FL_SAVE_REGS;
+> > +	fp->ops.flags |= FTRACE_OPS_FL_SAVE_ARGS;
+> 
+> so with this change you move to ftrace_caller trampoline,
+> but we need ftrace_regs_caller right?
 
-Convert all the PAGE_MASK usages over to:
+Yes, that's right.
 
-  (PAGE_SIZE << cpu_buffer->buffer->subbuf_order) - 1
+> 
+> otherwise the (!regs) check in kprobe_multi_link_handler
+> will be allways true IIUC
 
-Fixes: TBD ("ring-buffer: Page size per ring buffer")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ring_buffer.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+Ah, OK. So until we move to fgraph [28/34], keep this flag SAVE_REGS
+then kprobe_multi test will pass.
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 7ee6779bf292..173d2595ce2d 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -2269,11 +2269,13 @@ rb_commit_index(struct ring_buffer_per_cpu *cpu_buffer)
- }
- 
- static __always_inline unsigned
--rb_event_index(struct ring_buffer_event *event)
-+rb_event_index(struct ring_buffer_per_cpu *cpu_buffer, struct ring_buffer_event *event)
- {
- 	unsigned long addr = (unsigned long)event;
- 
--	return (addr & ~PAGE_MASK) - BUF_PAGE_HDR_SIZE;
-+	addr &= (PAGE_SIZE << cpu_buffer->buffer->subbuf_order) - 1;
-+
-+	return addr - BUF_PAGE_HDR_SIZE;
- }
- 
- static void rb_inc_iter(struct ring_buffer_iter *iter)
-@@ -2646,7 +2648,8 @@ rb_move_tail(struct ring_buffer_per_cpu *cpu_buffer,
- 
- /* Slow path */
- static struct ring_buffer_event *
--rb_add_time_stamp(struct ring_buffer_event *event, u64 delta, bool abs)
-+rb_add_time_stamp(struct ring_buffer_per_cpu *cpu_buffer,
-+		  struct ring_buffer_event *event, u64 delta, bool abs)
- {
- 	if (abs)
- 		event->type_len = RINGBUF_TYPE_TIME_STAMP;
-@@ -2654,7 +2657,7 @@ rb_add_time_stamp(struct ring_buffer_event *event, u64 delta, bool abs)
- 		event->type_len = RINGBUF_TYPE_TIME_EXTEND;
- 
- 	/* Not the first event on the page, or not delta? */
--	if (abs || rb_event_index(event)) {
-+	if (abs || rb_event_index(cpu_buffer, event)) {
- 		event->time_delta = delta & TS_MASK;
- 		event->array[0] = delta >> TS_SHIFT;
- 	} else {
-@@ -2728,7 +2731,7 @@ static void rb_add_timestamp(struct ring_buffer_per_cpu *cpu_buffer,
- 		if (!abs)
- 			info->delta = 0;
- 	}
--	*event = rb_add_time_stamp(*event, info->delta, abs);
-+	*event = rb_add_time_stamp(cpu_buffer, *event, info->delta, abs);
- 	*length -= RB_LEN_TIME_EXTEND;
- 	*delta = 0;
- }
-@@ -2812,10 +2815,10 @@ rb_try_to_discard(struct ring_buffer_per_cpu *cpu_buffer,
- 	struct buffer_page *bpage;
- 	unsigned long addr;
- 
--	new_index = rb_event_index(event);
-+	new_index = rb_event_index(cpu_buffer, event);
- 	old_index = new_index + rb_event_ts_length(event);
- 	addr = (unsigned long)event;
--	addr &= PAGE_MASK;
-+	addr &= ~((PAGE_SIZE << cpu_buffer->buffer->subbuf_order) - 1);
- 
- 	bpage = READ_ONCE(cpu_buffer->tail_page);
- 
-@@ -3726,7 +3729,7 @@ rb_decrement_entry(struct ring_buffer_per_cpu *cpu_buffer,
- 	struct buffer_page *bpage = cpu_buffer->commit_page;
- 	struct buffer_page *start;
- 
--	addr &= PAGE_MASK;
-+	addr &= ~((PAGE_SIZE << cpu_buffer->buffer->subbuf_order) - 1);
- 
- 	/* Do the likely case first */
- 	if (likely(bpage->page == (void *)addr)) {
+OK, let me keep it so.
+
+Thank you!
+
+> 
+> jirka
+> 
+> >  }
+> >  
+> >  static int fprobe_init_rethook(struct fprobe *fp, int num)
+> > diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
+> > index 7d2ddbcfa377..ef6b36fd05ae 100644
+> > --- a/kernel/trace/trace_fprobe.c
+> > +++ b/kernel/trace/trace_fprobe.c
+> > @@ -320,12 +320,16 @@ NOKPROBE_SYMBOL(fexit_perf_func);
+> >  #endif	/* CONFIG_PERF_EVENTS */
+> >  
+> >  static int fentry_dispatcher(struct fprobe *fp, unsigned long entry_ip,
+> > -			     unsigned long ret_ip, struct pt_regs *regs,
+> > +			     unsigned long ret_ip, struct ftrace_regs *fregs,
+> >  			     void *entry_data)
+> >  {
+> >  	struct trace_fprobe *tf = container_of(fp, struct trace_fprobe, fp);
+> > +	struct pt_regs *regs = ftrace_get_regs(fregs);
+> >  	int ret = 0;
+> >  
+> > +	if (!regs)
+> > +		return 0;
+> > +
+> >  	if (trace_probe_test_flag(&tf->tp, TP_FLAG_TRACE))
+> >  		fentry_trace_func(tf, entry_ip, regs);
+> >  #ifdef CONFIG_PERF_EVENTS
+> > diff --git a/lib/test_fprobe.c b/lib/test_fprobe.c
+> > index 24de0e5ff859..ff607babba18 100644
+> > --- a/lib/test_fprobe.c
+> > +++ b/lib/test_fprobe.c
+> > @@ -40,7 +40,7 @@ static noinline u32 fprobe_selftest_nest_target(u32 value, u32 (*nest)(u32))
+> >  
+> >  static notrace int fp_entry_handler(struct fprobe *fp, unsigned long ip,
+> >  				    unsigned long ret_ip,
+> > -				    struct pt_regs *regs, void *data)
+> > +				    struct ftrace_regs *fregs, void *data)
+> >  {
+> >  	KUNIT_EXPECT_FALSE(current_test, preemptible());
+> >  	/* This can be called on the fprobe_selftest_target and the fprobe_selftest_target2 */
+> > @@ -81,7 +81,7 @@ static notrace void fp_exit_handler(struct fprobe *fp, unsigned long ip,
+> >  
+> >  static notrace int nest_entry_handler(struct fprobe *fp, unsigned long ip,
+> >  				      unsigned long ret_ip,
+> > -				      struct pt_regs *regs, void *data)
+> > +				      struct ftrace_regs *fregs, void *data)
+> >  {
+> >  	KUNIT_EXPECT_FALSE(current_test, preemptible());
+> >  	return 0;
+> > diff --git a/samples/fprobe/fprobe_example.c b/samples/fprobe/fprobe_example.c
+> > index 64e715e7ed11..1545a1aac616 100644
+> > --- a/samples/fprobe/fprobe_example.c
+> > +++ b/samples/fprobe/fprobe_example.c
+> > @@ -50,7 +50,7 @@ static void show_backtrace(void)
+> >  
+> >  static int sample_entry_handler(struct fprobe *fp, unsigned long ip,
+> >  				unsigned long ret_ip,
+> > -				struct pt_regs *regs, void *data)
+> > +				struct ftrace_regs *fregs, void *data)
+> >  {
+> >  	if (use_trace)
+> >  		/*
+> > 
+
+
 -- 
-2.42.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
