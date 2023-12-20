@@ -1,19 +1,21 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96802D628;
-	Wed, 20 Dec 2023 13:09:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B878C433C8;
-	Wed, 20 Dec 2023 13:09:28 +0000 (UTC)
-Date: Wed, 20 Dec 2023 08:10:28 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8164C347B0;
+	Wed, 20 Dec 2023 13:28:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E2FFC433C7;
+	Wed, 20 Dec 2023 13:28:32 +0000 (UTC)
+Date: Wed, 20 Dec 2023 08:29:32 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- David Laight <David.Laight@ACULAB.COM>
-Subject: [PATCH] ring-buffer: Remove stale comment from ring_buffer_size()
-Message-ID: <20231220081028.7cd7e8e2@gandalf.local.home>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v8 0/2] Introducing trace buffer mapping by user-space
+Message-ID: <20231220082932.1b391355@gandalf.local.home>
+In-Reply-To: <ZYLmvmzLOBfrrsSu@google.com>
+References: <20231219184556.1552951-1-vdonnefort@google.com>
+	<20231219153924.2ff9c132@gandalf.local.home>
+	<ZYLmvmzLOBfrrsSu@google.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -24,41 +26,58 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Wed, 20 Dec 2023 13:06:06 +0000
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-It's been 11 years since the ring_buffer_size() function was updated to
-use the nr_pages from the buffer->buffers[cpu] structure instead of using
-the buffer->nr_pages that no longer exists.
+> > @@ -771,10 +772,20 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+> >  static void rb_wake_up_waiters(struct irq_work *work)
+> >  {
+> >  	struct rb_irq_work *rbwork = container_of(work, struct rb_irq_work, work);
+> > -	struct ring_buffer_per_cpu *cpu_buffer =
+> > -		container_of(rbwork, struct ring_buffer_per_cpu, irq_work);
+> > +	struct ring_buffer_per_cpu *cpu_buffer;
+> > +	struct trace_buffer *buffer;
+> > +	int cpu;
+> >  
+> > -	rb_update_meta_page(cpu_buffer);
+> > +	if (rbwork->is_cpu_buffer) {
+> > +		cpu_buffer = container_of(rbwork, struct ring_buffer_per_cpu, irq_work);
+> > +		rb_update_meta_page(cpu_buffer);
+> > +	} else {
+> > +		buffer = container_of(rbwork, struct trace_buffer, irq_work);
+> > +		for_each_buffer_cpu(buffer, cpu) {
+> > +			cpu_buffer = buffer->buffers[cpu];
+> > +			rb_update_meta_page(cpu_buffer);
+> > +		}
+> > +	}  
+> 
+> Arg, somehow never reproduced the problem :-\. I suppose you need to cat
+> trace/trace_pipe and mmap(trace/cpuX/trace_pipe) at the same time?
 
-The comment in the code is more of what a change log should have and is
-pretty much useless for development. It's saying how things worked back in
-2012 that bares no purpose on today's code. Remove it.
+It triggered as soon as I ran "trace-cmd start -e sched_switch"
 
-Link: https://lore.kernel.org/linux-trace-kernel/84d3b41a72bd43dbb9d44921ef535c92@AcuMS.aculab.com/
+In other words, it broke the non mmap case. This function gets called for
+both the buffer and cpu_buffer irq_work entries. You added the
+container_of() to get access to cpu_buffer, when the rbwork could also be
+for the main buffer too. The main buffer has no meta page, and it triggered
+a NULL pointer dereference, as "cpu_buffer->mapped" returned true (because
+it was on something of the buffer structure that wasn't zero), and then here:
 
-Reported-by: David Laight <David.Laight@ACULAB.COM>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ring_buffer.c | 6 ------
- 1 file changed, 6 deletions(-)
+	if (cpu_buffer->mapped) {
+		WRITE_ONCE(cpu_buffer->meta_page->reader.read, 0);
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 173d2595ce2d..7887d61d5b56 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -5122,12 +5122,6 @@ EXPORT_SYMBOL_GPL(ring_buffer_iter_advance);
-  */
- unsigned long ring_buffer_size(struct trace_buffer *buffer, int cpu)
- {
--	/*
--	 * Earlier, this method returned
--	 *	buffer->subbuf_size * buffer->nr_pages
--	 * Since the nr_pages field is now removed, we have converted this to
--	 * return the per cpu buffer value.
--	 */
- 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
- 		return 0;
- 
--- 
-2.42.0
+It dereferenced cpu_buffer->meta_page->reader
 
+which is only God knows what!
+
+> 
+> Updating the meta-page is only useful if the reader we are waking up is a
+> user-space one, which would only happen with the cpu_buffer version of this
+> function. We could limit the update of the meta_page only to this case?
+
+I rather not add another irq_work entry. This workaround should be good
+enough.
+
+Thanks,
+
+-- Steve
