@@ -1,281 +1,104 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F32481AE
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Dec 2023 17:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC76047A45
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Dec 2023 17:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="v/M/LJip"
-Message-ID: <2327d4aa-68f5-48d4-9296-7d5df15502b1@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1703094619;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IY2ph31/nWIVOyETibAMshgrN+RHTx2DHe8IAndM9HQ=;
-	b=v/M/LJipERvMexlkBI5pNpfNUF9CXhKIRsQsAJD6AFvBg+av9/G5swE1fkGONF5q6OWZsR
-	T8bSSJpIGxCRCjd4xszvLF17YV+HZ6IN0GIF9C4dVWm1T78s/2fcggEoXL/DkMjKRMmnSo
-	Je6DkC79Vryp2L6W13atoncVMZ7z0KY=
-Date: Wed, 20 Dec 2023 09:50:09 -0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0ZwJTXD3"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40c32bea30dso985e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Dec 2023 09:55:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1703094916; x=1703699716; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JXBfEAuqKBSMS1c3GRv3ur+swt6j3InHmy9rp0ZP3us=;
+        b=0ZwJTXD3Yl+expwUFvwXOJx4ZYg1UmIPK3MClewdBJqzeA9Sd0sUEUq+kPw7sxkh00
+         pZI+KAXUCru/zg6YoqPImRgocVAHOLqSk5k2FVzZ3HlV3r/7dglUOqDht28WLZc/vnZc
+         mWCRgskRZ8mpy51RxdF2pqaKNjEqVjMAi+BUCBqW41Ghdt7XarKu9eZ26hK7O0GkKKw0
+         4tYWA1MzICBld5pyr5IIxpzl5OGs6VCy97CPpaMYSRkXtkCy2DBkN3Yvlalf0KQ2bvtE
+         3EGHHilvPWIS+0zXbSsTQ58pz24JENqCrEZkIlQcziQTg6M/WIl6ap9Dbylps6zjybnA
+         uStA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703094916; x=1703699716;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JXBfEAuqKBSMS1c3GRv3ur+swt6j3InHmy9rp0ZP3us=;
+        b=RR3yRXFttA0zUh6gEUb9nr/8sO3U8JnGSpoaWxd58F1M56/zNQ1JrtV/ATICxWJ2oC
+         CNx6xYKju5YngCvAvpGY4hpBCKmquaD2zWcNSL5saI8PS/K73uaBNg2dYT31XJQwEziq
+         Ev7ylInMHXRezWQFhEmFgK6qZym8PuzPtyEb5ZvuqiLu/Xcy0jtFvyzLS1I/S9yL+tbS
+         yQAK1rSHJTM2yNtvHLSqP239wil+fjZoe1+/7yInNWgHT32Gxo1LW6zBrKo+HIiKScus
+         OYG0DjQQvqMv2h0i00kA8ycyfGJ3On+HDFr/N0S1kM7Gn6DY+AGHPr0w8lLddeyE5xF3
+         7ZyQ==
+X-Gm-Message-State: AOJu0Yxmkh0Am1wzbmzv4LDyl+TrwTLDK3lmuv3gOkm8mD98uwHJDXmI
+	588/c25GCONp3f5J8PddR2tJYe3wxSZoQPZOxIWKx4EizVhs
+X-Google-Smtp-Source: AGHT+IHq8UHmJLiFOiMTsnij3nN2uawkD9E8P3p56H86OZir+aqGDEi/SFQXCqkznhc09wtdn2Bmjx7O0qVLrF3dxlU=
+X-Received: by 2002:a05:600c:3b9d:b0:40d:1bcf:1abf with SMTP id
+ n29-20020a05600c3b9d00b0040d1bcf1abfmr207456wms.6.1703094915775; Wed, 20 Dec
+ 2023 09:55:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: BUG: unable to handle kernel paging request in
- bpf_probe_read_compat_str
-To: Hou Tao <houtao@huaweicloud.com>, xingwei lee <xrivendell7@gmail.com>,
- song@kernel.org
-Cc: ast@kernel.org, jolsa@kernel.org, daniel@iogearbox.net,
- john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com,
- haoluo@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <CABOYnLynjBoFZOf3Z4BhaZkc5hx_kHfsjiW+UWLoB=w33LvScw@mail.gmail.com>
- <cde2ebc4-7e7d-56be-5f08-6d261142189e@huaweicloud.com>
-Content-Language: en-GB
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yonghong Song <yonghong.song@linux.dev>
-In-Reply-To: <cde2ebc4-7e7d-56be-5f08-6d261142189e@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+References: <20231220012123.2787-1-cuibixuan@vivo.com> <20231220012123.2787-3-cuibixuan@vivo.com>
+In-Reply-To: <20231220012123.2787-3-cuibixuan@vivo.com>
+From: Yu Zhao <yuzhao@google.com>
+Date: Wed, 20 Dec 2023 10:54:37 -0700
+Message-ID: <CAOUHufZjxjra9Cfw8YC2eA-xsikPw=K5=1ew55hKTdYhMwjUig@mail.gmail.com>
+Subject: Re: [PATCH -next v4 2/2] mm: vmscan: add new event to trace shrink lru
+To: Bixuan Cui <cuibixuan@vivo.com>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	opensource.kernel@vivo.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 12/20/23 1:19 AM, Hou Tao wrote:
-> Hi,
+On Tue, Dec 19, 2023 at 6:22=E2=80=AFPM Bixuan Cui <cuibixuan@vivo.com> wro=
+te:
 >
-> On 12/14/2023 11:40 AM, xingwei lee wrote:
->> Hello I found a bug in net/bpf in the lastest upstream linux and
->> comfired in the lastest net tree and lastest net bpf titled BUG:
->> unable to handle kernel paging request in bpf_probe_read_compat_str
->>
->> If you fix this issue, please add the following tag to the commit:
->> Reported-by: xingwei Lee <xrivendell7@gmail.com>
->>
->> kernel: net 9702817384aa4a3700643d0b26e71deac0172cfd / bpf
->> 2f2fee2bf74a7e31d06fc6cb7ba2bd4dd7753c99
->> Kernel config: https://syzkaller.appspot.com/text?tag=KernelConfig&x=b50bd31249191be8
->>
->> in the lastest bpf tree, the crash like:
->>
->> TITLE: BUG: unable to handle kernel paging request in bpf_probe_read_compat_str
->> CORRUPTED: false ()
->> MAINTAINERS (TO): [akpm@linux-foundation.org linux-mm@kvack.org]
->> MAINTAINERS (CC): [linux-kernel@vger.kernel.org]
->>
->> BUG: unable to handle page fault for address: ff0
-> Thanks for the report and reproducer. The output is incomplete. It
-> should be: "BUG: unable to handle page fault for address:
-> ffffffffff600000". The address is a vsyscall address, so
-> handle_page_fault() considers that the fault address is in userspace
-> instead of kernel space, and there will be no fix-up for the exception
-> and oops happened. Will post a fix and a selftest for it.
+> From: cuibixuan <cuibixuan@vivo.com>
+>
+> Add a new event to calculate the shrink_inactive_list()/shrink_active_lis=
+t()
+> execution time.
+>
+> Example of output:
+>          kswapd0-103     [007] .....  1098.353020: mm_vmscan_lru_shrink_a=
+ctive_start: nid=3D0
+>          kswapd0-103     [007] .....  1098.353040: mm_vmscan_lru_shrink_a=
+ctive_end: nid=3D0 nr_taken=3D32 nr_active=3D0 nr_deactivated=3D32 nr_refer=
+enced=3D0 priority=3D6 flags=3DRECLAIM_WB_FILE|RECLAIM_WB_ASYNC
+>          kswapd0-103     [007] .....  1098.353040: mm_vmscan_lru_shrink_i=
+nactive_start: nid=3D0
+>          kswapd0-103     [007] .....  1098.353094: mm_vmscan_lru_shrink_i=
+nactive_end: nid=3D0 nr_scanned=3D32 nr_reclaimed=3D0 nr_dirty=3D0 nr_write=
+back=3D0 nr_congested=3D0 nr_immediate=3D0 nr_activate_anon=3D0 nr_activate=
+_file=3D0 nr_ref_keep=3D32 nr_unmap_fail=3D0 priority=3D6 flags=3DRECLAIM_W=
+B_ANON|RECLAIM_WB_ASYNC
+>          kswapd0-103     [007] .....  1098.353094: mm_vmscan_lru_shrink_i=
+nactive_start: nid=3D0
+>          kswapd0-103     [007] .....  1098.353162: mm_vmscan_lru_shrink_i=
+nactive_end: nid=3D0 nr_scanned=3D32 nr_reclaimed=3D21 nr_dirty=3D0 nr_writ=
+eback=3D0 nr_congested=3D0 nr_immediate=3D0 nr_activate_anon=3D0 nr_activat=
+e_file=3D0 nr_ref_keep=3D11 nr_unmap_fail=3D0 priority=3D6 flags=3DRECLAIM_=
+WB_FILE|RECLAIM_WB_ASYNC
+>
+> Signed-off-by: Bixuan Cui <cuibixuan@vivo.com>
+> Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+> ---
+> v4: Add Reviewed-by and Changlog to every patch.
 
-There is a proposed fix here:
+Where did Andrew provide his Reviewed-by?
 
-https://lore.kernel.org/bpf/87r0jwquhv.ffs@tglx/
+> v2: Modify trace_mm_vmscan_lru_shrink_inactive() in evict_folios() at the=
+ same time to fix build error.
 
-Not sure the fix in the above link is merged to some upstream branch or not.
+The reason v3 was NAK'ed was not mentioned or fixed in v4.
 
->> #PF: supervisor read access in kernel mode
->> #PF: error_code(0x0000) - not-present page
->> PGD cf7a067 P4D cf7a067 PUD cf7c067 PMD cf9f067 0
->> Oops: 0000 [#1] PREEMPT SMP KASAN
->> CPU: 1 PID: 8219 Comm: 9de Not tainted 6.7.0-rc41
->> Hardware name: QEMU Standard PC (i440FX + PIIX, 4
->> RIP: 0010:strncpy_from_kernel_nofault+0xc4/0x270 mm/maccess.c:91
->> Code: 83 85 6c 17 00 00 01 48 8b 2c 24 eb 18 e8 0
->> RSP: 0018:ffffc900114e7ac0 EFLAGS: 00010293
->> RAX: 0000000000000000 RBX: ffffc900114e7b30 RCX:2
->> RDX: ffff8880183abcc0 RSI: ffffffff81b8c9c4 RDI:c
->> RBP: ffffffffff600000 R08: 0000000000000001 R09:0
->> R10: 0000000000000001 R11: 0000000000000001 R12:8
->> R13: ffffffffff600000 R14: 0000000000000008 R15:0
->> FS:  0000000000000000(0000) GS:ffff88823bc00000(0
->> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> CR2: ffffffffff600000 CR3: 000000000cf77000 CR4:0
->> PKRU: 55555554
->> Call Trace:
->> <TASK>
->> bpf_probe_read_kernel_str_common kernel/trace/bpf_trace.c:262 [inline]
->> ____bpf_probe_read_compat_str kernel/trace/bpf_trace.c:310 [inline]
->> bpf_probe_read_compat_str+0x12f/0x170 kernel/trace/bpf_trace.c:303
->> bpf_prog_f17ebaf3f5f7baf8+0x42/0x44
->> bpf_dispatcher_nop_func include/linux/bpf.h:1196 [inline]
->> __bpf_prog_run include/linux/filter.h:651 [inline]
->> bpf_prog_run include/linux/filter.h:658 [inline]
->> __bpf_trace_run kernel/trace/bpf_trace.c:2307 [inline]
->> bpf_trace_run2+0x14e/0x410 kernel/trace/bpf_trace.c:2346
->> trace_kfree include/trace/events/kmem.h:94 [inline]
->> kfree+0xec/0x150 mm/slab_common.c:1043
->> vma_numab_state_free include/linux/mm.h:638 [inline]
->> __vm_area_free+0x3e/0x140 kernel/fork.c:525
->> remove_vma+0x128/0x170 mm/mmap.c:146
->> exit_mmap+0x453/0xa70 mm/mmap.c:3332
->> __mmput+0x12a/0x4d0 kernel/fork.c:1349
->> mmput+0x62/0x70 kernel/fork.c:1371
->> exit_mm kernel/exit.c:567 [inline]
->> do_exit+0x9aa/0x2ac0 kernel/exit.c:858
->> do_group_exit+0xd4/0x2a0 kernel/exit.c:1021
->> __do_sys_exit_group kernel/exit.c:1032 [inline]
->> __se_sys_exit_group kernel/exit.c:1030 [inline]
->> __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1030
->> do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->> do_syscall_64+0x41/0x110 arch/x86/entry/common.c:83
->> entry_SYSCALL_64_after_hwframe+0x63/0x6b
->>
->>
->> =* repro.c =*
->> // autogenerated by syzkaller (https://github.com/google/syzkaller)
->>
->> #define _GNU_SOURCE
->>
->> #include <endian.h>
->> #include <stdint.h>
->> #include <stdio.h>
->> #include <stdlib.h>
->> #include <string.h>
->> #include <sys/syscall.h>
->> #include <sys/types.h>
->> #include <unistd.h>
->>
->> #ifndef __NR_bpf
->> #define __NR_bpf 321
->> #endif
->>
->> #define BITMASK(bf_off, bf_len) (((1ull << (bf_len)) - 1) << (bf_off))
->> #define STORE_BY_BITMASK(type, htobe, addr, val, bf_off, bf_len)     \
->>   *(type*)(addr) =                                                   \
->>       htobe((htobe(*(type*)(addr)) & ~BITMASK((bf_off), (bf_len))) | \
->>             (((type)(val) << (bf_off)) & BITMASK((bf_off), (bf_len))))
->>
->> uint64_t r[1] = {0xffffffffffffffff};
->>
->> int main(void) {
->>   syscall(__NR_mmap, /*addr=*/0x1ffff000ul, /*len=*/0x1000ul, /*prot=*/0ul,
->>           /*flags=*/0x32ul, /*fd=*/-1, /*offset=*/0ul);
->>   syscall(__NR_mmap, /*addr=*/0x20000000ul, /*len=*/0x1000000ul, /*prot=*/7ul,
->>           /*flags=*/0x32ul, /*fd=*/-1, /*offset=*/0ul);
->>   syscall(__NR_mmap, /*addr=*/0x21000000ul, /*len=*/0x1000ul, /*prot=*/0ul,
->>           /*flags=*/0x32ul, /*fd=*/-1, /*offset=*/0ul);
->>   intptr_t res = 0;
->>   *(uint32_t*)0x200000c0 = 0x11;
->>   *(uint32_t*)0x200000c4 = 0xb;
->>   *(uint64_t*)0x200000c8 = 0x20000180;
->>   *(uint8_t*)0x20000180 = 0x18;
->>   STORE_BY_BITMASK(uint8_t, , 0x20000181, 0, 0, 4);
->>   STORE_BY_BITMASK(uint8_t, , 0x20000181, 0, 4, 4);
->>   *(uint16_t*)0x20000182 = 0;
->>   *(uint32_t*)0x20000184 = 0;
->>   *(uint8_t*)0x20000188 = 0;
->>   *(uint8_t*)0x20000189 = 0;
->>   *(uint16_t*)0x2000018a = 0;
->>   *(uint32_t*)0x2000018c = 0;
->>   *(uint8_t*)0x20000190 = 0x18;
->>   STORE_BY_BITMASK(uint8_t, , 0x20000191, 1, 0, 4);
->>   STORE_BY_BITMASK(uint8_t, , 0x20000191, 0, 4, 4);
->>   *(uint16_t*)0x20000192 = 0;
->>   *(uint32_t*)0x20000194 = 0x25702020;
->>   *(uint8_t*)0x20000198 = 0;
->>   *(uint8_t*)0x20000199 = 0;
->>   *(uint16_t*)0x2000019a = 0;
->>   *(uint32_t*)0x2000019c = 0x20202000;
->>   STORE_BY_BITMASK(uint8_t, , 0x200001a0, 3, 0, 3);
->>   STORE_BY_BITMASK(uint8_t, , 0x200001a0, 3, 3, 2);
->>   STORE_BY_BITMASK(uint8_t, , 0x200001a0, 3, 5, 3);
->>   STORE_BY_BITMASK(uint8_t, , 0x200001a1, 0xa, 0, 4);
->>   STORE_BY_BITMASK(uint8_t, , 0x200001a1, 1, 4, 4);
->>   *(uint16_t*)0x200001a2 = 0xfff8;
->>   *(uint32_t*)0x200001a4 = 0;
->>   STORE_BY_BITMASK(uint8_t, , 0x200001a8, 7, 0, 3);
->>   STORE_BY_BITMASK(uint8_t, , 0x200001a8, 1, 3, 1);
->>   STORE_BY_BITMASK(uint8_t, , 0x200001a8, 0xb, 4, 4);
->>   STORE_BY_BITMASK(uint8_t, , 0x200001a9, 1, 0, 4);
->>   STORE_BY_BITMASK(uint8_t, , 0x200001a9, 0xa, 4, 4);
->>   *(uint16_t*)0x200001aa = 0;
->>   *(uint32_t*)0x200001ac = 0;
->>   STORE_BY_BITMASK(uint8_t, , 0x200001b0, 7, 0, 3);
->>   STORE_BY_BITMASK(uint8_t, , 0x200001b0, 0, 3, 1);
->>   STORE_BY_BITMASK(uint8_t, , 0x200001b0, 0, 4, 4);
->>   STORE_BY_BITMASK(uint8_t, , 0x200001b1, 1, 0, 4);
->>   STORE_BY_BITMASK(uint8_t, , 0x200001b1, 0, 4, 4);
->>   *(uint16_t*)0x200001b2 = 0;
->>   *(uint32_t*)0x200001b4 = 0xfffffff8;
->>   STORE_BY_BITMASK(uint8_t, , 0x200001b8, 7, 0, 3);
->>   STORE_BY_BITMASK(uint8_t, , 0x200001b8, 0, 3, 1);
->>   STORE_BY_BITMASK(uint8_t, , 0x200001b8, 0xb, 4, 4);
->>   STORE_BY_BITMASK(uint8_t, , 0x200001b9, 2, 0, 4);
->>   STORE_BY_BITMASK(uint8_t, , 0x200001b9, 0, 4, 4);
->>   *(uint16_t*)0x200001ba = 0;
->>   *(uint32_t*)0x200001bc = 8;
->>   STORE_BY_BITMASK(uint8_t, , 0x200001c0, 7, 0, 3);
->>   STORE_BY_BITMASK(uint8_t, , 0x200001c0, 0, 3, 1);
->>   STORE_BY_BITMASK(uint8_t, , 0x200001c0, 0xb, 4, 4);
->>   STORE_BY_BITMASK(uint8_t, , 0x200001c1, 3, 0, 4);
->>   STORE_BY_BITMASK(uint8_t, , 0x200001c1, 0, 4, 4);
->>   *(uint16_t*)0x200001c2 = 0;
->>   *(uint32_t*)0x200001c4 = 0xff600000;
->>   *(uint8_t*)0x200001c8 = 0x85;
->>   *(uint8_t*)0x200001c9 = 0;
->>   *(uint16_t*)0x200001ca = 0;
->>   *(uint32_t*)0x200001cc = 0x2d;
->>   *(uint8_t*)0x200001d0 = 0x95;
->>   *(uint8_t*)0x200001d1 = 0;
->>   *(uint16_t*)0x200001d2 = 0;
->>   *(uint32_t*)0x200001d4 = 0;
->>   *(uint64_t*)0x200000d0 = 0x20000200;
->>   memcpy((void*)0x20000200, "GPL\000", 4);
->>   *(uint32_t*)0x200000d8 = 0;
->>   *(uint32_t*)0x200000dc = 0;
->>   *(uint64_t*)0x200000e0 = 0;
->>   *(uint32_t*)0x200000e8 = 0;
->>   *(uint32_t*)0x200000ec = 0;
->>   memset((void*)0x200000f0, 0, 16);
->>   *(uint32_t*)0x20000100 = 0;
->>   *(uint32_t*)0x20000104 = 0;
->>   *(uint32_t*)0x20000108 = 0;
->>   *(uint32_t*)0x2000010c = 0;
->>   *(uint64_t*)0x20000110 = 0;
->>   *(uint32_t*)0x20000118 = 0;
->>   *(uint32_t*)0x2000011c = 0;
->>   *(uint64_t*)0x20000120 = 0;
->>   *(uint32_t*)0x20000128 = 0;
->>   *(uint32_t*)0x2000012c = 0;
->>   *(uint32_t*)0x20000130 = 0;
->>   *(uint32_t*)0x20000134 = 0;
->>   *(uint64_t*)0x20000138 = 0;
->>   *(uint64_t*)0x20000140 = 0;
->>   *(uint32_t*)0x20000148 = 0;
->>   *(uint32_t*)0x2000014c = 0;
->>   res = syscall(__NR_bpf, /*cmd=*/5ul, /*arg=*/0x200000c0ul, /*size=*/0x90ul);
->>   if (res != -1) r[0] = res;
->>   *(uint64_t*)0x20000540 = 0x20000000;
->>   memcpy((void*)0x20000000, "kfree\000", 6);
->>   *(uint32_t*)0x20000548 = r[0];
->>   syscall(__NR_bpf, /*cmd=*/0x11ul, /*arg=*/0x20000540ul, /*size=*/0x10ul);
->>   return 0;
->> }
->>
->> =* repro.txt =*
->> r0 = bpf$PROG_LOAD(0x5, &(0x7f00000000c0)={0x11, 0xb,
->> &(0x7f0000000180)=@framed={{}, [@printk={@p, {}, {}, {}, {}, {0x7,
->> 0x0, 0xb, 0x3, 0x0, 0x0, 0xff600000}, {0x85, 0x0, 0x0, 0x2d}}]},
->> &(0x7f0000000200)='GPL\x00', 0x0, 0x0, 0x0, 0x0, 0x0, '\x00', 0x0,
->> 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
->> 0x90)
->> bpf$BPF_RAW_TRACEPOINT_OPEN(0x11,
->> &(0x7f0000000540)={&(0x7f0000000000)='kfree\x00', r0}, 0x10)
->>
->>
->>
->> See aslo https://gist.github.com/xrivendell7/7bb1f0a30ccc2899fe7ea34bef882067
->> I hope it helps.
->>
->> Best regards.
->> xingwei Lee
->>
->> .
+So NAK again.
