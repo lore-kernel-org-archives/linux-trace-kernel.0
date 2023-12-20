@@ -1,26 +1,21 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75BDF3D38D;
-	Wed, 20 Dec 2023 14:39:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 046A1C433C8;
-	Wed, 20 Dec 2023 14:39:29 +0000 (UTC)
-Date: Wed, 20 Dec 2023 09:40:30 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D7540BF0;
+	Wed, 20 Dec 2023 15:49:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44827C433C8;
+	Wed, 20 Dec 2023 15:49:17 +0000 (UTC)
+Date: Wed, 20 Dec 2023 10:50:17 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
- Vincent Donnefort <vdonnefort@google.com>, Kent Overstreet
- <kent.overstreet@gmail.com>
-Subject: Re: [PATCH v5 03/15] ring-buffer: Add interface for configuring
- trace sub buffer size
-Message-ID: <20231220094030.5d13438b@gandalf.local.home>
-In-Reply-To: <20231220232619.67f0b175578d14f9341fb30c@kernel.org>
-References: <20231219185414.474197117@goodmis.org>
-	<20231219185628.298324722@goodmis.org>
-	<20231220232619.67f0b175578d14f9341fb30c@kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Dongliang Cui
+ <cuidongliang390@gmail.com>, Hongyu Jin  <hongyu.jin@unisoc.com>,
+ linux-fsdevel@vger.kernel.org
+Subject: [PATCH] eventfs: Have event files and directories default to parent
+ uid and gid
+Message-ID: <20231220105017.1489d790@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -31,61 +26,93 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 20 Dec 2023 23:26:19 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> On Tue, 19 Dec 2023 13:54:17 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > +/**
-> > + * ring_buffer_subbuf_order_set - set the size of ring buffer sub page.
-> > + * @buffer: The ring_buffer to set the new page size.
-> > + * @order: Order of the system pages in one sub buffer page
-> > + *
-> > + * By default, one ring buffer pages equals to one system page. This API can be
-> > + * used to set new size of the ring buffer page. The size must be order of
-> > + * system page size, that's why the input parameter @order is the order of
-> > + * system pages that are allocated for one ring buffer page:
-> > + *  0 - 1 system page
-> > + *  1 - 2 system pages
-> > + *  3 - 4 system pages
-> > + *  ...  
-> 
-> Don't we have the max order of the pages?
+Dongliang reported:
 
-Actually there is. I think it's 7?
+  I found that in the latest version, the nodes of tracefs have been
+  changed to dynamically created.
 
-Honestly, anything over 5 is probably too much. But hey.
+  This has caused me to encounter a problem where the gid I specified in
+  the mounting parameters cannot apply to all files, as in the following
+  situation:
 
-> 
-> > + *
-> > + * Returns 0 on success or < 0 in case of an error.
-> > + */
-> > +int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
-> > +{
-> > +	int psize;
-> > +
-> > +	if (!buffer || order < 0)
-> > +		return -EINVAL;
-> > +
-> > +	if (buffer->subbuf_order == order)
-> > +		return 0;
-> > +
-> > +	psize = (1 << order) * PAGE_SIZE;
-> > +	if (psize <= BUF_PAGE_HDR_SIZE)
-> > +		return -EINVAL;
-> > +
-> > +	buffer->subbuf_order = order;
-> > +	buffer->subbuf_size = psize - BUF_PAGE_HDR_SIZE;
-> > +
-> > +	/* Todo: reset the buffer with the new page size */
-> > +  
-> 
-> I just wonder why there is no reallocate the sub buffers here.
-> Is it OK to change the sub buffer page size and order while
-> using the ring buffer?
+  /data/tmp/events # mount | grep tracefs
+  tracefs on /data/tmp type tracefs (rw,seclabel,relatime,gid=3012)
 
-Currently we disable the ring buffer to do the update.
+  gid 3012 = readtracefs
 
--- Steve
+  /data/tmp # ls -lh
+  total 0
+  -r--r-----   1 root readtracefs 0 1970-01-01 08:00 README
+  -r--r-----   1 root readtracefs 0 1970-01-01 08:00 available_events
+
+  ums9621_1h10:/data/tmp/events # ls -lh
+  total 0
+  drwxr-xr-x 2 root root 0 2023-12-19 00:56 alarmtimer
+  drwxr-xr-x 2 root root 0 2023-12-19 00:56 asoc
+
+  It will prevent certain applications from accessing tracefs properly, I
+  try to avoid this issue by making the following modifications.
+
+To fix this, have the files created default to taking the ownership of
+the parent dentry unless the ownership was previously set by the user.
+
+Link: https://lore.kernel.org/linux-trace-kernel/1703063706-30539-1-git-send-email-dongliang.cui@unisoc.com/
+
+Reported-by: Dongliang Cui <cuidongliang390@gmail.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/tracefs/event_inode.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 43e237864a42..2ccc849a5bda 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -148,7 +148,8 @@ static const struct file_operations eventfs_file_operations = {
+ 	.release	= eventfs_release,
+ };
+ 
+-static void update_inode_attr(struct inode *inode, struct eventfs_attr *attr, umode_t mode)
++static void update_inode_attr(struct dentry *dentry, struct inode *inode,
++			      struct eventfs_attr *attr, umode_t mode)
+ {
+ 	if (!attr) {
+ 		inode->i_mode = mode;
+@@ -162,9 +163,13 @@ static void update_inode_attr(struct inode *inode, struct eventfs_attr *attr, um
+ 
+ 	if (attr->mode & EVENTFS_SAVE_UID)
+ 		inode->i_uid = attr->uid;
++	else
++		inode->i_uid = d_inode(dentry->d_parent)->i_uid;
+ 
+ 	if (attr->mode & EVENTFS_SAVE_GID)
+ 		inode->i_gid = attr->gid;
++	else
++		inode->i_gid = d_inode(dentry->d_parent)->i_gid;
+ }
+ 
+ /**
+@@ -206,7 +211,7 @@ static struct dentry *create_file(const char *name, umode_t mode,
+ 		return eventfs_failed_creating(dentry);
+ 
+ 	/* If the user updated the directory's attributes, use them */
+-	update_inode_attr(inode, attr, mode);
++	update_inode_attr(dentry, inode, attr, mode);
+ 
+ 	inode->i_op = &eventfs_file_inode_operations;
+ 	inode->i_fop = fop;
+@@ -242,7 +247,8 @@ static struct dentry *create_dir(struct eventfs_inode *ei, struct dentry *parent
+ 		return eventfs_failed_creating(dentry);
+ 
+ 	/* If the user updated the directory's attributes, use them */
+-	update_inode_attr(inode, &ei->attr, S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO);
++	update_inode_attr(dentry, inode, &ei->attr,
++			  S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO);
+ 
+ 	inode->i_op = &eventfs_root_dir_inode_operations;
+ 	inode->i_fop = &eventfs_file_operations;
+-- 
+2.42.0
 
