@@ -1,113 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6382D638;
-	Wed, 20 Dec 2023 13:29:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AAEBC433C8;
-	Wed, 20 Dec 2023 13:29:58 +0000 (UTC)
-Date: Wed, 20 Dec 2023 08:30:58 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Dongliang Cui <dongliang.cui@unisoc.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, Dongliang Cui
- <cuidongliang390@gmail.com>, Hongyu Jin <hongyu.jin@unisoc.com>
-Subject: Re: [PATCH]eventfs: Apply the gid in the mounting parameters to all
- files
-Message-ID: <20231220083058.09196546@gandalf.local.home>
-In-Reply-To: <1703063706-30539-1-git-send-email-dongliang.cui@unisoc.com>
-References: <1703063706-30539-1-git-send-email-dongliang.cui@unisoc.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7E1364B5
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Dec 2023 13:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jmovdpk6"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40c2bb872e2so63900665e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Dec 2023 05:49:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1703080175; x=1703684975; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ih34x4InGk88oDWRnsxRncm3q1vebeIOmiotxCM5pDA=;
+        b=Jmovdpk6u35xnk5pFqig02SdTqsabQldyKAozeZfP1SMwW76fTMloWYr4btiNL95IY
+         gsbJjYy6zMfWDMvrPqvReCmmnlFaYS/ve0R/VNiLqBE2TJNmsH7erP6ccxcQYdocHJpG
+         2gVH9bM7Gky1HXpLjEQqDLZYRDujjD5kmvH1jl9PT7uvUoSt+8RIhZwVeLk0oJcdYu+T
+         qLWnZlS6Twfy+Ko8ANf2u25+SzqI35ZALZowej9WbcF0FxJyvePtPeG9Wjp1l0N59Mrw
+         pcAmORaYdM1s0Gm+Qv9Zjq1DvW3DCynUEgvJQmXHqnY4WEErqdrn+HAkjNb/KkIMH0Fg
+         rqBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703080175; x=1703684975;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ih34x4InGk88oDWRnsxRncm3q1vebeIOmiotxCM5pDA=;
+        b=QiFpGw4urZGCalFaxGv3c8/PhqK1mUExehf7dCIoJzSSLCSmA1InMiBYrR5L4Z/OlX
+         wMHt19q/CvM+40OPGevuchhVluB/VfsrjKan2f72aHJfpV+J5RQAtuZzSnMd4bgyXcPR
+         +BOIhLHIlwGdXwQK4gz/ihtvuZMWibpAlRUxlGWYS8ALPmi5pOKIVnuaQqveucUr43no
+         btIIDxAsC5uYO2b8ZGcvu4I49HX+mBHzGgoJqYgVZlxK+hGBhscILPk1w3syfJNka+TD
+         BasKlRGKc5DeahuQeVBa4VyklZBDNSslpJ2VKJUl7NxKOKhUhmuD15N3tZTTlcEqm3MH
+         d53Q==
+X-Gm-Message-State: AOJu0YydwRf/Ljc9UVKzWSJTyCrS+cO6yf0eHJbdQtIz+Xob2vsHfARE
+	QzCSfnZo4mhBtEdka0/z4uxjvw==
+X-Google-Smtp-Source: AGHT+IGwrWFAfuw/3nKJpG6xKX7J59/w3QAQjYWaEjBcrbaLwiCn3ycI1rxvf4Jda5pngeRU/t4DmQ==
+X-Received: by 2002:a7b:c4d4:0:b0:40c:32e8:e253 with SMTP id g20-20020a7bc4d4000000b0040c32e8e253mr4751991wmk.363.1703080175004;
+        Wed, 20 Dec 2023 05:49:35 -0800 (PST)
+Received: from google.com (109.36.187.35.bc.googleusercontent.com. [35.187.36.109])
+        by smtp.gmail.com with ESMTPSA id v17-20020a5d6111000000b0033660f75d08sm10964603wrt.116.2023.12.20.05.49.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Dec 2023 05:49:34 -0800 (PST)
+Date: Wed, 20 Dec 2023 13:49:30 +0000
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v8 0/2] Introducing trace buffer mapping by user-space
+Message-ID: <ZYLw6okkDJq9Pi2O@google.com>
+References: <20231219184556.1552951-1-vdonnefort@google.com>
+ <20231219153924.2ff9c132@gandalf.local.home>
+ <ZYLmvmzLOBfrrsSu@google.com>
+ <20231220082932.1b391355@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231220082932.1b391355@gandalf.local.home>
 
-On Wed, 20 Dec 2023 17:15:06 +0800
-Dongliang Cui <dongliang.cui@unisoc.com> wrote:
+On Wed, Dec 20, 2023 at 08:29:32AM -0500, Steven Rostedt wrote:
+> On Wed, 20 Dec 2023 13:06:06 +0000
+> Vincent Donnefort <vdonnefort@google.com> wrote:
+> 
+> > > @@ -771,10 +772,20 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+> > >  static void rb_wake_up_waiters(struct irq_work *work)
+> > >  {
+> > >  	struct rb_irq_work *rbwork = container_of(work, struct rb_irq_work, work);
+> > > -	struct ring_buffer_per_cpu *cpu_buffer =
+> > > -		container_of(rbwork, struct ring_buffer_per_cpu, irq_work);
+> > > +	struct ring_buffer_per_cpu *cpu_buffer;
+> > > +	struct trace_buffer *buffer;
+> > > +	int cpu;
+> > >  
+> > > -	rb_update_meta_page(cpu_buffer);
+> > > +	if (rbwork->is_cpu_buffer) {
+> > > +		cpu_buffer = container_of(rbwork, struct ring_buffer_per_cpu, irq_work);
+> > > +		rb_update_meta_page(cpu_buffer);
+> > > +	} else {
+> > > +		buffer = container_of(rbwork, struct trace_buffer, irq_work);
+> > > +		for_each_buffer_cpu(buffer, cpu) {
+> > > +			cpu_buffer = buffer->buffers[cpu];
+> > > +			rb_update_meta_page(cpu_buffer);
+> > > +		}
+> > > +	}  
+> > 
+> > Arg, somehow never reproduced the problem :-\. I suppose you need to cat
+> > trace/trace_pipe and mmap(trace/cpuX/trace_pipe) at the same time?
+> 
+> It triggered as soon as I ran "trace-cmd start -e sched_switch"
+> 
+> In other words, it broke the non mmap case. This function gets called for
+> both the buffer and cpu_buffer irq_work entries. You added the
+> container_of() to get access to cpu_buffer, when the rbwork could also be
+> for the main buffer too. The main buffer has no meta page, and it triggered
+> a NULL pointer dereference, as "cpu_buffer->mapped" returned true (because
+> it was on something of the buffer structure that wasn't zero), and then here:
+> 
+> 	if (cpu_buffer->mapped) {
+> 		WRITE_ONCE(cpu_buffer->meta_page->reader.read, 0);
+> 
+> It dereferenced cpu_buffer->meta_page->reader
+> 
+> which is only God knows what!
+> 
+> > 
+> > Updating the meta-page is only useful if the reader we are waking up is a
+> > user-space one, which would only happen with the cpu_buffer version of this
+> > function. We could limit the update of the meta_page only to this case?
+> 
+> I rather not add another irq_work entry. This workaround should be good
+> enough.
 
-> I found that in the latest version, the nodes of 
-> tracefs have been changed to dynamically created.
-> 
-> This has caused me to encounter a problem where 
-> the gid I specified in the mounting parameters 
-> cannot apply to all files, as in the following
-> situation:
-> 
-> /data/tmp/events # mount | grep tracefs
-> tracefs on /data/tmp type tracefs (rw,seclabel,relatime,gid=3012)
-> 
-> gid 3012 = readtracefs
-> 
-> /data/tmp # ls -lh
-> total 0
-> -r--r-----   1 root readtracefs 0 1970-01-01 08:00 README
-> -r--r-----   1 root readtracefs 0 1970-01-01 08:00 available_events
-> 
-> ums9621_1h10:/data/tmp/events # ls -lh
-> total 0
-> drwxr-xr-x 2 root root 0 2023-12-19 00:56 alarmtimer
-> drwxr-xr-x 2 root root 0 2023-12-19 00:56 asoc
-> 
-> It will prevent certain applications from accessing
-> tracefs properly, I try to avoid this issue by making 
-> the following modifications.
-> 
-> Signed-off-by: Dongliang Cui <dongliang.cui@unisoc.com>
+I meant, to only do in rb_wake_up_waiters()
 
+  if (rbwork->is_cpu_buffer) 
+  	rb_update_meta_page(cpu_buffer)
 
-Thanks for the report, can you try this fix instead?
+And skip the meta-page update for the !is_cpu_buffer case?
 
--- Steve
-
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 43e237864a42..2ccc849a5bda 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -148,7 +148,8 @@ static const struct file_operations eventfs_file_operations = {
- 	.release	= eventfs_release,
- };
- 
--static void update_inode_attr(struct inode *inode, struct eventfs_attr *attr, umode_t mode)
-+static void update_inode_attr(struct dentry *dentry, struct inode *inode,
-+			      struct eventfs_attr *attr, umode_t mode)
- {
- 	if (!attr) {
- 		inode->i_mode = mode;
-@@ -162,9 +163,13 @@ static void update_inode_attr(struct inode *inode, struct eventfs_attr *attr, um
- 
- 	if (attr->mode & EVENTFS_SAVE_UID)
- 		inode->i_uid = attr->uid;
-+	else
-+		inode->i_uid = d_inode(dentry->d_parent)->i_uid;
- 
- 	if (attr->mode & EVENTFS_SAVE_GID)
- 		inode->i_gid = attr->gid;
-+	else
-+		inode->i_gid = d_inode(dentry->d_parent)->i_gid;
- }
- 
- /**
-@@ -206,7 +211,7 @@ static struct dentry *create_file(const char *name, umode_t mode,
- 		return eventfs_failed_creating(dentry);
- 
- 	/* If the user updated the directory's attributes, use them */
--	update_inode_attr(inode, attr, mode);
-+	update_inode_attr(dentry, inode, attr, mode);
- 
- 	inode->i_op = &eventfs_file_inode_operations;
- 	inode->i_fop = fop;
-@@ -242,7 +247,8 @@ static struct dentry *create_dir(struct eventfs_inode *ei, struct dentry *parent
- 		return eventfs_failed_creating(dentry);
- 
- 	/* If the user updated the directory's attributes, use them */
--	update_inode_attr(inode, &ei->attr, S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO);
-+	update_inode_attr(dentry, inode, &ei->attr,
-+			  S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO);
- 
- 	inode->i_op = &eventfs_root_dir_inode_operations;
- 	inode->i_fop = &eventfs_file_operations;
+> 
+> Thanks,
+> 
+> -- Steve
