@@ -1,128 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEE341862;
-	Wed, 20 Dec 2023 16:14:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F102EC433C9;
-	Wed, 20 Dec 2023 16:14:24 +0000 (UTC)
-Date: Wed, 20 Dec 2023 11:15:25 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Alexander Graf <graf@amazon.com>, Tom
- Zanussi <zanussi@kernel.org>
-Subject: [PATCH] tracing / synthetic: Disable events after testing in
- synth_event_gen_test_init()
-Message-ID: <20231220111525.2f0f49b0@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3490A47A7B;
+	Wed, 20 Dec 2023 16:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pbx40+sV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73CC8C433C7;
+	Wed, 20 Dec 2023 16:23:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703089399;
+	bh=IYxNhfoPQDOhU8TVSYJ0LQ/+qknb5nTRTy9LLBYZ0Uc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pbx40+sVvAprd4ZsHKt5lVIzubGuCmQZjBNcWlwFYNuDkUltnT23y4VAtisropWA5
+	 mKDUrMnK0f/AS6Ju8v7okrOu8uX0WWJmvvnn7PDQ+myx5x02lTzoK9N73eF730Szdy
+	 tDkMg8mswc64Ts5qQ6YlN7GvFfJPvPrdTj86b0Pq1g6XoTJEggpiVrjVGMO48peTrt
+	 gMmBI0SZcCsLPRsx9Ndv1LRcpBsHAm24jtBhaB9dVG6Iw/4Vbf0HSamaRIhkmKTOlp
+	 SzFWzJPR3GW+BuWcoFRnd6l/ONtBr4GiQj0TXvV0FE7PkcU8JGO3XPUf59wi8ucolN
+	 /xhjEwmFYLC1w==
+Date: Thu, 21 Dec 2023 01:23:14 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+ Vincent Donnefort <vdonnefort@google.com>, Kent Overstreet
+ <kent.overstreet@gmail.com>
+Subject: Re: [PATCH v5 06/15] ring-buffer: Clear pages on error in
+ ring_buffer_subbuf_order_set() failure
+Message-Id: <20231221012314.1d041383caf29e31c49dfc4e@kernel.org>
+In-Reply-To: <20231219185629.179352802@goodmis.org>
+References: <20231219185414.474197117@goodmis.org>
+	<20231219185629.179352802@goodmis.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Tue, 19 Dec 2023 13:54:20 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-The synth_event_gen_test module can be built in, if someone wants to run
-the tests at boot up and not have to load them.
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> On failure to allocate ring buffer pages, the pointer to the CPU buffer
+> pages is freed, but the pages that were allocated previously were not.
+> Make sure they are freed too.
+> 
+> Fixes: TBD ("tracing: Set new size of the ring buffer sub page")
 
-The synth_event_gen_test_init() function creates and enables the synthetic
-events and runs its tests.
+Do you merge this fix to the original one in the same series later?
+I think it is better to merge it for git bisect.
 
-The synth_event_gen_test_exit() disables the events it created and
-destroys the events.
+Thank you,
 
-If the module is builtin, the events are never disabled. The issue is, the
-events should be disable after the tests are run. This could be an issue
-if the rest of the boot up tests are enabled, as they expect the events to
-be in a known state before testing. That known state happens to be
-disabled.
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/ring_buffer.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index c2afcf98ea91..3c11e8e811ed 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -5927,6 +5927,7 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+>  	for_each_buffer_cpu(buffer, cpu) {
+>  		if (!cpu_buffers[cpu])
+>  			continue;
+> +		rb_free_cpu_buffer(cpu_buffers[cpu]);
+>  		kfree(cpu_buffers[cpu]);
+>  	}
+>  	kfree(cpu_buffers);
+> -- 
+> 2.42.0
+> 
+> 
 
-When CONFIG_SYNTH_EVENT_GEN_TEST=y and CONFIG_EVENT_TRACE_STARTUP_TEST=y
-a warning will trigger:
 
- Running tests on trace events:
- Testing event create_synth_test:
- Enabled event during self test!
- ------------[ cut here ]------------
- WARNING: CPU: 2 PID: 1 at kernel/trace/trace_events.c:4150 event_trace_self_tests+0x1c2/0x480
- Modules linked in:
- CPU: 2 PID: 1 Comm: swapper/0 Not tainted 6.7.0-rc2-test-00031-gb803d7c664d5-dirty #276
- Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
- RIP: 0010:event_trace_self_tests+0x1c2/0x480
- Code: bb e8 a2 ab 5d fc 48 8d 7b 48 e8 f9 3d 99 fc 48 8b 73 48 40 f6 c6 01 0f 84 d6 fe ff ff 48 c7 c7 20 b6 ad bb e8 7f ab 5d fc 90 <0f> 0b 90 48 89 df e8 d3 3d 99 fc 48 8b 1b 4c 39 f3 0f 85 2c ff ff
- RSP: 0000:ffffc9000001fdc0 EFLAGS: 00010246
- RAX: 0000000000000029 RBX: ffff88810399ca80 RCX: 0000000000000000
- RDX: 0000000000000000 RSI: ffffffffb9f19478 RDI: ffff88823c734e64
- RBP: ffff88810399f300 R08: 0000000000000000 R09: fffffbfff79eb32a
- R10: ffffffffbcf59957 R11: 0000000000000001 R12: ffff888104068090
- R13: ffffffffbc89f0a0 R14: ffffffffbc8a0f08 R15: 0000000000000078
- FS:  0000000000000000(0000) GS:ffff88823c700000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 0000000000000000 CR3: 00000001f6282001 CR4: 0000000000170ef0
- Call Trace:
-  <TASK>
-  ? __warn+0xa5/0x200
-  ? event_trace_self_tests+0x1c2/0x480
-  ? report_bug+0x1f6/0x220
-  ? handle_bug+0x6f/0x90
-  ? exc_invalid_op+0x17/0x50
-  ? asm_exc_invalid_op+0x1a/0x20
-  ? tracer_preempt_on+0x78/0x1c0
-  ? event_trace_self_tests+0x1c2/0x480
-  ? __pfx_event_trace_self_tests_init+0x10/0x10
-  event_trace_self_tests_init+0x27/0xe0
-  do_one_initcall+0xd6/0x3c0
-  ? __pfx_do_one_initcall+0x10/0x10
-  ? kasan_set_track+0x25/0x30
-  ? rcu_is_watching+0x38/0x60
-  kernel_init_freeable+0x324/0x450
-  ? __pfx_kernel_init+0x10/0x10
-  kernel_init+0x1f/0x1e0
-  ? _raw_spin_unlock_irq+0x33/0x50
-  ret_from_fork+0x34/0x60
-  ? __pfx_kernel_init+0x10/0x10
-  ret_from_fork_asm+0x1b/0x30
-  </TASK>
-
-This is because the synth_event_gen_test_init() left the synthetic events
-that it created enabled. By having it disable them after testing, the
-other selftests will run fine.
-
-Cc: stable@vger.kernel.org
-Fixes: 9fe41efaca084 ("tracing: Add synth event generation test module")
-Reported-by: Alexander Graf <graf@amazon.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/synth_event_gen_test.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/kernel/trace/synth_event_gen_test.c b/kernel/trace/synth_event_gen_test.c
-index 8dfe85499d4a..354c2117be43 100644
---- a/kernel/trace/synth_event_gen_test.c
-+++ b/kernel/trace/synth_event_gen_test.c
-@@ -477,6 +477,17 @@ static int __init synth_event_gen_test_init(void)
- 
- 	ret = test_trace_synth_event();
- 	WARN_ON(ret);
-+
-+	/* Disable when done */
-+	trace_array_set_clr_event(gen_synth_test->tr,
-+				  "synthetic",
-+				  "gen_synth_test", false);
-+	trace_array_set_clr_event(empty_synth_test->tr,
-+				  "synthetic",
-+				  "empty_synth_test", false);
-+	trace_array_set_clr_event(create_synth_test->tr,
-+				  "synthetic",
-+				  "create_synth_test", false);
-  out:
- 	return ret;
- }
 -- 
-2.42.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
