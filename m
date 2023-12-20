@@ -1,26 +1,23 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D354644D;
-	Wed, 20 Dec 2023 16:55:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99994C433C8;
-	Wed, 20 Dec 2023 16:55:01 +0000 (UTC)
-Date: Wed, 20 Dec 2023 11:56:02 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01F14777F;
+	Wed, 20 Dec 2023 17:35:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D875C433C7;
+	Wed, 20 Dec 2023 17:35:44 +0000 (UTC)
+Date: Wed, 20 Dec 2023 12:36:44 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
- Vincent Donnefort <vdonnefort@google.com>, Kent Overstreet
- <kent.overstreet@gmail.com>
-Subject: Re: [PATCH v5 04/15] ring-buffer: Set new size of the ring buffer
- sub page
-Message-ID: <20231220115602.1903bf77@gandalf.local.home>
-In-Reply-To: <20231221013456.cc03acc7b565cfa9a15cbe87@kernel.org>
-References: <20231219185414.474197117@goodmis.org>
-	<20231219185628.588995543@goodmis.org>
-	<20231221013456.cc03acc7b565cfa9a15cbe87@kernel.org>
+To: Bixuan Cui <cuibixuan@vivo.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+ opensource.kernel@vivo.com
+Subject: Re: [PATCH -next v4 2/2] mm: vmscan: add new event to trace shrink
+ lru
+Message-ID: <20231220123644.2a28d162@gandalf.local.home>
+In-Reply-To: <20231220012123.2787-3-cuibixuan@vivo.com>
+References: <20231220012123.2787-1-cuibixuan@vivo.com>
+	<20231220012123.2787-3-cuibixuan@vivo.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -31,36 +28,94 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 21 Dec 2023 01:34:56 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Tue, 19 Dec 2023 17:21:23 -0800
+Bixuan Cui <cuibixuan@vivo.com> wrote:
 
-> On Tue, 19 Dec 2023 13:54:18 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > From: "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
-> > 
-> > There are two approaches when changing the size of the ring buffer
-> > sub page:
-> >  1. Destroying all pages and allocating new pages with the new size.
-> >  2. Allocating new pages, copying the content of the old pages before
-> >     destroying them.
-> > The first approach is easier, it is selected in the proposed
-> > implementation. Changing the ring buffer sub page size is supposed to
-> > not happen frequently. Usually, that size should be set only once,
-> > when the buffer is not in use yet and is supposed to be empty.
-> > 
-> > Link: https://lore.kernel.org/linux-trace-devel/20211213094825.61876-5-tz.stoyanov@gmail.com
-> >   
-> 
-> OK, this actually reallocate the sub buffers when a new order is set.
-> BTW, with this change, if we set a new order, the total buffer size will be
-> changed too? Or reserve the total size? I think either is OK but it should
-> be described in the document. (e.g. if it is changed, user should set the
-> order first and set the total size later.)
-> 
+> diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
+> index b99cd28c9815..02868bdc5999 100644
+> --- a/include/trace/events/vmscan.h
+> +++ b/include/trace/events/vmscan.h
+> @@ -395,7 +395,24 @@ TRACE_EVENT(mm_vmscan_write_folio,
+>  		show_reclaim_flags(__entry->reclaim_flags))
+>  );
+>  
+> -TRACE_EVENT(mm_vmscan_lru_shrink_inactive,
+> +TRACE_EVENT(mm_vmscan_lru_shrink_inactive_start,
+> +
+> +	TP_PROTO(int nid),
+> +
+> +	TP_ARGS(nid),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(int, nid)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->nid = nid;
+> +	),
+> +
+> +	TP_printk("nid=%d", __entry->nid)
+> +);
+> +
+> +TRACE_EVENT(mm_vmscan_lru_shrink_inactive_end,
+>  
+>  	TP_PROTO(int nid,
+>  		unsigned long nr_scanned, unsigned long nr_reclaimed,
+> @@ -446,7 +463,24 @@ TRACE_EVENT(mm_vmscan_lru_shrink_inactive,
+>  		show_reclaim_flags(__entry->reclaim_flags))
+>  );
+>  
+> -TRACE_EVENT(mm_vmscan_lru_shrink_active,
+> +TRACE_EVENT(mm_vmscan_lru_shrink_active_start,
+> +
+> +	TP_PROTO(int nid),
+> +
+> +	TP_ARGS(nid),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(int, nid)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->nid = nid;
+> +	),
+> +
+> +	TP_printk("nid=%d", __entry->nid)
+> +);
+> +
+> +TRACE_EVENT(mm_vmscan_lru_shrink_active_end,
+>  
 
-Patch 11 keeps the same size of the buffer. As I would think that would be
-what the user would expect. And not only that, it breaks the latency
-tracers if it doesn't keep the same size.
+These two events are identical, please use DECLARE_EVENT_CLASS and
+DEFINE_EVENT macros:
+
+DECLARE_EVENT_CLASS(mm_vmscan_lru_shrink_start_template,
+
+	TP_PROTO(int nid),
+
+	TP_ARGS(nid),
+
+	TP_STRUCT__entry(
+		__field(int, nid)
+	),
+
+	TP_fast_assign(
+		__entry->nid = nid;
+	),
+
+	TP_printk("nid=%d", __entry->nid)
+);
+
+DEFINE_EVENT(mm_vmscan_lru_shrink_start_template, mm_vmscan_lru_shrink_inactive_start,
+	TP_PROTO(int nid),
+	TP_ARGS(nid)
+);
+
+DEFINE_EVENT(mm_vmscan_lru_shrink_start_template, mm_vmscan_lru_shrink_active_end,
+	TP_PROTO(int nid),
+	TP_ARGS(nid)
+);
+
+This saves a bit of memory footprint when doing so.
 
 -- Steve
