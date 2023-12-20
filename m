@@ -1,147 +1,64 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308B82575E
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Dec 2023 13:06:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cCCxmkfv"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40c3ceded81so56907905e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Dec 2023 05:06:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1703077570; x=1703682370; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=L1KyF5ztvGlUul0sGfnijy8bLBROmer8p4hV5ot40fg=;
-        b=cCCxmkfvWEpO+dj5MZQIx6h9Ea4Z7G4jBFih2WAmHHIrTqxUzjtookWvXTOxOrejSV
-         88y+EyiAJlfDPv1bprnp48Vd2oa5etEe/HbGx47EQIhBWfvNDCZoZ7BFuha2jOAS6tGr
-         mGLpmEn3wqj9rbNGZLJ0NdffapvxtdDSh2W4mWQP7PnXQ+WhfBSdqNb6W7h53sldgmJl
-         dwPr7h2iFSk8OGpqNT7y4CAHM1eEQ/hgqdSrT/p0iQwEVgYLKVs7JcMPiFNC3OxNoeJU
-         fosds53Lg2mt5n07Xg6kkY28Z2jM2QdlP6VUo9f4E2YdVPXVwO5qToF9CtJHq348n7Cw
-         JYwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703077570; x=1703682370;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L1KyF5ztvGlUul0sGfnijy8bLBROmer8p4hV5ot40fg=;
-        b=S5pqwG7x7I1+OGVF7vzxGyJy9zD+Pl9Ivz+svsj5uGGuCk+9nkjVXkhHz2vvbvQRHU
-         Q/d5AbynkaFoLdt8qLTvjUP43OAV86zU4EhrcIkcLwHEMXcyXS496USayC2CiK6lG4Ia
-         FRIOHJd0w+WF/LTFmkwXmRylS3HWQrmr0XwDKqylBcl/hfrZqcK6dl5TIFrlirqBp34J
-         S75ru3uURPFJcyzcaASWv2RRKxQSQlwtRzaroqCAjuQ7bi1JOLWOPuYkxqVFof9YRJwq
-         Nm8MPy96hHmhhG+p0fd0TP9yovDClYRIQvxcclhD9DvF27E/8RrdRG8pu8b32E4jl2sN
-         vnhw==
-X-Gm-Message-State: AOJu0Yy6mnVQ2DtAASpR7+GXjsOWV1jONSjYz0EbkDmWHnA3n+UuDk4H
-	ywr7d4veeDDcLulEcIf73m5kyg==
-X-Google-Smtp-Source: AGHT+IH3uj24ZNSaD5hcYEFoV2fK8kPLrDBuLewg3RMyX7UU++/1MXG6mYfw+NgWcZzOttdoYQ5I7w==
-X-Received: by 2002:a05:600c:3acd:b0:40d:377c:3b7a with SMTP id d13-20020a05600c3acd00b0040d377c3b7amr513861wms.114.1703077570294;
-        Wed, 20 Dec 2023 05:06:10 -0800 (PST)
-Received: from google.com (109.36.187.35.bc.googleusercontent.com. [35.187.36.109])
-        by smtp.gmail.com with ESMTPSA id c5-20020a05600c0a4500b0040c411da99csm7414902wmq.48.2023.12.20.05.06.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Dec 2023 05:06:09 -0800 (PST)
-Date: Wed, 20 Dec 2023 13:06:06 +0000
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH v8 0/2] Introducing trace buffer mapping by user-space
-Message-ID: <ZYLmvmzLOBfrrsSu@google.com>
-References: <20231219184556.1552951-1-vdonnefort@google.com>
- <20231219153924.2ff9c132@gandalf.local.home>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96802D628;
+	Wed, 20 Dec 2023 13:09:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B878C433C8;
+	Wed, 20 Dec 2023 13:09:28 +0000 (UTC)
+Date: Wed, 20 Dec 2023 08:10:28 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ David Laight <David.Laight@ACULAB.COM>
+Subject: [PATCH] ring-buffer: Remove stale comment from ring_buffer_size()
+Message-ID: <20231220081028.7cd7e8e2@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231219153924.2ff9c132@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Dec 19, 2023 at 03:39:24PM -0500, Steven Rostedt wrote:
-> On Tue, 19 Dec 2023 18:45:54 +0000
-> Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> > The tracing ring-buffers can be stored on disk or sent to network
-> > without any copy via splice. However the later doesn't allow real time
-> > processing of the traces. A solution is to give userspace direct access
-> > to the ring-buffer pages via a mapping. An application can now become a
-> > consumer of the ring-buffer, in a similar fashion to what trace_pipe
-> > offers.
-> > 
-> > Attached to this cover letter an example of consuming read for a
-> > ring-buffer, using libtracefs.
-> > 
-> 
-> I'm still testing this, but I needed to add this patch to fix two bugs. One
-> is that you are calling rb_wakeup_waiters() for both the buffer and the
-> cpu_buffer, and it needs to know which one to use the container_of() macro.
-> 
-> The other is a "goto unlock" that unlocks two locks where only one was taken.
-> 
-> -- Steve
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 35f3736f660b..987ad7bd1e8b 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -389,6 +389,7 @@ struct rb_irq_work {
->  	bool				waiters_pending;
->  	bool				full_waiters_pending;
->  	bool				wakeup_full;
-> +	bool				is_cpu_buffer;
->  };
->  
->  /*
-> @@ -771,10 +772,20 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
->  static void rb_wake_up_waiters(struct irq_work *work)
->  {
->  	struct rb_irq_work *rbwork = container_of(work, struct rb_irq_work, work);
-> -	struct ring_buffer_per_cpu *cpu_buffer =
-> -		container_of(rbwork, struct ring_buffer_per_cpu, irq_work);
-> +	struct ring_buffer_per_cpu *cpu_buffer;
-> +	struct trace_buffer *buffer;
-> +	int cpu;
->  
-> -	rb_update_meta_page(cpu_buffer);
-> +	if (rbwork->is_cpu_buffer) {
-> +		cpu_buffer = container_of(rbwork, struct ring_buffer_per_cpu, irq_work);
-> +		rb_update_meta_page(cpu_buffer);
-> +	} else {
-> +		buffer = container_of(rbwork, struct trace_buffer, irq_work);
-> +		for_each_buffer_cpu(buffer, cpu) {
-> +			cpu_buffer = buffer->buffers[cpu];
-> +			rb_update_meta_page(cpu_buffer);
-> +		}
-> +	}
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Arg, somehow never reproduced the problem :-\. I suppose you need to cat
-trace/trace_pipe and mmap(trace/cpuX/trace_pipe) at the same time?
+It's been 11 years since the ring_buffer_size() function was updated to
+use the nr_pages from the buffer->buffers[cpu] structure instead of using
+the buffer->nr_pages that no longer exists.
 
-Updating the meta-page is only useful if the reader we are waking up is a
-user-space one, which would only happen with the cpu_buffer version of this
-function. We could limit the update of the meta_page only to this case?
+The comment in the code is more of what a change log should have and is
+pretty much useless for development. It's saying how things worked back in
+2012 that bares no purpose on today's code. Remove it.
 
->  
->  	wake_up_all(&rbwork->waiters);
->  	if (rbwork->full_waiters_pending || rbwork->wakeup_full) {
-> @@ -1569,6 +1580,7 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
->  	init_waitqueue_head(&cpu_buffer->irq_work.waiters);
->  	init_waitqueue_head(&cpu_buffer->irq_work.full_waiters);
->  	mutex_init(&cpu_buffer->mapping_lock);
-> +	cpu_buffer->irq_work.is_cpu_buffer = true;
->  
->  	bpage = kzalloc_node(ALIGN(sizeof(*bpage), cache_line_size()),
->  			    GFP_KERNEL, cpu_to_node(cpu));
-> @@ -6209,7 +6221,8 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu)
->  
->  	if (cpu_buffer->mapped) {
->  		WRITE_ONCE(cpu_buffer->mapped, cpu_buffer->mapped + 1);
-> -		goto unlock;
-> +		mutex_unlock(&cpu_buffer->mapping_lock);
-> +		return 0;
->  	}
->  
->  	/* prevent another thread from changing buffer sizes */
+Link: https://lore.kernel.org/linux-trace-kernel/84d3b41a72bd43dbb9d44921ef535c92@AcuMS.aculab.com/
+
+Reported-by: David Laight <David.Laight@ACULAB.COM>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 173d2595ce2d..7887d61d5b56 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -5122,12 +5122,6 @@ EXPORT_SYMBOL_GPL(ring_buffer_iter_advance);
+  */
+ unsigned long ring_buffer_size(struct trace_buffer *buffer, int cpu)
+ {
+-	/*
+-	 * Earlier, this method returned
+-	 *	buffer->subbuf_size * buffer->nr_pages
+-	 * Since the nr_pages field is now removed, we have converted this to
+-	 * return the per cpu buffer value.
+-	 */
+ 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+ 		return 0;
+ 
+-- 
+2.42.0
+
