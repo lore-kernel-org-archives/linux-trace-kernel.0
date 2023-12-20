@@ -1,155 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E395E1F5FF;
-	Wed, 20 Dec 2023 09:48:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3AB9210F8
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Dec 2023 11:05:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aAdQFac6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3166FC433C8;
-	Wed, 20 Dec 2023 09:48:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703065728;
-	bh=wJiQg+u749YBBw4wmY0qJj3zwBAd7kxmoLP3xzWnTMA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=aAdQFac69rgV1g//Rszj1gYUTlrhwYsrYR+0s7Nzt8odxsu0XcLGPn2jB/4KwO1eb
-	 hykRs9n6dlquwNRSq466xQUFGNpkwK0eiNrhJOmon9tWp5XCEFG3IHzynh78XfE7T2
-	 o7C/SUn7jMxx7C6JQGvP5yl6X/kpR/snQ6dGBLXM6bCYrb8TsFaRFF2yy6Jpdd5kQ9
-	 zvFrRwtOYanlhGhtO9Dys5IKQMwxdBfA7WdycfMsRYgEhYGT1H82/trAzsus9pmcuM
-	 SAGb5qX1DKsw71joZPRDn0RYbq9fwwzXdc254KWkjboslxzbt4gEeRUuE0jRrT/0n7
-	 Yht4XiC229FnA==
-Date: Wed, 20 Dec 2023 18:48:43 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
- Vincent Donnefort <vdonnefort@google.com>, Kent Overstreet
- <kent.overstreet@gmail.com>
-Subject: Re: [PATCH v5 01/15] ring-buffer: Refactor ring buffer
- implementation
-Message-Id: <20231220184843.163d60de46f82b7b4ee01d3d@kernel.org>
-In-Reply-To: <20231219185627.723857541@goodmis.org>
-References: <20231219185414.474197117@goodmis.org>
-	<20231219185627.723857541@goodmis.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZLsOLMp6"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-67f0d22e4faso40027156d6.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Dec 2023 03:05:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1703070308; x=1703675108; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aRuOb3thPKxS5ftTwWuPZVBwpG9dfs4GXpoJ1hD7vC0=;
+        b=ZLsOLMp6hN5xMThNv+as6Ms91ht4Hg8idXzILP4u9tIFPo+5rHRXxllusclBYIXajE
+         Taub7AAXqVnoQI3f+fLXz1Gp0AxFveNNF0bNkr8eTL/zMqrVufk8w5ZNjCo+t1tZ8qv8
+         t8z5nthKMJW+gMkBUyv+fkxw3IDtvvaXbfvz6qO0TtjPZ/NLkiMZzcomXP3VmwV5CiRQ
+         UTKG35J2uNwTtYgyXGpycBAz1Ubbiix2cIl1KNmNuETV61LRgb3U//dbRzVATravzLY2
+         7cwjvRQh5zkoshl6AuNy4Yj/qGDO3V1Z+x9I8CvRuIbJouB2zBFCjxFaSRojVcxHE5UK
+         ufRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703070308; x=1703675108;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aRuOb3thPKxS5ftTwWuPZVBwpG9dfs4GXpoJ1hD7vC0=;
+        b=JJ1f7fCObsLhL3QDWAQZ/CI8UsG3qG4uzcdVJ0yHh36yKgs9StpwBd5zYL94wlQMIo
+         QmMDcdI1TJkjMwLhpCWbfKRdX7HcqQQO3JorHPFYwEUHvJ1tONx/5f1NiVHcDBhwkHx7
+         Q0gSHZoU6U54lqLRxhEqmLojgEPQ1Ou8kQQPLcD94oQdSdr15VYrM0j2r2il3eEX+Okg
+         WVOLDDU6aKcdfQ20U3OfX6EvQ8BZ7Bv8QZzDrlybW6oKccBriGNv2fNuoEZTy5FYBfv8
+         JaVKc5niQKZZfy3CeO48G9KCIWC3y7OLuu3GKGZ6iCzf3Jg85zU20man0WgBWmaDWod6
+         zUvA==
+X-Gm-Message-State: AOJu0YysMgnWeBgEH7RrNhsnxs+6Tgkm19vbSqbtroXOawCBtMED9oPf
+	1Qhoa8qgANWYHqZeWKrC3NFD07fNMqINQ3g6Q2E8qg==
+X-Google-Smtp-Source: AGHT+IGM1DvhNsHIpLRzl7TLlRhf+sSCR6McpSC15tKPCcbFJwj7U8mFeDmNKOAesBXFyLQOLaIWCh6aAZXNFJ7pswI=
+X-Received: by 2002:ad4:5dca:0:b0:67f:143d:b8ca with SMTP id
+ m10-20020ad45dca000000b0067f143db8camr12635720qvh.44.1703070308403; Wed, 20
+ Dec 2023 03:05:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20231213233605.661251-1-iii@linux.ibm.com> <20231213233605.661251-25-iii@linux.ibm.com>
+In-Reply-To: <20231213233605.661251-25-iii@linux.ibm.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Wed, 20 Dec 2023 12:04:28 +0100
+Message-ID: <CAG_fn=X_MejbvJRG7qYih+qrL6D0hrJW7czfAJbOdY5ES4JyiA@mail.gmail.com>
+Subject: Re: [PATCH v3 24/34] s390/cpumf: Unpoison STCCTM output buffer
+To: Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 19 Dec 2023 13:54:15 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> From: "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
-> 
-> In order to introduce sub-buffer size per ring buffer, some internal
-> refactoring is needed. As ring_buffer_print_page_header() will depend on
-> the trace_buffer structure, it is moved after the structure definition.
-> 
-> Link: https://lore.kernel.org/linux-trace-devel/20211213094825.61876-2-tz.stoyanov@gmail.com
-> 
-
-OK, but the title is too generic. Something like 
-"Move ring_buffer_print_page_header() after ring_buffer_iter"
-will be preferable.
-
-Thank you,
-
-
-> Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/ring_buffer.c | 60 +++++++++++++++++++-------------------
->  1 file changed, 30 insertions(+), 30 deletions(-)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index f7dc74e45ebf..2400c8e68fd3 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -379,36 +379,6 @@ static inline bool test_time_stamp(u64 delta)
->  /* Max payload is BUF_PAGE_SIZE - header (8bytes) */
->  #define BUF_MAX_DATA_SIZE (BUF_PAGE_SIZE - (sizeof(u32) * 2))
->  
-> -int ring_buffer_print_page_header(struct trace_seq *s)
-> -{
-> -	struct buffer_data_page field;
-> -
-> -	trace_seq_printf(s, "\tfield: u64 timestamp;\t"
-> -			 "offset:0;\tsize:%u;\tsigned:%u;\n",
-> -			 (unsigned int)sizeof(field.time_stamp),
-> -			 (unsigned int)is_signed_type(u64));
-> -
-> -	trace_seq_printf(s, "\tfield: local_t commit;\t"
-> -			 "offset:%u;\tsize:%u;\tsigned:%u;\n",
-> -			 (unsigned int)offsetof(typeof(field), commit),
-> -			 (unsigned int)sizeof(field.commit),
-> -			 (unsigned int)is_signed_type(long));
-> -
-> -	trace_seq_printf(s, "\tfield: int overwrite;\t"
-> -			 "offset:%u;\tsize:%u;\tsigned:%u;\n",
-> -			 (unsigned int)offsetof(typeof(field), commit),
-> -			 1,
-> -			 (unsigned int)is_signed_type(long));
-> -
-> -	trace_seq_printf(s, "\tfield: char data;\t"
-> -			 "offset:%u;\tsize:%u;\tsigned:%u;\n",
-> -			 (unsigned int)offsetof(typeof(field), data),
-> -			 (unsigned int)BUF_PAGE_SIZE,
-> -			 (unsigned int)is_signed_type(char));
-> -
-> -	return !trace_seq_has_overflowed(s);
-> -}
-> -
->  struct rb_irq_work {
->  	struct irq_work			work;
->  	wait_queue_head_t		waiters;
-> @@ -556,6 +526,36 @@ struct ring_buffer_iter {
->  	int				missed_events;
->  };
->  
-> +int ring_buffer_print_page_header(struct trace_seq *s)
-> +{
-> +	struct buffer_data_page field;
-> +
-> +	trace_seq_printf(s, "\tfield: u64 timestamp;\t"
-> +			 "offset:0;\tsize:%u;\tsigned:%u;\n",
-> +			 (unsigned int)sizeof(field.time_stamp),
-> +			 (unsigned int)is_signed_type(u64));
-> +
-> +	trace_seq_printf(s, "\tfield: local_t commit;\t"
-> +			 "offset:%u;\tsize:%u;\tsigned:%u;\n",
-> +			 (unsigned int)offsetof(typeof(field), commit),
-> +			 (unsigned int)sizeof(field.commit),
-> +			 (unsigned int)is_signed_type(long));
-> +
-> +	trace_seq_printf(s, "\tfield: int overwrite;\t"
-> +			 "offset:%u;\tsize:%u;\tsigned:%u;\n",
-> +			 (unsigned int)offsetof(typeof(field), commit),
-> +			 1,
-> +			 (unsigned int)is_signed_type(long));
-> +
-> +	trace_seq_printf(s, "\tfield: char data;\t"
-> +			 "offset:%u;\tsize:%u;\tsigned:%u;\n",
-> +			 (unsigned int)offsetof(typeof(field), data),
-> +			 (unsigned int)BUF_PAGE_SIZE,
-> +			 (unsigned int)is_signed_type(char));
-> +
-> +	return !trace_seq_has_overflowed(s);
-> +}
-> +
->  static inline void rb_time_read(rb_time_t *t, u64 *ret)
->  {
->  	*ret = local64_read(&t->time);
-> -- 
-> 2.42.0
-> 
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Thu, Dec 14, 2023 at 12:37=E2=80=AFAM Ilya Leoshkevich <iii@linux.ibm.co=
+m> wrote:
+>
+> stcctm() uses the "Q" constraint for dest, therefore KMSAN does not
+> understand that it fills multiple doublewords pointed to by dest, not
+> just one. This results in false positives.
+>
+> Unpoison the whole dest manually with kmsan_unpoison_memory().
+>
+> Reported-by: Alexander Gordeev <agordeev@linux.ibm.com>
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Reviewed-by: Alexander Potapenko <glider@google.com>
