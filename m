@@ -1,18 +1,18 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBB5BA2F;
-	Thu, 21 Dec 2023 17:50:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44821C433C8;
-	Thu, 21 Dec 2023 17:50:21 +0000 (UTC)
-Date: Thu, 21 Dec 2023 12:51:24 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2DE864A83;
+	Thu, 21 Dec 2023 17:57:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA2CDC433C7;
+	Thu, 21 Dec 2023 17:57:09 +0000 (UTC)
+Date: Thu, 21 Dec 2023 12:58:13 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Vincent Donnefort <vdonnefort@google.com>
 Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org, kernel-team@android.com
 Subject: Re: [PATCH v9 1/2] ring-buffer: Introducing ring-buffer mapping
  functions
-Message-ID: <20231221125124.49ee8201@gandalf.local.home>
+Message-ID: <20231221125813.673293a2@gandalf.local.home>
 In-Reply-To: <20231221173523.3015715-2-vdonnefort@google.com>
 References: <20231221173523.3015715-1-vdonnefort@google.com>
 	<20231221173523.3015715-2-vdonnefort@google.com>
@@ -29,102 +29,62 @@ Content-Transfer-Encoding: 7bit
 On Thu, 21 Dec 2023 17:35:22 +0000
 Vincent Donnefort <vdonnefort@google.com> wrote:
 
-> @@ -739,6 +747,22 @@ static __always_inline bool full_hit(struct trace_buffer *buffer, int cpu, int f
->  	return (dirty * 100) > (full * nr_pages);
+> @@ -5999,6 +6078,307 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
 >  }
+>  EXPORT_SYMBOL_GPL(ring_buffer_subbuf_order_set);
 >  
-> +static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+
+The kernel developers have agreed to allow loop variables to be declared in
+loops. This will simplify these macros:
+
+
+
+> +#define subbuf_page(off, start) \
+> +	virt_to_page((void *)(start + (off << PAGE_SHIFT)))
+> +
+> +#define foreach_subbuf_page(off, sub_order, start, page)	\
+> +	for (off = 0, page = subbuf_page(0, start);		\
+> +	     off < (1 << sub_order);				\
+> +	     off++, page = subbuf_page(off, start))
+
+#define foreach_subbuf_page(sub_order, start, page)		\
+	for (int __off = 0, page = subbuf_page(0, (start));	\
+	     __off < (1 << (sub_order));			\
+	     __off++, page = subbuf_page(__off, (start)))
+
+And parameters as r-values should always be wrapped in parenthesis.
+
+> +
+> +static inline void subbuf_map_prepare(unsigned long subbuf_start, int order)
 > +{
-> +	if (unlikely(READ_ONCE(cpu_buffer->mapped))) {
-> +		/* Ensure the meta_page is ready */
-> +		smp_rmb();
-> +		WRITE_ONCE(cpu_buffer->meta_page->entries,
-> +			   local_read(&cpu_buffer->entries));
-> +		WRITE_ONCE(cpu_buffer->meta_page->overrun,
-> +			   local_read(&cpu_buffer->overrun));
-> +		WRITE_ONCE(cpu_buffer->meta_page->subbufs_touched,
-> +			   local_read(&cpu_buffer->pages_touched));
-> +		WRITE_ONCE(cpu_buffer->meta_page->subbufs_lost,
-> +			   local_read(&cpu_buffer->pages_lost));
+> +	struct page *page;
+> +	int subbuf_off;
+
+Then you can remove the "subbuf_off".
+
+> +
+> +	/*
+> +	 * When allocating order > 0 pages, only the first struct page has a
+> +	 * refcount > 1. Increasing the refcount here ensures none of the struct
+> +	 * page composing the sub-buffer is freeed when the mapping is closed.
+
+Nice catch by the way ;-)
+
+-- Steve
+
+> +	 */
+> +	foreach_subbuf_page(subbuf_off, order, subbuf_start, page)
+> +		page_ref_inc(page);
+> +}
+> +
+> +static inline void subbuf_unmap(unsigned long subbuf_start, int order)
+> +{
+> +	struct page *page;
+> +	int subbuf_off;
+> +
+> +	foreach_subbuf_page(subbuf_off, order, subbuf_start, page) {
+> +		page_ref_dec(page);
+> +		page->mapping = NULL;
 > +	}
 > +}
 > +
->  /*
->   * rb_wake_up_waiters - wake up tasks waiting for ring buffer input
->   *
-> @@ -749,6 +773,18 @@ static void rb_wake_up_waiters(struct irq_work *work)
->  {
->  	struct rb_irq_work *rbwork = container_of(work, struct rb_irq_work, work);
->  
-> +	if (rbwork->is_cpu_buffer) {
-> +		struct ring_buffer_per_cpu *cpu_buffer;
-> +
-> +		cpu_buffer = container_of(rbwork, struct ring_buffer_per_cpu,
-> +					  irq_work);
-> +		/*
-> +		 * If the waiter is a cpu_buffer, this might be due to a
-> +		 * userspace mapping. Let's update the meta-page.
-> +		 */
-> +		rb_update_meta_page(cpu_buffer);
-> +	}
-> +
->  	wake_up_all(&rbwork->waiters);
->  	if (rbwork->full_waiters_pending || rbwork->wakeup_full) {
->  		rbwork->wakeup_full = false;
-
-
-I think this code would be cleaner if we did:
-
-static void rb_update_meta_page(strucrt rb_irq_work *rbwork)
-{
-	struct ring_buffer_per_cpu *cpu_buffer;
-
-	if (!rbwork->is_cpu_buffer)
-		return;
-
-	/*
-	 * If the waiter is a cpu_buffer, this might be due to a
-	 * userspace mapping. Let's update the meta-page.
-	 */
-	cpu_buffer = container_of(rbwork, struct ring_buffer_per_cpu,
-				  irq_work);
-
-	if (unlikely(READ_ONCE(cpu_buffer->mapped))) {
-
-// I don't think we need the "unlikely"
-
-		/* Ensure the meta_page is ready */
-		smp_rmb();
-		WRITE_ONCE(cpu_buffer->meta_page->entries,
-			   local_read(&cpu_buffer->entries));
-		WRITE_ONCE(cpu_buffer->meta_page->overrun,
-			   local_read(&cpu_buffer->overrun));
-		WRITE_ONCE(cpu_buffer->meta_page->subbufs_touched,
-			   local_read(&cpu_buffer->pages_touched));
-		WRITE_ONCE(cpu_buffer->meta_page->subbufs_lost,
-			   local_read(&cpu_buffer->pages_lost));
-	}
-}
-
-/*
- * rb_wake_up_waiters - wake up tasks waiting for ring buffer input
- *
- * Schedules a delayed work to wake up any task that is blocked on the
- * ring buffer waiters queue.
- */
-static void rb_wake_up_waiters(struct irq_work *work)
-{
-	struct rb_irq_work *rbwork = container_of(work, struct rb_irq_work, work);
-
-	rb_update_meta_page(cpu_buffer);
-
-	wake_up_all(&rbwork->waiters);
-	if (rbwork->full_waiters_pending || rbwork->wakeup_full) {
-		rbwork->wakeup_full = false;
-		rbwork->full_waiters_pending = false;
-		wake_up_all(&rbwork->full_waiters);
-	}
-}
-
-
--- Steve
