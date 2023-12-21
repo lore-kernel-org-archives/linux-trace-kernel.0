@@ -1,90 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2DE864A83;
-	Thu, 21 Dec 2023 17:57:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA2CDC433C7;
-	Thu, 21 Dec 2023 17:57:09 +0000 (UTC)
-Date: Thu, 21 Dec 2023 12:58:13 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH v9 1/2] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <20231221125813.673293a2@gandalf.local.home>
-In-Reply-To: <20231221173523.3015715-2-vdonnefort@google.com>
-References: <20231221173523.3015715-1-vdonnefort@google.com>
-	<20231221173523.3015715-2-vdonnefort@google.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E11651AC;
+	Thu, 21 Dec 2023 19:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6dbb09061c0so208162a34.0;
+        Thu, 21 Dec 2023 11:57:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703188639; x=1703793439;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lQyApPo3WHA9WK0JdlyYLGUay3XOd+TgnZOYmPZErh0=;
+        b=a+iMOe38goYXZ63lHpP7KGSSeWa+dZ+BKeZ4QjJKDI06F5Bc6CUhGWNkkMZQ6vuDIx
+         joOkYtyiP5wCRrHfycUxndLLxEzuMkIHakh50VhDzwrv4S1t91sWQXtTGyDgr+WQ1fE0
+         w0wDG47UxqGMf62SyWp4eMQG0/KZWUVH6RcnZmTtWCFbSUgBKvPjeTDzti1khjd3rqQu
+         cGCulBA7+j88QdZ0hSP0j2VjE0UHVoeTj000Av3HbDwvCuez7Qya+FY8BPtdbNlIbgh6
+         gg6TER5Z5W7SaBLvt1kwWkRYeS6ADQ0qj8IoiGp5/95PG4gt9L2GkcFMR1XtOuF3iUGL
+         MKZw==
+X-Gm-Message-State: AOJu0Yw5fUG5Wj0ZSHWyOup1i4mTZdkaooHmZA6VvGvMn6hcqDsNSmGu
+	E0wA6VCqqgp155FZr9EWm3fEE3CnWsLTuZ9IKRi6CyRM
+X-Google-Smtp-Source: AGHT+IFbxgKuMTLxtgCb3LuZNckAkALMWFlfsK4xQp5rtqhYaPIWoMdg0+HnI3vNWFl4+2ln5EgM4TTRuzXaEWTxwKI=
+X-Received: by 2002:a4a:dcd1:0:b0:591:4861:6b02 with SMTP id
+ h17-20020a4adcd1000000b0059148616b02mr334797oou.1.1703188639115; Thu, 21 Dec
+ 2023 11:57:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20231221152407.436177-1-vincent.guittot@linaro.org> <20231221152407.436177-2-vincent.guittot@linaro.org>
+In-Reply-To: <20231221152407.436177-2-vincent.guittot@linaro.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 21 Dec 2023 20:57:08 +0100
+Message-ID: <CAJZ5v0iU+nx_Tk_K74=dfeOuA7Lyvbq51UW=U1L4mZVEKy-+ZQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] cpufreq: Add a cpufreq pressure feedback for the scheduler
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: catalin.marinas@arm.com, will@kernel.org, sudeep.holla@arm.com, 
+	rafael@kernel.org, viresh.kumar@linaro.org, agross@kernel.org, 
+	andersson@kernel.org, konrad.dybcio@linaro.org, mingo@redhat.com, 
+	peterz@infradead.org, juri.lelli@redhat.com, dietmar.eggemann@arm.com, 
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, bristot@redhat.com, 
+	vschneid@redhat.com, lukasz.luba@arm.com, rui.zhang@intel.com, 
+	mhiramat@kernel.org, daniel.lezcano@linaro.org, amit.kachhap@gmail.com, 
+	linux@armlinux.org.uk, corbet@lwn.net, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 21 Dec 2023 17:35:22 +0000
-Vincent Donnefort <vdonnefort@google.com> wrote:
-
-> @@ -5999,6 +6078,307 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+On Thu, Dec 21, 2023 at 4:24=E2=80=AFPM Vincent Guittot
+<vincent.guittot@linaro.org> wrote:
+>
+> Provide to the scheduler a feedback about the temporary max available
+> capacity. Unlike arch_update_thermal_pressure, this doesn't need to be
+> filtered as the pressure will happen for dozens ms or more.
+>
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
+>  drivers/cpufreq/cpufreq.c | 34 ++++++++++++++++++++++++++++++++++
+>  include/linux/cpufreq.h   | 10 ++++++++++
+>  2 files changed, 44 insertions(+)
+>
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 44db4f59c4cc..15bd41f9bb5e 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -2563,6 +2563,38 @@ int cpufreq_get_policy(struct cpufreq_policy *poli=
+cy, unsigned int cpu)
 >  }
->  EXPORT_SYMBOL_GPL(ring_buffer_subbuf_order_set);
->  
-
-The kernel developers have agreed to allow loop variables to be declared in
-loops. This will simplify these macros:
-
-
-
-> +#define subbuf_page(off, start) \
-> +	virt_to_page((void *)(start + (off << PAGE_SHIFT)))
+>  EXPORT_SYMBOL(cpufreq_get_policy);
+>
+> +DEFINE_PER_CPU(unsigned long, cpufreq_pressure);
 > +
-> +#define foreach_subbuf_page(off, sub_order, start, page)	\
-> +	for (off = 0, page = subbuf_page(0, start);		\
-> +	     off < (1 << sub_order);				\
-> +	     off++, page = subbuf_page(off, start))
-
-#define foreach_subbuf_page(sub_order, start, page)		\
-	for (int __off = 0, page = subbuf_page(0, (start));	\
-	     __off < (1 << (sub_order));			\
-	     __off++, page = subbuf_page(__off, (start)))
-
-And parameters as r-values should always be wrapped in parenthesis.
-
-> +
-> +static inline void subbuf_map_prepare(unsigned long subbuf_start, int order)
+> +/**
+> + * cpufreq_update_pressure() - Update cpufreq pressure for CPUs
+> + * @policy: cpufreq policy of the CPUs.
+> + *
+> + * Update the value of cpufreq pressure for all @cpus in the policy.
+> + */
+> +static void cpufreq_update_pressure(struct cpufreq_policy *policy)
 > +{
-> +	struct page *page;
-> +	int subbuf_off;
-
-Then you can remove the "subbuf_off".
-
+> +       unsigned long max_capacity, capped_freq, pressure;
+> +       u32 max_freq;
+> +       int cpu;
 > +
-> +	/*
-> +	 * When allocating order > 0 pages, only the first struct page has a
-> +	 * refcount > 1. Increasing the refcount here ensures none of the struct
-> +	 * page composing the sub-buffer is freeed when the mapping is closed.
+> +       cpu =3D cpumask_first(policy->related_cpus);
+> +       pressure =3D max_capacity =3D arch_scale_cpu_capacity(cpu);
 
-Nice catch by the way ;-)
+I would prefer two separate statements instead of the above.
 
--- Steve
+Other than this
 
-> +	 */
-> +	foreach_subbuf_page(subbuf_off, order, subbuf_start, page)
-> +		page_ref_inc(page);
+Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+
+> +       capped_freq =3D policy->max;
+> +       max_freq =3D arch_scale_freq_ref(cpu);
+> +
+> +       /*
+> +        * Handle properly the boost frequencies, which should simply cle=
+an
+> +        * the thermal pressure value.
+> +        */
+> +       if (max_freq <=3D capped_freq)
+> +               pressure -=3D max_capacity;
+> +       else
+> +               pressure -=3D mult_frac(max_capacity, capped_freq, max_fr=
+eq);
+> +
+> +       for_each_cpu(cpu, policy->related_cpus)
+> +               WRITE_ONCE(per_cpu(cpufreq_pressure, cpu), pressure);
 > +}
 > +
-> +static inline void subbuf_unmap(unsigned long subbuf_start, int order)
+>  /**
+>   * cpufreq_set_policy - Modify cpufreq policy parameters.
+>   * @policy: Policy object to modify.
+> @@ -2618,6 +2650,8 @@ static int cpufreq_set_policy(struct cpufreq_policy=
+ *policy,
+>         policy->max =3D __resolve_freq(policy, policy->max, CPUFREQ_RELAT=
+ION_H);
+>         trace_cpu_frequency_limits(policy);
+>
+> +       cpufreq_update_pressure(policy);
+> +
+>         policy->cached_target_freq =3D UINT_MAX;
+>
+>         pr_debug("new min and max freqs are %u - %u kHz\n",
+> diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+> index afda5f24d3dd..b1d97edd3253 100644
+> --- a/include/linux/cpufreq.h
+> +++ b/include/linux/cpufreq.h
+> @@ -241,6 +241,12 @@ struct kobject *get_governor_parent_kobj(struct cpuf=
+req_policy *policy);
+>  void cpufreq_enable_fast_switch(struct cpufreq_policy *policy);
+>  void cpufreq_disable_fast_switch(struct cpufreq_policy *policy);
+>  bool has_target_index(void);
+> +
+> +DECLARE_PER_CPU(unsigned long, cpufreq_pressure);
+> +static inline unsigned long cpufreq_get_pressure(int cpu)
 > +{
-> +	struct page *page;
-> +	int subbuf_off;
-> +
-> +	foreach_subbuf_page(subbuf_off, order, subbuf_start, page) {
-> +		page_ref_dec(page);
-> +		page->mapping = NULL;
-> +	}
+> +       return per_cpu(cpufreq_pressure, cpu);
 > +}
-> +
+>  #else
+>  static inline unsigned int cpufreq_get(unsigned int cpu)
+>  {
+> @@ -263,6 +269,10 @@ static inline bool cpufreq_supports_freq_invariance(=
+void)
+>         return false;
+>  }
+>  static inline void disable_cpufreq(void) { }
+> +static inline unsigned long cpufreq_get_pressure(int cpu)
+> +{
+> +       return 0;
+> +}
+>  #endif
+>
+>  #ifdef CONFIG_CPU_FREQ_STAT
+> --
+> 2.34.1
+>
