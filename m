@@ -1,75 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8998F40;
-	Fri, 22 Dec 2023 04:11:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C921773B
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 22 Dec 2023 11:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fyecIRAH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEE59C433C8;
-	Fri, 22 Dec 2023 04:11:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703218303;
-	bh=cOh3HqqN/2o8/n2h2oZTCxQJgNUcu+nvKLVUPxkxR9A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fyecIRAHClOG27LegLH1Ex/LySYEE4G/pZSZt0zXQ5TAJKrFh4K5rRCdGqQTHDHH2
-	 qOs3zAyZIbZnLRwS7Ib8BUURWdnbGay4eijigoL4dGFYxqQ9DFoWRIXGSUvUFWFbml
-	 KskgJftD3Bs5gbU69H8lsP2qHQqgbfqqRziGc2VcSlsDslo/2jA5U7fvjLwz9YpfRE
-	 lUxqJ8A6KSoRyBtupp8XDRhlttKeWAlppLhH+TXjuCsE84u+8hUUx2bVeuH4Q0vTks
-	 RUAiuXW+xVPvr3670Ie8WAlrKjRLdF0Ro0B6txKcYr9oDSQiQt1rdMXDCvVDxcrRnY
-	 wwXGnLw2Xr4jA==
-Date: Fri, 22 Dec 2023 13:11:39 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, Linux
- selftests <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH v2] tracing/selftests: Add ownership modification tests
- for eventfs
-Message-Id: <20231222131139.26fe6dea8524016d4f3251a4@kernel.org>
-In-Reply-To: <20231221210757.112aa4e8@gandalf.local.home>
-References: <20231221194516.53e1ee43@gandalf.local.home>
-	<20231222102148.2aa3863d7c11f3928549335a@kernel.org>
-	<20231221202813.38ef5664@gandalf.local.home>
-	<20231222104841.1d1b306c989070f82c672d89@kernel.org>
-	<20231222105200.e73d58640d8be7da89331deb@kernel.org>
-	<20231221210757.112aa4e8@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sEtBWDud"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-67f6272e7c6so10507876d6.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 22 Dec 2023 03:28:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1703244510; x=1703849310; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1p7KqUeaWemOFaHH+JSolT+/fQ/fl1zP2/9KT4NrzQs=;
+        b=sEtBWDude6HWs19lafdbEKl2ITBZWLxnvBlNmD1wXKZRmQ5Fw700bLGgf1AgDjWYZI
+         p90Mot4L/KBL+CRZVWTkC7Q73Pnwq9Fn8mrQ+2z2D1IKCz+monFQE3vXKu8LSaWONASH
+         DUdNuMayUvwttB4B1a3DbD4x0tvatna2N2PIgbD6L7KfntPLk6REcVazi5nOKmgbiMLr
+         Kzca5tZZ+skU6Gs8xc2wuKmNZrghaZuxG8ATJNGohgNcRDovDQl+6Iw5N/hSByDjtGbr
+         s3RmOugWDoBjZtttca7+aCFdMHerhCO9QUQyYRSlb7gG6A+YmDM7uqoWayUyvAFq24wi
+         fODw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703244510; x=1703849310;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1p7KqUeaWemOFaHH+JSolT+/fQ/fl1zP2/9KT4NrzQs=;
+        b=t/zEL1QPstA/Su9zblhfhMsED8ziCpeaHHGzb0stjy+Ra8Jia+HlrZ4EV0Rg+6zEzr
+         /xq7701y6FhtXGGTXPLG512l7+z1ZIauRwk2JNqwDDIBA4+2kVodTlEwhOJpJy61epdw
+         9zmUODpU0HNi8sWobG9T3rqjuAW6KeIQwfZUP/JSUmVKeUwmPukXkFTBPacwC8u5ueKF
+         FP1TTNY8FcP17/TFEYh50br7u5l61oj/ZSOBJsjHaYyhjF6kff/K7VcM/FFN+Ky5q3ln
+         wDUi9gkDkydAte7vp9tmkUSHk1aYPdTx3g37qIx8diXHujb+cSDHJLLIgcT0D3wMC5Ix
+         nxFw==
+X-Gm-Message-State: AOJu0YyjURpz7WyjLvghpqmLxZoMHCaFASH8Jb8qqLLvolCIPGr99kZI
+	l60VoldI/5usokvRwaFygiXhxH/aWZFKwPLn3O0VWTCeyi0y
+X-Google-Smtp-Source: AGHT+IHPji95ha6HR/0zNsyc4lcIIhIIZ0QuPDK3fEve1mQsC16ko8lq10eB/oWPfvvIAqy7RvyLZOYcE5PauCz3ktA=
+X-Received: by 2002:a05:6214:62a:b0:67f:9eb:f1ec with SMTP id
+ a10-20020a056214062a00b0067f09ebf1ecmr1541233qvx.56.1703244510192; Fri, 22
+ Dec 2023 03:28:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20231213233605.661251-1-iii@linux.ibm.com> <20231213233605.661251-28-iii@linux.ibm.com>
+In-Reply-To: <20231213233605.661251-28-iii@linux.ibm.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Fri, 22 Dec 2023 12:27:50 +0100
+Message-ID: <CAG_fn=VfYNpMynQtXiKemoDy3LjH5Hn8N-VpzH6AGVZ3jDHPUQ@mail.gmail.com>
+Subject: Re: [PATCH v3 27/34] s390/irqflags: Do not instrument
+ arch_local_irq_*() with KMSAN
+To: Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Pekka Enberg <penberg@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-s390@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Sven Schnelle <svens@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 21 Dec 2023 21:07:57 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Fri, 22 Dec 2023 10:52:00 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > On Fri, 22 Dec 2023 10:48:41 +0900
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > And I confirmed that this test passed on v6.5.13 with that change.
-> > 
-> 
-> I just ran it on 6.5.13 and it took *forever*!
-> 
-> But I do have a bit of debug, and before 6.6 creating the instance and
-> deleting it required creating and deleting thousands of inodes and dentries.
-
-Hmm, it may depends on the machine. I could ran it (on 64 vcpu VM)
-
-Thank you,
-
-> 
-> -- Steve
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Thu, Dec 14, 2023 at 12:36=E2=80=AFAM Ilya Leoshkevich <iii@linux.ibm.co=
+m> wrote:
+>
+> KMSAN generates the following false positives on s390x:
+>
+> [    6.063666] DEBUG_LOCKS_WARN_ON(lockdep_hardirqs_enabled())
+> [         ...]
+> [    6.577050] Call Trace:
+> [    6.619637]  [<000000000690d2de>] check_flags+0x1fe/0x210
+> [    6.665411] ([<000000000690d2da>] check_flags+0x1fa/0x210)
+> [    6.707478]  [<00000000006cec1a>] lock_acquire+0x2ca/0xce0
+> [    6.749959]  [<00000000069820ea>] _raw_spin_lock_irqsave+0xea/0x190
+> [    6.794912]  [<00000000041fc988>] __stack_depot_save+0x218/0x5b0
+> [    6.838420]  [<000000000197affe>] __msan_poison_alloca+0xfe/0x1a0
+> [    6.882985]  [<0000000007c5827c>] start_kernel+0x70c/0xd50
+> [    6.927454]  [<0000000000100036>] startup_continue+0x36/0x40
+>
+> Between trace_hardirqs_on() and `stosm __mask, 3` lockdep thinks that
+> interrupts are on, but on the CPU they are still off. KMSAN
+> instrumentation takes spinlocks, giving lockdep a chance to see and
+> complain about this discrepancy.
+>
+> KMSAN instrumentation is inserted in order to poison the __mask
+> variable. Disable instrumentation in the respective functions. They are
+> very small and it's easy to see that no important metadata updates are
+> lost because of this.
+>
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Reviewed-by: Alexander Potapenko <glider@google.com>
