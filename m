@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5552B11719;
-	Thu, 21 Dec 2023 22:37:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03679C433C7;
-	Thu, 21 Dec 2023 22:37:08 +0000 (UTC)
-Date: Thu, 21 Dec 2023 17:38:12 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C93D191;
+	Fri, 22 Dec 2023 00:06:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11AC8C433C8;
+	Fri, 22 Dec 2023 00:06:53 +0000 (UTC)
+Date: Thu, 21 Dec 2023 19:07:57 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, Dongliang Cui <cuidongliang390@gmail.com>,
- Hongyu Jin  <hongyu.jin@unisoc.com>
-Subject: [PATCH] eventfs: Fix file and directory uid and gid ownership
-Message-ID: <20231221173812.51fe6113@gandalf.local.home>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Dongliang Cui
+ <cuidongliang390@gmail.com>, Hongyu Jin  <hongyu.jin@unisoc.com>
+Subject: [PATCH v2] eventfs: Fix file and directory uid and gid ownership
+Message-ID: <20231221190757.7eddbca9@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -123,13 +123,26 @@ Fixes: 0dfc852b6fe3 ("eventfs: Have event files and directories default to paren
 Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/tracefs/event_inode.c | 74 ++++++++++++++++++++++++++++++++++------
- fs/tracefs/inode.c       |  6 ++++
- fs/tracefs/internal.h    |  2 ++
- 3 files changed, 72 insertions(+), 10 deletions(-)
+Changes since v1: https://lore.kernel.org/linux-trace-kernel/20231221173812.51fe6113@gandalf.local.home
+
+- While writing kselftests to test ownership, I found a bug. The remount
+  option allows for an update of the gid. If it is specified, then all
+  dentries are traversed in tracefs and eventfs and the gid is updated.
+
+  The bug is that a eventfs that does not have a dentry, but had its gid
+  updated, the old gid is still stored, and when the dentry is created, it
+  will use the stored gid.
+
+  Instead, check all eventfs_inodes that do not have a dentry, and traverse
+  its children to make sure their gids are updated as well.
+
+ fs/tracefs/event_inode.c | 105 +++++++++++++++++++++++++++++++++++----
+ fs/tracefs/inode.c       |   6 +++
+ fs/tracefs/internal.h    |   2 +
+ 3 files changed, 103 insertions(+), 10 deletions(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 2ccc849a5bda..2d6b11195420 100644
+index 2ccc849a5bda..6e005a83114f 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
 @@ -113,7 +113,14 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
@@ -140,7 +153,7 @@ index 2ccc849a5bda..2d6b11195420 100644
 +		/*
 +		 * The events directory dentry is never freed, unless its
 +		 * part of an instance that is deleted. It's attr is the
-+		 * default for its child files and directores.
++		 * default for its child files and directories.
 +		 * Do not update it. It's not used for its own mode or ownership
 +		 */
 +		if (!ei->is_events)
@@ -148,7 +161,7 @@ index 2ccc849a5bda..2d6b11195420 100644
  
  	} else {
  		name = dentry->d_name.name;
-@@ -148,28 +155,62 @@ static const struct file_operations eventfs_file_operations = {
+@@ -148,28 +155,93 @@ static const struct file_operations eventfs_file_operations = {
  	.release	= eventfs_release,
  };
  
@@ -212,15 +225,46 @@ index 2ccc849a5bda..2d6b11195420 100644
 -		inode->i_gid = d_inode(dentry->d_parent)->i_gid;
 +}
 +
++static void update_gid(struct eventfs_inode *ei, kgid_t gid, int level)
++{
++	struct eventfs_inode *ei_child;
++
++	/* at most we have events/system/event */
++	if (WARN_ON_ONCE(level > 3))
++		return;
++
++	ei->attr.gid = gid;
++
++	if (ei->entry_attrs) {
++		for (int i = 0; i < ei->nr_entries; i++) {
++			ei->entry_attrs[i].gid = gid;
++		}
++	}
++
++	/*
++	 * Only eventfs_inode with dentries are updated, make sure
++	 * all eventfs_inodes are updated. If one of the children
++	 * do not have a dentry, this function must traverse it.
++	 */
++	list_for_each_entry_srcu(ei_child, &ei->children, list,
++				 srcu_read_lock_held(&eventfs_srcu)) {
++		if (!ei_child->dentry)
++			update_gid(ei_child, gid, level + 1);
++	}
++}
++
 +void eventfs_update_gid(struct dentry *dentry, kgid_t gid)
 +{
 +	struct eventfs_inode *ei = dentry->d_fsdata;
++	int idx;
 +
-+	ei->attr.gid = gid;
++	idx = srcu_read_lock(&eventfs_srcu);
++	update_gid(ei, gid, 0);
++	srcu_read_unlock(&eventfs_srcu, idx);
  }
  
  /**
-@@ -860,6 +901,8 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+@@ -860,6 +932,8 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
  	struct eventfs_inode *ei;
  	struct tracefs_inode *ti;
  	struct inode *inode;
@@ -229,7 +273,7 @@ index 2ccc849a5bda..2d6b11195420 100644
  
  	if (security_locked_down(LOCKDOWN_TRACEFS))
  		return NULL;
-@@ -884,11 +927,20 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+@@ -884,11 +958,20 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
  	ei->dentry = dentry;
  	ei->entries = entries;
  	ei->nr_entries = size;
@@ -250,7 +294,7 @@ index 2ccc849a5bda..2d6b11195420 100644
  	INIT_LIST_HEAD(&ei->children);
  	INIT_LIST_HEAD(&ei->list);
  
-@@ -897,6 +949,8 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+@@ -897,6 +980,8 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
  	ti->private = ei;
  
  	inode->i_mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
