@@ -1,22 +1,18 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CFC4F892;
-	Tue, 26 Dec 2023 17:51:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B64D0C433C8;
-	Tue, 26 Dec 2023 17:51:06 +0000 (UTC)
-Date: Tue, 26 Dec 2023 12:51:50 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0940D4F8BC;
+	Tue, 26 Dec 2023 17:58:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA420C433C8;
+	Tue, 26 Dec 2023 17:58:17 +0000 (UTC)
+Date: Tue, 26 Dec 2023 12:59:02 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, Linux
- Trace Kernel <linux-trace-kernel@vger.kernel.org>, Jonathan Corbet
- <corbet@lwn.net>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] ring-buffer/Documentation: Add documentation on
- buffer_percent file
-Message-ID: <20231226125150.62d7521f@gandalf.local.home>
-In-Reply-To: <20231226123525.71a6d0fb@gandalf.local.home>
-References: <20231226123525.71a6d0fb@gandalf.local.home>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] ring-buffer: Fix wake ups when buffer_percent is set to 100
+Message-ID: <20231226125902.4a057f1d@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -27,60 +23,68 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Jon,
+The tracefs file "buffer_percent" is to allow user space to set a
+water-mark on how much of the tracing ring buffer needs to be filled in
+order to wake up a blocked reader.
 
-I was about to ask if you can take this through your tree, but then I did a
-self edit :-p
+ 0 - is to wait until any data is in the buffer
+ 1 - is to wait for 1% of the sub buffers to be filled
+ 50 - would be half of the sub buffers are filled with data
+ 100 - is not to wake the waiter until the ring buffer is completely full
 
-On Tue, 26 Dec 2023 12:35:25 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Unfortunately the test for being full was:
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> When the buffer_percent file was added to the kernel, the documentation
-> should have been updated to document what that file does.
-> 
-> Fixes: 03329f9939781 ("tracing: Add tracefs file buffer_percentage")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  Documentation/trace/ftrace.rst | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-> index 933e7efb9f1b..16eabb00fa55 100644
-> --- a/Documentation/trace/ftrace.rst
-> +++ b/Documentation/trace/ftrace.rst
-> @@ -180,6 +180,21 @@ of ftrace. Here is a list of some of the key files:
->  	Only active when the file contains a number greater than 0.
->  	(in microseconds)
->  
-> +  buffer_percent:
-> +
-> +	This is the water-mark for how much the ring buffer needs to be filled
-> +	before a waiter is woken up. That is, if an application call a
+	dirty = ring_buffer_nr_dirty_pages(buffer, cpu);
+	return (dirty * 100) > (full * nr_pages);
 
-							"calls"
+Where "full" is the value for "buffer_percent".
 
-> +	blocking read syscall on one of the per_cpu trace_pipe_raw files, it
-> +	will block until the given amount of data specified by buffer_percent
-> +	is in the ring buffer before it wakes the reader up. This also
-> +	controls how splice system calls are blocked on this file.
+There is two issues with the above when full == 100.
 
-		"the splice system"
+1. dirty * 100 > 100 * nr_pages will never be true
+   That is, the above is basically saying that if the user sets
+   buffer_percent to 100, more pages need to be dirty than exist in the
+   ring buffer!
 
-> +
-> +	0   - means to wake up as soon as there is any data in the ring buffer.
-> +	50  - means to wake up when roughly half of the ring buffer sub-buffers
-> +	      are full.
-> +	100 - means to block until the ring buffer is totally full and is
-> +	      about to start overwriting the older data.
-> +
->    buffer_size_kb:
->  
->  	This sets or displays the number of kilobytes each CPU
+2. The page that the writer is on is never considered dirty, as dirty
+   pages are only those that are full. When the writer goes to a new
+   sub-buffer, it clears the contents of that sub-buffer.
 
-Will send a v2.
+That is, even if the check was ">=" it would still not be equal as the
+most pages that can be considered "dirty" is nr_pages - 1.
 
--- Steve
+To fix this, add one to dirty and use ">=" in the compare.
+
+Cc: stable@vger.kernel.org
+Fixes: 03329f9939781 ("tracing: Add tracefs file buffer_percentage")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 83eab547f1d1..32c0dd2fd1c3 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -881,9 +881,14 @@ static __always_inline bool full_hit(struct trace_buffer *buffer, int cpu, int f
+ 	if (!nr_pages || !full)
+ 		return true;
+ 
+-	dirty = ring_buffer_nr_dirty_pages(buffer, cpu);
++	/*
++	 * Add one as dirty will never equal nr_pages, as the sub-buffer
++	 * that the writer is on is not counted as dirty.
++	 * This is needed if "buffer_percent" is set to 100.
++	 */
++	dirty = ring_buffer_nr_dirty_pages(buffer, cpu) + 1;
+ 
+-	return (dirty * 100) > (full * nr_pages);
++	return (dirty * 100) >= (full * nr_pages);
+ }
+ 
+ /*
+-- 
+2.42.0
 
