@@ -1,146 +1,88 @@
-Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FCD9A29;
-	Tue, 26 Dec 2023 02:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 3BQ2ASig019667;
-	Tue, 26 Dec 2023 10:10:28 +0800 (+08)
-	(envelope-from Dongliang.Cui@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4SzdNx1CHrz2Q6fVS;
-	Tue, 26 Dec 2023 10:04:01 +0800 (CST)
-Received: from tj10388pcu.spreadtrum.com (10.5.32.11) by
- BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Tue, 26 Dec 2023 10:10:25 +0800
-From: Dongliang Cui <dongliang.cui@unisoc.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu
-	<mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
-CC: Dongliang Cui <cuidongliang390@gmail.com>,
-        Hongyu Jin
-	<hongyu.jin@unisoc.com>
-Subject: [PATCH] block: Add ioprio to block_rq tracepoint
-Date: Tue, 26 Dec 2023 10:09:10 +0800
-Message-ID: <1703556550-2858-1-git-send-email-dongliang.cui@unisoc.com>
-X-Mailer: git-send-email 2.7.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E284B12F
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Dec 2023 05:32:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hOaTTgEY"
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-1f060e059a3so3507910fac.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 25 Dec 2023 21:32:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703568756; x=1704173556; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z/yCtDNlZbkApsOPbotq0miDNKgFHHdTcJH5FR2SEXc=;
+        b=hOaTTgEYTZFUhkKPe/tTr0A+O6ry+8aqpDGvL/7WcXFQ7tS3Ab0jCSQCYdb6eRKrK/
+         4iRonRTjOkLVIo4YpNwMgoZudk/eFIjWkTR60TuExCXEML8k2skp5hbuvvdEm/qIhoI7
+         p4GniBdX+jC/4rK1BpShCgq8CqrU9tXrI1isW+Zq0wht+vRb4EifiSzDg1ZB6hfuy1Fg
+         ve7tA+DwFpYmUFkPXkEU/EJkxH0MSIMrK1Xvaxr1OkNOkL8QeZde4fglr0g7+o0MCjhv
+         GxniQzdRK/cxrWKqbfZp12yMNrJh9iX8I0sfkOxF8RiQ9gBMtMOktU5pyOptq1NB14Mz
+         Fi8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703568756; x=1704173556;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z/yCtDNlZbkApsOPbotq0miDNKgFHHdTcJH5FR2SEXc=;
+        b=bvscP1/sE8CtDTYh2cuqYVnmJ+xrHSVCRcN6izYM0M7L275Ao9WFLzzDVBPb8dSwTm
+         vGtT4N4N8n7sNPYQKM/xEEsxGnn56cH5X6zh+wTuUkBmgh+sQEHeeSZ5WmHgky/85oGW
+         g3CVULJ6J0X1cGdQi/TcRT6iyg6IVSSr/lothmoxvqUNe6EXlNdO5goLLvf6/tb/7xWH
+         Xgli3MgF+jhhRbg6RwsWa+OmvkHEn4FC0jbpR1aomuaNE53TrzdBKwv9b/lP4xhKNBB/
+         LQEU41JsIdohzhJdRcnzY+2NuhQoQxMeTboIlTw6/EKIp+l/2yBoQBcJ9zda/qSir1t9
+         nDyQ==
+X-Gm-Message-State: AOJu0YwUGOEzlIw2nXlFL5yfBEyD9xhdiFQiUgAP3h9SYNsCSUu4WiNw
+	ROpfmXebsK3lww1CsMWOdHKa2rHeyuEkvQ==
+X-Google-Smtp-Source: AGHT+IHsV2cCLwDgQ+aRxdEBipW52bolZPopgXkwJdwS+zecDa1ZDPFsMRrh5GOgq3Hk9laWbArYnw==
+X-Received: by 2002:a05:6870:858a:b0:1fb:31a0:619c with SMTP id f10-20020a056870858a00b001fb31a0619cmr8333158oal.47.1703568755795;
+        Mon, 25 Dec 2023 21:32:35 -0800 (PST)
+Received: from localhost ([122.172.86.168])
+        by smtp.gmail.com with ESMTPSA id u18-20020a63f652000000b005cd821a01d4sm8703700pgj.28.2023.12.25.21.32.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Dec 2023 21:32:35 -0800 (PST)
+Date: Tue, 26 Dec 2023 11:02:33 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: catalin.marinas@arm.com, will@kernel.org, sudeep.holla@arm.com,
+	rafael@kernel.org, agross@kernel.org, andersson@kernel.org,
+	konrad.dybcio@linaro.org, mingo@redhat.com, peterz@infradead.org,
+	juri.lelli@redhat.com, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, lukasz.luba@arm.com,
+	rui.zhang@intel.com, mhiramat@kernel.org, daniel.lezcano@linaro.org,
+	amit.kachhap@gmail.com, linux@armlinux.org.uk, corbet@lwn.net,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] thermal/cpufreq: Remove
+ arch_update_thermal_pressure()
+Message-ID: <20231226053233.gtvuflyonkcifa4x@vireshk-i7>
+References: <20231221152407.436177-1-vincent.guittot@linaro.org>
+ <20231221152407.436177-4-vincent.guittot@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-X-MAIL:SHSQR01.spreadtrum.com 3BQ2ASig019667
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231221152407.436177-4-vincent.guittot@linaro.org>
 
-Sometimes we need to track the processing order of
-requests with ioprio set, especially when using
-mq-deadline. So the ioprio of request can be useful
-information.
+On 21-12-23, 16:24, Vincent Guittot wrote:
+> arch_update_thermal_pressure() aims to update fast changing signal which
+> should be averaged using PELT filtering before being provided to the
+> scheduler which can't make smart use of fast changing signal.
+> cpufreq now provides the maximum freq_qos pressure on the capacity to the
+> scheduler, which includes cpufreq cooling device. Remove the call to
+> arch_update_thermal_pressure() in cpufreq cooling device as this is
+> handled by cpufreq_get_pressure().
+> 
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
 
-Signed-off-by: Dongliang Cui <dongliang.cui@unisoc.com>
----
- include/trace/events/block.h | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-diff --git a/include/trace/events/block.h b/include/trace/events/block.h
-index 0e128ad..e84ff93 100644
---- a/include/trace/events/block.h
-+++ b/include/trace/events/block.h
-@@ -82,6 +82,7 @@
- 		__field(  dev_t,	dev			)
- 		__field(  sector_t,	sector			)
- 		__field(  unsigned int,	nr_sector		)
-+		__field(  unsigned int, ioprio			)
- 		__array(  char,		rwbs,	RWBS_LEN	)
- 		__dynamic_array( char,	cmd,	1		)
- 	),
-@@ -90,16 +91,17 @@
- 		__entry->dev	   = rq->q->disk ? disk_devt(rq->q->disk) : 0;
- 		__entry->sector    = blk_rq_trace_sector(rq);
- 		__entry->nr_sector = blk_rq_trace_nr_sectors(rq);
-+		__entry->ioprio    = rq->ioprio;
- 
- 		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
- 		__get_str(cmd)[0] = '\0';
- 	),
- 
--	TP_printk("%d,%d %s (%s) %llu + %u [%d]",
-+	TP_printk("%d,%d %s (%s) %llu + %u 0x%x [%d]",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
- 		  __entry->rwbs, __get_str(cmd),
- 		  (unsigned long long)__entry->sector,
--		  __entry->nr_sector, 0)
-+		  __entry->nr_sector, __entry->ioprio, 0)
- );
- 
- DECLARE_EVENT_CLASS(block_rq_completion,
-@@ -112,6 +114,7 @@
- 		__field(  dev_t,	dev			)
- 		__field(  sector_t,	sector			)
- 		__field(  unsigned int,	nr_sector		)
-+		__field(  unsigned int, ioprio			)
- 		__field(  int	,	error			)
- 		__array(  char,		rwbs,	RWBS_LEN	)
- 		__dynamic_array( char,	cmd,	1		)
-@@ -121,17 +124,19 @@
- 		__entry->dev	   = rq->q->disk ? disk_devt(rq->q->disk) : 0;
- 		__entry->sector    = blk_rq_pos(rq);
- 		__entry->nr_sector = nr_bytes >> 9;
-+		__entry->ioprio    = rq->ioprio;
- 		__entry->error     = blk_status_to_errno(error);
- 
- 		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
- 		__get_str(cmd)[0] = '\0';
- 	),
- 
--	TP_printk("%d,%d %s (%s) %llu + %u [%d]",
-+	TP_printk("%d,%d %s (%s) %llu + %u 0x%x [%d]",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
- 		  __entry->rwbs, __get_str(cmd),
- 		  (unsigned long long)__entry->sector,
--		  __entry->nr_sector, __entry->error)
-+		  __entry->nr_sector, __entry->ioprio,
-+		  __entry->error)
- );
- 
- /**
-@@ -180,6 +185,7 @@
- 		__field(  sector_t,	sector			)
- 		__field(  unsigned int,	nr_sector		)
- 		__field(  unsigned int,	bytes			)
-+		__field(  unsigned int, ioprio			)
- 		__array(  char,		rwbs,	RWBS_LEN	)
- 		__array(  char,         comm,   TASK_COMM_LEN   )
- 		__dynamic_array( char,	cmd,	1		)
-@@ -190,17 +196,19 @@
- 		__entry->sector    = blk_rq_trace_sector(rq);
- 		__entry->nr_sector = blk_rq_trace_nr_sectors(rq);
- 		__entry->bytes     = blk_rq_bytes(rq);
-+		__entry->ioprio    = rq->ioprio;
- 
- 		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
- 		__get_str(cmd)[0] = '\0';
- 		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
- 	),
- 
--	TP_printk("%d,%d %s %u (%s) %llu + %u [%s]",
-+	TP_printk("%d,%d %s %u (%s) %llu + %u 0x%x [%s]",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
- 		  __entry->rwbs, __entry->bytes, __get_str(cmd),
- 		  (unsigned long long)__entry->sector,
--		  __entry->nr_sector, __entry->comm)
-+		  __entry->nr_sector, __entry->ioprio,
-+		  __entry->comm)
- );
- 
- /**
 -- 
-1.9.1
-
+viresh
