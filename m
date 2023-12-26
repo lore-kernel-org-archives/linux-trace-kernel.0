@@ -1,100 +1,124 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9AD4C67;
-	Tue, 26 Dec 2023 19:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBCF525B;
+	Tue, 26 Dec 2023 22:57:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ztqRwRly"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=9U5copr9xDoJG160dopatrz4QWoLK4jdJ0iC5TUWcmE=; b=ztqRwRlybhDpub6IodCHbbzPi6
-	qy3cy2/4BA6/kQXhUwl0foKUgdQsutlj/fWmfRjW+GdY6mKD7Jl4ttVHRJnoN2K9lsfmOo2Ga0wfL
-	U3DwCwgEE5VNXSVsEEc4IY9q7+fnnHmBCUbvyR9Wh9TUD8IbtwU1bzK3yGNxOhfZww8Oie1zxlJgv
-	5hWLFX8kSwFo8cTbdNv3F78SjD4D2gGHwnbwDC3GpZOGZy/VC91sl8p9+i7BvVPFuKKkOvRJk0J8O
-	CiGBV0M497hCwIE1o+oVlVWfLLky1Pu+CZghVtuYIElgEczEJ3MsbFVNOj9SrtpYKN+HgPQhyKlaI
-	w7KIhhlw==;
-Received: from [50.53.46.231] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rIDKK-00DST5-1d;
-	Tue, 26 Dec 2023 19:42:56 +0000
-Message-ID: <92cedbf6-0313-4ff7-96a7-ddd40506b82e@infradead.org>
-Date: Tue, 26 Dec 2023 11:42:54 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CRltgXlD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B1D5C433C7;
+	Tue, 26 Dec 2023 22:57:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703631432;
+	bh=RnHI3X+wfM4e7cmhsHvWFX3pGA94mnF30x/7yRkimHk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=CRltgXlDoUI8hv9A0mECylaPn77DijNXxzp5r38sNL/YDIivGYsTsGJiEcLwZKBr1
+	 OguN7bY+eVVSiStni4qIBFecIabebPA9+Z7J6e+T7v5N946ltcD3wIIwLEg/RSEPF1
+	 ZbD0Gg5hghNL6nf9tVx2h3zhA3ugGTqHUG+lbYgXQ2QETwIL6gNkvhu0Vw39cUoLls
+	 9IxDZL+yk+0U3HqGNuUI74ZTgiKeTh8kRqPsGO5qzEm2kp/VqHfMXbHROZkc69SKd5
+	 OpXljetGJ3PhPkSJwaaUIclJ8alSboZrBj3yneADZtHnox8fzzbUJ9+o8T6+rCq1ov
+	 9rkbZ5WHxVP2Q==
+Date: Wed, 27 Dec 2023 07:57:08 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] ring-buffer: Fix wake ups when buffer_percent is set to
+ 100
+Message-Id: <20231227075708.008225fc3c04444aac193b39@kernel.org>
+In-Reply-To: <20231226125902.4a057f1d@gandalf.local.home>
+References: <20231226125902.4a057f1d@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] ring-buffer/Documentation: Add documentation on
- buffer_percent file
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
- Jonathan Corbet <corbet@lwn.net>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-References: <20231226130149.4685c838@gandalf.local.home>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20231226130149.4685c838@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Tue, 26 Dec 2023 12:59:02 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-
-On 12/26/23 10:01, Steven Rostedt wrote:
 > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> When the buffer_percent file was added to the kernel, the documentation
-> should have been updated to document what that file does.
+> The tracefs file "buffer_percent" is to allow user space to set a
+> water-mark on how much of the tracing ring buffer needs to be filled in
+> order to wake up a blocked reader.
 > 
+>  0 - is to wait until any data is in the buffer
+>  1 - is to wait for 1% of the sub buffers to be filled
+>  50 - would be half of the sub buffers are filled with data
+>  100 - is not to wake the waiter until the ring buffer is completely full
+> 
+> Unfortunately the test for being full was:
+> 
+> 	dirty = ring_buffer_nr_dirty_pages(buffer, cpu);
+> 	return (dirty * 100) > (full * nr_pages);
+> 
+> Where "full" is the value for "buffer_percent".
+> 
+> There is two issues with the above when full == 100.
+> 
+> 1. dirty * 100 > 100 * nr_pages will never be true
+>    That is, the above is basically saying that if the user sets
+>    buffer_percent to 100, more pages need to be dirty than exist in the
+>    ring buffer!
+> 
+> 2. The page that the writer is on is never considered dirty, as dirty
+>    pages are only those that are full. When the writer goes to a new
+>    sub-buffer, it clears the contents of that sub-buffer.
+> 
+> That is, even if the check was ">=" it would still not be equal as the
+> most pages that can be considered "dirty" is nr_pages - 1.
+> 
+> To fix this, add one to dirty and use ">=" in the compare.
+> 
+> Cc: stable@vger.kernel.org
 > Fixes: 03329f9939781 ("tracing: Add tracefs file buffer_percentage")
 > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
-> Changes since v1: https://lore.kernel.org/all/20231226123525.71a6d0fb@gandalf.local.home/
+>  kernel/trace/ring_buffer.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 > 
-> - Fixed some grammar issues.
-> 
->  Documentation/trace/ftrace.rst | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-> index 933e7efb9f1b..84b810a6cf76 100644
-> --- a/Documentation/trace/ftrace.rst
-> +++ b/Documentation/trace/ftrace.rst
-> @@ -180,6 +180,21 @@ of ftrace. Here is a list of some of the key files:
->  	Only active when the file contains a number greater than 0.
->  	(in microseconds)
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 83eab547f1d1..32c0dd2fd1c3 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -881,9 +881,14 @@ static __always_inline bool full_hit(struct trace_buffer *buffer, int cpu, int f
+>  	if (!nr_pages || !full)
+>  		return true;
 >  
-> +  buffer_percent:
-> +
-> +	This is the water-mark for how much the ring buffer needs to be filled
+> -	dirty = ring_buffer_nr_dirty_pages(buffer, cpu);
+> +	/*
+> +	 * Add one as dirty will never equal nr_pages, as the sub-buffer
+> +	 * that the writer is on is not counted as dirty.
+> +	 * This is needed if "buffer_percent" is set to 100.
+> +	 */
+> +	dirty = ring_buffer_nr_dirty_pages(buffer, cpu) + 1;
 
-                    watermark
-please
+Is this "+ 1" required? If we have 200 pages and 1 buffer is dirty,
+it is 0.5% dirty. Consider @full = 1%.
 
-> +	before a waiter is woken up. That is, if an application calls a
-> +	blocking read syscall on one of the per_cpu trace_pipe_raw files, it
-> +	will block until the given amount of data specified by buffer_percent
-> +	is in the ring buffer before it wakes the reader up. This also
-> +	controls how the splice system calls are blocked on this file.
-> +
-> +	0   - means to wake up as soon as there is any data in the ring buffer.
-> +	50  - means to wake up when roughly half of the ring buffer sub-buffers
-> +	      are full.
-> +	100 - means to block until the ring buffer is totally full and is
-> +	      about to start overwriting the older data.
-> +
->    buffer_size_kb:
+@dirty = 1 + 1 = 2 and @dirty * 100 == 200. but 
+@full * @nr_pages = 1 * 200 = 200.
+Thus it hits (200 >= 200 is true) even if dirty pages are 0.5%.
+
 >  
->  	This sets or displays the number of kilobytes each CPU
+> -	return (dirty * 100) > (full * nr_pages);
+> +	return (dirty * 100) >= (full * nr_pages);
+
+Thank you,
+
+>  }
+>  
+>  /*
+> -- 
+> 2.42.0
+> 
+
 
 -- 
-#Randy
-https://people.kernel.org/tglx/notes-about-netiquette
-https://subspace.kernel.org/etiquette.html
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
