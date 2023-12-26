@@ -1,75 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8400715CB;
-	Tue, 26 Dec 2023 00:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EGulxQ0a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3ECEC433CA;
-	Tue, 26 Dec 2023 00:20:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703550029;
-	bh=viWaVDgZggRIC+o1djZ9IF495Y7uvJgX50ROW6lgb8E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=EGulxQ0aRmTNruUx3GKzXeud8BJciXVftEVkUSyTpcOIM3yhzQuVhvCx5B9WS1ARx
-	 bg41Z/eMW1yPZASeWOrhYDYnZTdeW044e9NidLVmOIAnzU5UhyMCIZKgYgrtedg6dc
-	 2xDec3CDR5P8CE7J6UeZsWwU3Mtg+td3ATN0DqSmA0R9nWvUsETe5phgQXIL5Mul+L
-	 EPrIfxggPTVih0FGqZPxlxbOthFTyJ+nbXCzfr1U2twCPPGyrbUqBRk+B0TSr7IrO3
-	 9RNrFlvNi3Hm8nDBzg/XqV8g5GBnPKu3Wd9gM9Tb3mIexbcPpplmAQqhUe2gGD8mcY
-	 yZtgOYUUuThaQ==
-Date: Tue, 26 Dec 2023 09:20:23 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt
- <rostedt@goodmis.org>, Florent Revest <revest@chromium.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v5 11/34] function_graph: Have the instances use their
- own ftrace_ops for filtering
-Message-Id: <20231226092023.2383d0d05c1120c094302685@kernel.org>
-In-Reply-To: <170290522555.220107.1435543481968270637.stgit@devnote2>
-References: <170290509018.220107.1347127510564358608.stgit@devnote2>
-	<170290522555.220107.1435543481968270637.stgit@devnote2>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FCD9A29;
+	Tue, 26 Dec 2023 02:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 3BQ2ASig019667;
+	Tue, 26 Dec 2023 10:10:28 +0800 (+08)
+	(envelope-from Dongliang.Cui@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4SzdNx1CHrz2Q6fVS;
+	Tue, 26 Dec 2023 10:04:01 +0800 (CST)
+Received: from tj10388pcu.spreadtrum.com (10.5.32.11) by
+ BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Tue, 26 Dec 2023 10:10:25 +0800
+From: Dongliang Cui <dongliang.cui@unisoc.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu
+	<mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
+CC: Dongliang Cui <cuidongliang390@gmail.com>,
+        Hongyu Jin
+	<hongyu.jin@unisoc.com>
+Subject: [PATCH] block: Add ioprio to block_rq tracepoint
+Date: Tue, 26 Dec 2023 10:09:10 +0800
+Message-ID: <1703556550-2858-1-git-send-email-dongliang.cui@unisoc.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX02.spreadtrum.com (10.0.64.8)
+X-MAIL:SHSQR01.spreadtrum.com 3BQ2ASig019667
 
-Hi,
+Sometimes we need to track the processing order of
+requests with ioprio set, especially when using
+mq-deadline. So the ioprio of request can be useful
+information.
 
-On Mon, 18 Dec 2023 22:13:46 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+Signed-off-by: Dongliang Cui <dongliang.cui@unisoc.com>
+---
+ include/trace/events/block.h | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-> @@ -408,15 +395,51 @@ int function_graph_enter(unsigned long ret, unsigned long func,
->  	return -EBUSY;
->  }
->  
-> +/* This is called from ftrace_graph_func() via ftrace */
-> +int function_graph_enter_ops(unsigned long ret, unsigned long func,
-> +			     unsigned long frame_pointer, unsigned long *retp,
-> +			     struct fgraph_ops *gops)
-> +{
-> +	struct ftrace_graph_ent trace;
-> +	int index;
-> +	int type;
-> +
-
-Here,  I found that this needs to check whether the fgraph_array[gops->idx]
-is still valid or not. When unregistering the fgraph, fgraph_array[idx] is
-cleared (with fgraph_stub) and disable ftrace. So there is a chance to hit
-this and it will mess up the shadow stack because gops->idx is already invalid.
-
-Thank you,
-
+diff --git a/include/trace/events/block.h b/include/trace/events/block.h
+index 0e128ad..e84ff93 100644
+--- a/include/trace/events/block.h
++++ b/include/trace/events/block.h
+@@ -82,6 +82,7 @@
+ 		__field(  dev_t,	dev			)
+ 		__field(  sector_t,	sector			)
+ 		__field(  unsigned int,	nr_sector		)
++		__field(  unsigned int, ioprio			)
+ 		__array(  char,		rwbs,	RWBS_LEN	)
+ 		__dynamic_array( char,	cmd,	1		)
+ 	),
+@@ -90,16 +91,17 @@
+ 		__entry->dev	   = rq->q->disk ? disk_devt(rq->q->disk) : 0;
+ 		__entry->sector    = blk_rq_trace_sector(rq);
+ 		__entry->nr_sector = blk_rq_trace_nr_sectors(rq);
++		__entry->ioprio    = rq->ioprio;
+ 
+ 		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
+ 		__get_str(cmd)[0] = '\0';
+ 	),
+ 
+-	TP_printk("%d,%d %s (%s) %llu + %u [%d]",
++	TP_printk("%d,%d %s (%s) %llu + %u 0x%x [%d]",
+ 		  MAJOR(__entry->dev), MINOR(__entry->dev),
+ 		  __entry->rwbs, __get_str(cmd),
+ 		  (unsigned long long)__entry->sector,
+-		  __entry->nr_sector, 0)
++		  __entry->nr_sector, __entry->ioprio, 0)
+ );
+ 
+ DECLARE_EVENT_CLASS(block_rq_completion,
+@@ -112,6 +114,7 @@
+ 		__field(  dev_t,	dev			)
+ 		__field(  sector_t,	sector			)
+ 		__field(  unsigned int,	nr_sector		)
++		__field(  unsigned int, ioprio			)
+ 		__field(  int	,	error			)
+ 		__array(  char,		rwbs,	RWBS_LEN	)
+ 		__dynamic_array( char,	cmd,	1		)
+@@ -121,17 +124,19 @@
+ 		__entry->dev	   = rq->q->disk ? disk_devt(rq->q->disk) : 0;
+ 		__entry->sector    = blk_rq_pos(rq);
+ 		__entry->nr_sector = nr_bytes >> 9;
++		__entry->ioprio    = rq->ioprio;
+ 		__entry->error     = blk_status_to_errno(error);
+ 
+ 		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
+ 		__get_str(cmd)[0] = '\0';
+ 	),
+ 
+-	TP_printk("%d,%d %s (%s) %llu + %u [%d]",
++	TP_printk("%d,%d %s (%s) %llu + %u 0x%x [%d]",
+ 		  MAJOR(__entry->dev), MINOR(__entry->dev),
+ 		  __entry->rwbs, __get_str(cmd),
+ 		  (unsigned long long)__entry->sector,
+-		  __entry->nr_sector, __entry->error)
++		  __entry->nr_sector, __entry->ioprio,
++		  __entry->error)
+ );
+ 
+ /**
+@@ -180,6 +185,7 @@
+ 		__field(  sector_t,	sector			)
+ 		__field(  unsigned int,	nr_sector		)
+ 		__field(  unsigned int,	bytes			)
++		__field(  unsigned int, ioprio			)
+ 		__array(  char,		rwbs,	RWBS_LEN	)
+ 		__array(  char,         comm,   TASK_COMM_LEN   )
+ 		__dynamic_array( char,	cmd,	1		)
+@@ -190,17 +196,19 @@
+ 		__entry->sector    = blk_rq_trace_sector(rq);
+ 		__entry->nr_sector = blk_rq_trace_nr_sectors(rq);
+ 		__entry->bytes     = blk_rq_bytes(rq);
++		__entry->ioprio    = rq->ioprio;
+ 
+ 		blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
+ 		__get_str(cmd)[0] = '\0';
+ 		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
+ 	),
+ 
+-	TP_printk("%d,%d %s %u (%s) %llu + %u [%s]",
++	TP_printk("%d,%d %s %u (%s) %llu + %u 0x%x [%s]",
+ 		  MAJOR(__entry->dev), MINOR(__entry->dev),
+ 		  __entry->rwbs, __entry->bytes, __get_str(cmd),
+ 		  (unsigned long long)__entry->sector,
+-		  __entry->nr_sector, __entry->comm)
++		  __entry->nr_sector, __entry->ioprio,
++		  __entry->comm)
+ );
+ 
+ /**
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+1.9.1
+
