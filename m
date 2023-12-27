@@ -1,75 +1,132 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912F719BC2
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Dec 2023 09:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7b7fb5b059aso732648939f.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Dec 2023 01:18:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703668706; x=1704273506;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=P92PRpFs43lMfLroNZcs/O9zoCnn8cVd+GQQi2rMJj8=;
-        b=K4MkkQgydE6Y/pTsK9Vxwd9jNcSSeplSZhk+A+I0W3W7uLUXmtmo5YBe5iUVStSSpg
-         4DTNLClvPpSumfaaqY4H08s9oMgPFYyG+5UB6gQo3p6HGsDKA/ORVp0QzkAIRzRFVgas
-         T67Q9s6un1bCi4jNHpd1rmmRPIHJCllM6Axv14bmJL8J481BOV4AtTBkYVqwLFJqPukq
-         OaURQUYcbe17fwN0gotZVRQF7sdkOUphN9huDwP/lokNfq4y1l1bB7XVlFdUTdoxTTlV
-         i4d3zV4oaClNP5PHc7DpwEBRKRgy5iIKgO7sT03lIUbY7CIXfF1j52Uj6RBt3fLNjNL4
-         Pt8g==
-X-Gm-Message-State: AOJu0YxlZl8vkkb2Zi7nP0u9pqGqUui+L4S85gC7lWjfmH5KBJokLKUg
-	lEdfMR95jtt85OPfXJWiVIHk+sCIFNT93G23vTjzDlTnS/SW
-X-Google-Smtp-Source: AGHT+IERWvZmHmQ+4E00GP96i5z51eWR2fAgJfii09uXe+M7KhjqhyTISPOUNv5AypNN0mies4d/UgHH7IRk5rRDYa+iIjoT+qrp
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA63444C79;
+	Wed, 27 Dec 2023 12:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s3xdYdjN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13075C433C9;
+	Wed, 27 Dec 2023 12:38:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703680709;
+	bh=X7R6F9hT6XYOO3BGfeWVV1thc/132FVHa6UnzJbO8Fg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=s3xdYdjN0JOula1WTh6A2iY780fPuc5IgTrHuxBP2YtCgzASY8pVu5cCIY7V7869q
+	 TE0fEUoZX+CYtqtqwXCsY8OYqXoe843PQhGtjEdymRcJLFja1/UF0z70P+ObGRMhcy
+	 q5mHqo9TWriOWFO8r/kE4PTdfsTl5/UVNn9H+iJe8JO4oJipqon4Kv1/oyimY/7o8v
+	 0TzD2/pQGXH+KeQR/7JBNOzi9SHvR2xPoYCM7SvufLJ2jw0s74kX+eqxEsTqPiypj3
+	 zZySoByBOlV7buyytNoiODdK6mDu0ZQbrUqD0ZaH5FVMY98tGXBo8VMIUahi8uB1fA
+	 uCC4SF5HSoqYg==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Jiri Olsa <jolsa@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] tracing: Fix possible memory leak in ftrace_regsiter_direct()
+Date: Wed, 27 Dec 2023 21:38:25 +0900
+Message-Id: <170368070504.42064.8960569647118388081.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:174c:b0:35f:bea3:c041 with SMTP id
- y12-20020a056e02174c00b0035fbea3c041mr1537712ill.4.1703668706759; Wed, 27 Dec
- 2023 01:18:26 -0800 (PST)
-Date: Wed, 27 Dec 2023 01:18:26 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000014de01060d7a484b@google.com>
-Subject: [syzbot] Monthly trace report (Dec 2023)
-From: syzbot <syzbot+list6c5ee133fd7951cf4004@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mhiramat@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hello trace maintainers/developers,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-This is a 31-day syzbot report for the trace subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/trace
+If ftrace_register_direct() called with a large number of target
+functions (e.g. 65), the free_hash can be updated twice or more
+in the ftrace_add_rec_direct() without freeing the previous hash
+memory. Thus this can cause a memory leak.
 
-During the period, 0 new issues were detected and 0 were fixed.
-In total, 8 issues are still open and 29 have been fixed so far.
+Fix this issue by expanding the direct_hash at once before
+adding the new entries.
 
-Some of the still happening issues:
-
-Ref Crashes Repro Title
-<1> 8166    Yes   possible deadlock in task_fork_fair
-                  https://syzkaller.appspot.com/bug?extid=1a93ee5d329e97cfbaff
-<2> 114     Yes   WARNING in format_decode (3)
-                  https://syzkaller.appspot.com/bug?extid=e2c932aec5c8a6e1d31c
-<3> 26      Yes   WARNING in blk_register_tracepoints
-                  https://syzkaller.appspot.com/bug?extid=c54ded83396afee31eb1
-<4> 7       Yes   INFO: task hung in blk_trace_ioctl (4)
-                  https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
-
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Fixes: f64dd4627ec6 ("ftrace: Add multi direct register/unregister interface")
+Cc: stable@vger.kernel.org
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ kernel/trace/ftrace.c |   49 +++++++++++++++++++++++++++++++------------------
+ 1 file changed, 31 insertions(+), 18 deletions(-)
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 8de8bec5f366..9269c2c3e595 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -2555,28 +2555,33 @@ unsigned long ftrace_find_rec_direct(unsigned long ip)
+ 	return entry->direct;
+ }
+ 
+-static struct ftrace_func_entry*
+-ftrace_add_rec_direct(unsigned long ip, unsigned long addr,
+-		      struct ftrace_hash **free_hash)
++static struct ftrace_hash *ftrace_expand_direct(int inc_count)
+ {
+-	struct ftrace_func_entry *entry;
++	struct ftrace_hash *new_hash, *free_hash;
++	int size = ftrace_hash_empty(direct_functions) ? 0 :
++		direct_functions->count + inc_count;
+ 
+-	if (ftrace_hash_empty(direct_functions) ||
+-	    direct_functions->count > 2 * (1 << direct_functions->size_bits)) {
+-		struct ftrace_hash *new_hash;
+-		int size = ftrace_hash_empty(direct_functions) ? 0 :
+-			direct_functions->count + 1;
++	if (!ftrace_hash_empty(direct_functions) &&
++	    size <= 2 * (1 << direct_functions->size_bits))
++		return NULL;
+ 
+-		if (size < 32)
+-			size = 32;
++	if (size < 32)
++		size = 32;
+ 
+-		new_hash = dup_hash(direct_functions, size);
+-		if (!new_hash)
+-			return NULL;
++	new_hash = dup_hash(direct_functions, size);
++	if (!new_hash)
++		return ERR_PTR(-ENOMEM);
+ 
+-		*free_hash = direct_functions;
+-		direct_functions = new_hash;
+-	}
++	free_hash = direct_functions;
++	direct_functions = new_hash;
++
++	return free_hash;
++}
++
++static struct ftrace_func_entry*
++ftrace_add_rec_direct(unsigned long ip, unsigned long addr)
++{
++	struct ftrace_func_entry *entry;
+ 
+ 	entry = kmalloc(sizeof(*entry), GFP_KERNEL);
+ 	if (!entry)
+@@ -5436,11 +5441,19 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+ 		}
+ 	}
+ 
++	/* ... and prepare the insertion */
++	free_hash = ftrace_expand_direct(hash->count);
++	if (IS_ERR(free_hash)) {
++		err = PTR_ERR(free_hash);
++		free_hash = NULL;
++		goto out_unlock;
++	}
++
+ 	/* ... and insert them to direct_functions hash. */
+ 	err = -ENOMEM;
+ 	for (i = 0; i < size; i++) {
+ 		hlist_for_each_entry(entry, &hash->buckets[i], hlist) {
+-			new = ftrace_add_rec_direct(entry->ip, addr, &free_hash);
++			new = ftrace_add_rec_direct(entry->ip, addr);
+ 			if (!new)
+ 				goto out_remove;
+ 			entry->direct = addr;
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
