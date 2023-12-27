@@ -1,96 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9AAA35;
-	Wed, 27 Dec 2023 00:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CkyjzRTG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E8BCC433C8;
-	Wed, 27 Dec 2023 00:59:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703638759;
-	bh=ygOF1FE2qsIEsSYrjFBXdoWsOq4WuzTN5J8O+K11Qu0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CkyjzRTGfGttnJ9UIlGWZhotoLx4Nmw2tC7mw6HAmvFXD5NEC3SAf+88dHVplXVfQ
-	 ggqSq+TP+Pc8wEREx86470ByGHh242ehTQq3a7JKaOBsu0X0xtLYbyzker662m55ZQ
-	 HM5IlzJThylwdyCGSJnLvEcxCx89cOTw3YkVRJVXt4gCd6xg1fn7MPgkgv9q2Wh9T/
-	 Pv2HLyi1UoWBUpBZmxd5AQijMhEto1JRQ4B1cvdi+Mbv0wO9EIC8C0Zqmz6gUQleL2
-	 RLbGJzwvnVrHIVP7dmrWQ/8X+sYpL3WApdUrijcmF1tSwKm9O3RWmP4Pw8RVtLPmtA
-	 n3YctZGs+nGHg==
-Date: Wed, 27 Dec 2023 09:59:14 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, Linux
- Trace Kernel <linux-trace-kernel@vger.kernel.org>, Jonathan Corbet
- <corbet@lwn.net>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] ring-buffer/Documentation: Add documentation on
- buffer_percent file
-Message-Id: <20231227095914.4ee69b53b69254ad8c5f7171@kernel.org>
-In-Reply-To: <20231226123525.71a6d0fb@gandalf.local.home>
-References: <20231226123525.71a6d0fb@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912F719BC2
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Dec 2023 09:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7b7fb5b059aso732648939f.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Dec 2023 01:18:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703668706; x=1704273506;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=P92PRpFs43lMfLroNZcs/O9zoCnn8cVd+GQQi2rMJj8=;
+        b=K4MkkQgydE6Y/pTsK9Vxwd9jNcSSeplSZhk+A+I0W3W7uLUXmtmo5YBe5iUVStSSpg
+         4DTNLClvPpSumfaaqY4H08s9oMgPFYyG+5UB6gQo3p6HGsDKA/ORVp0QzkAIRzRFVgas
+         T67Q9s6un1bCi4jNHpd1rmmRPIHJCllM6Axv14bmJL8J481BOV4AtTBkYVqwLFJqPukq
+         OaURQUYcbe17fwN0gotZVRQF7sdkOUphN9huDwP/lokNfq4y1l1bB7XVlFdUTdoxTTlV
+         i4d3zV4oaClNP5PHc7DpwEBRKRgy5iIKgO7sT03lIUbY7CIXfF1j52Uj6RBt3fLNjNL4
+         Pt8g==
+X-Gm-Message-State: AOJu0YxlZl8vkkb2Zi7nP0u9pqGqUui+L4S85gC7lWjfmH5KBJokLKUg
+	lEdfMR95jtt85OPfXJWiVIHk+sCIFNT93G23vTjzDlTnS/SW
+X-Google-Smtp-Source: AGHT+IERWvZmHmQ+4E00GP96i5z51eWR2fAgJfii09uXe+M7KhjqhyTISPOUNv5AypNN0mies4d/UgHH7IRk5rRDYa+iIjoT+qrp
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:174c:b0:35f:bea3:c041 with SMTP id
+ y12-20020a056e02174c00b0035fbea3c041mr1537712ill.4.1703668706759; Wed, 27 Dec
+ 2023 01:18:26 -0800 (PST)
+Date: Wed, 27 Dec 2023 01:18:26 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000014de01060d7a484b@google.com>
+Subject: [syzbot] Monthly trace report (Dec 2023)
+From: syzbot <syzbot+list6c5ee133fd7951cf4004@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mhiramat@kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 26 Dec 2023 12:35:25 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hello trace maintainers/developers,
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> When the buffer_percent file was added to the kernel, the documentation
-> should have been updated to document what that file does.
-> 
+This is a 31-day syzbot report for the trace subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/trace
 
-Looks good to me.
+During the period, 0 new issues were detected and 0 were fixed.
+In total, 8 issues are still open and 29 have been fixed so far.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Some of the still happening issues:
 
-Thanks!
+Ref Crashes Repro Title
+<1> 8166    Yes   possible deadlock in task_fork_fair
+                  https://syzkaller.appspot.com/bug?extid=1a93ee5d329e97cfbaff
+<2> 114     Yes   WARNING in format_decode (3)
+                  https://syzkaller.appspot.com/bug?extid=e2c932aec5c8a6e1d31c
+<3> 26      Yes   WARNING in blk_register_tracepoints
+                  https://syzkaller.appspot.com/bug?extid=c54ded83396afee31eb1
+<4> 7       Yes   INFO: task hung in blk_trace_ioctl (4)
+                  https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
 
-> Fixes: 03329f9939781 ("tracing: Add tracefs file buffer_percentage")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  Documentation/trace/ftrace.rst | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-> index 933e7efb9f1b..16eabb00fa55 100644
-> --- a/Documentation/trace/ftrace.rst
-> +++ b/Documentation/trace/ftrace.rst
-> @@ -180,6 +180,21 @@ of ftrace. Here is a list of some of the key files:
->  	Only active when the file contains a number greater than 0.
->  	(in microseconds)
->  
-> +  buffer_percent:
-> +
-> +	This is the water-mark for how much the ring buffer needs to be filled
-> +	before a waiter is woken up. That is, if an application call a
-> +	blocking read syscall on one of the per_cpu trace_pipe_raw files, it
-> +	will block until the given amount of data specified by buffer_percent
-> +	is in the ring buffer before it wakes the reader up. This also
-> +	controls how splice system calls are blocked on this file.
-> +
-> +	0   - means to wake up as soon as there is any data in the ring buffer.
-> +	50  - means to wake up when roughly half of the ring buffer sub-buffers
-> +	      are full.
-> +	100 - means to block until the ring buffer is totally full and is
-> +	      about to start overwriting the older data.
-> +
->    buffer_size_kb:
->  
->  	This sets or displays the number of kilobytes each CPU
-> -- 
-> 2.42.0
-> 
-> 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
