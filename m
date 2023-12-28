@@ -1,385 +1,124 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B524EAE1;
-	Thu, 28 Dec 2023 10:52:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="K1oBB0iu"
-X-UUID: 1d5fe642a56f11eea2298b7352fd921d-20231228
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=o+KOdpGR4a+y2NUejORHdNuzugPlvMG7gZma7xXOwJ8=;
-	b=K1oBB0iudSYXQSpbAuVgz2Alo9bNIhqcldaToN+GaSp4foWjfmRrVyVfrCKnimuQsUHBdpACcw9z8SEbxA9X3MRopDsyTSrRLJlFBEdj2SjJJp2T/SUITXAuNX+we5hU085/NJCPm8dYMq6jIYXoYq6UIhsmlw0q6xOX+HBS2Ys=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:f83a4ede-706d-40f6-800d-aacf84cc33f4,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:5d391d7,CLOUDID:7552aa8d-e2c0-40b0-a8fe-7c7e47299109,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:
-	NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 1d5fe642a56f11eea2298b7352fd921d-20231228
-Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw02.mediatek.com
-	(envelope-from <yi-de.wu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1848425333; Thu, 28 Dec 2023 18:51:54 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Thu, 28 Dec 2023 18:51:53 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Thu, 28 Dec 2023 18:51:53 +0800
-From: Yi-De Wu <yi-de.wu@mediatek.com>
-To: Yingshiuan Pan <yingshiuan.pan@mediatek.com>, Ze-Yu Wang
-	<ze-yu.wang@mediatek.com>, Yi-De Wu <yi-de.wu@mediatek.com>, Rob Herring
-	<robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>,
-	Wihl Deacon <will@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
-	<mathieu.desnoyers@efficios.com>, Richard Cochran <richardcochran@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-trace-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-mediatek@lists.infradead.org>, David Bradil <dbrazdil@google.com>,
-	Trilok Soni <quic_tsoni@quicinc.com>, Jade Shih <jades.shih@mediatek.com>,
-	Ivan Tseng <ivan.tseng@mediatek.com>, My Chuang <my.chuang@mediatek.com>,
-	Shawn Hsiao <shawn.hsiao@mediatek.com>, PeiLun Suei
-	<peilun.suei@mediatek.com>, Liju Chen <liju-clr.chen@mediatek.com>, Willix
- Yeh <chi-shen.yeh@mediatek.com>, Kevenny Hsieh <kevenny.hsieh@mediatek.com>
-Subject: [PATCH v8 14/20] virt: geniezone: Add demand paging support
-Date: Thu, 28 Dec 2023 18:51:41 +0800
-Message-ID: <20231228105147.13752-15-yi-de.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20231228105147.13752-1-yi-de.wu@mediatek.com>
-References: <20231228105147.13752-1-yi-de.wu@mediatek.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21A0F4E3;
+	Thu, 28 Dec 2023 14:51:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4951C433C7;
+	Thu, 28 Dec 2023 14:51:00 +0000 (UTC)
+Date: Thu, 28 Dec 2023 09:51:49 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH] tracing: Fix blocked reader of snapshot buffer
+Message-ID: <20231228095149.77f5b45d@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK: N
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: "Yingshiuan Pan" <yingshiuan.pan@mediatek.com>
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-This page fault handler helps GenieZone hypervisor to do demand paging.
-On a lower level translation fault, GenieZone hypervisor will first
-check the fault GPA (guest physical address or IPA in ARM) is valid
-e.g. within the registered memory region, then it will setup the
-vcpu_run->exit_reason with necessary information for returning to
-gzvm driver.
+If an application blocks on the snapshot or snapshot_raw files, expecting
+to be woken up when a snapshot occurs, it will not happen. Or it may
+happen with an unexpected result.
 
-With the fault information, the gzvm driver looks up the physical
-address and call the MT_HVC_GZVM_MAP_GUEST to request the hypervisor
-maps the found PA to the fault GPA (IPA).
+That result is that the application will be reading the main buffer
+instead of the snapshot buffer. That is because when the snapshot occurs,
+the main and snapshot buffers are swapped. But the reader has a descriptor
+still pointing to the buffer that it originally connected to.
 
-There is one exception, for protected vm, we will populate full VM's
-memory region in advance in order to improve performance.
+This is fine for the main buffer readers, as they may be blocked waiting
+for a watermark to be hit, and when a snapshot occurs, the data that the
+main readers want is now on the snapshot buffer.
 
-Signed-off-by: Yingshiuan Pan <yingshiuan.pan@mediatek.com>
-Signed-off-by: Jerry Wang <ze-yu.wang@mediatek.com>
-Signed-off-by: kevenny hsieh <kevenny.hsieh@mediatek.com>
-Signed-off-by: Liju Chen <liju-clr.chen@mediatek.com>
-Signed-off-by: Yi-De Wu <yi-de.wu@mediatek.com>
+But for waiters of the snapshot buffer, they are waiting for an event to
+occur that will trigger the snapshot and they can then consume it quickly
+to save the snapshot before the next snapshot occurs. But to do this, they
+need to read the new snapshot buffer, not the old one that is now
+receiving new data.
+
+Also, it does not make sense to have a watermark "buffer_percent" on the
+snapshot buffer, as the snapshot buffer is static and does not receive new
+data except all at once.
+
+Cc: stable@vger.kernel.org
+Fixes: debdd57f5145f ("tracing: Make a snapshot feature available from userspace")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- arch/arm64/geniezone/gzvm_arch_common.h |  2 ++
- arch/arm64/geniezone/vm.c               |  9 ++++++
- drivers/virt/geniezone/Makefile         |  4 +--
- drivers/virt/geniezone/gzvm_exception.c | 39 +++++++++++++++++++++++++
- drivers/virt/geniezone/gzvm_main.c      |  2 ++
- drivers/virt/geniezone/gzvm_mmu.c       | 39 +++++++++++++++++++++++++
- drivers/virt/geniezone/gzvm_vcpu.c      |  6 ++--
- drivers/virt/geniezone/gzvm_vm.c        | 25 ++++++++++++++++
- include/linux/gzvm_drv.h                |  7 +++++
- include/uapi/linux/gzvm.h               | 11 +++++++
- 10 files changed, 140 insertions(+), 4 deletions(-)
- create mode 100644 drivers/virt/geniezone/gzvm_exception.c
+ kernel/trace/ring_buffer.c |  3 ++-
+ kernel/trace/trace.c       | 20 +++++++++++++++++---
+ 2 files changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/geniezone/gzvm_arch_common.h b/arch/arm64/geniezone/gzvm_arch_common.h
-index afb91713fc45..1f0c7a3fede8 100644
---- a/arch/arm64/geniezone/gzvm_arch_common.h
-+++ b/arch/arm64/geniezone/gzvm_arch_common.h
-@@ -24,6 +24,7 @@ enum {
- 	GZVM_FUNC_INFORM_EXIT = 14,
- 	GZVM_FUNC_MEMREGION_PURPOSE = 15,
- 	GZVM_FUNC_SET_DTB_CONFIG = 16,
-+	GZVM_FUNC_MAP_GUEST = 17,
- 	NR_GZVM_FUNC,
- };
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index e476d42c84c5..07dae67424a9 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -838,7 +838,8 @@ void ring_buffer_wake_waiters(struct trace_buffer *buffer, int cpu)
+ 	/* make sure the waiters see the new index */
+ 	smp_wmb();
  
-@@ -48,6 +49,7 @@ enum {
- #define MT_HVC_GZVM_INFORM_EXIT		GZVM_HCALL_ID(GZVM_FUNC_INFORM_EXIT)
- #define MT_HVC_GZVM_MEMREGION_PURPOSE	GZVM_HCALL_ID(GZVM_FUNC_MEMREGION_PURPOSE)
- #define MT_HVC_GZVM_SET_DTB_CONFIG	GZVM_HCALL_ID(GZVM_FUNC_SET_DTB_CONFIG)
-+#define MT_HVC_GZVM_MAP_GUEST		GZVM_HCALL_ID(GZVM_FUNC_MAP_GUEST)
- 
- #define GIC_V3_NR_LRS			16
- 
-diff --git a/arch/arm64/geniezone/vm.c b/arch/arm64/geniezone/vm.c
-index 4ca2ec43b37c..ecc43bcc2705 100644
---- a/arch/arm64/geniezone/vm.c
-+++ b/arch/arm64/geniezone/vm.c
-@@ -382,3 +382,12 @@ u64 gzvm_hva_to_pa_arch(u64 hva)
- 		return GZVM_PA_ERR_BAD;
- 	return par;
+-	rb_wake_up_waiters(&rbwork->work);
++	/* This can be called in any context */
++	irq_work_queue(&rbwork->work);
  }
-+
-+int gzvm_arch_map_guest(u16 vm_id, int memslot_id, u64 pfn, u64 gfn,
-+			u64 nr_pages)
-+{
-+	struct arm_smccc_res res;
-+
-+	return gzvm_hypcall_wrapper(MT_HVC_GZVM_MAP_GUEST, vm_id, memslot_id,
-+				    pfn, gfn, nr_pages, 0, 0, &res);
-+}
-diff --git a/drivers/virt/geniezone/Makefile b/drivers/virt/geniezone/Makefile
-index 9956f4891df2..2e12870637d5 100644
---- a/drivers/virt/geniezone/Makefile
-+++ b/drivers/virt/geniezone/Makefile
-@@ -8,5 +8,5 @@ GZVM_DIR ?= ../../../drivers/virt/geniezone
  
- gzvm-y := $(GZVM_DIR)/gzvm_main.o $(GZVM_DIR)/gzvm_vm.o \
- 	  $(GZVM_DIR)/gzvm_mmu.o $(GZVM_DIR)/gzvm_vcpu.o \
--	  $(GZVM_DIR)/gzvm_irqfd.o $(GZVM_DIR)/gzvm_ioeventfd.o
--
-+	  $(GZVM_DIR)/gzvm_irqfd.o $(GZVM_DIR)/gzvm_ioeventfd.o \
-+	  $(GZVM_DIR)/gzvm_exception.o
-diff --git a/drivers/virt/geniezone/gzvm_exception.c b/drivers/virt/geniezone/gzvm_exception.c
-new file mode 100644
-index 000000000000..31fdb4ae8db4
---- /dev/null
-+++ b/drivers/virt/geniezone/gzvm_exception.c
-@@ -0,0 +1,39 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2023 MediaTek Inc.
-+ */
+ /**
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index cfeaf2cd204e..606787edae8c 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -1902,6 +1902,9 @@ update_max_tr(struct trace_array *tr, struct task_struct *tsk, int cpu,
+ 	__update_max_tr(tr, tsk, cpu);
+ 
+ 	arch_spin_unlock(&tr->max_lock);
 +
-+#include <linux/device.h>
-+#include <linux/gzvm_drv.h>
-+
-+/**
-+ * gzvm_handle_guest_exception() - Handle guest exception
-+ * @vcpu: Pointer to struct gzvm_vcpu_run in userspace
-+ * Return:
-+ * * true - This exception has been processed, no need to back to VMM.
-+ * * false - This exception has not been processed, require userspace.
-+ */
-+bool gzvm_handle_guest_exception(struct gzvm_vcpu *vcpu)
-+{
++	/* Any waiters on the old snapshot buffer need to wake up */
++	ring_buffer_wake_waiters(tr->array_buffer.buffer, RING_BUFFER_ALL_CPUS);
+ }
+ 
+ /**
+@@ -1953,12 +1956,23 @@ update_max_tr_single(struct trace_array *tr, struct task_struct *tsk, int cpu)
+ 
+ static int wait_on_pipe(struct trace_iterator *iter, int full)
+ {
 +	int ret;
 +
-+	for (int i = 0; i < ARRAY_SIZE(vcpu->run->exception.reserved); i++) {
-+		if (vcpu->run->exception.reserved[i])
-+			return -EINVAL;
-+	}
-+
-+	switch (vcpu->run->exception.exception) {
-+	case GZVM_EXCEPTION_PAGE_FAULT:
-+		ret = gzvm_handle_page_fault(vcpu);
-+		break;
-+	case GZVM_EXCEPTION_UNKNOWN:
-+		fallthrough;
-+	default:
-+		ret = -EFAULT;
-+	}
-+
-+	if (!ret)
-+		return true;
-+	else
-+		return false;
-+}
-diff --git a/drivers/virt/geniezone/gzvm_main.c b/drivers/virt/geniezone/gzvm_main.c
-index 4e5d1b83df4a..af5ab8949206 100644
---- a/drivers/virt/geniezone/gzvm_main.c
-+++ b/drivers/virt/geniezone/gzvm_main.c
-@@ -28,6 +28,8 @@ int gzvm_err_to_errno(unsigned long err)
+ 	/* Iterators are static, they should be filled or empty */
+ 	if (trace_buffer_iter(iter, iter->cpu_file))
  		return 0;
- 	case ERR_NO_MEMORY:
- 		return -ENOMEM;
-+	case ERR_INVALID_ARGS:
-+		return -EINVAL;
- 	case ERR_NOT_SUPPORTED:
- 		return -EOPNOTSUPP;
- 	case ERR_NOT_IMPLEMENTED:
-diff --git a/drivers/virt/geniezone/gzvm_mmu.c b/drivers/virt/geniezone/gzvm_mmu.c
-index f24fa7e6d975..e6415baa064d 100644
---- a/drivers/virt/geniezone/gzvm_mmu.c
-+++ b/drivers/virt/geniezone/gzvm_mmu.c
-@@ -106,3 +106,42 @@ int gzvm_gfn_to_pfn_memslot(struct gzvm_memslot *memslot, u64 gfn,
  
- 	return 0;
- }
+-	return ring_buffer_wait(iter->array_buffer->buffer, iter->cpu_file,
+-				full);
++	ret = ring_buffer_wait(iter->array_buffer->buffer, iter->cpu_file, full);
 +
-+static int handle_single_demand_page(struct gzvm *vm, int memslot_id, u64 gfn)
-+{
-+	int ret;
-+	u64 pfn;
-+
-+	ret = gzvm_gfn_to_pfn_memslot(&vm->memslot[memslot_id], gfn, &pfn);
-+	if (unlikely(ret))
-+		return -EFAULT;
-+
-+	ret = gzvm_arch_map_guest(vm->vm_id, memslot_id, pfn, gfn, 1);
-+	if (unlikely(ret))
-+		return -EFAULT;
-+
-+	return 0;
-+}
-+
-+/**
-+ * gzvm_handle_page_fault() - Handle guest page fault, find corresponding page
-+ *                            for the faulting gpa
-+ * @vcpu: Pointer to struct gzvm_vcpu_run of the faulting vcpu
-+ *
-+ * Return:
-+ * * 0		- Success to handle guest page fault
-+ * * -EFAULT	- Failed to map phys addr to guest's GPA
-+ */
-+int gzvm_handle_page_fault(struct gzvm_vcpu *vcpu)
-+{
-+	struct gzvm *vm = vcpu->gzvm;
-+	int memslot_id;
-+	u64 gfn;
-+
-+	gfn = PHYS_PFN(vcpu->run->exception.fault_gpa);
-+	memslot_id = gzvm_find_memslot(vm, gfn);
-+	if (unlikely(memslot_id < 0))
-+		return -EFAULT;
-+
-+	return handle_single_demand_page(vm, memslot_id, gfn);
-+}
-diff --git a/drivers/virt/geniezone/gzvm_vcpu.c b/drivers/virt/geniezone/gzvm_vcpu.c
-index 77138e749e9a..455ae2e4285c 100644
---- a/drivers/virt/geniezone/gzvm_vcpu.c
-+++ b/drivers/virt/geniezone/gzvm_vcpu.c
-@@ -113,9 +113,11 @@ static long gzvm_vcpu_run(struct gzvm_vcpu *vcpu, void __user *argp)
- 		 * it's geniezone's responsibility to fill corresponding data
- 		 * structure
- 		 */
--		case GZVM_EXIT_HYPERCALL:
--			fallthrough;
- 		case GZVM_EXIT_EXCEPTION:
-+			if (!gzvm_handle_guest_exception(vcpu))
-+				need_userspace = true;
-+			break;
-+		case GZVM_EXIT_HYPERCALL:
- 			fallthrough;
- 		case GZVM_EXIT_DEBUG:
- 			fallthrough;
-diff --git a/drivers/virt/geniezone/gzvm_vm.c b/drivers/virt/geniezone/gzvm_vm.c
-index 538549ef405c..9f7e44521de5 100644
---- a/drivers/virt/geniezone/gzvm_vm.c
-+++ b/drivers/virt/geniezone/gzvm_vm.c
-@@ -23,6 +23,31 @@ u64 gzvm_gfn_to_hva_memslot(struct gzvm_memslot *memslot, u64 gfn)
- 	return memslot->userspace_addr + offset * PAGE_SIZE;
++#ifdef CONFIG_TRACER_MAX_TRACE
++	/*
++	 * Make sure this is still the snapshot buffer, as if a snapshot were
++	 * to happen, this would now be the main buffer.
++	 */
++	if (iter->snapshot)
++		iter->array_buffer = &iter->tr->max_buffer;
++#endif
++	return ret;
  }
  
-+/**
-+ * gzvm_find_memslot() - Find memslot containing this @gpa
-+ * @vm: Pointer to struct gzvm
-+ * @gfn: Guest frame number
-+ *
-+ * Return:
-+ * * >=0		- Index of memslot
-+ * * -EFAULT		- Not found
-+ */
-+int gzvm_find_memslot(struct gzvm *vm, u64 gfn)
-+{
-+	int i;
-+
-+	for (i = 0; i < GZVM_MAX_MEM_REGION; i++) {
-+		if (vm->memslot[i].npages == 0)
-+			continue;
-+
-+		if (gfn >= vm->memslot[i].base_gfn &&
-+		    gfn < vm->memslot[i].base_gfn + vm->memslot[i].npages)
-+			return i;
-+	}
-+
-+	return -EFAULT;
-+}
-+
- /**
-  * register_memslot_addr_range() - Register memory region to GenieZone
-  * @gzvm: Pointer to struct gzvm
-diff --git a/include/linux/gzvm_drv.h b/include/linux/gzvm_drv.h
-index 43d85dc5d7c0..b9e60fe5dcde 100644
---- a/include/linux/gzvm_drv.h
-+++ b/include/linux/gzvm_drv.h
-@@ -29,6 +29,7 @@
-  */
- #define NO_ERROR                (0)
- #define ERR_NO_MEMORY           (-5)
-+#define ERR_INVALID_ARGS        (-8)
- #define ERR_NOT_SUPPORTED       (-24)
- #define ERR_NOT_IMPLEMENTED     (-27)
- #define ERR_FAULT               (-40)
-@@ -123,6 +124,8 @@ int gzvm_arch_set_memregion(u16 vm_id, size_t buf_size,
- int gzvm_arch_check_extension(struct gzvm *gzvm, __u64 cap, void __user *argp);
- int gzvm_arch_create_vm(unsigned long vm_type);
- int gzvm_arch_destroy_vm(u16 vm_id);
-+int gzvm_arch_map_guest(u16 vm_id, int memslot_id, u64 pfn, u64 gfn,
-+			u64 nr_pages);
- int gzvm_vm_ioctl_arch_enable_cap(struct gzvm *gzvm,
- 				  struct gzvm_enable_cap *cap,
- 				  void __user *argp);
-@@ -141,6 +144,10 @@ int gzvm_arch_vcpu_run(struct gzvm_vcpu *vcpu, __u64 *exit_reason);
- int gzvm_arch_destroy_vcpu(u16 vm_id, int vcpuid);
- int gzvm_arch_inform_exit(u16 vm_id);
+ #ifdef CONFIG_FTRACE_STARTUP_TEST
+@@ -8560,7 +8574,7 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
  
-+int gzvm_find_memslot(struct gzvm *vm, u64 gpa);
-+int gzvm_handle_page_fault(struct gzvm_vcpu *vcpu);
-+bool gzvm_handle_guest_exception(struct gzvm_vcpu *vcpu);
-+
- int gzvm_arch_create_device(u16 vm_id, struct gzvm_create_device *gzvm_dev);
- int gzvm_arch_inject_irq(struct gzvm *gzvm, unsigned int vcpu_idx,
- 			 u32 irq, bool level);
-diff --git a/include/uapi/linux/gzvm.h b/include/uapi/linux/gzvm.h
-index f4f04403d5b3..1f134c55ac2a 100644
---- a/include/uapi/linux/gzvm.h
-+++ b/include/uapi/linux/gzvm.h
-@@ -185,6 +185,12 @@ enum {
- 	GZVM_EXIT_GZ = 0x9292000a,
- };
+ 		wait_index = READ_ONCE(iter->wait_index);
  
-+/* exception definitions of GZVM_EXIT_EXCEPTION */
-+enum {
-+	GZVM_EXCEPTION_UNKNOWN = 0x0,
-+	GZVM_EXCEPTION_PAGE_FAULT = 0x1,
-+};
-+
- /**
-  * struct gzvm_vcpu_run: Same purpose as kvm_run, this struct is
-  *			shared between userspace, kernel and
-@@ -209,6 +215,9 @@ enum {
-  *             Handle exception occurred in VM
-  * @exception: Which exception vector
-  * @error_code: Exception error codes
-+ * @fault_gpa: Fault GPA (guest physical address or IPA in ARM)
-+ * @reserved: Future-proof reservation and reset to zero in hypervisor.
-+ *            Fill up to the union size, 256 bytes.
-  * @hypercall: The nested struct in anonymous union.
-  *             Some hypercalls issued from VM must be handled
-  * @args: The hypercall's arguments
-@@ -255,6 +264,8 @@ struct gzvm_vcpu_run {
- 		struct {
- 			__u32 exception;
- 			__u32 error_code;
-+			__u64 fault_gpa;
-+			__u64 reserved[30];
- 		} exception;
- 		/* GZVM_EXIT_HYPERCALL */
- 		struct {
+-		ret = wait_on_pipe(iter, iter->tr->buffer_percent);
++		ret = wait_on_pipe(iter, iter->snapshot ? 0 : iter->tr->buffer_percent);
+ 		if (ret)
+ 			goto out;
+ 
 -- 
-2.18.0
+2.42.0
 
