@@ -1,39 +1,39 @@
 Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650D26D24;
-	Thu, 28 Dec 2023 10:52:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF8263DC;
+	Thu, 28 Dec 2023 10:52:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="mp1DGRX+"
-X-UUID: 1d48162aa56f11ee9e680517dc993faa-20231228
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="KSXYJ4HU"
+X-UUID: 1bfdeb1ea56f11ee9e680517dc993faa-20231228
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=GClm9IO7NJgwV47kSxaXujuU8xe1dpAmeELF7eE1ujk=;
-	b=mp1DGRX+EDQIE26YAbd2MyepoRUDJuxdnTDBChq5pk+UooiChJ1w05ZFFK4pASPN2wOIwvSxGy/IZxuXtnE4oyHvP/+WKdcWljw/9M1xddWx+MoPuhxbEXR/UspRMEqK7/0mQsSN6RO2ZL5jCtMvslFxXhaJXKkk8JLlf6h83kc=;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=nI6KrttaRM/LNaEDq5ru106Lo4sVpI71ZcgQf7QGbis=;
+	b=KSXYJ4HUS+pInwMn/4OragY9BG2O0i+nNZ1qDUlhusC8yi7QbKhswncRIKG0bKgpMnahqlL/cmShJxDcb7Z0Ve1quSzgV+mh0mNXY5uI7N3SiUE9opRwDSjInYXMz3r1NL7yxn3tI7IERn6iO045WkZZuG3OAUjs250yVwKNu8I=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:91e27581-c34d-4e27-986d-40cf5131a56e,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:5d391d7,CLOUDID:bb694382-8d4f-477b-89d2-1e3bdbef96d1,B
+X-CID-O-INFO: VERSION:1.1.35,REQID:96f658e0-bbb5-4b07-9d38-712f83f326c4,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:5d391d7,CLOUDID:6452aa8d-e2c0-40b0-a8fe-7c7e47299109,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
 	RL:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:
 	NO,DKR:0,DKP:0,BRR:0,BRE:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_ULN,TF_CID_SPAM_SNR
-X-UUID: 1d48162aa56f11ee9e680517dc993faa-20231228
-Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: 1bfdeb1ea56f11ee9e680517dc993faa-20231228
+Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw01.mediatek.com
 	(envelope-from <yi-de.wu@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1944825578; Thu, 28 Dec 2023 18:51:54 +0800
+	with ESMTP id 485193057; Thu, 28 Dec 2023 18:51:52 +0800
 Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Thu, 28 Dec 2023 18:51:54 +0800
+ 15.2.1118.26; Thu, 28 Dec 2023 18:51:50 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
  mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Thu, 28 Dec 2023 18:51:54 +0800
+ 15.2.1118.26 via Frontend Transport; Thu, 28 Dec 2023 18:51:50 +0800
 From: Yi-De Wu <yi-de.wu@mediatek.com>
 To: Yingshiuan Pan <yingshiuan.pan@mediatek.com>, Ze-Yu Wang
 	<ze-yu.wang@mediatek.com>, Yi-De Wu <yi-de.wu@mediatek.com>, Rob Herring
@@ -54,9 +54,9 @@ CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	Shawn Hsiao <shawn.hsiao@mediatek.com>, PeiLun Suei
 	<peilun.suei@mediatek.com>, Liju Chen <liju-clr.chen@mediatek.com>, "Willix
  Yeh" <chi-shen.yeh@mediatek.com>, Kevenny Hsieh <kevenny.hsieh@mediatek.com>
-Subject: [PATCH v8 17/20] virt: geniezone: Add memory relinquish support
-Date: Thu, 28 Dec 2023 18:51:44 +0800
-Message-ID: <20231228105147.13752-18-yi-de.wu@mediatek.com>
+Subject: [PATCH v8 01/20] docs: geniezone: Introduce GenieZone hypervisor
+Date: Thu, 28 Dec 2023 18:51:28 +0800
+Message-ID: <20231228105147.13752-2-yi-de.wu@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20231228105147.13752-1-yi-de.wu@mediatek.com>
 References: <20231228105147.13752-1-yi-de.wu@mediatek.com>
@@ -68,175 +68,162 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--6.462700-8.000000
-X-TMASE-MatchedRID: FAqaJEPp0bkCsjHNBKjIykKcYi5Qw/RVQBnqdxuJ5SBGL0g1nVmkYXB4
-	4IkzjfYyR3nAM7y+sxF8f1Kw27wTO10U3RPW+iLPdXz3l78F3Ym2McZY43zJ47UV4VfJ6SB08bf
-	335SL+13q24xRTqfKLQ+BePuQCx01y6xJm0/fVixVTfJWlqPdDEEZVEiY7PGfa0TOsL14A2lh4r
-	/wCPzhZOGXhQ8jxGrgu2drAUtvuhvIs9Qr+U/JpgKDWtq/hHcNf2g6KJZtxl1+YesuCgkiXA+Pz
-	ND1U86eKsiucgwl76rEyq0r6O7kZx8TzIzimOwPC24oEZ6SpSk6XEE7Yhw4FnIhDzh4rNQgpk/0
-	AOc358E2HoKUeqcpn7dFZQ+Cgj32Y2LpRK90P0o=
+X-TM-AS-Result: No-10--13.623400-8.000000
+X-TMASE-MatchedRID: WxZCKdO1VZMihjhlMTu+HHa57ruHAnHxFuNF4lJG6xs1LB46LFAAkkd0
+	Rzx07LDVu1YWrIMJBFIUZ7mqlsLL7wAwGIAo3ShbyATMS/tDL5ipD1R7N5OROMA5YKm8dwM6jIZ
+	02fRmyUctK7tHzSdmVLdnCNkrUAnN1ddezVny+QLiHyvyXeXh5qny79MYSKWc/uK0hv0lVwklHD
+	ysIsZQz11tBKF7hhAzucwGRxuiOSoY1mlq1H5Z3ov2/i8VNqeOWOi4GPaBr7/FpA1uJFd1mtZho
+	S9qxz0XFekDcD12A6u1XPxxyTBct3y3NtgjFBPrGLXhwJ3YV6NAq6/y5AEOOjvpyveVkrtEhCLR
+	gWbx/Un1D9AzgdWivKIys8bfOtn9+hiRYeF7szVHoKp7fxLOV7ZvJfWpnfsSEoBacoHAF/+lBxI
+	wyU8eVQMQDDSpB+BxYhdQng3DZoPhLW5g057g5cgc0seoKgtWFugFBW/IrRqNBRPxef1SsaPFjJ
+	EFr+olwXCBO/GKkVr3FLeZXNZS4KBkcgGnJ4Wm4mr4jsefoybqLrr3+QO3xTOeYkMCfRSDfJ9ey
+	qxGYOl+3BndfXUhXQ==
 X-TM-AS-User-Approved-Sender: No
 X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--6.462700-8.000000
+X-TMASE-Result: 10--13.623400-8.000000
 X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP:
-	58BCEAA5F206AE8E31147776ED6DBC96126A9E01B27FC9207549801019057C332000:8
+X-TM-SNTS-SMTP: A97F132679FFB44938030EAF818E5B0C5D6D3597C1EAF770A3466D574814B1752000:8
 X-MTK: N
 
-From: "Jerry Wang" <ze-yu.wang@mediatek.com>
+From: "Yingshiuan Pan" <yingshiuan.pan@mediatek.com>
 
-Unpin the pages when VM relinquish the pages or is destroyed.
+GenieZone is MediaTek proprietary hypervisor solution, and it is running
+in EL2 stand alone as a type-I hypervisor. It is a pure EL2
+implementation which implies it does not rely any specific host VM, and
+this behavior improves GenieZone's security as it limits its interface.
 
-Signed-off-by: Jerry Wang <ze-yu.wang@mediatek.com>
 Signed-off-by: Yingshiuan Pan <yingshiuan.pan@mediatek.com>
-Signed-off-by: Liju-Clr Chen <liju-clr.chen@mediatek.com>
+Signed-off-by: Liju Chen <liju-clr.chen@mediatek.com>
 Signed-off-by: Yi-De Wu <yi-de.wu@mediatek.com>
 ---
- drivers/virt/geniezone/gzvm_exception.c | 23 +++++++++++++++
- drivers/virt/geniezone/gzvm_mmu.c       | 39 +++++++++++++++++++++++++
- drivers/virt/geniezone/gzvm_vcpu.c      |  6 ++--
- include/linux/gzvm_drv.h                |  2 ++
- include/uapi/linux/gzvm.h               |  5 ++++
- 5 files changed, 73 insertions(+), 2 deletions(-)
+ Documentation/virt/geniezone/introduction.rst | 87 +++++++++++++++++++
+ Documentation/virt/index.rst                  |  1 +
+ MAINTAINERS                                   |  6 ++
+ 3 files changed, 94 insertions(+)
+ create mode 100644 Documentation/virt/geniezone/introduction.rst
 
-diff --git a/drivers/virt/geniezone/gzvm_exception.c b/drivers/virt/geniezone/gzvm_exception.c
-index 31fdb4ae8db4..af26d1c82791 100644
---- a/drivers/virt/geniezone/gzvm_exception.c
-+++ b/drivers/virt/geniezone/gzvm_exception.c
-@@ -37,3 +37,26 @@ bool gzvm_handle_guest_exception(struct gzvm_vcpu *vcpu)
- 	else
- 		return false;
- }
+diff --git a/Documentation/virt/geniezone/introduction.rst b/Documentation/virt/geniezone/introduction.rst
+new file mode 100644
+index 000000000000..f280476228b3
+--- /dev/null
++++ b/Documentation/virt/geniezone/introduction.rst
+@@ -0,0 +1,87 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+/**
-+ * gzvm_handle_guest_hvc() - Handle guest hvc
-+ * @vcpu: Pointer to struct gzvm_vcpu struct
-+ * Return:
-+ * * true - This hvc has been processed, no need to back to VMM.
-+ * * false - This hvc has not been processed, require userspace.
-+ */
-+bool gzvm_handle_guest_hvc(struct gzvm_vcpu *vcpu)
-+{
-+	unsigned long ipa;
-+	int ret;
++======================
++GenieZone Introduction
++======================
 +
-+	switch (vcpu->run->hypercall.args[0]) {
-+	case GZVM_HVC_MEM_RELINQUISH:
-+		ipa = vcpu->run->hypercall.args[1];
-+		ret = gzvm_handle_relinquish(vcpu, ipa);
-+		return (ret == 0) ? true : false;
-+	default:
-+		break;
-+	}
-+	return false;
-+}
-diff --git a/drivers/virt/geniezone/gzvm_mmu.c b/drivers/virt/geniezone/gzvm_mmu.c
-index 857cc68f76dc..ab0afec48381 100644
---- a/drivers/virt/geniezone/gzvm_mmu.c
-+++ b/drivers/virt/geniezone/gzvm_mmu.c
-@@ -141,6 +141,26 @@ static int gzvm_insert_ppage(struct gzvm *vm, struct gzvm_pinned_page *ppage)
- 	return 0;
- }
++Overview
++========
++GenieZone hypervisor (gzvm) is a type-1 hypervisor that supports various virtual
++machine types and provides security features such as TEE-like scenarios and
++secure boot. It can create guest VMs for security use cases and has
++virtualization capabilities for both platform and interrupt. Although the
++hypervisor can be booted independently, it requires the assistance of GenieZone
++hypervisor kernel driver(also named gzvm) to leverage the ability of Linux
++kernel for vCPU scheduling, memory management, inter-VM communication and virtio
++backend support.
++
++Supported Architecture
++======================
++GenieZone now only supports MediaTek ARM64 SoC.
++
++Features
++========
++
++- vCPU Management
++
++  VM manager aims to provide vCPUs on the basis of time sharing on physical
++  CPUs. It requires Linux kernel in host VM for vCPU scheduling and VM power
++  management.
++
++- Memory Management
++
++  Direct use of physical memory from VMs is forbidden and designed to be
++  dictated to the privilege models managed by GenieZone hypervisor for security
++  reason. With the help of gzvm module, the hypervisor would be able to manipulate
++  memory as objects.
++
++- Virtual Platform
++
++  We manage to emulate a virtual mobile platform for guest OS running on guest
++  VM. The platform supports various architecture-defined devices, such as
++  virtual arch timer, GIC, MMIO, PSCI, and exception watching...etc.
++
++- Inter-VM Communication
++
++  Communication among guest VMs was provided mainly on RPC. More communication
++  mechanisms were to be provided in the future based on VirtIO-vsock.
++
++- Device Virtualization
++
++  The solution is provided using the well-known VirtIO. The gzvm module would
++  redirect MMIO traps back to VMM where the virtual devices are mostly emulated.
++  Ioeventfd is implemented using eventfd for signaling host VM that some IO
++  events in guest VMs need to be processed.
++
++- Interrupt virtualization
++
++  All Interrupts during some guest VMs running would be handled by GenieZone
++  hypervisor with the help of gzvm module, both virtual and physical ones.
++  In case there's no guest VM running out there, physical interrupts would be
++  handled by host VM directly for performance reason. Irqfd is also implemented
++  using eventfd for accepting vIRQ requests in gzvm module.
++
++Platform architecture component
++===============================
++
++- vm
++
++  The vm component is responsible for setting up the capability and memory
++  management for the protected VMs. The capability is mainly about the lifecycle
++  control and boot context initialization. And the memory management is highly
++  integrated with ARM 2-stage translation tables to convert VA to IPA to PA
++  under proper security measures required by protected VMs.
++
++- vcpu
++
++  The vcpu component is the core of virtualizing aarch64 physical CPU runnable,
++  and it controls the vCPU lifecycle including creating, running and destroying.
++  With self-defined exit handler, the vm component would be able to act
++  accordingly before terminated.
++
++- vgic
++
++  The vgic component exposes control interfaces to Linux kernel via irqchip, and
++  we intend to support all SPI, PPI, and SGI. When it comes to virtual
++  interrupts, the GenieZone hypervisor would write to list registers and trigger
++  vIRQ injection in guest VMs via GIC.
+diff --git a/Documentation/virt/index.rst b/Documentation/virt/index.rst
+index 7fb55ae08598..cf12444db336 100644
+--- a/Documentation/virt/index.rst
++++ b/Documentation/virt/index.rst
+@@ -16,6 +16,7 @@ Virtualization Support
+    coco/sev-guest
+    coco/tdx-guest
+    hyperv/index
++   geniezone/introduction
  
-+/* Invoker of this function is responsible for locking */
-+static int gzvm_remove_ppage(struct gzvm *vm, phys_addr_t ipa)
-+{
-+	struct gzvm_pinned_page *ppage;
-+	struct rb_node *node;
-+
-+	node = rb_find((void *)ipa, &vm->pinned_pages, rb_ppage_cmp);
-+
-+	if (node)
-+		rb_erase(node, &vm->pinned_pages);
-+	else
-+		return 0;
-+
-+	ppage = container_of(node, struct gzvm_pinned_page, node);
-+	unpin_user_pages_dirty_lock(&ppage->page, 1, true);
-+	kfree(ppage);
-+
-+	return 0;
-+}
-+
- static int pin_one_page(struct gzvm *vm, unsigned long hva, u64 gpa)
- {
- 	unsigned int flags = FOLL_HWPOISON | FOLL_LONGTERM | FOLL_WRITE;
-@@ -171,6 +191,25 @@ static int pin_one_page(struct gzvm *vm, unsigned long hva, u64 gpa)
- 	return 0;
- }
+ .. only:: html and subproject
  
-+/**
-+ * gzvm_handle_relinquish() - Handle memory relinquish request from hypervisor
-+ *
-+ * @vcpu: Pointer to struct gzvm_vcpu_run in userspace
-+ * @ipa: Start address(gpa) of a reclaimed page
-+ *
-+ * Return: Always return 0 because there are no cases of failure
-+ */
-+int gzvm_handle_relinquish(struct gzvm_vcpu *vcpu, phys_addr_t ipa)
-+{
-+	struct gzvm *vm = vcpu->gzvm;
-+
-+	mutex_lock(&vm->mem_lock);
-+	gzvm_remove_ppage(vm, ipa);
-+	mutex_unlock(&vm->mem_lock);
-+
-+	return 0;
-+}
-+
- static int handle_block_demand_page(struct gzvm *vm, int memslot_id, u64 gfn)
- {
- 	unsigned long hva;
-diff --git a/drivers/virt/geniezone/gzvm_vcpu.c b/drivers/virt/geniezone/gzvm_vcpu.c
-index 455ae2e4285c..86c690749277 100644
---- a/drivers/virt/geniezone/gzvm_vcpu.c
-+++ b/drivers/virt/geniezone/gzvm_vcpu.c
-@@ -113,12 +113,14 @@ static long gzvm_vcpu_run(struct gzvm_vcpu *vcpu, void __user *argp)
- 		 * it's geniezone's responsibility to fill corresponding data
- 		 * structure
- 		 */
-+		case GZVM_EXIT_HYPERCALL:
-+			if (!gzvm_handle_guest_hvc(vcpu))
-+				need_userspace = true;
-+			break;
- 		case GZVM_EXIT_EXCEPTION:
- 			if (!gzvm_handle_guest_exception(vcpu))
- 				need_userspace = true;
- 			break;
--		case GZVM_EXIT_HYPERCALL:
--			fallthrough;
- 		case GZVM_EXIT_DEBUG:
- 			fallthrough;
- 		case GZVM_EXIT_FAIL_ENTRY:
-diff --git a/include/linux/gzvm_drv.h b/include/linux/gzvm_drv.h
-index 116d1d7c1562..17f5fb9d843d 100644
---- a/include/linux/gzvm_drv.h
-+++ b/include/linux/gzvm_drv.h
-@@ -175,6 +175,8 @@ int gzvm_arch_inform_exit(u16 vm_id);
- int gzvm_find_memslot(struct gzvm *vm, u64 gpa);
- int gzvm_handle_page_fault(struct gzvm_vcpu *vcpu);
- bool gzvm_handle_guest_exception(struct gzvm_vcpu *vcpu);
-+int gzvm_handle_relinquish(struct gzvm_vcpu *vcpu, phys_addr_t ipa);
-+bool gzvm_handle_guest_hvc(struct gzvm_vcpu *vcpu);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d1af56dc3113..184a16268032 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8979,6 +8979,12 @@ F:	include/vdso/
+ F:	kernel/time/vsyscall.c
+ F:	lib/vdso/
  
- int gzvm_arch_create_device(u16 vm_id, struct gzvm_create_device *gzvm_dev);
- int gzvm_arch_inject_irq(struct gzvm *gzvm, unsigned int vcpu_idx,
-diff --git a/include/uapi/linux/gzvm.h b/include/uapi/linux/gzvm.h
-index f858b04bf7b9..a98787a18c36 100644
---- a/include/uapi/linux/gzvm.h
-+++ b/include/uapi/linux/gzvm.h
-@@ -193,6 +193,11 @@ enum {
- 	GZVM_EXCEPTION_PAGE_FAULT = 0x1,
- };
- 
-+/* hypercall definitions of GZVM_EXIT_HYPERCALL */
-+enum {
-+	GZVM_HVC_MEM_RELINQUISH = 0xc6000009,
-+};
++GENIEZONE HYPERVISOR DRIVER
++M:	Yingshiuan Pan <yingshiuan.pan@mediatek.com>
++M:	Ze-Yu Wang <ze-yu.wang@mediatek.com>
++M:	Yi-De Wu <yi-de.wu@mediatek.com>
++F:	Documentation/virt/geniezone/
 +
- /**
-  * struct gzvm_vcpu_run: Same purpose as kvm_run, this struct is
-  *			shared between userspace, kernel and
+ GENWQE (IBM Generic Workqueue Card)
+ M:	Frank Haverkamp <haver@linux.ibm.com>
+ S:	Supported
 -- 
 2.18.0
 
