@@ -1,153 +1,381 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019B31170A;
-	Fri, 29 Dec 2023 13:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HCSywPDT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B637C433C7;
-	Fri, 29 Dec 2023 13:47:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703857670;
-	bh=SrW5nlX5snYhfbnE+gR5vFq2NPPUgdmttYN89+7fLdE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=HCSywPDTl/1kF7cj3SO5V9x7m5yilZKsE2G43DyYaFsIGUz+vbj2sTyEcmceZw16U
-	 Do5yA/wD4ntVVytalS34DvgCLWMtYuBEMZpbBocyzAaRj/Wqqzopd6Lvztqw/kHzSS
-	 g7hgSclvI1dLqcZKDxVHhm7fieG2KR4l6cg4ip+YKIVjMESfHxxRjmb7QMnvQVXQGy
-	 t92SAJLiJ1ZOVGyy66FhY/Vz/WyyvYd6lx66JzMokjRgCjCIJONN2EC62FI+Ej28lC
-	 Veas0pyzE8CLXzAKcBeczSmHJz62GABdpCC2OI80sURXHkt1TjgROUMFOeGz1wCeQZ
-	 qA+RNDqXkmmTw==
-Date: Fri, 29 Dec 2023 22:47:46 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] tracing: Fix blocked reader of snapshot buffer
-Message-Id: <20231229224746.6c55e4482a0dadf9d5a3c527@kernel.org>
-In-Reply-To: <20231228095149.77f5b45d@gandalf.local.home>
-References: <20231228095149.77f5b45d@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3868125BD;
+	Fri, 29 Dec 2023 16:17:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC999C433C9;
+	Fri, 29 Dec 2023 16:17:55 +0000 (UTC)
+Date: Fri, 29 Dec 2023 11:18:46 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Fix possible memory leak in
+ ftrace_regsiter_direct()
+Message-ID: <20231229111846.36d09812@gandalf.local.home>
+In-Reply-To: <170368070504.42064.8960569647118388081.stgit@devnote2>
+References: <170368070504.42064.8960569647118388081.stgit@devnote2>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 28 Dec 2023 09:51:49 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, 27 Dec 2023 21:38:25 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> If an application blocks on the snapshot or snapshot_raw files, expecting
-> to be woken up when a snapshot occurs, it will not happen. Or it may
-> happen with an unexpected result.
-> 
-> That result is that the application will be reading the main buffer
-> instead of the snapshot buffer. That is because when the snapshot occurs,
-> the main and snapshot buffers are swapped. But the reader has a descriptor
-> still pointing to the buffer that it originally connected to.
-> 
-> This is fine for the main buffer readers, as they may be blocked waiting
-> for a watermark to be hit, and when a snapshot occurs, the data that the
-> main readers want is now on the snapshot buffer.
-> 
-> But for waiters of the snapshot buffer, they are waiting for an event to
-> occur that will trigger the snapshot and they can then consume it quickly
-> to save the snapshot before the next snapshot occurs. But to do this, they
-> need to read the new snapshot buffer, not the old one that is now
-> receiving new data.
-> 
-> Also, it does not make sense to have a watermark "buffer_percent" on the
-> snapshot buffer, as the snapshot buffer is static and does not receive new
-> data except all at once.
+> If ftrace_register_direct() called with a large number of target
 
-This looks good to me.
+There's no function called "ftrace_register_direct()", I guess you meant
+register_ftrace_direct()?
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you!
-
+> functions (e.g. 65), the free_hash can be updated twice or more
+> in the ftrace_add_rec_direct() without freeing the previous hash
+> memory. Thus this can cause a memory leak.
 > 
+> Fix this issue by expanding the direct_hash at once before
+> adding the new entries.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Fixes: f64dd4627ec6 ("ftrace: Add multi direct register/unregister interface")
 > Cc: stable@vger.kernel.org
-> Fixes: debdd57f5145f ("tracing: Make a snapshot feature available from userspace")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->  kernel/trace/ring_buffer.c |  3 ++-
->  kernel/trace/trace.c       | 20 +++++++++++++++++---
->  2 files changed, 19 insertions(+), 4 deletions(-)
+>  kernel/trace/ftrace.c |   49 +++++++++++++++++++++++++++++++------------------
+>  1 file changed, 31 insertions(+), 18 deletions(-)
 > 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index e476d42c84c5..07dae67424a9 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -838,7 +838,8 @@ void ring_buffer_wake_waiters(struct trace_buffer *buffer, int cpu)
->  	/* make sure the waiters see the new index */
->  	smp_wmb();
->  
-> -	rb_wake_up_waiters(&rbwork->work);
-> +	/* This can be called in any context */
-> +	irq_work_queue(&rbwork->work);
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 8de8bec5f366..9269c2c3e595 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -2555,28 +2555,33 @@ unsigned long ftrace_find_rec_direct(unsigned long ip)
+>  	return entry->direct;
 >  }
 >  
->  /**
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index cfeaf2cd204e..606787edae8c 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -1902,6 +1902,9 @@ update_max_tr(struct trace_array *tr, struct task_struct *tsk, int cpu,
->  	__update_max_tr(tr, tsk, cpu);
->  
->  	arch_spin_unlock(&tr->max_lock);
-> +
-> +	/* Any waiters on the old snapshot buffer need to wake up */
-> +	ring_buffer_wake_waiters(tr->array_buffer.buffer, RING_BUFFER_ALL_CPUS);
->  }
->  
->  /**
-> @@ -1953,12 +1956,23 @@ update_max_tr_single(struct trace_array *tr, struct task_struct *tsk, int cpu)
->  
->  static int wait_on_pipe(struct trace_iterator *iter, int full)
+> -static struct ftrace_func_entry*
+> -ftrace_add_rec_direct(unsigned long ip, unsigned long addr,
+> -		      struct ftrace_hash **free_hash)
+> +static struct ftrace_hash *ftrace_expand_direct(int inc_count)
 >  {
-> +	int ret;
-> +
->  	/* Iterators are static, they should be filled or empty */
->  	if (trace_buffer_iter(iter, iter->cpu_file))
->  		return 0;
+> -	struct ftrace_func_entry *entry;
+> +	struct ftrace_hash *new_hash, *free_hash;
+> +	int size = ftrace_hash_empty(direct_functions) ? 0 :
+> +		direct_functions->count + inc_count;
 >  
-> -	return ring_buffer_wait(iter->array_buffer->buffer, iter->cpu_file,
-> -				full);
-> +	ret = ring_buffer_wait(iter->array_buffer->buffer, iter->cpu_file, full);
-> +
-> +#ifdef CONFIG_TRACER_MAX_TRACE
-> +	/*
-> +	 * Make sure this is still the snapshot buffer, as if a snapshot were
-> +	 * to happen, this would now be the main buffer.
-> +	 */
-> +	if (iter->snapshot)
-> +		iter->array_buffer = &iter->tr->max_buffer;
-> +#endif
-> +	return ret;
->  }
+> -	if (ftrace_hash_empty(direct_functions) ||
+> -	    direct_functions->count > 2 * (1 << direct_functions->size_bits)) {
+> -		struct ftrace_hash *new_hash;
+> -		int size = ftrace_hash_empty(direct_functions) ? 0 :
+> -			direct_functions->count + 1;
+> +	if (!ftrace_hash_empty(direct_functions) &&
+> +	    size <= 2 * (1 << direct_functions->size_bits))
+> +		return NULL;
 >  
->  #ifdef CONFIG_FTRACE_STARTUP_TEST
-> @@ -8560,7 +8574,7 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
->  
->  		wait_index = READ_ONCE(iter->wait_index);
->  
-> -		ret = wait_on_pipe(iter, iter->tr->buffer_percent);
-> +		ret = wait_on_pipe(iter, iter->snapshot ? 0 : iter->tr->buffer_percent);
->  		if (ret)
->  			goto out;
->  
-> -- 
-> 2.42.0
-> 
+> -		if (size < 32)
+> -			size = 32;
+> +	if (size < 32)
+> +		size = 32;
+
+Hmm, why the limit of 32? I know this was there before this patch, but this
+patch made me notice it.
+
+In dup_hash() we have:
+
+	bits = fls(size / 2);
+
+	/* Don't allocate too much */
+	if (bits > FTRACE_HASH_MAX_BITS)
+		bits = FTRACE_HASH_MAX_BITS;
+
+Where bits will determine the number of buckets.
+
+If size = 32, then bits = fls(32/2) = fls(16) = 5
+
+So the buckets will be 2^5 = 32. Thus, you will get 32 buckets even with 64
+entries, which will cause a minimum of two loops to find a bucket.
+
+Is this a concern?
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>  
+> -		new_hash = dup_hash(direct_functions, size);
+> -		if (!new_hash)
+> -			return NULL;
+> +	new_hash = dup_hash(direct_functions, size);
+> +	if (!new_hash)
+> +		return ERR_PTR(-ENOMEM);
+>  
+> -		*free_hash = direct_functions;
+> -		direct_functions = new_hash;
+> -	}
+> +	free_hash = direct_functions;
+> +	direct_functions = new_hash;
+> +
+> +	return free_hash;
+> +}
+> +
+> +static struct ftrace_func_entry*
+> +ftrace_add_rec_direct(unsigned long ip, unsigned long addr)
+> +{
+> +	struct ftrace_func_entry *entry;
+>  
+>  	entry = kmalloc(sizeof(*entry), GFP_KERNEL);
+>  	if (!entry)
+> @@ -5436,11 +5441,19 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+>  		}
+>  	}
+>  
+> +	/* ... and prepare the insertion */
+> +	free_hash = ftrace_expand_direct(hash->count);
+
+Why does the direct_functions need to be expanded before new items are
+entered? Can't we do it the way ftrace does it, and that is just to fill
+the hash, and then expand if necessary.
+
+Hmm, also, I think there's a bug here too. That is, hash_dup() does not do
+what it says. It doesn't copy it actually moves. So when you use hash_dup()
+with the source being direct_functions, it's removing the entries from the
+direct functions, and not copying them :-/
+
+That is, during the resize, the check against direct_functions will not
+find them and things will be missed!
+
+What I think we need to do, is what ftrace does, and that is to add
+everything to a temp hash first and then do an RCU assign to the
+direct_functions.
+
+> +	if (IS_ERR(free_hash)) {
+> +		err = PTR_ERR(free_hash);
+> +		free_hash = NULL;
+> +		goto out_unlock;
+> +	}
+> +
+>  	/* ... and insert them to direct_functions hash. */
+>  	err = -ENOMEM;
+>  	for (i = 0; i < size; i++) {
+>  		hlist_for_each_entry(entry, &hash->buckets[i], hlist) {
+> -			new = ftrace_add_rec_direct(entry->ip, addr, &free_hash);
+> +			new = ftrace_add_rec_direct(entry->ip, addr);
+>  			if (!new)
+>  				goto out_remove;
+>  			entry->direct = addr;
+
+This should fix both the leak and the fact that direct_functions are being
+modified while in use.
+
+Also, by reusing add_hash_entry() and removing ftrace_add_rec_direct(),
+this simplifies the code. The biggest change is changing add_hash_entry()
+to return the entry and not an int, which required updates to its other
+users.
+
+-- Steve
+
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 8de8bec5f366..78ad2c4210cf 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -1183,18 +1183,19 @@ static void __add_hash_entry(struct ftrace_hash *hash,
+ 	hash->count++;
+ }
+ 
+-static int add_hash_entry(struct ftrace_hash *hash, unsigned long ip)
++static struct ftrace_func_entry *
++add_hash_entry(struct ftrace_hash *hash, unsigned long ip)
+ {
+ 	struct ftrace_func_entry *entry;
+ 
+ 	entry = kmalloc(sizeof(*entry), GFP_KERNEL);
+ 	if (!entry)
+-		return -ENOMEM;
++		return NULL;
+ 
+ 	entry->ip = ip;
+ 	__add_hash_entry(hash, entry);
+ 
+-	return 0;
++	return entry;
+ }
+ 
+ static void
+@@ -1349,7 +1350,6 @@ alloc_and_copy_ftrace_hash(int size_bits, struct ftrace_hash *hash)
+ 	struct ftrace_func_entry *entry;
+ 	struct ftrace_hash *new_hash;
+ 	int size;
+-	int ret;
+ 	int i;
+ 
+ 	new_hash = alloc_ftrace_hash(size_bits);
+@@ -1366,8 +1366,7 @@ alloc_and_copy_ftrace_hash(int size_bits, struct ftrace_hash *hash)
+ 	size = 1 << hash->size_bits;
+ 	for (i = 0; i < size; i++) {
+ 		hlist_for_each_entry(entry, &hash->buckets[i], hlist) {
+-			ret = add_hash_entry(new_hash, entry->ip);
+-			if (ret < 0)
++			if (add_hash_entry(new_hash, entry->ip) == NULL)
+ 				goto free_hash;
+ 		}
+ 	}
+@@ -2536,7 +2535,7 @@ ftrace_find_unique_ops(struct dyn_ftrace *rec)
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+ /* Protected by rcu_tasks for reading, and direct_mutex for writing */
+-static struct ftrace_hash *direct_functions = EMPTY_HASH;
++static struct ftrace_hash __rcu *direct_functions = EMPTY_HASH;
+ static DEFINE_MUTEX(direct_mutex);
+ int ftrace_direct_func_count;
+ 
+@@ -2555,39 +2554,6 @@ unsigned long ftrace_find_rec_direct(unsigned long ip)
+ 	return entry->direct;
+ }
+ 
+-static struct ftrace_func_entry*
+-ftrace_add_rec_direct(unsigned long ip, unsigned long addr,
+-		      struct ftrace_hash **free_hash)
+-{
+-	struct ftrace_func_entry *entry;
+-
+-	if (ftrace_hash_empty(direct_functions) ||
+-	    direct_functions->count > 2 * (1 << direct_functions->size_bits)) {
+-		struct ftrace_hash *new_hash;
+-		int size = ftrace_hash_empty(direct_functions) ? 0 :
+-			direct_functions->count + 1;
+-
+-		if (size < 32)
+-			size = 32;
+-
+-		new_hash = dup_hash(direct_functions, size);
+-		if (!new_hash)
+-			return NULL;
+-
+-		*free_hash = direct_functions;
+-		direct_functions = new_hash;
+-	}
+-
+-	entry = kmalloc(sizeof(*entry), GFP_KERNEL);
+-	if (!entry)
+-		return NULL;
+-
+-	entry->ip = ip;
+-	entry->direct = addr;
+-	__add_hash_entry(direct_functions, entry);
+-	return entry;
+-}
+-
+ static void call_direct_funcs(unsigned long ip, unsigned long pip,
+ 			      struct ftrace_ops *ops, struct ftrace_regs *fregs)
+ {
+@@ -4223,8 +4189,8 @@ enter_record(struct ftrace_hash *hash, struct dyn_ftrace *rec, int clear_filter)
+ 		/* Do nothing if it exists */
+ 		if (entry)
+ 			return 0;
+-
+-		ret = add_hash_entry(hash, rec->ip);
++		if (add_hash_entry(hash, rec->ip) == NULL)
++			ret = -ENOMEM;
+ 	}
+ 	return ret;
+ }
+@@ -5266,7 +5232,8 @@ __ftrace_match_addr(struct ftrace_hash *hash, unsigned long ip, int remove)
+ 		return 0;
+ 	}
+ 
+-	return add_hash_entry(hash, ip);
++	entry = add_hash_entry(hash, ip);
++	return entry ? 0 :  -ENOMEM;
+ }
+ 
+ static int
+@@ -5410,7 +5377,7 @@ static void remove_direct_functions_hash(struct ftrace_hash *hash, unsigned long
+  */
+ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+ {
+-	struct ftrace_hash *hash, *free_hash = NULL;
++	struct ftrace_hash *hash, *new_hash = NULL, *free_hash = NULL;
+ 	struct ftrace_func_entry *entry, *new;
+ 	int err = -EBUSY, size, i;
+ 
+@@ -5436,17 +5403,44 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+ 		}
+ 	}
+ 
+-	/* ... and insert them to direct_functions hash. */
+ 	err = -ENOMEM;
++
++	/* Make a copy hash to place the new and the old entries in */
++	size += (1 << direct_functions->size_bits);
++	if (size > 32)
++		size = 32;
++	new_hash = alloc_ftrace_hash(fls(size));
++	if (!new_hash)
++		goto out_unlock;
++
++	/* Now copy over the existing direct entries */
++	size = 1 << direct_functions->size_bits;
++	for (i = 0; i < size; i++) {
++		hlist_for_each_entry(entry, &direct_functions->buckets[i], hlist) {
++			new = add_hash_entry(new_hash, entry->ip);
++			if (!new)
++				goto out_unlock;
++			new->direct = entry->direct;
++		}
++	}
++
++	/* ... and add the new entries */
++	size = 1 << hash->size_bits;
+ 	for (i = 0; i < size; i++) {
+ 		hlist_for_each_entry(entry, &hash->buckets[i], hlist) {
+-			new = ftrace_add_rec_direct(entry->ip, addr, &free_hash);
++			new = add_hash_entry(new_hash, entry->ip);
+ 			if (!new)
+-				goto out_remove;
++				goto out_unlock;
++			/* Update both the copy and the hash entry */
++			new->direct = addr;
+ 			entry->direct = addr;
+ 		}
+ 	}
+ 
++	free_hash = direct_functions;
++	rcu_assign_pointer(direct_functions, new_hash);
++	new_hash = NULL;
++
+ 	ops->func = call_direct_funcs;
+ 	ops->flags = MULTI_FLAGS;
+ 	ops->trampoline = FTRACE_REGS_ADDR;
+@@ -5454,17 +5448,17 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+ 
+ 	err = register_ftrace_function_nolock(ops);
+ 
+- out_remove:
+-	if (err)
+-		remove_direct_functions_hash(hash, addr);
+-
+  out_unlock:
+ 	mutex_unlock(&direct_mutex);
+ 
+-	if (free_hash) {
++	if (free_hash && free_hash != EMPTY_HASH) {
+ 		synchronize_rcu_tasks();
+ 		free_ftrace_hash(free_hash);
+ 	}
++
++	if (new_hash)
++		free_ftrace_hash(new_hash);
++
+ 	return err;
+ }
+ EXPORT_SYMBOL_GPL(register_ftrace_direct);
+@@ -6309,7 +6303,7 @@ ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer)
+ 
+ 				if (entry)
+ 					continue;
+-				if (add_hash_entry(hash, rec->ip) < 0)
++				if (add_hash_entry(hash, rec->ip) == NULL)
+ 					goto out;
+ 			} else {
+ 				if (entry) {
