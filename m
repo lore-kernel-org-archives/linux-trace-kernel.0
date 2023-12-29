@@ -1,20 +1,21 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3868125BD;
-	Fri, 29 Dec 2023 16:17:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC999C433C9;
-	Fri, 29 Dec 2023 16:17:55 +0000 (UTC)
-Date: Fri, 29 Dec 2023 11:18:46 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A423A12B60;
+	Fri, 29 Dec 2023 16:50:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CCDFC433C7;
+	Fri, 29 Dec 2023 16:50:44 +0000 (UTC)
+Date: Fri, 29 Dec 2023 11:51:34 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Fix possible memory leak in
- ftrace_regsiter_direct()
-Message-ID: <20231229111846.36d09812@gandalf.local.home>
-In-Reply-To: <170368070504.42064.8960569647118388081.stgit@devnote2>
-References: <170368070504.42064.8960569647118388081.stgit@devnote2>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, bpf@vger.kernel.org
+Subject: [PATCH] ftrace: Fix modification of direct_function hash while in
+ use
+Message-ID: <20231229115134.08dd5174@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -25,158 +26,96 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 27 Dec 2023 21:38:25 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> If ftrace_register_direct() called with a large number of target
+Masami Hiramatsu reported a memory leak in register_ftrace_direct() where
+if the number of new entries are added is large enough to cause two
+allocations in the loop:
 
-There's no function called "ftrace_register_direct()", I guess you meant
-register_ftrace_direct()?
+        for (i = 0; i < size; i++) {
+                hlist_for_each_entry(entry, &hash->buckets[i], hlist) {
+                        new = ftrace_add_rec_direct(entry->ip, addr, &free_hash);
+                        if (!new)
+                                goto out_remove;
+                        entry->direct = addr;
+                }
+        }
 
-> functions (e.g. 65), the free_hash can be updated twice or more
-> in the ftrace_add_rec_direct() without freeing the previous hash
-> memory. Thus this can cause a memory leak.
-> 
-> Fix this issue by expanding the direct_hash at once before
-> adding the new entries.
-> 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> Fixes: f64dd4627ec6 ("ftrace: Add multi direct register/unregister interface")
-> Cc: stable@vger.kernel.org
-> ---
->  kernel/trace/ftrace.c |   49 +++++++++++++++++++++++++++++++------------------
->  1 file changed, 31 insertions(+), 18 deletions(-)
-> 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 8de8bec5f366..9269c2c3e595 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -2555,28 +2555,33 @@ unsigned long ftrace_find_rec_direct(unsigned long ip)
->  	return entry->direct;
->  }
->  
-> -static struct ftrace_func_entry*
-> -ftrace_add_rec_direct(unsigned long ip, unsigned long addr,
-> -		      struct ftrace_hash **free_hash)
-> +static struct ftrace_hash *ftrace_expand_direct(int inc_count)
->  {
-> -	struct ftrace_func_entry *entry;
-> +	struct ftrace_hash *new_hash, *free_hash;
-> +	int size = ftrace_hash_empty(direct_functions) ? 0 :
-> +		direct_functions->count + inc_count;
->  
-> -	if (ftrace_hash_empty(direct_functions) ||
-> -	    direct_functions->count > 2 * (1 << direct_functions->size_bits)) {
-> -		struct ftrace_hash *new_hash;
-> -		int size = ftrace_hash_empty(direct_functions) ? 0 :
-> -			direct_functions->count + 1;
-> +	if (!ftrace_hash_empty(direct_functions) &&
-> +	    size <= 2 * (1 << direct_functions->size_bits))
-> +		return NULL;
->  
-> -		if (size < 32)
-> -			size = 32;
-> +	if (size < 32)
-> +		size = 32;
+Where ftrace_add_rec_direct() has:
 
-Hmm, why the limit of 32? I know this was there before this patch, but this
-patch made me notice it.
+        if (ftrace_hash_empty(direct_functions) ||
+            direct_functions->count > 2 * (1 << direct_functions->size_bits)) {
+                struct ftrace_hash *new_hash;
+                int size = ftrace_hash_empty(direct_functions) ? 0 :
+                        direct_functions->count + 1;
 
-In dup_hash() we have:
+                if (size < 32)
+                        size = 32;
 
-	bits = fls(size / 2);
+                new_hash = dup_hash(direct_functions, size);
+                if (!new_hash)
+                        return NULL;
 
-	/* Don't allocate too much */
-	if (bits > FTRACE_HASH_MAX_BITS)
-		bits = FTRACE_HASH_MAX_BITS;
+                *free_hash = direct_functions;
+                direct_functions = new_hash;
+        }
 
-Where bits will determine the number of buckets.
+The "*free_hash = direct_functions;" can happen twice, losing the previous
+allocation of direct_functions.
 
-If size = 32, then bits = fls(32/2) = fls(16) = 5
+But this also exposed a more serious bug.
 
-So the buckets will be 2^5 = 32. Thus, you will get 32 buckets even with 64
-entries, which will cause a minimum of two loops to find a bucket.
+The modification of direct_functions above is not safe. As
+direct_functions can be referenced at any time to find what direct caller
+it should call, the time between:
 
-Is this a concern?
+                new_hash = dup_hash(direct_functions, size);
+ and
+                direct_functions = new_hash;
 
+can have a race with another CPU (or even this one if it gets interrupted),
+and the entries being moved to the new hash are not referenced.
 
->  
-> -		new_hash = dup_hash(direct_functions, size);
-> -		if (!new_hash)
-> -			return NULL;
-> +	new_hash = dup_hash(direct_functions, size);
-> +	if (!new_hash)
-> +		return ERR_PTR(-ENOMEM);
->  
-> -		*free_hash = direct_functions;
-> -		direct_functions = new_hash;
-> -	}
-> +	free_hash = direct_functions;
-> +	direct_functions = new_hash;
-> +
-> +	return free_hash;
-> +}
-> +
-> +static struct ftrace_func_entry*
-> +ftrace_add_rec_direct(unsigned long ip, unsigned long addr)
-> +{
-> +	struct ftrace_func_entry *entry;
->  
->  	entry = kmalloc(sizeof(*entry), GFP_KERNEL);
->  	if (!entry)
-> @@ -5436,11 +5441,19 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
->  		}
->  	}
->  
-> +	/* ... and prepare the insertion */
-> +	free_hash = ftrace_expand_direct(hash->count);
+That's because the "dup_hash()" is really misnamed and is really a
+"move_hash()". It moves the entries from the old hash to the new one.
 
-Why does the direct_functions need to be expanded before new items are
-entered? Can't we do it the way ftrace does it, and that is just to fill
-the hash, and then expand if necessary.
+Now even if that was changed, this code is not proper as direct_functions
+should not be updated until the end. That is the best way to handle
+function reference changes, and is the way other parts of ftrace handles
+this.
 
-Hmm, also, I think there's a bug here too. That is, hash_dup() does not do
-what it says. It doesn't copy it actually moves. So when you use hash_dup()
-with the source being direct_functions, it's removing the entries from the
-direct functions, and not copying them :-/
+The following is done:
 
-That is, during the resize, the check against direct_functions will not
-find them and things will be missed!
+ 1. Change add_hash_entry() to return the entry it created and inserted
+    into the hash, and not just return success or not.
 
-What I think we need to do, is what ftrace does, and that is to add
-everything to a temp hash first and then do an RCU assign to the
-direct_functions.
+ 2. Replace ftrace_add_rec_direct() with add_hash_entry(), and remove
+    the former.
 
-> +	if (IS_ERR(free_hash)) {
-> +		err = PTR_ERR(free_hash);
-> +		free_hash = NULL;
-> +		goto out_unlock;
-> +	}
-> +
->  	/* ... and insert them to direct_functions hash. */
->  	err = -ENOMEM;
->  	for (i = 0; i < size; i++) {
->  		hlist_for_each_entry(entry, &hash->buckets[i], hlist) {
-> -			new = ftrace_add_rec_direct(entry->ip, addr, &free_hash);
-> +			new = ftrace_add_rec_direct(entry->ip, addr);
->  			if (!new)
->  				goto out_remove;
->  			entry->direct = addr;
+ 3. Allocate a "new_hash" at the start that is made for holding both the
+    new hash entries as well as the existing entries in direct_functions.
 
-This should fix both the leak and the fact that direct_functions are being
-modified while in use.
+ 4. Copy (not move) the direct_function entries over to the new_hash.
 
-Also, by reusing add_hash_entry() and removing ftrace_add_rec_direct(),
-this simplifies the code. The biggest change is changing add_hash_entry()
-to return the entry and not an int, which required updates to its other
-users.
+ 5. Copy the entries of the added hash to the new_hash.
 
--- Steve
+ 6. If everything succeeds, then use rcu_pointer_assign() to update the
+    direct_functions with the new_hash.
+
+This simplifies the code and fixes both the memory leak as well as the
+race condition mentioned above.
+
+Link: https://lore.kernel.org/all/170368070504.42064.8960569647118388081.stgit@devnote2/
+
+Cc: stable@vger.kernel.org
+Fixes: 763e34e74bb7d ("ftrace: Add register_ftrace_direct()")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ftrace.c | 100 ++++++++++++++++++++----------------------
+ 1 file changed, 47 insertions(+), 53 deletions(-)
 
 diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 8de8bec5f366..78ad2c4210cf 100644
+index 8de8bec5f366..b01ae7d36021 100644
 --- a/kernel/trace/ftrace.c
 +++ b/kernel/trace/ftrace.c
 @@ -1183,18 +1183,19 @@ static void __add_hash_entry(struct ftrace_hash *hash,
@@ -307,7 +246,7 @@ index 8de8bec5f366..78ad2c4210cf 100644
  	err = -ENOMEM;
 +
 +	/* Make a copy hash to place the new and the old entries in */
-+	size += (1 << direct_functions->size_bits);
++	size = hash->count + direct_functions->count;
 +	if (size > 32)
 +		size = 32;
 +	new_hash = alloc_ftrace_hash(fls(size));
@@ -379,3 +318,6 @@ index 8de8bec5f366..78ad2c4210cf 100644
  					goto out;
  			} else {
  				if (entry) {
+-- 
+2.42.0
+
