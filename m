@@ -1,42 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52F414A84;
-	Fri, 29 Dec 2023 21:04:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B2B4C433C7;
-	Fri, 29 Dec 2023 21:04:04 +0000 (UTC)
-Date: Fri, 29 Dec 2023 16:04:55 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, bpf@vger.kernel.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D10A23A5;
+	Sat, 30 Dec 2023 08:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DOrXnMgu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C058CC433C8;
+	Sat, 30 Dec 2023 08:41:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703925696;
+	bh=dzteouM10pv6wk8uNmQ/VLB0p6VTmDWkZ/hi/6DF8y8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=DOrXnMguPzj6kjPbJVJBJ7kOOWHicouD6MQY3Kv1TdJ7Ho6rbLqIV/Uuh3dsKLdKC
+	 wiFVZuqbXEX5wSK65we2CMbdKa4nzX2HdkBxZ1DWoe4ndj84K8un/Dw7rgKgZcg21m
+	 bwX60dCXvvbTwCPNA24KrK/Vk84lOoz+fcLqkVQNcnoRsjgyOgH7sg4MfHZc2ndqyU
+	 DEu2QQG6xG9xF89MA5BQ58hN6A7dOOUWCsQSyNahq9QDLXiX4f7X3Zear9X21iJ0z5
+	 U3Sx1H8YBD9gvmPpyse21kuuSqg7zh3cD8ZD6ap1WIKdK3/lm1ygtXK1POVLOpnZ30
+	 uYFoy4Jswp+/g==
+Date: Sat, 30 Dec 2023 17:41:31 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Jiri Olsa <jolsa@kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, bpf@vger.kernel.org
 Subject: Re: [PATCH] ftrace: Fix modification of direct_function hash while
  in use
-Message-ID: <20231229160455.17b0f136@gandalf.local.home>
+Message-Id: <20231230174131.fe6dc271f126d0e17662514c@kernel.org>
 In-Reply-To: <20231229115134.08dd5174@gandalf.local.home>
 References: <20231229115134.08dd5174@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-
-
-Masami and Jiri,
-
-This patch made it through all my tests. If I can get an Acked-by by
-Sunday, I'll include it in my push to Linus (I have a couple of other fixes
-to send him).
-
--- Steve
-
 
 On Fri, 29 Dec 2023 11:51:34 -0500
 Steven Rostedt <rostedt@goodmis.org> wrote:
@@ -98,6 +101,9 @@ Steven Rostedt <rostedt@goodmis.org> wrote:
 > should not be updated until the end. That is the best way to handle
 > function reference changes, and is the way other parts of ftrace handles
 > this.
+
+Oops, I also misunderstood.
+
 > 
 > The following is done:
 > 
@@ -119,6 +125,13 @@ Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
 > This simplifies the code and fixes both the memory leak as well as the
 > race condition mentioned above.
+
+This looks good to me.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thank you,
+
 > 
 > Link: https://lore.kernel.org/all/170368070504.42064.8960569647118388081.stgit@devnote2/
 > 
@@ -333,4 +346,10 @@ Steven Rostedt <rostedt@goodmis.org> wrote:
 >  					goto out;
 >  			} else {
 >  				if (entry) {
+> -- 
+> 2.42.0
+> 
 
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
