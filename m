@@ -1,49 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D10A23A5;
-	Sat, 30 Dec 2023 08:41:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F73375;
+	Sun, 31 Dec 2023 00:19:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DOrXnMgu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C058CC433C8;
-	Sat, 30 Dec 2023 08:41:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703925696;
-	bh=dzteouM10pv6wk8uNmQ/VLB0p6VTmDWkZ/hi/6DF8y8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=DOrXnMguPzj6kjPbJVJBJ7kOOWHicouD6MQY3Kv1TdJ7Ho6rbLqIV/Uuh3dsKLdKC
-	 wiFVZuqbXEX5wSK65we2CMbdKa4nzX2HdkBxZ1DWoe4ndj84K8un/Dw7rgKgZcg21m
-	 bwX60dCXvvbTwCPNA24KrK/Vk84lOoz+fcLqkVQNcnoRsjgyOgH7sg4MfHZc2ndqyU
-	 DEu2QQG6xG9xF89MA5BQ58hN6A7dOOUWCsQSyNahq9QDLXiX4f7X3Zear9X21iJ0z5
-	 U3Sx1H8YBD9gvmPpyse21kuuSqg7zh3cD8ZD6ap1WIKdK3/lm1ygtXK1POVLOpnZ30
-	 uYFoy4Jswp+/g==
-Date: Sat, 30 Dec 2023 17:41:31 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XAgroevB"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2cb21afa6c1so99559661fa.0;
+        Sat, 30 Dec 2023 16:19:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703981997; x=1704586797; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+4wxf2V4Kgwn4shFkWEi1vRz4S3m+eki29twTukIBuI=;
+        b=XAgroevBCxPvUQILHNvUi/Rq7kOZH1yUs7hUDbWKarYku2xH5HYFk6wxtLSA1E08mC
+         +kpwIqrshSbDViyAbPk61iH52GW6z9MOkV+/FtibFldn+fg9c9Ql2FD4l+VB8Zba/4rB
+         WWYC6lQX704w1vbJU9QzN1ztNOK3VKwu2+Ijt0ICMWMYCsirjKwHuqgOjh9Mpbv2Fzv/
+         ypgDJ2sFcDmuLbhZxF0gHqAbr9XpakIb8Sh5D8Xa0phPcn2nMhqzAk7dJwKiiU5F5Xh5
+         lNt4nbuLW2X8khwpZuYwGFTRuMqL9gfgJnR7QrfWEXGl2NKHYmvcNDo4Gr5Eg5yKM92M
+         yPYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703981997; x=1704586797;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+4wxf2V4Kgwn4shFkWEi1vRz4S3m+eki29twTukIBuI=;
+        b=LlSzbga2/zUaqN0w08dYalFHTeHuKQfI1f6HCG9p5xs8Sb4umksC7uMIjCFNFFYkyV
+         trAT9xSaHEorl0qj24KuIZieg3A7/PRtajVu5W/uBm2VuIC1EbCPKnZrujM81NQyXJ4d
+         EIcEUXujKTEBRJzpfKjq9p8ryAW7PVedXv7oFAcigBRN9FNmdn4xceatYgD22QxTLsYx
+         qjfGTgRDmbhmjYylq4yz1+N8upXVo7/jDXGa39s5wgzntB5AU80ceGLtEbc6ebV+y1et
+         wi/wlr+gc/XgerlcihKrbTbAb1JeIrSBP8nSS7tYrGD1gqob8Jij51VZd2U/gtGipyA4
+         ShBQ==
+X-Gm-Message-State: AOJu0Yx2/UV/VJsO3VFZ65qOJ3kUKHZwkOw6uuugDIT1RaT5wrQjTFz1
+	0TNiPj+q8GgCOzPlCqu6lvM=
+X-Google-Smtp-Source: AGHT+IFpXk3C7xrBbiFD/pChpmH1dvEEPb+7wEt3RH9fXEg8XlAoDMbs2aWcGZ7gNJifqJdxxBhEiA==
+X-Received: by 2002:a05:6512:944:b0:50e:3ad6:c34 with SMTP id u4-20020a056512094400b0050e3ad60c34mr5539762lft.112.1703981996288;
+        Sat, 30 Dec 2023 16:19:56 -0800 (PST)
+Received: from krava ([83.240.62.111])
+        by smtp.gmail.com with ESMTPSA id x17-20020a1709065ad100b00a27e2641941sm236513ejs.113.2023.12.30.16.19.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 30 Dec 2023 16:19:55 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Sun, 31 Dec 2023 01:19:53 +0100
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Jiri Olsa <jolsa@kernel.org>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, bpf@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>, bpf@vger.kernel.org
 Subject: Re: [PATCH] ftrace: Fix modification of direct_function hash while
  in use
-Message-Id: <20231230174131.fe6dc271f126d0e17662514c@kernel.org>
-In-Reply-To: <20231229115134.08dd5174@gandalf.local.home>
+Message-ID: <ZZCzqaxTnDB8ISZt@krava>
 References: <20231229115134.08dd5174@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231229115134.08dd5174@gandalf.local.home>
 
-On Fri, 29 Dec 2023 11:51:34 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
+On Fri, Dec 29, 2023 at 11:51:34AM -0500, Steven Rostedt wrote:
 > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
 > Masami Hiramatsu reported a memory leak in register_ftrace_direct() where
@@ -80,6 +103,16 @@ Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
 > The "*free_hash = direct_functions;" can happen twice, losing the previous
 > allocation of direct_functions.
+
+nice catch, I'm running bpf CI on this and it looks good so far [1]
+
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+
+jirka
+
+
+[1] https://github.com/kernel-patches/bpf/pull/6202
+
 > 
 > But this also exposed a more serious bug.
 > 
@@ -101,9 +134,6 @@ Steven Rostedt <rostedt@goodmis.org> wrote:
 > should not be updated until the end. That is the best way to handle
 > function reference changes, and is the way other parts of ftrace handles
 > this.
-
-Oops, I also misunderstood.
-
 > 
 > The following is done:
 > 
@@ -125,13 +155,6 @@ Oops, I also misunderstood.
 > 
 > This simplifies the code and fixes both the memory leak as well as the
 > race condition mentioned above.
-
-This looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you,
-
 > 
 > Link: https://lore.kernel.org/all/170368070504.42064.8960569647118388081.stgit@devnote2/
 > 
@@ -349,7 +372,3 @@ Thank you,
 > -- 
 > 2.42.0
 > 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
