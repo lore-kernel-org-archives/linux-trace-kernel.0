@@ -1,132 +1,103 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2541F168D6;
-	Tue,  2 Jan 2024 19:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sf+h60Ai"
-Received: from skinsburskii. (c-73-239-240-195.hsd1.wa.comcast.net [73.239.240.195])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 2C6DD20B3CC1;
-	Tue,  2 Jan 2024 11:58:13 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2C6DD20B3CC1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1704225493;
-	bh=2UaDwV/oGm+Epqzq+iuoXLl1XYKs/iiOjHPSgAf4WNI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sf+h60AikfAoNDWIfOQf+gp/7n62YjqR91jk021dI0v+1a8M9a0OEjS7fQlNbGHtT
-	 ipeSl4ZqBYQjVEH3GZlLaVHYTWm8e6nUV0SEqCtKnbq135a3/00oHsQNKX3wd4Z7BD
-	 ICaDdMQVBMMzyyO3sadV/R66AVE4C1KSJe3ErDtk=
-Date: Sun, 31 Dec 2023 19:33:01 -0800
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Alexander Graf <graf@amazon.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org,
-	linux-doc@vger.kernel.org, x86@kernel.org,
-	Eric Biederman <ebiederm@xmission.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>,
-	James Gowans <jgowans@amazon.com>, arnd@arndb.de,
-	pbonzini@redhat.com, madvenka@linux.microsoft.com,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v2 04/17] kexec: Add KHO parsing support
-Message-ID: <20240101033301.GA765@skinsburskii.>
-References: <20231222193607.15474-1-graf@amazon.com>
- <20231222193607.15474-5-graf@amazon.com>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3517516404;
+	Tue,  2 Jan 2024 20:11:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA8F3C433C7;
+	Tue,  2 Jan 2024 20:11:48 +0000 (UTC)
+Date: Tue, 2 Jan 2024 15:12:49 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "Ubisectech Sirius" <bugreport@ubisectech.com>
+Subject: [PATCH v2] tracefs: Check for dentry->d_inode exists in set_gid()
+Message-ID: <20240102151249.05da244d@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231222193607.15474-5-graf@amazon.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Dec 22, 2023 at 07:35:54PM +0000, Alexander Graf wrote:
-> +/**
-> + * kho_reserve_previous_mem - Adds all memory reservations into memblocks
-> + * and moves us out of the scratch only phase. Must be called after page tables
-> + * are initialized and memblock_allow_resize().
-> + */
-> +void __init kho_reserve_previous_mem(void)
-> +{
-> +	void *mem_virt = __va(mem_phys);
-> +	int off, err;
-> +
-> +	if (!handover_phys || !mem_phys)
-> +		return;
-> +
-> +	/*
-> +	 * We reached here because we are running inside a working linear map
-> +	 * that allows us to resize memblocks dynamically. Use the chance and
-> +	 * populate the global fdt pointer
-> +	 */
-> +	fdt = __va(handover_phys);
-> +
-> +	off = fdt_path_offset(fdt, "/");
-> +	if (off < 0) {
-> +		fdt = NULL;
-> +		return;
-> +	}
-> +
-> +	err = fdt_node_check_compatible(fdt, off, "kho-v1");
-> +	if (err) {
-> +		pr_warn("KHO has invalid compatible, disabling.");
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-It looks like KHO preserved regions won't be reserved in this case.
-Should KHO DT state be destroyed here to prevent KHO memory regions
-reuse upon rollback?
+If a getdents() is called on the tracefs directory but does not get all
+the files, it can leave a "cursor" dentry in the d_subdirs list of tracefs
+dentry. This cursor dentry does not have a d_inode for it. Before
+referencing tracefs_inode from the dentry, the d_inode must first be
+checked if it has content. If not, then it's not a tracefs_inode and can
+be ignored.
 
-> +
-> +void __init kho_populate(phys_addr_t handover_dt_phys, phys_addr_t scratch_phys,
-> +			 u64 scratch_len, phys_addr_t mem_cache_phys,
-> +			 u64 mem_cache_len)
-> +{
-> +	void *handover_dt;
-> +
-> +	/* Determine the real size of the DT */
-> +	handover_dt = early_memremap(handover_dt_phys, sizeof(struct fdt_header));
-> +	if (!handover_dt) {
-> +		pr_warn("setup: failed to memremap kexec FDT (0x%llx)\n", handover_dt_phys);
-> +		return;
-> +	}
-> +
-> +	if (fdt_check_header(handover_dt)) {
-> +		pr_warn("setup: kexec handover FDT is invalid (0x%llx)\n", handover_dt_phys);
-> +		early_memunmap(handover_dt, PAGE_SIZE);
-> +		return;
-> +	}
-> +
-> +	handover_len = fdt_totalsize(handover_dt);
-> +	handover_phys = handover_dt_phys;
-> +
-> +	/* Reserve the DT so we can still access it in late boot */
-> +	memblock_reserve(handover_phys, handover_len);
-> +
-> +	/* Reserve the mem cache so we can still access it later */
-> +	memblock_reserve(mem_cache_phys, mem_cache_len);
-> +
-> +	/*
-> +	 * We pass a safe contiguous block of memory to use for early boot purporses from
-> +	 * the previous kernel so that we can resize the memblock array as needed.
-> +	 */
-> +	memblock_add(scratch_phys, scratch_len);
-> +
-> +	if (WARN_ON(memblock_mark_scratch(scratch_phys, scratch_len))) {
-> +		pr_err("Kexec failed to mark the scratch region. Disabling KHO.");
-> +		handover_len = 0;
-> +		handover_phys = 0;
+The following caused a crash:
 
-Same question here: doesn't all the KHO state gets invalid in case of any
-restoration error?
+ #define getdents64(fd, dirp, count) syscall(SYS_getdents64, fd, dirp, count)
+ #define BUF_SIZE 256
+ #define TDIR "/tmp/file0"
+
+ int main(void)
+ {
+	char buf[BUF_SIZE];
+	int fd;
+       	int n;
+
+       	mkdir(TDIR, 0777);
+	mount(NULL, TDIR, "tracefs", 0, NULL);
+       	fd = openat(AT_FDCWD, TDIR, O_RDONLY);
+       	n = getdents64(fd, buf, BUF_SIZE);
+       	ret = mount(NULL, TDIR, NULL, MS_NOSUID|MS_REMOUNT|MS_RELATIME|MS_LAZYTIME,
+		    "gid=1000");
+	return 0;
+ }
+
+That's because the 256 BUF_SIZE was not big enough to read all the
+dentries of the tracefs file system and it left a "cursor" dentry in the
+subdirs of the tracefs root inode. Then on remounting with "gid=1000",
+it would cause an iteration of all dentries which hit:
+
+	ti = get_tracefs(dentry->d_inode);
+	if (ti && (ti->flags & TRACEFS_EVENT_INODE))
+		eventfs_update_gid(dentry, gid);
+
+Which crashed because of the dereference of the cursor dentry which had a NULL
+d_inode.
+
+In the subdir loop of the dentry lookup of set_gid(), if a child has a
+NULL d_inode, simply skip it.
+
+Link: https://lore.kernel.org/all/20240102135637.3a21fb10@gandalf.local.home/
+
+Cc: stable@vger.kernel.org
+Fixes: 7e8358edf503e ("eventfs: Fix file and directory uid and gid ownership")
+Reported-by: "Ubisectech Sirius" <bugreport@ubisectech.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v1: https://lore.kernel.org/linux-trace-kernel/20240102142311.5670813d@gandalf.local.home
+
+- Simplify the logic to just continue the loop if the cursor dentry is hit.
+
+ fs/tracefs/inode.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index 62524b20964e..bc86ffdb103b 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -215,6 +215,10 @@ static void set_gid(struct dentry *parent, kgid_t gid)
+ 		struct dentry *dentry = list_entry(tmp, struct dentry, d_child);
+ 		next = tmp->next;
+ 
++		/* Note, getdents() can add a cursor dentry with no inode */
++		if (!dentry->d_inode)
++			continue;
++
+ 		spin_lock_nested(&dentry->d_lock, DENTRY_D_LOCK_NESTED);
+ 
+ 		change_gid(dentry, gid);
+-- 
+2.42.0
 
