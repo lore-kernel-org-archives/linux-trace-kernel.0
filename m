@@ -1,110 +1,159 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA6A12E5A;
-	Tue,  2 Jan 2024 15:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F00312E60;
+	Tue,  2 Jan 2024 15:02:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FfcjT7K/"
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-595471d17baso620550eaf.3;
-        Tue, 02 Jan 2024 07:01:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704207670; x=1704812470; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lyLOp+oiw0esAy0wQraXA6wAoRvZSK9pPvSbS7IUzRg=;
-        b=FfcjT7K/Aa6JMlb2WldZc8tY2/y8zfTfwIq250OsYppLdUjhJf2DBpTo5/q7zRZD+s
-         FuDAGgJD3jhI9oM+7lLKeEUQz+xuS1uyzOcn1m8laCZLFRYNcfuGgcrZxhh5n2TSLgIv
-         g83oOT3qwyj4Ps2qw+9x+0fS4y/Nv70jEfp49lE06t+Pf3nVTjJl1xDDfF1ZbvvJwMPi
-         z4HOTmI4zJU09zeftGOUISmZkqP8wzdZw/Adu6mb2IJf9ixhtorefiIQ3Atvm2xdyrsX
-         Be3hBUOFizm3QXNrpdjNYH1VWWHcnrASrDnRPtXYah4DToB/XtihuB+I5rsgZrmNjFAp
-         2mZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704207670; x=1704812470;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lyLOp+oiw0esAy0wQraXA6wAoRvZSK9pPvSbS7IUzRg=;
-        b=XY0STWcCr5duuybY9m5t+fEuK8JodWoYG1lRW3G3QgINTiDrs/1JYWwciP7m/1bZo/
-         p5m9ystf1T9SVQY+35ZJPsfV2JW2esZIHpaSwYr1XioTvQ8bhYI5PijoXPP7imlTSkEu
-         lgIpW0g8Nz+6ecHTiHGTkNALPmM1h+o+O9btRNguL2F0keEDdzjEIRCr9lY8CHpK+8tP
-         e1Uz4sryc/IabyJ6wQupn4GMAOrIoefXHfk7z7b89iqHD2liCMZELHwvnVf2t0J/0pBG
-         kAHZGskGzq5YmkZ/BHx1h7/93fs5K3Kq5IYMfTmUZ15hTCxKEGSc/Bh/gYD6WHJyW3Um
-         nYDQ==
-X-Gm-Message-State: AOJu0YzmW3KjL5Nj1J7CDogcUDSCqNWJObC0jiz5xkPb7kjfFGjiUgXa
-	ylmeUr4W4ve5EbfzCLz7yGXlh7VYAE/tYi39yiECTZts
-X-Google-Smtp-Source: AGHT+IGURtiz3YBIe7uJ+I9DwaohQ0agFQnx8UfiF3MLBRhBFFE0f/OYUG1elum9rg9qBYgj7YsuZ8yigsW6xQpUtlQ=
-X-Received: by 2002:a4a:d47:0:b0:595:b365:ffd0 with SMTP id
- 68-20020a4a0d47000000b00595b365ffd0mr738302oob.13.1704207670235; Tue, 02 Jan
- 2024 07:01:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="llleeLZ1"
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 402Em3pb016145;
+	Tue, 2 Jan 2024 15:01:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=5DfTXPVd/eM6V5PQwyJZ3YoyiYCR8XXYxNPU2tae1Gc=;
+ b=llleeLZ1ol24GiW0XrAG7Le+6pmHGHMQalKuApVuZL2WIy3jo7ljmy4hSE5e6tp+tZCI
+ K7vlZFeuiv/E2XmsdfxAtzSKVINYWDfieCmkYkctRCNpabzr8+KUB2nXusJwdly7neN5
+ DNcOW+UTBpzWVsNnqIEaKs6c+2ubgK1P6dhBA8MeGloaMYN1rkRDWjy7SiLytVhZg7dr
+ kiohKNQcV/E2v2ncOXMdqzzU/jcx3YS7/IL4HqvoW719XvhLL4njoj2FH+7frvcgGe8w
+ aqSd5B4bEN+IyyWlW9shHwpg5pYi8PvXItMzqx1RVihM7lXWpI0URdLT+YWSkEX0GMUz XA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vcmjmgd3s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jan 2024 15:01:48 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 402EnT7r021329;
+	Tue, 2 Jan 2024 15:01:46 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vcmjmgd2v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jan 2024 15:01:45 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 402F0adP017991;
+	Tue, 2 Jan 2024 15:01:44 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vayrkd6r0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jan 2024 15:01:44 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 402F1f3350790732
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 2 Jan 2024 15:01:41 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 889F62004D;
+	Tue,  2 Jan 2024 15:01:41 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3725820043;
+	Tue,  2 Jan 2024 15:01:40 +0000 (GMT)
+Received: from osiris (unknown [9.171.22.30])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  2 Jan 2024 15:01:40 +0000 (GMT)
+Date: Tue, 2 Jan 2024 16:01:38 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Sven Schnelle <svens@linux.ibm.com>
+Subject: Re: [PATCH v3 27/34] s390/irqflags: Do not instrument
+ arch_local_irq_*() with KMSAN
+Message-ID: <20240102150138.6306-E-hca@linux.ibm.com>
+References: <20231213233605.661251-1-iii@linux.ibm.com>
+ <20231213233605.661251-28-iii@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAL0j0DF-b9ye7TD3mB-BgHvJYCN61NB+QU8Qr25NvfEv0OjPAA@mail.gmail.com>
- <20240102093102.6a74566d@gandalf.local.home>
-In-Reply-To: <20240102093102.6a74566d@gandalf.local.home>
-From: P K <pkopensrc@gmail.com>
-Date: Tue, 2 Jan 2024 20:30:59 +0530
-Message-ID: <CAL0j0DGTW+jN3vcOvjCUfLTpTSfokhcRdGoM4WRVuGcxi40Ssw@mail.gmail.com>
-Subject: Re: Unable to trace nf_nat function using kprobe with latest kernel 6.1.66-1
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231213233605.661251-28-iii@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: fwlCQf0fqngEyUEwz2n1oINtNGsURlEU
+X-Proofpoint-ORIG-GUID: 0BosCkKzyYZnSHJAxdZslg6QZCVj4M3P
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-02_04,2024-01-02_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 malwarescore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=968 suspectscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
+ adultscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401020115
 
-sure. function was available in /proc/kallsyms.
+On Thu, Dec 14, 2023 at 12:24:47AM +0100, Ilya Leoshkevich wrote:
+> KMSAN generates the following false positives on s390x:
+> 
+> [    6.063666] DEBUG_LOCKS_WARN_ON(lockdep_hardirqs_enabled())
+> [         ...]
+> [    6.577050] Call Trace:
+> [    6.619637]  [<000000000690d2de>] check_flags+0x1fe/0x210
+> [    6.665411] ([<000000000690d2da>] check_flags+0x1fa/0x210)
+> [    6.707478]  [<00000000006cec1a>] lock_acquire+0x2ca/0xce0
+> [    6.749959]  [<00000000069820ea>] _raw_spin_lock_irqsave+0xea/0x190
+> [    6.794912]  [<00000000041fc988>] __stack_depot_save+0x218/0x5b0
+> [    6.838420]  [<000000000197affe>] __msan_poison_alloca+0xfe/0x1a0
+> [    6.882985]  [<0000000007c5827c>] start_kernel+0x70c/0xd50
+> [    6.927454]  [<0000000000100036>] startup_continue+0x36/0x40
+> 
+> Between trace_hardirqs_on() and `stosm __mask, 3` lockdep thinks that
+> interrupts are on, but on the CPU they are still off. KMSAN
+> instrumentation takes spinlocks, giving lockdep a chance to see and
+> complain about this discrepancy.
+> 
+> KMSAN instrumentation is inserted in order to poison the __mask
+> variable. Disable instrumentation in the respective functions. They are
+> very small and it's easy to see that no important metadata updates are
+> lost because of this.
+> 
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+> ---
+>  arch/s390/include/asm/irqflags.h | 18 +++++++++++++++---
+>  drivers/s390/char/sclp.c         |  2 +-
+>  2 files changed, 16 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/s390/include/asm/irqflags.h b/arch/s390/include/asm/irqflags.h
+> index 02427b205c11..7353a88b2ae2 100644
+> --- a/arch/s390/include/asm/irqflags.h
+> +++ b/arch/s390/include/asm/irqflags.h
+> @@ -37,12 +37,19 @@ static __always_inline void __arch_local_irq_ssm(unsigned long flags)
+>  	asm volatile("ssm   %0" : : "Q" (flags) : "memory");
+>  }
+>  
+> -static __always_inline unsigned long arch_local_save_flags(void)
+> +#ifdef CONFIG_KMSAN
+> +#define ARCH_LOCAL_IRQ_ATTRIBUTES \
+> +	noinline notrace __no_sanitize_memory __maybe_unused
+> +#else
+> +#define ARCH_LOCAL_IRQ_ATTRIBUTES __always_inline
+> +#endif
+> +
+> +static ARCH_LOCAL_IRQ_ATTRIBUTES unsigned long arch_local_save_flags(void)
+>  {
 
-Any suggestion how to track source IP and natted IP in bpf after NAT
-masquerade?
-Basically I wanted to know the Source IP and source Port after NAT IP
-using 5 tuple lookup?
+Please change this to lower case and long single lines, so it matches the
+more common patterns:
 
--- PK
+#ifdef CONFIG_KMSAN
+#define __arch_local_irq_attributes noinline notrace __no_sanitize_memory __maybe_unused
+#else
+#define __arch_local_irq_attributes __always_inline
+#endif
 
-On Tue, Jan 2, 2024 at 8:00=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
->
-> On Tue, 2 Jan 2024 11:23:54 +0530
-> P K <pkopensrc@gmail.com> wrote:
->
-> > Hi,
-> >
-> > I am unable to trace nf_nat functions using kprobe with the latest kern=
-el.
-> > Previously in kernel 6.1.55-1 it was working fine.
-> > Can someone please check if it's broken with the latest commit or  i
-> > have to use it differently?
-> >
->
-> Note, attaching to kernel functions is never considered stable API and ma=
-y
-> break at any kernel release.
->
-> Also, if the compiler decides to inline the function, and makes it no
-> longer visible in /proc/kallsyms then that too will cause this to break.
->
-> -- Steve
->
->
-> > Mentioned below are output:
-> > Kernel - 6.1.55-1
-> > / # bpftrace -e 'kprobe:nf_nat_ipv4_manip_pkt { printf("func called\n")=
-; }'
-> > Attaching 1 probe...
-> > cannot attach kprobe, probe entry may not exist
-> > ERROR: Error attaching probe: 'kprobe:nf_nat_ipv4_manip_pkt'
-> >
-> >
-> >
-> > Kernel 6.1.55-1
-> > / # bpftrace -e 'kprobe:nf_nat_ipv4_manip_pkt { printf("func called\n")=
-; }'
-> > Attaching 1 probe...
-> > func called
-> > func called
->
+static __arch_local_irq_attributes unsigned long arch_local_save_flags(void)
+
+...
