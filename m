@@ -1,89 +1,73 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E62AEBF;
-	Tue,  2 Jan 2024 03:43:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4T3zDl56V5z29jK8;
-	Tue,  2 Jan 2024 11:41:59 +0800 (CST)
-Received: from dggpemd100005.china.huawei.com (unknown [7.185.36.102])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6737E140135;
-	Tue,  2 Jan 2024 11:43:24 +0800 (CST)
-Received: from hulk-vt.huawei.com (10.67.174.104) by
- dggpemd100005.china.huawei.com (7.185.36.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.28; Tue, 2 Jan 2024 11:43:24 +0800
-From: Chen Zhongjin <chenzhongjin@huawei.com>
-To: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
-CC: <naveen.n.rao@linux.ibm.com>, <anil.s.keshavamurthy@intel.com>,
-	<davem@davemloft.net>, <paulmck@kernel.org>, <mhiramat@kernel.org>,
-	<akpm@linux-foundation.org>, <tglx@linutronix.de>, <peterz@infradead.org>,
-	<pmladek@suse.com>, <dianders@chromium.org>, <npiggin@gmail.com>,
-	<mpe@ellerman.id.au>, <jkl820.git@gmail.com>,
-	<juerg.haefliger@canonical.com>, <rick.p.edgecombe@intel.com>,
-	<eric.devolder@oracle.com>, <mic@digikod.net>
-Subject: [RFC PATCH] kprobes: Use synchronize_rcu_tasks_rude in kprobe_optimizer
-Date: Tue, 2 Jan 2024 03:40:24 +0000
-Message-ID: <20240102034024.256326-1-chenzhongjin@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB6015BD
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  2 Jan 2024 05:54:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AoIuR9/M"
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-594e894a5eeso1696549eaf.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 01 Jan 2024 21:54:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704174845; x=1704779645; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=invCKMVVaFy0jJiADuOTq4ZK1FmopzcTk17WVZTa3qA=;
+        b=AoIuR9/MbgtAav4g7qwmRDWZG31erwl++L39SR3HkNwOS0z65xRa4bpR9T8TCFLPMs
+         e9KZx/DGHfL9vr1Cjqmzk+4DgR3oepXCvBnhhFT+WR97+JWFYd/wBHE0fvhF56Kyumcg
+         1U0wkOtecpg27MSnSv2Zhy6iYfuV4Qvp2GDZBn26WNFKqj4QPxWwCanfrzzHGdY/c99t
+         e+nn1lfRSs4tymlMCIXTzEMcLMN4loXnWtU98ALekRDd3PGsKIdrFo0JBZdas6Oe3SeZ
+         GmV70sIu+3U9mfZxujUxLK+FkM/Ueyb+Wl9n6lUTtFSalZCsI820YeRMwaw8PrYDRQ6N
+         y/Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704174845; x=1704779645;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=invCKMVVaFy0jJiADuOTq4ZK1FmopzcTk17WVZTa3qA=;
+        b=l1d3Sc5xInyuq1LCbScMtJ/gXI+hbKMzbGoQl/L6GIMX5JGih/IxSgSHj4RrnjUd1a
+         w4TiF6vsoDF2bDNmZgBAZ2o03ISYljKDOgPWj8XyXGRG+QnOugJrcF1M2xf/bZEZdLqX
+         EdfNyvagWjq37n2agsAaYAMXKAEecHkQ2jpvNam/LUroq3yE7oyJoD2XlugvbOILLsFx
+         SolOYjYgN9gTcwPbLrexKH9h2/vFIUj3vYHWR9Ms4dFqwkfOExbLpcE1vn5g/9AT9o2g
+         stiDBGMJ+eL3TpCVFDDaGtFmnXycq4JRFOrCc0far/6wQVTwyMyepguBLnSKmekYAQg0
+         W+bA==
+X-Gm-Message-State: AOJu0YxrA7DfgZI0UM8Kpi7EeguI8AmM1o6sYOimfVBVseFRoBjWhSPh
+	dHz0b1N1oHtChqFnNVzeQrzQ2xtPXNIOuv5EqLGTAOKpT7I=
+X-Google-Smtp-Source: AGHT+IFq+qfnLgvJooOVwJEDsTGpZYSyDl3n3RQCwZnMUHmQBY/iA3qVMYPKCOT5GEobfIOU0j42p3DVzMbYrL2ypUY=
+X-Received: by 2002:a4a:a9c1:0:b0:590:97b9:5565 with SMTP id
+ h1-20020a4aa9c1000000b0059097b95565mr6134484oon.12.1704174845474; Mon, 01 Jan
+ 2024 21:54:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemd100005.china.huawei.com (7.185.36.102)
+From: P K <pkopensrc@gmail.com>
+Date: Tue, 2 Jan 2024 11:23:54 +0530
+Message-ID: <CAL0j0DF-b9ye7TD3mB-BgHvJYCN61NB+QU8Qr25NvfEv0OjPAA@mail.gmail.com>
+Subject: Unable to trace nf_nat function using kprobe with latest kernel 6.1.66-1
+To: linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-There is a deadlock scenario in kprobe_optimizer():
+Hi,
 
-pid A				pid B			pid C
-kprobe_optimizer()		do_exit()		perf_kprobe_init()
-mutex_lock(&kprobe_mutex)	exit_tasks_rcu_start()	mutex_lock(&kprobe_mutex)
-synchronize_rcu_tasks()		zap_pid_ns_processes()	// waiting kprobe_mutex
-// waiting tasks_rcu_exit_srcu	kernel_wait4()
-				// waiting pid C exit
+I am unable to trace nf_nat functions using kprobe with the latest kernel.
+Previously in kernel 6.1.55-1 it was working fine.
+Can someone please check if it's broken with the latest commit or  i
+have to use it differently?
 
-To avoid this deadlock loop, use synchronize_rcu_tasks_rude() in kprobe_optimizer()
-rather than synchronize_rcu_tasks(). synchronize_rcu_tasks_rude() can also promise
-that all preempted tasks have scheduled, but it will not wait tasks_rcu_exit_srcu.
+Mentioned below are output:
+Kernel - 6.1.55-1
+/ # bpftrace -e 'kprobe:nf_nat_ipv4_manip_pkt { printf("func called\n"); }'
+Attaching 1 probe...
+cannot attach kprobe, probe entry may not exist
+ERROR: Error attaching probe: 'kprobe:nf_nat_ipv4_manip_pkt'
 
-Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
----
- arch/Kconfig     | 2 +-
- kernel/kprobes.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index f4b210ab0612..dc6a18854017 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -104,7 +104,7 @@ config STATIC_CALL_SELFTEST
- config OPTPROBES
- 	def_bool y
- 	depends on KPROBES && HAVE_OPTPROBES
--	select TASKS_RCU if PREEMPTION
-+	select TASKS_RUDE_RCU
- 
- config KPROBES_ON_FTRACE
- 	def_bool y
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index d5a0ee40bf66..09056ae50c58 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -623,7 +623,7 @@ static void kprobe_optimizer(struct work_struct *work)
- 	 * Note that on non-preemptive kernel, this is transparently converted
- 	 * to synchronoze_sched() to wait for all interrupts to have completed.
- 	 */
--	synchronize_rcu_tasks();
-+	synchronize_rcu_tasks_rude();
- 
- 	/* Step 3: Optimize kprobes after quiesence period */
- 	do_optimize_kprobes();
--- 
-2.25.1
 
+Kernel 6.1.55-1
+/ # bpftrace -e 'kprobe:nf_nat_ipv4_manip_pkt { printf("func called\n"); }'
+Attaching 1 probe...
+func called
+func called
