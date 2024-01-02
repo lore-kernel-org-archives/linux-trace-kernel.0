@@ -1,78 +1,35 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985B71773D;
-	Tue,  2 Jan 2024 14:39:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD96A12E55;
+	Tue,  2 Jan 2024 14:53:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NEFPA7vn"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 402DrFMW030277;
-	Tue, 2 Jan 2024 14:38:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=nMN2ZiX5fBPheidUVHXBOQeJqaVq22NMKNPrKMlBIko=;
- b=NEFPA7vnFk6X9GPS8sFiMjJAtY75cGHdTmLvGSk5Je/YgLCupxWV3EUPGvxEjAbwoHDY
- 2dNEsUwhGblerqNvLaMvmeUEQ53Rr8YqQ0pMonFpTK2h4KBBAsdpiRvxVEbUFUx+TQTl
- ++kGJyjvu2hhBlWp4nLtYsEVgK5HgZX2Au/OE9F4SQ6VR1fgeb68Nb+Be5hJdbAIAaO/
- 24wHoBOFAagWfY9KvHEyIaV1f4DMBkFN9/tG3Sz1LpCEf4YqUckChANqIFBDNXfnOMiw
- kInuz6kiV3cOO+1BB2Cvmikp7gS70EPKXaUHn9fQZbBf3MrVtuXCNYr6918cSDP6DRCl YA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vckrss3mg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jan 2024 14:38:55 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 402ESQmP022837;
-	Tue, 2 Jan 2024 14:38:54 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vckrss3kq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jan 2024 14:38:54 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 402CCo8h018138;
-	Tue, 2 Jan 2024 14:38:53 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vayrkd0gw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jan 2024 14:38:53 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 402Eco3o12387020
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 2 Jan 2024 14:38:50 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6D9C32004E;
-	Tue,  2 Jan 2024 14:38:50 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3108320067;
-	Tue,  2 Jan 2024 14:38:49 +0000 (GMT)
-Received: from osiris (unknown [9.171.22.30])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue,  2 Jan 2024 14:38:49 +0000 (GMT)
-Date: Tue, 2 Jan 2024 15:38:47 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Sven Schnelle <svens@linux.ibm.com>
-Subject: Re: [PATCH v3 24/34] s390/cpumf: Unpoison STCCTM output buffer
-Message-ID: <20240102143847.6306-B-hca@linux.ibm.com>
-References: <20231213233605.661251-1-iii@linux.ibm.com>
- <20231213233605.661251-25-iii@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U9Kot7xB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A473EC433C8;
+	Tue,  2 Jan 2024 14:53:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704207201;
+	bh=33py32HipQADVMip2QWDvskvo4ArE+O9uBBmaumLfiY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U9Kot7xBJ+tffPDF2Uq3v1XI+nGy2eUAWOpn4y8nL9vnMOUEOx1xZ74j/PwQFV2xk
+	 HdZwBzfSSAIKpG5mlPQTWHhmfa4u4U2m3eeXCDACaCDk21Q+axko7rhR5gjZO1kLrL
+	 0WVp/stC/NEtPgZTE6om7EWBaDttRk8HLkCyqebdjKBXWvOae431bqSrBteisYnq7/
+	 05cL3O/gmcD8jwlHnaT/z8SsUR0jUWX5izW1RoFOiBPJfVa4VUK4v8c7ehYwF8BAbx
+	 p3tFIucCeWupZ8yhu6Xo0CIH8eiG5mivO3ccyPepCNRFfggRU3QqSsJ2Ex679D2BXT
+	 JFMQGgB3FeYpw==
+Received: (nullmailer pid 2821843 invoked by uid 1000);
+	Tue, 02 Jan 2024 14:53:17 -0000
+Date: Tue, 2 Jan 2024 07:53:17 -0700
+From: Rob Herring <robh@kernel.org>
+To: Alexander Graf <graf@amazon.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-doc@vger.kernel.org, x86@kernel.org, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, Andrew Morton <akpm@linux-foundation.org>, Mark Rutland <mark.rutland@arm.com>, Tom Lendacky <thomas.lendacky@amd.com>, Ashish Kalra <ashish.kalra@amd.com>, James Gowans <jgowans@amazon.com>, Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, arnd@arndb.de, pbonzini@redhat.com, madvenka@linux.microsoft.com, Anthony Yznaga <anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, David Woodhouse <dwmw@amazon.co.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v2 17/17] devicetree: Add bindings for ftrace KHO
+Message-ID: <20240102145317.GA2815776-robh@kernel.org>
+References: <20231222193607.15474-1-graf@amazon.com>
+ <20231222195144.24532-1-graf@amazon.com>
+ <20231222195144.24532-12-graf@amazon.com>
+ <39a33f9b-0290-428d-ab1f-f90856cdb31d@kernel.org>
+ <34e78a84-a29d-4b01-a860-cac3959f6cb6@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,30 +38,39 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231213233605.661251-25-iii@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: tigr5Z3z0BxX2AirZXNHzagI1bfeH5jj
-X-Proofpoint-ORIG-GUID: qfT-irTXYoFc-48gwcgYv32GP9D1i41z
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-02_04,2024-01-02_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 malwarescore=0 bulkscore=0 spamscore=0 phishscore=0
- mlxlogscore=623 priorityscore=1501 suspectscore=0 clxscore=1015 mlxscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401020112
+In-Reply-To: <34e78a84-a29d-4b01-a860-cac3959f6cb6@amazon.com>
 
-On Thu, Dec 14, 2023 at 12:24:44AM +0100, Ilya Leoshkevich wrote:
-> stcctm() uses the "Q" constraint for dest, therefore KMSAN does not
-> understand that it fills multiple doublewords pointed to by dest, not
-> just one. This results in false positives.
+On Sun, Dec 24, 2023 at 12:20:17AM +0100, Alexander Graf wrote:
+> Hi Krzysztof!
 > 
-> Unpoison the whole dest manually with kmsan_unpoison_memory().
+> Thanks a lot for the fast review!
 > 
-> Reported-by: Alexander Gordeev <agordeev@linux.ibm.com>
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-> ---
->  arch/s390/include/asm/cpu_mf.h | 6 ++++++
->  1 file changed, 6 insertions(+)
+> On 23.12.23 15:30, Krzysztof Kozlowski wrote:
+> > On 22/12/2023 20:51, Alexander Graf wrote:
+> > > With ftrace in KHO, we are creating an ABI between old kernel and new
+> > > kernel about the state that they transfer. To ensure that we document
+> > > that state and catch any breaking change, let's add its schema to the
+> > > common devicetree bindings. This way, we can quickly reason about the
+> > > state that gets passed.
+> > Please use scripts/get_maintainers.pl to get a list of necessary people
+> > and lists to CC (and consider --no-git-fallback argument). It might
+> > happen, that command when run on an older kernel, gives you outdated
+> > entries. Therefore please be sure you base your patches on recent Linux
+> > kernel.
 
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
+[...]
+
+> > 
+> > > +            mem = < 0x101000000ULL 0x38ULL 0x101000100ULL 0x1000ULL 0x101000038ULL 0x38ULL 0x101002000ULL 0x1000ULL>;
+> > ? Do you see any of such syntax in DTS?
+> 
+> 
+> I was trying to make it easy to reason to readers about 64bit numbers - and
+> then potentially extend dtc to consume that new syntax. KHO DTs are
+> native/little endian, so dtc already has some difficulties interpreting it
+> which I'll need to fix up with patches to it eventually :). I'll change it
+> to something that looks more 32bit'y for now.
+
+"/bits/ 64 <0x0 ...>" is what you are looking for.
+
+Rob
