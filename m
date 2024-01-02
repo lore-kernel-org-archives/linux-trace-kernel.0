@@ -1,155 +1,110 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D857A12E5B;
-	Tue,  2 Jan 2024 14:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA6A12E5A;
+	Tue,  2 Jan 2024 15:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FXbIqg4H"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 402EhEM2021402;
-	Tue, 2 Jan 2024 14:57:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=bL+ZIKl6ttywS56QSUlX/YXzFOtll+hBW6t6aAV1Vp0=;
- b=FXbIqg4H6uJbPylH7RCPxkCCPirilzNe8hKTNicaeuAWBCv7bk14cvJG7UG6Wj6pzOqG
- 0MV1LxQTX10AhZ056a++KwE4/uQwt6gkeShrymB5sEeYt9T8WTLwoHx+KMNiIstjgX96
- gqhM+2MdedhFfefj4k/fiOjfZxJfbl3tsitdBcT1/t8sLGnYHXwigZL8z3cTaOuDKe3R
- /gDW0xNyfeiOsOSKg1bSzE3eKXp7RObaTpHpGRfca3i7SandTgvPNsLFI4Ucl77ksyX0
- 5V8+XdJvDyK2zhylYrT8qWzuSD2Fo3wF72lpZhRWPxMuC3zpFYy+rSJtTe9/g136ORzM wg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vcmg7re0c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jan 2024 14:56:59 +0000
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 402EjXkx029393;
-	Tue, 2 Jan 2024 14:56:56 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vcmg7rdpv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jan 2024 14:56:56 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 402ED398007417;
-	Tue, 2 Jan 2024 14:56:29 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vaxhnweh8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jan 2024 14:56:29 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 402EuQBv58393020
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 2 Jan 2024 14:56:26 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 65FF320063;
-	Tue,  2 Jan 2024 14:56:26 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 546F42004D;
-	Tue,  2 Jan 2024 14:56:25 +0000 (GMT)
-Received: from osiris (unknown [9.171.22.30])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue,  2 Jan 2024 14:56:25 +0000 (GMT)
-Date: Tue, 2 Jan 2024 15:56:23 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Sven Schnelle <svens@linux.ibm.com>
-Subject: Re: [PATCH v3 25/34] s390/diag: Unpoison diag224() output buffer
-Message-ID: <20240102145623.6306-C-hca@linux.ibm.com>
-References: <20231213233605.661251-1-iii@linux.ibm.com>
- <20231213233605.661251-26-iii@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FfcjT7K/"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-595471d17baso620550eaf.3;
+        Tue, 02 Jan 2024 07:01:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704207670; x=1704812470; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lyLOp+oiw0esAy0wQraXA6wAoRvZSK9pPvSbS7IUzRg=;
+        b=FfcjT7K/Aa6JMlb2WldZc8tY2/y8zfTfwIq250OsYppLdUjhJf2DBpTo5/q7zRZD+s
+         FuDAGgJD3jhI9oM+7lLKeEUQz+xuS1uyzOcn1m8laCZLFRYNcfuGgcrZxhh5n2TSLgIv
+         g83oOT3qwyj4Ps2qw+9x+0fS4y/Nv70jEfp49lE06t+Pf3nVTjJl1xDDfF1ZbvvJwMPi
+         z4HOTmI4zJU09zeftGOUISmZkqP8wzdZw/Adu6mb2IJf9ixhtorefiIQ3Atvm2xdyrsX
+         Be3hBUOFizm3QXNrpdjNYH1VWWHcnrASrDnRPtXYah4DToB/XtihuB+I5rsgZrmNjFAp
+         2mZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704207670; x=1704812470;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lyLOp+oiw0esAy0wQraXA6wAoRvZSK9pPvSbS7IUzRg=;
+        b=XY0STWcCr5duuybY9m5t+fEuK8JodWoYG1lRW3G3QgINTiDrs/1JYWwciP7m/1bZo/
+         p5m9ystf1T9SVQY+35ZJPsfV2JW2esZIHpaSwYr1XioTvQ8bhYI5PijoXPP7imlTSkEu
+         lgIpW0g8Nz+6ecHTiHGTkNALPmM1h+o+O9btRNguL2F0keEDdzjEIRCr9lY8CHpK+8tP
+         e1Uz4sryc/IabyJ6wQupn4GMAOrIoefXHfk7z7b89iqHD2liCMZELHwvnVf2t0J/0pBG
+         kAHZGskGzq5YmkZ/BHx1h7/93fs5K3Kq5IYMfTmUZ15hTCxKEGSc/Bh/gYD6WHJyW3Um
+         nYDQ==
+X-Gm-Message-State: AOJu0YzmW3KjL5Nj1J7CDogcUDSCqNWJObC0jiz5xkPb7kjfFGjiUgXa
+	ylmeUr4W4ve5EbfzCLz7yGXlh7VYAE/tYi39yiECTZts
+X-Google-Smtp-Source: AGHT+IGURtiz3YBIe7uJ+I9DwaohQ0agFQnx8UfiF3MLBRhBFFE0f/OYUG1elum9rg9qBYgj7YsuZ8yigsW6xQpUtlQ=
+X-Received: by 2002:a4a:d47:0:b0:595:b365:ffd0 with SMTP id
+ 68-20020a4a0d47000000b00595b365ffd0mr738302oob.13.1704207670235; Tue, 02 Jan
+ 2024 07:01:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231213233605.661251-26-iii@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: RUOkeM2Jhk_VjhploDiahEDWYEBVFPeb
-X-Proofpoint-GUID: _T0ziB-ASJYSISr80eNxgXOERvkM-ZsL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-02_04,2024-01-02_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- suspectscore=0 phishscore=0 mlxscore=0 bulkscore=0 lowpriorityscore=0
- adultscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=999
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401020115
+References: <CAL0j0DF-b9ye7TD3mB-BgHvJYCN61NB+QU8Qr25NvfEv0OjPAA@mail.gmail.com>
+ <20240102093102.6a74566d@gandalf.local.home>
+In-Reply-To: <20240102093102.6a74566d@gandalf.local.home>
+From: P K <pkopensrc@gmail.com>
+Date: Tue, 2 Jan 2024 20:30:59 +0530
+Message-ID: <CAL0j0DGTW+jN3vcOvjCUfLTpTSfokhcRdGoM4WRVuGcxi40Ssw@mail.gmail.com>
+Subject: Re: Unable to trace nf_nat function using kprobe with latest kernel 6.1.66-1
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 14, 2023 at 12:24:45AM +0100, Ilya Leoshkevich wrote:
-> Diagnose 224 stores 4k bytes, which cannot be deduced from the inline
-> assembly constraints. This leads to KMSAN false positives.
-> 
-> Unpoison the output buffer manually with kmsan_unpoison_memory().
-> 
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-> ---
->  arch/s390/kernel/diag.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/s390/kernel/diag.c b/arch/s390/kernel/diag.c
-> index 92fdc35f028c..fb83a21014d0 100644
-> --- a/arch/s390/kernel/diag.c
-> +++ b/arch/s390/kernel/diag.c
-> @@ -9,6 +9,7 @@
->  #include <linux/export.h>
->  #include <linux/init.h>
->  #include <linux/cpu.h>
-> +#include <linux/kmsan-checks.h>
->  #include <linux/seq_file.h>
->  #include <linux/debugfs.h>
->  #include <linux/vmalloc.h>
-> @@ -255,6 +256,7 @@ int diag224(void *ptr)
->  		"1:\n"
->  		EX_TABLE(0b,1b)
->  		: "+d" (rc) :"d" (0), "d" (addr) : "memory");
-> +	kmsan_unpoison_memory(ptr, PAGE_SIZE);
+sure. function was available in /proc/kallsyms.
 
-Wouldn't it be better to adjust the inline assembly instead?
-Something like this:
+Any suggestion how to track source IP and natted IP in bpf after NAT
+masquerade?
+Basically I wanted to know the Source IP and source Port after NAT IP
+using 5 tuple lookup?
 
-diff --git a/arch/s390/kernel/diag.c b/arch/s390/kernel/diag.c
-index 92fdc35f028c..b1b0acda50c6 100644
---- a/arch/s390/kernel/diag.c
-+++ b/arch/s390/kernel/diag.c
-@@ -247,14 +247,18 @@ int diag224(void *ptr)
- {
- 	unsigned long addr = __pa(ptr);
- 	int rc = -EOPNOTSUPP;
-+	struct _d {
-+		char _d[4096];
-+	};
- 
- 	diag_stat_inc(DIAG_STAT_X224);
--	asm volatile(
--		"	diag	%1,%2,0x224\n"
--		"0:	lhi	%0,0x0\n"
-+	asm volatile("\n"
-+		"	diag	%[type],%[addr],0x224\n"
-+		"0:	lhi	%[rc],0\n"
- 		"1:\n"
- 		EX_TABLE(0b,1b)
--		: "+d" (rc) :"d" (0), "d" (addr) : "memory");
-+		: [rc] "+d" (rc), "=m" (*(struct _d *)ptr)
-+		: [type] "d" (0), [addr] "d" (addr));
- 	return rc;
- }
- EXPORT_SYMBOL(diag224);
+-- PK
+
+On Tue, Jan 2, 2024 at 8:00=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
+>
+> On Tue, 2 Jan 2024 11:23:54 +0530
+> P K <pkopensrc@gmail.com> wrote:
+>
+> > Hi,
+> >
+> > I am unable to trace nf_nat functions using kprobe with the latest kern=
+el.
+> > Previously in kernel 6.1.55-1 it was working fine.
+> > Can someone please check if it's broken with the latest commit or  i
+> > have to use it differently?
+> >
+>
+> Note, attaching to kernel functions is never considered stable API and ma=
+y
+> break at any kernel release.
+>
+> Also, if the compiler decides to inline the function, and makes it no
+> longer visible in /proc/kallsyms then that too will cause this to break.
+>
+> -- Steve
+>
+>
+> > Mentioned below are output:
+> > Kernel - 6.1.55-1
+> > / # bpftrace -e 'kprobe:nf_nat_ipv4_manip_pkt { printf("func called\n")=
+; }'
+> > Attaching 1 probe...
+> > cannot attach kprobe, probe entry may not exist
+> > ERROR: Error attaching probe: 'kprobe:nf_nat_ipv4_manip_pkt'
+> >
+> >
+> >
+> > Kernel 6.1.55-1
+> > / # bpftrace -e 'kprobe:nf_nat_ipv4_manip_pkt { printf("func called\n")=
+; }'
+> > Attaching 1 probe...
+> > func called
+> > func called
+>
