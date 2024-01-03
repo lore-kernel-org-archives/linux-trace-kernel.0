@@ -1,59 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78F61DA23;
-	Wed,  3 Jan 2024 21:24:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C96FC433C8;
-	Wed,  3 Jan 2024 21:24:32 +0000 (UTC)
-Date: Wed, 3 Jan 2024 16:25:35 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, Linux
- Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH v2] ring-buffer/Documentation: Add documentation on
- buffer_percent file
-Message-ID: <20240103162535.6de92d55@gandalf.local.home>
-In-Reply-To: <87h6ju86fh.fsf@meer.lwn.net>
-References: <20231226130149.4685c838@gandalf.local.home>
-	<87h6ju86fh.fsf@meer.lwn.net>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E810D1D687;
+	Wed,  3 Jan 2024 21:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="UwyT4oom"
+Received: from localhost (unknown [IPv6:2601:280:5e00:7e19::646])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 27D511C33;
+	Wed,  3 Jan 2024 21:36:48 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 27D511C33
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1704317808; bh=Pp+S4dnT1+94l+jOINYFV0VO5dbfPFIuxTyiE3wcd/M=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=UwyT4oomfbvbcT8MGD+wZGT6FriTY4R6KbSyczzQOBTXWE9swrKrKpvA3Gl1zJavp
+	 23Mt7u4Kj42970Uz1uBBavRAZzTn72w+chbeRtjXgYF1H50EmI0hMj91Gxf8NjmyWw
+	 Wd0tw2Rjb6gJZ2R1RxulRYFHFBgkfEz1Os8ozxjjhQ3lfogH3rPx6MIWE4snzAOJUZ
+	 7ly/FjrT4IwFJgvifG+q9YpUwqIdoSGLa5jmzY7XXUl6OC8XSIgxqD6SxrOW5fFPUr
+	 8t/FSj+/mT820UVjTQx86dBWCnB0AlJCg2DiDlDpwjCzB+LGGQk3ECOQigWVcdEKaM
+	 uE6BzSVBv+C8A==
+From: Jonathan Corbet <corbet@lwn.net>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-doc@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] docs, kprobes: Update email address of Masami
+ Hiramatsu
+In-Reply-To: <20231219062330.22813-2-yangtiezhu@loongson.cn>
+References: <20231219062330.22813-1-yangtiezhu@loongson.cn>
+ <20231219062330.22813-2-yangtiezhu@loongson.cn>
+Date: Wed, 03 Jan 2024 14:36:47 -0700
+Message-ID: <87mstm6qvk.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On Wed, 03 Jan 2024 14:15:30 -0700
-Jonathan Corbet <corbet@lwn.net> wrote:
+Tiezhu Yang <yangtiezhu@loongson.cn> writes:
 
-> Steven Rostedt <rostedt@goodmis.org> writes:
-> 
-> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> >
-> > When the buffer_percent file was added to the kernel, the documentation
-> > should have been updated to document what that file does.
-> >
-> > Fixes: 03329f9939781 ("tracing: Add tracefs file buffer_percentage")
-> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> > ---
-> > Changes since v1: https://lore.kernel.org/all/20231226123525.71a6d0fb@gandalf.local.home/
-> >
-> > - Fixed some grammar issues.
-> >
-> >  Documentation/trace/ftrace.rst | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)  
-> 
-> Are you planning on shipping this one upstream, or would you like me to
-> pick it up?
+> According to the latest authorship and Signed-off-by:
+>
+>   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
+> Masami Hiramatsu is working at Google, so the current email @redhat.com
+> is out of date, it is better to use the email @kernel.org.
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  Documentation/trace/kprobes.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/trace/kprobes.rst b/Documentation/trace/kprobes.rst
+> index f825970a1495..968ae080accd 100644
+> --- a/Documentation/trace/kprobes.rst
+> +++ b/Documentation/trace/kprobes.rst
+> @@ -4,7 +4,7 @@ Kernel Probes (Kprobes)
+>  
+>  :Author: Jim Keniston <jkenisto@us.ibm.com>
+>  :Author: Prasanna S Panchamukhi <prasanna.panchamukhi@gmail.com>
+> -:Author: Masami Hiramatsu <mhiramat@redhat.com>
+> +:Author: Masami Hiramatsu <mhiramat@kernel.org>
 
-I was hoping you can take it, but please take v3.
+Masami, is this change OK with you?
 
-  https://lore.kernel.org/all/20231229122402.537eb252@gandalf.local.home/
+Thanks,
 
-Thanks!
-
--- Steve
+jon
