@@ -1,414 +1,448 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9336F17988;
-	Wed,  3 Jan 2024 05:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZxRJdLZl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17922C433CB;
-	Wed,  3 Jan 2024 05:17:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704259031;
-	bh=Ftpkj8e4e/uJKLz0f6l5DA/ZEcA8s4mTAOFPduXaCbI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ZxRJdLZlbSrkV7T82ZKgPZx+llIrTh1kkLZc/KEO7WxKtoanyk3NZKivKe6QXK0L2
-	 Xu+chuiAZYryC0swEd9TBWTSF9Au9oBBPt3TNzesNPUCOYmZC5MCc1wCzoFRsloYmG
-	 5ZZyhjm0H9noaYSTNk8Bay5WbI41FsYHxeJUcGzWawzag55KMgf1s2OThovcAqEHTQ
-	 xJ7osUUwAW+uZj5K8co7VMeys0upolKqVDqo2Tt7D1SrAR3GBCNpc7AiPxtbYM0D8e
-	 FWjHlugYXJ4RV5mL/rOPl8XxamR3HNYnu5j2UUzCV5KVc9XwS5odBWtj9x98XJ6R10
-	 NB8qYe7fqkh1A==
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2048e63dbd9so3256956fac.1;
-        Tue, 02 Jan 2024 21:17:11 -0800 (PST)
-X-Gm-Message-State: AOJu0YwbD1s0p/qx/oAhkDodmDLu2YhZ3sUt/tpGvlrGhG9DpYq0qbbm
-	7Mvh8JfCjOeNU1Q5MJoRs+pxsieGn8CWBUc6kiM=
-X-Google-Smtp-Source: AGHT+IE4S3FLEXM55aEyV/3DkpRfihQLelFHpLW6nefXRLOPEfw7AVJL15lBRzfviRegU7+JEIHwQsIrADmKgZIeMcc=
-X-Received: by 2002:a05:6871:1c5:b0:204:5a14:c4c9 with SMTP id
- q5-20020a05687101c500b002045a14c4c9mr12651064oad.52.1704259030325; Tue, 02
- Jan 2024 21:17:10 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39F61A726;
+	Wed,  3 Jan 2024 15:24:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9DEDC433C8;
+	Wed,  3 Jan 2024 15:24:50 +0000 (UTC)
+Date: Wed, 3 Jan 2024 10:25:53 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Subject: [PATCH] eventfs: Stop using dcache_readdir() for getdents()
+Message-ID: <20240103102553.17a19cea@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231204214635.2916691-1-alessandro.carminati@gmail.com>
- <CAK7LNASo6dDrgt=cyLDBqSuZKdb=+SpJCnigBXWN8Y5ricECKQ@mail.gmail.com> <CAPp5cGSYUvOXdR8e_N-LcJY74hrXFQitykCWN3NDYmQ48nyBNA@mail.gmail.com>
-In-Reply-To: <CAPp5cGSYUvOXdR8e_N-LcJY74hrXFQitykCWN3NDYmQ48nyBNA@mail.gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Wed, 3 Jan 2024 14:16:33 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARZ07hnAH_LT0QDKuHmn23Mgs-v124B3rpVjvBD=j21fA@mail.gmail.com>
-Message-ID: <CAK7LNARZ07hnAH_LT0QDKuHmn23Mgs-v124B3rpVjvBD=j21fA@mail.gmail.com>
-Subject: Re: [PATCH v7] scripts/link-vmlinux.sh: Add alias to duplicate
- symbols for kallsyms
-To: Alessandro Carminati <alessandro.carminati@gmail.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Mladek <pmladek@suse.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Daniel Bristot de Oliveira <bristot@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Alexander Lobakin <aleksander.lobakin@intel.com>, 
-	Nick Alcock <nick.alcock@oracle.com>, Kris Van Hees <kris.van.hees@oracle.com>, 
-	Eugene Loh <eugene.loh@oracle.com>, Francis Laniel <flaniel@linux.microsoft.com>, 
-	Viktor Malik <vmalik@redhat.com>, Tom Rix <trix@redhat.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 1, 2024 at 8:11=E2=80=AFPM Alessandro Carminati
-<alessandro.carminati@gmail.com> wrote:
->
-> Hello,
->
->
->
-> Il giorno dom 31 dic 2023 alle ore 06:35 Masahiro Yamada
-> <masahiroy@kernel.org> ha scritto:
-> >
-> > On Tue, Dec 5, 2023 at 6:48=E2=80=AFAM Alessandro Carminati (Red Hat)
-> > <alessandro.carminati@gmail.com> wrote:
-> > >
-> > > In the kernel environment, situations frequently arise where identica=
-l
-> > > names are shared among symbols within both the core image and modules=
-.
-> > > While this doesn't pose issues for the kernel's binary itself, it
-> > > complicates trace or probe operations using tools like kprobe.
-> > >
-> > > This patch introduces "kas_alias" to address this challenge.
-> > >
-> > > During the kernel's build process, just before linking the vmlinux
-> > > image in the "scripts/link-vmlinux.sh", symbol name frequencies are
-> > > collected.
-> > > This collection includes both the core kernel components and modules.
-> > > Subsequently, within the same action, the nm data relative to vmlinux
-> > > is modified by adding aliases based on the comprehensive symbol
-> > > information gathered.
-> > >
-> > > The collection process occurs in two phases:
-> > >
-> > > 1. First phase: Executed during the linking of vmlinux, "kas_alias" s=
-cans
-> > >    all symbols provided by the 'nm' data against the vmlinux core ima=
-ge
-> > >    and all objects used for module linkage. This phase requires all
-> > >    modules objects to be produced at this stage, thereby adding a vml=
-inux
-> > >    dependency for linking modules in 'scripts/Makefile.modfinal'.
-> > >
-> > > 2. Second phase: In a subsequent run in the same build, "kas_alias"
-> > >    processes module objects and injects aliases into the objects' sym=
-bol
-> > >    tables where necessary. This operation is done by modifying
-> > >    'scripts/Makefile.modfinal' to include an action for each processe=
-d
-> > >    module.
-> > >
-> > > Example:
-> > >
-> > > Consider the symbol "device_show", you can expect an output like the
-> > > following:
-> > >
-> > >  ~ # cat /proc/kallsyms | grep " name_show"
-> > > ffffcaa2bb4f01c8 t name_show
-> > > ffffcaa2bb4f01c8 t name_show@kernel_irq_irqdesc_c_264
-> > > ffffcaa2bb9c1a30 t name_show
-> > > ffffcaa2bb9c1a30 t name_show@drivers_pnp_card_c_186
-> > > ffffcaa2bbac4754 t name_show
-> > > ffffcaa2bbac4754 t name_show@drivers_regulator_core_c_678
-> > > ffffcaa2bbba4900 t name_show
-> > > ffffcaa2bbba4900 t name_show@drivers_base_power_wakeup_stats_c_93
-> > > ffffcaa2bbec4038 t name_show
-> > > ffffcaa2bbec4038 t name_show@drivers_rtc_sysfs_c_26
-> > > ffffcaa2bbecc920 t name_show
-> > > ffffcaa2bbecc920 t name_show@drivers_i2c_i2c_core_base_c_660
-> > > ffffcaa2bbed3840 t name_show
-> > > ffffcaa2bbed3840 t name_show@drivers_i2c_i2c_dev_c_100
-> > > ffffcaa2bbef7210 t name_show
-> > > ffffcaa2bbef7210 t name_show@drivers_pps_sysfs_c_66
-> > > ffffcaa2bbf03328 t name_show
-> > > ffffcaa2bbf03328 t name_show@drivers_hwmon_hwmon_c_72
-> > > ffffcaa2bbff6f3c t name_show
-> > > ffffcaa2bbff6f3c t name_show@drivers_remoteproc_remoteproc_sysfs_c_21=
-5
-> > > ffffcaa2bbff8d78 t name_show
-> > > ffffcaa2bbff8d78 t name_show@drivers_rpmsg_rpmsg_core_c_455
-> > > ffffcaa2bbfff7a4 t name_show
-> > > ffffcaa2bbfff7a4 t name_show@drivers_devfreq_devfreq_c_1395
-> > > ffffcaa2bc001f60 t name_show
-> > > ffffcaa2bc001f60 t name_show@drivers_extcon_extcon_c_389
-> > > ffffcaa2bc009890 t name_show
-> > > ffffcaa2bc009890 t name_show@drivers_iio_industrialio_core_c_1396
-> > > ffffcaa2bc01212c t name_show
-> > > ffffcaa2bc01212c t name_show@drivers_iio_industrialio_trigger_c_51
-> > > ffffcaa2bc025e2c t name_show
-> > > ffffcaa2bc025e2c t name_show@drivers_fpga_fpga_mgr_c_618
-> > > ffffcaa2a052102c t name_show    [hello]
-> > > ffffcaa2a052102c t name_show@hello_hello_c_8    [hello]
-> > > ffffcaa2a051955c t name_show    [rpmsg_char]
-> > > ffffcaa2a051955c t name_show@drivers_rpmsg_rpmsg_char_c_365     [rpms=
-g_char]
-> > >
-> > > where hello, is a plain helloworld module built OOT.
-> > >
-> > > Tested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > Signed-off-by: Alessandro Carminati (Red Hat) <alessandro.carminati@g=
-mail.com>
-> > >
-> > > ---
-> > >
-> > > NOTE1:
-> > > About the symbols name duplication that happens as consequence of the
-> > > inclusion compat_binfmt_elf.c does, it is evident that this corner is
-> > > inherently challenging the addr2line approach.
-> > > Attempting to conceal this limitation would be counterproductive.
-> > >
-> > > compat_binfmt_elf.c includes directly binfmt_elf.c, addr2line can't h=
-elp
-> > > but report all functions and data declared by that file, coming from
-> > > binfmt_elf.c.
-> > >
-> > > My position is that, rather than producing a more complicated pipelin=
-e
-> > > to handle this corner case, it is better to fix the compat_binfmt_elf=
-.c
-> > > anomaly.
-> > >
-> > > This patch does not deal with the two potentially problematic symbols
-> > > defined by compat_binfmt_elf.c
-> > >
-> > > Changes from v1:
-> > > * Integrated changes requested by Masami to exclude symbols with pref=
-ixes
-> > >   "_cfi" and "_pfx".
-> > > * Introduced a small framework to handle patterns that need to be exc=
-luded
-> > >   from the alias production.
-> > > * Excluded other symbols using the framework.
-> > > * Introduced the ability to discriminate between text and data symbol=
-s.
-> > > * Added two new config symbols in this version:
-> > >   CONFIG_KALLSYMS_ALIAS_DATA, which allows data for data, and
-> > >   CONFIG_KALLSYMS_ALIAS_DATA_ALL, which excludes all filters and prov=
-ides
-> > >   an alias for each duplicated symbol.
-> > >
-> > > https://lore.kernel.org/all/20230711151925.1092080-1-alessandro.carmi=
-nati@gmail.com/
-> > >
-> > > Changes from v2:
-> > > * Alias tags are created by querying DWARF information from the vmlin=
-ux.
-> > > * The filename + line number is normalized and appended to the origin=
-al
-> > >   name.
-> > > * The tag begins with '@' to indicate the symbol source.
-> > > * Not a change, but worth mentioning, since the alias is added to the
-> > >   existing list, the old duplicated name is preserved, and the livepa=
-tch
-> > >   way of dealing with duplicates is maintained.
-> > > * Acknowledging the existence of scenarios where inlined functions
-> > >   declared in header files may result in multiple copies due to compi=
-ler
-> > >   behavior, though it is not actionable as it does not pose an operat=
-ional
-> > >   issue.
-> > > * Highlighting a single exception where the same name refers to diffe=
-rent
-> > >   functions: the case of "compat_binfmt_elf.c," which directly includ=
-es
-> > >   "binfmt_elf.c" producing identical function copies in two separate
-> > >   modules.
-> > >
-> > > https://lore.kernel.org/all/20230714150326.1152359-1-alessandro.carmi=
-nati@gmail.com/
-> > >
-> > > Changes from v3:
-> > > * kas_alias was rewritten in Python to create a more concise and
-> > >   maintainable codebase.
-> > > * The previous automation process used by kas_alias to locate the vml=
-inux
-> > >   and the addr2line has been replaced with an explicit command-line s=
-witch
-> > >   for specifying these requirements.
-> > > * addr2line has been added into the main Makefile.
-> > > * A new command-line switch has been introduced, enabling users to ex=
-tend
-> > >   the alias to global data names.
-> > >
-> > > https://lore.kernel.org/all/20230828080423.3539686-1-alessandro.carmi=
-nati@gmail.com/
-> > >
-> > > Changes from v4:
-> > > * Fixed the O=3D<build dir> build issue
-> > > * The tool halts execution upon encountering major issues, thereby en=
-suring
-> > >   the pipeline is interrupted.
-> > > * A cmdline option to specify the source directory added.
-> > > * Minor code adjusments.
-> > > * Tested on mips32 and i386
-> > >
-> > > https://lore.kernel.org/all/20230919193948.465340-1-alessandro.carmin=
-ati@gmail.com/
-> > >
-> > > Changes from v5:
-> > > * Regex filter extended to all symbols
-> > > * Alias creation extended to module objects
-> > > * Code cleaned and commented
-> > > * kas_alias verbose execution via KAS_ALIAS_DEBUG env variable
-> > > * CONFIG_KALLSYMS_ALIAS_SRCLINE selects KBUILD_BUILTIN to ensure no r=
-aces
-> > >   during modules build
-> > > * Tested on x86_64, aarch64 and i386
-> > >
-> > > https://lore.kernel.org/all/20230927173516.1456594-1-alessandro.carmi=
-nati@gmail.com/
-> > >
-> > > Changes from v6:
-> > > * Generate a file to facilitate the construction of custom OOT module=
-s using aliases.
-> > >   In this context, it is needed to export the modules.symbfreq file, =
-a product of
-> > >   the build.
-> > > * Previously, kas_alias was intended to run once, executing all tasks=
- within the same
-> > >   session. In this version, two targets have been introduced to split=
- the work into
-> > >   distinct phases: one for creating aliases for the core image and an=
-other for
-> > >   generating aliases for modules.
-> > > * The module aliases production statement has been inserted in the
-> > >   scripts/Makefile.modfinal. Instead of being executed individually f=
-or each module,
-> > >   it now runs once for all modules.
-> > > * The approach for excluding symbols in .init and .exit ELF sections =
-has undergone a
-> > >   rewrite.
-> > > * kas_alias is now capable of applying aliases to OOT modules. Howeve=
-r, for this to
-> > >   occur, the 'modules.symbfreq' file needs to be accessible during th=
-e build.
-> > >   If it is not found, aliases won't be added.
-> > >
-> > > https://lore.kernel.org/all/20231024201157.748254-1-alessandro.carmin=
-ati@gmail.com/
-> >
-> >
-> >
-> >
-> >
-> > I am concerned with your code.
-> > At least, I'd like you to understand the Makefile principle.
-> >
-> >
-> >
-> >
-> >
-> > <output>: <input>
-> >        <command>
-> >
-> >
-> >
-> > The <command> reads <input> and generates <output>.
-> >
-> > The <command> must not modify <input>.
-> >
-> >
-> > If you deviate from this principle,
-> > we will never know where build artifacts are updated.
-> >
-> >
-> >
-> >
-> > Your code looks like this:
-> >
-> >
-> > %.ko:  %.o %.mod.o
-> >         Your script inserts aliases to %.o
-> >         Link %.o and %.mod.o into %.ko
-> >
-> >
-> >
-> > Your script updates the input file, %.o.
-> > This is never acceptable.
-> >
-> >
-> >
->
-> I truly appreciate your guidance regarding the Makefile principle. I real=
-ize
-> now that my self-taught approach overlooked key aspects, particularly the
-> importance of not modifying the input file, and I'm committed to aligning=
- my
-> code with this principle.
->
-> Before I proceed, I seek a better understanding of how the kernel communi=
-ty
-> aims to address the duplicate symbols issue.
->
-> > Anyway, @FILENAME_LINE seems a cheesy workaround after all,
-> > and I do not see a good reason to grow the ugliness.
->
-> Regarding the FILENAME_LINE implementation, my assumption stemmed from
-> notable comments by
->
-> Luis Chamberlain
-> https://lore.kernel.org/all/ZLVxUQiC5iF+xTPQ@bombadil.infradead.org/
->
-> Petr Mladek
-> https://lore.kernel.org/all/ZQFtdJEKJ9taYpA0@alley/
->
-> within the threads related to my work, but the idea itself originated
-> elsewhere: the erlies message I'm aware of, carrying this contents is a
-> Petr's message as answer to another thread.
-> https://lore.kernel.org/all/ZEeO_rWL4bDh5vui@alley/
->
-> If FILENAME_LINE doesn't serve the community's purpose, and my interpreta=
-tion
-> was mistaken, I apologize for any inconvenience caused and will cease wor=
-k on
-> this aspect.
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
+The eventfs creates dynamically allocated dentries and inodes. Using the
+dcache_readdir() logic for its own directory lookups requires hiding the
+cursor of the dcache logic and playing games to allow the dcache_readdir()
+to still have access to the cursor while the eventfs saved what it created
+and what it needs to release.
 
-There is no common opinion in the community.
-It is just that every person has a different thought.
+Instead, just have eventfs have its own iterate_shared callback function
+that will fill in the dent entries. This simplifies the code quite a bit.
 
+Also, remove the "lookup" parameter to the create_file/dir_dentry() and
+always have it return a dentry that has its ref count incremented, and
+have the caller call the dput. This simplifies that code as well.
 
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/tracefs/event_inode.c | 237 +++++++++++++--------------------------
+ 1 file changed, 78 insertions(+), 159 deletions(-)
 
-When I use GDB for debugging, the debug info is optional;
-even without debug info, I can use minimal functionality;
-assembler-level debugging, break-point setting by specifying
-an address.
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index f0677ea0ec24..53d34a4b5a2b 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -52,9 +52,7 @@ enum {
+ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 					  struct dentry *dentry,
+ 					  unsigned int flags);
+-static int dcache_dir_open_wrapper(struct inode *inode, struct file *file);
+-static int dcache_readdir_wrapper(struct file *file, struct dir_context *ctx);
+-static int eventfs_release(struct inode *inode, struct file *file);
++static int eventfs_iterate(struct file *file, struct dir_context *ctx);
+ 
+ static void update_attr(struct eventfs_attr *attr, struct iattr *iattr)
+ {
+@@ -148,11 +146,9 @@ static const struct inode_operations eventfs_file_inode_operations = {
+ };
+ 
+ static const struct file_operations eventfs_file_operations = {
+-	.open		= dcache_dir_open_wrapper,
+ 	.read		= generic_read_dir,
+-	.iterate_shared	= dcache_readdir_wrapper,
++	.iterate_shared	= eventfs_iterate,
+ 	.llseek		= generic_file_llseek,
+-	.release	= eventfs_release,
+ };
+ 
+ /* Return the evenfs_inode of the "events" directory */
+@@ -390,16 +386,14 @@ void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry)
+  * @mode: The mode of the file.
+  * @data: The data to use to set the inode of the file with on open()
+  * @fops: The fops of the file to be created.
+- * @lookup: If called by the lookup routine, in which case, dput() the created dentry.
+  *
+  * Create a dentry for a file of an eventfs_inode @ei and place it into the
+- * address located at @e_dentry. If the @e_dentry already has a dentry, then
+- * just do a dget() on it and return. Otherwise create the dentry and attach it.
++ * address located at @e_dentry.
+  */
+ static struct dentry *
+ create_file_dentry(struct eventfs_inode *ei, int idx,
+ 		   struct dentry *parent, const char *name, umode_t mode, void *data,
+-		   const struct file_operations *fops, bool lookup)
++		   const struct file_operations *fops)
+ {
+ 	struct eventfs_attr *attr = NULL;
+ 	struct dentry **e_dentry = &ei->d_children[idx];
+@@ -414,9 +408,7 @@ create_file_dentry(struct eventfs_inode *ei, int idx,
+ 	}
+ 	/* If the e_dentry already has a dentry, use it */
+ 	if (*e_dentry) {
+-		/* lookup does not need to up the ref count */
+-		if (!lookup)
+-			dget(*e_dentry);
++		dget(*e_dentry);
+ 		mutex_unlock(&eventfs_mutex);
+ 		return *e_dentry;
+ 	}
+@@ -441,13 +433,12 @@ create_file_dentry(struct eventfs_inode *ei, int idx,
+ 		 * way to being freed, don't return it. If e_dentry is NULL
+ 		 * it means it was already freed.
+ 		 */
+-		if (ei->is_freed)
++		if (ei->is_freed) {
+ 			dentry = NULL;
+-		else
++		} else {
+ 			dentry = *e_dentry;
+-		/* The lookup does not need to up the dentry refcount */
+-		if (dentry && !lookup)
+ 			dget(dentry);
++		}
+ 		mutex_unlock(&eventfs_mutex);
+ 		return dentry;
+ 	}
+@@ -465,9 +456,6 @@ create_file_dentry(struct eventfs_inode *ei, int idx,
+ 	}
+ 	mutex_unlock(&eventfs_mutex);
+ 
+-	if (lookup)
+-		dput(dentry);
+-
+ 	return dentry;
+ }
+ 
+@@ -500,13 +488,12 @@ static void eventfs_post_create_dir(struct eventfs_inode *ei)
+  * @pei: The eventfs_inode parent of ei.
+  * @ei: The eventfs_inode to create the directory for
+  * @parent: The dentry of the parent of this directory
+- * @lookup: True if this is called by the lookup code
+  *
+  * This creates and attaches a directory dentry to the eventfs_inode @ei.
+  */
+ static struct dentry *
+ create_dir_dentry(struct eventfs_inode *pei, struct eventfs_inode *ei,
+-		  struct dentry *parent, bool lookup)
++		  struct dentry *parent)
+ {
+ 	struct dentry *dentry = NULL;
+ 
+@@ -520,9 +507,7 @@ create_dir_dentry(struct eventfs_inode *pei, struct eventfs_inode *ei,
+ 	if (ei->dentry) {
+ 		/* If the dentry already has a dentry, use it */
+ 		dentry = ei->dentry;
+-		/* lookup does not need to up the ref count */
+-		if (!lookup)
+-			dget(dentry);
++		dget(dentry);
+ 		mutex_unlock(&eventfs_mutex);
+ 		return dentry;
+ 	}
+@@ -542,7 +527,7 @@ create_dir_dentry(struct eventfs_inode *pei, struct eventfs_inode *ei,
+ 		 * way to being freed.
+ 		 */
+ 		dentry = ei->dentry;
+-		if (dentry && !lookup)
++		if (dentry)
+ 			dget(dentry);
+ 		mutex_unlock(&eventfs_mutex);
+ 		return dentry;
+@@ -562,9 +547,6 @@ create_dir_dentry(struct eventfs_inode *pei, struct eventfs_inode *ei,
+ 	}
+ 	mutex_unlock(&eventfs_mutex);
+ 
+-	if (lookup)
+-		dput(dentry);
+-
+ 	return dentry;
+ }
+ 
+@@ -589,8 +571,8 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 	struct eventfs_inode *ei;
+ 	struct dentry *ei_dentry = NULL;
+ 	struct dentry *ret = NULL;
++	struct dentry *d;
+ 	const char *name = dentry->d_name.name;
+-	bool created = false;
+ 	umode_t mode;
+ 	void *data;
+ 	int idx;
+@@ -626,13 +608,10 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 		ret = simple_lookup(dir, dentry, flags);
+ 		if (IS_ERR(ret))
+ 			goto out;
+-		create_dir_dentry(ei, ei_child, ei_dentry, true);
+-		created = true;
+-		break;
+-	}
+-
+-	if (created)
++		d = create_dir_dentry(ei, ei_child, ei_dentry);
++		dput(d);
+ 		goto out;
++	}
+ 
+ 	for (i = 0; i < ei->nr_entries; i++) {
+ 		entry = &ei->entries[i];
+@@ -650,8 +629,8 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 			ret = simple_lookup(dir, dentry, flags);
+ 			if (IS_ERR(ret))
+ 				goto out;
+-			create_file_dentry(ei, i, ei_dentry, name, mode, cdata,
+-					   fops, true);
++			d = create_file_dentry(ei, i, ei_dentry, name, mode, cdata, fops);
++			dput(d);
+ 			break;
+ 		}
+ 	}
+@@ -660,127 +639,82 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 	return ret;
+ }
+ 
+-struct dentry_list {
+-	void			*cursor;
+-	struct dentry		**dentries;
+-};
+-
+-/**
+- * eventfs_release - called to release eventfs file/dir
+- * @inode: inode to be released
+- * @file: file to be released (not used)
+- */
+-static int eventfs_release(struct inode *inode, struct file *file)
+-{
+-	struct tracefs_inode *ti;
+-	struct dentry_list *dlist = file->private_data;
+-	void *cursor;
+-	int i;
+-
+-	ti = get_tracefs(inode);
+-	if (!(ti->flags & TRACEFS_EVENT_INODE))
+-		return -EINVAL;
+-
+-	if (WARN_ON_ONCE(!dlist))
+-		return -EINVAL;
+-
+-	for (i = 0; dlist->dentries && dlist->dentries[i]; i++) {
+-		dput(dlist->dentries[i]);
+-	}
+-
+-	cursor = dlist->cursor;
+-	kfree(dlist->dentries);
+-	kfree(dlist);
+-	file->private_data = cursor;
+-	return dcache_dir_close(inode, file);
+-}
+-
+-static int add_dentries(struct dentry ***dentries, struct dentry *d, int cnt)
+-{
+-	struct dentry **tmp;
+-
+-	tmp = krealloc(*dentries, sizeof(d) * (cnt + 2), GFP_NOFS);
+-	if (!tmp)
+-		return -1;
+-	tmp[cnt] = d;
+-	tmp[cnt + 1] = NULL;
+-	*dentries = tmp;
+-	return 0;
+-}
+-
+-/**
+- * dcache_dir_open_wrapper - eventfs open wrapper
+- * @inode: not used
+- * @file: dir to be opened (to create it's children)
+- *
+- * Used to dynamic create file/dir with-in @file, all the
+- * file/dir will be created. If already created then references
+- * will be increased
++/*
++ * Walk the children of a eventfs_inode to fill in getdents().
+  */
+-static int dcache_dir_open_wrapper(struct inode *inode, struct file *file)
++static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ {
+ 	const struct file_operations *fops;
++	struct inode *f_inode = file_inode(file);
+ 	const struct eventfs_entry *entry;
+ 	struct eventfs_inode *ei_child;
+ 	struct tracefs_inode *ti;
+ 	struct eventfs_inode *ei;
+-	struct dentry_list *dlist;
+-	struct dentry **dentries = NULL;
+-	struct dentry *parent = file_dentry(file);
+-	struct dentry *d;
+-	struct inode *f_inode = file_inode(file);
+-	const char *name = parent->d_name.name;
++	struct dentry *ei_dentry = NULL;
++	struct dentry *dentry;
++	const char *name;
+ 	umode_t mode;
+-	void *data;
+-	int cnt = 0;
+ 	int idx;
+-	int ret;
+-	int i;
+-	int r;
++	int ret = -EINVAL;
++	int ino;
++	int i, r, c;
++
++	if (!dir_emit_dots(file, ctx))
++		return 0;
+ 
+ 	ti = get_tracefs(f_inode);
+ 	if (!(ti->flags & TRACEFS_EVENT_INODE))
+ 		return -EINVAL;
+ 
+-	if (WARN_ON_ONCE(file->private_data))
+-		return -EINVAL;
++	c = ctx->pos - 2;
+ 
+ 	idx = srcu_read_lock(&eventfs_srcu);
+ 
+ 	mutex_lock(&eventfs_mutex);
+ 	ei = READ_ONCE(ti->private);
++	if (ei && !ei->is_freed)
++		ei_dentry = READ_ONCE(ei->dentry);
+ 	mutex_unlock(&eventfs_mutex);
+ 
+-	if (!ei) {
+-		srcu_read_unlock(&eventfs_srcu, idx);
+-		return -EINVAL;
+-	}
+-
+-
+-	data = ei->data;
++	if (!ei || !ei_dentry)
++		goto out;
+ 
+-	dlist = kmalloc(sizeof(*dlist), GFP_KERNEL);
+-	if (!dlist) {
+-		srcu_read_unlock(&eventfs_srcu, idx);
+-		return -ENOMEM;
+-	}
++	ret = 0;
+ 
+-	inode_lock(parent->d_inode);
++	/*
++	 * Need to create the dentries and inodes to have a consistent
++	 * inode number.
++	 */
+ 	list_for_each_entry_srcu(ei_child, &ei->children, list,
+ 				 srcu_read_lock_held(&eventfs_srcu)) {
+-		d = create_dir_dentry(ei, ei_child, parent, false);
+-		if (d) {
+-			ret = add_dentries(&dentries, d, cnt);
+-			if (ret < 0)
+-				break;
+-			cnt++;
++
++		if (ei_child->is_freed)
++			continue;
++
++		name = ei_child->name;
++
++		dentry = create_dir_dentry(ei, ei_child, ei_dentry);
++		if (!dentry)
++			goto out;
++		ino = dentry->d_inode->i_ino;
++		dput(dentry);
++
++		if (c > 0) {
++			c--;
++			continue;
+ 		}
++
++		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR))
++			goto out;
++		ctx->pos++;
+ 	}
+ 
+ 	for (i = 0; i < ei->nr_entries; i++) {
+-		void *cdata = data;
++		void *cdata = ei->data;
++
+ 		entry = &ei->entries[i];
+ 		name = entry->name;
++
+ 		mutex_lock(&eventfs_mutex);
+ 		/* If ei->is_freed, then the event itself may be too */
+ 		if (!ei->is_freed)
+@@ -790,41 +724,26 @@ static int dcache_dir_open_wrapper(struct inode *inode, struct file *file)
+ 		mutex_unlock(&eventfs_mutex);
+ 		if (r <= 0)
+ 			continue;
+-		d = create_file_dentry(ei, i, parent, name, mode, cdata, fops, false);
+-		if (d) {
+-			ret = add_dentries(&dentries, d, cnt);
+-			if (ret < 0)
+-				break;
+-			cnt++;
++
++		dentry = create_file_dentry(ei, i, ei_dentry, name, mode, cdata, fops);
++		if (!dentry)
++			goto out;
++		ino = dentry->d_inode->i_ino;
++		dput(dentry);
++
++		if (c > 0) {
++			c--;
++			continue;
+ 		}
++
++		if (!dir_emit(ctx, name, strlen(name), ino, DT_REG))
++			goto out;
++		ctx->pos++;
+ 	}
+-	inode_unlock(parent->d_inode);
++	ret = 1;
++ out:
+ 	srcu_read_unlock(&eventfs_srcu, idx);
+-	ret = dcache_dir_open(inode, file);
+-
+-	/*
+-	 * dcache_dir_open() sets file->private_data to a dentry cursor.
+-	 * Need to save that but also save all the dentries that were
+-	 * opened by this function.
+-	 */
+-	dlist->cursor = file->private_data;
+-	dlist->dentries = dentries;
+-	file->private_data = dlist;
+-	return ret;
+-}
+-
+-/*
+- * This just sets the file->private_data back to the cursor and back.
+- */
+-static int dcache_readdir_wrapper(struct file *file, struct dir_context *ctx)
+-{
+-	struct dentry_list *dlist = file->private_data;
+-	int ret;
+ 
+-	file->private_data = dlist->cursor;
+-	ret = dcache_readdir(file, ctx);
+-	dlist->cursor = file->private_data;
+-	file->private_data = dlist;
+ 	return ret;
+ }
+ 
+-- 
+2.42.0
 
-By loading the symbol table, I can have better experiences;
-for example, source code debugging, break-point setting by
-a function name, etc.
-
-
-
-
-I wonder if we can do something similar for this case.
-We can use ftrace/kprobe without CONFIG_DEBUG_INFO.
-This covers most use cases because kallsyms records
-(address, symbol-name) tuples.
-
-With debug info loaded, every symbol address is associated
-with more info such as file name, line number, etc.
-
-
-In many distributions, the debug info files of vmlinux
-and modules are available under /usr/lib/debug/.
-
-
-Your patch already depends on CONFIG_DEBUG_INFO,
-so you have the ones in your build directory at least.
-
-Adding <func>@<filename>_<line> aliases seems a
-niche workaround, as this is duplicated data
-transformed from what you already have in debug info.
-
-
-
-
---
-Best Regards
-Masahiro Yamada
