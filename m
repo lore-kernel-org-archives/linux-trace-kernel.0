@@ -1,165 +1,167 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508011CA83
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Jan 2024 18:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B4EC1CA8E;
+	Wed,  3 Jan 2024 18:49:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="DFjHIT4r"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ccbded5aa4so84534751fa.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Jan 2024 10:38:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1704307108; x=1704911908; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=NjSZPIcPNoFGpG+WpkTBOGU5J4ZC0xbLsWqkPtHnL28=;
-        b=DFjHIT4rw9qvULevWxYS7fscs7xiOemEXBQaUUJHtHFDqJEtr1AzV/2XGk6h8WfvU9
-         C4oOlRu5heAIOC6RMLVR/dFZDIrTmhgYiKtMY47FCEY+WdZ6ypF6qj/Iu7nNh2ohVEeJ
-         SBj4bRUX+qE8sFuLIwvy7+wRPdgdfkOY0JCJ4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704307108; x=1704911908;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NjSZPIcPNoFGpG+WpkTBOGU5J4ZC0xbLsWqkPtHnL28=;
-        b=izaw4hv8b3ASvh3w96a06IlSEAL9RgTojmWniRsOdiY+TFbDnoJEm1etJxqWkaKEMZ
-         JWRMp2+F8eMK0PYAC/WMTiT8VxRVONNk0UIIvSwyg0OJFUgh3r8NrllM40GgvS65nzAh
-         /oKxwv6lfcAtJMsZrTrRjujBaGP0AQGmj+HU391t1+ZlfUQyM4t3MeKBew0tUeQ3cFOC
-         Fk2euH/ehsqkfZhNccxXW2ujt7338PnRlKspp0gUo0vTeU2I5Y2S6j74XFSerMO6Djqs
-         dx8P22IgYdEho9RcTrg7NKJBOub7OB0q19LYNPymB67FFDZYxbYuZCjgThd4fiBOlDGD
-         rJzQ==
-X-Gm-Message-State: AOJu0YwlPnEypAcVEgQRHZpTak6u0e+mVFkGGyLkv2wpqDuEGSZNLRSo
-	MDJxyQNhgbn52/AyukQzZHS+uyH3yGa4Fpvcs17HUPTQfnJ1u1G5
-X-Google-Smtp-Source: AGHT+IFplXb7dv2YHX+6Hwm9gfsr5K4KXuFTbk5+NMWBs87AROgk2qCoGZQgam4u6ZrKrvXgjKxuTw==
-X-Received: by 2002:a2e:7d14:0:b0:2cc:a7ee:ce68 with SMTP id y20-20020a2e7d14000000b002cca7eece68mr8632939ljc.67.1704307108555;
-        Wed, 03 Jan 2024 10:38:28 -0800 (PST)
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
-        by smtp.gmail.com with ESMTPSA id m7-20020a2ea887000000b002ccdc9af79fsm3442341ljq.75.2024.01.03.10.38.27
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jan 2024 10:38:27 -0800 (PST)
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-50eaabc36bcso221602e87.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Jan 2024 10:38:27 -0800 (PST)
-X-Received: by 2002:a05:6512:a83:b0:50e:a517:6f13 with SMTP id
- m3-20020a0565120a8300b0050ea5176f13mr871776lfu.23.1704307107291; Wed, 03 Jan
- 2024 10:38:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QWx1LZ2P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E50E0C433AD;
+	Wed,  3 Jan 2024 18:49:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704307752;
+	bh=RMZCoyni1dg/u5PWGXOjNR0UmnG/FzeuF8AtWgpE53o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=QWx1LZ2PIbiMG1XZqGmr22SPfJH41Dy22FvwvzfIv4KyUPRrF5q8WzXYnLQd9rs86
+	 yL9ePwqcN1S1rRlB/biKp0ukhEFgmop2NIjmL5EOxem1NomAWFjolJWxrSQqZzWr8x
+	 ELxW+cJ9NFuIupoCwP1JzeF0+Ju7CBhcyieXXWz28QBbjF+H9pFE7wpQi6sKHyGWLo
+	 L2y3ySPb30L7oKKU6Z2zM2pPhlsfPKq1GXfNqbTtfspFz63rKyw/qVLr48k/p6PbfD
+	 eF9JrBEGat+1z6GrQFq5ndH7z1VnyfJDiHgpQPidNftQNKdMLg38oO/rYLRh2LwOOF
+	 4/LJj9oAZ5qwg==
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2cceb5f0918so48208721fa.2;
+        Wed, 03 Jan 2024 10:49:12 -0800 (PST)
+X-Gm-Message-State: AOJu0Yxry7RhlAyi3fdK7SDpv6n48GBSCsU4ayGm2xpaF+igwcPDfVUi
+	TX5ZCiYsCQBjcoEl/p0TGZQqRF4zrw9Klh/yVA==
+X-Google-Smtp-Source: AGHT+IFb3zTv3w6i/eFBsPe9r0iuXmmX/2JiP7xGNWZZFBabGYb5yb23iDV40OA8jh6BzQ1/gm/DPrOco/LCOyYOSFg=
+X-Received: by 2002:a05:651c:168f:b0:2cc:6dff:9383 with SMTP id
+ bd15-20020a05651c168f00b002cc6dff9383mr5104245ljb.83.1704307750860; Wed, 03
+ Jan 2024 10:49:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240103102553.17a19cea@gandalf.local.home> <CAHk-=whrRobm82kcjwj625bZrdK+vvEo0B5PBzP+hVaBcHUkJA@mail.gmail.com>
-In-Reply-To: <CAHk-=whrRobm82kcjwj625bZrdK+vvEo0B5PBzP+hVaBcHUkJA@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 3 Jan 2024 10:38:09 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjVdGkjDXBbvLn2wbZnqP4UsH46E3gqJ9m7UG6DpX2+WA@mail.gmail.com>
-Message-ID: <CAHk-=wjVdGkjDXBbvLn2wbZnqP4UsH46E3gqJ9m7UG6DpX2+WA@mail.gmail.com>
-Subject: Re: [PATCH] eventfs: Stop using dcache_readdir() for getdents()
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Type: multipart/mixed; boundary="000000000000b8b1f0060e0eebf2"
-
---000000000000b8b1f0060e0eebf2
+References: <20231222193607.15474-1-graf@amazon.com> <20231222195144.24532-1-graf@amazon.com>
+ <20231222195144.24532-2-graf@amazon.com>
+In-Reply-To: <20231222195144.24532-2-graf@amazon.com>
+From: Rob Herring <robh+dt@kernel.org>
+Date: Wed, 3 Jan 2024 11:48:58 -0700
+X-Gmail-Original-Message-ID: <CAL_JsqJSYgq7BJnSxwKebEX8e9tL-FG74rT+eLJ4e32kKZC30g@mail.gmail.com>
+Message-ID: <CAL_JsqJSYgq7BJnSxwKebEX8e9tL-FG74rT+eLJ4e32kKZC30g@mail.gmail.com>
+Subject: Re: [PATCH v2 07/17] kexec: Add documentation for KHO
+To: Alexander Graf <graf@amazon.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, 
+	linux-doc@vger.kernel.org, x86@kernel.org, 
+	Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Ashish Kalra <ashish.kalra@amd.com>, 
+	James Gowans <jgowans@amazon.com>, 
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, arnd@arndb.de, pbonzini@redhat.com, 
+	madvenka@linux.microsoft.com, Anthony Yznaga <anthony.yznaga@oracle.com>, 
+	Usama Arif <usama.arif@bytedance.com>, David Woodhouse <dwmw@amazon.co.uk>, 
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 3 Jan 2024 at 10:12, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Fri, Dec 22, 2023 at 12:52=E2=80=AFPM Alexander Graf <graf@amazon.com> w=
+rote:
 >
-> Much better. Now eventfs looks more like a real filesystem, and less
-> like an eldritch horror monster that is parts of dcache tackled onto a
-> pseudo-filesystem.
+> With KHO in place, let's add documentation that describes what it is and
+> how to use it.
+>
+> Signed-off-by: Alexander Graf <graf@amazon.com>
+> ---
+>  Documentation/kho/concepts.rst   | 88 ++++++++++++++++++++++++++++++++
+>  Documentation/kho/index.rst      | 19 +++++++
+>  Documentation/kho/usage.rst      | 57 +++++++++++++++++++++
+>  Documentation/subsystem-apis.rst |  1 +
+>  4 files changed, 165 insertions(+)
+>  create mode 100644 Documentation/kho/concepts.rst
+>  create mode 100644 Documentation/kho/index.rst
+>  create mode 100644 Documentation/kho/usage.rst
+>
+> diff --git a/Documentation/kho/concepts.rst b/Documentation/kho/concepts.=
+rst
+> new file mode 100644
+> index 000000000000..8e4fe8c57865
+> --- /dev/null
+> +++ b/Documentation/kho/concepts.rst
+> @@ -0,0 +1,88 @@
+> +.. SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +Kexec Handover Concepts
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Kexec HandOver (KHO) is a mechanism that allows Linux to preserve state =
+-
+> +arbitrary properties as well as memory locations - across kexec.
+> +
+> +It introduces multiple concepts:
+> +
+> +KHO Device Tree
+> +---------------
+> +
+> +Every KHO kexec carries a KHO specific flattened device tree blob that
+> +describes the state of the system. Device drivers can register to KHO to
+> +serialize their state before kexec. After KHO, device drivers can read
+> +the device tree and extract previous state.
 
-Oh, except I think you still need to just remove the 'set_gid()' mess.
+How does this work with kexec when there is also the FDT for the h/w?
+The h/w FDT has a /chosen property pointing to this FDT blob?
 
-It's disgusting and it's wrong, and it's not even what the 'uid'
-option does (it only sets the root inode uid).
+> +
+> +KHO only uses the fdt container format and libfdt library, but does not
+> +adhere to the same property semantics that normal device trees do: Prope=
+rties
+> +are passed in native endianness and standardized properties like ``regs`=
+` and
+> +``ranges`` do not exist, hence there are no ``#...-cells`` properties.
 
-If you remount the filesystem with different gid values, you get to
-keep both broken pieces. And if it isn't a remount, then setting the
-root uid is sufficient.
+I think native endianness is asking for trouble. libfdt would need
+different swap functions here than elsewhere in the kernel for example
+which wouldn't even work. So you are just crossing your fingers that
+you aren't using any libfdt functions that swap. And when I sync
+dtc/libfdt and that changes, I might break you.
 
-I think the whole thing was triggered by commit 49d67e445742, and
-maybe the fix is to just revert that commit.
+Also, if you want to dump the FDT and do a dtc DTB->DTS pass, it is
+not going to be too readable given that outputs swapped 32-bit values
+for anything that's a 4 byte multiple.
 
-That commit makes no sense in general, since the default mounting
-position for tracefs that the kernel sets up is only accessible to
-root anyway.
+> +
+> +KHO introduces a new concept to its device tree: ``mem`` properties. A
+> +``mem`` property can inside any subnode in the device tree. When present=
+,
+> +it contains an array of physical memory ranges that the new kernel must =
+mark
+> +as reserved on boot. It is recommended, but not required, to make these =
+ranges
+> +as physically contiguous as possible to reduce the number of array eleme=
+nts ::
+> +
+> +    struct kho_mem {
+> +            __u64 addr;
+> +            __u64 len;
+> +    };
+> +
+> +After boot, drivers can call the kho subsystem to transfer ownership of =
+memory
+> +that was reserved via a ``mem`` property to themselves to continue using=
+ memory
+> +from the previous execution.
+> +
+> +The KHO device tree follows the in-Linux schema requirements. Any elemen=
+t in
+> +the device tree is documented via device tree schema yamls that explain =
+what
+> +data gets transferred.
 
-Alternatively, just do the ->permissions() thing, and allow access to
-the group in the mount options.
+If this is all separate, then I think the schemas should be too. And
+then from my (DT maintainer) perspective, you can do whatever you want
+here (like FIT images). The dtschema tools are pretty much only geared
+for "normal" DTs. A couple of problems come to mind. You can't exclude
+or change standard properties. The decoding of the DTB to run
+validation assumes big endian. We could probably split things up a
+bit, but you may be better off just using jsonschema directly. I'm not
+even sure running validation here would that valuable. You have 1
+source of code generating the DT and 1 consumer. Yes, there's
+different kernel versions to deal with, but it's not 100s of people
+creating 1000s of DTs with 100s of nodes.
 
-Getting rid of set_gid() would be this attached lovely patch:
+You might look at the netlink stuff which is using its own yaml syntax
+to generate code and jsonschema is used to validate the yaml.
 
- fs/tracefs/inode.c | 83 ++----------------------------------------------------
- 1 file changed, 2 insertions(+), 81 deletions(-)
-
-and would get rid of the final (?) piece of disgusting dcache hackery
-that tracefs most definitely should not have.
-
-             Linus
-
---000000000000b8b1f0060e0eebf2
-Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
-Content-Disposition: attachment; filename="patch.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_lqy4f8350>
-X-Attachment-Id: f_lqy4f8350
-
-IGZzL3RyYWNlZnMvaW5vZGUuYyB8IDgzICsrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwg
-ODEgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZnMvdHJhY2Vmcy9pbm9kZS5jIGIvZnMvdHJh
-Y2Vmcy9pbm9kZS5jCmluZGV4IDYyNTI0YjIwOTY0ZS4uYTIyMjUzMDM3ZTNlIDEwMDY0NAotLS0g
-YS9mcy90cmFjZWZzL2lub2RlLmMKKysrIGIvZnMvdHJhY2Vmcy9pbm9kZS5jCkBAIC0xODMsODMg
-KzE4Myw2IEBAIHN0cnVjdCB0cmFjZWZzX2ZzX2luZm8gewogCXN0cnVjdCB0cmFjZWZzX21vdW50
-X29wdHMgbW91bnRfb3B0czsKIH07CiAKLXN0YXRpYyB2b2lkIGNoYW5nZV9naWQoc3RydWN0IGRl
-bnRyeSAqZGVudHJ5LCBrZ2lkX3QgZ2lkKQotewotCWlmICghZGVudHJ5LT5kX2lub2RlKQotCQly
-ZXR1cm47Ci0JZGVudHJ5LT5kX2lub2RlLT5pX2dpZCA9IGdpZDsKLX0KLQotLyoKLSAqIFRha2Vu
-IGZyb20gZF93YWxrLCBidXQgd2l0aG91dCBoZSBuZWVkIGZvciBoYW5kbGluZyByZW5hbWVzLgot
-ICogTm90aGluZyBjYW4gYmUgcmVuYW1lZCB3aGlsZSB3YWxraW5nIHRoZSBsaXN0LCBhcyB0cmFj
-ZWZzCi0gKiBkb2VzIG5vdCBzdXBwb3J0IHJlbmFtZXMuIFRoaXMgaXMgb25seSBjYWxsZWQgd2hl
-biBtb3VudGluZwotICogb3IgcmVtb3VudGluZyB0aGUgZmlsZSBzeXN0ZW0sIHRvIHNldCBhbGwg
-dGhlIGZpbGVzIHRvCi0gKiB0aGUgZ2l2ZW4gZ2lkLgotICovCi1zdGF0aWMgdm9pZCBzZXRfZ2lk
-KHN0cnVjdCBkZW50cnkgKnBhcmVudCwga2dpZF90IGdpZCkKLXsKLQlzdHJ1Y3QgZGVudHJ5ICp0
-aGlzX3BhcmVudDsKLQlzdHJ1Y3QgbGlzdF9oZWFkICpuZXh0OwotCi0JdGhpc19wYXJlbnQgPSBw
-YXJlbnQ7Ci0Jc3Bpbl9sb2NrKCZ0aGlzX3BhcmVudC0+ZF9sb2NrKTsKLQotCWNoYW5nZV9naWQo
-dGhpc19wYXJlbnQsIGdpZCk7Ci1yZXBlYXQ6Ci0JbmV4dCA9IHRoaXNfcGFyZW50LT5kX3N1YmRp
-cnMubmV4dDsKLXJlc3VtZToKLQl3aGlsZSAobmV4dCAhPSAmdGhpc19wYXJlbnQtPmRfc3ViZGly
-cykgewotCQlzdHJ1Y3QgdHJhY2Vmc19pbm9kZSAqdGk7Ci0JCXN0cnVjdCBsaXN0X2hlYWQgKnRt
-cCA9IG5leHQ7Ci0JCXN0cnVjdCBkZW50cnkgKmRlbnRyeSA9IGxpc3RfZW50cnkodG1wLCBzdHJ1
-Y3QgZGVudHJ5LCBkX2NoaWxkKTsKLQkJbmV4dCA9IHRtcC0+bmV4dDsKLQotCQlzcGluX2xvY2tf
-bmVzdGVkKCZkZW50cnktPmRfbG9jaywgREVOVFJZX0RfTE9DS19ORVNURUQpOwotCi0JCWNoYW5n
-ZV9naWQoZGVudHJ5LCBnaWQpOwotCi0JCS8qIElmIHRoaXMgaXMgdGhlIGV2ZW50cyBkaXJlY3Rv
-cnksIHVwZGF0ZSB0aGF0IHRvbyAqLwotCQl0aSA9IGdldF90cmFjZWZzKGRlbnRyeS0+ZF9pbm9k
-ZSk7Ci0JCWlmICh0aSAmJiAodGktPmZsYWdzICYgVFJBQ0VGU19FVkVOVF9JTk9ERSkpCi0JCQll
-dmVudGZzX3VwZGF0ZV9naWQoZGVudHJ5LCBnaWQpOwotCi0JCWlmICghbGlzdF9lbXB0eSgmZGVu
-dHJ5LT5kX3N1YmRpcnMpKSB7Ci0JCQlzcGluX3VubG9jaygmdGhpc19wYXJlbnQtPmRfbG9jayk7
-Ci0JCQlzcGluX3JlbGVhc2UoJmRlbnRyeS0+ZF9sb2NrLmRlcF9tYXAsIF9SRVRfSVBfKTsKLQkJ
-CXRoaXNfcGFyZW50ID0gZGVudHJ5OwotCQkJc3Bpbl9hY3F1aXJlKCZ0aGlzX3BhcmVudC0+ZF9s
-b2NrLmRlcF9tYXAsIDAsIDEsIF9SRVRfSVBfKTsKLQkJCWdvdG8gcmVwZWF0OwotCQl9Ci0JCXNw
-aW5fdW5sb2NrKCZkZW50cnktPmRfbG9jayk7Ci0JfQotCS8qCi0JICogQWxsIGRvbmUgYXQgdGhp
-cyBsZXZlbCAuLi4gYXNjZW5kIGFuZCByZXN1bWUgdGhlIHNlYXJjaC4KLQkgKi8KLQlyY3VfcmVh
-ZF9sb2NrKCk7Ci1hc2NlbmQ6Ci0JaWYgKHRoaXNfcGFyZW50ICE9IHBhcmVudCkgewotCQlzdHJ1
-Y3QgZGVudHJ5ICpjaGlsZCA9IHRoaXNfcGFyZW50OwotCQl0aGlzX3BhcmVudCA9IGNoaWxkLT5k
-X3BhcmVudDsKLQotCQlzcGluX3VubG9jaygmY2hpbGQtPmRfbG9jayk7Ci0JCXNwaW5fbG9jaygm
-dGhpc19wYXJlbnQtPmRfbG9jayk7Ci0KLQkJLyogZ28gaW50byB0aGUgZmlyc3Qgc2libGluZyBz
-dGlsbCBhbGl2ZSAqLwotCQlkbyB7Ci0JCQluZXh0ID0gY2hpbGQtPmRfY2hpbGQubmV4dDsKLQkJ
-CWlmIChuZXh0ID09ICZ0aGlzX3BhcmVudC0+ZF9zdWJkaXJzKQotCQkJCWdvdG8gYXNjZW5kOwot
-CQkJY2hpbGQgPSBsaXN0X2VudHJ5KG5leHQsIHN0cnVjdCBkZW50cnksIGRfY2hpbGQpOwotCQl9
-IHdoaWxlICh1bmxpa2VseShjaGlsZC0+ZF9mbGFncyAmIERDQUNIRV9ERU5UUllfS0lMTEVEKSk7
-Ci0JCXJjdV9yZWFkX3VubG9jaygpOwotCQlnb3RvIHJlc3VtZTsKLQl9Ci0JcmN1X3JlYWRfdW5s
-b2NrKCk7Ci0Jc3Bpbl91bmxvY2soJnRoaXNfcGFyZW50LT5kX2xvY2spOwotCXJldHVybjsKLX0K
-LQogc3RhdGljIGludCB0cmFjZWZzX3BhcnNlX29wdGlvbnMoY2hhciAqZGF0YSwgc3RydWN0IHRy
-YWNlZnNfbW91bnRfb3B0cyAqb3B0cykKIHsKIAlzdWJzdHJpbmdfdCBhcmdzW01BWF9PUFRfQVJH
-U107CkBAIC0zMzIsMTAgKzI1NSw4IEBAIHN0YXRpYyBpbnQgdHJhY2Vmc19hcHBseV9vcHRpb25z
-KHN0cnVjdCBzdXBlcl9ibG9jayAqc2IsIGJvb2wgcmVtb3VudCkKIAlpZiAoIXJlbW91bnQgfHwg
-b3B0cy0+b3B0cyAmIEJJVChPcHRfdWlkKSkKIAkJaW5vZGUtPmlfdWlkID0gb3B0cy0+dWlkOwog
-Ci0JaWYgKCFyZW1vdW50IHx8IG9wdHMtPm9wdHMgJiBCSVQoT3B0X2dpZCkpIHsKLQkJLyogU2V0
-IGFsbCB0aGUgZ3JvdXAgaWRzIHRvIHRoZSBtb3VudCBvcHRpb24gKi8KLQkJc2V0X2dpZChzYi0+
-c19yb290LCBvcHRzLT5naWQpOwotCX0KKwlpZiAoIXJlbW91bnQgfHwgb3B0cy0+b3B0cyAmIEJJ
-VChPcHRfZ2lkKSkKKwkJaW5vZGUtPmlfZ2lkID0gb3B0cy0+Z2lkOwogCiAJcmV0dXJuIDA7CiB9
-Cg==
---000000000000b8b1f0060e0eebf2--
+Rob
