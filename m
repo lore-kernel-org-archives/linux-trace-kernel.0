@@ -1,166 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644911D52D;
-	Wed,  3 Jan 2024 18:26:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 288E3C433C8;
-	Wed,  3 Jan 2024 18:26:07 +0000 (UTC)
-Date: Wed, 3 Jan 2024 13:27:10 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] eventfs: Stop using dcache_readdir() for getdents()
-Message-ID: <20240103132710.443f227f@gandalf.local.home>
-In-Reply-To: <CAHk-=whrRobm82kcjwj625bZrdK+vvEo0B5PBzP+hVaBcHUkJA@mail.gmail.com>
-References: <20240103102553.17a19cea@gandalf.local.home>
-	<CAHk-=whrRobm82kcjwj625bZrdK+vvEo0B5PBzP+hVaBcHUkJA@mail.gmail.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508011CA83
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  3 Jan 2024 18:38:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="DFjHIT4r"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ccbded5aa4so84534751fa.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Jan 2024 10:38:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1704307108; x=1704911908; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=NjSZPIcPNoFGpG+WpkTBOGU5J4ZC0xbLsWqkPtHnL28=;
+        b=DFjHIT4rw9qvULevWxYS7fscs7xiOemEXBQaUUJHtHFDqJEtr1AzV/2XGk6h8WfvU9
+         C4oOlRu5heAIOC6RMLVR/dFZDIrTmhgYiKtMY47FCEY+WdZ6ypF6qj/Iu7nNh2ohVEeJ
+         SBj4bRUX+qE8sFuLIwvy7+wRPdgdfkOY0JCJ4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704307108; x=1704911908;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NjSZPIcPNoFGpG+WpkTBOGU5J4ZC0xbLsWqkPtHnL28=;
+        b=izaw4hv8b3ASvh3w96a06IlSEAL9RgTojmWniRsOdiY+TFbDnoJEm1etJxqWkaKEMZ
+         JWRMp2+F8eMK0PYAC/WMTiT8VxRVONNk0UIIvSwyg0OJFUgh3r8NrllM40GgvS65nzAh
+         /oKxwv6lfcAtJMsZrTrRjujBaGP0AQGmj+HU391t1+ZlfUQyM4t3MeKBew0tUeQ3cFOC
+         Fk2euH/ehsqkfZhNccxXW2ujt7338PnRlKspp0gUo0vTeU2I5Y2S6j74XFSerMO6Djqs
+         dx8P22IgYdEho9RcTrg7NKJBOub7OB0q19LYNPymB67FFDZYxbYuZCjgThd4fiBOlDGD
+         rJzQ==
+X-Gm-Message-State: AOJu0YwlPnEypAcVEgQRHZpTak6u0e+mVFkGGyLkv2wpqDuEGSZNLRSo
+	MDJxyQNhgbn52/AyukQzZHS+uyH3yGa4Fpvcs17HUPTQfnJ1u1G5
+X-Google-Smtp-Source: AGHT+IFplXb7dv2YHX+6Hwm9gfsr5K4KXuFTbk5+NMWBs87AROgk2qCoGZQgam4u6ZrKrvXgjKxuTw==
+X-Received: by 2002:a2e:7d14:0:b0:2cc:a7ee:ce68 with SMTP id y20-20020a2e7d14000000b002cca7eece68mr8632939ljc.67.1704307108555;
+        Wed, 03 Jan 2024 10:38:28 -0800 (PST)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
+        by smtp.gmail.com with ESMTPSA id m7-20020a2ea887000000b002ccdc9af79fsm3442341ljq.75.2024.01.03.10.38.27
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jan 2024 10:38:27 -0800 (PST)
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-50eaabc36bcso221602e87.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 Jan 2024 10:38:27 -0800 (PST)
+X-Received: by 2002:a05:6512:a83:b0:50e:a517:6f13 with SMTP id
+ m3-20020a0565120a8300b0050ea5176f13mr871776lfu.23.1704307107291; Wed, 03 Jan
+ 2024 10:38:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240103102553.17a19cea@gandalf.local.home> <CAHk-=whrRobm82kcjwj625bZrdK+vvEo0B5PBzP+hVaBcHUkJA@mail.gmail.com>
+In-Reply-To: <CAHk-=whrRobm82kcjwj625bZrdK+vvEo0B5PBzP+hVaBcHUkJA@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 3 Jan 2024 10:38:09 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjVdGkjDXBbvLn2wbZnqP4UsH46E3gqJ9m7UG6DpX2+WA@mail.gmail.com>
+Message-ID: <CAHk-=wjVdGkjDXBbvLn2wbZnqP4UsH46E3gqJ9m7UG6DpX2+WA@mail.gmail.com>
+Subject: Re: [PATCH] eventfs: Stop using dcache_readdir() for getdents()
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Type: multipart/mixed; boundary="000000000000b8b1f0060e0eebf2"
 
-On Wed, 3 Jan 2024 10:12:08 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+--000000000000b8b1f0060e0eebf2
+Content-Type: text/plain; charset="UTF-8"
 
-> On Wed, 3 Jan 2024 at 07:24, Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > Instead, just have eventfs have its own iterate_shared callback function
-> > that will fill in the dent entries. This simplifies the code quite a bit.  
-> 
+On Wed, 3 Jan 2024 at 10:12, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
 > Much better. Now eventfs looks more like a real filesystem, and less
 > like an eldritch horror monster that is parts of dcache tackled onto a
 > pseudo-filesystem.
 
-Thanks.
+Oh, except I think you still need to just remove the 'set_gid()' mess.
 
-> 
-> However, one request, and one nit:
-> 
-> > Also, remove the "lookup" parameter to the create_file/dir_dentry() and
-> > always have it return a dentry that has its ref count incremented, and
-> > have the caller call the dput. This simplifies that code as well.  
-> 
-> Can you please do that as a separate patch, where the first patch just
-> cleans up the directory iteration, and the second patch then goes "now
-> there are no more callers that have the 'lookup' argument set to
-> false".
+It's disgusting and it's wrong, and it's not even what the 'uid'
+option does (it only sets the root inode uid).
 
-Yeah, I was thinking of doing it as two patches and figured I'd merge them
-into one because I deleted one of the users of it. As I was on the fence
-with doing two patches, I'm happy to change that.
+If you remount the filesystem with different gid values, you get to
+keep both broken pieces. And if it isn't a remount, then setting the
+root uid is sufficient.
 
-> 
-> Because as-is, the patch is kind of two things mixed up.
-> 
-> The small nit is this:
-> 
-> > +static int eventfs_iterate(struct file *file, struct dir_context *ctx)
-> >  {
-> > +       /*
-> > +        * Need to create the dentries and inodes to have a consistent
-> > +        * inode number.
-> > +        */
-> >         list_for_each_entry_srcu(ei_child, &ei->children, list,
-> >                                  srcu_read_lock_held(&eventfs_srcu)) {
-> > -               d = create_dir_dentry(ei, ei_child, parent, false);
-> > -               if (d) {
-> > -                       ret = add_dentries(&dentries, d, cnt);
-> > -                       if (ret < 0)
-> > -                               break;
-> > -                       cnt++;
-> > +
-> > +               if (ei_child->is_freed)
-> > +                       continue;
-> > +
-> > +               name = ei_child->name;
-> > +
-> > +               dentry = create_dir_dentry(ei, ei_child, ei_dentry);
-> > +               if (!dentry)
-> > +                       goto out;
-> > +               ino = dentry->d_inode->i_ino;
-> > +               dput(dentry);
-> > +
-> > +               if (c > 0) {
-> > +                       c--;
-> > +                       continue;
-> >                 }  
-> 
-> Just move this "is the position before this name" up to the top of the
-> loop. Even above the "is_freed" part.
-> 
-> Let's just always count all the entries in the child list.
-> 
-> And same for the ei->nr_entries loop:
-> 
-> >         for (i = 0; i < ei->nr_entries; i++) {  
-> 
-> where there's no point in creating that dentry just to look up the
-> inode number, only to then decide "Oh, we already iterated past this
-> part, so let's not do anything with it".
-> 
-> This wouldn't seem to matter much with a big enough getdents buffer
-> (which is the normal user level behavior), but it actually does,
-> because we don't keep track of "we have read to the end of the
-> directory".
-> 
-> So every readdir ends up effectively doing getdents at least twice:
-> once to read the directory entries, and then once to just be told
-> "that was all".
-> 
-> End result: you should strive very hard to *not* waste time on the
-> directory entries that have already been read, and are less than
-> 'ctx->pos'.
+I think the whole thing was triggered by commit 49d67e445742, and
+maybe the fix is to just revert that commit.
 
-My patch originally did that, but then I was worried about counting something
-that doesn't exist.
+That commit makes no sense in general, since the default mounting
+position for tracefs that the kernel sets up is only accessible to
+root anyway.
 
-If it is done twice, there's a good chance the dentry will still be around
-anyway, so it doesn't slow it down that much. The dput() only decrements
-the entry and doesn't free it. I added back my "show_events_dentries" file
-to test this. They sit with refcount equal to zero waiting to be reclaimed.
-But if they get referenced again, the refcount goes up again.
+Alternatively, just do the ->permissions() thing, and allow access to
+the group in the mount options.
 
-That is, the first time it is called, where ctx->pos is likely zero, it
-creates the dentry, but that is also added to the list. The next time, with
-ctx->pos greater than zero, the create_dir_dentry() starts with:
+Getting rid of set_gid() would be this attached lovely patch:
 
-static struct dentry *
-create_dir_dentry(struct eventfs_inode *pei, struct eventfs_inode *ei,
-		  struct dentry *parent)
-{
-	struct dentry *dentry = NULL;
+ fs/tracefs/inode.c | 83 ++----------------------------------------------------
+ 1 file changed, 2 insertions(+), 81 deletions(-)
 
-	WARN_ON_ONCE(!inode_is_locked(parent->d_inode));
+and would get rid of the final (?) piece of disgusting dcache hackery
+that tracefs most definitely should not have.
 
-	mutex_lock(&eventfs_mutex);
-	if (pei->is_freed || ei->is_freed) {
-		mutex_unlock(&eventfs_mutex);
-		return NULL;
-	}
-	if (ei->dentry) {
-		/* If the dentry already has a dentry, use it */
-		dentry = ei->dentry;
-		dget(dentry);
-		mutex_unlock(&eventfs_mutex);
-		return dentry;
-	}
-	mutex_unlock(&eventfs_mutex);
+             Linus
 
-Where the already created dentry is returned. (hmm, I just noticed that
-comment should be "if the eventfs_inode already has a dentry" and not "If
-the dentry already has a dentry" :-p ).
+--000000000000b8b1f0060e0eebf2
+Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
+Content-Disposition: attachment; filename="patch.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_lqy4f8350>
+X-Attachment-Id: f_lqy4f8350
 
-It does require taking a mutex, but that's actually quite fast too.
-
-If you don't think it will cause any inconsistencies to count something
-that perhaps doesn't exist anymore, then I can move the ctx->pos check up.
-
--- Steve
-
+IGZzL3RyYWNlZnMvaW5vZGUuYyB8IDgzICsrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwg
+ODEgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZnMvdHJhY2Vmcy9pbm9kZS5jIGIvZnMvdHJh
+Y2Vmcy9pbm9kZS5jCmluZGV4IDYyNTI0YjIwOTY0ZS4uYTIyMjUzMDM3ZTNlIDEwMDY0NAotLS0g
+YS9mcy90cmFjZWZzL2lub2RlLmMKKysrIGIvZnMvdHJhY2Vmcy9pbm9kZS5jCkBAIC0xODMsODMg
+KzE4Myw2IEBAIHN0cnVjdCB0cmFjZWZzX2ZzX2luZm8gewogCXN0cnVjdCB0cmFjZWZzX21vdW50
+X29wdHMgbW91bnRfb3B0czsKIH07CiAKLXN0YXRpYyB2b2lkIGNoYW5nZV9naWQoc3RydWN0IGRl
+bnRyeSAqZGVudHJ5LCBrZ2lkX3QgZ2lkKQotewotCWlmICghZGVudHJ5LT5kX2lub2RlKQotCQly
+ZXR1cm47Ci0JZGVudHJ5LT5kX2lub2RlLT5pX2dpZCA9IGdpZDsKLX0KLQotLyoKLSAqIFRha2Vu
+IGZyb20gZF93YWxrLCBidXQgd2l0aG91dCBoZSBuZWVkIGZvciBoYW5kbGluZyByZW5hbWVzLgot
+ICogTm90aGluZyBjYW4gYmUgcmVuYW1lZCB3aGlsZSB3YWxraW5nIHRoZSBsaXN0LCBhcyB0cmFj
+ZWZzCi0gKiBkb2VzIG5vdCBzdXBwb3J0IHJlbmFtZXMuIFRoaXMgaXMgb25seSBjYWxsZWQgd2hl
+biBtb3VudGluZwotICogb3IgcmVtb3VudGluZyB0aGUgZmlsZSBzeXN0ZW0sIHRvIHNldCBhbGwg
+dGhlIGZpbGVzIHRvCi0gKiB0aGUgZ2l2ZW4gZ2lkLgotICovCi1zdGF0aWMgdm9pZCBzZXRfZ2lk
+KHN0cnVjdCBkZW50cnkgKnBhcmVudCwga2dpZF90IGdpZCkKLXsKLQlzdHJ1Y3QgZGVudHJ5ICp0
+aGlzX3BhcmVudDsKLQlzdHJ1Y3QgbGlzdF9oZWFkICpuZXh0OwotCi0JdGhpc19wYXJlbnQgPSBw
+YXJlbnQ7Ci0Jc3Bpbl9sb2NrKCZ0aGlzX3BhcmVudC0+ZF9sb2NrKTsKLQotCWNoYW5nZV9naWQo
+dGhpc19wYXJlbnQsIGdpZCk7Ci1yZXBlYXQ6Ci0JbmV4dCA9IHRoaXNfcGFyZW50LT5kX3N1YmRp
+cnMubmV4dDsKLXJlc3VtZToKLQl3aGlsZSAobmV4dCAhPSAmdGhpc19wYXJlbnQtPmRfc3ViZGly
+cykgewotCQlzdHJ1Y3QgdHJhY2Vmc19pbm9kZSAqdGk7Ci0JCXN0cnVjdCBsaXN0X2hlYWQgKnRt
+cCA9IG5leHQ7Ci0JCXN0cnVjdCBkZW50cnkgKmRlbnRyeSA9IGxpc3RfZW50cnkodG1wLCBzdHJ1
+Y3QgZGVudHJ5LCBkX2NoaWxkKTsKLQkJbmV4dCA9IHRtcC0+bmV4dDsKLQotCQlzcGluX2xvY2tf
+bmVzdGVkKCZkZW50cnktPmRfbG9jaywgREVOVFJZX0RfTE9DS19ORVNURUQpOwotCi0JCWNoYW5n
+ZV9naWQoZGVudHJ5LCBnaWQpOwotCi0JCS8qIElmIHRoaXMgaXMgdGhlIGV2ZW50cyBkaXJlY3Rv
+cnksIHVwZGF0ZSB0aGF0IHRvbyAqLwotCQl0aSA9IGdldF90cmFjZWZzKGRlbnRyeS0+ZF9pbm9k
+ZSk7Ci0JCWlmICh0aSAmJiAodGktPmZsYWdzICYgVFJBQ0VGU19FVkVOVF9JTk9ERSkpCi0JCQll
+dmVudGZzX3VwZGF0ZV9naWQoZGVudHJ5LCBnaWQpOwotCi0JCWlmICghbGlzdF9lbXB0eSgmZGVu
+dHJ5LT5kX3N1YmRpcnMpKSB7Ci0JCQlzcGluX3VubG9jaygmdGhpc19wYXJlbnQtPmRfbG9jayk7
+Ci0JCQlzcGluX3JlbGVhc2UoJmRlbnRyeS0+ZF9sb2NrLmRlcF9tYXAsIF9SRVRfSVBfKTsKLQkJ
+CXRoaXNfcGFyZW50ID0gZGVudHJ5OwotCQkJc3Bpbl9hY3F1aXJlKCZ0aGlzX3BhcmVudC0+ZF9s
+b2NrLmRlcF9tYXAsIDAsIDEsIF9SRVRfSVBfKTsKLQkJCWdvdG8gcmVwZWF0OwotCQl9Ci0JCXNw
+aW5fdW5sb2NrKCZkZW50cnktPmRfbG9jayk7Ci0JfQotCS8qCi0JICogQWxsIGRvbmUgYXQgdGhp
+cyBsZXZlbCAuLi4gYXNjZW5kIGFuZCByZXN1bWUgdGhlIHNlYXJjaC4KLQkgKi8KLQlyY3VfcmVh
+ZF9sb2NrKCk7Ci1hc2NlbmQ6Ci0JaWYgKHRoaXNfcGFyZW50ICE9IHBhcmVudCkgewotCQlzdHJ1
+Y3QgZGVudHJ5ICpjaGlsZCA9IHRoaXNfcGFyZW50OwotCQl0aGlzX3BhcmVudCA9IGNoaWxkLT5k
+X3BhcmVudDsKLQotCQlzcGluX3VubG9jaygmY2hpbGQtPmRfbG9jayk7Ci0JCXNwaW5fbG9jaygm
+dGhpc19wYXJlbnQtPmRfbG9jayk7Ci0KLQkJLyogZ28gaW50byB0aGUgZmlyc3Qgc2libGluZyBz
+dGlsbCBhbGl2ZSAqLwotCQlkbyB7Ci0JCQluZXh0ID0gY2hpbGQtPmRfY2hpbGQubmV4dDsKLQkJ
+CWlmIChuZXh0ID09ICZ0aGlzX3BhcmVudC0+ZF9zdWJkaXJzKQotCQkJCWdvdG8gYXNjZW5kOwot
+CQkJY2hpbGQgPSBsaXN0X2VudHJ5KG5leHQsIHN0cnVjdCBkZW50cnksIGRfY2hpbGQpOwotCQl9
+IHdoaWxlICh1bmxpa2VseShjaGlsZC0+ZF9mbGFncyAmIERDQUNIRV9ERU5UUllfS0lMTEVEKSk7
+Ci0JCXJjdV9yZWFkX3VubG9jaygpOwotCQlnb3RvIHJlc3VtZTsKLQl9Ci0JcmN1X3JlYWRfdW5s
+b2NrKCk7Ci0Jc3Bpbl91bmxvY2soJnRoaXNfcGFyZW50LT5kX2xvY2spOwotCXJldHVybjsKLX0K
+LQogc3RhdGljIGludCB0cmFjZWZzX3BhcnNlX29wdGlvbnMoY2hhciAqZGF0YSwgc3RydWN0IHRy
+YWNlZnNfbW91bnRfb3B0cyAqb3B0cykKIHsKIAlzdWJzdHJpbmdfdCBhcmdzW01BWF9PUFRfQVJH
+U107CkBAIC0zMzIsMTAgKzI1NSw4IEBAIHN0YXRpYyBpbnQgdHJhY2Vmc19hcHBseV9vcHRpb25z
+KHN0cnVjdCBzdXBlcl9ibG9jayAqc2IsIGJvb2wgcmVtb3VudCkKIAlpZiAoIXJlbW91bnQgfHwg
+b3B0cy0+b3B0cyAmIEJJVChPcHRfdWlkKSkKIAkJaW5vZGUtPmlfdWlkID0gb3B0cy0+dWlkOwog
+Ci0JaWYgKCFyZW1vdW50IHx8IG9wdHMtPm9wdHMgJiBCSVQoT3B0X2dpZCkpIHsKLQkJLyogU2V0
+IGFsbCB0aGUgZ3JvdXAgaWRzIHRvIHRoZSBtb3VudCBvcHRpb24gKi8KLQkJc2V0X2dpZChzYi0+
+c19yb290LCBvcHRzLT5naWQpOwotCX0KKwlpZiAoIXJlbW91bnQgfHwgb3B0cy0+b3B0cyAmIEJJ
+VChPcHRfZ2lkKSkKKwkJaW5vZGUtPmlfZ2lkID0gb3B0cy0+Z2lkOwogCiAJcmV0dXJuIDA7CiB9
+Cg==
+--000000000000b8b1f0060e0eebf2--
