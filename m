@@ -1,56 +1,45 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3EF128DAB;
-	Thu,  4 Jan 2024 17:53:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203EA28DBD;
+	Thu,  4 Jan 2024 18:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r1xGtIhZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6501DC433C7;
-	Thu,  4 Jan 2024 17:52:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704390782;
-	bh=wKYftDd3FW5eeDWnzupfy2i9v4YDDNe798XkVIlpntA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=r1xGtIhZLKg/DWo5tFxE72e0gxuhkDIKV4oTNFvWvLqyDfrPQlNjK41WMhUYcJ1Hy
-	 7l4MiWr16D03U44+WfsgK+XEiKYsL32Ukwtb+j/zownEYSCDtIc4jIudL8FCPlztJa
-	 wa3BjGjg6ADD5tLTRzht7v5o/AtHz6wJOmu6cGaHjdJhk2IFea8qY2lPnxJ6cm1Qjh
-	 xd0qOT1j7Yhp3oL6StLi286l42ZzdauAuy+Mqtq4fkVcX1zQ/VIPPAK5WbYmULuKja
-	 UuqG0mCKG/yDEgIxi9pDNgNiLE0gWveCqOYbIqd2Tk7qom5amXmA6wKNlSJKE3rHuA
-	 pKoSbTQBou1NQ==
-Date: Thu, 4 Jan 2024 17:52:53 +0000
-From: Simon Horman <horms@kernel.org>
-To: Yi-De Wu <yi-de.wu@mediatek.com>
-Cc: Yingshiuan Pan <yingshiuan.pan@mediatek.com>,
-	Ze-Yu Wang <ze-yu.wang@mediatek.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Wihl Deacon <will@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="wAJEnhjH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Vlx+ZyzaT4C42cyQHsUsGkWLG7RTQETHcAtkqa33ebs=; b=wAJEnhjHNPQBPFB+B3TeYLwccW
+	Jmi4jOF2JdAvFz/Mwtn3bpmQC6Eoyh2SiclUtxYPwIe+GaHAUdMuB176cxT0Wh9/D+VA/whIzSXNg
+	sWUfZesAuVyDEujCKhLQnScShAzJw09YGhXG7XsPf5Q6UMI8iKvaIZ+o+El7Dh8I/uvRZPA4Usfxo
+	dozADWUa+Cu1hHyBMyZWmt0NMtAPz9fZrFj4iVx6xMxarGgriaIWekUYg90FgECYuIQPLRHWKUImd
+	kHatuLbhLvzUqX5/yIwWm1LesyzVaFtiwvpPg+KKQkiGfOqJioUu1Z+nIMCHc4tMb+6pVxm5vbppa
+	lw1vk29Q==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rLSOs-002CW8-1f;
+	Thu, 04 Jan 2024 18:25:03 +0000
+Date: Thu, 4 Jan 2024 18:25:02 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	David Bradil <dbrazdil@google.com>,
-	Trilok Soni <quic_tsoni@quicinc.com>,
-	Jade Shih <jades.shih@mediatek.com>,
-	Ivan Tseng <ivan.tseng@mediatek.com>,
-	My Chuang <my.chuang@mediatek.com>,
-	Shawn Hsiao <shawn.hsiao@mediatek.com>,
-	PeiLun Suei <peilun.suei@mediatek.com>,
-	Liju Chen <liju-clr.chen@mediatek.com>,
-	Willix Yeh <chi-shen.yeh@mediatek.com>,
-	Kevenny Hsieh <kevenny.hsieh@mediatek.com>
-Subject: Re: [PATCH v8 08/20] virt: geniezone: Add vcpu support
-Message-ID: <20240104175253.GK31813@kernel.org>
-References: <20231228105147.13752-1-yi-de.wu@mediatek.com>
- <20231228105147.13752-9-yi-de.wu@mediatek.com>
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] tracefs/eventfs: Use root and instance inodes as default
+ ownership
+Message-ID: <20240104182502.GR1674809@ZenIV>
+References: <20240103203246.115732ec@gandalf.local.home>
+ <20240104014837.GO1674809@ZenIV>
+ <20240103212506.41432d12@gandalf.local.home>
+ <20240104043945.GQ1674809@ZenIV>
+ <20240104100544.593030e0@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -59,230 +48,192 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231228105147.13752-9-yi-de.wu@mediatek.com>
+In-Reply-To: <20240104100544.593030e0@gandalf.local.home>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Thu, Dec 28, 2023 at 06:51:35PM +0800, Yi-De Wu wrote:
-> From: "Yingshiuan Pan" <yingshiuan.pan@mediatek.com>
+On Thu, Jan 04, 2024 at 10:05:44AM -0500, Steven Rostedt wrote:
+
+> This is the "tribal knowledge" I'm talking about. I really didn't know how
+> the root dentry parent worked. I guess that makes sense, as it matches the
+> '..' of a directory, and the '/' directory '..' points to itself. Although
+> mounted file systems do not behave that way. My /proc/.. is '/'. I just
+> figured that the dentry->d_parent would be similar. Learn something everyday.
+
+What would you expect to happen if you have the same filesystem mounted in
+several places?  Having separate dentry trees would be a nightmare - you'd
+get cache coherency problems from hell.  It's survivable for procfs, but
+for something like a normal local filesystem it'd become very painful.
+And if we want them to share dentry tree, how do you choose where the ..
+would lead from the root dentry?
+
+The way it's done is that linkage between the trees is done separately -
+there's a tree of struct mount (well, forest, really - different processes
+can easily have separate trees, which is how namespaces are done) and
+each node in the mount tree refers to a dentry (sub)tree in some filesystem
+instance.  Location is represented by (mount, dentry) pair and handling of
+.. is basically (modulo refcounting, locking, error handling, etc.)
+	while dentry == subtree_root(mount) && mount != mountpoint_mount(mount)
+		// cross into the mountpoint under it
+		dentry = mountpoint_dentry(mount)
+		mount = mountpoint_mount(mount)
+	go_into(mount, dentry->d_parent)
+
+Note that you can have e.g. /usr/lib/gcc/x86_64-linux-gnu/12 mounted on /mnt/blah:
+; mount --bind /usr/lib/gcc/x86_64-linux-gnu/12 /mnt/blah
+will do it.  Then e.g. /mnt/blah/include will resolve to the same dentry as
+/usr/lib/gcc/x86_64-linux-gnu/12/include, etc.
+; chdir /mnt/blah
+; ls
+32                 crtprec80.o        libgomp.so         libsanitizer.spec
+cc1                g++-mapper-server  libgomp.spec       libssp_nonshared.a
+cc1plus            include            libitm.a           libstdc++.a
+collect2           libasan.a          libitm.so          libstdc++fs.a
+crtbegin.o         libasan_preinit.o  libitm.spec        libstdc++.so
+crtbeginS.o        libasan.so         liblsan.a          libsupc++.a
+crtbeginT.o        libatomic.a        liblsan_preinit.o  libtsan.a
+crtend.o           libatomic.so       liblsan.so         libtsan_preinit.o
+crtendS.o          libbacktrace.a     liblto_plugin.so   libtsan.so
+crtfastmath.o      libcc1.so          libobjc.a          libubsan.a
+crtoffloadbegin.o  libgcc.a           libobjc_gc.a       libubsan.so
+crtoffloadend.o    libgcc_eh.a        libobjc_gc.so      lto1
+crtoffloadtable.o  libgcc_s.so        libobjc.so         lto-wrapper
+crtprec32.o        libgcov.a          libquadmath.a      plugin
+crtprec64.o        libgomp.a          libquadmath.so     x32
+
+We obviously want .. to resolve to /mnt, though.
+; ls ..
+; ls /usr/lib/gcc/x86_64-linux-gnu/
+12
+
+So the trigger for "cross into underlying mountpoint" has to be "dentry is
+the root of subtree mount refers to" - it depends upon the mount we are
+in.
+
+> >  Filesystem object contents belongs here; multiple hardlinks
+> > have different dentries and the same inode.
 > 
-> VMM use this interface to create vcpu instance which is a fd, and this
-> fd will be for any vcpu operations, such as setting vcpu registers and
-> accepts the most important ioctl GZVM_VCPU_RUN which requests GenieZone
-> hypervisor to do context switch to execute VM's vcpu context.
+> So, can I assume that an inode could only have as many dentries as hard
+> links? I know directories are only allowed to have a single hard link. Is
+> that why they can only have a single dentry?
+
+Not quite.  Single alias for directories is more about cache coherency
+fun; we really can't afford multiple aliases for those.  For non-directories
+it's possible to have an entirely disconnected dentry refering to that
+sucker; if somebody hands you an fhandle with no indication of the parent
+directory, you might end up having to do one of those, no matter how many
+times you find the same inode later.  Not an issue for tracefs, though.
+
+> > namespace: mount tree.  Unlike everything prior, this one is a part of
+> > process state - same as descriptor table, mappings, etc.
 > 
-> Signed-off-by: Yingshiuan Pan <yingshiuan.pan@mediatek.com>
-> Signed-off-by: Jerry Wang <ze-yu.wang@mediatek.com>
-> Signed-off-by: kevenny hsieh <kevenny.hsieh@mediatek.com>
-> Signed-off-by: Liju Chen <liju-clr.chen@mediatek.com>
-> Signed-off-by: Yi-De Wu <yi-de.wu@mediatek.com>
+> And I'm guessing namespace is for containers. At least that's what I've
+> been assuming they are for.
 
-Hi Yi-De Wu,
+It predates containers by quite a few years, but yes, that's one of the
+users.  It is related to virtual machines, in the same sense the set
+of memory mappings is - each thread can be thought of as a VM, with
+a bunch of components.  Just as mmap() manipulates the virtual address
+translation for the threads that share memory space with the caller,
+mount() manipulates the pathname resolution for the threads that share
+the namespace with the caller.
 
-some minor feedback from my side.
+> > descriptor table: mapping from numbers to IO channels (opened files).
+> 
+> This is that "process fd table" I mentioned above (I wrote that before
+> reading this).
+> 
+> > Again, a part of process state.  dup() creates a new entry, with
+> > reference to the same file as the old one; multiple open() of the
+> 
+> Hmm, wouldn't "dup()" create another "file" that just points to the same
+> dentry? It wouldn't be the "same file", or did you mean "file" from the
+> user space point of view?
 
-...
+No.  The difference between open() and dup() is that the latter will
+result in a descriptor that really refers to the same file.  Current
+IO position belongs to IO channel; it doesn't matter for e.g. terminals,
+but for regular file it immediately becomes an issue.
+	fd1 = open("foo", 0);
+	fd2 = open("foo", 0);
+	read(fd1, &c1, 1);
+	read(fd2, &c2, 1);
+will result in the first byte of foo read into c1 and c2, but
+	fd1 = open("foo", 0);
+	fd2 = dup(fd1);
+	read(fd1, &c1, 1);
+	read(fd2, &c2, 1);
+will have the first byte of foo in c1 and the second one - in c2.
+open() yields a new IO channel attached to new descriptor; dup()
+(and dup2()) attaches the existing IO channel to new descriptor.
+fork() acts like dup() in that respect - child gets its descriptor
+table populated with references to the same IO channels as the
+parent does.
 
-> diff --git a/include/uapi/linux/gzvm.h b/include/uapi/linux/gzvm.h
-> index 77a58ee085df..bdf277fa248a 100644
-> --- a/include/uapi/linux/gzvm.h
-> +++ b/include/uapi/linux/gzvm.h
-> @@ -25,6 +25,34 @@
->  /* GZVM_CAP_PVM_SET_PROTECTED_VM only sets protected but not load pvmfw */
->  #define GZVM_CAP_PVM_SET_PROTECTED_VM		2
->  
-> +/*
-> + * Architecture specific registers are to be defined and ORed with
-> + * the arch identifier.
-> + */
-> +#define GZVM_REG_ARCH_ARM64	0x6000000000000000ULL
-> +#define GZVM_REG_ARCH_MASK	0xff00000000000000ULL
+Any Unix since about '71 has it done that way and the same goes
+for NT, DOS, etc. - you can't implement redirects to/from regular
+files without that distinction.
 
-nit: using GENMASK_ULL and FIELD_PREP seems appropriate here.
+Unfortunately, the terms are clumsy as hell - POSIX ends up with
+"file descriptor" (for numbers) vs. "file description" (for IO
+channels), which is hard to distinguish when reading and just
+as hard to distinguish when listening.  "Opened file" (as IO
+channel) vs. "file on disc" (as collection of data that might
+be accessed via said channels) distinction on top of that also
+doesn't help, to put it mildly.  It's many decades too late to
+do anything about, unfortunately.  Pity the UNIX 101 students... ;-/
 
-> +
-> +/*
-> + * Reg size = BIT((reg.id & GZVM_REG_SIZE_MASK) >> GZVM_REG_SIZE_SHIFT) bytes
-> + */
-> +#define GZVM_REG_SIZE_SHIFT	52
-> +#define GZVM_REG_SIZE_MASK	0x00f0000000000000ULL
-> +
-> +#define GZVM_REG_SIZE_U8	0x0000000000000000ULL
-> +#define GZVM_REG_SIZE_U16	0x0010000000000000ULL
-> +#define GZVM_REG_SIZE_U32	0x0020000000000000ULL
-> +#define GZVM_REG_SIZE_U64	0x0030000000000000ULL
-> +#define GZVM_REG_SIZE_U128	0x0040000000000000ULL
-> +#define GZVM_REG_SIZE_U256	0x0050000000000000ULL
-> +#define GZVM_REG_SIZE_U512	0x0060000000000000ULL
-> +#define GZVM_REG_SIZE_U1024	0x0070000000000000ULL
-> +#define GZVM_REG_SIZE_U2048	0x0080000000000000ULL
+The bottom line:
+	* struct file represents an IO channel; it might be operating
+on various objects, including regular files, pipes, sockets, etc.
+	* current IO position is a property of IO channel.
+	* struct files_struct represents a descriptor table; each of
+those maps numbers to IO channels.
+	* each thread uses a descriptor table to turn numbers ("file
+descriptors") into struct file references.  Different threads might
+share the same descriptor table or have separate descriptor tables.
+current->files points to the descriptor table of the current thread.
+	* open() creates a new IO channel and attaches it to an
+unused position in descriptor table.
+	* dup(n) takes the IO channel from position 'n' in descriptor
+table and attaches it to an unused position.
+	* dup2(old, new) takes the IO channel from position 'old' and
+attaches it to position 'new'; if there used to be something in position
+'new', it gets detached.
+	* close(n) takes the IO channel from position 'n', flushes and
+detaches it.  Note that it IO channel itself is *NOT* closed until
+all references to it are gone.  E.g. open() + fork() + (in parent) close()
+will end up with the child's descriptor table keeping a reference to
+IO channel established by open(); close() in parent will not shut the
+channel down.  The same goes for implicit close() done by dup2() or
+by exit(), etc.
+	* things like mmap() retain struct file references;
+open() + mmap() + close() ends up with struct file left (in vma->vm_file)
+alive and well for as long as the mapping exists, nevermind the reference
+that used to be in descriptor table.  In other words, IO channels can
+exist with no references in any descriptor tables.  There are other
+ways for such situation to occur (e.g. SCM_RIGHTS stuff); it's entirely
+normal.
 
-And here.
+> > same pathname will each yield a separate opened file.  _Some_ state
+> > belongs here (close-on-exec, mostly).  Note that there's no such
+> > thing as "the descriptor of this file" - not even "the user-supplied
+> > number that had been used to get the file we are currently reading
+> > from", since that number might be refering to something entirely
+> > different right after we'd resolved it to opened file and that
+> > happens *without* disrupting the operation.
+> 
+> This last paragraph confused me. What do you mean by ""referring to
+> something entirely different"?
 
-> +
-> +/* Register type definitions */
-> +#define GZVM_REG_TYPE_SHIFT	16
-> +/* Register type: general purpose */
-> +#define GZVM_REG_TYPE_GENERAL	(0x10 << GZVM_REG_TYPE_SHIFT)
+	Two threads share descriptor table; one of them is in
+read(fd, ...), another does dup2(fd2, fd).  If read() gets past the
+point where it gets struct file reference, it will keep accessing that
+IO channel.  dup2() will replace the reference in descriptor table,
+but that won't disrupt the read()...
 
-And using FIELD_PREP seems appropriate here too.
+> 
+> Thanks for this overview. It was very useful, and something I think we
+> should add to kernel doc. I did read Documentation/filesystems/vfs.rst but
+> honestly, I think your writeup here is a better overview.
 
-...
-
-> @@ -51,6 +79,11 @@ struct gzvm_memory_region {
->  
->  #define GZVM_SET_MEMORY_REGION     _IOW(GZVM_IOC_MAGIC,  0x40, \
->  					struct gzvm_memory_region)
-> +/*
-> + * GZVM_CREATE_VCPU receives as a parameter the vcpu slot,
-> + * and returns a vcpu fd.
-> + */
-> +#define GZVM_CREATE_VCPU           _IO(GZVM_IOC_MAGIC,   0x41)
->  
->  /* for GZVM_SET_USER_MEMORY_REGION */
->  struct gzvm_userspace_memory_region {
-> @@ -66,6 +99,124 @@ struct gzvm_userspace_memory_region {
->  #define GZVM_SET_USER_MEMORY_REGION _IOW(GZVM_IOC_MAGIC, 0x46, \
->  					 struct gzvm_userspace_memory_region)
->  
-> +/*
-> + * ioctls for vcpu fds
-> + */
-> +#define GZVM_RUN                   _IO(GZVM_IOC_MAGIC,   0x80)
-> +
-> +/* VM exit reason */
-> +enum {
-> +	GZVM_EXIT_UNKNOWN = 0x92920000,
-> +	GZVM_EXIT_MMIO = 0x92920001,
-> +	GZVM_EXIT_HYPERCALL = 0x92920002,
-> +	GZVM_EXIT_IRQ = 0x92920003,
-> +	GZVM_EXIT_EXCEPTION = 0x92920004,
-> +	GZVM_EXIT_DEBUG = 0x92920005,
-> +	GZVM_EXIT_FAIL_ENTRY = 0x92920006,
-> +	GZVM_EXIT_INTERNAL_ERROR = 0x92920007,
-> +	GZVM_EXIT_SYSTEM_EVENT = 0x92920008,
-> +	GZVM_EXIT_SHUTDOWN = 0x92920009,
-> +	GZVM_EXIT_GZ = 0x9292000a,
-> +};
-> +
-> +/**
-> + * struct gzvm_vcpu_run: Same purpose as kvm_run, this struct is
-> + *			shared between userspace, kernel and
-> + *			GenieZone hypervisor
-> + * @exit_reason: The reason why gzvm_vcpu_run has stopped running the vCPU
-> + * @immediate_exit: Polled when the vcpu is scheduled.
-> + *                  If set, immediately returns -EINTR
-> + * @padding1: Reserved for future-proof and must be zero filled
-> + * @mmio: The nested struct in anonymous union. Handle mmio in host side
-> + * @phys_addr: The address guest tries to access
-> + * @data: The value to be written (is_write is 1) or
-> + *        be filled by user for reads (is_write is 0)
-> + * @size: The size of written data.
-> + *        Only the first `size` bytes of `data` are handled
-> + * @reg_nr: The register number where the data is stored
-> + * @is_write: 1 for VM to perform a write or 0 for VM to perform a read
-> + * @fail_entry: The nested struct in anonymous union.
-> + *              Handle invalid entry address at the first run
-> + * @hardware_entry_failure_reason: The reason codes about hardware entry failure
-> + * @cpu: The current processor number via smp_processor_id()
-> + * @exception: The nested struct in anonymous union.
-> + *             Handle exception occurred in VM
-> + * @exception: Which exception vector
-> + * @error_code: Exception error codes
-> + * @hypercall: The nested struct in anonymous union.
-> + *             Some hypercalls issued from VM must be handled
-> + * @args: The hypercall's arguments
-> + * @internal: The nested struct in anonymous union. The errors from hypervisor
-> + * @suberror: The errors codes about GZVM_EXIT_INTERNAL_ERROR
-> + * @ndata: The number of elements used in data[]
-> + * @data: Keep the detailed information about GZVM_EXIT_INTERNAL_ERROR
-> + * @system_event: The nested struct in anonymous union.
-> + *                VM's PSCI must be handled by host
-> + * @type: System event type.
-> + *        Ex. GZVM_SYSTEM_EVENT_SHUTDOWN or GZVM_SYSTEM_EVENT_RESET...etc.
-> + * @ndata: The number of elements used in data[]
-> + * @data: Keep the detailed information about GZVM_EXIT_SYSTEM_EVENT
-> + * @padding: Fix it to a reasonable size future-proof for keeping the same
-> + *           struct size when adding new variables in the union is needed
-> + *
-> + * Keep identical layout between the 3 modules
-> + */
-
-I am unsure how to address this, but ./scripts/kernel-doc seems confused
-about the correlation between the fields documented above and the nested
-structure below.
-
-"./scripts/kernel-doc -none" says:
-
- .../gzvm.h:219: warning: Excess struct member 'phys_addr' description in 'gzvm_vcpu_run'
- .../gzvm.h:219: warning: Excess struct member 'data' description in 'gzvm_vcpu_run'
- .../gzvm.h:219: warning: Excess struct member 'size' description in 'gzvm_vcpu_run'
- .../gzvm.h:219: warning: Excess struct member 'reg_nr' description in 'gzvm_vcpu_run'
- .../gzvm.h:219: warning: Excess struct member 'is_write' description in 'gzvm_vcpu_run'
- .../gzvm.h:219: warning: Excess struct member 'hardware_entry_failure_reason' description in 'gzvm_vcpu_run'
- .../gzvm.h:219: warning: Excess struct member 'cpu' description in 'gzvm_vcpu_run'
- .../gzvm.h:219: warning: Excess struct member 'error_code' description in 'gzvm_vcpu_run'
- .../gzvm.h:219: warning: Excess struct member 'args' description in 'gzvm_vcpu_run'
- .../gzvm.h:219: warning: Excess struct member 'suberror' description in 'gzvm_vcpu_run'
- .../gzvm.h:219: warning: Excess struct member 'ndata' description in 'gzvm_vcpu_run'
- .../gzvm.h:219: warning: Excess struct member 'data' description in 'gzvm_vcpu_run'
- .../gzvm.h:219: warning: Excess struct member 'type' description in 'gzvm_vcpu_run'
- .../gzvm.h:219: warning: Excess struct member 'ndata' description in 'gzvm_vcpu_run'
- .../gzvm.h:219: warning: Excess struct member 'data' description in 'gzvm_vcpu_run'
-
-
-> +struct gzvm_vcpu_run {
-> +	/* to userspace */
-> +	__u32 exit_reason;
-> +	__u8 immediate_exit;
-> +	__u8 padding1[3];
-> +	/* union structure of collection of guest exit reason */
-> +	union {
-> +		/* GZVM_EXIT_MMIO */
-> +		struct {
-> +			/* from FAR_EL2 */
-> +			__u64 phys_addr;
-> +			__u8 data[8];
-> +			/* from ESR_EL2 as */
-> +			__u64 size;
-> +			/* from ESR_EL2 */
-> +			__u32 reg_nr;
-> +			/* from ESR_EL2 */
-> +			__u8 is_write;
-> +		} mmio;
-> +		/* GZVM_EXIT_FAIL_ENTRY */
-> +		struct {
-> +			__u64 hardware_entry_failure_reason;
-> +			__u32 cpu;
-> +		} fail_entry;
-> +		/* GZVM_EXIT_EXCEPTION */
-> +		struct {
-> +			__u32 exception;
-> +			__u32 error_code;
-> +		} exception;
-> +		/* GZVM_EXIT_HYPERCALL */
-> +		struct {
-> +			__u64 args[8];	/* in-out */
-> +		} hypercall;
-> +		/* GZVM_EXIT_INTERNAL_ERROR */
-> +		struct {
-> +			__u32 suberror;
-> +			__u32 ndata;
-> +			__u64 data[16];
-> +		} internal;
-> +		/* GZVM_EXIT_SYSTEM_EVENT */
-> +		struct {
-> +#define GZVM_SYSTEM_EVENT_SHUTDOWN       1
-> +#define GZVM_SYSTEM_EVENT_RESET          2
-> +#define GZVM_SYSTEM_EVENT_CRASH          3
-> +#define GZVM_SYSTEM_EVENT_WAKEUP         4
-> +#define GZVM_SYSTEM_EVENT_SUSPEND        5
-> +#define GZVM_SYSTEM_EVENT_SEV_TERM       6
-> +#define GZVM_SYSTEM_EVENT_S2IDLE         7
-> +			__u32 type;
-> +			__u32 ndata;
-> +			__u64 data[16];
-> +		} system_event;
-> +		char padding[256];
-> +	};
-> +};
-
-...
+At the very least it would need serious reordering ;-/
