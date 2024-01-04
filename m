@@ -1,182 +1,396 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CECD241E2;
-	Thu,  4 Jan 2024 15:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="t8OW53/b"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240104152317euoutp02af64ea5d44089fbf76814de916d80a0e~nLjblY91G0383403834euoutp02S;
-	Thu,  4 Jan 2024 15:23:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240104152317euoutp02af64ea5d44089fbf76814de916d80a0e~nLjblY91G0383403834euoutp02S
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1704381797;
-	bh=JalEKYMkjsneZ1f8omw/O0M8dMeqvgrqvomUY87Fhfg=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=t8OW53/bBoW8L9GkkTvvZs4nFJoit0t32xAeCuyCdhzm1xAwgLcS4i+QWCwdYR751
-	 uKMHMPmL5vl+T13dMvzs0JbHPIPONUmbj2fR7/shSJjCihhOnUxf+2BsbU5u+eRnWB
-	 tCGKFybp2cf3kUnCH+qV1xVYfB6EOQwcBXv3BBDg=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240104152317eucas1p19950f0b8746d6f6c732a2653a49e0a67~nLjbVXSBN1357313573eucas1p1J;
-	Thu,  4 Jan 2024 15:23:17 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id D1.15.09539.46DC6956; Thu,  4
-	Jan 2024 15:23:16 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240104152316eucas1p15614f44c3e210a165983df57e9014009~nLja2BBXo1074810748eucas1p17;
-	Thu,  4 Jan 2024 15:23:16 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240104152316eusmtrp27b5ba330034b29d296ed9522af8c9794~nLja06KbN2376823768eusmtrp2M;
-	Thu,  4 Jan 2024 15:23:16 +0000 (GMT)
-X-AuditID: cbfec7f2-515ff70000002543-5e-6596cd646407
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id D0.E3.09146.46DC6956; Thu,  4
-	Jan 2024 15:23:16 +0000 (GMT)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240104152316eusmtip1a81f893d56955799d8aa2aa6593eae90~nLjaj-tQO0636206362eusmtip1-;
-	Thu,  4 Jan 2024 15:23:16 +0000 (GMT)
-Received: from localhost (106.210.248.231) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Thu, 4 Jan 2024 15:23:15 +0000
-Date: Thu, 4 Jan 2024 16:23:11 +0100
-From: Joel Granados <j.granados@samsung.com>
-To: Matthew Wilcox <willy@infradead.org>
-CC: Luis Chamberlain <mcgrof@kernel.org>, <josh@joshtriplett.org>, Kees Cook
-	<keescook@chromium.org>, Eric Biederman <ebiederm@xmission.com>, Iurii
-	Zaikin <yzaikin@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami
-	Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas
-	Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>, Stephen
-	Boyd <sboyd@kernel.org>, Andy Lutomirski <luto@amacapital.net>, Will Drewry
-	<wad@chromium.org>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
-	<peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
-	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Daniel
-	Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider
-	<vschneid@redhat.com>, Petr Mladek <pmladek@suse.com>, John Ogness
-	<john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Anil S Keshavamurthy
-	<anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
-	Balbir Singh <bsingharora@gmail.com>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
-	<john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Martin
-	KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Yonghong Song
-	<yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, Stanislav Fomichev
-	<sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
-	<linux-fsdevel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<bpf@vger.kernel.org>
-Subject: Re: [PATCH v2 00/10] sysctl: Remove sentinel elements from kernel
- dir
-Message-ID: <20240104152311.f62uxcnimol5qwxx@localhost>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39AAE249FD;
+	Thu,  4 Jan 2024 16:00:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A729DC433C8;
+	Thu,  4 Jan 2024 16:00:22 +0000 (UTC)
+Date: Thu, 4 Jan 2024 11:01:27 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <mhi@lists.linux.dev>, <linux-arm-msm@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>, <quic_vbadigan@quicinc.com>,
+ <quic_ramkri@quicinc.com>, <quic_nitegupt@quicinc.com>,
+ <quic_skananth@quicinc.com>, <quic_parass@quicinc.com>
+Subject: Re: [PATCH v8] bus: mhi: host: Add tracing support
+Message-ID: <20240104110127.42da8ec8@gandalf.local.home>
+In-Reply-To: <20231207-ftrace_support-v8-1-7f62d4558555@quicinc.com>
+References: <20231207-ftrace_support-v8-1-7f62d4558555@quicinc.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="jzrq2uleinvzsb23"
-Content-Disposition: inline
-In-Reply-To: <ZZbJRiN8ENV/FoTV@casper.infradead.org>
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA2VTazBcZxjud87ZcxZds5bwRTpjZkOmFTSRhK8XnaTVyZlp0shM+yP5kdrG
-	GTTsiqWk1RmbirpUY8LSIKxL3NYlNkuo6yg2CEoIJYmUsF0rS12KitXdHG0z03/P+zzv873P
-	8+Pj4oJmypEbLI5gwsWiECFpSdR1bfS7B/RlMAdqdV5obTMbR42/TxBoZWOCQssdGhINTY+Q
-	KFMnI1CO7h6FCvP/xFHOQByBZlJrcbRdF0ehdk0rhS7Xl2KobjgPoI70LJOgkKDnd2tI9Oiq
-	nED3kkNRY+8qhrQtKRhqau4m0P2fckjUUd1HIGVlLAfdHB3EUEViGQeNpc4AlGaYBaiwZB8a
-	alNgSJm+RSFNShuGtqdXOagl4QmGjA9qCDS0ridQY00BiTQlWyS6rZLjKKHDlLC2c41CE0nb
-	FNpcN915oqzjoOKGj4960JPzWwRdkVsB6OzYQYJWl/2K0Q1Zjyg6rmWcohWqSPp2qStd2KTD
-	6KSxIZwe1/vQqvJEkn74oImkDf39FJ0fK8fp1II24Gd/1vLdACYk+Esm/M33/C2DRlpWQJjB
-	KlqxsMyJBVWWScCCC/mHoXawhpMELLkCfimAldX9O8MKgD/f2CTZYRnAyRSdaeC+sMxNO5nd
-	An4JgPoch393rhdMk6ygBnBTv9uMCb4zHPnx1gue5LvBgfmHuPkdO/7rcF7taaZxfg0PXqv/
-	3Ixt+X5w+E4zYcY8vjdUFxkBi21g9/WnBLsfDct0JcD8DM7fA0uMXDNtYUrW1P39Tsq9cEnr
-	z3b8BvaoxzFzSshfsIIVRUrACr6wdqZ1B9vCOY2aYvFrcLshb8eQBmCrcZFiByWAxbJVjN16
-	B8YNP6XYa8fg8x+iWGgNx57ZsDGt4bW6TJyleTAhXsAa90Hl43kiFezNeqlY1kvFsv4rxtJu
-	UNG4RP6P3g+L8/U4i31gVdUCoQBUOXBgIqWhgYz0oJiJ8pCKQqWR4kCP85JQFTD9ql6jZqke
-	3Jj7w6MdYFzQDpxN5qlbyl+AIyGWiBmhHa+6Ko0R8AJEl75iwiWfhUeGMNJ2sIdLCB14LgFO
-	jIAfKIpgLjBMGBP+j4pxLRxjsSh1srvTB13D23M96QNMsFeS59XkA187+oY807r49TRtvjJ7
-	3jXurxP7XeSqXK2xJ/7OqNdxv3apQrKr1Cj3HA+8uy60mu2ydr45ZRt9atHakusq4/jFjJZ7
-	vJVxQt2ZGmJf/UXRR7LVCzZ9HKvEcq3LzOHxty2Go0NqrW1PxvtPFTQHGdw6E1Xnags6Hfo+
-	FZ7SZ2EL7u2jdssXA0YCj6zu+s7rVbfTl+y7f6uXZeMx4yMjYWcMst7MyeDsy55HWk4vGjbu
-	43m7F4nqCApFOE58kluZcebKgkjtHXPl4qH+tW993pCMtZ07+tj3QzcoD9QeEvUvvQ8WDKEn
-	vcUJwcfOpgoJaZDooCseLhX9DXoa/GDQBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA2VTe0xTVxz23Ht7b0FIKuC8dHNulTiHrrbldTqK2UbirpKBWcyW6DatcANk
-	lJI+jDzUwpgpBTeUxyaCFhBRW3mDMhiyrsAYD6EdyFMRBCyvBXwAQ2DtmmUm++873+/7vt/v
-	d3IOE3UZwtnMyGgFLYsWR3FwR6xtrWX4vbCObJrXNe4GF1cuobDuySAGny0PEvCpsQWHprEe
-	HP5gScRgrqWdgIX5L1CYey8Zg+Pp1Shcr0kmoKHlLgGT7lxHYM0fVwA0ZuZYC1opfPlbOQ6H
-	v8/CYHuqBNa1PUfgZMM5BNb/3IpB80+5ODSWdmBQd0vFgEX3uxGoT7nBgH3p4wBmzE0AWFi8
-	A5oatQjUZa4SsOVcIwLXx54zYIN6BIFrveUYNC1NY7CuvACHLcWrOKysyEKh2midsLppkYCD
-	mnUCrixZ+4zoahjwWm3wB1zq4cwqRukv6wF1SdWNUVU3+hGqNmeYoJIbBghKW6GkKq97UoX1
-	FoTS9JlQamA6gKq4mYJTQ731ODXX2UlQ+aoslEovaAQHXzvMFcmkSgX9VoRUrgjgHOFDAZcv
-	hFyBt5DL9/L78n2BD2fPXlEYHRV5gpbt2XuMG3F1fQmLmdl4cvbsNwwV0DtqAJNJsrzJqbFt
-	GuDIdGEVATL1vhnVAAcr/wZZ/qyHYceu5MteDW4XzQPS0DyK2g9VgHz0YPYfFcbyIHt+LMNt
-	GGftJu/NDKG2Dm6sneRMlcCmR1nlzuTy+SbExruygsnKWcomd2b5kVVX14A9sxeQy81NhL2w
-	iWy9+BizYZR1gpxYSGXYvCjrdbJ4jWmjHawL1Lem4fZltpMLk8fsM58in65OgHTgmvNKUM4r
-	QTn/BdlpT7JvzYL8j95FXsufRu04gCwp+RPTAuImcKOVckm4RM7nysUSuTI6nBsqlVQA69Ou
-	aV6uvAMuT81zDQBhAgPwsDpHy3RdgI1FS6NpjptzaUkG7eIcJo6No2XSozJlFC03AB/rHZ5H
-	2ZtDpdZ/Eq04yvfl+fC9fYU8H6GvF2eL8/4YtdiFFS5W0F/TdAwt+9eHMB3YKkTfGPgicKF6
-	5vZJk+jt4n1bk4qkXvFTO7a+8yT+I4fY2aCAd5PIWPzjTdWfhVtOTbVppJOb42I+SVAf6jpn
-	qV3MYgcyhZ5NrR1a+PluP2OeB9tJ43TAkPkX3z8v+9HwhtSzvHjjdp7guI/yixSRQ58AnS84
-	Ejkqdqv+zl2btNJSOpC2JeiQkHTqzB574H885HZDyPyBDRn9v5i/DakZjavifppWh48pLrgT
-	A/2u2cG0MESvzjzofua0Z79upD7PXNv81c6gh6FDjzlzF1R3NfDim7uutA63ByTeEpgWOs2j
-	OlGCaGPCfkk8MIuWeB/2eKyAicPbuk8nninzV1f8PvGrOweTR4j5nqhMLv4bnkmcD28EAAA=
-X-CMS-MailID: 20240104152316eucas1p15614f44c3e210a165983df57e9014009
-X-Msg-Generator: CA
-X-RootMTR: 20240104150558eucas1p2cfaa2a4ea3933e8dfbf1bc94fb9e6ff5
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240104150558eucas1p2cfaa2a4ea3933e8dfbf1bc94fb9e6ff5
-References: <20240104-jag-sysctl_remove_empty_elem_kernel-v2-0-836cc04e00ec@samsung.com>
-	<CGME20240104150558eucas1p2cfaa2a4ea3933e8dfbf1bc94fb9e6ff5@eucas1p2.samsung.com>
-	<ZZbJRiN8ENV/FoTV@casper.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
---jzrq2uleinvzsb23
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, 7 Dec 2023 10:00:47 +0530
+Krishna chaitanya chundru <quic_krichai@quicinc.com> wrote:
 
-On Thu, Jan 04, 2024 at 03:05:42PM +0000, Matthew Wilcox wrote:
-> On Thu, Jan 04, 2024 at 04:02:21PM +0100, Joel Granados via B4 Relay wrot=
-e:
-> > From: Joel Granados <j.granados@samsung.com>
-> >=20
-> > What?
->=20
-> The reason I wanted you to do the sentinel removal before the split was
-> so that there weren't two rounds of patches.  Ironically, because you
-> refused to do it that way, not only are there two rounds of patches, but
-> I'm being cc'd on all of them, so I get all the $%*^ emails twice.
->=20
-> Please at least stop cc'ing me.
-Will do
+> This change adds ftrace support for following functions which
+> helps in debugging the issues when there is Channel state & MHI
+> state change and also when we receive data and control events:
+> 1. mhi_intvec_mhi_states
+> 2. mhi_process_data_event_ring
+> 3. mhi_process_ctrl_ev_ring
+> 4. mhi_gen_tre
+> 5. mhi_update_channel_state
+> 6. mhi_tryset_pm_state
+> 7. mhi_pm_st_worker
+> 
+> Where ever the trace events are added, debug messages are removed.
+> 
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> ---
+> Changes in v8:
+> - Pass the structure and derefernce the variables in TP_fast_assign as suggested by steve
+> - Link to v7: https://lore.kernel.org/r/20231206-ftrace_support-v7-1-aca49a04268b@quicinc.com
 
---=20
+So this looks good from a tracing POV.
 
-Joel Granados
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
---jzrq2uleinvzsb23
-Content-Type: application/pgp-signature; name="signature.asc"
+But I do have some more comments that could be done by new patches.
 
------BEGIN PGP SIGNATURE-----
 
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmWWzV4ACgkQupfNUreW
-QU8FhwwAiNDNSaoaB/pGcA4KJtPoMdEJm9tL4XsYkZf24rQJXWitgrDdtcgoZo65
-VMARclf+GYvEvKwbnBJTK3mvcW4sHq0QoAGQy8AtQuo8dFk2K+n4XvvyKuWRlPRF
-hgE2MsdpbWNSFaKPYw5o6MYcjDmxkusvPifKASX/NANB16gjAWtjHqLfhRN+uXA7
-Hsxg3zQwr0sN+/7apAHCWO5X1A4RLpBoT9tjPnqPCKWCeya9HMpQfIwfRs9qIiM3
-NQsVAtLT8f5e969fRNEzDvPF2m/bV3ecyxTL/mEOd7TP2H0pL/8FkPw55aWMSt0q
-XxavHxTdl1Qo7oPVQMUckL9j58Nc5oDzPevLjGi0wZEpFcuQWRskWSZf7nTh0wEj
-cGU7UYjwF9ZRvp4axwPkIMQ1aanxXZ+KOh6GwORsCpHpnjzDKdBG273k5Lo7GB7j
-KpdO+fxc94k33h0uCV46v8YhAKy3WGnioX0EMwmOjhQiMnGU3cpVLedXpBJUmxFk
-57Osrz7P
-=hr38
------END PGP SIGNATURE-----
 
---jzrq2uleinvzsb23--
+> +TRACE_EVENT(mhi_intvec_states,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, int dev_ee, int dev_state),
+> +
+> +	TP_ARGS(mhi_cntrl, dev_ee, dev_state),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, mhi_cntrl->mhi_dev->name)
+> +		__field(int, local_ee)
+> +		__field(int, state)
+> +		__field(int, dev_ee)
+> +		__field(int, dev_state)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
+> +		__entry->local_ee = mhi_cntrl->ee;
+> +		__entry->state = mhi_cntrl->dev_state;
+> +		__entry->dev_ee = dev_ee;
+> +		__entry->dev_state = dev_state;
+> +	),
+> +
+> +	TP_printk("%s: local ee: %s state: %s device ee: %s state: %s\n",
+> +		  __get_str(name),
+> +		  TO_MHI_EXEC_STR(__entry->local_ee),
+> +		  mhi_state_str(__entry->state),
+> +		  TO_MHI_EXEC_STR(__entry->dev_ee),
+> +		  mhi_state_str(__entry->dev_state))
+
+So the above may have issues with user space parsing.
+
+For one, that mhi_state_str() is:
+
+static inline const char *mhi_state_str(enum mhi_state state)
+{
+        switch (state) {
+        case MHI_STATE_RESET:
+                return "RESET";
+        case MHI_STATE_READY:
+                return "READY";
+        case MHI_STATE_M0:
+                return "M0";
+        case MHI_STATE_M1:
+                return "M1";
+        case MHI_STATE_M2:
+                return "M2";
+        case MHI_STATE_M3:
+                return "M3";
+        case MHI_STATE_M3_FAST:
+                return "M3 FAST";
+        case MHI_STATE_BHI:
+                return "BHI";
+        case MHI_STATE_SYS_ERR:
+                return "SYS ERROR";
+        default:
+                return "Unknown state";
+        }
+};
+ 
+Which if this could be changed into:
+
+#define MHI_STATE_LIST			\
+	EM(RESET,    "RESET")		\
+	EM(READY,    "READY")		\
+	EM(M0,       "M0")		\
+	EM(M1,       "M1")		\
+	EM(M2,       "M2")		\
+	EM(M3,       "M3")		\
+	EM(M3_FAST,  "M3_FAST")		\
+	EM(BHI,      "BHI")		\
+	EMe(SYS_ERR, "SYS ERROR")
+
+#undef EM
+#undef EMe
+
+#define EM(a, b)  case MHI_STATE_##a: return b;
+#define EMe(a, b) case MHI_STATE_##a: return b;
+
+static inline const char *mhi_state_str(enum mhi_state state)
+{
+        switch (state) {
+	MHI_STATE_LIST
+	default:
+		return "Unknown state";
+}
+
+Then you could use that macro in the trace header:
+
+#undef EM
+#undef EMe
+
+#define EM(a, b)	TRACE_DEFINE_ENUM(MHI_STATE_##a);
+#define EMe(a, b)	TRACE_DEFINE_ENUM(MHI_STATE_##a);
+
+MHI_STATE_LIST
+
+And in the print fmts:
+
+#undef EM
+#undef EMe
+
+#define EM(a, b)   { MHI_STATE_##a, b },
+#define EMe(a, b)  { MHI_STATE_##a, b }
+
+
+	TP_printk("%s: local ee: %s state: %s device ee: %s state: %s\n",
+		  __get_str(name),
+		  TO_MHI_EXEC_STR(__entry->local_ee),
+
+		  __print_symbolic(__entry->state), MHI_STATE_LIST),
+
+		  TO_MHI_EXEC_STR(__entry->dev_ee),
+
+		  __print_symbolic(__entry->dev_state, MHI_STATE_LIST))
+
+
+And that will be exported to user space in the
+/sys/kernel/tracing/events/*/*/format file, as:
+
+	__print_symbolic(REC->state, { 
+	        { MHI_STATE_RESET, "RESET"},
+	        { MHI_STATE_READY, "READY"},
+	        { MHI_STATE_M0, "M0"},
+	        { MHI_STATE_M1, "M1"},
+	        { MHI_STATE_M2, "M2"},
+	        { MHI_STATE_M3, "M3"},
+	        { MHI_STATE_M3_FAST, "M3 FAST"},
+	        { MHI_STATE_BHI, "BHI"},
+	        { MHI_STATE_SYS_ERR, "SYS ERROR"} }
+
+Which libtracevent knows how to parse. Oh, it wouldn't even show the enum
+names as the TRACE_DEFINE_ENUM() above, would tell the kernel to replace
+them with their actual numeric values. That way, when trace-cmd or perf
+reads the raw data, it knows how to print it.
+
+Now what about those TO_MHI_EXEC_STR() macros? They are not the same. They are:
+
+#define TO_MHI_EXEC_STR(ee) (((ee) >= MHI_EE_MAX) ? \
+                             "INVALID_EE" : mhi_ee_str[ee])
+
+Where that mhi_ee_str[] is:
+
+const char * const mhi_ee_str[MHI_EE_MAX] = {
+        [MHI_EE_PBL] = "PRIMARY BOOTLOADER",
+        [MHI_EE_SBL] = "SECONDARY BOOTLOADER",
+        [MHI_EE_AMSS] = "MISSION MODE",
+        [MHI_EE_RDDM] = "RAMDUMP DOWNLOAD MODE",
+        [MHI_EE_WFW] = "WLAN FIRMWARE",
+        [MHI_EE_PTHRU] = "PASS THROUGH",
+        [MHI_EE_EDL] = "EMERGENCY DOWNLOAD",
+        [MHI_EE_FP] = "FLASH PROGRAMMER",
+        [MHI_EE_DISABLE_TRANSITION] = "DISABLE",
+        [MHI_EE_NOT_SUPPORTED] = "NOT SUPPORTED",
+};
+
+Which would require doing the same thing for that as well.
+
+#define MHI_EE_LIST 					\
+	EM(PBL,			"PRIMARY BOOTLOADER")	\
+	EM(SBL,			"SECONDARY BOOTLOADER")	\
+	EM(AMSS,		"MISSION MODE")		\
+	EM(RDDM,		"RAMDUMP DOWNLOAD MODE")\
+	EM(WFW,			"WLAN FIRMWARE")	\
+	EM(PTHRU,		"PASS THROUGH")		\
+	EM(EDL,			"EMERGENCY DOWNLOAD")	\
+	EM(FP,			"FLASH PROGRAMMER")	\
+	EM(DISABLE_TRANSITION,	"DISABLE")		\
+	EMe(NOT_SUPPORTED,	"NOT SUPPORTED")
+
+And have:
+
+#undef EM
+#undef EMe
+
+#define EM(a, b)  [MHI_EE_##a] = b,
+#define EMe(a, b) [MHI_EE_##a] = b,
+
+const char * const mhi_ee_str[MHI_EE_MAX] = {
+	MHI_EE_LIST
+};
+
+and so on. That way the user space parsing will know how to properly parse
+these events.
+
+Note, if you don't want to modify the other files, you can still just all
+the above to the trace.h file and it will still properly map the enums to
+the strings. That is, don't modify the mhi_ee_str(), but instead just add
+the MHI_EE_LIST macro in the trace header, and use the __print_symbolic()
+with it.
+
+I only mentioned modifying the strings to make it consistent if new strings
+are added.
+
+-- Steve
+
+
+> +);
+> +
+> +TRACE_EVENT(mhi_tryset_pm_state,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, int pm_state),
+> +
+> +	TP_ARGS(mhi_cntrl, pm_state),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, mhi_cntrl->mhi_dev->name)
+> +		__field(int, pm_state)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
+> +		if (pm_state)
+> +			pm_state = __fls(pm_state);
+> +		__entry->pm_state = pm_state;
+> +	),
+> +
+> +	TP_printk("%s: PM state: %s\n", __get_str(name),
+> +		  to_mhi_pm_state_str(__entry->pm_state))
+> +);
+> +
+> +DECLARE_EVENT_CLASS(mhi_process_event_ring,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct
+> mhi_ring_element *rp), +
+> +	TP_ARGS(mhi_cntrl, rp),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, mhi_cntrl->mhi_dev->name)
+> +		__field(__le32, dword0)
+> +		__field(__le32, dword1)
+> +		__field(int, state)
+> +		__field(__le64, ptr)
+> +		__field(void *, rp)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
+> +		__entry->rp = rp;
+> +		__entry->ptr = rp->ptr;
+> +		__entry->dword0 = rp->dword[0];
+> +		__entry->dword1 = rp->dword[1];
+> +		__entry->state = MHI_TRE_GET_EV_STATE(rp);
+> +	),
+> +
+> +	TP_printk("%s: Tre: 0x%p Tre buf: 0x%llx dword0: 0x%08x dword1:
+> 0x%08x state: %s\n",
+> +		  __get_str(name), __entry->rp, __entry->ptr,
+> __entry->dword0,
+> +		  __entry->dword1, mhi_state_str(__entry->state))
+> +);
+> +
+> +DEFINE_EVENT(mhi_process_event_ring, mhi_data_event,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct
+> mhi_ring_element *rp), +
+> +	TP_ARGS(mhi_cntrl, rp)
+> +);
+> +
+> +DEFINE_EVENT(mhi_process_event_ring, mhi_ctrl_event,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct
+> mhi_ring_element *rp), +
+> +	TP_ARGS(mhi_cntrl, rp)
+> +);
+> +
+> +DECLARE_EVENT_CLASS(mhi_update_channel_state,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan
+> *mhi_chan, int state), +
+> +	TP_ARGS(mhi_cntrl, mhi_chan, state),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, mhi_cntrl->mhi_dev->name)
+> +		__field(int, ch_num)
+> +		__field(int, state)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
+> +		__entry->ch_num = mhi_chan->chan;
+> +		__entry->state = state;
+> +	),
+> +
+> +	TP_printk("%s: chan%d: Updating state to: %s\n",
+> +		  __get_str(name), __entry->ch_num,
+> +		  TO_CH_STATE_TYPE_STR(__entry->state))
+> +);
+> +
+> +DEFINE_EVENT(mhi_update_channel_state, mhi_channel_command_start,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan
+> *mhi_chan, int state), +
+> +	TP_ARGS(mhi_cntrl, mhi_chan, state)
+> +);
+> +
+> +DEFINE_EVENT(mhi_update_channel_state, mhi_channel_command_end,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan
+> *mhi_chan, int state), +
+> +	TP_ARGS(mhi_cntrl, mhi_chan, state)
+> +);
+> +
+> +TRACE_EVENT(mhi_pm_st_transition,
+> +
+> +	TP_PROTO(struct mhi_controller *mhi_cntrl, int state),
+> +
+> +	TP_ARGS(mhi_cntrl, state),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, mhi_cntrl->mhi_dev->name)
+> +		__field(int, state)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
+> +		__entry->state = state;
+> +	),
+> +
+> +	TP_printk("%s: Handling state transition: %s\n", __get_str(name),
+> +		  TO_DEV_STATE_TRANS_STR(__entry->state))
+> +);
+> +
+> +#endif
+> +#undef TRACE_INCLUDE_PATH
+> +#define TRACE_INCLUDE_PATH ../../drivers/bus/mhi/host
+> +#undef TRACE_INCLUDE_FILE
+> +#define TRACE_INCLUDE_FILE trace
+> +
+> +#include <trace/define_trace.h>
+> 
+> ---
+> base-commit: 3006adf3be79cde4d14b1800b963b82b6e5572e0
+> change-id: 20231005-ftrace_support-6869d4156139
+> 
+> Best regards,
+
