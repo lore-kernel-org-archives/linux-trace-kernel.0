@@ -1,128 +1,179 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2124.outbound.protection.outlook.com [40.107.215.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D271420B00;
-	Thu,  4 Jan 2024 10:04:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7EF20B02;
+	Thu,  4 Jan 2024 10:06:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PwamUfyZ"
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4048r1Vv014717;
-	Thu, 4 Jan 2024 10:03:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=mEC9RU/7gJsuNRS5VA9HyG1hQ3z9kUtySW0uefqhic4=;
- b=PwamUfyZQwMs7zqqv7AyyQ4T/H/ZuwF2rNasPDug3qz4BcWe4HRu5C2VzK8O2nzthgtw
- IpjAN+oFwhnI1JsI8v0VlD2eEPeVRMFs5peKPXBAIEb18WLGyIS5m2FmtBXuz8XVEM54
- RiAxrADaVI5Heg3TcSrUAcuyog3CU2Y2VzWsuXa87vQ1rd/DoH+p1uEV/qPhmGAC2MnR
- 0mduIbJXj8fJIuY7CwHXivFZpfoXaVQ5xipNO5Nb2UgW/CWKHgid7soEY/ZbGE/bZEeY
- 4u3h339KxfgLQqk2gVkSMVcDySTQhYIncIR1M8F9AMphMM9GYwxv0zVCBSP2UgUgUDtW 0Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vdsj1a7rh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Jan 2024 10:03:50 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4048sLms018434;
-	Thu, 4 Jan 2024 10:03:50 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vdsj1a7qx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Jan 2024 10:03:49 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4048PKj3024643;
-	Thu, 4 Jan 2024 10:03:48 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vb082g0ew-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Jan 2024 10:03:48 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 404A3jJr5178108
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 4 Jan 2024 10:03:45 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9B53B2004B;
-	Thu,  4 Jan 2024 10:03:45 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1D71A20040;
-	Thu,  4 Jan 2024 10:03:44 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.45.37])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu,  4 Jan 2024 10:03:44 +0000 (GMT)
-Date: Thu, 4 Jan 2024 11:03:42 +0100
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: Ilya Leoshkevich <iii@linux.ibm.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Sven Schnelle <svens@linux.ibm.com>
-Subject: Re: [PATCH v3 28/34] s390/mm: Define KMSAN metadata for vmalloc and
- modules
-Message-ID: <ZZaCfsuuODGkdUHV@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20231213233605.661251-1-iii@linux.ibm.com>
- <20231213233605.661251-29-iii@linux.ibm.com>
- <20240102150531.6306-F-hca@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="L8n3rvM3"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hpQeRnPGgkSksogS+fBzHmsIHQb+iwZTr1bfbnVIPZ0kB2jpnEZAPkqZ01zCnVkJJoU/inH76Et95fO8k+TP6P94FZSEs0/i2KH+QAfJtK67lDMRSFNycdAX6P83kZcSBnF65UZXfKNlXiNf5GqRbjFQx5Bk9Ey/NuEMqgLFEIChRkaCT/LPdFxJ3IFJTQeg81sQU+BHRgvFHVRf1uKpcRPQfKB94UM84i8OpGeV+JEmzCY4mHf/n9mu3y5lrdGNZ/lhU2ssWHgsb6aB5UiKOrlufiocxsVam8kYShJPrHI7rgH5NSy+nZX9vytul3OXEFpMk/eUHEr6sxmBIi3XkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zsVe3UP4UgK9uHn33EMZpTNhMYGychcd080bxCe9C00=;
+ b=U6ZFkiFc9q8rE3N67ndU8QrTE5Twkc6rnKhQuab71bvMPB/hj3eowKmDYnwckoIlQ8dpJRWI6jBCzhWthaG7ImE6nUlCJkCZznDnP9kerq1NpstLB9JwKNekeD9htnISuqNcQ3gZaBymqGXNM65ZgSxLY/nwngYjE6jyzJcIai1KSJLmVZDNV46ZlrdpqFUmlF4Y5OD9VrBjhkqPYxDnw5BOrxIfiJcbWnxpTXi8mXQ1OBwThZMr5tLSFcu2xXJvlSHN43eMlNGURFEbMQ9spQy0J47zXgGT83c+mRWjIybUm3D7h8jicn/qEZQ7YzdQ3Azo7IEtblhNbGst+5PW0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zsVe3UP4UgK9uHn33EMZpTNhMYGychcd080bxCe9C00=;
+ b=L8n3rvM3t6qm6lkWgIUZXgpdIN8q0y80uQpD2rpe25Z9jKd0P1CCxMSs5F+5R+adGFIEW5EDqQHLs/s6xX9JLRICDpeA0AnOwOsKVk1lK3Wlv6OEqTfwVHWPK0ov9d/nS7pM8TKuS1dcsYoExkvyDS/5zdkZtux2LUQQdKd2BfEqz7SnTmHjZCggvy6MqHgP1nOSCYoeQz9YOoEiycD3C4oSdeOyIkr2t1wwtx4r7R2gqePOwfiOqPzcbUXf/gmO9xeEo/BiAL7KdRxA6GWb4/YaFoBY4gvVbqHCgO/liMcO+V18ZbCfAPgNqEJzI0L0ww42uBkjWJlEhj5x04p/wg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from TYZPR06MB4045.apcprd06.prod.outlook.com (2603:1096:400:21::8)
+ by SEZPR06MB5879.apcprd06.prod.outlook.com (2603:1096:101:e4::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.25; Thu, 4 Jan
+ 2024 10:06:01 +0000
+Received: from TYZPR06MB4045.apcprd06.prod.outlook.com
+ ([fe80::9925:32d7:c818:3c5]) by TYZPR06MB4045.apcprd06.prod.outlook.com
+ ([fe80::9925:32d7:c818:3c5%7]) with mapi id 15.20.7159.013; Thu, 4 Jan 2024
+ 10:06:01 +0000
+From: Bixuan Cui <cuibixuan@vivo.com>
+To: akpm@linux-foundation.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	opensource.kernel@vivo.com,
+	cuibixuan@vivo.com
+Subject: [PATCH -next v5 0/2] Make memory reclamation measurable
+Date: Thu,  4 Jan 2024 02:05:25 -0800
+Message-Id: <20240104100527.3908-1-cuibixuan@vivo.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: TYCP286CA0316.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:3b7::9) To TYZPR06MB4045.apcprd06.prod.outlook.com
+ (2603:1096:400:21::8)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240102150531.6306-F-hca@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: nbfM0juIhZleyeD13N0-vwHlSIw9D1PP
-X-Proofpoint-GUID: 48fRanwL7QTj7BMTM-SFy1C7v7RSY4Cv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-04_05,2024-01-03_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 bulkscore=0 mlxscore=0 suspectscore=0 adultscore=0
- malwarescore=0 spamscore=0 mlxlogscore=676 clxscore=1015
- lowpriorityscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2311290000 definitions=main-2401040075
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZPR06MB4045:EE_|SEZPR06MB5879:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0c6b9e98-a59d-4866-3914-08dc0d0cc128
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	YiJMKyfSRwe0Ot1NWzMdddYXSjeuWJVdTOeSIl0IjjDTfaWF+jAQ7c8DTrLVNPyzvAw22B+78PQomaYiGvEiyQoG0aEriEZyaQRtnexMV66KnYL3T9L/wItKoTiEOKVIzpDny+LRJ8VDJkc3IMW6a5iz8DJhZ2hDYauTKQee3mNiFpj5wvc8vpHZt/TlKaoUj2jl9Dz9moGbRwyvzsdZeWmXSKR4JZl/DH2lP5fOKADTMcmeb6aGkjHhlHbeHeGeIyN+gzspGEkshRJFfNaV86siuVU9kFapgxiMfjaa2aKXAC8XTjUcl7854QQDhufvzwYmKv5v9sxdboVWhExqkhxmMrYgAPQLuWSgL6x8Q+sVhEGa7P1F8PbCGYASb1VoGC42Vzzrw88p1QkF4hPhVGjGxz3NBypk4inYGVYIfyZSlLh4J1tKEeuooAaD4tY5gM3Y5uD60KAwfUiIVkeEDR7wjkhcqm5wcMqu8RrXfEN/yKdXf/OKCquHkRNW1EoOrsg0SQf7QV821lm2PocT4YP6aZUD8iJFM0O3NXyVHwzjKtxvAejAnso/TdivxvFUzh7STekQYdgz66GYEMHCpgzO1m7xCQteYpweuQQhR+xSZJzEFVIvERmH20+8vfbk
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB4045.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(346002)(396003)(39860400002)(376002)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(26005)(1076003)(5660300002)(107886003)(83380400001)(2616005)(2906002)(8676002)(8936002)(41300700001)(316002)(38100700002)(4326008)(6666004)(478600001)(52116002)(6486002)(6512007)(6506007)(66556008)(66946007)(86362001)(66476007)(38350700005)(36756003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?0luzV+Icj6u23Q4lyciz4F2DeayqpJhpV7U3KByrbVAenOSbj0L3d6+hLHlk?=
+ =?us-ascii?Q?Hu0u6/8B3LBU9tUSip6z4R8HaAGt3M3yGaPzsmXALIY1DaQbvAHq2hVVgBd7?=
+ =?us-ascii?Q?LFv0MbzIofAlHuNHQSi08XpqTp4NjLpea9S3Vx+jCjYg4rgK1vEw3WKR4eHO?=
+ =?us-ascii?Q?7yaYlq1v3u9Oi3i5yjXOL202iILLKKafkZGmi7nPkmf+NSc4t8K72nkRA/Xd?=
+ =?us-ascii?Q?oezNRipd8ZakFZzsPexBWtFSSbzLnU8xXZojfxoTWnpitmX1kW8yPt04VZbt?=
+ =?us-ascii?Q?fEKGAs++rtaqlAm9emJX5CskJo8U2uZFC1AIRVGGl2iMiIc1uOujrveDZWpY?=
+ =?us-ascii?Q?hESUtiosOZWSV7MtxdXGbDfY3MJMaFOy5kFcxdoDdYxgFPEoi0tRhrn53XhH?=
+ =?us-ascii?Q?G6mucvDaA6yzVBJ3jamduj7HIrthLPhZcILWr0lz2u2+hE1GR06hcw6OPKQl?=
+ =?us-ascii?Q?dn1wi++9QuDZ5qEUANHpHVJSzwEvFBaGyT3BmoU4d0omZa2JmPAbQWRXAR0F?=
+ =?us-ascii?Q?LAn18uZQCBTSa4SQYGObxr7SlzeBGb/igxeFHrqvlHGX9zT0lMlL9Vockp9j?=
+ =?us-ascii?Q?rMYV/9fr6zmvcUZlk2Jy2/z1smeB+khrQ6Sq56FqIJiIdaiM54IEQivBODrA?=
+ =?us-ascii?Q?QkFvX4E++53GiiJVT4xkS6Xiq9IBoOEICI7YYK9dJ/4Xo1XVHzqOggdvJJBa?=
+ =?us-ascii?Q?pNRg9cZNlW+u6iCn202dBXc1UnTJrVz14JPHg9ysPbO/cCZHQyqMCvvaVihE?=
+ =?us-ascii?Q?L8hw9fgdOVRcJzzrcVtMv8QBC6TLil1Fx2RvIoO0KVee/eLj5gicLtpfyFdV?=
+ =?us-ascii?Q?9y5FNHsaIIT7QIHNS9EkTulJ5W0FlS1fUlzyV59kF0bEwcuCYcs/HDCXh+eX?=
+ =?us-ascii?Q?ln1sKjIveg8ZYnaxhEzBZty70HgDi4KvQGNALP3vTWUWUGAJQXL6VnvNdNfX?=
+ =?us-ascii?Q?Hw2Petljw7aZbTF0Q9dj4r70x1/USwQYEwW4AlwcHzO/vWO/m+92wYPOL1ai?=
+ =?us-ascii?Q?2AX0aMw0EG7gQeuRgVu3As6qsI+Rejmhn8M3zUISuyTOrrRkracOxV2Uu8EK?=
+ =?us-ascii?Q?JgCFsHk19fP7oya1fnfqZogEd8w6Ccscrcz7CcPcOXHjKeCm6lga+0MXCI2O?=
+ =?us-ascii?Q?jQcY92g3mrIOPwFk0rg61DT7aW2PLDwCoEeSoQ36ISMtzHuyY/daOMTbby0z?=
+ =?us-ascii?Q?LcUKuR/WpXgB1rKkv71kvDH1oJSYOVLSwkW2nuxfZga0oBb+Irp/RxGKE9SG?=
+ =?us-ascii?Q?n43BE/hIM+p5EWOM7paZiUGfuM72T1cxxaJtD2ttzKcGeJ/jq3h/JZgvhmQD?=
+ =?us-ascii?Q?gcJx0p/3B/YX/IOq1Mt02N0+WAboY98uBzCxRxrjaN8jglhLP9q/7hGBGU6F?=
+ =?us-ascii?Q?5ztnsVqqVq3yq4iKF5Xii66Q5A/hKy77ZSmTobbOn3Oapy084dNvJJJGsoEz?=
+ =?us-ascii?Q?sTtLt2xFNdhgUZmZrdxd8A/pBFcBkC4qOXa3ztdHV1gofaos8ISpdel2Nws5?=
+ =?us-ascii?Q?8u+h5Q/KMKMJkHl8IJHZvGHP3Tm3yGVuaaKsqbyZy8CrxrU34u27ress6Der?=
+ =?us-ascii?Q?rYPCGA834psS+xuLYcvl0t2w9XreuWe5kYf1IcU+?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c6b9e98-a59d-4866-3914-08dc0d0cc128
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB4045.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jan 2024 10:06:01.7166
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xSX6LT5gd/9LChbG7diqDdWH3/vnVgBEyH2XV07fTw6UBMS+nneppFTtvtnM8gWko9digxkIGRUsuCw/rGcusA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB5879
 
-On Tue, Jan 02, 2024 at 04:05:31PM +0100, Heiko Carstens wrote:
-Hi Heiko,
-...
-> > @@ -253,9 +253,17 @@ static unsigned long setup_kernel_memory_layout(void)
-> >  	MODULES_END = round_down(__abs_lowcore, _SEGMENT_SIZE);
-> >  	MODULES_VADDR = MODULES_END - MODULES_LEN;
-> >  	VMALLOC_END = MODULES_VADDR;
-> > +#ifdef CONFIG_KMSAN
-> > +	VMALLOC_END -= MODULES_LEN * 2;
-> > +#endif
-> >  
-> >  	/* allow vmalloc area to occupy up to about 1/2 of the rest virtual space left */
-> >  	vmalloc_size = min(vmalloc_size, round_down(VMALLOC_END / 2, _REGION3_SIZE));
-> > +#ifdef CONFIG_KMSAN
-> > +	/* take 2/3 of vmalloc area for KMSAN shadow and origins */
-> > +	vmalloc_size = round_down(vmalloc_size / 3, _REGION3_SIZE);
-> > +	VMALLOC_END -= vmalloc_size * 2;
-> > +#endif
-> 
-> Please use
-> 
-> 	if (IS_ENABLED(CONFIG_KMSAN))
-> 
-> above, since this way we get more compile time checks.
+When the system memory is low, kswapd reclaims the memory. The key steps
+of memory reclamation include
+1.shrink_lruvec
+  * shrink_active_list, moves folios from the active LRU to the inactive LRU
+  * shrink_inactive_list, shrink lru from inactive LRU list
+2.shrink_slab
+  * shrinker->count_objects(), calculates the freeable memory
+  * shrinker->scan_objects(), reclaims the slab memory
 
-This way we will get a mixture of CONFIG_KASAN and CONFIG_KMSAN
-#ifdef vs IS_ENABLED() checks within one function. I guess, we
-would rather address it with a separate cleanup?
+The existing tracers in the vmscan are as follows:
 
-Thanks!
+--do_try_to_free_pages
+--shrink_zones
+--trace_mm_vmscan_node_reclaim_begin (tracer)
+--shrink_node
+--shrink_node_memcgs
+  --trace_mm_vmscan_memcg_shrink_begin (tracer)
+  --shrink_lruvec
+    --shrink_list
+      --shrink_active_list
+	  --trace_mm_vmscan_lru_shrink_active (tracer)
+      --shrink_inactive_list
+	  --trace_mm_vmscan_lru_shrink_inactive (tracer)
+    --shrink_active_list
+  --shrink_slab
+    --do_shrink_slab
+    --shrinker->count_objects()
+    --trace_mm_shrink_slab_start (tracer)
+    --shrinker->scan_objects()
+    --trace_mm_shrink_slab_end (tracer)
+  --trace_mm_vmscan_memcg_shrink_end (tracer)
+--trace_mm_vmscan_node_reclaim_end (tracer)
+
+If we get the duration and quantity of shrink lru and slab,
+then we can measure the memory recycling, as follows
+
+Measuring memory reclamation with bpf:
+  LRU FILE:
+	CPU COMM 	ShrinkActive(us) ShrinkInactive(us)  Reclaim(page)
+	7   kswapd0	 	26		51		32
+	7   kswapd0		52		47		13
+  SLAB:
+	CPU COMM 		OBJ_NAME		Count_Dur(us) Freeable(page) Scan_Dur(us) Reclaim(page)
+	 1  kswapd0		super_cache_scan.cfi_jt     2		    341		   3225		128
+	 7  kswapd0		super_cache_scan.cfi_jt     0		    2247	   8524		1024
+	 7  kswapd0	        super_cache_scan.cfi_jt     2367	    0		   0		0
+
+For this, add the new tracer to shrink_active_list/shrink_inactive_list
+and shrinker->count_objects().
+
+Changes:
+v5: * Use 'DECLARE_EVENT_CLASS(mm_vmscan_lru_shrink_start_template' to
+replace 'RACE_EVENT(mm_vmscan_lru_shrink_inactive/active_start'
+    * Add the explanation for adding new shrink lru events into 'mm: vmscan: add new event to trace shrink lru'
+v4: Add Reviewed-by and Changlog to every patch.
+v3: Swap the positions of 'nid' and 'freeable' to prevent the hole in the trace event.
+v2: Modify trace_mm_vmscan_lru_shrink_inactive() in evict_folios() at the same time to fix build error.
+
+cuibixuan (2):
+  mm: shrinker: add new event to trace shrink count
+  mm: vmscan: add new event to trace shrink lru
+
+ include/trace/events/vmscan.h | 80 ++++++++++++++++++++++++++++++++++-
+ mm/shrinker.c                 |  4 ++
+ mm/vmscan.c                   | 11 +++--
+ 3 files changed, 90 insertions(+), 5 deletions(-)
+
+-- 
+2.17.1
+
