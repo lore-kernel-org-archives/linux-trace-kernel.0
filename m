@@ -1,29 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A162377E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A83241E0;
 	Thu,  4 Jan 2024 15:02:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rJosMr+e"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 92CFCC4AF5D;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oaoRz5Gi"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4FAC2C433CD;
 	Thu,  4 Jan 2024 15:02:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1704380565;
-	bh=rztlto8eEbJ+Snp+e1X4/9BzW9/7AlNu0SuQr3dKr6Y=;
+	bh=F68T4yfrZvNl4UBjQrVTXao7+5rzaoz2/YnsMWP1cC4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=rJosMr+ehRG/C2guKa2lmEkTDfQWd5W3U8g4xdyzMBtPGAGdQ7oygvRVw4wbnDsZu
-	 JNrnyz6Dj4Gu6JGXLwUspUakqNyqgz9W4Ccv12H6B3OKBRctIO+0f78d3X1j1i3lNw
-	 WCr2OvgIh036faAKWZ194es1Mutt698yFao/RVeMwiIxmMGbdf952Fh8w6Evj4KPVO
-	 lTuJ9dFErNeMw0BNsU2RTSwEJrCwh6XpmUOuTS2ckb1FFr5SRuwceBkM+5dgxuIc3V
-	 I0fOOcrPU/9c14wJHoAkkwvdcYpasKSPKgRwvVDBE7rWPyhe/lPWCee6EcPHfT/ytf
-	 VQJg3rP96OqHw==
+	b=oaoRz5GiNYa5bYC4deGDtkgORzDYuZk8/+xSsgC6uEEfqrRQEWxuSvzNbIcJgYNRO
+	 5II7A22TwTEu+xw/JvB60IDbpOlcgCm+51YdXBjS+7yap+fL8vmrqHDoPoTQ9eL+Ub
+	 XsD3ZNfOKZ0lixbMFXbPmwsx4igi8pVq+Rq8RcaFj75cUuRq+TT6io5hp3BHM59JKr
+	 bHIWs9f+tMw1nkDnXMdUSWmmiyce9skuPzQpN0s6eeFNidA9eKXPffWB8YmQJrXs4j
+	 N5p64LY2deHe0yGc+Pfb+vT+rfyEd6i+bKGrut2S7u6K+5TFNvFuWmipiW7jkQzm9D
+	 n2G1MCUhPBCgA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F24C47079;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B09DC47074;
 	Thu,  4 Jan 2024 15:02:45 +0000 (UTC)
 From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Date: Thu, 04 Jan 2024 16:02:26 +0100
-Subject: [PATCH v2 05/10] seccomp: Remove the now superfluous sentinel
- elements from ctl_table array
+Date: Thu, 04 Jan 2024 16:02:23 +0100
+Subject: [PATCH v2 02/10] umh: Remove the now superfluous sentinel elements
+ from ctl_table array
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -33,7 +33,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Message-Id:
- <20240104-jag-sysctl_remove_empty_elem_kernel-v2-5-836cc04e00ec@samsung.com>
+ <20240104-jag-sysctl_remove_empty_elem_kernel-v2-2-836cc04e00ec@samsung.com>
 References:
  <20240104-jag-sysctl_remove_empty_elem_kernel-v2-0-836cc04e00ec@samsung.com>
 In-Reply-To:
@@ -69,17 +69,17 @@ Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
  linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
  bpf@vger.kernel.org, Joel Granados <j.granados@samsung.com>
 X-Mailer: b4 0.13-dev-86aa5
-X-Developer-Signature: v=1; a=openpgp-sha256; l=933; i=j.granados@samsung.com;
- h=from:subject:message-id; bh=z6EeWSeb/wAILeyqvWIX8FMlRbwGB4xwjlfltNsIiys=;
- b=owEB7QES/pANAwAKAbqXzVK3lkFPAcsmYgBllsiQF0oBNt6LJkb+zVY5GGJCeSKg2G1eOlNY/
- U9hMugX/3qJAbMEAAEKAB0WIQSuRwlXJeYxJc7LJ5C6l81St5ZBTwUCZZbIkAAKCRC6l81St5ZB
- T7e6DACU+v+qIRdOgR0Vmu/bybMMTZLCFfSEqP2vKHZSh37Ah76SyGQpohwFYIlyBeOBBnPNVyJ
- w8p0UWOfIBTtC+RGTtt2n0ijQHCmzEUBwd2OS+8KyEGACtGvfQ/HTz0ohTLF+dkeSuN36ne0Pc/
- 5e7X+WCLZT9/SrcD0xsDhmm1eBnRUVHbBwQVfRVipKlX1xm3KrnZmSfeC5RrFvx0C5HJrJeJ/lA
- /hKTvsd4Lz3IMWylzkkAgqXGSjXjftqgJUEkAHGjptsRIAFAOuOvPq/UN6RctFRocbfHGq4y2is
- jGLLoDYRoLk43HuSXfJlB2y+a4pRp77W8ZH2uzwJkinqJpEMfHIHKB4zlq/sXgYIpyt0m7FMEK+
- diaryq9MeBCXKGs6k1+XLcyj/vWSI1KAYrB2xLVuKd2dsT+dFwovPvTkPayLoVRQusHMPEWXJAg
- /b49Ubys+BjHCNculOLNQoH4Nm+SfvkyVDsf6IrMme51A2DKU3QkWmvfzwebLsO9PnjAE=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=848; i=j.granados@samsung.com;
+ h=from:subject:message-id; bh=BUKRurk0Zl4Mt0SVqAIUyLoFVcmRKbH7eHtjelFkSI0=;
+ b=owEB7QES/pANAwAKAbqXzVK3lkFPAcsmYgBllsiQynlD07SyzoCEvZyaTpPLTS0Jzw1bQSZvP
+ 5UavKIH+mqJAbMEAAEKAB0WIQSuRwlXJeYxJc7LJ5C6l81St5ZBTwUCZZbIkAAKCRC6l81St5ZB
+ TwHOC/9M6CH39Pyho/yoy4pmOkgcdI96sfOfD//REIIsW0L3jlYqDJq0RWkCKG4sW7EWH4CCelA
+ E2F0Fs488M5wUZq/hsDEQMKP43Fidwd0LxD39SwlCSYptvHVU6PPNTD2PBHnyvYJJQ6tS+o22JP
+ Afmj8uAA9+w3OfbQWxNfCifSGLBSPbSwiN9SOIdBz1YcLL4Tt7e86FswNGxtpWhDZM0C5aoElqC
+ ToOri3VRMj8jq4NUSwkbeTDG6RPXTvm2J/J+uqmHHeE8p1kTWUuQPfUpkfF1abJLfFccFNjr4UY
+ d+/QGLugW3Xsy8gjkaFnHGpprRPSDScy+1CDB+yWSYE4I2v874plQu1fiKUEAd2ftBqvo2p0vVk
+ WnMSTJktp0zAWwJXb+OIjGiU4OVnckLAJN8qPdMH8jUPLQoYtAnD9JTkm2wkkZF3rszil97zrbJ
+ NAq+PlfYIT6xntDB3fA6kfeFaYLpTopQTpPF4FaA0vSaYvBmCMwXqfQKNnnUbs99dlGAs=
 X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
  fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
 X-Endpoint-Received:
@@ -95,26 +95,25 @@ will reduce the overall build time size of the kernel and run time
 memory bloat by ~64 bytes per sentinel (further information Link :
 https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
 
-Remove sentinel element from seccomp_sysctl_table.
+Remove sentinel element from usermodehelper_table
 
-Acked-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Joel Granados <j.granados@samsung.com>
 ---
- kernel/seccomp.c | 1 -
+ kernel/umh.c | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-index 255999ba9190..b727b4351c1b 100644
---- a/kernel/seccomp.c
-+++ b/kernel/seccomp.c
-@@ -2445,7 +2445,6 @@ static struct ctl_table seccomp_sysctl_table[] = {
- 		.mode		= 0644,
- 		.proc_handler	= seccomp_actions_logged_handler,
+diff --git a/kernel/umh.c b/kernel/umh.c
+index 1b13c5d34624..598b3ffe1522 100644
+--- a/kernel/umh.c
++++ b/kernel/umh.c
+@@ -560,7 +560,6 @@ static struct ctl_table usermodehelper_table[] = {
+ 		.mode		= 0600,
+ 		.proc_handler	= proc_cap_handler,
  	},
 -	{ }
  };
  
- static int __init seccomp_sysctl_init(void)
+ static int __init init_umh_sysctls(void)
 
 -- 
 2.30.2
