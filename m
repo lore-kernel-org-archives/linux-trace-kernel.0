@@ -1,88 +1,75 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA4F2C69C;
-	Thu,  4 Jan 2024 21:28:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="p7YAaLYd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=VpiHI2Kr32mnTEJdDdX1NMESeAPZ+0Ox204pDtleoeY=; b=p7YAaLYdkiCGU8IWeBN7IrFyoa
-	WrYiuZsm0J2ltUQTu5X/8H0IVewGPaA+hSm/ydSGxKfAVhVz4FXA+ee1cZc2Em0ixJ5CgQ3nl8PQy
-	5caZlCUwRLYTG1D1N66pCTNZrFbEj3lj29JrIRt8Nwp3J8SHDRa7tBjiEmqEQ2LEGXwVTCuYzcfvP
-	NxYRYRJKnjqG6xLqnVHGfpiP3r/QlFttiBdKho0ZNkRRFPTnAiLK9rW+sD8puwdHtuUMUGQsJuaKb
-	LlLZBeOYehxLVBdOmgK2vzAtHDs6iGp7GpVuTtiqx+/BwujaiUtLbT0vZAx8ZzMUtutHOZSu4+/FI
-	s4xvYz4w==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rLVGf-002Mut-2j;
-	Thu, 04 Jan 2024 21:28:45 +0000
-Date: Thu, 4 Jan 2024 21:28:45 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH] tracefs/eventfs: Use root and instance inodes as default
- ownership
-Message-ID: <20240104212845.GS1674809@ZenIV>
-References: <20240103203246.115732ec@gandalf.local.home>
- <20240104014837.GO1674809@ZenIV>
- <20240103212506.41432d12@gandalf.local.home>
- <20240104043945.GQ1674809@ZenIV>
- <20240104100544.593030e0@gandalf.local.home>
- <20240104182502.GR1674809@ZenIV>
- <20240104141517.0657b9d1@gandalf.local.home>
- <CAHk-=wgxhmMcVGvyxTxvjeBaenOmG8t_Erahj16-68whbvh-Ug@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111622C851;
+	Thu,  4 Jan 2024 21:59:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A76E5C433C8;
+	Thu,  4 Jan 2024 21:59:41 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1rLVlg-00000000vgE-0dzN;
+	Thu, 04 Jan 2024 17:00:48 -0500
+Message-ID: <20240104220048.016261289@goodmis.org>
+User-Agent: quilt/0.67
+Date: Thu, 04 Jan 2024 16:57:12 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Al Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>,
+ linux-fsdevel@vger.kernel.org,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 1/4] eventfs: Have eventfs_iterate() stop immediately if ei->is_freed is
+ set
+References: <20240104215711.924088454@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgxhmMcVGvyxTxvjeBaenOmG8t_Erahj16-68whbvh-Ug@mail.gmail.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Type: text/plain; charset=UTF-8
 
-On Thu, Jan 04, 2024 at 11:35:37AM -0800, Linus Torvalds wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> > "file description" - is how the file is accessed (position in the file and
-> >                         flags associated to how it was opened)
-> 
-> That's a horrible term that shouldn't be used at all. Apparently some
-> people use it for what is our 'struct file *", also known as a "file
-> table entry".  Avoid it.
+If ei->is_freed is set in eventfs_iterate(), it means that the directory
+that is being iterated on is in the process of being freed. Just exit the
+loop immediately when that is ever detected, and separate out the return
+of the entry->callback() from ei->is_freed.
 
-Worse, really.  As far as I can reconstruct what happened it was something
-along the lines of "colloquial expression is 'opened file', but that is
-confusing - sounds like a property+noun, so it might be misparsed as
-a member of subset of files satisfying the property of 'being opened';
-can't have that in a standard, let's come up with something else".
-Except that what they did come up with had been much worse, for obvious
-linguistic reasons.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/tracefs/event_inode.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-The *ONLY* uses for that expression I can think of are
-	1.  When reading POSIX texts, watch out for that one - if you
-see them talking about a file descriptor in context where it really
-should be about an opened file, check the wording.  If it really says
-"file descriptOR", it's probably a bug in standard or a codified
-bullshit practice.  If it says "file descriptION" instead, replace with
-"opened file" and move on.
-	2.  An outstanding example of the taste of that bunch.
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 72912b5f9a90..0aca6910efb3 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -788,11 +788,12 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 		name = entry->name;
+ 
+ 		mutex_lock(&eventfs_mutex);
+-		/* If ei->is_freed, then the event itself may be too */
+-		if (!ei->is_freed)
+-			r = entry->callback(name, &mode, &cdata, &fops);
+-		else
+-			r = -1;
++		/* If ei->is_freed then just bail here, nothing more to do */
++		if (ei->is_freed) {
++			mutex_unlock(&eventfs_mutex);
++			goto out;
++		}
++		r = entry->callback(name, &mode, &cdata, &fops);
+ 		mutex_unlock(&eventfs_mutex);
+ 		if (r <= 0)
+ 			continue;
+-- 
+2.42.0
 
-IO channel would be a saner variant, but it's far too late for that.
 
-The 3-way distinction between descriptor/opened file/file as collection of data
-needs to be explained in UNIX 101; it is userland-visible and it has to be
-understood.  Unfortunately, it's often done in a way that leaves students
-seriously confused ;-/
