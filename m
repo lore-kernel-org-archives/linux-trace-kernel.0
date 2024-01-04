@@ -1,70 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C9728DDA;
-	Thu,  4 Jan 2024 18:27:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D712CC433C8;
-	Thu,  4 Jan 2024 18:27:44 +0000 (UTC)
-Date: Thu, 4 Jan 2024 13:28:50 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH v9 1/2] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <20240104132850.061620d7@gandalf.local.home>
-In-Reply-To: <20231221125813.673293a2@gandalf.local.home>
-References: <20231221173523.3015715-1-vdonnefort@google.com>
-	<20231221173523.3015715-2-vdonnefort@google.com>
-	<20231221125813.673293a2@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0C32C681;
+	Thu,  4 Jan 2024 19:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FtpCyBrs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Axy8b7yTVmlWQ3J02cuBqfZM28j68uaGpo9P0Q0lef8=; b=FtpCyBrszIbomqrZcJVs3ACgAW
+	jDaVkMzCrpfEduq46FlNmEmn4hXnLMFsBg/yqd/I5v90EiMxxbIRvhAsAGO8hx7whKKpzMCuKRodz
+	jxPOoxGNXqudhGsrX2cazJQgtZvGc/TciQavrsTx1Lzu/lyrMeerdNTAVuCN92kx3/su0GhP7ZQ75
+	C2Bef3Q+0tphpjBh6MYfAkMKaAhxeo75tiwrJWrBx34n8WNX0Nsx81jvtHYYslD7MC0bVvBGcKEGC
+	tC5ZaFwAoIj6g9b3ucxQrmVQlOssd64/r+DVgjxHN4M0Tze+MYcEQMZumo2yqVV8fsiFkHPQeOMUl
+	U/6jHccQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1rLSzw-00Fnxu-9n; Thu, 04 Jan 2024 19:03:20 +0000
+Date: Thu, 4 Jan 2024 19:03:20 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] tracefs/eventfs: Use root and instance inodes as default
+ ownership
+Message-ID: <ZZcA+LnSFyZFuqNX@casper.infradead.org>
+References: <20240103203246.115732ec@gandalf.local.home>
+ <20240104014837.GO1674809@ZenIV>
+ <20240103212506.41432d12@gandalf.local.home>
+ <20240104043945.GQ1674809@ZenIV>
+ <20240104100544.593030e0@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240104100544.593030e0@gandalf.local.home>
 
-On Thu, 21 Dec 2023 12:58:13 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Thu, 21 Dec 2023 17:35:22 +0000
-> Vincent Donnefort <vdonnefort@google.com> wrote:
+On Thu, Jan 04, 2024 at 10:05:44AM -0500, Steven Rostedt wrote:
+> > file_system_type: what filesystem instances belong to.  Not quite the same
+> > thing as fs driver (one driver can provide several of those).  Usually
+> > it's 1-to-1, but that's not required (e.g. NFS vs NFSv4, or ext[234], or...).
 > 
-> > @@ -5999,6 +6078,307 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
-> >  }
-> >  EXPORT_SYMBOL_GPL(ring_buffer_subbuf_order_set);
-> >    
-> 
-> The kernel developers have agreed to allow loop variables to be declared in
-> loops. This will simplify these macros:
-> 
-> 
-> 
-> > +#define subbuf_page(off, start) \
-> > +	virt_to_page((void *)(start + (off << PAGE_SHIFT)))
-> > +
-> > +#define foreach_subbuf_page(off, sub_order, start, page)	\
-> > +	for (off = 0, page = subbuf_page(0, start);		\
-> > +	     off < (1 << sub_order);				\
-> > +	     off++, page = subbuf_page(off, start))  
-> 
-> #define foreach_subbuf_page(sub_order, start, page)		\
-> 	for (int __off = 0, page = subbuf_page(0, (start));	\
-> 	     __off < (1 << (sub_order));			\
-> 	     __off++, page = subbuf_page(__off, (start)))
+> I don't know the difference between NFS and NFSv4 as I just used whatever
+> was the latest. But I understand the ext[234] part.
 
-So it seems that you can't declare "int __off" with page there, but we
-could have:
+What Al's sying is that nfs.ko provides both nfs_fs_type and
+nfs4_fs_type.  ext4.ko provides ext2_fs_type, ext3_fs_type and
+ext4_fs_type.  This is allowed but anomalous.  Most filesystems provide
+only one, eg ocfs2_fs_type.
 
-#define foreach_subbuf_page(sub_order, start, page)		\
-	page = subbuf_page(0, (start));				\
-	for (int __off = 0; __off < (1 << (sub_order));		\
-	     __off++, page = subbuf_page(__off, (start)))
+> > 
+> > super_block: individual filesystem instance.  Hosts dentry tree (connected or
+> > several disconnected parts - think NFSv4 or the state while trying to get
+> > a dentry by fhandle, etc.).
+> 
+> I don't know how NFSv4 works, I'm only a user of it, I never actually
+> looked at the code. So that's not the best example, at least for me.
 
+Right, so NFS (v4 or otherwise) is Special.  In the protocol, files
+are identified by a thing called an fhandle.  This is (iirc) a 32-byte
+identifier which must persist across server reboot.  Originally it was
+probably supposed to encode dev_t plus ino_t plus generation number.
+But you can do all kinds of things in the NFS protocol with an fhandle
+that you need a dentry for in Linux (like path walks).  Unfortunately,
+clients can't be told "Hey, we've lost context, please rewalk" (which
+would have other problems anyway), so we need a way to find the dentry
+for an fhandle.  I understand this very badly, but essentially we end
+up looking for canonical ones, and then creating isolated trees of
+dentries if we can't find them.  Sometimes we then graft these isolated
+trees into the canonical spots if we end up connecting them through
+various filesystem activity.
 
-And that would work.
+At least that's my understanding which probably contains several
+misunderstandings.
 
--- Steve
+> >  Filesystem object contents belongs here; multiple hardlinks
+> > have different dentries and the same inode.
+> 
+> So, can I assume that an inode could only have as many dentries as hard
+> links? I know directories are only allowed to have a single hard link. Is
+> that why they can only have a single dentry?
+
+There could be more.  For example, I could open("A"); ln("A", "B");
+open("B"); rm("A"); ln("B", "C"); open("C"); rm("B").
+
+Now there are three dentries for this inode, its link count is currently
+one and never exceeded two.
+
+> Thanks for this overview. It was very useful, and something I think we
+> should add to kernel doc. I did read Documentation/filesystems/vfs.rst but
+> honestly, I think your writeup here is a better overview.
+
+Documentation/filesystems/locking.rst is often a better source, although
+the two should really be merged.  Not for the faint-hearted.
