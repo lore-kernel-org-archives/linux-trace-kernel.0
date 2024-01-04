@@ -1,17 +1,17 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B932C861;
-	Thu,  4 Jan 2024 21:59:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1CB9C43395;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399802C862;
+	Thu,  4 Jan 2024 21:59:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6B90C43391;
 	Thu,  4 Jan 2024 21:59:41 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rLVlg-00000000vhh-2eTY;
-	Thu, 04 Jan 2024 17:00:48 -0500
-Message-ID: <20240104220048.494956957@goodmis.org>
+	id 1rLVlf-00000000vfj-49as;
+	Thu, 04 Jan 2024 17:00:47 -0500
+Message-ID: <20240104215711.924088454@goodmis.org>
 User-Agent: quilt/0.67
-Date: Thu, 04 Jan 2024 16:57:15 -0500
+Date: Thu, 04 Jan 2024 16:57:11 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -24,93 +24,35 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Christian Brauner <brauner@kernel.org>,
  linux-fsdevel@vger.kernel.org,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4/4] eventfs: Shortcut eventfs_iterate() by skipping entries already read
-References: <20240104215711.924088454@goodmis.org>
+Subject: [PATCH 0/4] eventfs: More updates to eventfs_iterate()
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+With the ongoing descussion of eventfs iterator, a few more changes
+are required and some changes are just enhancements.
 
-As the ei->entries array is fixed for the duration of the eventfs_inode,
-it can be used to skip over already read entries in eventfs_iterate().
+- Stop immediately in the loop if the ei is found to be in the process
+  of being freed.
 
-That is, if ctx->pos is greater than zero, there's no reason in doing the
-loop across the ei->entries array for the entries less than ctx->pos.
-Instead, start the lookup of the entries at the current ctx->pos.
+- Make the ctx->pos update consistent with the skipped previous read index.
+  This fixes a bug with duplicate files being showned by 'ls'.
 
-Link: https://lore.kernel.org/all/CAHk-=wiKwDUDv3+jCsv-uacDcHDVTYsXtBR9=6sGM5mqX+DhOg@mail.gmail.com/
+- Swap reading ei->entries with ei->children to make the next change
+  easier to read
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- fs/tracefs/event_inode.c | 23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
-
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index a1934e0eea3b..fdff53d5a1f8 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -746,21 +746,15 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 	if (!ei || !ei_dentry)
- 		goto out;
- 
--	ret = 0;
--
- 	/*
- 	 * Need to create the dentries and inodes to have a consistent
- 	 * inode number.
- 	 */
--	for (i = 0; i < ei->nr_entries; i++) {
--		void *cdata = ei->data;
--
--		if (c > 0) {
--			c--;
--			continue;
--		}
-+	ret = 0;
- 
--		ctx->pos++;
-+	/* Start at 'c' to jump over already read entries */
-+	for (i = c; i < ei->nr_entries; i++, ctx->pos++) {
-+		void *cdata = ei->data;
- 
- 		entry = &ei->entries[i];
- 		name = entry->name;
-@@ -769,7 +763,7 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 		/* If ei->is_freed then just bail here, nothing more to do */
- 		if (ei->is_freed) {
- 			mutex_unlock(&eventfs_mutex);
--			goto out_dec;
-+			goto out;
- 		}
- 		r = entry->callback(name, &mode, &cdata, &fops);
- 		mutex_unlock(&eventfs_mutex);
-@@ -778,14 +772,17 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 
- 		dentry = create_file_dentry(ei, i, ei_dentry, name, mode, cdata, fops);
- 		if (!dentry)
--			goto out_dec;
-+			goto out;
- 		ino = dentry->d_inode->i_ino;
- 		dput(dentry);
- 
- 		if (!dir_emit(ctx, name, strlen(name), ino, DT_REG))
--			goto out_dec;
-+			goto out;
- 	}
- 
-+	/* Subtract the skipped entries above */
-+	c -= min((unsigned int)c, (unsigned int)ei->nr_entries);
-+
- 	list_for_each_entry_srcu(ei_child, &ei->children, list,
- 				 srcu_read_lock_held(&eventfs_srcu)) {
- 
--- 
-2.42.0
+- Add a "shortcut" in the ei->entries array to skip over already read
+  entries.
 
 
+Steven Rostedt (Google) (4):
+      eventfs: Have eventfs_iterate() stop immediately if ei->is_freed is set
+      eventfs: Do ctx->pos update for all iterations in  eventfs_iterate()
+      eventfs: Read ei->entries before ei->children in eventfs_iterate()
+      eventfs: Shortcut eventfs_iterate() by skipping entries already read
+
+----
+ fs/tracefs/event_inode.c | 67 ++++++++++++++++++++++++++----------------------
+ 1 file changed, 36 insertions(+), 31 deletions(-)
