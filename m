@@ -1,148 +1,146 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E5FC32182;
-	Fri,  5 Jan 2024 17:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E33EDFEC;
-	Fri,  5 Jan 2024 09:14:57 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.85.228])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF4C93F64C;
-	Fri,  5 Jan 2024 09:14:08 -0800 (PST)
-Date: Fri, 5 Jan 2024 17:14:06 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@chromium.org>,
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0FB7D517;
+	Sat,  6 Jan 2024 18:24:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="nSlxfYqt";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="b3+3KpJV"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.nyi.internal (Postfix) with ESMTP id BEEB15C01F7;
+	Sat,  6 Jan 2024 13:24:49 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Sat, 06 Jan 2024 13:24:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
+	:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm1; t=1704565489; x=1704651889; bh=O+QqJr2WAb6rnS5d3f3K/
+	DUa8bao3pdF0ZTmvmSXi54=; b=nSlxfYqtTJQDcbNuLTrQgszS9JWQG78owNAi+
+	zSEhkctan19C4FEG6xx31H7/uqLhr7cesA1k19u3yPWoTqEsjFQ9yXkYWzOwcrCc
+	uVFm073ba2P4po8CIj0KsQmKiUvyewqrtgGGHYuCsQh9sG9wTVHadAUo0quCq9nh
+	3wn4b3d1hbj+B/ZBZzqNQciP6TjHgoc98zJcDMj167R+hteCx5QxTdQFWmXVzzZW
+	dLZHp2yX3SB79f2KkARUikb1eP9u23YNh795fdJ0UznpK3VR5tdEnA4s15gPY+yc
+	m8kLTyYiJGEIqc1JEboSKWqEtD7xjep48oIUYT69ow17Gai6A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-transfer-encoding:content-type
+	:date:date:feedback-id:feedback-id:from:from:in-reply-to
+	:message-id:mime-version:reply-to:subject:subject:to:to
+	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1704565489; x=1704651889; bh=O+QqJr2WAb6rnS5d3f3K/DUa8bao
+	3pdF0ZTmvmSXi54=; b=b3+3KpJVeWQPqqPw2/XyIgSWVprhEDWFog7zIhj7juCB
+	2fghtEDXjtChsmjRYm5But8IKubV1CNa4oc4t8RnFO9oYn0LRNPBXCZSj+uBMyoS
+	hqCbZqfAaWnezgz2I9YNwPlBKGmW+OwMM5TKxf+m1k5XACoJwnYaulFkWJXWIeuC
+	G4wTyt1bBYVR3EFQPep8tJMmwO2Z8w/GPAloXq3sTltOn9ht5D9dBpVImQ3kjoaF
+	Kl0wD++fiJfxAfJraal4lPmjZxrlq5azZ6HzjJk0lPs0xKwIWbnwmcNllJA6r0i8
+	Bziwb2eIGshtU8+n9i4yL+sn1ttsvey9hwKh4kj2eQ==
+X-ME-Sender: <xms:8JqZZTa2LWzgZ0-GmgqS5LmLiABXTJV-q6m5pw2KEf52kA-_v2wfMA>
+    <xme:8JqZZSY16TYAWdOZIuP8yKWF5XRgyCIaZj9hCtazJgvb_WXDJT9OoLmN_FIlP23Tb
+    sL0h3wKj1DmLsm58g>
+X-ME-Received: <xmr:8JqZZV8ddNHA1F0_QGF1cpRCX1fLuMSzgKqs_Fg3sXfaUgOpYFT_S3HHautwyc1OmhIwEyCsPi3RRo61vZxpwY8y-vSDxy2GkEZ98QEvFqVpPA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdehuddguddutdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdefhedmnecujfgurhephf
+    fvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeffrghnihgvlhcuighuuceougig
+    uhesugiguhhuuhdrgiihiieqnecuggftrfgrthhtvghrnhepffffgeejudehlefgtdduke
+    eijefggeehheejgfeijeevveetieevueekgfehkeejnecuffhomhgrihhnpehgihhthhhu
+    sgdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpegugihusegugihuuhhurdighiii
+X-ME-Proxy: <xmx:8JqZZZpHSzujnehtNM-9w6SM6ebZxdJiLRzNQZcPYUXvIr1FXoFm8Q>
+    <xmx:8JqZZeqcnauyVxfA1Rp6P8hO1PAbhin9VwCYuUjW_KX7IU7bSpqbDg>
+    <xmx:8JqZZfSntMFC9PDiV8fngNBCBp68lp9CgFnySiCgnfTcNGT64YxhQQ>
+    <xmx:8ZqZZSZbzVDin2kRmp_SLX1xW7XThP5VlZBJyX2zJfv-05ftzvGpwQ>
+Feedback-ID: i6a694271:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 6 Jan 2024 13:24:47 -0500 (EST)
+From: Daniel Xu <dxu@dxuuu.xyz>
+To: linux-input@vger.kernel.org,
+	coreteam@netfilter.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	netfilter-devel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v5 22/34] tracing: Rename ftrace_regs_return_value to
- ftrace_regs_get_return_value
-Message-ID: <ZZg43tDXejswYxji@FVFF77S0Q05N>
-References: <170290509018.220107.1347127510564358608.stgit@devnote2>
- <170290535934.220107.9998902467249003656.stgit@devnote2>
+	fsverity@lists.linux.dev,
+	bpf@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	cgroups@vger.kernel.org,
+	alexei.starovoitov@gmail.com,
+	olsajiri@gmail.com,
+	quentin@isovalent.com,
+	alan.maguire@oracle.com,
+	memxor@gmail.com
+Subject: [PATCH bpf-next v3 0/3] Annotate kfuncs in .BTF_ids section
+Date: Sat,  6 Jan 2024 11:24:07 -0700
+Message-ID: <cover.1704565248.git.dxu@dxuuu.xyz>
+X-Mailer: git-send-email 2.42.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <170290535934.220107.9998902467249003656.stgit@devnote2>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Dec 18, 2023 at 10:15:59PM +0900, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Rename ftrace_regs_return_value to ftrace_regs_get_return_value as same as
-> other ftrace_regs_get/set_* APIs.
-> 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+=== Description ===
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+This is a bpf-treewide change that annotates all kfuncs as such inside
+.BTF_ids. This annotation eventually allows us to automatically generate
+kfunc prototypes from bpftool.
 
-Since this is a trivial cleanup, it might make sense to move this to the start
-of the series, so that it can be queued even if the later parts need more work.
+We store this metadata inside a yet-unused flags field inside struct
+btf_id_set8 (thanks Kumar!). pahole will be taught where to look.
 
-Mark.
+More details about the full chain of events are available in commit 3's
+description.
 
-> ---
->  Changes in v3:
->   - Newly added.
-> ---
->  arch/loongarch/include/asm/ftrace.h |    2 +-
->  arch/powerpc/include/asm/ftrace.h   |    2 +-
->  arch/s390/include/asm/ftrace.h      |    2 +-
->  arch/x86/include/asm/ftrace.h       |    2 +-
->  include/linux/ftrace.h              |    2 +-
->  kernel/trace/fgraph.c               |    2 +-
->  6 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/loongarch/include/asm/ftrace.h b/arch/loongarch/include/asm/ftrace.h
-> index a11996eb5892..a9c3d0f2f941 100644
-> --- a/arch/loongarch/include/asm/ftrace.h
-> +++ b/arch/loongarch/include/asm/ftrace.h
-> @@ -70,7 +70,7 @@ ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs, unsigned long ip)
->  	regs_get_kernel_argument(&(fregs)->regs, n)
->  #define ftrace_regs_get_stack_pointer(fregs) \
->  	kernel_stack_pointer(&(fregs)->regs)
-> -#define ftrace_regs_return_value(fregs) \
-> +#define ftrace_regs_get_return_value(fregs) \
->  	regs_return_value(&(fregs)->regs)
->  #define ftrace_regs_set_return_value(fregs, ret) \
->  	regs_set_return_value(&(fregs)->regs, ret)
-> diff --git a/arch/powerpc/include/asm/ftrace.h b/arch/powerpc/include/asm/ftrace.h
-> index 9e5a39b6a311..7e138e0e3baf 100644
-> --- a/arch/powerpc/include/asm/ftrace.h
-> +++ b/arch/powerpc/include/asm/ftrace.h
-> @@ -69,7 +69,7 @@ ftrace_regs_get_instruction_pointer(struct ftrace_regs *fregs)
->  	regs_get_kernel_argument(&(fregs)->regs, n)
->  #define ftrace_regs_get_stack_pointer(fregs) \
->  	kernel_stack_pointer(&(fregs)->regs)
-> -#define ftrace_regs_return_value(fregs) \
-> +#define ftrace_regs_get_return_value(fregs) \
->  	regs_return_value(&(fregs)->regs)
->  #define ftrace_regs_set_return_value(fregs, ret) \
->  	regs_set_return_value(&(fregs)->regs, ret)
-> diff --git a/arch/s390/include/asm/ftrace.h b/arch/s390/include/asm/ftrace.h
-> index 5a82b08f03cd..01e775c98425 100644
-> --- a/arch/s390/include/asm/ftrace.h
-> +++ b/arch/s390/include/asm/ftrace.h
-> @@ -88,7 +88,7 @@ ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
->  	regs_get_kernel_argument(&(fregs)->regs, n)
->  #define ftrace_regs_get_stack_pointer(fregs) \
->  	kernel_stack_pointer(&(fregs)->regs)
-> -#define ftrace_regs_return_value(fregs) \
-> +#define ftrace_regs_get_return_value(fregs) \
->  	regs_return_value(&(fregs)->regs)
->  #define ftrace_regs_set_return_value(fregs, ret) \
->  	regs_set_return_value(&(fregs)->regs, ret)
-> diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-> index 0b306c82855d..a061f8832b20 100644
-> --- a/arch/x86/include/asm/ftrace.h
-> +++ b/arch/x86/include/asm/ftrace.h
-> @@ -64,7 +64,7 @@ arch_ftrace_get_regs(struct ftrace_regs *fregs)
->  	regs_get_kernel_argument(&(fregs)->regs, n)
->  #define ftrace_regs_get_stack_pointer(fregs) \
->  	kernel_stack_pointer(&(fregs)->regs)
-> -#define ftrace_regs_return_value(fregs) \
-> +#define ftrace_regs_get_return_value(fregs) \
->  	regs_return_value(&(fregs)->regs)
->  #define ftrace_regs_set_return_value(fregs, ret) \
->  	regs_set_return_value(&(fregs)->regs, ret)
-> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> index 79875a00c02b..da2a23f5a9ed 100644
-> --- a/include/linux/ftrace.h
-> +++ b/include/linux/ftrace.h
-> @@ -187,7 +187,7 @@ static __always_inline bool ftrace_regs_has_args(struct ftrace_regs *fregs)
->  	regs_get_kernel_argument(ftrace_get_regs(fregs), n)
->  #define ftrace_regs_get_stack_pointer(fregs) \
->  	kernel_stack_pointer(ftrace_get_regs(fregs))
-> -#define ftrace_regs_return_value(fregs) \
-> +#define ftrace_regs_get_return_value(fregs) \
->  	regs_return_value(ftrace_get_regs(fregs))
->  #define ftrace_regs_set_return_value(fregs, ret) \
->  	regs_set_return_value(ftrace_get_regs(fregs), ret)
-> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-> index 088432b695a6..9a60acaacc96 100644
-> --- a/kernel/trace/fgraph.c
-> +++ b/kernel/trace/fgraph.c
-> @@ -783,7 +783,7 @@ static void fgraph_call_retfunc(struct ftrace_regs *fregs,
->  	trace.rettime = trace_clock_local();
->  #ifdef CONFIG_FUNCTION_GRAPH_RETVAL
->  	if (fregs)
-> -		trace.retval = ftrace_regs_return_value(fregs);
-> +		trace.retval = ftrace_regs_get_return_value(fregs);
->  	else
->  		trace.retval = fgraph_ret_regs_return_value(ret_regs);
->  #endif
-> 
+The accompanying pahole changes (still needs some cleanup) can be viewed
+here on this "frozen" branch [0].
+
+[0]: https://github.com/danobi/pahole/tree/kfunc_btf-mailed
+
+=== Changelog ===
+
+Changes from v2:
+* Only WARN() for vmlinux kfuncs
+
+Changes from v1:
+* Move WARN_ON() up a call level
+* Also return error when kfunc set is not properly tagged
+* Use BTF_KFUNCS_START/END instead of flags
+* Rename BTF_SET8_KFUNC to BTF_SET8_KFUNCS
+
+Daniel Xu (3):
+  bpf: btf: Support flags for BTF_SET8 sets
+  bpf: btf: Add BTF_KFUNCS_START/END macro pair
+  bpf: treewide: Annotate BPF kfuncs in BTF
+
+ drivers/hid/bpf/hid_bpf_dispatch.c            |  8 +++----
+ fs/verity/measure.c                           |  4 ++--
+ include/linux/btf_ids.h                       | 21 +++++++++++++++----
+ kernel/bpf/btf.c                              |  8 +++++++
+ kernel/bpf/cpumask.c                          |  4 ++--
+ kernel/bpf/helpers.c                          |  8 +++----
+ kernel/bpf/map_iter.c                         |  4 ++--
+ kernel/cgroup/rstat.c                         |  4 ++--
+ kernel/trace/bpf_trace.c                      |  8 +++----
+ net/bpf/test_run.c                            |  8 +++----
+ net/core/filter.c                             | 16 +++++++-------
+ net/core/xdp.c                                |  4 ++--
+ net/ipv4/bpf_tcp_ca.c                         |  4 ++--
+ net/ipv4/fou_bpf.c                            |  4 ++--
+ net/ipv4/tcp_bbr.c                            |  4 ++--
+ net/ipv4/tcp_cubic.c                          |  4 ++--
+ net/ipv4/tcp_dctcp.c                          |  4 ++--
+ net/netfilter/nf_conntrack_bpf.c              |  4 ++--
+ net/netfilter/nf_nat_bpf.c                    |  4 ++--
+ net/xfrm/xfrm_interface_bpf.c                 |  4 ++--
+ net/xfrm/xfrm_state_bpf.c                     |  4 ++--
+ .../selftests/bpf/bpf_testmod/bpf_testmod.c   |  8 +++----
+ 22 files changed, 81 insertions(+), 60 deletions(-)
+
+-- 
+2.42.1
+
