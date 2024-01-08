@@ -1,194 +1,86 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F5C4653F
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Jan 2024 13:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="chVFedUY"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3375a236525so1758304f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Jan 2024 05:48:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704721736; x=1705326536; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q6tS/zmA8jTmUGQmD7ZGbI7KJfpIZIi+8GuPTUd/kRc=;
-        b=chVFedUYM36NKkGOYXAqT/Lo0iBTj1e+0nxYmADVdc4KsN5scXoT0CuAvi6rAnMiGO
-         HLCZE58JC3b1z466Y5LJVfzwHlLnyrzqHmj6XHxgSmbfGZk2oyaROYDB5P00e2UkVsRF
-         xdVh6hYmm09TILJy1DjghxcxUH5w1tiqr2ab9x92uXoSbqmX5r92texj6dk4JvjFBKGx
-         3Qw8E2vXOxvt7vPwjOXy4v3pgVJGlBWQzjZm+e5uul1p6roosO8FQ7mMhPCazTHoc62D
-         hNgjf8NXSooYAl4OEMOaqW+5hkfe8x1hzG5gh5Fi0BI/7egl7tUBsKc0DNPlXvWJaWXC
-         73og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704721736; x=1705326536;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q6tS/zmA8jTmUGQmD7ZGbI7KJfpIZIi+8GuPTUd/kRc=;
-        b=VR8oeDKBbYyQrinQXm1RigH9k0fkbmLSq6CTCj69UeiC9Z65L+a5sfiiJsfY21zaXI
-         RD6TV0AX/EfCCNj9Qf1c3C73gDwaRmoSpelJzU0fPwgD1qgYprw1g1CLaKEpzDYUCmB5
-         wALbtkDrrBvK1YPpTX9DJlwPWfHEEMX1ZRoXu6bYW2DAQwKf0cY7QMjl2ZRdZv0MDTxG
-         qO3T0bEnMHPC7HadtlgPf1jsZOeHXQ5/siVNTpjVYNMJ8yC8D4SIINo8ZZZOgjpv638J
-         CfCsOnvbvmlOWdp8iGxaAE9l1+QR/zBwc0AWYM71x9V6552llmAwJbJ3DTNvWBBvdlly
-         4aaA==
-X-Gm-Message-State: AOJu0YwYAbgjVRHVgDt8VOeN5p71y9TimAmjGfINkmec50T5ES90NXHQ
-	RpXCg/S5VBnjZUk691f7O3HfBM8R/o1g8g==
-X-Google-Smtp-Source: AGHT+IExBXWbVBsi6lW0nbPs92Y11blHgXhSiv0yCc/BePGdHEv57ZAi/RZ/fcIrf0iFuASaoWVAHA==
-X-Received: by 2002:a05:600c:5403:b0:40e:4b6d:c9fa with SMTP id he3-20020a05600c540300b0040e4b6dc9famr30807wmb.147.1704721736518;
-        Mon, 08 Jan 2024 05:48:56 -0800 (PST)
-Received: from vingu-book.. ([2a01:e0a:f:6020:53aa:59bc:34ea:bb2c])
-        by smtp.gmail.com with ESMTPSA id n34-20020a05600c3ba200b0040d5b984668sm11165003wms.9.2024.01.08.05.48.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jan 2024 05:48:55 -0800 (PST)
-From: Vincent Guittot <vincent.guittot@linaro.org>
-To: linux@armlinux.org.uk,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	sudeep.holla@arm.com,
-	rafael@kernel.org,
-	viresh.kumar@linaro.org,
-	agross@kernel.org,
-	andersson@kernel.org,
-	konrad.dybcio@linaro.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	bristot@redhat.com,
-	vschneid@redhat.com,
-	lukasz.luba@arm.com,
-	rui.zhang@intel.com,
-	mhiramat@kernel.org,
-	daniel.lezcano@linaro.org,
-	amit.kachhap@gmail.com,
-	corbet@lwn.net,
-	gregkh@linuxfoundation.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F00EF47776;
+	Mon,  8 Jan 2024 14:21:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 383B3C15;
+	Mon,  8 Jan 2024 06:21:57 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.89.149])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1A833F64C;
+	Mon,  8 Jan 2024 06:21:08 -0800 (PST)
+Date: Mon, 8 Jan 2024 14:21:03 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>,
 	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Cc: qyousef@layalina.io,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH v3 5/5] sched/pelt: Remove shift of thermal clock
-Date: Mon,  8 Jan 2024 14:48:43 +0100
-Message-Id: <20240108134843.429769-6-vincent.guittot@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240108134843.429769-1-vincent.guittot@linaro.org>
-References: <20240108134843.429769-1-vincent.guittot@linaro.org>
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v5 11/34] function_graph: Have the instances use their
+ own ftrace_ops for filtering
+Message-ID: <ZZwEz8HsTa2IZE3L@FVFF77S0Q05N>
+References: <170290509018.220107.1347127510564358608.stgit@devnote2>
+ <170290522555.220107.1435543481968270637.stgit@devnote2>
+ <ZZg3tlOynx7YVLGQ@FVFF77S0Q05N>
+ <20240108101436.07509def635fbecf80a59ae6@kernel.org>
+ <ZZvp08OFIFbP3rnk@FVFF77S0Q05N>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZZvp08OFIFbP3rnk@FVFF77S0Q05N>
 
-The optional shift of the clock used by thermal/hw load avg has been
-introduced to handle case where the signal was not always a high frequency
-hw signal. Now that cpufreq provides a signal for firmware and
-SW pressure, we can remove this exception and always keep this PELT signal
-aligned with other signals.
-Mark deprecated sched_thermal_decay_shift boot parameter.
+On Mon, Jan 08, 2024 at 12:25:55PM +0000, Mark Rutland wrote:
+> We also have HAVE_FUNCTION_GRAPH_RET_ADDR_PTR, but since the return address is
+> not on the stack at the point function-entry is intercepted we use the FP as
+> the retp value -- in the absence of tail calls this will be different between a
+> caller and callee.
 
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
----
- .../admin-guide/kernel-parameters.txt          |  1 +
- kernel/sched/core.c                            |  2 +-
- kernel/sched/fair.c                            | 10 ++--------
- kernel/sched/sched.h                           | 18 ------------------
- 4 files changed, 4 insertions(+), 27 deletions(-)
+Ah; I just spotted that this patch changed that in ftrace_graph_func(), which
+is the source of the bug. 
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 65731b060e3f..2ee15522b15d 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5722,6 +5722,7 @@
- 			but is useful for debugging and performance tuning.
- 
- 	sched_thermal_decay_shift=
-+			[Deprecated]
- 			[KNL, SMP] Set a decay shift for scheduler thermal
- 			pressure signal. Thermal pressure signal follows the
- 			default decay period of other scheduler pelt
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index a6f084bdf1c5..c68e47bfd5ae 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -5670,7 +5670,7 @@ void scheduler_tick(void)
- 
- 	update_rq_clock(rq);
- 	hw_pressure = arch_scale_hw_pressure(cpu_of(rq));
--	update_hw_load_avg(rq_clock_hw(rq), rq, hw_pressure);
-+	update_hw_load_avg(rq_clock_task(rq), rq, hw_pressure);
- 	curr->sched_class->task_tick(rq, curr, 0);
- 	if (sched_feat(LATENCY_WARN))
- 		resched_latency = cpu_resched_latency(rq);
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index f1c3d600d6d6..d5ba6cdb141c 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -78,15 +78,9 @@ static unsigned int normalized_sysctl_sched_base_slice	= 750000ULL;
- 
- const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
- 
--int sched_hw_decay_shift;
- static int __init setup_sched_thermal_decay_shift(char *str)
- {
--	int _shift = 0;
--
--	if (kstrtoint(str, 0, &_shift))
--		pr_warn("Unable to set scheduler thermal pressure decay shift parameter\n");
--
--	sched_hw_decay_shift = clamp(_shift, 0, 10);
-+	pr_warn("Ignoring the deprecated sched_thermal_decay_shift= option\n");
- 	return 1;
- }
- __setup("sched_thermal_decay_shift=", setup_sched_thermal_decay_shift);
-@@ -9247,7 +9241,7 @@ static bool __update_blocked_others(struct rq *rq, bool *done)
- 
- 	decayed = update_rt_rq_load_avg(now, rq, curr_class == &rt_sched_class) |
- 		  update_dl_rq_load_avg(now, rq, curr_class == &dl_sched_class) |
--		  update_hw_load_avg(rq_clock_hw(rq), rq, hw_pressure) |
-+		  update_hw_load_avg(now, rq, hw_pressure) |
- 		  update_irq_load_avg(rq, 0);
- 
- 	if (others_have_blocked(rq))
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 677d24202eec..6fc6718a1060 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1520,24 +1520,6 @@ static inline u64 rq_clock_task(struct rq *rq)
- 	return rq->clock_task;
- }
- 
--/**
-- * By default the decay is the default pelt decay period.
-- * The decay shift can change the decay period in
-- * multiples of 32.
-- *  Decay shift		Decay period(ms)
-- *	0			32
-- *	1			64
-- *	2			128
-- *	3			256
-- *	4			512
-- */
--extern int sched_hw_decay_shift;
--
--static inline u64 rq_clock_hw(struct rq *rq)
--{
--	return rq_clock_task(rq) >> sched_hw_decay_shift;
--}
--
- static inline void rq_clock_skip_update(struct rq *rq)
- {
- 	lockdep_assert_rq_held(rq);
--- 
-2.34.1
+As of this patch, we use the address of fregs->lr as the retp value, but the
+unwinder still uses the FP value, and so when unwind_recover_return_address()
+calls ftrace_graph_ret_addr(), the retp value won't match the expected entry on
+the fgraph ret_stack, resulting in failing to find the expected entry.
 
+Since the ftrace_regs only exist transiently during function entry/exit, it's
+possible for a stackframe to reuse that same address on the stack, which would
+result in finding a different entry by mistake.
+
+The diff below restores the existing behaviour and fixes the issue for me.
+Could you please fold that into this patch?
+
+On a separate note, looking at how this patch changed arm64's
+ftrace_graph_func(), do we need similar changes to arm64's
+prepare_ftrace_return() for the old-style mcount based ftrace?
+
+Mark.
+
+---->8----
+diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
+index 205937e04ece..329092ce06ba 100644
+--- a/arch/arm64/kernel/ftrace.c
++++ b/arch/arm64/kernel/ftrace.c
+@@ -495,7 +495,7 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+        if (bit < 0)
+                return;
+ 
+-       if (!function_graph_enter_ops(*parent, ip, fregs->fp, parent, gops))
++       if (!function_graph_enter_ops(*parent, ip, fregs->fp, (void *)fregs->fp, gops))
+                *parent = (unsigned long)&return_to_handler;
+ 
+        ftrace_test_recursion_unlock(bit);
