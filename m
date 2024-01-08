@@ -1,109 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB800800;
-	Mon,  8 Jan 2024 01:31:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 787EAC433C8;
-	Mon,  8 Jan 2024 01:31:45 +0000 (UTC)
-Date: Sun, 7 Jan 2024 20:32:58 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andy Shevchenko <andy@kernel.org>, Tom
- Zanussi <zanussi@kernel.org>
-Subject: [PATCH] tracing histograms: Simplify parse_actions() function
-Message-ID: <20240107203258.37e26d2b@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F3CDDAA;
+	Mon,  8 Jan 2024 08:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HoTsV4Dv"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7831be84f4eso113376885a.0;
+        Mon, 08 Jan 2024 00:32:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704702771; x=1705307571; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5GwILI2ALIJNST8VPsffc3ahIHUwnzbrpdCcG6R7Vhc=;
+        b=HoTsV4DvBMHGn6Gc01wMfSso7vRMCJLHPeOPGdmENBoNZTQDayk3+B8mmlnDfYVdHu
+         VlY4HmqfAdRZwhm/Mo7mT0n55kk4xz1wFsNj8SYj9WUoz7qUO3E+ageDqnvOjnXzoYEH
+         q10FApay7za4whrVaUDwi/sdLMeQjoxJWfqsMq6kF69mglZApuUnWxW4dVYCdy0Lj0XP
+         C7lOZsk9AGAXgC++fEebscewmh4m6aUd9jSuUsSUQ7R/spVBRzX3fmhjNKzgyoC7oLEh
+         ArK6vhacTW/YbwXE4jTKB5H3KNGAmCiOz4M/tK2nSejLq2PpZMGa7Njnwnf5GZ01vZWI
+         w8QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704702771; x=1705307571;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5GwILI2ALIJNST8VPsffc3ahIHUwnzbrpdCcG6R7Vhc=;
+        b=ToIBPaQ+rgY/aBWKOI+5mQTyB5s+hoSagnDGyM6Cy8lRYc7zYZHGyu3MKV5EAQ7k8z
+         QlMqk1P10yN2ohK2B1+ni/ddsg3+W30/qP4eOUmtQFt1T/OlOajhtt8K6FjrnryXCEKX
+         vLAwIMwfp82m75bmuhYxnjaHpuIitU2ZjIQOJjwa25+Jx6V4vOYnP604FD3zMLBl17PR
+         uY3LQZyuJZ22lXmzLS6MYSNsIeB21RgoO21/4AfgvOgxTvcKqHjCfXNLpPFeLb4e19j3
+         oYWMTGJ0ZI3Fz80RUfkjY6MirbsCaOIxiN5zk4QnfjgDMzWeM5CpalmNPPMUhpvuoQRr
+         zicQ==
+X-Gm-Message-State: AOJu0Yy9+NoMi2X7xAR/lhwkG8Nr5SomdBOU/7QQD32Hp8gjGw8IhaoZ
+	WiM5hXkCD/lyZB7lTeV2kFAm/ZU+TEy/GCZ7SNNTh/JcOcE=
+X-Google-Smtp-Source: AGHT+IG1hYBz6K5KACuHekMLwBrEkxXFHG+wjm3BDqSNoAayV1A15p4tlYfATgTjURZaXukYiBYGdCrKH8cKINUQZL8=
+X-Received: by 2002:a05:6214:500a:b0:67f:998b:bfa6 with SMTP id
+ jo10-20020a056214500a00b0067f998bbfa6mr4859226qvb.64.1704702770711; Mon, 08
+ Jan 2024 00:32:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240107203258.37e26d2b@gandalf.local.home>
+In-Reply-To: <20240107203258.37e26d2b@gandalf.local.home>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 8 Jan 2024 10:32:14 +0200
+Message-ID: <CAHp75VcsV8t2-6GB24Rz003B2JSAEOBjWD7B7FjEXuCQhkJ5pQ@mail.gmail.com>
+Subject: Re: [PATCH] tracing histograms: Simplify parse_actions() function
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andy Shevchenko <andy@kernel.org>, 
+	Tom Zanussi <zanussi@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Mon, Jan 8, 2024 at 3:31=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
+>
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+>
+> The parse_actions() function uses 'len =3D str_has_prefix()' to test whic=
+h
+> action is in the string being parsed. But then it goes and repeats the
+> logic for each different action. This logic can be simplified and
+> duplicate code can be removed as 'len' contains the length of the found
+> prefix which should be used for all actions.
 
-The parse_actions() function uses 'len = str_has_prefix()' to test which
-action is in the string being parsed. But then it goes and repeats the
-logic for each different action. This logic can be simplified and
-duplicate code can be removed as 'len' contains the length of the found
-prefix which should be used for all actions.
+> Link: https://lore.kernel.org/all/20240107112044.6702cb66@gandalf.local.h=
+ome/
+>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Link: https://lore.kernel.org/all/20240107112044.6702cb66@gandalf.local.home/
+If you want Link to be formally a tag, you should drop the following
+blank line.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_events_hist.c | 49 ++++++++++++++++----------------
- 1 file changed, 24 insertions(+), 25 deletions(-)
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 5ecf3c8bde20..6ece1308d36a 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -4805,36 +4805,35 @@ static int parse_actions(struct hist_trigger_data *hist_data)
- 	int len;
- 
- 	for (i = 0; i < hist_data->attrs->n_actions; i++) {
-+		enum handler_id hid = 0;
-+		char *action_str;
-+
- 		str = hist_data->attrs->action_str[i];
- 
--		if ((len = str_has_prefix(str, "onmatch("))) {
--			char *action_str = str + len;
-+		if ((len = str_has_prefix(str, "onmatch(")))
-+			hid = HANDLER_ONMATCH;
-+		else if ((len = str_has_prefix(str, "onmax(")))
-+			hid = HANDLER_ONMAX;
-+		else if ((len = str_has_prefix(str, "onchange(")))
-+			hid = HANDLER_ONCHANGE;
- 
--			data = onmatch_parse(tr, action_str);
--			if (IS_ERR(data)) {
--				ret = PTR_ERR(data);
--				break;
--			}
--		} else if ((len = str_has_prefix(str, "onmax("))) {
--			char *action_str = str + len;
-+		action_str = str + len;
- 
--			data = track_data_parse(hist_data, action_str,
--						HANDLER_ONMAX);
--			if (IS_ERR(data)) {
--				ret = PTR_ERR(data);
--				break;
--			}
--		} else if ((len = str_has_prefix(str, "onchange("))) {
--			char *action_str = str + len;
-+		switch (hid) {
-+		case HANDLER_ONMATCH:
-+			data = onmatch_parse(tr, action_str);
-+			break;
-+		case HANDLER_ONMAX:
-+		case HANDLER_ONCHANGE:
-+			data = track_data_parse(hist_data, action_str, hid);
-+			break;
-+		default:
-+			data = ERR_PTR(-EINVAL);
-+			break;
-+		}
- 
--			data = track_data_parse(hist_data, action_str,
--						HANDLER_ONCHANGE);
--			if (IS_ERR(data)) {
--				ret = PTR_ERR(data);
--				break;
--			}
--		} else {
--			ret = -EINVAL;
-+		if (IS_ERR(data)) {
-+			ret = PTR_ERR(data);
- 			break;
- 		}
- 
--- 
-2.42.0
+> +               if ((len =3D str_has_prefix(str, "onmatch(")))
+> +                       hid =3D HANDLER_ONMATCH;
+> +               else if ((len =3D str_has_prefix(str, "onmax(")))
+> +                       hid =3D HANDLER_ONMAX;
+> +               else if ((len =3D str_has_prefix(str, "onchange(")))
+> +                       hid =3D HANDLER_ONCHANGE;
 
+The repeating check for ( might be moved out as well after this like
+
+  if (str[len] !=3D '(') {
+    // not sure if you need data to be assigned here as well
+    ret =3D -EINVAL;
+    ...
+  }
+
+--=20
+With Best Regards,
+Andy Shevchenko
