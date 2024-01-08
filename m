@@ -1,143 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518085380B;
-	Mon,  8 Jan 2024 15:40:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAFE0C433C7;
-	Mon,  8 Jan 2024 15:40:51 +0000 (UTC)
-Date: Mon, 8 Jan 2024 10:41:47 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Al Viro
- <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Kees Cook
- <keescook@chromium.org>
-Subject: Re: [PATCH] tracefs/eventfs: Use root and instance inodes as
- default ownership
-Message-ID: <20240108104147.49baa4cb@gandalf.local.home>
-In-Reply-To: <20240108-natur-geophysik-f4c6fdaf6901@brauner>
-References: <20240103203246.115732ec@gandalf.local.home>
-	<20240105-wegstecken-sachkenntnis-6289842d6d01@brauner>
-	<20240105095954.67de63c2@gandalf.local.home>
-	<20240107-getrickst-angeeignet-049cea8cad13@brauner>
-	<20240107132912.71b109d8@rorschach.local.home>
-	<20240107133228.05b0f485@rorschach.local.home>
-	<20240108-natur-geophysik-f4c6fdaf6901@brauner>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDBAE54664;
+	Mon,  8 Jan 2024 16:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C484FEC;
+	Mon,  8 Jan 2024 08:36:02 -0800 (PST)
+Received: from [192.168.178.6] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A9D683F64C;
+	Mon,  8 Jan 2024 08:35:10 -0800 (PST)
+Message-ID: <158a8c60-cb54-43c1-8232-6a0a46cc6d42@arm.com>
+Date: Mon, 8 Jan 2024 17:35:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/5] cpufreq: Add a cpufreq pressure feedback for the
+ scheduler
+Content-Language: en-US
+To: Vincent Guittot <vincent.guittot@linaro.org>, linux@armlinux.org.uk,
+ catalin.marinas@arm.com, will@kernel.org, sudeep.holla@arm.com,
+ rafael@kernel.org, viresh.kumar@linaro.org, agross@kernel.org,
+ andersson@kernel.org, konrad.dybcio@linaro.org, mingo@redhat.com,
+ peterz@infradead.org, juri.lelli@redhat.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+ vschneid@redhat.com, lukasz.luba@arm.com, rui.zhang@intel.com,
+ mhiramat@kernel.org, daniel.lezcano@linaro.org, amit.kachhap@gmail.com,
+ corbet@lwn.net, gregkh@linuxfoundation.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: qyousef@layalina.io
+References: <20240108134843.429769-1-vincent.guittot@linaro.org>
+ <20240108134843.429769-2-vincent.guittot@linaro.org>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+In-Reply-To: <20240108134843.429769-2-vincent.guittot@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Mon, 8 Jan 2024 12:32:46 +0100
-Christian Brauner <brauner@kernel.org> wrote:
+On 08/01/2024 14:48, Vincent Guittot wrote:
+> Provide to the scheduler a feedback about the temporary max available
+> capacity. Unlike arch_update_thermal_pressure, this doesn't need to be
+> filtered as the pressure will happen for dozens ms or more.
 
-> On Sun, Jan 07, 2024 at 01:32:28PM -0500, Steven Rostedt wrote:
-> > On Sun, 7 Jan 2024 13:29:12 -0500
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> >   
-> > > > 
-> > > > IOW, the inode_permission() in lookup_one_len() that eventfs does is
-> > > > redundant and just wrong.    
-> > > 
-> > > I don't think so.  
-> > 
-> > Just to make it clear. eventfs has nothing to do with mkdir instance/foo.
-> > It exists without that. Although one rationale to do eventfs was so  
+Is this then related to the 'medium pace system pressure' you mentioned
+in your OSPM '23 talk?
+
 > 
-> Every instance/foo/ tracefs instances also contains an events directory
-> and thus a eventfs portion. Eventfs is just a subtree of tracefs. It's
-> not a separate filesystem. Both eventfs and tracefs are on the same
-> single, system wide superblock.
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
+>  drivers/cpufreq/cpufreq.c | 36 ++++++++++++++++++++++++++++++++++++
+>  include/linux/cpufreq.h   | 10 ++++++++++
+>  2 files changed, 46 insertions(+)
 > 
-> > that the instance directories wouldn't recreate the same 10thousands
-> > event inodes and dentries for every mkdir done.  
-> 
-> I know but that's irrelevant to what I'm trying to tell you.
-> 
-> A mkdir /sys/kernel/tracing/instances/foo creates a new tracefs
-> instance. With or without the on-demand dentry and inode creation for
-> the eventfs portion that tracefs "instance" has now been created in its
-> entirety including all the required information for someone to later
-> come along and perform a lookup on /sys/kernel/tracing/instances/foo/events.
-> 
-> All you've done is to defer the addition of the dentries and inodes when
-> someone does actually look at the events directory of the tracefs
-> instance.
-> 
-> Whether you choose to splice in the dentries and inodes for the eventfs
-> portion during lookup and readdir or if you had chosen to not do the
-> on-demand thing at all and the entries were created at the same time as
-> the mkdir call are equivalent from the perspective of permission
-> checking.
-> 
-> If you have the required permissions to look at the events directory
-> then there's no reason why listing the directory entries in there should
-> fail. This can't even happen right now.
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 44db4f59c4cc..fa2e2ea26f7f 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -2563,6 +2563,40 @@ int cpufreq_get_policy(struct cpufreq_policy *policy, unsigned int cpu)
+>  }
+>  EXPORT_SYMBOL(cpufreq_get_policy);
+>  
+> +DEFINE_PER_CPU(unsigned long, cpufreq_pressure);
+> +
+> +/**
+> + * cpufreq_update_pressure() - Update cpufreq pressure for CPUs
+> + * @policy: cpufreq policy of the CPUs.
+> + *
+> + * Update the value of cpufreq pressure for all @cpus in the policy.
+> + */
+> +static void cpufreq_update_pressure(struct cpufreq_policy *policy)
+> +{
+> +	unsigned long max_capacity, capped_freq, pressure;
+> +	u32 max_freq;
+> +	int cpu;
+> +
+> +	/*
+> +	 * Handle properly the boost frequencies, which should simply clean
+> +	 * the thermal pressure value.
+               ^^^^^^^
+IMHO, this is a copy & paste error from topology_update_thermal_pressure()?
 
-Ah, I think I know where the confusion lies. The tracing information in
-kernel/trace/*.c doesn't keep track of permission. It relies totally on
-fs/tracefs/* to do so. If someone does 'chmod' or 'chown' or mounts with
-'gid=xxx' then it's up to tracefs to maintain that information and not the
-tracing subsystem. The tracing subsystem only gives the "default"
-permissions (before boot finishes).
+> +	 */
+> +	if (max_freq <= capped_freq) {
 
-The difference between normal file systems and pseudo file systems like
-debugfs and tracefs, is that normal file systems keep the permission
-information stored on the external device. That is, when the inodes and
-dentries are created, the information is retrieved from the stored file
-system.
+max_freq seems to be uninitialized.
 
-I think this may actually be a failure of debugfs (and tracefs as it was
-based on debugfs), in that the inodes and dentries are created at the same
-time the "files" backing them are. Which is normally at boot up and before
-the file system is mounted.
+> +		pressure = 0;
 
-That is, inodes and dentries are actually coupled with the data they
-represent. It's not a cache for a back store like a hard drive partition.
+Is this x86 (turbo boost) specific? IMHO at arm we follow this max freq
+(including boost) relates to 1024 in capacity? Or haven't we made this
+discussion yet?
 
-To create a file in debugfs you do:
+> +	} else {
+> +		cpu = cpumask_first(policy->related_cpus);
+> +		max_capacity = arch_scale_cpu_capacity(cpu);
+> +		capped_freq = policy->max;
+> +		max_freq = arch_scale_freq_ref(cpu);
+> +
+> +		pressure = max_capacity -
+> +			   mult_frac(max_capacity, capped_freq, max_freq);
+> +	}
+> +
+> +	for_each_cpu(cpu, policy->related_cpus)
+> +		WRITE_ONCE(per_cpu(cpufreq_pressure, cpu), pressure);
+> +}
+> +
 
-struct dentry *debugfs_create_file(const char *name, umode_t mode,
-				   struct dentry *parent, void *data,
-				   const struct file_operations *fops)
+[...]
 
-That is, you pass a the name, the mode, the parent dentry, data, and the
-fops and that will create an inode and dentry (which is returned).
-
-This happens at boot up before user space is running and before debugfs is
-even mounted.
-
-Because debugfs is mostly for debugging, people don't care about how it's
-mounted. It is usually restricted to root only access. Especially since
-there's a lot of sensitive information that shouldn't be exposed to
-non-privileged users.
-
-The reason tracefs came about is that people asked me to be able to have
-access to tracing without needing to even enable debugfs. They also want to
-easily make it accessible to non root users and talking with Kees Cook, he
-recommended using ACL. But because it inherited a lot from debugfs, I
-started doing these tricks like walking the dentry tree to make it work a
-bit better. Because the dentries and inodes were created before mount, I
-had to play these tricks.
-
-But as Linus pointed out, that was the wrong way to do that. The right way
-was to use .getattr and .permission callbacks to figure out what the
-permissions to the files are.
-
-This has nothing to do with the creation of the files, it's about who has
-access to the files that the inodes point to.
-
-This sounds like another topic to bring up at LSFMM ;-)  "Can we
-standardize pseudo file systems like debugfs and tracefs to act more like
-real file systems, and have inodes and dentries act as cache and not be so
-coupled to the data?"
-
--- Steve
