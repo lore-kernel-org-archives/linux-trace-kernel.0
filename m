@@ -1,79 +1,164 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABAD012B92
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Jan 2024 09:15:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isovalent.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA8A1A271;
+	Mon,  8 Jan 2024 11:04:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b="MzNX37sC"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a28ee72913aso447698266b.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Jan 2024 01:15:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=isovalent.com; s=google; t=1704705356; x=1705310156; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TQw0PBv7H3F9npAXhHpc/yO+0aZTdw3iW7XYRioBY9M=;
-        b=MzNX37sCftG06J7zDqRoVr0ASbCiDMbrmnnww9QwIfjHn6v305+3yC4sf5ZhItJ/P9
-         dWgD/FpnTIJwHE4ksSWe0LyKUd6OfMRRTu2GsW3LrzyYIlk1hIm1lWPPTQTB7KlqL7yN
-         TZ4o5IaKMtV94FWQY6kwJIi2YrmviStlCIrez+Ok7YKHBE61mw9794RlBmRCxk8r8RUL
-         VrdvaM3wBX128iDc7clv/XxbWwBql1tdTSo4hEdAuX6o0HA2yEC1qaVMYbdyxbkpNlPz
-         Usmp583j3JFO42mG5KGuZPz8LDrv6DbVyXe7CC8l1Vt6gXrWdave70ArygI0WAZ/X/pQ
-         wOmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704705356; x=1705310156;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TQw0PBv7H3F9npAXhHpc/yO+0aZTdw3iW7XYRioBY9M=;
-        b=PiedEJui49B23Z8keBzpXiSgPrASRG7yDmx3Nmh3F4QHBRMWs+qr4Vz9CN88oa9zMQ
-         KBrbIxlLxJoaptsDZGWBkyl0zWG+w1xWX1MnP6rd15oXB3HqQMj68lp2TUXQsQwt5ZSZ
-         4EkS14y+pkr1qIsK5Urrd7DrwfCtHlt4+OeRBztb6rt0htYiyWSHVdgKkQeSSoGFKg+l
-         pKciN0nDP32LBC5faNOVuGi9IJ2h81lHLZGSTcFPrRuBUI2r9v7B44RQQvhSJwKnqn/G
-         wcKL34b1Tq/G2vTB1BfkU3CHBmWihnioJ1aUG6Oj4Pplnzj+PGMZLrxFx4okYvqMebM+
-         NPAw==
-X-Gm-Message-State: AOJu0YxJMn+zHDDvaH0N3g/azYrWSk1YAVA6b4Ub54JMowwb1JoNv/ak
-	T5PMKPntJ1w7vJCPqsZAI+q9zAcw0IiSnoWJG/71kL3GttxvUQ==
-X-Google-Smtp-Source: AGHT+IF5FdPBR02bei/X14Ub000OcoVXRo17m86hQ2MPBeQuC7hWG3H6v1jptH9g+ATyuoxWlGDUexOGIPMl6jmv1Ns=
-X-Received: by 2002:a17:906:1797:b0:a28:bd9c:8363 with SMTP id
- t23-20020a170906179700b00a28bd9c8363mr3034170eje.57.1704705356043; Mon, 08
- Jan 2024 01:15:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FEs1ZNsN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10868C433CC;
+	Mon,  8 Jan 2024 11:04:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704711899;
+	bh=ADZSz3svcvy4AE0ELj/OHAdWql4h0/MMJv4njtLcOQ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FEs1ZNsNkv1hZ7rvZ5yDtjX9ooa2ixnqvb4Lt3NzsFMPe0NI1ulO6GFDsaAnVY46A
+	 tUCu9aWmz9Fq0LAW8jlic1dnzOOPAV3fEKKRvN2EgNUaEgRyNLDS2TYmqtnZ2vRqtJ
+	 8G8TIAYNsGbIfyPZ/c0bEhfIGJK4Uxs7bH8wKvi3eEoGOcORi6jtC9hBK0eCx7j247
+	 wGbg/dFaHlhpty+peUeOXy1NcOg8TksLY63xbLWs1pLAeY5Bwr3wG+ae6RtT4E1hXk
+	 Jveorm9MUjFCsDmsCn1oRxafbYkUodH0uRxLnu0cd+6mARBJsU/NK42nqqC9SumzMM
+	 H7u/PxmBtP4NQ==
+Date: Mon, 8 Jan 2024 12:04:54 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] tracefs/eventfs: Use root and instance inodes as default
+ ownership
+Message-ID: <20240108-ortsrand-ziehen-4e9a9a58e708@brauner>
+References: <20240103203246.115732ec@gandalf.local.home>
+ <20240105-wegstecken-sachkenntnis-6289842d6d01@brauner>
+ <20240105095954.67de63c2@gandalf.local.home>
+ <20240107-getrickst-angeeignet-049cea8cad13@brauner>
+ <20240107132912.71b109d8@rorschach.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1704565248.git.dxu@dxuuu.xyz>
-In-Reply-To: <cover.1704565248.git.dxu@dxuuu.xyz>
-From: Lorenz Bauer <lorenz.bauer@isovalent.com>
-Date: Mon, 8 Jan 2024 10:15:45 +0100
-Message-ID: <CAN+4W8gPeQ2OjoYLKXsNPyhSVTB+vcSaS3Xzw=-M9Rf5MXfKPg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 0/3] Annotate kfuncs in .BTF_ids section
-To: Daniel Xu <dxu@dxuuu.xyz>
-Cc: linux-input@vger.kernel.org, coreteam@netfilter.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	netfilter-devel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, fsverity@lists.linux.dev, 
-	bpf@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, cgroups@vger.kernel.org, 
-	alexei.starovoitov@gmail.com, olsajiri@gmail.com, quentin@isovalent.com, 
-	alan.maguire@oracle.com, memxor@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240107132912.71b109d8@rorschach.local.home>
 
-On Sat, Jan 6, 2024 at 7:25=E2=80=AFPM Daniel Xu <dxu@dxuuu.xyz> wrote:
->
-> =3D=3D=3D Description =3D=3D=3D
->
-> This is a bpf-treewide change that annotates all kfuncs as such inside
-> .BTF_ids. This annotation eventually allows us to automatically generate
-> kfunc prototypes from bpftool.
->
-> We store this metadata inside a yet-unused flags field inside struct
-> btf_id_set8 (thanks Kumar!). pahole will be taught where to look.
+> > * Tracefs supports the creation of instances from userspace via mkdir.
+> >   For example,
+> > 
+> > 	mkdir /sys/kernel/tracing/instances/foo
+> > 
+> >   And here the idmapping is relevant so we need to make the helpers
+> >   aware of the idmapping.
+> > 
+> >   I just went and plumbed this through to most helpers.
+> > 
+> > There's some subtlety in eventfs. Afaict, the directories and files for
+> > the individual events are created on-demand during lookup or readdir.
+> > 
+> > The ownership of these events is again inherited from the parent inode
+> > or recovered from stored state. In both cases the actual idmapping is
+> > irrelevant.
+> > 
+> > The callchain here is:
+> > 
+> > eventfs_root_lookup("xfs", "events")
+> > -> create_{dir,file}_dentry("xfs", "events")
+> >    -> create_{dir,file}("xfs", "events")
+> >       -> eventfs_start_creating("xfs", "events")
+> >          -> lookup_one_len("xfs", "events")  
+> > 
+> > And the subtlety is that lookup_one_len() does permission checking on
+> > the parent inode (IOW, if you want a dentry for "blech" under "events"
+> > it'll do a permission check on events->d_inode) for exec permissions
+> > and then goes on to give you a new dentry.
+> > 
+> > Usually this call would have to be changed to lookup_one() and the
+> > idmapping be handed down to it. But I think that's irrelevant here.
+> > 
+> > Lookup generally doesn't need to be aware of idmappings at all. The
+> > permission checking is done purely in the vfs via may_lookup() and the
+> > idmapping is irrelevant because we always initialize inodes with the
+> > filesystem level ownership (see the idmappings.rst) documentation if
+> > you're interested in excessive details (otherwise you get inode aliases
+> > which you really don't want).
+> > 
+> > For tracefs it would not matter for lookup per se but only because
+> > tracefs seemingly creates inodes/dentries during lookup (and readdir()).
+> 
+> tracefs creates the inodes/dentries at boot up, it's eventfs that does
+> it on demand during lookup.
+> 
+> For inodes/dentries:
+> 
+>  /sys/kernel/tracing/* is all created at boot up, except for "events".
 
-This is great, thanks for tackling this. With yout patches we can
-figure out the full set of kfuncs. Is there a way to extend it so that
-we can tell which program context a kfunc can be called from?
+Yes.
+
+>  /sys/kernel/tracing/events/* is created on demand.
+
+Yes.
+
+> 
+> > 
+> > But imho the permission checking done in current eventfs_root_lookup()
+> > via lookup_one_len() is meaningless in any way; possibly even
+> > (conceptually) wrong.
+> > 
+> > Because, the actual permission checking for the creation of the eventfs
+> > entries isn't really done during lookup or readdir, it's done when mkdir
+> > is called:
+> > 
+> >         mkdir /sys/kernel/tracing/instances/foo
+> 
+> No. that creates a entire new tracefs instance, which happens to
+> include another eventfs directory.
+
+Yes, I'm aware of all that.
+
+> No. Only the meta data is created for the eventfs directory with a
+> mkdir instances/foo. The inodes and dentries are not there.
+
+I know, that is what I'm saying.
+
+> 
+> > 
+> > When one goes and looksup stuff under foo/events/ or readdir the entries
+> > in that directory:
+> > 
+> > fd = open("foo/events")
+> > readdir(fd, ...)
+> > 
+> > then they are licensed to list an entry in that directory. So all that
+> > needs to be done is to actually list those files in that directory. And
+> > since they already exist (they were created during mkdir) we just need
+> > to splice in inodes and dentries for them. But for that we shouldn't
+> > check permissions on the directory again. Because we've done that
+> > already correctly when the VFS called may_lookup().
+> 
+> No they do not exist.
+
+I am aware.
+
+> 
+> > 
+> > IOW, the inode_permission() in lookup_one_len() that eventfs does is
+> > redundant and just wrong.
+> 
+> I don't think so.
+
+I'm very well aware that the dentries and inode aren't created during
+mkdir but the completely directory layout is determined. You're just
+splicing in dentries and inodes during lookup and readdir.
+
+If mkdir /sys/kernel/tracing/instances/foo has succeeded and you later
+do a lookup/readdir on
+
+ls -al /sys/kernel/tracing/instances/foo/events
+
+Why should the creation of the dentries and inodes ever fail due to a
+permission failure? The vfs did already verify that you had the required
+permissions to list entries in that directory. Why should filling up
+/sys/kernel/tracing/instances/foo/events ever fail then? It shouldn't
+That tracefs instance would be half-functional. And again, right now
+that inode_permission() check cannot even fail.
