@@ -1,119 +1,78 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44FCC47796;
-	Mon,  8 Jan 2024 15:03:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D034C15;
-	Mon,  8 Jan 2024 07:04:13 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.89.149])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE35C3F64C;
-	Mon,  8 Jan 2024 07:03:24 -0800 (PST)
-Date: Mon, 8 Jan 2024 15:03:21 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@chromium.org>,
-	linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v5 11/34] function_graph: Have the instances use their
- own ftrace_ops for filtering
-Message-ID: <ZZwOubTSbB_FucVz@FVFF77S0Q05N>
-References: <170290509018.220107.1347127510564358608.stgit@devnote2>
- <170290522555.220107.1435543481968270637.stgit@devnote2>
- <ZZg3tlOynx7YVLGQ@FVFF77S0Q05N>
- <20240108101436.07509def635fbecf80a59ae6@kernel.org>
- <ZZvp08OFIFbP3rnk@FVFF77S0Q05N>
- <ZZwEz8HsTa2IZE3L@FVFF77S0Q05N>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8015103A;
+	Mon,  8 Jan 2024 15:20:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1797C43391;
+	Mon,  8 Jan 2024 15:20:19 +0000 (UTC)
+Date: Mon, 8 Jan 2024 10:21:15 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andy Shevchenko <andy@kernel.org>, Tom Zanussi <zanussi@kernel.org>
+Subject: Re: [PATCH] tracing histograms: Simplify parse_actions() function
+Message-ID: <20240108102115.43464fd6@gandalf.local.home>
+In-Reply-To: <CAHp75VcsV8t2-6GB24Rz003B2JSAEOBjWD7B7FjEXuCQhkJ5pQ@mail.gmail.com>
+References: <20240107203258.37e26d2b@gandalf.local.home>
+	<CAHp75VcsV8t2-6GB24Rz003B2JSAEOBjWD7B7FjEXuCQhkJ5pQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZZwEz8HsTa2IZE3L@FVFF77S0Q05N>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 08, 2024 at 02:21:03PM +0000, Mark Rutland wrote:
-> On Mon, Jan 08, 2024 at 12:25:55PM +0000, Mark Rutland wrote:
-> > We also have HAVE_FUNCTION_GRAPH_RET_ADDR_PTR, but since the return address is
-> > not on the stack at the point function-entry is intercepted we use the FP as
-> > the retp value -- in the absence of tail calls this will be different between a
-> > caller and callee.
-> 
-> Ah; I just spotted that this patch changed that in ftrace_graph_func(), which
-> is the source of the bug. 
-> 
-> As of this patch, we use the address of fregs->lr as the retp value, but the
-> unwinder still uses the FP value, and so when unwind_recover_return_address()
-> calls ftrace_graph_ret_addr(), the retp value won't match the expected entry on
-> the fgraph ret_stack, resulting in failing to find the expected entry.
-> 
-> Since the ftrace_regs only exist transiently during function entry/exit, it's
-> possible for a stackframe to reuse that same address on the stack, which would
-> result in finding a different entry by mistake.
-> 
-> The diff below restores the existing behaviour and fixes the issue for me.
-> Could you please fold that into this patch?
-> 
-> On a separate note, looking at how this patch changed arm64's
-> ftrace_graph_func(), do we need similar changes to arm64's
-> prepare_ftrace_return() for the old-style mcount based ftrace?
-> 
-> Mark.
-> 
-> ---->8----
-> diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
-> index 205937e04ece..329092ce06ba 100644
-> --- a/arch/arm64/kernel/ftrace.c
-> +++ b/arch/arm64/kernel/ftrace.c
-> @@ -495,7 +495,7 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
->         if (bit < 0)
->                 return;
->  
-> -       if (!function_graph_enter_ops(*parent, ip, fregs->fp, parent, gops))
-> +       if (!function_graph_enter_ops(*parent, ip, fregs->fp, (void *)fregs->fp, gops))
->                 *parent = (unsigned long)&return_to_handler;
->  
->         ftrace_test_recursion_unlock(bit);
+On Mon, 8 Jan 2024 10:32:14 +0200
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-Thinking some more, this line gets excessively long when we pass the fregs too,
-so it's probably worth adding a local variable for fp, i.e. the diff below.
+> On Mon, Jan 8, 2024 at 3:31=E2=80=AFAM Steven Rostedt <rostedt@goodmis.or=
+g> wrote:
+> >
+> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> >
+> > The parse_actions() function uses 'len =3D str_has_prefix()' to test wh=
+ich
+> > action is in the string being parsed. But then it goes and repeats the
+> > logic for each different action. This logic can be simplified and
+> > duplicate code can be removed as 'len' contains the length of the found
+> > prefix which should be used for all actions. =20
+>=20
+> > Link: https://lore.kernel.org/all/20240107112044.6702cb66@gandalf.local=
+.home/
+> >
+> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org> =20
+>=20
+> If you want Link to be formally a tag, you should drop the following
+> blank line.
 
-Mark.
+The link is for humans not for parsers.
 
----->8----
-diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
-index 205937e04ece..d4e142ef4686 100644
---- a/arch/arm64/kernel/ftrace.c
-+++ b/arch/arm64/kernel/ftrace.c
-@@ -481,8 +481,9 @@ void prepare_ftrace_return(unsigned long self_addr, unsigned long *parent,
- void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
-                       struct ftrace_ops *op, struct ftrace_regs *fregs)
- {
--       unsigned long *parent = &fregs->lr;
-        struct fgraph_ops *gops = container_of(op, struct fgraph_ops, ops);
-+       unsigned long *parent = &fregs->lr;
-+       unsigned long fp = fregs->fp;
-        int bit;
- 
-        if (unlikely(ftrace_graph_is_dead()))
-@@ -495,7 +496,7 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
-        if (bit < 0)
-                return;
- 
--       if (!function_graph_enter_ops(*parent, ip, fregs->fp, parent, gops))
-+       if (!function_graph_enter_ops(*parent, ip, fp, (void *)fp, gops))
-                *parent = (unsigned long)&return_to_handler;
- 
-        ftrace_test_recursion_unlock(bit);
+>=20
+>=20
+> > +               if ((len =3D str_has_prefix(str, "onmatch(")))
+> > +                       hid =3D HANDLER_ONMATCH;
+> > +               else if ((len =3D str_has_prefix(str, "onmax(")))
+> > +                       hid =3D HANDLER_ONMAX;
+> > +               else if ((len =3D str_has_prefix(str, "onchange(")))
+> > +                       hid =3D HANDLER_ONCHANGE; =20
+>=20
+> The repeating check for ( might be moved out as well after this like
+>=20
+>   if (str[len] !=3D '(') {
+>     // not sure if you need data to be assigned here as well
+>     ret =3D -EINVAL;
+>     ...
+>   }
+>=20
+
+Not sure how that makes it any better. It adds more code. I could start
+with checking the "on" before checking for "match", "max" and "change", but
+that just makes it more complex.
+
+-- Steve
+
