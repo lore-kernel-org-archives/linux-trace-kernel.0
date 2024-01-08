@@ -1,769 +1,145 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4834644C76;
-	Mon,  8 Jan 2024 13:22:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3BCA45946
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Jan 2024 13:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aQCnf9wY"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 408Cbur0022651;
-	Mon, 8 Jan 2024 13:22:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=o0VcOhJuQRpeTaDulVHmbz0vhxac4kh9ufIpTC2IkBk=; b=aQ
-	Cnf9wYY/bTZEPCxnfES/m7arV9ivNxJrWYNB6D/KGZaukIu44rkAzxxAV10916pz
-	lJacWd/udgnNCNfnOGomsios42ol+52tTVXC2n2vkPd4MXk996EydRlcdmmpKbym
-	yXjds3WiaPJ0RulWtW0TMDU2iJKWdJWHiQsv304rPX+3OhjEuFUyk/Zjlzb8MfUs
-	CW2EHbASGX9jxStZbQ17p61X/x+wmCeDc1lhfHcLLxc3f+dPD+nR4BoHOD40fdHe
-	L8wk7DArB2rcCtfeHFR8SoUW/qUbA/SVzhzp1riA5faZJiIWuvJwvCjgn0Sy/QqW
-	1MUn/8xfx/QLlCSeG2tA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vg97b12j6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jan 2024 13:22:38 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 408DMbK8003478
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 8 Jan 2024 13:22:37 GMT
-Received: from [10.216.40.78] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 8 Jan
- 2024 05:22:31 -0800
-Message-ID: <bd98da3f-17c2-e4c7-cb7c-b76090cab06b@quicinc.com>
-Date: Mon, 8 Jan 2024 18:52:26 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ni9Y6ind"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-50e80d40a41so2109947e87.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Jan 2024 05:48:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704721727; x=1705326527; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3x2TdodL+Fcapt/Lz+/UzPzH9/xPlS0RgAh88kWjJrE=;
+        b=ni9Y6indTFLW4HjOoRre86ECBsygbT1d/sQ75lAMHQYJEw0ZtRmix3ke/qIUqdOq9P
+         wAO4ULL41UN1X70RbmuvKJQDzlHvssLK00B7dqTVD0znZfmmEGd9uTWV+Dmq4+HiTcrL
+         mp/DML+fK9u9oj/EwxZugoHykEugTvEq9H6Rh+bwWPPE2F3AGWbrI1eqEJbz5hEG+uVJ
+         MmTs7DdGY0rY98AT/AAhLLDmC1R8P3CBSi2D2U6ADNpM3V9pV6fLQFUQixh/j/Kgiija
+         rgD7MGKeoQYX53IkqcbkAzOHfaylQJMIvXrCLfamKAMGDubDs38H6lGqN01uDKJc5Wzi
+         TAXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704721727; x=1705326527;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3x2TdodL+Fcapt/Lz+/UzPzH9/xPlS0RgAh88kWjJrE=;
+        b=YMCs74mlWomy0EeI61o8mKL+Idn2yGUyx+sMM2fl3biUQfRmtmDsnqgP2zmhLCKZ9E
+         6AsY92ghdOU60yPSiR4kcsaUZIQ2AcoDVq9glbnmwLu2Uiz+mlk4soEmZt0wQbrODT+5
+         zG5PsTkca5gcHxztP03c/pASaMzFW0VVZNyWlAGiRkKOEbyjF7rBeUuiZu7A4TzCfqHq
+         UkIZrtLb6GcBFiS4vA4issa1jkxrnt4mZ9hjOdsWAu9xUQATxGrpsYwryO85kcyB7orb
+         1GoA9PO49idcTfMiCTIAVoseCz3/uYYdto4VNg2GmqxvEFZoPphJJHWhTg335eltfzf5
+         VXIw==
+X-Gm-Message-State: AOJu0Yz/Ya4EvCqfE2pokfDkizK+vqvrcTjQ2FMYmT42C649ddKtV9uu
+	5vVQrHYUocMW/xxIuAxXjKzK2MeY/LNW+Q==
+X-Google-Smtp-Source: AGHT+IF8wvH8PrEkvaQ5eneyPSBxwlk4AX9BIBBL2hHuP2Fx1us01yJftrMyoHDAiZOd2XE/MC7YJA==
+X-Received: by 2002:a05:6512:318e:b0:50e:7a9e:5c1d with SMTP id i14-20020a056512318e00b0050e7a9e5c1dmr1884615lfe.0.1704721726995;
+        Mon, 08 Jan 2024 05:48:46 -0800 (PST)
+Received: from vingu-book.. ([2a01:e0a:f:6020:53aa:59bc:34ea:bb2c])
+        by smtp.gmail.com with ESMTPSA id n34-20020a05600c3ba200b0040d5b984668sm11165003wms.9.2024.01.08.05.48.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jan 2024 05:48:46 -0800 (PST)
+From: Vincent Guittot <vincent.guittot@linaro.org>
+To: linux@armlinux.org.uk,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	sudeep.holla@arm.com,
+	rafael@kernel.org,
+	viresh.kumar@linaro.org,
+	agross@kernel.org,
+	andersson@kernel.org,
+	konrad.dybcio@linaro.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	bristot@redhat.com,
+	vschneid@redhat.com,
+	lukasz.luba@arm.com,
+	rui.zhang@intel.com,
+	mhiramat@kernel.org,
+	daniel.lezcano@linaro.org,
+	amit.kachhap@gmail.com,
+	corbet@lwn.net,
+	gregkh@linuxfoundation.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Cc: qyousef@layalina.io,
+	Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH v3 0/5] Rework system pressure interface to the scheduler
+Date: Mon,  8 Jan 2024 14:48:38 +0100
+Message-Id: <20240108134843.429769-1-vincent.guittot@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH v9] bus: mhi: host: Add tracing support
-Content-Language: en-US
-To: Manivannan Sadhasivam <mani@kernel.org>,
-        Steven Rostedt
-	<rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <mhi@lists.linux.dev>,
-        <linux-arm-msm@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <quic_vbadigan@quicinc.com>, <quic_ramkri@quicinc.com>,
-        <quic_nitegupt@quicinc.com>, <quic_skananth@quicinc.com>,
-        <quic_parass@quicinc.com>
-References: <20240105-ftrace_support-v9-1-a2dca64cc6ea@quicinc.com>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20240105-ftrace_support-v9-1-a2dca64cc6ea@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: tmKEzRNFrBNg4cU9CNM5jn0oluStAYwv
-X-Proofpoint-ORIG-GUID: tmKEzRNFrBNg4cU9CNM5jn0oluStAYwv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- impostorscore=0 phishscore=0 clxscore=1015 mlxscore=0 bulkscore=0
- priorityscore=1501 malwarescore=0 mlxlogscore=999 suspectscore=0
- spamscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401080115
+Content-Transfer-Encoding: 8bit
 
-Hi Steven,
+Following the consolidation and cleanup of CPU capacity in [1], this serie
+reworks how the scheduler gets the pressures on CPUs. We need to take into
+account all pressures applied by cpufreq on the compute capacity of a CPU
+for dozens of ms or more and not only cpufreq cooling device or HW
+mitigiations. we split the pressure applied on CPU's capacity in 2 parts:
+- one from cpufreq and freq_qos
+- one from HW high freq mitigiation.
 
-Even though I added your reviewed-by tag, I incorporated changes 
-mentioned in the previous patch.
+The next step will be to add a dedicated interface for long standing
+capping of the CPU capacity (i.e. for seconds or more) like the
+scaling_max_freq of cpufreq sysfs. The latter is already taken into
+account by this serie but as a temporary pressure which is not always the
+best choice when we know that it will happen for seconds or more.
 
-Can you please review it once.
+[1] https://lore.kernel.org/lkml/20231211104855.558096-1-vincent.guittot@linaro.org/
 
-Thanks & Regards,
+Change since v1:
+- Rework cpufreq_update_pressure()
 
-Krishna Chaitanya.
+Change since v1:
+- Use struct cpufreq_policy as parameter of cpufreq_update_pressure()
+- Fix typos and comments
+- Make sched_thermal_decay_shift boot param as deprecated
 
-On 1/5/2024 5:53 PM, Krishna chaitanya chundru wrote:
-> This change adds ftrace support for following functions which
-> helps in debugging the issues when there is Channel state & MHI
-> state change and also when we receive data and control events:
-> 1. mhi_intvec_mhi_states
-> 2. mhi_process_data_event_ring
-> 3. mhi_process_ctrl_ev_ring
-> 4. mhi_gen_tre
-> 5. mhi_update_channel_state
-> 6. mhi_tryset_pm_state
-> 7. mhi_pm_st_worker
->
-> Change the implementation of the arrays which has enum to strings mapping
-> to make it consistent in both trace header file and other files.
->
-> Where ever the trace events are added, debug messages are removed.
->
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> Reviewed-by: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> ---
-> Changes in v9:
-> - Change the implementations of some array so that the strings to enum mapping
-> - is same in both trace header and other files as suggested by steve.
-> - Link to v8: https://lore.kernel.org/r/20231207-ftrace_support-v8-1-7f62d4558555@quicinc.com
->
-> Changes in v8:
-> - Pass the structure and derefernce the variables in TP_fast_assign as suggested by steve
-> - Link to v7: https://lore.kernel.org/r/20231206-ftrace_support-v7-1-aca49a04268b@quicinc.com
->
-> Changes in v7:
-> - change log format as pointed by mani.
-> - Link to v6: https://lore.kernel.org/r/20231204-ftrace_support-v6-1-9b206546dac2@quicinc.com
->
-> Changes in v6:
-> - use 'rp' directly as suggested by jeffrey.
-> - Link to v5: https://lore.kernel.org/r/20231127-ftrace_support-v5-1-eb67daead4f1@quicinc.com
->
-> Changes in v5:
-> - Use DECLARE_EVENT_CLASS for multiple events as suggested by steve.
-> - Instead of converting to u64 to print address, use %px to print the address to avoid
-> - warnings in some platforms.
-> - Link to v4: https://lore.kernel.org/r/20231111-ftrace_support-v4-1-c83602399461@quicinc.com
->
-> Changes in v4:
-> - Fix compilation issues in previous patch which happended due to rebasing.
-> - In the defconfig FTRACE config is not enabled due to that the compilation issue is not
-> - seen in my workspace.
-> - Link to v3: https://lore.kernel.org/r/20231111-ftrace_support-v3-1-f358d2911a74@quicinc.com
->
-> Changes in v3:
-> - move trace header file from include/trace/events to drivers/bus/mhi/host/ so that
-> - we can include driver header files.
-> - Use macros directly in the trace events as suggested Jeffrey Hugo.
-> - Reorder the structure in the events as suggested by steve to avoid holes in the buffer.
-> - removed the mhi_to_physical function as this can give security issues.
-> - removed macros to define strings as we can get those from driver headers.
-> - Link to v2: https://lore.kernel.org/r/20231013-ftrace_support-v2-1-6e893ce010b5@quicinc.com
->
-> Changes in v2:
-> - Passing the raw state into the trace event and using  __print_symbolic() as suggested by bjorn.
-> - Change mhi_pm_st_worker to mhi_pm_st_transition as suggested by bjorn.
-> - Fixed the kernel test rebot issues.
-> - Link to v1: https://lore.kernel.org/r/20231005-ftrace_support-v1-1-23a2f394fa49@quicinc.com
-> ---
->   drivers/bus/mhi/common.h        |  38 +++---
->   drivers/bus/mhi/host/init.c     |  63 +++++----
->   drivers/bus/mhi/host/internal.h |  40 ++++++
->   drivers/bus/mhi/host/main.c     |  19 ++-
->   drivers/bus/mhi/host/pm.c       |   7 +-
->   drivers/bus/mhi/host/trace.h    | 275 ++++++++++++++++++++++++++++++++++++++++
->   6 files changed, 378 insertions(+), 64 deletions(-)
->
-> diff --git a/drivers/bus/mhi/common.h b/drivers/bus/mhi/common.h
-> index f794b9c8049e..dda340aaed95 100644
-> --- a/drivers/bus/mhi/common.h
-> +++ b/drivers/bus/mhi/common.h
-> @@ -297,30 +297,30 @@ struct mhi_ring_element {
->   	__le32 dword[2];
->   };
->   
-> +#define MHI_STATE_LIST				\
-> +	mhi_state(RESET,	"RESET")	\
-> +	mhi_state(READY,	"READY")	\
-> +	mhi_state(M0,		"M0")		\
-> +	mhi_state(M1,		"M1")		\
-> +	mhi_state(M2,		"M2")		\
-> +	mhi_state(M3,		"M3")		\
-> +	mhi_state(M3_FAST,	"M3_FAST")	\
-> +	mhi_state(BHI,		"BHI")		\
-> +	mhi_state_end(SYS_ERR,	"SYS ERROR")
-> +
-> +#undef mhi_state
-> +#undef mhi_state_end
-> +
-> +#define mhi_state(a, b)		case MHI_STATE_##a: return b;
-> +#define mhi_state_end(a, b)	case MHI_STATE_##a: return b;
-> +
->   static inline const char *mhi_state_str(enum mhi_state state)
->   {
->   	switch (state) {
-> -	case MHI_STATE_RESET:
-> -		return "RESET";
-> -	case MHI_STATE_READY:
-> -		return "READY";
-> -	case MHI_STATE_M0:
-> -		return "M0";
-> -	case MHI_STATE_M1:
-> -		return "M1";
-> -	case MHI_STATE_M2:
-> -		return "M2";
-> -	case MHI_STATE_M3:
-> -		return "M3";
-> -	case MHI_STATE_M3_FAST:
-> -		return "M3 FAST";
-> -	case MHI_STATE_BHI:
-> -		return "BHI";
-> -	case MHI_STATE_SYS_ERR:
-> -		return "SYS ERROR";
-> +	MHI_STATE_LIST
->   	default:
->   		return "Unknown state";
->   	}
-> -};
-> +}
->   
->   #endif /* _MHI_COMMON_H */
-> diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
-> index f78aefd2d7a3..c28bc02872fe 100644
-> --- a/drivers/bus/mhi/host/init.c
-> +++ b/drivers/bus/mhi/host/init.c
-> @@ -20,50 +20,49 @@
->   #include <linux/wait.h>
->   #include "internal.h"
->   
-> +#define CREATE_TRACE_POINTS
-> +#include "trace.h"
-> +
->   static DEFINE_IDA(mhi_controller_ida);
->   
-> +#undef mhi_ee
-> +#undef mhi_ee_end
-> +
-> +#define mhi_ee(a, b)		[MHI_EE_##a] = b,
-> +#define mhi_ee_end(a, b)	[MHI_EE_##a] = b,
-> +
->   const char * const mhi_ee_str[MHI_EE_MAX] = {
-> -	[MHI_EE_PBL] = "PRIMARY BOOTLOADER",
-> -	[MHI_EE_SBL] = "SECONDARY BOOTLOADER",
-> -	[MHI_EE_AMSS] = "MISSION MODE",
-> -	[MHI_EE_RDDM] = "RAMDUMP DOWNLOAD MODE",
-> -	[MHI_EE_WFW] = "WLAN FIRMWARE",
-> -	[MHI_EE_PTHRU] = "PASS THROUGH",
-> -	[MHI_EE_EDL] = "EMERGENCY DOWNLOAD",
-> -	[MHI_EE_FP] = "FLASH PROGRAMMER",
-> -	[MHI_EE_DISABLE_TRANSITION] = "DISABLE",
-> -	[MHI_EE_NOT_SUPPORTED] = "NOT SUPPORTED",
-> +	MHI_EE_LIST
->   };
->   
-> +#undef dev_st_trans
-> +#undef dev_st_trans_end
-> +
-> +#define dev_st_trans(a, b)	[DEV_ST_TRANSITION_##a] = b,
-> +#define dev_st_trans_end(a, b)	[DEV_ST_TRANSITION_##a] = b,
-> +
->   const char * const dev_state_tran_str[DEV_ST_TRANSITION_MAX] = {
-> -	[DEV_ST_TRANSITION_PBL] = "PBL",
-> -	[DEV_ST_TRANSITION_READY] = "READY",
-> -	[DEV_ST_TRANSITION_SBL] = "SBL",
-> -	[DEV_ST_TRANSITION_MISSION_MODE] = "MISSION MODE",
-> -	[DEV_ST_TRANSITION_FP] = "FLASH PROGRAMMER",
-> -	[DEV_ST_TRANSITION_SYS_ERR] = "SYS ERROR",
-> -	[DEV_ST_TRANSITION_DISABLE] = "DISABLE",
-> +	DEV_ST_TRANSITION_LIST
->   };
->   
-> +#undef ch_state_type
-> +#undef ch_state_type_end
-> +
-> +#define ch_state_type(a, b)	[MHI_CH_STATE_TYPE_##a] = b,
-> +#define ch_state_type_end(a, b)	[MHI_CH_STATE_TYPE_##a] = b,
-> +
->   const char * const mhi_ch_state_type_str[MHI_CH_STATE_TYPE_MAX] = {
-> -	[MHI_CH_STATE_TYPE_RESET] = "RESET",
-> -	[MHI_CH_STATE_TYPE_STOP] = "STOP",
-> -	[MHI_CH_STATE_TYPE_START] = "START",
-> +	MHI_CH_STATE_TYPE_LIST
->   };
->   
-> +#undef mhi_pm_state
-> +#undef mhi_pm_state_end
-> +
-> +#define mhi_pm_state(a, b)	[MHI_PM_STATE_##a] = b,
-> +#define mhi_pm_state_end(a, b)	[MHI_PM_STATE_##a] = b,
-> +
->   static const char * const mhi_pm_state_str[] = {
-> -	[MHI_PM_STATE_DISABLE] = "DISABLE",
-> -	[MHI_PM_STATE_POR] = "POWER ON RESET",
-> -	[MHI_PM_STATE_M0] = "M0",
-> -	[MHI_PM_STATE_M2] = "M2",
-> -	[MHI_PM_STATE_M3_ENTER] = "M?->M3",
-> -	[MHI_PM_STATE_M3] = "M3",
-> -	[MHI_PM_STATE_M3_EXIT] = "M3->M0",
-> -	[MHI_PM_STATE_FW_DL_ERR] = "Firmware Download Error",
-> -	[MHI_PM_STATE_SYS_ERR_DETECT] = "SYS ERROR Detect",
-> -	[MHI_PM_STATE_SYS_ERR_PROCESS] = "SYS ERROR Process",
-> -	[MHI_PM_STATE_SHUTDOWN_PROCESS] = "SHUTDOWN Process",
-> -	[MHI_PM_STATE_LD_ERR_FATAL_DETECT] = "Linkdown or Error Fatal Detect",
-> +	MHI_PM_STATE_LIST
->   };
->   
->   const char *to_mhi_pm_state_str(u32 state)
-> diff --git a/drivers/bus/mhi/host/internal.h b/drivers/bus/mhi/host/internal.h
-> index 2e139e76de4c..9a2f2ca2be7c 100644
-> --- a/drivers/bus/mhi/host/internal.h
-> +++ b/drivers/bus/mhi/host/internal.h
-> @@ -42,6 +42,11 @@ enum mhi_ch_state_type {
->   	MHI_CH_STATE_TYPE_MAX,
->   };
->   
-> +#define MHI_CH_STATE_TYPE_LIST				\
-> +	ch_state_type(RESET,		"RESET")	\
-> +	ch_state_type(STOP,		"STOP")		\
-> +	ch_state_type_end(START,	"START")
-> +
->   extern const char * const mhi_ch_state_type_str[MHI_CH_STATE_TYPE_MAX];
->   #define TO_CH_STATE_TYPE_STR(state) (((state) >= MHI_CH_STATE_TYPE_MAX) ? \
->   				     "INVALID_STATE" : \
-> @@ -50,6 +55,18 @@ extern const char * const mhi_ch_state_type_str[MHI_CH_STATE_TYPE_MAX];
->   #define MHI_INVALID_BRSTMODE(mode) (mode != MHI_DB_BRST_DISABLE && \
->   				    mode != MHI_DB_BRST_ENABLE)
->   
-> +#define MHI_EE_LIST						\
-> +	mhi_ee(PBL,			"PRIMARY BOOTLOADER")	\
-> +	mhi_ee(SBL,			"SECONDARY BOOTLOADER")	\
-> +	mhi_ee(AMSS,			"MISSION MODE")		\
-> +	mhi_ee(RDDM,			"RAMDUMP DOWNLOAD MODE")\
-> +	mhi_ee(WFW,			"WLAN FIRMWARE")	\
-> +	mhi_ee(PTHRU,			"PASS THROUGH")		\
-> +	mhi_ee(EDL,			"EMERGENCY DOWNLOAD")	\
-> +	mhi_ee(FP,			"FLASH PROGRAMMER")	\
-> +	mhi_ee(DISABLE_TRANSITION,	"DISABLE")		\
-> +	mhi_ee_end(NOT_SUPPORTED,	"NOT SUPPORTED")
-> +
->   extern const char * const mhi_ee_str[MHI_EE_MAX];
->   #define TO_MHI_EXEC_STR(ee) (((ee) >= MHI_EE_MAX) ? \
->   			     "INVALID_EE" : mhi_ee_str[ee])
-> @@ -72,6 +89,15 @@ enum dev_st_transition {
->   	DEV_ST_TRANSITION_MAX,
->   };
->   
-> +#define DEV_ST_TRANSITION_LIST					\
-> +	dev_st_trans(PBL,		"PBL")			\
-> +	dev_st_trans(READY,		"READY")		\
-> +	dev_st_trans(SBL,		"SBL")			\
-> +	dev_st_trans(MISSION_MODE,	"MISSION MODE")		\
-> +	dev_st_trans(FP,		"FLASH PROGRAMMER")	\
-> +	dev_st_trans(SYS_ERR,		"SYS ERROR")		\
-> +	dev_st_trans_end(DISABLE,	"DISABLE")
-> +
->   extern const char * const dev_state_tran_str[DEV_ST_TRANSITION_MAX];
->   #define TO_DEV_STATE_TRANS_STR(state) (((state) >= DEV_ST_TRANSITION_MAX) ? \
->   				"INVALID_STATE" : dev_state_tran_str[state])
-> @@ -93,6 +119,20 @@ enum mhi_pm_state {
->   	MHI_PM_STATE_MAX
->   };
->   
-> +#define MHI_PM_STATE_LIST							\
-> +	mhi_pm_state(DISABLE,			"DISABLE")			\
-> +	mhi_pm_state(POR,			"POWER ON RESET")		\
-> +	mhi_pm_state(M0,			"M0")				\
-> +	mhi_pm_state(M2,			"M2")				\
-> +	mhi_pm_state(M3_ENTER,			"M?->M3")			\
-> +	mhi_pm_state(M3,			"M3")				\
-> +	mhi_pm_state(M3_EXIT,			"M3->M0")			\
-> +	mhi_pm_state(FW_DL_ERR,			"Firmware Download Error")	\
-> +	mhi_pm_state(SYS_ERR_DETECT,		"SYS ERROR Detect")		\
-> +	mhi_pm_state(SYS_ERR_PROCESS,		"SYS ERROR Process")		\
-> +	mhi_pm_state(SHUTDOWN_PROCESS,		"SHUTDOWN Process")		\
-> +	mhi_pm_state_end(LD_ERR_FATAL_DETECT,	"Linkdown or Error Fatal Detect")
-> +
->   #define MHI_PM_DISABLE					BIT(0)
->   #define MHI_PM_POR					BIT(1)
->   #define MHI_PM_M0					BIT(2)
-> diff --git a/drivers/bus/mhi/host/main.c b/drivers/bus/mhi/host/main.c
-> index dcf627b36e82..189f4786403e 100644
-> --- a/drivers/bus/mhi/host/main.c
-> +++ b/drivers/bus/mhi/host/main.c
-> @@ -15,6 +15,7 @@
->   #include <linux/skbuff.h>
->   #include <linux/slab.h>
->   #include "internal.h"
-> +#include "trace.h"
->   
->   int __must_check mhi_read_reg(struct mhi_controller *mhi_cntrl,
->   			      void __iomem *base, u32 offset, u32 *out)
-> @@ -491,11 +492,8 @@ irqreturn_t mhi_intvec_threaded_handler(int irq_number, void *priv)
->   
->   	state = mhi_get_mhi_state(mhi_cntrl);
->   	ee = mhi_get_exec_env(mhi_cntrl);
-> -	dev_dbg(dev, "local ee: %s state: %s device ee: %s state: %s\n",
-> -		TO_MHI_EXEC_STR(mhi_cntrl->ee),
-> -		mhi_state_str(mhi_cntrl->dev_state),
-> -		TO_MHI_EXEC_STR(ee), mhi_state_str(state));
->   
-> +	trace_mhi_intvec_states(mhi_cntrl, ee, state);
->   	if (state == MHI_STATE_SYS_ERR) {
->   		dev_dbg(dev, "System error detected\n");
->   		pm_state = mhi_tryset_pm_state(mhi_cntrl,
-> @@ -832,6 +830,8 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
->   	while (dev_rp != local_rp) {
->   		enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
->   
-> +		trace_mhi_ctrl_event(mhi_cntrl, local_rp);
-> +
->   		switch (type) {
->   		case MHI_PKT_TYPE_BW_REQ_EVENT:
->   		{
-> @@ -997,6 +997,8 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
->   	while (dev_rp != local_rp && event_quota > 0) {
->   		enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
->   
-> +		trace_mhi_data_event(mhi_cntrl, local_rp);
-> +
->   		chan = MHI_TRE_GET_EV_CHID(local_rp);
->   
->   		WARN_ON(chan >= mhi_cntrl->max_chan);
-> @@ -1235,6 +1237,7 @@ int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
->   	mhi_tre->dword[0] = MHI_TRE_DATA_DWORD0(info->len);
->   	mhi_tre->dword[1] = MHI_TRE_DATA_DWORD1(bei, eot, eob, chain);
->   
-> +	trace_mhi_gen_tre(mhi_cntrl, mhi_chan, mhi_tre);
->   	/* increment WP */
->   	mhi_add_ring_element(mhi_cntrl, tre_ring);
->   	mhi_add_ring_element(mhi_cntrl, buf_ring);
-> @@ -1327,9 +1330,7 @@ static int mhi_update_channel_state(struct mhi_controller *mhi_cntrl,
->   	enum mhi_cmd_type cmd = MHI_CMD_NOP;
->   	int ret;
->   
-> -	dev_dbg(dev, "%d: Updating channel state to: %s\n", mhi_chan->chan,
-> -		TO_CH_STATE_TYPE_STR(to_state));
-> -
-> +	trace_mhi_channel_command_start(mhi_cntrl, mhi_chan, to_state);
->   	switch (to_state) {
->   	case MHI_CH_STATE_TYPE_RESET:
->   		write_lock_irq(&mhi_chan->lock);
-> @@ -1396,9 +1397,7 @@ static int mhi_update_channel_state(struct mhi_controller *mhi_cntrl,
->   		write_unlock_irq(&mhi_chan->lock);
->   	}
->   
-> -	dev_dbg(dev, "%d: Channel state change to %s successful\n",
-> -		mhi_chan->chan, TO_CH_STATE_TYPE_STR(to_state));
-> -
-> +	trace_mhi_channel_command_end(mhi_cntrl, mhi_chan, to_state);
->   exit_channel_update:
->   	mhi_cntrl->runtime_put(mhi_cntrl);
->   	mhi_device_put(mhi_cntrl->mhi_dev);
-> diff --git a/drivers/bus/mhi/host/pm.c b/drivers/bus/mhi/host/pm.c
-> index 8a4362d75fc4..5a2394b5b2e1 100644
-> --- a/drivers/bus/mhi/host/pm.c
-> +++ b/drivers/bus/mhi/host/pm.c
-> @@ -15,6 +15,7 @@
->   #include <linux/slab.h>
->   #include <linux/wait.h>
->   #include "internal.h"
-> +#include "trace.h"
->   
->   /*
->    * Not all MHI state transitions are synchronous. Transitions like Linkdown,
-> @@ -123,6 +124,7 @@ enum mhi_pm_state __must_check mhi_tryset_pm_state(struct mhi_controller *mhi_cn
->   	if (unlikely(!(dev_state_transitions[index].to_states & state)))
->   		return cur_state;
->   
-> +	trace_mhi_tryset_pm_state(mhi_cntrl, state);
->   	mhi_cntrl->pm_state = state;
->   	return mhi_cntrl->pm_state;
->   }
-> @@ -753,7 +755,6 @@ void mhi_pm_st_worker(struct work_struct *work)
->   	struct mhi_controller *mhi_cntrl = container_of(work,
->   							struct mhi_controller,
->   							st_worker);
-> -	struct device *dev = &mhi_cntrl->mhi_dev->dev;
->   
->   	spin_lock_irq(&mhi_cntrl->transition_lock);
->   	list_splice_tail_init(&mhi_cntrl->transition_list, &head);
-> @@ -761,8 +762,8 @@ void mhi_pm_st_worker(struct work_struct *work)
->   
->   	list_for_each_entry_safe(itr, tmp, &head, node) {
->   		list_del(&itr->node);
-> -		dev_dbg(dev, "Handling state transition: %s\n",
-> -			TO_DEV_STATE_TRANS_STR(itr->state));
-> +
-> +		trace_mhi_pm_st_transition(mhi_cntrl, itr->state);
->   
->   		switch (itr->state) {
->   		case DEV_ST_TRANSITION_PBL:
-> diff --git a/drivers/bus/mhi/host/trace.h b/drivers/bus/mhi/host/trace.h
-> new file mode 100644
-> index 000000000000..c74be0949178
-> --- /dev/null
-> +++ b/drivers/bus/mhi/host/trace.h
-> @@ -0,0 +1,275 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
-> + */
-> +
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM mhi_host
-> +
-> +#if !defined(_TRACE_EVENT_MHI_HOST_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_EVENT_MHI_HOST_H
-> +
-> +#include <linux/tracepoint.h>
-> +#include <linux/trace_seq.h>
-> +#include "../common.h"
-> +#include "internal.h"
-> +
-> +#undef mhi_state
-> +#undef mhi_state_end
-> +
-> +#define mhi_state(a, b)		TRACE_DEFINE_ENUM(MHI_STATE_##a);
-> +#define mhi_state_end(a, b)	TRACE_DEFINE_ENUM(MHI_STATE_##a);
-> +
-> +MHI_STATE_LIST
-> +
-> +#undef mhi_state
-> +#undef mhi_state_end
-> +
-> +#define mhi_state(a, b)		{ MHI_STATE_##a, b },
-> +#define mhi_state_end(a, b)	{ MHI_STATE_##a, b }
-> +
-> +#undef mhi_pm_state
-> +#undef mhi_pm_state_end
-> +
-> +#define mhi_pm_state(a, b)		TRACE_DEFINE_ENUM(MHI_PM_STATE_##a);
-> +#define mhi_pm_state_end(a, b)		TRACE_DEFINE_ENUM(MHI_PM_STATE_##a);
-> +
-> +MHI_PM_STATE_LIST
-> +
-> +#undef mhi_pm_state
-> +#undef mhi_pm_state_end
-> +
-> +#define mhi_pm_state(a, b)		{ MHI_PM_STATE_##a, b },
-> +#define mhi_pm_state_end(a, b)		{ MHI_PM_STATE_##a, b }
-> +
-> +#undef mhi_ee
-> +#undef mhi_ee_end
-> +
-> +#define mhi_ee(a, b)			TRACE_DEFINE_ENUM(MHI_EE_##a);
-> +#define mhi_ee_end(a, b)		TRACE_DEFINE_ENUM(MHI_EE_##a);
-> +
-> +MHI_EE_LIST
-> +
-> +#undef mhi_ee
-> +#undef mhi_ee_end
-> +
-> +#define mhi_ee(a, b)			{ MHI_EE_##a, b },
-> +#define mhi_ee_end(a, b)		{ MHI_EE_##a, b }
-> +
-> +#undef ch_state_type
-> +#undef ch_state_type_end
-> +
-> +#define ch_state_type(a, b)		TRACE_DEFINE_ENUM(MHI_CH_STATE_TYPE_##a);
-> +#define ch_state_type_end(a, b)		TRACE_DEFINE_ENUM(MHI_CH_STATE_TYPE_##a);
-> +
-> +MHI_CH_STATE_TYPE_LIST
-> +
-> +#undef ch_state_type
-> +#undef ch_state_type_end
-> +
-> +#define ch_state_type(a, b)		{ MHI_CH_STATE_TYPE_##a, b },
-> +#define ch_state_type_end(a, b)		{ MHI_CH_STATE_TYPE_##a, b }
-> +
-> +#undef dev_st_trans
-> +#undef dev_st_trans_end
-> +
-> +#define dev_st_trans(a, b)		TRACE_DEFINE_ENUM(DEV_ST_TRANSITION_##a);
-> +#define dev_st_trans_end(a, b)		TRACE_DEFINE_ENUM(DEV_ST_TRANSITION_##a);
-> +
-> +DEV_ST_TRANSITION_LIST
-> +
-> +#undef dev_st_trans
-> +#undef dev_st_trans_end
-> +
-> +#define dev_st_trans(a, b)		{ DEV_ST_TRANSITION_##a, b },
-> +#define dev_st_trans_end(a, b)		{ DEV_ST_TRANSITION_##a, b }
-> +
-> +TRACE_EVENT(mhi_gen_tre,
-> +
-> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
-> +		 struct mhi_ring_element *mhi_tre),
-> +
-> +	TP_ARGS(mhi_cntrl, mhi_chan, mhi_tre),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(name, mhi_cntrl->mhi_dev->name)
-> +		__field(int, ch_num)
-> +		__field(void *, wp)
-> +		__field(__le64, tre_ptr)
-> +		__field(__le32, dword0)
-> +		__field(__le32, dword1)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
-> +		__entry->ch_num = mhi_chan->chan;
-> +		__entry->wp = mhi_tre;
-> +		__entry->tre_ptr = mhi_tre->ptr;
-> +		__entry->dword0 = mhi_tre->dword[0];
-> +		__entry->dword1 = mhi_tre->dword[1];
-> +	),
-> +
-> +	TP_printk("%s: Chan: %d Tre: 0x%p Tre buf: 0x%llx dword0: 0x%08x dword1: 0x%08x\n",
-> +		  __get_str(name), __entry->ch_num, __entry->wp, __entry->tre_ptr,
-> +		  __entry->dword0, __entry->dword1)
-> +);
-> +
-> +TRACE_EVENT(mhi_intvec_states,
-> +
-> +	TP_PROTO(struct mhi_controller *mhi_cntrl, int dev_ee, int dev_state),
-> +
-> +	TP_ARGS(mhi_cntrl, dev_ee, dev_state),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(name, mhi_cntrl->mhi_dev->name)
-> +		__field(int, local_ee)
-> +		__field(int, state)
-> +		__field(int, dev_ee)
-> +		__field(int, dev_state)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
-> +		__entry->local_ee = mhi_cntrl->ee;
-> +		__entry->state = mhi_cntrl->dev_state;
-> +		__entry->dev_ee = dev_ee;
-> +		__entry->dev_state = dev_state;
-> +	),
-> +
-> +	TP_printk("%s: local ee: %s state: %s device ee: %s state: %s\n",
-> +		  __get_str(name),
-> +		  __print_symbolic(__entry->local_ee, MHI_EE_LIST),
-> +		  __print_symbolic(__entry->state, MHI_STATE_LIST),
-> +		  __print_symbolic(__entry->dev_ee, MHI_EE_LIST),
-> +		  __print_symbolic(__entry->state, MHI_STATE_LIST))
-> +);
-> +
-> +TRACE_EVENT(mhi_tryset_pm_state,
-> +
-> +	TP_PROTO(struct mhi_controller *mhi_cntrl, int pm_state),
-> +
-> +	TP_ARGS(mhi_cntrl, pm_state),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(name, mhi_cntrl->mhi_dev->name)
-> +		__field(int, pm_state)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
-> +		if (pm_state)
-> +			pm_state = __fls(pm_state);
-> +		__entry->pm_state = pm_state;
-> +	),
-> +
-> +	TP_printk("%s: PM state: %s\n", __get_str(name),
-> +		  __print_symbolic(__entry->pm_state, MHI_PM_STATE_LIST))
-> +);
-> +
-> +DECLARE_EVENT_CLASS(mhi_process_event_ring,
-> +
-> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_ring_element *rp),
-> +
-> +	TP_ARGS(mhi_cntrl, rp),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(name, mhi_cntrl->mhi_dev->name)
-> +		__field(__le32, dword0)
-> +		__field(__le32, dword1)
-> +		__field(int, state)
-> +		__field(__le64, ptr)
-> +		__field(void *, rp)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
-> +		__entry->rp = rp;
-> +		__entry->ptr = rp->ptr;
-> +		__entry->dword0 = rp->dword[0];
-> +		__entry->dword1 = rp->dword[1];
-> +		__entry->state = MHI_TRE_GET_EV_STATE(rp);
-> +	),
-> +
-> +	TP_printk("%s: Tre: 0x%p Tre buf: 0x%llx dword0: 0x%08x dword1: 0x%08x state: %s\n",
-> +		  __get_str(name), __entry->rp, __entry->ptr, __entry->dword0,
-> +		  __entry->dword1, __print_symbolic(__entry->state, MHI_STATE_LIST))
-> +);
-> +
-> +DEFINE_EVENT(mhi_process_event_ring, mhi_data_event,
-> +
-> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_ring_element *rp),
-> +
-> +	TP_ARGS(mhi_cntrl, rp)
-> +);
-> +
-> +DEFINE_EVENT(mhi_process_event_ring, mhi_ctrl_event,
-> +
-> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_ring_element *rp),
-> +
-> +	TP_ARGS(mhi_cntrl, rp)
-> +);
-> +
-> +DECLARE_EVENT_CLASS(mhi_update_channel_state,
-> +
-> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan, int state),
-> +
-> +	TP_ARGS(mhi_cntrl, mhi_chan, state),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(name, mhi_cntrl->mhi_dev->name)
-> +		__field(int, ch_num)
-> +		__field(int, state)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
-> +		__entry->ch_num = mhi_chan->chan;
-> +		__entry->state = state;
-> +	),
-> +
-> +	TP_printk("%s: chan%d: Updating state to: %s\n",
-> +		  __get_str(name), __entry->ch_num,
-> +		  __print_symbolic(__entry->state, MHI_CH_STATE_TYPE_LIST))
-> +);
-> +
-> +DEFINE_EVENT(mhi_update_channel_state, mhi_channel_command_start,
-> +
-> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan, int state),
-> +
-> +	TP_ARGS(mhi_cntrl, mhi_chan, state)
-> +);
-> +
-> +DEFINE_EVENT(mhi_update_channel_state, mhi_channel_command_end,
-> +
-> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan, int state),
-> +
-> +	TP_ARGS(mhi_cntrl, mhi_chan, state)
-> +);
-> +
-> +TRACE_EVENT(mhi_pm_st_transition,
-> +
-> +	TP_PROTO(struct mhi_controller *mhi_cntrl, int state),
-> +
-> +	TP_ARGS(mhi_cntrl, state),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(name, mhi_cntrl->mhi_dev->name)
-> +		__field(int, state)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
-> +		__entry->state = state;
-> +	),
-> +
-> +	TP_printk("%s: Handling state transition: %s\n", __get_str(name),
-> +		  __print_symbolic(__entry->state, DEV_ST_TRANSITION_LIST))
-> +);
-> +
-> +#endif
-> +#undef TRACE_INCLUDE_PATH
-> +#define TRACE_INCLUDE_PATH ../../drivers/bus/mhi/host
-> +#undef TRACE_INCLUDE_FILE
-> +#define TRACE_INCLUDE_FILE trace
-> +
-> +#include <trace/define_trace.h>
->
-> ---
-> base-commit: 3006adf3be79cde4d14b1800b963b82b6e5572e0
-> change-id: 20231005-ftrace_support-6869d4156139
->
-> Best regards,
+Vincent Guittot (5):
+  cpufreq: Add a cpufreq pressure feedback for the scheduler
+  sched: Take cpufreq feedback into account
+  thermal/cpufreq: Remove arch_update_thermal_pressure()
+  sched: Rename arch_update_thermal_pressure into
+    arch_update_hw_pressure
+  sched/pelt: Remove shift of thermal clock
+
+ .../admin-guide/kernel-parameters.txt         |  1 +
+ arch/arm/include/asm/topology.h               |  6 +-
+ arch/arm64/include/asm/topology.h             |  6 +-
+ drivers/base/arch_topology.c                  | 26 ++++----
+ drivers/cpufreq/cpufreq.c                     | 36 +++++++++++
+ drivers/cpufreq/qcom-cpufreq-hw.c             |  4 +-
+ drivers/thermal/cpufreq_cooling.c             |  3 -
+ include/linux/arch_topology.h                 |  8 +--
+ include/linux/cpufreq.h                       | 10 +++
+ include/linux/sched/topology.h                |  8 +--
+ .../{thermal_pressure.h => hw_pressure.h}     | 14 ++---
+ include/trace/events/sched.h                  |  2 +-
+ init/Kconfig                                  | 12 ++--
+ kernel/sched/core.c                           |  8 +--
+ kernel/sched/fair.c                           | 63 +++++++++----------
+ kernel/sched/pelt.c                           | 18 +++---
+ kernel/sched/pelt.h                           | 16 ++---
+ kernel/sched/sched.h                          | 22 +------
+ 18 files changed, 144 insertions(+), 119 deletions(-)
+ rename include/trace/events/{thermal_pressure.h => hw_pressure.h} (55%)
+
+-- 
+2.34.1
+
