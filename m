@@ -1,151 +1,112 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1367753E13
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Jan 2024 16:46:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735C854BF7;
+	Mon,  8 Jan 2024 17:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pUP2rOtW"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5ce10b5ee01so1254931a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Jan 2024 08:46:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704732388; x=1705337188; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=hcP4oDQ3eDslDSaUDkl9PzQaFEemmBlUGTQnZjWidg4=;
-        b=pUP2rOtW6Xehw5sbW4Db42S3eXL6pYW2eYllWr4cE/Q9bnNaTfOfy1cM8mYZWubd9Z
-         rtaVNOTe6OcOY2YwRAL7wh8FCjGxp1gPQdbTndHCfQVcrb2fnYGthuBXnuvWndwMB5/E
-         2SC+BM68cnEV6IAyTN7QlvKr1PseDLFkKykt8A/Q+PvGFZgxoOqLxXv4v6y01OFc+cBX
-         QdDNQGb8nDrRVQvknzMAT0J5bLR4YE2W5LAh1Hens3v2sqAkmvsfDFsrXhpYrAYJLNpS
-         5Zq65cRlis0A16Zg0lkKvJJhcPLNnWPq4TKem4OH7mmUlATYiu51ulayh596kejad5HF
-         6vQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704732388; x=1705337188;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hcP4oDQ3eDslDSaUDkl9PzQaFEemmBlUGTQnZjWidg4=;
-        b=JBqGdkZQhhqhhBUVGWu3H0u22MC6GyuAlf5+6aF7OzLfmh7taUmv9IdFK8cFdD8V9/
-         6ntsg2ru+Pan4/3SaZnKu6CEYRn/5wsZefBSsTkfWJmDYDgdorLed05WqBg0uZgVgSPR
-         cL1Zk2qDT8z/WFzBII5/hB4/M0yQeWBqqg93PGlvRR423DltqKDQqrKnTIKU/7R1VTT3
-         /mA/4gM0GA0rGwDRmZqTpx+V44gDnRcO4qV39pMTPwVgAhAoZyFOJ89vGEXZ2usp4AR0
-         w6xdEKHOwcNF+TnkPxIS65yNYWxMwkYRvPHvwuqfV/hOik33cbc2cOLeGTpeKsrcfeoN
-         d5iQ==
-X-Gm-Message-State: AOJu0YwhsB2HjUTZIEBGsqKrMqj3UGBKIuFXLAF14PRSTI42LK7qb+/p
-	/e2D5oAEfobDNkUoDQ7uXUYoGNQ6wyyywGYHZzzizgPl1vLsPQ==
-X-Google-Smtp-Source: AGHT+IFw0ZW5iYobNEFWZzdpYvN80E//t7DHgMsA/jih0qwTCCuMrTnc/u3iq7XAKVneW1gI6Fz2Ad2vEIHHTTaIGds=
-X-Received: by 2002:a05:6a20:1b22:b0:199:995d:e88c with SMTP id
- ch34-20020a056a201b2200b00199995de88cmr5854pzb.24.1704732388407; Mon, 08 Jan
- 2024 08:46:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="QCuiJ8OT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HW+5pS6p"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.west.internal (Postfix) with ESMTP id C2DC53200D00;
+	Mon,  8 Jan 2024 12:52:53 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Mon, 08 Jan 2024 12:52:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1704736373;
+	 x=1704822773; bh=U5vHpLovxHw2jLbFSMwbVDfMhB5fX3K4zCUa0DIZn9Q=; b=
+	QCuiJ8OTr3lnfrzIujxwe/TZfLN1UIxB9lhaB8yim94u+mOcHro7SQ0ObxmjGCj4
+	Tb5u0npdf4GTBeVq7Cz2aFXmNa+QaEhiPOPcYSTHw5bxB+WNwzuSL0IBboyPK2jL
+	RzROivW2MUr5bdEzhDn/fpTjaPkhuKq7Y2O2FlIsGTSQ9/BiKUju+JyX8yMRXGxy
+	4JPkPMqkebAGZ6X5Oy2CJOJRzQ+gue9Cqa/+eZVCp0qB+sAUPlgY+jxbyGXJVYhe
+	X8V375V1byyUcuQNDBOBnTK7GBHSMhaLYEUU1U0iaoBJMrNlJHxV6qxUG3wMq5B0
+	uH7MPtSQ6xQmfd7oR7iFQQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1704736373; x=
+	1704822773; bh=U5vHpLovxHw2jLbFSMwbVDfMhB5fX3K4zCUa0DIZn9Q=; b=H
+	W+5pS6p8StQO1iOCpRMUGETWwegLC/itEkr0WC7HcpACh+OG0OM0TAGa2hkvGwaP
+	5qvYy2mXuiO0tnh4P2u0crfFK96diRxzgDdqyWzqT/FYexQukTZ6mnUCLxYEbIIM
+	4VlhkzufmFARICF16ChUFz/yOoBP+iZekdv0UswKOkpjR6BNq5VapPZOg1q2qT/C
+	5PveKLQu44B16jB0rftks3B649wadrnfVLj2ZAxOpu0DO54vzbm8rXKi4m1mMfQ9
+	/eYc+hn5aySPRTAK8Hg9gCA/LLAcGWZE7njvQ556WjGBHBu6qQhslWNzlDUkyO8K
+	iQsL/YuJcDENA1Msf1eVA==
+X-ME-Sender: <xms:dDacZcuDTXN6lIEB8WcOO16Pq_Tb_ovk8QZo9ds7l0Lpb-hT7fKQlg>
+    <xme:dDacZZebg42EFk_Dte7vA-bggeXbFkekpX81XBWPhF---MbikwU4NEQAq_cbaMZyt
+    GDLFMocQhEF5-vUZA>
+X-ME-Received: <xmr:dDacZXxBZ9cQLWYl6jdfdcpCufgtDH1LcuUb3pmhHdXoOlL94QlkfynIuxozVxZlTsp7KYObYheOxk2Q_1uOjqeGruABsR5zL19sbLc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdehjedguddtgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enfghrlhcuvffnffculdejtddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkefs
+    tddttdejnecuhfhrohhmpeffrghnihgvlhcuighuuceougiguhesugiguhhuuhdrgiihii
+    eqnecuggftrfgrthhtvghrnheptdfgueeuueekieekgfeiueekffelteekkeekgeegffev
+    tddvjeeuheeuueelfeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepugiguhesugiguhhuuhdrgiihii
+X-ME-Proxy: <xmx:dTacZfO1_6ZhFSPZ7zYR_vaSkrh9xyqkFLtjv5fayG8ZpCbkP8Qaxg>
+    <xmx:dTacZc-OoIoBjtWs99QJ3JVhf7MeRx8huVlrpOGlzP4IbiCQjrWwAg>
+    <xmx:dTacZXVkZfDjbk7VxlH_D6LS-Uq5m97mwmnDhWMv7x4tSBRugNGqbw>
+    <xmx:dTacZcOHJTHi1jhIyuq6e13SVSM7x8VZNsMZkqqn0mrcGx9wqqEgzA>
+Feedback-ID: i6a694271:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 8 Jan 2024 12:52:51 -0500 (EST)
+Date: Mon, 8 Jan 2024 10:52:49 -0700
+From: Daniel Xu <dxu@dxuuu.xyz>
+To: Lorenz Bauer <lorenz.bauer@isovalent.com>
+Cc: linux-input@vger.kernel.org, coreteam@netfilter.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org, fsverity@lists.linux.dev, 
+	bpf@vger.kernel.org, netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	cgroups@vger.kernel.org, alexei.starovoitov@gmail.com, olsajiri@gmail.com, 
+	quentin@isovalent.com, alan.maguire@oracle.com, memxor@gmail.com
+Subject: Re: [PATCH bpf-next v3 0/3] Annotate kfuncs in .BTF_ids section
+Message-ID: <6t5bei3t2gwhuycu6ewftrgfuuyfhs26euymkysefqyfabgupa@3od5pe6ajybo>
+References: <cover.1704565248.git.dxu@dxuuu.xyz>
+ <CAN+4W8gPeQ2OjoYLKXsNPyhSVTB+vcSaS3Xzw=-M9Rf5MXfKPg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240108134843.429769-1-vincent.guittot@linaro.org>
- <20240108134843.429769-2-vincent.guittot@linaro.org> <158a8c60-cb54-43c1-8232-6a0a46cc6d42@arm.com>
-In-Reply-To: <158a8c60-cb54-43c1-8232-6a0a46cc6d42@arm.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Mon, 8 Jan 2024 17:46:16 +0100
-Message-ID: <CAKfTPtC7sM1ZeW4iGN6fzvF9bR0juYePycX3GeWzYQwRBR7XkA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] cpufreq: Add a cpufreq pressure feedback for the scheduler
-To: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
-	sudeep.holla@arm.com, rafael@kernel.org, viresh.kumar@linaro.org, 
-	agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org, 
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, bristot@redhat.com, 
-	vschneid@redhat.com, lukasz.luba@arm.com, rui.zhang@intel.com, 
-	mhiramat@kernel.org, daniel.lezcano@linaro.org, amit.kachhap@gmail.com, 
-	corbet@lwn.net, gregkh@linuxfoundation.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	qyousef@layalina.io
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAN+4W8gPeQ2OjoYLKXsNPyhSVTB+vcSaS3Xzw=-M9Rf5MXfKPg@mail.gmail.com>
 
-On Mon, 8 Jan 2024 at 17:35, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->
-> On 08/01/2024 14:48, Vincent Guittot wrote:
-> > Provide to the scheduler a feedback about the temporary max available
-> > capacity. Unlike arch_update_thermal_pressure, this doesn't need to be
-> > filtered as the pressure will happen for dozens ms or more.
->
-> Is this then related to the 'medium pace system pressure' you mentioned
-> in your OSPM '23 talk?
->
+Hi Lorenz,
+
+On Mon, Jan 08, 2024 at 10:15:45AM +0100, Lorenz Bauer wrote:
+> On Sat, Jan 6, 2024 at 7:25 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
 > >
-> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > ---
-> >  drivers/cpufreq/cpufreq.c | 36 ++++++++++++++++++++++++++++++++++++
-> >  include/linux/cpufreq.h   | 10 ++++++++++
-> >  2 files changed, 46 insertions(+)
+> > === Description ===
 > >
-> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > index 44db4f59c4cc..fa2e2ea26f7f 100644
-> > --- a/drivers/cpufreq/cpufreq.c
-> > +++ b/drivers/cpufreq/cpufreq.c
-> > @@ -2563,6 +2563,40 @@ int cpufreq_get_policy(struct cpufreq_policy *policy, unsigned int cpu)
-> >  }
-> >  EXPORT_SYMBOL(cpufreq_get_policy);
+> > This is a bpf-treewide change that annotates all kfuncs as such inside
+> > .BTF_ids. This annotation eventually allows us to automatically generate
+> > kfunc prototypes from bpftool.
 > >
-> > +DEFINE_PER_CPU(unsigned long, cpufreq_pressure);
-> > +
-> > +/**
-> > + * cpufreq_update_pressure() - Update cpufreq pressure for CPUs
-> > + * @policy: cpufreq policy of the CPUs.
-> > + *
-> > + * Update the value of cpufreq pressure for all @cpus in the policy.
-> > + */
-> > +static void cpufreq_update_pressure(struct cpufreq_policy *policy)
-> > +{
-> > +     unsigned long max_capacity, capped_freq, pressure;
-> > +     u32 max_freq;
-> > +     int cpu;
-> > +
-> > +     /*
-> > +      * Handle properly the boost frequencies, which should simply clean
-> > +      * the thermal pressure value.
->                ^^^^^^^
-> IMHO, this is a copy & paste error from topology_update_thermal_pressure()?
->
-> > +      */
-> > +     if (max_freq <= capped_freq) {
->
-> max_freq seems to be uninitialized.
+> > We store this metadata inside a yet-unused flags field inside struct
+> > btf_id_set8 (thanks Kumar!). pahole will be taught where to look.
+> 
+> This is great, thanks for tackling this. With yout patches we can
+> figure out the full set of kfuncs. Is there a way to extend it so that
+> we can tell which program context a kfunc can be called from?
 
-argh yes, I made crap while cleaning up
-both max_freq and capped_freq are uninitialized
+I think a potential approach would be to extend BTF_ID_FLAGS() with some
+more flags if we want to continue with .BTF_ids parsing technique. But
+it has some issues with program-type-less helpers that are associated with
+attachpoints as well as struct_ops helpers.
 
->
-> > +             pressure = 0;
->
-> Is this x86 (turbo boost) specific? IMHO at arm we follow this max freq
-> (including boost) relates to 1024 in capacity? Or haven't we made this
-> discussion yet?
+Since it looks like we're in rather early stages of program-type-less
+world, maybe it'd be good to defer solving this problem until more use
+cases are established and we can find a good cut point to design around.
+Even with uapi helpers there was no way before.
 
-This is not x86 specific. We can have capped_freq > max_freq on Arm too
-
-Also this bypass all calculation below when max_freq == capped_freq
-which is the most common case
-
->
-> > +     } else {
-> > +             cpu = cpumask_first(policy->related_cpus);
-> > +             max_capacity = arch_scale_cpu_capacity(cpu);
-> > +             capped_freq = policy->max;
-> > +             max_freq = arch_scale_freq_ref(cpu);
-> > +
-> > +             pressure = max_capacity -
-> > +                        mult_frac(max_capacity, capped_freq, max_freq);
-> > +     }
-> > +
-> > +     for_each_cpu(cpu, policy->related_cpus)
-> > +             WRITE_ONCE(per_cpu(cpufreq_pressure, cpu), pressure);
-> > +}
-> > +
->
-> [...]
->
+Thanks,
+Daniel
