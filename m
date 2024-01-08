@@ -1,88 +1,279 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0244D14AA9;
-	Mon,  8 Jan 2024 11:32:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7+dT7qS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB358C433C7;
-	Mon,  8 Jan 2024 11:32:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704713572;
-	bh=tSNAM6JWF8XX8kU8+fujI2z/wVl8zHOZzyBlqT0PMT8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V7+dT7qSsTrSZcf4S4rg3BbBihyZXeEZLgDC6as7ZNAnlSdCkB3I1uDP/4bZ7qvY9
-	 uZamI5gH3Vn2yxh37F3tyWtp+MJaXeqh4uNnX09qF5i2uYBGifc6yvg0w0Ig0Q9ohy
-	 ZaRlgN71Yre21iEKv4Xmc5OdW1um4woGoP9B5+7IbHT3UqW3cSFN3O0pQ2r1HZ6EE0
-	 7xPZ5r5QFFgpHhv1wV5rQfE8rJkYecMmyupBTUKTabnufzAaKCqKxMOAW/XkJY2ub8
-	 d3F0PoQomSYR4TPEGGzEOt++rhJIWo2s8O8vntrzxsTB7sq/4+KYwHGYlRBVBHPKK5
-	 jDZxsll9sYImQ==
-Date: Mon, 8 Jan 2024 12:32:46 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] tracefs/eventfs: Use root and instance inodes as default
- ownership
-Message-ID: <20240108-natur-geophysik-f4c6fdaf6901@brauner>
-References: <20240103203246.115732ec@gandalf.local.home>
- <20240105-wegstecken-sachkenntnis-6289842d6d01@brauner>
- <20240105095954.67de63c2@gandalf.local.home>
- <20240107-getrickst-angeeignet-049cea8cad13@brauner>
- <20240107132912.71b109d8@rorschach.local.home>
- <20240107133228.05b0f485@rorschach.local.home>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E56B13FE4E;
+	Mon,  8 Jan 2024 12:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2AEAFC15;
+	Mon,  8 Jan 2024 04:26:49 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.89.149])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A62BB3F64C;
+	Mon,  8 Jan 2024 04:26:00 -0800 (PST)
+Date: Mon, 8 Jan 2024 12:25:55 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>,
+	linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v5 11/34] function_graph: Have the instances use their
+ own ftrace_ops for filtering
+Message-ID: <ZZvp08OFIFbP3rnk@FVFF77S0Q05N>
+References: <170290509018.220107.1347127510564358608.stgit@devnote2>
+ <170290522555.220107.1435543481968270637.stgit@devnote2>
+ <ZZg3tlOynx7YVLGQ@FVFF77S0Q05N>
+ <20240108101436.07509def635fbecf80a59ae6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240107133228.05b0f485@rorschach.local.home>
+In-Reply-To: <20240108101436.07509def635fbecf80a59ae6@kernel.org>
 
-On Sun, Jan 07, 2024 at 01:32:28PM -0500, Steven Rostedt wrote:
-> On Sun, 7 Jan 2024 13:29:12 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi,
+
+There's a bit more of an info-dump below; I'll go try to dump the fgraph shadow
+stack so that we can analyse this in more detail.
+
+On Mon, Jan 08, 2024 at 10:14:36AM +0900, Masami Hiramatsu wrote:
+> On Fri, 5 Jan 2024 17:09:10 +0000
+> Mark Rutland <mark.rutland@arm.com> wrote:
 > 
+> > On Mon, Dec 18, 2023 at 10:13:46PM +0900, Masami Hiramatsu (Google) wrote:
+> > > From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 > > > 
-> > > IOW, the inode_permission() in lookup_one_len() that eventfs does is
-> > > redundant and just wrong.  
+> > > Allow for instances to have their own ftrace_ops part of the fgraph_ops
+> > > that makes the funtion_graph tracer filter on the set_ftrace_filter file
+> > > of the instance and not the top instance.
+> > > 
+> > > This also change how the function_graph handles multiple instances on the
+> > > shadow stack. Previously we use ARRAY type entries to record which one
+> > > is enabled, and this makes it a bitmap of the fgraph_array's indexes.
+> > > Previous function_graph_enter() expects calling back from
+> > > prepare_ftrace_return() function which is called back only once if it is
+> > > enabled. But this introduces different ftrace_ops for each fgraph
+> > > instance and those are called from ftrace_graph_func() one by one. Thus
+> > > we can not loop on the fgraph_array(), and need to reuse the ret_stack
+> > > pushed by the previous instance. Finding the ret_stack is easy because
+> > > we can check the ret_stack->func. But that is not enough for the self-
+> > > recursive tail-call case. Thus fgraph uses the bitmap entry to find it
+> > > is already set (this means that entry is for previous tail call).
+> > > 
+> > > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > > 
-> > I don't think so.
+> > As a heads-up, while testing the topic/fprobe-on-fgraph branch on arm64, I get
+> > a warning which bisets down to this commit:
 > 
-> Just to make it clear. eventfs has nothing to do with mkdir instance/foo.
-> It exists without that. Although one rationale to do eventfs was so
+> Hmm, so does this happen when enabling function graph tracer?
 
-Every instance/foo/ tracefs instances also contains an events directory
-and thus a eventfs portion. Eventfs is just a subtree of tracefs. It's
-not a separate filesystem. Both eventfs and tracefs are on the same
-single, system wide superblock.
+Yes; I see it during the function_graph boot-time self-test if I also enable
+CONFIG_IRQSOFF_TRACER=y. I can also trigger it regardless of
+CONFIG_IRQSOFF_TRACER if I cat /proc/self/stack with the function_graph tracer
+enabled (note that I hacked the unwinder to continue after failing to recover a
+return address):
 
-> that the instance directories wouldn't recreate the same 10thousands
-> event inodes and dentries for every mkdir done.
+| # mount -t tracefs none /sys/kernel/tracing/
+| # echo function_graph > /sys/kernel/tracing/current_tracer
+| # cat /proc/self/stack
+| [   37.469980] ------------[ cut here ]------------
+| [   37.471503] WARNING: CPU: 2 PID: 174 at arch/arm64/kernel/stacktrace.c:84 arch_stack_walk+0x2d8/0x338
+| [   37.474381] Modules linked in:
+| [   37.475501] CPU: 2 PID: 174 Comm: cat Not tainted 6.7.0-rc2-00026-gea1e68a341c2-dirty #15
+| [   37.478133] Hardware name: linux,dummy-virt (DT)
+| [   37.479670] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+| [   37.481923] pc : arch_stack_walk+0x2d8/0x338
+| [   37.483373] lr : arch_stack_walk+0x1bc/0x338
+| [   37.484818] sp : ffff8000835f3a90
+| [   37.485974] x29: ffff8000835f3a90 x28: ffff8000835f3b80 x27: ffff8000835f3b38
+| [   37.488405] x26: ffff000004341e00 x25: ffff8000835f4000 x24: ffff80008002df18
+| [   37.490842] x23: ffff80008002df18 x22: ffff8000835f3b60 x21: ffff80008015d240
+| [   37.493269] x20: ffff8000835f3b50 x19: ffff8000835f3b40 x18: 0000000000000000
+| [   37.495704] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+| [   37.498144] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+| [   37.500579] x11: ffff800082b4d920 x10: ffff8000835f3a70 x9 : ffff8000800e55a0
+| [   37.503021] x8 : ffff80008002df18 x7 : ffff000004341e00 x6 : 00000000ffffffff
+| [   37.505452] x5 : 0000000000000000 x4 : ffff8000835f3e48 x3 : ffff8000835f3b80
+| [   37.507888] x2 : ffff80008002df18 x1 : ffff000007f7b000 x0 : ffff80008002df18
+| [   37.510319] Call trace:
+| [   37.511202]  arch_stack_walk+0x2d8/0x338
+| [   37.512541]  stack_trace_save_tsk+0x90/0x110
+| [   37.514012]  return_to_handler+0x0/0x48
+| [   37.515336]  return_to_handler+0x0/0x48
+| [   37.516657]  return_to_handler+0x0/0x48
+| [   37.517985]  return_to_handler+0x0/0x48
+| [   37.519305]  return_to_handler+0x0/0x48
+| [   37.520623]  return_to_handler+0x0/0x48
+| [   37.521957]  return_to_handler+0x0/0x48
+| [   37.523272]  return_to_handler+0x0/0x48
+| [   37.524595]  return_to_handler+0x0/0x48
+| [   37.525931]  return_to_handler+0x0/0x48
+| [   37.527254]  return_to_handler+0x0/0x48
+| [   37.528564]  el0t_64_sync_handler+0x120/0x130
+| [   37.530046]  el0t_64_sync+0x190/0x198
+| [   37.531310] ---[ end trace 0000000000000000 ]---
+| [<0>] ftrace_stub_graph+0x8/0x8
+| [<0>] ftrace_stub_graph+0x8/0x8
+| [<0>] ftrace_stub_graph+0x8/0x8
+| [<0>] ftrace_stub_graph+0x8/0x8
+| [<0>] ftrace_stub_graph+0x8/0x8
+| [<0>] ftrace_stub_graph+0x8/0x8
+| [<0>] ftrace_stub_graph+0x8/0x8
+| [<0>] ftrace_stub_graph+0x8/0x8
+| [<0>] ftrace_stub_graph+0x8/0x8
+| [<0>] ftrace_stub_graph+0x8/0x8
+| [<0>] ftrace_stub_graph+0x8/0x8
+| [<0>] el0t_64_sync_handler+0x120/0x130
+| [<0>] el0t_64_sync+0x190/0x198
 
-I know but that's irrelevant to what I'm trying to tell you.
+One interesting thing there is that there are two distinct failure modes: the
+unwind for the WARNING gives return_to_handler instead of the original return
+address, and the unwind returned from /proc/self/stack gives ftrace_stub_graph
+rather than the original return address.
 
-A mkdir /sys/kernel/tracing/instances/foo creates a new tracefs
-instance. With or without the on-demand dentry and inode creation for
-the eventfs portion that tracefs "instance" has now been created in its
-entirety including all the required information for someone to later
-come along and perform a lookup on /sys/kernel/tracing/instances/foo/events.
+> > 
+> > | Testing tracer function_graph: 
+> > | ------------[ cut here ]------------
+> > | WARNING: CPU: 2 PID: 0 at arch/arm64/kernel/stacktrace.c:84 arch_stack_walk+0x3c0/0x3d8
+> > | Modules linked in:
+> > | CPU: 2 PID: 0 Comm: swapper/2 Not tainted 6.7.0-rc2-00026-gea1e68a341c2 #12
+> > | Hardware name: linux,dummy-virt (DT)
+> > | pstate: 604000c5 (nZCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> > | pc : arch_stack_walk+0x3c0/0x3d8
+> > | lr : arch_stack_walk+0x260/0x3d8
+> > | sp : ffff80008318be00
+> > | x29: ffff80008318be00 x28: ffff000003c0ae80 x27: 0000000000000000
+> > | x26: 0000000000000000 x25: ffff000003c0ae80 x24: 0000000000000000
+> > | x23: ffff8000800234c8 x22: ffff80008002dc30 x21: ffff800080035d10
+> > | x20: ffff80008318bee8 x19: ffff800080023460 x18: ffff800083453c68
+> > | x17: 0000000000000000 x16: ffff800083188000 x15: 000000008ccc5058
+> > | x14: 0000000000000004 x13: ffff800082b8c4f0 x12: 0000000000000000
+> > | x11: ffff800081fba9b0 x10: ffff80008318bff0 x9 : ffff800080010798
+> > | x8 : ffff80008002dc30 x7 : ffff000003c0ae80 x6 : 00000000ffffffff
+> > | x5 : 0000000000000000 x4 : ffff8000832a3c18 x3 : ffff80008318bff0
+> > | x2 : ffff80008002dc30 x1 : ffff80008002dc30 x0 : ffff80008002dc30
+> > | Call trace:
+> > |  arch_stack_walk+0x3c0/0x3d8
+> > |  return_address+0x40/0x80
+> > |  trace_hardirqs_on+0x8c/0x198
+> > |  __do_softirq+0xe8/0x440
+> > | ---[ end trace 0000000000000000 ]---
 
-All you've done is to defer the addition of the dentries and inodes when
-someone does actually look at the events directory of the tracefs
-instance.
+With the smae hack to continue after failing to recover a return address, the
+failure in the selftest looks like:
 
-Whether you choose to splice in the dentries and inodes for the eventfs
-portion during lookup and readdir or if you had chosen to not do the
-on-demand thing at all and the entries were created at the same time as
-the mkdir call are equivalent from the perspective of permission
-checking.
+| ------------[ cut here ]------------
+| WARNING: CPU: 7 PID: 0 at arch/arm64/kernel/stacktrace.c:84 arch_stack_walk+0x2d8/0x338
+| Modules linked in:
+| CPU: 7 PID: 0 Comm: swapper/7 Not tainted 6.7.0-rc2-00026-gea1e68a341c2-dirty #14
+| Hardware name: linux,dummy-virt (DT)
+| pstate: 604000c5 (nZCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+| pc : arch_stack_walk+0x2d8/0x338
+| lr : arch_stack_walk+0x1bc/0x338
+| sp : ffff8000830c3e20
+| x29: ffff8000830c3e20 x28: ffff8000830c3ff0 x27: ffff8000830c3ec8
+| x26: ffff0000037e0000 x25: ffff8000830c4000 x24: ffff80008002e080
+| x23: ffff80008002e080 x22: ffff8000830c3ee8 x21: ffff800080023418
+| x20: ffff8000830c3f50 x19: ffff8000830c3f40 x18: ffffffffffffffff
+| x17: 0000000000000000 x16: ffff8000830c0000 x15: 0000000000000000
+| x14: 0000000000000002 x13: ffff8000800360f8 x12: ffff800080028330
+| x11: ffff800081f4a978 x10: ffff8000830c3ff0 x9 : ffff800080010798
+| x8 : ffff80008002e080 x7 : ffff0000037e0000 x6 : 00000000ffffffff
+| x5 : 0000000000000000 x4 : ffff8000831dbc18 x3 : ffff8000830c3ff0
+| x2 : ffff80008002e080 x1 : ffff0000040a3000 x0 : ffff80008002e080
+| Call trace:
+|  arch_stack_walk+0x2d8/0x338
+|  return_address+0x40/0x80
+|  trace_hardirqs_on+0x8c/0x198
+|  __do_softirq+0xe8/0x43c
+|  return_to_handler+0x0/0x48
+|  return_to_handler+0x0/0x48
+|  do_softirq_own_stack+0x24/0x38
+|  return_to_handler+0x0/0x48
+|  el1_interrupt+0x38/0x68
+|  el1h_64_irq_handler+0x18/0x28
+|  el1h_64_irq+0x64/0x68
+|  default_idle_call+0x70/0x178
+|  do_idle+0x228/0x290
+|  cpu_startup_entry+0x40/0x50
+|  secondary_start_kernel+0x138/0x160
+|  __secondary_switched+0xb8/0xc0
+| ---[ end trace 0000000000000000 ]---
 
-If you have the required permissions to look at the events directory
-then there's no reason why listing the directory entries in there should
-fail. This can't even happen right now.
+The portion of the trace with:
+
+	__do_softirq+0xe8/0x43c
+	return_to_handler+0x0/0x48
+	return_to_handler+0x0/0x48
+	do_softirq_own_stack+0x24/0x38
+
+... should be something like:
+
+	__do_softirq
+	____do_softirq
+	call_on_irq_stack	// asm trampoline, not traceable
+	do_softirq_own_stack
+
+The generated assembly for do_softirq_own_stack(), ____do_softirq(), and
+__do_softirq() is as I'd expect with no tail calls, so I can't see an obvious
+reason the return address cannot be recovered correctly.
+
+> > That's a warning in arm64's unwind_recover_return_address() function, which
+> > fires when ftrace_graph_ret_addr() finds return_to_handler:
+> > 
+> > 	if (state->task->ret_stack &&
+> > 	    (state->pc == (unsigned long)return_to_handler)) {
+> > 		unsigned long orig_pc;
+> > 		orig_pc = ftrace_graph_ret_addr(state->task, NULL, state->pc,
+> > 						(void *)state->fp);
+> > 		if (WARN_ON_ONCE(state->pc == orig_pc))
+> > 			return -EINVAL;
+> > 		state->pc = orig_pc;
+> > 	}
+> > 
+> > The rationale there is that since tail calls are (currently) disabled on arm64,
+> > the only reason for ftrace_graph_ret_addr() to return return_to_handler is when
+> > it fails to find the original return address.
+> 
+> Yes. what about FP check?
+
+Do you mean HAVE_FUNCTION_GRAPH_FP_TEST?
+
+That is enabled, and there are warnings from ftrace_pop_return_trace(), so I
+believe push/pop is balanced.
+
+We also have HAVE_FUNCTION_GRAPH_RET_ADDR_PTR, but since the return address is
+not on the stack at the point function-entry is intercepted we use the FP as
+the retp value -- in the absence of tail calls this will be different between a
+caller and callee.
+
+> > Does this change make it legitimate for ftrace_graph_ret_addr() to return
+> > return_to_handler in other cases, or is that a bug?
+> 
+> It should be a bug to be fixed.
+
+Cool; thanks for confirming!
+
+> > Either way, we'll need *some* way to recover the original return addresss...
+> 
+> At least it needs to dump the shadow stack so that we can analyze what
+> happened. 
+
+Sounds like a plan; as above I'll have a go at putting that together and will
+dump the results here.
+
+Thanks for the help! :)
+
+Mark.
