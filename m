@@ -1,100 +1,79 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F3CDDAA;
-	Mon,  8 Jan 2024 08:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABAD012B92
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  8 Jan 2024 09:15:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isovalent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HoTsV4Dv"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7831be84f4eso113376885a.0;
-        Mon, 08 Jan 2024 00:32:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b="MzNX37sC"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a28ee72913aso447698266b.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 08 Jan 2024 01:15:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704702771; x=1705307571; darn=vger.kernel.org;
+        d=isovalent.com; s=google; t=1704705356; x=1705310156; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5GwILI2ALIJNST8VPsffc3ahIHUwnzbrpdCcG6R7Vhc=;
-        b=HoTsV4DvBMHGn6Gc01wMfSso7vRMCJLHPeOPGdmENBoNZTQDayk3+B8mmlnDfYVdHu
-         VlY4HmqfAdRZwhm/Mo7mT0n55kk4xz1wFsNj8SYj9WUoz7qUO3E+ageDqnvOjnXzoYEH
-         q10FApay7za4whrVaUDwi/sdLMeQjoxJWfqsMq6kF69mglZApuUnWxW4dVYCdy0Lj0XP
-         C7lOZsk9AGAXgC++fEebscewmh4m6aUd9jSuUsSUQ7R/spVBRzX3fmhjNKzgyoC7oLEh
-         ArK6vhacTW/YbwXE4jTKB5H3KNGAmCiOz4M/tK2nSejLq2PpZMGa7Njnwnf5GZ01vZWI
-         w8QQ==
+        bh=TQw0PBv7H3F9npAXhHpc/yO+0aZTdw3iW7XYRioBY9M=;
+        b=MzNX37sCftG06J7zDqRoVr0ASbCiDMbrmnnww9QwIfjHn6v305+3yC4sf5ZhItJ/P9
+         dWgD/FpnTIJwHE4ksSWe0LyKUd6OfMRRTu2GsW3LrzyYIlk1hIm1lWPPTQTB7KlqL7yN
+         TZ4o5IaKMtV94FWQY6kwJIi2YrmviStlCIrez+Ok7YKHBE61mw9794RlBmRCxk8r8RUL
+         VrdvaM3wBX128iDc7clv/XxbWwBql1tdTSo4hEdAuX6o0HA2yEC1qaVMYbdyxbkpNlPz
+         Usmp583j3JFO42mG5KGuZPz8LDrv6DbVyXe7CC8l1Vt6gXrWdave70ArygI0WAZ/X/pQ
+         wOmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704702771; x=1705307571;
+        d=1e100.net; s=20230601; t=1704705356; x=1705310156;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5GwILI2ALIJNST8VPsffc3ahIHUwnzbrpdCcG6R7Vhc=;
-        b=ToIBPaQ+rgY/aBWKOI+5mQTyB5s+hoSagnDGyM6Cy8lRYc7zYZHGyu3MKV5EAQ7k8z
-         QlMqk1P10yN2ohK2B1+ni/ddsg3+W30/qP4eOUmtQFt1T/OlOajhtt8K6FjrnryXCEKX
-         vLAwIMwfp82m75bmuhYxnjaHpuIitU2ZjIQOJjwa25+Jx6V4vOYnP604FD3zMLBl17PR
-         uY3LQZyuJZ22lXmzLS6MYSNsIeB21RgoO21/4AfgvOgxTvcKqHjCfXNLpPFeLb4e19j3
-         oYWMTGJ0ZI3Fz80RUfkjY6MirbsCaOIxiN5zk4QnfjgDMzWeM5CpalmNPPMUhpvuoQRr
-         zicQ==
-X-Gm-Message-State: AOJu0Yy9+NoMi2X7xAR/lhwkG8Nr5SomdBOU/7QQD32Hp8gjGw8IhaoZ
-	WiM5hXkCD/lyZB7lTeV2kFAm/ZU+TEy/GCZ7SNNTh/JcOcE=
-X-Google-Smtp-Source: AGHT+IG1hYBz6K5KACuHekMLwBrEkxXFHG+wjm3BDqSNoAayV1A15p4tlYfATgTjURZaXukYiBYGdCrKH8cKINUQZL8=
-X-Received: by 2002:a05:6214:500a:b0:67f:998b:bfa6 with SMTP id
- jo10-20020a056214500a00b0067f998bbfa6mr4859226qvb.64.1704702770711; Mon, 08
- Jan 2024 00:32:50 -0800 (PST)
+        bh=TQw0PBv7H3F9npAXhHpc/yO+0aZTdw3iW7XYRioBY9M=;
+        b=PiedEJui49B23Z8keBzpXiSgPrASRG7yDmx3Nmh3F4QHBRMWs+qr4Vz9CN88oa9zMQ
+         KBrbIxlLxJoaptsDZGWBkyl0zWG+w1xWX1MnP6rd15oXB3HqQMj68lp2TUXQsQwt5ZSZ
+         4EkS14y+pkr1qIsK5Urrd7DrwfCtHlt4+OeRBztb6rt0htYiyWSHVdgKkQeSSoGFKg+l
+         pKciN0nDP32LBC5faNOVuGi9IJ2h81lHLZGSTcFPrRuBUI2r9v7B44RQQvhSJwKnqn/G
+         wcKL34b1Tq/G2vTB1BfkU3CHBmWihnioJ1aUG6Oj4Pplnzj+PGMZLrxFx4okYvqMebM+
+         NPAw==
+X-Gm-Message-State: AOJu0YxJMn+zHDDvaH0N3g/azYrWSk1YAVA6b4Ub54JMowwb1JoNv/ak
+	T5PMKPntJ1w7vJCPqsZAI+q9zAcw0IiSnoWJG/71kL3GttxvUQ==
+X-Google-Smtp-Source: AGHT+IF5FdPBR02bei/X14Ub000OcoVXRo17m86hQ2MPBeQuC7hWG3H6v1jptH9g+ATyuoxWlGDUexOGIPMl6jmv1Ns=
+X-Received: by 2002:a17:906:1797:b0:a28:bd9c:8363 with SMTP id
+ t23-20020a170906179700b00a28bd9c8363mr3034170eje.57.1704705356043; Mon, 08
+ Jan 2024 01:15:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240107203258.37e26d2b@gandalf.local.home>
-In-Reply-To: <20240107203258.37e26d2b@gandalf.local.home>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 8 Jan 2024 10:32:14 +0200
-Message-ID: <CAHp75VcsV8t2-6GB24Rz003B2JSAEOBjWD7B7FjEXuCQhkJ5pQ@mail.gmail.com>
-Subject: Re: [PATCH] tracing histograms: Simplify parse_actions() function
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andy Shevchenko <andy@kernel.org>, 
-	Tom Zanussi <zanussi@kernel.org>
+References: <cover.1704565248.git.dxu@dxuuu.xyz>
+In-Reply-To: <cover.1704565248.git.dxu@dxuuu.xyz>
+From: Lorenz Bauer <lorenz.bauer@isovalent.com>
+Date: Mon, 8 Jan 2024 10:15:45 +0100
+Message-ID: <CAN+4W8gPeQ2OjoYLKXsNPyhSVTB+vcSaS3Xzw=-M9Rf5MXfKPg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 0/3] Annotate kfuncs in .BTF_ids section
+To: Daniel Xu <dxu@dxuuu.xyz>
+Cc: linux-input@vger.kernel.org, coreteam@netfilter.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	netfilter-devel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, fsverity@lists.linux.dev, 
+	bpf@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, cgroups@vger.kernel.org, 
+	alexei.starovoitov@gmail.com, olsajiri@gmail.com, quentin@isovalent.com, 
+	alan.maguire@oracle.com, memxor@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 8, 2024 at 3:31=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
+On Sat, Jan 6, 2024 at 7:25=E2=80=AFPM Daniel Xu <dxu@dxuuu.xyz> wrote:
 >
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> =3D=3D=3D Description =3D=3D=3D
 >
-> The parse_actions() function uses 'len =3D str_has_prefix()' to test whic=
-h
-> action is in the string being parsed. But then it goes and repeats the
-> logic for each different action. This logic can be simplified and
-> duplicate code can be removed as 'len' contains the length of the found
-> prefix which should be used for all actions.
-
-> Link: https://lore.kernel.org/all/20240107112044.6702cb66@gandalf.local.h=
-ome/
+> This is a bpf-treewide change that annotates all kfuncs as such inside
+> .BTF_ids. This annotation eventually allows us to automatically generate
+> kfunc prototypes from bpftool.
 >
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> We store this metadata inside a yet-unused flags field inside struct
+> btf_id_set8 (thanks Kumar!). pahole will be taught where to look.
 
-If you want Link to be formally a tag, you should drop the following
-blank line.
-
-
-> +               if ((len =3D str_has_prefix(str, "onmatch(")))
-> +                       hid =3D HANDLER_ONMATCH;
-> +               else if ((len =3D str_has_prefix(str, "onmax(")))
-> +                       hid =3D HANDLER_ONMAX;
-> +               else if ((len =3D str_has_prefix(str, "onchange(")))
-> +                       hid =3D HANDLER_ONCHANGE;
-
-The repeating check for ( might be moved out as well after this like
-
-  if (str[len] !=3D '(') {
-    // not sure if you need data to be assigned here as well
-    ret =3D -EINVAL;
-    ...
-  }
-
---=20
-With Best Regards,
-Andy Shevchenko
+This is great, thanks for tackling this. With yout patches we can
+figure out the full set of kfuncs. Is there a way to extend it so that
+we can tell which program context a kfunc can be called from?
