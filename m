@@ -1,100 +1,107 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A1D38DD8
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Jan 2024 13:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731EC364A2
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Jan 2024 14:31:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="voZqk7gV"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3368ae75082so2248120f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Jan 2024 05:47:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uNCafcL3"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-517ab9a4a13so2283782a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Jan 2024 06:31:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704808073; x=1705412873; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=L8ptE3MfMCNPnA4x0tsihK9wQ9HIxrC2BPD7lupKPdw=;
-        b=voZqk7gVGwIBawLTaRXiIdNZEfnDQrA1/OIKiP2hg3KLl1PYA/vTzBu7HWbSjbSo4o
-         pq1u5IJ+hDBnMeYPC3s7ZnDhemOOP3DMHC0qv+5giyylXyClcFzScKuj6Ttr22y1MCOx
-         QIl20y+SS1Hxdo7Q+2Hvb5Ov75jQ9gqmDyBhrley6f1LZ01EMrB7ldekjChO+A/2yLum
-         EFWwf3awUSLBv8wMrbvb6XcDyAPVkoLwB2GY2HcLOyf+Wn4sb3Ouu5VHt0NnfGV3rUPN
-         7qPfNvb++t2WYV/3jDIiBigXFaGEWWDC1u90o9Dysx9Nu4kLvptQ9n3RyjVgHyZYhojf
-         G0UQ==
+        d=linaro.org; s=google; t=1704810663; x=1705415463; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=d3HXRcKDVxJPTXyXJSN6jduIbifNRx9OK443HIjFR3c=;
+        b=uNCafcL3BbzriyQNRDfLPsysHiWA0xiGo1soCwY9H5k4/YXABvsNn+ch3oLKdxHBgK
+         0xBcwdCI6eDD283MK41rFiTEHJXGzx5f+8jTrBWF8PkvC1Y+SL9a6W9+ZNQ1qOqXtdrW
+         zNdDa80CyA5jrt/2AGxZuKQKaX5RemiAcBm94SpDGmhRCws7DsPislkMFGy5FHBAGs8P
+         EUa/k6CDUM8trkRKY5Yl7aqeGH9R4185NUbQeBNDOWFCGKl5ixOdukYr1d4IpITzZI/c
+         +4hqgqluZEoRKpWh21xf8eW7r9gz+ECGdIpG9hDOoIhbM/YElNbORxQKTC9mH4Wh7rAo
+         8Dbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704808073; x=1705412873;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L8ptE3MfMCNPnA4x0tsihK9wQ9HIxrC2BPD7lupKPdw=;
-        b=E8WsSJCRXe7DAY0g295jAvvNCDZbfd8zjySd5zmFKqAZoCHHOawEBHt9z0j2Hvyqcp
-         L87Au5M7Tkeqz580n3hn+lDWStFWkrJpvI63FlrquKe4cGU2O8rYAGFf2nteAlrPpDXd
-         DeHJMPX1T514NtcO6vRhzDKQK+yNHeVxRFLSIt97YHEcDuCfUHIulo3eh86+t5pD/+9t
-         awS9d6tmt2v/aH+ppoqonRF7dQXBwO8f6Xi0cSB8PXrlyiphCxgPcDeTxaF7hszZklGE
-         jXZOTpFCUhMxnr0PR0M6kTYGBHLBEjPrZVJ0jIozzDgWLnJyekVWa4k3jYSyEzaOtMSG
-         G54w==
-X-Gm-Message-State: AOJu0Yx1aOTY4YYrC2EhArYiY6szFc83fVIM+I8Gpf+gIULBfBh9bbbk
-	8E+Lg5KTAuPL1C8YsegltT/CT83/dOlWqmTb2Ia6hFie5ItT
-X-Google-Smtp-Source: AGHT+IEXYfwbjMuOhaavTU76/l1dg18I1F9vBu9R0Zw3RN6i+CppLr4+FB7CQH5A9Vaq6ifuIf4nKg==
-X-Received: by 2002:a05:600c:298c:b0:40d:5aea:c89b with SMTP id r12-20020a05600c298c00b0040d5aeac89bmr438395wmd.64.1704808072719;
-        Tue, 09 Jan 2024 05:47:52 -0800 (PST)
-Received: from google.com (185.83.140.34.bc.googleusercontent.com. [34.140.83.185])
-        by smtp.gmail.com with ESMTPSA id g8-20020a5d46c8000000b003372befd19bsm2455240wrs.104.2024.01.09.05.47.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 05:47:52 -0800 (PST)
-Date: Tue, 9 Jan 2024 13:47:48 +0000
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com, kernel-team@android.com
-Subject: Re: [PATCH v10 0/2] Introducing trace buffer mapping by user-space
-Message-ID: <ZZ1OhPXsDE4JCno0@google.com>
-References: <20240105094729.2363579-1-vdonnefort@google.com>
- <20240109220445.5683e4af0cea6b034945b2bb@kernel.org>
- <20240109082057.2bb6da70@gandalf.local.home>
+        d=1e100.net; s=20230601; t=1704810663; x=1705415463;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d3HXRcKDVxJPTXyXJSN6jduIbifNRx9OK443HIjFR3c=;
+        b=M3yRpVgolm5RM1x6w19oQLq1ofEH3/04qECksNQn2rDHpYzeb0WWAvcVxzdpnghIen
+         K0TvNqMm/qkPCxlm/ARJScrHShguUv7A67Xjsb+Wre8DKoNOOt/sC7/Kj3mDlmYDRZmk
+         OtiVFUsBMg6crUZ30qL7clmeojdcva+GzZ+GF2+3MtBPxBWRUwX9YTfrgpKBz2NJqLQN
+         IftNyp+mBExO/sbI5h9JSngzOpnfpzpS4vcppPGmfb8/X67fqRulIDjPDxjYkgpOfozg
+         XmhigiWyX+o2mUs6ZMBIBERkp0K7CqUgaR4tAJA2U/x5heq+6DkdNqHewUSeVxDtzTbv
+         /UaQ==
+X-Gm-Message-State: AOJu0YwxMcka4IAhXShtrSLRAiNUCUa6qrcZL9x+ToErecO9R3nD6K/E
+	iIqmFtkM0bpJNqSPFlVolMkvrZNjiIsF315ZbUKyD1v81kKljA==
+X-Google-Smtp-Source: AGHT+IGCrRv2Xox8IoTKAK1tK0lI+F5UQ2lc3D09T7sRQDvvxo2IzFqkGcHCcK2S942TMjaLqrnQP9OX3vcm21L/yJk=
+X-Received: by 2002:a17:90a:ea83:b0:28c:8ec9:6330 with SMTP id
+ h3-20020a17090aea8300b0028c8ec96330mr3145262pjz.15.1704810662738; Tue, 09 Jan
+ 2024 06:31:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240109082057.2bb6da70@gandalf.local.home>
+References: <20240108134843.429769-1-vincent.guittot@linaro.org>
+ <20240108134843.429769-3-vincent.guittot@linaro.org> <fb25afab-9586-455a-b8c1-47949035c95a@arm.com>
+In-Reply-To: <fb25afab-9586-455a-b8c1-47949035c95a@arm.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Tue, 9 Jan 2024 15:30:51 +0100
+Message-ID: <CAKfTPtDEKzup63H0iwHkTQCZOdQLUurACCYfEB-MpW+v7JEfag@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] sched: Take cpufreq feedback into account
+To: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
+	sudeep.holla@arm.com, rafael@kernel.org, viresh.kumar@linaro.org, 
+	agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org, 
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, bristot@redhat.com, 
+	vschneid@redhat.com, lukasz.luba@arm.com, rui.zhang@intel.com, 
+	mhiramat@kernel.org, daniel.lezcano@linaro.org, amit.kachhap@gmail.com, 
+	corbet@lwn.net, gregkh@linuxfoundation.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	qyousef@layalina.io
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jan 09, 2024 at 08:20:57AM -0500, Steven Rostedt wrote:
-> 
-> Hi Masami, thanks for looking at this.
-> 
-> On Tue, 9 Jan 2024 22:04:45 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > > The tracing ring-buffers can be stored on disk or sent to network
-> > > without any copy via splice. However the later doesn't allow real time
-> > > processing of the traces. A solution is to give userspace direct access
-> > > to the ring-buffer pages via a mapping. An application can now become a
-> > > consumer of the ring-buffer, in a similar fashion to what trace_pipe
-> > > offers.  
-> > 
-> > I think this is very nice feature. But this series seems just a feature,
-> > no document and no example code. Can you add 2 patches to add those?
-> > I know libtracefs already provide a support code, but I think it is
-> > better to have a test code under tools/testing/selftests/ring_buffer.
-> 
-> Yeah, we should have sample code and a test.
+On Tue, 9 Jan 2024 at 12:22, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>
+> On 08/01/2024 14:48, Vincent Guittot wrote:
+> > Aggregate the different pressures applied on the capacity of CPUs and
+> > create a new function that returns the actual capacity of the CPU:
+> >   get_actual_cpu_capacity()
+>
+>    function name                scaling
+>
+> (1) arch_scale_cpu_capacity() - uarch
+>
+> (2) get_actual_cpu_capacity() - hw + cpufreq/thermal of (1)
+>
+> (3) capacity_of()             - rt (rt/dl/irq) of (2) (used by fair)
+>
+> Although (1) - (3) are very close to each other from the functional
 
-Ack. I will recycle what I had in the cover letter in a ring_buffer selftest.
+I don't get your point as name of (1) and (3) have not been changed by the patch
 
-> 
-> > 
-> > I also wonder what happen if other operation (e.g. taking snapshot) happens
-> > while mmaping the ring buffer.
-> 
-> Hmm, good point. We should disable snapshots when mapped, and also prevent
-> mapping with latency tracer if we are not already doing that.
+> standpoint, their names are not very coherent.
+>
+> I assume this makes it hard to understand all of this when reading the
+> code w/o knowing these patches before.
+>
+> Why is (2) tagged with 'actual'?
 
-ring_buffer_swap_cpu() is already disabled when mapped as well as
-resize_disabled set. Is something else necessary?
+This is the actual max compute capacity of the cpu at now  i.e.
+possibly reduced because of temporary frequency capping
 
-> 
-> -- Steve
+So (2) equals (1) minus temporary performance capping and (3)
+additionally subtracts the time used by other class to (2)
+
+
+>
+> This is especially visible in feec() where local variable cpu_cap
+> relates to (3) whereas cpu_actual_cap related to (2).
+>
+> [...]
+>
