@@ -1,56 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A9926AF7;
-	Tue,  9 Jan 2024 13:20:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8408FC433F1;
-	Tue,  9 Jan 2024 13:19:59 +0000 (UTC)
-Date: Tue, 9 Jan 2024 08:20:57 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Vincent Donnefort <vdonnefort@google.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- kernel-team@android.com
-Subject: Re: [PATCH v10 0/2] Introducing trace buffer mapping by user-space
-Message-ID: <20240109082057.2bb6da70@gandalf.local.home>
-In-Reply-To: <20240109220445.5683e4af0cea6b034945b2bb@kernel.org>
-References: <20240105094729.2363579-1-vdonnefort@google.com>
-	<20240109220445.5683e4af0cea6b034945b2bb@kernel.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E352638F9A
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Jan 2024 13:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MRs/bEWq"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5ceb3fe708eso927327a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Jan 2024 05:29:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704806982; x=1705411782; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=pyLic9iO2i6kaJfam6/jRmyNsV6AuxuUVqN/iIKWdX0=;
+        b=MRs/bEWqCeNYQcFzZWjUBYDieSYSCVIVqyrXsBfD9AicV+JHblOI1PAfdJ8dvL5M4w
+         rpX7/5KOQWTnw3f6t9UUbU5ZLu8vgTnIGxu+cyUI+msMtxppX2HLWi9eXqO45inqc1VG
+         1aftg+lU9EXJOm6IcvTHKZwfbQd2JkCVtDLDHlFrI+YejvRf89FdtziRNim5pKs1+NjQ
+         ofXuvZQH3eQElAaVlLe7/4vbMv3qQ6nr7LsdJvb6mACSsu6MrDqx8c4PYOZV7AwlVnM8
+         ZT7vbx2f92uqtGrXcu2cKWvJxP2HaTYu2iQyI4r3hcainYDgGypheJRSMu9LVHeabfDT
+         0a3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704806982; x=1705411782;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pyLic9iO2i6kaJfam6/jRmyNsV6AuxuUVqN/iIKWdX0=;
+        b=P066XuaEJ2ljbnNp/BtFJjU6EHljiyNavloT5T/HNflZZZw1MBNXFnyOM+8VWH25Q1
+         t57KQefvHH5pPZ9Ap+dBfbgFZzZfOQ+3Ef6n6zMDWZ0ToL1ceZjM/nlusHtbKKrLZR/r
+         W+k2zYPFsZMvRNbjC1tXZLye6p1YShb5LObfkulr49yEm2xp38qDgQytEuNLofo8xxBy
+         aHlN5N0p0Qj6R+hEElZwyivjyiEkuDse2+9lzp5t4g/UadSLSg7J49SeiyfuGHZ5tJ5K
+         6i2AwSnLmRdAGqy0YLb7+lUmp/igM9wVmsE5P1YLUhT3lt4fmfUEDeAcfwzRJEJ9V1Bp
+         nL7A==
+X-Gm-Message-State: AOJu0YxmuJUAd8cZUohKypJ3fUiLoyTTPGDb0kdvplCcb4rxnbL4yYrl
+	8PL8/UM3uXTG/YK3d0mdkQMnZp53gCg8kBA3y6tawb+BpREhRA==
+X-Google-Smtp-Source: AGHT+IHTyoiQC3WFdFRPjSJCoNhZ5A2+02943Z/lNMhVjhkOgqY37/nGB5ElSTBSubouYNO/eWSGYi/j7r77wcYAjoc=
+X-Received: by 2002:a17:90a:4701:b0:28c:3758:f38a with SMTP id
+ h1-20020a17090a470100b0028c3758f38amr2341460pjg.5.1704806982158; Tue, 09 Jan
+ 2024 05:29:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240108134843.429769-1-vincent.guittot@linaro.org> <d37e3d06-d9fc-4fc3-ad92-e7031489660a@arm.com>
+In-Reply-To: <d37e3d06-d9fc-4fc3-ad92-e7031489660a@arm.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Tue, 9 Jan 2024 14:29:31 +0100
+Message-ID: <CAKfTPtAOSgnStDSao1QarHuUW9BTfk1o7r6NO4LhwEJMhq1drg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/5] Rework system pressure interface to the scheduler
+To: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
+	sudeep.holla@arm.com, rafael@kernel.org, viresh.kumar@linaro.org, 
+	agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org, 
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, bristot@redhat.com, 
+	vschneid@redhat.com, lukasz.luba@arm.com, rui.zhang@intel.com, 
+	mhiramat@kernel.org, daniel.lezcano@linaro.org, amit.kachhap@gmail.com, 
+	corbet@lwn.net, gregkh@linuxfoundation.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	qyousef@layalina.io
+Content-Type: text/plain; charset="UTF-8"
 
+On Tue, 9 Jan 2024 at 12:34, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>
+> On 08/01/2024 14:48, Vincent Guittot wrote:
+> > Following the consolidation and cleanup of CPU capacity in [1], this serie
+> > reworks how the scheduler gets the pressures on CPUs. We need to take into
+> > account all pressures applied by cpufreq on the compute capacity of a CPU
+> > for dozens of ms or more and not only cpufreq cooling device or HW
+> > mitigiations. we split the pressure applied on CPU's capacity in 2 parts:
+> > - one from cpufreq and freq_qos
+> > - one from HW high freq mitigiation.
+> >
+> > The next step will be to add a dedicated interface for long standing
+> > capping of the CPU capacity (i.e. for seconds or more) like the
+> > scaling_max_freq of cpufreq sysfs. The latter is already taken into
+> > account by this serie but as a temporary pressure which is not always the
+> > best choice when we know that it will happen for seconds or more.
+>
+> I guess this is related to the 'user space system pressure' (*) slide of
+> your OSPM '23 talk.
 
-Hi Masami, thanks for looking at this.
+yes
 
-On Tue, 9 Jan 2024 22:04:45 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+>
+> Where do you draw the line when it comes to time between (*) and the
+> 'medium pace system pressure' (e.g. thermal and FREQ_QOS).
 
-> > The tracing ring-buffers can be stored on disk or sent to network
-> > without any copy via splice. However the later doesn't allow real time
-> > processing of the traces. A solution is to give userspace direct access
-> > to the ring-buffer pages via a mapping. An application can now become a
-> > consumer of the ring-buffer, in a similar fashion to what trace_pipe
-> > offers.  
-> 
-> I think this is very nice feature. But this series seems just a feature,
-> no document and no example code. Can you add 2 patches to add those?
-> I know libtracefs already provide a support code, but I think it is
-> better to have a test code under tools/testing/selftests/ring_buffer.
+My goal is to consider the /sys/../scaling_max_freq as the 'user space
+system pressure'
 
-Yeah, we should have sample code and a test.
+>
+> IIRC, with (*) you want to rebuild the sched domains etc.
 
-> 
-> I also wonder what happen if other operation (e.g. taking snapshot) happens
-> while mmaping the ring buffer.
+The easiest way would be to rebuild the sched_domain but the cost is
+not small so I would prefer to skip the rebuild and add a new signal
+that keep track on this capped capacity
 
-Hmm, good point. We should disable snapshots when mapped, and also prevent
-mapping with latency tracer if we are not already doing that.
-
--- Steve
+>
+> >
+> > [1] https://lore.kernel.org/lkml/20231211104855.558096-1-vincent.guittot@linaro.org/
+> >
+> > Change since v1:
+> > - Rework cpufreq_update_pressure()
+> >
+> > Change since v1:
+> > - Use struct cpufreq_policy as parameter of cpufreq_update_pressure()
+> > - Fix typos and comments
+> > - Make sched_thermal_decay_shift boot param as deprecated
+> >
+> > Vincent Guittot (5):
+> >   cpufreq: Add a cpufreq pressure feedback for the scheduler
+> >   sched: Take cpufreq feedback into account
+> >   thermal/cpufreq: Remove arch_update_thermal_pressure()
+> >   sched: Rename arch_update_thermal_pressure into
+> >     arch_update_hw_pressure
+> >   sched/pelt: Remove shift of thermal clock
+> >
+> >  .../admin-guide/kernel-parameters.txt         |  1 +
+> >  arch/arm/include/asm/topology.h               |  6 +-
+> >  arch/arm64/include/asm/topology.h             |  6 +-
+> >  drivers/base/arch_topology.c                  | 26 ++++----
+> >  drivers/cpufreq/cpufreq.c                     | 36 +++++++++++
+> >  drivers/cpufreq/qcom-cpufreq-hw.c             |  4 +-
+> >  drivers/thermal/cpufreq_cooling.c             |  3 -
+> >  include/linux/arch_topology.h                 |  8 +--
+> >  include/linux/cpufreq.h                       | 10 +++
+> >  include/linux/sched/topology.h                |  8 +--
+> >  .../{thermal_pressure.h => hw_pressure.h}     | 14 ++---
+> >  include/trace/events/sched.h                  |  2 +-
+> >  init/Kconfig                                  | 12 ++--
+> >  kernel/sched/core.c                           |  8 +--
+> >  kernel/sched/fair.c                           | 63 +++++++++----------
+> >  kernel/sched/pelt.c                           | 18 +++---
+> >  kernel/sched/pelt.h                           | 16 ++---
+> >  kernel/sched/sched.h                          | 22 +------
+> >  18 files changed, 144 insertions(+), 119 deletions(-)
+> >  rename include/trace/events/{thermal_pressure.h => hw_pressure.h} (55%)
+>
