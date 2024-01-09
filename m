@@ -1,176 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6DD73D961;
-	Tue,  9 Jan 2024 20:43:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9EA9C433C7;
-	Tue,  9 Jan 2024 20:43:35 +0000 (UTC)
-Date: Tue, 9 Jan 2024 15:44:34 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
-Subject: [PATCH] ring-buffer: Have mmapped ring buffer keep track of missed
- events
-Message-ID: <20240109154434.6eb61647@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D393C6A4;
+	Tue,  9 Jan 2024 22:16:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qB46A5Sp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA61FC433F1;
+	Tue,  9 Jan 2024 22:16:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704838610;
+	bh=EHvco0VkqOSJGuxdue1TEtXAL00jI8VZrVZxCAuX2+E=;
+	h=From:Subject:Date:To:Cc:From;
+	b=qB46A5SpFD/NpmrZNfvwVgTddKr4FozL/Nm6NTWqjJuavIDeYbyWj8WbTz/AJAYAd
+	 rCq1xH2+lrNbAzymhVqtxXCmJQYKKBtigLbuskx+y07oOM7Fuhn5KtE5lAQldU86ff
+	 zsHlTOsJZDWVdq5RMMJKOsWvG0Sf8ZHgtVjZur4CTnnCh2KmHRiE+g9IYh0N3JSxTK
+	 HD8CBIbqmmGPG+MOnwgxTifgp44rGjZZFXk0l6vXeduRl6TLk9LScel7oWlPR5uz1g
+	 UsvtcwNt/LBd82QaDZxv1VzpZC3HDPVzq86WEch1mZNDSm/ODiPUOVtCeJtXC34hlE
+	 7d2vmCHDFTLIQ==
+From: Nathan Chancellor <nathan@kernel.org>
+Subject: [PATCH 0/3] Update LLVM Phabricator and Bugzilla links
+Date: Tue, 09 Jan 2024 15:16:28 -0700
+Message-Id: <20240109-update-llvm-links-v1-0-eb09b59db071@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALzFnWUC/x3MQQqAIBBA0avErBtQi8CuEi0kpxoyCy0JwrsnL
+ d/i/xciBaYIffVCoMSRD18g6wqm1fiFkG0xKKFaIYXG+7TmInQu7ejYbxGtaGZtu1aTJCjdGWj
+ m538OY84fszs+Z2MAAAA=
+To: akpm@linux-foundation.org
+Cc: llvm@lists.linux.dev, patches@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
+ linux-s390@vger.kernel.org, linux-pm@vger.kernel.org, 
+ linux-crypto@vger.kernel.org, linux-efi@vger.kernel.org, 
+ amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+ linux-media@vger.kernel.org, linux-arch@vger.kernel.org, 
+ kasan-dev@googlegroups.com, linux-mm@kvack.org, bridge@lists.linux.dev, 
+ netdev@vger.kernel.org, linux-security-module@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>, 
+ ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, mykolal@fb.com, 
+ bpf@vger.kernel.org
+X-Mailer: b4 0.13-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2460; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=EHvco0VkqOSJGuxdue1TEtXAL00jI8VZrVZxCAuX2+E=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDKlzj17YHOFbeqmmzSTv+Yl3Dvc2pO2+wn2gftPWtOlmz
+ ZFzErc87ShlYRDjYpAVU2Spfqx63NBwzlnGG6cmwcxhZQIZwsDFKQATcYlj+J+VsOtwv+FtLr6v
+ L2ptJLoTJ1xwvPM+afI7W55fz9vnRocyMsxLsi56rXP33S6VMzNvVJ4tXR/xeu4ma9Zvvc8ruWO
+ PdPIDAA==
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+This series updates all instances of LLVM Phabricator and Bugzilla links
+to point to GitHub commits directly and LLVM's Bugzilla to GitHub issue
+shortlinks respectively.
 
-While testing libtracefs on the mmapped ring buffer, the test that checks
-if missed events are accounted for failed when using the mapped buffer.
-This is because the mapped page does not update the missed events that
-were dropped because the writer filled up the ring buffer before the
-reader could catch it.
+I split up the Phabricator patch into BPF selftests and the rest of the
+kernel in case the BPF folks want to take it separately from the rest of
+the series, there are obviously no dependency issues in that case. The
+Bugzilla change was mechanical enough and should have no conflicts.
 
-Add the missed events to the reader page/sub-buffer when the IOCTL is done
-and a new reader page is acquired.
+I am aiming this at Andrew and CC'ing other lists, in case maintainers
+want to chime in, but I think this is pretty uncontroversial (famous
+last words...).
 
-Note that all accesses to the reader_page via rb_page_commit() had to be
-switched to rb_page_size(), and rb_page_size() which was just a copy of
-rb_page_commit() but now it masks out the RB_MISSED bits. This is needed
-as the mapped reader page is still active in the ring buffer code and
-where it reads the commit field of the bpage for the size, it now must
-mask it otherwise the missed bits that are now set will corrupt the size
-returned.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ring_buffer.c | 54 +++++++++++++++++++++++++++++++++-----
- 1 file changed, 48 insertions(+), 6 deletions(-)
+Nathan Chancellor (3):
+      selftests/bpf: Update LLVM Phabricator links
+      arch and include: Update LLVM Phabricator links
+      treewide: Update LLVM Bugzilla links
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 07dae67424a9..90af4f28671f 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -312,6 +312,8 @@ static u64 rb_event_time_stamp(struct ring_buffer_event *event)
- /* Missed count stored at end */
- #define RB_MISSED_STORED	(1 << 30)
- 
-+#define RB_MISSED_MASK		(3 << 30)
-+
- struct buffer_data_page {
- 	u64		 time_stamp;	/* page time stamp */
- 	local_t		 commit;	/* write committed index */
-@@ -2303,7 +2305,7 @@ rb_iter_head_event(struct ring_buffer_iter *iter)
- /* Size is determined by what has been committed */
- static __always_inline unsigned rb_page_size(struct buffer_page *bpage)
- {
--	return rb_page_commit(bpage);
-+	return rb_page_commit(bpage) & ~RB_MISSED_MASK;
- }
- 
- static __always_inline unsigned
-@@ -2769,6 +2771,7 @@ static void rb_add_timestamp(struct ring_buffer_per_cpu *cpu_buffer,
- 				once++;
- 				pr_warn("Ring buffer clock went backwards: %llu -> %llu\n",
- 					info->before, info->ts);
-+				dump_stack();
- 			}
- 		} else
- 			rb_check_timestamp(cpu_buffer, info);
-@@ -3930,7 +3933,7 @@ static bool rb_per_cpu_empty(struct ring_buffer_per_cpu *cpu_buffer)
- 		return true;
- 
- 	/* Reader should exhaust content in reader page */
--	if (reader->read != rb_page_commit(reader))
-+	if (reader->read != rb_page_size(reader))
- 		return false;
- 
- 	/*
-@@ -4401,7 +4404,7 @@ int ring_buffer_iter_empty(struct ring_buffer_iter *iter)
- 	return ((iter->head_page == commit_page && iter->head >= commit) ||
- 		(iter->head_page == reader && commit_page == head_page &&
- 		 head_page->read == commit &&
--		 iter->head == rb_page_commit(cpu_buffer->reader_page)));
-+		 iter->head == rb_page_size(cpu_buffer->reader_page)));
- }
- EXPORT_SYMBOL_GPL(ring_buffer_iter_empty);
- 
-@@ -5745,7 +5748,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 	event = rb_reader_event(cpu_buffer);
- 
- 	read = reader->read;
--	commit = rb_page_commit(reader);
-+	commit = rb_page_size(reader);
- 
- 	/* Check if any events were dropped */
- 	missed_events = cpu_buffer->lost_events;
-@@ -5822,7 +5825,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 	} else {
- 		/* update the entry counter */
- 		cpu_buffer->read += rb_page_entries(reader);
--		cpu_buffer->read_bytes += rb_page_commit(reader);
-+		cpu_buffer->read_bytes += rb_page_size(reader);
- 
- 		/* swap the pages */
- 		rb_init_page(bpage);
-@@ -6349,6 +6352,8 @@ struct page *ring_buffer_map_fault(struct trace_buffer *buffer, int cpu,
- int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer;
-+	struct buffer_page *reader;
-+	unsigned long missed_events;
- 	unsigned long reader_size;
- 	unsigned long flags;
- 
-@@ -6374,9 +6379,46 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
- 		goto out;
- 	}
- 
--	if (WARN_ON(!rb_get_reader_page(cpu_buffer)))
-+	reader = rb_get_reader_page(cpu_buffer);
-+	if (WARN_ON(!reader))
- 		goto out;
- 
-+	/* Check if any events were dropped */
-+	missed_events = cpu_buffer->lost_events;
-+
-+	if (cpu_buffer->reader_page != cpu_buffer->commit_page) {
-+		if (missed_events) {
-+			struct buffer_data_page *bpage = reader->page;
-+			unsigned int commit;
-+			/*
-+			 * If there is room at the end of the page to save the
-+			 * missed events, then record it there.
-+			 */
-+			commit = rb_page_size(reader);
-+			if (buffer->subbuf_size - commit >= sizeof(missed_events)) {
-+				memcpy(&bpage->data[commit], &missed_events,
-+				       sizeof(missed_events));
-+				local_add(RB_MISSED_STORED, &bpage->commit);
-+				commit += sizeof(missed_events);
-+			}
-+			local_add(RB_MISSED_EVENTS, &bpage->commit);
-+			/*
-+			 * This page may be off to user land. Zero it out here.
-+			 */
-+			if (commit < buffer->subbuf_size)
-+				memset(&bpage->data[commit], 0,
-+				       buffer->subbuf_size - commit);
-+		}
-+	} else {
-+		/*
-+		 * There really shouldn't be any missed events if the commit
-+		 * is on the reader page.
-+		 */
-+		WARN_ON_ONCE(missed_events);
-+	}
-+
-+	cpu_buffer->lost_events = 0;
-+
- 	goto consume;
- out:
- 	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ arch/arm64/Kconfig                                 |  4 +--
+ arch/powerpc/Makefile                              |  4 +--
+ arch/powerpc/kvm/book3s_hv_nested.c                |  2 +-
+ arch/riscv/Kconfig                                 |  2 +-
+ arch/riscv/include/asm/ftrace.h                    |  2 +-
+ arch/s390/include/asm/ftrace.h                     |  2 +-
+ arch/x86/power/Makefile                            |  2 +-
+ crypto/blake2b_generic.c                           |  2 +-
+ drivers/firmware/efi/libstub/Makefile              |  2 +-
+ drivers/gpu/drm/amd/amdgpu/sdma_v4_4_2.c           |  2 +-
+ drivers/media/test-drivers/vicodec/codec-fwht.c    |  2 +-
+ drivers/regulator/Kconfig                          |  2 +-
+ include/asm-generic/vmlinux.lds.h                  |  2 +-
+ include/linux/compiler-clang.h                     |  2 +-
+ lib/Kconfig.kasan                                  |  2 +-
+ lib/raid6/Makefile                                 |  2 +-
+ lib/stackinit_kunit.c                              |  2 +-
+ mm/slab_common.c                                   |  2 +-
+ net/bridge/br_multicast.c                          |  2 +-
+ security/Kconfig                                   |  2 +-
+ tools/testing/selftests/bpf/README.rst             | 32 +++++++++++-----------
+ tools/testing/selftests/bpf/prog_tests/xdpwall.c   |  2 +-
+ .../selftests/bpf/progs/test_core_reloc_type_id.c  |  2 +-
+ 23 files changed, 40 insertions(+), 40 deletions(-)
+---
+base-commit: 0dd3ee31125508cd67f7e7172247f05b7fd1753a
+change-id: 20240109-update-llvm-links-d03f9d649e1e
+
+Best regards,
 -- 
-2.43.0
+Nathan Chancellor <nathan@kernel.org>
 
