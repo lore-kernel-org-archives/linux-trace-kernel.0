@@ -1,82 +1,103 @@
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411A037168
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  9 Jan 2024 11:24:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pqP4Q7qr"
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3bb53e20a43so2567568b6e.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Jan 2024 03:24:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704799462; x=1705404262; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=S4SDTApmECBjOzEfaLEaZeXHNRvaFB8n31mQspM0kzI=;
-        b=pqP4Q7qrtH13LVzQQIbkrFcZWOdvC1Nr4902rbwIxXZ+X2JUqI5XEJVMrke+xCFYRi
-         BVDyRjp8sn98Ac20qQyNK1rp5kirGRPn4381TYVG/XtRTuxwfvr3XLVzus/zsqOTk/MM
-         pUUFV/VLpK3SZhB3tWJstw8S3GxYZukPyouWgj3LTIPKpAtGPEbhSng+20CRVWbn2Us2
-         HBaETC/cxP0n7VMVyfMdy+UN5raCKUzYJJtUGgAbFV7T+p12mAEZPP0VtwHxjyootKgC
-         WD6mpH7Mtkp41RpSFGDGh5Er/UkMXLl9My1yPiBUyW4vv7L5ZVyp5dbE2FQ+VRWbPyAP
-         D8sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704799462; x=1705404262;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=S4SDTApmECBjOzEfaLEaZeXHNRvaFB8n31mQspM0kzI=;
-        b=QPvDp57jHanVi4BDrxBUdoGkt07HYcQiZ8k16n7GYvDIEdFYTfkFdBKy57p/achA+Z
-         Pk5IUctEDeIwKnqPKMIbyzEKKYwzyhVhlN69MXM3g6o6bQmJ364bz38kmU43crSveSrT
-         HLitMS/ChqUPwJvr9arwFSxJpLdeKmcd5wbhSnnSCFbnqOihLcoyMvZKMwetXX+JeJLA
-         2nySVusLq0+RjiZLmLlTpBVqd3/VfbpiTVOzE4CQngpVTRHUKdTVkE0uUtggsTLf/AGy
-         WWCPDS9yhMak2S/wDI6veDYM4hpFDKfxBlLHQ4pVfLzmVBrc2h1vmvcNIKbgH1GRf98F
-         LnEw==
-X-Gm-Message-State: AOJu0YwOnpqA/EDvdH3JGdJy4nqv1WQrWAy/Vyp3gNNUD3lfQ/wjiCIA
-	eX5j7tbvJkV07nTeFGNoEqQxPjPN+1+/COstwL9mAj0om9f5zg==
-X-Google-Smtp-Source: AGHT+IHCLgsnZU5IHiP8NOccH6UwDy+IAfkge3Z3hsXsWEacGqaX4OClBqm4E9R659NzB4EBGfLT1yi7Zncj2QY5gMo=
-X-Received: by 2002:a05:6358:2928:b0:172:d2ac:1e with SMTP id
- y40-20020a056358292800b00172d2ac001emr3729385rwb.5.1704799462214; Tue, 09 Jan
- 2024 03:24:22 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150A8381C8;
+	Tue,  9 Jan 2024 11:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4T8TF658DYz1wrqC;
+	Tue,  9 Jan 2024 19:27:54 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
+	by mail.maildlp.com (Postfix) with ESMTPS id F10E81402CB;
+	Tue,  9 Jan 2024 19:28:30 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 9 Jan 2024 19:28:30 +0800
+Subject: Re: [RFC PATCH] kprobes: Use synchronize_rcu_tasks_rude in
+ kprobe_optimizer
+To: Chen Zhongjin <chenzhongjin@huawei.com>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>
+CC: <naveen.n.rao@linux.ibm.com>, <anil.s.keshavamurthy@intel.com>,
+	<davem@davemloft.net>, <paulmck@kernel.org>, <mhiramat@kernel.org>,
+	<akpm@linux-foundation.org>, <tglx@linutronix.de>, <peterz@infradead.org>,
+	<pmladek@suse.com>, <dianders@chromium.org>, <npiggin@gmail.com>,
+	<mpe@ellerman.id.au>, <jkl820.git@gmail.com>,
+	<juerg.haefliger@canonical.com>, <rick.p.edgecombe@intel.com>,
+	<eric.devolder@oracle.com>, <mic@digikod.net>
+References: <20240102034024.256326-1-chenzhongjin@huawei.com>
+From: Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <29eaed4d-c4e5-cf9b-113b-da146b719820@huawei.com>
+Date: Tue, 9 Jan 2024 19:28:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240108134843.429769-1-vincent.guittot@linaro.org>
- <20240108134843.429769-2-vincent.guittot@linaro.org> <158a8c60-cb54-43c1-8232-6a0a46cc6d42@arm.com>
-In-Reply-To: <158a8c60-cb54-43c1-8232-6a0a46cc6d42@arm.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Tue, 9 Jan 2024 12:24:11 +0100
-Message-ID: <CAKfTPtBv5=Td2o_fEcq0E7JumyH6XW705kkKR=sPf+_YzB0aPQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] cpufreq: Add a cpufreq pressure feedback for the scheduler
-To: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
-	sudeep.holla@arm.com, rafael@kernel.org, viresh.kumar@linaro.org, 
-	agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org, 
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, bristot@redhat.com, 
-	vschneid@redhat.com, lukasz.luba@arm.com, rui.zhang@intel.com, 
-	mhiramat@kernel.org, daniel.lezcano@linaro.org, amit.kachhap@gmail.com, 
-	corbet@lwn.net, gregkh@linuxfoundation.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	qyousef@layalina.io
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20240102034024.256326-1-chenzhongjin@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
 
-On Mon, 8 Jan 2024 at 17:35, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->
-> On 08/01/2024 14:48, Vincent Guittot wrote:
-> > Provide to the scheduler a feedback about the temporary max available
-> > capacity. Unlike arch_update_thermal_pressure, this doesn't need to be
-> > filtered as the pressure will happen for dozens ms or more.
->
-> Is this then related to the 'medium pace system pressure' you mentioned
-> in your OSPM '23 talk?
+Hello,
 
-Sorry I forgot to answer this question. Yes this is the medium pace
-system pressure that I mentioned at OSPM'23
->
-> >
+PING.
+
+I had a similar problem. Is this solution feasible?
+
+Thanks,
+Yang
+
+On 2024/1/2 11:40, Chen Zhongjin wrote:
+> There is a deadlock scenario in kprobe_optimizer():
+> 
+> pid A				pid B			pid C
+> kprobe_optimizer()		do_exit()		perf_kprobe_init()
+> mutex_lock(&kprobe_mutex)	exit_tasks_rcu_start()	mutex_lock(&kprobe_mutex)
+> synchronize_rcu_tasks()		zap_pid_ns_processes()	// waiting kprobe_mutex
+> // waiting tasks_rcu_exit_srcu	kernel_wait4()
+> 				// waiting pid C exit
+> 
+> To avoid this deadlock loop, use synchronize_rcu_tasks_rude() in kprobe_optimizer()
+> rather than synchronize_rcu_tasks(). synchronize_rcu_tasks_rude() can also promise
+> that all preempted tasks have scheduled, but it will not wait tasks_rcu_exit_srcu.
+> 
+> Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
+> ---
+>   arch/Kconfig     | 2 +-
+>   kernel/kprobes.c | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index f4b210ab0612..dc6a18854017 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -104,7 +104,7 @@ config STATIC_CALL_SELFTEST
+>   config OPTPROBES
+>   	def_bool y
+>   	depends on KPROBES && HAVE_OPTPROBES
+> -	select TASKS_RCU if PREEMPTION
+> +	select TASKS_RUDE_RCU
+>   
+>   config KPROBES_ON_FTRACE
+>   	def_bool y
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index d5a0ee40bf66..09056ae50c58 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -623,7 +623,7 @@ static void kprobe_optimizer(struct work_struct *work)
+>   	 * Note that on non-preemptive kernel, this is transparently converted
+>   	 * to synchronoze_sched() to wait for all interrupts to have completed.
+>   	 */
+> -	synchronize_rcu_tasks();
+> +	synchronize_rcu_tasks_rude();
+>   
+>   	/* Step 3: Optimize kprobes after quiesence period */
+>   	do_optimize_kprobes();
+> 
