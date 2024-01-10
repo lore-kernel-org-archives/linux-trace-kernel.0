@@ -1,121 +1,124 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C8A4D114
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jan 2024 17:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w+5XwlqQ"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-680285e7ce8so31200986d6.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jan 2024 09:25:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704907527; x=1705512327; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Quxkd2kOtosd0xhGtW1MMtr97HwHYuSGHPI/EcetRCs=;
-        b=w+5XwlqQUyXYj8g2im0Pvn7grMhFHaJuYl2lDW30WjvLDoDv6GKpqBCwdb/Q6rko6g
-         tpnM3ip31+jO5eTXCXfkFy4qxdx4/ileYONHc1zedL/xk/is3on/mqydJpx4GwaOcSOR
-         gLPXo181lVYsfK8BlUXFS2y4FZoQiwEjGdculNHyohn7eake/rlseXEA7YsFi+6Cd3dg
-         QGvF57QQNAZr422fYYfNe/ZlCitQ1kiDrEQjiqKKwElocmPmRzbu8CcwGBn/eKEZkamy
-         gJsYkdxDknNBh8wzs32i6YR65qczVtKeaSKwMsMkDjrqCGHDdguo+ECaZ7A8iAIYaCbd
-         WorQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704907527; x=1705512327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Quxkd2kOtosd0xhGtW1MMtr97HwHYuSGHPI/EcetRCs=;
-        b=cPFUFpNX8Gc09j0nTNAYbU1YXcqcTv6/BtIj4j7TpHN2Oc5QsghsWlXLehDBuXmuQy
-         EUr64qcOa3ezT0lG6UUGJz9HiRBCYH52sLY/h+AIvA3wcKfThpoZ4QVjC52NT3Qg+IKR
-         bBiXl7l42w9PmUh5FzCtUSBpp84JhVGD05BwrMmxzgupHM4K4gspHB7MPLlsd/5kdCzc
-         C4OssJ0wG+LPpB7A28pbX6zBcfTTc7fvkDBwLljM6Zetiy1QTndwfSqcUXUCnwPhAvWa
-         g2f9ss3pkd6qyo76RY07mAb5pW6DDXYyeocDAHc81hud+ncZ7CmlP2sN+v+huHyjV526
-         QaMw==
-X-Gm-Message-State: AOJu0YwRQsAp1HSBlrKNtNL+1gc8l/RhbBbtmzKsxWjI1qBZ45O8F/Zq
-	RLpMfEugHZH5TWZ48Yq+CafVbo/U5erHsvkLqIRDKWaMk6SHpA==
-X-Google-Smtp-Source: AGHT+IE33eYzPxNj50mHq4ToCDSp6OSKaqrAqY1BJvDZ+yYXMeLMBCiBrvgPGHdUZ5z6ObmpRUl+dxy3YNhpTLcXkW8=
-X-Received: by 2002:a05:6214:c8b:b0:67f:7b95:a0f7 with SMTP id
- r11-20020a0562140c8b00b0067f7b95a0f7mr1704090qvr.91.1704907526838; Wed, 10
- Jan 2024 09:25:26 -0800 (PST)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD9734CDF8;
+	Wed, 10 Jan 2024 18:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8EE252F4;
+	Wed, 10 Jan 2024 10:10:59 -0800 (PST)
+Received: from [192.168.178.6] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 659FF3F5A1;
+	Wed, 10 Jan 2024 10:10:09 -0800 (PST)
+Message-ID: <5ac0df44-82b6-463b-a805-65f93d181215@arm.com>
+Date: Wed, 10 Jan 2024 19:10:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/5] Rework system pressure interface to the scheduler
+Content-Language: en-US
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+ sudeep.holla@arm.com, rafael@kernel.org, viresh.kumar@linaro.org,
+ agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+ mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+ rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+ bristot@redhat.com, vschneid@redhat.com, lukasz.luba@arm.com,
+ rui.zhang@intel.com, mhiramat@kernel.org, daniel.lezcano@linaro.org,
+ amit.kachhap@gmail.com, corbet@lwn.net, gregkh@linuxfoundation.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ qyousef@layalina.io
 References: <20240108134843.429769-1-vincent.guittot@linaro.org>
- <20240108134843.429769-3-vincent.guittot@linaro.org> <fb25afab-9586-455a-b8c1-47949035c95a@arm.com>
- <CAKfTPtDEKzup63H0iwHkTQCZOdQLUurACCYfEB-MpW+v7JEfag@mail.gmail.com> <92d1b906-6d76-4e96-a688-3a06a0a88508@arm.com>
-In-Reply-To: <92d1b906-6d76-4e96-a688-3a06a0a88508@arm.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Wed, 10 Jan 2024 18:25:15 +0100
-Message-ID: <CAKfTPtBh-Fc-bN3GMZSR7Dv1VCuck6xL_EQuFLBMkfSLGXSs_g@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] sched: Take cpufreq feedback into account
-To: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
-	sudeep.holla@arm.com, rafael@kernel.org, viresh.kumar@linaro.org, 
-	agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org, 
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, bristot@redhat.com, 
-	vschneid@redhat.com, lukasz.luba@arm.com, rui.zhang@intel.com, 
-	mhiramat@kernel.org, daniel.lezcano@linaro.org, amit.kachhap@gmail.com, 
-	corbet@lwn.net, gregkh@linuxfoundation.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	qyousef@layalina.io
-Content-Type: text/plain; charset="UTF-8"
+ <d37e3d06-d9fc-4fc3-ad92-e7031489660a@arm.com>
+ <CAKfTPtAOSgnStDSao1QarHuUW9BTfk1o7r6NO4LhwEJMhq1drg@mail.gmail.com>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+In-Reply-To: <CAKfTPtAOSgnStDSao1QarHuUW9BTfk1o7r6NO4LhwEJMhq1drg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 10 Jan 2024 at 14:51, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->
-> On 09/01/2024 15:30, Vincent Guittot wrote:
-> > On Tue, 9 Jan 2024 at 12:22, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
-> >>
-> >> On 08/01/2024 14:48, Vincent Guittot wrote:
-> >>> Aggregate the different pressures applied on the capacity of CPUs and
-> >>> create a new function that returns the actual capacity of the CPU:
-> >>>   get_actual_cpu_capacity()
-> >>
-> >>    function name                scaling
-> >>
-> >> (1) arch_scale_cpu_capacity() - uarch
-> >>
-> >> (2) get_actual_cpu_capacity() - hw + cpufreq/thermal of (1)
-> >>
-> >> (3) capacity_of()             - rt (rt/dl/irq) of (2) (used by fair)
-> >>
-> >> Although (1) - (3) are very close to each other from the functional
-> >
-> > I don't get your point as name of (1) and (3) have not been changed by the patch
->
-> That's true. But with capacity_orig_of() for (1), we had some coherence
-> in the naming scheme of those cpu_capacity related functions (1) - (3).
-> which helps when trying to understand the code.
->
-> I can see that actual_capacity_of() (2) sounds awful though.
->
-> >> standpoint, their names are not very coherent.
-> >>
-> >> I assume this makes it hard to understand all of this when reading the
-> >> code w/o knowing these patches before.
-> >>
-> >> Why is (2) tagged with 'actual'?
-> >
-> > This is the actual max compute capacity of the cpu at now  i.e.
-> > possibly reduced because of temporary frequency capping
->
-> Will the actual max compute capacity also depend on 'user space system
-> pressure' later, i.e. on 'permanent' frequency capping?
+On 09/01/2024 14:29, Vincent Guittot wrote:
+> On Tue, 9 Jan 2024 at 12:34, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>
+>> On 08/01/2024 14:48, Vincent Guittot wrote:
+>>> Following the consolidation and cleanup of CPU capacity in [1], this serie
+>>> reworks how the scheduler gets the pressures on CPUs. We need to take into
+>>> account all pressures applied by cpufreq on the compute capacity of a CPU
+>>> for dozens of ms or more and not only cpufreq cooling device or HW
+>>> mitigiations. we split the pressure applied on CPU's capacity in 2 parts:
+>>> - one from cpufreq and freq_qos
+>>> - one from HW high freq mitigiation.
+>>>
+>>> The next step will be to add a dedicated interface for long standing
+>>> capping of the CPU capacity (i.e. for seconds or more) like the
+>>> scaling_max_freq of cpufreq sysfs. The latter is already taken into
+>>> account by this serie but as a temporary pressure which is not always the
+>>> best choice when we know that it will happen for seconds or more.
+>>
+>> I guess this is related to the 'user space system pressure' (*) slide of
+>> your OSPM '23 talk.
+> 
+> yes
+> 
+>>
+>> Where do you draw the line when it comes to time between (*) and the
+>> 'medium pace system pressure' (e.g. thermal and FREQ_QOS).
+> 
+> My goal is to consider the /sys/../scaling_max_freq as the 'user space
+> system pressure'
+> 
+>>
+>> IIRC, with (*) you want to rebuild the sched domains etc.
+> 
+> The easiest way would be to rebuild the sched_domain but the cost is
+> not small so I would prefer to skip the rebuild and add a new signal
+> that keep track on this capped capacity
 
-yes it will
+Are you saying that you don't need to rebuild sched domains since
+cpu_capacity information of the sched domain hierarchy is
+independently updated via: 
+
+update_sd_lb_stats() {
+
+  update_group_capacity() {
+
+    if (!child)
+      update_cpu_capacity(sd, cpu) {
+
+        capacity = scale_rt_capacity(cpu) {
+
+          max = get_actual_cpu_capacity(cpu) <- (*)
+        }
+
+        sdg->sgc->capacity = capacity;
+        sdg->sgc->min_capacity = capacity;
+        sdg->sgc->max_capacity = capacity;
+      }
+
+  }
+
+}
+        
+(*) influence of temporary and permanent (to be added) frequency
+pressure on cpu_capacity (per-cpu and in sd data)
 
 
->
-> > So (2) equals (1) minus temporary performance capping and (3)
-> > additionally subtracts the time used by other class to (2)
->
-> OK.
->
-> A coherent set of those tags even reflected in those getters would help
-> but can be done later too.
+example: hackbench on h960 with IPA:
+                                                                                  cap  min  max
+...
+hackbench-2284 [007] .Ns..  2170.796726: update_group_capacity: sdg !child cpu=7 1017 1017 1017
+hackbench-2456 [007] ..s..  2170.920729: update_group_capacity: sdg !child cpu=7 1018 1018 1018
+    <...>-2314 [007] ..s1.  2171.044724: update_group_capacity: sdg !child cpu=7 1011 1011 1011
+hackbench-2541 [007] ..s..  2171.168734: update_group_capacity: sdg !child cpu=7  918  918  918
+hackbench-2558 [007] .Ns..  2171.228716: update_group_capacity: sdg !child cpu=7  912  912  912
+    <...>-2321 [007] ..s..  2171.352718: update_group_capacity: sdg !child cpu=7  812  812  812
+hackbench-2553 [007] ..s..  2171.476721: update_group_capacity: sdg !child cpu=7  640  640  640
+    <...>-2446 [007] ..s2.  2171.600743: update_group_capacity: sdg !child cpu=7  610  610  610
+hackbench-2347 [007] ..s..  2171.724738: update_group_capacity: sdg !child cpu=7  406  406  406
+hackbench-2331 [007] .Ns1.  2171.848768: update_group_capacity: sdg !child cpu=7  390  390  390
+hackbench-2421 [007] ..s..  2171.972733: update_group_capacity: sdg !child cpu=7  388  388  388
+...
