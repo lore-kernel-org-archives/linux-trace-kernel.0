@@ -1,123 +1,179 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7410A59;
-	Wed, 10 Jan 2024 00:13:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bqi4B/uk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86FEAC433C7;
-	Wed, 10 Jan 2024 00:13:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704845591;
-	bh=Gv4c6KiHO29Wy6P60cNBnzMOUtlrYYrwMdYxxWKGGFY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Bqi4B/uk/VltCFfhEXjIjNk7QvDsCS+7JyqKYmONimHrhav1/UluI5Nj7jT6Lq2Mn
-	 ZjeclY/aL5T1PCOQ9r97Zqh8QTFuRJzLX9GKFEKzgqXIrLh/G9Mn2IEhg9H82xM5BY
-	 MtEIot4/yqrFGesVhf70KaGIjvY94GeRS9jpjAskeudO24Awc36Kei+WjyQouYjMow
-	 oJ4Qw5RB8JL4BoE42UFOjtd4UeEp0vsowgqhRTyBbsjaXNjIp7fp5EqK3HMrG3lPYA
-	 YR4xeaIyW1bIaiPwW6kEqAx3MudklNnZG5QxCo18Ub5g/GV7QN50w2p0+AjbNl8ZO2
-	 77p9tjUs4nF3w==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Florent Revest <revest@chromium.org>,
-	Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH] ftrace: Fix DIRECT_CALLS to use SAVE_REGS by default
-Date: Wed, 10 Jan 2024 09:13:06 +0900
-Message-Id: <170484558617.178953.1590516949390270842.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-User-Agent: StGit/0.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA8417C6;
+	Wed, 10 Jan 2024 02:26:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 129BCC433F1;
+	Wed, 10 Jan 2024 02:26:02 +0000 (UTC)
+Date: Tue, 9 Jan 2024 21:27:02 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
+Subject: [PATCH v3] ring-buffer: Have mmapped ring buffer keep track of
+ missed events
+Message-ID: <20240109212702.5b8e6045@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-The commit 60c8971899f3 ("ftrace: Make DIRECT_CALLS work WITH_ARGS
-and !WITH_REGS") changed DIRECT_CALLS to use SAVE_ARGS when there
-are multiple ftrace_ops at the same function, but since the x86 only
-support to jump to direct_call from ftrace_regs_caller, when we set
-the function tracer on the same target function on x86, ftrace-direct
-does not work as below (this actually works on arm64.)
+While testing libtracefs on the mmapped ring buffer, the test that checks
+if missed events are accounted for failed when using the mapped buffer.
+This is because the mapped page does not update the missed events that
+were dropped because the writer filled up the ring buffer before the
+reader could catch it.
 
-At first, insmod ftrace-direct.ko to put a direct_call on
-'wake_up_process()'.
+Add the missed events to the reader page/sub-buffer when the IOCTL is done
+and a new reader page is acquired.
 
- # insmod kernel/samples/ftrace/ftrace-direct.ko
- # less trace
-...
-          <idle>-0       [006] ..s1.   564.686958: my_direct_func: waking up rcu_preempt-17
-          <idle>-0       [007] ..s1.   564.687836: my_direct_func: waking up kcompactd0-63
-          <idle>-0       [006] ..s1.   564.690926: my_direct_func: waking up rcu_preempt-17
-          <idle>-0       [006] ..s1.   564.696872: my_direct_func: waking up rcu_preempt-17
-          <idle>-0       [007] ..s1.   565.191982: my_direct_func: waking up kcompactd0-63
+Note that all accesses to the reader_page via rb_page_commit() had to be
+switched to rb_page_size(), and rb_page_size() which was just a copy of
+rb_page_commit() but now it masks out the RB_MISSED bits. This is needed
+as the mapped reader page is still active in the ring buffer code and
+where it reads the commit field of the bpage for the size, it now must
+mask it otherwise the missed bits that are now set will corrupt the size
+returned.
 
-Setup a function filter to the 'wake_up_process' too, and enable it.
-
- # cd /sys/kernel/tracing/
- # echo wake_up_process > set_ftrace_filter
- # echo function > current_tracer
- # less trace
-...
-          <idle>-0       [006] ..s3.   686.180972: wake_up_process <-call_timer_fn
-          <idle>-0       [006] ..s3.   686.186919: wake_up_process <-call_timer_fn
-          <idle>-0       [002] ..s3.   686.264049: wake_up_process <-call_timer_fn
-          <idle>-0       [002] d.h6.   686.515216: wake_up_process <-kick_pool
-          <idle>-0       [002] d.h6.   686.691386: wake_up_process <-kick_pool
-
-Then, only function tracer is shown on x86.
-But if you enable 'kprobe on ftrace' event (which uses SAVE_REGS flag)
-on the same function, it is shown again.
-
- # echo 'p wake_up_process' >> dynamic_events
- # echo 1 > events/kprobes/p_wake_up_process_0/enable
- # echo > trace
- # less trace
-...
-          <idle>-0       [006] ..s2.  2710.345919: p_wake_up_process_0: (wake_up_process+0x4/0x20)
-          <idle>-0       [006] ..s3.  2710.345923: wake_up_process <-call_timer_fn
-          <idle>-0       [006] ..s1.  2710.345928: my_direct_func: waking up rcu_preempt-17
-          <idle>-0       [006] ..s2.  2710.349931: p_wake_up_process_0: (wake_up_process+0x4/0x20)
-          <idle>-0       [006] ..s3.  2710.349934: wake_up_process <-call_timer_fn
-          <idle>-0       [006] ..s1.  2710.349937: my_direct_func: waking up rcu_preempt-17
-
-To fix this issue, use SAVE_REGS flag for multiple ftrace_ops flag of
-direct_call by default.
-
-Fixes: 60c8971899f3 ("ftrace: Make DIRECT_CALLS work WITH_ARGS and !WITH_REGS")
-Cc: stable@vger.kernel.org
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ftrace.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+Changes since v2: https://lore.kernel.org/linux-trace-kernel/20240109173552.0b40d199@gandalf.local.home/
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index b01ae7d36021..c060d5b47910 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5325,7 +5325,17 @@ static LIST_HEAD(ftrace_direct_funcs);
+- Remove left-over "dump_stack()" that was used for debugging
+
+ kernel/trace/ring_buffer.c | 60 ++++++++++++++++++++++++++++++++++----
+ 1 file changed, 54 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 07dae67424a9..603956bc1e59 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -312,6 +312,8 @@ static u64 rb_event_time_stamp(struct ring_buffer_event *event)
+ /* Missed count stored at end */
+ #define RB_MISSED_STORED	(1 << 30)
  
- static int register_ftrace_function_nolock(struct ftrace_ops *ops);
- 
-+/*
-+ * If there are multiple ftrace_ops, use SAVE_REGS by default, so that direct
-+ * call will be jumped from ftrace_regs_caller. Only if the architecture does
-+ * not support ftrace_regs_caller but direct_call, use SAVE_ARGS so that it
-+ * jumps from ftrace_caller for multiple ftrace_ops.
-+ */
-+#ifndef HAVE_DYNAMIC_FTRACE_WITH_REGS
- #define MULTI_FLAGS (FTRACE_OPS_FL_DIRECT | FTRACE_OPS_FL_SAVE_ARGS)
-+#else
-+#define MULTI_FLAGS (FTRACE_OPS_FL_DIRECT | FTRACE_OPS_FL_SAVE_REGS)
-+#endif
- 
- static int check_direct_multi(struct ftrace_ops *ops)
++#define RB_MISSED_MASK		(3 << 30)
++
+ struct buffer_data_page {
+ 	u64		 time_stamp;	/* page time stamp */
+ 	local_t		 commit;	/* write committed index */
+@@ -2303,7 +2305,7 @@ rb_iter_head_event(struct ring_buffer_iter *iter)
+ /* Size is determined by what has been committed */
+ static __always_inline unsigned rb_page_size(struct buffer_page *bpage)
  {
+-	return rb_page_commit(bpage);
++	return rb_page_commit(bpage) & ~RB_MISSED_MASK;
+ }
+ 
+ static __always_inline unsigned
+@@ -3930,7 +3932,7 @@ static bool rb_per_cpu_empty(struct ring_buffer_per_cpu *cpu_buffer)
+ 		return true;
+ 
+ 	/* Reader should exhaust content in reader page */
+-	if (reader->read != rb_page_commit(reader))
++	if (reader->read != rb_page_size(reader))
+ 		return false;
+ 
+ 	/*
+@@ -4401,7 +4403,7 @@ int ring_buffer_iter_empty(struct ring_buffer_iter *iter)
+ 	return ((iter->head_page == commit_page && iter->head >= commit) ||
+ 		(iter->head_page == reader && commit_page == head_page &&
+ 		 head_page->read == commit &&
+-		 iter->head == rb_page_commit(cpu_buffer->reader_page)));
++		 iter->head == rb_page_size(cpu_buffer->reader_page)));
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_iter_empty);
+ 
+@@ -5745,7 +5747,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+ 	event = rb_reader_event(cpu_buffer);
+ 
+ 	read = reader->read;
+-	commit = rb_page_commit(reader);
++	commit = rb_page_size(reader);
+ 
+ 	/* Check if any events were dropped */
+ 	missed_events = cpu_buffer->lost_events;
+@@ -5822,7 +5824,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+ 	} else {
+ 		/* update the entry counter */
+ 		cpu_buffer->read += rb_page_entries(reader);
+-		cpu_buffer->read_bytes += rb_page_commit(reader);
++		cpu_buffer->read_bytes += rb_page_size(reader);
+ 
+ 		/* swap the pages */
+ 		rb_init_page(bpage);
+@@ -6349,6 +6351,8 @@ struct page *ring_buffer_map_fault(struct trace_buffer *buffer, int cpu,
+ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
++	struct buffer_page *reader;
++	unsigned long missed_events;
+ 	unsigned long reader_size;
+ 	unsigned long flags;
+ 
+@@ -6374,9 +6378,53 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+ 		goto out;
+ 	}
+ 
+-	if (WARN_ON(!rb_get_reader_page(cpu_buffer)))
++	reader = rb_get_reader_page(cpu_buffer);
++	if (WARN_ON(!reader))
+ 		goto out;
+ 
++	/* Check if any events were dropped */
++	missed_events = cpu_buffer->lost_events;
++
++	if (cpu_buffer->reader_page != cpu_buffer->commit_page) {
++		if (missed_events) {
++			struct buffer_data_page *bpage = reader->page;
++			unsigned int commit;
++			/*
++			 * Use the real_end for the data size,
++			 * This gives us a chance to store the lost events
++			 * on the page.
++			 */
++			if (reader->real_end)
++				local_set(&bpage->commit, reader->real_end);
++			/*
++			 * If there is room at the end of the page to save the
++			 * missed events, then record it there.
++			 */
++			commit = rb_page_size(reader);
++			if (buffer->subbuf_size - commit >= sizeof(missed_events)) {
++				memcpy(&bpage->data[commit], &missed_events,
++				       sizeof(missed_events));
++				local_add(RB_MISSED_STORED, &bpage->commit);
++				commit += sizeof(missed_events);
++			}
++			local_add(RB_MISSED_EVENTS, &bpage->commit);
++			/*
++			 * This page may be off to user land. Zero it out here.
++			 */
++			if (commit < buffer->subbuf_size)
++				memset(&bpage->data[commit], 0,
++				       buffer->subbuf_size - commit);
++		}
++	} else {
++		/*
++		 * There really shouldn't be any missed events if the commit
++		 * is on the reader page.
++		 */
++		WARN_ON_ONCE(missed_events);
++	}
++
++	cpu_buffer->lost_events = 0;
++
+ 	goto consume;
+ out:
+ 	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+-- 
+2.43.0
 
