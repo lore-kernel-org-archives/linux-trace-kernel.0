@@ -1,179 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA8417C6;
-	Wed, 10 Jan 2024 02:26:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 129BCC433F1;
-	Wed, 10 Jan 2024 02:26:02 +0000 (UTC)
-Date: Tue, 9 Jan 2024 21:27:02 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
-Subject: [PATCH v3] ring-buffer: Have mmapped ring buffer keep track of
- missed events
-Message-ID: <20240109212702.5b8e6045@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E717E6AC0
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 10 Jan 2024 06:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GkckBDl9"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6d9f94b9186so3236569b3a.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 09 Jan 2024 22:43:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704869007; x=1705473807; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ufriYbCxMamJExkyO+DSziDprmr/nvohHV8KvnEcisE=;
+        b=GkckBDl9tyDeaKoq1OlLbr6jEBwdbjzMGB0I45CAU6xI+pgxYAVVcgVcq2AKQpBjM7
+         3wnDntahFoAcep5K8VnjbMQzSJIofcavO4I7WeCodBVsVW8sbbAy3vuCAA23d10llbWQ
+         O0Sa1BdzkP2xMT49yTz2ONeRQ0t3IdlTQum1qPOpfmaOziYsSz+6XZRSr9zXz8ZyI7IT
+         OorO6nPNXk+DvFyUSi31O7tQPj6+WQAiDZdAp8KoiEEuE89AijmVyZCZabZe5dKcdwdV
+         PbKiXXhbg5q2qGY1BdIQLX4bb8S1WkyNIE0CjOlaKMneYqwUl0Y8joqktrM0wx4EbVEw
+         JFlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704869007; x=1705473807;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ufriYbCxMamJExkyO+DSziDprmr/nvohHV8KvnEcisE=;
+        b=UsfvbDnaJ6s+v437Ij+Pcf6ohYKodaH1BCIa5b4RuQnPXAkemUmiv7urYk7oRFlIDR
+         ZYJoykv/+jlK1d5j+hhhQUCPZB0NpmklyAeFxcipqjxZ9xpSx2cSXneHcx/BrF0erUWi
+         fgNHtWTz/urkcJvEWeuJKSvmpYuXjjWNanwmqpuhqmqSMlbWlptif8ea4JfBIP0HVxrZ
+         iAlfy6jIEgsXOuWbUckMQi7cf3jP2KlvP1EsYcxdd8CET4KZNlPRIVeKdAxTCPOcyjQc
+         E41bCX9hrONRBPQYsF3PuBdwnNYJOBi0Kw34RbWNr3gWeXwga4GzoucFMbhMHFcPo0xt
+         S9tA==
+X-Gm-Message-State: AOJu0YzM4F5EEK7z5MNLWHEJBxM2pMpdorZyw9M8nSVaziXO33QUzQNM
+	XTUosZTqiu3yvDBdtbgLoI8EoB1mmwbWHA==
+X-Google-Smtp-Source: AGHT+IHVmZ9O2UiKApFYg6a+2bvUEeNRE+QH24QgnpIssMtERJd0DP+8Dglnh788IGmlXjBYlPjMPA==
+X-Received: by 2002:a05:6a20:1682:b0:198:7feb:97ae with SMTP id q2-20020a056a20168200b001987feb97aemr365175pzc.123.1704869007250;
+        Tue, 09 Jan 2024 22:43:27 -0800 (PST)
+Received: from localhost ([122.172.81.83])
+        by smtp.gmail.com with ESMTPSA id n5-20020a634005000000b005cd64ff9a42sm2618582pga.64.2024.01.09.22.43.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jan 2024 22:43:26 -0800 (PST)
+Date: Wed, 10 Jan 2024 12:13:24 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+	sudeep.holla@arm.com, rafael@kernel.org, agross@kernel.org,
+	andersson@kernel.org, konrad.dybcio@linaro.org, mingo@redhat.com,
+	peterz@infradead.org, juri.lelli@redhat.com,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+	lukasz.luba@arm.com, rui.zhang@intel.com, mhiramat@kernel.org,
+	daniel.lezcano@linaro.org, amit.kachhap@gmail.com, corbet@lwn.net,
+	gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, qyousef@layalina.io
+Subject: Re: [PATCH v4 1/5] cpufreq: Add a cpufreq pressure feedback for the
+ scheduler
+Message-ID: <20240110064324.bex3ssej5ghie6cu@vireshk-i7>
+References: <20240109164655.626085-1-vincent.guittot@linaro.org>
+ <20240109164655.626085-2-vincent.guittot@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240109164655.626085-2-vincent.guittot@linaro.org>
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On 09-01-24, 17:46, Vincent Guittot wrote:
+> Provide to the scheduler a feedback about the temporary max available
+> capacity. Unlike arch_update_thermal_pressure, this doesn't need to be
+> filtered as the pressure will happen for dozens ms or more.
+> 
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
+>  drivers/cpufreq/cpufreq.c | 36 ++++++++++++++++++++++++++++++++++++
+>  include/linux/cpufreq.h   | 10 ++++++++++
+>  2 files changed, 46 insertions(+)
 
-While testing libtracefs on the mmapped ring buffer, the test that checks
-if missed events are accounted for failed when using the mapped buffer.
-This is because the mapped page does not update the missed events that
-were dropped because the writer filled up the ring buffer before the
-reader could catch it.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Add the missed events to the reader page/sub-buffer when the IOCTL is done
-and a new reader page is acquired.
-
-Note that all accesses to the reader_page via rb_page_commit() had to be
-switched to rb_page_size(), and rb_page_size() which was just a copy of
-rb_page_commit() but now it masks out the RB_MISSED bits. This is needed
-as the mapped reader page is still active in the ring buffer code and
-where it reads the commit field of the bpage for the size, it now must
-mask it otherwise the missed bits that are now set will corrupt the size
-returned.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v2: https://lore.kernel.org/linux-trace-kernel/20240109173552.0b40d199@gandalf.local.home/
-
-- Remove left-over "dump_stack()" that was used for debugging
-
- kernel/trace/ring_buffer.c | 60 ++++++++++++++++++++++++++++++++++----
- 1 file changed, 54 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 07dae67424a9..603956bc1e59 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -312,6 +312,8 @@ static u64 rb_event_time_stamp(struct ring_buffer_event *event)
- /* Missed count stored at end */
- #define RB_MISSED_STORED	(1 << 30)
- 
-+#define RB_MISSED_MASK		(3 << 30)
-+
- struct buffer_data_page {
- 	u64		 time_stamp;	/* page time stamp */
- 	local_t		 commit;	/* write committed index */
-@@ -2303,7 +2305,7 @@ rb_iter_head_event(struct ring_buffer_iter *iter)
- /* Size is determined by what has been committed */
- static __always_inline unsigned rb_page_size(struct buffer_page *bpage)
- {
--	return rb_page_commit(bpage);
-+	return rb_page_commit(bpage) & ~RB_MISSED_MASK;
- }
- 
- static __always_inline unsigned
-@@ -3930,7 +3932,7 @@ static bool rb_per_cpu_empty(struct ring_buffer_per_cpu *cpu_buffer)
- 		return true;
- 
- 	/* Reader should exhaust content in reader page */
--	if (reader->read != rb_page_commit(reader))
-+	if (reader->read != rb_page_size(reader))
- 		return false;
- 
- 	/*
-@@ -4401,7 +4403,7 @@ int ring_buffer_iter_empty(struct ring_buffer_iter *iter)
- 	return ((iter->head_page == commit_page && iter->head >= commit) ||
- 		(iter->head_page == reader && commit_page == head_page &&
- 		 head_page->read == commit &&
--		 iter->head == rb_page_commit(cpu_buffer->reader_page)));
-+		 iter->head == rb_page_size(cpu_buffer->reader_page)));
- }
- EXPORT_SYMBOL_GPL(ring_buffer_iter_empty);
- 
-@@ -5745,7 +5747,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 	event = rb_reader_event(cpu_buffer);
- 
- 	read = reader->read;
--	commit = rb_page_commit(reader);
-+	commit = rb_page_size(reader);
- 
- 	/* Check if any events were dropped */
- 	missed_events = cpu_buffer->lost_events;
-@@ -5822,7 +5824,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 	} else {
- 		/* update the entry counter */
- 		cpu_buffer->read += rb_page_entries(reader);
--		cpu_buffer->read_bytes += rb_page_commit(reader);
-+		cpu_buffer->read_bytes += rb_page_size(reader);
- 
- 		/* swap the pages */
- 		rb_init_page(bpage);
-@@ -6349,6 +6351,8 @@ struct page *ring_buffer_map_fault(struct trace_buffer *buffer, int cpu,
- int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer;
-+	struct buffer_page *reader;
-+	unsigned long missed_events;
- 	unsigned long reader_size;
- 	unsigned long flags;
- 
-@@ -6374,9 +6378,53 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
- 		goto out;
- 	}
- 
--	if (WARN_ON(!rb_get_reader_page(cpu_buffer)))
-+	reader = rb_get_reader_page(cpu_buffer);
-+	if (WARN_ON(!reader))
- 		goto out;
- 
-+	/* Check if any events were dropped */
-+	missed_events = cpu_buffer->lost_events;
-+
-+	if (cpu_buffer->reader_page != cpu_buffer->commit_page) {
-+		if (missed_events) {
-+			struct buffer_data_page *bpage = reader->page;
-+			unsigned int commit;
-+			/*
-+			 * Use the real_end for the data size,
-+			 * This gives us a chance to store the lost events
-+			 * on the page.
-+			 */
-+			if (reader->real_end)
-+				local_set(&bpage->commit, reader->real_end);
-+			/*
-+			 * If there is room at the end of the page to save the
-+			 * missed events, then record it there.
-+			 */
-+			commit = rb_page_size(reader);
-+			if (buffer->subbuf_size - commit >= sizeof(missed_events)) {
-+				memcpy(&bpage->data[commit], &missed_events,
-+				       sizeof(missed_events));
-+				local_add(RB_MISSED_STORED, &bpage->commit);
-+				commit += sizeof(missed_events);
-+			}
-+			local_add(RB_MISSED_EVENTS, &bpage->commit);
-+			/*
-+			 * This page may be off to user land. Zero it out here.
-+			 */
-+			if (commit < buffer->subbuf_size)
-+				memset(&bpage->data[commit], 0,
-+				       buffer->subbuf_size - commit);
-+		}
-+	} else {
-+		/*
-+		 * There really shouldn't be any missed events if the commit
-+		 * is on the reader page.
-+		 */
-+		WARN_ON_ONCE(missed_events);
-+	}
-+
-+	cpu_buffer->lost_events = 0;
-+
- 	goto consume;
- out:
- 	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
 -- 
-2.43.0
-
+viresh
