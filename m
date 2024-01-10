@@ -1,155 +1,92 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40BF482FC;
-	Wed, 10 Jan 2024 13:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20F4495CC;
+	Wed, 10 Jan 2024 13:48:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PP3DVEC/"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-50e7f58c5fbso5283982e87.1;
-        Wed, 10 Jan 2024 05:10:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704892213; x=1705497013; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dcp3BdvYnFjEQy7q3wABGIgUqH9mmv2OBJ3xCim2kMY=;
-        b=PP3DVEC/TCmIqGDc3WbZW+M7kWv7ZjvaG/wD4ErVV3iLTD+oIS25qLCx2vnmuSVaUi
-         d8t/YQAdgQDi1toDdpfzywxbiKKFg6478mq2egPuqAAxKERJIEzwRZhgyVTbSbJuEqJP
-         yCCDzIH3gFBu/p/ooSUO3O+utB9f6jCyfNi+V53mWcy9CVtZzBTsHb5ysNw/P1UJcsMA
-         GXF40qDaciu5RzZCArIfNSz/s4v1YmUgw2LfJqt56Wwz/UUo5SPSGSCxDfsb6u1Mca1s
-         LFWR9CKE6sVJgGlBpVIXz2wdnA2g18WnUNzNDYYVeRcn3tFrfCCExdzBliPsu5gdNS9M
-         anSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704892213; x=1705497013;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Dcp3BdvYnFjEQy7q3wABGIgUqH9mmv2OBJ3xCim2kMY=;
-        b=joEgOZjTKTJFMwA/AexTUWWeRo3eCp6WX3kOupbMrtaZJp+wcV00/otycMI+/72tYO
-         iqXLbOE/8vcvHO4Qfhn8kpSzdiEfJImnLjhDXji3mkBp0qAL4XgbTYUdZotZltaQP46D
-         O1+wHFi/ezlWV3isREYS989J4fyRtnMUNZi0tOvRE1UBrNsJAAh+OybDmEOwYwNoVVWU
-         pjqsTBVtKhGosvEzkhILmsE3/ZeQUcZoyYfbbnUMcTQazWR5mYMbnYw+xx8qzSSXsypW
-         6vPR6HWDDJTr1fsJDeyNZYmz4xtxkd6mZDoXT3erSRh2hF9PlRyyKxP9gWPCVl5pl/Lj
-         fwag==
-X-Gm-Message-State: AOJu0Yxi29Wbz5c2SuO96IabKRYY/xXRiYfGxUSutBCyTtb1d51FFbEC
-	YNhPgl32/gBRdvJHlWgkzlo=
-X-Google-Smtp-Source: AGHT+IETwxojo0uhH0QtUD/lTz3fm8rpHRKidhtMuw5Jxb2NGO+a6RYpyBJ5linEVx7czgUHB+Te6w==
-X-Received: by 2002:a19:ca0b:0:b0:50e:bb4d:e502 with SMTP id a11-20020a19ca0b000000b0050ebb4de502mr452352lfg.122.1704892212552;
-        Wed, 10 Jan 2024 05:10:12 -0800 (PST)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id u21-20020a170906069500b00a2a67731f31sm2075239ejb.109.2024.01.10.05.10.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 05:10:12 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 10 Jan 2024 14:10:10 +0100
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Florent Revest <revest@chromium.org>,
-	Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] ftrace: Fix DIRECT_CALLS to use SAVE_REGS by default
-Message-ID: <ZZ6XMk-k6NL0eInV@krava>
-References: <170484558617.178953.1590516949390270842.stgit@devnote2>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V1jPPPfb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14496C433C7;
+	Wed, 10 Jan 2024 13:48:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704894507;
+	bh=Mpj9MmpWsZ0QXa3z+JG9y8iO9570kyRUme6G8UyY3ns=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V1jPPPfbtZjWicjR/pXvV3fvfEd+WTpUYKesK1ver/unl0yUXsY4TkjQIutQjBRsP
+	 rP/Oz0q/0h14UEjOgFaxFG624+eWlJ/AO+ivv3TYC1sZnL+hL4/+Alo/46tP000hXg
+	 zplNZ64lLrfkj8J9hOzdzzP2smKm7MeEZ/IYISeNp94tvvX509RdtM1WHeyhjMm5jx
+	 6PVp6J9lR2f0adpYnosG4kNDW+C6yKAzSmFoUpH39oONuTUSb402zXo2PYbzqdDyDw
+	 8BKfIvBQaR2VfeSzJy9k28uur98lcaUtFQRjhOYk1Xziu9Q+q1jecwOjEuD67FrH9y
+	 AnuUlci6GEj1Q==
+Date: Wed, 10 Jan 2024 13:48:20 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: akpm@linux-foundation.org, llvm@lists.linux.dev,
+	patches@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	kvm@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-efi@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linux-arch@vger.kernel.org, kasan-dev@googlegroups.com,
+	linux-mm@kvack.org, bridge@lists.linux.dev, netdev@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 2/3] arch and include: Update LLVM Phabricator links
+Message-ID: <20240110-apostle-trident-533d4c2c9c97@spud>
+References: <20240109-update-llvm-links-v1-0-eb09b59db071@kernel.org>
+ <20240109-update-llvm-links-v1-2-eb09b59db071@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="p6SYI+U6gP5vpK1M"
+Content-Disposition: inline
+In-Reply-To: <20240109-update-llvm-links-v1-2-eb09b59db071@kernel.org>
+
+
+--p6SYI+U6gP5vpK1M
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <170484558617.178953.1590516949390270842.stgit@devnote2>
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 10, 2024 at 09:13:06AM +0900, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> The commit 60c8971899f3 ("ftrace: Make DIRECT_CALLS work WITH_ARGS
-> and !WITH_REGS") changed DIRECT_CALLS to use SAVE_ARGS when there
-> are multiple ftrace_ops at the same function, but since the x86 only
-> support to jump to direct_call from ftrace_regs_caller, when we set
-> the function tracer on the same target function on x86, ftrace-direct
-> does not work as below (this actually works on arm64.)
-> 
-> At first, insmod ftrace-direct.ko to put a direct_call on
-> 'wake_up_process()'.
-> 
->  # insmod kernel/samples/ftrace/ftrace-direct.ko
->  # less trace
-> ...
->           <idle>-0       [006] ..s1.   564.686958: my_direct_func: waking up rcu_preempt-17
->           <idle>-0       [007] ..s1.   564.687836: my_direct_func: waking up kcompactd0-63
->           <idle>-0       [006] ..s1.   564.690926: my_direct_func: waking up rcu_preempt-17
->           <idle>-0       [006] ..s1.   564.696872: my_direct_func: waking up rcu_preempt-17
->           <idle>-0       [007] ..s1.   565.191982: my_direct_func: waking up kcompactd0-63
-> 
-> Setup a function filter to the 'wake_up_process' too, and enable it.
-> 
->  # cd /sys/kernel/tracing/
->  # echo wake_up_process > set_ftrace_filter
->  # echo function > current_tracer
->  # less trace
-> ...
->           <idle>-0       [006] ..s3.   686.180972: wake_up_process <-call_timer_fn
->           <idle>-0       [006] ..s3.   686.186919: wake_up_process <-call_timer_fn
->           <idle>-0       [002] ..s3.   686.264049: wake_up_process <-call_timer_fn
->           <idle>-0       [002] d.h6.   686.515216: wake_up_process <-kick_pool
->           <idle>-0       [002] d.h6.   686.691386: wake_up_process <-kick_pool
-> 
-> Then, only function tracer is shown on x86.
-> But if you enable 'kprobe on ftrace' event (which uses SAVE_REGS flag)
-> on the same function, it is shown again.
-> 
->  # echo 'p wake_up_process' >> dynamic_events
->  # echo 1 > events/kprobes/p_wake_up_process_0/enable
->  # echo > trace
->  # less trace
-> ...
->           <idle>-0       [006] ..s2.  2710.345919: p_wake_up_process_0: (wake_up_process+0x4/0x20)
->           <idle>-0       [006] ..s3.  2710.345923: wake_up_process <-call_timer_fn
->           <idle>-0       [006] ..s1.  2710.345928: my_direct_func: waking up rcu_preempt-17
->           <idle>-0       [006] ..s2.  2710.349931: p_wake_up_process_0: (wake_up_process+0x4/0x20)
->           <idle>-0       [006] ..s3.  2710.349934: wake_up_process <-call_timer_fn
->           <idle>-0       [006] ..s1.  2710.349937: my_direct_func: waking up rcu_preempt-17
-> 
-> To fix this issue, use SAVE_REGS flag for multiple ftrace_ops flag of
-> direct_call by default.
-
-nice catch
-
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-jirka
-
-> 
-> Fixes: 60c8971899f3 ("ftrace: Make DIRECT_CALLS work WITH_ARGS and !WITH_REGS")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Tue, Jan 09, 2024 at 03:16:30PM -0700, Nathan Chancellor wrote:
+> reviews.llvm.org was LLVM's Phabricator instances for code review. It
+> has been abandoned in favor of GitHub pull requests. While the majority
+> of links in the kernel sources still work because of the work Fangrui
+> has done turning the dynamic Phabricator instance into a static archive,
+> there are some issues with that work, so preemptively convert all the
+> links in the kernel sources to point to the commit on GitHub.
+>=20
+> Most of the commits have the corresponding differential review link in
+> the commit message itself so there should not be any loss of fidelity in
+> the relevant information.
+>=20
+> Link: https://discourse.llvm.org/t/update-on-github-pull-requests/71540/1=
+72
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 > ---
->  kernel/trace/ftrace.c |   10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index b01ae7d36021..c060d5b47910 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -5325,7 +5325,17 @@ static LIST_HEAD(ftrace_direct_funcs);
->  
->  static int register_ftrace_function_nolock(struct ftrace_ops *ops);
->  
-> +/*
-> + * If there are multiple ftrace_ops, use SAVE_REGS by default, so that direct
-> + * call will be jumped from ftrace_regs_caller. Only if the architecture does
-> + * not support ftrace_regs_caller but direct_call, use SAVE_ARGS so that it
-> + * jumps from ftrace_caller for multiple ftrace_ops.
-> + */
-> +#ifndef HAVE_DYNAMIC_FTRACE_WITH_REGS
->  #define MULTI_FLAGS (FTRACE_OPS_FL_DIRECT | FTRACE_OPS_FL_SAVE_ARGS)
-> +#else
-> +#define MULTI_FLAGS (FTRACE_OPS_FL_DIRECT | FTRACE_OPS_FL_SAVE_REGS)
-> +#endif
->  
->  static int check_direct_multi(struct ftrace_ops *ops)
->  {
-> 
+
+>  arch/riscv/Kconfig              | 2 +-
+>  arch/riscv/include/asm/ftrace.h | 2 +-
+
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+
+Cheers,
+Conor.
+
+--p6SYI+U6gP5vpK1M
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZZ6gJAAKCRB4tDGHoIJi
+0mIlAQCj5ZP6QEhEswWYjX38obn/p3pF8mt+Ve+vlBnVEhAW8QD8ClRvKxDiajR5
+Zp8ES/FLDyH/QJ5QjGuYLP5PATLeFAY=
+=SqXc
+-----END PGP SIGNATURE-----
+
+--p6SYI+U6gP5vpK1M--
