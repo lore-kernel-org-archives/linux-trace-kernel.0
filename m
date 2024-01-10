@@ -1,168 +1,56 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A114D5A8;
-	Wed, 10 Jan 2024 18:30:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FE05C433C7;
-	Wed, 10 Jan 2024 18:30:54 +0000 (UTC)
-Date: Wed, 10 Jan 2024 13:31:54 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Al Viro
- <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] tracefs/eventfs: Use root and instance inodes as
- default ownership
-Message-ID: <20240110133154.6e18feb9@gandalf.local.home>
-In-Reply-To: <20240110105251.48334598@gandalf.local.home>
-References: <20240103203246.115732ec@gandalf.local.home>
-	<20240105-wegstecken-sachkenntnis-6289842d6d01@brauner>
-	<20240105095954.67de63c2@gandalf.local.home>
-	<20240107-getrickst-angeeignet-049cea8cad13@brauner>
-	<20240107132912.71b109d8@rorschach.local.home>
-	<20240108-ortsrand-ziehen-4e9a9a58e708@brauner>
-	<20240108102331.7de98cab@gandalf.local.home>
-	<20240110-murren-extra-cd1241aae470@brauner>
-	<20240110080746.50f7767d@gandalf.local.home>
-	<20240110105251.48334598@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB86551C5E;
+	Wed, 10 Jan 2024 20:38:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KcJTj4Cd"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 949F1C433A6;
+	Wed, 10 Jan 2024 20:38:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704919125;
+	bh=jqVJ65PjAdptZLt/APBS0SPrv8D3nmlTfilvmJfxIV4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=KcJTj4CdRpWb6G9Tb6QhW8NkOOPiIXwITosMIGkuseTUdc547qUsTOCb5JBPQjYFS
+	 BFXWUrVK5jzeTrap2fTe0UXVhR0IVWcOcZMUNRH16+8rql5+Va8zpN/HCL5Q8LDZa/
+	 fOfFWoluxTtYdRgxdwiNAKLxxbCV1d6s+bXlswjHtYkBhTL0+majClvIoBBQWbtx8X
+	 bP90zTGW2TU8GnI9AawR7aOB0vS3L7Omnh55/gPPLFoaALxoV/9KpL2E2GZirA1Vk1
+	 TjP+e9UbZSYAim7g/N3SmpUwUH+xOIiUWSzeFfnL3zFpxXkVDiHA5aZTp704hWAtjf
+	 +vtPvzpRPJ5AA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7D2B2DFC686;
+	Wed, 10 Jan 2024 20:38:45 +0000 (UTC)
+Subject: Re: [GIT PULL] hardening updates for v6.8-rc1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <202401081012.7571CBB@keescook>
+References: <202401081012.7571CBB@keescook>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <202401081012.7571CBB@keescook>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.8-rc1
+X-PR-Tracked-Commit-Id: a75b3809dce2ad006ebf7fa641f49881fa0d79d7
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 120a201bd2ad0bffebdd2cf62c389dbba79bbfae
+Message-Id: <170491912549.22036.4098527230662245491.pr-tracker-bot@kernel.org>
+Date: Wed, 10 Jan 2024 20:38:45 +0000
+To: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Alexander Potapenko <glider@google.com>, Anders Larsen <al@alarsen.net>, Andrew Morton <akpm@linux-foundation.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Anna Schumaker <anna@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Azeem Shaikh <azeemshaikh38@gmail.com>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Chuck Lever <chuck.lever@oracle.com>, Dai Ngo <Dai.Ngo@oracle.com>, "David S. Miller" <davem@davemloft.net>, Dmitry Vyukov <dvyukov@google.com>, Eric Dumazet <edumazet@google.com>, Geliang Tang <geliang.tang@suse.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gurucharan G <gurucharanx.g@intel.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Jeff Layton <jlayton@kernel.org>, Jesse Brandeburg <jesse.brandeburg@intel.com>, Justin Stitt <justinstitt@google.com>, kasan-dev@googlegroups.com, Kees Cook <keescook@chromium.org>, linux-hardening@vg
+ er.kernel.org, linux-nfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, Marco Elver <elver@google.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Neil Brown <neilb@suse.de>, netdev@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>, Paolo Abeni <pabeni@redhat.com>, Ronald Monthero <debug.penguin32@gmail.com>, Shiraz Saleem <shiraz.saleem@intel.com>, Stephen Boyd <swboyd@chromium.org>, "Steven Rostedt (Google)" <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, Tom Talpey <tom@talpey.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, Trond Myklebust <trond.myklebust@hammerspace.com>, Valentin Schneider <vschneid@redhat.com>, Xu Panda <xu.panda@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Wed, 10 Jan 2024 10:52:51 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+The pull request you sent on Mon, 8 Jan 2024 10:20:13 -0800:
 
-> On Wed, 10 Jan 2024 08:07:46 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > Or are you saying that I don't need the ".permission" callback, because
-> > eventfs does it when it creates the inodes? But for eventfs to know what
-> > the permissions changes are, it uses .getattr and .setattr.  
-> 
-> OK, if your main argument is that we do not need .permission, I agree with
-> you. But that's a trivial change and doesn't affect the complexity that
-> eventfs is doing. In fact, removing the "permission" check is simply this
-> patch:
-> 
-> --
-> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-> index fdff53d5a1f8..f2af07a857e2 100644
-> --- a/fs/tracefs/event_inode.c
-> +++ b/fs/tracefs/event_inode.c
-> @@ -192,18 +192,10 @@ static int eventfs_get_attr(struct mnt_idmap *idmap,
->  	return 0;
->  }
->  
-> -static int eventfs_permission(struct mnt_idmap *idmap,
-> -			      struct inode *inode, int mask)
-> -{
-> -	set_top_events_ownership(inode);
-> -	return generic_permission(idmap, inode, mask);
-> -}
-> -
->  static const struct inode_operations eventfs_root_dir_inode_operations = {
->  	.lookup		= eventfs_root_lookup,
->  	.setattr	= eventfs_set_attr,
->  	.getattr	= eventfs_get_attr,
-> -	.permission	= eventfs_permission,
->  };
->  
->  static const struct inode_operations eventfs_file_inode_operations = {
-> --
-> 
-> I only did that because Linus mentioned it, and I thought it was needed.
-> I'll apply this patch too, as it appears to work with this code.
+> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.8-rc1
 
-Oh, eventfs files and directories don't need the .permissions because its
-inodes and dentries are not created until accessed. But the "events"
-directory itself has its dentry and inode created at boot up, but still
-uses the eventfs_root_dir_inode_operations. So the .permissions is still
-needed!
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/120a201bd2ad0bffebdd2cf62c389dbba79bbfae
 
-If you look at the "set_top_events_ownership()" function, it has:
+Thank you!
 
-	/* The top events directory doesn't get automatically updated */
-	if (!ei || !ei->is_events || !(ei->attr.mode & EVENTFS_TOPLEVEL))
-		return;
-
-That is, it does nothing if the entry is not the "events" directory. It
-falls back to he default "->permissions()" function for everything but the
-top level "events" directory.
-
-But this and .getattr are still needed for the events directory, because it
-suffers the same issue as the other tracefs entries. That is, it's inodes
-and dentries are created at boot up before it is mounted. So if the mount
-has gid=1000, it will be ignored.
-
-The .getattr is called by "stat" which ls does. So after boot up if you
-just do:
-
- # chmod 0750 /sys/kernel/events
- # chmod 0770 /sys/kernel/tracing
- # mount -o remount,gid=1000 /sys/kernel/tracing
- # su - rostedt
- $ id
-uid=1000(rostedt) gid=1000(rostedt) groups=1000(rostedt)
- $ ls /sys/kernel/tracing/events/
-9p            ext4            iomap        module      raw_syscalls  thermal
-alarmtimer    fib             iommu        msr         rcu           thp
-avc           fib6            io_uring     napi        regmap        timer
-block         filelock        ipi          neigh       regulator     tlb
-bpf_test_run  filemap         irq          net         resctrl       udp
-bpf_trace     ftrace          irq_matrix   netfs       rpm           virtio_gpu[
-...]
-
-The above works because "ls" does a stat() on the directory first, which
-does a .getattr() call that updates the permissions of the existing "events"
-directory inode.
-
-  BUT!
-
-If I had used my own getents() program that has:
-
-        fd = openat(AT_FDCWD, argv[1], O_RDONLY);
-        if (fd < 0)
-                perror("openat");
-
-        n = getdents64(fd, buf, BUF_SIZE);
-        if (n < 0)
-                perror("getdents64");
-
-Where it calls the openat() without doing a stat fist, and after boot, had done:
-
- # chmod 0750 /sys/kernel/events
- # chmod 0770 /sys/kernel/tracing
- # mount -o remount,gid=1000 /sys/kernel/tracing
- # su - rostedt
- $ id
-uid=1000(rostedt) gid=1000(rostedt) groups=1000(rostedt)
- $ ./getdents /sys/kernel/tracing/events
-openat: Permission denied
-getdents64: Bad file descriptor
-
-It errors because he "events" inode permission hasn't been updated yet.
-Now after getting the above error, if I do the "ls" and then run it again:
-
- $ ls /sys/kernel/tracing/events > /dev/null
- $ ./getdents /sys/kernel/tracing/events
-enable
-header_page
-header_event
-initcall
-vsyscall
-syscalls
-
-it works!
-
-so no, I can't remove that .permissions callback from eventfs.
-
--- Steve
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
