@@ -1,52 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C265100A;
-	Thu, 11 Jan 2024 17:08:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D985955C18;
+	Thu, 11 Jan 2024 19:40:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F3mQ8372"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704992917; x=1736528917;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pZADfUlkNjpKkgkO8I89jRqUgQvYhM2PinPZp/8ueuk=;
-  b=F3mQ8372Kibz9w747lmsfwa/I0swiUHLsh4xnvRjf4EJar6FML4tlqa6
-   kD1Rx82XhXvAEzVvSGKultxQFyHw0XD5LZOEodf6w+FJ3U3zHQ8dm2rbO
-   MCPPnbo/GzsLKhMZ/qci2CxTZE8KcLogXR+/wrR2BdEKL0qnHyOq0459V
-   7glzznR6Ur/IaSiVEao3MfQBLxhmjUgZ830jWEHnmCotnAa/8oMTLbnod
-   FlInT32T6zw+JUP2ulcCrZatgq0Ie1X2aeW9WbB2K+009kBUzy5qp6HMT
-   dkUY9iyutpaspIFVcn16Vhfy0H21UNLjKhlcMuKNRTdWMrId7/9gqgh6a
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="430098460"
-X-IronPort-AV: E=Sophos;i="6.04,186,1695711600"; 
-   d="scan'208";a="430098460"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 09:08:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,186,1695711600"; 
-   d="scan'208";a="31086890"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 11 Jan 2024 09:07:58 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rNyX5-0008WK-12;
-	Thu, 11 Jan 2024 17:07:55 +0000
-Date: Fri, 12 Jan 2024 01:07:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Carlos Galo <carlosgalo@google.com>, rostedt@goodmis.org,
-	akpm@linux-foundation.org, surenb@google.com
-Cc: oe-kbuild-all@lists.linux.dev, android-mm@google.com,
-	kernel-team@android.com, Carlos Galo <carlosgalo@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH] mm: Update mark_victim tracepoints fields
-Message-ID: <202401120052.rdFjpivG-lkp@intel.com>
-References: <20240111001155.746-1-carlosgalo@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SPPtBjPT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFE49C433C7;
+	Thu, 11 Jan 2024 19:40:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705002004;
+	bh=DmkLUwPO5pHCJHvVcwPy1P4sgjTzQNNak+Eq1cUdG4A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SPPtBjPT+YAd4ocTNd3PGbSKeEby62sm5DsaPgCv2HqVIW9AA61WpCKjUG1nFowUj
+	 3KfWsd59L33mr3lPW1pODJ4DxPp3c0FvcL65M+M43Xd0dsozkiXoWTzMQXYyp+ok+1
+	 Cb30aWs3Sxk5AodiSlMI4eMG+NABT1HgniB893pjpYDswpLiHA/yPSOP9UoGeJLbKt
+	 bnTkQNlGsDQqy8YOmI7KSXeLlghLdU+zlsbZoTu+RaMYkcWjxf+xdeMOQ8myzu+KXS
+	 4DFQ7cH+eAqKWFGmhszUBwC2NDKu/wiPRUDEP+5/MhjNc4xXnfccYuJTOa5a8NwKDV
+	 Z7nFRX4xsl/qg==
+Date: Thu, 11 Jan 2024 12:40:01 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Yonghong Song <yonghong.song@linux.dev>, akpm@linux-foundation.org
+Cc: llvm@lists.linux.dev, patches@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-efi@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linux-arch@vger.kernel.org,
+	kasan-dev@googlegroups.com, linux-mm@kvack.org,
+	bridge@lists.linux.dev, netdev@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, ast@kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, mykolal@fb.com,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH 1/3] selftests/bpf: Update LLVM Phabricator links
+Message-ID: <20240111194001.GA3805856@dev-arch.thelio-3990X>
+References: <20240109-update-llvm-links-v1-0-eb09b59db071@kernel.org>
+ <20240109-update-llvm-links-v1-1-eb09b59db071@kernel.org>
+ <6a655e9f-9878-4292-9d16-f988c4bdfc73@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -55,69 +47,55 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240111001155.746-1-carlosgalo@google.com>
+In-Reply-To: <6a655e9f-9878-4292-9d16-f988c4bdfc73@linux.dev>
 
-Hi Carlos,
+Hi Yonghong,
 
-kernel test robot noticed the following build errors:
+On Wed, Jan 10, 2024 at 08:05:36PM -0800, Yonghong Song wrote:
+> 
+> On 1/9/24 2:16 PM, Nathan Chancellor wrote:
+> > reviews.llvm.org was LLVM's Phabricator instances for code review. It
+> > has been abandoned in favor of GitHub pull requests. While the majority
+> > of links in the kernel sources still work because of the work Fangrui
+> > has done turning the dynamic Phabricator instance into a static archive,
+> > there are some issues with that work, so preemptively convert all the
+> > links in the kernel sources to point to the commit on GitHub.
+> > 
+> > Most of the commits have the corresponding differential review link in
+> > the commit message itself so there should not be any loss of fidelity in
+> > the relevant information.
+> > 
+> > Additionally, fix a typo in the xdpwall.c print ("LLMV" -> "LLVM") while
+> > in the area.
+> > 
+> > Link: https://discourse.llvm.org/t/update-on-github-pull-requests/71540/172
+> > Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> 
+> Ack with one nit below.
+> 
+> Acked-by: Yonghong Song <yonghong.song@linux.dev>
 
-[auto build test ERROR on 0dd3ee31125508cd67f7e7172247f05b7fd1753a]
+<snip>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Carlos-Galo/mm-Update-mark_victim-tracepoints-fields/20240111-081635
-base:   0dd3ee31125508cd67f7e7172247f05b7fd1753a
-patch link:    https://lore.kernel.org/r/20240111001155.746-1-carlosgalo%40google.com
-patch subject: [PATCH] mm: Update mark_victim tracepoints fields
-config: x86_64-defconfig (https://download.01.org/0day-ci/archive/20240112/202401120052.rdFjpivG-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240112/202401120052.rdFjpivG-lkp@intel.com/reproduce)
+> > @@ -304,6 +304,6 @@ from running test_progs will look like:
+> >   .. code-block:: console
+> > -  test_xdpwall:FAIL:Does LLVM have https://reviews.llvm.org/D109073? unexpected error: -4007
+> > +  test_xdpwall:FAIL:Does LLVM have https://github.com/llvm/llvm-project/commit/ea72b0319d7b0f0c2fcf41d121afa5d031b319d5? unexpected error: -4007
+> > -__ https://reviews.llvm.org/D109073
+> > +__ https://github.com/llvm/llvm-project/commit/ea72b0319d7b0f0c2fcf41d121afa5d031b319d
+> 
+> To be consistent with other links, could you add the missing last alnum '5' to the above link?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401120052.rdFjpivG-lkp@intel.com/
+Thanks a lot for catching this and providing an ack. Andrew, could you
+squash this update into selftests-bpf-update-llvm-phabricator-links.patch?
 
-All errors (new ones prefixed by >>):
-
-   In file included from include/trace/define_trace.h:102,
-                    from include/trace/events/oom.h:206,
-                    from mm/oom_kill.c:54:
-   include/trace/events/oom.h: In function 'trace_raw_output_mark_victim':
->> include/trace/stages/stage3_trace_output.h:6:17: error: called object is not a function or function pointer
-       6 | #define __entry field
-         |                 ^~~~~
-   include/trace/trace_events.h:203:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
-     203 |         trace_event_printf(iter, print);                                \
-         |                                  ^~~~~
-   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
-      45 |                              PARAMS(print));                   \
-         |                              ^~~~~~
-   include/trace/events/oom.h:74:1: note: in expansion of macro 'TRACE_EVENT'
-      74 | TRACE_EVENT(mark_victim,
-         | ^~~~~~~~~~~
-   include/trace/events/oom.h:93:9: note: in expansion of macro 'TP_printk'
-      93 |         TP_printk("pid=%d uid=%u comm=%s oom_score_adj=%hd",
-         |         ^~~~~~~~~
-   include/trace/events/oom.h:95:17: note: in expansion of macro '__entry'
-      95 |                 __entry->uid
-         |                 ^~~~~~~
->> include/trace/trace_events.h:203:39: error: expected expression before ')' token
-     203 |         trace_event_printf(iter, print);                                \
-         |                                       ^
-   include/trace/trace_events.h:40:9: note: in expansion of macro 'DECLARE_EVENT_CLASS'
-      40 |         DECLARE_EVENT_CLASS(name,                              \
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/trace/events/oom.h:74:1: note: in expansion of macro 'TRACE_EVENT'
-      74 | TRACE_EVENT(mark_victim,
-         | ^~~~~~~~~~~
-
-
-vim +6 include/trace/stages/stage3_trace_output.h
-
-af6b9668e85ffd include/trace/stages/stage3_defines.h Steven Rostedt (Google  2022-03-03  4) 
-af6b9668e85ffd include/trace/stages/stage3_defines.h Steven Rostedt (Google  2022-03-03  5) #undef __entry
-af6b9668e85ffd include/trace/stages/stage3_defines.h Steven Rostedt (Google  2022-03-03 @6) #define __entry field
-af6b9668e85ffd include/trace/stages/stage3_defines.h Steven Rostedt (Google  2022-03-03  7) 
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+diff --git a/tools/testing/selftests/bpf/README.rst b/tools/testing/selftests/bpf/README.rst
+index b9a493f66557..e56034abb3c2 100644
+--- a/tools/testing/selftests/bpf/README.rst
++++ b/tools/testing/selftests/bpf/README.rst
+@@ -306,4 +306,4 @@ from running test_progs will look like:
+ 
+   test_xdpwall:FAIL:Does LLVM have https://github.com/llvm/llvm-project/commit/ea72b0319d7b0f0c2fcf41d121afa5d031b319d5? unexpected error: -4007
+ 
+-__ https://github.com/llvm/llvm-project/commit/ea72b0319d7b0f0c2fcf41d121afa5d031b319d
++__ https://github.com/llvm/llvm-project/commit/ea72b0319d7b0f0c2fcf41d121afa5d031b319d5
