@@ -1,53 +1,55 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE26524A4
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jan 2024 16:17:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD754F8BC
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jan 2024 16:17:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LAH2DDEN"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5f325796097so103516677b3.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:17:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K0lnm9+/"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-40e5980dfdfso11769375e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 Jan 2024 08:17:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704989839; x=1705594639; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=vkeyhCHOKb2kF/hYU6ZKeasacJR/H+VX92GhGBJ9brc=;
-        b=LAH2DDENZd6CsO//gJC/ykgkERKgeS2o9DRLTjT4ysZyQEUQVXZ4ltUbU+RBqWN7N4
-         OxPqGDGg3AXzGbKAB+GoRlk7hRBfICkLCBUVbskBgt5vjS93VHeBtIFFwqHcZ8f4Ns5B
-         xKx6wgmj6E+MVHZO/1pDAD+4RC36wUj2rurFpnBYFQR9KHmCbeNe81kJy/MXMh2R/Zer
-         bQy7H+n248iYy9YV0tL/FsYejTjWCYs6mNiEmD6CzsXIfmTNNr/O/LmBUAnqUlIt2gSH
-         UkIiCWNZhcTWWDa79Qdr7Kz2qYfnAoizg1gFXuILSxwGRXPUf7gmxphi5H26GR0w45Dw
-         sd0g==
+        d=google.com; s=20230601; t=1704989842; x=1705594642; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=urOae5rhFO+lmkwawv/vVpYhVX+PQ6+XyZK8aXYOwuU=;
+        b=K0lnm9+/Oin3Bl9s7WIjjMeZoohAvkHXeGcXPjXRRpLtmbSdpKMlCPUIrdLen9q1tx
+         Xok7zLWfWGECmITMmsZlH2RWJU4phaXF/mXq+sni2IqMbNUwpF8y0glmojJ0a39PMyjo
+         X+Zja6GZVrRdxVF2mvB7l1rzdR4ESOjt0+gC4vGq5MeCl6BMTAOEn2nVmOyLQWllmOQ7
+         /Z+N2snbfFtgqwanuC0akjvAI2Y1kKI7cLAfTXgCWZyuCXTJIQag+XVUHQqqUphjG1Dv
+         msliKn0Zsth/LnMX+yD/AwpocbbOjY98yixE+nVnZy5gkkPEKuMt1fsCaQ/r2jUhpFVx
+         rMeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704989839; x=1705594639;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vkeyhCHOKb2kF/hYU6ZKeasacJR/H+VX92GhGBJ9brc=;
-        b=Rna4bXWCjXgedPX66x0JY0I7lGqoaqhyMG/IEWjL2+3sxabGYhdbCXpHBtgFN2AOqt
-         zQ6y4I1Ji0uwGVUyEdZbZkGsRJDSuKNUA78h9X3nOg2sESvMbm1azCIPu2C0WHHe4wcT
-         5/cpZO+2e+GEQvuC/mG+cJdapcTFoy5wsZrqucn5BduCxE+fpFCiTo94BPR+AwdeS2cB
-         SITC6q/m/iTVLUOOMY0PCzn2WbIvwNQVbu6J+6muyqGoMGLX8RnyIrJ7n0t4hxKKP3c5
-         pGzQIT2VjFCfeMIGYY0XEi7E6CHPWj0iG6hGwwnBVKENUxjURzkc7n6DorzSBqeNsRPm
-         ULqw==
-X-Gm-Message-State: AOJu0YwuEVbBJg9P0QKPNfLTyYN4r0bmFoXhfcFS6M20T3pzFx841VKT
-	MXUEwoyECr1Z8Udc05/NGOWeyCUm9IG1nglJxqRPIUM=
-X-Google-Smtp-Source: AGHT+IF6GADHIQd7b8ubedlmXtU4tm+5G+Zqj/aR9OTD/hraMQefZ56g13h0dXrk7+oJHDrOZMsDe89zbXctKdoK
+        d=1e100.net; s=20230601; t=1704989842; x=1705594642;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=urOae5rhFO+lmkwawv/vVpYhVX+PQ6+XyZK8aXYOwuU=;
+        b=UjAvt/21jkySrcoA/5ds+PT6vAsk6natrvh33++kAv/I4UMD0UueWjom39ReEvwjCQ
+         kR4aFfXWIycAtrSEqEJD/cvTIMeOOCTHo0a5A4zr6JAN/u11WKc/4yzSrosQUJVKD6RS
+         AC+fWTTb4zfwBaJSlTqpakIaNOOFxdM9AZIkotB745pN1BMVQICLJrtkIpEOcf2noP2X
+         vVHkudrIkED/iIoa8su695WqxY4vznPVsJGb9spNa3jCi37wwGvQus90NrZKT//jzJ0A
+         MvAaQUj4qcNTP+1gOJowMCrXSFZVYM3bS/0NeVtafE6q03pKu9GuabKNjkoZaNDbdjE5
+         5SoA==
+X-Gm-Message-State: AOJu0YzmIvtSv6CyTtctxt3Vzan99hirZXh1ifqA1M2yYu5N/24ta8td
+	M72awFjdRrs5Dlkn27WdDz9KqQTzWNJFz3TXjLO9Avw=
+X-Google-Smtp-Source: AGHT+IF8MR6r7u8iVUmbLI+HZyZdBccm+AfUiHjUHEq6uy/4UgamnrMeV91I6Wy9kPk+wBVGPHmAI0cvbRiu9ePG
 X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:a05:6902:2283:b0:dbe:a0c2:df20 with
- SMTP id dn3-20020a056902228300b00dbea0c2df20mr571717ybb.12.1704989839582;
- Thu, 11 Jan 2024 08:17:19 -0800 (PST)
-Date: Thu, 11 Jan 2024 16:17:07 +0000
+ (user=vdonnefort job=sendgmr) by 2002:a05:600c:3b0c:b0:40d:5e86:fe9e with
+ SMTP id m12-20020a05600c3b0c00b0040d5e86fe9emr173wms.5.1704989841944; Thu, 11
+ Jan 2024 08:17:21 -0800 (PST)
+Date: Thu, 11 Jan 2024 16:17:08 +0000
+In-Reply-To: <20240111161712.1480333-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240111161712.1480333-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.43.0.275.g3460e3d667-goog
-Message-ID: <20240111161712.1480333-1-vdonnefort@google.com>
-Subject: [PATCH v11 0/5] Introducing trace buffer mapping by user-space
+Message-ID: <20240111161712.1480333-2-vdonnefort@google.com>
+Subject: [PATCH v11 1/5] ring-buffer: Zero ring-buffer sub-buffers
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
 	linux-trace-kernel@vger.kernel.org
@@ -55,109 +57,45 @@ Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com,
 	Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-The tracing ring-buffers can be stored on disk or sent to network
-without any copy via splice. However the later doesn't allow real time
-processing of the traces. A solution is to give userspace direct access
-to the ring-buffer pages via a mapping. An application can now become a
-consumer of the ring-buffer, in a similar fashion to what trace_pipe
-offers.
+In preparation for the ring-buffer memory mapping where each subbuf will
+be accessible to user-space, zero all the page allocations.
 
-Support for this new feature can already be found in libtracefs from the
-version 1.8, when built with EXTRA_CFLAGS=-DFORCE_MMAP_ENABLE.
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-Vincent
-
-v10 -> v11:
-  * Add Documentation and code sample.
-  * Add a selftest.
-  * Move all the update to the meta-page into a single
-    rb_update_meta_page().
-  * rb_update_meta_page() is now called from
-    ring_buffer_map_get_reader() to fix NOBLOCK callers.
-  * kerneldoc for struct trace_meta_page.
-  * Add a patch to zero all the ring-buffer allocations.
-
-v9 -> v10:
-  * Refactor rb_update_meta_page()
-  * In-loop declaration for foreach_subbuf_page()
-  * Check for cpu_buffer->mapped overflow
-
-v8 -> v9:
-  * Fix the unlock path in ring_buffer_map()
-  * Fix cpu_buffer cast with rb_work_rq->is_cpu_buffer
-  * Rebase on linux-trace/for-next (3cb3091138ca0921c4569bcf7ffa062519639b6a)
-
-v7 -> v8:
-  * Drop the subbufs renaming into bpages
-  * Use subbuf as a name when relevant
-
-v6 -> v7:
-  * Rebase onto lore.kernel.org/lkml/20231215175502.106587604@goodmis.org/
-  * Support for subbufs
-  * Rename subbufs into bpages
-
-v5 -> v6:
-  * Rebase on next-20230802.
-  * (unsigned long) -> (void *) cast for virt_to_page().
-  * Add a wait for the GET_READER_PAGE ioctl.
-  * Move writer fields update (overrun/pages_lost/entries/pages_touched)
-    in the irq_work.
-  * Rearrange id in struct buffer_page.
-  * Rearrange the meta-page.
-  * ring_buffer_meta_page -> trace_buffer_meta_page.
-  * Add meta_struct_len into the meta-page.
-
-v4 -> v5:
-  * Trivial rebase onto 6.5-rc3 (previously 6.4-rc3)
-
-v3 -> v4:
-  * Add to the meta-page:
-       - pages_lost / pages_read (allow to compute how full is the
-	 ring-buffer)
-       - read (allow to compute how many entries can be read)
-       - A reader_page struct.
-  * Rename ring_buffer_meta_header -> ring_buffer_meta
-  * Rename ring_buffer_get_reader_page -> ring_buffer_map_get_reader_page
-  * Properly consume events on ring_buffer_map_get_reader_page() with
-    rb_advance_reader().
-
-v2 -> v3:
-  * Remove data page list (for non-consuming read)
-    ** Implies removing order > 0 meta-page
-  * Add a new meta page field ->read
-  * Rename ring_buffer_meta_page_header into ring_buffer_meta_header
-
-v1 -> v2:
-  * Hide data_pages from the userspace struct
-  * Fix META_PAGE_MAX_PAGES
-  * Support for order > 0 meta-page
-  * Add missing page->mapping.
-
-Vincent Donnefort (5):
-  ring-buffer: Zero ring-buffer sub-buffers
-  ring-buffer: Introducing ring-buffer mapping functions
-  tracing: Allow user-space mapping of the ring-buffer
-  Documentation: tracing: Add ring-buffer mapping
-  ring-buffer/selftest: Add ring-buffer mapping test
-
- Documentation/trace/index.rst                 |   1 +
- Documentation/trace/ring-buffer-map.rst       | 105 ++++++
- include/linux/ring_buffer.h                   |   7 +
- include/uapi/linux/trace_mmap.h               |  47 +++
- kernel/trace/ring_buffer.c                    | 339 +++++++++++++++++-
- kernel/trace/trace.c                          |  81 ++++-
- tools/testing/selftests/ring-buffer/Makefile  |   8 +
- tools/testing/selftests/ring-buffer/config    |   1 +
- .../testing/selftests/ring-buffer/map_test.c  | 188 ++++++++++
- 9 files changed, 769 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/trace/ring-buffer-map.rst
- create mode 100644 include/uapi/linux/trace_mmap.h
- create mode 100644 tools/testing/selftests/ring-buffer/Makefile
- create mode 100644 tools/testing/selftests/ring-buffer/config
- create mode 100644 tools/testing/selftests/ring-buffer/map_test.c
-
-
-base-commit: 4f1991a92cfe89096b2d1f5583a2e093bdd55c37
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 173d2595ce2d..db73e326fa04 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -1466,7 +1466,8 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+ 
+ 		list_add(&bpage->list, pages);
+ 
+-		page = alloc_pages_node(cpu_to_node(cpu_buffer->cpu), mflags,
++		page = alloc_pages_node(cpu_to_node(cpu_buffer->cpu),
++					mflags | __GFP_ZERO,
+ 					cpu_buffer->buffer->subbuf_order);
+ 		if (!page)
+ 			goto free_pages;
+@@ -1551,7 +1552,8 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+ 
+ 	cpu_buffer->reader_page = bpage;
+ 
+-	page = alloc_pages_node(cpu_to_node(cpu), GFP_KERNEL, cpu_buffer->buffer->subbuf_order);
++	page = alloc_pages_node(cpu_to_node(cpu), GFP_KERNEL | __GFP_ZERO,
++				cpu_buffer->buffer->subbuf_order);
+ 	if (!page)
+ 		goto fail_free_reader;
+ 	bpage->page = page_address(page);
+@@ -5525,7 +5527,8 @@ ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu)
+ 	if (bpage->data)
+ 		goto out;
+ 
+-	page = alloc_pages_node(cpu_to_node(cpu), GFP_KERNEL | __GFP_NORETRY,
++	page = alloc_pages_node(cpu_to_node(cpu),
++				GFP_KERNEL | __GFP_NORETRY | __GFP_ZERO,
+ 				cpu_buffer->buffer->subbuf_order);
+ 	if (!page) {
+ 		kfree(bpage);
 -- 
 2.43.0.275.g3460e3d667-goog
 
