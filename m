@@ -1,33 +1,23 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF7156B83;
-	Thu, 11 Jan 2024 21:52:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 573C2C433C7;
-	Thu, 11 Jan 2024 21:52:16 +0000 (UTC)
-Date: Thu, 11 Jan 2024 16:53:19 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9147EFBEF;
+	Thu, 11 Jan 2024 23:22:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 260CCC433C7;
+	Thu, 11 Jan 2024 23:22:17 +0000 (UTC)
+Date: Thu, 11 Jan 2024 18:23:20 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Al Viro
- <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] tracefs/eventfs: Use root and instance inodes as
- default ownership
-Message-ID: <20240111165319.4bb2af76@gandalf.local.home>
-In-Reply-To: <20240111-unzahl-gefegt-433acb8a841d@brauner>
-References: <20240103203246.115732ec@gandalf.local.home>
-	<20240105-wegstecken-sachkenntnis-6289842d6d01@brauner>
-	<20240105095954.67de63c2@gandalf.local.home>
-	<20240107-getrickst-angeeignet-049cea8cad13@brauner>
-	<20240107132912.71b109d8@rorschach.local.home>
-	<20240108-ortsrand-ziehen-4e9a9a58e708@brauner>
-	<20240108102331.7de98cab@gandalf.local.home>
-	<20240110-murren-extra-cd1241aae470@brauner>
-	<20240110080746.50f7767d@gandalf.local.home>
-	<20240111-unzahl-gefegt-433acb8a841d@brauner>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Vincent Donnefort <vdonnefort@google.com>, mhiramat@kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ kernel-team@android.com
+Subject: Re: [PATCH v11 2/5] ring-buffer: Introducing ring-buffer mapping
+ functions
+Message-ID: <20240111181814.362c42cf@gandalf.local.home>
+In-Reply-To: <c3dba53f-66de-43f5-9b82-38aa807da67a@efficios.com>
+References: <20240111161712.1480333-1-vdonnefort@google.com>
+	<20240111161712.1480333-3-vdonnefort@google.com>
+	<c3dba53f-66de-43f5-9b82-38aa807da67a@efficios.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,59 +28,137 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 11 Jan 2024 22:01:32 +0100
-Christian Brauner <brauner@kernel.org> wrote:
+On Thu, 11 Jan 2024 11:34:58 -0500
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-> What I'm pointing out in the current logic is that the caller is
-> taxed twice:
+
+> The LTTng kernel tracer has supported mmap'd buffers for nearly 15 years [1],
+> and has a lot of similarities with this patch series.
 > 
-> (1) Once when the VFS has done inode_permission(MAY_EXEC, "xfs")
-> (2) And again when you call lookup_one_len() in eventfs_start_creating()
->     _because_ the permission check in lookup_one_len() is the exact
->     same permission check again that the vfs has done
->     inode_permission(MAY_EXEC, "xfs").
+> LTTng has the notion of "subbuffer id" to allow atomically exchanging a
+> "reader" extra subbuffer with the subbuffer to be read. It implements
+> "get subbuffer" / "put subbuffer" ioctls to allow the consumer (reader)
+> to move the currently read subbuffer position. [2]
+> 
+> It would not hurt to compare your approach to LTTng and highlight
+> similarities/differences, and the rationale for the differences.
+> 
+> Especially when it comes to designing kernel ABIs, it's good to make sure
+> that all bases are covered, because those choices will have lasting impacts.
+> 
+> Thanks,
+> 
+> Mathieu
+> 
+> [1] https://git.lttng.org/?p=lttng-modules.git;a=blob;f=src/lib/ringbuffer/ring_buffer_mmap.c
+> [2] https://git.lttng.org/?p=lttng-modules.git;a=blob;f=src/lib/ringbuffer/ring_buffer_vfs.c
+> 
 
-As I described in: https://lore.kernel.org/all/20240110133154.6e18feb9@gandalf.local.home/
+Hi Mathieu,
 
-The eventfs files below "events" doesn't need the .permissions callback at
-all. It's only there because the "events" inode uses it.
+Thanks for sharing!
 
-The .permissions call for eventfs has:
+As we discussed a little bit in the tracing meeting we do somethings
+differently but very similar too ;-)
 
-static int eventfs_permission(struct mnt_idmap *idmap,
-			      struct inode *inode, int mask)
-{
-	set_top_events_ownership(inode);
-	return generic_permission(idmap, inode, mask);
-}
+The similarities as that all the sub-buffers are mapped. You have a
+reader-sub-buffer as well.
 
-Where the "set_top_events_ownership() is a nop for everything but the
-"events" directory.
+The main difference is that you use an ioctl() that returns where to find
+the reader-sub-buffer, where our ioctl() is just "I'm done, get me a new
+reader-sub-buffer". Ours will update the meta page.
 
-I guess I could have two ops:
+Our meta page looks like this:
 
-static const struct inode_operations eventfs_root_dir_inode_operations = {
-	.lookup		= eventfs_root_lookup,
-	.setattr	= eventfs_set_attr,
-	.getattr	= eventfs_get_attr,
-	.permission	= eventfs_permission,
-};
+> +struct trace_buffer_meta {
+> +	unsigned long	entries;
+> +	unsigned long	overrun;
+> +	unsigned long	read;
 
-static const struct inode_operations eventfs_dir_inode_operations = {
-	.lookup		= eventfs_root_lookup,
-	.setattr	= eventfs_set_attr,
-	.getattr	= eventfs_get_attr,
-};
+If start tracing: trace-cmd start -e sched_switch and do:
 
-And use the second one for all dentries below the root, but I figured it's
-not that big of a deal if I called the permissions on all. Perhaps I should
-do it with two?
+ ~ cat /sys/kernel/tracing/per_cpu/cpu0/stats 
+entries: 14
+overrun: 0
+commit overrun: 0
+bytes: 992
+oldest event ts: 84844.825372
+now ts: 84847.102075
+dropped events: 0
+read events: 0
 
-Anyway, the issue is with "events" directory and remounting, because like
-the tracefs system, the inode and dentry for "evnets" is created at boot
-up, before the mount happens. The VFS layer is going to check the
-permissions of its inode and dentry, which will be incorrect if the mount
-was mounted with a "gid" option.
+You'll see similar to the above.
 
+ entries = entries
+ overrun = overrun
+ read = read
+
+The above "read" is total number of events read.
+
+Pretty staight forward ;-)
+
+
+> +
+> +	unsigned long	subbufs_touched;
+> +	unsigned long	subbufs_lost;
+> +	unsigned long	subbufs_read;
+
+Now I'm thinking we may not want this exported, as I'm not sure it's useful.
+
+Vincent, talking with Mathieu, he was suggesting that we only export what
+we really need, and I don't think we need the above. Especially since they
+are not exposed in the stats file.
+
+
+> +
+> +	struct {
+> +		unsigned long	lost_events;
+> +		__u32		id;
+> +		__u32		read;
+> +	} reader;
+
+The above is definitely needed, as all of it is used to read the
+reader-page of the sub-buffer.
+
+lost_events is the number of lost events that happened before this
+sub-buffer was swapped out.
+
+Hmm, Vincent, I just notice that you update the lost_events as:
+
+> +static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+> +{
+> +	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+> +
+> +	WRITE_ONCE(meta->entries, local_read(&cpu_buffer->entries));
+> +	WRITE_ONCE(meta->overrun, local_read(&cpu_buffer->overrun));
+> +	WRITE_ONCE(meta->read, cpu_buffer->read);
+> +
+> +	WRITE_ONCE(meta->subbufs_touched, local_read(&cpu_buffer->pages_touched));
+> +	WRITE_ONCE(meta->subbufs_lost, local_read(&cpu_buffer->pages_lost));
+> +	WRITE_ONCE(meta->subbufs_read, local_read(&cpu_buffer->pages_read));
+> +
+> +	WRITE_ONCE(meta->reader.read, cpu_buffer->reader_page->read);
+> +	WRITE_ONCE(meta->reader.id, cpu_buffer->reader_page->id);
+> +	WRITE_ONCE(meta->reader.lost_events, cpu_buffer->lost_events);
+> +}
+
+The lost_events may need to be handled differently, as it doesn't always
+get cleared. So it may be stale data.
+
+
+> +
+> +	__u32		subbuf_size;
+> +	__u32		nr_subbufs;
+
+This gets is the information needed to read the mapped ring buffer.
+
+> +
+> +	__u32		meta_page_size;
+> +	__u32		meta_struct_len;
+
+The ring buffer gets mapped after "meta_page_size" and this structure is
+"meta_struct_len" which will change if we add new data to it.
+
+> +};
 
 -- Steve
