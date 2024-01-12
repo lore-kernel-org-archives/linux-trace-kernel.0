@@ -1,11 +1,11 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0FC41C62;
-	Fri, 12 Jan 2024 15:05:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 145AAC433F1;
-	Fri, 12 Jan 2024 15:05:36 +0000 (UTC)
-Date: Fri, 12 Jan 2024 10:06:41 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF106EB6E;
+	Fri, 12 Jan 2024 15:57:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61562C433C7;
+	Fri, 12 Jan 2024 15:57:50 +0000 (UTC)
+Date: Fri, 12 Jan 2024 10:58:55 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Vincent Donnefort <vdonnefort@google.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, mhiramat@kernel.org,
@@ -13,13 +13,14 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, mhiramat@kernel.org,
  kernel-team@android.com
 Subject: Re: [PATCH v11 2/5] ring-buffer: Introducing ring-buffer mapping
  functions
-Message-ID: <20240112100641.3675edad@gandalf.local.home>
-In-Reply-To: <ZaECnv7EJHo6sqcT@google.com>
+Message-ID: <20240112105855.7f4c290d@gandalf.local.home>
+In-Reply-To: <20240112100641.3675edad@gandalf.local.home>
 References: <20240111161712.1480333-1-vdonnefort@google.com>
 	<20240111161712.1480333-3-vdonnefort@google.com>
 	<c3dba53f-66de-43f5-9b82-38aa807da67a@efficios.com>
 	<20240111181814.362c42cf@gandalf.local.home>
 	<ZaECnv7EJHo6sqcT@google.com>
+	<20240112100641.3675edad@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -30,92 +31,104 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 12 Jan 2024 09:13:02 +0000
-Vincent Donnefort <vdonnefort@google.com> wrote:
+On Fri, 12 Jan 2024 10:06:41 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> > > +
-> > > +	unsigned long	subbufs_touched;
-> > > +	unsigned long	subbufs_lost;
-> > > +	unsigned long	subbufs_read;  
-> > 
-> > Now I'm thinking we may not want this exported, as I'm not sure it's useful.  
+> I'm thinking both may be good, as the number of dropped events are not
+> added if there's no room to put it at the end of the ring buffer. When
+> there's no room, it just sets a flag that there was missed events but
+> doesn't give how many events were missed.
 > 
-> touched and lost are not useful now, but it'll be for my support of the
-> hypervisor tracing, that's why I added them already.
-> 
-> subbufs_read could probably go away though as even in that case I can track that
-> in the reader.
+> If anything, it should be in both locations. In the sub-buffer header, to
+> be consistent with the read/splice version, and in the meta page were if
+> there's no room to add the count, it can be accessed in the meta page.
 
-Yeah, but I think we can leave it off for now.
+I think  the meta data page should look like this:
 
-This is something we could extend the structure with. In fact, it can be
-different for different buffers!
+struct trace_buffer_meta {
+	__u32		meta_page_size;
+	__u32		meta_struct_len;
+ 
+	__u32		subbuf_size;
+	__u32		nr_subbufs;
+ 
+	struct {
+		__u64		lost_events;
+		__u32		id;
+		__u32		read;
+	} reader;
+ 
+	__u64	entries;
+	__u64	overrun;
+	__u64	read;
 
-That is, since they are pretty meaningless for the normal ring buffer, I
-don't think we need to export it. But if it's useful for your hypervisor
-buffer, it can export it. It would be a good test to know if the extension
-works. Of course, that means if the normal ring buffer needs more info, it
-must also include this as well, as it will already be part of the extended
-structure.
+};
+
+1) meta_page_size
+
+      The size of this meta page. It's the first thing the application
+      needs to know how much to mmap.
+
+2) meta_struct_len
+
+      The actual length of the structure. It's the second thing the
+      application will look at to know what version it is dealing with.
+
+3) subbuf_size
+4) nr_subbufs
+
+      The next two is the next thing the application should do. That is to
+      memory map in all the sub-buffers. With 1) and this, it knows how to
+      do that.
+
+The first four are needed for setup, and never changes once mapped. The
+rest gets updated during the trace.
+
+5) reader
+  5a) lost_events
+  5b) id
+  5c) read
+
+      This is actively needed during tracing. It is what is used to know
+      where and how to read the reader sub-buffer.
+
+6) entries
+7) overrun
+8) read
+
+      These are useful statistics, but probably seldom really looked at.
+      They should be at the end.
+
+Also notice that I converted all "unsigned long" to __u64. This is because
+it is possible to have a 32 bit userspace running this on top of a 64 bit
+kernel. If we were to use "long" it would be inconsistent and buggy.
+
+Now if you need subbufs_touched and subbufs_lost. When that gets opened, it
+would update the  meta_struct_len accordingly, and the structure would look
+like:
+
+struct trace_buffer_meta {
+	__u32		meta_page_size;
+	__u32		meta_struct_len;
+ 
+	__u32		subbuf_size;
+	__u32		nr_subbufs;
+ 
+	struct {
+		__u64		lost_events;
+		__u32		id;
+		__u32		read;
+	} reader;
+ 
+	__u64	entries;
+	__u64	overrun;
+	__u64	read;
+
+	__u64	subbufs_touched;
+	__u64	subbufs_lost;
+};
 
 
-> 
-> > 
-> > Vincent, talking with Mathieu, he was suggesting that we only export what
-> > we really need, and I don't think we need the above. Especially since they
-> > are not exposed in the stats file.
-> > 
-> >   
-> > > +
-> > > +	struct {
-> > > +		unsigned long	lost_events;
-> > > +		__u32		id;
-> > > +		__u32		read;
-> > > +	} reader;  
-> > 
-> > The above is definitely needed, as all of it is used to read the
-> > reader-page of the sub-buffer.
-> > 
-> > lost_events is the number of lost events that happened before this
-> > sub-buffer was swapped out.
-> > 
-> > Hmm, Vincent, I just notice that you update the lost_events as:
-> >   
-> > > +static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
-> > > +{
-> > > +	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
-> > > +
-> > > +	WRITE_ONCE(meta->entries, local_read(&cpu_buffer->entries));
-> > > +	WRITE_ONCE(meta->overrun, local_read(&cpu_buffer->overrun));
-> > > +	WRITE_ONCE(meta->read, cpu_buffer->read);
-> > > +
-> > > +	WRITE_ONCE(meta->subbufs_touched, local_read(&cpu_buffer->pages_touched));
-> > > +	WRITE_ONCE(meta->subbufs_lost, local_read(&cpu_buffer->pages_lost));
-> > > +	WRITE_ONCE(meta->subbufs_read, local_read(&cpu_buffer->pages_read));
-> > > +
-> > > +	WRITE_ONCE(meta->reader.read, cpu_buffer->reader_page->read);
-> > > +	WRITE_ONCE(meta->reader.id, cpu_buffer->reader_page->id);
-> > > +	WRITE_ONCE(meta->reader.lost_events, cpu_buffer->lost_events);
-> > > +}  
-> > 
-> > The lost_events may need to be handled differently, as it doesn't always
-> > get cleared. So it may be stale data.  
-> 
-> My idea was to check this value after the ioctl(). If > 0 then events were lost
-> between the that ioctl() and the previous swap.
-> 
-> But now if with "[PATCH] ring-buffer: Have mmapped ring buffer keep track of
-> missed events" we put this information in the page itself, we can get rid of
-> this field.
-> 
-
-I'm thinking both may be good, as the number of dropped events are not
-added if there's no room to put it at the end of the ring buffer. When
-there's no room, it just sets a flag that there was missed events but
-doesn't give how many events were missed.
-
-If anything, it should be in both locations. In the sub-buffer header, to
-be consistent with the read/splice version, and in the meta page were if
-there's no room to add the count, it can be accessed in the meta page.
+Make sense?
 
 -- Steve
