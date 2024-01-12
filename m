@@ -1,151 +1,163 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404BC5D90A;
-	Fri, 12 Jan 2024 10:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f2z9gtUA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3262C433F1;
-	Fri, 12 Jan 2024 10:17:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705054678;
-	bh=8t7YVZmoVUR7dCk/2nFP4SmQbrkuMwJVZH30PnGw0sc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=f2z9gtUAWIjEDs9pfVTmI6Zy2S9KhTEAr4uRe1HUHIokgTpq4u59CeZFnN5+AkPWh
-	 CGwyaj9gjzVtULbi8P2ZnK6nNyNfgbOG+jHrd0LMn9s6rkd9QYmbuwmkYRfSYO5msU
-	 DZaPnMVoglrPX4PuMRm7leKECaoBqVAfKqpdqkowhtekw8Bibu6PQJ8b7Ha0NT7X5q
-	 yI2S+C2yYbL7pWtiGwge8L9JBeYDByEbKb8BVgQN2r3Vq+lMZtc6BqBIX9FBTXimSv
-	 ApgS1tIfuEj08EoSVUNxW3tBxXbifc73LWam6TelHgIivaByLTXrSd6uA1g6ibIkGX
-	 Dub11J9U2j5vg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@chromium.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Guo Ren <guoren@kernel.org>
-Subject: [PATCH v6 36/36] Documentation: probes: Update fprobe on function-graph tracer
-Date: Fri, 12 Jan 2024 19:17:52 +0900
-Message-Id: <170505467231.459169.5422331995958897132.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <170505424954.459169.10630626365737237288.stgit@devnote2>
-References: <170505424954.459169.10630626365737237288.stgit@devnote2>
-User-Agent: StGit/0.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52906BB40;
+	Fri, 12 Jan 2024 13:53:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31075C433F1;
+	Fri, 12 Jan 2024 13:53:46 +0000 (UTC)
+Date: Fri, 12 Jan 2024 08:53:44 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Al Viro
+ <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] tracefs/eventfs: Use root and instance inodes as
+ default ownership
+Message-ID: <20240112085344.30540d10@rorschach.local.home>
+In-Reply-To: <20240112-normierung-knipsen-dccb7cac7efc@brauner>
+References: <20240105-wegstecken-sachkenntnis-6289842d6d01@brauner>
+	<20240105095954.67de63c2@gandalf.local.home>
+	<20240107-getrickst-angeeignet-049cea8cad13@brauner>
+	<20240107132912.71b109d8@rorschach.local.home>
+	<20240108-ortsrand-ziehen-4e9a9a58e708@brauner>
+	<20240108102331.7de98cab@gandalf.local.home>
+	<20240110-murren-extra-cd1241aae470@brauner>
+	<20240110080746.50f7767d@gandalf.local.home>
+	<20240111-unzahl-gefegt-433acb8a841d@brauner>
+	<20240111165319.4bb2af76@gandalf.local.home>
+	<20240112-normierung-knipsen-dccb7cac7efc@brauner>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Fri, 12 Jan 2024 09:27:24 +0100
+Christian Brauner <brauner@kernel.org> wrote:
 
-Update fprobe documentation for the new fprobe on function-graph
-tracer. This includes some bahvior changes and pt_regs to
-ftrace_regs interface change.
+> On Thu, Jan 11, 2024 at 04:53:19PM -0500, Steven Rostedt wrote:
+> > On Thu, 11 Jan 2024 22:01:32 +0100
+> > Christian Brauner <brauner@kernel.org> wrote:
+> >   
+> > > What I'm pointing out in the current logic is that the caller is
+> > > taxed twice:
+> > > 
+> > > (1) Once when the VFS has done inode_permission(MAY_EXEC, "xfs")
+> > > (2) And again when you call lookup_one_len() in eventfs_start_creating()
+> > >     _because_ the permission check in lookup_one_len() is the exact
+> > >     same permission check again that the vfs has done
+> > >     inode_permission(MAY_EXEC, "xfs").  
+> > 
+> > As I described in: https://lore.kernel.org/all/20240110133154.6e18feb9@gandalf.local.home/
+> > 
+> > The eventfs files below "events" doesn't need the .permissions callback at
+> > all. It's only there because the "events" inode uses it.
+> > 
+> > The .permissions call for eventfs has:  
+> 
+> It doesn't matter whether there's a ->permission handler. If you don't
+> add one explicitly the VFS will simply call generic_permission():
+> 
+> inode_permission()
+> -> do_inode_permission()  
+>    {
+>         if (unlikely(!(inode->i_opflags & IOP_FASTPERM))) {
+>                 if (likely(inode->i_op->permission))
+>                         return inode->i_op->permission(idmap, inode, mask);
+>                
+>                 /* This gets set once for the inode lifetime */
+>                 spin_lock(&inode->i_lock);
+>                 inode->i_opflags |= IOP_FASTPERM;
+>                 spin_unlock(&inode->i_lock);
+>         }
+>         return generic_permission(idmap, inode, mask);
+>    }
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v2:
-  - Update @fregs parameter explanation.
----
- Documentation/trace/fprobe.rst |   42 ++++++++++++++++++++++++++--------------
- 1 file changed, 27 insertions(+), 15 deletions(-)
+Yes I know that, because that's where I knew what to call in the non
+"events" dir case.
 
-diff --git a/Documentation/trace/fprobe.rst b/Documentation/trace/fprobe.rst
-index 196f52386aaa..f58bdc64504f 100644
---- a/Documentation/trace/fprobe.rst
-+++ b/Documentation/trace/fprobe.rst
-@@ -9,9 +9,10 @@ Fprobe - Function entry/exit probe
- Introduction
- ============
- 
--Fprobe is a function entry/exit probe mechanism based on ftrace.
--Instead of using ftrace full feature, if you only want to attach callbacks
--on function entry and exit, similar to the kprobes and kretprobes, you can
-+Fprobe is a function entry/exit probe mechanism based on the function-graph
-+tracer.
-+Instead of tracing all functions, if you want to attach callbacks on specific
-+function entry and exit, similar to the kprobes and kretprobes, you can
- use fprobe. Compared with kprobes and kretprobes, fprobe gives faster
- instrumentation for multiple functions with single handler. This document
- describes how to use fprobe.
-@@ -91,12 +92,14 @@ The prototype of the entry/exit callback function are as follows:
- 
- .. code-block:: c
- 
-- int entry_callback(struct fprobe *fp, unsigned long entry_ip, unsigned long ret_ip, struct pt_regs *regs, void *entry_data);
-+ int entry_callback(struct fprobe *fp, unsigned long entry_ip, unsigned long ret_ip, struct ftrace_regs *fregs, void *entry_data);
- 
-- void exit_callback(struct fprobe *fp, unsigned long entry_ip, unsigned long ret_ip, struct pt_regs *regs, void *entry_data);
-+ void exit_callback(struct fprobe *fp, unsigned long entry_ip, unsigned long ret_ip, struct ftrace_regs *fregs, void *entry_data);
- 
--Note that the @entry_ip is saved at function entry and passed to exit handler.
--If the entry callback function returns !0, the corresponding exit callback will be cancelled.
-+Note that the @entry_ip is saved at function entry and passed to exit
-+handler.
-+If the entry callback function returns !0, the corresponding exit callback
-+will be cancelled.
- 
- @fp
-         This is the address of `fprobe` data structure related to this handler.
-@@ -112,12 +115,10 @@ If the entry callback function returns !0, the corresponding exit callback will
-         This is the return address that the traced function will return to,
-         somewhere in the caller. This can be used at both entry and exit.
- 
--@regs
--        This is the `pt_regs` data structure at the entry and exit. Note that
--        the instruction pointer of @regs may be different from the @entry_ip
--        in the entry_handler. If you need traced instruction pointer, you need
--        to use @entry_ip. On the other hand, in the exit_handler, the instruction
--        pointer of @regs is set to the current return address.
-+@fregs
-+        This is the `ftrace_regs` data structure at the entry and exit. This
-+        includes the function parameters, or the return values. So user can
-+        access thos values via appropriate `ftrace_regs_*` APIs.
- 
- @entry_data
-         This is a local storage to share the data between entry and exit handlers.
-@@ -125,6 +126,17 @@ If the entry callback function returns !0, the corresponding exit callback will
-         and `entry_data_size` field when registering the fprobe, the storage is
-         allocated and passed to both `entry_handler` and `exit_handler`.
- 
-+Entry data size and exit handlers on the same function
-+======================================================
-+
-+Since the entry data is passed via per-task stack and it is has limited size,
-+the entry data size per probe is limited to `15 * sizeof(long)`. You also need
-+to take care that the different fprobes are probing on the same function, this
-+limit becomes smaller. The entry data size is aligned to `sizeof(long)` and
-+each fprobe which has exit handler uses a `sizeof(long)` space on the stack,
-+you should keep the number of fprobes on the same function as small as
-+possible.
-+
- Share the callbacks with kprobes
- ================================
- 
-@@ -165,8 +177,8 @@ This counter counts up when;
-  - fprobe fails to take ftrace_recursion lock. This usually means that a function
-    which is traced by other ftrace users is called from the entry_handler.
- 
-- - fprobe fails to setup the function exit because of the shortage of rethook
--   (the shadow stack for hooking the function return.)
-+ - fprobe fails to setup the function exit because of failing to allocate the
-+   data buffer from the per-task shadow stack.
- 
- The `fprobe::nmissed` field counts up in both cases. Therefore, the former
- skips both of entry and exit callback and the latter skips the exit
+> 
+> > Anyway, the issue is with "events" directory and remounting, because like
+> > the tracefs system, the inode and dentry for "evnets" is created at boot
+> > up, before the mount happens. The VFS layer is going to check the
+> > permissions of its inode and dentry, which will be incorrect if the mount
+> > was mounted with a "gid" option.  
+> 
+> The gid option has nothing to do with this and it is just handled fine
+> if you remove the second permission checking in (2).
 
+I guess I'm confused to what you are having an issue with. Is it just
+that the permission check gets called twice?
+
+> 
+> You need to remove the inode_permission() code from
+> eventfs_start_creating(). It is just an internal lookup and the fact
+> that you have it in there allows userspace to break readdir on the
+> eventfs portions of tracefs as I've shown in the parts of the mail that
+> you cut off.
+
+That's because I didn't see how it was related to the way I fixed the
+mount=gid issue. Are you only concerned because of the check in
+eventfs_start_creating()?
+
+Yes, you posted code that would make things act funny for some code
+that I see no real world use case for. Yeah, it may not act "properly"
+but I'm not sure that's bad.
+
+Here, I'll paste it back:
+
+> // We managed to open the directory so we have permission to list
+> // directory entries in "xfs".
+> fd = open("/sys/kernel/tracing/events/xfs");
+> 
+> // Remove ownership so we can't open the directory anymore
+> chown("/sys/kernel/tracing/events/xfs", 0, 0);
+> 
+> // Or just remove exec bit for the group and restrict to owner
+> chmod("/sys/kernel/tracing/events/xfs", 700);
+> 
+> // Drop caches to force an eventfs_root_lookup() on everything
+> write("/proc/sys/vm/drop_caches", "3", 1);
+
+This requires opening the directory, then having it's permissions
+change, and then immediately dropping the caches.
+
+> 
+> // Returns 0 even though directory has a lot of entries and we should be
+> // able to list them
+> getdents64(fd, ...);
+
+And do we care?
+
+Since tracing exposes internal kernel information, perhaps this is a
+feature and not a bug. If someone who had access to the tracing system
+and you wanted to stop them, if they had a directory open that they no
+longer have access to, you don't want them to see what's left in the
+directory.
+
+In other words, I like the idea that the getends64(fd, ...) will fail!
+
+If there's a file underneath that wasn't change, and the admin thought
+that just keeping the top directory permissions off is good enough,
+then that attacker having that directory open before the directory had
+it's file permissions change is a way to still have access to the files
+below it.
+
+> 
+> And the failure is in the inode_permission(MAY_EXEC, "xfs") call in
+> lookup_one_len() in eventfs_start_creating() which now fails.
+
+And I think is a good thing!
+
+Again, tracefs is special. It gives you access and possibly control to
+the kernel behavior. I like the fact that as soon as someone loses
+permission to a directory, they immediately lose it.
+
+-- Steve
