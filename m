@@ -1,560 +1,325 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEDF63A8;
-	Mon, 15 Jan 2024 04:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pZ/Zc73L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 423E6C433F1;
-	Mon, 15 Jan 2024 04:43:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705293788;
-	bh=8m9TyBUxnAJ7PxFW4tXh0W4qFNdGTgigb/5lI9J3ccg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=pZ/Zc73LvhFdA2unSVz7I6eSmTqXQSXI2UFkzVvx07/eNObhr8E9+M8xp8HD/MQf9
-	 thRi5lq68GWzBQ4w3HU55cd5geB0qmB8ZV2eO957NVRQiILVr8byCpqDk6D4igVZWV
-	 Azk5c1bikeiuqPC4wZDPQtrLQLt78rxtP7L89TcEKneTuNsKlm9v5K9ahOWqX40WIk
-	 VVl0g+8IOtirpJiMtgQZ5/nB04nBzGdx7BUJzw9EzINjIm4HcpGFm7Rg0myX7oEC6W
-	 1oJzSuGSqioeShTtAGBhYRQLkAMXypNqsBefMEX4tdzCtTPFikJ4Nyvj0ZSqyfgT+c
-	 XjRLQtRVHr6GA==
-Date: Mon, 15 Jan 2024 13:43:03 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: rostedt@goodmis.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- kernel-team@android.com
-Subject: Re: [PATCH v11 2/5] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-Id: <20240115134303.1a673e37b8e7d35a33d8df52@kernel.org>
-In-Reply-To: <20240111161712.1480333-3-vdonnefort@google.com>
-References: <20240111161712.1480333-1-vdonnefort@google.com>
-	<20240111161712.1480333-3-vdonnefort@google.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B1F817CF;
+	Mon, 15 Jan 2024 04:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d6dff70000001748-26-65a4ba2b41f8
+From: Honggyu Kim <honggyu.kim@sk.com>
+To: sj@kernel.org,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel_team@skhynix.com,
+	akpm@linux-foundation.org,
+	apopple@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	dave.jiang@intel.com,
+	linmiaohe@huawei.com,
+	lizhijian@cn.fujitsu.com,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	rostedt@goodmis.org,
+	surenb@google.com,
+	yangx.jy@fujitsu.com,
+	ying.huang@intel.com,
+	ziy@nvidia.com,
+	Honggyu Kim <honggyu.kim@sk.com>,
+	Hyeongtak Ji <hyeongtak.ji@sk.com>,
+	Rakie Kim <rakie.kim@sk.com>
+Subject: [RFC PATCH 0/4] DAMON based 2-tier memory management for CXL memory
+Date: Mon, 15 Jan 2024 13:52:48 +0900
+Message-ID: <20240115045253.1775-1-honggyu.kim@sk.com>
+X-Mailer: git-send-email 2.43.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgkeLIzCtJLcpLzFFi42LhesuzUFdn15JUg6OPGC3mrF/DZrHrRojF
+	/73HGC2e/P/NanHiZiObRef3pSwWl3fNYbO4t+Y/q8WR9WdZLNbdArI2nz3DbLF4uZrFvo4H
+	TBaHv75hsph8aQGbxYspZxgtTs6azGIx++g9dgchj/8HJzF7LD39hs1jQxOQaNl3i91jwaZS
+	j5Yjb1k9Fu95yeSxaVUnm8emT5PYPU7M+M3isfOhpceLzTMZPXqb37F5fN4kF8AXxWWTkpqT
+	WZZapG+XwJWxcMdi5oKXKRUbnh1ma2C879vFyMkhIWAicefSLUYYu+PGPyYQm01ATeLKy0lA
+	NgeHiICDxKqvCl2MXBzMApNYJLY+WgZWLyzgI/Fs/0E2EJtFQFXi2YXVYL28AmYSM5fMYIWY
+	qSnxePtPdoi4oMTJmU9YQGxmAXmJ5q2zmUGGSgisYpeYtn4FVIOkxMEVN1gmMPLOQtIzC0nP
+	AkamVYxCmXlluYmZOSZ6GZV5mRV6yfm5mxiB8bOs9k/0DsZPF4IPMQpwMCrx8P74uzhViDWx
+	rLgy9xCjBAezkgjvwecLUoV4UxIrq1KL8uOLSnNSiw8xSnOwKInzGn0rTxESSE8sSc1OTS1I
+	LYLJMnFwSjUw+hZZ39rmcyv73xr+SKFe0TO7RP6HrZZ8UrXQxpE9IrzhYHbxtCQxiVcnd20L
+	mG3DkmxWE/PZ8rav4G0ZkUyr+bzGN3dxeOp7SixVFxXalTClm8dW/bKchOancz/TXgr59s2e
+	63pU4hMfk0ujS9Kd6verH91i4YiXclGuV1mxY+m3f2rxxuuUWIozEg21mIuKEwG5oKXpmwIA
+	AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpikeLIzCtJLcpLzFFi42LhmqGlp6u9a0mqQdtvWYs569ewWey6EWLx
+	f+8xRosn/3+zWpy42chm8fnZa2aLziffGS0Ozz3JatH5fSmLxeVdc9gs7q35z2pxZP1ZFot1
+	t4CszWfPMFssXq5mcejac1aLfR0PmCwOf33DZDH50gI2ixdTzjBanJw1mcVi9tF77A5iHv8P
+	TmL2WHr6DZvHhiYg0bLvFrvHgk2lHi1H3rJ6LN7zkslj06pONo9Nnyaxe5yY8ZvFY+dDS48X
+	m2cyevQ2v2Pz+Hbbw2Pxiw9MHp83yQUIRHHZpKTmZJalFunbJXBlLNyxmLngZUrFhmeH2RoY
+	7/t2MXJySAiYSHTc+McEYrMJqElceTkJyObgEBFwkFj1VaGLkYuDWWASi8TWR8sYQWqEBXwk
+	nu0/yAZiswioSjy7sBqsl1fATGLmkhmsEDM1JR5v/8kOEReUODnzCQuIzSwgL9G8dTbzBEau
+	WUhSs5CkFjAyrWIUycwry03MzDHVK87OqMzLrNBLzs/dxAiMmWW1fybuYPxy2f0QowAHoxIP
+	74+/i1OFWBPLiitzDzFKcDArifAefL4gVYg3JbGyKrUoP76oNCe1+BCjNAeLkjivV3hqgpBA
+	emJJanZqakFqEUyWiYNTqoGx58Af33/5cr7BP+KC/55luPF4eVzNpsvzVrq3+BxUX7hejmHr
+	v3d6rVfSi2/YfNIvSOw8mlUUX/Or7c9iyxupW4R35ZRWpD+svLWet6adj7vQ+ds/y0Xnmb5s
+	fNedamNitkVlperdTXwrPs0MeeR8KXjLgjdO2puNMrQV1/EfODuvLKmltaVAiaU4I9FQi7mo
+	OBEA6YqQS5UCAAA=
+X-CFilter-Loop: Reflected
 
-On Thu, 11 Jan 2024 16:17:09 +0000
-Vincent Donnefort <vdonnefort@google.com> wrote:
+There was an RFC IDEA "DAMOS-based Tiered-Memory Management" previously
+posted at [1].
 
-> In preparation for allowing the user-space to map a ring-buffer, add
-> a set of mapping functions:
-> 
->   ring_buffer_{map,unmap}()
->   ring_buffer_map_fault()
-> 
-> And controls on the ring-buffer:
-> 
->   ring_buffer_map_get_reader()  /* swap reader and head */
-> 
-> Mapping the ring-buffer also involves:
-> 
->   A unique ID for each subbuf of the ring-buffer, currently they are
->   only identified through their in-kernel VA.
-> 
->   A meta-page, where are stored ring-buffer statistics and a
->   description for the current reader
-> 
-> The linear mapping exposes the meta-page, and each subbuf of the
-> ring-buffer, ordered following their unique ID, assigned during the
-> first mapping.
-> 
-> Once mapped, no subbuf can get in or out of the ring-buffer: the buffer
-> size will remain unmodified and the splice enabling functions will in
-> reality simply memcpy the data instead of swapping subbufs.
-> 
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> 
-> diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-> index fa802db216f9..0841ba8bab14 100644
-> --- a/include/linux/ring_buffer.h
-> +++ b/include/linux/ring_buffer.h
-> @@ -6,6 +6,8 @@
->  #include <linux/seq_file.h>
->  #include <linux/poll.h>
->  
-> +#include <uapi/linux/trace_mmap.h>
-> +
->  struct trace_buffer;
->  struct ring_buffer_iter;
->  
-> @@ -221,4 +223,9 @@ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node);
->  #define trace_rb_cpu_prepare	NULL
->  #endif
->  
-> +int ring_buffer_map(struct trace_buffer *buffer, int cpu);
-> +int ring_buffer_unmap(struct trace_buffer *buffer, int cpu);
-> +struct page *ring_buffer_map_fault(struct trace_buffer *buffer, int cpu,
-> +				   unsigned long pgoff);
-> +int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu);
->  #endif /* _LINUX_RING_BUFFER_H */
-> diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
-> new file mode 100644
-> index 000000000000..bde39a73ce65
-> --- /dev/null
-> +++ b/include/uapi/linux/trace_mmap.h
-> @@ -0,0 +1,45 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +#ifndef _TRACE_MMAP_H_
-> +#define _TRACE_MMAP_H_
-> +
-> +#include <linux/types.h>
-> +
-> +/**
-> + * struct trace_buffer_meta - Ring-buffer Meta-page description
-> + * @entries:		Number of entries in the ring-buffer.
-> + * @overrun:		Number of entries lost in the ring-buffer.
-> + * @read:		Number of entries that have been read.
-> + * @subbufs_touched:	Number of subbufs that have been filled.
-> + * @subbufs_lost:	Number of subbufs lost to overrun.
-> + * @subbufs_read:	Number of subbufs that have been read.
-> + * @reader.lost_events:	Number of events lost at the time of the reader swap.
-> + * @reader.id:		subbuf ID of the current reader. From 0 to @nr_subbufs - 1
-> + * @reader.read:	Number of bytes read on the reader subbuf.
-> + * @subbuf_size:	Size of each subbuf, including the header.
-> + * @nr_subbufs:		Number of subbfs in the ring-buffer.
-> + * @meta_page_size:	Size of this meta-page.
-> + * @meta_struct_len:	Size of this structure.
-> + */
-> +struct trace_buffer_meta {
-> +	unsigned long	entries;
-> +	unsigned long	overrun;
-> +	unsigned long	read;
-> +
-> +	unsigned long	subbufs_touched;
-> +	unsigned long	subbufs_lost;
-> +	unsigned long	subbufs_read;
-> +
-> +	struct {
-> +		unsigned long	lost_events;
-> +		__u32		id;
-> +		__u32		read;
-> +	} reader;
-> +
-> +	__u32		subbuf_size;
-> +	__u32		nr_subbufs;
-> +
-> +	__u32		meta_page_size;
-> +	__u32		meta_struct_len;
-> +};
-> +
-> +#endif /* _TRACE_MMAP_H_ */
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index db73e326fa04..e9ff1c95e896 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -338,6 +338,7 @@ struct buffer_page {
->  	local_t		 entries;	/* entries on this page */
->  	unsigned long	 real_end;	/* real end of data */
->  	unsigned	 order;		/* order of the page */
-> +	u32		 id;		/* ID for external mapping */
->  	struct buffer_data_page *page;	/* Actual data page */
->  };
->  
-> @@ -484,6 +485,12 @@ struct ring_buffer_per_cpu {
->  	u64				read_stamp;
->  	/* pages removed since last reset */
->  	unsigned long			pages_removed;
-> +
-> +	int				mapped;
-> +	struct mutex			mapping_lock;
-> +	unsigned long			*subbuf_ids;	/* ID to addr */
-> +	struct trace_buffer_meta	*meta_page;
-> +
->  	/* ring buffer pages to update, > 0 to add, < 0 to remove */
->  	long				nr_pages_to_update;
->  	struct list_head		new_pages; /* new pages to add */
-> @@ -1542,6 +1549,7 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
->  	init_irq_work(&cpu_buffer->irq_work.work, rb_wake_up_waiters);
->  	init_waitqueue_head(&cpu_buffer->irq_work.waiters);
->  	init_waitqueue_head(&cpu_buffer->irq_work.full_waiters);
-> +	mutex_init(&cpu_buffer->mapping_lock);
->  
->  	bpage = kzalloc_node(ALIGN(sizeof(*bpage), cache_line_size()),
->  			    GFP_KERNEL, cpu_to_node(cpu));
-> @@ -5160,6 +5168,23 @@ static void rb_clear_buffer_page(struct buffer_page *page)
->  	page->read = 0;
->  }
->  
-> +static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
-> +{
-> +	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
-> +
-> +	WRITE_ONCE(meta->entries, local_read(&cpu_buffer->entries));
-> +	WRITE_ONCE(meta->overrun, local_read(&cpu_buffer->overrun));
-> +	WRITE_ONCE(meta->read, cpu_buffer->read);
-> +
-> +	WRITE_ONCE(meta->subbufs_touched, local_read(&cpu_buffer->pages_touched));
-> +	WRITE_ONCE(meta->subbufs_lost, local_read(&cpu_buffer->pages_lost));
-> +	WRITE_ONCE(meta->subbufs_read, local_read(&cpu_buffer->pages_read));
-> +
-> +	WRITE_ONCE(meta->reader.read, cpu_buffer->reader_page->read);
-> +	WRITE_ONCE(meta->reader.id, cpu_buffer->reader_page->id);
-> +	WRITE_ONCE(meta->reader.lost_events, cpu_buffer->lost_events);
-> +}
-> +
->  static void
->  rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
->  {
-> @@ -5204,6 +5229,9 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
->  	cpu_buffer->lost_events = 0;
->  	cpu_buffer->last_overrun = 0;
->  
-> +	if (cpu_buffer->mapped)
-> +		rb_update_meta_page(cpu_buffer);
-> +
->  	rb_head_page_activate(cpu_buffer);
->  	cpu_buffer->pages_removed = 0;
->  }
-> @@ -5418,6 +5446,11 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
->  	cpu_buffer_a = buffer_a->buffers[cpu];
->  	cpu_buffer_b = buffer_b->buffers[cpu];
->  
-> +	if (READ_ONCE(cpu_buffer_a->mapped) || READ_ONCE(cpu_buffer_b->mapped)) {
-> +		ret = -EBUSY;
-> +		goto out;
-> +	}
-
-Ah, this is not enough to stop snapshot. update_max_tr()@kernel/trace/trace.c
-is used for swapping all CPU buffer and it does not use this function.
-(but that should use this instead of accessing buffer directly...)
-
-Maybe we need ring_buffer_swap() and it checks all cpu_buffer does not set
-mapping bits.
-
-Thank you,
-
-> +
->  	/* At least make sure the two buffers are somewhat the same */
->  	if (cpu_buffer_a->nr_pages != cpu_buffer_b->nr_pages)
->  		goto out;
-> @@ -5682,7 +5715,8 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
->  	 * Otherwise, we can simply swap the page with the one passed in.
->  	 */
->  	if (read || (len < (commit - read)) ||
-> -	    cpu_buffer->reader_page == cpu_buffer->commit_page) {
-> +	    cpu_buffer->reader_page == cpu_buffer->commit_page ||
-> +	    cpu_buffer->mapped) {
->  		struct buffer_data_page *rpage = cpu_buffer->reader_page->page;
->  		unsigned int rpos = read;
->  		unsigned int pos = 0;
-> @@ -5901,6 +5935,11 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
->  
->  		cpu_buffer = buffer->buffers[cpu];
->  
-> +		if (cpu_buffer->mapped) {
-> +			err = -EBUSY;
-> +			goto error;
-> +		}
-> +
->  		/* Update the number of pages to match the new size */
->  		nr_pages = old_size * buffer->buffers[cpu]->nr_pages;
->  		nr_pages = DIV_ROUND_UP(nr_pages, buffer->subbuf_size);
-> @@ -6002,6 +6041,295 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
->  }
->  EXPORT_SYMBOL_GPL(ring_buffer_subbuf_order_set);
->  
-> +#define subbuf_page(off, start) \
-> +	virt_to_page((void *)(start + (off << PAGE_SHIFT)))
-> +
-> +#define foreach_subbuf_page(sub_order, start, page)		\
-> +	page = subbuf_page(0, (start));				\
-> +	for (int __off = 0; __off < (1 << (sub_order));		\
-> +	     __off++, page = subbuf_page(__off, (start)))
-> +
-> +static inline void subbuf_map_prepare(unsigned long subbuf_start, int order)
-> +{
-> +	struct page *page;
-> +
-> +	/*
-> +	 * When allocating order > 0 pages, only the first struct page has a
-> +	 * refcount > 1. Increasing the refcount here ensures none of the struct
-> +	 * page composing the sub-buffer is freeed when the mapping is closed.
-> +	 */
-> +	foreach_subbuf_page(order, subbuf_start, page)
-> +		page_ref_inc(page);
-> +}
-> +
-> +static inline void subbuf_unmap(unsigned long subbuf_start, int order)
-> +{
-> +	struct page *page;
-> +
-> +	foreach_subbuf_page(order, subbuf_start, page) {
-> +		page_ref_dec(page);
-> +		page->mapping = NULL;
-> +	}
-> +}
-> +
-> +static void rb_free_subbuf_ids(struct ring_buffer_per_cpu *cpu_buffer)
-> +{
-> +	int sub_id;
-> +
-> +	for (sub_id = 0; sub_id < cpu_buffer->nr_pages + 1; sub_id++)
-> +		subbuf_unmap(cpu_buffer->subbuf_ids[sub_id],
-> +			     cpu_buffer->buffer->subbuf_order);
-> +
-> +	kfree(cpu_buffer->subbuf_ids);
-> +	cpu_buffer->subbuf_ids = NULL;
-> +}
-> +
-> +static int rb_alloc_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
-> +{
-> +	if (cpu_buffer->meta_page)
-> +		return 0;
-> +
-> +	cpu_buffer->meta_page = page_to_virt(alloc_page(GFP_USER | __GFP_ZERO));
-> +	if (!cpu_buffer->meta_page)
-> +		return -ENOMEM;
-> +
-> +	return 0;
-> +}
-> +
-> +static void rb_free_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
-> +{
-> +	unsigned long addr = (unsigned long)cpu_buffer->meta_page;
-> +
-> +	virt_to_page((void *)addr)->mapping = NULL;
-> +	free_page(addr);
-> +	cpu_buffer->meta_page = NULL;
-> +}
-> +
-> +static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
-> +				   unsigned long *subbuf_ids)
-> +{
-> +	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
-> +	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
-> +	struct buffer_page *first_subbuf, *subbuf;
-> +	int id = 0;
-> +
-> +	subbuf_ids[id] = (unsigned long)cpu_buffer->reader_page->page;
-> +	subbuf_map_prepare(subbuf_ids[id], cpu_buffer->buffer->subbuf_order);
-> +	cpu_buffer->reader_page->id = id++;
-> +
-> +	first_subbuf = subbuf = rb_set_head_page(cpu_buffer);
-> +	do {
-> +		if (id >= nr_subbufs) {
-> +			WARN_ON(1);
-> +			break;
-> +		}
-> +
-> +		subbuf_ids[id] = (unsigned long)subbuf->page;
-> +		subbuf->id = id;
-> +		subbuf_map_prepare(subbuf_ids[id], cpu_buffer->buffer->subbuf_order);
-> +
-> +		rb_inc_page(&subbuf);
-> +		id++;
-> +	} while (subbuf != first_subbuf);
-> +
-> +	/* install subbuf ID to kern VA translation */
-> +	cpu_buffer->subbuf_ids = subbuf_ids;
-> +
-> +	meta->meta_page_size = PAGE_SIZE;
-> +	meta->meta_struct_len = sizeof(*meta);
-> +	meta->nr_subbufs = nr_subbufs;
-> +	meta->subbuf_size = cpu_buffer->buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
-> +
-> +	rb_update_meta_page(cpu_buffer);
-> +}
-> +
-> +static inline struct ring_buffer_per_cpu *
-> +rb_get_mapped_buffer(struct trace_buffer *buffer, int cpu)
-> +{
-> +	struct ring_buffer_per_cpu *cpu_buffer;
-> +
-> +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	cpu_buffer = buffer->buffers[cpu];
-> +
-> +	mutex_lock(&cpu_buffer->mapping_lock);
-> +
-> +	if (!cpu_buffer->mapped) {
-> +		mutex_unlock(&cpu_buffer->mapping_lock);
-> +		return ERR_PTR(-ENODEV);
-> +	}
-> +
-> +	return cpu_buffer;
-> +}
-> +
-> +static inline void rb_put_mapped_buffer(struct ring_buffer_per_cpu *cpu_buffer)
-> +{
-> +	mutex_unlock(&cpu_buffer->mapping_lock);
-> +}
-> +
-> +int ring_buffer_map(struct trace_buffer *buffer, int cpu)
-> +{
-> +	struct ring_buffer_per_cpu *cpu_buffer;
-> +	unsigned long flags, *subbuf_ids;
-> +	int err = 0;
-> +
-> +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
-> +		return -EINVAL;
-> +
-> +	cpu_buffer = buffer->buffers[cpu];
-> +
-> +	mutex_lock(&cpu_buffer->mapping_lock);
-> +
-> +	if (cpu_buffer->mapped) {
-> +		if (cpu_buffer->mapped == INT_MAX)
-> +			err = -EBUSY;
-> +		else
-> +			WRITE_ONCE(cpu_buffer->mapped, cpu_buffer->mapped + 1);
-> +		mutex_unlock(&cpu_buffer->mapping_lock);
-> +		return err;
-> +	}
-> +
-> +	/* prevent another thread from changing buffer sizes */
-> +	mutex_lock(&buffer->mutex);
-> +
-> +	err = rb_alloc_meta_page(cpu_buffer);
-> +	if (err)
-> +		goto unlock;
-> +
-> +	/* subbuf_ids include the reader while nr_pages does not */
-> +	subbuf_ids = kzalloc(sizeof(*subbuf_ids) * (cpu_buffer->nr_pages + 1),
-> +			   GFP_KERNEL);
-> +	if (!subbuf_ids) {
-> +		rb_free_meta_page(cpu_buffer);
-> +		err = -ENOMEM;
-> +		goto unlock;
-> +	}
-> +
-> +	atomic_inc(&cpu_buffer->resize_disabled);
-> +
-> +	/*
-> +	 * Lock all readers to block any subbuf swap until the subbuf IDs are
-> +	 * assigned.
-> +	 */
-> +	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-> +
-> +	rb_setup_ids_meta_page(cpu_buffer, subbuf_ids);
-> +
-> +	WRITE_ONCE(cpu_buffer->mapped, 1);
-> +
-> +	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
-> +unlock:
-> +	mutex_unlock(&buffer->mutex);
-> +	mutex_unlock(&cpu_buffer->mapping_lock);
-> +
-> +	return err;
-> +}
-> +
-> +int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
-> +{
-> +	struct ring_buffer_per_cpu *cpu_buffer;
-> +	int err = 0;
-> +
-> +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
-> +		return -EINVAL;
-> +
-> +	cpu_buffer = buffer->buffers[cpu];
-> +
-> +	mutex_lock(&cpu_buffer->mapping_lock);
-> +
-> +	if (!cpu_buffer->mapped) {
-> +		err = -ENODEV;
-> +		goto unlock;
-> +	}
-> +
-> +	WRITE_ONCE(cpu_buffer->mapped, cpu_buffer->mapped - 1);
-> +	if (!cpu_buffer->mapped) {
-> +		/* Wait for the writer and readers to observe !mapped */
-> +		synchronize_rcu();
-> +
-> +		rb_free_subbuf_ids(cpu_buffer);
-> +		rb_free_meta_page(cpu_buffer);
-> +		atomic_dec(&cpu_buffer->resize_disabled);
-> +	}
-> +unlock:
-> +	mutex_unlock(&cpu_buffer->mapping_lock);
-> +
-> +	return err;
-> +}
-> +
-> +/*
-> + *   +--------------+  pgoff == 0
-> + *   |   meta page  |
-> + *   +--------------+  pgoff == 1
-> + *   | subbuffer 0  |
-> + *   +--------------+  pgoff == 1 + (1 << subbuf_order)
-> + *   | subbuffer 1  |
-> + *         ...
-> + */
-> +struct page *ring_buffer_map_fault(struct trace_buffer *buffer, int cpu,
-> +				   unsigned long pgoff)
-> +{
-> +	struct ring_buffer_per_cpu *cpu_buffer = buffer->buffers[cpu];
-> +	unsigned long subbuf_id, subbuf_offset, addr;
-> +	struct page *page;
-> +
-> +	if (!pgoff)
-> +		return virt_to_page((void *)cpu_buffer->meta_page);
-> +
-> +	pgoff--;
-> +
-> +	subbuf_id = pgoff >> buffer->subbuf_order;
-> +	if (subbuf_id > cpu_buffer->nr_pages)
-> +		return NULL;
-> +
-> +	subbuf_offset = pgoff & ((1UL << buffer->subbuf_order) - 1);
-> +	addr = cpu_buffer->subbuf_ids[subbuf_id] + (subbuf_offset * PAGE_SIZE);
-> +	page = virt_to_page((void *)addr);
-> +
-> +	return page;
-> +}
-> +
-> +int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
-> +{
-> +	struct ring_buffer_per_cpu *cpu_buffer;
-> +	unsigned long reader_size;
-> +	unsigned long flags;
-> +
-> +	cpu_buffer = rb_get_mapped_buffer(buffer, cpu);
-> +	if (IS_ERR(cpu_buffer))
-> +		return (int)PTR_ERR(cpu_buffer);
-> +
-> +	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-> +consume:
-> +	if (rb_per_cpu_empty(cpu_buffer))
-> +		goto out;
-> +
-> +	reader_size = rb_page_size(cpu_buffer->reader_page);
-> +
-> +	/*
-> +	 * There are data to be read on the current reader page, we can
-> +	 * return to the caller. But before that, we assume the latter will read
-> +	 * everything. Let's update the kernel reader accordingly.
-> +	 */
-> +	if (cpu_buffer->reader_page->read < reader_size) {
-> +		while (cpu_buffer->reader_page->read < reader_size)
-> +			rb_advance_reader(cpu_buffer);
-> +		goto out;
-> +	}
-> +
-> +	if (WARN_ON(!rb_get_reader_page(cpu_buffer)))
-> +		goto out;
-> +
-> +	goto consume;
-> +out:
-> +	rb_update_meta_page(cpu_buffer);
-> +	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
-> +	rb_put_mapped_buffer(cpu_buffer);
-> +
-> +	return 0;
-> +}
-> +
->  /*
->   * We only allocate new buffers, never free them if the CPU goes down.
->   * If we were to free the buffer, then the user would lose any trace that was in
-> -- 
-> 2.43.0.275.g3460e3d667-goog
-> 
+It says there is no implementation of the demote/promote DAMOS action
+are made.  This RFC is about its implementation for physical address
+space.
 
 
+Introduction
+============
+
+With the advent of CXL/PCIe attached DRAM, which will be called simply
+as CXL memory in this cover letter, some systems are becoming more
+heterogenous having memory systems with different latency and bandwidth
+characteristics.  They are usually handled as different NUMA nodes in
+separate memory tiers and CXL memory is used as slow tiers because of
+its protocol overhead compared to local DRAM.
+
+In this kind of systems, we need to be careful placing memory pages on
+proper NUMA nodes based on the memory access frequency.  Otherwise, some
+frequently accessed pages might reside on slow tiers and it makes
+performance degradation unexpectedly.  Moreover, the memory access
+patterns can be changed at runtime.
+
+To handle this problem, we need a way to monitor the memory access
+patterns and migrate pages based on their access temperature.  The
+DAMON(Data Access MONitor) framework and its DAMOS(DAMON-based Operation
+Schemes) can be useful features for monitoring and migrating pages.
+DAMOS provides multiple actions based on DAMON monitoring results and it
+can be used for proactive reclaim, which means swapping cold pages out
+with DAMOS_PAGEOUT action, but it doesn't support migration actions such
+as demotion and promotion between tiered memory nodes.
+
+This series supports two new DAMOS actions; DAMOS_DEMOTE for demotion
+from fast tiers and DAMOS_PROMOTE for promotion from slow tiers.  This
+prevents hot pages from being stuck on slow tiers, which makes
+performance degradation and cold pages can be proactively demoted to
+slow tiers so that the system can increase the chance to allocate more
+hot pages to fast tiers.
+
+The DAMON provides various tuning knobs but we found that the proactive
+demotion for cold pages is especially useful when the system is running
+out of memory on its fast tier nodes.
+
+Our evaluation result shows that it reduces the performance slowdown
+compared to the default memory policy from 15~17% to 4~5% when the
+system runs under high memory pressure on its fast tier DRAM nodes.
+
+
+DAMON configuration
+===================
+The specific DAMON configuration doesn't have to be in the scope of this
+patch series, but some rough idea is better to be shared to explain the
+evaluation result.
+
+The DAMON provides many knobs for fine tuning but its configuration file
+is generated by HMSDK[2].  It includes gen_config.py script that
+generates a json file with the full config of DAMON knobs and it creates
+multiple kdamonds for each NUMA node when the DAMON is enabled so that
+it can run hot/cold based migration for tiered memory.
+
+
+Evaluation Workload
+===================
+
+The performance evaluation is done with redis[3], which is a widely used
+in-memory database and the memory access patterns are generated via
+YCSB[4].  We have measured two different workloads with zipfian and
+latest distributions but their configs are slightly modified to make
+memory usage higher and execution time longer for better evaluation.
+
+The idea of evaluation using these demote and promote actions covers
+system-wide memory management rather than partitioning hot/cold pages of
+a single workload.  The default memory allocation policy creates pages
+to the fast tier DRAM node first, then allocates newly created pages to
+the slow tier CXL node when the DRAM node has insufficient free space.
+Once the page allocation is done then those pages never move between
+NUMA nodes.  It's not true when using numa balancing, but it is not the
+scope of this DAMON based 2-tier memory management support.
+
+If the working set of redis can be fit fully into the DRAM node, then
+the redis will access the fast DRAM only.  Since the performance of DRAM
+only is faster than partially accessing CXL memory in slow tiers, this
+environment is not useful to evaluate this patch series.
+
+To make pages of redis be distributed across fast DRAM node and slow
+CXL node to evaluate our demote and promote actions, we pre-allocate
+some cold memory externally using mmap and memset before launching
+redis-server.  We assumed that there are enough amount of cold memory in
+datacenters as TMO[5] and TPP[6] papers mentioned.
+
+The evaluation sequence is as follows.
+
+1. Turn on DAMON with DAMOS_DEMOTE action for DRAM node and
+   DAMOS_PROMOTE action for CXL node.  It demotes cold pages on DRAM
+   node and promotes hot pages on CXL node in a regular interval.
+2. Allocate a huge block of cold memory by calling mmap and memset at
+   the fast tier DRAM node, then make the process sleep to make the fast
+   tier has insufficient memory for redis-server.
+3. Launch redis-server and load prebaked snapshot image, dump.rdb.  The
+   redis-server consumes 52GB of anon pages and 33GB of file pages, but
+   due to the cold memory allocated at 2, it fails allocating the entire
+   memory of redis-server on the fast tier DRAM node so it partially
+   allocates the remaining on the slow tier CXL node.  The ratio of
+   DRAM:CXL depends on the size of the pre-allocated cold memory.
+4. Run YCSB to make zipfian or latest distribution of memory accesses to
+   redis-server, then measure its execution time when it's completed.
+5. Repeat 4 over 50 times to measure the average execution time for each
+   run.
+6. Increase the cold memory size then repeat goes to 2.
+
+For each test at 4 took about a minute so repeating it 50 times almost
+took about 1 hour for each test with a specific cold memory from 440GB
+to 500GB in 10GB increments for each evaluation.  So it took about more
+than 10 hours for both zipfian and latest workloads to get the entire
+evaluation results.  Repeating the same test set multiple times doesn't
+show much difference so I think it might be enough to make the result
+reliable.
+
+
+Evaluation Results
+==================
+
+All the result values are normalized to DRAM-only execution time because
+the workload cannot be faster than DRAM-only unless the workload hits
+the bandwidth peak but our redis test doesn't go beyond the bandwidth
+limit.
+
+So the DRAM-only execution time is the ideal result without affected by
+the gap between DRAM and CXL performance difference.  The NUMA node
+environment is as follows.
+
+  node0 - local DRAM, 512GB with a CPU socket (fast tier)
+  node1 - disabled
+  node2 - CXL DRAM, 96GB, no CPU attached (slow tier)
+
+The following is the result of generating zipfian distribution to
+redis-server and the numbers are averaged by 50 times of execution.
+
+  1. YCSB zipfian distribution read only workload
+  memory pressure with cold memory on node0 with 512GB of local DRAM.
+  =============+================================================+=========
+               |       cold memory occupied by mmap and memset  |
+               |   0G  440G  450G  460G  470G  480G  490G  500G |
+  =============+================================================+=========
+  Execution time normalized to DRAM-only values                 | GEOMEAN
+  -------------+------------------------------------------------+---------
+  DRAM-only    | 1.00     -     -     -     -     -     -     - | 1.00
+  CXL-only     | 1.21     -     -     -     -     -     -     - | 1.21
+  default      |    -  1.09  1.10  1.13  1.15  1.18  1.21  1.21 | 1.15
+  DAMON 2-tier |    -  1.02  1.04  1.05  1.04  1.05  1.05  1.06 | 1.04
+  =============+================================================+=========
+  CXL usage of redis-server in GB                               | AVERAGE
+  -------------+------------------------------------------------+---------
+  DRAM-only    |  0.0     -     -     -     -     -     -     - |  0.0
+  CXL-only     | 52.6     -     -     -     -     -     -     - | 52.6
+  default      |    -  19.4  26.1  32.3  38.5  44.7  50.5  50.3 | 37.4
+  DAMON 2-tier |    -   0.1   1.6   5.2   8.0   9.1  11.8  13.6 |  7.1
+  =============+================================================+=========
+
+Each test result is based on the exeuction environment as follows.
+
+  DRAM-only   : redis-server uses only local DRAM memory.
+  CXL-only    : redis-server uses only CXL memory.
+  default     : default memory policy(MPOL_DEFAULT).
+                numa balancing disabled.
+  DAMON 2-tier: DAMON enabled with DAMOS_DEMOTE for DRAM nodes and
+                DAMOS_PROMOTE for CXL nodes.
+
+The above result shows the "default" execution time goes up as the size
+of cold memory is increased from 440G to 500G because the more cold
+memory used, the more CXL memory is used for the target redis workload
+and this makes the execution time increase.
+
+However, "DAMON 2-tier" result shows less slowdown because the
+DAMOS_DEMOTE action at DRAM node proactively demotes pre-allocated cold
+memory to CXL node and this free space at DRAM increases more chance to
+allocate hot or warm pages of redis-server to fast DRAM node.  Moreover,
+DEMOS_PROMOTE action at CXL node also promotes hot pages of redis-server
+to DRAM node actively.
+
+As a result, it makes more memory of redis-server stay in DRAM node
+compared to "default" memory policy and this makes the performance
+improvement.
+
+The following result of latest distribution workload shows similar data.
+
+  2. YCSB latest distribution read only workload
+  memory pressure with cold memory on node0 with 512GB of local DRAM.
+  =============+================================================+=========
+               |       cold memory occupied by mmap and memset  |
+               |   0G  440G  450G  460G  470G  480G  490G  500G |
+  =============+================================================+=========
+  Execution time normalized to DRAM-only values                 | GEOMEAN
+  -------------+------------------------------------------------+---------
+  DRAM-only    | 1.00  -     -     -     -     -     -     -    | 1.00
+  CXL-only     | 1.18  -     -     -     -     -     -     -    | 1.18
+  default      | -     1.16  1.15  1.17  1.18  1.16  1.18  1.15 | 1.17
+  DAMON 2-tier | -     1.04  1.04  1.05  1.05  1.06  1.05  1.06 | 1.05
+  =============+================================================+=========
+  CXL usage of redis-server in GB                               | AVERAGE
+  -------------+------------------------------------------------+---------
+  DRAM-only    |  0.0     -     -     -     -     -     -     - |  0.0
+  CXL-only     | 52.6     -     -     -     -     -     -     - | 52.6
+  default      |    -  19.3  26.1  32.2  38.5  44.6  50.5  50.6 | 37.4
+  DAMON 2-tier |    -   1.3   3.8   7.0   4.1   9.4  12.5  16.7 |  7.8
+  =============+================================================+=========
+
+In summary of both results, our evaluation shows that "DAMON 2-tier"
+memory management reduces the performance slowdown compared to the
+"default" memory policy from 15~17% to 4~5% when the system runs with
+high memory pressure on its fast tier DRAM nodes.
+
+The similar evaluation was done in another machine that has 256GB of
+local DRAM and 96GB of CXL memory.  The performance slowdown is reduced
+from 20~24% for "default" to 5~7% for "DAMON 2-tier".
+
+Having these DAMOS_DEMOTE and DAMOS_PROMOTE actions can make 2-tier
+memory systems run more efficiently under high memory pressures.
+
+Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+Signed-off-by: Hyeongtak Ji <hyeongtak.ji@sk.com>
+Signed-off-by: Rakie Kim <rakie.kim@sk.com>
+
+[1] https://lore.kernel.org/damon/20231112195602.61525-1-sj@kernel.org
+[2] https://github.com/skhynix/hmsdk
+[3] https://github.com/redis/redis/tree/7.0.0
+[4] https://github.com/brianfrankcooper/YCSB/tree/0.17.0
+[5] https://dl.acm.org/doi/10.1145/3503222.3507731
+[6] https://dl.acm.org/doi/10.1145/3582016.3582063
+
+Honggyu Kim (2):
+  mm/vmscan: refactor reclaim_pages with reclaim_or_migrate_folios
+  mm/damon: introduce DAMOS_DEMOTE action for demotion
+
+Hyeongtak Ji (2):
+  mm/memory-tiers: add next_promotion_node to find promotion target
+  mm/damon: introduce DAMOS_PROMOTE action for promotion
+
+ include/linux/damon.h          |   4 +
+ include/linux/memory-tiers.h   |  11 ++
+ include/linux/migrate_mode.h   |   1 +
+ include/linux/vm_event_item.h  |   1 +
+ include/trace/events/migrate.h |   3 +-
+ mm/damon/paddr.c               |  46 ++++++-
+ mm/damon/sysfs-schemes.c       |   2 +
+ mm/internal.h                  |   2 +
+ mm/memory-tiers.c              |  43 ++++++
+ mm/vmscan.c                    | 231 +++++++++++++++++++++++++++++++--
+ mm/vmstat.c                    |   1 +
+ 11 files changed, 330 insertions(+), 15 deletions(-)
+
+
+base-commit: 0dd3ee31125508cd67f7e7172247f05b7fd1753a
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.34.1
+
