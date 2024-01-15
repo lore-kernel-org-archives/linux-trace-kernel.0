@@ -1,153 +1,114 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F6218E25
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 15 Jan 2024 18:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0596D1B7E2;
+	Mon, 15 Jan 2024 23:48:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Mq6/yHPG"
-Received: from eig-obgw-5006a.ext.cloudfilter.net ([10.0.29.179])
-	by cmsmtp with ESMTPS
-	id PPDmr4OepMVQiPRdlrgFvY; Mon, 15 Jan 2024 18:24:53 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id PRdkrb6uuim6EPRdkrPyBj; Mon, 15 Jan 2024 18:24:53 +0000
-X-Authority-Analysis: v=2.4 cv=Qft1A+Xv c=1 sm=1 tr=0 ts=65a57875
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=NEAV23lmAAAA:8 a=7YfXLusrAAAA:8 a=EvbeSHRCGunigFkjgBEA:9 a=QEXdDO2ut3YA:10
- a=9cHFzqQdt-sA:10 a=PUnBvhIW4WwA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=SLz71HocmBbuEhFRYD3r:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=cIx2Q42MgOjugJW5xmZxdWQVR1i47N/QKStLLpKq8T4=; b=Mq6/yHPGzLLoNSdcpmx19D4Jes
-	JzGBWh6pD3zHKVecZhvQSW9tHcq8+nhACrFU9TF4ajxJJbXnJMZB/TQ51NVPYYCVMH3OzoJ7N1ux2
-	KuABoEG3GfuEexc3avK3N2J0zV/xL7Pp5ToVPuKe1o6aNBmMd3xY+yNaDzE93S9ie4ewjLghCded+
-	qL25txjMZ4IQZ+1f2KRkYkFv1DdNGnkXAm6+DZZtcvQdtJLqz2uIAXF8SyjKUF8X9jc5PfW1SS7Er
-	cGdwIDq/qmLHkOCjkScF7yRbwCpMZ51GzJ3IudxUXXm2aRKgjm+dFoij3iHGwNPA4CsjY69ROyQpK
-	KzYV82TQ==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:43136 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rPRdj-003vCX-2g;
-	Mon, 15 Jan 2024 12:24:51 -0600
-Message-ID: <77d29a54-ca71-4a2a-99ca-f2932c72e32d@embeddedor.com>
-Date: Mon, 15 Jan 2024 12:24:50 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KL2djf5Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF123C433F1;
+	Mon, 15 Jan 2024 23:48:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705362517;
+	bh=KZwAUGNVj6Y4Y4rlr5muEF1gOqr5vNBnbpgz4CwGlUs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KL2djf5ZjDfkD4lMU3ZknlW1ZJ9+UEk1POs6fKFyc1besOOH8tjrnvqLbsoGdlXaj
+	 nNr8s7mWjq+cPb+0ZHfBseJm4X6EX421qo30LXmy3QOH40anud7T7kNUrwZ019INqE
+	 1mc0blZqYtMYmuepI60pIpgc7b6NGezrtOWfnLp6i65HoM384JkXmD8rUAV3LYMfgp
+	 Q3KGl9H4aImXEemkm1SXyQU86JjioObCPvTUdW5cw0QaenOnCgoY9RPClScCk2SNyC
+	 2CXU2Q3mPPtSZZhoikn/qkQ637kygBt3A+f8BAnDDmCmVINlN43XMD765fKNqXy9fb
+	 jTxaVKCtTtUPQ==
+Date: Tue, 16 Jan 2024 08:48:33 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Vincent Donnefort <vdonnefort@google.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ kernel-team@android.com
+Subject: Re: [PATCH v11 2/5] ring-buffer: Introducing ring-buffer mapping
+ functions
+Message-Id: <20240116084833.f5537b00bae88afb0249492f@kernel.org>
+In-Reply-To: <20240115112359.65dcecbf@rorschach.local.home>
+References: <20240111161712.1480333-1-vdonnefort@google.com>
+	<20240111161712.1480333-3-vdonnefort@google.com>
+	<20240115134303.1a673e37b8e7d35a33d8df52@kernel.org>
+	<ZaVRO76JxaHjPwCi@google.com>
+	<20240115110938.613380ca@rorschach.local.home>
+	<20240115112359.65dcecbf@rorschach.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] eventfs: Use kcalloc() instead of kzalloc()
-Content-Language: en-US
-To: Erick Archer <erick.archer@gmx.com>, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240115181658.4562-1-erick.archer@gmx.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240115181658.4562-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1rPRdj-003vCX-2g
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:43136
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfIR61jm1UDLRpkGpZc3y3rxvydW9Z5qnEDtzBrL5/AMRU8z8DrW2GL9ws5wvUrGiiZl9IfAr1Q/4JeKmzkw960ntQS2CvEfP2vILOv/oeQGGCg1utbdK
- W76APnyyI6SZmnOW0nSnfvh2bMn5X/6RRTShwBHXFG3q25AzTBs4GAWlQBREbpejtucQiWgmcrUYH4xnaWL7uNfHc30fmufIrFOsnDwH1+DqLzvquQRo5pae
 
+On Mon, 15 Jan 2024 11:23:59 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-
-On 1/15/24 12:16, Erick Archer wrote:
-> As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> and Conventions" documentation [1], size calculations (especially
-> multiplication) should not be performed in memory allocator (or similar)
-> function arguments due to the risk of them overflowing. This could lead
-> to values wrapping around and a smaller allocation being made than the
-> caller was expecting. Using those allocations could lead to linear
-> overflows of heap memory and other misbehaviors.
+> On Mon, 15 Jan 2024 11:09:38 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> So, use the purpose specific kcalloc() function instead of the argument
-> size * count in the kzalloc() function.
+> > No. The ring buffer logic should not care if the user of it is swapping
+> > the entire ring buffer or not. It only cares if parts of the ring
+> > buffer is being swapped or not. That's not the level of scope it should
+> > care about. If we do not want a swap to happen in update_max_tr()
+> > that's not ring_buffer.c's problem. The code to prevent that from
+> > happening should be 100% in trace.c.
 > 
-> [1] https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+> What needs to be done, and feel free to add this as a separate patch,
+> is to have checks where snapshot is used.
 > 
-> Link: https://github.com/KSPP/linux/issues/162
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+>   (All errors return -EBUSY)
+> 
+> Before allowing mapping, check to see if:
+> 
+>  1) the current tracer has "use_max_tr" set.
+>  2) any event has a "snapshot" trigger set
+>  3) Any function has a "snapshot" command set
+> 
+> Fail if any of the above is true.
+> 
+> Also in reverse, if the buffer is mapped, then fail:
+> 
+>  1) a tracer being set that has "use_max_tr" set.
+>  2) a "snapshot" command being set on a function
+>  3) a "snapshot" trigger being set on an event.
+> 
+> For the last two, we may be able to get away with just a below as well.
+> Adding the tr->flags bit. We could also add a tr->snapshot count to
+> keep track of everything that is using a snapshot, and if that count is
+> non-zero, mapping fails.
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+BTW, if we allow mapping per-cpu ring buffer, we may need "tr->mapped"
+counter in addition to per-cpu mapped bit. Then we can just check
+tr->snapshot at mapping, and tr->mapped at preparing snapshot.
 
-Thanks!
+Thank you,
+
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 2a7c6fd934e9..f534f74ae80f 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -1175,6 +1175,12 @@ static void tracing_snapshot_instance_cond(struct trace_array *tr,
+>  		return;
+>  	}
+>  
+> +	if (tr->flags & TRACE_ARRAY_FL_MAPPED) {
+> +		trace_array_puts(tr, "*** BUFFER IS MEMORY MAPPED ***\n");
+> +		trace_array_puts(tr, "*** Can not use snapshot (sorry) ***\n");
+> +		return;
+> +	}
+> +
+>  	local_irq_save(flags);
+>  	update_max_tr(tr, current, smp_processor_id(), cond_data);
+>  	local_irq_restore(flags);
+> 
+> 
+> -- Steve
+
+
 -- 
-Gustavo
-
-> ---
-> Changes in v2:
-> - Update the commit message to better explain the changes (Mark Rutland)
-> 
-> Previous versions:
-> v1: https://lore.kernel.org/linux-hardening/20240114105340.5746-1-erick.archer@gmx.com/
-> ---
->   fs/tracefs/event_inode.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-> index fdff53d5a1f8..f8196289692c 100644
-> --- a/fs/tracefs/event_inode.c
-> +++ b/fs/tracefs/event_inode.c
-> @@ -93,7 +93,7 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
->   	/* Preallocate the children mode array if necessary */
->   	if (!(dentry->d_inode->i_mode & S_IFDIR)) {
->   		if (!ei->entry_attrs) {
-> -			ei->entry_attrs = kzalloc(sizeof(*ei->entry_attrs) * ei->nr_entries,
-> +			ei->entry_attrs = kcalloc(ei->nr_entries, sizeof(*ei->entry_attrs),
->   						  GFP_NOFS);
->   			if (!ei->entry_attrs) {
->   				ret = -ENOMEM;
-> @@ -874,7 +874,7 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
->   	}
-> 
->   	if (size) {
-> -		ei->d_children = kzalloc(sizeof(*ei->d_children) * size, GFP_KERNEL);
-> +		ei->d_children = kcalloc(size, sizeof(*ei->d_children), GFP_KERNEL);
->   		if (!ei->d_children) {
->   			kfree_const(ei->name);
->   			kfree(ei);
-> @@ -941,7 +941,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
->   		goto fail;
-> 
->   	if (size) {
-> -		ei->d_children = kzalloc(sizeof(*ei->d_children) * size, GFP_KERNEL);
-> +		ei->d_children = kcalloc(size, sizeof(*ei->d_children), GFP_KERNEL);
->   		if (!ei->d_children)
->   			goto fail;
->   	}
-> --
-> 2.25.1
-> 
-> 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
