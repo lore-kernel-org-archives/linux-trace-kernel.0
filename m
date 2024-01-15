@@ -1,435 +1,187 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A118663AC;
-	Mon, 15 Jan 2024 04:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d6dff70000001748-74-65a4ba317e96
-From: Honggyu Kim <honggyu.kim@sk.com>
-To: sj@kernel.org,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel_team@skhynix.com,
-	akpm@linux-foundation.org,
-	apopple@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	dave.jiang@intel.com,
-	linmiaohe@huawei.com,
-	lizhijian@cn.fujitsu.com,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	rostedt@goodmis.org,
-	surenb@google.com,
-	yangx.jy@fujitsu.com,
-	ying.huang@intel.com,
-	ziy@nvidia.com,
-	Hyeongtak Ji <hyeongtak.ji@sk.com>,
-	Honggyu Kim <honggyu.kim@sk.com>
-Subject: [RFC PATCH 4/4] mm/damon: introduce DAMOS_PROMOTE action for promotion
-Date: Mon, 15 Jan 2024 13:52:52 +0900
-Message-ID: <20240115045253.1775-5-honggyu.kim@sk.com>
-X-Mailer: git-send-email 2.43.0.windows.1
-In-Reply-To: <20240115045253.1775-1-honggyu.kim@sk.com>
-References: <20240115045253.1775-1-honggyu.kim@sk.com>
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2110.outbound.protection.outlook.com [40.107.255.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2514A23C5;
+	Mon, 15 Jan 2024 06:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="JUxlR4F+"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gTe1WnNTkJwt9Kr7JRJT+CtEWqPpQ0/EQNooPhyCVN9WadCS0ApsdhxvQpCjhuJYQ7+HWMo3RnMTdj4FuBCHLunV//AG5609lxrmFSGK/2aWXFMLJPBvuwtS8vXATRQ/8G+nI2JRdW6p2zgawbRkrZdwIr1u/SgxgG1Ehmzq8p2TQPQdmivopwG3XqkoXJlwKw70NmuaPEj194TWOE1L6tuQOSZh8BOTXip0DMMmtSlrWMn8nKPRYDBBTW0bV1Klvvo3vxLbgOgy6nts7WP61Ko/tZj9IzWDxfBvjECNQ1vAkFl29EgNP1MgK99HBQg+6RVaWfeLBpDQlc4ZBI1v1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UUpaom51hJXjSvVhih0g0QjTelFX9vmGOrUDtVibyCc=;
+ b=Ro7ieo86sYiYcLbf1RXUgM4h/GirzqGVpf7LJiRuMpeNxsEnffiQ5wzIpbEE7Vyvuxl6E5/5VfEXLgLUnSHoPOxbSfCY9XsHczRnPlHBGygjcQRx+nwnZ04FGfseJLzI5e/H9QOzV5M6b2XT0rojdpL7R0JaEMq5tqDQCak64j93xCLwZZ8/zBBOFcZCTiiJffNTGcTOf7HuaK0F8P9SA+nYlwe706zV/UsxMJhKX0ju4/buxG3O5iWer/oxqxRVJlz7xek41dhwYChgOTJZDjM749H25R5wF9s9ZEgRLJwi3DeZeivTqf6KEfze5Pn7ddP5+tx5h87phJe+BmWcxg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UUpaom51hJXjSvVhih0g0QjTelFX9vmGOrUDtVibyCc=;
+ b=JUxlR4F+Af04eIgrqFDSf63MqAwuHbJ6HpAHWIAnM8BmuddJiXU1be3QTfX3pZgmhv0+8rUhrjW9LDW0Wu03+XngoJU3JFkvdduvRWSNMn0FaOiN6+Sp6T3dqWS5HORIRe+a6We9vD2V3ogz6kycEQW6N3oMXsgO7RvlALOevJBX/w52eK/1MmB6jxRXdDt87byxSxGdRNfK4XJNUBsdDjD5l/che6kBz7ebRzld7ItkTGBW1GJe5k3MrQgpxzOJcuBEBH3rgZM575jcwu/UjGS36mhFaMMz0B5Azxvsf/Z69XckD9WXe1Dr9IHTy5KJUXYKF40FMJffFEo4PtHTlw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from TYZPR06MB4045.apcprd06.prod.outlook.com (2603:1096:400:21::8)
+ by PSAPR06MB3990.apcprd06.prod.outlook.com (2603:1096:301:39::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.23; Mon, 15 Jan
+ 2024 06:27:05 +0000
+Received: from TYZPR06MB4045.apcprd06.prod.outlook.com
+ ([fe80::9925:32d7:c818:3c5]) by TYZPR06MB4045.apcprd06.prod.outlook.com
+ ([fe80::9925:32d7:c818:3c5%7]) with mapi id 15.20.7181.022; Mon, 15 Jan 2024
+ 06:27:05 +0000
+Message-ID: <fb00ee99-ab5e-4274-af9d-cf4eca509d7d@vivo.com>
+Date: Mon, 15 Jan 2024 14:27:01 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next v6 0/2] Make memory reclamation measurable
+To: akpm@linux-foundation.org, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org, opensource.kernel@vivo.com
+References: <20240105013607.2868-1-cuibixuan@vivo.com>
+From: Bixuan Cui <cuibixuan@vivo.com>
+In-Reply-To: <20240105013607.2868-1-cuibixuan@vivo.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SI1PR02CA0018.apcprd02.prod.outlook.com
+ (2603:1096:4:1f4::7) To TYZPR06MB4045.apcprd06.prod.outlook.com
+ (2603:1096:400:21::8)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPIsWRmVeSWpSXmKPExsXC9ZZnoa7hriWpBh8filrMWb+GzWLXjRCL
-	/3uPMVo8+f+b1eLEzUY2i87vS1ksLu+aw2Zxb81/Vosj68+yWKy7BWRtPnuG2WLxcjWLfR0P
-	mCwOf33DZDH50gI2ixdTzjBanJw1mcVi9tF77A5CHv8PTmL2WHr6DZvHhiYg0bLvFrvHgk2l
-	Hi1H3rJ6LN7zkslj06pONo9Nnyaxe5yY8ZvFY+dDS48Xm2cyevQ2v2Pz+LxJLoAvissmJTUn
-	syy1SN8ugStjyrsWpoI9kRVff19hbmD859HFyMkhIWAi0bhjDyuc/amdDcRmE1CTuPJyElMX
-	IweHiICDxKqvCl2MXBzMAp+YJW4fnskMUiMs4C+x/OJ1dhCbRUBV4sua5Wwg9bwCZhI3HjFD
-	jNSUeLz9J1gJp4C5xOv2N2BxIaCSxrXfwOK8AoISJ2c+YQGxmQXkJZq3zmYG2SUhsI9d4tW8
-	NUwQgyQlDq64wTKBkX8Wkp5ZSHoWMDKtYhTKzCvLTczMMdHLqMzLrNBLzs/dxAiMtmW1f6J3
-	MH66EHyIUYCDUYmH98ffxalCrIllxZW5hxglOJiVRHgPPl+QKsSbklhZlVqUH19UmpNafIhR
-	moNFSZzX6Ft5ipBAemJJanZqakFqEUyWiYNTqoGx16WGmUH5dkzwk+eNjTUlS+ultB09X6nL
-	CW4t3PC2bmHZ8XPZ3z8tiF8x1dJn2vLYpiMTrJPWF9cYzn2quv62/exncpNzFq74F1awKnul
-	V3Og1yuZ4uXGScfuJV/+8VB9ls/X94l35MsP628P77f9Vz7j49vfhp970ycWOzh26p883Fys
-	vVZZiaU4I9FQi7moOBEAEJRAWbICAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCIsWRmVeSWpSXmKPExsXCNUNLT9dg15JUg02NthZz1q9hs9h1I8Ti
-	/95jjBZP/v9mtThxs5HN4vOz18wWnU++M1ocnnuS1aLz+1IWi8u75rBZ3Fvzn9XiyPqzLBbr
-	bgFZm8+eYbZYvFzNYl/HAyaLw1/fMFlMvrSAzeLFlDOMFidnTWaxmH30HruDqMf/g5OYPZae
-	fsPmsaEJSLTsu8XusWBTqUfLkbesHov3vGTy2LSqk81j06dJ7B4nZvxm8dj50NLjxeaZjB69
-	ze/YPL7d9vBY/OIDk8fnTXIBAlFcNimpOZllqUX6dglcGVPetTAV7Ims+Pr7CnMD4z+PLkZO
-	DgkBE4nGT+1sIDabgJrElZeTmLoYOThEBBwkVn1V6GLk4mAW+MQscfvwTGaQGmEBf4nlF6+z
-	g9gsAqoSX9YsZwOp5xUwk7jxiBlipKbE4+0/wUo4BcwlXre/AYsLAZU0rv0GFucVEJQ4OfMJ
-	C4jNLCAv0bx1NvMERp5ZSFKzkKQWMDKtYhTJzCvLTczMMdUrzs6ozMus0EvOz93ECIyrZbV/
-	Ju5g/HLZ/RCjAAejEg/vj7+LU4VYE8uKK3MPMUpwMCuJ8B58viBViDclsbIqtSg/vqg0J7X4
-	EKM0B4uSOK9XeGqCkEB6YklqdmpqQWoRTJaJg1OqgbHB85rxSbF7IgVpn09/+lHssdLjbJjQ
-	M/msy++3njB9Wjxp4ec9bh9mtk6NeLpotqLOxYyiPyxqFkl5i51mBn//v28Cx99gyWh+6X0n
-	nH7vWL9gwiZ1B57wrcXVM80+868+NS886N+tmPj1G2tmf7ZQfit25RnjtoNGj+VDtLb8fPbl
-	Sfz9GVoXlViKMxINtZiLihMB/3CNO6cCAAA=
-X-CFilter-Loop: Reflected
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZPR06MB4045:EE_|PSAPR06MB3990:EE_
+X-MS-Office365-Filtering-Correlation-Id: c6a87f56-712f-427d-fd24-08dc1592fe57
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	XN4963a4Tq1l4viaukY6uysiyKp8jVlHjmIWh6GEBIRtArK+bDwSGU9/Tp/K/6fzM2c4O9RO18Mfmaz/LD/y2PK3SGKbIC+UjOhIA1jlE7Z8oCPNNHHENQNEfcLs7A0ofsK4nyGpGflLmzJpRJ9Ln9HOVX/jOSyCZHNVnFhIZ3utdFMIPBVBuRAy1yrSCk3jNzb33mYP5rdWL7AUVE8WEokrC4HzDBVUc2yOm4MoTnf3bpa6Z1scmHWPBjehriGHVnW6+Ie2fg3FpyQ8mF1p5xlrm4gNEfvEsgvpTgHgWN65x76yDsYASyIaNWmQ1ok09zI9TVRAc15ZavxJ9NDbUMOwfFEqexuOQz4KdmI37W0zPXPqPB/gR+9zpjyb452S58ut6F9Klpi6gZFDc6afUBfp2cNn0iDOPsq9LEEjifCguEEtEV/srF5XzfXZZ9E7g6+H9XbPBzrMry3lbT9gYTZVl+YM7xc1ptv0xbBBQ3mRSnPuCwmZ6/O4IAkYrpFmFwJ2fDGSSLMTDSgO8GceGtmSGxNT0hOEzBlkFu+B8YJUO7PZ1Cgs/aVu2vPfgVVObvSaiAhMRP5l3l5pps16TOUP9k1SAuPlamZ42uHdxhAztDv8C9XC20qzd2YUSPf6/Wha53ps/Ef9M5FaxkSQs8s2Y1f5TX+NUVg554/QKxwDiZXpfxW0p7uWP9qXUbVp
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB4045.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(346002)(366004)(396003)(39850400004)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(52116002)(6506007)(6512007)(6486002)(6666004)(478600001)(26005)(2616005)(107886003)(83380400001)(2906002)(41300700001)(5660300002)(66556008)(66476007)(316002)(8936002)(8676002)(4326008)(38350700005)(66946007)(31696002)(86362001)(36756003)(38100700002)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aUdEZlhWeGRYbllHc0x6MkUvZTl3alpoODN4V01TTkNHWE84NDNuRktBL2NV?=
+ =?utf-8?B?SVFpT3VXVHZFM25sOVBTa1lCR2ZNa0wvVVZLTjBDYVhPV3F3MXd6Mm9QeWJG?=
+ =?utf-8?B?Y2d5RCthU2FZazdiVWwxOC91Rnc0RUsxOUlJSHR3MnJFVDJkUnp3TldBWkY1?=
+ =?utf-8?B?M2hNMitPWEdORFRYR2lhYng4Y0dyK2VReE5YN0lVUjhVd1VJc245d3NXaFRa?=
+ =?utf-8?B?QzJ6Nm5sVWwzL0s0aFRsS1hnSzdBSnExbWU1WFlFSzRrT2ZnRjYzUEJXUm5i?=
+ =?utf-8?B?WU5TaFNuSERVdmVsZzFkUDFoWXpuOUlRZFdIaHdjWEE0UTJLWFJ0NURUcXRG?=
+ =?utf-8?B?NnlCekoxVURNVzdoQmZTcmdJcTAzbm5Mb2lPcWpqRitlVSs4ZFc5U1ZWTmpw?=
+ =?utf-8?B?V2N5MW9kcVpmVjNDRlMwU0lQSmtWUHVzL3NCbWU3M3dtMjIyWEo4c3pmOFpo?=
+ =?utf-8?B?Njd4K0NqMlBXSHNpRXdxUkFBWjZVUSsxS3pmN2loS3NURlVKOTVwZFBIUXAx?=
+ =?utf-8?B?TTF1d0VRUXV6dERmMmsyTTRCSlhNWGVrczlUc25MbTJHQTRIQllRVzZFTStS?=
+ =?utf-8?B?OGxwRlJ1MEpsTmt0WlhkMXArWWNZQ3pZQWdrZkFhbUZuVmdOUVYxQ0MweGVq?=
+ =?utf-8?B?OGxhSDJvY2JtUWJhN0lpVUFzbGFXMUpEd1Bmck9keG9hbnhFQVE0NGJvYUlH?=
+ =?utf-8?B?TXJ2OWZLK00yV3R3dzQrZE5nRGhBSEd2TkhBVU8yc1diYmtNQ0pHOUw1ODMw?=
+ =?utf-8?B?YkVKS1ZKSWk4V0hPajlidFM1SFVXNnBCUXRPbXJ4dWdqRlhmODd5OXNXcDVw?=
+ =?utf-8?B?dEhBNVp2UkphOWdZS0crZ29STDN1Z3Fub2t0RlhING9CNFFRTE1mNXI3NlJM?=
+ =?utf-8?B?RnI1elFyNDkxN2F0UXZPUS9xSmZFajlsR2NYSGJWSjVPeXRuRlYydzNpMjQx?=
+ =?utf-8?B?TlNvVzdrdDdoaGNTdUkrYXFndFRyTUhOMEx5ZEViQmFaOW40RG5YekVabFVW?=
+ =?utf-8?B?bVZVb0dNV2lCa3RDR2NwcnViL3JkOXB4RGh6K255TTdqL0t4TnFNRlFjVlYr?=
+ =?utf-8?B?YVZueW5TR1hqOHpQNk5qR1BIbHZLNFlNTnhnMzk0U2NRUlV6UERsV0o5OXhF?=
+ =?utf-8?B?d044bHFqczhJUVI4TmZZekJVOUdkYks2RzArYmJncGNqYWZwaGJxNnNTZ0tS?=
+ =?utf-8?B?ZHdXWnhQbnhMUkdFL0NobmV3Z0ZZMm9aSk5aWUI3UE9uUG90dXdjSlpYU3BS?=
+ =?utf-8?B?LzlhZDIyTU5nellhRUYrckt0ZGpaZjFZUkwwOVNrVDNXQW02NWxTREJBdXhY?=
+ =?utf-8?B?UzJBYVJSTUw2NThaMm5qdTBuQVJGQkJSa2tIb0lkZS9hbUE1Umpzbm5lUDJB?=
+ =?utf-8?B?REJ2MmZYMi9SUkVoODNhRm5zb1pGT3ZJNW9BUXdUc09YYjRGRVZSdWo5REpa?=
+ =?utf-8?B?eml4ejRWeEZ4bDlBVDA0Y1ZVdDRRZC9CczRreFl2N0ZlQlNIZkdPbXV0YzVR?=
+ =?utf-8?B?cnNsYVJpZmpYczUvaHlNVlhESGhvelVVR2xZU1hHazRzMHdWSFlkaDYrZGI4?=
+ =?utf-8?B?MXhTVU9vWkpZVjA5S0NWMGYrMXJ5VHNPZTdTMVJpcEQ1S0FBUTd1UTl3ODJs?=
+ =?utf-8?B?U0pFVFI3N0ZKV21FMWZka0NCeit0TExyQVdZRHpkRWZTR3p6ZEpnbXprVFhl?=
+ =?utf-8?B?aHV0WkZFM1dFSFpWNklEUTVnN0l4ZnpheWpwcDgwR25Fci92cHNnUXdGOS9Y?=
+ =?utf-8?B?L0JyZnk5dlplQkw0R2plSXFvV0l5QlZWUUFTMkFaV0VnLy9qaEZ5bW1sYjVI?=
+ =?utf-8?B?Rzl5ZmtWK3Nsd2JSd3E1WGNiK2VLVnVqei9GandoVkUyZndrUlJlblM4L0d4?=
+ =?utf-8?B?dENRSlB3K2J6K3g3b3p6aFRuYnJ4ZEtqd3A0TmIxWGtpaXBOUHRaeG8zZTBi?=
+ =?utf-8?B?ZEVNKzBpbjRQbU4zakVwc0ZGZk9wMHNSc0FOSjYyU0dhdDIzNThXQjUvN1FL?=
+ =?utf-8?B?T1gwVG5WdElCV0pqR1FzUERVeHV5OFptRjByclgxZ3NCNml0NTZsRFp0ZmJi?=
+ =?utf-8?B?b2xxZVROZC9oVzlFZVV6WmUzVWZCMVo2azU2cDZEZDkzdGdGOEkwSkRvZ3RK?=
+ =?utf-8?Q?uei7XnnuItCxg3Ar+Q5xJQGoI?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6a87f56-712f-427d-fd24-08dc1592fe57
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB4045.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2024 06:27:05.8394
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9IkNl3J6ActN+8av6+FFrul+Ucsalhzfp/Ou4lU+R7lUe/lsYRAK6yn47myJ/hkwu32QhvG5PRx56xH3PpIX1w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PSAPR06MB3990
 
-From: Hyeongtak Ji <hyeongtak.ji@sk.com>
+ping~
 
-This patch introduces DAMOS_PROMOTE action for paddr mode.
-
-It includes renaming alloc_demote_folio to alloc_migrate_folio to use it
-for promotion as well.
-
-The execution sequence of DAMOS_DEMOTE and DAMOS_PROMOTE look as
-follows for comparison.
-
-  DAMOS_DEMOTE action
-    damo_pa_apply_scheme
-    -> damon_pa_reclaim
-    -> demote_pages
-    -> do_demote_folio_list
-    -> __demote_folio_list
-    -> demote_folio_list
-
-  DAMOS_PROMOTE action
-    damo_pa_apply_scheme
-    -> damon_pa_promote
-    -> promote_pages
-    -> do_promote_folio_list
-    -> __promote_folio_list
-    -> promote_folio_list
-
-Signed-off-by: Hyeongtak Ji <hyeongtak.ji@sk.com>
-Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
----
- include/linux/damon.h          |   2 +
- include/linux/migrate_mode.h   |   1 +
- include/linux/vm_event_item.h  |   1 +
- include/trace/events/migrate.h |   3 +-
- mm/damon/paddr.c               |  29 ++++++++
- mm/damon/sysfs-schemes.c       |   1 +
- mm/internal.h                  |   1 +
- mm/vmscan.c                    | 129 ++++++++++++++++++++++++++++++++-
- mm/vmstat.c                    |   1 +
- 9 files changed, 165 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index 4c0a0fef09c5..477060bb6718 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -107,6 +107,7 @@ struct damon_target {
-  * @DAMOS_LRU_DEPRIO:	Deprioritize the region on its LRU lists.
-  * @DAMOS_STAT:		Do nothing but count the stat.
-  * @DAMOS_DEMOTE:	Do demotion for the current region.
-+ * @DAMOS_PROMOTE:	Do promotion if possible, otherwise do nothing.
-  * @NR_DAMOS_ACTIONS:	Total number of DAMOS actions
-  *
-  * The support of each action is up to running &struct damon_operations.
-@@ -125,6 +126,7 @@ enum damos_action {
- 	DAMOS_LRU_DEPRIO,
- 	DAMOS_STAT,		/* Do nothing but only record the stat */
- 	DAMOS_DEMOTE,
-+	DAMOS_PROMOTE,
- 	NR_DAMOS_ACTIONS,
- };
- 
-diff --git a/include/linux/migrate_mode.h b/include/linux/migrate_mode.h
-index f37cc03f9369..63f75eb9abf3 100644
---- a/include/linux/migrate_mode.h
-+++ b/include/linux/migrate_mode.h
-@@ -29,6 +29,7 @@ enum migrate_reason {
- 	MR_CONTIG_RANGE,
- 	MR_LONGTERM_PIN,
- 	MR_DEMOTION,
-+	MR_PROMOTION,
- 	MR_TYPES
- };
- 
-diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
-index 8abfa1240040..63cf920afeaa 100644
---- a/include/linux/vm_event_item.h
-+++ b/include/linux/vm_event_item.h
-@@ -44,6 +44,7 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
- 		PGDEMOTE_KSWAPD,
- 		PGDEMOTE_DIRECT,
- 		PGDEMOTE_KHUGEPAGED,
-+		PGPROMOTE,
- 		PGSCAN_KSWAPD,
- 		PGSCAN_DIRECT,
- 		PGSCAN_KHUGEPAGED,
-diff --git a/include/trace/events/migrate.h b/include/trace/events/migrate.h
-index 0190ef725b43..f0dd569c1e62 100644
---- a/include/trace/events/migrate.h
-+++ b/include/trace/events/migrate.h
-@@ -22,7 +22,8 @@
- 	EM( MR_NUMA_MISPLACED,	"numa_misplaced")		\
- 	EM( MR_CONTIG_RANGE,	"contig_range")			\
- 	EM( MR_LONGTERM_PIN,	"longterm_pin")			\
--	EMe(MR_DEMOTION,	"demotion")
-+	EM( MR_DEMOTION,	"demotion")			\
-+	EMe(MR_PROMOTION,	"promotion")
- 
- /*
-  * First define the enums in the above macros to be exported to userspace
-diff --git a/mm/damon/paddr.c b/mm/damon/paddr.c
-index d3e3f077cd00..360ce69d5898 100644
---- a/mm/damon/paddr.c
-+++ b/mm/damon/paddr.c
-@@ -257,6 +257,32 @@ static unsigned long damon_pa_reclaim(struct damon_region *r, struct damos *s, b
- 	return applied * PAGE_SIZE;
- }
- 
-+static unsigned long damon_pa_promote(struct damon_region *r, struct damos *s)
-+{
-+	unsigned long addr, applied;
-+	LIST_HEAD(folio_list);
-+
-+	for (addr = r->ar.start; addr < r->ar.end; addr += PAGE_SIZE) {
-+		struct folio *folio = damon_get_folio(PHYS_PFN(addr));
-+
-+		if (!folio)
-+			continue;
-+
-+		if (damos_pa_filter_out(s, folio))
-+			goto put_folio;
-+
-+		if (!folio_isolate_lru(folio))
-+			goto put_folio;
-+
-+		list_add(&folio->lru, &folio_list);
-+put_folio:
-+		folio_put(folio);
-+	}
-+	applied = promote_pages(&folio_list);
-+	cond_resched();
-+	return applied * PAGE_SIZE;
-+}
-+
- static inline unsigned long damon_pa_mark_accessed_or_deactivate(
- 		struct damon_region *r, struct damos *s, bool mark_accessed)
- {
-@@ -309,6 +335,8 @@ static unsigned long damon_pa_apply_scheme(struct damon_ctx *ctx,
- 		break;
- 	case DAMOS_DEMOTE:
- 		return damon_pa_reclaim(r, scheme, true);
-+	case DAMOS_PROMOTE:
-+		return damon_pa_promote(r, scheme);
- 	default:
- 		/* DAMOS actions that not yet supported by 'paddr'. */
- 		break;
-@@ -326,6 +354,7 @@ static int damon_pa_scheme_score(struct damon_ctx *context,
- 	case DAMOS_DEMOTE:
- 		return damon_cold_score(context, r, scheme);
- 	case DAMOS_LRU_PRIO:
-+	case DAMOS_PROMOTE:
- 		return damon_hot_score(context, r, scheme);
- 	default:
- 		break;
-diff --git a/mm/damon/sysfs-schemes.c b/mm/damon/sysfs-schemes.c
-index ac7cd3f17b12..1b84d0af7e1f 100644
---- a/mm/damon/sysfs-schemes.c
-+++ b/mm/damon/sysfs-schemes.c
-@@ -1188,6 +1188,7 @@ static const char * const damon_sysfs_damos_action_strs[] = {
- 	"lru_deprio",
- 	"stat",
- 	"demote",
-+	"promote",
- };
- 
- static struct damon_sysfs_scheme *damon_sysfs_scheme_alloc(
-diff --git a/mm/internal.h b/mm/internal.h
-index 2380397ec2f3..f159455e63d4 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -870,6 +870,7 @@ unsigned long reclaim_pages(struct list_head *folio_list);
- unsigned int reclaim_clean_pages_from_list(struct zone *zone,
- 					    struct list_head *folio_list);
- unsigned long demote_pages(struct list_head *folio_list);
-+unsigned long promote_pages(struct list_head *folio_list);
- /* The ALLOC_WMARK bits are used as an index to zone->watermark */
- #define ALLOC_WMARK_MIN		WMARK_MIN
- #define ALLOC_WMARK_LOW		WMARK_LOW
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index eaa3dd6b7562..f03be320f9ad 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -910,7 +910,7 @@ static void folio_check_dirty_writeback(struct folio *folio,
- 		mapping->a_ops->is_dirty_writeback(folio, dirty, writeback);
- }
- 
--static struct folio *alloc_demote_folio(struct folio *src,
-+static struct folio *alloc_migrate_folio(struct folio *src,
- 		unsigned long private)
- {
- 	struct folio *dst;
-@@ -973,7 +973,7 @@ static unsigned int demote_folio_list(struct list_head *demote_folios,
- 	node_get_allowed_targets(pgdat, &allowed_mask);
- 
- 	/* Demotion ignores all cpuset and mempolicy settings */
--	migrate_pages(demote_folios, alloc_demote_folio, NULL,
-+	migrate_pages(demote_folios, alloc_migrate_folio, NULL,
- 		      (unsigned long)&mtc, MIGRATE_ASYNC, MR_DEMOTION,
- 		      &nr_succeeded);
- 
-@@ -982,6 +982,48 @@ static unsigned int demote_folio_list(struct list_head *demote_folios,
- 	return nr_succeeded;
- }
- 
-+/*
-+ * Take folios on @promote_folios and attempt to promote them to another node.
-+ * Folios which are not promoted are left on @promote_folios.
-+ */
-+static unsigned int promote_folio_list(struct list_head *promote_folios,
-+				     struct pglist_data *pgdat)
-+{
-+	int target_nid = next_promotion_node(pgdat->node_id);
-+	unsigned int nr_succeeded;
-+	nodemask_t allowed_mask = NODE_MASK_NONE;
-+
-+	struct migration_target_control mtc = {
-+		/*
-+		 * Allocate from 'node', or fail quickly and quietly.
-+		 * When this happens, 'page' will likely be stayed
-+		 * instead of migrated.
-+		 */
-+		.gfp_mask = (GFP_HIGHUSER_MOVABLE & ~__GFP_RECLAIM) | __GFP_NOWARN |
-+			__GFP_NOMEMALLOC | GFP_NOWAIT,
-+		.nid = target_nid,
-+		.nmask = &allowed_mask
-+	};
-+
-+	if (pgdat->node_id == target_nid)
-+		return 0;
-+
-+	if (list_empty(promote_folios))
-+		return 0;
-+
-+	if (target_nid == NUMA_NO_NODE)
-+		return 0;
-+
-+	/* Promotion ignores all cpuset and mempolicy settings */
-+	migrate_pages(promote_folios, alloc_migrate_folio, NULL,
-+		      (unsigned long)&mtc, MIGRATE_ASYNC, MR_PROMOTION,
-+		      &nr_succeeded);
-+
-+	__count_vm_events(PGPROMOTE, nr_succeeded);
-+
-+	return nr_succeeded;
-+}
-+
- static bool may_enter_fs(struct folio *folio, gfp_t gfp_mask)
- {
- 	if (gfp_mask & __GFP_FS)
-@@ -1058,6 +1100,65 @@ static unsigned int __demote_folio_list(struct list_head *folio_list,
- 	return nr_demoted;
- }
- 
-+/*
-+ * __promote_folio_list() returns the number of promoted pages
-+ */
-+static unsigned int __promote_folio_list(struct list_head *folio_list,
-+		struct pglist_data *pgdat, struct scan_control *sc)
-+{
-+	LIST_HEAD(ret_folios);
-+	LIST_HEAD(promote_folios);
-+	unsigned int nr_promoted = 0;
-+
-+	cond_resched();
-+
-+	while (!list_empty(folio_list)) {
-+		struct folio *folio;
-+		enum folio_references references;
-+
-+		cond_resched();
-+
-+		folio = lru_to_folio(folio_list);
-+		list_del(&folio->lru);
-+
-+		if (!folio_trylock(folio))
-+			goto keep;
-+
-+		VM_BUG_ON_FOLIO(folio_test_active(folio), folio);
-+
-+		references = folio_check_references(folio, sc);
-+		if (references == FOLIOREF_KEEP ||
-+		    references == FOLIOREF_RECLAIM ||
-+		    references == FOLIOREF_RECLAIM_CLEAN)
-+			goto keep_locked;
-+
-+		/* Relocate its contents to another node. */
-+		list_add(&folio->lru, &promote_folios);
-+		folio_unlock(folio);
-+		continue;
-+keep_locked:
-+		folio_unlock(folio);
-+keep:
-+		list_add(&folio->lru, &ret_folios);
-+		VM_BUG_ON_FOLIO(folio_test_lru(folio), folio);
-+	}
-+	/* 'folio_list' is always empty here */
-+
-+	/* Migrate folios selected for promotion */
-+	nr_promoted += promote_folio_list(&promote_folios, pgdat);
-+	/* Folios that could not be promoted are still in @promote_folios */
-+	if (!list_empty(&promote_folios)) {
-+		/* Folios which weren't promoted go back on @folio_list */
-+		list_splice_init(&promote_folios, folio_list);
-+	}
-+
-+	try_to_unmap_flush();
-+
-+	list_splice(&ret_folios, folio_list);
-+
-+	return nr_promoted;
-+}
-+
- /*
-  * shrink_folio_list() returns the number of reclaimed pages
-  */
-@@ -2186,6 +2287,25 @@ static unsigned int do_demote_folio_list(struct list_head *folio_list,
- 	return nr_demoted;
- }
- 
-+static unsigned int do_promote_folio_list(struct list_head *folio_list,
-+				      struct pglist_data *pgdat)
-+{
-+	unsigned int nr_promoted;
-+	struct folio *folio;
-+	struct scan_control sc = {
-+		.gfp_mask = GFP_KERNEL,
-+	};
-+
-+	nr_promoted = __promote_folio_list(folio_list, pgdat, &sc);
-+	while (!list_empty(folio_list)) {
-+		folio = lru_to_folio(folio_list);
-+		list_del(&folio->lru);
-+		folio_putback_lru(folio);
-+	}
-+
-+	return nr_promoted;
-+}
-+
- static unsigned long reclaim_or_migrate_folios(struct list_head *folio_list,
- 		unsigned int (*handler)(struct list_head *, struct pglist_data *))
- {
-@@ -2230,6 +2350,11 @@ unsigned long demote_pages(struct list_head *folio_list)
- 	return reclaim_or_migrate_folios(folio_list, do_demote_folio_list);
- }
- 
-+unsigned long promote_pages(struct list_head *folio_list)
-+{
-+	return reclaim_or_migrate_folios(folio_list, do_promote_folio_list);
-+}
-+
- static unsigned long shrink_list(enum lru_list lru, unsigned long nr_to_scan,
- 				 struct lruvec *lruvec, struct scan_control *sc)
- {
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 359460deb377..c703abdb8137 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1282,6 +1282,7 @@ const char * const vmstat_text[] = {
- 	"pgdemote_kswapd",
- 	"pgdemote_direct",
- 	"pgdemote_khugepaged",
-+	"pgpromote",
- 	"pgscan_kswapd",
- 	"pgscan_direct",
- 	"pgscan_khugepaged",
--- 
-2.34.1
-
+在 2024/1/5 9:36, Bixuan Cui 写道:
+> When the system memory is low, kswapd reclaims the memory. The key steps
+> of memory reclamation include
+> 1.shrink_lruvec
+>    * shrink_active_list, moves folios from the active LRU to the inactive LRU
+>    * shrink_inactive_list, shrink lru from inactive LRU list
+> 2.shrink_slab
+>    * shrinker->count_objects(), calculates the freeable memory
+>    * shrinker->scan_objects(), reclaims the slab memory
+> 
+> The existing tracers in the vmscan are as follows:
+> 
+> --do_try_to_free_pages
+> --shrink_zones
+> --trace_mm_vmscan_node_reclaim_begin (tracer)
+> --shrink_node
+> --shrink_node_memcgs
+>    --trace_mm_vmscan_memcg_shrink_begin (tracer)
+>    --shrink_lruvec
+>      --shrink_list
+>        --shrink_active_list
+> 	  --trace_mm_vmscan_lru_shrink_active (tracer)
+>        --shrink_inactive_list
+> 	  --trace_mm_vmscan_lru_shrink_inactive (tracer)
+>      --shrink_active_list
+>    --shrink_slab
+>      --do_shrink_slab
+>      --shrinker->count_objects()
+>      --trace_mm_shrink_slab_start (tracer)
+>      --shrinker->scan_objects()
+>      --trace_mm_shrink_slab_end (tracer)
+>    --trace_mm_vmscan_memcg_shrink_end (tracer)
+> --trace_mm_vmscan_node_reclaim_end (tracer)
+> 
+> If we get the duration and quantity of shrink lru and slab,
+> then we can measure the memory recycling, as follows
+> 
+> Measuring memory reclamation with bpf:
+>    LRU FILE:
+> 	CPU COMM 	ShrinkActive(us) ShrinkInactive(us)  Reclaim(page)
+> 	7   kswapd0	 	26		51		32
+> 	7   kswapd0		52		47		13
+>    SLAB:
+> 	CPU COMM 		OBJ_NAME		Count_Dur(us) Freeable(page) Scan_Dur(us) Reclaim(page)
+> 	 1  kswapd0		super_cache_scan.cfi_jt     2		    341		   3225		128
+> 	 7  kswapd0		super_cache_scan.cfi_jt     0		    2247	   8524		1024
+> 	 7  kswapd0	        super_cache_scan.cfi_jt     2367	    0		   0		0
+> 
+> For this, add the new tracer to shrink_active_list/shrink_inactive_list
+> and shrinker->count_objects().
+> 
+> Changes:
+> v6: * Add Reviewed-by from Steven Rostedt.
+> v5: * Use 'DECLARE_EVENT_CLASS(mm_vmscan_lru_shrink_start_template' to
+> replace 'RACE_EVENT(mm_vmscan_lru_shrink_inactive/active_start'
+>      * Add the explanation for adding new shrink lru events into 'mm: vmscan: add new event to trace shrink lru'
+> v4: Add Reviewed-by and Changlog to every patch.
+> v3: Swap the positions of 'nid' and 'freeable' to prevent the hole in the trace event.
+> v2: Modify trace_mm_vmscan_lru_shrink_inactive() in evict_folios() at the same time to fix build error.
+> 
+> cuibixuan (2):
+>    mm: shrinker: add new event to trace shrink count
+>    mm: vmscan: add new event to trace shrink lru
+> 
+>   include/trace/events/vmscan.h | 80 ++++++++++++++++++++++++++++++++++-
+>   mm/shrinker.c                 |  4 ++
+>   mm/vmscan.c                   | 11 +++--
+>   3 files changed, 90 insertions(+), 5 deletions(-)
+> 
