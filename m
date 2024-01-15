@@ -1,113 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FA7182A0;
-	Mon, 15 Jan 2024 18:03:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 422C5C433F1;
-	Mon, 15 Jan 2024 18:03:55 +0000 (UTC)
-Date: Mon, 15 Jan 2024 13:03:53 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- kernel-team@android.com
-Subject: Re: [PATCH v11 2/5] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <20240115130353.78a7a587@rorschach.local.home>
-In-Reply-To: <ZaVrZWGgmBNbsNba@google.com>
-References: <20240111161712.1480333-1-vdonnefort@google.com>
-	<20240111161712.1480333-3-vdonnefort@google.com>
-	<20240115134303.1a673e37b8e7d35a33d8df52@kernel.org>
-	<ZaVRO76JxaHjPwCi@google.com>
-	<20240115110938.613380ca@rorschach.local.home>
-	<20240115112359.65dcecbf@rorschach.local.home>
-	<ZaVrZWGgmBNbsNba@google.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8327B1863E;
+	Mon, 15 Jan 2024 18:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="SZBZngzm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1705342640; x=1705947440; i=erick.archer@gmx.com;
+	bh=vIOTPgNBydSqKCJCF1Y+JqsAan+pT9TC0MylL9uW2R0=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=SZBZngzmcE79+RU29xAXD5HwuZCh3qMwSour3m5zDk4uewVeaKodI2gao7uoBbea
+	 acofFyGAfCxq4uIhwmLxC2PBPqJGNR7NHntU6LjUEnDLtInPcixI0k33SDWs1RdZc
+	 W4JdogS8GYwHjZJBZcCCM5X3gbZMh/Up/1qy3XCJRSCSpoDOthd1W+fejpJH8A46u
+	 JMtZuP6DlpmvNsP/yEmFAKkKcE6h0F/V9t8dIWUPOxDwEgG+XYL1qMutBNvH75Cbn
+	 zhiit5CN1u6xoWx+JtqVZy6CEI25tieLYJVAjWEmeXK+u2os7mw6VPOYyo0BYjlgs
+	 ebAfHlwOYrh1CZr+mg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
+ (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MhlKs-1qulTT3wJc-00dk5q; Mon, 15 Jan 2024 19:17:20 +0100
+From: Erick Archer <erick.archer@gmx.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Erick Archer <erick.archer@gmx.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] eventfs: Use kcalloc() instead of kzalloc()
+Date: Mon, 15 Jan 2024 19:16:58 +0100
+Message-Id: <20240115181658.4562-1-erick.archer@gmx.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:0g1HcZkBjgXbdwH65/z58cKfoG4eUSOlTy25Nx06xre/KJiWz4m
+ SkPbpl8fGlc4UQ18ujM97F85F9hLPqeA2rmTQVOdDPLmgvPVXEW1+wNQghH23fXjERqJgn8
+ 5+0mZwbu/iR2h9imQ5RadyEP5N7gCOamNmJflA7sQTdjSJNCULkcOre6u+k6EUGN0ctsMvF
+ NGLVPUEJAccHJyXBkloCQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:VxCX+FbTuiU=;wa/Qu/GPbrz8jMjfxFIdVgsNWZl
+ PxHOAK6x+m+be9+s4+J1CKTt3/gvAAtZusqrYKVLAwKKm1Tqd5wk/7jm6HAVRHQYGjrCCZp+j
+ fo+CeafPcQ+uQFCbuZHJbHxuESYX9IKw/OBOY4jwarZBdSFcAH7mlpmlaCAExWqTyFhHeBpYv
+ NYE9lRDSrAHDajnxZNJOaP2BiuN8YCZWjeAKxDS8H5wWLz7ueE6Z9aqnHOzXZm3pex2gpnWDh
+ hD2oCNXd9WIDMrkppIbG7ut6y4u5X1dWZWXAfRxnbCDG7onwZT12SCWJvY5cw6OZ6bTsiRs5P
+ Qr9p0StE0I4MtJOPvHnYsK/1XE/vvAF32pOGssQMIogxDV187555ry2EWoYHTIa8BOtTCClTe
+ /aM/bUfbUUnJUBTOq1+U6lgRXW6f3Hd9ojET5h6ht7VXcpQ7/Tn6XaPPa97qy/fJ96+CUWhUU
+ r3DsZISn79iXPvjLv5vHrD8T3SAcikgdN72hZN7pEfmFjxjY1JcgQiacCFcrmkJazQcoCmrcH
+ JsenuGsEKgI0KZ+kbEKsOqo6prl6FW8inPOCi3QokB5WYGGuFIzug9v9GQi9l/sv5HBjJHUuf
+ /BWcZsMlgOkKk1WOIlqPuoMoU2cXPraaRnoOIh8Vw4k77UdYNPaKB3TyOug6BBKYu3trhhYDE
+ 4p/RcrUGXC+2zSa9h2rY0Cw17ArTOUkFy/Xo2ByPIv+lQhojXLtoDFkJtJxDe6tQrpmYi5W1v
+ 5AMtnvkw7wTBC49m9mlX/5ox8LT0pHwIItNprhmg+IkaB/VLDtjWSF3MpPyaeLSesf3BCDCxU
+ 8ZhdlqjjmJBrx7JkBPRVq6mR8/5bBndmifJyNZ8l2Qy5jIwBCTPOEJ+wQSiBAxBeg13rBgBYa
+ FjZ4mULJPtQrUHS5KldLCD74/9bESBW+VCLqiq0nt2HlwbRwRg/Ikj1Mi+fr4UPzDjH+yi8Gr
+ 7p/I7Q==
 
-On Mon, 15 Jan 2024 17:29:09 +0000
-Vincent Donnefort <vdonnefort@google.com> wrote:
+As noted in the "Deprecated Interfaces, Language Features, Attributes,
+and Conventions" documentation [1], size calculations (especially
+multiplication) should not be performed in memory allocator (or similar)
+function arguments due to the risk of them overflowing. This could lead
+to values wrapping around and a smaller allocation being made than the
+caller was expecting. Using those allocations could lead to linear
+overflows of heap memory and other misbehaviors.
 
-> > 
-> > What needs to be done, and feel free to add this as a separate patch,
-> > is to have checks where snapshot is used.
-> > 
-> >   (All errors return -EBUSY)
-> > 
-> > Before allowing mapping, check to see if:
-> > 
-> >  1) the current tracer has "use_max_tr" set.
-> >  2) any event has a "snapshot" trigger set
-> >  3) Any function has a "snapshot" command set  
-> 
-> Could we sum-up this with a single check to allocate_snapshot? If that is
-> allocated it's probably because we'll be using it?
+So, use the purpose specific kcalloc() function instead of the argument
+size * count in the kzalloc() function.
 
-Not always. It can be allocated at any time and never used.
+[1] https://www.kernel.org/doc/html/next/process/deprecated.html#open-code=
+d-arithmetic-in-allocator-arguments
 
-I'd like to keep the allocation of the snapshot buffer agnostic to if
-the buffer is mapped or not, especially since it can be allocated at
-boot up and never used. Several of my boxes have "alloc_snapshot" on
-the command line even though I don't always use it. But we could update
-the output of reading the "snapshot" file to:
+Link: https://github.com/KSPP/linux/issues/162
+Signed-off-by: Erick Archer <erick.archer@gmx.com>
+=2D--
+Changes in v2:
+- Update the commit message to better explain the changes (Mark Rutland)
 
- ~# cat /sys/kernel/tracing/snapshot 
-# tracer: nop
-#
-#
-# ** Snapshot disabled due to the buffer being memory mapped **
-#
-# * Snapshot is freed *
-#
-# Snapshot commands:
-# echo 0 > snapshot : Clears and frees snapshot buffer
-# echo 1 > snapshot : Allocates snapshot buffer, if not already allocated.
-#                      Takes a snapshot of the main buffer.
-# echo 2 > snapshot : Clears snapshot buffer (but does not allocate or free)
-#                      (Doesn't have to be '2' works with any number that
-#                       is not a '0' or '1')
+Previous versions:
+v1: https://lore.kernel.org/linux-hardening/20240114105340.5746-1-erick.ar=
+cher@gmx.com/
+=2D--
+ fs/tracefs/event_inode.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-If it is allocated:
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index fdff53d5a1f8..f8196289692c 100644
+=2D-- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -93,7 +93,7 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, str=
+uct dentry *dentry,
+ 	/* Preallocate the children mode array if necessary */
+ 	if (!(dentry->d_inode->i_mode & S_IFDIR)) {
+ 		if (!ei->entry_attrs) {
+-			ei->entry_attrs =3D kzalloc(sizeof(*ei->entry_attrs) * ei->nr_entries,
++			ei->entry_attrs =3D kcalloc(ei->nr_entries, sizeof(*ei->entry_attrs),
+ 						  GFP_NOFS);
+ 			if (!ei->entry_attrs) {
+ 				ret =3D -ENOMEM;
+@@ -874,7 +874,7 @@ struct eventfs_inode *eventfs_create_dir(const char *n=
+ame, struct eventfs_inode
+ 	}
 
- ~# cat /sys/kernel/tracing/snapshot
-# tracer: nop
-#
-# ** Snapshot disabled due to the buffer being memory mapped **
-#
-# * Snapshot is allocated *
-#
-# Snapshot commands:
-# echo 0 > snapshot : Clears and frees snapshot buffer
-# echo 1 > snapshot : Allocates snapshot buffer, if not already allocated.
-#                      Takes a snapshot of the main buffer.
-# echo 2 > snapshot : Clears snapshot buffer (but does not allocate or free)
-#                      (Doesn't have to be '2' works with any number that
-#                       is not a '0' or '1')
+ 	if (size) {
+-		ei->d_children =3D kzalloc(sizeof(*ei->d_children) * size, GFP_KERNEL);
++		ei->d_children =3D kcalloc(size, sizeof(*ei->d_children), GFP_KERNEL);
+ 		if (!ei->d_children) {
+ 			kfree_const(ei->name);
+ 			kfree(ei);
+@@ -941,7 +941,7 @@ struct eventfs_inode *eventfs_create_events_dir(const =
+char *name, struct dentry
+ 		goto fail;
 
+ 	if (size) {
+-		ei->d_children =3D kzalloc(sizeof(*ei->d_children) * size, GFP_KERNEL);
++		ei->d_children =3D kcalloc(size, sizeof(*ei->d_children), GFP_KERNEL);
+ 		if (!ei->d_children)
+ 			goto fail;
+ 	}
+=2D-
+2.25.1
 
-> 
-> That would simply add the requirement to echo 0 > snapshot before starting the
-> memory map?
-
-I rather not depend on that. It just makes it more complex for why
-mapping failed. If you get -EBUSY, it will be hard to know why.
-
-> 
-> The opposite could be to let tracing_alloc_snapshot_instance() fail whenever a
-> mapping is in place?
-
-Yes, that would fail if mapping is in place.
-
-Because the snapshot being allocated can be something people want, as
-it allows the snapshot to happen immediately when needed, I don't want
-the fact that it is allocated to prevent mapping. As mapping may just
-happen for a small period of time while an application is running.
-
--- Steve
