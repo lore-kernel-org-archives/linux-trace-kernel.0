@@ -1,449 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDEE022EF8;
-	Tue, 16 Jan 2024 20:32:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9724D200B7;
+	Tue, 16 Jan 2024 21:12:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705437155; cv=none; b=rnCHkqTYQkYdqfjb5P9/AikTeZqhELfHgjgnY+WN42BOAM7jGAUkUi8RGAgYK9CWynj/PwyZi9AMUMQM9IBYz3vGYIh/3hEmmEXT4H2z9Vgez1KijPvg8vHPUHvgPINOSIp3XR77rNzcIiBjKH0fJdtdgZ9Jf/QGogDh1BT8540=
+	t=1705439558; cv=none; b=X6ehvOFD8TKPa+EPPzMtRo7Dahrzi6cac58Fn5ZrxN1lqxy9zm674ebx3lBtW6yl8qUsJ1DBmN7V6cK583Y/sdglNYuZTDuM4oj/e7R7H2FjDBO50hqrsJEfl8V8yRtOE9y9dmu+2TqTldAtqP7A3w7ZhSdMcfdCjbhftDjY5ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705437155; c=relaxed/simple;
-	bh=P+kmQSxhZgr4dg4PgekC+SHUzy7heDMGuWouVasimHk=;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-Id:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding; b=n9rKkbfnYaWa+x7Gt8rFup3Jg4fYJIaP61Z8Tbwqi3CbZvBQ833jbdIjQRI9rI2TUG60WEMOQO2DTrAIO5VmN570nkqoe//90PJe1RH5OuUHNqkJkWW00Aum8MjUnKD9wdhFyEBdU/h3nixN4n2ukoa8vuara+uhoUwlEBi8pp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZIPatRbI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZIPatRbI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFCB2C433C7;
-	Tue, 16 Jan 2024 20:32:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705437155;
-	bh=P+kmQSxhZgr4dg4PgekC+SHUzy7heDMGuWouVasimHk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZIPatRbIvA6bZ9bUbLXecMGket7gW6LedJSUyIibZq9SJQ8v72WMwLx/qrfujPyXE
-	 8mZl1t6y5pFaQALvExfkuK2OZ0MWCox3Ylw8nTnOs2/FBuCbtnJTbzw26ZHfSA8iY2
-	 FlvRXjRiyBDw2oSbg+mR4w15TTbwXXfj0XtxhSBpKurR9oLfDb/cHrRyQwEz5PiwA8
-	 edIwgrjppDq93BHPlCXU09S3mPVwMEuBf0xW929x5jsdDmkSYWmmhdFfAHJ0mqc8sY
-	 jWKLNg8XVG9VwBfxWeA8o2aumUISJUev5ianH5OxIObzJgh1CqTYWOmUmjcTCRLJtm
-	 EhV5WTKZTqD8Q==
-From: SeongJae Park <sj@kernel.org>
-To: Honggyu Kim <honggyu.kim@sk.com>
-Cc: sj@kernel.org,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel_team@skhynix.com,
-	akpm@linux-foundation.org,
-	apopple@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	dave.jiang@intel.com,
-	linmiaohe@huawei.com,
-	lizhijian@cn.fujitsu.com,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	rostedt@goodmis.org,
-	surenb@google.com,
-	yangx.jy@fujitsu.com,
-	ying.huang@intel.com,
-	ziy@nvidia.com,
-	Hyeongtak Ji <hyeongtak.ji@sk.com>
-Subject: Re: [RFC PATCH 4/4] mm/damon: introduce DAMOS_PROMOTE action for promotion
-Date: Tue, 16 Jan 2024 12:32:30 -0800
-Message-Id: <20240116203231.52894-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240115045253.1775-5-honggyu.kim@sk.com>
-References: 
+	s=arc-20240116; t=1705439558; c=relaxed/simple;
+	bh=mSSEti/pws5tstaq4hJGZy7wJkxktJfMLR7SyPu5kN4=;
+	h=Received:Received:Message-ID:User-Agent:Date:From:To:Cc:Subject:
+	 References:MIME-Version:Content-Type; b=ja7qFTeKCsLpAm2G+MEddfADK42XFCxAOLf7UHZzdqKs0Hq8MHvcNo1YBppuh0M0MZJQlcdmAjUClBpw/AUkOHQ5+L+It2WChGL/VkO4SYniesMGnj7q1B0MxC9PVlkxvj7WJFlKmhCtNBQDisK7IAmwI1pKQqpmtzZWmneGV+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A57EC43390;
+	Tue, 16 Jan 2024 21:12:38 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1rPqkr-00000001PQy-2KDw;
+	Tue, 16 Jan 2024 16:13:53 -0500
+Message-ID: <20240116211353.412180363@goodmis.org>
+User-Agent: quilt/0.67
+Date: Tue, 16 Jan 2024 16:12:18 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Christian Brauner <brauner@kernel.org>,
+ Al  Viro <viro@ZenIV.linux.org.uk>,
+ Ajay Kaher <ajay.kaher@broadcom.com>,
+ linux-fsdevel@vger.kernel.org
+Subject: [PATCH v2 1/2] eventfs: Have the inodes all for files and directories all be the
+ same
+References: <20240116211217.968123837@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 
-On Mon, 15 Jan 2024 13:52:52 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> From: Hyeongtak Ji <hyeongtak.ji@sk.com>
-> 
-> This patch introduces DAMOS_PROMOTE action for paddr mode.
-> 
-> It includes renaming alloc_demote_folio to alloc_migrate_folio to use it
-> for promotion as well.
-> 
-> The execution sequence of DAMOS_DEMOTE and DAMOS_PROMOTE look as
-> follows for comparison.
-> 
->   DAMOS_DEMOTE action
->     damo_pa_apply_scheme
->     -> damon_pa_reclaim
->     -> demote_pages
->     -> do_demote_folio_list
->     -> __demote_folio_list
->     -> demote_folio_list
-> 
->   DAMOS_PROMOTE action
->     damo_pa_apply_scheme
->     -> damon_pa_promote
->     -> promote_pages
->     -> do_promote_folio_list
->     -> __promote_folio_list
->     -> promote_folio_list
-> 
-> Signed-off-by: Hyeongtak Ji <hyeongtak.ji@sk.com>
-> Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
-> ---
->  include/linux/damon.h          |   2 +
->  include/linux/migrate_mode.h   |   1 +
->  include/linux/vm_event_item.h  |   1 +
->  include/trace/events/migrate.h |   3 +-
->  mm/damon/paddr.c               |  29 ++++++++
->  mm/damon/sysfs-schemes.c       |   1 +
->  mm/internal.h                  |   1 +
->  mm/vmscan.c                    | 129 ++++++++++++++++++++++++++++++++-
->  mm/vmstat.c                    |   1 +
->  9 files changed, 165 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/damon.h b/include/linux/damon.h
-> index 4c0a0fef09c5..477060bb6718 100644
-> --- a/include/linux/damon.h
-> +++ b/include/linux/damon.h
-> @@ -107,6 +107,7 @@ struct damon_target {
->   * @DAMOS_LRU_DEPRIO:	Deprioritize the region on its LRU lists.
->   * @DAMOS_STAT:		Do nothing but count the stat.
->   * @DAMOS_DEMOTE:	Do demotion for the current region.
-> + * @DAMOS_PROMOTE:	Do promotion if possible, otherwise do nothing.
+The dentries and inodes are created in the readdir for the sole purpose of
+getting a consistent inode number. Linus stated that is unnecessary, and
+that all inodes can have the same inode number. For a virtual file system
+they are pretty meaningless.
 
-Like LRU_PRIO is defined before LRU_DEPRIO, what about defining PROMOTE before
-DEMOTE?
+Instead use a single unique inode number for all files and one for all
+directories.
 
->   * @NR_DAMOS_ACTIONS:	Total number of DAMOS actions
->   *
->   * The support of each action is up to running &struct damon_operations.
-> @@ -125,6 +126,7 @@ enum damos_action {
->  	DAMOS_LRU_DEPRIO,
->  	DAMOS_STAT,		/* Do nothing but only record the stat */
->  	DAMOS_DEMOTE,
-> +	DAMOS_PROMOTE,
->  	NR_DAMOS_ACTIONS,
->  };
->  
-> diff --git a/include/linux/migrate_mode.h b/include/linux/migrate_mode.h
-> index f37cc03f9369..63f75eb9abf3 100644
-> --- a/include/linux/migrate_mode.h
-> +++ b/include/linux/migrate_mode.h
-> @@ -29,6 +29,7 @@ enum migrate_reason {
->  	MR_CONTIG_RANGE,
->  	MR_LONGTERM_PIN,
->  	MR_DEMOTION,
-> +	MR_PROMOTION,
->  	MR_TYPES
->  };
->  
-> diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
-> index 8abfa1240040..63cf920afeaa 100644
-> --- a/include/linux/vm_event_item.h
-> +++ b/include/linux/vm_event_item.h
-> @@ -44,6 +44,7 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
->  		PGDEMOTE_KSWAPD,
->  		PGDEMOTE_DIRECT,
->  		PGDEMOTE_KHUGEPAGED,
-> +		PGPROMOTE,
->  		PGSCAN_KSWAPD,
->  		PGSCAN_DIRECT,
->  		PGSCAN_KHUGEPAGED,
-> diff --git a/include/trace/events/migrate.h b/include/trace/events/migrate.h
-> index 0190ef725b43..f0dd569c1e62 100644
-> --- a/include/trace/events/migrate.h
-> +++ b/include/trace/events/migrate.h
-> @@ -22,7 +22,8 @@
->  	EM( MR_NUMA_MISPLACED,	"numa_misplaced")		\
->  	EM( MR_CONTIG_RANGE,	"contig_range")			\
->  	EM( MR_LONGTERM_PIN,	"longterm_pin")			\
-> -	EMe(MR_DEMOTION,	"demotion")
-> +	EM( MR_DEMOTION,	"demotion")			\
-> +	EMe(MR_PROMOTION,	"promotion")
->  
->  /*
->   * First define the enums in the above macros to be exported to userspace
-> diff --git a/mm/damon/paddr.c b/mm/damon/paddr.c
-> index d3e3f077cd00..360ce69d5898 100644
-> --- a/mm/damon/paddr.c
-> +++ b/mm/damon/paddr.c
-> @@ -257,6 +257,32 @@ static unsigned long damon_pa_reclaim(struct damon_region *r, struct damos *s, b
->  	return applied * PAGE_SIZE;
->  }
->  
-> +static unsigned long damon_pa_promote(struct damon_region *r, struct damos *s)
-> +{
-> +	unsigned long addr, applied;
-> +	LIST_HEAD(folio_list);
-> +
-> +	for (addr = r->ar.start; addr < r->ar.end; addr += PAGE_SIZE) {
-> +		struct folio *folio = damon_get_folio(PHYS_PFN(addr));
-> +
-> +		if (!folio)
-> +			continue;
-> +
-> +		if (damos_pa_filter_out(s, folio))
-> +			goto put_folio;
-> +
-> +		if (!folio_isolate_lru(folio))
-> +			goto put_folio;
-> +
-> +		list_add(&folio->lru, &folio_list);
-> +put_folio:
-> +		folio_put(folio);
-> +	}
-> +	applied = promote_pages(&folio_list);
-> +	cond_resched();
-> +	return applied * PAGE_SIZE;
-> +}
-> +
->  static inline unsigned long damon_pa_mark_accessed_or_deactivate(
->  		struct damon_region *r, struct damos *s, bool mark_accessed)
->  {
-> @@ -309,6 +335,8 @@ static unsigned long damon_pa_apply_scheme(struct damon_ctx *ctx,
->  		break;
->  	case DAMOS_DEMOTE:
->  		return damon_pa_reclaim(r, scheme, true);
-> +	case DAMOS_PROMOTE:
-> +		return damon_pa_promote(r, scheme);
->  	default:
->  		/* DAMOS actions that not yet supported by 'paddr'. */
->  		break;
-> @@ -326,6 +354,7 @@ static int damon_pa_scheme_score(struct damon_ctx *context,
->  	case DAMOS_DEMOTE:
->  		return damon_cold_score(context, r, scheme);
->  	case DAMOS_LRU_PRIO:
-> +	case DAMOS_PROMOTE:
->  		return damon_hot_score(context, r, scheme);
+Link: https://lore.kernel.org/all/20240116133753.2808d45e@gandalf.local.home/
 
-As mentioned on the previous patch, I'd prefer keeping the order of operations
-and having dedicated branches for each operation.
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/tracefs/event_inode.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
->  	default:
->  		break;
-> diff --git a/mm/damon/sysfs-schemes.c b/mm/damon/sysfs-schemes.c
-> index ac7cd3f17b12..1b84d0af7e1f 100644
-> --- a/mm/damon/sysfs-schemes.c
-> +++ b/mm/damon/sysfs-schemes.c
-> @@ -1188,6 +1188,7 @@ static const char * const damon_sysfs_damos_action_strs[] = {
->  	"lru_deprio",
->  	"stat",
->  	"demote",
-> +	"promote",
->  };
->  
->  static struct damon_sysfs_scheme *damon_sysfs_scheme_alloc(
-> diff --git a/mm/internal.h b/mm/internal.h
-> index 2380397ec2f3..f159455e63d4 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -870,6 +870,7 @@ unsigned long reclaim_pages(struct list_head *folio_list);
->  unsigned int reclaim_clean_pages_from_list(struct zone *zone,
->  					    struct list_head *folio_list);
->  unsigned long demote_pages(struct list_head *folio_list);
-> +unsigned long promote_pages(struct list_head *folio_list);
->  /* The ALLOC_WMARK bits are used as an index to zone->watermark */
->  #define ALLOC_WMARK_MIN		WMARK_MIN
->  #define ALLOC_WMARK_LOW		WMARK_LOW
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index eaa3dd6b7562..f03be320f9ad 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -910,7 +910,7 @@ static void folio_check_dirty_writeback(struct folio *folio,
->  		mapping->a_ops->is_dirty_writeback(folio, dirty, writeback);
->  }
->  
-> -static struct folio *alloc_demote_folio(struct folio *src,
-> +static struct folio *alloc_migrate_folio(struct folio *src,
->  		unsigned long private)
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index fdff53d5a1f8..5edf0b96758b 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -32,6 +32,10 @@
+  */
+ static DEFINE_MUTEX(eventfs_mutex);
+ 
++/* Choose something "unique" ;-) */
++#define EVENTFS_FILE_INODE_INO		0x12c4e37
++#define EVENTFS_DIR_INODE_INO		0x134b2f5
++
+ /*
+  * The eventfs_inode (ei) itself is protected by SRCU. It is released from
+  * its parent's list and will have is_freed set (under eventfs_mutex).
+@@ -352,6 +356,9 @@ static struct dentry *create_file(const char *name, umode_t mode,
+ 	inode->i_fop = fop;
+ 	inode->i_private = data;
+ 
++	/* All files will have the same inode number */
++	inode->i_ino = EVENTFS_FILE_INODE_INO;
++
+ 	ti = get_tracefs(inode);
+ 	ti->flags |= TRACEFS_EVENT_INODE;
+ 	d_instantiate(dentry, inode);
+@@ -388,6 +395,9 @@ static struct dentry *create_dir(struct eventfs_inode *ei, struct dentry *parent
+ 	inode->i_op = &eventfs_root_dir_inode_operations;
+ 	inode->i_fop = &eventfs_file_operations;
+ 
++	/* All directories will have the same inode number */
++	inode->i_ino = EVENTFS_DIR_INODE_INO;
++
+ 	ti = get_tracefs(inode);
+ 	ti->flags |= TRACEFS_EVENT_INODE;
+ 
+-- 
+2.43.0
 
-As also mentioned on the previous patch, I'm unsure if vmscan.c is the right
-place for general migration.
 
->  {
->  	struct folio *dst;
-> @@ -973,7 +973,7 @@ static unsigned int demote_folio_list(struct list_head *demote_folios,
->  	node_get_allowed_targets(pgdat, &allowed_mask);
->  
->  	/* Demotion ignores all cpuset and mempolicy settings */
-> -	migrate_pages(demote_folios, alloc_demote_folio, NULL,
-> +	migrate_pages(demote_folios, alloc_migrate_folio, NULL,
->  		      (unsigned long)&mtc, MIGRATE_ASYNC, MR_DEMOTION,
->  		      &nr_succeeded);
->  
-> @@ -982,6 +982,48 @@ static unsigned int demote_folio_list(struct list_head *demote_folios,
->  	return nr_succeeded;
->  }
->  
-> +/*
-> + * Take folios on @promote_folios and attempt to promote them to another node.
-> + * Folios which are not promoted are left on @promote_folios.
-> + */
-> +static unsigned int promote_folio_list(struct list_head *promote_folios,
-> +				     struct pglist_data *pgdat)
-> +{
-> +	int target_nid = next_promotion_node(pgdat->node_id);
-> +	unsigned int nr_succeeded;
-> +	nodemask_t allowed_mask = NODE_MASK_NONE;
-> +
-> +	struct migration_target_control mtc = {
-> +		/*
-> +		 * Allocate from 'node', or fail quickly and quietly.
-> +		 * When this happens, 'page' will likely be stayed
-> +		 * instead of migrated.
-> +		 */
-> +		.gfp_mask = (GFP_HIGHUSER_MOVABLE & ~__GFP_RECLAIM) | __GFP_NOWARN |
-> +			__GFP_NOMEMALLOC | GFP_NOWAIT,
-> +		.nid = target_nid,
-> +		.nmask = &allowed_mask
-> +	};
-> +
-> +	if (pgdat->node_id == target_nid)
-> +		return 0;
-> +
-> +	if (list_empty(promote_folios))
-> +		return 0;
-> +
-> +	if (target_nid == NUMA_NO_NODE)
-> +		return 0;
-> +
-> +	/* Promotion ignores all cpuset and mempolicy settings */
-> +	migrate_pages(promote_folios, alloc_migrate_folio, NULL,
-> +		      (unsigned long)&mtc, MIGRATE_ASYNC, MR_PROMOTION,
-> +		      &nr_succeeded);
-> +
-> +	__count_vm_events(PGPROMOTE, nr_succeeded);
-> +
-> +	return nr_succeeded;
-> +}
-> +
->  static bool may_enter_fs(struct folio *folio, gfp_t gfp_mask)
->  {
->  	if (gfp_mask & __GFP_FS)
-> @@ -1058,6 +1100,65 @@ static unsigned int __demote_folio_list(struct list_head *folio_list,
->  	return nr_demoted;
->  }
->  
-> +/*
-> + * __promote_folio_list() returns the number of promoted pages
-> + */
-> +static unsigned int __promote_folio_list(struct list_head *folio_list,
-> +		struct pglist_data *pgdat, struct scan_control *sc)
-> +{
-> +	LIST_HEAD(ret_folios);
-> +	LIST_HEAD(promote_folios);
-> +	unsigned int nr_promoted = 0;
-> +
-> +	cond_resched();
-> +
-> +	while (!list_empty(folio_list)) {
-> +		struct folio *folio;
-> +		enum folio_references references;
-> +
-> +		cond_resched();
-> +
-> +		folio = lru_to_folio(folio_list);
-> +		list_del(&folio->lru);
-> +
-> +		if (!folio_trylock(folio))
-> +			goto keep;
-> +
-> +		VM_BUG_ON_FOLIO(folio_test_active(folio), folio);
-> +
-> +		references = folio_check_references(folio, sc);
-> +		if (references == FOLIOREF_KEEP ||
-> +		    references == FOLIOREF_RECLAIM ||
-> +		    references == FOLIOREF_RECLAIM_CLEAN)
-> +			goto keep_locked;
-> +
-> +		/* Relocate its contents to another node. */
-> +		list_add(&folio->lru, &promote_folios);
-> +		folio_unlock(folio);
-> +		continue;
-> +keep_locked:
-> +		folio_unlock(folio);
-> +keep:
-> +		list_add(&folio->lru, &ret_folios);
-> +		VM_BUG_ON_FOLIO(folio_test_lru(folio), folio);
-> +	}
-> +	/* 'folio_list' is always empty here */
-> +
-> +	/* Migrate folios selected for promotion */
-> +	nr_promoted += promote_folio_list(&promote_folios, pgdat);
-
-Again as mentioned on the previous patch, I was thinking promote_folios_list()
-may call __promote_folio_list().  Making the __ prefix usage consistent with
-other functions might be better, in my opinion.
-
-> +	/* Folios that could not be promoted are still in @promote_folios */
-> +	if (!list_empty(&promote_folios)) {
-> +		/* Folios which weren't promoted go back on @folio_list */
-> +		list_splice_init(&promote_folios, folio_list);
-> +	}
-> +
-> +	try_to_unmap_flush();
-> +
-> +	list_splice(&ret_folios, folio_list);
-> +
-> +	return nr_promoted;
-> +}
-> +
->  /*
->   * shrink_folio_list() returns the number of reclaimed pages
->   */
-> @@ -2186,6 +2287,25 @@ static unsigned int do_demote_folio_list(struct list_head *folio_list,
->  	return nr_demoted;
->  }
->  
-> +static unsigned int do_promote_folio_list(struct list_head *folio_list,
-> +				      struct pglist_data *pgdat)
-> +{
-> +	unsigned int nr_promoted;
-> +	struct folio *folio;
-> +	struct scan_control sc = {
-> +		.gfp_mask = GFP_KERNEL,
-> +	};
-> +
-> +	nr_promoted = __promote_folio_list(folio_list, pgdat, &sc);
-> +	while (!list_empty(folio_list)) {
-> +		folio = lru_to_folio(folio_list);
-> +		list_del(&folio->lru);
-> +		folio_putback_lru(folio);
-> +	}
-> +
-> +	return nr_promoted;
-> +}
-> +
->  static unsigned long reclaim_or_migrate_folios(struct list_head *folio_list,
->  		unsigned int (*handler)(struct list_head *, struct pglist_data *))
->  {
-> @@ -2230,6 +2350,11 @@ unsigned long demote_pages(struct list_head *folio_list)
->  	return reclaim_or_migrate_folios(folio_list, do_demote_folio_list);
->  }
->  
-> +unsigned long promote_pages(struct list_head *folio_list)
-> +{
-> +	return reclaim_or_migrate_folios(folio_list, do_promote_folio_list);
-> +}
-> +
->  static unsigned long shrink_list(enum lru_list lru, unsigned long nr_to_scan,
->  				 struct lruvec *lruvec, struct scan_control *sc)
->  {
-> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> index 359460deb377..c703abdb8137 100644
-> --- a/mm/vmstat.c
-> +++ b/mm/vmstat.c
-> @@ -1282,6 +1282,7 @@ const char * const vmstat_text[] = {
->  	"pgdemote_kswapd",
->  	"pgdemote_direct",
->  	"pgdemote_khugepaged",
-> +	"pgpromote",
->  	"pgscan_kswapd",
->  	"pgscan_direct",
->  	"pgscan_khugepaged",
-> -- 
-> 2.34.1
