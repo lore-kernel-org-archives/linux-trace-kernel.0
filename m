@@ -1,178 +1,352 @@
-Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E93B200C9;
-	Wed, 17 Jan 2024 14:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705500131; cv=none; b=nGDByBAw5vlxEslL756Ql5GeZ64pFGuT+9tdbxJ5lrBsWL2J59nDOHVUu2cZOeRRdNoP0Ukkyuts/zpILEtfFKHaC1GJpX7YGoHm/qDXG8BJTRTUFlDdg854VNJNsNzFjBIA9dK0IpFai0KT5aWt9ep4HOq8PxY9iOM24taZ23w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705500131; c=relaxed/simple;
-	bh=R+N96ZQEAfDbhmqKJeIs5t/qX5hk250eLM+kCzB/5uc=;
-	h=DKIM-Signature:X-IronPort-AV:Received:Received:Received:
-	 X-Farcaster-Flow-ID:Received:Received:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:Content-Language:To:CC:References:From:
-	 In-Reply-To:X-Originating-IP:X-ClientProxiedBy:Content-Type:
-	 Content-Transfer-Encoding; b=ePIWMg92TyWC+sJwEkV/OAcgBIKt4zJ9kD0b8l5WUbTGr0mUu8kBEUimhT8VyCkMd+OvEL/ZfEHM3uI3QfJnJ7BvGWENgGYQSbFVArOTYLNQmZPSriOkdGnrr5slBwRf2DtDmAhRF8/JCr9yybJDEwMrsL2s3oN9y+mkl4J73Hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=ngg0ERDa; arc=none smtp.client-ip=52.119.213.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9321120327;
+	Wed, 17 Jan 2024 14:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705501723; cv=fail; b=QhpC18eo0ZlXCbcRn8b1SemWPnlQsoiIlBhPQLSlGbBQ6gnBoJ2YbNrPFgj+7bDtdAtHn0HCG9ycw4CakaLgZnAOrXNxmVJiylUEJJMx44ZWBAN7GMijnPzyAix1KO4T6fgurpp8XewkZmgT4fyEcOQ9PO7B1JrdBWmpcEmK3i8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705501723; c=relaxed/simple;
+	bh=pNP15OBPCfhgLAFVXwkEhBhuE6nXSfp0RdbDhrdBkVQ=;
+	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
+	 X-IronPort-AV:Received:Received:Received:Received:
+	 ARC-Message-Signature:ARC-Authentication-Results:Received:Received:
+	 Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:X-ClientProxiedBy:MIME-Version:
+	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:
+	 X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+	b=cRFDiPA3WWBqQqjgiTQuDCuaIA6PBJ7BhYOpAcKtJ9Wm1fFGHH7Sy9uf2Ad5BX+NvaZips67viHL6wDJadiL7qEhBg6XfNQhMXn87oQtBKPki3uS3GY5jkP1Kxcp7iNcRlZZwTv7AtXtlj73Qwk3YeAYWexFzxvz2Y6RLMBZzPY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VRRkYi03; arc=fail smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ngg0ERDa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1705500130; x=1737036130;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=R+N96ZQEAfDbhmqKJeIs5t/qX5hk250eLM+kCzB/5uc=;
-  b=ngg0ERDacrxyeq9DqzaSjO5gGkJyhaXM7MoZHLdekPWpCMMFgCIXRBCN
-   mLObZHAKGT2xnC2eBpEjvMEk7NgOktZptiFPSuug75QODcQIRbXKkX6Gm
-   0vbyF2GKGwNcz6ud8v3+gTwYAN2NUOXhvP8p01NeeaA1YhZ0E0fdPZOzG
-   g=;
-X-IronPort-AV: E=Sophos;i="6.05,200,1701129600"; 
-   d="scan'208";a="628159042"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-iad-1e-m6i4x-6e7a78d7.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 14:02:08 +0000
-Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan2.iad.amazon.com [10.32.235.34])
-	by email-inbound-relay-iad-1e-m6i4x-6e7a78d7.us-east-1.amazon.com (Postfix) with ESMTPS id 6DBC280774;
-	Wed, 17 Jan 2024 14:02:00 +0000 (UTC)
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.7.35:42529]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.41.57:2525] with esmtp (Farcaster)
- id e65f03f2-b86e-47d1-8655-6702971ecda1; Wed, 17 Jan 2024 14:01:59 +0000 (UTC)
-X-Farcaster-Flow-ID: e65f03f2-b86e-47d1-8655-6702971ecda1
-Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VRRkYi03"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705501720; x=1737037720;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=pNP15OBPCfhgLAFVXwkEhBhuE6nXSfp0RdbDhrdBkVQ=;
+  b=VRRkYi03u0hAMOYuen2pKH4oU1cW6fy87V6UzCq/cHG7S+bUpcNP/NsG
+   kXodvWQWznp4F+ghJzAFXtlG30gs7b37e225LogUJXjs/qN4q1DuqJ8zQ
+   yj+zKbSXshaQ4rwsAD4RQcPv2TcfQIkciVpX0ts3JEiNleeKGIRP8ANrW
+   kV4ZBwpw+TINSlNMMHqKFs2UNzE/tRHCjF96ixBHKxP9czA99k0f9S/wK
+   gfIUizmzyuDnRAp9W16FyjMx3EzzGnw3VsoSk7Y5OQA/nH+Ck2FOCJdiU
+   6P0baoyMGLfh9IW2de8w62Bs6LRW7R/G8AgWzJDGRaC+efX8k29eXVY8Y
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="21653274"
+X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
+   d="scan'208";a="21653274"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 06:28:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
+   d="scan'208";a="48269"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 17 Jan 2024 06:28:38 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 17 Jan 2024 06:28:37 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Wed, 17 Jan 2024 06:28:37 -0800
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.169)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 17 Jan 2024 14:01:59 +0000
-Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
- (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 17 Jan
- 2024 14:01:53 +0000
-Message-ID: <c96203ba-a5b2-4765-9d30-0f4e66c82cd7@amazon.com>
-Date: Wed, 17 Jan 2024 15:01:51 +0100
+ 15.1.2507.35; Wed, 17 Jan 2024 06:28:37 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Tw1L/CD+RZIQic5RyArlGpF/C4G8UR7ioQ7TsH1JbCBk0Spj3EW/g0UoxNlTGd/XBgXLNqPXxlm3K4jhajzDzUpqRy2UYhDji68csHiVqfA564IMM0iTUtniT8sXlN4XfemMFekFwjoQXon+dMu81d/JTwp/nkrMYQGyOs730+j1UgQMK+hUevqrPgRTvuB9jc9+RKcenYtYmAfX6pdfTC7WxrSlDHK4kQMlC68JSDL87UIC9i/9Gnro4h8rDwcqM4oQAR33waYgzRnu0Bszw9/8NaAjCB6uZnWTCgDG1Zetj7X2YpFtYTcrAp7QQ6629gkgM5GbFTfe6T/XDb1atw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sJEq63s3jKaDpODQHMLdJv+nX6RI4/7xBFDSO8h/a3M=;
+ b=awhgOOM+6ojjI8vQo3uuAiFetekWCK1Jr1++PK8Vyq6hJpDmbBun+VxAxQl5GVQoYAZ2ouuC/ZAUD/0v+go0qOVCkE4sdPFnEP5ew8IdC9IU114EP2dqiq1Op6Ss2fNjvFfumQkv4q4IU9AZbp3rADiDvUBY9rke4n3uGHypBlyKFjKqwssw3faCS0IsDUBbHZEzd7yprEZ6t4eevC3AYQZbOIicswnOemEmoTvW++euKblIrnv7nvaB5myAuvWAhxfQ8OqK12vHDtp26jV9yDBiaw8+RIRy7YrkSxgtp2WLMXuOKGcLIXzrMV+UQBKTME993w0QPJLQN/PZiDtK9w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by SN7PR11MB7975.namprd11.prod.outlook.com (2603:10b6:806:2eb::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.21; Wed, 17 Jan
+ 2024 14:28:34 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::1236:9a2e:5acd:a7f]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::1236:9a2e:5acd:a7f%3]) with mapi id 15.20.7159.020; Wed, 17 Jan 2024
+ 14:28:34 +0000
+Date: Wed, 17 Jan 2024 22:28:27 +0800
+From: kernel test robot <oliver.sang@intel.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <oliver.sang@intel.com>
+Subject: [mhiramat:topic/fprobe-on-fgraph] [function_graph] 367c724761:
+ BUG:KASAN:slab-out-of-bounds_in_ftrace_push_return_trace
+Message-ID: <202401172217.36e37075-oliver.sang@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-ClientProxiedBy: TY2PR02CA0069.apcprd02.prod.outlook.com
+ (2603:1096:404:e2::33) To LV3PR11MB8603.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::9)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/17] kexec: Add documentation for KHO
-Content-Language: en-US
-To: Rob Herring <robh+dt@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kexec@lists.infradead.org>,
-	<linux-doc@vger.kernel.org>, <x86@kernel.org>, Eric Biederman
-	<ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski
-	<luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt
-	<rostedt@goodmis.org>, Andrew Morton <akpm@linux-foundation.org>, "Mark
- Rutland" <mark.rutland@arm.com>, Tom Lendacky <thomas.lendacky@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>, James Gowans <jgowans@amazon.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, <arnd@arndb.de>,
-	<pbonzini@redhat.com>, <madvenka@linux.microsoft.com>, Anthony Yznaga
-	<anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, "David
- Woodhouse" <dwmw@amazon.co.uk>, Benjamin Herrenschmidt
-	<benh@kernel.crashing.org>
-References: <20231222193607.15474-1-graf@amazon.com>
- <20231222195144.24532-1-graf@amazon.com>
- <20231222195144.24532-2-graf@amazon.com>
- <CAL_JsqJSYgq7BJnSxwKebEX8e9tL-FG74rT+eLJ4e32kKZC30g@mail.gmail.com>
-From: Alexander Graf <graf@amazon.com>
-In-Reply-To: <CAL_JsqJSYgq7BJnSxwKebEX8e9tL-FG74rT+eLJ4e32kKZC30g@mail.gmail.com>
-X-ClientProxiedBy: EX19D035UWB001.ant.amazon.com (10.13.138.33) To
- EX19D020UWC004.ant.amazon.com (10.13.138.149)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|SN7PR11MB7975:EE_
+X-MS-Office365-Filtering-Correlation-Id: 654b8ae2-4a8c-4cff-7143-08dc17689604
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: fpMDy9SfAZ3TC4jQ6kP+UMQTGVItz3QoxfgzSl3CJw7czDEI2TTyrRI2O0uPEB+FxmKsE8ke+5ykfvZ+J2yjlRLaOM98RHvEwvqfCZvFLp04ajs02QibKsP2aUD5AMCF/b6X2+BE76/B0r0/uSGXjLnRoPDEjS4MMruzQ5aTSbEMMz7yiq82B/FsVEb+g1A/RvwHfLIwGoBZibD5JPn3gCBcZz1eFawHFen08GRJ+EhaQBkEyHHrerrAeVUEvVjObcyc0UG0rFNOBKx2zft00mWFQis5eiBrUPh3bAJ7gkWsCQeS6m88UOuVFVZ4SYe2rpACAk/tQE2c6A+jpTFSCyrZbdeqrsDs3n4J0u4XXOr1nZyBJus6cNLsxsVfk8EG9GLozGT2MuWUEmeRZ9meM9JOx6/4kvvX57U+fbzPgPSnj8TmMKn5kBVl7wcYunc858XYxwjgUIo0bL4Fcva1Ok/QWtZRWIddgmcIT2oGkOxLvINxSs06oSLlGGItWEN7PPi1h+d7qVR6itSrh9KUrIe3rr/xIu6CLoIzSr71KAe69qHtvSteB8Vel6nTWlLNV2V+D2ukQ7pDH83xSuEnQaA1MmWS47QyoZELiMwNekXcVTJ2QQFxW5NfRjZ+SCMZxSX1UOJPyiuRKklzAftAgQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(396003)(376002)(366004)(39860400002)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(107886003)(1076003)(83380400001)(38100700002)(66946007)(2616005)(26005)(30864003)(4326008)(8936002)(41300700001)(6666004)(5660300002)(8676002)(6512007)(966005)(478600001)(2906002)(6506007)(66556008)(66476007)(316002)(6916009)(6486002)(36756003)(82960400001)(86362001)(505234007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?iaXnY+4iQitZxmqN2/zCPg/w7glR9nO1Hqbf2yVkgYrC2QmU7FAPydO0SJgP?=
+ =?us-ascii?Q?GZzspBXgdKraP0LWqAC3m/r6fd+ja60ddUmGsDTiLGU2bAGynO46GQ3Jddtf?=
+ =?us-ascii?Q?MzZq7IOUV+4akFwr2Cn+66mpERTwBBC6UVWyRYc14EQ1K99tTjrlmzQCkmy0?=
+ =?us-ascii?Q?+yE0+yY0AhqfuPHJ0CNWJF5JK3H/Q8tdAVPVDvBY383EBUh81pwasKrctTkk?=
+ =?us-ascii?Q?gpv190XSUny7Ud0O+uzb4Hq/9YV5qNnWYAuocx7YGGLPo/1h7ch21FBHlvg9?=
+ =?us-ascii?Q?dCerVEQsSVg5RUuRlzkyf36lukhGCxLJvA9rKSWdY7/AO/2wogCZybhNBo0h?=
+ =?us-ascii?Q?SuG44YIE71OvPPyRo+Lt6PINiK6q/TyNPkz3tlzpVecYr4V1EWZDuB7MQq+d?=
+ =?us-ascii?Q?fg0mK1ZTRnahaUe6J+64n6fsHlUkUZMJFYPW29Y9sKqFCG0+rxlVDQZ3aH7v?=
+ =?us-ascii?Q?O/Pe7ar2Yl/PgkFbhtpsl3tL40bhXkOAMTG7JJ4+2MYSlhDvugA9lDktd6V0?=
+ =?us-ascii?Q?zjXc4BNFfW7APp/0uWPaLoMK1v7qIe4+ACNPsUPgLMThIzSEH89NW2pV0DGF?=
+ =?us-ascii?Q?HcfWgqa4xCYdoJDZaM13qPBEfmj+jJqj0O/4lNtfydEM6BtwKyR3Pv4iYyCq?=
+ =?us-ascii?Q?cc+Aklgll8vqbV1P2SyQeu1WqHJqcFdoVKB6iiDYvGbAW4SCnFu9Mg7sCS7N?=
+ =?us-ascii?Q?dSVD9wcFghPfOyFoBUsvj1NArczR83M0Ar/5FTenDEyZ1WaUvi/ziTFZUped?=
+ =?us-ascii?Q?etdht4OAHpLuedrIHQOewQn4VQBiabxtcd8Uny/TDWCuPEERTFvHiTWtv0Xo?=
+ =?us-ascii?Q?aI6wUJGUp6ZIhTeXTs6t/+etJngBCfrT6Aamrxsi5CUg0sU8uZngH7Fkxi8I?=
+ =?us-ascii?Q?RNje7+gFkhUuydUEC+Vhuv4cEnOmvVEa3z0CfrWSuJnZic3kkmfgEbTwV9ot?=
+ =?us-ascii?Q?9JQ3fx5NfJ/cXzKWtJ/H7vwieLhKRSlJnmpv6GSlNieS3h/E8LmqV5deUas2?=
+ =?us-ascii?Q?WroCOCFbF7ZUSwKpMMMN6WyBeYBwgOvqzxx+O05KCD7OMKq0Y6j9mlQcoyUl?=
+ =?us-ascii?Q?93/LAu1pYVWtkXsb0yWl0xNMbr41SOPZAN1JmKfLlbgqq+tgKGTaSijVEIQB?=
+ =?us-ascii?Q?/5ieFsD8CGfQezsZa/iQ0aLS//gwm2OhfJEyVvtJnE08TG/EqKL3yZnIwrPS?=
+ =?us-ascii?Q?CKW/2an7aeeyaYGvRBAo4TS4BcD03GYtMUSn/4FEkwyAHJUIdKOdJ2Y/TJOV?=
+ =?us-ascii?Q?9mBgb8W5ME2gPA60Q0FX972cygyd+R32N7agn2Ygkb7hljuSuo2sykYYdXBu?=
+ =?us-ascii?Q?1TeOLWgeNGnVXzh57qen0Kl2uDlChH9r8aeXOm25t90mhp9QRdVImUPzE5VG?=
+ =?us-ascii?Q?uFfrpeB0cmDSU3gf6t754QppDsrXwLx/rCX55tIDcKQ63P/aaikEkM26yN7Y?=
+ =?us-ascii?Q?GT3lRdaUaPMwhOuJL7S/kK1tk0PJ0TASOMYQKANcpdSkfZZZmEFpYYoiTGJL?=
+ =?us-ascii?Q?jBVPbk0xZFFHVTVgxeRVowlucCfQ8+SLQ5T1H4Dr/4L8Qn2wDM+/Z6Y/jKwS?=
+ =?us-ascii?Q?VQ8MefmS1UVAXhRn8e9atNgBGpgxal1TbKFkGGc50JfrNsy01VU1NZssfT8T?=
+ =?us-ascii?Q?LQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 654b8ae2-4a8c-4cff-7143-08dc17689604
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2024 14:28:34.2314
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /p6gGqY9XM0EhyHMAUnya2GPvofNxvlLivttmkGR1LEzCzmI/lNgeq/9aX/Ow1XuZasbHejkTmrTN+mBCIMEgQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7975
+X-OriginatorOrg: intel.com
 
-Ck9uIDAzLjAxLjI0IDE5OjQ4LCBSb2IgSGVycmluZyB3cm90ZToKPgo+IE9uIEZyaSwgRGVjIDIy
-LCAyMDIzIGF0IDEyOjUy4oCvUE0gQWxleGFuZGVyIEdyYWYgPGdyYWZAYW1hem9uLmNvbT4gd3Jv
-dGU6Cj4+IFdpdGggS0hPIGluIHBsYWNlLCBsZXQncyBhZGQgZG9jdW1lbnRhdGlvbiB0aGF0IGRl
-c2NyaWJlcyB3aGF0IGl0IGlzIGFuZAo+PiBob3cgdG8gdXNlIGl0Lgo+Pgo+PiBTaWduZWQtb2Zm
-LWJ5OiBBbGV4YW5kZXIgR3JhZiA8Z3JhZkBhbWF6b24uY29tPgo+PiAtLS0KPj4gICBEb2N1bWVu
-dGF0aW9uL2toby9jb25jZXB0cy5yc3QgICB8IDg4ICsrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrCj4+ICAgRG9jdW1lbnRhdGlvbi9raG8vaW5kZXgucnN0ICAgICAgfCAxOSArKysrKysr
-Cj4+ICAgRG9jdW1lbnRhdGlvbi9raG8vdXNhZ2UucnN0ICAgICAgfCA1NyArKysrKysrKysrKysr
-KysrKysrKysKPj4gICBEb2N1bWVudGF0aW9uL3N1YnN5c3RlbS1hcGlzLnJzdCB8ICAxICsKPj4g
-ICA0IGZpbGVzIGNoYW5nZWQsIDE2NSBpbnNlcnRpb25zKCspCj4+ICAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IERvY3VtZW50YXRpb24va2hvL2NvbmNlcHRzLnJzdAo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBEb2N1bWVudGF0aW9uL2toby9pbmRleC5yc3QKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9j
-dW1lbnRhdGlvbi9raG8vdXNhZ2UucnN0Cj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
-L2toby9jb25jZXB0cy5yc3QgYi9Eb2N1bWVudGF0aW9uL2toby9jb25jZXB0cy5yc3QKPj4gbmV3
-IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMDAwMDAwLi44ZTRmZThjNTc4NjUKPj4g
-LS0tIC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2toby9jb25jZXB0cy5yc3QKPj4g
-QEAgLTAsMCArMSw4OCBAQAo+PiArLi4gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAt
-b3ItbGF0ZXIKPj4gKwo+PiArPT09PT09PT09PT09PT09PT09PT09PT0KPj4gK0tleGVjIEhhbmRv
-dmVyIENvbmNlcHRzCj4+ICs9PT09PT09PT09PT09PT09PT09PT09PQo+PiArCj4+ICtLZXhlYyBI
-YW5kT3ZlciAoS0hPKSBpcyBhIG1lY2hhbmlzbSB0aGF0IGFsbG93cyBMaW51eCB0byBwcmVzZXJ2
-ZSBzdGF0ZSAtCj4+ICthcmJpdHJhcnkgcHJvcGVydGllcyBhcyB3ZWxsIGFzIG1lbW9yeSBsb2Nh
-dGlvbnMgLSBhY3Jvc3Mga2V4ZWMuCj4+ICsKPj4gK0l0IGludHJvZHVjZXMgbXVsdGlwbGUgY29u
-Y2VwdHM6Cj4+ICsKPj4gK0tITyBEZXZpY2UgVHJlZQo+PiArLS0tLS0tLS0tLS0tLS0tCj4+ICsK
-Pj4gK0V2ZXJ5IEtITyBrZXhlYyBjYXJyaWVzIGEgS0hPIHNwZWNpZmljIGZsYXR0ZW5lZCBkZXZp
-Y2UgdHJlZSBibG9iIHRoYXQKPj4gK2Rlc2NyaWJlcyB0aGUgc3RhdGUgb2YgdGhlIHN5c3RlbS4g
-RGV2aWNlIGRyaXZlcnMgY2FuIHJlZ2lzdGVyIHRvIEtITyB0bwo+PiArc2VyaWFsaXplIHRoZWly
-IHN0YXRlIGJlZm9yZSBrZXhlYy4gQWZ0ZXIgS0hPLCBkZXZpY2UgZHJpdmVycyBjYW4gcmVhZAo+
-PiArdGhlIGRldmljZSB0cmVlIGFuZCBleHRyYWN0IHByZXZpb3VzIHN0YXRlLgo+IEhvdyBkb2Vz
-IHRoaXMgd29yayB3aXRoIGtleGVjIHdoZW4gdGhlcmUgaXMgYWxzbyB0aGUgRkRUIGZvciB0aGUg
-aC93Pwo+IFRoZSBoL3cgRkRUIGhhcyBhIC9jaG9zZW4gcHJvcGVydHkgcG9pbnRpbmcgdG8gdGhp
-cyBGRFQgYmxvYj8KCgpZZXAsIGV4YWN0bHkuCgoKPgo+PiArCj4+ICtLSE8gb25seSB1c2VzIHRo
-ZSBmZHQgY29udGFpbmVyIGZvcm1hdCBhbmQgbGliZmR0IGxpYnJhcnksIGJ1dCBkb2VzIG5vdAo+
-PiArYWRoZXJlIHRvIHRoZSBzYW1lIHByb3BlcnR5IHNlbWFudGljcyB0aGF0IG5vcm1hbCBkZXZp
-Y2UgdHJlZXMgZG86IFByb3BlcnRpZXMKPj4gK2FyZSBwYXNzZWQgaW4gbmF0aXZlIGVuZGlhbm5l
-c3MgYW5kIHN0YW5kYXJkaXplZCBwcm9wZXJ0aWVzIGxpa2UgYGByZWdzYGAgYW5kCj4+ICtgYHJh
-bmdlc2BgIGRvIG5vdCBleGlzdCwgaGVuY2UgdGhlcmUgYXJlIG5vIGBgIy4uLi1jZWxsc2BgIHBy
-b3BlcnRpZXMuCj4gSSB0aGluayBuYXRpdmUgZW5kaWFubmVzcyBpcyBhc2tpbmcgZm9yIHRyb3Vi
-bGUuIGxpYmZkdCB3b3VsZCBuZWVkCj4gZGlmZmVyZW50IHN3YXAgZnVuY3Rpb25zIGhlcmUgdGhh
-biBlbHNld2hlcmUgaW4gdGhlIGtlcm5lbCBmb3IgZXhhbXBsZQo+IHdoaWNoIHdvdWxkbid0IGV2
-ZW4gd29yay4gU28geW91IGFyZSBqdXN0IGNyb3NzaW5nIHlvdXIgZmluZ2VycyB0aGF0Cj4geW91
-IGFyZW4ndCB1c2luZyBhbnkgbGliZmR0IGZ1bmN0aW9ucyB0aGF0IHN3YXAuIEFuZCB3aGVuIEkg
-c3luYwo+IGR0Yy9saWJmZHQgYW5kIHRoYXQgY2hhbmdlcywgSSBtaWdodCBicmVhayB5b3UuCj4K
-PiBBbHNvLCBpZiB5b3Ugd2FudCB0byBkdW1wIHRoZSBGRFQgYW5kIGRvIGEgZHRjIERUQi0+RFRT
-IHBhc3MsIGl0IGlzCj4gbm90IGdvaW5nIHRvIGJlIHRvbyByZWFkYWJsZSBnaXZlbiB0aGF0IG91
-dHB1dHMgc3dhcHBlZCAzMi1iaXQgdmFsdWVzCj4gZm9yIGFueXRoaW5nIHRoYXQncyBhIDQgYnl0
-ZSBtdWx0aXBsZS4KCgpZZWFoLCBidXQgYmlnIGVuZGlhbiB0aGVzZSBkYXlzIGlzIGp1c3QgYSBj
-b21wbGV0ZSB3YXN0ZSBvZiBicmFpbiBhbmQgCmNwdSBjeWNsZXMgOikuIEFuZCB5ZXMsIEkgZG9u
-J3QgcmVhbGx5IHdhbnQgdG8gdXNlIGFueSBsaWJmZHQgaGVscGVyIApmdW5jdGlvbnMgdG8gcmVh
-ZCBkYXRhLiBJIHVzZSBpdCBvbmx5IHRvIGdpdmUgbWUgdGhlIHJhdyBkYXRhIGFuZCB0YWtlIApp
-dCBmcm9tIHRoZXJlLgoKCj4KPj4gKwo+PiArS0hPIGludHJvZHVjZXMgYSBuZXcgY29uY2VwdCB0
-byBpdHMgZGV2aWNlIHRyZWU6IGBgbWVtYGAgcHJvcGVydGllcy4gQQo+PiArYGBtZW1gYCBwcm9w
-ZXJ0eSBjYW4gaW5zaWRlIGFueSBzdWJub2RlIGluIHRoZSBkZXZpY2UgdHJlZS4gV2hlbiBwcmVz
-ZW50LAo+PiAraXQgY29udGFpbnMgYW4gYXJyYXkgb2YgcGh5c2ljYWwgbWVtb3J5IHJhbmdlcyB0
-aGF0IHRoZSBuZXcga2VybmVsIG11c3QgbWFyawo+PiArYXMgcmVzZXJ2ZWQgb24gYm9vdC4gSXQg
-aXMgcmVjb21tZW5kZWQsIGJ1dCBub3QgcmVxdWlyZWQsIHRvIG1ha2UgdGhlc2UgcmFuZ2VzCj4+
-ICthcyBwaHlzaWNhbGx5IGNvbnRpZ3VvdXMgYXMgcG9zc2libGUgdG8gcmVkdWNlIHRoZSBudW1i
-ZXIgb2YgYXJyYXkgZWxlbWVudHMgOjoKPj4gKwo+PiArICAgIHN0cnVjdCBraG9fbWVtIHsKPj4g
-KyAgICAgICAgICAgIF9fdTY0IGFkZHI7Cj4+ICsgICAgICAgICAgICBfX3U2NCBsZW47Cj4+ICsg
-ICAgfTsKPj4gKwo+PiArQWZ0ZXIgYm9vdCwgZHJpdmVycyBjYW4gY2FsbCB0aGUga2hvIHN1YnN5
-c3RlbSB0byB0cmFuc2ZlciBvd25lcnNoaXAgb2YgbWVtb3J5Cj4+ICt0aGF0IHdhcyByZXNlcnZl
-ZCB2aWEgYSBgYG1lbWBgIHByb3BlcnR5IHRvIHRoZW1zZWx2ZXMgdG8gY29udGludWUgdXNpbmcg
-bWVtb3J5Cj4+ICtmcm9tIHRoZSBwcmV2aW91cyBleGVjdXRpb24uCj4+ICsKPj4gK1RoZSBLSE8g
-ZGV2aWNlIHRyZWUgZm9sbG93cyB0aGUgaW4tTGludXggc2NoZW1hIHJlcXVpcmVtZW50cy4gQW55
-IGVsZW1lbnQgaW4KPj4gK3RoZSBkZXZpY2UgdHJlZSBpcyBkb2N1bWVudGVkIHZpYSBkZXZpY2Ug
-dHJlZSBzY2hlbWEgeWFtbHMgdGhhdCBleHBsYWluIHdoYXQKPj4gK2RhdGEgZ2V0cyB0cmFuc2Zl
-cnJlZC4KPiBJZiB0aGlzIGlzIGFsbCBzZXBhcmF0ZSwgdGhlbiBJIHRoaW5rIHRoZSBzY2hlbWFz
-IHNob3VsZCBiZSB0b28uIEFuZAo+IHRoZW4gZnJvbSBteSAoRFQgbWFpbnRhaW5lcikgcGVyc3Bl
-Y3RpdmUsIHlvdSBjYW4gZG8gd2hhdGV2ZXIgeW91IHdhbnQKPiBoZXJlIChsaWtlIEZJVCBpbWFn
-ZXMpLiBUaGUgZHRzY2hlbWEgdG9vbHMgYXJlIHByZXR0eSBtdWNoIG9ubHkgZ2VhcmVkCj4gZm9y
-ICJub3JtYWwiIERUcy4gQSBjb3VwbGUgb2YgcHJvYmxlbXMgY29tZSB0byBtaW5kLiBZb3UgY2Fu
-J3QgZXhjbHVkZQo+IG9yIGNoYW5nZSBzdGFuZGFyZCBwcm9wZXJ0aWVzLiBUaGUgZGVjb2Rpbmcg
-b2YgdGhlIERUQiB0byBydW4KPiB2YWxpZGF0aW9uIGFzc3VtZXMgYmlnIGVuZGlhbi4gV2UgY291
-bGQgcHJvYmFibHkgc3BsaXQgdGhpbmdzIHVwIGEKPiBiaXQsIGJ1dCB5b3UgbWF5IGJlIGJldHRl
-ciBvZmYganVzdCB1c2luZyBqc29uc2NoZW1hIGRpcmVjdGx5LiBJJ20gbm90Cj4gZXZlbiBzdXJl
-IHJ1bm5pbmcgdmFsaWRhdGlvbiBoZXJlIHdvdWxkIHRoYXQgdmFsdWFibGUuIFlvdSBoYXZlIDEK
-PiBzb3VyY2Ugb2YgY29kZSBnZW5lcmF0aW5nIHRoZSBEVCBhbmQgMSBjb25zdW1lci4gWWVzLCB0
-aGVyZSdzCj4gZGlmZmVyZW50IGtlcm5lbCB2ZXJzaW9ucyB0byBkZWFsIHdpdGgsIGJ1dCBpdCdz
-IG5vdCAxMDBzIG9mIHBlb3BsZQo+IGNyZWF0aW5nIDEwMDBzIG9mIERUcyB3aXRoIDEwMHMgb2Yg
-bm9kZXMuCj4KPiBZb3UgbWlnaHQgbG9vayBhdCB0aGUgbmV0bGluayBzdHVmZiB3aGljaCBpcyB1
-c2luZyBpdHMgb3duIHlhbWwgc3ludGF4Cj4gdG8gZ2VuZXJhdGUgY29kZSBhbmQganNvbnNjaGVt
-YSBpcyB1c2VkIHRvIHZhbGlkYXRlIHRoZSB5YW1sLgoKCkknbSBjdXJyZW50bHkgYSBsb3QgbW9y
-ZSBpbnRlcmVzdGVkIGluIHRoZSBkb2N1bWVudGF0aW9uIGFzcGVjdCB0aGFuIGluIAp0aGUgdmFs
-aWRhdGlvbiwgeWVhaC4gU28gSSB0aGluayBmb3IgdjMsIEknbGwganVzdCB0aHJvdyB0aGUgc2No
-ZW1hcyAKaW50byB0aGUgRG9jdW1lbnRhdGlvbi9raG8gZGlyZWN0b3J5IHdpdGhvdXQgYW55IHZh
-bGlkYXRpb24uIFdlIGNhbiAKd29ycnkgYWJvdXQgdGhhdCBsYXRlciA6KQoKVGhhbmtzIGEgbG90
-IGFnYWluIGZvciB0aGUgcmV2aWV3IQoKCkFsZXgKCgoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2Vu
-dGVyIEdlcm1hbnkgR21iSApLcmF1c2Vuc3RyLiAzOAoxMDExNyBCZXJsaW4KR2VzY2hhZWZ0c2Z1
-ZWhydW5nOiBDaHJpc3RpYW4gU2NobGFlZ2VyLCBKb25hdGhhbiBXZWlzcwpFaW5nZXRyYWdlbiBh
-bSBBbXRzZ2VyaWNodCBDaGFybG90dGVuYnVyZyB1bnRlciBIUkIgMTQ5MTczIEIKU2l0ejogQmVy
-bGluClVzdC1JRDogREUgMjg5IDIzNyA4NzkKCgo=
+
+
+Hello,
+
+kernel test robot noticed "BUG:KASAN:slab-out-of-bounds_in_ftrace_push_return_trace" on:
+
+commit: 367c724761b0a49e115dd3bb27e93b3905cfe05a ("function_graph: Improve push operation for several interrupts")
+https://git.kernel.org/cgit/linux/kernel/git/mhiramat/linux.git topic/fprobe-on-fgraph
+
+in testcase: ftrace-onoff
+version: 
+with following parameters:
+
+	runtime: 5m
+
+
+
+compiler: gcc-12
+test machine: 8 threads 1 sockets Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz (Kaby Lake) with 32G memory
+
+(please refer to attached dmesg/kmsg for entire log/backtrace)
+
+
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <oliver.sang@intel.com>
+| Closes: https://lore.kernel.org/oe-lkp/202401172217.36e37075-oliver.sang@intel.com
+
+
+[ 43.381281][ T644] BUG: KASAN: slab-out-of-bounds in ftrace_push_return_trace+0x7e0/0x820 
+[   43.390620][  T644] Write of size 8 at addr ffff888116ea1ff8 by task cat/644
+[   43.397694][  T644]
+[   43.399903][  T644] CPU: 1 PID: 644 Comm: cat Not tainted 6.7.0-rc8-00020-g367c724761b0 #1
+[   43.408197][  T644] Hardware name: Dell Inc. OptiPlex 7050/062KRH, BIOS 1.2.0 12/22/2016
+[   43.416323][  T644] Call Trace:
+[   43.419491][  T644]  <TASK>
+[ 43.422316][ T644] dump_stack_lvl (lib/dump_stack.c:107 (discriminator 1)) 
+[ 43.426715][ T644] print_address_description+0x2c/0x3a0 
+[ 43.433196][ T644] ? ftrace_push_return_trace+0x7e0/0x820 
+[ 43.439857][ T644] print_report (mm/kasan/report.c:476) 
+[ 43.444161][ T644] ? fixup_red_left (mm/slub.c:224) 
+[ 43.448650][ T644] ? kasan_addr_to_slab (mm/kasan/common.c:35) 
+[ 43.453485][ T644] ? ftrace_push_return_trace+0x7e0/0x820 
+[ 43.460143][ T644] kasan_report (mm/kasan/report.c:590) 
+[ 43.464461][ T644] ? ftrace_push_return_trace+0x7e0/0x820 
+[ 43.471130][ T644] ? unwind_next_frame (arch/x86/kernel/unwind_orc.c:469) 
+[ 43.476040][ T644] ? arch_stack_walk (arch/x86/kernel/stacktrace.c:24) 
+[ 43.480689][ T644] ftrace_push_return_trace+0x7e0/0x820 
+[ 43.487161][ T644] ? trace_graph_entry (arch/x86/include/asm/atomic.h:60 include/linux/atomic/atomic-arch-fallback.h:1210 include/linux/atomic/atomic-instrumented.h:593 kernel/trace/trace_functions_graph.c:188) 
+[ 43.492173][ T644] ? unwind_next_frame (arch/x86/kernel/unwind_orc.c:469) 
+[ 43.497079][ T644] ? arch_stack_walk (arch/x86/kernel/stacktrace.c:24) 
+[ 43.501724][ T644] function_graph_enter_ops (kernel/trace/fgraph.c:702) 
+[ 43.507071][ T644] ? kernel_text_address (kernel/extable.c:95) 
+[ 43.512071][ T644] ? function_graph_enter (kernel/trace/fgraph.c:690) 
+[ 43.517338][ T644] ? ftrace_graph_func (arch/x86/kernel/ftrace.c:674) 
+[ 43.522352][ T644] ? kernel_text_address (kernel/extable.c:95) 
+[ 43.527372][ T644] ? unwind_next_frame (arch/x86/kernel/unwind_orc.c:469) 
+[ 43.532287][ T644] ftrace_graph_func (arch/x86/kernel/ftrace.c:674) 
+[ 43.537116][ T644] ? write_profile (kernel/stacktrace.c:83) 
+[   43.541769][  T644]  0xffffffffc0478087
+[ 43.545670][ T644] ? do_exit (kernel/exit.c:859) 
+[ 43.549799][ T644] ? unwind_next_frame (arch/x86/kernel/unwind_orc.c:471) 
+[ 43.554715][ T644] unwind_next_frame (arch/x86/kernel/unwind_orc.c:471) 
+[ 43.559444][ T644] arch_stack_walk (arch/x86/kernel/stacktrace.c:24) 
+[ 43.563944][ T644] ? do_exit (kernel/exit.c:859) 
+[ 43.568090][ T644] stack_trace_save (kernel/stacktrace.c:123) 
+[ 43.572653][ T644] ? filter_irq_stacks (kernel/stacktrace.c:114) 
+[ 43.577492][ T644] ? stack_trace_save (kernel/stacktrace.c:114) 
+[ 43.582148][ T644] kasan_save_stack (mm/kasan/common.c:46) 
+[ 43.586707][ T644] ? kasan_save_stack (mm/kasan/common.c:46) 
+[ 43.591436][ T644] ? kasan_set_track (mm/kasan/common.c:52) 
+[ 43.596081][ T644] ? kasan_save_free_info (mm/kasan/generic.c:524) 
+[ 43.601159][ T644] ? __kasan_slab_free (mm/kasan/common.c:238 mm/kasan/common.c:200 mm/kasan/common.c:244) 
+[ 43.606150][ T644] ? kmem_cache_free_bulk (mm/slub.c:4037) 
+[ 43.612010][ T644] ? mt_destroy_walk+0x56f/0xfd0 
+[ 43.617435][ T644] ? __mt_destroy (lib/maple_tree.c:5338) 
+[ 43.621906][ T644] ? exit_mmap (arch/x86/include/asm/jump_label.h:27 include/linux/jump_label.h:207 include/linux/mmap_lock.h:41 include/linux/mmap_lock.h:131 mm/mmap.c:3341) 
+[ 43.626203][ T644] ? __mmput (kernel/fork.c:1350) 
+[ 43.630241][ T644] ? exit_mm (kernel/exit.c:568) 
+[ 43.634374][ T644] ? do_exit (kernel/exit.c:859) 
+[ 43.638643][ T644] ? mt_destroy_walk+0x56f/0xfd0 
+[ 43.644071][ T644] kasan_set_track (mm/kasan/common.c:52) 
+[ 43.648544][ T644] kasan_save_free_info (mm/kasan/generic.c:524) 
+[ 43.653452][ T644] __kasan_slab_free (mm/kasan/common.c:238 mm/kasan/common.c:200 mm/kasan/common.c:244) 
+[ 43.658280][ T644] kmem_cache_free_bulk (mm/slub.c:4037) 
+[ 43.663969][ T644] ? mt_destroy_walk+0x56f/0xfd0 
+[ 43.669445][ T644] mt_destroy_walk+0x56f/0xfd0 
+[ 43.674747][ T644] __mt_destroy (lib/maple_tree.c:5338) 
+[ 43.679062][ T644] exit_mmap (arch/x86/include/asm/jump_label.h:27 include/linux/jump_label.h:207 include/linux/mmap_lock.h:41 include/linux/mmap_lock.h:131 mm/mmap.c:3341) 
+[ 43.683205][ T644] ? do_vma_munmap (mm/mmap.c:3283) 
+[ 43.687684][ T644] ? mutex_unlock (kernel/locking/mutex.c:538) 
+[ 43.692014][ T644] ? ftrace_graph_func (arch/x86/kernel/ftrace.c:674) 
+[ 43.697069][ T644] ? __mmput (arch/x86/include/asm/bitops.h:206 arch/x86/include/asm/bitops.h:238 include/asm-generic/bitops/instrumented-non-atomic.h:142 include/linux/khugepaged.h:38 kernel/fork.c:1348) 
+[ 43.701136][ T644] __mmput (kernel/fork.c:1350) 
+[ 43.705015][ T644] exit_mm (kernel/exit.c:568) 
+[ 43.708973][ T644] do_exit (kernel/exit.c:859) 
+[ 43.712936][ T644] ? exit_mm (kernel/exit.c:810) 
+[ 43.717057][ T644] ? _raw_spin_lock_irq (arch/x86/include/asm/atomic.h:115 include/linux/atomic/atomic-arch-fallback.h:2164 include/linux/atomic/atomic-instrumented.h:1296 include/asm-generic/qspinlock.h:111 include/linux/spinlock.h:187 include/linux/spinlock_api_smp.h:120 kernel/locking/spinlock.c:170) 
+[ 43.721969][ T644] ? _raw_spin_lock_irq (arch/x86/include/asm/atomic.h:115 include/linux/atomic/atomic-arch-fallback.h:2164 include/linux/atomic/atomic-instrumented.h:1296 include/asm-generic/qspinlock.h:111 include/linux/spinlock.h:187 include/linux/spinlock_api_smp.h:120 kernel/locking/spinlock.c:170) 
+[ 43.726901][ T644] do_group_exit (kernel/exit.c:999) 
+[ 43.731301][ T644] __x64_sys_exit_group (kernel/exit.c:1027) 
+[ 43.736215][ T644] do_syscall_64 (arch/x86/entry/common.c:52 arch/x86/entry/common.c:83) 
+[ 43.740518][ T644] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:129) 
+[   43.746293][  T644] RIP: 0033:0x7fddfe515699
+[ 43.750594][ T644] Code: Unable to access opcode bytes at 0x7fddfe51566f.
+
+Code starting with the faulting instruction
+===========================================
+[   43.757492][  T644] RSP: 002b:00007fff2924edf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+[   43.765794][  T644] RAX: ffffffffffffffda RBX: 00007fddfe60a610 RCX: 00007fddfe515699
+[   43.773649][  T644] RDX: 000000000000003c RSI: 00000000000000e7 RDI: 0000000000000000
+[   43.781505][  T644] RBP: 0000000000000000 R08: ffffffffffffff80 R09: 0000000000000001
+[   43.789373][  T644] R10: 00007fddfe63a1c0 R11: 0000000000000246 R12: 00007fddfe60a610
+[   43.797228][  T644] R13: 0000000000000002 R14: 00007fddfe60aae8 R15: 0000000000000000
+[   43.805145][  T644]  </TASK>
+[   43.808050][  T644]
+[   43.810258][  T644] Allocated by task 478:
+[ 43.814377][ T644] kasan_save_stack (mm/kasan/common.c:46) 
+[ 43.818934][ T644] kasan_set_track (mm/kasan/common.c:52) 
+[ 43.823405][ T644] __kasan_kmalloc (mm/kasan/common.c:374 mm/kasan/common.c:383) 
+[ 43.827877][ T644] ftrace_graph_init_task (include/linux/slab.h:600 kernel/trace/fgraph.c:1168) 
+[ 43.833130][ T644] copy_process (kernel/fork.c:1947 (discriminator 4) kernel/fork.c:2360 (discriminator 4)) 
+[ 43.837599][ T644] kernel_clone (include/linux/random.h:26 kernel/fork.c:2908) 
+[ 43.841896][ T644] __do_sys_clone (kernel/fork.c:3039) 
+[ 43.846277][ T644] do_syscall_64 (arch/x86/entry/common.c:52 arch/x86/entry/common.c:83) 
+[ 43.850574][ T644] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:129) 
+[   43.856360][  T644]
+[   43.858566][  T644] Freed by task 0:
+[ 43.862167][ T644] kasan_save_stack (mm/kasan/common.c:46) 
+[ 43.866723][ T644] kasan_set_track (mm/kasan/common.c:52) 
+[ 43.871193][ T644] kasan_save_free_info (mm/kasan/generic.c:524) 
+[ 43.876094][ T644] __kasan_slab_free (mm/kasan/common.c:238 mm/kasan/common.c:200 mm/kasan/common.c:244) 
+[ 43.880910][ T644] __kmem_cache_free (mm/slub.c:1826 mm/slub.c:3809 mm/slub.c:3822) 
+[ 43.885729][ T644] free_task (kernel/fork.c:623 (discriminator 3)) 
+[ 43.889764][ T644] rcu_do_batch (arch/x86/include/asm/preempt.h:27 kernel/rcu/tree.c:2165) 
+[ 43.894148][ T644] rcu_core (kernel/rcu/tree.c:2433) 
+[ 43.898183][ T644] __do_softirq (arch/x86/include/asm/jump_label.h:27 include/linux/jump_label.h:207 include/trace/events/irq.h:142 kernel/softirq.c:554) 
+[   43.902567][  T644]
+[   43.904776][  T644] The buggy address belongs to the object at ffff888116ea0000
+[   43.904776][  T644]  which belongs to the cache kmalloc-4k of size 4096
+[   43.918727][  T644] The buggy address is located 4088 bytes to the right of
+[   43.918727][  T644]  allocated 4096-byte region [ffff888116ea0000, ffff888116ea1000)
+[   43.933471][  T644]
+[   43.935684][  T644] The buggy address belongs to the physical page:
+[   43.941980][  T644] page:00000000206533fa refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x116ea0
+[   43.952099][  T644] head:00000000206533fa order:3 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+[   43.960911][  T644] flags: 0x17ffffc0000840(slab|head|node=0|zone=2|lastcpupid=0x1fffff)
+[   43.969032][  T644] page_type: 0xffffffff()
+[   43.973238][  T644] raw: 0017ffffc0000840 ffff88810c843040 ffffea00045ba600 0000000000000002
+[   43.981703][  T644] raw: 0000000000000000 0000000080040004 00000001ffffffff 0000000000000000
+[   43.990167][  T644] page dumped because: kasan: bad access detected
+[   43.996456][  T644]
+[   43.998663][  T644] Memory state around the buggy address:
+[   44.004172][  T644]  ffff888116ea1e80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[   44.012114][  T644]  ffff888116ea1f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[   44.020056][  T644] >ffff888116ea1f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[   44.027999][  T644]                                                                 ^
+[   44.035856][  T644]  ffff888116ea2000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[   44.043803][  T644]  ffff888116ea2080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[   44.051747][  T644] ==================================================================
+[   44.059762][  T644] Disabling lock debugging due to kernel taint
+[   44.423837][  T312] 2024-01-15 00:33:41 echo 1 > tracing_on
+[   44.425933][  T312]
+[   45.159545][  T312] 2024-01-15 00:33:41 echo 0 > tracing_on
+[   45.159845][  T312]
+[   45.289241][  T312] 2024-01-15 00:33:41 echo wakeup_dl > current_tracer
+[   45.289643][  T312]
+[   45.735915][  T312] 2024-01-15 00:33:42 echo 1 > tracing_on
+[   45.735956][  T312]
+[   45.780233][  T312] 2024-01-15 00:33:42 echo 0 > tracing_on
+[   45.780288][  T312]
+[   45.802820][  T312] 2024-01-15 00:33:42 echo wakeup_rt > current_tracer
+[   45.802877][  T312]
+[   46.191536][  T312] 2024-01-15 00:33:42 echo 1 > tracing_on
+[   46.191576][  T312]
+[   46.227375][  T312] 2024-01-15 00:33:42 echo 0 > tracing_on
+[   46.227420][  T312]
+[   46.248058][  T312] 2024-01-15 00:33:42 echo wakeup > current_tracer
+[   46.248099][  T312]
+[   46.637161][  T312] 2024-01-15 00:33:43 echo 1 > tracing_on
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20240117/202401172217.36e37075-oliver.sang@intel.com
+
+
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
