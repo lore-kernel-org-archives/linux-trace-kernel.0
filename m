@@ -1,53 +1,53 @@
-Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
+Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706B121356;
-	Wed, 17 Jan 2024 14:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA442232C;
+	Wed, 17 Jan 2024 14:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705503007; cv=none; b=Tvam91RkCAPbi/UOoIj25TX04liF6/q+IUyVZxdZyEoyYUlgkHuiZOlU3XEvptnZggSNd3yJtRIbcYNp+2BCnlg7zqRzMxMm1gWZl9yqHSD57XJrBRObIGEXMFZjrLe1j4Pe5vk2JMuVcLetcQupRYTZANMyX8HksBS3mmbLL1k=
+	t=1705503010; cv=none; b=jFdl5+M4UOQbB3Ke1UKv/VLhW8hucAcP6zkErbhrFZjW6asPUs4Y/bfzp5VcXk6EjOv/gCx5yHQMVCd67UQaDNu0JSI0GJ8R+YmALLHReb7EGhXxrCHLH1WX/JfmLBaTOjTMulWAoCMPxvyGbpGgWR0V+gK2HS3VqsIaVbBcLHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705503007; c=relaxed/simple;
-	bh=9u6BK+UlFxRilMhNjGBFH3LvV7U2DOlD4K2JyCZ48AU=;
+	s=arc-20240116; t=1705503010; c=relaxed/simple;
+	bh=M4xsVfV/+F5mriFinfpf39EQh3DfNKpLBBjzXyGsAmE=;
 	h=DKIM-Signature:X-IronPort-AV:Received:Received:Received:
 	 X-Farcaster-Flow-ID:Received:Received:From:To:CC:Subject:Date:
 	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 X-Originating-IP:X-ClientProxiedBy:Content-Type:
-	 Content-Transfer-Encoding; b=srAOXl4EnLBNcIrgg1X3C5CcwbR1LXofQV9dKhcwuL+g7Snx0ZZUmc5NBQ2lFVBmUCojeYHwPrY9KPqZW+hWZ3Iy6J6afkeQ4W6nBWJneDcTv6xUdSKAyTu8ul87cZWTfNEktO60pT60Rq10oaM+vsDmdCDDlNREj+IFCbAuHLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=l3/Lz/l9; arc=none smtp.client-ip=52.95.49.90
+	 Content-Transfer-Encoding; b=V4beWm6oODMo1Fu7ViIY8cN6IGdw8FrEuwTCnIu4wvZAK9N2H7Usl4ji79+d3qSgjLHUvpx0XE8AmcNLYpgKYh5OIe4ddZVAMeQ9mfvI+zyFN0BSkL6w2fFrte6RvuqieSBuhi/YpRvGtdMCgkb/9auFr1LA+gIp5fEleCfAh6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=jkl3iEhx; arc=none smtp.client-ip=99.78.197.220
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="l3/Lz/l9"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="jkl3iEhx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1705503006; x=1737039006;
+  t=1705503008; x=1737039008;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=V7RkoctXcKrPHqjafH3kK9YvW0BnbS/G0GKRcf3+doU=;
-  b=l3/Lz/l9o2egQ1M+lRh589LVsnsi859F9jtjDq7IZkfSkKNKKKj1y5f4
-   v3wYWJhAjqvF3H+S4rMX7wtHpmSvExNFF11eVB20qHIgREiWsPxBrRcS0
-   1vE4aGM3AWVhRRe/xgDgrMZpgbLs1ct8VUYkWCnHsycc1EruHREPUsPAm
+  bh=tPlYmxW2bD4g5p/4BZUhVQG9FE6x6xhR8RJRJRx13Io=;
+  b=jkl3iEhxFN0r8FVHPk+eTNYHtb7St1LRYKDU5CIMW5vvgeIJ3hUKqvc3
+   iFGAX1F5bNZiHNpeHFFNpqfzln+edLxuQUeloqqehxwEOsFd7AtrnmwuY
+   LJVLBqoDmAUI+WnguZjWKFxMUitYysZm4zo5BlTovRnkZexvLdFs9kV5m
    I=;
 X-IronPort-AV: E=Sophos;i="6.05,200,1701129600"; 
-   d="scan'208";a="380369071"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-pdx-2a-m6i4x-8a14c045.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 14:50:01 +0000
-Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (pdx2-ws-svc-p26-lb5-vlan3.pdx.amazon.com [10.39.38.70])
-	by email-inbound-relay-pdx-2a-m6i4x-8a14c045.us-west-2.amazon.com (Postfix) with ESMTPS id 1F47E8A896;
-	Wed, 17 Jan 2024 14:49:59 +0000 (UTC)
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.7.35:26388]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.14.60:2525] with esmtp (Farcaster)
- id 20269b52-e38b-433c-9abe-1cc6bb154dc9; Wed, 17 Jan 2024 14:49:58 +0000 (UTC)
-X-Farcaster-Flow-ID: 20269b52-e38b-433c-9abe-1cc6bb154dc9
+   d="scan'208";a="58930648"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-pdx-2a-m6i4x-21d8d9f4.us-west-2.amazon.com) ([10.25.36.210])
+  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 14:50:08 +0000
+Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (pdx2-ws-svc-p26-lb5-vlan2.pdx.amazon.com [10.39.38.66])
+	by email-inbound-relay-pdx-2a-m6i4x-21d8d9f4.us-west-2.amazon.com (Postfix) with ESMTPS id 1DF7988A4B;
+	Wed, 17 Jan 2024 14:50:07 +0000 (UTC)
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.21.151:3171]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.0.206:2525] with esmtp (Farcaster)
+ id b53c9c00-2d51-410c-8d2a-13bacadca1c2; Wed, 17 Jan 2024 14:50:06 +0000 (UTC)
+X-Farcaster-Flow-ID: b53c9c00-2d51-410c-8d2a-13bacadca1c2
 Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 17 Jan 2024 14:49:58 +0000
+ 15.2.1118.40; Wed, 17 Jan 2024 14:50:06 +0000
 Received: from dev-dsk-graf-1a-5ce218e4.eu-west-1.amazon.com (10.253.83.51) by
  EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 17 Jan 2024 14:49:54 +0000
+ 15.2.1118.40; Wed, 17 Jan 2024 14:50:02 +0000
 From: Alexander Graf <graf@amazon.com>
 To: <linux-kernel@vger.kernel.org>
 CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -64,9 +64,9 @@ CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
 	Usama Arif <usama.arif@bytedance.com>, David Woodhouse <dwmw@amazon.co.uk>,
 	Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring
 	<robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 15/17] tracing: Recover trace events from kexec handover
-Date: Wed, 17 Jan 2024 14:47:02 +0000
-Message-ID: <20240117144704.602-16-graf@amazon.com>
+Subject: [PATCH v3 17/17] Documentation: KHO: Add ftrace bindings
+Date: Wed, 17 Jan 2024 14:47:04 +0000
+Message-ID: <20240117144704.602-18-graf@amazon.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240117144704.602-1-graf@amazon.com>
 References: <20240117144704.602-1-graf@amazon.com>
@@ -81,216 +81,207 @@ X-ClientProxiedBy: EX19D041UWB004.ant.amazon.com (10.13.139.143) To
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 
-This patch implements all logic necessary to match a new trace event
-that we add against preserved trace events from kho. If we find a match,
-we give the new trace event the old event's identifier. That way, trace
-read-outs are able to make sense of buffer contents again because the
-parsing code for events looks at the same identifiers.
+We introduced KHO into Linux: A framework that allows Linux to pass
+metadata and memory across kexec from Linux to Linux. KHO reuses fdt
+as file format and shares a lot of the same properties of firmware-to-
+Linux boot formats: It needs a stable, documented ABI that allows for
+forward and backward compatibility as well as versioning.
+
+As first user of KHO, we introduced ftrace which can now preserve
+trace contents across kexec, so you can use the post-kexec kernel to
+read traces from the pre-kexec kernel.
+
+This patch adds ftrace schemas similar to "device" device tree ones to
+a new kho bindings directory. This allows us to force contributors to
+document the data that moves across KHO kexecs and catch breaking change
+during review.
 
 Signed-off-by: Alexander Graf <graf@amazon.com>
 
 ---
 
-v1 -> v2:
+v2 -> v3:
 
-  - make kho_get_fdt() const
-  - Get events as array from a property, use fingerprint instead of
-    names to identify events
-  - Remove ifdefs
+  - Fix make dt_binding_check
+  - Add descriptions for each object
+  - s/trace_flags/trace-flags/
+  - s/global_trace/global-trace/
+  - Make all additionalProperties false
+  - Change subject to reflect subsysten (dt-bindings)
+  - Fix indentation
+  - Remove superfluous examples
+  - Convert to 64bit syntax
+  - Move to kho directory
 ---
- kernel/trace/trace_output.c | 158 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 156 insertions(+), 2 deletions(-)
+ .../kho/bindings/ftrace/ftrace-array.yaml     | 38 ++++++++++++
+ .../kho/bindings/ftrace/ftrace-cpu.yaml       | 43 +++++++++++++
+ Documentation/kho/bindings/ftrace/ftrace.yaml | 62 +++++++++++++++++++
+ 3 files changed, 143 insertions(+)
+ create mode 100644 Documentation/kho/bindings/ftrace/ftrace-array.yaml
+ create mode 100644 Documentation/kho/bindings/ftrace/ftrace-cpu.yaml
+ create mode 100644 Documentation/kho/bindings/ftrace/ftrace.yaml
 
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index 7d8815352e20..937002a204e1 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -24,6 +24,8 @@ DECLARE_RWSEM(trace_event_sem);
- 
- static struct hlist_head event_hash[EVENT_HASHSIZE] __read_mostly;
- 
-+static bool trace_is_kho_event(int type);
+diff --git a/Documentation/kho/bindings/ftrace/ftrace-array.yaml b/Documentation/kho/bindings/ftrace/ftrace-array.yaml
+new file mode 100644
+index 000000000000..aa0007595b95
+--- /dev/null
++++ b/Documentation/kho/bindings/ftrace/ftrace-array.yaml
+@@ -0,0 +1,38 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/kho/ftrace/ftrace-array.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- enum print_line_t trace_print_bputs_msg_only(struct trace_iterator *iter)
- {
- 	struct trace_seq *s = &iter->seq;
-@@ -784,7 +786,7 @@ static DEFINE_IDA(trace_event_ida);
- 
- static void free_trace_event_type(int type)
- {
--	if (type >= __TRACE_LAST_TYPE)
-+	if (type >= __TRACE_LAST_TYPE && !trace_is_kho_event(type))
- 		ida_free(&trace_event_ida, type);
- }
- 
-@@ -810,6 +812,156 @@ void trace_event_read_unlock(void)
- 	up_read(&trace_event_sem);
- }
- 
++title: Ftrace trace array
 +
-+/**
-+ * trace_kho_get_map - Return the KHO event map
-+ * @pmap: Pointer to a trace map array. Will be filled on success.
-+ * @plen: Pointer to the length of the map. Will be filled on success.
-+ * @unallocated: True if the event does not have an ID yet
-+ *
-+ * Event types are semi-dynamically generated. To ensure that
-+ * their identifiers match before and after kexec with KHO,
-+ * we store an event map in the KHO DT. Whenever we need the
-+ * map, this function provides it.
-+ *
-+ * The first time we request a map, it also walks through it and
-+ * reserves all identifiers so later event registration has find their
-+ * identifier already reserved.
-+ */
-+static int trace_kho_get_map(const struct trace_event_map **pmap, int *plen,
-+			     bool unallocated)
-+{
-+	static const struct trace_event_map *event_map;
-+	static int event_map_len;
-+	static bool event_map_reserved;
-+	const struct trace_event_map *map = NULL;
-+	const void *fdt = kho_get_fdt();
-+	const char *path = "/ftrace";
-+	int off, err, len = 0;
-+	int i;
++maintainers:
++  - Alexander Graf <graf@amazon.com>
 +
-+	if (!IS_ENABLED(CONFIG_FTRACE_KHO) || !fdt)
-+		return -EINVAL;
++description: |
++  Ftrace can create and expose multiple different trace instances, see
++  https://docs.kernel.org/trace/ftrace.html#instances. Each instance is
++  backed by a single trace array which contains all information about where
++  the corresponding trace buffers are located and how they are configured.
 +
-+	if (event_map) {
-+		map = event_map;
-+		len = event_map_len;
-+	}
++properties:
++  compatible:
++    enum:
++      - ftrace,array-v1
 +
-+	if (!map) {
-+		off = fdt_path_offset(fdt, path);
++  trace-flags:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Bitmap of all the trace flags that were enabled in the trace array at the
++      point of serialization.
 +
-+		if (off < 0) {
-+			pr_debug("Could not find '%s' in DT", path);
-+			return -EINVAL;
-+		}
++patternProperties:
++  cpu[0-9a-f]*:
++    $ref: ftrace-cpu.yaml#
++    description: Trace buffer location for each CPU
 +
-+		err = fdt_node_check_compatible(fdt, off, "ftrace-v1");
-+		if (err) {
-+			pr_warn("Node '%s' has invalid compatible", path);
-+			return -EINVAL;
-+		}
++required:
++  - compatible
++  - trace-flags
 +
-+		map = fdt_getprop(fdt, off, "events", &len);
-+		if (!map)
-+			return -EINVAL;
++additionalProperties: false
+diff --git a/Documentation/kho/bindings/ftrace/ftrace-cpu.yaml b/Documentation/kho/bindings/ftrace/ftrace-cpu.yaml
+new file mode 100644
+index 000000000000..95dec1c94fc3
+--- /dev/null
++++ b/Documentation/kho/bindings/ftrace/ftrace-cpu.yaml
+@@ -0,0 +1,43 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/kho/ftrace/ftrace-cpu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+		event_map = map;
-+		event_map_len = len;
-+	}
++title: Ftrace per-CPU ring buffer contents
 +
-+	if (unallocated && !event_map_reserved) {
-+		/*
-+		 * Reserve all IDs in our IDA. We only have a working IDA later
-+		 * in boot, so restrict it to when we allocate a dynamic type id
-+		 * for an event.
-+		 */
-+		for (i = 0; i < len; i += sizeof(*map)) {
-+			const struct trace_event_map *imap = (void *)map + i;
++maintainers:
++  - Alexander Graf <graf@amazon.com>
 +
-+			if (imap->type < __TRACE_LAST_TYPE)
-+				continue;
-+			if (ida_alloc_range(&trace_event_ida, imap->type, imap->type,
-+					    GFP_KERNEL) != imap->type) {
-+				pr_warn("Unable to reserve id %d", imap->type);
-+				return -EINVAL;
-+			}
-+		}
++description: |
++  An ftrace trace array contains a ring buffers for each CPU. This
++  object describes the buffers of such a single CPU. It describes which
++  CPU it was used in and which memory was backing the ring buffer.
 +
-+		event_map_reserved = true;
-+	}
++properties:
++  compatible:
++    enum:
++      - ftrace,cpu-v1
 +
-+	*pmap = map;
-+	*plen = len;
++  cpu:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      CPU number of the CPU that this ring buffer belonged to when it was
++      serialized.
 +
-+	return 0;
-+}
++  mem:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description: |
++      Array of { u64 phys_addr, u64 len } elements that describe a list of ring
++      buffer pages. Each page consists of two elements. The first element
++      describes the location of the struct buffer_page that contains metadata
++      for a given ring buffer page, such as the ring's head indicator. The
++      second element points to the ring buffer data page which contains the raw
++      trace data.
 +
-+/**
-+ * trace_is_kho_event - returns true if the event type is KHO reserved
-+ * @event: the event type to enumerate
-+ *
-+ * With KHO, we reserve all previous kernel's trace event types in the
-+ * KHO DT. Then, when we allocate a type, we just reuse the previous
-+ * kernel's value. However, that means we have to keep these type identifiers
-+ * reserved across the lifetime of the system, because we may get a new event
-+ * that matches the old kernel's event fingerprint. This function is a small
-+ * helper that allows us to check whether a type ID is in use by KHO.
-+ */
-+static bool trace_is_kho_event(int type)
-+{
-+	const struct trace_event_map *map = NULL;
-+	int len, i;
++required:
++  - compatible
++  - cpu
++  - mem
 +
-+	if (trace_kho_get_map(&map, &len, false))
-+		return false;
++additionalProperties: false
+diff --git a/Documentation/kho/bindings/ftrace/ftrace.yaml b/Documentation/kho/bindings/ftrace/ftrace.yaml
+new file mode 100644
+index 000000000000..4a7308be8dbf
+--- /dev/null
++++ b/Documentation/kho/bindings/ftrace/ftrace.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/kho/ftrace/ftrace.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	if (!map)
-+		return false;
++title: Ftrace core data
 +
-+	for (i = 0; i < len; i += sizeof(*map), map++)
-+		if (map->type == type)
-+			return true;
++maintainers:
++  - Alexander Graf <graf@amazon.com>
 +
-+	return false;
-+}
++description: |
++  Ftrace can serialize its current trace buffers across kexec through KHO.
++  For each instance, it preserves the backing ring buffers. It also
++  preserves event ID associations. The post-KHO kernel can then consume
++  these bits to reassemble trace data (not configuration!) for each trace
++  instance and that way expose pre-KHO traces in post-KHO ftrace files.
 +
-+/**
-+ * trace_kho_fill_event_type - restore event type info from KHO
-+ * @event: the event to enumerate
-+ *
-+ * Event types are semi-dynamically generated. To ensure that
-+ * their identifiers match before and after kexec with KHO,
-+ * let's match up unique fingerprint - either their predetermined
-+ * type or their crc32 value - and fill in the respective type
-+ * information if we booted with KHO.
-+ */
-+static bool trace_kho_fill_event_type(struct trace_event *event)
-+{
-+	const struct trace_event_map *map = NULL;
-+	int len = 0, i;
-+	u32 crc32;
++properties:
++  compatible:
++    enum:
++      - ftrace-v1
 +
-+	if (trace_kho_get_map(&map, &len, !event->type))
-+		return false;
++  events:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description:
++      Array of { u32 crc, u32 type } elements. Each element contains a unique
++      identifier for an event, followed by the identifier that this event had
++      in the previous kernel's trace buffers.
 +
-+	crc32 = event2fp(event);
++# Every subnode has to be a trace array
++patternProperties:
++  ^(?!compatible|events)$:
++    $ref: ftrace-array.yaml#
++    description: Trace array description for each trace instance
 +
-+	for (i = 0; i < len; i += sizeof(*map), map++) {
-+		if (map->crc32 == crc32) {
-+			if (!map->type)
-+				return false;
++required:
++  - compatible
++  - events
 +
-+			event->type = map->type;
-+			return true;
-+		}
-+	}
++additionalProperties: true
 +
-+	pr_debug("Could not find event");
++examples:
++  - |
++    ftrace {
++      compatible = "ftrace-v1";
++      events = < 1 1 2 2 3 3 >;
 +
-+	return false;
-+}
++      global-trace {
++        compatible = "ftrace,array-v1";
++        trace-flags = < 0x3354601 >;
 +
- /**
-  * register_trace_event - register output for an event type
-  * @event: the event type to register
-@@ -838,7 +990,9 @@ int register_trace_event(struct trace_event *event)
- 	if (WARN_ON(!event->funcs))
- 		goto out;
- 
--	if (!event->type) {
-+	if (trace_kho_fill_event_type(event)) {
-+		pr_debug("Recovered id=%d", event->type);
-+	} else if (!event->type) {
- 		event->type = alloc_trace_event_type();
- 		if (!event->type)
- 			goto out;
++        cpu0 {
++          compatible = "ftrace,cpu-v1";
++          cpu = < 0x00 >;
++          mem = /bits/ 64 < 0x101000000 0x38
++	                    0x101000100 0x1000
++	                    0x101000038 0x38
++	                    0x101002000 0x1000 >;
++        };
++      };
++    };
 -- 
 2.40.1
 
