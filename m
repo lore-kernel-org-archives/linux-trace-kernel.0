@@ -1,202 +1,198 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C9613ADC;
-	Thu, 18 Jan 2024 06:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+Received: from invmail3.skhynix.com (exvmail3.skhynix.com [166.125.252.90])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 311B41B96D;
+	Thu, 18 Jan 2024 10:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705560453; cv=none; b=Cbt7KzN/U/SyAxYWctm6jdwoouhowrNBjr+4ssdWRnHsVEm/8VaVvE8N1zi4AYy3vdX8kiJIez/iaHSLwc22Qgio27VHrZF+wFceJGnTuH5NIZtS5FBDblreduX0/oyYsagFhIzR1+PTLskeE2jNXkCEcYFQqC/YWhwSEVYfwwA=
+	t=1705575343; cv=none; b=tcHoxhT/9eLz8YD8f/kdy+WN+1bEe+6kZX+cTIfqL7DPEdN5UMNPvwxJ8eIlE8odaIijwvpJMlwnLE3NexEWxLSex6gQBS97iJsbAbP6wz3wx2CcIn8CO+fThxCcoQYYb0FliLZhyRbAXFpSN1bqfZg4/7Zrj5I0sd7f71d88Y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705560453; c=relaxed/simple;
-	bh=SWREub8VuUlUODzLU8q34Rk02UcISqoTmL/dacBll1w=;
-	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
-	 X-IronPort-AV:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To; b=VepQrOjAJ8o+VjGHuBPCmYsSkwNMFW3bhwKpic8bkxAzEg/BjqG14Uowe307xM1XJ+cdJitJGJrGDdOAYN1SKMCjvuI6/tP1dZ/aGlnBvO7/xIrlnhVdk7B05WYbVeMDbWvA8lisblEhAshv0TRiQ/k6HV/3Q/PXTuwHgq6dmak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N/LbTHaZ; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N/LbTHaZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705560451; x=1737096451;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SWREub8VuUlUODzLU8q34Rk02UcISqoTmL/dacBll1w=;
-  b=N/LbTHaZlIWfykiqKBRdeyxs9o2Cim/HB1T0CHN3ErxZ/gEMikhg5O34
-   VzIUQcD7tCwq0VHGcHGjYnBAXiWQo6kiHL9/PAQsDxaBfcy8ho1qlKpbO
-   /EeWu1cAIQqK9vE+5aqPjVChS3G3zdTJh00ifYtbP22Xl4XP5Q4nMNAbM
-   aU0EiKKOE1W+qgzWDZ5E9wuU51ObzubHPl9z9osCD087VBedsuq4eM9g1
-   ptPc42B6p18n4DToj+TjecPfoy5e8EFXUip3xoT1SZTFdSlJ1uNPtizcD
-   CJUV50FONS2GpyYxpF7qA2h6O3xbsSiFYSvQqfAqoRWzD3eCmfTWFrFBh
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="7459413"
-X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
-   d="scan'208";a="7459413"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 22:47:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
-   d="scan'208";a="204921"
-Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 17 Jan 2024 22:47:22 -0800
-Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rQMBL-0002jI-0y;
-	Thu, 18 Jan 2024 06:47:19 +0000
-Date: Thu, 18 Jan 2024 14:46:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: Alexander Graf <graf@amazon.com>, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org,
-	linux-doc@vger.kernel.org, x86@kernel.org,
-	Eric Biederman <ebiederm@xmission.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>,
-	James Gowans <jgowans@amazon.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	arnd@arndb.de, pbonzini@redhat.com, madvenka@linux.microsoft.com,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3 13/17] tracing: Recover trace buffers from kexec
- handover
-Message-ID: <202401181457.dzB2femp-lkp@intel.com>
-References: <20240117144704.602-14-graf@amazon.com>
+	s=arc-20240116; t=1705575343; c=relaxed/simple;
+	bh=62k+DYNYiAToaJmsoXZKLChah95X0PxNNmBWywU7twk=;
+	h=X-AuditID:From:To:Cc:Subject:Date:Message-Id:X-Mailer:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:
+	 X-Brightmail-Tracker:X-Brightmail-Tracker:X-CFilter-Loop; b=NPGtj5c+Z8j/Qd8POZQdpwzPU470YKVYyJi3MfRhLrGpb5HTaO6eFbRtRFifrF9lLNVnQ+rO6O4gEuBvi9ypwPIppJ0zPZYkM+tgs5I9vyeEfmUEu4kveZ5Axjyc+Xi3GY/1JbFWXZBmTQTCzOhkIPR+3t7u4Rr/MNT3+6B9UQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc59-bd5ff7000001c92b-70-65a9001d9683
+From: Hyeongtak Ji <hyeongtak.ji@sk.com>
+To: sj@kernel.org
+Cc: akpm@linux-foundation.org,
+	apopple@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	damon@lists.linux.dev,
+	dave.jiang@intel.com,
+	honggyu.kim@sk.com,
+	hyeongtak.ji@sk.com,
+	kernel_team@skhynix.com,
+	linmiaohe@huawei.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	lizhijian@cn.fujitsu.com,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	rakie.kim@sk.com,
+	rostedt@goodmis.org,
+	surenb@google.com,
+	yangx.jy@fujitsu.com,
+	ying.huang@intel.com,
+	ziy@nvidia.com
+Subject: Re: [RFC PATCH 0/4] DAMON based 2-tier memory management for CXL memory
+Date: Thu, 18 Jan 2024 19:40:16 +0900
+Message-Id: <20240118104017.2098-1-hyeongtak.ji@sk.com>
+X-Mailer: git-send-email 2.37.3.windows.1
+In-Reply-To: <20240117211103.51806-1-sj@kernel.org>
+References: <20240117211103.51806-1-sj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240117144704.602-14-graf@amazon.com>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRmVeSWpSXmKPExsXC9ZZnka4sw8pUgwe/tCzmrF/DZrHrRojF
+	/73HGC2e/P/NanHiZiObRef3pSwWl3fNYbO4t+Y/q8WR9WdZLNbdArI2nz3DbLF4uZrFvo4H
+	TBaHv75hsph8aQGbxYspZxgtTs6azGIx++g9dgchj/8HJzF7LD39hs1jQxOQaNl3i91jwaZS
+	j5Yjb1k9Fu95yeSxaVUnm8emT5PYPU7M+M3isfOhpceLzTMZPXqb37F5fN4kF8AXxWWTkpqT
+	WZZapG+XwJXx53YnW8EnzYpfkw+yNDBOkOti5OSQEDCRuL7kIjuMvfLICiYQm01AQ2Jaw2Jm
+	EFtEQFCi//EM1i5GLg5mgRksEhf3HAcrEhYIkHg85wxYEYuAqkTLgk4WEJtXwFxi5u41LBBD
+	NSUmbJkDVs8pYCwx+cREsGVCAkYS29smskHUC0qcnPkErJ5ZQF6ieetsZpBlEgKH2CVWbVjD
+	BDFIUuLgihssExj5ZyHpmYWkZwEj0ypGkcy8stzEzBxjveLsjMq8zAq95PzcTYzAqFtW+ydy
+	B+O3C8GHGAU4GJV4eDOeLE8VYk0sK67MPcQowcGsJMLrb7AsVYg3JbGyKrUoP76oNCe1+BCj
+	NAeLkjiv0bfyFCGB9MSS1OzU1ILUIpgsEwenVAOjhPXVy5c7udb/d02LtrKX1TU5sHLSLPZT
+	tyRZr1bv39J+aGZTSLi7gu7+8+71h6/orFrqe/Pmzs/eh9f//OG2a7Kgtprb028lO5e+qyt8
+	UTZxgsqiKWsuL3cvyfu1I5FjW/qsYnu3x0mV/QXsF6dcEunwaL0+w1L93/nA6NapItFaMxQm
+	KpYsV2Ipzkg01GIuKk4EAA04c1+2AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRmVeSWpSXmKPExsXCNUPNU1eWYWWqwcW50hZz1q9hs9h1I8Ti
+	/95jjBZP/v9mtThxs5HN4vOz18wWnU++M1ocnnuS1aLz+1IWi8u75rBZ3Fvzn9XiyPqzLBbr
+	bgFZm8+eYbZYvFzN4tC156wW+zoeMFkc/vqGyWLypQVsFi+mnGG0ODlrMovF7KP32B3EPP4f
+	nMTssfT0GzaPDU1AomXfLXaPBZtKPVqOvGX1WLznJZPHplWdbB6bPk1i9zgx4zeLx86Hlh4v
+	Ns9k9Ohtfsfm8e22h8fiFx+YPD5vkgsQiOKySUnNySxLLdK3S+DK+HO7k63gk2bFr8kHWRoY
+	J8h1MXJySAiYSKw8soIJxGYT0JCY1rCYGcQWERCU6H88g7WLkYuDWWAGi8TFPcfBioQFAiQe
+	zzkDVsQioCrRsqCTBcTmFTCXmLl7DQvEUE2JCVvmgNVzChhLTD4xkR3EFhIwktjeNpENol5Q
+	4uTMJ2D1zALyEs1bZzNPYOSZhSQ1C0lqASPTKkaRzLyy3MTMHDO94uyMyrzMCr3k/NxNjMAo
+	W1b7Z9IOxm+X3Q8xCnAwKvHwdjxckSrEmlhWXJl7iFGCg1lJhNffYFmqEG9KYmVValF+fFFp
+	TmrxIUZpDhYlcV6v8NQEIYH0xJLU7NTUgtQimCwTB6dUA2NFlpnYb70PZ7i5l0jdVFHMfLD2
+	Tvp120lf3p2bI/1nh2CruuSsXqYYBu1jn0KbOft/Xw7v6n9RsevFU8VWz0/dRywL/rxiK2Iv
+	3nrIZOPEu0pHP8bvWbTt/j3+61Uz6sVXhWX/zPX9ED5BZKYoU9pKmxdCBZFntH01rTS5f/Bs
+	+ffZO+XUlDNKLMUZiYZazEXFiQBg223CrgIAAA==
+X-CFilter-Loop: Reflected
 
-Hi Alexander,
+Hi SeongJae,
 
-kernel test robot noticed the following build warnings:
+On Wed, 17 Jan 2024 SeongJae Park <sj@kernel.org> wrote:
 
-[auto build test WARNING on linus/master]
-[cannot apply to tip/x86/core arm64/for-next/core akpm-mm/mm-everything v6.7 next-20240117]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+[...]
+>> Let's say there are 3 nodes in the system and the first node0 and node1
+>> are the first tier, and node2 is the second tier.
+>> 
+>>   $ cat /sys/devices/virtual/memory_tiering/memory_tier4/nodelist
+>>   0-1
+>> 
+>>   $ cat /sys/devices/virtual/memory_tiering/memory_tier22/nodelist
+>>   2
+>> 
+>> Here is the result of partitioning hot/cold memory and I put execution
+>> command at the right side of numastat result.  I initially ran each
+>> hot_cold program with preferred setting so that they initially allocate
+>> memory on one of node0 or node2, but they gradually migrated based on
+>> their access frequencies.
+>> 
+>>   $ numastat -c -p hot_cold
+>>   Per-node process memory usage (in MBs) 
+>>   PID              Node 0 Node 1 Node 2 Total 
+>>   ---------------  ------ ------ ------ ----- 
+>>   754 (hot_cold)     1800      0   2000  3800    <- hot_cold 1800 2000 
+>>   1184 (hot_cold)     300      0    500   800    <- hot_cold 300 500 
+>>   1818 (hot_cold)     801      0   3199  4000    <- hot_cold 800 3200 
+>>   30289 (hot_cold)      4      0      5    10    <- hot_cold 3 5 
+>>   30325 (hot_cold)     31      0     51    81    <- hot_cold 30 50 
+>>   ---------------  ------ ------ ------ ----- 
+>>   Total              2938      0   5756  8695
+>> 
+>> The final node placement result shows that DAMON accurately migrated
+>> pages by their hotness for multiple processes.
+>
+> What was the result when the corner cases handling logics were not applied?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Alexander-Graf/mm-memblock-Add-support-for-scratch-memory/20240117-225136
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240117144704.602-14-graf%40amazon.com
-patch subject: [PATCH v3 13/17] tracing: Recover trace buffers from kexec handover
-config: arc-defconfig (https://download.01.org/0day-ci/archive/20240118/202401181457.dzB2femp-lkp@intel.com/config)
-compiler: arc-elf-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240118/202401181457.dzB2femp-lkp@intel.com/reproduce)
+This is the result of the same test that Honggyu did, but with an insufficient
+corner cases handling logics.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401181457.dzB2femp-lkp@intel.com/
+  $ numastat -c -p hot_cold
 
-All warnings (new ones prefixed by >>):
+  Per-node process memory usage (in MBs)
+  PID             Node 0 Node 1 Node 2 Total
+  --------------  ------ ------ ------ -----
+  862 (hot_cold)    2256      0   1545  3801   <- hot_cold 1800 2000
+  863 (hot_cold)     403      0    398   801   <- hot_cold 300 500
+  864 (hot_cold)    1520      0   2482  4001   <- hot_cold 800 3200
+  865 (hot_cold)       6      0      3     9   <- hot_cold 3 5
+  866 (hot_cold)      29      0     52    81   <- hot_cold 30 50
+  --------------  ------ ------ ------ -----
+  Total             4215      0   4480  8695
 
-   kernel/trace/ring_buffer.c: In function 'rb_kho_replace_buffers':
->> kernel/trace/ring_buffer.c:5936:66: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-    5936 |                         cpu_buffer->head_page->list.prev->next = (struct list_head *)
-         |                                                                  ^
-   kernel/trace/ring_buffer.c:5939:44: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-    5939 |                         bpage->list.next = (struct list_head *)((ulong)new_lhead | rb_page_head);
-         |                                            ^
---
->> kernel/trace/ring_buffer.c:1783: warning: Function parameter or struct member 'tr_off' not described in '__ring_buffer_alloc'
+As time goes by, DAMON keeps trying to split the hot/cold region, but it does
+not seem to be enough.
 
+  $ numastat -c -p hot_cold
 
-vim +5936 kernel/trace/ring_buffer.c
+  Per-node process memory usage (in MBs)
+  PID             Node 0 Node 1 Node 2 Total
+  --------------  ------ ------ ------ -----
+  862 (hot_cold)    2022      0   1780  3801   <- hot_cold 1800 2000
+  863 (hot_cold)     351      0    450   801   <- hot_cold 300 500
+  864 (hot_cold)    1134      0   2868  4001   <- hot_cold 800 3200
+  865 (hot_cold)       7      0      2     9   <- hot_cold 3 5
+  866 (hot_cold)      43      0     39    81   <- hot_cold 30 50
+  --------------  ------ ------ ------ -----
+  Total             3557      0   5138  8695
 
-  5896	
-  5897	static int rb_kho_replace_buffers(struct ring_buffer_per_cpu *cpu_buffer,
-  5898					     struct rb_kho_cpu *kho)
-  5899	{
-  5900		bool first_loop = true;
-  5901		struct list_head *tmp;
-  5902		int err = 0;
-  5903		int i = 0;
-  5904	
-  5905		if (!IS_ENABLED(CONFIG_FTRACE_KHO))
-  5906			return -EINVAL;
-  5907	
-  5908		if (kho->nr_mems != cpu_buffer->nr_pages * 2)
-  5909			return -EINVAL;
-  5910	
-  5911		for (tmp = rb_list_head(cpu_buffer->pages);
-  5912		     tmp != rb_list_head(cpu_buffer->pages) || first_loop;
-  5913		     tmp = rb_list_head(tmp->next), first_loop = false) {
-  5914			struct buffer_page *bpage = (struct buffer_page *)tmp;
-  5915			const struct kho_mem *mem_bpage = &kho->mem[i++];
-  5916			const struct kho_mem *mem_page = &kho->mem[i++];
-  5917			const uint64_t rb_page_head = 1;
-  5918			struct buffer_page *old_bpage;
-  5919			void *old_page;
-  5920	
-  5921			old_bpage = __va(mem_bpage->addr);
-  5922			if (!bpage)
-  5923				goto out;
-  5924	
-  5925			if ((ulong)old_bpage->list.next & rb_page_head) {
-  5926				struct list_head *new_lhead;
-  5927				struct buffer_page *new_head;
-  5928	
-  5929				new_lhead = rb_list_head(bpage->list.next);
-  5930				new_head = (struct buffer_page *)new_lhead;
-  5931	
-  5932				/* Assume the buffer is completely full */
-  5933				cpu_buffer->tail_page = bpage;
-  5934				cpu_buffer->commit_page = bpage;
-  5935				/* Set the head pointers to what they were before */
-> 5936				cpu_buffer->head_page->list.prev->next = (struct list_head *)
-  5937					((ulong)cpu_buffer->head_page->list.prev->next & ~rb_page_head);
-  5938				cpu_buffer->head_page = new_head;
-  5939				bpage->list.next = (struct list_head *)((ulong)new_lhead | rb_page_head);
-  5940			}
-  5941	
-  5942			if (rb_page_entries(old_bpage) || rb_page_write(old_bpage)) {
-  5943				/*
-  5944				 * We want to recycle the pre-kho page, it contains
-  5945				 * trace data. To do so, we unreserve it and swap the
-  5946				 * current data page with the pre-kho one
-  5947				 */
-  5948				old_page = kho_claim_mem(mem_page);
-  5949	
-  5950				/* Recycle the old page, it contains data */
-  5951				free_page((ulong)bpage->page);
-  5952				bpage->page = old_page;
-  5953	
-  5954				bpage->write = old_bpage->write;
-  5955				bpage->entries = old_bpage->entries;
-  5956				bpage->real_end = old_bpage->real_end;
-  5957	
-  5958				local_inc(&cpu_buffer->pages_touched);
-  5959			} else {
-  5960				kho_return_mem(mem_page);
-  5961			}
-  5962	
-  5963			kho_return_mem(mem_bpage);
-  5964		}
-  5965	
-  5966	out:
-  5967		return err;
-  5968	}
-  5969	
+>
+> And, what are the corner cases handling logic that seemed essential?  I show
+> the page granularity active/reference check could indeed provide many
+> improvements, but that's only my humble assumption.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Yes, the page granularity active/reference check is essential.  To make the
+above "insufficient" result, the only thing I did was to promote
+inactive/not_referenced pages.
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index f03be320f9ad..c2aefb883c54 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1127,9 +1127,7 @@ static unsigned int __promote_folio_list(struct list_head *folio_list,
+                VM_BUG_ON_FOLIO(folio_test_active(folio), folio);
+
+                references = folio_check_references(folio, sc);
+-               if (references == FOLIOREF_KEEP ||
+-                   references == FOLIOREF_RECLAIM ||
+-                   references == FOLIOREF_RECLAIM_CLEAN)
++               if (references == FOLIOREF_KEEP )
+                        goto keep_locked;
+
+                /* Relocate its contents to another node. */
+
+>
+> If the corner cases are indeed better to be applied in page granularity, I
+> agree we need some more efforts since DAMON monitoring results are not page
+> granularity aware by the design.  Users could increase min_nr_regions to make
+> it more accurate, and we have plan to support page granularity monitoring,
+> though.  But maybe the overhead could be unacceptable.
+>
+> Ideal solution would be making DAMON more accurate while keeping current level
+> of overhead.  We indeed have TODO items for DAMON accuracy improvement, but
+> this may take some time that might unacceptable for your case.
+>
+> If that's the case, I think the additional corner handling (or, page gran
+> additional access check) could be made as DAMOS filters[1], since DAMOS filters
+> can be applied in page granularity, and designed for this kind of handling of
+> information that DAMON monitoring results cannot provide.  More specifically,
+> we could have filters for promotion-qualifying pages and demotion-qualifying
+> pages.  In this way, I think we can keep the action more flexible while the
+> filters can be applied in creative ways.
+
+Making corner handling as a new DAMOS filters is a good idea.  I'm just a bit
+concerned if adding new filters might cause users to care more.
+
+Kind regards,
+Hyeongtak
