@@ -1,103 +1,106 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C3E5390;
-	Thu, 18 Jan 2024 02:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6499C2115;
+	Thu, 18 Jan 2024 02:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705544530; cv=none; b=Xu+AoF649iuEa46mGgKS8B3aW3ZAFZibg8RcCbuhS2BUFF3Mvx+08QUduXyZeo8H/bxgHb38NAvR5A/sUoNIxCTY7HCq1QvjJJmxE3XRk/C4XBRXMbWMHp9TdbbwYnBuBcZpt/2eS0MecPxt9AJD/5az/PIvFVYLfbxMHYc9byc=
+	t=1705544732; cv=none; b=ZZ9Mz7xeV4epI1hQ4y4+B9tm+XhINDHNw7xdm2+MUKi3iFno7IsqhkZwckFw/9xO7LMSoFuR5VYwSBgu8fqKmVMkoTS0i6C67Kkl/EH/3Bu3RH+QV7y1SfIYUSUzjPW54w4vQch2rqjy+Lm2/Zy8+C2joOeSTO2nrBQkbGUiLUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705544530; c=relaxed/simple;
-	bh=inlffgtvifbsvDrPcKJZRtI3H2Vl5db6hquU9Sf5l5Q=;
-	h=Received:Received:Received:From:To:CC:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding:Content-Type:
-	 X-Originating-IP:X-ClientProxiedBy; b=mXPQ0xe3IinBW+Md9xxca/Ls+CToDlUk3eBsYkiuKtZsPHxSASfzEWK91m0Ah+TLPrcF5ybzcdI0tR5r496ThHtqAxftKmF+P1YQbdU0qNOy/Ob+jUH9zQzuyCiZaGEHAsbFZnlS9JYwAN7/9Wr7H8BkfB04WHgKqdH0UBuHNBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TFmh510dyzsWBk;
-	Thu, 18 Jan 2024 10:21:09 +0800 (CST)
-Received: from dggpemd100005.china.huawei.com (unknown [7.185.36.102])
-	by mail.maildlp.com (Postfix) with ESMTPS id A93A1180077;
-	Thu, 18 Jan 2024 10:22:03 +0800 (CST)
-Received: from hulk-vt.huawei.com (10.67.174.104) by
- dggpemd100005.china.huawei.com (7.185.36.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.28; Thu, 18 Jan 2024 10:22:03 +0800
-From: Chen Zhongjin <chenzhongjin@huawei.com>
-To: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
-CC: <chenzhongjin@huawei.com>, <yangjihong1@huawei.com>,
-	<naveen.n.rao@linux.ibm.com>, <anil.s.keshavamurthy@intel.com>,
-	<davem@davemloft.net>, <paulmck@kernel.org>, <mhiramat@kernel.org>,
-	<akpm@linux-foundation.org>, <tglx@linutronix.de>, <peterz@infradead.org>,
-	<pmladek@suse.com>, <dianders@chromium.org>, <npiggin@gmail.com>,
-	<mpe@ellerman.id.au>, <jkl820.git@gmail.com>,
-	<juerg.haefliger@canonical.com>, <rick.p.edgecombe@intel.com>,
-	<eric.devolder@oracle.com>, <mic@digikod.net>
-Subject: [PATCH v2] kprobes: Use synchronize_rcu_tasks_rude in kprobe_optimizer
-Date: Thu, 18 Jan 2024 02:18:42 +0000
-Message-ID: <20240118021842.290665-1-chenzhongjin@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1705544732; c=relaxed/simple;
+	bh=8LBkJof5B327L1V0yCKArqI09jJkUVrtza9uTR4uueI=;
+	h=Received:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
+	 References:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding; b=Hj4KJGrw7UpTZ1sfuohhyUu4JQWyixFoSpVtUKTwjQHAz6R7L2u3Z32Tkkh9a7FMSDrrdwiIMXZckDyAXkI5X5AiZ9GudKNHJkYEB8X+xcZ22U51on4dGnUG8vDS5foFAFcSOsUiU2fJxJwh1FbUB48r9GL9VF3Dn8tU+iPdRLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 633BFC433C7;
+	Thu, 18 Jan 2024 02:25:29 +0000 (UTC)
+Date: Wed, 17 Jan 2024 21:26:46 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Chen Zhongjin <chenzhongjin@huawei.com>
+Cc: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+ <yangjihong1@huawei.com>, <naveen.n.rao@linux.ibm.com>,
+ <anil.s.keshavamurthy@intel.com>, <davem@davemloft.net>,
+ <paulmck@kernel.org>, <mhiramat@kernel.org>, <akpm@linux-foundation.org>,
+ <tglx@linutronix.de>, <peterz@infradead.org>, <pmladek@suse.com>,
+ <dianders@chromium.org>, <npiggin@gmail.com>, <mpe@ellerman.id.au>,
+ <jkl820.git@gmail.com>, <juerg.haefliger@canonical.com>,
+ <rick.p.edgecombe@intel.com>, <eric.devolder@oracle.com>, <mic@digikod.net>
+Subject: Re: [PATCH v2] kprobes: Use synchronize_rcu_tasks_rude in
+ kprobe_optimizer
+Message-ID: <20240117212646.5f0ddf0c@gandalf.local.home>
+In-Reply-To: <20240118021842.290665-1-chenzhongjin@huawei.com>
+References: <20240118021842.290665-1-chenzhongjin@huawei.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemd100005.china.huawei.com (7.185.36.102)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-There is a deadlock scenario in kprobe_optimizer():
+On Thu, 18 Jan 2024 02:18:42 +0000
+Chen Zhongjin <chenzhongjin@huawei.com> wrote:
 
-pid A				pid B			pid C
-kprobe_optimizer()		do_exit()		perf_kprobe_init()
-mutex_lock(&kprobe_mutex)	exit_tasks_rcu_start()	mutex_lock(&kprobe_mutex)
-synchronize_rcu_tasks()		zap_pid_ns_processes()	// waiting kprobe_mutex
-// waiting tasks_rcu_exit_srcu	kernel_wait4()
-				// waiting pid C exit
+> There is a deadlock scenario in kprobe_optimizer():
+> 
+> pid A				pid B			pid C
+> kprobe_optimizer()		do_exit()		perf_kprobe_init()
+> mutex_lock(&kprobe_mutex)	exit_tasks_rcu_start()	mutex_lock(&kprobe_mutex)
+> synchronize_rcu_tasks()		zap_pid_ns_processes()	// waiting kprobe_mutex
+> // waiting tasks_rcu_exit_srcu	kernel_wait4()
+> 				// waiting pid C exit
+> 
+> To avoid this deadlock loop, use synchronize_rcu_tasks_rude() in kprobe_optimizer()
+> rather than synchronize_rcu_tasks(). synchronize_rcu_tasks_rude() can also promise
+> that all preempted tasks have scheduled, but it will not wait tasks_rcu_exit_srcu.
+> 
 
-To avoid this deadlock loop, use synchronize_rcu_tasks_rude() in kprobe_optimizer()
-rather than synchronize_rcu_tasks(). synchronize_rcu_tasks_rude() can also promise
-that all preempted tasks have scheduled, but it will not wait tasks_rcu_exit_srcu.
+Did lockdep detect this? If not, we should fix that.
 
-Fixes: a30b85df7d59 ("kprobes: Use synchronize_rcu_tasks() for optprobe with CONFIG_PREEMPT=y")
-Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
----
-v1 -> v2: Add Fixes tag
----
- arch/Kconfig     | 2 +-
- kernel/kprobes.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+I'm also thinking if we should find another solution, as this seems more of
+a work around than a fix.
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index f4b210ab0612..dc6a18854017 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -104,7 +104,7 @@ config STATIC_CALL_SELFTEST
- config OPTPROBES
- 	def_bool y
- 	depends on KPROBES && HAVE_OPTPROBES
--	select TASKS_RCU if PREEMPTION
-+	select TASKS_RUDE_RCU
- 
- config KPROBES_ON_FTRACE
- 	def_bool y
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index d5a0ee40bf66..09056ae50c58 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -623,7 +623,7 @@ static void kprobe_optimizer(struct work_struct *work)
- 	 * Note that on non-preemptive kernel, this is transparently converted
- 	 * to synchronoze_sched() to wait for all interrupts to have completed.
- 	 */
--	synchronize_rcu_tasks();
-+	synchronize_rcu_tasks_rude();
- 
- 	/* Step 3: Optimize kprobes after quiesence period */
- 	do_optimize_kprobes();
--- 
-2.25.1
+> Fixes: a30b85df7d59 ("kprobes: Use synchronize_rcu_tasks() for optprobe with CONFIG_PREEMPT=y")
+> Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
+> ---
+> v1 -> v2: Add Fixes tag
+> ---
+>  arch/Kconfig     | 2 +-
+>  kernel/kprobes.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index f4b210ab0612..dc6a18854017 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -104,7 +104,7 @@ config STATIC_CALL_SELFTEST
+>  config OPTPROBES
+>  	def_bool y
+>  	depends on KPROBES && HAVE_OPTPROBES
+> -	select TASKS_RCU if PREEMPTION
+> +	select TASKS_RUDE_RCU
+
+Is this still a bug if PREEMPTION is not enabled?
+
+-- Steve
+
+>  
+>  config KPROBES_ON_FTRACE
+>  	def_bool y
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index d5a0ee40bf66..09056ae50c58 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -623,7 +623,7 @@ static void kprobe_optimizer(struct work_struct *work)
+>  	 * Note that on non-preemptive kernel, this is transparently converted
+>  	 * to synchronoze_sched() to wait for all interrupts to have completed.
+>  	 */
+> -	synchronize_rcu_tasks();
+> +	synchronize_rcu_tasks_rude();
+>  
+>  	/* Step 3: Optimize kprobes after quiesence period */
+>  	do_optimize_kprobes();
 
