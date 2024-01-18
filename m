@@ -1,200 +1,262 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DB12C841;
-	Thu, 18 Jan 2024 17:17:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 886A21DA45;
+	Thu, 18 Jan 2024 23:10:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705598279; cv=none; b=jdIeV25ORWCKf3zp4f6LEEpYhQ6Os5WmaL7yqrtL5pFqE8taRyvNuKoI1xULTaXsomp/n17LYLqKYJXp39m8x+vapJs38Y0Jpkyq83IR3Qn0mLmu38RYTwuH5/6ICIPjKyZHRGtFmd3G1qo4ZD+Sog4P+NxHA75Yhf+jibs41eY=
+	t=1705619447; cv=none; b=Gg3Xj10tuFDTBT0ce/XUxuqC9y3KlyXk+3FAPlY0nGaKcz73b4Os6M2OQsX8Z27o+S6ZFsloZ+tIy/5nWAEFzLmZsgUrIBCL2tBKUfzIrbxRhOv1GqbAYaZj+t1v+UytUShKHWmvm0UqvmqGT78wmQtDh6X/04UfzsoQyZJhf2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705598279; c=relaxed/simple;
-	bh=3QxSF28AU67pQOjUoBLeJaaRz+4V7zAoBNQxbnwWDt8=;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-Id:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding; b=WvSTlYbQ/nSc9uv4CmRdi4odFpM+ojdcYd7QrKxWSIcSx00Wee+Anr+9+H65RkRQ633FAvN9p/gwITAKDJCZCWsvGVNdOzkGpR7YTlnYuXHb3yVfpvYfBaYEFgsU52vFX1t2LekinsHM9MqhtIWHolYcqhitvNlrrO+NJ4H/+NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YY0GKIJc; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YY0GKIJc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66706C433C7;
-	Thu, 18 Jan 2024 17:17:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705598278;
-	bh=3QxSF28AU67pQOjUoBLeJaaRz+4V7zAoBNQxbnwWDt8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YY0GKIJc+pAS737+c4sKDiztl/QoGtBo8pvn+YwjPSonfyxdp0JRYw4bQNAr0joWz
-	 CaVmb7jTY4wu9qshPkDLOY+weKEPjX+1DBD9bFW2MdV537bXdXFmTO3Ba4DOODuxuI
-	 7pWpez9XB8YlGlN4/ud5X91JMKrygflfa27tvcxRILMMUKFvlWpolaQ3aN3mKmzQYW
-	 Gp8csA815jUZcly340n12SsW5f4Lbf/h33nXVW2vBTKUzh0JgLfOYa+JmPfcSA0J+R
-	 SFPrW1SXWufOKHqiDMTSLlhk0NrSTLgLDJjLUyCvUAKzvYcUSL/ovQkMkm6+Q0XnhE
-	 KPhE25L8zpjvA==
-From: SeongJae Park <sj@kernel.org>
-To: Hyeongtak Ji <hyeongtak.ji@sk.com>
-Cc: sj@kernel.org,
-	akpm@linux-foundation.org,
-	apopple@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	damon@lists.linux.dev,
-	dave.jiang@intel.com,
-	honggyu.kim@sk.com,
-	kernel_team@skhynix.com,
-	linmiaohe@huawei.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	lizhijian@cn.fujitsu.com,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	rakie.kim@sk.com,
-	rostedt@goodmis.org,
-	surenb@google.com,
-	yangx.jy@fujitsu.com,
-	ying.huang@intel.com,
-	ziy@nvidia.com
-Subject: Re: [RFC PATCH 0/4] DAMON based 2-tier memory management for CXL memory
-Date: Thu, 18 Jan 2024 09:17:56 -0800
-Message-Id: <20240118171756.80356-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240118104017.2098-1-hyeongtak.ji@sk.com>
-References: 
+	s=arc-20240116; t=1705619447; c=relaxed/simple;
+	bh=ccBDyj5vZPnWp6TxrmhfWdgJHBSitmV+PXLfxpt4Hnk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=pbaQ0f7qWnNbwkdGkC++hjY/oyc0xFcNvYR1MARNVpSRc5EPwwhQ1MoZYYcrBquzgbEqRtQpJtbAwFXQW9/vytunNEBvdU6m3C0O89O4SWbIUAGdhWmcu71Ul/8ZmEs5vt/VMJZ0/m1OQQTD1TNBASHwK8J9+249QCXrKiKeMyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98B20C433F1;
+	Thu, 18 Jan 2024 23:10:46 +0000 (UTC)
+Date: Thu, 18 Jan 2024 18:12:05 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH] ring-buffer: Simplify reservation with try_cmpxchg() loop
+Message-ID: <20240118181206.4977da2f@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 18 Jan 2024 19:40:16 +0900 Hyeongtak Ji <hyeongtak.ji@sk.com> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> Hi SeongJae,
-> 
-> On Wed, 17 Jan 2024 SeongJae Park <sj@kernel.org> wrote:
-> 
-> [...]
-> >> Let's say there are 3 nodes in the system and the first node0 and node1
-> >> are the first tier, and node2 is the second tier.
-> >> 
-> >>   $ cat /sys/devices/virtual/memory_tiering/memory_tier4/nodelist
-> >>   0-1
-> >> 
-> >>   $ cat /sys/devices/virtual/memory_tiering/memory_tier22/nodelist
-> >>   2
-> >> 
-> >> Here is the result of partitioning hot/cold memory and I put execution
-> >> command at the right side of numastat result.  I initially ran each
-> >> hot_cold program with preferred setting so that they initially allocate
-> >> memory on one of node0 or node2, but they gradually migrated based on
-> >> their access frequencies.
-> >> 
-> >>   $ numastat -c -p hot_cold
-> >>   Per-node process memory usage (in MBs) 
-> >>   PID              Node 0 Node 1 Node 2 Total 
-> >>   ---------------  ------ ------ ------ ----- 
-> >>   754 (hot_cold)     1800      0   2000  3800    <- hot_cold 1800 2000 
-> >>   1184 (hot_cold)     300      0    500   800    <- hot_cold 300 500 
-> >>   1818 (hot_cold)     801      0   3199  4000    <- hot_cold 800 3200 
-> >>   30289 (hot_cold)      4      0      5    10    <- hot_cold 3 5 
-> >>   30325 (hot_cold)     31      0     51    81    <- hot_cold 30 50 
-> >>   ---------------  ------ ------ ------ ----- 
-> >>   Total              2938      0   5756  8695
-> >> 
-> >> The final node placement result shows that DAMON accurately migrated
-> >> pages by their hotness for multiple processes.
-> >
-> > What was the result when the corner cases handling logics were not applied?
-> 
-> This is the result of the same test that Honggyu did, but with an insufficient
-> corner cases handling logics.
-> 
->   $ numastat -c -p hot_cold
-> 
->   Per-node process memory usage (in MBs)
->   PID             Node 0 Node 1 Node 2 Total
->   --------------  ------ ------ ------ -----
->   862 (hot_cold)    2256      0   1545  3801   <- hot_cold 1800 2000
->   863 (hot_cold)     403      0    398   801   <- hot_cold 300 500
->   864 (hot_cold)    1520      0   2482  4001   <- hot_cold 800 3200
->   865 (hot_cold)       6      0      3     9   <- hot_cold 3 5
->   866 (hot_cold)      29      0     52    81   <- hot_cold 30 50
->   --------------  ------ ------ ------ -----
->   Total             4215      0   4480  8695
-> 
-> As time goes by, DAMON keeps trying to split the hot/cold region, but it does
-> not seem to be enough.
-> 
->   $ numastat -c -p hot_cold
-> 
->   Per-node process memory usage (in MBs)
->   PID             Node 0 Node 1 Node 2 Total
->   --------------  ------ ------ ------ -----
->   862 (hot_cold)    2022      0   1780  3801   <- hot_cold 1800 2000
->   863 (hot_cold)     351      0    450   801   <- hot_cold 300 500
->   864 (hot_cold)    1134      0   2868  4001   <- hot_cold 800 3200
->   865 (hot_cold)       7      0      2     9   <- hot_cold 3 5
->   866 (hot_cold)      43      0     39    81   <- hot_cold 30 50
->   --------------  ------ ------ ------ -----
->   Total             3557      0   5138  8695
-> 
-> >
-> > And, what are the corner cases handling logic that seemed essential?  I show
-> > the page granularity active/reference check could indeed provide many
-> > improvements, but that's only my humble assumption.
-> 
-> Yes, the page granularity active/reference check is essential.  To make the
-> above "insufficient" result, the only thing I did was to promote
-> inactive/not_referenced pages.
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index f03be320f9ad..c2aefb883c54 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -1127,9 +1127,7 @@ static unsigned int __promote_folio_list(struct list_head *folio_list,
->                 VM_BUG_ON_FOLIO(folio_test_active(folio), folio);
-> 
->                 references = folio_check_references(folio, sc);
-> -               if (references == FOLIOREF_KEEP ||
-> -                   references == FOLIOREF_RECLAIM ||
-> -                   references == FOLIOREF_RECLAIM_CLEAN)
-> +               if (references == FOLIOREF_KEEP )
->                         goto keep_locked;
-> 
->                 /* Relocate its contents to another node. */
+Instead of using local_add_return() to reserve the ring buffer data,
+Mathieu Desnoyers suggested using local_cmpxchg(). This would simplify the
+reservation with the time keeping code.
 
-Thank you for sharing the details :)  I think DAMOS filters based approach
-could be worthy to try, then.
+Although, it does not get rid of the double time stamps (before_stamp and
+write_stamp), using cmpxchg() does get rid of the more complex case when
+an interrupting event occurs between getting the timestamps and reserving
+the data, as when that happens, it just tries again instead of dealing
+with it.
 
-> 
-> >
-> > If the corner cases are indeed better to be applied in page granularity, I
-> > agree we need some more efforts since DAMON monitoring results are not page
-> > granularity aware by the design.  Users could increase min_nr_regions to make
-> > it more accurate, and we have plan to support page granularity monitoring,
-> > though.  But maybe the overhead could be unacceptable.
-> >
-> > Ideal solution would be making DAMON more accurate while keeping current level
-> > of overhead.  We indeed have TODO items for DAMON accuracy improvement, but
-> > this may take some time that might unacceptable for your case.
-> >
-> > If that's the case, I think the additional corner handling (or, page gran
-> > additional access check) could be made as DAMOS filters[1], since DAMOS filters
-> > can be applied in page granularity, and designed for this kind of handling of
-> > information that DAMON monitoring results cannot provide.  More specifically,
-> > we could have filters for promotion-qualifying pages and demotion-qualifying
-> > pages.  In this way, I think we can keep the action more flexible while the
-> > filters can be applied in creative ways.
-> 
-> Making corner handling as a new DAMOS filters is a good idea.  I'm just a bit
-> concerned if adding new filters might cause users to care more.
+Before we had:
 
-I prefer keeping DAMON API and Sysfs interface flexible and easy to extended
-even if it increases number of parameters, while providing simplified
-high level interfaces for end users aiming to use DAMON for specific use cases,
-like DAMON_RECLAIM, DAMON_LRU_SORT, and damo do.  Hence I'm not very concerned.
+	w = local_read(&tail_page->write);
+	/* get time stamps */
+	write = local_add_return(length, &tail_page->write);
+	if (write - length == w) {
+		/* do simple case */
+	} else {
+		/* do complex case */
+	}
 
+By switching the local_add_return() to a local_try_cmpxchg() it can now be:
 
-Thanks,
-SJ
+	 w = local_read(&tail_page->write);
+ again:
+	/* get time stamps */
+	if (!local_try_cmpxchg(&tail_page->write, &w, w + length))
+		goto again;
 
-> 
-> Kind regards,
-> Hyeongtak
+	 /* do simple case */
+
+The benchmarks between the two showed no regressions when trying this:
+
+ Enable: CONFIG_TRACEPOINT_BENCHMARK
+
+ # trace-cmd record -m 800000 -e benchmark sleep 60
+
+Before the patch:
+
+ # trace-cmd report | tail
+ event_benchmark-944   [003]  1998.910191: benchmark_event:      last=150 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=150
+ event_benchmark-944   [003]  1998.910192: benchmark_event:      last=149 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=149
+ event_benchmark-944   [003]  1998.910193: benchmark_event:      last=150 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=150
+ event_benchmark-944   [003]  1998.910193: benchmark_event:      last=150 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=150
+ event_benchmark-944   [003]  1998.910194: benchmark_event:      last=136 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=136
+ event_benchmark-944   [003]  1998.910194: benchmark_event:      last=138 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=138
+ event_benchmark-944   [003]  1998.910195: benchmark_event:      last=150 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=150
+ event_benchmark-944   [003]  1998.910196: benchmark_event:      last=151 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=151
+ event_benchmark-944   [003]  1998.910196: benchmark_event:      last=150 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=150
+ event_benchmark-944   [003]  1998.910197: benchmark_event:      last=152 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=152
+
+After the patch:
+
+ # trace-cmd report | tail
+ event_benchmark-848   [004]   171.414716: benchmark_event:      last=143 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=143
+ event_benchmark-848   [004]   171.414717: benchmark_event:      last=142 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=142
+ event_benchmark-848   [004]   171.414718: benchmark_event:      last=142 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=142
+ event_benchmark-848   [004]   171.414718: benchmark_event:      last=141 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=141
+ event_benchmark-848   [004]   171.414719: benchmark_event:      last=141 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=141
+ event_benchmark-848   [004]   171.414719: benchmark_event:      last=141 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=141
+ event_benchmark-848   [004]   171.414720: benchmark_event:      last=140 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=140
+ event_benchmark-848   [004]   171.414721: benchmark_event:      last=142 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=142
+ event_benchmark-848   [004]   171.414721: benchmark_event:      last=145 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=145
+ event_benchmark-848   [004]   171.414722: benchmark_event:      last=144 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=144
+
+It may have even improved!
+
+Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 100 ++++++++++++-------------------------
+ 1 file changed, 31 insertions(+), 69 deletions(-)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 7887d61d5b56..74f8895785ca 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -3449,9 +3449,11 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+ 	/* Don't let the compiler play games with cpu_buffer->tail_page */
+ 	tail_page = info->tail_page = READ_ONCE(cpu_buffer->tail_page);
+ 
+- /*A*/	w = local_read(&tail_page->write) & RB_WRITE_MASK;
++ /*A*/	w = local_read(&tail_page->write);
+ 	barrier();
+ 	rb_time_read(&cpu_buffer->before_stamp, &info->before);
++	/* Read before_stamp only the first time through */
++ again:
+ 	rb_time_read(&cpu_buffer->write_stamp, &info->after);
+ 	barrier();
+ 	info->ts = rb_time_stamp(cpu_buffer->buffer);
+@@ -3464,7 +3466,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+ 		 * absolute timestamp.
+ 		 * Don't bother if this is the start of a new page (w == 0).
+ 		 */
+-		if (!w) {
++		if (!(w & RB_WRITE_MASK)) {
+ 			/* Use the sub-buffer timestamp */
+ 			info->delta = 0;
+ 		} else if (unlikely(info->before != info->after)) {
+@@ -3481,89 +3483,49 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+ 
+  /*B*/	rb_time_set(&cpu_buffer->before_stamp, info->ts);
+ 
+- /*C*/	write = local_add_return(info->length, &tail_page->write);
++ /*C*/	if (!local_try_cmpxchg(&tail_page->write, &w, w + info->length))
++		goto again;
+ 
+-	/* set write to only the index of the write */
+-	write &= RB_WRITE_MASK;
++	/* Set write to the start of this event */
++	write = w & RB_WRITE_MASK;
+ 
+-	tail = write - info->length;
++	/* set tail to the end of the event */
++	tail = write + info->length;
+ 
+ 	/* See if we shot pass the end of this buffer page */
+-	if (unlikely(write > cpu_buffer->buffer->subbuf_size)) {
++	if (unlikely(tail > cpu_buffer->buffer->subbuf_size)) {
+ 		check_buffer(cpu_buffer, info, CHECK_FULL_PAGE);
+-		return rb_move_tail(cpu_buffer, tail, info);
++		return rb_move_tail(cpu_buffer, write, info);
+ 	}
+ 
+-	if (likely(tail == w)) {
+-		/* Nothing interrupted us between A and C */
+- /*D*/		rb_time_set(&cpu_buffer->write_stamp, info->ts);
+-		/*
+-		 * If something came in between C and D, the write stamp
+-		 * may now not be in sync. But that's fine as the before_stamp
+-		 * will be different and then next event will just be forced
+-		 * to use an absolute timestamp.
+-		 */
+-		if (likely(!(info->add_timestamp &
+-			     (RB_ADD_STAMP_FORCE | RB_ADD_STAMP_ABSOLUTE))))
+-			/* This did not interrupt any time update */
+-			info->delta = info->ts - info->after;
+-		else
+-			/* Just use full timestamp for interrupting event */
+-			info->delta = info->ts;
+-		check_buffer(cpu_buffer, info, tail);
+-	} else {
+-		u64 ts;
+-		/* SLOW PATH - Interrupted between A and C */
+-
+-		/* Save the old before_stamp */
+-		rb_time_read(&cpu_buffer->before_stamp, &info->before);
+-
+-		/*
+-		 * Read a new timestamp and update the before_stamp to make
+-		 * the next event after this one force using an absolute
+-		 * timestamp. This is in case an interrupt were to come in
+-		 * between E and F.
+-		 */
+-		ts = rb_time_stamp(cpu_buffer->buffer);
+-		rb_time_set(&cpu_buffer->before_stamp, ts);
+-
+-		barrier();
+- /*E*/		rb_time_read(&cpu_buffer->write_stamp, &info->after);
+-		barrier();
+- /*F*/		if (write == (local_read(&tail_page->write) & RB_WRITE_MASK) &&
+-		    info->after == info->before && info->after < ts) {
+-			/*
+-			 * Nothing came after this event between C and F, it is
+-			 * safe to use info->after for the delta as it
+-			 * matched info->before and is still valid.
+-			 */
+-			info->delta = ts - info->after;
+-		} else {
+-			/*
+-			 * Interrupted between C and F:
+-			 * Lost the previous events time stamp. Just set the
+-			 * delta to zero, and this will be the same time as
+-			 * the event this event interrupted. And the events that
+-			 * came after this will still be correct (as they would
+-			 * have built their delta on the previous event.
+-			 */
+-			info->delta = 0;
+-		}
+-		info->ts = ts;
+-		info->add_timestamp &= ~RB_ADD_STAMP_FORCE;
+-	}
++	/* Nothing interrupted us between A and C */
++ /*D*/	rb_time_set(&cpu_buffer->write_stamp, info->ts);
++	/*
++	 * If something came in between C and D, the write stamp
++	 * may now not be in sync. But that's fine as the before_stamp
++	 * will be different and then next event will just be forced
++	 * to use an absolute timestamp.
++	 */
++	if (likely(!(info->add_timestamp &
++		     (RB_ADD_STAMP_FORCE | RB_ADD_STAMP_ABSOLUTE))))
++		/* This did not interrupt any time update */
++		info->delta = info->ts - info->after;
++	else
++		/* Just use full timestamp for interrupting event */
++		info->delta = info->ts;
++	check_buffer(cpu_buffer, info, write);
+ 
+ 	/*
+ 	 * If this is the first commit on the page, then it has the same
+ 	 * timestamp as the page itself.
+ 	 */
+-	if (unlikely(!tail && !(info->add_timestamp &
++	if (unlikely(!write && !(info->add_timestamp &
+ 				(RB_ADD_STAMP_FORCE | RB_ADD_STAMP_ABSOLUTE))))
+ 		info->delta = 0;
+ 
+ 	/* We reserved something on the buffer */
+ 
+-	event = __rb_page_index(tail_page, tail);
++	event = __rb_page_index(tail_page, write);
+ 	rb_update_event(cpu_buffer, event, info);
+ 
+ 	local_inc(&tail_page->entries);
+@@ -3572,7 +3534,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+ 	 * If this is the first commit on the page, then update
+ 	 * its timestamp.
+ 	 */
+-	if (unlikely(!tail))
++	if (unlikely(!write))
+ 		tail_page->page->time_stamp = info->ts;
+ 
+ 	/* account for these added bytes */
+-- 
+2.43.0
+
