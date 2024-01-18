@@ -1,51 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2CE3A53;
-	Thu, 18 Jan 2024 14:41:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DD2646;
+	Thu, 18 Jan 2024 14:44:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705588866; cv=none; b=Tse9Jmuc3Se9G0KdHoQoPiygiCu6Qetx854mECegmIjl2RVFzUnvs007hJH6aZP/NeTKk51vCeXG6l8r0IwsjMKFNTyVBbkcP7vp1Sn9EaN8zv3MzQyKByO+15wzdPhAb/eeKVztTwugVBL651sBmNW4+JAGYzF/UAt1CPbbxXc=
+	t=1705589095; cv=none; b=XjHO98/vVqsB8VTqXEskc8BXj1r8ygmUkyAlHvnEDMkL+X3Md3paN58zjxBdwRj1PrtCT/vJcJZORsgVCv+Fz++7oCZDs5XzMOlUJTx1icB1U+fXHIdSuUlU6rTI93FLZx5Z8pcRsxQxw1v3BOxrhB0WVcJWutVojKnZchme96k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705588866; c=relaxed/simple;
-	bh=jbr6rdJ/qeiYoL30WlSwpGj5SzBJllrSxz7PDcWI+jY=;
+	s=arc-20240116; t=1705589095; c=relaxed/simple;
+	bh=FIWDXh4TMq/7lMeI0IsyQDpPlkd6cnqeXUZhP3qX+A4=;
 	h=Received:DKIM-Signature:Received:Date:From:To:Cc:Subject:
 	 Message-ID:Reply-To:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Iu4X6JgJi0zz57ZDhDUd4nmKDWVhVmapkEmoWvPCG4NakKm2nl89tLpJjxYIWVhdfu2500wA7UxGqX4lAEs9AP6mSDTtqC/n3s0aV3EZfF4DURRtuUbGRjX6rx60GPyR1OhY35F3eKrxYhNDS0WGM5Mr/MmieLqVvJKdNBVKnQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UC4J9KD5; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition:In-Reply-To; b=rPkS8VEk9xFotx7xJCr1tDhS6u2xcGdUZOSZv61tiuJS8SaSv0FVB7aCkaAwi14nNTRns9RJhNN0hmW8s1+Ge3gGZCLyMwVvkkbjFDKB6WIIV7YL6Mzu3GDpT891Qk5LuPaq7wrPq/tVuTvohh+fEo6fUOuJAWDcC3HPz+fOJ34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OmfPqywr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UC4J9KD5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A4E4C433F1;
-	Thu, 18 Jan 2024 14:41:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OmfPqywr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBA55C433C7;
+	Thu, 18 Jan 2024 14:44:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705588865;
-	bh=jbr6rdJ/qeiYoL30WlSwpGj5SzBJllrSxz7PDcWI+jY=;
+	s=k20201202; t=1705589094;
+	bh=FIWDXh4TMq/7lMeI0IsyQDpPlkd6cnqeXUZhP3qX+A4=;
 	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=UC4J9KD5DkWzus10ieCSPso1KKv+GxZN/efrkkYGlvJNq/8JzrklGZZzUcPtoBb63
-	 nRapeeZ4STrBg/h272xm9P0M/cjCjO/a3PJukYYbM0pg12EIHLoWCdGBdlL7hrnTz6
-	 Q0xQFpSNsaIyesZZax+USYwBtamZ7n8nt4Lc+KD7mGl2n9vzgQLBSZdivVJEoDINek
-	 /ehG0nL5Z3nlJphQVJaxyRrt3m7B9Xr7rqZpVT9yiEjEp8Shq7F7UzYC5/uhNGqS0V
-	 txOjVqMWDqHHtVyrPN5axaMQ2A8HHJjsxEhPI3vtmHEmQDJ4u9YFfKKh+K1oPTt9Db
-	 4H95w7BbPSRPA==
+	b=OmfPqywrN5vo9zYO6l/kHSO0GOcSt6zCu+Wvibnqme2XW7kQSLfgRs0oWVczAxoXe
+	 d6NWhfOKeQzHtrGjDkmxJlAEDlDzn3aD8aNL9vRJZEm0SjDI+MQR6heyuF2Kv6CW7I
+	 773MMllTjQ9wrci5Imq1JsL9U1M5cYXzd6kpocvZLYQDtVCWtxChhMg/+ixVvuyszl
+	 kvdhYJNQgYKH9322x923TgetLy3Ir43rUh4POtkDWjS+AUPtvnW4hZb6NEV/nwBkaV
+	 tNYjpb78YnDRALYsi4jarc2aLh02j7nV1vdnmHF+qZRk/fceXJFO19DW67eglBw8bc
+	 zbcaUrPpDWnew==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id CB27ECE0546; Thu, 18 Jan 2024 06:41:04 -0800 (PST)
-Date: Thu, 18 Jan 2024 06:41:04 -0800
+	id 50520CE0546; Thu, 18 Jan 2024 06:44:54 -0800 (PST)
+Date: Thu, 18 Jan 2024 06:44:54 -0800
 From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
+To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Chen Zhongjin <chenzhongjin@huawei.com>, linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org, yangjihong1@huawei.com,
 	naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-	davem@davemloft.net, mhiramat@kernel.org, tglx@linutronix.de,
-	peterz@infradead.org, pmladek@suse.com, dianders@chromium.org,
-	npiggin@gmail.com, mpe@ellerman.id.au, jkl820.git@gmail.com,
-	juerg.haefliger@canonical.com, rick.p.edgecombe@intel.com,
-	eric.devolder@oracle.com, mic@digikod.net
-Subject: Re: [PATCH] kprobes: Use synchronize_rcu_tasks_rude in
+	davem@davemloft.net, mhiramat@kernel.org, akpm@linux-foundation.org,
+	tglx@linutronix.de, peterz@infradead.org, pmladek@suse.com,
+	dianders@chromium.org, npiggin@gmail.com, mpe@ellerman.id.au,
+	jkl820.git@gmail.com, juerg.haefliger@canonical.com,
+	rick.p.edgecombe@intel.com, eric.devolder@oracle.com,
+	mic@digikod.net
+Subject: Re: [PATCH v2] kprobes: Use synchronize_rcu_tasks_rude in
  kprobe_optimizer
-Message-ID: <526b12e4-4bb0-47b1-bece-66b47bfc0a92@paulmck-laptop>
+Message-ID: <47e87ff3-2925-4671-89a6-067f36f25d19@paulmck-laptop>
 Reply-To: paulmck@kernel.org
-References: <20240117061636.288412-1-chenzhongjin@huawei.com>
- <20240117123133.2e40438936167e6a4aec8b16@linux-foundation.org>
+References: <20240118021842.290665-1-chenzhongjin@huawei.com>
+ <20240117212646.5f0ddf0c@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -54,10 +55,11 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240117123133.2e40438936167e6a4aec8b16@linux-foundation.org>
+In-Reply-To: <20240117212646.5f0ddf0c@gandalf.local.home>
 
-On Wed, Jan 17, 2024 at 12:31:33PM -0800, Andrew Morton wrote:
-> On Wed, 17 Jan 2024 06:16:36 +0000 Chen Zhongjin <chenzhongjin@huawei.com> wrote:
+On Wed, Jan 17, 2024 at 09:26:46PM -0500, Steven Rostedt wrote:
+> On Thu, 18 Jan 2024 02:18:42 +0000
+> Chen Zhongjin <chenzhongjin@huawei.com> wrote:
 > 
 > > There is a deadlock scenario in kprobe_optimizer():
 > > 
@@ -71,40 +73,60 @@ On Wed, Jan 17, 2024 at 12:31:33PM -0800, Andrew Morton wrote:
 > > To avoid this deadlock loop, use synchronize_rcu_tasks_rude() in kprobe_optimizer()
 > > rather than synchronize_rcu_tasks(). synchronize_rcu_tasks_rude() can also promise
 > > that all preempted tasks have scheduled, but it will not wait tasks_rcu_exit_srcu.
+> > 
+> 
+> Did lockdep detect this? If not, we should fix that.
+> 
+> I'm also thinking if we should find another solution, as this seems more of
+> a work around than a fix.
 
-Hello, Chen Zhongjin,
+My suggestion is at 526b12e4-4bb0-47b1-bece-66b47bfc0a92@paulmck-laptop.
 
-Relying on the non-preemptability of the last portion of the do_exit()
-function does appear to be the basis for a much better solution than
-what we currently have.  So at the very least, thank you for the idea!!!
-I feel a bit silly for not having thought of it myself.  ;-)
+Better suggestions are of course welcome.  ;-)
 
-However, just invoking synchronize_rcu_tasks_rude() will be bad for both
-energy efficiency and real-time response.  This is due to the fact that
-synchronize_rcu_tasks_rude() sends an IPI to each and every online CPUs,
-almost none of which will be in the non-preemptible tail of do_exit()
-at any given time.  These additional unnecessary IPIs will drain battery
-when they hit idle CPUs and degrade real-time response when they hit
-CPUs running aggressive real-time applications.  Which might not make
-people happy.
+> > Fixes: a30b85df7d59 ("kprobes: Use synchronize_rcu_tasks() for optprobe with CONFIG_PREEMPT=y")
+> > Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
+> > ---
+> > v1 -> v2: Add Fixes tag
+> > ---
+> >  arch/Kconfig     | 2 +-
+> >  kernel/kprobes.c | 2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/Kconfig b/arch/Kconfig
+> > index f4b210ab0612..dc6a18854017 100644
+> > --- a/arch/Kconfig
+> > +++ b/arch/Kconfig
+> > @@ -104,7 +104,7 @@ config STATIC_CALL_SELFTEST
+> >  config OPTPROBES
+> >  	def_bool y
+> >  	depends on KPROBES && HAVE_OPTPROBES
+> > -	select TASKS_RCU if PREEMPTION
+> > +	select TASKS_RUDE_RCU
+> 
+> Is this still a bug if PREEMPTION is not enabled?
 
-So, would you be willing to use RCU's do_exit() hooks and RCU's hook
-into the scheduler (either rcu_note_context_switch() or rcu_tasks_qs(),
-whichever would work better) maintain a per-CPU variable that is a
-pointer to the task in the non-preemptible tail of do_exit() if there
-is one or NULL otherwise?  This would get us the deadlock-avoidance
-simplicity of your underlying idea, while avoiding (almost all of)
-the energy-efficiency and real-time-response issues with your patch.
-
-This does require a bit of memory-ordering care, so if you would prefer
-that I do the implementation, just let me know.
-
-(The memory-ordering trick is to use "smp_mb(); smp_load_acquire();" to
-sample the counter and "smp_store_release(); smp_mb();" to update it.)
+Both "select" clauses would be needed for this patch, if I understand
+correctly.
 
 							Thanx, Paul
 
-> > Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
+> -- Steve
 > 
-> Thanks.  Should we backport this fix into earlier kernels?  If so, are
-> we able to identify a suitable Fixes: target?
+> >  
+> >  config KPROBES_ON_FTRACE
+> >  	def_bool y
+> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> > index d5a0ee40bf66..09056ae50c58 100644
+> > --- a/kernel/kprobes.c
+> > +++ b/kernel/kprobes.c
+> > @@ -623,7 +623,7 @@ static void kprobe_optimizer(struct work_struct *work)
+> >  	 * Note that on non-preemptive kernel, this is transparently converted
+> >  	 * to synchronoze_sched() to wait for all interrupts to have completed.
+> >  	 */
+> > -	synchronize_rcu_tasks();
+> > +	synchronize_rcu_tasks_rude();
+> >  
+> >  	/* Step 3: Optimize kprobes after quiesence period */
+> >  	do_optimize_kprobes();
+> 
