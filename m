@@ -1,198 +1,110 @@
-Received: from invmail3.skhynix.com (exvmail3.skhynix.com [166.125.252.90])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 311B41B96D;
-	Thu, 18 Jan 2024 10:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.90
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2CE3A53;
+	Thu, 18 Jan 2024 14:41:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705575343; cv=none; b=tcHoxhT/9eLz8YD8f/kdy+WN+1bEe+6kZX+cTIfqL7DPEdN5UMNPvwxJ8eIlE8odaIijwvpJMlwnLE3NexEWxLSex6gQBS97iJsbAbP6wz3wx2CcIn8CO+fThxCcoQYYb0FliLZhyRbAXFpSN1bqfZg4/7Zrj5I0sd7f71d88Y8=
+	t=1705588866; cv=none; b=Tse9Jmuc3Se9G0KdHoQoPiygiCu6Qetx854mECegmIjl2RVFzUnvs007hJH6aZP/NeTKk51vCeXG6l8r0IwsjMKFNTyVBbkcP7vp1Sn9EaN8zv3MzQyKByO+15wzdPhAb/eeKVztTwugVBL651sBmNW4+JAGYzF/UAt1CPbbxXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705575343; c=relaxed/simple;
-	bh=62k+DYNYiAToaJmsoXZKLChah95X0PxNNmBWywU7twk=;
-	h=X-AuditID:From:To:Cc:Subject:Date:Message-Id:X-Mailer:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:
-	 X-Brightmail-Tracker:X-Brightmail-Tracker:X-CFilter-Loop; b=NPGtj5c+Z8j/Qd8POZQdpwzPU470YKVYyJi3MfRhLrGpb5HTaO6eFbRtRFifrF9lLNVnQ+rO6O4gEuBvi9ypwPIppJ0zPZYkM+tgs5I9vyeEfmUEu4kveZ5Axjyc+Xi3GY/1JbFWXZBmTQTCzOhkIPR+3t7u4Rr/MNT3+6B9UQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc59-bd5ff7000001c92b-70-65a9001d9683
-From: Hyeongtak Ji <hyeongtak.ji@sk.com>
-To: sj@kernel.org
-Cc: akpm@linux-foundation.org,
-	apopple@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	damon@lists.linux.dev,
-	dave.jiang@intel.com,
-	honggyu.kim@sk.com,
-	hyeongtak.ji@sk.com,
-	kernel_team@skhynix.com,
-	linmiaohe@huawei.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	lizhijian@cn.fujitsu.com,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	rakie.kim@sk.com,
-	rostedt@goodmis.org,
-	surenb@google.com,
-	yangx.jy@fujitsu.com,
-	ying.huang@intel.com,
-	ziy@nvidia.com
-Subject: Re: [RFC PATCH 0/4] DAMON based 2-tier memory management for CXL memory
-Date: Thu, 18 Jan 2024 19:40:16 +0900
-Message-Id: <20240118104017.2098-1-hyeongtak.ji@sk.com>
-X-Mailer: git-send-email 2.37.3.windows.1
-In-Reply-To: <20240117211103.51806-1-sj@kernel.org>
-References: <20240117211103.51806-1-sj@kernel.org>
+	s=arc-20240116; t=1705588866; c=relaxed/simple;
+	bh=jbr6rdJ/qeiYoL30WlSwpGj5SzBJllrSxz7PDcWI+jY=;
+	h=Received:DKIM-Signature:Received:Date:From:To:Cc:Subject:
+	 Message-ID:Reply-To:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Iu4X6JgJi0zz57ZDhDUd4nmKDWVhVmapkEmoWvPCG4NakKm2nl89tLpJjxYIWVhdfu2500wA7UxGqX4lAEs9AP6mSDTtqC/n3s0aV3EZfF4DURRtuUbGRjX6rx60GPyR1OhY35F3eKrxYhNDS0WGM5Mr/MmieLqVvJKdNBVKnQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UC4J9KD5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UC4J9KD5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A4E4C433F1;
+	Thu, 18 Jan 2024 14:41:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705588865;
+	bh=jbr6rdJ/qeiYoL30WlSwpGj5SzBJllrSxz7PDcWI+jY=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=UC4J9KD5DkWzus10ieCSPso1KKv+GxZN/efrkkYGlvJNq/8JzrklGZZzUcPtoBb63
+	 nRapeeZ4STrBg/h272xm9P0M/cjCjO/a3PJukYYbM0pg12EIHLoWCdGBdlL7hrnTz6
+	 Q0xQFpSNsaIyesZZax+USYwBtamZ7n8nt4Lc+KD7mGl2n9vzgQLBSZdivVJEoDINek
+	 /ehG0nL5Z3nlJphQVJaxyRrt3m7B9Xr7rqZpVT9yiEjEp8Shq7F7UzYC5/uhNGqS0V
+	 txOjVqMWDqHHtVyrPN5axaMQ2A8HHJjsxEhPI3vtmHEmQDJ4u9YFfKKh+K1oPTt9Db
+	 4H95w7BbPSRPA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id CB27ECE0546; Thu, 18 Jan 2024 06:41:04 -0800 (PST)
+Date: Thu, 18 Jan 2024 06:41:04 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Chen Zhongjin <chenzhongjin@huawei.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, yangjihong1@huawei.com,
+	naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
+	davem@davemloft.net, mhiramat@kernel.org, tglx@linutronix.de,
+	peterz@infradead.org, pmladek@suse.com, dianders@chromium.org,
+	npiggin@gmail.com, mpe@ellerman.id.au, jkl820.git@gmail.com,
+	juerg.haefliger@canonical.com, rick.p.edgecombe@intel.com,
+	eric.devolder@oracle.com, mic@digikod.net
+Subject: Re: [PATCH] kprobes: Use synchronize_rcu_tasks_rude in
+ kprobe_optimizer
+Message-ID: <526b12e4-4bb0-47b1-bece-66b47bfc0a92@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240117061636.288412-1-chenzhongjin@huawei.com>
+ <20240117123133.2e40438936167e6a4aec8b16@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRmVeSWpSXmKPExsXC9ZZnka4sw8pUgwe/tCzmrF/DZrHrRojF
-	/73HGC2e/P/NanHiZiObRef3pSwWl3fNYbO4t+Y/q8WR9WdZLNbdArI2nz3DbLF4uZrFvo4H
-	TBaHv75hsph8aQGbxYspZxgtTs6azGIx++g9dgchj/8HJzF7LD39hs1jQxOQaNl3i91jwaZS
-	j5Yjb1k9Fu95yeSxaVUnm8emT5PYPU7M+M3isfOhpceLzTMZPXqb37F5fN4kF8AXxWWTkpqT
-	WZZapG+XwJXx53YnW8EnzYpfkw+yNDBOkOti5OSQEDCRuL7kIjuMvfLICiYQm01AQ2Jaw2Jm
-	EFtEQFCi//EM1i5GLg5mgRksEhf3HAcrEhYIkHg85wxYEYuAqkTLgk4WEJtXwFxi5u41LBBD
-	NSUmbJkDVs8pYCwx+cREsGVCAkYS29smskHUC0qcnPkErJ5ZQF6ieetsZpBlEgKH2CVWbVjD
-	BDFIUuLgihssExj5ZyHpmYWkZwEj0ypGkcy8stzEzBxjveLsjMq8zAq95PzcTYzAqFtW+ydy
-	B+O3C8GHGAU4GJV4eDOeLE8VYk0sK67MPcQowcGsJMLrb7AsVYg3JbGyKrUoP76oNCe1+BCj
-	NAeLkjiv0bfyFCGB9MSS1OzU1ILUIpgsEwenVAOjhPXVy5c7udb/d02LtrKX1TU5sHLSLPZT
-	tyRZr1bv39J+aGZTSLi7gu7+8+71h6/orFrqe/Pmzs/eh9f//OG2a7Kgtprb028lO5e+qyt8
-	UTZxgsqiKWsuL3cvyfu1I5FjW/qsYnu3x0mV/QXsF6dcEunwaL0+w1L93/nA6NapItFaMxQm
-	KpYsV2Ipzkg01GIuKk4EAA04c1+2AgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRmVeSWpSXmKPExsXCNUPNU1eWYWWqwcW50hZz1q9hs9h1I8Ti
-	/95jjBZP/v9mtThxs5HN4vOz18wWnU++M1ocnnuS1aLz+1IWi8u75rBZ3Fvzn9XiyPqzLBbr
-	bgFZm8+eYbZYvFzN4tC156wW+zoeMFkc/vqGyWLypQVsFi+mnGG0ODlrMovF7KP32B3EPP4f
-	nMTssfT0GzaPDU1AomXfLXaPBZtKPVqOvGX1WLznJZPHplWdbB6bPk1i9zgx4zeLx86Hlh4v
-	Ns9k9Ohtfsfm8e22h8fiFx+YPD5vkgsQiOKySUnNySxLLdK3S+DK+HO7k63gk2bFr8kHWRoY
-	J8h1MXJySAiYSKw8soIJxGYT0JCY1rCYGcQWERCU6H88g7WLkYuDWWAGi8TFPcfBioQFAiQe
-	zzkDVsQioCrRsqCTBcTmFTCXmLl7DQvEUE2JCVvmgNVzChhLTD4xkR3EFhIwktjeNpENol5Q
-	4uTMJ2D1zALyEs1bZzNPYOSZhSQ1C0lqASPTKkaRzLyy3MTMHDO94uyMyrzMCr3k/NxNjMAo
-	W1b7Z9IOxm+X3Q8xCnAwKvHwdjxckSrEmlhWXJl7iFGCg1lJhNffYFmqEG9KYmVValF+fFFp
-	TmrxIUZpDhYlcV6v8NQEIYH0xJLU7NTUgtQimCwTB6dUA2NFlpnYb70PZ7i5l0jdVFHMfLD2
-	Tvp120lf3p2bI/1nh2CruuSsXqYYBu1jn0KbOft/Xw7v6n9RsevFU8VWz0/dRywL/rxiK2Iv
-	3nrIZOPEu0pHP8bvWbTt/j3+61Uz6sVXhWX/zPX9ED5BZKYoU9pKmxdCBZFntH01rTS5f/Bs
-	+ffZO+XUlDNKLMUZiYZazEXFiQBg223CrgIAAA==
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240117123133.2e40438936167e6a4aec8b16@linux-foundation.org>
 
-Hi SeongJae,
+On Wed, Jan 17, 2024 at 12:31:33PM -0800, Andrew Morton wrote:
+> On Wed, 17 Jan 2024 06:16:36 +0000 Chen Zhongjin <chenzhongjin@huawei.com> wrote:
+> 
+> > There is a deadlock scenario in kprobe_optimizer():
+> > 
+> > pid A				pid B			pid C
+> > kprobe_optimizer()		do_exit()		perf_kprobe_init()
+> > mutex_lock(&kprobe_mutex)	exit_tasks_rcu_start()	mutex_lock(&kprobe_mutex)
+> > synchronize_rcu_tasks()		zap_pid_ns_processes()	// waiting kprobe_mutex
+> > // waiting tasks_rcu_exit_srcu	kernel_wait4()
+> > 				// waiting pid C exit
+> > 
+> > To avoid this deadlock loop, use synchronize_rcu_tasks_rude() in kprobe_optimizer()
+> > rather than synchronize_rcu_tasks(). synchronize_rcu_tasks_rude() can also promise
+> > that all preempted tasks have scheduled, but it will not wait tasks_rcu_exit_srcu.
 
-On Wed, 17 Jan 2024 SeongJae Park <sj@kernel.org> wrote:
+Hello, Chen Zhongjin,
 
-[...]
->> Let's say there are 3 nodes in the system and the first node0 and node1
->> are the first tier, and node2 is the second tier.
->> 
->>   $ cat /sys/devices/virtual/memory_tiering/memory_tier4/nodelist
->>   0-1
->> 
->>   $ cat /sys/devices/virtual/memory_tiering/memory_tier22/nodelist
->>   2
->> 
->> Here is the result of partitioning hot/cold memory and I put execution
->> command at the right side of numastat result.  I initially ran each
->> hot_cold program with preferred setting so that they initially allocate
->> memory on one of node0 or node2, but they gradually migrated based on
->> their access frequencies.
->> 
->>   $ numastat -c -p hot_cold
->>   Per-node process memory usage (in MBs) 
->>   PID              Node 0 Node 1 Node 2 Total 
->>   ---------------  ------ ------ ------ ----- 
->>   754 (hot_cold)     1800      0   2000  3800    <- hot_cold 1800 2000 
->>   1184 (hot_cold)     300      0    500   800    <- hot_cold 300 500 
->>   1818 (hot_cold)     801      0   3199  4000    <- hot_cold 800 3200 
->>   30289 (hot_cold)      4      0      5    10    <- hot_cold 3 5 
->>   30325 (hot_cold)     31      0     51    81    <- hot_cold 30 50 
->>   ---------------  ------ ------ ------ ----- 
->>   Total              2938      0   5756  8695
->> 
->> The final node placement result shows that DAMON accurately migrated
->> pages by their hotness for multiple processes.
->
-> What was the result when the corner cases handling logics were not applied?
+Relying on the non-preemptability of the last portion of the do_exit()
+function does appear to be the basis for a much better solution than
+what we currently have.  So at the very least, thank you for the idea!!!
+I feel a bit silly for not having thought of it myself.  ;-)
 
-This is the result of the same test that Honggyu did, but with an insufficient
-corner cases handling logics.
+However, just invoking synchronize_rcu_tasks_rude() will be bad for both
+energy efficiency and real-time response.  This is due to the fact that
+synchronize_rcu_tasks_rude() sends an IPI to each and every online CPUs,
+almost none of which will be in the non-preemptible tail of do_exit()
+at any given time.  These additional unnecessary IPIs will drain battery
+when they hit idle CPUs and degrade real-time response when they hit
+CPUs running aggressive real-time applications.  Which might not make
+people happy.
 
-  $ numastat -c -p hot_cold
+So, would you be willing to use RCU's do_exit() hooks and RCU's hook
+into the scheduler (either rcu_note_context_switch() or rcu_tasks_qs(),
+whichever would work better) maintain a per-CPU variable that is a
+pointer to the task in the non-preemptible tail of do_exit() if there
+is one or NULL otherwise?  This would get us the deadlock-avoidance
+simplicity of your underlying idea, while avoiding (almost all of)
+the energy-efficiency and real-time-response issues with your patch.
 
-  Per-node process memory usage (in MBs)
-  PID             Node 0 Node 1 Node 2 Total
-  --------------  ------ ------ ------ -----
-  862 (hot_cold)    2256      0   1545  3801   <- hot_cold 1800 2000
-  863 (hot_cold)     403      0    398   801   <- hot_cold 300 500
-  864 (hot_cold)    1520      0   2482  4001   <- hot_cold 800 3200
-  865 (hot_cold)       6      0      3     9   <- hot_cold 3 5
-  866 (hot_cold)      29      0     52    81   <- hot_cold 30 50
-  --------------  ------ ------ ------ -----
-  Total             4215      0   4480  8695
+This does require a bit of memory-ordering care, so if you would prefer
+that I do the implementation, just let me know.
 
-As time goes by, DAMON keeps trying to split the hot/cold region, but it does
-not seem to be enough.
+(The memory-ordering trick is to use "smp_mb(); smp_load_acquire();" to
+sample the counter and "smp_store_release(); smp_mb();" to update it.)
 
-  $ numastat -c -p hot_cold
+							Thanx, Paul
 
-  Per-node process memory usage (in MBs)
-  PID             Node 0 Node 1 Node 2 Total
-  --------------  ------ ------ ------ -----
-  862 (hot_cold)    2022      0   1780  3801   <- hot_cold 1800 2000
-  863 (hot_cold)     351      0    450   801   <- hot_cold 300 500
-  864 (hot_cold)    1134      0   2868  4001   <- hot_cold 800 3200
-  865 (hot_cold)       7      0      2     9   <- hot_cold 3 5
-  866 (hot_cold)      43      0     39    81   <- hot_cold 30 50
-  --------------  ------ ------ ------ -----
-  Total             3557      0   5138  8695
-
->
-> And, what are the corner cases handling logic that seemed essential?  I show
-> the page granularity active/reference check could indeed provide many
-> improvements, but that's only my humble assumption.
-
-Yes, the page granularity active/reference check is essential.  To make the
-above "insufficient" result, the only thing I did was to promote
-inactive/not_referenced pages.
-
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index f03be320f9ad..c2aefb883c54 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1127,9 +1127,7 @@ static unsigned int __promote_folio_list(struct list_head *folio_list,
-                VM_BUG_ON_FOLIO(folio_test_active(folio), folio);
-
-                references = folio_check_references(folio, sc);
--               if (references == FOLIOREF_KEEP ||
--                   references == FOLIOREF_RECLAIM ||
--                   references == FOLIOREF_RECLAIM_CLEAN)
-+               if (references == FOLIOREF_KEEP )
-                        goto keep_locked;
-
-                /* Relocate its contents to another node. */
-
->
-> If the corner cases are indeed better to be applied in page granularity, I
-> agree we need some more efforts since DAMON monitoring results are not page
-> granularity aware by the design.  Users could increase min_nr_regions to make
-> it more accurate, and we have plan to support page granularity monitoring,
-> though.  But maybe the overhead could be unacceptable.
->
-> Ideal solution would be making DAMON more accurate while keeping current level
-> of overhead.  We indeed have TODO items for DAMON accuracy improvement, but
-> this may take some time that might unacceptable for your case.
->
-> If that's the case, I think the additional corner handling (or, page gran
-> additional access check) could be made as DAMOS filters[1], since DAMOS filters
-> can be applied in page granularity, and designed for this kind of handling of
-> information that DAMON monitoring results cannot provide.  More specifically,
-> we could have filters for promotion-qualifying pages and demotion-qualifying
-> pages.  In this way, I think we can keep the action more flexible while the
-> filters can be applied in creative ways.
-
-Making corner handling as a new DAMOS filters is a good idea.  I'm just a bit
-concerned if adding new filters might cause users to care more.
-
-Kind regards,
-Hyeongtak
+> > Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
+> 
+> Thanks.  Should we backport this fix into earlier kernels?  If so, are
+> we able to identify a suitable Fixes: target?
