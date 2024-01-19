@@ -1,169 +1,229 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301235822A
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Jan 2024 17:57:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB45C1E498;
+	Fri, 19 Jan 2024 20:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705687074; cv=none; b=h/HeCDCKaz5I5AyDpfz/BY6WcEcopn7URBZDzEtPgiINk+m3+29P1bdB9jqSe42GV67c3c7MyOGFkXGueL4QoF6GImm8+GXlb5rza1f3nP9QVNV4Dq0exuQEDfqdkFFzwmrrm968049qnsXnzFwZth6hiQrQYbVQiEfEVcnA3j4=
+	t=1705697787; cv=none; b=nE8aJffjsEH06TinOYLQO1rLzG+ldDx8MGOvH+iNgh0WSGbgh6SW9TXGb82NHYIaoxPsbfr0JTHa92vyIwh2Pn8CxqciuFclRi7t1WENtBgJXolP0HpeuQkTuki6MuSvYa3796u/6TJXk8wYU20vTPbbBQyRYZp7Rpt6U0Ljil8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705687074; c=relaxed/simple;
-	bh=Hs5EhcUi8XoiZYod5yUZE9vnnJwoed4gSPgHtPxEZEo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UCZp+ZSEve1qEuAtwd2LvXwR4XYHLzWwg/X3ZOQT3zrlNvgFMfNETTdTEqTVJ9EXROSGJdEpitITQULs2iRCIwwT5VFLdO5cHE/0eRaeiVUGgOsBitP9RnOKAWnlAlS1kl5BFcWh0Jy4TB3OoAxaPaXdwp3bUtOsFZL10Xq4e/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NvbwUvsW; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1705697787; c=relaxed/simple;
+	bh=muiy5JFaVef6TBO8rX0XRJL32UzwlIuJnjxRIfVC5hk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d2crBIjBZCBqDaXr3nUcjrZeqb/9Mj8YiuiGh8uMWwvR8a91s+uHJbKatqrLtQFJkmujNmpM9Hc07gtIyJJpvh9u6sT8FFp170m7JBlHqosnE6ixLkzavGynn5yA402xPXWHG2LNxRjTUoXQZFQ4q5T3X+ePFelEmmS7cozD9QE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=m9VX2ryS; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NvbwUvsW"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5cf87cdc4c5so893451a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 19 Jan 2024 09:57:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705687072; x=1706291872; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=STdvALwx1cJlhI4fFxZ8A3ouzBnNEklbbv9BMOJUhas=;
-        b=NvbwUvsWrEVlcfhW7AgGuAINh8pp1XjxCrJzYyZaS4lMga7u+djlqr9uLY5vBhaZlx
-         U1IM4aer3ms10BfUiMdzGfowzuDhsA46bZ/YX94W2txmPdZhzjhE5Y8YSqBh5IFtuzEw
-         0vwC6dNUDNpycOCAsIIXcmpVmrK4D/g6KSXp1bTUvlglIJpgOFEZFx1P05LXkJ2B5U1G
-         Y/erq/fojEvcPeW1vNkaa34uDYcaN3yV43Rs2kn3YBFO210ytnnqWqEx/HtmpPdhZ3dV
-         OGeNcYdvYl/RfiCay+vOQa+r2dtGE7LyNbdPnF1O/uPXpi+j84ysPacyGarqwqgxWLge
-         AqFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705687072; x=1706291872;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=STdvALwx1cJlhI4fFxZ8A3ouzBnNEklbbv9BMOJUhas=;
-        b=iTxdA23iR84wdk/ePp4kk6qf4AW3w9blmG19emqD68pyfxoKprBg3X30oCL5JGDi7o
-         hBa+cAYYn68/CKl6cW5hwOdbhyXb/wDBHw3UKe9b5daYqOQ8CyIz4TOL0lw27ZChc7sv
-         EJY6DtRtZ8T325ipdzbzvUyStOMrEFJYs6/tXDnsXC5nR9eZQH3vKKqpej6aBU6ZoLnQ
-         NjdcWvIjgJffKiwtyiRgCJGtCQAI6I6JJO74PavVCzqjuRqt6BzY5iqwJNbptPdQSTcu
-         HOOsC6BnQlf2YdiOgtU+lytHdWG/6ZXAm786Xp7zQugsSSVF2nzSS274sxxWmdASGZjU
-         E4WA==
-X-Gm-Message-State: AOJu0YxujsjhEbTX9QdEDsHrzHZnO2XiovowNpml3zoXp1cy88a9pYyq
-	Lxc3CyQbHrVa8EdMGk9qw3v7+jcZln9QzFftdM56oLLUJpjln/6PqiXtSVHZ47Pbh1Z+V7c8iEf
-	GKSSQyBbVcX/U6U0xzmvkJRLhHq+VEYuGRJC+xg==
-X-Google-Smtp-Source: AGHT+IH8ETPC9j1JKPobq2N1D5kovws7zB1ri83OldKaisFdDCCHf09XHHhY7RBpbmGdFefsj+FA8yRNnpVs7aLmQm0=
-X-Received: by 2002:a17:90b:157:b0:290:2c5:b231 with SMTP id
- em23-20020a17090b015700b0029002c5b231mr116943pjb.81.1705687072457; Fri, 19
- Jan 2024 09:57:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="m9VX2ryS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1705697782;
+	bh=muiy5JFaVef6TBO8rX0XRJL32UzwlIuJnjxRIfVC5hk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=m9VX2rySbl+NQBI6UlFPdkUL3FKfio8RPM9AZxstIGBscu0QhC0qJoaRxKeWswLE+
+	 un+SD/tOx44WKA4TflB4DqEFqhSdXnrR6flMmadWRkDmJvJ1Y/cDXgMxJp9QzPojI0
+	 TskuF9OlFhoW+GfiIjtbae+s6s4BBIGXpFYfvB2y1/LfkcBfZ+DhJlhHUzhNDziMJG
+	 60hoOKSsaA+m0uw5TLpI1IhWAIEEUwytxj2QBxchNAFMmHujUXlq22QeGTT90EcBSi
+	 JHMwSC8EtziUmgfodpgcS/gIz6RftkWRV5MmsOzIFDgW/jLXW39Kz5KfAU7lUaa7zF
+	 tWGVNQmt93gZw==
+Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TGsNQ1mjCzTZP;
+	Fri, 19 Jan 2024 15:56:22 -0500 (EST)
+Message-ID: <cd3f37cc-31ba-4eb4-8d67-852d05570e7b@efficios.com>
+Date: Fri, 19 Jan 2024 15:56:21 -0500
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240108134843.429769-1-vincent.guittot@linaro.org>
- <d37e3d06-d9fc-4fc3-ad92-e7031489660a@arm.com> <CAKfTPtAOSgnStDSao1QarHuUW9BTfk1o7r6NO4LhwEJMhq1drg@mail.gmail.com>
- <5ac0df44-82b6-463b-a805-65f93d181215@arm.com>
-In-Reply-To: <5ac0df44-82b6-463b-a805-65f93d181215@arm.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Fri, 19 Jan 2024 18:57:41 +0100
-Message-ID: <CAKfTPtCK-YeM4cJehSb8G0aj40rjGgq2kG-ddgKxdAMAvkbZQg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/5] Rework system pressure interface to the scheduler
-To: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
-	sudeep.holla@arm.com, rafael@kernel.org, viresh.kumar@linaro.org, 
-	agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org, 
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, bristot@redhat.com, 
-	vschneid@redhat.com, lukasz.luba@arm.com, rui.zhang@intel.com, 
-	mhiramat@kernel.org, daniel.lezcano@linaro.org, amit.kachhap@gmail.com, 
-	corbet@lwn.net, gregkh@linuxfoundation.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	qyousef@layalina.io
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ring-buffer: Simplify reservation with try_cmpxchg() loop
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Philippe Proulx <pproulx@efficios.com>
+References: <20240118181206.4977da2f@gandalf.local.home>
+ <504085e9-bf91-4948-a158-abae5dcb276a@efficios.com>
+ <20240119103754.154dc009@gandalf.local.home>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+In-Reply-To: <20240119103754.154dc009@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 10 Jan 2024 at 19:10, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->
-> On 09/01/2024 14:29, Vincent Guittot wrote:
-> > On Tue, 9 Jan 2024 at 12:34, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
-> >>
-> >> On 08/01/2024 14:48, Vincent Guittot wrote:
-> >>> Following the consolidation and cleanup of CPU capacity in [1], this serie
-> >>> reworks how the scheduler gets the pressures on CPUs. We need to take into
-> >>> account all pressures applied by cpufreq on the compute capacity of a CPU
-> >>> for dozens of ms or more and not only cpufreq cooling device or HW
-> >>> mitigiations. we split the pressure applied on CPU's capacity in 2 parts:
-> >>> - one from cpufreq and freq_qos
-> >>> - one from HW high freq mitigiation.
-> >>>
-> >>> The next step will be to add a dedicated interface for long standing
-> >>> capping of the CPU capacity (i.e. for seconds or more) like the
-> >>> scaling_max_freq of cpufreq sysfs. The latter is already taken into
-> >>> account by this serie but as a temporary pressure which is not always the
-> >>> best choice when we know that it will happen for seconds or more.
-> >>
-> >> I guess this is related to the 'user space system pressure' (*) slide of
-> >> your OSPM '23 talk.
-> >
-> > yes
-> >
-> >>
-> >> Where do you draw the line when it comes to time between (*) and the
-> >> 'medium pace system pressure' (e.g. thermal and FREQ_QOS).
-> >
-> > My goal is to consider the /sys/../scaling_max_freq as the 'user space
-> > system pressure'
-> >
-> >>
-> >> IIRC, with (*) you want to rebuild the sched domains etc.
-> >
-> > The easiest way would be to rebuild the sched_domain but the cost is
-> > not small so I would prefer to skip the rebuild and add a new signal
-> > that keep track on this capped capacity
->
-> Are you saying that you don't need to rebuild sched domains since
-> cpu_capacity information of the sched domain hierarchy is
-> independently updated via:
->
-> update_sd_lb_stats() {
->
->   update_group_capacity() {
->
->     if (!child)
->       update_cpu_capacity(sd, cpu) {
->
->         capacity = scale_rt_capacity(cpu) {
->
->           max = get_actual_cpu_capacity(cpu) <- (*)
->         }
->
->         sdg->sgc->capacity = capacity;
->         sdg->sgc->min_capacity = capacity;
->         sdg->sgc->max_capacity = capacity;
->       }
->
->   }
->
-> }
->
-> (*) influence of temporary and permanent (to be added) frequency
-> pressure on cpu_capacity (per-cpu and in sd data)
+On 2024-01-19 10:37, Steven Rostedt wrote:
+> On Fri, 19 Jan 2024 09:40:27 -0500
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+> 
+>> On 2024-01-18 18:12, Steven Rostedt wrote:
+>>> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+>>>
 
+[...]
 
-I'm more concerned by rd->max_cpu_capacity which remains at original
-capacity and triggers spurious LB if we take into account the
-userspace max freq instead of the original max compute capacity of a
-CPU. And also how to manage this in RT and DL
+>>> Although, it does not get rid of the double time stamps (before_stamp and
+>>> write_stamp), using cmpxchg() does get rid of the more complex case when
+>>> an interrupting event occurs between getting the timestamps and reserving
+>>> the data, as when that happens, it just tries again instead of dealing
+>>> with it.
+>>
+>> I understand that the reason why you need the before/after stamps and their
+>> associated complexity is because the Ftrace ring buffer ABI encodes event
+>> timestamps as delta from the previous event within the buffer as a mean of
+>> compressing the timestamp fields. If the delta cannot be represented in a
+>> given number of bits, then it inserts a 64-bit timestamp (not sure if that
+>> one is absolute or a delta from previous event).
+> 
+> There's both. An extended timestamp, which is added when the delta is too
+> big, and that too is just a delta from the previous event. And there is the
+> absolute timestamp as well. I could always just use the absolute one. That
+> event came much later.
 
->
->
-> example: hackbench on h960 with IPA:
->                                                                                   cap  min  max
-> ...
-> hackbench-2284 [007] .Ns..  2170.796726: update_group_capacity: sdg !child cpu=7 1017 1017 1017
-> hackbench-2456 [007] ..s..  2170.920729: update_group_capacity: sdg !child cpu=7 1018 1018 1018
->     <...>-2314 [007] ..s1.  2171.044724: update_group_capacity: sdg !child cpu=7 1011 1011 1011
-> hackbench-2541 [007] ..s..  2171.168734: update_group_capacity: sdg !child cpu=7  918  918  918
-> hackbench-2558 [007] .Ns..  2171.228716: update_group_capacity: sdg !child cpu=7  912  912  912
->     <...>-2321 [007] ..s..  2171.352718: update_group_capacity: sdg !child cpu=7  812  812  812
-> hackbench-2553 [007] ..s..  2171.476721: update_group_capacity: sdg !child cpu=7  640  640  640
->     <...>-2446 [007] ..s2.  2171.600743: update_group_capacity: sdg !child cpu=7  610  610  610
-> hackbench-2347 [007] ..s..  2171.724738: update_group_capacity: sdg !child cpu=7  406  406  406
-> hackbench-2331 [007] .Ns1.  2171.848768: update_group_capacity: sdg !child cpu=7  390  390  390
-> hackbench-2421 [007] ..s..  2171.972733: update_group_capacity: sdg !child cpu=7  388  388  388
-> ...
+OK
+
+> 
+>>
+>> This timestamp encoding as delta between events introduce a strong
+>> inter-dependency between consecutive (nested) events, and is the reason
+>> why you are stuck with all this timestamp before/after complexity.
+>>
+>> The Common Trace Format specifies (and LTTng implements) a different way
+>> to achieve the same ring buffer space-savings achieved with timestamp deltas
+>> while keeping the timestamps semantically absolute from a given reference,
+>> hence without all the before/after timestamp complexity. You can see the
+>> clock value decoding procedure in the CTF2 SPEC RC9 [1] document. The basic
+> 
+> That points to this:
+> 
+> ---------------------8<-------------------------
+> 6.3. Clock value update procedure
+> To update DEF_CLK_VAL from an unsigned integer field F having the unsigned integer value V and the class C:
+> 
+> Let L be an unsigned integer initialized to, depending on the type property of C:
+> 
+> "fixed-length-unsigned-integer"
+> The value of the length property of C.
+> 
+> "variable-length-unsigned-integer"
+> S ×7, where S is the number of bytes which F occupies with the data stream.
+> 
+> Let MASK be an unsigned integer initialized to 2L − 1.
+> 
+> Let H be an unsigned integer initialized to DEF_CLK_VAL & ~MASK, where “&” is the bitwise AND operator and “~” is the bitwise NOT operator.
+> 
+> Let CUR be an unsigned integer initialized to DEF_CLK_VAL & MASK, where “&” is the bitwise AND operator.
+> 
+> Set DEF_CLK_VAL to:
+> 
+> If V ≥ CUR
+> H + V
+> 
+> Else
+> H + MASK + 1 + V
+> --------------------->8-------------------------
+> 
+> There's a lot of missing context there, so I don't see how it relates.
+
+This explains how the "current time" is reconstructed by a trace reader
+when loading an event header timestamp field. But for the sake of this
+discussion we can focus on the less formal explanation of how the tracer
+generates this timestamp encoding provided below.
+
+>> idea on the producer side is to record the low-order bits of the current
+>> timestamp in the event header (truncating the higher order bits), and
+>> fall back on a full 64-bit value if the number of low-order bits overflows
+>> from the previous timestamp is more than 1, or if it is impossible to figure
+>> out precisely the timestamp of the previous event due to a race. This achieves
+>> the same space savings as delta timestamp encoding without introducing the
+>> strong event inter-dependency.
+> 
+> So when an overflow happens, you just insert a timestamp, and then events
+> after that is based on that?
+
+No. Let's use an example to show how it works.
+
+For reference, LTTng uses 5-bit for event ID and 27-bit for timestamps
+in the compact event header representation. But for the sake of making this
+discussion easier, let's assume a tracer would use 16-bit for timestamps in the
+compact representation.
+
+Let's say we have the following ktime_get() values (monotonic timestamp value) for
+a sequence of events:
+
+                                   Timestamp (Hex)    Encoding in the trace
+
+Packet header timestamp begin     0x12345678         64-bit: 0x12345678
+
+Event 1                           0x12345678         16-bit: 0x5678
+    (When decoded, same value as previous timestamp, no overflow)
+Event 2                           0x12347777         16-bit: 0x7777
+    (When decoded, going from "0x5678" to "0x7777" does not overflow 16-bit)
+Event 3                           0x12350000         16-bit: 0x0000
+    (When decoded, going from "0x7777" to "0x0000" overflow 16-bit exactly once
+     which allows the trace reader to reconstruct timestamp 0x12350000 from the
+     previous timestamp and the 16-bit timestamp encoding.)
+Event 4                           0x12370000         64-bit: 0x12370000
+    (Encoding over 16-bit not possible because going from 0x12350000 to
+     0x12370000 would overflow 16-bit twice, which cannot be detected
+     by a trace reader. Therefore use the full 64-bit timestamp in the
+     "large" event header representation.)
+
+> 
+>>
+>> The fact that Ftrace exposes this ring buffer binary layout as a user-space
+>> ABI makes it tricky to move to the Common Trace Format timestamp encoding.
+>> There are clearly huge simplifications that could be made by moving to this
+>> scheme though. Is there any way to introduce a different timestamp encoding
+>> scheme as an extension to the Ftrace ring buffer ABI ? This would allow us to
+>> introduce this simpler scheme and gradually phase out the more complex delta
+>> encoding when no users are left.
+> 
+> I'm not sure if there's a path forward. The infrastructure can easily swap
+> in and out a new implementation. That is, there's not much dependency on
+> the way the ring buffer works outside the ring buffer itself.
+> 
+> If we were to change the layout, it would likely require a new interface
+> file to read. The trace_pipe_raw is the only file that exposes the current
+> ring buffer. We could create a trace_out_raw or some other named file that
+> has a completely different API and it wouldn't break any existing API.
+
+Or introduce "trace_pipe_raw2" or some kind of versioned file names as new
+ABIs.
+
+> Although, if we want to change the "default" way, it may need some other
+> knobs or something, which wouldn't be hard.
+
+The delta-timestamp-encoding would have to stay there for a while as long
+as users have not switched over to trace_pipe_raw2. Then when it's really
+gone, the trace_pipe_raw could either go away or return an error when
+opened.
+
+> Now I have to ask, what's the motivation for this. The code isn't that
+> complex anymore. Yes it still has the before/after timestamps, but the
+> most complexity in that code was due to what happens in the race of
+> updating the reserved data. But that's no longer the case with the
+> cmpxchg(). If you look at this patch, that entire else statement was
+> deleted. And that deleted code was what made me sick to my stomach ;-)
+> Good riddance!
+
+The motivation for this would be to further simplify the implementation
+of __rb_reserve_next(), rb_add_timestamp(), and rb_try_to_discard(), and
+remove a few useless loads, stores, and conditional branches on the fast-path
+of __rb_reserve_next(). This would turn the before/after timestamp
+stores/loads/comparisons into a simple "last timestamp" field and a comparison
+of the current timestamp against the "last timestamp" value to figure out
+whether the compact representation can be used.
+
+I don't know whether it's worth the trouble or not, it's really up to you. :)
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
+
