@@ -1,169 +1,184 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D54554FB0;
-	Fri, 19 Jan 2024 14:57:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637B154BC7;
+	Fri, 19 Jan 2024 15:36:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705676231; cv=none; b=Mq/aRQ0YJQyuhZfTICHeho0D2m+4te0wIMuC0fHYsPhYepdyzdY73sOS/5IXqfvqAC6tlQwhzG1xf+lkf3hJdsNgRG8q/2RGcNA529cvnIwqLXNZU82QklM9H/4eHbiaY2a1dmGaxRtH6U5jyu5uleyYfYct9cmy5j3qP2BdhtM=
+	t=1705678594; cv=none; b=uNEJBaCfrIE0Ux69ZPVG/IqqPKXPDY3c4fgF2LYoAech2nshJGMBH7+v3wp3vQOWifOFARQXopMan0VySfjw95zcgY8lZPbXb5ZKIqEOAslgg9Y1MGbwOH3A6DDyV93m3utrU2xw4Eldy/+Balia/4Ec4uYw0GK5+CSTSIY9y2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705676231; c=relaxed/simple;
-	bh=0+4OncppuBjBS1DVIfYJuQGGGGBFqfj/oxaz1paaCyQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=UWi/YHeo2KPfh/rICxSPTprWuc3zopQOtCbUxWEM0WPrdUbWxORxUHV6hPhr2xqee9vJnP28kEn85z7jtD3bRwamyN5W/a6idTVEpqTSmir29VM8P7/qkgn19dzffIMxGNdAT97ZW1McocZMcrI16AiX3+Pq0IDp52AhVzmflqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QXRT9MRD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QXRT9MRD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1C39C433C7;
-	Fri, 19 Jan 2024 14:57:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705676230;
-	bh=0+4OncppuBjBS1DVIfYJuQGGGGBFqfj/oxaz1paaCyQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QXRT9MRDy4dwtum2pdDyfttpjOhV+jaVO+YRpimt8H7Uu/VnpsEzWFFizHIz9K20b
-	 gX79Xd4wDztLkTQxv3+MYHsmHfUFbiDYlMjryPsFSu9ZCtJFJbyki6ABESpIdQWA46
-	 4XwBbGk+B1LwFC11+eCEBVbQHq10zQ9HzbTopW2K7Egq+ZBlV2Pk6wF53SGKVKmzgf
-	 xpSa9NZUe0gR73S29Tff6ducCusnn53LBHS0TZ05ojq9fqXTu8cZhLgk8BBjwCZpmG
-	 kBKj2zdqvmoILKR5bpi6LxpaFOOy4cUEc+ZuXywlrqqRoAGZ6fBmfn+lnMeAVoVPY8
-	 aW+dNFttzTXAQ==
-Date: Fri, 19 Jan 2024 23:57:06 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Ye Bin <yebin10@huawei.com>
-Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
- <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] tracing/probes: support '%pd' type for print struct
- dentry's name
-Message-Id: <20240119235706.65ff7f6c9a7a6ad8a79934af@kernel.org>
-In-Reply-To: <20240119013848.3111364-2-yebin10@huawei.com>
-References: <20240119013848.3111364-1-yebin10@huawei.com>
-	<20240119013848.3111364-2-yebin10@huawei.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1705678594; c=relaxed/simple;
+	bh=mdLArEAx2++hnsF4nRXH6+e4vKM3ueZvivxFppef9Do=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sIhk8hCEJAuV46jBKipzXCUOA83nkpSAgV7kT2FjTBTUI0taQrhDxqj9dpi8SHETjaGx1B1YPmDWvnjLarU+6wexXHJYR7Psxlo8k7oDroHNN7PjtlX4yID3uvulik0zCVNgP0eCm/KDozDpn/mRVeNBxCGKPM9E7vkVyIHicJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29257C433C7;
+	Fri, 19 Jan 2024 15:36:33 +0000 (UTC)
+Date: Fri, 19 Jan 2024 10:37:54 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] ring-buffer: Simplify reservation with try_cmpxchg()
+ loop
+Message-ID: <20240119103754.154dc009@gandalf.local.home>
+In-Reply-To: <504085e9-bf91-4948-a158-abae5dcb276a@efficios.com>
+References: <20240118181206.4977da2f@gandalf.local.home>
+	<504085e9-bf91-4948-a158-abae5dcb276a@efficios.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 19 Jan 2024 09:38:46 +0800
-Ye Bin <yebin10@huawei.com> wrote:
+On Fri, 19 Jan 2024 09:40:27 -0500
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-> Similar to '%pd' for printk, use 'pd' for print struct dentry's name.
+> On 2024-01-18 18:12, Steven Rostedt wrote:
+> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> >=20
+> > Instead of using local_add_return() to reserve the ring buffer data,
+> > Mathieu Desnoyers suggested using local_cmpxchg(). This would simplify =
+the
+> > reservation with the time keeping code. =20
+>=20
+> I admire the effort of trying to simplify the Ftrace ring buffer by bring=
+ing
+> over ideas that worked well for LTTng. :-) As reviewer of the tracing sub=
+system,
+> I certainly welcome the simplifications.
+>=20
 
-No, please use '%pd' as a type instead.
+The idea itself wasn't new. It was you convincing me that
+local_add_return() is no faster than local_cmpxchg(). As I would have done
+it this way from the start if I wasn't dead set against adding any new
+cmpxchg() in the fast path.
 
-> 
-> Signed-off-by: Ye Bin <yebin10@huawei.com>
-> ---
->  kernel/trace/trace_probe.c | 38 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
-> 
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index 4dc74d73fc1d..460f98b85b1c 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -11,6 +11,7 @@
->   */
->  #define pr_fmt(fmt)	"trace_probe: " fmt
->  
-> +#include <linux/dcache.h>
->  #include <linux/bpf.h>
->  #include "trace_btf.h"
->  
-> @@ -86,6 +87,8 @@ static const struct fetch_type probe_fetch_types[] = {
->  			    "__data_loc char[]"),
->  	__ASSIGN_FETCH_TYPE("symstr", string, string, sizeof(u32), 1, 1,
->  			    "__data_loc char[]"),
-> +	__ASSIGN_FETCH_TYPE("pd", string, string, sizeof(u32), 1, 1,
-> +			    "__data_loc char[]"),
+Testing showed that local_add_return() is pretty much just as bad, so the
+added complexity to avoid just slapping in a cmpxchg() was useless.
 
-And you don't need to add a new type.
-Similar to the preprocessor macro, this should be done before parsing the
-args. See traceprobe_expand_meta_args(), you can scan the args and search
-argument end with ':%pd'. If you find that, you can replace it with 
-"+0x%lx(%s):string". Then, you don't need any of these complex fetch type.
+> > Although, it does not get rid of the double time stamps (before_stamp a=
+nd
+> > write_stamp), using cmpxchg() does get rid of the more complex case when
+> > an interrupting event occurs between getting the timestamps and reservi=
+ng
+> > the data, as when that happens, it just tries again instead of dealing
+> > with it. =20
+>=20
+> I understand that the reason why you need the before/after stamps and the=
+ir
+> associated complexity is because the Ftrace ring buffer ABI encodes event
+> timestamps as delta from the previous event within the buffer as a mean of
+> compressing the timestamp fields. If the delta cannot be represented in a
+> given number of bits, then it inserts a 64-bit timestamp (not sure if that
+> one is absolute or a delta from previous event).
 
-Thank you,
+There's both. An extended timestamp, which is added when the delta is too
+big, and that too is just a delta from the previous event. And there is the
+absolute timestamp as well. I could always just use the absolute one. That
+event came much later.
 
->  	/* Basic types */
->  	ASSIGN_FETCH_TYPE(u8,  u8,  0),
->  	ASSIGN_FETCH_TYPE(u16, u16, 0),
-> @@ -1090,6 +1093,25 @@ static int __parse_bitfield_probe_arg(const char *bf,
->  	return (BYTES_TO_BITS(t->size) < (bw + bo)) ? -EINVAL : 0;
->  }
->  
-> +static char* traceprobe_expand_dentry(const char *argv)
-> +{
-> +	#define DENTRY_EXPAND_LEN 7  /* +0xXX() */
-> +	char *new_argv;
-> +	int len = strlen(argv) + 1 + DENTRY_EXPAND_LEN;
-> +
-> +	new_argv = kmalloc(len, GFP_KERNEL);
-> +	if (!new_argv)
-> +		return NULL;
-> +
-> +	if (snprintf(new_argv, len, "+0x%lx(%s)",
-> +		     offsetof(struct dentry, d_name.name), argv) >= len) {
-> +		kfree(new_argv);
-> +		return NULL;
-> +	}
-> +
-> +	return new_argv;
-> +}
-> +
->  /* String length checking wrapper */
->  static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
->  					   struct probe_arg *parg,
-> @@ -1099,6 +1121,7 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
->  	char *t, *t2, *t3;
->  	int ret, len;
->  	char *arg;
-> +	char *org_arg = NULL;
->  
->  	arg = kstrdup(argv, GFP_KERNEL);
->  	if (!arg)
-> @@ -1182,6 +1205,16 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
->  			 parg->count);
->  	}
->  
-> +	if (!strcmp("pd", parg->type->name)) {
-> +		char *temp;
-> +
-> +		temp = traceprobe_expand_dentry(arg);
-> +		if (!temp)
-> +			goto out;
-> +		org_arg = arg;
-> +		arg = temp;
-> +	}
-> +
->  	code = tmp = kcalloc(FETCH_INSN_MAX, sizeof(*code), GFP_KERNEL);
->  	if (!code)
->  		goto out;
-> @@ -1243,6 +1276,10 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
->  				goto fail;
->  			}
->  		}
-> +
-> +		if (!strcmp(parg->type->name, "pd"))
-> +			code++;
-> +
->  		/* If op == DEREF, replace it with STRING */
->  		if (!strcmp(parg->type->name, "ustring") ||
->  		    code->op == FETCH_OP_UDEREF)
-> @@ -1321,6 +1358,7 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
->  	kfree(tmp);
->  out:
->  	kfree(arg);
-> +	kfree(org_arg);
->  
->  	return ret;
->  }
-> -- 
-> 2.31.1
-> 
+>=20
+> This timestamp encoding as delta between events introduce a strong
+> inter-dependency between consecutive (nested) events, and is the reason
+> why you are stuck with all this timestamp before/after complexity.
+>=20
+> The Common Trace Format specifies (and LTTng implements) a different way
+> to achieve the same ring buffer space-savings achieved with timestamp del=
+tas
+> while keeping the timestamps semantically absolute from a given reference,
+> hence without all the before/after timestamp complexity. You can see the
+> clock value decoding procedure in the CTF2 SPEC RC9 [1] document. The bas=
+ic
+
+That points to this:
+
+---------------------8<-------------------------
+6.3. Clock value update procedure
+To update DEF_CLK_VAL from an unsigned integer field F having the unsigned =
+integer value V and the class C:
+
+Let L be an unsigned integer initialized to, depending on the type property=
+ of C:
+
+"fixed-length-unsigned-integer"
+The value of the length property of C.
+
+"variable-length-unsigned-integer"
+S =C3=977, where S is the number of bytes which F occupies with the data st=
+ream.
+
+Let MASK be an unsigned integer initialized to 2L =E2=88=92 1.
+
+Let H be an unsigned integer initialized to DEF_CLK_VAL & ~MASK, where =E2=
+=80=9C&=E2=80=9D is the bitwise AND operator and =E2=80=9C~=E2=80=9D is the=
+ bitwise NOT operator.
+
+Let CUR be an unsigned integer initialized to DEF_CLK_VAL & MASK, where =E2=
+=80=9C&=E2=80=9D is the bitwise AND operator.
+
+Set DEF_CLK_VAL to:
+
+If V =E2=89=A5 CUR
+H + V
+
+Else
+H + MASK + 1 + V
+--------------------->8-------------------------
+
+There's a lot of missing context there, so I don't see how it relates.
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> idea on the producer side is to record the low-order bits of the current
+> timestamp in the event header (truncating the higher order bits), and
+> fall back on a full 64-bit value if the number of low-order bits overflows
+> from the previous timestamp is more than 1, or if it is impossible to fig=
+ure
+> out precisely the timestamp of the previous event due to a race. This ach=
+ieves
+> the same space savings as delta timestamp encoding without introducing the
+> strong event inter-dependency.
+
+So when an overflow happens, you just insert a timestamp, and then events
+after that is based on that?
+
+>=20
+> The fact that Ftrace exposes this ring buffer binary layout as a user-spa=
+ce
+> ABI makes it tricky to move to the Common Trace Format timestamp encoding.
+> There are clearly huge simplifications that could be made by moving to th=
+is
+> scheme though. Is there any way to introduce a different timestamp encodi=
+ng
+> scheme as an extension to the Ftrace ring buffer ABI ? This would allow u=
+s to
+> introduce this simpler scheme and gradually phase out the more complex de=
+lta
+> encoding when no users are left.
+
+I'm not sure if there's a path forward. The infrastructure can easily swap
+in and out a new implementation. That is, there's not much dependency on
+the way the ring buffer works outside the ring buffer itself.
+
+If we were to change the layout, it would likely require a new interface
+file to read. The trace_pipe_raw is the only file that exposes the current
+ring buffer. We could create a trace_out_raw or some other named file that
+has a completely different API and it wouldn't break any existing API.
+
+Although, if we want to change the "default" way, it may need some other
+knobs or something, which wouldn't be hard.
+
+Now I have to ask, what's the motivation for this. The code isn't that
+complex anymore. Yes it still has the before/after timestamps, but the
+most complexity in that code was due to what happens in the race of
+updating the reserved data. But that's no longer the case with the
+cmpxchg(). If you look at this patch, that entire else statement was
+deleted. And that deleted code was what made me sick to my stomach ;-)
+Good riddance!
+
+-- Steve
