@@ -1,115 +1,169 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB5A5479F;
-	Fri, 19 Jan 2024 14:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D54554FB0;
+	Fri, 19 Jan 2024 14:57:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705675723; cv=none; b=joNJEEXBAOJKZa7Bi7I3zeHkMS3pDy7XewFfW0vPUlIqj38+RrJnyzDnOG6AbR8LSAV0enFRga2EaKQaLF4FniUHKFYYegMakCunO8sAkbHttTGGc9OqfC4zXAsEDufNJpv0cQZ0n06v2vpP+9XDg9qhJpB1Z81piWgDLxJ3KKQ=
+	t=1705676231; cv=none; b=Mq/aRQ0YJQyuhZfTICHeho0D2m+4te0wIMuC0fHYsPhYepdyzdY73sOS/5IXqfvqAC6tlQwhzG1xf+lkf3hJdsNgRG8q/2RGcNA529cvnIwqLXNZU82QklM9H/4eHbiaY2a1dmGaxRtH6U5jyu5uleyYfYct9cmy5j3qP2BdhtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705675723; c=relaxed/simple;
-	bh=N5dxDJ8RBtd+2+qEyuvlZWxCpwk9SOuLxT5zchJWh7g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dtzIHl/RXVU9uF7rVI3EMgT1ARNg6YFOPGCLHw9mm5jslfR0PG1A9LurZNuGxch+ItjPgeAooVGJOq96m2m5EWxGA+7qLvTzYZWdv/7L/mCg77ca8RC6WQj9bJ1+B1VO4bHwToth1PcUoXK79mo5TCJ82sjYtjLkkdSq7ZnRQM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=r9plyTna; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	s=arc-20240116; t=1705676231; c=relaxed/simple;
+	bh=0+4OncppuBjBS1DVIfYJuQGGGGBFqfj/oxaz1paaCyQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=UWi/YHeo2KPfh/rICxSPTprWuc3zopQOtCbUxWEM0WPrdUbWxORxUHV6hPhr2xqee9vJnP28kEn85z7jtD3bRwamyN5W/a6idTVEpqTSmir29VM8P7/qkgn19dzffIMxGNdAT97ZW1McocZMcrI16AiX3+Pq0IDp52AhVzmflqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QXRT9MRD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="r9plyTna"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1705675228;
-	bh=N5dxDJ8RBtd+2+qEyuvlZWxCpwk9SOuLxT5zchJWh7g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=r9plyTnaRfggs+rIScfK287Oih516Dx4TkppuV/JDCfjQgfyAWermTZsR6ZAya2I3
-	 wb7GRgjVdaKxlW/znjeJ5wNYkW/xctA0PBxSyoKF7K8ZnDKJ0Z94bgR3sXuN/Wyehe
-	 pGKCj8O4Ni1XC3yW8qjbnGfoNlVJ7A3OyZc6KO2mYfVsc13zsnUGCOotrYsty1jDIs
-	 JubAZi/oeqJrhw5fV4cn4GKIw/pmieaUx8olcVyqP/AVP7RARW7yYzKsU0A3bzFcka
-	 9/zhEecxDz478X7pB/3IzgZ73vyC72Jm/IxdTE5galtiE+s88ydg67OvdqAvfbNz8V
-	 MVqpTQRjAgTKw==
-Received: from [IPV6:2606:6d00:100:4000:cacb:9855:de1f:ded2] (unknown [IPv6:2606:6d00:100:4000:cacb:9855:de1f:ded2])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TGj2h3Lv2zLdp;
-	Fri, 19 Jan 2024 09:40:28 -0500 (EST)
-Message-ID: <504085e9-bf91-4948-a158-abae5dcb276a@efficios.com>
-Date: Fri, 19 Jan 2024 09:40:27 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QXRT9MRD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1C39C433C7;
+	Fri, 19 Jan 2024 14:57:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705676230;
+	bh=0+4OncppuBjBS1DVIfYJuQGGGGBFqfj/oxaz1paaCyQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=QXRT9MRDy4dwtum2pdDyfttpjOhV+jaVO+YRpimt8H7Uu/VnpsEzWFFizHIz9K20b
+	 gX79Xd4wDztLkTQxv3+MYHsmHfUFbiDYlMjryPsFSu9ZCtJFJbyki6ABESpIdQWA46
+	 4XwBbGk+B1LwFC11+eCEBVbQHq10zQ9HzbTopW2K7Egq+ZBlV2Pk6wF53SGKVKmzgf
+	 xpSa9NZUe0gR73S29Tff6ducCusnn53LBHS0TZ05ojq9fqXTu8cZhLgk8BBjwCZpmG
+	 kBKj2zdqvmoILKR5bpi6LxpaFOOy4cUEc+ZuXywlrqqRoAGZ6fBmfn+lnMeAVoVPY8
+	 aW+dNFttzTXAQ==
+Date: Fri, 19 Jan 2024 23:57:06 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Ye Bin <yebin10@huawei.com>
+Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
+ <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] tracing/probes: support '%pd' type for print struct
+ dentry's name
+Message-Id: <20240119235706.65ff7f6c9a7a6ad8a79934af@kernel.org>
+In-Reply-To: <20240119013848.3111364-2-yebin10@huawei.com>
+References: <20240119013848.3111364-1-yebin10@huawei.com>
+	<20240119013848.3111364-2-yebin10@huawei.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ring-buffer: Simplify reservation with try_cmpxchg() loop
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>
-References: <20240118181206.4977da2f@gandalf.local.home>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-In-Reply-To: <20240118181206.4977da2f@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 2024-01-18 18:12, Steven Rostedt wrote:
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Fri, 19 Jan 2024 09:38:46 +0800
+Ye Bin <yebin10@huawei.com> wrote:
+
+> Similar to '%pd' for printk, use 'pd' for print struct dentry's name.
+
+No, please use '%pd' as a type instead.
+
 > 
-> Instead of using local_add_return() to reserve the ring buffer data,
-> Mathieu Desnoyers suggested using local_cmpxchg(). This would simplify the
-> reservation with the time keeping code.
+> Signed-off-by: Ye Bin <yebin10@huawei.com>
+> ---
+>  kernel/trace/trace_probe.c | 38 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 4dc74d73fc1d..460f98b85b1c 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -11,6 +11,7 @@
+>   */
+>  #define pr_fmt(fmt)	"trace_probe: " fmt
+>  
+> +#include <linux/dcache.h>
+>  #include <linux/bpf.h>
+>  #include "trace_btf.h"
+>  
+> @@ -86,6 +87,8 @@ static const struct fetch_type probe_fetch_types[] = {
+>  			    "__data_loc char[]"),
+>  	__ASSIGN_FETCH_TYPE("symstr", string, string, sizeof(u32), 1, 1,
+>  			    "__data_loc char[]"),
+> +	__ASSIGN_FETCH_TYPE("pd", string, string, sizeof(u32), 1, 1,
+> +			    "__data_loc char[]"),
 
-I admire the effort of trying to simplify the Ftrace ring buffer by bringing
-over ideas that worked well for LTTng. :-) As reviewer of the tracing subsystem,
-I certainly welcome the simplifications.
+And you don't need to add a new type.
+Similar to the preprocessor macro, this should be done before parsing the
+args. See traceprobe_expand_meta_args(), you can scan the args and search
+argument end with ':%pd'. If you find that, you can replace it with 
+"+0x%lx(%s):string". Then, you don't need any of these complex fetch type.
 
-> Although, it does not get rid of the double time stamps (before_stamp and
-> write_stamp), using cmpxchg() does get rid of the more complex case when
-> an interrupting event occurs between getting the timestamps and reserving
-> the data, as when that happens, it just tries again instead of dealing
-> with it.
+Thank you,
 
-I understand that the reason why you need the before/after stamps and their
-associated complexity is because the Ftrace ring buffer ABI encodes event
-timestamps as delta from the previous event within the buffer as a mean of
-compressing the timestamp fields. If the delta cannot be represented in a
-given number of bits, then it inserts a 64-bit timestamp (not sure if that
-one is absolute or a delta from previous event).
+>  	/* Basic types */
+>  	ASSIGN_FETCH_TYPE(u8,  u8,  0),
+>  	ASSIGN_FETCH_TYPE(u16, u16, 0),
+> @@ -1090,6 +1093,25 @@ static int __parse_bitfield_probe_arg(const char *bf,
+>  	return (BYTES_TO_BITS(t->size) < (bw + bo)) ? -EINVAL : 0;
+>  }
+>  
+> +static char* traceprobe_expand_dentry(const char *argv)
+> +{
+> +	#define DENTRY_EXPAND_LEN 7  /* +0xXX() */
+> +	char *new_argv;
+> +	int len = strlen(argv) + 1 + DENTRY_EXPAND_LEN;
+> +
+> +	new_argv = kmalloc(len, GFP_KERNEL);
+> +	if (!new_argv)
+> +		return NULL;
+> +
+> +	if (snprintf(new_argv, len, "+0x%lx(%s)",
+> +		     offsetof(struct dentry, d_name.name), argv) >= len) {
+> +		kfree(new_argv);
+> +		return NULL;
+> +	}
+> +
+> +	return new_argv;
+> +}
+> +
+>  /* String length checking wrapper */
+>  static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
+>  					   struct probe_arg *parg,
+> @@ -1099,6 +1121,7 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
+>  	char *t, *t2, *t3;
+>  	int ret, len;
+>  	char *arg;
+> +	char *org_arg = NULL;
+>  
+>  	arg = kstrdup(argv, GFP_KERNEL);
+>  	if (!arg)
+> @@ -1182,6 +1205,16 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
+>  			 parg->count);
+>  	}
+>  
+> +	if (!strcmp("pd", parg->type->name)) {
+> +		char *temp;
+> +
+> +		temp = traceprobe_expand_dentry(arg);
+> +		if (!temp)
+> +			goto out;
+> +		org_arg = arg;
+> +		arg = temp;
+> +	}
+> +
+>  	code = tmp = kcalloc(FETCH_INSN_MAX, sizeof(*code), GFP_KERNEL);
+>  	if (!code)
+>  		goto out;
+> @@ -1243,6 +1276,10 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
+>  				goto fail;
+>  			}
+>  		}
+> +
+> +		if (!strcmp(parg->type->name, "pd"))
+> +			code++;
+> +
+>  		/* If op == DEREF, replace it with STRING */
+>  		if (!strcmp(parg->type->name, "ustring") ||
+>  		    code->op == FETCH_OP_UDEREF)
+> @@ -1321,6 +1358,7 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
+>  	kfree(tmp);
+>  out:
+>  	kfree(arg);
+> +	kfree(org_arg);
+>  
+>  	return ret;
+>  }
+> -- 
+> 2.31.1
+> 
 
-This timestamp encoding as delta between events introduce a strong
-inter-dependency between consecutive (nested) events, and is the reason
-why you are stuck with all this timestamp before/after complexity.
-
-The Common Trace Format specifies (and LTTng implements) a different way
-to achieve the same ring buffer space-savings achieved with timestamp deltas
-while keeping the timestamps semantically absolute from a given reference,
-hence without all the before/after timestamp complexity. You can see the
-clock value decoding procedure in the CTF2 SPEC RC9 [1] document. The basic
-idea on the producer side is to record the low-order bits of the current
-timestamp in the event header (truncating the higher order bits), and
-fall back on a full 64-bit value if the number of low-order bits overflows
-from the previous timestamp is more than 1, or if it is impossible to figure
-out precisely the timestamp of the previous event due to a race. This achieves
-the same space savings as delta timestamp encoding without introducing the
-strong event inter-dependency.
-
-The fact that Ftrace exposes this ring buffer binary layout as a user-space
-ABI makes it tricky to move to the Common Trace Format timestamp encoding.
-There are clearly huge simplifications that could be made by moving to this
-scheme though. Is there any way to introduce a different timestamp encoding
-scheme as an extension to the Ftrace ring buffer ABI ? This would allow us to
-introduce this simpler scheme and gradually phase out the more complex delta
-encoding when no users are left.
-
-Thoughts ?
-
-Thanks,
-
-Mathieu
-
-[1] https://diamon.org/ctf/files/CTF2-SPECRC-9.0.html#clk-val-update
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
