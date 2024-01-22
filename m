@@ -1,185 +1,126 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86CD9F4EB;
-	Mon, 22 Jan 2024 07:16:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E1310A16
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Jan 2024 07:36:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705907799; cv=none; b=Pm7UWHSVLkdbK2wSgDtSmeckA6sztVp7hbN2xlzYi+MRLWiJ/kkq+weUCwlj5+BqkWECM/C4zhgL/KrADvA9S52tuXzNuex/9Vk7XyKWYR/SDwGHL+/A8qJO97yUsZmsgDPzpMdyouI94AcZpAg/01K/ZibcNdag6+vi9b5B/H8=
+	t=1705909020; cv=none; b=HMpBNfJiYHUVUh57pio5gGLHJpmKmH4mp4U2DRfbhWm2Hlh1tGRKH5m9tzCudRkHMlB/h73zoKRDXa8PKmXt1FMiwOLytY/kdR1Oa34X9NKP1hK7oN6epFXMhmzewUOr9fLA+s2rRqmxLssyVLQ+ojEYv6iU+BXo0lAD0f71uOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705907799; c=relaxed/simple;
-	bh=NkAADOM7nb3nJHV0kE9YVtfOI0rFBMbB2vTpVb+wdVM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kNQQVWJMAbOzLeA9bfApZVm8hi8fDQOIsUjbXlSoNSRixmO66RYORvextsFvAvNkWQZFJ1IOPCMf9/BEYgVry3SWinoyLEmjYDnGwZR0F7zLQ3GXkJ6JWKLjsHUONa0MfiArfbgMLGMiSm4mz3XiVD9lseW88LMY/IW3vASwhyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CL5tGsNW; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705909020; c=relaxed/simple;
+	bh=qy6klsxZk7hzsrK1qWptWRv9/t7/Mr89X7/6RjG3elI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=l/fQaff6nEDK5X5UmeTAL5vnFG1tjvhDRl7WWeMGEhKbLNsPvQK6beqJGT2a4H55SZJ2HE0d7x8rVoieSs2S4pVjHaRawWPEBmXeiDhX4B3APPBMR43b3oMKVjMJ9AGaRBwuaYnQ9M+bphYVHRJm5CEeonqKE7ACcqNXv1vb4LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Wjt+AKpC; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CL5tGsNW"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-429af318342so25663301cf.0;
-        Sun, 21 Jan 2024 23:16:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705907795; x=1706512595; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pFrY6G60Aj2NUWP7R4VEsp/j/Y7W4OPZlVPvuZYRf7U=;
-        b=CL5tGsNWaSOg/Ls/nRuIjpQ9221Ah4OyeBq1zx+F8iLgBovI0tPj1usenLTvL0dFeC
-         ckaoFRwSjWtgJ0pPHy03EW7s+uVVMtI0LaahByBcOklh/CmJYnQ4Hg3hj3xlbfaCHE6w
-         pKEiE0G/sxSMo9p7f++oCS+xj13o7suzRRm+v3K8MqGac5PcTMOE2JzV26a6hJpCTHU8
-         4hRAbibHmUmpEID4ggmWgxJ7OTHa90flHLi+tsNewwe/6uiKUsW/amJgVFeopwjjy7HB
-         w4qNkySl/ITKAIHNrJhKi9Nx7yL0xND6HunnxvoSU7JZu2cgMXpVjntLHol4Ug7ikP7p
-         Vn+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705907795; x=1706512595;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pFrY6G60Aj2NUWP7R4VEsp/j/Y7W4OPZlVPvuZYRf7U=;
-        b=sxKPuNumMdMiXAIlIOyP+dossHiMjz6AkAzH43HXVUU6F5HrsfFHrzrz+V3uI15ysY
-         Mq/QNQp8QFqymG/14OU0QWFIcgb37F90L5yFtsYUT/Iac4MKjRu9GsVUiVNcXkmpo0ju
-         HLOlQlJtKY3LIRe3M+R3Z++p+CupTimaZnA7fnyQC7lHj4hAqIlIeZrtP2GWe13/9d/N
-         e/tvHe+TENaHyc3tYfm1HRvQLQdLIsm8/2joR5WLbiBdoPaSNJzO/tPebIAMfhe/sn1F
-         3PWAUPixixZoR2z6+jj+8mgplOzjBzAx7KTxeeGJKBKdih4wORERtuE7LiQUN24R6pwi
-         lFvQ==
-X-Gm-Message-State: AOJu0Yxs8GDUn+4SqdqQSDGB7wXOthBfGmPTQzpR0KokUsBWUuLKIG6s
-	5zwqFxq6lIH97km1f2+JSu2h6j3gPVPhc0hykosg9/LHtjB4LTaCgwiEvWGSJQJvdumlqxPbWIl
-	rXc48BAkgmuYm7hlSgqTNF7Xynm4=
-X-Google-Smtp-Source: AGHT+IFHvFLh501PK0oM3jZ/eFsDEQtqlc7uSmHrZDLn2DY/iKWvCWJ0cNpZSeapYK4yQqc6ua1md893fN8t9VeOsL0=
-X-Received: by 2002:ac8:5a50:0:b0:42a:159d:a955 with SMTP id
- o16-20020ac85a50000000b0042a159da955mr6553070qta.12.1705907795270; Sun, 21
- Jan 2024 23:16:35 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Wjt+AKpC"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1705909016;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=iZwrwM1Ad6JK2YvVtV430bcdms4CvfKkXJdWk7cX5TM=;
+	b=Wjt+AKpC8WI7NsljxAg7ANsxEuGl2dxMVtAUBQqPqYa0o7QYCjGdDEh4IJLnXaHzNCg17D
+	5nMI2QS71LvrwZiDlCleENlxlGptuL5nTPGVrtxOk6n1xK+GkoInPZt3N3SgZo4nAbmY9R
+	ZpSqKD9/4B/jPEoSLlxZvSdAm070AuQ=
+From: George Guo <dongtai.guo@linux.dev>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: George Guo <guodongtai@kylinos.cn>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [PATCH] percpu: improve percpu_alloc_percpu_fail event trace
+Date: Mon, 22 Jan 2024 15:36:29 +0800
+Message-Id: <20240122073629.2594271-1-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1703556550-2858-1-git-send-email-dongliang.cui@unisoc.com>
-In-Reply-To: <1703556550-2858-1-git-send-email-dongliang.cui@unisoc.com>
-From: dongliang cui <cuidongliang390@gmail.com>
-Date: Mon, 22 Jan 2024 15:16:24 +0800
-Message-ID: <CAPqOJe0H2h+ObwpP=05OtwOTE254kV3LZTVXE6jdNawT1EVzFQ@mail.gmail.com>
-Subject: Re: [PATCH] block: Add ioprio to block_rq tracepoint
-To: Dongliang Cui <dongliang.cui@unisoc.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Hongyu Jin <hongyu.jin@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi,
+From: George Guo <guodongtai@kylinos.cn>
 
-Can this submission be uploaded=EF=BC=8Cor is there anything that needs to =
-be modified=EF=BC=9F
+Add do_warn, warn_limit fields to the output of the
+percpu_alloc_percpu_fail ftrace event.
 
-On Tue, Dec 26, 2023 at 10:10=E2=80=AFAM Dongliang Cui <dongliang.cui@uniso=
-c.com> wrote:
->
-> Sometimes we need to track the processing order of
-> requests with ioprio set, especially when using
-> mq-deadline. So the ioprio of request can be useful
-> information.
->
-> Signed-off-by: Dongliang Cui <dongliang.cui@unisoc.com>
-> ---
->  include/trace/events/block.h | 20 ++++++++++++++------
->  1 file changed, 14 insertions(+), 6 deletions(-)
->
-> diff --git a/include/trace/events/block.h b/include/trace/events/block.h
-> index 0e128ad..e84ff93 100644
-> --- a/include/trace/events/block.h
-> +++ b/include/trace/events/block.h
-> @@ -82,6 +82,7 @@
->                 __field(  dev_t,        dev                     )
->                 __field(  sector_t,     sector                  )
->                 __field(  unsigned int, nr_sector               )
-> +               __field(  unsigned int, ioprio                  )
->                 __array(  char,         rwbs,   RWBS_LEN        )
->                 __dynamic_array( char,  cmd,    1               )
->         ),
-> @@ -90,16 +91,17 @@
->                 __entry->dev       =3D rq->q->disk ? disk_devt(rq->q->dis=
-k) : 0;
->                 __entry->sector    =3D blk_rq_trace_sector(rq);
->                 __entry->nr_sector =3D blk_rq_trace_nr_sectors(rq);
-> +               __entry->ioprio    =3D rq->ioprio;
->
->                 blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
->                 __get_str(cmd)[0] =3D '\0';
->         ),
->
-> -       TP_printk("%d,%d %s (%s) %llu + %u [%d]",
-> +       TP_printk("%d,%d %s (%s) %llu + %u 0x%x [%d]",
->                   MAJOR(__entry->dev), MINOR(__entry->dev),
->                   __entry->rwbs, __get_str(cmd),
->                   (unsigned long long)__entry->sector,
-> -                 __entry->nr_sector, 0)
-> +                 __entry->nr_sector, __entry->ioprio, 0)
->  );
->
->  DECLARE_EVENT_CLASS(block_rq_completion,
-> @@ -112,6 +114,7 @@
->                 __field(  dev_t,        dev                     )
->                 __field(  sector_t,     sector                  )
->                 __field(  unsigned int, nr_sector               )
-> +               __field(  unsigned int, ioprio                  )
->                 __field(  int   ,       error                   )
->                 __array(  char,         rwbs,   RWBS_LEN        )
->                 __dynamic_array( char,  cmd,    1               )
-> @@ -121,17 +124,19 @@
->                 __entry->dev       =3D rq->q->disk ? disk_devt(rq->q->dis=
-k) : 0;
->                 __entry->sector    =3D blk_rq_pos(rq);
->                 __entry->nr_sector =3D nr_bytes >> 9;
-> +               __entry->ioprio    =3D rq->ioprio;
->                 __entry->error     =3D blk_status_to_errno(error);
->
->                 blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
->                 __get_str(cmd)[0] =3D '\0';
->         ),
->
-> -       TP_printk("%d,%d %s (%s) %llu + %u [%d]",
-> +       TP_printk("%d,%d %s (%s) %llu + %u 0x%x [%d]",
->                   MAJOR(__entry->dev), MINOR(__entry->dev),
->                   __entry->rwbs, __get_str(cmd),
->                   (unsigned long long)__entry->sector,
-> -                 __entry->nr_sector, __entry->error)
-> +                 __entry->nr_sector, __entry->ioprio,
-> +                 __entry->error)
->  );
->
->  /**
-> @@ -180,6 +185,7 @@
->                 __field(  sector_t,     sector                  )
->                 __field(  unsigned int, nr_sector               )
->                 __field(  unsigned int, bytes                   )
-> +               __field(  unsigned int, ioprio                  )
->                 __array(  char,         rwbs,   RWBS_LEN        )
->                 __array(  char,         comm,   TASK_COMM_LEN   )
->                 __dynamic_array( char,  cmd,    1               )
-> @@ -190,17 +196,19 @@
->                 __entry->sector    =3D blk_rq_trace_sector(rq);
->                 __entry->nr_sector =3D blk_rq_trace_nr_sectors(rq);
->                 __entry->bytes     =3D blk_rq_bytes(rq);
-> +               __entry->ioprio    =3D rq->ioprio;
->
->                 blk_fill_rwbs(__entry->rwbs, rq->cmd_flags);
->                 __get_str(cmd)[0] =3D '\0';
->                 memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
->         ),
->
-> -       TP_printk("%d,%d %s %u (%s) %llu + %u [%s]",
-> +       TP_printk("%d,%d %s %u (%s) %llu + %u 0x%x [%s]",
->                   MAJOR(__entry->dev), MINOR(__entry->dev),
->                   __entry->rwbs, __entry->bytes, __get_str(cmd),
->                   (unsigned long long)__entry->sector,
-> -                 __entry->nr_sector, __entry->comm)
-> +                 __entry->nr_sector, __entry->ioprio,
-> +                 __entry->comm)
->  );
->
->  /**
-> --
-> 1.9.1
->
+This is required to percpu_alloc failed with no warning showing.
+
+Signed-off-by: George Guo <guodongtai@kylinos.cn>
+---
+ include/trace/events/percpu.h | 22 ++++++++++++++--------
+ mm/percpu.c                   |  2 +-
+ 2 files changed, 15 insertions(+), 9 deletions(-)
+
+diff --git a/include/trace/events/percpu.h b/include/trace/events/percpu.h
+index 5b8211ca8950..c5f412e84bb8 100644
+--- a/include/trace/events/percpu.h
++++ b/include/trace/events/percpu.h
+@@ -75,15 +75,18 @@ TRACE_EVENT(percpu_free_percpu,
+ 
+ TRACE_EVENT(percpu_alloc_percpu_fail,
+ 
+-	TP_PROTO(bool reserved, bool is_atomic, size_t size, size_t align),
++	TP_PROTO(bool reserved, bool is_atomic, size_t size, size_t align,
++		 bool do_warn, int warn_limit),
+ 
+-	TP_ARGS(reserved, is_atomic, size, align),
++	TP_ARGS(reserved, is_atomic, size, align, do_warn, warn_limit),
+ 
+ 	TP_STRUCT__entry(
+-		__field(	bool,	reserved	)
+-		__field(	bool,	is_atomic	)
+-		__field(	size_t,	size		)
+-		__field(	size_t, align		)
++		__field(bool,	reserved)
++		__field(bool,	is_atomic)
++		__field(size_t,	size)
++		__field(size_t, align)
++		__field(bool,	do_warn)
++		__field(int,	warn_limit)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -91,11 +94,14 @@ TRACE_EVENT(percpu_alloc_percpu_fail,
+ 		__entry->is_atomic	= is_atomic;
+ 		__entry->size		= size;
+ 		__entry->align		= align;
++		__entry->do_warn	= do_warn;
++		__entry->warn_limit	= warn_limit;
+ 	),
+ 
+-	TP_printk("reserved=%d is_atomic=%d size=%zu align=%zu",
++	TP_printk("reserved=%d is_atomic=%d size=%zu align=%zu do_warn=%d, warn_limit=%d",
+ 		  __entry->reserved, __entry->is_atomic,
+-		  __entry->size, __entry->align)
++		  __entry->size, __entry->align,
++		  __entry->do_warn, __entry->warn_limit)
+ );
+ 
+ TRACE_EVENT(percpu_create_chunk,
+diff --git a/mm/percpu.c b/mm/percpu.c
+index 4e11fc1e6def..ac5b48268c99 100644
+--- a/mm/percpu.c
++++ b/mm/percpu.c
+@@ -1886,7 +1886,7 @@ static void __percpu *pcpu_alloc(size_t size, size_t align, bool reserved,
+ fail_unlock:
+ 	spin_unlock_irqrestore(&pcpu_lock, flags);
+ fail:
+-	trace_percpu_alloc_percpu_fail(reserved, is_atomic, size, align);
++	trace_percpu_alloc_percpu_fail(reserved, is_atomic, size, align, do_warn, warn_limit);
+ 
+ 	if (do_warn && warn_limit) {
+ 		pr_warn("allocation failed, size=%zu align=%zu atomic=%d, %s\n",
+-- 
+2.34.1
+
