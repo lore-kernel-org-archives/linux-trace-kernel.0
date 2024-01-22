@@ -1,134 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76B84F61C;
-	Mon, 22 Jan 2024 16:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 194CE4C62E;
+	Mon, 22 Jan 2024 18:23:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705939899; cv=none; b=Tiw3fNbmlIH4bRlTizD1+wpMI6RsKk5Vj8QhfF0JXuPc+V/Jrvru+O+KYUx5f/BTHS0FaZbVcvS1Jm6UMphojwZUusV17LG3v4O5RMiMDUKLOiGwoStghwdd7b1DzbrmIOrdWfOc7kf3wsA+DavRmEtqdzNbEwtS6YzHor1KRng=
+	t=1705947798; cv=none; b=TONv71SrZlG0Dt/uYtfcalXlH7ruxdwBJB0/dtwJo28wpt12BAA8gS6WNyo7HDl87KTJYTJc9kNRsQD1hqfzYGMHA89drnk/8Ib6Z2IuK0NywRVpONgmfQZ7r5wQyt+Z8C+h2DGShheZmigXegiqzfXcwx2ZEgGG+xQGKWriIlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705939899; c=relaxed/simple;
-	bh=xVjXRbwY8mo3Dvvjl8WT0u2qoQdRoh8qqox2bCQyV7U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z7cWa/zfFtciCbNA6RXK1qx6oo12ObfoSdXnM/uKmoDddTmusTSNyB/y2U1f3Rv3PGxi+//Y17NulbyISjPnqhiL+HT8asghpy8g8YRtE6uQKbOIU7FY2zVa+elR4p1G/py05GdwZxCUXXQZr3etv5s/F4fHeCSxTCYysE6YJaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C88AAC433F1;
-	Mon, 22 Jan 2024 16:11:37 +0000 (UTC)
-Date: Mon, 22 Jan 2024 11:13:06 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ye Bin <yebin10@huawei.com>
-Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
- <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/7] tracing/probes: support '%pD' type for print
- struct file's name
-Message-ID: <20240122111306.4e0a29ab@gandalf.local.home>
-In-Reply-To: <20240122074015.4042575-5-yebin10@huawei.com>
-References: <20240122074015.4042575-1-yebin10@huawei.com>
-	<20240122074015.4042575-5-yebin10@huawei.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1705947798; c=relaxed/simple;
+	bh=r5tnMBAxj+Zc0GnIBmWi8dlh9C839THA+aaunMF7LB0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LDdQyBitsLvBbcINhBRHe6myRJp2wsWJwAa/UhF8ADjyEb5U9ZRsjXTz5EyuxvwritieKFTbIMegDUAGRySCDQ7cwV88JFAiG73XlmxieBYeqhvs9YMiYNzaHpA2C3RjGnT0J5H1JLQD8h01j1L82AATOhrl2728TfuoaSSX1TU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=fail (0-bit key) header.d=marliere.net header.i=@marliere.net header.b=RZQRoupX reason="key not found in DNS"; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marliere.net header.i=@marliere.net header.b="RZQRoupX"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d70a986c4aso12684635ad.2;
+        Mon, 22 Jan 2024 10:23:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705947796; x=1706552596;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k6N23FD1ddpWBXwStnXFwbZTQFl0KVxuOVUtdcEtA6s=;
+        b=ejnyRgMqdETwUejoWgAvdFvQt6Mqk5L33RTmTc+96muJnhqpeMIqbhOk9U0kKEff6S
+         /SWQuRxK4Mcj2mIIWPqJQ4CCXnEjVmQmbnzmtxXwP0K6+oYUhT+6LmpAnK20aG9T+wYO
+         1qiQFN16OpoPJPxR/3r5fxgS2w3WtYtvlq6q5urlw1YTLGbfNOL1bPNktZJyLkC9FHbA
+         VykIO8TybgRP0ffQWRqixW7GDWqHk9Jar/qgT+nmeuaQeQBb/dzAdPzwyDj8GgqGmwxM
+         H2M/MFpOHhETLH1Q3XrCY6hS8fAiV+0azUZHnLsnn3IrOWRqY3C5zGR/IzmOqzfzpXo7
+         l80w==
+X-Gm-Message-State: AOJu0Yy6zMr6R8lM3R3LuQ0BsE+a6JCTbZfxyorDJNaVSQdwaqpV8hlR
+	TJG6agLub1MB09/jBWSRrFrOOe0Z4vdhp3ILTcEPGbi+Z5SSyOoe
+X-Google-Smtp-Source: AGHT+IFA42EU4wtFKLB3beE553Ttt3Gfp4paRYRn38+U44SUio0ZUWHXrS/ZlCUVtTxW4iYy6ndCXg==
+X-Received: by 2002:a17:903:1ca:b0:1d7:691e:2707 with SMTP id e10-20020a17090301ca00b001d7691e2707mr454076plh.27.1705947796230;
+        Mon, 22 Jan 2024 10:23:16 -0800 (PST)
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id o5-20020a1709026b0500b001d70af7dd0dsm7046402plk.263.2024.01.22.10.23.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 10:23:15 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2023; t=1705947794;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=k6N23FD1ddpWBXwStnXFwbZTQFl0KVxuOVUtdcEtA6s=;
+	b=RZQRoupXiycDUK13994y5n5TZ9ltuuDfHOR1zuZRCGwyOl3G7qD/PFaabCOzwWxTw9lSZF
+	zE9K1vnaeHOk/fBUItsTcGum0K3dtBqMHsXi01KL7ztsXSGQReVq8ljHDPEsCcZJo48H9b
+	d+lA8lu4zlUvocuSpbk5nzyWhqwUkAGb+xI17eCTJqUzLrziuJxx7x6g0GzZj+UAmb+xXq
+	cA4fhl5msSpVj2J0tk3P/isPKbmwtU76qi/JTwRx5XVwsO43aRdWqj6JyxMXRXAjv+oM2R
+	qT3o+wuynGSR89HjPN21uzpMWf/UNKDsOA/zAbXZk1OFHsKqGxGS1uaJx0H7Kw==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: "Ricardo B. Marliere" <ricardo@marliere.net>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing: add trace_seq_reset function
+Date: Mon, 22 Jan 2024 15:22:25 -0300
+Message-ID: <20240122182225.69061-2-ricardo@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Mon, 22 Jan 2024 15:40:12 +0800
-Ye Bin <yebin10@huawei.com> wrote:
+Currently, trace_seq_init may be called many times with the intent of
+resetting the buffer. Add a function trace_seq_reset that does that and
+replace the relevant occurrences to use it instead.
 
-> Similar to '%pD' for printk, use '%pD' for print struct file's name.
-> 
-> Signed-off-by: Ye Bin <yebin10@huawei.com>
-> ---
->  kernel/trace/trace_probe.c | 41 ++++++++++++++++++++++++--------------
->  1 file changed, 26 insertions(+), 15 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index 1599c0c3e6b7..f9819625de58 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -12,6 +12,7 @@
->  #define pr_fmt(fmt)	"trace_probe: " fmt
->  
->  #include <linux/bpf.h>
-> +#include <linux/fs.h>
->  #include "trace_btf.h"
->  
->  #include "trace_probe.h"
-> @@ -1572,28 +1573,38 @@ int traceprobe_expand_dentry_args(int argc, const char *argv[], char *buf,
->  
->  	used = 0;
->  	for (i = 0; i < argc; i++) {
-> -		if (str_has_suffix(argv[i], ":%pd")) {
-> -			char *tmp = kstrdup(argv[i], GFP_KERNEL);
-> -			char *equal;
-> +		if (!str_has_suffix(argv[i], ":%pd") &&
-> +		    !str_has_suffix(argv[i], ":%pD"))
-> +			continue;
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+---
+ include/linux/trace_seq.h    | 8 ++++++++
+ include/trace/trace_events.h | 2 +-
+ kernel/trace/trace.c         | 8 ++++----
+ kernel/trace/trace_seq.c     | 2 +-
+ 4 files changed, 14 insertions(+), 6 deletions(-)
 
-And here too:
-
-		if (!str_has_suffix(argv[i], ":%pd", &idx) &&
-		    !str_has_suffix(argv[i], ":%pD", &idx))
-			continue;
-
-
->  
-> -			if (!tmp)
-> -				return -ENOMEM;
-> +		char *tmp = kstrdup(argv[i], GFP_KERNEL);
-> +		char *equal;
-> +
-> +		if (!tmp)
-> +			return -ENOMEM;
->  
-> -			equal = strchr(tmp, '=');
-> -			if (equal)
-> -				*equal = '\0';
-> -			tmp[strlen(argv[i]) - 4] = '\0';
-> +		equal = strchr(tmp, '=');
-> +		if (equal)
-> +			*equal = '\0';
-> +		tmp[strlen(argv[i]) - 4] = '\0';
-
-		tmp[idx] = '\0';
-
-> +		if (argv[i][strlen(argv[i]) - 1] == 'd')
-
-To avoid another strlen() call.
-
-		if (tmp[idx + 3] == 'd')
-
-
--- Steve
-
-
->  			ret = snprintf(buf + used, bufsize - used,
->  				       "%s%s+0x0(+0x%zx(%s)):string",
->  				       equal ? tmp : "", equal ? "=" : "",
->  				       offsetof(struct dentry, d_name.name),
->  				       equal ? equal + 1 : tmp);
-> -			kfree(tmp);
-> -			if (ret >= bufsize - used)
-> -				return -ENOMEM;
-> -			argv[i] = buf + used;
-> -			used += ret + 1;
-> -		}
-> +		else
-> +			ret = snprintf(buf + used, bufsize - used,
-> +				       "%s%s+0x0(+0x%zx(+0x%zx(%s))):string",
-> +				       equal ? tmp : "", equal ? "=" : "",
-> +				       offsetof(struct dentry, d_name.name),
-> +				       offsetof(struct file, f_path.dentry),
-> +				       equal ? equal + 1 : tmp);
-> +		kfree(tmp);
-> +		if (ret >= bufsize - used)
-> +			return -ENOMEM;
-> +		argv[i] = buf + used;
-> +		used += ret + 1;
->  	}
->  
->  	return 0;
+diff --git a/include/linux/trace_seq.h b/include/linux/trace_seq.h
+index 9ec229dfddaa..c28e0ccb50bd 100644
+--- a/include/linux/trace_seq.h
++++ b/include/linux/trace_seq.h
+@@ -29,6 +29,14 @@ trace_seq_init(struct trace_seq *s)
+ 	s->readpos = 0;
+ }
+ 
++static inline void
++trace_seq_reset(struct trace_seq *s)
++{
++	seq_buf_clear(&s->seq);
++	s->full = 0;
++	s->readpos = 0;
++}
++
+ /**
+  * trace_seq_used - amount of actual data written to buffer
+  * @s: trace sequence descriptor
+diff --git a/include/trace/trace_events.h b/include/trace/trace_events.h
+index c2f9cabf154d..2bc79998e5ab 100644
+--- a/include/trace/trace_events.h
++++ b/include/trace/trace_events.h
+@@ -227,7 +227,7 @@ trace_raw_output_##call(struct trace_iterator *iter, int flags,		\
+ 									\
+ 	field = (typeof(field))entry;					\
+ 									\
+-	trace_seq_init(p);						\
++	trace_seq_reset(p);						\
+ 	return trace_output_call(iter, #call, print);			\
+ }									\
+ static struct trace_event_functions trace_event_type_funcs_##call = {	\
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 46dbe22121e9..9147f3717b9a 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6946,7 +6946,7 @@ tracing_read_pipe(struct file *filp, char __user *ubuf,
+ 	/* reset all but tr, trace, and overruns */
+ 	trace_iterator_reset(iter);
+ 	cpumask_clear(iter->started);
+-	trace_seq_init(&iter->seq);
++	trace_seq_reset(&iter->seq);
+ 
+ 	trace_event_read_lock();
+ 	trace_access_lock(iter->cpu_file);
+@@ -6993,7 +6993,7 @@ tracing_read_pipe(struct file *filp, char __user *ubuf,
+ 	/* Now copy what we have to the user */
+ 	sret = trace_seq_to_user(&iter->seq, ubuf, cnt);
+ 	if (iter->seq.readpos >= trace_seq_used(&iter->seq))
+-		trace_seq_init(&iter->seq);
++		trace_seq_reset(&iter->seq);
+ 
+ 	/*
+ 	 * If there was nothing to send to user, in spite of consuming trace
+@@ -7125,7 +7125,7 @@ static ssize_t tracing_splice_read_pipe(struct file *filp,
+ 		spd.partial[i].offset = 0;
+ 		spd.partial[i].len = trace_seq_used(&iter->seq);
+ 
+-		trace_seq_init(&iter->seq);
++		trace_seq_reset(&iter->seq);
+ 	}
+ 
+ 	trace_access_unlock(iter->cpu_file);
+@@ -10274,7 +10274,7 @@ trace_printk_seq(struct trace_seq *s)
+ 
+ 	printk(KERN_TRACE "%s", s->buffer);
+ 
+-	trace_seq_init(s);
++	trace_seq_reset(s);
+ }
+ 
+ void trace_init_global_iter(struct trace_iterator *iter)
+diff --git a/kernel/trace/trace_seq.c b/kernel/trace/trace_seq.c
+index c158d65a8a88..741b2f3d76c0 100644
+--- a/kernel/trace/trace_seq.c
++++ b/kernel/trace/trace_seq.c
+@@ -59,7 +59,7 @@ int trace_print_seq(struct seq_file *m, struct trace_seq *s)
+ 	 * do something else with the contents.
+ 	 */
+ 	if (!ret)
+-		trace_seq_init(s);
++		trace_seq_reset(s);
+ 
+ 	return ret;
+ }
+-- 
+2.43.0
 
