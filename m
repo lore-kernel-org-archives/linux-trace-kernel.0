@@ -1,36 +1,36 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE64A1BC49;
-	Mon, 22 Jan 2024 07:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505B120DD2;
+	Mon, 22 Jan 2024 07:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705909142; cv=none; b=SyXAVt/fO1wyfCI7D2+0vEMvvLVMihNFkIks+GJ1DSif1kMDNr4xUs5Bed8QnQUgtROAehDU4rMrajCOkRxNG2Nuz0a8cYf1zlXPvD7swVRWj8Lm+/2JobXCvIx9fyHoz0UrzNGoK3CaJ+4kikanU84zWpNrFvelSHRi1eh7c5Y=
+	t=1705909142; cv=none; b=Hspp8Q5IAi2WudvIkeq269z6y26HRRu95pIGGDjVUyHhHC9zrqp46/BagGJqrFQx2aoFMO7mIFENTuofCVDWwXECgcqln9QZyQrceISGy1xCerkcN0Y1qzJtx+nxp+IWTB++s1ka4EZa8ZghaeYzzER6FCwAvUtfIvne3g8GKko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705909142; c=relaxed/simple;
-	bh=76LvXPCu8lBDHJ52SEwVPpx3KQzmKFwc0Brqv+mwS0Q=;
+	bh=wqD3BcIyhEmryJcEFaCD5uVA14nzmG5cK5v0iik8hsM=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GkWuZBMlOMY6PJa/QfCFPg8wRvaevCLJYdrgGwFtq6NYiVgAMqMVVWCeEbaC85e7wEGiO34hjLBtOgUc0t8VhLGzubQVkdcr3EV3F5D2pZTJP4S6X/VzCBa9tXX7vYoE672K3D8BfTad+eONHcYlBirDbLfwpwLVA3tgZ554EwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+	 MIME-Version:Content-Type; b=R6Hs6jZDOlUuv9DNioAM5VfLJ5ZJ/Q0qB+BOdQ7erHeFQHdg2KOQrwOHZzVuAx1RZz5D5K4osUQRvV0pHw1e7mC1qZtHmFZghKCxBlSDHeosOmNKlZYT8IEjq3bcVeBWyBC2fostEGemuGJEyRWGVTVcMPUx/kPJDBxbCGf7Pws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TJMVs57T3z29kf3;
-	Mon, 22 Jan 2024 15:37:09 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4TJMWd6s7LzVhkZ;
+	Mon, 22 Jan 2024 15:37:49 +0800 (CST)
 Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id 297FC1A017F;
-	Mon, 22 Jan 2024 15:38:37 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 0E1201850CA;
+	Mon, 22 Jan 2024 15:38:59 +0800 (CST)
 Received: from huawei.com (10.175.127.227) by canpemm500010.china.huawei.com
  (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 22 Jan
- 2024 15:37:40 +0800
+ 2024 15:37:41 +0800
 From: Ye Bin <yebin10@huawei.com>
 To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
 	<mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <yebin10@huawei.com>
-Subject: [PATCH v2 4/7] tracing/probes: support '%pD' type for print struct file's name
-Date: Mon, 22 Jan 2024 15:40:12 +0800
-Message-ID: <20240122074015.4042575-5-yebin10@huawei.com>
+Subject: [PATCH v2 7/7] selftests/ftrace: add test cases for VFS type "%pd" and "%pD"
+Date: Mon, 22 Jan 2024 15:40:15 +0800
+Message-ID: <20240122074015.4042575-8-yebin10@huawei.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20240122074015.4042575-1-yebin10@huawei.com>
 References: <20240122074015.4042575-1-yebin10@huawei.com>
@@ -45,79 +45,103 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  canpemm500010.china.huawei.com (7.192.105.118)
 
-Similar to '%pD' for printk, use '%pD' for print struct file's name.
+This patch adds test cases for new print format type "%pd/%pD".The test cases
+test the following items:
+1. Test README if add "%pd/%pD" type;
+2. Test "%pd" type for dput();
+3. Test "%pD" type for vfs_read();
 
 Signed-off-by: Ye Bin <yebin10@huawei.com>
 ---
- kernel/trace/trace_probe.c | 41 ++++++++++++++++++++++++--------------
- 1 file changed, 26 insertions(+), 15 deletions(-)
+ .../ftrace/test.d/kprobe/kprobe_args_vfs.tc   | 79 +++++++++++++++++++
+ 1 file changed, 79 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 1599c0c3e6b7..f9819625de58 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -12,6 +12,7 @@
- #define pr_fmt(fmt)	"trace_probe: " fmt
- 
- #include <linux/bpf.h>
-+#include <linux/fs.h>
- #include "trace_btf.h"
- 
- #include "trace_probe.h"
-@@ -1572,28 +1573,38 @@ int traceprobe_expand_dentry_args(int argc, const char *argv[], char *buf,
- 
- 	used = 0;
- 	for (i = 0; i < argc; i++) {
--		if (str_has_suffix(argv[i], ":%pd")) {
--			char *tmp = kstrdup(argv[i], GFP_KERNEL);
--			char *equal;
-+		if (!str_has_suffix(argv[i], ":%pd") &&
-+		    !str_has_suffix(argv[i], ":%pD"))
-+			continue;
- 
--			if (!tmp)
--				return -ENOMEM;
-+		char *tmp = kstrdup(argv[i], GFP_KERNEL);
-+		char *equal;
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
+new file mode 100644
+index 000000000000..1d8edd294dd6
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
+@@ -0,0 +1,79 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: Kprobe event VFS type argument
++# requires: kprobe_events
 +
-+		if (!tmp)
-+			return -ENOMEM;
- 
--			equal = strchr(tmp, '=');
--			if (equal)
--				*equal = '\0';
--			tmp[strlen(argv[i]) - 4] = '\0';
-+		equal = strchr(tmp, '=');
-+		if (equal)
-+			*equal = '\0';
-+		tmp[strlen(argv[i]) - 4] = '\0';
-+		if (argv[i][strlen(argv[i]) - 1] == 'd')
- 			ret = snprintf(buf + used, bufsize - used,
- 				       "%s%s+0x0(+0x%zx(%s)):string",
- 				       equal ? tmp : "", equal ? "=" : "",
- 				       offsetof(struct dentry, d_name.name),
- 				       equal ? equal + 1 : tmp);
--			kfree(tmp);
--			if (ret >= bufsize - used)
--				return -ENOMEM;
--			argv[i] = buf + used;
--			used += ret + 1;
--		}
-+		else
-+			ret = snprintf(buf + used, bufsize - used,
-+				       "%s%s+0x0(+0x%zx(+0x%zx(%s))):string",
-+				       equal ? tmp : "", equal ? "=" : "",
-+				       offsetof(struct dentry, d_name.name),
-+				       offsetof(struct file, f_path.dentry),
-+				       equal ? equal + 1 : tmp);
-+		kfree(tmp);
-+		if (ret >= bufsize - used)
-+			return -ENOMEM;
-+		argv[i] = buf + used;
-+		used += ret + 1;
- 	}
- 
- 	return 0;
++case `uname -m` in
++x86_64)
++  ARG1=%di
++;;
++i[3456]86)
++  ARG1=%ax
++;;
++aarch64)
++  ARG1=%x0
++;;
++arm*)
++  ARG1=%r0
++;;
++ppc64*)
++  ARG1=%r3
++;;
++ppc*)
++  ARG1=%r3
++;;
++s390*)
++  ARG1=%r2
++;;
++mips*)
++  ARG1=%r4
++;;
++loongarch*)
++  ARG1=%r4
++;;
++riscv*)
++  ARG1=%a0
++;;
++*)
++  echo "Please implement other architecture here"
++  exit_untested
++esac
++
++: "Test argument %pd/%pD in README"
++grep -q "%pd/%pD" README
++
++: "Test argument %pd with name"
++echo "p:testprobe dput name=${ARG1}:%pd" > kprobe_events
++echo 1 > events/kprobes/testprobe/enable
++grep -q "1" events/kprobes/testprobe/enable
++echo 0 > events/kprobes/testprobe/enable
++grep "dput" trace | grep -q "enable"
++echo "" > kprobe_events
++echo "" > trace
++
++: "Test argument %pd without name"
++echo "p:testprobe dput ${ARG1}:%pd" > kprobe_events
++echo 1 > events/kprobes/testprobe/enable
++grep -q "1" events/kprobes/testprobe/enable
++echo 0 > events/kprobes/testprobe/enable
++grep "dput" trace | grep -q "enable"
++echo "" > kprobe_events
++echo "" > trace
++
++: "Test argument %pD with name"
++echo "p:testprobe vfs_read name=${ARG1}:%pD" > kprobe_events
++echo 1 > events/kprobes/testprobe/enable
++grep -q "1" events/kprobes/testprobe/enable
++echo 0 > events/kprobes/testprobe/enable
++grep "vfs_read" trace | grep -q "enable"
++echo "" > kprobe_events
++echo "" > trace
++
++: "Test argument %pD without name"
++echo "p:testprobe vfs_read ${ARG1}:%pD" > kprobe_events
++echo 1 > events/kprobes/testprobe/enable
++grep -q "1"  events/kprobes/testprobe/enable
++echo 0 > events/kprobes/testprobe/enable
++grep "vfs_read" trace | grep -q "enable"
++echo "" > kprobe_events
++echo "" > trace
 -- 
 2.31.1
 
