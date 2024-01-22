@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46DFD3EA85;
-	Mon, 22 Jan 2024 16:07:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76B84F61C;
+	Mon, 22 Jan 2024 16:11:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705939643; cv=none; b=pxKpJFxMGmnwaxYq2MHfbWqVUXpt8OU7I6jC3IsOBqAVulJmotJCjGoPNXJQmQKU4j6Bim223BtcDucL0Qi9jc34N1/fqJpTLSzl0argAp9dYSGuTK2MGeXaEpWkA7xOEBBC8JHu5DPDP4e2wt6Rju4yAD2wYtySO3Mbe8quaUo=
+	t=1705939899; cv=none; b=Tiw3fNbmlIH4bRlTizD1+wpMI6RsKk5Vj8QhfF0JXuPc+V/Jrvru+O+KYUx5f/BTHS0FaZbVcvS1Jm6UMphojwZUusV17LG3v4O5RMiMDUKLOiGwoStghwdd7b1DzbrmIOrdWfOc7kf3wsA+DavRmEtqdzNbEwtS6YzHor1KRng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705939643; c=relaxed/simple;
-	bh=Y0YnSaZ7rJJoYHHQKixkCTtvD+62+VNE4Ysym1ByEns=;
+	s=arc-20240116; t=1705939899; c=relaxed/simple;
+	bh=xVjXRbwY8mo3Dvvjl8WT0u2qoQdRoh8qqox2bCQyV7U=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uHABAz5PoBr4BEurcx+ljmp5HVrimzmD4pI+/N0XY04fqBlqzwOZuqKuQ7J2MSXvLXSgKVE3lw03w4sMbts3bI8mcBYu+FDnHYibf9x41Jmoe1uUa4oW5hYaNyRP4wgZcvbpEaJ2EFdydbfSFu3H3rUGzoNoIJ/E8Wsdkih7wJo=
+	 MIME-Version:Content-Type; b=Z7cWa/zfFtciCbNA6RXK1qx6oo12ObfoSdXnM/uKmoDddTmusTSNyB/y2U1f3Rv3PGxi+//Y17NulbyISjPnqhiL+HT8asghpy8g8YRtE6uQKbOIU7FY2zVa+elR4p1G/py05GdwZxCUXXQZr3etv5s/F4fHeCSxTCYysE6YJaI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EFA5C433F1;
-	Mon, 22 Jan 2024 16:07:22 +0000 (UTC)
-Date: Mon, 22 Jan 2024 11:08:50 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C88AAC433F1;
+	Mon, 22 Jan 2024 16:11:37 +0000 (UTC)
+Date: Mon, 22 Jan 2024 11:13:06 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Ye Bin <yebin10@huawei.com>
 Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
  <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/7] tracing/probes: add
- traceprobe_expand_dentry_args() helper
-Message-ID: <20240122110850.4978f510@gandalf.local.home>
-In-Reply-To: <20240122074015.4042575-3-yebin10@huawei.com>
+Subject: Re: [PATCH v2 4/7] tracing/probes: support '%pD' type for print
+ struct file's name
+Message-ID: <20240122111306.4e0a29ab@gandalf.local.home>
+In-Reply-To: <20240122074015.4042575-5-yebin10@huawei.com>
 References: <20240122074015.4042575-1-yebin10@huawei.com>
-	<20240122074015.4042575-3-yebin10@huawei.com>
+	<20240122074015.4042575-5-yebin10@huawei.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -35,88 +35,100 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 22 Jan 2024 15:40:10 +0800
+On Mon, 22 Jan 2024 15:40:12 +0800
 Ye Bin <yebin10@huawei.com> wrote:
 
-> Add traceprobe_expand_dentry_args() to expand dentry args. this API is
-> prepare to support "%pd" print format for kprobe.
+> Similar to '%pD' for printk, use '%pD' for print struct file's name.
 > 
 > Signed-off-by: Ye Bin <yebin10@huawei.com>
 > ---
->  kernel/trace/trace_probe.c | 34 ++++++++++++++++++++++++++++++++++
->  kernel/trace/trace_probe.h |  2 ++
->  2 files changed, 36 insertions(+)
+>  kernel/trace/trace_probe.c | 41 ++++++++++++++++++++++++--------------
+>  1 file changed, 26 insertions(+), 15 deletions(-)
 > 
 > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index 4dc74d73fc1d..1599c0c3e6b7 100644
+> index 1599c0c3e6b7..f9819625de58 100644
 > --- a/kernel/trace/trace_probe.c
 > +++ b/kernel/trace/trace_probe.c
-> @@ -1565,6 +1565,40 @@ const char **traceprobe_expand_meta_args(int argc, const char *argv[],
->  	return ERR_PTR(ret);
->  }
+> @@ -12,6 +12,7 @@
+>  #define pr_fmt(fmt)	"trace_probe: " fmt
 >  
-> +int traceprobe_expand_dentry_args(int argc, const char *argv[], char *buf,
-> +				  int bufsize)
-> +{
-> +	int i, used, ret;
+>  #include <linux/bpf.h>
+> +#include <linux/fs.h>
+>  #include "trace_btf.h"
+>  
+>  #include "trace_probe.h"
+> @@ -1572,28 +1573,38 @@ int traceprobe_expand_dentry_args(int argc, const char *argv[], char *buf,
+>  
+>  	used = 0;
+>  	for (i = 0; i < argc; i++) {
+> -		if (str_has_suffix(argv[i], ":%pd")) {
+> -			char *tmp = kstrdup(argv[i], GFP_KERNEL);
+> -			char *equal;
+> +		if (!str_has_suffix(argv[i], ":%pd") &&
+> +		    !str_has_suffix(argv[i], ":%pD"))
+> +			continue;
 
-	size_t idx;
+And here too:
 
+		if (!str_has_suffix(argv[i], ":%pd", &idx) &&
+		    !str_has_suffix(argv[i], ":%pD", &idx))
+			continue;
+
+
+>  
+> -			if (!tmp)
+> -				return -ENOMEM;
+> +		char *tmp = kstrdup(argv[i], GFP_KERNEL);
+> +		char *equal;
 > +
-> +	used = 0;
-> +	for (i = 0; i < argc; i++) {
-> +		if (str_has_suffix(argv[i], ":%pd")) {
+> +		if (!tmp)
+> +			return -ENOMEM;
+>  
+> -			equal = strchr(tmp, '=');
+> -			if (equal)
+> -				*equal = '\0';
+> -			tmp[strlen(argv[i]) - 4] = '\0';
+> +		equal = strchr(tmp, '=');
+> +		if (equal)
+> +			*equal = '\0';
+> +		tmp[strlen(argv[i]) - 4] = '\0';
 
-If we were to update str_has_suffix() as I said in my reply to the previous
-patch, then we could do:
+		tmp[idx] = '\0';
 
-		if (str_has_suffix(argv[i], ":%pd", &idx) {
+> +		if (argv[i][strlen(argv[i]) - 1] == 'd')
 
-> +			char *tmp = kstrdup(argv[i], GFP_KERNEL);
-> +			char *equal;
-> +
-> +			if (!tmp)
-> +				return -ENOMEM;
-> +
-> +			equal = strchr(tmp, '=');
-> +			if (equal)
-> +				*equal = '\0';
-> +			tmp[strlen(argv[i]) - 4] = '\0';
+To avoid another strlen() call.
 
-			tmp[idx] = '\0';
+		if (tmp[idx + 3] == 'd')
+
 
 -- Steve
 
+
+>  			ret = snprintf(buf + used, bufsize - used,
+>  				       "%s%s+0x0(+0x%zx(%s)):string",
+>  				       equal ? tmp : "", equal ? "=" : "",
+>  				       offsetof(struct dentry, d_name.name),
+>  				       equal ? equal + 1 : tmp);
+> -			kfree(tmp);
+> -			if (ret >= bufsize - used)
+> -				return -ENOMEM;
+> -			argv[i] = buf + used;
+> -			used += ret + 1;
+> -		}
+> +		else
 > +			ret = snprintf(buf + used, bufsize - used,
-> +				       "%s%s+0x0(+0x%zx(%s)):string",
+> +				       "%s%s+0x0(+0x%zx(+0x%zx(%s))):string",
 > +				       equal ? tmp : "", equal ? "=" : "",
 > +				       offsetof(struct dentry, d_name.name),
+> +				       offsetof(struct file, f_path.dentry),
 > +				       equal ? equal + 1 : tmp);
-> +			kfree(tmp);
-> +			if (ret >= bufsize - used)
-> +				return -ENOMEM;
-> +			argv[i] = buf + used;
-> +			used += ret + 1;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  void traceprobe_finish_parse(struct traceprobe_parse_context *ctx)
->  {
->  	clear_btf_context(ctx);
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index 850d9ecb6765..553371a4e0b1 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -402,6 +402,8 @@ extern int traceprobe_parse_probe_arg(struct trace_probe *tp, int i,
->  const char **traceprobe_expand_meta_args(int argc, const char *argv[],
->  					 int *new_argc, char *buf, int bufsize,
->  					 struct traceprobe_parse_context *ctx);
-> +extern int traceprobe_expand_dentry_args(int argc, const char *argv[], char *buf,
-> +					 int bufsize);
+> +		kfree(tmp);
+> +		if (ret >= bufsize - used)
+> +			return -ENOMEM;
+> +		argv[i] = buf + used;
+> +		used += ret + 1;
+>  	}
 >  
->  extern int traceprobe_update_arg(struct probe_arg *arg);
->  extern void traceprobe_free_probe_arg(struct probe_arg *arg);
+>  	return 0;
 
