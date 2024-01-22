@@ -1,39 +1,36 @@
 Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2319D16416;
-	Mon, 22 Jan 2024 07:37:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2317D16410;
+	Mon, 22 Jan 2024 07:37:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705909072; cv=none; b=tCJpB3ZWssMxwMwmSiSpq/4HokrxhUzH4LgVxw6N2X8Fqutv/2JY5GIb4wMrU7b8HlGHBi3u2BwjTgUFFMQEqqJHolhp/QA/eOEH6gUWiSo9TkP/GgjkPHchobEiBKZjZgcQAfytMnblyLOEOOJXOwwsg4QPgxWQG6mA4yJTevo=
+	t=1705909073; cv=none; b=WTJM4q6GYXmG+FokHZIMlJqsaqcrdh0WlurCKV2g8r6g97trtMG+SDHJ2kJb5P1jtjBET/QBQwt9GcwM3pepo5DLKAhX2LwGgo9qAB4YMOpzWGjtB0CjOgVKFIuGelUc5GV/sdqpPZiKC/9fkpMiQqhwsMZRUQWOFdsyo9DD72Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705909072; c=relaxed/simple;
-	bh=sBwc0e0LX68ujIGPPtdpEdCtFeOhchnf4ztfTmcCrW4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PqdnJLFmR2y4yr6IFpsaa/yKHdTSXPzt3OZqQYX9CUSh8sw5QdTNl2T7fct/lxsUj66XLtH47+7utJiXYORZNx5BSTyOXtgMNRSOsgD1/hmDTl5dJpU+sn70ozaFgIDgu9NG9Z1uqGmlHcxpiZgS1pnXZ3tTfsim5bhHxPrf+jk=
+	s=arc-20240116; t=1705909073; c=relaxed/simple;
+	bh=dwg7fEKyPCidxs40PwHs/24PyKN/EeAm2a7dSGR0l+E=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mBF3ixqccjF3NI/EO0Oa6zOdQQVjFBGnFh9Yt4oV/8CtSBflGvKVFiyfSY5aJRI1FYI2yyeaK58t6gBHzWTulrAcmUzliZPPs1tre7/kWrsZSCRkqKyprUALN3YE3az6vmCwqfZncRdDcaAcwc6amxU3HHIc6498IxLZRtmyCYY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4TJMVC181kzVjFn;
-	Mon, 22 Jan 2024 15:36:35 +0800 (CST)
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4TJMW6168HzbcFx;
+	Mon, 22 Jan 2024 15:37:22 +0800 (CST)
 Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id 49E9D1400E4;
+	by mail.maildlp.com (Postfix) with ESMTPS id 40E80140428;
 	Mon, 22 Jan 2024 15:37:44 +0800 (CST)
 Received: from huawei.com (10.175.127.227) by canpemm500010.china.huawei.com
  (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 22 Jan
- 2024 15:37:39 +0800
+ 2024 15:37:38 +0800
 From: Ye Bin <yebin10@huawei.com>
 To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
 	<mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <yebin10@huawei.com>
-Subject: [PATCH v2 1/7] string.h: add str_has_suffix() helper for test string ends with specify string
-Date: Mon, 22 Jan 2024 15:40:09 +0800
-Message-ID: <20240122074015.4042575-2-yebin10@huawei.com>
+Subject: [PATCH v2 0/7] support '%pd' and '%pD' for print file name
+Date: Mon, 22 Jan 2024 15:40:08 +0800
+Message-ID: <20240122074015.4042575-1-yebin10@huawei.com>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240122074015.4042575-1-yebin10@huawei.com>
-References: <20240122074015.4042575-1-yebin10@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -45,42 +42,38 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  canpemm500010.china.huawei.com (7.192.105.118)
 
-str_has_suffix() is test string if ends with specify string.
+During fault locating, the file name needs to be printed based on the
+dentry/file address. The offset needs to be calculated each time, which
+is troublesome. Similar to printk, kprobe supports printing file names
+for dentry/file addresses.
 
-Signed-off-by: Ye Bin <yebin10@huawei.com>
----
- include/linux/string.h | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Diff v2 vs v1:
+1. Use "%pd/%pD" print format instead of "pd/pD" print format;
+2. Add "%pd/%pD" in README;
+3. Expand "%pd/%pD" argument before parameter parsing;
+4. Add more detail information in ftrace documentation;
+5. Add test cases for new print format in selftests/ftrace;
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 433c207a01da..e47e9597af27 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -405,4 +405,24 @@ static __always_inline size_t str_has_prefix(const char *str, const char *prefix
- 	return strncmp(str, prefix, len) == 0 ? len : 0;
- }
- 
-+/**
-+ * str_has_suffix - Test if a string has a given suffix
-+ * @str: The string to test
-+ * @suffix: The string to see if @str ends with
-+ *
-+ * Returns:
-+ * * strlen(@suffix) if @str ends with @suffix
-+ * * 0 if @str does not end with @suffix
-+ */
-+static __always_inline size_t str_has_suffix(const char *str, const char *suffix)
-+{
-+	size_t len = strlen(suffix);
-+	size_t str_len = strlen(str);
-+
-+	if (len > str_len)
-+		return 0;
-+
-+	return strncmp(str + str_len - len, suffix, len) == 0 ? len : 0;
-+}
-+
- #endif /* _LINUX_STRING_H_ */
+Ye Bin (7):
+  string.h: add str_has_suffix() helper for test string ends with
+    specify string
+  tracing/probes: add traceprobe_expand_dentry_args() helper
+  tracing/probes: support '%pd' type for print struct dentry's name
+  tracing/probes: support '%pD' type for print struct file's name
+  tracing: add new type "%pd/%pD" in readme_msg[]
+  Documentation: tracing: add new type '%pd' and '%pD' for kprobe
+  selftests/ftrace: add test cases for VFS type "%pd" and "%pD"
+
+ Documentation/trace/kprobetrace.rst           |  6 +-
+ include/linux/string.h                        | 20 +++++
+ kernel/trace/trace.c                          |  2 +-
+ kernel/trace/trace_kprobe.c                   |  6 ++
+ kernel/trace/trace_probe.c                    | 45 +++++++++++
+ kernel/trace/trace_probe.h                    |  3 +
+ .../ftrace/test.d/kprobe/kprobe_args_vfs.tc   | 79 +++++++++++++++++++
+ 7 files changed, 159 insertions(+), 2 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
+
 -- 
 2.31.1
 
