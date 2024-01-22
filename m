@@ -1,32 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C0F3DB9E;
-	Mon, 22 Jan 2024 15:55:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7913EA92;
+	Mon, 22 Jan 2024 16:06:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705938935; cv=none; b=GX1ZIgxzeR50XI//OmUVPNBUe4Dn5ZadDjVeJKSiYLjaNnvfJse8Ge7b8t6WI5wSLCe1uZj4xIWoPEhA5+UA8CiPjhMeoUD1miFFDfj8usOqb/XyEb72X+IUSytALn6dB5NFMdFmT4+vxHU2bHO2szBdqpf8zaofGMY0MjxI5RI=
+	t=1705939592; cv=none; b=ruuOrI2bMpWcCmy3wV/5g/qSqZBJAuO+mKhB1m+wTneEMyNvvFSlD+xhcBFR3XgliYt3JZLNiLD2McQD41Uh1ZXeIQt+O1ll2aJ6mpPQ2mr5HPNIDg9NJKBb2XXl13UMZYYwcv+z9vMYUgqGNaEvsezojoF6IclCOatjGvygiU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705938935; c=relaxed/simple;
-	bh=wFHV5w4eFFMMNTf7evJdhihmrKVVk9HXlU999A05S6c=;
+	s=arc-20240116; t=1705939592; c=relaxed/simple;
+	bh=/L2YrNxPOfocGWcSIQklbfEgmVRKuWexr+x6ZjSRXzM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e3OjpJmSWR7mdyZkcFgxValS/RpxsC9NJIU5Me/8EwWAdECqqJsS7ABTjTYPfWJYZAH0KJMjA/76zolc+OF2DDOe3CtInYOpdnTxf8jF/EIRoiIhgfqrhmjsbV2RMj17jHmwXAOyIsIuZnIu7p/WnpF28VX3CZtEa7qPTSMZQro=
+	 MIME-Version:Content-Type; b=JJGqSZ653Ah5yCicAUax+WXgineCF8HIRp0EtW7KovbBcDZhM+GYHM4ooL+DfmDsSZe0jWHEWFWWnwebrcp9oXmqRngltsoVIypCb83tHhTiqVhOURAL0FDnekRg29nYSrko1RtFu74Ou7PVCbOe/ZfJMSluFdXyC8xd+6r0F+U=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6071DC433C7;
-	Mon, 22 Jan 2024 15:55:33 +0000 (UTC)
-Date: Mon, 22 Jan 2024 10:57:00 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C547C433F1;
+	Mon, 22 Jan 2024 16:06:31 +0000 (UTC)
+Date: Mon, 22 Jan 2024 11:07:59 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: George Guo <dongtai.guo@linux.dev>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Dennis Zhou <dennis@kernel.org>, Tejun
- Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, Andrew Morton
- <akpm@linux-foundation.org>, George Guo <guodongtai@kylinos.cn>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org
-Subject: Re: [PATCH] percpu: improve percpu_alloc_percpu_fail event trace
-Message-ID: <20240122105700.05e5ee46@gandalf.local.home>
-In-Reply-To: <20240122073629.2594271-1-dongtai.guo@linux.dev>
-References: <20240122073629.2594271-1-dongtai.guo@linux.dev>
+To: Ye Bin <yebin10@huawei.com>
+Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
+ <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/7] string.h: add str_has_suffix() helper for test
+ string ends with specify string
+Message-ID: <20240122110759.29c50a19@gandalf.local.home>
+In-Reply-To: <20240122074015.4042575-2-yebin10@huawei.com>
+References: <20240122074015.4042575-1-yebin10@huawei.com>
+	<20240122074015.4042575-2-yebin10@huawei.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,31 +35,70 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 22 Jan 2024 15:36:29 +0800
-George Guo <dongtai.guo@linux.dev> wrote:
+On Mon, 22 Jan 2024 15:40:09 +0800
+Ye Bin <yebin10@huawei.com> wrote:
 
-> From: George Guo <guodongtai@kylinos.cn>
+> str_has_suffix() is test string if ends with specify string.
 > 
-> Add do_warn, warn_limit fields to the output of the
-> percpu_alloc_percpu_fail ftrace event.
+> Signed-off-by: Ye Bin <yebin10@huawei.com>
+> ---
+>  include/linux/string.h | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 > 
-> This is required to percpu_alloc failed with no warning showing.
+> diff --git a/include/linux/string.h b/include/linux/string.h
+> index 433c207a01da..e47e9597af27 100644
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -405,4 +405,24 @@ static __always_inline size_t str_has_prefix(const char *str, const char *prefix
+>  	return strncmp(str, prefix, len) == 0 ? len : 0;
+>  }
+>  
+> +/**
+> + * str_has_suffix - Test if a string has a given suffix
+> + * @str: The string to test
+> + * @suffix: The string to see if @str ends with
+> + *
+> + * Returns:
+> + * * strlen(@suffix) if @str ends with @suffix
+> + * * 0 if @str does not end with @suffix
+> + */
+> +static __always_inline size_t str_has_suffix(const char *str, const char *suffix)
+> +{
+> +	size_t len = strlen(suffix);
+> +	size_t str_len = strlen(str);
+> +
+> +	if (len > str_len)
+> +		return 0;
+> +
+> +	return strncmp(str + str_len - len, suffix, len) == 0 ? len : 0;
+> +}
 
-You mean to state;
+I understand why you are returning the length of the suffix, as it matches
+str_has_prefix(). But as the user of this will likely need the length of
+the "str" too, we should either return the length of the string, or the
+index of where the suffix was found.
 
-  In order to know why percpu_alloc failed but produces no warnings, the
-  do_warn and warn_limit should be traced to let the user know it was
-  rate-limited.
+/**
+ [..]
+ @index: The index into @str of where @suffix is if found (NULL to ignore)
+ [..]
+*/
+static __always_inline size_t str_has_suffix(const char *str, const char *suffix, size_t *index)
+{
+	size_t len = strlen(suffix);
+	size_t str_len = strlen(str);
 
-Or something like that?
+	if (len > str_len)
+		return 0;
 
-Honestly, I don't think that the trace event is the proper place to do
-that. The trace event just shows that it did fail. If you are confused to
-why it doesn't print to dmesg, then you can simply add a kprobe to see
-those values as well.
+	if (index)
+		*index = str_len - len;
+
+	return strncmp(str + str_len - len, suffix, len) == 0 ? len : 0;
+}
 
 -- Steve
 
-> 
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> ---
+> +
+>  #endif /* _LINUX_STRING_H_ */
+
