@@ -1,118 +1,240 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B6B48CEF
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Jan 2024 21:35:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59AF482D1;
+	Mon, 22 Jan 2024 21:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705959324; cv=none; b=SSARY6U6KiQN1Xl/hcartd1031+yPWUUThmrgRhjcmYdbX528BKZszt6jQK4QS8dKf3wZpJqwltQGC2DB8jI8BoHH/KJ90kgIkMi2MELXmU93dK9XJ4afCpnoa52f92FlgJP3R40cP0xPU13re7xa+uLLhzr2+UzW5+L7OUXY/Y=
+	t=1705960517; cv=none; b=pX38a7Ch3EyK+e1Hmz+5Y0r3p3bjGvsNntAAgKJ7lxArZXqo2SWMicgzt9wpGrlWvwmlRhHPPliryZ6WIMtg7XQOr5nyJoQgTg5RMe+9n2HQg2GiXVAAfRKcjzkoB4t+ymkMuJSywE9yNKEy0Fw9b/zsywDiaJMIhpsJVmr/D70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705959324; c=relaxed/simple;
-	bh=tir7kge5xaX08VMRW1qUzxTUu9x6OO0aQSyK1LncuuY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AnLoh7hsMykozupqhrj2Q3ItPcmk2G+sOEIJuCRiae3Zfb9CL8MV3CIdOYogTiXxeaAOUVCGGimfhZvZ1ukbq3fDYHoCIqTNA8F0nIJsb08ZsABuiophAkkoMk8+q/EnvA7MDfweQz0Gh0WhLA4GqciCUjEUr/brnYhnQ394MDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=V4Rk67bh; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1705960517; c=relaxed/simple;
+	bh=KtugyW7AS+Y0kyu+UdduUUKiahxv+lkYKyHtEdZWmGQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qnvWo6ktQeUMl+LwCqdP05hUE+xcKX4F3YArbMcdY5O28z3bXZsWolGTy0qVjmmSLwFdpb6ZDk6qdxyftzOrGrPL3yCXQXKfaYXt+i3P+WiM9sXRhtuNVM+EpwyHwoSDstW9UTqdBGzUY3eDLr26raA+JtWUXjvObUwcr+dNoA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cugfcyuo; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V4Rk67bh"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5c229dabbb6so1371079a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 Jan 2024 13:35:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705959320; x=1706564120; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=La/pQA6UxU8t2n1gEI32Cqq0uc4Tew1m9B7OoRZQ8SI=;
-        b=V4Rk67bhj38bUYpTgO1fXNT7hlYfhelV36xIeufYYXG/jyrFnpW3z+ZFIoQNE/eiSz
-         7F7EblPvj8mBUqZ4tkfYTHThHDwRYOueP8p409VYLs5dsXEPMFIurqLUt9qGQ1wNQpvW
-         yxofseEB9WDEY9pPwhthu+mwYY3hrzwhMJeb0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705959320; x=1706564120;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=La/pQA6UxU8t2n1gEI32Cqq0uc4Tew1m9B7OoRZQ8SI=;
-        b=uO4fE6hSdqr/q4FBI/q3B5B28qLt1woRc0F8u/lqJWWWMgwBhW5pwH3vEFYFNCS8Te
-         aqj/Iu5yf8wScloPn3qSwGJ6MRJdpedZaWhY+iXKW1Ck9XzmS27zgki+AkcLU56iG8fN
-         ZVMzwdlcHI1AvJaMF3TPH0CeQqUWfnkf4QuInOSp60lutAeiEFxW0JInBx22HgNb3sqX
-         CO1sbkBoYupm3mfX8PE+Zbc5dtPnMei+zT9iPdYw47nCyyNLzqxzFXppq3w+plyhrEnz
-         0KTJnv0WcPsrOi2AP67t7C527zw/ySYIbJ+n5tg6RF18fIM0+JPo/eCphWQvB8vt3diG
-         eOEA==
-X-Gm-Message-State: AOJu0YxtwF0qerBvVtTZb7MnvzVGi1pwQgXvUyqERXeW0NcYTNh/WxP2
-	70xmg6KGHqV1bmuQWyNx9URxL/RU6MnvlQRjgt5iHdS2f5C8+Up7AY7yVHmIxw==
-X-Google-Smtp-Source: AGHT+IEhye246jTya1RIC7tJ0lpkhYypKWEZO4ePXa0bxP/yrVeg7EyStXAcy9+TrTGZeyn+aV1J5Q==
-X-Received: by 2002:a17:90a:c0f:b0:28a:b5ac:514f with SMTP id 15-20020a17090a0c0f00b0028ab5ac514fmr1976731pjs.95.1705959319837;
-        Mon, 22 Jan 2024 13:35:19 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id pd5-20020a17090b1dc500b0028c5585fb41sm10145282pjb.45.2024.01.22.13.35.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 13:35:19 -0800 (PST)
-Date: Mon, 22 Jan 2024 13:35:18 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] eventfs: Save directory inodes in the eventfs_inode
- structure
-Message-ID: <202401221334.A6BC4754@keescook>
-References: <20240122152748.46897388@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cugfcyuo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705960515; x=1737496515;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=KtugyW7AS+Y0kyu+UdduUUKiahxv+lkYKyHtEdZWmGQ=;
+  b=cugfcyuoRbRpwMfSNSYK79bhKoXHCZ1aFiPZkba1ObUi139L5MyuQSgJ
+   wGO+tOlFCID3/ncAe6niWhzDXNhv+/R0GrpYjNphwAGsscVLU1CeLYAEC
+   Bby6p64K1KS01PukoNp03bwkmKNy9nxX7TGR3XlXXTCFVcI55HVf+M6+2
+   1KCr7xbJnBoscBsMXDD4SgZJp/7YUiRhiqGAeCO+6OAnJ/2ro2zX4Lj0k
+   E5aDszmyJeMP2DzXN/FvbWmd2f2CDgTiWEkIhdIRD1DG7rgjeNrOcgUSq
+   3cKDmTDyynS7QAxN6GGiXp8Zj2tpLXqxKKDnjzRXGASW9IqXYyndTg4zN
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="14853463"
+X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
+   d="scan'208";a="14853463"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 13:55:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="904997364"
+X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
+   d="scan'208";a="904997364"
+Received: from jacobrit-mobl1.amr.corp.intel.com ([10.213.179.193])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 13:55:13 -0800
+Message-ID: <622f9ba5db1e4f4e72d14bf8d918d27033f88167.camel@linux.intel.com>
+Subject: Re: [PATCH] tracing: Ensure visibility when inserting an element
+ into tracing_map
+From: Tom Zanussi <tom.zanussi@linux.intel.com>
+To: Petr Pavlu <petr.pavlu@suse.com>, rostedt@goodmis.org,
+ mhiramat@kernel.org,  mathieu.desnoyers@efficios.com
+Cc: vedang.patel@intel.com, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Mon, 22 Jan 2024 15:55:12 -0600
+In-Reply-To: <20240122150928.27725-1-petr.pavlu@suse.com>
+References: <20240122150928.27725-1-petr.pavlu@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240122152748.46897388@gandalf.local.home>
 
-On Mon, Jan 22, 2024 at 03:27:48PM -0500, Steven Rostedt wrote:
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> The eventfs inodes and directories are allocated when referenced. But this
-> leaves the issue of keeping consistent inode numbers and the number is
-> only saved in the inode structure itself. When the inode is no longer
-> referenced, it can be freed. When the file that the inode was representing
-> is referenced again, the inode is once again created, but the inode number
-> needs to be the same as it was before.
-> 
-> Just making the inode numbers the same for all files is fine, but that
-> does not work with directories. The find command will check for loops via
-> the inode number and having the same inode number for directories triggers:
-> 
->   # find /sys/kernel/tracing
-> find: File system loop detected;
-> '/sys/kernel/debug/tracing/events/initcall/initcall_finish' is part of the same file system loop as
-> '/sys/kernel/debug/tracing/events/initcall'.
-> [..]
-> 
-> Linus pointed out that the eventfs_inode structure ends with a single
-> 32bit int, and on 64 bit machines, there's likely a 4 byte hole due to
-> alignment. We can use this hole to store the inode number for the
-> eventfs_inode. All directories in eventfs are represented by an
-> eventfs_inode and that data structure can hold its inode number.
-> 
-> That last int was also purposely placed at the end of the structure to
-> prevent holes from within. Now that there's a 4 byte number to hold the
-> inode, both the inode number and the last integer can be moved up in the
-> structure for better cache locality, where the llist and rcu fields can be
-> moved to the end as they are only used when the eventfs_inode is being
-> deleted.
-> 
-> Link: https://lore.kernel.org/all/CAMuHMdXKiorg-jiuKoZpfZyDJ3Ynrfb8=X+c7x0Eewxn-YRdCA@mail.gmail.com/
-> 
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Fixes: 53c41052ba31 ("eventfs: Have the inodes all for files and directories all be the same")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Hi Petr,
 
-Since I reviewed the earlier patch, I will repeat here for the formal
-one too. :) Thanks for avoiding the hashing!
+On Mon, 2024-01-22 at 16:09 +0100, Petr Pavlu wrote:
+> Running the following two commands in parallel on a multi-processor
+> AArch64 machine can sporadically produce an unexpected warning about
+> duplicate histogram entries:
+>=20
+> =C2=A0$ while true; do
+> =C2=A0=C2=A0=C2=A0=C2=A0 echo hist:key=3Did.syscall:val=3Dhitcount > \
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /sys/kernel/debug/tracing/events/raw=
+_syscalls/sys_enter/trigger
+> =C2=A0=C2=A0=C2=A0=C2=A0 cat /sys/kernel/debug/tracing/events/raw_syscall=
+s/sys_enter/hist
+> =C2=A0=C2=A0=C2=A0=C2=A0 sleep 0.001
+> =C2=A0=C2=A0 done
+> =C2=A0$ stress-ng --sysbadaddr $(nproc)
+>=20
+> The warning looks as follows:
+>=20
+> [ 2911.172474] ------------[ cut here ]------------
+> [ 2911.173111] Duplicates detected: 1
+> [ 2911.173574] WARNING: CPU: 2 PID: 12247 at kernel/trace/tracing_map.c:9=
+83 tracing_map_sort_entries+0x3e0/0x408
+> [ 2911.174702] Modules linked in: iscsi_ibft(E) iscsi_boot_sysfs(E) rfkil=
+l(E) af_packet(E) nls_iso8859_1(E) nls_cp437(E) vfat(E) fat(E) ena(E) tiny_=
+power_button(E) qemu_fw_cfg(E) button(E) fuse(E) efi_pstore(E) ip_tables(E)=
+ x_tables(E) xfs(E) libcrc32c(E) aes_ce_blk(E) aes_ce_cipher(E) crct10dif_c=
+e(E) polyval_ce(E) polyval_generic(E) ghash_ce(E) gf128mul(E) sm4_ce_gcm(E)=
+ sm4_ce_ccm(E) sm4_ce(E) sm4_ce_cipher(E) sm4(E) sm3_ce(E) sm3(E) sha3_ce(E=
+) sha512_ce(E) sha512_arm64(E) sha2_ce(E) sha256_arm64(E) nvme(E) sha1_ce(E=
+) nvme_core(E) nvme_auth(E) t10_pi(E) sg(E) scsi_mod(E) scsi_common(E) efiv=
+arfs(E)
+> [ 2911.174738] Unloaded tainted modules: cppc_cpufreq(E):1
+> [ 2911.180985] CPU: 2 PID: 12247 Comm: cat Kdump: loaded Tainted: G=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 E=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 6.7.0-default #2 1b58bbb22c97e4399dc09f92d309344f69c44a0=
+1
+> [ 2911.182398] Hardware name: Amazon EC2 c7g.8xlarge/, BIOS 1.0 11/1/2018
+> [ 2911.183208] pstate: 61400005 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYP=
+E=3D--)
+> [ 2911.184038] pc : tracing_map_sort_entries+0x3e0/0x408
+> [ 2911.184667] lr : tracing_map_sort_entries+0x3e0/0x408
+> [ 2911.185310] sp : ffff8000a1513900
+> [ 2911.185750] x29: ffff8000a1513900 x28: ffff0003f272fe80 x27: 000000000=
+0000001
+> [ 2911.186600] x26: ffff0003f272fe80 x25: 0000000000000030 x24: 000000000=
+0000008
+> [ 2911.187458] x23: ffff0003c5788000 x22: ffff0003c16710c8 x21: ffff80008=
+017f180
+> [ 2911.188310] x20: ffff80008017f000 x19: ffff80008017f180 x18: fffffffff=
+fffffff
+> [ 2911.189160] x17: 0000000000000000 x16: 0000000000000000 x15: ffff8000a=
+15134b8
+> [ 2911.190015] x14: 0000000000000000 x13: 205d373432323154 x12: 5b5d31313=
+1333731
+> [ 2911.190844] x11: 00000000fffeffff x10: 00000000fffeffff x9 : ffffd1b78=
+274a13c
+> [ 2911.191716] x8 : 000000000017ffe8 x7 : c0000000fffeffff x6 : 000000000=
+057ffa8
+> [ 2911.192554] x5 : ffff0012f6c24ec0 x4 : 0000000000000000 x3 : ffff2e5b7=
+2b5d000
+> [ 2911.193404] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff0003f=
+f254480
+> [ 2911.194259] Call trace:
+> [ 2911.194626]=C2=A0 tracing_map_sort_entries+0x3e0/0x408
+> [ 2911.195220]=C2=A0 hist_show+0x124/0x800
+> [ 2911.195692]=C2=A0 seq_read_iter+0x1d4/0x4e8
+> [ 2911.196193]=C2=A0 seq_read+0xe8/0x138
+> [ 2911.196638]=C2=A0 vfs_read+0xc8/0x300
+> [ 2911.197078]=C2=A0 ksys_read+0x70/0x108
+> [ 2911.197534]=C2=A0 __arm64_sys_read+0x24/0x38
+> [ 2911.198046]=C2=A0 invoke_syscall+0x78/0x108
+> [ 2911.198553]=C2=A0 el0_svc_common.constprop.0+0xd0/0xf8
+> [ 2911.199157]=C2=A0 do_el0_svc+0x28/0x40
+> [ 2911.199613]=C2=A0 el0_svc+0x40/0x178
+> [ 2911.200048]=C2=A0 el0t_64_sync_handler+0x13c/0x158
+> [ 2911.200621]=C2=A0 el0t_64_sync+0x1a8/0x1b0
+> [ 2911.201115] ---[ end trace 0000000000000000 ]---
+>=20
+> The problem appears to be caused by CPU reordering of writes issued from
+> __tracing_map_insert().
+>=20
+> The check for the presence of an element with a given key in this
+> function is:
+>=20
+> =C2=A0val =3D READ_ONCE(entry->val);
+> =C2=A0if (val && keys_match(key, val->key, map->key_size)) ...
+>=20
+> The write of a new entry is:
+>=20
+> =C2=A0elt =3D get_free_elt(map);
+> =C2=A0memcpy(elt->key, key, map->key_size);
+> =C2=A0entry->val =3D elt;
+>=20
+> The "memcpy(elt->key, key, map->key_size);" and "entry->val =3D elt;"
+> stores may become visible in the reversed order on another CPU. This
+> second CPU might then incorrectly determine that a new key doesn't match
+> an already present val->key and subsequently insert a new element,
+> resulting in a duplicate.
+>=20
+> Fix the problem by adding a write barrier between
+> "memcpy(elt->key, key, map->key_size);" and "entry->val =3D elt;", and fo=
+r
+> good measure, also use WRITE_ONCE(entry->val, elt) for publishing the
+> element. The sequence pairs with the mentioned "READ_ONCE(entry->val);"
+> and the "val->key" check which has an address dependency.
+>=20
+> The barrier is placed on a path executed when adding an element for
+> a new key. Subsequent updates targeting the same key remain unaffected.
+>=20
+> From the user's perspective, the issue was introduced by commit
+> c193707dde77 ("tracing: Remove code which merges duplicates"), which
+> followed commit cbf4100efb8f ("tracing: Add support to detect and avoid
+> duplicates"). The previous code operated differently; it inherently
+> expected potential races which result in duplicates but merged them
+> later when they occurred.
+>=20
+> Fixes: c193707dde77 ("tracing: Remove code which merges duplicates")
+> Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
+> ---
+> =C2=A0kernel/trace/tracing_map.c | 7 ++++++-
+> =C2=A01 file changed, 6 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/kernel/trace/tracing_map.c b/kernel/trace/tracing_map.c
+> index c774e560f2f9..a4dcf0f24352 100644
+> --- a/kernel/trace/tracing_map.c
+> +++ b/kernel/trace/tracing_map.c
+> @@ -574,7 +574,12 @@ __tracing_map_insert(struct tracing_map *map, void *=
+key, bool lookup_only)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
+> =C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0memcpy(elt->key, key, map->key=
+_size);
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0entry->val =3D elt;
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/*
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Ensure the initialization is visi=
+ble and
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * publish the elt.
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0smp_wmb();
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0WRITE_ONCE(entry->val, elt);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0atomic64_inc(&map->hits);
+> =C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return entry->val;
+>=20
+> base-commit: 9d1694dc91ce7b80bc96d6d8eaf1a1eca668d847
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Makes sense, thanks for fixing this!
 
--- 
-Kees Cook
+Acked-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+
+Tom
+
+
+
