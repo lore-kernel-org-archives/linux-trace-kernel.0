@@ -1,36 +1,36 @@
 Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5844358134;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5878058218;
 	Tue, 23 Jan 2024 09:19:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706001556; cv=none; b=pk7Q8aNUZ+MPpk8C+/tmpi9pCr6FwzsMcaiU5clVcr9w1LIVE6SYtJuUWZKcKo6RyfjKRsm6Jx3HWq061p0IuBpqVvRtFlYVEg6wnY/BD8gUY2mBNtsJUzLALYxu6s9xADfDINQ42kXhFG6RRE7j5B7gUB+a7KyQx5z8yRjSz5o=
+	t=1706001556; cv=none; b=hwBul+U3ePXlCJ9RS91cfjFKf92qUmiiEOWnXb9ylYOiCy/u9Jp5yHRmzQk5i2/vp1/ao8U/0nkgp4XuyqMXlbSqxwC/5gSKYZ2dFtPi8cZwQ3JFwCQv8fI4oVIHrg/bJXaS2V+63jzsp+mSXN50JNfBScqov+6mNr+Du91fPJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706001556; c=relaxed/simple;
-	bh=SiWtbyNZNzEz2T7i5SIjV//aX/niwPXUWmBVnXoNsP4=;
+	bh=pw2vTIuQmODbxC808VglRRN13BkaI7LvfeN3506+b+k=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HIAR2wTADuePdmXaxQu6uwhOePOiA/O7dVTOaHzGi9njSgxegiuQVW9vxMMnHsxwvhQXICLCDbWyT/JuedkxiafMgbh0lviVigy6+oNLIfsJqELjFPHZ0A7mbxSQ1qVBJ3aXicmAlmqWH/Ymo+bX6lBmlJxgHspSo0YUJ4QZWMM=
+	 MIME-Version:Content-Type; b=mcgWNbWgtL4NOauva2Sf1gk6UGad5a4UcwnpqPhtZJr7TIG716XpjSmw62oUSgQF2dX4SMG9n8VRvPZDYUs9a7UHJlPFM3dxIko8e1AlTcr7phN7qLSnU0jORv0YLgZIcJY1R71U1NqEURVibTH3GU86nJACsaegYVWiRlNyxvg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TK1hK5R6nzvVDK;
-	Tue, 23 Jan 2024 17:17:37 +0800 (CST)
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TK1hv31hXzsWMZ;
+	Tue, 23 Jan 2024 17:18:07 +0800 (CST)
 Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id D7D851404FE;
+	by mail.maildlp.com (Postfix) with ESMTPS id E479C1404FD;
 	Tue, 23 Jan 2024 17:19:08 +0800 (CST)
 Received: from huawei.com (10.175.127.227) by canpemm500010.china.huawei.com
  (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 23 Jan
- 2024 17:19:03 +0800
+ 2024 17:19:05 +0800
 From: Ye Bin <yebin10@huawei.com>
 To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
 	<mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <yebin10@huawei.com>
-Subject: [PATCH v4 1/7] string.h: add str_has_suffix() helper for test string ends with specify string
-Date: Tue, 23 Jan 2024 17:21:33 +0800
-Message-ID: <20240123092139.3698375-2-yebin10@huawei.com>
+Subject: [PATCH v4 4/7] tracing/probes: support '%pD' type for print struct file's name
+Date: Tue, 23 Jan 2024 17:21:36 +0800
+Message-ID: <20240123092139.3698375-5-yebin10@huawei.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20240123092139.3698375-1-yebin10@huawei.com>
 References: <20240123092139.3698375-1-yebin10@huawei.com>
@@ -45,51 +45,79 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  canpemm500010.china.huawei.com (7.192.105.118)
 
-str_has_suffix() is test string if ends with specify string, and also
-this API may return the index of where the suffix was found.
+Similar to '%pD' for printk, use '%pD' for print struct file's name.
 
 Signed-off-by: Ye Bin <yebin10@huawei.com>
 ---
- include/linux/string.h | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ kernel/trace/trace_probe.c | 41 ++++++++++++++++++++++++--------------
+ 1 file changed, 26 insertions(+), 15 deletions(-)
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 433c207a01da..2fb0f22237fe 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -405,4 +405,32 @@ static __always_inline size_t str_has_prefix(const char *str, const char *prefix
- 	return strncmp(str, prefix, len) == 0 ? len : 0;
- }
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index cc8bd7ea5341..a664633137a0 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -12,6 +12,7 @@
+ #define pr_fmt(fmt)	"trace_probe: " fmt
  
-+/**
-+ * str_has_suffix - Test if a string has a given suffix
-+ * @str: The string to test
-+ * @suffix: The string to see if @str ends with
-+ * @index: The index into @str of where @suffix is if found (NULL to ignore)
-+ *
-+ * Returns:
-+ * * strlen(@suffix) if @str ends with @suffix
-+ * * 0 if @str does not end with @suffix
-+ */
-+static __always_inline size_t str_has_suffix(const char *str, const char *suffix,
-+					     size_t *index)
-+{
-+	size_t len = strlen(suffix);
-+	size_t str_len = strlen(str);
+ #include <linux/bpf.h>
++#include <linux/fs.h>
+ #include "trace_btf.h"
+ 
+ #include "trace_probe.h"
+@@ -1574,28 +1575,38 @@ int traceprobe_expand_dentry_args(int argc, const char *argv[], char *buf,
+ 	for (i = 0; i < argc; i++) {
+ 		size_t idx;
+ 
+-		if (str_has_suffix(argv[i], ":%pd", &idx)) {
+-			char *tmp = kstrdup(argv[i], GFP_KERNEL);
+-			char *equal;
++		if (!str_has_suffix(argv[i], ":%pd", &idx) &&
++		    !str_has_suffix(argv[i], ":%pD", &idx))
++			continue;
+ 
+-			if (!tmp)
+-				return -ENOMEM;
++		char *tmp = kstrdup(argv[i], GFP_KERNEL);
++		char *equal;
 +
-+	if (len > str_len)
-+		return 0;
-+
-+	if (strncmp(str + str_len - len, suffix, len))
-+		return 0;
-+
-+	if (index)
-+		*index = str_len - len;
-+
-+	return len;
-+}
-+
- #endif /* _LINUX_STRING_H_ */
++		if (!tmp)
++			return -ENOMEM;
+ 
+-			equal = strchr(tmp, '=');
+-			if (equal)
+-				*equal = '\0';
+-			tmp[idx] = '\0';
++		equal = strchr(tmp, '=');
++		if (equal)
++			*equal = '\0';
++		tmp[idx] = '\0';
++		if (argv[i][idx + 3] == 'd')
+ 			ret = snprintf(buf + used, bufsize - used,
+ 				       "%s%s+0x0(+0x%zx(%s)):string",
+ 				       equal ? tmp : "", equal ? "=" : "",
+ 				       offsetof(struct dentry, d_name.name),
+ 				       equal ? equal + 1 : tmp);
+-			kfree(tmp);
+-			if (ret >= bufsize - used)
+-				return -ENOMEM;
+-			argv[i] = buf + used;
+-			used += ret + 1;
+-		}
++		else
++			ret = snprintf(buf + used, bufsize - used,
++				       "%s%s+0x0(+0x%zx(+0x%zx(%s))):string",
++				       equal ? tmp : "", equal ? "=" : "",
++				       offsetof(struct dentry, d_name.name),
++				       offsetof(struct file, f_path.dentry),
++				       equal ? equal + 1 : tmp);
++		kfree(tmp);
++		if (ret >= bufsize - used)
++			return -ENOMEM;
++		argv[i] = buf + used;
++		used += ret + 1;
+ 	}
+ 
+ 	return 0;
 -- 
 2.31.1
 
