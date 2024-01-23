@@ -1,36 +1,36 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DCC811;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531A6A47;
 	Tue, 23 Jan 2024 02:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705978517; cv=none; b=O7Mz4y8FRRacfPZmRI5j/f7eb7h9fIMxRnnwTC6kp3On0fRDu/APgtAxqDhJ0DRrQAKjO/r+Oml9YzPaaCfMtX1dg0nMrgOxbgKXoNsfUJkuDnKbZzkzjw6B8rJ6QiWcpH/U3dz0SMVSfc2A8UxLMmwcSq7ogZCxuh8MbLx0kPg=
+	t=1705978517; cv=none; b=msAIdruDv2zh3eCDqXamEmEvaHqXNnL58dD+Ikz8SeAkniJX9eWVmsTF3d/mzkO4qJ/U7zo8VL4CxO4R4B2hM3BLtrbHFOwBWL5e3341n13HKcDKx6aVHY7zLY5rpuSVwrFIiSriKJ/RclQQME8mhwseYl5/xX5Qhv+6P53ORdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705978517; c=relaxed/simple;
-	bh=ASkvNL+WBKTxbaQNMIjBmg1cXddIy1p77kjdfuRrvQo=;
+	bh=SiWtbyNZNzEz2T7i5SIjV//aX/niwPXUWmBVnXoNsP4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bSdG6uOTMtoOp2ifbaPCPRlNhFQfyde0m4kwYPdBc+Nrdppy1uKjXg0UM64v22BztWZCdzZwq1KBwieafK+JJrtnxMDa7bpMVSA5hl9kmQvs8cJ727Ew5vBNtyFomHj8aUx/QU85wqHszMjM7J4RJm61BOYMFLLScdxPn24wdBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+	 MIME-Version:Content-Type; b=VZhU+gAG9FEvIDTCj8iv8lwXkAiRXcrmkG8FyapLC3o2cf038mnXmG/BpsG+i08celqQXdhsH3rLs27p+NbdLqMaX4gE2Iw8GRAOR3V7pyOS6fLoDiDdf4K4IkjCU0Nkfjo+ZHv1CgRrJuQxA0ALgqETRkSazlRz5+qa/GVjU7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TJs954pVDz29kg8;
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4TJs951t53z1S5QG;
 	Tue, 23 Jan 2024 10:53:29 +0800 (CST)
 Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id CCD7C140412;
+	by mail.maildlp.com (Postfix) with ESMTPS id B85D21404D9;
 	Tue, 23 Jan 2024 10:55:12 +0800 (CST)
 Received: from huawei.com (10.175.127.227) by canpemm500010.china.huawei.com
  (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 23 Jan
- 2024 10:53:34 +0800
+ 2024 10:53:33 +0800
 From: Ye Bin <yebin10@huawei.com>
 To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
 	<mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <yebin10@huawei.com>
-Subject: [PATCH v3 5/7] tracing: add new type "%pd/%pD" in readme_msg[]
-Date: Tue, 23 Jan 2024 10:56:06 +0800
-Message-ID: <20240123025608.2370978-6-yebin10@huawei.com>
+Subject: [PATCH v3 1/7] string.h: add str_has_suffix() helper for test string ends with specify string
+Date: Tue, 23 Jan 2024 10:56:02 +0800
+Message-ID: <20240123025608.2370978-2-yebin10@huawei.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20240123025608.2370978-1-yebin10@huawei.com>
 References: <20240123025608.2370978-1-yebin10@huawei.com>
@@ -45,24 +45,51 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  canpemm500010.china.huawei.com (7.192.105.118)
 
+str_has_suffix() is test string if ends with specify string, and also
+this API may return the index of where the suffix was found.
+
 Signed-off-by: Ye Bin <yebin10@huawei.com>
 ---
- kernel/trace/trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/string.h | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 2a7c6fd934e9..13197d3b86bd 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5745,7 +5745,7 @@ static const char readme_msg[] =
- 	"\t           +|-[u]<offset>(<fetcharg>), \\imm-value, \\\"imm-string\"\n"
- 	"\t     type: s8/16/32/64, u8/16/32/64, x8/16/32/64, char, string, symbol,\n"
- 	"\t           b<bit-width>@<bit-offset>/<container-size>, ustring,\n"
--	"\t           symstr, <type>\\[<array-size>\\]\n"
-+	"\t           symstr, %pd/%pD <type>\\[<array-size>\\]\n"
- #ifdef CONFIG_HIST_TRIGGERS
- 	"\t    field: <stype> <name>;\n"
- 	"\t    stype: u8/u16/u32/u64, s8/s16/s32/s64, pid_t,\n"
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 433c207a01da..2fb0f22237fe 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -405,4 +405,32 @@ static __always_inline size_t str_has_prefix(const char *str, const char *prefix
+ 	return strncmp(str, prefix, len) == 0 ? len : 0;
+ }
+ 
++/**
++ * str_has_suffix - Test if a string has a given suffix
++ * @str: The string to test
++ * @suffix: The string to see if @str ends with
++ * @index: The index into @str of where @suffix is if found (NULL to ignore)
++ *
++ * Returns:
++ * * strlen(@suffix) if @str ends with @suffix
++ * * 0 if @str does not end with @suffix
++ */
++static __always_inline size_t str_has_suffix(const char *str, const char *suffix,
++					     size_t *index)
++{
++	size_t len = strlen(suffix);
++	size_t str_len = strlen(str);
++
++	if (len > str_len)
++		return 0;
++
++	if (strncmp(str + str_len - len, suffix, len))
++		return 0;
++
++	if (index)
++		*index = str_len - len;
++
++	return len;
++}
++
+ #endif /* _LINUX_STRING_H_ */
 -- 
 2.31.1
 
