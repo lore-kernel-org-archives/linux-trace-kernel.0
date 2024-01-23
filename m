@@ -1,56 +1,56 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35BFF60DD6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6368560DEF
 	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jan 2024 15:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706024253; cv=none; b=WX33/xm+l0RzDIAbdLs96DvA8EK59FsqdjYetpy8pUci1o2GjmdWlmWbgYm9/yE7vuT/zLJ4GkNM6acK5huXypIy9/+tgA2TjcuJRxQ4tcWFlFj0+wLcE7Hgm3ndMHna74Zy/YCOk8GItcXKX5lMHDIJlTjYnzB2S43AcNeHEdQ=
+	t=1706024253; cv=none; b=ZOpecu+y9JBT9VbjrBH7K8jbZCKCiCcaJInRBmxCVZIopF5xFYiveA9xjBmW7lEyzT1wd+yMmtApr6p/rgkypC36teTyjk6718Pb16HddtBHbwORFmkonmsAyNm8NU+3AhI3mdA36Pw0HHySP2O28VWflR7Rth4+hMlYI6uBEIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706024253; c=relaxed/simple;
-	bh=t6uAJFMViO+HMxmFBNUKRYgjnERIYOpZmhn/2AN2c8Q=;
+	bh=jCjAbkJtriD7ifpw1qebNMZZ8BWgs8SNrPPMBTZcbt0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QggeVk6Lb7bHAaxvuARkpiWHxogNu04We+AcAaSjXlKMYbf6vLwPcl5c517L7GQrN1sFqLP72Aw9DkKxviQ5BZOeYEKMWMXn8zPeYyBo5BTL8OuAShVBtY29WV917BQYZtq6jjRPCz+IM+d6HL6jhjfGD2ou8P4Wnp4T8f9zlkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=waldekranz.com; spf=pass smtp.mailfrom=waldekranz.com; dkim=pass (2048-bit key) header.d=waldekranz-com.20230601.gappssmtp.com header.i=@waldekranz-com.20230601.gappssmtp.com header.b=jugQnHRA; arc=none smtp.client-ip=209.85.167.54
+	 MIME-Version; b=C2cngByScRonT74gGhEAIeoWJ0v/KOkhKhyzrcHAL+XwMCjA11J4HKK171atJzaHowuWE27V3FPRRNuTXu4HcAnLdXTwuEWeNm38jm9RzZO/EUyxakSKWpRnoG99SUC+B06DaqMcPwvuLIDoOJwrS0BoT7D9+42Q95VwMubNnmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=waldekranz.com; spf=pass smtp.mailfrom=waldekranz.com; dkim=pass (2048-bit key) header.d=waldekranz-com.20230601.gappssmtp.com header.i=@waldekranz-com.20230601.gappssmtp.com header.b=Sm7tYrJ6; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=waldekranz.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=waldekranz.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=waldekranz-com.20230601.gappssmtp.com header.i=@waldekranz-com.20230601.gappssmtp.com header.b="jugQnHRA"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-50e78f1f41fso4587326e87.2
+	dkim=pass (2048-bit key) header.d=waldekranz-com.20230601.gappssmtp.com header.i=@waldekranz-com.20230601.gappssmtp.com header.b="Sm7tYrJ6"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-50f11e3ba3aso6346611e87.1
         for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jan 2024 07:37:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=waldekranz-com.20230601.gappssmtp.com; s=20230601; t=1706024248; x=1706629048; darn=vger.kernel.org;
+        d=waldekranz-com.20230601.gappssmtp.com; s=20230601; t=1706024249; x=1706629049; darn=vger.kernel.org;
         h=content-transfer-encoding:organization:mime-version:references
          :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=fPaQcwVDm1hs7rZIx/MRtZyeT8rTUy8NvGG7kGqel6E=;
-        b=jugQnHRAURw/CWK7AiGJjmqMJiu7YZHy8LBqmpXeCQPnXaMfjsJ54BxQX7xk1c3bXA
-         lorUSLOp7ZYyfmwDASmh0P9splGGxPjEPhfnDSrowubSnsRJr3v/D4TLQPlmZau3pYgi
-         dw6w05nsjTIDqmBBfNfof3/C9xt9jr8wSXpAMgsKlXU3UucUsiPo16u6G02twQOQjNkj
-         4q9xu47yTuzQucagBgr93tMhzzBOFt5w3Qy+zwBOG2CPZLN323xfXYMTxwF3GRma/3uO
-         DRv/DO4Nh6CMo0StEquYvmRy/M4FknhuiPstVbEDKLx/yKWoyTuWHf+PTk1dBXUHsAC3
-         IcAA==
+        bh=/kR0u0El9IYx1DrH3bIc67HSSi50NSYYpP/QMJclvuE=;
+        b=Sm7tYrJ6sRNIWeb6yWs7oI6wGD3zl1fmpUXerP0Z86/vGaazMKRfrtEML7OY9KYjWs
+         KKZNFw+ThRw8L56lt8S3Od/eWNsvehdM0AubYoDsHCPH6qW3PpFrGwPOFQXqv2JYDOXm
+         jBXcFLGz/EXJoWKwkTe5DuPnL19PiP2olQmbIXy0/2NmArSi6++9SxiKQc8ZVWGrY8h7
+         rBFq34/z/GfpAzK+i7FOK3uw9WwwxpN8cekDCO9h+UEcm9uF957g5bZDzTvAJoMeknIi
+         WG38xPa6DUV1MEnd83oXBCyHqktiqli9D+u0t3GXNCXDHiti7CC3xLCfOmPPZ3po+1Q3
+         7MXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706024248; x=1706629048;
+        d=1e100.net; s=20230601; t=1706024249; x=1706629049;
         h=content-transfer-encoding:organization:mime-version:references
          :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=fPaQcwVDm1hs7rZIx/MRtZyeT8rTUy8NvGG7kGqel6E=;
-        b=kbcLWd0mjETUFf5T0+r55eTYH0TGGoQqRfCIGBY98aKP0yUalr+mIT2wKmM+zQHtnr
-         m4t36gD93ANUscDG8BdpSV28eM0ZRktwu0On6ziaNv3YxjHTg3qtE4MLsCan/Eg3wk3c
-         mJK3VysKsRU6tk0LZHzs0WVKvKPfTjpGkSM7s7B7VsFjzznZMkJ5zRdthRMUNwCqPg8U
-         aMhUvkQbZAn5R/W987N5mfBvjPMw8NG7BEol1xx7VQ86TuA+U6wZ9neO9MbaCJ+ZEQJt
-         AV/k8OPyxr7bA3Ry3sPObDY1WTiyFDZPYqGWEU3EHDdNA6akMJ4Lh0ESd5vgwCYBYZsv
-         Ejrw==
-X-Gm-Message-State: AOJu0YzW4uBWmDX+zQMsk8j2pZEZyz2i1nIXSHiCEkitiLC4w0fx4uKJ
-	+IX5duxWoUWuzm6ax74SqC4uJXfXdEFZI9iV+3yyeEwOXrTrrFOH81dKYAh4Ze0=
-X-Google-Smtp-Source: AGHT+IFPao4jpCTPjIUWAvgQ5SK98Il76XVbN67TXhfZYef6P15A89B9DQmxDv6/+zvp20DDi5NJVg==
-X-Received: by 2002:a05:6512:1243:b0:50e:4fb2:a65d with SMTP id fb3-20020a056512124300b0050e4fb2a65dmr3212895lfb.6.1706024247984;
-        Tue, 23 Jan 2024 07:37:27 -0800 (PST)
+        bh=/kR0u0El9IYx1DrH3bIc67HSSi50NSYYpP/QMJclvuE=;
+        b=O7B7KENC7RiaZo/SnVGZP+WlzzBc87Kv/M7wos0XZGvA56yhO/FbHChFS48sYLV7Dm
+         AjnGe3OCD7AVIzx4J1JxfUrK3JAQfXSrVJ0ntKzq7sWXxU3znVXtepaPuvmM5ngZuijb
+         OyOHpmOF5glakpn4pS9DeoOyqBYJFvTmCcCmJrfS3Mk4IlcEHpeL2vpeFBf6XkX9Toh7
+         5hA8BH7aoKaN1CwXFho2pQNSxgY5XrVfhamTDVTmBkjvjVe5FIGWA67gCLypmD/Ad+vz
+         3zuKm1Qny6h23xjIvmqxS8YdPy9bhnavMeInvXU5VKAnWAG3x+UfOBoOOtMV/e6IAYYQ
+         9OtQ==
+X-Gm-Message-State: AOJu0Yz47yNf530W95j5WtAQanXFJeJ61eeywf29ln7yEiyHwqJUExcw
+	QL9h+iqferyE2SZZF+FAxaoY7mdiYOyzlNMAvlxfio2Z53knYciTm9GAEmcogFQ=
+X-Google-Smtp-Source: AGHT+IGSn5CrzlN+/laBMcMd+rqCGstwG6C5pv+WqobE9f+hz4U2/blyIRzhX9e/Kg61UXM8SOisRA==
+X-Received: by 2002:a19:7001:0:b0:50e:4fa2:4fe4 with SMTP id h1-20020a197001000000b0050e4fa24fe4mr2218128lfc.66.1706024248871;
+        Tue, 23 Jan 2024 07:37:28 -0800 (PST)
 Received: from wkz-x13.addiva.ad (h-158-174-187-194.NA.cust.bahnhof.se. [158.174.187.194])
-        by smtp.gmail.com with ESMTPSA id h23-20020a19ca57000000b0050ee3e540e4sm2386790lfj.65.2024.01.23.07.37.27
+        by smtp.gmail.com with ESMTPSA id h23-20020a19ca57000000b0050ee3e540e4sm2386790lfj.65.2024.01.23.07.37.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 07:37:27 -0800 (PST)
+        Tue, 23 Jan 2024 07:37:28 -0800 (PST)
 From: Tobias Waldekranz <tobias@waldekranz.com>
 To: davem@davemloft.net,
 	kuba@kernel.org
@@ -63,9 +63,9 @@ Cc: jiri@resnulli.us,
 	rostedt@goodmis.org,
 	mhiramat@kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH net-next 1/5] net: switchdev: Wrap enums in mapper macros
-Date: Tue, 23 Jan 2024 16:37:03 +0100
-Message-Id: <20240123153707.550795-2-tobias@waldekranz.com>
+Subject: [PATCH net-next 2/5] net: switchdev: Add helpers to display switchdev objects as strings
+Date: Tue, 23 Jan 2024 16:37:04 +0100
+Message-Id: <20240123153707.550795-3-tobias@waldekranz.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240123153707.550795-1-tobias@waldekranz.com>
 References: <20240123153707.550795-1-tobias@waldekranz.com>
@@ -78,159 +78,335 @@ MIME-Version: 1.0
 Organization: Addiva Elektronik
 Content-Transfer-Encoding: 8bit
 
-In order to avoid having to maintain separate mappings from enum
-values to strings, wrap enumerators in mapper macros, so that
-enum-to-string tables can be generated.
-
-This will make it easier to create helpers that convert switchdev
-objects to strings.
+Useful both in error messages and in tracepoints.
 
 Signed-off-by: Tobias Waldekranz <tobias@waldekranz.com>
 ---
- include/net/switchdev.h | 113 ++++++++++++++++++++++++----------------
- 1 file changed, 68 insertions(+), 45 deletions(-)
+ include/net/switchdev.h       |  14 ++
+ net/switchdev/Makefile        |   2 +-
+ net/switchdev/switchdev-str.c | 278 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 293 insertions(+), 1 deletion(-)
+ create mode 100644 net/switchdev/switchdev-str.c
 
 diff --git a/include/net/switchdev.h b/include/net/switchdev.h
-index a43062d4c734..76eabf95c647 100644
+index 76eabf95c647..250053748c08 100644
 --- a/include/net/switchdev.h
 +++ b/include/net/switchdev.h
-@@ -16,21 +16,28 @@
- #define SWITCHDEV_F_SKIP_EOPNOTSUPP	BIT(1)
- #define SWITCHDEV_F_DEFER		BIT(2)
- 
-+#define SWITCHDEV_ATTR_ID_MAPPER(_fn)	\
-+	_fn(UNDEFINED),			\
-+	_fn(PORT_STP_STATE),		\
-+	_fn(PORT_MST_STATE),		\
-+	_fn(PORT_BRIDGE_FLAGS),		\
-+	_fn(PORT_PRE_BRIDGE_FLAGS),	\
-+	_fn(PORT_MROUTER),		\
-+	_fn(BRIDGE_AGEING_TIME),	\
-+	_fn(BRIDGE_VLAN_FILTERING),	\
-+	_fn(BRIDGE_VLAN_PROTOCOL),	\
-+	_fn(BRIDGE_MC_DISABLED),	\
-+	_fn(BRIDGE_MROUTER),		\
-+	_fn(BRIDGE_MST),		\
-+	_fn(MRP_PORT_ROLE),		\
-+	_fn(VLAN_MSTI),			\
-+	/*  */
+@@ -391,6 +391,20 @@ int switchdev_handle_port_attr_set(struct net_device *dev,
+ 			int (*set_cb)(struct net_device *dev, const void *ctx,
+ 				      const struct switchdev_attr *attr,
+ 				      struct netlink_ext_ack *extack));
 +
-+#define SWITCHDEV_ATTR_ID_ENUMERATOR(_id) \
-+	SWITCHDEV_ATTR_ID_ ## _id
-+
- enum switchdev_attr_id {
--	SWITCHDEV_ATTR_ID_UNDEFINED,
--	SWITCHDEV_ATTR_ID_PORT_STP_STATE,
--	SWITCHDEV_ATTR_ID_PORT_MST_STATE,
--	SWITCHDEV_ATTR_ID_PORT_BRIDGE_FLAGS,
--	SWITCHDEV_ATTR_ID_PORT_PRE_BRIDGE_FLAGS,
--	SWITCHDEV_ATTR_ID_PORT_MROUTER,
--	SWITCHDEV_ATTR_ID_BRIDGE_AGEING_TIME,
--	SWITCHDEV_ATTR_ID_BRIDGE_VLAN_FILTERING,
--	SWITCHDEV_ATTR_ID_BRIDGE_VLAN_PROTOCOL,
--	SWITCHDEV_ATTR_ID_BRIDGE_MC_DISABLED,
--	SWITCHDEV_ATTR_ID_BRIDGE_MROUTER,
--	SWITCHDEV_ATTR_ID_BRIDGE_MST,
--	SWITCHDEV_ATTR_ID_MRP_PORT_ROLE,
--	SWITCHDEV_ATTR_ID_VLAN_MSTI,
-+	SWITCHDEV_ATTR_ID_MAPPER(SWITCHDEV_ATTR_ID_ENUMERATOR)
- };
++/* switchdev-str.c */
++ssize_t switchdev_attr_str(const struct switchdev_attr *attr,
++			   char *buf, size_t len);
++ssize_t switchdev_obj_str(const struct switchdev_obj *obj,
++			  char *buf, size_t len);
++ssize_t switchdev_fdb_info_str(enum switchdev_notifier_type nt,
++			       const struct switchdev_notifier_fdb_info *fdbi,
++			       char *buf, size_t len);
++ssize_t switchdev_brport_str(const struct switchdev_brport *brport,
++			     char *buf, size_t len);
++ssize_t switchdev_notifier_str(enum switchdev_notifier_type nt,
++			       const struct switchdev_notifier_info *info,
++			       char *buf, size_t len);
+ #else
  
- struct switchdev_mst_state {
-@@ -69,18 +76,25 @@ struct switchdev_attr {
- 	} u;
- };
+ static inline int
+diff --git a/net/switchdev/Makefile b/net/switchdev/Makefile
+index c5561d7f3a7c..a40e4421087b 100644
+--- a/net/switchdev/Makefile
++++ b/net/switchdev/Makefile
+@@ -3,4 +3,4 @@
+ # Makefile for the Switch device API
+ #
  
-+#define SWITCHDEV_OBJ_ID_MAPPER(_fn)	\
-+	_fn(UNDEFINED),			\
-+	_fn(PORT_VLAN),			\
-+	_fn(PORT_MDB),			\
-+	_fn(HOST_MDB),			\
-+	_fn(MRP),			\
-+	_fn(RING_TEST_MRP),		\
-+	_fn(RING_ROLE_MRP),		\
-+	_fn(RING_STATE_MRP),		\
-+	_fn(IN_TEST_MRP),		\
-+	_fn(IN_ROLE_MRP),		\
-+	_fn(IN_STATE_MRP),		\
-+	/*  */
+-obj-y += switchdev.o
++obj-y += switchdev.o switchdev-str.o
+diff --git a/net/switchdev/switchdev-str.c b/net/switchdev/switchdev-str.c
+new file mode 100644
+index 000000000000..a1fa7315cc28
+--- /dev/null
++++ b/net/switchdev/switchdev-str.c
+@@ -0,0 +1,278 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#include <linux/if_bridge.h>
++#include <net/switchdev.h>
 +
-+#define SWITCHDEV_OBJ_ID_ENUMERATOR(_id) \
-+	SWITCHDEV_OBJ_ID_ ## _id
++static ssize_t switchdev_str_write_id(char *buf, size_t len, unsigned long id,
++				      const char *const *names, size_t n_names)
++{
++	if (id < n_names && names[id])
++		return snprintf(buf, len, "%s", names[id]);
 +
- enum switchdev_obj_id {
--	SWITCHDEV_OBJ_ID_UNDEFINED,
--	SWITCHDEV_OBJ_ID_PORT_VLAN,
--	SWITCHDEV_OBJ_ID_PORT_MDB,
--	SWITCHDEV_OBJ_ID_HOST_MDB,
--	SWITCHDEV_OBJ_ID_MRP,
--	SWITCHDEV_OBJ_ID_RING_TEST_MRP,
--	SWITCHDEV_OBJ_ID_RING_ROLE_MRP,
--	SWITCHDEV_OBJ_ID_RING_STATE_MRP,
--	SWITCHDEV_OBJ_ID_IN_TEST_MRP,
--	SWITCHDEV_OBJ_ID_IN_ROLE_MRP,
--	SWITCHDEV_OBJ_ID_IN_STATE_MRP,
-+	SWITCHDEV_OBJ_ID_MAPPER(SWITCHDEV_OBJ_ID_ENUMERATOR)
- };
- 
- struct switchdev_obj {
-@@ -209,27 +223,36 @@ struct switchdev_brport {
- 	bool tx_fwd_offload;
- };
- 
-+#define SWITCHDEV_TYPE_MAPPER(_fn)	\
-+	_fn(UNKNOWN),			\
-+					\
-+	_fn(FDB_ADD_TO_BRIDGE),		\
-+	_fn(FDB_DEL_TO_BRIDGE),		\
-+	_fn(FDB_ADD_TO_DEVICE),		\
-+	_fn(FDB_DEL_TO_DEVICE),		\
-+	_fn(FDB_OFFLOADED),		\
-+	_fn(FDB_FLUSH_TO_BRIDGE),	\
-+					\
-+	_fn(PORT_OBJ_ADD),		\
-+	_fn(PORT_OBJ_DEL),		\
-+	_fn(PORT_ATTR_SET),		\
-+					\
-+	_fn(VXLAN_FDB_ADD_TO_BRIDGE),	\
-+	_fn(VXLAN_FDB_DEL_TO_BRIDGE),	\
-+	_fn(VXLAN_FDB_ADD_TO_DEVICE),	\
-+	_fn(VXLAN_FDB_DEL_TO_DEVICE),	\
-+	_fn(VXLAN_FDB_OFFLOADED),	\
-+					\
-+	_fn(BRPORT_OFFLOADED),		\
-+	_fn(BRPORT_UNOFFLOADED),	\
-+	_fn(BRPORT_REPLAY),		\
-+	/*  */
++	return snprintf(buf, len, "UNKNOWN<%lu>", id);
++}
 +
-+#define SWITCHDEV_TYPE_ENUMERATOR(_id) \
-+	SWITCHDEV_ ## _id
++ssize_t switchdev_attr_str(const struct switchdev_attr *attr,
++			   char *buf, size_t len)
++{
++#define _ATTR_ID_STRINGER(_id) [SWITCHDEV_ATTR_ID_ ## _id] = #_id
++	static const char *const attr_id_strs[] = {
++		SWITCHDEV_ATTR_ID_MAPPER(_ATTR_ID_STRINGER)
++	};
++#undef _ATTR_ID_STRINGER
 +
- enum switchdev_notifier_type {
--	SWITCHDEV_FDB_ADD_TO_BRIDGE = 1,
--	SWITCHDEV_FDB_DEL_TO_BRIDGE,
--	SWITCHDEV_FDB_ADD_TO_DEVICE,
--	SWITCHDEV_FDB_DEL_TO_DEVICE,
--	SWITCHDEV_FDB_OFFLOADED,
--	SWITCHDEV_FDB_FLUSH_TO_BRIDGE,
--
--	SWITCHDEV_PORT_OBJ_ADD, /* Blocking. */
--	SWITCHDEV_PORT_OBJ_DEL, /* Blocking. */
--	SWITCHDEV_PORT_ATTR_SET, /* May be blocking . */
--
--	SWITCHDEV_VXLAN_FDB_ADD_TO_BRIDGE,
--	SWITCHDEV_VXLAN_FDB_DEL_TO_BRIDGE,
--	SWITCHDEV_VXLAN_FDB_ADD_TO_DEVICE,
--	SWITCHDEV_VXLAN_FDB_DEL_TO_DEVICE,
--	SWITCHDEV_VXLAN_FDB_OFFLOADED,
--
--	SWITCHDEV_BRPORT_OFFLOADED,
--	SWITCHDEV_BRPORT_UNOFFLOADED,
--	SWITCHDEV_BRPORT_REPLAY,
-+	SWITCHDEV_TYPE_MAPPER(SWITCHDEV_TYPE_ENUMERATOR)
- };
- 
- struct switchdev_notifier_info {
++	static const char *const stp_state_strs[] = {
++		[BR_STATE_DISABLED] = "disabled",
++		[BR_STATE_LISTENING] = "listening",
++		[BR_STATE_LEARNING] = "learning",
++		[BR_STATE_FORWARDING] = "forwarding",
++		[BR_STATE_BLOCKING] = "blocking",
++	};
++
++	char *cur = buf;
++	ssize_t n;
++
++	n = switchdev_str_write_id(cur, len, attr->id, attr_id_strs,
++				   ARRAY_SIZE(attr_id_strs));
++	if (n < 0)
++		return n;
++
++	cur += n;
++	len -= n;
++
++	n = snprintf(cur, len, "(flags %#x orig %s) ", attr->flags,
++		     attr->orig_dev ? netdev_name(attr->orig_dev) : "(null)");
++	if (n < 0)
++		return n;
++
++	cur += n;
++	len -= n;
++
++	switch (attr->id) {
++	case SWITCHDEV_ATTR_ID_PORT_STP_STATE:
++		n = switchdev_str_write_id(cur, len, attr->u.stp_state,
++					   stp_state_strs, ARRAY_SIZE(stp_state_strs));
++		break;
++	case SWITCHDEV_ATTR_ID_PORT_MST_STATE:
++		n = snprintf(cur, len, "msti %u", attr->u.mst_state.msti);
++		if (n < 0)
++			return n;
++
++		cur += n;
++		len -= n;
++
++		n = switchdev_str_write_id(cur, len, attr->u.mst_state.state,
++					   stp_state_strs, ARRAY_SIZE(stp_state_strs));
++		break;
++	case SWITCHDEV_ATTR_ID_PORT_PRE_BRIDGE_FLAGS:
++	case SWITCHDEV_ATTR_ID_PORT_BRIDGE_FLAGS:
++		n = snprintf(cur, len, "val %#lx mask %#lx",
++			     attr->u.brport_flags.val,
++			     attr->u.brport_flags.mask);
++		break;
++	case SWITCHDEV_ATTR_ID_PORT_MROUTER:
++	case SWITCHDEV_ATTR_ID_BRIDGE_MROUTER:
++		n = snprintf(cur, len, "%s",
++			     attr->u.mrouter ? "enabled" : "disabled");
++		break;
++	case SWITCHDEV_ATTR_ID_BRIDGE_AGEING_TIME:
++		n = snprintf(cur, len, "%ums",
++			     jiffies_to_msecs(clock_t_to_jiffies(attr->u.ageing_time)));
++		break;
++	case SWITCHDEV_ATTR_ID_BRIDGE_VLAN_FILTERING:
++		n = snprintf(cur, len, "%s",
++			     attr->u.vlan_filtering ? "enabled" : "disabled");
++		break;
++	case SWITCHDEV_ATTR_ID_BRIDGE_VLAN_PROTOCOL:
++		n = snprintf(cur, len, "%#x", attr->u.vlan_protocol);
++		break;
++	case SWITCHDEV_ATTR_ID_BRIDGE_MC_DISABLED:
++		n = snprintf(cur, len, "%s",
++			     attr->u.mc_disabled ? "active" : "inactive");
++		break;
++	case SWITCHDEV_ATTR_ID_BRIDGE_MST:
++		n = snprintf(cur, len, "%s",
++			     attr->u.mst ? "enabled" : "disabled");
++		break;
++	case SWITCHDEV_ATTR_ID_VLAN_MSTI:
++		n = snprintf(cur, len, "vid %u msti %u",
++			     attr->u.vlan_msti.vid, attr->u.vlan_msti.msti);
++		break;
++	default:
++		/* Trim trailing space */
++		return --cur - buf;
++	}
++
++	if (n < 0)
++		return n;
++
++	cur += n;
++	return cur - buf;
++}
++EXPORT_SYMBOL_GPL(switchdev_attr_str);
++
++ssize_t switchdev_obj_str(const struct switchdev_obj *obj,
++			  char *buf, size_t len)
++{
++#define _OBJ_ID_STRINGER(_id) [SWITCHDEV_OBJ_ID_ ## _id] = #_id
++	static const char *const obj_id_strs[] = {
++		SWITCHDEV_OBJ_ID_MAPPER(_OBJ_ID_STRINGER)
++	};
++#undef _OBJ_ID_STRINGER
++
++	const struct switchdev_obj_port_vlan *vlan;
++	const struct switchdev_obj_port_mdb *mdb;
++	char *cur = buf;
++	ssize_t n;
++
++	n = switchdev_str_write_id(cur, len, obj->id, obj_id_strs,
++				   ARRAY_SIZE(obj_id_strs));
++	if (n < 0)
++		return n;
++
++	cur += n;
++	len -= n;
++
++	n = snprintf(cur, len, "(flags %#x orig %s) ", obj->flags,
++		     obj->orig_dev ? netdev_name(obj->orig_dev) : "(null)");
++	if (n < 0)
++		return n;
++
++	cur += n;
++	len -= n;
++
++	switch (obj->id) {
++	case SWITCHDEV_OBJ_ID_PORT_VLAN:
++		vlan = SWITCHDEV_OBJ_PORT_VLAN(obj);
++		n = snprintf(cur, len, "vid %u flags %#x%s", vlan->vid,
++			     vlan->flags, vlan->changed ? "(changed)" : "");
++		break;
++	case SWITCHDEV_OBJ_ID_PORT_MDB:
++	case SWITCHDEV_OBJ_ID_HOST_MDB:
++		mdb = SWITCHDEV_OBJ_PORT_MDB(obj);
++		n = snprintf(cur, len, "vid %u addr %pM", mdb->vid, mdb->addr);
++		break;
++	default:
++		/* Trim trailing space */
++		return --cur - buf;
++	}
++
++	if (n < 0)
++		return n;
++
++	cur += n;
++	return cur - buf;
++}
++EXPORT_SYMBOL_GPL(switchdev_obj_str);
++
++ssize_t switchdev_fdb_info_str(enum switchdev_notifier_type nt,
++			       const struct switchdev_notifier_fdb_info *fdbi,
++			       char *buf, size_t len)
++{
++	switch (nt) {
++	case SWITCHDEV_FDB_FLUSH_TO_BRIDGE:
++		return snprintf(buf, len, "vid %u", fdbi->vid);
++	case SWITCHDEV_FDB_ADD_TO_BRIDGE:
++	case SWITCHDEV_FDB_DEL_TO_BRIDGE:
++	case SWITCHDEV_FDB_ADD_TO_DEVICE:
++	case SWITCHDEV_FDB_DEL_TO_DEVICE:
++	case SWITCHDEV_FDB_OFFLOADED:
++	case SWITCHDEV_VXLAN_FDB_ADD_TO_BRIDGE:
++	case SWITCHDEV_VXLAN_FDB_DEL_TO_BRIDGE:
++	case SWITCHDEV_VXLAN_FDB_ADD_TO_DEVICE:
++	case SWITCHDEV_VXLAN_FDB_DEL_TO_DEVICE:
++	case SWITCHDEV_VXLAN_FDB_OFFLOADED:
++		return snprintf(buf, len, "vid %u addr %pM%s%s%s%s",
++				fdbi->vid, fdbi->addr,
++				fdbi->added_by_user ? " added_by_user" : "",
++				fdbi->is_local ? " is_local" : "",
++				fdbi->locked ? " locked" : "",
++				fdbi->offloaded ? " offloaded" : "");
++	default:
++		break;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(switchdev_fdb_info_str);
++
++ssize_t switchdev_brport_str(const struct switchdev_brport *brport,
++			     char *buf, size_t len)
++{
++	return snprintf(buf, len, "dev %s%s",
++			brport->dev ? netdev_name(brport->dev) : "(null)",
++			brport->tx_fwd_offload ? " tx_fwd_offload" : "");
++}
++EXPORT_SYMBOL_GPL(switchdev_brport_str);
++
++ssize_t switchdev_notifier_str(enum switchdev_notifier_type nt,
++			       const struct switchdev_notifier_info *info,
++			       char *buf, size_t len)
++{
++#define _TYPE_STRINGER(_id) [SWITCHDEV_ ## _id] = #_id
++	static const char *const type_strs[] = {
++		SWITCHDEV_TYPE_MAPPER(_TYPE_STRINGER)
++	};
++#undef _TYPE_STRINGER
++
++	const struct switchdev_notifier_port_attr_info *attri;
++	const struct switchdev_notifier_brport_info *brporti;
++	const struct switchdev_notifier_port_obj_info *obji;
++	const struct switchdev_notifier_fdb_info *fdbi;
++	char *cur = buf;
++	ssize_t n;
++
++	n = switchdev_str_write_id(cur, len, nt, type_strs,
++				   ARRAY_SIZE(type_strs));
++	if (n < 0)
++		return n;
++
++	cur += n;
++	len -= n;
++
++	if (len > 0) {
++		*cur++ = ' ';
++		len--;
++	}
++
++	switch (nt) {
++	case SWITCHDEV_FDB_FLUSH_TO_BRIDGE:
++	case SWITCHDEV_FDB_ADD_TO_BRIDGE:
++	case SWITCHDEV_FDB_DEL_TO_BRIDGE:
++	case SWITCHDEV_FDB_ADD_TO_DEVICE:
++	case SWITCHDEV_FDB_DEL_TO_DEVICE:
++	case SWITCHDEV_FDB_OFFLOADED:
++	case SWITCHDEV_VXLAN_FDB_ADD_TO_BRIDGE:
++	case SWITCHDEV_VXLAN_FDB_DEL_TO_BRIDGE:
++	case SWITCHDEV_VXLAN_FDB_ADD_TO_DEVICE:
++	case SWITCHDEV_VXLAN_FDB_DEL_TO_DEVICE:
++	case SWITCHDEV_VXLAN_FDB_OFFLOADED:
++		fdbi = container_of(info, typeof(*fdbi), info);
++		n = switchdev_fdb_info_str(nt, fdbi, cur, len);
++		break;
++	case SWITCHDEV_PORT_OBJ_ADD:
++	case SWITCHDEV_PORT_OBJ_DEL:
++		obji = container_of(info, typeof(*obji), info);
++		n = switchdev_obj_str(obji->obj, cur, len);
++		break;
++	case SWITCHDEV_PORT_ATTR_SET:
++		attri = container_of(info, typeof(*attri), info);
++		n = switchdev_attr_str(attri->attr, cur, len);
++		break;
++	case SWITCHDEV_BRPORT_OFFLOADED:
++	case SWITCHDEV_BRPORT_UNOFFLOADED:
++	case SWITCHDEV_BRPORT_REPLAY:
++		brporti = container_of(info, typeof(*brporti), info);
++		n = switchdev_brport_str(&brporti->brport, cur, len);
++		break;
++	default:
++		/* Trim trailing space */
++		return --cur - buf;
++	}
++
++	if (n < 0)
++		return n;
++
++	cur += n;
++	return cur - buf;
++}
++EXPORT_SYMBOL_GPL(switchdev_notifier_str);
 -- 
 2.34.1
 
