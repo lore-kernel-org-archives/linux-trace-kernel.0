@@ -1,36 +1,39 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466D1812;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5314DA3F;
 	Tue, 23 Jan 2024 02:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705978517; cv=none; b=glGnWS4U/EmOR1Q9NqGl2P5h9BjMvwLIrLwaPhAWm8OcoOW7sQ78jsCnFmQdTFf6fqDm5aE0057c5gd8ller+g15V2h2/8ZEG51NI/uqjVAluRKwQABaXYwzYzw6v5j6XS8mel8ifpM/vf+qsHs4lkoltGIK2FcTpcdTzAd+D1k=
+	t=1705978518; cv=none; b=on2OPFKaByGdKpgYkupFyuejNP0l7+bL47GipS6jVJf6V+94hx4J31MwUvwZ0r1LgQZIE0CpMkF23aV+vrD/ej33mU1rZQwvZ08ElrSLOJind7JEQEMMfp9aCaPPtBZ2t30U8hkdO6hpqrblY9cHGW80u7kHawcT694BQIQnQKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705978517; c=relaxed/simple;
-	bh=LiwWyhM1qtbQeVlD18oSz5aI1Vwll7UcNW8EVujM6uY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=s6o9KNrFn5VKoaYryu4cQzfVfNskEHoFkgTocO+3X/DO8FmrZv8vUiGo8lgiRCAZLctD2eWrPp6+M73t0fyEZ4iFBR4xFsgBrdHXG/CeTNH6pTAcU7Mj244OGv0r4QHztdyKcZME0qqpK7ugDKKHrzraSAMmHGE435vQAseZS38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+	s=arc-20240116; t=1705978518; c=relaxed/simple;
+	bh=pHdZHFG+EXUIZJhSA7rnvMbd1K6r4z+UAhyNamX37Cs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LtQRlXPkBsyXVdmab3hjBxzyp563Y0m4qqADdZJw0OC5344zP9trEREzpqvf0P+qGwnVOg8kLBnaxN6lOvl3TLbQNp+qHRu8A7PjnBID6g09GBiAPt7OUr+QowSlu46HMDJCPmNemRxxrFCLcA+j9Ytjlcuh0nU0Bbj9b1o/CKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4TJsBg1dDnz1wnDj;
-	Tue, 23 Jan 2024 10:54:51 +0800 (CST)
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4TJs952KWFz1S5QH;
+	Tue, 23 Jan 2024 10:53:29 +0800 (CST)
 Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id B30441404D8;
+	by mail.maildlp.com (Postfix) with ESMTPS id C7A911404FD;
 	Tue, 23 Jan 2024 10:55:12 +0800 (CST)
 Received: from huawei.com (10.175.127.227) by canpemm500010.china.huawei.com
  (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 23 Jan
- 2024 10:53:32 +0800
+ 2024 10:53:34 +0800
 From: Ye Bin <yebin10@huawei.com>
 To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
 	<mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <yebin10@huawei.com>
-Subject: [PATCH v3 0/7] support '%pd' and '%pD' for print file name
-Date: Tue, 23 Jan 2024 10:56:01 +0800
-Message-ID: <20240123025608.2370978-1-yebin10@huawei.com>
+Subject: [PATCH v3 4/7] tracing/probes: support '%pD' type for print struct file's name
+Date: Tue, 23 Jan 2024 10:56:05 +0800
+Message-ID: <20240123025608.2370978-5-yebin10@huawei.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20240123025608.2370978-1-yebin10@huawei.com>
+References: <20240123025608.2370978-1-yebin10@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -42,41 +45,79 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  canpemm500010.china.huawei.com (7.192.105.118)
 
-During fault locating, the file name needs to be printed based on the
-dentry/file address. The offset needs to be calculated each time, which
-is troublesome. Similar to printk, kprobe supports printing file names
-for dentry/file addresses.
+Similar to '%pD' for printk, use '%pD' for print struct file's name.
 
-Diff v3 vs v2:
-1. Return the index of where the suffix was found in str_has_suffix();
+Signed-off-by: Ye Bin <yebin10@huawei.com>
+---
+ kernel/trace/trace_probe.c | 41 ++++++++++++++++++++++++--------------
+ 1 file changed, 26 insertions(+), 15 deletions(-)
 
-Diff v2 vs v1:
-1. Use "%pd/%pD" print format instead of "pd/pD" print format;
-2. Add "%pd/%pD" in README;
-3. Expand "%pd/%pD" argument before parameter parsing;
-4. Add more detail information in ftrace documentation;
-5. Add test cases for new print format in selftests/ftrace;
-
-Ye Bin (7):
-  string.h: add str_has_suffix() helper for test string ends with
-    specify string
-  tracing/probes: add traceprobe_expand_dentry_args() helper
-  tracing/probes: support '%pd' type for print struct dentry's name
-  tracing/probes: support '%pD' type for print struct file's name
-  tracing: add new type "%pd/%pD" in readme_msg[]
-  Documentation: tracing: add new type '%pd' and '%pD' for kprobe
-  selftests/ftrace: add test cases for VFS type "%pd" and "%pD"
-
- Documentation/trace/kprobetrace.rst           |  6 +-
- include/linux/string.h                        | 28 +++++++
- kernel/trace/trace.c                          |  2 +-
- kernel/trace/trace_kprobe.c                   |  6 ++
- kernel/trace/trace_probe.c                    | 47 +++++++++++
- kernel/trace/trace_probe.h                    |  3 +
- .../ftrace/test.d/kprobe/kprobe_args_vfs.tc   | 79 +++++++++++++++++++
- 7 files changed, 169 insertions(+), 2 deletions(-)
- create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
-
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index cc8bd7ea5341..6215b9573793 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -12,6 +12,7 @@
+ #define pr_fmt(fmt)	"trace_probe: " fmt
+ 
+ #include <linux/bpf.h>
++#include <linux/fs.h>
+ #include "trace_btf.h"
+ 
+ #include "trace_probe.h"
+@@ -1574,28 +1575,38 @@ int traceprobe_expand_dentry_args(int argc, const char *argv[], char *buf,
+ 	for (i = 0; i < argc; i++) {
+ 		size_t idx;
+ 
+-		if (str_has_suffix(argv[i], ":%pd", &idx)) {
+-			char *tmp = kstrdup(argv[i], GFP_KERNEL);
+-			char *equal;
++		if (!str_has_suffix(argv[i], ":%pd", &idx) &&
++		    !str_has_suffix(argv[i], ":%pD", &idx))
++			continue;
+ 
+-			if (!tmp)
+-				return -ENOMEM;
++		char *tmp = kstrdup(argv[i], GFP_KERNEL);
++		char *equal;
++
++		if (!tmp)
++			return -ENOMEM;
+ 
+-			equal = strchr(tmp, '=');
+-			if (equal)
+-				*equal = '\0';
+-			tmp[idx] = '\0';
++		equal = strchr(tmp, '=');
++		if (equal)
++			*equal = '\0';
++		tmp[idx] = '\0';
++		if (argv[i][strlen(argv[i]) - 1] == 'd')
+ 			ret = snprintf(buf + used, bufsize - used,
+ 				       "%s%s+0x0(+0x%zx(%s)):string",
+ 				       equal ? tmp : "", equal ? "=" : "",
+ 				       offsetof(struct dentry, d_name.name),
+ 				       equal ? equal + 1 : tmp);
+-			kfree(tmp);
+-			if (ret >= bufsize - used)
+-				return -ENOMEM;
+-			argv[i] = buf + used;
+-			used += ret + 1;
+-		}
++		else
++			ret = snprintf(buf + used, bufsize - used,
++				       "%s%s+0x0(+0x%zx(+0x%zx(%s))):string",
++				       equal ? tmp : "", equal ? "=" : "",
++				       offsetof(struct dentry, d_name.name),
++				       offsetof(struct file, f_path.dentry),
++				       equal ? equal + 1 : tmp);
++		kfree(tmp);
++		if (ret >= bufsize - used)
++			return -ENOMEM;
++		argv[i] = buf + used;
++		used += ret + 1;
+ 	}
+ 
+ 	return 0;
 -- 
 2.31.1
 
