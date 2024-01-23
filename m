@@ -1,36 +1,36 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531A6A47;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB5D374;
 	Tue, 23 Jan 2024 02:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705978517; cv=none; b=msAIdruDv2zh3eCDqXamEmEvaHqXNnL58dD+Ikz8SeAkniJX9eWVmsTF3d/mzkO4qJ/U7zo8VL4CxO4R4B2hM3BLtrbHFOwBWL5e3341n13HKcDKx6aVHY7zLY5rpuSVwrFIiSriKJ/RclQQME8mhwseYl5/xX5Qhv+6P53ORdA=
+	t=1705978517; cv=none; b=Df1wFzcR9bjo6PyOQxq7ar63xm3JUyaOccwvkOs9JYIsdeZA2xia2ubDTnD+3CiZIOIDqLVTCD2oCkdRvCdZdnkO5UszF4+nQ3YxO8PhywUkaIE+6oXGdVXVotidbGBeIOOB7U1RNoocLR30s+81hP0sMXUX9ryqNxQCIp4BO2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705978517; c=relaxed/simple;
-	bh=SiWtbyNZNzEz2T7i5SIjV//aX/niwPXUWmBVnXoNsP4=;
+	bh=IZ2ztT+g8180deg7EL3rrFcIgg1N/vQXRmntkTF7fOc=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VZhU+gAG9FEvIDTCj8iv8lwXkAiRXcrmkG8FyapLC3o2cf038mnXmG/BpsG+i08celqQXdhsH3rLs27p+NbdLqMaX4gE2Iw8GRAOR3V7pyOS6fLoDiDdf4K4IkjCU0Nkfjo+ZHv1CgRrJuQxA0ALgqETRkSazlRz5+qa/GVjU7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+	 MIME-Version:Content-Type; b=pMRR98SMobb9LeBojXpV+EHoWh+tENKbSsPSNKVZYyJ3Pwa+mHGn0+GaxW0JMy8Evm07c8eDYUrmZBlnBeLTDhUtGSxfXZ55kj/vSmDOh19bpmrNI8KceicIrg/994xncRvc7WEz9mKe6Rj0qKwgM6MEnrG/JMP8QrYqQrf6lHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4TJs951t53z1S5QG;
-	Tue, 23 Jan 2024 10:53:29 +0800 (CST)
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TJs6450xNz1FJfN;
+	Tue, 23 Jan 2024 10:50:52 +0800 (CST)
 Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id B85D21404D9;
+	by mail.maildlp.com (Postfix) with ESMTPS id D1F94140485;
 	Tue, 23 Jan 2024 10:55:12 +0800 (CST)
 Received: from huawei.com (10.175.127.227) by canpemm500010.china.huawei.com
  (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 23 Jan
- 2024 10:53:33 +0800
+ 2024 10:53:35 +0800
 From: Ye Bin <yebin10@huawei.com>
 To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
 	<mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <yebin10@huawei.com>
-Subject: [PATCH v3 1/7] string.h: add str_has_suffix() helper for test string ends with specify string
-Date: Tue, 23 Jan 2024 10:56:02 +0800
-Message-ID: <20240123025608.2370978-2-yebin10@huawei.com>
+Subject: [PATCH v3 6/7] Documentation: tracing: add new type '%pd' and '%pD' for kprobe
+Date: Tue, 23 Jan 2024 10:56:07 +0800
+Message-ID: <20240123025608.2370978-7-yebin10@huawei.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20240123025608.2370978-1-yebin10@huawei.com>
 References: <20240123025608.2370978-1-yebin10@huawei.com>
@@ -45,51 +45,38 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  canpemm500010.china.huawei.com (7.192.105.118)
 
-str_has_suffix() is test string if ends with specify string, and also
-this API may return the index of where the suffix was found.
+Similar to printk() '%pd' is for fetch dentry's name from struct dentry's
+pointer, and '%pD' is for fetch file's name from struct file's pointer.
 
 Signed-off-by: Ye Bin <yebin10@huawei.com>
 ---
- include/linux/string.h | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ Documentation/trace/kprobetrace.rst | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 433c207a01da..2fb0f22237fe 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -405,4 +405,32 @@ static __always_inline size_t str_has_prefix(const char *str, const char *prefix
- 	return strncmp(str, prefix, len) == 0 ? len : 0;
- }
+diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
+index bf9cecb69fc9..a1d12d65a8dc 100644
+--- a/Documentation/trace/kprobetrace.rst
++++ b/Documentation/trace/kprobetrace.rst
+@@ -58,7 +58,8 @@ Synopsis of kprobe_events
+   NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
+   FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
+ 		  (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
+-		  (x8/x16/x32/x64), "char", "string", "ustring", "symbol", "symstr"
++		  (x8/x16/x32/x64), VFS layer common type(%pd/%pD) for print
++                  file name, "char", "string", "ustring", "symbol", "symstr"
+                   and bitfield are supported.
  
-+/**
-+ * str_has_suffix - Test if a string has a given suffix
-+ * @str: The string to test
-+ * @suffix: The string to see if @str ends with
-+ * @index: The index into @str of where @suffix is if found (NULL to ignore)
-+ *
-+ * Returns:
-+ * * strlen(@suffix) if @str ends with @suffix
-+ * * 0 if @str does not end with @suffix
-+ */
-+static __always_inline size_t str_has_suffix(const char *str, const char *suffix,
-+					     size_t *index)
-+{
-+	size_t len = strlen(suffix);
-+	size_t str_len = strlen(str);
+   (\*1) only for the probe on function entry (offs == 0). Note, this argument access
+@@ -113,6 +114,9 @@ With 'symstr' type, you can filter the event with wildcard pattern of the
+ symbols, and you don't need to solve symbol name by yourself.
+ For $comm, the default type is "string"; any other type is invalid.
+ 
++VFS layer common type(%pd/%pD) is a special type, which fetches dentry's or
++file's name from struct dentry's pointer or struct file's pointer.
 +
-+	if (len > str_len)
-+		return 0;
-+
-+	if (strncmp(str + str_len - len, suffix, len))
-+		return 0;
-+
-+	if (index)
-+		*index = str_len - len;
-+
-+	return len;
-+}
-+
- #endif /* _LINUX_STRING_H_ */
+ .. _user_mem_access:
+ 
+ User Memory Access
 -- 
 2.31.1
 
