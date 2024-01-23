@@ -1,38 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B7F60DCB;
-	Tue, 23 Jan 2024 15:37:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5753F604C4;
+	Tue, 23 Jan 2024 15:50:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706024260; cv=none; b=uDls7Pv0zWVb4SYRXBuB0hn0zbOr7rz68yqm467cRu0QkzWYzutXzhw/sBXqiLP0hh84kb5fRU3SpUGMvyzwYBGV5d9WutGjafycWrFX9bsosJ5SvwKb3+WCrQBtje8z7kfBAX9sSfoBNd6n4yolvnqtu5A0VnpdetjYN7uooX8=
+	t=1706025020; cv=none; b=Nfy4jnDcVnc3AOKtA/ntqC6jAFpmxmZAsPzp4YL2pcWVPW6OiXr1aGN3yMLdWrWw2KH5gJqcA3N5glB1f9yXJUSBu5ihTpkl6KFyBpCT8XYdJFAGc13RXCvJZWIzBRTlsG6WEoLs7IptXJR7OArwdB2lgIyUpSg3Tuo+krWwcZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706024260; c=relaxed/simple;
-	bh=MLAhwwGHU/3Yecw28oC/pA0NXAJpTVerqjiXcGUDpXY=;
+	s=arc-20240116; t=1706025020; c=relaxed/simple;
+	bh=tf/dpxgcUBtYs+oE2E1+O79b0TAiJ4Gu5UtW7Lg9Q1c=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NTVwZ1LX1vf6py0WfqR4AM7LIVWdnKisfv3Wyl+yXpQduFh4flfhJnYWeHMRm8GWjaF009N1hpzhDEtmOgvrS3VEG68hutZiGoVIea+a+tJpACglAFlO6MWkuNb0XKBlSQ+L6ir5FFt5e/DZl6FwSyNiJzEsrOk9dUN+Yh0VZZ4=
+	 MIME-Version:Content-Type; b=nekuT9e416/FKgiqXuXBfpODImZflugnrQaAGBqw+lhbIh+Veq6NJ3MTDkeVvVrXwDgMOKxa9ZsXAJxo5SA/jw5TfBAV8Zxbwle6ttCpUmwbX5T5yYMzThaO/pXiJa3xnrZE3x1+s4H4AcYiUVO1btFiq0CrC34PKBSFv5geZUs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2365EC43394;
-	Tue, 23 Jan 2024 15:37:37 +0000 (UTC)
-Date: Tue, 23 Jan 2024 10:39:07 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A6E7C433F1;
+	Tue, 23 Jan 2024 15:50:19 +0000 (UTC)
+Date: Tue, 23 Jan 2024 10:51:49 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Huang Yiwei <quic_hyiwei@quicinc.com>
-Cc: <mhiramat@kernel.org>, <mark.rutland@arm.com>, <mcgrof@kernel.org>,
- <keescook@chromium.org>, <j.granados@samsung.com>,
- <mathieu.desnoyers@efficios.com>, <corbet@lwn.net>,
- <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
- <quic_bjorande@quicinc.com>, <quic_tsoni@quicinc.com>,
- <quic_satyap@quicinc.com>, <quic_aiquny@quicinc.com>, <kernel@quicinc.com>,
- Ross Zwisler <zwisler@google.com>, Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH v3] tracing: Support to dump instance traces by
- ftrace_dump_on_oops
-Message-ID: <20240123103907.636c1840@gandalf.local.home>
-In-Reply-To: <20240123094900.6f96572c@gandalf.local.home>
-References: <20240119080824.907101-1-quic_hyiwei@quicinc.com>
-	<20240119115625.603188d1@gandalf.local.home>
-	<0279a4cb-ced0-447a-a06f-37c38650ed5b@quicinc.com>
-	<20240123094900.6f96572c@gandalf.local.home>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ kernel-team@android.com
+Subject: Re: [PATCH v12 2/6] ring-buffer: Introducing ring-buffer mapping
+ functions
+Message-ID: <20240123105149.36abf019@gandalf.local.home>
+In-Reply-To: <20240123110757.3657908-3-vdonnefort@google.com>
+References: <20240123110757.3657908-1-vdonnefort@google.com>
+	<20240123110757.3657908-3-vdonnefort@google.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -43,64 +36,40 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 23 Jan 2024 09:49:00 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, 23 Jan 2024 11:07:53 +0000
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-> On Tue, 23 Jan 2024 18:23:58 +0800
-> Huang Yiwei <quic_hyiwei@quicinc.com> wrote:
-> 
-> > > And if we really want to be fancy!
-> > > 
-> > > 	ftrace_dump_on_opps[=orig_cpu | =<instance> | =orig_cpu:<instance> ][,<instance> | ,<instance>:orig_cpu]
-> > >     
-> > Yeah, I agree to make the parameter more flexible.
-> > 
-> > "=orig_cpu:<instance>" means to dump global and another instance?  
-> 
-> No, I added a comma for that:
-> 
->   =,orig_cpu:<instance>
-> 
-> Would mean to dump all of global and just the origin CPU of the instance.
-> 
-> > 
-> > I'm thinking of the following format:
-> > 
-> > ftrace_dump_on_opps[=orig_cpu | =<instance>][,<instance> | 
-> > ,<instance>=orig_cpu]
-> > 
-> > Here list some possible situations:
-> > 
-> > 1. Dump global on orig_cpu:
-> > ftrace_dump_on_oops=orig_cpu
-> > 
-> > 2. Dump global and instance1 on all cpu, instance2 on orig_cpu:
-> > ftrace_dump_on_opps,<instance1>,<instance2>=orig_cpu
-> > 
-> > 3. Dump global and instance1 on orig_cpu, instance2 on all cpu:
-> > ftrace_dump_on_opps=orig_cpu,<instance1>=orig_cpu,<instance2>
-> > 
-> > 4. Dump instance1 on all cpu, instance2 on orig_cpu:
-> > ftrace_dump_on_opps=<instance1>,<instance2>=orig_cpu
-> > 
-> > 5. Dump instance1 and instance2 on orig_cpu:
-> > ftrace_dump_on_opps=<instance1>=orig_cpu,<instance2>=orig_cpu
-> > 
-> > This makes orig_cpu dump for global same as instance, the parameter may 
-> > seems more unified and users don't need to remember another markers to 
-> > request orig_cpu dump.
-> > 
-> > But one problem here is if there's an instance named "orig_cpu", then we 
-> > may not dump it correctly.  
-> 
-> I would put that under:
-> 
->    Patient: Doctor it hurts me when I do this
->    Doctor:  Then don't do that
-> 
-> ;-)
+> index 000000000000..5468afc94be7
+> --- /dev/null
+> +++ b/include/uapi/linux/trace_mmap.h
+> @@ -0,0 +1,44 @@
+> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> +#ifndef _TRACE_MMAP_H_
+> +#define _TRACE_MMAP_H_
+> +
+> +#include <linux/types.h>
+> +
+> +/**
+> + * struct trace_buffer_meta - Ring-buffer Meta-page description
+> + * @meta_page_size:	Size of this meta-page.
+> + * @meta_struct_len:	Size of this structure.
+> + * @subbuf_size:	Size of each subbuf, including the header.
+> + * @nr_subbufs:		Number of subbfs in the ring-buffer.
+> + * @reader.lost_events:	Number of events lost at the time of the reader swap.
+> + * @reader.id:		subbuf ID of the current reader. From 0 to @nr_subbufs - 1
+> + * @reader.read:	Number of bytes read on the reader subbuf.
+> + * @entries:		Number of entries in the ring-buffer.
+> + * @overrun:		Number of entries lost in the ring-buffer.
+> + * @read:		Number of entries that have been read.
 
-Oh, and I'm fine with what you proposed above.
+
+> + * @subbufs_touched:	Number of subbufs that have been filled.
+> + * @subbufs_lost:	Number of subbufs lost to overrun.
+> + * @subbufs_read:	Number of subbufs that have been read.
+
+Do we actually need the above 3 fields?
+
+What's the use case for them? I don't want to expose internals in the API
+unless they are needed.
 
 -- Steve
-
