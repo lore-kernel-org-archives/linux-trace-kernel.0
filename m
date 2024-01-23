@@ -1,296 +1,99 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10035D8F6
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jan 2024 11:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FAE05F57C;
+	Tue, 23 Jan 2024 13:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706008098; cv=none; b=D35fkDiPO3quyvtWcP/mNw5z9OE0og8rL9a5cso71zZdQBi2upbGLysHNOaU6LV2eQK4M/sAXsVhbqqX6W4Y8BlnkHTvbGqix8/U37D2fDZu6hF2RSvU5+dmS8F1qwVQVQ9JTocKyLGBLxI/WNwCaljzJEioOx2nfg+Y6LY+UXY=
+	t=1706015257; cv=none; b=qJct2z8SsTqBE0V9BCAq0PqBVqYUqyoukQeZ2U4GUe/gYO3dBHVd8TTua3LepNzkqqFwk4P896wut8A9v9tZaa7x83NoeRTA1Ex6LkOpNVgQfDUqEA5mboy11QjMViB5b0BauT9YS2ecbtUvJdB+JWVI1+HqnO+rU9FPlUiQMso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706008098; c=relaxed/simple;
-	bh=jzpwCo0HMVI99saI3KiX/DjK1lxlN166EymbCtXFVp8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DuSS/y3feCn+tc2Bq6ZTq7XeWEZYAoOff3ztLQTahv6HSCXH5EwcEpbuUn2qhilAW8pPrIRv1SSlfOQp1LMViZiwVUSaWoFY0MwIEOJYZOMMMcBQkApzFKmtO+X0ibk2uIYTFEzwk6j5SgxdzgGpv8H1nJZ+uog67RY1pQJuayQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=21Y1a1Hg; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1706015257; c=relaxed/simple;
+	bh=QIawHl6UH5nEOFBUuWe4QbZg3ju5mdjdvopEqLdJLp4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=u/oFT9gJAp9oIp78sYQvvRLyhAkrSL2nWjOHB0dQJb/44GkPCvAURGxocUpOWbg/R3Atpcoskbzv/N77MF6pelJ6RRqXn53hq7B4VUPlZZMpY1XW4XW3/Liezn3pE4+YYLluytogAqfUFmwhkoxQJviEcIVn1cp9WPiZtEoQOaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ojTbrOL5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="21Y1a1Hg"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-40e9d6a364eso34663725e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 23 Jan 2024 03:08:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706008095; x=1706612895; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=on32GNvkxWDILvYMfSVIpQ/Zr8fKHLMLlVw8UqZ+BYg=;
-        b=21Y1a1HgqV17XDk72W8zaiQUgFOpz+A3umWCn6OacqzZ/FZgortPr4j30Gf+isxEfW
-         +KSZSVeYFt6Ha69275CbVHA6s97JnciucZciv7lyhjfTt4LaXAbfwsj3EVV4r+KWgIiT
-         HTSmNka/4NKIVB5b6vSgF/27Vie6QhFl6xkQtzV81T6iTx0+EthCA3WYGhNReiOHfQAY
-         y1XCNYPukpRu0AI7NvaGLQZjsP8SqXGFF2lq0/BmZIDHmceyE7JwGirmmZAB8kBb4IFX
-         gGN58ITwZB0UAOSlTUxZRG1Zz29S58OdfdFoLAc57ko0dBDjl0KOCTqKRjPgaIK+FjGd
-         f11g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706008095; x=1706612895;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=on32GNvkxWDILvYMfSVIpQ/Zr8fKHLMLlVw8UqZ+BYg=;
-        b=skiimRs79FABMyFI8G1cByaSK874QYgjxVvWnODu8+laTivgHs7UaKQjUYXrwDUJRw
-         mm/z6z9Y/PLY3LOSzYeWd9jU3XYRQ7J6QxXLcm+tg9/OhMfvHS39dKpjtG+qoPjpOmfx
-         p53HolubipPwr87oCRuoTwGFXIBcJ/b8ijnOSu5rIJGSFkhxDVPt0CKgWCFzUHcb5uFj
-         Yr4bGk4HCjJTPisFeKTMYU1uWvFINUa5CTXAWVvAv3BDoHiHMRpHlWg31oPMDjacEZ2S
-         sb5MvwWG6CuCZwVldgMNt1auzWPlMUCTW4tS3L0fRJR8JudvFYcwYZAYvENQAx4DTmJb
-         mwvQ==
-X-Gm-Message-State: AOJu0Yzl2yUMRXN+p6+sWQkCdtsFNMuZg20Fq9kyxwUfwPVwLqSrwd8Q
-	RL7tjejbwYQJCzHeWOAVtMIHlxKEDoREg8qLG2L5QPzfvXMmXuSqKUey2507GjuEF1Gr6cWmyjO
-	aondt6aGTSK+UDHqbLA==
-X-Google-Smtp-Source: AGHT+IFczxSO95adCCP1/OQdMVdXuAbrhocNenUfZEJQ6Y/inr3mrpYKphpQLoisODALT2LTe4UZKmi4jxqxDWFY
-X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:a05:600c:5104:b0:40d:8587:3399 with
- SMTP id o4-20020a05600c510400b0040d85873399mr13616wms.6.1706008095318; Tue,
- 23 Jan 2024 03:08:15 -0800 (PST)
-Date: Tue, 23 Jan 2024 11:07:57 +0000
-In-Reply-To: <20240123110757.3657908-1-vdonnefort@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ojTbrOL5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D8BCC43390;
+	Tue, 23 Jan 2024 13:07:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706015256;
+	bh=QIawHl6UH5nEOFBUuWe4QbZg3ju5mdjdvopEqLdJLp4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ojTbrOL5OBHDkS/yeaqsAIFGdyFYDAUzU2FpmWlKum/Q+F683nNs7z40AF1AeMXmQ
+	 Cx85aS4IwWebfAKWgZiznCfgpS1gc7M/yAF2/Usp4adbNURkPYKZL5+hmhOmuu6BXP
+	 3bNiJzHI6Z7/dL/5PvFmEQBDnXNyXg/JXHnvqipf4yfJdcZfXt8grEAliBrDQOGXBG
+	 B1dUFD65+4iBBERxwu9W8P+5uB0KjaSjNjz630tR3En4oflw2HufH8GQiCyUAKvpLX
+	 DQbbZF5K4Q6QdiVOBzF9pknP26i5b1wabNU5K1rJpFDSOidJ7+CY9pE0EhO0z1Km2F
+	 Cm+cEh+chJouQ==
+Date: Tue, 23 Jan 2024 22:07:32 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Ye Bin <yebin10@huawei.com>
+Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
+ <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 6/7] Documentation: tracing: add new type '%pd' and
+ '%pD' for kprobe
+Message-Id: <20240123220732.79d810aa183b3ddfd2b2a4ab@kernel.org>
+In-Reply-To: <20240123092139.3698375-7-yebin10@huawei.com>
+References: <20240123092139.3698375-1-yebin10@huawei.com>
+	<20240123092139.3698375-7-yebin10@huawei.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240123110757.3657908-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-Message-ID: <20240123110757.3657908-7-vdonnefort@google.com>
-Subject: [PATCH v12 6/6] ring-buffer/selftest: Add ring-buffer mapping test
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	Vincent Donnefort <vdonnefort@google.com>, Shuah Khan <shuah@kernel.org>, 
-	Shuah Khan <skhan@linuxfoundation.org>, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-This test maps a ring-buffer and validate the meta-page after reset and
-after emitting few events.
+On Tue, 23 Jan 2024 17:21:38 +0800
+Ye Bin <yebin10@huawei.com> wrote:
 
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-kselftest@vger.kernel.org
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> Similar to printk() '%pd' is for fetch dentry's name from struct dentry's
+> pointer, and '%pD' is for fetch file's name from struct file's pointer.
+> 
+> Signed-off-by: Ye Bin <yebin10@huawei.com>
+> ---
+>  Documentation/trace/kprobetrace.rst | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
+> index bf9cecb69fc9..a1d12d65a8dc 100644
+> --- a/Documentation/trace/kprobetrace.rst
+> +++ b/Documentation/trace/kprobetrace.rst
+> @@ -58,7 +58,8 @@ Synopsis of kprobe_events
+>    NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
+>    FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
+>  		  (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
+> -		  (x8/x16/x32/x64), "char", "string", "ustring", "symbol", "symstr"
+> +		  (x8/x16/x32/x64), VFS layer common type(%pd/%pD) for print
+> +                  file name, "char", "string", "ustring", "symbol", "symstr"
 
-diff --git a/tools/testing/selftests/ring-buffer/Makefile b/tools/testing/selftests/ring-buffer/Makefile
-new file mode 100644
-index 000000000000..627c5fa6d1ab
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/Makefile
-@@ -0,0 +1,8 @@
-+# SPDX-License-Identifier: GPL-2.0
-+CFLAGS += -Wl,-no-as-needed -Wall
-+CFLAGS += $(KHDR_INCLUDES)
-+CFLAGS += -D_GNU_SOURCE
-+
-+TEST_GEN_PROGS = map_test
-+
-+include ../lib.mk
-diff --git a/tools/testing/selftests/ring-buffer/config b/tools/testing/selftests/ring-buffer/config
-new file mode 100644
-index 000000000000..ef8214661612
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/config
-@@ -0,0 +1 @@
-+CONFIG_FTRACE=y
-diff --git a/tools/testing/selftests/ring-buffer/map_test.c b/tools/testing/selftests/ring-buffer/map_test.c
-new file mode 100644
-index 000000000000..ec891e956b83
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/map_test.c
-@@ -0,0 +1,188 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Ring-buffer memory mapping tests
-+ *
-+ * Copyright (c) 2024 Vincent Donnefort <vdonnefort@google.com>
-+ */
-+#include <fcntl.h>
-+#include <sched.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+
-+#include <linux/trace_mmap.h>
-+
-+#include <sys/mman.h>
-+#include <sys/ioctl.h>
-+
-+#include "../user_events/user_events_selftests.h" /* share tracefs setup */
-+#include "../kselftest_harness.h"
-+
-+#define TRACEFS_ROOT "/sys/kernel/tracing"
-+
-+static int __tracefs_write(const char *path, const char *value)
-+{
-+	FILE *file;
-+
-+	file = fopen(path, "w");
-+	if (!file)
-+		return -1;
-+
-+	fputs(value, file);
-+	fclose(file);
-+
-+	return 0;
-+}
-+
-+static int __tracefs_write_int(const char *path, int value)
-+{
-+	char *str;
-+	int ret;
-+
-+	if (asprintf(&str, "%d", value) < 0)
-+		return -1;
-+
-+	ret = __tracefs_write(path, str);
-+
-+	free(str);
-+
-+	return ret;
-+}
-+
-+#define tracefs_write_int(path, value) \
-+	ASSERT_EQ(__tracefs_write_int((path), (value)), 0)
-+
-+static int tracefs_reset(void)
-+{
-+	if (__tracefs_write_int(TRACEFS_ROOT"/tracing_on", 0))
-+		return -1;
-+	if (__tracefs_write_int(TRACEFS_ROOT"/trace", 0))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/set_event", ""))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/current_tracer", "nop"))
-+		return -1;
-+
-+	return 0;
-+}
-+
-+FIXTURE(map) {
-+	struct trace_buffer_meta	*meta;
-+	void				*data;
-+	int				cpu_fd;
-+	bool				umount;
-+};
-+
-+FIXTURE_VARIANT(map) {
-+	int	subbuf_size;
-+};
-+
-+FIXTURE_VARIANT_ADD(map, subbuf_size_4k) {
-+	.subbuf_size = 4,
-+};
-+
-+FIXTURE_VARIANT_ADD(map, subbuf_size_8k) {
-+	.subbuf_size = 8,
-+};
-+
-+FIXTURE_SETUP(map)
-+{
-+	int cpu = sched_getcpu(), page_size = getpagesize();
-+	unsigned long meta_len, data_len;
-+	char *cpu_path, *message;
-+	bool fail, umount;
-+	cpu_set_t cpu_mask;
-+	void *map;
-+
-+	if (!tracefs_enabled(&message, &fail, &umount)) {
-+		if (fail) {
-+			TH_LOG("Tracefs setup failed: %s", message);
-+			ASSERT_FALSE(fail);
-+		}
-+		SKIP(return, "Skipping: %s", message);
-+	}
-+
-+	self->umount = umount;
-+
-+	ASSERT_GE(cpu, 0);
-+
-+	ASSERT_EQ(tracefs_reset(), 0);
-+
-+	tracefs_write_int(TRACEFS_ROOT"/buffer_subbuf_size_kb", variant->subbuf_size);
-+
-+	ASSERT_GE(asprintf(&cpu_path,
-+			   TRACEFS_ROOT"/per_cpu/cpu%d/trace_pipe_raw",
-+			   cpu), 0);
-+
-+	self->cpu_fd = open(cpu_path, O_RDONLY | O_NONBLOCK);
-+	ASSERT_GE(self->cpu_fd, 0);
-+	free(cpu_path);
-+
-+	map = mmap(NULL, page_size, PROT_READ, MAP_SHARED, self->cpu_fd, 0);
-+	ASSERT_NE(map, MAP_FAILED);
-+	self->meta = (struct trace_buffer_meta *)map;
-+
-+	meta_len = self->meta->meta_page_size;
-+	data_len = self->meta->subbuf_size * self->meta->nr_subbufs;
-+
-+	map = mmap(NULL, data_len, PROT_READ, MAP_SHARED, self->cpu_fd, meta_len);
-+	ASSERT_NE(map, MAP_FAILED);
-+	self->data = map;
-+
-+	/*
-+	 * Ensure generated events will be found on this very same ring-buffer.
-+	 */
-+	CPU_ZERO(&cpu_mask);
-+	CPU_SET(cpu, &cpu_mask);
-+	ASSERT_EQ(sched_setaffinity(0, sizeof(cpu_mask), &cpu_mask), 0);
-+}
-+
-+FIXTURE_TEARDOWN(map)
-+{
-+	tracefs_reset();
-+
-+	if (self->umount)
-+		tracefs_unmount();
-+
-+	munmap(self->data, self->meta->subbuf_size * self->meta->nr_subbufs);
-+	munmap(self->meta, self->meta->meta_page_size);
-+	close(self->cpu_fd);
-+}
-+
-+TEST_F(map, meta_page_check)
-+{
-+	int cnt = 0;
-+
-+	ASSERT_EQ(self->meta->entries, 0);
-+	ASSERT_EQ(self->meta->overrun, 0);
-+	ASSERT_EQ(self->meta->read, 0);
-+	ASSERT_EQ(self->meta->subbufs_touched, 0);
-+	ASSERT_EQ(self->meta->subbufs_lost, 0);
-+
-+	ASSERT_EQ(self->meta->reader.id, 0);
-+	ASSERT_EQ(self->meta->reader.read, 0);
-+
-+	ASSERT_EQ(ioctl(self->cpu_fd, TRACE_MMAP_IOCTL_GET_READER), 0);
-+	ASSERT_EQ(self->meta->reader.id, 0);
-+
-+	tracefs_write_int(TRACEFS_ROOT"/tracing_on", 1);
-+	for (int i = 0; i < 16; i++)
-+		tracefs_write_int(TRACEFS_ROOT"/trace_marker", i);
-+again:
-+	ASSERT_EQ(ioctl(self->cpu_fd, TRACE_MMAP_IOCTL_GET_READER), 0);
-+
-+	ASSERT_EQ(self->meta->entries, 16);
-+	ASSERT_EQ(self->meta->overrun, 0);
-+	ASSERT_EQ(self->meta->read, 16);
-+	/* subbufs_touched doesn't take into account the commit page */
-+	ASSERT_EQ(self->meta->subbufs_touched, 0);
-+	ASSERT_EQ(self->meta->subbufs_lost, 0);
-+
-+	ASSERT_EQ(self->meta->reader.id, 1);
-+
-+	if (!(cnt++))
-+		goto again;
-+}
-+
-+TEST_HARNESS_MAIN
+Could you remove the "for print file name" here?  Since this is not the place
+where such precise information describes. I think following hunk is enough to
+explain it.
+
+Thank you,
+
+>                    and bitfield are supported.
+>  
+>    (\*1) only for the probe on function entry (offs == 0). Note, this argument access
+> @@ -113,6 +114,9 @@ With 'symstr' type, you can filter the event with wildcard pattern of the
+>  symbols, and you don't need to solve symbol name by yourself.
+>  For $comm, the default type is "string"; any other type is invalid.
+>  
+> +VFS layer common type(%pd/%pD) is a special type, which fetches dentry's or
+> +file's name from struct dentry's pointer or struct file's pointer.
+> +
+>  .. _user_mem_access:
+>  
+>  User Memory Access
+> -- 
+> 2.31.1
+> 
+> 
+
+
 -- 
-2.43.0.429.g432eaa2c6b-goog
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
