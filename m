@@ -1,100 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FA560259;
-	Tue, 23 Jan 2024 14:47:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7125FDAA;
+	Tue, 23 Jan 2024 15:02:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706021252; cv=none; b=YYkJMDdmmYOOtDxsqfWi6nlD3+Os6pT6dQlz5X0XfHjTAaS/mXo95nRSwKuZR1O6FpNZb/eWSPAthdvekIDo2cqVF5PmjaIYBGDYi/e8Y0Symb38/WcUvf+IQJspXA3OE0Cv5zhKzWF9iaYNpBmKtsAwbqiG8d074T2NVt1YHSg=
+	t=1706022147; cv=none; b=WQP3ggfoYoj0JaXBODtQghv6EeSLVq9j1Av0nIuDgHfCPQpmijZ2s58VWtFUZiBNKzB3AKJ4AOiZzxCevBxuaLjvlLzmQSjqTdoo/g7oMO8nGcOZf0bTq8K8Tq1ozPzHhewe83dAGYU/cjsgFIjcnBmWpTbk8Khb42aPOIi6dOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706021252; c=relaxed/simple;
-	bh=SyOCDDjWY9xeLbCSe4FxdSgAc8OEaImCI2tOJVIHOBE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z0f5nNTGW581C7Ec1IKRG5x98xXh77N+hcOJnF6w2WIoHA2xhkFrB2lQWtqMVSeHGb05eEiC9q/lzffQ8u5C6dMQzS3WcH7CjhviZM0YDi9LA9+V12qkNnt7YXZ/HhnR+McwF0oL5nzySque8z24pl5OcVNggu65YDS5OjC67d4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B149C3277A;
-	Tue, 23 Jan 2024 14:47:29 +0000 (UTC)
-Date: Tue, 23 Jan 2024 09:49:00 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Huang Yiwei <quic_hyiwei@quicinc.com>
-Cc: <mhiramat@kernel.org>, <mark.rutland@arm.com>, <mcgrof@kernel.org>,
- <keescook@chromium.org>, <j.granados@samsung.com>,
- <mathieu.desnoyers@efficios.com>, <corbet@lwn.net>,
- <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
- <quic_bjorande@quicinc.com>, <quic_tsoni@quicinc.com>,
- <quic_satyap@quicinc.com>, <quic_aiquny@quicinc.com>, <kernel@quicinc.com>,
- Ross Zwisler <zwisler@google.com>, Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH v3] tracing: Support to dump instance traces by
- ftrace_dump_on_oops
-Message-ID: <20240123094900.6f96572c@gandalf.local.home>
-In-Reply-To: <0279a4cb-ced0-447a-a06f-37c38650ed5b@quicinc.com>
-References: <20240119080824.907101-1-quic_hyiwei@quicinc.com>
-	<20240119115625.603188d1@gandalf.local.home>
-	<0279a4cb-ced0-447a-a06f-37c38650ed5b@quicinc.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1706022147; c=relaxed/simple;
+	bh=c55w7bNYVc+/PvGNzvXmIarNgAUxg847kHKA77JNnc0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=TyFKieN8kUeD9OcyVHppw0HZy1hAf4lIyA8s4WLcLiuc10zklSm7lU328JKeFSeiQMg8U5NzfZIKkFZuqTQlVrGvgiE0YX7/B8PUXyKrhEOUjSBydjBTfmnLrH8SyOlH1vIpinTZHMrUF3rCw8qxSI59NMlwbrjQtWqysRHBZss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DkFPbd16; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DkFPbd16"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F0AEC433C7;
+	Tue, 23 Jan 2024 15:02:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706022147;
+	bh=c55w7bNYVc+/PvGNzvXmIarNgAUxg847kHKA77JNnc0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DkFPbd16B7eo+m35zewPwpfGW8OFongXs9gXKgsc5czh3fGnGmNGKjI/CQGOeQ2Re
+	 jCLea4BNT6AHbNFPilYwcfTvFYLswvelMQ56KeRZU8ukGee/n2ggQWhnZgFtPkEmbt
+	 g1qTFagY7GhwHbYDoFH6LQ/e2v9UTJV4fW+thUlKh5u3KnT0aINbHJ+SSImjYrGZdL
+	 SAYzQVwT/bKsAH3JO+vLeH9bIELLNM2znN5PeNk/UfO/6snR2riciBc4qlIgcJQpYr
+	 g/6BgYxUx8njeLBVRgchNDpKi+Y3HXdcyfZZc2CPJBipIqaUIbhKNvuCgm3szHawzg
+	 3PdMLdG8QWaYw==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] tracing/probes: Fix probe event argument parser
+Date: Wed, 24 Jan 2024 00:02:23 +0900
+Message-Id: <170602214309.215583.16731124846112910621.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 23 Jan 2024 18:23:58 +0800
-Huang Yiwei <quic_hyiwei@quicinc.com> wrote:
+These fix two bugs in the trace probe event argument parser, which I
+found while I'm cleaning up the code.
 
-> > And if we really want to be fancy!
-> > 
-> > 	ftrace_dump_on_opps[=orig_cpu | =<instance> | =orig_cpu:<instance> ][,<instance> | ,<instance>:orig_cpu]
-> >   
-> Yeah, I agree to make the parameter more flexible.
-> 
-> "=orig_cpu:<instance>" means to dump global and another instance?
+One is just adding an error message to message log buffer (but it is
+important to check the reason). Another is setting the size of argument
+entry correctly with argument data updated by BTF.
 
-No, I added a comma for that:
+Thank you,
 
-  =,orig_cpu:<instance>
+---
 
-Would mean to dump all of global and just the origin CPU of the instance.
+Masami Hiramatsu (Google) (2):
+      tracing/probes: Fix to show a parse error for bad type for $comm
+      tracing/probes: Fix to set arg size and fmt after setting type from BTF
 
-> 
-> I'm thinking of the following format:
-> 
-> ftrace_dump_on_opps[=orig_cpu | =<instance>][,<instance> | 
-> ,<instance>=orig_cpu]
-> 
-> Here list some possible situations:
-> 
-> 1. Dump global on orig_cpu:
-> ftrace_dump_on_oops=orig_cpu
-> 
-> 2. Dump global and instance1 on all cpu, instance2 on orig_cpu:
-> ftrace_dump_on_opps,<instance1>,<instance2>=orig_cpu
-> 
-> 3. Dump global and instance1 on orig_cpu, instance2 on all cpu:
-> ftrace_dump_on_opps=orig_cpu,<instance1>=orig_cpu,<instance2>
-> 
-> 4. Dump instance1 on all cpu, instance2 on orig_cpu:
-> ftrace_dump_on_opps=<instance1>,<instance2>=orig_cpu
-> 
-> 5. Dump instance1 and instance2 on orig_cpu:
-> ftrace_dump_on_opps=<instance1>=orig_cpu,<instance2>=orig_cpu
-> 
-> This makes orig_cpu dump for global same as instance, the parameter may 
-> seems more unified and users don't need to remember another markers to 
-> request orig_cpu dump.
-> 
-> But one problem here is if there's an instance named "orig_cpu", then we 
-> may not dump it correctly.
 
-I would put that under:
+ kernel/trace/trace_probe.c |   32 ++++++++++++++++++--------------
+ kernel/trace/trace_probe.h |    3 ++-
+ 2 files changed, 20 insertions(+), 15 deletions(-)
 
-   Patient: Doctor it hurts me when I do this
-   Doctor:  Then don't do that
-
-;-)
-
--- Steve
-
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
