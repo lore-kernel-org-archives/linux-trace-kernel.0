@@ -1,120 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A475F4878F;
-	Tue, 23 Jan 2024 14:40:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FA560259;
+	Tue, 23 Jan 2024 14:47:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706020817; cv=none; b=EW6On3aNdJxlT6xvVOmyFDbk213gAR9IwItzU9I8E13moAnRtVfl8QblmSChYofL7BZms8jJKUrnFVDNsF09+UXvoEx1W02oqLxVpeLARiCsB4C9G4Blw4cuLafnNbkl490m8ow7UQ2kHov3WixGSu4aP0hP/9ifOghcubqKd2A=
+	t=1706021252; cv=none; b=YYkJMDdmmYOOtDxsqfWi6nlD3+Os6pT6dQlz5X0XfHjTAaS/mXo95nRSwKuZR1O6FpNZb/eWSPAthdvekIDo2cqVF5PmjaIYBGDYi/e8Y0Symb38/WcUvf+IQJspXA3OE0Cv5zhKzWF9iaYNpBmKtsAwbqiG8d074T2NVt1YHSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706020817; c=relaxed/simple;
-	bh=7OrEELPqwl1P/+/gYysQOWDUrrVY1g6F2G52cR4MOb8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=hkbvhM9WUihs3X84RnwxTq1AUvqOoZ2XSsG96Drv7JWP/t7bSXuP/oaoyqZEgNdS+mzbZmjp8eRHe+ciqKSB7gvBbRjQfLz8X8sN2ACz8nL1fuXuboPtA2fg5U8shKk5lQiT8m7+mG5Y1inXbeNbCmUoXM9Qd9jXejtpiG3lKLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vQ+tKRUF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vQ+tKRUF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07282C43394;
-	Tue, 23 Jan 2024 14:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706020817;
-	bh=7OrEELPqwl1P/+/gYysQOWDUrrVY1g6F2G52cR4MOb8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=vQ+tKRUF54hRd0uRx9LGKJXikF5x23IHF5X9zUujFmtIFHVv+bbowa/dLUDMauDJD
-	 o27P+MW0BuxpctPbvE5wZV9U+CDJXcUbnQUICamFxR/g7CIhK2d8ZksGHxUDljrQX4
-	 kHK/7xaEe6b002yPwRc+REQEvMgKtIIwHEcZOVTP0lpl2j03xiD4aM3F0cojPyYKFv
-	 /OQVy1S1AZLzkYCP3mcvioxzHy22Mswgl93hGXuqc0qgZeFNtVaZrLnXMy06aIj+Yj
-	 C531TVsxcpk46Z0SgRCfx65arUDUTN66WDovMkPyiF4A+whLIVBKUpqxwAhGx0OQnP
-	 AbSwEcWY+QKqw==
-Date: Tue, 23 Jan 2024 23:40:13 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Ye Bin <yebin10@huawei.com>
-Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
- <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 3/7] tracing/probes: support '%pd' type for print
- struct dentry's name
-Message-Id: <20240123234013.52b1834908da7be0272e7a73@kernel.org>
-In-Reply-To: <20240123092139.3698375-4-yebin10@huawei.com>
-References: <20240123092139.3698375-1-yebin10@huawei.com>
-	<20240123092139.3698375-4-yebin10@huawei.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1706021252; c=relaxed/simple;
+	bh=SyOCDDjWY9xeLbCSe4FxdSgAc8OEaImCI2tOJVIHOBE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z0f5nNTGW581C7Ec1IKRG5x98xXh77N+hcOJnF6w2WIoHA2xhkFrB2lQWtqMVSeHGb05eEiC9q/lzffQ8u5C6dMQzS3WcH7CjhviZM0YDi9LA9+V12qkNnt7YXZ/HhnR+McwF0oL5nzySque8z24pl5OcVNggu65YDS5OjC67d4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B149C3277A;
+	Tue, 23 Jan 2024 14:47:29 +0000 (UTC)
+Date: Tue, 23 Jan 2024 09:49:00 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Huang Yiwei <quic_hyiwei@quicinc.com>
+Cc: <mhiramat@kernel.org>, <mark.rutland@arm.com>, <mcgrof@kernel.org>,
+ <keescook@chromium.org>, <j.granados@samsung.com>,
+ <mathieu.desnoyers@efficios.com>, <corbet@lwn.net>,
+ <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+ <linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+ <quic_bjorande@quicinc.com>, <quic_tsoni@quicinc.com>,
+ <quic_satyap@quicinc.com>, <quic_aiquny@quicinc.com>, <kernel@quicinc.com>,
+ Ross Zwisler <zwisler@google.com>, Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH v3] tracing: Support to dump instance traces by
+ ftrace_dump_on_oops
+Message-ID: <20240123094900.6f96572c@gandalf.local.home>
+In-Reply-To: <0279a4cb-ced0-447a-a06f-37c38650ed5b@quicinc.com>
+References: <20240119080824.907101-1-quic_hyiwei@quicinc.com>
+	<20240119115625.603188d1@gandalf.local.home>
+	<0279a4cb-ced0-447a-a06f-37c38650ed5b@quicinc.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 23 Jan 2024 17:21:35 +0800
-Ye Bin <yebin10@huawei.com> wrote:
+On Tue, 23 Jan 2024 18:23:58 +0800
+Huang Yiwei <quic_hyiwei@quicinc.com> wrote:
 
-> Similar to '%pd' for printk, use '%pd' for print struct dentry's name.
+> > And if we really want to be fancy!
+> > 
+> > 	ftrace_dump_on_opps[=orig_cpu | =<instance> | =orig_cpu:<instance> ][,<instance> | ,<instance>:orig_cpu]
+> >   
+> Yeah, I agree to make the parameter more flexible.
 > 
-> Signed-off-by: Ye Bin <yebin10@huawei.com>
-> ---
->  kernel/trace/trace_kprobe.c | 6 ++++++
->  kernel/trace/trace_probe.h  | 1 +
->  2 files changed, 7 insertions(+)
+> "=orig_cpu:<instance>" means to dump global and another instance?
+
+No, I added a comma for that:
+
+  =,orig_cpu:<instance>
+
+Would mean to dump all of global and just the origin CPU of the instance.
+
 > 
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index c4c6e0e0068b..00b74530fbad 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -779,6 +779,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
->  	char buf[MAX_EVENT_NAME_LEN];
->  	char gbuf[MAX_EVENT_NAME_LEN];
->  	char abuf[MAX_BTF_ARGS_LEN];
-> +	char dbuf[MAX_DENTRY_ARGS_LEN];
-
-Hmm, no, I don't like to expand stack anymore. Please allocate it
-from heap.
-
->  	struct traceprobe_parse_context ctx = { .flags = TPARG_FL_KERNEL };
->  
->  	switch (argv[0][0]) {
-> @@ -930,6 +931,11 @@ static int __trace_kprobe_create(int argc, const char *argv[])
->  		argv = new_argv;
->  	}
->  
-> +	ret = traceprobe_expand_dentry_args(argc, argv, dbuf,
-> +					    MAX_DENTRY_ARGS_LEN);
-> +	if (ret)
-> +		goto out;
-
-And calling this here will not cover the trace_fprobe. 
-
-Could you call this from traceprobe_expand_meta_args() instead of
-calling it directly from trace_kprobe? Then it can be used from
-fprobe_event too.
-
-Thank you,
-
-> +
->  	/* setup a probe */
->  	tk = alloc_trace_kprobe(group, event, addr, symbol, offset, maxactive,
->  				argc, is_return);
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index 553371a4e0b1..d9c053824975 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -34,6 +34,7 @@
->  #define MAX_ARRAY_LEN		64
->  #define MAX_ARG_NAME_LEN	32
->  #define MAX_BTF_ARGS_LEN	128
-> +#define MAX_DENTRY_ARGS_LEN	256
-
-Why do you think 
-
->  #define MAX_STRING_SIZE		PATH_MAX
->  #define MAX_ARG_BUF_LEN		(MAX_TRACE_ARGS * MAX_ARG_NAME_LEN)
->  
-> -- 
-> 2.31.1
+> I'm thinking of the following format:
 > 
+> ftrace_dump_on_opps[=orig_cpu | =<instance>][,<instance> | 
+> ,<instance>=orig_cpu]
 > 
+> Here list some possible situations:
+> 
+> 1. Dump global on orig_cpu:
+> ftrace_dump_on_oops=orig_cpu
+> 
+> 2. Dump global and instance1 on all cpu, instance2 on orig_cpu:
+> ftrace_dump_on_opps,<instance1>,<instance2>=orig_cpu
+> 
+> 3. Dump global and instance1 on orig_cpu, instance2 on all cpu:
+> ftrace_dump_on_opps=orig_cpu,<instance1>=orig_cpu,<instance2>
+> 
+> 4. Dump instance1 on all cpu, instance2 on orig_cpu:
+> ftrace_dump_on_opps=<instance1>,<instance2>=orig_cpu
+> 
+> 5. Dump instance1 and instance2 on orig_cpu:
+> ftrace_dump_on_opps=<instance1>=orig_cpu,<instance2>=orig_cpu
+> 
+> This makes orig_cpu dump for global same as instance, the parameter may 
+> seems more unified and users don't need to remember another markers to 
+> request orig_cpu dump.
+> 
+> But one problem here is if there's an instance named "orig_cpu", then we 
+> may not dump it correctly.
 
+I would put that under:
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+   Patient: Doctor it hurts me when I do this
+   Doctor:  Then don't do that
+
+;-)
+
+-- Steve
+
