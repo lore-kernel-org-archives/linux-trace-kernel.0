@@ -1,36 +1,39 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00EE75820F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88BEF58209;
 	Tue, 23 Jan 2024 09:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706001555; cv=none; b=ffRAsv5+If3ukNTRxzew/9XUkOLkwyfSqCaONgy9CMeFmrihe3D8DgPCaTma9Vqe2ivlCXAIPOHXl9pvUy0Inj6S67lv2Rk8K+Em9+5KBSF/lyU7Lp72Qi3ifUtvKBh577Dtwc6LT73WW9fEBSK7t3U0Jyj8jzHWoyfcU0YtqJM=
+	t=1706001555; cv=none; b=SJ71NUc6FDq60LRbc+O3MTSE7+SxrzaCDuM46yMnEuuU9zPpNBQEedOyFCczMMvTI/67HLwHkrw7iySIDLTWk9dESLyMomgEkJ1CGPGtTlmcpvfXo6muHBq6fxs+sg9RFyCprtmI/p2Q6AY+riw2jnqC7+l8sczC1a82rsYsCYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706001555; c=relaxed/simple;
-	bh=jUHVuIs/UapfTOlXV8cUELrTxUQ8NolJD73xVsvPNbI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EKXwloVVH875iUmLMRox2H3jb3ymG9cy0DfIXkkAADnAL7YEWImMUOMWrbJy1edQh6fsqdAg3KAWILFOHNKQrAQkEs91aKwA/z/+4ZfUsDDvkL2kLjtKbyk5I7Ey9Br+nuMbGMy2FM18yl9zdZdtXIpKF9FKFVh+POHW0MDfjhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+	bh=ASkvNL+WBKTxbaQNMIjBmg1cXddIy1p77kjdfuRrvQo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rQzUycTcymEisBX0zjk6GhQY0UomjQBkhR0m0YxUnSg7iPNF5sNbjPyu4S8uCFmRNW5Cqfl4fWe/ZUhCTr3TCQDnpcych1fOdJHIb8UHT5UqYN5cLuOuCvkrhYWrNxaQZ85+cV2IhIhbmqji/xBnGW1CwXMfCbymlk0Tk9drtNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4TK1hv3qXMz18KL3;
-	Tue, 23 Jan 2024 17:18:07 +0800 (CST)
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4TK1j51JZkzNlSH;
+	Tue, 23 Jan 2024 17:18:17 +0800 (CST)
 Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id D35EC1404FD;
+	by mail.maildlp.com (Postfix) with ESMTPS id E8AED140631;
 	Tue, 23 Jan 2024 17:19:08 +0800 (CST)
 Received: from huawei.com (10.175.127.227) by canpemm500010.china.huawei.com
  (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 23 Jan
- 2024 17:19:03 +0800
+ 2024 17:19:05 +0800
 From: Ye Bin <yebin10@huawei.com>
 To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
 	<mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <yebin10@huawei.com>
-Subject: [PATCH v4 0/7] support '%pd' and '%pD' for print file name
-Date: Tue, 23 Jan 2024 17:21:32 +0800
-Message-ID: <20240123092139.3698375-1-yebin10@huawei.com>
+Subject: [PATCH v4 5/7] tracing: add new type "%pd/%pD" in readme_msg[]
+Date: Tue, 23 Jan 2024 17:21:37 +0800
+Message-ID: <20240123092139.3698375-6-yebin10@huawei.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20240123092139.3698375-1-yebin10@huawei.com>
+References: <20240123092139.3698375-1-yebin10@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -42,45 +45,24 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  canpemm500010.china.huawei.com (7.192.105.118)
 
-During fault locating, the file name needs to be printed based on the
-dentry/file address. The offset needs to be calculated each time, which
-is troublesome. Similar to printk, kprobe supports printing file names
-for dentry/file addresses.
+Signed-off-by: Ye Bin <yebin10@huawei.com>
+---
+ kernel/trace/trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Diff v4 vs v3:
-1. Use "argv[i][idx + 3] == 'd'" instead of "argv[i][strlen(argv[i]) - 1] == 'd'"
-to judge print format in PATCH[4/7];
-
-Diff v3 vs v2:
-1. Return the index of where the suffix was found in str_has_suffix();
-
-Diff v2 vs v1:
-1. Use "%pd/%pD" print format instead of "pd/pD" print format;
-2. Add "%pd/%pD" in README;
-3. Expand "%pd/%pD" argument before parameter parsing;
-4. Add more detail information in ftrace documentation;
-5. Add test cases for new print format in selftests/ftrace;
-
-Ye Bin (7):
-  string.h: add str_has_suffix() helper for test string ends with
-    specify string
-  tracing/probes: add traceprobe_expand_dentry_args() helper
-  tracing/probes: support '%pd' type for print struct dentry's name
-  tracing/probes: support '%pD' type for print struct file's name
-  tracing: add new type "%pd/%pD" in readme_msg[]
-  Documentation: tracing: add new type '%pd' and '%pD' for kprobe
-  selftests/ftrace: add test cases for VFS type "%pd" and "%pD"
-
- Documentation/trace/kprobetrace.rst           |  6 +-
- include/linux/string.h                        | 28 +++++++
- kernel/trace/trace.c                          |  2 +-
- kernel/trace/trace_kprobe.c                   |  6 ++
- kernel/trace/trace_probe.c                    | 47 +++++++++++
- kernel/trace/trace_probe.h                    |  3 +
- .../ftrace/test.d/kprobe/kprobe_args_vfs.tc   | 79 +++++++++++++++++++
- 7 files changed, 169 insertions(+), 2 deletions(-)
- create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
-
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 2a7c6fd934e9..13197d3b86bd 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -5745,7 +5745,7 @@ static const char readme_msg[] =
+ 	"\t           +|-[u]<offset>(<fetcharg>), \\imm-value, \\\"imm-string\"\n"
+ 	"\t     type: s8/16/32/64, u8/16/32/64, x8/16/32/64, char, string, symbol,\n"
+ 	"\t           b<bit-width>@<bit-offset>/<container-size>, ustring,\n"
+-	"\t           symstr, <type>\\[<array-size>\\]\n"
++	"\t           symstr, %pd/%pD <type>\\[<array-size>\\]\n"
+ #ifdef CONFIG_HIST_TRIGGERS
+ 	"\t    field: <stype> <name>;\n"
+ 	"\t    stype: u8/u16/u32/u64, s8/s16/s32/s64, pid_t,\n"
 -- 
 2.31.1
 
