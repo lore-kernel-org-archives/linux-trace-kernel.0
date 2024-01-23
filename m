@@ -1,62 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8737960DD6;
-	Tue, 23 Jan 2024 01:54:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D1C52F90;
+	Tue, 23 Jan 2024 02:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705974851; cv=none; b=PTkpeJbL2mW4y3WekBbVMwnHWq1YEeChCcWSwHsaeYhSPcWjkCUbg6pWPYWRvXJty3OT1NiOwze2kGLbg3Cg8Hzwlzb6M3fCeuoC0CejbSpChOWtAwjrwCH7y/oDy7KEpiyxfg+hclPjSdGJr0DgnZlDOAFD5OOGFUw/MNPYlYo=
+	t=1705977418; cv=none; b=V5nCyEp7pq+Td8OOpDR4h7qRbcByC1aXoCoNxy1xHpGoMX0zM9Ba2mxjbOs1yeSREmMAEbiLXzzEwPz33/h+JGT3U/vSYpQgue+SF4Ob5b7GJrnFZHpwtBHrlFlQjuYbrWiCA5ccK9NKgFIRiSbmzf4rgZHYUn5voNYjmKPV7CI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705974851; c=relaxed/simple;
-	bh=nt6Hl62u5AXRkmcTQcS/xesbw7puA81xqOiLHvBdtHM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EYbb8ChhcjUUAN63QHu1K2qwn4tvly+U4WyxylcTEQQ6HgCJsz2j80dWH+KxOlmlYTI5/ADJ31YsCy0MG9UiNbZbOHDht0CHeY1vf12nD+AYwgg6rHO7wHQ4JT72cFhGouJwSWM9nI83KVmkBS7rGBL43Qh9tCtf+TBda8PUXIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3510C433C7;
-	Tue, 23 Jan 2024 01:54:09 +0000 (UTC)
-Date: Mon, 22 Jan 2024 20:55:39 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: George Guo <dongtai.guo@linux.dev>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Dennis Zhou <dennis@kernel.org>, Tejun
- Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, Andrew Morton
- <akpm@linux-foundation.org>, George Guo <guodongtai@kylinos.cn>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org
-Subject: Re: [PATCH] percpu: improve percpu_alloc_percpu_fail event trace
-Message-ID: <20240122205539.705f5701@gandalf.local.home>
-In-Reply-To: <20240123094443.00007b20@linux.dev>
-References: <20240122073629.2594271-1-dongtai.guo@linux.dev>
-	<20240122105700.05e5ee46@gandalf.local.home>
-	<20240123094443.00007b20@linux.dev>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1705977418; c=relaxed/simple;
+	bh=ZzHhTy4oVqbqk4rjHHtCAYK6n4KCr+YmeWtTcRgougs=;
+	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=C2v0OyiB4IM0fxaY9cLIldTYBbCmpsBAOx286RTuy/txxBfaQ2claPQodzE8cHyQcspBDDBGUbA2KOpRDzxoH+nLolIGCNAnedj6v2z+s8OS86/rEqE45A1k/xGyA/QAB3rKxA3idy9piH/LW59M3PKB2E0pdRMla+EZ0Feospc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4TJrmx75ZRzNlNk;
+	Tue, 23 Jan 2024 10:36:01 +0800 (CST)
+Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6CBBE18005E;
+	Tue, 23 Jan 2024 10:36:53 +0800 (CST)
+Received: from [10.174.178.185] (10.174.178.185) by
+ canpemm500010.china.huawei.com (7.192.105.118) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 23 Jan 2024 10:36:37 +0800
+Subject: Re: [PATCH v2 1/7] string.h: add str_has_suffix() helper for test
+ string ends with specify string
+To: Steven Rostedt <rostedt@goodmis.org>
+References: <20240122074015.4042575-1-yebin10@huawei.com>
+ <20240122074015.4042575-2-yebin10@huawei.com>
+ <20240122110759.29c50a19@gandalf.local.home>
+CC: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From: "yebin (H)" <yebin10@huawei.com>
+Message-ID: <65AF2634.2090705@huawei.com>
+Date: Tue, 23 Jan 2024 10:36:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.1.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20240122110759.29c50a19@gandalf.local.home>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ canpemm500010.china.huawei.com (7.192.105.118)
 
-On Tue, 23 Jan 2024 09:44:43 +0800
-George Guo <dongtai.guo@linux.dev> wrote:
 
-> There are two reasons of percpu_alloc failed without warnings: 
-> 
-> 1. do_warn is false
-> 2. do_warn is true and warn_limit is reached the limit.
 
-Yes I know the reasons.
+On 2024/1/23 0:07, Steven Rostedt wrote:
+> On Mon, 22 Jan 2024 15:40:09 +0800
+> Ye Bin <yebin10@huawei.com> wrote:
+>
+>> str_has_suffix() is test string if ends with specify string.
+>>
+>> Signed-off-by: Ye Bin <yebin10@huawei.com>
+>> ---
+>>   include/linux/string.h | 20 ++++++++++++++++++++
+>>   1 file changed, 20 insertions(+)
+>>
+>> diff --git a/include/linux/string.h b/include/linux/string.h
+>> index 433c207a01da..e47e9597af27 100644
+>> --- a/include/linux/string.h
+>> +++ b/include/linux/string.h
+>> @@ -405,4 +405,24 @@ static __always_inline size_t str_has_prefix(const char *str, const char *prefix
+>>   	return strncmp(str, prefix, len) == 0 ? len : 0;
+>>   }
+>>   
+>> +/**
+>> + * str_has_suffix - Test if a string has a given suffix
+>> + * @str: The string to test
+>> + * @suffix: The string to see if @str ends with
+>> + *
+>> + * Returns:
+>> + * * strlen(@suffix) if @str ends with @suffix
+>> + * * 0 if @str does not end with @suffix
+>> + */
+>> +static __always_inline size_t str_has_suffix(const char *str, const char *suffix)
+>> +{
+>> +	size_t len = strlen(suffix);
+>> +	size_t str_len = strlen(str);
+>> +
+>> +	if (len > str_len)
+>> +		return 0;
+>> +
+>> +	return strncmp(str + str_len - len, suffix, len) == 0 ? len : 0;
+>> +}
+> I understand why you are returning the length of the suffix, as it matches
+> str_has_prefix(). But as the user of this will likely need the length of
+> the "str" too, we should either return the length of the string, or the
+> index of where the suffix was found.
+>
+> /**
+>   [..]
+>   @index: The index into @str of where @suffix is if found (NULL to ignore)
+>   [..]
+> */
+> static __always_inline size_t str_has_suffix(const char *str, const char *suffix, size_t *index)
+> {
+> 	size_t len = strlen(suffix);
+> 	size_t str_len = strlen(str);
+>
+> 	if (len > str_len)
+> 		return 0;
+>
+> 	if (index)
+> 		*index = str_len - len;
+>
+> 	return strncmp(str + str_len - len, suffix, len) == 0 ? len : 0;
+> }
+>
+> -- Steve
+Thank you for your advice.
+Return the index of where the suffix was found is useful. I'll modify it 
+according to your suggestion.
 
-> 
-> Showing do_warn and warn_limit makes things simple, maybe dont need
-> kprobe again.
+-- Ye Bin
+>> +
+>>   #endif /* _LINUX_STRING_H_ */
+> .
+>
 
-It's up to the maintainers of that code to decide if it's worth it or not,
-but honestly, my opinion it is not.
-
-The trace event in question is to trace that percpu_alloc failed and why.
-It's not there to determine why it did not produce a printk message.
-
--- Steve
