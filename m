@@ -1,42 +1,67 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6DB248CC5;
-	Tue, 23 Jan 2024 22:08:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706047735; cv=none; b=KELpYEepMUY1vumCIkI1NFXN3uP7Q7PboNcFjshh4SN72AFDC+Z85IEtFmm3PdlhE1fa4dUXjbsYJTvclGh2EICbohk+8vQ1paUVkRZmUg0zdRjb1GgmU4Fc0xlj/8Y0hFFmeJ8Z6GvzEg1MzVgX2M863EPtIpvnlnpKTrWQ1TU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706047735; c=relaxed/simple;
-	bh=FnbJOUYyo9SG09sWxWfioByn+hYZ8tNLAv0xeWTvLE8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LaIog80rH+hknfSglK1ojXBMy7AkhRzL+joOjOGwKZp3lDNx7oU+eRphmOJgOB3a2tpPTCjAQUuH7KxL86e3e0P4gfUHFLX49y8cBxN1UbG56CjLxi0JpUIIOx5oFMyxfbI6laRSTDDwFNuL5KnpXmGYL03TOliDube/imTBBeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=OtyTv9Et; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2082.outbound.protection.outlook.com [40.107.243.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E5154279;
+	Tue, 23 Jan 2024 23:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706053920; cv=fail; b=gb57iqWR5yL+UxPjHTbfuKzxFHL9vFObMDkoTg7n3OWPK0ySZQcvyYU8RQ5XTbgJesGdIjL7ptHeMV+hl9Jk7FWrguQNBsxWmL/CmL5iLj7fGVciq3pz/1hOpQ5/Fd/Mima66KP2UxlbPZW8Y+H78T++hPYcOrgH3UFpdAS167g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706053920; c=relaxed/simple;
+	bh=NqxRvSTQyoRKXt3tmzF5NVxt89X1ZOKw7m4wj6eWflQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VyfbA+T3vSfuynYeaKe2zsTf/i1cn43s1ByOpQk6xATM3yMXKcPLM6qsV0RdmEzC8+EsUYZxNNCwE3ld4LlN4wlFAF02FC90Zdi52UehBwHaRFEKy86lXK7tzOSq8loV7pFtNj9p4C0jKZ2U+VZKI5RXZZvZnWFAoUw1+oJCJWE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pOxiiqov; arc=fail smtp.client-ip=40.107.243.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OtyTv9Et"
-Received: from localhost.localdomain (unknown [4.155.48.122])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 88C7820E34D0;
-	Tue, 23 Jan 2024 14:08:52 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 88C7820E34D0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1706047732;
-	bh=Le9f0e49+dthCc61KAgcRwh1XvFlFO0FSHHTzXoZbRU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OtyTv9EtKmt4y1fWGfRtp81PD8/wWA/gbO3YAEiF0NTmwxjAP0MgSYP2UDxUgxZi8
-	 9uw7ve+CHPPlnvlJzr0MucgSAGI8r2Nrij4WmsVrR4/7KFN3G4Iru4H7DiU02X18Eo
-	 BkzZspq2rTrgpDl76ynffa+S507c5JmbfPujC9qM=
-From: Beau Belgrave <beaub@linux.microsoft.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com
-Subject: [PATCH 2/4] tracing/user_events: Introduce multi-format events
-Date: Tue, 23 Jan 2024 22:08:42 +0000
-Message-Id: <20240123220844.928-3-beaub@linux.microsoft.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pOxiiqov"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QCInVQP9YqBwvfwkGUHYo8mG9wJL1lX3BzX7VZAjfirtF2WCEgOS48TTZXaG/yNnyw4TMJiVNcFW23zPFEbGWXTsrfh4BRiyb7M90wtG8jvt4oLrM+rsOmBC9Q6FtviTvZcXdXqbbJIOiMXMoriJjXXeyS3MRn43gSOdVDCqygUUBfEdggeyntmo51sH52uko7x6BdhjYujjUYGpmPk0Qqmd6K3zTw5Yi2gFJNUDF++6AZ+gcVB69n9gC33jdbEsELytwSgs77C4lEWOVwO3JXrVOmNIncOjYKrpjYRUrfFyTShzMkRWKhm5/EuldZB0h2AASJHDKgozXkPY4QoMyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mUvZyZeEyAKy1Q9MxG5SF//0HE+AqfLvar/e0N9dwVg=;
+ b=OSRU0tBSpoHGKDUziwOSRva3tcbOsGbdvfnLm09nTXKJVpooSfu41FDfSYkrw677DoXVNT14JKB6nmNFEFNNpaOT0HH/31hHoZNfJqDFgKGo/FM/pGBrMRpLGDHcD3cndg8OGr4pmOixgZw8M8841ju8NBoEwEddOZLqGx9M1E9EryxmbMAddd+/XVZ4RBRoPg7lFCCYVvsgkYmd4M4V3wawPXZIMAC3g4fqv42x5kQUyuIjGCdzM3G2v0h+VU3SuAHST0a25qajU1wV2BI3jRJ7h5n53YbBXxxaGWSE2Ii/+5oIrJ7BPmi261m6OuSwtz7VcZ6W0XLG5OCY3lDRfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mUvZyZeEyAKy1Q9MxG5SF//0HE+AqfLvar/e0N9dwVg=;
+ b=pOxiiqov3EhYK7BJDqBQVhhVHCqQ+0o0UgU1u7JOY4E3PDSW9XDK1eW0d3Vo+ri7jKPQFPEe9iWtKNOJJqS137yDg1+Kqyn6pf4AFZbLFd/ousNY03ozlQDIsP2dGbZ7P1aUU6HaCEin6GjWRPP73fMwZ3ZLChGgcRv80RRxjCg=
+Received: from BL0PR0102CA0044.prod.exchangelabs.com (2603:10b6:208:25::21) by
+ BN9PR12MB5130.namprd12.prod.outlook.com (2603:10b6:408:137::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7202.37; Tue, 23 Jan 2024 23:51:57 +0000
+Received: from MN1PEPF0000ECD5.namprd02.prod.outlook.com
+ (2603:10b6:208:25:cafe::ab) by BL0PR0102CA0044.outlook.office365.com
+ (2603:10b6:208:25::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.32 via Frontend
+ Transport; Tue, 23 Jan 2024 23:51:56 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MN1PEPF0000ECD5.mail.protection.outlook.com (10.167.242.133) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7202.16 via Frontend Transport; Tue, 23 Jan 2024 23:51:56 +0000
+Received: from titanite-d354host.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34; Tue, 23 Jan 2024 17:51:56 -0600
+From: Avadhut Naik <avadhut.naik@amd.com>
+To: <linux-trace-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>
+CC: <rostedt@goodmis.org>, <tony.luck@intel.com>, <bp@alien8.de>,
+	<x86@kernel.org>, <linux-kernel@vger.kernel.org>, <yazen.ghannam@amd.com>,
+	<avadnaik@amd.com>
+Subject: [PATCH] tracing: Include PPIN in mce_record tracepoint
+Date: Tue, 23 Jan 2024 17:51:50 -0600
+Message-ID: <20240123235150.3744089-1-avadhut.naik@amd.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240123220844.928-1-beaub@linux.microsoft.com>
-References: <20240123220844.928-1-beaub@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -44,334 +69,85 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN1PEPF0000ECD5:EE_|BN9PR12MB5130:EE_
+X-MS-Office365-Filtering-Correlation-Id: 50638fa1-d48e-49e5-8a08-08dc1c6e4897
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	THJreMWjqAy1Wy0JDwA7UV24b1B7KTMvzFh+gSBlohowsasDIgDUeHb7h5AFe1boltQEuW4svDBNQbSxnpEVSxrm9z/riAjtCm8Cy5Z1/FZvm0ez9gcKt8Z2MDxEA/Sy2qiHUibrCWtUQy+vcbp1D98WvKWAUfC9q0Wy0ZozqF6ubYdM1n2Ee+nSMNM7EoC6rRK7+QSSbjCFuknpZHXOgzWMXFqOhud5COjeeOFmD8khFTUvwcSRA2LL6jF3GgskQBUegIqmBtFrq25vUYK7cZNfKvE402h9COVq8J9W12qpRLpoPnz9lJCP/lgew00mcrUfG1DZ7i6pvJjdxIjiA+2dMXOhSnzJNHmGU1BJnTjE7Ez8KrbOuXhI7rku1cZUbi2crv7jwg+X50Sbjg8fBdsaFOmQURC1tRf6ZqyWQ6kIonOvCic0Uc0mfRezNTm0aTVExB3XUM+MUa+QnV2oe+pRCKTpWnNrco6PEswXUJuPXTCRfqhZtxeyA8hDOLDioc6RlN/JXf7umyxooRtSglIrvDEvtY1Bla8f82Nn9T1dpRc6Xq+bd/AL2EuSD35LLtMSbquF++9l9jhvhSKOSxDbFhPxeb4q3r53iWp07SoyU+ztvJJIW1Mg2Y85hTHUkUrV7vhA6Uwtk0SjIpOd8l+7/vuaHcD319TvyMR3VD7Ync94L+rUhKP1S/tvgfnQ40cZ6Ch+pu7t/YdCuDML1KlRlKD+RERPWLnaFgHR7JOONMSXvX2Ivi6JAvjNmUfFIbjOI1LK2Uzqqb1LYtMJSA==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(396003)(346002)(376002)(136003)(230922051799003)(1800799012)(82310400011)(186009)(451199024)(64100799003)(36840700001)(46966006)(40470700004)(40480700001)(40460700003)(2616005)(1076003)(8676002)(426003)(4326008)(336012)(83380400001)(44832011)(8936002)(47076005)(316002)(7696005)(6666004)(70206006)(54906003)(70586007)(478600001)(5660300002)(26005)(110136005)(16526019)(36860700001)(356005)(81166007)(82740400003)(2906002)(36756003)(41300700001)(86362001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2024 23:51:56.9170
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 50638fa1-d48e-49e5-8a08-08dc1c6e4897
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MN1PEPF0000ECD5.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5130
 
-Currently user_events supports 1 event with the same name and must have
-the exact same format when referenced by multiple programs. This opens
-an opportunity for malicous or poorly thought through programs to
-create events that others use with different formats. Another scenario
-is user programs wishing to use the same event name but add more fields
-later when the software updates. Various versions of a program may be
-running side-by-side, which is prevented by the current single format
-requirement.
+Machine Check Error information from struct mce is exported to userspace
+through the mce_record tracepoint.
 
-Add a new register flag (USER_EVENT_REG_MULTI_FORMAT) which indicates
-the user program wishes to use the same user_event name, but may have
-several different formats of the event in the future. When this flag is
-used, create the underlying tracepoint backing the user_event with a
-unique name per-version of the format. It's important that existing ABI
-users do not get this logic automatically, even if one of the multi
-format events matches the format. This ensures existing programs that
-create events and assume the tracepoint name will match exactly continue
-to work as expected. Add logic to only check multi-format events with
-other multi-format events and single-format events to only check
-single-format events during find.
+Currently, however, the PPIN (Protected Processor Inventory Number) field
+of struct mce is not exported through the tracepoint.
 
-Change system name of the multi-format event tracepoint to ensure that
-multi-format events are isolated completely from single-format events.
+Export PPIN through the tracepoint as it may provide useful information
+for debug and analysis.
 
-Add a register_name (reg_name) to the user_event struct which allows for
-split naming of events. We now have the name that was used to register
-within user_events as well as the unique name for the tracepoint. Upon
-registering events ensure matches based on first the reg_name, followed
-by the fields and format of the event. This allows for multiple events
-with the same registered name to have different formats. The underlying
-tracepoint will have a unique name in the format of {reg_name}:[unique_id].
-
-For example, if both "test u32 value" and "test u64 value" are used with
-the USER_EVENT_REG_MULTI_FORMAT the system would have 2 unique
-tracepoints. The dynamic_events file would then show the following:
-  u:test u64 count
-  u:test u32 count
-
-The actual tracepoint names look like this:
-  test:[d5874fdac44]
-  test:[d5914662cd4]
-
-Both would be under the new user_events_multi system name to prevent the
-older ABI from being used to squat on multi-formatted events and block
-their use.
-
-Deleting events via "!u:test u64 count" would only delete the first
-tracepoint that matched that format. When the delete ABI is used all
-events with the same name will be attempted to be deleted. If
-per-version deletion is required, user programs should either not use
-persistent events or delete them via dynamic_events.
-
-Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
+Signed-off-by: Avadhut Naik <avadhut.naik@amd.com>
 ---
- include/uapi/linux/user_events.h |   6 +-
- kernel/trace/trace_events_user.c | 118 +++++++++++++++++++++++++++----
- 2 files changed, 111 insertions(+), 13 deletions(-)
+ include/trace/events/mce.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/include/uapi/linux/user_events.h b/include/uapi/linux/user_events.h
-index f74f3aedd49c..a03de03dccbc 100644
---- a/include/uapi/linux/user_events.h
-+++ b/include/uapi/linux/user_events.h
-@@ -12,6 +12,7 @@
- #include <linux/ioctl.h>
+diff --git a/include/trace/events/mce.h b/include/trace/events/mce.h
+index 1391ada0da3b..657b93ec8176 100644
+--- a/include/trace/events/mce.h
++++ b/include/trace/events/mce.h
+@@ -25,6 +25,7 @@ TRACE_EVENT(mce_record,
+ 		__field(	u64,		ipid		)
+ 		__field(	u64,		ip		)
+ 		__field(	u64,		tsc		)
++		__field(	u64,		ppin	)
+ 		__field(	u64,		walltime	)
+ 		__field(	u32,		cpu		)
+ 		__field(	u32,		cpuid		)
+@@ -45,6 +46,7 @@ TRACE_EVENT(mce_record,
+ 		__entry->ipid		= m->ipid;
+ 		__entry->ip		= m->ip;
+ 		__entry->tsc		= m->tsc;
++		__entry->ppin		= m->ppin;
+ 		__entry->walltime	= m->time;
+ 		__entry->cpu		= m->extcpu;
+ 		__entry->cpuid		= m->cpuid;
+@@ -55,7 +57,7 @@ TRACE_EVENT(mce_record,
+ 		__entry->cpuvendor	= m->cpuvendor;
+ 	),
  
- #define USER_EVENTS_SYSTEM "user_events"
-+#define USER_EVENTS_MULTI_SYSTEM "user_events_multi"
- #define USER_EVENTS_PREFIX "u:"
- 
- /* Create dynamic location entry within a 32-bit value */
-@@ -22,8 +23,11 @@ enum user_reg_flag {
- 	/* Event will not delete upon last reference closing */
- 	USER_EVENT_REG_PERSIST		= 1U << 0,
- 
-+	/* Event will be allowed to have multiple formats */
-+	USER_EVENT_REG_MULTI_FORMAT	= 1U << 1,
-+
- 	/* This value or above is currently non-ABI */
--	USER_EVENT_REG_MAX		= 1U << 1,
-+	USER_EVENT_REG_MAX		= 1U << 2,
- };
- 
- /*
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index 0480579ba563..f9c0781285b6 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -34,7 +34,8 @@
- 
- /* Limit how long of an event name plus args within the subsystem. */
- #define MAX_EVENT_DESC 512
--#define EVENT_NAME(user_event) ((user_event)->tracepoint.name)
-+#define EVENT_NAME(user_event) ((user_event)->reg_name)
-+#define EVENT_TP_NAME(user_event) ((user_event)->tracepoint.name)
- #define MAX_FIELD_ARRAY_SIZE 1024
- 
- /*
-@@ -54,10 +55,13 @@
-  * allows isolation for events by various means.
-  */
- struct user_event_group {
--	char		*system_name;
--	struct		hlist_node node;
--	struct		mutex reg_mutex;
-+	char			*system_name;
-+	char			*system_multi_name;
-+	struct hlist_node	node;
-+	struct mutex		reg_mutex;
- 	DECLARE_HASHTABLE(register_table, 8);
-+	/* ID that moves forward within the group for multi-event names */
-+	u64			multi_id;
- };
- 
- /* Group for init_user_ns mapping, top-most group */
-@@ -78,6 +82,7 @@ static unsigned int current_user_events;
-  */
- struct user_event {
- 	struct user_event_group		*group;
-+	char				*reg_name;
- 	struct tracepoint		tracepoint;
- 	struct trace_event_call		call;
- 	struct trace_event_class	class;
-@@ -127,6 +132,8 @@ struct user_event_enabler {
- 
- #define ENABLE_BIT(e) ((int)((e)->values & ENABLE_VAL_BIT_MASK))
- 
-+#define EVENT_MULTI_FORMAT(f) ((f) & USER_EVENT_REG_MULTI_FORMAT)
-+
- /* Used for asynchronous faulting in of pages */
- struct user_event_enabler_fault {
- 	struct work_struct		work;
-@@ -330,6 +337,7 @@ static void user_event_put(struct user_event *user, bool locked)
- static void user_event_group_destroy(struct user_event_group *group)
- {
- 	kfree(group->system_name);
-+	kfree(group->system_multi_name);
- 	kfree(group);
- }
- 
-@@ -348,6 +356,21 @@ static char *user_event_group_system_name(void)
- 	return system_name;
- }
- 
-+static char *user_event_group_system_multi_name(void)
-+{
-+	char *system_name;
-+	int len = sizeof(USER_EVENTS_MULTI_SYSTEM) + 1;
-+
-+	system_name = kmalloc(len, GFP_KERNEL);
-+
-+	if (!system_name)
-+		return NULL;
-+
-+	snprintf(system_name, len, "%s", USER_EVENTS_MULTI_SYSTEM);
-+
-+	return system_name;
-+}
-+
- static struct user_event_group *current_user_event_group(void)
- {
- 	return init_group;
-@@ -367,6 +390,11 @@ static struct user_event_group *user_event_group_create(void)
- 	if (!group->system_name)
- 		goto error;
- 
-+	group->system_multi_name = user_event_group_system_multi_name();
-+
-+	if (!group->system_multi_name)
-+		goto error;
-+
- 	mutex_init(&group->reg_mutex);
- 	hash_init(group->register_table);
- 
-@@ -1482,6 +1510,11 @@ static int destroy_user_event(struct user_event *user)
- 	hash_del(&user->node);
- 
- 	user_event_destroy_validators(user);
-+
-+	/* If we have different names, both must be freed */
-+	if (EVENT_NAME(user) != EVENT_TP_NAME(user))
-+		kfree(EVENT_TP_NAME(user));
-+
- 	kfree(user->call.print_fmt);
- 	kfree(EVENT_NAME(user));
- 	kfree(user);
-@@ -1504,12 +1537,24 @@ static struct user_event *find_user_event(struct user_event_group *group,
- 	*outkey = key;
- 
- 	hash_for_each_possible(group->register_table, user, node, key) {
-+		/*
-+		 * Single-format events shouldn't return multi-format
-+		 * events. Callers expect the underlying tracepoint to match
-+		 * the name exactly in these cases. Only check like-formats.
-+		 */
-+		if (EVENT_MULTI_FORMAT(flags) != EVENT_MULTI_FORMAT(user->reg_flags))
-+			continue;
-+
- 		if (strcmp(EVENT_NAME(user), name))
- 			continue;
- 
- 		if (user_fields_match(user, argc, argv))
- 			return user_event_get(user);
- 
-+		/* Scan others if this is a multi-format event */
-+		if (EVENT_MULTI_FORMAT(flags))
-+			continue;
-+
- 		return ERR_PTR(-EADDRINUSE);
- 	}
- 
-@@ -1889,8 +1934,12 @@ static bool user_event_match(const char *system, const char *event,
- 	struct user_event *user = container_of(ev, struct user_event, devent);
- 	bool match;
- 
--	match = strcmp(EVENT_NAME(user), event) == 0 &&
--		(!system || strcmp(system, USER_EVENTS_SYSTEM) == 0);
-+	match = strcmp(EVENT_NAME(user), event) == 0;
-+
-+	if (match && system) {
-+		match = strcmp(system, user->group->system_name) == 0 ||
-+			strcmp(system, user->group->system_multi_name) == 0;
-+	}
- 
- 	if (match)
- 		match = user_fields_match(user, argc, argv);
-@@ -1923,6 +1972,39 @@ static int user_event_trace_register(struct user_event *user)
- 	return ret;
- }
- 
-+static int user_event_set_tp_name(struct user_event *user)
-+{
-+	lockdep_assert_held(&user->group->reg_mutex);
-+
-+	if (EVENT_MULTI_FORMAT(user->reg_flags)) {
-+		char *multi_name;
-+		int len;
-+
-+		len = snprintf(NULL, 0, "%s:[%llx]", user->reg_name,
-+			       user->group->multi_id) + 1;
-+
-+		multi_name = kzalloc(len, GFP_KERNEL_ACCOUNT);
-+
-+		if (!multi_name)
-+			return -ENOMEM;
-+
-+		snprintf(multi_name, len, "%s:[%llx]", user->reg_name,
-+			 user->group->multi_id);
-+
-+		user->call.name = multi_name;
-+		user->tracepoint.name = multi_name;
-+
-+		/* Inc to ensure unique multi-event name next time */
-+		user->group->multi_id++;
-+	} else {
-+		/* Non Multi-format uses register name */
-+		user->call.name = user->reg_name;
-+		user->tracepoint.name = user->reg_name;
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * Parses the event name, arguments and flags then registers if successful.
-  * The name buffer lifetime is owned by this method for success cases only.
-@@ -1985,7 +2067,13 @@ static int user_event_parse(struct user_event_group *group, char *name,
- 	INIT_LIST_HEAD(&user->validators);
- 
- 	user->group = group;
--	user->tracepoint.name = name;
-+	user->reg_name = name;
-+	user->reg_flags = reg_flags;
-+
-+	ret = user_event_set_tp_name(user);
-+
-+	if (ret)
-+		goto put_user;
- 
- 	ret = user_event_parse_fields(user, args);
- 
-@@ -1999,11 +2087,14 @@ static int user_event_parse(struct user_event_group *group, char *name,
- 
- 	user->call.data = user;
- 	user->call.class = &user->class;
--	user->call.name = name;
- 	user->call.flags = TRACE_EVENT_FL_TRACEPOINT;
- 	user->call.tp = &user->tracepoint;
- 	user->call.event.funcs = &user_event_funcs;
--	user->class.system = group->system_name;
-+
-+	if (EVENT_MULTI_FORMAT(user->reg_flags))
-+		user->class.system = group->system_multi_name;
-+	else
-+		user->class.system = group->system_name;
- 
- 	user->class.fields_array = user_event_fields_array;
- 	user->class.get_fields = user_event_get_fields;
-@@ -2025,8 +2116,6 @@ static int user_event_parse(struct user_event_group *group, char *name,
- 	if (ret)
- 		goto put_user_lock;
- 
--	user->reg_flags = reg_flags;
--
- 	if (user->reg_flags & USER_EVENT_REG_PERSIST) {
- 		/* Ensure we track self ref and caller ref (2) */
- 		refcount_set(&user->refcnt, 2);
-@@ -2050,6 +2139,11 @@ static int user_event_parse(struct user_event_group *group, char *name,
- 	user_event_destroy_fields(user);
- 	user_event_destroy_validators(user);
- 	kfree(user->call.print_fmt);
-+
-+	/* Caller frees reg_name on error, but not multi-name */
-+	if (EVENT_NAME(user) != EVENT_TP_NAME(user))
-+		kfree(EVENT_TP_NAME(user));
-+
- 	kfree(user);
- 	return ret;
- }
-@@ -2640,7 +2734,7 @@ static int user_seq_show(struct seq_file *m, void *p)
- 	hash_for_each(group->register_table, i, user, node) {
- 		status = user->status;
- 
--		seq_printf(m, "%s", EVENT_NAME(user));
-+		seq_printf(m, "%s", EVENT_TP_NAME(user));
- 
- 		if (status != 0)
- 			seq_puts(m, " #");
+-	TP_printk("CPU: %d, MCGc/s: %llx/%llx, MC%d: %016Lx, IPID: %016Lx, ADDR/MISC/SYND: %016Lx/%016Lx/%016Lx, RIP: %02x:<%016Lx>, TSC: %llx, PROCESSOR: %u:%x, TIME: %llu, SOCKET: %u, APIC: %x",
++	TP_printk("CPU: %d, MCGc/s: %llx/%llx, MC%d: %016Lx, IPID: %016Lx, ADDR/MISC/SYND: %016Lx/%016Lx/%016Lx, RIP: %02x:<%016Lx>, TSC: %llx, PPIN: %llx, PROCESSOR: %u:%x, TIME: %llu, SOCKET: %u, APIC: %x",
+ 		__entry->cpu,
+ 		__entry->mcgcap, __entry->mcgstatus,
+ 		__entry->bank, __entry->status,
+@@ -63,6 +65,7 @@ TRACE_EVENT(mce_record,
+ 		__entry->addr, __entry->misc, __entry->synd,
+ 		__entry->cs, __entry->ip,
+ 		__entry->tsc,
++		__entry->ppin,
+ 		__entry->cpuvendor, __entry->cpuid,
+ 		__entry->walltime,
+ 		__entry->socketid,
+
+base-commit: 451b2bc29430fa147e36a48348f8b6b615fd6820
 -- 
 2.34.1
 
