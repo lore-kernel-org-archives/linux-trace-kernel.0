@@ -1,167 +1,182 @@
-Received: from mail.toke.dk (mail.toke.dk [45.145.95.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A777E762;
-	Wed, 24 Jan 2024 17:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.95.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77AFF7E771;
+	Wed, 24 Jan 2024 23:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706116330; cv=none; b=IwBty8/niXW4sDwi1keTuAeMeMYGPubu+z8BgspPQ5iz7GsqrBokKgPx8vep/1by1zIilbCnf8h+drz9YXskXts/zpTM52/zskj/xXrTfPh3t0c/eBDIYvJ1OcDI/7i5O1CmZ6p45lKZabpa5M/aXVKEfVXv8LlsnKslSeIxjhQ=
+	t=1706139055; cv=none; b=Wiola5iWRZlEqml3cuGri2osA+6u+GC9/cyatCBnbXbjuZhdqEGf3HMU22dOeNbDHBZN/Tyg+m56hyGMJ9xwqp0/aOprKbML3Gn17uvjT/fynASlgqrBeYG1XyILQgoM7laFwhQA6QKzt1Q8IgERCR7LGwUognWpYh35feiA3o4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706116330; c=relaxed/simple;
-	bh=5qz2F9Z7NYBi7ZTnYZWey+cuP9uUiWX83QGOe5SsFBM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=LdErJmIlEN/Yolw9C17Pkr8eueidvRivrTQKimEee1+/HhCVDjLR5EuwthjCXibxOluUn99aao7tnAgjUJUsmuaabrj5pyf5qXhSRYDXzAY3VwU9Tn7scF/Sg+U6r9hK0/6rx71RZquoDMrH75nUAO1thx0wppn5tOLA7Fv+73g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk; spf=pass smtp.mailfrom=toke.dk; dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b=QNluEfPs; arc=none smtp.client-ip=45.145.95.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toke.dk
+	s=arc-20240116; t=1706139055; c=relaxed/simple;
+	bh=soJQajv5hWHBtkP0ngNF1lxQ1aDvaD2aJ71sXUKd0QA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=PNEMyhREqgCggtqIgapRcQqQNusThfpJd/TTysLjd6VXwsIfCYsC4HfRKqW4gcADnqdTC0C3KL4EEyrJ5e74Wjcnh2LzDpxQLhZEN9diH3w8kZsqVxpQRcGKAisEHPZzRBWxb3GJbKb12Gtpv3hKAXT4LHulNeTjPEMdOkE4GFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p9crZG72; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b="QNluEfPs"
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=toke.dk; s=20161023;
-	t=1706115966; bh=5qz2F9Z7NYBi7ZTnYZWey+cuP9uUiWX83QGOe5SsFBM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=QNluEfPsizytP2tnYUMdOgBwVBeQGESRulGkuYWC/HVzkxWxG/RT2PEdUKegyRqZ2
-	 MQdVzI70/J9t6+B0+0l01dlTBZMpnz8HdZP3Wg9URyDIvmSW/9tU7+rRhqafTEWT87
-	 jVvGT9bv0QSi8VaF010SEcli4WGPYyoYaDa9S886kdtehoLtwnDG/K9m8XUzv9z/4H
-	 3K9DDJIArw0k5wmGc0UE+E9RfAreEsWEpYmT5ZkbD++1LmXla8nkLWZqrfTrxGvvGi
-	 NTpefIHxTO1P7uUndY4pZYKjVJxCxe6fZ9Rshov4Z6JkoXm4S3qMHDrce2o8WR3YqY
-	 LO5bq88ADNV3g==
-To: Ubisectech Sirius <bugreport@ubisectech.com>, linux-trace-kernel
- <linux-trace-kernel@vger.kernel.org>, linux-kernel
- <linux-kernel@vger.kernel.org>
-Cc: johannes <johannes@sipsolutions.net>, kvalo <kvalo@kernel.org>
-Subject: Re: general protection fault in ath9k_wmi_event_tasklet
-In-Reply-To: <ed1d2c66-1193-4c81-9542-d514c29ba8b8.bugreport@ubisectech.com>
-References: <ed1d2c66-1193-4c81-9542-d514c29ba8b8.bugreport@ubisectech.com>
-Date: Wed, 24 Jan 2024 18:06:06 +0100
-X-Clacks-Overhead: GNU Terry Pratchett
-Message-ID: <878r4e4q69.fsf@toke.dk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p9crZG72"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E9C9C433F1;
+	Wed, 24 Jan 2024 23:30:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706139054;
+	bh=soJQajv5hWHBtkP0ngNF1lxQ1aDvaD2aJ71sXUKd0QA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=p9crZG72VtU5pUkqjebisl7t/RKPEgqzRTPCS3ml4IGxH7I610DGn1lciTuQMNsNV
+	 lAwQH/c+6Y3JmfShX9uPu8nBSSV2bOl9uiTGE+jXqsW69cu8ms5aX4uABgIhNEsHKD
+	 nxV5PrsNMK9m91vkY737KJYVOBgMMW3QKUA0eM/opZQfAdeqW4fK36//0S5UXi0MLJ
+	 vN7GgYtKvNBmtlcDf4qlMqs56b+PwQ9692oDVlxnKUZ78SLZWhBUpQfHz8ou4cLvT/
+	 wWhVwMN9yGofau+YDRwn5NY4AA5/N5jiAkgwIGu+isUlyIw8kD9l0wWbnd5lke6f9t
+	 9k9Kd7OetCxFg==
+Date: Thu, 25 Jan 2024 08:30:50 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "yebin (H)" <yebin10@huawei.com>
+Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
+ <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 7/7] selftests/ftrace: add test cases for VFS type
+ "%pd" and "%pD"
+Message-Id: <20240125083050.5aca0f58c3936206ec1827f9@kernel.org>
+In-Reply-To: <65B08249.6050704@huawei.com>
+References: <20240123092139.3698375-1-yebin10@huawei.com>
+	<20240123092139.3698375-8-yebin10@huawei.com>
+	<20240124103201.6dd8d466b1b734796418c1c4@kernel.org>
+	<65B08249.6050704@huawei.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-"Ubisectech Sirius" <bugreport@ubisectech.com> writes:
+On Wed, 24 Jan 2024 11:21:45 +0800
+"yebin (H)" <yebin10@huawei.com> wrote:
 
-> Hello.
-> We are Ubisectech Sirius Team, the vulnerability lab of China ValiantSec. Recently, our team has discovered a issue in Linux kernel 6.7.0-g9d1694dc91ce. Attached to the email were a POC file of the issue.
-> Stack dump:
-> general protection fault, probably for non-canonical address 0xdffffc0000000038: 0000 [#1] PREEMPT SMP KASAN
-> KASAN: null-ptr-deref in range [0x00000000000001c0-0x00000000000001c7]
-> CPU: 0 PID: 16 Comm: ksoftirqd/0 Not tainted 6.7.0-g9d1694dc91ce #20
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-> RIP: 0010:__queue_work+0x9d/0x1160 kernel/workqueue.c:1727
-> Call Trace:
-> <TASK>
-> queue_work_on+0xf2/0x110 kernel/workqueue.c:1837
-> queue_work include/linux/workqueue.h:548 [inline]
-> ieee80211_queue_work net/mac80211/util.c:898 [inline]
-> ieee80211_queue_work+0x111/0x180 net/mac80211/util.c:891
-> ath9k_wmi_event_tasklet+0x327/0x450 drivers/net/wireless/ath/ath9k/wmi.c:168
-> tasklet_action_common.constprop.0+0x229/0x390 kernel/softirq.c:780
-> __do_softirq+0x1d4/0x85e kernel/softirq.c:553
-> run_ksoftirqd kernel/softirq.c:921 [inline]
-> run_ksoftirqd+0x31/0x60 kernel/softirq.c:913
-> smpboot_thread_fn+0x63c/0x9f0 kernel/smpboot.c:164
-> kthread+0x2cc/0x3b0 kernel/kthread.c:388
-> ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
-> ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
-> </TASK>
-> Modules linked in:
-> ---[ end trace 0000000000000000 ]---
-> RIP: 0010:__queue_work+0x9d/0x1160 kernel/workqueue.c:1727
-> Thank you for taking the time to read this email and we look forward
-> to working with you further.
+> 
+> 
+> On 2024/1/24 9:32, Masami Hiramatsu (Google) wrote:
+> > On Tue, 23 Jan 2024 17:21:39 +0800
+> > Ye Bin <yebin10@huawei.com> wrote:
+> >
+> >> This patch adds test cases for new print format type "%pd/%pD".The test cases
+> >> test the following items:
+> >> 1. Test README if add "%pd/%pD" type;
+> >> 2. Test "%pd" type for dput();
+> >> 3. Test "%pD" type for vfs_read();
+> >>
+> >> Signed-off-by: Ye Bin <yebin10@huawei.com>
+> >> ---
+> >>   .../ftrace/test.d/kprobe/kprobe_args_vfs.tc   | 79 +++++++++++++++++++
+> >>   1 file changed, 79 insertions(+)
+> >>   create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
+> >>
+> >> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
+> >> new file mode 100644
+> >> index 000000000000..1d8edd294dd6
+> >> --- /dev/null
+> >> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
+> >> @@ -0,0 +1,79 @@
+> >> +#!/bin/sh
+> >> +# SPDX-License-Identifier: GPL-2.0
+> >> +# description: Kprobe event VFS type argument
+> >> +# requires: kprobe_events
+> >> +
+> >> +case `uname -m` in
+> >> +x86_64)
+> >> +  ARG1=%di
+> >> +;;
+> >> +i[3456]86)
+> >> +  ARG1=%ax
+> >> +;;
+> >> +aarch64)
+> >> +  ARG1=%x0
+> >> +;;
+> >> +arm*)
+> >> +  ARG1=%r0
+> >> +;;
+> >> +ppc64*)
+> >> +  ARG1=%r3
+> >> +;;
+> >> +ppc*)
+> >> +  ARG1=%r3
+> > You can merge this ppc* and ppc64* cases :)
+> >
+> >> +;;
+> >> +s390*)
+> >> +  ARG1=%r2
+> >> +;;
+> >> +mips*)
+> >> +  ARG1=%r4
+> >> +;;
+> >> +loongarch*)
+> >> +  ARG1=%r4
+> >> +;;
+> >> +riscv*)
+> >> +  ARG1=%a0
+> > Anyway, I wonder why don't you use '$arg1' instead of these registers.
+> > Is there any reason?
+> >
+> > Thank you,
+> I looked at the parameter parsing code again, and using "$arg1" requires 
+> the kernel to
+> enable the CONFIG_HAVE_FUNCTION_ARG_ACCESS_API configuration.
 
-Hmm, so from eyeballing the code in question, this looks like it is
-another initialisation race along the lines of the one fixed in commit:
-8b3046abc99e ("ath9k_htc: fix NULL pointer dereference at ath9k_htc_tx_get_packet()")
+Yes, and it is recommended (required) for supporting kprobe event
+via ftrace. So, if you see any error on this test, that machine should
+implement it.
 
-Could you please test the patch below and see if you can still reproduce
-this issue with that applied?
+Thank you,
 
--Toke
+> >> +;;
+> >> +*)
+> >> +  echo "Please implement other architecture here"
+> >> +  exit_untested
+> >> +esac
+> >> +
+> >> +: "Test argument %pd/%pD in README"
+> >> +grep -q "%pd/%pD" README
+> >> +
+> >> +: "Test argument %pd with name"
+> >> +echo "p:testprobe dput name=${ARG1}:%pd" > kprobe_events
+> >> +echo 1 > events/kprobes/testprobe/enable
+> >> +grep -q "1" events/kprobes/testprobe/enable
+> >> +echo 0 > events/kprobes/testprobe/enable
+> >> +grep "dput" trace | grep -q "enable"
+> >> +echo "" > kprobe_events
+> >> +echo "" > trace
+> >> +
+> >> +: "Test argument %pd without name"
+> >> +echo "p:testprobe dput ${ARG1}:%pd" > kprobe_events
+> >> +echo 1 > events/kprobes/testprobe/enable
+> >> +grep -q "1" events/kprobes/testprobe/enable
+> >> +echo 0 > events/kprobes/testprobe/enable
+> >> +grep "dput" trace | grep -q "enable"
+> >> +echo "" > kprobe_events
+> >> +echo "" > trace
+> >> +
+> >> +: "Test argument %pD with name"
+> >> +echo "p:testprobe vfs_read name=${ARG1}:%pD" > kprobe_events
+> >> +echo 1 > events/kprobes/testprobe/enable
+> >> +grep -q "1" events/kprobes/testprobe/enable
+> >> +echo 0 > events/kprobes/testprobe/enable
+> >> +grep "vfs_read" trace | grep -q "enable"
+> >> +echo "" > kprobe_events
+> >> +echo "" > trace
+> >> +
+> >> +: "Test argument %pD without name"
+> >> +echo "p:testprobe vfs_read ${ARG1}:%pD" > kprobe_events
+> >> +echo 1 > events/kprobes/testprobe/enable
+> >> +grep -q "1"  events/kprobes/testprobe/enable
+> >> +echo 0 > events/kprobes/testprobe/enable
+> >> +grep "vfs_read" trace | grep -q "enable"
+> >> +echo "" > kprobe_events
+> >> +echo "" > trace
+> >> -- 
+> >> 2.31.1
+> >>
+> >
+> 
 
 
-
-diff --git a/drivers/net/wireless/ath/ath9k/htc.h b/drivers/net/wireless/ath/ath9k/htc.h
-index 237f4ec2cffd..6c33e898b300 100644
---- a/drivers/net/wireless/ath/ath9k/htc.h
-+++ b/drivers/net/wireless/ath/ath9k/htc.h
-@@ -306,7 +306,6 @@ struct ath9k_htc_tx {
- 	DECLARE_BITMAP(tx_slot, MAX_TX_BUF_NUM);
- 	struct timer_list cleanup_timer;
- 	spinlock_t tx_lock;
--	bool initialized;
- };
- 
- struct ath9k_htc_tx_ctl {
-@@ -515,6 +514,7 @@ struct ath9k_htc_priv {
- 	unsigned long ps_usecount;
- 	bool ps_enabled;
- 	bool ps_idle;
-+	bool initialized;
- 
- #ifdef CONFIG_MAC80211_LEDS
- 	enum led_brightness brightness;
-diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_init.c b/drivers/net/wireless/ath/ath9k/htc_drv_init.c
-index dae3d9c7b640..fc339079ee8c 100644
---- a/drivers/net/wireless/ath/ath9k/htc_drv_init.c
-+++ b/drivers/net/wireless/ath/ath9k/htc_drv_init.c
-@@ -966,6 +966,10 @@ int ath9k_htc_probe_device(struct htc_target *htc_handle, struct device *dev,
- 
- 	htc_handle->drv_priv = priv;
- 
-+	/* Allow ath9k_wmi_event_tasklet() to operate. */
-+	smp_wmb();
-+	priv->initialized = true;
-+
- 	return 0;
- 
- err_init:
-diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
-index 672789e3c55d..768ed8ea5c9f 100644
---- a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
-+++ b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
-@@ -814,10 +814,6 @@ int ath9k_tx_init(struct ath9k_htc_priv *priv)
- 	skb_queue_head_init(&priv->tx.data_vo_queue);
- 	skb_queue_head_init(&priv->tx.tx_failed);
- 
--	/* Allow ath9k_wmi_event_tasklet(WMI_TXSTATUS_EVENTID) to operate. */
--	smp_wmb();
--	priv->tx.initialized = true;
--
- 	return 0;
- }
- 
-diff --git a/drivers/net/wireless/ath/ath9k/wmi.c b/drivers/net/wireless/ath/ath9k/wmi.c
-index 1476b42b52a9..805ad31edba2 100644
---- a/drivers/net/wireless/ath/ath9k/wmi.c
-+++ b/drivers/net/wireless/ath/ath9k/wmi.c
-@@ -155,6 +155,12 @@ void ath9k_wmi_event_tasklet(struct tasklet_struct *t)
- 		}
- 		spin_unlock_irqrestore(&wmi->wmi_lock, flags);
- 
-+		/* Check if ath9k_htc_probe_device() completed. */
-+		if (!data_race(priv->initialized)) {
-+			kfree_skb(skb);
-+			continue;
-+		}
-+
- 		hdr = (struct wmi_cmd_hdr *) skb->data;
- 		cmd_id = be16_to_cpu(hdr->command_id);
- 		wmi_event = skb_pull(skb, sizeof(struct wmi_cmd_hdr));
-@@ -169,10 +175,6 @@ void ath9k_wmi_event_tasklet(struct tasklet_struct *t)
- 					     &wmi->drv_priv->fatal_work);
- 			break;
- 		case WMI_TXSTATUS_EVENTID:
--			/* Check if ath9k_tx_init() completed. */
--			if (!data_race(priv->tx.initialized))
--				break;
--
- 			spin_lock_bh(&priv->tx.tx_lock);
- 			if (priv->tx.flags & ATH9K_HTC_OP_TX_DRAIN) {
- 				spin_unlock_bh(&priv->tx.tx_lock);
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
