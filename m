@@ -1,168 +1,99 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E84F524C;
-	Wed, 24 Jan 2024 03:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C62C17543;
+	Wed, 24 Jan 2024 08:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706066534; cv=none; b=bDbsL26+ywuuzXQEx2vAXpeyesAQU/a+kOegCYLqjDMpTuq8QI+5NfgCrlX8SqMwcexh8HvCINwORglJD5bbWqRSNxwZudPbzklxraj43pqJqmGZJya7ut5p/5Tye5vhDYw7CBwqfeZoGVMGHziZB54m1UHPCJlmQR+lnaozyCo=
+	t=1706083996; cv=none; b=QnRcR2ux0HbqH0yT01fgmg7LU9gfInqWxHG2EeY2vJws6xx3zSSUY+xyFdOGGaljKUkNn+XPDUjAh6g6OYSsAXvNAjvFqdPbmYlEEF+LCyHt7Y4wiKT3GOcW5J6rLkdglSEnIK3md+sd8obpbwMlEtz5/oWDeL3IyoebvR6HgAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706066534; c=relaxed/simple;
-	bh=QIZBf1kkH+VXUncxbQEtkWRVJgkIw5LyVIjqmrdxNRg=;
-	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=pfv+UZjkWMqagifQb+JGR7kGzFptdXqSu30idL5Mw3l4a0DLJ4bR8/BtFXoCUy35/V5aQawq6IEV6CXpu0EoIiuC5RmOH/TIhxyKMIIoFcjmgEyA56pQyKKv+x+o+JDNhUSzTVBmQgAmsajb4tTnETFur2zGi9tWO7fNyVzBs8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4TKTjf6c3pz1Q8Ck;
-	Wed, 24 Jan 2024 11:20:22 +0800 (CST)
-Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4258B140516;
-	Wed, 24 Jan 2024 11:21:52 +0800 (CST)
-Received: from [10.174.178.185] (10.174.178.185) by
- canpemm500010.china.huawei.com (7.192.105.118) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 24 Jan 2024 11:21:46 +0800
-Subject: Re: [PATCH v4 7/7] selftests/ftrace: add test cases for VFS type
- "%pd" and "%pD"
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-References: <20240123092139.3698375-1-yebin10@huawei.com>
- <20240123092139.3698375-8-yebin10@huawei.com>
- <20240124103201.6dd8d466b1b734796418c1c4@kernel.org>
-CC: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-From: "yebin (H)" <yebin10@huawei.com>
-Message-ID: <65B08249.6050704@huawei.com>
-Date: Wed, 24 Jan 2024 11:21:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.1.0
+	s=arc-20240116; t=1706083996; c=relaxed/simple;
+	bh=RfjYW6e1IYhvrEGXxzFytIMTdGZXx5WayXRK/3yFuoY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dwEeVHh+Vny80+5YOneNIh0veah0yZOFaCzzA+z8QMeQ0qDHgvAUqK5zylOnIW0B6nbhvBMsLYOrAjZEheUN1LGs7nhTI6utKy/fMSngg6X3IvYErrDQUiLbXMUKwqwcfU3vTX2AaBGjqtrxfbRnzMauM/FApJ3qA8F1H+DdYog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6daa89a6452so3558593b3a.2;
+        Wed, 24 Jan 2024 00:13:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706083995; x=1706688795;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B9qF18RzvDXzodIwOLOD1mj5uV5sasqvoSwmEt0eiQ8=;
+        b=F2DOFkUIl2kTknTwBfUrELoWoyNVNjWC4hxw+9nSrOC5jJ6HN3lNzY6o3q5MDS9r1m
+         GP5n9NOYd+VSmGLHEbrqjwPuRu51ZyCbQWsRNB3TuZpd93zlStnRJ+Be3AFQNj/86kz9
+         bnxJyuF2FJ6dVfdBXvWIjcrjzTQ4DiZkF0iZE/uzpj2181AYukrq4HFcf0K1jS3A1UwV
+         FVzvgOb03clKpNWA9NHA8by078p1n7hkQtmAPG/C9mTMfKTPDizUm1hwpqEDls7x2x7R
+         vmitZ6kdtxKlMIK5Y+tkyKofJFyTHmMrvEOgykxO0ju98vJDlaP9ov1Ocio9VlDCU4Hw
+         M+JA==
+X-Gm-Message-State: AOJu0YzUsInSqwk0XFr7pFgKe1vMSLPlVAUxryrGahqSzHOWMSoHgVZe
+	ZEMqEkk9BlWUVOkDeiO1nhBjksgUo7drD12pa9vMBFzYV4TJNgFK
+X-Google-Smtp-Source: AGHT+IHbq4iG8bKu4Eji3JiKtMcP1j98BSAv4jldXfilN+5jE/9EtPklfe0VP/SbKdgtCHsW+VeWEw==
+X-Received: by 2002:a05:6a00:2443:b0:6db:afd4:f54c with SMTP id d3-20020a056a00244300b006dbafd4f54cmr4792529pfj.0.1706083994816;
+        Wed, 24 Jan 2024 00:13:14 -0800 (PST)
+Received: from snowbird ([136.25.84.107])
+        by smtp.gmail.com with ESMTPSA id e14-20020a056a001a8e00b006dd8985e7c6sm974076pfv.1.2024.01.24.00.13.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jan 2024 00:13:14 -0800 (PST)
+Date: Wed, 24 Jan 2024 00:13:11 -0800
+From: Dennis Zhou <dennis@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	George Guo <dongtai.guo@linux.dev>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	George Guo <guodongtai@kylinos.cn>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] percpu: improve percpu_alloc_percpu_fail event trace
+Message-ID: <ZbDGlyHYetscNcut@snowbird>
+References: <20240122073629.2594271-1-dongtai.guo@linux.dev>
+ <20240122105700.05e5ee46@gandalf.local.home>
+ <20240123094443.00007b20@linux.dev>
+ <20240122205539.705f5701@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240124103201.6dd8d466b1b734796418c1c4@kernel.org>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- canpemm500010.china.huawei.com (7.192.105.118)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240122205539.705f5701@gandalf.local.home>
 
+Hello,
 
+On Mon, Jan 22, 2024 at 08:55:39PM -0500, Steven Rostedt wrote:
+> On Tue, 23 Jan 2024 09:44:43 +0800
+> George Guo <dongtai.guo@linux.dev> wrote:
+> 
+> > There are two reasons of percpu_alloc failed without warnings: 
+> > 
+> > 1. do_warn is false
+> > 2. do_warn is true and warn_limit is reached the limit.
+> 
+> Yes I know the reasons.
+> 
+> > 
+> > Showing do_warn and warn_limit makes things simple, maybe dont need
+> > kprobe again.
+> 
+> It's up to the maintainers of that code to decide if it's worth it or not,
+> but honestly, my opinion it is not.
+> 
 
-On 2024/1/24 9:32, Masami Hiramatsu (Google) wrote:
-> On Tue, 23 Jan 2024 17:21:39 +0800
-> Ye Bin <yebin10@huawei.com> wrote:
->
->> This patch adds test cases for new print format type "%pd/%pD".The test cases
->> test the following items:
->> 1. Test README if add "%pd/%pD" type;
->> 2. Test "%pd" type for dput();
->> 3. Test "%pD" type for vfs_read();
->>
->> Signed-off-by: Ye Bin <yebin10@huawei.com>
->> ---
->>   .../ftrace/test.d/kprobe/kprobe_args_vfs.tc   | 79 +++++++++++++++++++
->>   1 file changed, 79 insertions(+)
->>   create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
->>
->> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
->> new file mode 100644
->> index 000000000000..1d8edd294dd6
->> --- /dev/null
->> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
->> @@ -0,0 +1,79 @@
->> +#!/bin/sh
->> +# SPDX-License-Identifier: GPL-2.0
->> +# description: Kprobe event VFS type argument
->> +# requires: kprobe_events
->> +
->> +case `uname -m` in
->> +x86_64)
->> +  ARG1=%di
->> +;;
->> +i[3456]86)
->> +  ARG1=%ax
->> +;;
->> +aarch64)
->> +  ARG1=%x0
->> +;;
->> +arm*)
->> +  ARG1=%r0
->> +;;
->> +ppc64*)
->> +  ARG1=%r3
->> +;;
->> +ppc*)
->> +  ARG1=%r3
-> You can merge this ppc* and ppc64* cases :)
->
->> +;;
->> +s390*)
->> +  ARG1=%r2
->> +;;
->> +mips*)
->> +  ARG1=%r4
->> +;;
->> +loongarch*)
->> +  ARG1=%r4
->> +;;
->> +riscv*)
->> +  ARG1=%a0
-> Anyway, I wonder why don't you use '$arg1' instead of these registers.
-> Is there any reason?
->
-> Thank you,
-I looked at the parameter parsing code again, and using "$arg1" requires 
-the kernel to
-enable the CONFIG_HAVE_FUNCTION_ARG_ACCESS_API configuration.
->> +;;
->> +*)
->> +  echo "Please implement other architecture here"
->> +  exit_untested
->> +esac
->> +
->> +: "Test argument %pd/%pD in README"
->> +grep -q "%pd/%pD" README
->> +
->> +: "Test argument %pd with name"
->> +echo "p:testprobe dput name=${ARG1}:%pd" > kprobe_events
->> +echo 1 > events/kprobes/testprobe/enable
->> +grep -q "1" events/kprobes/testprobe/enable
->> +echo 0 > events/kprobes/testprobe/enable
->> +grep "dput" trace | grep -q "enable"
->> +echo "" > kprobe_events
->> +echo "" > trace
->> +
->> +: "Test argument %pd without name"
->> +echo "p:testprobe dput ${ARG1}:%pd" > kprobe_events
->> +echo 1 > events/kprobes/testprobe/enable
->> +grep -q "1" events/kprobes/testprobe/enable
->> +echo 0 > events/kprobes/testprobe/enable
->> +grep "dput" trace | grep -q "enable"
->> +echo "" > kprobe_events
->> +echo "" > trace
->> +
->> +: "Test argument %pD with name"
->> +echo "p:testprobe vfs_read name=${ARG1}:%pD" > kprobe_events
->> +echo 1 > events/kprobes/testprobe/enable
->> +grep -q "1" events/kprobes/testprobe/enable
->> +echo 0 > events/kprobes/testprobe/enable
->> +grep "vfs_read" trace | grep -q "enable"
->> +echo "" > kprobe_events
->> +echo "" > trace
->> +
->> +: "Test argument %pD without name"
->> +echo "p:testprobe vfs_read ${ARG1}:%pD" > kprobe_events
->> +echo 1 > events/kprobes/testprobe/enable
->> +grep -q "1"  events/kprobes/testprobe/enable
->> +echo 0 > events/kprobes/testprobe/enable
->> +grep "vfs_read" trace | grep -q "enable"
->> +echo "" > kprobe_events
->> +echo "" > trace
->> -- 
->> 2.31.1
->>
->
+I agree, I don't think this is a worthwhile change. If we do change
+this, I'd like it to be more actionable in some way and as a result
+something we can fix or tune accordingly.
 
+George is this a common problem you're seeing?
+
+> The trace event in question is to trace that percpu_alloc failed and why.
+> It's not there to determine why it did not produce a printk message.
+> 
+> -- Steve
+
+Thanks,
+Dennis
