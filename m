@@ -1,195 +1,134 @@
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2117.outbound.protection.outlook.com [40.107.215.117])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E788BA24;
-	Wed, 24 Jan 2024 02:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.117
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706064141; cv=fail; b=DEdfDGhOcP5llXCdmOY5ljtawn00Q4jfwNAtzmhh0J7ZGf1QUL7DiXevMP7jCqFEoQPDhKlryXIHhGLVCOGH6uXZiIrGSvRktAsvYy+arSVh9xOLtXvKP0Oyv+Rl92+vcqVUVUSv2ZwbS+cv4jWl0Ukyi86WeizO7jh0EGmY6Yo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706064141; c=relaxed/simple;
-	bh=WHdvgHuKUB8kT08Um2BI/jzr8lTrLl8O6NHB9y+QW9E=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=aUSkeVTRKHqwP7S2ID6QX9vmd5GBTd+ciTeAvA/lIiB+A33zy2gJjdv9PWch0CAwmBl+dkXo02Zkp11J7T3nN8VxUpfUxsCf7JcqeFwHuNXxNVBdNPSXJMdW4Y4+S0dn4BwQ5MXKKQZBi7o3l0mdbVkIb54xd19s/+O5pKyQWHo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=FtRaZ7e4; arc=fail smtp.client-ip=40.107.215.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="FtRaZ7e4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aLOMS7T0MzPLdvaop/g8g3N65UZY7R9lp6nnsytwHcdF3bW/cWpfa6E0bwSYQJMnF6OfACGY778f68emC4poOCkmWXRPhOCjQX7SOt/5bkJGW6D4a+nasQ9ybLOwgiGGb3U3xLfio4enul7YkW5FntdWXgar6Ff68ag5C2MNGgC1aYVjlcpUBrySTm6cgTj3NNargxst9HNfTXm+SqUGC6r/oEzO9xacIUNrNTIRqRNxuZSBoPU2nqMjco0bxttDzf6ABDH/uhABBtmsGAJysayCWi0QFDyJmI2xReQ544bxyiZ32xqtWIddaTeXdx9SA/s096NKskvaOGyZzgYQYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UUpaom51hJXjSvVhih0g0QjTelFX9vmGOrUDtVibyCc=;
- b=Zy+tQkSmWcvwcIZPearB7+Jxp9ntaZRFUh9/mycR9jHkfrRDTcbHhECJQmmGiNnmtGugNNuFN9xS7LY2XDO0fTq304fHs/LNZ4KXRt2vUdPJKI8DMfv05BQIqunS9voXE8UqLKi0Lxv+57H9bacmueD7fSxeOMumUJT5BH9uTd21pBcWP6rA+1kXkBpfbEhAQvlH7Tl6CKtdSpbYJy2d1eo4t5osRt0uJK12hTXQon37siG07c4WrPyKk6h/9kamhzpTEA/BiopwdrKAGnw6UntoH+JmWNSuJEDIwnXcotik8z8TQsUxgu/T9xHH4ImOrXFtl4PY2qBp/EuKtAheDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UUpaom51hJXjSvVhih0g0QjTelFX9vmGOrUDtVibyCc=;
- b=FtRaZ7e4DjAGu9EMs3f2NBJY9ieKIHeSJ8+jZBJd0xmzFrE7vj0A+nL7S/MxKjS7b2xGhQYOheWD4pLNHtJaDZdzDfeTKV+BhQg23C3F3BofleelO5tW7FOj3bb7x2g1Sy/TORbSWXh9tV3hB0BFBKlR/RVE8XzRoB1tKFNXVEH+AAgNAxsh61Y2ce/UebhYNteGAZQwmWeTd6TGuysZfdrZaJHhuz4WJlT6EdFz4s9HboKFE4CeazxDMtgm09Nv8wEY9DP1pjEB54ecuAEsQgqN8RzcLm8QLrmHcq9/cBfUuwuz5yQAAfFzKXuzduPXe2ywsoGx+265ugrtHTswXw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from TYZPR06MB4045.apcprd06.prod.outlook.com (2603:1096:400:21::8)
- by TY0PR06MB5305.apcprd06.prod.outlook.com (2603:1096:400:210::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22; Wed, 24 Jan
- 2024 02:42:15 +0000
-Received: from TYZPR06MB4045.apcprd06.prod.outlook.com
- ([fe80::9925:32d7:c818:3c5]) by TYZPR06MB4045.apcprd06.prod.outlook.com
- ([fe80::9925:32d7:c818:3c5%7]) with mapi id 15.20.7228.022; Wed, 24 Jan 2024
- 02:42:14 +0000
-Message-ID: <eb48859c-d56d-4c0d-8800-af82a4b2eea4@vivo.com>
-Date: Wed, 24 Jan 2024 10:41:48 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next v6 0/2] Make memory reclamation measurable
-To: akpm@linux-foundation.org, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org, opensource.kernel@vivo.com
-References: <20240105013607.2868-1-cuibixuan@vivo.com>
-From: Bixuan Cui <cuibixuan@vivo.com>
-In-Reply-To: <20240105013607.2868-1-cuibixuan@vivo.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SG3P274CA0009.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::21)
- To TYZPR06MB4045.apcprd06.prod.outlook.com (2603:1096:400:21::8)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978495225;
+	Wed, 24 Jan 2024 02:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706064398; cv=none; b=MYtb+E+zxIbHI03Lrir1TSUHYYDM7KhqvdPz7P79zZpXhPja2SAGbfvZiPZ24xxldsIRkAeW0b7AkzYeHa9OvlsnU0iUgopab/oQBxos8cJMgycF3aVKP9DfcPWmh+iHFL+ydjRziEo+9Zf0qPBB69EFEA78qlxXiBl3JhGxpw0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706064398; c=relaxed/simple;
+	bh=kIfCbyqTIfHCDLX59SJ1DP0+CgVWCIkjSYqLb5Zq1x4=;
+	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=pYkQwb39xtlpJpacsB16+B6GPH7JsN3pc3ubjYKKkXWRL2JceK/Q65c7a/ZGZMHNeW8fCROpOIfCPxVT7DamULCNBinpzb6ldw3Zmuz7JRYQBYXwKdXCDI4XgYDl+k+CXQyq8HhSKk8ekE7vLqVxXBd+Bv/RBqhCF7V3MBrAMaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4TKSyB4VnJz1vsYX;
+	Wed, 24 Jan 2024 10:46:10 +0800 (CST)
+Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8ED3E1A0172;
+	Wed, 24 Jan 2024 10:46:17 +0800 (CST)
+Received: from [10.174.178.185] (10.174.178.185) by
+ canpemm500010.china.huawei.com (7.192.105.118) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 24 Jan 2024 10:46:10 +0800
+Subject: Re: [PATCH v4 3/7] tracing/probes: support '%pd' type for print
+ struct dentry's name
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+References: <20240123092139.3698375-1-yebin10@huawei.com>
+ <20240123092139.3698375-4-yebin10@huawei.com>
+ <20240123234013.52b1834908da7be0272e7a73@kernel.org>
+CC: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From: "yebin (H)" <yebin10@huawei.com>
+Message-ID: <65B079F2.4000802@huawei.com>
+Date: Wed, 24 Jan 2024 10:46:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.1.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYZPR06MB4045:EE_|TY0PR06MB5305:EE_
-X-MS-Office365-Filtering-Correlation-Id: 76d8f252-79b8-43c0-e720-08dc1c8612d9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	sI8T/DVYN+EXR8ag9Sr5xZIKOwV6xgrxYXbiDuqf7dyqGE2M5ir1F/U3k+YaTVoE4DerAJMQDiNNC9u5gnlM+TNfRp0U5OvLIFqzi+HEuA8b4oK0NIHG7NOuLSzwamXsl4AkgIVwZdGO/BWF96Oh/rvpVFQT/dfWcPPuWHUdM2wCRmwUcnrMnqtMSveqKFhb1TTH9+FhjilYIMI5TG0yAivNb0CLKpwwcir0yHEuArlJFIMwJYuPyNUlR/rMsUTZqtR/2JnbwZ5gaJ/sQ/fAZWnQl/VAy61s4YDeaEuhYBvxxBKcARjT+J2QvsjoSw65bmcAAwonYTrFhNJuki7O6rtuC8i8BeQJFabBYGRzzvXjm0KLaV0mMcYefFp1DsPfK2BSHt3jgirVs9b5X8URXV50sdoDNZfaGs8JXRhvBjfA19Z3y7oozVo5ri2KwtBY5duhmC+iB56OyHhm7cvX22vryGsUSe9SkFXvxI0I98HELDYh43D2ujTt9RttbrjBnRGatjDe9s8ADgp28i91Uqcg/A4AAJT9NpnIsUiBIGNkftwlx8zA5t3jTBNOHBroGPfRUy97shbEJ5JZagjKy61wOsWNm2DHYkbFfBwmyDzoWX9190U/ScKjjjDUCXoItveRYBek/zSc9Y8IaA1t2szTZ4zWhGS9ix7aRn/En3UlUzOCwqb9NlhjxWPFZB1C
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB4045.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(346002)(396003)(376002)(366004)(230922051799003)(1800799012)(186009)(64100799003)(451199024)(2906002)(8676002)(4326008)(8936002)(66556008)(66946007)(66476007)(5660300002)(83380400001)(107886003)(2616005)(26005)(36756003)(38350700005)(86362001)(31696002)(316002)(31686004)(52116002)(6486002)(478600001)(6506007)(6666004)(6512007)(41300700001)(38100700002)(43740500002)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?djdZeTdhelBYN04zMzBqcXdEQytma1RIU3NRZ1FIYVFZUndrU1A0b3c0RXlN?=
- =?utf-8?B?ejQ5aGZxNFk5UFJnc2lzWWJUcWgxajFiNXRvdkRjRUpwaGphbm5nUWcvVHdy?=
- =?utf-8?B?S0Z3aG9MdW9WYXYyOWQ1cWREa3ZxZ1JBL0p1TldZbVg0VWIvdDV0ZUltTDRq?=
- =?utf-8?B?SDJES2dXK0cxY2o4RDRhYlYwTUtneXZKTHVWZ1JERWxiNnViZytkN2hWSmdo?=
- =?utf-8?B?REkyVDFScjBDd3BIaEFUbnNpWU0va0xnT3NtaWpoMHlGeU9NamR6Z1BrL2w2?=
- =?utf-8?B?UE1RTS9wS0NEZzN6RGdjSGNsZzVxM2hUUUxJdWZSZW1yVUJrM0J0eUk1dHVX?=
- =?utf-8?B?alh6NVMwV2IyQlhYNUsrVFk0QnRUdGQyNkJXMlNsODZ4ekFOanZTR2o0aFJW?=
- =?utf-8?B?YitFbVlzK1h5WHFiZ1VDU1J1TGZwOXl6ejlCcTUzSERHS3JiaHVQbDh3ZWVa?=
- =?utf-8?B?V2tHUHhuTzJMSTN3d2tEVGNHNHEyeXR3bGlZMXlkL201MytHMDFFeUVYTEdP?=
- =?utf-8?B?ZlZwR2QyUzFIZ0psZWhQL2I2S3pDWVZvSk1qZUQ2QTdIbWt0QkpkbVUwSG8z?=
- =?utf-8?B?TU9EcUN2T09Ja05ZZlVEaHIxR1BXY2l1L0VmSnNUVXRXM002M1owRkFyZWxD?=
- =?utf-8?B?WkEwSGpOUXZweTlWbEtKcng3UTQ4WGh6SnpiakZ6T3VVa09zTEg4UjA0WUwr?=
- =?utf-8?B?Z3BOc1kvN2JRS0lzUTZ5WUJ4dFlkRVJ1Q2JUcjkzSnkvU1VQYTJwcytXYzZV?=
- =?utf-8?B?NXErTEZ3eVdiTzhyMG9LbldUL1h2cVNmVlhvckxuV3lGZHVvdFB0aXBJVmhv?=
- =?utf-8?B?Vkl3TCtNeXJsdmw0M2F1V3IyU3VmOUdjWWZ5TndmOXR6cG40Q0c4aUZiTWNH?=
- =?utf-8?B?N0d0aU1sUlVzdFNKa25nMk5vVDlaVG5FRDdKcWdiZy9HTXRMMjNNaWI1MkdS?=
- =?utf-8?B?ODZOOXBmYlFtek9RRW1WZGRoNGFONmpCaEIyemhGc0ZNMmlqTU9nNG5ocVdk?=
- =?utf-8?B?Z3QyTU5OM1cwaFFSaHgyd21tVk5Jd20wQXpieHh4dVNxcGVXcWphYWhFQVZQ?=
- =?utf-8?B?N2FRUzR3MHJRK0tOR3ZhaFFsM3hxMzZVN21PVWwwN2t6eCs1R3JTeUwzWUFH?=
- =?utf-8?B?WVFzOTZGTjduczNqUmNLeVJYTzU1bHVrWU1tNFdSL01oY2cza0NPY05pTnZy?=
- =?utf-8?B?ZW1UUzVCRW14YTFsK3RTdEYrbDNQeWdsNlJmMzlZTXQvT3hpeEx0clgrNE43?=
- =?utf-8?B?YkdvMGFsRWNQZk1zd1Q0OXZpcWZpM3RhR2NCbURoQ1FRVmg2bFBrNXBtUS92?=
- =?utf-8?B?T1ZKSmRrVVVWTFIwS1JBU05XYmNxODh1eHF2dngva29hNkVFY01TdVlvWEMr?=
- =?utf-8?B?K0JZSDFvUDRMVk5yK1JDOUZpcjJOaDFhdjFlTDNLVk4xM0VlajE5dUd1SVVy?=
- =?utf-8?B?UHpUMGdyTXdZV2NwS2d0QkZ2YWRaRkphejhyTXhEMjJVVGpvT3k0TXBUb05i?=
- =?utf-8?B?dlZiVnQvUzBBVCtSbWRFTmxpVXltREgvTjBCbU9oOVgxK3BLYlQ0WkJHb3Bs?=
- =?utf-8?B?WktabDVFOStLUUdYaTFzOTJlUUxWTklOUDJVRHpuYWpWaXh2MHJiVCtRcTVz?=
- =?utf-8?B?Q2VJMVZidUZNVlo4Qk1yRmJqVjZMRithcEkwU1BUbmhyY092ejBtZVhQUk05?=
- =?utf-8?B?ZFZWaytDOXpPdVA2bEFOT1A5OFFjM1JjeXozelJMSVBKSDdlTzQ5eWlmNjBz?=
- =?utf-8?B?dUVPazR0bWFXdzhmUTFiWHY3U0pMTm1Qb1BYeUs2OFBjS2pXaFY0VzlBdGJa?=
- =?utf-8?B?eE5TTVNvb01XRW9LV0lvelBEaDRvTExWMTFkWldZTnAvSm9Vc3NpVjRvWHZX?=
- =?utf-8?B?dmM0YTlNRlNMVFQxU2VZSVo5TkRzVDlGY1FSUG5hREs4YVM5MUgvV2doQkQz?=
- =?utf-8?B?YVJCM1Q5NFdGTmU3TzViZFQ5NWxyTU85R0djMG5MZDAxTCtZOTZJL1pGL0Zy?=
- =?utf-8?B?UlNhMWxsOWptNkdaQ2ozRTEranRzTDZXVzFid2NJVmVpSWZKSHNWQW9zNnow?=
- =?utf-8?B?VlVaN3JRS0RxZk5Va0Q1bnF2NG5kM0lFcUJTcytmcTY2YlpXVzJvWTZDa2Ez?=
- =?utf-8?Q?rz7If4NRuq6abrA9Qv5HAR4pp?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 76d8f252-79b8-43c0-e720-08dc1c8612d9
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB4045.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2024 02:42:14.9193
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0IO7zHQKBAttp4bJhQu66Mm4OIGnw9vhNyO2F7c2rUu6SVTcktZKO1lQD9Gb8orzJCegWFP8rNmKTpebV1XLTw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY0PR06MB5305
+In-Reply-To: <20240123234013.52b1834908da7be0272e7a73@kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ canpemm500010.china.huawei.com (7.192.105.118)
 
-ping~
 
-在 2024/1/5 9:36, Bixuan Cui 写道:
-> When the system memory is low, kswapd reclaims the memory. The key steps
-> of memory reclamation include
-> 1.shrink_lruvec
->    * shrink_active_list, moves folios from the active LRU to the inactive LRU
->    * shrink_inactive_list, shrink lru from inactive LRU list
-> 2.shrink_slab
->    * shrinker->count_objects(), calculates the freeable memory
->    * shrinker->scan_objects(), reclaims the slab memory
-> 
-> The existing tracers in the vmscan are as follows:
-> 
-> --do_try_to_free_pages
-> --shrink_zones
-> --trace_mm_vmscan_node_reclaim_begin (tracer)
-> --shrink_node
-> --shrink_node_memcgs
->    --trace_mm_vmscan_memcg_shrink_begin (tracer)
->    --shrink_lruvec
->      --shrink_list
->        --shrink_active_list
-> 	  --trace_mm_vmscan_lru_shrink_active (tracer)
->        --shrink_inactive_list
-> 	  --trace_mm_vmscan_lru_shrink_inactive (tracer)
->      --shrink_active_list
->    --shrink_slab
->      --do_shrink_slab
->      --shrinker->count_objects()
->      --trace_mm_shrink_slab_start (tracer)
->      --shrinker->scan_objects()
->      --trace_mm_shrink_slab_end (tracer)
->    --trace_mm_vmscan_memcg_shrink_end (tracer)
-> --trace_mm_vmscan_node_reclaim_end (tracer)
-> 
-> If we get the duration and quantity of shrink lru and slab,
-> then we can measure the memory recycling, as follows
-> 
-> Measuring memory reclamation with bpf:
->    LRU FILE:
-> 	CPU COMM 	ShrinkActive(us) ShrinkInactive(us)  Reclaim(page)
-> 	7   kswapd0	 	26		51		32
-> 	7   kswapd0		52		47		13
->    SLAB:
-> 	CPU COMM 		OBJ_NAME		Count_Dur(us) Freeable(page) Scan_Dur(us) Reclaim(page)
-> 	 1  kswapd0		super_cache_scan.cfi_jt     2		    341		   3225		128
-> 	 7  kswapd0		super_cache_scan.cfi_jt     0		    2247	   8524		1024
-> 	 7  kswapd0	        super_cache_scan.cfi_jt     2367	    0		   0		0
-> 
-> For this, add the new tracer to shrink_active_list/shrink_inactive_list
-> and shrinker->count_objects().
-> 
-> Changes:
-> v6: * Add Reviewed-by from Steven Rostedt.
-> v5: * Use 'DECLARE_EVENT_CLASS(mm_vmscan_lru_shrink_start_template' to
-> replace 'RACE_EVENT(mm_vmscan_lru_shrink_inactive/active_start'
->      * Add the explanation for adding new shrink lru events into 'mm: vmscan: add new event to trace shrink lru'
-> v4: Add Reviewed-by and Changlog to every patch.
-> v3: Swap the positions of 'nid' and 'freeable' to prevent the hole in the trace event.
-> v2: Modify trace_mm_vmscan_lru_shrink_inactive() in evict_folios() at the same time to fix build error.
-> 
-> cuibixuan (2):
->    mm: shrinker: add new event to trace shrink count
->    mm: vmscan: add new event to trace shrink lru
-> 
->   include/trace/events/vmscan.h | 80 ++++++++++++++++++++++++++++++++++-
->   mm/shrinker.c                 |  4 ++
->   mm/vmscan.c                   | 11 +++--
->   3 files changed, 90 insertions(+), 5 deletions(-)
-> 
+
+On 2024/1/23 22:40, Masami Hiramatsu (Google) wrote:
+> On Tue, 23 Jan 2024 17:21:35 +0800
+> Ye Bin <yebin10@huawei.com> wrote:
+>
+>> Similar to '%pd' for printk, use '%pd' for print struct dentry's name.
+>>
+>> Signed-off-by: Ye Bin <yebin10@huawei.com>
+>> ---
+>>   kernel/trace/trace_kprobe.c | 6 ++++++
+>>   kernel/trace/trace_probe.h  | 1 +
+>>   2 files changed, 7 insertions(+)
+>>
+>> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+>> index c4c6e0e0068b..00b74530fbad 100644
+>> --- a/kernel/trace/trace_kprobe.c
+>> +++ b/kernel/trace/trace_kprobe.c
+>> @@ -779,6 +779,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+>>   	char buf[MAX_EVENT_NAME_LEN];
+>>   	char gbuf[MAX_EVENT_NAME_LEN];
+>>   	char abuf[MAX_BTF_ARGS_LEN];
+>> +	char dbuf[MAX_DENTRY_ARGS_LEN];
+> Hmm, no, I don't like to expand stack anymore. Please allocate it
+> from heap.
+Do I need to change the other buffers on the stacks to allocate memory 
+from heap?
+>>   	struct traceprobe_parse_context ctx = { .flags = TPARG_FL_KERNEL };
+>>   
+>>   	switch (argv[0][0]) {
+>> @@ -930,6 +931,11 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+>>   		argv = new_argv;
+>>   	}
+>>   
+>> +	ret = traceprobe_expand_dentry_args(argc, argv, dbuf,
+>> +					    MAX_DENTRY_ARGS_LEN);
+>> +	if (ret)
+>> +		goto out;
+> And calling this here will not cover the trace_fprobe.
+>
+> Could you call this from traceprobe_expand_meta_args() instead of
+> calling it directly from trace_kprobe? Then it can be used from
+> fprobe_event too.
+>
+> Thank you,
+At first I wanted to implement the extension logic in 
+traceprobe_expand_meta_args(),
+but I found that the code was difficult to understand when I started 
+writing. If fprobe_event
+wants to support this function, is traceprobe_expand_dentry_args() also 
+called? Or re-encapsulate
+an interface to include the logic of different extensions. In this way, 
+the same buffer is used for
+the entire extension process, and the extension function needs to return 
+the information about
+the length of the buffer.
+
+>> +
+>>   	/* setup a probe */
+>>   	tk = alloc_trace_kprobe(group, event, addr, symbol, offset, maxactive,
+>>   				argc, is_return);
+>> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+>> index 553371a4e0b1..d9c053824975 100644
+>> --- a/kernel/trace/trace_probe.h
+>> +++ b/kernel/trace/trace_probe.h
+>> @@ -34,6 +34,7 @@
+>>   #define MAX_ARRAY_LEN		64
+>>   #define MAX_ARG_NAME_LEN	32
+>>   #define MAX_BTF_ARGS_LEN	128
+>> +#define MAX_DENTRY_ARGS_LEN	256
+> Why do you think
+I determined this value according to the extreme case that a parameter 
+is expanded to occupy
+64 bytes, and a maximum of four such large parameters are supported.
+>>   #define MAX_STRING_SIZE		PATH_MAX
+>>   #define MAX_ARG_BUF_LEN		(MAX_TRACE_ARGS * MAX_ARG_NAME_LEN)
+>>   
+>> -- 
+>> 2.31.1
+>>
+>>
+>
+
