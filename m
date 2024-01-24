@@ -1,65 +1,182 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE3A477F04;
-	Wed, 24 Jan 2024 14:09:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7BB17562;
+	Wed, 24 Jan 2024 15:11:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706105351; cv=none; b=XNAGaeSnd+hEB35uMTQPiQw9D6Q6pDW9ry/8sU3yjsuHNO+FI/ypgCs/Dt8fwlPmyrGhWwfQILgAj6nw4U/uL7S79tZleL92AJ9fxPb2vN/u2yRfQHucG3xP7BjD4yMZOBfF/961vscRD82aQOL9WJ0Zd+4YnLIPXOdijbiS95o=
+	t=1706109119; cv=none; b=bD0J18j/pDfEim7PM0OaKm6O6Z3VusD4whdohbB/J6tX9rhoPpbwZOwL1WeU+PCYAUXebdGkRiOE0PcBZDE7bN55+2VvYSbc9IsC8ThYM1UwNNAjY6VaLpdpI5Kh2pixaY4MlB7k0pgWgDVJxjOEKanFNs2LTFX7bOZOL8toWaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706105351; c=relaxed/simple;
-	bh=9xyQqImeowhTNiBETbyePeJW8OBK843qk/mKs+AU/Uo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aM5HaTfJ/8nksb5mhJB/sE/d53loRVwm1D/eKgkSbKjBMTuir+kWN4KkzVYJlENono4u1W2MxJ3d2zgY8dEskQY720d42sPbkcYuyvEsXlYvDu5Pkk7hwDSOeirzwzEFvgKlmPh91bitrLOmzbZLk9vAzuC6kQjdoNYGqOTV/pQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DC7FC433C7;
-	Wed, 24 Jan 2024 14:09:10 +0000 (UTC)
-Date: Wed, 24 Jan 2024 09:09:08 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: "Naik, Avadhut" <avadnaik@amd.com>, Tony Luck <tony.luck@intel.com>,
- Avadhut Naik <avadhut.naik@amd.com>, linux-trace-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org,
- yazen.ghannam@amd.com
-Subject: Re: [PATCH] tracing: Include PPIN in mce_record tracepoint
-Message-ID: <20240124090908.1c4daea8@rorschach.local.home>
-In-Reply-To: <20240124095708.GAZbDe9Hks0tL2Aj94@fat_crate.local>
-References: <20240123235150.3744089-1-avadhut.naik@amd.com>
-	<ZbBV4EGrZw6hJ5IE@agluck-desk3>
-	<be870e14-eeb9-4dcf-ba43-a72ef66a3d87@amd.com>
-	<20240123203853.66655e95@rorschach.local.home>
-	<20240124095708.GAZbDe9Hks0tL2Aj94@fat_crate.local>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1706109119; c=relaxed/simple;
+	bh=R89RbMLDlTyyQD/EW+3r2qZaBZKEVWRsol+oOTF+Puo=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=n3svRxU7sAbjVPgy0RkNyhvW6vt1FJMvr6IwyV++IFrUqFOUVqCXGtpkmig1wg5OKJ99DebJ+Vdkwwp5HAJYFk5108P/3RbzXBUHogRB5ceMhRE4v50SuMcVWl8bXrz9fJU3SeiFlj2YgDEgTo+ilpHJDeCkHya8eT2hGYeTnVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TW6p4XCR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TW6p4XCR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C012FC433C7;
+	Wed, 24 Jan 2024 15:11:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706109118;
+	bh=R89RbMLDlTyyQD/EW+3r2qZaBZKEVWRsol+oOTF+Puo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=TW6p4XCR71WvsUtJAPzVLicpm72SL/R5SDZMWmzplbHW8PGdjRxsPF8cg+Js/a5o7
+	 XcbOnnGhx0wYlF/N0e/pIBZ1e9oa1NUxRLerZg02RlgAjagm1iQgstlHb/HPQhqwUZ
+	 52YDJoRbW0eGJ4LMts9YAfEmKMKN40jAyLbTEs3cTJp2XIRLl4W3WwHXJ9ge36wEJl
+	 129d5iuzkYp9geKzVMrJQu7+BOynst7FkaXCrdj/iaIqUkkaV0achD57B+tRQj7S7X
+	 +DvOkGiLzmtZScwyN0/Jk+HndIOPtPxxbWdo5bCd1Hsn7pR7g19hyvpwilYfL0oYfc
+	 I6sWxyPi0+FIA==
+Date: Thu, 25 Jan 2024 00:11:49 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ kernel-team@android.com
+Subject: Re: [PATCH v12 3/6] tracing: Add snapshot refcount
+Message-Id: <20240125001149.364c0b08237e8b7f0a69bd56@kernel.org>
+In-Reply-To: <20240123110757.3657908-4-vdonnefort@google.com>
+References: <20240123110757.3657908-1-vdonnefort@google.com>
+	<20240123110757.3657908-4-vdonnefort@google.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 24 Jan 2024 10:57:08 +0100
-Borislav Petkov <bp@alien8.de> wrote:
+On Tue, 23 Jan 2024 11:07:54 +0000
+Vincent Donnefort <vdonnefort@google.com> wrote:
 
-> On Tue, Jan 23, 2024 at 08:38:53PM -0500, Steven Rostedt wrote:
-> > Yes, rasdaemon uses libtraceevent (or a copy of it internally) that
-> > reads the format file to find fields. You can safely add fields to the
-> > middle of the event structure and the parsing will be just fine.  
+[...]
+> @@ -6592,8 +6641,11 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
+>  
+>  	if (t->init) {
+>  		ret = tracer_init(t, tr);
+> -		if (ret)
+> +		if (ret) {
+> +			if (t->use_max_tr)
+> +				tracing_disarm_snapshot_locked(tr);
+
+This part is out of CONFIG_TRACER_MAX_TRACE, so it may cause a compile error
+if CONFIG_TRACER_MAX_TRACE is not set.
+
+>  			goto out;
+> +		}
+>  	}
+>  
+>  	tr->current_trace = t;
+[...]
+> diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+> index 46439e3bcec4..d41bf64741e2 100644
+> --- a/kernel/trace/trace_events_trigger.c
+> +++ b/kernel/trace/trace_events_trigger.c
+> @@ -597,20 +597,9 @@ static int register_trigger(char *glob,
+>  	return ret;
+>  }
+>  
+> -/**
+> - * unregister_trigger - Generic event_command @unreg implementation
+> - * @glob: The raw string used to register the trigger
+> - * @test: Trigger-specific data used to find the trigger to remove
+> - * @file: The trace_event_file associated with the event
+> - *
+> - * Common implementation for event trigger unregistration.
+> - *
+> - * Usually used directly as the @unreg method in event command
+> - * implementations.
+> - */
+> -static void unregister_trigger(char *glob,
+> -			       struct event_trigger_data *test,
+> -			       struct trace_event_file *file)
+
+OK, so __unregister_trigger returns true if data exists, but
+unregister_trigger() ignores results. (I want some comment here)
+
+> +static bool __unregister_trigger(char *glob,
+> +				 struct event_trigger_data *test,
+> +				 struct trace_event_file *file)
+>  {
+>  	struct event_trigger_data *data = NULL, *iter;
+>  
+> @@ -626,8 +615,32 @@ static void unregister_trigger(char *glob,
+>  		}
+>  	}
+>  
+> -	if (data && data->ops->free)
+> -		data->ops->free(data);
+> +	if (data) {
+> +		if (data->ops->free)
+> +			data->ops->free(data);
+> +
+> +		return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +/**
+> + * unregister_trigger - Generic event_command @unreg implementation
+> + * @glob: The raw string used to register the trigger
+> + * @test: Trigger-specific data used to find the trigger to remove
+> + * @file: The trace_event_file associated with the event
+> + *
+> + * Common implementation for event trigger unregistration.
+> + *
+> + * Usually used directly as the @unreg method in event command
+> + * implementations.
+> + */
+> +static void unregister_trigger(char *glob,
+> +			       struct event_trigger_data *test,
+> +			       struct trace_event_file *file)
+> +{
+> +	__unregister_trigger(glob, test, file);
+>  }
+>  
+>  /*
+> @@ -1470,12 +1483,20 @@ register_snapshot_trigger(char *glob,
+>  			  struct event_trigger_data *data,
+>  			  struct trace_event_file *file)
+>  {
+> -	if (tracing_alloc_snapshot_instance(file->tr) != 0)
+> +	if (tracing_arm_snapshot(file->tr))
+>  		return 0;
+
+BTW, is this return value correct? It seems that the register_*_trigger()
+will return error code when it fails.
+
+Thanks,
+
+>  
+>  	return register_trigger(glob, data, file);
+>  }
+>  
+> +static void unregister_snapshot_trigger(char *glob,
+> +					struct event_trigger_data *data,
+> +					struct trace_event_file *file)
+> +{
+> +	if (__unregister_trigger(glob, data, file))
+> +		tracing_disarm_snapshot(file->tr);
+> +}
+> +
+>  static int
+>  snapshot_trigger_print(struct seq_file *m, struct event_trigger_data *data)
+>  {
+> @@ -1508,7 +1529,7 @@ static struct event_command trigger_snapshot_cmd = {
+>  	.trigger_type		= ETT_SNAPSHOT,
+>  	.parse			= event_trigger_parse,
+>  	.reg			= register_snapshot_trigger,
+> -	.unreg			= unregister_trigger,
+> +	.unreg			= unregister_snapshot_trigger,
+>  	.get_trigger_ops	= snapshot_get_trigger_ops,
+>  	.set_filter		= set_trigger_filter,
+>  };
+> -- 
+> 2.43.0.429.g432eaa2c6b-goog
 > 
-> Should we worry about tools who consume the event "blindly", without the
-> lib?
 
-I don't think that's a worry anymore. The offsets can change based on
-kernel config. PowerTop needed to have the library ported to it because
-it use to hardcode the offsets but then it broke when running the 32bit
-version on a 64bit kernel.
 
-> 
-> I guess no until we break some use case and then we will have to revert.
-> At least this is what we've done in the past...
-> 
-
-But that revert was reverted when we converted PowerTop to use libtraceevent.
-
--- Steve
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
