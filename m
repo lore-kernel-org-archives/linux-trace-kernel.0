@@ -1,182 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.toke.dk (mail.toke.dk [45.145.95.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7BB17562;
-	Wed, 24 Jan 2024 15:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A777E762;
+	Wed, 24 Jan 2024 17:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.95.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706109119; cv=none; b=bD0J18j/pDfEim7PM0OaKm6O6Z3VusD4whdohbB/J6tX9rhoPpbwZOwL1WeU+PCYAUXebdGkRiOE0PcBZDE7bN55+2VvYSbc9IsC8ThYM1UwNNAjY6VaLpdpI5Kh2pixaY4MlB7k0pgWgDVJxjOEKanFNs2LTFX7bOZOL8toWaA=
+	t=1706116330; cv=none; b=IwBty8/niXW4sDwi1keTuAeMeMYGPubu+z8BgspPQ5iz7GsqrBokKgPx8vep/1by1zIilbCnf8h+drz9YXskXts/zpTM52/zskj/xXrTfPh3t0c/eBDIYvJ1OcDI/7i5O1CmZ6p45lKZabpa5M/aXVKEfVXv8LlsnKslSeIxjhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706109119; c=relaxed/simple;
-	bh=R89RbMLDlTyyQD/EW+3r2qZaBZKEVWRsol+oOTF+Puo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=n3svRxU7sAbjVPgy0RkNyhvW6vt1FJMvr6IwyV++IFrUqFOUVqCXGtpkmig1wg5OKJ99DebJ+Vdkwwp5HAJYFk5108P/3RbzXBUHogRB5ceMhRE4v50SuMcVWl8bXrz9fJU3SeiFlj2YgDEgTo+ilpHJDeCkHya8eT2hGYeTnVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TW6p4XCR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706116330; c=relaxed/simple;
+	bh=5qz2F9Z7NYBi7ZTnYZWey+cuP9uUiWX83QGOe5SsFBM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=LdErJmIlEN/Yolw9C17Pkr8eueidvRivrTQKimEee1+/HhCVDjLR5EuwthjCXibxOluUn99aao7tnAgjUJUsmuaabrj5pyf5qXhSRYDXzAY3VwU9Tn7scF/Sg+U6r9hK0/6rx71RZquoDMrH75nUAO1thx0wppn5tOLA7Fv+73g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk; spf=pass smtp.mailfrom=toke.dk; dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b=QNluEfPs; arc=none smtp.client-ip=45.145.95.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toke.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TW6p4XCR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C012FC433C7;
-	Wed, 24 Jan 2024 15:11:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706109118;
-	bh=R89RbMLDlTyyQD/EW+3r2qZaBZKEVWRsol+oOTF+Puo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TW6p4XCR71WvsUtJAPzVLicpm72SL/R5SDZMWmzplbHW8PGdjRxsPF8cg+Js/a5o7
-	 XcbOnnGhx0wYlF/N0e/pIBZ1e9oa1NUxRLerZg02RlgAjagm1iQgstlHb/HPQhqwUZ
-	 52YDJoRbW0eGJ4LMts9YAfEmKMKN40jAyLbTEs3cTJp2XIRLl4W3WwHXJ9ge36wEJl
-	 129d5iuzkYp9geKzVMrJQu7+BOynst7FkaXCrdj/iaIqUkkaV0achD57B+tRQj7S7X
-	 +DvOkGiLzmtZScwyN0/Jk+HndIOPtPxxbWdo5bCd1Hsn7pR7g19hyvpwilYfL0oYfc
-	 I6sWxyPi0+FIA==
-Date: Thu, 25 Jan 2024 00:11:49 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: rostedt@goodmis.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- kernel-team@android.com
-Subject: Re: [PATCH v12 3/6] tracing: Add snapshot refcount
-Message-Id: <20240125001149.364c0b08237e8b7f0a69bd56@kernel.org>
-In-Reply-To: <20240123110757.3657908-4-vdonnefort@google.com>
-References: <20240123110757.3657908-1-vdonnefort@google.com>
-	<20240123110757.3657908-4-vdonnefort@google.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b="QNluEfPs"
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=toke.dk; s=20161023;
+	t=1706115966; bh=5qz2F9Z7NYBi7ZTnYZWey+cuP9uUiWX83QGOe5SsFBM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=QNluEfPsizytP2tnYUMdOgBwVBeQGESRulGkuYWC/HVzkxWxG/RT2PEdUKegyRqZ2
+	 MQdVzI70/J9t6+B0+0l01dlTBZMpnz8HdZP3Wg9URyDIvmSW/9tU7+rRhqafTEWT87
+	 jVvGT9bv0QSi8VaF010SEcli4WGPYyoYaDa9S886kdtehoLtwnDG/K9m8XUzv9z/4H
+	 3K9DDJIArw0k5wmGc0UE+E9RfAreEsWEpYmT5ZkbD++1LmXla8nkLWZqrfTrxGvvGi
+	 NTpefIHxTO1P7uUndY4pZYKjVJxCxe6fZ9Rshov4Z6JkoXm4S3qMHDrce2o8WR3YqY
+	 LO5bq88ADNV3g==
+To: Ubisectech Sirius <bugreport@ubisectech.com>, linux-trace-kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-kernel
+ <linux-kernel@vger.kernel.org>
+Cc: johannes <johannes@sipsolutions.net>, kvalo <kvalo@kernel.org>
+Subject: Re: general protection fault in ath9k_wmi_event_tasklet
+In-Reply-To: <ed1d2c66-1193-4c81-9542-d514c29ba8b8.bugreport@ubisectech.com>
+References: <ed1d2c66-1193-4c81-9542-d514c29ba8b8.bugreport@ubisectech.com>
+Date: Wed, 24 Jan 2024 18:06:06 +0100
+X-Clacks-Overhead: GNU Terry Pratchett
+Message-ID: <878r4e4q69.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Tue, 23 Jan 2024 11:07:54 +0000
-Vincent Donnefort <vdonnefort@google.com> wrote:
+"Ubisectech Sirius" <bugreport@ubisectech.com> writes:
 
-[...]
-> @@ -6592,8 +6641,11 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
->  
->  	if (t->init) {
->  		ret = tracer_init(t, tr);
-> -		if (ret)
-> +		if (ret) {
-> +			if (t->use_max_tr)
-> +				tracing_disarm_snapshot_locked(tr);
+> Hello.
+> We are Ubisectech Sirius Team, the vulnerability lab of China ValiantSec. Recently, our team has discovered a issue in Linux kernel 6.7.0-g9d1694dc91ce. Attached to the email were a POC file of the issue.
+> Stack dump:
+> general protection fault, probably for non-canonical address 0xdffffc0000000038: 0000 [#1] PREEMPT SMP KASAN
+> KASAN: null-ptr-deref in range [0x00000000000001c0-0x00000000000001c7]
+> CPU: 0 PID: 16 Comm: ksoftirqd/0 Not tainted 6.7.0-g9d1694dc91ce #20
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+> RIP: 0010:__queue_work+0x9d/0x1160 kernel/workqueue.c:1727
+> Call Trace:
+> <TASK>
+> queue_work_on+0xf2/0x110 kernel/workqueue.c:1837
+> queue_work include/linux/workqueue.h:548 [inline]
+> ieee80211_queue_work net/mac80211/util.c:898 [inline]
+> ieee80211_queue_work+0x111/0x180 net/mac80211/util.c:891
+> ath9k_wmi_event_tasklet+0x327/0x450 drivers/net/wireless/ath/ath9k/wmi.c:168
+> tasklet_action_common.constprop.0+0x229/0x390 kernel/softirq.c:780
+> __do_softirq+0x1d4/0x85e kernel/softirq.c:553
+> run_ksoftirqd kernel/softirq.c:921 [inline]
+> run_ksoftirqd+0x31/0x60 kernel/softirq.c:913
+> smpboot_thread_fn+0x63c/0x9f0 kernel/smpboot.c:164
+> kthread+0x2cc/0x3b0 kernel/kthread.c:388
+> ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+> ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+> </TASK>
+> Modules linked in:
+> ---[ end trace 0000000000000000 ]---
+> RIP: 0010:__queue_work+0x9d/0x1160 kernel/workqueue.c:1727
+> Thank you for taking the time to read this email and we look forward
+> to working with you further.
 
-This part is out of CONFIG_TRACER_MAX_TRACE, so it may cause a compile error
-if CONFIG_TRACER_MAX_TRACE is not set.
+Hmm, so from eyeballing the code in question, this looks like it is
+another initialisation race along the lines of the one fixed in commit:
+8b3046abc99e ("ath9k_htc: fix NULL pointer dereference at ath9k_htc_tx_get_packet()")
 
->  			goto out;
-> +		}
->  	}
->  
->  	tr->current_trace = t;
-[...]
-> diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-> index 46439e3bcec4..d41bf64741e2 100644
-> --- a/kernel/trace/trace_events_trigger.c
-> +++ b/kernel/trace/trace_events_trigger.c
-> @@ -597,20 +597,9 @@ static int register_trigger(char *glob,
->  	return ret;
->  }
->  
-> -/**
-> - * unregister_trigger - Generic event_command @unreg implementation
-> - * @glob: The raw string used to register the trigger
-> - * @test: Trigger-specific data used to find the trigger to remove
-> - * @file: The trace_event_file associated with the event
-> - *
-> - * Common implementation for event trigger unregistration.
-> - *
-> - * Usually used directly as the @unreg method in event command
-> - * implementations.
-> - */
-> -static void unregister_trigger(char *glob,
-> -			       struct event_trigger_data *test,
-> -			       struct trace_event_file *file)
+Could you please test the patch below and see if you can still reproduce
+this issue with that applied?
 
-OK, so __unregister_trigger returns true if data exists, but
-unregister_trigger() ignores results. (I want some comment here)
-
-> +static bool __unregister_trigger(char *glob,
-> +				 struct event_trigger_data *test,
-> +				 struct trace_event_file *file)
->  {
->  	struct event_trigger_data *data = NULL, *iter;
->  
-> @@ -626,8 +615,32 @@ static void unregister_trigger(char *glob,
->  		}
->  	}
->  
-> -	if (data && data->ops->free)
-> -		data->ops->free(data);
-> +	if (data) {
-> +		if (data->ops->free)
-> +			data->ops->free(data);
-> +
-> +		return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +/**
-> + * unregister_trigger - Generic event_command @unreg implementation
-> + * @glob: The raw string used to register the trigger
-> + * @test: Trigger-specific data used to find the trigger to remove
-> + * @file: The trace_event_file associated with the event
-> + *
-> + * Common implementation for event trigger unregistration.
-> + *
-> + * Usually used directly as the @unreg method in event command
-> + * implementations.
-> + */
-> +static void unregister_trigger(char *glob,
-> +			       struct event_trigger_data *test,
-> +			       struct trace_event_file *file)
-> +{
-> +	__unregister_trigger(glob, test, file);
->  }
->  
->  /*
-> @@ -1470,12 +1483,20 @@ register_snapshot_trigger(char *glob,
->  			  struct event_trigger_data *data,
->  			  struct trace_event_file *file)
->  {
-> -	if (tracing_alloc_snapshot_instance(file->tr) != 0)
-> +	if (tracing_arm_snapshot(file->tr))
->  		return 0;
-
-BTW, is this return value correct? It seems that the register_*_trigger()
-will return error code when it fails.
-
-Thanks,
-
->  
->  	return register_trigger(glob, data, file);
->  }
->  
-> +static void unregister_snapshot_trigger(char *glob,
-> +					struct event_trigger_data *data,
-> +					struct trace_event_file *file)
-> +{
-> +	if (__unregister_trigger(glob, data, file))
-> +		tracing_disarm_snapshot(file->tr);
-> +}
-> +
->  static int
->  snapshot_trigger_print(struct seq_file *m, struct event_trigger_data *data)
->  {
-> @@ -1508,7 +1529,7 @@ static struct event_command trigger_snapshot_cmd = {
->  	.trigger_type		= ETT_SNAPSHOT,
->  	.parse			= event_trigger_parse,
->  	.reg			= register_snapshot_trigger,
-> -	.unreg			= unregister_trigger,
-> +	.unreg			= unregister_snapshot_trigger,
->  	.get_trigger_ops	= snapshot_get_trigger_ops,
->  	.set_filter		= set_trigger_filter,
->  };
-> -- 
-> 2.43.0.429.g432eaa2c6b-goog
-> 
+-Toke
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+diff --git a/drivers/net/wireless/ath/ath9k/htc.h b/drivers/net/wireless/ath/ath9k/htc.h
+index 237f4ec2cffd..6c33e898b300 100644
+--- a/drivers/net/wireless/ath/ath9k/htc.h
++++ b/drivers/net/wireless/ath/ath9k/htc.h
+@@ -306,7 +306,6 @@ struct ath9k_htc_tx {
+ 	DECLARE_BITMAP(tx_slot, MAX_TX_BUF_NUM);
+ 	struct timer_list cleanup_timer;
+ 	spinlock_t tx_lock;
+-	bool initialized;
+ };
+ 
+ struct ath9k_htc_tx_ctl {
+@@ -515,6 +514,7 @@ struct ath9k_htc_priv {
+ 	unsigned long ps_usecount;
+ 	bool ps_enabled;
+ 	bool ps_idle;
++	bool initialized;
+ 
+ #ifdef CONFIG_MAC80211_LEDS
+ 	enum led_brightness brightness;
+diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_init.c b/drivers/net/wireless/ath/ath9k/htc_drv_init.c
+index dae3d9c7b640..fc339079ee8c 100644
+--- a/drivers/net/wireless/ath/ath9k/htc_drv_init.c
++++ b/drivers/net/wireless/ath/ath9k/htc_drv_init.c
+@@ -966,6 +966,10 @@ int ath9k_htc_probe_device(struct htc_target *htc_handle, struct device *dev,
+ 
+ 	htc_handle->drv_priv = priv;
+ 
++	/* Allow ath9k_wmi_event_tasklet() to operate. */
++	smp_wmb();
++	priv->initialized = true;
++
+ 	return 0;
+ 
+ err_init:
+diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
+index 672789e3c55d..768ed8ea5c9f 100644
+--- a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
++++ b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
+@@ -814,10 +814,6 @@ int ath9k_tx_init(struct ath9k_htc_priv *priv)
+ 	skb_queue_head_init(&priv->tx.data_vo_queue);
+ 	skb_queue_head_init(&priv->tx.tx_failed);
+ 
+-	/* Allow ath9k_wmi_event_tasklet(WMI_TXSTATUS_EVENTID) to operate. */
+-	smp_wmb();
+-	priv->tx.initialized = true;
+-
+ 	return 0;
+ }
+ 
+diff --git a/drivers/net/wireless/ath/ath9k/wmi.c b/drivers/net/wireless/ath/ath9k/wmi.c
+index 1476b42b52a9..805ad31edba2 100644
+--- a/drivers/net/wireless/ath/ath9k/wmi.c
++++ b/drivers/net/wireless/ath/ath9k/wmi.c
+@@ -155,6 +155,12 @@ void ath9k_wmi_event_tasklet(struct tasklet_struct *t)
+ 		}
+ 		spin_unlock_irqrestore(&wmi->wmi_lock, flags);
+ 
++		/* Check if ath9k_htc_probe_device() completed. */
++		if (!data_race(priv->initialized)) {
++			kfree_skb(skb);
++			continue;
++		}
++
+ 		hdr = (struct wmi_cmd_hdr *) skb->data;
+ 		cmd_id = be16_to_cpu(hdr->command_id);
+ 		wmi_event = skb_pull(skb, sizeof(struct wmi_cmd_hdr));
+@@ -169,10 +175,6 @@ void ath9k_wmi_event_tasklet(struct tasklet_struct *t)
+ 					     &wmi->drv_priv->fatal_work);
+ 			break;
+ 		case WMI_TXSTATUS_EVENTID:
+-			/* Check if ath9k_tx_init() completed. */
+-			if (!data_race(priv->tx.initialized))
+-				break;
+-
+ 			spin_lock_bh(&priv->tx.tx_lock);
+ 			if (priv->tx.flags & ATH9K_HTC_OP_TX_DRAIN) {
+ 				spin_unlock_bh(&priv->tx.tx_lock);
