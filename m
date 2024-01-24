@@ -1,165 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7671396;
-	Wed, 24 Jan 2024 01:32:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22D220E6;
+	Wed, 24 Jan 2024 01:38:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706059926; cv=none; b=Ae7Og9mUVtXYCwn2S1mAT8J/gYtt2eF/jgmvxYDSjzwcBxkmrM5UUB1NzeaU6knaMheqsNSkQuOzu3LjukmT58+jT0i0kMmOrE5nqTtz1DAhrCsOavDQvfESMCXhDU0Zh5FMPetnbYWzVmS51hGERWifBUIv3fAFt4TbcrYlsAQ=
+	t=1706060339; cv=none; b=VY9J2QJqTK8Ca7dWYFZqYpl4ZrG1T0JFzk7e8G7BRKyWuopqVaI3w7w/6vHUnU4+Ziq10210g6VyU+0e8taKMj9PZ8BVEMvuGGy2FX7WgtVyTvyIwJd/7Mto4AoPGe4QOvV7zr6aEqrIjhE58+49aUXrDH+lh7cE+eSwxSBBq5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706059926; c=relaxed/simple;
-	bh=wBc7BoZbGTMbQ1QWsWXSbUPtRHXBQH0+VcToISPS524=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=YxtlXNkuFwasBHJklgEVJun6NN+3ZTzp7aUYkLNy/2wcW2P23p0rYyUNz+bYY7aTf3zXQNJQ/QEbyWsNo2AKynKLLVYCcqscdZkS7JXmC01hA8rivDdJP8+wme+0hxSUQsoBJZKCnxl4vIDiqYskg32wYX5sA+ER2KP9XH/kkj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fSZy68Z2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fSZy68Z2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A08DBC433C7;
-	Wed, 24 Jan 2024 01:32:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706059926;
-	bh=wBc7BoZbGTMbQ1QWsWXSbUPtRHXBQH0+VcToISPS524=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fSZy68Z2JKU5dW23uvmKGh6d4jv+AAXJcb3GA+EmTzleVtoaNNMsQ2nya7nfuDKbV
-	 hyrVc7yvyUvxRjP5KqSokYDISYRpxS25eRpzYQqAcDYQZ/VDtSzjPx6gteb4E0iA5g
-	 a0KmlWrp/W2Ou2gmRA+UkEDbNniZuoI8356SuxuN9e5KqnLAuFJp+8umsbwkkWYX+z
-	 slXl1DmGyyVhoLfDhPAl6JfEWX0YpH+asX+8l0+GdjRIq1qppf2yD8aS4e57e5ZN4g
-	 OBgbLhFJLNfZoaOnHXSt7v8hC4PSOKkDqkgSOdB5E+9ghZhdr0y08JWMk81yrlaPA5
-	 fl3VTjCteU9jw==
-Date: Wed, 24 Jan 2024 10:32:01 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Ye Bin <yebin10@huawei.com>
-Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
- <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 7/7] selftests/ftrace: add test cases for VFS type
- "%pd" and "%pD"
-Message-Id: <20240124103201.6dd8d466b1b734796418c1c4@kernel.org>
-In-Reply-To: <20240123092139.3698375-8-yebin10@huawei.com>
-References: <20240123092139.3698375-1-yebin10@huawei.com>
-	<20240123092139.3698375-8-yebin10@huawei.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1706060339; c=relaxed/simple;
+	bh=T/SApjS4NcwCV6e9qX6lfk7qF4ETSE5E2S3aJnDWIjA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GH+1S5IGCRxl/nOwi2gNht2YynZcnCaZuPHiChyE7a1ZzQv43jlddyatpzJfnMqtNQGu705xtRL6JAQAujlAojixSMQsNdGp5SATKMLfCaXHpH+Ppa1XOQYViRDKNbU+V/7VNmTXnwaLNcQBqG3zN1kZ0CJjONod1yYNr4okYAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D956C433F1;
+	Wed, 24 Jan 2024 01:38:55 +0000 (UTC)
+Date: Tue, 23 Jan 2024 20:38:53 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Naik, Avadhut" <avadnaik@amd.com>
+Cc: Tony Luck <tony.luck@intel.com>, Avadhut Naik <avadhut.naik@amd.com>,
+ linux-trace-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+ bp@alien8.de, x86@kernel.org, linux-kernel@vger.kernel.org,
+ yazen.ghannam@amd.com
+Subject: Re: [PATCH] tracing: Include PPIN in mce_record tracepoint
+Message-ID: <20240123203853.66655e95@rorschach.local.home>
+In-Reply-To: <be870e14-eeb9-4dcf-ba43-a72ef66a3d87@amd.com>
+References: <20240123235150.3744089-1-avadhut.naik@amd.com>
+	<ZbBV4EGrZw6hJ5IE@agluck-desk3>
+	<be870e14-eeb9-4dcf-ba43-a72ef66a3d87@amd.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 23 Jan 2024 17:21:39 +0800
-Ye Bin <yebin10@huawei.com> wrote:
+On Tue, 23 Jan 2024 19:29:52 -0600
+"Naik, Avadhut" <avadnaik@amd.com> wrote:
 
-> This patch adds test cases for new print format type "%pd/%pD".The test cases
-> test the following items:
-> 1. Test README if add "%pd/%pD" type;
-> 2. Test "%pd" type for dput();
-> 3. Test "%pD" type for vfs_read();
+> > But some questions:
+> > 
+> > 1) Are tracepoints a user visible ABI? Adding a new field in the middle
+> > feels like it might be problematic. I asked this question many years
+> > ago and Steven Rostedt said there was some tracing library in the works
+> > that would make this OK for appplications using that library.
+> >   
 > 
-> Signed-off-by: Ye Bin <yebin10@huawei.com>
-> ---
->  .../ftrace/test.d/kprobe/kprobe_args_vfs.tc   | 79 +++++++++++++++++++
->  1 file changed, 79 insertions(+)
->  create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
+> I think they can be user visible through the "trace" and "trace_pipe" in
+> /sys/kernel/debug/tracing. But you will have to enable the events you want
+> to trace through /sys/kernel/debug/tracing/events/<event-name>/enable.
 > 
-> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
-> new file mode 100644
-> index 000000000000..1d8edd294dd6
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
-> @@ -0,0 +1,79 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +# description: Kprobe event VFS type argument
-> +# requires: kprobe_events
-> +
-> +case `uname -m` in
-> +x86_64)
-> +  ARG1=%di
-> +;;
-> +i[3456]86)
-> +  ARG1=%ax
-> +;;
-> +aarch64)
-> +  ARG1=%x0
-> +;;
-> +arm*)
-> +  ARG1=%r0
-> +;;
-> +ppc64*)
-> +  ARG1=%r3
-> +;;
-> +ppc*)
-> +  ARG1=%r3
-
-You can merge this ppc* and ppc64* cases :)
-
-> +;;
-> +s390*)
-> +  ARG1=%r2
-> +;;
-> +mips*)
-> +  ARG1=%r4
-> +;;
-> +loongarch*)
-> +  ARG1=%r4
-> +;;
-> +riscv*)
-> +  ARG1=%a0
-
-Anyway, I wonder why don't you use '$arg1' instead of these registers.
-Is there any reason?
-
-Thank you,
-
-> +;;
-> +*)
-> +  echo "Please implement other architecture here"
-> +  exit_untested
-> +esac
-> +
-> +: "Test argument %pd/%pD in README"
-> +grep -q "%pd/%pD" README
-> +
-> +: "Test argument %pd with name"
-> +echo "p:testprobe dput name=${ARG1}:%pd" > kprobe_events
-> +echo 1 > events/kprobes/testprobe/enable
-> +grep -q "1" events/kprobes/testprobe/enable
-> +echo 0 > events/kprobes/testprobe/enable
-> +grep "dput" trace | grep -q "enable"
-> +echo "" > kprobe_events
-> +echo "" > trace
-> +
-> +: "Test argument %pd without name"
-> +echo "p:testprobe dput ${ARG1}:%pd" > kprobe_events
-> +echo 1 > events/kprobes/testprobe/enable
-> +grep -q "1" events/kprobes/testprobe/enable
-> +echo 0 > events/kprobes/testprobe/enable
-> +grep "dput" trace | grep -q "enable"
-> +echo "" > kprobe_events
-> +echo "" > trace
-> +
-> +: "Test argument %pD with name"
-> +echo "p:testprobe vfs_read name=${ARG1}:%pD" > kprobe_events
-> +echo 1 > events/kprobes/testprobe/enable
-> +grep -q "1" events/kprobes/testprobe/enable
-> +echo 0 > events/kprobes/testprobe/enable
-> +grep "vfs_read" trace | grep -q "enable"
-> +echo "" > kprobe_events
-> +echo "" > trace
-> +
-> +: "Test argument %pD without name"
-> +echo "p:testprobe vfs_read ${ARG1}:%pD" > kprobe_events
-> +echo 1 > events/kprobes/testprobe/enable
-> +grep -q "1"  events/kprobes/testprobe/enable
-> +echo 0 > events/kprobes/testprobe/enable
-> +grep "vfs_read" trace | grep -q "enable"
-> +echo "" > kprobe_events
-> +echo "" > trace
-> -- 
-> 2.31.1
+> AFAIK, this (adding field in the middle) shouldn't be problematic as we
+> have the tracepoint format available in debugfs. For e.g. with this patch,
+> the format is as follows:
+> 
+> [root avadnaik]# cat /sys/kernel/debug/tracing/events/mce/mce_record/format 
+> name: mce_record
+> ID: 113
+> format:
+>         field:unsigned short common_type;       offset:0;       size:2; signed:0;
+>         field:unsigned char common_flags;       offset:2;       size:1; signed:0;
+>         field:unsigned char common_preempt_count;       offset:3;       size:1; signed:0;
+>         field:int common_pid;   offset:4;       size:4; signed:1;
+> 
+>         field:u64 mcgcap;       offset:8;       size:8; signed:0;
+>         field:u64 mcgstatus;    offset:16;      size:8; signed:0;
+>         field:u64 status;       offset:24;      size:8; signed:0;
+>         field:u64 addr; offset:32;      size:8; signed:0;
+>         field:u64 misc; offset:40;      size:8; signed:0;
+>         field:u64 synd; offset:48;      size:8; signed:0;
+>         field:u64 ipid; offset:56;      size:8; signed:0;
+>         field:u64 ip;   offset:64;      size:8; signed:0;
+>         field:u64 tsc;  offset:72;      size:8; signed:0;
+>         field:u64 ppin; offset:80;      size:8; signed:0;
+>         field:u64 walltime;     offset:88;      size:8; signed:0;
+>         field:u32 cpu;  offset:96;      size:4; signed:0;
+>         field:u32 cpuid;        offset:100;     size:4; signed:0;
+>         field:u32 apicid;       offset:104;     size:4; signed:0;
+>         field:u32 socketid;     offset:108;     size:4; signed:0;
+>         field:u8 cs;    offset:112;     size:1; signed:0;
+>         field:u8 bank;  offset:113;     size:1; signed:0;
+>         field:u8 cpuvendor;     offset:114;     size:1; signed:0;
+> 
+> print fmt: "CPU: %d, MCGc/s: %llx/%llx, MC%d: %016Lx, IPID: %016Lx, ADDR/MISC/SYND: %016Lx/%016Lx/%016Lx, RIP: %02x:<%016Lx>, TSC: %llx, PPIN: %llx, PROCESSOR: %u:%x, TIME: %llu, SOCKET: %u, APIC: %x", REC->cpu, REC->mcgcap, REC->mcgstatus, REC->bank, REC->status, REC->ipid, REC->addr, REC->misc, REC->synd, REC->cs, REC->ip, REC->tsc, REC->ppin, REC->cpuvendor, REC->cpuid, REC->walltime, REC->socketid, REC->apicid
+> 
+> 
+> Just quickly tried with rasdaemon and things seem to be okay.
+> 
+> Also, not a cent percent sure, but the library you are mentioning of, I think
+> its the libtraceevent library and IIUC, it utilizes the above tracepoint format.
 > 
 
+Yes, rasdaemon uses libtraceevent (or a copy of it internally) that
+reads the format file to find fields. You can safely add fields to the
+middle of the event structure and the parsing will be just fine.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+-- Steve
