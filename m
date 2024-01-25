@@ -1,388 +1,349 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31226EB43;
-	Thu, 25 Jan 2024 14:54:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706194501; cv=none; b=HhIF0qpf3zViExuI5FOagXFodawJudbykbqBZUpQUZSqJc0M9GL1mSFTly9ZsaVyq1+5Ns8IxEp1Q0o1tO5nWgCCctiN17n9kxL96aMvvkM83ndXv1VEY/mn0/tQPFUsUSKPrxztMNC0OTkacLSnpYh+rtXcGgKYJLSacTnW1xo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706194501; c=relaxed/simple;
-	bh=WaCTn81EfF8BHKH6XayDUFhbAP8w/lNYD2gaOqR1k/A=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JJK7yKXxhcAkMx3xnitp2jCTGWoqnc47xy7cQTWN1ZMDvbK7YZT7nvBGv/UIroRqg0euIsxfx3FoZntPBL9pKNxUgYcRR8weeHpntqxSRATLbRA2t1xeaJXJnDOHIZ9nuX//Mb0YXJtTitlGUC1SlSF9CguOgPF8O0fwcB8aGro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VblggUPQ; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867F36EB5E;
+	Thu, 25 Jan 2024 15:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706194876; cv=fail; b=CHGvMnHGOF3TAO7jCj3tTlxwccpVLWn+JchCfjwPFXz3Iwubqlky3IhJwJhKmrsVVZV9guhgZEHL25yL/OX81Wiux8zB0KTuigcOmByW1wg5giN5Bccza77nJHCMOC+uVorPk3w45+jOHsdgWkRiEhuP5ZUW0MRBDNpjNVYu6Bo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706194876; c=relaxed/simple;
+	bh=G0i/QvJyOxqFTmUQvARwCcB8rUkkv5A5LYTU5ewCBck=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=DABnO0TvytexqA9lUpcd0CMQToIzEMmRzKUXUXW6fOQ0gN5C180ltzR5MgzWDlw87p6/yBnOjIfRu7CIrIBDMvG5fhogkMoDU3kWwEeghHg1TMSiQJW9shP7bGKV3o8NA4/0tFLLgpGdTbkmeQqgVa93tgw7N3Kfxks0Gw0s3eI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=NfCMYgG1; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=G4hXfDQ4; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VblggUPQ"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3392d417a9fso3135037f8f.1;
-        Thu, 25 Jan 2024 06:54:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NfCMYgG1";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="G4hXfDQ4"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40P9wwT0004126;
+	Thu, 25 Jan 2024 14:57:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2023-11-20;
+ bh=WzqW6A75q79Ha5qjrM5ggWMCWjI4mPUYbHiGGVPQvGQ=;
+ b=NfCMYgG1zyd62OkwyXvWsFxHAROYJm6Us3UL/rSFRxuulI8TsRID7tvzKoW86L34XbxQ
+ iVyu2efQpOs1VN2+eipQuPi4xZlrGj6ONUuEAz8jLkbz0YCn7xPRf864mc4xRoRVAze1
+ zqTxxjlnnbunvmynkBTA99TRAenLcCZV2OmqGT5p1dQDhsyxBKe15j3hmANo7qTugTOx
+ 6PuMbo0kSSFB8+hyhbF99VgrhfI38DJqhY7N1b6XP4tlojOVJb7MkBL5cck4pm9C8XGN
+ Am/TyoIWRw/FkP4hZuIPPe7X/b4nxYPGfq5sSj3Ax5KLe+RT6XD9nZoVWFdEnizKO5q7 Ow== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vr7cwq493-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 25 Jan 2024 14:57:26 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40PEZ0RN029256;
+	Thu, 25 Jan 2024 14:57:25 GMT
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2041.outbound.protection.outlook.com [104.47.57.41])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3vs33wu3dj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 25 Jan 2024 14:57:25 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IpmIcfCmWhhYMKO/Kzbyfqq6eHdW/4+aatJfA1AC7HpOl+Q1GsKZuoyNJ9vC97BXguugok6E7ks/1SPJaiGKneFaU+WFe3bg24+H/EI/akKFqEteZPjTsO9JLzYPPfF6sx+3XERP+w4gxQLgzbBDoY2lk0+LMiLCPmp/sYFy9REY8NrOTMxLprEA1WnFFFjCeXioJKF4nhgHZ7ixCzfMYhQaF3zy1Ci7iVGYkEmCtDzSgy2bBP55kzxjyI6MKJYeoIvAfm1d3CiFi+hwJF7DGVCbXmK1N/2acn6h/aolAymt99TzIS3OXGFeECVUNoX3HX2H60AcM3rCkgRaw7da6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WzqW6A75q79Ha5qjrM5ggWMCWjI4mPUYbHiGGVPQvGQ=;
+ b=IGxSVZE4oao98Ec5XnSqwhpO8aU6UlFDsdcQ+bu8BdbxQ6whZf6knGX2sCK8FPkyyBMemLrUUDaVTEE34C8XTTk+hgEAxP7vFATUJZPulglEtH87ilF5susEKtnHeyosv7n2gMPpV6Msu/be7wvxv3z7CApoeh7W0X7CVph9hjpb88Tzcab2ax3JcI9b/kN+hFREY9IWJy8njfCeOkfAbM4PnskrX5WEi8sYSFDh0xqE6SsSnvRigat2yIHLv/CBRjY8MxOZR7ehlppKTPiES4Ky+vDQnnST6pp/x0sHzCv/BQr4jTn2Y4+JXSOYIO3GAYCjzbZhBZerwQj/h811XA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706194496; x=1706799296; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LNxSOUbK9cy5x8I7r+EXHEAbuA/vjwKM6GxsyXC2tQ4=;
-        b=VblggUPQDfIXlD47vcLyHYcr6/n2YjHq1EPLSHGsrSV1N0nAEztRNNUsvUY6nVcZzF
-         KR9K2eUli6sbTPEbVGSquskyT4nelsCjWd5y5KeRPmk9RrYxnKSzWSdiXy5QLx+Y8kLa
-         5MbSe0LyswoqwiBwvdInwBOuLjvRy6hCsRaM0ANoHVZ15qcGN270seOOYX54tShFOT3H
-         Q0xwvH+lySNEj+aFEj7l0vTJ5UbsRlbA/uyWxxICSxRHRWxVA2up2FEtpwCkoxDps8Nk
-         Aq+FDT57GMHwsL6ctQi2mwVG47CIN3kEQGKp3zuRix9Ey7pKAFkt1oeJlkdyZetyLQM8
-         URzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706194496; x=1706799296;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LNxSOUbK9cy5x8I7r+EXHEAbuA/vjwKM6GxsyXC2tQ4=;
-        b=oD7N6l0QEhuDwZlLvTReYjzJaOZobqoxEK+/fB1v6nXPyUgWLu3GpZY9eMFRWeOjJS
-         QqEFNClA3Vhc7Fr2vncgNsFMTFB2KFZhKxJ4laoOHFCejpzNGvEcjfoGM0oAXPNSiOD0
-         y+IbYGg44/e4Yow3qpTQRTVOQxUnr+UO85HdwhpcBZfR881I7t64NIx8/pudhqz/wIuF
-         8ko6cLjqv+umYVt9eDWA3NBpjtRstTgnZEgZXvshm2NxxCD0rAVTgWWfIPLrI4Alg5uJ
-         swMafpTAFwOv/Gz58XeFrtwqYnSthOlBk6F+/REECtxFDIk6JG6cCiDsxcC3C3NPgvzM
-         MoSA==
-X-Gm-Message-State: AOJu0YyVKQ1CWEUhMrgYhpW0nFueXvhuGfKLPLVGVtIdJ9F1+WDoN65M
-	8wwGcULYr0a7XxKNFtZ+J3afw4jxuep5Ktx5dSaVepZImGmjmiWb
-X-Google-Smtp-Source: AGHT+IFdwmSG9CfAWdeVEGtRxml+oBCTrqEqqemoDRP/Jk8BjpaNtmluCoEoIi81V2Mt1Xqdj8Jnrw==
-X-Received: by 2002:adf:fc02:0:b0:339:362f:e17 with SMTP id i2-20020adffc02000000b00339362f0e17mr861411wrr.21.1706194495746;
-        Thu, 25 Jan 2024 06:54:55 -0800 (PST)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id m33-20020a05600c3b2100b0040d81ca11casm2815611wms.28.2024.01.25.06.54.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 06:54:55 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 25 Jan 2024 15:54:53 +0100
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@chromium.org>,
-	linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v6 00/36] tracing: fprobe: function_graph: Multi-function
- graph and fprobe on fgraph
-Message-ID: <ZbJ2PfSt3RM3pm43@krava>
-References: <170505424954.459169.10630626365737237288.stgit@devnote2>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WzqW6A75q79Ha5qjrM5ggWMCWjI4mPUYbHiGGVPQvGQ=;
+ b=G4hXfDQ4n5BDGLszlpliRSiOj1nYdFmNSEOtNRSMi6tAp2QRzHpEvjKj+Dsyt3kyjWa1WxWj6mrWDViC3CyrBT12kah3qD+iC+4yH5xKO8pnFOAZck8WT1epMrbxmKvOvjkkc9ji5TKVHKFgXch4nLYCZidY/rN/LNSLRHgG+jU=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by CH0PR10MB5145.namprd10.prod.outlook.com (2603:10b6:610:db::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.26; Thu, 25 Jan
+ 2024 14:57:22 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::5475:bf96:8fdf:8ff9]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::5475:bf96:8fdf:8ff9%7]) with mapi id 15.20.7228.026; Thu, 25 Jan 2024
+ 14:57:22 +0000
+Date: Thu, 25 Jan 2024 09:57:17 -0500
+From: Chuck Lever <chuck.lever@oracle.com>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Van Hensbergen <ericvh@kernel.org>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Christian Schoenebeck <linux_oss@crudebyte.com>,
+        David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>, Xiubo Li <xiubli@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Alexander Aring <aahringo@redhat.com>,
+        David Teigland <teigland@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>, Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+        Tom Talpey <tom@talpey.com>, Jan Kara <jack@suse.cz>,
+        Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>,
+        Shyam Prasad N <sprasad@microsoft.com>,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+        linux-kernel@vger.kernel.org, v9fs@lists.linux.dev,
+        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
+        gfs2@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev,
+        linux-cifs@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/41] filelock: split struct file_lock into file_lock
+ and file_lease structs
+Message-ID: <ZbJ2zc3I3uBwF/RE@tissot.1015granger.net>
+References: <20240125-flsplit-v2-0-7485322b62c7@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240125-flsplit-v2-0-7485322b62c7@kernel.org>
+X-ClientProxiedBy: CH2PR14CA0039.namprd14.prod.outlook.com
+ (2603:10b6:610:56::19) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <170505424954.459169.10630626365737237288.stgit@devnote2>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CH0PR10MB5145:EE_
+X-MS-Office365-Filtering-Correlation-Id: 785769e6-bf10-48fc-e26d-08dc1db5ef26
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	zYCeADwdmouEUFdmjNUYv6iw9P3kiwL2n0TUeYYDDZQi8mNkkP6lF5d4IDuTPAjn0FRwlsg2oXCbxhaNTI68C5f2W5SdhNF2xuYPXONVO2pulzYwTTt8acWI1n2o5z5wdG6TtDiy2gc/saWE/HT7fC7IdqNd8d8c9I2t+8nGo8CUmG5pNwPcom/PypodkojKy3in9Mg0iJNVHmvNf1dESp1o0lAMRS0gUt7zKeIAECODtwi7vT2Y9WA0Va2idPqUB79PC0JNIvROQJwrgRH1+Fpgdl6D2AmHMe9VhIOVU5mPw67nrHT09+Veru4cbJ/nF8u7bDQMWoS8n8zaNvE0IbCb7UfmtQdzlMm6WAoONgU9ICIyKw+iQaXk7kjHkFUFRb/NK7NCaYRpF3Ja/p7zESRZz5fXvxnZcRbXGcveNxlvFYbm6rLDr8KLKsf56m4Ay4/VqSig9M+3g5y5Yvq0G6Y8JDeww6xCAUma118rk0rY061MfnORpJHQnkgq0EVmLtbFbXtMYTHO+vbe9+8oYxEn6oEzMnX52y9TktronjM=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(396003)(346002)(376002)(366004)(230922051799003)(186009)(1800799012)(64100799003)(451199024)(66899024)(83380400001)(38100700002)(2906002)(41300700001)(86362001)(54906003)(6916009)(316002)(66476007)(66556008)(6506007)(66946007)(966005)(478600001)(6512007)(9686003)(6666004)(5660300002)(7416002)(8676002)(44832011)(7406005)(4326008)(26005)(8936002)(6486002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?eLKpfp99CYmB3qpNfXHlk2We/pwcyw736vefijX4egufLNnubK0tq+PsHoYx?=
+ =?us-ascii?Q?THPf6qCnbVx0dyT3WtVbLRbVpzOvpNzSKRBvfvWIY08j5Jk64ObaPRulT5Hj?=
+ =?us-ascii?Q?tCkXIZmjttTp/2a819bmEZFe4uHiFfB/RVl4xGV5xFEQQ7npKPNdp8wkB19f?=
+ =?us-ascii?Q?OHnUKUE6tak0h60Baf07YuK+2atFnuJXw0mmkCZvsjj7KiimxegPfj2z88F1?=
+ =?us-ascii?Q?9LIqUHniZzj6+dOu+rkxT+61XNnlamR+gB3QEjSmj1OTGPfLGPKq6XyR6pld?=
+ =?us-ascii?Q?zxTr06Z7rk16RdBO87T5157ToMLJ7ANyZRy0fNm1nHRs+dAc5ZwD68+kQ5TM?=
+ =?us-ascii?Q?1aF6f+odm+ijikc5QK3lspW3v6oe22lNp199LHS5Yx1mXemkqGKZI1/ZGZuA?=
+ =?us-ascii?Q?c3t8+Vp5JnQ7AdHezkY0Cn/txBRBec9ECmVMEC38ysGjluGptIt944X2hHUb?=
+ =?us-ascii?Q?Rg5c2e3fDi2ohGnXtSyZSqzFf4n4MKuXCLVk9TNpwOJZtVNDjVqItHbvbtIM?=
+ =?us-ascii?Q?Hm2oDnynqQpzLjAOjeln82RCJaz5uYLHFrCPY156W4GVIn8s+r7ITlnxEhIk?=
+ =?us-ascii?Q?f3wF3pZoOafHfL3zyZiM4Q1rxpWWkQjhPLtZ3gWn1Rrg6BeqgNPMOrvPpMi2?=
+ =?us-ascii?Q?4/VzAnQl1WToAnAFoOhmb9Hb66WXE4E6v/HdhPn2UA5BBKFxLHWY1eQz0HiI?=
+ =?us-ascii?Q?8I2UpENPnumuSfTvCZ8pKtcVivZ42NzGm/Eh+AhFklLmQzEmyTCa+j8RpGQP?=
+ =?us-ascii?Q?zctti9ifNAsDkGMN99lAPFHp5ZXITRhp8pZgIUUmKYepznm6ly9866QWx7Rh?=
+ =?us-ascii?Q?9HKS6tYCUAppxnESPgaqoGOAtnX8YsY0ktOSCI44QUr3IVE6nEmbLkXP+VI1?=
+ =?us-ascii?Q?ojnhvDtTqUl63BXQvMmiXgoIILSU1Jf4xuOm5vvXGEh3hfnoLBl9tvHApyI6?=
+ =?us-ascii?Q?W27wkpUHN8msT6FIk7/SlZUFX+fpUo7pjqKKkFYWzbAbN9pYH1pNuR4tkwW9?=
+ =?us-ascii?Q?AkHk2y0obK82I+BwiIyYQwbReKmrSRdWdCrNJQCwPDrtXdPrwpB262SoArzw?=
+ =?us-ascii?Q?VWdxxCtXnY4vhZz2gRCtLJFhPY/dZIx6hYYZB2f5nNIsgCud2ppPlWtMdEnQ?=
+ =?us-ascii?Q?Dj4umi2tj9cv7z56xeXJrnEpuedygkcmR3bBKLFYqMEqvnGv+/mVr+oZZSWG?=
+ =?us-ascii?Q?buhJFZII/+OnwH1tQ6/VWxKU1ocFslj0pDjjt6TYaVuT1JnEX5pgbg2ssIuE?=
+ =?us-ascii?Q?34ebfnXZSB1OFUnSHLTnhSqZkt6BtKGlyBKt1cR3GHTuETZWc0Bst+u2uBj9?=
+ =?us-ascii?Q?7ie3d9wK0/eF1eHAbZ3OFjJzDKAiN2X7BRO4W1R4IHgZIDGSwbQyYOkr2qCB?=
+ =?us-ascii?Q?kdUKvNhE1xKWAbmsZS4U0w61wim0Edeu0Uz1RP5Fn4RaRe9/yD6uHrH4kN4g?=
+ =?us-ascii?Q?KWhUJWRTKYG/GHLECN/hWNK3BxITzgfRTV6NSRXHK84Frr3jBwBO9q60GMP4?=
+ =?us-ascii?Q?FFbMXr4xojjbAPSukpb6iN5I2nKTmiRv+yOCSddxXzoB6RYwNyzs9mR+F9kQ?=
+ =?us-ascii?Q?Rfifo5u0+MIXVpj26/yfY+XiVOXsXDmS5Ua9WDG0GsaonDSIvEp8e/QyG/Is?=
+ =?us-ascii?Q?qQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	moMPWq+itVyIhcS7sFAnBKNxjcTf/uDudzh0fWeOkwLDKnDvxD2YO0LqqMPxzIAH2zHQ5AO6Iexr2ErWwYwBgI0hO9C8CRjNBmMZvfFaed8dBgJF67KrCQNmdj9cgpbA8XF31uZ/pGHeAbXIqkoq4gSOxCol5OvmH44JluzV02vpnCSCltdunKpd1XOuUFP66AfmkpFou2eh4FUnOBBXVMyY6iXr20Zmdex5VHoEI9onMjJD0a1A+QfqsdGDGK9EfByxLhhmTodvbyLRdy336oRqozSjS3IFdom3CBkFPWEz8hMjTMmMNGBKO1q5RNhxFC9TZKdqotZrDRwYumkQY/GNrVM664p/o/nHC5i/SRLIb3lejHiLyxICGOu+q/BRRDHQcgEmfM0U6dXVq+TWXf6fvGUZRjXYyl/HJ0P60mWzyQq86+YWe7oC0Gsu/b0HrW1Bn8+3SfJKsKbwYfIkfahd2mJIZ6NkOQAr5RhevN/OAB/8lwz1x1y31a09J418EjXjO/GRpPANdoKR3pxXhaIEqi7ZyClqpFoMKOGRx5SChnUTXRg3FkVE6woLlqXleJTl9GFyokwIv2iKBvL4OFRkebuOslhNiPITkq+ry0A=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 785769e6-bf10-48fc-e26d-08dc1db5ef26
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jan 2024 14:57:22.0199
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5worhn7r6BSosHil6x01UZBZq3nucPSjd8IswNTlWBXH1X/kWO9CqSXjBXTCbvRjMql5e1j8qgRzSY+ksmRl5g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB5145
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-25_08,2024-01-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 malwarescore=0
+ mlxlogscore=999 suspectscore=0 bulkscore=0 adultscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2401250105
+X-Proofpoint-ORIG-GUID: CRsV7t9cpXFkwC4WxFkkyS6lDeaV-osz
+X-Proofpoint-GUID: CRsV7t9cpXFkwC4WxFkkyS6lDeaV-osz
 
-On Fri, Jan 12, 2024 at 07:10:50PM +0900, Masami Hiramatsu (Google) wrote:
-> Hi,
+On Thu, Jan 25, 2024 at 05:42:41AM -0500, Jeff Layton wrote:
+> Long ago, file locks used to hang off of a singly-linked list in struct
+> inode. Because of this, when leases were added, they were added to the
+> same list and so they had to be tracked using the same sort of
+> structure.
 > 
-> Here is the 6th version of the series to re-implement the fprobe on
-> function-graph tracer. The previous version is;
+> Several years ago, we added struct file_lock_context, which allowed us
+> to use separate lists to track different types of file locks. Given
+> that, leases no longer need to be tracked using struct file_lock.
 > 
-> https://lore.kernel.org/all/170290509018.220107.1347127510564358608.stgit@devnote2/
+> That said, a lot of the underlying infrastructure _is_ the same between
+> file leases and locks, so we can't completely separate everything.
 > 
-> This version fixes use-after-unregister bug and arm64 stack unwinding
-> bug [13/36], add an improvement for multiple interrupts during push
-> operation[20/36], keep SAVE_REGS until BPF and fprobe_event using
-> ftrace_regs[26/36], also reorder the patches[30/36][31/36] so that new
-> fprobe can switch to SAVE_ARGS[32/36] safely.
-> This series also temporarily adds a DIRECT_CALLS bugfix[1/36], which
-> should be pushed separatedly as a stable bugfix.
+> This patchset first splits a group of fields used by both file locks and
+> leases into a new struct file_lock_core, that is then embedded in struct
+> file_lock. Coccinelle was then used to convert a lot of the callers to
+> deal with the move, with the remaining 25% or so converted by hand.
 > 
-> There are some TODOs:
->  - Add s390x and loongarch support to fprobe (multiple fgraph).
->  - Fix to get the symbol address from ftrace entry address on arm64.
->    (This should be done in BPF trace event)
->  - Cleanup code, rename some terms(offset/index) and FGRAPH_TYPE_BITMAP
->    part should be merged to FGRAPH_TYPE_ARRAY patch.
+> It then converts several internal functions in fs/locks.c to work
+> with struct file_lock_core. Lastly, struct file_lock is split into
+> struct file_lock and file_lease, and the lease-related APIs converted to
+> take struct file_lease.
+> 
+> After the first few patches (which I left split up for easier review),
+> the set should be bisectable. I'll plan to squash the first few
+> together to make sure the resulting set is bisectable before merge.
+> 
+> Finally, I left the coccinelle scripts I used in tree. I had heard it
+> was preferable to merge those along with the patches that they
+> generate, but I wasn't sure where they go. I can either move those to a
+> more appropriate location or we can just drop that commit if it's not
+> needed.
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-hi,
-I'm getting kasan bugs below when running bpf selftests on top of this
-patchset.. I think it's probably the reason I see failures in some bpf
-kprobe_multi/fprobe tests
+v2 looks nicer.
 
-so far I couldn't find the reason.. still checking ;-)
+I would add a few list handling primitives, as I see enough
+instances of list_for_each_entry, list_for_each_entry_safe,
+list_first_entry, and list_first_entry_or_null on fl_core.flc_list
+to make it worth having those.
 
-jirka
+Also, there doesn't seem to be benefit for API consumers to have to
+understand the internal structure of struct file_lock/lease to reach
+into fl_core. Having accessor functions for common fields like
+fl_type and fl_flags could be cleaner.
+
+For the series:
+
+Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
+
+For the nfsd and lockd parts:
+
+Acked-by: Chuck Lever <chuck.lever@oracle.com>
 
 
----
-[  507.585913][  T697] BUG: KASAN: slab-out-of-bounds in ftrace_push_return_trace.isra.0+0x346/0x370
-[  507.586747][  T697] Write of size 8 at addr ffff888148193ff8 by task test_progs/697
-[  507.587460][  T697] 
-[  507.587713][  T697] CPU: 2 PID: 697 Comm: test_progs Tainted: G           OE      6.7.0+ #309 d8e2cbcdc10865c6eb2d28ed0cbf958842aa75a8
-[  507.588821][  T697] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-1.fc38 04/01/2014
-[  507.589681][  T697] Call Trace:
-[  507.590044][  T697]  <TASK>
-[  507.590357][  T697]  dump_stack_lvl+0xf6/0x180
-[  507.590807][  T697]  print_report+0xc4/0x610
-[  507.591259][  T697]  ? fixup_red_left+0x5/0x20
-[  507.591781][  T697]  kasan_report+0xbe/0xf0
-[  507.592241][  T697]  ? ftrace_push_return_trace.isra.0+0x346/0x370
-[  507.592928][  T697]  ? ftrace_push_return_trace.isra.0+0x346/0x370
-[  507.593535][  T697]  ? __pfx_text_poke_loc_init+0x10/0x10
-[  507.594076][  T697]  ? ftrace_replace_code+0x17a/0x230
-[  507.594586][  T697]  ftrace_push_return_trace.isra.0+0x346/0x370
-[  507.595192][  T697]  ? __pfx_text_poke_loc_init+0x10/0x10
-[  507.595747][  T697]  function_graph_enter_ops+0xbb/0x2d0
-[  507.596271][  T697]  ? ftrace_replace_code+0x17a/0x230
-[  507.596784][  T697]  ? __pfx_function_graph_enter_ops+0x10/0x10
-[  507.597353][  T697]  ? preempt_count_sub+0x14/0xc0
-[  507.598576][  T697]  ? __pfx_text_poke_loc_init+0x10/0x10
-[  507.599145][  T697]  ? __pfx_fuse_sync_fs+0x10/0x10
-[  507.599718][  T697]  ftrace_graph_func+0x142/0x270
-[  507.600293][  T697]  ? __pfx_text_poke_loc_init+0x10/0x10
-[  507.600892][  T697]  ? __pfx_fuse_conn_put.part.0+0x10/0x10
-[  507.601484][  T697]  0xffffffffa0560097
-[  507.602067][  T697]  ? __pfx_fuse_conn_put.part.0+0x10/0x10
-[  507.602715][  T697]  ? text_poke_loc_init+0x5/0x2e0
-[  507.603288][  T697]  ? __pfx_fuse_conn_put.part.0+0x10/0x10
-[  507.603923][  T697]  text_poke_loc_init+0x5/0x2e0
-[  507.604468][  T697]  ftrace_replace_code+0x17a/0x230
-[  507.605071][  T697]  ftrace_modify_all_code+0x131/0x1a0
-[  507.605663][  T697]  ftrace_startup+0x10b/0x210
-[  507.606200][  T697]  register_ftrace_graph+0x313/0x8a0
-[  507.606805][  T697]  ? register_ftrace_graph+0x3fe/0x8a0
-[  507.607427][  T697]  register_fprobe_ips.part.0+0x25a/0x3f0
-[  507.608090][  T697]  bpf_kprobe_multi_link_attach+0x49e/0x850
-[  507.608781][  T697]  ? __pfx_bpf_kprobe_multi_link_attach+0x10/0x10
-[  507.609500][  T697]  ? __debug_check_no_obj_freed+0x1d8/0x3a0
-[  507.610194][  T697]  ? __fget_light+0x96/0xe0
-[  507.610741][  T697]  __sys_bpf+0x307a/0x3180
-[  507.611286][  T697]  ? __pfx___sys_bpf+0x10/0x10
-[  507.611838][  T697]  ? __kasan_slab_free+0x12d/0x1c0
-[  507.612434][  T697]  ? audit_log_exit+0x8e0/0x1960
-[  507.613003][  T697]  ? kmem_cache_free+0x19d/0x460
-[  507.613644][  T697]  ? rcu_is_watching+0x34/0x60
-[  507.614202][  T697]  ? lockdep_hardirqs_on_prepare+0xe/0x250
-[  507.614865][  T697]  ? seqcount_lockdep_reader_access.constprop.0+0x105/0x120
-[  507.615662][  T697]  ? seqcount_lockdep_reader_access.constprop.0+0xb2/0x120
-[  507.616431][  T697]  __x64_sys_bpf+0x44/0x60
-[  507.616940][  T697]  do_syscall_64+0x87/0x1b0
-[  507.617495][  T697]  entry_SYSCALL_64_after_hwframe+0x6e/0x76
-[  507.618179][  T697] RIP: 0033:0x7ff2edca6b4d
-[  507.618745][  T697] Code: c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 8b 92 0c 00 f7 d8 64 89 01 48
-[  507.620863][  T697] RSP: 002b:00007ffe2e58a8f8 EFLAGS: 00000206 ORIG_RAX: 0000000000000141
-[  507.621749][  T697] RAX: ffffffffffffffda RBX: 00007ffe2e58b018 RCX: 00007ff2edca6b4d
-[  507.622580][  T697] RDX: 0000000000000040 RSI: 00007ffe2e58a970 RDI: 000000000000001c
-[  507.623395][  T697] RBP: 00007ffe2e58a910 R08: 0000000000000001 R09: 00007ffe2e58a970
-[  507.624198][  T697] R10: 0000000000000007 R11: 0000000000000206 R12: 0000000000000001
-[  507.625029][  T697] R13: 0000000000000000 R14: 00007ff2eddee000 R15: 0000000000edcdb0
-[  507.625989][  T697]  </TASK>
-[  507.626377][  T697] 
-[  507.626678][  T697] Allocated by task 697:
-[  507.627175][  T697]  kasan_save_stack+0x1c/0x40
-[  507.627757][  T697]  kasan_save_track+0x10/0x30
-[  507.628992][  T697]  __kasan_kmalloc+0xa6/0xb0
-[  507.629502][  T697]  register_ftrace_graph+0x42b/0x8a0
-[  507.630071][  T697]  register_fprobe_ips.part.0+0x25a/0x3f0
-[  507.630649][  T697]  bpf_kprobe_multi_link_attach+0x49e/0x850
-[  507.631218][  T697]  __sys_bpf+0x307a/0x3180
-[  507.631662][  T697]  __x64_sys_bpf+0x44/0x60
-[  507.632128][  T697]  do_syscall_64+0x87/0x1b0
-[  507.632577][  T697]  entry_SYSCALL_64_after_hwframe+0x6e/0x76
-[  507.633136][  T697] 
-[  507.633399][  T697] The buggy address belongs to the object at ffff888148194000
-[  507.633399][  T697]  which belongs to the cache kmalloc-4k of size 4096
-[  507.634667][  T697] The buggy address is located 8 bytes to the left of
-[  507.634667][  T697]  allocated 4096-byte region [ffff888148194000, ffff888148195000)
-[  507.636028][  T697] 
-[  507.636392][  T697] The buggy address belongs to the physical page:
-[  507.637106][  T697] page:ffffea0005206400 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x148190
-[  507.638206][  T697] head:ffffea0005206400 order:3 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-[  507.639082][  T697] flags: 0x17ffe000000840(slab|head|node=0|zone=2|lastcpupid=0x3fff)
-[  507.639858][  T697] page_type: 0xffffffff()
-[  507.640306][  T697] raw: 0017ffe000000840 ffff888100043a40 ffffea0005a89610 ffffea0005d0de10
-[  507.641244][  T697] raw: 0000000000000000 0000000000020002 00000001ffffffff 0000000000000000
-[  507.642184][  T697] page dumped because: kasan: bad access detected
-[  507.642853][  T697] 
-[  507.643152][  T697] Memory state around the buggy address:
-[  507.643773][  T697]  ffff888148193e80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-[  507.644661][  T697]  ffff888148193f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-[  507.645490][  T697] >ffff888148193f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-[  507.646263][  T697]                                                                 ^
-[  507.647025][  T697]  ffff888148194000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[  507.647821][  T697]  ffff888148194080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[  507.648588][  T697] ==================================================================
+> ---
+> Changes in v2:
+> - renamed file_lock_core fields to have "flc_" prefix
+> - used macros to more easily do the change piecemeal
+> - broke up patches into per-subsystem ones
+> - Link to v1: https://lore.kernel.org/r/20240116-flsplit-v1-0-c9d0f4370a5d@kernel.org
+> 
+> ---
+> Jeff Layton (41):
+>       filelock: rename some fields in tracepoints
+>       filelock: rename fl_pid variable in lock_get_status
+>       dlm: rename fl_flags variable in dlm_posix_unlock
+>       nfs: rename fl_flags variable in nfs4_proc_unlck
+>       nfsd: rename fl_type and fl_flags variables in nfsd4_lock
+>       lockd: rename fl_flags and fl_type variables in nlmclnt_lock
+>       9p: rename fl_type variable in v9fs_file_do_lock
+>       afs: rename fl_type variable in afs_next_locker
+>       filelock: drop the IS_* macros
+>       filelock: split common fields into struct file_lock_core
+>       filelock: add coccinelle scripts to move fields to struct file_lock_core
+>       filelock: have fs/locks.c deal with file_lock_core directly
+>       filelock: convert some internal functions to use file_lock_core instead
+>       filelock: convert more internal functions to use file_lock_core
+>       filelock: make posix_same_owner take file_lock_core pointers
+>       filelock: convert posix_owner_key to take file_lock_core arg
+>       filelock: make locks_{insert,delete}_global_locks take file_lock_core arg
+>       filelock: convert locks_{insert,delete}_global_blocked
+>       filelock: make __locks_delete_block and __locks_wake_up_blocks take file_lock_core
+>       filelock: convert __locks_insert_block, conflict and deadlock checks to use file_lock_core
+>       filelock: convert fl_blocker to file_lock_core
+>       filelock: clean up locks_delete_block internals
+>       filelock: reorganize locks_delete_block and __locks_insert_block
+>       filelock: make assign_type helper take a file_lock_core pointer
+>       filelock: convert locks_wake_up_blocks to take a file_lock_core pointer
+>       filelock: convert locks_insert_lock_ctx and locks_delete_lock_ctx
+>       filelock: convert locks_translate_pid to take file_lock_core
+>       filelock: convert seqfile handling to use file_lock_core
+>       9p: adapt to breakup of struct file_lock
+>       afs: adapt to breakup of struct file_lock
+>       ceph: adapt to breakup of struct file_lock
+>       dlm: adapt to breakup of struct file_lock
+>       gfs2: adapt to breakup of struct file_lock
+>       lockd: adapt to breakup of struct file_lock
+>       nfs: adapt to breakup of struct file_lock
+>       nfsd: adapt to breakup of struct file_lock
+>       ocfs2: adapt to breakup of struct file_lock
+>       smb/client: adapt to breakup of struct file_lock
+>       smb/server: adapt to breakup of struct file_lock
+>       filelock: remove temporary compatability macros
+>       filelock: split leases out of struct file_lock
+> 
+>  cocci/filelock.cocci            |  88 +++++
+>  cocci/nlm.cocci                 |  81 ++++
+>  fs/9p/vfs_file.c                |  40 +-
+>  fs/afs/flock.c                  |  59 +--
+>  fs/ceph/locks.c                 |  74 ++--
+>  fs/dlm/plock.c                  |  44 +--
+>  fs/gfs2/file.c                  |  16 +-
+>  fs/libfs.c                      |   2 +-
+>  fs/lockd/clnt4xdr.c             |  14 +-
+>  fs/lockd/clntlock.c             |   2 +-
+>  fs/lockd/clntproc.c             |  65 +--
+>  fs/lockd/clntxdr.c              |  14 +-
+>  fs/lockd/svc4proc.c             |  10 +-
+>  fs/lockd/svclock.c              |  64 +--
+>  fs/lockd/svcproc.c              |  10 +-
+>  fs/lockd/svcsubs.c              |  24 +-
+>  fs/lockd/xdr.c                  |  14 +-
+>  fs/lockd/xdr4.c                 |  14 +-
+>  fs/locks.c                      | 848 ++++++++++++++++++++++------------------
+>  fs/nfs/delegation.c             |   4 +-
+>  fs/nfs/file.c                   |  22 +-
+>  fs/nfs/nfs3proc.c               |   2 +-
+>  fs/nfs/nfs4_fs.h                |   2 +-
+>  fs/nfs/nfs4file.c               |   2 +-
+>  fs/nfs/nfs4proc.c               |  39 +-
+>  fs/nfs/nfs4state.c              |  22 +-
+>  fs/nfs/nfs4trace.h              |   4 +-
+>  fs/nfs/nfs4xdr.c                |   8 +-
+>  fs/nfs/write.c                  |   8 +-
+>  fs/nfsd/filecache.c             |   4 +-
+>  fs/nfsd/nfs4callback.c          |   2 +-
+>  fs/nfsd/nfs4layouts.c           |  34 +-
+>  fs/nfsd/nfs4state.c             | 118 +++---
+>  fs/ocfs2/locks.c                |  12 +-
+>  fs/ocfs2/stack_user.c           |   2 +-
+>  fs/open.c                       |   2 +-
+>  fs/posix_acl.c                  |   4 +-
+>  fs/smb/client/cifsfs.c          |   2 +-
+>  fs/smb/client/cifssmb.c         |   8 +-
+>  fs/smb/client/file.c            |  76 ++--
+>  fs/smb/client/smb2file.c        |   2 +-
+>  fs/smb/server/smb2pdu.c         |  44 +--
+>  fs/smb/server/vfs.c             |  14 +-
+>  include/linux/filelock.h        |  80 ++--
+>  include/linux/fs.h              |   5 +-
+>  include/linux/lockd/lockd.h     |   8 +-
+>  include/linux/lockd/xdr.h       |   2 +-
+>  include/trace/events/afs.h      |   4 +-
+>  include/trace/events/filelock.h | 102 ++---
+>  49 files changed, 1198 insertions(+), 923 deletions(-)
+> ---
+> base-commit: 615d300648869c774bd1fe54b4627bb0c20faed4
+> change-id: 20240116-flsplit-bdb46824db68
+> 
+> Best regards,
+> -- 
+> Jeff Layton <jlayton@kernel.org>
+> 
 
----
-
-[  367.302586][  T973] BUG: KASAN: slab-out-of-bounds in ftrace_push_return_trace.isra.0+0x346/0x370
-[  367.303380][  T973] Write of size 8 at addr ffff888174e58ff8 by task kworker/u12:10/973
-[  367.304243][  T973] 
-[  367.304599][  T973] CPU: 3 PID: 973 Comm: kworker/u12:10 Tainted: G           OE      6.7.0+ #312 a13024221ef8bb3aaeade334af809d35027f09e3
-[  367.305894][  T973] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-1.fc38 04/01/2014
-[  367.306834][  T973] Workqueue: writeback wb_workfn (flush-253:0)
-[  367.307415][  T973] Call Trace:
-[  367.307786][  T973]  <TASK>
-[  367.308130][  T973]  dump_stack_lvl+0xf6/0x180
-[  367.308610][  T973]  print_report+0xc4/0x610
-[  367.309090][  T973]  ? fixup_red_left+0x5/0x20
-[  367.309557][  T973]  kasan_report+0xbe/0xf0
-[  367.309926][  T973]  ? ftrace_push_return_trace.isra.0+0x346/0x370
-[  367.310404][  T973]  ? ftrace_push_return_trace.isra.0+0x346/0x370
-[  367.310932][  T973]  ? __pfx_unwind_get_return_address+0x10/0x10
-[  367.311529][  T973]  ? arch_stack_walk+0x9e/0xf0
-[  367.312092][  T973]  ftrace_push_return_trace.isra.0+0x346/0x370
-[  367.312769][  T973]  ? __pfx_function_graph_enter_ops+0x10/0x10
-[  367.313414][  T973]  ? __pfx_unwind_get_return_address+0x10/0x10
-[  367.313946][  T973]  function_graph_enter_ops+0xbb/0x2d0
-[  367.314518][  T973]  ? arch_stack_walk+0x9e/0xf0
-[  367.315016][  T973]  ? __pfx_function_graph_enter_ops+0x10/0x10
-[  367.315540][  T973]  ? ftrace_graph_func+0x173/0x270
-[  367.316084][  T973]  ? __pfx_preempt_count_sub+0x10/0x10
-[  367.317791][  T973]  ftrace_graph_func+0x142/0x270
-[  367.318231][  T973]  ? __pfx_unwind_get_return_address+0x10/0x10
-[  367.318690][  T973]  ? __pfx_stack_trace_consume_entry+0x10/0x10
-[  367.319159][  T973]  0xffffffffa0568097
-[  367.319542][  T973]  ? preempt_count_sub+0x5/0xc0
-[  367.320073][  T973]  ? preempt_count_sub+0x14/0xc0
-[  367.320610][  T973]  ? preempt_count_sub+0x14/0xc0
-[  367.321226][  T973]  ? unwind_get_return_address+0x5/0x50
-[  367.321862][  T973]  unwind_get_return_address+0x5/0x50
-[  367.322449][  T973]  arch_stack_walk+0x9e/0xf0
-[  367.322997][  T973]  ? worker_thread+0x393/0x680
-[  367.323553][  T973]  stack_trace_save+0x91/0xd0
-[  367.324087][  T973]  ? __pfx_stack_trace_save+0x10/0x10
-[  367.324708][  T973]  ? stack_trace_save+0x5/0xd0
-[  367.325244][  T973]  ? kvm_sched_clock_read+0xd/0x20
-[  367.325822][  T973]  kasan_save_stack+0x1c/0x40
-[  367.326326][  T973]  ? kasan_save_stack+0x1c/0x40
-[  367.326828][  T973]  ? kasan_save_track+0x10/0x30
-[  367.327298][  T973]  ? __kasan_slab_alloc+0x85/0x90
-[  367.327803][  T973]  ? kmem_cache_alloc+0x159/0x460
-[  367.328383][  T973]  ? mempool_alloc+0xe1/0x270
-[  367.328925][  T973]  ? bio_alloc_bioset+0x2c6/0x440
-[  367.329435][  T973]  ? iomap_do_writepage+0x784/0x1090
-[  367.329993][  T973]  ? write_cache_pages+0x2be/0x720
-[  367.330506][  T973]  ? iomap_writepages+0x39/0x70
-[  367.331015][  T973]  ? xfs_vm_writepages+0xf6/0x150
-[  367.331583][  T973]  ? do_writepages+0x104/0x320
-[  367.332163][  T973]  ? __writeback_single_inode+0x9e/0x6e0
-[  367.332754][  T973]  ? writeback_sb_inodes+0x384/0x830
-[  367.333329][  T973]  ? __writeback_inodes_wb+0x70/0x130
-[  367.333915][  T973]  ? wb_writeback+0x486/0x5b0
-[  367.334437][  T973]  ? wb_workfn+0x68b/0x8c0
-[  367.334942][  T973]  ? process_one_work+0x48c/0x970
-[  367.335574][  T973]  ? __pfx_function_graph_enter_ops+0x10/0x10
-[  367.336257][  T973]  ? kmem_cache_alloc+0x415/0x460
-[  367.336818][  T973]  ? __pfx_preempt_count_sub+0x10/0x10
-[  367.337426][  T973]  ? iomap_do_writepage+0x784/0x1090
-[  367.337947][  T973]  ? write_cache_pages+0x2be/0x720
-[  367.338475][  T973]  ? iomap_writepages+0x39/0x70
-[  367.338981][  T973]  ? xfs_vm_writepages+0xf6/0x150
-[  367.339514][  T973]  ? do_writepages+0x104/0x320
-[  367.340065][  T973]  ? ftrace_graph_func+0x173/0x270
-[  367.340658][  T973]  ? __pfx_preempt_count_sub+0x10/0x10
-[  367.341225][  T973]  ? mempool_alloc+0xe1/0x270
-[  367.341729][  T973]  ? 0xffffffffa0568097
-[  367.342155][  T973]  ? 0xffffffffa0568097
-[  367.342598][  T973]  ? preempt_count_sub+0x5/0xc0
-[  367.343109][  T973]  ? mempool_alloc+0xe1/0x270
-[  367.343590][  T973]  kasan_save_track+0x10/0x30
-[  367.344040][  T973]  __kasan_slab_alloc+0x85/0x90
-[  367.344542][  T973]  kmem_cache_alloc+0x159/0x460
-[  367.345024][  T973]  ? __pfx_mempool_alloc_slab+0x10/0x10
-[  367.345518][  T973]  mempool_alloc+0xe1/0x270
-[  367.345997][  T973]  ? __pfx_mempool_alloc+0x10/0x10
-[  367.346526][  T973]  ? 0xffffffffa0568097
-[  367.346973][  T973]  ? ftrace_push_return_trace.isra.0+0x17c/0x370
-[  367.348141][  T973]  bio_alloc_bioset+0x2c6/0x440
-[  367.348653][  T973]  ? __pfx_bio_alloc_bioset+0x10/0x10
-[  367.349221][  T973]  iomap_do_writepage+0x784/0x1090
-[  367.349763][  T973]  ? __pfx_iomap_do_writepage+0x10/0x10
-[  367.350306][  T973]  ? __pfx_iomap_do_writepage+0x10/0x10
-[  367.350860][  T973]  write_cache_pages+0x2be/0x720
-[  367.351366][  T973]  ? __pfx_iomap_do_writepage+0x10/0x10
-[  367.351921][  T973]  ? __pfx_write_cache_pages+0x10/0x10
-[  367.352468][  T973]  ? ftrace_graph_func+0x173/0x270
-[  367.352967][  T973]  ? ksys_fadvise64_64+0x8c/0xc0
-[  367.357367][  T973]  ? __pfx_lock_release+0x10/0x10
-[  367.357872][  T973]  ? __pfx_iomap_do_writepage+0x10/0x10
-[  367.358440][  T973]  iomap_writepages+0x39/0x70
-[  367.358953][  T973]  xfs_vm_writepages+0xf6/0x150
-[  367.359505][  T973]  ? __pfx_xfs_vm_writepages+0x10/0x10
-[  367.360108][  T973]  ? __pfx_xfs_vm_writepages+0x10/0x10
-[  367.360740][  T973]  ? __pfx_xfs_vm_writepages+0x10/0x10
-[  367.361343][  T973]  ? do_writepages+0x164/0x320
-[  367.361893][  T973]  do_writepages+0x104/0x320
-[  367.362414][  T973]  ? __pfx_do_writepages+0x10/0x10
-[  367.362957][  T973]  ? 0xffffffffa0568097
-[  367.363449][  T973]  ? __pfx___writeback_single_inode+0x10/0x10
-[  367.364114][  T973]  __writeback_single_inode+0x9e/0x6e0
-[  367.364705][  T973]  writeback_sb_inodes+0x384/0x830
-[  367.365295][  T973]  ? __pfx_writeback_sb_inodes+0x10/0x10
-[  367.365857][  T973]  ? __pfx_writeback_sb_inodes+0x10/0x10
-[  367.366505][  T973]  ? super_trylock_shared+0x46/0x70
-[  367.367085][  T973]  __writeback_inodes_wb+0x70/0x130
-[  367.367764][  T973]  wb_writeback+0x486/0x5b0
-[  367.368300][  T973]  ? __pfx_wb_writeback+0x10/0x10
-[  367.368860][  T973]  ? 0xffffffffa0568097
-[  367.369339][  T973]  ? __pfx_lock_release+0x10/0x10
-[  367.369940][  T973]  wb_workfn+0x68b/0x8c0
-[  367.370473][  T973]  ? _raw_spin_unlock_irqrestore+0x37/0xb0
-[  367.371131][  T973]  ? __pfx_wb_workfn+0x10/0x10
-[  367.371600][  T973]  ? ftrace_graph_func+0x173/0x270
-[  367.372110][  T973]  ? __pfx_wb_workfn+0x10/0x10
-[  367.372609][  T973]  ? 0xffffffffa0568097
-[  367.373044][  T973]  ? __pfx_wb_workfn+0x10/0x10
-[  367.373507][  T973]  ? process_one_work+0x483/0x970
-[  367.373990][  T973]  ? rcu_is_watching+0x34/0x60
-[  367.374474][  T973]  process_one_work+0x48c/0x970
-[  367.374956][  T973]  ? __pfx_process_one_work+0x10/0x10
-[  367.375474][  T973]  ? 0xffffffffa0568097
-[  367.375903][  T973]  ? __list_add_valid_or_report+0x33/0xc0
-[  367.376518][  T973]  ? worker_thread+0x375/0x680
-[  367.377065][  T973]  worker_thread+0x393/0x680
-[  367.378058][  T973]  ? __pfx_worker_thread+0x10/0x10
-[  367.378649][  T973]  kthread+0x1ad/0x1f0
-[  367.379076][  T973]  ? kthread+0xf2/0x1f0
-[  367.379513][  T973]  ? __pfx_kthread+0x10/0x10
-[  367.380003][  T973]  ret_from_fork+0x2d/0x50
-[  367.380483][  T973]  ? __pfx_kthread+0x10/0x10
-[  367.380993][  T973]  ret_from_fork_asm+0x1b/0x30
-[  367.381486][  T973]  </TASK>
-[  367.381815][  T973] 
-[  367.382070][  T973] Allocated by task 719:
-[  367.382508][  T973]  kasan_save_stack+0x1c/0x40
-[  367.382988][  T973]  kasan_save_track+0x10/0x30
-[  367.383477][  T973]  __kasan_kmalloc+0xa6/0xb0
-[  367.383960][  T973]  register_ftrace_graph+0x42b/0x8a0
-[  367.384454][  T973]  register_fprobe_ips.part.0+0x25a/0x3f0
-[  367.385075][  T973]  bpf_kprobe_multi_link_attach+0x49e/0x850
-[  367.385713][  T973]  __sys_bpf+0x307a/0x3180
-[  367.386217][  T973]  __x64_sys_bpf+0x44/0x60
-[  367.386716][  T973]  do_syscall_64+0x87/0x1b0
-[  367.387220][  T973]  entry_SYSCALL_64_after_hwframe+0x6e/0x76
-[  367.387878][  T973] 
-[  367.388193][  T973] The buggy address belongs to the object at ffff888174e59000
-[  367.388193][  T973]  which belongs to the cache kmalloc-4k of size 4096
-[  367.389731][  T973] The buggy address is located 8 bytes to the left of
-[  367.389731][  T973]  allocated 4096-byte region [ffff888174e59000, ffff888174e5a000)
-[  367.391266][  T973] 
-[  367.391580][  T973] The buggy address belongs to the physical page:
-[  367.392285][  T973] page:ffffea0005d39600 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x174e58
-[  367.393398][  T973] head:ffffea0005d39600 order:3 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-[  367.394437][  T973] flags: 0x17ffe000000840(slab|head|node=0|zone=2|lastcpupid=0x3fff)
-[  367.395335][  T973] page_type: 0xffffffff()
-[  367.395837][  T973] raw: 0017ffe000000840 ffff888100043a40 ffffea000674d010 ffffea0004bc8c10
-[  367.396786][  T973] raw: 0000000000000000 0000000000020002 00000001ffffffff 0000000000000000
-[  367.397728][  T973] page dumped because: kasan: bad access detected
-[  367.398458][  T973] 
-[  367.398766][  T973] Memory state around the buggy address:
-[  367.399411][  T973]  ffff888174e58e80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-[  367.400296][  T973]  ffff888174e58f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-[  367.401189][  T973] >ffff888174e58f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-[  367.402093][  T973]                                                                 ^
-[  367.402983][  T973]  ffff888174e59000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[  367.403879][  T973]  ffff888174e59080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[  367.404769][  T973] ==================================================================
+-- 
+Chuck Lever
