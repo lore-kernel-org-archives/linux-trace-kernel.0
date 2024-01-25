@@ -1,25 +1,25 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A41175AD;
-	Thu, 25 Jan 2024 07:39:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF3F17BAE;
+	Thu, 25 Jan 2024 07:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706168387; cv=none; b=uzYYvpYrYfeuSYVAvNpTFJOLhNcj3QQswPo7KE8/cQ0xXYdRBEMbFvxhAA1KyRfcl9pYalMULoafKsRIdeMCnWb1uGfE422MYeuAIPbTJ4lRXIOtqXnixFE8c+YvbFvt3GA/LbEJIPFbQiZ7RpFfJ3Xa1/tNPPP9INlNprsGw4c=
+	t=1706168403; cv=none; b=SR2jdrvqLnpOa+FuolKyKvhdSKmIJUBX6bmlCDPE8AAIsUGRwBLhMhPm5wZl63wwGy/tI7KD2skm+m47ci8g3/LRmtCWPIlZeMyb0qVt2++o807EXx3OfjYGn1IagMQK8Jg/HybUNKjccErrcJBUJ5NuBfBZ0byPreTvfrzoj+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706168387; c=relaxed/simple;
-	bh=kbdMpe4IqkGBetn5w0E/SJbJ+UhnYagZ5GDUcfBAmB8=;
+	s=arc-20240116; t=1706168403; c=relaxed/simple;
+	bh=Di5QFTkBZO4/CVl9f+evbhAXhnNNLRMry/k3VXo5/Hs=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HzNngnDFxOOAz4lZtm8Pxrf3Pnd00T9lEh8jNVIcDMKkWSqwFyQ5FPA/MUOPHtJoerw8JKxjF3gSqFH4HD3XREHqb5R0x3Dk/5iiiXBX/WJE0/yalbq56zqEK96eAY/HnjQloShRn+YhDSRlroPQjDXCP8xg5L3pdrh55gwgem8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+	 MIME-Version:Content-Type; b=LysK3lS9382xpMooisgpX0iBbGXV1Ubh00tMNXws7aPLGA58acAp2UjlwHAwksqXYyS69ufiaxGniEaHx7YGUlggQMWcYGxNjhFV5EKY4av8KibGfVe9GlxcDbeDOzf6OHoVw2xrw7qRb+/vXAOkPG9i0gwDN+iF/u8IdyAST8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4TLCPD3X0cz18Lnb;
-	Thu, 25 Jan 2024 15:38:40 +0800 (CST)
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TLCNy19qwzhZPy;
+	Thu, 25 Jan 2024 15:38:26 +0800 (CST)
 Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5326818006C;
-	Thu, 25 Jan 2024 15:39:29 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 575A9180083;
+	Thu, 25 Jan 2024 15:39:44 +0800 (CST)
 Received: from huawei.com (10.175.127.227) by canpemm500010.china.huawei.com
  (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 25 Jan
@@ -28,9 +28,9 @@ From: Ye Bin <yebin10@huawei.com>
 To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
 	<mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <yebin10@huawei.com>
-Subject: [PATCH v5 7/8] selftests/ftrace: add kprobe test cases for VFS type "%pd" and "%pD"
-Date: Thu, 25 Jan 2024 15:39:22 +0800
-Message-ID: <20240125073923.2252057-8-yebin10@huawei.com>
+Subject: [PATCH v5 8/8] selftests/ftrace: add fprobe test cases for VFS type "%pd" and "%pD"
+Date: Thu, 25 Jan 2024 15:39:23 +0800
+Message-ID: <20240125073923.2252057-9-yebin10@huawei.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20240125073923.2252057-1-yebin10@huawei.com>
 References: <20240125073923.2252057-1-yebin10@huawei.com>
@@ -45,68 +45,64 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  canpemm500010.china.huawei.com (7.192.105.118)
 
-This patch adds test cases for new print format type "%pd/%pD".The test cases
-test the following items:
-1. Test README if add "%pd/%pD" type;
-2. Test "%pd" type for dput();
-3. Test "%pD" type for vfs_read();
+This patch adds fprobe test cases for new print format type "%pd/%pD".The
+test cases test the following items:
+1. Test "%pd" type for dput();
+2. Test "%pD" type for vfs_read();
 
 This test case require enable CONFIG_HAVE_FUNCTION_ARG_ACCESS_API configuration.
 
 Signed-off-by: Ye Bin <yebin10@huawei.com>
 ---
- .../ftrace/test.d/kprobe/kprobe_args_vfs.tc   | 43 +++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
+ .../ftrace/test.d/dynevent/fprobe_args_vfs.tc | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/fprobe_args_vfs.tc
 
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_args_vfs.tc b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_args_vfs.tc
 new file mode 100644
-index 000000000000..cf0599b90f1a
+index 000000000000..0a5baaffc137
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
-@@ -0,0 +1,43 @@
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_args_vfs.tc
+@@ -0,0 +1,40 @@
 +#!/bin/sh
 +# SPDX-License-Identifier: GPL-2.0
-+# description: Kprobe event VFS type argument
++# description: Fprobe event VFS type argument
 +# requires: kprobe_events
 +
-+: "Test argument %pd/%pD in README"
-+grep -q "%pd/%pD" README
-+
-+: "Test argument %pd with name"
-+echo 'p:testprobe dput name=$arg1:%pd' > kprobe_events
-+echo 1 > events/kprobes/testprobe/enable
-+grep -q "1" events/kprobes/testprobe/enable
-+echo 0 > events/kprobes/testprobe/enable
++: "Test argument %pd with name for fprobe"
++echo 'f:testprobe dput name=$arg1:%pd' > dynamic_events
++echo 1 > events/fprobes/testprobe/enable
++grep -q "1" events/fprobes/testprobe/enable
++echo 0 > events/fprobes/testprobe/enable
 +grep "dput" trace | grep -q "enable"
-+echo "" > kprobe_events
++echo "" > dynamic_events
 +echo "" > trace
 +
-+: "Test argument %pd without name"
-+echo 'p:testprobe dput $arg1:%pd' > kprobe_events
-+echo 1 > events/kprobes/testprobe/enable
-+grep -q "1" events/kprobes/testprobe/enable
-+echo 0 > events/kprobes/testprobe/enable
++: "Test argument %pd without name for fprobe"
++echo 'f:testprobe dput $arg1:%pd' > dynamic_events
++echo 1 > events/fprobes/testprobe/enable
++grep -q "1" events/fprobes/testprobe/enable
++echo 0 > events/fprobes/testprobe/enable
 +grep "dput" trace | grep -q "enable"
-+echo "" > kprobe_events
++echo "" > dynamic_events
 +echo "" > trace
 +
-+: "Test argument %pD with name"
-+echo 'p:testprobe vfs_read name=$arg1:%pD' > kprobe_events
-+echo 1 > events/kprobes/testprobe/enable
-+grep -q "1" events/kprobes/testprobe/enable
-+echo 0 > events/kprobes/testprobe/enable
++: "Test argument %pD with name for fprobe"
++echo 'f:testprobe vfs_read name=$arg1:%pD' > dynamic_events
++echo 1 > events/fprobes/testprobe/enable
++grep -q "1" events/fprobes/testprobe/enable
++echo 0 > events/fprobes/testprobe/enable
 +grep "vfs_read" trace | grep -q "enable"
-+echo "" > kprobe_events
++echo "" > dynamic_events
 +echo "" > trace
 +
-+: "Test argument %pD without name"
-+echo 'p:testprobe vfs_read $arg1:%pD' > kprobe_events
-+echo 1 > events/kprobes/testprobe/enable
-+grep -q "1"  events/kprobes/testprobe/enable
-+echo 0 > events/kprobes/testprobe/enable
++: "Test argument %pD without name for fprobe"
++echo 'f:testprobe vfs_read $arg1:%pD' > dynamic_events
++echo 1 > events/fprobes/testprobe/enable
++grep -q "1"  events/fprobes/testprobe/enable
++echo 0 > events/fprobes/testprobe/enable
 +grep "vfs_read" trace | grep -q "enable"
-+echo "" > kprobe_events
++echo "" > dynamic_events
 +echo "" > trace
 -- 
 2.31.1
