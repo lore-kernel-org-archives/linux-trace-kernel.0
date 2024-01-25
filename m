@@ -1,235 +1,271 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981027468;
-	Thu, 25 Jan 2024 21:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.55.52.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706216596; cv=fail; b=jAsOKTLAFD9KItgfvg0jP4b/dzPr3VNe+jLRSND2Ny+XfpnAf5ZxV8VYeFb7H18hoCRnHj+xkfGdJz0xVC8xREJi5osiAoKmdOoBSIndj2NwL/1/H1r12ISDWXamo4RKtAEVM/tjo/ki4IZBUDW25eGLvqmSoPuglOG8s87PkK8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706216596; c=relaxed/simple;
-	bh=iOqbu3sHTO19eqsfa+LuX2t/u3fLIw8FzDF8leak0xQ=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=pwqrCnVPXa7R2wQ80jNLuJDQYl13jeGVFhh9JgZbrZnXozQUf3S85FyFRoWwFgAXXBOMf/X/LZ7As70r8ILFtnkCeYZIpNePiavlTHo5n4x8lgUFcJvjWx25IUkvxFeMZRFeSErBjyjIUdqhsBDBAHs7/4/Km60xucHZoMEk9YA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HO2A3qPC; arc=fail smtp.client-ip=192.55.52.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3551F60A;
+	Thu, 25 Jan 2024 21:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706217530; cv=none; b=th4nHpoNSvyn/SRIcSVJ4fDnNZhXAgeakHptQMLYzT/O5dwi+j4y3u8baomXV+LfNo0BDtCT7XXsFtiZpC0b+5fKV9JRFsuHxJA8sewGw06yD3LixXlJJ94BJc/+i273QkjH7++C/5cE7kFjjxY0kDT42Sb60gRkpEIqw+t5+Vk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706217530; c=relaxed/simple;
+	bh=7A6T2n0aDnhcce+dO+8Wvx7QMAxrKD6pFzB7Wi0Hv4M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hChGQC277gQ3xW03IUTBlj1eb07z0cwCUDvdMIt7xZMTr3mwgdLStZq/neXesxLsi4Sl1rXASdT6r9+O3FhIioU9fp0Vi4uLKPSpuDbDtBtijQqV3S8swLT8jY/X8UBFqNanfwDbV8aDOXXzBkNdMexFHO8jlNxP+HXsLBb1+iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=rl3c/U5h; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HO2A3qPC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706216594; x=1737752594;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=iOqbu3sHTO19eqsfa+LuX2t/u3fLIw8FzDF8leak0xQ=;
-  b=HO2A3qPCH2pAMp8XaCssfatFDeabDPFnS2Hwu3VbjLSf7jnpAimWKv49
-   lV3O3bK/rnp85zyyqDdLM1MsoJQD0dijGaNRYt9J6GOiblOQ0nJ9amGPs
-   zWqMrORUt9qVW46T/JlzgNKBZJUHn6fYY2S3wM08qm8FN45ui2WwzB1Bp
-   EvDH4QxQjSNACR5dXtH2WL3hyFlk47u5n+GEF2O6sDGqD39c2b8au8b1M
-   QKxs6LyjsTIAHw34kErQBkm8WHqx4+b3+fI8ceuLaouHFMOCADG5VrYXF
-   L3VCuXFIx33NGt1l5b/8g6MTDbV/d5ZeKoxkH/ayGxr4b4L8OrHFUs7WG
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="433454143"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="433454143"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 13:03:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="959995200"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="959995200"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orsmga005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Jan 2024 13:03:12 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 25 Jan 2024 13:03:11 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 25 Jan 2024 13:03:11 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 25 Jan 2024 13:03:11 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 25 Jan 2024 13:03:11 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fMQVKceb3bqQv+Q3BChD5LTJfJRaC7ngvSawg0RtlRnrrl6KBWhXiSrHkvbrRtGBEBC0B448A63g8umh/9W8InFNPQF7gI0DZ3OlKq54YhmgfOuB/D6VbCFnpSfXlZgcrMlkmBSild7ZK9i94rqoXFWNPlfciNBYFNRAXssWP26ZJ1JlH061REKJatYoBICTeXoAS1QUHylZ+FnIwcTdzRWLlmkhcKFdFadpIAGQaIEOtNq//EC5OW8Eoj2pd2HB15NNtxh8x5F7tKpEs6NQrlf80uvnuJRJ3PFbULLl18gzAB4nuWvFKd68JeDymkn5pprwrt+vvePH43M41NNCrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=angtyveXERsDoyTVEgMJiz5q6f73ZmExMJOWHtquvuQ=;
- b=bYQn29e5/4FzPf9+66u9BwouCRmLbyTv6B2bV0/Kmvs+XI50mynHogJ/tI+QcBR8mbM91IJMSdp5f2uwUForIZhkiGz6T6g83+uIEpef0vYnEbwvwJOG8pKyiNUNzL21d5IxxcxBxhPOKkWlvNvPlM5HcZ4RStJsGnZy+fXMUI+ignIgfY2s8lWyEgtpFLw6mg/1mpeOh9lVASvLvPOfz1rN7DJOl/g0aiSqqmGggFGktEreK5JljmCD8olbFOgFz9bmr5V7U0U+VbHiScjGM0NPSDol2KpOHOx5vrr/0Hh0tfW7dBZ7SePNLC03TPwfJbLq0j/VGnpyRF+pLuAF6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BYAPR11MB3320.namprd11.prod.outlook.com (2603:10b6:a03:18::25)
- by SN7PR11MB7089.namprd11.prod.outlook.com (2603:10b6:806:298::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.39; Thu, 25 Jan
- 2024 21:03:08 +0000
-Received: from BYAPR11MB3320.namprd11.prod.outlook.com
- ([fe80::c3aa:f75e:c0ed:e15f]) by BYAPR11MB3320.namprd11.prod.outlook.com
- ([fe80::c3aa:f75e:c0ed:e15f%3]) with mapi id 15.20.7202.035; Thu, 25 Jan 2024
- 21:03:08 +0000
-Message-ID: <1792a925-172f-4a9e-ad59-dea474bc7cda@intel.com>
-Date: Thu, 25 Jan 2024 13:03:06 -0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] tracing: Include Microcode Revision in mce_record
- tracepoint
-Content-Language: en-US
-To: Avadhut Naik <avadhut.naik@amd.com>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-edac@vger.kernel.org>
-CC: <rostedt@goodmis.org>, <tony.luck@intel.com>, <bp@alien8.de>,
-	<x86@kernel.org>, <linux-kernel@vger.kernel.org>, <yazen.ghannam@amd.com>,
-	<avadnaik@amd.com>
-References: <20240125184857.851355-1-avadhut.naik@amd.com>
- <20240125184857.851355-3-avadhut.naik@amd.com>
-From: Sohil Mehta <sohil.mehta@intel.com>
-In-Reply-To: <20240125184857.851355-3-avadhut.naik@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR11CA0053.namprd11.prod.outlook.com
- (2603:10b6:a03:80::30) To BYAPR11MB3320.namprd11.prod.outlook.com
- (2603:10b6:a03:18::25)
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="rl3c/U5h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1706217517;
+	bh=7A6T2n0aDnhcce+dO+8Wvx7QMAxrKD6pFzB7Wi0Hv4M=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=rl3c/U5hL0eP2xGIYusX+iBHqq6uiQW2fTir+xNDuDk+vfXQ3fH8b1Q9kBVbF5enZ
+	 P72LHkwBrSf5suOAFtmHI7IqyLc9MhqqJKpfJhACf7Uv1eayWQt/sBHsj5WdFreaTM
+	 tI8jQKqR2nYDBh+y4UujKPR2PwAzrq6QVG431tRogHZY+jFnXsPxemREo35TykekXx
+	 ghdfNmrPL2m7shN9tyISxeL2RRjduDUBs2QVmTLj8I2TDfQqSGR2zd4VsLMzIY4QVK
+	 73HsmVM0cvAr8fSILRSVZ2q/CooThqu1aO0OzyjxiFJ6BIbEUJHqkt+g3KppyoV9UB
+	 1a8Ujgbtg+rag==
+Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TLYbK4pyZzVMl;
+	Thu, 25 Jan 2024 16:18:37 -0500 (EST)
+Message-ID: <88e9a728-9c9a-42d5-bba4-b9f3fbe61d53@efficios.com>
+Date: Thu, 25 Jan 2024 16:18:37 -0500
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR11MB3320:EE_|SN7PR11MB7089:EE_
-X-MS-Office365-Filtering-Correlation-Id: e6ff989f-4ae4-41dc-69e2-08dc1de90814
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7MqcQLS5Y2l4SMbwgdEC9Ga1ACM0zpz4IwUTor5lP3U1IleTJ9ElI4ZmBVfNMjL0GwLIkMDSsU/VG+1lX42phgYdLNikt/9p+Tnjmz1tJiGQz4So0X1Z2IKG8V061iSLkjHqNMbBRcgd/LqT0ECZAHL5CJi2igNLY8J+roN7GohsSfUdq9LzlBAtYqAxUHi4unAQrtAmRyUlp759+C1WFN0b9zTWduIzvh5IYf22Ur5aiha75cgbCId2owpsVoQClH0JtUBtzoLGnZdWEzHKvgdL0+cCJAG5ck1XJ/J6Zw36C1oBAP/TSukx21vmMG0Cyo7WfmlwkKUkJQBy96LZQycr2W5y3kc/UXDEGXs0S1w/9P2HWt5yBo4WAwC5rNz/J7BtvssI8zW44ylOksgxBdCKaLClMInY9XBiuUHoblmPONEkFHZaE5n35EDt2PPNr/Mvr7jCru/WBVZhoQ1IyNf/s0YX3vhW3VZ0yMFjre6zFHvj0yR6mdhPXBHfYWY90E+ulKkKOtk2237+nrkiQIAFMDuKxTDNMLzVCneA2EqzuPXVCtD7IINtDODbaW1FVMLGcnoJfX38o1sAoNLrtvGQ/Ba9zr8vW0oYh1zX+5XwZ/aJpDfPYbx2O6b1s2kZAJ9/JRta2pKXmygY7cX40iUWAMspS1O9WkxdJPx3GRh7MtsJgPchZHaQF4G8M+hq
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3320.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(39860400002)(346002)(136003)(376002)(230273577357003)(230922051799003)(230173577357003)(451199024)(1800799012)(186009)(64100799003)(83380400001)(6512007)(8936002)(6506007)(53546011)(26005)(5660300002)(44832011)(2616005)(6486002)(66556008)(2906002)(8676002)(4326008)(66946007)(478600001)(316002)(66476007)(86362001)(36756003)(82960400001)(38100700002)(41300700001)(31696002)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TTdXNXhxeFZWUjJ6MzdEdElxUjM2aVVNbmNwQ3NxWjhPNEMxSmtSYWFnOWsy?=
- =?utf-8?B?ZDY5aTVnNmQzaEt1eFZzd1d6RXIrd1FVbkg5ZnIxcTNEU0k5ZG9PdEQyZE9i?=
- =?utf-8?B?WmhHellNcUh5emZYWkVMbmVPNGRxcEFmeFk0dDFzUXVMWFpTWDFTMVpQaUVh?=
- =?utf-8?B?UTBPNWhtQlVOZHJNTHJTZTFxUE9kVzFwUk1kUm44M1ZkSjR0Y1gyQlZzMHE0?=
- =?utf-8?B?YXVodlFueFFDdGRQSmZ0b29SVU00SjBQUHBRSUoyNldCbFZ3Y0l6TnZvTnpq?=
- =?utf-8?B?OVdjZW1JdjRQYW9YOURwZktlN3NYRk9temF3UTg1aGo4My91Z1NmNmtPbW1H?=
- =?utf-8?B?QWlkYjM4M3k1OXdxK09ubnkyam9ZZ0F4SkdyVktzdHJiL1BCN3VqMHZHUlFN?=
- =?utf-8?B?b08ySHdENGd6d3ZwSVIyMTN6NjhsNHl3MFdnQi9EV0ZCUkNibWM1T1hkanlZ?=
- =?utf-8?B?L1FubW1zeWh3Ukt1c3VNekFIWlhQb3lLNFp4SURmNzU2cEEycHdIeFJZUGpK?=
- =?utf-8?B?UzdzMy8yOEV2N055ZVY5RHV5RWZTWXVIZVRRTU53NEd4WE0vVUJNaDUycmdE?=
- =?utf-8?B?dFVRWk5Sb2FzYkYxM2V3WFdLQm1vMGhsQ0IxK2xnYWw4eDQrM0EvYnVFV0VJ?=
- =?utf-8?B?MDdFLzE3bjRsY25OSzBNRmJpcVlyQnRiSFBrQVIvYkxOMlhYTlVFb1YwVkxr?=
- =?utf-8?B?ZHJrejdNd2tmNklWT1F5amM4UWdKZjZqM1RhVVhmWGFYdVkya3YrQ05YT3Yx?=
- =?utf-8?B?TXV0NVNsTW5rVHpZMTZJemljaEticnhwdFNUNzFCM25rNUg0enBvUVNwd09m?=
- =?utf-8?B?elFTUnAwVWI2Mno1aVpDNDBxcTJ5a0s4OTBuTWFyMTBxeURnNndPbXBDWldY?=
- =?utf-8?B?cEtaN3U5RUZaaXJ2dGw0dzY3MEE2ZFJubUovTnlXZ01VY0kvTVYvZUE4V0Rk?=
- =?utf-8?B?aVd3bU1NVGNMdVRVcURsWHJWdURDaVkyaWhnOVRhYkZUSmwyTzR4eHhzY1Fm?=
- =?utf-8?B?UTBjRVB1OS9ENW5Zam5YL0hCd1A5c2NJT1dVcEZIekFvVWVQQjFUUGxvVms1?=
- =?utf-8?B?bUtnckswVkhyOGZVMTRqanBtdlVJbXZDMkdsWXRQMk11MmpCcmNtTDhqQkM3?=
- =?utf-8?B?bmUvbGtnTU5tdmF2KzJhQ2k4Wm5yT01xazhGeWZjVUV1SzFac2dNNjFWOWEr?=
- =?utf-8?B?QjlqYWxtSmVLWDR0dDRiWWVWM3d2c21sZzZRTHRZM0J2cm42N0hhU3ZtQzlo?=
- =?utf-8?B?QXlIRkUzU0NLQ3BrRVJjMEVlQUI0REJpNzU1S25NbmVYMFpQK0U4U1NlNklB?=
- =?utf-8?B?d29UMVhuUTJ5YnlEY1Z2ZERSSXYzSlZaRjBhS0lYaU9VbU1rbm9aQVE1WGlr?=
- =?utf-8?B?c09OeitRUDVseGg0TWdkOEZISnJmNEc5aklPQ2ZKS2JEdDJxbEIwVEh4eWdn?=
- =?utf-8?B?bkhRcUlreWVUYnNSK3B5QnIwZnBicm5NU3U1K0RvUWtJRTgrNUs2d2xkaUtK?=
- =?utf-8?B?bkpub0xZcW52elA3SmYzUC9PWEZUUXQ4TjVpdlhPSVFaTXp3OW5XNWF3MTdP?=
- =?utf-8?B?MDJNdEZEeEVQRFlKeDd3RHd1djlsYnRuWEFRakRBSzhscFFYdWhqcDlvOVZM?=
- =?utf-8?B?VkEyS1dCdExYNU42bkZwQmE2UGVhYTNsZ0JLcGk5dUZISnJ6enBENllHRmZU?=
- =?utf-8?B?SmhEK1JFdDVITjFqWlFaa3FkaTRCNXdtTG9Pd0NiUUpvVVZFWUhrQjBQUVJz?=
- =?utf-8?B?MExtTUVMQmlGMkJqRzE1R1c5OVE5TWJlcFVDQzFwUG04YlJWa1JtWVlRY2h6?=
- =?utf-8?B?YUwvTXJwTzc0R3AxR0VLSVZQemZRNWZ1OVNPcmc5ZXY4TWRWM1dvbXR5T2xR?=
- =?utf-8?B?WU80NEFhU3Mya3lEQ2xpZ3FTSFltcTZyWlFlcThXbEpVNDI2b2JUUXIwTXMw?=
- =?utf-8?B?aUV1amxWSVYrZmNLTlVidnp0eGYvNFhId01qREwwSC9pbUwrZkF6NTZXZTFp?=
- =?utf-8?B?VWpkdTc4RU4xVmptM29IYzNJSnZTZjgwR3lXajM2d3RBSkZ1YmI3WCs1NG10?=
- =?utf-8?B?SEhzZzlUQ0F3UzVudERVYTg4Zk5TNFhXWHpVTTlJVDgzTXlxcnM1QmVNSmI3?=
- =?utf-8?Q?M9QY0LFniPWVKFMWuhfLG8yFK?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: e6ff989f-4ae4-41dc-69e2-08dc1de90814
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3320.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jan 2024 21:03:08.1215
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XFiw5lDnE72qX1Mhfgsy4qfPqFZV2XJlSmiZmCEdkDc/VtZ8+16iJwRijgbOeaf+4AVTq/RigMhxffPDt6sCZw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7089
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ring-buffer: Simplify reservation with try_cmpxchg() loop
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Philippe Proulx <pproulx@efficios.com>
+References: <20240118181206.4977da2f@gandalf.local.home>
+ <504085e9-bf91-4948-a158-abae5dcb276a@efficios.com>
+ <20240119103754.154dc009@gandalf.local.home>
+ <cd3f37cc-31ba-4eb4-8d67-852d05570e7b@efficios.com>
+ <20240119164252.54ccb654@gandalf.local.home>
+ <5d323a65-8a04-4c73-8702-58869982a269@efficios.com>
+ <20240120084713.6eb7aa52@rorschach.local.home>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+In-Reply-To: <20240120084713.6eb7aa52@rorschach.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 1/25/2024 10:48 AM, Avadhut Naik wrote:
-> Currently, the microcode field (Microcode Revision) of struct mce is not
-> exported to userspace through the mce_record tracepoint.
+On 2024-01-20 08:47, Steven Rostedt wrote:
+> On Fri, 19 Jan 2024 20:49:36 -0500
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 > 
-> Export it through the tracepoint as it may provide useful information for
-> debug and analysis.
+>>>> Let's say we have the following ktime_get() values (monotonic timestamp value) for
+>>>> a sequence of events:
+>>>>
+>>>>                                      Timestamp (Hex)    Encoding in the trace
+>>>>
+>>>> Packet header timestamp begin     0x12345678         64-bit: 0x12345678
+>>>>
+>>>> Event 1                           0x12345678         16-bit: 0x5678
+>>>>       (When decoded, same value as previous timestamp, no overflow)
+>>>> Event 2                           0x12347777         16-bit: 0x7777
+>>>>       (When decoded, going from "0x5678" to "0x7777" does not overflow 16-bit)
+>>>> Event 3                           0x12350000         16-bit: 0x0000
+>>>>       (When decoded, going from "0x7777" to "0x0000" overflow 16-bit exactly once
+>>>>        which allows the trace reader to reconstruct timestamp 0x12350000 from the
+>>>>        previous timestamp and the 16-bit timestamp encoding.)
+>>>> Event 4                           0x12370000         64-bit: 0x12370000
+>>>>       (Encoding over 16-bit not possible because going from 0x12350000 to
+>>>>        0x12370000 would overflow 16-bit twice, which cannot be detected
+>>>>        by a trace reader. Therefore use the full 64-bit timestamp in the
+>>>>        "large" event header representation.)
+>>>
+>>> I think that's basically what I said, but you are just looking at it
+>>> differently ;-) Or should I say, you are using bits for optimization.
+>>
+>> Based on your explanation below, we are really talking about different things
+>> here. Let me try to reply to your explanation to try to show where what I am
+>> doing completely differs from what you have in mind. This will help explain
+>> how I handle 16-bit overflow as well.
+>>
+>>> The events are based off of the last injected timestamp.
+>>
+>> Incorrect. There is no "injected timestamp". There is only a concept
+>> of the "current timestamp" as we either write to or read from the
+>> event stream. I will take the point of view of the trace reader for
+>> the rest of the discussion.
+>>
+>>> The above example,
+>>> starts with an timestamp injection into the packet header: 0x12345678, with
+>>> the lsb 16bits ignore.
+>>
+>> Wrong again. The 16 least significant bits are not ignored. The "current timestamp"
+>> is really 0x12345678 when the packet header is read.
 > 
-> Signed-off-by: Avadhut Naik <avadhut.naik@amd.com>
-> ---
+> In the packet header you have 0x12345678 in the first event you have
+> 0x5678 how does that get you the timestamp? If that event had 0x8888,
+> when the reader reads this packet, it would take the header 0x12345678
+> chop off (ignore) the 5678, and add the 8888, right?
 
-A couple of nits below.
+We need to consider not only what happens when the 16 low bits increase, but
+also what happens when they end up with a value smaller than the previous
+16 low bits.
 
-Apart from that the patch looks fine to me.
+As a summary from our video meeting discussion:
 
-Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+There are 3 cases we care about here:
 
->  include/trace/events/mce.h | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+packet header timestamp: 0x12345678
+
+followed by either:
+
+A) first event delta from packet header timestamp is 0: 16-bit value 0x5678
+
+B) first event delta from packet header timestamp is <= 0xFFFF:
+    B.1) 16-bit value example 0x5699 (no 16-bit overflow from previous value)
+    B.2) 16-bit value example 0x2222 (exactly one 16-bit overflow from previous value)
+
+C) first event delta from packet header timestamp is larger than 0xFFFF, which would
+    cause the low-order 16 bits to have more than one 16-bit overflow from the previous
+    value. The tracer detects this and uses a full 64-bit timestamp instead of the compact
+    16 bits.
+
+[...]
+
+
 > 
-> diff --git a/include/trace/events/mce.h b/include/trace/events/mce.h
-> index 657b93ec8176..203baccd3c5c 100644
-> --- a/include/trace/events/mce.h
-> +++ b/include/trace/events/mce.h
-> @@ -34,6 +34,7 @@ TRACE_EVENT(mce_record,
->  		__field(	u8,		cs		)
->  		__field(	u8,		bank		)
->  		__field(	u8,		cpuvendor	)
-> +		__field(	u32,	microcode	)
+>>
+>>>
+>>> But how do you detect the overflow? That last timestamps to know if
+>>> the tsc overflowed or not needs to be saved and compared. I would
+>>> assume you have a similar race that I have.
+>>
+>> Yes, I save a "last timestamp" per buffer, but the race does not
+>> matter because of the order in which it is saved wrt local cmpxchg
+>> updating the reserved position.
+>>
+>> The algorithm looks like:
+>>
+>> do {
+>>     - read current reserved position (old pos)
+>>     - read time
+>>     - compute new reserved position (new pos)
+>> } while (cmpxchg(reserved pos, old pos, new pos) != old pos);
+>>
+>> [A]
+>>
+>> save_last_tsc()
+> 
+> So the last_tsc that is saved is from the timestamp read before the
+> cmpxchg.
 
-Tab alignment is inconsistent.
+Yes.
 
->  	),
->  
->  	TP_fast_assign(
-> @@ -55,9 +56,10 @@ TRACE_EVENT(mce_record,
->  		__entry->cs		= m->cs;
->  		__entry->bank		= m->bank;
->  		__entry->cpuvendor	= m->cpuvendor;
-> +		__entry->microcode	= m->microcode;
->  	),
->  
-> -	TP_printk("CPU: %d, MCGc/s: %llx/%llx, MC%d: %016Lx, IPID: %016Lx, ADDR/MISC/SYND: %016Lx/%016Lx/%016Lx, RIP: %02x:<%016Lx>, TSC: %llx, PPIN: %llx, PROCESSOR: %u:%x, TIME: %llu, SOCKET: %u, APIC: %x",
-> +	TP_printk("CPU: %d, MCGc/s: %llx/%llx, MC%d: %016Lx, IPID: %016Lx, ADDR/MISC/SYND: %016Lx/%016Lx/%016Lx, RIP: %02x:<%016Lx>, TSC: %llx, PPIN: %llx, PROCESSOR: %u:%x, TIME: %llu, SOCKET: %u, APIC: %x, MICROCODE REVISION: %u",
+> 
+>>
+>> If interrupted at [A] by another trace producer, it will compare with
+>> an older "last tsc" than the tsc of the event physically located just
+>> before the nested event. This stale "last tsc" has a value which is
+>> necessarily lower than the one we would be saving with the
+>> save_last_tsc immediately afterwards, which means in the worse case
+>> we end up using a full 64-bit timestamp when in fact we could use a
+>> more compact representation. But this race is rare and therefore it
+>> does not matter for size.
+> 
+> That's equivalent to me "injecting" an absolute value for the same race.
 
-Should microcode by printed as a decimal or an hexadecimal? Elsewhere
-such as __print_mce(), it is printed as an hexadecimal:
+Yes.
 
-        /*
-         * Note this output is parsed by external tools and old fields
-         * should not be changed.
-         */
-        pr_emerg(HW_ERR "PROCESSOR %u:%x TIME %llu SOCKET %u APIC %x
-microcode %x\n",
-                m->cpuvendor, m->cpuid, m->time, m->socketid, m->apicid,
-                m->microcode);
+> 
+>>
+>> The fact that I only need this last_tsc value for the sake of
+>> optimization, and not for computation of a time delta from a previous
+>> injected timestamp, makes it possible to handle the race gracefully
+>> without requiring anything more than a single last_tsc value per
+>> buffer and a single comparison for 16-bit overflow.
+> 
+> If you have:
+> 
+>> do {
+>>     - read current reserved position (old pos)
+>>     - read time
+>>     - compute new reserved position (new pos)
+>> } while (cmpxchg(reserved pos, old pos, new pos) != old pos);
+>>
+>> [A]
+> 
+> And here you have an interrupt that runs for several minutes (yeah bad
+> code ;-) And it does the same thing
+> 
+> do {
+>     - read current reserved position (old pos)
+>     - read time
+>     - compute new reserved position (new pos)
+> } while (cmpxchg(reserved pos, old pos, new pos) != old pos);
+> 
+> save_last_tsc()
+> 
+> But that last_tsc from before the cmpxchg is much later than the one it
+> interrupted.
+> 
+> 
+>>
+>> save_last_tsc()
+> 
+> Ah, so if you put the clock back here, it will just cause the next
+> event to inject a full timestamp again because the delta is too big.
 
+Yes.
 
+> 
+> This is how you are able to avoid the "before/after" logic I have, as
+> the race is automatically detected. The least significant bits of the
+> timestamp is ignored for the event delta calculation.
 
+Not quite, as I explained at the beginning of this email. All bits from the
+previous timestamp, including its low bits, are useful to know how many
+overflows happened since the last tsc.
 
->  		__entry->cpu,
->  		__entry->mcgcap, __entry->mcgstatus,
->  		__entry->bank, __entry->status,
-> @@ -69,7 +71,8 @@ TRACE_EVENT(mce_record,
->  		__entry->cpuvendor, __entry->cpuid,
->  		__entry->walltime,
->  		__entry->socketid,
-> -		__entry->apicid)
-> +		__entry->apicid,
-> +		__entry->microcode)
->  );
->  
->  #endif /* _TRACE_MCE_H */
+> And if a race
+> happens where the interrupting event saves a later timestamp and comes
+> back here, if the interrupted event writes the older timestamp, it just
+> causes that delta calculation to overflow again and you inject another
+> 64bit timestamp into the buffer.
+
+This part is correct: in the race you describe, we end up with the
+possibility of bringing the last_tsc backwards, which can only cause
+the tracer to use the full 64-bit timestamp when in fact it could use
+the compact representation. But it's rare and should not matter in
+practice.
+
+And by the way this algorithm is designed to work with preemption/migration
+enabled as well, not just interrupts. So the race can come from a thread
+running concurrently on another CPU and it should work as well.
+
+[...]
+
+> 
+> Going through a transition of changing it could end up being just as
+> complex. I'm not sure the complexity in that transition is better than
+> the complexity of the current code, as this code has been there for 15
+> years, and I know of at least 2 other projects that depend on this
+> format as is.
+
+I agree with you that it's not clear-cut whether introducing this change
+would be a benefit at this stage considering the extra complexity of
+extending the ABI while keeping backward compatibility.
+
+But it's something we can keep in mind if we ever have to do major ABI
+extensions for other reasons.
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
 
