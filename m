@@ -1,44 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77AFF7E771;
-	Wed, 24 Jan 2024 23:30:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4808010E6;
+	Thu, 25 Jan 2024 00:59:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706139055; cv=none; b=Wiola5iWRZlEqml3cuGri2osA+6u+GC9/cyatCBnbXbjuZhdqEGf3HMU22dOeNbDHBZN/Tyg+m56hyGMJ9xwqp0/aOprKbML3Gn17uvjT/fynASlgqrBeYG1XyILQgoM7laFwhQA6QKzt1Q8IgERCR7LGwUognWpYh35feiA3o4=
+	t=1706144347; cv=none; b=WFdelNe3nq7rBGdl3ShKEz5JgTa4TgyGDFymYNEHH/a4rZ2Uw+UeVgluCu+z0GMyc7GDc+i4tKbtxuxtDmuBJ1uQTD4GEhoalVVdcoIaOV+US7Y8SVLwwViRGNNehxMxLw+WgGpXIAwDB83szs1MlKGBCsvOh+QY0g7rtzQrU0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706139055; c=relaxed/simple;
-	bh=soJQajv5hWHBtkP0ngNF1lxQ1aDvaD2aJ71sXUKd0QA=;
+	s=arc-20240116; t=1706144347; c=relaxed/simple;
+	bh=8zx8VInJbEn6Il+2QJF2mOpf6Byv0juF37c3fzeDGsM=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=PNEMyhREqgCggtqIgapRcQqQNusThfpJd/TTysLjd6VXwsIfCYsC4HfRKqW4gcADnqdTC0C3KL4EEyrJ5e74Wjcnh2LzDpxQLhZEN9diH3w8kZsqVxpQRcGKAisEHPZzRBWxb3GJbKb12Gtpv3hKAXT4LHulNeTjPEMdOkE4GFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p9crZG72; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=iDdgMfvE/JmHVM4+1iLilRGVA3l2Bu6lOj966d3isnxH+2cwJ19Som9jgJVVGvQb3ZjEL2tQfzjPudkS96Qg9NRqj+2OTTAjWl29LRsKR4T7zdUCVyjAKKfRJgqOdUAyoXfAcgws/E8MqERzDQymQKQxoKQQPWhi3ab8dBSPzWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LeP7lTCm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p9crZG72"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E9C9C433F1;
-	Wed, 24 Jan 2024 23:30:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LeP7lTCm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 994DAC433F1;
+	Thu, 25 Jan 2024 00:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706139054;
-	bh=soJQajv5hWHBtkP0ngNF1lxQ1aDvaD2aJ71sXUKd0QA=;
+	s=k20201202; t=1706144346;
+	bh=8zx8VInJbEn6Il+2QJF2mOpf6Byv0juF37c3fzeDGsM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=p9crZG72VtU5pUkqjebisl7t/RKPEgqzRTPCS3ml4IGxH7I610DGn1lciTuQMNsNV
-	 lAwQH/c+6Y3JmfShX9uPu8nBSSV2bOl9uiTGE+jXqsW69cu8ms5aX4uABgIhNEsHKD
-	 nxV5PrsNMK9m91vkY737KJYVOBgMMW3QKUA0eM/opZQfAdeqW4fK36//0S5UXi0MLJ
-	 vN7GgYtKvNBmtlcDf4qlMqs56b+PwQ9692oDVlxnKUZ78SLZWhBUpQfHz8ou4cLvT/
-	 wWhVwMN9yGofau+YDRwn5NY4AA5/N5jiAkgwIGu+isUlyIw8kD9l0wWbnd5lke6f9t
-	 9k9Kd7OetCxFg==
-Date: Thu, 25 Jan 2024 08:30:50 +0900
+	b=LeP7lTCmYa8/HJAfzgqmPmZ+5zZ6iIL2pMuLubPgov9S1nzLT1ihkRPRowqH36NwM
+	 /pHjxp0h3eIa1oltXtlrnnnM2KE7edXd44SZwuoXYme+3jFazQ0sjvMx/xfKXXOXQI
+	 /+BI6E8/nZBT7YYJGKNZaOXwJEbIEuX35qyzGJUDUFUtusyX3wAkSJsk4KzCcsElmb
+	 7bfrQ2GqMkSxPRhcfkz7H9x2mN3/ZqxsNH3CGqOx5kCFD1VwGdSRZMJxpn67W5sKYi
+	 3aUtFe8VIAmGp4aQ9DHr6xDapomO+IxLpzISGqkyE9iSF3s5OaIX1Ytv8RMDDcMaY7
+	 phNxjNMp1MPvg==
+Date: Thu, 25 Jan 2024 09:59:03 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "yebin (H)" <yebin10@huawei.com>
-Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
- <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 7/7] selftests/ftrace: add test cases for VFS type
- "%pd" and "%pD"
-Message-Id: <20240125083050.5aca0f58c3936206ec1827f9@kernel.org>
-In-Reply-To: <65B08249.6050704@huawei.com>
-References: <20240123092139.3698375-1-yebin10@huawei.com>
-	<20240123092139.3698375-8-yebin10@huawei.com>
-	<20240124103201.6dd8d466b1b734796418c1c4@kernel.org>
-	<65B08249.6050704@huawei.com>
+To: Beau Belgrave <beaub@linux.microsoft.com>
+Cc: rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH 1/4] tracing/user_events: Prepare find/delete for same
+ name events
+Message-Id: <20240125095903.747d657ef53bbf8cf0ddb31c@kernel.org>
+In-Reply-To: <20240123220844.928-2-beaub@linux.microsoft.com>
+References: <20240123220844.928-1-beaub@linux.microsoft.com>
+	<20240123220844.928-2-beaub@linux.microsoft.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,132 +47,241 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 24 Jan 2024 11:21:45 +0800
-"yebin (H)" <yebin10@huawei.com> wrote:
+On Tue, 23 Jan 2024 22:08:41 +0000
+Beau Belgrave <beaub@linux.microsoft.com> wrote:
+
+> The current code for finding and deleting events assumes that there will
+> never be cases when user_events are registered with the same name, but
+> different formats. In the future this scenario will exist to ensure
+> user programs can be updated or modify their events and run different
+> versions of their programs side-by-side without being blocked.
+
+Ah, this is a very important point. Kernel always has only one instance
+but user program doesn't. Thus it can define the same event name.
+For the similar problem, uprobe event assumes that the user (here
+admin) will define different group name to avoid it. But for the user
+event, it is embedded, hmm.
 
 > 
+> This change does not yet allow for multi-format events. If user_events
+> are registered with the same name but different arguments the programs
+> see the same return values as before. This change simply makes it
+> possible to easily accomodate for this in future changes.
 > 
-> On 2024/1/24 9:32, Masami Hiramatsu (Google) wrote:
-> > On Tue, 23 Jan 2024 17:21:39 +0800
-> > Ye Bin <yebin10@huawei.com> wrote:
-> >
-> >> This patch adds test cases for new print format type "%pd/%pD".The test cases
-> >> test the following items:
-> >> 1. Test README if add "%pd/%pD" type;
-> >> 2. Test "%pd" type for dput();
-> >> 3. Test "%pD" type for vfs_read();
-> >>
-> >> Signed-off-by: Ye Bin <yebin10@huawei.com>
-> >> ---
-> >>   .../ftrace/test.d/kprobe/kprobe_args_vfs.tc   | 79 +++++++++++++++++++
-> >>   1 file changed, 79 insertions(+)
-> >>   create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
-> >>
-> >> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
-> >> new file mode 100644
-> >> index 000000000000..1d8edd294dd6
-> >> --- /dev/null
-> >> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
-> >> @@ -0,0 +1,79 @@
-> >> +#!/bin/sh
-> >> +# SPDX-License-Identifier: GPL-2.0
-> >> +# description: Kprobe event VFS type argument
-> >> +# requires: kprobe_events
-> >> +
-> >> +case `uname -m` in
-> >> +x86_64)
-> >> +  ARG1=%di
-> >> +;;
-> >> +i[3456]86)
-> >> +  ARG1=%ax
-> >> +;;
-> >> +aarch64)
-> >> +  ARG1=%x0
-> >> +;;
-> >> +arm*)
-> >> +  ARG1=%r0
-> >> +;;
-> >> +ppc64*)
-> >> +  ARG1=%r3
-> >> +;;
-> >> +ppc*)
-> >> +  ARG1=%r3
-> > You can merge this ppc* and ppc64* cases :)
-> >
-> >> +;;
-> >> +s390*)
-> >> +  ARG1=%r2
-> >> +;;
-> >> +mips*)
-> >> +  ARG1=%r4
-> >> +;;
-> >> +loongarch*)
-> >> +  ARG1=%r4
-> >> +;;
-> >> +riscv*)
-> >> +  ARG1=%a0
-> > Anyway, I wonder why don't you use '$arg1' instead of these registers.
-> > Is there any reason?
-> >
-> > Thank you,
-> I looked at the parameter parsing code again, and using "$arg1" requires 
-> the kernel to
-> enable the CONFIG_HAVE_FUNCTION_ARG_ACCESS_API configuration.
+> Update find_user_event() to take in argument parameters and register
+> flags to accomodate future multi-format event scenarios. Have find
+> validate argument matching and return error pointers to cover address
+> in use cases, or allocation errors. Update callers to handle error
+> pointer logic.
 
-Yes, and it is recommended (required) for supporting kprobe event
-via ftrace. So, if you see any error on this test, that machine should
-implement it.
+Understand, that is similar to what probe events do.
+
+> 
+> Move delete_user_event() to use hash walking directly now that find has
+> changed. Delete all events found that match the register name, stop
+> if an error occurs and report back to the user.
+
+What happen if we run 2 different version of the applications and terminate
+one of them? The event which is used by others will be kept?
 
 Thank you,
 
-> >> +;;
-> >> +*)
-> >> +  echo "Please implement other architecture here"
-> >> +  exit_untested
-> >> +esac
-> >> +
-> >> +: "Test argument %pd/%pD in README"
-> >> +grep -q "%pd/%pD" README
-> >> +
-> >> +: "Test argument %pd with name"
-> >> +echo "p:testprobe dput name=${ARG1}:%pd" > kprobe_events
-> >> +echo 1 > events/kprobes/testprobe/enable
-> >> +grep -q "1" events/kprobes/testprobe/enable
-> >> +echo 0 > events/kprobes/testprobe/enable
-> >> +grep "dput" trace | grep -q "enable"
-> >> +echo "" > kprobe_events
-> >> +echo "" > trace
-> >> +
-> >> +: "Test argument %pd without name"
-> >> +echo "p:testprobe dput ${ARG1}:%pd" > kprobe_events
-> >> +echo 1 > events/kprobes/testprobe/enable
-> >> +grep -q "1" events/kprobes/testprobe/enable
-> >> +echo 0 > events/kprobes/testprobe/enable
-> >> +grep "dput" trace | grep -q "enable"
-> >> +echo "" > kprobe_events
-> >> +echo "" > trace
-> >> +
-> >> +: "Test argument %pD with name"
-> >> +echo "p:testprobe vfs_read name=${ARG1}:%pD" > kprobe_events
-> >> +echo 1 > events/kprobes/testprobe/enable
-> >> +grep -q "1" events/kprobes/testprobe/enable
-> >> +echo 0 > events/kprobes/testprobe/enable
-> >> +grep "vfs_read" trace | grep -q "enable"
-> >> +echo "" > kprobe_events
-> >> +echo "" > trace
-> >> +
-> >> +: "Test argument %pD without name"
-> >> +echo "p:testprobe vfs_read ${ARG1}:%pD" > kprobe_events
-> >> +echo 1 > events/kprobes/testprobe/enable
-> >> +grep -q "1"  events/kprobes/testprobe/enable
-> >> +echo 0 > events/kprobes/testprobe/enable
-> >> +grep "vfs_read" trace | grep -q "enable"
-> >> +echo "" > kprobe_events
-> >> +echo "" > trace
-> >> -- 
-> >> 2.31.1
-> >>
-> >
+> 
+> Update user_fields_match() to cover list_empty() scenarios instead of
+> each callsite doing it now that find_user_event() uses it directly.
+> 
+> Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
+> ---
+>  kernel/trace/trace_events_user.c | 106 +++++++++++++++++--------------
+>  1 file changed, 58 insertions(+), 48 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+> index 9365ce407426..0480579ba563 100644
+> --- a/kernel/trace/trace_events_user.c
+> +++ b/kernel/trace/trace_events_user.c
+> @@ -202,6 +202,8 @@ static struct user_event_mm *user_event_mm_get(struct user_event_mm *mm);
+>  static struct user_event_mm *user_event_mm_get_all(struct user_event *user);
+>  static void user_event_mm_put(struct user_event_mm *mm);
+>  static int destroy_user_event(struct user_event *user);
+> +static bool user_fields_match(struct user_event *user, int argc,
+> +			      const char **argv);
+>  
+>  static u32 user_event_key(char *name)
+>  {
+> @@ -1493,17 +1495,24 @@ static int destroy_user_event(struct user_event *user)
+>  }
+>  
+>  static struct user_event *find_user_event(struct user_event_group *group,
+> -					  char *name, u32 *outkey)
+> +					  char *name, int argc, const char **argv,
+> +					  u32 flags, u32 *outkey)
+>  {
+>  	struct user_event *user;
+>  	u32 key = user_event_key(name);
+>  
+>  	*outkey = key;
+>  
+> -	hash_for_each_possible(group->register_table, user, node, key)
+> -		if (!strcmp(EVENT_NAME(user), name))
+> +	hash_for_each_possible(group->register_table, user, node, key) {
+> +		if (strcmp(EVENT_NAME(user), name))
+> +			continue;
+> +
+> +		if (user_fields_match(user, argc, argv))
+>  			return user_event_get(user);
+>  
+> +		return ERR_PTR(-EADDRINUSE);
+> +	}
+> +
+>  	return NULL;
+>  }
+>  
+> @@ -1860,6 +1869,9 @@ static bool user_fields_match(struct user_event *user, int argc,
+>  	struct list_head *head = &user->fields;
+>  	int i = 0;
+>  
+> +	if (argc == 0)
+> +		return list_empty(head);
+> +
+>  	list_for_each_entry_reverse(field, head, link) {
+>  		if (!user_field_match(field, argc, argv, &i))
+>  			return false;
+> @@ -1880,10 +1892,8 @@ static bool user_event_match(const char *system, const char *event,
+>  	match = strcmp(EVENT_NAME(user), event) == 0 &&
+>  		(!system || strcmp(system, USER_EVENTS_SYSTEM) == 0);
+>  
+> -	if (match && argc > 0)
+> +	if (match)
+>  		match = user_fields_match(user, argc, argv);
+> -	else if (match && argc == 0)
+> -		match = list_empty(&user->fields);
+>  
+>  	return match;
+>  }
+> @@ -1922,11 +1932,11 @@ static int user_event_parse(struct user_event_group *group, char *name,
+>  			    char *args, char *flags,
+>  			    struct user_event **newuser, int reg_flags)
+>  {
+> -	int ret;
+> -	u32 key;
+>  	struct user_event *user;
+> +	char **argv = NULL;
+>  	int argc = 0;
+> -	char **argv;
+> +	int ret;
+> +	u32 key;
+>  
+>  	/* Currently don't support any text based flags */
+>  	if (flags != NULL)
+> @@ -1935,41 +1945,34 @@ static int user_event_parse(struct user_event_group *group, char *name,
+>  	if (!user_event_capable(reg_flags))
+>  		return -EPERM;
+>  
+> +	if (args) {
+> +		argv = argv_split(GFP_KERNEL, args, &argc);
+> +
+> +		if (!argv)
+> +			return -ENOMEM;
+> +	}
+> +
+>  	/* Prevent dyn_event from racing */
+>  	mutex_lock(&event_mutex);
+> -	user = find_user_event(group, name, &key);
+> +	user = find_user_event(group, name, argc, (const char **)argv,
+> +			       reg_flags, &key);
+>  	mutex_unlock(&event_mutex);
+>  
+> -	if (user) {
+> -		if (args) {
+> -			argv = argv_split(GFP_KERNEL, args, &argc);
+> -			if (!argv) {
+> -				ret = -ENOMEM;
+> -				goto error;
+> -			}
+> +	if (argv)
+> +		argv_free(argv);
+>  
+> -			ret = user_fields_match(user, argc, (const char **)argv);
+> -			argv_free(argv);
+> -
+> -		} else
+> -			ret = list_empty(&user->fields);
+> -
+> -		if (ret) {
+> -			*newuser = user;
+> -			/*
+> -			 * Name is allocated by caller, free it since it already exists.
+> -			 * Caller only worries about failure cases for freeing.
+> -			 */
+> -			kfree(name);
+> -		} else {
+> -			ret = -EADDRINUSE;
+> -			goto error;
+> -		}
+> +	if (IS_ERR(user))
+> +		return PTR_ERR(user);
+> +
+> +	if (user) {
+> +		*newuser = user;
+> +		/*
+> +		 * Name is allocated by caller, free it since it already exists.
+> +		 * Caller only worries about failure cases for freeing.
+> +		 */
+> +		kfree(name);
+>  
+>  		return 0;
+> -error:
+> -		user_event_put(user, false);
+> -		return ret;
+>  	}
+>  
+>  	user = kzalloc(sizeof(*user), GFP_KERNEL_ACCOUNT);
+> @@ -2052,25 +2055,32 @@ static int user_event_parse(struct user_event_group *group, char *name,
+>  }
+>  
+>  /*
+> - * Deletes a previously created event if it is no longer being used.
+> + * Deletes previously created events if they are no longer being used.
+>   */
+>  static int delete_user_event(struct user_event_group *group, char *name)
+>  {
+> -	u32 key;
+> -	struct user_event *user = find_user_event(group, name, &key);
+> +	struct user_event *user;
+> +	u32 key = user_event_key(name);
+> +	int ret = -ENOENT;
+>  
+> -	if (!user)
+> -		return -ENOENT;
+> +	/* Attempt to delete all event(s) with the name passed in */
+> +	hash_for_each_possible(group->register_table, user, node, key) {
+> +		if (strcmp(EVENT_NAME(user), name))
+> +			continue;
+>  
+> -	user_event_put(user, true);
+> +		if (!user_event_last_ref(user))
+> +			return -EBUSY;
+>  
+> -	if (!user_event_last_ref(user))
+> -		return -EBUSY;
+> +		if (!user_event_capable(user->reg_flags))
+> +			return -EPERM;
+>  
+> -	if (!user_event_capable(user->reg_flags))
+> -		return -EPERM;
+> +		ret = destroy_user_event(user);
+>  
+> -	return destroy_user_event(user);
+> +		if (ret)
+> +			goto out;
+> +	}
+> +out:
+> +	return ret;
+>  }
+>  
+>  /*
+> -- 
+> 2.34.1
 > 
 
 
