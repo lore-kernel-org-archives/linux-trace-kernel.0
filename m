@@ -1,101 +1,254 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275CF13BEA9;
-	Thu, 25 Jan 2024 22:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4660E10A29;
+	Thu, 25 Jan 2024 22:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706221708; cv=none; b=kbj7MLpnFs3j3XzvFKSKJTDet7tv6QiLGfcPFXFqprHZcUDoaxvm0tCzEZnQUFQ2yA5P00lY/7jhNJRxSj82wLI8Zk3ye8ujXmVhj7oGEDZEsZAdKRVQW3fMkyS9olpJW+PIVMSEhtqtGE4XFf+joyvU19p8UX44VPFfGSFTIZM=
+	t=1706222105; cv=none; b=TpgYWzEsZHfp7I3zkL5TOOBI5JoJYGvPlMWhaKlC8qSmf/EATQCAmVKaHHxNUVtBdCHtHCvj8mTRbObp70pp1uLi3Z/AcOssid/Z6naXe2eLSu6OQSlfInMeu0l1Y/Pxxg44CylzPNTziQtaKlCoHzzK7k0lCE7GemMKEy+v5x8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706221708; c=relaxed/simple;
-	bh=/btpYBoKltilJcMDCCj8DktuiKGbFPJxfILScVQXwpg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q2e3wdg9+nMvtJrQVANfRAMi36P5HOeAap/9iEgLRUIKmSb8XSQrnDRXc4GKkBoSvMi/NNSrzwvdCegDeUlDSaCuBnqEOepcjTCqMD8RUBWyBIRBUc/0xVMe9yrg7p2f0WrCi9Dpu2VyLRVMIlbWCq+RQ581L6nCsdF5yTDixHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=fail (0-bit key) header.d=marliere.net header.i=@marliere.net header.b=PHxPYs25 reason="key not found in DNS"; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706222105; c=relaxed/simple;
+	bh=YOkDgAPOGX+3yUf289GizPduKRrR4GYqFGRb1/Oir2U=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=BOKjeYDZznwYiSetYuYS9/XpDfU1H4Ur4A+FjSLKJ2E5Jm7JejQKXVENYPr33bOJYzPgsdmNdI5VFcOpM/4q1v59ld2ZL9yti+/d7hiuoGflqGOhGHi8+KFGZ0Ow88zvjT2SMyejYVEcfcrq+0AMfVwPnv2x4b84sKMquqgfbQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZOUobf0e; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yUs2jVJK; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZOUobf0e; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yUs2jVJK; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marliere.net header.i=@marliere.net header.b="PHxPYs25"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d74045c463so38808175ad.3;
-        Thu, 25 Jan 2024 14:28:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706221706; x=1706826506;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:dkim-signature:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w0VO8GupOllM8NGeaQ3SXOm5cCjSBeKcpIn0k9PNzAU=;
-        b=s87xSAtj5alVl0U40m7C5r+nEwWA1Gk+hTaveXR3M9XHD1gTGe0IRTJfZ7lAMWXarj
-         BBqhiLFY6IRp+dW9YwPcbGxRuD8o6U5TDoCNeXc/cZfa1G4WZvAGpY/B4u0HRujqxjDT
-         dUi9ZCxDDJW+PsM+7jJQu6BLlpaxoJ/YwoZunu64orIu98y7zwsCDSiHTS2CgY5w2gI5
-         Tqc6fJ8ZLke9ibPw7uhfvjwep+0dkcjGv5Zj46kBdyglglG0ejnGap8n3AtxzL5fxq28
-         QerL+QJLE/lbKYkiWgj7y54XZ1ktHT9VnXtWzGDedwGZv9qojO/pkpxceBqnsvfhRx5f
-         DjTg==
-X-Gm-Message-State: AOJu0YwSMgR/aeGtl5+ZZI1Clf3tWN1XLM/PCMLJept7LLo8YCaHsd05
-	SIBMxTtnvd7ekfS3MAcz8cLATz1ylqv2T3BUSOeAkTLP/GfM1oSE
-X-Google-Smtp-Source: AGHT+IFNOXfnnvhHGC8+oB5mPATdahjM+3HbqL4zKH68OivYtDySAlGqXK5aO5Do5NcyOuo2bzXbhA==
-X-Received: by 2002:a17:903:3284:b0:1d7:c16:338a with SMTP id jh4-20020a170903328400b001d70c16338amr315873plb.104.1706221706354;
-        Thu, 25 Jan 2024 14:28:26 -0800 (PST)
-Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id q23-20020a170902789700b001d3a371cd24sm12359167pll.53.2024.01.25.14.28.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 14:28:25 -0800 (PST)
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2023; t=1706221704;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZOUobf0e";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yUs2jVJK";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZOUobf0e";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yUs2jVJK"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E89982242E;
+	Thu, 25 Jan 2024 22:34:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1706222100; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=w0VO8GupOllM8NGeaQ3SXOm5cCjSBeKcpIn0k9PNzAU=;
-	b=PHxPYs25pYGlDrgOuO+bliSKAY8BF+njzgSrr/lF9ZohInEGlcWMK2W1tJL98GfjmpwBNG
-	NfmStxhT71YD+mxW48nIzYf9HLLNgIErhBAk8Su5aAuwtYjOYzgnnw8HEzZxJMOYQc5PDt
-	CJXwU6Dvmiod++Gnw/mqdZ1/jbDQ/bt7PqRWZ2DStUu61fRrzn4OuaRIGtx5v7Su09ijWm
-	HQXHg8gZ1MDhmEoXv9QzllfaYiKpPhwCwcxXIQj603wJf7YLrQ7NLOxGuTmYZiksJB5dtp
-	s0ZXpq9U+t/TAtzHGc6YdPywEOeJMCxQfyjpsPd8GQfcW45Z39WRqAY9/2whFg==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: "Ricardo B. Marliere" <ricardo@marliere.net>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] tracing: convert __trace_seq_init to use WARN_ON_ONCE
-Date: Thu, 25 Jan 2024 19:28:18 -0300
-Message-ID: <20240125222818.7425-4-ricardo@marliere.net>
-In-Reply-To: <20240125222818.7425-1-ricardo@marliere.net>
-References: <20240125222818.7425-1-ricardo@marliere.net>
+	bh=dEF3qBSHdfhxWr1uVJuvK+HFHBusGPLQ/NY34eH+fno=;
+	b=ZOUobf0eU0MWWTPmMuXuzwMUzRextIfV7U4/QyxXhdOjHBiFji3EwFBX7kg1iz/tfpPG97
+	uqvsCjVpcRVGComQR9QvHmnHZnFB79gp8WWzLYuSsNSBTEtVontA2YPDN0K8xZc6RBTsCv
+	tJRXK0vq6KFVnmcUAZ23T0+eOf9/kEc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1706222100;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dEF3qBSHdfhxWr1uVJuvK+HFHBusGPLQ/NY34eH+fno=;
+	b=yUs2jVJKRMZgaKFPPbx+hxBGNQ7msdbJoZQWI4olnt/4Kde8HDKlyDI3CACVd0MAur9enF
+	gbu4zVRHF6YchcBg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1706222100; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dEF3qBSHdfhxWr1uVJuvK+HFHBusGPLQ/NY34eH+fno=;
+	b=ZOUobf0eU0MWWTPmMuXuzwMUzRextIfV7U4/QyxXhdOjHBiFji3EwFBX7kg1iz/tfpPG97
+	uqvsCjVpcRVGComQR9QvHmnHZnFB79gp8WWzLYuSsNSBTEtVontA2YPDN0K8xZc6RBTsCv
+	tJRXK0vq6KFVnmcUAZ23T0+eOf9/kEc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1706222100;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dEF3qBSHdfhxWr1uVJuvK+HFHBusGPLQ/NY34eH+fno=;
+	b=yUs2jVJKRMZgaKFPPbx+hxBGNQ7msdbJoZQWI4olnt/4Kde8HDKlyDI3CACVd0MAur9enF
+	gbu4zVRHF6YchcBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1F01313649;
+	Thu, 25 Jan 2024 22:34:46 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Pwa1MQbismWjYAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Thu, 25 Jan 2024 22:34:46 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "NeilBrown" <neilb@suse.de>
+To: "Chuck Lever" <chuck.lever@oracle.com>
+Cc: "Jeff Layton" <jlayton@kernel.org>,
+ "Christian Brauner" <brauner@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Eric Van Hensbergen" <ericvh@kernel.org>,
+ "Latchesar Ionkov" <lucho@ionkov.net>,
+ "Dominique Martinet" <asmadeus@codewreck.org>,
+ "Christian Schoenebeck" <linux_oss@crudebyte.com>,
+ "David Howells" <dhowells@redhat.com>,
+ "Marc Dionne" <marc.dionne@auristor.com>, "Xiubo Li" <xiubli@redhat.com>,
+ "Ilya Dryomov" <idryomov@gmail.com>, "Alexander Aring" <aahringo@redhat.com>,
+ "David Teigland" <teigland@redhat.com>, "Miklos Szeredi" <miklos@szeredi.hu>,
+ "Andreas Gruenbacher" <agruenba@redhat.com>,
+ "Trond Myklebust" <trond.myklebust@hammerspace.com>,
+ "Anna Schumaker" <anna@kernel.org>, "Olga Kornievskaia" <kolga@netapp.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ "Jan Kara" <jack@suse.cz>, "Mark Fasheh" <mark@fasheh.com>,
+ "Joel Becker" <jlbec@evilplan.org>, "Joseph Qi" <joseph.qi@linux.alibaba.com>,
+ "Steve French" <sfrench@samba.org>, "Paulo Alcantara" <pc@manguebit.com>,
+ "Shyam Prasad N" <sprasad@microsoft.com>,
+ "Namjae Jeon" <linkinjeon@kernel.org>,
+ "Sergey Senozhatsky" <senozhatsky@chromium.org>,
+ "Steven Rostedt" <rostedt@goodmis.org>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>,
+ "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
+ "Ronnie Sahlberg" <ronniesahlberg@gmail.com>, linux-kernel@vger.kernel.org,
+ v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
+ ceph-devel@vger.kernel.org, gfs2@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+ ocfs2-devel@lists.linux.dev, linux-cifs@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/41] filelock: split struct file_lock into file_lock
+ and file_lease structs
+In-reply-to: <ZbJ2zc3I3uBwF/RE@tissot.1015granger.net>
+References: <20240125-flsplit-v2-0-7485322b62c7@kernel.org>,
+ <ZbJ2zc3I3uBwF/RE@tissot.1015granger.net>
+Date: Fri, 26 Jan 2024 09:34:43 +1100
+Message-id: <170622208395.21664.2510213291504081000@noble.neil.brown.name>
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ZOUobf0e;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=yUs2jVJK
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 R_RATELIMIT(0.00)[to_ip_from(RLouahofup1mwqksbidco3ksry)];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_TWELVE(0.00)[44];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 NEURAL_HAM_SHORT(-0.20)[-0.999];
+	 FREEMAIL_CC(0.00)[kernel.org,zeniv.linux.org.uk,ionkov.net,codewreck.org,crudebyte.com,redhat.com,auristor.com,gmail.com,szeredi.hu,hammerspace.com,netapp.com,oracle.com,talpey.com,suse.cz,fasheh.com,evilplan.org,linux.alibaba.com,samba.org,manguebit.com,microsoft.com,chromium.org,goodmis.org,efficios.com,vger.kernel.org,lists.linux.dev,lists.infradead.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Score: -4.51
+X-Rspamd-Queue-Id: E89982242E
+X-Spam-Flag: NO
 
-The initialization of trace_seq buffers is done elsewhere and therefore
-__trace_seq_init should yield a warning if it has to actually initialize
-the buffer.
+On Fri, 26 Jan 2024, Chuck Lever wrote:
+> On Thu, Jan 25, 2024 at 05:42:41AM -0500, Jeff Layton wrote:
+> > Long ago, file locks used to hang off of a singly-linked list in struct
+> > inode. Because of this, when leases were added, they were added to the
+> > same list and so they had to be tracked using the same sort of
+> > structure.
+> > 
+> > Several years ago, we added struct file_lock_context, which allowed us
+> > to use separate lists to track different types of file locks. Given
+> > that, leases no longer need to be tracked using struct file_lock.
+> > 
+> > That said, a lot of the underlying infrastructure _is_ the same between
+> > file leases and locks, so we can't completely separate everything.
+> > 
+> > This patchset first splits a group of fields used by both file locks and
+> > leases into a new struct file_lock_core, that is then embedded in struct
+> > file_lock. Coccinelle was then used to convert a lot of the callers to
+> > deal with the move, with the remaining 25% or so converted by hand.
+> > 
+> > It then converts several internal functions in fs/locks.c to work
+> > with struct file_lock_core. Lastly, struct file_lock is split into
+> > struct file_lock and file_lease, and the lease-related APIs converted to
+> > take struct file_lease.
+> > 
+> > After the first few patches (which I left split up for easier review),
+> > the set should be bisectable. I'll plan to squash the first few
+> > together to make sure the resulting set is bisectable before merge.
+> > 
+> > Finally, I left the coccinelle scripts I used in tree. I had heard it
+> > was preferable to merge those along with the patches that they
+> > generate, but I wasn't sure where they go. I can either move those to a
+> > more appropriate location or we can just drop that commit if it's not
+> > needed.
+> > 
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> 
+> v2 looks nicer.
+> 
+> I would add a few list handling primitives, as I see enough
+> instances of list_for_each_entry, list_for_each_entry_safe,
+> list_first_entry, and list_first_entry_or_null on fl_core.flc_list
+> to make it worth having those.
+> 
+> Also, there doesn't seem to be benefit for API consumers to have to
+> understand the internal structure of struct file_lock/lease to reach
+> into fl_core. Having accessor functions for common fields like
+> fl_type and fl_flags could be cleaner.
 
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
----
- kernel/trace/trace_seq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'm not a big fan of accessor functions.  They don't *look* like normal
+field access, so a casual reader has to go find out what the function
+does, just to find the it doesn't really do anything.
 
-diff --git a/kernel/trace/trace_seq.c b/kernel/trace/trace_seq.c
-index 741b2f3d76c0..3c7a7d903b54 100644
---- a/kernel/trace/trace_seq.c
-+++ b/kernel/trace/trace_seq.c
-@@ -32,7 +32,7 @@
-  */
- static inline void __trace_seq_init(struct trace_seq *s)
- {
--	if (unlikely(!s->seq.size))
-+	if (WARN_ON_ONCE(!s->seq.size))
- 		trace_seq_init(s);
- }
- 
--- 
-2.43.0
+But neither am I a fan have requiring filesystems to use
+"fl_core.flc_foo".  As you say, reaching into fl_core isn't ideal.
+
+It would be nice if we could make fl_core and anonymous structure, but
+that really requires -fplan9-extensions which Linus is on-record as not
+liking.
+Unless...
+
+How horrible would it be to use
+
+   union {
+       struct file_lock_core flc_core;
+       struct file_lock_core;
+   };
+
+I think that only requires -fms-extensions, which Linus was less
+negative towards.  That would allow access to the members of
+file_lock_core without the "flc_core." prefix, but would still allow
+getting the address of 'flc_core'.
+Maybe it's too ugly.
+
+While fl_type and fl_flags are most common, fl_pid, fl_owner, fl_file
+and even fl_wait are also used.  Having accessor functions for all of those
+would be too much I think.
+
+Maybe higher-level functions which meet the real need of the filesystem
+might be a useful approach:
+
+ locks_wakeup(lock)
+ locks_wait_interruptible(lock, condition)
+ locks_posix_init(lock, type, pid, ...) ??
+ locks_is_unlock() - fl_type is compared with F_UNLCK 22 times.
+
+While those are probably a good idea, through don't really help much
+with reducing the need for accessor functions.
+
+I don't suppose we could just leave the #defines in place?  Probably not
+a good idea.
+
+Maybe spell "fl_core" as "c"?  lk->c.flc_flags ???
+
+
+And I wonder if we could have a new fl_flag for 'FOREIGN' locks rather
+than encoding that flag in the sign of the pid.  That seems a bit ...
+clunky?
+
+NeilBrown
 
