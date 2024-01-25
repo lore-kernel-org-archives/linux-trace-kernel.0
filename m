@@ -1,311 +1,123 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48EBB6EB5D;
-	Thu, 25 Jan 2024 17:26:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706203576; cv=none; b=p0rY19KCZT1H1vGDuN3pqMzxf0GjFUd5YvP+BVP8n4Jsyhnr+jlxU7mct1NaBUsnZ8lWAPqTIJ1BEeC3F+w8wd5vNetfKSGLiSDmufNY18CSer6fe4m8McAdw2K7+JLVXQGCYLyiyhwEMkXdFYyKI2bOPwlU4NRvRf9Qmiw9Wbs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706203576; c=relaxed/simple;
-	bh=ATFVMV5gFGShOpTNlWx004gxAfv5ocKeIvouTse+2k4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ps883YimOYeFY9H942mUvMsmxjYLJiNg9lA+j3BcdVbwBbM8CEN+fy+wspU7uMv0giA6/MlEygTnsy7T8DHfb/J5TVEQHApAS6a1SNKgosmyd2xW8YnMBGepBuYms20uBncDmYD7UHiJKuICAnhQr+FpWOtNAV858klDXunPC2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=H+fx3MID; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2061.outbound.protection.outlook.com [40.107.102.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63C31E501;
+	Thu, 25 Jan 2024 18:49:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706208550; cv=fail; b=F6kmNapABw27KWv+eyCUfeWOYXLl+GmO9YfaagKC3/OJIOESIIs1ZYkEoSxgY1u+2OoxGe8eWvWtCKT8xxSFGXwY2YLabNwOrMu6xLM0YRdGcrEFyoizDiwZa0R3Ht964ovB9CH7dkI99eYKgp6BTvGAHjY1hjtkEo6qvfVfJeE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706208550; c=relaxed/simple;
+	bh=8xI0hz7fxd/8K+3oefumBBSxI7Jdj+WFbo2lbeBwLFs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fK2Xv3Ha3R6CkBnA8/s8nVw7GVmRTwcMGIe9UWFX8ecynkLFHXtqWeHy9ZbtRuVIDeA431bgYwr2DTwkaRr8ZVQIOkSwhNwDQpxuoZh2Z6G4Rf8A2jOE0SmR6EL/i7StvIDpQzrCx/SWeSJwn1EXIAUJNspIeekxOb4bdntQAf4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5sH39EXF; arc=fail smtp.client-ip=40.107.102.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="H+fx3MID"
-Received: from DESKTOP-4OLSCEK. (c-76-135-27-212.hsd1.wa.comcast.net [76.135.27.212])
-	by linux.microsoft.com (Postfix) with ESMTPSA id A042F20E56B9;
-	Thu, 25 Jan 2024 09:26:14 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A042F20E56B9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1706203574;
-	bh=n8WD6CdN9xvqz02mq0utwmZs6xtl6OMyi2i4cJ2+O5U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H+fx3MIDtwH2lZhoue1LG68zQjVlmb08xh09XlhOwn4luCg9IbmYw7tN9QU/x9kG8
-	 8b4x7tJOyOd6UxhukD+s0Zqwh05v0UoA+l4bTJIWigpEcAUPHNjnaUwxsdSZOxWdur
-	 1Fzrv0Rl29aOTVt2S6dBwQ9fVEpJ9dYgo+1Y7xew=
-Date: Thu, 25 Jan 2024 09:26:11 -0800
-From: Beau Belgrave <beaub@linux.microsoft.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: rostedt@goodmis.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH 1/4] tracing/user_events: Prepare find/delete for same
- name events
-Message-ID: <20240125172611.GA443-beaub@linux.microsoft.com>
-References: <20240123220844.928-1-beaub@linux.microsoft.com>
- <20240123220844.928-2-beaub@linux.microsoft.com>
- <20240125095903.747d657ef53bbf8cf0ddb31c@kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5sH39EXF"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YXH6ky6LeQ0zd6L2aUGvwLhHvdyoDdbHFphVIezmffFEt/5HRh/LNFhUYSW5SuFh7u9jAKNPSYRG/Rrb9Y2tsMZ5b6yWTjHwAUQy/TcCbzA3Hvb8RzekBlYYM+JETs1QUOBtzxVzyEVEcRU0WBjrLKtcfoRpTtbuM7e2OAaWckyR4bwVdw1o5y5i7mP76c/oeDP+kP2RJQobwuzGxVpRf8BuyXpPKn5ELoViuHl/i0SiDqQW4CwKfDyDZGZdDUq5aq9WMUU/j+Zn9cwkWznc642pdKnueLAqZPs1fizPUuTtv7lIeic66Nyg6RggnGsEgofoxjVss/r2mlVDy2jtcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bDe6RZlBI2IyODeMOcY8qHkcwCfxCvjxWG44p+fWyoI=;
+ b=n8Efq5qSF1L/vdEsdwFpXAJyCgp4MAysmAVr51Nd4sA9zx0Qia7V6AP0CtzPFRuPtlIp0KNbJZhFXMHyo1r7MLg4wSsUPS9qG9KihfjTYyPo8GPM9IQ3b6PCrf1jyBZptXPaQj6OCvbAcvV8PGef23AsDPTB2N6xJdeHXmOMGeb2DdavpWNz4mpEm16c7FnUSqWeHgPpCPYLU8WeRiUbjk04vkTPp2lUkzCsMm3UFVoZnGw59ITJIJWCz857g1i42LBcksCI10nF+WnzT0FblzigTXwglbQ+9TXrRRX6+If9xVkGS2qQKSnaMco7pP4+skK6xx/wJ+Gq2AwpI04AOA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bDe6RZlBI2IyODeMOcY8qHkcwCfxCvjxWG44p+fWyoI=;
+ b=5sH39EXFDUNFffYPtk/sacAadaY5kds/u0PHb9JMzS6/OoSoFo2zHF0qcJaNbfDUlHuZL++7Wni4+qbZvTe+7gJq6EjGOnBhK3UeUBDSspwKEKyGSZiuluxYOO8RjWTAm40TQjKCEDFPFZfSS6URoLZeDJBBCJ7+yPJajOhSyxo=
+Received: from MW3PR05CA0017.namprd05.prod.outlook.com (2603:10b6:303:2b::22)
+ by DM6PR12MB4057.namprd12.prod.outlook.com (2603:10b6:5:213::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.27; Thu, 25 Jan
+ 2024 18:49:04 +0000
+Received: from CO1PEPF000044F9.namprd21.prod.outlook.com
+ (2603:10b6:303:2b:cafe::72) by MW3PR05CA0017.outlook.office365.com
+ (2603:10b6:303:2b::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.10 via Frontend
+ Transport; Thu, 25 Jan 2024 18:49:04 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000044F9.mail.protection.outlook.com (10.167.241.199) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7249.0 via Frontend Transport; Thu, 25 Jan 2024 18:49:04 +0000
+Received: from titanite-d354host.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34; Thu, 25 Jan 2024 12:49:03 -0600
+From: Avadhut Naik <avadhut.naik@amd.com>
+To: <linux-trace-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>
+CC: <rostedt@goodmis.org>, <tony.luck@intel.com>, <bp@alien8.de>,
+	<x86@kernel.org>, <linux-kernel@vger.kernel.org>, <yazen.ghannam@amd.com>,
+	<avadnaik@amd.com>
+Subject: [PATCH v2 0/2] Update mce_record tracepoint
+Date: Thu, 25 Jan 2024 12:48:55 -0600
+Message-ID: <20240125184857.851355-1-avadhut.naik@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240125095903.747d657ef53bbf8cf0ddb31c@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044F9:EE_|DM6PR12MB4057:EE_
+X-MS-Office365-Filtering-Correlation-Id: d1ed3da4-ece9-48e8-01a4-08dc1dd64da4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	f3ecOUIV7EfWwvCwC7ruB/j/Rpwdx0XFrU8bH4rN2+b4Z+drVBF+nOLY/HrwiAPaf7RCFzZY13oFMNTNhqrz7SvNlO3/QPCtfwX9XUMf+spMYOZQsap8gXca5RCOW5fAV2CqMADvZo0oOGXVqdK2bTu1aeB3Y6yJQ5tbgF0wkBrmxpbMPeVbIEilKoHFJiAQqpZTmiBDxsdjGX2S2AUXraDHvlvRfDRv3f69wXKTECzV3MxLK6SkYXqKMrlWbUpMgk/rdsjIT2bAvBJcrG7RZMq5dfqK6Xq3nH6EwZfAvKNHGG+xfODzlDsnDURvmEU+jfNimojPuB1nl/yfucMIfSeokuGQmU6W2UVwM/6cpWtD88NU7Gf2JuzgiQy6NX9B8aV1uC5EOVLa6Se7FesG0VxEAmSQTngOesHvVCyW09D7fa+g1E/ltkc5C+S04LpRGMPd97qpcUDMsGUkoGHnSR35xSS6u+yMdOVss9IgeOy+UdglMX1KO7Yqc+y/uNqylzfmmYwDXmoP+gaQ/h5M4/fTbUsoITI8ngJvV9fZ3DSUL94s6iTQh2cssQF7HQklbmghD5GoUPhA04eOTFFgepXGWnDOSS8VifeVdmlKqCdv7A5BVKgi2fTtFhT5/OSeiU+dG2fcZKcfQpDx9I0Tg/9gWgM84fwrLWL/CZe2h9iziLQA7hLnL3HUXzb8EJL/W5FSBx5Z2/D5ld/PEv7Ske0824JVr//wP46eGdut/no=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(39860400002)(376002)(396003)(346002)(230922051799003)(451199024)(186009)(82310400011)(1800799012)(64100799003)(36840700001)(46966006)(40470700004)(41300700001)(2616005)(26005)(16526019)(7696005)(1076003)(6666004)(8936002)(83380400001)(336012)(426003)(8676002)(4326008)(44832011)(478600001)(70206006)(54906003)(70586007)(316002)(110136005)(5660300002)(86362001)(36860700001)(81166007)(82740400003)(356005)(47076005)(36756003)(40480700001)(40460700003)(4744005)(15650500001)(2906002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jan 2024 18:49:04.1162
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1ed3da4-ece9-48e8-01a4-08dc1dd64da4
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000044F9.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4057
 
-On Thu, Jan 25, 2024 at 09:59:03AM +0900, Masami Hiramatsu wrote:
-> On Tue, 23 Jan 2024 22:08:41 +0000
-> Beau Belgrave <beaub@linux.microsoft.com> wrote:
-> 
-> > The current code for finding and deleting events assumes that there will
-> > never be cases when user_events are registered with the same name, but
-> > different formats. In the future this scenario will exist to ensure
-> > user programs can be updated or modify their events and run different
-> > versions of their programs side-by-side without being blocked.
-> 
-> Ah, this is a very important point. Kernel always has only one instance
-> but user program doesn't. Thus it can define the same event name.
-> For the similar problem, uprobe event assumes that the user (here
-> admin) will define different group name to avoid it. But for the user
-> event, it is embedded, hmm.
-> 
+This patchset updates the mce_record tracepoint so that the recently added
+fields of struct mce are exported through it to userspace.
 
-Yes, the series will handle if multi-processes use the same name, we
-will find a matching version of that name within the user_event group.
-If there isn't one, a new one is created. Each is backed by an
-independent tracepoint which does match up with how uprobe does it. This
-actually got brought up in the tracefs meetings we've had and it seemed
-to get wide agreement on how to best handle this.
+The first patch adds PPIN (Protected Processor Inventory Number) field to
+the tracepoint.
 
-> > 
-> > This change does not yet allow for multi-format events. If user_events
-> > are registered with the same name but different arguments the programs
-> > see the same return values as before. This change simply makes it
-> > possible to easily accomodate for this in future changes.
-> > 
-> > Update find_user_event() to take in argument parameters and register
-> > flags to accomodate future multi-format event scenarios. Have find
-> > validate argument matching and return error pointers to cover address
-> > in use cases, or allocation errors. Update callers to handle error
-> > pointer logic.
-> 
-> Understand, that is similar to what probe events do.
-> 
-> > 
-> > Move delete_user_event() to use hash walking directly now that find has
-> > changed. Delete all events found that match the register name, stop
-> > if an error occurs and report back to the user.
-> 
-> What happen if we run 2 different version of the applications and terminate
-> one of them? The event which is used by others will be kept?
-> 
+The second patch adds the microcode field (Microcode Revision) to the
+tracepoint.
 
-Each unique version of a user_event has it's own ref-count. If one
-version is not-used, but another version is, only the not-used version
-will get deleted. The other version that is in use will return a -EBUSY
-when it gets to that version via enumeration.
+Changes in v2:
+ - Export microcode field (Microcode Revision) through the tracepoiont in
+   addition to PPIN.
 
-While we only have a single tracepoint per-version, we have several
-user_event structures in memory that have the same name, yet different
-formats. Each of which have their own lifetime, enablers and ref-counts
-to keep them isolated from each other.
+Avadhut Naik (2):
+  tracing: Include PPIN in mce_record tracepoint
+  tracing: Include Microcode Revision in mce_record tracepoint
 
-Thanks,
--Beau
+ include/trace/events/mce.h | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-> Thank you,
-> 
-> > 
-> > Update user_fields_match() to cover list_empty() scenarios instead of
-> > each callsite doing it now that find_user_event() uses it directly.
-> > 
-> > Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
-> > ---
-> >  kernel/trace/trace_events_user.c | 106 +++++++++++++++++--------------
-> >  1 file changed, 58 insertions(+), 48 deletions(-)
-> > 
-> > diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-> > index 9365ce407426..0480579ba563 100644
-> > --- a/kernel/trace/trace_events_user.c
-> > +++ b/kernel/trace/trace_events_user.c
-> > @@ -202,6 +202,8 @@ static struct user_event_mm *user_event_mm_get(struct user_event_mm *mm);
-> >  static struct user_event_mm *user_event_mm_get_all(struct user_event *user);
-> >  static void user_event_mm_put(struct user_event_mm *mm);
-> >  static int destroy_user_event(struct user_event *user);
-> > +static bool user_fields_match(struct user_event *user, int argc,
-> > +			      const char **argv);
-> >  
-> >  static u32 user_event_key(char *name)
-> >  {
-> > @@ -1493,17 +1495,24 @@ static int destroy_user_event(struct user_event *user)
-> >  }
-> >  
-> >  static struct user_event *find_user_event(struct user_event_group *group,
-> > -					  char *name, u32 *outkey)
-> > +					  char *name, int argc, const char **argv,
-> > +					  u32 flags, u32 *outkey)
-> >  {
-> >  	struct user_event *user;
-> >  	u32 key = user_event_key(name);
-> >  
-> >  	*outkey = key;
-> >  
-> > -	hash_for_each_possible(group->register_table, user, node, key)
-> > -		if (!strcmp(EVENT_NAME(user), name))
-> > +	hash_for_each_possible(group->register_table, user, node, key) {
-> > +		if (strcmp(EVENT_NAME(user), name))
-> > +			continue;
-> > +
-> > +		if (user_fields_match(user, argc, argv))
-> >  			return user_event_get(user);
-> >  
-> > +		return ERR_PTR(-EADDRINUSE);
-> > +	}
-> > +
-> >  	return NULL;
-> >  }
-> >  
-> > @@ -1860,6 +1869,9 @@ static bool user_fields_match(struct user_event *user, int argc,
-> >  	struct list_head *head = &user->fields;
-> >  	int i = 0;
-> >  
-> > +	if (argc == 0)
-> > +		return list_empty(head);
-> > +
-> >  	list_for_each_entry_reverse(field, head, link) {
-> >  		if (!user_field_match(field, argc, argv, &i))
-> >  			return false;
-> > @@ -1880,10 +1892,8 @@ static bool user_event_match(const char *system, const char *event,
-> >  	match = strcmp(EVENT_NAME(user), event) == 0 &&
-> >  		(!system || strcmp(system, USER_EVENTS_SYSTEM) == 0);
-> >  
-> > -	if (match && argc > 0)
-> > +	if (match)
-> >  		match = user_fields_match(user, argc, argv);
-> > -	else if (match && argc == 0)
-> > -		match = list_empty(&user->fields);
-> >  
-> >  	return match;
-> >  }
-> > @@ -1922,11 +1932,11 @@ static int user_event_parse(struct user_event_group *group, char *name,
-> >  			    char *args, char *flags,
-> >  			    struct user_event **newuser, int reg_flags)
-> >  {
-> > -	int ret;
-> > -	u32 key;
-> >  	struct user_event *user;
-> > +	char **argv = NULL;
-> >  	int argc = 0;
-> > -	char **argv;
-> > +	int ret;
-> > +	u32 key;
-> >  
-> >  	/* Currently don't support any text based flags */
-> >  	if (flags != NULL)
-> > @@ -1935,41 +1945,34 @@ static int user_event_parse(struct user_event_group *group, char *name,
-> >  	if (!user_event_capable(reg_flags))
-> >  		return -EPERM;
-> >  
-> > +	if (args) {
-> > +		argv = argv_split(GFP_KERNEL, args, &argc);
-> > +
-> > +		if (!argv)
-> > +			return -ENOMEM;
-> > +	}
-> > +
-> >  	/* Prevent dyn_event from racing */
-> >  	mutex_lock(&event_mutex);
-> > -	user = find_user_event(group, name, &key);
-> > +	user = find_user_event(group, name, argc, (const char **)argv,
-> > +			       reg_flags, &key);
-> >  	mutex_unlock(&event_mutex);
-> >  
-> > -	if (user) {
-> > -		if (args) {
-> > -			argv = argv_split(GFP_KERNEL, args, &argc);
-> > -			if (!argv) {
-> > -				ret = -ENOMEM;
-> > -				goto error;
-> > -			}
-> > +	if (argv)
-> > +		argv_free(argv);
-> >  
-> > -			ret = user_fields_match(user, argc, (const char **)argv);
-> > -			argv_free(argv);
-> > -
-> > -		} else
-> > -			ret = list_empty(&user->fields);
-> > -
-> > -		if (ret) {
-> > -			*newuser = user;
-> > -			/*
-> > -			 * Name is allocated by caller, free it since it already exists.
-> > -			 * Caller only worries about failure cases for freeing.
-> > -			 */
-> > -			kfree(name);
-> > -		} else {
-> > -			ret = -EADDRINUSE;
-> > -			goto error;
-> > -		}
-> > +	if (IS_ERR(user))
-> > +		return PTR_ERR(user);
-> > +
-> > +	if (user) {
-> > +		*newuser = user;
-> > +		/*
-> > +		 * Name is allocated by caller, free it since it already exists.
-> > +		 * Caller only worries about failure cases for freeing.
-> > +		 */
-> > +		kfree(name);
-> >  
-> >  		return 0;
-> > -error:
-> > -		user_event_put(user, false);
-> > -		return ret;
-> >  	}
-> >  
-> >  	user = kzalloc(sizeof(*user), GFP_KERNEL_ACCOUNT);
-> > @@ -2052,25 +2055,32 @@ static int user_event_parse(struct user_event_group *group, char *name,
-> >  }
-> >  
-> >  /*
-> > - * Deletes a previously created event if it is no longer being used.
-> > + * Deletes previously created events if they are no longer being used.
-> >   */
-> >  static int delete_user_event(struct user_event_group *group, char *name)
-> >  {
-> > -	u32 key;
-> > -	struct user_event *user = find_user_event(group, name, &key);
-> > +	struct user_event *user;
-> > +	u32 key = user_event_key(name);
-> > +	int ret = -ENOENT;
-> >  
-> > -	if (!user)
-> > -		return -ENOENT;
-> > +	/* Attempt to delete all event(s) with the name passed in */
-> > +	hash_for_each_possible(group->register_table, user, node, key) {
-> > +		if (strcmp(EVENT_NAME(user), name))
-> > +			continue;
-> >  
-> > -	user_event_put(user, true);
-> > +		if (!user_event_last_ref(user))
-> > +			return -EBUSY;
-> >  
-> > -	if (!user_event_last_ref(user))
-> > -		return -EBUSY;
-> > +		if (!user_event_capable(user->reg_flags))
-> > +			return -EPERM;
-> >  
-> > -	if (!user_event_capable(user->reg_flags))
-> > -		return -EPERM;
-> > +		ret = destroy_user_event(user);
-> >  
-> > -	return destroy_user_event(user);
-> > +		if (ret)
-> > +			goto out;
-> > +	}
-> > +out:
-> > +	return ret;
-> >  }
-> >  
-> >  /*
-> > -- 
-> > 2.34.1
-> > 
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+base-commit: 0d4f19418f067465b0a84a287d9a51e443a0bc3a
+-- 
+2.34.1
+
