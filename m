@@ -1,71 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD99D20DD3;
-	Fri, 26 Jan 2024 18:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779681E51E;
+	Fri, 26 Jan 2024 18:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706294500; cv=none; b=AsF3XJ6LLBiR+4sxyWwcstmvKbSM6BbmhYAbAOnvvJGZCnz87hi6meZBZ3H2eqwROSQl/GT37Q4O6OenStnhSa/+IiXQyO+u4NzxcwlOpbZhBZopahgHynQCwKdkn2iX512QbyJ75R7pA4GLS+kklcG0wpDVOm3rvMlw6r8jEG8=
+	t=1706295436; cv=none; b=UPeBlPPMgzrOqEVCoGqyrUmCLNVyRgbjYAkJIAxmriBF00hzgIq0k0ZnYCKmYov0lUEGc5ooeyI8hu1lfIAPVy3fLrxf3tFJsZmbXQSNWWY0M0gOz7fXk3uJvm5prl6bjPo9+P4TZNSKm7TsFH/2uvZT/JQCb7Rpjuu49DjtvEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706294500; c=relaxed/simple;
-	bh=kEQjJsA8wpw6FHNf9vQGPieJQVwYxiG/mQO5T+LdSDs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FJzH1ic6GMmbBknj0p81UKfEbkrgAkX1YOLqAop25Ua4aXehfk0dGTsmS/RVTT032Dzt0q6HNNpAOvDlyTV+SKMUPGG3iq1OIqlEe/pgZ2IuywvzlKyH4EiiSG3ZCPSZ1YfMCKAUDv+s8pPrRa8t4Cml1ZQAo5xpJyWALdwITew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8E80C433C7;
-	Fri, 26 Jan 2024 18:41:38 +0000 (UTC)
-Date: Fri, 26 Jan 2024 13:41:41 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Christian Brauner <brauner@kernel.org>, Ajay Kaher
- <ajay.kaher@broadcom.com>, Geert Uytterhoeven <geert@linux-m68k.org>,
- linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] eventfs: Give files a default of PAGE_SIZE size
-Message-ID: <20240126134141.65139b5e@gandalf.local.home>
-In-Reply-To: <CAHk-=whA8562VjU3MVBPMLsJ4u=ixecRpn=0UnJPPAxsBr680Q@mail.gmail.com>
-References: <20240126131837.36dbecc8@gandalf.local.home>
-	<CAHk-=whA8562VjU3MVBPMLsJ4u=ixecRpn=0UnJPPAxsBr680Q@mail.gmail.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1706295436; c=relaxed/simple;
+	bh=QJe1FJ1iBaalO5uoFk0dCsivP88lPhMfWnHVPQV7TEg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V6KKfJzSR3aD5UmZRmz5Ur+FOiAxAk0SJ7NB33z8vCwgc++05ou+BK4W9nzpws7WTGPJ5k9DQm9XJUwAOMTP1bkUdIrqtOXFOrQd66nYZ7Tt1pvPqwue57VtbmSZ/lSzvPburKAubyfD4k86CCV0NJ2Lpn+fGomTlRMupFStnkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Gk6qPLPc; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Gk6qPLPc"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 79D1240E016C;
+	Fri, 26 Jan 2024 18:57:05 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 5WLNMonkyGe7; Fri, 26 Jan 2024 18:57:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1706295423; bh=xhhU0pI4cvWOVs/8fChYblqpo/BatkU5qzvZCo8PM24=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Gk6qPLPcz3QyHGb+YZrdeyar1yu/82X4/OlpJjJe/3pC3U1xpXztdO1fqU3mosVLv
+	 UlsfzXIVa55o6ZrUHl5/auceFNgMAzyq7VJiNGjV7opMRfbyum2pVY7dGgHDZjxZbr
+	 dYJq7D+T2rgLX6KsRaYGsDn23zcIXobLBMTQWhQXlMkJ1r+D6zZ7bRMEgu+tCyDjx0
+	 XUYp/QMRJ/2x29ucUkKlG5uVKjCyBow1ySc6rHRNfGWE7/qXB2A8vA4a9wbkDgs5kK
+	 7qHrYLRdyf/vF8e55qq27+E4zJzFin7H2ZCqCVL+f8Ht/xx1VJCrDaWKvBaA/c/Eku
+	 J7izqRGN2k8vZ36o4hGuubBn4h04D4h68ZHx4wSc1A+5ODc0YSPjL+11qXVUK0i/Ie
+	 NshSqXqMHaOSAUWnETUBy+dvVeatGrvtlsOmLdXfcLFIFn+psEC2LzzIDEeGano4gD
+	 qTUjJi0C+3YBjLqqDwRnAqUxGhkYys5dO4hm42c2dxIUjFhClEp3bCMhAor5nv7hy5
+	 S8rXEnukgKW6CmkvaoLDq6YvPpPwsK/r+vdpnt76JfrGjqXlNebks1B3wzs0t3GUYi
+	 69hulmUU0AXfVHHBlckzj+BBhEXYwVTVQYSlEDkjI8O9oeeFOFv9E0gHnGJ7TM7W3h
+	 /byjo3FsQMKAO3RyWAMVTD/8=
+Received: from zn.tnic (pd953033e.dip0.t-ipconnect.de [217.83.3.62])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3E04340E0196;
+	Fri, 26 Jan 2024 18:56:54 +0000 (UTC)
+Date: Fri, 26 Jan 2024 19:56:49 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: "Luck, Tony" <tony.luck@intel.com>
+Cc: Avadhut Naik <avadhut.naik@amd.com>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
+	"avadnaik@amd.com" <avadnaik@amd.com>
+Subject: Re: [PATCH v2 0/2] Update mce_record tracepoint
+Message-ID: <20240126185649.GFZbQAccZphdW_0CkH@fat_crate.local>
+References: <20240125184857.851355-1-avadhut.naik@amd.com>
+ <20240125185821.GDZbKvTW93APAiY1LP@fat_crate.local>
+ <SJ1PR11MB6083DAA7A6EDBBDAF5987A80FC7A2@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <20240126102721.GCZbOJCTqTVmvgOEuM@fat_crate.local>
+ <SJ1PR11MB60839509241AA98A59B78D15FC792@SJ1PR11MB6083.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <SJ1PR11MB60839509241AA98A59B78D15FC792@SJ1PR11MB6083.namprd11.prod.outlook.com>
 
-On Fri, 26 Jan 2024 10:31:07 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Fri, Jan 26, 2024 at 05:10:20PM +0000, Luck, Tony wrote:
+> 12 extra bytes divided by (say) 64GB (a very small server these days, may laptop has that much)
+>    = 0.00000001746%
+> 
+> We will need 57000 changes like this one before we get to 0.001% :-)
 
-> On Fri, 26 Jan 2024 at 10:18, Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > By following what sysfs does, and give files a default size of PAGE_SIZE,
-> > it allows the tar to work. No event file is greater than PAGE_SIZE.  
-> 
-> No, please. Just don't.
-> 
-> Nobody has asked for this, and nobody sane should use 'tar' on tracefs anyway.
-> 
-> It hasn't worked before, so saying "now you can use tar" is just a
-> *bad* idea. There is no upside, only downsides, with tar either (a)
-> not working at all on older kernels or (b) complaining about how the
-> size isn't reliable on newer ones.
-> 
-> So please. You should *NOT* look at "this makes tar work, albeit badly".
-> 
-> You should look at whether it improves REAL LOADS. And it doesn't. All
-> it does is add a hack for a bad idea. Leave it alone.
->
+You're forgetting that those 12 bytes repeat per MCE tracepoint logged.
+And there's other code which adds more 0.01% here and there, well,
+because we can.
 
-Fine, but I still plan on sending you the update to give all files unique
-inode numbers. If it screws up tar, it could possibly screw up something
-else. And all the files use to have unique numbers. They are just not unique
-in the current -rc release. You have a point that this would just fix this
-release and the older kernels would still be broken, but the identical inode
-numbers is something I don't want to later find out breaks something.
+> But the key there is keeping the details of the source machine attached to
+> the error record. My first contact with machine check debugging is always
+> just the raw error record (from mcelog, rasdaemon, or console log).
 
--- Steve
+Yes, that is somewhat sensible reason to have the PPIN together with the
+MCE record.
+
+> Knowing which microcode version was loaded on a core *at the time of
+> the error* is critical. 
+
+So is the rest of the debug info you're going to need from that machine.
+And yet we're not adding that to the tracepoint.
+
+> You've spent enough time with Ashok and Thomas tweaking the Linux
+> microcode driver to know that going back to the machine the next day
+> to ask about microcode version has a bunch of ways to get a wrong
+> answer.
+
+Huh, what does that have to do with this?
+
+IIUC, if someone changes something on the system, whether that is
+updating microcode or swapping a harddrive or swapping memory or
+whatever, that invalidates the errors reported, pretty much.
+
+You can't put it all in the trace record, you just can't. 
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
