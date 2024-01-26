@@ -1,116 +1,69 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B16522F12
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Jan 2024 20:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FDF22EE5;
+	Fri, 26 Jan 2024 20:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706299252; cv=none; b=bqCGN7xAZWPA/5i/XGIOF09d+XVFBwxTqnxe/IyiPFeHJ2sSSHCu2yUYG06g4Tb+g/CRQFMbyMvPX5adD6vIyUSWTAEZKPMIAU4vdnoI3OjP/RHlmwhnOzbdoqrfsgcJ2yhBo3sszxrGHIQOGTAbmbtCaP9NkomV84yJqm2qaRU=
+	t=1706299484; cv=none; b=bNfmILJGi8FuKUdJCy4Og3OpKQbQ6NzuWEZAjBt/pRRE/WWIeq5UbftH1bHsLlr8uuKhyf3McDjrqNOBk8DO7479NlGZzOYFe4AGiVfW21ZaapvlEmwEExjvYCW5/FosKRNZ5TbU5xCtPco6B67rv0QmrJL99YWQF6dDsQrPwuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706299252; c=relaxed/simple;
-	bh=fcxQ3bc2/ycZVVRavVndN2TW1bmrjhqtW752nshgov4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YHD87IkFRKMVMfARFIDVIUpZC1cJEvbPlhV4wUqqVmanmHmWApNAvP464OdjJQQXQgdhA0+146g/Gz/VJUU+AEqh5nznPlQ39G2uvXMk1hjmkMwQATiy9/hMvO0F5J5S442PK5XLMZkNzgLAqWrfLo3F+8YxGm+gR6nF4tmDFjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YMWxv2La; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YMWxv2La"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d72d240c69so20205ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Jan 2024 12:00:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706299250; x=1706904050; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MimXWUdcIvN0nH3+dB3+knWCETvDzwsFYg6Za1niF5A=;
-        b=YMWxv2LaOd1dcfqzupCcwMB+CtjBdtFEUGJpYmamncMy6fKsXW0Pu9UsOeA2A0nA7m
-         awROwFafV0KwQC4whgnD5xgIlVL6+WIlHXiq8Lg34EpAlTJUqRzYeubb9gEBR4GZzVVD
-         V7EkNkJoK2HfHltFPpNivyhioX4CbuUO8mNUOjLtrzKiBSsS/Cy2UZEpA1z4EA1iyNpU
-         X0giY/smB78dF2ZLkSBGGu7S35WA1DhtFf/9pZpswzRWDmzt6pmlkpd9X2vXu8E/1Uu7
-         BFStjW4ngBX2zwBWlpmFq9ciWL3KFpuov4e/cEuHpwdHruCSMmsInYIoGeTSzomm+0ZW
-         Y4Bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706299250; x=1706904050;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MimXWUdcIvN0nH3+dB3+knWCETvDzwsFYg6Za1niF5A=;
-        b=aJyhRM2hiKVUW+sUS/53atFQyfEAt3R0klcw0FYfwOzZp51JWCCmrDdcg9LSsmvzin
-         mWqs6q8kmpVzdUp3k8dEG9yodTDxmgCLgnDwdJGnCanNpyTmoP/otMR8ROjw5U1soF3y
-         5iB5Aafb8sJtHRtD5NV6RxJN6HPWQjjfRk2sT8kXeFFKaSMzjtttvG29Bd9YEzIrOCmF
-         VaXa1FoXYXf2dpRYTH6ACFIRYPj0uj4BfdR6Sr1rMhJ24tHVM++dkf18tPJ5/jmV0O5K
-         j/1hxLd0Gm3iArfyBRMaRN9LD5S3DOVQUiWhvRxEAk/VnSjPKt2yufDkGw1M1P11GpaV
-         Pe0A==
-X-Gm-Message-State: AOJu0YwqXJFq9JsyIzyOZuUmULNDA/WcXn6OqDCLgP4HSd8k7/FH5c60
-	gEO3wqtNht5RK5qurBpaBiDDqqBNva0IPZkG6FeFnWN1J+zyytC+Pi6fVLPx0ngBuCJR3m0dKKY
-	ruoAXKPNJfNooCfUpTqFKxWsyBk9Vx0F5Q5w7
-X-Google-Smtp-Source: AGHT+IFUiaxxx/fnNfe3njsMipgqF2fdYzG/YBwFDzOMI+2YRba8r80bUR3upqDy6QVJlcre5NJrJ1mYmBGhuhzNf/E=
-X-Received: by 2002:a17:903:1246:b0:1d8:a782:6cc2 with SMTP id
- u6-20020a170903124600b001d8a7826cc2mr127996plh.13.1706299249979; Fri, 26 Jan
- 2024 12:00:49 -0800 (PST)
+	s=arc-20240116; t=1706299484; c=relaxed/simple;
+	bh=IfeDUEa6PaW2Z0SPW3DXlCzgYBQGS6SOuHgow2fYReU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bCQTeNpnd1YiOtxFvJOl7GORKn1OWskwA0bKnlnNwaHZenUXaxWilObOgwNerqO8yR2SdTUjOOQqSeZTBrCk0hXCp7tBsTFrniCccXbEgE3lrZ9HdCnmhhMmkIumNVFWFEjtGZdDfNuEcS5yTkXmOLGEE8RbenU9m9LZIHio974=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 288D4C433C7;
+	Fri, 26 Jan 2024 20:04:43 +0000 (UTC)
+Date: Fri, 26 Jan 2024 15:04:45 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Beau Belgrave <beaub@linux.microsoft.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH 2/4] tracing/user_events: Introduce multi-format events
+Message-ID: <20240126150445.71c5d426@gandalf.local.home>
+In-Reply-To: <20240126191007.GA456-beaub@linux.microsoft.com>
+References: <20240123220844.928-1-beaub@linux.microsoft.com>
+	<20240123220844.928-3-beaub@linux.microsoft.com>
+	<20240127000104.7c98b34d295747ab1b084bd2@kernel.org>
+	<20240126191007.GA456-beaub@linux.microsoft.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240125164256.4147-1-alexandru.elisei@arm.com> <20240125164256.4147-12-alexandru.elisei@arm.com>
-In-Reply-To: <20240125164256.4147-12-alexandru.elisei@arm.com>
-From: Peter Collingbourne <pcc@google.com>
-Date: Fri, 26 Jan 2024 12:00:36 -0800
-Message-ID: <CAMn1gO6hx7yaFHEYVbkpPocAxQmQc3JBgppcNSJw9SUfyvjwbQ@mail.gmail.com>
-Subject: Re: [PATCH RFC v3 11/35] mm: Allow an arch to hook into folio
- allocation when VMA is known
-To: Alexandru Elisei <alexandru.elisei@arm.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, 
-	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, 
-	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org, 
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
-	bsegall@google.com, mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, 
-	mhiramat@kernel.org, rppt@kernel.org, hughd@google.com, steven.price@arm.com, 
-	anshuman.khandual@arm.com, vincenzo.frascino@arm.com, david@redhat.com, 
-	eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 25, 2024 at 8:43=E2=80=AFAM Alexandru Elisei
-<alexandru.elisei@arm.com> wrote:
->
-> arm64 uses VM_HIGH_ARCH_0 and VM_HIGH_ARCH_1 for enabling MTE for a VMA.
-> When VM_HIGH_ARCH_0, which arm64 renames to VM_MTE, is set for a VMA, and
-> the gfp flag __GFP_ZERO is present, the __GFP_ZEROTAGS gfp flag also gets
-> set in vma_alloc_zeroed_movable_folio().
->
-> Expand this to be more generic by adding an arch hook that modifes the gf=
-p
-> flags for an allocation when the VMA is known.
->
-> Note that __GFP_ZEROTAGS is ignored by the page allocator unless __GFP_ZE=
-RO
-> is also set; from that point of view, the current behaviour is unchanged,
-> even though the arm64 flag is set in more places.  When arm64 will have
-> support to reuse the tag storage for data allocation, the uses of the
-> __GFP_ZEROTAGS flag will be expanded to instruct the page allocator to tr=
-y
-> to reserve the corresponding tag storage for the pages being allocated.
->
-> The flags returned by arch_calc_vma_gfp() are or'ed with the flags set by
-> the caller; this has been done to keep an architecture from modifying the
-> flags already set by the core memory management code; this is similar to
-> how do_mmap() -> calc_vm_flag_bits() -> arch_calc_vm_flag_bits() has been
-> implemented. This can be revisited in the future if there's a need to do
-> so.
->
-> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+On Fri, 26 Jan 2024 11:10:07 -0800
+Beau Belgrave <beaub@linux.microsoft.com> wrote:
 
-This patch also needs to update the non-CONFIG_NUMA definition of
-vma_alloc_folio in include/linux/gfp.h to call arch_calc_vma_gfp. See:
-https://r.android.com/2849146
+> > OK, so the each different event has suffixed name. But this will
+> > introduce non C-variable name.
+> > 
+> > Steve, do you think your library can handle these symbols? It will
+> > be something like "event:[1]" as the event name.
+> > Personally I like "event.1" style. (of course we need to ensure the
+> > user given event name is NOT including such suffix numbers)
+> >   
+> 
+> Just to clarify around events including a suffix number. This is why
+> multi-events use "user_events_multi" system name and the single-events
+> using just "user_events".
+> 
+> Even if a user program did include a suffix, the suffix would still get
+> appended. An example is "test" vs "test:[0]" using multi-format would
+> result in two tracepoints ("test:[0]" and "test:[0]:[1]" respectively
+> (assuming these are the first multi-events on the system).
+> 
+> I'm with you, we really don't want any spoofing or squatting possible.
+> By using different system names and always appending the suffix I
+> believe covers this.
+> 
+> Looking forward to hearing Steven's thoughts on this as well.
 
-Peter
+I'm leaning towards Masami's suggestion to use dots, as that won't conflict
+with special characters from bash, as '[' and ']' do.
+
+-- Steve
