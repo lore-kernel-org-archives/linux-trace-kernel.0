@@ -1,116 +1,90 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779681E51E;
-	Fri, 26 Jan 2024 18:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7BF620320
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Jan 2024 19:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706295436; cv=none; b=UPeBlPPMgzrOqEVCoGqyrUmCLNVyRgbjYAkJIAxmriBF00hzgIq0k0ZnYCKmYov0lUEGc5ooeyI8hu1lfIAPVy3fLrxf3tFJsZmbXQSNWWY0M0gOz7fXk3uJvm5prl6bjPo9+P4TZNSKm7TsFH/2uvZT/JQCb7Rpjuu49DjtvEM=
+	t=1706296014; cv=none; b=Gw13L7D51+/pZfVa5JFEYAZoXZX+T++G3731N8RzWIrAm6JN9CYfqt4mvfkEJaQHzHI3U9c7ZViG6NCvWXW0VbwaS/DX3OBbQiNs5yFqrK4AgGRlUw6K31TxvdQ46s5H6fTWbUmc+CFrcZ0xGF0OtK86y3+T3zevrLfCfBf7SIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706295436; c=relaxed/simple;
-	bh=QJe1FJ1iBaalO5uoFk0dCsivP88lPhMfWnHVPQV7TEg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V6KKfJzSR3aD5UmZRmz5Ur+FOiAxAk0SJ7NB33z8vCwgc++05ou+BK4W9nzpws7WTGPJ5k9DQm9XJUwAOMTP1bkUdIrqtOXFOrQd66nYZ7Tt1pvPqwue57VtbmSZ/lSzvPburKAubyfD4k86CCV0NJ2Lpn+fGomTlRMupFStnkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Gk6qPLPc; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1706296014; c=relaxed/simple;
+	bh=u4QMmyhqfZPexfauxvPU4+cj2+a1AaNdzp8EfyoHBcs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B54sMHPgt5jZirKOhCBQWxg4h0PKHgWMz09JKStpaJ+7lRt/Ysfp1e4SDkGmWarGS8aAdVTgnIe8z7xSkhC/IXGgH6O6GT0jHBpcCdaj4Ldmq31bqhnxisxcrGM/Lext+yKn/x5M4qsuSyvneCKl9m8Ddwn75KAQ0NF7VoTQoi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cb6c0M8u; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Gk6qPLPc"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 79D1240E016C;
-	Fri, 26 Jan 2024 18:57:05 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 5WLNMonkyGe7; Fri, 26 Jan 2024 18:57:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1706295423; bh=xhhU0pI4cvWOVs/8fChYblqpo/BatkU5qzvZCo8PM24=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Gk6qPLPcz3QyHGb+YZrdeyar1yu/82X4/OlpJjJe/3pC3U1xpXztdO1fqU3mosVLv
-	 UlsfzXIVa55o6ZrUHl5/auceFNgMAzyq7VJiNGjV7opMRfbyum2pVY7dGgHDZjxZbr
-	 dYJq7D+T2rgLX6KsRaYGsDn23zcIXobLBMTQWhQXlMkJ1r+D6zZ7bRMEgu+tCyDjx0
-	 XUYp/QMRJ/2x29ucUkKlG5uVKjCyBow1ySc6rHRNfGWE7/qXB2A8vA4a9wbkDgs5kK
-	 7qHrYLRdyf/vF8e55qq27+E4zJzFin7H2ZCqCVL+f8Ht/xx1VJCrDaWKvBaA/c/Eku
-	 J7izqRGN2k8vZ36o4hGuubBn4h04D4h68ZHx4wSc1A+5ODc0YSPjL+11qXVUK0i/Ie
-	 NshSqXqMHaOSAUWnETUBy+dvVeatGrvtlsOmLdXfcLFIFn+psEC2LzzIDEeGano4gD
-	 qTUjJi0C+3YBjLqqDwRnAqUxGhkYys5dO4hm42c2dxIUjFhClEp3bCMhAor5nv7hy5
-	 S8rXEnukgKW6CmkvaoLDq6YvPpPwsK/r+vdpnt76JfrGjqXlNebks1B3wzs0t3GUYi
-	 69hulmUU0AXfVHHBlckzj+BBhEXYwVTVQYSlEDkjI8O9oeeFOFv9E0gHnGJ7TM7W3h
-	 /byjo3FsQMKAO3RyWAMVTD/8=
-Received: from zn.tnic (pd953033e.dip0.t-ipconnect.de [217.83.3.62])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3E04340E0196;
-	Fri, 26 Jan 2024 18:56:54 +0000 (UTC)
-Date: Fri, 26 Jan 2024 19:56:49 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: "Luck, Tony" <tony.luck@intel.com>
-Cc: Avadhut Naik <avadhut.naik@amd.com>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
-	"avadnaik@amd.com" <avadnaik@amd.com>
-Subject: Re: [PATCH v2 0/2] Update mce_record tracepoint
-Message-ID: <20240126185649.GFZbQAccZphdW_0CkH@fat_crate.local>
-References: <20240125184857.851355-1-avadhut.naik@amd.com>
- <20240125185821.GDZbKvTW93APAiY1LP@fat_crate.local>
- <SJ1PR11MB6083DAA7A6EDBBDAF5987A80FC7A2@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <20240126102721.GCZbOJCTqTVmvgOEuM@fat_crate.local>
- <SJ1PR11MB60839509241AA98A59B78D15FC792@SJ1PR11MB6083.namprd11.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cb6c0M8u"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40ee8cea674so6526635e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Jan 2024 11:06:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1706296011; x=1706900811; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=1dP7C1f8EQhzrHBctOG/vK1/Bgm4Z5gBZgBjg0ZQiw0=;
+        b=cb6c0M8ubZW7HoFcqS3ikmBd69xWIDX3NWURSzf2rVUJTGOo1yj24X8aRCcuJichXM
+         XXQh14UkDG3utibOXs7FNERUc/TXm9BGElsuszIlLEsosG7V7AiHgu5Z60uzwjhX6pEp
+         eN74UJ8lMUMV9WslrvJGyDN5CYFooLUArHp7E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706296011; x=1706900811;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1dP7C1f8EQhzrHBctOG/vK1/Bgm4Z5gBZgBjg0ZQiw0=;
+        b=n1PzNOZ5BMAhD9sU5pEaUHnQ3F3f1lJ1MJ7+S77MV3zFJw2VvV/PhkhvVhPrjulX35
+         D8VztZ9IkIuxiVHU1A38WdU4BPBcHuedCv6ITJswQMQRrn6TsZGxQJqY/m9sioE0uA3d
+         v6i/91QQSW6BCCNhjMidrun1eGXYJQKK2t6uC0rSzG1pMmelFMF5Eg1tPrOT4Y2l12qb
+         xwGDcA+2Vvzs9WOwThWJ4z1kxD6AI+XCczX+IwD0zXWxWTNspRMqnCl8VnaEFPN6WIun
+         1fJKgzodB3x0UHUEzqQge6LCFMkgfzRgzojj8yCeh0B/k+bJLiJ/9JPsF9inLHq8IQSy
+         7eeg==
+X-Gm-Message-State: AOJu0YwkuqqNONjErqg7KlZoAvmQTmao7nznOwzXPHOtyuMYGyCD/J87
+	iglY1q2AjFFiKNYaDzwUQ4IFuXzCV5l7Go5lZGqo/ALMvujD+3Czrf76fuxI6dTee5n2tTujTST
+	nFo1TOg==
+X-Google-Smtp-Source: AGHT+IH9gyu/ZR+oQR9Rax18KA0zU8ZxyYuKWcwo9LCCJtj2QAYpD7x4EccAc34Hes3hQwPrOL1Twg==
+X-Received: by 2002:a05:600c:558a:b0:40e:e74b:771b with SMTP id jp10-20020a05600c558a00b0040ee74b771bmr194105wmb.164.1706296010640;
+        Fri, 26 Jan 2024 11:06:50 -0800 (PST)
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
+        by smtp.gmail.com with ESMTPSA id rs10-20020a170907036a00b00a316a652c6csm917488ejb.70.2024.01.26.11.06.50
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jan 2024 11:06:50 -0800 (PST)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-55817a12ad8so541175a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Jan 2024 11:06:50 -0800 (PST)
+X-Received: by 2002:a05:6402:1d9c:b0:55c:d7f5:d1e1 with SMTP id
+ dk28-20020a0564021d9c00b0055cd7f5d1e1mr89897edb.22.1706296009700; Fri, 26 Jan
+ 2024 11:06:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <SJ1PR11MB60839509241AA98A59B78D15FC792@SJ1PR11MB6083.namprd11.prod.outlook.com>
+References: <20240126131837.36dbecc8@gandalf.local.home> <CAHk-=whA8562VjU3MVBPMLsJ4u=ixecRpn=0UnJPPAxsBr680Q@mail.gmail.com>
+ <20240126134141.65139b5e@gandalf.local.home>
+In-Reply-To: <20240126134141.65139b5e@gandalf.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 26 Jan 2024 11:06:33 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjTECUZLBgALpvm9zDN8TJCGxyc3VCEXXHMsFNAN+x5Fg@mail.gmail.com>
+Message-ID: <CAHk-=wjTECUZLBgALpvm9zDN8TJCGxyc3VCEXXHMsFNAN+x5Fg@mail.gmail.com>
+Subject: Re: [PATCH] eventfs: Give files a default of PAGE_SIZE size
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Christian Brauner <brauner@kernel.org>, 
+	Ajay Kaher <ajay.kaher@broadcom.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jan 26, 2024 at 05:10:20PM +0000, Luck, Tony wrote:
-> 12 extra bytes divided by (say) 64GB (a very small server these days, may laptop has that much)
->    = 0.00000001746%
-> 
-> We will need 57000 changes like this one before we get to 0.001% :-)
+On Fri, 26 Jan 2024 at 10:41, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> Fine, but I still plan on sending you the update to give all files unique
+> inode numbers. If it screws up tar, it could possibly screw up something
+> else.
 
-You're forgetting that those 12 bytes repeat per MCE tracepoint logged.
-And there's other code which adds more 0.01% here and there, well,
-because we can.
+Well, that in many ways just regularizes the code, and the dynamic
+inode numbers are actually prettier than the odd fixed date-based one
+you picked. I assume it's your birthdate (although I don't know what
+the directory ino number was).
 
-> But the key there is keeping the details of the source machine attached to
-> the error record. My first contact with machine check debugging is always
-> just the raw error record (from mcelog, rasdaemon, or console log).
-
-Yes, that is somewhat sensible reason to have the PPIN together with the
-MCE record.
-
-> Knowing which microcode version was loaded on a core *at the time of
-> the error* is critical. 
-
-So is the rest of the debug info you're going to need from that machine.
-And yet we're not adding that to the tracepoint.
-
-> You've spent enough time with Ashok and Thomas tweaking the Linux
-> microcode driver to know that going back to the machine the next day
-> to ask about microcode version has a bunch of ways to get a wrong
-> answer.
-
-Huh, what does that have to do with this?
-
-IIUC, if someone changes something on the system, whether that is
-updating microcode or swapping a harddrive or swapping memory or
-whatever, that invalidates the errors reported, pretty much.
-
-You can't put it all in the trace record, you just can't. 
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+               Linus
