@@ -1,116 +1,116 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FAC224D1;
-	Fri, 26 Jan 2024 19:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B16522F12
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Jan 2024 20:00:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706298345; cv=none; b=KQndF3sK/6QMb7fqi5xSlQQx4weN7SzUWSHGrDl0H+4GoawRSWh05SI4Eu8w5yw4OsLt1jIZMZixRNJEFcADPdinlFnWIGT6bgeftoeyPekXvR/LUqICIzurZDJzjz1LQ+XT+BfIs9g48ipIYdqvRwH2oRFbwFFzA35rD9nGXsQ=
+	t=1706299252; cv=none; b=bqCGN7xAZWPA/5i/XGIOF09d+XVFBwxTqnxe/IyiPFeHJ2sSSHCu2yUYG06g4Tb+g/CRQFMbyMvPX5adD6vIyUSWTAEZKPMIAU4vdnoI3OjP/RHlmwhnOzbdoqrfsgcJ2yhBo3sszxrGHIQOGTAbmbtCaP9NkomV84yJqm2qaRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706298345; c=relaxed/simple;
-	bh=Ja5XSvXXB3bXyk3PQQIKZvOhuba76LOPTL58fZOQOys=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jOmuyX21GfdlhmjQnFdHoOEjSVZjY6yOeunfqvEJp2HE4EIaPnAN3eQaXhskY13pmc7x5pPPtKRpMRIaGIpQG0EWPyrzewsMD/6bT4Lx9hATv2D92cf1qBfgzn84K3e7pVOSGmV51UFAyylJcz0FeGZNpBUO9dygYhEY+/yPwPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=IgaEvEBX; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1706299252; c=relaxed/simple;
+	bh=fcxQ3bc2/ycZVVRavVndN2TW1bmrjhqtW752nshgov4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YHD87IkFRKMVMfARFIDVIUpZC1cJEvbPlhV4wUqqVmanmHmWApNAvP464OdjJQQXQgdhA0+146g/Gz/VJUU+AEqh5nznPlQ39G2uvXMk1hjmkMwQATiy9/hMvO0F5J5S442PK5XLMZkNzgLAqWrfLo3F+8YxGm+gR6nF4tmDFjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YMWxv2La; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="IgaEvEBX"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id DEE9640E00C5;
-	Fri, 26 Jan 2024 19:45:38 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 7kx3nQG4-2fs; Fri, 26 Jan 2024 19:45:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1706298336; bh=WjM/lnqY25TseZDaAul9QfQaxjOIp7nZWMt6/hJNsoY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IgaEvEBX4vdW9Ekmd/HPfVjxgsqXInQVoO+UAu7GLl75DFo0/qpdEmWfS7AC5gP7W
-	 BIUxQ3KknP/xSGqWsk0ZygFwFHbn4dvJXBUheH4tcHKwF5Jgcc8p7/iRe8tNCM1Uo0
-	 0R8JsdZAUSpHBDKS28l0zoZ8LQ4AR32gZMOXjvhgWm3x/o1NjwfpOu2XYuNR8Y0LUK
-	 ZJkvjqdfZzZhINa4plzhNk9CQXxKCnGBT+9k+OL6JkjFCak/6SO6gLKHvGD+UrRa4M
-	 1LBIPFBS5ID3tuWPXEBsB4jmULKYBUOwUH9Jj5QpEs/WAPkMYZioFIUGyXDbPZuThn
-	 B+RRNkZbGGAVEpstg3qm6G2P+TPTSFQWeANoACMOmlkPRatT0GDfakur0h501924SO
-	 HQfy8+OYb0GROMxnJ3AZ9HVFIdzHEatqNSwdEMj/wSl7EkGr34j8visQolShKoN9jT
-	 p3sb3tB0rb7vitraBdkwXynN/YZmYN04IOLb+IscxcxWnbWU/ny7v6QDnxwgBSmNVs
-	 oD/VcVwzImAxociW3mZnBlteJwLFpdOueeq1t0zyivxecjgNqeWgKGmupo6+8px7TY
-	 zLRjhnbTG3QNzT9eOSdqP/DGcKQTBsbo356+lFc/q8ki+so2COsHpD/0psmn+V8ZMy
-	 G6iJ4RncYadEX64dtSbkeh00=
-Received: from zn.tnic (pd953033e.dip0.t-ipconnect.de [217.83.3.62])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 606AC40E0196;
-	Fri, 26 Jan 2024 19:45:27 +0000 (UTC)
-Date: Fri, 26 Jan 2024 20:45:22 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: "Luck, Tony" <tony.luck@intel.com>
-Cc: Avadhut Naik <avadhut.naik@amd.com>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
-	"avadnaik@amd.com" <avadnaik@amd.com>
-Subject: Re: [PATCH v2 0/2] Update mce_record tracepoint
-Message-ID: <20240126194522.GGZbQL0gTwpniYGDHw@fat_crate.local>
-References: <20240125184857.851355-1-avadhut.naik@amd.com>
- <20240125185821.GDZbKvTW93APAiY1LP@fat_crate.local>
- <SJ1PR11MB6083DAA7A6EDBBDAF5987A80FC7A2@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <20240126102721.GCZbOJCTqTVmvgOEuM@fat_crate.local>
- <SJ1PR11MB60839509241AA98A59B78D15FC792@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <20240126185649.GFZbQAccZphdW_0CkH@fat_crate.local>
- <SJ1PR11MB6083E6BF178B9D394BD58DDBFC792@SJ1PR11MB6083.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YMWxv2La"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d72d240c69so20205ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Jan 2024 12:00:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706299250; x=1706904050; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MimXWUdcIvN0nH3+dB3+knWCETvDzwsFYg6Za1niF5A=;
+        b=YMWxv2LaOd1dcfqzupCcwMB+CtjBdtFEUGJpYmamncMy6fKsXW0Pu9UsOeA2A0nA7m
+         awROwFafV0KwQC4whgnD5xgIlVL6+WIlHXiq8Lg34EpAlTJUqRzYeubb9gEBR4GZzVVD
+         V7EkNkJoK2HfHltFPpNivyhioX4CbuUO8mNUOjLtrzKiBSsS/Cy2UZEpA1z4EA1iyNpU
+         X0giY/smB78dF2ZLkSBGGu7S35WA1DhtFf/9pZpswzRWDmzt6pmlkpd9X2vXu8E/1Uu7
+         BFStjW4ngBX2zwBWlpmFq9ciWL3KFpuov4e/cEuHpwdHruCSMmsInYIoGeTSzomm+0ZW
+         Y4Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706299250; x=1706904050;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MimXWUdcIvN0nH3+dB3+knWCETvDzwsFYg6Za1niF5A=;
+        b=aJyhRM2hiKVUW+sUS/53atFQyfEAt3R0klcw0FYfwOzZp51JWCCmrDdcg9LSsmvzin
+         mWqs6q8kmpVzdUp3k8dEG9yodTDxmgCLgnDwdJGnCanNpyTmoP/otMR8ROjw5U1soF3y
+         5iB5Aafb8sJtHRtD5NV6RxJN6HPWQjjfRk2sT8kXeFFKaSMzjtttvG29Bd9YEzIrOCmF
+         VaXa1FoXYXf2dpRYTH6ACFIRYPj0uj4BfdR6Sr1rMhJ24tHVM++dkf18tPJ5/jmV0O5K
+         j/1hxLd0Gm3iArfyBRMaRN9LD5S3DOVQUiWhvRxEAk/VnSjPKt2yufDkGw1M1P11GpaV
+         Pe0A==
+X-Gm-Message-State: AOJu0YwqXJFq9JsyIzyOZuUmULNDA/WcXn6OqDCLgP4HSd8k7/FH5c60
+	gEO3wqtNht5RK5qurBpaBiDDqqBNva0IPZkG6FeFnWN1J+zyytC+Pi6fVLPx0ngBuCJR3m0dKKY
+	ruoAXKPNJfNooCfUpTqFKxWsyBk9Vx0F5Q5w7
+X-Google-Smtp-Source: AGHT+IFUiaxxx/fnNfe3njsMipgqF2fdYzG/YBwFDzOMI+2YRba8r80bUR3upqDy6QVJlcre5NJrJ1mYmBGhuhzNf/E=
+X-Received: by 2002:a17:903:1246:b0:1d8:a782:6cc2 with SMTP id
+ u6-20020a170903124600b001d8a7826cc2mr127996plh.13.1706299249979; Fri, 26 Jan
+ 2024 12:00:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <SJ1PR11MB6083E6BF178B9D394BD58DDBFC792@SJ1PR11MB6083.namprd11.prod.outlook.com>
+References: <20240125164256.4147-1-alexandru.elisei@arm.com> <20240125164256.4147-12-alexandru.elisei@arm.com>
+In-Reply-To: <20240125164256.4147-12-alexandru.elisei@arm.com>
+From: Peter Collingbourne <pcc@google.com>
+Date: Fri, 26 Jan 2024 12:00:36 -0800
+Message-ID: <CAMn1gO6hx7yaFHEYVbkpPocAxQmQc3JBgppcNSJw9SUfyvjwbQ@mail.gmail.com>
+Subject: Re: [PATCH RFC v3 11/35] mm: Allow an arch to hook into folio
+ allocation when VMA is known
+To: Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, 
+	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, 
+	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org, 
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
+	bsegall@google.com, mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, 
+	mhiramat@kernel.org, rppt@kernel.org, hughd@google.com, steven.price@arm.com, 
+	anshuman.khandual@arm.com, vincenzo.frascino@arm.com, david@redhat.com, 
+	eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 26, 2024 at 07:15:50PM +0000, Luck, Tony wrote:
-> If deployment of a microcode update across a fleet always went
-> flawlessly, life would be simpler. But things can fail. And maybe the
-> failure wasn't noticed. Perhaps a node was rebooting when the sysadmin
-> pushed the update to the fleet and so missed the deployment. Perhaps
-> one core was already acting weird and the microcode update didn't get
-> applied to that core.
+On Thu, Jan 25, 2024 at 8:43=E2=80=AFAM Alexandru Elisei
+<alexandru.elisei@arm.com> wrote:
+>
+> arm64 uses VM_HIGH_ARCH_0 and VM_HIGH_ARCH_1 for enabling MTE for a VMA.
+> When VM_HIGH_ARCH_0, which arm64 renames to VM_MTE, is set for a VMA, and
+> the gfp flag __GFP_ZERO is present, the __GFP_ZEROTAGS gfp flag also gets
+> set in vma_alloc_zeroed_movable_folio().
+>
+> Expand this to be more generic by adding an arch hook that modifes the gf=
+p
+> flags for an allocation when the VMA is known.
+>
+> Note that __GFP_ZEROTAGS is ignored by the page allocator unless __GFP_ZE=
+RO
+> is also set; from that point of view, the current behaviour is unchanged,
+> even though the arm64 flag is set in more places.  When arm64 will have
+> support to reuse the tag storage for data allocation, the uses of the
+> __GFP_ZEROTAGS flag will be expanded to instruct the page allocator to tr=
+y
+> to reserve the corresponding tag storage for the pages being allocated.
+>
+> The flags returned by arch_calc_vma_gfp() are or'ed with the flags set by
+> the caller; this has been done to keep an architecture from modifying the
+> flags already set by the core memory management code; this is similar to
+> how do_mmap() -> calc_vm_flag_bits() -> arch_calc_vm_flag_bits() has been
+> implemented. This can be revisited in the future if there's a need to do
+> so.
+>
+> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
 
-Yes, and you go collect data from that box. You will have to anyway to
-figure out why the microcode didn't update.
+This patch also needs to update the non-CONFIG_NUMA definition of
+vma_alloc_folio in include/linux/gfp.h to call arch_calc_vma_gfp. See:
+https://r.android.com/2849146
 
-> Swapping a hard drive, or hot plugging a NIC isn't very likely
-> to correlate with an error reported by the CPU in machine
-> check banks.
-
-Ofc it is - coherent probe timeoutting due to problematic insertion
-could be reported with a MCE, and so on and so on.
-
-> Is it so very different to add this to a trace record so that rasdaemon
-> can have feature parity with mcelog(8)?
-
-I knew you were gonna say that. When someone decides that it is
-a splendid idea to add more stuff to struct mce then said someone would
-want it in the tracepoint too.
-
-And then we're back to my original question: 
-
-"And where does it end? Stick full dmesg in the tracepoint too?"
-
-Where do you draw the line in the sand and say, no more, especially
-static, fields bloating the trace record should be added and from then
-on, you should go collect the info from that box. Something which you're
-supposed to do anyway.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Peter
