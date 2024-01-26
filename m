@@ -1,116 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2046.outbound.protection.outlook.com [40.107.94.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339F312B9B;
-	Fri, 26 Jan 2024 06:07:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706249263; cv=none; b=IJyqKn9TcFse9kJLHA3bp+4SSMYl4xYZridpJ2Vm+sC160aa9PPqMWLWpHjIwmHsYFF4Yh2rtnvfAe4DWKIvk8WXoBzfke8E9c7YhEoe6OMttmhIr/IMC7iMJRHKR/txgI/xbboXvOMv1x3oIJwPaoSTxMsz8gh5whyDqmG6rAg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706249263; c=relaxed/simple;
-	bh=lCdbp+pHkoUM7vUgFWED1lJvOrbS+WRL3qXPvADIs9A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oWB0kFKW3S12TgSg5bwzIfOPxJVNtixLnXBwhy4W+/C53hIktHIbIGYQLeF6qKEqDvZGqnGWG1olcFsbno16Sdi/U9cG/Y8TRZnohYo59deI3k1BJAuULisHX5/L6Wb3tJ4NOvZj8vRdmVMsjtpOrQqs/yg7gOkdjqG3WWrvPeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AkMIBN6I; arc=none smtp.client-ip=192.55.52.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE1E125CF;
+	Fri, 26 Jan 2024 07:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706255913; cv=fail; b=e/owwm4OLtQPXR6P+EBct07O3J8U9+4enCF1NjV+sraw2j3N2cv/x8U3AephQvBE379P7xWD01BbosbNqgWWWDWnc8bGeUe9F4uumXcRv4AghuNYk2i7jHVB9Xm1BjJ+KdFwLy/su1OIfnBSpbqzVDW2/Rv/nwkVPBoLj9JsSyo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706255913; c=relaxed/simple;
+	bh=iZJpxoABYIcc3Ov/ec4qonLeOnn3YlhhTTTR2FClyZM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TkZQFvPRbHRB0olC02Q90d/gblMyZtmaV8jG3Brl2gbNJvAVkvgVI6t/oIV9x8Dcot26JOeJQHCuTP4zT6ooLg4OkYJ/BF1TJFwOPAzEwGKqeUd52Hpu83bHzX+Em4tkK/mNK7CLbxsQ81ylYR+KLBCaRsk+qO4KcD0Jpq0vf1o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pqzcDBFK; arc=fail smtp.client-ip=40.107.94.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AkMIBN6I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706249260; x=1737785260;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lCdbp+pHkoUM7vUgFWED1lJvOrbS+WRL3qXPvADIs9A=;
-  b=AkMIBN6IlGsIp99Rh+ncA1MeJmGMB5YW/wejmTlK/psAiXyS+tsmQqKM
-   2WXI2H6fK5y+0mMYSaXPHba2xjEtDJ12SUeZrw4IuQZBRSg17nIE4nVUF
-   lyLJ9kSwtcz8uBb2xKpkJU9LnHdo0zAesqiDdYHzPu3TTVwmvPBh4DjK1
-   h9iYcejXpgWtn9bcnv4id0+3/efKXsjiLOtI4uxgWZZoFttGQed34SuS7
-   vEDMHuLiX24267CiHD+rzid3gPYILBkhdNZpqB8HFNwPIGvj0uG+CqHgW
-   FQZu0wj05DpNLU+xuT+xFHg0jk2UcZ/Sano4Djm5CZShCcGUg0r/luV6i
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="401245640"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="401245640"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 22:07:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="2519019"
-Received: from lkp-server01.sh.intel.com (HELO 370188f8dc87) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 25 Jan 2024 22:07:34 -0800
-Received: from kbuild by 370188f8dc87 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rTFND-0000kW-37;
-	Fri, 26 Jan 2024 06:07:31 +0000
-Date: Fri, 26 Jan 2024 14:07:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Tobias Waldekranz <tobias@waldekranz.com>, davem@davemloft.net,
-	kuba@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, jiri@resnulli.us,
-	ivecera@redhat.com, netdev@vger.kernel.org, roopa@nvidia.com,
-	razor@blackwall.org, bridge@lists.linux.dev, rostedt@goodmis.org,
-	mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 3/5] net: switchdev: Relay all replay messages
- through a central function
-Message-ID: <202401261325.D8Hg7ign-lkp@intel.com>
-References: <20240123153707.550795-4-tobias@waldekranz.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pqzcDBFK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cy5D9FCIkpU1a/pf51CHyeK8xYTVF6x8+VZKEvl/Tbob04Odj3lVht7nXBhn6P0Cm/d8N/GxSfz7S9i+Btfpn+i63qT6Il4vPx0KNk8pHekb6+a2UIXlutb6vrjOYTNz40RbyvNNEGCiBh/9T4LLvcFPemUlIYEPChkYsMsp8MHgMluWHBWgix360KY9yMNOEU/DEpSklFsWyqe9Rc0Xto+26ycICq3uIgIoDkzDnU1DCncKjtePXSswBDg7I3rMkCGUjQjWrhHMFHegGr8V2S3PvTTKkddAjDChLip5U1t8XtGHzJI/lEWKVLvmYYMXA2yY4TcjCcuwzLUTNsdnxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bDcIHQG2+G2tlbGqUmQTPWZFbHJ1KvmTHROAwPXx1pY=;
+ b=a85o4v7aWOyUJzIUZCWssJY0FGpRzkuGQJhgSUANu3fyVb0rKdEbRb5ClddL+M7T7GOTw+S5zuqUAYcHZUsvuAOUludpErPKWN+MJfBX0vfm2bUIq2mEPUcjGhnnE6KvFKe1KGDjFiO/xEyZ3/BiNxXQfRG4WLabObV7n4v93AZPvXmEGgvKSrO34ZPqRV+Q8J0Xu1pmdCh2aAJakLuB6xYow6oI9L5F9IY+HWS6cdhUizBsZl1iMSOsJLo8BDmgFXuicM0+05DXWeQdh+A59HeIkIBdtki26WCkTFs4fm35UrAD9oPYFlWNm0831Uvk8q+6Et2K8pCYP5wFIARXUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bDcIHQG2+G2tlbGqUmQTPWZFbHJ1KvmTHROAwPXx1pY=;
+ b=pqzcDBFK7NDbTY60mfkZ9a8PPgQBIHFzlUEQbY/WOx31gu8vYQwebvF502VQCSHreKUyeOswtjLtyg3XsSjD5TkJ5eirCeluWv44VjY/HiIZoc+FTTwgQlV0YFF2uG3+jF0eaSQS60cdTJ/1ZQgUpO1NeihNtMS3S9D7p+Cekwo=
+Received: from BY5PR17CA0005.namprd17.prod.outlook.com (2603:10b6:a03:1b8::18)
+ by DS0PR12MB9274.namprd12.prod.outlook.com (2603:10b6:8:1a9::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22; Fri, 26 Jan
+ 2024 07:58:30 +0000
+Received: from SJ1PEPF00001CE9.namprd03.prod.outlook.com
+ (2603:10b6:a03:1b8:cafe::6f) by BY5PR17CA0005.outlook.office365.com
+ (2603:10b6:a03:1b8::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.26 via Frontend
+ Transport; Fri, 26 Jan 2024 07:58:29 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF00001CE9.mail.protection.outlook.com (10.167.242.25) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7202.16 via Frontend Transport; Fri, 26 Jan 2024 07:58:29 +0000
+Received: from titanite-d354host.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34; Fri, 26 Jan 2024 01:58:24 -0600
+From: Avadhut Naik <avadhut.naik@amd.com>
+To: <linux-trace-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>
+CC: <rostedt@goodmis.org>, <tony.luck@intel.com>, <bp@alien8.de>,
+	<x86@kernel.org>, <linux-kernel@vger.kernel.org>, <yazen.ghannam@amd.com>,
+	<avadnaik@amd.com>
+Subject: [PATCH v3 0/2] Update mce_record tracepoint
+Date: Fri, 26 Jan 2024 01:57:58 -0600
+Message-ID: <20240126075800.1174583-1-avadhut.naik@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240123153707.550795-4-tobias@waldekranz.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE9:EE_|DS0PR12MB9274:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3fe9f54c-c351-4c30-8b23-08dc1e4495b3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	pfRXF44HoTpA0q7gyy2j8mYBrQReEtQVaRw/ifDHlbJuzIKxHvwjickE02gGxnmdUQrnTTYMGJ2IAM1FzYlqsG3/yjFcE0QbBCOKvFXfSW3wMlbGM8cREu4zaTIPeVttY1MYfjzIwWBslVgKSE4iL+Obz3hl3PvhTs3S8pSFwjVClb5oHb4IicDJ3o4NIWGCpZzYzoVzQvncsvnRuB7iEUrc+116eLeR1j/sStXsugHGBj31UMs6PM/bmGtLB2qgIGjUnhDZf892Vvo632Bl0fgT3zSI1R2+qM0v5agwaByF5eMpgkIJGVbur6kWUfiqC4eWrodWq3TiMSNNy8eXySp1nnNN7crljJgwk6+080iiKtR+BbOtLl2LIHgPnkiLi0UlbyZdXhUd+D9f1YA1355hWWeuW/a9ySd6mm9qaSBp/2Vd5f6YVPMVfh8hlS7QP1ERGwVMxfFwPYIg2xyGN6qaeYWUNK1K9iG/Lgh2/xEVyFVv87TmYFXJob28H30sqNhKS1bfER5UhpZDbBlxjTj5TgGpvBQDVjLL72FZvhIUR1NUWTl91+BBjBc1s2xgDbZLOX9u+vPasR1AamTkvl5vVdhkMr1kNcabw0fsgZ1ojn1mtSTPJsgrjhC1XHSnj9/Gn40uJSLzaGRy1qW4QoWQNKfPaUO1GbHcnDQ5hp08k5hmAx8NPuL61ikYdf6rtwJCBz4V5/j4e16gI+ZeG8jcXczDh/U6t2WUGR/wSRXAVXp2/ce/j26eCDli2eaNUh97hJhlLW6xRhnrsb+TYg==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(39860400002)(346002)(136003)(376002)(230922051799003)(1800799012)(64100799003)(451199024)(186009)(82310400011)(46966006)(36840700001)(40470700004)(41300700001)(336012)(40480700001)(40460700003)(26005)(1076003)(426003)(47076005)(478600001)(36860700001)(2616005)(36756003)(7696005)(6666004)(83380400001)(16526019)(81166007)(356005)(82740400003)(110136005)(86362001)(316002)(44832011)(70586007)(54906003)(4744005)(2906002)(5660300002)(4326008)(8936002)(8676002)(70206006)(15650500001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2024 07:58:29.6698
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3fe9f54c-c351-4c30-8b23-08dc1e4495b3
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CE9.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9274
 
-Hi Tobias,
+This patchset updates the mce_record tracepoint so that the recently added
+fields of struct mce are exported through it to userspace.
 
-kernel test robot noticed the following build warnings:
+The first patch adds PPIN (Protected Processor Inventory Number) field to
+the tracepoint.
 
-[auto build test WARNING on net-next/main]
+The second patch adds the microcode field (Microcode Revision) to the
+tracepoint.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tobias-Waldekranz/net-switchdev-Wrap-enums-in-mapper-macros/20240123-234801
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20240123153707.550795-4-tobias%40waldekranz.com
-patch subject: [PATCH net-next 3/5] net: switchdev: Relay all replay messages through a central function
-config: i386-buildonly-randconfig-003-20240126 (https://download.01.org/0day-ci/archive/20240126/202401261325.D8Hg7ign-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240126/202401261325.D8Hg7ign-lkp@intel.com/reproduce)
+Changes in v2:
+ - Export microcode field (Microcode Revision) through the tracepoiont in
+   addition to PPIN.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401261325.D8Hg7ign-lkp@intel.com/
+Changes in v3:
+ - Change format specifier for microcode revision from %u to %x
+ - Fix tab alignments
+ - Add Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
 
-All warnings (new ones prefixed by >>):
+Avadhut Naik (2):
+  tracing: Include PPIN in mce_record tracepoint
+  tracing: Include Microcode Revision in mce_record tracepoint
 
->> net/switchdev/switchdev.c:322: warning: Function parameter or struct member 'type' not described in 'switchdev_call_replay'
->> net/switchdev/switchdev.c:322: warning: expecting prototype for switchdev_replay(). Prototype was for switchdev_call_replay() instead
+ include/trace/events/mce.h | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
 
-vim +322 net/switchdev/switchdev.c
-
-   309	
-   310	/**
-   311	 *	switchdev_replay - Replay switchdev message to driver
-   312	 *	@nb: notifier block to send the message to
-   313	 *	@val: value passed unmodified to notifier function
-   314	 *	@info: notifier information data
-   315	 *
-   316	 *	Typically issued by the bridge, as a response to a replay
-   317	 *	request initiated by a port that is either attaching to, or
-   318	 *	detaching from, that bridge.
-   319	 */
-   320	int switchdev_call_replay(struct notifier_block *nb, unsigned long type,
-   321				  struct switchdev_notifier_info *info)
- > 322	{
-   323		return nb->notifier_call(nb, type, info);
-   324	}
-   325	EXPORT_SYMBOL_GPL(switchdev_call_replay);
-   326	
-
+base-commit: 0d4f19418f067465b0a84a287d9a51e443a0bc3a
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
