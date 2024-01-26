@@ -1,75 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA95250E2;
-	Fri, 26 Jan 2024 21:27:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A58C1B582
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Jan 2024 21:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706304447; cv=none; b=EZJIsK2ssxE5an0ufuCuEj2N1tBGMuK+7i15+3N3LVV6l3/soAABcA/oVLHv1apxGwDjGGeOBGlMycugvOLqGuJi1pOrDXgddWwUhvyDqHRTn+JllOUEdY+Vtq92gkuU8OoFhoq9F6qpJjO7hcnMT4LuEkZ8ItpR8R4L62ycCBY=
+	t=1706306136; cv=none; b=iWCqwpmq1c6aCnXYUDVOUsp+XmsiaTiNyj5QhCza/1JfCw/90rG2y+704v9671SMsfuB2onLLJAJKZ8JMl9j18h56/krce9g9oYY8FeHOqnF9MEdWWYrGEXPn9+XCrV2yiXctFIX5OVxA/cUFvjIE7Rdrv7YoMNTVsPdtPGNtgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706304447; c=relaxed/simple;
-	bh=0Ibpzu52pa7xZyWfPXdiBU7biXDc1fNDD9XSBAy9kds=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L0j8c/tPAdQvXWFgt5vJJbucRTotxyjt3giIfdI6DfFhGsDlFQE1ScnBN9Tfk8agsQcuJvz8PxqgTKq9tzlaTYrMh1KOogcO/ZIfVBnEJVte9HHG+HO8LAB7ehGpEXUDWd5PFrzjhtfBmDuvw7ji8sUWkK3ZrsUsGxSPGswzFDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9A4BC433F1;
-	Fri, 26 Jan 2024 21:27:25 +0000 (UTC)
-Date: Fri, 26 Jan 2024 16:27:28 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Christian Brauner <brauner@kernel.org>, Ajay Kaher
- <ajay.kaher@broadcom.com>, Geert Uytterhoeven <geert@linux-m68k.org>,
- linux-fsdevel <linux-fsdevel@vger.kernel.org>, Linus Torvalds
- <torvalds@linux-foundation.org>
-Subject: Re: [RESEND] [PATCH] eventfs: Have inodes have unique inode numbers
-Message-ID: <20240126162728.786e56dd@gandalf.local.home>
-In-Reply-To: <e3548c86-7422-432c-8b72-8de99fa9772f@efficios.com>
-References: <20240126151251.74cb9285@gandalf.local.home>
-	<e3548c86-7422-432c-8b72-8de99fa9772f@efficios.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1706306136; c=relaxed/simple;
+	bh=p6YVvKXOOwohPb6oUgioCbBxsKbg/UXAcY0gQZK0lJI=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=hZUbNKYbv/oGXfNwn3nsPnXHvHHBYVPlnaLH0tKnmjh9V9s+LpHjobX115DqvPlWazwg4eq+seOs1tCN5+g8Hbe3SptGv2QPv+qvMzvTq+YtAqUKppp0yEWxZnQ1LOSfL2U237J/yVs9qkNZjKntlFZOtCi+sdnlJ8AeWp7DKPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-361aaf3f03bso3527785ab.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 Jan 2024 13:55:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706306134; x=1706910934;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8lZ+RoLccba6Zyj0Ry1n2ZHFwWTBO9rUbxTQO1+BOxI=;
+        b=gpmQON8rWUj/FB2b8M8+FOV7seWSX52elmO5HURA2sETGK6aP65gQWBo7x87tZHgNU
+         +ahe59wAyIL9ZUGDDzQCBT95bdSIuTo0w6CRNjyrw3cM7V6CP7a1suLBGWHNvt0WphSD
+         0i/lFIX5+uXflpOvQVgzhJiO56JEy9s0Q470uX1T7q5m/2xUvXRHNWvLS0h3DRRxCV3J
+         JbLrK5jzSfoKE0UOfsKCXKBmytP4QTlWZVaxCag0FIuzBrHz9tdSbERit/D0+fzo/zbF
+         qxT63p9Nwe5C/OaiHUsv8hV/cc1xdxjnyj5gHYPlcObEMddwviMovbQofHlRfydvVKll
+         tgng==
+X-Gm-Message-State: AOJu0YxzJsSdD7B540y640SpzfSKixsbGzuEM41UXc6k79gsTkFkppTY
+	+BKcX/vgs+xuV+Hx+xkf8PP2obGGlB1Am5Vxb3vsTGgvIqDf2LvPX5opXgInRjno6KPs+H47008
+	vi7E7HCL9n34g8w7hp9NfEQ6DWc76V629V4xnI047qYWJ/wrqnqMateI=
+X-Google-Smtp-Source: AGHT+IHQ700lnngjM8exNANwdaXeYMkQsFXucd8GzIxnkP9wyO9vyxY5mAvAf7ult6g4a2xA0mgs/oHi5dyj9+DZY5cU1kvyZsOj
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:1b83:b0:360:795e:a6b3 with SMTP id
+ h3-20020a056e021b8300b00360795ea6b3mr57972ili.4.1706306134405; Fri, 26 Jan
+ 2024 13:55:34 -0800 (PST)
+Date: Fri, 26 Jan 2024 13:55:34 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000004fa23060fe05bdd@google.com>
+Subject: [syzbot] Monthly trace report (Jan 2024)
+From: syzbot <syzbot+list6f10f18d2d6a90df46a7@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mhiramat@kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 26 Jan 2024 15:24:17 -0500
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+Hello trace maintainers/developers,
 
-> On 2024-01-26 15:12, Steven Rostedt wrote:
-> [...]
-> > diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-> > index e1b172c0e091..2187be6d7b23 100644
-> > --- a/fs/tracefs/inode.c
-> > +++ b/fs/tracefs/inode.c
-> > @@ -223,13 +223,41 @@ static const struct inode_operations tracefs_file_inode_operations = {
-> >   	.setattr	= tracefs_setattr,
-> >   };
-> >   
-> > +/* Copied from get_next_ino() but adds allocation for multiple inodes */
-> > +#define LAST_INO_BATCH 1024
-> > +#define LAST_INO_MASK (~(LAST_INO_BATCH - 1))
-> > +static DEFINE_PER_CPU(unsigned int, last_ino);
-> > +
-> > +unsigned int tracefs_get_next_ino(int files)
-> > +{
-> > +	unsigned int *p = &get_cpu_var(last_ino);
-> > +	unsigned int res = *p;
-> > +
-> > +#ifdef CONFIG_SMP
-> > +	/* Check if adding files+1 overflows */  
-> 
-> How does it handle a @files input where:
-> 
-> * (files+1 > LAST_INO_BATCH) ?
-> 
-> * (files+1 == LAST_INO_BATCH) ?
+This is a 31-day syzbot report for the trace subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/trace
 
-Well, this is moot anyway, as Linus hates it.
+During the period, 2 new issues were detected and 0 were fixed.
+In total, 8 issues are still open and 29 have been fixed so far.
 
--- Steve
+Some of the still happening issues:
+
+Ref Crashes Repro Title
+<1> 8174    Yes   possible deadlock in task_fork_fair
+                  https://syzkaller.appspot.com/bug?extid=1a93ee5d329e97cfbaff
+<2> 235     Yes   WARNING in format_decode (3)
+                  https://syzkaller.appspot.com/bug?extid=e2c932aec5c8a6e1d31c
+<3> 26      Yes   WARNING in blk_register_tracepoints
+                  https://syzkaller.appspot.com/bug?extid=c54ded83396afee31eb1
+<4> 12      Yes   INFO: task hung in blk_trace_ioctl (4)
+                  https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
+<5> 5       Yes   WARNING in get_probe_ref
+                  https://syzkaller.appspot.com/bug?extid=8672dcb9d10011c0a160
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
