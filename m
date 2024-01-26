@@ -1,107 +1,108 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C667D29B;
-	Fri, 26 Jan 2024 10:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37281CA9A;
+	Fri, 26 Jan 2024 15:01:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706264861; cv=none; b=fVXAKAkpZn2qBn63XTmvQrAITDuTBB+cngFN9ORLBpGy1GjGrTmD4QWnh18d56Vbf4Ijd34CQF0q/bE6590BIWQheBHFevUnAYjStYslgU/n7cuRyzUEsTkmOt7FFlZUKFo0uzGWJLE1lBpe/l4QWMQRiriUds4i9fiCH5SZmK8=
+	t=1706281268; cv=none; b=sELD6XRU6Z2lBZWPDasBLIIzEw/hpWd0rpZ6Fbugwg1Pahv9dD6Q8GvAcUtPCH3/RESYY9UTZA7JJ4ohit7afPKYYO8N/+9uPbULjhrMnSS/0zTSI7Gb/Ol0f2rwflPi+YvY57jFQen8h26Jl/ml1MOFCgqoqq8QvdxT3TcmWME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706264861; c=relaxed/simple;
-	bh=0+6uW3E01gOEBOfdgAhQnU2+BnQHo5v7B+NFl20erek=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BC3ELhhpdfQ7JHlP/XcZ/sF9wb+MdhBmchrrEsfxIIVd+Fy558KdRbdRiG4ANRWr4JDC7mU5PcZUp3RjN3lKCfMfUsbYf0aNyM1ItpClAgX4hzmhwSP3XJgg18r2zCb2fOlvYgvY/y9vVoZDc3ggvLJ/adzlTKjtVAKml9ywsh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=F9q0Htxa; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1706281268; c=relaxed/simple;
+	bh=wpIIhHC7FF0JMdEEtnwkKOxQlezV/4Rsn65xHYSsIhI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=cJXU34FlW57JHuJzH/bNhaq8B5mYmaH2y+obHVp+W2c73JzRbxBKM3gjkprO9GLw6Zk1jnoJgS1Do2rIoXKzmoB0f3xHMmvnO2/+ByPvXRX8MEkmMo1BrHe83P1wBr5x+AShlh8kM3mDhMSlARqXE8cQHs3fujdET6PMzS7f0yY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TDIHWsic; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="F9q0Htxa"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E42AF40E00C5;
-	Fri, 26 Jan 2024 10:27:36 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 4A_KLoSY1ucI; Fri, 26 Jan 2024 10:27:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1706264855; bh=Lo3Jle6hGyaTjT1aYU4eDQLUEKWUsBykcFqCUCF7Z8M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F9q0HtxaswEQEysDV0vPUznLmVX0B6R78VAI2jY7aEbBeB8WwHXi5Hq/x47zkZeYd
-	 ENt6ZibVLG+5jaUzCzUAn+8nX2xOX02NEcQ5KzafkTaWpjZAncvum3zCSNLjDdwKSN
-	 /H1MtphPC6GG1JyiwW4O3xaHiF21QQk7jDJiEa9WD/NDPyyS1GxBQgtBvK9An7RUI+
-	 ZcPCUDcyRJOpX7ASwRXvKkLMSBLwehP8Y31dI635D/94bi8Q4R/tqC59HcYJxWwCS4
-	 jzA0Zf9usxf53Gn6R5mSMJ59gVw0/B/4CcF6SrP+NL0AvDpZ3V3vpuXRLySZ1bXtrW
-	 CSMCXzr4mDafLCq536E0UEF/t/NQaXMDrtlbZdJfYHttG/4Pu7gT80AIf8UJldr1+L
-	 vx7BZiqPeuBJi/ap0Uc0SgyUvjWXH+w4PCYSHFWul8rJKD81gXW9yhKDu38VcHx4Ry
-	 liL4RS5e0faCQEgX7yNdA7YRAmeFoGs1pusT6gZsUW2yydZ3pbdD+INnZJla0NxW9L
-	 wPV0kTCOcz2yCiAGxKkMv9z+chgA+AeFb1taVeexyDNP2JdgZ5Vzyeme9+MkVuyt3P
-	 PGLKn5sRmfkXP6+bcepgQIH7Eh97fDlLijZb4XLw0vqxsobx4AumAk/wOvOGAipJri
-	 auOFQ3gvB3pqYB/DPt7hy92M=
-Received: from zn.tnic (pd953033e.dip0.t-ipconnect.de [217.83.3.62])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CF33F40E0196;
-	Fri, 26 Jan 2024 10:27:25 +0000 (UTC)
-Date: Fri, 26 Jan 2024 11:27:21 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: "Luck, Tony" <tony.luck@intel.com>
-Cc: Avadhut Naik <avadhut.naik@amd.com>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
-	"avadnaik@amd.com" <avadnaik@amd.com>
-Subject: Re: [PATCH v2 0/2] Update mce_record tracepoint
-Message-ID: <20240126102721.GCZbOJCTqTVmvgOEuM@fat_crate.local>
-References: <20240125184857.851355-1-avadhut.naik@amd.com>
- <20240125185821.GDZbKvTW93APAiY1LP@fat_crate.local>
- <SJ1PR11MB6083DAA7A6EDBBDAF5987A80FC7A2@SJ1PR11MB6083.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TDIHWsic"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8330C433C7;
+	Fri, 26 Jan 2024 15:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706281268;
+	bh=wpIIhHC7FF0JMdEEtnwkKOxQlezV/4Rsn65xHYSsIhI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=TDIHWsicbwX4uLgMVxG7k8LegcFu1it1TpGST36SCFPdMZRZbrc77saGR7XSsvJsy
+	 NdSx7VVrmMHhANo6rqlfYmh7xc5bcwRkdVL7HOc/n8fpcwOWtHTZIXDbXS7KcXG3mW
+	 xrp7ZFrcucY6WJ80WIU7bG5jV4YHsDEPmgHd2yQdH5aMd3jtZ4Yp1WYrqLUCJTMOix
+	 ZwhlFv6xZkJ7dBE7aaSLHizboYxIsaaL1lQVwsDh4nq0UN7zYwQxEdzANpkcy7mriT
+	 VTVmyRL79xrMxjoORy5h/87r1cEmXfXeECQbFdyr7HCqMrYEPyvFCgTaAeamHNScuj
+	 2pFTEnafO1wXQ==
+Date: Sat, 27 Jan 2024 00:01:04 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Beau Belgrave <beaub@linux.microsoft.com>
+Cc: rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH 2/4] tracing/user_events: Introduce multi-format events
+Message-Id: <20240127000104.7c98b34d295747ab1b084bd2@kernel.org>
+In-Reply-To: <20240123220844.928-3-beaub@linux.microsoft.com>
+References: <20240123220844.928-1-beaub@linux.microsoft.com>
+	<20240123220844.928-3-beaub@linux.microsoft.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <SJ1PR11MB6083DAA7A6EDBBDAF5987A80FC7A2@SJ1PR11MB6083.namprd11.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 25, 2024 at 07:19:22PM +0000, Luck, Tony wrote:
-> 8 bytes for PPIN, 4 more for microcode.
+On Tue, 23 Jan 2024 22:08:42 +0000
+Beau Belgrave <beaub@linux.microsoft.com> wrote:
 
-I know, nothing leads to bloat like 0.01% here, 0.001% there...
+> Add a register_name (reg_name) to the user_event struct which allows for
+> split naming of events. We now have the name that was used to register
+> within user_events as well as the unique name for the tracepoint. Upon
+> registering events ensure matches based on first the reg_name, followed
+> by the fields and format of the event. This allows for multiple events
+> with the same registered name to have different formats. The underlying
+> tracepoint will have a unique name in the format of {reg_name}:[unique_id].
+> 
+> For example, if both "test u32 value" and "test u64 value" are used with
+> the USER_EVENT_REG_MULTI_FORMAT the system would have 2 unique
+> tracepoints. The dynamic_events file would then show the following:
+>   u:test u64 count
+>   u:test u32 count
+> 
+> The actual tracepoint names look like this:
+>   test:[d5874fdac44]
+>   test:[d5914662cd4]
+> 
+> Both would be under the new user_events_multi system name to prevent the
+> older ABI from being used to squat on multi-formatted events and block
+> their use.
+[...]
+> @@ -1923,6 +1972,39 @@ static int user_event_trace_register(struct user_event *user)
+>  	return ret;
+>  }
+>  
+> +static int user_event_set_tp_name(struct user_event *user)
+> +{
+> +	lockdep_assert_held(&user->group->reg_mutex);
+> +
+> +	if (EVENT_MULTI_FORMAT(user->reg_flags)) {
+> +		char *multi_name;
+> +		int len;
+> +
+> +		len = snprintf(NULL, 0, "%s:[%llx]", user->reg_name,
+> +			       user->group->multi_id) + 1;
+> +
+> +		multi_name = kzalloc(len, GFP_KERNEL_ACCOUNT);
+> +
+> +		if (!multi_name)
+> +			return -ENOMEM;
+> +
+> +		snprintf(multi_name, len, "%s:[%llx]", user->reg_name,
+> +			 user->group->multi_id);
 
-> Number of recoverable machine checks per system .... I hope the
-> monthly rate should be countable on my fingers...
+OK, so the each different event has suffixed name. But this will
+introduce non C-variable name.
 
-That's not the point. Rather, when you look at MCE reports, you pretty
-much almost always go and collect additional information from the target
-machine because you want to figure out what exactly is going on.
+Steve, do you think your library can handle these symbols? It will
+be something like "event:[1]" as the event name.
+Personally I like "event.1" style. (of course we need to ensure the
+user given event name is NOT including such suffix numbers)
 
-So what's stopping you from collecting all that static information
-instead of parrotting it through the tracepoint with each error?
-
-> PPIN is useful when talking to the CPU vendor about patterns of
-> similar errors seen across a cluster.
-
-I guess that is perhaps the only thing of the two that makes some sense
-at least - the identifier uniquely describes which CPU the error comes
-from...
-
-> MICROCODE - gives a fast path to root cause problems that have already
-> been fixed in a microcode update.
-
-But that, nah. See above.
-
-Thx.
+Thank you.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
