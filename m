@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D49F266D4;
-	Mon, 29 Jan 2024 21:45:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8594153BC1;
+	Mon, 29 Jan 2024 21:55:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706564714; cv=none; b=p63+eq8wMuvzSZaeHm+0PnrIgYp0W1OksOhPVqJ0QnSP/zsyTsJfw4s/o9M9cVX/VR+QtNXsNjqKzd5h3g3yox2vohemkbwJZ8mswzjHESXEmiWG5is11BEBjOMCHIzmQhy9hI8SXiNvzPVlw8LCHZg2m7bVX//A++KhciUenJA=
+	t=1706565335; cv=none; b=qR3RGQf6wBKF4Yo6H9v4yIz4mZC36uWOFTxWwa9rQJD93TerV3l+wZqaDuXacY9NasnD8CLTpNV2vaEFgDdQ3TJccAhIaGLvG8RS/k6iRPx5WxZkfkh8zVhTwa8RB9dmI6fKvOhBLHnrKzLyLXe4okMJpyey3PU6UNP64wMP+V4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706564714; c=relaxed/simple;
-	bh=yY4xF0kLqIPE63javcYLHfeIRhob7wmKoaWeIExeS1Q=;
+	s=arc-20240116; t=1706565335; c=relaxed/simple;
+	bh=LwpdwWjfn8pn6umFZf8cgWtzSTXpwBVw1pHvwYkuXYU=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XN1/ocxtadsahfo0WCJgHU3zTYWBY/Va6j2TOtSAtoPqED38443IsNebmYlxf105A/wPV63Awy+xn+SgXSz0Iye2U5Kx1jlwnxAVrA0Yxi50gOI38OmSrStIfooNcGxi0MwolJ5EK8WOcxTLf3KGrQcacxXZiz33vM2J/6I53nM=
+	 MIME-Version:Content-Type; b=euAyhllvjRU8mH7XTE9IAQoLc+os5WeWWbDDqgnXGj0byp4CiWAayOIZvX7f1ScZEooEVI8vrhQp2U2WiP7KZ1xEyhdi2stBDyJbHya26vUrlCNCI+iIW4iPNBz+0oJZ2shbIA+18Jt4PVqOzBwhXB5iqUyub+RusJ6gUFvsbH8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A19BC433F1;
-	Mon, 29 Jan 2024 21:45:12 +0000 (UTC)
-Date: Mon, 29 Jan 2024 16:45:22 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D87AC433F1;
+	Mon, 29 Jan 2024 21:55:33 +0000 (UTC)
+Date: Mon, 29 Jan 2024 16:55:43 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
@@ -25,7 +25,7 @@ Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
  <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org
 Subject: Re: [linus:master] [eventfs] 852e46e239:
  BUG:unable_to_handle_page_fault_for_address
-Message-ID: <20240129164522.72482faa@gandalf.local.home>
+Message-ID: <20240129165543.5468039a@gandalf.local.home>
 In-Reply-To: <CAHk-=wghobf5qCqNUsafkQzNAZBJiS0=7CRjNXNChpoAvTbvUw@mail.gmail.com>
 References: <202401291043.e62e89dc-oliver.sang@intel.com>
 	<CAHk-=wh0M=e8R=ZXxa4vesLTtvGmYWJ-w1VmXxW5Mva=Nimk4Q@mail.gmail.com>
@@ -48,59 +48,10 @@ Content-Transfer-Encoding: 7bit
 On Mon, 29 Jan 2024 12:51:59 -0800
 Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-> End result: what simple_lookup() does is say "oh, you didn't have the
-> file, so it's by definition a negative dentry", and thus all it does
-> is to do "d_add(dentry, NULL)".
-> 
-> Anyway, removing this was painful. I initially thought "I'll just
-> remove the calls". But it all ended up cascading into "that's also
-> wrong".
-> 
-> So now I have a patch that tries to fix this all up, and it looks like thisL:
-> 
->  1 file changed, 50 insertions(+), 219 deletions(-)
+> [0001-tracefs-remove-stale-update_gid-code.patch  text/x-patch (2612 bytes)] 
 
-Thanks, much appreciated.
+Oh, I already applied this and even sent you a pull request with it.
 
-> 
-> because it basically removed all the old code, and replaced it with
-> much simpler code.
-> 
-> I'm including the patch here as an attachment, but I want to note very
-> clearly that this *builds* for me, and it looks a *lot* more obvious
-> and correct than the old code did, but I haven't tested it. AT ALL.
-
-I'm going to stare at them as I test them. Because I want to understand
-them. I may come back with questions.
-
-> 
-> Also note that it depends on my previous patches, so I guess I'll
-> include them here again just to make it unambiguous.
-> 
-> Finally - this does *not* fix up the refcounting. I still think the
-> SRCU stuff is completely broken. But that's another headache. But at
-> least now the *lookup* parts look like they DTRT wrt eventfs_mutex.
-> 
-> The SRCU logic from the directory iteration parts still needs crapectomy.
-
-I think the not dropping the mutex lock lets me get rid of the SRCU. I
-added the SRCU when I was hitting the deadlocks with the iput code which
-I'm not hitting anymore. So getting rid of the SRCU shouldn't be hard.
-
-> 
-> AGAIN: these patches (ie particularly that last one - 0004) were all
-> done entirely "blindly" - I've looked at the code, and fixed the bugs
-> and problems I've seen by pure code inspection.
-> 
-> That's great, but it really means that it's all untested. It *looks*
-> better than the old code, but there may be some silly gotcha that I
-> have missed.
-
-I'll let you know. 
-
-Oh, does b4 handle attachments? Because this breaks the patchwork flow.
-I haven't used b4 yet.
-
-Thanks,
+  https://lore.kernel.org/all/20240128223151.2dad6599@rorschach.local.home/
 
 -- Steve
