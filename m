@@ -1,59 +1,59 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922C84CB3D
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jan 2024 19:24:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA9C4C619
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jan 2024 19:52:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706556275; cv=none; b=YgYKt0xVOEmo5Q0oqw07+KkSB9ucAToFy8p6HKKOB8j8zddYyzFppgQakKgqkZAveyTj1zfwdmpNugPFlqiPTfaqoKYaYxWPkZhwX6jJtWgiyi37MFO64fIfA0XKgqzNeviLGsn5B5zo8g6Cbx2ZxCyx1dQcXp0EVxm3Txs1cgE=
+	t=1706557934; cv=none; b=MPqeWLYm4SC1B1Linccb5ST6haznWOt9A7IOfuWVJndqaajhIXwJTAiWJQ4HANcCP6IndOWTBcUzRNct/vSbhSzffqU64VnrTcRvtGxNeNnVHSzy0PK8KwbJjRvu86Wg1ew4TIbLFJL0E0Ein06ydvgxej/RTT3vVnZczCkEu5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706556275; c=relaxed/simple;
-	bh=bBpiX78LXMRXA22N7d+TRCKij7xbGDSODZmb19qcTVE=;
+	s=arc-20240116; t=1706557934; c=relaxed/simple;
+	bh=+U42MXYQmyPm0YLTZYN6+NqwTBjYG5RX5rdbE3Yhuts=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uheDuM0qM9jtol9uYpBqlVTKqRpS1EIPe0C6+KnH/8lLsCvdiUPYLagEL5O3VoJH75QvxVGrt07DiOzn34hwf+DfydLEMOqmLFG00Z9QqqDfKwGqby1mgN9E7C4mGTMW7GC/Wt/3Is1SvOmL+p4HAFZ8Mx+3rmBb7CEEqDfd9IU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=CuB8nfmV; arc=none smtp.client-ip=209.85.208.171
+	 To:Cc:Content-Type; b=sIxxgwU4R1epDTwmTJ94nmLmj5iIFJ67MlUsuROHX/Y3go4YLYI77VsemPQpiyowS9n7bDDpbvTBS9N5rdSCPx1xuU2obWMKJxvK+kgMxmRNBT+29re1krCkj4HChpbt9If/Ifb0fb+YKAXLcVcpmdYgJkFk1ET3q4wwegt/eqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=e+F+XGcc; arc=none smtp.client-ip=209.85.208.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="CuB8nfmV"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2cf328885b4so35925791fa.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jan 2024 11:24:33 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="e+F+XGcc"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-55f13b682d4so1499388a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jan 2024 11:52:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1706556271; x=1707161071; darn=vger.kernel.org;
+        d=linux-foundation.org; s=google; t=1706557930; x=1707162730; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rcYLqzXF8lziibesGlxqW2Lt27r28IgsPGcFjfsGXTQ=;
-        b=CuB8nfmVh8NYFmpkkEekSRnII5+FDMbT1ga1WwXibSjTE1j8hdlyS6YmWKW3iChWMX
-         kex8tGkCwU2XcUc91WI3FoRVNqWjWJTOYZxdoCSw7od6Q4DTN15ttXzqZ1cPErRWjVY6
-         lY38PAHFoNL5kZD1mmGwZ/MI1DxI7KjRasYRQ=
+        bh=POvQx/OtzDWk0KpZLv1n2MuJ9LedkHIMhddtK9sWv5M=;
+        b=e+F+XGcc/Xysiz2RY2vioan6Fq+ZZyXzafhL04gc0yqdKBiWsZJUgzpRmc/NB+j5vQ
+         AmZMfM4dGL0OXsaCkqsA12Ihcvm8JfEDaub+jQyUKzWZwj82HSQpa5UknJmU0V4t/QUp
+         gppgh7VO8u9Y1JXAJlaPK8MB5GF8WN96C5O+w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706556271; x=1707161071;
+        d=1e100.net; s=20230601; t=1706557930; x=1707162730;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=rcYLqzXF8lziibesGlxqW2Lt27r28IgsPGcFjfsGXTQ=;
-        b=xU1yxP9xwkl7UgzyncU/Y0O0JQU+B+xYzIBcgkJZnSW9YgF8wHcaaR3OByuciD8cVC
-         cuhXezIe+sIN6fwszACh7StYp8RgUYERa0PKosTUDgN1pEjgI415x6xw5RB7rknukbOW
-         enSb5sULWIslR/NFWfoBz3p/M+S2CVwblb9uAtCQWkx09ClXTJLUbFdhphD/IBL88fmk
-         Wau+a6DYGDbWNCw+sYas20PwlgFGnaLJQa6X/v/wM5HWY31TtZ/3Cax3vyUkcqaYnFxg
-         tsz+OMyMzU1gaPt22Qkwa44HfGIxby3kjVvKCmQP8ur+RihcSGk+Oxtgdur/9/mEsn9i
-         Hrvw==
-X-Gm-Message-State: AOJu0YwyeK7ecDDGY1oDhs0pcdxiW/UB/tRU9Pnteiob4dF4b5AV/Via
-	xNK0v7kXCI2SR6ihBtaOvrWwdnHtKTRY5iA9ZkKcg5t6vp8eNqClwQvZU6tfyBJyh4gsCqnsXCb
-	VdoQ=
-X-Google-Smtp-Source: AGHT+IE1f0sDgYnOip+r+wbFOJRBp8D6UMKviiNAgcBLhIk84wqpcf/ZwrC6om3VG8blG17hZmWOkg==
-X-Received: by 2002:a2e:2ac6:0:b0:2cf:3f81:1526 with SMTP id q189-20020a2e2ac6000000b002cf3f811526mr4316975ljq.47.1706556271042;
-        Mon, 29 Jan 2024 11:24:31 -0800 (PST)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id s14-20020a2e9c0e000000b002d0522b2550sm238379lji.32.2024.01.29.11.24.29
+        bh=POvQx/OtzDWk0KpZLv1n2MuJ9LedkHIMhddtK9sWv5M=;
+        b=S3XHMcafYRm61oWtAQdDWnlvp2v3sYV87+c3xdrM6j0ITKR4eNf6s1yUgq+WKqOI7o
+         HRTcY5N0JYYGBeE2bMTEeTVFpIILcIJZXdkwljs39AXUU1PCF1kkrJGZ+gkmiFtx3wWn
+         tKI5nanobcTRu+jKbJVlGjHTZLeCWwNtfj+KVYWOsAVrxzkaZowamGiDc0h72rOel+ij
+         C7YqRQIaMTH4zuZfYh8qHD5w2Re5NKhzgZfs/9HWRRBvx0KDjc0oYgEdFus4xUjP2KuN
+         sHHfkyEIg7uDGj0QYXedViP4P41i3xcExGtChVLQUvXKhMrzwWYNgoU6NWkoayglZAhA
+         E03g==
+X-Gm-Message-State: AOJu0Yw7Q+mHwxSUA+edxEnlGpCVLwNw53mkh/lW053t0AQzSeJ1pFRz
+	NDvGfEPfDerF9AUz1XQtRs9AQ6ALnX443Wur1R1zCDysasR7LFmYG8lsoJhNU+0XyVY4ln8MA1t
+	DCw4=
+X-Google-Smtp-Source: AGHT+IHeby8FGmdxWTvveUaz4PvC07s5MHpXqqUIdHQ+X4m/gjaVvufSeQ+1KwC7WNydfKNv9JvFBg==
+X-Received: by 2002:a05:6402:51ca:b0:55e:e838:a20e with SMTP id r10-20020a05640251ca00b0055ee838a20emr3923761edd.25.1706557930141;
+        Mon, 29 Jan 2024 11:52:10 -0800 (PST)
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com. [209.85.208.46])
+        by smtp.gmail.com with ESMTPSA id j16-20020aa7de90000000b0055ef0574a59sm1794449edv.40.2024.01.29.11.52.09
         for <linux-trace-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jan 2024 11:24:29 -0800 (PST)
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2cf4fafa386so32751381fa.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jan 2024 11:24:29 -0800 (PST)
-X-Received: by 2002:a2e:8342:0:b0:2cf:433c:b3e with SMTP id
- l2-20020a2e8342000000b002cf433c0b3emr4156643ljh.8.1706556269035; Mon, 29 Jan
- 2024 11:24:29 -0800 (PST)
+        Mon, 29 Jan 2024 11:52:09 -0800 (PST)
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-55f2b0c5ae9so700890a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jan 2024 11:52:09 -0800 (PST)
+X-Received: by 2002:a05:6402:51ca:b0:55e:e838:a20e with SMTP id
+ r10-20020a05640251ca00b0055ee838a20emr3923739edd.25.1706557929185; Mon, 29
+ Jan 2024 11:52:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -62,11 +62,12 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <202401291043.e62e89dc-oliver.sang@intel.com> <CAHk-=wh0M=e8R=ZXxa4vesLTtvGmYWJ-w1VmXxW5Mva=Nimk4Q@mail.gmail.com>
  <20240129120125.605e97af@gandalf.local.home> <CAHk-=wghx8Abyx_jcSrCDuNj96SuWS0NvNMhfU8VjFGg9bgm_g@mail.gmail.com>
-In-Reply-To: <CAHk-=wghx8Abyx_jcSrCDuNj96SuWS0NvNMhfU8VjFGg9bgm_g@mail.gmail.com>
+ <CAHk-=whb91PWEaEJpRGsuWaQpYZGj98ji8HC2vvHD4xb_TqhJw@mail.gmail.com>
+In-Reply-To: <CAHk-=whb91PWEaEJpRGsuWaQpYZGj98ji8HC2vvHD4xb_TqhJw@mail.gmail.com>
 From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 29 Jan 2024 11:24:12 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whb91PWEaEJpRGsuWaQpYZGj98ji8HC2vvHD4xb_TqhJw@mail.gmail.com>
-Message-ID: <CAHk-=whb91PWEaEJpRGsuWaQpYZGj98ji8HC2vvHD4xb_TqhJw@mail.gmail.com>
+Date: Mon, 29 Jan 2024 11:51:52 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgp7UkG31=cCcbSdhMv6-vBJ=orktUOUdiLzw4tQ4gDLg@mail.gmail.com>
+Message-ID: <CAHk-=wgp7UkG31=cCcbSdhMv6-vBJ=orktUOUdiLzw4tQ4gDLg@mail.gmail.com>
 Subject: Re: [linus:master] [eventfs] 852e46e239: BUG:unable_to_handle_page_fault_for_address
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel.com, 
@@ -74,86 +75,58 @@ Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel
 	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
 	Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
 	Ajay Kaher <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org
-Content-Type: multipart/mixed; boundary="00000000000035679f06101a980c"
-
---00000000000035679f06101a980c
 Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 29 Jan 2024 at 09:40, Linus Torvalds
+On Mon, 29 Jan 2024 at 11:24, Linus Torvalds
 <torvalds@linux-foundation.org> wrote:
 >
-> IOW, I think the right fix is really just this:
+> So the patch was completely broken. Here's the one that should
+> actually compile (although still not actually *tested*).
 
-Oh, for some reason I sent out the original patch I had which didn't
-fix the create_dir() case.
+Note that this fixes the d_instantiate() ordering wrt initializing the inode.
 
-So that patch was missing the important hunk that added the
+But as I look up the call chain, I see many more fundamental mistakes.
 
-        ti->flags = TRACEFS_EVENT_INODE;
-        ti->private = ei;
+Steven - the reason you think that the VFS doesn't have documentation
+is that we *do* have tons of documentation, but it's of the kind "Here
+is what you should do".
 
-to create_dir() (to match the removal in eventfs_post_create_dir()).
+It is *not* of the kind that says "You messed up and did something
+else, and how do you recover from it?".
 
-I had incorrectly put it in the create_file() case, that should just
-set ->private to NULL. afaik
+So the fundamental bug I now find is that eventfs_root_lookup() gets a
+target dentry, and for some unfathomable reason it then does
 
-So the patch was completely broken. Here's the one that should
-actually compile (although still not actually *tested*).
+        ret = simple_lookup(dir, dentry, flags);
 
-               Linus
+on it. Which is *completely* broken, because what "simple_lookup()"
+does is just say "oh, you didn't have a dentry of this kind before, so
+clearly a lookup must be a non-existent file". Remember: this is for
+'tmpfs' kinds of filesystems where the dentry cache cotnains *ALL*
+files.
 
---00000000000035679f06101a980c
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-eventfsfs-initialize-the-tracefs-inode-properly.patch"
-Content-Disposition: attachment; 
-	filename="0001-eventfsfs-initialize-the-tracefs-inode-properly.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_lrzbg76z0>
-X-Attachment-Id: f_lrzbg76z0
+For the tracefs kind of filesystem, it's TOTALLY BOGUS. What the
+"simple_lookup()" will do is just a plain
 
-RnJvbSA2ZTVkYjEwZWJjOTZlYmU2Yjk3MDdjOTkzOGM0NTBmNTFlOWEzYWUwIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBMaW51cyBUb3J2YWxkcyA8dG9ydmFsZHNAbGludXgtZm91bmRh
-dGlvbi5vcmc+CkRhdGU6IE1vbiwgMjkgSmFuIDIwMjQgMTE6MDY6MzIgLTA4MDAKU3ViamVjdDog
-W1BBVENIXSBldmVudGZzZnM6IGluaXRpYWxpemUgdGhlIHRyYWNlZnMgaW5vZGUgcHJvcGVybHkK
-ClRoZSB0cmFjZWZzLXNwZWNpZmljIGZpZWxkcyBpbiB0aGUgaW5vZGUgd2VyZSBub3QgaW5pdGlh
-bGl6ZWQgYmVmb3JlIHRoZQppbm9kZSB3YXMgZXhwb3NlZCB0byBvdGhlcnMgdGhyb3VnaCB0aGUg
-ZGVudHJ5IHdpdGggJ2RfaW5zdGFudGlhdGUoKScuCgpBbmQgdGhlIC0+ZmxhZ3MgZmlsZSB3YXMg
-aW5pdGlhbGl6ZWQgaW5jb3JyZWN0bHkgd2l0aCBhICd8PScsIHdoZW4gdGhlCm9sZCB2YWx1ZSB3
-YXMgc3RhbGUuICBJdCBzaG91bGQgaGF2ZSBqdXN0IGJlZW4gYSBzdHJhaWdodCBhc3NpZ25tZW50
-LgoKTW92ZSB0aGUgZmllbGQgaW5pdGlhbGl6YXRpb25zIHVwIHRvIGJlZm9yZSB0aGUgZF9pbnN0
-YW50aWF0ZSwgYW5kIGZpeAp0aGUgdXNlIG9mIHVuaW5pdGlhbGl6ZWQgZGF0YS4KClNpZ25lZC1v
-ZmYtYnk6IExpbnVzIFRvcnZhbGRzIDx0b3J2YWxkc0BsaW51eC1mb3VuZGF0aW9uLm9yZz4KLS0t
-CiBmcy90cmFjZWZzL2V2ZW50X2lub2RlLmMgfCAxMyArKysrKystLS0tLS0tCiAxIGZpbGUgY2hh
-bmdlZCwgNiBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2ZzL3Ry
-YWNlZnMvZXZlbnRfaW5vZGUuYyBiL2ZzL3RyYWNlZnMvZXZlbnRfaW5vZGUuYwppbmRleCAyZDEy
-OGJlZGQ2NTQuLmMwZDk3N2U2YzBmMiAxMDA2NDQKLS0tIGEvZnMvdHJhY2Vmcy9ldmVudF9pbm9k
-ZS5jCisrKyBiL2ZzL3RyYWNlZnMvZXZlbnRfaW5vZGUuYwpAQCAtMzI4LDcgKzMyOCw5IEBAIHN0
-YXRpYyBzdHJ1Y3QgZGVudHJ5ICpjcmVhdGVfZmlsZShjb25zdCBjaGFyICpuYW1lLCB1bW9kZV90
-IG1vZGUsCiAJaW5vZGUtPmlfaW5vID0gRVZFTlRGU19GSUxFX0lOT0RFX0lOTzsKIAogCXRpID0g
-Z2V0X3RyYWNlZnMoaW5vZGUpOwotCXRpLT5mbGFncyB8PSBUUkFDRUZTX0VWRU5UX0lOT0RFOwor
-CXRpLT5mbGFncyA9IFRSQUNFRlNfRVZFTlRfSU5PREU7CisJdGktPnByaXZhdGUgPSBOVUxMOwkJ
-CS8vIERpcmVjdG9yaWVzIGhhdmUgJ2VpJywgZmlsZXMgbm90CisKIAlkX2luc3RhbnRpYXRlKGRl
-bnRyeSwgaW5vZGUpOwogCWZzbm90aWZ5X2NyZWF0ZShkZW50cnktPmRfcGFyZW50LT5kX2lub2Rl
-LCBkZW50cnkpOwogCXJldHVybiBldmVudGZzX2VuZF9jcmVhdGluZyhkZW50cnkpOwpAQCAtMzY3
-LDcgKzM2OSw4IEBAIHN0YXRpYyBzdHJ1Y3QgZGVudHJ5ICpjcmVhdGVfZGlyKHN0cnVjdCBldmVu
-dGZzX2lub2RlICplaSwgc3RydWN0IGRlbnRyeSAqcGFyZW50CiAJaW5vZGUtPmlfaW5vID0gZXZl
-bnRmc19kaXJfaW5vKGVpKTsKIAogCXRpID0gZ2V0X3RyYWNlZnMoaW5vZGUpOwotCXRpLT5mbGFn
-cyB8PSBUUkFDRUZTX0VWRU5UX0lOT0RFOworCXRpLT5mbGFncyA9IFRSQUNFRlNfRVZFTlRfSU5P
-REU7CisJdGktPnByaXZhdGUgPSBlaTsKIAogCWluY19ubGluayhpbm9kZSk7CiAJZF9pbnN0YW50
-aWF0ZShkZW50cnksIGlub2RlKTsKQEAgLTUxMyw3ICs1MTYsNiBAQCBjcmVhdGVfZmlsZV9kZW50
-cnkoc3RydWN0IGV2ZW50ZnNfaW5vZGUgKmVpLCBpbnQgaWR4LAogc3RhdGljIHZvaWQgZXZlbnRm
-c19wb3N0X2NyZWF0ZV9kaXIoc3RydWN0IGV2ZW50ZnNfaW5vZGUgKmVpKQogewogCXN0cnVjdCBl
-dmVudGZzX2lub2RlICplaV9jaGlsZDsKLQlzdHJ1Y3QgdHJhY2Vmc19pbm9kZSAqdGk7CiAKIAls
-b2NrZGVwX2Fzc2VydF9oZWxkKCZldmVudGZzX211dGV4KTsKIApAQCAtNTIzLDkgKzUyNSw2IEBA
-IHN0YXRpYyB2b2lkIGV2ZW50ZnNfcG9zdF9jcmVhdGVfZGlyKHN0cnVjdCBldmVudGZzX2lub2Rl
-ICplaSkKIAkJCQkgc3JjdV9yZWFkX2xvY2tfaGVsZCgmZXZlbnRmc19zcmN1KSkgewogCQllaV9j
-aGlsZC0+ZF9wYXJlbnQgPSBlaS0+ZGVudHJ5OwogCX0KLQotCXRpID0gZ2V0X3RyYWNlZnMoZWkt
-PmRlbnRyeS0+ZF9pbm9kZSk7Ci0JdGktPnByaXZhdGUgPSBlaTsKIH0KIAogLyoqCkBAIC05NDMs
-NyArOTQyLDcgQEAgc3RydWN0IGV2ZW50ZnNfaW5vZGUgKmV2ZW50ZnNfY3JlYXRlX2V2ZW50c19k
-aXIoY29uc3QgY2hhciAqbmFtZSwgc3RydWN0IGRlbnRyeQogCUlOSVRfTElTVF9IRUFEKCZlaS0+
-bGlzdCk7CiAKIAl0aSA9IGdldF90cmFjZWZzKGlub2RlKTsKLQl0aS0+ZmxhZ3MgfD0gVFJBQ0VG
-U19FVkVOVF9JTk9ERSB8IFRSQUNFRlNfRVZFTlRfVE9QX0lOT0RFOworCXRpLT5mbGFncyA9IFRS
-QUNFRlNfRVZFTlRfSU5PREUgfCBUUkFDRUZTX0VWRU5UX1RPUF9JTk9ERTsKIAl0aS0+cHJpdmF0
-ZSA9IGVpOwogCiAJaW5vZGUtPmlfbW9kZSA9IFNfSUZESVIgfCBTX0lSV1hVIHwgU19JUlVHTyB8
-IFNfSVhVR087Ci0tIAoyLjQzLjAuNS5nMzhmYjEzN2JkYgoK
---00000000000035679f06101a980c--
+        d_add(dentry, NULL);
+
+and nothing else. And guess what *that* does? It basically
+instantiates a negative dentry, telling all other lookups that the
+path does not exist.
+
+So if you have two concurrent lookups, one will do that
+simple_lookup(), and the other will then - depending on timing -
+either see the negative dentry and return -ENOENT, or - if it comes in
+a bit later - see the new inode that then later gets added by the
+first lookup with d_instantiate().
+
+See? That simple_lookup() is not just unnecessary, but it's also
+actively completely WRONG. Because it instantiates a NULL pointer,
+other processes that race with the lookup may now end up saying "that
+file doesn't exist", even though it should.
+
+Basically, you can't use *any* of the "simple" filesystem helpers.
+Because they are all designed for that "the dentry tree is all there
+is" case.
+
+                Linus
