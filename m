@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C855E4F1F5;
-	Mon, 29 Jan 2024 22:49:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C6B51C4B;
+	Mon, 29 Jan 2024 23:15:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706568581; cv=none; b=gmgroQ64/SV0OEtLExoIchpL/brlbUxPjp1FKYku74eXm8Uo9FZwe/04s94eQaEOcfwRTHTU6IQNzI31frOWyMysJ8dLPOBjnQZJt9cophv8v+ukV7hauTdokTgtik3/FPGtY7RdI3KoeQcMTfyQRppqiTd+z2uGYXT14nDMZhY=
+	t=1706570119; cv=none; b=oTO0IziK4Cs1AcBxroK486tWuSE7ken16wgwDVMsOaKvGUzV7tjbDw4fpGDTt71zyQQBKzBPF3Z0dHSJcU5ZohEFN+Qw/L7ndQ7d6nBOYBcW+P2FdCxR+CvTfGoXzfu2paYlLEmIyHIxZVmuOoMcmeTMUijGOb1VZ5h1yxFK8JQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706568581; c=relaxed/simple;
-	bh=KeLg8W/OSpqeBnocOacGal7XGwVN+UGJN0OY1ZfZUbg=;
+	s=arc-20240116; t=1706570119; c=relaxed/simple;
+	bh=gR27Qkt/D00rT1UvrX2VsvQIp//4zeSKmy026dIcPSM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iCB/GpqRf83YygBuUyMXNaX0mHwDcpstTkFM+9I8NAfU9byy0mwjb3dt1FzsnX/QrXE/ERmHAde/GAhjKGDKo+YfCBfRKtigXJmSPcU8bHjVK549rJlleBtPhSXga3xJfhyGVaz0khtKw6QQlLQsyOMjAM1VqoSfq6KD++eAtN8=
+	 MIME-Version:Content-Type; b=Rd4CMkfN+rCdxvsq/j34crhJZFiGsIvwgqrvyrWg8bSZdbsedLpXOfwnYR3+BrvI8f4BNbRhbjYbXNpYoR4tapaP/0lEetIxYpi1pMu6KsldocFGXjxvdqaTMlTyDyXmcItb3EV/27KvZeriSpeWEpEPiRRYOQqr1r5Z91Z3nTU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AB80C433C7;
-	Mon, 29 Jan 2024 22:49:39 +0000 (UTC)
-Date: Mon, 29 Jan 2024 17:49:50 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 270D0C433F1;
+	Mon, 29 Jan 2024 23:15:18 +0000 (UTC)
+Date: Mon, 29 Jan 2024 18:15:28 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
@@ -25,8 +25,8 @@ Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
  <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org
 Subject: Re: [linus:master] [eventfs] 852e46e239:
  BUG:unable_to_handle_page_fault_for_address
-Message-ID: <20240129174950.5a17a86c@gandalf.local.home>
-In-Reply-To: <CAHk-=wgOxTeTi02C=kOXsHzuD6XCrV0L1zk1XP9t+a4Wx--xvA@mail.gmail.com>
+Message-ID: <20240129181528.2aa5e39f@gandalf.local.home>
+In-Reply-To: <20240129174732.1cea0d69@gandalf.local.home>
 References: <202401291043.e62e89dc-oliver.sang@intel.com>
 	<CAHk-=wh0M=e8R=ZXxa4vesLTtvGmYWJ-w1VmXxW5Mva=Nimk4Q@mail.gmail.com>
 	<20240129120125.605e97af@gandalf.local.home>
@@ -37,7 +37,7 @@ References: <202401291043.e62e89dc-oliver.sang@intel.com>
 	<CAHk-=wghobf5qCqNUsafkQzNAZBJiS0=7CRjNXNChpoAvTbvUw@mail.gmail.com>
 	<20240129172200.1725f01b@gandalf.local.home>
 	<CAHk-=wjV6+U1FQ8wzQ5ASmqGgby+GZ6wpdh0NrJgA43mc+TEwA@mail.gmail.com>
-	<CAHk-=wgOxTeTi02C=kOXsHzuD6XCrV0L1zk1XP9t+a4Wx--xvA@mail.gmail.com>
+	<20240129174732.1cea0d69@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -48,42 +48,48 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 29 Jan 2024 14:42:47 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Mon, 29 Jan 2024 17:47:32 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> @@ -324,7 +322,7 @@ static struct dentry *lookup_file(struct dentry *dentry,
->  	ti->flags = TRACEFS_EVENT_INODE;
->  	ti->private = NULL;			// Directories have 'ei', files not
->  
-> -	d_instantiate(dentry, inode);
-> +	d_add(dentry, inode);
->  	fsnotify_create(dentry->d_parent->d_inode, dentry);
->  	return eventfs_end_creating(dentry);
->  };
-> @@ -365,7 +363,7 @@ static struct dentry *lookup_dir_entry(struct dentry *dentry,
->          ei->dentry = dentry;	// Remove me!
->  
->  	inc_nlink(inode);
-> -	d_instantiate(dentry, inode);
-> +	d_add(dentry, inode);
->  	inc_nlink(dentry->d_parent->d_inode);
->  	fsnotify_mkdir(dentry->d_parent->d_inode, dentry);
->  	return eventfs_end_creating(dentry);
-> @@ -786,7 +784,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
->  
->  	/* directory inodes start off with i_nlink == 2 (for "." entry) */
->  	inc_nlink(inode);
-> -	d_instantiate(dentry, inode);
-> +	d_add(dentry, inode);
+> > And I hope there aren't any other stupid things I missed like that.  
+> 
+> Well the preliminary tests pass with this added to your patch:
 
-Now I didn't change this last d_instantiate, because this is not called
-through the lookup code. This is the root events directory and acts more
-like debugfs. It's not "dynamically" added.
+Spoke too soon. The later tests started failing.
+
+It fails on creating a kprobe, deleting it, and then recreating it. Even
+though the directory is there, it can't be accessed.
+
+ # cd /sys/kernel/tracing
+
+// Create a kprobe
+
+ # echo 'p:sched schedule' >> kprobe_events 
+ # ls events/kprobes/
+enable  filter  sched
+
+// Now delete the kprobe
+
+ # echo '-:sched schedule' >> kprobe_events
+
+// Make sure it's gone
+
+ # ls events/kprobes/
+ls: cannot access 'events/kprobes/': No such file or directory
+
+// Recreate it
+
+ # echo 'p:sched schedule' >> kprobe_events 
+ # ls events/kprobes/
+ls: cannot access 'events/kprobes/': No such file or directory
+ # ls events | grep kprobes
+kprobes
+
+No longer able to access it.
+
+ # ls -l events | grep kprobes
+ls: cannot access 'events/kprobes': No such file or directory
+d????????? ? ?    ?    ?            ? kprobes
+
 
 -- Steve
-
-
->  	inc_nlink(dentry->d_parent->d_inode);
->  	fsnotify_mkdir(dentry->d_parent->d_inode, dentry);
->  	tracefs_end_creating(dentry);
-
