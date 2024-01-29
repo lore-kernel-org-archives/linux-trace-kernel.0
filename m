@@ -1,712 +1,316 @@
-Received: from wnew3-smtp.messagingengine.com (wnew3-smtp.messagingengine.com [64.147.123.17])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30A810A03;
-	Mon, 29 Jan 2024 01:24:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706491483; cv=none; b=i79/sTsh6xLpp34OzQk8z1SaFkVYM9A6SPAm5h6u6/nYNPwRqGjzIiq8fZpBtNJVUZ6r8Xc9tCkpTR+UHVeIpyHQ1BIYOdvji5SI6NhtFQ9Uek4BkEHz98k306TX8r2OLQOucqr6bA3Ye+YkwAahuEDIFBka0Zv7G72jw5j/EEw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706491483; c=relaxed/simple;
-	bh=9cqf/9Amg13k51+5iwKHHBPjAS/7BPVRIAcPkcxtH34=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iUvdf8W2inRngbum65fRVC23mRIz6HoESXZgGnUhYtLQ/P81W4FNIhTYSXbetGzjPYyNOyu1bSqYAbERB9KcPJl8kog4HVM9F7B1S2pOfP3RgeLqkDy3cyRBuHw8Zxv2gNaZthx1bMJpgBLy5HMychYeH4SuH+BKQswUj1hMO0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=PDmSR97q; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=oCfjADXd; arc=none smtp.client-ip=64.147.123.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C5DF9D6;
+	Mon, 29 Jan 2024 02:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=134.134.136.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706497153; cv=fail; b=QuqYjxPSvJxjexEqBk9D9IPriAPHHGpIL1F9LQz1o8GE7yN7u/kZbzlXs2GRUDnTC1glR4Poe3+QkamB5tvKJRediB4rkmgnDkI2CTT21vlq7J74F1j4aY7QarlEb+Nr+CosUKE/27t/k9U6VNhZz+GAIrcOSyXXyi0gYRUccP4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706497153; c=relaxed/simple;
+	bh=WqfS8AmgLhQkTj2wCU8H8SsD6Pd9Twg57YOqFrDbqv4=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=WFNgjOilsD8E1leYLUU91YAS/ZUmQFVinnNJK5xB7sCRx8JpMb6j05WN6JhhNIHSowrFk5qp+re4O0cwdLLJsxpyEA+GbpaHgGomJadLZ2CIGSrNV7p6PbVQ5kkznBRbujL/jjyBHkE7wJbBecyShqJwy1/+U/EVbY3pfCoAW3Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MBGLeDGT; arc=fail smtp.client-ip=134.134.136.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="PDmSR97q";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oCfjADXd"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailnew.west.internal (Postfix) with ESMTP id C955B2B000B7;
-	Sun, 28 Jan 2024 20:24:35 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Sun, 28 Jan 2024 20:24:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1706491475; x=
-	1706498675; bh=7VY0dgiBYbbcfrJZGJjk3/dghfGQwBOVRbFdN20Jllc=; b=P
-	DmSR97qYC5AQ0X0mowcuOzTuwPcZ4CAO/zQNOhfMk5gl+N0HZ1sguKzvsZdD51Vv
-	YOO0BdgeLeRYlfmTJhvX468qqORV3+29hu5mkz0hDd5Z8DQiUH/FfuCIhQprCLxV
-	HtSZHYCfTyy7k/m2aB86zL7CFt2quEOaelhfOTkOFrWtbDNuZ21UOxG27fy00ZDx
-	Ymu54rykoBYw9bS4dwNXh7dH4SmztixFjRK8S5liOxam/YOnvv44ojdgucHJeEvQ
-	PDvKAmtgxFrw/OwdQFidt51nU+b9rGjRAWLNJeuxFEkiZ57qXlEfkOrxGO+zF4yH
-	c/87ZKno/hZ/q4p5R3XDA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1706491475; x=
-	1706498675; bh=7VY0dgiBYbbcfrJZGJjk3/dghfGQwBOVRbFdN20Jllc=; b=o
-	CfjADXdjCPCzQd0tA0qiO8oSeZtIj/DwMKkRW5oXdFwcCw5kRrkIhWks6rpESZjt
-	S6Yc9FoZ7kg7HgKYtlGzDzjWTw2Jame5heMRtF9smduCS24Fm+cQArWdrK0p+xlM
-	4MYDJW2PLlQ+BpiRKw9SPpTEryeaIR39j1yjGruQ+/x1E6E0+JA4duZ8MZ353d3t
-	PRukXzYvK0qUjdkUiN2VWFsXrZlZXZuwdVBqc6c2s6rMW15uRDfFKr3jXcCYNCr4
-	mssSBb1pbCJiMhDCGBJdNSEoGnKVUg4rfAufKkPrmSdAi8IQYI6pQY3Eo9XfzNbB
-	23bpWoftXA5U5XqFZeiBA==
-X-ME-Sender: <xms:Uf62ZVpLyuToMRsh43rvNr_vRqX0UqM9LDGiPn0Nwv7_YLYGD9E0SA>
-    <xme:Uf62ZXoNw_R92rK8xBHL3g4vwXy5LC1ZZcgxUjHWt234FXCSYipp-hDnZxRKbUHVM
-    ixwZcbwKybOKIjatA>
-X-ME-Received: <xmr:Uf62ZSOxAKXE2nt0abg5ssAzW170NWTNodlkN8XeFyKawVe2oTqxg2Hognd0Yv18d9eii6a_ByeJAv-4Dz4GMgV29DdCSxvqZQciA3jRRPBJCg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrfedtfedgfeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    gfrhhlucfvnfffucdljedtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertder
-    tddtnecuhfhrohhmpeffrghnihgvlhcuighuuceougiguhesugiguhhuuhdrgiihiieqne
-    cuggftrfgrthhtvghrnhepgfefgfegjefhudeikedvueetffelieefuedvhfehjeeljeej
-    kefgffeghfdttdetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomhepugiguhesugiguhhuuhdrgiihii
-X-ME-Proxy: <xmx:Uf62ZQ5KmMuASEZ-hTy3Coh_5pREwEk78EiSEadvNgH4mj3M_WueUg>
-    <xmx:Uf62ZU7giyc6-spDEECmzp_pIaWqgKksUgxhQcRC-AF7NOTHNbJJ5Q>
-    <xmx:Uf62ZYgx426avijJ4r-M5l9FlVPX9hfo4N-SQybQa38lk-zOrtGr7w>
-    <xmx:U_62ZTaLYFtcxCu39z_t1SZlWZHkxraCifWVWPh4I03XxWq8uYqmZYpxapg>
-Feedback-ID: i6a694271:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 28 Jan 2024 20:24:30 -0500 (EST)
-From: Daniel Xu <dxu@dxuuu.xyz>
-To: mhiramat@kernel.org,
-	daniel@iogearbox.net,
-	edumazet@google.com,
-	fw@strlen.de,
-	hannes@cmpxchg.org,
-	tytso@mit.edu,
-	ast@kernel.org,
-	eddyz87@gmail.com,
-	kuba@kernel.org,
-	tj@kernel.org,
-	steffen.klassert@secunet.com,
-	yonghong.song@linux.dev,
-	hawk@kernel.org,
-	rostedt@goodmis.org,
-	john.fastabend@gmail.com,
-	pablo@netfilter.org,
-	pabeni@redhat.com,
-	jikos@kernel.org,
-	davem@davemloft.net,
-	alexandre.torgue@foss.st.com,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	song@kernel.org,
-	dsahern@kernel.org,
-	mcoquelin.stm32@gmail.com,
-	corbet@lwn.net,
-	lizefan.x@bytedance.com,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	benjamin.tissoires@redhat.com,
-	ebiggers@kernel.org,
-	kadlec@netfilter.org,
-	shuah@kernel.org,
-	alexei.starovoitov@gmail.com,
-	olsajiri@gmail.com,
-	quentin@isovalent.com,
-	alan.maguire@oracle.com,
-	memxor@gmail.com
-Cc: kpsingh@kernel.org,
-	sdf@google.com,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mykolal@fb.com,
-	bpf@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	fsverity@lists.linux.dev,
-	cgroups@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org,
-	linux-kselftest@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH bpf-next v4 3/3] bpf: treewide: Annotate BPF kfuncs in BTF
-Date: Sun, 28 Jan 2024 18:24:08 -0700
-Message-ID: <e55150ceecbf0a5d961e608941165c0bee7bc943.1706491398.git.dxu@dxuuu.xyz>
-X-Mailer: git-send-email 2.42.1
-In-Reply-To: <cover.1706491398.git.dxu@dxuuu.xyz>
-References: <cover.1706491398.git.dxu@dxuuu.xyz>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MBGLeDGT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706497151; x=1738033151;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=WqfS8AmgLhQkTj2wCU8H8SsD6Pd9Twg57YOqFrDbqv4=;
+  b=MBGLeDGTP/v14X47JkToNtHdZ7LuCi3BuXQfuFGWescreAxUr5UfdT9I
+   L75GntZdRwseIZwxHAa3C/qKTLpropuFxN/jmzUhGST6nP+FQtkNU9uhq
+   nmZWUwSWcaAewmumRJtY25RWHbzNFE0MDE/XoXJIcVXRwlXUkeKvb6L8J
+   IWbFnXFI64LPnGzLOuBa384BjulvIFzAl3t6poDRD+jv0KFlmpSiWfdfT
+   2mLy1xeF0homhu1mzq9WbyXCL/VhV/fcCn/md6dlmnjLMuxV/Sp1Y81ya
+   hOEOcm/PxP2X2Rks8cHvFFomCQfGMXaiwnnOr56s8qogSdgBUCycJgXki
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="406559606"
+X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
+   d="scan'208";a="406559606"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2024 18:59:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="787690924"
+X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
+   d="scan'208";a="787690924"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 28 Jan 2024 18:59:08 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 28 Jan 2024 18:59:08 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Sun, 28 Jan 2024 18:59:08 -0800
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.41) by
+ edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Sun, 28 Jan 2024 18:59:08 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MtK9eV/58y1spw9mMcCNsq31SD3rjZjRqZt2/ibCkXRK4fy/AZfVFE093bolR4VcqeE7yanAAe9RQNcobpzkDx0LGxO5/abZEDAk8NSvl3a5gF8yWYachxi5Nt4D0T0/Xuxm5Mnuc1ajJC9pQwKzun5Qf6Gd2Jn9R1Ihb05Czq75VKAWcxCTrOo3VTOJivD1aCB/w4Fe/xHXSJ5doOH0uxCsfLuYo6qsqfqwZVLioDPeg702e9X5hgg46XWfMk+dUCJ1hxNJg43MhUpUCFWkVF2Hhc1V/ErRixLTksFTMsyr1nH4hwcRAxDxKAdifVYhHlryTMe67lGmHwYtEPXCzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=k7ojX+8nn1DQABbMFQb9zOFhfebua5jUH8VhTtDgJi0=;
+ b=jhzbyhi7BAP9jgt4QzdGDN7tuqkxGtc4FnltSRqDJTOdf3T+vLZX29RQ0EtM1rubLUGARDS6kh3hNan2u5cT/fg5ure0KmEJOn4dff2/CtsTKZ6S1EmdL2h2yuoUJcLACa3h2smGwLSvGPgtbeC0cT3MJWuMV+0ilszI8kIRbbPWTrKu42Jcl3ILyBwnY4XDvWrNKlyEyAfBxBcMJNqA/1sot3VamBK3JhnXyJA8UlQMyw9Yy1vFsiNX4rzGEuAd82k9MvwN2dfAiYWz5tCUlpgF0/yV+/nKpYwE6x+Ji5EKrBtYbrHqgmRmP0Lfua6yVUJzxpb5siyGAQRx4RkAWg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by PH8PR11MB6952.namprd11.prod.outlook.com (2603:10b6:510:224::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.32; Mon, 29 Jan
+ 2024 02:59:05 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::a026:574d:dab0:dc8e]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::a026:574d:dab0:dc8e%3]) with mapi id 15.20.7228.029; Mon, 29 Jan 2024
+ 02:59:05 +0000
+Date: Mon, 29 Jan 2024 10:58:55 +0800
+From: kernel test robot <oliver.sang@intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Linus Torvalds
+	<torvalds@linux-foundation.org>, Christian Brauner <brauner@kernel.org>, "Al
+ Viro" <viro@zeniv.linux.org.uk>, Ajay Kaher <ajay.kaher@broadcom.com>,
+	"kernel test robot" <oliver.sang@intel.com>,
+	<linux-trace-kernel@vger.kernel.org>
+Subject: [linus:master] [eventfs]  852e46e239:
+ BUG:unable_to_handle_page_fault_for_address
+Message-ID: <202401291043.e62e89dc-oliver.sang@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-ClientProxiedBy: SG2PR02CA0075.apcprd02.prod.outlook.com
+ (2603:1096:4:90::15) To LV3PR11MB8603.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::9)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|PH8PR11MB6952:EE_
+X-MS-Office365-Filtering-Correlation-Id: 888c829c-92e4-43b6-90e8-08dc2076414b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jVjE3rhxhzhHCXVJRqtZWJBThx6weO/AB5NqhDv4oZE7gjTeF8Tmi9ppjcQxxnUYQTkFxB06aPU6bEzgzkGRAKI4iCLcKdGDABS+O1oQvVaYHTK+EPfE4+jlKEEKqgeZ/6hTGB1UUIbWT5b+fOfLlYzO9b8FwvJ1Hz1BHegGIO9fS24pyY1C4xJvScVP9BFOGPuIHPlQjflW8nyVcJdvtbFdCSvA3W80eEI6R7c+uL0E+48NSqrPuf6gtu29fsPvsHKKzk4LA9sAFTczD6RAEFDNEzNUd0eK8lZyZrxF1531mfT565HF3+KkuKhKekQmQlFfk8Em0N/UigAX3r01nxyFZXOtNVXerOnjqykhLJYQY+XgwLIUSpreksWu2iKUEBDo1O7XdWFvD3cw7jQP9WA57FJ1+MDjv1YK82pzESNeXbs8OdPcBJjABE2wmOO9wkHMGb4ID4ri97p4oxdQ8vV8/uwnLj+XXX6Iu0q/dAzDp+BJY4KCjqVm7IhliqF+VhzofYNL3X0jG6W0djVP6He1lweMmshTLZvElyiK2Jk=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(396003)(376002)(346002)(366004)(136003)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(83380400001)(6512007)(26005)(1076003)(2616005)(6506007)(7416002)(5660300002)(4326008)(41300700001)(2906002)(6486002)(6666004)(966005)(478600001)(316002)(54906003)(8676002)(8936002)(6916009)(66476007)(66556008)(66946007)(36756003)(86362001)(82960400001)(38100700002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?6EnURqEuarreUSJXovrYuchJaL7wbZBxdOz7ON2gqT9eComPStfD0pAb7NT8?=
+ =?us-ascii?Q?0G7fPqWv6NC1nfe+1bKyN9q6fg7xllyIrLOGwLXlTLKmAQktTZ1Q7UuPbUJ9?=
+ =?us-ascii?Q?M63W5MVqyF8aEacIUsUsaWwSz13KWc69bBYbvKn56ztFyTpV3D/EAPuzImpJ?=
+ =?us-ascii?Q?Te9Q8IHH3Nco+BVKY/ERiPOqvC5Gn3We27zGI6jjfB/j0jDmLmBviy7+PJoP?=
+ =?us-ascii?Q?XBK7s71rLTEuEfMFqHDsv1QUnkCeE0PuG2I6bQ0vEH9c77zuHNcQljByvu0c?=
+ =?us-ascii?Q?TYUJAGYzDQ7O7ORBjpg6CkdhCLiTr3bBq6CfnmaDvkW7XCT1zhqYvEUAP4yz?=
+ =?us-ascii?Q?Q/++ZNFeay0yefboAk8bVWLLuW1Tdsvr0yMBKUSME+ESdmiSk8rL/zzNs9wy?=
+ =?us-ascii?Q?e5fWoTiQ94Fudkzs0+W+iSbXhoSNQ9Qh6ghR1T11ac8hG+siPgHSLh9rnWzg?=
+ =?us-ascii?Q?lafPnDwuRoFH/EJ4g1ZtiohsmoC8UygWbKdMMXarAqxacpuPEYwzI7zci/tY?=
+ =?us-ascii?Q?yLGA6XM7fxS82V9iWozmuXtAdP7ID2XjsmmHoTDNN/UumUy504Ta5Epg4mid?=
+ =?us-ascii?Q?MgP9r/4xgXEYljNSm1v7i4YF/bEwqRtbjLyH4+EFcwNCqYj2jOz+gpzVf+oo?=
+ =?us-ascii?Q?35HoB7JjpXubfoNBlhQqx0c9AcoJp7+iiCzu3io1T/NecTL83zTxBwGDzmYr?=
+ =?us-ascii?Q?VrO91W7vnC0Ns33BSrOUs6+cmulTCcHMft5QE9LAqJFxdG9dBVR/UuXZhrpz?=
+ =?us-ascii?Q?SFl0BrA3v2mmYBQCo+3X4JTQypkweqr2/AR8ClA2V7eMHdW2KFbZ0rPD95Ni?=
+ =?us-ascii?Q?3/zh1KNNAf2ptLamp7PCfxT2YeVE4jmEo6CIWixASZFn8UZ76LwCgtoqb7fY?=
+ =?us-ascii?Q?+M6cahXPE+VI592l30Ob1QeaDa2r9xflZZLtRkPIDkLla+RFHI/+azWEatLI?=
+ =?us-ascii?Q?uHPRkKwvLZoTkNazK96gpMjNCgdKIkXd3v/8NVfacZbrpIm2xagmctgClFYq?=
+ =?us-ascii?Q?k8DmFwvJKLrgwJ+NEuTOR0VJ3aRhE2sB/5RJMAr8GNatdCL7/cKQST3yvOve?=
+ =?us-ascii?Q?mguxZlLKZSBbsQDE/Iz1H330RZE8cdlEGwK7x3X/L1XyOJ5nCDimH1jWrjmv?=
+ =?us-ascii?Q?yUPFAM8fWFViqRiXTyejn9MdIdh0nk2fz/98QZ6NXonbZtWNrv51O7yYXk0I?=
+ =?us-ascii?Q?cpPI11ayA25CQbJeqwbFUGLLXHLjNC/dbriM2K2ojpMzBS1gIDh4ag1dwghv?=
+ =?us-ascii?Q?yAk7V78BS/EhnLzAylg2ezPK1fd9W4cXki4kjSrUKEF0UBXSBxgTTY5cjBOZ?=
+ =?us-ascii?Q?Y15u80WPUSeh7LkDt/PJKDGCBdsej7ClgxAy5O7bNVYgt7YIQFvolHy2Uz8v?=
+ =?us-ascii?Q?nnsekJFuZW+RwFTVTE9ULuB63kUTOJihaVV1OD24NL6KXU6LPeI+TXJ1QhZg?=
+ =?us-ascii?Q?78HvWC8Wu1x6KcXwiCor7X7MMfjSN7lu8TJlF7GILZ0p51GKnbImxM0drNdm?=
+ =?us-ascii?Q?Mhm3/mJk+6emZWF0WcqlX4/etr80nOfUeudMtWnprOZ+WVi40N9MqUSv1y/0?=
+ =?us-ascii?Q?iwF/5grq8YyQwanfbTws9TUsi62kGU1XONqsAYsH?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 888c829c-92e4-43b6-90e8-08dc2076414b
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 02:59:05.6501
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Wi6q3dwQ1IPY6+pvohzge9rqSn218g7TE1h4pWk9cCknlnCKZJ8VkUDy/Tx1OXxCKsUCT/Huot/mmP4K4cZGpQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6952
+X-OriginatorOrg: intel.com
 
-This commit marks kfuncs as such inside the .BTF_ids section. The upshot
-of these annotations is that we'll be able to automatically generate
-kfunc prototypes for downstream users. The process is as follows:
 
-1. In source, use BTF_KFUNCS_START/END macro pair to mark kfuncs
-2. During build, pahole injects into BTF a "bpf_kfunc" BTF_DECL_TAG for
-   each function inside BTF_KFUNCS sets
-3. At runtime, vmlinux or module BTF is made available in sysfs
-4. At runtime, bpftool (or similar) can look at provided BTF and
-   generate appropriate prototypes for functions with "bpf_kfunc" tag
 
-To ensure future kfunc are similarly tagged, we now also return error
-inside kfunc registration for untagged kfuncs. For vmlinux kfuncs,
-we also WARN(), as initcall machinery does not handle errors.
+Hello,
 
-Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
----
- Documentation/bpf/kfuncs.rst                  |  8 ++++----
- drivers/hid/bpf/hid_bpf_dispatch.c            |  8 ++++----
- fs/verity/measure.c                           |  4 ++--
- kernel/bpf/btf.c                              |  8 ++++++++
- kernel/bpf/cpumask.c                          |  4 ++--
- kernel/bpf/helpers.c                          |  8 ++++----
- kernel/bpf/map_iter.c                         |  4 ++--
- kernel/cgroup/rstat.c                         |  4 ++--
- kernel/trace/bpf_trace.c                      |  8 ++++----
- net/bpf/test_run.c                            |  8 ++++----
- net/core/filter.c                             | 20 +++++++++----------
- net/core/xdp.c                                |  4 ++--
- net/ipv4/bpf_tcp_ca.c                         |  4 ++--
- net/ipv4/fou_bpf.c                            |  4 ++--
- net/ipv4/tcp_bbr.c                            |  4 ++--
- net/ipv4/tcp_cubic.c                          |  4 ++--
- net/ipv4/tcp_dctcp.c                          |  4 ++--
- net/netfilter/nf_conntrack_bpf.c              |  4 ++--
- net/netfilter/nf_nat_bpf.c                    |  4 ++--
- net/xfrm/xfrm_interface_bpf.c                 |  4 ++--
- net/xfrm/xfrm_state_bpf.c                     |  4 ++--
- .../selftests/bpf/bpf_testmod/bpf_testmod.c   |  8 ++++----
- 22 files changed, 70 insertions(+), 62 deletions(-)
+kernel test robot noticed "BUG:unable_to_handle_page_fault_for_address" on:
 
-diff --git a/Documentation/bpf/kfuncs.rst b/Documentation/bpf/kfuncs.rst
-index 7985c6615f3c..a8f5782bd833 100644
---- a/Documentation/bpf/kfuncs.rst
-+++ b/Documentation/bpf/kfuncs.rst
-@@ -177,10 +177,10 @@ In addition to kfuncs' arguments, verifier may need more information about the
- type of kfunc(s) being registered with the BPF subsystem. To do so, we define
- flags on a set of kfuncs as follows::
- 
--        BTF_SET8_START(bpf_task_set)
-+        BTF_KFUNCS_START(bpf_task_set)
-         BTF_ID_FLAGS(func, bpf_get_task_pid, KF_ACQUIRE | KF_RET_NULL)
-         BTF_ID_FLAGS(func, bpf_put_pid, KF_RELEASE)
--        BTF_SET8_END(bpf_task_set)
-+        BTF_KFUNCS_END(bpf_task_set)
- 
- This set encodes the BTF ID of each kfunc listed above, and encodes the flags
- along with it. Ofcourse, it is also allowed to specify no flags.
-@@ -347,10 +347,10 @@ Once the kfunc is prepared for use, the final step to making it visible is
- registering it with the BPF subsystem. Registration is done per BPF program
- type. An example is shown below::
- 
--        BTF_SET8_START(bpf_task_set)
-+        BTF_KFUNCS_START(bpf_task_set)
-         BTF_ID_FLAGS(func, bpf_get_task_pid, KF_ACQUIRE | KF_RET_NULL)
-         BTF_ID_FLAGS(func, bpf_put_pid, KF_RELEASE)
--        BTF_SET8_END(bpf_task_set)
-+        BTF_KFUNCS_END(bpf_task_set)
- 
-         static const struct btf_kfunc_id_set bpf_task_kfunc_set = {
-                 .owner = THIS_MODULE,
-diff --git a/drivers/hid/bpf/hid_bpf_dispatch.c b/drivers/hid/bpf/hid_bpf_dispatch.c
-index d9ef45fcaeab..02c441aaa217 100644
---- a/drivers/hid/bpf/hid_bpf_dispatch.c
-+++ b/drivers/hid/bpf/hid_bpf_dispatch.c
-@@ -172,9 +172,9 @@ hid_bpf_get_data(struct hid_bpf_ctx *ctx, unsigned int offset, const size_t rdwr
-  * The following set contains all functions we agree BPF programs
-  * can use.
-  */
--BTF_SET8_START(hid_bpf_kfunc_ids)
-+BTF_KFUNCS_START(hid_bpf_kfunc_ids)
- BTF_ID_FLAGS(func, hid_bpf_get_data, KF_RET_NULL)
--BTF_SET8_END(hid_bpf_kfunc_ids)
-+BTF_KFUNCS_END(hid_bpf_kfunc_ids)
- 
- static const struct btf_kfunc_id_set hid_bpf_kfunc_set = {
- 	.owner = THIS_MODULE,
-@@ -440,12 +440,12 @@ static const struct btf_kfunc_id_set hid_bpf_fmodret_set = {
- };
- 
- /* for syscall HID-BPF */
--BTF_SET8_START(hid_bpf_syscall_kfunc_ids)
-+BTF_KFUNCS_START(hid_bpf_syscall_kfunc_ids)
- BTF_ID_FLAGS(func, hid_bpf_attach_prog)
- BTF_ID_FLAGS(func, hid_bpf_allocate_context, KF_ACQUIRE | KF_RET_NULL)
- BTF_ID_FLAGS(func, hid_bpf_release_context, KF_RELEASE)
- BTF_ID_FLAGS(func, hid_bpf_hw_request)
--BTF_SET8_END(hid_bpf_syscall_kfunc_ids)
-+BTF_KFUNCS_END(hid_bpf_syscall_kfunc_ids)
- 
- static const struct btf_kfunc_id_set hid_bpf_syscall_kfunc_set = {
- 	.owner = THIS_MODULE,
-diff --git a/fs/verity/measure.c b/fs/verity/measure.c
-index bf7a5f4cccaf..3969d54158d1 100644
---- a/fs/verity/measure.c
-+++ b/fs/verity/measure.c
-@@ -159,9 +159,9 @@ __bpf_kfunc int bpf_get_fsverity_digest(struct file *file, struct bpf_dynptr_ker
- 
- __bpf_kfunc_end_defs();
- 
--BTF_SET8_START(fsverity_set_ids)
-+BTF_KFUNCS_START(fsverity_set_ids)
- BTF_ID_FLAGS(func, bpf_get_fsverity_digest, KF_TRUSTED_ARGS)
--BTF_SET8_END(fsverity_set_ids)
-+BTF_KFUNCS_END(fsverity_set_ids)
- 
- static int bpf_get_fsverity_digest_filter(const struct bpf_prog *prog, u32 kfunc_id)
- {
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index edef96ceffa3..bc446f37530c 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -8041,6 +8041,14 @@ int register_btf_kfunc_id_set(enum bpf_prog_type prog_type,
- {
- 	enum btf_kfunc_hook hook;
- 
-+	/* All kfuncs need to be tagged as such in BTF.
-+	 * WARN() for initcall registrations that do not check errors.
-+	 */
-+	if (!(kset->set->flags & BTF_SET8_KFUNCS)) {
-+		WARN_ON(!kset->owner);
-+		return -EINVAL;
-+	}
-+
- 	hook = bpf_prog_type_to_kfunc_hook(prog_type);
- 	return __register_btf_kfunc_id_set(hook, kset);
- }
-diff --git a/kernel/bpf/cpumask.c b/kernel/bpf/cpumask.c
-index 2e73533a3811..dad0fb1c8e87 100644
---- a/kernel/bpf/cpumask.c
-+++ b/kernel/bpf/cpumask.c
-@@ -424,7 +424,7 @@ __bpf_kfunc u32 bpf_cpumask_weight(const struct cpumask *cpumask)
- 
- __bpf_kfunc_end_defs();
- 
--BTF_SET8_START(cpumask_kfunc_btf_ids)
-+BTF_KFUNCS_START(cpumask_kfunc_btf_ids)
- BTF_ID_FLAGS(func, bpf_cpumask_create, KF_ACQUIRE | KF_RET_NULL)
- BTF_ID_FLAGS(func, bpf_cpumask_release, KF_RELEASE)
- BTF_ID_FLAGS(func, bpf_cpumask_acquire, KF_ACQUIRE | KF_TRUSTED_ARGS)
-@@ -450,7 +450,7 @@ BTF_ID_FLAGS(func, bpf_cpumask_copy, KF_RCU)
- BTF_ID_FLAGS(func, bpf_cpumask_any_distribute, KF_RCU)
- BTF_ID_FLAGS(func, bpf_cpumask_any_and_distribute, KF_RCU)
- BTF_ID_FLAGS(func, bpf_cpumask_weight, KF_RCU)
--BTF_SET8_END(cpumask_kfunc_btf_ids)
-+BTF_KFUNCS_END(cpumask_kfunc_btf_ids)
- 
- static const struct btf_kfunc_id_set cpumask_kfunc_set = {
- 	.owner = THIS_MODULE,
-diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-index bcb951a2ecf4..4db1c658254c 100644
---- a/kernel/bpf/helpers.c
-+++ b/kernel/bpf/helpers.c
-@@ -2544,7 +2544,7 @@ __bpf_kfunc void bpf_throw(u64 cookie)
- 
- __bpf_kfunc_end_defs();
- 
--BTF_SET8_START(generic_btf_ids)
-+BTF_KFUNCS_START(generic_btf_ids)
- #ifdef CONFIG_KEXEC_CORE
- BTF_ID_FLAGS(func, crash_kexec, KF_DESTRUCTIVE)
- #endif
-@@ -2573,7 +2573,7 @@ BTF_ID_FLAGS(func, bpf_task_get_cgroup1, KF_ACQUIRE | KF_RCU | KF_RET_NULL)
- #endif
- BTF_ID_FLAGS(func, bpf_task_from_pid, KF_ACQUIRE | KF_RET_NULL)
- BTF_ID_FLAGS(func, bpf_throw)
--BTF_SET8_END(generic_btf_ids)
-+BTF_KFUNCS_END(generic_btf_ids)
- 
- static const struct btf_kfunc_id_set generic_kfunc_set = {
- 	.owner = THIS_MODULE,
-@@ -2589,7 +2589,7 @@ BTF_ID(struct, cgroup)
- BTF_ID(func, bpf_cgroup_release_dtor)
- #endif
- 
--BTF_SET8_START(common_btf_ids)
-+BTF_KFUNCS_START(common_btf_ids)
- BTF_ID_FLAGS(func, bpf_cast_to_kern_ctx)
- BTF_ID_FLAGS(func, bpf_rdonly_cast)
- BTF_ID_FLAGS(func, bpf_rcu_read_lock)
-@@ -2618,7 +2618,7 @@ BTF_ID_FLAGS(func, bpf_dynptr_is_null)
- BTF_ID_FLAGS(func, bpf_dynptr_is_rdonly)
- BTF_ID_FLAGS(func, bpf_dynptr_size)
- BTF_ID_FLAGS(func, bpf_dynptr_clone)
--BTF_SET8_END(common_btf_ids)
-+BTF_KFUNCS_END(common_btf_ids)
- 
- static const struct btf_kfunc_id_set common_kfunc_set = {
- 	.owner = THIS_MODULE,
-diff --git a/kernel/bpf/map_iter.c b/kernel/bpf/map_iter.c
-index 6abd7c5df4b3..9575314f40a6 100644
---- a/kernel/bpf/map_iter.c
-+++ b/kernel/bpf/map_iter.c
-@@ -213,9 +213,9 @@ __bpf_kfunc s64 bpf_map_sum_elem_count(const struct bpf_map *map)
- 
- __bpf_kfunc_end_defs();
- 
--BTF_SET8_START(bpf_map_iter_kfunc_ids)
-+BTF_KFUNCS_START(bpf_map_iter_kfunc_ids)
- BTF_ID_FLAGS(func, bpf_map_sum_elem_count, KF_TRUSTED_ARGS)
--BTF_SET8_END(bpf_map_iter_kfunc_ids)
-+BTF_KFUNCS_END(bpf_map_iter_kfunc_ids)
- 
- static const struct btf_kfunc_id_set bpf_map_iter_kfunc_set = {
- 	.owner = THIS_MODULE,
-diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-index a8350d2d63e6..07e2284bb499 100644
---- a/kernel/cgroup/rstat.c
-+++ b/kernel/cgroup/rstat.c
-@@ -562,10 +562,10 @@ void cgroup_base_stat_cputime_show(struct seq_file *seq)
- }
- 
- /* Add bpf kfuncs for cgroup_rstat_updated() and cgroup_rstat_flush() */
--BTF_SET8_START(bpf_rstat_kfunc_ids)
-+BTF_KFUNCS_START(bpf_rstat_kfunc_ids)
- BTF_ID_FLAGS(func, cgroup_rstat_updated)
- BTF_ID_FLAGS(func, cgroup_rstat_flush, KF_SLEEPABLE)
--BTF_SET8_END(bpf_rstat_kfunc_ids)
-+BTF_KFUNCS_END(bpf_rstat_kfunc_ids)
- 
- static const struct btf_kfunc_id_set bpf_rstat_kfunc_set = {
- 	.owner          = THIS_MODULE,
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 64fdaf79d113..241ddf5e3895 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1412,14 +1412,14 @@ __bpf_kfunc int bpf_verify_pkcs7_signature(struct bpf_dynptr_kern *data_ptr,
- 
- __bpf_kfunc_end_defs();
- 
--BTF_SET8_START(key_sig_kfunc_set)
-+BTF_KFUNCS_START(key_sig_kfunc_set)
- BTF_ID_FLAGS(func, bpf_lookup_user_key, KF_ACQUIRE | KF_RET_NULL | KF_SLEEPABLE)
- BTF_ID_FLAGS(func, bpf_lookup_system_key, KF_ACQUIRE | KF_RET_NULL)
- BTF_ID_FLAGS(func, bpf_key_put, KF_RELEASE)
- #ifdef CONFIG_SYSTEM_DATA_VERIFICATION
- BTF_ID_FLAGS(func, bpf_verify_pkcs7_signature, KF_SLEEPABLE)
- #endif
--BTF_SET8_END(key_sig_kfunc_set)
-+BTF_KFUNCS_END(key_sig_kfunc_set)
- 
- static const struct btf_kfunc_id_set bpf_key_sig_kfunc_set = {
- 	.owner = THIS_MODULE,
-@@ -1475,9 +1475,9 @@ __bpf_kfunc int bpf_get_file_xattr(struct file *file, const char *name__str,
- 
- __bpf_kfunc_end_defs();
- 
--BTF_SET8_START(fs_kfunc_set_ids)
-+BTF_KFUNCS_START(fs_kfunc_set_ids)
- BTF_ID_FLAGS(func, bpf_get_file_xattr, KF_SLEEPABLE | KF_TRUSTED_ARGS)
--BTF_SET8_END(fs_kfunc_set_ids)
-+BTF_KFUNCS_END(fs_kfunc_set_ids)
- 
- static int bpf_get_file_xattr_filter(const struct bpf_prog *prog, u32 kfunc_id)
- {
-diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
-index dfd919374017..5535f9adc658 100644
---- a/net/bpf/test_run.c
-+++ b/net/bpf/test_run.c
-@@ -617,21 +617,21 @@ CFI_NOSEAL(bpf_kfunc_call_memb_release_dtor);
- 
- __bpf_kfunc_end_defs();
- 
--BTF_SET8_START(bpf_test_modify_return_ids)
-+BTF_KFUNCS_START(bpf_test_modify_return_ids)
- BTF_ID_FLAGS(func, bpf_modify_return_test)
- BTF_ID_FLAGS(func, bpf_modify_return_test2)
- BTF_ID_FLAGS(func, bpf_fentry_test1, KF_SLEEPABLE)
--BTF_SET8_END(bpf_test_modify_return_ids)
-+BTF_KFUNCS_END(bpf_test_modify_return_ids)
- 
- static const struct btf_kfunc_id_set bpf_test_modify_return_set = {
- 	.owner = THIS_MODULE,
- 	.set   = &bpf_test_modify_return_ids,
- };
- 
--BTF_SET8_START(test_sk_check_kfunc_ids)
-+BTF_KFUNCS_START(test_sk_check_kfunc_ids)
- BTF_ID_FLAGS(func, bpf_kfunc_call_test_release, KF_RELEASE)
- BTF_ID_FLAGS(func, bpf_kfunc_call_memb_release, KF_RELEASE)
--BTF_SET8_END(test_sk_check_kfunc_ids)
-+BTF_KFUNCS_END(test_sk_check_kfunc_ids)
- 
- static void *bpf_test_init(const union bpf_attr *kattr, u32 user_size,
- 			   u32 size, u32 headroom, u32 tailroom)
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 358870408a51..524adf1fa6d0 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -11982,21 +11982,21 @@ int bpf_dynptr_from_skb_rdonly(struct sk_buff *skb, u64 flags,
- 	return 0;
- }
- 
--BTF_SET8_START(bpf_kfunc_check_set_skb)
-+BTF_KFUNCS_START(bpf_kfunc_check_set_skb)
- BTF_ID_FLAGS(func, bpf_dynptr_from_skb)
--BTF_SET8_END(bpf_kfunc_check_set_skb)
-+BTF_KFUNCS_END(bpf_kfunc_check_set_skb)
- 
--BTF_SET8_START(bpf_kfunc_check_set_xdp)
-+BTF_KFUNCS_START(bpf_kfunc_check_set_xdp)
- BTF_ID_FLAGS(func, bpf_dynptr_from_xdp)
--BTF_SET8_END(bpf_kfunc_check_set_xdp)
-+BTF_KFUNCS_END(bpf_kfunc_check_set_xdp)
- 
--BTF_SET8_START(bpf_kfunc_check_set_sock_addr)
-+BTF_KFUNCS_START(bpf_kfunc_check_set_sock_addr)
- BTF_ID_FLAGS(func, bpf_sock_addr_set_sun_path)
--BTF_SET8_END(bpf_kfunc_check_set_sock_addr)
-+BTF_KFUNCS_END(bpf_kfunc_check_set_sock_addr)
- 
--BTF_SET8_START(bpf_kfunc_check_set_tcp_reqsk)
-+BTF_KFUNCS_START(bpf_kfunc_check_set_tcp_reqsk)
- BTF_ID_FLAGS(func, bpf_sk_assign_tcp_reqsk, KF_TRUSTED_ARGS)
--BTF_SET8_END(bpf_kfunc_check_set_tcp_reqsk)
-+BTF_KFUNCS_END(bpf_kfunc_check_set_tcp_reqsk)
- 
- static const struct btf_kfunc_id_set bpf_kfunc_set_skb = {
- 	.owner = THIS_MODULE,
-@@ -12075,9 +12075,9 @@ __bpf_kfunc int bpf_sock_destroy(struct sock_common *sock)
- 
- __bpf_kfunc_end_defs();
- 
--BTF_SET8_START(bpf_sk_iter_kfunc_ids)
-+BTF_KFUNCS_START(bpf_sk_iter_kfunc_ids)
- BTF_ID_FLAGS(func, bpf_sock_destroy, KF_TRUSTED_ARGS)
--BTF_SET8_END(bpf_sk_iter_kfunc_ids)
-+BTF_KFUNCS_END(bpf_sk_iter_kfunc_ids)
- 
- static int tracing_iter_filter(const struct bpf_prog *prog, u32 kfunc_id)
- {
-diff --git a/net/core/xdp.c b/net/core/xdp.c
-index 4869c1c2d8f3..034fb80f3fbe 100644
---- a/net/core/xdp.c
-+++ b/net/core/xdp.c
-@@ -771,11 +771,11 @@ __bpf_kfunc int bpf_xdp_metadata_rx_vlan_tag(const struct xdp_md *ctx,
- 
- __bpf_kfunc_end_defs();
- 
--BTF_SET8_START(xdp_metadata_kfunc_ids)
-+BTF_KFUNCS_START(xdp_metadata_kfunc_ids)
- #define XDP_METADATA_KFUNC(_, __, name, ___) BTF_ID_FLAGS(func, name, KF_TRUSTED_ARGS)
- XDP_METADATA_KFUNC_xxx
- #undef XDP_METADATA_KFUNC
--BTF_SET8_END(xdp_metadata_kfunc_ids)
-+BTF_KFUNCS_END(xdp_metadata_kfunc_ids)
- 
- static const struct btf_kfunc_id_set xdp_metadata_kfunc_set = {
- 	.owner = THIS_MODULE,
-diff --git a/net/ipv4/bpf_tcp_ca.c b/net/ipv4/bpf_tcp_ca.c
-index 834edc18463a..7f518ea5f4ac 100644
---- a/net/ipv4/bpf_tcp_ca.c
-+++ b/net/ipv4/bpf_tcp_ca.c
-@@ -201,13 +201,13 @@ bpf_tcp_ca_get_func_proto(enum bpf_func_id func_id,
- 	}
- }
- 
--BTF_SET8_START(bpf_tcp_ca_check_kfunc_ids)
-+BTF_KFUNCS_START(bpf_tcp_ca_check_kfunc_ids)
- BTF_ID_FLAGS(func, tcp_reno_ssthresh)
- BTF_ID_FLAGS(func, tcp_reno_cong_avoid)
- BTF_ID_FLAGS(func, tcp_reno_undo_cwnd)
- BTF_ID_FLAGS(func, tcp_slow_start)
- BTF_ID_FLAGS(func, tcp_cong_avoid_ai)
--BTF_SET8_END(bpf_tcp_ca_check_kfunc_ids)
-+BTF_KFUNCS_END(bpf_tcp_ca_check_kfunc_ids)
- 
- static const struct btf_kfunc_id_set bpf_tcp_ca_kfunc_set = {
- 	.owner = THIS_MODULE,
-diff --git a/net/ipv4/fou_bpf.c b/net/ipv4/fou_bpf.c
-index 4da03bf45c9b..06e5572f296f 100644
---- a/net/ipv4/fou_bpf.c
-+++ b/net/ipv4/fou_bpf.c
-@@ -100,10 +100,10 @@ __bpf_kfunc int bpf_skb_get_fou_encap(struct __sk_buff *skb_ctx,
- 
- __bpf_kfunc_end_defs();
- 
--BTF_SET8_START(fou_kfunc_set)
-+BTF_KFUNCS_START(fou_kfunc_set)
- BTF_ID_FLAGS(func, bpf_skb_set_fou_encap)
- BTF_ID_FLAGS(func, bpf_skb_get_fou_encap)
--BTF_SET8_END(fou_kfunc_set)
-+BTF_KFUNCS_END(fou_kfunc_set)
- 
- static const struct btf_kfunc_id_set fou_bpf_kfunc_set = {
- 	.owner = THIS_MODULE,
-diff --git a/net/ipv4/tcp_bbr.c b/net/ipv4/tcp_bbr.c
-index 22358032dd48..05dc2d05bc7c 100644
---- a/net/ipv4/tcp_bbr.c
-+++ b/net/ipv4/tcp_bbr.c
-@@ -1155,7 +1155,7 @@ static struct tcp_congestion_ops tcp_bbr_cong_ops __read_mostly = {
- 	.set_state	= bbr_set_state,
- };
- 
--BTF_SET8_START(tcp_bbr_check_kfunc_ids)
-+BTF_KFUNCS_START(tcp_bbr_check_kfunc_ids)
- #ifdef CONFIG_X86
- #ifdef CONFIG_DYNAMIC_FTRACE
- BTF_ID_FLAGS(func, bbr_init)
-@@ -1168,7 +1168,7 @@ BTF_ID_FLAGS(func, bbr_min_tso_segs)
- BTF_ID_FLAGS(func, bbr_set_state)
- #endif
- #endif
--BTF_SET8_END(tcp_bbr_check_kfunc_ids)
-+BTF_KFUNCS_END(tcp_bbr_check_kfunc_ids)
- 
- static const struct btf_kfunc_id_set tcp_bbr_kfunc_set = {
- 	.owner = THIS_MODULE,
-diff --git a/net/ipv4/tcp_cubic.c b/net/ipv4/tcp_cubic.c
-index 0fd78ecb67e7..44869ea089e3 100644
---- a/net/ipv4/tcp_cubic.c
-+++ b/net/ipv4/tcp_cubic.c
-@@ -485,7 +485,7 @@ static struct tcp_congestion_ops cubictcp __read_mostly = {
- 	.name		= "cubic",
- };
- 
--BTF_SET8_START(tcp_cubic_check_kfunc_ids)
-+BTF_KFUNCS_START(tcp_cubic_check_kfunc_ids)
- #ifdef CONFIG_X86
- #ifdef CONFIG_DYNAMIC_FTRACE
- BTF_ID_FLAGS(func, cubictcp_init)
-@@ -496,7 +496,7 @@ BTF_ID_FLAGS(func, cubictcp_cwnd_event)
- BTF_ID_FLAGS(func, cubictcp_acked)
- #endif
- #endif
--BTF_SET8_END(tcp_cubic_check_kfunc_ids)
-+BTF_KFUNCS_END(tcp_cubic_check_kfunc_ids)
- 
- static const struct btf_kfunc_id_set tcp_cubic_kfunc_set = {
- 	.owner = THIS_MODULE,
-diff --git a/net/ipv4/tcp_dctcp.c b/net/ipv4/tcp_dctcp.c
-index bb23bb5b387a..e33fbe4933e4 100644
---- a/net/ipv4/tcp_dctcp.c
-+++ b/net/ipv4/tcp_dctcp.c
-@@ -260,7 +260,7 @@ static struct tcp_congestion_ops dctcp_reno __read_mostly = {
- 	.name		= "dctcp-reno",
- };
- 
--BTF_SET8_START(tcp_dctcp_check_kfunc_ids)
-+BTF_KFUNCS_START(tcp_dctcp_check_kfunc_ids)
- #ifdef CONFIG_X86
- #ifdef CONFIG_DYNAMIC_FTRACE
- BTF_ID_FLAGS(func, dctcp_init)
-@@ -271,7 +271,7 @@ BTF_ID_FLAGS(func, dctcp_cwnd_undo)
- BTF_ID_FLAGS(func, dctcp_state)
- #endif
- #endif
--BTF_SET8_END(tcp_dctcp_check_kfunc_ids)
-+BTF_KFUNCS_END(tcp_dctcp_check_kfunc_ids)
- 
- static const struct btf_kfunc_id_set tcp_dctcp_kfunc_set = {
- 	.owner = THIS_MODULE,
-diff --git a/net/netfilter/nf_conntrack_bpf.c b/net/netfilter/nf_conntrack_bpf.c
-index 475358ec8212..d2492d050fe6 100644
---- a/net/netfilter/nf_conntrack_bpf.c
-+++ b/net/netfilter/nf_conntrack_bpf.c
-@@ -467,7 +467,7 @@ __bpf_kfunc int bpf_ct_change_status(struct nf_conn *nfct, u32 status)
- 
- __bpf_kfunc_end_defs();
- 
--BTF_SET8_START(nf_ct_kfunc_set)
-+BTF_KFUNCS_START(nf_ct_kfunc_set)
- BTF_ID_FLAGS(func, bpf_xdp_ct_alloc, KF_ACQUIRE | KF_RET_NULL)
- BTF_ID_FLAGS(func, bpf_xdp_ct_lookup, KF_ACQUIRE | KF_RET_NULL)
- BTF_ID_FLAGS(func, bpf_skb_ct_alloc, KF_ACQUIRE | KF_RET_NULL)
-@@ -478,7 +478,7 @@ BTF_ID_FLAGS(func, bpf_ct_set_timeout, KF_TRUSTED_ARGS)
- BTF_ID_FLAGS(func, bpf_ct_change_timeout, KF_TRUSTED_ARGS)
- BTF_ID_FLAGS(func, bpf_ct_set_status, KF_TRUSTED_ARGS)
- BTF_ID_FLAGS(func, bpf_ct_change_status, KF_TRUSTED_ARGS)
--BTF_SET8_END(nf_ct_kfunc_set)
-+BTF_KFUNCS_END(nf_ct_kfunc_set)
- 
- static const struct btf_kfunc_id_set nf_conntrack_kfunc_set = {
- 	.owner = THIS_MODULE,
-diff --git a/net/netfilter/nf_nat_bpf.c b/net/netfilter/nf_nat_bpf.c
-index 6e3b2f58855f..481be15609b1 100644
---- a/net/netfilter/nf_nat_bpf.c
-+++ b/net/netfilter/nf_nat_bpf.c
-@@ -54,9 +54,9 @@ __bpf_kfunc int bpf_ct_set_nat_info(struct nf_conn___init *nfct,
- 
- __bpf_kfunc_end_defs();
- 
--BTF_SET8_START(nf_nat_kfunc_set)
-+BTF_KFUNCS_START(nf_nat_kfunc_set)
- BTF_ID_FLAGS(func, bpf_ct_set_nat_info, KF_TRUSTED_ARGS)
--BTF_SET8_END(nf_nat_kfunc_set)
-+BTF_KFUNCS_END(nf_nat_kfunc_set)
- 
- static const struct btf_kfunc_id_set nf_bpf_nat_kfunc_set = {
- 	.owner = THIS_MODULE,
-diff --git a/net/xfrm/xfrm_interface_bpf.c b/net/xfrm/xfrm_interface_bpf.c
-index 7d5e920141e9..5ea15037ebd1 100644
---- a/net/xfrm/xfrm_interface_bpf.c
-+++ b/net/xfrm/xfrm_interface_bpf.c
-@@ -93,10 +93,10 @@ __bpf_kfunc int bpf_skb_set_xfrm_info(struct __sk_buff *skb_ctx, const struct bp
- 
- __bpf_kfunc_end_defs();
- 
--BTF_SET8_START(xfrm_ifc_kfunc_set)
-+BTF_KFUNCS_START(xfrm_ifc_kfunc_set)
- BTF_ID_FLAGS(func, bpf_skb_get_xfrm_info)
- BTF_ID_FLAGS(func, bpf_skb_set_xfrm_info)
--BTF_SET8_END(xfrm_ifc_kfunc_set)
-+BTF_KFUNCS_END(xfrm_ifc_kfunc_set)
- 
- static const struct btf_kfunc_id_set xfrm_interface_kfunc_set = {
- 	.owner = THIS_MODULE,
-diff --git a/net/xfrm/xfrm_state_bpf.c b/net/xfrm/xfrm_state_bpf.c
-index 9e20d4a377f7..2248eda741f8 100644
---- a/net/xfrm/xfrm_state_bpf.c
-+++ b/net/xfrm/xfrm_state_bpf.c
-@@ -117,10 +117,10 @@ __bpf_kfunc void bpf_xdp_xfrm_state_release(struct xfrm_state *x)
- 
- __bpf_kfunc_end_defs();
- 
--BTF_SET8_START(xfrm_state_kfunc_set)
-+BTF_KFUNCS_START(xfrm_state_kfunc_set)
- BTF_ID_FLAGS(func, bpf_xdp_get_xfrm_state, KF_RET_NULL | KF_ACQUIRE)
- BTF_ID_FLAGS(func, bpf_xdp_xfrm_state_release, KF_RELEASE)
--BTF_SET8_END(xfrm_state_kfunc_set)
-+BTF_KFUNCS_END(xfrm_state_kfunc_set)
- 
- static const struct btf_kfunc_id_set xfrm_state_xdp_kfunc_set = {
- 	.owner = THIS_MODULE,
-diff --git a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-index 8befaf17d454..53f73fc86baa 100644
---- a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-+++ b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-@@ -343,12 +343,12 @@ static struct bin_attribute bin_attr_bpf_testmod_file __ro_after_init = {
- 	.write = bpf_testmod_test_write,
- };
- 
--BTF_SET8_START(bpf_testmod_common_kfunc_ids)
-+BTF_KFUNCS_START(bpf_testmod_common_kfunc_ids)
- BTF_ID_FLAGS(func, bpf_iter_testmod_seq_new, KF_ITER_NEW)
- BTF_ID_FLAGS(func, bpf_iter_testmod_seq_next, KF_ITER_NEXT | KF_RET_NULL)
- BTF_ID_FLAGS(func, bpf_iter_testmod_seq_destroy, KF_ITER_DESTROY)
- BTF_ID_FLAGS(func, bpf_kfunc_common_test)
--BTF_SET8_END(bpf_testmod_common_kfunc_ids)
-+BTF_KFUNCS_END(bpf_testmod_common_kfunc_ids)
- 
- static const struct btf_kfunc_id_set bpf_testmod_common_kfunc_set = {
- 	.owner = THIS_MODULE,
-@@ -494,7 +494,7 @@ __bpf_kfunc static u32 bpf_kfunc_call_test_static_unused_arg(u32 arg, u32 unused
- 	return arg;
- }
- 
--BTF_SET8_START(bpf_testmod_check_kfunc_ids)
-+BTF_KFUNCS_START(bpf_testmod_check_kfunc_ids)
- BTF_ID_FLAGS(func, bpf_testmod_test_mod_kfunc)
- BTF_ID_FLAGS(func, bpf_kfunc_call_test1)
- BTF_ID_FLAGS(func, bpf_kfunc_call_test2)
-@@ -520,7 +520,7 @@ BTF_ID_FLAGS(func, bpf_kfunc_call_test_ref, KF_TRUSTED_ARGS | KF_RCU)
- BTF_ID_FLAGS(func, bpf_kfunc_call_test_destructive, KF_DESTRUCTIVE)
- BTF_ID_FLAGS(func, bpf_kfunc_call_test_static_unused_arg)
- BTF_ID_FLAGS(func, bpf_kfunc_call_test_offset)
--BTF_SET8_END(bpf_testmod_check_kfunc_ids)
-+BTF_KFUNCS_END(bpf_testmod_check_kfunc_ids)
- 
- static int bpf_testmod_ops_init(struct btf *btf)
- {
+commit: 852e46e239ee6db3cd220614cf8bce96e79227c2 ("eventfs: Do not create dentries nor inodes in iterate_shared")
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+
+[test failed on linus/master 7ed2632ec7d72e926b9e8bcc9ad1bb0cd37274bf]
+[test failed on linux-next/master 774551425799cb5bbac94e1768fd69eec4f78dd4]
+
+in testcase: stress-ng
+version: stress-ng-x86_64-1744999cb-1_20240112
+with following parameters:
+
+	nr_threads: 10%
+	disk: 1HDD
+	testtime: 60s
+	fs: xfs
+	class: filesystem
+	test: getdent
+	cpufreq_governor: performance
+
+
+
+compiler: gcc-12
+test machine: 64 threads 2 sockets Intel(R) Xeon(R) Gold 6346 CPU @ 3.10GHz (Ice Lake) with 256G memory
+
+(please refer to attached dmesg/kmsg for entire log/backtrace)
+
+
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <oliver.sang@intel.com>
+| Closes: https://lore.kernel.org/oe-lkp/202401291043.e62e89dc-oliver.sang@intel.com
+
+
+[   52.318955][ T4398] BUG: unable to handle page fault for address: 0000042c000004db
+[   52.326780][ T4398] #PF: supervisor read access in kernel mode
+[   52.332830][ T4398] #PF: error_code(0x0000) - not-present page
+[   52.338864][ T4398] PGD 186970067 P4D 0
+[   52.342993][ T4398] Oops: 0000 [#1] SMP NOPTI
+[   52.347552][ T4398] CPU: 32 PID: 4398 Comm: stress-ng-getde Not tainted 6.7.0-rc2-00049-g852e46e239ee #1
+[   52.357235][ T4398] Hardware name: Inspur NF5180M6/NF5180M6, BIOS 06.00.04 04/12/2022
+[ 52.365278][ T4398] RIP: 0010:set_top_events_ownership (fs/tracefs/event_inode.c:172 (discriminator 1)) 
+[ 52.371424][ T4398] Code: 00 00 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 48 8b 47 f8 48 85 c0 74 11 <f6> 40 78 02 74 0b 8b 50 50 f7 c2 00 00 08 00 75 05 c3 cc cc cc cc
+All code
+========
+   0:	00 00                	add    %al,(%rax)
+   2:	66 2e 0f 1f 84 00 00 	nopw   %cs:0x0(%rax,%rax,1)
+   9:	00 00 00 
+   c:	90                   	nop
+   d:	90                   	nop
+   e:	90                   	nop
+   f:	90                   	nop
+  10:	90                   	nop
+  11:	90                   	nop
+  12:	90                   	nop
+  13:	90                   	nop
+  14:	90                   	nop
+  15:	90                   	nop
+  16:	90                   	nop
+  17:	90                   	nop
+  18:	90                   	nop
+  19:	90                   	nop
+  1a:	90                   	nop
+  1b:	90                   	nop
+  1c:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
+  21:	48 8b 47 f8          	mov    -0x8(%rdi),%rax
+  25:	48 85 c0             	test   %rax,%rax
+  28:	74 11                	je     0x3b
+  2a:*	f6 40 78 02          	testb  $0x2,0x78(%rax)		<-- trapping instruction
+  2e:	74 0b                	je     0x3b
+  30:	8b 50 50             	mov    0x50(%rax),%edx
+  33:	f7 c2 00 00 08 00    	test   $0x80000,%edx
+  39:	75 05                	jne    0x40
+  3b:	c3                   	retq   
+  3c:	cc                   	int3   
+  3d:	cc                   	int3   
+  3e:	cc                   	int3   
+  3f:	cc                   	int3   
+
+Code starting with the faulting instruction
+===========================================
+   0:	f6 40 78 02          	testb  $0x2,0x78(%rax)
+   4:	74 0b                	je     0x11
+   6:	8b 50 50             	mov    0x50(%rax),%edx
+   9:	f7 c2 00 00 08 00    	test   $0x80000,%edx
+   f:	75 05                	jne    0x16
+  11:	c3                   	retq   
+  12:	cc                   	int3   
+  13:	cc                   	int3   
+  14:	cc                   	int3   
+  15:	cc                   	int3   
+[   52.391324][ T4398] RSP: 0018:ffa000000f2efc90 EFLAGS: 00010206
+[   52.397481][ T4398] RAX: 0000042c00000463 RBX: ff110002452ae2c8 RCX: 0000000000004000
+[   52.405547][ T4398] RDX: 0000000000000024 RSI: ff110002452ae2c8 RDI: ff110002452ae2c8
+[   52.413616][ T4398] RBP: ffffffff83080320 R08: 0000000000000064 R09: ff1100018a25dd40
+[   52.421686][ T4398] R10: ffffffffffff8c98 R11: 0000000000000000 R12: 0000000000000024
+[   52.429755][ T4398] R13: ffffffff83080320 R14: ffa000000f2efedc R15: 0000000000018000
+[   52.437828][ T4398] FS:  00007f3b60e3d740(0000) GS:ff11001fffe00000(0000) knlGS:0000000000000000
+[   52.446854][ T4398] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   52.453547][ T4398] CR2: 0000042c000004db CR3: 0000000113750004 CR4: 0000000000771ef0
+[   52.461629][ T4398] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   52.469707][ T4398] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   52.477783][ T4398] PKRU: 55555554
+[   52.481444][ T4398] Call Trace:
+[   52.484848][ T4398]  <TASK>
+[ 52.487894][ T4398] ? __die (arch/x86/kernel/dumpstack.c:421 arch/x86/kernel/dumpstack.c:434) 
+[ 52.491898][ T4398] ? page_fault_oops (arch/x86/mm/fault.c:707) 
+[ 52.496854][ T4398] ? exc_page_fault (arch/x86/include/asm/irqflags.h:37 arch/x86/include/asm/irqflags.h:72 arch/x86/mm/fault.c:1513 arch/x86/mm/fault.c:1561) 
+[ 52.501725][ T4398] ? asm_exc_page_fault (arch/x86/include/asm/idtentry.h:570) 
+[ 52.506858][ T4398] ? set_top_events_ownership (fs/tracefs/event_inode.c:172 (discriminator 1)) 
+[ 52.512425][ T4398] eventfs_permission (fs/tracefs/event_inode.c:203) 
+[ 52.517390][ T4398] inode_permission (fs/namei.c:462 fs/namei.c:529 fs/namei.c:504) 
+[ 52.522271][ T4398] may_open (fs/namei.c:3250) 
+[ 52.526453][ T4398] do_open (fs/namei.c:3621) 
+[ 52.530540][ T4398] ? open_last_lookups (fs/namei.c:3569) 
+[ 52.535670][ T4398] path_openat (fs/namei.c:3780) 
+[ 52.540187][ T4398] do_filp_open (fs/namei.c:3809) 
+[ 52.544696][ T4398] do_sys_openat2 (fs/open.c:1440) 
+[ 52.549285][ T4398] __x64_sys_openat (fs/open.c:1466) 
+[ 52.554044][ T4398] do_syscall_64 (arch/x86/entry/common.c:51 arch/x86/entry/common.c:82) 
+[ 52.558541][ T4398] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:129) 
+[   52.564509][ T4398] RIP: 0033:0x7f3b60fcb127
+[ 52.568991][ T4398] Code: 25 00 00 41 00 3d 00 00 41 00 74 47 64 8b 04 25 18 00 00 00 85 c0 75 6b 44 89 e2 48 89 ee bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d 00 f0 ff ff 0f 87 95 00 00 00 48 8b 4c 24 28 64 48 2b 0c 25
+All code
+========
+   0:	25 00 00 41 00       	and    $0x410000,%eax
+   5:	3d 00 00 41 00       	cmp    $0x410000,%eax
+   a:	74 47                	je     0x53
+   c:	64 8b 04 25 18 00 00 	mov    %fs:0x18,%eax
+  13:	00 
+  14:	85 c0                	test   %eax,%eax
+  16:	75 6b                	jne    0x83
+  18:	44 89 e2             	mov    %r12d,%edx
+  1b:	48 89 ee             	mov    %rbp,%rsi
+  1e:	bf 9c ff ff ff       	mov    $0xffffff9c,%edi
+  23:	b8 01 01 00 00       	mov    $0x101,%eax
+  28:	0f 05                	syscall 
+  2a:*	48 3d 00 f0 ff ff    	cmp    $0xfffffffffffff000,%rax		<-- trapping instruction
+  30:	0f 87 95 00 00 00    	ja     0xcb
+  36:	48 8b 4c 24 28       	mov    0x28(%rsp),%rcx
+  3b:	64                   	fs
+  3c:	48                   	rex.W
+  3d:	2b                   	.byte 0x2b
+  3e:	0c 25                	or     $0x25,%al
+
+Code starting with the faulting instruction
+===========================================
+   0:	48 3d 00 f0 ff ff    	cmp    $0xfffffffffffff000,%rax
+   6:	0f 87 95 00 00 00    	ja     0xa1
+   c:	48 8b 4c 24 28       	mov    0x28(%rsp),%rcx
+  11:	64                   	fs
+  12:	48                   	rex.W
+  13:	2b                   	.byte 0x2b
+  14:	0c 25                	or     $0x25,%al
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20240129/202401291043.e62e89dc-oliver.sang@intel.com
+
+
+
 -- 
-2.42.1
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
