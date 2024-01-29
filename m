@@ -1,109 +1,194 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51FE076C61;
-	Mon, 29 Jan 2024 17:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848EC76C80
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jan 2024 17:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706549354; cv=none; b=FPy9k5Agwj2qqkLTlJPI3Y8CBFEuCBORfghB9VInUABATbNULrNrB+uf6rzn0mNiwpEH+vXWQjbFnFczbG81aj/hUwp/P9dZ8Wm1Aj9Iz3GfoHRg0Kz0Ns/JuS6OgFlhdUblVUcL+GiPQo8pIAZpO2aylsgkdgn1iEDXMskiX7A=
+	t=1706550029; cv=none; b=VUV5slDDJM5RZEuKyglGBoGihnpwiX+lyzlD0hz6poteUNKx5fybBXCGyzgFpshK7WopIRUOf3BtJPCGO4v8QWTOIyiO6q+/jJbx51gDYMqFNTixtCPmh6u8oZjwcbWr9MKGzbFidv0tj87ymnYTTPQ7smaFbWtH43OYDf9HTyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706549354; c=relaxed/simple;
-	bh=W3XWPZGSMK3fE0uF5C5Gi8zDVvbzMbUonqOccKnW2rw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sZhg5v9LAh+slFVXdes3IxJO8ZoV2EvR/3UhMpHlPV/b22rv5Jo6g8A1MkBpANyrDQ0HpDLb+AEdTFGrzHiM2sS/4DDufoo4SoDT7Qg1Aw5NmgLH1B3dPscSkbH0IcPXAfWVcc0paAUVP7wHY5/Q/zcEZ0hIbF5XdrAmSy9AAJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=G1lxcQKb; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1706550029; c=relaxed/simple;
+	bh=kkIzpH18wDHfYouguHhG1jnDHVScQ73RnQm28C2mofo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RELdMQ53oe9p2RxJxEF7uqdx/Y5mTiYU9wpqIKngXSyvtjizf5fVghNHw/yO9BsV/MuHMs7y35oPEEA0j+vFvsRVVdS10K5pYcTmXNFYTvPWfUuZId2vfDotCPeQxFYoAyXq3fIbArxPREGQ6h4WtD+IGqdbW4bqxZ1O0aGbFUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=eM40Jqqp; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="G1lxcQKb"
-Received: from DESKTOP-4OLSCEK. (c-76-135-27-212.hsd1.wa.comcast.net [76.135.27.212])
-	by linux.microsoft.com (Postfix) with ESMTPSA id B97DB22FF43D;
-	Mon, 29 Jan 2024 09:29:12 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B97DB22FF43D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1706549352;
-	bh=q31WO/M6IYddLDiJtANlwh/aklgHuYZf/tuCYhTXQ8c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=G1lxcQKbs+avBaj80Oh/7rqajGWEFByV9TKhO4EFGjb5gJ/SW437ytLFggwrMbWNo
-	 EBFx0gvFy+D/GM/PXA300msfbl5aJwrGie0cwIYS5CuDuSujGcvF3oSCK1hQGYd9ge
-	 GDFjMuhv2jAyI6lAdWdX67Pzqw1mz3BOkUuSSMAM=
-Date: Mon, 29 Jan 2024 09:29:07 -0800
-From: Beau Belgrave <beaub@linux.microsoft.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH 2/4] tracing/user_events: Introduce multi-format events
-Message-ID: <20240129172907.GA444-beaub@linux.microsoft.com>
-References: <20240123220844.928-1-beaub@linux.microsoft.com>
- <20240123220844.928-3-beaub@linux.microsoft.com>
- <20240127000104.7c98b34d295747ab1b084bd2@kernel.org>
- <20240126191007.GA456-beaub@linux.microsoft.com>
- <20240126150445.71c5d426@gandalf.local.home>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="eM40Jqqp"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5102a2e4b7bso4437926e87.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:40:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1706550025; x=1707154825; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=XMTUvx/6SM2X/X8eIaLRq0dCrVO/7O0bBhRFSLcgZrI=;
+        b=eM40Jqqpth7AaTOlekds2v29GqXn+THHGLemssEnUNZ7n/kecprb+HO1ISZXwNAoMT
+         LIC1NLbKTqCevbSlaQC1PuK2vnXQR3XEYEJ8lAWisQe9kQfjCqfOrlLNVXwzyXlVI5fH
+         xytD2ZtnT9JWihwd2j/uXzQq/woLe+Mq0/EzI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706550025; x=1707154825;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XMTUvx/6SM2X/X8eIaLRq0dCrVO/7O0bBhRFSLcgZrI=;
+        b=k14FU6gipVZ9CwhFHOhVj4QAVFFA6xwBHDqaOZYoumlXOzSa7PWehaOh6FYT08wHtK
+         ALoSSvajbfEbLjEvn1eUPdDCbarYaOmKs4lSqNNCnP0wGLWGOjPuRzz8ED4QaJc57BQP
+         K3qIadBCawak6JoKhUJMEkiafMNiTjXwv3h6Fm5HTEKz6yvPa4i02ofxHF2+zEk8my++
+         7STR5rpnznK43utP6xs2fpwcMt4wkAcqwrITilp4Q1N7HadBnK3ePfcs3DHxCWFi5Eh5
+         0VaarypWiJkHRfDN4F9dhOUBmHmqUyVkw0GPRjyUmBxck24W4Qzos/HxQ9e0X5TGCu5j
+         k5+Q==
+X-Gm-Message-State: AOJu0YwTcSmUisTXS79jvZMBrglI2/3pFfuhzqs9DNO8Gy/4h9J+zLwY
+	7D4MPjwbHNEWAOo81vJPqwDkB8B/bBnWfchJnhYmk6YK4gyczYuMZoZ9V2VKikutXGxivMtCXB0
+	T12Cagg==
+X-Google-Smtp-Source: AGHT+IFuCBlHSWZyBQw3qldVq18/+Ql0g99qU0tioIg1v0ITGldHPD85QGQ+HjJtRZhF+UC/0RGuEw==
+X-Received: by 2002:a05:6512:ad6:b0:50e:a8c7:b2e2 with SMTP id n22-20020a0565120ad600b0050ea8c7b2e2mr4175336lfu.38.1706550025346;
+        Mon, 29 Jan 2024 09:40:25 -0800 (PST)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id y16-20020ac255b0000000b005101627fd2fsm1169031lfg.197.2024.01.29.09.40.24
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jan 2024 09:40:24 -0800 (PST)
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2cf3ed3b917so33591991fa.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jan 2024 09:40:24 -0800 (PST)
+X-Received: by 2002:a2e:bc83:0:b0:2cf:48c9:1554 with SMTP id
+ h3-20020a2ebc83000000b002cf48c91554mr5355393ljf.0.1706550024205; Mon, 29 Jan
+ 2024 09:40:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240126150445.71c5d426@gandalf.local.home>
+References: <202401291043.e62e89dc-oliver.sang@intel.com> <CAHk-=wh0M=e8R=ZXxa4vesLTtvGmYWJ-w1VmXxW5Mva=Nimk4Q@mail.gmail.com>
+ <20240129120125.605e97af@gandalf.local.home>
+In-Reply-To: <20240129120125.605e97af@gandalf.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 29 Jan 2024 09:40:06 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wghx8Abyx_jcSrCDuNj96SuWS0NvNMhfU8VjFGg9bgm_g@mail.gmail.com>
+Message-ID: <CAHk-=wghx8Abyx_jcSrCDuNj96SuWS0NvNMhfU8VjFGg9bgm_g@mail.gmail.com>
+Subject: Re: [linus:master] [eventfs] 852e46e239: BUG:unable_to_handle_page_fault_for_address
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel.com, 
+	linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Ajay Kaher <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jan 26, 2024 at 03:04:45PM -0500, Steven Rostedt wrote:
-> On Fri, 26 Jan 2024 11:10:07 -0800
-> Beau Belgrave <beaub@linux.microsoft.com> wrote:
-> 
-> > > OK, so the each different event has suffixed name. But this will
-> > > introduce non C-variable name.
-> > > 
-> > > Steve, do you think your library can handle these symbols? It will
-> > > be something like "event:[1]" as the event name.
-> > > Personally I like "event.1" style. (of course we need to ensure the
-> > > user given event name is NOT including such suffix numbers)
-> > >   
-> > 
-> > Just to clarify around events including a suffix number. This is why
-> > multi-events use "user_events_multi" system name and the single-events
-> > using just "user_events".
-> > 
-> > Even if a user program did include a suffix, the suffix would still get
-> > appended. An example is "test" vs "test:[0]" using multi-format would
-> > result in two tracepoints ("test:[0]" and "test:[0]:[1]" respectively
-> > (assuming these are the first multi-events on the system).
-> > 
-> > I'm with you, we really don't want any spoofing or squatting possible.
-> > By using different system names and always appending the suffix I
-> > believe covers this.
-> > 
-> > Looking forward to hearing Steven's thoughts on this as well.
-> 
-> I'm leaning towards Masami's suggestion to use dots, as that won't conflict
-> with special characters from bash, as '[' and ']' do.
-> 
+On Mon, 29 Jan 2024 at 09:01, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> Thanks for the analysis. I have a patch that removes the dropping of the
+> mutex over the create_dir/file() calls, and lockdep hasn't complained about
+> it.
+>
+> I was going to add that to my queue for the next merge window along with
+> other clean ups but this looks like it actually fixes a real bug. I'll move
+> that over to my urgent queue and start testing it.
 
-Thanks, yeah ideally we wouldn't use special characters.
+Note that it is *not* enough to just keep the mutex.
 
-I'm not picky about this. However, I did want something that clearly
-allowed a glob pattern to find all versions of a given register name of
-user_events by user programs that record. The dot notation will pull in
-more than expected if dotted namespace style names are used.
+All the *users* need to get the mutex too.
 
-An example is "Asserts" and "Asserts.Verbose" from different programs.
-If we tried to find all versions of "Asserts" via glob of "Asserts.*" it
-will pull in "Asserts.Verbose.1" in addition to "Asserts.0".
+Otherwise you have this:
 
-While a glob of "Asserts.[0-9]" works when the unique ID is 0-9, it
-doesn't work if the number is higher, like 128. If we ever decide to
-change the ID from an integer to say hex to save space, these globs
-would break.
+CPU1:
 
-Is there some scheme that fits the C-variable name that addresses the
-above scenarios? Brackets gave me a simple glob that seemed to prevent a
-lot of this ("Asserts.\[*\]" in this case).
+   create_dir_dentry():
+      mutex locked the whole time..
+        dentry = create_dir(ei, parent);
+           does d_instantiate(dentry, inode);
+        eventfs_post_create_dir(ei);
+           dentry->d_fsdata = ei;
+        mutex dropped;
 
-Are we confident that we always want to represent the ID as a base-10
-integer vs a base-16 integer? The suffix will be ABI to ensure recording
-programs can find their events easily.
+but CPU2 can still come in, see the dentry immediately after the
+"d_instantiate()", and do an "open()" or "stat()" on the dentry (which
+will *not* cause a 'lookup()', since it's in the dentry cache), and
+that will then cause either
 
-Thanks,
--Beau
+ ->permission() -> eventfs_permission() -> set_top_events_ownership()
 
-> -- Steve
+or
+
+ ->get_attr() -> eventfs_get_attr() -> set_top_events_ownership()
+
+and both of those will now do the dentry->inode->ei lookup. And
+neither of them takes the mutex.
+
+So then it doesn't even matter that you didn't drop the mutex in the
+middle, because the users simply won't be serializing with it anyway.
+
+So you'd have to make set_top_events_ownership() take the mutex around
+it all too.
+
+In fact, pretty much *any* use of "ti->private" needs the mutex.
+
+Which is obviously a bit painful.
+
+Honestly, I think the right model is to just make sure that the inode
+is fully initialized when you do 'd_instantiate()'
+
+The patch looks obvious, and I think this actually fixes *another*
+bug, namely that the old
+
+        ti = get_tracefs(inode);
+        ti->flags |= TRACEFS_EVENT_INODE;
+
+was buggy, because 'ti->flags' was uninitialized before.
+
+eventfs_create_events_dir() seems to have the same bug with ti->flags,
+btw, but got the ti->private initialization right.
+
+Funnily enough, create_file() got this right. I don't even understand
+why create_dir() did what it did.
+
+IOW, I think the right fix is really just this:
+
+  --- a/fs/tracefs/event_inode.c
+  +++ b/fs/tracefs/event_inode.c
+  @@ -328,7 +328,8 @@
+        inode->i_ino = EVENTFS_FILE_INODE_INO;
+
+        ti = get_tracefs(inode);
+  -     ti->flags |= TRACEFS_EVENT_INODE;
+  +     ti->flags = TRACEFS_EVENT_INODE;
+  +     ti->private = ei;
+        d_instantiate(dentry, inode);
+        fsnotify_create(dentry->d_parent->d_inode, dentry);
+        return eventfs_end_creating(dentry);
+  @@ -513,7 +514,6 @@
+   static void eventfs_post_create_dir(struct eventfs_inode *ei)
+   {
+        struct eventfs_inode *ei_child;
+  -     struct tracefs_inode *ti;
+
+        lockdep_assert_held(&eventfs_mutex);
+
+  @@ -523,9 +523,6 @@
+                                 srcu_read_lock_held(&eventfs_srcu)) {
+                ei_child->d_parent = ei->dentry;
+        }
+  -
+  -     ti = get_tracefs(ei->dentry->d_inode);
+  -     ti->private = ei;
+   }
+
+   /**
+  @@ -943,7 +940,7 @@
+        INIT_LIST_HEAD(&ei->list);
+
+        ti = get_tracefs(inode);
+  -     ti->flags |= TRACEFS_EVENT_INODE | TRACEFS_EVENT_TOP_INODE;
+  +     ti->flags = TRACEFS_EVENT_INODE | TRACEFS_EVENT_TOP_INODE;
+        ti->private = ei;
+
+        inode->i_mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
+
+which fixes the initialization errors with the 'ti' fields.
+
+Now, I do agree that your locking is strange, and that should be fixed
+*too*, but I think the above is the "right" fix for this particular
+issue.
+
+                Linus
