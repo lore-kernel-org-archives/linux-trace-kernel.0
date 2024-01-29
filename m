@@ -1,129 +1,179 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF58257883;
-	Mon, 29 Jan 2024 09:31:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEF857871;
+	Mon, 29 Jan 2024 09:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706520700; cv=none; b=iH57SxyfVNy+Acjqo9SJ+AsB5Ct6HJSaIr49+KBtLkYIy+LwHintaHKX9hD2G7KsSb/XOQzRcRBQwz37+E5ZNNQIFwfVOU8znE7wiY9qozdR00OX52PkP6lIe1CrkChoAb7QD4k8yFYLaxKi+/0Icu8c/ETl2bJ4kZB4+dzTGiE=
+	t=1706522065; cv=none; b=foatTqY8r4t9xFu1k2NXK8ThejAau19U0nCbEsIq1O5c9fZxHN3fWinbxH8WX84BrEDec/TiPyyfPkQcUizzwKHnsjL35HLB6GRh4ZkbmPPd7bDvJNiNSq4iomAvE1r61kCZ4qhHg8DNpTdnEHGL4DtVb5TTl/6fk8eb7Hd34r4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706520700; c=relaxed/simple;
-	bh=f2nIjWzHpvckZF6FW2rjgzqK/Kl1yzYIbEFzQnXuNCA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tb6krhIrK2z6N46a9G3woQa5q/2t8iuBCtd4wAkfDZ1VkKFOgfbck/8/0q0zR7isjP9hE1oVVr5CFx9gpT2eoCblm+fn0bkVbLOcv2AFnxEWhwqJUOdGyakFHRciWxK5BthS7By8Q0MKyVegIZERIvUQrPYefi1dPOrQFcQizxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0F771FB;
-	Mon, 29 Jan 2024 01:32:21 -0800 (PST)
-Received: from [10.162.42.11] (a077893.blr.arm.com [10.162.42.11])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1DA1E3F762;
-	Mon, 29 Jan 2024 01:31:26 -0800 (PST)
-Message-ID: <545bb7bd-31c7-4166-9f81-778b82ece6d4@arm.com>
-Date: Mon, 29 Jan 2024 15:01:24 +0530
+	s=arc-20240116; t=1706522065; c=relaxed/simple;
+	bh=Xxht6U4VSYKYvcFm5QKEYFp05/uW5TH2MJnFmQ9fcjU=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ChqvlA7In0wnXhGHcFQz53ny9gj8rQdKUN2pv6m9yaSpC/QTp8vKC2rVLvynzeOMAHwwDYfcj5+WnIT1QYquGhSVM+5u/FZ6q9mioUXCSyMyg+yNKqqu2STgeMpa7EIQNWopBCCnvLAcpNxmekWzKoXzuFlTsvM+6DR6Lo/PwQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jtlwp4+R; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jtlwp4+R"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-55a035669d5so3003696a12.2;
+        Mon, 29 Jan 2024 01:54:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706522062; x=1707126862; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hsyq9RDJnyx/vwAlCABE4IQoDmtfQ9ujfI3zrm1Np8k=;
+        b=Jtlwp4+RKlWQKnTE+Yie3uw+WgTL0uGzcvC6TyYpq7RiXcXgfNGhkWR7lHzlhp3eyy
+         N9N9uTtZOZibSZZ8HTe/KXYRGNqFp0XBxrCrr74PoJmqkK/dwGh6OpVpZceyhjqbsZaa
+         JmKsTS0UVzDoa5faqHzEgR+FgWio7FU0QUqCa4bTO4hPIRFSAlD0dmiRP2c2gwhyk+zB
+         itfppoq1p6ewVSTCIyH0JfWYjDOV3kknoEv06JLdt3Dn18Y5EIS0aARirg3C1M6BId3z
+         jyQYLqupc4JpBXrg5zFsBaRyOckUu94e+XUE7z17bCh/2AGQUIxym/6JCQajAr83pqwg
+         tFFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706522062; x=1707126862;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Hsyq9RDJnyx/vwAlCABE4IQoDmtfQ9ujfI3zrm1Np8k=;
+        b=gdGDZT1jNHmqpGdi/YetGvVlNpbdSeOn7A/vvgDrCtMdn2Vy811s4GTCnGN5W6cCpj
+         geVZDOTwVT9qWbffdIx5ai0PNUoxEsgeSlBLqTR0Y936+JoYsMEdYN34sogBMjyKJXqQ
+         nH3o5cNWdij6omPMd7Mnb86iHE1k8hWrHcYe3GpdGvQCAQEEoXkhWCkVrH2lxrhixKB9
+         L7fBBUPgui3jQAW9zijYrXYf/FVFzfgAwFE4meci2YrRIN9evgUz516WlneI6y+J08hE
+         idmn16uktixaH+r6GuVTT8uedE6n85NF/8Exx8BM9JCa8JO73vE4c8sxbfJ3S5Q+a1FG
+         fpxQ==
+X-Gm-Message-State: AOJu0YxRoahafwb364j5rzlLfLDmmF10qabuShKccNyuibcIUw/uR2Rg
+	PTHY4rXu6ZQej27oRaVbtejSFfCLieL/6I/JpQEWwrQFZDAyi/uU
+X-Google-Smtp-Source: AGHT+IEZfWmmqffnPjC9XgPKd+2w+8UYFBSDMfNDkeKUhfXXXBALKwEvO4NuuDo6hstyrnAd4354HA==
+X-Received: by 2002:a17:906:acb:b0:a31:1907:2fe8 with SMTP id z11-20020a1709060acb00b00a3119072fe8mr3987816ejf.48.1706522061544;
+        Mon, 29 Jan 2024 01:54:21 -0800 (PST)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id s15-20020a170906354f00b00a3186c2c254sm3714270eja.213.2024.01.29.01.54.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 01:54:21 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 29 Jan 2024 10:54:18 +0100
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jiri Olsa <olsajiri@gmail.com>,
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>,
+	linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v6 00/36] tracing: fprobe: function_graph: Multi-function
+ graph and fprobe on fgraph
+Message-ID: <Zbd1ypWJEVMW0uFv@krava>
+References: <170505424954.459169.10630626365737237288.stgit@devnote2>
+ <ZbJ2PfSt3RM3pm43@krava>
+ <20240127001405.c031ad1d7ab37089b563371b@kernel.org>
+ <ZbVO9oKa7Ti-EvAa@krava>
+ <20240128165153.5e6d71be8ad9c3dd69bd02bf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v3 07/35] mm: cma: Add CMA_RELEASE_{SUCCESS,FAIL}
- events
-Content-Language: en-US
-To: Alexandru Elisei <alexandru.elisei@arm.com>, catalin.marinas@arm.com,
- will@kernel.org, oliver.upton@linux.dev, maz@kernel.org,
- james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
- arnd@arndb.de, akpm@linux-foundation.org, mingo@redhat.com,
- peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
- mhiramat@kernel.org, rppt@kernel.org, hughd@google.com
-Cc: pcc@google.com, steven.price@arm.com, vincenzo.frascino@arm.com,
- david@redhat.com, eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org
-References: <20240125164256.4147-1-alexandru.elisei@arm.com>
- <20240125164256.4147-8-alexandru.elisei@arm.com>
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20240125164256.4147-8-alexandru.elisei@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240128165153.5e6d71be8ad9c3dd69bd02bf@kernel.org>
 
+On Sun, Jan 28, 2024 at 04:51:53PM +0900, Masami Hiramatsu wrote:
+> On Sat, 27 Jan 2024 19:44:06 +0100
+> Jiri Olsa <olsajiri@gmail.com> wrote:
+> 
+> > On Sat, Jan 27, 2024 at 12:14:05AM +0900, Masami Hiramatsu wrote:
+> > > On Thu, 25 Jan 2024 15:54:53 +0100
+> > > Jiri Olsa <olsajiri@gmail.com> wrote:
+> > > 
+> > > > On Fri, Jan 12, 2024 at 07:10:50PM +0900, Masami Hiramatsu (Google) wrote:
+> > > > > Hi,
+> > > > > 
+> > > > > Here is the 6th version of the series to re-implement the fprobe on
+> > > > > function-graph tracer. The previous version is;
+> > > > > 
+> > > > > https://lore.kernel.org/all/170290509018.220107.1347127510564358608.stgit@devnote2/
+> > > > > 
+> > > > > This version fixes use-after-unregister bug and arm64 stack unwinding
+> > > > > bug [13/36], add an improvement for multiple interrupts during push
+> > > > > operation[20/36], keep SAVE_REGS until BPF and fprobe_event using
+> > > > > ftrace_regs[26/36], also reorder the patches[30/36][31/36] so that new
+> > > > > fprobe can switch to SAVE_ARGS[32/36] safely.
+> > > > > This series also temporarily adds a DIRECT_CALLS bugfix[1/36], which
+> > > > > should be pushed separatedly as a stable bugfix.
+> > > > > 
+> > > > > There are some TODOs:
+> > > > >  - Add s390x and loongarch support to fprobe (multiple fgraph).
+> > > > >  - Fix to get the symbol address from ftrace entry address on arm64.
+> > > > >    (This should be done in BPF trace event)
+> > > > >  - Cleanup code, rename some terms(offset/index) and FGRAPH_TYPE_BITMAP
+> > > > >    part should be merged to FGRAPH_TYPE_ARRAY patch.
+> > > > 
+> > > > hi,
+> > > > I'm getting kasan bugs below when running bpf selftests on top of this
+> > > > patchset.. I think it's probably the reason I see failures in some bpf
+> > > > kprobe_multi/fprobe tests
+> > > > 
+> > > > so far I couldn't find the reason.. still checking ;-)
+> > > 
+> > > Thanks for reporting! Have you built the kernel with debuginfo? In that
+> > > case, can you decode the line from the address?
+> > > 
+> > > $ eu-addr2line -fi -e vmlinux ftrace_push_return_trace.isra.0+0x346
+> > > 
+> > > This helps me a lot.
+> > 
+> > I had to recompile/regenerate the fault, it points in here:
+> > 
+> >         ffffffff8149b390 <ftrace_push_return_trace.isra.0>:    
+> >         ...
+> > 
+> >                         current->ret_stack[rindex - 1] = val;  
+> >         ffffffff8149b6b1:       48 8d bd 78 28 00 00    lea    0x2878(%rbp),%rdi
+> >         ffffffff8149b6b8:       e8 63 e4 28 00          call   ffffffff81729b20 <__asan_load8>
+> >         ffffffff8149b6bd:       48 8b 95 78 28 00 00    mov    0x2878(%rbp),%rdx
+> >         ffffffff8149b6c4:       41 8d 47 ff             lea    -0x1(%r15),%eax
+> >         ffffffff8149b6c8:       48 98                   cltq
+> >         ffffffff8149b6ca:       4c 8d 24 c2             lea    (%rdx,%rax,8),%r12
+> >         ffffffff8149b6ce:       4c 89 e7                mov    %r12,%rdi
+> >         ffffffff8149b6d1:       e8 ea e4 28 00          call   ffffffff81729bc0 <__asan_store8>
+> > --->    ffffffff8149b6d6:       49 89 1c 24             mov    %rbx,(%r12)
+> >                         current->curr_ret_stack = index = rindex;
+> >         ffffffff8149b6da:       48 8d bd 6c 28 00 00    lea    0x286c(%rbp),%rdi
+> >         ffffffff8149b6e1:       e8 9a e3 28 00          call   ffffffff81729a80 <__asan_store4>
+> >         ffffffff8149b6e6:       44 89 bd 6c 28 00 00    mov    %r15d,0x286c(%rbp)
+> >         ffffffff8149b6ed:       e9 8d fd ff ff          jmp    ffffffff8149b47f <ftrace_push_return_trace.isra.0+0xef>
+> >                 if (WARN_ON_ONCE(idx <= 0))      
+> > 
+> 
+> Thanks! So this shows that this bug is failed to check the boundary of
+> shadow stack while pushing the return trace.
+> 
+> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+> index 0f11f80bdd6c..8e1fcc3f4bda 100644
+> --- a/kernel/trace/fgraph.c
+> +++ b/kernel/trace/fgraph.c
+> @@ -550,7 +550,7 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
+>  	smp_rmb();
+>  
+>  	/* The return trace stack is full */
+> -	if (current->curr_ret_stack + FGRAPH_RET_INDEX >= SHADOW_STACK_MAX_INDEX) {
+> +	if (current->curr_ret_stack + FGRAPH_RET_INDEX + 1 >= SHADOW_STACK_MAX_INDEX) {
+>  		atomic_inc(&current->trace_overrun);
+>  		return -EBUSY;
+>  	} 
+> 
+> Sorry, I forgot to increment the space for reserved entry...
 
+hum, I'm getting same error even with the change above, same backtrace/line
 
-On 1/25/24 22:12, Alexandru Elisei wrote:
-> Similar to the two events that relate to CMA allocations, add the
-> CMA_RELEASE_SUCCESS and CMA_RELEASE_FAIL events that count when CMA pages
-> are freed.
-
-How is this is going to be beneficial towards analyzing CMA alloc/release
-behaviour - particularly with respect to this series. OR just adding this
-from parity perspective with CMA alloc side counters ? Regardless this
-CMA change too could be discussed separately.
-
-> 
-> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
-> ---
-> 
-> Changes since rfc v2:
-> 
-> * New patch.
-> 
->  include/linux/vm_event_item.h | 2 ++
->  mm/cma.c                      | 6 +++++-
->  mm/vmstat.c                   | 2 ++
->  3 files changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
-> index 747943bc8cc2..aba5c5bf8127 100644
-> --- a/include/linux/vm_event_item.h
-> +++ b/include/linux/vm_event_item.h
-> @@ -83,6 +83,8 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
->  #ifdef CONFIG_CMA
->  		CMA_ALLOC_SUCCESS,
->  		CMA_ALLOC_FAIL,
-> +		CMA_RELEASE_SUCCESS,
-> +		CMA_RELEASE_FAIL,
->  #endif
->  		UNEVICTABLE_PGCULLED,	/* culled to noreclaim list */
->  		UNEVICTABLE_PGSCANNED,	/* scanned for reclaimability */
-> diff --git a/mm/cma.c b/mm/cma.c
-> index dbf7fe8cb1bd..543bb6b3be8e 100644
-> --- a/mm/cma.c
-> +++ b/mm/cma.c
-> @@ -562,8 +562,10 @@ bool cma_release(struct cma *cma, const struct page *pages,
->  {
->  	unsigned long pfn;
->  
-> -	if (!cma_pages_valid(cma, pages, count))
-> +	if (!cma_pages_valid(cma, pages, count)) {
-> +		count_vm_events(CMA_RELEASE_FAIL, count);
->  		return false;
-> +	}
->  
->  	pr_debug("%s(page %p, count %lu)\n", __func__, (void *)pages, count);
->  
-> @@ -575,6 +577,8 @@ bool cma_release(struct cma *cma, const struct page *pages,
->  	cma_clear_bitmap(cma, pfn, count);
->  	trace_cma_release(cma->name, pfn, pages, count);
->  
-> +	count_vm_events(CMA_RELEASE_SUCCESS, count);
-> +
->  	return true;
->  }
->  
-> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> index db79935e4a54..eebfd5c6c723 100644
-> --- a/mm/vmstat.c
-> +++ b/mm/vmstat.c
-> @@ -1340,6 +1340,8 @@ const char * const vmstat_text[] = {
->  #ifdef CONFIG_CMA
->  	"cma_alloc_success",
->  	"cma_alloc_fail",
-> +	"cma_release_success",
-> +	"cma_release_fail",
->  #endif
->  	"unevictable_pgs_culled",
->  	"unevictable_pgs_scanned",
+jirka
