@@ -1,98 +1,192 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A70D9604AD;
-	Mon, 29 Jan 2024 11:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBC166B45
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jan 2024 14:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706529573; cv=none; b=oHP/DNRjXMoOLXKo3f26ZEnXd/YVA86ZoGYdiOePzoxahbxCHy7ggcxLajTT2PV3f3QdXxYmxWaOWRpma8EV6KAzwI1XKFofqZ72nxXeC2S1xJnXUtmu4Zi9R52d5lWlUM6GK+fxrGaKElhviUKKbP6WM4PYL/ANVVbfiv1L2VE=
+	t=1706538492; cv=none; b=a47QaVfruZz1ulPvxhP1qn85Qwej7ugNEFN+eyZt7J0VL1MiqFbLgW0XQX9IKQjAJ1NjFT3zhB8DfDvsdvJ0MVIV8ODGRFDGKwq4lQ7+EKYZpf26orEgdZMuPBIVHh5MfyBSgYhjyo00Cx0M3NUM7hH5XJrLOtxfsSHAF2sWyU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706529573; c=relaxed/simple;
-	bh=g8VjbZmPPMmeZJ0+muiwD3pbzn3IrrJd/y/zYOa4JkI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YmhODcLWy+OOvp7lKPZiUi3t8HxOVjoJS60FHg8hplMudV6eAL82GdfmAjEu8p2F/TifNr+yb+gsBcMGGGE5GGuCW7PLp9pM5N23CwlpCw8DXiqmYkVSd4JA84wIQn0yG0ZzZ5OXnHdcKXm3EIDPjCzQ56HB0vkFUKQMn1iceFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF0DB1FB;
-	Mon, 29 Jan 2024 04:00:13 -0800 (PST)
-Received: from raptor (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7F6793F5A1;
-	Mon, 29 Jan 2024 03:59:24 -0800 (PST)
-Date: Mon, 29 Jan 2024 11:59:21 +0000
-From: Alexandru Elisei <alexandru.elisei@arm.com>
-To: Peter Collingbourne <pcc@google.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
-	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
-	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
-	rppt@kernel.org, hughd@google.com, steven.price@arm.com,
-	anshuman.khandual@arm.com, vincenzo.frascino@arm.com,
-	david@redhat.com, eugenis@google.com, kcc@google.com,
-	hyesoo.yu@samsung.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v3 11/35] mm: Allow an arch to hook into folio
- allocation when VMA is known
-Message-ID: <ZbeTGX1QSQlhcmh2@raptor>
-References: <20240125164256.4147-1-alexandru.elisei@arm.com>
- <20240125164256.4147-12-alexandru.elisei@arm.com>
- <CAMn1gO6hx7yaFHEYVbkpPocAxQmQc3JBgppcNSJw9SUfyvjwbQ@mail.gmail.com>
+	s=arc-20240116; t=1706538492; c=relaxed/simple;
+	bh=08vMVQVJ1OL1ZrKwTC27MiT2Y0Q66IzGXt2K5LTQM9o=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Km4mpIgXPcO/zAgp35vdkwKUu7Bmikz0UvAk2XyDpC0KDqRXGtHeWPvWiRHAiBUB2yu+aNqE7vrO4jdp2y2lTXYt5SKt12KZBi0hf9/oHu1YngdVUteJ4RgUZOG7ikMbf7uY2Ua7UB1RolZNLW65olm4yEkN9dyIQ5BDSOk2gA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K3LyIwYC; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K3LyIwYC"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc693399655so578833276.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jan 2024 06:28:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706538490; x=1707143290; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=m6ix6w6jnc/r7m37oFEuHsrF8vE57HFuEmsPVrjGUaM=;
+        b=K3LyIwYCK+G+Lo6hvBHjsL9NoQkKrNa0sqARrSDIjLJYoi1XfrwYBcvOy3VFGOuf3m
+         iAefHLZWq7bbKHchUPh4fhgot3cD45M/+w1kxRrVSY0SpNi1tG5Ps4Xu+437n1Fuy2Tr
+         B7vD69eoNZ5wNW4Lj/XkkcSDXOOCVUzc86rmImpwiIwse2WP1nYzkjpDa5UNqeEfQ+Cv
+         oU7FaughFLMILAZ4UuJV6nbUzsMcXEquOVVYJri49nIt9GZHHMoLODj0QpQqlVwgg6kY
+         IV+FzokgR2jr5mal2YU4g6qkFq8SxQISC6IDASozwQ3aREj3h3ZYglOiZg1LOH4CwhT0
+         7LEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706538490; x=1707143290;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=m6ix6w6jnc/r7m37oFEuHsrF8vE57HFuEmsPVrjGUaM=;
+        b=rMg5Jb+/4+qozX+e9ILd/Qvy89IjpVo6y+z5030Y2idO9CTU1jJw+g2HbyN/oNbMye
+         WyS/8a4xH1Wragv7lRG0ulIR82VZMkfqPDcVkUpvWWPQNLzUnzfo1dYoxpPPv2pbO+ay
+         b4sY0CnTKYZiFoUk1SeFcbHltFli/fq3ljNNSULnPQnpEYmXAiBWsjBHjncD36oY/zEi
+         XBQP3C9qjcCNn2aOHY9+yCpcvNF3kQKdDTHgsgPeRe1GZDpJsbOkAu4wOGNdw8SLKo1T
+         aKrRy7bXXn2D1dZafJ/E6Tl7ed14fXkVkqROxVLI8UMttGlAzxJ88H/rpaL2ljoxTKci
+         Ba6Q==
+X-Gm-Message-State: AOJu0YzkZV2t3XzLo2G4mX+MtRTy46ucDhAqObEwn2KTWpZ+kifL4Vjs
+	dDpFHjL6cItazTgatjqyBrcylHUGSiGnJN/phHL/kzx1TaTjITE/4xtuL/sFNDuCPsnF6pevLWh
+	PAP4lhMhak3jAXt4jQg==
+X-Google-Smtp-Source: AGHT+IFte0IYVAormlKW9S1uv8ALJPhQWbkSghp060KwuGekaE6Nm2aCF6VUI2ioQZuqMFJyJ+SRN1kWtMrBxlQh
+X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
+ (user=vdonnefort job=sendgmr) by 2002:a05:6902:e0d:b0:dc6:785:1a10 with SMTP
+ id df13-20020a0569020e0d00b00dc607851a10mr2227607ybb.4.1706538489812; Mon, 29
+ Jan 2024 06:28:09 -0800 (PST)
+Date: Mon, 29 Jan 2024 14:27:56 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMn1gO6hx7yaFHEYVbkpPocAxQmQc3JBgppcNSJw9SUfyvjwbQ@mail.gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
+Message-ID: <20240129142802.2145305-1-vdonnefort@google.com>
+Subject: [PATCH v13 0/6] Introducing trace buffer mapping by user-space
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Peter,
+The tracing ring-buffers can be stored on disk or sent to network
+without any copy via splice. However the later doesn't allow real time
+processing of the traces. A solution is to give userspace direct access
+to the ring-buffer pages via a mapping. An application can now become a
+consumer of the ring-buffer, in a similar fashion to what trace_pipe
+offers.
 
-On Fri, Jan 26, 2024 at 12:00:36PM -0800, Peter Collingbourne wrote:
-> On Thu, Jan 25, 2024 at 8:43 AM Alexandru Elisei
-> <alexandru.elisei@arm.com> wrote:
-> >
-> > arm64 uses VM_HIGH_ARCH_0 and VM_HIGH_ARCH_1 for enabling MTE for a VMA.
-> > When VM_HIGH_ARCH_0, which arm64 renames to VM_MTE, is set for a VMA, and
-> > the gfp flag __GFP_ZERO is present, the __GFP_ZEROTAGS gfp flag also gets
-> > set in vma_alloc_zeroed_movable_folio().
-> >
-> > Expand this to be more generic by adding an arch hook that modifes the gfp
-> > flags for an allocation when the VMA is known.
-> >
-> > Note that __GFP_ZEROTAGS is ignored by the page allocator unless __GFP_ZERO
-> > is also set; from that point of view, the current behaviour is unchanged,
-> > even though the arm64 flag is set in more places.  When arm64 will have
-> > support to reuse the tag storage for data allocation, the uses of the
-> > __GFP_ZEROTAGS flag will be expanded to instruct the page allocator to try
-> > to reserve the corresponding tag storage for the pages being allocated.
-> >
-> > The flags returned by arch_calc_vma_gfp() are or'ed with the flags set by
-> > the caller; this has been done to keep an architecture from modifying the
-> > flags already set by the core memory management code; this is similar to
-> > how do_mmap() -> calc_vm_flag_bits() -> arch_calc_vm_flag_bits() has been
-> > implemented. This can be revisited in the future if there's a need to do
-> > so.
-> >
-> > Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
-> 
-> This patch also needs to update the non-CONFIG_NUMA definition of
-> vma_alloc_folio in include/linux/gfp.h to call arch_calc_vma_gfp. See:
-> https://r.android.com/2849146
+Support for this new feature can already be found in libtracefs from
+version 1.8, when built with EXTRA_CFLAGS=-DFORCE_MMAP_ENABLE.
 
-Of course, you're already reported this to me, I cherry-pick the version of
-the patch that doesn't have the fix for this series.
+Vincent
 
-Will fix.
+v12 -> v13:
+  * Swap subbufs_{touched,lost} for Reserved fields.
+  * Add a flag field in the meta-page.
+  * Fix CONFIG_TRACER_MAX_TRACE.
+  * Rebase on top of trace/urgent. (29142dc92c37d3259a33aef15b03e6ee25b0d188)
+  * Add a comment for try_unregister_trigger()
 
-Thanks,
-Alex
+v11 -> v12:
+  * Fix code sample mmap bug.
+  * Add logging in sample code.
+  * Reset tracer in selftest.
+  * Add a refcount for the snapshot users.
+  * Prevent mapping when there are snapshot users and vice versa.
+  * Refine the meta-page.
+  * Fix types in the meta-page.
+  * Collect Reviewed-by.
 
-> 
-> Peter
+v10 -> v11:
+  * Add Documentation and code sample.
+  * Add a selftest.
+  * Move all the update to the meta-page into a single
+    rb_update_meta_page().
+  * rb_update_meta_page() is now called from
+    ring_buffer_map_get_reader() to fix NOBLOCK callers.
+  * kerneldoc for struct trace_meta_page.
+  * Add a patch to zero all the ring-buffer allocations.
+
+v9 -> v10:
+  * Refactor rb_update_meta_page()
+  * In-loop declaration for foreach_subbuf_page()
+  * Check for cpu_buffer->mapped overflow
+
+v8 -> v9:
+  * Fix the unlock path in ring_buffer_map()
+  * Fix cpu_buffer cast with rb_work_rq->is_cpu_buffer
+  * Rebase on linux-trace/for-next (3cb3091138ca0921c4569bcf7ffa062519639b6a)
+
+v7 -> v8:
+  * Drop the subbufs renaming into bpages
+  * Use subbuf as a name when relevant
+
+v6 -> v7:
+  * Rebase onto lore.kernel.org/lkml/20231215175502.106587604@goodmis.org/
+  * Support for subbufs
+  * Rename subbufs into bpages
+
+v5 -> v6:
+  * Rebase on next-20230802.
+  * (unsigned long) -> (void *) cast for virt_to_page().
+  * Add a wait for the GET_READER_PAGE ioctl.
+  * Move writer fields update (overrun/pages_lost/entries/pages_touched)
+    in the irq_work.
+  * Rearrange id in struct buffer_page.
+  * Rearrange the meta-page.
+  * ring_buffer_meta_page -> trace_buffer_meta_page.
+  * Add meta_struct_len into the meta-page.
+
+v4 -> v5:
+  * Trivial rebase onto 6.5-rc3 (previously 6.4-rc3)
+
+v3 -> v4:
+  * Add to the meta-page:
+       - pages_lost / pages_read (allow to compute how full is the
+	 ring-buffer)
+       - read (allow to compute how many entries can be read)
+       - A reader_page struct.
+  * Rename ring_buffer_meta_header -> ring_buffer_meta
+  * Rename ring_buffer_get_reader_page -> ring_buffer_map_get_reader_page
+  * Properly consume events on ring_buffer_map_get_reader_page() with
+    rb_advance_reader().
+
+v2 -> v3:
+  * Remove data page list (for non-consuming read)
+    ** Implies removing order > 0 meta-page
+  * Add a new meta page field ->read
+  * Rename ring_buffer_meta_page_header into ring_buffer_meta_header
+
+v1 -> v2:
+  * Hide data_pages from the userspace struct
+  * Fix META_PAGE_MAX_PAGES
+  * Support for order > 0 meta-page
+  * Add missing page->mapping.
+
+Vincent Donnefort (6):
+  ring-buffer: Zero ring-buffer sub-buffers
+  ring-buffer: Introducing ring-buffer mapping functions
+  tracing: Add snapshot refcount
+  tracing: Allow user-space mapping of the ring-buffer
+  Documentation: tracing: Add ring-buffer mapping
+  ring-buffer/selftest: Add ring-buffer mapping test
+
+ Documentation/trace/index.rst                 |   1 +
+ Documentation/trace/ring-buffer-map.rst       | 104 ++++++
+ include/linux/ring_buffer.h                   |   7 +
+ include/uapi/linux/trace_mmap.h               |  45 +++
+ kernel/trace/ring_buffer.c                    | 335 +++++++++++++++++-
+ kernel/trace/trace.c                          | 210 ++++++++++-
+ kernel/trace/trace.h                          |   6 +
+ kernel/trace/trace_events_trigger.c           |  58 ++-
+ tools/testing/selftests/ring-buffer/Makefile  |   8 +
+ tools/testing/selftests/ring-buffer/config    |   1 +
+ .../testing/selftests/ring-buffer/map_test.c  | 183 ++++++++++
+ 11 files changed, 918 insertions(+), 40 deletions(-)
+ create mode 100644 Documentation/trace/ring-buffer-map.rst
+ create mode 100644 include/uapi/linux/trace_mmap.h
+ create mode 100644 tools/testing/selftests/ring-buffer/Makefile
+ create mode 100644 tools/testing/selftests/ring-buffer/config
+ create mode 100644 tools/testing/selftests/ring-buffer/map_test.c
+
+
+base-commit: 29142dc92c37d3259a33aef15b03e6ee25b0d188
+-- 
+2.43.0.429.g432eaa2c6b-goog
+
