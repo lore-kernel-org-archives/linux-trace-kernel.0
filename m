@@ -1,65 +1,143 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8485F364A3;
-	Tue, 30 Jan 2024 02:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E2C364A9;
+	Tue, 30 Jan 2024 02:09:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706580500; cv=none; b=oRTvJLrJvG6lY91/hWV9zG9zooN0v0JZwlo9lSl5a6kDMNmavKJmMpxrnjbC7/DGXHl9I8TmPP/BMTcTMvQ7uJA4ngkv7JLhF2mDP/CViAsj9gaCzVA0TU4BIKBgMgcuv8cKt/Rckn1AaY7JGgYwkVOQ7eiZuYDO9P6IGOSd0k0=
+	t=1706580577; cv=none; b=CkAbWTDAsHBvdRzIWHzuGfR8nDMC0N6y3o6as/1upZ+nwdxfnpn6TSNg7X7ohOiUzpnj/AA79QQeTid6pIt5wWmxXgMAj2TkhV9lm77HIAtWDJ/wxQp9+iWzwnw8qCbjOpLe+D8hHAieHcD+X41O7LUSaegzlIAEIY1fTIWQYE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706580500; c=relaxed/simple;
-	bh=gwghMWsyJ5olqhnWSLRVCP36AA0Xr3Ue0iwR9NP8FVM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NTY31GoYg8XdI6TBqLYoGVRx70D+3sheSRTH9iVUlNmfOBlyHTp78vtWrV+DLOxzk65EEVdTAoTWg1GO950W1Q3jUBv/RPFiBjzaYsHFax96bLB7M/sMKD6Jr8HDBDZ+n/fAzhvFC6zPH7pyYxYfvWT2SwVDdHuAOOic7wb3ZNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=hqBEtson; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1706580577; c=relaxed/simple;
+	bh=AtIFfKEU50x8ic2rwnKi7D3UN2L2uDca9A0dr0cTcgA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=nJLOOyrw6ue/OPL0zYfVoN2QFRK7GzLIGsRQMa7bwHs2S5ph+IRXdCopxwWCJ6trOOHMUpzjyFxAXIHVNc/jIuWjtCO1NtLR3WWr941LCgEolgq7xEXLW7fms//1ipS6Uoz6CT/rppsWd+0U+SWbzjKMPS87ZMOABGtyBtkvAR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kCYneb/w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="hqBEtson"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=gwghMWsyJ5olqhnWSLRVCP36AA0Xr3Ue0iwR9NP8FVM=; b=hqBEtsonsPSXn88C4Vxe0aMmvk
-	CGsD5wSPNAtFbTxmp52M6VOyPzYctpGrSWrtc5BEkP5df37aHIz+p9Wgbzle2X8mc5OapP3nr2Wmf
-	I1WdaHzLqDfy2KyINOw302a5gK5nm4g0rMjvQem0yeaid036DxDBB32rhtgDghLTK9HaPGCOpRJ9g
-	wt6uPnZZl9qe13VThwyuTutKeVR5+nVyqUvM+FBFsM2nK+V/0bQqgrHS8Y9kRmqGPvRFxYAt/nIPf
-	oefOvwIr3M86Nt6/hGBmIJO/2fWg9iKZIxbm28vsCGIkaIqlpHzmWiYYISv4nkunnkEuNKGg4v78b
-	sWm2dihw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rUdXl-000wk2-2i;
-	Tue, 30 Jan 2024 02:08:09 +0000
-Date: Tue, 30 Jan 2024 02:08:09 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: kernel test robot <oliver.sang@intel.com>,
-	Steven Rostedt <rostedt@goodmis.org>, oe-lkp@lists.linux.dev,
-	lkp@intel.com, linux-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [linus:master] [eventfs] 852e46e239:
- BUG:unable_to_handle_page_fault_for_address
-Message-ID: <20240130020809.GK2087318@ZenIV>
-References: <202401291043.e62e89dc-oliver.sang@intel.com>
- <CAHk-=wh0M=e8R=ZXxa4vesLTtvGmYWJ-w1VmXxW5Mva=Nimk4Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kCYneb/w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7E44C433F1;
+	Tue, 30 Jan 2024 02:09:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706580577;
+	bh=AtIFfKEU50x8ic2rwnKi7D3UN2L2uDca9A0dr0cTcgA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kCYneb/wHH9FYwBKFArgINYa/RWHPpDkJmM7wHvq3Cd+ljtY35WXuv4iyOcgB+BQl
+	 CaGx3SS2OCg9Jj0VmjZJ0msbYtb0ar290s6Cr5XO0tRMeVFMT5dwXIjRrYQ/u7YvK5
+	 UkqpSmomg3teapn8jLCDoD5Xsb0EDpARpoAJEFRrjgrRTli2OBRYYioCIRMTVMKSZi
+	 JDF6/4qgTiHsoQ65YQs4jhxomdOB2ZZ6NQ+nx0m4V5acO8vOA6pwJ1qSR7Y/mEL+Nq
+	 GYvnMboCOU/EsvkBxLEMDBqXRs0m7tBE6oJNXXVgjTeyKaaxqKBgSR/iu2YQ/kGhwN
+	 8he8duUWCE2hQ==
+Date: Tue, 30 Jan 2024 11:09:33 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Beau Belgrave <beaub@linux.microsoft.com>
+Cc: rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH 0/4] tracing/user_events: Introduce multi-format events
+Message-Id: <20240130110933.32c9aa0eceff2f0f917affd1@kernel.org>
+In-Reply-To: <20240123220844.928-1-beaub@linux.microsoft.com>
+References: <20240123220844.928-1-beaub@linux.microsoft.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wh0M=e8R=ZXxa4vesLTtvGmYWJ-w1VmXxW5Mva=Nimk4Q@mail.gmail.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jan 28, 2024 at 08:36:12PM -0800, Linus Torvalds wrote:
+Hi Beau,
 
-[snip]
+On Tue, 23 Jan 2024 22:08:40 +0000
+Beau Belgrave <beaub@linux.microsoft.com> wrote:
 
-apologies for being MIA on that, will post tomorrow morning once I get some
-sleep...
+> Currently user_events supports 1 event with the same name and must have
+> the exact same format when referenced by multiple programs. This opens
+> an opportunity for malicous or poorly thought through programs to
+> create events that others use with different formats. Another scenario
+> is user programs wishing to use the same event name but add more fields
+> later when the software updates. Various versions of a program may be
+> running side-by-side, which is prevented by the current single format
+> requirement.
+> 
+> Add a new register flag (USER_EVENT_REG_MULTI_FORMAT) which indicates
+> the user program wishes to use the same user_event name, but may have
+> several different formats of the event in the future. When this flag is
+> used, create the underlying tracepoint backing the user_event with a
+> unique name per-version of the format. It's important that existing ABI
+> users do not get this logic automatically, even if one of the multi
+> format events matches the format. This ensures existing programs that
+> create events and assume the tracepoint name will match exactly continue
+> to work as expected. Add logic to only check multi-format events with
+> other multi-format events and single-format events to only check
+> single-format events during find.
+
+Thanks for this work! This will allow many instance to use the same
+user-events at the same time.
+
+BTW, can we force this flag set by default? My concern is if any user
+program use this user-event interface in the container (maybe it is
+possible if we bind-mount it). In this case, the user program can
+detect the other program is using the event if this flag is not set.
+Moreover, if there is a malicious program running in the container,
+it can prevent using the event name from other programs even if it
+is isolated by the name-space.
+
+Steve suggested that if a user program which is running in a namespace
+uses user-event without this flag, we can reject that by default.
+
+What would you think about?
+
+Thank you,
+
+
+> 
+> Add a register_name (reg_name) to the user_event struct which allows for
+> split naming of events. We now have the name that was used to register
+> within user_events as well as the unique name for the tracepoint. Upon
+> registering events ensure matches based on first the reg_name, followed
+> by the fields and format of the event. This allows for multiple events
+> with the same registered name to have different formats. The underlying
+> tracepoint will have a unique name in the format of {reg_name}:[unique_id].
+> The unique_id is the time, in nanoseconds, of the event creation converted
+> to hex. Since this is done under the register mutex, it is extremely
+> unlikely for these IDs to ever match. It's also very unlikely a malicious
+> program could consistently guess what the name would be and attempt to
+> squat on it via the single format ABI.
+> 
+> For example, if both "test u32 value" and "test u64 value" are used with
+> the USER_EVENT_REG_MULTI_FORMAT the system would have 2 unique
+> tracepoints. The dynamic_events file would then show the following:
+>   u:test u64 count
+>   u:test u32 count
+> 
+> The actual tracepoint names look like this:
+>   test:[d5874fdac44]
+>   test:[d5914662cd4]
+> 
+> Deleting events via "!u:test u64 count" would only delete the first
+> tracepoint that matched that format. When the delete ABI is used all
+> events with the same name will be attempted to be deleted. If
+> per-version deletion is required, user programs should either not use
+> persistent events or delete them via dynamic_events.
+> 
+> Beau Belgrave (4):
+>   tracing/user_events: Prepare find/delete for same name events
+>   tracing/user_events: Introduce multi-format events
+>   selftests/user_events: Test multi-format events
+>   tracing/user_events: Document multi-format flag
+> 
+>  Documentation/trace/user_events.rst           |  23 +-
+>  include/uapi/linux/user_events.h              |   6 +-
+>  kernel/trace/trace_events_user.c              | 224 +++++++++++++-----
+>  .../testing/selftests/user_events/abi_test.c  | 134 +++++++++++
+>  4 files changed, 325 insertions(+), 62 deletions(-)
+> 
+> 
+> base-commit: 610a9b8f49fbcf1100716370d3b5f6f884a2835a
+> -- 
+> 2.34.1
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
