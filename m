@@ -1,143 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E2C364A9;
-	Tue, 30 Jan 2024 02:09:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A8A364C0;
+	Tue, 30 Jan 2024 02:23:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706580577; cv=none; b=CkAbWTDAsHBvdRzIWHzuGfR8nDMC0N6y3o6as/1upZ+nwdxfnpn6TSNg7X7ohOiUzpnj/AA79QQeTid6pIt5wWmxXgMAj2TkhV9lm77HIAtWDJ/wxQp9+iWzwnw8qCbjOpLe+D8hHAieHcD+X41O7LUSaegzlIAEIY1fTIWQYE8=
+	t=1706581438; cv=none; b=ZqSso3JR0U9rEgZ93vfYsYsUPr2i7jfFLafjd5jn4Km5L4J/LEYFxzDQPPZqT48iInF6Fq1eXn8KuIp+LwxT0RCcJk34E6CQRmN/rOpat1sjgniNeGA3+xLhXbVOmkOW1HaAI48ZArTdpjjSCdavIs7jIUkt+fXaAUp/m0Geip4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706580577; c=relaxed/simple;
-	bh=AtIFfKEU50x8ic2rwnKi7D3UN2L2uDca9A0dr0cTcgA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=nJLOOyrw6ue/OPL0zYfVoN2QFRK7GzLIGsRQMa7bwHs2S5ph+IRXdCopxwWCJ6trOOHMUpzjyFxAXIHVNc/jIuWjtCO1NtLR3WWr941LCgEolgq7xEXLW7fms//1ipS6Uoz6CT/rppsWd+0U+SWbzjKMPS87ZMOABGtyBtkvAR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kCYneb/w; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kCYneb/w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7E44C433F1;
-	Tue, 30 Jan 2024 02:09:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706580577;
-	bh=AtIFfKEU50x8ic2rwnKi7D3UN2L2uDca9A0dr0cTcgA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kCYneb/wHH9FYwBKFArgINYa/RWHPpDkJmM7wHvq3Cd+ljtY35WXuv4iyOcgB+BQl
-	 CaGx3SS2OCg9Jj0VmjZJ0msbYtb0ar290s6Cr5XO0tRMeVFMT5dwXIjRrYQ/u7YvK5
-	 UkqpSmomg3teapn8jLCDoD5Xsb0EDpARpoAJEFRrjgrRTli2OBRYYioCIRMTVMKSZi
-	 JDF6/4qgTiHsoQ65YQs4jhxomdOB2ZZ6NQ+nx0m4V5acO8vOA6pwJ1qSR7Y/mEL+Nq
-	 GYvnMboCOU/EsvkBxLEMDBqXRs0m7tBE6oJNXXVgjTeyKaaxqKBgSR/iu2YQ/kGhwN
-	 8he8duUWCE2hQ==
-Date: Tue, 30 Jan 2024 11:09:33 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+	s=arc-20240116; t=1706581438; c=relaxed/simple;
+	bh=MclRyWN5Fr1VA5Q/cVFjdRV4b2xSG14WVjCgvemUT2s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=T3EMOGUFdnruW9aY5Egod9eVOvoyHDgQwMnHBtEuf4/WYy9b8dOT/bPouujDXvG4SBJ5RCIhrIsV5Y3KWyoJr8sdVf3MwWpLLshQXY2mOs3nkonv/hyoP1HTANuHfUGgZ89v5He0dlqsFysktw+ghcKRQzsDr7SGAveY9/o4Snc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61162C433C7;
+	Tue, 30 Jan 2024 02:23:57 +0000 (UTC)
+Date: Mon, 29 Jan 2024 21:24:07 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
 To: Beau Belgrave <beaub@linux.microsoft.com>
-Cc: rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH 0/4] tracing/user_events: Introduce multi-format events
-Message-Id: <20240130110933.32c9aa0eceff2f0f917affd1@kernel.org>
-In-Reply-To: <20240123220844.928-1-beaub@linux.microsoft.com>
+Subject: Re: [PATCH 2/4] tracing/user_events: Introduce multi-format events
+Message-ID: <20240129212407.157a5533@gandalf.local.home>
+In-Reply-To: <20240129172907.GA444-beaub@linux.microsoft.com>
 References: <20240123220844.928-1-beaub@linux.microsoft.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	<20240123220844.928-3-beaub@linux.microsoft.com>
+	<20240127000104.7c98b34d295747ab1b084bd2@kernel.org>
+	<20240126191007.GA456-beaub@linux.microsoft.com>
+	<20240126150445.71c5d426@gandalf.local.home>
+	<20240129172907.GA444-beaub@linux.microsoft.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi Beau,
-
-On Tue, 23 Jan 2024 22:08:40 +0000
+On Mon, 29 Jan 2024 09:29:07 -0800
 Beau Belgrave <beaub@linux.microsoft.com> wrote:
 
-> Currently user_events supports 1 event with the same name and must have
-> the exact same format when referenced by multiple programs. This opens
-> an opportunity for malicous or poorly thought through programs to
-> create events that others use with different formats. Another scenario
-> is user programs wishing to use the same event name but add more fields
-> later when the software updates. Various versions of a program may be
-> running side-by-side, which is prevented by the current single format
-> requirement.
+> Thanks, yeah ideally we wouldn't use special characters.
 > 
-> Add a new register flag (USER_EVENT_REG_MULTI_FORMAT) which indicates
-> the user program wishes to use the same user_event name, but may have
-> several different formats of the event in the future. When this flag is
-> used, create the underlying tracepoint backing the user_event with a
-> unique name per-version of the format. It's important that existing ABI
-> users do not get this logic automatically, even if one of the multi
-> format events matches the format. This ensures existing programs that
-> create events and assume the tracepoint name will match exactly continue
-> to work as expected. Add logic to only check multi-format events with
-> other multi-format events and single-format events to only check
-> single-format events during find.
+> I'm not picky about this. However, I did want something that clearly
+> allowed a glob pattern to find all versions of a given register name of
+> user_events by user programs that record. The dot notation will pull in
+> more than expected if dotted namespace style names are used.
+> 
+> An example is "Asserts" and "Asserts.Verbose" from different programs.
+> If we tried to find all versions of "Asserts" via glob of "Asserts.*" it
+> will pull in "Asserts.Verbose.1" in addition to "Asserts.0".
 
-Thanks for this work! This will allow many instance to use the same
-user-events at the same time.
-
-BTW, can we force this flag set by default? My concern is if any user
-program use this user-event interface in the container (maybe it is
-possible if we bind-mount it). In this case, the user program can
-detect the other program is using the event if this flag is not set.
-Moreover, if there is a malicious program running in the container,
-it can prevent using the event name from other programs even if it
-is isolated by the name-space.
-
-Steve suggested that if a user program which is running in a namespace
-uses user-event without this flag, we can reject that by default.
-
-What would you think about?
-
-Thank you,
-
+Do you prevent brackets in names?
 
 > 
-> Add a register_name (reg_name) to the user_event struct which allows for
-> split naming of events. We now have the name that was used to register
-> within user_events as well as the unique name for the tracepoint. Upon
-> registering events ensure matches based on first the reg_name, followed
-> by the fields and format of the event. This allows for multiple events
-> with the same registered name to have different formats. The underlying
-> tracepoint will have a unique name in the format of {reg_name}:[unique_id].
-> The unique_id is the time, in nanoseconds, of the event creation converted
-> to hex. Since this is done under the register mutex, it is extremely
-> unlikely for these IDs to ever match. It's also very unlikely a malicious
-> program could consistently guess what the name would be and attempt to
-> squat on it via the single format ABI.
+> While a glob of "Asserts.[0-9]" works when the unique ID is 0-9, it
+> doesn't work if the number is higher, like 128. If we ever decide to
+> change the ID from an integer to say hex to save space, these globs
+> would break.
 > 
-> For example, if both "test u32 value" and "test u64 value" are used with
-> the USER_EVENT_REG_MULTI_FORMAT the system would have 2 unique
-> tracepoints. The dynamic_events file would then show the following:
->   u:test u64 count
->   u:test u32 count
-> 
-> The actual tracepoint names look like this:
->   test:[d5874fdac44]
->   test:[d5914662cd4]
-> 
-> Deleting events via "!u:test u64 count" would only delete the first
-> tracepoint that matched that format. When the delete ABI is used all
-> events with the same name will be attempted to be deleted. If
-> per-version deletion is required, user programs should either not use
-> persistent events or delete them via dynamic_events.
-> 
-> Beau Belgrave (4):
->   tracing/user_events: Prepare find/delete for same name events
->   tracing/user_events: Introduce multi-format events
->   selftests/user_events: Test multi-format events
->   tracing/user_events: Document multi-format flag
-> 
->  Documentation/trace/user_events.rst           |  23 +-
->  include/uapi/linux/user_events.h              |   6 +-
->  kernel/trace/trace_events_user.c              | 224 +++++++++++++-----
->  .../testing/selftests/user_events/abi_test.c  | 134 +++++++++++
->  4 files changed, 325 insertions(+), 62 deletions(-)
-> 
-> 
-> base-commit: 610a9b8f49fbcf1100716370d3b5f6f884a2835a
-> -- 
-> 2.34.1
-> 
+> Is there some scheme that fits the C-variable name that addresses the
+> above scenarios? Brackets gave me a simple glob that seemed to prevent a
+> lot of this ("Asserts.\[*\]" in this case).
 
+Prevent a lot of what? I'm not sure what your example here is.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Are we confident that we always want to represent the ID as a base-10
+> integer vs a base-16 integer? The suffix will be ABI to ensure recording
+> programs can find their events easily.
+
+Is there a difference to what we choose?
+
+-- Steve
