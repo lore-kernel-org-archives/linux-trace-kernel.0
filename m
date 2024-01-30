@@ -1,620 +1,651 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF9586AE8
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 16:22:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80460128382;
+	Tue, 30 Jan 2024 16:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706631735; cv=none; b=L72IBhfOZccatVQkeYG0N7e08rOj//3d+FFik5QfwO1Ui97fDeNR1vXqg5S3YzikBusvXCwRJO3m8hEsblh7DhTL/PzvzSLNmMIb2S79m3a1LOPJEFX5iVED50Ut/evH8iXgiHA2PI14bqHgZ6vGAaLuhSN2iMF33ZYWo5NHsew=
+	t=1706633377; cv=none; b=UiiGxceqnwGF3nzv18etui3/6irTsKkw6hv96hPwWbMGDRylL37i0dShDw6jh6JkkNAwfyGVEG88O6y5ZVY0MiycKnZ9sqMRSfV8eK/qoMCzbYxoaac6s7L4PnuGFoREh8FMTCF8chJtRSAC3YiSBZOtOA5sIrdAmbnGIuwroZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706631735; c=relaxed/simple;
-	bh=23d9Jk79FUYOsMzaTSvIET6y9QKX2F5rPhNS+3vO9f0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mq5CU/kvX0kFHR1NStEC7LYhwOGeniFkYRWb9F6BGVXa2rbjh3N0IUocgt81qkQeU6LPFOrd6JZ847bUH92ls+uEy9uNfS+tKmUg9JbQaEu9cG71EhZ/NdW5rENTBZhKO4hGvTRJ2pLrnSzrRFq7BX7gkSyiMi3P6bc+aDxYbfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xXbj6kk5; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xXbj6kk5"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-40fb0c4bb9fso879295e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 08:22:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706631731; x=1707236531; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xi81N63fN6oM3d4JV9/CJyrJqsEWdLtHeD0rXmz99AA=;
-        b=xXbj6kk5AEDu6w28cIGhOBJPKPDlhCf538mbGJPQn6oLsQvRuGcg1GzvVdZCxnSwT6
-         OzMBj9NVNNJ5XV4dd6fKP2qsCGz3l5Swp4nuFLVKdSLv71O8Yy4W4LbRT0kWU70ZADnF
-         RfQOZH2Du63lmitcuLC9UzC9sACj2EPFmfVwocFusa8TBjaDJ8sVKPFhxqGDkil3F1UB
-         Vsagng7N55g/kukGMwSaUNYiT8Ocm3+YOq+WXpCv7aKoTrOq7AHxm0vMsiozr4p/Jnws
-         iqgHZf7qLm1vwcy9ljeEAIxNkaq20FdFsUx2FEMGFDWnkIitPZOySnYh6eueypIRjwnh
-         lqtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706631731; x=1707236531;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xi81N63fN6oM3d4JV9/CJyrJqsEWdLtHeD0rXmz99AA=;
-        b=VwzqIuTE/Nvb45D4OjCdHMiu/pcMWKc8qbm87SPZO7MG7oMF1d9eY1gVstxgfaC2bs
-         Z25ynw/a77tyc3+xRLaulbGOvLpw6eLBrX5EKICU2J2a+xFUwFWONbl1l+a8kV+IkrP5
-         FTT2sYq7mY8FOELchAEKeay2cEZykd5hXxBcvcoaxUayyjqNRK/YduQq3UztnwfcbEne
-         7xqrzoPa3dK6+xyO8IUWdddb75TPGPedFKwbBSXk3Ozq99zizIWYpkrTBaPt4glokaDN
-         5ZRENEadxVKTv1jnIJRz+xkkzy/gxjy/j7a5qCX86Doat2NWqyTfaQZTfqwtkfaV/WcZ
-         pSlQ==
-X-Gm-Message-State: AOJu0YzjtnVso/VtcQevmYnlxMv+g30zcRT91/hKwaaQbMxQvOvKZ/Uh
-	HjrvLDPZwBQvB5HKHSUxPzcP+weBZ5HYXV6YfhIy4xnMCI3nodnOgv/iPSkq/A==
-X-Google-Smtp-Source: AGHT+IEJTPKDlkRG92zVhrBD8rZwt1TMztInSMqO1j7bC+v1zH762Kajh3reNyydhpLCtrXmz7Slow==
-X-Received: by 2002:a05:600c:3514:b0:40e:fc29:f527 with SMTP id h20-20020a05600c351400b0040efc29f527mr2556232wmq.31.1706631730765;
-        Tue, 30 Jan 2024 08:22:10 -0800 (PST)
-Received: from google.com (185.83.140.34.bc.googleusercontent.com. [34.140.83.185])
-        by smtp.gmail.com with ESMTPSA id b6-20020a05600003c600b0033aed4e3b55sm6015779wrg.102.2024.01.30.08.22.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 08:22:10 -0800 (PST)
-Date: Tue, 30 Jan 2024 16:22:06 +0000
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>, g@google.com
-Cc: rostedt@goodmis.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
-	kernel-team@android.com
-Subject: Re: [PATCH v13 2/6] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <ZbkiLjUKmgg6oXR5@google.com>
-References: <20240129142802.2145305-1-vdonnefort@google.com>
- <20240129142802.2145305-3-vdonnefort@google.com>
- <20240130235510.c92a31ee6998697dd49d2600@kernel.org>
+	s=arc-20240116; t=1706633377; c=relaxed/simple;
+	bh=oDQFVuazwccw0VobvtJ3B79vpCwY8c8I+xjm3GLltnU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KholdVGWrUTg7vTfNMWzwARU8Mud/SKqhkiPOQlikGhoJTvUuq70fjxtC52x8DOm3qM7MK4cBy0pJf/gxsnYwtXP6j3eI3RQe9rWzXzxTlvNfXgDX8FML14btydloDDIx+TvQz6jBIfjyfmzoHC5EdEE9Kbw7FKuPE+wXzlR2kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C41D6C43399;
+	Tue, 30 Jan 2024 16:49:35 +0000 (UTC)
+Date: Tue, 30 Jan 2024 11:49:47 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
+ lkp@intel.com, linux-kernel@vger.kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Christian Brauner
+ <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Ajay Kaher
+ <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org
+Subject: Re: [linus:master] [eventfs] 852e46e239:
+ BUG:unable_to_handle_page_fault_for_address
+Message-ID: <20240130114947.5bc856b0@gandalf.local.home>
+In-Reply-To: <20240130093942.56206ff1@gandalf.local.home>
+References: <202401291043.e62e89dc-oliver.sang@intel.com>
+	<CAHk-=whb91PWEaEJpRGsuWaQpYZGj98ji8HC2vvHD4xb_TqhJw@mail.gmail.com>
+	<CAHk-=wgp7UkG31=cCcbSdhMv6-vBJ=orktUOUdiLzw4tQ4gDLg@mail.gmail.com>
+	<20240129152600.7587d1aa@gandalf.local.home>
+	<CAHk-=wghobf5qCqNUsafkQzNAZBJiS0=7CRjNXNChpoAvTbvUw@mail.gmail.com>
+	<20240129172200.1725f01b@gandalf.local.home>
+	<CAHk-=wjV6+U1FQ8wzQ5ASmqGgby+GZ6wpdh0NrJgA43mc+TEwA@mail.gmail.com>
+	<CAHk-=wgOxTeTi02C=kOXsHzuD6XCrV0L1zk1XP9t+a4Wx--xvA@mail.gmail.com>
+	<20240129174950.5a17a86c@gandalf.local.home>
+	<CAHk-=wjbzw3=nwR5zGH9jqXgB8jj03wxWfdFDn=oAVCoymQQJg@mail.gmail.com>
+	<20240129193549.265f32c8@gandalf.local.home>
+	<CAHk-=whRxcmjvGNBKi9_x59cAedh8SO8wsNDNrEQbAQfM5A8CQ@mail.gmail.com>
+	<CAHk-=wh97AkwaOkXoBgf0z8EP88ePffLnTcmmQXcY+AhFaFrnA@mail.gmail.com>
+	<CAHk-=wi6m7d-nivx10Lo=aGhbdk2qg-8SzjtDd9XW01LxGgAMA@mail.gmail.com>
+	<CAHk-=wi+WbXZcc2Sx1i-MGV2DfG4eS4Ci+mrqi-PBSLSnww6qA@mail.gmail.com>
+	<20240130093942.56206ff1@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240130235510.c92a31ee6998697dd49d2600@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 30, 2024 at 11:55:10PM +0900, Masami Hiramatsu wrote:
-> Hi Vincent,
-> 
-> Thanks for update the code.
-> 
-> On Mon, 29 Jan 2024 14:27:58 +0000
-> Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> > In preparation for allowing the user-space to map a ring-buffer, add
-> > a set of mapping functions:
-> > 
-> >   ring_buffer_{map,unmap}()
-> >   ring_buffer_map_fault()
-> > 
-> > And controls on the ring-buffer:
-> > 
-> >   ring_buffer_map_get_reader()  /* swap reader and head */
-> > 
-> > Mapping the ring-buffer also involves:
-> > 
-> >   A unique ID for each subbuf of the ring-buffer, currently they are
-> >   only identified through their in-kernel VA.
-> > 
-> >   A meta-page, where are stored ring-buffer statistics and a
-> >   description for the current reader
-> > 
-> > The linear mapping exposes the meta-page, and each subbuf of the
-> > ring-buffer, ordered following their unique ID, assigned during the
-> > first mapping.
-> > 
-> > Once mapped, no subbuf can get in or out of the ring-buffer: the buffer
-> > size will remain unmodified and the splice enabling functions will in
-> > reality simply memcpy the data instead of swapping subbufs.
-> > 
-> > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> > 
-> > diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-> > index fa802db216f9..0841ba8bab14 100644
-> > --- a/include/linux/ring_buffer.h
-> > +++ b/include/linux/ring_buffer.h
-> > @@ -6,6 +6,8 @@
-> >  #include <linux/seq_file.h>
-> >  #include <linux/poll.h>
-> >  
-> > +#include <uapi/linux/trace_mmap.h>
-> > +
-> >  struct trace_buffer;
-> >  struct ring_buffer_iter;
-> >  
-> > @@ -221,4 +223,9 @@ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node);
-> >  #define trace_rb_cpu_prepare	NULL
-> >  #endif
-> >  
-> > +int ring_buffer_map(struct trace_buffer *buffer, int cpu);
-> > +int ring_buffer_unmap(struct trace_buffer *buffer, int cpu);
-> > +struct page *ring_buffer_map_fault(struct trace_buffer *buffer, int cpu,
-> > +				   unsigned long pgoff);
-> > +int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu);
-> >  #endif /* _LINUX_RING_BUFFER_H */
-> > diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
-> > new file mode 100644
-> > index 000000000000..d4bb67430719
-> > --- /dev/null
-> > +++ b/include/uapi/linux/trace_mmap.h
-> > @@ -0,0 +1,43 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> > +#ifndef _TRACE_MMAP_H_
-> > +#define _TRACE_MMAP_H_
-> > +
-> > +#include <linux/types.h>
-> > +
-> > +/**
-> > + * struct trace_buffer_meta - Ring-buffer Meta-page description
-> > + * @meta_page_size:	Size of this meta-page.
-> > + * @meta_struct_len:	Size of this structure.
-> > + * @subbuf_size:	Size of each subbuf, including the header.
-> > + * @nr_subbufs:		Number of subbfs in the ring-buffer.
-> > + * @reader.lost_events:	Number of events lost at the time of the reader swap.
-> > + * @reader.id:		subbuf ID of the current reader. From 0 to @nr_subbufs - 1
-> > + * @reader.read:	Number of bytes read on the reader subbuf.
-> > + * @entries:		Number of entries in the ring-buffer.
-> > + * @overrun:		Number of entries lost in the ring-buffer.
-> > + * @read:		Number of entries that have been read.
-> > + */
-> > +struct trace_buffer_meta {
-> > +	__u32		meta_page_size;
-> > +	__u32		meta_struct_len;
-> > +
-> > +	__u32		subbuf_size;
-> > +	__u32		nr_subbufs;
-> > +
-> > +	struct {
-> > +		__u64	lost_events;
-> > +		__u32	id;
-> > +		__u32	read;
-> > +	} reader;
-> > +
-> > +	__u64	flags;
-> > +
-> > +	__u64	entries;
-> > +	__u64	overrun;
-> > +	__u64	read;
-> > +
-> > +	__u64	Reserved1;
-> > +	__u64	Reserved2;
-> > +};
-> > +
-> > +#endif /* _TRACE_MMAP_H_ */
-> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > index 8179e0a8984e..081065e76d4a 100644
-> > --- a/kernel/trace/ring_buffer.c
-> > +++ b/kernel/trace/ring_buffer.c
-> > @@ -338,6 +338,7 @@ struct buffer_page {
-> >  	local_t		 entries;	/* entries on this page */
-> >  	unsigned long	 real_end;	/* real end of data */
-> >  	unsigned	 order;		/* order of the page */
-> > +	u32		 id;		/* ID for external mapping */
-> >  	struct buffer_data_page *page;	/* Actual data page */
-> >  };
-> >  
-> > @@ -484,6 +485,12 @@ struct ring_buffer_per_cpu {
-> >  	u64				read_stamp;
-> >  	/* pages removed since last reset */
-> >  	unsigned long			pages_removed;
-> > +
-> > +	int				mapped;
-> > +	struct mutex			mapping_lock;
-> > +	unsigned long			*subbuf_ids;	/* ID to addr */
-> > +	struct trace_buffer_meta	*meta_page;
-> > +
-> >  	/* ring buffer pages to update, > 0 to add, < 0 to remove */
-> >  	long				nr_pages_to_update;
-> >  	struct list_head		new_pages; /* new pages to add */
-> > @@ -1548,6 +1555,7 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
-> >  	init_irq_work(&cpu_buffer->irq_work.work, rb_wake_up_waiters);
-> >  	init_waitqueue_head(&cpu_buffer->irq_work.waiters);
-> >  	init_waitqueue_head(&cpu_buffer->irq_work.full_waiters);
-> > +	mutex_init(&cpu_buffer->mapping_lock);
-> >  
-> >  	bpage = kzalloc_node(ALIGN(sizeof(*bpage), cache_line_size()),
-> >  			    GFP_KERNEL, cpu_to_node(cpu));
-> > @@ -5160,6 +5168,19 @@ static void rb_clear_buffer_page(struct buffer_page *page)
-> >  	page->read = 0;
-> >  }
-> >  
-> > +static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
-> > +{
-> > +	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
-> > +
-> > +	WRITE_ONCE(meta->reader.read, cpu_buffer->reader_page->read);
-> > +	WRITE_ONCE(meta->reader.id, cpu_buffer->reader_page->id);
-> > +	WRITE_ONCE(meta->reader.lost_events, cpu_buffer->lost_events);
-> > +
-> > +	WRITE_ONCE(meta->entries, local_read(&cpu_buffer->entries));
-> > +	WRITE_ONCE(meta->overrun, local_read(&cpu_buffer->overrun));
-> > +	WRITE_ONCE(meta->read, cpu_buffer->read);
-> > +}
-> > +
-> >  static void
-> >  rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
-> >  {
-> > @@ -5204,6 +5225,9 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
-> >  	cpu_buffer->lost_events = 0;
-> >  	cpu_buffer->last_overrun = 0;
-> >  
-> > +	if (cpu_buffer->mapped)
-> 
-> There are some cpu_buffer->mapped are accessed via WRITE_ONCE/READ_ONCE()
-> but others are not. What makes those different?
+On Tue, 30 Jan 2024 09:39:42 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-The cpu_buffer->mapped is READ_ONCE for the section where it is not protected
-with a lock. That is (in this version) only ring_buffer_swap_cpu().
+> I may try something that will still let me get rid of the ei->dentry.
 
-That said... 
+This appears to work, but like always, I may have missed something. I need
+to add debugging (printks) to make sure the that I don't leave any dangling
+dentries around (dget without a dput).
 
-a. This is not enough protection at this level, Ideally the _map should also
-call synchronize_rcu() to make sure the _swap does see the ->mapped > 0.
+Here's what I did:
 
-b. With refcount for the snapshot in trace/trace.c, it is not possible for those
-functions to race. trace_arm_snapshot() and tracing_buffers_mmap() are mutually
-exclusive and already stabilized with the trace mutex.
+- Removed the ei->dentry that you loved so much
 
-So how about I completely remove those WRITE_ONCE/READ_ONCE and just rely on the
-protection given in trace/trace.c instead of duplicating it in
-trace/ring_buffer.c?
+- Removed the ei->d_children that you shared as much love for.
 
-> 
-> > +		rb_update_meta_page(cpu_buffer);
-> > +
-> >  	rb_head_page_activate(cpu_buffer);
-> >  	cpu_buffer->pages_removed = 0;
-> >  }
-> > @@ -5418,6 +5442,11 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
-> >  	cpu_buffer_a = buffer_a->buffers[cpu];
-> >  	cpu_buffer_b = buffer_b->buffers[cpu];
-> >  
-> > +	if (READ_ONCE(cpu_buffer_a->mapped) || READ_ONCE(cpu_buffer_b->mapped)) {
-> > +		ret = -EBUSY;
-> > +		goto out;
-> > +	}
-> > +
-> >  	/* At least make sure the two buffers are somewhat the same */
-> >  	if (cpu_buffer_a->nr_pages != cpu_buffer_b->nr_pages)
-> >  		goto out;
-> > @@ -5682,7 +5711,8 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
-> >  	 * Otherwise, we can simply swap the page with the one passed in.
-> >  	 */
-> >  	if (read || (len < (commit - read)) ||
-> > -	    cpu_buffer->reader_page == cpu_buffer->commit_page) {
-> > +	    cpu_buffer->reader_page == cpu_buffer->commit_page ||
-> > +	    cpu_buffer->mapped) {
-> >  		struct buffer_data_page *rpage = cpu_buffer->reader_page->page;
-> >  		unsigned int rpos = read;
-> >  		unsigned int pos = 0;
-> > @@ -5901,6 +5931,11 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
-> >  
-> >  		cpu_buffer = buffer->buffers[cpu];
-> >  
-> > +		if (cpu_buffer->mapped) {
-> > +			err = -EBUSY;
-> > +			goto error;
-> > +		}
-> > +
-> >  		/* Update the number of pages to match the new size */
-> >  		nr_pages = old_size * buffer->buffers[cpu]->nr_pages;
-> >  		nr_pages = DIV_ROUND_UP(nr_pages, buffer->subbuf_size);
-> > @@ -6002,6 +6037,295 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
-> >  }
-> >  EXPORT_SYMBOL_GPL(ring_buffer_subbuf_order_set);
-> >  
-> > +#define subbuf_page(off, start) \
-> > +	virt_to_page((void *)(start + (off << PAGE_SHIFT)))
-> > +
-> > +#define foreach_subbuf_page(sub_order, start, page)		\
-> > +	page = subbuf_page(0, (start));				\
-> > +	for (int __off = 0; __off < (1 << (sub_order));		\
-> > +	     __off++, page = subbuf_page(__off, (start)))
-> > +
-> > +static inline void subbuf_map_prepare(unsigned long subbuf_start, int order)
-> > +{
-> > +	struct page *page;
-> > +
-> > +	/*
-> > +	 * When allocating order > 0 pages, only the first struct page has a
-> > +	 * refcount > 1. Increasing the refcount here ensures none of the struct
-> > +	 * page composing the sub-buffer is freeed when the mapping is closed.
-> > +	 */
-> > +	foreach_subbuf_page(order, subbuf_start, page)
-> > +		page_ref_inc(page);
-> > +}
-> > +
-> > +static inline void subbuf_unmap(unsigned long subbuf_start, int order)
-> > +{
-> > +	struct page *page;
-> > +
-> > +	foreach_subbuf_page(order, subbuf_start, page) {
-> > +		page_ref_dec(page);
-> > +		page->mapping = NULL;
-> > +	}
-> > +}
-> > +
-> > +static void rb_free_subbuf_ids(struct ring_buffer_per_cpu *cpu_buffer)
-> > +{
-> > +	int sub_id;
-> > +
-> > +	for (sub_id = 0; sub_id < cpu_buffer->nr_pages + 1; sub_id++)
-> > +		subbuf_unmap(cpu_buffer->subbuf_ids[sub_id],
-> > +			     cpu_buffer->buffer->subbuf_order);
-> > +
-> > +	kfree(cpu_buffer->subbuf_ids);
-> > +	cpu_buffer->subbuf_ids = NULL;
-> > +}
-> > +
-> > +static int rb_alloc_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
-> > +{
-> > +	if (cpu_buffer->meta_page)
-> > +		return 0;
-> > +
-> > +	cpu_buffer->meta_page = page_to_virt(alloc_page(GFP_USER | __GFP_ZERO));
-> > +	if (!cpu_buffer->meta_page)
-> > +		return -ENOMEM;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void rb_free_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
-> > +{
-> > +	unsigned long addr = (unsigned long)cpu_buffer->meta_page;
-> > +
-> > +	virt_to_page((void *)addr)->mapping = NULL;
-> > +	free_page(addr);
-> > +	cpu_buffer->meta_page = NULL;
-> > +}
-> > +
-> > +static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
-> > +				   unsigned long *subbuf_ids)
-> > +{
-> > +	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
-> > +	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
-> > +	struct buffer_page *first_subbuf, *subbuf;
-> > +	int id = 0;
-> > +
-> > +	subbuf_ids[id] = (unsigned long)cpu_buffer->reader_page->page;
-> > +	subbuf_map_prepare(subbuf_ids[id], cpu_buffer->buffer->subbuf_order);
-> > +	cpu_buffer->reader_page->id = id++;
-> > +
-> > +	first_subbuf = subbuf = rb_set_head_page(cpu_buffer);
-> > +	do {
-> > +		if (id >= nr_subbufs) {
-> > +			WARN_ON(1);
-> > +			break;
-> > +		}
-> > +
-> > +		subbuf_ids[id] = (unsigned long)subbuf->page;
-> > +		subbuf->id = id;
-> > +		subbuf_map_prepare(subbuf_ids[id], cpu_buffer->buffer->subbuf_order);
-> > +
-> > +		rb_inc_page(&subbuf);
-> > +		id++;
-> > +	} while (subbuf != first_subbuf);
-> > +
-> > +	/* install subbuf ID to kern VA translation */
-> > +	cpu_buffer->subbuf_ids = subbuf_ids;
-> > +
-> > +	meta->meta_page_size = PAGE_SIZE;
-> > +	meta->meta_struct_len = sizeof(*meta);
-> > +	meta->nr_subbufs = nr_subbufs;
-> > +	meta->subbuf_size = cpu_buffer->buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
-> > +
-> > +	rb_update_meta_page(cpu_buffer);
-> > +}
-> > +
-> > +static inline struct ring_buffer_per_cpu *
-> > +rb_get_mapped_buffer(struct trace_buffer *buffer, int cpu)
-> > +{
-> > +	struct ring_buffer_per_cpu *cpu_buffer;
-> > +
-> > +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
-> > +		return ERR_PTR(-EINVAL);
-> > +
-> > +	cpu_buffer = buffer->buffers[cpu];
-> > +
-> > +	mutex_lock(&cpu_buffer->mapping_lock);
-> > +
-> > +	if (!cpu_buffer->mapped) {
-> > +		mutex_unlock(&cpu_buffer->mapping_lock);
-> > +		return ERR_PTR(-ENODEV);
-> > +	}
-> > +
-> > +	return cpu_buffer;
-> > +}
-> > +
-> > +static inline void rb_put_mapped_buffer(struct ring_buffer_per_cpu *cpu_buffer)
-> > +{
-> > +	mutex_unlock(&cpu_buffer->mapping_lock);
-> > +}
-> > +
-> > +int ring_buffer_map(struct trace_buffer *buffer, int cpu)
-> > +{
-> > +	struct ring_buffer_per_cpu *cpu_buffer;
-> > +	unsigned long flags, *subbuf_ids;
-> > +	int err = 0;
-> > +
-> > +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
-> > +		return -EINVAL;
-> > +
-> > +	cpu_buffer = buffer->buffers[cpu];
-> > +
-> > +	mutex_lock(&cpu_buffer->mapping_lock);
-> > +
-> > +	if (cpu_buffer->mapped) {
-> > +		if (cpu_buffer->mapped == INT_MAX)
-> > +			err = -EBUSY;
-> > +		else
-> > +			WRITE_ONCE(cpu_buffer->mapped, cpu_buffer->mapped + 1);
-> > +		mutex_unlock(&cpu_buffer->mapping_lock);
-> > +		return err;
-> > +	}
-> > +
-> > +	/* prevent another thread from changing buffer sizes */
-> > +	mutex_lock(&buffer->mutex);
-> > +
-> > +	err = rb_alloc_meta_page(cpu_buffer);
-> > +	if (err)
-> > +		goto unlock;
-> > +
-> > +	/* subbuf_ids include the reader while nr_pages does not */
-> > +	subbuf_ids = kzalloc(sizeof(*subbuf_ids) * (cpu_buffer->nr_pages + 1),
-> > +			   GFP_KERNEL);
-> > +	if (!subbuf_ids) {
-> > +		rb_free_meta_page(cpu_buffer);
-> > +		err = -ENOMEM;
-> > +		goto unlock;
-> > +	}
-> > +
-> > +	atomic_inc(&cpu_buffer->resize_disabled);
-> > +
-> > +	/*
-> > +	 * Lock all readers to block any subbuf swap until the subbuf IDs are
-> > +	 * assigned.
-> > +	 */
-> > +	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-> > +
-> > +	rb_setup_ids_meta_page(cpu_buffer, subbuf_ids);
-> > +
-> > +	WRITE_ONCE(cpu_buffer->mapped, 1);
-> > +
-> > +	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
-> > +unlock:
-> > +	mutex_unlock(&buffer->mutex);
-> > +	mutex_unlock(&cpu_buffer->mapping_lock);
-> > +
-> > +	return err;
-> > +}
-> > +
-> > +int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
-> > +{
-> > +	struct ring_buffer_per_cpu *cpu_buffer;
-> > +	int err = 0;
-> > +
-> > +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
-> > +		return -EINVAL;
-> > +
-> > +	cpu_buffer = buffer->buffers[cpu];
-> > +
-> > +	mutex_lock(&cpu_buffer->mapping_lock);
-> > +
-> > +	if (!cpu_buffer->mapped) {
-> > +		err = -ENODEV;
-> > +		goto unlock;
-> > +	}
-> > +
-> > +	WRITE_ONCE(cpu_buffer->mapped, cpu_buffer->mapped - 1);
-> > +	if (!cpu_buffer->mapped) {
-> > +		/* Wait for the writer and readers to observe !mapped */
-> > +		synchronize_rcu();
-> 
-> How does this synchronize_rcu() work for ensuring to observe?
-> (All of those writers/readers are in non-preemptive critical section?)
+- Removed SRCU. All accesses are under the eventfs_mutex
+  I need to add comments that the callbacks need to be aware of this.
+  Currently, the callbacks do not take any other locks. I may comment
+  that they should never take a lock.
 
-Apologies, that is something I should have reworked. In earlier versions of the
-patch series, the writer could update themselves the meta-page.
+- Added the kref that you recommended
 
-This has been abandoned and now only rb_reset_cpu() and the get_reader ioctl are
-updating the meta-page.
+- Created a eventfs_root_inode that has the structure of:
 
-ring_buffer_map_get_reader() is already protected with the mapping mutex.
-rb_reset_cpu() is behind the reader_lock, Taking the later would be way more
-efficient than the synchronize_rcu()
+  struct eventfs_root_inode {
+       struct eventfs_inode    ei;
+       struct dentry           *root_dentry;
+  };
 
-> 
-> Thank you,
-> 
-> > +
-> > +		rb_free_subbuf_ids(cpu_buffer);
-> > +		rb_free_meta_page(cpu_buffer);
-> > +		atomic_dec(&cpu_buffer->resize_disabled);
-> > +	}
-> > +unlock:
-> > +	mutex_unlock(&cpu_buffer->mapping_lock);
-> > +
-> > +	return err;
-> > +}
-> > +
-> > +/*
-> > + *   +--------------+  pgoff == 0
-> > + *   |   meta page  |
-> > + *   +--------------+  pgoff == 1
-> > + *   | subbuffer 0  |
-> > + *   +--------------+  pgoff == 1 + (1 << subbuf_order)
-> > + *   | subbuffer 1  |
-> > + *         ...
-> > + */
-> > +struct page *ring_buffer_map_fault(struct trace_buffer *buffer, int cpu,
-> > +				   unsigned long pgoff)
-> > +{
-> > +	struct ring_buffer_per_cpu *cpu_buffer = buffer->buffers[cpu];
-> > +	unsigned long subbuf_id, subbuf_offset, addr;
-> > +	struct page *page;
-> > +
-> > +	if (!pgoff)
-> > +		return virt_to_page((void *)cpu_buffer->meta_page);
-> > +
-> > +	pgoff--;
-> > +
-> > +	subbuf_id = pgoff >> buffer->subbuf_order;
-> > +	if (subbuf_id > cpu_buffer->nr_pages)
-> > +		return NULL;
-> > +
-> > +	subbuf_offset = pgoff & ((1UL << buffer->subbuf_order) - 1);
-> > +	addr = cpu_buffer->subbuf_ids[subbuf_id] + (subbuf_offset * PAGE_SIZE);
-> > +	page = virt_to_page((void *)addr);
-> > +
-> > +	return page;
-> > +}
-> > +
-> > +int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
-> > +{
-> > +	struct ring_buffer_per_cpu *cpu_buffer;
-> > +	unsigned long reader_size;
-> > +	unsigned long flags;
-> > +
-> > +	cpu_buffer = rb_get_mapped_buffer(buffer, cpu);
-> > +	if (IS_ERR(cpu_buffer))
-> > +		return (int)PTR_ERR(cpu_buffer);
-> > +
-> > +	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-> > +consume:
-> > +	if (rb_per_cpu_empty(cpu_buffer))
-> > +		goto out;
-> > +
-> > +	reader_size = rb_page_size(cpu_buffer->reader_page);
-> > +
-> > +	/*
-> > +	 * There are data to be read on the current reader page, we can
-> > +	 * return to the caller. But before that, we assume the latter will read
-> > +	 * everything. Let's update the kernel reader accordingly.
-> > +	 */
-> > +	if (cpu_buffer->reader_page->read < reader_size) {
-> > +		while (cpu_buffer->reader_page->read < reader_size)
-> > +			rb_advance_reader(cpu_buffer);
-> > +		goto out;
-> > +	}
-> > +
-> > +	if (WARN_ON(!rb_get_reader_page(cpu_buffer)))
-> > +		goto out;
-> > +
-> > +	goto consume;
-> > +out:
-> > +	rb_update_meta_page(cpu_buffer);
-> > +	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
-> > +	rb_put_mapped_buffer(cpu_buffer);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  /*
-> >   * We only allocate new buffers, never free them if the CPU goes down.
-> >   * If we were to free the buffer, then the user would lose any trace that was in
-> > -- 
-> > 2.43.0.429.g432eaa2c6b-goog
-> > 
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+  The "events" directory is the only directory that allocates this.
+  It is required that its ei->is_events is set, and no other ei has that
+  set. This will hold the only non-dynamic dentry.
+
+- I added "parent" to the eventfs_inode that points to the parent
+  eventfs_inode.
+
+- On removal, I got rid of the SRCU callback and the work queue.
+  Instead, I find the dentry of the current eventfs_inode that is being
+  deleted by walking the ei->parent until I find the events inode that has
+  a dentry. I then use that to do a lookup walking back down to the
+  eventfs_inode I want to delete. This gives me the dentry that I can call
+  d_invalidate() on.
+
+This all works with light testing. I'm sure I did something wrong, but
+hopefully this is more inline to what you are looking for.
+
+This patch is on top of your last patch series.
+
+-- Steve
+
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index ad11063bdd53..49d4630d5d70 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -24,17 +24,24 @@
+ #include <linux/delay.h>
+ #include "internal.h"
+ 
+-/*
+- * eventfs_mutex protects the eventfs_inode (ei) dentry. Any access
+- * to the ei->dentry must be done under this mutex and after checking
+- * if ei->is_freed is not set. When ei->is_freed is set, the dentry
+- * is on its way to being freed after the last dput() is made on it.
+- */
++/* eventfs_mutex protects ei->is_freed and the ei->ref counting. */
+ static DEFINE_MUTEX(eventfs_mutex);
+ 
+ /* Choose something "unique" ;-) */
+ #define EVENTFS_FILE_INODE_INO		0x12c4e37
+ 
++/* Used only by the "events" directory */
++struct eventfs_root_inode {
++	struct eventfs_inode	ei;
++	struct dentry		*root_dentry;
++};
++
++static struct eventfs_root_inode *get_root_inode(struct eventfs_inode *ei)
++{
++	WARN_ON_ONCE(!ei->is_events);
++	return container_of(ei, struct eventfs_inode, ei);
++}
++
+ /* Just try to make something consistent and unique */
+ static int eventfs_dir_ino(struct eventfs_inode *ei)
+ {
+@@ -44,14 +51,6 @@ static int eventfs_dir_ino(struct eventfs_inode *ei)
+ 	return ei->ino;
+ }
+ 
+-/*
+- * The eventfs_inode (ei) itself is protected by SRCU. It is released from
+- * its parent's list and will have is_freed set (under eventfs_mutex).
+- * After the SRCU grace period is over and the last dput() is called
+- * the ei is freed.
+- */
+-DEFINE_STATIC_SRCU(eventfs_srcu);
+-
+ /* Mode is unsigned short, use the upper bits for flags */
+ enum {
+ 	EVENTFS_SAVE_MODE	= BIT(16),
+@@ -360,7 +359,7 @@ static struct dentry *lookup_dir_entry(struct dentry *dentry,
+ 	ti->private = ei;
+ 
+ 	dentry->d_fsdata = ei;
+-        ei->dentry = dentry;	// Remove me!
++	kref_get(&ei->kref);
+ 
+ 	inc_nlink(inode);
+ 	d_add(dentry, inode);
+@@ -371,10 +370,30 @@ static struct dentry *lookup_dir_entry(struct dentry *dentry,
+ 
+ static void free_ei(struct eventfs_inode *ei)
+ {
++	struct eventfs_root_inode *rei;
++
+ 	kfree_const(ei->name);
+-	kfree(ei->d_children);
+ 	kfree(ei->entry_attrs);
+-	kfree(ei);
++
++	if (ei->is_events) {
++		rei = get_root_inode(ei);
++		kfree(rei);
++	} else {
++		kfree(ei);
++	}
++}
++
++static void kref_ei_release(struct kref *kref)
++{
++	struct eventfs_inode *ei = container_of(kref, struct eventfs_inode, kref);
++	WARN_ON_ONCE(!ei->is_freed);
++	free_ei(ei);
++}
++
++
++static void eventfs_inode_put(struct eventfs_inode *ei)
++{
++	kref_put(&ei->kref, kref_ei_release);
+ }
+ 
+ /**
+@@ -387,7 +406,6 @@ static void free_ei(struct eventfs_inode *ei)
+ void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry)
+ {
+ 	struct eventfs_inode *ei;
+-	int i;
+ 
+ 	mutex_lock(&eventfs_mutex);
+ 
+@@ -395,20 +413,7 @@ void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry)
+ 	if (!ei)
+ 		goto out;
+ 
+-	/* This could belong to one of the files of the ei */
+-	if (ei->dentry != dentry) {
+-		for (i = 0; i < ei->nr_entries; i++) {
+-			if (ei->d_children[i] == dentry)
+-				break;
+-		}
+-		if (WARN_ON_ONCE(i == ei->nr_entries))
+-			goto out;
+-		ei->d_children[i] = NULL;
+-	} else if (ei->is_freed) {
+-		free_ei(ei);
+-	} else {
+-		ei->dentry = NULL;
+-	}
++	eventfs_inode_put(ei);
+ 
+ 	dentry->d_fsdata = NULL;
+  out:
+@@ -435,16 +440,14 @@ lookup_file_dentry(struct dentry *dentry,
+ 		   const struct file_operations *fops)
+ {
+ 	struct eventfs_attr *attr = NULL;
+-	struct dentry **e_dentry = &ei->d_children[idx];
+ 
+ 	if (ei->entry_attrs)
+ 		attr = &ei->entry_attrs[idx];
+ 
+ 	dentry->d_fsdata = ei;		// NOTE: ei of _parent_
++	kref_get(&ei->kref);
+ 	lookup_file(dentry, mode, attr, data, fops);
+ 
+-	*e_dentry = dentry;	// Remove me
+-
+ 	return dentry;
+ }
+ 
+@@ -465,6 +468,7 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 	struct eventfs_inode *ei_child;
+ 	struct tracefs_inode *ti;
+ 	struct eventfs_inode *ei;
++	struct dentry *result = NULL;
+ 	const char *name = dentry->d_name.name;
+ 
+ 	ti = get_tracefs(dir);
+@@ -505,11 +509,10 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 
+  enoent:
+ 	/* Nothing found? */
+-	d_add(dentry, NULL);
+-
++	result = ERR_PTR(-ENOENT);
+  out:
+ 	mutex_unlock(&eventfs_mutex);
+-	return NULL;
++	return result;
+ }
+ 
+ /*
+@@ -525,7 +528,6 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 	struct eventfs_inode *ei;
+ 	const char *name;
+ 	umode_t mode;
+-	int idx;
+ 	int ret = -EINVAL;
+ 	int ino;
+ 	int i, r, c;
+@@ -539,15 +541,9 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 
+ 	c = ctx->pos - 2;
+ 
+-	idx = srcu_read_lock(&eventfs_srcu);
+-
+ 	mutex_lock(&eventfs_mutex);
+ 	ei = READ_ONCE(ti->private);
+ 	if (ei && ei->is_freed)
+-		ei = NULL;
+-	mutex_unlock(&eventfs_mutex);
+-
+-	if (!ei)
+ 		goto out;
+ 
+ 	/*
+@@ -563,14 +559,12 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 		entry = &ei->entries[i];
+ 		name = entry->name;
+ 
+-		mutex_lock(&eventfs_mutex);
+ 		/* If ei->is_freed then just bail here, nothing more to do */
+ 		if (ei->is_freed) {
+ 			mutex_unlock(&eventfs_mutex);
+ 			goto out;
+ 		}
+ 		r = entry->callback(name, &mode, &cdata, &fops);
+-		mutex_unlock(&eventfs_mutex);
+ 		if (r <= 0)
+ 			continue;
+ 
+@@ -583,8 +577,7 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 	/* Subtract the skipped entries above */
+ 	c -= min((unsigned int)c, (unsigned int)ei->nr_entries);
+ 
+-	list_for_each_entry_srcu(ei_child, &ei->children, list,
+-				 srcu_read_lock_held(&eventfs_srcu)) {
++	list_for_each_entry(ei_child, &ei->children, list) {
+ 
+ 		if (c > 0) {
+ 			c--;
+@@ -605,7 +598,7 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 	}
+ 	ret = 1;
+  out:
+-	srcu_read_unlock(&eventfs_srcu, idx);
++	mutex_unlock(&eventfs_mutex);
+ 
+ 	return ret;
+ 
+@@ -669,25 +662,17 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+ 
+-	if (size) {
+-		ei->d_children = kcalloc(size, sizeof(*ei->d_children), GFP_KERNEL);
+-		if (!ei->d_children) {
+-			kfree_const(ei->name);
+-			kfree(ei);
+-			return ERR_PTR(-ENOMEM);
+-		}
+-	}
+-
+ 	ei->entries = entries;
+ 	ei->nr_entries = size;
+ 	ei->data = data;
+ 	INIT_LIST_HEAD(&ei->children);
+ 	INIT_LIST_HEAD(&ei->list);
++	kref_init(&ei->kref);
+ 
+ 	mutex_lock(&eventfs_mutex);
+ 	if (!parent->is_freed) {
+ 		list_add_tail(&ei->list, &parent->children);
+-		ei->d_parent = parent->dentry;
++		ei->parent = parent;
+ 	}
+ 	mutex_unlock(&eventfs_mutex);
+ 
+@@ -716,6 +701,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+ 						int size, void *data)
+ {
+ 	struct dentry *dentry = tracefs_start_creating(name, parent);
++	struct eventfs_root_inode *rei;
+ 	struct eventfs_inode *ei;
+ 	struct tracefs_inode *ti;
+ 	struct inode *inode;
+@@ -728,24 +714,21 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+ 	if (IS_ERR(dentry))
+ 		return ERR_CAST(dentry);
+ 
+-	ei = kzalloc(sizeof(*ei), GFP_KERNEL);
+-	if (!ei)
++	rei = kzalloc(sizeof(*rei), GFP_KERNEL);
++	if (!rei)
+ 		goto fail_ei;
+ 
++	ei = &rei->ei;
++	ei->is_events = 1;
++
+ 	inode = tracefs_get_inode(dentry->d_sb);
+ 	if (unlikely(!inode))
+ 		goto fail;
+ 
+-	if (size) {
+-		ei->d_children = kcalloc(size, sizeof(*ei->d_children), GFP_KERNEL);
+-		if (!ei->d_children)
+-			goto fail;
+-	}
++	rei->root_dentry = dentry;
+ 
+-	ei->dentry = dentry;
+ 	ei->entries = entries;
+ 	ei->nr_entries = size;
+-	ei->is_events = 1;
+ 	ei->data = data;
+ 	ei->name = kstrdup_const(name, GFP_KERNEL);
+ 	if (!ei->name)
+@@ -781,6 +764,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+ 	inode->i_fop = &eventfs_file_operations;
+ 
+ 	dentry->d_fsdata = ei;
++	kref_init(&ei->kref);
+ 
+ 	/* directory inodes start off with i_nlink == 2 (for "." entry) */
+ 	inc_nlink(inode);
+@@ -792,83 +776,24 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+ 	return ei;
+ 
+  fail:
+-	kfree(ei->d_children);
+-	kfree(ei);
++	kfree(rei);
+  fail_ei:
+ 	tracefs_failed_creating(dentry);
+ 	return ERR_PTR(-ENOMEM);
+ }
+ 
+-static LLIST_HEAD(free_list);
+-
+-static void eventfs_workfn(struct work_struct *work)
+-{
+-        struct eventfs_inode *ei, *tmp;
+-        struct llist_node *llnode;
+-
+-	llnode = llist_del_all(&free_list);
+-        llist_for_each_entry_safe(ei, tmp, llnode, llist) {
+-		/* This dput() matches the dget() from unhook_dentry() */
+-		for (int i = 0; i < ei->nr_entries; i++) {
+-			if (ei->d_children[i])
+-				dput(ei->d_children[i]);
+-		}
+-		/* This should only get here if it had a dentry */
+-		if (!WARN_ON_ONCE(!ei->dentry))
+-			dput(ei->dentry);
+-        }
+-}
+-
+-static DECLARE_WORK(eventfs_work, eventfs_workfn);
+-
+-static void free_rcu_ei(struct rcu_head *head)
+-{
+-	struct eventfs_inode *ei = container_of(head, struct eventfs_inode, rcu);
+-
+-	if (ei->dentry) {
+-		/* Do not free the ei until all references of dentry are gone */
+-		if (llist_add(&ei->llist, &free_list))
+-			queue_work(system_unbound_wq, &eventfs_work);
+-		return;
+-	}
+-
+-	/* If the ei doesn't have a dentry, neither should its children */
+-	for (int i = 0; i < ei->nr_entries; i++) {
+-		WARN_ON_ONCE(ei->d_children[i]);
+-	}
+-
+-	free_ei(ei);
+-}
+-
+-static void unhook_dentry(struct dentry *dentry)
+-{
+-	if (!dentry)
+-		return;
+-	/*
+-	 * Need to add a reference to the dentry that is expected by
+-	 * simple_recursive_removal(), which will include a dput().
+-	 */
+-	dget(dentry);
+-
+-	/*
+-	 * Also add a reference for the dput() in eventfs_workfn().
+-	 * That is required as that dput() will free the ei after
+-	 * the SRCU grace period is over.
+-	 */
+-	dget(dentry);
+-}
+-
+ /**
+  * eventfs_remove_rec - remove eventfs dir or file from list
+  * @ei: eventfs_inode to be removed.
++ * @head: List head to add the ei's to remove
+  * @level: prevent recursion from going more than 3 levels deep.
+  *
+  * This function recursively removes eventfs_inodes which
+  * contains info of files and/or directories.
+  */
+-static void eventfs_remove_rec(struct eventfs_inode *ei, int level)
++static void eventfs_remove_rec(struct eventfs_inode *ei, struct list_head *head, int level)
+ {
+-	struct eventfs_inode *ei_child;
++	struct eventfs_inode *ei_child, *tmp;
+ 
+ 	if (!ei)
+ 		return;
+@@ -883,28 +808,67 @@ static void eventfs_remove_rec(struct eventfs_inode *ei, int level)
+ 		return;
+ 
+ 	/* search for nested folders or files */
+-	list_for_each_entry_srcu(ei_child, &ei->children, list,
+-				 lockdep_is_held(&eventfs_mutex)) {
+-		/* Children only have dentry if parent does */
+-		WARN_ON_ONCE(ei_child->dentry && !ei->dentry);
+-		eventfs_remove_rec(ei_child, level + 1);
++	list_for_each_entry_safe(ei_child, tmp, &ei->children, list) {
++		eventfs_remove_rec(ei_child, head, level + 1);
+ 	}
+ 
+-
+ 	ei->is_freed = 1;
+ 
+-	for (int i = 0; i < ei->nr_entries; i++) {
+-		if (ei->d_children[i]) {
+-			/* Children only have dentry if parent does */
+-			WARN_ON_ONCE(!ei->dentry);
+-			unhook_dentry(ei->d_children[i]);
+-		}
++	list_del(&ei->list);
++	list_add(&ei->list, head);
++}
++
++static struct dentry *find_ei_dentry(struct eventfs_inode *ei, int level)
++{
++	struct dentry *d_parent;
++	struct dentry *dentry;
++	const char *name = ei->name;
++
++	/*
++	 * Check recursion depth. It should never be greater than 2;
++	 * 0 - events/
++	 * 1 - events/group/
++	 * 2 - events/group/event/
++	 */
++	if (WARN_ON_ONCE(level > 2))
++		return NULL;
++
++	/* Only the events directory has a dentry we can use */
++	if (ei->parent->is_events) {
++		struct eventfs_root_inode *rei;
++
++		rei = get_root_inode(ei);
++		d_parent = rei->root_dentry;
++		dget(d_parent);
++	} else {
++		d_parent = find_ei_dentry(ei->parent, level + 1);
++		if (!d_parent)
++			return NULL;
+ 	}
+ 
+-	unhook_dentry(ei->dentry);
++	inode_lock(d_inode(d_parent));
++	dentry = lookup_one_len(name, d_parent, strlen(name));
++	inode_unlock(d_inode(d_parent));
++	dput(d_parent);
++
++	if (IS_ERR(dentry))
++		dentry = NULL;
++	return dentry;
++}
++
++static void remove_dir(struct eventfs_inode *ei)
++{
++	struct eventfs_inode *tmp;
++	LIST_HEAD(head);
+ 
+-	list_del_rcu(&ei->list);
+-	call_srcu(&eventfs_srcu, &ei->rcu, free_rcu_ei);
++	mutex_lock(&eventfs_mutex);
++	eventfs_remove_rec(ei, &head, 0);
++	mutex_unlock(&eventfs_mutex);
++
++	list_for_each_entry_safe(ei, tmp, &head, list) {
++		list_del(&ei->list);
++		eventfs_inode_put(ei);
++	}
+ }
+ 
+ /**
+@@ -920,17 +884,14 @@ void eventfs_remove_dir(struct eventfs_inode *ei)
+ 	if (!ei)
+ 		return;
+ 
+-	mutex_lock(&eventfs_mutex);
+-	dentry = ei->dentry;
+-	eventfs_remove_rec(ei, 0);
+-	mutex_unlock(&eventfs_mutex);
++	dentry = find_ei_dentry(ei, 0);
+ 
+-	/*
+-	 * If any of the ei children has a dentry, then the ei itself
+-	 * must have a dentry.
+-	 */
+-	if (dentry)
+-		simple_recursive_removal(dentry, NULL);
++	remove_dir(ei);
++
++	if (dentry) {
++		d_invalidate(dentry);
++		dput(dentry);
++	}
+ }
+ 
+ /**
+@@ -941,10 +902,13 @@ void eventfs_remove_dir(struct eventfs_inode *ei)
+  */
+ void eventfs_remove_events_dir(struct eventfs_inode *ei)
+ {
++	struct eventfs_root_inode *rei;
+ 	struct dentry *dentry;
+ 
+-	dentry = ei->dentry;
+-	eventfs_remove_dir(ei);
++	rei = get_root_inode(ei);
++	dentry = rei->root_dentry;
++
++	remove_dir(ei);
+ 
+ 	/*
+ 	 * Matches the dget() done by tracefs_start_creating()
+@@ -953,5 +917,8 @@ void eventfs_remove_events_dir(struct eventfs_inode *ei)
+ 	 * sticks around while the other ei->dentry are created
+ 	 * and destroyed dynamically.
+ 	 */
++	simple_recursive_removal(dentry, NULL);
++
++	eventfs_inode_put(ei);
+ 	dput(dentry);
+ }
+diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+index 91c2bf0b91d9..2af78fd95c93 100644
+--- a/fs/tracefs/internal.h
++++ b/fs/tracefs/internal.h
+@@ -34,9 +34,7 @@ struct eventfs_attr {
+  * @entries:	the array of entries representing the files in the directory
+  * @name:	the name of the directory to create
+  * @children:	link list into the child eventfs_inode
+- * @dentry:     the dentry of the directory
+  * @d_parent:   pointer to the parent's dentry
+- * @d_children: The array of dentries to represent the files when created
+  * @entry_attrs: Saved mode and ownership of the @d_children
+  * @attr:	Saved mode and ownership of eventfs_inode itself
+  * @data:	The private data to pass to the callbacks
+@@ -49,12 +47,11 @@ struct eventfs_inode {
+ 	const struct eventfs_entry	*entries;
+ 	const char			*name;
+ 	struct list_head		children;
+-	struct dentry			*dentry; /* Check is_freed to access */
+-	struct dentry			*d_parent;
+-	struct dentry			**d_children;
++	struct eventfs_inode		*parent;
+ 	struct eventfs_attr		*entry_attrs;
+ 	struct eventfs_attr		attr;
+ 	void				*data;
++	struct kref			kref;
+ 	unsigned int			is_freed:1;
+ 	unsigned int			is_events:1;
+ 	unsigned int			nr_entries:30;
+
