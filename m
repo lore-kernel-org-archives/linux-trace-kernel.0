@@ -1,122 +1,329 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745895915C
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 397DA5821A;
+	Tue, 30 Jan 2024 09:19:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706605948; cv=none; b=NcUXBjI3dL4c+nj4CrSDuAAGoVrx9pdSgEIN/iF7nfqLbaxd+K4UtROy1G/KSR4sAdh8+JC7SQH9V2JG+Jovf4fpgZhVg4fTqCGopF+4Vz91iRBRCVjgvbOXNtOcKNf/xYR17hMFeGurv3cYKDiOh5Tl6hgfHYwlEMhPnZBcqgU=
+	t=1706606354; cv=none; b=fD40v8V7tFO8FQlySS+DvEGgm+zaEWrMdyjcqCCUJkymy4F0p5EBT0WfJ0+cC+y9/DuFB3YuOl7GQLTHQ+gDICzl6BakY/um8eApJFu49yPpFav5xDuTYkJqWuryIkZRSBaR3FVFwMYGBCxw7wrrFd5R1yCiFm2MJqjXeQ8nd+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706605948; c=relaxed/simple;
-	bh=2DIY+lL0JwPloAko6mVPmoNJ4C898Ios+yVnwFsSQws=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KMlb4aWGPUKaXXU8cDizE9gT+FeaTxI8RrLjveneey8evLD174LU9T5NNVL0AOvLsFPYq+JiiduzrpuMRQio/M/Qs8LvFG+XFKNt+JmVceyHN1yS4ZDoUPTBU2ZL/B6EGcHPACMcsjveE1THNe5KTmM3b70ez+Om80tPULTuHzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=QKOG1Tq9; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="QKOG1Tq9"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-55ee9805da7so2647808a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 01:12:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1706605944; x=1707210744; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OJ62OXvXVngPLK5bvC/N3snsj6IMt9f3ZjXYsKK3MQk=;
-        b=QKOG1Tq9+hXRzKv8cisDBTgJOZep5Kx4opUjVxcLN2EEyXXBkziOLDGl697wld3zAZ
-         JINU6VShz0wuVKi8rC8pmEDMdMRUtpqN+lANGKtvcheXcpD6zEqgsGstUl7MMHuVHM0v
-         L+I5yHEZn9oMvSRjTVkHFO0ANpqYEAWQTYcs8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706605944; x=1707210744;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OJ62OXvXVngPLK5bvC/N3snsj6IMt9f3ZjXYsKK3MQk=;
-        b=tqOOV1carwRR3WE5Mw3euwZc84zEQ4AN9WsSXESbtc4vYARw/u6ujsRO20eoWw+dkU
-         4Fxi4b4BJ01NaiIQXTL8XP8jQV/w0aMdk+Y/Oo/Ct8HuH3f+jgDl8rcEu9aEo551hcmZ
-         +px+sYQOVqprU2tCp2ekGMZo53bV8ozQ1kFuwegeCGYvdX/8akkOR8uz16X1XHf1qEg+
-         xHOrmO+dC2yQmXj2I60EM9TaJ+8cXR8q6gpyI1DDbHK/iXRI6H4zrsleIE9p881sX76C
-         yZ/TzRevymACr/e1bjlDFdyVmIzbrvdXaLKBZw3gsxQr5N7wMYDQUAMUSneiXJUl+uXF
-         FEmA==
-X-Gm-Message-State: AOJu0YwZBdxjqDsHeWq/wsLmTyG7E9V8GrXroJvbl1GQyjCo5iV48U6H
-	jDgSA3rvXNMdtrznUjqUTLnEQ1ktU4ZYyrnUP28FjIGHUtAH6RLOvgQhhbTBGR2qAWQtBVKFsQq
-	vcagEcQ==
-X-Google-Smtp-Source: AGHT+IHbEqfS3Epv5z+QsruHblsh0KkNS/VW/irQQqa2SomNO9ax3vibsnE/aP/aLwfzLtH6q+ai8w==
-X-Received: by 2002:a17:906:f14f:b0:a35:f054:7589 with SMTP id gw15-20020a170906f14f00b00a35f0547589mr2454216ejb.10.1706605943738;
-        Tue, 30 Jan 2024 01:12:23 -0800 (PST)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
-        by smtp.gmail.com with ESMTPSA id s16-20020a17090699d000b00a355a34f1f3sm3414945ejn.225.2024.01.30.01.12.22
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jan 2024 01:12:23 -0800 (PST)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-55a035669d5so4704476a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 01:12:22 -0800 (PST)
-X-Received: by 2002:a05:6402:1910:b0:55e:f740:4f39 with SMTP id
- e16-20020a056402191000b0055ef7404f39mr4388911edz.22.1706605941604; Tue, 30
- Jan 2024 01:12:21 -0800 (PST)
+	s=arc-20240116; t=1706606354; c=relaxed/simple;
+	bh=96TAfdDkpHCSucUS9AjQOlifrvIEsXlMGa/QpT4c67U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tGZJKOo+ShcY5XUJ61m/HZoC+k5iIhBipQpFxcQpP/0llzZKsFp1gKmJBdL2KWH6Z/GBEDpTQk3eZ4LQ5MMRnpzbgmRVEk0L7+GiX+OfH9VfsQbeb1J+IUhmzDdp8XedelEaXZaeARF8RPsti208RUGfVtiyoSw60KgopQqhMgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B99EBDA7;
+	Tue, 30 Jan 2024 01:19:52 -0800 (PST)
+Received: from [10.163.41.110] (unknown [10.163.41.110])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 860293F738;
+	Tue, 30 Jan 2024 01:18:56 -0800 (PST)
+Message-ID: <598c9762-83b3-4517-858c-8349d6dceec2@arm.com>
+Date: Tue, 30 Jan 2024 14:48:53 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202401291043.e62e89dc-oliver.sang@intel.com> <CAHk-=wh0M=e8R=ZXxa4vesLTtvGmYWJ-w1VmXxW5Mva=Nimk4Q@mail.gmail.com>
- <20240129120125.605e97af@gandalf.local.home> <CAHk-=wghx8Abyx_jcSrCDuNj96SuWS0NvNMhfU8VjFGg9bgm_g@mail.gmail.com>
- <CAHk-=whb91PWEaEJpRGsuWaQpYZGj98ji8HC2vvHD4xb_TqhJw@mail.gmail.com>
- <CAHk-=wgp7UkG31=cCcbSdhMv6-vBJ=orktUOUdiLzw4tQ4gDLg@mail.gmail.com>
- <20240129152600.7587d1aa@gandalf.local.home> <CAHk-=wghobf5qCqNUsafkQzNAZBJiS0=7CRjNXNChpoAvTbvUw@mail.gmail.com>
- <20240129172200.1725f01b@gandalf.local.home> <CAHk-=wjV6+U1FQ8wzQ5ASmqGgby+GZ6wpdh0NrJgA43mc+TEwA@mail.gmail.com>
- <CAHk-=wgOxTeTi02C=kOXsHzuD6XCrV0L1zk1XP9t+a4Wx--xvA@mail.gmail.com>
- <20240129174950.5a17a86c@gandalf.local.home> <CAHk-=wjbzw3=nwR5zGH9jqXgB8jj03wxWfdFDn=oAVCoymQQJg@mail.gmail.com>
- <20240129193549.265f32c8@gandalf.local.home> <CAHk-=whRxcmjvGNBKi9_x59cAedh8SO8wsNDNrEQbAQfM5A8CQ@mail.gmail.com>
- <CAHk-=wh97AkwaOkXoBgf0z8EP88ePffLnTcmmQXcY+AhFaFrnA@mail.gmail.com> <CAHk-=wi6m7d-nivx10Lo=aGhbdk2qg-8SzjtDd9XW01LxGgAMA@mail.gmail.com>
-In-Reply-To: <CAHk-=wi6m7d-nivx10Lo=aGhbdk2qg-8SzjtDd9XW01LxGgAMA@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 30 Jan 2024 01:12:05 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wi+WbXZcc2Sx1i-MGV2DfG4eS4Ci+mrqi-PBSLSnww6qA@mail.gmail.com>
-Message-ID: <CAHk-=wi+WbXZcc2Sx1i-MGV2DfG4eS4Ci+mrqi-PBSLSnww6qA@mail.gmail.com>
-Subject: Re: [linus:master] [eventfs] 852e46e239: BUG:unable_to_handle_page_fault_for_address
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel.com, 
-	linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Ajay Kaher <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v3 10/35] mm: cma: Fast track allocating memory when
+ the pages are free
+Content-Language: en-US
+To: Alexandru Elisei <alexandru.elisei@arm.com>, catalin.marinas@arm.com,
+ will@kernel.org, oliver.upton@linux.dev, maz@kernel.org,
+ james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
+ arnd@arndb.de, akpm@linux-foundation.org, mingo@redhat.com,
+ peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+ mhiramat@kernel.org, rppt@kernel.org, hughd@google.com
+Cc: pcc@google.com, steven.price@arm.com, vincenzo.frascino@arm.com,
+ david@redhat.com, eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20240125164256.4147-1-alexandru.elisei@arm.com>
+ <20240125164256.4147-11-alexandru.elisei@arm.com>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20240125164256.4147-11-alexandru.elisei@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 30 Jan 2024 at 00:43, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> I'll go back to bed, but I think the fix is something trivial like this:
 
-Almost.
 
->   +     result = ERR_PTR(ENOENT);
+On 1/25/24 22:12, Alexandru Elisei wrote:
+> If the pages to be allocated are free, take them directly off the buddy
+> allocator, instead of going through alloc_contig_range() and avoiding
+> costly calls to lru_cache_disable().
+> 
+> Only allocations of the same size as the CMA region order are considered,
+> to avoid taking the zone spinlock for too long.
+> 
+> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
 
-That needs a '-' in front of the ENOENT, otherwise you have a positive
-error number and things go wrong very quickly.
+This patch seems to be improving standard cma_alloc() as well as
+the previously added new allocator i.e cma_alloc_range() - via a
+new helper cma_alloc_pages_fastpath().
 
-And that does indeed fix the lookup problem, but you end up with the
-same problem later when you do the eventfs_remove_dir(). Again the
-eventfs data structure changes, but we don't have a reliable dentry
-that we can invalidate.
+Should not any standard cma_alloc() improvement be discussed as
+an independent patch separately irrespective of this series. OR
+it is some how related to this series which I might be missing ?
 
-The dentry cache is just very good at caching those old dentries, and
-the interface for eventfs_create_dir() and eventfs_remove_dir() is
-just not great.
-
-If those did an actual path lookup (like eventfs_create_events_dir()
-does), we'd have the dentry, and it's trivial to get from dentry to
-eventfs_inode.
-
-But going the other way is the broken thing because of how the
-dentries are just temporary caches.
-
-I suspect the solution is to make eventfs_create_dir() do the same as
-the events directory case does, and actually pin the directory dentry
-and save it off.
-
-Oh well. At least I understand what the problem is. Now I'm going to
-try to go back to sleep.
-
-              Linus
+> ---
+> 
+> Changes since rfc v2:
+> 
+> * New patch. Reworked from the rfc v2 patch #26 ("arm64: mte: Fast track
+> reserving tag storage when the block is free") (David Hildenbrand).
+> 
+>  include/linux/page-flags.h | 15 ++++++++++++--
+>  mm/Kconfig                 |  5 +++++
+>  mm/cma.c                   | 42 ++++++++++++++++++++++++++++++++++----
+>  mm/memory-failure.c        |  8 ++++----
+>  mm/page_alloc.c            | 23 ++++++++++++---------
+>  5 files changed, 73 insertions(+), 20 deletions(-)
+> 
+> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+> index 735cddc13d20..b7237bce7446 100644
+> --- a/include/linux/page-flags.h
+> +++ b/include/linux/page-flags.h
+> @@ -575,11 +575,22 @@ TESTSCFLAG(HWPoison, hwpoison, PF_ANY)
+>  #define MAGIC_HWPOISON	0x48575053U	/* HWPS */
+>  extern void SetPageHWPoisonTakenOff(struct page *page);
+>  extern void ClearPageHWPoisonTakenOff(struct page *page);
+> -extern bool take_page_off_buddy(struct page *page);
+> -extern bool put_page_back_buddy(struct page *page);
+> +extern bool PageHWPoisonTakenOff(struct page *page);
+>  #else
+>  PAGEFLAG_FALSE(HWPoison, hwpoison)
+> +TESTSCFLAG_FALSE(HWPoison, hwpoison)
+>  #define __PG_HWPOISON 0
+> +static inline void SetPageHWPoisonTakenOff(struct page *page) { }
+> +static inline void ClearPageHWPoisonTakenOff(struct page *page) { }
+> +static inline bool PageHWPoisonTakenOff(struct page *page)
+> +{
+> +      return false;
+> +}
+> +#endif
+> +
+> +#ifdef CONFIG_WANTS_TAKE_PAGE_OFF_BUDDY
+> +extern bool take_page_off_buddy(struct page *page, bool poison);
+> +extern bool put_page_back_buddy(struct page *page, bool unpoison);
+>  #endif
+>  
+>  #if defined(CONFIG_PAGE_IDLE_FLAG) && defined(CONFIG_64BIT)
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index ffc3a2ba3a8c..341cf53898db 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -745,12 +745,16 @@ config DEFAULT_MMAP_MIN_ADDR
+>  config ARCH_SUPPORTS_MEMORY_FAILURE
+>  	bool
+>  
+> +config WANTS_TAKE_PAGE_OFF_BUDDY
+> +	bool> +
+>  config MEMORY_FAILURE
+>  	depends on MMU
+>  	depends on ARCH_SUPPORTS_MEMORY_FAILURE
+>  	bool "Enable recovery from hardware memory errors"
+>  	select MEMORY_ISOLATION
+>  	select RAS
+> +	select WANTS_TAKE_PAGE_OFF_BUDDY
+>  	help
+>  	  Enables code to recover from some memory failures on systems
+>  	  with MCA recovery. This allows a system to continue running
+> @@ -891,6 +895,7 @@ config CMA
+>  	depends on MMU
+>  	select MIGRATION
+>  	select MEMORY_ISOLATION
+> +	select WANTS_TAKE_PAGE_OFF_BUDDY
+>  	help
+>  	  This enables the Contiguous Memory Allocator which allows other
+>  	  subsystems to allocate big physically-contiguous blocks of memory.
+> diff --git a/mm/cma.c b/mm/cma.c
+> index 2881bab12b01..15663f95d77b 100644
+> --- a/mm/cma.c
+> +++ b/mm/cma.c
+> @@ -444,6 +444,34 @@ static void cma_debug_show_areas(struct cma *cma)
+>  static inline void cma_debug_show_areas(struct cma *cma) { }
+>  #endif
+>  
+> +/* Called with the cma mutex held. */
+> +static int cma_alloc_pages_fastpath(struct cma *cma, unsigned long start,
+> +				    unsigned long end)
+> +{
+> +	bool success = false;
+> +	unsigned long i, j;
+> +
+> +	/* Avoid contention on the zone lock. */
+> +	if (start - end != 1 << cma->order_per_bit)
+> +		return -EINVAL;
+> +
+> +	for (i = start; i < end; i++) {
+> +		if (!is_free_buddy_page(pfn_to_page(i)))
+> +			break;
+> +		success = take_page_off_buddy(pfn_to_page(i), false);
+> +		if (!success)
+> +			break;
+> +	}
+> +
+> +	if (success)
+> +		return 0;
+> +
+> +	for (j = start; j < i; j++)
+> +		put_page_back_buddy(pfn_to_page(j), false);
+> +
+> +	return -EBUSY;
+> +}
+> +
+>  /**
+>   * cma_alloc_range() - allocate pages in a specific range
+>   * @cma:   Contiguous memory region for which the allocation is performed.
+> @@ -493,7 +521,11 @@ int cma_alloc_range(struct cma *cma, unsigned long start, unsigned long count,
+>  
+>  	for (i = 0; i < tries; i++) {
+>  		mutex_lock(&cma_mutex);
+> -		err = alloc_contig_range(start, start + count, MIGRATE_CMA, gfp);
+> +		err = cma_alloc_pages_fastpath(cma, start, start + count);
+> +		if (err) {
+> +			err = alloc_contig_range(start, start + count,
+> +						 MIGRATE_CMA, gfp);
+> +		}
+>  		mutex_unlock(&cma_mutex);
+>  
+>  		if (err != -EBUSY)
+> @@ -529,7 +561,6 @@ int cma_alloc_range(struct cma *cma, unsigned long start, unsigned long count,
+>  	return err;
+>  }
+>  
+> -
+>  /**
+>   * cma_alloc() - allocate pages from contiguous area
+>   * @cma:   Contiguous memory region for which the allocation is performed.
+> @@ -589,8 +620,11 @@ struct page *cma_alloc(struct cma *cma, unsigned long count,
+>  
+>  		pfn = cma->base_pfn + (bitmap_no << cma->order_per_bit);
+>  		mutex_lock(&cma_mutex);
+> -		ret = alloc_contig_range(pfn, pfn + count, MIGRATE_CMA,
+> -				     GFP_KERNEL | (no_warn ? __GFP_NOWARN : 0));
+> +		ret = cma_alloc_pages_fastpath(cma, pfn, pfn + count);
+> +		if (ret) {
+> +			ret = alloc_contig_range(pfn, pfn + count, MIGRATE_CMA,
+> +					GFP_KERNEL | (no_warn ? __GFP_NOWARN : 0));
+> +		}
+>  		mutex_unlock(&cma_mutex);
+>  		if (ret == 0) {
+>  			page = pfn_to_page(pfn);
+> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> index 4f9b61f4a668..b87b533a9871 100644
+> --- a/mm/memory-failure.c
+> +++ b/mm/memory-failure.c
+> @@ -157,7 +157,7 @@ static int __page_handle_poison(struct page *page)
+>  	zone_pcp_disable(page_zone(page));
+>  	ret = dissolve_free_huge_page(page);
+>  	if (!ret)
+> -		ret = take_page_off_buddy(page);
+> +		ret = take_page_off_buddy(page, true);
+>  	zone_pcp_enable(page_zone(page));
+>  
+>  	return ret;
+> @@ -1353,7 +1353,7 @@ static int page_action(struct page_state *ps, struct page *p,
+>  	return action_result(pfn, ps->type, result);
+>  }
+>  
+> -static inline bool PageHWPoisonTakenOff(struct page *page)
+> +bool PageHWPoisonTakenOff(struct page *page)
+>  {
+>  	return PageHWPoison(page) && page_private(page) == MAGIC_HWPOISON;
+>  }
+> @@ -2247,7 +2247,7 @@ int memory_failure(unsigned long pfn, int flags)
+>  		res = get_hwpoison_page(p, flags);
+>  		if (!res) {
+>  			if (is_free_buddy_page(p)) {
+> -				if (take_page_off_buddy(p)) {
+> +				if (take_page_off_buddy(p, true)) {
+>  					page_ref_inc(p);
+>  					res = MF_RECOVERED;
+>  				} else {
+> @@ -2578,7 +2578,7 @@ int unpoison_memory(unsigned long pfn)
+>  		ret = folio_test_clear_hwpoison(folio) ? 0 : -EBUSY;
+>  	} else if (ghp < 0) {
+>  		if (ghp == -EHWPOISON) {
+> -			ret = put_page_back_buddy(p) ? 0 : -EBUSY;
+> +			ret = put_page_back_buddy(p, true) ? 0 : -EBUSY;
+>  		} else {
+>  			ret = ghp;
+>  			unpoison_pr_info("Unpoison: failed to grab page %#lx\n",
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 0fa34bcfb1af..502ee3eb8583 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -6655,7 +6655,7 @@ bool is_free_buddy_page(struct page *page)
+>  }
+>  EXPORT_SYMBOL(is_free_buddy_page);
+>  
+> -#ifdef CONFIG_MEMORY_FAILURE
+> +#ifdef CONFIG_WANTS_TAKE_PAGE_OFF_BUDDY
+>  /*
+>   * Break down a higher-order page in sub-pages, and keep our target out of
+>   * buddy allocator.
+> @@ -6687,9 +6687,9 @@ static void break_down_buddy_pages(struct zone *zone, struct page *page,
+>  }
+>  
+>  /*
+> - * Take a page that will be marked as poisoned off the buddy allocator.
+> + * Take a page off the buddy allocator, and optionally mark it as poisoned.
+>   */
+> -bool take_page_off_buddy(struct page *page)
+> +bool take_page_off_buddy(struct page *page, bool poison)
+>  {
+>  	struct zone *zone = page_zone(page);
+>  	unsigned long pfn = page_to_pfn(page);
+> @@ -6710,7 +6710,8 @@ bool take_page_off_buddy(struct page *page)
+>  			del_page_from_free_list(page_head, zone, page_order);
+>  			break_down_buddy_pages(zone, page_head, page, 0,
+>  						page_order, migratetype);
+> -			SetPageHWPoisonTakenOff(page);
+> +			if (poison)
+> +				SetPageHWPoisonTakenOff(page);
+>  			if (!is_migrate_isolate(migratetype))
+>  				__mod_zone_freepage_state(zone, -1, migratetype);
+>  			ret = true;
+> @@ -6724,9 +6725,10 @@ bool take_page_off_buddy(struct page *page)
+>  }
+>  
+>  /*
+> - * Cancel takeoff done by take_page_off_buddy().
+> + * Cancel takeoff done by take_page_off_buddy(), and optionally unpoison the
+> + * page.
+>   */
+> -bool put_page_back_buddy(struct page *page)
+> +bool put_page_back_buddy(struct page *page, bool unpoison)
+>  {
+>  	struct zone *zone = page_zone(page);
+>  	unsigned long pfn = page_to_pfn(page);
+> @@ -6736,17 +6738,18 @@ bool put_page_back_buddy(struct page *page)
+>  
+>  	spin_lock_irqsave(&zone->lock, flags);
+>  	if (put_page_testzero(page)) {
+> -		ClearPageHWPoisonTakenOff(page);
+> +		VM_WARN_ON_ONCE(PageHWPoisonTakenOff(page) && !unpoison);
+> +		if (unpoison)
+> +			ClearPageHWPoisonTakenOff(page);
+>  		__free_one_page(page, pfn, zone, 0, migratetype, FPI_NONE);
+> -		if (TestClearPageHWPoison(page)) {
+> +		if (!unpoison || (unpoison && TestClearPageHWPoison(page)))
+>  			ret = true;
+> -		}
+>  	}
+>  	spin_unlock_irqrestore(&zone->lock, flags);
+>  
+>  	return ret;
+>  }
+> -#endif
+> +#endif /* CONFIG_WANTS_TAKE_PAGE_OFF_BUDDY */
+>  
+>  #ifdef CONFIG_ZONE_DMA
+>  bool has_managed_dma(void)
