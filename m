@@ -1,59 +1,59 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8978B60B9F
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 08:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745895915C
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 09:12:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706604247; cv=none; b=W3B/leRJ7z8/CPNn+aNuXpkjgGnM4d149V2vmvZTLYCWVyAwzVslMQPEU0k/xuFijx5OhT0KqIZN0suyr5ff2juM0KMo2QwqP5h3BwGJ/rAZVGeoPTCYMc3YYaWMQKAAxfM0swDuo0WIRT/2Pl4B+BQ7aZjdm/vrLn/WDzkzST4=
+	t=1706605948; cv=none; b=NcUXBjI3dL4c+nj4CrSDuAAGoVrx9pdSgEIN/iF7nfqLbaxd+K4UtROy1G/KSR4sAdh8+JC7SQH9V2JG+Jovf4fpgZhVg4fTqCGopF+4Vz91iRBRCVjgvbOXNtOcKNf/xYR17hMFeGurv3cYKDiOh5Tl6hgfHYwlEMhPnZBcqgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706604247; c=relaxed/simple;
-	bh=fh3Oobbo3ozn7qKP0JOFPHWneqBQFpX8St5WanXUNXo=;
+	s=arc-20240116; t=1706605948; c=relaxed/simple;
+	bh=2DIY+lL0JwPloAko6mVPmoNJ4C898Ios+yVnwFsSQws=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CdXtEb2I0RQ5iTSDlMBMfGf4GjBgSQkxP6uUyt7mMc9DdYRIoSMXIE+v9UpLdUgvhujj66ourbWFJFhmdH2oEP+XYjLa10pNpuKj7EjOGt/ANxF8EOJIqih3S/LLWlh9ccz3epnBNEHnPty9MEAhd6FrCVz5Tw5OOaSChWWaYO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Y3lnMCoU; arc=none smtp.client-ip=209.85.167.42
+	 To:Cc:Content-Type; b=KMlb4aWGPUKaXXU8cDizE9gT+FeaTxI8RrLjveneey8evLD174LU9T5NNVL0AOvLsFPYq+JiiduzrpuMRQio/M/Qs8LvFG+XFKNt+JmVceyHN1yS4ZDoUPTBU2ZL/B6EGcHPACMcsjveE1THNe5KTmM3b70ez+Om80tPULTuHzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=QKOG1Tq9; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Y3lnMCoU"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5102bbe87afso3023730e87.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 00:44:05 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="QKOG1Tq9"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-55ee9805da7so2647808a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 01:12:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1706604243; x=1707209043; darn=vger.kernel.org;
+        d=linux-foundation.org; s=google; t=1706605944; x=1707210744; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=IQ+AzAqTf7hVYM2GdeV6bNXU4qpra1WyPgLqP0lu0rA=;
-        b=Y3lnMCoU9RhnkxVUn3s32tkfMTSg4fCmLZlJ7LW1BYYf5lpCQ66+sAk2yfHea7pU4m
-         8+K8f+te9vwXW/c9bIGuJsxQZ/mKAXSueKjdIgomXXaXjJNcjVyihi+lVEjZuNb9MPx8
-         gZnd+mTx8pd9xRV+4zwVDx6oFxPDj42bMJi6E=
+        bh=OJ62OXvXVngPLK5bvC/N3snsj6IMt9f3ZjXYsKK3MQk=;
+        b=QKOG1Tq9+hXRzKv8cisDBTgJOZep5Kx4opUjVxcLN2EEyXXBkziOLDGl697wld3zAZ
+         JINU6VShz0wuVKi8rC8pmEDMdMRUtpqN+lANGKtvcheXcpD6zEqgsGstUl7MMHuVHM0v
+         L+I5yHEZn9oMvSRjTVkHFO0ANpqYEAWQTYcs8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706604243; x=1707209043;
+        d=1e100.net; s=20230601; t=1706605944; x=1707210744;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=IQ+AzAqTf7hVYM2GdeV6bNXU4qpra1WyPgLqP0lu0rA=;
-        b=rdlhHScpMGc4xjLJyrj879ye6WRsT4NNSBpxo2/hh/Zvbth7XaEb3Zu4eLNlZMNNo4
-         GKc0UKA46XprQZ7fS+K2wXgP3Kvm6kj/AX8yOqoOmvbYGO/agC0gqZmMMo8BgcCGP/gC
-         IWgjCL0NGcSCexuxnfRWq6P5eN4gi712wE8UFXwDPPIfH+1ojFMIGBfLeX2n/Mdn14G9
-         Pd3o+WNx1W37NhUjn0SH2Y3FCu8mIWnqIb694r7dMbgKRsyQleTx9PE+GuL8Ubmwkqsr
-         betv6kags0Yn5p6cMCznUwXMV3UUm/Px4JVuo6iDSOky7z+FhcczNHUTjs6nBUDJjvQN
-         AMpw==
-X-Gm-Message-State: AOJu0Yz8W8VlDCofgjsTcYuaoqSnVpKrrQXZitbIZ3x2XcJWbnBmnbbP
-	m7TnKYZGhoL2CDEN1uJSe+JdYeRWF3P3E0UhBTcO2qVrAEC6SF4FHZiMkedevn4xDKivHOC46f+
-	jxEY=
-X-Google-Smtp-Source: AGHT+IEqz9C5aBidNPClX8VgBrD1Te8xmWyXryZU4JqDSWxtv66ZIsZ9/zPt+JRPLWZftGHwSu2PAA==
-X-Received: by 2002:ac2:4899:0:b0:50e:50ac:2c84 with SMTP id x25-20020ac24899000000b0050e50ac2c84mr4725468lfc.51.1706604243121;
-        Tue, 30 Jan 2024 00:44:03 -0800 (PST)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id n28-20020a056512311c00b0050e80fe2ed0sm1283946lfb.8.2024.01.30.00.44.02
+        bh=OJ62OXvXVngPLK5bvC/N3snsj6IMt9f3ZjXYsKK3MQk=;
+        b=tqOOV1carwRR3WE5Mw3euwZc84zEQ4AN9WsSXESbtc4vYARw/u6ujsRO20eoWw+dkU
+         4Fxi4b4BJ01NaiIQXTL8XP8jQV/w0aMdk+Y/Oo/Ct8HuH3f+jgDl8rcEu9aEo551hcmZ
+         +px+sYQOVqprU2tCp2ekGMZo53bV8ozQ1kFuwegeCGYvdX/8akkOR8uz16X1XHf1qEg+
+         xHOrmO+dC2yQmXj2I60EM9TaJ+8cXR8q6gpyI1DDbHK/iXRI6H4zrsleIE9p881sX76C
+         yZ/TzRevymACr/e1bjlDFdyVmIzbrvdXaLKBZw3gsxQr5N7wMYDQUAMUSneiXJUl+uXF
+         FEmA==
+X-Gm-Message-State: AOJu0YwZBdxjqDsHeWq/wsLmTyG7E9V8GrXroJvbl1GQyjCo5iV48U6H
+	jDgSA3rvXNMdtrznUjqUTLnEQ1ktU4ZYyrnUP28FjIGHUtAH6RLOvgQhhbTBGR2qAWQtBVKFsQq
+	vcagEcQ==
+X-Google-Smtp-Source: AGHT+IHbEqfS3Epv5z+QsruHblsh0KkNS/VW/irQQqa2SomNO9ax3vibsnE/aP/aLwfzLtH6q+ai8w==
+X-Received: by 2002:a17:906:f14f:b0:a35:f054:7589 with SMTP id gw15-20020a170906f14f00b00a35f0547589mr2454216ejb.10.1706605943738;
+        Tue, 30 Jan 2024 01:12:23 -0800 (PST)
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
+        by smtp.gmail.com with ESMTPSA id s16-20020a17090699d000b00a355a34f1f3sm3414945ejn.225.2024.01.30.01.12.22
         for <linux-trace-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jan 2024 00:44:02 -0800 (PST)
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5101f2dfdadso6345254e87.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 00:44:02 -0800 (PST)
-X-Received: by 2002:a05:651c:1cc:b0:2d0:4ef8:3472 with SMTP id
- d12-20020a05651c01cc00b002d04ef83472mr3848048ljn.47.1706604241691; Tue, 30
- Jan 2024 00:44:01 -0800 (PST)
+        Tue, 30 Jan 2024 01:12:23 -0800 (PST)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-55a035669d5so4704476a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 01:12:22 -0800 (PST)
+X-Received: by 2002:a05:6402:1910:b0:55e:f740:4f39 with SMTP id
+ e16-20020a056402191000b0055ef7404f39mr4388911edz.22.1706605941604; Tue, 30
+ Jan 2024 01:12:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -69,12 +69,12 @@ References: <202401291043.e62e89dc-oliver.sang@intel.com> <CAHk-=wh0M=e8R=ZXxa4v
  <CAHk-=wgOxTeTi02C=kOXsHzuD6XCrV0L1zk1XP9t+a4Wx--xvA@mail.gmail.com>
  <20240129174950.5a17a86c@gandalf.local.home> <CAHk-=wjbzw3=nwR5zGH9jqXgB8jj03wxWfdFDn=oAVCoymQQJg@mail.gmail.com>
  <20240129193549.265f32c8@gandalf.local.home> <CAHk-=whRxcmjvGNBKi9_x59cAedh8SO8wsNDNrEQbAQfM5A8CQ@mail.gmail.com>
- <CAHk-=wh97AkwaOkXoBgf0z8EP88ePffLnTcmmQXcY+AhFaFrnA@mail.gmail.com>
-In-Reply-To: <CAHk-=wh97AkwaOkXoBgf0z8EP88ePffLnTcmmQXcY+AhFaFrnA@mail.gmail.com>
+ <CAHk-=wh97AkwaOkXoBgf0z8EP88ePffLnTcmmQXcY+AhFaFrnA@mail.gmail.com> <CAHk-=wi6m7d-nivx10Lo=aGhbdk2qg-8SzjtDd9XW01LxGgAMA@mail.gmail.com>
+In-Reply-To: <CAHk-=wi6m7d-nivx10Lo=aGhbdk2qg-8SzjtDd9XW01LxGgAMA@mail.gmail.com>
 From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 30 Jan 2024 00:43:44 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wi6m7d-nivx10Lo=aGhbdk2qg-8SzjtDd9XW01LxGgAMA@mail.gmail.com>
-Message-ID: <CAHk-=wi6m7d-nivx10Lo=aGhbdk2qg-8SzjtDd9XW01LxGgAMA@mail.gmail.com>
+Date: Tue, 30 Jan 2024 01:12:05 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wi+WbXZcc2Sx1i-MGV2DfG4eS4Ci+mrqi-PBSLSnww6qA@mail.gmail.com>
+Message-ID: <CAHk-=wi+WbXZcc2Sx1i-MGV2DfG4eS4Ci+mrqi-PBSLSnww6qA@mail.gmail.com>
 Subject: Re: [linus:master] [eventfs] 852e46e239: BUG:unable_to_handle_page_fault_for_address
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel.com, 
@@ -84,64 +84,39 @@ Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel
 	Ajay Kaher <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 29 Jan 2024 at 19:56, Linus Torvalds
+On Tue, 30 Jan 2024 at 00:43, Linus Torvalds
 <torvalds@linux-foundation.org> wrote:
 >
-> But I've been staring at this code for too long, so I'm posting this
-> just as a "it's broken, but _something_ like this", because I'm taking
-> a break from looking at this.
+> I'll go back to bed, but I think the fix is something trivial like this:
 
-Bah. I literally woke up and realized what the problem is.
+Almost.
 
-We're caching negative dentries, but eventfs_create_dir() has no way
-to invalidate the old negative dentry when it adds a new entry.
+>   +     result = ERR_PTR(ENOENT);
 
-The old "try to reuse dentry" ended up hiding that issue, because it
-would look up the negative dentry from the 'ei' and turn it into a
-positive one.
+That needs a '-' in front of the ENOENT, otherwise you have a positive
+error number and things go wrong very quickly.
 
-And I was stupidly staring at the wrong code - all these functions
-with almost the same names.
+And that does indeed fix the lookup problem, but you end up with the
+same problem later when you do the eventfs_remove_dir(). Again the
+eventfs data structure changes, but we don't have a reliable dentry
+that we can invalidate.
 
-eventfs_create_events_dir() is fine, because it gets the parent as a
-dentry, so looking up the new dentry is trivial.
+The dentry cache is just very good at caching those old dentries, and
+the interface for eventfs_create_dir() and eventfs_remove_dir() is
+just not great.
 
-But eventfs_create_dir() doesn't get a dentry at all. It gets the parent as a
+If those did an actual path lookup (like eventfs_create_events_dir()
+does), we'd have the dentry, and it's trivial to get from dentry to
+eventfs_inode.
 
-  struct eventfs_inode *parent
+But going the other way is the broken thing because of how the
+dentries are just temporary caches.
 
-which is no good.
+I suspect the solution is to make eventfs_create_dir() do the same as
+the events directory case does, and actually pin the directory dentry
+and save it off.
 
-So that explains why creating an event after deleting an old one - or
-after just looking it up before it was created - ends up with the
-nonsensical "ls" output - it gets listed by readdir() because the
-entry is there in the eventfs data structures, but then doing a
-"stat()" on it will just hit the negative dentry. So it won't actually
-look up the dentry.
+Oh well. At least I understand what the problem is. Now I'm going to
+try to go back to sleep.
 
-The simple solution is probably just to not cache negative dentries
-for eventfs.  So instead of doing the "d_add(dentry, NULL);" we should
-just return "ERR_PTR(ENOENT)".
-
-Which is actually what /proc/<pid> lookups do, for the same reason.
-
-I'll go back to bed, but I think the fix is something trivial like this:
-
-  --- a/fs/tracefs/event_inode.c
-  +++ b/fs/tracefs/event_inode.c
-  @@ -517,9 +517,8 @@ static struct dentry *eventfs_root_lookup(
-        }
-
-    enoent:
-  -     /* Nothing found? */
-  -     d_add(dentry, NULL);
-  -     result = NULL;
-  +     /* Don't cache negative lookups, just return an error */
-  +     result = ERR_PTR(ENOENT);
-
-    out:
-        mutex_unlock(&eventfs_mutex);
-
-I just wanted to write it down when the likely solution struck me.
-
-               Linus
+              Linus
