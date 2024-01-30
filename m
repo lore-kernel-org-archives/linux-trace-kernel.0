@@ -1,156 +1,133 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A2BC67749;
-	Tue, 30 Jan 2024 11:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC8A6D1DB;
+	Tue, 30 Jan 2024 14:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706615904; cv=none; b=dec0yUD+lXfpx+6f+FvjHPL3gHbtCGumeBef8kKLl/soEj1lxFobnhES+P2MW8IqDQNFpBvQMS3ssNTy3cy3RUaawZ8imRLvCk8gxxbs6qSviPPnisluwzvEZDrWfmVAtrdt5nx5C+eXpyKWzc5x78/vVuVj9VePjWLLfqdfo1o=
+	t=1706623947; cv=none; b=Be6UtPMwxfPwQMTTYQHvH0MgsCk1Za1uG0k9REVus5XNmTKbSUPNPLXvURAlpNm1RbELLJWgSmAktuiFOb7QrvFIT2HIVFfiEs5O1onXUwQpxwG2QNJUUA4ky+dC3RnCJe4U1cDs/W9o+csIBTfz94JeOhg2FnAHxhNX7/R6Apw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706615904; c=relaxed/simple;
-	bh=jNHQrdd2Z4gnAKa15AMBURkRQv5zNH5s6N2REXaxEKA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q+OwI1oo1gwbxsV/fUGtpYEaQ40BGt1fiB5HCEo0EA0ShVhEibnKkJHdu6ii86kyPZLh//RWcsoyR6tvGkhkibfaGm1D5LqCectbU1xuAF5Ud93WhNRR4rEBnC5sHi7m71C+iw3lqHUCUfmoFwjQL5oMRNTtE09d6D5k9CEg+UY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E04CDA7;
-	Tue, 30 Jan 2024 03:59:05 -0800 (PST)
-Received: from raptor (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 878FB3F762;
-	Tue, 30 Jan 2024 03:58:15 -0800 (PST)
-Date: Tue, 30 Jan 2024 11:58:04 +0000
-From: Alexandru Elisei <alexandru.elisei@arm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
-	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
-	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
-	rppt@kernel.org, hughd@google.com, pcc@google.com,
-	steven.price@arm.com, vincenzo.frascino@arm.com, david@redhat.com,
-	eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v3 06/35] mm: cma: Make CMA_ALLOC_SUCCESS/FAIL count
- the number of pages
-Message-ID: <ZbjkTFEvSvyHNqmu@raptor>
-References: <20240125164256.4147-1-alexandru.elisei@arm.com>
- <20240125164256.4147-7-alexandru.elisei@arm.com>
- <0a71c87a-ae2c-4a61-8adb-3a51d6369b99@arm.com>
- <ZbeRQpGNnfXnjayQ@raptor>
- <2cb8288c-5378-4968-a75b-8462b41998c6@arm.com>
+	s=arc-20240116; t=1706623947; c=relaxed/simple;
+	bh=V1d6QnJih+bl/9yZ7PYqfSpDrBSlonUiSAcEhRy++04=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=F+2jdMIHiiGo0DG/8ZooS1XlqJJf6Wu/09Hu9hWBdjiM041K0alcepwzyQZ0vjnsnwDG178YW185apXPZgU2A8gQYHuZrgB53C/rkNsXBm014BdAoUepG3JgLYCHurP963NdrfThw2kf2RCGawB1AgezXkPbrhW6GxfV7Ay7tZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KBgKF1ie; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KBgKF1ie"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B393C433F1;
+	Tue, 30 Jan 2024 14:12:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706623946;
+	bh=V1d6QnJih+bl/9yZ7PYqfSpDrBSlonUiSAcEhRy++04=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KBgKF1iesVD7dHytxhDJzUvob9bKwNFiKD4xxQIZKRTvm8MP6mHAbTIV7WeFEHgaM
+	 suV8USZbVs81ycIPNBHXRgsnylcMONOhtcj/WpDF7dTG+IA8P/WuysjSnEutQUWgKb
+	 5Iio6T27L69Hb98/SP0JLrauij9sP3ibXOlcci+myryz1vTauSt7l94E4CSjvHffe5
+	 TcD5cbagkYTTimENli94EPX3BQfqcrpvGViA3zc2EEpXedYNTQJ8VFZuyTraS029Vy
+	 F5O5/66BoRoXfW5lNvX+9khjsGs6bkG0FAboc9hec6oW+SLSJ6sMF7FZlBxzbwoJPD
+	 /RR8KTbdmQsGA==
+Date: Tue, 30 Jan 2024 23:12:22 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Beau Belgrave <beaub@linux.microsoft.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH 2/4] tracing/user_events: Introduce multi-format events
+Message-Id: <20240130231222.1ff0777d13f6179ce4ada91f@kernel.org>
+In-Reply-To: <20240129172907.GA444-beaub@linux.microsoft.com>
+References: <20240123220844.928-1-beaub@linux.microsoft.com>
+	<20240123220844.928-3-beaub@linux.microsoft.com>
+	<20240127000104.7c98b34d295747ab1b084bd2@kernel.org>
+	<20240126191007.GA456-beaub@linux.microsoft.com>
+	<20240126150445.71c5d426@gandalf.local.home>
+	<20240129172907.GA444-beaub@linux.microsoft.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2cb8288c-5378-4968-a75b-8462b41998c6@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On Mon, 29 Jan 2024 09:29:07 -0800
+Beau Belgrave <beaub@linux.microsoft.com> wrote:
 
-On Tue, Jan 30, 2024 at 10:22:11AM +0530, Anshuman Khandual wrote:
-> 
-> 
-> On 1/29/24 17:21, Alexandru Elisei wrote:
-> > Hi,
+> On Fri, Jan 26, 2024 at 03:04:45PM -0500, Steven Rostedt wrote:
+> > On Fri, 26 Jan 2024 11:10:07 -0800
+> > Beau Belgrave <beaub@linux.microsoft.com> wrote:
 > > 
-> > On Mon, Jan 29, 2024 at 02:54:20PM +0530, Anshuman Khandual wrote:
-> >>
-> >>
-> >> On 1/25/24 22:12, Alexandru Elisei wrote:
-> >>> The CMA_ALLOC_SUCCESS, respectively CMA_ALLOC_FAIL, are increased by one
-> >>> after each cma_alloc() function call. This is done even though cma_alloc()
-> >>> can allocate an arbitrary number of CMA pages. When looking at
-> >>> /proc/vmstat, the number of successful (or failed) cma_alloc() calls
-> >>> doesn't tell much with regards to how many CMA pages were allocated via
-> >>> cma_alloc() versus via the page allocator (regular allocation request or
-> >>> PCP lists refill).
-> >>>
-> >>> This can also be rather confusing to a user who isn't familiar with the
-> >>> code, since the unit of measurement for nr_free_cma is the number of pages,
-> >>> but cma_alloc_success and cma_alloc_fail count the number of cma_alloc()
-> >>> function calls.
-> >>>
-> >>> Let's make this consistent, and arguably more useful, by having
-> >>> CMA_ALLOC_SUCCESS count the number of successfully allocated CMA pages, and
-> >>> CMA_ALLOC_FAIL count the number of pages the cma_alloc() failed to
-> >>> allocate.
-> >>>
-> >>> For users that wish to track the number of cma_alloc() calls, there are
-> >>> tracepoints for that already implemented.
-> >>>
-> >>> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
-> >>> ---
-> >>>  mm/cma.c | 4 ++--
-> >>>  1 file changed, 2 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/mm/cma.c b/mm/cma.c
-> >>> index f49c95f8ee37..dbf7fe8cb1bd 100644
-> >>> --- a/mm/cma.c
-> >>> +++ b/mm/cma.c
-> >>> @@ -517,10 +517,10 @@ struct page *cma_alloc(struct cma *cma, unsigned long count,
-> >>>  	pr_debug("%s(): returned %p\n", __func__, page);
-> >>>  out:
-> >>>  	if (page) {
-> >>> -		count_vm_event(CMA_ALLOC_SUCCESS);
-> >>> +		count_vm_events(CMA_ALLOC_SUCCESS, count);
-> >>>  		cma_sysfs_account_success_pages(cma, count);
-> >>>  	} else {
-> >>> -		count_vm_event(CMA_ALLOC_FAIL);
-> >>> +		count_vm_events(CMA_ALLOC_FAIL, count);
-> >>>  		if (cma)
-> >>>  			cma_sysfs_account_fail_pages(cma, count);
-> >>>  	}
-> >>
-> >> Without getting into the merits of this patch - which is actually trying to do
-> >> semantics change to /proc/vmstat, wondering how is this even related to this
-> >> particular series ? If required this could be debated on it's on separately.
+> > > > OK, so the each different event has suffixed name. But this will
+> > > > introduce non C-variable name.
+> > > > 
+> > > > Steve, do you think your library can handle these symbols? It will
+> > > > be something like "event:[1]" as the event name.
+> > > > Personally I like "event.1" style. (of course we need to ensure the
+> > > > user given event name is NOT including such suffix numbers)
+> > > >   
+> > > 
+> > > Just to clarify around events including a suffix number. This is why
+> > > multi-events use "user_events_multi" system name and the single-events
+> > > using just "user_events".
+> > > 
+> > > Even if a user program did include a suffix, the suffix would still get
+> > > appended. An example is "test" vs "test:[0]" using multi-format would
+> > > result in two tracepoints ("test:[0]" and "test:[0]:[1]" respectively
+> > > (assuming these are the first multi-events on the system).
+> > > 
+> > > I'm with you, we really don't want any spoofing or squatting possible.
+> > > By using different system names and always appending the suffix I
+> > > believe covers this.
+> > > 
+> > > Looking forward to hearing Steven's thoughts on this as well.
 > > 
-> > Having the number of CMA pages allocated and the number of CMA pages freed
-> > allows someone to infer how many tagged pages are in use at a given time:
-> 
-> That should not be done in CMA which is a generic multi purpose allocator.
-
-Ah, ok. Let me rephrase that: Having the number of CMA pages allocated, the
-number of failed CMA page allocations and the number of freed CMA pages
-allows someone to infer how many CMA pages are in use at a given time.
-That's valuable information for software designers and system
-administrators, as it allows them to tune the number of CMA pages available
-in a system.
-
-Or put another way: what would you consider to be more useful?  Knowing the
-number of cma_alloc()/cma_release() calls, or knowing the number of pages
-that cma_alloc()/cma_release() allocated or freed?
-
-> 
-> > (allocated CMA pages - CMA pages allocated by drivers* - CMA pages
-> > released) * 32. That is valuable information for software and hardware
-> > designers.
+> > I'm leaning towards Masami's suggestion to use dots, as that won't conflict
+> > with special characters from bash, as '[' and ']' do.
 > > 
-> > Besides that, for every iteration of the series, this has proven invaluable
-> > for discovering bugs with freeing and/or reserving tag storage pages.
 > 
-> I am afraid that might not be enough justification for getting something
-> merged mainline.
+> Thanks, yeah ideally we wouldn't use special characters.
 > 
-> > 
-> > *that would require userspace reading cma_alloc_success and
-> > cma_release_success before any tagged allocations are performed.
+> I'm not picky about this. However, I did want something that clearly
+> allowed a glob pattern to find all versions of a given register name of
+> user_events by user programs that record. The dot notation will pull in
+> more than expected if dotted namespace style names are used.
 > 
-> While assuming that no other non-memory-tagged CMA based allocation amd free
-> call happens in the meantime ? That would be on real thin ice.
-> 
-> I suppose arm64 tagged memory specific allocation or free related counters
-> need to be created on the caller side, including arch_free_pages_prepare().
+> An example is "Asserts" and "Asserts.Verbose" from different programs.
+> If we tried to find all versions of "Asserts" via glob of "Asserts.*" it
+> will pull in "Asserts.Verbose.1" in addition to "Asserts.0".
 
-I'll think about this. At the very least, I can add tracepoints.
+If we use dot for the suffix number, we can prohibit user to use it
+for their name. They still can use '_' (or change the group name?)
+I just concerned that the name can be parsed by existing tools. Since
+':' is used as a separator for group and event name in some case (e.g.
+tracefs "set_event" is using, so trace-cmd and perf is using it.)
 
-Thanks,
-Alex
+> While a glob of "Asserts.[0-9]" works when the unique ID is 0-9, it
+> doesn't work if the number is higher, like 128. If we ever decide to
+> change the ID from an integer to say hex to save space, these globs
+> would break.
+
+Hmm, why can't we use regexp?
+And if we limits the number of events up to 1000 for each same-name event
+we can use fixed numbers, like Assets.[0-9][0-9][0-9]
+
+Thank you,
+
+> 
+> Is there some scheme that fits the C-variable name that addresses the
+> above scenarios? Brackets gave me a simple glob that seemed to prevent a
+> lot of this ("Asserts.\[*\]" in this case).
+> 
+> Are we confident that we always want to represent the ID as a base-10
+> integer vs a base-16 integer? The suffix will be ABI to ensure recording
+> programs can find their events easily.
+> 
+> Thanks,
+> -Beau
+> 
+> > -- Steve
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
