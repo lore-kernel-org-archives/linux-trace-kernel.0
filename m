@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC6636AE5;
-	Tue, 30 Jan 2024 01:44:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E42376EC;
+	Tue, 30 Jan 2024 01:45:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706579059; cv=none; b=VfkAUtyG81KixPtn7NzwibELDSGA0DfQLvl32lDYLV8+WNXQM6IbBDBVbirIR+tT72D1cI07hdCx0iebGLmZF9U6HsPPkTxMRT5BQ7ma6DPzPmgyJmRtuNxI0lKzvgosRFmAowIkadjQYyPPaJPcauT60cQMO3Ufz5FkxC7bt/I=
+	t=1706579116; cv=none; b=jauVcVN/zbpnPDgYncgqAl1O04MCaUW3cpOemNH2wK9NX5/kovV8qn4Do+sktvfBeMDHzSBhITrAhy1HNLUmv3skeROu02MB4PD7/SZ/P61k96ms+JNtuk6LffTa8pfcMcfbfx1Hk0tZnn2UcWQJNPkYtQmDOhKO6jkM8Jzh+8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706579059; c=relaxed/simple;
-	bh=o3f4/zVkFpKEvn4qbUAfnKptnNUY7pSxrpQ8qjYJXUA=;
+	s=arc-20240116; t=1706579116; c=relaxed/simple;
+	bh=zMZgNGNJ/4QrveRNN1bD0SiAaoebGVCPihzQ3ckTAvQ=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=cieAT/RXJQSaB3snUKhYI6+8BWudrC0lQDNtE7zDFqkdULNIncWs9GtreAZi07u9Al1J8rZkePvhz0LUjapJQKNQm05x4hQlb3tHNvsW63B9E8kzm0wY+Xa3ZkvQm0Tig6szz/mwTP+0GdTTHF/7NIqQDpJ/F8UJko5f4oVy1y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uTSAGQbd; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=ZwOC/+VN4tCYHBSnIuSMsWn/66wj9T5hWjuHHYVv9ntYfcA53NbVI5TPb/jxncHU6NwdgrvnTO4C6Bl+5qBZmw2ig4eBLos8tbddJ9gA90VkJ/kBJmuFkMXLJ9sTc2M3ClDVDRWOTYN3J7G57PMgG3O7b0+smhtTyyL+rcu9OH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=No102ObB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uTSAGQbd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAAF5C433F1;
-	Tue, 30 Jan 2024 01:44:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="No102ObB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 081ABC433B2;
+	Tue, 30 Jan 2024 01:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706579058;
-	bh=o3f4/zVkFpKEvn4qbUAfnKptnNUY7pSxrpQ8qjYJXUA=;
+	s=k20201202; t=1706579116;
+	bh=zMZgNGNJ/4QrveRNN1bD0SiAaoebGVCPihzQ3ckTAvQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=uTSAGQbd2lRJoto0hbST+cQdZaFy5RxboCGBciJZe37km4HKniIhjk+Bw/M3S5ofH
-	 JUSUXlwE2kCJ8gpEGzALGbf5yO+o0xLwna9rNdMiOJ7doO8iMfnXaDi7v5KnEfy/Md
-	 E9W+Fm5xubUvQKhzI1tOoye1CqD/iolAVZwBQ9YwxqkgNIt9xXW52uPsF5VQly3T7Q
-	 4nJXeJS+bxblVQYP485Q9Zu0VzzJR3in3P+ZW6PIzpv5a9WrlBULmqqKSbi60mL/fW
-	 MomzbxXl9kUljwRFz5HKErE9TYQJ6sFkzrIfy13yd2L9X8E34fOCha10VGOHvTS46S
-	 4VfO5kzwNAROw==
-Date: Tue, 30 Jan 2024 10:44:14 +0900
+	b=No102ObB6r8N7DQ9fAQhYJfI79g+Kc3QU1VptOU6IHr9lV0IP/ClEzkE6Y/zzwmxu
+	 MoBdmemd9QzC0oOFOAWM+6wegLfySKFQFDjyvdqY3b0SyEmNSSfiIM9o0ccsinQoSP
+	 8dvRYsQMenV0puzU46fwjb9S3Aa9gQ/pIPIObTQpX9R3sNtrgkDoPUI16OeBTD613c
+	 XNKY+4dcDxImhO2VQqzZnfhyLKC3ud4VfLNsTQpgO6hmXRIQFM46OUPxWVRGwABJM3
+	 StqqmQErm9rRBRvOhDcSlkbY3NBQOmrOFl0jgFIxIVKz3xNCF2i9qqg+6zf6tJ/uGu
+	 C+xvfAj94xDZA==
+Date: Tue, 30 Jan 2024 10:45:12 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Jinghao Jia <jinghao7@illinois.edu>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
@@ -34,13 +34,14 @@ Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
  x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra
  <peterz@infradead.org>, linux-trace-kernel@vger.kernel.org,
  linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] x86/kprobes: Prohibit kprobing on INT and UD
-Message-Id: <20240130104414.4548b70ada33ea3180047423@kernel.org>
-In-Reply-To: <8c29d66d-b17d-4185-988c-de078566d0da@illinois.edu>
+Subject: Re: [RFC PATCH 2/2] x86/kprobes: boost more instructions from
+ grp2/3/4/5
+Message-Id: <20240130104512.3b64056130ca6c47e0bceb19@kernel.org>
+In-Reply-To: <9aace649-8a84-46ba-9092-0b74523147f0@illinois.edu>
 References: <20240127044124.57594-1-jinghao7@illinois.edu>
-	<20240127044124.57594-2-jinghao7@illinois.edu>
-	<20240128101912.5ad6717347bd66089ecea03a@kernel.org>
-	<8c29d66d-b17d-4185-988c-de078566d0da@illinois.edu>
+	<20240127044124.57594-3-jinghao7@illinois.edu>
+	<20240128112218.5501726d17ac2fde2502da44@kernel.org>
+	<9aace649-8a84-46ba-9092-0b74523147f0@illinois.edu>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -51,75 +52,107 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sun, 28 Jan 2024 15:25:59 -0600
+On Sun, 28 Jan 2024 15:30:50 -0600
 Jinghao Jia <jinghao7@illinois.edu> wrote:
 
-> >>  /* Check if paddr is at an instruction boundary */
-> >>  static int can_probe(unsigned long paddr)
-> >>  {
-> >> @@ -294,6 +310,16 @@ static int can_probe(unsigned long paddr)
-> >>  #endif
-> >>  		addr += insn.length;
-> >>  	}
-> >> +	__addr = recover_probed_instruction(buf, addr);
-> >> +	if (!__addr)
-> >> +		return 0;
-> >> +
-> >> +	if (insn_decode_kernel(&insn, (void *)__addr) < 0)
-> >> +		return 0;
-> >> +
-> >> +	if (is_exception_insn(&insn))
-> >> +		return 0;
-> >> +
-> > 
-> > Please don't put this outside of decoding loop. You should put these in
-> > the loop which decodes the instruction from the beginning of the function.
-> > Since the x86 instrcution is variable length, can_probe() needs to check
-> > whether that the address is instruction boundary and decodable.
-> > 
-> > Thank you,
 > 
-> If my understanding is correct then this is trying to decode the kprobe
-> target instruction, given that it is after the main decoding loop.  Here I
-> hoisted the decoding logic out of the if(IS_ENABLED(CONFIG_CFI_CLANG))
-> block so that we do not need to decode the same instruction twice.  I left
-> the main decoding loop unchanged so it is still decoding the function from
-> the start and should handle instruction boundaries. Are there any caveats
-> that I missed?
-
-Ah, sorry I misread the patch. You're correct!
-This is a good place to do that.
-
-But hmm, I think we should add another patch to check the addr == paddr
-soon after the loop so that we will avoid decoding.
-
-Thank you,
-
+> 
+> On 1/27/24 20:22, Masami Hiramatsu (Google) wrote:
+> > On Fri, 26 Jan 2024 22:41:24 -0600
+> > Jinghao Jia <jinghao7@illinois.edu> wrote:
+> > 
+> >> With the instruction decoder, we are now able to decode and recognize
+> >> instructions with opcode extensions. There are more instructions in
+> >> these groups that can be boosted:
+> >>
+> >> Group 2: ROL, ROR, RCL, RCR, SHL/SAL, SHR, SAR
+> >> Group 3: TEST, NOT, NEG, MUL, IMUL, DIV, IDIV
+> >> Group 4: INC, DEC (byte operation)
+> >> Group 5: INC, DEC (word/doubleword/quadword operation)
+> >>
+> >> These instructions are not boosted previously because there are reserved
+> >> opcodes within the groups, e.g., group 2 with ModR/M.nnn == 110 is
+> >> unmapped. As a result, kprobes attached to them requires two int3 traps
+> >> as being non-boostable also prevents jump-optimization.
+> >>
+> >> Some simple tests on QEMU show that after boosting and jump-optimization
+> >> a single kprobe on these instructions with an empty pre-handler runs 10x
+> >> faster (~1000 cycles vs. ~100 cycles).
+> >>
+> >> Since these instructions are mostly ALU operations and do not touch
+> >> special registers like RIP, let's boost them so that we get the
+> >> performance benefit.
+> >>
+> > 
+> > As far as we check the ModR/M byte, I think we can safely run these
+> > instructions on trampoline buffer without adjusting results (this
+> > means it can be "boosted").
+> > I just have a minor comment, but basically this looks good to me.
+> > 
+> > Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> >> Signed-off-by: Jinghao Jia <jinghao7@illinois.edu>
+> >> ---
+> >>  arch/x86/kernel/kprobes/core.c | 21 +++++++++++++++------
+> >>  1 file changed, 15 insertions(+), 6 deletions(-)
+> >>
+> >> diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+> >> index 792b38d22126..f847bd9cc91b 100644
+> >> --- a/arch/x86/kernel/kprobes/core.c
+> >> +++ b/arch/x86/kernel/kprobes/core.c
+> >> @@ -169,22 +169,31 @@ int can_boost(struct insn *insn, void *addr)
+> >>  	case 0x62:		/* bound */
+> >>  	case 0x70 ... 0x7f:	/* Conditional jumps */
+> >>  	case 0x9a:		/* Call far */
+> >> -	case 0xc0 ... 0xc1:	/* Grp2 */
+> >>  	case 0xcc ... 0xce:	/* software exceptions */
+> >> -	case 0xd0 ... 0xd3:	/* Grp2 */
+> >>  	case 0xd6:		/* (UD) */
+> >>  	case 0xd8 ... 0xdf:	/* ESC */
+> >>  	case 0xe0 ... 0xe3:	/* LOOP*, JCXZ */
+> >>  	case 0xe8 ... 0xe9:	/* near Call, JMP */
+> >>  	case 0xeb:		/* Short JMP */
+> >>  	case 0xf0 ... 0xf4:	/* LOCK/REP, HLT */
+> >> -	case 0xf6 ... 0xf7:	/* Grp3 */
+> >> -	case 0xfe:		/* Grp4 */
+> >>  		/* ... are not boostable */
+> >>  		return 0;
+> >> +	case 0xc0 ... 0xc1:	/* Grp2 */
+> >> +	case 0xd0 ... 0xd3:	/* Grp2 */
+> >> +		/* ModR/M nnn == 110 is reserved */
+> >> +		return X86_MODRM_REG(insn->modrm.bytes[0]) != 6;
+> >> +	case 0xf6 ... 0xf7:	/* Grp3 */
+> >> +		/* ModR/M nnn == 001 is reserved */
+> > 
+> > 		/* AMD uses nnn == 001 as TEST, but Intel makes it reserved. */
+> > 
+> 
+> I will incorporate this into the v2. Since nnn == 001 is still considered
+> reserved by Intel, we still need to prevent it from being boosted, don't
+> we?
 > 
 > --Jinghao
 > 
-> > 
-> >>  	if (IS_ENABLED(CONFIG_CFI_CLANG)) {
-> >>  		/*
-> >>  		 * The compiler generates the following instruction sequence
-> >> @@ -308,13 +334,6 @@ static int can_probe(unsigned long paddr)
-> >>  		 * Also, these movl and addl are used for showing expected
-> >>  		 * type. So those must not be touched.
-> >>  		 */
-> >> -		__addr = recover_probed_instruction(buf, addr);
-> >> -		if (!__addr)
-> >> -			return 0;
-> >> -
-> >> -		if (insn_decode_kernel(&insn, (void *)__addr) < 0)
-> >> -			return 0;
-> >> -
-> >>  		if (insn.opcode.value == 0xBA)
-> >>  			offset = 12;
-> >>  		else if (insn.opcode.value == 0x3)
+> >> +		return X86_MODRM_REG(insn->modrm.bytes[0]) != 1;
+> >> +	case 0xfe:		/* Grp4 */
+> >> +		/* Only inc and dec are boostable */
+> >> +		return X86_MODRM_REG(insn->modrm.bytes[0]) == 0 ||
+> >> +		       X86_MODRM_REG(insn->modrm.bytes[0]) == 1;
+> >>  	case 0xff:		/* Grp5 */
+> >> -		/* Only indirect jmp is boostable */
+> >> -		return X86_MODRM_REG(insn->modrm.bytes[0]) == 4;
+> >> +		/* Only inc, dec, and indirect jmp are boostable */
+> >> +		return X86_MODRM_REG(insn->modrm.bytes[0]) == 0 ||
+> >> +		       X86_MODRM_REG(insn->modrm.bytes[0]) == 1 ||
+> >> +		       X86_MODRM_REG(insn->modrm.bytes[0]) == 4;
+> >>  	default:
+> >>  		return 1;
+> >>  	}
 > >> -- 
 > >> 2.43.0
 > >>
 > > 
+> > Thamnk you,
 > > 
 
 
