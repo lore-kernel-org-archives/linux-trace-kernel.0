@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1887E5B1F6;
-	Tue, 30 Jan 2024 20:55:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E890762EB;
+	Tue, 30 Jan 2024 21:25:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706648139; cv=none; b=MJ/CRJIE4IDgjmxoIj5US7piidrG4bnfkJT9cDjsdC2NsVabhtMUtdRM/oaht5cB2twpRmZSHaca7YFs6vEBAwup1HoFlG9GO16rdNzkmVdk8OZDhX3l4vv/0NNp9iUX8Ly0+Et9diol31V+CbgbD/s2WyiQiSI6WiE5+6ZeIZs=
+	t=1706649901; cv=none; b=ZsWjYCYdrmPRgkieo8zrosNsdmk/CVdyLWVVNbsA2YpbO4HIXD3ZCt4Xi7NJhHrR6Cx5acRXdSlgXN2iUBh2tev6cDYUyipVZpMOaxWldhDmDisEf7a5VyyPu/2ZsgJi0M49WHeR9B1O7FAU/kRRDgWTchtvCciWORbg6EE9WZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706648139; c=relaxed/simple;
-	bh=HxYKHoYi8jbrtfFbIjWPfldYQ7Hbb74CixrX76m43b0=;
+	s=arc-20240116; t=1706649901; c=relaxed/simple;
+	bh=UErUAiK+wbqdYNWFOxyFj3A61/TSdw+2QMruaQnSiYg=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TI1fjMbwclm0x+oFga+QrdT7AJlyraXPz4vCG5hsH3Pi3AmIywAKQ19M43tz7FKcD0KKZ6xiafTB+ZLQeeouqWfCc6K3+Qx4fOoo47SYJfZ71t/tVAfURr7fl95GZfuhjZx/9Mo7jvdl5Mup8kCe8VCRArFZYKD6xCMmPjf6gK0=
+	 MIME-Version:Content-Type; b=MgRWlwqYJML3xBIhG4J5q8zvIBren1ryqE4EXHPmQYUTBBJAXG7X8i9b5DBmNRS4ARVPZX4Vngj2BoXFv6pH0n1QH7FPgIerTtXALmzK/jABhqrFbJi1dEinaEn4Po5mkR6FAnC6bP643SmVb7hOBqWbcaii2JZ8rkGEzwFW2nU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AE75C433C7;
-	Tue, 30 Jan 2024 20:55:38 +0000 (UTC)
-Date: Tue, 30 Jan 2024 15:55:50 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C55CC433F1;
+	Tue, 30 Jan 2024 21:25:00 +0000 (UTC)
+Date: Tue, 30 Jan 2024 16:25:12 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] eventfs: get rid of dentry pointers without
- refcounts
-Message-ID: <20240130155550.4881d558@gandalf.local.home>
-In-Reply-To: <20240130190355.11486-5-torvalds@linux-foundation.org>
+Subject: Re: [PATCH 6/6] eventfs: clean up dentry ops and add revalidate
+ function
+Message-ID: <20240130162512.312eb446@gandalf.local.home>
+In-Reply-To: <20240130190355.11486-6-torvalds@linux-foundation.org>
 References: <20240130190355.11486-1-torvalds@linux-foundation.org>
-	<20240130190355.11486-5-torvalds@linux-foundation.org>
+	<20240130190355.11486-6-torvalds@linux-foundation.org>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -35,83 +35,27 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 30 Jan 2024 11:03:54 -0800
+On Tue, 30 Jan 2024 11:03:55 -0800
 Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-> -static void free_ei(struct eventfs_inode *ei)
-> +static inline struct eventfs_inode *alloc_ei(const char *name)
->  {
-> -	kfree_const(ei->name);
-> -	kfree(ei->d_children);
-> -	kfree(ei->entry_attrs);
-> -	kfree(ei);
-> +	int namesize = strlen(name) + 1;
-> +	struct eventfs_inode *ei = kzalloc(sizeof(*ei) + namesize, GFP_KERNEL);
-> +
-> +	if (ei) {
-> +		memcpy((char *)ei->name, name, namesize);
-> +		kref_init(&ei->kref);
-> +	}
+> Another thing that might be worth doing is to make all eventfs lookups
+> mark their dentries as not worth caching.  We could do that with
+> d_delete(), but the DCACHE_DONTCACHE flag would likely be even better.
+> 
+> As it is, the dentries are all freeable, but they only tend to get freed
+> at memory pressure rather than more proactively.  But that's a separate
+> issue.
 
-I'm going to be putting back the ei->name pointer as the above actually
-adds more memory usage. The reason being is that all static trace events
-(not kprobes or other dynamic events) are created with the TRACE_EVENT()
-macro that points to a constant name. Passing in a const to kstrdup_const()
-checks if the name passed in is a constant or not. If it is, it doesn't
-allocate the name and just passes back the pointer.
+I actually find the dentry's sticking around when their ref counts go to
+zero a feature. Tracing applications will open and close the eventfs files
+many times. If the dentry were to be deleted on every close, it would need
+to be create over again in short spurts.
 
-Removing the pointer to "name" removed 8 bytes on 64 bit machines from the
-eventfs_inode structure, but added strlen(name)+1 bytes to it, where the
-majority of trace event names are greater than 8 bytes, and are constant
-strings.
-
-Another reason for converting back to the way it was is I have moving the
-ei allocation to a slab on my TODO list.
+There's some operations that will traverse the tree many times. One
+operation is on reset, as there's some dependencies in the order of
+disabling triggers. If there's a dependency, and a trigger is to be
+disabled out of order, the disabling will fail with -EBUSY. Thus the tools
+will iterate the trigger files several times until it there's no more
+changes. It's not a critical path, but I rather not add more overhead to it.
 
 -- Steve
-
-
-
-> +	return ei;
->  }
->  
-
-
-> diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-> index 8f38740bfb5b..72db3bdc4dfb 100644
-> --- a/fs/tracefs/internal.h
-> +++ b/fs/tracefs/internal.h
-> @@ -34,8 +34,7 @@ struct eventfs_attr {
->   * @entries:	the array of entries representing the files in the directory
->   * @name:	the name of the directory to create
->   * @children:	link list into the child eventfs_inode
-> - * @dentry:     the dentry of the directory
-> - * @d_children: The array of dentries to represent the files when created
-> + * @events_dir: the dentry of the events directory
->   * @entry_attrs: Saved mode and ownership of the @d_children
->   * @attr:	Saved mode and ownership of eventfs_inode itself
->   * @data:	The private data to pass to the callbacks
-> @@ -44,12 +43,11 @@ struct eventfs_attr {
->   * @nr_entries: The number of items in @entries
->   */
->  struct eventfs_inode {
-> +	struct kref			kref;
->  	struct list_head		list;
->  	const struct eventfs_entry	*entries;
-> -	const char			*name;
->  	struct list_head		children;
-> -	struct dentry			*dentry; /* Check is_freed to access */
-> -	struct dentry			**d_children;
-> +	struct dentry			*events_dir;
->  	struct eventfs_attr		*entry_attrs;
->  	struct eventfs_attr		attr;
->  	void				*data;
-> @@ -66,6 +64,7 @@ struct eventfs_inode {
->  		struct llist_node	llist;
->  		struct rcu_head		rcu;
->  	};
-> +	const char name[];
->  };
->  
->  static inline struct tracefs_inode *get_tracefs(const struct inode *inode)
-
