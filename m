@@ -1,30 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A95B071B2B;
-	Tue, 30 Jan 2024 19:56:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD3071B29;
+	Tue, 30 Jan 2024 20:03:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706644604; cv=none; b=pn0OLlpRTe2P4SIaamcSQN320VUK/gZzZZGsrI3saJLDqwH5mfUARH/GPrwtFFsClqYrWunz/waGUlROk/iDtINVCRjFLZAHi5GvJw2KLXqe9ZS1DtMOW9Mi/GeTIqfu1qsRHPsGRqBD5opPUWeADzhanH757c236ADpSIMLr3E=
+	t=1706645030; cv=none; b=YLxArgaIv1Afd7S7u3cIAzZ/OsuQ7dN5B5Ah1Skh/GKMw3ZLWndhTVUOiQSsDZENcRHzuIb3bQQEfCqcOEPMzP2GxfQi1yBO6we6nctpjBdPBo5JRLzNBJ8RIsVtcIge1/Cz+Z8Tth+V29rl+VTRdjZObalMcqNt/ecT7WaylAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706644604; c=relaxed/simple;
-	bh=SLu7uhmKIIMNyprfYtwziS/mgqFfszhz26PKqZn0p+M=;
+	s=arc-20240116; t=1706645030; c=relaxed/simple;
+	bh=raqJis5H5REnlNnsblpFO5LfaAPo42f2Cmdcg4YjBRc=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mqwv+j5cuBXw8AbT1tpz3ZI/H8MHoHQxwaaYnYkuZ8phtQXUM1A+bo+kGqH8zecNzSSsUcE++9H81grS6ZtOZF8LVr81DSObw9O1a2mA8btNVXnUNqLDbSXkas3I+ZG9dXfJ0nqdMleZnK0Zr6pfcuA0rMpdnL7rJKNoSt4djkA=
+	 MIME-Version:Content-Type; b=MDqtvRVHJQ614gpkZYL399YTe7oUg9wIOKHxAVSdavg1wgP9vZY04NbNgw69rnxUoq9YNIuy5/jHf1eGJ6N/MbEUr/fxbEUiaZeeFuRHqDuoxQHzNKAIeX3BHjJ17PB89h2HevJCK8r4YvS6qU6fRlnWbSHTJ/OAitwHvtZPOvQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6962C43394;
-	Tue, 30 Jan 2024 19:56:43 +0000 (UTC)
-Date: Tue, 30 Jan 2024 14:56:55 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB6EEC433C7;
+	Tue, 30 Jan 2024 20:03:48 +0000 (UTC)
+Date: Tue, 30 Jan 2024 15:04:00 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/6] eventfsfs: initialize the tracefs inode properly
-Message-ID: <20240130145655.073ff344@gandalf.local.home>
-In-Reply-To: <20240130144802.6e1a8cf8@gandalf.local.home>
-References: <20240130190355.11486-1-torvalds@linux-foundation.org>
-	<20240130190355.11486-2-torvalds@linux-foundation.org>
-	<20240130144802.6e1a8cf8@gandalf.local.home>
+Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
+ lkp@intel.com, linux-kernel@vger.kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Christian Brauner
+ <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Ajay Kaher
+ <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org
+Subject: Re: [linus:master] [eventfs] 852e46e239:
+ BUG:unable_to_handle_page_fault_for_address
+Message-ID: <20240130150400.119a3909@gandalf.local.home>
+In-Reply-To: <CAHk-=whMJgqu2v1_Uopg5NBschGFa_BK1Ct=s7ehwnzPpPi6nQ@mail.gmail.com>
+References: <202401291043.e62e89dc-oliver.sang@intel.com>
+	<CAHk-=wgp7UkG31=cCcbSdhMv6-vBJ=orktUOUdiLzw4tQ4gDLg@mail.gmail.com>
+	<20240129152600.7587d1aa@gandalf.local.home>
+	<CAHk-=wghobf5qCqNUsafkQzNAZBJiS0=7CRjNXNChpoAvTbvUw@mail.gmail.com>
+	<20240129172200.1725f01b@gandalf.local.home>
+	<CAHk-=wjV6+U1FQ8wzQ5ASmqGgby+GZ6wpdh0NrJgA43mc+TEwA@mail.gmail.com>
+	<CAHk-=wgOxTeTi02C=kOXsHzuD6XCrV0L1zk1XP9t+a4Wx--xvA@mail.gmail.com>
+	<20240129174950.5a17a86c@gandalf.local.home>
+	<CAHk-=wjbzw3=nwR5zGH9jqXgB8jj03wxWfdFDn=oAVCoymQQJg@mail.gmail.com>
+	<20240129193549.265f32c8@gandalf.local.home>
+	<CAHk-=whRxcmjvGNBKi9_x59cAedh8SO8wsNDNrEQbAQfM5A8CQ@mail.gmail.com>
+	<CAHk-=wh97AkwaOkXoBgf0z8EP88ePffLnTcmmQXcY+AhFaFrnA@mail.gmail.com>
+	<20240130132319.022817e8@gandalf.local.home>
+	<CAHk-=wiGb2aDbtq2+mYv6C=pYRKmo_iOu9feL9o52iRT8cuh6Q@mail.gmail.com>
+	<20240130143734.31b9b3f1@gandalf.local.home>
+	<CAHk-=whMJgqu2v1_Uopg5NBschGFa_BK1Ct=s7ehwnzPpPi6nQ@mail.gmail.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -35,29 +53,64 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 30 Jan 2024 14:48:02 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
- 
-> The ti is allocated from fs/tracefs/inode.c that has:
-> 
-> static struct inode *tracefs_alloc_inode(struct super_block *sb)
-> {
-> 	struct tracefs_inode *ti;
-> 
-> 	ti = kmem_cache_alloc(tracefs_inode_cachep, GFP_KERNEL);
+On Tue, 30 Jan 2024 11:54:56 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-I could also just add __GFP_ZERO so that all of it is initialized to zero,
-and then we don't need to assign NULL to any part of it.
+> On Tue, 30 Jan 2024 at 11:37, Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > Do you want me to put this in my urgent branch and mark them for stable,
+> > and then send them for 6.8?  
+> 
+> Hmm. I think the only one that fixes a _reported_ bug is that [PTCH
+> 2/6]. And it turns out that while 'ti->private' really is entirely
+> uninitialized (and I still think it's the cause of the kernel test
+> robot report that started this thread), the ti->flags field _is_
+> initialized to zero in tracefs_alloc_inode().
+> 
+> So even in that [PATCH 2/6], these parts:
+> 
+>   -     ti->flags |= TRACEFS_EVENT_INODE;
+>   +     ti->flags = TRACEFS_EVENT_INODE;
+> 
+> aren't strictly needed (but aren't wrong either).
+> 
+> The 'make sure to initialize ti->private before exposing the dentry'
+> part *definitely* needs to be part of 6.8, though. That has an
+> outstanding actually triggered bug report on it.
+> 
+> I do think that tracefs_alloc_inode() should also initialize
+> ti->private to NULL, but while that would fix the oops that the test
+> robot reported, it wouldn't fix the data-race on any ti->private
+> accesses.
+> 
+> So that "ti->private = ei" needs to be done before the d_instantiate()
+> (that later became a d_add()) regardless. But not having random fields
+> left uninitialized for future subtle bugs would be a good idea too.
+
+
+I'll add a patch to add __GFP_ZERO to the tracefs inode allocation, and
+modify your patch 2 to just move the ti->private = ei;
+
+
+> 
+> Anyway.
+> 
+> If you do run the full tracefs tests on the whole series, and there
+> are no other major problems, I'll happily take it all for 6.8. And
+> yes, even mark it for stable. I think the other bugs are much harder
+> to hit, but I do think they exist. And code deletion is always good.
+
+Sounds good.
+
+> 
+> So give it the full test attention, and *if* it all still looks good
+> and there are no new subtle issues that crop up, let's just put this
+> saga behind us asap.
+
+Yes, I've been wanting to get away from eventfs for a month now.
+
+Again, I really do appreciate the time you put in to fixing this for me.
+I'm going to be backporting this to older Chromebooks as we really need to
+cut down on the memory overhead of instances.
 
 -- Steve
-
-
-> 	if (!ti)
-> 		return NULL;
-> 
-> 	ti->flags = 0;
-> 
-> 	return &ti->vfs_inode;
-> }
-> 
->
