@@ -1,48 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FFF78B42;
-	Tue, 30 Jan 2024 18:36:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E14879922;
+	Tue, 30 Jan 2024 18:52:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706639788; cv=none; b=u1lMsLoTJltUuwhldH6ca2zwv6SLfQfJPm8E9PmrKYL5fEn85IrDCoH25T0e13KTWC3OAfC0/sA8tAlIHnN9mHSTJLkioliGf4D3lH1+p23DCBpFGUpN3pcqnW+Mug2kyTie1eVMqfYzHsNSOSks9zcn2RKn4ZHSbIROrZT0mjk=
+	t=1706640739; cv=none; b=SOx4dwoMNRb6MWn/R2vjXLUIOidqfUYPSlOKQAXqRY8LC4KG0Em+Xi+NyxEkSbrymRZEKXuZdetP+MxyUcNFxmE8gdfGPlDsircyzViHIkHrC6ZCxsVsF4camar8JKMN52E66396wPo/4Kb3YUDWJ6dMzlq+/atPiJn16Nl0PUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706639788; c=relaxed/simple;
-	bh=MAq6UTzZ5I8FQRIOgfrKTJJAi0lX50HQeuJa1ZfmREE=;
+	s=arc-20240116; t=1706640739; c=relaxed/simple;
+	bh=VI+11BxTPHbaqxH2CqckgfYqM1FmLjMbf1aOw4y+a+U=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CcFDtGonmY5Wg5iMvJ95fPbUjPmeJGAL9wm6lixOeYoD4T+iuwcMVB/AmYaz4usZiloT/CeJWTIDBu2BaCzIaKJ5r9ZRq7bmcKvnTrUw9eUDftfPPsULEwCxle+reLU/XKFrT/nmiVCIOuDdK8LjpaqA7peF6tKhBSNbo98jOlU=
+	 MIME-Version:Content-Type; b=Md6+qvIgqdVT/Q0zqd8fEln/x5KVzkBtKd07c5Zad2I1oBEFCRMNUKZ47IW1TrdEFd0qpgC8I6+2I2SRx5OE0bb59Q9RrZgNODtc0LJS2Uukzo0G1ilAA05hqwdA9ALt9pobvoSCyniVwDCnIxujUuttiEvl6AAwv2+if9Bcuek=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B028DC433C7;
-	Tue, 30 Jan 2024 18:36:26 +0000 (UTC)
-Date: Tue, 30 Jan 2024 13:36:38 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 437BEC433C7;
+	Tue, 30 Jan 2024 18:52:18 +0000 (UTC)
+Date: Tue, 30 Jan 2024 13:52:30 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
- lkp@intel.com, linux-kernel@vger.kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Christian Brauner
- <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Ajay Kaher
- <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org
-Subject: Re: [linus:master] [eventfs] 852e46e239:
- BUG:unable_to_handle_page_fault_for_address
-Message-ID: <20240130133638.2c268b6d@gandalf.local.home>
-In-Reply-To: <CAHk-=wh97AkwaOkXoBgf0z8EP88ePffLnTcmmQXcY+AhFaFrnA@mail.gmail.com>
-References: <202401291043.e62e89dc-oliver.sang@intel.com>
-	<CAHk-=wh0M=e8R=ZXxa4vesLTtvGmYWJ-w1VmXxW5Mva=Nimk4Q@mail.gmail.com>
-	<20240129120125.605e97af@gandalf.local.home>
-	<CAHk-=wghx8Abyx_jcSrCDuNj96SuWS0NvNMhfU8VjFGg9bgm_g@mail.gmail.com>
-	<CAHk-=whb91PWEaEJpRGsuWaQpYZGj98ji8HC2vvHD4xb_TqhJw@mail.gmail.com>
-	<CAHk-=wgp7UkG31=cCcbSdhMv6-vBJ=orktUOUdiLzw4tQ4gDLg@mail.gmail.com>
-	<20240129152600.7587d1aa@gandalf.local.home>
-	<CAHk-=wghobf5qCqNUsafkQzNAZBJiS0=7CRjNXNChpoAvTbvUw@mail.gmail.com>
-	<20240129172200.1725f01b@gandalf.local.home>
-	<CAHk-=wjV6+U1FQ8wzQ5ASmqGgby+GZ6wpdh0NrJgA43mc+TEwA@mail.gmail.com>
-	<CAHk-=wgOxTeTi02C=kOXsHzuD6XCrV0L1zk1XP9t+a4Wx--xvA@mail.gmail.com>
-	<20240129174950.5a17a86c@gandalf.local.home>
-	<CAHk-=wjbzw3=nwR5zGH9jqXgB8jj03wxWfdFDn=oAVCoymQQJg@mail.gmail.com>
-	<20240129193549.265f32c8@gandalf.local.home>
-	<CAHk-=whRxcmjvGNBKi9_x59cAedh8SO8wsNDNrEQbAQfM5A8CQ@mail.gmail.com>
-	<CAHk-=wh97AkwaOkXoBgf0z8EP88ePffLnTcmmQXcY+AhFaFrnA@mail.gmail.com>
+To: Beau Belgrave <beaub@linux.microsoft.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH 2/4] tracing/user_events: Introduce multi-format events
+Message-ID: <20240130135230.25eb6f21@gandalf.local.home>
+In-Reply-To: <20240130180515.GA827-beaub@linux.microsoft.com>
+References: <20240123220844.928-1-beaub@linux.microsoft.com>
+	<20240123220844.928-3-beaub@linux.microsoft.com>
+	<20240127000104.7c98b34d295747ab1b084bd2@kernel.org>
+	<20240126191007.GA456-beaub@linux.microsoft.com>
+	<20240126150445.71c5d426@gandalf.local.home>
+	<20240129172907.GA444-beaub@linux.microsoft.com>
+	<20240129212407.157a5533@gandalf.local.home>
+	<20240130180515.GA827-beaub@linux.microsoft.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -53,13 +40,135 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 29 Jan 2024 19:56:52 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Tue, 30 Jan 2024 10:05:15 -0800
+Beau Belgrave <beaub@linux.microsoft.com> wrote:
 
-> [0001-tracefs-avoid-using-the-ei-dentry-pointer-unnecessar.patch  text/x-patch (3561 bytes)] 
+> On Mon, Jan 29, 2024 at 09:24:07PM -0500, Steven Rostedt wrote:
+> > On Mon, 29 Jan 2024 09:29:07 -0800
+> > Beau Belgrave <beaub@linux.microsoft.com> wrote:
+> >   
+> > > Thanks, yeah ideally we wouldn't use special characters.
+> > > 
+> > > I'm not picky about this. However, I did want something that clearly
+> > > allowed a glob pattern to find all versions of a given register name of
+> > > user_events by user programs that record. The dot notation will pull in
+> > > more than expected if dotted namespace style names are used.
+> > > 
+> > > An example is "Asserts" and "Asserts.Verbose" from different programs.
+> > > If we tried to find all versions of "Asserts" via glob of "Asserts.*" it
+> > > will pull in "Asserts.Verbose.1" in addition to "Asserts.0".  
+> > 
+> > Do you prevent brackets in names?
+> >   
 > 
-> [0002-eventfsfs-initialize-the-tracefs-inode-properly.patch  text/x-patch (2548 bytes)] 
+> No. However, since brackets have a start and end token that are distinct
+> finding all versions of your event is trivial compared to a single dot.
+> 
+> Imagine two events:
+> Asserts
+> Asserts[MyCoolIndex]
+> 
+> Resolves to tracepoints of:
+> Asserts:[0]
+> Asserts[MyCoolIndex]:[1]
+> 
+> Regardless of brackets in the names, a simple glob of Asserts:\[*\] only
+> finds Asserts:[0]. This is because we have that end bracket in the glob
+> and the full event name including the start bracket.
+> 
+> If I register another "version" of Asserts, thne I'll have:
+> Asserts:[0]
+> Asserts[MyCoolIndex]:[1]
+> Asserts:[2]
+> 
+> The glob of Asserts:\[*\] will return both:
+> Asserts:[0]
+> Asserts:[2]
 
-Ah these two are new.
+But what if you had registered "Asserts:[MyCoolIndex]:[1]"
+
+Do you prevent colons?
+
+> 
+> At this point the program can either record all versions or scan further
+> to find which version of Asserts is wanted.
+> 
+> > > 
+> > > While a glob of "Asserts.[0-9]" works when the unique ID is 0-9, it
+> > > doesn't work if the number is higher, like 128. If we ever decide to
+> > > change the ID from an integer to say hex to save space, these globs
+> > > would break.
+> > > 
+> > > Is there some scheme that fits the C-variable name that addresses the
+> > > above scenarios? Brackets gave me a simple glob that seemed to prevent a
+> > > lot of this ("Asserts.\[*\]" in this case).  
+> > 
+> > Prevent a lot of what? I'm not sure what your example here is.
+> >   
+> 
+> I'll try again :)
+> 
+> We have 2 events registered via user_events:
+> Asserts
+> Asserts.Verbose
+> 
+> Using dot notation these would result in tracepoints of:
+> user_events_multi/Asserts.0
+> user_events_multi/Asserts.Verbose.1
+> 
+> Using bracket notation these would result in tracepoints of:
+> user_events_multi/Asserts:[0]
+> user_events_multi/Asserts.Verbose:[1]
+> 
+> A recording program only wants to enable the Asserts tracepoint. It does
+> not want to record the Asserts.Verbose tracepoint.
+> 
+> The program must find the right tracepoint by scanning tracefs under the
+> user_events_multi system.
+> 
+> A single dot suffix does not allow a simple glob to be used. The glob
+> Asserts.* will return both Asserts.0 and Asserts.Verbose.1.
+> 
+> A simple glob of Asserts:\[*\] will only find Asserts:[0], it will not
+> find Asserts.Verbose:[1].
+> 
+> We could just use brackets and not have the colon (Asserts[0] in this
+> case). But brackets are still special for bash.
+
+Are these shell scripts or programs. I use regex in programs all the time.
+And if you have shell scripts, use awk or something.
+
+Unless you prevent something from being added, I don't see the protection.
+
+> 
+> > > 
+> > > Are we confident that we always want to represent the ID as a base-10
+> > > integer vs a base-16 integer? The suffix will be ABI to ensure recording
+> > > programs can find their events easily.  
+> > 
+> > Is there a difference to what we choose?
+> >   
+> 
+> If a simple glob of event_name:\[*\] cannot be used, then we must document
+> what the suffix format is, so an appropriate regex can be created. If we
+> start with base-10 then later move to base-16 we will break existing regex
+> patterns on the recording side.
+> 
+> I prefer, and have in this series, a base-16 output since it saves on
+> the tracepoint name size.
+
+I honestly don't care which base you use. So if you want to use base 16,
+I'm fine with that.
+
+> 
+> Either way we go, we need to define how recording programs should find
+> the events they care about. So we must be very clear, IMHO, about the
+> format of the tracepoint names in our documentation.
+> 
+> I personally think recording programs are likely to get this wrong
+> without proper guidance.
+> 
+
+Agreed.
 
 -- Steve
