@@ -1,147 +1,245 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D040F66B2B;
-	Tue, 30 Jan 2024 11:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C921467729;
+	Tue, 30 Jan 2024 11:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706614233; cv=none; b=j7o2QEinwUDrY2YIWp+Oe4x35h/EVR8D8rr8O8/EKFB6m1r/RKkKvAnb1yZb2zZcqUIYEAOKdiWM43TEWJtTeTFMFIPvP097QWfz3FxGMB+j/L3DAi+3fTxePrJbku9g2DXUoeFpVCCOJEqg8Qys8Rs42Jwwn3Kj6kqqNM/KoX0=
+	t=1706614404; cv=none; b=vBzUC+BEpEn4n84TB1XHk6ndbtuKx/8SUpu0Y01pRWorOAz2MHe/TaYGCHCcw8zlqI7uCvheXTfC2ba0zBXQTl7/rcQaSo6afq1KPpE/PfJ4fluH/nWc4SBj+Coz+4JZJ2RRJZFx0CS/RVM64Y8qgnlQnEvR371rAH9vTKcw4E4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706614233; c=relaxed/simple;
-	bh=9OMcTfbqDWp8yh7PIGJwzemNavrPJGabvoRiA7Mzr1k=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=pP4yqHbH0fONMdH5EesPSFQF1qCuXntzyyCgtt72ilW4IahPwLIsAcjpUNYFXnG6jHvR08/mf9JccxwO/hUFtRz9SqK42yAxJY43Qa6YUoQl3jWG6c6/eTPlFADOOITNbgDNCzg46XDw0kAo0aR6ayIvHPb/6ac9X9ZfIpf/kK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gr01gI3J; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gr01gI3J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA5C0C433C7;
-	Tue, 30 Jan 2024 11:30:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706614233;
-	bh=9OMcTfbqDWp8yh7PIGJwzemNavrPJGabvoRiA7Mzr1k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Gr01gI3JYz5XYMk4rbnDzVsmBHGKnjEHBYvPqo8B+5nZqzZSKrbGfOKTKEzQuMhGz
-	 RSc+XS/krLBGGYIQxZyQXkLT/CgY6zkI98Ed9xqcU3qbnq4+bWN/rZMRTcm5bpMntN
-	 VdEvzFm+FI15md6QaQWi1EXJVNw/yfUGmMQlap5TCJSJTqwucriUu+QYxZtO0RI8Zg
-	 wlQkNaq0RR6cfMM9JKYmWH5q6yqzunbxmCRnU5r0EpyXN2x2VMcH0/G4Vn+nw2bYQZ
-	 U1eFQuBjYLM1jp2MRZxIF0FgSpE4RFKKnbxOIT58vNQWuR0b3XVphSMojOjsn9qVP6
-	 E9MhggPfj+M2w==
-Date: Tue, 30 Jan 2024 20:30:28 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jinghao Jia <jinghao7@illinois.edu>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra
- <peterz@infradead.org>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] x86/kprobes: Prohibit kprobing on INT and UD
-Message-Id: <20240130203028.320df28af0bcaf9ce8c91d4d@kernel.org>
-In-Reply-To: <15690bf4-a803-4ce0-87bc-ec21727fa38e@illinois.edu>
-References: <20240127044124.57594-1-jinghao7@illinois.edu>
-	<20240127044124.57594-2-jinghao7@illinois.edu>
-	<20240128101912.5ad6717347bd66089ecea03a@kernel.org>
-	<8c29d66d-b17d-4185-988c-de078566d0da@illinois.edu>
-	<20240130104414.4548b70ada33ea3180047423@kernel.org>
-	<15690bf4-a803-4ce0-87bc-ec21727fa38e@illinois.edu>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1706614404; c=relaxed/simple;
+	bh=iYeZRBQMYetEM+TK5yHlgX6GcwqR9jGOdY9NNlijHeI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JnNG0P5FvhwG3Cd6UOqZaR8H4RrXt5Ai5rtYR5pcSG1+OUDNtl8fG1Sudeydh9SonyCekVNIRJS0kshi/87l9HhXQWOxWAioaM63XfDFHOs6gGscT2BLoqO2eg62Gv8jgQjLdFf6wwaVijkgzkpI/vUeWWztgrI+psLwdgIjdTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 121DBDA7;
+	Tue, 30 Jan 2024 03:34:03 -0800 (PST)
+Received: from raptor (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA3D43F5A1;
+	Tue, 30 Jan 2024 03:33:13 -0800 (PST)
+Date: Tue, 30 Jan 2024 11:33:07 +0000
+From: Alexandru Elisei <alexandru.elisei@arm.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
+	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
+	rppt@kernel.org, hughd@google.com, pcc@google.com,
+	steven.price@arm.com, vincenzo.frascino@arm.com, david@redhat.com,
+	eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v3 09/35] mm: cma: Introduce cma_remove_mem()
+Message-ID: <ZbjecxWRUrBfOEdn@raptor>
+References: <20240125164256.4147-1-alexandru.elisei@arm.com>
+ <20240125164256.4147-10-alexandru.elisei@arm.com>
+ <830691cf-cb96-443e-b6eb-2adfe2edd587@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <830691cf-cb96-443e-b6eb-2adfe2edd587@arm.com>
 
-On Mon, 29 Jan 2024 20:50:39 -0600
-Jinghao Jia <jinghao7@illinois.edu> wrote:
+Hi,
 
-> On 1/29/24 19:44, Masami Hiramatsu (Google) wrote:
-> > On Sun, 28 Jan 2024 15:25:59 -0600
-> > Jinghao Jia <jinghao7@illinois.edu> wrote:
-> > 
-> >>>>  /* Check if paddr is at an instruction boundary */
-> >>>>  static int can_probe(unsigned long paddr)
-> >>>>  {
-> >>>> @@ -294,6 +310,16 @@ static int can_probe(unsigned long paddr)
-> >>>>  #endif
-> >>>>  		addr += insn.length;
-> >>>>  	}
-> >>>> +	__addr = recover_probed_instruction(buf, addr);
-> >>>> +	if (!__addr)
-> >>>> +		return 0;
-> >>>> +
-> >>>> +	if (insn_decode_kernel(&insn, (void *)__addr) < 0)
-> >>>> +		return 0;
-> >>>> +
-> >>>> +	if (is_exception_insn(&insn))
-> >>>> +		return 0;
-> >>>> +
-> >>>
-> >>> Please don't put this outside of decoding loop. You should put these in
-> >>> the loop which decodes the instruction from the beginning of the function.
-> >>> Since the x86 instrcution is variable length, can_probe() needs to check
-> >>> whether that the address is instruction boundary and decodable.
-> >>>
-> >>> Thank you,
-> >>
-> >> If my understanding is correct then this is trying to decode the kprobe
-> >> target instruction, given that it is after the main decoding loop.  Here I
-> >> hoisted the decoding logic out of the if(IS_ENABLED(CONFIG_CFI_CLANG))
-> >> block so that we do not need to decode the same instruction twice.  I left
-> >> the main decoding loop unchanged so it is still decoding the function from
-> >> the start and should handle instruction boundaries. Are there any caveats
-> >> that I missed?
-> > 
-> > Ah, sorry I misread the patch. You're correct!
-> > This is a good place to do that.
-> > 
-> > But hmm, I think we should add another patch to check the addr == paddr
-> > soon after the loop so that we will avoid decoding.
-> > 
-> > Thank you,
-> > 
+I really appreciate the feedback you have given me so far. I believe the
+commit message isn't clear enough and there has been a confusion.
+
+A CMA user adds a CMA area to the cma_areas array with
+cma_declare_contiguous_nid() or cma_init_reserved_mem().
+init_cma_reserved_pageblock() then iterates over the array and activates
+all cma areas.
+
+The function cma_remove_mem() is intended to be used to remove a cma area
+from the cma_areas array **before** the area has been activated.
+
+Usecase: a driver (in this case, the arm64 dynamic tag storage code)
+manages several cma areas. The driver successfully adds the first area to
+the cma_areas array. When the driver tries to adds the second area, the
+function fails. Without cma_remove_mem(), the driver has no way to prevent
+the first area from being freed to the page allocator. cma_remove_mem() is
+about providing a means to do cleanup in case of error.
+
+Does that make more sense now?
+
+Ok Tue, Jan 30, 2024 at 11:20:56AM +0530, Anshuman Khandual wrote:
 > 
-> Yes, that makes sense to me. At the same time, I'm also thinking about
-> changing the return type of can_probe() to bool, since we are just using
-> int as bool in this context.
+> 
+> On 1/25/24 22:12, Alexandru Elisei wrote:
+> > Memory is added to CMA with cma_declare_contiguous_nid() and
+> > cma_init_reserved_mem(). This memory is then put on the MIGRATE_CMA list in
+> > cma_init_reserved_areas(), where the page allocator can make use of it.
+> 
+> cma_declare_contiguous_nid() reserves memory in memblock and marks the
 
-Yes, that is also a good change :)
+You forgot about about cma_init_reserved_mem() which does the same thing,
+but yes, you are right.
 
-Thank you,
+> for subsequent CMA usage, where as cma_init_reserved_areas() activates
+> these memory areas through init_cma_reserved_pageblock(). Standard page
+> allocator only receives these memory via free_reserved_page() - only if
+
+I don't think that's correct. init_cma_reserved_pageblock() clears the
+PG_reserved page flag, sets the migratetype to MIGRATE_CMA and then frees
+the page. After that, the page is available to the standard page allocator
+to use for allocation. Otherwise, what would be the point of the
+MIGRATE_CMA migratetype?
+
+> the page block activation fails.
+
+For the sake of having a complete picture, I'll add that that only happens
+if cma->reserve_pages_on_error is false. If the CMA user sets the field to
+'true' (with cma_reserve_pages_on_error()), then the pages in the CMA
+region are kept PG_reserved if activation fails.
 
 > 
-> --Jinghao
+> > 
+> > If a device manages multiple CMA areas, and there's an error when one of
+> > the areas is added to CMA, there is no mechanism for the device to prevent
 > 
-> >>
-> >> --Jinghao
-> >>
-> >>>
-> >>>>  	if (IS_ENABLED(CONFIG_CFI_CLANG)) {
-> >>>>  		/*
-> >>>>  		 * The compiler generates the following instruction sequence
-> >>>> @@ -308,13 +334,6 @@ static int can_probe(unsigned long paddr)
-> >>>>  		 * Also, these movl and addl are used for showing expected
-> >>>>  		 * type. So those must not be touched.
-> >>>>  		 */
-> >>>> -		__addr = recover_probed_instruction(buf, addr);
-> >>>> -		if (!__addr)
-> >>>> -			return 0;
-> >>>> -
-> >>>> -		if (insn_decode_kernel(&insn, (void *)__addr) < 0)
-> >>>> -			return 0;
-> >>>> -
-> >>>>  		if (insn.opcode.value == 0xBA)
-> >>>>  			offset = 12;
-> >>>>  		else if (insn.opcode.value == 0x3)
-> >>>> -- 
-> >>>> 2.43.0
-> >>>>
-> >>>
-> >>>
-> > 
-> > 
+> What kind of error ? init_cma_reserved_pageblock() fails ? But that will
+> not happen until cma_init_reserved_areas().
 
+I think I haven't been clear enough. When I say that "an area is added
+to CMA", I mean that the memory region is added to cma_areas array, via
+cma_declare_contiguous_nid() or cma_init_reserved_mem(). There are several
+ways in which either function can fail.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> > the rest of the areas, which were added before the error occured, from
+> > being later added to the MIGRATE_CMA list.
+> 
+> Why is this mechanism required ? cma_init_reserved_areas() scans over all
+> CMA areas and try and activate each of them sequentially. Why is not this
+> sufficient ?
+
+This patch is about removing a struct cma from the cma_areas array after it
+has been added to the array, with cma_declare_contiguous_nid() or
+cma_init_reserved_mem(), to prevent the area from being activated in
+cma_init_reserved_areas(). Sorry for the confusion.
+
+I'll add a check in cma_remove_mem() to fail if the cma area has been
+activated, and a comment to the function to explain its usage.
+
+> 
+> > 
+> > Add cma_remove_mem() which allows a previously reserved CMA area to be
+> > removed and thus it cannot be used by the page allocator.
+> 
+> Successfully activated CMA areas do not get used by the buddy allocator.
+
+I don't believe that is correct, see above.
+
+> 
+> > 
+> > Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> > ---
+> > 
+> > Changes since rfc v2:
+> > 
+> > * New patch.
+> > 
+> >  include/linux/cma.h |  1 +
+> >  mm/cma.c            | 30 +++++++++++++++++++++++++++++-
+> >  2 files changed, 30 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/include/linux/cma.h b/include/linux/cma.h
+> > index e32559da6942..787cbec1702e 100644
+> > --- a/include/linux/cma.h
+> > +++ b/include/linux/cma.h
+> > @@ -48,6 +48,7 @@ extern int cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
+> >  					unsigned int order_per_bit,
+> >  					const char *name,
+> >  					struct cma **res_cma);
+> > +extern void cma_remove_mem(struct cma **res_cma);
+> >  extern struct page *cma_alloc(struct cma *cma, unsigned long count, unsigned int align,
+> >  			      bool no_warn);
+> >  extern int cma_alloc_range(struct cma *cma, unsigned long start, unsigned long count,
+> > diff --git a/mm/cma.c b/mm/cma.c
+> > index 4a0f68b9443b..2881bab12b01 100644
+> > --- a/mm/cma.c
+> > +++ b/mm/cma.c
+> > @@ -147,8 +147,12 @@ static int __init cma_init_reserved_areas(void)
+> >  {
+> >  	int i;
+> >  
+> > -	for (i = 0; i < cma_area_count; i++)
+> > +	for (i = 0; i < cma_area_count; i++) {
+> > +		/* Region was removed. */
+> > +		if (!cma_areas[i].count)
+> > +			continue;
+> 
+> Skip previously added CMA area (now zeroed out) ?
+
+Yes, that's what I meant with the comment "Region was removed". Do you
+think I should reword the comment?
+
+> 
+> >  		cma_activate_area(&cma_areas[i]);
+> > +	}
+> >  
+> >  	return 0;
+> >  }
+> 
+> cma_init_reserved_areas() gets called via core_initcall(). Some how
+> platform/device needs to call cma_remove_mem() before core_initcall()
+> gets called ? This might be time sensitive.
+
+I don't understand your point.
+
+> 
+> > @@ -216,6 +220,30 @@ int __init cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
+> >  	return 0;
+> >  }
+> >  
+> > +/**
+> > + * cma_remove_mem() - remove cma area
+> > + * @res_cma: Pointer to the cma region.
+> > + *
+> > + * This function removes a cma region created with cma_init_reserved_mem(). The
+> > + * ->count is set to 0.
+> > + */
+> > +void __init cma_remove_mem(struct cma **res_cma)
+> > +{
+> > +	struct cma *cma;
+> > +
+> > +	if (WARN_ON_ONCE(!res_cma || !(*res_cma)))
+> > +		return;
+> > +
+> > +	cma = *res_cma;
+> > +	if (WARN_ON_ONCE(!cma->count))
+> > +		return;
+> > +
+> > +	totalcma_pages -= cma->count;
+> > +	cma->count = 0;
+> > +
+> > +	*res_cma = NULL;
+> > +}
+> > +
+> >  /**
+> >   * cma_declare_contiguous_nid() - reserve custom contiguous area
+> >   * @base: Base address of the reserved area optional, use 0 for any
+> 
+> But first please do explain what are the errors device or platform might
+
+cma_declare_contiguous_nid() and cma_init_reserved_mem() can fail in a
+number of ways, the code should be self documenting.
+
+> see on a previously marked CMA area so that removing them on way becomes
+> necessary preventing their activation via cma_init_reserved_areas().
+
+I've described how the function is supposed to be used at the top of my
+reply.
+
+Thanks,
+Alex
