@@ -1,166 +1,82 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DF691552EC;
-	Tue, 30 Jan 2024 18:14:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F553157E98;
+	Tue, 30 Jan 2024 18:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706638477; cv=none; b=VmtVxDNmOGYxolnoVZQNFblTKAgMEUi6OYbFdeEhdgrhAap7DB0KXp+RgvQXgCXGMuc/Yp/hkeXv+eBsjxc1vVfgodhAxj0aQPHilGIipEL15hSzVdQs3TY+/TRDBLf6d9TFG8AUk0MAkQi9Nr3mqPWchzwHtuMjA6nHaoyTfx0=
+	t=1706638989; cv=none; b=t5Y9wZivks83UjHMfFkuggFQ24x27YjRzADBSQ9Jfwm/TxtlveMqNZ33yB0oBr9aEDT7xmQ4V8Pil+4tnuB15GfoWUvsXgVoYeJ7GEOMtESSSUG395M8TVQHvG+rGNtD91MpeuCMchPZX9tDssbnKh7caGn9+89LuRGD7iNM6IU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706638477; c=relaxed/simple;
-	bh=FmOTcDYkN0aegLs81VJGLogVhcJ/Xf0gVSm/L+TmVdA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rGjJEwqUwiqWmGDF5KKkTAOwXh5gE2UPEJvxMIM7XgVo1KKg1E7Aj2INy7teffA8xZUMttNY1CYT3nlQDwAP4+zKKJv5ZcSgF5PfdXrAJ1wZaVQ4+tnWgK64/K9VEmp8uDfuUGdPJXuNkBTn34mitNhsHeOzoly9m+I+7OAaVfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Pt21Sxs6; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Pt21Sxs6"
-Received: from DESKTOP-4OLSCEK. (c-76-135-27-212.hsd1.wa.comcast.net [76.135.27.212])
-	by linux.microsoft.com (Postfix) with ESMTPSA id D4A6F20B2000;
-	Tue, 30 Jan 2024 10:14:35 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D4A6F20B2000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1706638475;
-	bh=JN16uiIf/4cLJ/Dw3JU5WgDwDBiOHGFcVXJaToRNsQw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Pt21Sxs6WdLY/cpJ5eodRDIv2riGetPSgmw665jfm5VwwVaiBcTRG2KctUCOfz77q
-	 O5G1vCMFuCYaFQ26s/YD8FGcfIRerAeX1ZTySJsW59s3a8VUZkzYUO7EnanDXhb7OR
-	 DHbv+5dwtuAgEqEKjFYBrDm3EV9AYGm5L8fXWyF4=
-Date: Tue, 30 Jan 2024 10:14:34 -0800
-From: Beau Belgrave <beaub@linux.microsoft.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH 2/4] tracing/user_events: Introduce multi-format events
-Message-ID: <20240130181434.GB827-beaub@linux.microsoft.com>
-References: <20240123220844.928-1-beaub@linux.microsoft.com>
- <20240123220844.928-3-beaub@linux.microsoft.com>
- <20240127000104.7c98b34d295747ab1b084bd2@kernel.org>
- <20240126191007.GA456-beaub@linux.microsoft.com>
- <20240126150445.71c5d426@gandalf.local.home>
- <20240129172907.GA444-beaub@linux.microsoft.com>
- <20240130231222.1ff0777d13f6179ce4ada91f@kernel.org>
+	s=arc-20240116; t=1706638989; c=relaxed/simple;
+	bh=y1duc/zFuerroIv0zwgnkpk2zK5bc2TgkZVoPSAVmaY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rB9ZzS91R/XigLvWjqlPkiixZdKVagj9JjoaDJR8sMoMaYpJPGlnDlfa75WNyF/TJ9hFJ34d0u6t5bIDmZiZdbt/Nf628kTi5xRd+8YbdLsoBJC6lENq2yDLAs6Q43sgjRHYIeWykRoBykaLUXTIHbf99unD+q1ifuYbuaV0chA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEA18C433A6;
+	Tue, 30 Jan 2024 18:23:07 +0000 (UTC)
+Date: Tue, 30 Jan 2024 13:23:19 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
+ lkp@intel.com, linux-kernel@vger.kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Christian Brauner
+ <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Ajay Kaher
+ <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org
+Subject: Re: [linus:master] [eventfs] 852e46e239:
+ BUG:unable_to_handle_page_fault_for_address
+Message-ID: <20240130132319.022817e8@gandalf.local.home>
+In-Reply-To: <CAHk-=wh97AkwaOkXoBgf0z8EP88ePffLnTcmmQXcY+AhFaFrnA@mail.gmail.com>
+References: <202401291043.e62e89dc-oliver.sang@intel.com>
+	<CAHk-=wh0M=e8R=ZXxa4vesLTtvGmYWJ-w1VmXxW5Mva=Nimk4Q@mail.gmail.com>
+	<20240129120125.605e97af@gandalf.local.home>
+	<CAHk-=wghx8Abyx_jcSrCDuNj96SuWS0NvNMhfU8VjFGg9bgm_g@mail.gmail.com>
+	<CAHk-=whb91PWEaEJpRGsuWaQpYZGj98ji8HC2vvHD4xb_TqhJw@mail.gmail.com>
+	<CAHk-=wgp7UkG31=cCcbSdhMv6-vBJ=orktUOUdiLzw4tQ4gDLg@mail.gmail.com>
+	<20240129152600.7587d1aa@gandalf.local.home>
+	<CAHk-=wghobf5qCqNUsafkQzNAZBJiS0=7CRjNXNChpoAvTbvUw@mail.gmail.com>
+	<20240129172200.1725f01b@gandalf.local.home>
+	<CAHk-=wjV6+U1FQ8wzQ5ASmqGgby+GZ6wpdh0NrJgA43mc+TEwA@mail.gmail.com>
+	<CAHk-=wgOxTeTi02C=kOXsHzuD6XCrV0L1zk1XP9t+a4Wx--xvA@mail.gmail.com>
+	<20240129174950.5a17a86c@gandalf.local.home>
+	<CAHk-=wjbzw3=nwR5zGH9jqXgB8jj03wxWfdFDn=oAVCoymQQJg@mail.gmail.com>
+	<20240129193549.265f32c8@gandalf.local.home>
+	<CAHk-=whRxcmjvGNBKi9_x59cAedh8SO8wsNDNrEQbAQfM5A8CQ@mail.gmail.com>
+	<CAHk-=wh97AkwaOkXoBgf0z8EP88ePffLnTcmmQXcY+AhFaFrnA@mail.gmail.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240130231222.1ff0777d13f6179ce4ada91f@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 30, 2024 at 11:12:22PM +0900, Masami Hiramatsu wrote:
-> On Mon, 29 Jan 2024 09:29:07 -0800
-> Beau Belgrave <beaub@linux.microsoft.com> wrote:
-> 
-> > On Fri, Jan 26, 2024 at 03:04:45PM -0500, Steven Rostedt wrote:
-> > > On Fri, 26 Jan 2024 11:10:07 -0800
-> > > Beau Belgrave <beaub@linux.microsoft.com> wrote:
-> > > 
-> > > > > OK, so the each different event has suffixed name. But this will
-> > > > > introduce non C-variable name.
-> > > > > 
-> > > > > Steve, do you think your library can handle these symbols? It will
-> > > > > be something like "event:[1]" as the event name.
-> > > > > Personally I like "event.1" style. (of course we need to ensure the
-> > > > > user given event name is NOT including such suffix numbers)
-> > > > >   
-> > > > 
-> > > > Just to clarify around events including a suffix number. This is why
-> > > > multi-events use "user_events_multi" system name and the single-events
-> > > > using just "user_events".
-> > > > 
-> > > > Even if a user program did include a suffix, the suffix would still get
-> > > > appended. An example is "test" vs "test:[0]" using multi-format would
-> > > > result in two tracepoints ("test:[0]" and "test:[0]:[1]" respectively
-> > > > (assuming these are the first multi-events on the system).
-> > > > 
-> > > > I'm with you, we really don't want any spoofing or squatting possible.
-> > > > By using different system names and always appending the suffix I
-> > > > believe covers this.
-> > > > 
-> > > > Looking forward to hearing Steven's thoughts on this as well.
-> > > 
-> > > I'm leaning towards Masami's suggestion to use dots, as that won't conflict
-> > > with special characters from bash, as '[' and ']' do.
-> > > 
-> > 
-> > Thanks, yeah ideally we wouldn't use special characters.
-> > 
-> > I'm not picky about this. However, I did want something that clearly
-> > allowed a glob pattern to find all versions of a given register name of
-> > user_events by user programs that record. The dot notation will pull in
-> > more than expected if dotted namespace style names are used.
-> > 
-> > An example is "Asserts" and "Asserts.Verbose" from different programs.
-> > If we tried to find all versions of "Asserts" via glob of "Asserts.*" it
-> > will pull in "Asserts.Verbose.1" in addition to "Asserts.0".
-> 
-> If we use dot for the suffix number, we can prohibit user to use it
-> for their name. They still can use '_' (or change the group name?)
+On Mon, 29 Jan 2024 19:56:52 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-We could, however, we have user_event integration in OpenTelemetry and
-I'm unsure if we should really try to restrict names. We'll also at some
-point have libside integration, which might not have the same
-restrictions on the user-tracer side as the kernel-tracer side.
+> [0005-eventfs-get-rid-of-dentry-pointers-without-refcounts.patch  text/x-patch (15652 bytes)] 
 
-I'm trying to restrict the user_event group name from changing outside
-of an eventual tracer namespace. I'd like for each container to inherit
-a tracer namespace long-term which decides what the actual group name
-will be instead of users self-selecting names to prevent squatting or
-spoofing of events.
+I missed this email when I wrote basically the same thing :-p
 
-> I just concerned that the name can be parsed by existing tools. Since
-> ':' is used as a separator for group and event name in some case (e.g.
-> tracefs "set_event" is using, so trace-cmd and perf is using it.)
-> 
+It was sent just as I went to bed and this morning I mistaken it as an
+email I already read. When you mentioned that your last patch was on top of
+your other 5, I said to myself, "Wait? there's five?" and went back though
+this thread looking at every email with an attachment. Well, even though I
+duplicated your work, I'll take that as a learning experience.
 
-Good point.
+Anyway, I'm assuming that the other 4 patches are exactly the same as the
+previous version, as applying patches from attachments is a manual process.
+I don't even develop on the machine with my email client, so it either is
+me downloading each and scp'ing them over to my development box or finding
+the lore link and going through them individually one by one.
 
-What about just event_name[unique_id]? IE: Drop the colon.
+I know you don't send patches inlined anymore, which is a shame, because
+patchwork takes care of all the administering when patches are inlined, and
+I don't miss patches like I use to.
 
-Brackets are still special in bash, but it would prevent simple glob
-patterns from matching to incorrect tracepoints under user_events_multi.
+So, I'll down load patch 5 here and just assume that I already have your
+other 4 patches from the previous email.
 
-> > While a glob of "Asserts.[0-9]" works when the unique ID is 0-9, it
-> > doesn't work if the number is higher, like 128. If we ever decide to
-> > change the ID from an integer to say hex to save space, these globs
-> > would break.
-> 
-> Hmm, why can't we use regexp?
-
-We can use regex, but we'll need to agree the suffix format. We won't be
-able to change it after that point. I'd prefer a base-16/Hex suffix
-either in brackets or a simple dot.
-
-> And if we limits the number of events up to 1000 for each same-name event
-> we can use fixed numbers, like Assets.[0-9][0-9][0-9]
-> 
-
-I'm always wrong when I guess how many events programs will end up
-using. Folks always surprise me. I'd rather have a solution that scales
-to the max number of tracepoints allowed on the system (currently 16-bit
-max value).
-
-Thanks,
--Beau
-
-> Thank you,
-> 
-> > 
-> > Is there some scheme that fits the C-variable name that addresses the
-> > above scenarios? Brackets gave me a simple glob that seemed to prevent a
-> > lot of this ("Asserts.\[*\]" in this case).
-> > 
-> > Are we confident that we always want to represent the ID as a base-10
-> > integer vs a base-16 integer? The suffix will be ABI to ensure recording
-> > programs can find their events easily.
-> > 
-> > Thanks,
-> > -Beau
-> > 
-> > > -- Steve
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+-- Steve
