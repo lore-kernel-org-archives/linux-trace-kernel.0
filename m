@@ -1,235 +1,147 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823892C1AA
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 10:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D040F66B2B;
+	Tue, 30 Jan 2024 11:30:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706610775; cv=none; b=WrxWKoXRcr+IqTbjQVQueaflNckNj8Sm97kWzje1pP1anOHA/kV6m4bEnfWoD8GWEpwvi0PexpFlz9vLriEJ92MeML17QsGaUi/celmeQ2+U9xtEUJ7JbrnnR/ACQ1vbeXO4/2IN+1ZuNswwWPB9JPw+WDxyczcZlhP/OMC7egw=
+	t=1706614233; cv=none; b=j7o2QEinwUDrY2YIWp+Oe4x35h/EVR8D8rr8O8/EKFB6m1r/RKkKvAnb1yZb2zZcqUIYEAOKdiWM43TEWJtTeTFMFIPvP097QWfz3FxGMB+j/L3DAi+3fTxePrJbku9g2DXUoeFpVCCOJEqg8Qys8Rs42Jwwn3Kj6kqqNM/KoX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706610775; c=relaxed/simple;
-	bh=T8YocdfcR21pd5ihCsAeQ/OPqAW1R3GuUg5zJ4h+d/0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fSJxFRfC6s5aiiOy16BuDa8RhhPr2vSIKXIywpJp7nQwhvmB+2n9Uvcha240AFJ2rvWVV3CmprHbY7DC4AAVusMFKNG4GRe/n8RJahvzbozSOB9Dw2DxJtr1tXsEZb9LRUWdV8UINydqV52TxUB52DXLprgOwFomfT+Pqaw98mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UrURb1VB; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1706614233; c=relaxed/simple;
+	bh=9OMcTfbqDWp8yh7PIGJwzemNavrPJGabvoRiA7Mzr1k=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=pP4yqHbH0fONMdH5EesPSFQF1qCuXntzyyCgtt72ilW4IahPwLIsAcjpUNYFXnG6jHvR08/mf9JccxwO/hUFtRz9SqK42yAxJY43Qa6YUoQl3jWG6c6/eTPlFADOOITNbgDNCzg46XDw0kAo0aR6ayIvHPb/6ac9X9ZfIpf/kK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gr01gI3J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UrURb1VB"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-40ef3f351d2so11882785e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 02:32:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706610772; x=1707215572; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HJy2oY5sSa5dpMNL2tlno0bYtkBbusko6D5boAApUTk=;
-        b=UrURb1VB8WNnZlzoG+CMAISDb/+edIcCOzH2xpWD5DmBHFK+y3IRTM5a0OCZHC9K2t
-         m7K/N9Yqbe0Fq4GKtwLF799KzHBime3OfXFUIwsC+VNmFR7Vs+5M0hscXnllu321BS/K
-         9EZDAC4O/jBQXeYIRUzCYC+i9F0kirjj1eJAxd+IREL3AgzjCfAuKXj8cM4hNK9HC+vu
-         A7pUfa2wVjGYmA0i/CsnnrBifETJ2kH/90TeLWr0mI6GRyoRhHB6iNFEcjuW1Oods5w0
-         kakwfBam0sK44/EW8VNRWgkxwzjHC/OsmhX4i2uCzDVYA6UhyBd5aAv5j2uWb9SDYHWn
-         rkFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706610772; x=1707215572;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HJy2oY5sSa5dpMNL2tlno0bYtkBbusko6D5boAApUTk=;
-        b=Iyxe2/OjtXf8c1D4B6fTRJXUyYbMjYKhtIPpi+XU8SOX4tg0OgPoSELVavI/3Cthpb
-         5nkhAPKXyIvCN5cj7EcGxRBdtu/R8msYEowr52pq/ZwKZFCVQ9IFoAgPcUuidUDmgO0R
-         L0GWZ9qwC/ckAudMC5wZoDDocUzcEYFTQXbplew5Lrblp0Qaq1UR3B8cwRqk+a0g9wq7
-         pxNnsMOwurWqZYK2Qm7LlQkilDSJo7GW03Ug5sOmqS4Kq6DIKBrmC/yo1Q16R/lDxfcI
-         CJ+gm4BJUQscj9aNLKK0VrGowtwpz35Ru9qUetU78La7iqqeDfQO8lbQYVIckcJQ6Y/0
-         l3qg==
-X-Gm-Message-State: AOJu0YzcdfOZfIB8Zrsr4N/v4foxULeLqgNj+51uy5KteztzpRZ+0928
-	KHkh7BPgKEEeI0JA0aPNHWPlzSPU5Ky8m3TkkaIf2A+X92QvjJ8kNIWkOc85XA==
-X-Google-Smtp-Source: AGHT+IFeqsWf8yGfkeST6DbWjfbRh7I1RsszM1c7991rKwNqILlVIe5QTUm8OTMctrmeYqClxLEdyQ==
-X-Received: by 2002:a05:600c:3510:b0:40f:aabd:b83 with SMTP id h16-20020a05600c351000b0040faabd0b83mr485777wmq.13.1706610771692;
-        Tue, 30 Jan 2024 02:32:51 -0800 (PST)
-Received: from google.com (185.83.140.34.bc.googleusercontent.com. [34.140.83.185])
-        by smtp.gmail.com with ESMTPSA id t20-20020a05600c199400b0040ef702a338sm5538522wmq.25.2024.01.30.02.32.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 02:32:51 -0800 (PST)
-Date: Tue, 30 Jan 2024 10:32:45 +0000
-From: Vincent Donnefort <vdonnefort@google.com>
-To: kernel test robot <lkp@intel.com>
-Cc: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, oe-kbuild-all@lists.linux.dev,
-	mathieu.desnoyers@efficios.com, kernel-team@android.com
-Subject: Re: [PATCH v13 3/6] tracing: Add snapshot refcount
-Message-ID: <ZbjQTZ4SIkG703QM@google.com>
-References: <20240129142802.2145305-4-vdonnefort@google.com>
- <202401301740.qzZlpcYV-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gr01gI3J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA5C0C433C7;
+	Tue, 30 Jan 2024 11:30:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706614233;
+	bh=9OMcTfbqDWp8yh7PIGJwzemNavrPJGabvoRiA7Mzr1k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Gr01gI3JYz5XYMk4rbnDzVsmBHGKnjEHBYvPqo8B+5nZqzZSKrbGfOKTKEzQuMhGz
+	 RSc+XS/krLBGGYIQxZyQXkLT/CgY6zkI98Ed9xqcU3qbnq4+bWN/rZMRTcm5bpMntN
+	 VdEvzFm+FI15md6QaQWi1EXJVNw/yfUGmMQlap5TCJSJTqwucriUu+QYxZtO0RI8Zg
+	 wlQkNaq0RR6cfMM9JKYmWH5q6yqzunbxmCRnU5r0EpyXN2x2VMcH0/G4Vn+nw2bYQZ
+	 U1eFQuBjYLM1jp2MRZxIF0FgSpE4RFKKnbxOIT58vNQWuR0b3XVphSMojOjsn9qVP6
+	 E9MhggPfj+M2w==
+Date: Tue, 30 Jan 2024 20:30:28 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jinghao Jia <jinghao7@illinois.edu>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra
+ <peterz@infradead.org>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] x86/kprobes: Prohibit kprobing on INT and UD
+Message-Id: <20240130203028.320df28af0bcaf9ce8c91d4d@kernel.org>
+In-Reply-To: <15690bf4-a803-4ce0-87bc-ec21727fa38e@illinois.edu>
+References: <20240127044124.57594-1-jinghao7@illinois.edu>
+	<20240127044124.57594-2-jinghao7@illinois.edu>
+	<20240128101912.5ad6717347bd66089ecea03a@kernel.org>
+	<8c29d66d-b17d-4185-988c-de078566d0da@illinois.edu>
+	<20240130104414.4548b70ada33ea3180047423@kernel.org>
+	<15690bf4-a803-4ce0-87bc-ec21727fa38e@illinois.edu>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202401301740.qzZlpcYV-lkp@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 30, 2024 at 05:30:38PM +0800, kernel test robot wrote:
-> Hi Vincent,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on 29142dc92c37d3259a33aef15b03e6ee25b0d188]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Vincent-Donnefort/ring-buffer-Zero-ring-buffer-sub-buffers/20240129-223025
-> base:   29142dc92c37d3259a33aef15b03e6ee25b0d188
-> patch link:    https://lore.kernel.org/r/20240129142802.2145305-4-vdonnefort%40google.com
-> patch subject: [PATCH v13 3/6] tracing: Add snapshot refcount
-> config: arc-randconfig-002-20240130 (https://download.01.org/0day-ci/archive/20240130/202401301740.qzZlpcYV-lkp@intel.com/config)
-> compiler: arceb-elf-gcc (GCC) 13.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240130/202401301740.qzZlpcYV-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202401301740.qzZlpcYV-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->    kernel/trace/trace.c: In function 'tracing_set_tracer':
->    kernel/trace/trace.c:6644:17: error: implicit declaration of function 'tracing_disarm_snapshot_locked'; did you mean 'tracing_disarm_snapshot'? [-Werror=implicit-function-declaration]
->     6644 |                 tracing_disarm_snapshot_locked(tr);
->          |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->          |                 tracing_disarm_snapshot
-> >> kernel/trace/trace.c:6648:23: error: implicit declaration of function 'tracing_arm_snapshot_locked'; did you mean 'tracing_arm_snapshot'? [-Werror=implicit-function-declaration]
->     6648 |                 ret = tracing_arm_snapshot_locked(tr);
->          |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->          |                       tracing_arm_snapshot
->    cc1: some warnings being treated as errors
+On Mon, 29 Jan 2024 20:50:39 -0600
+Jinghao Jia <jinghao7@illinois.edu> wrote:
 
-Right, two tracers (hwlat and osnoise) select _only_ MAX_TRACE and not
-TRACER_SNAPSHOT.
+> On 1/29/24 19:44, Masami Hiramatsu (Google) wrote:
+> > On Sun, 28 Jan 2024 15:25:59 -0600
+> > Jinghao Jia <jinghao7@illinois.edu> wrote:
+> > 
+> >>>>  /* Check if paddr is at an instruction boundary */
+> >>>>  static int can_probe(unsigned long paddr)
+> >>>>  {
+> >>>> @@ -294,6 +310,16 @@ static int can_probe(unsigned long paddr)
+> >>>>  #endif
+> >>>>  		addr += insn.length;
+> >>>>  	}
+> >>>> +	__addr = recover_probed_instruction(buf, addr);
+> >>>> +	if (!__addr)
+> >>>> +		return 0;
+> >>>> +
+> >>>> +	if (insn_decode_kernel(&insn, (void *)__addr) < 0)
+> >>>> +		return 0;
+> >>>> +
+> >>>> +	if (is_exception_insn(&insn))
+> >>>> +		return 0;
+> >>>> +
+> >>>
+> >>> Please don't put this outside of decoding loop. You should put these in
+> >>> the loop which decodes the instruction from the beginning of the function.
+> >>> Since the x86 instrcution is variable length, can_probe() needs to check
+> >>> whether that the address is instruction boundary and decodable.
+> >>>
+> >>> Thank you,
+> >>
+> >> If my understanding is correct then this is trying to decode the kprobe
+> >> target instruction, given that it is after the main decoding loop.  Here I
+> >> hoisted the decoding logic out of the if(IS_ENABLED(CONFIG_CFI_CLANG))
+> >> block so that we do not need to decode the same instruction twice.  I left
+> >> the main decoding loop unchanged so it is still decoding the function from
+> >> the start and should handle instruction boundaries. Are there any caveats
+> >> that I missed?
+> > 
+> > Ah, sorry I misread the patch. You're correct!
+> > This is a good place to do that.
+> > 
+> > But hmm, I think we should add another patch to check the addr == paddr
+> > soon after the loop so that we will avoid decoding.
+> > 
+> > Thank you,
+> > 
+> 
+> Yes, that makes sense to me. At the same time, I'm also thinking about
+> changing the return type of can_probe() to bool, since we are just using
+> int as bool in this context.
 
-However, AFAICT, they will not call any of the swapping functions (they don't
-set use_max_tr). So I suppose arm/disarm can be ommited in that case.
+Yes, that is also a good change :)
+
+Thank you,
 
 > 
+> --Jinghao
 > 
-> vim +6648 kernel/trace/trace.c
-> 
->   6560	
->   6561	int tracing_set_tracer(struct trace_array *tr, const char *buf)
->   6562	{
->   6563		struct tracer *t;
->   6564	#ifdef CONFIG_TRACER_MAX_TRACE
->   6565		bool had_max_tr;
->   6566	#endif
->   6567		int ret = 0;
->   6568	
->   6569		mutex_lock(&trace_types_lock);
->   6570	
->   6571		if (!tr->ring_buffer_expanded) {
->   6572			ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
->   6573							RING_BUFFER_ALL_CPUS);
->   6574			if (ret < 0)
->   6575				goto out;
->   6576			ret = 0;
->   6577		}
->   6578	
->   6579		for (t = trace_types; t; t = t->next) {
->   6580			if (strcmp(t->name, buf) == 0)
->   6581				break;
->   6582		}
->   6583		if (!t) {
->   6584			ret = -EINVAL;
->   6585			goto out;
->   6586		}
->   6587		if (t == tr->current_trace)
->   6588			goto out;
->   6589	
->   6590	#ifdef CONFIG_TRACER_SNAPSHOT
->   6591		if (t->use_max_tr) {
->   6592			local_irq_disable();
->   6593			arch_spin_lock(&tr->max_lock);
->   6594			if (tr->cond_snapshot)
->   6595				ret = -EBUSY;
->   6596			arch_spin_unlock(&tr->max_lock);
->   6597			local_irq_enable();
->   6598			if (ret)
->   6599				goto out;
->   6600		}
->   6601	#endif
->   6602		/* Some tracers won't work on kernel command line */
->   6603		if (system_state < SYSTEM_RUNNING && t->noboot) {
->   6604			pr_warn("Tracer '%s' is not allowed on command line, ignored\n",
->   6605				t->name);
->   6606			goto out;
->   6607		}
->   6608	
->   6609		/* Some tracers are only allowed for the top level buffer */
->   6610		if (!trace_ok_for_array(t, tr)) {
->   6611			ret = -EINVAL;
->   6612			goto out;
->   6613		}
->   6614	
->   6615		/* If trace pipe files are being read, we can't change the tracer */
->   6616		if (tr->trace_ref) {
->   6617			ret = -EBUSY;
->   6618			goto out;
->   6619		}
->   6620	
->   6621		trace_branch_disable();
->   6622	
->   6623		tr->current_trace->enabled--;
->   6624	
->   6625		if (tr->current_trace->reset)
->   6626			tr->current_trace->reset(tr);
->   6627	
->   6628	#ifdef CONFIG_TRACER_MAX_TRACE
->   6629		had_max_tr = tr->current_trace->use_max_tr;
->   6630	
->   6631		/* Current trace needs to be nop_trace before synchronize_rcu */
->   6632		tr->current_trace = &nop_trace;
->   6633	
->   6634		if (had_max_tr && !t->use_max_tr) {
->   6635			/*
->   6636			 * We need to make sure that the update_max_tr sees that
->   6637			 * current_trace changed to nop_trace to keep it from
->   6638			 * swapping the buffers after we resize it.
->   6639			 * The update_max_tr is called from interrupts disabled
->   6640			 * so a synchronized_sched() is sufficient.
->   6641			 */
->   6642			synchronize_rcu();
->   6643			free_snapshot(tr);
->   6644			tracing_disarm_snapshot_locked(tr);
->   6645		}
->   6646	
->   6647		if (t->use_max_tr) {
-> > 6648			ret = tracing_arm_snapshot_locked(tr);
->   6649			if (ret)
->   6650				goto out;
->   6651		}
->   6652	#else
->   6653		tr->current_trace = &nop_trace;
->   6654	#endif
->   6655	
->   6656		if (t->init) {
->   6657			ret = tracer_init(t, tr);
->   6658			if (ret) {
->   6659	#ifdef CONFIG_TRACER_MAX_TRACE
->   6660				if (t->use_max_tr)
->   6661					tracing_disarm_snapshot_locked(tr);
->   6662	#endif
->   6663				goto out;
->   6664			}
->   6665		}
->   6666	
->   6667		tr->current_trace = t;
->   6668		tr->current_trace->enabled++;
->   6669		trace_branch_enable(tr);
->   6670	 out:
->   6671		mutex_unlock(&trace_types_lock);
->   6672	
->   6673		return ret;
->   6674	}
->   6675	
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+> >>
+> >> --Jinghao
+> >>
+> >>>
+> >>>>  	if (IS_ENABLED(CONFIG_CFI_CLANG)) {
+> >>>>  		/*
+> >>>>  		 * The compiler generates the following instruction sequence
+> >>>> @@ -308,13 +334,6 @@ static int can_probe(unsigned long paddr)
+> >>>>  		 * Also, these movl and addl are used for showing expected
+> >>>>  		 * type. So those must not be touched.
+> >>>>  		 */
+> >>>> -		__addr = recover_probed_instruction(buf, addr);
+> >>>> -		if (!__addr)
+> >>>> -			return 0;
+> >>>> -
+> >>>> -		if (insn_decode_kernel(&insn, (void *)__addr) < 0)
+> >>>> -			return 0;
+> >>>> -
+> >>>>  		if (insn.opcode.value == 0xBA)
+> >>>>  			offset = 12;
+> >>>>  		else if (insn.opcode.value == 0x3)
+> >>>> -- 
+> >>>> 2.43.0
+> >>>>
+> >>>
+> >>>
+> > 
+> > 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
