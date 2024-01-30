@@ -1,160 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E42376EC;
-	Tue, 30 Jan 2024 01:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E13364A5
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 01:50:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706579116; cv=none; b=jauVcVN/zbpnPDgYncgqAl1O04MCaUW3cpOemNH2wK9NX5/kovV8qn4Do+sktvfBeMDHzSBhITrAhy1HNLUmv3skeROu02MB4PD7/SZ/P61k96ms+JNtuk6LffTa8pfcMcfbfx1Hk0tZnn2UcWQJNPkYtQmDOhKO6jkM8Jzh+8c=
+	t=1706579460; cv=none; b=VlqVz0iSeNh4D0b9PY5ciezjnIll65W6Yl6abJdwFS9dKGO3W46hvXMlXuAKwtTwPNQ9AaCg5iJziEZIgB86UwEGpoPr8SHSvJtPnn4SYx05OQMR3owxq9cYxHLv1fPyxWQvhn3Cctg2DS8TCz2/B/MGE0Ynioe7cf/64nlSm3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706579116; c=relaxed/simple;
-	bh=zMZgNGNJ/4QrveRNN1bD0SiAaoebGVCPihzQ3ckTAvQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ZwOC/+VN4tCYHBSnIuSMsWn/66wj9T5hWjuHHYVv9ntYfcA53NbVI5TPb/jxncHU6NwdgrvnTO4C6Bl+5qBZmw2ig4eBLos8tbddJ9gA90VkJ/kBJmuFkMXLJ9sTc2M3ClDVDRWOTYN3J7G57PMgG3O7b0+smhtTyyL+rcu9OH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=No102ObB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706579460; c=relaxed/simple;
+	bh=zyDZ08Jamx3NYeGqhVvbunwn56jBnGzJ3cGlRkrcSRg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EU90xOn6dHCroyaalnGWCQcY/mFgAKDTR8ubKytYxUSbkUa+00GZb2n/Gpod0EAsTKoygFwN+h7qwNjBxu4RLKhzXuYxk6T8B1alpqm9Og5//vszJ/8NB95HFBlgGxQU3ztd6kskUdxUxeCmRfXGEaa4Kzvy4IijdG6ZWboUryM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=bVF17mhD; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="No102ObB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 081ABC433B2;
-	Tue, 30 Jan 2024 01:45:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706579116;
-	bh=zMZgNGNJ/4QrveRNN1bD0SiAaoebGVCPihzQ3ckTAvQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=No102ObB6r8N7DQ9fAQhYJfI79g+Kc3QU1VptOU6IHr9lV0IP/ClEzkE6Y/zzwmxu
-	 MoBdmemd9QzC0oOFOAWM+6wegLfySKFQFDjyvdqY3b0SyEmNSSfiIM9o0ccsinQoSP
-	 8dvRYsQMenV0puzU46fwjb9S3Aa9gQ/pIPIObTQpX9R3sNtrgkDoPUI16OeBTD613c
-	 XNKY+4dcDxImhO2VQqzZnfhyLKC3ud4VfLNsTQpgO6hmXRIQFM46OUPxWVRGwABJM3
-	 StqqmQErm9rRBRvOhDcSlkbY3NBQOmrOFl0jgFIxIVKz3xNCF2i9qqg+6zf6tJ/uGu
-	 C+xvfAj94xDZA==
-Date: Tue, 30 Jan 2024 10:45:12 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jinghao Jia <jinghao7@illinois.edu>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra
- <peterz@infradead.org>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] x86/kprobes: boost more instructions from
- grp2/3/4/5
-Message-Id: <20240130104512.3b64056130ca6c47e0bceb19@kernel.org>
-In-Reply-To: <9aace649-8a84-46ba-9092-0b74523147f0@illinois.edu>
-References: <20240127044124.57594-1-jinghao7@illinois.edu>
-	<20240127044124.57594-3-jinghao7@illinois.edu>
-	<20240128112218.5501726d17ac2fde2502da44@kernel.org>
-	<9aace649-8a84-46ba-9092-0b74523147f0@illinois.edu>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="bVF17mhD"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-55a5e7fa471so3335953a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jan 2024 17:50:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1706579457; x=1707184257; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=4JiXyOYVlI6BSEdoNtzDGECSezeX6jIOydJh3gzKSfA=;
+        b=bVF17mhDhNj6ABQr/QpFyJm3YAMJnklVu0o1QMOB3EK/5WiPsGI8mG7iKNTRDJp5DA
+         vf62jU9sn+GbH3yFbJF9hn+lTjKMoF9EpjIEQcMHnO8cI9Z7py61CloaAHv28kW1Xeba
+         bPh9AT6/N/7Ue9rXxEAi49YnTKGjvbv3ih9ds=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706579457; x=1707184257;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4JiXyOYVlI6BSEdoNtzDGECSezeX6jIOydJh3gzKSfA=;
+        b=TXtF7d700CbR+PqguNBuNt4w8lCVSJ3DvKGyJZssv7aVvLAxjhqEEUwYr9jj5O8MXT
+         XOgvWjvthNhhVlosunPsXWtmkwskjnpsDe4cQWzDkwYkJxKC3AQaXagJX/94YTfJAxeI
+         HUfvU6bnw5vfdQBcIOgh2+wDXeRrmaJCTdsUKOtongEkL8GM/eA1ug030ky8ZFioFCwK
+         kytBBvAWvkpogNROrIuRTC6QNP7M+dzHDD4Nzo8x+ot2HiCCzoUJz+nQHmnbJhHjJdjV
+         KKcoxuAMkOqh5k+Tg4vgmlOzOuU5FjCERRqOO6584y2M1CQNc8CZbwH2Z1Jvf7S6miPj
+         qG/w==
+X-Gm-Message-State: AOJu0YyTkxWlsFKC8cN4L8lbbE42/AQYrWsCV/IIUTNClKS0zxD2qg7z
+	Lk1gy4eSQBkEtjeeIXIxGHoy9mNEGwzRgotNU1SL6dy8H2slPJgFdwM22PX2/poJ8X7JFIGHTvt
+	vnizGPw==
+X-Google-Smtp-Source: AGHT+IG9VgIYsxhNsCbwa0CA6FmYsqng1Hf1TjVjUrWJStpSQqwMQLv8ia4UcURbDmuquG/ugt8Q3g==
+X-Received: by 2002:a05:6402:5207:b0:55e:ef2d:952e with SMTP id s7-20020a056402520700b0055eef2d952emr3987475edd.36.1706579457061;
+        Mon, 29 Jan 2024 17:50:57 -0800 (PST)
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
+        by smtp.gmail.com with ESMTPSA id j17-20020aa7c351000000b0055c4a251205sm4284162edr.90.2024.01.29.17.50.55
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jan 2024 17:50:55 -0800 (PST)
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-55817a12ad8so3348116a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 29 Jan 2024 17:50:55 -0800 (PST)
+X-Received: by 2002:a05:6402:3514:b0:55e:e22c:c1fd with SMTP id
+ b20-20020a056402351400b0055ee22cc1fdmr4283813edd.4.1706579455285; Mon, 29 Jan
+ 2024 17:50:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <202401291043.e62e89dc-oliver.sang@intel.com> <CAHk-=wh0M=e8R=ZXxa4vesLTtvGmYWJ-w1VmXxW5Mva=Nimk4Q@mail.gmail.com>
+ <20240129120125.605e97af@gandalf.local.home> <CAHk-=wghx8Abyx_jcSrCDuNj96SuWS0NvNMhfU8VjFGg9bgm_g@mail.gmail.com>
+ <CAHk-=whb91PWEaEJpRGsuWaQpYZGj98ji8HC2vvHD4xb_TqhJw@mail.gmail.com>
+ <CAHk-=wgp7UkG31=cCcbSdhMv6-vBJ=orktUOUdiLzw4tQ4gDLg@mail.gmail.com>
+ <20240129152600.7587d1aa@gandalf.local.home> <CAHk-=wghobf5qCqNUsafkQzNAZBJiS0=7CRjNXNChpoAvTbvUw@mail.gmail.com>
+ <20240129172200.1725f01b@gandalf.local.home> <CAHk-=wjV6+U1FQ8wzQ5ASmqGgby+GZ6wpdh0NrJgA43mc+TEwA@mail.gmail.com>
+ <CAHk-=wgOxTeTi02C=kOXsHzuD6XCrV0L1zk1XP9t+a4Wx--xvA@mail.gmail.com>
+ <20240129174950.5a17a86c@gandalf.local.home> <CAHk-=wjbzw3=nwR5zGH9jqXgB8jj03wxWfdFDn=oAVCoymQQJg@mail.gmail.com>
+ <20240129193549.265f32c8@gandalf.local.home>
+In-Reply-To: <20240129193549.265f32c8@gandalf.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 29 Jan 2024 17:50:38 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whRxcmjvGNBKi9_x59cAedh8SO8wsNDNrEQbAQfM5A8CQ@mail.gmail.com>
+Message-ID: <CAHk-=whRxcmjvGNBKi9_x59cAedh8SO8wsNDNrEQbAQfM5A8CQ@mail.gmail.com>
+Subject: Re: [linus:master] [eventfs] 852e46e239: BUG:unable_to_handle_page_fault_for_address
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel.com, 
+	linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Ajay Kaher <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, 28 Jan 2024 15:30:50 -0600
-Jinghao Jia <jinghao7@illinois.edu> wrote:
+On Mon, 29 Jan 2024 at 16:35, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+>  # echo 'p:sched schedule' >> /sys/kernel/tracing/kprobe_events
+>  # ls -l events/kprobes/
+> ls: cannot access 'events/kprobes/': No such file or directory
+>
+> Where it should now exist but doesn't. But the lookup code never triggered.
+>
+> If the lookup fails, does it cache the result?
 
-> 
-> 
-> On 1/27/24 20:22, Masami Hiramatsu (Google) wrote:
-> > On Fri, 26 Jan 2024 22:41:24 -0600
-> > Jinghao Jia <jinghao7@illinois.edu> wrote:
-> > 
-> >> With the instruction decoder, we are now able to decode and recognize
-> >> instructions with opcode extensions. There are more instructions in
-> >> these groups that can be boosted:
-> >>
-> >> Group 2: ROL, ROR, RCL, RCR, SHL/SAL, SHR, SAR
-> >> Group 3: TEST, NOT, NEG, MUL, IMUL, DIV, IDIV
-> >> Group 4: INC, DEC (byte operation)
-> >> Group 5: INC, DEC (word/doubleword/quadword operation)
-> >>
-> >> These instructions are not boosted previously because there are reserved
-> >> opcodes within the groups, e.g., group 2 with ModR/M.nnn == 110 is
-> >> unmapped. As a result, kprobes attached to them requires two int3 traps
-> >> as being non-boostable also prevents jump-optimization.
-> >>
-> >> Some simple tests on QEMU show that after boosting and jump-optimization
-> >> a single kprobe on these instructions with an empty pre-handler runs 10x
-> >> faster (~1000 cycles vs. ~100 cycles).
-> >>
-> >> Since these instructions are mostly ALU operations and do not touch
-> >> special registers like RIP, let's boost them so that we get the
-> >> performance benefit.
-> >>
-> > 
-> > As far as we check the ModR/M byte, I think we can safely run these
-> > instructions on trampoline buffer without adjusting results (this
-> > means it can be "boosted").
-> > I just have a minor comment, but basically this looks good to me.
-> > 
-> > Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> >> Signed-off-by: Jinghao Jia <jinghao7@illinois.edu>
-> >> ---
-> >>  arch/x86/kernel/kprobes/core.c | 21 +++++++++++++++------
-> >>  1 file changed, 15 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-> >> index 792b38d22126..f847bd9cc91b 100644
-> >> --- a/arch/x86/kernel/kprobes/core.c
-> >> +++ b/arch/x86/kernel/kprobes/core.c
-> >> @@ -169,22 +169,31 @@ int can_boost(struct insn *insn, void *addr)
-> >>  	case 0x62:		/* bound */
-> >>  	case 0x70 ... 0x7f:	/* Conditional jumps */
-> >>  	case 0x9a:		/* Call far */
-> >> -	case 0xc0 ... 0xc1:	/* Grp2 */
-> >>  	case 0xcc ... 0xce:	/* software exceptions */
-> >> -	case 0xd0 ... 0xd3:	/* Grp2 */
-> >>  	case 0xd6:		/* (UD) */
-> >>  	case 0xd8 ... 0xdf:	/* ESC */
-> >>  	case 0xe0 ... 0xe3:	/* LOOP*, JCXZ */
-> >>  	case 0xe8 ... 0xe9:	/* near Call, JMP */
-> >>  	case 0xeb:		/* Short JMP */
-> >>  	case 0xf0 ... 0xf4:	/* LOCK/REP, HLT */
-> >> -	case 0xf6 ... 0xf7:	/* Grp3 */
-> >> -	case 0xfe:		/* Grp4 */
-> >>  		/* ... are not boostable */
-> >>  		return 0;
-> >> +	case 0xc0 ... 0xc1:	/* Grp2 */
-> >> +	case 0xd0 ... 0xd3:	/* Grp2 */
-> >> +		/* ModR/M nnn == 110 is reserved */
-> >> +		return X86_MODRM_REG(insn->modrm.bytes[0]) != 6;
-> >> +	case 0xf6 ... 0xf7:	/* Grp3 */
-> >> +		/* ModR/M nnn == 001 is reserved */
-> > 
-> > 		/* AMD uses nnn == 001 as TEST, but Intel makes it reserved. */
-> > 
-> 
-> I will incorporate this into the v2. Since nnn == 001 is still considered
-> reserved by Intel, we still need to prevent it from being boosted, don't
-> we?
-> 
-> --Jinghao
-> 
-> >> +		return X86_MODRM_REG(insn->modrm.bytes[0]) != 1;
-> >> +	case 0xfe:		/* Grp4 */
-> >> +		/* Only inc and dec are boostable */
-> >> +		return X86_MODRM_REG(insn->modrm.bytes[0]) == 0 ||
-> >> +		       X86_MODRM_REG(insn->modrm.bytes[0]) == 1;
-> >>  	case 0xff:		/* Grp5 */
-> >> -		/* Only indirect jmp is boostable */
-> >> -		return X86_MODRM_REG(insn->modrm.bytes[0]) == 4;
-> >> +		/* Only inc, dec, and indirect jmp are boostable */
-> >> +		return X86_MODRM_REG(insn->modrm.bytes[0]) == 0 ||
-> >> +		       X86_MODRM_REG(insn->modrm.bytes[0]) == 1 ||
-> >> +		       X86_MODRM_REG(insn->modrm.bytes[0]) == 4;
-> >>  	default:
-> >>  		return 1;
-> >>  	}
-> >> -- 
-> >> 2.43.0
-> >>
-> > 
-> > Thamnk you,
-> > 
+I think you end up still having negative dentries around.
 
+The old code then tried to compensate for that by trying to remember
+the old dentry with 'ei->dentry' and 'ei->d_children[]', and would at
+lookup time try to use the *old* dentry instead of the new one.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+And because dentries are just caches and can go away, it then had that
+odd dance with '.d_iput', so that when a dentry was removed, it would
+be removed from the 'ei->dentry' and 'ei->d_children[]' array too.
+
+Except that d_iput() of an old dentry isn't actually serialized with
+->d_lookup() in any way, so you end up with the whole race that I
+already talked about earlier, where you could still have an
+'ei->dentry' that pointed to something that had already been unhashed,
+but d_iput() hadn't been called *yet*, so d_lookup() is called with a
+new dentry, but the tracefs code then desperately tries to use the old
+dentry pointer that just isn't _valid_ any more, but it doesn't know
+that because d_iput() hasn't been called yet...
+
+And as I *also* pointed out when I described that originally, you'll
+practically never hit this race, because you just need to be *very*
+unlucky with the whole "dentry is freed due to memory pressure".
+
+But basically, this is why I absolutely *HATE* that "ei->dentry"
+backpointer. It's truly fundamentally broken.
+
+You can't reference-count it, since the whole point of your current
+tracefs scheme is to *not* keep dentries and inodes around forever,
+and doing a "dget()" on that 'ei->dentry' would thus fundamentally
+screw that up.
+
+But you also cannot keep it in sync with dentries being released due
+to memory pressure, because of the above thing.
+
+See why I've tried to tell you that the back-pointer is basically a
+100% sign of a bug.
+
+The *only* time you can have a valid dentry pointer is when you have
+also taken a ref to it with dget(), and you can't do that.
+
+So then you have all that completely broken code that _tries_ to
+maintain consistency with ->d_children[] etc, and it works 99.9% in
+practice, because the race is just so hard to hit because dentries
+only normally get evicted either synchronously (which you do under the
+eventfs_mutex) or under memory pressure (which is basically never
+going to be something you can test).
+
+And yes, my lookup patch removed all the band-aids for "if I have an
+ei->dentry, I'll reuse it". So I think it ends up exposing all the
+previous bugs that the old "let's reuse the old dentry" code tried to
+hide.
+
+But, as mentioned, that ei->dentry pointer really REALLY is broken.
+
+NBow, having looked at this a lot, I think I have a way forward.
+Because there is actually *one* case where you actually *do* do the
+whole "dget()" to get a stable dentry pointer. And that's exactly the
+"events" directory creation (ie eventfs_create_events_dir()).
+
+So what I propose is that
+
+ - ei->dentry and ei->d_children[] need to die. Really. They are
+buggy. There is no way to save them. There never was.
+
+ - but we *can* introduce a new 'ei->events_dir' pointer that is
+*only* set by eventfs_create_events_dir(), and which is stable exactly
+because that function also does a dget() on it, so now the dentry will
+actually continue to exist reliably
+
+I think that works. The only thing that actually *needs* the existing
+'ei->dentry' is literally the eventfs_remove_events_dir() that gets
+rid of the stable events directory. It's undoing
+eventfs_create_events_dir(), and it will do the final dput() too.
+
+I will try to make a patch for this. I do think it means that every
+time we do that
+
+    dentry->d_fsdata = ei;
+
+we need to also do proper reference counting of said 'ei'. Because we
+can't release 'ei' early when we have dentries that point to it.
+
+Let me see how painful this will be.
+
+             Linus
