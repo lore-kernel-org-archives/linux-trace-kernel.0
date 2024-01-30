@@ -1,298 +1,209 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9557D402
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 22:09:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0AEB78B6D;
+	Tue, 30 Jan 2024 22:42:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706652579; cv=none; b=PqDB/L7oxmv2/uTtsMWPMXSR3wwGnyG+9Acl0uIjzEvx//aX/vbWsW3Opjz8skqysL1Zkpt9gujoeoceZXzpspEZoVdM30sBezILQ7kSjIpJUBL0eNnnItXmlvZXCAuJENHf1wY383EwzMK6Wdzj42qgB67e5/q0kHWMCi7iB8o=
+	t=1706654550; cv=none; b=pl79K5PCB5p3fj8jU9jQsiU8MwNcAOwNaLxWRyKeVB7CvAGuqaURTOPHeZndBo2yuE2NSm2hf/CHNv/SGd1/6N2Bi9Re9RZK3Wz8PuNATbWg8+M5QWRuhNMd/7jKAOw/+qLQmNq1robk3GwJ81FGgzcTRLFjMfbWWELRWM5WONk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706652579; c=relaxed/simple;
-	bh=CgJMFn7wku+na+YduB33o8Ey5aB8CoiOZySPtX3EizM=;
+	s=arc-20240116; t=1706654550; c=relaxed/simple;
+	bh=Nx1e4pop5AqEvKYE+6bTOVPXV7286s5WcoEZH12vQtA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SNBUGi5t4r0LRtze4d2vFBoovaMB0LttNmZokHovDlAT0dRfCpHb7UrsSkDkgO8qu8gPL8/0MITDi5SNNMr2ED0HakxOIPCXR45E4XmemA+YhxNQMmLtLAIATI7Sb3j++rzhIpXdF5eRdCzFDPoF/uvYv69Ad35b4pYT6AmCBls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=kr1hv1SP; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
+	 Content-Type:Content-Disposition:In-Reply-To; b=QMfbw9ds1tiBPghepcMJjRelqF4VWc1scZ9L5Zk2oK0g/H388LWxxs2O9C0IJAHn5Nzfg6BxUvHU2Dxz2trstXt7HpmisX8cmfnvNClLo6CnpeAAanYXfg/SIqQVSfe6LY5cG2Sjl9s9wl/omFmvEm558n++4ChJQcQ6qN8YPRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=kuPKs6Vp; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="kr1hv1SP"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-51121c08535so610314e87.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 14:09:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1706652575; x=1707257375; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Sa9NIl9o38HhCF5W35qE3UN/MWi6AZoAUggK3dO2Ek=;
-        b=kr1hv1SPZZLOLO+bmFA4CikaQCDlneeDQRlQNJY6y1ON71J2/n8ns+CuS9+lmgALlC
-         AExrFTDZr3UyBPLMberghx+cLu8uWpTSsleMzKrckVl0H7UmpdmSB0byTzSXThYypIF+
-         dzLBGCP4Hn65Hv5I0F4jL3BQYVvHnj6wGxTbOschakov9s5LlZT/0Z7CYOr6BPtiyxwK
-         icaDqqohk2Zatxzs/Av0SxPxQm+tc0Y1nOFck4txI8ylUL8CFDdciWPZ642AZZ+/NHsr
-         rHnXPLuHnoh88jZoLuJtaWXE5ju15VnyyZXYEHl8rXeAPQMx5KoEzy9ibYMDOyAC6cu2
-         +/xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706652575; x=1707257375;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0Sa9NIl9o38HhCF5W35qE3UN/MWi6AZoAUggK3dO2Ek=;
-        b=WBo7Gwr0G/VkUzZ1qeVyUuFXyJunCQrJYX+H5Qm/wPK/yIJ71PE7LwWiSNTznZQh0Z
-         oCaeeZvaIIeuTmjOQa6RAH/YirTSmPKnqIPUN1Tlcf8RlRr30lcsKizQTgPzNhoP0oi+
-         LiN/yrzG7Wuah/l/mdRMxFty4vbJAeszj1ZatrMDRv+k9DfcTzE2bZ/t/Lr7M79K8C2g
-         UnLk0HTOpZiA3TRzhYJwBdjxCy+484h4osSXBJTkuYUdfHAGgQQey20PzMLkZvUlpljq
-         AS6Oo7vaTiZzGLx1J9CEj81FcmrY5qxYTze+0/6SDudBxWPJ2bnWoi+JcWU2Cht+/2Hf
-         HzLg==
-X-Gm-Message-State: AOJu0YwjatP0VPGM5Z3DWmOr/bpHwoyxGtdSYaMjs8lwZ80Ce4kXiNQN
-	in7CbMDvr+r+Lp8T8NeaWHgz8hvoXtt26m8VAOibEYGaBfxnaBent9CRg+6Zk1I=
-X-Google-Smtp-Source: AGHT+IFLhL1hqCulNbyoqWstpln+RHYfGX0scj+oQ1Qn/1831yGq+tCMcZ0730Fh+ehsDwy9WRiu2w==
-X-Received: by 2002:a05:6512:3f08:b0:511:1abf:2a6c with SMTP id y8-20020a0565123f0800b005111abf2a6cmr2591441lfa.62.1706652575057;
-        Tue, 30 Jan 2024 14:09:35 -0800 (PST)
-Received: from airbuntu ([213.122.231.14])
-        by smtp.gmail.com with ESMTPSA id k7-20020a05600c1c8700b0040ef3ae26cdsm8878492wms.37.2024.01.30.14.09.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 14:09:34 -0800 (PST)
-Date: Tue, 30 Jan 2024 22:09:32 +0000
-From: Qais Yousef <qyousef@layalina.io>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
-	sudeep.holla@arm.com, rafael@kernel.org, viresh.kumar@linaro.org,
-	agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
-	lukasz.luba@arm.com, rui.zhang@intel.com, mhiramat@kernel.org,
-	daniel.lezcano@linaro.org, amit.kachhap@gmail.com, corbet@lwn.net,
-	gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 2/5] sched: Take cpufreq feedback into account
-Message-ID: <20240130220932.2wvnscmzqadmsrd2@airbuntu>
-References: <20240109164655.626085-1-vincent.guittot@linaro.org>
- <20240109164655.626085-3-vincent.guittot@linaro.org>
- <20240130002652.ipdyqs3sjy6qqt6t@airbuntu>
- <20240130005028.vbqg27ctmanxsej6@airbuntu>
- <CAKfTPtCJ9TXRRrCPsTam=uReDtay7dRqBpZCWQkOsbieWTuMbw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kuPKs6Vp"
+Received: from DESKTOP-4OLSCEK. (c-76-135-27-212.hsd1.wa.comcast.net [76.135.27.212])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 53DD620B2004;
+	Tue, 30 Jan 2024 14:42:28 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 53DD620B2004
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1706654548;
+	bh=gNgRjz+MsOXXdEsDWVg3uGol6zwXi+IHXyDrs53BXIw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kuPKs6VpI+veqbrIMVSY80XJ7Ktyp2BJussP+OXuGObMYSVnMSwprTCtgjxucQ4qW
+	 4o4KgAldBYu9FQBgHHSojNmz4tVOIcXwd/sWiGKIkVW7f6apEdXpwuApmemax672D1
+	 0E7N+5JH2iBe1KNM6WJHxbDryoYZ43WTEu/fo0zw=
+Date: Tue, 30 Jan 2024 14:42:24 -0800
+From: Beau Belgrave <beaub@linux.microsoft.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH 2/4] tracing/user_events: Introduce multi-format events
+Message-ID: <20240130224224.GA435-beaub@linux.microsoft.com>
+References: <20240123220844.928-1-beaub@linux.microsoft.com>
+ <20240123220844.928-3-beaub@linux.microsoft.com>
+ <20240127000104.7c98b34d295747ab1b084bd2@kernel.org>
+ <20240126191007.GA456-beaub@linux.microsoft.com>
+ <20240126150445.71c5d426@gandalf.local.home>
+ <20240129172907.GA444-beaub@linux.microsoft.com>
+ <20240129212407.157a5533@gandalf.local.home>
+ <20240130180515.GA827-beaub@linux.microsoft.com>
+ <20240130135230.25eb6f21@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKfTPtCJ9TXRRrCPsTam=uReDtay7dRqBpZCWQkOsbieWTuMbw@mail.gmail.com>
+In-Reply-To: <20240130135230.25eb6f21@gandalf.local.home>
 
-On 01/30/24 10:35, Vincent Guittot wrote:
-> On Tue, 30 Jan 2024 at 01:50, Qais Yousef <qyousef@layalina.io> wrote:
-> >
-> > On 01/30/24 00:26, Qais Yousef wrote:
-> > > On 01/09/24 17:46, Vincent Guittot wrote:
-> > > > Aggregate the different pressures applied on the capacity of CPUs and
-> > > > create a new function that returns the actual capacity of the CPU:
-> > > >   get_actual_cpu_capacity()
-> > > >
-> > > > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > > > Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-> > > > ---
-> > > >  kernel/sched/fair.c | 45 +++++++++++++++++++++++++--------------------
-> > > >  1 file changed, 25 insertions(+), 20 deletions(-)
-> > > >
-> > > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > > > index 9cc20855dc2b..e54bbf8b4936 100644
-> > > > --- a/kernel/sched/fair.c
-> > > > +++ b/kernel/sched/fair.c
-> > > > @@ -4910,13 +4910,22 @@ static inline void util_est_update(struct cfs_rq *cfs_rq,
-> > > >     trace_sched_util_est_se_tp(&p->se);
-> > > >  }
-> > > >
-> > > > +static inline unsigned long get_actual_cpu_capacity(int cpu)
-> > > > +{
-> > > > +   unsigned long capacity = arch_scale_cpu_capacity(cpu);
-> > > > +
-> > > > +   capacity -= max(thermal_load_avg(cpu_rq(cpu)), cpufreq_get_pressure(cpu));
-> > >
-> > > Does cpufreq_get_pressure() reflect thermally throttled frequency, or just the
-> > > policy->max being capped by user etc? I didn't see an update to cpufreq when we
-> > > topology_update_hw_pressure(). Not sure if it'll go through another path.
-> >
-> > It is done via the cooling device. And assume any limitations on freq due to
-> > power etc are assumed to always to cause the policy->max to change.
-> >
-> > (sorry if I missed earlier discussions about this)
+On Tue, Jan 30, 2024 at 01:52:30PM -0500, Steven Rostedt wrote:
+> On Tue, 30 Jan 2024 10:05:15 -0800
+> Beau Belgrave <beaub@linux.microsoft.com> wrote:
 > 
-> I assume that you have answered all your questions.
+> > On Mon, Jan 29, 2024 at 09:24:07PM -0500, Steven Rostedt wrote:
+> > > On Mon, 29 Jan 2024 09:29:07 -0800
+> > > Beau Belgrave <beaub@linux.microsoft.com> wrote:
+> > >   
+> > > > Thanks, yeah ideally we wouldn't use special characters.
+> > > > 
+> > > > I'm not picky about this. However, I did want something that clearly
+> > > > allowed a glob pattern to find all versions of a given register name of
+> > > > user_events by user programs that record. The dot notation will pull in
+> > > > more than expected if dotted namespace style names are used.
+> > > > 
+> > > > An example is "Asserts" and "Asserts.Verbose" from different programs.
+> > > > If we tried to find all versions of "Asserts" via glob of "Asserts.*" it
+> > > > will pull in "Asserts.Verbose.1" in addition to "Asserts.0".  
+> > > 
+> > > Do you prevent brackets in names?
+> > >   
+> > 
+> > No. However, since brackets have a start and end token that are distinct
+> > finding all versions of your event is trivial compared to a single dot.
+> > 
+> > Imagine two events:
+> > Asserts
+> > Asserts[MyCoolIndex]
+> > 
+> > Resolves to tracepoints of:
+> > Asserts:[0]
+> > Asserts[MyCoolIndex]:[1]
+> > 
+> > Regardless of brackets in the names, a simple glob of Asserts:\[*\] only
+> > finds Asserts:[0]. This is because we have that end bracket in the glob
+> > and the full event name including the start bracket.
+> > 
+> > If I register another "version" of Asserts, thne I'll have:
+> > Asserts:[0]
+> > Asserts[MyCoolIndex]:[1]
+> > Asserts:[2]
+> > 
+> > The glob of Asserts:\[*\] will return both:
+> > Asserts:[0]
+> > Asserts:[2]
 > 
-> We have now 2 distinct signals:
-> - hw high freq update which is averaged with PELT and go through
-> topology_update_hw_pressure
-> - cpufreq pressure which is not averaged (including cpufreq cooling
-> device with patch 3)
-
-Yes. I think a comment like suggested below is useful to help keeping the code
-understandable to new comers. But FWIW
-
-Reviewed-by: Qais Yousef <qyousef@layalina.io>
-
+> But what if you had registered "Asserts:[MyCoolIndex]:[1]"
 > 
-> >
-> > >
-> > > maxing with thermal_load_avg() will change the behavior below where we used to
-> > > compare against instantaneous pressure. The concern was that it not just can
-> > > appear quickly, but disappear quickly too. thermal_load_avg() will decay
-> > > slowly, no?  This means we'll lose a lot of opportunities for better task
-> > > placement until this decays which can take relatively long time.
-> > >
-> > > So maxing handles the direction where a pressure suddenly appears. But it
-> > > doesn't handle where it disappears.
-> > >
-> > > I suspect your thoughts are that if it was transient then thermal_load_avg()
-> > > should be small anyway - which I think makes sense.
-> > >
-> > > I think we need a comment to explain these nuance differences.
-> > >
-> > > > +
-> > > > +   return capacity;
-> > > > +}
-> > > > +
-> > > >  static inline int util_fits_cpu(unsigned long util,
-> > > >                             unsigned long uclamp_min,
-> > > >                             unsigned long uclamp_max,
-> > > >                             int cpu)
-> > > >  {
-> > > > -   unsigned long capacity_orig, capacity_orig_thermal;
-> > > >     unsigned long capacity = capacity_of(cpu);
-> > > > +   unsigned long capacity_orig;
-> > > >     bool fits, uclamp_max_fits;
-> > > >
-> > > >     /*
-> > > > @@ -4948,7 +4957,6 @@ static inline int util_fits_cpu(unsigned long util,
-> > > >      * goal is to cap the task. So it's okay if it's getting less.
-> > > >      */
-> > > >     capacity_orig = arch_scale_cpu_capacity(cpu);
-> > > > -   capacity_orig_thermal = capacity_orig - arch_scale_thermal_pressure(cpu);
-> > > >
-> > > >     /*
-> > > >      * We want to force a task to fit a cpu as implied by uclamp_max.
-> > > > @@ -5023,7 +5031,8 @@ static inline int util_fits_cpu(unsigned long util,
-> > > >      * handle the case uclamp_min > uclamp_max.
-> > > >      */
-> > > >     uclamp_min = min(uclamp_min, uclamp_max);
-> > > > -   if (fits && (util < uclamp_min) && (uclamp_min > capacity_orig_thermal))
-> > > > +   if (fits && (util < uclamp_min) &&
-> > > > +       (uclamp_min > get_actual_cpu_capacity(cpu)))
-> > > >             return -1;
-> > > >
-> > > >     return fits;
-> > > > @@ -7404,7 +7413,7 @@ select_idle_capacity(struct task_struct *p, struct sched_domain *sd, int target)
-> > > >              * Look for the CPU with best capacity.
-> > > >              */
-> > > >             else if (fits < 0)
-> > > > -                   cpu_cap = arch_scale_cpu_capacity(cpu) - thermal_load_avg(cpu_rq(cpu));
-> > > > +                   cpu_cap = get_actual_cpu_capacity(cpu);
-> > > >
-> > > >             /*
-> > > >              * First, select CPU which fits better (-1 being better than 0).
-> > > > @@ -7897,8 +7906,8 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
-> > > >     struct root_domain *rd = this_rq()->rd;
-> > > >     int cpu, best_energy_cpu, target = -1;
-> > > >     int prev_fits = -1, best_fits = -1;
-> > > > -   unsigned long best_thermal_cap = 0;
-> > > > -   unsigned long prev_thermal_cap = 0;
-> > > > +   unsigned long best_actual_cap = 0;
-> > > > +   unsigned long prev_actual_cap = 0;
-> > > >     struct sched_domain *sd;
-> > > >     struct perf_domain *pd;
-> > > >     struct energy_env eenv;
-> > > > @@ -7928,7 +7937,7 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
-> > > >
-> > > >     for (; pd; pd = pd->next) {
-> > > >             unsigned long util_min = p_util_min, util_max = p_util_max;
-> > > > -           unsigned long cpu_cap, cpu_thermal_cap, util;
-> > > > +           unsigned long cpu_cap, cpu_actual_cap, util;
-> > > >             long prev_spare_cap = -1, max_spare_cap = -1;
-> > > >             unsigned long rq_util_min, rq_util_max;
-> > > >             unsigned long cur_delta, base_energy;
-> > > > @@ -7940,18 +7949,17 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
-> > > >             if (cpumask_empty(cpus))
-> > > >                     continue;
-> > > >
-> > > > -           /* Account thermal pressure for the energy estimation */
-> > > > +           /* Account external pressure for the energy estimation */
-> > > >             cpu = cpumask_first(cpus);
-> > > > -           cpu_thermal_cap = arch_scale_cpu_capacity(cpu);
-> > > > -           cpu_thermal_cap -= arch_scale_thermal_pressure(cpu);
-> > > > +           cpu_actual_cap = get_actual_cpu_capacity(cpu);
-> > > >
-> > > > -           eenv.cpu_cap = cpu_thermal_cap;
-> > > > +           eenv.cpu_cap = cpu_actual_cap;
-> > > >             eenv.pd_cap = 0;
-> > > >
-> > > >             for_each_cpu(cpu, cpus) {
-> > > >                     struct rq *rq = cpu_rq(cpu);
-> > > >
-> > > > -                   eenv.pd_cap += cpu_thermal_cap;
-> > > > +                   eenv.pd_cap += cpu_actual_cap;
-> > > >
-> > > >                     if (!cpumask_test_cpu(cpu, sched_domain_span(sd)))
-> > > >                             continue;
-> > > > @@ -8022,7 +8030,7 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
-> > > >                     if (prev_delta < base_energy)
-> > > >                             goto unlock;
-> > > >                     prev_delta -= base_energy;
-> > > > -                   prev_thermal_cap = cpu_thermal_cap;
-> > > > +                   prev_actual_cap = cpu_actual_cap;
-> > > >                     best_delta = min(best_delta, prev_delta);
-> > > >             }
-> > > >
-> > > > @@ -8037,7 +8045,7 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
-> > > >                      * but best energy cpu has better capacity.
-> > > >                      */
-> > > >                     if ((max_fits < 0) &&
-> > > > -                       (cpu_thermal_cap <= best_thermal_cap))
-> > > > +                       (cpu_actual_cap <= best_actual_cap))
-> > > >                             continue;
-> > > >
-> > > >                     cur_delta = compute_energy(&eenv, pd, cpus, p,
-> > > > @@ -8058,14 +8066,14 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
-> > > >                     best_delta = cur_delta;
-> > > >                     best_energy_cpu = max_spare_cap_cpu;
-> > > >                     best_fits = max_fits;
-> > > > -                   best_thermal_cap = cpu_thermal_cap;
-> > > > +                   best_actual_cap = cpu_actual_cap;
-> > > >             }
-> > > >     }
-> > > >     rcu_read_unlock();
-> > > >
-> > > >     if ((best_fits > prev_fits) ||
-> > > >         ((best_fits > 0) && (best_delta < prev_delta)) ||
-> > > > -       ((best_fits < 0) && (best_thermal_cap > prev_thermal_cap)))
-> > > > +       ((best_fits < 0) && (best_actual_cap > prev_actual_cap)))
-> > > >             target = best_energy_cpu;
-> > > >
-> > > >     return target;
-> > > > @@ -9441,8 +9449,8 @@ static inline void init_sd_lb_stats(struct sd_lb_stats *sds)
-> > > >
-> > > >  static unsigned long scale_rt_capacity(int cpu)
-> > > >  {
-> > > > +   unsigned long max = get_actual_cpu_capacity(cpu);
-> > > >     struct rq *rq = cpu_rq(cpu);
-> > > > -   unsigned long max = arch_scale_cpu_capacity(cpu);
-> > > >     unsigned long used, free;
-> > > >     unsigned long irq;
-> > > >
-> > > > @@ -9454,12 +9462,9 @@ static unsigned long scale_rt_capacity(int cpu)
-> > > >     /*
-> > > >      * avg_rt.util_avg and avg_dl.util_avg track binary signals
-> > > >      * (running and not running) with weights 0 and 1024 respectively.
-> > > > -    * avg_thermal.load_avg tracks thermal pressure and the weighted
-> > > > -    * average uses the actual delta max capacity(load).
-> > > >      */
-> > > >     used = READ_ONCE(rq->avg_rt.util_avg);
-> > > >     used += READ_ONCE(rq->avg_dl.util_avg);
-> > > > -   used += thermal_load_avg(rq);
-> > > >
-> > > >     if (unlikely(used >= max))
-> > > >             return 1;
-> > > > --
-> > > > 2.34.1
-> > > >
+
+Good point, the above would still require a regex type pattern to not
+get pulled in.
+
+> Do you prevent colons?
+> 
+
+No, nothing is prevented at this point.
+
+It seems we could either prevent certain characters to make it easier or
+define a good regex that we should document.
+
+I'm leaning toward just doing a simple suffix and documenting the regex
+well.
+
+> > 
+> > At this point the program can either record all versions or scan further
+> > to find which version of Asserts is wanted.
+> > 
+> > > > 
+> > > > While a glob of "Asserts.[0-9]" works when the unique ID is 0-9, it
+> > > > doesn't work if the number is higher, like 128. If we ever decide to
+> > > > change the ID from an integer to say hex to save space, these globs
+> > > > would break.
+> > > > 
+> > > > Is there some scheme that fits the C-variable name that addresses the
+> > > > above scenarios? Brackets gave me a simple glob that seemed to prevent a
+> > > > lot of this ("Asserts.\[*\]" in this case).  
+> > > 
+> > > Prevent a lot of what? I'm not sure what your example here is.
+> > >   
+> > 
+> > I'll try again :)
+> > 
+> > We have 2 events registered via user_events:
+> > Asserts
+> > Asserts.Verbose
+> > 
+> > Using dot notation these would result in tracepoints of:
+> > user_events_multi/Asserts.0
+> > user_events_multi/Asserts.Verbose.1
+> > 
+> > Using bracket notation these would result in tracepoints of:
+> > user_events_multi/Asserts:[0]
+> > user_events_multi/Asserts.Verbose:[1]
+> > 
+> > A recording program only wants to enable the Asserts tracepoint. It does
+> > not want to record the Asserts.Verbose tracepoint.
+> > 
+> > The program must find the right tracepoint by scanning tracefs under the
+> > user_events_multi system.
+> > 
+> > A single dot suffix does not allow a simple glob to be used. The glob
+> > Asserts.* will return both Asserts.0 and Asserts.Verbose.1.
+> > 
+> > A simple glob of Asserts:\[*\] will only find Asserts:[0], it will not
+> > find Asserts.Verbose:[1].
+> > 
+> > We could just use brackets and not have the colon (Asserts[0] in this
+> > case). But brackets are still special for bash.
+> 
+> Are these shell scripts or programs. I use regex in programs all the time.
+> And if you have shell scripts, use awk or something.
+> 
+
+They could be both. In our case, it is a program.
+
+> Unless you prevent something from being added, I don't see the protection.
+> 
+
+Yeah, it just makes it way less likely. Given that, I'm starting to lean
+toward just documenting the regex well and not trying to get fancy.
+
+> > 
+> > > > 
+> > > > Are we confident that we always want to represent the ID as a base-10
+> > > > integer vs a base-16 integer? The suffix will be ABI to ensure recording
+> > > > programs can find their events easily.  
+> > > 
+> > > Is there a difference to what we choose?
+> > >   
+> > 
+> > If a simple glob of event_name:\[*\] cannot be used, then we must document
+> > what the suffix format is, so an appropriate regex can be created. If we
+> > start with base-10 then later move to base-16 we will break existing regex
+> > patterns on the recording side.
+> > 
+> > I prefer, and have in this series, a base-16 output since it saves on
+> > the tracepoint name size.
+> 
+> I honestly don't care which base you use. So if you want to use base 16,
+> I'm fine with that.
+> 
+> > 
+> > Either way we go, we need to define how recording programs should find
+> > the events they care about. So we must be very clear, IMHO, about the
+> > format of the tracepoint names in our documentation.
+> > 
+> > I personally think recording programs are likely to get this wrong
+> > without proper guidance.
+> > 
+> 
+> Agreed.
+> 
+> -- Steve
+
+Thanks,
+-Beau
