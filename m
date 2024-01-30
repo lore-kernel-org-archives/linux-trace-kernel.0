@@ -1,119 +1,567 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEDD27C08A;
-	Tue, 30 Jan 2024 14:39:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C877CF3C;
+	Tue, 30 Jan 2024 14:55:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706625572; cv=none; b=I0KwcYdQazS3s7I8A76XQJIl2z+1oY30f56NJEPBuLRufPvTX8DPaP7CIIJmcIXZFPQDZUg+ReRkiE5zijMM5LuSR8Mem+dtDv8Z76ISQJnAZue3TlnB4L4cRkxa928e9sONeJBkJMFwOvmaNnpMQqPXXDy7hfHnFlQzJzhu7rA=
+	t=1706626515; cv=none; b=sFknstzfDyAC8d74hzGdxq9Y09/Pb1VRSX10kA33MhYpD67DXb/eq9JUAKiobgY2y3rR3SOkilfniQllQLV84YZzt7NU9EViR2C7kZ1YyjO8Llp8j5/2l2MQZNTZV0W4vFUjpmI1C9r+8W/owgsR4Loe8AX+xHDIQqJIvKsr4MU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706625572; c=relaxed/simple;
-	bh=wqSBbOtqTFhUjK2zJYRQVHTlBD4gJby8xLhIvN0PEhA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FZoZuhQ3lXQLkqRL+ZCCLIs90QdQ59UzWTOYVPyvTUb4oyFRuilDYTKy2HeoZfx1D0/2bq9h90P8wXwWGa4GO2SHTPYQLyib5fqPL6BTL2gkGpMzwfNP+HnTCgvzkzhICKHwTaeFKGH4dI7OB6FL6/EipnvKiYcio/DdWv2HBik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33BA7C433C7;
-	Tue, 30 Jan 2024 14:39:31 +0000 (UTC)
-Date: Tue, 30 Jan 2024 09:39:42 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
- lkp@intel.com, linux-kernel@vger.kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Christian Brauner
- <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Ajay Kaher
- <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org
-Subject: Re: [linus:master] [eventfs] 852e46e239:
- BUG:unable_to_handle_page_fault_for_address
-Message-ID: <20240130093942.56206ff1@gandalf.local.home>
-In-Reply-To: <CAHk-=wi+WbXZcc2Sx1i-MGV2DfG4eS4Ci+mrqi-PBSLSnww6qA@mail.gmail.com>
-References: <202401291043.e62e89dc-oliver.sang@intel.com>
-	<CAHk-=whb91PWEaEJpRGsuWaQpYZGj98ji8HC2vvHD4xb_TqhJw@mail.gmail.com>
-	<CAHk-=wgp7UkG31=cCcbSdhMv6-vBJ=orktUOUdiLzw4tQ4gDLg@mail.gmail.com>
-	<20240129152600.7587d1aa@gandalf.local.home>
-	<CAHk-=wghobf5qCqNUsafkQzNAZBJiS0=7CRjNXNChpoAvTbvUw@mail.gmail.com>
-	<20240129172200.1725f01b@gandalf.local.home>
-	<CAHk-=wjV6+U1FQ8wzQ5ASmqGgby+GZ6wpdh0NrJgA43mc+TEwA@mail.gmail.com>
-	<CAHk-=wgOxTeTi02C=kOXsHzuD6XCrV0L1zk1XP9t+a4Wx--xvA@mail.gmail.com>
-	<20240129174950.5a17a86c@gandalf.local.home>
-	<CAHk-=wjbzw3=nwR5zGH9jqXgB8jj03wxWfdFDn=oAVCoymQQJg@mail.gmail.com>
-	<20240129193549.265f32c8@gandalf.local.home>
-	<CAHk-=whRxcmjvGNBKi9_x59cAedh8SO8wsNDNrEQbAQfM5A8CQ@mail.gmail.com>
-	<CAHk-=wh97AkwaOkXoBgf0z8EP88ePffLnTcmmQXcY+AhFaFrnA@mail.gmail.com>
-	<CAHk-=wi6m7d-nivx10Lo=aGhbdk2qg-8SzjtDd9XW01LxGgAMA@mail.gmail.com>
-	<CAHk-=wi+WbXZcc2Sx1i-MGV2DfG4eS4Ci+mrqi-PBSLSnww6qA@mail.gmail.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1706626515; c=relaxed/simple;
+	bh=RGJjrGZPbLUuFUjuCYyguun2Idc1ACjWA9E9iAYPwko=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=HyU8TkfKD5C1Iryd+upM7oG6sbTkYcx4lRseKaKXnh01WEFhbOmmhoWQCXYfKfkOEiD/GXtG6qsfLLtM4uActLuBQJqZrcbSxa6Ph2D+zqgLarvu1DVbD6dofHs/gF8F4omIddWUPnChBmWco4VsJjLyCRX5mcStp8JRbe2eKVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DBZeAdoR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DBZeAdoR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAF81C433F1;
+	Tue, 30 Jan 2024 14:55:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706626514;
+	bh=RGJjrGZPbLUuFUjuCYyguun2Idc1ACjWA9E9iAYPwko=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=DBZeAdoRPZZqG7mSl8LX5AwnaIOoyXN05Sl4OhvkBW00cbDUTrOVkFgTFiO2wqitt
+	 K7uPztIuVBu3Y9PcY8nwXsM3tl62kwJYHdLDlddMlwvzEbxIzRZcJPzjHncWJMn05q
+	 LBx/TNKfQ7fSpMFWOZJie2Tb3bLG0TzG8mcBVfSpTXp1mHTlktL3I6zoRGlsqh/D2u
+	 ubDYBibMzYsX85sBj/cqPG1HbJIdiO8DuNcWEYFaygXKQ/m6aRhU0Q175FkGkEbKoC
+	 EZTyvaAizpp2yKAIKMc/f2w7Nk6odmfBZcuGjzRoGMBwzXJLVpfdmANcuk6SZnh+nG
+	 RGKqmI/zCi6NA==
+Date: Tue, 30 Jan 2024 23:55:10 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ kernel-team@android.com
+Subject: Re: [PATCH v13 2/6] ring-buffer: Introducing ring-buffer mapping
+ functions
+Message-Id: <20240130235510.c92a31ee6998697dd49d2600@kernel.org>
+In-Reply-To: <20240129142802.2145305-3-vdonnefort@google.com>
+References: <20240129142802.2145305-1-vdonnefort@google.com>
+	<20240129142802.2145305-3-vdonnefort@google.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 30 Jan 2024 01:12:05 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+Hi Vincent,
 
-> On Tue, 30 Jan 2024 at 00:43, Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > I'll go back to bed, but I think the fix is something trivial like this:  
+Thanks for update the code.
+
+On Mon, 29 Jan 2024 14:27:58 +0000
+Vincent Donnefort <vdonnefort@google.com> wrote:
+
+> In preparation for allowing the user-space to map a ring-buffer, add
+> a set of mapping functions:
 > 
-> Almost.
+>   ring_buffer_{map,unmap}()
+>   ring_buffer_map_fault()
 > 
-> >   +     result = ERR_PTR(ENOENT);  
+> And controls on the ring-buffer:
 > 
-> That needs a '-' in front of the ENOENT, otherwise you have a positive
-> error number and things go wrong very quickly.
+>   ring_buffer_map_get_reader()  /* swap reader and head */
 > 
-> And that does indeed fix the lookup problem, but you end up with the
-> same problem later when you do the eventfs_remove_dir(). Again the
-> eventfs data structure changes, but we don't have a reliable dentry
-> that we can invalidate.
+> Mapping the ring-buffer also involves:
 > 
-> The dentry cache is just very good at caching those old dentries, and
-> the interface for eventfs_create_dir() and eventfs_remove_dir() is
-> just not great.
+>   A unique ID for each subbuf of the ring-buffer, currently they are
+>   only identified through their in-kernel VA.
 > 
-> If those did an actual path lookup (like eventfs_create_events_dir()
-> does), we'd have the dentry, and it's trivial to get from dentry to
-> eventfs_inode.
+>   A meta-page, where are stored ring-buffer statistics and a
+>   description for the current reader
 > 
-> But going the other way is the broken thing because of how the
-> dentries are just temporary caches.
+> The linear mapping exposes the meta-page, and each subbuf of the
+> ring-buffer, ordered following their unique ID, assigned during the
+> first mapping.
 > 
-> I suspect the solution is to make eventfs_create_dir() do the same as
-> the events directory case does, and actually pin the directory dentry
-> and save it off.
-
-I rather not have the create do that because that happens for every event
-directory. On my machine that's:
-
-  # find events -type d | wc -l
-  2102
-
-And that's regardless if tracefs is mounted or not. And that's how many are
-also created with every instance creation. And doesn't pinning the dentry
-also require it to be positive? That is, have a full inode allocated with
-it?
-
-I may try something that will still let me get rid of the ei->dentry.
-
+> Once mapped, no subbuf can get in or out of the ring-buffer: the buffer
+> size will remain unmodified and the splice enabling functions will in
+> reality simply memcpy the data instead of swapping subbufs.
 > 
-> Oh well. At least I understand what the problem is.
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> 
+> diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+> index fa802db216f9..0841ba8bab14 100644
+> --- a/include/linux/ring_buffer.h
+> +++ b/include/linux/ring_buffer.h
+> @@ -6,6 +6,8 @@
+>  #include <linux/seq_file.h>
+>  #include <linux/poll.h>
+>  
+> +#include <uapi/linux/trace_mmap.h>
+> +
+>  struct trace_buffer;
+>  struct ring_buffer_iter;
+>  
+> @@ -221,4 +223,9 @@ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node);
+>  #define trace_rb_cpu_prepare	NULL
+>  #endif
+>  
+> +int ring_buffer_map(struct trace_buffer *buffer, int cpu);
+> +int ring_buffer_unmap(struct trace_buffer *buffer, int cpu);
+> +struct page *ring_buffer_map_fault(struct trace_buffer *buffer, int cpu,
+> +				   unsigned long pgoff);
+> +int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu);
+>  #endif /* _LINUX_RING_BUFFER_H */
+> diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
+> new file mode 100644
+> index 000000000000..d4bb67430719
+> --- /dev/null
+> +++ b/include/uapi/linux/trace_mmap.h
+> @@ -0,0 +1,43 @@
+> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> +#ifndef _TRACE_MMAP_H_
+> +#define _TRACE_MMAP_H_
+> +
+> +#include <linux/types.h>
+> +
+> +/**
+> + * struct trace_buffer_meta - Ring-buffer Meta-page description
+> + * @meta_page_size:	Size of this meta-page.
+> + * @meta_struct_len:	Size of this structure.
+> + * @subbuf_size:	Size of each subbuf, including the header.
+> + * @nr_subbufs:		Number of subbfs in the ring-buffer.
+> + * @reader.lost_events:	Number of events lost at the time of the reader swap.
+> + * @reader.id:		subbuf ID of the current reader. From 0 to @nr_subbufs - 1
+> + * @reader.read:	Number of bytes read on the reader subbuf.
+> + * @entries:		Number of entries in the ring-buffer.
+> + * @overrun:		Number of entries lost in the ring-buffer.
+> + * @read:		Number of entries that have been read.
+> + */
+> +struct trace_buffer_meta {
+> +	__u32		meta_page_size;
+> +	__u32		meta_struct_len;
+> +
+> +	__u32		subbuf_size;
+> +	__u32		nr_subbufs;
+> +
+> +	struct {
+> +		__u64	lost_events;
+> +		__u32	id;
+> +		__u32	read;
+> +	} reader;
+> +
+> +	__u64	flags;
+> +
+> +	__u64	entries;
+> +	__u64	overrun;
+> +	__u64	read;
+> +
+> +	__u64	Reserved1;
+> +	__u64	Reserved2;
+> +};
+> +
+> +#endif /* _TRACE_MMAP_H_ */
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 8179e0a8984e..081065e76d4a 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -338,6 +338,7 @@ struct buffer_page {
+>  	local_t		 entries;	/* entries on this page */
+>  	unsigned long	 real_end;	/* real end of data */
+>  	unsigned	 order;		/* order of the page */
+> +	u32		 id;		/* ID for external mapping */
+>  	struct buffer_data_page *page;	/* Actual data page */
+>  };
+>  
+> @@ -484,6 +485,12 @@ struct ring_buffer_per_cpu {
+>  	u64				read_stamp;
+>  	/* pages removed since last reset */
+>  	unsigned long			pages_removed;
+> +
+> +	int				mapped;
+> +	struct mutex			mapping_lock;
+> +	unsigned long			*subbuf_ids;	/* ID to addr */
+> +	struct trace_buffer_meta	*meta_page;
+> +
+>  	/* ring buffer pages to update, > 0 to add, < 0 to remove */
+>  	long				nr_pages_to_update;
+>  	struct list_head		new_pages; /* new pages to add */
+> @@ -1548,6 +1555,7 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+>  	init_irq_work(&cpu_buffer->irq_work.work, rb_wake_up_waiters);
+>  	init_waitqueue_head(&cpu_buffer->irq_work.waiters);
+>  	init_waitqueue_head(&cpu_buffer->irq_work.full_waiters);
+> +	mutex_init(&cpu_buffer->mapping_lock);
+>  
+>  	bpage = kzalloc_node(ALIGN(sizeof(*bpage), cache_line_size()),
+>  			    GFP_KERNEL, cpu_to_node(cpu));
+> @@ -5160,6 +5168,19 @@ static void rb_clear_buffer_page(struct buffer_page *page)
+>  	page->read = 0;
+>  }
+>  
+> +static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+> +{
+> +	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+> +
+> +	WRITE_ONCE(meta->reader.read, cpu_buffer->reader_page->read);
+> +	WRITE_ONCE(meta->reader.id, cpu_buffer->reader_page->id);
+> +	WRITE_ONCE(meta->reader.lost_events, cpu_buffer->lost_events);
+> +
+> +	WRITE_ONCE(meta->entries, local_read(&cpu_buffer->entries));
+> +	WRITE_ONCE(meta->overrun, local_read(&cpu_buffer->overrun));
+> +	WRITE_ONCE(meta->read, cpu_buffer->read);
+> +}
+> +
+>  static void
+>  rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
+>  {
+> @@ -5204,6 +5225,9 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
+>  	cpu_buffer->lost_events = 0;
+>  	cpu_buffer->last_overrun = 0;
+>  
+> +	if (cpu_buffer->mapped)
+
+There are some cpu_buffer->mapped are accessed via WRITE_ONCE/READ_ONCE()
+but others are not. What makes those different?
+
+> +		rb_update_meta_page(cpu_buffer);
+> +
+>  	rb_head_page_activate(cpu_buffer);
+>  	cpu_buffer->pages_removed = 0;
+>  }
+> @@ -5418,6 +5442,11 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
+>  	cpu_buffer_a = buffer_a->buffers[cpu];
+>  	cpu_buffer_b = buffer_b->buffers[cpu];
+>  
+> +	if (READ_ONCE(cpu_buffer_a->mapped) || READ_ONCE(cpu_buffer_b->mapped)) {
+> +		ret = -EBUSY;
+> +		goto out;
+> +	}
+> +
+>  	/* At least make sure the two buffers are somewhat the same */
+>  	if (cpu_buffer_a->nr_pages != cpu_buffer_b->nr_pages)
+>  		goto out;
+> @@ -5682,7 +5711,8 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+>  	 * Otherwise, we can simply swap the page with the one passed in.
+>  	 */
+>  	if (read || (len < (commit - read)) ||
+> -	    cpu_buffer->reader_page == cpu_buffer->commit_page) {
+> +	    cpu_buffer->reader_page == cpu_buffer->commit_page ||
+> +	    cpu_buffer->mapped) {
+>  		struct buffer_data_page *rpage = cpu_buffer->reader_page->page;
+>  		unsigned int rpos = read;
+>  		unsigned int pos = 0;
+> @@ -5901,6 +5931,11 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+>  
+>  		cpu_buffer = buffer->buffers[cpu];
+>  
+> +		if (cpu_buffer->mapped) {
+> +			err = -EBUSY;
+> +			goto error;
+> +		}
+> +
+>  		/* Update the number of pages to match the new size */
+>  		nr_pages = old_size * buffer->buffers[cpu]->nr_pages;
+>  		nr_pages = DIV_ROUND_UP(nr_pages, buffer->subbuf_size);
+> @@ -6002,6 +6037,295 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+>  }
+>  EXPORT_SYMBOL_GPL(ring_buffer_subbuf_order_set);
+>  
+> +#define subbuf_page(off, start) \
+> +	virt_to_page((void *)(start + (off << PAGE_SHIFT)))
+> +
+> +#define foreach_subbuf_page(sub_order, start, page)		\
+> +	page = subbuf_page(0, (start));				\
+> +	for (int __off = 0; __off < (1 << (sub_order));		\
+> +	     __off++, page = subbuf_page(__off, (start)))
+> +
+> +static inline void subbuf_map_prepare(unsigned long subbuf_start, int order)
+> +{
+> +	struct page *page;
+> +
+> +	/*
+> +	 * When allocating order > 0 pages, only the first struct page has a
+> +	 * refcount > 1. Increasing the refcount here ensures none of the struct
+> +	 * page composing the sub-buffer is freeed when the mapping is closed.
+> +	 */
+> +	foreach_subbuf_page(order, subbuf_start, page)
+> +		page_ref_inc(page);
+> +}
+> +
+> +static inline void subbuf_unmap(unsigned long subbuf_start, int order)
+> +{
+> +	struct page *page;
+> +
+> +	foreach_subbuf_page(order, subbuf_start, page) {
+> +		page_ref_dec(page);
+> +		page->mapping = NULL;
+> +	}
+> +}
+> +
+> +static void rb_free_subbuf_ids(struct ring_buffer_per_cpu *cpu_buffer)
+> +{
+> +	int sub_id;
+> +
+> +	for (sub_id = 0; sub_id < cpu_buffer->nr_pages + 1; sub_id++)
+> +		subbuf_unmap(cpu_buffer->subbuf_ids[sub_id],
+> +			     cpu_buffer->buffer->subbuf_order);
+> +
+> +	kfree(cpu_buffer->subbuf_ids);
+> +	cpu_buffer->subbuf_ids = NULL;
+> +}
+> +
+> +static int rb_alloc_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+> +{
+> +	if (cpu_buffer->meta_page)
+> +		return 0;
+> +
+> +	cpu_buffer->meta_page = page_to_virt(alloc_page(GFP_USER | __GFP_ZERO));
+> +	if (!cpu_buffer->meta_page)
+> +		return -ENOMEM;
+> +
+> +	return 0;
+> +}
+> +
+> +static void rb_free_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+> +{
+> +	unsigned long addr = (unsigned long)cpu_buffer->meta_page;
+> +
+> +	virt_to_page((void *)addr)->mapping = NULL;
+> +	free_page(addr);
+> +	cpu_buffer->meta_page = NULL;
+> +}
+> +
+> +static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
+> +				   unsigned long *subbuf_ids)
+> +{
+> +	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+> +	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
+> +	struct buffer_page *first_subbuf, *subbuf;
+> +	int id = 0;
+> +
+> +	subbuf_ids[id] = (unsigned long)cpu_buffer->reader_page->page;
+> +	subbuf_map_prepare(subbuf_ids[id], cpu_buffer->buffer->subbuf_order);
+> +	cpu_buffer->reader_page->id = id++;
+> +
+> +	first_subbuf = subbuf = rb_set_head_page(cpu_buffer);
+> +	do {
+> +		if (id >= nr_subbufs) {
+> +			WARN_ON(1);
+> +			break;
+> +		}
+> +
+> +		subbuf_ids[id] = (unsigned long)subbuf->page;
+> +		subbuf->id = id;
+> +		subbuf_map_prepare(subbuf_ids[id], cpu_buffer->buffer->subbuf_order);
+> +
+> +		rb_inc_page(&subbuf);
+> +		id++;
+> +	} while (subbuf != first_subbuf);
+> +
+> +	/* install subbuf ID to kern VA translation */
+> +	cpu_buffer->subbuf_ids = subbuf_ids;
+> +
+> +	meta->meta_page_size = PAGE_SIZE;
+> +	meta->meta_struct_len = sizeof(*meta);
+> +	meta->nr_subbufs = nr_subbufs;
+> +	meta->subbuf_size = cpu_buffer->buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
+> +
+> +	rb_update_meta_page(cpu_buffer);
+> +}
+> +
+> +static inline struct ring_buffer_per_cpu *
+> +rb_get_mapped_buffer(struct trace_buffer *buffer, int cpu)
+> +{
+> +	struct ring_buffer_per_cpu *cpu_buffer;
+> +
+> +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	cpu_buffer = buffer->buffers[cpu];
+> +
+> +	mutex_lock(&cpu_buffer->mapping_lock);
+> +
+> +	if (!cpu_buffer->mapped) {
+> +		mutex_unlock(&cpu_buffer->mapping_lock);
+> +		return ERR_PTR(-ENODEV);
+> +	}
+> +
+> +	return cpu_buffer;
+> +}
+> +
+> +static inline void rb_put_mapped_buffer(struct ring_buffer_per_cpu *cpu_buffer)
+> +{
+> +	mutex_unlock(&cpu_buffer->mapping_lock);
+> +}
+> +
+> +int ring_buffer_map(struct trace_buffer *buffer, int cpu)
+> +{
+> +	struct ring_buffer_per_cpu *cpu_buffer;
+> +	unsigned long flags, *subbuf_ids;
+> +	int err = 0;
+> +
+> +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+> +		return -EINVAL;
+> +
+> +	cpu_buffer = buffer->buffers[cpu];
+> +
+> +	mutex_lock(&cpu_buffer->mapping_lock);
+> +
+> +	if (cpu_buffer->mapped) {
+> +		if (cpu_buffer->mapped == INT_MAX)
+> +			err = -EBUSY;
+> +		else
+> +			WRITE_ONCE(cpu_buffer->mapped, cpu_buffer->mapped + 1);
+> +		mutex_unlock(&cpu_buffer->mapping_lock);
+> +		return err;
+> +	}
+> +
+> +	/* prevent another thread from changing buffer sizes */
+> +	mutex_lock(&buffer->mutex);
+> +
+> +	err = rb_alloc_meta_page(cpu_buffer);
+> +	if (err)
+> +		goto unlock;
+> +
+> +	/* subbuf_ids include the reader while nr_pages does not */
+> +	subbuf_ids = kzalloc(sizeof(*subbuf_ids) * (cpu_buffer->nr_pages + 1),
+> +			   GFP_KERNEL);
+> +	if (!subbuf_ids) {
+> +		rb_free_meta_page(cpu_buffer);
+> +		err = -ENOMEM;
+> +		goto unlock;
+> +	}
+> +
+> +	atomic_inc(&cpu_buffer->resize_disabled);
+> +
+> +	/*
+> +	 * Lock all readers to block any subbuf swap until the subbuf IDs are
+> +	 * assigned.
+> +	 */
+> +	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+> +
+> +	rb_setup_ids_meta_page(cpu_buffer, subbuf_ids);
+> +
+> +	WRITE_ONCE(cpu_buffer->mapped, 1);
+> +
+> +	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+> +unlock:
+> +	mutex_unlock(&buffer->mutex);
+> +	mutex_unlock(&cpu_buffer->mapping_lock);
+> +
+> +	return err;
+> +}
+> +
+> +int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
+> +{
+> +	struct ring_buffer_per_cpu *cpu_buffer;
+> +	int err = 0;
+> +
+> +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+> +		return -EINVAL;
+> +
+> +	cpu_buffer = buffer->buffers[cpu];
+> +
+> +	mutex_lock(&cpu_buffer->mapping_lock);
+> +
+> +	if (!cpu_buffer->mapped) {
+> +		err = -ENODEV;
+> +		goto unlock;
+> +	}
+> +
+> +	WRITE_ONCE(cpu_buffer->mapped, cpu_buffer->mapped - 1);
+> +	if (!cpu_buffer->mapped) {
+> +		/* Wait for the writer and readers to observe !mapped */
+> +		synchronize_rcu();
+
+How does this synchronize_rcu() work for ensuring to observe?
+(All of those writers/readers are in non-preemptive critical section?)
+
+Thank you,
+
+> +
+> +		rb_free_subbuf_ids(cpu_buffer);
+> +		rb_free_meta_page(cpu_buffer);
+> +		atomic_dec(&cpu_buffer->resize_disabled);
+> +	}
+> +unlock:
+> +	mutex_unlock(&cpu_buffer->mapping_lock);
+> +
+> +	return err;
+> +}
+> +
+> +/*
+> + *   +--------------+  pgoff == 0
+> + *   |   meta page  |
+> + *   +--------------+  pgoff == 1
+> + *   | subbuffer 0  |
+> + *   +--------------+  pgoff == 1 + (1 << subbuf_order)
+> + *   | subbuffer 1  |
+> + *         ...
+> + */
+> +struct page *ring_buffer_map_fault(struct trace_buffer *buffer, int cpu,
+> +				   unsigned long pgoff)
+> +{
+> +	struct ring_buffer_per_cpu *cpu_buffer = buffer->buffers[cpu];
+> +	unsigned long subbuf_id, subbuf_offset, addr;
+> +	struct page *page;
+> +
+> +	if (!pgoff)
+> +		return virt_to_page((void *)cpu_buffer->meta_page);
+> +
+> +	pgoff--;
+> +
+> +	subbuf_id = pgoff >> buffer->subbuf_order;
+> +	if (subbuf_id > cpu_buffer->nr_pages)
+> +		return NULL;
+> +
+> +	subbuf_offset = pgoff & ((1UL << buffer->subbuf_order) - 1);
+> +	addr = cpu_buffer->subbuf_ids[subbuf_id] + (subbuf_offset * PAGE_SIZE);
+> +	page = virt_to_page((void *)addr);
+> +
+> +	return page;
+> +}
+> +
+> +int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+> +{
+> +	struct ring_buffer_per_cpu *cpu_buffer;
+> +	unsigned long reader_size;
+> +	unsigned long flags;
+> +
+> +	cpu_buffer = rb_get_mapped_buffer(buffer, cpu);
+> +	if (IS_ERR(cpu_buffer))
+> +		return (int)PTR_ERR(cpu_buffer);
+> +
+> +	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+> +consume:
+> +	if (rb_per_cpu_empty(cpu_buffer))
+> +		goto out;
+> +
+> +	reader_size = rb_page_size(cpu_buffer->reader_page);
+> +
+> +	/*
+> +	 * There are data to be read on the current reader page, we can
+> +	 * return to the caller. But before that, we assume the latter will read
+> +	 * everything. Let's update the kernel reader accordingly.
+> +	 */
+> +	if (cpu_buffer->reader_page->read < reader_size) {
+> +		while (cpu_buffer->reader_page->read < reader_size)
+> +			rb_advance_reader(cpu_buffer);
+> +		goto out;
+> +	}
+> +
+> +	if (WARN_ON(!rb_get_reader_page(cpu_buffer)))
+> +		goto out;
+> +
+> +	goto consume;
+> +out:
+> +	rb_update_meta_page(cpu_buffer);
+> +	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+> +	rb_put_mapped_buffer(cpu_buffer);
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+>   * We only allocate new buffers, never free them if the CPU goes down.
+>   * If we were to free the buffer, then the user would lose any trace that was in
+> -- 
+> 2.43.0.429.g432eaa2c6b-goog
+> 
 
 
- Yep!
-
-
-> Now I'm going to try to go back to sleep.
-
-Hope you sleep better than I did. We just bought a new mattress, which felt
-great in the store, but now after 4 or 5 hours sleeping in it, I wake up
-with a sore back and have to sleep on the couch. And we bought the most
-expensive "best" mattress in the store :-p
-
-Oh, and NY State law has it that you can't return in once it is delivered.
-
--- Steve
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
