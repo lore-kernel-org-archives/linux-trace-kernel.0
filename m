@@ -1,135 +1,158 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D455112CDB8
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jan 2024 18:08:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3604D20DE2;
+	Wed, 31 Jan 2024 18:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706724539; cv=none; b=svJJYSfG5GoONeRM0+XQzZen5k75EKYD/LND3Yan2b3lEqYUD0cgHHh0HcpuPMd7O/TUXIWGS4tYK4wXqjCz5Nm8K+VTsZDmGxuaQNjW0w1MrjIJCCEcnlg95bRSv4eqidqbsllsaOK63+xN5DVR0UBJRr5oR9/3qBy/mk0GoOs=
+	t=1706726370; cv=none; b=HBVvgzx6w2ymfokYB+c2EQ7pGsvBaCU7j1y31UDtucV53IjGZLYvcMuQYiK963+Whv9vNvASW+8laK7EAUZSHo9Zt+26TS7OUUJ81LSYtnArQgEOJ0+FSCEs4kIgdMvA12k3kb0yzgBwr+IhZjh9mjs7/CR94j4DyuzZLU69lh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706724539; c=relaxed/simple;
-	bh=blmiXtxuj4mntZApxPDJE7PTbuISn5ro/0Z3J2K+ecM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V3P08+CSs5tQD/lp0xSQ8y1pao2v/9otiAMwmYzaFYfinMwd948m7fDO27T+tM9P8QN0Sh8ZWMS6Elu3Jt7okHxMLTjvcu2TqbsD6GkJ6PrnMYLzX+gPNSaEbOIOZi2YCTUqx1otiFFh0+1HxL45hVyp8YHQ2CMw4Ue7UILvWVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=JFh/fS+6; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="JFh/fS+6"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d03fde0bd9so1702551fa.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jan 2024 10:08:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1706724536; x=1707329336; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=jdXyGxV7lSUrZp0+m+N5dUYZe5f3ZNHmFavQF3mekH4=;
-        b=JFh/fS+60RErpcnjC7MkQwJanISmh57OrEa1JivJIIHKOz2EA+6hyg8pNpgqNc6Sj5
-         awehbu5LxMn+EYYOmBpK3g+/chmYuNu/JGiMx3o619IeeR09xEZpp97XNpffRTBAH7wW
-         wauPRkrhfSVcSE0Oibcr6QIn4Ofm7rjAkDR60=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706724536; x=1707329336;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jdXyGxV7lSUrZp0+m+N5dUYZe5f3ZNHmFavQF3mekH4=;
-        b=Y/OvrH5Ki6OfcqmGQUuO8YTgNKjkfoT00qhIRVyvsAV/lVPyBbHV20Aj0d3qzlw3p7
-         M2LoFcjcMlLztR1+nmeGZvEZvzcgWiev2/+InzXL7bdWYA48ajjdggaHBNmagtUdECDj
-         fanOlylWHZ5UH207tVDwF1NoEMYWmX2uwaH5P27WWcInnNuPa8hF1fERZSViugM+nyKx
-         jXFODMXhtHry06ZpvgL0KMNZ7t2bbP5VlNkEQqq1ePOXX3ALrMQF7YbMT4WeBzLfnJvq
-         DZLhIkhC138QYegKHZl0Q93U6wZSrtHqzCZkuqG/pxa3vq/IZWKsx0qSeE0WcvG2MIQB
-         X6Nw==
-X-Gm-Message-State: AOJu0Yy4JfFjDhprkONEHU4w3VIbdT79ShIhG6nbZasaVpviCv5grRAV
-	KHWoXngo+sTFNKsagZDahUSwjMsHrLMxSbAPnEsrNsrj8yTLlFz3+84bk08WIZ7Yb1wVdCrnCNX
-	Oyns=
-X-Google-Smtp-Source: AGHT+IFivn7ktqU7pZNY5/jbbZff9TA2C1kl3IZcy9fxGQ0mnTOh5lXYVEJwZi1f41TPq5vLqXQl+Q==
-X-Received: by 2002:a2e:9c8d:0:b0:2cd:50a7:12d0 with SMTP id x13-20020a2e9c8d000000b002cd50a712d0mr1799828lji.38.1706724535679;
-        Wed, 31 Jan 2024 10:08:55 -0800 (PST)
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
-        by smtp.gmail.com with ESMTPSA id w7-20020aa7da47000000b0055f0c027a3esm2990370eds.30.2024.01.31.10.08.54
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 31 Jan 2024 10:08:54 -0800 (PST)
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-55f15762840so55266a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jan 2024 10:08:54 -0800 (PST)
-X-Received: by 2002:a05:6402:35c1:b0:55f:a7d6:fd6a with SMTP id
- z1-20020a05640235c100b0055fa7d6fd6amr225894edc.5.1706724534163; Wed, 31 Jan
- 2024 10:08:54 -0800 (PST)
+	s=arc-20240116; t=1706726370; c=relaxed/simple;
+	bh=wG3Hn51lXiqqGTEQgHWDBCOpRQh7/FE2IhWysyt/Vb8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h3xua7a8M/7IFJzofivSF7SMi56ddBTDY6Vhyse8R97fMdpnMSk/C4if51Tk1hR/qnu2Z1dHuQT7vZ4q22d7UvaWJ1JhQkUNpi6iczgw7/E5N3IDrK4hKp+zgMUeq9D4wbuLTq9HDIm0pwm/EuXOu4vVUt0htqLTfXbl3YFbal4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65216C433F1;
+	Wed, 31 Jan 2024 18:39:29 +0000 (UTC)
+Date: Wed, 31 Jan 2024 13:39:43 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, Masami Hiramatsu
+ <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] eventfs: get rid of dentry pointers without
+ refcounts
+Message-ID: <20240131133943.0a6e0e1d@gandalf.local.home>
+In-Reply-To: <CAHk-=whNqOa5rAr4Lq9j=zZgrSxyZwgt6imSydAY3vyeaHm01g@mail.gmail.com>
+References: <20240130190355.11486-1-torvalds@linux-foundation.org>
+	<20240130190355.11486-5-torvalds@linux-foundation.org>
+	<20240131000956.3dbc0fc0@gandalf.local.home>
+	<CAHk-=wjH+k47je4YbP=D+KOiNYp8cJh8C_gZFzSOa8HPDm=AQw@mail.gmail.com>
+	<20240131003317.7a63e799@gandalf.local.home>
+	<CAHk-=wg69FE2826EokkCbSKHZvCG-cM5t=9SMFLcfpNu8Yvwqw@mail.gmail.com>
+	<CAHk-=whSse54d+X361K2Uw6jO2SvrO-U0LHLBTLnqHaA+406Fw@mail.gmail.com>
+	<20240131075740.660e7634@rorschach.local.home>
+	<20240131081449.6e917b71@rorschach.local.home>
+	<CAHk-=whNqOa5rAr4Lq9j=zZgrSxyZwgt6imSydAY3vyeaHm01g@mail.gmail.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130190355.11486-1-torvalds@linux-foundation.org>
- <20240130190355.11486-5-torvalds@linux-foundation.org> <20240131000956.3dbc0fc0@gandalf.local.home>
- <CAHk-=wjH+k47je4YbP=D+KOiNYp8cJh8C_gZFzSOa8HPDm=AQw@mail.gmail.com>
- <20240131003317.7a63e799@gandalf.local.home> <CAHk-=wg69FE2826EokkCbSKHZvCG-cM5t=9SMFLcfpNu8Yvwqw@mail.gmail.com>
- <CAHk-=whSse54d+X361K2Uw6jO2SvrO-U0LHLBTLnqHaA+406Fw@mail.gmail.com>
- <20240131075740.660e7634@rorschach.local.home> <20240131081449.6e917b71@rorschach.local.home>
-In-Reply-To: <20240131081449.6e917b71@rorschach.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 31 Jan 2024 10:08:37 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whNqOa5rAr4Lq9j=zZgrSxyZwgt6imSydAY3vyeaHm01g@mail.gmail.com>
-Message-ID: <CAHk-=whNqOa5rAr4Lq9j=zZgrSxyZwgt6imSydAY3vyeaHm01g@mail.gmail.com>
-Subject: Re: [PATCH 5/6] eventfs: get rid of dentry pointers without refcounts
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 31 Jan 2024 at 05:14, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> If you also notice, tracefs only allows mkdir/rmdir to be assigned to
-> one directory. Once it is assigned, no other directories can have mkdir
-> rmdir functionality.
+On Wed, 31 Jan 2024 10:08:37 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-I think that does limit the damage, but it's not clear that it is actually safe.
+> On Wed, 31 Jan 2024 at 05:14, Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > If you also notice, tracefs only allows mkdir/rmdir to be assigned to
+> > one directory. Once it is assigned, no other directories can have mkdir
+> > rmdir functionality.  
+> 
+> I think that does limit the damage, but it's not clear that it is actually safe.
+> 
+> Because you don't hold the inode lock, somebody could come in and do a
+> mkdir inside the other one that is being removed, ie something like
+> 
+>  - thread 1 does took the inode lock, called ->rmdir
+> 
+>  - it then drops the inode lock (both parent and the directory that is
+> getting removed) and gets the event lock
+> 
+>  - but thread 2 can come in between that inode lock drop and event lock
+> 
+> Notice: thread 2 comes in where there is *no* locking. Nada. Zilch.
+> 
+> This is what worries me.
 
-Because you don't hold the inode lock, somebody could come in and do a
-mkdir inside the other one that is being removed, ie something like
+Yep, and that was my biggest concern too, which is why I have stress tests
+that try to hit that above scenario. Well, rmdir and other accesses
+including other mkdir's of the same name.
 
- - thread 1 does took the inode lock, called ->rmdir
+As my knowledge on the inode life time is still limited, my main concern
+was just corruption of the dentry/inodes themselves. But the first one to
+get the event_mutex determines the state of the file system.
 
- - it then drops the inode lock (both parent and the directory that is
-getting removed) and gets the event lock
+If thread 1 is doing rmdir, what would thread 2 do that can harm it?
 
- - but thread 2 can come in between that inode lock drop and event lock
+The rmdir calls trace_remove() which is basically retrying to remove the
+directory again, and hopefully has the proper locking just like removing
+the kprobe trace event that deletes directories. It can have references on
+it.
 
-Notice: thread 2 comes in where there is *no* locking. Nada. Zilch.
+Now if something were to get a reference, and a valid dentry, as soon as
+the open function is called, the tracing logic will see that the
+trace_array no longer exists and returns an error.
 
-This is what worries me.
+All the open functions for files that are created in an instance (and that
+includes eventfs files) have a check to see if the inode->i_private data is
+still valid. The trace_array structure represents the directory, and
+there's a link list of all the trace_array structures that is protected by
+the trace_types_lock. It grabs that lock, iterates the array to see if the
+passed in trace_array is on it, if it is, it ups the ref count (preventing
+a rmdir from succeeding) and returns it. If it is not, it returns NULL and
+the open call fails as if it opened a nonexistent file.
 
-But it does help that it's all only in *one* directory.  At least
-another mkdir cannot happen *inside* the one that is going away while
-the locks are not held. So the good news is that it does mean that
-there's only one point that is being protected.
+> 
+> But it does help that it's all only in *one* directory.  At least
+> another mkdir cannot happen *inside* the one that is going away while
+> the locks are not held. So the good news is that it does mean that
+> there's only one point that is being protected.
+> 
+> But I do worry about things like this (in vfs_rmdir()):
+> 
+>         inode_lock(dentry->d_inode);
+> 
+>         error = -EBUSY;
+>         if (is_local_mountpoint(dentry) ||
+>             (dentry->d_inode->i_flags & S_KERNEL_FILE))
+>                 goto out;
+> 
+>         error = security_inode_rmdir(dir, dentry);
+>         if (error)
+>                 goto out;
+> 
+>         error = dir->i_op->rmdir(dir, dentry);
+>         if (error)
+>                 goto out;
+> 
+> notice how it does that "is this a mount point" test atomically wrt
+> the rmdir before it is allowed to proceed.
 
-But I do worry about things like this (in vfs_rmdir()):
+You mean if someone did:
 
-        inode_lock(dentry->d_inode);
+ # mkdir instances/foo
+ # rmdir instances/foo
 
-        error = -EBUSY;
-        if (is_local_mountpoint(dentry) ||
-            (dentry->d_inode->i_flags & S_KERNEL_FILE))
-                goto out;
+and at the same time, someone else did
 
-        error = security_inode_rmdir(dir, dentry);
-        if (error)
-                goto out;
+ # mount -t ext4 /dev/sda instances/foo
 
-        error = dir->i_op->rmdir(dir, dentry);
-        if (error)
-                goto out;
+?
 
-notice how it does that "is this a mount point" test atomically wrt
-the rmdir before it is allowed to proceed.
+OK, I never thought of that use case. Although, I think if someone is
+trying to mount anything in tracefs, they can keep the pieces. ;-)
 
-And I do think that the inode lock is what also protects it from
-concurrent mounts. So now what happens when that "thread 2" above
-comes in while there is *no* locking, and mounts something there?
+> 
+> And I do think that the inode lock is what also protects it from
+> concurrent mounts. So now what happens when that "thread 2" above
+> comes in while there is *no* locking, and mounts something there?
+> 
+> Now, I'm not saying this is a huge problem. But it's very much an
+> example of a thing that *could* be a problem. Dropping locks in the
+> middle is just very scary.
 
-Now, I'm not saying this is a huge problem. But it's very much an
-example of a thing that *could* be a problem. Dropping locks in the
-middle is just very scary.
+No arguments from me. I really didn't like the dropping of the locks, and
+tried hard to avoid it. If switching over to kernfs can solve that, I'd let
+that conversion happen.
 
-               Linus
+I'm all for someone switching tracefs over to kernfs if it solves all these
+unknown bugs, as long as it doesn't hurt the memory savings of eventfs. But
+again, I'm also willing to make eventfs its own file system (although I
+don't have the time yet to do that) where tracefs isn't burdened by it.
+
+-- Steve
