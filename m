@@ -1,99 +1,77 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90D53E462
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jan 2024 05:57:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A7F93DBB7;
+	Wed, 31 Jan 2024 06:00:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706680667; cv=none; b=ugzCuIDFgNY+/DVuw1orjxcM9gugxQLnUznNagxaN3Pxhv9PPh/Z0vVoGH4tTqIMSqbAXsx3maiqPrWErPL/Q6C9pUCLk1R901uD4CTZxPjTnZTWREQHV2c1uBzFXjs+PXwbxJAgGOyTy47Q6X+JBf7+2ve8YazBkdceZsxpM/k=
+	t=1706680802; cv=none; b=t76wzt0gx18c7s/o1Zv72GPuaw9ToCWlzQqDW4QsH/u59KnjY/h7X8iNIMGPiNiQIZKJ6jCnhwUA+0xN4dWQHfhHHdXDhIu215OOusUguMJ1xRw2olkZ3RjyFuG6ayA49FiRfcA0hm8+g2RUF8+omzKH/jBa54HIVwr7qs9ySuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706680667; c=relaxed/simple;
-	bh=vOyih3ICf+cC/rEztfmfpM3LdNIl0b2I9wSmpv/NLFk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QIbQzBTqAp16ljZ/NVSKi+NHWSgZxc+1K9UkaIEgvggdBUk0w7fDIFcQ2m4apYJw04ngSMJVE9OpndXHzNz9IzZmC+TIzYQl1bIF7wIdIxdHEoualQK8ZYN7sQp8tYKMRC1MDjxtTyrDsdTzFyIx7dIGh5kgZtPcHv5WRtW64sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cBPK5zEU; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cBPK5zEU"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a35e65df2d8so334888766b.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 21:57:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1706680664; x=1707285464; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DJmhQWnMdv5xPINffOj6QDTUCMF7DMEzkKe7lbx6KIE=;
-        b=cBPK5zEUQs9ZGjlwe0sQxa8pWCYVhR/pb0wKhpLAkfs9O9yK8E7q1fKltCbD3nHaBI
-         uL6V7bHSbSnzmN2ZQF+zojIHIIsbQ8j+qyzNpbue9ZjQtCKo1tV74q2nf8jXmAaQTV4+
-         FwEKEMyxTWcgDFB/IXT8G1Ra67gNVqobnr8Zo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706680664; x=1707285464;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DJmhQWnMdv5xPINffOj6QDTUCMF7DMEzkKe7lbx6KIE=;
-        b=ZStmQeY6nM1RgzmovPPTQoQ5+FHob7uuEywK/FMI1qKU6mzUTAthz+wYIsSJnx2eLV
-         4kYL4+5TiThAQYoTYHdv0mtI6X5LQ4DxHJyTuE2K3yUupuUaPm09Uj916nzoRS9lGaYB
-         wvBW0pWXcs9mmBBNDsA7kSTcCCPdEuwV8y6fva3rGVSsckpWq1q6p1FGT0oghTUJGU51
-         kcKjHXCePi2JYvn2SMi2UnVfhx1x44o2A0oVB/BE5GC689T764SqW5+jNr0ru8hOVhvB
-         AJyM3CrUlsSrrG8UO4o5bixDMTYCHcEENYpcliR6N073MZ2P/e/lThXwLkA1kfAz4NMT
-         izjA==
-X-Gm-Message-State: AOJu0YyFvq6xvl6YLCXzGacCsX/TowmYI/aHFhDUI4ikuGQpxNmMbeUw
-	OTowRqgxj2O2+ll1KObQwmNiNRhNEDoRohUWE6x/V8IOsWnTQws2CpvfX+TtE48jPv7+IWGAtzU
-	EtrzAMQ==
-X-Google-Smtp-Source: AGHT+IF/Jke3Z9QnDOgh6pqcEyKyDJXnBKST6uXRvYuqwjkAK5UFPityhMjmeKm4NjfqaUyu1Soh+w==
-X-Received: by 2002:a17:906:d114:b0:a35:e26c:e80a with SMTP id b20-20020a170906d11400b00a35e26ce80amr371123ejz.3.1706680663781;
-        Tue, 30 Jan 2024 21:57:43 -0800 (PST)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
-        by smtp.gmail.com with ESMTPSA id qt11-20020a170906eceb00b00a358f659989sm3602191ejb.113.2024.01.30.21.57.43
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jan 2024 21:57:43 -0800 (PST)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-55ee9805da7so4061265a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 21:57:43 -0800 (PST)
-X-Received: by 2002:aa7:ca47:0:b0:55e:eade:fcba with SMTP id
- j7-20020aa7ca47000000b0055eeadefcbamr342103edt.5.1706680663061; Tue, 30 Jan
- 2024 21:57:43 -0800 (PST)
+	s=arc-20240116; t=1706680802; c=relaxed/simple;
+	bh=LfvQ3qAas7dc9Kho/inAFjp0k7QeB/Phd/4o/C6refo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tCoTf3pTKm0ARbVDwOAX7Pu0qN1yhGurjYc67U5p9jHVXUImKjzgWYGHmuEUgF/RnLFjlLsuOFV+XqCuFPC5RiU3KTLXNMOHvrm3mEGnjdiMSkfVar62AL3PxTRySqwT6Gje7Lhu0MFbf38Om0uCiKlSa+a9Dr2I9BKhulF81dY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0EAFADA7;
+	Tue, 30 Jan 2024 22:00:37 -0800 (PST)
+Received: from [10.163.41.195] (unknown [10.163.41.195])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B16933F738;
+	Tue, 30 Jan 2024 21:59:41 -0800 (PST)
+Message-ID: <1fcf38b4-b0ff-40ec-8ac0-730c8bfd57ff@arm.com>
+Date: Wed, 31 Jan 2024 11:29:39 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130190355.11486-1-torvalds@linux-foundation.org>
- <20240130190355.11486-5-torvalds@linux-foundation.org> <20240131000956.3dbc0fc0@gandalf.local.home>
- <CAHk-=wjH+k47je4YbP=D+KOiNYp8cJh8C_gZFzSOa8HPDm=AQw@mail.gmail.com> <20240131003317.7a63e799@gandalf.local.home>
-In-Reply-To: <20240131003317.7a63e799@gandalf.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 30 Jan 2024 21:57:26 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wg69FE2826EokkCbSKHZvCG-cM5t=9SMFLcfpNu8Yvwqw@mail.gmail.com>
-Message-ID: <CAHk-=wg69FE2826EokkCbSKHZvCG-cM5t=9SMFLcfpNu8Yvwqw@mail.gmail.com>
-Subject: Re: [PATCH 5/6] eventfs: get rid of dentry pointers without refcounts
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v3 07/35] mm: cma: Add CMA_RELEASE_{SUCCESS,FAIL}
+ events
+Content-Language: en-US
+To: Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
+ maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
+ yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
+ mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+ vschneid@redhat.com, mhiramat@kernel.org, rppt@kernel.org, hughd@google.com,
+ pcc@google.com, steven.price@arm.com, vincenzo.frascino@arm.com,
+ david@redhat.com, eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20240125164256.4147-1-alexandru.elisei@arm.com>
+ <20240125164256.4147-8-alexandru.elisei@arm.com>
+ <545bb7bd-31c7-4166-9f81-778b82ece6d4@arm.com> <ZbeRs-vIDWGlpcGV@raptor>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <ZbeRs-vIDWGlpcGV@raptor>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 30 Jan 2024 at 21:33, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> With even the last patch included, without the d_invalidate() I get errors
-> with simply doing:
->
->  # cd /sys/kernel/tracing
->  # mkdir instances/foo
->  # ls instances/foo/events
->  # rmdir instances/foo
->
-> As the rmdir calls tracefs_remove() that calls simple_recursive_removal()
-> that then walks into the "events" directory. Without that d_invalidate, it
-> walks beyond just the top directory and then splats on the dentries that
-> are cached.
 
-Ugh.
 
-This is only an issue for that "events" dir, right? The one that has a
-proper refcount on the dentry in 'ei->events_dir'?
+On 1/29/24 17:23, Alexandru Elisei wrote:
+> Hi,
+> 
+> On Mon, Jan 29, 2024 at 03:01:24PM +0530, Anshuman Khandual wrote:
+>>
+>> On 1/25/24 22:12, Alexandru Elisei wrote:
+>>> Similar to the two events that relate to CMA allocations, add the
+>>> CMA_RELEASE_SUCCESS and CMA_RELEASE_FAIL events that count when CMA pages
+>>> are freed.
+>> How is this is going to be beneficial towards analyzing CMA alloc/release
+>> behaviour - particularly with respect to this series. OR just adding this
+>> from parity perspective with CMA alloc side counters ? Regardless this
+>> CMA change too could be discussed separately.
+> Added for parity and because it's useful for this series (see my reply to
+> the previous patch where I discuss how I've used the counters).
 
-Because yes, then doing d_invalidate() looks like the right thing.
-
-           Linus
+As mentioned earlier, a new CONFIG_CMA_SYSFS element 'cma->nr_freed_pages'
+could be instrumented in cma_release()'s success path for this purpose.
+But again the failure path is not of much value as it could only happen
+when there is an invalid input from the caller i.e when cma_pages_valid()
+check fails.
