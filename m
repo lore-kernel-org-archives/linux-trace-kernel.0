@@ -1,34 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5B83EA76;
-	Wed, 31 Jan 2024 19:17:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311013EA8F;
+	Wed, 31 Jan 2024 19:24:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706728659; cv=none; b=s2hsSovg2BWXNhj4SN9PCx3CFXZVJaXgc9ftmC73Fd/sSB2b54VQLlB4UqUMm5SQa6yuUNy7rWHK8Uig3KFRb9SZl+FSdZ+u8N+9i1jsQDJyTCyVYgSF4UBGLkNJrBUrvphNAQR8PXNbFnoPin/IzLAwuE/6wyqRIdFNNmYNJkI=
+	t=1706729079; cv=none; b=K+mEcvx9koWkZoPEESyXPhevu1OESxnFLHnSxIeGTm3BA4gP2If3ts9LvVyfdVMc3iF/1jK4p30OiKZlS58pBYri2riwLcpJJEkzqW1IXWwI78rw5CHUxxaPXxeIsyV1MKw2UgMQj2JBFMirgJIav9W70CWu1LK4Z14Erdp6k7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706728659; c=relaxed/simple;
-	bh=tT/yVpc6ezGYO3wN+4MZZTS5ig6YKTzdtS9P6KR5VBI=;
+	s=arc-20240116; t=1706729079; c=relaxed/simple;
+	bh=G00LMao4GevkYINsVIDt8RNrwzZ/UP+aNdCnJJg3bbE=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V6wSArXZqfvVeAviWVFHXfeyKAr+V5413JvX7pBCZtIPf9KHcd7KCvGjQoDhrzL+tsg00g7W//btYWUYI+JpP7KjPoo973QXKHBtjKxJ4HxH9NAP5Kp4oars+y4as4TVTiBWMsKNgfkVN7vs4TpOHG43oiwab4uHkp2HOywPumo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64BF9C433F1;
-	Wed, 31 Jan 2024 19:17:37 +0000 (UTC)
-Date: Wed, 31 Jan 2024 14:17:51 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Christian Brauner
- <brauner@kernel.org>, Al Viro <viro@ZenIV.linux.org.uk>, Ajay Kaher
- <ajay.kaher@broadcom.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 0/7] eventfs: Rewrite to simplify the code (aka:
- crapectomy)
-Message-ID: <20240131141751.3caf42a1@gandalf.local.home>
-In-Reply-To: <20240131184918.945345370@goodmis.org>
-References: <20240131184918.945345370@goodmis.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	 MIME-Version:Content-Type; b=KC1yG10kNdEvNxnXi1KPAeUCwREV1V59EkowndGp2iQCo/MOA0LUuMAdpK24dI9tIr3mlvHa2wikGvmV7/ksKAlZsStPstlVTXafaNC1SVEzR20v0e+fYQbYtTNj337zyLiPP4KQDRyQxxcaoNIiTUCRcnVlaXNow2wxk0C81N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BpbXaMRZ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BpbXaMRZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C12BC43390;
+	Wed, 31 Jan 2024 19:24:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706729078;
+	bh=G00LMao4GevkYINsVIDt8RNrwzZ/UP+aNdCnJJg3bbE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=BpbXaMRZ0kgyskPS6KSBqq94sBmHpqrEtvijtUW8ouURXNZzFyk1Cc1MAnan2VjUj
+	 FY2/+7rYUBWt9qpkbIwnKUO0Z8y++oWNFSzT5bQNSWyuvpblScWHnToWkyGncgiRd7
+	 3Nc25Pt34WCy1G0fxuXj7EFEq1+sZ5qNryZXnjnykEAnIwNk0uSUQauCi3t8f6lz9n
+	 cdJhCsSzJ5GlfRWnBS9ct9o1CHxFZimDCQzmnGAQtJZ4EZBN8ZMnVDV7mWBfXnjrNL
+	 jdFehURzNPqP3oIHMomov4qGmVSXT45ncYAfqkDb0Na1D0mpQjXQbMwGa+HhaI45ir
+	 zhbWM95+eLFkw==
+Date: Wed, 31 Jan 2024 11:24:32 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: mcgrof@kernel.org, russ.weight@linux.dev, gregkh@linuxfoundation.org,
+ rafael@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, davem@davemloft.net, edumazet@google.com,
+ pabeni@redhat.com, keescook@chromium.org, masahiroy@kernel.org,
+ nathan@kernel.org, nicolas@fjasle.eu, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH RFC 3/4] net: ethtool: Use uts_release
+Message-ID: <20240131112432.5133bcaa@kernel.org>
+In-Reply-To: <20240131104851.2311358-4-john.g.garry@oracle.com>
+References: <20240131104851.2311358-1-john.g.garry@oracle.com>
+	<20240131104851.2311358-4-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -38,17 +50,12 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 31 Jan 2024 13:49:18 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, 31 Jan 2024 10:48:50 +0000 John Garry wrote:
+> Instead of using UTS_RELEASE, use uts_release, which means that we don't
+> need to rebuild the code just for the git head commit changing.
+> 
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
 
-> I would like to have this entire series go all the way back to 6.6 (after it
-> is accepted in mainline of course) and replace everything since the creation
-> of the eventfs code.  That is, stable releases may need to add all the
-> patches that are in fs/tracefs to make that happen. The reason being is that
-> this rewrite likely fixed a lot of hidden bugs and I honestly believe it's
-> more stable than the code that currently exists.
+Yes, please!
 
-If there is no more issues found here, and Linus pulls it into 6.8, I'll
-make the backport series for both 6.7 and 6.6.
-
--- Steve
+Acked-by: Jakub Kicinski <kuba@kernel.org>
