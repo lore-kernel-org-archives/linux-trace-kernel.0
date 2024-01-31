@@ -1,136 +1,282 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2193E7BB19;
-	Wed, 31 Jan 2024 13:14:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C6D551C2B;
+	Wed, 31 Jan 2024 13:19:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706706892; cv=none; b=ovjNdX8fHGjpstMhtYEXkdfsTeN4Jd5ejRdeFtuD1IVS+rbOhxCH7CHt4871BOzaxOxeNr9E9PnFniyW59dzGWrjsF/Zn95mykRK2TsfIqJj1JmcTWZwPmgQ8urAawvD072eaEKGnpltYJA4kbxbZNUaTun6hANAGivN07KB5JQ=
+	t=1706707200; cv=none; b=YdjuVnpuN0osXEVcI8dzOkmowLROz/rDlZjsJNjaKR5W2y/Ixzg3oEbKC1oCHqPcwgvS/i8m4MFXet9x+Bn0yfyuGfWqrLIfe/X7u1AvYRM5Kk0iZyIaT6yXy8jqIw2bHicV5I4WekonXs/imseULPJc39nlLgzcpvo6qzg3iV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706706892; c=relaxed/simple;
-	bh=3LOvVtBERK8LO5HOTNwFGjviYIEoYL95JBFF4loUY0U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZLuETYidNbvWgrUEN4YYO0ri7iObSPBjwgH7PdxpfhYR5PhgPp2tel9HfR5Q9Kzy+HcO2x4J0StaizVkLYRkXJ3E1eocPjHk+ztOPG/eEfgYI7Qm2jz6SK9kHjS52QlF1hTFTAoferzMYQcrMsXFtUv1aiaVKEkXE5r93YbPmBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA58EC43390;
-	Wed, 31 Jan 2024 13:14:50 +0000 (UTC)
-Date: Wed, 31 Jan 2024 08:14:49 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, Masami Hiramatsu
- <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] eventfs: get rid of dentry pointers without
- refcounts
-Message-ID: <20240131081449.6e917b71@rorschach.local.home>
-In-Reply-To: <20240131075740.660e7634@rorschach.local.home>
-References: <20240130190355.11486-1-torvalds@linux-foundation.org>
-	<20240130190355.11486-5-torvalds@linux-foundation.org>
-	<20240131000956.3dbc0fc0@gandalf.local.home>
-	<CAHk-=wjH+k47je4YbP=D+KOiNYp8cJh8C_gZFzSOa8HPDm=AQw@mail.gmail.com>
-	<20240131003317.7a63e799@gandalf.local.home>
-	<CAHk-=wg69FE2826EokkCbSKHZvCG-cM5t=9SMFLcfpNu8Yvwqw@mail.gmail.com>
-	<CAHk-=whSse54d+X361K2Uw6jO2SvrO-U0LHLBTLnqHaA+406Fw@mail.gmail.com>
-	<20240131075740.660e7634@rorschach.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1706707200; c=relaxed/simple;
+	bh=7S1u80W4jitsvF/EXsjPMKtcBb2ejC9FZlRnpbAdFNc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=et/ZuAWKA1Y0rxnN4xriIJJ15AHcYnfI8f2I7ysFKe4yy6x8emI/uHtFlmkappcTaedlOpx/6aoQZW0Ai/J2FngeezST5xkpsT8CnjTrrwgMjnWvFYOkrTOgLcWhYfrDchgsi2MuQJr9LpdpmNnMJTxQwt7Eqwu4ZnvQzQjnsu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7B5BDA7;
+	Wed, 31 Jan 2024 05:20:40 -0800 (PST)
+Received: from [10.163.41.195] (unknown [10.163.41.195])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 556463F738;
+	Wed, 31 Jan 2024 05:19:35 -0800 (PST)
+Message-ID: <b945652a-d65e-4a57-bc4c-09809c26e59a@arm.com>
+Date: Wed, 31 Jan 2024 18:49:34 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v3 09/35] mm: cma: Introduce cma_remove_mem()
+Content-Language: en-US
+To: Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
+ maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
+ yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
+ mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+ vschneid@redhat.com, mhiramat@kernel.org, rppt@kernel.org, hughd@google.com,
+ pcc@google.com, steven.price@arm.com, vincenzo.frascino@arm.com,
+ david@redhat.com, eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20240125164256.4147-1-alexandru.elisei@arm.com>
+ <20240125164256.4147-10-alexandru.elisei@arm.com>
+ <830691cf-cb96-443e-b6eb-2adfe2edd587@arm.com> <ZbjecxWRUrBfOEdn@raptor>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <ZbjecxWRUrBfOEdn@raptor>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Wed, 31 Jan 2024 07:57:40 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> static int instance_rmdir(const char *name)
-> {
->         struct trace_array *tr;
->         int ret;
+On 1/30/24 17:03, Alexandru Elisei wrote:
+> Hi,
 > 
->         mutex_lock(&event_mutex);
-
-Note, event_mutex prevents dynamic events from being created. No kprobe
-can be added while the event_mutex is held (not to be confused with
-eventfs_mutex).
-
->         mutex_lock(&trace_types_lock);
+> I really appreciate the feedback you have given me so far. I believe the
+> commit message isn't clear enough and there has been a confusion.
 > 
->         ret = -ENODEV;
->         tr = trace_array_find(name);
->         if (tr)
->                 ret = __remove_instance(tr);
+> A CMA user adds a CMA area to the cma_areas array with
+> cma_declare_contiguous_nid() or cma_init_reserved_mem().
+> init_cma_reserved_pageblock() then iterates over the array and activates
+> all cma areas.
+
+Agreed.
+
 > 
->         mutex_unlock(&trace_types_lock);
->         mutex_unlock(&event_mutex);
+> The function cma_remove_mem() is intended to be used to remove a cma area
+> from the cma_areas array **before** the area has been activated.
+
+Understood.
+
 > 
->         return ret;
-> }
+> Usecase: a driver (in this case, the arm64 dynamic tag storage code)
+> manages several cma areas. The driver successfully adds the first area to
+> the cma_areas array. When the driver tries to adds the second area, the
+> function fails. Without cma_remove_mem(), the driver has no way to prevent
+> the first area from being freed to the page allocator. cma_remove_mem() is
+> about providing a means to do cleanup in case of error.
+> 
+> Does that make more sense now?
 
-And
-
-static int instance_mkdir(const char *name)
-{
-        struct trace_array *tr;
-        int ret;
-
-        mutex_lock(&event_mutex);
-        mutex_lock(&trace_types_lock);
-
-        ret = -EEXIST;
-        if (trace_array_find(name))
-                goto out_unlock;
-
-        tr = trace_array_create(name);
-
-        ret = PTR_ERR_OR_ZERO(tr);
-
-out_unlock:
-        mutex_unlock(&trace_types_lock);
-        mutex_unlock(&event_mutex);
-        return ret;
-}
+How to ensure that cma_remove_mem() should get called by the driver before
+core_initcall()---> cma_init_reserved_areas()---> cma_activate_area() chain
+happens. Else cma_remove_mem() will miss out to clear cma->count and given
+area will proceed to get activated like always.
 
 
-The above functions would have been basically what would have been
-called if I had created:
+> 
+> Ok Tue, Jan 30, 2024 at 11:20:56AM +0530, Anshuman Khandual wrote:
+>>
+>>
+>> On 1/25/24 22:12, Alexandru Elisei wrote:
+>>> Memory is added to CMA with cma_declare_contiguous_nid() and
+>>> cma_init_reserved_mem(). This memory is then put on the MIGRATE_CMA list in
+>>> cma_init_reserved_areas(), where the page allocator can make use of it.
+>>
+>> cma_declare_contiguous_nid() reserves memory in memblock and marks the
+> 
+> You forgot about about cma_init_reserved_mem() which does the same thing,
+> but yes, you are right.
 
-  echo foo >> make_instance
-  echo '!foo' >> remove_instance
+Agreed, missed that. There are some direct cma_init_reserved_mem() calls as well.
 
-In fact, IIRC, I did do the above first, and then moved that code into
-mkdir/rmdir. Such that the tracefs mkdir and rmdir were just helpers
-and not real "mkdir" and "rmdir" routines. This isn't in git history
-because it was done only on my local repository.
+> 
+>> for subsequent CMA usage, where as cma_init_reserved_areas() activates
+>> these memory areas through init_cma_reserved_pageblock(). Standard page
+>> allocator only receives these memory via free_reserved_page() - only if
+> 
+> I don't think that's correct. init_cma_reserved_pageblock() clears the
+> PG_reserved page flag, sets the migratetype to MIGRATE_CMA and then frees
+> the page. After that, the page is available to the standard page allocator
+> to use for allocation. Otherwise, what would be the point of the
+> MIGRATE_CMA migratetype?
 
-If you also notice, tracefs only allows mkdir/rmdir to be assigned to
-one directory. Once it is assigned, no other directories can have mkdir
-rmdir functionality.
+Understood and agreed.
 
- /sys/kernel/tracing/instances
+> 
+>> the page block activation fails.
+> 
+> For the sake of having a complete picture, I'll add that that only happens
+> if cma->reserve_pages_on_error is false. If the CMA user sets the field to
+> 'true' (with cma_reserve_pages_on_error()), then the pages in the CMA
+> region are kept PG_reserved if activation fails.
 
-is the *only* directory that can have mkdir rmdir on it.
+Why cannot you use cma_reserve_pages_on_error() ?
 
-__init struct dentry *tracefs_create_instance_dir(const char *name,
-                                          struct dentry *parent,
-                                          int (*mkdir)(const char *name),
-                                          int (*rmdir)(const char *name))
-{
-        struct dentry *dentry;
+> 
+>>
+>>>
+>>> If a device manages multiple CMA areas, and there's an error when one of
+>>> the areas is added to CMA, there is no mechanism for the device to prevent
+>>
+>> What kind of error ? init_cma_reserved_pageblock() fails ? But that will
+>> not happen until cma_init_reserved_areas().
+> 
+> I think I haven't been clear enough. When I say that "an area is added
+> to CMA", I mean that the memory region is added to cma_areas array, via
+> cma_declare_contiguous_nid() or cma_init_reserved_mem(). There are several
+> ways in which either function can fail.
 
-        /* Only allow one instance of the instances directory. */
-        if (WARN_ON(tracefs_ops.mkdir || tracefs_ops.rmdir))
-                return NULL;
+Okay.
 
-And IIRC, Al told me that if I released the locks, it's up to the above
-functions to prevent the races from occurring. That is, no file can be
-created or remove when the mkdir and rmdir are running. Which the
-event_mutex prevents.
+> 
+>>
+>>> the rest of the areas, which were added before the error occured, from
+>>> being later added to the MIGRATE_CMA list.
+>>
+>> Why is this mechanism required ? cma_init_reserved_areas() scans over all
+>> CMA areas and try and activate each of them sequentially. Why is not this
+>> sufficient ?
+> 
+> This patch is about removing a struct cma from the cma_areas array after it
+> has been added to the array, with cma_declare_contiguous_nid() or
+> cma_init_reserved_mem(), to prevent the area from being activated in
+> cma_init_reserved_areas(). Sorry for the confusion.
+> 
+> I'll add a check in cma_remove_mem() to fail if the cma area has been
+> activated, and a comment to the function to explain its usage.
 
-Basically, I freeze external file creation and deletion within
-tracefs/eventfs when the above mkdir/rmdir is being executed, and
-prevent rmdir if any file within it is open.
+That will be a good check.
 
--- Steve
+> 
+>>
+>>>
+>>> Add cma_remove_mem() which allows a previously reserved CMA area to be
+>>> removed and thus it cannot be used by the page allocator.
+>>
+>> Successfully activated CMA areas do not get used by the buddy allocator.
+> 
+> I don't believe that is correct, see above.
+Apologies, it's my bad.
+
+> 
+>>
+>>>
+>>> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+>>> ---
+>>>
+>>> Changes since rfc v2:
+>>>
+>>> * New patch.
+>>>
+>>>  include/linux/cma.h |  1 +
+>>>  mm/cma.c            | 30 +++++++++++++++++++++++++++++-
+>>>  2 files changed, 30 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/include/linux/cma.h b/include/linux/cma.h
+>>> index e32559da6942..787cbec1702e 100644
+>>> --- a/include/linux/cma.h
+>>> +++ b/include/linux/cma.h
+>>> @@ -48,6 +48,7 @@ extern int cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
+>>>  					unsigned int order_per_bit,
+>>>  					const char *name,
+>>>  					struct cma **res_cma);
+>>> +extern void cma_remove_mem(struct cma **res_cma);
+>>>  extern struct page *cma_alloc(struct cma *cma, unsigned long count, unsigned int align,
+>>>  			      bool no_warn);
+>>>  extern int cma_alloc_range(struct cma *cma, unsigned long start, unsigned long count,
+>>> diff --git a/mm/cma.c b/mm/cma.c
+>>> index 4a0f68b9443b..2881bab12b01 100644
+>>> --- a/mm/cma.c
+>>> +++ b/mm/cma.c
+>>> @@ -147,8 +147,12 @@ static int __init cma_init_reserved_areas(void)
+>>>  {
+>>>  	int i;
+>>>  
+>>> -	for (i = 0; i < cma_area_count; i++)
+>>> +	for (i = 0; i < cma_area_count; i++) {
+>>> +		/* Region was removed. */
+>>> +		if (!cma_areas[i].count)
+>>> +			continue;
+>>
+>> Skip previously added CMA area (now zeroed out) ?
+> 
+> Yes, that's what I meant with the comment "Region was removed". Do you
+> think I should reword the comment?
+> 
+>>
+>>>  		cma_activate_area(&cma_areas[i]);
+>>> +	}
+>>>  
+>>>  	return 0;
+>>>  }
+>>
+>> cma_init_reserved_areas() gets called via core_initcall(). Some how
+>> platform/device needs to call cma_remove_mem() before core_initcall()
+>> gets called ? This might be time sensitive.
+> 
+> I don't understand your point.
+> 
+>>
+>>> @@ -216,6 +220,30 @@ int __init cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
+>>>  	return 0;
+>>>  }
+>>>  
+>>> +/**
+>>> + * cma_remove_mem() - remove cma area
+>>> + * @res_cma: Pointer to the cma region.
+>>> + *
+>>> + * This function removes a cma region created with cma_init_reserved_mem(). The
+>>> + * ->count is set to 0.
+>>> + */
+>>> +void __init cma_remove_mem(struct cma **res_cma)
+>>> +{
+>>> +	struct cma *cma;
+>>> +
+>>> +	if (WARN_ON_ONCE(!res_cma || !(*res_cma)))
+>>> +		return;
+>>> +
+>>> +	cma = *res_cma;
+>>> +	if (WARN_ON_ONCE(!cma->count))
+>>> +		return;
+>>> +
+>>> +	totalcma_pages -= cma->count;
+>>> +	cma->count = 0;
+>>> +
+>>> +	*res_cma = NULL;
+>>> +}
+>>> +
+>>>  /**
+>>>   * cma_declare_contiguous_nid() - reserve custom contiguous area
+>>>   * @base: Base address of the reserved area optional, use 0 for any
+>>
+>> But first please do explain what are the errors device or platform might
+> 
+> cma_declare_contiguous_nid() and cma_init_reserved_mem() can fail in a
+> number of ways, the code should be self documenting.
+
+But when they do fail - would not cma->count be left uninitialized as 0 ?
+Hence the proposed check (!cma->count) in cma_init_reserved_areas() should
+just do the trick without requiring an explicit cma_remove_mem() call.
+
+> 
+>> see on a previously marked CMA area so that removing them on way becomes
+>> necessary preventing their activation via cma_init_reserved_areas().
+> 
+> I've described how the function is supposed to be used at the top of my
+> reply.
+> 
+> Thanks,
+> Alex
