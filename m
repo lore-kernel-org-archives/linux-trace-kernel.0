@@ -1,108 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39913EA7B;
-	Wed, 31 Jan 2024 19:51:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900B73FB1E;
+	Wed, 31 Jan 2024 20:20:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706730661; cv=none; b=u4z7zznMkwqDGKSky+EyicaRO0kEaXKZitMoT6SDuB02O4Ba/jya7x/LRZWS6o2ZEW+L7rU4Uhlfv2FntIiKy+E8Qw4rVeIgL2xpmBVjsw/Ugy3qUTAK61fYZd7zNZJDEHvpULrjscOWVbpTPk8AgnTVJ+LUWmkVXFm7aRR6anI=
+	t=1706732429; cv=none; b=kxmt7KKeMn0gxIgfhcXzC9wmyQ1+V/Vcjx2z19LcoRJ/RkQTrD7rGWxTTfrhwhjieI1DeuS6Zvso8vInLFe5AgPR/dR91vL+wDuiHgEY39fp3/G9el7KZ49dNN2tl9fTz4NX6cZ195R3nuGnojHAyce2VTt+gqkaFIrNVV894qM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706730661; c=relaxed/simple;
-	bh=WkxLzqe7R8IsUNodKo0seAmQQD7yja62YP4YaBbLLec=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=MgaxMt8ICsQU4S19oJlRU3VRp7cHaTJ94trVZEfzrNyNCDYsviwr7iiZgrS47mVyyZnKGMzSnEVEmgS7EgWd9vFODGsSSO4aUoO4Kae3GUDCU4o907mwHjuNtrSkNOswnZTDSIGPZDfe3WkDY/163r+YiqaZBD3h5dQPBuT8+pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 752AEC433F1;
-	Wed, 31 Jan 2024 19:51:00 +0000 (UTC)
-Date: Wed, 31 Jan 2024 14:51:14 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] eventfs: Restructure eventfs_inode structure to be more
- condensed
-Message-ID: <20240131145114.525936cc@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1706732429; c=relaxed/simple;
+	bh=5n2GPaqqGywO7Qry4eYZWTM4oFGQUDmGZmFT4fN7rrA=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=V5tk5twx4UxIbCwcBA7Dtjb6dijhsYCcR6BOXxpBk74eKp1vPXTq55COUdt2Vv3sQJ29/ijPYfm/d/4EnZ/XZHyob+wsuSGj6GtEHq82HCpGz/L/uQ5G4tUQhq3XdOj4lB4SN+YNpsJWMzFqBwP+yVnKr0ZUlfZFNipfpvn9flY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j2uVbYHm; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j2uVbYHm"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1644BC43399;
+	Wed, 31 Jan 2024 20:20:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706732429;
+	bh=5n2GPaqqGywO7Qry4eYZWTM4oFGQUDmGZmFT4fN7rrA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=j2uVbYHmJ0BNlBHTdgUBgToOHPf+Qp4+Unj1DhM4x0CdZn1Tp36nyKi13zJ4NsBIr
+	 //0kQJg6fwsnmWQYfnR2CZSUXvSIpo3/iGgYh/XaFnVL1jU0DTgM8QBNto5qWBWVDS
+	 vcqbDp7/vd0zLOGyh5KfD4vVhxPymWXNSaVHEQnaHcADHr+VtdaF38ZzDPzu6o8zPU
+	 fWEGnzHYcE7+2/JhZaS3ZIov8rGKSfUD63SwZdSAHH3lFpglQsA/0G3nIPMWrFeXm3
+	 9frtgxX17A8LyAlpcuY9DlRurZmEwHMKebMLzPTzZHfIKjiacmWjriWBzUTbkx54sG
+	 53m66RsqvuGaQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id F2F56DC99E4;
+	Wed, 31 Jan 2024 20:20:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next v4 0/3] Annotate kfuncs in .BTF_ids section
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170673242899.4502.6917209613478941432.git-patchwork-notify@kernel.org>
+Date: Wed, 31 Jan 2024 20:20:28 +0000
+References: <cover.1706491398.git.dxu@dxuuu.xyz>
+In-Reply-To: <cover.1706491398.git.dxu@dxuuu.xyz>
+To: Daniel Xu <dxu@dxuuu.xyz>
+Cc: linux-trace-kernel@vger.kernel.org, coreteam@netfilter.org,
+ bpf@vger.kernel.org, linux-input@vger.kernel.org, cgroups@vger.kernel.org,
+ netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
+ fsverity@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, netfilter-devel@vger.kernel.org,
+ alexei.starovoitov@gmail.com, olsajiri@gmail.com, quentin@isovalent.com,
+ alan.maguire@oracle.com, memxor@gmail.com
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Hello:
 
-Some of the eventfs_inode structure has holes in it. Rework the structure
-to be a bit more condensed, and also remove the no longer used llist
-field.
+This series was applied to bpf/bpf-next.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
 
-Link: https://lore.kernel.org/linux-trace-kernel/CAHk-=wgh0otaSyV0MNrQpwFDTjT3=TWV94Wit2eUuPdh2KdyVg@mail.gmail.com/
+On Sun, 28 Jan 2024 18:24:05 -0700 you wrote:
+> === Description ===
+> 
+> This is a bpf-treewide change that annotates all kfuncs as such inside
+> .BTF_ids. This annotation eventually allows us to automatically generate
+> kfunc prototypes from bpftool.
+> 
+> We store this metadata inside a yet-unused flags field inside struct
+> btf_id_set8 (thanks Kumar!). pahole will be taught where to look.
+> 
+> [...]
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- fs/tracefs/internal.h | 27 ++++++++++++---------------
- 1 file changed, 12 insertions(+), 15 deletions(-)
+Here is the summary with links:
+  - [bpf-next,v4,1/3] bpf: btf: Support flags for BTF_SET8 sets
+    https://git.kernel.org/bpf/bpf-next/c/79b47344bbc5
+  - [bpf-next,v4,2/3] bpf: btf: Add BTF_KFUNCS_START/END macro pair
+    https://git.kernel.org/bpf/bpf-next/c/2747e0ee57c2
+  - [bpf-next,v4,3/3] bpf: treewide: Annotate BPF kfuncs in BTF
+    https://git.kernel.org/bpf/bpf-next/c/6e7769e6419f
 
-diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index 1886f1826cd8..beb3dcd0e434 100644
---- a/fs/tracefs/internal.h
-+++ b/fs/tracefs/internal.h
-@@ -32,40 +32,37 @@ struct eventfs_attr {
- /*
-  * struct eventfs_inode - hold the properties of the eventfs directories.
-  * @list:	link list into the parent directory
-+ * @rcu:	Union with @list for freeing
-+ * @children:	link list into the child eventfs_inode
-  * @entries:	the array of entries representing the files in the directory
-  * @name:	the name of the directory to create
-- * @children:	link list into the child eventfs_inode
-  * @events_dir: the dentry of the events directory
-  * @entry_attrs: Saved mode and ownership of the @d_children
-- * @attr:	Saved mode and ownership of eventfs_inode itself
-  * @data:	The private data to pass to the callbacks
-+ * @attr:	Saved mode and ownership of eventfs_inode itself
-  * @is_freed:	Flag set if the eventfs is on its way to be freed
-  *                Note if is_freed is set, then dentry is corrupted.
-+ * @is_events:	Flag set for only the top level "events" directory
-  * @nr_entries: The number of items in @entries
-+ * @ino:	The saved inode number
-  */
- struct eventfs_inode {
--	struct kref			kref;
--	struct list_head		list;
-+	union {
-+		struct list_head	list;
-+		struct rcu_head		rcu;
-+	};
-+	struct list_head		children;
- 	const struct eventfs_entry	*entries;
- 	const char			*name;
--	struct list_head		children;
- 	struct dentry			*events_dir;
- 	struct eventfs_attr		*entry_attrs;
--	struct eventfs_attr		attr;
- 	void				*data;
-+	struct eventfs_attr		attr;
-+	struct kref			kref;
- 	unsigned int			is_freed:1;
- 	unsigned int			is_events:1;
- 	unsigned int			nr_entries:30;
- 	unsigned int			ino;
--	/*
--	 * Union - used for deletion
--	 * @llist:	for calling dput() if needed after RCU
--	 * @rcu:	eventfs_inode to delete in RCU
--	 */
--	union {
--		struct llist_node	llist;
--		struct rcu_head		rcu;
--	};
- };
- 
- static inline struct tracefs_inode *get_tracefs(const struct inode *inode)
+You are awesome, thank you!
 -- 
-2.43.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
