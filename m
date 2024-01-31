@@ -1,108 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6360D7EEFD;
-	Tue, 30 Jan 2024 23:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093E6184F;
+	Wed, 31 Jan 2024 00:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706658925; cv=none; b=krfKDeEqoSV5he+ELbdmh/y/9u5s/bmPbVdYTLk2AqYgEa7Vcn23kRly+Nfu5r5sc/WwYVGnc4fUcAaSG8MzANdHE90hvlrEI4mUGJ3umpLHL64iIl1ozOdQTV3HwZEXzb9EDvtQzkX/O7J/d09uHgTtI0/Fufku50y7C86HGd0=
+	t=1706659660; cv=none; b=JuGg0XaorsM14hBAgXuC1n1oyvnPrXAiz1Ku3wbDII4FEjP81L3nJik6Mj+Ko1Os8Rezu/TBn5Yd+i5vq/7RHrJPOAQKlPPAfKFiSa69iuJnemsHY+0xiYnmyWoBG5s/fOd2hahbvNdnYYKSaWHH1qgshc/qu5f5e1qCTja6UcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706658925; c=relaxed/simple;
-	bh=JvgASyfstcPaEIcYgdpWGbMI3/ZlvPNS2e/6AkoMlO8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q+ses4wrANhEL2s5SDLcJ+Os1QH35VkrkCDlMV5nRSnx/hvXfnbELJ4AH1NpPDGPR3+VYmf1yXuJZm/dmNxg54ch8skDq76Q9bwJ0FiCz1PAwaAr0uW0PlxzbXLzVfqA8bndBhwAHfvf77xO1WH/xkQhgAHHrlSDrti3wOaKtKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 400B6C43390;
-	Tue, 30 Jan 2024 23:55:24 +0000 (UTC)
-Date: Tue, 30 Jan 2024 18:55:36 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
+	s=arc-20240116; t=1706659660; c=relaxed/simple;
+	bh=Q9vGSke0CeUMqvDrrQjbDeVNJVHShXMK2uoebpMoBEE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gyBs0BTxGGShxQxXwIAfIS3WidOZmmcIf2ZFtH+Iv91wghiKQ20ZOdYpypdS/Za+AkzMZ/vnw6wyBwLYbFOT3DTeok0+oNapk852ecfwFnwTp066V0UKazFEUoXx+1sg34oTPVVOW6oYCA4StYjMiu0syewcDdM9VIUcj3ekAXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=EUKWUUCT; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="EUKWUUCT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=K5UQD9zZvaq52bbDLYpIpYyrlxYHg6jTjLYeRl++9Vc=; b=EUKWUUCTpVrwKqNrLZx8yQsal4
+	aH30WA2M/jM9ACLa9/dW9mk8jrsvRMwsee0xg2pjLqdhbJnkIcCWyWxAZVazIuXzvcTvk2kbKmolg
+	5//JWQp0j5K4nfqSbl3yBeKMVN6MilXhr9jq/LdT8BpLz/e5atE/J2CtPTOlYnF9PnDILU2TZ9GiC
+	Rv4SBCQpTMgG+HdsiJ+yPmeN/gGg2UzQgci4TGJXFSVqxcnT88Mq9CQmdjtO10fdXQixjUNav3a4W
+	NuRnBc9NCe4NX0lpCezck3dlskdipouVz66i1DqblB5UpFBykSB64wljT1g3SSWNKARyOzj6eZFSL
+	7m/j6CIA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rUy8a-001jn2-2h;
+	Wed, 31 Jan 2024 00:07:32 +0000
+Date: Wed, 31 Jan 2024 00:07:32 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH 3/6] tracefs: dentry lookup crapectomy
-Message-ID: <20240130185536.7ff14cb2@gandalf.local.home>
-In-Reply-To: <20240130232621.GL2087318@ZenIV>
+Message-ID: <20240131000732.GM2087318@ZenIV>
 References: <20240130190355.11486-1-torvalds@linux-foundation.org>
-	<20240130190355.11486-3-torvalds@linux-foundation.org>
-	<20240130232621.GL2087318@ZenIV>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <20240130190355.11486-3-torvalds@linux-foundation.org>
+ <20240130232621.GL2087318@ZenIV>
+ <20240130185536.7ff14cb2@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240130185536.7ff14cb2@gandalf.local.home>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Tue, 30 Jan 2024 23:26:21 +0000
-Al Viro <viro@zeniv.linux.org.uk> wrote:
+On Tue, Jan 30, 2024 at 06:55:36PM -0500, Steven Rostedt wrote:
 
-> On Tue, Jan 30, 2024 at 11:03:52AM -0800, Linus Torvalds wrote:
-> > The dentry lookup for eventfs files was very broken, and had lots of
-> > signs of the old situation where the filesystem names were all created
-> > statically in the dentry tree, rather than being looked up dynamically
-> > based on the eventfs data structures.
+> Actually it's the tracefs_start_creating() locks the inode, the
+> eventfs_start_creating() doesn't.
+
+Right.
+
 > > 
-> > You could see it in the naming - how it claimed to "create" dentries
-> > rather than just look up the dentries that were given it.
+> > >  	if (unlikely(!inode))
+> > >  		return eventfs_failed_creating(dentry);  
 > > 
-> > You could see it in various nonsensical and very incorrect operations,
-> > like using "simple_lookup()" on the dentries that were passed in, which
-> > only results in those dentries becoming negative dentries.  Which meant
-> > that any other lookup would possibly return ENOENT if it saw that
-> > negative dentry before the data rwas then later filled in.
-> > 
-> > You could see it in the immesnse amount of nonsensical code that didn't
-> > actually just do lookups.  
-> 
-> > -static struct dentry *create_file(const char *name, umode_t mode,
-> > +static struct dentry *lookup_file(struct dentry *dentry,
-> > +				  umode_t mode,
-> >  				  struct eventfs_attr *attr,
-> > -				  struct dentry *parent, void *data,
-> > +				  void *data,
-> >  				  const struct file_operations *fop)
-> >  {
-> >  	struct tracefs_inode *ti;
-> > -	struct dentry *dentry;
-> >  	struct inode *inode;
-> >  
-> >  	if (!(mode & S_IFMT))
-> > @@ -307,12 +304,6 @@ static struct dentry *create_file(const char *name, umode_t mode,
-> >  	if (WARN_ON_ONCE(!S_ISREG(mode)))
-> >  		return NULL;
-> >  
-> > -	WARN_ON_ONCE(!parent);
-> > -	dentry = eventfs_start_creating(name, parent);  
-> 
-> Used to lock the inode of parent.
+> > ... and that still unlocks it.
 
-Actually it's the tracefs_start_creating() locks the inode, the
-eventfs_start_creating() doesn't.
+This is still bogus, though - both the stray dput() and
+dropping a reference to internal mount.
 
--- Steve
-
-
-> 
-> >  	if (unlikely(!inode))
-> >  		return eventfs_failed_creating(dentry);  
-> 
-> ... and that still unlocks it.
-> 
-> > @@ -331,29 +322,25 @@ static struct dentry *create_file(const char *name, umode_t mode,
-> >  	ti->flags = TRACEFS_EVENT_INODE;
-> >  	ti->private = NULL;			// Directories have 'ei', files not
-> >  
-> > -	d_instantiate(dentry, inode);
-> > +	d_add(dentry, inode);
-> >  	fsnotify_create(dentry->d_parent->d_inode, dentry);
-> >  	return eventfs_end_creating(dentry);  
-> 
-> ... and so does this.
-> 
-> >  };  
-> 
-> Where has that inode_lock() gone and how could that possibly work?
-
+struct dentry *eventfs_failed_creating(struct dentry *dentry)
+{
+        dput(dentry);
+	simple_release_fs(&tracefs_mount, &tracefs_mount_count);
+	return NULL;
+}
