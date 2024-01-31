@@ -1,86 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5862912BEA8;
-	Wed, 31 Jan 2024 16:13:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF8D12A146;
+	Wed, 31 Jan 2024 16:22:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706717626; cv=none; b=gMuee71rhQjKAV0ggKSzlbzY/hcNZc8QYQiHyiNcC+GWaA5xcBvKFRgjXx3xhFfJ1+aF5rm5oVif2TdJubLJJyMcXQ9S/PDs1PwrH3znR+G+n/PEsIza9Ypao9Y5UMMTxrKqJ+m+BmVN0vzmWi+bAAtDH0xINifQy0OcIU4koQo=
+	t=1706718170; cv=none; b=pMI/yMUqVBsaRo0X6HqioXAIz8p3+kV9Z4Gl35zE0s9s6ChqVHNM4KK+nf6i6NhER6+wRaVMscUfnOU2jEqQbqszGmWmV/I845tVFTldM5d4IYHst5uy19SQIvruVclmXGYOpfbMo83uH/Ftc17RIemd9Y9Y+fCds6+ErMhTK7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706717626; c=relaxed/simple;
-	bh=Y9p7Qys8VYoI5vR/TxJmHQmVhklAbcJAcFqAVVpM4GY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hndHPRYdPgT67lK4rGoAy3KeXay/0Eaff+FFpz1dQ2YgIml3bVni+zmMpNGBySPF/gRuSadIOU+pGNkNrGsPIGevf/PmW5dZzaDY7XzE/NNUhKPg3ilUpLF9pbpVI3vBRc2j9qu1IUlR6QKKfOKOUsrsihYOzUoEs2K2jwjNpIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CAB6C433F1;
-	Wed, 31 Jan 2024 16:13:44 +0000 (UTC)
-Date: Wed, 31 Jan 2024 11:13:58 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
- lkp@intel.com, linux-kernel@vger.kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Christian Brauner
- <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Ajay Kaher
- <ajay.kaher@broadcom.com>, linux-trace-kernel@vger.kernel.org
-Subject: Re: [linus:master] [eventfs] 852e46e239:
- BUG:unable_to_handle_page_fault_for_address
-Message-ID: <20240131111358.5506645a@gandalf.local.home>
-In-Reply-To: <20240131105847.3e9afcb8@gandalf.local.home>
-References: <202401291043.e62e89dc-oliver.sang@intel.com>
-	<20240129152600.7587d1aa@gandalf.local.home>
-	<CAHk-=wghobf5qCqNUsafkQzNAZBJiS0=7CRjNXNChpoAvTbvUw@mail.gmail.com>
-	<20240129172200.1725f01b@gandalf.local.home>
-	<CAHk-=wjV6+U1FQ8wzQ5ASmqGgby+GZ6wpdh0NrJgA43mc+TEwA@mail.gmail.com>
-	<CAHk-=wgOxTeTi02C=kOXsHzuD6XCrV0L1zk1XP9t+a4Wx--xvA@mail.gmail.com>
-	<20240129174950.5a17a86c@gandalf.local.home>
-	<CAHk-=wjbzw3=nwR5zGH9jqXgB8jj03wxWfdFDn=oAVCoymQQJg@mail.gmail.com>
-	<20240129193549.265f32c8@gandalf.local.home>
-	<CAHk-=whRxcmjvGNBKi9_x59cAedh8SO8wsNDNrEQbAQfM5A8CQ@mail.gmail.com>
-	<CAHk-=wh97AkwaOkXoBgf0z8EP88ePffLnTcmmQXcY+AhFaFrnA@mail.gmail.com>
-	<20240130132319.022817e8@gandalf.local.home>
-	<CAHk-=wiGb2aDbtq2+mYv6C=pYRKmo_iOu9feL9o52iRT8cuh6Q@mail.gmail.com>
-	<20240130143734.31b9b3f1@gandalf.local.home>
-	<CAHk-=whMJgqu2v1_Uopg5NBschGFa_BK1Ct=s7ehwnzPpPi6nQ@mail.gmail.com>
-	<20240131105847.3e9afcb8@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1706718170; c=relaxed/simple;
+	bh=cgqvIXY2Y6ujV/j24/sdO9SiSv1S/a3wo9WZsazN5KU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fWG1yYmyqO5lq8dsYihtvSRFzP5eW2lVWr5dqHJgyMmq53TPVr/PpBu+QkewAuAEJ6ZTIaRLl2sNOT2T4TWo5bSELWWEZgu0joubuxZB5EwDMn5Wh8ZflCjpe6d6ENwnc1N7ThaeY+lYG4uYFZWT2B/QEZww3vm+18/cOaXJfdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ztUlj6r1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ztUlj6r1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52923C433F1;
+	Wed, 31 Jan 2024 16:22:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1706718169;
+	bh=cgqvIXY2Y6ujV/j24/sdO9SiSv1S/a3wo9WZsazN5KU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ztUlj6r1C3QWmhHr8PeOKtvt3MbKGvpQMs2jmB6RTKF7ovM+Nr2MGanVh8TIKcUc4
+	 4txSI7YtPg0yD4Q0rh2TB3JxzcyrflSpviYGG3jQUroC3aZdOd9OqRqHTecGDm6a8Z
+	 BMEHMK0A7DKOVAbk+sStoc162pmZM43u0s1zG35M=
+Date: Wed, 31 Jan 2024 08:22:48 -0800
+From: Greg KH <gregkh@linuxfoundation.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: mcgrof@kernel.org, russ.weight@linux.dev, rafael@kernel.org,
+	rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	keescook@chromium.org, masahiroy@kernel.org, nathan@kernel.org,
+	nicolas@fjasle.eu, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH RFC 0/4] Introduce uts_release
+Message-ID: <2024013158-dipper-mural-424b@gregkh>
+References: <20240131104851.2311358-1-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240131104851.2311358-1-john.g.garry@oracle.com>
 
-On Wed, 31 Jan 2024 10:58:47 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, Jan 31, 2024 at 10:48:47AM +0000, John Garry wrote:
+> When hacking it is a waste of time and compute energy that we need to
+> rebuild much kernel code just for changing the head git commit, like this:
+> 
+> > touch include/generated/utsrelease.h 
+> > time make  -j3
+> mkdir -p /home/john/mnt_sda4/john/kernel-dev2/tools/objtool && make O=/home/john/mnt_sda4/john/kernel-dev2 subdir=tools/objtool --no-print-directory -C objtool 
+>   INSTALL libsubcmd_headers
+>   CALL    scripts/checksyscalls.sh
+>   CC      init/version.o
+>   AR      init/built-in.a
+>   CC      kernel/sys.o
+>   CC      kernel/module/main.o
+>   AR      kernel/module/built-in.a
+>   CC      drivers/base/firmware_loader/main.o
+>   CC      kernel/trace/trace.o
+>   AR      drivers/base/firmware_loader/built-in.a
+>   AR      drivers/base/built-in.a
+>   CC      net/ethtool/ioctl.o
+>   AR      kernel/trace/built-in.a
+>   AR      kernel/built-in.a
+>   AR      net/ethtool/built-in.a
+>   AR      net/built-in.a
+>   AR      drivers/built-in.a
+>   AR      built-in.a
+>   ...
+> 
+> Files like drivers/base/firmware_loader/main.c needs to be recompiled as
+> it includes generated/utsrelease.h for UTS_RELEASE macro, and utsrelease.h
+> is regenerated when the head commit changes.
+> 
+> Introduce global char uts_release[] in init/version.c, which this
+> mentioned code can use instead of UTS_RELEASE, meaning that we don't need
+> to rebuild for changing the head commit - only init/version.c needs to be
+> rebuilt. Whether all the references to UTS_RELEASE in the codebase are
+> proper is a different matter.
+> 
+> For an x86_64 defconfig build for this series on my old laptop, here is
+> before and after rebuild time:
+> 
+> before:
+> real    0m53.591s
+> user    1m1.842s
+> sys     0m9.161s
+> 
+> after:
+> real    0m37.481s
+> user    0m46.461s
+> sys     0m7.199s
+> 
+> Sending as an RFC as I need to test more of the conversions and I would
+> like to also convert more UTS_RELEASE users to prove this is proper
+> approach.
 
-> @@ -788,6 +717,7 @@ static void init_once(void *foo)
->  {
->  	struct tracefs_inode *ti = (struct tracefs_inode *) foo;
->  
-> +	memset(ti, 0, sizeof(*ti));
->  	inode_init_once(&ti->vfs_inode);
->  }
->  
+I like it, I also think that v4l2 includes this as well as all of those
+drivers seem to rebuild when this changes, does that not happen for you
+too?
 
-Note, that inode_init_once() also does a memset on the entire inode, so the
-initial memset is redundant on the inode portion. But I didn't think it was
-really worth the time to complicate the code by optimizing it. I guess if I
-changed the structure to:
+Anyway, if the firmware changes work, I'm all for this, thanks for
+taking it on!
 
- struct tracefs_inode {
-+	struct inode            vfs_inode;
-	unsigned long           flags;
-	void                    *private;
--	struct inode            vfs_inode;
- };
+thanks,
 
-I could have it do:
-
-	memset_after(ti, 0, vfs_inode);
-
-But this can be done as a separate clean up and doesn't need to be done now.
-
--- Steve
+greg k-h
