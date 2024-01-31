@@ -1,68 +1,66 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D007BAF3;
-	Wed, 31 Jan 2024 13:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C61C77BB10;
+	Wed, 31 Jan 2024 13:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706708034; cv=none; b=FGoxK0FMzaqZO3HEWN5o56a7mVhHAgn9/+9nGn5IT5OZlQXeHBtGMMrZY/okGADEheUyDbaSGTVo5oPDDqrKrGom0wh6a2/5lSRai5D/J1CRcUn5BLoF/dN939RvPma1NhbPvo1bqwoo2wIIYW/fWxXZOa/Gx5VWvE+5MyFjssI=
+	t=1706708075; cv=none; b=TMSTKXnJCR9Myxf9VuP6EPzT+b+Xi3TDz8LfPEnL56D8oV+LrvdPrWyxEHgk5g97HsnoN8tdHfD4M+r1PJqcfzKkGLZ2xY5RetctGKJ2iv6FoCcbbh0KTtdtrfbgRsp39Zkrsz9+3WGTBpX4B421WS8a2VK8M9h4AiL5uXsJg9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706708034; c=relaxed/simple;
-	bh=x7pDRdtnj1w7St6knLG86KC9J7zYvKmaTgXcKEEy/xU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k8asbr9vj1CuVB8dSvVGO17BNHx9MXVo/Jvt0Wj6d/UNXVc/zWuofra6NtdivHrU/nvTfJnXUpyXjchTDUbBAgA1ivPxAKRriv5yhIgEcjrWTi7JRHLNe7woH70TG3CwuxzIZ7GfBdyA/Lx12HDH7ftceytvYyGlml2tpUyOF9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AQ+TZXm8; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706708075; c=relaxed/simple;
+	bh=ipB51S4ayXjPdAjDFJrXZRnPCOCc58tiHGNoK3XtmJo=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=QM5aDUBUji2q/WsGOzqON4pEt/knbxk/e0txPJx83/MZHTBmdLBoLVcL1jltbwXU9NkRrvPYYLNlIk720gpqYP4XZO6ylx4WSiN85m3UAvTRJ0KRRnwNYRfhWgYfLQ45Yv9UP+4iLmYtjBKx4QPSZV0F2TKjlNbifGFjAGgLtso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=i2aCGLJz; arc=none smtp.client-ip=162.62.57.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AQ+TZXm8"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-55c33773c0aso5534410a12.1;
-        Wed, 31 Jan 2024 05:33:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706708031; x=1707312831; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=g2vX3j9pZB99MF+ul54pGfWjbJyQ2L+Maw8cOuYH98o=;
-        b=AQ+TZXm8iCvlbK2HPg1/e/QgQc4qkVw8LyO1PcnvftZ5lqpoO6zDRqRcf4/WZ1IkGJ
-         WY2CrimbWNo6EgveN0YrpSA++QJ1FCOYTV/p3Z0WlgbBIM+1Ok0yz/Gac3iMmLiKsN3m
-         3xcbTKCwYOn93KAG6G7g6VdFHsrh1QMW5uF/792iCirboGZsauX5CKs8gbTeQ1oNmmDr
-         6J2jUkCQPvmreDr4uODXdwcKpEOsxp1UHQjAuaIpjZhcXtGmudCvBEe8VWeJCH1LY+Fl
-         n7hUiWPSc/GmkuMr47CV+WnErIBi5/YqrPqODwQQpEVfpmjU0gU4xdORqTQTHCSuYbDh
-         4OgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706708031; x=1707312831;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=g2vX3j9pZB99MF+ul54pGfWjbJyQ2L+Maw8cOuYH98o=;
-        b=TrHRoZToMbtAHCfu85yqPKflAGWUbKE9NUD1t/rE9hlYRzwTxF0P29XRxzL3BVgbYh
-         oCHAwNndgmDdAHlOZOhslBFhp5/CcGhKmxG+1HQ0iqi9ezelxahgj0h3UheYArcVEqDf
-         PSkNA+kgLw9tAu1mhc8PcbNCjddjmYH/aM5yXGaX+Y8xZr572gRNftrnB81WzsdOF2ji
-         3Rr3CYRPfqbB/hxOFW9GTh6/ViW1dgwiE4yg0GB0Q5duOe4ZVxvuBLCK6f0pKcRP4bHg
-         eYuOTpneOY6S2gpEfR6s5UgFmpJnixhgyIryFt4sQkpIhc+GCyjH7lyeE+CuhFAw5DnR
-         +kdw==
-X-Gm-Message-State: AOJu0YydK4KBcPkV6MerceulSOOgC2mhcAMyt9oHFw2TUqwgMlDKpfeN
-	frByNbjfX+c2Z9vPvj697WxjZMuAcRrxQbVf8ZScg57fCaZJkYhaVg3F3p8I
-X-Google-Smtp-Source: AGHT+IHsKF1n9XLJxec1HD9HMXbUCbpxrOuB0WcplBS4PYu5bbUSEj6toKCDUOFEw1hW/o1CeKMgow==
-X-Received: by 2002:aa7:c354:0:b0:55f:144f:4fe4 with SMTP id j20-20020aa7c354000000b0055f144f4fe4mr1215227edr.27.1706708030981;
-        Wed, 31 Jan 2024 05:33:50 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUDDjDXbSp+3d4LcD8AzgYOe5pzNlbspew2zInXso8UidvVhJiQ2SBRl/jb3FU2N4E6TKtX4pXuQ6151wRYuLlWNa0y5Mn6Q0DDwyqbCY6HK4R/cLgu36NZzx6KXLbxPW7gAjIKkitQL9BNbet/PhZVbFSnR0RY//db2vQDD0J5AWWmDJvniUR7DLFG+jC2qy9UTHRgyMf4fxjvahyFptd6Tb9QfHEmC2/vriR2tJmaG2KsKRP8LmvvwarOGwv2wAefeYT2Z6K6VD1iuw2tUPY0TmQ8Oc1Oizc=
-Received: from localhost.localdomain ([213.55.225.76])
-        by smtp.gmail.com with ESMTPSA id fd12-20020a056402388c00b00557d839727esm5866201edb.7.2024.01.31.05.33.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jan 2024 05:33:50 -0800 (PST)
-From: Ali Zahraee <ahzahraee@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	shuah@kernel.org
-Cc: Ali Zahraee <ahzahraee@gmail.com>,
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="i2aCGLJz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1706707765; bh=3LvlDGqVp2dR5tHsbeJj41RdmcLcttRB0AeyEWvvGzI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=i2aCGLJzWyXKRhu4uyL11CKjUakJspzaoyW0rKL4NkUI3m+lwIXdqNTAw2IQeXbGV
+	 6CXEmfuk3SwD0zVJ3cHMfw3lXaCOFIDjH2aHxIEG1oNxjqNXrTKPVIz7M9ijMscHc3
+	 i2RoBStwbjpB8z/B5G2RB8r37bVSGphEFbVWhxJU=
+Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
+	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
+	id 7039203E; Wed, 31 Jan 2024 21:28:03 +0800
+X-QQ-mid: xmsmtpt1706707683t170w99ch
+Message-ID: <tencent_6D33089EBD1B9C4BEE1B2425C6BAB4BB9F08@qq.com>
+X-QQ-XMAILINFO: OW4JKxETGMY27nXxRGBgayPGLZPP931PdTQSzQ1zill1Akyt95iEkXs+ChWv2F
+	 n/HpM4S8NTgrbmkEw81HUfzwMbV3QyRN88d61pS4hhgxXYxwlki1m+FCzR/7uohYdAL3e+rcAwpu
+	 XjWW0mLSZNmhdhZJlcWWRrYPEbmwGncPjqt3ccGAQ4VOUtCrlq+J/v7Wka+kTtFwQyzDHPFOmrpn
+	 86/yyJ0tMqEeIzoOzCfks+VOzYC+amIaujQAY/SsL6N1lb/uso+i4LenVzJGACPj68Q0e04IbUKG
+	 pMx2ZQnCPv9QulEQnstzSmUBouq+B/gj7u/lA9XbV+ThgFkVC5HdfcRFjgY/hFPpHINMY1pDKeVv
+	 FyqT9TTPYe0knHqoWuIjp63PtOfKcgfKUiEZJty311vKqCW+GiYihART3eEU3bUTpeV+FfK5T1yi
+	 SlSICnN+aWkrVyXDmzY/tlHLwn9X2oLt9uOTjGEpHz1s4vqwfYoL+/9ymeNPkgOzOQ21nFQgf3ia
+	 ZpsbGGvWpSAIIFXsoAMZgU6ft5LcAcJ5iX9xxnLrIA2HtppDlvi5bvzliJT/Ne1tjJj3aPwmDB/+
+	 DQtHj45SSkTMbatqpOCv0xgEkOLdv5CR6z7KTdb+kmSk7TpYzeRhXXUscJpUdqVab7dH7eQ2QGJ/
+	 PPez3v1z80UgHA5G1uDZ3PMbC2x9D4TDj/SoZpvL+6M+PD7Q/a1mSGUhwHq8cosBN3p1VH8iTc19
+	 25O3CKulz7AqwjvIcE016grLq0/rkcqYrfqVXmsNx6ayaViMr2mQmCYKka14DiyMUh1pjtKHG3PA
+	 EdN6VQD4UZG3iAps4umrYFljISA9iW+UprIl84wat4JXoWLxCQYb9y2TLEwyVN4CE13n2U/XcQ38
+	 2QoeA4gBLg2jmII106Xi58Eo3WKzS7jVbq1NXfWwYULy/KZ+b+HkpUyy/fUf3HRn0oitvlfbF3YH
+	 ReEJKvVRI=
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+2373f6be3e6de4f92562@syzkaller.appspotmail.com
+Cc: akpm@linux-foundation.org,
+	axboe@kernel.dk,
+	dvyukov@google.com,
+	linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH] selftests: ftrace: fix typo in test description
-Date: Wed, 31 Jan 2024 14:33:06 +0100
-Message-Id: <20240131133306.7723-1-ahzahraee@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	pengfei.xu@intel.com,
+	rostedt@goodmis.org,
+	syzkaller-bugs@googlegroups.com
+Subject: [PATCH] trace/blktrace: fix task hung in blk_trace_remove
+Date: Wed, 31 Jan 2024 21:28:04 +0800
+X-OQ-MSGID: <20240131132803.1350049-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000002b1fc7060fca3adf@google.com>
+References: <0000000000002b1fc7060fca3adf@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -71,27 +69,35 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The typo in the description shows up in test logs and output.
-This patch submission is part of my application to the Linux Foundation
-mentorship program: Linux kernel Bug Fixing Spring Unpaid 2024.
+Delete critical sections that are time-consuming and protected by other mutexes
+to avoid this issue.
 
-Signed-off-by: Ali Zahraee <ahzahraee@gmail.com>
+Reported-and-tested-by: syzbot+2373f6be3e6de4f92562@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
 ---
- tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/blktrace.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-index add7d5bf585d..c45094d1e1d2 100644
---- a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-+++ b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-@@ -1,6 +1,6 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
--# description: Test file and directory owership changes for eventfs
-+# description: Test file and directory ownership changes for eventfs
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index d5d94510afd3..4543be718362 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -313,6 +313,7 @@ static void __blk_add_trace(struct blk_trace *bt, sector_t sector, int bytes,
  
- original_group=`stat -c "%g" .`
- original_owner=`stat -c "%u" .`
+ static void blk_trace_free(struct request_queue *q, struct blk_trace *bt)
+ {
++	mutex_unlock(&q->debugfs_mutex);
+ 	relay_close(bt->rchan);
+ 
+ 	/*
+@@ -325,6 +326,7 @@ static void blk_trace_free(struct request_queue *q, struct blk_trace *bt)
+ 	} else {
+ 		debugfs_remove(bt->dir);
+ 	}
++	mutex_lock(&q->debugfs_mutex);
+ 	free_percpu(bt->sequence);
+ 	free_percpu(bt->msg_data);
+ 	kfree(bt);
 -- 
-2.34.1
+2.43.0
 
