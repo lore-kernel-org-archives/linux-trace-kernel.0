@@ -1,46 +1,44 @@
 Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093E6184F;
-	Wed, 31 Jan 2024 00:07:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F731859;
+	Wed, 31 Jan 2024 00:23:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706659660; cv=none; b=JuGg0XaorsM14hBAgXuC1n1oyvnPrXAiz1Ku3wbDII4FEjP81L3nJik6Mj+Ko1Os8Rezu/TBn5Yd+i5vq/7RHrJPOAQKlPPAfKFiSa69iuJnemsHY+0xiYnmyWoBG5s/fOd2hahbvNdnYYKSaWHH1qgshc/qu5f5e1qCTja6UcM=
+	t=1706660634; cv=none; b=VHnUGxcxUDLpRcYrQVzofFqTHiN2E7oDGi7VaqQQUC6/HbxPje71Bl5iOiLhvlGzkGQGeMvkJJcXggvppiDg1sl4CnGZW6JTr2U7+UND7nDZO0omFSsgHRrkOcDLrjYqf51xYQyxmdyLMn2Wu1fJpIBKjiCsBV7Si7TyIyH4eEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706659660; c=relaxed/simple;
-	bh=Q9vGSke0CeUMqvDrrQjbDeVNJVHShXMK2uoebpMoBEE=;
+	s=arc-20240116; t=1706660634; c=relaxed/simple;
+	bh=c/eIPZvywtwvTLT9YSLVvlch++xEbKA446vc6uScEkg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gyBs0BTxGGShxQxXwIAfIS3WidOZmmcIf2ZFtH+Iv91wghiKQ20ZOdYpypdS/Za+AkzMZ/vnw6wyBwLYbFOT3DTeok0+oNapk852ecfwFnwTp066V0UKazFEUoXx+1sg34oTPVVOW6oYCA4StYjMiu0syewcDdM9VIUcj3ekAXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=EUKWUUCT; arc=none smtp.client-ip=62.89.141.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=rP+y0hN4GpislUKogU3v1Lstx3Pw3ksOAErxDetVOljzINntaPXNgKEnkmYOllMf46qmnIFagoBY4LSUiK2QHXi5rhM9cWzFmUwX4i4MgfNqYLWIx9rVchzvsjR0uXt5zi3RQWf69bOwHF1FQEbjLagdIItwKv/MNmHu6Y2PFoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=rDtLZXD6; arc=none smtp.client-ip=62.89.141.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="EUKWUUCT"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="rDtLZXD6"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=K5UQD9zZvaq52bbDLYpIpYyrlxYHg6jTjLYeRl++9Vc=; b=EUKWUUCTpVrwKqNrLZx8yQsal4
-	aH30WA2M/jM9ACLa9/dW9mk8jrsvRMwsee0xg2pjLqdhbJnkIcCWyWxAZVazIuXzvcTvk2kbKmolg
-	5//JWQp0j5K4nfqSbl3yBeKMVN6MilXhr9jq/LdT8BpLz/e5atE/J2CtPTOlYnF9PnDILU2TZ9GiC
-	Rv4SBCQpTMgG+HdsiJ+yPmeN/gGg2UzQgci4TGJXFSVqxcnT88Mq9CQmdjtO10fdXQixjUNav3a4W
-	NuRnBc9NCe4NX0lpCezck3dlskdipouVz66i1DqblB5UpFBykSB64wljT1g3SSWNKARyOzj6eZFSL
-	7m/j6CIA==;
+	bh=OMoLdYC5GdVaaynp2LWvJ7jTSZFMs+neDTkz0sr2JQw=; b=rDtLZXD6C82pW8fFtqMrFK5g3Q
+	/J6RXUnzSdDaFA4brvEZu+DjCazUIs7Icdeeed4Zpuo/BjJ5lzcwN7Cl5vjfYrsWdbcKbk4+9TOrV
+	RO/59vpswj1S2BQ4ftNAWsCSGue3AeExxpgxD2MQw1yTWBclv9o6vEO9LfR+c0ZK+y6/IvbzsskM4
+	cGOBfcyPRRWu1SyM9zJmQ6a8GI5Zo7GVD3g2hkBHkhu/ikydAH6i8XJSLdEqWpt4RWwoWRoLhhAwi
+	PWkeGzZ4b0uLAPZ91UYL0G6Cw5+uwFfgH2ScHhgGOGbr4DYeLACQJpIE9pJm4CztJtVgC8DVmnqvd
+	O587NUTw==;
 Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rUy8a-001jn2-2h;
-	Wed, 31 Jan 2024 00:07:32 +0000
-Date: Wed, 31 Jan 2024 00:07:32 +0000
+	id 1rUyOI-001kOL-2I;
+	Wed, 31 Jan 2024 00:23:46 +0000
+Date: Wed, 31 Jan 2024 00:23:46 +0000
 From: Al Viro <viro@zeniv.linux.org.uk>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH 3/6] tracefs: dentry lookup crapectomy
-Message-ID: <20240131000732.GM2087318@ZenIV>
+Message-ID: <20240131002346.GN2087318@ZenIV>
 References: <20240130190355.11486-1-torvalds@linux-foundation.org>
  <20240130190355.11486-3-torvalds@linux-foundation.org>
- <20240130232621.GL2087318@ZenIV>
- <20240130185536.7ff14cb2@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -49,28 +47,23 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240130185536.7ff14cb2@gandalf.local.home>
+In-Reply-To: <20240130190355.11486-3-torvalds@linux-foundation.org>
 Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Tue, Jan 30, 2024 at 06:55:36PM -0500, Steven Rostedt wrote:
+On Tue, Jan 30, 2024 at 11:03:52AM -0800, Linus Torvalds wrote:
+>  {
+>  	struct eventfs_inode *ei;
+>  
+> -	mutex_lock(&eventfs_mutex);
+>  	do {
+>  		// The parent is stable because we do not do renames
+>  		dentry = dentry->d_parent;
+> @@ -247,7 +246,6 @@ static struct eventfs_inode *eventfs_find_events(struct dentry *dentry)
+>  		}
+>  		// Walk upwards until you find the events inode
+>  	} while (!ei->is_events);
+> -	mutex_unlock(&eventfs_mutex);
 
-> Actually it's the tracefs_start_creating() locks the inode, the
-> eventfs_start_creating() doesn't.
-
-Right.
-
-> > 
-> > >  	if (unlikely(!inode))
-> > >  		return eventfs_failed_creating(dentry);  
-> > 
-> > ... and that still unlocks it.
-
-This is still bogus, though - both the stray dput() and
-dropping a reference to internal mount.
-
-struct dentry *eventfs_failed_creating(struct dentry *dentry)
-{
-        dput(dentry);
-	simple_release_fs(&tracefs_mount, &tracefs_mount_count);
-	return NULL;
-}
+Unless I'm missing something, you've just lost exclusion with
+removals (not that the original hadn't been suspicious in that
+respect - what's to protect ei past that mutex_unlock?
