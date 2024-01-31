@@ -1,123 +1,254 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87CD678686;
-	Wed, 31 Jan 2024 12:22:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682F15A7A1;
+	Wed, 31 Jan 2024 12:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706703744; cv=none; b=Bj4uyxqxKRMEpWS94DtLAhP6lAN5PdUO3mkU1zypPfem0p4aKFbZmnTuvttAKIQT/5p7QrnDaio2bNM7y3ISbnN8pvqne4Un+pFRFlxyyiS9hE/ziIuDHdvSPe+wKASo8KI6QL1+U6CWOMZP+RPovyaEevRHdQHCbSrKG7NGHWA=
+	t=1706705863; cv=none; b=dCSKNJbr7QuTO+qVKwObT5WnRKJm8LOkQW1P2pUIgMyvYo08KSGi/NygtpPzFRHzMvU1Y8rLFD0IIV1Gaf39Z+K4rbKiX1Pw6yOYtgo0mhg4uDo2kpjDSfQCe7Om84fCJ1cwulInMJrg/SQVfGQtc6cawTY1kQHxTDDEF5UErMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706703744; c=relaxed/simple;
-	bh=JjRzeMvW2Ua9zjpVLjV5iutNqduF5tpcfH8Ei36DH8g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y6hFUTjjONujxHEaxSv7vPXb1flm5NRJ9JHJgTHk++2iHqu5elkOm40HFpRBR7fCKpJW0A1RsSTm0cvd7d8GjtGs9b71lJHk33cAzMnvuED3KfiCM6MOw7yWvSxEWYA92dQfUmt3uchNuuK+1C9tjvi/qzyo/mQVwMyOqKd/NtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53ACFDA7;
-	Wed, 31 Jan 2024 04:23:05 -0800 (PST)
-Received: from raptor (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4D3293F738;
-	Wed, 31 Jan 2024 04:22:16 -0800 (PST)
-Date: Wed, 31 Jan 2024 12:22:05 +0000
-From: Alexandru Elisei <alexandru.elisei@arm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
-	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
-	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
-	rppt@kernel.org, hughd@google.com, pcc@google.com,
-	steven.price@arm.com, vincenzo.frascino@arm.com, david@redhat.com,
-	eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v3 11/35] mm: Allow an arch to hook into folio
- allocation when VMA is known
-Message-ID: <Zbo7bVq822iphFtc@raptor>
-References: <20240125164256.4147-1-alexandru.elisei@arm.com>
- <20240125164256.4147-12-alexandru.elisei@arm.com>
- <1e03aec4-705a-41b6-b258-0b8944d9dc0c@arm.com>
- <Zbje4T5tZ5k707Wg@raptor>
- <7612b843-cd31-4917-87c0-c26802c5bef2@arm.com>
+	s=arc-20240116; t=1706705863; c=relaxed/simple;
+	bh=adrEc5ycfvBXd5A/G1QblPRi/8rVFlhF8UA3Djg+zTo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CnxC7swThpGC1q38hYyKoZdUXJbabLoU5Q8dCijvgGqwbfXiexqCoTewcymVREO5HylsouDXpi4+RZw/I3ND/8vzN1ikL7lPSjAUm+LqCcVXradtsMj+o6UQSp16vF9SIolu5DYBmx3P2uvmeN4ZfcnlgGzst6Tfuz3pBBN0Dhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10AA6C433F1;
+	Wed, 31 Jan 2024 12:57:41 +0000 (UTC)
+Date: Wed, 31 Jan 2024 07:57:40 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, Masami Hiramatsu
+ <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] eventfs: get rid of dentry pointers without
+ refcounts
+Message-ID: <20240131075740.660e7634@rorschach.local.home>
+In-Reply-To: <CAHk-=whSse54d+X361K2Uw6jO2SvrO-U0LHLBTLnqHaA+406Fw@mail.gmail.com>
+References: <20240130190355.11486-1-torvalds@linux-foundation.org>
+	<20240130190355.11486-5-torvalds@linux-foundation.org>
+	<20240131000956.3dbc0fc0@gandalf.local.home>
+	<CAHk-=wjH+k47je4YbP=D+KOiNYp8cJh8C_gZFzSOa8HPDm=AQw@mail.gmail.com>
+	<20240131003317.7a63e799@gandalf.local.home>
+	<CAHk-=wg69FE2826EokkCbSKHZvCG-cM5t=9SMFLcfpNu8Yvwqw@mail.gmail.com>
+	<CAHk-=whSse54d+X361K2Uw6jO2SvrO-U0LHLBTLnqHaA+406Fw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7612b843-cd31-4917-87c0-c26802c5bef2@arm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On Tue, 30 Jan 2024 22:20:24 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-On Wed, Jan 31, 2024 at 12:23:51PM +0530, Anshuman Khandual wrote:
+> On Tue, 30 Jan 2024 at 21:57, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > Ugh.  
 > 
-> 
-> On 1/30/24 17:04, Alexandru Elisei wrote:
-> > Hi,
-> > 
-> > On Tue, Jan 30, 2024 at 03:25:20PM +0530, Anshuman Khandual wrote:
-> >>
-> >> On 1/25/24 22:12, Alexandru Elisei wrote:
-> >>> arm64 uses VM_HIGH_ARCH_0 and VM_HIGH_ARCH_1 for enabling MTE for a VMA.
-> >>> When VM_HIGH_ARCH_0, which arm64 renames to VM_MTE, is set for a VMA, and
-> >>> the gfp flag __GFP_ZERO is present, the __GFP_ZEROTAGS gfp flag also gets
-> >>> set in vma_alloc_zeroed_movable_folio().
-> >>>
-> >>> Expand this to be more generic by adding an arch hook that modifes the gfp
-> >>> flags for an allocation when the VMA is known.
-> >>>
-> >>> Note that __GFP_ZEROTAGS is ignored by the page allocator unless __GFP_ZERO
-> >>> is also set; from that point of view, the current behaviour is unchanged,
-> >>> even though the arm64 flag is set in more places.  When arm64 will have
-> >>> support to reuse the tag storage for data allocation, the uses of the
-> >>> __GFP_ZEROTAGS flag will be expanded to instruct the page allocator to try
-> >>> to reserve the corresponding tag storage for the pages being allocated.
-> >> Right but how will pushing __GFP_ZEROTAGS addition into gfp_t flags further
-> >> down via a new arch call back i.e arch_calc_vma_gfp() while still maintaining
-> >> (vma->vm_flags & VM_MTE) conditionality improve the current scenario. Because
-> > I'm afraid I don't follow you.
-> 
-> I was just asking whether the overall scope of __GFP_ZEROTAGS flag is being
-> increased to cover more core MM paths through this patch. I think you have
-> already answered that below.
-> 
-> > 
-> >> the page allocator could have still analyzed alloc flags for __GFP_ZEROTAGS
-> >> for any additional stuff.
-> >>
-> >> OR this just adds some new core MM paths to get __GFP_ZEROTAGS which was not
-> >> the case earlier via this call back.
-> > Before this patch: vma_alloc_zeroed_movable_folio() sets __GFP_ZEROTAGS.
-> > After this patch: vma_alloc_folio() sets __GFP_ZEROTAGS.
-> 
-> Understood.
-> 
-> > 
-> > This patch is about adding __GFP_ZEROTAGS for more callers.
-> 
-> Right, I guess that is the real motivation for this patch. But just wondering
-> does this cover all possible anon fault paths for converting given vma_flag's
-> VM_MTE flag into page alloc flag __GFP_ZEROTAGS ? Aren't there any other file
-> besides (mm/shmem.c) which needs to be changed to include arch_calc_vma_gfp() ?
+> Oh, and double-ugh on that tracefs_syscall_mkdir/rmdir(). I hate how
+> it does that "unlock and re-lock inode" thing.
 
-My thoughts exactly. I went through most of the fault handling code, and
-from the code I read, all the allocation were executed with
-vma_alloc_folio() or by shmem.
+I'd figured you'd like that one.
 
-That's not to say there's no scope for improvment, there definitely is, but
-since having __GFP_ZEROTAGS isn't necessary for correctness (but it's very
-useful for performance, since it can avoid a page fault and a page
-migration) and this series is an RFC I settled on changing only the above,
-since KVM support for dynamic tag storage also benefits from this change.
+> 
+> It's a disease, and no, it's not an acceptable response to "lockdep
+> shows there's a locking problem".
+> 
+> The comment says "It is up to the individual mkdir routine to handle
+> races" but that's *completely* bogus and shows a fundamental
+> misunderstanding of locking.
+> 
+> Dropping the lock in the middle of a locked section does NOT affect
+> just the section that you dropped the lock around.
+> 
+> It affects the *caller*, who took the lock in the first place, and who
+> may well assume that the lock protects things for the whole duration
+> of the lock.
+> 
+> And so dropping the lock in the middle of an operation is a bad BAD
+> *BAD* thing to do.
+> 
+> Honestly, I had only been looking at the eventfs_inode.c lookup code.
+> But now that I started looking at mkdir/rmdir, I'm seeing the same
+> signs of horrible mistakes there too.
+> 
+> And yes, it might be a real problem. For example, for the rmdir case,
+> the actual lock was taken by 'vfs_rmdir()', and it does *not* protect
+> only the ->rmdir() call itself.
+> 
+> It also, for example, is supposed to make the ->rmdir be atomic wrt things like
+> 
+>         dentry->d_inode->i_flags |= S_DEAD;
+> 
+> and
+> 
+>         dont_mount(dentry);
+>         detach_mounts(dentry);
+> 
+> but now because the inode lock was dropped in the middle, for all we
+> know a "mkdir()" could come in on the same name, and make a mockery of
+> the whole inode locking.
+> 
+> The inode lock on that directory that is getting removed is also what
+> is supposed to make it impossible to add new files to the directory
+> while the rmdir is going on.
+> 
+> Again, dropping the lock violates those kinds of guarantees.
+> 
+> "git blame" actually fingers Al for that "unlock and relock", but
+> that's because Al did a search-and-replace on
+> "mutex_[un]lock(&inode->i_mutex)" and replaced it with
+> "inode_[un]lock(inode)" back in 2016.
+> 
+> The real culprit is you, and that sh*t-show goes back to commit
+> 277ba04461c2 ("tracing: Add interface to allow multiple trace
+> buffers").
+> 
+> Christ. Now I guess I need to start looking if there is anything else
+> horrid lurking in that mkdir/rmdir path.
+> 
+> I doubt the inode locking problem ends up mattering in this situation.
+> Mostly since this is only tracefs, and normal users shouldn't be able
+> to access these things anyway. And I think (hope?) that you only
+> accept mkdir/rmdir in specific places.
 
-The series is very big already, I wanted to settle on an approach that is
-acceptable for upstreaming before thinking too much about performance.
+Yes, this was very deliberate. It was for a very "special" feature, and
+thus very limited.
 
-Thanks,
-Alex
+> 
+> But this really is another case of "This code smells *fundamentally* wrong".
+> 
+> Adding Al, in the hopes that he will take a look at this too.
+
+This is something I asked Al about when I wrote it. This isn't a normal
+rmdir. I remember telling Al what this was doing. Basically, it's just
+a way to tell the tracing infrastructure to create a new instance. It
+doesn't actually create a normal directory. It's similar to the
+kprobe_events interface, where writing to a file would create
+directories and files. Ideally I wanted a mkdir interface as it felt
+more realistic, and I was ready to have another "echo foo > make_instance"
+if this didn't work. But after talking with Al, I felt that it could
+work. The main issue is that mkdir doesn't just make a directory, it
+creates the entire tree (like what is done in /sys/fs/cgroup). If this
+was more like kernfs instead of debugfs, I may not have had this
+problem. That was another time I tried to understand how krenfs worked.
+
+This is the reason all the opens in the tracing code has:
+
+        struct trace_array *tr = inode->i_private;
+        int ret;
+
+        ret = tracing_check_open_get_tr(tr);
+	if (ret)
+		return ret;
+
+
+In kernel/trace/trace.c:
+
+LIST_HEAD(ftrace_trace_arrays);
+
+int trace_array_get(struct trace_array *this_tr)
+{
+        struct trace_array *tr;
+        int ret = -ENODEV;
+        
+        mutex_lock(&trace_types_lock);
+        list_for_each_entry(tr, &ftrace_trace_arrays, list) {
+                if (tr == this_tr) {
+                        tr->ref++;
+                        ret = 0;
+                        break;
+                }
+        }
+        mutex_unlock(&trace_types_lock);
+                
+        return ret;
+}       
+
+static void __trace_array_put(struct trace_array *this_tr)
+{
+        WARN_ON(!this_tr->ref);
+        this_tr->ref--;       
+}
+
+void trace_array_put(struct trace_array *this_tr)
+{
+        if (!this_tr)
+                return;
+
+        mutex_lock(&trace_types_lock);
+        __trace_array_put(this_tr);
+        mutex_unlock(&trace_types_lock);
+}
+
+int tracing_check_open_get_tr(struct trace_array *tr)
+{
+        int ret;
+
+        ret = security_locked_down(LOCKDOWN_TRACEFS);
+        if (ret)
+                return ret;
+
+        if (tracing_disabled)
+                return -ENODEV;
+
+        if (tr && trace_array_get(tr) < 0)
+                return -ENODEV;
+
+        return 0;
+}
+
+The rmdir code that tracefs calls is also in kernel/trace/trace.c:
+
+static int instance_rmdir(const char *name)
+{
+        struct trace_array *tr;
+        int ret;
+
+        mutex_lock(&event_mutex);
+        mutex_lock(&trace_types_lock);
+
+        ret = -ENODEV;
+        tr = trace_array_find(name);
+        if (tr)
+                ret = __remove_instance(tr);
+
+        mutex_unlock(&trace_types_lock);
+        mutex_unlock(&event_mutex);
+
+        return ret;
+}
+
+The mkdir creates a new trace_array (tr) and rmdir destroys it. If
+there's any reference on a trace array the rmdir fails. On every open,
+a check is made to see if the trace array that was added to the inode
+still exists, and if it does, it ups its ref count to prevent a rmdir
+from happening.
+
+It's a very limited mkdir and rmdir. I remember Al asking me questions
+about what it can and can't do, and me telling him to make sure the
+lock release wasn't going to cause problems.
+
+I wrote several fuzzers on this code that perform mkdir and rmdir on the
+instances while other tasks are trying to access them (reading and
+writing). In the beginning, it found a few bugs. But I was finally able
+to get my fuzzers to work non-stop for over a month and that's when I
+felt that this is fine.
+
+I was always weary of this code because of the locking situation. The
+kernel selftests has a stress test on this code too.
+
+  tools/testing/selftests/ftrace/test.d/instances/instance-event.tc
+  tools/testing/selftests/ftrace/test.d/instances/instance.tc
+
+Which is run as part of the selftest suite, which is run by most people
+testing the kernel, including KernelCI.
+
+I haven't had a problem with this code in years, and unless we find a
+real bug that needs to be fixed, I'm afraid to touch it.
+
+-- Steve
