@@ -1,112 +1,86 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54EF1F5F5
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jan 2024 03:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC02D14A92;
+	Wed, 31 Jan 2024 04:06:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706672417; cv=none; b=rUULPLM+F+53EkA2l67JdRLT6kyqhjwM7WmOjvt8kmPwtOK6gP0Ninym5debe9cOvp7LLatbdS9Z9T1jvjaDUNarKcL6bbgl40OjdpoctTa5kDp8SlPmMZ6zLbLNuTEYY+TeMBNBKbrpzMfZBzPsY/26udHrsO3BBPoQectRac8=
+	t=1706673960; cv=none; b=tmoRJdDH/nbNWZdPCR6UCE8Ga2ZV72fGl0/KI1s+mwvgn7vjNj7ZzddWp6KzjsDAHjr/DohxKkpS6mBPjIgTj2nZIXb6T7Ywg7Ceg6fkLJrd9Ps/6kkXNO7Onky3W24NHiR/wG9niHOqo8dT/Wp5UUupGqqrgaf47QRu5WnCwOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706672417; c=relaxed/simple;
-	bh=yw1NOpDHyLzhqgRn7bhY/dhSkPQ2PzYELUWet09fCyU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sd7wCIvCnzchaGc3rFOCmWsDGg2Bw+CX+hAGQtQ0bMG129fjpi9HyJvwLZPgdbEuwHgLaOPpwz8H9j9Ac0uwe3DSls3qhAb1lGT2Sc4uqsZC8SLXrg7wDxu6xLT15Xz6VU5C1BO3VOGKEX+CuHKQ33AJTW2OZZQamm0ffI7DK1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=gZsoelm+; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="gZsoelm+"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a3566c0309fso409267566b.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 19:40:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1706672413; x=1707277213; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8RGcPR+EINRerlSJ09DwzUdoWhHkZNQ/15Haltdbaks=;
-        b=gZsoelm+umAuDJp3o6Xch5DRDE3T3wh+tTYj1V2Wlt92Bh+lXQMfIpQi/MqjdIDjJx
-         OLieoIr0ncAnh5HfxOivwJxgAfy8VkX0U/IVeerD3Qu7OWNkZuZmLHoDJzdK0UH/Iw6L
-         t+AuWNE+nBjHewJHJ+kBOtCNiD70IfHn8Ci+E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706672413; x=1707277213;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8RGcPR+EINRerlSJ09DwzUdoWhHkZNQ/15Haltdbaks=;
-        b=m6Umr90YPaPIY8f3w8Eot+triS+46ykk9DkCOEr00hennl5BSr9tysnk0PBESgE0cG
-         xDYDRzSat27/MuX6hK4gfbR5SvqY9dpb/y5ENU8Z52uBWk585kL2rtKj2XKKBdxDlU3K
-         FH0kn8C/N5/j6Mz6cigG9OFMFoyXr3xRzFUtAitaLheQR1Uw+7OvwdAdsZsm0CsverQ0
-         L4U5ET4vv6qpYZ4noyEpFERT6zHbLNcQldJCRYCBg8mR6nSteJydc3YRusqdWNxY2X8m
-         +k1DR2DdVPY6mHkIU99mDNkw93wxWLI8sORXVnuOn/pBMTpIgHjnG6X2f2zCZTkChKG1
-         DktQ==
-X-Gm-Message-State: AOJu0YypQFWPO9ubYjW2bVZheQEzp9z70SHRPHriIMbGmwy4SteyMacy
-	k1b3Cgd1pF8KdvnvhdH2ciQDF9Y2QbdQQqhR/M6QVS+K53RoYh9tP07XcwoZBJNoyGN6XC9acfb
-	gELKcUw==
-X-Google-Smtp-Source: AGHT+IFEYXnVxeMTmUzEiR7RZt+T6fWjWPgDQTuAGFQqfp+2Diij+cFzsUdl5mhMyWtt0RwPm3yonQ==
-X-Received: by 2002:a17:906:e2cd:b0:a30:f558:e04f with SMTP id gr13-20020a170906e2cd00b00a30f558e04fmr233205ejb.7.1706672412693;
-        Tue, 30 Jan 2024 19:40:12 -0800 (PST)
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com. [209.85.208.41])
-        by smtp.gmail.com with ESMTPSA id hw18-20020a170907a0d200b00a3600d7c2fbsm1827759ejc.176.2024.01.30.19.40.12
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jan 2024 19:40:12 -0800 (PST)
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-55f2b0c5ae9so2555645a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 19:40:12 -0800 (PST)
-X-Received: by 2002:aa7:d3da:0:b0:55f:4d7e:e4e9 with SMTP id
- o26-20020aa7d3da000000b0055f4d7ee4e9mr171002edr.21.1706672411784; Tue, 30 Jan
- 2024 19:40:11 -0800 (PST)
+	s=arc-20240116; t=1706673960; c=relaxed/simple;
+	bh=E3NIQxoA8SMIzX9BXY7UqTvrppGF6a/PTIVPf1MjfcA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ejUotKHDzaT4vfHA1AnNBwwRJT0xNu3TJXTV9/b/TC74kF6G9jaS0HKWAIxr9MGL0XpR/kGEkJTBG18LzG70y/+w1VHdckXXmOyKOzjGUYfp/5XgI90Fe148xEl94hH9+uNb48LWm/yJCVxkaI6mCIZTNg/LXe4mz/Nda9Z9BW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7553BC43399;
+	Wed, 31 Jan 2024 04:05:59 +0000 (UTC)
+Date: Tue, 30 Jan 2024 23:06:12 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Al Viro
+ <viro@ZenIV.linux.org.uk>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH v2] tracefs: Zero out the tracefs_inode when allocating it
+Message-ID: <20240130230612.377a1933@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130190355.11486-1-torvalds@linux-foundation.org>
- <20240130190355.11486-6-torvalds@linux-foundation.org> <20240131011246.GP2087318@ZenIV>
- <CAHk-=wie3VgLatmR4J_VpnyJR-qKppz=gnDfxEa9Gyy-7cH7HQ@mail.gmail.com> <20240131024626.GQ2087318@ZenIV>
-In-Reply-To: <20240131024626.GQ2087318@ZenIV>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 30 Jan 2024 19:39:55 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjyki7XCnUjaBZSobLaNqWSjg39JhaUjrMH67sYxZLmdQ@mail.gmail.com>
-Message-ID: <CAHk-=wjyki7XCnUjaBZSobLaNqWSjg39JhaUjrMH67sYxZLmdQ@mail.gmail.com>
-Subject: Re: [PATCH 6/6] eventfs: clean up dentry ops and add revalidate function
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 30 Jan 2024 at 18:46, Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> What's to stop ->d_revalidate() from being called in parallel with
-> __dentry_kill()?
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Oh, you're right.
+eventfs uses the tracefs_inode and assumes that it's already initialized
+to zero. That is, it doesn't set fields to zero (like ti->private) after
+getting its tracefs_inode. This causes bugs due to stale values.
 
-For some reason I thought we did the d_release() _after_ the RCU grace
-period, but we don't.
+Just initialize the entire structure to zero on allocation so there isn't
+any more surprises.
 
-Why don't we, btw? It would be so much better if we did the
-d_release() from __d_free(). We have all that smarts in fs/dcache.c to
-decide if we need to RCU-delay it or not, and then we don't let
-filesystems use it.
+This is a partial fix for accessing ti->private. The assignment still needs
+to be made before the dentry is instantiated.
 
-I assume the reason is that some 'd_delete' cases might want to sleep
-etc. Still, for things like this that just want to release memory, it
-would be *much* better to have d_release called when the dentry is
-actually released.
+Cc: stable@vger.kernel.org
+Fixes: 5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode")
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202401291043.e62e89dc-oliver.sang@intel.com
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v1: https://lore.kernel.org/all/20240130151737.6e97ae00@gandalf.local.home/
 
-Hmm. Not very many d_delete cases, but I did see a couple that
-definitely want process context (dma_buf_release goes to things that
-do vfree() etc).
+- I didn't realize the slab had a constructor which prohibits __GFP_ZERO.
+  Just use memset() in the constructor. I noticed the WARN_ON_ONCE
+  that was triggering early in the boot process.
 
-So I guess the "make low-level filesystems do their own kfree_rcu() is
-what we're doing.
+ fs/tracefs/inode.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-In this case it's as simple as doing that
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index e1b172c0e091..636180d45c62 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -38,8 +38,6 @@ static struct inode *tracefs_alloc_inode(struct super_block *sb)
+ 	if (!ti)
+ 		return NULL;
+ 
+-	ti->flags = 0;
+-
+ 	return &ti->vfs_inode;
+ }
+ 
+@@ -779,6 +777,7 @@ static void init_once(void *foo)
+ {
+ 	struct tracefs_inode *ti = (struct tracefs_inode *) foo;
+ 
++	memset(ti, 0, sizeof(*ti));
+ 	inode_init_once(&ti->vfs_inode);
+ }
+ 
+-- 
+2.43.0
 
--       kfree(ei);
-+       kfree_rcu(ei, rcu);
-
-and we'd just make the rcu entry a union with something that isn't
-that 'is_freed' field so that it doesn't take more space.
-
-             Linus
