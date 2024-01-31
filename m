@@ -1,92 +1,152 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE2916435;
-	Wed, 31 Jan 2024 04:28:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E38D13FE2;
+	Wed, 31 Jan 2024 04:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706675334; cv=none; b=kYgF2gqikAL7ZsTLUlOTWnM3VJhpogSDs4RDl4OQqtU26lXSvTCIybGa05sQenAUan9WQVpuGRCu91Sa/UMpUtsDu2DvgOeRjkwWufs/C1RVIlhtf+0nJLxrOIpyZtN1bQg9Qz5GuQbVq12PKLCia0fd7PPYjgTEG8CbItYirwI=
+	t=1706676024; cv=none; b=ZA/h1NV5hCIsbNV/kPGmZuyPuXxwNG14btxKk1BEcNL0dWOLRUUz11KvmvhDk+SEoP1jSXibxU70DdAtli2XYBIC6zNFf12Fcp79TNlJE4rawobxmfTSeWcY7rYtgRV0rRxo6Xim1AWY+ET/YVb2TQEq+gY/jtFLmi6d5BWZw9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706675334; c=relaxed/simple;
-	bh=q/1BS2OX1oUUGnrX6cy1UM172bA0q2pXg6jeavFp5vw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=egakzBNAxVt9a5Ojjqri+p7VFHvmFeD8hz/pNfVXSmL0Mlh7dQUQ3ku0JyRwt4c9r1nAaUZxSAPGEuVVqia0MLbNuHtD13f5KSHDQV2WEoGCpXV9VhNISUSrdlqhpL6E9tj04rQrM8eIGw9wcxMA8mZtLrh/+BbAWgSFIa7hXOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=BtDk4lvO; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="BtDk4lvO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=FDd5RueNwxuOVcrivLNJd26KzEVzpCVpny7vKd/QBaU=; b=BtDk4lvOSpoeLOMPHd+C8AebNZ
-	XXgdRSjjDba8hWd1zMjZr9ioiBzks2CMsKoZV1JMHKrcNhAP5u7+7OSWJSMSZ5UApID99gngXJvZv
-	fOO+tJ6t5jTRIRHnNat/IaWAu496t+ZLUom0iMxhI9ilQCf+DgGoZWE+tjrlg0IAMw3vKl3dsm7WN
-	cHqh25LjLSR/QyQGyMopwas+OEB4LqI0D94AcUMJYH6xIq6CPgzJpiLsOCKAdEq70VUdqw8qT2iN1
-	15pWBarvYNtm6IGDD6dSoexPyL81qv7CfkI5hYSmPRc/AfazrDoocVpzUNcX7bjCQJPL+I2kiBuTP
-	WGLfC72Q==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rV2DL-001sLR-1u;
-	Wed, 31 Jan 2024 04:28:43 +0000
-Date: Wed, 31 Jan 2024 04:28:43 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] eventfs: clean up dentry ops and add revalidate
- function
-Message-ID: <20240131042843.GR2087318@ZenIV>
-References: <20240130190355.11486-1-torvalds@linux-foundation.org>
- <20240130190355.11486-6-torvalds@linux-foundation.org>
- <20240131011246.GP2087318@ZenIV>
- <CAHk-=wie3VgLatmR4J_VpnyJR-qKppz=gnDfxEa9Gyy-7cH7HQ@mail.gmail.com>
- <20240131024626.GQ2087318@ZenIV>
- <CAHk-=wjyki7XCnUjaBZSobLaNqWSjg39JhaUjrMH67sYxZLmdQ@mail.gmail.com>
+	s=arc-20240116; t=1706676024; c=relaxed/simple;
+	bh=3R14n/VzZcxmNnLweehoAPfyjB2o8LMMfTdOUihMJJY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=plDZY6P0eYCU92S/dlwxRLOVIieIscajYpzPOyvs14+QI+k5YJeJzW8OTc5LikRZrNsACTIz0VkZG9vmPRtxvx/mY0kddxErF2XOWomN7U3neoWywAbzEnm8X0UM0sVlND9nMmwlyhUgKAYKEVWcpY+g7wl3NG+iDk1RCR8jNl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4E6CDA7;
+	Tue, 30 Jan 2024 20:41:03 -0800 (PST)
+Received: from [10.163.41.195] (unknown [10.163.41.195])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 52C333F738;
+	Tue, 30 Jan 2024 20:40:06 -0800 (PST)
+Message-ID: <8cd39b48-7fb8-40b2-8d6c-e6fc2b48f86d@arm.com>
+Date: Wed, 31 Jan 2024 10:10:05 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjyki7XCnUjaBZSobLaNqWSjg39JhaUjrMH67sYxZLmdQ@mail.gmail.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v3 06/35] mm: cma: Make CMA_ALLOC_SUCCESS/FAIL count
+ the number of pages
+Content-Language: en-US
+To: Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
+ maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
+ yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
+ mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+ vschneid@redhat.com, mhiramat@kernel.org, rppt@kernel.org, hughd@google.com,
+ pcc@google.com, steven.price@arm.com, vincenzo.frascino@arm.com,
+ david@redhat.com, eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20240125164256.4147-1-alexandru.elisei@arm.com>
+ <20240125164256.4147-7-alexandru.elisei@arm.com>
+ <0a71c87a-ae2c-4a61-8adb-3a51d6369b99@arm.com> <ZbeRQpGNnfXnjayQ@raptor>
+ <2cb8288c-5378-4968-a75b-8462b41998c6@arm.com> <ZbjkTFEvSvyHNqmu@raptor>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <ZbjkTFEvSvyHNqmu@raptor>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 30, 2024 at 07:39:55PM -0800, Linus Torvalds wrote:
 
-> Why don't we, btw? It would be so much better if we did the
-> d_release() from __d_free(). We have all that smarts in fs/dcache.c to
-> decide if we need to RCU-delay it or not, and then we don't let
-> filesystems use it.
 
-Because we want to give filesystems a chance to do something useful
-in it?  Something that might need access to the parent.  Or superblock,
-for that matter...  By the time we are past the RCU delay there's
-very little left; if you want to look at some per-superblock data,
-you would have to do something like putting it into a refcounted
-structure, with each dentry holding a counting reference, with obvious
-effects...
-
-We could add a separate method just for freeing stuff, but... we already
-have 4 of them related to that path (->d_delete(), ->d_prune(), ->d_iput(),
-->d_release()) and the things are pretty confusing as it is, without
-throwing another one into the mix.
-
-I'll look through the RCU pathwalk fixes (will repost the rebased set in
-a couple of days, need to finish the re-audit of that stuff) and see how
-much would such a method simplify, but I don't think it would buy us
-a lot.
-
-> So I guess the "make low-level filesystems do their own kfree_rcu() is
-> what we're doing.
+On 1/30/24 17:28, Alexandru Elisei wrote:
+> Hi,
 > 
-> In this case it's as simple as doing that
+> On Tue, Jan 30, 2024 at 10:22:11AM +0530, Anshuman Khandual wrote:
+>>
+>> On 1/29/24 17:21, Alexandru Elisei wrote:
+>>> Hi,
+>>>
+>>> On Mon, Jan 29, 2024 at 02:54:20PM +0530, Anshuman Khandual wrote:
+>>>>
+>>>> On 1/25/24 22:12, Alexandru Elisei wrote:
+>>>>> The CMA_ALLOC_SUCCESS, respectively CMA_ALLOC_FAIL, are increased by one
+>>>>> after each cma_alloc() function call. This is done even though cma_alloc()
+>>>>> can allocate an arbitrary number of CMA pages. When looking at
+>>>>> /proc/vmstat, the number of successful (or failed) cma_alloc() calls
+>>>>> doesn't tell much with regards to how many CMA pages were allocated via
+>>>>> cma_alloc() versus via the page allocator (regular allocation request or
+>>>>> PCP lists refill).
+>>>>>
+>>>>> This can also be rather confusing to a user who isn't familiar with the
+>>>>> code, since the unit of measurement for nr_free_cma is the number of pages,
+>>>>> but cma_alloc_success and cma_alloc_fail count the number of cma_alloc()
+>>>>> function calls.
+>>>>>
+>>>>> Let's make this consistent, and arguably more useful, by having
+>>>>> CMA_ALLOC_SUCCESS count the number of successfully allocated CMA pages, and
+>>>>> CMA_ALLOC_FAIL count the number of pages the cma_alloc() failed to
+>>>>> allocate.
+>>>>>
+>>>>> For users that wish to track the number of cma_alloc() calls, there are
+>>>>> tracepoints for that already implemented.
+>>>>>
+>>>>> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+>>>>> ---
+>>>>>  mm/cma.c | 4 ++--
+>>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/mm/cma.c b/mm/cma.c
+>>>>> index f49c95f8ee37..dbf7fe8cb1bd 100644
+>>>>> --- a/mm/cma.c
+>>>>> +++ b/mm/cma.c
+>>>>> @@ -517,10 +517,10 @@ struct page *cma_alloc(struct cma *cma, unsigned long count,
+>>>>>  	pr_debug("%s(): returned %p\n", __func__, page);
+>>>>>  out:
+>>>>>  	if (page) {
+>>>>> -		count_vm_event(CMA_ALLOC_SUCCESS);
+>>>>> +		count_vm_events(CMA_ALLOC_SUCCESS, count);
+>>>>>  		cma_sysfs_account_success_pages(cma, count);
+>>>>>  	} else {
+>>>>> -		count_vm_event(CMA_ALLOC_FAIL);
+>>>>> +		count_vm_events(CMA_ALLOC_FAIL, count);
+>>>>>  		if (cma)
+>>>>>  			cma_sysfs_account_fail_pages(cma, count);
+>>>>>  	}
+>>>> Without getting into the merits of this patch - which is actually trying to do
+>>>> semantics change to /proc/vmstat, wondering how is this even related to this
+>>>> particular series ? If required this could be debated on it's on separately.
+>>> Having the number of CMA pages allocated and the number of CMA pages freed
+>>> allows someone to infer how many tagged pages are in use at a given time:
+>> That should not be done in CMA which is a generic multi purpose allocator.
+
+> Ah, ok. Let me rephrase that: Having the number of CMA pages allocated, the
+> number of failed CMA page allocations and the number of freed CMA pages
+> allows someone to infer how many CMA pages are in use at a given time.
+> That's valuable information for software designers and system
+> administrators, as it allows them to tune the number of CMA pages available
+> in a system.
 > 
-> -       kfree(ei);
-> +       kfree_rcu(ei, rcu);
-> 
-> and we'd just make the rcu entry a union with something that isn't
-> that 'is_freed' field so that it doesn't take more space.
+> Or put another way: what would you consider to be more useful?  Knowing the
+> number of cma_alloc()/cma_release() calls, or knowing the number of pages
+> that cma_alloc()/cma_release() allocated or freed?
+
+There is still value in knowing how many times cma_alloc() succeeded or failed
+regardless of the cumulative number pages involved over the time. Actually the
+count helps to understand how cma_alloc() performed overall as an allocator.
+
+But on the cma_release() path there is no chances of failure apart from - just
+when the caller itself provides an wrong input. So there are no corresponding
+CMA_RELEASE_SUCCESS/CMA_RELEASE_FAIL vmstat counters in there - for a reason !
+
+Coming back to CMA based pages being allocated and freed, there is already an
+interface via sysfs (CONFIG_CMA_SYSFS) which gets updated in cma_alloc() path
+via cma_sysfs_account_success_pages() and cma_sysfs_account_fail_pages().
+
+#ls /sys/kernel/mm/cma/<name>
+alloc_pages_fail alloc_pages_success
+
+Why these counters could not meet your requirements ? Also 'struct cma' can
+be updated to add an element 'nr_pages_freed' to be tracked in cma_release(),
+providing free pages count as well.
+
+There are additional debug fs based elements (CONFIG_CMA_DEBUGFS) available.
+
+#ls /sys/kernel/debug/cma/<name>
+alloc  base_pfn  bitmap  count  free  maxchunk  order_per_bit  used
