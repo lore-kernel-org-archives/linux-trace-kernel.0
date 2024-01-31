@@ -1,63 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AEB6131750;
-	Wed, 31 Jan 2024 18:00:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D455112CDB8
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jan 2024 18:08:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706724026; cv=none; b=cxoaWS7ohqrJTOA31tnggqeNwq+2WaTeaRW55LZOAqj9Mt5IFjxiCFWVsgcR3x6SmHKtJYBTnM9ossCNMM9hnLpSx7HBbhyw019x7Nqjr9bNdYrkYxi1phBdB7xXRrYKcN0Mvv5orya1S0hYQ48grdqlKs6GyQ0woWYLy7hkZsM=
+	t=1706724539; cv=none; b=svJJYSfG5GoONeRM0+XQzZen5k75EKYD/LND3Yan2b3lEqYUD0cgHHh0HcpuPMd7O/TUXIWGS4tYK4wXqjCz5Nm8K+VTsZDmGxuaQNjW0w1MrjIJCCEcnlg95bRSv4eqidqbsllsaOK63+xN5DVR0UBJRr5oR9/3qBy/mk0GoOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706724026; c=relaxed/simple;
-	bh=pfjCuFmbF5hKvhNYdwreXy+v0oqzoT+zBRRD6SOcCiI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OvcL0TL8erMi900LpWmqWQ9e9P73DLl3MY5c15fqIqx8Xkc9Sr6SjxpRMPWrZ0fuGxMrzi5VeZy0n4ucJ76XYPzz/AQ8MS610/SqhWCePgxp17c1ljRPCw4RVFnz6eYx6hkln4SdE58KSENkcEo5cySfCYF3mD74vrKw/I+1884=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A0C5C433F1;
-	Wed, 31 Jan 2024 18:00:25 +0000 (UTC)
-Date: Wed, 31 Jan 2024 13:00:39 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] eventfs: clean up dentry ops and add revalidate
- function
-Message-ID: <20240131130039.241c8978@gandalf.local.home>
-In-Reply-To: <20240130190355.11486-6-torvalds@linux-foundation.org>
-References: <20240130190355.11486-1-torvalds@linux-foundation.org>
-	<20240130190355.11486-6-torvalds@linux-foundation.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1706724539; c=relaxed/simple;
+	bh=blmiXtxuj4mntZApxPDJE7PTbuISn5ro/0Z3J2K+ecM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V3P08+CSs5tQD/lp0xSQ8y1pao2v/9otiAMwmYzaFYfinMwd948m7fDO27T+tM9P8QN0Sh8ZWMS6Elu3Jt7okHxMLTjvcu2TqbsD6GkJ6PrnMYLzX+gPNSaEbOIOZi2YCTUqx1otiFFh0+1HxL45hVyp8YHQ2CMw4Ue7UILvWVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=JFh/fS+6; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="JFh/fS+6"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d03fde0bd9so1702551fa.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jan 2024 10:08:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1706724536; x=1707329336; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=jdXyGxV7lSUrZp0+m+N5dUYZe5f3ZNHmFavQF3mekH4=;
+        b=JFh/fS+60RErpcnjC7MkQwJanISmh57OrEa1JivJIIHKOz2EA+6hyg8pNpgqNc6Sj5
+         awehbu5LxMn+EYYOmBpK3g+/chmYuNu/JGiMx3o619IeeR09xEZpp97XNpffRTBAH7wW
+         wauPRkrhfSVcSE0Oibcr6QIn4Ofm7rjAkDR60=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706724536; x=1707329336;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jdXyGxV7lSUrZp0+m+N5dUYZe5f3ZNHmFavQF3mekH4=;
+        b=Y/OvrH5Ki6OfcqmGQUuO8YTgNKjkfoT00qhIRVyvsAV/lVPyBbHV20Aj0d3qzlw3p7
+         M2LoFcjcMlLztR1+nmeGZvEZvzcgWiev2/+InzXL7bdWYA48ajjdggaHBNmagtUdECDj
+         fanOlylWHZ5UH207tVDwF1NoEMYWmX2uwaH5P27WWcInnNuPa8hF1fERZSViugM+nyKx
+         jXFODMXhtHry06ZpvgL0KMNZ7t2bbP5VlNkEQqq1ePOXX3ALrMQF7YbMT4WeBzLfnJvq
+         DZLhIkhC138QYegKHZl0Q93U6wZSrtHqzCZkuqG/pxa3vq/IZWKsx0qSeE0WcvG2MIQB
+         X6Nw==
+X-Gm-Message-State: AOJu0Yy4JfFjDhprkONEHU4w3VIbdT79ShIhG6nbZasaVpviCv5grRAV
+	KHWoXngo+sTFNKsagZDahUSwjMsHrLMxSbAPnEsrNsrj8yTLlFz3+84bk08WIZ7Yb1wVdCrnCNX
+	Oyns=
+X-Google-Smtp-Source: AGHT+IFivn7ktqU7pZNY5/jbbZff9TA2C1kl3IZcy9fxGQ0mnTOh5lXYVEJwZi1f41TPq5vLqXQl+Q==
+X-Received: by 2002:a2e:9c8d:0:b0:2cd:50a7:12d0 with SMTP id x13-20020a2e9c8d000000b002cd50a712d0mr1799828lji.38.1706724535679;
+        Wed, 31 Jan 2024 10:08:55 -0800 (PST)
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
+        by smtp.gmail.com with ESMTPSA id w7-20020aa7da47000000b0055f0c027a3esm2990370eds.30.2024.01.31.10.08.54
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 31 Jan 2024 10:08:54 -0800 (PST)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-55f15762840so55266a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jan 2024 10:08:54 -0800 (PST)
+X-Received: by 2002:a05:6402:35c1:b0:55f:a7d6:fd6a with SMTP id
+ z1-20020a05640235c100b0055fa7d6fd6amr225894edc.5.1706724534163; Wed, 31 Jan
+ 2024 10:08:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240130190355.11486-1-torvalds@linux-foundation.org>
+ <20240130190355.11486-5-torvalds@linux-foundation.org> <20240131000956.3dbc0fc0@gandalf.local.home>
+ <CAHk-=wjH+k47je4YbP=D+KOiNYp8cJh8C_gZFzSOa8HPDm=AQw@mail.gmail.com>
+ <20240131003317.7a63e799@gandalf.local.home> <CAHk-=wg69FE2826EokkCbSKHZvCG-cM5t=9SMFLcfpNu8Yvwqw@mail.gmail.com>
+ <CAHk-=whSse54d+X361K2Uw6jO2SvrO-U0LHLBTLnqHaA+406Fw@mail.gmail.com>
+ <20240131075740.660e7634@rorschach.local.home> <20240131081449.6e917b71@rorschach.local.home>
+In-Reply-To: <20240131081449.6e917b71@rorschach.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 31 Jan 2024 10:08:37 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whNqOa5rAr4Lq9j=zZgrSxyZwgt6imSydAY3vyeaHm01g@mail.gmail.com>
+Message-ID: <CAHk-=whNqOa5rAr4Lq9j=zZgrSxyZwgt6imSydAY3vyeaHm01g@mail.gmail.com>
+Subject: Re: [PATCH 5/6] eventfs: get rid of dentry pointers without refcounts
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 30 Jan 2024 11:03:55 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Wed, 31 Jan 2024 at 05:14, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> If you also notice, tracefs only allows mkdir/rmdir to be assigned to
+> one directory. Once it is assigned, no other directories can have mkdir
+> rmdir functionality.
 
-> It would probably be cleaner to make eventfs its own filesystem, or at
-> least set its own dentry ops when looking up eventfs files.  But as it
-> is, only eventfs dentries use d_fsdata, so we don't really need to split
-> these things up by use.
+I think that does limit the damage, but it's not clear that it is actually safe.
 
-BTW, I have been thinking about making eventfs a completely separate file
-system that could be mounted outside of tracefs. One that is readonly that
-only contains the "id" and "format" files and nothing more.
+Because you don't hold the inode lock, somebody could come in and do a
+mkdir inside the other one that is being removed, ie something like
 
-Why? Because perf and powertop both use those files to know how to parse
-the raw event formats. I don't think there's anything in there that
-requires root privileges to read. They should not be exposing any internal
-kernel information besides the event format layouts, and it would be nice
-to have a /sys/kernel/events directory that only had that.
+ - thread 1 does took the inode lock, called ->rmdir
 
-Making eventfs a separate file system where, when added to tracefs, has the
-control files for the specific trace_array, but for the /sys/kernel
-directory, only cares about the trace format files.
+ - it then drops the inode lock (both parent and the directory that is
+getting removed) and gets the event lock
 
-Then tracefs could be nicely converted over to kernfs, and eventfs would be
-its own entity.
+ - but thread 2 can come in between that inode lock drop and event lock
 
--- Steve
+Notice: thread 2 comes in where there is *no* locking. Nada. Zilch.
+
+This is what worries me.
+
+But it does help that it's all only in *one* directory.  At least
+another mkdir cannot happen *inside* the one that is going away while
+the locks are not held. So the good news is that it does mean that
+there's only one point that is being protected.
+
+But I do worry about things like this (in vfs_rmdir()):
+
+        inode_lock(dentry->d_inode);
+
+        error = -EBUSY;
+        if (is_local_mountpoint(dentry) ||
+            (dentry->d_inode->i_flags & S_KERNEL_FILE))
+                goto out;
+
+        error = security_inode_rmdir(dir, dentry);
+        if (error)
+                goto out;
+
+        error = dir->i_op->rmdir(dir, dentry);
+        if (error)
+                goto out;
+
+notice how it does that "is this a mount point" test atomically wrt
+the rmdir before it is allowed to proceed.
+
+And I do think that the inode lock is what also protects it from
+concurrent mounts. So now what happens when that "thread 2" above
+comes in while there is *no* locking, and mounts something there?
+
+Now, I'm not saying this is a huge problem. But it's very much an
+example of a thing that *could* be a problem. Dropping locks in the
+middle is just very scary.
+
+               Linus
