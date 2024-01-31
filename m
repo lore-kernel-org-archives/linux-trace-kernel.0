@@ -1,152 +1,122 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E38D13FE2;
-	Wed, 31 Jan 2024 04:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8D93FB0D;
+	Wed, 31 Jan 2024 05:09:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706676024; cv=none; b=ZA/h1NV5hCIsbNV/kPGmZuyPuXxwNG14btxKk1BEcNL0dWOLRUUz11KvmvhDk+SEoP1jSXibxU70DdAtli2XYBIC6zNFf12Fcp79TNlJE4rawobxmfTSeWcY7rYtgRV0rRxo6Xim1AWY+ET/YVb2TQEq+gY/jtFLmi6d5BWZw9k=
+	t=1706677784; cv=none; b=fCmRDgSwdmXoRVT4/CT54SJwwo21kbZXVT8s7twqsXMyscnAui0cWE3tENgGICdmsShBQ5ww4d1KDT0JBX9eLCaMuBlzov9sGjUPMVCRG+kasazKq9fc/vjUDyOY2LwVZPOB/UqxghevQeNon1jXobunGGX22oy3QRBfzjtlMUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706676024; c=relaxed/simple;
-	bh=3R14n/VzZcxmNnLweehoAPfyjB2o8LMMfTdOUihMJJY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=plDZY6P0eYCU92S/dlwxRLOVIieIscajYpzPOyvs14+QI+k5YJeJzW8OTc5LikRZrNsACTIz0VkZG9vmPRtxvx/mY0kddxErF2XOWomN7U3neoWywAbzEnm8X0UM0sVlND9nMmwlyhUgKAYKEVWcpY+g7wl3NG+iDk1RCR8jNl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4E6CDA7;
-	Tue, 30 Jan 2024 20:41:03 -0800 (PST)
-Received: from [10.163.41.195] (unknown [10.163.41.195])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 52C333F738;
-	Tue, 30 Jan 2024 20:40:06 -0800 (PST)
-Message-ID: <8cd39b48-7fb8-40b2-8d6c-e6fc2b48f86d@arm.com>
-Date: Wed, 31 Jan 2024 10:10:05 +0530
+	s=arc-20240116; t=1706677784; c=relaxed/simple;
+	bh=QvjKDYSLV2yuH9+Dn5eSLY9XpB6/Ol/LAIJt1dzRKXc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AXaSx72DMXBB63wZFBEFvqaSyDUhjWr/7Rl/m1q5R58eVxnwPhOrFmV1j7vOZhzFNYmxWHIkJLc8TryNxGzJ6hNBEpPu6Y8kaEa8THXQZaKYENq+CFSMQbGOMC3ekDgt5bLawCBrGBUTJ6gFwRVdrUktUlpV9v9UrrYwWneJMoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD2F9C433C7;
+	Wed, 31 Jan 2024 05:09:43 +0000 (UTC)
+Date: Wed, 31 Jan 2024 00:09:56 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] eventfs: get rid of dentry pointers without
+ refcounts
+Message-ID: <20240131000956.3dbc0fc0@gandalf.local.home>
+In-Reply-To: <20240130190355.11486-5-torvalds@linux-foundation.org>
+References: <20240130190355.11486-1-torvalds@linux-foundation.org>
+	<20240130190355.11486-5-torvalds@linux-foundation.org>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v3 06/35] mm: cma: Make CMA_ALLOC_SUCCESS/FAIL count
- the number of pages
-Content-Language: en-US
-To: Alexandru Elisei <alexandru.elisei@arm.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
- maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
- yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
- mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
- bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
- vschneid@redhat.com, mhiramat@kernel.org, rppt@kernel.org, hughd@google.com,
- pcc@google.com, steven.price@arm.com, vincenzo.frascino@arm.com,
- david@redhat.com, eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org
-References: <20240125164256.4147-1-alexandru.elisei@arm.com>
- <20240125164256.4147-7-alexandru.elisei@arm.com>
- <0a71c87a-ae2c-4a61-8adb-3a51d6369b99@arm.com> <ZbeRQpGNnfXnjayQ@raptor>
- <2cb8288c-5378-4968-a75b-8462b41998c6@arm.com> <ZbjkTFEvSvyHNqmu@raptor>
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <ZbjkTFEvSvyHNqmu@raptor>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Tue, 30 Jan 2024 11:03:54 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
+
+> +/*
+> + * eventfs_inode reference count management.
+> + *
+> + * NOTE! We count only references from dentries, in the
+> + * form 'dentry->d_fsdata'. There are also references from
+> + * directory inodes ('ti->private'), but the dentry reference
+> + * count is always a superset of the inode reference count.
+> + */
+> +static void release_ei(struct kref *ref)
+> +{
+> +	struct eventfs_inode *ei = container_of(ref, struct eventfs_inode, kref);
+> +	kfree(ei->entry_attrs);
+
+I did modify this to add back the kfree_const(ei->name);
+
+I would also like to add a:
+
+	WARN_ON_ONCE(!ei->is_freed);
+
+The kref_put() logic should add the protection that this is guaranteed to
+be true as the logic in the removal does:
+
+	ei->is_freed = 1;
+  [..]
+	kref_put(ei);
+
+I would think that the last "put" would always have the "is_freed" set. The
+WARN_ON is to catch things doing too many put_ei().
 
 
-On 1/30/24 17:28, Alexandru Elisei wrote:
-> Hi,
-> 
-> On Tue, Jan 30, 2024 at 10:22:11AM +0530, Anshuman Khandual wrote:
->>
->> On 1/29/24 17:21, Alexandru Elisei wrote:
->>> Hi,
->>>
->>> On Mon, Jan 29, 2024 at 02:54:20PM +0530, Anshuman Khandual wrote:
->>>>
->>>> On 1/25/24 22:12, Alexandru Elisei wrote:
->>>>> The CMA_ALLOC_SUCCESS, respectively CMA_ALLOC_FAIL, are increased by one
->>>>> after each cma_alloc() function call. This is done even though cma_alloc()
->>>>> can allocate an arbitrary number of CMA pages. When looking at
->>>>> /proc/vmstat, the number of successful (or failed) cma_alloc() calls
->>>>> doesn't tell much with regards to how many CMA pages were allocated via
->>>>> cma_alloc() versus via the page allocator (regular allocation request or
->>>>> PCP lists refill).
->>>>>
->>>>> This can also be rather confusing to a user who isn't familiar with the
->>>>> code, since the unit of measurement for nr_free_cma is the number of pages,
->>>>> but cma_alloc_success and cma_alloc_fail count the number of cma_alloc()
->>>>> function calls.
->>>>>
->>>>> Let's make this consistent, and arguably more useful, by having
->>>>> CMA_ALLOC_SUCCESS count the number of successfully allocated CMA pages, and
->>>>> CMA_ALLOC_FAIL count the number of pages the cma_alloc() failed to
->>>>> allocate.
->>>>>
->>>>> For users that wish to track the number of cma_alloc() calls, there are
->>>>> tracepoints for that already implemented.
->>>>>
->>>>> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
->>>>> ---
->>>>>  mm/cma.c | 4 ++--
->>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/mm/cma.c b/mm/cma.c
->>>>> index f49c95f8ee37..dbf7fe8cb1bd 100644
->>>>> --- a/mm/cma.c
->>>>> +++ b/mm/cma.c
->>>>> @@ -517,10 +517,10 @@ struct page *cma_alloc(struct cma *cma, unsigned long count,
->>>>>  	pr_debug("%s(): returned %p\n", __func__, page);
->>>>>  out:
->>>>>  	if (page) {
->>>>> -		count_vm_event(CMA_ALLOC_SUCCESS);
->>>>> +		count_vm_events(CMA_ALLOC_SUCCESS, count);
->>>>>  		cma_sysfs_account_success_pages(cma, count);
->>>>>  	} else {
->>>>> -		count_vm_event(CMA_ALLOC_FAIL);
->>>>> +		count_vm_events(CMA_ALLOC_FAIL, count);
->>>>>  		if (cma)
->>>>>  			cma_sysfs_account_fail_pages(cma, count);
->>>>>  	}
->>>> Without getting into the merits of this patch - which is actually trying to do
->>>> semantics change to /proc/vmstat, wondering how is this even related to this
->>>> particular series ? If required this could be debated on it's on separately.
->>> Having the number of CMA pages allocated and the number of CMA pages freed
->>> allows someone to infer how many tagged pages are in use at a given time:
->> That should not be done in CMA which is a generic multi purpose allocator.
+> +	kfree(ei);
+> +}
+> +
 
-> Ah, ok. Let me rephrase that: Having the number of CMA pages allocated, the
-> number of failed CMA page allocations and the number of freed CMA pages
-> allows someone to infer how many CMA pages are in use at a given time.
-> That's valuable information for software designers and system
-> administrators, as it allows them to tune the number of CMA pages available
-> in a system.
-> 
-> Or put another way: what would you consider to be more useful?  Knowing the
-> number of cma_alloc()/cma_release() calls, or knowing the number of pages
-> that cma_alloc()/cma_release() allocated or freed?
 
-There is still value in knowing how many times cma_alloc() succeeded or failed
-regardless of the cumulative number pages involved over the time. Actually the
-count helps to understand how cma_alloc() performed overall as an allocator.
+> @@ -951,5 +857,6 @@ void eventfs_remove_events_dir(struct eventfs_inode *ei)
+>  	 * sticks around while the other ei->dentry are created
+>  	 * and destroyed dynamically.
+>  	 */
+> +	simple_recursive_removal(dentry, NULL);
 
-But on the cma_release() path there is no chances of failure apart from - just
-when the caller itself provides an wrong input. So there are no corresponding
-CMA_RELEASE_SUCCESS/CMA_RELEASE_FAIL vmstat counters in there - for a reason !
+Actually, this doesn't work. It expects all the dentries in the list to
+have positive ref counts, as it does dput() on them. If there's any cached,
+it will bug with a dput() on a dentry of zero.
 
-Coming back to CMA based pages being allocated and freed, there is already an
-interface via sysfs (CONFIG_CMA_SYSFS) which gets updated in cma_alloc() path
-via cma_sysfs_account_success_pages() and cma_sysfs_account_fail_pages().
+The only dentries that should have non zero ref counts are ones that are
+currently being accessed and wont go away until finished. I think all we
+need to do is invalidate the top dentry. Is that true?
 
-#ls /sys/kernel/mm/cma/<name>
-alloc_pages_fail alloc_pages_success
+Does this work:
 
-Why these counters could not meet your requirements ? Also 'struct cma' can
-be updated to add an element 'nr_pages_freed' to be tracked in cma_release(),
-providing free pages count as well.
+	d_invalidate(dentry);
 
-There are additional debug fs based elements (CONFIG_CMA_DEBUGFS) available.
+to make the directory no longer accessible. And all dentries within it
+should be zero, and hopefully go away on memory reclaim. The last patch
+removes it, but if you want to test the deletion, you can do this:
 
-#ls /sys/kernel/debug/cma/<name>
-alloc  base_pfn  bitmap  count  free  maxchunk  order_per_bit  used
+ # cd /sys/kernel/tracing
+ # mkdir instances/foo
+ # ls instances/foo/events
+ # rmdir instances/foo
+
+
+But also note that this patch fails with the "ghost" files with the kprobe
+test again. When I apply patch 6, that goes away. I'm guessing that's
+because this needs the d_revalidate() call. To not break bisection, I think
+we need to merge this and patch 6 together.
+
+Also patch 6 removes the simple_recursive_removal() which without at least
+the d_invalidate() causes a dput splat. That's because the rmdir calls
+tracefs_remove() which calls simple_recursive_removal() that will walk to
+the events directory and I'm assuming if it hasn't been invalidated, it
+walks into it causing the same issue as a simple_recursive_removal() would
+have here.
+
+Try the above mkdir and rmdir to see.
+
+-- Steve
+
+
+>  	dput(dentry);
+>  }
