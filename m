@@ -1,96 +1,138 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B481A8286B
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jan 2024 14:10:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF2E169D00;
+	Wed, 31 Jan 2024 14:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706710225; cv=none; b=ao1OFCgQYn6EEIVO0l/oyaZNbvBx1sFKOs9L3RYRdJfq4VaPjOM2gM4c1KN1Gg6mSaxDPDg8gSVeukaDxAXA3UZEZyZpxiEvsEsQ2FY7RmL0mAwoBaQKZVrXFgNH6Ust6iwSsHHUmXYScw1VYh0C4tq/w5SfQvtuwimXg0NF8jU=
+	t=1706710716; cv=none; b=pb/+9QLaFReQoYWx8O2GvCDGsIiSiISnMAW3wjKxNauHAJeF9sBgGtiaF+GCYyIr3F1z7THKs1m+fAaW4RxH9VzV6Y2UPQKuIJT/DTXLq8Di+7v63fTLF3hf+agks00VY90YEkm96O7qcbOtZVxRMT/J10MUtgX/44Xl9OVriis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706710225; c=relaxed/simple;
-	bh=ChnpHtzhwwEksEpZfUG5N45CvS33hPCxhPKxVI52Zr0=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=nwvz1X9RYpcj8p6FDiEHdNlBZ7Bfx3ZSEKESOQR9oenb9jsckctvesc9LhcjsRExWFqR/Md5PiwWFgYtSwugraXmFVZlHuOYfEyhnIhESUakVgHaPh7GbVMolJIfyhnoWVUon62oD5uHCL+0T8lcS96xCp+WbrVfgZZkNAs2tAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G5L9qlvb; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G5L9qlvb"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-40fb486573fso3726715e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jan 2024 06:10:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706710222; x=1707315022; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=IzlY9A2R0kaKV7lZ2foiFIkkQaUNsuvTSg8191v0PRY=;
-        b=G5L9qlvbrgeEzuu8K91kPMG3uNbkzYRxHwQWzmvdkPU5xLF6llFz3M/xh7eKz70YVW
-         dW0Tr2HtcGRyxDjA62jfVd4KiG2GOCzIpk9JBq5dvXZ+sh+EdJPTxqymeMhy50SZ34s1
-         cqCaFxXkrBoOtVhO7kCa4J0rHAN1iidnDlQ2R5C8tZkh67ylbcW3A8bbVO/rADb6dIs/
-         suHKZs2k0N1IvdRdh5UlYZ/Do5wZWujlWNZRkWyR2kITzCb1DUVfJ8SiuRpVz2N81wYP
-         +C8oTIgirDYZLBX5BGKrOVUUSnYNpAwEfXEF7txxAaf0L8iasZgoG4Er3YIsaNCxukUS
-         kJSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706710222; x=1707315022;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IzlY9A2R0kaKV7lZ2foiFIkkQaUNsuvTSg8191v0PRY=;
-        b=EbwcPV5dRubO6n8srzAoLY5fLWPp3YH54a/GbVcCjzmHUq5c1OKk25QFevXtM+2To+
-         bZi4QCHX0EEl2jJ5s+ZiTefNDyxP3b34u0jJINZUOSrJ3BMgF886a1MYEVoUyCDNYf6s
-         G5obenQNXDA+GWSe66TkweEk4MB+JUapS37nZQcm+HqKmFJm3FwrTq+1GxkYXprCkut1
-         YExF1GAzbW7Sxc9B3QsoUuA/jiiiCGU3P2lNMdtDoxctt5HtcsubzqUPCZ45CIRguUSq
-         a0Ohuo+EIkeDzXa3Ed0XRkWEgDt+UdprV8nY036QcUHsT80NnDSwIndHampd6+5BtDlG
-         IyPQ==
-X-Gm-Message-State: AOJu0YzE6n6nVG8A6MebwAdCzXn6Oj73EFIe0y5Gu5LjJL2JDe25HC6F
-	HTkR7W0B5Fc2ekFM19SzKgrwF+XQ8NI34S1Etj3WrxLrnIAQZFXCcpvGAQgRElQsS7/U8wdQ7Fh
-	VemZEAbv/UPb0urqQmA==
-X-Google-Smtp-Source: AGHT+IFoIzm7UlztHyR94RuKhnD6orBc64DUoMgvOKfcrGZ0sM+BqGYm3tBri/8v96og+cTTxoB4iflBZRGHIEUL
-X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:a05:600c:3d8e:b0:40e:f5d0:7002 with
- SMTP id bi14-20020a05600c3d8e00b0040ef5d07002mr5457wmb.8.1706710221712; Wed,
- 31 Jan 2024 06:10:21 -0800 (PST)
-Date: Wed, 31 Jan 2024 14:09:55 +0000
+	s=arc-20240116; t=1706710716; c=relaxed/simple;
+	bh=2efCmHXOKMA9e2vGpnP2bHu385K2t0wVYZiGw3jyuHQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ULuSKeLUO4acVcmnU/zKCBZ+JBBiEei3+Gp1/9tYHHO4wb5UsIKuochhoEmm9FExWTT8TESGxqZisEwnvKrRaAV/xbdWjaLm5xOUCE7A1nKSf2XhCrOlhscosStpqJXFJTbge3sJqItNlqbISoVCgT/Fi+cKwPrfr05l1CHAqHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F9F4DA7;
+	Wed, 31 Jan 2024 06:19:17 -0800 (PST)
+Received: from raptor (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 150DA3F738;
+	Wed, 31 Jan 2024 06:18:28 -0800 (PST)
+Date: Wed, 31 Jan 2024 14:18:22 +0000
+From: Alexandru Elisei <alexandru.elisei@arm.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
+	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
+	rppt@kernel.org, hughd@google.com, pcc@google.com,
+	steven.price@arm.com, vincenzo.frascino@arm.com, david@redhat.com,
+	eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v3 08/35] mm: cma: Introduce cma_alloc_range()
+Message-ID: <ZbpWripbKW5MaV8J@raptor>
+References: <20240125164256.4147-1-alexandru.elisei@arm.com>
+ <20240125164256.4147-9-alexandru.elisei@arm.com>
+ <61a3dbb7-25b6-4f49-aa70-9a8aaeb53365@arm.com>
+ <ZbjfEzlNgprdxfxX@raptor>
+ <d22f63a0-f6de-44e1-874b-24d707907858@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-Message-ID: <20240131140955.3322792-1-vdonnefort@google.com>
-Subject: [PATCH] ring-buffer: Clean ring_buffer_poll_wait() error return
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d22f63a0-f6de-44e1-874b-24d707907858@arm.com>
 
-The return type for ring_buffer_poll_wait() is __poll_t. This is behind
-the scenes an unsigned where we can set event bits. In case of a
-non-allocated CPU, we do return instead -EINVAL (0xffffffea). Lucky us,
-this ends up setting few error bits (EPOLLERR | EPOLLHUP | EPOLLNVAL), so
-user-space at least is aware something went wrong.
+Hi,
 
-Nonetheless, this is an incorrect code. Replace that -EINVAL with a
-proper EPOLLERR to clean that output. As this doesn't change the
-behaviour, there's no need to treat this change as a bug fix.
+On Wed, Jan 31, 2024 at 11:54:17AM +0530, Anshuman Khandual wrote:
+> 
+> 
+> On 1/30/24 17:05, Alexandru Elisei wrote:
+> > Hi,
+> > 
+> > On Tue, Jan 30, 2024 at 10:50:00AM +0530, Anshuman Khandual wrote:
+> >>
+> >> On 1/25/24 22:12, Alexandru Elisei wrote:
+> >>> Today, cma_alloc() is used to allocate a contiguous memory region. The
+> >>> function allows the caller to specify the number of pages to allocate, but
+> >>> not the starting address. cma_alloc() will walk over the entire CMA region
+> >>> trying to allocate the first available range of the specified size.
+> >>>
+> >>> Introduce cma_alloc_range(), which makes CMA more versatile by allowing the
+> >>> caller to specify a particular range in the CMA region, defined by the
+> >>> start pfn and the size.
+> >>>
+> >>> arm64 will make use of this function when tag storage management will be
+> >>> implemented: cma_alloc_range() will be used to reserve the tag storage
+> >>> associated with a tagged page.
+> >> Basically, you would like to pass on a preferred start address and the
+> >> allocation could just fail if a contig range is not available from such
+> >> a starting address ?
+> >>
+> >> Then why not just change cma_alloc() to take a new argument 'start_pfn'.
+> >> Why create a new but almost similar allocator ?
+> > I tried doing that, and I gave up because:
+> > 
+> > - It made cma_alloc() even more complex and hard to follow.
+> > 
+> > - What value should 'start_pfn' be to tell cma_alloc() that it should be
+> >   ignored? Or, to put it another way, what pfn number is invalid on **all**
+> >   platforms that Linux supports?
+> > 
+> > I can give it another go if we can come up with an invalid value for
+> > 'start_pfn'.
+> 
+> Something negative might work. How about -1/-1UL ? A quick search gives
+> some instances such as ...
+> 
+> git grep "pfn == -1"
+> 
+> mm/mm_init.c:   if (*start_pfn == -1UL)
+> mm/vmscan.c:            if (pfn == -1)
+> mm/vmscan.c:            if (pfn == -1)
+> mm/vmscan.c:            if (pfn == -1)
+> tools/testing/selftests/mm/hugepage-vmemmap.c:  if (pfn == -1UL) {
+> 
+> Could not -1UL be abstracted as common macro MM_INVALID_PFN to be used in
+> such scenarios including here ?
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+Ah yes, you are right, get_pte_pfn() already uses -1 as an invalid pfn, so
+I can just use that.
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 13aaf5e85b81..fd4bfe3ecf01 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -944,7 +944,7 @@ __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
- 		full = 0;
- 	} else {
- 		if (!cpumask_test_cpu(cpu, buffer->cpumask))
--			return -EINVAL;
-+			return EPOLLERR;
- 
- 		cpu_buffer = buffer->buffers[cpu];
- 		work = &cpu_buffer->irq_work;
+Will definitely give it a go on the next iteration, thanks for the
+suggestion!
 
-base-commit: 29142dc92c37d3259a33aef15b03e6ee25b0d188
--- 
-2.43.0.429.g432eaa2c6b-goog
+> 
+> > 
+> >> But then I am wondering why this could not be done in the arm64 platform
+> >> code itself operating on a CMA area reserved just for tag storage. Unless
+> >> this new allocator has other usage beyond MTE, this could be implemented
+> >> in the platform itself.
+> > I had the same idea in the previous iteration, David Hildenbrand suggested
+> > this approach [1].
+> > 
+> > [1] https://lore.kernel.org/linux-fsdevel/2aafd53f-af1f-45f3-a08c-d11962254315@redhat.com/
+> 
+> There are two different cma_alloc() proposals here - including the next
+> patch i.e mm: cma: Fast track allocating memory when the pages are free
+> 
+> 1) Augment cma_alloc() or add cma_alloc_range() with start_pfn parameter
+> 2) Speed up cma_alloc() for small allocation requests when pages are free
+> 
+> The second one if separated out from this series could be considered on
+> its own as it will help all existing cma_alloc() callers. The first one
+> definitely needs an use case as provided in this series.
 
+I understand, thanks for the input!
+
+Alex
