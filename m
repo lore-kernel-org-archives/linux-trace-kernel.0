@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125DB3A1C8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126083A8FE;
 	Wed, 31 Jan 2024 18:54:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706727298; cv=none; b=Yn8JZn0Iwabe8Ua9fcT4G+5b163vjldSYfz9J6h7+6l+S97SoTRco+xh0hLR4jmiO7+4SUu9ZvZI/FF+0DBx0eypI/waU6z2l1BApJzCJcAlUSu8jelHj2GJTvOIVdb+SuIl21sdEuxR9TwTncE90ehDUCro8FYMn28hunHd8B8=
+	t=1706727298; cv=none; b=QNyL46sDnBnrpgal219thiF4Hw4JOvSzIMwBjGrnEAmA2VHnjHQe05JrqA6druQj6Eh/YRbOmkZhUvhZcw8r34DGokCsQ/rAdveXpbAkzSasqOJdfb0CdM0CB/RCfyFMXVElS7rJH6PjLOFEYQScxJUn2C40TdoKb3ywpanh9Mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706727298; c=relaxed/simple;
-	bh=GDc+aLW5Fd1txUftp1mWm1xo+fkkQ873V74up1OwR9E=;
+	bh=7Rdww8PD/OZDuJxNvZnG5j/I+jvbRavpqIHcKsYavJQ=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=TqUKGMLpJifjlVUUvG6T6Ycl2hxA5mCAb8CTKYgTEKluOaEPpwp8likqt3fCbPQ/ilqjl3FljVBDk5SkOn1+F4QqdefV1n/DlZ9DlxAmRYxdpOtJday0gWbKD6z28xAEmZ7Po3JDkvExewGyMeAiXht3B2YWfJ4hwOqcwoIBTnM=
+	 Content-Type; b=O8KbXwxcDuDNVuzyThFh293AFGLq0ovmBcfZ1iFkezRYTECvHntNpB//rASDyXktw+I//quNIEFhjG1fzLTeXvupAIZOsoulwnPPJ/yjmw5mIFtP+wa9gG5XZLJEe/yi5WjjHO9teI0/tzszT0iCOIp9DilZtnFeTtzQJtEFRTc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC093C433B2;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3D7AC433A6;
 	Wed, 31 Jan 2024 18:54:57 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rVFjs-000000055Qq-3Goq;
+	id 1rVFjs-000000055QM-2apb;
 	Wed, 31 Jan 2024 13:55:12 -0500
-Message-ID: <20240131185512.638645365@goodmis.org>
+Message-ID: <20240131185512.478449628@goodmis.org>
 User-Agent: quilt/0.67
-Date: Wed, 31 Jan 2024 13:49:21 -0500
+Date: Wed, 31 Jan 2024 13:49:20 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -33,8 +33,9 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Al Viro <viro@ZenIV.linux.org.uk>,
  Ajay Kaher <ajay.kaher@broadcom.com>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- stable@vger.kernel.org
-Subject: [PATCH v2 3/7] tracefs: Avoid using the ei->dentry pointer unnecessarily
+ stable@vger.kernel.org,
+ kernel test robot <oliver.sang@intel.com>
+Subject: [PATCH v2 2/7] eventfs: Initialize the tracefs inode properly
 References: <20240131184918.945345370@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,110 +47,57 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Linus Torvalds <torvalds@linux-foundation.org>
 
-The eventfs_find_events() code tries to walk up the tree to find the
-event directory that a dentry belongs to, in order to then find the
-eventfs inode that is associated with that event directory.
+The tracefs-specific fields in the inode were not initialized before the
+inode was exposed to others through the dentry with 'd_instantiate()'.
 
-However, it uses an odd combination of walking the dentry parent,
-looking up the eventfs inode associated with that, and then looking up
-the dentry from there.  Repeat.
-
-But the code shouldn't have back-pointers to dentries in the first
-place, and it should just walk the dentry parenthood chain directly.
-
-Similarly, 'set_top_events_ownership()' looks up the dentry from the
-eventfs inode, but the only reason it wants a dentry is to look up the
-superblock in order to look up the root dentry.
-
-But it already has the real filesystem inode, which has that same
-superblock pointer.  So just pass in the superblock pointer using the
-information that's already there, instead of looking up extraneous data
-that is irrelevant.
-
-Link: https://lore.kernel.org/linux-trace-kernel/202401291043.e62e89dc-oliver.sang@intel.com/
+Move the field initializations up to before the d_instantiate.
 
 Cc: stable@vger.kernel.org
-Fixes: c1504e510238 ("eventfs: Implement eventfs dir creation functions")
+Fixes: 5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode")
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202401291043.e62e89dc-oliver.sang@intel.com
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-Original patch: https://lore.kernel.org/linux-trace-kernel/20240130190355.11486-1-torvalds@linux-foundation.org
+Changes since v1: https://lore.kernel.org/linux-trace-kernel/20240130190355.11486-2-torvalds@linux-foundation.org
 
- fs/tracefs/event_inode.c | 26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+-  Since another patch zeroed out the entire tracefs_inode, there's no need
+   to initialize any of its fields to NULL.
+
+ fs/tracefs/event_inode.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 824b1811e342..e9819d719d2a 100644
+index 1c3dd0ad4660..824b1811e342 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
-@@ -156,33 +156,30 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
- 	return ret;
- }
+@@ -370,6 +370,8 @@ static struct dentry *create_dir(struct eventfs_inode *ei, struct dentry *parent
  
--static void update_top_events_attr(struct eventfs_inode *ei, struct dentry *dentry)
-+static void update_top_events_attr(struct eventfs_inode *ei, struct super_block *sb)
+ 	ti = get_tracefs(inode);
+ 	ti->flags |= TRACEFS_EVENT_INODE;
++	/* Only directories have ti->private set to an ei, not files */
++	ti->private = ei;
+ 
+ 	inc_nlink(inode);
+ 	d_instantiate(dentry, inode);
+@@ -515,7 +517,6 @@ create_file_dentry(struct eventfs_inode *ei, int idx,
+ static void eventfs_post_create_dir(struct eventfs_inode *ei)
  {
--	struct inode *inode;
-+	struct inode *root;
+ 	struct eventfs_inode *ei_child;
+-	struct tracefs_inode *ti;
  
- 	/* Only update if the "events" was on the top level */
- 	if (!ei || !(ei->attr.mode & EVENTFS_TOPLEVEL))
- 		return;
+ 	lockdep_assert_held(&eventfs_mutex);
  
- 	/* Get the tracefs root inode. */
--	inode = d_inode(dentry->d_sb->s_root);
--	ei->attr.uid = inode->i_uid;
--	ei->attr.gid = inode->i_gid;
-+	root = d_inode(sb->s_root);
-+	ei->attr.uid = root->i_uid;
-+	ei->attr.gid = root->i_gid;
+@@ -525,9 +526,6 @@ static void eventfs_post_create_dir(struct eventfs_inode *ei)
+ 				 srcu_read_lock_held(&eventfs_srcu)) {
+ 		ei_child->d_parent = ei->dentry;
+ 	}
+-
+-	ti = get_tracefs(ei->dentry->d_inode);
+-	ti->private = ei;
  }
  
- static void set_top_events_ownership(struct inode *inode)
- {
- 	struct tracefs_inode *ti = get_tracefs(inode);
- 	struct eventfs_inode *ei = ti->private;
--	struct dentry *dentry;
- 
- 	/* The top events directory doesn't get automatically updated */
- 	if (!ei || !ei->is_events || !(ei->attr.mode & EVENTFS_TOPLEVEL))
- 		return;
- 
--	dentry = ei->dentry;
--
--	update_top_events_attr(ei, dentry);
-+	update_top_events_attr(ei, inode->i_sb);
- 
- 	if (!(ei->attr.mode & EVENTFS_SAVE_UID))
- 		inode->i_uid = ei->attr.uid;
-@@ -235,8 +232,10 @@ static struct eventfs_inode *eventfs_find_events(struct dentry *dentry)
- 
- 	mutex_lock(&eventfs_mutex);
- 	do {
--		/* The parent always has an ei, except for events itself */
--		ei = dentry->d_parent->d_fsdata;
-+		// The parent is stable because we do not do renames
-+		dentry = dentry->d_parent;
-+		// ... and directories always have d_fsdata
-+		ei = dentry->d_fsdata;
- 
- 		/*
- 		 * If the ei is being freed, the ownership of the children
-@@ -246,12 +245,11 @@ static struct eventfs_inode *eventfs_find_events(struct dentry *dentry)
- 			ei = NULL;
- 			break;
- 		}
--
--		dentry = ei->dentry;
-+		// Walk upwards until you find the events inode
- 	} while (!ei->is_events);
- 	mutex_unlock(&eventfs_mutex);
- 
--	update_top_events_attr(ei, dentry);
-+	update_top_events_attr(ei, dentry->d_sb);
- 
- 	return ei;
- }
+ /**
 -- 
 2.43.0
 
