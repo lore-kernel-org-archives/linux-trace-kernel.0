@@ -1,158 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3604D20DE2;
-	Wed, 31 Jan 2024 18:39:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79B738F8F;
+	Wed, 31 Jan 2024 18:54:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706726370; cv=none; b=HBVvgzx6w2ymfokYB+c2EQ7pGsvBaCU7j1y31UDtucV53IjGZLYvcMuQYiK963+Whv9vNvASW+8laK7EAUZSHo9Zt+26TS7OUUJ81LSYtnArQgEOJ0+FSCEs4kIgdMvA12k3kb0yzgBwr+IhZjh9mjs7/CR94j4DyuzZLU69lh8=
+	t=1706727297; cv=none; b=S+xXs50JvCNhvFcngqqhtUr9xrHf1AnCOVZ7QsfJbZ5c+rT58vuT7Gpc3gYHjOxKFUdwi96QOljNILqhEA2YdzCSz17ARQWSFCCTvttjt6ywz0D2JpyGKoywHEP8y6IBgDo8o56PMs04R3NoA9bC+0luGjshxg+5nqD7iyu0tjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706726370; c=relaxed/simple;
-	bh=wG3Hn51lXiqqGTEQgHWDBCOpRQh7/FE2IhWysyt/Vb8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h3xua7a8M/7IFJzofivSF7SMi56ddBTDY6Vhyse8R97fMdpnMSk/C4if51Tk1hR/qnu2Z1dHuQT7vZ4q22d7UvaWJ1JhQkUNpi6iczgw7/E5N3IDrK4hKp+zgMUeq9D4wbuLTq9HDIm0pwm/EuXOu4vVUt0htqLTfXbl3YFbal4=
+	s=arc-20240116; t=1706727297; c=relaxed/simple;
+	bh=hP5oi3pik9tl/wFh8yLt0CHX3qLM0Nq6RxKvbz2ASZs=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=sgsGovtRHaKn4orfMw5Bh4E9TEMCT5Jfd3OnxSA8SNlSz63qJbYX/Cxgo7kT3s4xjiIbmLCRCh1zRFTgXAObcANeCKSu7NDbmvdgEXf/+4Hgttmxqick44EejPu1GOe68KejlGr5FdfKJQRBW9GYZC1vHcNmXL79guw7AFWS6TA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65216C433F1;
-	Wed, 31 Jan 2024 18:39:29 +0000 (UTC)
-Date: Wed, 31 Jan 2024 13:39:43 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61E16C433C7;
+	Wed, 31 Jan 2024 18:54:57 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1rVFjs-000000055PM-1C1Z;
+	Wed, 31 Jan 2024 13:55:12 -0500
+Message-ID: <20240131184918.945345370@goodmis.org>
+User-Agent: quilt/0.67
+Date: Wed, 31 Jan 2024 13:49:18 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, Masami Hiramatsu
- <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] eventfs: get rid of dentry pointers without
- refcounts
-Message-ID: <20240131133943.0a6e0e1d@gandalf.local.home>
-In-Reply-To: <CAHk-=whNqOa5rAr4Lq9j=zZgrSxyZwgt6imSydAY3vyeaHm01g@mail.gmail.com>
-References: <20240130190355.11486-1-torvalds@linux-foundation.org>
-	<20240130190355.11486-5-torvalds@linux-foundation.org>
-	<20240131000956.3dbc0fc0@gandalf.local.home>
-	<CAHk-=wjH+k47je4YbP=D+KOiNYp8cJh8C_gZFzSOa8HPDm=AQw@mail.gmail.com>
-	<20240131003317.7a63e799@gandalf.local.home>
-	<CAHk-=wg69FE2826EokkCbSKHZvCG-cM5t=9SMFLcfpNu8Yvwqw@mail.gmail.com>
-	<CAHk-=whSse54d+X361K2Uw6jO2SvrO-U0LHLBTLnqHaA+406Fw@mail.gmail.com>
-	<20240131075740.660e7634@rorschach.local.home>
-	<20240131081449.6e917b71@rorschach.local.home>
-	<CAHk-=whNqOa5rAr4Lq9j=zZgrSxyZwgt6imSydAY3vyeaHm01g@mail.gmail.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Christian Brauner <brauner@kernel.org>,
+ Al Viro <viro@ZenIV.linux.org.uk>,
+ Ajay Kaher <ajay.kaher@broadcom.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v2 0/7] eventfs: Rewrite to simplify the code (aka: crapectomy)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Wed, 31 Jan 2024 10:08:37 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-> On Wed, 31 Jan 2024 at 05:14, Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > If you also notice, tracefs only allows mkdir/rmdir to be assigned to
-> > one directory. Once it is assigned, no other directories can have mkdir
-> > rmdir functionality.  
-> 
-> I think that does limit the damage, but it's not clear that it is actually safe.
-> 
-> Because you don't hold the inode lock, somebody could come in and do a
-> mkdir inside the other one that is being removed, ie something like
-> 
->  - thread 1 does took the inode lock, called ->rmdir
-> 
->  - it then drops the inode lock (both parent and the directory that is
-> getting removed) and gets the event lock
-> 
->  - but thread 2 can come in between that inode lock drop and event lock
-> 
-> Notice: thread 2 comes in where there is *no* locking. Nada. Zilch.
-> 
-> This is what worries me.
+Linus took the time to massively clean up the eventfs logic.
+I took his code and made tweaks to represent some of the feedback
+from Al Viro and also fix issues that came up in testing.
 
-Yep, and that was my biggest concern too, which is why I have stress tests
-that try to hit that above scenario. Well, rmdir and other accesses
-including other mkdir's of the same name.
+The diff between v1 and this can be found here:
+  https://lore.kernel.org/linux-trace-kernel/20240131105847.3e9afcb8@gandalf.local.home/
+ 
+  Although the first patch I changed to use memset_after() since
+  that update.
 
-As my knowledge on the inode life time is still limited, my main concern
-was just corruption of the dentry/inodes themselves. But the first one to
-get the event_mutex determines the state of the file system.
+I would like to have this entire series go all the way back to 6.6 (after it
+is accepted in mainline of course) and replace everything since the creation
+of the eventfs code.  That is, stable releases may need to add all the
+patches that are in fs/tracefs to make that happen. The reason being is that
+this rewrite likely fixed a lot of hidden bugs and I honestly believe it's
+more stable than the code that currently exists.
 
-If thread 1 is doing rmdir, what would thread 2 do that can harm it?
+Note, there's more clean ups that can happen. One being cleaning up
+the eventfs_inode structure. But that's not critical now and can be
+added later.
 
-The rmdir calls trace_remove() which is basically retrying to remove the
-directory again, and hopefully has the proper locking just like removing
-the kprobe trace event that deletes directories. It can have references on
-it.
+This made it through one round of my testing. I'm going to run it
+again but with the part of testing that also runs some tests on
+each patch in the series to make sure it doesn't break bisection.
 
-Now if something were to get a reference, and a valid dentry, as soon as
-the open function is called, the tracing logic will see that the
-trace_array no longer exists and returns an error.
+In Linus's first version, patch 5 broke some of the tests but was fixed
+in patch 6. I swapped the order and moved patch 6 before patch 5
+and it appears to work. I still need to run this through all
+my testing again.
 
-All the open functions for files that are created in an instance (and that
-includes eventfs files) have a check to see if the inode->i_private data is
-still valid. The trace_array structure represents the directory, and
-there's a link list of all the trace_array structures that is protected by
-the trace_types_lock. It grabs that lock, iterates the array to see if the
-passed in trace_array is on it, if it is, it ups the ref count (preventing
-a rmdir from succeeding) and returns it. If it is not, it returns NULL and
-the open call fails as if it opened a nonexistent file.
+Version 1 is at: https://lore.kernel.org/linux-trace-kernel/20240130190355.11486-1-torvalds@linux-foundation.org/
 
-> 
-> But it does help that it's all only in *one* directory.  At least
-> another mkdir cannot happen *inside* the one that is going away while
-> the locks are not held. So the good news is that it does mean that
-> there's only one point that is being protected.
-> 
-> But I do worry about things like this (in vfs_rmdir()):
-> 
->         inode_lock(dentry->d_inode);
-> 
->         error = -EBUSY;
->         if (is_local_mountpoint(dentry) ||
->             (dentry->d_inode->i_flags & S_KERNEL_FILE))
->                 goto out;
-> 
->         error = security_inode_rmdir(dir, dentry);
->         if (error)
->                 goto out;
-> 
->         error = dir->i_op->rmdir(dir, dentry);
->         if (error)
->                 goto out;
-> 
-> notice how it does that "is this a mount point" test atomically wrt
-> the rmdir before it is allowed to proceed.
 
-You mean if someone did:
 
- # mkdir instances/foo
- # rmdir instances/foo
+Linus Torvalds (6):
+      eventfs: Initialize the tracefs inode properly
+      tracefs: Avoid using the ei->dentry pointer unnecessarily
+      tracefs: dentry lookup crapectomy
+      eventfs: Remove unused 'd_parent' pointer field
+      eventfs: Clean up dentry ops and add revalidate function
+      eventfs: Get rid of dentry pointers without refcounts
 
-and at the same time, someone else did
+Steven Rostedt (Google) (1):
+      tracefs: Zero out the tracefs_inode when allocating it
 
- # mount -t ext4 /dev/sda instances/foo
-
-?
-
-OK, I never thought of that use case. Although, I think if someone is
-trying to mount anything in tracefs, they can keep the pieces. ;-)
-
-> 
-> And I do think that the inode lock is what also protects it from
-> concurrent mounts. So now what happens when that "thread 2" above
-> comes in while there is *no* locking, and mounts something there?
-> 
-> Now, I'm not saying this is a huge problem. But it's very much an
-> example of a thing that *could* be a problem. Dropping locks in the
-> middle is just very scary.
-
-No arguments from me. I really didn't like the dropping of the locks, and
-tried hard to avoid it. If switching over to kernfs can solve that, I'd let
-that conversion happen.
-
-I'm all for someone switching tracefs over to kernfs if it solves all these
-unknown bugs, as long as it doesn't hurt the memory savings of eventfs. But
-again, I'm also willing to make eventfs its own file system (although I
-don't have the time yet to do that) where tracefs isn't burdened by it.
-
--- Steve
+----
+ fs/tracefs/event_inode.c | 551 ++++++++++++-----------------------------------
+ fs/tracefs/inode.c       | 102 ++-------
+ fs/tracefs/internal.h    |  18 +-
+ 3 files changed, 167 insertions(+), 504 deletions(-)
