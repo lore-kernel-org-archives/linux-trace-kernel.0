@@ -1,117 +1,93 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F57DF4F;
-	Wed, 31 Jan 2024 01:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D957D281
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jan 2024 02:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706665988; cv=none; b=IJ+5QCZ0ZgwaS1Lfe9epcOC7pXDpK8+6D+Dt18j+zUhMr3Ypprr14ZGFkaoaB8kZ4YJdbt2Si9fEa8H2WBRt9yUxnurk5Lhm0yAm4Hc3vV8BX7txD7sDi4maJj4PVqpuwmy13ANq+MXi6f53uRpBWcmg7VQkYbCaYHiMjWYXV4M=
+	t=1706668690; cv=none; b=aqb27aHp44nE2cuTSVDSOiNItto/F8wuEpgXPcQCrtmAqKrgyFBYrvhmfSrudUWjxZ+2Q4Ny5F60NYYnLuu555ZritbJVdt1pqUicZvjnijeQFmiKJATYcTlM2jUBNTeA8Q5drvMfgtrAhCc3dHktY+uqYb97ECcnjiGl7XPChU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706665988; c=relaxed/simple;
-	bh=1p5Z7Z9TVo1PQ3bqISL9xHz1q+pUeZaefmjz13XJP8w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cSYLF3NoShoJk02my2n97BHfmatQTou3v1cwgVkzUUOp0vynv6Volwlx/Rch/NhSR0NZoLCat9tcqF0IKDJ8e8ipS259MSZabUt8tUfEj2ev2RtxcCmxFxDEgfA8R05s7NeJmBdAx3aXfUrfqRJS40OKNJL/dkSMepO8QvjtqL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YBai7MRf; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1706668690; c=relaxed/simple;
+	bh=LGO4BdOvNZmc1lXwuOScKvZxhDaPx77tpjeDFBkTccE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JXPjPk6cuYWE8h7v9/zpcMAjKsAfRlicXwQLS6AJ/F4Vvlthha75PCftx+rVEk8teyVeZ5dsvXN2YRmsJP4tBy//zfGXb+asWFjQw9+PfkXGkmU9ge5sPQVsOLInbVs3vOVDxuxqzLKGnp0pC1NFW/pshN03tFuh8EaLxhjd11I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Yzg4GlwO; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YBai7MRf"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40V0em45019320;
-	Wed, 31 Jan 2024 01:53:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=3kpgfpypCR5T+As4pLy7omFzhP8Eh3qCmLdqkM1YErI=; b=YB
-	ai7MRfwbBlMqTCW6/vR50N/3F/jAQAWeJ4zT15ZHdxv+txHHvTuWdC565v69y/Dk
-	/F1u8EItFfCSBxUAzi/WSO0UBuKcMcIXl3ldH58Qowbz67/MtNkUVAmkm//aalyF
-	KtCAK7R6pbZtyIPrQAooDdkEVGTJTPsTpW2KPCXGQtVEHaUmhxugBbWGjtd6g3mi
-	rJ+8ZZEsfvdRmGjTZ0R4CsTaQkncxZElw+dWZ1VZehxFmqDzkyz4BmbxKa1ob8nX
-	82PFtpY0yGpq1Zsj4Q7O/xsHJgD29Xwdhg/SEfnfa840ZKIjYlniCoGZGGXtXp6x
-	WRmebkJjs/CY6Yv1+sjQ==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vyb0cr65v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 31 Jan 2024 01:53:02 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40V1r2hv022524
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 31 Jan 2024 01:53:02 GMT
-Received: from [10.216.5.224] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 30 Jan
- 2024 17:52:57 -0800
-Message-ID: <13703200-af1a-4776-98b2-b9a7261de2e6@quicinc.com>
-Date: Wed, 31 Jan 2024 07:22:54 +0530
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Yzg4GlwO"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-50eabbc3dccso5847705e87.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 18:38:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1706668687; x=1707273487; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=19aDwrdmn+mJoidoEhiPwZ55uaYowtebYP59bRAkETQ=;
+        b=Yzg4GlwOoMM4n+vHoEGBxFzylZoVRgG01TGpQUShGA9DOW9WS4iUyDquoJ2qAGz4ul
+         FxAOvyl/DG5nPoxarEWLKsUTRKhPSBdVXwlDVc8b0TP0Z5Zs87SguJ2kk49kNpoRIoRu
+         E9MGGP8BoOnCdmDOIUNjP1FggdrpWSaQPuAaA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706668687; x=1707273487;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=19aDwrdmn+mJoidoEhiPwZ55uaYowtebYP59bRAkETQ=;
+        b=PL/eSoUQohphbuyaQTyty0n4XRfecd40r66C1KULh84KgigRXY+Y16MUkJnK1VZ6R8
+         0TaaijtPxU9VQ7vqM5yBn+cDcXw+5XMNVTMEtaHYBcS0QEG7cKfZg+36KfWXdiHkJnxk
+         NA5Pw/qO5WKm9Z/ZWpfncz++QzChZHtxuBbqJRE6ZLPPGAe3i41rO3jHtsjqf37WB23I
+         rU2dwnOXw4feywVhUkGssVtDLwNfd9hZFQfiI1ZlmsHubHKRw7ETBFoSryrMSThX05da
+         fy3lNhaVXCHTQuMgOJcwxDida78bBStFngQWQptamoXWUTnyma6Eo0g89eIsMEx2Cb7W
+         E2zA==
+X-Gm-Message-State: AOJu0YzL9yXxmLLD3KX0V4kcitDa30OG3oJ7DHouuNzEotNxRonYCUjm
+	/WXQmQ3DOa2U77Wdf2m6+CQR5H+nee1/weIFDuIl8qacAdeomJokXb9UtOJVMXalZVZqVmbnpd0
+	doj78uw==
+X-Google-Smtp-Source: AGHT+IFMyA9InAMlHiSLWyAdyVhxRlUvz/Nu1LLSPvBRaSBYa4xvteJ7SLRgIGrjoXZx0j9xX69Dzg==
+X-Received: by 2002:a19:6757:0:b0:50e:ca86:658a with SMTP id e23-20020a196757000000b0050eca86658amr317370lfj.45.1706668686903;
+        Tue, 30 Jan 2024 18:38:06 -0800 (PST)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id c23-20020ac244b7000000b0051121bedf76sm179495lfm.34.2024.01.30.18.38.05
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jan 2024 18:38:06 -0800 (PST)
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2cf4a22e10dso54983121fa.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 18:38:05 -0800 (PST)
+X-Received: by 2002:a2e:9c17:0:b0:2cf:2ba3:e3d7 with SMTP id
+ s23-20020a2e9c17000000b002cf2ba3e3d7mr195592lji.8.1706668685355; Tue, 30 Jan
+ 2024 18:38:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH v9] bus: mhi: host: Add tracing support
-Content-Language: en-US
-To: Manivannan Sadhasivam <mani@kernel.org>,
-        Steven Rostedt
-	<rostedt@goodmis.org>
-CC: Masami Hiramatsu <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mhi@lists.linux.dev>, <linux-arm-msm@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <quic_vbadigan@quicinc.com>,
-        <quic_ramkri@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_skananth@quicinc.com>, <quic_parass@quicinc.com>
-References: <20240105-ftrace_support-v9-1-a2dca64cc6ea@quicinc.com>
- <20240130081152.GH32821@thinkpad>
- <20240130092252.32801387@gandalf.local.home> <20240130182654.GD4218@thinkpad>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20240130182654.GD4218@thinkpad>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: B8HBQxFko_uoW8v6Lt28E8DMKDMqa_3S
-X-Proofpoint-ORIG-GUID: B8HBQxFko_uoW8v6Lt28E8DMKDMqa_3S
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-30_14,2024-01-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- phishscore=0 suspectscore=0 bulkscore=0 malwarescore=0 mlxlogscore=766
- mlxscore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401190000 definitions=main-2401310014
+References: <20240130190355.11486-1-torvalds@linux-foundation.org>
+ <20240130190355.11486-6-torvalds@linux-foundation.org> <20240131011246.GP2087318@ZenIV>
+In-Reply-To: <20240131011246.GP2087318@ZenIV>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 30 Jan 2024 18:37:49 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wie3VgLatmR4J_VpnyJR-qKppz=gnDfxEa9Gyy-7cH7HQ@mail.gmail.com>
+Message-ID: <CAHk-=wie3VgLatmR4J_VpnyJR-qKppz=gnDfxEa9Gyy-7cH7HQ@mail.gmail.com>
+Subject: Re: [PATCH 6/6] eventfs: clean up dentry ops and add revalidate function
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-
-
-On 1/30/2024 11:56 PM, Manivannan Sadhasivam wrote:
-> On Tue, Jan 30, 2024 at 09:22:52AM -0500, Steven Rostedt wrote:
->> On Tue, 30 Jan 2024 13:41:52 +0530
->> Manivannan Sadhasivam <mani@kernel.org> wrote:
->>
->>> So same trace will get printed for both mhi_channel_command_start() and
->>> mhi_channel_command_end()?
->>
->> The trace output will also include the tracepoint name. That is, it will
->> have the same content but will be preceded with:
->>
->>    mhi_channel_command_start: ...
->>    mhi_channel_command_end: ...
->>
-> 
-> Yes, but the message will be the same:
-> 
-> mhi_channel_command_start: chan%d: Updating state to:
-> mhi_channel_command_end: chan%d: Updating state to:
-> 
-> Either only one of the trace should be present or the second one should print,
-> "mhi_channel_command_end: chan%d: Updated state to:"
-> 
-> - Mani
+On Tue, 30 Jan 2024 at 17:12, Al Viro <viro@zeniv.linux.org.uk> wrote:
 >
-I will try to pass a string to updated for mhi_channel_command_end &
-updating for mhi_channel_command_start in my next patch.
+> > + *
+> > + * Note that d_revalidate is called potentially under RCU,
+> > + * so it can't take the eventfs mutex etc. It's fine - if
+> > + * we open a file just as it's marked dead, things will
+> > + * still work just fine, and just see the old stale case.
+>
+> Looks like use after free, unless freeing ei is RCU-delayed...
 
-- Krishna Chaitanya.
+We hold the ref to the ei in the very dentry that is doing d_revalidate().
 
+So it should be fine. The race is with eventfs marking the ei
+'is_freed' (under the mutex that we don't hold here), but when that
+happens and we end up still using the dentry, the ei is still there,
+all the operations are just going to fail.
+
+             Linus
