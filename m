@@ -1,97 +1,112 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15703107A8;
-	Wed, 31 Jan 2024 03:27:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54EF1F5F5
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jan 2024 03:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706671657; cv=none; b=splrjT7XSDxUXRe1XkAUmSGnRXEUFPRCmPrvg7AAyJVrAVczIlSBEkOJ2qXPGupnJ6Gr4ETU1mgsjY7SuVLksZD8IhRM27tZxHc2S/ihEoXqhIaj+6opw4V+rQBNMAIgGmboldp/cQv6mbxDmJv8AkgmNhLfQE571D+bUK11Vjk=
+	t=1706672417; cv=none; b=rUULPLM+F+53EkA2l67JdRLT6kyqhjwM7WmOjvt8kmPwtOK6gP0Ninym5debe9cOvp7LLatbdS9Z9T1jvjaDUNarKcL6bbgl40OjdpoctTa5kDp8SlPmMZ6zLbLNuTEYY+TeMBNBKbrpzMfZBzPsY/26udHrsO3BBPoQectRac8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706671657; c=relaxed/simple;
-	bh=fYqycNloGpwsMkxeexPEkQZeco4zUIcyy5vzedaRkTg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lVdvCLZ6af9MyoWc91Gy6DxPfE8ttE2IgWcBZEucSD24gxeZCxBzxLMPsCaU/0UYES7u0aBhmWjGgfWZL7E1O/qcW4MvZrJcSLboauh6vRlKf6hzFjr2/mOr3lPON5DEEmmLwCxT+KLUTkysVEof2ZW5gq2T3UKeyYPwN8xJsZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D55EDA7;
-	Tue, 30 Jan 2024 19:28:17 -0800 (PST)
-Received: from [10.163.41.195] (unknown [10.163.41.195])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9FBBE3F5A1;
-	Tue, 30 Jan 2024 19:27:21 -0800 (PST)
-Message-ID: <edab95e6-e09f-4aab-a506-4ea011b1372b@arm.com>
-Date: Wed, 31 Jan 2024 08:57:19 +0530
+	s=arc-20240116; t=1706672417; c=relaxed/simple;
+	bh=yw1NOpDHyLzhqgRn7bhY/dhSkPQ2PzYELUWet09fCyU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sd7wCIvCnzchaGc3rFOCmWsDGg2Bw+CX+hAGQtQ0bMG129fjpi9HyJvwLZPgdbEuwHgLaOPpwz8H9j9Ac0uwe3DSls3qhAb1lGT2Sc4uqsZC8SLXrg7wDxu6xLT15Xz6VU5C1BO3VOGKEX+CuHKQ33AJTW2OZZQamm0ffI7DK1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=gZsoelm+; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="gZsoelm+"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a3566c0309fso409267566b.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 19:40:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1706672413; x=1707277213; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=8RGcPR+EINRerlSJ09DwzUdoWhHkZNQ/15Haltdbaks=;
+        b=gZsoelm+umAuDJp3o6Xch5DRDE3T3wh+tTYj1V2Wlt92Bh+lXQMfIpQi/MqjdIDjJx
+         OLieoIr0ncAnh5HfxOivwJxgAfy8VkX0U/IVeerD3Qu7OWNkZuZmLHoDJzdK0UH/Iw6L
+         t+AuWNE+nBjHewJHJ+kBOtCNiD70IfHn8Ci+E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706672413; x=1707277213;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8RGcPR+EINRerlSJ09DwzUdoWhHkZNQ/15Haltdbaks=;
+        b=m6Umr90YPaPIY8f3w8Eot+triS+46ykk9DkCOEr00hennl5BSr9tysnk0PBESgE0cG
+         xDYDRzSat27/MuX6hK4gfbR5SvqY9dpb/y5ENU8Z52uBWk585kL2rtKj2XKKBdxDlU3K
+         FH0kn8C/N5/j6Mz6cigG9OFMFoyXr3xRzFUtAitaLheQR1Uw+7OvwdAdsZsm0CsverQ0
+         L4U5ET4vv6qpYZ4noyEpFERT6zHbLNcQldJCRYCBg8mR6nSteJydc3YRusqdWNxY2X8m
+         +k1DR2DdVPY6mHkIU99mDNkw93wxWLI8sORXVnuOn/pBMTpIgHjnG6X2f2zCZTkChKG1
+         DktQ==
+X-Gm-Message-State: AOJu0YypQFWPO9ubYjW2bVZheQEzp9z70SHRPHriIMbGmwy4SteyMacy
+	k1b3Cgd1pF8KdvnvhdH2ciQDF9Y2QbdQQqhR/M6QVS+K53RoYh9tP07XcwoZBJNoyGN6XC9acfb
+	gELKcUw==
+X-Google-Smtp-Source: AGHT+IFEYXnVxeMTmUzEiR7RZt+T6fWjWPgDQTuAGFQqfp+2Diij+cFzsUdl5mhMyWtt0RwPm3yonQ==
+X-Received: by 2002:a17:906:e2cd:b0:a30:f558:e04f with SMTP id gr13-20020a170906e2cd00b00a30f558e04fmr233205ejb.7.1706672412693;
+        Tue, 30 Jan 2024 19:40:12 -0800 (PST)
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com. [209.85.208.41])
+        by smtp.gmail.com with ESMTPSA id hw18-20020a170907a0d200b00a3600d7c2fbsm1827759ejc.176.2024.01.30.19.40.12
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jan 2024 19:40:12 -0800 (PST)
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-55f2b0c5ae9so2555645a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 30 Jan 2024 19:40:12 -0800 (PST)
+X-Received: by 2002:aa7:d3da:0:b0:55f:4d7e:e4e9 with SMTP id
+ o26-20020aa7d3da000000b0055f4d7ee4e9mr171002edr.21.1706672411784; Tue, 30 Jan
+ 2024 19:40:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v3 04/35] mm: page_alloc: Partially revert "mm:
- page_alloc: remove stale CMA guard code"
-Content-Language: en-US
-To: Alexandru Elisei <alexandru.elisei@arm.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
- maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
- yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
- mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
- bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
- vschneid@redhat.com, mhiramat@kernel.org, rppt@kernel.org, hughd@google.com,
- pcc@google.com, steven.price@arm.com, vincenzo.frascino@arm.com,
- david@redhat.com, eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org
-References: <20240125164256.4147-1-alexandru.elisei@arm.com>
- <20240125164256.4147-5-alexandru.elisei@arm.com>
- <966a1a84-76dc-40da-bde2-251d2a81ee31@arm.com> <ZbeQBDwe8zc_pLDZ@raptor>
- <3983416f-b613-42c7-bb42-d3ab268ea1be@arm.com> <ZbjkFujWTs9zqkeD@raptor>
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <ZbjkFujWTs9zqkeD@raptor>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240130190355.11486-1-torvalds@linux-foundation.org>
+ <20240130190355.11486-6-torvalds@linux-foundation.org> <20240131011246.GP2087318@ZenIV>
+ <CAHk-=wie3VgLatmR4J_VpnyJR-qKppz=gnDfxEa9Gyy-7cH7HQ@mail.gmail.com> <20240131024626.GQ2087318@ZenIV>
+In-Reply-To: <20240131024626.GQ2087318@ZenIV>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 30 Jan 2024 19:39:55 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjyki7XCnUjaBZSobLaNqWSjg39JhaUjrMH67sYxZLmdQ@mail.gmail.com>
+Message-ID: <CAHk-=wjyki7XCnUjaBZSobLaNqWSjg39JhaUjrMH67sYxZLmdQ@mail.gmail.com>
+Subject: Re: [PATCH 6/6] eventfs: clean up dentry ops and add revalidate function
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Tue, 30 Jan 2024 at 18:46, Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> What's to stop ->d_revalidate() from being called in parallel with
+> __dentry_kill()?
 
+Oh, you're right.
 
-On 1/30/24 17:27, Alexandru Elisei wrote:
-> Hi,
-> 
-> On Tue, Jan 30, 2024 at 10:04:02AM +0530, Anshuman Khandual wrote:
->>
->>
->> On 1/29/24 17:16, Alexandru Elisei wrote:
->>> Hi,
->>>
->>> On Mon, Jan 29, 2024 at 02:31:23PM +0530, Anshuman Khandual wrote:
->>>>
->>>>
->>>> On 1/25/24 22:12, Alexandru Elisei wrote:
->>>>> The patch f945116e4e19 ("mm: page_alloc: remove stale CMA guard code")
->>>>> removed the CMA filter when allocating from the MIGRATE_MOVABLE pcp list
->>>>> because CMA is always allowed when __GFP_MOVABLE is set.
->>>>>
->>>>> With the introduction of the arch_alloc_cma() function, the above is not
->>>>> true anymore, so bring back the filter.
->>>>
->>>> This makes sense as arch_alloc_cma() now might prevent ALLOC_CMA being
->>>> assigned to alloc_flags in gfp_to_alloc_flags_cma().
->>>
->>> Can I add your Reviewed-by tag then?
->>
->> I think all these changes need to be reviewed in their entirety
->> even though some patches do look good on their own. For example
->> this patch depends on whether [PATCH 03/35] is acceptable or not.
->>
->> I would suggest separating out CMA patches which could be debated
->> and merged regardless of this series.
-> 
-> Ah, I see, makes sense. Since basically all the core mm changes are there
-> to enable dynamic tag storage for arm64, I'll hold on until the series
-> stabilises before separating the core mm from the arm64 patches.
+For some reason I thought we did the d_release() _after_ the RCU grace
+period, but we don't.
 
-Fair enough but at least could you please separate out this particular
-patch right away and send across. 
+Why don't we, btw? It would be so much better if we did the
+d_release() from __d_free(). We have all that smarts in fs/dcache.c to
+decide if we need to RCU-delay it or not, and then we don't let
+filesystems use it.
 
-mm: cma: Don't append newline when generating CMA area name
+I assume the reason is that some 'd_delete' cases might want to sleep
+etc. Still, for things like this that just want to release memory, it
+would be *much* better to have d_release called when the dentry is
+actually released.
+
+Hmm. Not very many d_delete cases, but I did see a couple that
+definitely want process context (dma_buf_release goes to things that
+do vfree() etc).
+
+So I guess the "make low-level filesystems do their own kfree_rcu() is
+what we're doing.
+
+In this case it's as simple as doing that
+
+-       kfree(ei);
++       kfree_rcu(ei, rcu);
+
+and we'd just make the rcu entry a union with something that isn't
+that 'is_freed' field so that it doesn't take more space.
+
+             Linus
