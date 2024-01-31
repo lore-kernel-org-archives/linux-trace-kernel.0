@@ -1,93 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B80C43A1DF;
-	Wed, 31 Jan 2024 23:07:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D03614076C;
+	Wed, 31 Jan 2024 23:23:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706742439; cv=none; b=oIZouqFg6om4PkazWvteYjip57WQfqCxfRF3nj+Rg3zOJsyiXTvpSgrZiY39SlHXc3nJr7OfG6n+rIPmavQrExTV+yq23gc97IRZ0s0Lz+lZsx2DXvM7CHJQd/FtdfiW963eDUnu1jio5kZSfRaqfVKcnrCOByPvn/gZWEJjHpo=
+	t=1706743420; cv=none; b=l5NOPHrGJb5GSUm6V/ssPMxboh4dDBNuBzSzFoxg6x3s4OKYmT9nAfUueeLlZOhKGfq9JO5vSukMwD8cMHmZTVJoetcDCuzejup4phs7ZiSrygUpXa/scbkwfvNejH+UN+np4aCau4/3enAcb2mYrORl1Rt43NqsMt6QvEPXR9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706742439; c=relaxed/simple;
-	bh=Wggs9PE5/hrQg3P8oEkZJ8ajg/xH6BAOahmm/U0oUOo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=k/XhOLipqfc1Z/bHo+jZKdmwD9jwtaHC8eWvgMld/lM9whYVhBznwYJVcGGH0F/F0D6Si0S2n6K1FYtJVg3fF2i9hmp//ZTc7H9cV1tF7gDeQsN7JTxWe7UuyBNp0WvW1Lb0bXVGGp2dgOA2kTrE4Po7SA/rtgp4sdFzKzZibI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fg2xm+pl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fg2xm+pl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99BE0C433F1;
-	Wed, 31 Jan 2024 23:07:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706742439;
-	bh=Wggs9PE5/hrQg3P8oEkZJ8ajg/xH6BAOahmm/U0oUOo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fg2xm+pl+AZChWrhKCFxSfuF16PIGB9b2sztYsV/VK+gs6ut7QbZYZvqMW0wsbNMk
-	 OZ1dAaHlwUS3MIpzzOb7SczBccTUPdSVpSKC4vE1K3L8I7pkyEkLdSwJ6RQUCFqSlI
-	 zjdCc9PU95y8Ul4Korc5MsWnCy2NnOMcpw52JmBldkUMbpA7gqQRsdKZBhVmYggybV
-	 Jic2++Y3Mq5RcdiJZxFIjMTdgGtm4Nx8coxV/rkNlRJKLplcf6ksGalel8U/FoBg3c
-	 J6W97UYMmiZu+QUZSLsCmT6aQdeM7mMZba8YqC5Qy9I5BguQwmDfCL+Eni6/qRudcM
-	 d0VHAMNB7My2w==
-Date: Thu, 1 Feb 2024 08:07:15 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
+	s=arc-20240116; t=1706743420; c=relaxed/simple;
+	bh=3xWEQWDeUUBk62LEoweFcda4fCmmQIdemLYVAtcazM0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gl9wQxpm9Aop3a7QI6OTrqbmRfJHGXgoA11qwPiYvF9IXzD/mmhXMUFzjB8EQpgHNOlRiI95E/YPZKt7I8LPPViAUY0HkXwxDQ6FVuvXHDMQue53N0CWEMdwviLzu/Ei+3fcmCYe87qh2cNVgZe8/bfxmT+w0PerHVDxfEKDEv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80634C433F1;
+	Wed, 31 Jan 2024 23:23:39 +0000 (UTC)
+Date: Wed, 31 Jan 2024 18:23:54 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH 6/6] eventfs: clean up dentry ops and add revalidate
  function
-Message-Id: <20240201080715.80fadd15f38396c95bf39a00@kernel.org>
-In-Reply-To: <20240131130039.241c8978@gandalf.local.home>
+Message-ID: <20240131182354.6815a2fa@gandalf.local.home>
+In-Reply-To: <20240201080715.80fadd15f38396c95bf39a00@kernel.org>
 References: <20240130190355.11486-1-torvalds@linux-foundation.org>
 	<20240130190355.11486-6-torvalds@linux-foundation.org>
 	<20240131130039.241c8978@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	<20240201080715.80fadd15f38396c95bf39a00@kernel.org>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 31 Jan 2024 13:00:39 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu, 1 Feb 2024 08:07:15 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> On Tue, 30 Jan 2024 11:03:55 -0800
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> > Then tracefs could be nicely converted over to kernfs, and eventfs would be
+> > its own entity.  
 > 
-> > It would probably be cleaner to make eventfs its own filesystem, or at
-> > least set its own dentry ops when looking up eventfs files.  But as it
-> > is, only eventfs dentries use d_fsdata, so we don't really need to split
-> > these things up by use.
-> 
-> BTW, I have been thinking about making eventfs a completely separate file
-> system that could be mounted outside of tracefs. One that is readonly that
-> only contains the "id" and "format" files and nothing more.
-> 
-> Why? Because perf and powertop both use those files to know how to parse
-> the raw event formats. I don't think there's anything in there that
-> requires root privileges to read. They should not be exposing any internal
-> kernel information besides the event format layouts, and it would be nice
-> to have a /sys/kernel/events directory that only had that.
+> If so, maybe we can just make symlinks to the 'id' and 'format' from events
+> under tracefs? :)
 
-That's a good idea! So maybe we can allow perf to read it without root user.
+I don't think that will save anything. The files currently do not allocate
+any memory. If we make symlinks, we need to allocate a path, to them. I
+think that would be rather difficult to do. Not to mention, that could
+cause a lot of breakage. What do you do if the other filesystem isn't
+mounted?
 
-> 
-> Making eventfs a separate file system where, when added to tracefs, has the
-> control files for the specific trace_array, but for the /sys/kernel
-> directory, only cares about the trace format files.
-> 
-> Then tracefs could be nicely converted over to kernfs, and eventfs would be
-> its own entity.
+I could possibly make a light way handle to pass back to the callbacks.
 
-If so, maybe we can just make symlinks to the 'id' and 'format' from events
-under tracefs? :)
+struct trace_event_light {
+	unsigned long			flags
+	struct trace_event_call		*event_call;
+};
 
-Thank you,
+struct trace_event_file {
+	struct trace_event_light	call;
+	[..]
+	// Remove he flags and event_call and have it above
+};
 
-> 
-> -- Steve
+if the callback data has:
 
+ callback(..., void **data)
+ {
+	struct trace_event_light *call = *data;
+	struct trace_event_file *file;
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+	If (strcmp(name, "id") == 0 || strcmp(name, "format") == 0) {
+		*data = call->event_call;
+		return 1;
+	}
+
+	/* Return if this is just a light data entry */
+	if (!(data->flags & TRACE_EVENT_FULL))
+		return 0;
+
+	file = container_of(data, struct trace_event_file, call);
+
+	// continue processing the full data
+}
+
+This way the lonely eventfs could still share a lot of the code.
+
+-- Steve
