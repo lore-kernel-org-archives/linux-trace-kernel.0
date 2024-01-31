@@ -1,70 +1,97 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE57F9FA;
-	Wed, 31 Jan 2024 02:46:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15703107A8;
+	Wed, 31 Jan 2024 03:27:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706669193; cv=none; b=DMhMnu18YzKk7XIN8hywkJHec0+ccxP5O0+jm19cuTvWc4SIF7tMkPALAHTGkN5B7NTc4ZuR6g6kqLp15fgm0v/QPxPf2+u97egTcCqYsemBJznmHzr0z18dpxGAWCMLrkD+xCOtOaGQh9ssrXHIZA1rKed0+7etUMPcD/b5o28=
+	t=1706671657; cv=none; b=splrjT7XSDxUXRe1XkAUmSGnRXEUFPRCmPrvg7AAyJVrAVczIlSBEkOJ2qXPGupnJ6Gr4ETU1mgsjY7SuVLksZD8IhRM27tZxHc2S/ihEoXqhIaj+6opw4V+rQBNMAIgGmboldp/cQv6mbxDmJv8AkgmNhLfQE571D+bUK11Vjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706669193; c=relaxed/simple;
-	bh=hO88cir5G8VkmZGM+f/afElr7N0rrYwqQyzsZup6KuI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p0Wqwrb8qdBeKKK3yvqxxQI7WTQ+rwyBH3/zAs9Fe+wM1/scSmy0rY/W2zo2kjmlhZPVBuZ6MXUU97rAmPDX9aY8fdCcMoK9hWAKWdA7bMr+2/cAt2IPUQJ/mINPktcYHPv1lm3zl2DcQgT9nsCjG53KI8ULau/s4ma+uZAy9fM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=gS99y5a4; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="gS99y5a4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Deybqn/u0JV7iqQYKVUrpkV+y9JJeEkIA+dCsumRDOw=; b=gS99y5a4zz5O/PVtgb/0CjP34p
-	R+EcuyI8nY0hmqrCBULxO8H88o4NmeP4xin7y8Gp5dPng8NVeNW7BJJ9tKqRZvtzXQ6ILVzXcXSEk
-	Jig9+nsay5a3ZukfnSKN6LzJnmsyZ+juUylQBBj2QXzstdcXiqN1zr31Brk03r2MC2exk4TyTdzBE
-	i2+voXkE56R0q6II9W8pi9B+k0AJvf+qDc/fhKHMiHkCvO8BfNW9pqkfVPKd163wmEV4IYvmQSh0v
-	py5bTJ7AhbwlZ8wTlk/V789bbRZE66Bb76OPzq/3Amng1k3+MTCUqXas4ONZuuTNjemFMRA0JAoxB
-	mmf7n/uQ==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rV0cM-001pEy-15;
-	Wed, 31 Jan 2024 02:46:26 +0000
-Date: Wed, 31 Jan 2024 02:46:26 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] eventfs: clean up dentry ops and add revalidate
- function
-Message-ID: <20240131024626.GQ2087318@ZenIV>
-References: <20240130190355.11486-1-torvalds@linux-foundation.org>
- <20240130190355.11486-6-torvalds@linux-foundation.org>
- <20240131011246.GP2087318@ZenIV>
- <CAHk-=wie3VgLatmR4J_VpnyJR-qKppz=gnDfxEa9Gyy-7cH7HQ@mail.gmail.com>
+	s=arc-20240116; t=1706671657; c=relaxed/simple;
+	bh=fYqycNloGpwsMkxeexPEkQZeco4zUIcyy5vzedaRkTg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lVdvCLZ6af9MyoWc91Gy6DxPfE8ttE2IgWcBZEucSD24gxeZCxBzxLMPsCaU/0UYES7u0aBhmWjGgfWZL7E1O/qcW4MvZrJcSLboauh6vRlKf6hzFjr2/mOr3lPON5DEEmmLwCxT+KLUTkysVEof2ZW5gq2T3UKeyYPwN8xJsZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D55EDA7;
+	Tue, 30 Jan 2024 19:28:17 -0800 (PST)
+Received: from [10.163.41.195] (unknown [10.163.41.195])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9FBBE3F5A1;
+	Tue, 30 Jan 2024 19:27:21 -0800 (PST)
+Message-ID: <edab95e6-e09f-4aab-a506-4ea011b1372b@arm.com>
+Date: Wed, 31 Jan 2024 08:57:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wie3VgLatmR4J_VpnyJR-qKppz=gnDfxEa9Gyy-7cH7HQ@mail.gmail.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v3 04/35] mm: page_alloc: Partially revert "mm:
+ page_alloc: remove stale CMA guard code"
+Content-Language: en-US
+To: Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
+ maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
+ yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
+ mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+ vschneid@redhat.com, mhiramat@kernel.org, rppt@kernel.org, hughd@google.com,
+ pcc@google.com, steven.price@arm.com, vincenzo.frascino@arm.com,
+ david@redhat.com, eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20240125164256.4147-1-alexandru.elisei@arm.com>
+ <20240125164256.4147-5-alexandru.elisei@arm.com>
+ <966a1a84-76dc-40da-bde2-251d2a81ee31@arm.com> <ZbeQBDwe8zc_pLDZ@raptor>
+ <3983416f-b613-42c7-bb42-d3ab268ea1be@arm.com> <ZbjkFujWTs9zqkeD@raptor>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <ZbjkFujWTs9zqkeD@raptor>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 30, 2024 at 06:37:49PM -0800, Linus Torvalds wrote:
-> On Tue, 30 Jan 2024 at 17:12, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> > > + *
-> > > + * Note that d_revalidate is called potentially under RCU,
-> > > + * so it can't take the eventfs mutex etc. It's fine - if
-> > > + * we open a file just as it's marked dead, things will
-> > > + * still work just fine, and just see the old stale case.
-> >
-> > Looks like use after free, unless freeing ei is RCU-delayed...
+
+
+On 1/30/24 17:27, Alexandru Elisei wrote:
+> Hi,
 > 
-> We hold the ref to the ei in the very dentry that is doing d_revalidate().
+> On Tue, Jan 30, 2024 at 10:04:02AM +0530, Anshuman Khandual wrote:
+>>
+>>
+>> On 1/29/24 17:16, Alexandru Elisei wrote:
+>>> Hi,
+>>>
+>>> On Mon, Jan 29, 2024 at 02:31:23PM +0530, Anshuman Khandual wrote:
+>>>>
+>>>>
+>>>> On 1/25/24 22:12, Alexandru Elisei wrote:
+>>>>> The patch f945116e4e19 ("mm: page_alloc: remove stale CMA guard code")
+>>>>> removed the CMA filter when allocating from the MIGRATE_MOVABLE pcp list
+>>>>> because CMA is always allowed when __GFP_MOVABLE is set.
+>>>>>
+>>>>> With the introduction of the arch_alloc_cma() function, the above is not
+>>>>> true anymore, so bring back the filter.
+>>>>
+>>>> This makes sense as arch_alloc_cma() now might prevent ALLOC_CMA being
+>>>> assigned to alloc_flags in gfp_to_alloc_flags_cma().
+>>>
+>>> Can I add your Reviewed-by tag then?
+>>
+>> I think all these changes need to be reviewed in their entirety
+>> even though some patches do look good on their own. For example
+>> this patch depends on whether [PATCH 03/35] is acceptable or not.
+>>
+>> I would suggest separating out CMA patches which could be debated
+>> and merged regardless of this series.
+> 
+> Ah, I see, makes sense. Since basically all the core mm changes are there
+> to enable dynamic tag storage for arm64, I'll hold on until the series
+> stabilises before separating the core mm from the arm64 patches.
 
-What's to stop ->d_revalidate() from being called in parallel with
-__dentry_kill()?
+Fair enough but at least could you please separate out this particular
+patch right away and send across. 
+
+mm: cma: Don't append newline when generating CMA area name
