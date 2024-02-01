@@ -1,25 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E6E15D5C6;
-	Thu,  1 Feb 2024 16:15:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C7316088E;
+	Thu,  1 Feb 2024 16:16:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706804160; cv=none; b=MRLQzrjPKurUjPUEeMaiJnEsyCgxlfVDuQPQSVdprD2U2Lk9yDags+p2TVQ0iQPr2ttQ8yKkhQN8NFwp/udoteWCPLM6p4KCtDSX/2v8pFBN4YOloRdo45aFuzWMbw4IZwSemyR737TaYHcAa76y9JSXEhiUEmW55LkPCFhIZ4U=
+	t=1706804160; cv=none; b=SSXuekQKbGrDclHqfNoIbgg1x9Y421strppmFWGp+v5gmJ691cRU4aX+r8YrjuDFNoL709Ca9ZgywE5WVcDgEw+9Pz1+TR+eVNMOdXEqadRlw9OtuNvCT+27V4A5LBbo3WJ5f/9PNAbCh8uuz/Rvk3SR18hT8cf/DecSSH3fEdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706804160; c=relaxed/simple;
-	bh=DyCrvgsA9ba5cHK2UEU+zFvlGHeNhP1QegBE0CHgiGc=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=HJNs+fxcD7Bck9MyU1JHrMpckZAPCWCxsv2HRBYJ6cpARRLq1SclVSmDm8DxmQwu/qfCHQ3Awfuv/p6N/D1J29yB6fypWsOtzz/9h9Ak+Zl4ZUDeNrvzn+Nz3/BqKpB8AKkZmYLsONif/ZYxnZQwBOmgSBDuzqKPP/DhnwUIHXU=
+	bh=UgB47jemCzZI8cfp+JEFI8vC2gts63luDIkaSyClb+c=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=DXMu9nSOLUN9n5Wo+M2r5VeoMQZ5v3U5Dz+lnjpffIZ9EWmqAN01zTaGb/b1Qb4POx4Pzbz3lRPCp2v/l2YvXt6qiU1YCVuq1jTVg4tf95P45Tg2DS9+CX+vYN3IybNINWquD1mNIFBbY9mM5fw8RD+ltMiETl0/umGLHb6+dbM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C006DC433C7;
-	Thu,  1 Feb 2024 16:15:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 113EFC43394;
+	Thu,  1 Feb 2024 16:16:00 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rVZjc-00000005TiE-3Q98;
-	Thu, 01 Feb 2024 11:16:16 -0500
-Message-ID: <20240201153446.138990674@goodmis.org>
+	id 1rVZjd-00000005TjE-0cEI;
+	Thu, 01 Feb 2024 11:16:17 -0500
+Message-ID: <20240201161617.002321438@goodmis.org>
 User-Agent: quilt/0.67
-Date: Thu, 01 Feb 2024 10:34:46 -0500
+Date: Thu, 01 Feb 2024 10:34:48 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -31,53 +32,85 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Christian Brauner <brauner@kernel.org>,
  Al Viro <viro@ZenIV.linux.org.uk>,
  Ajay Kaher <ajay.kaher@broadcom.com>
-Subject: [PATCH 0/6] eventfs: More fixes and clean ups
+Subject: [PATCH 2/6] eventfs: Restructure eventfs_inode structure to be more condensed
+References: <20240201153446.138990674@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
-Al Viro reviewed the latest patch set from Linus and had some comments.
-One was on the return code of the eventfs_root_lookup() which I already
-sent a patch for:
-  https://lore.kernel.org/linux-trace-kernel/20240131233227.73db55e1@gandalf.local.home/
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-The other comments had to do with code that was there before Linus's
-updates. Those were:
+Some of the eventfs_inode structure has holes in it. Rework the structure
+to be a bit more condensed, and also remove the no longer used llist
+field.
 
- - It made no sense to have the fsnotify*() functions triggering
-   from file/directory creation in the lookup()
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/tracefs/internal.h | 27 ++++++++++++---------------
+ 1 file changed, 12 insertions(+), 15 deletions(-)
 
- - The directory inode count wasn't accurate. The updates to
-   the link nodes for the parent directory was also happening in
-   lookup. Al Viro told me to just set them all to 1, as that
-   tells user space not to trust the hard link counts.
+diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+index 1886f1826cd8..beb3dcd0e434 100644
+--- a/fs/tracefs/internal.h
++++ b/fs/tracefs/internal.h
+@@ -32,40 +32,37 @@ struct eventfs_attr {
+ /*
+  * struct eventfs_inode - hold the properties of the eventfs directories.
+  * @list:	link list into the parent directory
++ * @rcu:	Union with @list for freeing
++ * @children:	link list into the child eventfs_inode
+  * @entries:	the array of entries representing the files in the directory
+  * @name:	the name of the directory to create
+- * @children:	link list into the child eventfs_inode
+  * @events_dir: the dentry of the events directory
+  * @entry_attrs: Saved mode and ownership of the @d_children
+- * @attr:	Saved mode and ownership of eventfs_inode itself
+  * @data:	The private data to pass to the callbacks
++ * @attr:	Saved mode and ownership of eventfs_inode itself
+  * @is_freed:	Flag set if the eventfs is on its way to be freed
+  *                Note if is_freed is set, then dentry is corrupted.
++ * @is_events:	Flag set for only the top level "events" directory
+  * @nr_entries: The number of items in @entries
++ * @ino:	The saved inode number
+  */
+ struct eventfs_inode {
+-	struct kref			kref;
+-	struct list_head		list;
++	union {
++		struct list_head	list;
++		struct rcu_head		rcu;
++	};
++	struct list_head		children;
+ 	const struct eventfs_entry	*entries;
+ 	const char			*name;
+-	struct list_head		children;
+ 	struct dentry			*events_dir;
+ 	struct eventfs_attr		*entry_attrs;
+-	struct eventfs_attr		attr;
+ 	void				*data;
++	struct eventfs_attr		attr;
++	struct kref			kref;
+ 	unsigned int			is_freed:1;
+ 	unsigned int			is_events:1;
+ 	unsigned int			nr_entries:30;
+ 	unsigned int			ino;
+-	/*
+-	 * Union - used for deletion
+-	 * @llist:	for calling dput() if needed after RCU
+-	 * @rcu:	eventfs_inode to delete in RCU
+-	 */
+-	union {
+-		struct llist_node	llist;
+-		struct rcu_head		rcu;
+-	};
+ };
+ 
+ static inline struct tracefs_inode *get_tracefs(const struct inode *inode)
+-- 
+2.43.0
 
-I added a WARN_ON_ONCE() in case of the eventfs_inode being freed without
-is_freed being set.
 
-I restructured the eventfs_inode structure to be a bit more compact.
-
-The last two changes I included here but do not plan on pushing for
-v6.8.  Those are:
-
- - Adding WARN_ON_ONCE() to the conditionals that Al asked about
-   as the logic should prevent them from being true.
-
- - Moving the dentry pointer out of eventfs_inode and creating a new
-   eventfs_root_inode that contains the eventfs_inode and the dentry
-   pointer. This only gets used by the "events" directory.
-
-Steven Rostedt (Google) (6):
-      eventfs: Warn if an eventfs_inode is freed without is_freed being set
-      eventfs: Restructure eventfs_inode structure to be more condensed
-      eventfs: Remove fsnotify*() functions from lookup()
-      eventfs: Keep all directory links at 1
-      eventfs: Add WARN_ON_ONCE() to checks in eventfs_root_lookup()
-      eventfs: Create eventfs_root_inode to store dentry
-
-----
- fs/tracefs/event_inode.c | 104 +++++++++++++++++++++++++++++++++++++----------
- fs/tracefs/internal.h    |  29 ++++++-------
- 2 files changed, 94 insertions(+), 39 deletions(-)
