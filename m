@@ -1,156 +1,97 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A11031586D3;
-	Thu,  1 Feb 2024 08:12:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B49015957F;
+	Thu,  1 Feb 2024 08:26:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706775151; cv=none; b=e+tEzq9r2Q9+kbbb16auwBc1G1Dqi2dN4UteYbKU3Lzpz96Q+m6n8uf4ZLYYx5F2ALu+pJy3xPgBvh9cyuqbGeeutUh2jdi7LeX7Tk/UHmSKqJLemsynX4PnMjpLw4kpy6w1ElHOEyc7dF91/A65FYp/w1WIfOlgBQRuZiW+vo4=
+	t=1706775985; cv=none; b=uZxfYGWdvBu3bzBD0xW656/U6XJnyec7zD9kzAHsQBwz2tEvgsgFxnGMqGqHPX95yh6U1NP2NfSXk4eTheiwBXpr0UdbkT4PtXwT0nU7eaNhxrNaN7MYCZzOd6ulAa+6uG8B3hfPzOwYZnI90AJDXjgzynt3AgKXq+ihnbkZ7Dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706775151; c=relaxed/simple;
-	bh=XWgkDI5LEjWrVN67JCy6YWdGvZ06tRRPL0Okk7aKAww=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gcLyjfYzqndazkpj8lafKfk/Dn9ulQQR3dSFd5n1Aev8tbRQ11nstL/5rQGHTW79DbUFW/7G/kAnGsPpZTrCH5LjyfPl0a5lU3KocrkU4XmmCrjCO4O4GBCX3S3zNhSKKU9LVz5jTDTbvoA66x7yQhH4j6g7TB4OWnP3JoSjfew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F301DA7;
-	Thu,  1 Feb 2024 00:13:05 -0800 (PST)
-Received: from [10.162.42.11] (a077893.blr.arm.com [10.162.42.11])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8267D3F738;
-	Thu,  1 Feb 2024 00:12:11 -0800 (PST)
-Message-ID: <599769c3-0aef-4c5b-ac98-f109649862f7@arm.com>
-Date: Thu, 1 Feb 2024 13:42:08 +0530
+	s=arc-20240116; t=1706775985; c=relaxed/simple;
+	bh=knJJzWChot6X2VFh0WEfUeOlcQaLFTlFMogt5kBThYc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OcidzaC6Wc5sTb0NSJ9MxM96IH75tZEZ8yIhzBsIRNluDUGF/xWkuW2pU7bl6m1XvUFhPImM3Jyk1Vo9WV8hkTckCG/OG4SC24/C3Nh8QAlfy3RttwDoYOYDMF6Z0caQ5Rofa05VqyhjGwHBCHtqIw1AhHmecHUj3XpxxSAYK5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=izkQ1vgd; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="izkQ1vgd"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a28a6cef709so85899666b.1;
+        Thu, 01 Feb 2024 00:26:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706775982; x=1707380782; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wknF7XfhG8tU0qg5dVgdBNdPsQJNDA0DXfRviA7Oev0=;
+        b=izkQ1vgdlJblx9CBD05gcWTAW9RFD0oNeZAtA7ih3akowI1EQbYvbloAXCM/JNv9hl
+         HGY3uqgOeGe5Vi28Kd1Fwfwr1Wzm4pZbju1Tr+PU1Rr01qn2zCL3csOnc4dDx0Qr78bG
+         mf5xyzSoF9UqOxiZWfOeRK76XW9GTbPzSP2nYKQ4ei8quHvxtj/Cb7NWgXso/m6QGkm5
+         1JgxOpRy5rFps635s1W1xYN5uolNx75bo6qVWgVDnnFzmu93D/iklVdiZSc+3u/2gF5F
+         q9ik3klixMgNJv57iftEX9CPkl4oayZ7ZkwEGzIU6iPx7GUQe1mYiyhcZeaP9NLN8+Kw
+         hmNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706775982; x=1707380782;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wknF7XfhG8tU0qg5dVgdBNdPsQJNDA0DXfRviA7Oev0=;
+        b=oTjj/osuYaEVQxneX7ROmZBFbWF2HiRjapUQARaRAJ04+CrpVrk0ERql09r1QBaUmf
+         1xlIjhOKmycObagBLkm5Ph9ZKBsGfzYdd+G50BT971TfejQcwGmYfuIvCYv4ICpzNYRe
+         Bi6mIVOoITY88oP38M3sw9XzZNiDyd7H1mxNEiDy5bPPHe0b+OvLnN+TfekL5U+1gB/M
+         sm/5iA+aO2qhLyMO9cjrmP3mKDOIinjtIi3WaarCVgKn+gnl4oIw48ae7eB7SWgxz+Fd
+         RUPUuev68YmmySa/V6FeJf3HqxdJzotvbJf6FLtNTPhe/Kbip26GIKPpPYQNT9S+IU2O
+         PRDA==
+X-Gm-Message-State: AOJu0YzDfzTnncVmTRN4pA0B0k+GuXB3Q8Dpq4dIHjtisQp5MZg4UGLp
+	5sz8HKIWFgv/wDJqj9HIbGhy1xP3jiqxwE+19v2thM8xRI+R0SrT
+X-Google-Smtp-Source: AGHT+IEh3MZ9iHUhPviRYTlqzQo6tIbLK5NyJ10RL3fuXuHdtpdrprze52LPElRCtt+oo3YbL/CGIg==
+X-Received: by 2002:a17:906:278c:b0:a35:d914:c33e with SMTP id j12-20020a170906278c00b00a35d914c33emr2652050ejc.52.1706775981529;
+        Thu, 01 Feb 2024 00:26:21 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCXmnA3fbWCQG3HQHXGYZ9KzJdOqAkX/clkebtqocjZDoKxNhiPpEHbdbtRjfriOSgP9godqO6S45NtH+l3zqP7g7P6xM3jjBhYG0AulYL1U+WVH2t8RSrb5BrzTyEZ/En8Ha+3tOOLIgrqq+gnmmGtOutDWFhtQZEmFvgxLvuaE45cJITCHLp8p6HW7ER6zN2kZjrXwusdY+iqSgeb0rq+HoiRje7m/NOZLMsJ+z/5TrSlRJEqINveAx1ErRkFFiR1T3ExOJEH4tDlXB8tKSsE/WEikRpWAgQE=
+Received: from localhost.localdomain ([213.55.221.11])
+        by smtp.gmail.com with ESMTPSA id pk27-20020a170906d7bb00b00a35242f5976sm6171849ejb.164.2024.02.01.00.26.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Feb 2024 00:26:20 -0800 (PST)
+From: Ali Zahraee <ahzahraee@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	shuah@kernel.org
+Cc: Ali Zahraee <ahzahraee@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH] selftests: ftrace: fix typo in test report
+Date: Thu,  1 Feb 2024 09:25:57 +0100
+Message-Id: <20240201082557.15965-1-ahzahraee@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v3 31/35] khugepaged: arm64: Don't collapse MTE
- enabled VMAs
-Content-Language: en-US
-To: Alexandru Elisei <alexandru.elisei@arm.com>, catalin.marinas@arm.com,
- will@kernel.org, oliver.upton@linux.dev, maz@kernel.org,
- james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
- arnd@arndb.de, akpm@linux-foundation.org, mingo@redhat.com,
- peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
- mhiramat@kernel.org, rppt@kernel.org, hughd@google.com
-Cc: pcc@google.com, steven.price@arm.com, vincenzo.frascino@arm.com,
- david@redhat.com, eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org
-References: <20240125164256.4147-1-alexandru.elisei@arm.com>
- <20240125164256.4147-32-alexandru.elisei@arm.com>
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20240125164256.4147-32-alexandru.elisei@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+This is just another trivial typo fix. The typo shows up in the final
+report after tests are done.
 
+Signed-off-by: Ali Zahraee <ahzahraee@gmail.com>
+---
+ tools/testing/selftests/ftrace/ftracetest | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 1/25/24 22:12, Alexandru Elisei wrote:
-> copy_user_highpage() will do memory allocation if there are saved tags for
-> the destination page, and the page is missing tag storage.
-> 
-> After commit a349d72fd9ef ("mm/pgtable: add rcu_read_lock() and
-> rcu_read_unlock()s"), collapse_huge_page() calls
-> __collapse_huge_page_copy() -> .. -> copy_user_highpage() with the RCU lock
-> held, which means that copy_user_highpage() can only allocate memory using
-> GFP_ATOMIC or equivalent.
-> 
-> Get around this by refusing to collapse pages into a transparent huge page
-> if the VMA is MTE-enabled.
+diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
+index c778d4dcc17e..25d4e0fca385 100755
+--- a/tools/testing/selftests/ftrace/ftracetest
++++ b/tools/testing/selftests/ftrace/ftracetest
+@@ -504,7 +504,7 @@ prlog "# of undefined(test bug): " `echo $UNDEFINED_CASES | wc -w`
+ if [ "$KTAP" = "1" ]; then
+   echo -n "# Totals:"
+   echo -n " pass:"`echo $PASSED_CASES | wc -w`
+-  echo -n " faii:"`echo $FAILED_CASES | wc -w`
++  echo -n " fail:"`echo $FAILED_CASES | wc -w`
+   echo -n " xfail:"`echo $XFAILED_CASES | wc -w`
+   echo -n " xpass:0"
+   echo -n " skip:"`echo $UNTESTED_CASES $UNSUPPORTED_CASES | wc -w`
+-- 
+2.34.1
 
-Makes sense when copy_user_highpage() will allocate memory for tag storage.
-
-> 
-> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
-> ---
-> 
-> Changes since rfc v2:
-> 
-> * New patch. I think an agreement on whether copy*_user_highpage() should be
-> always allowed to sleep, or should not be allowed, would be useful.
-
-This is a good question ! Even after preventing the collapse of MTE VMA here,
-there still might be more paths where a sleeping (i.e memory allocating)
-copy*_user_highpage() becomes problematic ?
-
-> 
->  arch/arm64/include/asm/pgtable.h    | 3 +++
->  arch/arm64/kernel/mte_tag_storage.c | 5 +++++
->  include/linux/khugepaged.h          | 5 +++++
->  mm/khugepaged.c                     | 4 ++++
->  4 files changed, 17 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-> index 87ae59436162..d0473538c926 100644
-> --- a/arch/arm64/include/asm/pgtable.h
-> +++ b/arch/arm64/include/asm/pgtable.h
-> @@ -1120,6 +1120,9 @@ static inline bool arch_alloc_cma(gfp_t gfp_mask)
->  	return true;
->  }
->  
-> +bool arch_hugepage_vma_revalidate(struct vm_area_struct *vma, unsigned long address);
-> +#define arch_hugepage_vma_revalidate arch_hugepage_vma_revalidate
-> +
->  #endif /* CONFIG_ARM64_MTE_TAG_STORAGE */
->  #endif /* CONFIG_ARM64_MTE */
->  
-> diff --git a/arch/arm64/kernel/mte_tag_storage.c b/arch/arm64/kernel/mte_tag_storage.c
-> index ac7b9c9c585c..a99959b70573 100644
-> --- a/arch/arm64/kernel/mte_tag_storage.c
-> +++ b/arch/arm64/kernel/mte_tag_storage.c
-> @@ -636,3 +636,8 @@ void arch_alloc_page(struct page *page, int order, gfp_t gfp)
->  	if (tag_storage_enabled() && alloc_requires_tag_storage(gfp))
->  		reserve_tag_storage(page, order, gfp);
->  }
-> +
-> +bool arch_hugepage_vma_revalidate(struct vm_area_struct *vma, unsigned long address)
-> +{
-> +	return !(vma->vm_flags & VM_MTE);
-> +}
-> diff --git a/include/linux/khugepaged.h b/include/linux/khugepaged.h
-> index f68865e19b0b..461e4322dff2 100644
-> --- a/include/linux/khugepaged.h
-> +++ b/include/linux/khugepaged.h
-> @@ -38,6 +38,11 @@ static inline void khugepaged_exit(struct mm_struct *mm)
->  	if (test_bit(MMF_VM_HUGEPAGE, &mm->flags))
->  		__khugepaged_exit(mm);
->  }
-> +
-> +#ifndef arch_hugepage_vma_revalidate
-> +#define arch_hugepage_vma_revalidate(vma, address) 1
-
-Please replace s/1/true as arch_hugepage_vma_revalidate() returns bool ?
-
-> +#endif
-
-Right, above construct is much better than __HAVE_ARCH_XXXX based one.
-
-> +
->  #else /* CONFIG_TRANSPARENT_HUGEPAGE */
->  static inline void khugepaged_fork(struct mm_struct *mm, struct mm_struct *oldmm)
->  {
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 2b219acb528e..cb9a9ddb4d86 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -935,6 +935,10 @@ static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
->  	 */
->  	if (expect_anon && (!(*vmap)->anon_vma || !vma_is_anonymous(*vmap)))
->  		return SCAN_PAGE_ANON;
-> +
-> +	if (!arch_hugepage_vma_revalidate(vma, address))
-> +		return SCAN_VMA_CHECK;
-> +
->  	return SCAN_SUCCEED;
->  }
->  
-
-Otherwise this LGTM.
