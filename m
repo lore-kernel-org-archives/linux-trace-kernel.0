@@ -1,69 +1,112 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A23423A8C5;
-	Thu,  1 Feb 2024 03:30:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27713A8EC;
+	Thu,  1 Feb 2024 04:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706758241; cv=none; b=hcYvPoR8W/2uCg5nc9z9glehCFcB7hL9dfV91r7N/jk36t2iDqYBb9Aiw6311tHYJ1g7psv0EX6dbjSbINqhiNwxgNQhNX8ZUHkkT1dktNcN4gACkQxM0YYtlwmQs6hBpzRpZkDOJRTsEQkGv7DNzIPpOmuViUSmdRKwqQntFww=
+	t=1706761066; cv=none; b=HhJd38RwV9F7XqICyqm5Zya6AW2XKDWDcxK+hYlqL+1bSHCGAuCtXz8NYsGxKakfmDFiV6sS3PLLH4FdYNxijVxiJ4Ezsr+F62pZDDITJd6I0aRIFWXGlLP9EMQF2zIkfG3uZxE0dY+Q/YqF4UrShNUoAXjzDt3kiwzfw6+cs7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706758241; c=relaxed/simple;
-	bh=0U0DRnxOD6IVrdCQPmo32znrfxpOuyUvuYMn1ho150w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AaU7UBeSPkm44jP2ZtQEVGGnbP0izIzyynUNf9/F/ulAMjwZtz2pXX5F2Z421wb4pV7gzH9KaGoqDUZswXuEXTNzjuyVQTeSVIPLW7fpdW7iuP7GDv0Ir8ARsg5p1rUq+j+c8b+zL1JuNpg3KYGrG+NZSkeqdZNeS45+jXdD44I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4B63DA7;
-	Wed, 31 Jan 2024 19:31:21 -0800 (PST)
-Received: from [10.162.42.11] (a077893.blr.arm.com [10.162.42.11])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DADF33F738;
-	Wed, 31 Jan 2024 19:30:26 -0800 (PST)
-Message-ID: <08a4971e-c31d-46f7-afbc-7404bd9a293f@arm.com>
-Date: Thu, 1 Feb 2024 09:00:23 +0530
+	s=arc-20240116; t=1706761066; c=relaxed/simple;
+	bh=1jz/F0H9uzx4iimjF6QGPOPc8awhpHtiBXKNQWRuH20=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aw8naRszGXs1c3G6fXo06zUkWhFtqA28V9nl7Fofnjpb6s7MVKxNXX0kHUZx2ZREAGzpn7gX5knnI5HR6yf6/5OMMF4DRpNhJ+K7U4Whi8As/6GHB4aQoLA68uDvIZ+fwDoE93ltTUr98sTqZFGntiNd3Bh7/MigqWekf/eBQUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0FAAC433F1;
+	Thu,  1 Feb 2024 04:17:44 +0000 (UTC)
+Date: Wed, 31 Jan 2024 23:18:00 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, Linus Torvalds
+ <torvalds@linux-foundation.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Christian Brauner <brauner@kernel.org>,
+ Ajay Kaher <ajay.kaher@broadcom.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Subject: Re: [PATCH v2 4/7] tracefs: dentry lookup crapectomy
+Message-ID: <20240131231800.35e3e715@gandalf.local.home>
+In-Reply-To: <20240131222127.15b2731b@gandalf.local.home>
+References: <20240131184918.945345370@goodmis.org>
+	<20240131185512.799813912@goodmis.org>
+	<20240201002719.GS2087318@ZenIV>
+	<20240131212642.2e384250@gandalf.local.home>
+	<20240201030205.GT2087318@ZenIV>
+	<20240131222127.15b2731b@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v3 12/35] mm: Call arch_swap_prepare_to_restore()
- before arch_swap_restore()
-Content-Language: en-US
-To: Alexandru Elisei <alexandru.elisei@arm.com>, catalin.marinas@arm.com,
- will@kernel.org, oliver.upton@linux.dev, maz@kernel.org,
- james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
- arnd@arndb.de, akpm@linux-foundation.org, mingo@redhat.com,
- peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
- mhiramat@kernel.org, rppt@kernel.org, hughd@google.com
-Cc: pcc@google.com, steven.price@arm.com, vincenzo.frascino@arm.com,
- david@redhat.com, eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org
-References: <20240125164256.4147-1-alexandru.elisei@arm.com>
- <20240125164256.4147-13-alexandru.elisei@arm.com>
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20240125164256.4147-13-alexandru.elisei@arm.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Wed, 31 Jan 2024 22:21:27 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-
-On 1/25/24 22:12, Alexandru Elisei wrote:
-> arm64 uses arch_swap_restore() to restore saved tags before the page is
-> swapped in and it's called in atomic context (with the ptl lock held).
+> We (Linus and I) got it wrong. It originally had:
 > 
-> Introduce arch_swap_prepare_to_restore() that will allow an architecture to
-> perform extra work during swap in and outside of a critical section.
-> This will be used by arm64 to allocate a buffer in memory where to
-> temporarily save tags if tag storage is not available for the page being
-> swapped in.
+> 	d_add(dentry, NULL);
+> 	[..]
+> 	return NULL;
 
-Just wondering if tag storage will always be unavailable for tagged pages
-being swapped in ? OR there are cases where allocation might not even be
-required ? This prepare phase needs to be outside the critical section -
-only because there might be memory allocations ?
+OK, so I changed that function to this:
+
+static struct dentry *eventfs_root_lookup(struct inode *dir,
+					  struct dentry *dentry,
+					  unsigned int flags)
+{
+	struct eventfs_inode *ei_child;
+	struct tracefs_inode *ti;
+	struct eventfs_inode *ei;
+	const char *name = dentry->d_name.name;
+
+	ti = get_tracefs(dir);
+	if (!(ti->flags & TRACEFS_EVENT_INODE))
+		return ERR_PTR(-EIO);
+
+	mutex_lock(&eventfs_mutex);
+
+	ei = ti->private;
+	if (!ei || ei->is_freed)
+		goto out;
+
+	list_for_each_entry(ei_child, &ei->children, list) {
+		if (strcmp(ei_child->name, name) != 0)
+			continue;
+		if (ei_child->is_freed)
+			goto out;
+		lookup_dir_entry(dentry, ei, ei_child);
+		goto out;
+	}
+
+	for (int i = 0; i < ei->nr_entries; i++) {
+		void *data;
+		umode_t mode;
+		const struct file_operations *fops;
+		const struct eventfs_entry *entry = &ei->entries[i];
+
+		if (strcmp(name, entry->name) != 0)
+			continue;
+
+		data = ei->data;
+		if (entry->callback(name, &mode, &data, &fops) <= 0)
+			goto out;
+
+		lookup_file_dentry(dentry, ei, i, mode, data, fops);
+		goto out;
+	}
+ out:
+	mutex_unlock(&eventfs_mutex);
+	return NULL;
+}
+
+And it passes the make kprobe test. I'll send out a v3 of this patch, and
+remove the inc_nlink(dentry->d_parent->d_inode) and the fsnotify as
+separate patches as that code was there before Linus touched it.
+
+Thanks,
+
+-- Steve
