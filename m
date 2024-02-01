@@ -1,119 +1,56 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2F962166;
-	Thu,  1 Feb 2024 15:27:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C075F494;
+	Thu,  1 Feb 2024 15:44:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706801246; cv=none; b=IPxDOGoztjPqLAgrkcblUUOMnE0MSTkn5J6+ddIRdCDnWSZb6qbzdtqLU46Tbdz2jq79SPwaINXoZbAgK3Qcfruhdgb8L2He0o1fukPmfeXNL2FfvI6hEBGQGWmblo5agHUDl911ab40r/GQNXTu2hlZJypnsJttO/61ynj9u6E=
+	t=1706802273; cv=none; b=NYh6TsMC1C28BneU66NhuegR2+qMmXlTyN8DmKWKD8LJ8Phfer22nuU0FnJNX+Bw4EwjuSly5egkWRqn/goGfIsFFjHaVmvNdfZafuEiMRLLb6YrlUZJy9Okxfniz4wQbiu3QYkYn0f9o2fTWAZ7o+nqlfZcsAI0z3EmC/DPoVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706801246; c=relaxed/simple;
-	bh=J4oACJ7K02dl5yARmR3wThXfdDqsUmklZwHWhRZPSAQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=to88ZmmDc6xUPHZuKpKaEYx7IknfqCwKpa8nENhESH4PVhg63EEFpx6ZPmouECITU2pNg5vemj6JY5MnBX1uMOKBAqHd5jk7FAEcumxsiimxgekosyGhHTu+XiXprWWHHWlkJAP0sTvTIx7n96Mbjo+oEh5bcEUFMz0+N3XsEEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UysrzrXq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706802273; c=relaxed/simple;
+	bh=cFF+cZZhYXujuj65xq6IcWbd/D/Sk1miTqOWKe1WC0I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VDEri6hGzaQNtoV6kdy4BZW1uLQiyltd5isHBVjMObSzNKJLaA+r/647AbUW4ohK+FoaYikbxhnqt6XeN7WX3z+xYSSQDoAj9C1VPB7KaY57R07sB/Xjka6lHhHmipsqR/wfBlFzStR4N8ZzzaSAdB8dB6brQvMZUPbmRcwwEmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=mZeVk456; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UysrzrXq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFDE5C433C7;
-	Thu,  1 Feb 2024 15:27:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706801246;
-	bh=J4oACJ7K02dl5yARmR3wThXfdDqsUmklZwHWhRZPSAQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UysrzrXqbkN/eYckVeuBK8QLFf3oKCyaE5jk5aKqffI5wKVIHHGZYq7HdvPfkt9HP
-	 TrHxL8Q7SmNs8sVFV8HmLJVGfHgE0G4E1mpRc6GWGveRktupuD4fUAl0jo+VrH36Wn
-	 uD6vNQ/BzHFBwz31OKvv7SbNgL+j8DKLYAfOahQ4FsZh6TmWa9xixHW1lEaQdlmmuL
-	 yvRqCWTymTvXjQB6Q42UCQ1Y4MKMscptPFzyDiNM7htsgKKimeG1u5IaeQ9Sa2ZKrB
-	 kzcUKuqq4a3Y1r0Nr/rx3fSPtIL4WH30ScoiXxxXfLaubFQht9JU/4RI5S6w+uS6HH
-	 Q8ulzLDRWjDSQ==
-Message-ID: <88ffd0ec-ef43-4b26-9314-207606291af3@kernel.org>
-Date: Thu, 1 Feb 2024 16:27:22 +0100
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="mZeVk456"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5007EC433F1;
+	Thu,  1 Feb 2024 15:44:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1706802272;
+	bh=cFF+cZZhYXujuj65xq6IcWbd/D/Sk1miTqOWKe1WC0I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mZeVk456WY4ZB6GKYrS3EUkJLgEevilMSVtyEsxmfk2o7uDku7H2+7jEUBUMQvtV7
+	 toSu0B0VREbRzofoAPJ+3MYbn7rPZmua1gD8L2oDmhGDJNTq2fN9a4XbIQfM4N+kCH
+	 5DdwCTalYRIPKw/Fen0kviDGTw7YN+Z+HV0LmVhU=
+Date: Thu, 1 Feb 2024 07:44:31 -0800
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Daniel Bristot de Oliveira <bristot@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] tracing/timerlat: Move hrtimer_init to timerlat_fd open()
+Message-ID: <2024020109-duffel-finally-4f0b@gregkh>
+References: <7324dd3fc0035658c99b825204a66049389c56e3.1706798888.git.bristot@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing/timerlat: Move hrtimer_init to timerlat_fd open()
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <7324dd3fc0035658c99b825204a66049389c56e3.1706798888.git.bristot@kernel.org>
- <20240201102526.755de868@gandalf.local.home>
-Content-Language: en-US, pt-BR, it-IT
-From: Daniel Bristot de Oliveira <bristot@kernel.org>
-In-Reply-To: <20240201102526.755de868@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7324dd3fc0035658c99b825204a66049389c56e3.1706798888.git.bristot@kernel.org>
 
-On 2/1/24 16:25, Steven Rostedt wrote:
-> On Thu,  1 Feb 2024 16:13:39 +0100
-> Daniel Bristot de Oliveira <bristot@kernel.org> wrote:
-> 
->> Currently, the timerlat's hrtimer is initialized at the first read of
->> timerlat_fd, and destroyed at close(). It works, but it causes an error
->> if the user program open() and close() the file without reading.
->>
->> Move hrtimer_init to timerlat_fd open() to avoid this problem.
->>
->> No functional changes.
-> 
-> It can't be fixing something and not have any functional changes.
-> 
-> No functional changes means the code is restructured but the resulting
-> assembly would be the same.
-> 
-> Like moving functions around in a file so that you don't need extra
-> prototype declarations.
-> 
-> Please only add "No functional changes" if the function's assembly would be
-> the same.
+On Thu, Feb 01, 2024 at 04:13:39PM +0100, Daniel Bristot de Oliveira wrote:
+> Currently, the timerlat's hrtimer is initialized at the first read of
+> timerlat_fd, and destroyed at close(). It works, but it causes an error
+> if the user program open() and close() the file without reading.
 
-ok
+What error exactly happens?  Userspace, or the kernel crashes?
 
->>
->> Fixes: e88ed227f639 ("tracing/timerlat: Add user-space interface")
-> 
-> With a fixes tag, I'm assuming his should go into v6.8 with a Cc stable?
+thanks,
 
-right, I added it on Cc, but did not include the Cc:.. tag. It seems that I should have.
-
--- Daniel
-
-> -- Steve
-> 
-> 
->> Signed-off-by: Daniel Bristot de Oliveira <bristot@kernel.org>
->> ---
->>  kernel/trace/trace_osnoise.c | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
->> index bd0d01d00fb9..a8e28f9b9271 100644
->> --- a/kernel/trace/trace_osnoise.c
->> +++ b/kernel/trace/trace_osnoise.c
->> @@ -2444,6 +2444,9 @@ static int timerlat_fd_open(struct inode *inode, struct file *file)
->>  	tlat = this_cpu_tmr_var();
->>  	tlat->count = 0;
->>  
->> +	hrtimer_init(&tlat->timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
->> +	tlat->timer.function = timerlat_irq;
->> +
->>  	migrate_enable();
->>  	return 0;
->>  };
->> @@ -2526,9 +2529,6 @@ timerlat_fd_read(struct file *file, char __user *ubuf, size_t count,
->>  		tlat->tracing_thread = false;
->>  		tlat->kthread = current;
->>  
->> -		hrtimer_init(&tlat->timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_PINNED_HARD);
->> -		tlat->timer.function = timerlat_irq;
->> -
->>  		/* Annotate now to drift new period */
->>  		tlat->abs_period = hrtimer_cb_get_time(&tlat->timer);
->>  
-> 
-
+greg k-h
