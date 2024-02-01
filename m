@@ -1,105 +1,156 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BACA6519D
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  1 Feb 2024 06:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A11031586D3;
+	Thu,  1 Feb 2024 08:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706768710; cv=none; b=qcyNyuudgD2jf3Pwiwm3hwvX+YlGKxV/je98fXVtC6u1dXgdRFL0EstTUiWCrg2T1b/ttg6KtbWR9qMXxKaKBI8qId1MtcgRBiHtyrhZGGjNIBFe/7SLVEa3LFsF0PIAs5CXAp2BIO5LTw7NvLGbQ2bCWRpcTYSEE6dJnGXotsY=
+	t=1706775151; cv=none; b=e+tEzq9r2Q9+kbbb16auwBc1G1Dqi2dN4UteYbKU3Lzpz96Q+m6n8uf4ZLYYx5F2ALu+pJy3xPgBvh9cyuqbGeeutUh2jdi7LeX7Tk/UHmSKqJLemsynX4PnMjpLw4kpy6w1ElHOEyc7dF91/A65FYp/w1WIfOlgBQRuZiW+vo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706768710; c=relaxed/simple;
-	bh=QQsWlat4W0oQ99+TRdtWlxr0YYMOd3RT0qj35+Vk0vk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nHy0hCCXNgE72AClkMkDsHmYUhwAWpEZDhWoPyMOayZgXwTzNIka6Zp2yLv370d3qAzNX+iJDaqJ76N9+hNU5AOhM+gYz8TmNbZhqZ6LLJzjLT4jnLp+LBi9MjywB6cGOR+mVQrzTrSpV3Bvzyn4rVXsmpmRK0ED7NMzViFV8EQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=bc6mFKSG; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="bc6mFKSG"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d7431e702dso5258615ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 31 Jan 2024 22:25:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1706768708; x=1707373508; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QHCM+0rvEETJ9CJL1wFjZvpRuOOW0WTxWE1cNekkKMM=;
-        b=bc6mFKSG6nyWsei/H2OxxRsmP7u3KyWlFDiemTIscxktYBODdG+N732b3aug9Nv7Mb
-         bbf5I9ss91/2klPrTi8qpnmmfe5qeimF0Pnw0nvwnFfM7WsheXcrlh5kudH2+713x4GM
-         7BMiMZTs8aV3oHlX/8yQuJT+YPRbsNoApTWbQv5QOr3XIhujZgFpD96sRAs0UZaZNmuf
-         W3CfITVxOSwIUGCCgtKHbD7KX620FMC3RydS6F8Z3WZoYlX/FHU/WgOS03mpYdbW2kc/
-         l9iQCR60ZxVLpVZ/mxpZyij7XZwFjnTBejk5VkCdTMrI8CDVVW4lJICGpGnrjaeGHDjJ
-         Gwqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706768708; x=1707373508;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QHCM+0rvEETJ9CJL1wFjZvpRuOOW0WTxWE1cNekkKMM=;
-        b=w3Ilb7lPZxX5yEOQCHf6AVa5/FCYGEwH3Zx/2yIosMOtjOoXtkHQY1Of7v6cd1W32p
-         m7GZwNtxT6J27Ebiu/RETq4UKD2cS7dlHhl+RCeZ/ew60u3XASnmMkso7hXD0bAjQlpY
-         pPwYjGwUF6tpo0QNlTWIk/6fLegCaRGGaP05XTl+pXEAEgQwFstjWQNdFChpz98Xi7GH
-         VwU21WV9dkSUa+YZc6qmENfZNpFu1zkfw/tIBYAZr/8NxmyNP/pOYdaUVRGO42Fe554d
-         2rk9rk2IxFnEmP6A4WkAeBSPMwOz94MU0niEYyl6Hb/GUfWLULFNSC7zQ/tuLH9hooxG
-         91xQ==
-X-Gm-Message-State: AOJu0YyUkdNVBD9EycHsTNday9I9hEnWtjGNTKVrdHxJ7i7e9xGAJ2De
-	R72rnTSu1uzuanbLvoGBi7j2/IBcHkaAf12AXjWs0I588pXg8axQ/tGpmFCOEDI=
-X-Google-Smtp-Source: AGHT+IFeefl1HF92/NbgbkhKS2PZbb2MAB98+uri4rs9WyF1nF8da3fBdsnFulUg2Xl+nE4otWRCuw==
-X-Received: by 2002:a17:902:7844:b0:1d9:542c:ec01 with SMTP id e4-20020a170902784400b001d9542cec01mr401620pln.12.1706768708377;
-        Wed, 31 Jan 2024 22:25:08 -0800 (PST)
-Received: from archlinux.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
-        by smtp.gmail.com with ESMTPSA id d12-20020a170902cecc00b001d92db44c9bsm2346896plg.17.2024.01.31.22.25.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Jan 2024 22:25:07 -0800 (PST)
-From: Andy Chiu <andy.chiu@sifive.com>
-To: rostedt@goodmis.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: bristot@kernel.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	Andy Chiu <andy.chiu@sifive.com>
-Subject: [v1] trace/hwlat: stop worker if !is_percpu_thread due to hotplug event
-Date: Thu,  1 Feb 2024 14:24:55 +0800
-Message-ID: <20240201062455.3154803-1-andy.chiu@sifive.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1706775151; c=relaxed/simple;
+	bh=XWgkDI5LEjWrVN67JCy6YWdGvZ06tRRPL0Okk7aKAww=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gcLyjfYzqndazkpj8lafKfk/Dn9ulQQR3dSFd5n1Aev8tbRQ11nstL/5rQGHTW79DbUFW/7G/kAnGsPpZTrCH5LjyfPl0a5lU3KocrkU4XmmCrjCO4O4GBCX3S3zNhSKKU9LVz5jTDTbvoA66x7yQhH4j6g7TB4OWnP3JoSjfew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F301DA7;
+	Thu,  1 Feb 2024 00:13:05 -0800 (PST)
+Received: from [10.162.42.11] (a077893.blr.arm.com [10.162.42.11])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8267D3F738;
+	Thu,  1 Feb 2024 00:12:11 -0800 (PST)
+Message-ID: <599769c3-0aef-4c5b-ac98-f109649862f7@arm.com>
+Date: Thu, 1 Feb 2024 13:42:08 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v3 31/35] khugepaged: arm64: Don't collapse MTE
+ enabled VMAs
+Content-Language: en-US
+To: Alexandru Elisei <alexandru.elisei@arm.com>, catalin.marinas@arm.com,
+ will@kernel.org, oliver.upton@linux.dev, maz@kernel.org,
+ james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
+ arnd@arndb.de, akpm@linux-foundation.org, mingo@redhat.com,
+ peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+ mhiramat@kernel.org, rppt@kernel.org, hughd@google.com
+Cc: pcc@google.com, steven.price@arm.com, vincenzo.frascino@arm.com,
+ david@redhat.com, eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20240125164256.4147-1-alexandru.elisei@arm.com>
+ <20240125164256.4147-32-alexandru.elisei@arm.com>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20240125164256.4147-32-alexandru.elisei@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-If the task happens to run after cpu hot-plug offline, then it would not
-be running in a percpu_thread. Instead, it would be re-queued into a
-UNBOUND workqueue. This would trigger a warning if we enable kernel
-preemption.
 
-Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
----
- kernel/trace/trace_hwlat.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
-index b791524a6536..87258ddc2141 100644
---- a/kernel/trace/trace_hwlat.c
-+++ b/kernel/trace/trace_hwlat.c
-@@ -511,7 +511,16 @@ static int start_cpu_kthread(unsigned int cpu)
- static void hwlat_hotplug_workfn(struct work_struct *dummy)
- {
- 	struct trace_array *tr = hwlat_trace;
--	unsigned int cpu = smp_processor_id();
-+	unsigned int cpu;
-+
-+	/*
-+	 * If the work is scheduled after CPU hotplug offline being invoked,
-+	 * then it would be queued into UNBOUNDED workqueue
-+	 */
-+	if (!is_percpu_thread())
-+		return;
-+
-+	cpu = smp_processor_id();
- 
- 	mutex_lock(&trace_types_lock);
- 	mutex_lock(&hwlat_data.lock);
--- 
-2.43.0
+On 1/25/24 22:12, Alexandru Elisei wrote:
+> copy_user_highpage() will do memory allocation if there are saved tags for
+> the destination page, and the page is missing tag storage.
+> 
+> After commit a349d72fd9ef ("mm/pgtable: add rcu_read_lock() and
+> rcu_read_unlock()s"), collapse_huge_page() calls
+> __collapse_huge_page_copy() -> .. -> copy_user_highpage() with the RCU lock
+> held, which means that copy_user_highpage() can only allocate memory using
+> GFP_ATOMIC or equivalent.
+> 
+> Get around this by refusing to collapse pages into a transparent huge page
+> if the VMA is MTE-enabled.
 
+Makes sense when copy_user_highpage() will allocate memory for tag storage.
+
+> 
+> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> ---
+> 
+> Changes since rfc v2:
+> 
+> * New patch. I think an agreement on whether copy*_user_highpage() should be
+> always allowed to sleep, or should not be allowed, would be useful.
+
+This is a good question ! Even after preventing the collapse of MTE VMA here,
+there still might be more paths where a sleeping (i.e memory allocating)
+copy*_user_highpage() becomes problematic ?
+
+> 
+>  arch/arm64/include/asm/pgtable.h    | 3 +++
+>  arch/arm64/kernel/mte_tag_storage.c | 5 +++++
+>  include/linux/khugepaged.h          | 5 +++++
+>  mm/khugepaged.c                     | 4 ++++
+>  4 files changed, 17 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index 87ae59436162..d0473538c926 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -1120,6 +1120,9 @@ static inline bool arch_alloc_cma(gfp_t gfp_mask)
+>  	return true;
+>  }
+>  
+> +bool arch_hugepage_vma_revalidate(struct vm_area_struct *vma, unsigned long address);
+> +#define arch_hugepage_vma_revalidate arch_hugepage_vma_revalidate
+> +
+>  #endif /* CONFIG_ARM64_MTE_TAG_STORAGE */
+>  #endif /* CONFIG_ARM64_MTE */
+>  
+> diff --git a/arch/arm64/kernel/mte_tag_storage.c b/arch/arm64/kernel/mte_tag_storage.c
+> index ac7b9c9c585c..a99959b70573 100644
+> --- a/arch/arm64/kernel/mte_tag_storage.c
+> +++ b/arch/arm64/kernel/mte_tag_storage.c
+> @@ -636,3 +636,8 @@ void arch_alloc_page(struct page *page, int order, gfp_t gfp)
+>  	if (tag_storage_enabled() && alloc_requires_tag_storage(gfp))
+>  		reserve_tag_storage(page, order, gfp);
+>  }
+> +
+> +bool arch_hugepage_vma_revalidate(struct vm_area_struct *vma, unsigned long address)
+> +{
+> +	return !(vma->vm_flags & VM_MTE);
+> +}
+> diff --git a/include/linux/khugepaged.h b/include/linux/khugepaged.h
+> index f68865e19b0b..461e4322dff2 100644
+> --- a/include/linux/khugepaged.h
+> +++ b/include/linux/khugepaged.h
+> @@ -38,6 +38,11 @@ static inline void khugepaged_exit(struct mm_struct *mm)
+>  	if (test_bit(MMF_VM_HUGEPAGE, &mm->flags))
+>  		__khugepaged_exit(mm);
+>  }
+> +
+> +#ifndef arch_hugepage_vma_revalidate
+> +#define arch_hugepage_vma_revalidate(vma, address) 1
+
+Please replace s/1/true as arch_hugepage_vma_revalidate() returns bool ?
+
+> +#endif
+
+Right, above construct is much better than __HAVE_ARCH_XXXX based one.
+
+> +
+>  #else /* CONFIG_TRANSPARENT_HUGEPAGE */
+>  static inline void khugepaged_fork(struct mm_struct *mm, struct mm_struct *oldmm)
+>  {
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 2b219acb528e..cb9a9ddb4d86 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -935,6 +935,10 @@ static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
+>  	 */
+>  	if (expect_anon && (!(*vmap)->anon_vma || !vma_is_anonymous(*vmap)))
+>  		return SCAN_PAGE_ANON;
+> +
+> +	if (!arch_hugepage_vma_revalidate(vma, address))
+> +		return SCAN_VMA_CHECK;
+> +
+>  	return SCAN_SUCCEED;
+>  }
+>  
+
+Otherwise this LGTM.
