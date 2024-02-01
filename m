@@ -1,126 +1,84 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14A2015B0F2;
-	Thu,  1 Feb 2024 09:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CED215D5A0;
+	Thu,  1 Feb 2024 09:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706779316; cv=none; b=I9+eBr/oku/6TpSjA1T6fqr2CabhMYcKF1Qe6GtIvcNZMyEoGm7BhMiWMKqZ4HM5rccWr7+UwSBHmI+c+61Q3ksOq9WXe7bwoNXGn4RfeKL8FZcIDbg7JwunjzbP9Tce/5yRIb3OvqiBAviosOHDrOhxY2lxNkUca3JV2tjFq2I=
+	t=1706780425; cv=none; b=d7S5UBjNCVEUf15PUMh3yPdeorjt3/SMn1J3zz0gwxiFMDv+k00Vuj5ynxvBtZ3UcTtcR3l5ALZNFT4J+gYorRow+PaLc84nYlwON1Tf34R2XTYqGg9RqpEjulHOHa6Pfuy0jHIDKrrqUU0ys56qSlShAQ6VrLVR33YKKrsUy/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706779316; c=relaxed/simple;
-	bh=Xan/dqyZBR9aQDewxYQ4N13dX6KyR4YMrUZL8g38qlQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OGzba39z+tIbnbz5qoWOIIhhjFZJh22A4Q98RUZ2f6BZP0WdLkWnZFt/FpSj9Vb6jbTMvglJDjxZgd7Gq8AVrFU6Z818GOUQFxWz6s6YBlB2eTjHKE3sE5jBVLZ1UmFpqGmgAPcwzFfZtiqou6qTWS5WDzAiXef0Zl70j8G8vko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E1878DA7;
-	Thu,  1 Feb 2024 01:22:35 -0800 (PST)
-Received: from [10.162.42.11] (a077893.blr.arm.com [10.162.42.11])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 48A343F738;
-	Thu,  1 Feb 2024 01:21:41 -0800 (PST)
-Message-ID: <30278898-c4b2-4dd6-ba68-a19575f81a65@arm.com>
-Date: Thu, 1 Feb 2024 14:51:39 +0530
+	s=arc-20240116; t=1706780425; c=relaxed/simple;
+	bh=R7a2rtRgwjmdB++q9hCI4UL5Bhb43h8syAga6lWfUeQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=oUewVGdXdybwfdwkJYX/6NFvWO5Q7RFLmbwOTGDdOrm0YAS/vyaj7E4pmhReutuXrokqOuTVTOzN9suS1umxovCvb0u2TIuFo3pm39apuWp8E3gkWCeeFLT3wO4eLsGT6z7icdH5xCEgQC6gX83t9W+nUdDP5mBTfDzamRicAtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W2IhjsPY; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W2IhjsPY"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d932f6ccfaso5606465ad.1;
+        Thu, 01 Feb 2024 01:40:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706780423; x=1707385223; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=THHWbzFKYYomtfW2u7Qzzngr/S9BIn+vJuGso8/zw8c=;
+        b=W2IhjsPYPRq1tXZWump5US7GAydEta/UwSc71ppLN6p6XbJTA5lUCeFSaLzAAvXtTA
+         cRohWz9+U9yBT5uL/Cboc05/ZE9DmA0HdZSp6g1An0yYW4K/Zl1gpYp4+NEgriaqHrMk
+         +KT/pf4UC1JBYty9l/bvJ+wb8TQw7TzalaEvN8IHwyk5CpKTccSYQzfQGv6vJhT4xKJy
+         +osOkHwpMA4U41OqFLwi++Naqw/qAInzd5I6bJwyxd44liJjxjAuNutmBpMgIz/fNl/K
+         m7mStssk/vd2PvylyJ1GLTSQo/cxUVKoMQaAUUhJcjf1RAKLoTk5G0+wL6Wo3WR4WeY1
+         Rz+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706780423; x=1707385223;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=THHWbzFKYYomtfW2u7Qzzngr/S9BIn+vJuGso8/zw8c=;
+        b=j3jh8nqXjzLR00apvukBEwAqL0rSlV1U1+QdZD7kB9nMKHzQfSIaf5HuL3OD2Dfb3o
+         dHqGKUgpIC3T1LdvISO7XxXmVws9cFgGE2R7FAqiYad3RDfeFFasifsrfW6vl8iBvVGg
+         jB5MPLLvc17OMSL9LLtm0emJNhPLJLAoCI70TEzhfo79L1651M5qALMsXpSbSFPlGhlP
+         nLAvHT3h/Bh3qQAFUvwdSoB8DQYhGOKffTjey3F6mWcjKqPEFdkkQY8x5VL9e+X7F7ea
+         G0UJagLTQrIAAANWEW1FHZRoCDIqyhPsRdMmdPT4P2V089q70vUgYkpn6BJLdtsRIhr+
+         jKCQ==
+X-Gm-Message-State: AOJu0YyrrEbQo+5YAnDm0TH4z00HjUgF5zAb8OvlDJcSozswPS2RqbvH
+	1d0ArFsux1Dl8tFOaU2rMn6iYgSFSN+GxldxgjPwcf+4iBGVTq8L
+X-Google-Smtp-Source: AGHT+IGEb99hE/ET4Ps281WI1WE87V2ZqlX/Y+d1n7SZOGe/m9hONwB2sSdLJbiCdJi/rBeC1W+xKQ==
+X-Received: by 2002:a17:902:a3c3:b0:1d9:42fa:c238 with SMTP id q3-20020a170902a3c300b001d942fac238mr2449373plb.14.1706780423464;
+        Thu, 01 Feb 2024 01:40:23 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCX3mcx9Z9iCoe7eyNMMtPVr+7GGMMq+KG4YllB1f65GHUGsWi2gtWSyNrQPoLENkHkOQkj8WwTLaiGVHSvMmrfQ5RarOGLCZ9Y9MIFliI3zQvTiXRMfmEIEl1wzfpxTPVczf2Elc29zFzgq9hH2+XkXBs9V
+Received: from five231003 ([2405:201:c006:31fd:502a:f3bc:f4c6:bc66])
+        by smtp.gmail.com with ESMTPSA id lc7-20020a170902fa8700b001d95a6983b0sm394927plb.87.2024.02.01.01.40.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Feb 2024 01:40:23 -0800 (PST)
+Date: Thu, 1 Feb 2024 15:10:19 +0530
+From: Kousik Sanagavarapu <five231003@gmail.com>
+To: Ali Zahraee <ahzahraee@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] selftests: ftrace: fix typo in test report
+Message-ID: <ZbtnA2Mz0nWGeetl@five231003>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v3 30/35] arm64: mte: ptrace: Handle pages with
- missing tag storage
-Content-Language: en-US
-To: Alexandru Elisei <alexandru.elisei@arm.com>, catalin.marinas@arm.com,
- will@kernel.org, oliver.upton@linux.dev, maz@kernel.org,
- james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
- arnd@arndb.de, akpm@linux-foundation.org, mingo@redhat.com,
- peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
- mhiramat@kernel.org, rppt@kernel.org, hughd@google.com
-Cc: pcc@google.com, steven.price@arm.com, vincenzo.frascino@arm.com,
- david@redhat.com, eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org
-References: <20240125164256.4147-1-alexandru.elisei@arm.com>
- <20240125164256.4147-31-alexandru.elisei@arm.com>
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20240125164256.4147-31-alexandru.elisei@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240201082557.15965-1-ahzahraee@gmail.com>
 
+Hi,
 
+Ali Zahraee <ahzahraee@gmail.com> wrote:
 
-On 1/25/24 22:12, Alexandru Elisei wrote:
-> A page can end up mapped in a MTE enabled VMA without the corresponding tag
-> storage block reserved. Tag accesses made by ptrace in this case can lead
-> to the wrong tags being read or memory corruption for the process that is
-> using the tag storage memory as data.
+> This is just another trivial typo fix. The typo shows up in the final
+> report after tests are done.
 > 
-> Reserve tag storage by treating ptrace accesses like a fault.
-> 
-> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
-> ---
-> 
-> Changes since rfc v2:
-> 
-> * New patch, issue reported by Peter Collingbourne.
-> 
->  arch/arm64/kernel/mte.c | 26 ++++++++++++++++++++++++--
->  1 file changed, 24 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
-> index faf09da3400a..b1fa02dad4fd 100644
-> --- a/arch/arm64/kernel/mte.c
-> +++ b/arch/arm64/kernel/mte.c
-> @@ -412,10 +412,13 @@ static int __access_remote_tags(struct mm_struct *mm, unsigned long addr,
->  	while (len) {
->  		struct vm_area_struct *vma;
->  		unsigned long tags, offset;
-> +		unsigned int fault_flags;
-> +		struct page *page;
-> +		vm_fault_t ret;
->  		void *maddr;
-> -		struct page *page = get_user_page_vma_remote(mm, addr,
-> -							     gup_flags, &vma);
->  
-> +get_page:
-> +		page = get_user_page_vma_remote(mm, addr, gup_flags, &vma);
+> Signed-off-by: Ali Zahraee <ahzahraee@gmail.com>
 
-But if there is valid page returned here in the first GUP attempt, will there
-still be a subsequent handle_mm_fault() on the same vma and addr ?
+I sent a patch regarding this already which has been acked,
 
->  		if (IS_ERR(page)) {
->  			err = PTR_ERR(page);
->  			break;
-> @@ -433,6 +436,25 @@ static int __access_remote_tags(struct mm_struct *mm, unsigned long addr,
->  			put_page(page);
->  			break;
->  		}
-> +
-> +		if (tag_storage_enabled() && !page_tag_storage_reserved(page)) {
+	https://lore.kernel.org/linux-trace-kernel/20240129162841.57979-1-five231003@gmail.com/
 
-Should not '!page' be checked here as well ?
-
-> +			fault_flags = FAULT_FLAG_DEFAULT | \
-> +				      FAULT_FLAG_USER | \
-> +				      FAULT_FLAG_REMOTE | \
-> +				      FAULT_FLAG_ALLOW_RETRY | \
-> +				      FAULT_FLAG_RETRY_NOWAIT;
-> +			if (write)
-> +				fault_flags |= FAULT_FLAG_WRITE;
-> +
-> +			put_page(page);
-> +			ret = handle_mm_fault(vma, addr, fault_flags, NULL);
-> +			if (ret & VM_FAULT_ERROR) {
-> +				err = -EFAULT;
-> +				break;
-> +			}
-> +			goto get_page;
-> +		}
-> +
->  		WARN_ON_ONCE(!page_mte_tagged(page));
->  
->  		/* limit access to the end of the page */
+Thanks
