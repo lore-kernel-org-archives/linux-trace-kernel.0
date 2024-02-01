@@ -1,573 +1,373 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E677EEE4;
-	Thu,  1 Feb 2024 04:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0B7B79946;
+	Thu,  1 Feb 2024 05:52:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706761933; cv=none; b=ROz1kkAx5cMkRYA0rrpHVkYNw67Bm7nUvcnjlQVm/rC00ZiQpLaxFaYhysDAMMWxYk88TOH2kS0vO0rUYTR6bB2MfZz29kDviyRKtl0Zv8bbj+DqsCi/ORLVsY5uafLygix7L4v24cm2ZzzNkxMs/tJyQBpt3Tm1n2YFVyq0HpY=
+	t=1706766751; cv=none; b=NP7tgfIBsrzucJ8lxIytkFGFGuA7NMZfgVlaBg9CNRGqHjY4zaJWPvYnVgZALfn2zXIKMWQ0j199Tkev1aoLRszHUkxjkxiSCDNN0Da39SDMB3xzlatYYme+CD9Ug7I+hFXR9qhZ13L/OL67z/4OWm73SLja1Ev0sTToKHgf0pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706761933; c=relaxed/simple;
-	bh=wbVMChkQH+oQ9rCGH1CNCMbJ90iIwyfZxrCPqMQTRZc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=l3a15wDf79SrXRJqep32RB+Zkq4yHy0XnQaOcdgsosKlAohyvRcSyStewVToeA/yS7BeGqtjmZ710oGd1fJPG3y8Wqtc2t3A76UsGe+pXYBL280zuMZn2veVUkqxVGqykrnLBpm90cQGg00xWdK5m8ox/fICRfM8OILs/VGwJd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53F0AC433F1;
-	Thu,  1 Feb 2024 04:32:12 +0000 (UTC)
-Date: Wed, 31 Jan 2024 23:32:27 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Al Viro
- <viro@ZenIV.linux.org.uk>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Christian Brauner
- <brauner@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ajay
- Kaher <ajay.kaher@broadcom.com>, Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v3] tracefs: dentry lookup crapectomy
-Message-ID: <20240131233227.73db55e1@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1706766751; c=relaxed/simple;
+	bh=c+FlmTPV+3JkbCa4919ukgbRJdoAejmH859rDIx+Zhk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D9iUoXp5C3BTpyTYjLpfd2Sic017wrm9F6uo8AKnL76z5XhsCQGea61kP1rNfpTKK9od4za24qTbkQuafdEZqeBfIz8jvpxYgN2pEhWPCi9gb/lE4bxenS4FjLAfAV7Txsc7O5C36lXQKrX6rPfCa020RxQo1upjTc1Kc0+Kd1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9FC30DA7;
+	Wed, 31 Jan 2024 21:53:10 -0800 (PST)
+Received: from [10.162.42.11] (a077893.blr.arm.com [10.162.42.11])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B3363F5A1;
+	Wed, 31 Jan 2024 21:52:16 -0800 (PST)
+Message-ID: <9a881a18-bc50-44d6-a4b5-48f8e2f73045@arm.com>
+Date: Thu, 1 Feb 2024 11:22:13 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v3 13/35] mm: memory: Introduce fault-on-access
+ mechanism for pages
+Content-Language: en-US
+To: Alexandru Elisei <alexandru.elisei@arm.com>, catalin.marinas@arm.com,
+ will@kernel.org, oliver.upton@linux.dev, maz@kernel.org,
+ james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
+ arnd@arndb.de, akpm@linux-foundation.org, mingo@redhat.com,
+ peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+ mhiramat@kernel.org, rppt@kernel.org, hughd@google.com
+Cc: pcc@google.com, steven.price@arm.com, vincenzo.frascino@arm.com,
+ david@redhat.com, eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20240125164256.4147-1-alexandru.elisei@arm.com>
+ <20240125164256.4147-14-alexandru.elisei@arm.com>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20240125164256.4147-14-alexandru.elisei@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+On 1/25/24 22:12, Alexandru Elisei wrote:
+> Introduce a mechanism that allows an architecture to trigger a page fault,
+> and add the infrastructure to handle that fault accordingly. To use make> use of this, an arch is expected to mark the table entry as PAGE_NONE (which
+> will cause a fault next time it is accessed) and to implement an
+> arch-specific method (like a software bit) for recognizing that the fault
+> needs to be handled by the arch code.
+> 
+> arm64 will use of this approach to reserve tag storage for pages which are
+> mapped in an MTE enabled VMA, but the storage needed to store tags isn't
+> reserved (for example, because of an mprotect(PROT_MTE) call on a VMA with
+> existing pages).
 
-The dentry lookup for eventfs files was very broken, and had lots of
-signs of the old situation where the filesystem names were all created
-statically in the dentry tree, rather than being looked up dynamically
-based on the eventfs data structures.
+Just to summerize -
 
-You could see it in the naming - how it claimed to "create" dentries
-rather than just look up the dentries that were given it.
+So platform will create NUMA balancing like page faults - via marking existing
+mappings with PAGE_NONE permission, when the subsequent fault happens identify
+such cases via a software bit in the page table entry and then route the fault
+to the platform code itself for special purpose page fault handling where page
+might come from some reserved areas instead.
 
-You could see it in various nonsensical and very incorrect operations,
-like using "simple_lookup()" on the dentries that were passed in, which
-only results in those dentries becoming negative dentries.  Which meant
-that any other lookup would possibly return ENOENT if it saw that
-negative dentry before the data was then later filled in.
+Some questions
 
-You could see it in the immense amount of nonsensical code that didn't
-actually just do lookups.
+- How often PAGE_NONE is to be marked for applicable MTE VMA based mappings 
 
-Link: https://lore.kernel.org/linux-trace-kernel/202401291043.e62e89dc-oliver.sang@intel.com/
+	- Is it periodic like NUMA balancing or just one time for tag storage
 
-Cc: stable@vger.kernel.org
-Fixes: c1504e510238 ("eventfs: Implement eventfs dir creation functions")
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v2: https://lore.kernel.org/linux-trace-kernel/20240131185512.799813912@goodmis.org
+- How this is going to interact with NUMA balancing given both use PAGE_NONE
 
-- Removed returning ERR_PTR(-ENOENT) and just return NULL. Got rid of the
-  noent: label, as everything can now just jump to out:
-  (Suggested by Al Viro)
+	- How to differentiate these mappings from standard pte_protnone()
 
- fs/tracefs/event_inode.c | 275 +++++++--------------------------------
- fs/tracefs/inode.c       |  69 ----------
- fs/tracefs/internal.h    |   3 -
- 3 files changed, 50 insertions(+), 297 deletions(-)
-
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index e9819d719d2a..04c2ab90f93e 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -230,7 +230,6 @@ static struct eventfs_inode *eventfs_find_events(struct dentry *dentry)
- {
- 	struct eventfs_inode *ei;
- 
--	mutex_lock(&eventfs_mutex);
- 	do {
- 		// The parent is stable because we do not do renames
- 		dentry = dentry->d_parent;
-@@ -247,7 +246,6 @@ static struct eventfs_inode *eventfs_find_events(struct dentry *dentry)
- 		}
- 		// Walk upwards until you find the events inode
- 	} while (!ei->is_events);
--	mutex_unlock(&eventfs_mutex);
- 
- 	update_top_events_attr(ei, dentry->d_sb);
- 
-@@ -280,11 +278,10 @@ static void update_inode_attr(struct dentry *dentry, struct inode *inode,
- }
- 
- /**
-- * create_file - create a file in the tracefs filesystem
-- * @name: the name of the file to create.
-+ * lookup_file - look up a file in the tracefs filesystem
-+ * @dentry: the dentry to look up
-  * @mode: the permission that the file should have.
-  * @attr: saved attributes changed by user
-- * @parent: parent dentry for this file.
-  * @data: something that the caller will want to get to later on.
-  * @fop: struct file_operations that should be used for this file.
-  *
-@@ -292,13 +289,13 @@ static void update_inode_attr(struct dentry *dentry, struct inode *inode,
-  * directory. The inode.i_private pointer will point to @data in the open()
-  * call.
-  */
--static struct dentry *create_file(const char *name, umode_t mode,
-+static struct dentry *lookup_file(struct dentry *dentry,
-+				  umode_t mode,
- 				  struct eventfs_attr *attr,
--				  struct dentry *parent, void *data,
-+				  void *data,
- 				  const struct file_operations *fop)
- {
- 	struct tracefs_inode *ti;
--	struct dentry *dentry;
- 	struct inode *inode;
- 
- 	if (!(mode & S_IFMT))
-@@ -307,15 +304,9 @@ static struct dentry *create_file(const char *name, umode_t mode,
- 	if (WARN_ON_ONCE(!S_ISREG(mode)))
- 		return NULL;
- 
--	WARN_ON_ONCE(!parent);
--	dentry = eventfs_start_creating(name, parent);
--
--	if (IS_ERR(dentry))
--		return dentry;
--
- 	inode = tracefs_get_inode(dentry->d_sb);
- 	if (unlikely(!inode))
--		return eventfs_failed_creating(dentry);
-+		return ERR_PTR(-ENOMEM);
- 
- 	/* If the user updated the directory's attributes, use them */
- 	update_inode_attr(dentry, inode, attr, mode);
-@@ -329,32 +320,29 @@ static struct dentry *create_file(const char *name, umode_t mode,
- 
- 	ti = get_tracefs(inode);
- 	ti->flags |= TRACEFS_EVENT_INODE;
--	d_instantiate(dentry, inode);
-+
-+	d_add(dentry, inode);
- 	fsnotify_create(dentry->d_parent->d_inode, dentry);
--	return eventfs_end_creating(dentry);
-+	return dentry;
- };
- 
- /**
-- * create_dir - create a dir in the tracefs filesystem
-+ * lookup_dir_entry - look up a dir in the tracefs filesystem
-+ * @dentry: the directory to look up
-  * @ei: the eventfs_inode that represents the directory to create
-- * @parent: parent dentry for this file.
-  *
-- * This function will create a dentry for a directory represented by
-+ * This function will look up a dentry for a directory represented by
-  * a eventfs_inode.
-  */
--static struct dentry *create_dir(struct eventfs_inode *ei, struct dentry *parent)
-+static struct dentry *lookup_dir_entry(struct dentry *dentry,
-+	struct eventfs_inode *pei, struct eventfs_inode *ei)
- {
- 	struct tracefs_inode *ti;
--	struct dentry *dentry;
- 	struct inode *inode;
- 
--	dentry = eventfs_start_creating(ei->name, parent);
--	if (IS_ERR(dentry))
--		return dentry;
--
- 	inode = tracefs_get_inode(dentry->d_sb);
- 	if (unlikely(!inode))
--		return eventfs_failed_creating(dentry);
-+		return ERR_PTR(-ENOMEM);
- 
- 	/* If the user updated the directory's attributes, use them */
- 	update_inode_attr(dentry, inode, &ei->attr,
-@@ -371,11 +359,14 @@ static struct dentry *create_dir(struct eventfs_inode *ei, struct dentry *parent
- 	/* Only directories have ti->private set to an ei, not files */
- 	ti->private = ei;
- 
-+	dentry->d_fsdata = ei;
-+        ei->dentry = dentry;	// Remove me!
-+
- 	inc_nlink(inode);
--	d_instantiate(dentry, inode);
-+	d_add(dentry, inode);
- 	inc_nlink(dentry->d_parent->d_inode);
- 	fsnotify_mkdir(dentry->d_parent->d_inode, dentry);
--	return eventfs_end_creating(dentry);
-+	return dentry;
- }
- 
- static void free_ei(struct eventfs_inode *ei)
-@@ -425,7 +416,7 @@ void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry)
- }
- 
- /**
-- * create_file_dentry - create a dentry for a file of an eventfs_inode
-+ * lookup_file_dentry - create a dentry for a file of an eventfs_inode
-  * @ei: the eventfs_inode that the file will be created under
-  * @idx: the index into the d_children[] of the @ei
-  * @parent: The parent dentry of the created file.
-@@ -438,157 +429,21 @@ void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry)
-  * address located at @e_dentry.
-  */
- static struct dentry *
--create_file_dentry(struct eventfs_inode *ei, int idx,
--		   struct dentry *parent, const char *name, umode_t mode, void *data,
-+lookup_file_dentry(struct dentry *dentry,
-+		   struct eventfs_inode *ei, int idx,
-+		   umode_t mode, void *data,
- 		   const struct file_operations *fops)
- {
- 	struct eventfs_attr *attr = NULL;
- 	struct dentry **e_dentry = &ei->d_children[idx];
--	struct dentry *dentry;
--
--	WARN_ON_ONCE(!inode_is_locked(parent->d_inode));
- 
--	mutex_lock(&eventfs_mutex);
--	if (ei->is_freed) {
--		mutex_unlock(&eventfs_mutex);
--		return NULL;
--	}
--	/* If the e_dentry already has a dentry, use it */
--	if (*e_dentry) {
--		dget(*e_dentry);
--		mutex_unlock(&eventfs_mutex);
--		return *e_dentry;
--	}
--
--	/* ei->entry_attrs are protected by SRCU */
- 	if (ei->entry_attrs)
- 		attr = &ei->entry_attrs[idx];
- 
--	mutex_unlock(&eventfs_mutex);
--
--	dentry = create_file(name, mode, attr, parent, data, fops);
-+	dentry->d_fsdata = ei;		// NOTE: ei of _parent_
-+	lookup_file(dentry, mode, attr, data, fops);
- 
--	mutex_lock(&eventfs_mutex);
--
--	if (IS_ERR_OR_NULL(dentry)) {
--		/*
--		 * When the mutex was released, something else could have
--		 * created the dentry for this e_dentry. In which case
--		 * use that one.
--		 *
--		 * If ei->is_freed is set, the e_dentry is currently on its
--		 * way to being freed, don't return it. If e_dentry is NULL
--		 * it means it was already freed.
--		 */
--		if (ei->is_freed) {
--			dentry = NULL;
--		} else {
--			dentry = *e_dentry;
--			dget(dentry);
--		}
--		mutex_unlock(&eventfs_mutex);
--		return dentry;
--	}
--
--	if (!*e_dentry && !ei->is_freed) {
--		*e_dentry = dentry;
--		dentry->d_fsdata = ei;
--	} else {
--		/*
--		 * Should never happen unless we get here due to being freed.
--		 * Otherwise it means two dentries exist with the same name.
--		 */
--		WARN_ON_ONCE(!ei->is_freed);
--		dentry = NULL;
--	}
--	mutex_unlock(&eventfs_mutex);
--
--	return dentry;
--}
--
--/**
-- * eventfs_post_create_dir - post create dir routine
-- * @ei: eventfs_inode of recently created dir
-- *
-- * Map the meta-data of files within an eventfs dir to their parent dentry
-- */
--static void eventfs_post_create_dir(struct eventfs_inode *ei)
--{
--	struct eventfs_inode *ei_child;
--
--	lockdep_assert_held(&eventfs_mutex);
--
--	/* srcu lock already held */
--	/* fill parent-child relation */
--	list_for_each_entry_srcu(ei_child, &ei->children, list,
--				 srcu_read_lock_held(&eventfs_srcu)) {
--		ei_child->d_parent = ei->dentry;
--	}
--}
--
--/**
-- * create_dir_dentry - Create a directory dentry for the eventfs_inode
-- * @pei: The eventfs_inode parent of ei.
-- * @ei: The eventfs_inode to create the directory for
-- * @parent: The dentry of the parent of this directory
-- *
-- * This creates and attaches a directory dentry to the eventfs_inode @ei.
-- */
--static struct dentry *
--create_dir_dentry(struct eventfs_inode *pei, struct eventfs_inode *ei,
--		  struct dentry *parent)
--{
--	struct dentry *dentry = NULL;
--
--	WARN_ON_ONCE(!inode_is_locked(parent->d_inode));
--
--	mutex_lock(&eventfs_mutex);
--	if (pei->is_freed || ei->is_freed) {
--		mutex_unlock(&eventfs_mutex);
--		return NULL;
--	}
--	if (ei->dentry) {
--		/* If the eventfs_inode already has a dentry, use it */
--		dentry = ei->dentry;
--		dget(dentry);
--		mutex_unlock(&eventfs_mutex);
--		return dentry;
--	}
--	mutex_unlock(&eventfs_mutex);
--
--	dentry = create_dir(ei, parent);
--
--	mutex_lock(&eventfs_mutex);
--
--	if (IS_ERR_OR_NULL(dentry) && !ei->is_freed) {
--		/*
--		 * When the mutex was released, something else could have
--		 * created the dentry for this e_dentry. In which case
--		 * use that one.
--		 *
--		 * If ei->is_freed is set, the e_dentry is currently on its
--		 * way to being freed.
--		 */
--		dentry = ei->dentry;
--		if (dentry)
--			dget(dentry);
--		mutex_unlock(&eventfs_mutex);
--		return dentry;
--	}
--
--	if (!ei->dentry && !ei->is_freed) {
--		ei->dentry = dentry;
--		eventfs_post_create_dir(ei);
--		dentry->d_fsdata = ei;
--	} else {
--		/*
--		 * Should never happen unless we get here due to being freed.
--		 * Otherwise it means two dentries exist with the same name.
--		 */
--		WARN_ON_ONCE(!ei->is_freed);
--		dentry = NULL;
--	}
--	mutex_unlock(&eventfs_mutex);
-+	*e_dentry = dentry;	// Remove me
- 
- 	return dentry;
- }
-@@ -607,79 +462,49 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
- 					  struct dentry *dentry,
- 					  unsigned int flags)
- {
--	const struct file_operations *fops;
--	const struct eventfs_entry *entry;
- 	struct eventfs_inode *ei_child;
- 	struct tracefs_inode *ti;
- 	struct eventfs_inode *ei;
--	struct dentry *ei_dentry = NULL;
--	struct dentry *ret = NULL;
--	struct dentry *d;
- 	const char *name = dentry->d_name.name;
--	umode_t mode;
--	void *data;
--	int idx;
--	int i;
--	int r;
- 
- 	ti = get_tracefs(dir);
- 	if (!(ti->flags & TRACEFS_EVENT_INODE))
--		return NULL;
--
--	/* Grab srcu to prevent the ei from going away */
--	idx = srcu_read_lock(&eventfs_srcu);
-+		return ERR_PTR(-EIO);
- 
--	/*
--	 * Grab the eventfs_mutex to consistent value from ti->private.
--	 * This s
--	 */
- 	mutex_lock(&eventfs_mutex);
--	ei = READ_ONCE(ti->private);
--	if (ei && !ei->is_freed)
--		ei_dentry = READ_ONCE(ei->dentry);
--	mutex_unlock(&eventfs_mutex);
- 
--	if (!ei || !ei_dentry)
-+	ei = ti->private;
-+	if (!ei || ei->is_freed)
- 		goto out;
- 
--	data = ei->data;
--
--	list_for_each_entry_srcu(ei_child, &ei->children, list,
--				 srcu_read_lock_held(&eventfs_srcu)) {
-+	list_for_each_entry(ei_child, &ei->children, list) {
- 		if (strcmp(ei_child->name, name) != 0)
- 			continue;
--		ret = simple_lookup(dir, dentry, flags);
--		if (IS_ERR(ret))
-+		if (ei_child->is_freed)
- 			goto out;
--		d = create_dir_dentry(ei, ei_child, ei_dentry);
--		dput(d);
-+		lookup_dir_entry(dentry, ei, ei_child);
- 		goto out;
- 	}
- 
--	for (i = 0; i < ei->nr_entries; i++) {
--		entry = &ei->entries[i];
--		if (strcmp(name, entry->name) == 0) {
--			void *cdata = data;
--			mutex_lock(&eventfs_mutex);
--			/* If ei->is_freed, then the event itself may be too */
--			if (!ei->is_freed)
--				r = entry->callback(name, &mode, &cdata, &fops);
--			else
--				r = -1;
--			mutex_unlock(&eventfs_mutex);
--			if (r <= 0)
--				continue;
--			ret = simple_lookup(dir, dentry, flags);
--			if (IS_ERR(ret))
--				goto out;
--			d = create_file_dentry(ei, i, ei_dentry, name, mode, cdata, fops);
--			dput(d);
--			break;
--		}
-+	for (int i = 0; i < ei->nr_entries; i++) {
-+		void *data;
-+		umode_t mode;
-+		const struct file_operations *fops;
-+		const struct eventfs_entry *entry = &ei->entries[i];
-+
-+		if (strcmp(name, entry->name) != 0)
-+			continue;
-+
-+		data = ei->data;
-+		if (entry->callback(name, &mode, &data, &fops) <= 0)
-+			goto out;
-+
-+		lookup_file_dentry(dentry, ei, i, mode, data, fops);
-+		goto out;
- 	}
-  out:
--	srcu_read_unlock(&eventfs_srcu, idx);
--	return ret;
-+	mutex_unlock(&eventfs_mutex);
-+	return NULL;
- }
- 
- /*
-diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-index 888e42087847..5c84460feeeb 100644
---- a/fs/tracefs/inode.c
-+++ b/fs/tracefs/inode.c
-@@ -495,75 +495,6 @@ struct dentry *tracefs_end_creating(struct dentry *dentry)
- 	return dentry;
- }
- 
--/**
-- * eventfs_start_creating - start the process of creating a dentry
-- * @name: Name of the file created for the dentry
-- * @parent: The parent dentry where this dentry will be created
-- *
-- * This is a simple helper function for the dynamically created eventfs
-- * files. When the directory of the eventfs files are accessed, their
-- * dentries are created on the fly. This function is used to start that
-- * process.
-- */
--struct dentry *eventfs_start_creating(const char *name, struct dentry *parent)
--{
--	struct dentry *dentry;
--	int error;
--
--	/* Must always have a parent. */
--	if (WARN_ON_ONCE(!parent))
--		return ERR_PTR(-EINVAL);
--
--	error = simple_pin_fs(&trace_fs_type, &tracefs_mount,
--			      &tracefs_mount_count);
--	if (error)
--		return ERR_PTR(error);
--
--	if (unlikely(IS_DEADDIR(parent->d_inode)))
--		dentry = ERR_PTR(-ENOENT);
--	else
--		dentry = lookup_one_len(name, parent, strlen(name));
--
--	if (!IS_ERR(dentry) && dentry->d_inode) {
--		dput(dentry);
--		dentry = ERR_PTR(-EEXIST);
--	}
--
--	if (IS_ERR(dentry))
--		simple_release_fs(&tracefs_mount, &tracefs_mount_count);
--
--	return dentry;
--}
--
--/**
-- * eventfs_failed_creating - clean up a failed eventfs dentry creation
-- * @dentry: The dentry to clean up
-- *
-- * If after calling eventfs_start_creating(), a failure is detected, the
-- * resources created by eventfs_start_creating() needs to be cleaned up. In
-- * that case, this function should be called to perform that clean up.
-- */
--struct dentry *eventfs_failed_creating(struct dentry *dentry)
--{
--	dput(dentry);
--	simple_release_fs(&tracefs_mount, &tracefs_mount_count);
--	return NULL;
--}
--
--/**
-- * eventfs_end_creating - Finish the process of creating a eventfs dentry
-- * @dentry: The dentry that has successfully been created.
-- *
-- * This function is currently just a place holder to match
-- * eventfs_start_creating(). In case any synchronization needs to be added,
-- * this function will be used to implement that without having to modify
-- * the callers of eventfs_start_creating().
-- */
--struct dentry *eventfs_end_creating(struct dentry *dentry)
--{
--	return dentry;
--}
--
- /* Find the inode that this will use for default */
- static struct inode *instance_inode(struct dentry *parent, struct inode *inode)
- {
-diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index 7d84349ade87..09037e2c173d 100644
---- a/fs/tracefs/internal.h
-+++ b/fs/tracefs/internal.h
-@@ -80,9 +80,6 @@ struct dentry *tracefs_start_creating(const char *name, struct dentry *parent);
- struct dentry *tracefs_end_creating(struct dentry *dentry);
- struct dentry *tracefs_failed_creating(struct dentry *dentry);
- struct inode *tracefs_get_inode(struct super_block *sb);
--struct dentry *eventfs_start_creating(const char *name, struct dentry *parent);
--struct dentry *eventfs_failed_creating(struct dentry *dentry);
--struct dentry *eventfs_end_creating(struct dentry *dentry);
- void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry);
- 
- #endif /* _TRACEFS_INTERNAL_H */
--- 
-2.43.0
-
+> 
+> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> ---
+> 
+> Changes since rfc v2:
+> 
+> * New patch. Split from patch #19 ("mm: mprotect: Introduce PAGE_FAULT_ON_ACCESS
+> for mprotect(PROT_MTE)") (David Hildenbrand).
+> 
+>  include/linux/huge_mm.h |  4 ++--
+>  include/linux/pgtable.h | 47 +++++++++++++++++++++++++++++++++++--
+>  mm/Kconfig              |  3 +++
+>  mm/huge_memory.c        | 36 +++++++++++++++++++++--------
+>  mm/memory.c             | 51 ++++++++++++++++++++++++++---------------
+>  5 files changed, 109 insertions(+), 32 deletions(-)
+> 
+> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> index 5adb86af35fc..4678a0a5e6a8 100644
+> --- a/include/linux/huge_mm.h
+> +++ b/include/linux/huge_mm.h
+> @@ -346,7 +346,7 @@ struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
+>  struct page *follow_devmap_pud(struct vm_area_struct *vma, unsigned long addr,
+>  		pud_t *pud, int flags, struct dev_pagemap **pgmap);
+>  
+> -vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf);
+> +vm_fault_t handle_huge_pmd_protnone(struct vm_fault *vmf);
+>  
+>  extern struct page *huge_zero_page;
+>  extern unsigned long huge_zero_pfn;
+> @@ -476,7 +476,7 @@ static inline spinlock_t *pud_trans_huge_lock(pud_t *pud,
+>  	return NULL;
+>  }
+>  
+> -static inline vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf)
+> +static inline vm_fault_t handle_huge_pmd_protnone(struct vm_fault *vmf)
+>  {
+>  	return 0;
+>  }
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index 2d0f04042f62..81a21be855a2 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -1455,7 +1455,7 @@ static inline int pud_trans_unstable(pud_t *pud)
+>  	return 0;
+>  }
+>  
+> -#ifndef CONFIG_NUMA_BALANCING
+> +#if !defined(CONFIG_NUMA_BALANCING) && !defined(CONFIG_ARCH_HAS_FAULT_ON_ACCESS)
+>  /*
+>   * In an inaccessible (PROT_NONE) VMA, pte_protnone() may indicate "yes". It is
+>   * perfectly valid to indicate "no" in that case, which is why our default
+> @@ -1477,7 +1477,50 @@ static inline int pmd_protnone(pmd_t pmd)
+>  {
+>  	return 0;
+>  }
+> -#endif /* CONFIG_NUMA_BALANCING */
+> +#endif /* !CONFIG_NUMA_BALANCING && !CONFIG_ARCH_HAS_FAULT_ON_ACCESS */
+> +
+> +#ifndef CONFIG_ARCH_HAS_FAULT_ON_ACCESS
+> +static inline bool arch_fault_on_access_pte(pte_t pte)
+> +{
+> +	return false;
+> +}
+> +
+> +static inline bool arch_fault_on_access_pmd(pmd_t pmd)
+> +{
+> +	return false;
+> +}
+> +
+> +/*
+> + * The function is called with the fault lock held and an elevated reference on
+> + * the folio.
+> + *
+> + * Rules that an arch implementation of the function must follow:
+> + *
+> + * 1. The function must return with the elevated reference dropped.
+> + *
+> + * 2. If the return value contains VM_FAULT_RETRY or VM_FAULT_COMPLETED then:
+> + *
+> + * - if FAULT_FLAG_RETRY_NOWAIT is not set, the function must return with the
+> + *   correct fault lock released, which can be accomplished with
+> + *   release_fault_lock(vmf). Note that release_fault_lock() doesn't check if
+> + *   FAULT_FLAG_RETRY_NOWAIT is set before releasing the mmap_lock.
+> + *
+> + * - if FAULT_FLAG_RETRY_NOWAIT is set, then the function must not release the
+> + *   mmap_lock. The flag should be set only if the mmap_lock is held.
+> + *
+> + * 3. If the return value contains neither of the above, the function must not
+> + * release the fault lock; the generic fault handler will take care of releasing
+> + * the correct lock.
+> + */
+> +static inline vm_fault_t arch_handle_folio_fault_on_access(struct folio *folio,
+> +							   struct vm_fault *vmf,
+> +							   bool *map_pte)
+> +{
+> +	*map_pte = false;
+> +
+> +	return VM_FAULT_SIGBUS;
+> +}
+> +#endif
+>  
+>  #endif /* CONFIG_MMU */
+>  
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index 341cf53898db..153df67221f1 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -1006,6 +1006,9 @@ config IDLE_PAGE_TRACKING
+>  config ARCH_HAS_CACHE_LINE_SIZE
+>  	bool
+>  
+> +config ARCH_HAS_FAULT_ON_ACCESS
+> +	bool
+> +
+>  config ARCH_HAS_CURRENT_STACK_POINTER
+>  	bool
+>  	help
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 94ef5c02b459..2bad63a7ec16 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -1698,7 +1698,7 @@ struct page *follow_trans_huge_pmd(struct vm_area_struct *vma,
+>  }
+>  
+>  /* NUMA hinting page fault entry point for trans huge pmds */
+> -vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf)
+> +vm_fault_t handle_huge_pmd_protnone(struct vm_fault *vmf)
+>  {
+>  	struct vm_area_struct *vma = vmf->vma;
+>  	pmd_t oldpmd = vmf->orig_pmd;
+> @@ -1708,6 +1708,7 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf)
+>  	int nid = NUMA_NO_NODE;
+>  	int target_nid, last_cpupid = (-1 & LAST_CPUPID_MASK);
+>  	bool migrated = false, writable = false;
+> +	vm_fault_t ret;
+>  	int flags = 0;
+>  
+>  	vmf->ptl = pmd_lock(vma->vm_mm, vmf->pmd);
+> @@ -1731,6 +1732,20 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf)
+>  	if (!folio)
+>  		goto out_map;
+>  
+> +	folio_get(folio);
+> +	vma_set_access_pid_bit(vma);
+> +
+> +	if (arch_fault_on_access_pmd(oldpmd)) {
+> +		bool map_pte = false;
+> +
+> +		spin_unlock(vmf->ptl);
+> +		ret = arch_handle_folio_fault_on_access(folio, vmf, &map_pte);
+> +		if (ret || !map_pte)
+> +			return ret;
+> +		writable = false;
+> +		goto out_lock_and_map;
+> +	}
+> +
+>  	/* See similar comment in do_numa_page for explanation */
+>  	if (!writable)
+>  		flags |= TNF_NO_GROUP;
+> @@ -1755,15 +1770,18 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf)
+>  	if (migrated) {
+>  		flags |= TNF_MIGRATED;
+>  		nid = target_nid;
+> -	} else {
+> -		flags |= TNF_MIGRATE_FAIL;
+> -		vmf->ptl = pmd_lock(vma->vm_mm, vmf->pmd);
+> -		if (unlikely(!pmd_same(oldpmd, *vmf->pmd))) {
+> -			spin_unlock(vmf->ptl);
+> -			goto out;
+> -		}
+> -		goto out_map;
+> +		goto out;
+> +	}
+> +
+> +	flags |= TNF_MIGRATE_FAIL;
+> +
+> +out_lock_and_map:
+> +	vmf->ptl = pmd_lock(vma->vm_mm, vmf->pmd);
+> +	if (unlikely(!pmd_same(oldpmd, *vmf->pmd))) {
+> +		spin_unlock(vmf->ptl);
+> +		goto out;
+>  	}
+> +	goto out_map;
+>  
+>  out:
+>  	if (nid != NUMA_NO_NODE)
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 8a421e168b57..110fe2224277 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -4886,11 +4886,6 @@ static vm_fault_t do_fault(struct vm_fault *vmf)
+>  int numa_migrate_prep(struct folio *folio, struct vm_area_struct *vma,
+>  		      unsigned long addr, int page_nid, int *flags)
+>  {
+> -	folio_get(folio);
+> -
+> -	/* Record the current PID acceesing VMA */
+> -	vma_set_access_pid_bit(vma);
+> -
+>  	count_vm_numa_event(NUMA_HINT_FAULTS);
+>  	if (page_nid == numa_node_id()) {
+>  		count_vm_numa_event(NUMA_HINT_FAULTS_LOCAL);
+> @@ -4900,13 +4895,14 @@ int numa_migrate_prep(struct folio *folio, struct vm_area_struct *vma,
+>  	return mpol_misplaced(folio, vma, addr);
+>  }
+>  
+> -static vm_fault_t do_numa_page(struct vm_fault *vmf)
+> +static vm_fault_t handle_pte_protnone(struct vm_fault *vmf)
+>  {
+>  	struct vm_area_struct *vma = vmf->vma;
+>  	struct folio *folio = NULL;
+>  	int nid = NUMA_NO_NODE;
+>  	bool writable = false;
+>  	int last_cpupid;
+> +	vm_fault_t ret;
+>  	int target_nid;
+>  	pte_t pte, old_pte;
+>  	int flags = 0;
+> @@ -4939,6 +4935,20 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
+>  	if (!folio || folio_is_zone_device(folio))
+>  		goto out_map;
+>  
+> +	folio_get(folio);
+> +	/* Record the current PID acceesing VMA */
+> +	vma_set_access_pid_bit(vma);
+> +
+> +	if (arch_fault_on_access_pte(old_pte)) {
+> +		bool map_pte = false;
+> +
+> +		pte_unmap_unlock(vmf->pte, vmf->ptl);
+> +		ret = arch_handle_folio_fault_on_access(folio, vmf, &map_pte);
+> +		if (ret || !map_pte)
+> +			return ret;
+> +		goto out_lock_and_map;
+> +	}
+> +
+>  	/* TODO: handle PTE-mapped THP */
+>  	if (folio_test_large(folio))
+>  		goto out_map;
+> @@ -4983,18 +4993,21 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
+>  	if (migrate_misplaced_folio(folio, vma, target_nid)) {
+>  		nid = target_nid;
+>  		flags |= TNF_MIGRATED;
+> -	} else {
+> -		flags |= TNF_MIGRATE_FAIL;
+> -		vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
+> -					       vmf->address, &vmf->ptl);
+> -		if (unlikely(!vmf->pte))
+> -			goto out;
+> -		if (unlikely(!pte_same(ptep_get(vmf->pte), vmf->orig_pte))) {
+> -			pte_unmap_unlock(vmf->pte, vmf->ptl);
+> -			goto out;
+> -		}
+> -		goto out_map;
+> +		goto out;
+> +	}
+> +
+> +	flags |= TNF_MIGRATE_FAIL;
+> +
+> +out_lock_and_map:
+> +	vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
+> +				       vmf->address, &vmf->ptl);
+> +	if (unlikely(!vmf->pte))
+> +		goto out;
+> +	if (unlikely(!pte_same(ptep_get(vmf->pte), vmf->orig_pte))) {
+> +		pte_unmap_unlock(vmf->pte, vmf->ptl);
+> +		goto out;
+>  	}
+> +	goto out_map;
+>  
+>  out:
+>  	if (nid != NUMA_NO_NODE)
+> @@ -5151,7 +5164,7 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
+>  		return do_swap_page(vmf);
+>  
+>  	if (pte_protnone(vmf->orig_pte) && vma_is_accessible(vmf->vma))
+> -		return do_numa_page(vmf);
+> +		return handle_pte_protnone(vmf);
+>  
+>  	spin_lock(vmf->ptl);
+>  	entry = vmf->orig_pte;
+> @@ -5272,7 +5285,7 @@ static vm_fault_t __handle_mm_fault(struct vm_area_struct *vma,
+>  		}
+>  		if (pmd_trans_huge(vmf.orig_pmd) || pmd_devmap(vmf.orig_pmd)) {
+>  			if (pmd_protnone(vmf.orig_pmd) && vma_is_accessible(vma))
+> -				return do_huge_pmd_numa_page(&vmf);
+> +				return handle_huge_pmd_protnone(&vmf);
+>  
+>  			if ((flags & (FAULT_FLAG_WRITE|FAULT_FLAG_UNSHARE)) &&
+>  			    !pmd_write(vmf.orig_pmd)) {
