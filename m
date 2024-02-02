@@ -1,230 +1,213 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E05948063D;
-	Fri,  2 Feb 2024 18:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96ABF126F1C
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 Feb 2024 22:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706899502; cv=none; b=gIDFwzOfrhwOZGpKXl+vYY0G9B0bSnt2npSA8FJgJl6EEz8fo/f6S8UDbV59leZWA4aa3ACSeGYmhh+rXhTNp4IaTshR3Cc7EBPAf4fdLEA3lf1ofBP52l7MVGCCDkcrZOsXtyd4jgfQVW36vstfaGvTsjVR5IkwvWfJs3+gS0E=
+	t=1706913014; cv=none; b=TwhA6GWppbZj+TCe8Ly64n0WMfISDa2djzBWOu4ihXAqSQD5rmif00/eLo26gfeauQr0z36GzihKGjRTKIpFsy5YiIWH1V6aqb5vidsfzSkM3V7uSoriT3cvGUq5XvUdii8FvmUuvWz0HS92LZvFFswiF4DR8rmUvPa37i9I9o0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706899502; c=relaxed/simple;
-	bh=GOTOl32tyEUqyiUqhLrtlUNFRb2MzjMvHRjHDbTATds=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=X1DsWpBh1UVXTfFCBfTG9c5Rz8FBxys93p+z5XUyqQ8Z9BH6+skKEJeq5pRscpqR+a8iTQ+zFBU48s3UeIoag6EjOsz+LeogjMFzEw7MUaZHRzepN7YYnpvhoYlMT2rlly1t7P0qPTNmDfOjnEM8ANJKb9ynnEIXm7RzGdWFSlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=CrihQ6FJ; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1706913014; c=relaxed/simple;
+	bh=OKtyV3UcUMJMPvy1ECKXZVqMjFEDtE8zKK3U8e5aNc4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KlLad0NNA7lXD2K4TtWQanx8Ur+a2VK00STPSdbbvkVTbiIKjEmYfLc9bZzB86wrlTgboOXnvPNEtEw1rHZjzKr97y3encY0uUrqngrJay9D7VWRfOH5ksO+5PDbCyYNeVQJbJulsKv0ntyaee1tiuwyKywXJxcJUrCDYMuLlKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LEshHdlO; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="CrihQ6FJ"
-Received: from localhost.localdomain (unknown [4.155.48.115])
-	by linux.microsoft.com (Postfix) with ESMTPSA id D8B8520B2003;
-	Fri,  2 Feb 2024 10:44:58 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D8B8520B2003
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1706899498;
-	bh=KUDMkr8RLsAYmhZAS3vUhiwE/jC9o4CeWLT+JtE+tIA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CrihQ6FJTtYTCwYDlu0e3y0carlrbGPga2EFZvSlqG2DlZ7fflirlfAuttNUW8ssp
-	 CULnETctYnIY+xC8P7gvi+aHoOs8kUQR6tMfIfjMYS3PcG2lQE3dRyC1qmhe2C5NpU
-	 mMsyHvoYtoFHwhkpEs22uCYo3UojXPalmk06C7yQ=
-From: Beau Belgrave <beaub@linux.microsoft.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com
-Subject: [PATCH v2 3/4] selftests/user_events: Test multi-format events
-Date: Fri,  2 Feb 2024 18:44:48 +0000
-Message-Id: <20240202184449.1674-4-beaub@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240202184449.1674-1-beaub@linux.microsoft.com>
-References: <20240202184449.1674-1-beaub@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LEshHdlO"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d89f0ab02bso13675ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 02 Feb 2024 14:30:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706913012; x=1707517812; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4gHfXsDd1+NPNrp7/zCgopLQIxA18bpbncOGieuL0yc=;
+        b=LEshHdlOppSpzoGJr8WruYK1DTNCt03hKGKI8sXlRdlXppWl4kSGtqrrZIHPL8AdgZ
+         yPAvHazvbYeP3UW10EuIS7/gfckqo//sFstRHgRNjY5QeZxqdpuBoOgVsFZyBRJfYfvm
+         QObiDtuZG5KFqWvrELcd5o+HSoNo3yPtOsgKz6NmKbd7moG56psGseipQeyHlMtGVVEa
+         ajtwZzlTbO3hkxPC30dn5gvEua/9cmXp2gJLpLSRAnd21tHC4cTCBNvl20ePBFTg90if
+         C3K+uIkPoptT6yZurR6Ezt+52XOd6VF4OGxtz3RacOZxirHfUmF7HjS6m1MvMXR2NUQr
+         bfoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706913012; x=1707517812;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4gHfXsDd1+NPNrp7/zCgopLQIxA18bpbncOGieuL0yc=;
+        b=jT5eOiQ4/j33A5XPsTG0fOAFLkZGxAPhZfzQ+owwJZoow0BHM4MM40LvrmnZw4KQoZ
+         5IPT+EY1RNhjTGqmVtoEVZzvqLPRHQNNPwP9rOeS+R1GDTdcjsDaYHqkdAyylcQsS8Ws
+         60KtYJkqeJ3NkEVbcYiWJWceFdBFwRjCGffy19LqGyYcJpfeweRW6PVdnb11XiDPTefm
+         oArbPchbrVIbxmHQXacZwLFlOV9GVlct6o/tF2wZi/qjC9WEg5JdVB2ilgGxZqC+IKoc
+         6TjkzJuu6Qzbpi4O2r/XgYgNQml02ByKWpuD7jC8TayNuCxXj7yfAb7ClztoGQIgx9cB
+         CXFQ==
+X-Gm-Message-State: AOJu0YwAgoaDoGQ7gxHrLvQTOhrlvdeqSTWhb688c7VDoHas0La1ZCpP
+	ZIZRMKOz8cAbOu5tD8n6CdJ7tNPATSQASF9DgDOqyXspW5jzOsUdwAEtpGn7aw+Ufb8uJZKJpkP
+	wTLnNf+MRULNdADbV1bkFChb5ZZhybvWIM45u
+X-Google-Smtp-Source: AGHT+IGYPtzOWKJUHpZOUv3WD2/u8xqCH2po02LT82xgQd99fQsVzRN06AKewo08mu5evakZqsXkrrjcw9wBJU3p9vw=
+X-Received: by 2002:a17:903:2349:b0:1d8:aada:a7e3 with SMTP id
+ c9-20020a170903234900b001d8aadaa7e3mr26544plh.3.1706913011645; Fri, 02 Feb
+ 2024 14:30:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240125164256.4147-1-alexandru.elisei@arm.com> <20240125164256.4147-23-alexandru.elisei@arm.com>
+In-Reply-To: <20240125164256.4147-23-alexandru.elisei@arm.com>
+From: Evgenii Stepanov <eugenis@google.com>
+Date: Fri, 2 Feb 2024 14:30:00 -0800
+Message-ID: <CAFKCwrhNE5PR7cu7tN8qMmSEUhdJ7ensGGrB-oodh-J_fdoRcw@mail.gmail.com>
+Subject: Re: [PATCH RFC v3 22/35] arm64: mte: Enable tag storage if CMA areas
+ have been activated
+To: Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, 
+	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, 
+	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org, 
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
+	bsegall@google.com, mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, 
+	mhiramat@kernel.org, rppt@kernel.org, hughd@google.com, pcc@google.com, 
+	steven.price@arm.com, anshuman.khandual@arm.com, vincenzo.frascino@arm.com, 
+	david@redhat.com, kcc@google.com, hyesoo.yu@samsung.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-User_events now has multi-format events which allow for the same
-register name, but with different formats. When this occurs, different
-tracepoints are created with unique names.
+On Thu, Jan 25, 2024 at 8:44=E2=80=AFAM Alexandru Elisei
+<alexandru.elisei@arm.com> wrote:
+>
+> Before enabling MTE tag storage management, make sure that the CMA areas
+> have been successfully activated. If a CMA area fails activation, the pag=
+es
+> are kept as reserved. Reserved pages are never used by the page allocator=
+.
+>
+> If this happens, the kernel would have to manage tag storage only for som=
+e
+> of the memory, but not for all memory, and that would make the code
+> unreasonably complicated.
+>
+> Choose to disable tag storage management altogether if a CMA area fails t=
+o
+> be activated.
+>
+> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> ---
+>
+> Changes since v2:
+>
+> * New patch.
+>
+>  arch/arm64/include/asm/mte_tag_storage.h | 12 ++++++
+>  arch/arm64/kernel/mte_tag_storage.c      | 50 ++++++++++++++++++++++++
+>  2 files changed, 62 insertions(+)
+>
+> diff --git a/arch/arm64/include/asm/mte_tag_storage.h b/arch/arm64/includ=
+e/asm/mte_tag_storage.h
+> index 3c2cd29e053e..7b3f6bff8e6f 100644
+> --- a/arch/arm64/include/asm/mte_tag_storage.h
+> +++ b/arch/arm64/include/asm/mte_tag_storage.h
+> @@ -6,8 +6,20 @@
+>  #define __ASM_MTE_TAG_STORAGE_H
+>
+>  #ifdef CONFIG_ARM64_MTE_TAG_STORAGE
+> +
+> +DECLARE_STATIC_KEY_FALSE(tag_storage_enabled_key);
+> +
+> +static inline bool tag_storage_enabled(void)
+> +{
+> +       return static_branch_likely(&tag_storage_enabled_key);
+> +}
+> +
+>  void mte_init_tag_storage(void);
+>  #else
+> +static inline bool tag_storage_enabled(void)
+> +{
+> +       return false;
+> +}
+>  static inline void mte_init_tag_storage(void)
+>  {
+>  }
+> diff --git a/arch/arm64/kernel/mte_tag_storage.c b/arch/arm64/kernel/mte_=
+tag_storage.c
+> index 9a1a8a45171e..d58c68b4a849 100644
+> --- a/arch/arm64/kernel/mte_tag_storage.c
+> +++ b/arch/arm64/kernel/mte_tag_storage.c
+> @@ -19,6 +19,8 @@
+>
+>  #include <asm/mte_tag_storage.h>
+>
+> +__ro_after_init DEFINE_STATIC_KEY_FALSE(tag_storage_enabled_key);
+> +
+>  struct tag_region {
+>         struct range mem_range; /* Memory associated with the tag storage=
+, in PFNs. */
+>         struct range tag_range; /* Tag storage memory, in PFNs. */
+> @@ -314,3 +316,51 @@ void __init mte_init_tag_storage(void)
+>         num_tag_regions =3D 0;
+>         pr_info("MTE tag storage region management disabled");
+>  }
+> +
+> +static int __init mte_enable_tag_storage(void)
+> +{
+> +       struct range *tag_range;
+> +       struct cma *cma;
+> +       int i, ret;
+> +
+> +       if (num_tag_regions =3D=3D 0)
+> +               return 0;
+> +
+> +       for (i =3D 0; i < num_tag_regions; i++) {
+> +               tag_range =3D &tag_regions[i].tag_range;
+> +               cma =3D tag_regions[i].cma;
+> +               /*
+> +                * CMA will keep the pages as reserved when the region fa=
+ils
+> +                * activation.
+> +                */
+> +               if (PageReserved(pfn_to_page(tag_range->start)))
+> +                       goto out_disabled;
+> +       }
+> +
+> +       static_branch_enable(&tag_storage_enabled_key);
+> +       pr_info("MTE tag storage region management enabled");
+> +
+> +       return 0;
+> +
+> +out_disabled:
+> +       for (i =3D 0; i < num_tag_regions; i++) {
+> +               tag_range =3D &tag_regions[i].tag_range;
+> +               cma =3D tag_regions[i].cma;
+> +
+> +               if (PageReserved(pfn_to_page(tag_range->start)))
+> +                       continue;
+> +
+> +               /* Try really hard to reserve the tag storage. */
+> +               ret =3D cma_alloc(cma, range_len(tag_range), 8, true);
+> +               /*
+> +                * Tag storage is still in use for data, memory and/or ta=
+g
+> +                * corruption will ensue.
+> +                */
+> +               WARN_ON_ONCE(ret);
 
-Add a new test that ensures the same name can be used for two different
-formats. Ensure they are isolated from each other and that name and arg
-matching still works if yet another register comes in with the same
-format as one of the two.
+cma_alloc returns (page *), so this condition needs to be inverted,
+and the type of `ret` changed.
+Not sure how it slipped through, this is a compile error with clang.
 
-Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
----
- .../testing/selftests/user_events/abi_test.c  | 134 ++++++++++++++++++
- 1 file changed, 134 insertions(+)
-
-diff --git a/tools/testing/selftests/user_events/abi_test.c b/tools/testing/selftests/user_events/abi_test.c
-index cef1ff1af223..7288a05136ba 100644
---- a/tools/testing/selftests/user_events/abi_test.c
-+++ b/tools/testing/selftests/user_events/abi_test.c
-@@ -16,6 +16,8 @@
- #include <sys/ioctl.h>
- #include <sys/stat.h>
- #include <unistd.h>
-+#include <glob.h>
-+#include <string.h>
- #include <asm/unistd.h>
- 
- #include "../kselftest_harness.h"
-@@ -23,6 +25,62 @@
- 
- const char *data_file = "/sys/kernel/tracing/user_events_data";
- const char *enable_file = "/sys/kernel/tracing/events/user_events/__abi_event/enable";
-+const char *multi_dir_glob = "/sys/kernel/tracing/events/user_events_multi/__abi_event.*";
-+
-+static int wait_for_delete(char *dir)
-+{
-+	struct stat buf;
-+	int i;
-+
-+	for (i = 0; i < 10000; ++i) {
-+		if (stat(dir, &buf) == -1 && errno == ENOENT)
-+			return 0;
-+
-+		usleep(1000);
-+	}
-+
-+	return -1;
-+}
-+
-+static int find_multi_event_dir(char *unique_field, char *out_dir, int dir_len)
-+{
-+	char path[256];
-+	glob_t buf;
-+	int i, ret;
-+
-+	ret = glob(multi_dir_glob, GLOB_ONLYDIR, NULL, &buf);
-+
-+	if (ret)
-+		return -1;
-+
-+	ret = -1;
-+
-+	for (i = 0; i < buf.gl_pathc; ++i) {
-+		FILE *fp;
-+
-+		snprintf(path, sizeof(path), "%s/format", buf.gl_pathv[i]);
-+		fp = fopen(path, "r");
-+
-+		if (!fp)
-+			continue;
-+
-+		while (fgets(path, sizeof(path), fp) != NULL) {
-+			if (strstr(path, unique_field)) {
-+				fclose(fp);
-+				/* strscpy is not available, use snprintf */
-+				snprintf(out_dir, dir_len, "%s", buf.gl_pathv[i]);
-+				ret = 0;
-+				goto out;
-+			}
-+		}
-+
-+		fclose(fp);
-+	}
-+out:
-+	globfree(&buf);
-+
-+	return ret;
-+}
- 
- static bool event_exists(void)
- {
-@@ -74,6 +132,39 @@ static int event_delete(void)
- 	return ret;
- }
- 
-+static int reg_enable_multi(void *enable, int size, int bit, int flags,
-+			    char *args)
-+{
-+	struct user_reg reg = {0};
-+	char full_args[512] = {0};
-+	int fd = open(data_file, O_RDWR);
-+	int len;
-+	int ret;
-+
-+	if (fd < 0)
-+		return -1;
-+
-+	len = snprintf(full_args, sizeof(full_args), "__abi_event %s", args);
-+
-+	if (len > sizeof(full_args)) {
-+		ret = -E2BIG;
-+		goto out;
-+	}
-+
-+	reg.size = sizeof(reg);
-+	reg.name_args = (__u64)full_args;
-+	reg.flags = USER_EVENT_REG_MULTI_FORMAT | flags;
-+	reg.enable_bit = bit;
-+	reg.enable_addr = (__u64)enable;
-+	reg.enable_size = size;
-+
-+	ret = ioctl(fd, DIAG_IOCSREG, &reg);
-+out:
-+	close(fd);
-+
-+	return ret;
-+}
-+
- static int reg_enable_flags(void *enable, int size, int bit, int flags)
- {
- 	struct user_reg reg = {0};
-@@ -207,6 +298,49 @@ TEST_F(user, bit_sizes) {
- 	ASSERT_NE(0, reg_enable(&self->check, 128, 0));
- }
- 
-+TEST_F(user, multi_format) {
-+	char first_dir[256];
-+	char second_dir[256];
-+	struct stat buf;
-+
-+	/* Multiple formats for the same name should work */
-+	ASSERT_EQ(0, reg_enable_multi(&self->check, sizeof(int), 0,
-+				      0, "u32 multi_first"));
-+
-+	ASSERT_EQ(0, reg_enable_multi(&self->check, sizeof(int), 1,
-+				      0, "u64 multi_second"));
-+
-+	/* Same name with same format should also work */
-+	ASSERT_EQ(0, reg_enable_multi(&self->check, sizeof(int), 2,
-+				      0, "u64 multi_second"));
-+
-+	ASSERT_EQ(0, find_multi_event_dir("multi_first",
-+					  first_dir, sizeof(first_dir)));
-+
-+	ASSERT_EQ(0, find_multi_event_dir("multi_second",
-+					  second_dir, sizeof(second_dir)));
-+
-+	/* Should not be found in the same dir */
-+	ASSERT_NE(0, strcmp(first_dir, second_dir));
-+
-+	/* First dir should still exist */
-+	ASSERT_EQ(0, stat(first_dir, &buf));
-+
-+	/* Disabling first register should remove first dir */
-+	ASSERT_EQ(0, reg_disable(&self->check, 0));
-+	ASSERT_EQ(0, wait_for_delete(first_dir));
-+
-+	/* Second dir should still exist */
-+	ASSERT_EQ(0, stat(second_dir, &buf));
-+
-+	/* Disabling second register should remove second dir */
-+	ASSERT_EQ(0, reg_disable(&self->check, 1));
-+	/* Ensure bit 1 and 2 are tied together, should not delete yet */
-+	ASSERT_EQ(0, stat(second_dir, &buf));
-+	ASSERT_EQ(0, reg_disable(&self->check, 2));
-+	ASSERT_EQ(0, wait_for_delete(second_dir));
-+}
-+
- TEST_F(user, forks) {
- 	int i;
- 
--- 
-2.34.1
-
+> +       }
+> +       num_tag_regions =3D 0;
+> +       pr_info("MTE tag storage region management disabled");
+> +
+> +       return -EINVAL;
+> +}
+> +arch_initcall(mte_enable_tag_storage);
+> --
+> 2.43.0
+>
