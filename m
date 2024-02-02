@@ -1,64 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF5F328AC;
-	Fri,  2 Feb 2024 18:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E054980630;
+	Fri,  2 Feb 2024 18:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706898861; cv=none; b=IP4YPam5CTrQFH6fR2fz88RQARtao24KwUv4rAxFZeEzrXGDTrQZrl3ftPzG5dGSHSua0c8C2aWV5VF9o2y30RcRiAKUYZe5nKhpI+/QnbE2vwL5X0SZ3Ak8LhMYmYYZyeL1mU9lPTcqV/zo+7k35K85/uH1HIMzwZBcpKHkdFE=
+	t=1706899501; cv=none; b=V2dO+QXrxW7SkDZRK5M3bF8VyAfEEXnE9uBUa1Q0CYsIDSWIE7sFR5NbsuUBFNYZkh6N2i4/4QjajKhgUY3j4CuJfJyibjKg1qhJ4zCBJ7pBMjE1GvbY1PPzyKmY9XfsLjXM2WmveQf6/V5/jufnTWxCGNToHUATa2aSkGalgsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706898861; c=relaxed/simple;
-	bh=vX6D9+slYxC1tY7rccFNiVvkllB8eXggC//tc7iYTWg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ELPY06sHmURsqyTqzgTGIR946EUh/ozITFrLqKavqNbS9qnx8bP0G1Vs7vsRg9vd/0FzTgdl4CsdYOni+BXzGSez+EyxILpaICjnB3enTiwjBR7y8wXkfnqwtxWfdTLSmOx/KhqR/kdocmQ3Pb+GiUWbbzdJL4mEkNvbZrdjyUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WiGftXBD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706899501; c=relaxed/simple;
+	bh=1n+POexB4IxIKN4NogGOvLi6IfL+92Wk9tP/cRbJstg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=BepaPCQWKJ6MRy1et/o/j96mJCqxjhZVa2zt37dR49+hrmXxabvbH6x30aYpMBPoVOBHPybyP53KtONM81dkbMzWTmxcrlP9nBipQs+yN2FS+3xGJ6G+79ntX3THJc5ZIRgXWg9qfKhRKvBvHWZy689Qz2p2VjfSAwGjpwMHpok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ChIloMUd; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WiGftXBD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EE94C433C7;
-	Fri,  2 Feb 2024 18:34:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706898861;
-	bh=vX6D9+slYxC1tY7rccFNiVvkllB8eXggC//tc7iYTWg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WiGftXBD6tcvIj70BNriqMYTQmRVZoZqidkupMM8dDxw0o0MUNTJHLWXziFkRs1UU
-	 u1pOU0pEU7ZyFGiIX680Oq7JWAjfH8xzoXRZa4sBlm9r/Lsb48D/vvARuZeyQ/twmM
-	 831UNWgK5pEQvHA7EtQ62pmDlF5Y8XfUZFo8bA0O5KiU3LuP04BJafTxF53HzLYNVL
-	 28ah5fDr5tcgjfE1tOeAGXdHlOl19I+8auYnDrJFMZ+v4Ao+KXG/rIUKvOIMicYjp3
-	 m/ZE8+1zxRjaNv/NG7OnwarcY9C2A6HXys+MxDayCPj5A0Q6UAB6gcX8UPeJ8ep697
-	 DvNZS7QNgwqHQ==
-Date: Fri, 2 Feb 2024 10:34:19 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Tobias Waldekranz <tobias@waldekranz.com>
-Cc: davem@davemloft.net, jiri@resnulli.us, ivecera@redhat.com,
- netdev@vger.kernel.org, roopa@nvidia.com, razor@blackwall.org,
- bridge@lists.linux.dev, rostedt@goodmis.org, mhiramat@kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 net-next 2/5] net: switchdev: Add helpers to display
- switchdev objects as strings
-Message-ID: <20240202103419.4e58d521@kernel.org>
-In-Reply-To: <87zfwjs3vs.fsf@waldekranz.com>
-References: <20240130201937.1897766-1-tobias@waldekranz.com>
-	<20240130201937.1897766-3-tobias@waldekranz.com>
-	<20240201204940.5f5b6e85@kernel.org>
-	<87zfwjs3vs.fsf@waldekranz.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ChIloMUd"
+Received: from localhost.localdomain (unknown [4.155.48.115])
+	by linux.microsoft.com (Postfix) with ESMTPSA id F24EA20B2004;
+	Fri,  2 Feb 2024 10:44:58 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F24EA20B2004
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1706899499;
+	bh=9VOCGDdI8wf7ppg3CttBYebJqIACHcsfFVDg2ERPXoo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ChIloMUd7Yz15+MUeaAt+evM/yKzUa9w93jRRTjQVtaLOdVIgmvoHP8fjPd+/yO8P
+	 Q73voyHyfz2JAKH0aaLznSS4grT74qYZBB5wkychvJe0WsJ79hSy8wLwNgAUkUwat3
+	 ZGSqUd7CAoF7XRQKb/wFZmqyZGEB4VyyUq4ug4ak=
+From: Beau Belgrave <beaub@linux.microsoft.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com
+Subject: [PATCH v2 4/4] tracing/user_events: Document multi-format flag
+Date: Fri,  2 Feb 2024 18:44:49 +0000
+Message-Id: <20240202184449.1674-5-beaub@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240202184449.1674-1-beaub@linux.microsoft.com>
+References: <20240202184449.1674-1-beaub@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Fri, 02 Feb 2024 08:48:39 +0100 Tobias Waldekranz wrote:
-> > Are you printing things together into one big string?
-> > Seems like leaving a lot of features on the table.
-> > trace point events can be filtered, not to mention attaching
-> > to them with bpftrace.   
-> 
-> My thinking was that __entry->msg was mostly for use by the tracepoint's
-> printf, and that if you are using some dynamic tracer, __entry->info
-> points to the verbatim notification which you can use to apply arbitrary
-> filtering.
+User programs can now ask user_events to handle the synchronization of
+multiple different formats for an event with the same name via the new
+USER_EVENT_REG_MULTI_FORMAT flag.
 
-Ah, I see. That works.
+Add a section for USER_EVENT_REG_MULTI_FORMAT that explains the intended
+purpose and caveats of using it. Explain how deletion works in these
+cases and how to use /sys/kernel/tracing/dynamic_events for per-version
+deletion.
+
+Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
+---
+ Documentation/trace/user_events.rst | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/trace/user_events.rst b/Documentation/trace/user_events.rst
+index d8f12442aaa6..1d5a7626e6a6 100644
+--- a/Documentation/trace/user_events.rst
++++ b/Documentation/trace/user_events.rst
+@@ -92,6 +92,24 @@ The following flags are currently supported.
+   process closes or unregisters the event. Requires CAP_PERFMON otherwise
+   -EPERM is returned.
+ 
+++ USER_EVENT_REG_MULTI_FORMAT: The event can contain multiple formats. This
++  allows programs to prevent themselves from being blocked when their event
++  format changes and they wish to use the same name. When this flag is used the
++  tracepoint name will be in the new format of "name.unique_id" vs the older
++  format of "name". A tracepoint will be created for each unique pair of name
++  and format. This means if several processes use the same name and format,
++  they will use the same tracepoint. If yet another process uses the same name,
++  but a different format than the other processes, it will use a different
++  tracepoint with a new unique id. Recording programs need to scan tracefs for
++  the various different formats of the event name they are interested in
++  recording. The system name of the tracepoint will also use "user_events_multi"
++  instead of "user_events". This prevents single-format event names conflicting
++  with any multi-format event names within tracefs. The unique_id is output as
++  a hex string. Recording programs should ensure the tracepoint name starts with
++  the event name they registered and has a suffix that starts with . and only
++  has hex characters. For example to find all versions of the event "test" you
++  can use the regex "^test\.[0-9a-fA-F]+$".
++
+ Upon successful registration the following is set.
+ 
+ + write_index: The index to use for this file descriptor that represents this
+@@ -106,6 +124,9 @@ or perf record -e user_events:[name] when attaching/recording.
+ **NOTE:** The event subsystem name by default is "user_events". Callers should
+ not assume it will always be "user_events". Operators reserve the right in the
+ future to change the subsystem name per-process to accommodate event isolation.
++In addition if the USER_EVENT_REG_MULTI_FORMAT flag is used the tracepoint name
++will have a unique id appended to it and the system name will be
++"user_events_multi" as described above.
+ 
+ Command Format
+ ^^^^^^^^^^^^^^
+@@ -156,7 +177,11 @@ to request deletes than the one used for registration due to this.
+ to the event. If programs do not want auto-delete, they must use the
+ USER_EVENT_REG_PERSIST flag when registering the event. Once that flag is used
+ the event exists until DIAG_IOCSDEL is invoked. Both register and delete of an
+-event that persists requires CAP_PERFMON, otherwise -EPERM is returned.
++event that persists requires CAP_PERFMON, otherwise -EPERM is returned. When
++there are multiple formats of the same event name, all events with the same
++name will be attempted to be deleted. If only a specific version is wanted to
++be deleted then the /sys/kernel/tracing/dynamic_events file should be used for
++that specific format of the event.
+ 
+ Unregistering
+ -------------
+-- 
+2.34.1
+
