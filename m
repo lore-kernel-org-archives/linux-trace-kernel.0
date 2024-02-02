@@ -1,99 +1,371 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2D4BA2C;
-	Fri,  2 Feb 2024 01:46:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0AEF513
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 Feb 2024 04:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706838381; cv=none; b=B/JrEC0XpRf2TQareOA1zXf9fsaEgon4MHQk75sqHqzAJ3M6j4HfOdOhuy9rVs+ga23hCpDzhlWLD32c8ANpwInKKD+dnMHIoj/ErnujbDOKFWu9NzTlwmJChbr1XAMRDSZXqLr8bs57kqoVlkjkJdzRxoE52oAzfODvxFU1RWM=
+	t=1706846577; cv=none; b=U9sF+9C1SbTm8P9FsUIwGkN07TmLNjA8PhP3H20RouTJdGYZ+LF9qOECKasYwfWwjxuVpL26iF8pSbXqT3NQNsg8idl/1c/ikRKq8gKDPEpwHcZZy2+KOtOwrbegw8AKBdZz/KcJXXp8eBr78cAdZ4xzD6pxBa/tGNnWyxgfACg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706838381; c=relaxed/simple;
-	bh=zQL/rMBDuoXBWrWx5GoEV+Lp22Ug6QFEu8XoV5dB1T0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hNCnw6Y1xilQE01qioVhjAQmkKmjIQMe0hDqyMOnHH4YYplatcWKjuNQJv/7Q64zsQ0gt2DEly05vMtYdJjog0MjxZPoxtgMKYU4ynNmD9DuBoPOgL3oUdSmmn7fTpJ4OKCMafNTvUIVi+1d87RTJ3ITwBKuFX1bPk9HCCHzkDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62967C433C7;
-	Fri,  2 Feb 2024 01:46:20 +0000 (UTC)
-Date: Thu, 1 Feb 2024 20:46:37 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc: linux-trace-kernel@vger.kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, Pengutronix Kernel Team
- <kernel@pengutronix.de>
-Subject: Re: Boot-time dumping of ftrace fuctiongraph buffer
-Message-ID: <20240201204637.2afab2db@gandalf.local.home>
-In-Reply-To: <d33e5271-219d-4b8e-be5a-8903219d7fd6@pengutronix.de>
-References: <d33e5271-219d-4b8e-be5a-8903219d7fd6@pengutronix.de>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1706846577; c=relaxed/simple;
+	bh=KikoRp16kk3HUQ3cz6e+KSBIyTpcvef+zDkRtLkKw4Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Yiao/tlhV22yKH4M+IrubY5MRbaZVR9SRFGGJfsRy01JCBBvkY+6GzSarcYbuKcl1/dVtXnRCHvSTpxoYhLtS3mHnqym8aBKvlrggLIc36OWDrotUDj2jKFWnH+YGyyl9OretIRr52FX61zXre2gEXOTURWsQOKpJMVRHASl6kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jK5oTfmi; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jK5oTfmi"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d5ce88b51cso112435ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 01 Feb 2024 20:02:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706846574; x=1707451374; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jFJqfnpRCM1VqQTQw/nonDO6j9S3/xW4X7YVXfU/LVQ=;
+        b=jK5oTfmi7SWu6CP2Wwiin2qgatH/MRXJExWPlOPUmN20d2v566a1mvF6zV19gLM8Lw
+         1xIyRKakQSLJKbjbmxT45ibAH7C2mHJVvQ7XBLtBFJJHf1tBGdG3QxyWIjhNO8ltD/AI
+         dpl9q0IVvjKF+L56yZLEeeQLgF2syuWm2U4Oz8MSjbTbLMd+m2zgT+hmQD7fNMSb0/IG
+         4x6rPUuGiAaGa/EBejiPqOxVTKVzjQB5RcOnf6/++HRA++iJQq0xDbOOcHAMQHl221vY
+         Z7HOA5ag+dGET5johDCIKCwn3tiKa8V01ytHV9mkkthyI9Sy7gnd6INDoZuHON4TwTC6
+         dpyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706846574; x=1707451374;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jFJqfnpRCM1VqQTQw/nonDO6j9S3/xW4X7YVXfU/LVQ=;
+        b=BqgVBod8zAS9mUPqeP9ODNmFJs2KN5x2SNiV3sOWMxge+RAgqThfvHBCbzIRqBs+J6
+         gxRxhDWmJIjWwljJ6DSLjgzH5rGaELzJ/wuOHxlgx51HxVp6GXnwKaQ7hx/2K8GYDG+b
+         raVJ+bSoA38w9yJrK/MoJCw7VdKFQFH8QYPZE11EbQKGPSfPwUECU/K0ThIoFd8C1Jal
+         U8crL0AwaqkVCdS4kLDitAjUr3jIFdMNR4/dXT2IEeaFx06r8Pt61JbxttH1tCfbI/Ac
+         0/B9u6gBzMbZ1CmWOt1pkDnitfghcSKhHyA0mXEMSCYrXv0eD1diqmeL/boczRl/ROfG
+         GxtA==
+X-Gm-Message-State: AOJu0Yy/ve8I7kPe9af8RFC5MQIyjNUp6DVFf2OhIGR1UDYviK9soe7J
+	F3sFMCuNsGkHUjVE5ZqAGGXRw/G8y2jnk8h6rVARUZOBwKayxAmrF4ju3kXYXWdwOhj6WOIKnpE
+	oJP8lDeEZbcN/++MngRunP8t9h675q4fNuqDb
+X-Google-Smtp-Source: AGHT+IHNdARZNWgrLAHaHq/bbR2IKOvaETBe+RFLk+CFfCXPML9rH0oDYlYlP9TWnJMBqc7eyBYwkFLTKF4GMzsdKDQ=
+X-Received: by 2002:a17:903:32d2:b0:1d8:d6bf:145b with SMTP id
+ i18-20020a17090332d200b001d8d6bf145bmr62172plr.15.1706846573457; Thu, 01 Feb
+ 2024 20:02:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240125164256.4147-1-alexandru.elisei@arm.com> <20240125164256.4147-29-alexandru.elisei@arm.com>
+In-Reply-To: <20240125164256.4147-29-alexandru.elisei@arm.com>
+From: Peter Collingbourne <pcc@google.com>
+Date: Thu, 1 Feb 2024 20:02:40 -0800
+Message-ID: <CAMn1gO7M51QtxPxkRO3ogH1zasd2-vErWqoPTqGoPiEvr8Pvcw@mail.gmail.com>
+Subject: Re: [PATCH RFC v3 28/35] arm64: mte: swap: Handle tag restoring when
+ missing tag storage
+To: Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, 
+	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, 
+	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org, 
+	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
+	bsegall@google.com, mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, 
+	mhiramat@kernel.org, rppt@kernel.org, hughd@google.com, steven.price@arm.com, 
+	anshuman.khandual@arm.com, vincenzo.frascino@arm.com, david@redhat.com, 
+	eugenis@google.com, kcc@google.com, hyesoo.yu@samsung.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	kvmarm@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 1 Feb 2024 13:21:37 +0100
-Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
+On Thu, Jan 25, 2024 at 8:45=E2=80=AFAM Alexandru Elisei
+<alexandru.elisei@arm.com> wrote:
+>
+> Linux restores tags when a page is swapped in and there are tags associat=
+ed
+> with the swap entry which the new page will replace. The saved tags are
+> restored even if the page will not be mapped as tagged, to protect agains=
+t
+> cases where the page is shared between different VMAs, and is tagged in
+> some, but untagged in others. By using this approach, the process can sti=
+ll
+> access the correct tags following an mprotect(PROT_MTE) on the non-MTE
+> enabled VMA.
+>
+> But this poses a challenge for managing tag storage: in the scenario abov=
+e,
+> when a new page is allocated to be swapped in for the process where it wi=
+ll
+> be mapped as untagged, the corresponding tag storage block is not reserve=
+d.
+> mte_restore_page_tags_by_swp_entry(), when it restores the saved tags, wi=
+ll
+> overwrite data in the tag storage block associated with the new page,
+> leading to data corruption if the block is in use by a process.
+>
+> Get around this issue by saving the tags in a new xarray, this time index=
+ed
+> by the page pfn, and then restoring them when tag storage is reserved for
+> the page.
+>
+> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> ---
+>
+> Changes since rfc v2:
+>
+> * Restore saved tags **before** setting the PG_tag_storage_reserved bit t=
+o
+> eliminate a brief window of opportunity where userspace can access uninit=
+ialized
+> tags (Peter Collingbourne).
+>
+>  arch/arm64/include/asm/mte_tag_storage.h |   8 ++
+>  arch/arm64/include/asm/pgtable.h         |  11 +++
+>  arch/arm64/kernel/mte_tag_storage.c      |  12 ++-
+>  arch/arm64/mm/mteswap.c                  | 110 +++++++++++++++++++++++
+>  4 files changed, 140 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/include/asm/mte_tag_storage.h b/arch/arm64/includ=
+e/asm/mte_tag_storage.h
+> index 50bdae94cf71..40590a8c3748 100644
+> --- a/arch/arm64/include/asm/mte_tag_storage.h
+> +++ b/arch/arm64/include/asm/mte_tag_storage.h
+> @@ -36,6 +36,14 @@ bool page_is_tag_storage(struct page *page);
+>
+>  vm_fault_t handle_folio_missing_tag_storage(struct folio *folio, struct =
+vm_fault *vmf,
+>                                             bool *map_pte);
+> +vm_fault_t mte_try_transfer_swap_tags(swp_entry_t entry, struct page *pa=
+ge);
+> +
+> +void tags_by_pfn_lock(void);
+> +void tags_by_pfn_unlock(void);
+> +
+> +void *mte_erase_tags_for_pfn(unsigned long pfn);
+> +bool mte_save_tags_for_pfn(void *tags, unsigned long pfn);
+> +void mte_restore_tags_for_pfn(unsigned long start_pfn, int order);
+>  #else
+>  static inline bool tag_storage_enabled(void)
+>  {
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pg=
+table.h
+> index 0174e292f890..87ae59436162 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -1085,6 +1085,17 @@ static inline void arch_swap_invalidate_area(int t=
+ype)
+>                 mte_invalidate_tags_area_by_swp_entry(type);
+>  }
+>
+> +#ifdef CONFIG_ARM64_MTE_TAG_STORAGE
+> +#define __HAVE_ARCH_SWAP_PREPARE_TO_RESTORE
+> +static inline vm_fault_t arch_swap_prepare_to_restore(swp_entry_t entry,
+> +                                                     struct folio *folio=
+)
+> +{
+> +       if (tag_storage_enabled())
+> +               return mte_try_transfer_swap_tags(entry, &folio->page);
+> +       return 0;
+> +}
+> +#endif
+> +
+>  #define __HAVE_ARCH_SWAP_RESTORE
+>  static inline void arch_swap_restore(swp_entry_t entry, struct folio *fo=
+lio)
+>  {
+> diff --git a/arch/arm64/kernel/mte_tag_storage.c b/arch/arm64/kernel/mte_=
+tag_storage.c
+> index afe2bb754879..ac7b9c9c585c 100644
+> --- a/arch/arm64/kernel/mte_tag_storage.c
+> +++ b/arch/arm64/kernel/mte_tag_storage.c
+> @@ -567,6 +567,7 @@ int reserve_tag_storage(struct page *page, int order,=
+ gfp_t gfp)
+>                 }
+>         }
+>
+> +       mte_restore_tags_for_pfn(page_to_pfn(page), order);
+>         page_set_tag_storage_reserved(page, order);
+>  out_unlock:
+>         mutex_unlock(&tag_blocks_lock);
+> @@ -595,7 +596,8 @@ void free_tag_storage(struct page *page, int order)
+>         struct tag_region *region;
+>         unsigned long page_va;
+>         unsigned long flags;
+> -       int ret;
+> +       void *tags;
+> +       int i, ret;
+>
+>         ret =3D tag_storage_find_block(page, &start_block, &region);
+>         if (WARN_ONCE(ret, "Missing tag storage block for pfn 0x%lx", pag=
+e_to_pfn(page)))
+> @@ -605,6 +607,14 @@ void free_tag_storage(struct page *page, int order)
+>         /* Avoid writeback of dirty tag cache lines corrupting data. */
+>         dcache_inval_tags_poc(page_va, page_va + (PAGE_SIZE << order));
+>
+> +       tags_by_pfn_lock();
+> +       for (i =3D 0; i < (1 << order); i++) {
+> +               tags =3D mte_erase_tags_for_pfn(page_to_pfn(page + i));
+> +               if (unlikely(tags))
+> +                       mte_free_tag_buf(tags);
+> +       }
+> +       tags_by_pfn_unlock();
+> +
+>         end_block =3D start_block + order_to_num_blocks(order, region->bl=
+ock_size_pages);
+>
+>         xa_lock_irqsave(&tag_blocks_reserved, flags);
+> diff --git a/arch/arm64/mm/mteswap.c b/arch/arm64/mm/mteswap.c
+> index 2a43746b803f..e11495fa3c18 100644
+> --- a/arch/arm64/mm/mteswap.c
+> +++ b/arch/arm64/mm/mteswap.c
+> @@ -20,6 +20,112 @@ void mte_free_tag_buf(void *buf)
+>         kfree(buf);
+>  }
+>
+> +#ifdef CONFIG_ARM64_MTE_TAG_STORAGE
+> +static DEFINE_XARRAY(tags_by_pfn);
+> +
+> +void tags_by_pfn_lock(void)
+> +{
+> +       xa_lock(&tags_by_pfn);
+> +}
+> +
+> +void tags_by_pfn_unlock(void)
+> +{
+> +       xa_unlock(&tags_by_pfn);
+> +}
+> +
+> +void *mte_erase_tags_for_pfn(unsigned long pfn)
+> +{
+> +       return __xa_erase(&tags_by_pfn, pfn);
+> +}
+> +
+> +bool mte_save_tags_for_pfn(void *tags, unsigned long pfn)
+> +{
+> +       void *entry;
+> +       int ret;
+> +
+> +       ret =3D xa_reserve(&tags_by_pfn, pfn, GFP_KERNEL);
 
-> Hello,
-> 
-> I semi-regularly debug probe failures. For drivers that use dev_err_probe
-> rigorously, this is a quick matter: The probe function records a deferral reason
-> and if the deferral persists, deferred_probe_timeout_work_func() will print
-> the collected reasons, even if PID 1 is never started.
-> 
-> For drivers that don't call dev_err_probe, I find myself sometimes doing printf
-> debugging inside the probe function.
+copy_highpage can be called from an atomic context, so it isn't
+currently valid to pass GFP_KERNEL here.
 
-Is the driver built in or started after init?
+To give one example of a possible atomic context call, copy_pte_range
+will take a PTE spinlock and can call copy_present_pte, which can call
+copy_present_page, which will call copy_user_highpage.
 
-> 
-> I would like to replace this with the function graph tracer:
-> 
->   - record the probe function, configured over kernel command line
->     (The device indefinitely deferring probe is printed to the console,
->      so I know what I am looking for on the next boot)
-> 
->   - Dump the function graph trace
-> 
->   - See if the last call before (non-devm) cleanup is getting a clock, a GPIO,
->     a regulator or w/e.
-> 
-> For this to be maximally useful, I need to configure this not only at boot-time,
-> but also dump the ftrace buffer at boot time. Probe deferral can hinder the kernel from
-> calling init and providing a shell, where I could read /sys/kernel/tracing/trace.
+To give another example, __buffer_migrate_folio can call
+spin_lock(&mapping->private_lock), then call folio_migrate_copy, which
+will call folio_copy.
 
-OK so the driver is built in.
+Peter
 
-> 
-> I found following two mechanisms that looked relevant, but seem not to
-> do exactly what I want:
-> 
->   - tp_printk: seems to be related to trace points only and not usable
->     for the function graph output
-> 
->   - dump_on_oops: I don't get an Oops if probe deferral times out, but maybe
->     one could patch the kernel to check a oops_on_probe_deferral or dump_on_probe_deferral
->     kernel command line parameter in deferred_probe_timeout_work_func()?
-> 
-> 
-> Is there existing support that I am missing? Any input on whether this
-> would be a welcome feature to have?
-
-Well you can start function_graph on the kernel command line and event
-filter on a give function
-
- ftrace=function_graph function_graph_filter=probe_func
-
-You can add your own ftrace_dump() on some kind of detected error and put
-that in the kernel command line. For example RCU has:
-
-  rcupdate.rcu_cpu_stall_ftrace_dump=
-
-Which will do a ftrace dump when a RCU stall is triggered.
-
--- Steve
-
+> +       if (ret)
+> +               return true;
+> +
+> +       tags_by_pfn_lock();
+> +
+> +       if (page_tag_storage_reserved(pfn_to_page(pfn))) {
+> +               xa_release(&tags_by_pfn, pfn);
+> +               tags_by_pfn_unlock();
+> +               return false;
+> +       }
+> +
+> +       entry =3D __xa_store(&tags_by_pfn, pfn, tags, GFP_ATOMIC);
+> +       if (xa_is_err(entry)) {
+> +               xa_release(&tags_by_pfn, pfn);
+> +               goto out_unlock;
+> +       } else if (entry) {
+> +               mte_free_tag_buf(entry);
+> +       }
+> +
+> +out_unlock:
+> +       tags_by_pfn_unlock();
+> +       return true;
+> +}
+> +
+> +void mte_restore_tags_for_pfn(unsigned long start_pfn, int order)
+> +{
+> +       struct page *page =3D pfn_to_page(start_pfn);
+> +       unsigned long pfn;
+> +       void *tags;
+> +
+> +       tags_by_pfn_lock();
+> +
+> +       for (pfn =3D start_pfn; pfn < start_pfn + (1 << order); pfn++, pa=
+ge++) {
+> +               tags =3D mte_erase_tags_for_pfn(pfn);
+> +               if (unlikely(tags)) {
+> +                       /*
+> +                        * Mark the page as tagged so mte_sync_tags() doe=
+sn't
+> +                        * clear the tags.
+> +                        */
+> +                       WARN_ON_ONCE(!try_page_mte_tagging(page));
+> +                       mte_copy_page_tags_from_buf(page_address(page), t=
+ags);
+> +                       set_page_mte_tagged(page);
+> +                       mte_free_tag_buf(tags);
+> +               }
+> +       }
+> +
+> +       tags_by_pfn_unlock();
+> +}
+> +
+> +/*
+> + * Note on locking: swap in/out is done with the folio locked, which eli=
+minates
+> + * races with mte_save/restore_page_tags_by_swp_entry.
+> + */
+> +vm_fault_t mte_try_transfer_swap_tags(swp_entry_t entry, struct page *pa=
+ge)
+> +{
+> +       void *swap_tags, *pfn_tags;
+> +       bool saved;
+> +
+> +       /*
+> +        * mte_restore_page_tags_by_swp_entry() will take care of copying=
+ the
+> +        * tags over.
+> +        */
+> +       if (likely(page_mte_tagged(page) || page_tag_storage_reserved(pag=
+e)))
+> +               return 0;
+> +
+> +       swap_tags =3D xa_load(&tags_by_swp_entry, entry.val);
+> +       if (!swap_tags)
+> +               return 0;
+> +
+> +       pfn_tags =3D mte_allocate_tag_buf();
+> +       if (!pfn_tags)
+> +               return VM_FAULT_OOM;
+> +
+> +       memcpy(pfn_tags, swap_tags, MTE_PAGE_TAG_STORAGE_SIZE);
+> +       saved =3D mte_save_tags_for_pfn(pfn_tags, page_to_pfn(page));
+> +       if (!saved)
+> +               mte_free_tag_buf(pfn_tags);
+> +
+> +       return 0;
+> +}
+> +#endif
+> +
+>  int mte_save_page_tags_by_swp_entry(struct page *page)
+>  {
+>         void *tags, *ret;
+> @@ -54,6 +160,10 @@ void mte_restore_page_tags_by_swp_entry(swp_entry_t e=
+ntry, struct page *page)
+>         if (!tags)
+>                 return;
+>
+> +       /* Tags will be restored when tag storage is reserved. */
+> +       if (tag_storage_enabled() && unlikely(!page_tag_storage_reserved(=
+page)))
+> +               return;
+> +
+>         if (try_page_mte_tagging(page)) {
+>                 mte_copy_page_tags_from_buf(page_address(page), tags);
+>                 set_page_mte_tagged(page);
+> --
+> 2.43.0
+>
