@@ -1,49 +1,25 @@
-Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D000D1872;
-	Fri,  2 Feb 2024 12:59:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21D520F7
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 Feb 2024 13:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706878754; cv=none; b=gvqbEDlSncT31IZ85o05k44iuMlsga86tP4U8FjY8NNvtZZqIQGG/i3lHrEzmBIYgNDPtrB2pxeVX8I7y9uvsHRDUPWTjm5KFqix3LUeWbdj7ULu2Lz6qeLC0thm710tP7S0SzdndaOq0dbHToRMke5PCuZfB1Kmw09hDYmvMU8=
+	t=1706879568; cv=none; b=CYKI0b5/ytH2xQIrHLhBR/01K3hGU1/rQAfmzKFGLks4IzN6jQ1YB6HaroOwFrv92NqHPNK3Q4QKUyORFFCLsP5zykRlVK8F3Zs1L9LgwF6kpGpHN1d6V0tHrBOFreG0i+EfKATjxkXHICgw+wCgRWoIHT/QSLqf8K7qc9IQ15c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706878754; c=relaxed/simple;
-	bh=bmyzsqyOfr7+gv8Qlt2kMAJlY3EVtmoXixA7BGuuqdE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ZYOBjtwYflgWo/ROC8kMiKj6mfUUaPbcM2hAASv8z1/A6uRiIZIcff1QMj9CRmxH7+fOZu5Qz9cFI/h1tE0cvfMOfVWEH1VSY0elwOY7n+xYjWrZ75Tsn6JloFYYFUSmDgbDnWrjQJKjfUlnNCB1u+clOEyqMNtVSUuLbuvA8hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=gVIkgZ+N; arc=none smtp.client-ip=99.78.197.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="gVIkgZ+N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1706878753; x=1738414753;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=bmyzsqyOfr7+gv8Qlt2kMAJlY3EVtmoXixA7BGuuqdE=;
-  b=gVIkgZ+NqDqi2kFK+NazxZBJYkrv+xwf2PRAlBfJpXsVes/eFU6cEc8+
-   wSgfPDl3TXUaiWomFA2iqR3E6OT2jvgB6kjiFiBdrS/r79DdlTxsEyA2e
-   OanzqgVp/R+bSogjweoKkmhu1Q+1LzF5mVSs9PR/qqLovGZlcmEj+EzGQ
-   k=;
-X-IronPort-AV: E=Sophos;i="6.05,238,1701129600"; 
-   d="scan'208";a="271450412"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 12:59:11 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.7.35:18284]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.55.97:2525] with esmtp (Farcaster)
- id 285d43f6-e4ef-413a-9d97-de6ed578368f; Fri, 2 Feb 2024 12:59:10 +0000 (UTC)
-X-Farcaster-Flow-ID: 285d43f6-e4ef-413a-9d97-de6ed578368f
-Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 2 Feb 2024 12:59:10 +0000
-Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
- (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 2 Feb
- 2024 12:58:56 +0000
-Message-ID: <3bfbe6b3-d293-483f-9f30-b7d49440be22@amazon.com>
-Date: Fri, 2 Feb 2024 13:58:52 +0100
+	s=arc-20240116; t=1706879568; c=relaxed/simple;
+	bh=2chKkVNyv+a25tr2l19cV9NQvnf2nRozHkVqSiQZ+jo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qRWo8Uyi5raPvMnIWjr4AHeUfnUgnb5UsIhi0kCWVxzJpt7v8wZGmO3VZLSXJ5V8pYQ7FxPR08JxWCJCuYGceNbNP5kknyyVAyb6fRr/McDZYUI0XIwItQr6V1PHIFBEzy6VtSqn5+ePJfFytp16LKiP4D3yYXtbbuFM7Gc0ZEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1rVtLY-0003u8-4f; Fri, 02 Feb 2024 14:12:44 +0100
+Message-ID: <0db9ff92-c643-4559-929b-fb375efab514@pengutronix.de>
+Date: Fri, 2 Feb 2024 14:12:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -51,194 +27,135 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/17] kexec: Allow preservation of ftrace buffers
+Subject: Re: Boot-time dumping of ftrace fuctiongraph buffer
 Content-Language: en-US
-To: Philipp Rudo <prudo@redhat.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kexec@lists.infradead.org>,
-	<linux-doc@vger.kernel.org>, <x86@kernel.org>, Eric Biederman
-	<ebiederm@xmission.com>, "H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski
-	<luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt
-	<rostedt@goodmis.org>, Andrew Morton <akpm@linux-foundation.org>, "Mark
- Rutland" <mark.rutland@arm.com>, Tom Lendacky <thomas.lendacky@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>, James Gowans <jgowans@amazon.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, <arnd@arndb.de>,
-	<pbonzini@redhat.com>, <madvenka@linux.microsoft.com>, Anthony Yznaga
-	<anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, "David
- Woodhouse" <dwmw@amazon.co.uk>, Benjamin Herrenschmidt
-	<benh@kernel.crashing.org>, Rob Herring <robh+dt@kernel.org>, "Krzysztof
- Kozlowski" <krzk@kernel.org>, <linux-integrity@vger.kernel.org>
-References: <20240117144704.602-1-graf@amazon.com>
- <20240129173450.038e46b7@rotkaeppchen>
-From: Alexander Graf <graf@amazon.com>
-In-Reply-To: <20240129173450.038e46b7@rotkaeppchen>
-X-ClientProxiedBy: EX19D033UWC001.ant.amazon.com (10.13.139.218) To
- EX19D020UWC004.ant.amazon.com (10.13.138.149)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>
+References: <d33e5271-219d-4b8e-be5a-8903219d7fd6@pengutronix.de>
+ <20240202150403.7ccc4126dbeaad8bdf77c384@kernel.org>
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+In-Reply-To: <20240202150403.7ccc4126dbeaad8bdf77c384@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-trace-kernel@vger.kernel.org
 
-SGkgUGhpbGlwcCwKCk9uIDI5LjAxLjI0IDE3OjM0LCBQaGlsaXBwIFJ1ZG8gd3JvdGU6Cj4gSGkg
-QWxleCwKPgo+IGFkZGluZyBsaW51eC1pbnRlZ3JpdHkgYXMgdGhlcmUgYXJlIHNvbWUgc3luZXJn
-aWVzIHdpdGggSU1BX0tFWEVDIChpbiBjYXNlIHdlCj4gZ2V0IEtITyB0byB3b3JrKS4KPgo+IEZp
-c3Qgb2YgYWxsIEkgYmVsaWV2ZSB0aGF0IGhhdmluZyBhIGdlbmVyaWMgZnJhbWV3b3JrIHRvIHBh
-c3MgaW5mb3JtYXRpb24gZnJvbQo+IG9uZSBrZXJuZWwgdG8gdGhlIG90aGVyIGFjcm9zcyBrZXhl
-YyB3b3VsZCBiZSBhIGdvb2QgdGhpbmcuIEJ1dCBJJ20gYWZyYWlkIHRoYXQKCgpUaGFua3MsIEkn
-bSBoYXBweSB0byBoZWFyIHRoYXQgeW91IGFncmVlIHdpdGggdGhlIGJhc2ljIG1vdGl2YXRpb24g
-OikuIApUaGVyZSBhcmUgZnVuZGFtZW50YWxseSAyIHByb2JsZW1zIHdpdGggcGFzc2luZyBkYXRh
-OgoKIMKgICogUGFzc2luZyBzdHJ1Y3R1cmVkIGRhdGEgaW4gYSBjcm9zcy1hcmNoaXRlY3R1cmUg
-d2F5CiDCoCAqIFBhc3NpbmcgbWVtb3J5CgpLSE8gdGFja2xlcyBib3RoLiBJdCBwcm9wb3NlcyBh
-IGNvbW1vbiBGRFQgYmFzZWQgZm9ybWF0IHRoYXQgYWxsb3dzIHVzIAp0byBwYXNzIHBlci1zdWJz
-eXN0ZW0gcHJvcGVydGllcy4gVGhhdCB3YXksIGEgc3Vic3lzdGVtIGRvZXMgbm90IG5lZWQgdG8g
-Cmtub3cgd2hldGhlciBpdCdzIHJ1bm5pbmcgb24gQVJNLCB4ODYsIFJJU0MtViBvciBzMzkweC4g
-SXQganVzdCBnYWlucyAKYXdhcmVuZXNzIGZvciBLSE8gYW5kIGNhbiBwYXNzIGRhdGEuCgpPbiB0
-b3Agb2YgdGhhdCwgaXQgcHJvcG9zZXMgYSBzdGFuZGFyZGl6ZWQgIm1lbSIgcHJvcGVydHkgKGFu
-ZCBzb21lIAptYWdpYyBhcm91bmQgdGhhdCkgd2hpY2ggYWxsb3dzIHN1YnN5c3RlbXMgdG8gcGFz
-cyBtZW1vcnkuCgoKPiB5b3UgYXJlIGlnbm9yaW5nIHNvbWUgZnVuZGFtZW50YWwgcHJvYmxlbXMg
-d2hpY2ggbWFrZXMgaXQgZXh0cmVtZWx5IGhhcmQsIGlmCj4gbm90IGltcG9zc2libGUsIHRvIHJl
-bGlhYmx5IHRyYW5zZmVyIHRoZSBrZXJuZWwncyBzdGF0ZSBmcm9tIG9uZSBrZXJuZWwgdG8gdGhl
-Cj4gb3RoZXIuCj4KPiBPbmUgdGhpbmcgSSBkb24ndCB1bmRlcnN0YW5kIGlzIGhvdyByZXVzaW5n
-IHRoZSBzY3JhdGNoIGFyZWEgaXMgd29ya2luZy4gU3VyZQo+IHlvdSBwYXNzIGl0J3MgbG9jYXRp
-b24gdmlhIHRoZSBkdC9ib290X3BhcmFtcyBidXQgSSBkb24ndCBzZWUgYW55IGNvZGUgdGhhdAo+
-IG1ha2VzIGl0IGEgQ01BIHJlZ2lvbi4gU28gSUlVQyB0aGUgc2NyYXRjaCBhcmVhIHdvbid0IGJl
-IGF2YWlsYWJsZSBmb3IgdGhlIDJuZAo+IGtlcm5lbC4gV2hpY2ggaXMgcHJvYmFibHkgZm9yIHRo
-ZSBiZXR0ZXIgYXMgSUlVQyB0aGUgMm5kIGtlcm5lbCBnZXRzIGxvYWRlZCBhbmQKPiBydW5zIGlu
-c2lkZSB0aGF0IGFyZWEgYW5kIEkgZG9uJ3QgYmVsaWV2ZSB0aGUgQ01BIGRlc2lnbiBldmVyIGNv
-bnNpZGVyZWQgdGhhdAo+IHRoZSBrZXJuZWwgaW1hZ2UgY291bGQgYmUgaW5jbHVkZWQgaW4gYSBD
-TUEgYXJlYS4KCgpUaGF0IG9uZSB0b29rIG1lIGEgbG90IHRvIGZpZ3VyZSBvdXQgc2Vuc2libHkg
-KHdpdGggcmVjdXJzaW9uIGFsbCB0aGUgCndheSBkb3duKSB3aGlsZSBidWlsZGluZyBLSE8gOiku
-IEkgaG9wZSBJIGRldGFpbGVkIGl0IHNlbnNpYmx5IGluIHRoZSAKZG9jdW1lbnRhdGlvbiAtIHBs
-ZWFzZSBsZXQgbWUga25vdyBob3cgdG8gaW1wcm92ZSBpdCBpbiBjYXNlIGl0J3MgCnVuY2xlYXI6
-IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvMjAyNDAxMTcxNDQ3MDQuNjAyLTgtZ3JhZkBh
-bWF6b24uY29tLwoKTGV0IG1lIGV4cGxhaW4gaW5saW5lIHVzaW5nIGRpZmZlcmVudCB3b3JkcyBh
-cyB3ZWxsIHdoYXQgaGFwcGVuczoKClRoZSBmaXJzdCAoYW5kIG9ubHkgdGhlIGZpcnN0KSBrZXJu
-ZWwgdGhhdCBib290cyBhbGxvY2F0ZXMgYSBDTUEgcmVnaW9uIAphcyAic2NyYXRjaCByZWdpb24i
-LiBJdCBsb2FkcyB0aGUgbmV3IGtlcm5lbCBpbnRvIHRoYXQgcmVnaW9uLiBJdCBwYXNzZXMgCnRo
-YXQgcmVnaW9uIGFzICJzY3JhdGNoIHJlZ2lvbiIgdG8gdGhlIG5leHQga2VybmVsLiBUaGUgbmV4
-dCBrZXJuZWwgbm93IAp0YWtlcyBpdCBhbmQgbWFya3MgZXZlcnkgcGFnZSBibG9jayB0aGF0IHRo
-ZSBzY3JhdGNoIHJlZ2lvbiBzcGFucyBhcyBDTUE6CgpodHRwczovL2xvcmUua2VybmVsLm9yZy9s
-a21sLzIwMjQwMTE3MTQ0NzA0LjYwMi0zLWdyYWZAYW1hem9uLmNvbS8KClRoZSBDTUEgaGludCBk
-b2Vzbid0IG1lYW4gd2UgY3JlYXRlIGFuIGFjdHVhbCBDTUEgcmVnaW9uLiBJdCBtb3N0bHkgCm1l
-YW5zIHRoYXQgdGhlIGtlcm5lbCB3b24ndCB1c2UgdGhpcyBtZW1vcnkgZm9yIGFueSBrZXJuZWwg
-YWxsb2NhdGlvbnMuIApLZXJuZWwgYWxsb2NhdGlvbnMgdXAgdG8gdGhpcyBwb2ludCBhcmUgYWxs
-b2NhdGlvbnMgd2UgZG9uJ3QgbmVlZCB0byAKcGFzcyBvbiB3aXRoIEtITyBhZ2Fpbi4gS2VybmVs
-IGFsbG9jYXRpb25zIHBhc3QgdGhhdCBwb2ludCBtYXkgYmUgCmFsbG9jYXRpb25zIHRoYXQgd2Ug
-d2FudCB0byBwYXNzLCBzbyB3ZSBqdXN0IG5ldmVyIHBsYWNlIHRoZW0gaW50byB0aGUgCiJzY3Jh
-dGNoIHJlZ2lvbiIgYWdhaW4uCgpBbmQgYmVjYXVzZSB3ZSBub3cgYWxyZWFkeSBoYXZlIGEgc2Ny
-YXRjaCByZWdpb24gZnJvbSB0aGUgcHJldmlvdXMgCmtlcm5lbCwgd2Uga2VlcCByZXVzaW5nIHRo
-YXQgZm9yZXZlciB3aXRoIGFueSBuZXcgS0hPIGtleGVjLgoKCj4gU3RheWluZyBhdCByZXVzaW5n
-IHRoZSBzY3JhdGNoIGFyZWEuIE9uZSB0aGluZyB0aGF0IGlzIGJyb2tlbiBmb3Igc3VyZSBpcyB0
-aGF0Cj4geW91IHJldXNlIHRoZSBzY3JhdGNoIGFyZWEgd2l0aG91dCBldmVyIGNoZWNraW5nIHRo
-ZSBraG9fc2NyYXRjaCBwYXJhbWV0ZXIgb2YKPiB0aGUgMm5kIGtlcm5lbCdzIGNvbW1hbmQgbGlu
-ZS4gUmVtZW1iZXIsIHdpdGgga2V4ZWMgeW91IGFyZSBkZWFsaW5nIHdpdGggdHdvCj4gZGlmZmVy
-ZW50IGtlcm5lbHMgd2l0aCB0d28gZGlmZmVyZW50IGNvbW1hbmQgbGluZXMuIE1lYW5pbmcgeW91
-IGNhbiBvbmx5IHJldXNlCj4gdGhlIHNjcmF0Y2ggYXJlYSBpZiB0aGUgcmVxdWVzdGVkIHNpemUg
-aW4gdGhlIDJuZCBrZXJuZWwgaXMgaWRlbnRpY2FsIHRvIHRoZQo+IG9uZSBvZiB0aGUgMXN0IGtl
-cm5lbC4gSW4gYWxsIG90aGVyIGNhc2VzIHlvdSBuZWVkIHRvIGFkanVzdCB0aGUgc2NyYXRjaCBh
-cmVhJ3MKPiBzaXplIG9yIHJlc2VydmUgYSBuZXcgb25lLgoKCkhtLiBTbyB5b3UncmUgc2F5aW5n
-IGEgdXNlciBtYXkgd2FudCB0byBjaGFuZ2UgdGhlIHNpemUgb2YgdGhlIHNjcmF0Y2ggCmFyZWEg
-d2l0aCBhIEtITyBrZXhlYy4gVGhhdCdzIGluc2FuZWx5IHJpc2t5IGJlY2F1c2UgeW91IChhcyBy
-aWdodGZ1bGx5IApwb2ludGVkIG91dCBiZWxvdykgbWF5IGhhdmUgc2lnbmlmaWNhbnQgZnJhZ21l
-bnRhdGlvbiBhdCB0aGF0IHBvaW50LiBBbmQgCndlIHdpbGwgb25seSBrbm93IHdoZW4gd2UncmUg
-aW4gdGhlIG5ldyBrZXJuZWwgc28gaXQncyB0b28gbGF0ZSB0byAKYWJvcnQuIElNSE8gaXQncyBi
-ZXR0ZXIgdG8ganVzdCBkZWNsYXJlIHRoZSBzY3JhdGNoIHJlZ2lvbiBhcyBpbW11dGFibGUgCmR1
-cmluZyBLSE8gdG8gYXZvaWQgdGhhdCBwaXRmYWxsLgoKCj4gVGhpcyBkaXJlY3RseSBsZWFkcyB0
-byB0aGUgbmV4dCBwcm9ibGVtLiBJbiBraG9fcmVzZXJ2ZV9wcmV2aW91c19tZW0geW91IGFyZQo+
-IHJldXNpbmcgdGhlIGRpZmZlcmVudCBtZW1vcnkgcmVnaW9ucyB3aGVyZXZlciB0aGUgMXN0IGtl
-cm5lbCBhbGxvY2F0ZWQgdGhlbS4KPiBCdXQgdGhhdCBhbHNvIG1lYW5zIHlvdSBhcmUgaGFuZGlu
-ZyBvdmVyIHRoZSAxc3Qga2VybmVsJ3MgbWVtb3J5Cj4gZnJhZ21lbnRhdGlvbiB0byB0aGUgMm5k
-IGtlcm5lbCBhbmQgeW91IGRvIHRoYXQgZXh0cmVtZWx5IGVhcmx5IGR1cmluZyBib290Lgo+IFdo
-aWNoIG1lYW5zIHRoYXQgdXNlcnMgd2hvIG5lZWQgdG8gYWxsb2NhdGUgbGFyZ2UgY29udGludW91
-cyBwaHlzaWNhbCBtZW1vcnksCj4gbGlrZSB0aGUgc2NyYXRjaCBhcmVhIG9yIHRoZSBjcmFzaGtl
-cm5lbCBtZW1vcnksIHdpbGwgaGF2ZSBpbmNyZWFzaW5nIGNoYW5jZSB0bwo+IG5vdCBmaW5kIGEg
-c3VpdGFibGUgYXJlYS4gV2hpY2ggSU1ITyBpcyB1bmFjY2VwdGFibGUuCgoKQ29ycmVjdCA6KS4g
-SXQgYmFzaWNhbGx5IG1lYW5zIHlvdSB3YW50IHRvIHBhc3MgbGFyZ2UgYWxsb2NhdGlvbnMgZnJv
-bSAKdGhlIDFzdCBrZXJuZWwgdGhhdCB5b3Ugd2FudCB0byBwcmVzZXJ2ZSBvbiB0byB0aGUgbmV4
-dC4gU28gaWYgdGhlIDFzdCAKa2VybmVsIGFsbG9jYXRlZCBhIGxhcmdlIGNyYXNoIGFyZWEsIGl0
-J3Mgc2FmZXN0IHRvIHBhc3MgdGhhdCBhbGxvY2F0aW9uIAp1c2luZyBLSE8gdG8gZW5zdXJlIHRo
-ZSBuZXh0IGtlcm5lbCBhbHNvIGhhcyB0aGUgcmVnaW9uIGZ1bGx5IHJlc2VydmVkLiAKT3RoZXJ3
-aXNlIHRoZSBuZXh0IGtlcm5lbCBtYXkgYWNjaWRlbnRhbGx5IHBsYWNlIGRhdGEgaW50byB0aGUg
-CnByZXZpb3VzbHkgcmVzZXJ2ZWQgY3Jhc2ggcmVnaW9uICh3aGljaCB3b3VsZCBiZSBjb250aWd1
-b3VzbHkgZnJlZSBhdCAKZWFybHkgaW5pdCBvZiB0aGUgMm5kIGtlcm5lbCkgYW5kIGZyYWdtZW50
-IGl0IGFnYWluLgoKCj4gRmluYWxseSwgYW5kIHRoYXQncyB0aGUgYmlnIGVsZXBoYW50IGluIHRo
-ZSByb29tLCBpcyB5b3VyIGxheCBoYW5kbGluZyBvZiB0aGUKPiB1bnN0YWJsZSBrZXJuZWwgaW50
-ZXJuYWwgQUJJLiBSZW1lbWJlciwgeW91IGFyZSBkZWFsaW5nIHdpdGggdHdvIGRpZmZlcmVudAo+
-IGtlcm5lbHMsIHRoYXQgYWxzbyBtZWFucyB0d28gZGlmZmVyZW50IHNvdXJjZSBsZXZlbHMgYW5k
-IHR3byBkaWZmZXJlbnQgY29uZmlncy4KPiBTbyBvbmx5IGJlY2F1c2UgYm90aCB0aGUgMXN0IGFu
-ZCAybmQga2VybmVsIGhhdmUgYSBlLmcuIHN0cnVjdCBidWZmZXJfcGFnZQo+IGRvZXNuJ3QgbWVh
-bnMgdGhhdCB0aGV5IGhhdmUgdGhlIHNhbWUgc3RydWN0IGJ1ZmZlcl9wYWdlLiBCdXQgdGhhdCdz
-IHdoYXQgeW91cgo+IGNvZGUgaW1wbGljaXRseSBhc3N1bWVzLiBGb3IgS0hPIGV2ZXIgdG8gbWFr
-ZSBpdCB1cHN0cmVhbSB5b3UgbmVlZCB0byBtYWtlIHN1cmUKPiB0aGF0IGJvdGgga2VybmVscyBh
-cmUgInNwZWFraW5nIHRoZSBzYW1lIGxhbmd1YWdlIi4KCgpXb3csIEkgaG9wZSBpdCBkaWRuJ3Qg
-Y29tZSBhY3Jvc3MgYXMgdGhhdCEgVGhlIHdob2xlIHBvaW50IG9mIHVzaW5nIEZEVCAKYW5kIGNv
-bXBhdGlibGUgc3RyaW5ncyBpbiBLSE8gaXMgdG8gc29sdmUgZXhhY3RseSB0aGF0IHByb2JsZW0u
-IEFueSB0aW1lIAphIHBhc3NlZCBvdmVyIGRhdGEgc3RydWN0dXJlIGNoYW5nZXMgaW5jb21wYXRp
-Ymx5LCB5b3Ugd291bGQgbmVlZCB0byAKbW9kaWZ5IHRoZSBjb21wYXRpYmxlIHN0cmluZyBvZiB0
-aGUgc3Vic3lzdGVtIHRoYXQgb3ducyB0aGUgbm93IAppbmNvbXBhdGlibGUgZGF0YS4KClNvIGlu
-IHRoZSBleGFtcGxlIG9mIHN0cnVjdCBidWZmZXJfcGFnZSwgaXQgbWVhbnMgdGhhdCBpZiBhbnlv
-bmUgY2hhbmdlcyAKdGhlIGZldyBiaXRzIHdlIGNhcmUgYWJvdXQgaW4gc3RydWN0IGJ1ZmZlcl9w
-YWdlLCB3ZSBuZWVkIHRvIGVuc3VyZSB0aGF0IAp0aGUgbmV3IGtlcm5lbCBlbWl0cyAiZnRyYWNl
-LGNwdS12MiIgY29tcGF0aWJsZSBzdHJpbmdzLiBXZSBjYW4gYXQgdGhhdCAKcG9pbnQgY2hvb3Nl
-IHdoZXRoZXIgd2Ugd2FudCB0byBpbXBsZW1lbnQgY29tcGF0IGhhbmRsaW5nIGZvciAKImZ0cmFj
-ZSxjcHUtdjEiIHN0eWxlIHN0cnVjdCBidWZmZXJfcGFnZXMgb3Igb25seSBzdXBwb3J0IHNhbWUg
-dmVyc2lvbiAKaW5nZXN0aW9uLgoKVGhlIG9uZSB0aGluZyB0aGF0IHdlIGNvdWxkIGltcHJvdmUg
-b24gaGVyZSB0b2RheSBJTUhPIGlzIHRvIGhhdmUgCmNvbXBpbGUgdGltZSBlcnJvcnMgaWYgYW55
-IHBhcnQgb2Ygc3RydWN0IGJ1ZmZlcl9wYWdlIGNoYW5nZXMgCnNlbWFudGljYWxseTogU28gd2Un
-ZCBjcmVhdGUgYSBmZXcgZGVmaW5lcyBmb3IgdGhlIGJpdHMgd2Ugd2FudCBpbiAKImZ0cmFjZSxj
-cHUtdjEiIGFzIHdlbGwgYXMgc2l6ZSBvZiBzdHJ1Y3QgYnVmZmVyX3BhZ2UgYW5kIHRoZW4gY29t
-cGFyZSAKdGhlbSB0byB3aGF0IHRoZSBzdHJ1Y3Qgb2Zmc2V0cyBhcmUgYXQgY29tcGlsZSB0aW1l
-IHRvIGVuc3VyZSB0aGV5IHN0YXkgCmlkZW50aWNhbC4KClBsZWFzZSBsZXQgbWUga25vdyBob3cg
-SSBjYW4gY2xhcmlmeSB0aGF0IG1vcmUgaW4gdGhlIGRvY3VtZW50YXRpb24uIEl0IApyZWFsbHkg
-aXMgdGhlIGFic29sdXRlIGNvcmUgb2YgS0hPLgoKCj4gUGVyc29uYWxseSBJIHNlZSB0d28gcG9z
-c2libGUgc29sdXRpb25zOgo+Cj4gMSkgWW91IGludHJvZHVjZSBhIHN0YWJsZSBpbnRlcm1lZGlh
-dGUgZm9ybWF0IGZvciBldmVyeSBzdWJzeXN0ZW0gc2ltaWxhciB0bwo+IHdoYXQgSU1BX0tFWEVD
-IGRvZXMuIFRoaXMgc2hvdWxkIHdvcmsgZm9yIHNpbXBsZSB0eXBlcyBsaWtlIHN0cnVjdCBidWZm
-ZXJfcGFnZQo+IGJ1dCBmb3IgY29tcGxleCBvbmVzIGxpa2Ugc3RydWN0IHZmaW9fZGV2aWNlIHRo
-YXQncyBiYXNpY2FsbHkgaW1wb3NzaWJsZS4KCgpJIGRvbid0IHNlZSB3aHkuIFRoZSBvbmx5IHJl
-YXNvbiBLSE8gcGFzc2VzIHN0cnVjdCBidWZmZXJfcGFnZSBhcyBtZW1vcnkgCmlzIGJlY2F1c2Ug
-d2Ugd2FudCB0byBiZSBhYmxlIHRvIHByb2R1Y2UgdHJhY2VzIGV2ZW4gYWZ0ZXIgS0hPIApzZXJp
-YWxpemF0aW9uIGlzIGRvbmUuIEZvciB2ZmlvX2RldmljZSwgSSB0aGluayBpdCdzIHBlcmZlY3Rs
-eSAKcmVhc29uYWJsZSB0byBzZXJpYWxpemUgYW55IGRhdGEgd2UgbmVlZCB0byBwcmVzZXJ2ZSBk
-aXJlY3RseSBpbnRvIEZEVCAKcHJvcGVydGllcy4KCgo+IDIpIFlvdSBhbHNvIGhhbmQgb3ZlciB0
-aGUgQUJJIHZlcnNpb24gZm9yIGV2ZXJ5IGdpdmVuIHR5cGUgKGJhc2ljYWxseSBqdXN0IGEKPiBo
-YXNoIG92ZXIgYWxsIGZpZWxkcyBpbmNsdWRpbmcgYWxsIHRoZSBkZXBlbmRlbmNpZXMpLiBTbyB0
-aGUgMm5kIGtlcm5lbCBjYW4KPiB2ZXJpZnkgdGhhdCB0aGUgZGF0YSBoYW5kZWQgb3ZlciBpcyBp
-biBhIGZvcm1hdCBpdCBjYW4gaGFuZGxlIGFuZCBpZiBub3QgYmFpbAo+IG91dCB3aXRoIGEgZGVz
-Y3JpcHRpdmUgZXJyb3IgbWVzc2FnZSByYXRoZXIgdGhhbiByZWFkaW5nIGdhcmJhZ2UuIFBsdXMg
-c2lkZSBpcwo+IHRoYXQgb25jZSBzdWNoIGEgc3lzdGVtIGlzIGluIHBsYWNlIHlvdSBjYW4gcmV1
-c2UgaXQgdG8gYXV0b21hdGljYWxseSByZXNvbHZlCj4gYWxsIGRlcGVuZGVuY2llcyBzbyB5b3Ug
-bm8gbG9uZ2VyIG5lZWQgdG8gbWFudWFsbHkgc3RvcmUgdGhlIGJ1ZmZlcl9wYWdlIGFuZAo+IGl0
-cyBidWZmZXJfZGF0YV9wYWdlIHNlcGFyYXRlbHkuCj4gRG93biBzaWRlIGlzIHRoYXQgdHJhdmVy
-c2luZyB0aGUgZGVidWdpbmZvIChpbmNsdWRpbmcgdGhlIG9uZXMgZnJvbSBtb2R1bGVzKSBpcwo+
-IG5vdCBhIHNpbXBsZSB0YXNrIGFuZCBJIGV4cGVjdCB0aGF0IHN1Y2ggYSBzeXN0ZW0gd2lsbCBi
-ZSB3YXkgbW9yZSBjb21wbGV4IHRoYW4KPiB0aGUgcmVzdCBvZiBLSE8uIEluIGFkZGl0aW9uIHRo
-ZXJlIGFyZSBzb21lIGNhc2VzIHRoYXQgdGhlIHZlcnNpb25pbmcgd29uJ3QgYmUKPiBhYmxlIHRv
-IGNhcHR1cmUuIEZvciBleGFtcGxlIGlmIGEgdHlwZSBjb250YWlucyBhICJ2b2lkICoiLWZpZWxk
-LiBUaGVuIGFsdGhvdWdoCj4gdGhlIGRlZmluaXRpb24gb2YgdGhlIHR5cGUgaXMgaWRlbnRpY2Fs
-IGluIGJvdGgga2VybmVscyB0aGUgZmllbGQgY2FuIGJlIGNhc3QKPiB0byBkaWZmZXJlbnQgdHlw
-ZXMgd2hlbiB1c2VkLiBBbiBvdGhlciBwcm9ibGVtIHdpbGwgYmUgZnVuY3Rpb24gcG9pbnRlcnMg
-d2hpY2gKPiB5b3UgZmlyc3QgbmVlZCB0byByZXNvbHZlIGluIHRoZSAxc3Qga2VybmVsIGFuZCB0
-aGVuIG1hcCB0byB0aGUgaWRlbnRpY2FsCj4gZnVuY3Rpb24gaW4gdGhlIDJuZCBrZXJuZWwuIFRo
-aXMgd2lsbCBiZWNvbWUgcGFydGljdWxhcmx5ICJmdW4iIHdoZW4gdGhlCj4gZnVuY3Rpb24gaXMg
-cGFydCBvZiBhIG1vZHVsZSB0aGF0IGlzbid0IGxvYWRlZCBhdCB0aGUgdGltZSB3aGVuIHlvdSB0
-cnkgdG8KPiByZWNyZWF0ZSB0aGUga2VybmVsJ3Mgc3RhdGUuCgoKVGhlIHdob2xlIHBvaW50IG9m
-IEtITyBpcyB0byBsZWF2ZSBpdCB0byB0aGUgc3Vic3lzdGVtIHdoaWNoIHBhdGggdGhleSAKd2Fu
-dCB0byB0YWtlLiBUaGUgc3Vic3lzdGVtIGNhbiBlaXRoZXIgcGFzcyBiaW5hcnkgZGF0YSBhbmQg
-dmFsaWRhdGUgYXMgCnBhcnQgb2YgRkRUIHByb3BlcnRpZXMgKGxpa2UgY29tcGF0aWJsZSBzdHJp
-bmdzKS4gVGhhdCBkYXRhIGNhbiBiZSAKaWRlbnRpY2FsIHRvIHRvZGF5J3MgaW4ta2VybmVsIGRh
-dGEgc3RydWN0dXJlcyAodXN1YWxseSBhIGJhZCBpZGVhKSBvciAKY2FuIGJlIGEgbmV3IGludGVy
-bWVkaWF0ZSBkYXRhIGZvcm1hdC4gQnV0IHRoZSBzdWJzeXN0ZW0gY2FuIGFsc28gY2hvb3NlIAp0
-byBmdWxseSBzZXJpYWxpemUgaW50byBGRFQgcHJvcGVydGllcyBhbmQgbm90IHBhc3MgYW55IG1l
-bW9yeSBhdCBhbGwgCmZvciBzdGF0ZSB0aGF0IHdvdWxkIGJlIGluIHN0cnVjdHMuIE9yIHNvbWV0
-aGluZyBpbiBiZXR3ZWVuLgoKCj4gU28gdG8gc3VtbWFyaXplLCB3aGlsZSBpdCB3b3VsZCBiZSBu
-aWNlIHRvIGhhdmUgYSBnZW5lcmljIGZyYW1ld29yayBsaWtlIEtITyB0bwo+IHBhc3MgZGF0YSBm
-cm9tIG9uZSBrZXJuZWwgdG8gdGhlIG90aGVyIHZpYSBrZXhlYyB0aGVyZSBhcmUgZ29vZCByZWFz
-b25zIHdoeSBpdAo+IGRvZXNuJ3QgZXhpc3QsIHlldC4KCgpJIGhvcGUgbXkgZXhwbGFuYXRpb25z
-IGFib3ZlIGNsYXJpZnkgdGhpbmdzIGEgYml0LiBMZXQgbWUga25vdyBpZiB5b3UncmUgCmF0IEZP
-U0RFTSwgaGFwcHkgdG8gdGFsayBhYm91dCB0aGUgaW50ZXJuYWxzIHRoZXJlIGFzIHdlbGwgOikK
-CgpBbGV4CgoKCgoKQW1hem9uIERldmVsb3BtZW50IENlbnRlciBHZXJtYW55IEdtYkgKS3JhdXNl
-bnN0ci4gMzgKMTAxMTcgQmVybGluCkdlc2NoYWVmdHNmdWVocnVuZzogQ2hyaXN0aWFuIFNjaGxh
-ZWdlciwgSm9uYXRoYW4gV2Vpc3MKRWluZ2V0cmFnZW4gYW0gQW10c2dlcmljaHQgQ2hhcmxvdHRl
-bmJ1cmcgdW50ZXIgSFJCIDE0OTE3MyBCClNpdHo6IEJlcmxpbgpVc3QtSUQ6IERFIDI4OSAyMzcg
-ODc5CgoK
+Hello Masami-san,
+
+On 02.02.24 07:04, Masami Hiramatsu (Google) wrote:
+> On Thu, 1 Feb 2024 13:21:37 +0100
+> Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
+>> For drivers that don't call dev_err_probe, I find myself sometimes doing printf
+>> debugging inside the probe function.
+
+[snip]
+
+>> I would like to replace this with the function graph tracer:
+>>
+>>   - record the probe function, configured over kernel command line
+>>     (The device indefinitely deferring probe is printed to the console,
+>>      so I know what I am looking for on the next boot)
+>>
+>>   - Dump the function graph trace
+>>
+>>   - See if the last call before (non-devm) cleanup is getting a clock, a GPIO,
+>>     a regulator or w/e.
+> 
+> What kind of information you prints by the printk()?
+
+Just littering around some:
+
+  pr_notice("%s:%d\n", __func__, __LINE__);
+
+to find where the probe function exits.
+
+> If the target (suspicious driver probe function) is obvious, you can use kprobe
+> event and tp_printk. Or, even if you don't know, if you are sure which function
+> is the starting/ending point, you can use bootconfig to record the specific part
+> of execution in the ring buffer, and dump it as Steve said.
+> 
+> In Documentation/trace/boottime-trace.rst, there is an example.
+> -----
+> With the trigger action and kprobes, you can trace function-graph while
+> a function is called. For example, this will trace all function calls in
+> the pci_proc_init()::
+> 
+>   ftrace {
+>         tracing_on = 0
+>         tracer = function_graph
+>         event.kprobes {
+>                 start_event {
+>                         probes = "pci_proc_init"
+>                         actions = "traceon"
+>                 }
+>                 end_event {
+>                         probes = "pci_proc_init%return"
+>                         actions = "traceoff"
+>                 }
+>         }
+>   }
+
+I get comparable tracing with the kernel command line, but lacked a way to dump
+it at boot-time. Sorry should have been clearer.
+
+Grepping the kernel source for `ftrace_func_command' lets me think that
+what I am after might be:
+
+  end_event {
+    actions = "traceoff", "dump"
+  }
+
+I need to try it out. Do you happen to know if the equivalent is possible
+without bootconfig?
+
+Thank you!
+Ahmad
+
+
+> -----
+> 
+> Thank you,
+> 
+>>
+>> For this to be maximally useful, I need to configure this not only at boot-time,
+>> but also dump the ftrace buffer at boot time. Probe deferral can hinder the kernel from
+>> calling init and providing a shell, where I could read /sys/kernel/tracing/trace.
+>>
+>> I found following two mechanisms that looked relevant, but seem not to
+>> do exactly what I want:
+>>
+>>   - tp_printk: seems to be related to trace points only and not usable
+>>     for the function graph output
+>>
+>>   - dump_on_oops: I don't get an Oops if probe deferral times out, but maybe
+>>     one could patch the kernel to check a oops_on_probe_deferral or dump_on_probe_deferral
+>>     kernel command line parameter in deferred_probe_timeout_work_func()?
+>>
+>>
+>> Is there existing support that I am missing? Any input on whether this
+>> would be a welcome feature to have?
+>>
+>> Thanks!
+>>
+>> Cheers,
+>> Ahmad
+>>     
+>> -- 
+>> Pengutronix e.K.                           |                             |
+>> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+>> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+>> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+>>  
+> 
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
