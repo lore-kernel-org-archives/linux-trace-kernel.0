@@ -1,46 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465CF149012;
-	Fri,  2 Feb 2024 18:29:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE3114D443;
+	Fri,  2 Feb 2024 18:32:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706898588; cv=none; b=O3heavjn9hbrBGZw5J84Wndwxj1flDAFe3Hyxon8lZ4AWmPcselLv1JcLoDlQZDUOW6ZR0bRJaTcQl3lWydfSsElQtR0c+JJyM8iXSJV1cy4RinVP7xB7WLOo1L9wAJ2rBtawPF3jKRGs8PuIG4NgtZUrfmc96PS2acxfUshLAU=
+	t=1706898761; cv=none; b=ZbToZplM9PofaUuZEzS2ahLsiSbHvDY3cqhjEnqQnmUsgtvd/kTjb0cYes4XfsTSs7b++iw9IZZXePX6DRGTbnh4R6TzV5BT179hfrcG2htjx++kyWzg/PQz7itasC/T0rJCxiTdUw5fm0O55SESsnt3Ag19U5fCUEuRZZ0XaZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706898588; c=relaxed/simple;
-	bh=tUCobfJJYi8OieBavxShsPnIA/+6GAcMJyEFD3AP3Kw=;
+	s=arc-20240116; t=1706898761; c=relaxed/simple;
+	bh=LXnUA9uLDfsc51JXxSgjMp6dsTQZv+8fYhk4eTTjY8M=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BxyOAb/0Sb2EaSP8Sr8jTgYnCv9dhbO441D8a+WZRZRYnU6zxi4LYLEtu7ojlzShpumAuPLxmbS+RMKYaiaChLQkMj+5B5ragKyj7OepA5+uiJ/7KPPJeYfVRspAsFOV50jFrTisCJZyoTyGcoJV4d4WBU2nDzZPoR9BjgLj64Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i2BjsCRO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=WKaiUj4tnDm65a0ZMFjHY90iDG7kghCgQehWXctXRW44DShwRadtTwRuVFc73aBmse7Y8R6EiP5qhDkhT7k2U41GcvrSTTcHjMHykioEsD2G2AunzWLIyfT7M0gbGZp8SYWINldtdyzS07Qy8tBSgRMSqZWKqr7j13dsRRRsXHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qbr10d3m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i2BjsCRO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B3FBC433C7;
-	Fri,  2 Feb 2024 18:29:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qbr10d3m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4321C433C7;
+	Fri,  2 Feb 2024 18:32:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706898587;
-	bh=tUCobfJJYi8OieBavxShsPnIA/+6GAcMJyEFD3AP3Kw=;
+	s=k20201202; t=1706898761;
+	bh=LXnUA9uLDfsc51JXxSgjMp6dsTQZv+8fYhk4eTTjY8M=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=i2BjsCROBtsIRrs/j6Ug/MslyOhwVvq1VpFPKQptSb7ysOwj/HgcprrwcNbhppf4g
-	 oC2BWiyJxBTjrnxtQOtWaGS/c2ft89VzbIZtcmy3VhBf7rWg85Mo8/7G6i+8Mz4Fu3
-	 KbNNmzWSLH/0pzKJeahqIZfEmhT7pBAS8iQI2hdNV/zypXUoq+r8rRyYw6Uz8zLBNi
-	 Pyo31JrWMN8Rbq3cNQECPNmsnVDELINMVW85DqzqZ8gPo7pvazR0nxLlySaRAQavqr
-	 hvPniZdiFJm2AhHrYhEIVPw5z4CByWWhC/72mDSO7Nhxun843WRu4vzV3/Rh7RO6nE
-	 2ch7u7WSZMPPA==
-Date: Fri, 2 Feb 2024 10:29:46 -0800
+	b=qbr10d3mY2jGaUrsflP5eunrMqgkEefU3XzrTPLE6FaUw3DSk75plfuPm4qnvPkjJ
+	 ogZ7YvZaoOkrrI+zsMpfNLazFVwAyAPWzHdq6yEblCy3Yt8IG0WjYFBBZKryCO0Iuv
+	 yNWqlZ5KRaxmuOkGTjDPQVaTaVzRsdLIyia3TIOpVr3l+hWrgSaYgaeO+do6kncBHf
+	 CDVRL0jQ/uxlnZ6vey5fQPvYgaQoGdoXmuRW89I0e4l4wNw+PCeM5p6Y8vdt2V9evu
+	 l/Cg+zSm8gdRzq2j1Wu481ixBqDQ7G7mc+Q+/S7ThcNKf98TkEcmSe+6mpeMjUiglx
+	 QoZkCcgzLBF3g==
+Date: Fri, 2 Feb 2024 10:32:39 -0800
 From: Jakub Kicinski <kuba@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: John Garry <john.g.garry@oracle.com>, mcgrof@kernel.org,
- russ.weight@linux.dev, gregkh@linuxfoundation.org, rafael@kernel.org,
- rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
- keescook@chromium.org, nathan@kernel.org, nicolas@fjasle.eu,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH RFC 0/4] Introduce uts_release
-Message-ID: <20240202102946.56215f4e@kernel.org>
-In-Reply-To: <CAK7LNATDMjzmgpBHZFTOJCkTCqpLPq8jEjdrwzEZ3uu7WMG7jg@mail.gmail.com>
-References: <20240131104851.2311358-1-john.g.garry@oracle.com>
-	<CAK7LNATDMjzmgpBHZFTOJCkTCqpLPq8jEjdrwzEZ3uu7WMG7jg@mail.gmail.com>
+To: Tobias Waldekranz <tobias@waldekranz.com>
+Cc: davem@davemloft.net, jiri@resnulli.us, ivecera@redhat.com,
+ netdev@vger.kernel.org, roopa@nvidia.com, razor@blackwall.org,
+ bridge@lists.linux.dev, rostedt@goodmis.org, mhiramat@kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 net-next 0/5] net: switchdev: Tracepoints
+Message-ID: <20240202103239.05f224c1@kernel.org>
+In-Reply-To: <8734ubtjqa.fsf@waldekranz.com>
+References: <20240130201937.1897766-1-tobias@waldekranz.com>
+	<20240201204459.60fea698@kernel.org>
+	<8734ubtjqa.fsf@waldekranz.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -50,12 +48,17 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sat, 3 Feb 2024 00:01:26 +0900 Masahiro Yamada wrote:
-> I do not see why it is useful.
-> As you discussed in 3/4, if UTS_RELEASE is unneeded,
-> it is better to get rid of it.
+On Fri, 02 Feb 2024 08:21:01 +0100 Tobias Waldekranz wrote:
+> My idea now is to get the fix accepted, wait for the next merge of net
+> back to net-next, then fixup this series so that it does not reintroduce
+> the MDB sync issue. I already have a version of the fix that applies on
+> top of this series, so I'll just work it in to the switchdev refactor
+> steps in the next version.
+> 
+> Is there a better way to go about this?
 
-To be clear - the discussion on 3/4 was about the fact that netdev
-already prints UTS_RELEASE into the version member of driver info
-struct, as a default. So the drivers no longer have to. But there's 
-no user-observable change there.
+No no, that's perfect! This set was still active in patchwork
+yesterday, tho, so we could have applied it by mistake..
+If you realize there's a conflict it's worth sending a comment 
+to the already-posted net-next series notifying maintainers of
+the situation.
