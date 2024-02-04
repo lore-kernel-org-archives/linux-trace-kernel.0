@@ -1,93 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E24629;
-	Sun,  4 Feb 2024 00:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C7B10F1;
+	Sun,  4 Feb 2024 01:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707008073; cv=none; b=DsQnLwwJU0H05Ma886+aSRKVk3fLb6vkDext26O5aq9NUQlIxySY5mgd6AEu8Hs0duRpzgxgrghL/1JEfH7mg43WT6aoxmMZaO7zffYco0yLFEAh1hpEAPJgmsK51BqH26EWs22mUBLlglaqpjRmRvPAtoxv1GQ3EoZJLPc7gBo=
+	t=1707009409; cv=none; b=ngTch6DKx//eJQcwFGVeNUKQ+tcmrqMlmREJ4C5SIOenOHt4CZUgGp185oB5T9ZrJbUx4G8rfarAIyesRYLCnrvXR184udkFLLIweDRI32x2ZZQffr+ja3aDc0ZACKk2fgbp8fj+1RQjZ3rEStGVXeVr6RhP/5cn/JY6nxKB0zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707008073; c=relaxed/simple;
-	bh=8+TMVLIlwovQgAOFetceIDM9IyzbQckUF0NQPc0zzsw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IsPsvsz8R8QG+UL0+x8tIG5NIQBeHH8k8slIgkD5B15tOCV10WDYj0UO/vvGivl94XBxEvwpWxvX+yUlNs6pEqSelTDs/xWUT8GBKwPJotE28JjcCrn8nqN1jaKvBPR1QIqymNdNdncvPQYRPV0auf1CgxmduH3HrNv9Xs1zwmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 841C3C433C7;
-	Sun,  4 Feb 2024 00:54:32 +0000 (UTC)
-Date: Sat, 3 Feb 2024 19:54:30 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, g@google.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- mathieu.desnoyers@efficios.com, kernel-team@android.com
-Subject: Re: [PATCH v13 2/6] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <20240203195430.51171d85@rorschach.local.home>
-In-Reply-To: <ZbkiLjUKmgg6oXR5@google.com>
-References: <20240129142802.2145305-1-vdonnefort@google.com>
-	<20240129142802.2145305-3-vdonnefort@google.com>
-	<20240130235510.c92a31ee6998697dd49d2600@kernel.org>
-	<ZbkiLjUKmgg6oXR5@google.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1707009409; c=relaxed/simple;
+	bh=kXAxuf/NRu62ybdEKHkf0EJhPGPJTi5CpcwG4gK4aNs=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=PsGZRdX9x9etZDKVdJ9R+wsMXeVqMU1/4w3dGo8j2cpNuxruIayCztBJDA/EMYRTMUCjGqgZ8wQ4vNc3APMDR+2FRjo9z8aCgy5E07E+obs8O20+qmGZfoynXfpl/IiT0wijVqpYN/LUEmert8aJN0/bfCYcVEBuRX0visDP4iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TSBPp0JJlzvRdm;
+	Sun,  4 Feb 2024 09:14:54 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
+	by mail.maildlp.com (Postfix) with ESMTPS id A934B140258;
+	Sun,  4 Feb 2024 09:16:37 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 4 Feb 2024 09:16:36 +0800
+Subject: Re: [RFC PATCH] kprobes: Use synchronize_rcu_tasks_rude in
+ kprobe_optimizer
+To: <paulmck@kernel.org>
+CC: Chen Zhongjin <chenzhongjin@huawei.com>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <naveen.n.rao@linux.ibm.com>,
+	<anil.s.keshavamurthy@intel.com>, <davem@davemloft.net>,
+	<mhiramat@kernel.org>, <akpm@linux-foundation.org>, <tglx@linutronix.de>,
+	<peterz@infradead.org>, <pmladek@suse.com>, <dianders@chromium.org>,
+	<npiggin@gmail.com>, <mpe@ellerman.id.au>, <jkl820.git@gmail.com>,
+	<juerg.haefliger@canonical.com>, <rick.p.edgecombe@intel.com>,
+	<eric.devolder@oracle.com>, <mic@digikod.net>
+References: <20240102034024.256326-1-chenzhongjin@huawei.com>
+ <29eaed4d-c4e5-cf9b-113b-da146b719820@huawei.com>
+ <d7cb96d8-86e1-423d-a135-46b4e472fe9e@paulmck-laptop>
+ <d7dfe177-6bfb-63c2-9be5-6ad25c8c243e@huawei.com>
+ <d970cda7-bf17-49c5-85b9-7596beb3690b@paulmck-laptop>
+From: Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <bbeebd04-f8c2-866b-0016-79778c64cab8@huawei.com>
+Date: Sun, 4 Feb 2024 09:16:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <d970cda7-bf17-49c5-85b9-7596beb3690b@paulmck-laptop>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
 
-On Tue, 30 Jan 2024 16:22:06 +0000
-Vincent Donnefort <vdonnefort@google.com> wrote:
-> > > +static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
-> > > +{
-> > > +	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
-> > > +
-> > > +	WRITE_ONCE(meta->reader.read, cpu_buffer->reader_page->read);
-> > > +	WRITE_ONCE(meta->reader.id, cpu_buffer->reader_page->id);
-> > > +	WRITE_ONCE(meta->reader.lost_events, cpu_buffer->lost_events);
-> > > +
-> > > +	WRITE_ONCE(meta->entries, local_read(&cpu_buffer->entries));
-> > > +	WRITE_ONCE(meta->overrun, local_read(&cpu_buffer->overrun));
-> > > +	WRITE_ONCE(meta->read, cpu_buffer->read);
-> > > +}
-> > > +
-> > >  static void
-> > >  rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
-> > >  {
-> > > @@ -5204,6 +5225,9 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
-> > >  	cpu_buffer->lost_events = 0;
-> > >  	cpu_buffer->last_overrun = 0;
-> > >  
-> > > +	if (cpu_buffer->mapped)  
-> > 
-> > There are some cpu_buffer->mapped are accessed via WRITE_ONCE/READ_ONCE()
-> > but others are not. What makes those different?  
-> 
-> The cpu_buffer->mapped is READ_ONCE for the section where it is not protected
-> with a lock. That is (in this version) only ring_buffer_swap_cpu().
-> 
-> That said... 
-> 
-> a. This is not enough protection at this level, Ideally the _map should also
-> call synchronize_rcu() to make sure the _swap does see the ->mapped > 0.
-> 
-> b. With refcount for the snapshot in trace/trace.c, it is not possible for those
-> functions to race. trace_arm_snapshot() and tracing_buffers_mmap() are mutually
-> exclusive and already stabilized with the trace mutex.
-> 
-> So how about I completely remove those WRITE_ONCE/READ_ONCE and just rely on the
-> protection given in trace/trace.c instead of duplicating it in
-> trace/ring_buffer.c?
+Hello,
 
-I would add a comment and replace the READ_ONCE with WARN_ON_ONCE():
+On 2024/2/4 6:00, Paul E. McKenney wrote:
+> On Mon, Jan 29, 2024 at 08:58:10AM +0800, Yang Jihong wrote:
+>> Hello,
+>>
+>> On 2024/1/28 3:22, Paul E. McKenney wrote:
+>>> On Tue, Jan 09, 2024 at 07:28:29PM +0800, Yang Jihong wrote:
+>>>> Hello,
+>>>>
+>>>> PING.
+>>>>
+>>>> I had a similar problem. Is this solution feasible?
+>>>
+>>> Sadly, no.
+>>>
+>>> It fails on CONFIG_PREEMPT=y kernels because synchronize_rcu_tasks_rude()
+>>> will not wait on tasks that have been preempted while executing in
+>>> a trampoline.
+>>>
+>>> But could you please try out the patch shown at the end of this email?
+>>
+>> Thanks for the patch, yes, I've tested and it solves the problem.
+> 
+> Very good, and thank you for testing it!
+> 
+> May I apply your Tested-by to the commit to record your efforts for
+> posterity?
+> 
+Sure absolutely.
 
-	/* It is up to the callers to not swap mapped buffers */
-	if (WARN_ON_ONCE(cpu_buffer_a->mapped || cpu_buffer_b->mapped)) {
-		ret = -EBUSY;
-		goto out;
-	}
+Tested-by: Yang Jihong <yangjihong1@huawei.com>
 
-
--- Steve
+Thanks,
+Yang
