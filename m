@@ -1,95 +1,125 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from mx0a-00007101.pphosted.com (mx0a-00007101.pphosted.com [148.163.135.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C7B10F1;
-	Sun,  4 Feb 2024 01:16:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0AC1C0F;
+	Sun,  4 Feb 2024 03:45:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707009409; cv=none; b=ngTch6DKx//eJQcwFGVeNUKQ+tcmrqMlmREJ4C5SIOenOHt4CZUgGp185oB5T9ZrJbUx4G8rfarAIyesRYLCnrvXR184udkFLLIweDRI32x2ZZQffr+ja3aDc0ZACKk2fgbp8fj+1RQjZ3rEStGVXeVr6RhP/5cn/JY6nxKB0zo=
+	t=1707018342; cv=none; b=qZASpeTjiL+KoWq6GDh2GPM4Ozf0z9l7MFB7PgBcNZaRk4kAvflsUOZl+55ChfAZkPn00BFl614cblKDkTxh2qya6+AvprymPwQdofEnMfn0U5WtTx81B+T0PEZbn4j9zXMSbZvEWp62k7ZjoAuVql/TNNOw7NSHC3Oous6y1gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707009409; c=relaxed/simple;
-	bh=kXAxuf/NRu62ybdEKHkf0EJhPGPJTi5CpcwG4gK4aNs=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=PsGZRdX9x9etZDKVdJ9R+wsMXeVqMU1/4w3dGo8j2cpNuxruIayCztBJDA/EMYRTMUCjGqgZ8wQ4vNc3APMDR+2FRjo9z8aCgy5E07E+obs8O20+qmGZfoynXfpl/IiT0wijVqpYN/LUEmert8aJN0/bfCYcVEBuRX0visDP4iQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TSBPp0JJlzvRdm;
-	Sun,  4 Feb 2024 09:14:54 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
-	by mail.maildlp.com (Postfix) with ESMTPS id A934B140258;
-	Sun,  4 Feb 2024 09:16:37 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Sun, 4 Feb 2024 09:16:36 +0800
-Subject: Re: [RFC PATCH] kprobes: Use synchronize_rcu_tasks_rude in
- kprobe_optimizer
-To: <paulmck@kernel.org>
-CC: Chen Zhongjin <chenzhongjin@huawei.com>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <naveen.n.rao@linux.ibm.com>,
-	<anil.s.keshavamurthy@intel.com>, <davem@davemloft.net>,
-	<mhiramat@kernel.org>, <akpm@linux-foundation.org>, <tglx@linutronix.de>,
-	<peterz@infradead.org>, <pmladek@suse.com>, <dianders@chromium.org>,
-	<npiggin@gmail.com>, <mpe@ellerman.id.au>, <jkl820.git@gmail.com>,
-	<juerg.haefliger@canonical.com>, <rick.p.edgecombe@intel.com>,
-	<eric.devolder@oracle.com>, <mic@digikod.net>
-References: <20240102034024.256326-1-chenzhongjin@huawei.com>
- <29eaed4d-c4e5-cf9b-113b-da146b719820@huawei.com>
- <d7cb96d8-86e1-423d-a135-46b4e472fe9e@paulmck-laptop>
- <d7dfe177-6bfb-63c2-9be5-6ad25c8c243e@huawei.com>
- <d970cda7-bf17-49c5-85b9-7596beb3690b@paulmck-laptop>
-From: Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <bbeebd04-f8c2-866b-0016-79778c64cab8@huawei.com>
-Date: Sun, 4 Feb 2024 09:16:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+	s=arc-20240116; t=1707018342; c=relaxed/simple;
+	bh=bp3+moavKJUOU9+YcZZ62WFzPtg6yWFvn6eFkIqmXdQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g0sT6s/vcudNnYZ6w7G6KnV5QYlLfnByTd0Nd2pHIkViYQ4NV0NYpeKX++vuE2+xGnrIRwrio3lIqZFK+6Y8C3YMlqKcJOZ+TFEyPf88JEQSyr1h2TFgMiNwrd0zcpgwh4YRv0Wj7Oz8bCZNmNy5to/O7dGX96tDw3DkE+cyISs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu; spf=pass smtp.mailfrom=illinois.edu; dkim=pass (2048-bit key) header.d=illinois.edu header.i=@illinois.edu header.b=VuBoUPpO; arc=none smtp.client-ip=148.163.135.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=illinois.edu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=illinois.edu header.i=@illinois.edu header.b="VuBoUPpO"
+Received: from pps.filterd (m0166257.ppops.net [127.0.0.1])
+	by mx0a-00007101.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41432XDK027752;
+	Sun, 4 Feb 2024 03:13:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=illinois.edu; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=campusrelays; bh=ed8waYid509TfcIsLqBzgp/9YodzRQmW/h6oOEGt1rk=;
+ b=VuBoUPpOtJ3EOrtirkhidspd7kjf8Yb3fLEPLU/54q1tfk38gQUZq46pdEbnzAq3Xnhe
+ YlfjixALde/JlgA0Q2CGDSVXmGUPnjr9yyussiP5mj/QtyHoS77Y4+JY0NnERnSr5XUZ
+ scFC7otRSHgpHuAKib6R0it9d2qCPGPqt26D2IsEBl8gngHcvA53lSum4CjW/ym2NA2j
+ Pv5y3ctpPK59qoQKT7wryF4aYBpEOUMWqDPJnPesQQmU0DI31vmzEDOkV4O2cTLG1myk
+ SKjVB9ZVpvmncPmiVbs+jfZ69Ml2Ts/7OZuiHt+b7Ow1w8jdBb3F8+8ZvVvM7WgT1Sxl pA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-00007101.pphosted.com (PPS) with ESMTPS id 3w1e8n4ktp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 04 Feb 2024 03:13:04 +0000
+Received: from m0166257.ppops.net (m0166257.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4143D4Fu010150;
+	Sun, 4 Feb 2024 03:13:04 GMT
+Received: from localhost.localdomain (oasis.cs.illinois.edu [130.126.137.13])
+	by mx0a-00007101.pphosted.com (PPS) with ESMTP id 3w1e8n4ktm-1;
+	Sun, 04 Feb 2024 03:13:03 +0000
+From: Jinghao Jia <jinghao7@illinois.edu>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>, Xin Li <xin@zytor.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jinghao Jia <jinghao7@illinois.edu>
+Subject: [PATCH v2 0/3] x86/kprobes: add exception opcode detector and boost more opcodes
+Date: Sat,  3 Feb 2024 21:12:57 -0600
+Message-ID: <20240204031300.830475-1-jinghao7@illinois.edu>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <d970cda7-bf17-49c5-85b9-7596beb3690b@paulmck-laptop>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600003.china.huawei.com (7.193.23.202)
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: mn5VSJ0mvjV8e4iC5xZSg_c-bVZsA20H
+X-Proofpoint-ORIG-GUID: 904boGWkVLvojL-KnoPb6Eo3_D3d1Dp0
+X-Spam-Details: rule=cautious_plus_nq_notspam policy=cautious_plus_nq score=0
+ lowpriorityscore=0 malwarescore=0 phishscore=0 bulkscore=0 spamscore=0
+ impostorscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999
+ priorityscore=1501 adultscore=0 clxscore=1015 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2402040022
+X-Spam-Score: 0
+X-Spam-OrigSender: jinghao7@illinois.edu
+X-Spam-Bar: 
 
-Hello,
+Hi everyone,
 
-On 2024/2/4 6:00, Paul E. McKenney wrote:
-> On Mon, Jan 29, 2024 at 08:58:10AM +0800, Yang Jihong wrote:
->> Hello,
->>
->> On 2024/1/28 3:22, Paul E. McKenney wrote:
->>> On Tue, Jan 09, 2024 at 07:28:29PM +0800, Yang Jihong wrote:
->>>> Hello,
->>>>
->>>> PING.
->>>>
->>>> I had a similar problem. Is this solution feasible?
->>>
->>> Sadly, no.
->>>
->>> It fails on CONFIG_PREEMPT=y kernels because synchronize_rcu_tasks_rude()
->>> will not wait on tasks that have been preempted while executing in
->>> a trampoline.
->>>
->>> But could you please try out the patch shown at the end of this email?
->>
->> Thanks for the patch, yes, I've tested and it solves the problem.
-> 
-> Very good, and thank you for testing it!
-> 
-> May I apply your Tested-by to the commit to record your efforts for
-> posterity?
-> 
-Sure absolutely.
+This patch set makes the following 3 changes:
 
-Tested-by: Yang Jihong <yangjihong1@huawei.com>
+- It refactors the can_probe and can_boost function to make them return
+  bool instead of int. Both functions are just using int as bool so let's
+  make them return a real boolean value.
 
-Thanks,
-Yang
+- It adds an exception opcode detector to prevent kprobing on INTs and UDs.
+  These opcodes serves special purposes in the kernel and kprobing them
+  will also cause the stack trace to be polluted by the copy buffer
+  address. This is suggested by Masami.
+
+- At the same time, this patch set also boosts more opcodes from the group
+  2/3/4/5. The newly boosted opcodes are all arithmetic instructions with
+  semantics that are easy to reason about, and therefore, they are able to
+  be boosted and executed out-of-line. These instructions were not boosted
+  previously because they use opcode extensions that are not handled by the
+  kernel. But now with the instruction decoder they can be easily handled.
+  Boosting (and further jump optimizing) these instructions leads to a 10x
+  performance gain for a single probe on QEMU.
+
+Changelog:
+---
+v1 -> v2
+v1: https://lore.kernel.org/linux-trace-kernel/20240127044124.57594-1-jinghao7@illinois.edu/
+
+- Address feedback from Xin:
+  - Change return type of is_exception_insn from int to bool.
+
+- Address feedback from Masami:
+  - Improve code style in is_exception_insn.
+  - Move instruction boundary check of the target address (addr == paddr)
+    right after the decoding loop to avoid decoding if the target address
+    is not a valid instruction boundary.
+  - Document instruction encoding differences between AMD and Intel for
+    instruction group 2 and 3 in can_boost.
+
+- Add an extra patch to change the return type of can_probe and can_boost
+  from int to bool based on v1 discussion.
+
+- Improve code comments in general.
+
+Jinghao Jia (3):
+  x86/kprobes: Refactor can_{probe,boost} return type to bool
+  x86/kprobes: Prohibit kprobing on INT and UD
+  x86/kprobes: Boost more instructions from grp2/3/4/5
+
+ arch/x86/kernel/kprobes/common.h |  2 +-
+ arch/x86/kernel/kprobes/core.c   | 98 ++++++++++++++++++++++----------
+ 2 files changed, 69 insertions(+), 31 deletions(-)
+
+--
+2.43.0
+
