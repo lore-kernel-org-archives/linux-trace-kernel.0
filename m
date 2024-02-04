@@ -1,31 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C5F629;
-	Sun,  4 Feb 2024 00:33:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E24629;
+	Sun,  4 Feb 2024 00:54:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707006834; cv=none; b=h9WG+tw5l6cLXfN0RWHjs9PvOyitkq13YexmKBSFeRG8CD5YDKcluYTdLF/WCEJZNpx9EC0uyGduu2w2zq1SjYAoUoWHYvHgWhiA8e+kIkRKvztLTGZEzV8QTmW4+rpXQ2T6ZzBv2cXDNkRNW/DBQxyjTYW1PQNj6j8HvYBlOYA=
+	t=1707008073; cv=none; b=DsQnLwwJU0H05Ma886+aSRKVk3fLb6vkDext26O5aq9NUQlIxySY5mgd6AEu8Hs0duRpzgxgrghL/1JEfH7mg43WT6aoxmMZaO7zffYco0yLFEAh1hpEAPJgmsK51BqH26EWs22mUBLlglaqpjRmRvPAtoxv1GQ3EoZJLPc7gBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707006834; c=relaxed/simple;
-	bh=NbRpMSxyKBKo0ONrZ8VpCh0Z4bIHDeO8UkFg9Z1W+lc=;
+	s=arc-20240116; t=1707008073; c=relaxed/simple;
+	bh=8+TMVLIlwovQgAOFetceIDM9IyzbQckUF0NQPc0zzsw=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G61dLPo3P+Y7675YIHDNT6bQU+4GXqP0Ag2ha9zRhs/1fzs7hdMqHGyUJuL2kyIfzTG8Iro73zUFDf9uKktSEjN70GFw7HQiweOz1fIKtXnJ39Pn8JIn4nyDpEDjK0vnvwz4uxRJQ5VSQ4/XvmWsWBQZyXxjejtB5lm97newwYs=
+	 MIME-Version:Content-Type; b=IsPsvsz8R8QG+UL0+x8tIG5NIQBeHH8k8slIgkD5B15tOCV10WDYj0UO/vvGivl94XBxEvwpWxvX+yUlNs6pEqSelTDs/xWUT8GBKwPJotE28JjcCrn8nqN1jaKvBPR1QIqymNdNdncvPQYRPV0auf1CgxmduH3HrNv9Xs1zwmA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBB74C433C7;
-	Sun,  4 Feb 2024 00:33:52 +0000 (UTC)
-Date: Sat, 3 Feb 2024 19:33:51 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 841C3C433C7;
+	Sun,  4 Feb 2024 00:54:32 +0000 (UTC)
+Date: Sat, 3 Feb 2024 19:54:30 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Vincent Donnefort <vdonnefort@google.com>
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- kernel-team@android.com
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, g@google.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, kernel-team@android.com
 Subject: Re: [PATCH v13 2/6] ring-buffer: Introducing ring-buffer mapping
  functions
-Message-ID: <20240203193351.76bbdda9@rorschach.local.home>
-In-Reply-To: <20240129142802.2145305-3-vdonnefort@google.com>
+Message-ID: <20240203195430.51171d85@rorschach.local.home>
+In-Reply-To: <ZbkiLjUKmgg6oXR5@google.com>
 References: <20240129142802.2145305-1-vdonnefort@google.com>
 	<20240129142802.2145305-3-vdonnefort@google.com>
+	<20240130235510.c92a31ee6998697dd49d2600@kernel.org>
+	<ZbkiLjUKmgg6oXR5@google.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -36,67 +38,56 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 29 Jan 2024 14:27:58 +0000
+On Tue, 30 Jan 2024 16:22:06 +0000
 Vincent Donnefort <vdonnefort@google.com> wrote:
+> > > +static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+> > > +{
+> > > +	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+> > > +
+> > > +	WRITE_ONCE(meta->reader.read, cpu_buffer->reader_page->read);
+> > > +	WRITE_ONCE(meta->reader.id, cpu_buffer->reader_page->id);
+> > > +	WRITE_ONCE(meta->reader.lost_events, cpu_buffer->lost_events);
+> > > +
+> > > +	WRITE_ONCE(meta->entries, local_read(&cpu_buffer->entries));
+> > > +	WRITE_ONCE(meta->overrun, local_read(&cpu_buffer->overrun));
+> > > +	WRITE_ONCE(meta->read, cpu_buffer->read);
+> > > +}
+> > > +
+> > >  static void
+> > >  rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
+> > >  {
+> > > @@ -5204,6 +5225,9 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
+> > >  	cpu_buffer->lost_events = 0;
+> > >  	cpu_buffer->last_overrun = 0;
+> > >  
+> > > +	if (cpu_buffer->mapped)  
+> > 
+> > There are some cpu_buffer->mapped are accessed via WRITE_ONCE/READ_ONCE()
+> > but others are not. What makes those different?  
+> 
+> The cpu_buffer->mapped is READ_ONCE for the section where it is not protected
+> with a lock. That is (in this version) only ring_buffer_swap_cpu().
+> 
+> That said... 
+> 
+> a. This is not enough protection at this level, Ideally the _map should also
+> call synchronize_rcu() to make sure the _swap does see the ->mapped > 0.
+> 
+> b. With refcount for the snapshot in trace/trace.c, it is not possible for those
+> functions to race. trace_arm_snapshot() and tracing_buffers_mmap() are mutually
+> exclusive and already stabilized with the trace mutex.
+> 
+> So how about I completely remove those WRITE_ONCE/READ_ONCE and just rely on the
+> protection given in trace/trace.c instead of duplicating it in
+> trace/ring_buffer.c?
 
-> --- /dev/null
-> +++ b/include/uapi/linux/trace_mmap.h
-> @@ -0,0 +1,43 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +#ifndef _TRACE_MMAP_H_
-> +#define _TRACE_MMAP_H_
-> +
-> +#include <linux/types.h>
-> +
-> +/**
-> + * struct trace_buffer_meta - Ring-buffer Meta-page description
-> + * @meta_page_size:	Size of this meta-page.
-> + * @meta_struct_len:	Size of this structure.
-> + * @subbuf_size:	Size of each subbuf, including the header.
+I would add a comment and replace the READ_ONCE with WARN_ON_ONCE():
 
-That is "the header"?
+	/* It is up to the callers to not swap mapped buffers */
+	if (WARN_ON_ONCE(cpu_buffer_a->mapped || cpu_buffer_b->mapped)) {
+		ret = -EBUSY;
+		goto out;
+	}
 
-> + * @nr_subbufs:		Number of subbfs in the ring-buffer.
-> + * @reader.lost_events:	Number of events lost at the time of the reader swap.
-> + * @reader.id:		subbuf ID of the current reader. From 0 to @nr_subbufs - 1
-> + * @reader.read:	Number of bytes read on the reader subbuf.
-
-Note, flags needs a comment.
-
-> + * @entries:		Number of entries in the ring-buffer.
-> + * @overrun:		Number of entries lost in the ring-buffer.
-> + * @read:		Number of entries that have been read.
-
-So does the two Reserved words, otherwise I'm going to start getting
-error reports about sparse warnings that check kerneldoc comments
-against their content. Every field needs to be represented in the
-kerneldoc comment.
 
 -- Steve
-
-
-> + */
-> +struct trace_buffer_meta {
-> +	__u32		meta_page_size;
-> +	__u32		meta_struct_len;
-> +
-> +	__u32		subbuf_size;
-> +	__u32		nr_subbufs;
-> +
-> +	struct {
-> +		__u64	lost_events;
-> +		__u32	id;
-> +		__u32	read;
-> +	} reader;
-> +
-> +	__u64	flags;
-> +
-> +	__u64	entries;
-> +	__u64	overrun;
-> +	__u64	read;
-> +
-> +	__u64	Reserved1;
-> +	__u64	Reserved2;
-> +};
-> +
-> +#endif /* _TRACE_MMAP_H_ */
