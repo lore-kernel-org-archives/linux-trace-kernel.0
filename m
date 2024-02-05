@@ -1,147 +1,93 @@
 Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40887134A3
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Feb 2024 09:44:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949E3134BC;
+	Mon,  5 Feb 2024 09:57:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707126246; cv=none; b=GEByvmONFwJ/TiMioNzmYNcHofufqtgEZVt8kM7Q/U1mkZpTfH/sSsx2lsx1S6wYePLurQCylnyPZoNzt3D72mFV0qdaC9Hy750EFwJ6DHOl0bGnF6vhgJ1lS2amzg2/S3QjUke4/88FwDs5445myo+AEGjNyylHdt7noZVQwY0=
+	t=1707127068; cv=none; b=bwLD1VCldo6mHpJjEmCnUhpTi2UdAhMSizZY1kzhzDPKRWchRbg7RFqk4VxeNZqun5KzGtKsNOucE70xgmoHHXP9rs22uHiLWW0W3tb2nqTwlzCzki01iQykbhMz+EQ2QSUsTW7SDNdddgHUF74XLvycDRVEaMbMyrjtwI2Oxfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707126246; c=relaxed/simple;
-	bh=+yO2XqpyNgbvfc/TzbsFxkAniaErxMeuh58ZQ25HP88=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uqd0gbV18nfqx0SG1RIrfMDh11oLnP1QOSsZXb4hYZZx/y3g+rtcPgQuQtFCg44UuRb86GDb/GKCn+yv3PuCqI0q7Ha5+xogEg99RfkO5PWowWaEpEoj/iJav/3Ikdwyf3MF8psmTzo3D2m6rifqWHgio/t2xtTCaPUscuW6dUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M3IMwIOO; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1707127068; c=relaxed/simple;
+	bh=WhLnBbjWuqYjIwGARAA1pzVbqLdXtIQN6h++SLYzu3g=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=pOqt+c9gTmmS2l6uBHywKuU1oxUGrJ+iMbOWpN6my7woM8myLjg+VDKO+H32AnZQ+QlMTBR9MwFBqulRQTzzu/cqIgFAXbU3I2VIvVFZPvgUtXFUMCASyYPOYTEqSZmXXUl+e8O/vo6BDxgDZ/u2LVeluuRL4SSOE3M//A71J7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OMquXTRP; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M3IMwIOO"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40fd72f71f8so5581265e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 05 Feb 2024 01:44:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OMquXTRP"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40fd280421aso13802315e9.3;
+        Mon, 05 Feb 2024 01:57:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707126241; x=1707731041; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=10BvlSMBOf9L9WLyXGyppPxhsknZ/PTNIDqct2oe/RY=;
-        b=M3IMwIOOVPqpCCWejLCdKt5h98OTXYRo4MeCUy2pLfHODx6Nl+3Q95OzXpD4Jabc9p
-         cXU7haPM3x8BdIOLYqFp4SBP55x4QIddjAxgcCZO6apYcc0XMQMJk5ijIdj0CFIfxJmT
-         7TG//tUARSfF9VlweFrEktdieKN2C3kQAw3HHUTeiU8frekHBgd/rXGPkRhpfM4JlUcd
-         bxWLCb8muebcJBTqTr0rbr/o4PEGkY7IeRd4acZY+f8FNCbWZcwZvxdo8fks130pgHJv
-         ZpYtmgpfMjfYsUR3RzuRjajLq6HIuL35pICljMtww6dG2bmP0+LKQjH0jEgtYgfOADVe
-         n1rg==
+        d=gmail.com; s=20230601; t=1707127065; x=1707731865; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tCtq+GIvKzGX4j4jHNEOu2hxdGJ4/Dlmsc+YK4PJJPo=;
+        b=OMquXTRP1ty4ywaLM9okNo1dQgHAt654D5+DEiP2QQLuhYdYTLawQRfjcaGkKJH9dK
+         HomUG2ZxK90o3yTEikTTwBUJH4M6v1HOHRtQZHXMsfFubpY+xd745m62ZqyoPsWSx/N+
+         llta3ZAuVCzEkCV4qFm/NOCG/rvGiaNdah2BqterMON7EZkWRX2Aa5z3H06Hu7GNFCXe
+         l4JaDZUVjTUZN/+CwrHGFSOOQI8imzTyLtYfwG21lW6q9ntThD8cikRlRHl8cUrHpFj9
+         s0p4vgjv1A2Pi+S8AX88PgmfYheiHWLGThyngrshcbX1VeTztn+yJ+z9OTdmWsHMG19i
+         vzWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707126241; x=1707731041;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=10BvlSMBOf9L9WLyXGyppPxhsknZ/PTNIDqct2oe/RY=;
-        b=CunkA9RsTTIGWxbp4HWAV601Y0P2ay+Z+cSnOguvUbkELCS9kxARhhaWCThD/n1KvT
-         +DLPaTAmy0Jkw5LZx8jRK++LngceTSwmaWEi6BgbEkQJMyyUHaErEiGvy4v4zGg/fb5B
-         RsAuVAYdo24Y1oQFISodn+fs1uRTq9E0J0yK/4buzXhLg2pfgpTV3BZtkeg/z5pAqARE
-         qD8hqA2Juby0JOH5C0UvM+2grWRIiyXxExDgvzp58553XWHIaFxJWdu+ZcP1FxM/JtLq
-         hqvzRPZv/8KaDXOdTEkUKEEYO0yzlx72WSitv/kDAXVd3LBCgM490C8pHB9DRebDZpM3
-         BC6Q==
-X-Gm-Message-State: AOJu0YwfJLqxxC6zN4WRPK6G9rD9TXXe7DzVo4aLGp43/T+Ui+SHOfyR
-	XOHy0SuEmcb8GGWGt4gdLrlGbVmQ+XB7qoyOYOntj3eU+QjWkV9PpNcy+ngn6g==
-X-Google-Smtp-Source: AGHT+IG57hSnEtL5HNUd+F6pM2/xUxxBNY/XxQni86ftTiBIdaM4ODjwVxglQWvQnbVa7YOfRVj/WQ==
-X-Received: by 2002:a05:600c:4ec9:b0:40e:fb74:c514 with SMTP id g9-20020a05600c4ec900b0040efb74c514mr3697897wmq.7.1707126241361;
-        Mon, 05 Feb 2024 01:44:01 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVPAZ+NrGCEUjPrlYnpnZfjMPyCmuW+1SJ8CuE4hbzCoPzygRgIDUwn5QLPZrdL7x2V2csRUuveuvmXScAVdblgH9ZIracKB5oQryZSw/ZL0mtZBSFa5sEGMxHBpjaeet5f1YH0iUe15Hy/65c+iHaLvEr5BxVmCIqSfFdOVHxM7Z/SPb+HZ02aF2hv18x9G+44SlkxZFpxLMKDhfIvuauZaFTnun9UlMWI
-Received: from google.com (185.83.140.34.bc.googleusercontent.com. [34.140.83.185])
-        by smtp.gmail.com with ESMTPSA id n4-20020a5d6604000000b00337d6f0013esm7622180wru.107.2024.02.05.01.44.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 01:44:01 -0800 (PST)
-Date: Mon, 5 Feb 2024 09:43:57 +0000
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
-	kernel-team@android.com
-Subject: Re: [PATCH v13 2/6] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <ZcCt3U11JeiZOyPn@google.com>
-References: <20240129142802.2145305-1-vdonnefort@google.com>
- <20240129142802.2145305-3-vdonnefort@google.com>
- <20240203193351.76bbdda9@rorschach.local.home>
+        d=1e100.net; s=20230601; t=1707127065; x=1707731865;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tCtq+GIvKzGX4j4jHNEOu2hxdGJ4/Dlmsc+YK4PJJPo=;
+        b=UmqKttofKOogG+KlggutJLIkBlw4tyKFzP3r8q04ltFjSQowfdhFoMYk7MIak+c9Ci
+         XtsepTJqvCrNuairzDhcdRsQN6D/9js+8Pe9Idf7BhaLPP2C5HTZIHIyIIU3oOipi4RZ
+         u8Z75Z9wp/kyYLCi1kZk/jDHgFJWR2yeQvTyiJy2nYjwknjAp07Q+kC+RkeBH0ZOsIyy
+         Ij6/TW+yNS4pUwr/iP5W1j1GsdMOAZqdJq3fO3Dhkin1EQdRjFL6+FHVDUruZjE3EMhz
+         B6HMStZrwieM5du4NqiqowumA4eSmjQ1mASfIKwc0zLvyOiiTdFqU+5qfnJNXMF2pm8C
+         nq/Q==
+X-Gm-Message-State: AOJu0YzxixCXnJBrL1pdt7KmHsO5L7dpaKEKOkskRw8pdS+FBAcKe2LF
+	VhuU9UIxcJYp+RXF6ozTqM/P2OlWhkFMESRHbtzOPOy5hm/aMOfPlGwgyjAem9P8cAeqVvdfMqS
+	sXNq48auYm08omcWRlhUXx8nfYJw=
+X-Google-Smtp-Source: AGHT+IH3NI3ipn0a6ca7OvcchfzcfeJvG97VIoeZDF4dFmYrE2Z3sbbxykdncbFfBxqULlxMpIdBGcwzT2EmmcKdGbc=
+X-Received: by 2002:a05:600c:34d3:b0:40f:b022:cea with SMTP id
+ d19-20020a05600c34d300b0040fb0220ceamr4336894wmq.28.1707127064538; Mon, 05
+ Feb 2024 01:57:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240203193351.76bbdda9@rorschach.local.home>
+From: richard clark <richard.xnu.clark@gmail.com>
+Date: Mon, 5 Feb 2024 17:57:29 +0800
+Message-ID: <CAJNi4rMpt88Gz+149wR9crzApmfUEfpS05sbOgAvOhzh2+Brbg@mail.gmail.com>
+Subject: Question about the ipi_raise filter usage and output
+To: nico@fluxnic.net, Steven Rostedt <rostedt@goodmis.org>, 
+	Mark Rutland <mark.rutland@arm.com>, mhiramat@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, richard clark <richard.xnu.clark@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Feb 03, 2024 at 07:33:51PM -0500, Steven Rostedt wrote:
-> On Mon, 29 Jan 2024 14:27:58 +0000
-> Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> > --- /dev/null
-> > +++ b/include/uapi/linux/trace_mmap.h
-> > @@ -0,0 +1,43 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> > +#ifndef _TRACE_MMAP_H_
-> > +#define _TRACE_MMAP_H_
-> > +
-> > +#include <linux/types.h>
-> > +
-> > +/**
-> > + * struct trace_buffer_meta - Ring-buffer Meta-page description
-> > + * @meta_page_size:	Size of this meta-page.
-> > + * @meta_struct_len:	Size of this structure.
-> > + * @subbuf_size:	Size of each subbuf, including the header.
-> 
-> That is "the header"?
+Hi guys,
 
-I mean the header of the "bpage". But that is confusing. I'll either remove that
-mention or just say it is aligned with the order of a system page size.
+With the ipi_raise event enabled and filtered with:
+echo 'reason == "Function call interrupts"' > filter, then the 'cat
+trace' output below messages:
+...
+insmod-3355    [010] ....1.. 24479.230381: ipi_raise:
+target_mask=00000000,00000bff (Function call interrupts)
+...
+The above output is triggered by my kernel module where it will smp
+cross call a remote function from cpu#10 to cpu#11, for the
+'target_mask' value, what does the '00000000,00000bff' mean?
+ ~~~~~~~~~~~~~~
 
-> 
-> > + * @nr_subbufs:		Number of subbfs in the ring-buffer.
-> > + * @reader.lost_events:	Number of events lost at the time of the reader swap.
-> > + * @reader.id:		subbuf ID of the current reader. From 0 to @nr_subbufs - 1
-> > + * @reader.read:	Number of bytes read on the reader subbuf.
-> 
-> Note, flags needs a comment.
-> 
-> > + * @entries:		Number of entries in the ring-buffer.
-> > + * @overrun:		Number of entries lost in the ring-buffer.
-> > + * @read:		Number of entries that have been read.
-> 
-> So does the two Reserved words, otherwise I'm going to start getting
-> error reports about sparse warnings that check kerneldoc comments
-> against their content. Every field needs to be represented in the
-> kerneldoc comment.
+Another question is for the filter, I'd like to catch the IPI only
+happening on cpu#11 *AND* a remote function call, so how to write the
+'target_cpus' in the filter expression?
 
-Ack, wasn't sure it was needed.
+I try to write below:
+echo 'target_cpus == 11 && reason == "Function call interrupts"' >
+events/ipi/ipi_raise/filter
 
-> 
-> -- Steve
-> 
-> 
-> > + */
-> > +struct trace_buffer_meta {
-> > +	__u32		meta_page_size;
-> > +	__u32		meta_struct_len;
-> > +
-> > +	__u32		subbuf_size;
-> > +	__u32		nr_subbufs;
-> > +
-> > +	struct {
-> > +		__u64	lost_events;
-> > +		__u32	id;
-> > +		__u32	read;
-> > +	} reader;
-> > +
-> > +	__u64	flags;
-> > +
-> > +	__u64	entries;
-> > +	__u64	overrun;
-> > +	__u64	read;
-> > +
-> > +	__u64	Reserved1;
-> > +	__u64	Reserved2;
-> > +};
-> > +
-> > +#endif /* _TRACE_MMAP_H_ */
+But the 'cat trace' doesn't show anything about cpu#11 IPI info,
+although both the /proc/interrupts and the smp_processor_id() in the
+remote function shows there's IPI sent to the cpu#11.
+
+Any suggestions?
+
+Thank you!
