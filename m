@@ -1,382 +1,300 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1518D45940
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Feb 2024 16:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D323FE3F;
+	Mon,  5 Feb 2024 16:55:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707150873; cv=none; b=neB+yVVnLWP23o87EH7UXnow2u3uXXKKAC0gozq77SYmXNS4jiepi6mQMThz9tARhjQh8DgNAUdXlRACmMcF/8eGbwx0KgrD8P1hspHc/NvcMx+QFmV2c/VhnilrwXVcn0l3zJhusVoDCemhlRohz5y9VJFfDB0IFn2QUAUc/VI=
+	t=1707152117; cv=none; b=sNStvrxGBBjM1aLMxG90OxOUDMZA+D8Vm7/Z5oIaOg7/GooISpmyCwUpHqjHnw5TMcoX9EFPOFQTnuV5+NlqiuXHNhH/fKTxfEgPwTG0Zj77hrFoc3FZpJW3JZ3cVTCyOPSbABmJ/UgchW0Vba9jkdViYcmbHmwR8O5+I84hI98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707150873; c=relaxed/simple;
-	bh=OFqHbKxqsaW9GPflVeJXijHkDF7anI9AJhhg0gch2Vk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=XC0AW76z0g8SyYceGj/zh4pUQ7m4fGEyC1+9tpwaz1Vxw/2H4AOEdJTBXtrW+ZmVcBCTIQnz5oWdyB2NxBeHqPMXnV019i5qUxUFfxG1dIueDS0NwaHPyhMX4R2eS7LftTyej1wMnesXH9x88am1LkXNemBoCcNku7GOuYavR+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1TiOgOQN; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1707152117; c=relaxed/simple;
+	bh=5qZXuupoFKUYVo8agP1h9S4qQ94D3Y2AcpLKcOkyjgo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xmi2ofeC1tARMyDT3lUP5x7zrmgW8+FouReqcy6OE4alZi1adAOy+KaxruGQ0L8QPHPyr1vhzbnyyCaa+gD6BiFLpcdr47nclafNxTvSzpLepcO1c0GtNK/lT60imUgpIE8e9DtoEdbuMn14HsN4F9RI3ip03D+nMQQYPJfpvxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=bX03+r4Y; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1TiOgOQN"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6ba69e803so7772179276.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 05 Feb 2024 08:34:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707150871; x=1707755671; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7nCPlQ//tobDi8AcCVhpF3SWhFnBTJGSmof7x/XHBwM=;
-        b=1TiOgOQNYacjyisUlqy4z3uYDTadnwbsPgFj6XRMnb0As+A1FfGOMYFZh9KHsLp4uz
-         AOs3m7ZZ+gcmwGY1fXKwBpGNakr85ftKjYvScH1rBX9VcGSo7oSzHZ+wjexjqz8PzOI/
-         NHAU5X6O8ZFnns72DDd0jdaJaTdFXPf5o1uqhFfFKBwuHoKXFBvb+c1LcsvRVWRffKut
-         azGhKfU/LBVXYOrygsZhbvCVBVV/bhAjwO6pr+OE3ETgm1Vg45s7/jkq9897qE7ddNFt
-         KFhLt9QFnMzMdBbLN7bJK2RMHaoTgI4ZIZY2wqrXJKYC0UqpLm+qxRkau06gFsSwjOoC
-         xExA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707150871; x=1707755671;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7nCPlQ//tobDi8AcCVhpF3SWhFnBTJGSmof7x/XHBwM=;
-        b=ILnemdDnV1s59EzhycqUK8IRIJSxh2Qq+v/fmHI/ePjqNJPkTiRd1ObHadoKn5RZ80
-         mfXFBaUka4WuQIu/X7dIkf4yugQRO7SKRWaVuMFYimPJ9AKx2dL4t2xZUraeACYIH3rr
-         OLB2pgfoBuz8c+hUlzvNFQJXlhOXqvRwV1YA7tDlBcCDrLjaD4BPK2V3uT/WEZbMtuff
-         ESko04L/46dEUAKIX5au1eklUFmntlDpskIHl3NeMhwXabVUpwQjGIz2gmxBFtwTadhd
-         nIsaCAJIBN5lNwA/5J0gk1T466rH+Oky8xiOJE1M8RFWG5YV8Xp58RwujUVwEtghNmAt
-         zv8Q==
-X-Gm-Message-State: AOJu0YyQ5GpcqUdq8Uhu9Cgmlkh9rmadS+mynZ3814zbnp9ih2mMXa/s
-	nKhHmL5c+LJdrlhc3drtiZTb9bAygAeJlhfVU5emXWVV3eByrMEBSo9TkLOq0/H8m4i28/iapks
-	s4MctILRP0y89HOLbFg==
-X-Google-Smtp-Source: AGHT+IFzaXiEdlFlkThqmjdrbgVfJN36x5NWNL4vAHrGOZtiZnYgArE3FcnGssBWDjg2FTXqAvkrS9QqLgHSW2sK
-X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:a05:6902:108e:b0:dbd:b165:441 with SMTP
- id v14-20020a056902108e00b00dbdb1650441mr2939257ybu.0.1707150871178; Mon, 05
- Feb 2024 08:34:31 -0800 (PST)
-Date: Mon,  5 Feb 2024 16:34:10 +0000
-In-Reply-To: <20240205163410.2296552-1-vdonnefort@google.com>
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="bX03+r4Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1707152104;
+	bh=5qZXuupoFKUYVo8agP1h9S4qQ94D3Y2AcpLKcOkyjgo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=bX03+r4YYyhXn3EBekXNvG+e/IwreI0XjxsB2c/D3YHNexWE1rXBW/9rxe04wNE8r
+	 RyvJi2VXchG1cMYwHilqXwJQvbdckvbJJiFPwM/BM95DGMJSsZ7W6G0FXJtfSNycKF
+	 EF+7B1egyIUaDdxEkvAeH1lpoQqBWy3Ftcy8fsEvwhM4jUdygd63nzJaPtFbzAoE2M
+	 hvMV66eyd5B5Tw99rlld5QpCciCGMbQQLR5XoZc3JFdU9QoVWmxIgpAVT8GJVZKt6E
+	 NSb4CHhTDQLi3XTNFe/AubThDwo/7zWWQ0NK1rd2G7lNU+6w070XBR2MuWvtaXvlq1
+	 tVOnLzTR1036g==
+Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TTCD82rwmzXck;
+	Mon,  5 Feb 2024 11:55:04 -0500 (EST)
+Message-ID: <3c16bee0-70b7-420f-a085-c9e09e293fe2@efficios.com>
+Date: Mon, 5 Feb 2024 11:55:08 -0500
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 4/6] tracing: Allow user-space mapping of the
+ ring-buffer
+To: Vincent Donnefort <vdonnefort@google.com>, rostedt@goodmis.org,
+ mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: kernel-team@android.com
 References: <20240205163410.2296552-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
-Message-ID: <20240205163410.2296552-7-vdonnefort@google.com>
-Subject: [PATCH v14 6/6] ring-buffer/selftest: Add ring-buffer mapping test
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	Vincent Donnefort <vdonnefort@google.com>, Shuah Khan <shuah@kernel.org>, 
-	Shuah Khan <skhan@linuxfoundation.org>, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+ <20240205163410.2296552-5-vdonnefort@google.com>
+Content-Language: en-US
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+In-Reply-To: <20240205163410.2296552-5-vdonnefort@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This test maps a ring-buffer and validate the meta-page after reset and
-after emitting few events.
+On 2024-02-05 11:34, Vincent Donnefort wrote:
+> Currently, user-space extracts data from the ring-buffer via splice,
+> which is handy for storage or network sharing. However, due to splice
+> limitations, it is imposible to do real-time analysis without a copy.
+> 
+> A solution for that problem is to let the user-space map the ring-buffer
+> directly.
+> 
+> The mapping is exposed via the per-CPU file trace_pipe_raw. The first
+> element of the mapping is the meta-page. It is followed by each
+> subbuffer constituting the ring-buffer, ordered by their unique page ID:
+> 
+>    * Meta-page -- include/uapi/linux/trace_mmap.h for a description
+>    * Subbuf ID 0
+>    * Subbuf ID 1
+>       ...
+> 
+> It is therefore easy to translate a subbuf ID into an offset in the
+> mapping:
+> 
+>    reader_id = meta->reader->id;
+>    reader_offset = meta->meta_page_size + reader_id * meta->subbuf_size;
+> 
+> When new data is available, the mapper must call a newly introduced ioctl:
+> TRACE_MMAP_IOCTL_GET_READER. This will update the Meta-page reader ID to
+> point to the next reader containing unread data.
+> 
+> Mapping will prevent snapshot and buffer size modifications.
 
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-kselftest@vger.kernel.org
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+How are the kernel linear mapping and the userspace mapping made coherent
+on architectures with virtually aliasing data caches ?
 
-diff --git a/tools/testing/selftests/ring-buffer/Makefile b/tools/testing/selftests/ring-buffer/Makefile
-new file mode 100644
-index 000000000000..627c5fa6d1ab
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/Makefile
-@@ -0,0 +1,8 @@
-+# SPDX-License-Identifier: GPL-2.0
-+CFLAGS += -Wl,-no-as-needed -Wall
-+CFLAGS += $(KHDR_INCLUDES)
-+CFLAGS += -D_GNU_SOURCE
-+
-+TEST_GEN_PROGS = map_test
-+
-+include ../lib.mk
-diff --git a/tools/testing/selftests/ring-buffer/config b/tools/testing/selftests/ring-buffer/config
-new file mode 100644
-index 000000000000..d936f8f00e78
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/config
-@@ -0,0 +1,2 @@
-+CONFIG_FTRACE=y
-+CONFIG_TRACER_SNAPSHOT=y
-diff --git a/tools/testing/selftests/ring-buffer/map_test.c b/tools/testing/selftests/ring-buffer/map_test.c
-new file mode 100644
-index 000000000000..56c44b29d998
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/map_test.c
-@@ -0,0 +1,273 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Ring-buffer memory mapping tests
-+ *
-+ * Copyright (c) 2024 Vincent Donnefort <vdonnefort@google.com>
-+ */
-+#include <fcntl.h>
-+#include <sched.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+
-+#include <linux/trace_mmap.h>
-+
-+#include <sys/mman.h>
-+#include <sys/ioctl.h>
-+
-+#include "../user_events/user_events_selftests.h" /* share tracefs setup */
-+#include "../kselftest_harness.h"
-+
-+#define TRACEFS_ROOT "/sys/kernel/tracing"
-+
-+static int __tracefs_write(const char *path, const char *value)
-+{
-+	int fd, ret;
-+
-+	fd = open(path, O_WRONLY | O_TRUNC);
-+	if (fd < 0)
-+		return fd;
-+
-+	ret = write(fd, value, strlen(value));
-+
-+	close(fd);
-+
-+	return ret == -1 ? -errno : 0;
-+}
-+
-+static int __tracefs_write_int(const char *path, int value)
-+{
-+	char *str;
-+	int ret;
-+
-+	if (asprintf(&str, "%d", value) < 0)
-+		return -1;
-+
-+	ret = __tracefs_write(path, str);
-+
-+	free(str);
-+
-+	return ret;
-+}
-+
-+#define tracefs_write_int(path, value) \
-+	ASSERT_EQ(__tracefs_write_int((path), (value)), 0)
-+
-+#define tracefs_write(path, value) \
-+	ASSERT_EQ(__tracefs_write((path), (value)), 0)
-+
-+static int tracefs_reset(void)
-+{
-+	if (__tracefs_write_int(TRACEFS_ROOT"/tracing_on", 0))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/trace", ""))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/set_event", ""))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/current_tracer", "nop"))
-+		return -1;
-+
-+	return 0;
-+}
-+
-+struct tracefs_cpu_map_desc {
-+	struct trace_buffer_meta	*meta;
-+	void				*data;
-+	int				cpu_fd;
-+};
-+
-+int tracefs_cpu_map(struct tracefs_cpu_map_desc *desc, int cpu)
-+{
-+	unsigned long meta_len, data_len;
-+	int page_size = getpagesize();
-+	char *cpu_path;
-+	void *map;
-+
-+	if (asprintf(&cpu_path,
-+		     TRACEFS_ROOT"/per_cpu/cpu%d/trace_pipe_raw",
-+		     cpu) < 0)
-+		return -ENOMEM;
-+
-+	desc->cpu_fd = open(cpu_path, O_RDONLY | O_NONBLOCK);
-+	free(cpu_path);
-+	if (desc->cpu_fd < 0)
-+		return -ENODEV;
-+
-+	map = mmap(NULL, page_size, PROT_READ, MAP_SHARED, desc->cpu_fd, 0);
-+	if (map == MAP_FAILED)
-+		return -errno;
-+
-+	desc->meta = (struct trace_buffer_meta *)map;
-+
-+	meta_len = desc->meta->meta_page_size;
-+	data_len = desc->meta->subbuf_size * desc->meta->nr_subbufs;
-+
-+	map = mmap(NULL, data_len, PROT_READ, MAP_SHARED, desc->cpu_fd, meta_len);
-+	if (map == MAP_FAILED) {
-+		munmap(desc->meta, desc->meta->meta_page_size);
-+		return -EINVAL;
-+	}
-+
-+	desc->data = map;
-+
-+	return 0;
-+}
-+
-+void tracefs_cpu_unmap(struct tracefs_cpu_map_desc *desc)
-+{
-+	munmap(desc->data, desc->meta->subbuf_size * desc->meta->nr_subbufs);
-+	munmap(desc->meta, desc->meta->meta_page_size);
-+	close(desc->cpu_fd);
-+}
-+
-+FIXTURE(map) {
-+	struct tracefs_cpu_map_desc	map_desc;
-+	bool				umount;
-+};
-+
-+FIXTURE_VARIANT(map) {
-+	int	subbuf_size;
-+};
-+
-+FIXTURE_VARIANT_ADD(map, subbuf_size_4k) {
-+	.subbuf_size = 4,
-+};
-+
-+FIXTURE_VARIANT_ADD(map, subbuf_size_8k) {
-+	.subbuf_size = 8,
-+};
-+
-+FIXTURE_SETUP(map)
-+{
-+	int cpu = sched_getcpu();
-+	cpu_set_t cpu_mask;
-+	bool fail, umount;
-+	char *message;
-+
-+	if (!tracefs_enabled(&message, &fail, &umount)) {
-+		if (fail) {
-+			TH_LOG("Tracefs setup failed: %s", message);
-+			ASSERT_FALSE(fail);
-+		}
-+		SKIP(return, "Skipping: %s", message);
-+	}
-+
-+	self->umount = umount;
-+
-+	ASSERT_GE(cpu, 0);
-+
-+	ASSERT_EQ(tracefs_reset(), 0);
-+
-+	tracefs_write_int(TRACEFS_ROOT"/buffer_subbuf_size_kb", variant->subbuf_size);
-+
-+	ASSERT_EQ(tracefs_cpu_map(&self->map_desc, cpu), 0);
-+
-+	/*
-+	 * Ensure generated events will be found on this very same ring-buffer.
-+	 */
-+	CPU_ZERO(&cpu_mask);
-+	CPU_SET(cpu, &cpu_mask);
-+	ASSERT_EQ(sched_setaffinity(0, sizeof(cpu_mask), &cpu_mask), 0);
-+}
-+
-+FIXTURE_TEARDOWN(map)
-+{
-+	tracefs_reset();
-+
-+	if (self->umount)
-+		tracefs_unmount();
-+
-+	tracefs_cpu_unmap(&self->map_desc);
-+}
-+
-+TEST_F(map, meta_page_check)
-+{
-+	struct tracefs_cpu_map_desc *desc = &self->map_desc;
-+	int cnt = 0;
-+
-+	ASSERT_EQ(desc->meta->entries, 0);
-+	ASSERT_EQ(desc->meta->overrun, 0);
-+	ASSERT_EQ(desc->meta->read, 0);
-+
-+	ASSERT_EQ(desc->meta->reader.id, 0);
-+	ASSERT_EQ(desc->meta->reader.read, 0);
-+
-+	ASSERT_EQ(ioctl(desc->cpu_fd, TRACE_MMAP_IOCTL_GET_READER), 0);
-+	ASSERT_EQ(desc->meta->reader.id, 0);
-+
-+	tracefs_write_int(TRACEFS_ROOT"/tracing_on", 1);
-+	for (int i = 0; i < 16; i++)
-+		tracefs_write_int(TRACEFS_ROOT"/trace_marker", i);
-+again:
-+	ASSERT_EQ(ioctl(desc->cpu_fd, TRACE_MMAP_IOCTL_GET_READER), 0);
-+
-+	ASSERT_EQ(desc->meta->entries, 16);
-+	ASSERT_EQ(desc->meta->overrun, 0);
-+	ASSERT_EQ(desc->meta->read, 16);
-+
-+	ASSERT_EQ(desc->meta->reader.id, 1);
-+
-+	if (!(cnt++))
-+		goto again;
-+}
-+
-+FIXTURE(snapshot) {
-+	bool	umount;
-+};
-+
-+FIXTURE_SETUP(snapshot)
-+{
-+	bool fail, umount;
-+	struct stat sb;
-+	char *message;
-+
-+	if (stat(TRACEFS_ROOT"/snapshot", &sb))
-+		SKIP(return, "Skipping: %s", "snapshot not available");
-+
-+	if (!tracefs_enabled(&message, &fail, &umount)) {
-+		if (fail) {
-+			TH_LOG("Tracefs setup failed: %s", message);
-+			ASSERT_FALSE(fail);
-+		}
-+		SKIP(return, "Skipping: %s", message);
-+	}
-+
-+	self->umount = umount;
-+}
-+
-+FIXTURE_TEARDOWN(snapshot)
-+{
-+	__tracefs_write(TRACEFS_ROOT"/events/sched/sched_switch/trigger",
-+			"!snapshot");
-+	tracefs_reset();
-+
-+	if (self->umount)
-+		tracefs_unmount();
-+}
-+
-+TEST_F(snapshot, excludes_map)
-+{
-+	struct tracefs_cpu_map_desc map_desc;
-+	int cpu = sched_getcpu();
-+
-+	ASSERT_GE(cpu, 0);
-+	tracefs_write(TRACEFS_ROOT"/events/sched/sched_switch/trigger",
-+		      "snapshot");
-+	ASSERT_EQ(tracefs_cpu_map(&map_desc, cpu), -EBUSY);
-+}
-+
-+TEST_F(snapshot, excluded_by_map)
-+{
-+	struct tracefs_cpu_map_desc map_desc;
-+	int cpu = sched_getcpu();
-+
-+	ASSERT_EQ(tracefs_cpu_map(&map_desc, cpu), 0);
-+
-+	ASSERT_EQ(__tracefs_write(TRACEFS_ROOT"/events/sched/sched_switch/trigger",
-+				  "snapshot"), -EBUSY);
-+	ASSERT_EQ(__tracefs_write(TRACEFS_ROOT"/snapshot",
-+				  "1"), -EBUSY);
-+}
-+
-+TEST_HARNESS_MAIN
+Ref. https://lore.kernel.org/lkml/20240202210019.88022-1-mathieu.desnoyers@efficios.com/T/#t
+
+Thanks,
+
+Mathieu
+
+> 
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> 
+> diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
+> index 182e05a3004a..7330249257e7 100644
+> --- a/include/uapi/linux/trace_mmap.h
+> +++ b/include/uapi/linux/trace_mmap.h
+> @@ -43,4 +43,6 @@ struct trace_buffer_meta {
+>   	__u64	Reserved2;
+>   };
+>   
+> +#define TRACE_MMAP_IOCTL_GET_READER		_IO('T', 0x1)
+> +
+>   #endif /* _TRACE_MMAP_H_ */
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 4ebf4d0bd14c..36b62cf2fb3f 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -1175,6 +1175,12 @@ static void tracing_snapshot_instance_cond(struct trace_array *tr,
+>   		return;
+>   	}
+>   
+> +	if (tr->mapped) {
+> +		trace_array_puts(tr, "*** BUFFER MEMORY MAPPED ***\n");
+> +		trace_array_puts(tr, "*** Can not use snapshot (sorry) ***\n");
+> +		return;
+> +	}
+> +
+>   	local_irq_save(flags);
+>   	update_max_tr(tr, current, smp_processor_id(), cond_data);
+>   	local_irq_restore(flags);
+> @@ -1307,7 +1313,7 @@ static int tracing_arm_snapshot_locked(struct trace_array *tr)
+>   	lockdep_assert_held(&trace_types_lock);
+>   
+>   	spin_lock(&tr->snapshot_trigger_lock);
+> -	if (tr->snapshot == UINT_MAX) {
+> +	if (tr->snapshot == UINT_MAX || tr->mapped) {
+>   		spin_unlock(&tr->snapshot_trigger_lock);
+>   		return -EBUSY;
+>   	}
+> @@ -6533,7 +6539,7 @@ static void tracing_set_nop(struct trace_array *tr)
+>   {
+>   	if (tr->current_trace == &nop_trace)
+>   		return;
+> -	
+> +
+>   	tr->current_trace->enabled--;
+>   
+>   	if (tr->current_trace->reset)
+> @@ -8652,15 +8658,31 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
+>   	return ret;
+>   }
+>   
+> -/* An ioctl call with cmd 0 to the ring buffer file will wake up all waiters */
+>   static long tracing_buffers_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+>   {
+>   	struct ftrace_buffer_info *info = file->private_data;
+>   	struct trace_iterator *iter = &info->iter;
+> +	int err;
+> +
+> +	if (cmd == TRACE_MMAP_IOCTL_GET_READER) {
+> +		if (!(file->f_flags & O_NONBLOCK)) {
+> +			err = ring_buffer_wait(iter->array_buffer->buffer,
+> +					       iter->cpu_file,
+> +					       iter->tr->buffer_percent);
+> +			if (err)
+> +				return err;
+> +		}
+>   
+> -	if (cmd)
+> -		return -ENOIOCTLCMD;
+> +		return ring_buffer_map_get_reader(iter->array_buffer->buffer,
+> +						  iter->cpu_file);
+> +	} else if (cmd) {
+> +		return -ENOTTY;
+> +	}
+>   
+> +	/*
+> +	 * An ioctl call with cmd 0 to the ring buffer file will wake up all
+> +	 * waiters
+> +	 */
+>   	mutex_lock(&trace_types_lock);
+>   
+>   	iter->wait_index++;
+> @@ -8673,6 +8695,97 @@ static long tracing_buffers_ioctl(struct file *file, unsigned int cmd, unsigned
+>   	return 0;
+>   }
+>   
+> +static vm_fault_t tracing_buffers_mmap_fault(struct vm_fault *vmf)
+> +{
+> +	struct ftrace_buffer_info *info = vmf->vma->vm_file->private_data;
+> +	struct trace_iterator *iter = &info->iter;
+> +	vm_fault_t ret = VM_FAULT_SIGBUS;
+> +	struct page *page;
+> +
+> +	page = ring_buffer_map_fault(iter->array_buffer->buffer, iter->cpu_file,
+> +				     vmf->pgoff);
+> +	if (!page)
+> +		return ret;
+> +
+> +	get_page(page);
+> +	vmf->page = page;
+> +	vmf->page->mapping = vmf->vma->vm_file->f_mapping;
+> +	vmf->page->index = vmf->pgoff;
+> +
+> +	return 0;
+> +}
+> +
+> +static void tracing_buffers_mmap_close(struct vm_area_struct *vma)
+> +{
+> +	struct ftrace_buffer_info *info = vma->vm_file->private_data;
+> +	struct trace_iterator *iter = &info->iter;
+> +	struct trace_array *tr = iter->tr;
+> +
+> +	ring_buffer_unmap(iter->array_buffer->buffer, iter->cpu_file);
+> +
+> +#ifdef CONFIG_TRACER_MAX_TRACE
+> +	spin_lock(&tr->snapshot_trigger_lock);
+> +	if (!WARN_ON(!tr->mapped))
+> +		tr->mapped--;
+> +	spin_unlock(&tr->snapshot_trigger_lock);
+> +#endif
+> +}
+> +
+> +static void tracing_buffers_mmap_open(struct vm_area_struct *vma)
+> +{
+> +	struct ftrace_buffer_info *info = vma->vm_file->private_data;
+> +	struct trace_iterator *iter = &info->iter;
+> +
+> +	WARN_ON(ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file));
+> +}
+> +
+> +static const struct vm_operations_struct tracing_buffers_vmops = {
+> +	.open		= tracing_buffers_mmap_open,
+> +	.close		= tracing_buffers_mmap_close,
+> +	.fault		= tracing_buffers_mmap_fault,
+> +};
+> +
+> +static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
+> +{
+> +	struct ftrace_buffer_info *info = filp->private_data;
+> +	struct trace_iterator *iter = &info->iter;
+> +	struct trace_array *tr = iter->tr;
+> +	int ret = 0;
+> +
+> +	if (vma->vm_flags & VM_WRITE)
+> +		return -EPERM;
+> +
+> +	vm_flags_mod(vma, VM_DONTCOPY | VM_DONTDUMP, VM_MAYWRITE);
+> +	vma->vm_ops = &tracing_buffers_vmops;
+> +
+> +#ifdef CONFIG_TRACER_MAX_TRACE
+> +	/*
+> +	 * We hold mmap_lock here. lockdep would be unhappy if we would now take
+> +	 * trace_types_lock. Instead use the specific snapshot_trigger_lock.
+> +	 */
+> +	spin_lock(&tr->snapshot_trigger_lock);
+> +	if (tr->snapshot || tr->mapped == UINT_MAX) {
+> +		spin_unlock(&tr->snapshot_trigger_lock);
+> +		return -EBUSY;
+> +	}
+> +	tr->mapped++;
+> +	spin_unlock(&tr->snapshot_trigger_lock);
+> +
+> +	/* Wait for update_max_tr() to observe iter->tr->mapped */
+> +	if (tr->mapped == 1)
+> +		synchronize_rcu();
+> +#endif
+> +	ret = ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file);
+> +#ifdef CONFIG_TRACER_MAX_TRACE
+> +	if (ret) {
+> +		spin_lock(&tr->snapshot_trigger_lock);
+> +		iter->tr->mapped--;
+> +		spin_unlock(&tr->snapshot_trigger_lock);
+> +	}
+> +#endif
+> +	return ret;
+> +}
+> +
+>   static const struct file_operations tracing_buffers_fops = {
+>   	.open		= tracing_buffers_open,
+>   	.read		= tracing_buffers_read,
+> @@ -8681,6 +8794,7 @@ static const struct file_operations tracing_buffers_fops = {
+>   	.splice_read	= tracing_buffers_splice_read,
+>   	.unlocked_ioctl = tracing_buffers_ioctl,
+>   	.llseek		= no_llseek,
+> +	.mmap		= tracing_buffers_mmap,
+>   };
+>   
+>   static ssize_t
+> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> index bd312e9afe25..8a96e7a89e6b 100644
+> --- a/kernel/trace/trace.h
+> +++ b/kernel/trace/trace.h
+> @@ -336,6 +336,7 @@ struct trace_array {
+>   	bool			allocated_snapshot;
+>   	spinlock_t		snapshot_trigger_lock;
+>   	unsigned int		snapshot;
+> +	unsigned int		mapped;
+>   	unsigned long		max_latency;
+>   #ifdef CONFIG_FSNOTIFY
+>   	struct dentry		*d_max_latency;
+
 -- 
-2.43.0.594.gd9cf4e227d-goog
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
 
