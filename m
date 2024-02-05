@@ -1,68 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C19517541;
-	Mon,  5 Feb 2024 10:25:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FE9A17582;
+	Mon,  5 Feb 2024 10:29:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707128737; cv=none; b=avfUQh/tCegEMwDGrDNXA3bxYPqB6occti/u5DxBCGGTvmQX2jXTDjzvdIMkMhaqXfNMNKSeJ7YrMtaEl016Ygd2Cf1trW46rXIFigO8ZDqjV3bJ3VgNdttARRTO5F6KD8mZlKEK4Bh6nhGbkTxgMRGBNao7RhoRTL3ZNvwGnLc=
+	t=1707128950; cv=none; b=BnEXBeOqbG4En9atHUgr9rTRTGK8gJTnhRk2OxKD85me4PZ+2VirdF7KBeVZcNQ46jbnHusSVTOpZLf10gtsqjYDhgw/6LMDZkK1jp9DdbjieOPBYK/J/KCgOpuLKa/nZEpjthdwQtCGBrYj2tV/nGy/Z5rsYTlxip+ekHao4Qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707128737; c=relaxed/simple;
-	bh=eRrFp2JexEbtNp6FWh3iMXTIaeLisx2WjsRpctM6ZEY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UNjI5uJy0K45mAt5lhlXYYpLYkuRaL4AEnSPb0YF3I+caM8fGo21kmCovB/1gmWIN0rKsht1E1vl4NEWK9KLAhFSr/90kTl6tlek5FQgp2Nyulf5ZfgDd+2B2wYJqHfFaOnIdKxAtahgANX0pCYj6wnKUcyXwApBrd8yAFyNMZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B45CC433C7;
-	Mon,  5 Feb 2024 10:25:34 +0000 (UTC)
-Date: Mon, 5 Feb 2024 05:25:32 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: kernel test robot <lkp@intel.com>, mhiramat@kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- oe-kbuild-all@lists.linux.dev, mathieu.desnoyers@efficios.com,
- kernel-team@android.com
-Subject: Re: [PATCH v13 3/6] tracing: Add snapshot refcount
-Message-ID: <20240205052532.37c65148@rorschach.local.home>
-In-Reply-To: <ZbjQTZ4SIkG703QM@google.com>
-References: <20240129142802.2145305-4-vdonnefort@google.com>
-	<202401301740.qzZlpcYV-lkp@intel.com>
-	<ZbjQTZ4SIkG703QM@google.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1707128950; c=relaxed/simple;
+	bh=s0mnT/cdLHBbbew5fqdPMxLP/4VYZ1bC8Ao2a37JfpU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rm/82kY1BEZ+qGvKmVrfTdrc5TiVITYWZ7xzKWkxkG2oK7UaGNZZG3tvSgpp1MfPSLqny0EOppXqKZCOjDMqe8XIaGay33lXqVLkmz+gVlDuiIbrbtO26FRhOsUGbsXgTFz9XdOpwYSnWog3oEjEfbKIOXgui2Kah/zdEfImNZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC4441FB;
+	Mon,  5 Feb 2024 02:29:47 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.66.84])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23ED63F762;
+	Mon,  5 Feb 2024 02:29:04 -0800 (PST)
+Date: Mon, 5 Feb 2024 10:28:57 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: richard clark <richard.xnu.clark@gmail.com>
+Cc: nico@fluxnic.net, Steven Rostedt <rostedt@goodmis.org>,
+	mhiramat@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Question about the ipi_raise filter usage and output
+Message-ID: <ZcC4aWWKFU1NgrZM@FVFF77S0Q05N>
+References: <CAJNi4rMpt88Gz+149wR9crzApmfUEfpS05sbOgAvOhzh2+Brbg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJNi4rMpt88Gz+149wR9crzApmfUEfpS05sbOgAvOhzh2+Brbg@mail.gmail.com>
 
-On Tue, 30 Jan 2024 10:32:45 +0000
-Vincent Donnefort <vdonnefort@google.com> wrote:
-
-> > All errors (new ones prefixed by >>):
-> > 
-> >    kernel/trace/trace.c: In function 'tracing_set_tracer':
-> >    kernel/trace/trace.c:6644:17: error: implicit declaration of function 'tracing_disarm_snapshot_locked'; did you mean 'tracing_disarm_snapshot'? [-Werror=implicit-function-declaration]
-> >     6644 |                 tracing_disarm_snapshot_locked(tr);
-> >          |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >          |                 tracing_disarm_snapshot  
-> > >> kernel/trace/trace.c:6648:23: error: implicit declaration of function 'tracing_arm_snapshot_locked'; did you mean 'tracing_arm_snapshot'? [-Werror=implicit-function-declaration]  
-> >     6648 |                 ret = tracing_arm_snapshot_locked(tr);
-> >          |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >          |                       tracing_arm_snapshot
-> >    cc1: some warnings being treated as errors  
+On Mon, Feb 05, 2024 at 05:57:29PM +0800, richard clark wrote:
+> Hi guys,
 > 
-> Right, two tracers (hwlat and osnoise) select _only_ MAX_TRACE and not
-> TRACER_SNAPSHOT.
+> With the ipi_raise event enabled and filtered with:
+> echo 'reason == "Function call interrupts"' > filter, then the 'cat
+> trace' output below messages:
+> ...
+> insmod-3355    [010] ....1.. 24479.230381: ipi_raise:
+> target_mask=00000000,00000bff (Function call interrupts)
+> ...
+> The above output is triggered by my kernel module where it will smp
+> cross call a remote function from cpu#10 to cpu#11, for the
+> 'target_mask' value, what does the '00000000,00000bff' mean?
+
+That's a cpumask bitmap: 0xbff is 0b1011_1111_1111, which is:
+
+     ,- CPU 10
+     |
+    1011_1111_1111
+    | '__________'
+    |      |
+    |      `- CPUs 9 to 0
+    |
+    `- CPU 11
+
+Note that bitmap has CPUs 0-9 and CPU 11 set, but CPU 10 is not set.
+
+I suspect your kernel module has generated the bitmap incorrectly; it looks
+like you have a mask for CPUs 0-11 minus a mask for CPU 10?
+
+For CPUs 10 and 11, that should be 0xc00 / 0b1100_0000_0000.
+
+>  ~~~~~~~~~~~~~~
 > 
-> However, AFAICT, they will not call any of the swapping functions (they don't
-> set use_max_tr). So I suppose arm/disarm can be ommited in that case.
+> Another question is for the filter, I'd like to catch the IPI only
+> happening on cpu#11 *AND* a remote function call, so how to write the
+> 'target_cpus' in the filter expression?
+> 
+> I try to write below:
+> echo 'target_cpus == 11 && reason == "Function call interrupts"' >
+> events/ipi/ipi_raise/filter
 
-Yeah, if you can test with the various configs enabled and disabled to
-make sure that it still builds properly, then that should be good.
+The '=' checks if the target_cpus bitmap *only* contains CPU 11. If the cpumask
+contains other CPUs, the filter will skip the call.
 
-I should make sure that my own ktest config that I use to run tests
-checks these variations too.
+I believe you can use '&' to check whether a cpumask contains a CPU, e.g.
 
--- Steve
+	'target_cpus & 11'
+
+Thanks,
+Mark.
