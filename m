@@ -1,43 +1,42 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FE9A17582;
-	Mon,  5 Feb 2024 10:29:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9267517575;
+	Mon,  5 Feb 2024 10:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707128950; cv=none; b=BnEXBeOqbG4En9atHUgr9rTRTGK8gJTnhRk2OxKD85me4PZ+2VirdF7KBeVZcNQ46jbnHusSVTOpZLf10gtsqjYDhgw/6LMDZkK1jp9DdbjieOPBYK/J/KCgOpuLKa/nZEpjthdwQtCGBrYj2tV/nGy/Z5rsYTlxip+ekHao4Qw=
+	t=1707129504; cv=none; b=HczjSbV0gM0kqwGczz/c3vakOVE/8Kfj/un6xmQJOpunwdVsxLSXHBu1aZc1x5NO0nYXQf9D6t8+kj2Hiu5wcP/pd6250s9k2/OlHHCmuL03sTqz+eC4GDLq7r0vKyNdb0orjAOPq1BOs8HMfYnNn1AMEfmr2+LHzzQ8PGHo2N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707128950; c=relaxed/simple;
-	bh=s0mnT/cdLHBbbew5fqdPMxLP/4VYZ1bC8Ao2a37JfpU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rm/82kY1BEZ+qGvKmVrfTdrc5TiVITYWZ7xzKWkxkG2oK7UaGNZZG3tvSgpp1MfPSLqny0EOppXqKZCOjDMqe8XIaGay33lXqVLkmz+gVlDuiIbrbtO26FRhOsUGbsXgTFz9XdOpwYSnWog3oEjEfbKIOXgui2Kah/zdEfImNZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC4441FB;
-	Mon,  5 Feb 2024 02:29:47 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.66.84])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23ED63F762;
-	Mon,  5 Feb 2024 02:29:04 -0800 (PST)
-Date: Mon, 5 Feb 2024 10:28:57 +0000
-From: Mark Rutland <mark.rutland@arm.com>
+	s=arc-20240116; t=1707129504; c=relaxed/simple;
+	bh=/QC8CAThaPcMyddwkEEQp4pIMysU99QBeEJYEmYBv94=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CEd1D07rZ+MSZPLYtMITUTS4BIyHPTVLGSxzZMAvTkHoZiQKfr60b2dvK3s6gJE7tskRn+e0Wu6yjsGv+5STk6Xw76JulBJ9WtQgiNhJVSYBfQ/0xywpf/SFi2QhtC2tVUyquVb+DKpf0WOsu1AKDhkMz13l9LRzTT+dP2+2MM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90635C433C7;
+	Mon,  5 Feb 2024 10:38:22 +0000 (UTC)
+Date: Mon, 5 Feb 2024 05:38:19 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
 To: richard clark <richard.xnu.clark@gmail.com>
-Cc: nico@fluxnic.net, Steven Rostedt <rostedt@goodmis.org>,
-	mhiramat@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: nico@fluxnic.net, Mark Rutland <mark.rutland@arm.com>,
+ mhiramat@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: Question about the ipi_raise filter usage and output
-Message-ID: <ZcC4aWWKFU1NgrZM@FVFF77S0Q05N>
+Message-ID: <20240205053819.3cf848f0@rorschach.local.home>
+In-Reply-To: <CAJNi4rMpt88Gz+149wR9crzApmfUEfpS05sbOgAvOhzh2+Brbg@mail.gmail.com>
 References: <CAJNi4rMpt88Gz+149wR9crzApmfUEfpS05sbOgAvOhzh2+Brbg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJNi4rMpt88Gz+149wR9crzApmfUEfpS05sbOgAvOhzh2+Brbg@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 05, 2024 at 05:57:29PM +0800, richard clark wrote:
+On Mon, 5 Feb 2024 17:57:29 +0800
+richard clark <richard.xnu.clark@gmail.com> wrote:
+
 > Hi guys,
 > 
 > With the ipi_raise event enabled and filtered with:
@@ -50,26 +49,11 @@ On Mon, Feb 05, 2024 at 05:57:29PM +0800, richard clark wrote:
 > The above output is triggered by my kernel module where it will smp
 > cross call a remote function from cpu#10 to cpu#11, for the
 > 'target_mask' value, what does the '00000000,00000bff' mean?
-
-That's a cpumask bitmap: 0xbff is 0b1011_1111_1111, which is:
-
-     ,- CPU 10
-     |
-    1011_1111_1111
-    | '__________'
-    |      |
-    |      `- CPUs 9 to 0
-    |
-    `- CPU 11
-
-Note that bitmap has CPUs 0-9 and CPU 11 set, but CPU 10 is not set.
-
-I suspect your kernel module has generated the bitmap incorrectly; it looks
-like you have a mask for CPUs 0-11 minus a mask for CPU 10?
-
-For CPUs 10 and 11, that should be 0xc00 / 0b1100_0000_0000.
-
 >  ~~~~~~~~~~~~~~
+
+It's the CPU mask. bff is bits 101111111111 or CPUs = 0-9,11.
+
+
 > 
 > Another question is for the filter, I'd like to catch the IPI only
 > happening on cpu#11 *AND* a remote function call, so how to write the
@@ -79,12 +63,20 @@ For CPUs 10 and 11, that should be 0xc00 / 0b1100_0000_0000.
 > echo 'target_cpus == 11 && reason == "Function call interrupts"' >
 > events/ipi/ipi_raise/filter
 
-The '=' checks if the target_cpus bitmap *only* contains CPU 11. If the cpumask
-contains other CPUs, the filter will skip the call.
+You mean when it is sent only to CPU 11? Not when the event is
+happening on CPU 11. Like the above example, the event was triggered on
+CPU 10, but the mask was for all the other CPUs.
 
-I believe you can use '&' to check whether a cpumask contains a CPU, e.g.
+If you are looking for just CPU 11, you can do:
 
-	'target_cpus & 11'
+  echo 'target_cpus == 0x800 && reason == "Function call interrupts"'
 
-Thanks,
-Mark.
+
+> 
+> But the 'cat trace' doesn't show anything about cpu#11 IPI info,
+> although both the /proc/interrupts and the smp_processor_id() in the
+> remote function shows there's IPI sent to the cpu#11.
+> 
+
+
+-- Steve
