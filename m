@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD1424B5B;
-	Mon,  5 Feb 2024 12:55:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE95C210E6;
+	Mon,  5 Feb 2024 13:06:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707137709; cv=none; b=ejV48AcKa0aKpesB/OI1ZkrPaL/JaO0pFyqwESj+qI+7Tev7qcEIATHPw6I6jYeau0lVI1c6IwsX/e6a8OWKwl2blnuAGHhDtlnVpsKZccBAkd4TVbtFhelIDXyUoIjxgWDHGXu7nAxwEKK/On4O/pGWjR+hCOls1sZmUjEmkcY=
+	t=1707138375; cv=none; b=t5SccQdXfUJP6dl/Grrmbe3gOSvfSphFOeT1n/lAIoydedf3o/OHqbNu2wLWM2meO6Lh/KZ75C1iRrWD6AD5IJZR3+rpWbzsH+Dr2ii9Eim7zGMjd8IJCGxmoSQPKpE8IM4iYkfgNU8fE0lqsAu0xWJjM3RBj0DqFxl7HPDiOPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707137709; c=relaxed/simple;
-	bh=RydxO7dOlNRVK8/BCFH6wMENEOVZlKouAZ/pEt+4pK0=;
+	s=arc-20240116; t=1707138375; c=relaxed/simple;
+	bh=jNCvi3Kx1udjn5zsmKNV0axNM8kCnrRuz3EFoPq0zNI=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CB5a6qnHCVN/ifpa5tNBRgn4OoQSFDtr0BKaEAoktc37rmef+vvvS+hiKZTCNODoG1KZNp5T0ztXeBDpxOcplz4jwAurKWvwlX8sTND2X4YJHc9ws+F9NpLb6i86V4iVyTBTWhK7XeOSXufyQfcdCJ2VqvRofpiHS02yXw1uJpo=
+	 MIME-Version:Content-Type; b=jv2667yYsz8SrzfHnx26YrN3dcQb+lhU5xGxb4U4A8aYL26vsBLKfu+MZlOQGxitJas13NMPa7NllfwUeUgcADl9oZPx3Tg5dFp2Gmn+As/xZuT/pQlju8R48x819JcTlyc4EN+hX0tvmfzV3fszFMHc21jplKj9NfqkpphJbSI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FD7AC433F1;
-	Mon,  5 Feb 2024 12:55:08 +0000 (UTC)
-Date: Mon, 5 Feb 2024 07:55:04 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D183C433F1;
+	Mon,  5 Feb 2024 13:06:13 +0000 (UTC)
+Date: Mon, 5 Feb 2024 08:06:09 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Sven Schnelle <svens@linux.ibm.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Mete Durlu <meted@linux.ibm.com>
-Subject: Re: [PATCH] tracing: use ring_buffer_record_is_set_on() in
- tracer_tracing_is_on()
-Message-ID: <20240205075504.1b55f29c@rorschach.local.home>
-In-Reply-To: <20240205065340.2848065-1-svens@linux.ibm.com>
-References: <20240205065340.2848065-1-svens@linux.ibm.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: richard clark <richard.xnu.clark@gmail.com>, nico@fluxnic.net,
+ mhiramat@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Question about the ipi_raise filter usage and output
+Message-ID: <20240205080609.563df00f@rorschach.local.home>
+In-Reply-To: <ZcC4aWWKFU1NgrZM@FVFF77S0Q05N>
+References: <CAJNi4rMpt88Gz+149wR9crzApmfUEfpS05sbOgAvOhzh2+Brbg@mail.gmail.com>
+	<ZcC4aWWKFU1NgrZM@FVFF77S0Q05N>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -35,18 +35,26 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon,  5 Feb 2024 07:53:40 +0100
-Sven Schnelle <svens@linux.ibm.com> wrote:
+On Mon, 5 Feb 2024 10:28:57 +0000
+Mark Rutland <mark.rutland@arm.com> wrote:
 
-> tracer_tracing_is_on() checks whether record_disabled is not zero. This
-> checks both the record_disabled counter and the RB_BUFFER_OFF flag.
-> Reading the source it looks like this function should only check for
-> the RB_BUFFER_OFF flag. Therefore use ring_buffer_record_is_set_on().
-> This fixes spurious fails in the 'test for function traceon/off triggers'
-> test from the ftrace testsuite when the system is under load.
+> > I try to write below:
+> > echo 'target_cpus == 11 && reason == "Function call interrupts"' >
+> > events/ipi/ipi_raise/filter  
 > 
+> The '=' checks if the target_cpus bitmap *only* contains CPU 11. If the cpumask
+> contains other CPUs, the filter will skip the call.
+> 
+> I believe you can use '&' to check whether a cpumask contains a CPU, e.g.
+> 
+> 	'target_cpus & 11'
 
-I've seen these spurious failures too, but haven't looked deeper into
-it. Thanks,
+11 == 0xb = b1011
+
+So the above would only be true for CPUs 0,1 and 3 ;-)
+
+I think you meant: 'target_cpus & 0x800' 
+
+I tried "1 << 11' but it appears to not allow shifts. I wonder if we should add that?
 
 -- Steve
