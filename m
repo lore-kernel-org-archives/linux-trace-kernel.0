@@ -1,92 +1,140 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30EB71CA88
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Feb 2024 13:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0929E1CD1C;
+	Mon,  5 Feb 2024 13:16:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707138785; cv=none; b=kmo7kzHrdYWKzJ8MqU5UgHjbMSbVgok03D+yJAmYkTqz+BZWnFDhLGmVEBMUFq4xfmTjoL4iUBQytKUBsNO7xIWbZeCypHgArhdSGK3aRpL11upk2u2cXcCcxIzIQ5bV1CdsJmDbCnN+cWhJmi0XRMFp8nfk6JIY1WT2IS1oEhY=
+	t=1707139001; cv=none; b=doHVOObdKxCDteMgOIlilzRJkzvJ50Dqdg59eFDh42Tnlp2Yht1olzhYsJNowXjmBhoupaSBjYj3iQsdkF99dFyExg1mNUTF6KaGb4iho8D/mNcsU+o9W66a/tMM057+K/aalr7X/85n1LUV8RVl8iwfIeqYzOYcqizMNBv3vQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707138785; c=relaxed/simple;
-	bh=g5xEBeyldH+fm+N8Sqx3EL+fAkUst9da5wdf2Iqc/qQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eCIfeC0AVUVQKjJ8o1ZXfChng/95fYR6/PEHw8wPzxx+IOYVscPHE6O4UbpJIndv4/frLYq5cdLXTdN0kV1Sz0gaGtZyAXzzxTqCOWFLaUIJ0QALLXUuaNH85msmrxULMIggeESuZKuKkMxew4GHq9vnK/wba55yxjGDCfeM7fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=oVRwfste; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1707139001; c=relaxed/simple;
+	bh=phFE0J5htpNCpRR8HNzbHVFzQ7uv/MuQlbk2fQvCWH8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=OgwCYto237oA7d4i2/Z4UqCjiD8lCcGnH8St0d0pDAWZN5LsHqb+WTK9lIScYzc8vTVXm5xgO14TVCYt/79IQMR+njcm3ypfYE/M+hlJN62IdJ+14kUZvLTq9JEL+gKNOMg9e3ZNQJaKISo6UXtGdpQ/oge4aqg7FEqjFGmr/a0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SOeVKHx2; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="oVRwfste"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1707138778; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=GS6+1vc7MxVuoEwx4nJjZgrNI1JABgol9fgwCj0Yexw=;
-	b=oVRwfste3elCGLhZKs/EL2f4JTcdt+rxIz7N8Fi5Dhou8/utP8J914v6KMbsII6bsjZkIa6rlYhmui7ykr3vC5zJ7r4+P6PREUSi81Q7nJIl9ux6kBqGUKg24xJT+iWuRKur7YMQH0TePTavxljZDDupWuTsoDA4gdtUW/tr27I=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R801e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=xiangzao@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0W0AbpQM_1707138769;
-Received: from localhost.localdomain(mailfrom:xiangzao@linux.alibaba.com fp:SMTPD_---0W0AbpQM_1707138769)
-          by smtp.aliyun-inc.com;
-          Mon, 05 Feb 2024 21:12:58 +0800
-From: Yuanhe Shu <xiangzao@linux.alibaba.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	shuah@kernel.org
-Cc: =linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	=linux-kselftest@vger.kernel.org,
-	Yuanhe Shu <xiangzao@linux.alibaba.com>
-Subject: [PATCH] selftests/ftrace: Limit length in subsystem-enable tests
-Date: Mon,  5 Feb 2024 21:12:33 +0800
-Message-Id: <20240205131233.13686-1-xiangzao@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SOeVKHx2"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 415D807c022337;
+	Mon, 5 Feb 2024 13:16:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : in-reply-to : references : date : message-id : mime-version :
+ content-type; s=pp1; bh=ky2sP7LC9ehECK2EtOMlyelCxIov3dSWzHcvB/YNGhs=;
+ b=SOeVKHx2rsVkW2qPu9iDzKJBTWysxuv64PilpuOkIT57Omgdki2uIVVyQggcKjJ0oZuH
+ u3pgWJUVNolekILVwWAwfaD6ywi/vJPXOgvy68bGc+EiqswF7ydBepJjYDIJM0Jcxajl
+ Rlc7ES7JPFJ1JvVYHkWCfIkS9RAhDOTUSaYnX2cw7fzbOzwDIcXi9AMPZhemhPcoBsT5
+ OzwWn1B1Bv3o57618QmDWXk5vNpJjzPoSg0bfiIhJGvQpJ+C0Z1owHzAhFz6C549/Sk6
+ 2ccXEvtQdtm4qdpEKU10ah8oVtuIbbdr+vGCY84uRtVsIay0/RBpCNTR3PP/FlbdbpVJ Ww== 
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w309q88nv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 Feb 2024 13:16:33 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 415CmN57020469;
+	Mon, 5 Feb 2024 13:16:33 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3w1ytsrvab-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 Feb 2024 13:16:32 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 415DGVHn40567042
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 5 Feb 2024 13:16:31 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 411A52004B;
+	Mon,  5 Feb 2024 13:16:31 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 08C7920040;
+	Mon,  5 Feb 2024 13:16:31 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon,  5 Feb 2024 13:16:30 +0000 (GMT)
+From: Sven Schnelle <svens@linux.ibm.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Mete Durlu <meted@linux.ibm.com>
+Subject: Re: [PATCH] tracing: use ring_buffer_record_is_set_on() in
+ tracer_tracing_is_on()
+In-Reply-To: <20240205075504.1b55f29c@rorschach.local.home> (Steven Rostedt's
+	message of "Mon, 5 Feb 2024 07:55:04 -0500")
+References: <20240205065340.2848065-1-svens@linux.ibm.com>
+	<20240205075504.1b55f29c@rorschach.local.home>
+Date: Mon, 05 Feb 2024 14:16:30 +0100
+Message-ID: <yt9djznj3vbl.fsf@linux.ibm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 0EOqI_za7h_Y6-9CYERr7KRQCuGyNNCr
+X-Proofpoint-GUID: 0EOqI_za7h_Y6-9CYERr7KRQCuGyNNCr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-05_08,2024-01-31_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ lowpriorityscore=0 suspectscore=0 adultscore=0 mlxlogscore=999
+ malwarescore=0 priorityscore=1501 spamscore=0 phishscore=0 clxscore=1015
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402050101
 
-While sched* events being traced and sched* events continuously happen,
-"[xx] event tracing - enable/disable with subsystem level files" would
-never stop as it cat an endless output.
-Select the first 100 lines of output would be enough to judge whether
-there are more than 3 types of sched events.
+Hi Steven,
 
-Signed-off-by: Yuanhe Shu <xiangzao@linux.alibaba.com>
----
- .../selftests/ftrace/test.d/event/subsystem-enable.tc       | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Steven Rostedt <rostedt@goodmis.org> writes:
 
-diff --git a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc b/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
-index b1ede6249866..74c1114603a7 100644
---- a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
-+++ b/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
-@@ -18,7 +18,7 @@ echo 'sched:*' > set_event
- 
- yield
- 
--count=`cat trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
-+count=`head -n 100 trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
- if [ $count -lt 3 ]; then
-     fail "at least fork, exec and exit events should be recorded"
- fi
-@@ -29,7 +29,7 @@ echo 1 > events/sched/enable
- 
- yield
- 
--count=`cat trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
-+count=`head -n 100 | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
- if [ $count -lt 3 ]; then
-     fail "at least fork, exec and exit events should be recorded"
- fi
-@@ -40,7 +40,7 @@ echo 0 > events/sched/enable
- 
- yield
- 
--count=`cat trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
-+count=`head -n 100 | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
- if [ $count -ne 0 ]; then
-     fail "any of scheduler events should not be recorded"
- fi
--- 
-2.39.3
+> On Mon,  5 Feb 2024 07:53:40 +0100
+> Sven Schnelle <svens@linux.ibm.com> wrote:
+>
+>> tracer_tracing_is_on() checks whether record_disabled is not zero. This
+>> checks both the record_disabled counter and the RB_BUFFER_OFF flag.
+>> Reading the source it looks like this function should only check for
+>> the RB_BUFFER_OFF flag. Therefore use ring_buffer_record_is_set_on().
+>> This fixes spurious fails in the 'test for function traceon/off triggers'
+>> test from the ftrace testsuite when the system is under load.
+>> 
+>
+> I've seen these spurious failures too, but haven't looked deeper into
+> it. Thanks,
 
+Another issue i'm hitting sometimes is this part:
+
+csum1=`md5sum trace`
+sleep $SLEEP_TIME
+csum2=`md5sum trace`
+
+if [ "$csum1" != "$csum2" ]; then
+    fail "Tracing file is still changing"
+fi
+
+This is because the command line was replaced in the
+saved_cmdlines_buffer, an example diff between both files
+is:
+
+       ftracetest-17950   [005] ..... 344507.002490: sched_process_wait: comm=ftracetest pid=0 prio=120
+       ftracetest-17950   [005] ..... 344507.002492: sched_process_wait: comm=ftracetest pid=0 prio=120
+- stress-ng-fanot-17820   [006] d.h.. 344507.009901: sched_stat_runtime: comm=stress-ng-fanot pid=17820 runtime=10000054 [ns]
++           <...>-17820   [006] d.h.. 344507.009901: sched_stat_runtime: comm=stress-ng-fanot pid=17820 runtime=10000054 [ns]
+       ftracetest-17950   [005] d.h.. 344507.009901: sched_stat_runtime: comm=ftracetest pid=17950 runtime=7417915 [ns]
+  stress-ng-fanot-17819   [003] d.h.. 344507.009901: sched_stat_runtime: comm=stress-ng-fanot pid=17819 runtime=9983473 [ns]
+- stress-ng-fanot-17820   [007] d.h.. 344507.079900: sched_stat_runtime: comm=stress-ng-fanot pid=17820 runtime=9999865 [ns]
++           <...>-17820   [007] d.h.. 344507.079900: sched_stat_runtime: comm=stress-ng-fanot pid=17820 runtime=9999865 [ns]
+  stress-ng-fanot-17819   [004] d.h.. 344507.079900: sched_stat_runtime: comm=stress-ng-fanot pid=17819 runtime=8388039 [ns]
+
+This can be improved by:
+
+echo 32768 > /sys/kernel/tracing/saved_cmdlines_size
+
+But this is of course not a fix - should we maybe replace the program
+name with <...> before comparing, remove the check completely, or do
+anything else? What do you think?
+
+Thanks,
+Sven
