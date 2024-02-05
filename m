@@ -1,301 +1,201 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2065.outbound.protection.outlook.com [40.107.20.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65132EB08;
-	Mon,  5 Feb 2024 16:30:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.65
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707150654; cv=fail; b=OrQmnwrbGp6CdZ2U74kVINRXRQyGMGVhEErJmSj9miqd8G6tIm89cN4ts4xiBxSSlfX2EsS94xUeMKWd5ulyTb/Je6jdtG1BJezIXRjkJO63WRuYcuXSUBVCf15A7EF+aoQ0oExim4T7GvFssS7s8WJW3hsCTn2Qx+8CNmyYUac=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707150654; c=relaxed/simple;
-	bh=J7AhrdpTKkNelVOnDNxZeOOyW0EB33IuTI/khrTRcVA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=kFW8stKXY2YluUt+yZjeIMAiV6TurN31zOE4bjAnuJGukoOLPe30aFiJ4Yvfg1VE0rK4aVsnxlbEeG1ekhbZadin9Hwqv23lnrg5OZFRpv0To8d2bHluFg6PfL1VYRRkNDNFWO6Z1sB/zjOEIlRr1TVUizVmJauYz8Cg7p6ARm0=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b=eGkemGGq; dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b=eGkemGGq; arc=fail smtp.client-ip=40.107.20.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22CE43FE3D
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Feb 2024 16:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707150859; cv=none; b=i8JUSAsWPYMjbCuhXTSweFleB7B1DeRRSmKChZ9HES15QMPwiJPzywFzZq/0zSTZmlEYiXDOTGlD5f9cOggf+Z03YHym6ggqu1KmL+1x+GNwx/JcPBstv/VsXJdyVjq/EajAR3SZ5UTolQLd3Bx5sV+49p5GqnfdvLSAnUnogTw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707150859; c=relaxed/simple;
+	bh=tZH2CeWzrF3LXwnsAv3jlMz5yaTDBOLavgTl2tFS9Bw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=p8SUzHy3Clb8hnyBVD7hq3u0aFPNx22YjjbSElz27/xjJB/S9wYdNlMS6y2R9qyKAieR+LAR+VHwXlN+JymfreYMjLn+fSMWrBX8vv9vURC1EbQCYM3fIBj6oZwtjKi8NEsPcs/TwR07Jh7bjk9iVx9ThN/BTXpNQN+QHuD+GqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h7zxTkwI; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="eGkemGGq";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="eGkemGGq"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=pass;
- b=gURm5mSu6iAUZHFtjfSem6I6YCrf3jyp7H8s0AJAVhxzYDqoe6XaEsmn+6frUmFJ8/dmMsV47WKvbClSZLAYMnt2ZeyX/V1ZkDC+ZNbT+8vVL5CpYw7xVWhQhfKn77q3ZSfOsH3SjFHFjdhoMNp45NHi9cPh+ktPYv7e77JNE8aNnz2AQB9kUH1FhcYGW6ot7ONDP+Cqx6Ply7y+T3IzhWD9y1FadDzLOGa7J0+ua/7sSstcQeAB8KUufpS4BL9F+589j3sZbiJGPup5ac2sCpLPkV5Ut1aEOTOrxPReqlz3DJoQ4oUprP2ZeF9ejwq2usbd1CugZM3tSU7MWD+p5Q==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VKFJxZ2+kCIPS11EhpwNvCR59jz94fC2Zn1gD1Ogz8I=;
- b=gzhJl7I4StQLNNQA78d13yh5iXQKCJCkMvOEgVgJcOHJMK21q91orohVGoieH0WfptYjWND9loxFb/vTh0NWN5yPYXdirJxd3QhdI0Lk+Gy72Rd6ptfBkLS1Z/+mx/wN1x5z7vq7gmfPkcFjloB1FS7nYlsjsSUbVNI9EztJ2MxfdQiZovx4MPC3nhDz8DnOMhlh7WXQaBlvMVS1UdvGotA8VEQUbxAtO9hNbWF6BWxDk5sduE7KbTIvyw72oDDMYRlwnBr/dLfwSEUA7sI4WgaNyhSkGfNMCHy8XC+9LcS/oa9fVsljHWQxEiYJTzzpCcE9RxLhCdMf9IfW0xKWvA==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 63.35.35.123) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=armh.onmicrosoft.com; arc=pass (0
- oda=1 ltdi=1 spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VKFJxZ2+kCIPS11EhpwNvCR59jz94fC2Zn1gD1Ogz8I=;
- b=eGkemGGqA4ziRNcBHlW3YoF8/bc8AQo8s45SQXbmSM5VYEh1MsGTASz3Etaqj5A75UCxBS6y6I8hxAekXXXrHLx8tW41dUCHzhRwcTd5lRiUWpmzs0lParmZGe6p+FuTCSmsehhjoY7rWvHyYjXITxMPb84XDDuTk99KD4wwrz4=
-Received: from DUZPR01CA0123.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:4bc::8) by AS2PR08MB8998.eurprd08.prod.outlook.com
- (2603:10a6:20b:5fa::5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.34; Mon, 5 Feb
- 2024 16:30:28 +0000
-Received: from DU2PEPF00028CFE.eurprd03.prod.outlook.com
- (2603:10a6:10:4bc:cafe::79) by DUZPR01CA0123.outlook.office365.com
- (2603:10a6:10:4bc::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.34 via Frontend
- Transport; Mon, 5 Feb 2024 16:30:28 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
- pr=C
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DU2PEPF00028CFE.mail.protection.outlook.com (10.167.242.182) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7249.19 via Frontend Transport; Mon, 5 Feb 2024 16:30:28 +0000
-Received: ("Tessian outbound 31df1b57f90c:v228"); Mon, 05 Feb 2024 16:30:28 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 3413c311706102e9
-X-CR-MTA-TID: 64aa7808
-Received: from a84e53a11534.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id E4E84FE5-8F84-428C-ACB9-145F11205B65.1;
-	Mon, 05 Feb 2024 16:30:21 +0000
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id a84e53a11534.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Mon, 05 Feb 2024 16:30:21 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EpFqAKwzxcQm2w7zqIWAFyG836slqrHazQhe9fflhFDWGFrIzILnCg+mdV4EFwAX/j/cf5OGXOc3f3uSgmSBQk2BpbNS5JQ1PnQtQaZRAIkXoj1gxhxefkv4OoR8i4tZ/GLrXGHC/xbE56CNAxcri4TwFMVnTGudDhiN/HkgwP4OQKzwthiRCmcViQyxTayZ1sL+PtwyTG2Z9ZO7/zfUm3od0kyl4l6kpWNptJzX8rJq6Smn5UUZN0Wfv/+MQx+Bkde8KQhJ7OdJqBfIUVjpFpWl84JS38iajgj8cPao8NyhcyXCUCUY0l9vDMXqk+kKewdhPkP758OJ820EuQXYNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VKFJxZ2+kCIPS11EhpwNvCR59jz94fC2Zn1gD1Ogz8I=;
- b=QeWjlujpd79364d5x0pKDQS1BtAGV/B58aS5yUid7oVWXitGW4+pEmFU4Lb3h5FT4JWixdhX9c6wivP1yqlsA6wwR2U3zm4Q/hLHmtVMShDYKHyymW5Md4kqvYmRcc2sB+dvnfG1gjlK0Q/pdeqWk2UAUBWD4Vanp1zMz4mKab7tX6rowLIXT1PeMZ4FOglIDYq7U0drrxYUIOihlgLFVu2G4Y3RHlE8XCwApsIkjdoO+kFDw6l5+DGqJbgoKlCh4RZ/GJAVpWxodHg7uyFTToMKwHqXNvo8J4pwoRTXCDFSZvZiiQGZh/egbvuG70XOYrdKfDfjYs79myxRRm6X/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VKFJxZ2+kCIPS11EhpwNvCR59jz94fC2Zn1gD1Ogz8I=;
- b=eGkemGGqA4ziRNcBHlW3YoF8/bc8AQo8s45SQXbmSM5VYEh1MsGTASz3Etaqj5A75UCxBS6y6I8hxAekXXXrHLx8tW41dUCHzhRwcTd5lRiUWpmzs0lParmZGe6p+FuTCSmsehhjoY7rWvHyYjXITxMPb84XDDuTk99KD4wwrz4=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from DU0PR08MB8640.eurprd08.prod.outlook.com (2603:10a6:10:400::17)
- by DB9PR08MB7493.eurprd08.prod.outlook.com (2603:10a6:10:36e::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.34; Mon, 5 Feb
- 2024 16:30:19 +0000
-Received: from DU0PR08MB8640.eurprd08.prod.outlook.com
- ([fe80::5334:4a53:f0af:e0b1]) by DU0PR08MB8640.eurprd08.prod.outlook.com
- ([fe80::5334:4a53:f0af:e0b1%4]) with mapi id 15.20.7249.032; Mon, 5 Feb 2024
- 16:30:19 +0000
-Date: Mon, 5 Feb 2024 16:30:17 +0000
-From: Alexandru Elisei <alexandru.elisei@arm.com>
-To: Evgenii Stepanov <eugenis@google.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev,
-	maz@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com,
-	yuzenghui@huawei.com, arnd@arndb.de, akpm@linux-foundation.org,
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	bristot@redhat.com, vschneid@redhat.com, mhiramat@kernel.org,
-	rppt@kernel.org, hughd@google.com, pcc@google.com,
-	steven.price@arm.com, anshuman.khandual@arm.com,
-	vincenzo.frascino@arm.com, david@redhat.com, kcc@google.com,
-	hyesoo.yu@samsung.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v3 22/35] arm64: mte: Enable tag storage if CMA areas
- have been activated
-Message-ID: <ZcEM+DjRX/UB07yM@arm.com>
-References: <20240125164256.4147-1-alexandru.elisei@arm.com>
- <20240125164256.4147-23-alexandru.elisei@arm.com>
- <CAFKCwrhNE5PR7cu7tN8qMmSEUhdJ7ensGGrB-oodh-J_fdoRcw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFKCwrhNE5PR7cu7tN8qMmSEUhdJ7ensGGrB-oodh-J_fdoRcw@mail.gmail.com>
-X-ClientProxiedBy: LO2P265CA0403.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:f::31) To DU0PR08MB8640.eurprd08.prod.outlook.com
- (2603:10a6:10:400::17)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h7zxTkwI"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60444884b7dso24607197b3.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 05 Feb 2024 08:34:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707150857; x=1707755657; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PpJg+QSlnAWjjgOu3uofSR4E+hbgVBBN+bxzotDQEwU=;
+        b=h7zxTkwIPDVLSvQDiWVx0qoiCXeDyGBbg59emV4SQrmdy+o518eMcsw2FcUdo5Lxuc
+         QjTSLc78kmu/HqjEcn2NSnglU88w6ZecNspy+nOcJpl0WjjbANP3d35USNQbvFMzZtKk
+         L1iaNyMclrBX6DYij7iG7DpGTPzlOgrw97cDgg9vi5rFThLIJfiHN/c6oVmjLVlxcBZB
+         onT9QqSNY15IWcSLFPK6rzEjEtHbdFyocbuz5AUcPK0sAouDqZBj+CMF5tGDwQYGLpcb
+         zE+/KXe/bSGpmhmyw3gX2n7G61jWD3AP/ojikwmFxTDT1U9JaLe/+wWC/FCuB/XZA2Oj
+         Sbpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707150857; x=1707755657;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PpJg+QSlnAWjjgOu3uofSR4E+hbgVBBN+bxzotDQEwU=;
+        b=UCAqVGz8s4vdsVbh93MfyX7wtxxke1aAIP/8ojCNR7a6kbPm6ccmrNsLpa1MiwjKX9
+         Q6emcZaIMvsA9C7ULZ80MAyHUVnpdbyqK35Tvc6bllxU6q3WnVNqQfluvembT+flnotY
+         kYxpwKt7BhFwYSePArqf8ldZhnpOgzEJTMFM4fU/soPcruFEgF4acOg6sFPNtYkzQeBl
+         kOZojzBiiLm2Ec6OHJHH4Xj05eJ9u16nS+CahHOMUk//IHuLmSmqikddXXqCcezNyVlf
+         TTENghbYUSMo/btfIAuHvHvwWp1ktcGzkM1neFzUaYuw5ZKw2cDU/KinFS4cCmTzo7Ow
+         J4Xg==
+X-Gm-Message-State: AOJu0YwfpDw/rF7Y3y9eaNeZn6c6NKyWRLrarHbmNAsUONXwNA87txP8
+	8E8LvjQbnGmxxwASYE/Cfpfp/PQ/3SwZrBvVgF+XPAukfx8UTf9dFSB0K08tF44pX+m7lMumQ0P
+	94bWHUYPryGpQbLwbYQ==
+X-Google-Smtp-Source: AGHT+IG9xRk/6XYsAS/orOHiz14UWutRLC9DGTBH6qjHxKsZJYds5u1iBQZr5mgmGlxbRyMQSvoRQspIEUVm1m1n
+X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
+ (user=vdonnefort job=sendgmr) by 2002:a05:6902:10cd:b0:dc6:e647:3fae with
+ SMTP id w13-20020a05690210cd00b00dc6e6473faemr448377ybu.2.1707150857143; Mon,
+ 05 Feb 2024 08:34:17 -0800 (PST)
+Date: Mon,  5 Feb 2024 16:34:04 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	DU0PR08MB8640:EE_|DB9PR08MB7493:EE_|DU2PEPF00028CFE:EE_|AS2PR08MB8998:EE_
-X-MS-Office365-Filtering-Correlation-Id: df412087-8631-4701-9232-08dc2667c39e
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original:
- bApf9F3aiu2d6QZbYeaETDt+MGR/RiKKAQJkg06AakVjvgklUUjf4E0+39BREKJljiL685FU4Lqmt+nLTkV60Gs0Qq8Bt25+t9B5Hmbn/XCUzd4nIBGwNbvKbHhooREIAyhz+ya/ihncZmOhIf98SS9eFjF5ecSWqwegmXhA4e6pBT4sIu8lncfVy2z6o65VAu/mO8qtNbJwoy6KoNi+AuM4S0d6HD/OscQCuIFg9B/ICGBSaN7sZbKqMMgXRoHWz64s+yREUpd3PP4xG5MrepADSbEFMqLv6bdbb9IpJk4OMX3qlHr7O5WKfCfuBAvE/vWxNBOb0NBnhIBLyMU9xrpk4Z3//ZIJ+T6F3BPQLZ/Xixf6iOKKA603XbzYkMBKs13W3KrUiE8vJEAsWcc8MLeR+NQIq/N4x1ekesI7RYX2weEJ/qGSH5YMafUUNWlsxOzM+VS17itIVeC4YsKdtD9RYmCzXo7N+i3ze5dkxdnwkRrW/V+bjckz7AYwkQ+759Nv70Fv00P/krwXwWzwQARFhYPyDN1HvQWKzk0elOGjbLYQI/0OmGFU5yUHRX55
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR08MB8640.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(39860400002)(136003)(396003)(346002)(366004)(230273577357003)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(83380400001)(26005)(44832011)(66476007)(7416002)(6916009)(5660300002)(66946007)(86362001)(66556008)(316002)(2906002)(7406005)(38100700002)(478600001)(6512007)(53546011)(2616005)(6506007)(41300700001)(8676002)(4326008)(6486002)(36756003)(8936002);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR08MB7493
-Original-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DU2PEPF00028CFE.eurprd03.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	8196798e-9e5a-4316-65a9-08dc2667be34
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	OK6CINt7S881L2NxiLvKc8x+TLkgnGs8kanKhpRoHuOSNYVhM0NsnAzSrL0FoaZxWzwNjhJ/Vn9GbFg9YDOW0g7UK5hwyDFxWcNhzavvIi3l4DTKWHP4M5eyxOjfRm2MyWbIg2Z7J0/mabdneYLIzNcyHavY+rH3SKBo3JcwgvkFkqSAPjFT3okH+G6pB61W1r29Xkm6y/YeEKYKR3XP/HAb3e4iuakGwfsI/zeThsRzTQQ7P9XtK106QC21GKSJXryXz1Ps3hBYSOBj8qKOj9xNpTWaGprYaU2kBZmGxKNq8+8sQDs8DMbT1EdTpvnkW7rZrgL6Q+DR8ZizVmA9Z5PeB4Rnztu/UDmIW4HkQ4ktGBF/T79BB2T0VHpLM8rqWIfC5unLbURieL2KM5PPnwpKF9+OFotl38Aljp7CRfzj5aZV4hvllEXh/Yu01jWzUiZnxAvztiL3R6QHxs0FtiWrNHZpP1zbg8ihNkQP4SnMT6shN4Gh2elTH4AU06pQ+du2MuRaUwKZ5F1PG6eQWSnZezHrI3uuNIfWZwixPYiD4a+wgEGc4mfADwEQmA5KFAeJgfIKiKYlJa1eyvbzvuaqKut2cdLToJjIPxQDAQCtVQSzxJvfP9wRgJzeijC6Au6d/dUOvtCK+cqkbtB5fc6cTKQUBAdAajkIh5Y1q6ndc25J4YVf+WYz0d/sLs6Qd5V1L3V5VLNpP5gbicRJS0QKE8W1b5+Fr3t3MQeVN+GWILy61Qi9Yz9lpcRrVPpX
-X-Forefront-Antispam-Report:
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(13230031)(4636009)(396003)(136003)(376002)(346002)(39860400002)(230273577357003)(230922051799003)(1800799012)(64100799003)(82310400011)(451199024)(186009)(40470700004)(36840700001)(46966006)(40460700003)(40480700001)(41300700001)(47076005)(36860700001)(83380400001)(6506007)(53546011)(336012)(26005)(2906002)(356005)(82740400003)(81166007)(6512007)(2616005)(36756003)(70586007)(316002)(70206006)(44832011)(478600001)(6486002)(86362001)(4326008)(6862004)(8936002)(450100002)(5660300002)(8676002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2024 16:30:28.4891
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: df412087-8631-4701-9232-08dc2667c39e
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DU2PEPF00028CFE.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR08MB8998
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
+Message-ID: <20240205163410.2296552-1-vdonnefort@google.com>
+Subject: [PATCH v14 0/6] Introducing trace buffer mapping by user-space
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Evgenii,
+The tracing ring-buffers can be stored on disk or sent to network
+without any copy via splice. However the later doesn't allow real time
+processing of the traces. A solution is to give userspace direct access
+to the ring-buffer pages via a mapping. An application can now become a
+consumer of the ring-buffer, in a similar fashion to what trace_pipe
+offers.
 
-On Fri, Feb 02, 2024 at 02:30:00PM -0800, Evgenii Stepanov wrote:
-> On Thu, Jan 25, 2024 at 8:44 AM Alexandru Elisei
-> <alexandru.elisei@arm.com> wrote:
-> >
-> > Before enabling MTE tag storage management, make sure that the CMA areas
-> > have been successfully activated. If a CMA area fails activation, the pages
-> > are kept as reserved. Reserved pages are never used by the page allocator.
-> >
-> > If this happens, the kernel would have to manage tag storage only for some
-> > of the memory, but not for all memory, and that would make the code
-> > unreasonably complicated.
-> >
-> > Choose to disable tag storage management altogether if a CMA area fails to
-> > be activated.
-> >
-> > Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
-> > ---
-> >
-> > Changes since v2:
-> >
-> > * New patch.
-> >
-> >  arch/arm64/include/asm/mte_tag_storage.h | 12 ++++++
-> >  arch/arm64/kernel/mte_tag_storage.c      | 50 ++++++++++++++++++++++++
-> >  2 files changed, 62 insertions(+)
-> >
-> > diff --git a/arch/arm64/include/asm/mte_tag_storage.h b/arch/arm64/include/asm/mte_tag_storage.h
-> > index 3c2cd29e053e..7b3f6bff8e6f 100644
-> > --- a/arch/arm64/include/asm/mte_tag_storage.h
-> > +++ b/arch/arm64/include/asm/mte_tag_storage.h
-> > @@ -6,8 +6,20 @@
-> >  #define __ASM_MTE_TAG_STORAGE_H
-> >
-> >  #ifdef CONFIG_ARM64_MTE_TAG_STORAGE
-> > +
-> > +DECLARE_STATIC_KEY_FALSE(tag_storage_enabled_key);
-> > +
-> > +static inline bool tag_storage_enabled(void)
-> > +{
-> > +       return static_branch_likely(&tag_storage_enabled_key);
-> > +}
-> > +
-> >  void mte_init_tag_storage(void);
-> >  #else
-> > +static inline bool tag_storage_enabled(void)
-> > +{
-> > +       return false;
-> > +}
-> >  static inline void mte_init_tag_storage(void)
-> >  {
-> >  }
-> > diff --git a/arch/arm64/kernel/mte_tag_storage.c b/arch/arm64/kernel/mte_tag_storage.c
-> > index 9a1a8a45171e..d58c68b4a849 100644
-> > --- a/arch/arm64/kernel/mte_tag_storage.c
-> > +++ b/arch/arm64/kernel/mte_tag_storage.c
-> > @@ -19,6 +19,8 @@
-> >
-> >  #include <asm/mte_tag_storage.h>
-> >
-> > +__ro_after_init DEFINE_STATIC_KEY_FALSE(tag_storage_enabled_key);
-> > +
-> >  struct tag_region {
-> >         struct range mem_range; /* Memory associated with the tag storage, in PFNs. */
-> >         struct range tag_range; /* Tag storage memory, in PFNs. */
-> > @@ -314,3 +316,51 @@ void __init mte_init_tag_storage(void)
-> >         num_tag_regions = 0;
-> >         pr_info("MTE tag storage region management disabled");
-> >  }
-> > +
-> > +static int __init mte_enable_tag_storage(void)
-> > +{
-> > +       struct range *tag_range;
-> > +       struct cma *cma;
-> > +       int i, ret;
-> > +
-> > +       if (num_tag_regions == 0)
-> > +               return 0;
-> > +
-> > +       for (i = 0; i < num_tag_regions; i++) {
-> > +               tag_range = &tag_regions[i].tag_range;
-> > +               cma = tag_regions[i].cma;
-> > +               /*
-> > +                * CMA will keep the pages as reserved when the region fails
-> > +                * activation.
-> > +                */
-> > +               if (PageReserved(pfn_to_page(tag_range->start)))
-> > +                       goto out_disabled;
-> > +       }
-> > +
-> > +       static_branch_enable(&tag_storage_enabled_key);
-> > +       pr_info("MTE tag storage region management enabled");
-> > +
-> > +       return 0;
-> > +
-> > +out_disabled:
-> > +       for (i = 0; i < num_tag_regions; i++) {
-> > +               tag_range = &tag_regions[i].tag_range;
-> > +               cma = tag_regions[i].cma;
-> > +
-> > +               if (PageReserved(pfn_to_page(tag_range->start)))
-> > +                       continue;
-> > +
-> > +               /* Try really hard to reserve the tag storage. */
-> > +               ret = cma_alloc(cma, range_len(tag_range), 8, true);
-> > +               /*
-> > +                * Tag storage is still in use for data, memory and/or tag
-> > +                * corruption will ensue.
-> > +                */
-> > +               WARN_ON_ONCE(ret);
-> 
-> cma_alloc returns (page *), so this condition needs to be inverted,
-> and the type of `ret` changed.
-> Not sure how it slipped through, this is a compile error with clang.
+Support for this new feature can already be found in libtracefs from
+version 1.8, when built with EXTRA_CFLAGS=-DFORCE_MMAP_ENABLE.
 
-Checked just now, it's a warning with gcc, I must have missed it. Will fix.
+Vincent
 
-Thanks,
-Alex
+v13 -> v14:
+  * All cpu_buffer->mapped readers use READ_ONCE (except for swap_cpu)
+  * on unmap, sync meta-page teardown with the reader_lock instead of
+    the synchronize_rcu.
+  * Add a dedicated spinlock for trace_array ->snapshot and ->mapped.
+    (intends to fix a lockdep issue)
+  * Add kerneldoc for flags and Reserved fields.
+  * Add kselftest for snapshot/map mutual exclusion.
 
-> 
-> > +       }
-> > +       num_tag_regions = 0;
-> > +       pr_info("MTE tag storage region management disabled");
-> > +
-> > +       return -EINVAL;
-> > +}
-> > +arch_initcall(mte_enable_tag_storage);
-> > --
-> > 2.43.0
-> >
+v12 -> v13:
+  * Swap subbufs_{touched,lost} for Reserved fields.
+  * Add a flag field in the meta-page.
+  * Fix CONFIG_TRACER_MAX_TRACE.
+  * Rebase on top of trace/urgent.
+  * Add a comment for try_unregister_trigger()
+
+v11 -> v12:
+  * Fix code sample mmap bug.
+  * Add logging in sample code.
+  * Reset tracer in selftest.
+  * Add a refcount for the snapshot users.
+  * Prevent mapping when there are snapshot users and vice versa.
+  * Refine the meta-page.
+  * Fix types in the meta-page.
+  * Collect Reviewed-by.
+
+v10 -> v11:
+  * Add Documentation and code sample.
+  * Add a selftest.
+  * Move all the update to the meta-page into a single
+    rb_update_meta_page().
+  * rb_update_meta_page() is now called from
+    ring_buffer_map_get_reader() to fix NOBLOCK callers.
+  * kerneldoc for struct trace_meta_page.
+  * Add a patch to zero all the ring-buffer allocations.
+
+v9 -> v10:
+  * Refactor rb_update_meta_page()
+  * In-loop declaration for foreach_subbuf_page()
+  * Check for cpu_buffer->mapped overflow
+
+v8 -> v9:
+  * Fix the unlock path in ring_buffer_map()
+  * Fix cpu_buffer cast with rb_work_rq->is_cpu_buffer
+  * Rebase on linux-trace/for-next (3cb3091138ca0921c4569bcf7ffa062519639b6a)
+
+v7 -> v8:
+  * Drop the subbufs renaming into bpages
+  * Use subbuf as a name when relevant
+
+v6 -> v7:
+  * Rebase onto lore.kernel.org/lkml/20231215175502.106587604@goodmis.org/
+  * Support for subbufs
+  * Rename subbufs into bpages
+
+v5 -> v6:
+  * Rebase on next-20230802.
+  * (unsigned long) -> (void *) cast for virt_to_page().
+  * Add a wait for the GET_READER_PAGE ioctl.
+  * Move writer fields update (overrun/pages_lost/entries/pages_touched)
+    in the irq_work.
+  * Rearrange id in struct buffer_page.
+  * Rearrange the meta-page.
+  * ring_buffer_meta_page -> trace_buffer_meta_page.
+  * Add meta_struct_len into the meta-page.
+
+v4 -> v5:
+  * Trivial rebase onto 6.5-rc3 (previously 6.4-rc3)
+
+v3 -> v4:
+  * Add to the meta-page:
+       - pages_lost / pages_read (allow to compute how full is the
+	 ring-buffer)
+       - read (allow to compute how many entries can be read)
+       - A reader_page struct.
+  * Rename ring_buffer_meta_header -> ring_buffer_meta
+  * Rename ring_buffer_get_reader_page -> ring_buffer_map_get_reader_page
+  * Properly consume events on ring_buffer_map_get_reader_page() with
+    rb_advance_reader().
+
+v2 -> v3:
+  * Remove data page list (for non-consuming read)
+    ** Implies removing order > 0 meta-page
+  * Add a new meta page field ->read
+  * Rename ring_buffer_meta_page_header into ring_buffer_meta_header
+
+v1 -> v2:
+  * Hide data_pages from the userspace struct
+  * Fix META_PAGE_MAX_PAGES
+  * Support for order > 0 meta-page
+  * Add missing page->mapping.
+
+Vincent Donnefort (6):
+  ring-buffer: Zero ring-buffer sub-buffers
+  ring-buffer: Introducing ring-buffer mapping functions
+  tracing: Add snapshot refcount
+  tracing: Allow user-space mapping of the ring-buffer
+  Documentation: tracing: Add ring-buffer mapping
+  ring-buffer/selftest: Add ring-buffer mapping test
+
+ Documentation/trace/index.rst                 |   1 +
+ Documentation/trace/ring-buffer-map.rst       | 104 ++++++
+ include/linux/ring_buffer.h                   |   7 +
+ include/uapi/linux/trace_mmap.h               |  48 +++
+ kernel/trace/ring_buffer.c                    | 344 +++++++++++++++++-
+ kernel/trace/trace.c                          | 221 +++++++++--
+ kernel/trace/trace.h                          |   9 +-
+ kernel/trace/trace_events_trigger.c           |  58 ++-
+ tools/testing/selftests/ring-buffer/Makefile  |   8 +
+ tools/testing/selftests/ring-buffer/config    |   2 +
+ .../testing/selftests/ring-buffer/map_test.c  | 273 ++++++++++++++
+ 11 files changed, 1029 insertions(+), 46 deletions(-)
+ create mode 100644 Documentation/trace/ring-buffer-map.rst
+ create mode 100644 include/uapi/linux/trace_mmap.h
+ create mode 100644 tools/testing/selftests/ring-buffer/Makefile
+ create mode 100644 tools/testing/selftests/ring-buffer/config
+ create mode 100644 tools/testing/selftests/ring-buffer/map_test.c
+
+
+base-commit: e2412e51fdea837b50ce31fea8e5dfc885237f3a
+-- 
+2.43.0.594.gd9cf4e227d-goog
+
