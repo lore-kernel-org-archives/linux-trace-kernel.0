@@ -1,114 +1,84 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0941AB811;
-	Tue,  6 Feb 2024 12:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B2D130AC6;
+	Tue,  6 Feb 2024 13:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707223519; cv=none; b=sEUo5LCZSqeJjhyyVJg3VSOOJ69Rv2zpN34FO3tOVKlZA1bLwc37EratsjEYgaDNdTvaSTGhW9smjkaKN4k2jdY/rdjB/Dwax38X6FTj+6do4T8wXhnmp5ZPYRGA86gcWp1SiP6t3YHvt/GoqpsXAi1iuapHUOYs5U0CFf4dbjE=
+	t=1707226559; cv=none; b=kcveqO6Ppvt6oaN+zLNi38GGZgit9G+4UzjjuNqiQtqc8xSt6rw35+WqYoZj/RxpS0u+SJEfTJepSBzGDg/v31FdnJsBm0LeEgkLkNfK63iDVvEn+hiZq/G4oCz5OVPyp5LInaCcJwVkOvK986l7T5QsTRVhDqdcerhXRjah0LY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707223519; c=relaxed/simple;
-	bh=wgk0R6xYpdvfMbfC3hL5n90HcTa0N22dWHpnm/GidCM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cSGpcMZKNGQZfNDipLnmMyLQ3AjPNH5vcDj/b90OhideWrL89j9zx8tbZfXXQRATYkB9mOmI1zONL6mAh3HzG4chTEYWvnz8Pho7snX2pqA3AFtDi9OliwGce1hSZYBguOqsGFx4gUK8s3t5uTV4eizM3DKPKuA2aHbyQ4QJXNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OdgGO4Sp; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1707226559; c=relaxed/simple;
+	bh=iWakEVCeamLbWCgOLWghGshYAgpA8eUaGk2EafVrC0E=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=XEmuQnGv5ARJV0BoSOGfHgXUUgondHyI/QBXfANiT4HAS1KKnH88Ry/sI0zsofFR/sNGM0Sfu+6Lglub49xy/W6WO7Lrb2hdEJS0kCYcsk3fXAOz2XW697TwkYgNg0GMFNf22eBTeAOhXUIuzOo5Pw4128yCiH80fugROe+d2bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s3cDTcYy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OdgGO4Sp"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4168NiKs018049;
-	Tue, 6 Feb 2024 12:45:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=fURlMuDtt1YpTEY8UBIo59b/87YA6fm1XN/jKUCmreI=; b=Od
-	gGO4SpmYbOXzNDSvrbywDtLN2C9x46ofQnuInQVAkeOvb7z8Z3FMug4CF2L1sBBm
-	tsHaSULL58cBNJAHh3U0ht7P7/eq5+rkUE+FmsUmDYp0+CMiCyYt+E0iRtXWrcI9
-	SxWEODhQGm4jmtqfKQ7ti2uHB1s2e2Lkrvi1S4NbF5PEDkzK8k86FWeY8igrSmfj
-	hd59IcNyO8+8QsguZFx28mLtYm5gh1D/1k4JO5ClYLy1V4L4ATNiGUczcoOthbca
-	pY5kSCDQNFRVjnZuANP3HMNQJ8BGEf/6YSf5gdJXGs5SgE3W+BTglexfx+PYYJkk
-	r7asstyJmY2wGv1NwVUw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w3h7hrfsa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 06 Feb 2024 12:45:12 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 416CjBxI029529
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 6 Feb 2024 12:45:12 GMT
-Received: from [10.214.82.119] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 6 Feb
- 2024 04:45:07 -0800
-Message-ID: <5af1ed27-2c59-4d8e-90cb-9ca7a2184b92@quicinc.com>
-Date: Tue, 6 Feb 2024 18:15:03 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s3cDTcYy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E44E6C433C7;
+	Tue,  6 Feb 2024 13:35:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707226558;
+	bh=iWakEVCeamLbWCgOLWghGshYAgpA8eUaGk2EafVrC0E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=s3cDTcYyicFbRwm7P9z8FbEIolPeJQSGSE495GVaHlqnfJp3eDld81zzthohl+hko
+	 24BQZ51sQOkgEQuBwlTMR2QDixnFzHnws4ZX4RlIWsmIc13pIvAt2bT7v25PcNV4bV
+	 CWTkv0MA/djg9/DB5M3U6i87kGL5LwRA3djl7gNewBz3mNMde1TWzgrCYqmHRhspfv
+	 rbBajhCrQI+S987PxF3D2S9E+G3MQttkFsrWL7+gJwm+tQF0LS0N9Iqkkkj/NRpWSP
+	 Fa3HJyT8hhAI1up2a8w1l94ZYhvMbeDoDEW7/Doz7vNnVEWx8cQrdAjCJE0diXwuTN
+	 ymHC7vFRRIWsg==
+Date: Tue, 6 Feb 2024 22:35:54 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Ali Zahraee <ahzahraee@gmail.com>
+Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com, shuah@kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] selftests: ftrace: fix typo in test report
+Message-Id: <20240206223554.719c004c6fe2f6c44aa81ef9@kernel.org>
+In-Reply-To: <20240201082557.15965-1-ahzahraee@gmail.com>
+References: <20240201082557.15965-1-ahzahraee@gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11] bus: mhi: host: Add tracing support
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        "Manivannan
- Sadhasivam" <mani@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Masami
- Hiramatsu" <mhiramat@kernel.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <mhi@lists.linux.dev>,
-        <linux-arm-msm@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <quic_vbadigan@quicinc.com>, <quic_ramkri@quicinc.com>,
-        <quic_nitegupt@quicinc.com>, <quic_skananth@quicinc.com>,
-        <quic_parass@quicinc.com>
-References: <20240206-ftrace_support-v11-1-3f71dc187544@quicinc.com>
-Content-Language: en-US
-From: Naman Jain <quic_namajain@quicinc.com>
-In-Reply-To: <20240206-ftrace_support-v11-1-3f71dc187544@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: IoCosgZZG8vc7WDqIJP3N1SlIftcIJv3
-X-Proofpoint-ORIG-GUID: IoCosgZZG8vc7WDqIJP3N1SlIftcIJv3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-06_06,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- spamscore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=639 mlxscore=0
- priorityscore=1501 adultscore=0 suspectscore=0 clxscore=1011
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402060090
 
-On 2/6/2024 10:02 AM, Krishna chaitanya chundru wrote:
-> This change adds ftrace support for following functions which
-> helps in debugging the issues when there is Channel state & MHI
-> state change and also when we receive data and control events:
+On Thu,  1 Feb 2024 09:25:57 +0100
+Ali Zahraee <ahzahraee@gmail.com> wrote:
 
-Please write commit msg in imperative mood.
-https://www.kernel.org/doc/html/v4.10/process/submitting-patches.html#describe-your-changes
-
-> 1. mhi_intvec_mhi_states
-> 2. mhi_process_data_event_ring
-> 3. mhi_process_ctrl_ev_ring
-> 4. mhi_gen_tre
-> 5. mhi_update_channel_state
-> 6. mhi_tryset_pm_state
-> 7. mhi_pm_st_worker
+> This is just another trivial typo fix. The typo shows up in the final
+> report after tests are done.
 > 
-> Change the implementation of the arrays which has enum to strings mapping
-> to make it consistent in both trace header file and other files.
+
+Thanks, and that is already reported very recently.
+
+https://lore.kernel.org/all/20240129162841.57979-1-five231003@gmail.com/
+
+> Signed-off-by: Ali Zahraee <ahzahraee@gmail.com>
+> ---
+>  tools/testing/selftests/ftrace/ftracetest | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Where ever the trace events are added, debug messages are removed.
+> diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
+> index c778d4dcc17e..25d4e0fca385 100755
+> --- a/tools/testing/selftests/ftrace/ftracetest
+> +++ b/tools/testing/selftests/ftrace/ftracetest
+> @@ -504,7 +504,7 @@ prlog "# of undefined(test bug): " `echo $UNDEFINED_CASES | wc -w`
+>  if [ "$KTAP" = "1" ]; then
+>    echo -n "# Totals:"
+>    echo -n " pass:"`echo $PASSED_CASES | wc -w`
+> -  echo -n " faii:"`echo $FAILED_CASES | wc -w`
+> +  echo -n " fail:"`echo $FAILED_CASES | wc -w`
+>    echo -n " xfail:"`echo $XFAILED_CASES | wc -w`
+>    echo -n " xpass:0"
+>    echo -n " skip:"`echo $UNTESTED_CASES $UNSUPPORTED_CASES | wc -w`
+> -- 
+> 2.34.1
+> 
 
-Ditto.
 
-Regards,
-Naman
-
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
