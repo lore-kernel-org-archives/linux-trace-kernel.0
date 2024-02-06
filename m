@@ -1,233 +1,170 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707BF1B942
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Feb 2024 20:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4D31CABD;
+	Tue,  6 Feb 2024 23:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707252374; cv=none; b=A8egBV8V3/UXdsGZnGpqOuVwo8iegk9RJgR7RuqSZnBODL5jpIqNyM1D8k0dn91YVqdQdmZ+1RwlKqRYnH796KNoNFnV8y7iJ09lhJ3s3OXrX90qpNWZ1XQA9N4kKKcsZPkxPWnRL9oc7HU4aRiB8SdVPyAfjpPeBQxod4u0GCI=
+	t=1707262860; cv=none; b=Kz2UVN4E79WBfkJ/tWjb0ztx6LjnVyYvtSFcWcxGC3/nd11B0zKOPjNbK16iZMd4gD1x0mYAcDzr4kwNBwOiweKHahXW02EAV34wTk27BMAKpah3vacZdEVan4HGMpisBvH7iF2DdFTjk/FmiMtsnIioOnT3/iBb9X27uNWMrNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707252374; c=relaxed/simple;
-	bh=Cte0mjf8jhkIpFc/0wwZCX06Fv91K7ojr+u3gO5FxnI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=p+gIr/J9Rp9d8aogkTh3MavFZL1BwBghU+6eYLpYGH79VroUPlqX809EmsdZLj2DDeqf99hDWVhBB2jN17TC81ROpS5n2mNly9LNBbJWgB8nOzN2y8g1Iy5pvcWYjpiUHVod8D9qQTJ6h+CvR1ijqnHO6U8/UMi091rF0zPrYZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=kIsP/7aO; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1707262860; c=relaxed/simple;
+	bh=PRL2AU8Ec4e9wjqPqZ5xSv6RBbyoPP0VSFP7n7tEZso=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=SPYUPGzF0mHXXSDfwGe2Uszk2C4n5Pff/zfdi3mWHVZNlKwkKFetBScqvknRkZRTchRXoLoyc5Mbkz8/eF7nEO3frWSlYEBUX6PagNqHdcHlx5V8vEmNXM8Ye6NoN+YM2bqeRWCY0lxq3rK04VmV2KDn0QJSPQzKia8GRuTPBAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rZ3RpgqE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="kIsP/7aO"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40fe3244bc6so9135795e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 Feb 2024 12:46:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1707252369; x=1707857169; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=faLdI7A4r1MDpBrjBMxPLIztplo9D7QJ5kY725lxPV0=;
-        b=kIsP/7aOtddedb2cOYEX4SKA3QjrEX/xn/SG//P6SL05HygUeToKPj7EnTfKsSrLGT
-         G/8GBoE/wX0J88azlIg6sDE1MK9bFLS6KaUtDCvN1c7NMUEUC8p2UWnFJ5uXBbafQmhu
-         V7oEfdEuWrzj/Ggm36jtMGQipLqlIiiu+YzuzXGDMJhz6RUWhhQaBs3HkiMFbiLN8YI2
-         ks7rEQ3MaUYtfRNACrwajReqmHNfpUaNi1F9QAeycX3fPzO8Kak2zlJKFzxSWJNzG3Zg
-         ptZJ6+WgdDv1hbNw/uxeFsP3s1aphc2Fu7uyTmNEXBiveWATtZ1PDYl1HAPqQhds/UXc
-         Fbag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707252369; x=1707857169;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=faLdI7A4r1MDpBrjBMxPLIztplo9D7QJ5kY725lxPV0=;
-        b=Y2dVwJhfY6trHHvhp3MRqmSkCYZkpXIlReN8N9P+D2ngmsD0k4PqN3kK3prCbsW9tB
-         Y5dVl8U4HRoK+YMGjDG42ayDHqelK0xkipvxxq8/LREy+S6sgB/Vjp3Jyt0bEgTX34tq
-         81POADrFtusYlg3mDxpeD24jEL/DfW9RslijDFTbZZHCwrNBLiLmdLJqR2MeXvLw94qZ
-         PTXTHPiverxuESwk2VxEyXeawFqPFTUxudsBghJM/onbKXeg+yE1Hl6IOvAyvciN6gWs
-         5+cROcU3PUvutgH4MW0h03ozz2DKm57woRZ3RparsPMDfmyHWiEGAkwiFIrxWTUkylK2
-         3u1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVUuXvr3Y7r0cQHMynH22ILrUfkwdbNzrgg2VwRnCBdd58YiRtVfQ3WjaXEsfmeTiYD5SKcxu5pdN46kbftfX8OsmkHtnrsIOWpfIrVylOP196B
-X-Gm-Message-State: AOJu0YxEc4xOtsmQfAYGNcmRVbernzB887n06K1xa7EdUGsbo6RJgjT4
-	hUXIF1u3h84X43q2hhryfwL7PoIvZgJIEvUoDIyDO4sDfdVEgh3OUUsT5FlHk70=
-X-Google-Smtp-Source: AGHT+IEUtpL/V/H84vcSbqDS07tiuujHFSTGM+gwxTOny5I+aPToo6WgrtaTz+5XzqRCMAXtUfnEdw==
-X-Received: by 2002:adf:ed0e:0:b0:33a:ed2c:fea0 with SMTP id a14-20020adfed0e000000b0033aed2cfea0mr1730381wro.1.1707252369535;
-        Tue, 06 Feb 2024 12:46:09 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVs9epp2rKTOZ8O1zlNog/fyR+3mQaCqPMlHSXF7JTIzPZX/1yRh8TSFwpxnlO9lctKVmUqTGRVgOPMLFH+6G6DBquk/RRImJP0cRNRhH82uFzI1tLbHCWZ3HwqQUYxDCha/mIXc4Cstm0th3V8rst8evMx2LQZyYzWMas3RalQdY1CWy2MycJzsGijgQpZkA09Codu0yESXB0n2qQNyg1cMDYzhcNQ2wAVh1cYWqK9whDhOa+cwtQBZaRKrSSyrftwGbyM2ycPGd0C3uWonieJ/HrgNshSMPzageTxbLgyuKaAjkTO6DyT6hyc5nF2/slPvAczakuicpDsvo63Yh4SJsIaC5Wbs8j/msxoTSgjL5lMfohxVa1bnGxhaKwkUGWtllj3kA==
-Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id l12-20020a5d4bcc000000b0033905a60689sm2899741wrt.45.2024.02.06.12.46.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 12:46:09 -0800 (PST)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Anup Patel <anup@brainfault.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>
-Subject: [PATCH] riscv: Fix text patching when icache flushes use IPIs
-Date: Tue,  6 Feb 2024 21:46:07 +0100
-Message-Id: <20240206204607.527195-1-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rZ3RpgqE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8EABC433C7;
+	Tue,  6 Feb 2024 23:40:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707262859;
+	bh=PRL2AU8Ec4e9wjqPqZ5xSv6RBbyoPP0VSFP7n7tEZso=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rZ3RpgqEI9xGCHR5iT0jRJXfgRa1YA/syYc2SWDw4ufHIbG61OvHeoaaF0tzQlCP2
+	 pzDR9VPlmI9rbOYkUPvDkMO/kWVdCfwgQTRmJov6TYZcBC7lV3VHDaHDMd+oILJwuL
+	 /ds+4i7rTEBSsM9Oab6c4VyN3s+tZJ0ofWbEFNvDnMQ6NcgiqEVkBTlYU2qlLCfUwi
+	 lIPaxnb5wW/DXVb4Qgf1NGPGNPNMU4Iqz2FYdoGkx+ziyyQu90FMir/DL4I5h/iUD1
+	 1K1JcvUKnnMrm/gf5gXM5GbJJFYu2I6jrUwe5yg9+pisoDAG/uELoZqwKkcmQ23HI4
+	 pDnWCVWEp8T1A==
+Date: Wed, 7 Feb 2024 08:40:54 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jinghao Jia <jinghao7@illinois.edu>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra
+ <peterz@infradead.org>, Xin Li <xin@zytor.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] x86/kprobes: Boost more instructions from
+ grp2/3/4/5
+Message-Id: <20240207084054.190a6103e40fe890363fb151@kernel.org>
+In-Reply-To: <14799708-1f90-464f-9432-5b11755c3fca@illinois.edu>
+References: <20240204031300.830475-1-jinghao7@illinois.edu>
+	<20240204031300.830475-4-jinghao7@illinois.edu>
+	<20240204210932.bd112a37dd3c276b046f6b16@kernel.org>
+	<14799708-1f90-464f-9432-5b11755c3fca@illinois.edu>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-For now, we use stop_machine() to patch the text and when we use IPIs for
-remote icache flushes, the system hangs since the irqs are disabled on all
-cpus.
+On Sun, 4 Feb 2024 22:39:32 -0600
+Jinghao Jia <jinghao7@illinois.edu> wrote:
 
-So instead, make sure every cpu executes the stop_machine() patching
-function which emits a local icache flush and then avoids the use of
-IPIs.
+> On 2/4/24 06:09, Masami Hiramatsu (Google) wrote:
+> > On Sat,  3 Feb 2024 21:13:00 -0600
+> > Jinghao Jia <jinghao7@illinois.edu> wrote:
+> > 
+> >> With the instruction decoder, we are now able to decode and recognize
+> >> instructions with opcode extensions. There are more instructions in
+> >> these groups that can be boosted:
+> >>
+> >> Group 2: ROL, ROR, RCL, RCR, SHL/SAL, SHR, SAR
+> >> Group 3: TEST, NOT, NEG, MUL, IMUL, DIV, IDIV
+> >> Group 4: INC, DEC (byte operation)
+> >> Group 5: INC, DEC (word/doubleword/quadword operation)
+> >>
+> >> These instructions are not boosted previously because there are reserved
+> >> opcodes within the groups, e.g., group 2 with ModR/M.nnn == 110 is
+> >> unmapped. As a result, kprobes attached to them requires two int3 traps
+> >> as being non-boostable also prevents jump-optimization.
+> >>
+> >> Some simple tests on QEMU show that after boosting and jump-optimization
+> >> a single kprobe on these instructions with an empty pre-handler runs 10x
+> >> faster (~1000 cycles vs. ~100 cycles).
+> >>
+> >> Since these instructions are mostly ALU operations and do not touch
+> >> special registers like RIP, let's boost them so that we get the
+> >> performance benefit.
+> >>
+> > 
+> > This looks good to me. And can you check how many instructions in the
+> > vmlinux will be covered by this change typically?
+> > 
+> 
+> I collected the stats from the LLVM CodeGen backend on kernel version 6.7.3
+> using Gentoo's dist-kernel config (with a mod2yesconfig to make modules
+> builtin) and here are the number of Grp 2/3/4/5 instructions that are newly
+> covered by this patch:
+> 
+> Kernel total # of insns:    28552017    (from objdump)
+> Grp2 insns:                 286249      (from LLVM)
+> Grp3 insns:                 286556      (from LLVM)
+> Grp4 insns:                 5832        (from LLVM)
+> Grp5 insns:                 146314      (from LLVM)
+> 
+> Note that using LLVM means we miss the stats from inline assembly and
+> assembly source files.
 
-Co-developed-by: Björn Töpel <bjorn@rivosinc.com>
-Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/riscv/include/asm/patch.h |  1 +
- arch/riscv/kernel/ftrace.c     | 38 ++++++++++++++++++++++++++++++----
- arch/riscv/kernel/patch.c      | 11 +++++-----
- 3 files changed, 40 insertions(+), 10 deletions(-)
+Thanks for checking! so it increases the coverage ~2.5% :)
 
-diff --git a/arch/riscv/include/asm/patch.h b/arch/riscv/include/asm/patch.h
-index e88b52d39eac..9f5d6e14c405 100644
---- a/arch/riscv/include/asm/patch.h
-+++ b/arch/riscv/include/asm/patch.h
-@@ -6,6 +6,7 @@
- #ifndef _ASM_RISCV_PATCH_H
- #define _ASM_RISCV_PATCH_H
+Thank you,
  
-+int patch_insn_write(void *addr, const void *insn, size_t len);
- int patch_text_nosync(void *addr, const void *insns, size_t len);
- int patch_text_set_nosync(void *addr, u8 c, size_t len);
- int patch_text(void *addr, u32 *insns, int ninsns);
-diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-index f5aa24d9e1c1..1694a1861d1e 100644
---- a/arch/riscv/kernel/ftrace.c
-+++ b/arch/riscv/kernel/ftrace.c
-@@ -8,6 +8,7 @@
- #include <linux/ftrace.h>
- #include <linux/uaccess.h>
- #include <linux/memory.h>
-+#include <linux/stop_machine.h>
- #include <asm/cacheflush.h>
- #include <asm/patch.h>
- 
-@@ -75,8 +76,7 @@ static int __ftrace_modify_call(unsigned long hook_pos, unsigned long target,
- 		make_call_t0(hook_pos, target, call);
- 
- 	/* Replace the auipc-jalr pair at once. Return -EPERM on write error. */
--	if (patch_text_nosync
--	    ((void *)hook_pos, enable ? call : nops, MCOUNT_INSN_SIZE))
-+	if (patch_insn_write((void *)hook_pos, enable ? call : nops, MCOUNT_INSN_SIZE))
- 		return -EPERM;
- 
- 	return 0;
-@@ -88,7 +88,7 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
- 
- 	make_call_t0(rec->ip, addr, call);
- 
--	if (patch_text_nosync((void *)rec->ip, call, MCOUNT_INSN_SIZE))
-+	if (patch_insn_write((void *)rec->ip, call, MCOUNT_INSN_SIZE))
- 		return -EPERM;
- 
- 	return 0;
-@@ -99,7 +99,7 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
- {
- 	unsigned int nops[2] = {NOP4, NOP4};
- 
--	if (patch_text_nosync((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
-+	if (patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
- 		return -EPERM;
- 
- 	return 0;
-@@ -134,6 +134,36 @@ int ftrace_update_ftrace_func(ftrace_func_t func)
- 
- 	return ret;
- }
-+
-+struct ftrace_modify_param {
-+	int command;
-+	atomic_t cpu_count;
-+};
-+
-+static int __ftrace_modify_code(void *data)
-+{
-+	struct ftrace_modify_param *param = data;
-+
-+	if (atomic_inc_return(&param->cpu_count) == num_online_cpus()) {
-+		ftrace_modify_all_code(param->command);
-+		atomic_inc(&param->cpu_count);
-+	} else {
-+		while (atomic_read(&param->cpu_count) <= num_online_cpus())
-+			cpu_relax();
-+		smp_mb();
-+	}
-+
-+	local_flush_icache_all();
-+
-+	return 0;
-+}
-+
-+void arch_ftrace_update_code(int command)
-+{
-+	struct ftrace_modify_param param = { command, ATOMIC_INIT(0) };
-+
-+	stop_machine(__ftrace_modify_code, &param, cpu_online_mask);
-+}
- #endif
- 
- #ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
-index 37e87fdcf6a0..ec7760a4d6cd 100644
---- a/arch/riscv/kernel/patch.c
-+++ b/arch/riscv/kernel/patch.c
-@@ -188,7 +188,7 @@ int patch_text_set_nosync(void *addr, u8 c, size_t len)
- }
- NOKPROBE_SYMBOL(patch_text_set_nosync);
- 
--static int patch_insn_write(void *addr, const void *insn, size_t len)
-+int patch_insn_write(void *addr, const void *insn, size_t len)
- {
- 	size_t patched = 0;
- 	size_t size;
-@@ -211,11 +211,9 @@ NOKPROBE_SYMBOL(patch_insn_write);
- 
- int patch_text_nosync(void *addr, const void *insns, size_t len)
- {
--	u32 *tp = addr;
- 	int ret;
- 
--	ret = patch_insn_write(tp, insns, len);
--
-+	ret = patch_insn_write(addr, insns, len);
- 	if (!ret)
- 		flush_icache_range((uintptr_t) tp, (uintptr_t) tp + len);
- 
-@@ -232,8 +230,7 @@ static int patch_text_cb(void *data)
- 	if (atomic_inc_return(&patch->cpu_count) == num_online_cpus()) {
- 		for (i = 0; ret == 0 && i < patch->ninsns; i++) {
- 			len = GET_INSN_LENGTH(patch->insns[i]);
--			ret = patch_text_nosync(patch->addr + i * len,
--						&patch->insns[i], len);
-+			ret = patch_insn_write(patch->addr + i * len, &patch->insns[i], len);
- 		}
- 		atomic_inc(&patch->cpu_count);
- 	} else {
-@@ -242,6 +239,8 @@ static int patch_text_cb(void *data)
- 		smp_mb();
- 	}
- 
-+	local_flush_icache_all();
-+
- 	return ret;
- }
- NOKPROBE_SYMBOL(patch_text_cb);
+
+> 
+> --Jinghao
+> 
+> > Thank you,
+> > 
+> >> Signed-off-by: Jinghao Jia <jinghao7@illinois.edu>
+> >> ---
+> >>  arch/x86/kernel/kprobes/core.c | 23 +++++++++++++++++------
+> >>  1 file changed, 17 insertions(+), 6 deletions(-)
+> >>
+> >> diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+> >> index 7a08d6a486c8..530f6d4b34f4 100644
+> >> --- a/arch/x86/kernel/kprobes/core.c
+> >> +++ b/arch/x86/kernel/kprobes/core.c
+> >> @@ -169,22 +169,33 @@ bool can_boost(struct insn *insn, void *addr)
+> >>  	case 0x62:		/* bound */
+> >>  	case 0x70 ... 0x7f:	/* Conditional jumps */
+> >>  	case 0x9a:		/* Call far */
+> >> -	case 0xc0 ... 0xc1:	/* Grp2 */
+> >>  	case 0xcc ... 0xce:	/* software exceptions */
+> >> -	case 0xd0 ... 0xd3:	/* Grp2 */
+> >>  	case 0xd6:		/* (UD) */
+> >>  	case 0xd8 ... 0xdf:	/* ESC */
+> >>  	case 0xe0 ... 0xe3:	/* LOOP*, JCXZ */
+> >>  	case 0xe8 ... 0xe9:	/* near Call, JMP */
+> >>  	case 0xeb:		/* Short JMP */
+> >>  	case 0xf0 ... 0xf4:	/* LOCK/REP, HLT */
+> >> -	case 0xf6 ... 0xf7:	/* Grp3 */
+> >> -	case 0xfe:		/* Grp4 */
+> >>  		/* ... are not boostable */
+> >>  		return false;
+> >> +	case 0xc0 ... 0xc1:	/* Grp2 */
+> >> +	case 0xd0 ... 0xd3:	/* Grp2 */
+> >> +		/*
+> >> +		 * AMD uses nnn == 110 as SHL/SAL, but Intel makes it reserved.
+> >> +		 */
+> >> +		return X86_MODRM_REG(insn->modrm.bytes[0]) != 0b110;
+> >> +	case 0xf6 ... 0xf7:	/* Grp3 */
+> >> +		/* AMD uses nnn == 001 as TEST, but Intel makes it reserved. */
+> >> +		return X86_MODRM_REG(insn->modrm.bytes[0]) != 0b001;
+> >> +	case 0xfe:		/* Grp4 */
+> >> +		/* Only INC and DEC are boostable */
+> >> +		return X86_MODRM_REG(insn->modrm.bytes[0]) == 0b000 ||
+> >> +		       X86_MODRM_REG(insn->modrm.bytes[0]) == 0b001;
+> >>  	case 0xff:		/* Grp5 */
+> >> -		/* Only indirect jmp is boostable */
+> >> -		return X86_MODRM_REG(insn->modrm.bytes[0]) == 4;
+> >> +		/* Only INC, DEC, and indirect JMP are boostable */
+> >> +		return X86_MODRM_REG(insn->modrm.bytes[0]) == 0b000 ||
+> >> +		       X86_MODRM_REG(insn->modrm.bytes[0]) == 0b001 ||
+> >> +		       X86_MODRM_REG(insn->modrm.bytes[0]) == 0b100;
+> >>  	default:
+> >>  		return true;
+> >>  	}
+> >> -- 
+> >> 2.43.0
+> >>
+> > 
+> > 
+
+
 -- 
-2.39.2
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
