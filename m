@@ -1,344 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC6A1E863;
-	Tue,  6 Feb 2024 14:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73BC938DFE
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Feb 2024 14:40:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707229934; cv=none; b=b9A+2PhXVSUSRNKD3NF3PtwxUbvjNpF6OLfxplRDhBiAt+BE6Rj7rNN4MLMZiAQjGeEspFT+HFerSUwKN2hrVpfytMUma6hIvIIW8z1BFVOhyvstheGutEUi/s0VZyuHlQUHbCRWafCwexDesIXj8SeBO6UzFoxnauFW19VYhDY=
+	t=1707230437; cv=none; b=ZdKpl8WoiUN/JzqvXuamhxWhwdakMER+lN/yI8CcIU52v+kuN2TADriH2h5HjG+kzmPFoM3zxHZuZ1PqpqcbztS/dasrRaXx4r3nGI0aMOilsfD0MJF+vvVIK63cZDOklpzRDlc6nscmy2XSmCvvjA4s8OlKIamBwUqFzhigPtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707229934; c=relaxed/simple;
-	bh=DLi2cOTGGXpfM3d/08BWeixnAJkYrReaaZAoFL/71Uo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E9kbZ9gT/NQqQKV308TsLk3VxvdB7xkSsxYKjucv7gmD6+zAnBXkd4My3YHePM4gHeangsG4dja2A0ogR1t4f5nM5sbRrZPtzlrXRJOzuOc7A1lrinXR4sjTAraJS1wr3QzKQ3hd1ooRqppkCJ447c/6gX8eK/i6e41aZY4zluE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OrgkvPOK; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OrgkvPOK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F1A5C43394;
-	Tue,  6 Feb 2024 14:32:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707229933;
-	bh=DLi2cOTGGXpfM3d/08BWeixnAJkYrReaaZAoFL/71Uo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=OrgkvPOKWzqWCtl7Wj71boguffvHhphHxRM7PSBmpA84vqRe6DdR8f5wd7/Xt6J9e
-	 LoETTbu0bGm24MZU1dq701pTTSaGks54u6sJoUTRsoS2PONW8OstGNYnulkjQpbGov
-	 Hl4ojrb/+rO9Jh/2isJ+fyeRlo4mrRGkvL6X54HA13B9AoC4wXTO39/qm3A8uR5vo2
-	 L0qO6v9RZZEDdblrjak8mI1EYlYTOwa9rN5GqFJ6vwyyuiVIWwtqdwYTXGFFCotiaQ
-	 eCXQJyCrBnO4b8oRM1ZVMd8l4q1J3l6t5cVwOn8hSSpTMDtlOTvlIXIABvkweZapjQ
-	 EvIxFhg2bG/dw==
-From: Daniel Bristot de Oliveira <bristot@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Daniel Bristot de Oliveira <bristot@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] tools/rtla: Add -U/--user-load option to timerlat
-Date: Tue,  6 Feb 2024 15:32:06 +0100
-Message-ID: <36e6bcf18fe15c7601048fd4c65aeb193c502cc8.1707229706.git.bristot@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1707230437; c=relaxed/simple;
+	bh=GyTTCLyaqdUATclQ53aQcWLFdER8rzwtEcSb0y8DF0k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hIMPBz5+uXCmWTf8XBs+Orz69LnFwOaAM7hi4IaAKerfJHewE+d5GUExh2ZKSdVCh7PtVguuqreW9K4ERSlNAg0abqPAlUV5fNohlvrX9jv2k78OHJmzp2oSAMbbEOSGTihVMxXLFbHMQGRXzbn0XV0cktV8bDz/Ms3iZjYvFJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rXMcd-0003xc-Ql; Tue, 06 Feb 2024 15:40:27 +0100
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rXMcY-004qRv-6e; Tue, 06 Feb 2024 15:40:22 +0100
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rXMcY-00EFqp-0E;
+	Tue, 06 Feb 2024 15:40:22 +0100
+Date: Tue, 6 Feb 2024 15:40:22 +0100
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Alexander Graf <graf@amazon.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org,
+	linux-doc@vger.kernel.org, x86@kernel.org,
+	Eric Biederman <ebiederm@xmission.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Ashish Kalra <ashish.kalra@amd.com>,
+	James Gowans <jgowans@amazon.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	arnd@arndb.de, pbonzini@redhat.com, madvenka@linux.microsoft.com,
+	Anthony Yznaga <anthony.yznaga@oracle.com>,
+	Usama Arif <usama.arif@bytedance.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3 00/17] kexec: Allow preservation of ftrace buffers
+Message-ID: <ZcJE1qQy29lR42-G@pengutronix.de>
+References: <20240117144704.602-1-graf@amazon.com>
+ <ZcHrIJ7lxpbkm5sc@pengutronix.de>
+ <c7157097-4727-4360-80a0-20e7d8015e13@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <c7157097-4727-4360-80a0-20e7d8015e13@amazon.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-trace-kernel@vger.kernel.org
 
-The timerlat tracer provides an interface for any application to wait
-for the timerlat's periodic wakeup. Currently, rtla timerlat uses it
-to dispatch its user-space workload (-u option).
+On Tue, Feb 06, 2024 at 02:43:15PM +0100, Alexander Graf wrote:
+> Hey Oleksij!
+> 
+> On 06.02.24 09:17, Oleksij Rempel wrote:
+> > Hi Alexander,
+> > 
+> > Nice work!
+> > 
+> > On Wed, Jan 17, 2024 at 02:46:47PM +0000, Alexander Graf wrote:
+> > > Make sure to fill ftrace with contents that you want to observe after
+> > > kexec.  Then, before you invoke file based "kexec -l", activate KHO:
+> > > 
+> > >    # echo 1 > /sys/kernel/kho/active
+> > >    # kexec -l Image --initrd=initrd -s
+> > >    # kexec -e
+> > > 
+> > > The new kernel will boot up and contain the previous kernel's trace
+> > > buffers in /sys/kernel/debug/tracing/trace.
+> > Assuming:
+> > - we wont to start tracing as early as possible, before rootfs
+> >    or initrd would be able to configure it.
+> > - traces are stored on a different device, not RAM. For example NVMEM.
+> > - Location of NVMEM is different for different board types, but
+> >    bootloader is able to give the right configuration to the kernel.
+> 
+> 
+> Let me try to really understand what you're tracing here. Are we talking
+> about exposing boot loader traces into Linux [1]? In that case, I think a
+> mechanism like [2] is what you're looking for.
+> 
+> Or do you want to transfer genuine Linux ftrace traces? In that case, why
+> would you want to store them outside of RAM?
 
-But as the tracer interface is generic, rtla timerlat can also be used
-to monitor any workload that uses it. For example, a user might
-place their own workload to wait on the tracer interface, and
-monitor the results with rtla timerlat.
+The high level object of what i need is to find how embedded systems in
+fields do break. Since this devices should be always on, there are
+different situations where system may reboot. For example, voltage
+related issues, temperature, scheduled system updates, HW or SW errors.
 
-Add the -U option to rtla timerlat top and hist. With this option, rtla
-timerlat will not dispatch its workload but only setting up the
-system, waiting for a user to dispatch its workload.
+To get better understand on what is going on, information should be
+collected. But there are some limitations:
+- voltage drops can be recorder only with prepared HW:
+  https://www.spinics.net/lists/devicetree/msg644030.html
 
-The sample code in this patch is an example of python application
-that loops in the timerlat tracer fd.
+- In case of voltage drops RAM or block devices can't be used. Instead,
+  some variant of NVMEM should be used. In my case, NVMEM has 8 bits of
+  storage :) So, only one entry of the "trace" is compressed to this storage.
+  https://lore.kernel.org/all/20240124122204.730370-1-o.rempel@pengutronix.de
+  The reset reason information is provide by kernel and used by firmware
+  and kernel on next reboot
 
-To use it, dispatch:
+The implementation is not a big deal. The problematic part is the way
+how the system should get information about existence of recorder and
+where the recorder should stored things, for example NVMEM cell.
 
- # rtla timerlat -U
+In my initial implementation I used devicetree to configure the software
+based recorder and linked it with NVMEM cell. But it is against the DT
+purpose to describe only HW and it makes this recorder unusable for
+not DT basd systems.
 
-In a terminal, then run the python program on another terminal,
-specifying the CPU to run it. For example, setting on CPU 1:
+Krzysztof is suggesting to configure it from initrd. This has own
+limitations as well:
+ - record can't be used before initrd.
+ - we have multiple configuration point of board specific information - 
+   firmware (bootloader) and initrd.
+ - initrd take place and reduce boot time for device which do not needed
+   it before.
 
- #./timerlat_load.py 1
+Other variants like kernel command-line and/or module parameters seems
+to be not acceptable depending maintainer. So, I'm still seeking
+proper, acceptable, portable way to hand over not HW specific
+information to the kernel.
 
-Then rtla timerlat will start printing the statistics of the
-./timerlat_load.py app.
+> > What would be the best, acceptable for mainline, way to provide this
+> > kind of configuration? At least part of this information do not
+> > describes devices or device states, this would not fit in to devicetree
+> > universe. Amount of possible information would not fit in to bootconfig
+> > too.
+> 
+> 
+> We have precedence for configuration in device tree: You can use device tree
+> to describe partitions on a NAND device, you can use it to specify MAC
+> address overrides of devices attached to USB, etc etc. At the end of the day
+> when people say they don't want configuration in device tree, what they mean
+> is that device tree should be a hand over data structure from firmware to
+> kernel, not from OS integrator to kernel :). If your firmware is the place
+> that knows about offsets and you need to pass those offsets, IMHO DT is a
+> good fit.
 
-An interesting point is that the "Ret user Timer Latency" value
-is the overall response time of the load. The sample load does
-a memory copy to exemplify that.
+Yes, the layout of the NVMEM can be described in the DT. How can I tell
+the system that this NVMEM cell should be used by some recorder or
+tracer? Before sysfs is available any how. @Krzysztof ?
 
-The stop tracing options on rtla timerlat works in this setup
-as well, including auto analysis.
+> > Other more or less overlapping use case I have in mind is a netbootable
+> > embedded system with a requirement to boot as fast as possible. Since
+> > bootloader already established a link and got all needed ip
+> > configuration, it would be able to hand over etherent controller and ip
+> > configuration states. Wille be the KHO the way to go for this use case?
+> 
+> 
+> That's an interesting one too. I would lean towards "try with normal device
+> tree first" here as well. It's again a very clear case of "firmware wants to
+> tell OS about things it knows, but the OS doesn't know" to me. That means
+> device tree should be fine to describe it.
 
-Signed-off-by: Daniel Bristot de Oliveira <bristot@kernel.org>
----
- .../tools/rtla/common_timerlat_options.rst    |  6 ++
- tools/tracing/rtla/sample/timerlat_load.py    | 74 +++++++++++++++++++
- tools/tracing/rtla/src/timerlat_hist.c        | 16 ++--
- tools/tracing/rtla/src/timerlat_top.c         | 14 +++-
- 4 files changed, 101 insertions(+), 9 deletions(-)
- create mode 100644 tools/tracing/rtla/sample/timerlat_load.py
+I can imagine description of PHY and MAC state. But IP configuration
+state of the firmware seems to be out of DT scope?
 
-diff --git a/Documentation/tools/rtla/common_timerlat_options.rst b/Documentation/tools/rtla/common_timerlat_options.rst
-index 88506b397c2d..d3255ed70195 100644
---- a/Documentation/tools/rtla/common_timerlat_options.rst
-+++ b/Documentation/tools/rtla/common_timerlat_options.rst
-@@ -33,3 +33,9 @@
-         to wait on the timerlat_fd. Once the workload is awakes, it goes to sleep again
-         adding so the measurement for the kernel-to-user and user-to-kernel to the tracer
-         output.
-+
-+**-U**, **--user-load**
-+
-+        Set timerlat to run without workload, waiting for the user to dispatch a per-cpu
-+        task that waits for a new period on the tracing/osnoise/per_cpu/cpu$ID/timerlat_fd.
-+        See linux/tools/rtla/sample/timerlat_load.py for an example of user-load code.
-diff --git a/tools/tracing/rtla/sample/timerlat_load.py b/tools/tracing/rtla/sample/timerlat_load.py
-new file mode 100644
-index 000000000000..8cc5eb2d2e69
---- /dev/null
-+++ b/tools/tracing/rtla/sample/timerlat_load.py
-@@ -0,0 +1,74 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Copyright (C) 2024 Red Hat, Inc. Daniel Bristot de Oliveira <bristot@kernel.org>
-+#
-+# This is a sample code about how to use timerlat's timer by any workload
-+# so rtla can measure and provide auto-analysis for the overall latency (IOW
-+# the response time) for a task.
-+#
-+# Before running it, you need to dispatch timerlat with -U option in a terminal.
-+# Then # run this script pinned to a CPU on another terminal. For example:
-+#
-+# timerlat_load.py 1 -p 95
-+#
-+# The "Timerlat IRQ" is the IRQ latency, The thread latency is the latency
-+# for the python process to get the CPU. The Ret from user Timer Latency is
-+# the overall latency. In other words, it is the response time for that
-+# activation.
-+#
-+# This is just an example, the load is reading 20MB of data from /dev/full
-+# It is in python because it is easy to read :-)
-+
-+import argparse
-+import sys
-+import os
-+
-+parser = argparse.ArgumentParser(description='user-space timerlat thread in Python')
-+parser.add_argument("cpu", help='CPU to run timerlat thread')
-+parser.add_argument("-p", "--prio", help='FIFO priority')
-+
-+args = parser.parse_args()
-+
-+try:
-+    affinity_mask = { int(args.cpu) }
-+except:
-+    print("Invalid cpu: " + args.cpu)
-+    exit(1)
-+
-+try:
-+    os.sched_setaffinity(0, affinity_mask);
-+except:
-+    print("Error setting affinity")
-+    exit(1)
-+
-+if (args.prio):
-+    try:
-+        param = os.sched_param(int(args.prio))
-+        os.sched_setscheduler(0, os.SCHED_FIFO, param)
-+    except:
-+        print("Error setting priority")
-+        exit(1)
-+
-+try:
-+    timerlat_path = "/sys/kernel/tracing/osnoise/per_cpu/cpu" + args.cpu + "/timerlat_fd"
-+    timerlat_fd = open(timerlat_path, 'r')
-+except:
-+    print("Error opening timerlat fd, did you run timerlat -U?")
-+    exit(1)
-+
-+try:
-+    data_fd = open("/dev/full", 'r');
-+except:
-+    print("Error opening data fd")
-+
-+while True:
-+    try:
-+        timerlat_fd.read(1)
-+        data_fd.read(20*1024*1024)
-+    except:
-+        print("Leaving")
-+        break
-+
-+timerlat_fd.close()
-+data_fd.close()
-diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index 3a5b8c409e7d..a668bf52e78e 100644
---- a/tools/tracing/rtla/src/timerlat_hist.c
-+++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -39,6 +39,7 @@ struct timerlat_hist_params {
- 	int			hk_cpus;
- 	int			no_aa;
- 	int			dump_tasks;
-+	int			user_workload;
- 	int			user_hist;
- 	cpu_set_t		hk_cpu_set;
- 	struct sched_attr	sched_param;
-@@ -534,6 +535,7 @@ static void timerlat_hist_usage(char *usage)
- 		"		d:runtime[us|ms|s]:period[us|ms|s] - use SCHED_DEADLINE with runtime and period",
- 		"						       in nanoseconds",
- 		"	  -u/--user-threads: use rtla user-space threads instead of in-kernel timerlat threads",
-+		"	  -U/--user-load: enable timerlat for user-defined user-space workload",
- 		NULL,
- 	};
- 
-@@ -591,6 +593,7 @@ static struct timerlat_hist_params
- 			{"thread",		required_argument,	0, 'T'},
- 			{"trace",		optional_argument,	0, 't'},
- 			{"user-threads",	no_argument,		0, 'u'},
-+			{"user-load",		no_argument,		0, 'U'},
- 			{"event",		required_argument,	0, 'e'},
- 			{"no-irq",		no_argument,		0, '0'},
- 			{"no-thread",		no_argument,		0, '1'},
-@@ -609,7 +612,7 @@ static struct timerlat_hist_params
- 		/* getopt_long stores the option index here. */
- 		int option_index = 0;
- 
--		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:DhH:i:np:P:s:t::T:u0123456:7:8:9\1",
-+		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:DhH:i:np:P:s:t::T:uU0123456:7:8:9\1",
- 				 long_options, &option_index);
- 
- 		/* detect the end of the options. */
-@@ -720,6 +723,9 @@ static struct timerlat_hist_params
- 				params->trace_output = "timerlat_trace.txt";
- 			break;
- 		case 'u':
-+			params->user_workload = 1;
-+			/* fallback: -u implies in -U */
-+		case 'U':
- 			params->user_hist = 1;
- 			break;
- 		case '0': /* no irq */
-@@ -981,7 +987,7 @@ int timerlat_hist_main(int argc, char *argv[])
- 		}
- 	}
- 
--	if (params->cgroup && !params->user_hist) {
-+	if (params->cgroup && !params->user_workload) {
- 		retval = set_comm_cgroup("timerlat/", params->cgroup_name);
- 		if (!retval) {
- 			err_msg("Failed to move threads to cgroup\n");
-@@ -1045,7 +1051,7 @@ int timerlat_hist_main(int argc, char *argv[])
- 	tool->start_time = time(NULL);
- 	timerlat_hist_set_signals(params);
- 
--	if (params->user_hist) {
-+	if (params->user_workload) {
- 		/* rtla asked to stop */
- 		params_u.should_run = 1;
- 		/* all threads left */
-@@ -1082,14 +1088,14 @@ int timerlat_hist_main(int argc, char *argv[])
- 			break;
- 
- 		/* is there still any user-threads ? */
--		if (params->user_hist) {
-+		if (params->user_workload) {
- 			if (params_u.stopped_running) {
- 				debug_msg("timerlat user-space threads stopped!\n");
- 				break;
- 			}
- 		}
- 	}
--	if (params->user_hist && !params_u.stopped_running) {
-+	if (params->user_workload && !params_u.stopped_running) {
- 		params_u.should_run = 0;
- 		sleep(1);
- 	}
-diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index 1640f121baca..6af47f21a1a3 100644
---- a/tools/tracing/rtla/src/timerlat_top.c
-+++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -43,6 +43,7 @@ struct timerlat_top_params {
- 	int			cgroup;
- 	int			hk_cpus;
- 	int			user_top;
-+	int			user_workload;
- 	cpu_set_t		hk_cpu_set;
- 	struct sched_attr	sched_param;
- 	struct trace_events	*events;
-@@ -364,6 +365,7 @@ static void timerlat_top_usage(char *usage)
- 		"		d:runtime[us|ms|s]:period[us|ms|s] - use SCHED_DEADLINE with runtime and period",
- 		"						       in nanoseconds",
- 		"	  -u/--user-threads: use rtla user-space threads instead of in-kernel timerlat threads",
-+		"	  -U/--user-load: enable timerlat for user-defined user-space workload",
- 		NULL,
- 	};
- 
-@@ -419,6 +421,7 @@ static struct timerlat_top_params
- 			{"thread",		required_argument,	0, 'T'},
- 			{"trace",		optional_argument,	0, 't'},
- 			{"user-threads",	no_argument,		0, 'u'},
-+			{"user-load",		no_argument,		0, 'U'},
- 			{"trigger",		required_argument,	0, '0'},
- 			{"filter",		required_argument,	0, '1'},
- 			{"dma-latency",		required_argument,	0, '2'},
-@@ -431,7 +434,7 @@ static struct timerlat_top_params
- 		/* getopt_long stores the option index here. */
- 		int option_index = 0;
- 
--		c = getopt_long(argc, argv, "a:c:C::d:De:hH:i:np:P:qs:t::T:u0:1:2:345:",
-+		c = getopt_long(argc, argv, "a:c:C::d:De:hH:i:np:P:qs:t::T:uU0:1:2:345:",
- 				 long_options, &option_index);
- 
- 		/* detect the end of the options. */
-@@ -548,6 +551,9 @@ static struct timerlat_top_params
- 
- 			break;
- 		case 'u':
-+			params->user_workload = true;
-+			/* fallback: -u implies -U */
-+		case 'U':
- 			params->user_top = true;
- 			break;
- 		case '0': /* trigger */
-@@ -865,7 +871,7 @@ int timerlat_top_main(int argc, char *argv[])
- 	top->start_time = time(NULL);
- 	timerlat_top_set_signals(params);
- 
--	if (params->user_top) {
-+	if (params->user_workload) {
- 		/* rtla asked to stop */
- 		params_u.should_run = 1;
- 		/* all threads left */
-@@ -908,7 +914,7 @@ int timerlat_top_main(int argc, char *argv[])
- 			break;
- 
- 		/* is there still any user-threads ? */
--		if (params->user_top) {
-+		if (params->user_workload) {
- 			if (params_u.stopped_running) {
- 				debug_msg("timerlat user space threads stopped!\n");
- 				break;
-@@ -916,7 +922,7 @@ int timerlat_top_main(int argc, char *argv[])
- 		}
- 	}
- 
--	if (params->user_top && !params_u.stopped_running) {
-+	if (params->user_workload && !params_u.stopped_running) {
- 		params_u.should_run = 0;
- 		sleep(1);
- 	}
+Regards,
+Oleksij
 -- 
-2.43.0
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
