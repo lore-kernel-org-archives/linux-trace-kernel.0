@@ -1,105 +1,192 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FBC33D54A;
-	Tue,  6 Feb 2024 07:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D670212AAF6
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Feb 2024 08:17:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707203120; cv=none; b=U3kVMijZ56WsQhzqr+lxLBmWXgmPXL92Zi/xP/bKbhCVi1IHMGQLJx8AyWgac8QNU/od+luR/3BlbZgOJRFxZzKk3ffM2AFIVGPuXjXXjTQ0gIpf24NPMNehKnAzSxYLheTy1Rebyc5e1h64KRuPLqv/TMqXZYpmCDpTMSYkKT0=
+	t=1707207475; cv=none; b=HuZlket3NtHAUotgqTjn446Xh/Duy3gck8oBMCGCmnEN/PHNjpeR2wboDqPiSRc/bNR8PUiYim/cEDq51fuQVv93KBI/gumGyqOj55ONv4IzqkfgiHf/drGZDGymTph9k7vN3PDtod56OF0Ry6UPYYeHqv6pAFXzKbJ7WVp/yuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707203120; c=relaxed/simple;
-	bh=8OOrirsFiRy+jWhBqLtOU1x+le6UyiBmtrdSLeywYtc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UFp/MX1EkK5fB/ZnpT61IEFeL63VG0R0/mO4FYy97h6FOS2ZJHhqDgu7Or1MDjCWS0C3j3WwsWLYxnmy5HVO1BQSbp6ClioPqCP745In47S7Exy2znjDAX44y6P0IsYEKG01/pEUH8B5yyCutMWGUcnPd1iP9dltmvtnXtxhSqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bg93yf9p; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bg93yf9p"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41671T8f030646;
-	Tue, 6 Feb 2024 07:05:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=oubYTPzQSYjeDnzcKC/PnXh+JcfYD5SlolpovnPWjdI=;
- b=bg93yf9poH+ZDELZY9yzTGmRj8fIH0ujT6Q63iSqOwC4rz0giurLn6WfWNaF3ZG6ifQO
- QvmF5Zwbd9pJJlP/N1Iww5MZni8noEq/I+QyeN8AVifuQUMdqVunZ58XzpOGt3FZyg23
- LPt4cD0sPnTyNTGPxO0isG3V4d7yS4unKvPOQMvpuftXb6rh/h0jBa29caVpDvXWbYlm
- MjOlba3CGbzCFpvow1ZSHoFli+iaz69SjeVadkn/RFqaaEl5s3+mn4gbPOxTA2xWL25B
- JJ2tv+YX6A3WLLCj2AQJpLIKXS8+LXoPbhWpZEQbbZ+0tDMgfOavpmTZGz8UQNXTrHrF Uw== 
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w3fnj8k3n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 06 Feb 2024 07:05:06 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4166pf7i005421;
-	Tue, 6 Feb 2024 07:05:04 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w21akd9u5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 06 Feb 2024 07:05:04 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 416752wu39584124
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 6 Feb 2024 07:05:02 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7BBF020043;
-	Tue,  6 Feb 2024 07:05:02 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4F56C20040;
-	Tue,  6 Feb 2024 07:05:02 +0000 (GMT)
-Received: from [9.152.212.156] (unknown [9.152.212.156])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  6 Feb 2024 07:05:02 +0000 (GMT)
-Message-ID: <35d17995-8707-4ddc-879b-9ed89d292c91@linux.ibm.com>
-Date: Tue, 6 Feb 2024 08:05:02 +0100
+	s=arc-20240116; t=1707207475; c=relaxed/simple;
+	bh=s450wOfvSBSteTUkLqao8mIdQacIljDGHpPnabtnEdY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AE+qcbCznw2AqomCoc5xXyN+qinAlc17T0DntNQT9+4VsQTrfLdNLbXn7Bz7AK/yaff8V3i3lNRSqNeDQ5Xn2gn3zkVKyOEwc3YG2pgpmISp+X60wjKTdMWu2c2wiS9jX/D12U5RzOv2cGRKDaXNCGskfV4CJHZXAvJQoPp90eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rXGeE-0002Xs-AM; Tue, 06 Feb 2024 09:17:42 +0100
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rXGe9-004mrs-2o; Tue, 06 Feb 2024 09:17:37 +0100
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rXGe8-00EA9b-38;
+	Tue, 06 Feb 2024 09:17:36 +0100
+Date: Tue, 6 Feb 2024 09:17:36 +0100
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Alexander Graf <graf@amazon.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org,
+	linux-doc@vger.kernel.org, x86@kernel.org,
+	Eric Biederman <ebiederm@xmission.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Ashish Kalra <ashish.kalra@amd.com>,
+	James Gowans <jgowans@amazon.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	arnd@arndb.de, pbonzini@redhat.com, madvenka@linux.microsoft.com,
+	Anthony Yznaga <anthony.yznaga@oracle.com>,
+	Usama Arif <usama.arif@bytedance.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3 00/17] kexec: Allow preservation of ftrace buffers
+Message-ID: <ZcHrIJ7lxpbkm5sc@pengutronix.de>
+References: <20240117144704.602-1-graf@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing: use ring_buffer_record_is_set_on() in
- tracer_tracing_is_on()
-To: Sven Schnelle <svens@linux.ibm.com>, Steven Rostedt
- <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20240205065340.2848065-1-svens@linux.ibm.com>
-Content-Language: en-US
-From: Mete Durlu <meted@linux.ibm.com>
-In-Reply-To: <20240205065340.2848065-1-svens@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 7jn7VMlhO6aBxIcF0qfoBiZ3kpz_4ToD
-X-Proofpoint-GUID: 7jn7VMlhO6aBxIcF0qfoBiZ3kpz_4ToD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-05_18,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 adultscore=0
- bulkscore=0 phishscore=0 priorityscore=1501 mlxlogscore=940
- lowpriorityscore=0 suspectscore=0 malwarescore=0 impostorscore=0
- mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402060048
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240117144704.602-1-graf@amazon.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-trace-kernel@vger.kernel.org
 
-On 2/5/24 07:53, Sven Schnelle wrote:
-> tracer_tracing_is_on() checks whether record_disabled is not zero. This
-> checks both the record_disabled counter and the RB_BUFFER_OFF flag.
-> Reading the source it looks like this function should only check for
-> the RB_BUFFER_OFF flag. Therefore use ring_buffer_record_is_set_on().
-> This fixes spurious fails in the 'test for function traceon/off triggers'
-> test from the ftrace testsuite when the system is under load.
-> 
-> Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-> ---
->   kernel/trace/trace.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 2a7c6fd934e9..47e221e1e720 100644
+Hi Alexander,
 
-Tested-By: Mete Durlu <meted@linux.ibm.com>
+Nice work!
+
+On Wed, Jan 17, 2024 at 02:46:47PM +0000, Alexander Graf wrote:
+> Kexec today considers itself purely a boot loader: When we enter the new
+> kernel, any state the previous kernel left behind is irrelevant and the
+> new kernel reinitializes the system.
+> 
+> However, there are use cases where this mode of operation is not what we
+> actually want. In virtualization hosts for example, we want to use kexec
+> to update the host kernel while virtual machine memory stays untouched.
+> When we add device assignment to the mix, we also need to ensure that
+> IOMMU and VFIO states are untouched. If we add PCIe peer to peer DMA, we
+> need to do the same for the PCI subsystem. If we want to kexec while an
+> SEV-SNP enabled virtual machine is running, we need to preserve the VM
+> context pages and physical memory. See James' and my Linux Plumbers
+> Conference 2023 presentation for details:
+> 
+>   https://lpc.events/event/17/contributions/1485/
+> 
+> To start us on the journey to support all the use cases above, this
+> patch implements basic infrastructure to allow hand over of kernel state
+> across kexec (Kexec HandOver, aka KHO). As example target, we use ftrace:
+> With this patch set applied, you can read ftrace records from the
+> pre-kexec environment in your post-kexec one. This creates a very powerful
+> debugging and performance analysis tool for kexec. It's also slightly
+> easier to reason about than full blown VFIO state preservation.
+> 
+> == Alternatives ==
+> 
+> There are alternative approaches to (parts of) the problems above:
+> 
+>   * Memory Pools [1] - preallocated persistent memory region + allocator
+>   * PRMEM [2] - resizable persistent memory regions with fixed metadata
+>                 pointer on the kernel command line + allocator
+>   * Pkernfs [3] - preallocated file system for in-kernel data with fixed
+>                   address location on the kernel command line
+>   * PKRAM [4] - handover of user space pages using a fixed metadata page
+>                 specified via command line
+> 
+> All of the approaches above fundamentally have the same problem: They
+> require the administrator to explicitly carve out a physical memory
+> location because they have no mechanism outside of the kernel command
+> line to pass data (including memory reservations) between kexec'ing
+> kernels.
+> 
+> KHO provides that base foundation. We will determine later whether we
+> still need any of the approaches above for fast bulk memory handover of for
+> example IOMMU page tables. But IMHO they would all be users of KHO, with
+> KHO providing the foundational primitive to pass metadata and bulk memory
+> reservations as well as provide easy versioning for data.
+> 
+> == Overview ==
+> 
+> We introduce a metadata file that the kernels pass between each other. How
+> they pass it is architecture specific. The file's format is a Flattened
+> Device Tree (fdt) which has a generator and parser already included in
+> Linux. When the root user enables KHO through /sys/kernel/kho/active, the
+> kernel invokes callbacks to every driver that supports KHO to serialize
+> its state. When the actual kexec happens, the fdt is part of the image
+> set that we boot into. In addition, we keep a "scratch region" available
+> for kexec: A physically contiguous memory region that is guaranteed to
+> not have any memory that KHO would preserve.  The new kernel bootstraps
+> itself using the scratch region and sets all handed over memory as in use.
+> When drivers initialize that support KHO, they introspect the fdt and
+> recover their state from it. This includes memory reservations, where the
+> driver can either discard or claim reservations.
+> 
+> == Limitations ==
+> 
+> I currently only implemented file based kexec. The kernel interfaces
+> in the patch set are already in place to support user space kexec as well,
+> but I have not implemented it yet inside kexec tools.
+> 
+> == How to Use ==
+> 
+> To use the code, please boot the kernel with the "kho_scratch=" command
+> line parameter set: "kho_scratch=512M". KHO requires a scratch region.
+> 
+> Make sure to fill ftrace with contents that you want to observe after
+> kexec.  Then, before you invoke file based "kexec -l", activate KHO:
+> 
+>   # echo 1 > /sys/kernel/kho/active
+>   # kexec -l Image --initrd=initrd -s
+>   # kexec -e
+> 
+> The new kernel will boot up and contain the previous kernel's trace
+> buffers in /sys/kernel/debug/tracing/trace.
+
+Assuming:
+- we wont to start tracing as early as possible, before rootfs
+  or initrd would be able to configure it.
+- traces are stored on a different device, not RAM. For example NVMEM.
+- Location of NVMEM is different for different board types, but
+  bootloader is able to give the right configuration to the kernel.
+
+What would be the best, acceptable for mainline, way to provide this
+kind of configuration? At least part of this information do not
+describes devices or device states, this would not fit in to devicetree
+universe. Amount of possible information would not fit in to bootconfig
+too.
+
+Other more or less overlapping use case I have in mind is a netbootable
+embedded system with a requirement to boot as fast as possible. Since
+bootloader already established a link and got all needed ip
+configuration, it would be able to hand over etherent controller and ip
+configuration states. Wille be the KHO the way to go for this use case?
+
+Regards,
+Oleksij
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
