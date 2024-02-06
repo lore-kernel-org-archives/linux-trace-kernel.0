@@ -1,192 +1,255 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73BC938DFE
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Feb 2024 14:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A4C1E866;
+	Tue,  6 Feb 2024 15:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707230437; cv=none; b=ZdKpl8WoiUN/JzqvXuamhxWhwdakMER+lN/yI8CcIU52v+kuN2TADriH2h5HjG+kzmPFoM3zxHZuZ1PqpqcbztS/dasrRaXx4r3nGI0aMOilsfD0MJF+vvVIK63cZDOklpzRDlc6nscmy2XSmCvvjA4s8OlKIamBwUqFzhigPtg=
+	t=1707232055; cv=none; b=S/erOGjnsYdSZmazgyPfs7SSwmgo9MbzjUoR11G6BLmwCeKmo8OCLof7IWzp55Xa6iLK5b6uDrCE2e61P2jGFqWR7TgUx/V0HTPkuNcw2KPFy6Rkxstpp8kdKQ3kk9YnGq/Hmt4j9FzlWDPGil8wiaYWpRUNpQKoDZ65QqjDhP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707230437; c=relaxed/simple;
-	bh=GyTTCLyaqdUATclQ53aQcWLFdER8rzwtEcSb0y8DF0k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hIMPBz5+uXCmWTf8XBs+Orz69LnFwOaAM7hi4IaAKerfJHewE+d5GUExh2ZKSdVCh7PtVguuqreW9K4ERSlNAg0abqPAlUV5fNohlvrX9jv2k78OHJmzp2oSAMbbEOSGTihVMxXLFbHMQGRXzbn0XV0cktV8bDz/Ms3iZjYvFJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rXMcd-0003xc-Ql; Tue, 06 Feb 2024 15:40:27 +0100
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rXMcY-004qRv-6e; Tue, 06 Feb 2024 15:40:22 +0100
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rXMcY-00EFqp-0E;
-	Tue, 06 Feb 2024 15:40:22 +0100
-Date: Tue, 6 Feb 2024 15:40:22 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Alexander Graf <graf@amazon.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org,
-	linux-doc@vger.kernel.org, x86@kernel.org,
-	Eric Biederman <ebiederm@xmission.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
+	s=arc-20240116; t=1707232055; c=relaxed/simple;
+	bh=Ii+WcqZDg5A6lf9RNiCFYTT3chrvRJ8xzBmAEQd/9x4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=LJBiOrlfKW/ZJoXoflSSqWZhqTNtGeqnt27kuYwbbPilXrNEA1QldB5xYBKBLC0RyXRORYgd74GGeDIsDZFaJ6DrSZsHFBmqdzcHZOsQsSzQAFP3kGAy8u4tRuwLMepkWBCE0IjvNdlhN9dDyUGA79VqQ8elppgQHvlUBWUVixQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i1+n6vfa; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i1+n6vfa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD9F9C433F1;
+	Tue,  6 Feb 2024 15:07:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707232055;
+	bh=Ii+WcqZDg5A6lf9RNiCFYTT3chrvRJ8xzBmAEQd/9x4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=i1+n6vfa9B4C/ZJl6O5oTNDHwfvjMdNbYgxpglUy3EuYORgKfoWQyGZpxp9LnEcRG
+	 AwzuARqxy4YK6RdbcJwl62sJZThPo40QqqWxHoMirpOz55GvzqbX7WnOaf17OL+yWa
+	 zFp2kNn7+q4u30ZeRcF0ROP04JTd3GycggfG7ZSE+xyG6N3WvytzfZIsaoN8RNwqj4
+	 FfVYIFikrYYOsB18HZ4DmH1m9+zIWGA26Ho6fjC4nMBJYUrn1g76ncqwF3YVM5moNa
+	 u4bBJHE/uU177BwIEhoRzdcoUSJcrUv+zCI20FaEY4L+vMnBMQzOWt64OfOZ0Bqpix
+	 zDqn5DNINSKCQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
+	Florent Revest <revest@chromium.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
 	Mark Rutland <mark.rutland@arm.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>,
-	James Gowans <jgowans@amazon.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	arnd@arndb.de, pbonzini@redhat.com, madvenka@linux.microsoft.com,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3 00/17] kexec: Allow preservation of ftrace buffers
-Message-ID: <ZcJE1qQy29lR42-G@pengutronix.de>
-References: <20240117144704.602-1-graf@amazon.com>
- <ZcHrIJ7lxpbkm5sc@pengutronix.de>
- <c7157097-4727-4360-80a0-20e7d8015e13@amazon.com>
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Guo Ren <guoren@kernel.org>
+Subject: [PATCH v7 00/36] tracing: fprobe: function_graph: Multi-function graph and fprobe on fgraph
+Date: Wed,  7 Feb 2024 00:07:29 +0900
+Message-Id: <170723204881.502590.11906735097521170661.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <c7157097-4727-4360-80a0-20e7d8015e13@amazon.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 06, 2024 at 02:43:15PM +0100, Alexander Graf wrote:
-> Hey Oleksij!
-> 
-> On 06.02.24 09:17, Oleksij Rempel wrote:
-> > Hi Alexander,
-> > 
-> > Nice work!
-> > 
-> > On Wed, Jan 17, 2024 at 02:46:47PM +0000, Alexander Graf wrote:
-> > > Make sure to fill ftrace with contents that you want to observe after
-> > > kexec.  Then, before you invoke file based "kexec -l", activate KHO:
-> > > 
-> > >    # echo 1 > /sys/kernel/kho/active
-> > >    # kexec -l Image --initrd=initrd -s
-> > >    # kexec -e
-> > > 
-> > > The new kernel will boot up and contain the previous kernel's trace
-> > > buffers in /sys/kernel/debug/tracing/trace.
-> > Assuming:
-> > - we wont to start tracing as early as possible, before rootfs
-> >    or initrd would be able to configure it.
-> > - traces are stored on a different device, not RAM. For example NVMEM.
-> > - Location of NVMEM is different for different board types, but
-> >    bootloader is able to give the right configuration to the kernel.
-> 
-> 
-> Let me try to really understand what you're tracing here. Are we talking
-> about exposing boot loader traces into Linux [1]? In that case, I think a
-> mechanism like [2] is what you're looking for.
-> 
-> Or do you want to transfer genuine Linux ftrace traces? In that case, why
-> would you want to store them outside of RAM?
+Hi,
 
-The high level object of what i need is to find how embedded systems in
-fields do break. Since this devices should be always on, there are
-different situations where system may reboot. For example, voltage
-related issues, temperature, scheduled system updates, HW or SW errors.
+Here is the 7th version of the series to re-implement the fprobe on
+function-graph tracer. The previous version is;
 
-To get better understand on what is going on, information should be
-collected. But there are some limitations:
-- voltage drops can be recorder only with prepared HW:
-  https://www.spinics.net/lists/devicetree/msg644030.html
+https://lore.kernel.org/all/170505424954.459169.10630626365737237288.stgit@devnote2/
 
-- In case of voltage drops RAM or block devices can't be used. Instead,
-  some variant of NVMEM should be used. In my case, NVMEM has 8 bits of
-  storage :) So, only one entry of the "trace" is compressed to this storage.
-  https://lore.kernel.org/all/20240124122204.730370-1-o.rempel@pengutronix.de
-  The reset reason information is provide by kernel and used by firmware
-  and kernel on next reboot
+This version fixes max-limitation check[8/36] and interrupt while commiting
+pop operation bugs [20/36]. Also, I decided to move the FGRAPH_TYPE_BITMAP
+part from [13/36] to [8/36] so that it will introduce bitmap type from
+the beginning, instead of replacing the FGRAPH_TYPE_ARRAY.
+This also updates ftrace_graph_func() on loongarch and powerpc so that
+it will call function_graph_enter_ops() directly with fgraph_ops [13/36].
 
-The implementation is not a big deal. The problematic part is the way
-how the system should get information about existence of recorder and
-where the recorder should stored things, for example NVMEM cell.
+TODOs:
+ - Add s390x support to fprobe (this means implementing fgraph call from
+   ftrace support).
 
-In my initial implementation I used devicetree to configure the software
-based recorder and linked it with NVMEM cell. But it is against the DT
-purpose to describe only HW and it makes this recorder unusable for
-not DT basd systems.
+Overview
+--------
+This series does major 2 changes, enable multiple function-graphs on
+the ftrace (e.g. allow function-graph on sub instances) and rewrite the
+fprobe on this function-graph.
 
-Krzysztof is suggesting to configure it from initrd. This has own
-limitations as well:
- - record can't be used before initrd.
- - we have multiple configuration point of board specific information - 
-   firmware (bootloader) and initrd.
- - initrd take place and reduce boot time for device which do not needed
-   it before.
+The former changes had been sent from Steven Rostedt 4 years ago (*),
+which allows users to set different setting function-graph tracer (and
+other tracers based on function-graph) in each trace-instances at the
+same time.
 
-Other variants like kernel command-line and/or module parameters seems
-to be not acceptable depending maintainer. So, I'm still seeking
-proper, acceptable, portable way to hand over not HW specific
-information to the kernel.
+(*) https://lore.kernel.org/all/20190525031633.811342628@goodmis.org/
 
-> > What would be the best, acceptable for mainline, way to provide this
-> > kind of configuration? At least part of this information do not
-> > describes devices or device states, this would not fit in to devicetree
-> > universe. Amount of possible information would not fit in to bootconfig
-> > too.
-> 
-> 
-> We have precedence for configuration in device tree: You can use device tree
-> to describe partitions on a NAND device, you can use it to specify MAC
-> address overrides of devices attached to USB, etc etc. At the end of the day
-> when people say they don't want configuration in device tree, what they mean
-> is that device tree should be a hand over data structure from firmware to
-> kernel, not from OS integrator to kernel :). If your firmware is the place
-> that knows about offsets and you need to pass those offsets, IMHO DT is a
-> good fit.
+The purpose of latter change are;
 
-Yes, the layout of the NVMEM can be described in the DT. How can I tell
-the system that this NVMEM cell should be used by some recorder or
-tracer? Before sysfs is available any how. @Krzysztof ?
+ 1) Remove dependency of the rethook from fprobe so that we can reduce
+   the return hook code and shadow stack.
 
-> > Other more or less overlapping use case I have in mind is a netbootable
-> > embedded system with a requirement to boot as fast as possible. Since
-> > bootloader already established a link and got all needed ip
-> > configuration, it would be able to hand over etherent controller and ip
-> > configuration states. Wille be the KHO the way to go for this use case?
-> 
-> 
-> That's an interesting one too. I would lean towards "try with normal device
-> tree first" here as well. It's again a very clear case of "firmware wants to
-> tell OS about things it knows, but the OS doesn't know" to me. That means
-> device tree should be fine to describe it.
+ 2) Make 'ftrace_regs' the common trace interface for the function
+   boundary.
 
-I can imagine description of PHY and MAC state. But IP configuration
-state of the firmware seems to be out of DT scope?
+1) Currently we have 2(or 3) different function return hook codes,
+ the function-graph tracer and rethook (and legacy kretprobe).
+ But since this  is redundant and needs double maintenance cost,
+ I would like to unify those. From the user's viewpoint, function-
+ graph tracer is very useful to grasp the execution path. For this
+ purpose, it is hard to use the rethook in the function-graph
+ tracer, but the opposite is possible. (Strictly speaking, kretprobe
+ can not use it because it requires 'pt_regs' for historical reasons.)
 
-Regards,
-Oleksij
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2) Now the fprobe provides the 'pt_regs' for its handler, but that is
+ wrong for the function entry and exit. Moreover, depending on the
+ architecture, there is no way to accurately reproduce 'pt_regs'
+ outside of interrupt or exception handlers. This means fprobe should
+ not use 'pt_regs' because it does not use such exceptions.
+ (Conversely, kprobe should use 'pt_regs' because it is an abstract
+  interface of the software breakpoint exception.)
+
+This series changes fprobe to use function-graph tracer for tracing
+function entry and exit, instead of mixture of ftrace and rethook.
+Unlike the rethook which is a per-task list of system-wide allocated
+nodes, the function graph's ret_stack is a per-task shadow stack.
+Thus it does not need to set 'nr_maxactive' (which is the number of
+pre-allocated nodes).
+Also the handlers will get the 'ftrace_regs' instead of 'pt_regs'.
+Since eBPF mulit_kprobe/multi_kretprobe events still use 'pt_regs' as
+their register interface, this changes it to convert 'ftrace_regs' to
+'pt_regs'. Of course this conversion makes an incomplete 'pt_regs',
+so users must access only registers for function parameters or
+return value. 
+
+Design
+------
+Instead of using ftrace's function entry hook directly, the new fprobe
+is built on top of the function-graph's entry and return callbacks
+with 'ftrace_regs'.
+
+Since the fprobe requires access to 'ftrace_regs', the architecture
+must support CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS, which enables to
+call function-graph entry callback with 'ftrace_regs', and also
+CONFIG_HAVE_FUNCTION_GRAPH_FREGS, which passes the ftrace_regs to
+return_to_handler.
+
+All fprobes share a single function-graph ops (means shares a common
+ftrace filter) similar to the kprobe-on-ftrace. This needs another
+layer to find corresponding fprobe in the common function-graph
+callbacks, but has much better scalability, since the number of
+registered function-graph ops is limited.
+
+In the entry callback, the fprobe runs its entry_handler and saves the
+address of 'fprobe' on the function-graph's shadow stack as data. The
+return callback decodes the data to get the 'fprobe' address, and runs
+the exit_handler.
+
+The fprobe introduces two hash-tables, one is for entry callback which
+searches fprobes related to the given function address passed by entry
+callback. The other is for a return callback which checks if the given
+'fprobe' data structure pointer is still valid. Note that it is
+possible to unregister fprobe before the return callback runs. Thus
+the address validation must be done before using it in the return
+callback.
+
+This series can be applied against the linux-trace/trace/urgent 
+(based on v6.8-rc1) kernel.
+
+This series can also be found below branch.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=topic/fprobe-on-fgraph
+
+Thank you,
+
+---
+
+Masami Hiramatsu (Google) (21):
+      ftrace: Fix DIRECT_CALLS to use SAVE_REGS by default
+      tracing: Add a comment about ftrace_regs definition
+      tracing: Rename ftrace_regs_return_value to ftrace_regs_get_return_value
+      x86: tracing: Add ftrace_regs definition in the header
+      function_graph: Use a simple LRU for fgraph_array index number
+      function_graph: Improve push operation for several interrupts
+      function_graph: Add a new entry handler with parent_ip and ftrace_regs
+      function_graph: Add a new exit handler with parent_ip and ftrace_regs
+      x86/ftrace: Enable HAVE_FUNCTION_GRAPH_FREGS
+      arm64: ftrace: Enable HAVE_FUNCTION_GRAPH_FREGS
+      fprobe: Use ftrace_regs in fprobe entry handler
+      fprobe: Use ftrace_regs in fprobe exit handler
+      tracing: Add ftrace_partial_regs() for converting ftrace_regs to pt_regs
+      tracing: Add ftrace_fill_perf_regs() for perf event
+      tracing/fprobe: Enable fprobe events with CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+      bpf: Enable kprobe_multi feature if CONFIG_FPROBE is enabled
+      fprobe: Rewrite fprobe on function-graph tracer
+      tracing/fprobe: Remove nr_maxactive from fprobe
+      selftests: ftrace: Remove obsolate maxactive syntax check
+      selftests/ftrace: Add a test case for repeating register/unregister fprobe
+      Documentation: probes: Update fprobe on function-graph tracer
+
+Steven Rostedt (VMware) (15):
+      function_graph: Convert ret_stack to a series of longs
+      fgraph: Use BUILD_BUG_ON() to make sure we have structures divisible by long
+      function_graph: Add an array structure that will allow multiple callbacks
+      function_graph: Allow multiple users to attach to function graph
+      function_graph: Remove logic around ftrace_graph_entry and return
+      ftrace/function_graph: Pass fgraph_ops to function graph callbacks
+      ftrace: Allow function_graph tracer to be enabled in instances
+      ftrace: Allow ftrace startup flags exist without dynamic ftrace
+      function_graph: Have the instances use their own ftrace_ops for filtering
+      function_graph: Add "task variables" per task for fgraph_ops
+      function_graph: Move set_graph_function tests to shadow stack global var
+      function_graph: Move graph depth stored data to shadow stack global var
+      function_graph: Move graph notrace bit to shadow stack global var
+      function_graph: Implement fgraph_reserve_data() and fgraph_retrieve_data()
+      function_graph: Add selftest for passing local variables
+
+
+ Documentation/trace/fprobe.rst                     |   42 +
+ arch/arm64/Kconfig                                 |    2 
+ arch/arm64/include/asm/ftrace.h                    |   24 
+ arch/arm64/kernel/entry-ftrace.S                   |   28 +
+ arch/arm64/kernel/ftrace.c                         |   21 
+ arch/loongarch/Kconfig                             |    1 
+ arch/loongarch/include/asm/ftrace.h                |    2 
+ arch/loongarch/kernel/ftrace_dyn.c                 |    9 
+ arch/powerpc/include/asm/ftrace.h                  |    9 
+ arch/powerpc/kernel/trace/ftrace.c                 |    3 
+ arch/powerpc/kernel/trace/ftrace_64_pg.c           |   10 
+ arch/s390/Kconfig                                  |    1 
+ arch/s390/include/asm/ftrace.h                     |    7 
+ arch/x86/Kconfig                                   |    4 
+ arch/x86/include/asm/ftrace.h                      |   17 
+ arch/x86/kernel/ftrace.c                           |   51 +
+ arch/x86/kernel/ftrace_64.S                        |   37 +
+ include/linux/fprobe.h                             |   58 +
+ include/linux/ftrace.h                             |  167 +++
+ include/linux/sched.h                              |    3 
+ include/linux/trace_recursion.h                    |   39 -
+ kernel/trace/Kconfig                               |   19 
+ kernel/trace/bpf_trace.c                           |   14 
+ kernel/trace/fgraph.c                              | 1078 ++++++++++++++++----
+ kernel/trace/fprobe.c                              |  631 ++++++++----
+ kernel/trace/ftrace.c                              |   21 
+ kernel/trace/ftrace_internal.h                     |    2 
+ kernel/trace/trace.h                               |   94 +-
+ kernel/trace/trace_fprobe.c                        |  114 +-
+ kernel/trace/trace_functions.c                     |    8 
+ kernel/trace/trace_functions_graph.c               |   96 +-
+ kernel/trace/trace_irqsoff.c                       |   10 
+ kernel/trace/trace_probe_tmpl.h                    |    2 
+ kernel/trace/trace_sched_wakeup.c                  |   10 
+ kernel/trace/trace_selftest.c                      |  178 +++
+ lib/test_fprobe.c                                  |   51 -
+ samples/fprobe/fprobe_example.c                    |    4 
+ .../test.d/dynevent/add_remove_fprobe_repeat.tc    |   19 
+ .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |    4 
+ 39 files changed, 2190 insertions(+), 700 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe_repeat.tc
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
