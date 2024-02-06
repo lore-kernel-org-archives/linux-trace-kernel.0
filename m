@@ -1,157 +1,121 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4FD212C7E4;
-	Tue,  6 Feb 2024 08:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492712E3F0;
+	Tue,  6 Feb 2024 08:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707208965; cv=none; b=jIrLmWWo/d0v6gvCHCbzhK6fFw9XagGE3npnv9J0zHhgiCwPKz915l3DAKpbe1fu4+YT0rO9uHfAFFccdqQ65QqDSsx0X53684WjzNV1ra+dxerC49kxco6FJmFlpOP6RK+lOudf84BaMk821xwwF2L+806k6TAHCMWG96Z983M=
+	t=1707209311; cv=none; b=BJuEY0beoRzFkQ2/JKSNuxDJEQvmmZXp07i+CLRefoTpQZvkGHd+1k/Jjx48Y2c7ozVXv/EW5wCEkj0PdfU7kyzGtqMpDwDgXgkCSjoUhEss0QNDqXJEO5PrduyzaUafh4Rju0famu4uQ+Xc92jtV+DJBdC051xcnlQPCMMlocs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707208965; c=relaxed/simple;
-	bh=Xra9uIettsqlejbTwgl4RaBulJHo8XpiY9JZgYuDOH0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NZz01h9ScVYMTY1Fy7dgmKHQPDzJrPtjoqQnfoTwJ/AmAovd0aojevHWay7ZqDB2h+KQ9JLgbwwLJNUkYmGJqQ8lgvh8Q17rsyAsq0K28woNZge8HFy0WzxK66jBsoINtr0x38BM+kJeh5iP12QW9+5HmEBRQEmmYJchLfuI+o0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nVx0oG7s; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1707209311; c=relaxed/simple;
+	bh=+WjsFcTceA8X8B+jIsmK4AkVAO3quMUcgY/eCwA0gnA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=KLMbVqX1UEi03kcak8efPR5ZJx4Q6Km5NGjzbHzDdaEcqdcYPFgMG9S8X/3HUw0xUDPwDmsUMEcFuOqs6Bnn6sSMyprFrWB5l92/rJdsQp4k9qC73Lsu+Z2cnK34dgb3zn5GpwvlkPbxd5eEmVKymph7R3iCuqmLtk8BgBdNii4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=foVtXMmx; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nVx0oG7s"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-33b40208735so1047269f8f.3;
-        Tue, 06 Feb 2024 00:42:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707208962; x=1707813762; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mRz+fl1vMOSU9qlDEq2lb1aXX2zcI26N8x0T+ksleSc=;
-        b=nVx0oG7sjEXPKSOdbOL/lrrM6xg/S44Vl6lNPjFdcTJKbwdcrk7I9CfNgDQxYaBOzT
-         Us5VNDMBdZ22k8CLImt4GVhoCCWsVaS6hYuhVgXgJLVrECjeDiJOphfdSJTBhqyOJA63
-         z8Pq4PyVZnLjIAZskqF9Kx7nkJL6cy9Gx1xVVHpWsSlYHYmd8LSadQklOpoCKybkAHUv
-         GwQx761HthX/T5O18VxAh01HPjy8yO24Sukj1LMCnx22SbXSLacUoHn1zkw74makbRje
-         7rrFJ/UhJoPeLxOdvOIeUD6jmOJNSZ5CgPk9kTwP6AS0GdlmSJF8pt1g9BclPma4ctVE
-         9QUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707208962; x=1707813762;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mRz+fl1vMOSU9qlDEq2lb1aXX2zcI26N8x0T+ksleSc=;
-        b=xCoRDIEIqRoW26bsD4wOm7WM4PmJ+Um/p1ZYRQUYMX4R+dyItoqDx420/uYtsDk5gY
-         oKmZwebRFfIhYW5lkwpADpoGyUmc90zP6vE2VJZ6KOvXB2tPwyIS9J7oo1tZMbT/jsYc
-         FGjuOZtcAK0xggRO8pFaI1yNAZYxIA8TqtqDckswacVR7Y9BmljxbkwUpOlb5zfWYfH3
-         YyqQRGasanyUobiBqHrxiXusf2A9+MU4YwnEP/aL6dOK2PmzEf+6GAVYkFS2otMiHsQ8
-         nToI/7DJpV06T8qVQv3GqKPSJ7qG42O8SGnvg4d5QxNfRSGcsgDW24dJU/dfn20oY57X
-         zXiA==
-X-Gm-Message-State: AOJu0YzPSpwS6Ezj6rUI40RMlNJBKoLsO37DeH8G/MxQKXh2wuYfGGCf
-	YdHLZc97+yzA/QKMvugMNicVbrDrEWUQDKx2uIrGZ+6F0VfLOa4O02OMH4Em7UrzZo0zoOxqK5N
-	qOonDydCfFwBv8UNcUXO612tqZEc=
-X-Google-Smtp-Source: AGHT+IFV1XWxS8tcuJKurVxhm37o/Feyf29TJzs2ECwD8y+UBPAQnNudzSZ7jomWmHJDOyJFzoS6IOpmBkHhFyfVcDc=
-X-Received: by 2002:adf:a1d0:0:b0:33b:1544:af23 with SMTP id
- v16-20020adfa1d0000000b0033b1544af23mr761337wrv.8.1707208961587; Tue, 06 Feb
- 2024 00:42:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="foVtXMmx"
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4168gE9h008383;
+	Tue, 6 Feb 2024 08:48:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : in-reply-to : references : date : message-id : mime-version :
+ content-type; s=pp1; bh=j0CHLrBCXuZm2/lScCN+j8B7uj/p62qacpZ+jr+ClZs=;
+ b=foVtXMmx/ORrN7NqDA02NJI/eRI0o91FUUG/X4r3keeVKQw9k3Lwi4iw/fblBQKoANlY
+ Z3s9LrCJ9+MRssoCrxM5fkUYxQ/Wb30y8sz0qVeR7OkzOuqfLr84xrDyJ5ctPmjhyADX
+ c06brdscJKO2iB/lemCA28WQ85JgA7zMI4MkWDAc1nBDn+I6riwbzErIVGxAT0CKDE7y
+ nNg8AFQ/uZh3bw6388r+RUOIfmPsmSDXxb3Wjm56tlCC1DPGDVFppnuxwARckI/+X5mb
+ BT3Qx48fFxyl3z/o641TC4QgYR/CGz5bpgnVkpI7RoDpK8BQZtvMhLOUa2qRrRRVolay Aw== 
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w3hg6g62x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 Feb 2024 08:48:21 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4165jXJ7014724;
+	Tue, 6 Feb 2024 08:48:20 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w20tnnvrt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 06 Feb 2024 08:48:19 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4168mHFo12386936
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 6 Feb 2024 08:48:17 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5951F20043;
+	Tue,  6 Feb 2024 08:48:17 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2C3E220040;
+	Tue,  6 Feb 2024 08:48:17 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  6 Feb 2024 08:48:17 +0000 (GMT)
+From: Sven Schnelle <svens@linux.ibm.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Mete Durlu <meted@linux.ibm.com>
+Subject: Re: [PATCH] tracing: use ring_buffer_record_is_set_on() in
+ tracer_tracing_is_on()
+In-Reply-To: <yt9d34u63xxz.fsf@linux.ibm.com> (Sven Schnelle's message of
+	"Tue, 06 Feb 2024 07:32:08 +0100")
+References: <20240205065340.2848065-1-svens@linux.ibm.com>
+	<20240205075504.1b55f29c@rorschach.local.home>
+	<yt9djznj3vbl.fsf@linux.ibm.com>
+	<20240205092353.523cc1ef@rorschach.local.home>
+	<yt9d34u63xxz.fsf@linux.ibm.com>
+Date: Tue, 06 Feb 2024 09:48:16 +0100
+Message-ID: <yt9dsf262d2n.fsf@linux.ibm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZcDwoce6Ok25K6Dm@FVFF77S0Q05N> <xhsmhmssehp6t.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-In-Reply-To: <xhsmhmssehp6t.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-From: richard clark <richard.xnu.clark@gmail.com>
-Date: Tue, 6 Feb 2024 16:42:25 +0800
-Message-ID: <CAJNi4rMiGcP4wdA=1dSOXwYXOKSCWnN8FYxBaFdaAXBqAU_ePQ@mail.gmail.com>
-Subject: Re: Question about the ipi_raise filter usage and output
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Steven Rostedt <rostedt@goodmis.org>, nico@fluxnic.net, 
-	mhiramat@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Fn1fDA3yR4AlgQT39UDWfGUeDdOdEdlK
+X-Proofpoint-ORIG-GUID: Fn1fDA3yR4AlgQT39UDWfGUeDdOdEdlK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-06_02,2024-01-31_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ priorityscore=1501 clxscore=1015 impostorscore=0 suspectscore=0
+ lowpriorityscore=0 spamscore=0 phishscore=0 bulkscore=0 malwarescore=0
+ mlxlogscore=720 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402060061
 
-On Tue, Feb 6, 2024 at 12:05=E2=80=AFAM Valentin Schneider <vschneid@redhat=
-.com> wrote:
->
-> On 05/02/24 14:39, Mark Rutland wrote:
-> > [adding Valentin]
-> >
->
-> Thanks!
->
-> > On Mon, Feb 05, 2024 at 08:06:09AM -0500, Steven Rostedt wrote:
-> >> On Mon, 5 Feb 2024 10:28:57 +0000
-> >> Mark Rutland <mark.rutland@arm.com> wrote:
-> >>
-> >> > > I try to write below:
-> >> > > echo 'target_cpus =3D=3D 11 && reason =3D=3D "Function call interr=
-upts"' >
-> >> > > events/ipi/ipi_raise/filter
-> >> >
-> >> > The '=3D' checks if the target_cpus bitmap *only* contains CPU 11. I=
-f the cpumask
-> >> > contains other CPUs, the filter will skip the call.
-> >> >
-> >> > I believe you can use '&' to check whether a cpumask contains a CPU,=
- e.g.
-> >> >
-> >> >    'target_cpus & 11'
-> >>
-> >> 11 =3D=3D 0xb =3D b1011
-> >>
-> >> So the above would only be true for CPUs 0,1 and 3 ;-)
-> >
-> > Sorry, I misunderstood the scalar logic and thought that we treated:
-> >
-> >       '$mask $OP $scalar', e.g. 'target_cpus & 11'
-> >
-> > .. as a special case meaning a cpumask with that scalar bit set, i.e.
-> >
-> >       '$mask $OP CPUS{$scalar}', e.g. 'target_cpus & CPUS{11}'
-> >
-> > .. but evidently I was wrong.
-> >
-> >> I think you meant: 'target_cpus & 0x800'
-> >>
-> >> I tried "1 << 11' but it appears to not allow shifts. I wonder if we s=
-hould add that?
-> >
-> > Hmm... shouldn't we make 'CPUS{11}' work for that?
-> >
->
-> It /should/ already be the case, the user input with the curly braces is
-> parsed as a cpulist. So CPUS{11} really does mean CPU11, not a hex value =
-to
-> be interpreted as a cpumask.
->
-> However...
->
-> > From a quick test (below), that doesn't seem to work, though I think it
-> > probably should?
-> > Have I completely misunderstood how this is supposed to work, or is tha=
-t a bug?
-> >
->
-> The CPUS{} thingie only works with an event field that is either declared=
- as a
-> cpumask (__cpumask) or a scalar. That's not the case for ipi_raise, the
-> target_cpus event field is saved as a "raw" bitmask.
->
-> There /should/ have been a warning about the event filter though, but I
-> think it's not happening because I'm allowing more than just FILTER_CPUMA=
-SK
-> in parse_pred() to make it work for scalars. I'll go poke around some mor=
-e.
->
-> Generally for this sort of IPI investigation I'd recommend using the newe=
-r
-> trace_ipi_send_cpu() and trace_ipi_send_cpumask() (for which CPUS{}
-> filtering works).
-> If it's only the function call interrupts you're interesting in, have a
-> look at trace_csd_queue_cpu().
+Sven Schnelle <svens@linux.ibm.com> writes:
 
-This should be supported by newer version kernels like v6.5, but I am
-using v6.1 and this trace event has not been supported yet... so ipi
-is more suitable for me. ipi_entry and ipi_exit is ok, but seems the
-filter doesn't support a specific cpu, maybe we need to add this?
+> Looking at trace_save_cmdline():
 >
-> > Mark.
+> tpid = tsk->pid & (PID_MAX_DEFAULT - 1); where PID_MAX_DEFAULT = 0x8000
 >
+> so this is basically
+>
+> tpid = tsk->pid & 0x7fff;
+>
+> further on:
+>
+>         // might clash with other pid if (otherpid & 0x7fff) == (tsk->pid & 0x7fff)
+> 	idx = savedcmd->map_pid_to_cmdline[tpid];
+> 	if (idx == NO_CMDLINE_MAP) {
+>                 // This will pick an existing entry if there are
+>                 // more than cmdline_num entries present
+> 		idx = (savedcmd->cmdline_idx + 1) % savedcmd->cmdline_num;      
+> 		savedcmd->map_pid_to_cmdline[tpid] = idx;
+> 		savedcmd->cmdline_idx = idx;
+> 	}
+>
+> So i think the problem that sometimes '<...>' instead of the correct
+> comm is logged is just expected behaviour given the code above. 
+
+I added some logging, and the test is not triggering this issue. So i
+assume the default of 128 cmdline entries is just to small. Sorry for
+the noise. Lets see whether we're still triggering some failures with
+the other fix applied in CI. If we do, maybe we want to increase the
+saved_cmdline_size for the ftrace test suite.
