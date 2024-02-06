@@ -1,122 +1,233 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 911A413341C;
-	Tue,  6 Feb 2024 15:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707BF1B942
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Feb 2024 20:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707234517; cv=none; b=UqBwEW918OR0u9KWLUAn1z41HC9uO9Pqi91PknsDoZhSgkqe28sdTMBoYsO7Fs386Q/l5TlK9leKoHwRK/xNyDmnOUSLvAY5pXrOMYjD3NXDOWlL/Ird5KHY93emMG/IwFhl0rIX0Fs8vPZhSSts0qsBjyEihQm9eFvTX/8pRZk=
+	t=1707252374; cv=none; b=A8egBV8V3/UXdsGZnGpqOuVwo8iegk9RJgR7RuqSZnBODL5jpIqNyM1D8k0dn91YVqdQdmZ+1RwlKqRYnH796KNoNFnV8y7iJ09lhJ3s3OXrX90qpNWZ1XQA9N4kKKcsZPkxPWnRL9oc7HU4aRiB8SdVPyAfjpPeBQxod4u0GCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707234517; c=relaxed/simple;
-	bh=zaZSsrvYhW5Ke2AYAmP/ja6WNn71gyudEVeXSINNEsM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dQ5j7qr3f5UarF+KCPt9P3+82A57mhL3TTPjrmuELMlj2yg6S34v0CAL+SuitC/ak/rWtuQiADYWEtK1wYtz/6XgGHRti7NC61hIV85MwmDloIO+t4WN/ZK83Op8Y9KhPqaxMmuvOo+BTPqCZeAwSsduKb0XH9/wVS2P7Eyld4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rak93+G/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707252374; c=relaxed/simple;
+	bh=Cte0mjf8jhkIpFc/0wwZCX06Fv91K7ojr+u3gO5FxnI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=p+gIr/J9Rp9d8aogkTh3MavFZL1BwBghU+6eYLpYGH79VroUPlqX809EmsdZLj2DDeqf99hDWVhBB2jN17TC81ROpS5n2mNly9LNBbJWgB8nOzN2y8g1Iy5pvcWYjpiUHVod8D9qQTJ6h+CvR1ijqnHO6U8/UMi091rF0zPrYZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=kIsP/7aO; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rak93+G/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C145DC433F1;
-	Tue,  6 Feb 2024 15:48:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707234517;
-	bh=zaZSsrvYhW5Ke2AYAmP/ja6WNn71gyudEVeXSINNEsM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Rak93+G/BJ5ORjKtT7vFG8fmk8Bwt1Ix0jXOncUPNsLpN5JcRXpcq/uuHxMwGa/OC
-	 BYwc2bIZqVoxeBRDy7aR8m8/RFB9RT3u0qBiuS6IU+lD22qZEkv3nZ/fJWTw3PoXvV
-	 6foJCiRNwclykXHNvYaVMgcc7sNrxJT5WIaaRXgfTdulEZ+jJGkE1g1yC4CMENy324
-	 iYCsdeZUGt+6gl00zho0VjeUgWgp6TRcs6qepB3mDA8pxDgZJAiGbnK2H1FEwJqZPQ
-	 VKzIxtuCY6zo1MDzmfE3t+sG4xvBD97LH/lfhZU6UpYS9F9ZlIO29kTHaIN+CIHpWb
-	 ObfJEzis5v/TA==
-Date: Tue, 6 Feb 2024 08:48:35 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Daniel Bristot de Oliveira <bristot@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="kIsP/7aO"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40fe3244bc6so9135795e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 Feb 2024 12:46:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1707252369; x=1707857169; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=faLdI7A4r1MDpBrjBMxPLIztplo9D7QJ5kY725lxPV0=;
+        b=kIsP/7aOtddedb2cOYEX4SKA3QjrEX/xn/SG//P6SL05HygUeToKPj7EnTfKsSrLGT
+         G/8GBoE/wX0J88azlIg6sDE1MK9bFLS6KaUtDCvN1c7NMUEUC8p2UWnFJ5uXBbafQmhu
+         V7oEfdEuWrzj/Ggm36jtMGQipLqlIiiu+YzuzXGDMJhz6RUWhhQaBs3HkiMFbiLN8YI2
+         ks7rEQ3MaUYtfRNACrwajReqmHNfpUaNi1F9QAeycX3fPzO8Kak2zlJKFzxSWJNzG3Zg
+         ptZJ6+WgdDv1hbNw/uxeFsP3s1aphc2Fu7uyTmNEXBiveWATtZ1PDYl1HAPqQhds/UXc
+         Fbag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707252369; x=1707857169;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=faLdI7A4r1MDpBrjBMxPLIztplo9D7QJ5kY725lxPV0=;
+        b=Y2dVwJhfY6trHHvhp3MRqmSkCYZkpXIlReN8N9P+D2ngmsD0k4PqN3kK3prCbsW9tB
+         Y5dVl8U4HRoK+YMGjDG42ayDHqelK0xkipvxxq8/LREy+S6sgB/Vjp3Jyt0bEgTX34tq
+         81POADrFtusYlg3mDxpeD24jEL/DfW9RslijDFTbZZHCwrNBLiLmdLJqR2MeXvLw94qZ
+         PTXTHPiverxuESwk2VxEyXeawFqPFTUxudsBghJM/onbKXeg+yE1Hl6IOvAyvciN6gWs
+         5+cROcU3PUvutgH4MW0h03ozz2DKm57woRZ3RparsPMDfmyHWiEGAkwiFIrxWTUkylK2
+         3u1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVUuXvr3Y7r0cQHMynH22ILrUfkwdbNzrgg2VwRnCBdd58YiRtVfQ3WjaXEsfmeTiYD5SKcxu5pdN46kbftfX8OsmkHtnrsIOWpfIrVylOP196B
+X-Gm-Message-State: AOJu0YxEc4xOtsmQfAYGNcmRVbernzB887n06K1xa7EdUGsbo6RJgjT4
+	hUXIF1u3h84X43q2hhryfwL7PoIvZgJIEvUoDIyDO4sDfdVEgh3OUUsT5FlHk70=
+X-Google-Smtp-Source: AGHT+IEUtpL/V/H84vcSbqDS07tiuujHFSTGM+gwxTOny5I+aPToo6WgrtaTz+5XzqRCMAXtUfnEdw==
+X-Received: by 2002:adf:ed0e:0:b0:33a:ed2c:fea0 with SMTP id a14-20020adfed0e000000b0033aed2cfea0mr1730381wro.1.1707252369535;
+        Tue, 06 Feb 2024 12:46:09 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVs9epp2rKTOZ8O1zlNog/fyR+3mQaCqPMlHSXF7JTIzPZX/1yRh8TSFwpxnlO9lctKVmUqTGRVgOPMLFH+6G6DBquk/RRImJP0cRNRhH82uFzI1tLbHCWZ3HwqQUYxDCha/mIXc4Cstm0th3V8rst8evMx2LQZyYzWMas3RalQdY1CWy2MycJzsGijgQpZkA09Codu0yESXB0n2qQNyg1cMDYzhcNQ2wAVh1cYWqK9whDhOa+cwtQBZaRKrSSyrftwGbyM2ycPGd0C3uWonieJ/HrgNshSMPzageTxbLgyuKaAjkTO6DyT6hyc5nF2/slPvAczakuicpDsvo63Yh4SJsIaC5Wbs8j/msxoTSgjL5lMfohxVa1bnGxhaKwkUGWtllj3kA==
+Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id l12-20020a5d4bcc000000b0033905a60689sm2899741wrt.45.2024.02.06.12.46.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Feb 2024 12:46:09 -0800 (PST)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Anup Patel <anup@brainfault.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Donald Zickus <dzickus@redhat.com>, stable@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH 1/6] tools/rtla: Fix Makefile compiler options for clang
-Message-ID: <20240206154835.GA1433705@dev-arch.thelio-3990X>
-References: <cover.1707217097.git.bristot@kernel.org>
- <567ac1b94effc228ce9a0225b9df7232a9b35b55.1707217097.git.bristot@kernel.org>
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>
+Subject: [PATCH] riscv: Fix text patching when icache flushes use IPIs
+Date: Tue,  6 Feb 2024 21:46:07 +0100
+Message-Id: <20240206204607.527195-1-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <567ac1b94effc228ce9a0225b9df7232a9b35b55.1707217097.git.bristot@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 06, 2024 at 12:05:29PM +0100, Daniel Bristot de Oliveira wrote:
-> The following errors are showing up when compiling rtla with clang:
-> 
->  $ make HOSTCC=clang CC=clang LLVM_IAS=1
->  [...]
-> 
->   clang -O -g -DVERSION=\"6.8.0-rc1\" -flto=auto -ffat-lto-objects
-> 	-fexceptions -fstack-protector-strong
-> 	-fasynchronous-unwind-tables -fstack-clash-protection  -Wall
-> 	-Werror=format-security -Wp,-D_FORTIFY_SOURCE=2
-> 	-Wp,-D_GLIBCXX_ASSERTIONS -Wno-maybe-uninitialized
-> 	$(pkg-config --cflags libtracefs)    -c -o src/utils.o src/utils.c
-> 
->   clang: warning: optimization flag '-ffat-lto-objects' is not supported [-Wignored-optimization-argument]
+For now, we use stop_machine() to patch the text and when we use IPIs for
+remote icache flushes, the system hangs since the irqs are disabled on all
+cpus.
 
-For what it's worth, this flag is supported in clang 17.0.0 and newer:
+So instead, make sure every cpu executes the stop_machine() patching
+function which emits a local icache flush and then avoids the use of
+IPIs.
 
-https://github.com/llvm/llvm-project/commit/610fc5cbcc8b68879c562f6458608afe2473ab7f
+Co-developed-by: Björn Töpel <bjorn@rivosinc.com>
+Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ arch/riscv/include/asm/patch.h |  1 +
+ arch/riscv/kernel/ftrace.c     | 38 ++++++++++++++++++++++++++++++----
+ arch/riscv/kernel/patch.c      | 11 +++++-----
+ 3 files changed, 40 insertions(+), 10 deletions(-)
 
-But if it is not critical, just dropping the flag like you have done
-here rather than conditionally supporting it is probably easier.
+diff --git a/arch/riscv/include/asm/patch.h b/arch/riscv/include/asm/patch.h
+index e88b52d39eac..9f5d6e14c405 100644
+--- a/arch/riscv/include/asm/patch.h
++++ b/arch/riscv/include/asm/patch.h
+@@ -6,6 +6,7 @@
+ #ifndef _ASM_RISCV_PATCH_H
+ #define _ASM_RISCV_PATCH_H
+ 
++int patch_insn_write(void *addr, const void *insn, size_t len);
+ int patch_text_nosync(void *addr, const void *insns, size_t len);
+ int patch_text_set_nosync(void *addr, u8 c, size_t len);
+ int patch_text(void *addr, u32 *insns, int ninsns);
+diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+index f5aa24d9e1c1..1694a1861d1e 100644
+--- a/arch/riscv/kernel/ftrace.c
++++ b/arch/riscv/kernel/ftrace.c
+@@ -8,6 +8,7 @@
+ #include <linux/ftrace.h>
+ #include <linux/uaccess.h>
+ #include <linux/memory.h>
++#include <linux/stop_machine.h>
+ #include <asm/cacheflush.h>
+ #include <asm/patch.h>
+ 
+@@ -75,8 +76,7 @@ static int __ftrace_modify_call(unsigned long hook_pos, unsigned long target,
+ 		make_call_t0(hook_pos, target, call);
+ 
+ 	/* Replace the auipc-jalr pair at once. Return -EPERM on write error. */
+-	if (patch_text_nosync
+-	    ((void *)hook_pos, enable ? call : nops, MCOUNT_INSN_SIZE))
++	if (patch_insn_write((void *)hook_pos, enable ? call : nops, MCOUNT_INSN_SIZE))
+ 		return -EPERM;
+ 
+ 	return 0;
+@@ -88,7 +88,7 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+ 
+ 	make_call_t0(rec->ip, addr, call);
+ 
+-	if (patch_text_nosync((void *)rec->ip, call, MCOUNT_INSN_SIZE))
++	if (patch_insn_write((void *)rec->ip, call, MCOUNT_INSN_SIZE))
+ 		return -EPERM;
+ 
+ 	return 0;
+@@ -99,7 +99,7 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
+ {
+ 	unsigned int nops[2] = {NOP4, NOP4};
+ 
+-	if (patch_text_nosync((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
++	if (patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
+ 		return -EPERM;
+ 
+ 	return 0;
+@@ -134,6 +134,36 @@ int ftrace_update_ftrace_func(ftrace_func_t func)
+ 
+ 	return ret;
+ }
++
++struct ftrace_modify_param {
++	int command;
++	atomic_t cpu_count;
++};
++
++static int __ftrace_modify_code(void *data)
++{
++	struct ftrace_modify_param *param = data;
++
++	if (atomic_inc_return(&param->cpu_count) == num_online_cpus()) {
++		ftrace_modify_all_code(param->command);
++		atomic_inc(&param->cpu_count);
++	} else {
++		while (atomic_read(&param->cpu_count) <= num_online_cpus())
++			cpu_relax();
++		smp_mb();
++	}
++
++	local_flush_icache_all();
++
++	return 0;
++}
++
++void arch_ftrace_update_code(int command)
++{
++	struct ftrace_modify_param param = { command, ATOMIC_INIT(0) };
++
++	stop_machine(__ftrace_modify_code, &param, cpu_online_mask);
++}
+ #endif
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
+index 37e87fdcf6a0..ec7760a4d6cd 100644
+--- a/arch/riscv/kernel/patch.c
++++ b/arch/riscv/kernel/patch.c
+@@ -188,7 +188,7 @@ int patch_text_set_nosync(void *addr, u8 c, size_t len)
+ }
+ NOKPROBE_SYMBOL(patch_text_set_nosync);
+ 
+-static int patch_insn_write(void *addr, const void *insn, size_t len)
++int patch_insn_write(void *addr, const void *insn, size_t len)
+ {
+ 	size_t patched = 0;
+ 	size_t size;
+@@ -211,11 +211,9 @@ NOKPROBE_SYMBOL(patch_insn_write);
+ 
+ int patch_text_nosync(void *addr, const void *insns, size_t len)
+ {
+-	u32 *tp = addr;
+ 	int ret;
+ 
+-	ret = patch_insn_write(tp, insns, len);
+-
++	ret = patch_insn_write(addr, insns, len);
+ 	if (!ret)
+ 		flush_icache_range((uintptr_t) tp, (uintptr_t) tp + len);
+ 
+@@ -232,8 +230,7 @@ static int patch_text_cb(void *data)
+ 	if (atomic_inc_return(&patch->cpu_count) == num_online_cpus()) {
+ 		for (i = 0; ret == 0 && i < patch->ninsns; i++) {
+ 			len = GET_INSN_LENGTH(patch->insns[i]);
+-			ret = patch_text_nosync(patch->addr + i * len,
+-						&patch->insns[i], len);
++			ret = patch_insn_write(patch->addr + i * len, &patch->insns[i], len);
+ 		}
+ 		atomic_inc(&patch->cpu_count);
+ 	} else {
+@@ -242,6 +239,8 @@ static int patch_text_cb(void *data)
+ 		smp_mb();
+ 	}
+ 
++	local_flush_icache_all();
++
+ 	return ret;
+ }
+ NOKPROBE_SYMBOL(patch_text_cb);
+-- 
+2.39.2
 
->   warning: unknown warning option '-Wno-maybe-uninitialized'; did you mean '-Wno-uninitialized'? [-Wunknown-warning-option]
->   1 warning generated.
-> 
->   clang -o rtla -ggdb  src/osnoise.o src/osnoise_hist.o src/osnoise_top.o
->   src/rtla.o src/timerlat_aa.o src/timerlat.o src/timerlat_hist.o
->   src/timerlat_top.o src/timerlat_u.o src/trace.o src/utils.o $(pkg-config --libs libtracefs)
-> 
->   src/osnoise.o: file not recognized: file format not recognized
->   clang: error: linker command failed with exit code 1 (use -v to see invocation)
->   make: *** [Makefile:110: rtla] Error 1
-> 
-> Solve these issues by:
->   - removing -ffat-lto-objects and -Wno-maybe-uninitialized if using clang
->   - informing the linker about -flto=auto
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 1a7b22ab15eb ("tools/rtla: Build with EXTRA_{C,LD}FLAGS")
-> Suggested-by: Donald Zickus <dzickus@redhat.com>
-> Signed-off-by: Daniel Bristot de Oliveira <bristot@kernel.org>
-> ---
->  tools/tracing/rtla/Makefile | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/tracing/rtla/Makefile b/tools/tracing/rtla/Makefile
-> index 2456a399eb9a..afd18c678ff5 100644
-> --- a/tools/tracing/rtla/Makefile
-> +++ b/tools/tracing/rtla/Makefile
-> @@ -28,10 +28,15 @@ FOPTS	:=	-flto=auto -ffat-lto-objects -fexceptions -fstack-protector-strong \
->  		-fasynchronous-unwind-tables -fstack-clash-protection
->  WOPTS	:= 	-Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS -Wno-maybe-uninitialized
->  
-> +ifeq ($(CC),clang)
-> +  FOPTS := $(filter-out -ffat-lto-objects, $(FOPTS))
-> +  WOPTS := $(filter-out -Wno-maybe-uninitialized, $(WOPTS))
-> +endif
-> +
->  TRACEFS_HEADERS	:= $$($(PKG_CONFIG) --cflags libtracefs)
->  
->  CFLAGS	:=	-O -g -DVERSION=\"$(VERSION)\" $(FOPTS) $(MOPTS) $(WOPTS) $(TRACEFS_HEADERS) $(EXTRA_CFLAGS)
-> -LDFLAGS	:=	-ggdb $(EXTRA_LDFLAGS)
-> +LDFLAGS	:=	-flto=auto -ggdb $(EXTRA_LDFLAGS)
->  LIBS	:=	$$($(PKG_CONFIG) --libs libtracefs)
->  
->  SRC	:=	$(wildcard src/*.c)
-> -- 
-> 2.43.0
-> 
