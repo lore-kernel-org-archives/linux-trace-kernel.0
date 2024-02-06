@@ -1,112 +1,56 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD15E4EB46;
-	Tue,  6 Feb 2024 10:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0521EA72;
+	Tue,  6 Feb 2024 11:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707216784; cv=none; b=mLqhjMSIVjtzO8D+cT0jdQkUD9cPN9Eqq7PFp+6/rhsEuqhzQK7IgU7thFDSRsIp7XuPHoYHSKHVMknqJfC3PNpfbg1ds45YfvbE1LTY1M3f/rSCI7ErTTmYBFWG93X+Ml3rqw/Sovwe19qlNZ5pCxjVVQzoYiR0SSzO1OHwQbE=
+	t=1707217279; cv=none; b=RZhCDvc9gk9UFP7Vll7WLWhcXVUKc+N/5Zf7ieDNuXIhOnXFlWM/T/pFz821+O6kDfmJ9cwU49kNrcLmLauAwnf75Fk3mGKRWnP553T34egR62QRfTG3OnwwafDiklKPMhW1Cb55gMD7bnq5l7AckR4fsLpz8CDc26nCvphXEEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707216784; c=relaxed/simple;
-	bh=9uQDvmNZjkwnGeIFN5mlmGI1UDGBBxNEzfYtOgWxsmM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tKHMi7E1KZERRKvKF30LYHGLWUPXomqv2YrZ20GtvoqzPunAB5DadTMqYyrJBcfrzyYcpVA6qWQGtJrP8z29O2+faiUxS0cGLq24OyNc0XnU5RKns3mGA7gU1O+sgtZ332utOux3uFWQQD3+twaBxAJe7ngu70TzINg2pL4JrcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BcT+27MJ; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BcT+27MJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707216782; x=1738752782;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9uQDvmNZjkwnGeIFN5mlmGI1UDGBBxNEzfYtOgWxsmM=;
-  b=BcT+27MJsnwSiVbfwzsT9ugDRD8J0k7ocl07M8w0iro6OWJQkH4d/yyD
-   xGRg38enTHGOxpYey2DR9A0LkpRV0VvJiktrG8TaB3P72NDakcgm618am
-   YOaX4hykr7W0J1pEwNPqtoWZ7F4DlDc5WKoDIHHSf3aXHYycN+eqFxBFn
-   08mZglcxXk+XsziV6gFwax7vLpyiLbi7xl8lkOjfEv2LOQRKRSTl2UT81
-   B33ZlXBPCDYuVTTREXUKpnA0DTQCofU+p3aFhQfFN35OXBAg9kWZaaz6n
-   XOckbAciZmG4Z6QDnELYnmxFK4o5RKMDML/5AnCQc8c8LWhbdbCXGQxlu
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="631470"
-X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
-   d="scan'208";a="631470"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 02:53:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
-   d="scan'208";a="38410556"
-Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 06 Feb 2024 02:53:01 -0800
-Received: from kbuild by 01f0647817ea with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rXJ4T-0001II-1W;
-	Tue, 06 Feb 2024 10:52:57 +0000
-Date: Tue, 6 Feb 2024 18:52:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Vincent Donnefort <vdonnefort@google.com>, rostedt@goodmis.org,
-	mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, mathieu.desnoyers@efficios.com,
-	kernel-team@android.com, Vincent Donnefort <vdonnefort@google.com>
-Subject: Re: [PATCH v14 4/6] tracing: Allow user-space mapping of the
- ring-buffer
-Message-ID: <202402061809.T2cv9J8W-lkp@intel.com>
-References: <20240205163410.2296552-5-vdonnefort@google.com>
+	s=arc-20240116; t=1707217279; c=relaxed/simple;
+	bh=S/gp/iNk5s/SxUEGNUOUBz+7FwLwrPc2i7zkwKKt8MY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uePftiiq37Jtf6aNScrh4RqSHbfUFkFW8yu2tS3uz7dySiuz5yBkPUx/QkDIjgcmbKVpPRTTVR68ZYWB9Gkzn/4NSX2snniy8ABQXTbVrz2M2olMzgtIo0eaOizDQ0bwGeUy1ywSYL+KuozdH1pDf/KdmZJ60zXs7IwaV8yG1YE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3906BC433C7;
+	Tue,  6 Feb 2024 11:01:17 +0000 (UTC)
+Date: Tue, 6 Feb 2024 06:01:13 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Sven Schnelle <svens@linux.ibm.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Mete Durlu <meted@linux.ibm.com>
+Subject: Re: [PATCH] tracing: use ring_buffer_record_is_set_on() in
+ tracer_tracing_is_on()
+Message-ID: <20240206060113.39c0f5bc@rorschach.local.home>
+In-Reply-To: <yt9dsf262d2n.fsf@linux.ibm.com>
+References: <20240205065340.2848065-1-svens@linux.ibm.com>
+	<20240205075504.1b55f29c@rorschach.local.home>
+	<yt9djznj3vbl.fsf@linux.ibm.com>
+	<20240205092353.523cc1ef@rorschach.local.home>
+	<yt9d34u63xxz.fsf@linux.ibm.com>
+	<yt9dsf262d2n.fsf@linux.ibm.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240205163410.2296552-5-vdonnefort@google.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Vincent,
+On Tue, 06 Feb 2024 09:48:16 +0100
+Sven Schnelle <svens@linux.ibm.com> wrote:
 
-kernel test robot noticed the following build warnings:
+> I added some logging, and the test is not triggering this issue. So i
+> assume the default of 128 cmdline entries is just to small. Sorry for
+> the noise. Lets see whether we're still triggering some failures with
+> the other fix applied in CI. If we do, maybe we want to increase the
+> saved_cmdline_size for the ftrace test suite.
 
-[auto build test WARNING on e2412e51fdea837b50ce31fea8e5dfc885237f3a]
+I wonder if it is a good idea to increase the size when tracing starts,
+like the ring buffer expanding code. Maybe to 1024? Or is that still
+too small?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Vincent-Donnefort/ring-buffer-Zero-ring-buffer-sub-buffers/20240206-004413
-base:   e2412e51fdea837b50ce31fea8e5dfc885237f3a
-patch link:    https://lore.kernel.org/r/20240205163410.2296552-5-vdonnefort%40google.com
-patch subject: [PATCH v14 4/6] tracing: Allow user-space mapping of the ring-buffer
-config: arc-defconfig (https://download.01.org/0day-ci/archive/20240206/202402061809.T2cv9J8W-lkp@intel.com/config)
-compiler: arc-elf-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240206/202402061809.T2cv9J8W-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402061809.T2cv9J8W-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   kernel/trace/trace.c: In function 'tracing_buffers_mmap_close':
->> kernel/trace/trace.c:8722:29: warning: unused variable 'tr' [-Wunused-variable]
-    8722 |         struct trace_array *tr = iter->tr;
-         |                             ^~
-   kernel/trace/trace.c: In function 'tracing_buffers_mmap':
-   kernel/trace/trace.c:8752:29: warning: unused variable 'tr' [-Wunused-variable]
-    8752 |         struct trace_array *tr = iter->tr;
-         |                             ^~
-
-
-vim +/tr +8722 kernel/trace/trace.c
-
-  8717	
-  8718	static void tracing_buffers_mmap_close(struct vm_area_struct *vma)
-  8719	{
-  8720		struct ftrace_buffer_info *info = vma->vm_file->private_data;
-  8721		struct trace_iterator *iter = &info->iter;
-> 8722		struct trace_array *tr = iter->tr;
-  8723	
-  8724		ring_buffer_unmap(iter->array_buffer->buffer, iter->cpu_file);
-  8725	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-- Steve
