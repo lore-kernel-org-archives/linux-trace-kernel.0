@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ECA17D400;
-	Wed,  7 Feb 2024 14:33:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2737E76E;
+	Wed,  7 Feb 2024 14:39:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707316381; cv=none; b=qaS8a/T5B0jyBQlRDEB/SFHFwmGgjXZznnBs5nr/cUp5yP8CCGn5it1HHeEkHbWOX+pIjPq5Sx2UKKYzeTAGZbDiy1pKQAmBiYwiVX4Lg+aHOCR4Y0y/n2K+oi3PZJJJg5naiGn5bpeFK9hduGh0Z1KA55Wu00fG0nQrXSBfQgo=
+	t=1707316783; cv=none; b=uyE0WvtDhKIbDBxfEoFIueYdELeaFvJIyGx0oRsnLhSBWDWltjU2Ul/HT5fijvjkmXK9kIo2qc1yGHJoClTsElQSzt1yWBkP5KoBTK9lZjHUNW19MRJ6qbta+6i4QpXXai9cZAdMUiX4RlRvwOMZrfcp50+grpP8jgYSe4q4JTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707316381; c=relaxed/simple;
-	bh=bxJjQ8zp5/wZKAbX888sLrtd1GMsGHbQwFH2TFebIu4=;
+	s=arc-20240116; t=1707316783; c=relaxed/simple;
+	bh=5SO8XoghfEJ9kt6J0CSha+AoXUiz+7SvGnwmVDAyX6o=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=bUFjPzebDKhwJ4g84L2ogxDntnKpwMOMim9LoHc+DYoiIRPui/VFLocex3EJDIktJk/mmjCHP90vRmzvD9qnxAsW1HgUW6Y7X9SWgSF45iI0yJ68v2jBLLIg1a/r+6LrnQb1TspRmtx6yqHmEtl9YI3Pjkj7KSJnb2pByz/AGWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jLmYWPV6; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=AvZ3aIJVw/aBzqKqqpauxhS/A+TfUC0FHXxZ2WQk//PkQkCuSVRcyLOoqokycZLkMczmjC1TjxJwLGqcnn9q7rwJtdnTlVgLhaFwVlxu7KBVN5a4xWU5zWtsM+gRSQ1GEfFHXdXMucDC0Q67Th8lDs6GE+xl4je/rUx+EP9zUz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lmF5if72; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jLmYWPV6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 552A5C433F1;
-	Wed,  7 Feb 2024 14:32:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lmF5if72"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81471C433C7;
+	Wed,  7 Feb 2024 14:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707316380;
-	bh=bxJjQ8zp5/wZKAbX888sLrtd1GMsGHbQwFH2TFebIu4=;
+	s=k20201202; t=1707316782;
+	bh=5SO8XoghfEJ9kt6J0CSha+AoXUiz+7SvGnwmVDAyX6o=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jLmYWPV6/fdm2GhyY4zcVd6HgReI0ZB643YZyPfHeJFnoIVNWL8agn9BuQ0yCnF6p
-	 wth+Ov6bgfMxWLjC10FJFU/DPrOpgqTyImbfV4h52d6P/ewbfgJE7CtyB1gHLoqOBE
-	 MkmMBkDDYGwxni3Qeyoo3LjI4naUbnMiN/I4zD+eIRFlo7z08svxe9bh+QF+0ode73
-	 tkP1e7FYr4oIGEfit58tzrY4WLLDKe1H7czBjr8kBCaDHuDoJhKLYPjlb8x80PMgNL
-	 OS5bH/0hCMurWyPH/US5ZB871BiN952jcv48y1yDriT81U6IrJOrIoJxn375ijrhBs
-	 +Bkm3ZGB4JQnw==
-Date: Wed, 7 Feb 2024 23:32:56 +0900
+	b=lmF5if72zIVb9Y4JuAHa5pZkhAIxphHTiU26VGqeK3WZRkr/tYp/AHreDIJ6nmqSD
+	 ZQyUIpgcDfNdybc4kfqUVCrchug8p87A2no1u/JxXirMYmj3e+lqpHGPRkgfZJRCyc
+	 43uYujwS+00u7lnUrpSUf97bUVzFI9kGQWkOra4s5Ng+Y/4YrGB9FQfPJykYbCBBK2
+	 ZHJvVmcNnkl7IEyGEuVoGaTtYS/lMrpReHGkQjM2Ew6wVVkfkXPtNsEST/oLRjAX1g
+	 zc5zdE2Z9pYItOKUBsnEk95Y+oAf5DBObdFB+gb6q8GRT6dH2rDCdI9iJhmEUsc849
+	 uckld7W2zOzyQ==
+Date: Wed, 7 Feb 2024 23:39:39 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Ye Bin <yebin10@huawei.com>
 Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
  <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 5/8] tracing: add new type "%pd/%pD" in readme_msg[]
-Message-Id: <20240207233256.10fe8dbc8451d5be8bb6ecd1@kernel.org>
-In-Reply-To: <20240125073923.2252057-6-yebin10@huawei.com>
+Subject: Re: [PATCH v5 7/8] selftests/ftrace: add kprobe test cases for VFS
+ type "%pd" and "%pD"
+Message-Id: <20240207233939.0450962199e2f1fdd8655540@kernel.org>
+In-Reply-To: <20240125073923.2252057-8-yebin10@huawei.com>
 References: <20240125073923.2252057-1-yebin10@huawei.com>
-	<20240125073923.2252057-6-yebin10@huawei.com>
+	<20240125073923.2252057-8-yebin10@huawei.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,33 +47,86 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 25 Jan 2024 15:39:20 +0800
+On Thu, 25 Jan 2024 15:39:22 +0800
 Ye Bin <yebin10@huawei.com> wrote:
 
+> This patch adds test cases for new print format type "%pd/%pD".The test cases
+> test the following items:
+> 1. Test README if add "%pd/%pD" type;
+> 2. Test "%pd" type for dput();
+> 3. Test "%pD" type for vfs_read();
+> 
+> This test case require enable CONFIG_HAVE_FUNCTION_ARG_ACCESS_API configuration.
+> 
 > Signed-off-by: Ye Bin <yebin10@huawei.com>
 > ---
->  kernel/trace/trace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../ftrace/test.d/kprobe/kprobe_args_vfs.tc   | 43 +++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
 > 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 2a7c6fd934e9..13197d3b86bd 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -5745,7 +5745,7 @@ static const char readme_msg[] =
->  	"\t           +|-[u]<offset>(<fetcharg>), \\imm-value, \\\"imm-string\"\n"
->  	"\t     type: s8/16/32/64, u8/16/32/64, x8/16/32/64, char, string, symbol,\n"
->  	"\t           b<bit-width>@<bit-offset>/<container-size>, ustring,\n"
-> -	"\t           symstr, <type>\\[<array-size>\\]\n"
-> +	"\t           symstr, %pd/%pD <type>\\[<array-size>\\]\n"
+> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
+> new file mode 100644
+> index 000000000000..cf0599b90f1a
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
+> @@ -0,0 +1,43 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# description: Kprobe event VFS type argument
+> +# requires: kprobe_events
+> +
+> +: "Test argument %pd/%pD in README"
+> +grep -q "%pd/%pD" README
 
-Almost! you missed the ',' after %pd/%pD. :)
+No. This means, if the kernel doesn't support %pd/%pD, this test fails.
+But the latest version of the ftracetest will be used for testing stable
+kernels (which will not support this feature).
+So you should make test returning 'unsupported' for that case.
+
+You can add a requirement as
+
+# requires: kprobe_events "%pd/%pD":README
+
+(e.g. tools/testing/selftests/ftrace/test.d/dynevent/eprobes_syntax_errors.tc)
 
 Thank you,
 
-
->  #ifdef CONFIG_HIST_TRIGGERS
->  	"\t    field: <stype> <name>;\n"
->  	"\t    stype: u8/u16/u32/u64, s8/s16/s32/s64, pid_t,\n"
+> +
+> +: "Test argument %pd with name"
+> +echo 'p:testprobe dput name=$arg1:%pd' > kprobe_events
+> +echo 1 > events/kprobes/testprobe/enable
+> +grep -q "1" events/kprobes/testprobe/enable
+> +echo 0 > events/kprobes/testprobe/enable
+> +grep "dput" trace | grep -q "enable"
+> +echo "" > kprobe_events
+> +echo "" > trace
+> +
+> +: "Test argument %pd without name"
+> +echo 'p:testprobe dput $arg1:%pd' > kprobe_events
+> +echo 1 > events/kprobes/testprobe/enable
+> +grep -q "1" events/kprobes/testprobe/enable
+> +echo 0 > events/kprobes/testprobe/enable
+> +grep "dput" trace | grep -q "enable"
+> +echo "" > kprobe_events
+> +echo "" > trace
+> +
+> +: "Test argument %pD with name"
+> +echo 'p:testprobe vfs_read name=$arg1:%pD' > kprobe_events
+> +echo 1 > events/kprobes/testprobe/enable
+> +grep -q "1" events/kprobes/testprobe/enable
+> +echo 0 > events/kprobes/testprobe/enable
+> +grep "vfs_read" trace | grep -q "enable"
+> +echo "" > kprobe_events
+> +echo "" > trace
+> +
+> +: "Test argument %pD without name"
+> +echo 'p:testprobe vfs_read $arg1:%pD' > kprobe_events
+> +echo 1 > events/kprobes/testprobe/enable
+> +grep -q "1"  events/kprobes/testprobe/enable
+> +echo 0 > events/kprobes/testprobe/enable
+> +grep "vfs_read" trace | grep -q "enable"
+> +echo "" > kprobe_events
+> +echo "" > trace
 > -- 
 > 2.31.1
 > 
