@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F757C08C;
-	Wed,  7 Feb 2024 14:29:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20FB57CF16;
+	Wed,  7 Feb 2024 14:31:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707316181; cv=none; b=uraitFycrI3lOkD+EMvISQ0vIYEateeyqc6lcVxkWw+gy+lSlkX4QWAM76IcGGCSN63H5u9yxAFA2oSTmrNABesfIQZN5zsPDRjCPgIzO2y+X+Q7le/Hx1S6CHQhtbrClwwb2nqN05NHrO63a5dZFYHkb7+efB+vJg8rFL74CCo=
+	t=1707316319; cv=none; b=mSk/Q5dDet+MrRf8/Q0n+NdXctrc5P+4Sclr99s/hmchVDuGxe/81hc7gNU9XyEqxPz7fh/Z0jJbup9h4LfYN4Mt2hmRBXjS6wqKZY46bBiW9maFzMohEG+fQdeRsmWe7h19F4hKbFC1qJM07nKWV7zm8V1d+HL5QcS43ICDgDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707316181; c=relaxed/simple;
-	bh=R+/WIaoIjD8psMbUkTSxqa/QWW5tlhPideSsKQwZD8w=;
+	s=arc-20240116; t=1707316319; c=relaxed/simple;
+	bh=BruKfoYyY7uGBswpNK7x1dXk12it/S1keDjlolw+HpU=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=IPsEkIma2Ft5Hh0/NQJhxNI3tMYbZ59Qdf0748299P1pKTxwncof2RD3d/Gj0bfnE8wmS8Ex2Qo3TjLOS+lp/2YILx/SAM1MO3zKGbBk3fwuqmvbd9V+TVbC/5AgADyvjZ5iy4JdlefFXbIsIhWMWtvYnmofQ49oWerfGOsLJuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WjxzIN1t; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=JV/0227xtqVbb1I9mipmfZNdyHp8VnLi7/JY+0lOV4+B4oCU+HIesi+mSWRFqVpSt9qBG3R0P82IkQuTiYM50S41kJ6hmoqF+slXEF+Cu7OK7omMMtKClg6AhBm698pr7SFSKq67Z22JjPCF57XJwFDxa2EQie40n9S8jsCuJrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eu++iotz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WjxzIN1t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1531FC43390;
-	Wed,  7 Feb 2024 14:29:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eu++iotz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDA4DC433F1;
+	Wed,  7 Feb 2024 14:31:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707316180;
-	bh=R+/WIaoIjD8psMbUkTSxqa/QWW5tlhPideSsKQwZD8w=;
+	s=k20201202; t=1707316318;
+	bh=BruKfoYyY7uGBswpNK7x1dXk12it/S1keDjlolw+HpU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WjxzIN1tbdYYh6j4dVl88fHHULYEYh5ctBDtDONlFRdDrWsVUgfSJUjpZmkwe3wfe
-	 7AiEfU0njpkprojuCB81YHVgPBKJXZz90TSUblmwkbmmUOKs3LwgmnaTvR2DyZOP6w
-	 /TKpRDk5u32+2uQOXHGvMF3ez7tMNZmlGo+HALs8LKrZJ3+gmw6djJwQ4g3lUrzESN
-	 oz5JIGjsyMR+anBL7dOdE8TfAG6zMHEM7DGwStXgLpW5RvZFTxrmCznfpuqFiVhJz6
-	 eD/oBU5KQt4+pnSOrJBurTv3Odvx6wu8QAUu0vxF2nO0KqUfLSJcMHadGeB/pbGEyO
-	 5Ez9qpUf24nUQ==
-Date: Wed, 7 Feb 2024 23:29:36 +0900
+	b=eu++iotzh8ZoOsnE5oECtw795jbt/pfDppxw/tQsMA37shxl6kw2q8zbKFIhBmCdi
+	 rwFs13SfMyjorG1j0sSL8ddw7Wd4+vlxpPVucvXTUwCaJ036lyXHGr92IstO+pq2Kf
+	 VhUAgxBkYzzXG4YXCU37DsebfL4jVHoUvw9WEwSXplAoKiE2qz1R0Xy8tjZK/1Dj+f
+	 S8S/GW6rajbU7mjPXlXj05p8fOCu531kavN3jTY2pe9g1H7gk1P8mE2Rq97/mgCO2p
+	 azmf+6ATsW0VAYJqrgkXWQopy0Ihzkl7HBtVl9zb6GjW1eJMIfmSPYEc0rNLXHMcLI
+	 ek4WFiD0ffxvA==
+Date: Wed, 7 Feb 2024 23:31:54 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Ye Bin <yebin10@huawei.com>
 Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
  <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 1/8] tracing/probes: add
- traceprobe_expand_dentry_args() helper
-Message-Id: <20240207232936.f93bbea10f920a263cb963b0@kernel.org>
-In-Reply-To: <20240125073923.2252057-2-yebin10@huawei.com>
+Subject: Re: [PATCH v5 4/8] tracing/probes: support '%pd/%pD' type for
+ fprobe
+Message-Id: <20240207233154.cd38fd0bf4891d66807c4ed9@kernel.org>
+In-Reply-To: <20240125073923.2252057-5-yebin10@huawei.com>
 References: <20240125073923.2252057-1-yebin10@huawei.com>
-	<20240125073923.2252057-2-yebin10@huawei.com>
+	<20240125073923.2252057-5-yebin10@huawei.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,107 +47,55 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi Ye,
-
-On Thu, 25 Jan 2024 15:39:16 +0800
+On Thu, 25 Jan 2024 15:39:19 +0800
 Ye Bin <yebin10@huawei.com> wrote:
 
-> Add traceprobe_expand_dentry_args() to expand dentry args. this API is
-> prepare to support "%pd" print format for kprobe.
+> Support print type '%pd/%pD' for print dentry's or file's name.
 > 
+
+nit: Looks good to me. but the patch ordering seems a bit strange.
+This should be next to [2/8].
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thank you,
+
 > Signed-off-by: Ye Bin <yebin10@huawei.com>
 > ---
->  kernel/trace/trace_probe.c | 50 ++++++++++++++++++++++++++++++++++++++
->  kernel/trace/trace_probe.h |  2 ++
->  2 files changed, 52 insertions(+)
+>  kernel/trace/trace_fprobe.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index 4dc74d73fc1d..0c1caf0f474a 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -1565,6 +1565,56 @@ const char **traceprobe_expand_meta_args(int argc, const char *argv[],
->  	return ERR_PTR(ret);
->  }
+> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
+> index 7d2ddbcfa377..988d68e906ad 100644
+> --- a/kernel/trace/trace_fprobe.c
+> +++ b/kernel/trace/trace_fprobe.c
+> @@ -976,6 +976,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+>  	char gbuf[MAX_EVENT_NAME_LEN];
+>  	char sbuf[KSYM_NAME_LEN];
+>  	char abuf[MAX_BTF_ARGS_LEN];
+> +	char *dbuf = NULL;
+>  	bool is_tracepoint = false;
+>  	struct tracepoint *tpoint = NULL;
+>  	struct traceprobe_parse_context ctx = {
+> @@ -1086,6 +1087,10 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+>  		argv = new_argv;
+>  	}
 >  
-> +/* @buf: *buf must be equal to NULL. Caller must to free *buf */
-> +int traceprobe_expand_dentry_args(int argc, const char *argv[], char **buf)
-> +{
-> +	int i, used, ret;
-> +	int bufsize = MAX_DENTRY_ARGS_LEN;
-
-nit: this bufsize is consistent, thus you should use the MAX_DENTRY_ARGS_LEN
-     directly. (or add 'const' or maybe you can update bufsize as remaining size)
-
-Thanks,
-
-> +	char *tmpbuf = NULL;
+> +	ret = traceprobe_expand_dentry_args(argc, argv, &dbuf);
+> +	if (ret)
+> +		goto out;
 > +
-> +	if (*buf)
-> +		return -EINVAL;
-> +
-> +	used = 0;
-> +	for (i = 0; i < argc; i++) {
-> +		if (glob_match("*:%pd", argv[i])) {
-> +			char *tmp;
-> +			char *equal;
-> +
-> +			if (!tmpbuf) {
-> +				tmpbuf = kmalloc(bufsize, GFP_KERNEL);
-> +				if (!tmpbuf)
-> +					return -ENOMEM;
-> +			}
-> +
-> +			tmp = kstrdup(argv[i], GFP_KERNEL);
-> +			if (!tmp)
-> +				goto nomem;
-> +
-> +			equal = strchr(tmp, '=');
-> +			if (equal)
-> +				*equal = '\0';
-> +			tmp[strlen(argv[i]) - 4] = '\0';
-> +			ret = snprintf(tmpbuf + used, bufsize - used,
-> +				       "%s%s+0x0(+0x%zx(%s)):string",
-> +				       equal ? tmp : "", equal ? "=" : "",
-> +				       offsetof(struct dentry, d_name.name),
-> +				       equal ? equal + 1 : tmp);
-> +			kfree(tmp);
-> +			if (ret >= bufsize - used)
-> +				goto nomem;
-> +			argv[i] = tmpbuf + used;
-> +			used += ret + 1;
-> +		}
-> +	}
-> +
-> +	*buf = tmpbuf;
-> +	return 0;
-> +nomem:
-> +	kfree(tmpbuf);
-> +	return -ENOMEM;
-> +}
-> +
->  void traceprobe_finish_parse(struct traceprobe_parse_context *ctx)
->  {
->  	clear_btf_context(ctx);
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index 850d9ecb6765..5800513439f3 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -34,6 +34,7 @@
->  #define MAX_ARRAY_LEN		64
->  #define MAX_ARG_NAME_LEN	32
->  #define MAX_BTF_ARGS_LEN	128
-> +#define MAX_DENTRY_ARGS_LEN	256
->  #define MAX_STRING_SIZE		PATH_MAX
->  #define MAX_ARG_BUF_LEN		(MAX_TRACE_ARGS * MAX_ARG_NAME_LEN)
+>  	/* setup a probe */
+>  	tf = alloc_trace_fprobe(group, event, symbol, tpoint, maxactive,
+>  				argc, is_return);
+> @@ -1131,6 +1136,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+>  	trace_probe_log_clear();
+>  	kfree(new_argv);
+>  	kfree(symbol);
+> +	kfree(dbuf);
+>  	return ret;
 >  
-> @@ -402,6 +403,7 @@ extern int traceprobe_parse_probe_arg(struct trace_probe *tp, int i,
->  const char **traceprobe_expand_meta_args(int argc, const char *argv[],
->  					 int *new_argc, char *buf, int bufsize,
->  					 struct traceprobe_parse_context *ctx);
-> +extern int traceprobe_expand_dentry_args(int argc, const char *argv[], char **buf);
->  
->  extern int traceprobe_update_arg(struct probe_arg *arg);
->  extern void traceprobe_free_probe_arg(struct probe_arg *arg);
+>  parse_error:
 > -- 
 > 2.31.1
 > 
