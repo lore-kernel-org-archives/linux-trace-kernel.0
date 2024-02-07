@@ -1,90 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127A77993B;
-	Wed,  7 Feb 2024 14:02:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1778977F20
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Feb 2024 14:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707314578; cv=none; b=TbmXhD5vQWzLdCvdCuOTYp2fJj/9apqXzVMVopeQVb24XMN11S6ydhw81pDwOLYoutdfANw4OpUZmxrNR+i1ZQgNloLgaISEjGJFP+Tc8aqJZ5UDxPd20kI7/cl2SEGD5+QP0Ehwj3D5e0iBYYHH9Rd0kDSWMUUoYz/R1RiFZeU=
+	t=1707315226; cv=none; b=pyHvGLNM17yL1bhELMe8XnlOFa9iZhtJ9R2f4zgFRbggIvMmsQUSeb6wrFzr3OVY8cMbAIa0kYBkFCEnQSeligHjQrixyzjxR0GGqbGq/W7Dxr9Ly6oZ4ONVTp42hNfaW/g+meo8nXeO8EI/y7DWWARx/MZs9hGecl124SvjPIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707314578; c=relaxed/simple;
-	bh=lBxlhXxu+GabBGVYKEg2jqp2jWZlucJFL35TxJDn30g=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=UE2CU/kzVPcWoW7rpZRWTSFGEkFkeCw+iX8WCalTWnLdPkHxORdT4FcW8sNl77VzUo7MIcAUqOdLw+glazONX10xyvmOmC+AzLxx9ekPUAIX1japYkbWSBrJHxfzCBZmAcFflQaXYphpqqHVwm+kabvUCcex4BNIj68IdUJL+WQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ci39I2UM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707315226; c=relaxed/simple;
+	bh=uDMXyMG6j9ONbezTC0mpLsB4ibSrcJDdL0htrYl1dP8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YKEJRjWhJeGa1pMHXpiH3XddwyqG0PzS93uJYEFm4FrllVE1Cce3pspot3nE+QsBsWDhLorMYXcLVKo6WncQTc9Q1fKKn9BHszZC4KvG+w456SWtZhFJFEDmfpQQJ8hCnnY6q98nC60YCeT7z5X4F2olz0hwQFyB7aSa5DiYIg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=AEM1TaGG; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ci39I2UM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD24EC433C7;
-	Wed,  7 Feb 2024 14:02:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707314577;
-	bh=lBxlhXxu+GabBGVYKEg2jqp2jWZlucJFL35TxJDn30g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ci39I2UM/1UznbgkKvJ+Pq/e4yXTdRC1m1r4sUF1lzDy9WHS0DHGYRF7/KYoCZ7mI
-	 aAGXnGZ4KUuLDGgnz7686QIXzdnOWOjfvE6pM68IZpqtgCNJ11OXxoqAZB43Y6+oy3
-	 HS+w5xemZauglfzhudqSI3/WUKl9rjo6qd01+efEnia+i7JV3eduxn6mnhqCM9TWKi
-	 pjFuRS7sJBdEuUeuqHdCjTiPWseSQj7Eo8+kdX1hDG2uaWBGF7FBlPXj8ZdNTW1/ko
-	 sY7WcmqeTZ9lnX0yFMekPHAikKn1SVqMkWWGO1GdHGzPitzbPS1ccz49HPhRSnC+Wi
-	 p7yW5KTCcX1wQ==
-Date: Wed, 7 Feb 2024 23:02:51 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt
- <rostedt@goodmis.org>, Florent Revest <revest@chromium.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v7 13/36] function_graph: Have the instances use their
- own ftrace_ops for filtering
-Message-Id: <20240207230251.48db0dd281aa13cbc223ed25@kernel.org>
-In-Reply-To: <170723219437.502590.17981699514070908579.stgit@devnote2>
-References: <170723204881.502590.11906735097521170661.stgit@devnote2>
-	<170723219437.502590.17981699514070908579.stgit@devnote2>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="AEM1TaGG"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d0a4e8444dso7815531fa.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Feb 2024 06:13:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google; t=1707315223; x=1707920023; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uDMXyMG6j9ONbezTC0mpLsB4ibSrcJDdL0htrYl1dP8=;
+        b=AEM1TaGGJL4wfEqm+2q9peXuocQIkjrQDjqZWUgmrqbKh2c6echwGBVUOkHYGtL1Jp
+         02AhZevn+De6PN7zGsB819FgrNnk/pvSqHSCA7PPW//BH4iRu3GtCxMeDnF34BH9WieF
+         R1hLL0ZneyOMPuS0eERh9ZDVSUIzkN/ZJ2rKg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707315223; x=1707920023;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uDMXyMG6j9ONbezTC0mpLsB4ibSrcJDdL0htrYl1dP8=;
+        b=RubFyadD4DRlxJTm62mwCVrwcqGBXuhLhijeZIpfM8y+8DxAc7J5x/PUuR+g00RkPu
+         jTCLkPcr6gKdOI6lF8hdRFDGt/WIMj4R3aDSaXDFBT4OadkzDplsbamlZlj7MjDiPzB2
+         jPNpdLVGFe68wD0qIW0O8NztGEYChWetFBnQyafRHeCzSS5BYuMULqG53a3BcK/vCLFC
+         Vp8zfiPClN0ELH7o6KGltUSk80USv+o0y8lYK1n35WUElJdjJFhQcko6NRrag2vNxJI5
+         R51xYmOUtVlK6NaQNs7QAgiASSBqTvSW5ha8baUI1uC1b7OEytgkWMH93bWObLff3TBN
+         cyWQ==
+X-Gm-Message-State: AOJu0YwWW2naJuar2ejcnMxf0knQ3FpnZtfoQGDLVQuNWK99UWeYL8ZE
+	apcqWoxe4gVqdJ2WYkJbAiBd3h/oaGiqGdaDEafPUQhis/538TPJuqbMpjN7nzIfv46oAaJhyfu
+	M9Ena66Q2lieb4YdIeevu1ewMHzJ+/7exTpfd3A==
+X-Google-Smtp-Source: AGHT+IED9YAP6IjuLO7QGzwihwwoadtsQqIErozgRiEhzKfXYz5J89hbN3mS6Tn00zxP0ae3LMxLBAw1f4m1Z4XB0YY=
+X-Received: by 2002:a2e:2206:0:b0:2d0:5f90:2b29 with SMTP id
+ i6-20020a2e2206000000b002d05f902b29mr4579555lji.12.1707315222978; Wed, 07 Feb
+ 2024 06:13:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20240206094650.1696566-1-quic_hyiwei@quicinc.com>
+ <50cdbe95-c14c-49db-86aa-458e87ae9513@joelfernandes.org> <20240207061429.3e29afc8@rorschach.local.home>
+In-Reply-To: <20240207061429.3e29afc8@rorschach.local.home>
+From: Joel Fernandes <joel@joelfernandes.org>
+Date: Wed, 7 Feb 2024 09:13:30 -0500
+Message-ID: <CAEXW_YSUD-CW_=BHbfrfPZAfRUtk_hys5r06uJP2TJJeYJb-1g@mail.gmail.com>
+Subject: Re: [PATCH v4] tracing: Support to dump instance traces by ftrace_dump_on_oops
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Huang Yiwei <quic_hyiwei@quicinc.com>, mhiramat@kernel.org, mark.rutland@arm.com, 
+	mcgrof@kernel.org, keescook@chromium.org, j.granados@samsung.com, 
+	mathieu.desnoyers@efficios.com, corbet@lwn.net, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, quic_bjorande@quicinc.com, quic_tsoni@quicinc.com, 
+	quic_satyap@quicinc.com, quic_aiquny@quicinc.com, kernel@quicinc.com, 
+	Ross Zwisler <zwisler@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed,  7 Feb 2024 00:09:54 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Wed, Feb 7, 2024 at 6:14=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
+>
+> On Wed, 7 Feb 2024 05:24:58 -0500
+> Joel Fernandes <joel@joelfernandes.org> wrote:
+>
+> > Btw, hopefully the "trace off on warning" and related boot parameters a=
+lso apply
+> > to instances, I haven't personally checked but I often couple those wit=
+h the
+> > dump-on-oops ones.
+>
+> Currently they do not. It would require an updated interface to do so,
+> as sometimes instances can be used to continue tracing after a warning,
+> so I don't want to make it for all instances.
 
-> diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
-> index 73858c9029cc..81d18b911cc1 100644
-> --- a/arch/loongarch/kernel/ftrace_dyn.c
-> +++ b/arch/loongarch/kernel/ftrace_dyn.c
-> @@ -241,10 +241,17 @@ void prepare_ftrace_return(unsigned long self_addr, unsigned long *parent)
->  void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
->  		       struct ftrace_ops *op, struct ftrace_regs *fregs)
->  {
-> +	struct fgraph_ops *gops = container_of(op, struct fgraph_ops, ops);
->  	struct pt_regs *regs = &fregs->regs;
->  	unsigned long *parent = (unsigned long *)&regs->regs[1];
->  
-> -	prepare_ftrace_return(ip, (unsigned long *)parent);
-> +	if (unlikely(atomic_read(&current->tracing_graph_pause)))
-> +		return;
-> +
-> +	old = *parent;
+Thanks for clarifying.
 
-Oops, this caused an error. 
+> Perhaps we need an option for these too, and have all options be
+> updated via the command line. That way we don't need to make special
+> boot line parameters for this. If we move these to options (keeping the
+> proc interface for backward compatibility) it would make most features
+> available to all with one change.
 
-> +
-> +	if (!function_graph_enter_ops(old, ip, 0, parent, gops))
+Agreed, that would be nice!!
 
-So this should be
-
-if (!function_graph_enter_ops(*parent, ip, 0, parent, gops))
-
-Thanks, 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+ - Joel
