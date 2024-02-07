@@ -1,170 +1,234 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4D31CABD;
-	Tue,  6 Feb 2024 23:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B577DF58;
+	Wed,  7 Feb 2024 02:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707262860; cv=none; b=Kz2UVN4E79WBfkJ/tWjb0ztx6LjnVyYvtSFcWcxGC3/nd11B0zKOPjNbK16iZMd4gD1x0mYAcDzr4kwNBwOiweKHahXW02EAV34wTk27BMAKpah3vacZdEVan4HGMpisBvH7iF2DdFTjk/FmiMtsnIioOnT3/iBb9X27uNWMrNo=
+	t=1707272936; cv=none; b=YVoY3SPHYgMLxyB/C/yUvBJEVATJExvKRQJPllVceZoC9EuMPYpTaJIY1VfRTIQGXhStROPVh7nmOCuo68UmbioAPdHT8c5eYEODLMdRy4J7NM2wvJ7zaBKDKxKEhywXBDxa6ZBY09CqIdmwLt8BIa4VmNhtVCH9j7YP9HkBw3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707262860; c=relaxed/simple;
-	bh=PRL2AU8Ec4e9wjqPqZ5xSv6RBbyoPP0VSFP7n7tEZso=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=SPYUPGzF0mHXXSDfwGe2Uszk2C4n5Pff/zfdi3mWHVZNlKwkKFetBScqvknRkZRTchRXoLoyc5Mbkz8/eF7nEO3frWSlYEBUX6PagNqHdcHlx5V8vEmNXM8Ye6NoN+YM2bqeRWCY0lxq3rK04VmV2KDn0QJSPQzKia8GRuTPBAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rZ3RpgqE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707272936; c=relaxed/simple;
+	bh=GAzfdjQyUQZQlsw/9SQ4PdngMFFUkF5iE/vp59Bqf/I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OI2HZL7c0oaEWHYqQwnp8SyB8Ph3/1Q9MRnf4v2uPOCZUeGTf3PiC7B4PXA8ctZrSWlcGmUdklp3gRZ8T4DcRa0U5kg4nXEfl77xiHlZ900mbs03RshgGIMZiVhT5Q13CgSqiMXPHw+5yYsyLp2nC+FGuTIrqzFiGv8fxKCjD+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QUkclYJR; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rZ3RpgqE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8EABC433C7;
-	Tue,  6 Feb 2024 23:40:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707262859;
-	bh=PRL2AU8Ec4e9wjqPqZ5xSv6RBbyoPP0VSFP7n7tEZso=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rZ3RpgqEI9xGCHR5iT0jRJXfgRa1YA/syYc2SWDw4ufHIbG61OvHeoaaF0tzQlCP2
-	 pzDR9VPlmI9rbOYkUPvDkMO/kWVdCfwgQTRmJov6TYZcBC7lV3VHDaHDMd+oILJwuL
-	 /ds+4i7rTEBSsM9Oab6c4VyN3s+tZJ0ofWbEFNvDnMQ6NcgiqEVkBTlYU2qlLCfUwi
-	 lIPaxnb5wW/DXVb4Qgf1NGPGNPNMU4Iqz2FYdoGkx+ziyyQu90FMir/DL4I5h/iUD1
-	 1K1JcvUKnnMrm/gf5gXM5GbJJFYu2I6jrUwe5yg9+pisoDAG/uELoZqwKkcmQ23HI4
-	 pDnWCVWEp8T1A==
-Date: Wed, 7 Feb 2024 08:40:54 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jinghao Jia <jinghao7@illinois.edu>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra
- <peterz@infradead.org>, Xin Li <xin@zytor.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] x86/kprobes: Boost more instructions from
- grp2/3/4/5
-Message-Id: <20240207084054.190a6103e40fe890363fb151@kernel.org>
-In-Reply-To: <14799708-1f90-464f-9432-5b11755c3fca@illinois.edu>
-References: <20240204031300.830475-1-jinghao7@illinois.edu>
-	<20240204031300.830475-4-jinghao7@illinois.edu>
-	<20240204210932.bd112a37dd3c276b046f6b16@kernel.org>
-	<14799708-1f90-464f-9432-5b11755c3fca@illinois.edu>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QUkclYJR"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3394ca0c874so128327f8f.2;
+        Tue, 06 Feb 2024 18:28:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707272929; x=1707877729; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+iVcz3g4MxUWRJae273hESZ7afXcLOcAGbcYewPQcZ4=;
+        b=QUkclYJRVNI9ZVjWQCWhMYViG515va0/LqMDJe5Fy8+FVGvD31iQFm7Er7pIW7j+om
+         AiBNTKFUzlqJJfUaTYBTWan1CdkobSQbgARmmBmLXqljHg30d1CIM6HHnWYeHHa9EMnK
+         1LabsdWw7kwFXyoZb27cTkdk1eNVdgEBL25gY9NZKnepsds7x0KucYs3gknSLaBtvKdM
+         jNBESIgmZ0tN8MrZTwYbJywp7OW4qS9ssqvLTDXCLuOaoHHL7OoK9/Be0OOKZKaTFfrf
+         ZjmoXzysr3KXcqRMl0zTzKhsOaSOSoTvFKJhDwKnFa/in1v0iucjvh60v4JnK0itf1za
+         JO7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707272929; x=1707877729;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+iVcz3g4MxUWRJae273hESZ7afXcLOcAGbcYewPQcZ4=;
+        b=ot4+nEDtmp2jhFhsQ6JSaGM80OYGlVqrkcfrrfY2nbjvsRucCQPWU0oFW+KqH0bab6
+         BWUdszJIbGAf+RZqUIi0KQyLPVFPTsLkK/HG9I8fh6lemxFkz2P7er75iv4/YxDxKEPv
+         KDFJYxxjMFJDLm/8dwC7lKQXgrks40+uQIadf6tB4nmxrTKxlUXq4mnWF362Z+HtBnkq
+         lyQyNRdGWiid6Ud9ybsR6LRdGM6RRVuSYt4gTtTqjvg0+ObHcITsH7q/A15eg6ZOQALt
+         XfEH9/Cn7PIHFfeQ6HqVLmdnHwyjLpb+IKZbdR0AaGQBKoMuAd8mN2TH8faS6vJR0Mf2
+         oSTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVJHYvDK8KBjG2sSQZaE6P2YVT+WoGFzeEpssFvPZFTXc6u44BY619syG8I62DkK2d9SgY8POvXwuWLk7w4oW+EjprCFNx1S8nC40myBD7CYiwpJ6voFtkcgNFPVmR6JixPKQeqsxPOWUApvETjF70q
+X-Gm-Message-State: AOJu0YyFFTBd8hyjx+yDytRxAOUflXs6kHyWKnGNFESmDnyishEgi64V
+	GmXo2IaWpdo4P+V5ikhey2ksFggjilnTBUiW3zkPaRdC+z2oElEnUg64VNFnTkQ+Og2hcBNVqtc
+	Zx2TBViKuPANttNW+3RPfzrXvfn/bEc3mmAE=
+X-Google-Smtp-Source: AGHT+IGL8HAR6YXekDae3plAm2kECL3tjVhSc5fDO//CWaL5/ApYDPvzX3p2iVkt+QMEDifp98018wjw21wAWXicRy0=
+X-Received: by 2002:a5d:4a90:0:b0:33b:3d7b:9df5 with SMTP id
+ o16-20020a5d4a90000000b0033b3d7b9df5mr2368927wrq.3.1707272929037; Tue, 06 Feb
+ 2024 18:28:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <ZcDwoce6Ok25K6Dm@FVFF77S0Q05N> <xhsmhmssehp6t.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAJNi4rMiGcP4wdA=1dSOXwYXOKSCWnN8FYxBaFdaAXBqAU_ePQ@mail.gmail.com> <xhsmhjznigcdr.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+In-Reply-To: <xhsmhjznigcdr.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+From: richard clark <richard.xnu.clark@gmail.com>
+Date: Wed, 7 Feb 2024 10:28:33 +0800
+Message-ID: <CAJNi4rPHhEMGbv9ndKxFLdTvdN9a3HBiRkT4jtTp0bOTYvWq0Q@mail.gmail.com>
+Subject: Re: Question about the ipi_raise filter usage and output
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Steven Rostedt <rostedt@goodmis.org>, nico@fluxnic.net, 
+	mhiramat@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 4 Feb 2024 22:39:32 -0600
-Jinghao Jia <jinghao7@illinois.edu> wrote:
+On Tue, Feb 6, 2024 at 5:39=E2=80=AFPM Valentin Schneider <vschneid@redhat.=
+com> wrote:
+>
+> You should have access to the generic fields which include the CPU from
+> which the event happens. Any of "CPU", "cpu" or "common_cpu" would match
+> this.
+>
+> So if you're on a recent enough kernel (v6.6 or above AFAICT), you should
+> be able to do something like so:
+>
+>   trace-cmd record -e 'ipi_raise' -f 'CPU & CPUS{7-42}' ./foo.sh
+>
+> If you just want to match a single CPU, or are on an older kernel, this
+> should work as well:
+>
+>   trace-cmd record -e 'ipi_raise' -f 'CPU =3D=3D 42' ./foo.sh
+>
+> For example on a QEMU x86 environment:
+>
+>   # trace-cmd record -e 'call_function*' -f 'CPU & CPUS{3}' hackbench
+>   Running in process mode with 10 groups using 40 file descriptors each (=
+=3D=3D 400 tasks)
+>   Each sender will pass 100 messages of 100 bytes
+>   Time: 0.396
+>   CPU0 data recorded at offset=3D0x738000
+>       0 bytes in size
+>   CPU1 data recorded at offset=3D0x738000
+>       0 bytes in size
+>   CPU2 data recorded at offset=3D0x738000
+>       0 bytes in size
+>   CPU3 data recorded at offset=3D0x738000
+>       4096 bytes in size
+>
+>   # trace-cmd report
+>   CPU 0 is empty
+>   CPU 1 is empty
+>   CPU 2 is empty
+>   cpus=3D4
+>             <idle>-0     [003]    29.704387: call_function_single_entry: =
+vector=3D251
+>             <idle>-0     [003]    29.704388: call_function_single_exit: v=
+ector=3D251
+>             <idle>-0     [003]    29.705950: call_function_single_entry: =
+vector=3D251
+>             <idle>-0     [003]    29.705951: call_function_single_exit: v=
+ector=3D251
+>             <idle>-0     [003]    29.706462: call_function_single_entry: =
+vector=3D251
+>             <idle>-0     [003]    29.706463: call_function_single_exit: v=
+ector=3D251
+>          hackbench-962   [003]    29.706501: call_function_single_entry: =
+vector=3D251
+>          hackbench-962   [003]    29.706502: call_function_single_exit: v=
+ector=3D251
+>          hackbench-955   [003]    29.706521: call_function_single_entry: =
+vector=3D251
+>          hackbench-955   [003]    29.706522: call_function_single_exit: v=
+ector=3D251
+>             <idle>-0     [003]    30.101812: call_function_single_entry: =
+vector=3D251
+>             <idle>-0     [003]    30.101814: call_function_single_exit: v=
+ector=3D251
+>             <idle>-0     [003]    30.101897: call_function_single_entry: =
+vector=3D251
+>             <idle>-0     [003]    30.101898: call_function_single_exit: v=
+ector=3D251
+>             <idle>-0     [003]    30.101985: call_function_single_entry: =
+vector=3D251
+>             <idle>-0     [003]    30.101986: call_function_single_exit: v=
+ector=3D251
+>             <idle>-0     [003]    30.102072: call_function_single_entry: =
+vector=3D251
+>             <idle>-0     [003]    30.102072: call_function_single_exit: v=
+ector=3D251
+>             <idle>-0     [003]    30.102161: call_function_single_entry: =
+vector=3D251
+>             <idle>-0     [003]    30.102161: call_function_single_exit: v=
+ector=3D251
+>             <idle>-0     [003]    30.102250: call_function_single_entry: =
+vector=3D251
+>             <idle>-0     [003]    30.102251: call_function_single_exit: v=
+ector=3D251
+>             <idle>-0     [003]    30.102372: call_function_single_entry: =
+vector=3D251
+>             <idle>-0     [003]    30.102372: call_function_single_exit: v=
+ector=3D251
+>
+>
+>   CPU 0 is empty
+>   CPU 1 is empty
+>   CPU 2 is empty
+>   cpus=3D4
+>           <idle>-0     [003]  1067.718304: call_function_single_entry: ve=
+ctor=3D251
+>           <idle>-0     [003]  1067.718309: call_function_single_exit: vec=
+tor=3D251
+>
+> and that behaves the same as
+>
+>   trace-cmd record -e 'call_function*' -f 'CPU =3D=3D 3' hackbench
+>
+Thanks, # trace-cmd record -e 'ipi' -f 'CPU=3D=3D10 || CPU=3D=3D11' -f
+'reason=3D=3D"Function call interrupts"' works:
+CPU0 data recorded at offset=3D0x336000
+    0 bytes in size
+CPU1 data recorded at offset=3D0x336000
+    0 bytes in size
+CPU2 data recorded at offset=3D0x336000
+    0 bytes in size
+CPU3 data recorded at offset=3D0x336000
+    0 bytes in size
+CPU4 data recorded at offset=3D0x336000
+    0 bytes in size
+CPU5 data recorded at offset=3D0x336000
+    0 bytes in size
+CPU6 data recorded at offset=3D0x336000
+    0 bytes in size
+CPU7 data recorded at offset=3D0x336000
+    0 bytes in size
+CPU8 data recorded at offset=3D0x336000
+    0 bytes in size
+CPU9 data recorded at offset=3D0x336000
+    0 bytes in size
+CPU10 data recorded at offset=3D0x336000
+    4096 bytes in size
+CPU11 data recorded at offset=3D0x337000
+    4096 bytes in size
 
-> On 2/4/24 06:09, Masami Hiramatsu (Google) wrote:
-> > On Sat,  3 Feb 2024 21:13:00 -0600
-> > Jinghao Jia <jinghao7@illinois.edu> wrote:
-> > 
-> >> With the instruction decoder, we are now able to decode and recognize
-> >> instructions with opcode extensions. There are more instructions in
-> >> these groups that can be boosted:
-> >>
-> >> Group 2: ROL, ROR, RCL, RCR, SHL/SAL, SHR, SAR
-> >> Group 3: TEST, NOT, NEG, MUL, IMUL, DIV, IDIV
-> >> Group 4: INC, DEC (byte operation)
-> >> Group 5: INC, DEC (word/doubleword/quadword operation)
-> >>
-> >> These instructions are not boosted previously because there are reserved
-> >> opcodes within the groups, e.g., group 2 with ModR/M.nnn == 110 is
-> >> unmapped. As a result, kprobes attached to them requires two int3 traps
-> >> as being non-boostable also prevents jump-optimization.
-> >>
-> >> Some simple tests on QEMU show that after boosting and jump-optimization
-> >> a single kprobe on these instructions with an empty pre-handler runs 10x
-> >> faster (~1000 cycles vs. ~100 cycles).
-> >>
-> >> Since these instructions are mostly ALU operations and do not touch
-> >> special registers like RIP, let's boost them so that we get the
-> >> performance benefit.
-> >>
-> > 
-> > This looks good to me. And can you check how many instructions in the
-> > vmlinux will be covered by this change typically?
-> > 
-> 
-> I collected the stats from the LLVM CodeGen backend on kernel version 6.7.3
-> using Gentoo's dist-kernel config (with a mod2yesconfig to make modules
-> builtin) and here are the number of Grp 2/3/4/5 instructions that are newly
-> covered by this patch:
-> 
-> Kernel total # of insns:    28552017    (from objdump)
-> Grp2 insns:                 286249      (from LLVM)
-> Grp3 insns:                 286556      (from LLVM)
-> Grp4 insns:                 5832        (from LLVM)
-> Grp5 insns:                 146314      (from LLVM)
-> 
-> Note that using LLVM means we miss the stats from inline assembly and
-> assembly source files.
+# trace-cmd report
+CPU 0 is empty
+CPU 1 is empty
+CPU 2 is empty
+CPU 3 is empty
+CPU 4 is empty
+CPU 5 is empty
+CPU 6 is empty
+CPU 7 is empty
+CPU 8 is empty
+CPU 9 is empty
+cpus=3D12
+          insmod-8519  [010] 170847.580062: ipi_raise:
+target_mask=3D00000000,00000bff (Function call interrupts)
+          <idle>-0     [011] 170847.580070: ipi_entry:
+(Function call interrupts)
+          <idle>-0     [011] 170847.580071: ipi_exit:
+(Function call interrupts)
+          insmod-8519  [010] 170847.580078: ipi_raise:
+target_mask=3D00000000,00000bff (Function call interrupts)
+          <idle>-0     [011] 170847.580080: ipi_entry:
+(Function call interrupts)
+          <idle>-0     [011] 170847.580080: ipi_exit:
+(Function call interrupts)
+          insmod-8519  [010] 170847.580282: ipi_raise:
+target_mask=3D00000000,00000002 (Function call interrupts)
+          insmod-8519  [010] 170847.580329: ipi_raise:
+target_mask=3D00000000,00000800 (Function call interrupts)
+          <idle>-0     [011] 170847.580331: ipi_entry:
+(Function call interrupts)
+          <idle>-0     [011] 170847.580343: ipi_exit:
+(Function call interrupts)
 
-Thanks for checking! so it increases the coverage ~2.5% :)
-
-Thank you,
- 
-
-> 
-> --Jinghao
-> 
-> > Thank you,
-> > 
-> >> Signed-off-by: Jinghao Jia <jinghao7@illinois.edu>
-> >> ---
-> >>  arch/x86/kernel/kprobes/core.c | 23 +++++++++++++++++------
-> >>  1 file changed, 17 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-> >> index 7a08d6a486c8..530f6d4b34f4 100644
-> >> --- a/arch/x86/kernel/kprobes/core.c
-> >> +++ b/arch/x86/kernel/kprobes/core.c
-> >> @@ -169,22 +169,33 @@ bool can_boost(struct insn *insn, void *addr)
-> >>  	case 0x62:		/* bound */
-> >>  	case 0x70 ... 0x7f:	/* Conditional jumps */
-> >>  	case 0x9a:		/* Call far */
-> >> -	case 0xc0 ... 0xc1:	/* Grp2 */
-> >>  	case 0xcc ... 0xce:	/* software exceptions */
-> >> -	case 0xd0 ... 0xd3:	/* Grp2 */
-> >>  	case 0xd6:		/* (UD) */
-> >>  	case 0xd8 ... 0xdf:	/* ESC */
-> >>  	case 0xe0 ... 0xe3:	/* LOOP*, JCXZ */
-> >>  	case 0xe8 ... 0xe9:	/* near Call, JMP */
-> >>  	case 0xeb:		/* Short JMP */
-> >>  	case 0xf0 ... 0xf4:	/* LOCK/REP, HLT */
-> >> -	case 0xf6 ... 0xf7:	/* Grp3 */
-> >> -	case 0xfe:		/* Grp4 */
-> >>  		/* ... are not boostable */
-> >>  		return false;
-> >> +	case 0xc0 ... 0xc1:	/* Grp2 */
-> >> +	case 0xd0 ... 0xd3:	/* Grp2 */
-> >> +		/*
-> >> +		 * AMD uses nnn == 110 as SHL/SAL, but Intel makes it reserved.
-> >> +		 */
-> >> +		return X86_MODRM_REG(insn->modrm.bytes[0]) != 0b110;
-> >> +	case 0xf6 ... 0xf7:	/* Grp3 */
-> >> +		/* AMD uses nnn == 001 as TEST, but Intel makes it reserved. */
-> >> +		return X86_MODRM_REG(insn->modrm.bytes[0]) != 0b001;
-> >> +	case 0xfe:		/* Grp4 */
-> >> +		/* Only INC and DEC are boostable */
-> >> +		return X86_MODRM_REG(insn->modrm.bytes[0]) == 0b000 ||
-> >> +		       X86_MODRM_REG(insn->modrm.bytes[0]) == 0b001;
-> >>  	case 0xff:		/* Grp5 */
-> >> -		/* Only indirect jmp is boostable */
-> >> -		return X86_MODRM_REG(insn->modrm.bytes[0]) == 4;
-> >> +		/* Only INC, DEC, and indirect JMP are boostable */
-> >> +		return X86_MODRM_REG(insn->modrm.bytes[0]) == 0b000 ||
-> >> +		       X86_MODRM_REG(insn->modrm.bytes[0]) == 0b001 ||
-> >> +		       X86_MODRM_REG(insn->modrm.bytes[0]) == 0b100;
-> >>  	default:
-> >>  		return true;
-> >>  	}
-> >> -- 
-> >> 2.43.0
-> >>
-> > 
-> > 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+BTW: where does 12 come from in 'cpus=3D12' :-)
