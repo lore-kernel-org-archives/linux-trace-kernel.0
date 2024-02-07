@@ -1,37 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D6925601;
-	Wed,  7 Feb 2024 11:09:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802D519470;
+	Wed,  7 Feb 2024 11:14:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707304170; cv=none; b=ICSCClr7k0wRfvnci9qab8ceDHfrR5v9y4zpLBlsvXfNWv0/3UIcLmEV0b5aiw5rD4/FhRRjvLnyjytzpbGoj5CFIxyAXsWN4h83ivRDMUDCnL8dFTearTj46Xvt/UTP5aQWaPOMxsPMm0YU1xODtEfNA/kXeO+OsjRGistjsjA=
+	t=1707304477; cv=none; b=ci3VkIP4JiR1yPpXu5j9CR2dKQX7L0xcMcmEJnYtlKv0yL+drvEkYU7JWOsS9dKNcvWGlwlNq1c8hH5uHNthGtTWfiLT+uCyDPJVE4lcOkuiyeUH3Vja6ERnX9rgQzWswWDSogF3jRuQcAaehcnsqEDIjd1HPjM/yfycaTP6Tac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707304170; c=relaxed/simple;
-	bh=3d920/gg0NJob19M4Cyq7mli11h+3maiACOkvHgQw6E=;
+	s=arc-20240116; t=1707304477; c=relaxed/simple;
+	bh=9jzCdFGI3TfxRBeaXMxWU6D4GDbQ3HqO5eHHtKZjJ1g=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ktjqs3QwqvYHsmw926cvaPkqRobGBO/LjcdHF/5GimeJ1NMw5KV43ojaQq94v4V58JQT9RqoaoYtwj9ncYMboV7IPlwWPjcs00CMuN64Yq77XBsikH5uUsmHcTSP3HW/5CaYpnrsof8x0q04RONyG92sujr8hX2j114Qm8U2mM4=
+	 MIME-Version:Content-Type; b=rE2wOaALEar3sM+0vPKts389q9keuAYDZ0GASHoEer9zK+hVSXswJYlOg5whgDNdTeMrC7AVWAkBOWOZAeBdPUyoJWb5mhiyQfFJPmCVOUz9XZk9V8U3e/X70b8JsSBIzPpZ9Tx9FgSYKnn0CGYZBSPdWUEF3lvrm0lxz2YpNlw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 945EEC43390;
-	Wed,  7 Feb 2024 11:09:28 +0000 (UTC)
-Date: Wed, 7 Feb 2024 06:09:23 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD655C433F1;
+	Wed,  7 Feb 2024 11:14:32 +0000 (UTC)
+Date: Wed, 7 Feb 2024 06:14:29 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Sven Schnelle <svens@linux.ibm.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Mete Durlu <meted@linux.ibm.com>
-Subject: Re: [PATCH] tracing: use ring_buffer_record_is_set_on() in
- tracer_tracing_is_on()
-Message-ID: <20240207060923.182ecb55@rorschach.local.home>
-In-Reply-To: <yt9deddovn3w.fsf@linux.ibm.com>
-References: <20240205065340.2848065-1-svens@linux.ibm.com>
-	<20240205075504.1b55f29c@rorschach.local.home>
-	<yt9djznj3vbl.fsf@linux.ibm.com>
-	<20240205092353.523cc1ef@rorschach.local.home>
-	<yt9d34u63xxz.fsf@linux.ibm.com>
-	<yt9dsf262d2n.fsf@linux.ibm.com>
-	<20240206060113.39c0f5bc@rorschach.local.home>
-	<yt9deddovn3w.fsf@linux.ibm.com>
+To: Joel Fernandes <joel@joelfernandes.org>
+Cc: Huang Yiwei <quic_hyiwei@quicinc.com>, mhiramat@kernel.org,
+ mark.rutland@arm.com, mcgrof@kernel.org, keescook@chromium.org,
+ j.granados@samsung.com, mathieu.desnoyers@efficios.com, corbet@lwn.net,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+ quic_bjorande@quicinc.com, quic_tsoni@quicinc.com, quic_satyap@quicinc.com,
+ quic_aiquny@quicinc.com, kernel@quicinc.com, Ross Zwisler
+ <zwisler@google.com>
+Subject: Re: [PATCH v4] tracing: Support to dump instance traces by
+ ftrace_dump_on_oops
+Message-ID: <20240207061429.3e29afc8@rorschach.local.home>
+In-Reply-To: <50cdbe95-c14c-49db-86aa-458e87ae9513@joelfernandes.org>
+References: <20240206094650.1696566-1-quic_hyiwei@quicinc.com>
+	<50cdbe95-c14c-49db-86aa-458e87ae9513@joelfernandes.org>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,23 +41,21 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 07 Feb 2024 06:50:59 +0100
-Sven Schnelle <svens@linux.ibm.com> wrote:
+On Wed, 7 Feb 2024 05:24:58 -0500
+Joel Fernandes <joel@joelfernandes.org> wrote:
 
-> Hi Steven,
+> Btw, hopefully the "trace off on warning" and related boot parameters also apply
+> to instances, I haven't personally checked but I often couple those with the
+> dump-on-oops ones.
 
-> Not sure whether that is enough, have to test. However, it's not really
-> a fix, it would just require a bit more load and the test would fail
-> again. The fundamental problem is that even after disabling tracing
-> there might be some tracing line added due to the lockless nature of
-> the ringbuffer. This might then replace some existing cmdline entry.
-> So maybe we should change the test to ignore the program name when
-> calculating the checksums.
+Currently they do not. It would require an updated interface to do so,
+as sometimes instances can be used to continue tracing after a warning,
+so I don't want to make it for all instances.
 
-Have you figured out what caused the cmdlines to change when tracing is
-off. It shouldn't be updated even with just 128 entries.
-
-I'm also looking into a way to keep more of a LRU command lines around,
-but nothing concrete yet.
+Perhaps we need an option for these too, and have all options be
+updated via the command line. That way we don't need to make special
+boot line parameters for this. If we move these to options (keeping the
+proc interface for backward compatibility) it would make most features
+available to all with one change.
 
 -- Steve
