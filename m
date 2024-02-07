@@ -1,137 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2737E76E;
-	Wed,  7 Feb 2024 14:39:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D641B7FBDE;
+	Wed,  7 Feb 2024 15:47:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707316783; cv=none; b=uyE0WvtDhKIbDBxfEoFIueYdELeaFvJIyGx0oRsnLhSBWDWltjU2Ul/HT5fijvjkmXK9kIo2qc1yGHJoClTsElQSzt1yWBkP5KoBTK9lZjHUNW19MRJ6qbta+6i4QpXXai9cZAdMUiX4RlRvwOMZrfcp50+grpP8jgYSe4q4JTA=
+	t=1707320829; cv=none; b=in4zsczbZ19tRAEAPqiwx6VxejN9G6y9N/DH+XUys3TmSh/ENeQp+aWXu/qxn5XMLDvYpeo+wQEUNyFgQDkLEhDVdmrtuBuQ/nLdzhzOOkhaodPkexUjaJx0Lk/Fcvt06gMGnMCPFW0UOs+x6ZPCJB3QmL4L1crSfWeLc1OwHjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707316783; c=relaxed/simple;
-	bh=5SO8XoghfEJ9kt6J0CSha+AoXUiz+7SvGnwmVDAyX6o=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=AvZ3aIJVw/aBzqKqqpauxhS/A+TfUC0FHXxZ2WQk//PkQkCuSVRcyLOoqokycZLkMczmjC1TjxJwLGqcnn9q7rwJtdnTlVgLhaFwVlxu7KBVN5a4xWU5zWtsM+gRSQ1GEfFHXdXMucDC0Q67Th8lDs6GE+xl4je/rUx+EP9zUz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lmF5if72; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lmF5if72"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81471C433C7;
-	Wed,  7 Feb 2024 14:39:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707316782;
-	bh=5SO8XoghfEJ9kt6J0CSha+AoXUiz+7SvGnwmVDAyX6o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=lmF5if72zIVb9Y4JuAHa5pZkhAIxphHTiU26VGqeK3WZRkr/tYp/AHreDIJ6nmqSD
-	 ZQyUIpgcDfNdybc4kfqUVCrchug8p87A2no1u/JxXirMYmj3e+lqpHGPRkgfZJRCyc
-	 43uYujwS+00u7lnUrpSUf97bUVzFI9kGQWkOra4s5Ng+Y/4YrGB9FQfPJykYbCBBK2
-	 ZHJvVmcNnkl7IEyGEuVoGaTtYS/lMrpReHGkQjM2Ew6wVVkfkXPtNsEST/oLRjAX1g
-	 zc5zdE2Z9pYItOKUBsnEk95Y+oAf5DBObdFB+gb6q8GRT6dH2rDCdI9iJhmEUsc849
-	 uckld7W2zOzyQ==
-Date: Wed, 7 Feb 2024 23:39:39 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Ye Bin <yebin10@huawei.com>
-Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
- <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 7/8] selftests/ftrace: add kprobe test cases for VFS
- type "%pd" and "%pD"
-Message-Id: <20240207233939.0450962199e2f1fdd8655540@kernel.org>
-In-Reply-To: <20240125073923.2252057-8-yebin10@huawei.com>
-References: <20240125073923.2252057-1-yebin10@huawei.com>
-	<20240125073923.2252057-8-yebin10@huawei.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1707320829; c=relaxed/simple;
+	bh=OjwsOP8AG5skKI4fhs6803ooEFYrGsVmNA28weA5DaU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JMckhjV7R44HvAvt6JX4FkNenE8sjGbE368J1ZnGfiUzVrHjUqii6omKQOImiH3Kf/CmD3mxF32/lXU8y0ONw25zdvJDX9JpzRUUNd2kioaHvE2vqSvfgqd7zpLnE7iZyNLAKbBNmC0p3E8eGRo41t3L9S7b6eZauiWomo9GGyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7176C433F1;
+	Wed,  7 Feb 2024 15:47:07 +0000 (UTC)
+Date: Wed, 7 Feb 2024 10:47:03 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Sven Schnelle <svens@linux.ibm.com>
+Cc: Mete Durlu <meted@linux.ibm.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: use ring_buffer_record_is_set_on() in
+ tracer_tracing_is_on()
+Message-ID: <20240207104703.071ee985@rorschach.local.home>
+In-Reply-To: <yt9dzfwch00u.fsf@linux.ibm.com>
+References: <20240205065340.2848065-1-svens@linux.ibm.com>
+	<20240205075504.1b55f29c@rorschach.local.home>
+	<yt9djznj3vbl.fsf@linux.ibm.com>
+	<20240205092353.523cc1ef@rorschach.local.home>
+	<yt9d34u63xxz.fsf@linux.ibm.com>
+	<yt9dsf262d2n.fsf@linux.ibm.com>
+	<20240206060113.39c0f5bc@rorschach.local.home>
+	<yt9deddovn3w.fsf@linux.ibm.com>
+	<20240207060923.182ecb55@rorschach.local.home>
+	<9a062196-ccbe-440e-a2f9-23eb8c5eb837@linux.ibm.com>
+	<20240207072812.4a29235f@rorschach.local.home>
+	<yt9dzfwch00u.fsf@linux.ibm.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 25 Jan 2024 15:39:22 +0800
-Ye Bin <yebin10@huawei.com> wrote:
+On Wed, 07 Feb 2024 14:33:21 +0100
+Sven Schnelle <svens@linux.ibm.com> wrote:
 
-> This patch adds test cases for new print format type "%pd/%pD".The test cases
-> test the following items:
-> 1. Test README if add "%pd/%pD" type;
-> 2. Test "%pd" type for dput();
-> 3. Test "%pD" type for vfs_read();
+> My assumption without reading the code is that something like this
+> happens:
 > 
-> This test case require enable CONFIG_HAVE_FUNCTION_ARG_ACCESS_API configuration.
-> 
-> Signed-off-by: Ye Bin <yebin10@huawei.com>
-> ---
->  .../ftrace/test.d/kprobe/kprobe_args_vfs.tc   | 43 +++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
-> 
-> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
-> new file mode 100644
-> index 000000000000..cf0599b90f1a
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
-> @@ -0,0 +1,43 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +# description: Kprobe event VFS type argument
-> +# requires: kprobe_events
-> +
-> +: "Test argument %pd/%pD in README"
-> +grep -q "%pd/%pD" README
+> CPU0                             CPU1
+> [ringbuffer enabled]
+>                                  ring_buffer_write()
+>                                      if (atomic_read(&buffer->record_disabled))
+>                                             goto out;
+> echo 0 > tracing_on
+> record_disabled |= RB_BUFFER_OFF
+> csum1=`md5sum trace`
 
-No. This means, if the kernel doesn't support %pd/%pD, this test fails.
-But the latest version of the ftracetest will be used for testing stable
-kernels (which will not support this feature).
-So you should make test returning 'unsupported' for that case.
+Note, the CPU1 is performing with preemption disabled, so for this to
+happen, something really bad happened on CPU0 to delay preempt disabled
+section so long to allow the trace to be read. Perhaps we should have
+the return of the echo 0 > tracing_on require a synchronize_rcu() to
+make sure all ring buffers see it disabled before it returns.
 
-You can add a requirement as
+But unless your system is doing something really stressed to cause the
+preempt disabled section to take so long, I highly doubt this was the
+race.
 
-# requires: kprobe_events "%pd/%pD":README
-
-(e.g. tools/testing/selftests/ftrace/test.d/dynevent/eprobes_syntax_errors.tc)
-
-Thank you,
-
-> +
-> +: "Test argument %pd with name"
-> +echo 'p:testprobe dput name=$arg1:%pd' > kprobe_events
-> +echo 1 > events/kprobes/testprobe/enable
-> +grep -q "1" events/kprobes/testprobe/enable
-> +echo 0 > events/kprobes/testprobe/enable
-> +grep "dput" trace | grep -q "enable"
-> +echo "" > kprobe_events
-> +echo "" > trace
-> +
-> +: "Test argument %pd without name"
-> +echo 'p:testprobe dput $arg1:%pd' > kprobe_events
-> +echo 1 > events/kprobes/testprobe/enable
-> +grep -q "1" events/kprobes/testprobe/enable
-> +echo 0 > events/kprobes/testprobe/enable
-> +grep "dput" trace | grep -q "enable"
-> +echo "" > kprobe_events
-> +echo "" > trace
-> +
-> +: "Test argument %pD with name"
-> +echo 'p:testprobe vfs_read name=$arg1:%pD' > kprobe_events
-> +echo 1 > events/kprobes/testprobe/enable
-> +grep -q "1" events/kprobes/testprobe/enable
-> +echo 0 > events/kprobes/testprobe/enable
-> +grep "vfs_read" trace | grep -q "enable"
-> +echo "" > kprobe_events
-> +echo "" > trace
-> +
-> +: "Test argument %pD without name"
-> +echo 'p:testprobe vfs_read $arg1:%pD' > kprobe_events
-> +echo 1 > events/kprobes/testprobe/enable
-> +grep -q "1"  events/kprobes/testprobe/enable
-> +echo 0 > events/kprobes/testprobe/enable
-> +grep "vfs_read" trace | grep -q "enable"
-> +echo "" > kprobe_events
-> +echo "" > trace
-> -- 
-> 2.31.1
-> 
-> 
+-- Steve
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>                                  [adds trace entry to ring buffer,
+>                                   overwriting savedcmd_lines entry because
+>                                   it thinks ring buffer is enabled]
+> csum2=`md5sum trace`
+
