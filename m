@@ -1,99 +1,157 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1778977F20
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Feb 2024 14:13:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F757C08C;
+	Wed,  7 Feb 2024 14:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707315226; cv=none; b=pyHvGLNM17yL1bhELMe8XnlOFa9iZhtJ9R2f4zgFRbggIvMmsQUSeb6wrFzr3OVY8cMbAIa0kYBkFCEnQSeligHjQrixyzjxR0GGqbGq/W7Dxr9Ly6oZ4ONVTp42hNfaW/g+meo8nXeO8EI/y7DWWARx/MZs9hGecl124SvjPIc=
+	t=1707316181; cv=none; b=uraitFycrI3lOkD+EMvISQ0vIYEateeyqc6lcVxkWw+gy+lSlkX4QWAM76IcGGCSN63H5u9yxAFA2oSTmrNABesfIQZN5zsPDRjCPgIzO2y+X+Q7le/Hx1S6CHQhtbrClwwb2nqN05NHrO63a5dZFYHkb7+efB+vJg8rFL74CCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707315226; c=relaxed/simple;
-	bh=uDMXyMG6j9ONbezTC0mpLsB4ibSrcJDdL0htrYl1dP8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YKEJRjWhJeGa1pMHXpiH3XddwyqG0PzS93uJYEFm4FrllVE1Cce3pspot3nE+QsBsWDhLorMYXcLVKo6WncQTc9Q1fKKn9BHszZC4KvG+w456SWtZhFJFEDmfpQQJ8hCnnY6q98nC60YCeT7z5X4F2olz0hwQFyB7aSa5DiYIg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=AEM1TaGG; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
+	s=arc-20240116; t=1707316181; c=relaxed/simple;
+	bh=R+/WIaoIjD8psMbUkTSxqa/QWW5tlhPideSsKQwZD8w=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=IPsEkIma2Ft5Hh0/NQJhxNI3tMYbZ59Qdf0748299P1pKTxwncof2RD3d/Gj0bfnE8wmS8Ex2Qo3TjLOS+lp/2YILx/SAM1MO3zKGbBk3fwuqmvbd9V+TVbC/5AgADyvjZ5iy4JdlefFXbIsIhWMWtvYnmofQ49oWerfGOsLJuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WjxzIN1t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="AEM1TaGG"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d0a4e8444dso7815531fa.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Feb 2024 06:13:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1707315223; x=1707920023; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uDMXyMG6j9ONbezTC0mpLsB4ibSrcJDdL0htrYl1dP8=;
-        b=AEM1TaGGJL4wfEqm+2q9peXuocQIkjrQDjqZWUgmrqbKh2c6echwGBVUOkHYGtL1Jp
-         02AhZevn+De6PN7zGsB819FgrNnk/pvSqHSCA7PPW//BH4iRu3GtCxMeDnF34BH9WieF
-         R1hLL0ZneyOMPuS0eERh9ZDVSUIzkN/ZJ2rKg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707315223; x=1707920023;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uDMXyMG6j9ONbezTC0mpLsB4ibSrcJDdL0htrYl1dP8=;
-        b=RubFyadD4DRlxJTm62mwCVrwcqGBXuhLhijeZIpfM8y+8DxAc7J5x/PUuR+g00RkPu
-         jTCLkPcr6gKdOI6lF8hdRFDGt/WIMj4R3aDSaXDFBT4OadkzDplsbamlZlj7MjDiPzB2
-         jPNpdLVGFe68wD0qIW0O8NztGEYChWetFBnQyafRHeCzSS5BYuMULqG53a3BcK/vCLFC
-         Vp8zfiPClN0ELH7o6KGltUSk80USv+o0y8lYK1n35WUElJdjJFhQcko6NRrag2vNxJI5
-         R51xYmOUtVlK6NaQNs7QAgiASSBqTvSW5ha8baUI1uC1b7OEytgkWMH93bWObLff3TBN
-         cyWQ==
-X-Gm-Message-State: AOJu0YwWW2naJuar2ejcnMxf0knQ3FpnZtfoQGDLVQuNWK99UWeYL8ZE
-	apcqWoxe4gVqdJ2WYkJbAiBd3h/oaGiqGdaDEafPUQhis/538TPJuqbMpjN7nzIfv46oAaJhyfu
-	M9Ena66Q2lieb4YdIeevu1ewMHzJ+/7exTpfd3A==
-X-Google-Smtp-Source: AGHT+IED9YAP6IjuLO7QGzwihwwoadtsQqIErozgRiEhzKfXYz5J89hbN3mS6Tn00zxP0ae3LMxLBAw1f4m1Z4XB0YY=
-X-Received: by 2002:a2e:2206:0:b0:2d0:5f90:2b29 with SMTP id
- i6-20020a2e2206000000b002d05f902b29mr4579555lji.12.1707315222978; Wed, 07 Feb
- 2024 06:13:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WjxzIN1t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1531FC43390;
+	Wed,  7 Feb 2024 14:29:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707316180;
+	bh=R+/WIaoIjD8psMbUkTSxqa/QWW5tlhPideSsKQwZD8w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WjxzIN1tbdYYh6j4dVl88fHHULYEYh5ctBDtDONlFRdDrWsVUgfSJUjpZmkwe3wfe
+	 7AiEfU0njpkprojuCB81YHVgPBKJXZz90TSUblmwkbmmUOKs3LwgmnaTvR2DyZOP6w
+	 /TKpRDk5u32+2uQOXHGvMF3ez7tMNZmlGo+HALs8LKrZJ3+gmw6djJwQ4g3lUrzESN
+	 oz5JIGjsyMR+anBL7dOdE8TfAG6zMHEM7DGwStXgLpW5RvZFTxrmCznfpuqFiVhJz6
+	 eD/oBU5KQt4+pnSOrJBurTv3Odvx6wu8QAUu0vxF2nO0KqUfLSJcMHadGeB/pbGEyO
+	 5Ez9qpUf24nUQ==
+Date: Wed, 7 Feb 2024 23:29:36 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Ye Bin <yebin10@huawei.com>
+Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
+ <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 1/8] tracing/probes: add
+ traceprobe_expand_dentry_args() helper
+Message-Id: <20240207232936.f93bbea10f920a263cb963b0@kernel.org>
+In-Reply-To: <20240125073923.2252057-2-yebin10@huawei.com>
+References: <20240125073923.2252057-1-yebin10@huawei.com>
+	<20240125073923.2252057-2-yebin10@huawei.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240206094650.1696566-1-quic_hyiwei@quicinc.com>
- <50cdbe95-c14c-49db-86aa-458e87ae9513@joelfernandes.org> <20240207061429.3e29afc8@rorschach.local.home>
-In-Reply-To: <20240207061429.3e29afc8@rorschach.local.home>
-From: Joel Fernandes <joel@joelfernandes.org>
-Date: Wed, 7 Feb 2024 09:13:30 -0500
-Message-ID: <CAEXW_YSUD-CW_=BHbfrfPZAfRUtk_hys5r06uJP2TJJeYJb-1g@mail.gmail.com>
-Subject: Re: [PATCH v4] tracing: Support to dump instance traces by ftrace_dump_on_oops
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Huang Yiwei <quic_hyiwei@quicinc.com>, mhiramat@kernel.org, mark.rutland@arm.com, 
-	mcgrof@kernel.org, keescook@chromium.org, j.granados@samsung.com, 
-	mathieu.desnoyers@efficios.com, corbet@lwn.net, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, quic_bjorande@quicinc.com, quic_tsoni@quicinc.com, 
-	quic_satyap@quicinc.com, quic_aiquny@quicinc.com, kernel@quicinc.com, 
-	Ross Zwisler <zwisler@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 7, 2024 at 6:14=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
->
-> On Wed, 7 Feb 2024 05:24:58 -0500
-> Joel Fernandes <joel@joelfernandes.org> wrote:
->
-> > Btw, hopefully the "trace off on warning" and related boot parameters a=
-lso apply
-> > to instances, I haven't personally checked but I often couple those wit=
-h the
-> > dump-on-oops ones.
->
-> Currently they do not. It would require an updated interface to do so,
-> as sometimes instances can be used to continue tracing after a warning,
-> so I don't want to make it for all instances.
+Hi Ye,
 
-Thanks for clarifying.
+On Thu, 25 Jan 2024 15:39:16 +0800
+Ye Bin <yebin10@huawei.com> wrote:
 
-> Perhaps we need an option for these too, and have all options be
-> updated via the command line. That way we don't need to make special
-> boot line parameters for this. If we move these to options (keeping the
-> proc interface for backward compatibility) it would make most features
-> available to all with one change.
+> Add traceprobe_expand_dentry_args() to expand dentry args. this API is
+> prepare to support "%pd" print format for kprobe.
+> 
+> Signed-off-by: Ye Bin <yebin10@huawei.com>
+> ---
+>  kernel/trace/trace_probe.c | 50 ++++++++++++++++++++++++++++++++++++++
+>  kernel/trace/trace_probe.h |  2 ++
+>  2 files changed, 52 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 4dc74d73fc1d..0c1caf0f474a 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -1565,6 +1565,56 @@ const char **traceprobe_expand_meta_args(int argc, const char *argv[],
+>  	return ERR_PTR(ret);
+>  }
+>  
+> +/* @buf: *buf must be equal to NULL. Caller must to free *buf */
+> +int traceprobe_expand_dentry_args(int argc, const char *argv[], char **buf)
+> +{
+> +	int i, used, ret;
+> +	int bufsize = MAX_DENTRY_ARGS_LEN;
 
-Agreed, that would be nice!!
+nit: this bufsize is consistent, thus you should use the MAX_DENTRY_ARGS_LEN
+     directly. (or add 'const' or maybe you can update bufsize as remaining size)
 
- - Joel
+Thanks,
+
+> +	char *tmpbuf = NULL;
+> +
+> +	if (*buf)
+> +		return -EINVAL;
+> +
+> +	used = 0;
+> +	for (i = 0; i < argc; i++) {
+> +		if (glob_match("*:%pd", argv[i])) {
+> +			char *tmp;
+> +			char *equal;
+> +
+> +			if (!tmpbuf) {
+> +				tmpbuf = kmalloc(bufsize, GFP_KERNEL);
+> +				if (!tmpbuf)
+> +					return -ENOMEM;
+> +			}
+> +
+> +			tmp = kstrdup(argv[i], GFP_KERNEL);
+> +			if (!tmp)
+> +				goto nomem;
+> +
+> +			equal = strchr(tmp, '=');
+> +			if (equal)
+> +				*equal = '\0';
+> +			tmp[strlen(argv[i]) - 4] = '\0';
+> +			ret = snprintf(tmpbuf + used, bufsize - used,
+> +				       "%s%s+0x0(+0x%zx(%s)):string",
+> +				       equal ? tmp : "", equal ? "=" : "",
+> +				       offsetof(struct dentry, d_name.name),
+> +				       equal ? equal + 1 : tmp);
+> +			kfree(tmp);
+> +			if (ret >= bufsize - used)
+> +				goto nomem;
+> +			argv[i] = tmpbuf + used;
+> +			used += ret + 1;
+> +		}
+> +	}
+> +
+> +	*buf = tmpbuf;
+> +	return 0;
+> +nomem:
+> +	kfree(tmpbuf);
+> +	return -ENOMEM;
+> +}
+> +
+>  void traceprobe_finish_parse(struct traceprobe_parse_context *ctx)
+>  {
+>  	clear_btf_context(ctx);
+> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+> index 850d9ecb6765..5800513439f3 100644
+> --- a/kernel/trace/trace_probe.h
+> +++ b/kernel/trace/trace_probe.h
+> @@ -34,6 +34,7 @@
+>  #define MAX_ARRAY_LEN		64
+>  #define MAX_ARG_NAME_LEN	32
+>  #define MAX_BTF_ARGS_LEN	128
+> +#define MAX_DENTRY_ARGS_LEN	256
+>  #define MAX_STRING_SIZE		PATH_MAX
+>  #define MAX_ARG_BUF_LEN		(MAX_TRACE_ARGS * MAX_ARG_NAME_LEN)
+>  
+> @@ -402,6 +403,7 @@ extern int traceprobe_parse_probe_arg(struct trace_probe *tp, int i,
+>  const char **traceprobe_expand_meta_args(int argc, const char *argv[],
+>  					 int *new_argc, char *buf, int bufsize,
+>  					 struct traceprobe_parse_context *ctx);
+> +extern int traceprobe_expand_dentry_args(int argc, const char *argv[], char **buf);
+>  
+>  extern int traceprobe_update_arg(struct probe_arg *arg);
+>  extern void traceprobe_free_probe_arg(struct probe_arg *arg);
+> -- 
+> 2.31.1
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
