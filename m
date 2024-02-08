@@ -1,92 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8F018E07;
-	Thu,  8 Feb 2024 10:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2D36F513;
+	Thu,  8 Feb 2024 11:42:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707388237; cv=none; b=uHx167f9zX/GUOYk0am/xQOzz8ENRUJaG/ZnVrJbhxEYn42q2XqbaoPYwo5u62X3mTgzrbTpvixRrSFzKtbpYEuN2yjiVVM/TqbJIG5duT0lT8PFAoPh10tQdOBvoY4mZlYsYbgx04oY6Yd5ml6jfTus4JrNSHC7R4jVnva8Goc=
+	t=1707392544; cv=none; b=K9arlzFN/IifpopyRz5wez1Pgq4u/FX73/phkAL/tLkIy9wYcYBQW9xLnfZwjuu0lM/D87rVeTGJZIemLquKCEA311JLzPtpejIOIvIVzGRUGYUCknS9RyhDUbB/Y5h2KRVqoy1ZWm9PcVTgOd+NQtMJ3CS5f4LQKP/RYJhWa54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707388237; c=relaxed/simple;
-	bh=K13J9XbERyxSfjmPTDP4eJHI3fqY0e+Prqu0RLjcPXQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g0quY0X+RvIETBdu8dxFz/XShG0pR9CYAEJd47I15Ls6qg/UUMSndWVcxj7JfpircsfK4bZg4W+GOmYnfiAGNQH9Z9gZU1I2NNZBuxPlZhVt1M5n4M0LjUnEAY05C8Ur48T7OSJ2dDyksn7ntDkGpI35Ln/EzA06NAX+UkkImJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MwhxLA5Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707392544; c=relaxed/simple;
+	bh=aEQ478SuaY6VmhEfhHXJw2WnDBxJM3W5d9Q2bW0sw+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fCIVEBkyF6gc7cRdnOaiz4aa5egPLyLkSpthSc9QAO2tORdFDqPar+zGR+jEbf5ic7XAdJaTeWNmAvN9Ti/guBrT+QyOn/4SH/BYJwvCSiC1kdrBUv+8bUafx4BE9SqqJpmP7edGFo27c7FhwM88PGBHL9FlNNHcTxkop/iaV54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KUh8YOkj; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MwhxLA5Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6671C433F1;
-	Thu,  8 Feb 2024 10:30:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707388237;
-	bh=K13J9XbERyxSfjmPTDP4eJHI3fqY0e+Prqu0RLjcPXQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MwhxLA5Zi9RKpJ9QTqGVbopqqTZUaVFxsO+wajyopWDswA5HhjWMh2WtVGvrgWQRx
-	 ivHnMyk9i4zEwcgGCRseLKwajgc5OrPynE2onad4ETVupBaoTjxGdidCKRgdvQO1qN
-	 BArJGTRoDg5zkjThawJYmKQtoWXdA7Pln4WYXTxfLpIFH5vsP9UBkltX2w0uo4HOJs
-	 gE5jsS316D9kM9AS7Z/vMMer0WBxBTUjdWcBZJ7sOz8P1wjWpv3AEoSBLMdzzwh9Hv
-	 5IVvVOuhLJkW7c9Um/af8hF4oyKMg0GVMg2R68oXSmlDWk4iBf5QXEnQwmRL6r08Kn
-	 tbj3AcwO6Zw6g==
-Message-ID: <684ec15f-6407-430d-af8f-8751e9aa4c43@kernel.org>
-Date: Thu, 8 Feb 2024 11:30:31 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KUh8YOkj"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a389ea940f1so137484966b.3;
+        Thu, 08 Feb 2024 03:42:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707392541; x=1707997341; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uJx67bcvbAo9zHf0ymAdxOGvHwHm6HIalhNV9TyZktU=;
+        b=KUh8YOkjcg2BhgaCu24iNDqUNjQPM1vPLVc6prWRUhCIimEvq99LTwbQpYWQM1Cd2i
+         WvIaWjWISh1sr/e2w4/bVnBqZr4M20wncCFCH7McS8ShIOn3a5tBQpdw5dcQDLQWi+Wg
+         EimMbcfIi0fdr68lFBpbMPViWJq8CUzns9JmQ4fwyORapXaMdv/OmCA5a3skHCqFja6k
+         hZWQFtHIrS2oPp8GZ7doiFvKaJ4OtfH2BjHyz+O/iIPyab/bKZ/t9jXJ1MwJTTrfzGA4
+         JQlY5fTWxuOXtOU0MS+byO2p39JQ5VeodxB7VodQYeVO4nJgCUaMwNOEYsw/ueoevojs
+         KHVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707392541; x=1707997341;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uJx67bcvbAo9zHf0ymAdxOGvHwHm6HIalhNV9TyZktU=;
+        b=YuPErl8f19A8/yEG5b03eGygR5lNYz1xY/Q5xSrBqXpdizmB5g/BE45esMW0Bn/RET
+         x0pQJv8MK/NZ2CSik/kgm7z6bgXSuC6y/C51hRYWDSrmXdWYKTZo0ETfYrzMuozM9OTe
+         AKKVcsTdxZtSXdnOgpOppCiEL4sE15VoCpauaikLZz0mYSjFC2lOPdMKINCF/hxyF0iA
+         O+umrTFSHcHPbti878o0v5YFidL+PJh2/QsS4VdNEem3joHLop7HxgsT4yD+DSYykhLN
+         vbfWov3pWalVg/WEfJXcwvuuH69aS4yBmL87a5WqoHzxuGOv7XlKLw5jA1OkfGxWtbYa
+         O4yA==
+X-Forwarded-Encrypted: i=1; AJvYcCVTij1mvMDrFIdiEjbmkzw93CwoGcH8dx0h/U/V7ggv8pltNT5I/7zb21+dTemJGK2pUZvxRMZWHm/QtfS07tySAmRdtIsiLX+3e3r3w0Ik9YDRVTnmCjEiaxv7GUngfsnxmHmSNsTLmJbqNVgH6eqe
+X-Gm-Message-State: AOJu0YwHMIRhVH0TgPcAmWx6EwIFH9jPGKFpxEDcb0YvSWTNBn1hFAxN
+	WhS+QioHAjmYir0gNsyGuUmyYYGSgN8fSywRaUEoleqEEkRZwm03
+X-Google-Smtp-Source: AGHT+IEiPm4u84iqFSB/UQg6ibdfUKzGrLkfL1m3NTh0SS5++/aHuKt3pBw9YrhOY1kilrXZeG6DMg==
+X-Received: by 2002:a17:906:d10d:b0:a38:948e:85d3 with SMTP id b13-20020a170906d10d00b00a38948e85d3mr2932904ejz.71.1707392541302;
+        Thu, 08 Feb 2024 03:42:21 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVISQGNJhcgRfbCljEvw7EzsND50WXxUpC4wFphSMcBvdzRIwbL7Ryz518AMPWPM8jSxRs0KB7Ropazpm8LjMrbZ8JFStTaDPeC1LQt2v8Ut06vT2nk2yiRzB5u5BwQ6VPecfYcJUZUnj3snDHe3u9fyFsYjU5QawLERsKuJF3YAWRNgL06iSOJ8SPb2oNBunViYzVACgOdN48RvE7Hab7wmi+qh1B5Nbs2VlDSJozNfZ03T/pWq1SaHNkIxG5Q1zGeZjK0WpttiduQo/fpQFRK/Y9Xow6QVEftEVQPw0jypU8d5Z2nQ9sWPbOADDjT9FKF4/yr8KIWAAGqCvHzPUSg1bgl+GaQv2Y+z41S38/k3qowiSDXHmU5a4279KlMRbSCw/LNpg==
+Received: from andrea ([31.189.46.254])
+        by smtp.gmail.com with ESMTPSA id qc12-20020a170906d8ac00b00a28f6294233sm1784541ejb.76.2024.02.08.03.42.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Feb 2024 03:42:20 -0800 (PST)
+Date: Thu, 8 Feb 2024 12:42:16 +0100
+From: Andrea Parri <parri.andrea@gmail.com>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>
+Subject: Re: [PATCH] riscv: Fix text patching when icache flushes use IPIs
+Message-ID: <ZcS+GAaM25LXsBOl@andrea>
+References: <20240206204607.527195-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] tools/rtla: Fix Makefile compiler options for clang
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Donald Zickus <dzickus@redhat.com>, stable@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-References: <cover.1707217097.git.bristot@kernel.org>
- <567ac1b94effc228ce9a0225b9df7232a9b35b55.1707217097.git.bristot@kernel.org>
- <20240206154835.GA1433705@dev-arch.thelio-3990X>
-Content-Language: en-US, pt-BR, it-IT
-From: Daniel Bristot de Oliveira <bristot@kernel.org>
-In-Reply-To: <20240206154835.GA1433705@dev-arch.thelio-3990X>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240206204607.527195-1-alexghiti@rivosinc.com>
 
-On 2/6/24 16:48, Nathan Chancellor wrote:
-> On Tue, Feb 06, 2024 at 12:05:29PM +0100, Daniel Bristot de Oliveira wrote:
->> The following errors are showing up when compiling rtla with clang:
->>
->>  $ make HOSTCC=clang CC=clang LLVM_IAS=1
->>  [...]
->>
->>   clang -O -g -DVERSION=\"6.8.0-rc1\" -flto=auto -ffat-lto-objects
->> 	-fexceptions -fstack-protector-strong
->> 	-fasynchronous-unwind-tables -fstack-clash-protection  -Wall
->> 	-Werror=format-security -Wp,-D_FORTIFY_SOURCE=2
->> 	-Wp,-D_GLIBCXX_ASSERTIONS -Wno-maybe-uninitialized
->> 	$(pkg-config --cflags libtracefs)    -c -o src/utils.o src/utils.c
->>
->>   clang: warning: optimization flag '-ffat-lto-objects' is not supported [-Wignored-optimization-argument]
-> 
-> For what it's worth, this flag is supported in clang 17.0.0 and newer:
-> 
-> https://github.com/llvm/llvm-project/commit/610fc5cbcc8b68879c562f6458608afe2473ab7f
+> +static int __ftrace_modify_code(void *data)
+> +{
+> +	struct ftrace_modify_param *param = data;
+> +
+> +	if (atomic_inc_return(&param->cpu_count) == num_online_cpus()) {
+> +		ftrace_modify_all_code(param->command);
+> +		atomic_inc(&param->cpu_count);
 
-Good! still, I am getting this error on fedora, with this clang version:
+I stared at ftrace_modify_all_code() for a bit but honestly I don't see
+what prevents the ->cpu_count increment from being reordered before the
+insn write(s) (architecturally) now that you have removed the IPI dance:
+perhaps add an smp_wmb() right before the atomic_inc() (or promote this
+latter to a (void)atomic_inc_return_release()) and/or an inline comment
+saying why such reordering is not possible?
 
-bristot@x1:~/src/git/linux/tools/tracing/rtla$ clang --version
-clang version 17.0.6 (Fedora 17.0.6-1.fc39)
-Target: x86_64-redhat-linux-gnu
-Thread model: posix
-InstalledDir: /usr/bin
 
-:-(
+> +	} else {
+> +		while (atomic_read(&param->cpu_count) <= num_online_cpus())
+> +			cpu_relax();
+> +		smp_mb();
 
-> But if it is not critical, just dropping the flag like you have done
-> here rather than conditionally supporting it is probably easier.
+I see that you've lifted/copied the memory barrier from patch_text_cb():
+what's its point?  AFAIU, the barrier has no ordering effect on program
+order later insn fetches; perhaps the code was based on some legacy/old
+version of Zifencei?  IAC, comments, comments, ... or maybe just remove
+that memory barrier?
 
-Yeah, I will drop it for now, and keep monitoring.
 
-Thanks Natan!
--- Daniel
+> +	}
+> +
+> +	local_flush_icache_all();
+> +
+> +	return 0;
+> +}
+
+[...]
+
+
+> @@ -232,8 +230,7 @@ static int patch_text_cb(void *data)
+>  	if (atomic_inc_return(&patch->cpu_count) == num_online_cpus()) {
+>  		for (i = 0; ret == 0 && i < patch->ninsns; i++) {
+>  			len = GET_INSN_LENGTH(patch->insns[i]);
+> -			ret = patch_text_nosync(patch->addr + i * len,
+> -						&patch->insns[i], len);
+> +			ret = patch_insn_write(patch->addr + i * len, &patch->insns[i], len);
+>  		}
+>  		atomic_inc(&patch->cpu_count);
+>  	} else {
+> @@ -242,6 +239,8 @@ static int patch_text_cb(void *data)
+>  		smp_mb();
+>  	}
+>  
+> +	local_flush_icache_all();
+> +
+>  	return ret;
+>  }
+>  NOKPROBE_SYMBOL(patch_text_cb);
+
+My above remarks/questions also apply to this function.
+
+
+On a last topic, although somehow orthogonal to the scope of this patch,
+I'm not sure the patch_{map,unmap}() dance in our patch_insn_write() is
+correct: I can see why we may want (need to do) the local TLB flush be-
+fore returning from patch_{map,unmap}(), but does a local flush suffice?
+For comparison, arm64 seems to go through a complete dsb-tlbi-dsb(-isb)
+sequence in their unmapping stage (and apparently relying on "no caching
+of invalid ptes" in their mapping stage).  Of course, "broadcasting" our
+(riscv's) TLB invalidations will necessary introduce some complexity...
+
+Thoughts?
+
+  Andrea
