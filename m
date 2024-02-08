@@ -1,105 +1,60 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B996E2D8
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  8 Feb 2024 09:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE8967C72;
+	Thu,  8 Feb 2024 09:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707384399; cv=none; b=RGSwdynWQh8KTeNtmCLcyME2073K9RPiAa4lQqfH8LyF3Ck18jysi7eZ3D6889Z7tAJu39xBe+JeogmRcpB9ojdV0w/kPzqxaqTjoKo7olanPzDI2esNO8wnixyduMi+uWDcbZiuzFE47YIr+PlxL1gRNHO4MbrGJ4MuRbWgCGg=
+	t=1707385028; cv=none; b=vET6TQPznBm4Wv+yrNOYH/6AUnbiqKkQQBHoSWg2wxnSyIgEM8tgIHY0ppkHtgj3F1IRWwnRFkqmYHDfQebSVpo+ohFAUxQO4nvgceBu6A67H3g3M0bXRKRe57tFFsXf4II7lbi7mQbXt3nZPwGiOlBTE/FLGosDL2Ufot/8oQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707384399; c=relaxed/simple;
-	bh=UWeQJCER8zXhqPwH0OuvxMry3m1VwMFBmLt7F6/2HpA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n/ZB3rIJvm3JuVuipaEJoCKxnaI09yGAJXO5koP9uhAqgtiGZk23Vy20XK1uIll+pZ9SaN7NqNmXnN0nzrog0T1tcIMPK7GqFStuZMaU881Blt94Om7oC+lZpGPsIplKVk5n1Ky7ru/Wgo9zbtSGOfJTItm4PMG3PuKfaTHTsNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=nTxFGSMg; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="nTxFGSMg"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-68cc9061c78so1889776d6.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 08 Feb 2024 01:26:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1707384396; x=1707989196; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VQR/FZR/rxXp/GDaSedW04oA7HUPwpCfLl/D3NpRt64=;
-        b=nTxFGSMgFTXXk+jHeqf7uY4CjELRNnaJBy+Di+APkIOOtisSsE5DeIeu2NAsF56yXl
-         5MqC9edFM+FbBobmIazEdbiGHFkO+U/L1wHDavaXmaMtYtBfxQ4vm8g+vmUdEHIonIBB
-         3M8m1ZWS8Fa4N1oChYcgE6rGtGvhySg6Zl02s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707384396; x=1707989196;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VQR/FZR/rxXp/GDaSedW04oA7HUPwpCfLl/D3NpRt64=;
-        b=CCB3cB++/XDsF6PmdKF5MNBbB1JA5cYTDqRPwV2PmJd6i5aZyAdWUgDXh1w52eikHa
-         xdtd7dtiSPQ/HP+KJUpC+ljynJkAE1zosQIsEWu5yvx7xgDhGA3mZf9STV/xeouQSlmA
-         upSaJbKtUWMTA5nTJTrKwzkaLlBEL/qovb4GG+6f4+eLqcKwA0JEvmN+aQ6IcFk1bkNX
-         wxxQXxkh9+7lh2fiHX1CYR51QgDxSB6qTv+E2VHnhn25fSvqCTWUnIyuyq/bp6d/VuKb
-         SeXtMpPnEbqE6nbXVfDl9QspFVGKW5ZqbMt1KqAlQPZhmivZF2dItWKff3VioXNPr0f7
-         FNZw==
-X-Gm-Message-State: AOJu0Yzq4FXPVtRpl/czOJ6MH0nksMsRRmnlc9cwBfekSXta66VHNnEh
-	ykO5F0pG1KVfYBT9HC34itQRx1vXiohSBsvtSPPNSPqK1Vz2lL4pzj1bcGl/sPU=
-X-Google-Smtp-Source: AGHT+IFyQqY/XMxLBi2+dW1HrhIyrQBgWWK6z36X0AV/vyVfmePVfHf89Cci4NiwIgBgMn8BTIQSjA==
-X-Received: by 2002:ad4:596a:0:b0:68c:87ed:ef36 with SMTP id eq10-20020ad4596a000000b0068c87edef36mr8957401qvb.29.1707384396330;
-        Thu, 08 Feb 2024 01:26:36 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWGEJIadMuHTt7Jw2f7HfK54uZfZvBAKdjJMHuqaJU+VzV0d0j4E0vrLDjLQwxeTE4zgd9d4LJqCxQ34ZSxxQDEMRMgwVAwPoUk2+BA9Y55cZ//dagNPc6ssASYAs5wRizJ1vGyZ5AgUbvFTzAzWaqIROCdt2PazC9Hyozi7/iVjw9nFGIbVC2b77pjYwNZyFGVIvIAonO+F3cpbMHS5wV0BTupRfrjQLpLst5Z4g0VcJyHhcJMia/WbhSqhH9AUHk879BylgJABR4eQCY8BkXqfGplm4yjxnBcb55ojyK1LoIHpCZOt8Tl2QaeKUy9cduhfR+be/8xU/yF0OgbssQjtxpW9wmI+yzcK4Bdm4vidAOMmvbYgWzYQjI1JrPe14rNtS0ZjCETxZrmxPv4p9Y6jJZyufAfZEyTg1460vrjJ9aqIOf6fFhjluO5ols3ys8pyZTgSUtSoDYyaB6FIkC16bfZDQ4nniMnywP/IGxRgKFUqLZE23LALf/Dq4MRuKg6b0ztq1iBSq8xTow8yKRNAoXQIOV5/cEAewsF66hZHnh52TYx7U09gRJrdGm8kptD4Kae03uBgxSXspUaDxHEPyGKUQ/PV66GlLEBc/rXQVyVg2o=
-Received: from [192.168.0.226] (c-98-249-43-138.hsd1.va.comcast.net. [98.249.43.138])
-        by smtp.gmail.com with ESMTPSA id ph30-20020a0562144a5e00b0068c6dd9af10sm1407729qvb.64.2024.02.08.01.26.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Feb 2024 01:26:35 -0800 (PST)
-Message-ID: <497fdb48-9fce-444e-8d51-2073a37f697d@joelfernandes.org>
-Date: Thu, 8 Feb 2024 04:26:30 -0500
+	s=arc-20240116; t=1707385028; c=relaxed/simple;
+	bh=Baq8xnvrDhL72IbU782BS9bRzNoGy/UvAQL6CzgdUlQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RPeuO3+WkPMbp6B4AXeybqRz3QXJal2+egIx5Af3jJ0c0GoVboUkUGcfTmGI3LvfGexxSYGOjZTI9n/0FTDg4u4PP82/dUKnkLcFhMNhLe22mEGWgT99p9R9mpj5wBEgWaQg9EMGgg64mz6i1qNZW6MICc2OdCdjzctI1biCoMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C9B0C433C7;
+	Thu,  8 Feb 2024 09:37:02 +0000 (UTC)
+Date: Thu, 8 Feb 2024 04:36:59 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Joel Fernandes <joel@joelfernandes.org>
+Cc: Huang Yiwei <quic_hyiwei@quicinc.com>, mhiramat@kernel.org,
+ mark.rutland@arm.com, mcgrof@kernel.org, keescook@chromium.org,
+ j.granados@samsung.com, mathieu.desnoyers@efficios.com, corbet@lwn.net,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+ quic_bjorande@quicinc.com, quic_tsoni@quicinc.com, quic_satyap@quicinc.com,
+ quic_aiquny@quicinc.com, kernel@quicinc.com, Ross Zwisler
+ <zwisler@google.com>
+Subject: Re: [PATCH v4] tracing: Support to dump instance traces by
+ ftrace_dump_on_oops
+Message-ID: <20240208043659.7476b3a1@rorschach.local.home>
+In-Reply-To: <497fdb48-9fce-444e-8d51-2073a37f697d@joelfernandes.org>
+References: <20240206094650.1696566-1-quic_hyiwei@quicinc.com>
+	<50cdbe95-c14c-49db-86aa-458e87ae9513@joelfernandes.org>
+	<20240207061429.3e29afc8@rorschach.local.home>
+	<CAEXW_YSUD-CW_=BHbfrfPZAfRUtk_hys5r06uJP2TJJeYJb-1g@mail.gmail.com>
+	<ec99fdee-8d3f-476f-842f-f57b2b817dae@quicinc.com>
+	<497fdb48-9fce-444e-8d51-2073a37f697d@joelfernandes.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] tracing: Support to dump instance traces by
- ftrace_dump_on_oops
-Content-Language: en-US
-To: Huang Yiwei <quic_hyiwei@quicinc.com>,
- Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, mark.rutland@arm.com, mcgrof@kernel.org,
- keescook@chromium.org, j.granados@samsung.com,
- mathieu.desnoyers@efficios.com, corbet@lwn.net,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
- quic_bjorande@quicinc.com, quic_tsoni@quicinc.com, quic_satyap@quicinc.com,
- quic_aiquny@quicinc.com, kernel@quicinc.com,
- Ross Zwisler <zwisler@google.com>
-References: <20240206094650.1696566-1-quic_hyiwei@quicinc.com>
- <50cdbe95-c14c-49db-86aa-458e87ae9513@joelfernandes.org>
- <20240207061429.3e29afc8@rorschach.local.home>
- <CAEXW_YSUD-CW_=BHbfrfPZAfRUtk_hys5r06uJP2TJJeYJb-1g@mail.gmail.com>
- <ec99fdee-8d3f-476f-842f-f57b2b817dae@quicinc.com>
-From: Joel Fernandes <joel@joelfernandes.org>
-In-Reply-To: <ec99fdee-8d3f-476f-842f-f57b2b817dae@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Thu, 8 Feb 2024 04:26:30 -0500
+Joel Fernandes <joel@joelfernandes.org> wrote:
 
-
-On 2/8/2024 4:22 AM, Huang Yiwei wrote:
+> > And for this patchset, shall I fix the typo and resend again? Thanks.  
 > 
-> 
-> On 2/7/2024 10:13 PM, Joel Fernandes wrote:
-[..]
->>> Perhaps we need an option for these too, and have all options be
->>> updated via the command line. That way we don't need to make special
->>> boot line parameters for this. If we move these to options (keeping the
->>> proc interface for backward compatibility) it would make most features
->>> available to all with one change.
-> It's a good idea that "traceoff_on_warning" also has instance support, but we
-> will use another patchset to do this, right?
-> 
-> And for this patchset, shall I fix the typo and resend again? Thanks.
+> That is fine with me but it is up to tracing maintainers. ;-)
 
-That is fine with me but it is up to tracing maintainers. ;-)
+The rest of the patch looks good to me. Please send a v5 with the typo
+fix and I'll try to get it into the next merge window.
 
- - Joel
+Thanks,
 
-
+-- Steve
