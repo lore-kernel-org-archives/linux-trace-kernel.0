@@ -1,59 +1,33 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1CC6DCFE;
-	Thu,  8 Feb 2024 10:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8F018E07;
+	Thu,  8 Feb 2024 10:30:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707387962; cv=none; b=USfXGi2Oi28oV6wNkOfdczBaeVD20r1VqwxtApC5VD3ohcvKscI/Zn3J2yC1NKwfIqSrwSCyIxV9GEUhdg34HxMYMLmZeeS6gnNwnAJgXPXGB3ilZmuO0P5ubhM1GBgjbBGtWS5AdRzUmrWt4n37Hx4L63IUUl4Wn0A/q1G1Grw=
+	t=1707388237; cv=none; b=uHx167f9zX/GUOYk0am/xQOzz8ENRUJaG/ZnVrJbhxEYn42q2XqbaoPYwo5u62X3mTgzrbTpvixRrSFzKtbpYEuN2yjiVVM/TqbJIG5duT0lT8PFAoPh10tQdOBvoY4mZlYsYbgx04oY6Yd5ml6jfTus4JrNSHC7R4jVnva8Goc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707387962; c=relaxed/simple;
-	bh=emnpEIwAYGIHVgid4NR926MQK2rJE8cWMDX2nfQ2l5A=;
+	s=arc-20240116; t=1707388237; c=relaxed/simple;
+	bh=K13J9XbERyxSfjmPTDP4eJHI3fqY0e+Prqu0RLjcPXQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iR7boCyUt53PGZYwf8MIOdMmzNm9Qus/U3ZShTYQo8u8gNZjKRkIKQo1bQKy7yUzOIYx+viFzmU9LnUHrEmCiPyHkpnyQzUvCbfaDsjpEAuajTf5EGRUVGlU9HgGmgjyXiYkoABfxx73zs1egHJuWq239i7IFAzogmh2sMTAjAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lEtSp19+; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=g0quY0X+RvIETBdu8dxFz/XShG0pR9CYAEJd47I15Ls6qg/UUMSndWVcxj7JfpircsfK4bZg4W+GOmYnfiAGNQH9Z9gZU1I2NNZBuxPlZhVt1M5n4M0LjUnEAY05C8Ur48T7OSJ2dDyksn7ntDkGpI35Ln/EzA06NAX+UkkImJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MwhxLA5Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lEtSp19+"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4189cIFV002468;
-	Thu, 8 Feb 2024 10:25:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=xKeQ9fcUMgud2iiOOvuDdu/2E6NwbXSOAkdeYBuJopc=;
- b=lEtSp19+zrRLKzGQUc/SipIlMgyHTz/orTtxhwvfTnkCZq2UuKrZ/OBDBE+OHofSMKjl
- vhwEBWdjArjFk3TVoO042zEgBASib9TCUvuCkLka/C3EKbUjCp4++FnUwgSl59n/UA7G
- BBp/ccpZXJ+rEGEQg+dyXMyIopeUPfyXDT9RWAif2RdvYBxiv6SHj7rN0qHy8b7HQSIQ
- 9IqRlAAxmH5Z7iZxp9a74rrRFCu9g+UYB7lsDmVDXhIVunJTBa6fMF1Ccbrdil42TtDo
- AZHjRA3YZoaOj7VvAHYJiJvlHVpISsXseSKXXOp4NNteFJ8+i3rIiXJgrmYtaLGYbZRd wQ== 
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w4vg9h24c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 Feb 2024 10:25:53 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4189xAxG005430;
-	Thu, 8 Feb 2024 10:25:53 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w21akuk8p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 Feb 2024 10:25:53 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 418APpbs44499240
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 8 Feb 2024 10:25:51 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 309EA2004B;
-	Thu,  8 Feb 2024 10:25:51 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BE67E20040;
-	Thu,  8 Feb 2024 10:25:50 +0000 (GMT)
-Received: from [9.171.57.15] (unknown [9.171.57.15])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  8 Feb 2024 10:25:50 +0000 (GMT)
-Message-ID: <8c986cb3-61b3-4f65-81c9-ffcfa994390f@linux.ibm.com>
-Date: Thu, 8 Feb 2024 11:25:50 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MwhxLA5Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6671C433F1;
+	Thu,  8 Feb 2024 10:30:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707388237;
+	bh=K13J9XbERyxSfjmPTDP4eJHI3fqY0e+Prqu0RLjcPXQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MwhxLA5Zi9RKpJ9QTqGVbopqqTZUaVFxsO+wajyopWDswA5HhjWMh2WtVGvrgWQRx
+	 ivHnMyk9i4zEwcgGCRseLKwajgc5OrPynE2onad4ETVupBaoTjxGdidCKRgdvQO1qN
+	 BArJGTRoDg5zkjThawJYmKQtoWXdA7Pln4WYXTxfLpIFH5vsP9UBkltX2w0uo4HOJs
+	 gE5jsS316D9kM9AS7Z/vMMer0WBxBTUjdWcBZJ7sOz8P1wjWpv3AEoSBLMdzzwh9Hv
+	 5IVvVOuhLJkW7c9Um/af8hF4oyKMg0GVMg2R68oXSmlDWk4iBf5QXEnQwmRL6r08Kn
+	 tbj3AcwO6Zw6g==
+Message-ID: <684ec15f-6407-430d-af8f-8751e9aa4c43@kernel.org>
+Date: Thu, 8 Feb 2024 11:30:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -61,102 +35,58 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing: use ring_buffer_record_is_set_on() in
- tracer_tracing_is_on()
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>, Sven Schnelle <svens@linux.ibm.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20240205065340.2848065-1-svens@linux.ibm.com>
- <20240205075504.1b55f29c@rorschach.local.home>
- <yt9djznj3vbl.fsf@linux.ibm.com>
- <20240205092353.523cc1ef@rorschach.local.home>
- <yt9d34u63xxz.fsf@linux.ibm.com> <yt9dsf262d2n.fsf@linux.ibm.com>
- <20240206060113.39c0f5bc@rorschach.local.home>
- <yt9deddovn3w.fsf@linux.ibm.com>
- <20240207060923.182ecb55@rorschach.local.home>
- <9a062196-ccbe-440e-a2f9-23eb8c5eb837@linux.ibm.com>
- <20240207072812.4a29235f@rorschach.local.home>
- <yt9dzfwch00u.fsf@linux.ibm.com>
- <20240207104703.071ee985@rorschach.local.home>
-From: Mete Durlu <meted@linux.ibm.com>
-In-Reply-To: <20240207104703.071ee985@rorschach.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH 1/6] tools/rtla: Fix Makefile compiler options for clang
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Donald Zickus <dzickus@redhat.com>, stable@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <cover.1707217097.git.bristot@kernel.org>
+ <567ac1b94effc228ce9a0225b9df7232a9b35b55.1707217097.git.bristot@kernel.org>
+ <20240206154835.GA1433705@dev-arch.thelio-3990X>
+Content-Language: en-US, pt-BR, it-IT
+From: Daniel Bristot de Oliveira <bristot@kernel.org>
+In-Reply-To: <20240206154835.GA1433705@dev-arch.thelio-3990X>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: sxZlMAMX3gmObfvP11ERkPRy8Nj5sqUe
-X-Proofpoint-GUID: sxZlMAMX3gmObfvP11ERkPRy8Nj5sqUe
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-08_01,2024-02-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- phishscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 mlxlogscore=984 suspectscore=0 clxscore=1015
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402080054
 
-On 2/7/24 16:47, Steven Rostedt wrote:
-> On Wed, 07 Feb 2024 14:33:21 +0100
-> Sven Schnelle <svens@linux.ibm.com> wrote:
-> 
->> My assumption without reading the code is that something like this
->> happens:
+On 2/6/24 16:48, Nathan Chancellor wrote:
+> On Tue, Feb 06, 2024 at 12:05:29PM +0100, Daniel Bristot de Oliveira wrote:
+>> The following errors are showing up when compiling rtla with clang:
 >>
->> CPU0                             CPU1
->> [ringbuffer enabled]
->>                                   ring_buffer_write()
->>                                       if (atomic_read(&buffer->record_disabled))
->>                                              goto out;
->> echo 0 > tracing_on
->> record_disabled |= RB_BUFFER_OFF
->> csum1=`md5sum trace`
+>>  $ make HOSTCC=clang CC=clang LLVM_IAS=1
+>>  [...]
+>>
+>>   clang -O -g -DVERSION=\"6.8.0-rc1\" -flto=auto -ffat-lto-objects
+>> 	-fexceptions -fstack-protector-strong
+>> 	-fasynchronous-unwind-tables -fstack-clash-protection  -Wall
+>> 	-Werror=format-security -Wp,-D_FORTIFY_SOURCE=2
+>> 	-Wp,-D_GLIBCXX_ASSERTIONS -Wno-maybe-uninitialized
+>> 	$(pkg-config --cflags libtracefs)    -c -o src/utils.o src/utils.c
+>>
+>>   clang: warning: optimization flag '-ffat-lto-objects' is not supported [-Wignored-optimization-argument]
 > 
-> Note, the CPU1 is performing with preemption disabled, so for this to
-> happen, something really bad happened on CPU0 to delay preempt disabled
-> section so long to allow the trace to be read. Perhaps we should have
-> the return of the echo 0 > tracing_on require a synchronize_rcu() to
-> make sure all ring buffers see it disabled before it returns.
+> For what it's worth, this flag is supported in clang 17.0.0 and newer:
 > 
-> But unless your system is doing something really stressed to cause the
-> preempt disabled section to take so long, I highly doubt this was the
-> race.
-> 
+> https://github.com/llvm/llvm-project/commit/610fc5cbcc8b68879c562f6458608afe2473ab7f
 
-I have been only able to reliably reproduce this issue when the system
-is under load from stressors. But I am not sure if it can be considered
-as *really stressed*.
+Good! still, I am getting this error on fedora, with this clang version:
 
-system : 8 cpus (4 physical cores)
-load   : stress-ng --fanotify 1 (or --context 2)
-result : ~5/10 test fails
+bristot@x1:~/src/git/linux/tools/tracing/rtla$ clang --version
+clang version 17.0.6 (Fedora 17.0.6-1.fc39)
+Target: x86_64-redhat-linux-gnu
+Thread model: posix
+InstalledDir: /usr/bin
 
-of course as load increases test starts to fail more often, but a
-single stressor doesn't seem like much to me for a 4 core machine.
+:-(
 
-after adding synchronize_rcu() + patch from Sven, I am no longer seeing
-failures with the setup above. So it seems like synchronize_rcu() did
-the trick(or at least it helps a lot) for the case described on the
-previous mail. I couldn't trigger the failure yet, not even with
-increased load(but now the test case takes > 5mins to finish :) ).
+> But if it is not critical, just dropping the flag like you have done
+> here rather than conditionally supporting it is probably easier.
 
-Here is the diff:
+Yeah, I will drop it for now, and keep monitoring.
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-@@ -9328,10 +9328,12 @@ rb_simple_write(struct file *filp, const char 
-__user *ubuf,
-                         val = 0; /* do nothing */
-                 } else if (val) {
-                         tracer_tracing_on(tr);
-+                       synchronize_rcu();
-                         if (tr->current_trace->start)
-                                 tr->current_trace->start(tr);
-                 } else {
-                         tracer_tracing_off(tr);
-+                       synchronize_rcu();
-                         if (tr->current_trace->stop)
-                                 tr->current_trace->stop(tr);
-
-Not 100% sure if these were the correct places to add them.
-
-
+Thanks Natan!
+-- Daniel
