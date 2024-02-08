@@ -1,28 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D0F7B3FF;
-	Thu,  8 Feb 2024 15:53:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA60573164;
+	Thu,  8 Feb 2024 17:01:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707407615; cv=none; b=moCGLEsh45TwQBk6rHvC+PfmIXqAHUss0U0sK+A5IpR8ms8Wn/xiX9vQEeXJd9YM/6e0mOBav63Cbf4sVVC9etazvL9UnrH8GNisrCwzpYsHiluCMz2zBqfzTXWYaWa3bVVPKdZx9Ce9Nwcpuial7oPPjiV8WOnlTHBURjISiV4=
+	t=1707411664; cv=none; b=KyCq0ritzOtTk/RVWyjnp+ajUkq+NakIZdvXHe0i/rbUHdnliAm4eRv2OMl1IaRv2t3uaOVXyZfjdLcNwLP3+Zv2ZsNZtV0c8Rk4TtHxfnayAs92P9XLYm3A/M3Y+DQ+iQBoACLNPRmJ7EeFnsl6XNUqMrNUXDIAx47Jr7IhzSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707407615; c=relaxed/simple;
-	bh=riINGfnd79EnQpYg7CsqL7ovhf6cZK3lm1VIv8aEOk4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=fd5ncBapaIt/snW3YlN4837xim0L9AG/36UVprbkRXz4ZBUw2JR9+n3jZQvhVb5Io3gKighIKejLb8wqhhWO5G2EWWJlQUurw/S5M5P5Gq5GHMtkpBazr9OEGNbDttBV/Kk5Ldkwl85ZeiyzLxQsjLebZ6XAiMwYTRrf6SPCLYg=
+	s=arc-20240116; t=1707411664; c=relaxed/simple;
+	bh=5FP2zStYJG2cbpb7iAuqfEvm/NVNqwfgtgdH0s+FaZw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=U7VADpKEM1P/GDlE9y2rhgeXrHR9qaDQEEPGIFaszWhQGi9oK7HrsHZeWx286vJfPrG1witnoktC1brgN6iIkuFMbTd969HDotYBa8pNw2wHGdcKIuuLudYZ1R0yynlOzmYjlljxmmZSYFXcWufhULv4OZHFq+rlORthy4i9XDk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95C57C433F1;
-	Thu,  8 Feb 2024 15:53:32 +0000 (UTC)
-Date: Thu, 8 Feb 2024 10:53:28 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01B44C43390;
+	Thu,  8 Feb 2024 17:01:01 +0000 (UTC)
+Date: Thu, 8 Feb 2024 12:00:57 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Vincent Donnefort
- <vdonnefort@google.com>, Sven Schnelle <svens@linux.ibm.com>, Mete Durlu
- <meted@linux.ibm.com>, stable <stable@vger.kernel.org>
-Subject: [PATCH] tracing: Fix wasted memory in saved_cmdlines logic
-Message-ID: <20240208105328.7e73f71d@rorschach.local.home>
+To: Carlos Galo <carlosgalo@google.com>
+Cc: akpm@linux-foundation.org, surenb@google.com, android-mm@google.com,
+ kernel-team@android.com, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, Roman Gushchin
+ <roman.gushchin@linux.dev>, Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH v2] mm: Update mark_victim tracepoints fields
+Message-ID: <20240208120057.01547849@rorschach.local.home>
+In-Reply-To: <20240111210539.636607-1-carlosgalo@google.com>
+References: <20240111210539.636607-1-carlosgalo@google.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -31,173 +34,128 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Thu, 11 Jan 2024 21:05:30 +0000
+Carlos Galo <carlosgalo@google.com> wrote:
 
-While looking at improving the saved_cmdlines cache I found a huge amount
-of wasted memory that should be used for the cmdlines.
+> The current implementation of the mark_victim tracepoint provides only
+> the process ID (pid) of the victim process. This limitation poses
+> challenges for userspace tools that need additional information
+> about the OOM victim. The association between pid and the additional
+> data may be lost after the kill, making it difficult for userspace to
+> correlate the OOM event with the specific process.
+>=20
+> In order to mitigate this limitation, add the following fields:
+>=20
+> - UID
+>    In Android each installed application has a unique UID. Including
+>    the `uid` assists in correlating OOM events with specific apps.
+>=20
+> - Process Name (comm)
+>    Enables identification of the affected process.
+>=20
+> - OOM Score
+>    Allows userspace to get additional insights of the relative kill
+>    priority of the OOM victim.
+>=20
 
-The tracing data saves pids during the trace. At sched switch, if a trace
-occurred, it will save the comm of the task that did the trace. This is
-saved in a "cache" that maps pids to comms and exposed to user space via
-the /sys/kernel/tracing/saved_cmdlines file. Currently it only caches by
-default 128 comms.
+=46rom a tracing POV this looks fine to me, but it's up to the mm
+maintainers to decide to take it.
 
-The structure that uses this creates an array to store the pids using
-PID_MAX_DEFAULT (which is usually set to 32768). This causes the structure
-to be of the size of 131104 bytes on 64 bit machines.
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Suren Baghdasaryan <surenb@google.com>
+> Signed-off-by: Carlos Galo <carlosgalo@google.com>
+> ---
+> v2: Fixed build error. Added missing comma when printing `__entry->uid`.
+>=20
+>  include/trace/events/oom.h | 19 +++++++++++++++----
+>  mm/oom_kill.c              |  6 +++++-
+>  2 files changed, 20 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/include/trace/events/oom.h b/include/trace/events/oom.h
+> index 26a11e4a2c36..fb8a5d1b8a0a 100644
+> --- a/include/trace/events/oom.h
+> +++ b/include/trace/events/oom.h
+> @@ -72,19 +72,30 @@ TRACE_EVENT(reclaim_retry_zone,
+>  );
+> =20
+>  TRACE_EVENT(mark_victim,
+> -	TP_PROTO(int pid),
+> +	TP_PROTO(struct task_struct *task, uid_t uid),
+> =20
+> -	TP_ARGS(pid),
+> +	TP_ARGS(task, uid),
+> =20
+>  	TP_STRUCT__entry(
+>  		__field(int, pid)
+> +		__field(uid_t, uid)
+> +		__string(comm, task->comm)
+> +		__field(short, oom_score_adj)
+>  	),
+> =20
+>  	TP_fast_assign(
+> -		__entry->pid =3D pid;
+> +		__entry->pid =3D task->pid;
+> +		__entry->uid =3D uid;
+> +		__assign_str(comm, task->comm);
+> +		__entry->oom_score_adj =3D task->signal->oom_score_adj;
+>  	),
+> =20
+> -	TP_printk("pid=3D%d", __entry->pid)
+> +	TP_printk("pid=3D%d uid=3D%u comm=3D%s oom_score_adj=3D%hd",
+> +		__entry->pid,
+> +		__entry->uid,
+> +		__get_str(comm),
+> +		__entry->oom_score_adj
+> +	)
+>  );
+> =20
+>  TRACE_EVENT(wake_reaper,
+> diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+> index 9e6071fde34a..0698c00c5da6 100644
+> --- a/mm/oom_kill.c
+> +++ b/mm/oom_kill.c
+> @@ -44,6 +44,7 @@
+>  #include <linux/kthread.h>
+>  #include <linux/init.h>
+>  #include <linux/mmu_notifier.h>
+> +#include <linux/cred.h>
+> =20
+>  #include <asm/tlb.h>
+>  #include "internal.h"
+> @@ -753,6 +754,7 @@ static inline void queue_oom_reaper(struct task_struc=
+t *tsk)
+>   */
+>  static void mark_oom_victim(struct task_struct *tsk)
+>  {
+> +	const struct cred *cred;
+>  	struct mm_struct *mm =3D tsk->mm;
+> =20
+>  	WARN_ON(oom_killer_disabled);
+> @@ -772,7 +774,9 @@ static void mark_oom_victim(struct task_struct *tsk)
+>  	 */
+>  	__thaw_task(tsk);
+>  	atomic_inc(&oom_victims);
+> -	trace_mark_victim(tsk->pid);
+> +	cred =3D get_task_cred(tsk);
 
-In hex: 131104 = 0x20020, and since the kernel allocates generic memory in
-powers of two, the kernel would allocate 0x40000 or 262144 bytes to store
-this structure. That leaves 131040 bytes of wasted space.
+get_task_cred() isn't a trivial function and is used only for tracing.
+But this isn't a fast path so I guess that is fine.
 
-Worse, the structure points to an allocated array to store the comm names,
-which is 16 bytes times the amount of names to save (currently 128), which
-is 2048 bytes. Instead of allocating a separate array, make the structure
-end with a variable length string and use the extra space for that.
+For tracing:
 
-This is similar to a recommendation that Linus had made about eventfs_inode names:
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-  https://lore.kernel.org/all/20240130190355.11486-5-torvalds@linux-foundation.org/
+-- Steve
 
-Instead of allocating a separate string array to hold the saved comms,
-have the structure end with: char saved_cmdlines[]; and round up to the
-next power of two over sizeof(struct saved_cmdline_buffers) + num_cmdlines * TASK_COMM_LEN
-It will use this extra space for the saved_cmdline portion.
 
-Now, instead of saving only 128 comms by default, by using this wasted
-space at the end of the structure it can save over 8000 comms and even
-saves space by removing the need for allocating the other array.
-
-Cc: stable@vger.kernel.org
-Fixes: 939c7a4f04fcd ("tracing: Introduce saved_cmdlines_size file")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace.c | 73 +++++++++++++++++++++-----------------------
- 1 file changed, 34 insertions(+), 39 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 2a7c6fd934e9..0b3e60b827f7 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -2320,7 +2320,7 @@ struct saved_cmdlines_buffer {
- 	unsigned *map_cmdline_to_pid;
- 	unsigned cmdline_num;
- 	int cmdline_idx;
--	char *saved_cmdlines;
-+	char saved_cmdlines[];
- };
- static struct saved_cmdlines_buffer *savedcmd;
- 
-@@ -2334,47 +2334,54 @@ static inline void set_cmdline(int idx, const char *cmdline)
- 	strncpy(get_saved_cmdlines(idx), cmdline, TASK_COMM_LEN);
- }
- 
--static int allocate_cmdlines_buffer(unsigned int val,
--				    struct saved_cmdlines_buffer *s)
-+static void free_saved_cmdlines_buffer(struct saved_cmdlines_buffer *s)
-+{
-+	int order = get_order(sizeof(*s) + s->cmdline_num * TASK_COMM_LEN);
-+
-+	kfree(s->map_cmdline_to_pid);
-+	free_pages((unsigned long)s, order);
-+}
-+
-+static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
- {
-+	struct saved_cmdlines_buffer *s;
-+	struct page *page;
-+	int orig_size, size;
-+	int order;
-+
-+	/* Figure out how much is needed to hold the given number of cmdlines */
-+	orig_size = sizeof(*s) + val * TASK_COMM_LEN;
-+	order = get_order(orig_size);
-+	size = 1 << (order + PAGE_SHIFT);
-+	page = alloc_pages(GFP_KERNEL, order);
-+	if (!page)
-+		return NULL;
-+
-+	s = page_address(page);
-+	memset(s, 0, sizeof(*s));
-+
-+	/* Round up to actual allocation */
-+	val = (size - sizeof(*s)) / TASK_COMM_LEN;
-+	s->cmdline_num = val;
-+
- 	s->map_cmdline_to_pid = kmalloc_array(val,
- 					      sizeof(*s->map_cmdline_to_pid),
- 					      GFP_KERNEL);
--	if (!s->map_cmdline_to_pid)
--		return -ENOMEM;
--
--	s->saved_cmdlines = kmalloc_array(TASK_COMM_LEN, val, GFP_KERNEL);
--	if (!s->saved_cmdlines) {
--		kfree(s->map_cmdline_to_pid);
--		return -ENOMEM;
--	}
- 
- 	s->cmdline_idx = 0;
--	s->cmdline_num = val;
- 	memset(&s->map_pid_to_cmdline, NO_CMDLINE_MAP,
- 	       sizeof(s->map_pid_to_cmdline));
- 	memset(s->map_cmdline_to_pid, NO_CMDLINE_MAP,
- 	       val * sizeof(*s->map_cmdline_to_pid));
- 
--	return 0;
-+	return s;
- }
- 
- static int trace_create_savedcmd(void)
- {
--	int ret;
--
--	savedcmd = kmalloc(sizeof(*savedcmd), GFP_KERNEL);
--	if (!savedcmd)
--		return -ENOMEM;
--
--	ret = allocate_cmdlines_buffer(SAVED_CMDLINES_DEFAULT, savedcmd);
--	if (ret < 0) {
--		kfree(savedcmd);
--		savedcmd = NULL;
--		return -ENOMEM;
--	}
-+	savedcmd = allocate_cmdlines_buffer(SAVED_CMDLINES_DEFAULT);
- 
--	return 0;
-+	return savedcmd ? 0 : -ENOMEM;
- }
- 
- int is_tracing_stopped(void)
-@@ -6056,26 +6063,14 @@ tracing_saved_cmdlines_size_read(struct file *filp, char __user *ubuf,
- 	return simple_read_from_buffer(ubuf, cnt, ppos, buf, r);
- }
- 
--static void free_saved_cmdlines_buffer(struct saved_cmdlines_buffer *s)
--{
--	kfree(s->saved_cmdlines);
--	kfree(s->map_cmdline_to_pid);
--	kfree(s);
--}
--
- static int tracing_resize_saved_cmdlines(unsigned int val)
- {
- 	struct saved_cmdlines_buffer *s, *savedcmd_temp;
- 
--	s = kmalloc(sizeof(*s), GFP_KERNEL);
-+	s = allocate_cmdlines_buffer(val);
- 	if (!s)
- 		return -ENOMEM;
- 
--	if (allocate_cmdlines_buffer(val, s) < 0) {
--		kfree(s);
--		return -ENOMEM;
--	}
--
- 	preempt_disable();
- 	arch_spin_lock(&trace_cmdline_lock);
- 	savedcmd_temp = savedcmd;
--- 
-2.43.0
+> +	trace_mark_victim(tsk, cred->uid.val);
+> +	put_cred(cred);
+>  }
+> =20
+>  /**
+>=20
+> base-commit: 0dd3ee31125508cd67f7e7172247f05b7fd1753a
 
