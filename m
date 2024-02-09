@@ -1,382 +1,210 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC496DD03
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Feb 2024 10:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C931D542;
+	Fri,  9 Feb 2024 11:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707474149; cv=none; b=Qq1jx53G5nDTzt1bw7puninQo3d1xPemh5+qTCAJRWNH/BDJ/TH5DwNR5ATW63jy7sc6fCmPP3fLjJo5USBkr/FzkhW+Aj1ej3wDyCrvmm1Mx83sapc1aWxOmnkmlasuoip0ZPx/xwZKap0y4jDV35YyoIWyn2I69k3uCRBxGvc=
+	t=1707478587; cv=none; b=qTIYa4grV7Q2xolLnqeJLIhMHIY3XI9YfyLHxEH2ObhcR7ik+X/ovRun9lZCrFj9AmBrbX1l6NaiV5M16oT1ZqlejqdnouYQiVUVMLr09o638YxewzOY/PTG0gCSTjmGtEofP5R1KJOBzxC6U8r1atfJSVTit5oeiU01/pERdrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707474149; c=relaxed/simple;
-	bh=yF4snXCigsdD2V4iu9JXl93VeJuVdieGXDlgLcIwa4g=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=io9JXW3UN9mK+NTLBAfAodPlQQ59ADsKuV7eJAWBd4VVc9GteWTldEzw08m9KGxUJkkLtWWqDb1vTDFR3nTWGO8CQFIdZsXFmTFjvTmMGb+RWpd+RzQYOKmYGWPrDwHlyQ2NGxObQbua4kzDt12hRsQkGX4GTDl+6ofakKf5xAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zVHPn20F; arc=none smtp.client-ip=209.85.221.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zVHPn20F"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-33b17a50104so288874f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Feb 2024 02:22:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707474145; x=1708078945; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gMbQC9Qrfc/CHbT/uyUQA9ufo0litTV7XPwdOdKcRAI=;
-        b=zVHPn20FoRetrupRW2+jFQlur/YtkrOh4Wrzc18viizOXoERBa1Ht5xcPe5u5WSqAo
-         RT1EuLt1QfnR2RXyVDrJcQaPP8UYzXDphNQ45ziJnw5XexzX9xjh1mYK0l2lmLZiu0B+
-         F0mgQ00OJKr99t+GMHSDEczbat/PG2dPayZXfpu3kjRGMI2DR18Nj8eh15Wg9PetitlQ
-         dMJk2qBSN3Sl00DLJOwf0vRQrG4dDdKayQjiWjD/DP6znOgM9lI69uJkhhJmIZc5DDE4
-         35Mh2hfsxLV5D3oNOWSBde5mbFezAxN+qScjR2SZ905irY11sCh9T7zJawBVCwHOBRFY
-         dXyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707474145; x=1708078945;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gMbQC9Qrfc/CHbT/uyUQA9ufo0litTV7XPwdOdKcRAI=;
-        b=kgXRsfq27h4+ti0v+pUxwgcRHOogPUb7I9U7lrfiUNUIPEzilkGWydnu7wkVwlagJi
-         4GbE3H0Fd/+m0UeeoTfuxNhXdHgNPkthQG0LvbKg5P4Dyt03StTRLrrm7O4BBWMlAWEe
-         R8rp7pxJffDHB0+0XAE7nscexVMSjDN6wNPT0FDRAPw0s+Gidh4qouNYFnhiPqdjLm18
-         a2iDF2HVi6Ji40wWu0GhQEcpjrMn+FDjLvb1kMXrIiSZxYSSGj+C8IqfPCTmmI+tB+HP
-         Dv3uuq1IscQkWHEfJ92jJwKdFGgnK5f/qAuwAxaGhKVLHR+IVatm6Za5qgDFwtpuRhRK
-         5nEg==
-X-Gm-Message-State: AOJu0Yysmn3+QiEvGtwUaYqp7viH2nkBN2rRkoBOUSuT3eIzKwZowYqu
-	2ftnjdAbVbzQee9gJvomblwCjW9cRQZvDfVPDcofXCFdx+ZlQIVWKJcwzFygqQfMaBxwtKooo9+
-	c0SzXuZ3Zc2NMzTpeTA==
-X-Google-Smtp-Source: AGHT+IHtscRAfbJ5jPOvuP6XvnQhZ16FOqQmFHSpIRBm3NvF18aw0gyh4spXXAUW4yaQS30nGFMQx0P1MjW93q6H
-X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:a5d:522d:0:b0:33b:10a9:cfe3 with SMTP
- id i13-20020a5d522d000000b0033b10a9cfe3mr1978wra.11.1707474145648; Fri, 09
- Feb 2024 02:22:25 -0800 (PST)
-Date: Fri,  9 Feb 2024 10:22:02 +0000
-In-Reply-To: <20240209102202.649049-1-vdonnefort@google.com>
+	s=arc-20240116; t=1707478587; c=relaxed/simple;
+	bh=lQCt5IpvlhoGD78imhrQYoo7a8ZPzBS9q7DvLNIcdeM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=mraesiliZuQSuU5KLbHWMIITwBAcsHXHhxW/V8Pv71NPY5SpUoUpchALudBCB/55lBgf4s4XUZPjmPdvGwenXIslQI2F5xKpNPrTlf1YcTEYiFiHQRrxCbgUxHj5lyN+rEQZjLm2WPw666yv5Ef3NC6j1u6N5HP5yK7FQylyYrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA21AC433F1;
+	Fri,  9 Feb 2024 11:36:25 +0000 (UTC)
+Date: Fri, 9 Feb 2024 06:36:22 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Vincent Donnefort
+ <vdonnefort@google.com>, Sven Schnelle <svens@linux.ibm.com>, Mete Durlu
+ <meted@linux.ibm.com>
+Subject: [PATCH v2] tracing: Fix wasted memory in saved_cmdlines logic
+Message-ID: <20240209063622.1f7b6d5f@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240209102202.649049-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-Message-ID: <20240209102202.649049-7-vdonnefort@google.com>
-Subject: [PATCH v15 6/6] ring-buffer/selftest: Add ring-buffer mapping test
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	Vincent Donnefort <vdonnefort@google.com>, Shuah Khan <shuah@kernel.org>, 
-	Shuah Khan <skhan@linuxfoundation.org>, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-This test maps a ring-buffer and validate the meta-page after reset and
-after emitting few events.
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-kselftest@vger.kernel.org
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+While looking at improving the saved_cmdlines cache I found a huge amount
+of wasted memory that should be used for the cmdlines.
 
-diff --git a/tools/testing/selftests/ring-buffer/Makefile b/tools/testing/selftests/ring-buffer/Makefile
-new file mode 100644
-index 000000000000..627c5fa6d1ab
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/Makefile
-@@ -0,0 +1,8 @@
-+# SPDX-License-Identifier: GPL-2.0
-+CFLAGS += -Wl,-no-as-needed -Wall
-+CFLAGS += $(KHDR_INCLUDES)
-+CFLAGS += -D_GNU_SOURCE
-+
-+TEST_GEN_PROGS = map_test
-+
-+include ../lib.mk
-diff --git a/tools/testing/selftests/ring-buffer/config b/tools/testing/selftests/ring-buffer/config
-new file mode 100644
-index 000000000000..d936f8f00e78
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/config
-@@ -0,0 +1,2 @@
-+CONFIG_FTRACE=y
-+CONFIG_TRACER_SNAPSHOT=y
-diff --git a/tools/testing/selftests/ring-buffer/map_test.c b/tools/testing/selftests/ring-buffer/map_test.c
-new file mode 100644
-index 000000000000..56c44b29d998
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/map_test.c
-@@ -0,0 +1,273 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Ring-buffer memory mapping tests
-+ *
-+ * Copyright (c) 2024 Vincent Donnefort <vdonnefort@google.com>
-+ */
-+#include <fcntl.h>
-+#include <sched.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+
-+#include <linux/trace_mmap.h>
-+
-+#include <sys/mman.h>
-+#include <sys/ioctl.h>
-+
-+#include "../user_events/user_events_selftests.h" /* share tracefs setup */
-+#include "../kselftest_harness.h"
-+
-+#define TRACEFS_ROOT "/sys/kernel/tracing"
-+
-+static int __tracefs_write(const char *path, const char *value)
+The tracing data saves pids during the trace. At sched switch, if a trace
+occurred, it will save the comm of the task that did the trace. This is
+saved in a "cache" that maps pids to comms and exposed to user space via
+the /sys/kernel/tracing/saved_cmdlines file. Currently it only caches by
+default 128 comms.
+
+The structure that uses this creates an array to store the pids using
+PID_MAX_DEFAULT (which is usually set to 32768). This causes the structure
+to be of the size of 131104 bytes on 64 bit machines.
+
+In hex: 131104 = 0x20020, and since the kernel allocates generic memory in
+powers of two, the kernel would allocate 0x40000 or 262144 bytes to store
+this structure. That leaves 131040 bytes of wasted space.
+
+Worse, the structure points to an allocated array to store the comm names,
+which is 16 bytes times the amount of names to save (currently 128), which
+is 2048 bytes. Instead of allocating a separate array, make the structure
+end with a variable length string and use the extra space for that.
+
+This is similar to a recommendation that Linus had made about eventfs_inode names:
+
+  https://lore.kernel.org/all/20240130190355.11486-5-torvalds@linux-foundation.org/
+
+Instead of allocating a separate string array to hold the saved comms,
+have the structure end with: char saved_cmdlines[]; and round up to the
+next power of two over sizeof(struct saved_cmdline_buffers) + num_cmdlines * TASK_COMM_LEN
+It will use this extra space for the saved_cmdline portion.
+
+Now, instead of saving only 128 comms by default, by using this wasted
+space at the end of the structure it can save over 8000 comms and even
+saves space by removing the need for allocating the other array.
+
+Cc: stable@vger.kernel.org
+Fixes: 939c7a4f04fcd ("tracing: Introduce saved_cmdlines_size file")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v1: https://lore.kernel.org/linux-trace-kernel/20240208105328.7e73f71d@rorschach.local.home
+
+- Added back error check of s->map_cmdline_to_pid allocation failure
+
+ kernel/trace/trace.c | 75 ++++++++++++++++++++++----------------------
+ 1 file changed, 37 insertions(+), 38 deletions(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 2a7c6fd934e9..9ff8a439d674 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -2320,7 +2320,7 @@ struct saved_cmdlines_buffer {
+ 	unsigned *map_cmdline_to_pid;
+ 	unsigned cmdline_num;
+ 	int cmdline_idx;
+-	char *saved_cmdlines;
++	char saved_cmdlines[];
+ };
+ static struct saved_cmdlines_buffer *savedcmd;
+ 
+@@ -2334,47 +2334,58 @@ static inline void set_cmdline(int idx, const char *cmdline)
+ 	strncpy(get_saved_cmdlines(idx), cmdline, TASK_COMM_LEN);
+ }
+ 
+-static int allocate_cmdlines_buffer(unsigned int val,
+-				    struct saved_cmdlines_buffer *s)
++static void free_saved_cmdlines_buffer(struct saved_cmdlines_buffer *s)
 +{
-+	int fd, ret;
++	int order = get_order(sizeof(*s) + s->cmdline_num * TASK_COMM_LEN);
 +
-+	fd = open(path, O_WRONLY | O_TRUNC);
-+	if (fd < 0)
-+		return fd;
-+
-+	ret = write(fd, value, strlen(value));
-+
-+	close(fd);
-+
-+	return ret == -1 ? -errno : 0;
++	kfree(s->map_cmdline_to_pid);
++	free_pages((unsigned long)s, order);
 +}
 +
-+static int __tracefs_write_int(const char *path, int value)
-+{
-+	char *str;
-+	int ret;
++static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
+ {
++	struct saved_cmdlines_buffer *s;
++	struct page *page;
++	int orig_size, size;
++	int order;
 +
-+	if (asprintf(&str, "%d", value) < 0)
-+		return -1;
++	/* Figure out how much is needed to hold the given number of cmdlines */
++	orig_size = sizeof(*s) + val * TASK_COMM_LEN;
++	order = get_order(orig_size);
++	size = 1 << (order + PAGE_SHIFT);
++	page = alloc_pages(GFP_KERNEL, order);
++	if (!page)
++		return NULL;
 +
-+	ret = __tracefs_write(path, str);
++	s = page_address(page);
++	memset(s, 0, sizeof(*s));
 +
-+	free(str);
++	/* Round up to actual allocation */
++	val = (size - sizeof(*s)) / TASK_COMM_LEN;
++	s->cmdline_num = val;
 +
-+	return ret;
-+}
-+
-+#define tracefs_write_int(path, value) \
-+	ASSERT_EQ(__tracefs_write_int((path), (value)), 0)
-+
-+#define tracefs_write(path, value) \
-+	ASSERT_EQ(__tracefs_write((path), (value)), 0)
-+
-+static int tracefs_reset(void)
-+{
-+	if (__tracefs_write_int(TRACEFS_ROOT"/tracing_on", 0))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/trace", ""))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/set_event", ""))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/current_tracer", "nop"))
-+		return -1;
-+
-+	return 0;
-+}
-+
-+struct tracefs_cpu_map_desc {
-+	struct trace_buffer_meta	*meta;
-+	void				*data;
-+	int				cpu_fd;
-+};
-+
-+int tracefs_cpu_map(struct tracefs_cpu_map_desc *desc, int cpu)
-+{
-+	unsigned long meta_len, data_len;
-+	int page_size = getpagesize();
-+	char *cpu_path;
-+	void *map;
-+
-+	if (asprintf(&cpu_path,
-+		     TRACEFS_ROOT"/per_cpu/cpu%d/trace_pipe_raw",
-+		     cpu) < 0)
-+		return -ENOMEM;
-+
-+	desc->cpu_fd = open(cpu_path, O_RDONLY | O_NONBLOCK);
-+	free(cpu_path);
-+	if (desc->cpu_fd < 0)
-+		return -ENODEV;
-+
-+	map = mmap(NULL, page_size, PROT_READ, MAP_SHARED, desc->cpu_fd, 0);
-+	if (map == MAP_FAILED)
-+		return -errno;
-+
-+	desc->meta = (struct trace_buffer_meta *)map;
-+
-+	meta_len = desc->meta->meta_page_size;
-+	data_len = desc->meta->subbuf_size * desc->meta->nr_subbufs;
-+
-+	map = mmap(NULL, data_len, PROT_READ, MAP_SHARED, desc->cpu_fd, meta_len);
-+	if (map == MAP_FAILED) {
-+		munmap(desc->meta, desc->meta->meta_page_size);
-+		return -EINVAL;
-+	}
-+
-+	desc->data = map;
-+
-+	return 0;
-+}
-+
-+void tracefs_cpu_unmap(struct tracefs_cpu_map_desc *desc)
-+{
-+	munmap(desc->data, desc->meta->subbuf_size * desc->meta->nr_subbufs);
-+	munmap(desc->meta, desc->meta->meta_page_size);
-+	close(desc->cpu_fd);
-+}
-+
-+FIXTURE(map) {
-+	struct tracefs_cpu_map_desc	map_desc;
-+	bool				umount;
-+};
-+
-+FIXTURE_VARIANT(map) {
-+	int	subbuf_size;
-+};
-+
-+FIXTURE_VARIANT_ADD(map, subbuf_size_4k) {
-+	.subbuf_size = 4,
-+};
-+
-+FIXTURE_VARIANT_ADD(map, subbuf_size_8k) {
-+	.subbuf_size = 8,
-+};
-+
-+FIXTURE_SETUP(map)
-+{
-+	int cpu = sched_getcpu();
-+	cpu_set_t cpu_mask;
-+	bool fail, umount;
-+	char *message;
-+
-+	if (!tracefs_enabled(&message, &fail, &umount)) {
-+		if (fail) {
-+			TH_LOG("Tracefs setup failed: %s", message);
-+			ASSERT_FALSE(fail);
-+		}
-+		SKIP(return, "Skipping: %s", message);
-+	}
-+
-+	self->umount = umount;
-+
-+	ASSERT_GE(cpu, 0);
-+
-+	ASSERT_EQ(tracefs_reset(), 0);
-+
-+	tracefs_write_int(TRACEFS_ROOT"/buffer_subbuf_size_kb", variant->subbuf_size);
-+
-+	ASSERT_EQ(tracefs_cpu_map(&self->map_desc, cpu), 0);
-+
-+	/*
-+	 * Ensure generated events will be found on this very same ring-buffer.
-+	 */
-+	CPU_ZERO(&cpu_mask);
-+	CPU_SET(cpu, &cpu_mask);
-+	ASSERT_EQ(sched_setaffinity(0, sizeof(cpu_mask), &cpu_mask), 0);
-+}
-+
-+FIXTURE_TEARDOWN(map)
-+{
-+	tracefs_reset();
-+
-+	if (self->umount)
-+		tracefs_unmount();
-+
-+	tracefs_cpu_unmap(&self->map_desc);
-+}
-+
-+TEST_F(map, meta_page_check)
-+{
-+	struct tracefs_cpu_map_desc *desc = &self->map_desc;
-+	int cnt = 0;
-+
-+	ASSERT_EQ(desc->meta->entries, 0);
-+	ASSERT_EQ(desc->meta->overrun, 0);
-+	ASSERT_EQ(desc->meta->read, 0);
-+
-+	ASSERT_EQ(desc->meta->reader.id, 0);
-+	ASSERT_EQ(desc->meta->reader.read, 0);
-+
-+	ASSERT_EQ(ioctl(desc->cpu_fd, TRACE_MMAP_IOCTL_GET_READER), 0);
-+	ASSERT_EQ(desc->meta->reader.id, 0);
-+
-+	tracefs_write_int(TRACEFS_ROOT"/tracing_on", 1);
-+	for (int i = 0; i < 16; i++)
-+		tracefs_write_int(TRACEFS_ROOT"/trace_marker", i);
-+again:
-+	ASSERT_EQ(ioctl(desc->cpu_fd, TRACE_MMAP_IOCTL_GET_READER), 0);
-+
-+	ASSERT_EQ(desc->meta->entries, 16);
-+	ASSERT_EQ(desc->meta->overrun, 0);
-+	ASSERT_EQ(desc->meta->read, 16);
-+
-+	ASSERT_EQ(desc->meta->reader.id, 1);
-+
-+	if (!(cnt++))
-+		goto again;
-+}
-+
-+FIXTURE(snapshot) {
-+	bool	umount;
-+};
-+
-+FIXTURE_SETUP(snapshot)
-+{
-+	bool fail, umount;
-+	struct stat sb;
-+	char *message;
-+
-+	if (stat(TRACEFS_ROOT"/snapshot", &sb))
-+		SKIP(return, "Skipping: %s", "snapshot not available");
-+
-+	if (!tracefs_enabled(&message, &fail, &umount)) {
-+		if (fail) {
-+			TH_LOG("Tracefs setup failed: %s", message);
-+			ASSERT_FALSE(fail);
-+		}
-+		SKIP(return, "Skipping: %s", message);
-+	}
-+
-+	self->umount = umount;
-+}
-+
-+FIXTURE_TEARDOWN(snapshot)
-+{
-+	__tracefs_write(TRACEFS_ROOT"/events/sched/sched_switch/trigger",
-+			"!snapshot");
-+	tracefs_reset();
-+
-+	if (self->umount)
-+		tracefs_unmount();
-+}
-+
-+TEST_F(snapshot, excludes_map)
-+{
-+	struct tracefs_cpu_map_desc map_desc;
-+	int cpu = sched_getcpu();
-+
-+	ASSERT_GE(cpu, 0);
-+	tracefs_write(TRACEFS_ROOT"/events/sched/sched_switch/trigger",
-+		      "snapshot");
-+	ASSERT_EQ(tracefs_cpu_map(&map_desc, cpu), -EBUSY);
-+}
-+
-+TEST_F(snapshot, excluded_by_map)
-+{
-+	struct tracefs_cpu_map_desc map_desc;
-+	int cpu = sched_getcpu();
-+
-+	ASSERT_EQ(tracefs_cpu_map(&map_desc, cpu), 0);
-+
-+	ASSERT_EQ(__tracefs_write(TRACEFS_ROOT"/events/sched/sched_switch/trigger",
-+				  "snapshot"), -EBUSY);
-+	ASSERT_EQ(__tracefs_write(TRACEFS_ROOT"/snapshot",
-+				  "1"), -EBUSY);
-+}
-+
-+TEST_HARNESS_MAIN
+ 	s->map_cmdline_to_pid = kmalloc_array(val,
+ 					      sizeof(*s->map_cmdline_to_pid),
+ 					      GFP_KERNEL);
+-	if (!s->map_cmdline_to_pid)
+-		return -ENOMEM;
+-
+-	s->saved_cmdlines = kmalloc_array(TASK_COMM_LEN, val, GFP_KERNEL);
+-	if (!s->saved_cmdlines) {
+-		kfree(s->map_cmdline_to_pid);
+-		return -ENOMEM;
++	if (!s->map_cmdline_to_pid) {
++		free_saved_cmdlines_buffer(s);
++		return NULL;
+ 	}
+ 
+ 	s->cmdline_idx = 0;
+-	s->cmdline_num = val;
+ 	memset(&s->map_pid_to_cmdline, NO_CMDLINE_MAP,
+ 	       sizeof(s->map_pid_to_cmdline));
+ 	memset(s->map_cmdline_to_pid, NO_CMDLINE_MAP,
+ 	       val * sizeof(*s->map_cmdline_to_pid));
+ 
+-	return 0;
++	return s;
+ }
+ 
+ static int trace_create_savedcmd(void)
+ {
+-	int ret;
+-
+-	savedcmd = kmalloc(sizeof(*savedcmd), GFP_KERNEL);
+-	if (!savedcmd)
+-		return -ENOMEM;
+-
+-	ret = allocate_cmdlines_buffer(SAVED_CMDLINES_DEFAULT, savedcmd);
+-	if (ret < 0) {
+-		kfree(savedcmd);
+-		savedcmd = NULL;
+-		return -ENOMEM;
+-	}
++	savedcmd = allocate_cmdlines_buffer(SAVED_CMDLINES_DEFAULT);
+ 
+-	return 0;
++	return savedcmd ? 0 : -ENOMEM;
+ }
+ 
+ int is_tracing_stopped(void)
+@@ -6056,26 +6067,14 @@ tracing_saved_cmdlines_size_read(struct file *filp, char __user *ubuf,
+ 	return simple_read_from_buffer(ubuf, cnt, ppos, buf, r);
+ }
+ 
+-static void free_saved_cmdlines_buffer(struct saved_cmdlines_buffer *s)
+-{
+-	kfree(s->saved_cmdlines);
+-	kfree(s->map_cmdline_to_pid);
+-	kfree(s);
+-}
+-
+ static int tracing_resize_saved_cmdlines(unsigned int val)
+ {
+ 	struct saved_cmdlines_buffer *s, *savedcmd_temp;
+ 
+-	s = kmalloc(sizeof(*s), GFP_KERNEL);
++	s = allocate_cmdlines_buffer(val);
+ 	if (!s)
+ 		return -ENOMEM;
+ 
+-	if (allocate_cmdlines_buffer(val, s) < 0) {
+-		kfree(s);
+-		return -ENOMEM;
+-	}
+-
+ 	preempt_disable();
+ 	arch_spin_lock(&trace_cmdline_lock);
+ 	savedcmd_temp = savedcmd;
 -- 
-2.43.0.687.g38aa6559b0-goog
+2.43.0
 
