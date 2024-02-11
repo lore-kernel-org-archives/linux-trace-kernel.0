@@ -1,31 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC81516410;
-	Sun, 11 Feb 2024 22:31:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EAF23C5;
+	Sun, 11 Feb 2024 22:38:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707690719; cv=none; b=ZpdYaKK0gxTrxtKXRs0JIeo8zek/DI3sL7DHPi1WKdSP857c40bRYFcCM5uOFiPgbAwfV4L4p5MgkYTwWP3MB/ABSep5zE5FtZMdvAS1OOnQ28FSkoffuIiX4HCvwABpQpd0o/8yu2tUfgKAKe8lEh3ZTegA5/VU03gMsaycyQQ=
+	t=1707691099; cv=none; b=VSuvgY+kMRZJRSPfBgWHHWhalFWyeZX8MbsaXax4fzL8/TajGGu1EvcNabxAyNWGyxlWJrU0Ott/4braiD29d3Niz6Z02F2ejPtcHCC6VhqmcFDiZc07R5GmBAD7TB2eT3FvhWf99U3Rd9qL+WIv6Upv2qnu5MDA7d3Fz3XfKV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707690719; c=relaxed/simple;
-	bh=QpPQNeAHMer5KrkFxS0Sut6+SxBrUisr5nLi+22bvCs=;
+	s=arc-20240116; t=1707691099; c=relaxed/simple;
+	bh=2jaB1u24d4zX6XbultG3tdTc6pKJNerRrYF3/9nyfLw=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MMMUN0QQtm3i1LXlzusOp1gtT/pEEgQIatTtJadLmbB117ve8svMmYJUREtDMXJWH5y2BMpsTSYH7ReQzRoBNywVN1iT/+p3um2KxIFCW4v5maEU4qdl4RQejy5sSqVst9z2hj7K2DXjUfd5AScosVzE1nMaUnedSBo3rArngdc=
+	 MIME-Version:Content-Type; b=OF8QNZXARowK8p1kjlT2x++K0ss15d5K6jfn2yyLPMxi8nlKxASzFsq5/TaKoQtjcNq2Yk2OeTE6uCeEGWCoNFTFrdr6IoCljRkz7V1buuY3xKaS0jshYQzVpExVrvU60wQXGdZ5tc1FbsbKnSHSgJSXDBHJ+518BOxmXF8rFYU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7978C433C7;
-	Sun, 11 Feb 2024 22:31:57 +0000 (UTC)
-Date: Sun, 11 Feb 2024 17:31:51 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 080C6C433C7;
+	Sun, 11 Feb 2024 22:38:18 +0000 (UTC)
+Date: Sun, 11 Feb 2024 17:38:12 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Vincent Donnefort <vdonnefort@google.com>
 Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
  kernel-team@android.com
-Subject: Re: [PATCH v16 4/6] tracing: Allow user-space mapping of the
- ring-buffer
-Message-ID: <20240211173151.0d3f58c4@rorschach.local.home>
-In-Reply-To: <20240209163448.944970-5-vdonnefort@google.com>
+Subject: Re: [PATCH v16 5/6] Documentation: tracing: Add ring-buffer mapping
+Message-ID: <20240211173812.70c37edd@rorschach.local.home>
+In-Reply-To: <20240209163448.944970-6-vdonnefort@google.com>
 References: <20240209163448.944970-1-vdonnefort@google.com>
-	<20240209163448.944970-5-vdonnefort@google.com>
+	<20240209163448.944970-6-vdonnefort@google.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -36,164 +35,150 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri,  9 Feb 2024 16:34:46 +0000
+On Fri,  9 Feb 2024 16:34:47 +0000
 Vincent Donnefort <vdonnefort@google.com> wrote:
 
-> +static void tracing_buffers_mmap_close(struct vm_area_struct *vma)
-> +{
-> +	struct ftrace_buffer_info *info = vma->vm_file->private_data;
-> +	struct trace_iterator *iter = &info->iter;
-> +	struct trace_array __maybe_unused *tr = iter->tr;
+> It is now possible to mmap() a ring-buffer to stream its content. Add
+> some documentation and a code example.
+> 
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> 
+> diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+> index 5092d6c13af5..0b300901fd75 100644
+> --- a/Documentation/trace/index.rst
+> +++ b/Documentation/trace/index.rst
+> @@ -29,6 +29,7 @@ Linux Tracing Technologies
+>     timerlat-tracer
+>     intel_th
+>     ring-buffer-design
+> +   ring-buffer-map
+>     stm
+>     sys-t
+>     coresight/index
+> diff --git a/Documentation/trace/ring-buffer-map.rst b/Documentation/trace/ring-buffer-map.rst
+> new file mode 100644
+> index 000000000000..628254e63830
+> --- /dev/null
+> +++ b/Documentation/trace/ring-buffer-map.rst
+> @@ -0,0 +1,104 @@
+> +.. SPDX-License-Identifier: GPL-2.0
 > +
-> +	ring_buffer_unmap(iter->array_buffer->buffer, iter->cpu_file);
+> +==================================
+> +Tracefs ring-buffer memory mapping
+> +==================================
 > +
-> +#ifdef CONFIG_TRACER_MAX_TRACE
-> +	spin_lock(&tr->snapshot_trigger_lock);
-> +	if (!WARN_ON(!tr->mapped))
-> +		tr->mapped--;
-> +	spin_unlock(&tr->snapshot_trigger_lock);
-> +#endif
-
-You can add a section with the #ifdef *MAX_TRACE and use static inline
-for these (or use an existing section):
-
-#ifdef CONFIG_TRACER_MAX_TRACE
-static void put_snapshot_map(struct trace_array *tr)
-{
-	spin_lock(&tr->snapshot_trigger_lock);
-	if (!WARN_ON(!tr->mapped))
-		tr->mapped--;
-	spin_unlock(&tr->snapshot_trigger_lock);	
-}
-[..]
-#else
-static inline void put_snapshot_map(struct trace_array *tr) { }
-[..]
-#endif
-
-> +}
+> +:Author: Vincent Donnefort <vdonnefort@google.com>
 > +
-> +static void tracing_buffers_mmap_open(struct vm_area_struct *vma)
-> +{
-> +	struct ftrace_buffer_info *info = vma->vm_file->private_data;
-> +	struct trace_iterator *iter = &info->iter;
+> +Overview
+> +========
+> +Tracefs ring-buffer memory map provides an efficient method to stream data
+> +as no memory copy is necessary. The application mapping the ring-buffer becomes
+> +then a consumer for that ring-buffer, in a similar fashion to trace_pipe.
 > +
-> +	WARN_ON(ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file));
-> +}
+> +Memory mapping setup
+> +====================
+> +The mapping works with a mmap() of the trace_pipe_raw interface.
 > +
-> +static const struct vm_operations_struct tracing_buffers_vmops = {
-> +	.open		= tracing_buffers_mmap_open,
-> +	.close		= tracing_buffers_mmap_close,
-> +	.fault		= tracing_buffers_mmap_fault,
-> +};
+> +The first system page of the mapping contains ring-buffer statistics and
+> +description. It is referred as the meta-page. One of the most important field of
+> +the meta-page is the reader. It contains the sub-buffer ID which can be safely
+> +read by the mapper (see ring-buffer-design.rst).
 > +
-> +static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
-> +{
-> +	struct ftrace_buffer_info *info = filp->private_data;
-> +	struct trace_iterator *iter = &info->iter;
-> +	struct trace_array __maybe_unused *tr = iter->tr;
-> +	int ret = 0;
+> +The meta-page is followed by all the sub-buffers, ordered by ascendant ID. It is
+> +therefore effortless to know where the reader starts in the mapping:
 > +
-> +	if (vma->vm_flags & VM_WRITE || vma->vm_flags & VM_EXEC)
-> +		return -EPERM;
+> +.. code-block:: c
 > +
-> +	vm_flags_mod(vma, VM_DONTCOPY | VM_DONTDUMP, VM_MAYWRITE);
-> +	vma->vm_ops = &tracing_buffers_vmops;
+> +        reader_id = meta->reader->id;
+> +        reader_offset = meta->meta_page_size + reader_id * meta->subbuf_size;
 > +
-> +#ifdef CONFIG_TRACER_MAX_TRACE
-> +	/*
-> +	 * We hold mmap_lock here. lockdep would be unhappy if we would now take
-> +	 * trace_types_lock. Instead use the specific snapshot_trigger_lock.
-> +	 */
-> +	spin_lock(&tr->snapshot_trigger_lock);
-> +	if (tr->snapshot || tr->mapped == UINT_MAX) {
-> +		spin_unlock(&tr->snapshot_trigger_lock);
-> +		return -EBUSY;
-> +	}
-> +	tr->mapped++;
-> +	spin_unlock(&tr->snapshot_trigger_lock);
+> +When the application is done with the current reader, it can get a new one using
+> +the trace_pipe_raw ioctl() TRACE_MMAP_IOCTL_GET_READER. This ioctl also updates
+> +the meta-page fields.
 > +
-> +	/* Wait for update_max_tr() to observe iter->tr->mapped */
-> +	if (tr->mapped == 1)
-> +		synchronize_rcu();
-> +#endif
+> +Limitations
+> +===========
+> +When a mapping is in place on a Tracefs ring-buffer, it is not possible to
+> +either resize it (either by increasing the entire size of the ring-buffer or
+> +each subbuf). It is also not possible to use snapshot or splice.
 
-The above could be:
+Actually, it doesn't stop splice. splice still works, it's just that it
+makes splice copy the data. The above should say:
 
-static int get_snapshot_map(struct trace_array *tr)
-{
-	/*
-	 * We hold mmap_lock here. lockdep would be unhappy if we would now take
-	 * trace_types_lock. Instead use the specific snapshot_trigger_lock.
-	 */
-	spin_lock(&tr->snapshot_trigger_lock);
-	if (tr->snapshot || tr->mapped == UINT_MAX) {
-		spin_unlock(&tr->snapshot_trigger_lock);
-		return -EBUSY;
-	}
-	tr->mapped++;
-	spin_unlock(&tr->snapshot_trigger_lock);
+	"It is also not possible to use snapshot and causes splice to
+	copy the ring buffer data instead of using the copyless swap
+	from the ring buffer".
 
-	/* Wait for update_max_tr() to observe iter->tr->mapped */
-	if (tr->mapped == 1)
-		synchronize_rcu();
+Or something like that.
 
-	return 0;
-}
-#else
-static inline test_snapshot_map(struct trace_array *tr)
-{
-	return 0;
-}
-[..]
+> +
+> +Concurrent readers (either another application mapping that ring-buffer or the
+> +kernel with trace_pipe) are allowed but not recommended. They will compete for
+> +the ring-buffer and the output is unpredictable.
 
-Then here just have:
-
-	ret = test_snapshot_map(tr);
-	if (ret < 0)
-		return ret;
-
-
-> +	ret = ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file);
-> +#ifdef CONFIG_TRACER_MAX_TRACE
-> +	if (ret) {
-> +		spin_lock(&tr->snapshot_trigger_lock);
-> +		iter->tr->mapped--;
-> +		spin_unlock(&tr->snapshot_trigger_lock);
-> +	}
-> +#endif
-
-and the above is just:
-
-	if (ret)
-		put_snapshot_map(tr);
+  "and the output is unpredictable just like concurrent readers on
+  trace_pipe would be." ;-)
 
 -- Steve
 
-> +	return ret;
-> +}
 > +
->  static const struct file_operations tracing_buffers_fops = {
->  	.open		= tracing_buffers_open,
->  	.read		= tracing_buffers_read,
-> @@ -8681,6 +8794,7 @@ static const struct file_operations tracing_buffers_fops = {
->  	.splice_read	= tracing_buffers_splice_read,
->  	.unlocked_ioctl = tracing_buffers_ioctl,
->  	.llseek		= no_llseek,
-> +	.mmap		= tracing_buffers_mmap,
->  };
->  
->  static ssize_t
-> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> index bd312e9afe25..8a96e7a89e6b 100644
-> --- a/kernel/trace/trace.h
-> +++ b/kernel/trace/trace.h
-> @@ -336,6 +336,7 @@ struct trace_array {
->  	bool			allocated_snapshot;
->  	spinlock_t		snapshot_trigger_lock;
->  	unsigned int		snapshot;
-> +	unsigned int		mapped;
->  	unsigned long		max_latency;
->  #ifdef CONFIG_FSNOTIFY
->  	struct dentry		*d_max_latency;
+> +Example
+> +=======
+> +
+> +.. code-block:: c
+> +
+> +        #include <fcntl.h>
+> +        #include <stdio.h>
+> +        #include <stdlib.h>
+> +        #include <unistd.h>
+> +
+> +        #include <linux/trace_mmap.h>
+> +
+> +        #include <sys/mman.h>
+> +        #include <sys/ioctl.h>
+> +
+> +        #define TRACE_PIPE_RAW "/sys/kernel/tracing/per_cpu/cpu0/trace_pipe_raw"
+> +
+> +        int main(void)
+> +        {
+> +                int page_size = getpagesize(), fd, reader_id;
+> +                unsigned long meta_len, data_len;
+> +                struct trace_buffer_meta *meta;
+> +                void *map, *reader, *data;
+> +
+> +                fd = open(TRACE_PIPE_RAW, O_RDONLY | O_NONBLOCK);
+> +                if (fd < 0)
+> +                        exit(EXIT_FAILURE);
+> +
+> +                map = mmap(NULL, page_size, PROT_READ, MAP_SHARED, fd, 0);
+> +                if (map == MAP_FAILED)
+> +                        exit(EXIT_FAILURE);
+> +
+> +                meta = (struct trace_buffer_meta *)map;
+> +                meta_len = meta->meta_page_size;
+> +
+> +                printf("entries:        %llu\n", meta->entries);
+> +                printf("overrun:        %llu\n", meta->overrun);
+> +                printf("read:           %llu\n", meta->read);
+> +                printf("nr_subbufs:     %u\n", meta->nr_subbufs);
+> +
+> +                data_len = meta->subbuf_size * meta->nr_subbufs;
+> +                data = mmap(NULL, data_len, PROT_READ, MAP_SHARED, fd, meta_len);
+> +                if (data == MAP_FAILED)
+> +                        exit(EXIT_FAILURE);
+> +
+> +                if (ioctl(fd, TRACE_MMAP_IOCTL_GET_READER) < 0)
+> +                        exit(EXIT_FAILURE);
+> +
+> +                reader_id = meta->reader.id;
+> +                reader = data + meta->subbuf_size * reader_id;
+> +
+> +                printf("Current reader address: %p\n", reader);
+> +
+> +                munmap(data, data_len);
+> +                munmap(meta, meta_len);
+> +                close (fd);
+> +
+> +                return 0;
+> +        }
 
