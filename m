@@ -1,68 +1,67 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31CA93C2C
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Feb 2024 22:43:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D0A154B1
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Feb 2024 23:09:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707691404; cv=none; b=mAyShmxonNUlR2TH4H3cw2QGh/XlbUIJt0L3aoQ9DVeUc9fbewK7HVSZfZ0ugLQ1PmSnoTyTX+/CnCqRIdnKCBZ12CqkF7Lt4QNr1DRRKembawNK4z/3+eNBvq5A6aaJNvhAqAxm32PF8mC+Eyr3QJfNAnWLygTgalSaRUOedf8=
+	t=1707692999; cv=none; b=q+IF9VsjoQzt6+bCR5y0TGD7rYX4GyPrzSvoyxTam7naBEJ4Ah8U/suaBSBVAebvHQ5guYzMmuu1Rklzm0knvbG/y5M51puY5ZfduCScK2fGuJQkqUn/onrtr4FKQN0gBRLpYFJKoVS+y03WTkV9i9O3+3gE+z8QXnAzeKXwA9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707691404; c=relaxed/simple;
-	bh=vH5zUWq2bx6dQW4vfZYSuRe8aVXk2pfKniPKqPuO358=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qT3n+r6c29hDfCf3/xxB/tpbaMF0uIThu9W6IbRLrSY9bcOQiS1kIA1YPsYL+6Pj69ZV8ndOEGnf8iY/PUOWY9Xrub0JUFAnc7ocT4jgIBcSETcEtFp/ZMt52XTy2+LrzcuvXY+UdEDHAUdskC7FrTUxSQgJUhKqsi+NtgAGLDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=XzwGrRYB; arc=none smtp.client-ip=209.85.218.54
+	s=arc-20240116; t=1707692999; c=relaxed/simple;
+	bh=0UHBFd8KsfNzuUb6VByQxElPhKzrj40UEzATEtX2vCE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bI62IKtuzk3nN/9LQxaEQjmvHSji5uNIzHEPzLHO3YTgoQ9MkY1EKGLbAUxWrjx3I0SUH9Slkvf3zJB6Je2oK9kJgDY4Bgr5BlmfxR/4nghslXXu6izbTirOeVu98Z3ApufjhFOnlpTvhcmf6M0v2by9uophLqeeuVjcvk6+BqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=M5JSqYeC; arc=none smtp.client-ip=209.85.208.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="XzwGrRYB"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a28a6cef709so350140966b.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Feb 2024 14:43:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="M5JSqYeC"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-561587ce966so2991347a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Feb 2024 15:09:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1707691400; x=1708296200; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1707692994; x=1708297794; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bjFoTus7aHlrnOcOuTAWCgZWdvA6SJu+L7BLRl44mJ4=;
-        b=XzwGrRYB4wgrdtQVHY5xX1gmGzqgxYdBbYfbzqQhvXkCm0J/eiDscC0FQdiLMEcoyN
-         xf3f7ffeMf42ZBRCIzQGhFrIqNFJriSP8DTRjRKvgS+j8N0qblrGp6360bNHCpeo8Gmc
-         MSqV7wvSAVwNGBQBlS/Y1ipmz9/E/o+l7gA4ozerlUh4mTNE1dGKh28pnGeaIog3ngyu
-         2fTAI5Oo1pGDmW5jecWj3oi+r1uvzKjEoB8C+mz6+CRQmFWm1ITT7NWPey7nBKM//TgF
-         n8l3ckrZfMqa3L8lWOch0M++KM0cYDLo+QFXj7TSvchlQRMvZxNoCf592pG0KnBaHVoV
-         nFLQ==
+        bh=XH/aCjJt/DiB7MsEbqzKT+olkUUu+T5Xb1GlIEopZ2s=;
+        b=M5JSqYeCSp8QZJ0B2mc5PfXQd8UPl+0ebY+0u3Y8K2A0g/yx5mmKb5TiyY96kReG60
+         rdBafxGQe9jaEMLth/9RIT43xfVjJ3VUAfpxec6sEX7XaN+r+HJv/hodKAmEScigPQmb
+         b5HIFSqr9NsYSACyYYq0ZPq3/sDHQSxyW87siIYAIv65M3EnrxP0zVbjtRhiJUmlISWK
+         PW9LIMxa4nyxbONBqWD9F6jSJ/spDArZ7X3oJ9txipFILbKmt6sS3dQ7HaZvv6aVRU1J
+         N/M4IlywRgLrZEMoxTgcxCNQDardrOj//vbYNC7Qv1EYRsu5dnB+UA1191K5D/ZvI4lL
+         zL9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707691400; x=1708296200;
+        d=1e100.net; s=20230601; t=1707692994; x=1708297794;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=bjFoTus7aHlrnOcOuTAWCgZWdvA6SJu+L7BLRl44mJ4=;
-        b=e9hFj5deZ6CSv9uKzvzndM18itIcw8dpQV+1dPellaFsKtWVVz59FAi/2p6c50WRbl
-         ysFbwE1kvdPSo3B8AmrZmlJzO8h5ATlx6JTqC8byYqyS9ea2cNNbt/0Wvw89imxBurIG
-         kdiyPFnPM8pl3yWlVQSi/GrJjbD1v5cgNKOcSS2VVr8p/7iDaWIt3uLwCfGFFdZqIfiu
-         0Hk2xLKdlH2xLzrpU5UAYCNMcEN64CioLf2lqICYbTc8/wr5KHNIVGWdhf+qx82+nBhm
-         QaM31W8bbpNGkh13VqTvzBNQsXRQR8OgSg1B8tMmQi+zs5MoUh08JEHYuluvfxyImn8h
-         g7EQ==
-X-Gm-Message-State: AOJu0YwBfuwHLxYuNYKYjn8Y27KmthYE081zGhnYNkAlj0Yu2aOVMfVJ
-	W600ycdlRIOtY7Jk8U/3nklvZB7pW6+F+QxKOdVBX3KZV0qFbferNrUq5Cx3S4o=
-X-Google-Smtp-Source: AGHT+IF/LQAiygCy1X2jwyJTPhn1e+uYExYY761RJQwyXq1F0mNIQlwA82dukr6G4OSCdbXkY491HQ==
-X-Received: by 2002:a17:906:7f8a:b0:a38:4879:72f9 with SMTP id f10-20020a1709067f8a00b00a38487972f9mr3948919ejr.24.1707691400547;
-        Sun, 11 Feb 2024 14:43:20 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVtkTht4pynUiAjFuubCUmY6w2q1SDAomrzS74tMB+us6WxH+jvbhOHWUNcrWMoEl5L6T55EfIgeLoXTWNKIlhYxr9Azsf4uiaYvVR0jG2UYSJFwNC53+sU4Mb9JCe/fX5SgZ0iM9y9BJX3hSLh6HTvEqrXDhnZY6lExzdV7s8jIHcuvCCKuG67bCDx3nmBH3OuRXj8OUpxJzEKKWMdgfkfHIGL+kY6VJS2t6LOasRut1XGmG8ZWm/H9pdGeBNsH2C0ZWGQZm8dOABjP7/+vv/lSJAW2MSWurvNReMFQoeTJ1fUgn9eVo4ou7kQKvt8tQ==
-Received: from raven.intern.cm-ag (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id g25-20020a1709061c9900b00a3bb2156f7asm3252608ejh.185.2024.02.11.14.43.19
+        bh=XH/aCjJt/DiB7MsEbqzKT+olkUUu+T5Xb1GlIEopZ2s=;
+        b=NR9/EzqFU2qq8wTCZ4btyn2y858gTZkNEQwK0heYYxCVndmRRL2rCw5OjwO9D6DGr8
+         RmlRX/H9BAl/DsWogrdILf/26ln/tj0P9K91EF/6wLL3nBNWKScwgzCOlhUIns+hU2Nc
+         59w/ilckEz4AZI1GGw8LUXhz3JuoXM3kTsvl7Y4vxLSNhJVNYj20ArWfmg+PaSLC0uMC
+         5E5S+CMtxEW3R9y54RGj3lwKSdVSmowMXWc7DZxS1PcZ2ya1t4Td4wr9cwzPCeBFE/dh
+         IoCNLlp3Hhkwrveu15Egbwb9vAvvbmsl54qpA6kPZJVQCtXpPiYS7SukY5LIZNDQ6lN0
+         Vz1Q==
+X-Gm-Message-State: AOJu0YxcWC17CoFWVNrUY4TrpSDr0HsmIq+ey8F56D9auDkLX97C4C2O
+	AgoSg4+dxZAqeTK1wLZqwTrz+hq6UOb3/xMhYEXSqVp9oz5QnEdJlKmazE7xJVE=
+X-Google-Smtp-Source: AGHT+IE/NlI/6DThlF/g6NgjuI7e0164D2rPvpOssgTLNrvG5ONjv7e8Jh03RQj+ex2PdOM1dF87kQ==
+X-Received: by 2002:a05:6402:35d2:b0:561:841f:ed03 with SMTP id z18-20020a05640235d200b00561841fed03mr4116845edc.14.1707692993755;
+        Sun, 11 Feb 2024 15:09:53 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU8klcKZ40EjoIvJcSdkTkkctgF4aLklrTh0LA3GCGFlxsHvhu2iaJDoXh8SbFR2ykdO1OHYPmnwHRIRne8/iFWv3Xnx0P+iJDrLWI3UsTxy6mYBkjPS80zr+xF81W5Ft2FoFZePwaIKyF9/s3hpXjyma4TfGT/DY7z4np6u7S1JBY+bE4BqXDohnuaPizfwn/i7uNKjGn/8uPde2l6nDNATh26taFPA6bdDegmDFNeIFxVY2t1k16RyJRZ69GTdUGujLgEM1HxzKEx2YkKBGRrta4cmsvtaw==
+Received: from raven.blarg.de (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
+        by smtp.gmail.com with ESMTPSA id e8-20020a056402148800b0055ff9299f71sm2183566edv.46.2024.02.11.15.09.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Feb 2024 14:43:20 -0800 (PST)
+        Sun, 11 Feb 2024 15:09:53 -0800 (PST)
 From: Max Kellermann <max.kellermann@ionos.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mark.rutland@arm.com,
+To: svens@stackframe.org,
 	James.Bottomley@HansenPartnership.com,
 	deller@gmx.de,
-	linux-trace-kernel@vger.kernel.org,
+	mcgrof@kernel.org,
 	linux-parisc@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH] parisc/ftrace: add missing CONFIG_DYNAMIC_FTRACE check
-Date: Sun, 11 Feb 2024 23:43:14 +0100
-Message-Id: <20240211224314.169314-1-max.kellermann@ionos.com>
+Subject: [PATCH] parisc/kprobes: always include asm-generic/kprobes.h
+Date: Mon, 12 Feb 2024 00:09:45 +0100
+Message-Id: <20240211230945.297104-1-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -72,34 +71,47 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fixes a bug revealed by -Wmissing-prototypes when
-CONFIG_FUNCTION_GRAPH_TRACER is enabled but not CONFIG_DYNAMIC_FTRACE:
+The NOKPROBE_SYMBOL macro (and others) were moved to
+asm-generic/kprobes.h in 2017 by commit 7d134b2ce639 ("kprobes: move
+kprobe declarations to asm-generic/kprobes.h"), and this new header
+was included by asm/kprobes.h unconditionally on all architectures.
 
- arch/parisc/kernel/ftrace.c:82:5: error: no previous prototype for 'ftrace_enable_ftrace_graph_caller' [-Werror=missing-prototypes]
-    82 | int ftrace_enable_ftrace_graph_caller(void)
-       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- arch/parisc/kernel/ftrace.c:88:5: error: no previous prototype for 'ftrace_disable_ftrace_graph_caller' [-Werror=missing-prototypes]
-    88 | int ftrace_disable_ftrace_graph_caller(void)
-       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+When kprobe support was added to parisc in 2017 by commit
+8858ac8e9e9b1 ("parisc: Implement kprobes"), that header was only
+included when CONFIG_KPROBES was enabled.
+
+This can lead to build failures when NOKPROBE_SYMBOL is used, but
+CONFIG_KPROBES is disabled.  This mistake however was never actually
+noticed because linux/kprobes.h also includes asm-generic/kprobes.h
+(though I do not understand why that is, because it also includes
+asm/kprobes.h).
+
+To prevent eventual build failures, I suggest to always include
+asm-generic/kprobes.h on parisc, just like all the other architectures
+do.  This way, including asm/kprobes.h suffices, and nobody (outside
+of arch/) ever needs to explicitly include asm-generic/kprobes.h.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- arch/parisc/kernel/ftrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/parisc/include/asm/kprobes.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/parisc/kernel/ftrace.c b/arch/parisc/kernel/ftrace.c
-index d1defb9ede70..621a4b386ae4 100644
---- a/arch/parisc/kernel/ftrace.c
-+++ b/arch/parisc/kernel/ftrace.c
-@@ -78,7 +78,7 @@ asmlinkage void notrace __hot ftrace_function_trampoline(unsigned long parent,
- #endif
- }
+diff --git a/arch/parisc/include/asm/kprobes.h b/arch/parisc/include/asm/kprobes.h
+index 0a175ac87698..0f42f5c8e3b6 100644
+--- a/arch/parisc/include/asm/kprobes.h
++++ b/arch/parisc/include/asm/kprobes.h
+@@ -10,9 +10,10 @@
+ #ifndef _PARISC_KPROBES_H
+ #define _PARISC_KPROBES_H
  
--#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-+#if defined(CONFIG_DYNAMIC_FTRACE) && defined(CONFIG_FUNCTION_GRAPH_TRACER)
- int ftrace_enable_ftrace_graph_caller(void)
- {
- 	static_key_enable(&ftrace_graph_enable.key);
++#include <asm-generic/kprobes.h>
++
+ #ifdef CONFIG_KPROBES
+ 
+-#include <asm-generic/kprobes.h>
+ #include <linux/types.h>
+ #include <linux/ptrace.h>
+ #include <linux/notifier.h>
 -- 
 2.39.2
 
