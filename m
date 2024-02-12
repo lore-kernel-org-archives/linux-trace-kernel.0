@@ -1,241 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26DBC25740;
-	Mon, 12 Feb 2024 15:40:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551103FE23
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Feb 2024 17:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707752443; cv=none; b=q5P20beBORI5vXoIgYJNqMAQgGEDwRzIt4xebX1RWejE2o0X7uyQzVXj+MaA4yGtwvN8JC0yhaJz7VbpCEcORmq9SEQieeSj1FKwnjLf0WpvPxxEp87rV42wVbvYMPRvJ6JEgLiOv1wJ66qpS0ocbiUhABW2kVMD4aNXyBD/TBY=
+	t=1707757804; cv=none; b=Wb1A4DuTz2nWlJ29jR6jBgcQtklAnMF2l9+pDJ2ns91mYDS7ing/+6+a+doJ4BctpqXLerTiDzYrbdHiBkoQ/UAuSxsY7hYf4JETP/QByyPjvnR0DsVFWxe5JikKP2bbBwBZOIEzHL5Z9AY/yjyx2OpN3GDvp4/iDKl8DPwOAhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707752443; c=relaxed/simple;
-	bh=AAYaXAgNwDkJYYCpR5i9Af12gDaXYrAMi0KO9/oZzPQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=J6fOQnoMdQ2aHo01selvjLHE/jsS30csojlXiW64i/NxICX1Y1p63sbSE07lhn5S4y3E7COOa0yQM8YTTrZodUkWOTUN+uiMTpj/NbDWmtAg5lFU2C5b47j2OuEJuWEbP7jkEinG9J2rgp51eMathQH886Lu9GmXZTGFS+eMsKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hGODAYzg; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hGODAYzg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 991C5C433C7;
-	Mon, 12 Feb 2024 15:40:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707752442;
-	bh=AAYaXAgNwDkJYYCpR5i9Af12gDaXYrAMi0KO9/oZzPQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hGODAYzgJkQ1uiYpK0b1y8yv6M8DtffkHFvFdM/iwhem65ZofsgzuWYFzeNJb6/u0
-	 fhBhpfgudbaqSFoAyeaKa0H7sG2hx/Oi5Jpaye8uU2jAGhgd/dVioSt01cCLKrmJWT
-	 BpLu4u5MfVTJ3sbMsTWUDnLQ2WfQD3sDR7rfAQv3lf8LQm1YRRS5FQI2Tp4wmVUIJp
-	 YFqrXDm93MgHrhl6YBw9jHUYIaUVKi1iVo02hmuZpwAWMjgASrnofKH+46G+M8s1tA
-	 U1R3VUXhGcsemLVPLL3FWYqYLDU6aLRQlhM8QhlEdEC2zubkGGVSys06FbOhohT8fy
-	 po+nmqzb3y7qA==
-Date: Tue, 13 Feb 2024 00:40:38 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Vincent Donnefort <vdonnefort@google.com>, Sven Schnelle
- <svens@linux.ibm.com>, Mete Durlu <meted@linux.ibm.com>
-Subject: Re: [PATCH v2] tracing: Fix wasted memory in saved_cmdlines logic
-Message-Id: <20240213004038.7fd10d2bd9f356c72100adcd@kernel.org>
-In-Reply-To: <20240209063622.1f7b6d5f@rorschach.local.home>
-References: <20240209063622.1f7b6d5f@rorschach.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1707757804; c=relaxed/simple;
+	bh=dhs5X453QuebkxZokUrCXDu80prHk7y1bR8rbGRUZR0=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=j29ObNVabsMSYhwq4SYf4XfsQpWhM13YQb8tjsL9MybF1AUx0bnXVJ3N7nHa1mkYzeNRZt4mu3k6JVYHAsDCkYwwXUKYewQ4QnkD2TTc34ZMYuP0yZGUrf3iLfLEbGga2hdprtOxQeoIUna3L7eygnz1rkMQpO7Drtt7GwK+fjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7bff2d672a5so287020239f.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Feb 2024 09:10:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707757802; x=1708362602;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=syTmq/2+cHOps7ocoSA0QeSIKj9tzYgPgaLcLXmYLsE=;
+        b=OptbIwGGTdwLAZI0qbwz69EBent6LgfnsrkJ7mtVE6y/LLWX2VpBJ8T17LGFYDdMgy
+         6yGNOM3AYWQGYzrp68dJMA0W6rmCJJ/Y5sPI7GFfkMKckD3NVPKF2RlHEfAVvHWoiafj
+         8GH4fWiku4Wj9jiaoTi66S3VO/1ZJmJlAGrZfQerYtAAXTbFIWhl0JSib/VALBHNx11U
+         IlmO2VJ5uwqHKjDtM3yeCNEwPm1UUVhdvsErvFleRu7jGmGrUA8SW0GGG74KuJAkx04E
+         Euh8UAmgq5Lyx9BU2DHCtbBePR+0M3qfWvowUOZEZkIvRjEjBKeDh9InxxAkTW0Y9YH4
+         JfDQ==
+X-Gm-Message-State: AOJu0YxliuhVnqUlnvPdVaYIqRmEWjIsL6mBZn5iLu9RiBqWHq3aiYqC
+	CaGKsToMli183LvAwgyzywGk2Zc5SoF8YdncNtOKbaVhkLFTLp2+fnmG8yrV0eaqK7FLwEjJESC
+	lf2TBT5OhuB27db7pUfjlfv4pDAbTqzocFfq+/v2tdGZnxd1r5R8LR2I=
+X-Google-Smtp-Source: AGHT+IFh4xAKDFcF47AC6TVZkIoj6iiFG392km/BapfaiHws2vqiNSlClhwZVgg+/uCSguLJAtaKS6ls2o03UbZ7vB36MylGOvZS
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-Received: by 2002:a6b:7108:0:b0:7c4:6e52:ec1 with SMTP id
+ q8-20020a6b7108000000b007c46e520ec1mr7560iog.2.1707757802567; Mon, 12 Feb
+ 2024 09:10:02 -0800 (PST)
+Date: Mon, 12 Feb 2024 09:10:02 -0800
+In-Reply-To: <0000000000006bf22a060e117a8d@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002f3fba0611325902@google.com>
+Subject: Re: [syzbot] [fs?] [trace?] BUG: unable to handle kernel paging
+ request in tracefs_apply_options
+From: syzbot <syzbot+f8a023e0c6beabe2371a@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
+	syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 9 Feb 2024 06:36:22 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+syzbot suspects this issue was fixed by commit:
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> While looking at improving the saved_cmdlines cache I found a huge amount
-> of wasted memory that should be used for the cmdlines.
-> 
-> The tracing data saves pids during the trace. At sched switch, if a trace
-> occurred, it will save the comm of the task that did the trace. This is
-> saved in a "cache" that maps pids to comms and exposed to user space via
-> the /sys/kernel/tracing/saved_cmdlines file. Currently it only caches by
-> default 128 comms.
-> 
-> The structure that uses this creates an array to store the pids using
-> PID_MAX_DEFAULT (which is usually set to 32768). This causes the structure
-> to be of the size of 131104 bytes on 64 bit machines.
-> 
-> In hex: 131104 = 0x20020, and since the kernel allocates generic memory in
-> powers of two, the kernel would allocate 0x40000 or 262144 bytes to store
-> this structure. That leaves 131040 bytes of wasted space.
-> 
-> Worse, the structure points to an allocated array to store the comm names,
-> which is 16 bytes times the amount of names to save (currently 128), which
-> is 2048 bytes. Instead of allocating a separate array, make the structure
-> end with a variable length string and use the extra space for that.
-> 
-> This is similar to a recommendation that Linus had made about eventfs_inode names:
-> 
->   https://lore.kernel.org/all/20240130190355.11486-5-torvalds@linux-foundation.org/
-> 
-> Instead of allocating a separate string array to hold the saved comms,
-> have the structure end with: char saved_cmdlines[]; and round up to the
-> next power of two over sizeof(struct saved_cmdline_buffers) + num_cmdlines * TASK_COMM_LEN
-> It will use this extra space for the saved_cmdline portion.
-> 
-> Now, instead of saving only 128 comms by default, by using this wasted
-> space at the end of the structure it can save over 8000 comms and even
-> saves space by removing the need for allocating the other array.
+commit ad579864637af46447208254719943179b69d41a
+Author: Steven Rostedt (Google) <rostedt@goodmis.org>
+Date:   Tue Jan 2 20:12:49 2024 +0000
 
-This looks good to me. So this will allocate the saved_cmdlines in page-size
-array instead of the power of two.
+    tracefs: Check for dentry->d_inode exists in set_gid()
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17659d24180000
+start commit:   453f5db0619e Merge tag 'trace-v6.7-rc7' of git://git.kerne..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f8e72bae38c079e4
+dashboard link: https://syzkaller.appspot.com/bug?extid=f8a023e0c6beabe2371a
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1414af31e80000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15e52409e80000
 
-Thank you,
+If the result looks correct, please mark the issue as fixed by replying with:
 
+#syz fix: tracefs: Check for dentry->d_inode exists in set_gid()
 
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 939c7a4f04fcd ("tracing: Introduce saved_cmdlines_size file")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
-> Changes since v1: https://lore.kernel.org/linux-trace-kernel/20240208105328.7e73f71d@rorschach.local.home
-> 
-> - Added back error check of s->map_cmdline_to_pid allocation failure
-> 
->  kernel/trace/trace.c | 75 ++++++++++++++++++++++----------------------
->  1 file changed, 37 insertions(+), 38 deletions(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 2a7c6fd934e9..9ff8a439d674 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -2320,7 +2320,7 @@ struct saved_cmdlines_buffer {
->  	unsigned *map_cmdline_to_pid;
->  	unsigned cmdline_num;
->  	int cmdline_idx;
-> -	char *saved_cmdlines;
-> +	char saved_cmdlines[];
->  };
->  static struct saved_cmdlines_buffer *savedcmd;
->  
-> @@ -2334,47 +2334,58 @@ static inline void set_cmdline(int idx, const char *cmdline)
->  	strncpy(get_saved_cmdlines(idx), cmdline, TASK_COMM_LEN);
->  }
->  
-> -static int allocate_cmdlines_buffer(unsigned int val,
-> -				    struct saved_cmdlines_buffer *s)
-> +static void free_saved_cmdlines_buffer(struct saved_cmdlines_buffer *s)
-> +{
-> +	int order = get_order(sizeof(*s) + s->cmdline_num * TASK_COMM_LEN);
-> +
-> +	kfree(s->map_cmdline_to_pid);
-> +	free_pages((unsigned long)s, order);
-> +}
-> +
-> +static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
->  {
-> +	struct saved_cmdlines_buffer *s;
-> +	struct page *page;
-> +	int orig_size, size;
-> +	int order;
-> +
-> +	/* Figure out how much is needed to hold the given number of cmdlines */
-> +	orig_size = sizeof(*s) + val * TASK_COMM_LEN;
-> +	order = get_order(orig_size);
-> +	size = 1 << (order + PAGE_SHIFT);
-> +	page = alloc_pages(GFP_KERNEL, order);
-> +	if (!page)
-> +		return NULL;
-> +
-> +	s = page_address(page);
-> +	memset(s, 0, sizeof(*s));
-> +
-> +	/* Round up to actual allocation */
-> +	val = (size - sizeof(*s)) / TASK_COMM_LEN;
-> +	s->cmdline_num = val;
-> +
->  	s->map_cmdline_to_pid = kmalloc_array(val,
->  					      sizeof(*s->map_cmdline_to_pid),
->  					      GFP_KERNEL);
-> -	if (!s->map_cmdline_to_pid)
-> -		return -ENOMEM;
-> -
-> -	s->saved_cmdlines = kmalloc_array(TASK_COMM_LEN, val, GFP_KERNEL);
-> -	if (!s->saved_cmdlines) {
-> -		kfree(s->map_cmdline_to_pid);
-> -		return -ENOMEM;
-> +	if (!s->map_cmdline_to_pid) {
-> +		free_saved_cmdlines_buffer(s);
-> +		return NULL;
->  	}
->  
->  	s->cmdline_idx = 0;
-> -	s->cmdline_num = val;
->  	memset(&s->map_pid_to_cmdline, NO_CMDLINE_MAP,
->  	       sizeof(s->map_pid_to_cmdline));
->  	memset(s->map_cmdline_to_pid, NO_CMDLINE_MAP,
->  	       val * sizeof(*s->map_cmdline_to_pid));
->  
-> -	return 0;
-> +	return s;
->  }
->  
->  static int trace_create_savedcmd(void)
->  {
-> -	int ret;
-> -
-> -	savedcmd = kmalloc(sizeof(*savedcmd), GFP_KERNEL);
-> -	if (!savedcmd)
-> -		return -ENOMEM;
-> -
-> -	ret = allocate_cmdlines_buffer(SAVED_CMDLINES_DEFAULT, savedcmd);
-> -	if (ret < 0) {
-> -		kfree(savedcmd);
-> -		savedcmd = NULL;
-> -		return -ENOMEM;
-> -	}
-> +	savedcmd = allocate_cmdlines_buffer(SAVED_CMDLINES_DEFAULT);
->  
-> -	return 0;
-> +	return savedcmd ? 0 : -ENOMEM;
->  }
->  
->  int is_tracing_stopped(void)
-> @@ -6056,26 +6067,14 @@ tracing_saved_cmdlines_size_read(struct file *filp, char __user *ubuf,
->  	return simple_read_from_buffer(ubuf, cnt, ppos, buf, r);
->  }
->  
-> -static void free_saved_cmdlines_buffer(struct saved_cmdlines_buffer *s)
-> -{
-> -	kfree(s->saved_cmdlines);
-> -	kfree(s->map_cmdline_to_pid);
-> -	kfree(s);
-> -}
-> -
->  static int tracing_resize_saved_cmdlines(unsigned int val)
->  {
->  	struct saved_cmdlines_buffer *s, *savedcmd_temp;
->  
-> -	s = kmalloc(sizeof(*s), GFP_KERNEL);
-> +	s = allocate_cmdlines_buffer(val);
->  	if (!s)
->  		return -ENOMEM;
->  
-> -	if (allocate_cmdlines_buffer(val, s) < 0) {
-> -		kfree(s);
-> -		return -ENOMEM;
-> -	}
-> -
->  	preempt_disable();
->  	arch_spin_lock(&trace_cmdline_lock);
->  	savedcmd_temp = savedcmd;
-> -- 
-> 2.43.0
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
