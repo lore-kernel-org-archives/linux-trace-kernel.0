@@ -1,29 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FB74EB28;
-	Mon, 12 Feb 2024 23:08:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1BF4F1E0;
+	Mon, 12 Feb 2024 23:11:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707779340; cv=none; b=XAFKARQNbqpQyK+pc5uRvh8MeRlsDwNfgEIUUg+tz+ueJK0Jx9t1DOWWHN01TL3gzSu6WVXiOaIMmgxrcIyt/WCcY+xUcBqBszAC4G8Q9pzL1gy3Xgw0KvL+Y5AQwxWPgkb2u/cYdrFnUVVO5F9KL/nwU3drQP3ea9c1/Kd9C3E=
+	t=1707779481; cv=none; b=LpL/gXp6MNJ8MofNeIE4+7RFTlqso/RBwubn9fwIVGhAZu1dwkzDm+LlkXuP+SeHreNq5TZ8k112cmpE0JV8S2wtjvdXNhxnTbCXZcybNaTyqZJeqiFoKn+kX8E6dNhPPYa9oRJt6iEswnLlLJNM+T0+lJME+zqULtDpsErU0i4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707779340; c=relaxed/simple;
-	bh=hhDd4Zg33Gyyd3pXps6UXldwu1puK288MZOmI4zYWyY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=RQLZUpnbZzj7xFZCjhXbW/fL8rcnwhqZRNMO5xwu1h2H7fNKd2avfylGoQ4njVwRYCoNOm9CUOPdqE9HO4ykv3DM13o9DGFADQBZMMVGw4WgD+4z7co/7mv6kQX40BLdWIdzwOnAQtDMeHwyGkCHX/k2W2imV/wkYYpQdomRL5w=
+	s=arc-20240116; t=1707779481; c=relaxed/simple;
+	bh=IeqVsqHBBxkRlvWKuRk+BM+q2fCSQTabzCOE3hEGlcc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QsbRWtgiD28n0YCwOarpTDvPQUz1SgZqSPHDqfmL7TLdMRGoqBaY9Zf54ED+mafGr1DcHrtSWRGzigJ/vV+vvlWch36u7buYCPx4O/TLE2s3psK4k0VzDVsICerCVGm6LSEqbAVjujM+CUTyySOci0pqMFMryq9hMVQ9VZxuBKc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC65EC433C7;
-	Mon, 12 Feb 2024 23:08:58 +0000 (UTC)
-Date: Mon, 12 Feb 2024 18:09:41 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C22F4C43394;
+	Mon, 12 Feb 2024 23:11:19 +0000 (UTC)
+Date: Mon, 12 Feb 2024 18:12:02 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>, Tim
- Chen <tim.c.chen@linux.intel.com>, Vincent Donnefort
- <vdonnefort@google.com>, Sven Schnelle  <svens@linux.ibm.com>, Mete Durlu
- <meted@linux.ibm.com>
-Subject: [PATCH] tracing: Have saved_cmdlines arrays all in one allocation
-Message-ID: <20240212180941.379c419b@gandalf.local.home>
+To: Mete Durlu <meted@linux.ibm.com>
+Cc: Sven Schnelle <svens@linux.ibm.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: use ring_buffer_record_is_set_on() in
+ tracer_tracing_is_on()
+Message-ID: <20240212181202.70f47870@gandalf.local.home>
+In-Reply-To: <957e4c37-954f-4c35-98ba-df5edde4b5ce@linux.ibm.com>
+References: <20240205065340.2848065-1-svens@linux.ibm.com>
+	<20240205075504.1b55f29c@rorschach.local.home>
+	<yt9djznj3vbl.fsf@linux.ibm.com>
+	<20240205092353.523cc1ef@rorschach.local.home>
+	<yt9d34u63xxz.fsf@linux.ibm.com>
+	<yt9dsf262d2n.fsf@linux.ibm.com>
+	<20240206060113.39c0f5bc@rorschach.local.home>
+	<yt9deddovn3w.fsf@linux.ibm.com>
+	<20240207060923.182ecb55@rorschach.local.home>
+	<9a062196-ccbe-440e-a2f9-23eb8c5eb837@linux.ibm.com>
+	<20240207072812.4a29235f@rorschach.local.home>
+	<yt9dzfwch00u.fsf@linux.ibm.com>
+	<20240207104703.071ee985@rorschach.local.home>
+	<8c986cb3-61b3-4f65-81c9-ffcfa994390f@linux.ibm.com>
+	<20240212135320.26f90f28@gandalf.local.home>
+	<957e4c37-954f-4c35-98ba-df5edde4b5ce@linux.ibm.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -34,70 +50,53 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Mon, 12 Feb 2024 23:54:00 +0100
+Mete Durlu <meted@linux.ibm.com> wrote:
 
-The saved_cmdlines have three arrays for mapping PIDs to COMMs:
+> On 2/12/24 19:53, Steven Rostedt wrote:
+> > 
+> > Right, it will definitely force the race window to go away.
+> > 
+> > Can you still trigger this issue with just Sven's patch and not this change?  
+> Sven's patch makes the test cases much more resilient. I needed to ramp
+> up the load up to 4 stressors on a 4 core system before the test starts
+> to fail again. At this point it is fair to say that the system is under
+> significant load.
+> 
+> The failing condition is now different, which tells me that
+> Sven's patch have already solved(or improved) the previous issue.
+> What is failing now:
+> 
+>    echo '** ENABLE TRACING'
+>    enable_tracing
+> 
+>    cnt=`cnt_trace`
+>    if [ $cnt -eq 0 ]; then
+>       fail "Nothing found in trace"
+>    fi
+> 
+> Adding a sleep between enable_tracing and cnt_trace seems to improve the
+> situation a lot. (my guess is that, the trace writer isn't getting any
+> runtime before the test checks the trace output)
+> 
+>    echo '** ENABLE TRACING'
+>    enable_tracing
+> 
+>   +sleep $SLEEP_TIME
+>    cnt=`cnt_trace`
+>    if [ $cnt -eq 0 ]; then
+>       fail "Nothing found in trace"
+>    fi
+> 
+> Didn't see any failure while increasing the system load until 8
+> stressors (this might have been luck). When system was under load with
+> 8 stressors, I have seen the test failing 2 out of 10 times. Definitely
+> an improvement over the current situation.
+> 
 
- - map_pid_to_cmdline[]
- - map_cmdline_to_pid[]
- - saved_cmdlines
 
-The map_pid_to_cmdline[] is PID_MAX_DEFAULT in size and holds the index
-into the other arrays. The map_cmdline_to_pid[] is a mapping back to the
-full pid as it can be larger than PID_MAX_DEFAULT. And the
-saved_cmdlines[] just holds the COMMs associated to the pids.
+So, I plan on adding Sven's patch for my next pull request to Linus. I had
+forgotten it when I did my last one (largely due to traveling). I'll hold
+off a week to see if any other fixes come in.
 
-Currently the map_pid_to_cmdline[] and saved_cmdlines[] are allocated
-together (in reality the saved_cmdlines is just in the memory of the
-rounding of the allocation of the structure as it is always allocated in
-powers of two). The map_cmdline_to_pid[] array is allocated separately.
-
-Since the rounding to a power of two is rather large (it allows for 8000
-elements in saved_cmdlines), also include the map_cmdline_to_pid[] array.
-(This drops it to 6000 by default, which is still plenty for most use
-cases). This saves even more memory as the map_cmdline_to_pid[] array
-doesn't need to be allocated.
-
-Link: https://lore.kernel.org/linux-trace-kernel/20240212174011.068211d9@gandalf.local.home/
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_sched_switch.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
-
-diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
-index e4fbcc3bede5..210c74dcd016 100644
---- a/kernel/trace/trace_sched_switch.c
-+++ b/kernel/trace/trace_sched_switch.c
-@@ -201,7 +201,7 @@ static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
- 	int order;
- 
- 	/* Figure out how much is needed to hold the given number of cmdlines */
--	orig_size = sizeof(*s) + val * TASK_COMM_LEN;
-+	orig_size = sizeof(*s) + val * (TASK_COMM_LEN + sizeof(int));
- 	order = get_order(orig_size);
- 	size = 1 << (order + PAGE_SHIFT);
- 	page = alloc_pages(GFP_KERNEL, order);
-@@ -212,16 +212,11 @@ static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
- 	memset(s, 0, sizeof(*s));
- 
- 	/* Round up to actual allocation */
--	val = (size - sizeof(*s)) / TASK_COMM_LEN;
-+	val = (size - sizeof(*s)) / (TASK_COMM_LEN + sizeof(int));
- 	s->cmdline_num = val;
- 
--	s->map_cmdline_to_pid = kmalloc_array(val,
--					      sizeof(*s->map_cmdline_to_pid),
--					      GFP_KERNEL);
--	if (!s->map_cmdline_to_pid) {
--		free_saved_cmdlines_buffer(s);
--		return NULL;
--	}
-+	/* Place map_cmdline_to_pid array right after saved_cmdlines */
-+	s->map_cmdline_to_pid = (unsigned *)&s->saved_cmdlines[val * TASK_COMM_LEN];
- 
- 	s->cmdline_idx = 0;
- 	memset(&s->map_pid_to_cmdline, NO_CMDLINE_MAP,
--- 
-2.43.0
-
+-- Steve
