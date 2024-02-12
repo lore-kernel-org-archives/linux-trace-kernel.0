@@ -1,33 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F51405FD;
-	Mon, 12 Feb 2024 18:26:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A721441206;
+	Mon, 12 Feb 2024 18:52:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707762369; cv=none; b=RZoS5n0QWMo+qX93mKge6qoKuxfVBYl28WDUPQS7b9Mlg+40msbWVwfN0NUBgLVyg5R6IRwzfExXEDgXVbXG6Y0hkYDSx/43RV3xV55Xm9ARFqg7n2N1cj05Caif3fVH+qyP7PBUF8EHJQ6TnmiP2o/bqHFvfRBQN96q4Ehi+w4=
+	t=1707763959; cv=none; b=dAd9LRLYcUr724rNp6HGSdZpwaLJu5Uvez7W99UGe/V3YIMHXueC+JPyiHBI0rdnYaB9CAwYqZdyxVuyXp116gOTMW1KgJFdsMJ6HKuNxyqa7z1dep0JxMjcKRW+PEwmuIc0ijHN0KEyQTFBT0IgBXbWcQ6Hr7Ygy9VhjDkV+yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707762369; c=relaxed/simple;
-	bh=RVBiiKt71wjFsnRdAFPjF0d4lGi7IogOJgAvmxhOfIw=;
+	s=arc-20240116; t=1707763959; c=relaxed/simple;
+	bh=Q5A4rNQ8gxAzUuOWSk/FOunFd5wB+QiktWiYf+9QpVA=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=movyyexd2AphoO4XQ6o34tBxiFu9z9t5/M8ualL5x/ukshP4uzVIrj4gVzCczu/pnSGJQIuaUyWRfRprBizWaEdFRxbrl9HJ2EBFK6I/FNE1ZGzRisR1OeLXYu6iLd8r1993uftu/byayeDgjjwO0WebhtHV/ZrFMYVrwnxpf7I=
+	 MIME-Version:Content-Type; b=kX1IdsfHZmmDJi/+egaI0GFO7P3MCHaO8pToQq5JUXByDuvuhWds7WzrkPAF6NcUTOFgfb5LNG7K7Azz9aTa4s3J4VwAHejeDwu1LMC0L/6ZSbuRxLFae03cE3EYqi+ICLptPy8stosJon6jZ1B5WuM4wypa5O8OV3ILaGAmSA8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BA73C43399;
-	Mon, 12 Feb 2024 18:26:07 +0000 (UTC)
-Date: Mon, 12 Feb 2024 13:26:49 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5838AC433C7;
+	Mon, 12 Feb 2024 18:52:38 +0000 (UTC)
+Date: Mon, 12 Feb 2024 13:53:20 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, "Manivannan Sadhasivam"
- <manivannan.sadhasivam@linaro.org>, <linux-kernel@vger.kernel.org>,
- <mhi@lists.linux.dev>, <linux-arm-msm@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <quic_vbadigan@quicinc.com>,
- <quic_ramkri@quicinc.com>, <quic_nitegupt@quicinc.com>,
- <quic_skananth@quicinc.com>, <quic_parass@quicinc.com>
-Subject: Re: [PATCH v11] bus: mhi: host: Add tracing support
-Message-ID: <20240212132649.767e9b87@gandalf.local.home>
-In-Reply-To: <20240206-ftrace_support-v11-1-3f71dc187544@quicinc.com>
-References: <20240206-ftrace_support-v11-1-3f71dc187544@quicinc.com>
+To: Mete Durlu <meted@linux.ibm.com>
+Cc: Sven Schnelle <svens@linux.ibm.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: use ring_buffer_record_is_set_on() in
+ tracer_tracing_is_on()
+Message-ID: <20240212135320.26f90f28@gandalf.local.home>
+In-Reply-To: <8c986cb3-61b3-4f65-81c9-ffcfa994390f@linux.ibm.com>
+References: <20240205065340.2848065-1-svens@linux.ibm.com>
+	<20240205075504.1b55f29c@rorschach.local.home>
+	<yt9djznj3vbl.fsf@linux.ibm.com>
+	<20240205092353.523cc1ef@rorschach.local.home>
+	<yt9d34u63xxz.fsf@linux.ibm.com>
+	<yt9dsf262d2n.fsf@linux.ibm.com>
+	<20240206060113.39c0f5bc@rorschach.local.home>
+	<yt9deddovn3w.fsf@linux.ibm.com>
+	<20240207060923.182ecb55@rorschach.local.home>
+	<9a062196-ccbe-440e-a2f9-23eb8c5eb837@linux.ibm.com>
+	<20240207072812.4a29235f@rorschach.local.home>
+	<yt9dzfwch00u.fsf@linux.ibm.com>
+	<20240207104703.071ee985@rorschach.local.home>
+	<8c986cb3-61b3-4f65-81c9-ffcfa994390f@linux.ibm.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,160 +48,48 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 6 Feb 2024 10:02:05 +0530
-Krishna chaitanya chundru <quic_krichai@quicinc.com> wrote:
+On Thu, 8 Feb 2024 11:25:50 +0100
+Mete Durlu <meted@linux.ibm.com> wrote:
 
+> I have been only able to reliably reproduce this issue when the system
+> is under load from stressors. But I am not sure if it can be considered
+> as *really stressed*.
+> 
+> system : 8 cpus (4 physical cores)
+> load   : stress-ng --fanotify 1 (or --context 2)
+> result : ~5/10 test fails
+> 
+> of course as load increases test starts to fail more often, but a
+> single stressor doesn't seem like much to me for a 4 core machine.
+> 
+> after adding synchronize_rcu() + patch from Sven, I am no longer seeing
+> failures with the setup above. So it seems like synchronize_rcu() did
+> the trick(or at least it helps a lot) for the case described on the
+> previous mail. I couldn't trigger the failure yet, not even with
+> increased load(but now the test case takes > 5mins to finish :) ).
 
+Right, it will definitely force the race window to go away.
 
-> diff --git a/drivers/bus/mhi/host/main.c b/drivers/bus/mhi/host/main.c
-> index abb561db9ae1..2d38f6005da6 100644
-> --- a/drivers/bus/mhi/host/main.c
-> +++ b/drivers/bus/mhi/host/main.c
-> @@ -15,6 +15,7 @@
->  #include <linux/skbuff.h>
->  #include <linux/slab.h>
->  #include "internal.h"
-> +#include "trace.h"
->  
->  int __must_check mhi_read_reg(struct mhi_controller *mhi_cntrl,
->  			      void __iomem *base, u32 offset, u32 *out)
-> @@ -493,11 +494,8 @@ irqreturn_t mhi_intvec_threaded_handler(int irq_number, void *priv)
->  
->  	state = mhi_get_mhi_state(mhi_cntrl);
->  	ee = mhi_get_exec_env(mhi_cntrl);
-> -	dev_dbg(dev, "local ee: %s state: %s device ee: %s state: %s\n",
-> -		TO_MHI_EXEC_STR(mhi_cntrl->ee),
-> -		mhi_state_str(mhi_cntrl->dev_state),
-> -		TO_MHI_EXEC_STR(ee), mhi_state_str(state));
->  
-> +	trace_mhi_intvec_states(mhi_cntrl, ee, state);
->  	if (state == MHI_STATE_SYS_ERR) {
->  		dev_dbg(dev, "System error detected\n");
->  		pm_state = mhi_tryset_pm_state(mhi_cntrl,
-> @@ -838,6 +836,8 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
->  	while (dev_rp != local_rp) {
->  		enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
->  
-> +		trace_mhi_ctrl_event(mhi_cntrl, local_rp);
-> +
->  		switch (type) {
->  		case MHI_PKT_TYPE_BW_REQ_EVENT:
->  		{
-> @@ -1003,6 +1003,8 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
->  	while (dev_rp != local_rp && event_quota > 0) {
->  		enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
->  
-> +		trace_mhi_data_event(mhi_cntrl, local_rp);
-> +
->  		chan = MHI_TRE_GET_EV_CHID(local_rp);
->  
->  		WARN_ON(chan >= mhi_cntrl->max_chan);
-> @@ -1243,6 +1245,7 @@ int mhi_gen_tre(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
->  	mhi_tre->dword[0] = MHI_TRE_DATA_DWORD0(info->len);
->  	mhi_tre->dword[1] = MHI_TRE_DATA_DWORD1(bei, eot, eob, chain);
->  
-> +	trace_mhi_gen_tre(mhi_cntrl, mhi_chan, mhi_tre);
->  	/* increment WP */
->  	mhi_add_ring_element(mhi_cntrl, tre_ring);
->  	mhi_add_ring_element(mhi_cntrl, buf_ring);
-> @@ -1337,9 +1340,7 @@ static int mhi_update_channel_state(struct mhi_controller *mhi_cntrl,
->  	enum mhi_cmd_type cmd = MHI_CMD_NOP;
->  	int ret;
->  
-> -	dev_dbg(dev, "%d: Updating channel state to: %s\n", mhi_chan->chan,
-> -		TO_CH_STATE_TYPE_STR(to_state));
-> -
-> +	trace_mhi_channel_command_start(mhi_cntrl, mhi_chan, to_state, "Updating");
-
-The string above "Updating"
-
->  	switch (to_state) {
->  	case MHI_CH_STATE_TYPE_RESET:
->  		write_lock_irq(&mhi_chan->lock);
-> @@ -1406,9 +1407,7 @@ static int mhi_update_channel_state(struct mhi_controller *mhi_cntrl,
->  		write_unlock_irq(&mhi_chan->lock);
->  	}
->  
-> -	dev_dbg(dev, "%d: Channel state change to %s successful\n",
-> -		mhi_chan->chan, TO_CH_STATE_TYPE_STR(to_state));
-> -
-> +	trace_mhi_channel_command_end(mhi_cntrl, mhi_chan, to_state, "Updated");
-
-And here "Updated"
-
->  exit_channel_update:
->  	mhi_cntrl->runtime_put(mhi_cntrl);
->  	mhi_device_put(mhi_cntrl->mhi_dev);
-
-Please add them to the printk_formats (like RCU trace events do).
-
-#define TPS(x)	tracepoint_string(x)
-
-Then the above should have:
-
-	trace_mhi_channel_command_start(mhi_cntrl, mhi_chan, to_state, TPS("Updating"));
-
-and
-
-	trace_mhi_channel_command_end(mhi_cntrl, mhi_chan, to_state, TPS("Updated"));
-
-> +DECLARE_EVENT_CLASS(mhi_update_channel_state,
-> +
-> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan, int state,
-> +		 const char *reason),
-> +
-> +	TP_ARGS(mhi_cntrl, mhi_chan, state, reason),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(name, mhi_cntrl->mhi_dev->name)
-> +		__field(int, ch_num)
-> +		__field(int, state)
-> +		__field(const char *, reason)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, mhi_cntrl->mhi_dev->name);
-> +		__entry->ch_num = mhi_chan->chan;
-> +		__entry->state = state;
-> +		__entry->reason = reason;
-> +	),
-> +
-> +	TP_printk("%s: chan%d: %s state to: %s\n",
-> +		  __get_str(name),  __entry->ch_num, __entry->reason,
-> +		  __print_symbolic(__entry->state, MHI_CH_STATE_TYPE_LIST))
-> +);
-
-The above print fmt has "%s" on __entry->reason which is just an internal
-kernel pointer to the string that is saved in the ring buffer. User space
-tools like perf and trace-cmd will not report them. It will just show some
-internal kernel address. By adding the TPS() logic above, those addresses
-will be mapped to strings:
-
- ~# grep RCU /sys/kernel/tracing/printk_formats 
- 0xffffffffb069a4e0 : "End RCU core"
- 0xffffffffb069a520 : "Start RCU core"
-
-As RCU uses direct string pointers in its name space, it has the TPS()
-logic that allows perf and ftrace to map the addresses that are saved in
-the ring buffer to the strings they represent.
+Can you still trigger this issue with just Sven's patch and not this change?
 
 -- Steve
 
-
-> +
-> +DEFINE_EVENT(mhi_update_channel_state, mhi_channel_command_start,
-> +
-> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan, int state,
-> +		 const char *reason),
-> +
-> +	TP_ARGS(mhi_cntrl, mhi_chan, state, reason)
-> +);
-> +
-> +DEFINE_EVENT(mhi_update_channel_state, mhi_channel_command_end,
-> +
-> +	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan, int state,
-> +		 const char *reason),
-> +
-> +	TP_ARGS(mhi_cntrl, mhi_chan, state, reason)
-> +);
-> +
+> 
+> Here is the diff:
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> @@ -9328,10 +9328,12 @@ rb_simple_write(struct file *filp, const char 
+> __user *ubuf,
+>                          val = 0; /* do nothing */
+>                  } else if (val) {
+>                          tracer_tracing_on(tr);
+> +                       synchronize_rcu();
+>                          if (tr->current_trace->start)
+>                                  tr->current_trace->start(tr);
+>                  } else {
+>                          tracer_tracing_off(tr);
+> +                       synchronize_rcu();
+>                          if (tr->current_trace->stop)
+>                                  tr->current_trace->stop(tr);
+> 
+> Not 100% sure if these were the correct places to add them.
