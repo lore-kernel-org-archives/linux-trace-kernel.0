@@ -1,118 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FFB84CE0F;
-	Mon, 12 Feb 2024 22:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99734EB3A;
+	Mon, 12 Feb 2024 22:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707775712; cv=none; b=FW1j8MU9dmp3hQqo1gqMXhkOG0EOzsmTysBpX5mzZEFins87aHTRoMD+3f1AYgmTTagt69PQZG+HZ8FVSynl++uahgJDmH9T8S89ZrogoICRoTyh2ZTF1YwJ4gYLoH1wp2yn0CFJ8/ObqwiGAwrEhmzy1Lu4L037HqAM5UM9TcA=
+	t=1707777569; cv=none; b=Xqg5dFoQwzwgBaOi/8S8WyR7JTWl/fa09ZNPwjwtnSjViAsxn1RugObUMLPLOv1NjdpFR/J7eyROgnv5k4GGqzI+mt+w6Nhsvt6dM9O76CmA9tXE3SAda/XrZw+YnVnnobqxmFmZVOOyGMDRRJQVy5TdC3klsU/PoYX4WT9yBro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707775712; c=relaxed/simple;
-	bh=y2m2uO1no1fiw88GoXKkQD+X/l3kVWbx0bdXFCnja60=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=forLWlbQeY2p4Yquc32MdkcTD7BOrsfIK1YHQT2NI5xSk+OHCb1hXm/tvHztDJlcFuOVdiV3B4hF93UetLpvEslleNsUw5GdbK1Kjf0rMGfX6onQ5bVUZ2VUvGfZs4RbShhspWjiifkn3CRnd/TjUuIN7T+/dfqbc9k2bEE0/Ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TCVy1d+q; arc=none smtp.client-ip=134.134.136.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TCVy1d+q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707775711; x=1739311711;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=y2m2uO1no1fiw88GoXKkQD+X/l3kVWbx0bdXFCnja60=;
-  b=TCVy1d+q0K++dIObUC2agJNdkLt5u6Rf31kXJlmnKKJ+6VUe2qSySy4f
-   3Vx+SbJ6J2O2UKfORMaR6wQdX4w9GZp5LRrWlV3SpG6x0jgvrrMzkIl1v
-   LbiEfk85Swzfzs8/r4toDBL8B4mi4v2Pbgs7oXcdboPa1wDeSun1xor7m
-   FYgwm4nk3NeIrfz4LGHleUsSCHS2++uNdGA8EMwucQ2MljrNJjyYxg7aX
-   cxyXUOp1TcoK2pZTfiF7aGTQisCh3/9YxX+EHamrEDP3WNNAuy1MloYU4
-   wyG3uzd46XxVSjkcwC/BxTZcndjsc56JZ0ZEyhMxVzUeX4pvmdgCnp3In
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="396205074"
-X-IronPort-AV: E=Sophos;i="6.06,155,1705392000"; 
-   d="scan'208";a="396205074"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 14:08:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,155,1705392000"; 
-   d="scan'208";a="7337485"
-Received: from sparrish-mobl1.amr.corp.intel.com (HELO [10.209.29.247]) ([10.209.29.247])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 14:08:30 -0800
-Message-ID: <dfa253e01ba9164abdd47da489c2a3da5da5cc93.camel@linux.intel.com>
+	s=arc-20240116; t=1707777569; c=relaxed/simple;
+	bh=chCgSI9YJkrGnYJm8WBzd/jHa1AAREfUA3WwG3qlx2U=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OJJwnWzg59I6ME+x/w8mnU0IW/o0QYSKLoVI4Jk7QNLIeOnISZBXyoKypbOxJQEEJikNiVNyLPlZeM9u+ogcDB2J0xH2zy1AFMGUo/PDw0fbJtzqUSz1rXVaO3cKSAzRwvZn9fndDyitU4pFAFseKe4D9QZH6WQvcz9daowqVZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D304C433C7;
+	Mon, 12 Feb 2024 22:39:28 +0000 (UTC)
+Date: Mon, 12 Feb 2024 17:40:11 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Vincent Donnefort <vdonnefort@google.com>, Sven Schnelle
+ <svens@linux.ibm.com>, Mete Durlu <meted@linux.ibm.com>, stable
+ <stable@vger.kernel.org>
 Subject: Re: [PATCH] tracing: Fix wasted memory in saved_cmdlines logic
-From: Tim Chen <tim.c.chen@linux.intel.com>
-To: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>,  Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Vincent Donnefort
- <vdonnefort@google.com>,  Sven Schnelle <svens@linux.ibm.com>, Mete Durlu
- <meted@linux.ibm.com>, stable <stable@vger.kernel.org>
-Date: Mon, 12 Feb 2024 14:08:29 -0800
-In-Reply-To: <20240208105328.7e73f71d@rorschach.local.home>
+Message-ID: <20240212174011.068211d9@gandalf.local.home>
+In-Reply-To: <dfa253e01ba9164abdd47da489c2a3da5da5cc93.camel@linux.intel.com>
 References: <20240208105328.7e73f71d@rorschach.local.home>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
+	<dfa253e01ba9164abdd47da489c2a3da5da5cc93.camel@linux.intel.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2024-02-08 at 10:53 -0500, Steven Rostedt wrote:
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
->=20
-> While looking at improving the saved_cmdlines cache I found a huge amount
-> of wasted memory that should be used for the cmdlines.
->=20
-> The tracing data saves pids during the trace. At sched switch, if a trace
-> occurred, it will save the comm of the task that did the trace. This is
-> saved in a "cache" that maps pids to comms and exposed to user space via
-> the /sys/kernel/tracing/saved_cmdlines file. Currently it only caches by
-> default 128 comms.
->=20
-> The structure that uses this creates an array to store the pids using
-> PID_MAX_DEFAULT (which is usually set to 32768). This causes the structur=
-e
-> to be of the size of 131104 bytes on 64 bit machines.
->=20
-> In hex: 131104 =3D 0x20020, and since the kernel allocates generic memory=
- in
-> powers of two, the kernel would allocate 0x40000 or 262144 bytes to store
-> this structure. That leaves 131040 bytes of wasted space.
->=20
-> Worse, the structure points to an allocated array to store the comm names=
-,
-> which is 16 bytes times the amount of names to save (currently 128), whic=
-h
-> is 2048 bytes. Instead of allocating a separate array, make the structure
-> end with a variable length string and use the extra space for that.
->=20
-> This is similar to a recommendation that Linus had made about eventfs_ino=
-de names:
->=20
->   https://lore.kernel.org/all/20240130190355.11486-5-torvalds@linux-found=
-ation.org/
->=20
-> Instead of allocating a separate string array to hold the saved comms,
-> have the structure end with: char saved_cmdlines[]; and round up to the
-> next power of two over sizeof(struct saved_cmdline_buffers) + num_cmdline=
-s * TASK_COMM_LEN
-> It will use this extra space for the saved_cmdline portion.
->=20
-> Now, instead of saving only 128 comms by default, by using this wasted
-> space at the end of the structure it can save over 8000 comms and even
-> saves space by removing the need for allocating the other array.
+On Mon, 12 Feb 2024 14:08:29 -0800
+Tim Chen <tim.c.chen@linux.intel.com> wrote:
 
-The change looks good to me code wise.  But it seems like we are still
-overallocating as we can now accommodate 8000 comms when 128
-was asked for.
+> > Now, instead of saving only 128 comms by default, by using this wasted
+> > space at the end of the structure it can save over 8000 comms and even
+> > saves space by removing the need for allocating the other array.  
+> 
+> The change looks good to me code wise.  But it seems like we are still
+> overallocating as we can now accommodate 8000 comms when 128
+> was asked for.
 
-Wonder if we can reduce the default ask to 127 comm so we don't have to
-go to the next page order?
+That's because that memory is allocated regardless of if we only asked for
+128. Why not use it?
 
-Tim
+> 
+> Wonder if we can reduce the default ask to 127 comm so we don't have to
+> go to the next page order?
 
+The internal structure does power of 2 allocations, and is just a little
+over 128k in size, causing 256k to be allocated, which leaves just under
+128k of wasted memory. And on top of that, the old way even allocated
+another array. So instead, since this is already allocated, we just use it.
+
+Now I may add a way to also include the other counter too, so that we can
+have both, and will make the default slightly smaller.
+
+We have three arrays:
+
+ map_pid_to_cmdline[] which is the bulk of the allocation.
+ map_cmdline_to_pid[] - which is cmdline_num * sizeof(int)
+ saved_cmdlines[] - which is cmdline_num * TASK_COMM_LEN(16).
+
+The first one above is a static array, the second is a pointer, and the
+third is the end of the structure that uses the rest of wasted space. Now,
+instead of allocating the map_cmdline_to_pid[], we could add that at the
+end.
+
+The following patch drops the default down to 6000 (which is also more than
+enough) but also saves from allocating another array.
+
+-- Steve
+
+diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
+index e4fbcc3bede5..0c60e4bcdd31 100644
+--- a/kernel/trace/trace_sched_switch.c
++++ b/kernel/trace/trace_sched_switch.c
+@@ -201,7 +201,7 @@ static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
+ 	int order;
+ 
+ 	/* Figure out how much is needed to hold the given number of cmdlines */
+-	orig_size = sizeof(*s) + val * TASK_COMM_LEN;
++	orig_size = sizeof(*s) + val * (TASK_COMM_LEN + sizeof(int));
+ 	order = get_order(orig_size);
+ 	size = 1 << (order + PAGE_SHIFT);
+ 	page = alloc_pages(GFP_KERNEL, order);
+@@ -212,16 +212,10 @@ static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
+ 	memset(s, 0, sizeof(*s));
+ 
+ 	/* Round up to actual allocation */
+-	val = (size - sizeof(*s)) / TASK_COMM_LEN;
++	val = (size - sizeof(*s)) / (TASK_COMM_LEN + sizeof(int));
+ 	s->cmdline_num = val;
+ 
+-	s->map_cmdline_to_pid = kmalloc_array(val,
+-					      sizeof(*s->map_cmdline_to_pid),
+-					      GFP_KERNEL);
+-	if (!s->map_cmdline_to_pid) {
+-		free_saved_cmdlines_buffer(s);
+-		return NULL;
+-	}
++	s->map_cmdline_to_pid = (unsigned *)(s->saved_cmdlines + val * TASK_COMM_LEN);
+ 
+ 	s->cmdline_idx = 0;
+ 	memset(&s->map_pid_to_cmdline, NO_CMDLINE_MAP,
