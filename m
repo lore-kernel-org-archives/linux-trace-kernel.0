@@ -1,32 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A583E477;
-	Mon, 12 Feb 2024 17:23:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69C93C6A6;
+	Mon, 12 Feb 2024 18:08:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707758622; cv=none; b=K+muL8TL/8Ngn1GFGDoZ4HaLlh+1NvBASKNH5zzBAEIW83h6QFdWBp2rbNgou/PfM3iHnGwKTVcPa4EaDgzK+qKhLK/j9IgwMBpErH/5KrHNtCw1dzlFCma1kZLyREc2NM9lEjUrzJkiKLW11JBuLhPDVQAGnYAezjr4utyUNi4=
+	t=1707761287; cv=none; b=DHCyMA0Gc6VVqG3rIgKOg6VbvQ9z704a1xLBFfBYUX9LBVwZNVBh053/oNAKMZAWLcuVBEBgEoPhJKK1NoNGgHNMLRs32H/x2CSHcLxDQQTUyoyUk7iMySt/ckabF+GDEpiSna0iHtWFtrJOyqbleN4N65WfPRGu8vykH0f6cdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707758622; c=relaxed/simple;
-	bh=Xy89FyQ5S4TsTqUr35IOZ1Q0qHWjJDfL8WOhAJbBJIA=;
+	s=arc-20240116; t=1707761287; c=relaxed/simple;
+	bh=qdqtg6TWGB8jo2x9G2cj2uu942FZJ3zVJy+wRCbux+Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gYxOmA4VuQci9I1IRQ8iDW9uAJT9ARXB5CbV7ipyACZORMD54rc9BGN0Gb7R8Aw8/GN9+4lsMDXRxP5mExoQV8lLuNwazZyty+N2BXv+Ynj7LcWderE4ygjlIbvXrm8mGzL3rJLrjx5FfLrFwum96pxwGaApzkRIQ8++LsRQHX8=
+	 MIME-Version:Content-Type; b=tCfBNTnzB3FLoDPN8XEpPYfkdNpBbWywcV3OpowJ/fUde+441IThcYinSUXZmMFDJI+yi+qmsKfbI/dggYJaPt0X2BrVf3IgcQeF4mFi2Zme0kOx8Atuq7MTb8q+hj03eNILQdJwJNigVjAFoTKon1aDFw15uoZZYuZpLtiC1mQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98276C433B2;
-	Mon, 12 Feb 2024 17:23:41 +0000 (UTC)
-Date: Mon, 12 Feb 2024 12:24:23 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF940C433F1;
+	Mon, 12 Feb 2024 18:08:05 +0000 (UTC)
+Date: Mon, 12 Feb 2024 13:08:48 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Vincent Donnefort
- <vdonnefort@google.com>, Sven Schnelle <svens@linux.ibm.com>, Mete Durlu
- <meted@linux.ibm.com>
-Subject: Re: [PATCH v2] tracing: Fix wasted memory in saved_cmdlines logic
-Message-ID: <20240212122423.52dc9ed0@gandalf.local.home>
-In-Reply-To: <20240213004038.7fd10d2bd9f356c72100adcd@kernel.org>
-References: <20240209063622.1f7b6d5f@rorschach.local.home>
-	<20240213004038.7fd10d2bd9f356c72100adcd@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>, Manivannan
+ Sadhasivam <mani@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
+ linux-arm-msm@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
+ quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+ quic_parass@quicinc.com
+Subject: Re: [PATCH v11] bus: mhi: host: Add tracing support
+Message-ID: <20240212130848.7415b87f@gandalf.local.home>
+In-Reply-To: <20240206093110.GC8333@thinkpad>
+References: <20240206-ftrace_support-v11-1-3f71dc187544@quicinc.com>
+	<20240206062636.GA8333@thinkpad>
+	<eded3ffe-882d-9514-9c9a-9c49d3a7a9a6@quicinc.com>
+	<20240206090312.GB8333@thinkpad>
+	<20240206093110.GC8333@thinkpad>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,62 +42,42 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 13 Feb 2024 00:40:38 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Tue, 6 Feb 2024 15:01:10 +0530
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
 
-> > Now, instead of saving only 128 comms by default, by using this wasted
-> > space at the end of the structure it can save over 8000 comms and even
-> > saves space by removing the need for allocating the other array.  
+> > Bot will check sparse warnings/errors mostly. But these checkpatch issues can be
+> > fixed easily. If you don't do it now, then someone will send a patch for it
+> > later.
+> >   
 > 
-> This looks good to me. So this will allocate the saved_cmdlines in page-size
-> array instead of the power of two.
+> Hmm, seems like we should ignore these checkpatch issues due to the way the
+> macros are used by trace headers. Ignore my above comment, patch looks fine.
 
-Once the size is greater than page-size, it still is a power of two ;-)
+Yes please ignore checkpatch on any TRACE_EVENT() and related macros. It
+doesn't understand them, and reports errors and asks for fixes that break
+the default way of using TRACE_EVENT().
 
-But I think you meant that it will be a reminder of extra data, and not a
-power of two. Looking at the code, it didn't need to be a power of two as
-the saved names were just in a ring buffer anyway. The recording of a PID
-must be a power of two, as that is masked.
+Someday I hope someone teaches checkpatch to know the TRACE_EVENT() default
+format which is:
 
-Basically we have three arrays. One for the PIDS that hold the index into the
-COMM array. The COMM array really has no limitation. The PID array is
-PID_MAX_DEFAULT. But PIDs can be more than PID_MAX_DEFAULT as that's just
-the "default" setting. User space can increase it. I need to add a comment
-to how this works, as there are three arrays:
+TRACE_EVENT(event,
 
- unsigned map_pid_to_cmdline[PID_MAX_DEFAULT + 1];
+	TP_PROTO(<proto>),
 
- /* The next two are allocated based on cmdline_num size */
- unsigned map_cmdline_to_pid[cmdline_num];
- char saved_cmdlines[cmdline_num][TASK_COMM_LEN];
+	TP_ARGS(<args>),
 
-map_pid_to_cmdline[task->pid & (PID_MAX_DEFAULT - 1)] = index into the other two arrays;
+	TP_STRUCT__entry(
+		__field(	<type>,		<field>			)
+		__array(	<type>,		<field>,	<len>	)
+	),
 
- [ Although I'm not sure I need that "+1" in the array. This code is ancient
-   and I need to re-examine it. ]
+	TP_fast_assign(
+		<code-block>
+	),
 
-To get back to the PID, you need the map_cmdline_to_pid[idx] which contains
-the full PID. Really, that array is only needed if pid max is greater than
-PID_MAX_DEFAULT (which I find is the case for most distros now).
+	TP_printk("format", <print-args>)
+);
 
-To assign a new comm, we basically do:
-
-	idx = map_pid_to_cmdline[pid & (PID_MAX_DEFAULT - 1)];
-	if (idx == -1) {
-		idx = // get next location in COMM ring buffer
-		map_pid_to_cmdline[pid & (PID_MAX_DEFAULT - 1)] = idx;
-	}
-	map_cmdline_to_pid[idx] = pid;
-	strcpy(saved_cmdlines[idx], task->comm);
-
-And Mathieu pinged me about the non-commented use of that NO_CMDLINE_MAP
-which is just -1. I have it as INT_MAX, but really maybe it should be -1U,
-and add a comment around the memset().
-
-> 
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks, but Linus already pulled this. But I have some patches to clean
-this up a bit more.
+But checkpatch will error all over the above. :-(
 
 -- Steve
