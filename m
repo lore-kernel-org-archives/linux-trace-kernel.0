@@ -1,58 +1,57 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F4350268;
-	Mon, 12 Feb 2024 23:39:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB794F897;
+	Mon, 12 Feb 2024 23:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707781147; cv=none; b=HFSKSA/Mp6jVGt2iWBm66pZjnLfteBfTgFhrk2ubh8FAkBuclgxHBw9SY4o3BxKVKIJJ93tdIkKSaLFah4cdvTCwVSS87t9sMSBNKwIPQ601aO6pRS3UPhv6OC6nexH+uQWxCxmzjw3F36xDYkcWRaDEeDhugQ5xKzQlVxXENW4=
+	t=1707781340; cv=none; b=BKTtRSOOKV5ul6QVYEmvuCiSutVMnQOGPZzWMone4XWBSHN0T0LGPXsADXL+OjafSIQPSP8PZ7+oQ/iy+UIdh2uR44lvPVJw6PFoTuzKoPwpK/QMliLPo+8EdaOJX0c/tg0Nd9WwUnb3PYGazOrBrtdGKFlU/+apI6ePyv2/Bfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707781147; c=relaxed/simple;
-	bh=QPAWSIbAkGzPHg0gCvchvrpX63qIMyVQwVrLpDY0n+c=;
+	s=arc-20240116; t=1707781340; c=relaxed/simple;
+	bh=7OgQNDmpILmfx9Ap+vxY4LxyWvfTI/aAmMdFZWULYpc=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fk9zfJ7QYmqacUYHjgUV7yFgq0fmWVYcY9zJvUL9bZzacnqzStDoe+SbLhCkGO7GPaVwRLG3yEjJDmYUIJHZn9IahwnssxTJmuzNpg2PNQgnFrTgXwQ+zRcWNdB+ZW+/gVc0pWxQz3ECK96dBp0xIph1E2SmPTjj4alZVSAH+0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gaCKnN3a; arc=none smtp.client-ip=198.175.65.11
+	 Content-Type:MIME-Version; b=reyToar/+XHGPynDdBpPXJpYLYGx+7qcdz6cRoBLTV5jvo/GmqiH6QyDaewqefzECndsNSSDe8YtYJmTPdtU3p1o/3eDV/d+gHpYYCKv+NEFjtHMSVLWZKVa7JTtJ4qiOv8y3AZaE0zRaG4yGyqjTBzn8qcAnTOAl/VpPOueLMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c10xvUXd; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gaCKnN3a"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c10xvUXd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707781146; x=1739317146;
+  t=1707781339; x=1739317339;
   h=message-id:subject:from:to:cc:date:in-reply-to:
    references:content-transfer-encoding:mime-version;
-  bh=QPAWSIbAkGzPHg0gCvchvrpX63qIMyVQwVrLpDY0n+c=;
-  b=gaCKnN3aIXi8iyK5YygR7BBoJNHbLA2Eti0Y1xg+mxJKXifJLKdKt+ih
-   cmVITmm9D41H3uuKe2NZHUolus6pRvu1kJMLW/4KglSPrDOOV2AeZQGZ0
-   fDGcFRCoPlswSwgkZkfXM+yp3B5X5X1vPVtcKmXWwbQ51U8n5RRp4amIG
-   GVWSyxwT49QhJNNRmcli6HKF6gxSDgGB/ZIYoYGBryhhit73Y75TEHO0y
-   A8dNNFj5h+Uktd1YkIdxlZ52W2YyTmyOo4TCRrjvuC2SOtotznYZSgTQz
-   IADCzDilj3qmNbydXdV5UmJjONSemYxecMlOPnfshwDHXdWS4yUvrXdel
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="12332444"
+  bh=7OgQNDmpILmfx9Ap+vxY4LxyWvfTI/aAmMdFZWULYpc=;
+  b=c10xvUXdS9FcxHbvysrzrIxv5P4LA5kPF19PlMjhjnUsObfiE3/h/QQW
+   6wqeixKkQaWDkmD7NlgREg4qCaosVrcYn9ZptMNmIvqdkF807hU04/6pe
+   cPJh/MPdaWtQo7QIOEXvz/ROH9BlMO7s4bQwKI7k1so/TxzfhB9YO0HzS
+   +BLZfEl/IJXNGZ6CvwdSUlvR+D6Bg1/wbVAw8M9aCOoDKnKC3JKz3G+ja
+   ora0LSWjyAS55a+2ntG69L8l6xkeRW+d+K23yLM2Jyr2Td7/QGHk6BiOH
+   sXM345ClOYlAruUujA7bSqKafOrCk123IHibLJoCW3v2FGoJ/EXzOKWfL
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="13162158"
 X-IronPort-AV: E=Sophos;i="6.06,155,1705392000"; 
-   d="scan'208";a="12332444"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 15:39:05 -0800
+   d="scan'208";a="13162158"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 15:42:18 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,155,1705392000"; 
-   d="scan'208";a="2682509"
+   d="scan'208";a="7375030"
 Received: from sparrish-mobl1.amr.corp.intel.com (HELO [10.209.29.247]) ([10.209.29.247])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 15:39:04 -0800
-Message-ID: <ef94259e139e4579ee27db99975dc4cf397e2a06.camel@linux.intel.com>
-Subject: Re: [PATCH] tracing: Have saved_cmdlines arrays all in one
- allocation
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 15:42:18 -0800
+Message-ID: <65e9189f920b03d0a8741c1cd19e55997b6ca9d2.camel@linux.intel.com>
+Subject: Re: [PATCH] tracing: Fix wasted memory in saved_cmdlines logic
 From: Tim Chen <tim.c.chen@linux.intel.com>
 To: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>,  Linux Trace Kernel
+ <linux-kernel@vger.kernel.org>,  Linux trace kernel
  <linux-trace-kernel@vger.kernel.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>, 
- Vincent Donnefort <vdonnefort@google.com>, Sven Schnelle
- <svens@linux.ibm.com>, Mete Durlu <meted@linux.ibm.com>
-Date: Mon, 12 Feb 2024 15:39:03 -0800
-In-Reply-To: <20240212180941.379c419b@gandalf.local.home>
-References: <20240212180941.379c419b@gandalf.local.home>
+ <mathieu.desnoyers@efficios.com>, Vincent Donnefort
+ <vdonnefort@google.com>,  Sven Schnelle <svens@linux.ibm.com>, Mete Durlu
+ <meted@linux.ibm.com>, stable <stable@vger.kernel.org>
+Date: Mon, 12 Feb 2024 15:42:16 -0800
+In-Reply-To: <20240208105328.7e73f71d@rorschach.local.home>
+References: <20240208105328.7e73f71d@rorschach.local.home>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
@@ -63,88 +62,184 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2024-02-12 at 18:09 -0500, Steven Rostedt wrote:
+On Thu, 2024-02-08 at 10:53 -0500, Steven Rostedt wrote:
 > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 >=20
-> The saved_cmdlines have three arrays for mapping PIDs to COMMs:
+> While looking at improving the saved_cmdlines cache I found a huge amount
+> of wasted memory that should be used for the cmdlines.
 >=20
->  - map_pid_to_cmdline[]
->  - map_cmdline_to_pid[]
->  - saved_cmdlines
+> The tracing data saves pids during the trace. At sched switch, if a trace
+> occurred, it will save the comm of the task that did the trace. This is
+> saved in a "cache" that maps pids to comms and exposed to user space via
+> the /sys/kernel/tracing/saved_cmdlines file. Currently it only caches by
+> default 128 comms.
 >=20
-> The map_pid_to_cmdline[] is PID_MAX_DEFAULT in size and holds the index
-> into the other arrays. The map_cmdline_to_pid[] is a mapping back to the
-> full pid as it can be larger than PID_MAX_DEFAULT. And the
-> saved_cmdlines[] just holds the COMMs associated to the pids.
+> The structure that uses this creates an array to store the pids using
+> PID_MAX_DEFAULT (which is usually set to 32768). This causes the structur=
+e
+> to be of the size of 131104 bytes on 64 bit machines.
 >=20
-> Currently the map_pid_to_cmdline[] and saved_cmdlines[] are allocated
-> together (in reality the saved_cmdlines is just in the memory of the
-> rounding of the allocation of the structure as it is always allocated in
-> powers of two). The map_cmdline_to_pid[] array is allocated separately.
+> In hex: 131104 =3D 0x20020, and since the kernel allocates generic memory=
+ in
+> powers of two, the kernel would allocate 0x40000 or 262144 bytes to store
+> this structure. That leaves 131040 bytes of wasted space.
 >=20
-> Since the rounding to a power of two is rather large (it allows for 8000
-> elements in saved_cmdlines), also include the map_cmdline_to_pid[] array.
-> (This drops it to 6000 by default, which is still plenty for most use
-> cases). This saves even more memory as the map_cmdline_to_pid[] array
-> doesn't need to be allocated.
-
-
-This patch does make better use of the extra space and make the
-previous change better.
+> Worse, the structure points to an allocated array to store the comm names=
+,
+> which is 16 bytes times the amount of names to save (currently 128), whic=
+h
+> is 2048 bytes. Instead of allocating a separate array, make the structure
+> end with a variable length string and use the extra space for that.
+>=20
+> This is similar to a recommendation that Linus had made about eventfs_ino=
+de names:
+>=20
+>   https://lore.kernel.org/all/20240130190355.11486-5-torvalds@linux-found=
+ation.org/
+>=20
+> Instead of allocating a separate string array to hold the saved comms,
+> have the structure end with: char saved_cmdlines[]; and round up to the
+> next power of two over sizeof(struct saved_cmdline_buffers) + num_cmdline=
+s * TASK_COMM_LEN
+> It will use this extra space for the saved_cmdline portion.
+>=20
+> Now, instead of saving only 128 comms by default, by using this wasted
+> space at the end of the structure it can save over 8000 comms and even
+> saves space by removing the need for allocating the other array.
+>=20
+> Cc: stable@vger.kernel.org
+> Fixes: 939c7a4f04fcd ("tracing: Introduce saved_cmdlines_size file")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
 Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
-=20
->=20
-> Link: https://lore.kernel.org/linux-trace-kernel/20240212174011.068211d9@=
-gandalf.local.home/
->=20
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
 > ---
->  kernel/trace/trace_sched_switch.c | 13 ++++---------
->  1 file changed, 4 insertions(+), 9 deletions(-)
+>  kernel/trace/trace.c | 73 +++++++++++++++++++++-----------------------
+>  1 file changed, 34 insertions(+), 39 deletions(-)
 >=20
-> diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched=
-_switch.c
-> index e4fbcc3bede5..210c74dcd016 100644
-> --- a/kernel/trace/trace_sched_switch.c
-> +++ b/kernel/trace/trace_sched_switch.c
-> @@ -201,7 +201,7 @@ static struct saved_cmdlines_buffer *allocate_cmdline=
-s_buffer(unsigned int val)
->  	int order;
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 2a7c6fd934e9..0b3e60b827f7 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -2320,7 +2320,7 @@ struct saved_cmdlines_buffer {
+>  	unsigned *map_cmdline_to_pid;
+>  	unsigned cmdline_num;
+>  	int cmdline_idx;
+> -	char *saved_cmdlines;
+> +	char saved_cmdlines[];
+>  };
+>  static struct saved_cmdlines_buffer *savedcmd;
 > =20
->  	/* Figure out how much is needed to hold the given number of cmdlines *=
+> @@ -2334,47 +2334,54 @@ static inline void set_cmdline(int idx, const cha=
+r *cmdline)
+>  	strncpy(get_saved_cmdlines(idx), cmdline, TASK_COMM_LEN);
+>  }
+> =20
+> -static int allocate_cmdlines_buffer(unsigned int val,
+> -				    struct saved_cmdlines_buffer *s)
+> +static void free_saved_cmdlines_buffer(struct saved_cmdlines_buffer *s)
+> +{
+> +	int order =3D get_order(sizeof(*s) + s->cmdline_num * TASK_COMM_LEN);
+> +
+> +	kfree(s->map_cmdline_to_pid);
+> +	free_pages((unsigned long)s, order);
+> +}
+> +
+> +static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned i=
+nt val)
+>  {
+> +	struct saved_cmdlines_buffer *s;
+> +	struct page *page;
+> +	int orig_size, size;
+> +	int order;
+> +
+> +	/* Figure out how much is needed to hold the given number of cmdlines *=
 /
-> -	orig_size =3D sizeof(*s) + val * TASK_COMM_LEN;
-> +	orig_size =3D sizeof(*s) + val * (TASK_COMM_LEN + sizeof(int));
-
-Strictly speaking, *map_cmdline_to_pid is unsigned int so it is more consis=
-tent
-to use sizeof(unsigned) in line above.  But I'm nitpicking and I'm fine to
-leave it as is.
-
->  	order =3D get_order(orig_size);
->  	size =3D 1 << (order + PAGE_SHIFT);
->  	page =3D alloc_pages(GFP_KERNEL, order);
-> @@ -212,16 +212,11 @@ static struct saved_cmdlines_buffer *allocate_cmdli=
-nes_buffer(unsigned int val)
->  	memset(s, 0, sizeof(*s));
-> =20
->  	/* Round up to actual allocation */
-> -	val =3D (size - sizeof(*s)) / TASK_COMM_LEN;
-> +	val =3D (size - sizeof(*s)) / (TASK_COMM_LEN + sizeof(int));
->  	s->cmdline_num =3D val;
-> =20
-> -	s->map_cmdline_to_pid =3D kmalloc_array(val,
-> -					      sizeof(*s->map_cmdline_to_pid),
-> -					      GFP_KERNEL);
-> -	if (!s->map_cmdline_to_pid) {
-> -		free_saved_cmdlines_buffer(s);
-> -		return NULL;
+> +	orig_size =3D sizeof(*s) + val * TASK_COMM_LEN;
+> +	order =3D get_order(orig_size);
+> +	size =3D 1 << (order + PAGE_SHIFT);
+> +	page =3D alloc_pages(GFP_KERNEL, order);
+> +	if (!page)
+> +		return NULL;
+> +
+> +	s =3D page_address(page);
+> +	memset(s, 0, sizeof(*s));
+> +
+> +	/* Round up to actual allocation */
+> +	val =3D (size - sizeof(*s)) / TASK_COMM_LEN;
+> +	s->cmdline_num =3D val;
+> +
+>  	s->map_cmdline_to_pid =3D kmalloc_array(val,
+>  					      sizeof(*s->map_cmdline_to_pid),
+>  					      GFP_KERNEL);
+> -	if (!s->map_cmdline_to_pid)
+> -		return -ENOMEM;
+> -
+> -	s->saved_cmdlines =3D kmalloc_array(TASK_COMM_LEN, val, GFP_KERNEL);
+> -	if (!s->saved_cmdlines) {
+> -		kfree(s->map_cmdline_to_pid);
+> -		return -ENOMEM;
 > -	}
-> +	/* Place map_cmdline_to_pid array right after saved_cmdlines */
-> +	s->map_cmdline_to_pid =3D (unsigned *)&s->saved_cmdlines[val * TASK_COM=
-M_LEN];
 > =20
 >  	s->cmdline_idx =3D 0;
+> -	s->cmdline_num =3D val;
 >  	memset(&s->map_pid_to_cmdline, NO_CMDLINE_MAP,
+>  	       sizeof(s->map_pid_to_cmdline));
+>  	memset(s->map_cmdline_to_pid, NO_CMDLINE_MAP,
+>  	       val * sizeof(*s->map_cmdline_to_pid));
+> =20
+> -	return 0;
+> +	return s;
+>  }
+> =20
+>  static int trace_create_savedcmd(void)
+>  {
+> -	int ret;
+> -
+> -	savedcmd =3D kmalloc(sizeof(*savedcmd), GFP_KERNEL);
+> -	if (!savedcmd)
+> -		return -ENOMEM;
+> -
+> -	ret =3D allocate_cmdlines_buffer(SAVED_CMDLINES_DEFAULT, savedcmd);
+> -	if (ret < 0) {
+> -		kfree(savedcmd);
+> -		savedcmd =3D NULL;
+> -		return -ENOMEM;
+> -	}
+> +	savedcmd =3D allocate_cmdlines_buffer(SAVED_CMDLINES_DEFAULT);
+> =20
+> -	return 0;
+> +	return savedcmd ? 0 : -ENOMEM;
+>  }
+> =20
+>  int is_tracing_stopped(void)
+> @@ -6056,26 +6063,14 @@ tracing_saved_cmdlines_size_read(struct file *fil=
+p, char __user *ubuf,
+>  	return simple_read_from_buffer(ubuf, cnt, ppos, buf, r);
+>  }
+> =20
+> -static void free_saved_cmdlines_buffer(struct saved_cmdlines_buffer *s)
+> -{
+> -	kfree(s->saved_cmdlines);
+> -	kfree(s->map_cmdline_to_pid);
+> -	kfree(s);
+> -}
+> -
+>  static int tracing_resize_saved_cmdlines(unsigned int val)
+>  {
+>  	struct saved_cmdlines_buffer *s, *savedcmd_temp;
+> =20
+> -	s =3D kmalloc(sizeof(*s), GFP_KERNEL);
+> +	s =3D allocate_cmdlines_buffer(val);
+>  	if (!s)
+>  		return -ENOMEM;
+> =20
+> -	if (allocate_cmdlines_buffer(val, s) < 0) {
+> -		kfree(s);
+> -		return -ENOMEM;
+> -	}
+> -
+>  	preempt_disable();
+>  	arch_spin_lock(&trace_cmdline_lock);
+>  	savedcmd_temp =3D savedcmd;
 
