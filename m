@@ -1,117 +1,530 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D0A154B1
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Feb 2024 23:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5201B3A1B0
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Feb 2024 10:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707692999; cv=none; b=q+IF9VsjoQzt6+bCR5y0TGD7rYX4GyPrzSvoyxTam7naBEJ4Ah8U/suaBSBVAebvHQ5guYzMmuu1Rklzm0knvbG/y5M51puY5ZfduCScK2fGuJQkqUn/onrtr4FKQN0gBRLpYFJKoVS+y03WTkV9i9O3+3gE+z8QXnAzeKXwA9w=
+	t=1707734678; cv=none; b=PoE2QLnI/QkOYGIL4Ws3J1dYZxPlb2FHZVyg5WTq6OGlqY22gWlHeVJ06b9DGf/s8yWM0TqqaeyYa8lLZyQpXrOy++9xbSJ1yPfv48X98uRwQL6aw5XspcRhpfbw9O+UKFYiNvReJ1AXi2EI67XQogTa4ED9JOTXitkxycG8tDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707692999; c=relaxed/simple;
-	bh=0UHBFd8KsfNzuUb6VByQxElPhKzrj40UEzATEtX2vCE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bI62IKtuzk3nN/9LQxaEQjmvHSji5uNIzHEPzLHO3YTgoQ9MkY1EKGLbAUxWrjx3I0SUH9Slkvf3zJB6Je2oK9kJgDY4Bgr5BlmfxR/4nghslXXu6izbTirOeVu98Z3ApufjhFOnlpTvhcmf6M0v2by9uophLqeeuVjcvk6+BqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=M5JSqYeC; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1707734678; c=relaxed/simple;
+	bh=wpbRiMI6NAMuncX9fLMTsZd5Gm9ZakHAkP2CSO0EoZ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C2RwDivO2aT7a+XKymdPJUfwMPSWtdM+hJymDS1WQswS57JkqhoKMT6o3YzCYbg3/OwX94fyp8Jb+6e6Mo+YwKXTAHJs5HqXf5VaGN5yGjp9pwotrCw8FBbjnzmNd2XaHtFPpoRNPSveQFEjfm2h0Tcp/klDMlGyJUwGHbRWeRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IpJJTyYc; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="M5JSqYeC"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-561587ce966so2991347a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 11 Feb 2024 15:09:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IpJJTyYc"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-560e9c7a094so3968298a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Feb 2024 02:44:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1707692994; x=1708297794; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XH/aCjJt/DiB7MsEbqzKT+olkUUu+T5Xb1GlIEopZ2s=;
-        b=M5JSqYeCSp8QZJ0B2mc5PfXQd8UPl+0ebY+0u3Y8K2A0g/yx5mmKb5TiyY96kReG60
-         rdBafxGQe9jaEMLth/9RIT43xfVjJ3VUAfpxec6sEX7XaN+r+HJv/hodKAmEScigPQmb
-         b5HIFSqr9NsYSACyYYq0ZPq3/sDHQSxyW87siIYAIv65M3EnrxP0zVbjtRhiJUmlISWK
-         PW9LIMxa4nyxbONBqWD9F6jSJ/spDArZ7X3oJ9txipFILbKmt6sS3dQ7HaZvv6aVRU1J
-         N/M4IlywRgLrZEMoxTgcxCNQDardrOj//vbYNC7Qv1EYRsu5dnB+UA1191K5D/ZvI4lL
-         zL9Q==
+        d=google.com; s=20230601; t=1707734674; x=1708339474; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aDJcRx4776rwIg7Cp6jkKLHIjuAeaTwhHWx6DnEvb0Q=;
+        b=IpJJTyYc+lGY2NUhYzV2RTYPnRab7RcDu6t/bvWi2DgrUvoZmwyWBUBVHZPltCOZOj
+         wam8RSK8emSEiL5iMH0mTfMCAr50q7l6jfVxvgSD5ruhSBoHNaoKTyeme1LP4f4Zmurv
+         XTbkEiLWuuMdpwqYbkrecKI5xX3eWG5CN6fbVwg6lpOnQKmGSRvnM0+7cu20XmYARPd+
+         bsjR+iKYUtJQkFLofAuj/JdvJFiQKO2daESHtt47fhOrj2kiSskoVj7PzOnxRkn+nWkF
+         KE4hSK2TywUvhXhYzuBDf5eQfmKHvxybnU5ithXNlZcsN78TV40bX5i+/RfrrEn3Y8CN
+         FNnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707692994; x=1708297794;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XH/aCjJt/DiB7MsEbqzKT+olkUUu+T5Xb1GlIEopZ2s=;
-        b=NR9/EzqFU2qq8wTCZ4btyn2y858gTZkNEQwK0heYYxCVndmRRL2rCw5OjwO9D6DGr8
-         RmlRX/H9BAl/DsWogrdILf/26ln/tj0P9K91EF/6wLL3nBNWKScwgzCOlhUIns+hU2Nc
-         59w/ilckEz4AZI1GGw8LUXhz3JuoXM3kTsvl7Y4vxLSNhJVNYj20ArWfmg+PaSLC0uMC
-         5E5S+CMtxEW3R9y54RGj3lwKSdVSmowMXWc7DZxS1PcZ2ya1t4Td4wr9cwzPCeBFE/dh
-         IoCNLlp3Hhkwrveu15Egbwb9vAvvbmsl54qpA6kPZJVQCtXpPiYS7SukY5LIZNDQ6lN0
-         Vz1Q==
-X-Gm-Message-State: AOJu0YxcWC17CoFWVNrUY4TrpSDr0HsmIq+ey8F56D9auDkLX97C4C2O
-	AgoSg4+dxZAqeTK1wLZqwTrz+hq6UOb3/xMhYEXSqVp9oz5QnEdJlKmazE7xJVE=
-X-Google-Smtp-Source: AGHT+IE/NlI/6DThlF/g6NgjuI7e0164D2rPvpOssgTLNrvG5ONjv7e8Jh03RQj+ex2PdOM1dF87kQ==
-X-Received: by 2002:a05:6402:35d2:b0:561:841f:ed03 with SMTP id z18-20020a05640235d200b00561841fed03mr4116845edc.14.1707692993755;
-        Sun, 11 Feb 2024 15:09:53 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU8klcKZ40EjoIvJcSdkTkkctgF4aLklrTh0LA3GCGFlxsHvhu2iaJDoXh8SbFR2ykdO1OHYPmnwHRIRne8/iFWv3Xnx0P+iJDrLWI3UsTxy6mYBkjPS80zr+xF81W5Ft2FoFZePwaIKyF9/s3hpXjyma4TfGT/DY7z4np6u7S1JBY+bE4BqXDohnuaPizfwn/i7uNKjGn/8uPde2l6nDNATh26taFPA6bdDegmDFNeIFxVY2t1k16RyJRZ69GTdUGujLgEM1HxzKEx2YkKBGRrta4cmsvtaw==
-Received: from raven.blarg.de (p200300dc6f267100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f26:7100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id e8-20020a056402148800b0055ff9299f71sm2183566edv.46.2024.02.11.15.09.53
+        d=1e100.net; s=20230601; t=1707734674; x=1708339474;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aDJcRx4776rwIg7Cp6jkKLHIjuAeaTwhHWx6DnEvb0Q=;
+        b=ghJWlkHIaBZ+UXEJXiIMMPCfun9fNZ1ZED4G95MMfcdtTktdnZK6C86wv+vEoU4jMc
+         YSeY23pEAVTkaNTUoGH8h28ex/9fm5b32Z101FymlQxLLn0e4jT9v3HyPK/NkVi+XvIt
+         fEfBUmuWSceUd3slbFw1xlqmlI1TfiNMgsTQrUeY3HkRHFeXcw1aptU3xeRlmOy5bnsg
+         QpNmas0J1bYOowy14J03R79/XhwtlFezJAiv19STo5J/qkrylPZdFB0cXz+przqIjHJV
+         AxI3gp/IkTTOilzZkl5/O+PJNipoBzkB5+JdWAbyctnZsKnqqsRBnb9lQEY1NknYS6yb
+         iLqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUT8qBE6C2WbnRrWAaz5zGpN3eJphthpQX/q5omkYeQ1LWvbvSGEspNEuO6JXVSIBL8WWA7weP7z8tJ0EfRwxx4PPhr73uc/bDTbUaeH3O+PiBk
+X-Gm-Message-State: AOJu0Yw8WI7kELGa5OewR7lwbD04qC40Y8GExwgEv4h7YlaUcyp8hDmN
+	MoYMwwz1DOrqrpp81fdq5Ti35nk0omhSNTVfyIwU+4qv/Zn6t2vQzGOlI0P41wPCxuR3ITh90iQ
+	Oxg==
+X-Google-Smtp-Source: AGHT+IE1mvcBn0onlKXCRL3qsI7ANWcNjzII0Rg2/q7n4hUvUMmWwuSyXJX+NL3UR+MOzcNaXhTedQ==
+X-Received: by 2002:a17:906:cb10:b0:a37:7f72:574c with SMTP id lk16-20020a170906cb1000b00a377f72574cmr3860590ejb.68.1707734674324;
+        Mon, 12 Feb 2024 02:44:34 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWxGJ8WqgL94+y/AvFtUXyeVhyk+Dyxcc8hx/OWGr0WY4ionbq7KMQ55zUb82v/R/VzicKNmjYXWqI1Y83GuaFCWr1diM9932XCSooDPJ/dB2QP5xCUVI17Ofc5srsXl+NfhjyhCnNYcgUN5hvu01DQOD5IoF4yR3Wv4TphkxdY75aY10wYJL/bmu+Mx1/J8DF29+m53e5GuTp21oPAu8LBblo8Qukclbnt
+Received: from google.com (185.83.140.34.bc.googleusercontent.com. [34.140.83.185])
+        by smtp.gmail.com with ESMTPSA id tj2-20020a170907c24200b00a3cc29e4b89sm72837ejc.131.2024.02.12.02.44.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Feb 2024 15:09:53 -0800 (PST)
-From: Max Kellermann <max.kellermann@ionos.com>
-To: svens@stackframe.org,
-	James.Bottomley@HansenPartnership.com,
-	deller@gmx.de,
-	mcgrof@kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH] parisc/kprobes: always include asm-generic/kprobes.h
-Date: Mon, 12 Feb 2024 00:09:45 +0100
-Message-Id: <20240211230945.297104-1-max.kellermann@ionos.com>
-X-Mailer: git-send-email 2.39.2
+        Mon, 12 Feb 2024 02:44:33 -0800 (PST)
+Date: Mon, 12 Feb 2024 10:44:26 +0000
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+	kernel-team@android.com
+Subject: Re: [PATCH v16 2/6] ring-buffer: Introducing ring-buffer mapping
+ functions
+Message-ID: <Zcn2iotAnIWT4F_O@google.com>
+References: <20240209163448.944970-1-vdonnefort@google.com>
+ <20240209163448.944970-3-vdonnefort@google.com>
+ <20240211171837.6a4ea1a5@rorschach.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240211171837.6a4ea1a5@rorschach.local.home>
 
-The NOKPROBE_SYMBOL macro (and others) were moved to
-asm-generic/kprobes.h in 2017 by commit 7d134b2ce639 ("kprobes: move
-kprobe declarations to asm-generic/kprobes.h"), and this new header
-was included by asm/kprobes.h unconditionally on all architectures.
+[...]
 
-When kprobe support was added to parisc in 2017 by commit
-8858ac8e9e9b1 ("parisc: Implement kprobes"), that header was only
-included when CONFIG_KPROBES was enabled.
+> > +static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+> > +{
+> > +	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+> > +
+> > +	meta->reader.read = cpu_buffer->reader_page->read;
+> > +	meta->reader.id = cpu_buffer->reader_page->id;
+> > +	meta->reader.lost_events = cpu_buffer->lost_events;
+> > +
+> > +	meta->entries = local_read(&cpu_buffer->entries);
+> > +	meta->overrun = local_read(&cpu_buffer->overrun);
+> > +	meta->read = cpu_buffer->read;
+> > +
+> > +	/* Some archs do not have data cache coherency between kernel and user-space */
+> > +	flush_dcache_folio(virt_to_folio(cpu_buffer->meta_page));
+> > +}
+> > +
+> >  static void
+> >  rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
+> >  {
+> > @@ -5204,6 +5227,9 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
+> >  	cpu_buffer->lost_events = 0;
+> >  	cpu_buffer->last_overrun = 0;
+> >  
+> > +	if (READ_ONCE(cpu_buffer->mapped))
+> 
+> Isn't the buffer_mutex held when we modify mapped? I believe it's held
+> here. I don't think we need a READ_ONCE() here. Is there a reason for it?
+> 
+> Hmm, looking down, it looks like you take the buffer->mutex after
+> setting mapped, is that necessary? If we take the buffer->mutex we can
+> sync the reset with mapping.
 
-This can lead to build failures when NOKPROBE_SYMBOL is used, but
-CONFIG_KPROBES is disabled.  This mistake however was never actually
-noticed because linux/kprobes.h also includes asm-generic/kprobes.h
-(though I do not understand why that is, because it also includes
-asm/kprobes.h).
+The idea was to not take any of the buffer mutex, reader lock if the refcount is
+simply inc/dec. Locks are only used if the meta-page is
+installed/uninstalled.
 
-To prevent eventual build failures, I suggest to always include
-asm-generic/kprobes.h on parisc, just like all the other architectures
-do.  This way, including asm/kprobes.h suffices, and nobody (outside
-of arch/) ever needs to explicitly include asm-generic/kprobes.h.
+The WRITE_ONCE/READ_ONCE is there only to make sure no compiler optimisation
+could lead a reader to wrongly interpret that refcount while it is inc/dec. That
+is probably not necessary and I'm happy to either drop it completely or replace
+it by taking buffer mutex and reader lock whenever the refcount is inc/dec.
 
-Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
----
- arch/parisc/include/asm/kprobes.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> > +		rb_update_meta_page(cpu_buffer);
+> > +
+> >  	rb_head_page_activate(cpu_buffer);
+> >  	cpu_buffer->pages_removed = 0;
+> >  }
+> > @@ -5418,6 +5444,12 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
+> >  	cpu_buffer_a = buffer_a->buffers[cpu];
+> >  	cpu_buffer_b = buffer_b->buffers[cpu];
+> >  
+> > +	/* It's up to the callers to not try to swap mapped buffers */
+> > +	if (WARN_ON_ONCE(cpu_buffer_a->mapped || cpu_buffer_b->mapped)) {
+> > +		ret = -EBUSY;
+> > +		goto out;
+> > +	}
+> > +
+> >  	/* At least make sure the two buffers are somewhat the same */
+> >  	if (cpu_buffer_a->nr_pages != cpu_buffer_b->nr_pages)
+> >  		goto out;
+> > @@ -5682,7 +5714,8 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+> >  	 * Otherwise, we can simply swap the page with the one passed in.
+> >  	 */
+> >  	if (read || (len < (commit - read)) ||
+> > -	    cpu_buffer->reader_page == cpu_buffer->commit_page) {
+> > +	    cpu_buffer->reader_page == cpu_buffer->commit_page ||
+> > +	    READ_ONCE(cpu_buffer->mapped)) {
+> 
+> Here the buffer_mutex isn't held, but still, what's the purpose of the READ_ONCE?
+> 
+> I wonder if we just grab the reader_lock when setting the mapped
+> variable if that would be better than using READ/WRITE_ONCE, which I'm
+> not sure is helpful.
 
-diff --git a/arch/parisc/include/asm/kprobes.h b/arch/parisc/include/asm/kprobes.h
-index 0a175ac87698..0f42f5c8e3b6 100644
---- a/arch/parisc/include/asm/kprobes.h
-+++ b/arch/parisc/include/asm/kprobes.h
-@@ -10,9 +10,10 @@
- #ifndef _PARISC_KPROBES_H
- #define _PARISC_KPROBES_H
- 
-+#include <asm-generic/kprobes.h>
-+
- #ifdef CONFIG_KPROBES
- 
--#include <asm-generic/kprobes.h>
- #include <linux/types.h>
- #include <linux/ptrace.h>
- #include <linux/notifier.h>
--- 
-2.39.2
+ditto above.
+> 
+> 
+> >  		struct buffer_data_page *rpage = cpu_buffer->reader_page->page;
+> >  		unsigned int rpos = read;
+> >  		unsigned int pos = 0;
+> > @@ -5901,6 +5934,11 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+> >  
+> >  		cpu_buffer = buffer->buffers[cpu];
+> >  
+> > +		if (READ_ONCE(cpu_buffer->mapped)) {
+> > +			err = -EBUSY;
+> > +			goto error;
+> > +		}
+> > +
+> >  		/* Update the number of pages to match the new size */
+> >  		nr_pages = old_size * buffer->buffers[cpu]->nr_pages;
+> >  		nr_pages = DIV_ROUND_UP(nr_pages, buffer->subbuf_size);
+> > @@ -6002,6 +6040,304 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+> >  }
+> >  EXPORT_SYMBOL_GPL(ring_buffer_subbuf_order_set);
+> >  
+> > +#define subbuf_page(off, start) \
+> > +	virt_to_page((void *)(start + (off << PAGE_SHIFT)))
+> > +
+> > +#define foreach_subbuf_page(sub_order, start, page)		\
+> > +	page = subbuf_page(0, (start));				\
+> > +	for (int __off = 0; __off < (1 << (sub_order));		\
+> > +	     __off++, page = subbuf_page(__off, (start)))
+> > +
+> > +static inline void subbuf_map_prepare(unsigned long subbuf_start, int order)
+> > +{
+> > +	struct page *page;
+> > +
+> > +	/*
+> > +	 * When allocating order > 0 pages, only the first struct page has a
+> > +	 * refcount > 1. Increasing the refcount here ensures none of the struct
+> > +	 * page composing the sub-buffer is freeed when the mapping is closed.
+> > +	 */
+> > +	foreach_subbuf_page(order, subbuf_start, page)
+> > +		page_ref_inc(page);
+> > +}
+> > +
+> > +static inline void subbuf_unmap(unsigned long subbuf_start, int order)
+> > +{
+> > +	struct page *page;
+> > +
+> > +	foreach_subbuf_page(order, subbuf_start, page) {
+> > +		page_ref_dec(page);
+> > +		page->mapping = NULL;
+> > +	}
+> > +}
+> > +
+> > +static void rb_free_subbuf_ids(struct ring_buffer_per_cpu *cpu_buffer)
+> > +{
+> > +	int sub_id;
+> > +
+> > +	for (sub_id = 0; sub_id < cpu_buffer->nr_pages + 1; sub_id++)
+> > +		subbuf_unmap(cpu_buffer->subbuf_ids[sub_id],
+> > +			     cpu_buffer->buffer->subbuf_order);
+> > +
+> > +	kfree(cpu_buffer->subbuf_ids);
+> > +	cpu_buffer->subbuf_ids = NULL;
+> > +}
+> > +
+> > +static int rb_alloc_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+> > +{
+> > +	if (cpu_buffer->meta_page)
+> > +		return 0;
+> > +
+> > +	cpu_buffer->meta_page = page_to_virt(alloc_page(GFP_USER | __GFP_ZERO));
+> 
+> The above is the main reason I'm looking for a v17. If that
+> alloc_page() fails, what exactly is going to be returned here? 
+> 
+> #define page_to_virt(x) __va(PFN_PHYS(page_to_pfn(x)))
+> #define __va(x)                     ((void *)((unsigned long)(x)+PAGE_OFFSET))
+> 
+> I don't think that will be the result you expect. We need to do the
+> alloc_page(), test the result of that, and then call page_to_virt() on a
+> page that is not NULL.
 
+Ouch, you're right!
+
+> 
+> > +	if (!cpu_buffer->meta_page)
+> > +		return -ENOMEM;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void rb_free_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+> > +{
+> > +	unsigned long addr = (unsigned long)cpu_buffer->meta_page;
+> > +
+> 
+> I'm thinking for extra safety we could add:
+> 
+> 	if (!addr)
+> 		return;
+> 
+> So this function could be called twice without issue.
+
+Ack.
+
+> 
+> > +	virt_to_page((void *)addr)->mapping = NULL;
+> > +	free_page(addr);
+> > +	cpu_buffer->meta_page = NULL;
+> > +}
+> > +
+> > +static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
+> > +				   unsigned long *subbuf_ids)
+> > +{
+> > +	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+> > +	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
+> > +	struct buffer_page *first_subbuf, *subbuf;
+> > +	int id = 0;
+> > +
+> > +	subbuf_ids[id] = (unsigned long)cpu_buffer->reader_page->page;
+> > +	subbuf_map_prepare(subbuf_ids[id], cpu_buffer->buffer->subbuf_order);
+> > +	cpu_buffer->reader_page->id = id++;
+> > +
+> > +	first_subbuf = subbuf = rb_set_head_page(cpu_buffer);
+> > +	do {
+> > +		if (id >= nr_subbufs) {
+> > +			WARN_ON(1);
+> > +			break;
+> > +		}
+> 
+> 		if (WARN_ON(id >= nr_subbufs))
+> 			break;
+> 
+> > +
+> > +		subbuf_ids[id] = (unsigned long)subbuf->page;
+> > +		subbuf->id = id;
+> > +		subbuf_map_prepare(subbuf_ids[id], cpu_buffer->buffer->subbuf_order);
+> > +
+> > +		rb_inc_page(&subbuf);
+> > +		id++;
+> > +	} while (subbuf != first_subbuf);
+> > +
+> > +	/* install subbuf ID to kern VA translation */
+> > +	cpu_buffer->subbuf_ids = subbuf_ids;
+> > +
+> > +	meta->meta_page_size = PAGE_SIZE;
+> > +	meta->meta_struct_len = sizeof(*meta);
+> > +	meta->nr_subbufs = nr_subbufs;
+> > +	meta->subbuf_size = cpu_buffer->buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
+> > +
+> > +	rb_update_meta_page(cpu_buffer);
+> > +}
+> > +
+> > +static inline struct ring_buffer_per_cpu *
+> > +rb_get_mapped_buffer(struct trace_buffer *buffer, int cpu)
+> > +{
+> > +	struct ring_buffer_per_cpu *cpu_buffer;
+> > +
+> > +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+> > +		return ERR_PTR(-EINVAL);
+> > +
+> > +	cpu_buffer = buffer->buffers[cpu];
+> > +
+> > +	mutex_lock(&cpu_buffer->mapping_lock);
+> > +
+> > +	if (!cpu_buffer->mapped) {
+> > +		mutex_unlock(&cpu_buffer->mapping_lock);
+> > +		return ERR_PTR(-ENODEV);
+> > +	}
+> > +
+> > +	return cpu_buffer;
+> > +}
+> > +
+> > +static inline void rb_put_mapped_buffer(struct ring_buffer_per_cpu *cpu_buffer)
+> > +{
+> > +	mutex_unlock(&cpu_buffer->mapping_lock);
+> > +}
+> > +
+> > +int ring_buffer_map(struct trace_buffer *buffer, int cpu)
+> > +{
+> > +	struct ring_buffer_per_cpu *cpu_buffer;
+> > +	unsigned long flags, *subbuf_ids;
+> > +	int err = 0;
+> > +
+> > +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+> > +		return -EINVAL;
+> > +
+> > +	cpu_buffer = buffer->buffers[cpu];
+> > +
+> > +	mutex_lock(&cpu_buffer->mapping_lock);
+> 
+> Is there a reason not to take the buffer->mutex before setting mapped?
+> 
+> > +
+> > +	if (cpu_buffer->mapped) {
+> > +		if (cpu_buffer->mapped == UINT_MAX)
+> > +			err = -EBUSY;
+> > +		else
+> > +			WRITE_ONCE(cpu_buffer->mapped, cpu_buffer->mapped + 1);
+> 
+> As mentioned before, it may be better to take the reader_lock when
+> setting mapped and that should add the protection we want with mapped
+> set and other readers.
+> 
+> > +		mutex_unlock(&cpu_buffer->mapping_lock);
+> > +		return err;
+> > +	}
+> > +
+> > +	/* prevent another thread from changing buffer/sub-buffer sizes */
+> > +	mutex_lock(&buffer->mutex);
+> > +
+> > +	err = rb_alloc_meta_page(cpu_buffer);
+> > +	if (err)
+> > +		goto unlock;
+> > +
+> > +	/* subbuf_ids include the reader while nr_pages does not */
+> > +	subbuf_ids = kzalloc(sizeof(*subbuf_ids) * (cpu_buffer->nr_pages + 1),
+> > +			   GFP_KERNEL);
+> 
+> Instead use:
+> 
+> 	subbuf_ids = kcalloc(cpu_buffer->nr_pages + 1, sizeof(*subbuf_ids), GFP_KERNEL);
+> 
+> > +	if (!subbuf_ids) {
+> > +		rb_free_meta_page(cpu_buffer);
+> > +		err = -ENOMEM;
+> > +		goto unlock;
+> > +	}
+> > +
+> > +	atomic_inc(&cpu_buffer->resize_disabled);
+> > +
+> > +	/*
+> > +	 * Lock all readers to block any subbuf swap until the subbuf IDs are
+> > +	 * assigned.
+> > +	 */
+> > +	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+> > +
+> > +	rb_setup_ids_meta_page(cpu_buffer, subbuf_ids);
+> > +	cpu_buffer->mapped = 1;
+> > +
+> > +	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+> > +unlock:
+> > +	mutex_unlock(&buffer->mutex);
+> > +	mutex_unlock(&cpu_buffer->mapping_lock);
+> > +
+> > +	return err;
+> > +}
+> > +
+> > +int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
+> > +{
+> > +	struct ring_buffer_per_cpu *cpu_buffer;
+> > +	unsigned long flags;
+> > +	int err = 0;
+> > +
+> > +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+> > +		return -EINVAL;
+> > +
+> > +	cpu_buffer = buffer->buffers[cpu];
+> > +
+> > +	mutex_lock(&cpu_buffer->mapping_lock);
+> > +
+> > +	if (!cpu_buffer->mapped) {
+> > +		err = -ENODEV;
+> > +		goto out;
+> > +	} else if (cpu_buffer->mapped > 1) {
+> > +		WRITE_ONCE(cpu_buffer->mapped, cpu_buffer->mapped - 1);
+> > +		goto out;
+> > +	}
+> > +
+> > +	mutex_lock(&buffer->mutex);
+> > +	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+> > +
+> > +	cpu_buffer->mapped = 0;
+> > +
+> > +	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+> > +
+> > +	rb_free_subbuf_ids(cpu_buffer);
+> > +	rb_free_meta_page(cpu_buffer);
+> > +	atomic_dec(&cpu_buffer->resize_disabled);
+> > +
+> > +	mutex_unlock(&buffer->mutex);
+> > +out:
+> > +	mutex_unlock(&cpu_buffer->mapping_lock);
+> > +
+> > +	return err;
+> > +}
+> > +
+> > +/*
+> > + *   +--------------+  pgoff == 0
+> > + *   |   meta page  |
+> > + *   +--------------+  pgoff == 1
+> > + *   | subbuffer 0  |
+> > + *   +--------------+  pgoff == 1 + (1 << subbuf_order)
+> > + *   | subbuffer 1  |
+> > + *         ...
+> > + */
+> > +struct page *ring_buffer_map_fault(struct trace_buffer *buffer, int cpu,
+> > +				   unsigned long pgoff)
+> > +{
+> > +	struct ring_buffer_per_cpu *cpu_buffer = buffer->buffers[cpu];
+> > +	unsigned long subbuf_id, subbuf_offset, addr;
+> > +	struct page *page;
+> > +
+> > +	if (!pgoff)
+> > +		return virt_to_page((void *)cpu_buffer->meta_page);
+> > +
+> > +	pgoff--;
+> > +
+> > +	subbuf_id = pgoff >> buffer->subbuf_order;
+> > +	if (subbuf_id > cpu_buffer->nr_pages)
+> > +		return NULL;
+> > +
+> > +	subbuf_offset = pgoff & ((1UL << buffer->subbuf_order) - 1);
+> > +	addr = cpu_buffer->subbuf_ids[subbuf_id] + (subbuf_offset * PAGE_SIZE);
+> > +	page = virt_to_page((void *)addr);
+> > +
+> > +	return page;
+> > +}
+> > +
+> > +int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+> > +{
+> > +	struct ring_buffer_per_cpu *cpu_buffer;
+> > +	unsigned long reader_size;
+> > +	unsigned long flags;
+> > +
+> > +	cpu_buffer = rb_get_mapped_buffer(buffer, cpu);
+> > +	if (IS_ERR(cpu_buffer))
+> > +		return (int)PTR_ERR(cpu_buffer);
+> > +
+> > +	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+> > +consume:
+> > +	if (rb_per_cpu_empty(cpu_buffer))
+> > +		goto out;
+> > +
+> > +	reader_size = rb_page_size(cpu_buffer->reader_page);
+> > +
+> > +	/*
+> > +	 * There are data to be read on the current reader page, we can
+> > +	 * return to the caller. But before that, we assume the latter will read
+> > +	 * everything. Let's update the kernel reader accordingly.
+> > +	 */
+> > +	if (cpu_buffer->reader_page->read < reader_size) {
+> > +		while (cpu_buffer->reader_page->read < reader_size)
+> > +			rb_advance_reader(cpu_buffer);
+> > +		goto out;
+> > +	}
+> > +
+> > +	if (WARN_ON(!rb_get_reader_page(cpu_buffer)))
+> > +		goto out;
+> > +
+> > +	goto consume;
+> > +out:
+> > +	rb_update_meta_page(cpu_buffer);
+> > +	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+> > +	rb_put_mapped_buffer(cpu_buffer);
+> > +
+> 
+> Hmm, there's no protection here. If this task gets preempted for a long
+> time, it is possible that the cpu_buffer->reader_page can become NULL,
+> causing a NULL kernel dereference.
+
+Right, this should be behind the reader lock as well :-\
+
+> 
+> -- Steve
+> 
+> 
+> > +	/* Some archs do not have data cache coherency between kernel and user-space */
+> > +	flush_dcache_folio(virt_to_folio(cpu_buffer->reader_page->page));
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  /*
+> >   * We only allocate new buffers, never free them if the CPU goes down.
+> >   * If we were to free the buffer, then the user would lose any trace that was in
+> 
