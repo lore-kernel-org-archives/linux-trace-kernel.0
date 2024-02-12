@@ -1,77 +1,98 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551103FE23
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Feb 2024 17:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A583E477;
+	Mon, 12 Feb 2024 17:23:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707757804; cv=none; b=Wb1A4DuTz2nWlJ29jR6jBgcQtklAnMF2l9+pDJ2ns91mYDS7ing/+6+a+doJ4BctpqXLerTiDzYrbdHiBkoQ/UAuSxsY7hYf4JETP/QByyPjvnR0DsVFWxe5JikKP2bbBwBZOIEzHL5Z9AY/yjyx2OpN3GDvp4/iDKl8DPwOAhY=
+	t=1707758622; cv=none; b=K+muL8TL/8Ngn1GFGDoZ4HaLlh+1NvBASKNH5zzBAEIW83h6QFdWBp2rbNgou/PfM3iHnGwKTVcPa4EaDgzK+qKhLK/j9IgwMBpErH/5KrHNtCw1dzlFCma1kZLyREc2NM9lEjUrzJkiKLW11JBuLhPDVQAGnYAezjr4utyUNi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707757804; c=relaxed/simple;
-	bh=dhs5X453QuebkxZokUrCXDu80prHk7y1bR8rbGRUZR0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=j29ObNVabsMSYhwq4SYf4XfsQpWhM13YQb8tjsL9MybF1AUx0bnXVJ3N7nHa1mkYzeNRZt4mu3k6JVYHAsDCkYwwXUKYewQ4QnkD2TTc34ZMYuP0yZGUrf3iLfLEbGga2hdprtOxQeoIUna3L7eygnz1rkMQpO7Drtt7GwK+fjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7bff2d672a5so287020239f.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Feb 2024 09:10:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707757802; x=1708362602;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=syTmq/2+cHOps7ocoSA0QeSIKj9tzYgPgaLcLXmYLsE=;
-        b=OptbIwGGTdwLAZI0qbwz69EBent6LgfnsrkJ7mtVE6y/LLWX2VpBJ8T17LGFYDdMgy
-         6yGNOM3AYWQGYzrp68dJMA0W6rmCJJ/Y5sPI7GFfkMKckD3NVPKF2RlHEfAVvHWoiafj
-         8GH4fWiku4Wj9jiaoTi66S3VO/1ZJmJlAGrZfQerYtAAXTbFIWhl0JSib/VALBHNx11U
-         IlmO2VJ5uwqHKjDtM3yeCNEwPm1UUVhdvsErvFleRu7jGmGrUA8SW0GGG74KuJAkx04E
-         Euh8UAmgq5Lyx9BU2DHCtbBePR+0M3qfWvowUOZEZkIvRjEjBKeDh9InxxAkTW0Y9YH4
-         JfDQ==
-X-Gm-Message-State: AOJu0YxliuhVnqUlnvPdVaYIqRmEWjIsL6mBZn5iLu9RiBqWHq3aiYqC
-	CaGKsToMli183LvAwgyzywGk2Zc5SoF8YdncNtOKbaVhkLFTLp2+fnmG8yrV0eaqK7FLwEjJESC
-	lf2TBT5OhuB27db7pUfjlfv4pDAbTqzocFfq+/v2tdGZnxd1r5R8LR2I=
-X-Google-Smtp-Source: AGHT+IFh4xAKDFcF47AC6TVZkIoj6iiFG392km/BapfaiHws2vqiNSlClhwZVgg+/uCSguLJAtaKS6ls2o03UbZ7vB36MylGOvZS
+	s=arc-20240116; t=1707758622; c=relaxed/simple;
+	bh=Xy89FyQ5S4TsTqUr35IOZ1Q0qHWjJDfL8WOhAJbBJIA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gYxOmA4VuQci9I1IRQ8iDW9uAJT9ARXB5CbV7ipyACZORMD54rc9BGN0Gb7R8Aw8/GN9+4lsMDXRxP5mExoQV8lLuNwazZyty+N2BXv+Ynj7LcWderE4ygjlIbvXrm8mGzL3rJLrjx5FfLrFwum96pxwGaApzkRIQ8++LsRQHX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98276C433B2;
+	Mon, 12 Feb 2024 17:23:41 +0000 (UTC)
+Date: Mon, 12 Feb 2024 12:24:23 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Vincent Donnefort
+ <vdonnefort@google.com>, Sven Schnelle <svens@linux.ibm.com>, Mete Durlu
+ <meted@linux.ibm.com>
+Subject: Re: [PATCH v2] tracing: Fix wasted memory in saved_cmdlines logic
+Message-ID: <20240212122423.52dc9ed0@gandalf.local.home>
+In-Reply-To: <20240213004038.7fd10d2bd9f356c72100adcd@kernel.org>
+References: <20240209063622.1f7b6d5f@rorschach.local.home>
+	<20240213004038.7fd10d2bd9f356c72100adcd@kernel.org>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:7108:0:b0:7c4:6e52:ec1 with SMTP id
- q8-20020a6b7108000000b007c46e520ec1mr7560iog.2.1707757802567; Mon, 12 Feb
- 2024 09:10:02 -0800 (PST)
-Date: Mon, 12 Feb 2024 09:10:02 -0800
-In-Reply-To: <0000000000006bf22a060e117a8d@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002f3fba0611325902@google.com>
-Subject: Re: [syzbot] [fs?] [trace?] BUG: unable to handle kernel paging
- request in tracefs_apply_options
-From: syzbot <syzbot+f8a023e0c6beabe2371a@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-syzbot suspects this issue was fixed by commit:
+On Tue, 13 Feb 2024 00:40:38 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-commit ad579864637af46447208254719943179b69d41a
-Author: Steven Rostedt (Google) <rostedt@goodmis.org>
-Date:   Tue Jan 2 20:12:49 2024 +0000
+> > Now, instead of saving only 128 comms by default, by using this wasted
+> > space at the end of the structure it can save over 8000 comms and even
+> > saves space by removing the need for allocating the other array.  
+> 
+> This looks good to me. So this will allocate the saved_cmdlines in page-size
+> array instead of the power of two.
 
-    tracefs: Check for dentry->d_inode exists in set_gid()
+Once the size is greater than page-size, it still is a power of two ;-)
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17659d24180000
-start commit:   453f5db0619e Merge tag 'trace-v6.7-rc7' of git://git.kerne..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f8e72bae38c079e4
-dashboard link: https://syzkaller.appspot.com/bug?extid=f8a023e0c6beabe2371a
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1414af31e80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15e52409e80000
+But I think you meant that it will be a reminder of extra data, and not a
+power of two. Looking at the code, it didn't need to be a power of two as
+the saved names were just in a ring buffer anyway. The recording of a PID
+must be a power of two, as that is masked.
 
-If the result looks correct, please mark the issue as fixed by replying with:
+Basically we have three arrays. One for the PIDS that hold the index into the
+COMM array. The COMM array really has no limitation. The PID array is
+PID_MAX_DEFAULT. But PIDs can be more than PID_MAX_DEFAULT as that's just
+the "default" setting. User space can increase it. I need to add a comment
+to how this works, as there are three arrays:
 
-#syz fix: tracefs: Check for dentry->d_inode exists in set_gid()
+ unsigned map_pid_to_cmdline[PID_MAX_DEFAULT + 1];
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+ /* The next two are allocated based on cmdline_num size */
+ unsigned map_cmdline_to_pid[cmdline_num];
+ char saved_cmdlines[cmdline_num][TASK_COMM_LEN];
+
+map_pid_to_cmdline[task->pid & (PID_MAX_DEFAULT - 1)] = index into the other two arrays;
+
+ [ Although I'm not sure I need that "+1" in the array. This code is ancient
+   and I need to re-examine it. ]
+
+To get back to the PID, you need the map_cmdline_to_pid[idx] which contains
+the full PID. Really, that array is only needed if pid max is greater than
+PID_MAX_DEFAULT (which I find is the case for most distros now).
+
+To assign a new comm, we basically do:
+
+	idx = map_pid_to_cmdline[pid & (PID_MAX_DEFAULT - 1)];
+	if (idx == -1) {
+		idx = // get next location in COMM ring buffer
+		map_pid_to_cmdline[pid & (PID_MAX_DEFAULT - 1)] = idx;
+	}
+	map_cmdline_to_pid[idx] = pid;
+	strcpy(saved_cmdlines[idx], task->comm);
+
+And Mathieu pinged me about the non-commented use of that NO_CMDLINE_MAP
+which is just -1. I have it as INT_MAX, but really maybe it should be -1U,
+and add a comment around the memset().
+
+> 
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks, but Linus already pulled this. But I have some patches to clean
+this up a bit more.
+
+-- Steve
