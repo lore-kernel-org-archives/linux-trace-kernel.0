@@ -1,31 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAA05FB90;
-	Tue, 13 Feb 2024 16:51:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C903605A3;
+	Tue, 13 Feb 2024 18:04:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707843115; cv=none; b=fYH2UMgqGlLEJxwMGyCHz2yqTIv4nMkDlmgoyuCvJ8VIy4UWtCv+Loy3IPR+KxDMoyBcJVqbpJCQTKXmj6dwOiC7JaAOBRGbGli0y1KQLrRpur16lZSUeasBdQie1egyi8dSK+07x8YTM4z+gMGFzqqN2x8oIaEnXIk2PW1Zmsc=
+	t=1707847499; cv=none; b=SMvMvcwjcjH/7NuLMj4ua6m1I4gse8l14Mx5QgVpTqjdDQHMoIrsU8Nm2NylLADPPXVtL74ThYSWGhPySwIOlbQ/AySl/6m9H+S2Xc5va1q4NKf7sM3qk+dTU8C67ybV3D7JFSVf2uR7XNACPKFUQzKhhKk7HMzlFYow4kVwSCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707843115; c=relaxed/simple;
-	bh=pDNrTzFYVWPEbMC4V/M9gXVJh6i7WKDwFhKiB2AoIz0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=iY+3DlZ8ipU1TY56c92vOQe5VlMmSvatVAtFINe7g1RNo9AMhudyMWUNNQGGLFaXRLJTh8izLLNiL9L42DzFd3LQNzQZ4b730wwWOBnAwiTyUpy2sCZny2JHLQbRloy6pwKPwcmFyJSZXZrbAMBj+cxe2MRTTfTB6uKDB1O8Woo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE644C433C7;
-	Tue, 13 Feb 2024 16:51:49 +0000 (UTC)
-Date: Tue, 13 Feb 2024 11:52:32 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+	s=arc-20240116; t=1707847499; c=relaxed/simple;
+	bh=QcYIDSiCp33r8BU8FmPB//SjKuQcfdO/ovF933HfSR0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=vFT0LS704obkYFhMysJF2ub1TOjiuh/RxatYagFnNBXF5VSZBEVpeA5hBXZKH5+Y0i7oSjVF6pN7aD2MK+E/MVWVvS41tW/aHO6SUiXwzFvXjkJZp572aMGJ9bZ3kPlTAXZAXiEQurH35lYLDepuB7NV+EI7IAknW8K8SuEnc7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WYsy4lZu; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WYsy4lZu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22B20C433C7;
+	Tue, 13 Feb 2024 18:04:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707847498;
+	bh=QcYIDSiCp33r8BU8FmPB//SjKuQcfdO/ovF933HfSR0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WYsy4lZuf3g58s8VpVgwI7cVjG5uF7Qa2eo1nxCkDfnZr4/o36pygCwWDZejklHzi
+	 OeFJY9XVFDnZ0W4GVozJnViVjQ4C4CcztMhkG9KofurM4VHEoHYazoX00ogQBAbIYq
+	 0JXqo4DmZQiW/SrbWAP5vb8ZpAPTFUmEE3fS5nYR7qQN8KREaN1GxOUg23CMqHlXgq
+	 q5UEwjLwqdTaB/X7pn2O4W5RzcQCBxsmFE8bNGuNAJDoNlDLI5Cx+6KSpI4DO85roV
+	 gQVjDZA9BHOJAjzBDuP67j9xlhQdaTNMpBGFYJxxIQVq/nwbMFVP/AuEsaA0sXdTMS
+	 ig8OXTK0lRCXg==
+Date: Tue, 13 Feb 2024 10:04:57 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Eric Dumazet <edumazet@google.com>
+Cc: Breno Leitao <leitao@debian.org>, davem@davemloft.net,
+ pabeni@redhat.com, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, weiwan@google.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, horms@kernel.org,
+ Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Johannes Berg
+ <johannes.berg@intel.com>, Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?=
+ <linux@weissschuh.net>, "open list:TRACING"
  <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>, Tim
-  Chen <tim.c.chen@linux.intel.com>, Vincent Donnefort 
- <vdonnefort@google.com>, Sven Schnelle  <svens@linux.ibm.com>, Mete Durlu 
- <meted@linux.ibm.com>
-Subject: [PATCH v2] tracing: Have saved_cmdlines arrays all in one
- allocation
-Message-ID: <20240213115232.5fd9e611@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Subject: Re: [PATCH net-next v3] net: dqs: add NIC stall detector based on
+ BQL
+Message-ID: <20240213100457.6648a8e0@kernel.org>
+In-Reply-To: <CANn89iLWWDjp71R7zttfTcEvZEdmcA1qo47oXkAX5DuciYvOtQ@mail.gmail.com>
+References: <20240202165315.2506384-1-leitao@debian.org>
+	<CANn89iLWWDjp71R7zttfTcEvZEdmcA1qo47oXkAX5DuciYvOtQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,85 +54,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Tue, 13 Feb 2024 14:57:49 +0100 Eric Dumazet wrote:
+> Please note that adding other sysfs entries is expensive for workloads
+> creating/deleting netdev and netns often.
+> 
+> I _think_ we should find a way for not creating
+> /sys/class/net/<interface>/queues/tx-{Q}/byte_queue_limits  directory
+> and files
+> for non BQL enabled devices (like loopback !)
 
-The saved_cmdlines have three arrays for mapping PIDs to COMMs:
-
- - map_pid_to_cmdline[]
- - map_cmdline_to_pid[]
- - saved_cmdlines
-
-The map_pid_to_cmdline[] is PID_MAX_DEFAULT in size and holds the index
-into the other arrays. The map_cmdline_to_pid[] is a mapping back to the
-full pid as it can be larger than PID_MAX_DEFAULT. And the
-saved_cmdlines[] just holds the COMMs associated to the pids.
-
-Currently the map_pid_to_cmdline[] and saved_cmdlines[] are allocated
-together (in reality the saved_cmdlines is just in the memory of the
-rounding of the allocation of the structure as it is always allocated in
-powers of two). The map_cmdline_to_pid[] array is allocated separately.
-
-Since the rounding to a power of two is rather large (it allows for 8000
-elements in saved_cmdlines), also include the map_cmdline_to_pid[] array.
-(This drops it to 6000 by default, which is still plenty for most use
-cases). This saves even more memory as the map_cmdline_to_pid[] array
-doesn't need to be allocated.
-
-Link: https://lore.kernel.org/linux-trace-kernel/20240212174011.068211d9@gandalf.local.home/
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v1: https://lore.kernel.org/linux-trace-kernel/20240212180941.379c419b@gandalf.local.home/
-
--- Added SAVED_CMDLINE_MAP_ELEMENT_SIZE helper macro.
-
- kernel/trace/trace_sched_switch.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
-
-diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
-index e4fbcc3bede5..5f3e9bc87079 100644
---- a/kernel/trace/trace_sched_switch.c
-+++ b/kernel/trace/trace_sched_switch.c
-@@ -175,6 +175,10 @@ struct saved_cmdlines_buffer {
- };
- static struct saved_cmdlines_buffer *savedcmd;
- 
-+/* Holds the size of a cmdline and pid element */
-+#define SAVED_CMDLINE_MAP_ELEMENT_SIZE(s)			\
-+	(TASK_COMM_LEN + sizeof((s)->map_cmdline_to_pid[0]))
-+
- static inline char *get_saved_cmdlines(int idx)
- {
- 	return &savedcmd->saved_cmdlines[idx * TASK_COMM_LEN];
-@@ -201,7 +205,7 @@ static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
- 	int order;
- 
- 	/* Figure out how much is needed to hold the given number of cmdlines */
--	orig_size = sizeof(*s) + val * TASK_COMM_LEN;
-+	orig_size = sizeof(*s) + val * SAVED_CMDLINE_MAP_ELEMENT_SIZE(s);
- 	order = get_order(orig_size);
- 	size = 1 << (order + PAGE_SHIFT);
- 	page = alloc_pages(GFP_KERNEL, order);
-@@ -212,16 +216,11 @@ static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
- 	memset(s, 0, sizeof(*s));
- 
- 	/* Round up to actual allocation */
--	val = (size - sizeof(*s)) / TASK_COMM_LEN;
-+	val = (size - sizeof(*s)) / SAVED_CMDLINE_MAP_ELEMENT_SIZE(s);
- 	s->cmdline_num = val;
- 
--	s->map_cmdline_to_pid = kmalloc_array(val,
--					      sizeof(*s->map_cmdline_to_pid),
--					      GFP_KERNEL);
--	if (!s->map_cmdline_to_pid) {
--		free_saved_cmdlines_buffer(s);
--		return NULL;
--	}
-+	/* Place map_cmdline_to_pid array right after saved_cmdlines */
-+	s->map_cmdline_to_pid = (unsigned *)&s->saved_cmdlines[val * TASK_COMM_LEN];
- 
- 	s->cmdline_idx = 0;
- 	memset(&s->map_pid_to_cmdline, NO_CMDLINE_MAP,
--- 
-2.43.0
-
+We should try, see if anyone screams. We could use IFF_NO_QUEUE, and
+NETIF_F_LLTX as a proxy for "device doesn't have a real queue so BQL 
+would be pointless"? Obviously better to annotate the drivers which
+do have BQL support, but there's >50 of them on a quick count..
