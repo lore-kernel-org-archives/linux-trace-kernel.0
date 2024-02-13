@@ -1,75 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B78F5F848;
-	Tue, 13 Feb 2024 16:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6873D2919;
+	Tue, 13 Feb 2024 16:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707841174; cv=none; b=hc1HXHDjQvZ8+UMHz5nyu0+8ykgAY9Ko1bFV/SuJAdr4/iNrKXz99xp2Pf0ZFpcd6Psq9iKYFZEPv4g+sFzUtGrMXXdx0fykHHuLLB+/7LWxGMy0iK5fmH2BcpQFGGjvb40ES8iaZfxfnZK9hbOQGuMAPoS/Ilc1qqmoGicbc6w=
+	t=1707842125; cv=none; b=d9rkDf7oN4c4l5ctyRsGxRSU1L8tC/xFHPzBCHVqDVgjVH7WQZirYpi+yChFRecsXQ94jk5ya29FleIo3OOFixa55kKTKAhTf7gQTEoEdNydPcdb2rdD6qXeIUu4wnwMlUcXBNaSkpqcEuFOVL2oM5xhcwk+YXHiMYSffLsd0no=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707841174; c=relaxed/simple;
-	bh=AhGpVNqhDbiDl0MGgQawZtJuMCf903q/B/3w4GmjpPM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=utjT7b3eipzZVOP50KXYbXTTKFwhfmqjJGflJQv9PS+/6BlAmvXh6mAQ0kyhCi3a4xM7EDDPiH1u8B7Pf/SyZi1KV3zQdrvT4yq8y1JB0Xs6fkaLeVm+DOYWMebOwqJ6s7xpfhfUmKGNl4Lh9fPdU4ICiEHoPZ8wUN5NrwXVxAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13877C433C7;
-	Tue, 13 Feb 2024 16:19:32 +0000 (UTC)
-Date: Tue, 13 Feb 2024 11:20:17 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>, Gustavo Padovan
- <gustavo@padovan.org>, Christian =?UTF-8?B?S8O2bmln?=
- <christian.koenig@amd.com>, "Masami Hiramatsu" <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- <dri-devel@lists.freedesktop.org>, <linux-media@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, "Alex Deucher"
- <alexander.deucher@amd.com>, <amd-gfx@lists.freedesktop.org>
-Subject: Re: [PATCH v2 6/6] drm: add drm_mode_atomic_commit event
-Message-ID: <20240213112017.726016f0@gandalf.local.home>
-In-Reply-To: <20240213155112.156537-7-pierre-eric.pelloux-prayer@amd.com>
-References: <20240117184329.479554-1-pierre-eric.pelloux-prayer@amd.com>
-	<20240213155112.156537-1-pierre-eric.pelloux-prayer@amd.com>
-	<20240213155112.156537-7-pierre-eric.pelloux-prayer@amd.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1707842125; c=relaxed/simple;
+	bh=YCcie0zAZHdXXCutJQ7kG+dvXcsnwrHdF2tff2UKPsY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=V0mVTWVJyrlX/1VHVwvarJg3A4/XXpFnpSX9r1/3980fYrBcLzDtDKXUL6iidWdK90ImybMUyfqxm+48hXBOdjDi05MURd6G7951uJvoPq6+3fpdHS58+2vqurDpCcd+03M/M3EBEqO75Ljfqn9XOw4ncZkTZby1zhnCaHW9uWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jV2UfaHY; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jV2UfaHY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707842123; x=1739378123;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=YCcie0zAZHdXXCutJQ7kG+dvXcsnwrHdF2tff2UKPsY=;
+  b=jV2UfaHYT3SH/MCwi/2PMHXkh1KdmzezKucDfeK51AOBsrMmU0N12ab6
+   cK2hHRtUDCjbGgXqdBeQkimVWbowD5r4wiUqWmOJ02syLHPj0+EOazLQ7
+   i8IGjtdpmrzz4qEFTA/MmNgSC+wugUhQ45p+Y8Pet1Ohj2Tc/5XlCKgiz
+   4GMxw3n41fuHLg1zlFvN3li9acPi/OA1uQ2efIoGX6qmiZyfdsJY37tPv
+   oHVNw5oq4aIpOFttHVV1fooCH/ad4UUr6um6BBncM6niNnbKv5yrBE2aj
+   Ort4TCl9P/qcbexaR6BM/hnIUF+/OWDjpWGaQNXzNUv4OwDzRGrQA3GSt
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="12405100"
+X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
+   d="scan'208";a="12405100"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 08:35:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
+   d="scan'208";a="3299363"
+Received: from arieldux-mobl.amr.corp.intel.com (HELO [10.209.91.178]) ([10.209.91.178])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 08:35:22 -0800
+Message-ID: <967027adabdc8aa654cd788b21147427477a0f08.camel@linux.intel.com>
+Subject: Re: [PATCH] tracing: Have saved_cmdlines arrays all in one
+ allocation
+From: Tim Chen <tim.c.chen@linux.intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>,  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mark Rutland <mark.rutland@arm.com>, Vincent Donnefort
+ <vdonnefort@google.com>, Sven Schnelle <svens@linux.ibm.com>, Mete Durlu
+ <meted@linux.ibm.com>
+Date: Tue, 13 Feb 2024 08:35:22 -0800
+In-Reply-To: <20240212191336.5c502f78@gandalf.local.home>
+References: <20240212180941.379c419b@gandalf.local.home>
+	 <ef94259e139e4579ee27db99975dc4cf397e2a06.camel@linux.intel.com>
+	 <20240212191336.5c502f78@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Tue, 13 Feb 2024 16:50:31 +0100
-Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com> wrote:
+On Mon, 2024-02-12 at 19:13 -0500, Steven Rostedt wrote:
+> On Mon, 12 Feb 2024 15:39:03 -0800
+> Tim Chen <tim.c.chen@linux.intel.com> wrote:
+>=20
+> > > diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_s=
+ched_switch.c
+> > > index e4fbcc3bede5..210c74dcd016 100644
+> > > --- a/kernel/trace/trace_sched_switch.c
+> > > +++ b/kernel/trace/trace_sched_switch.c
+> > > @@ -201,7 +201,7 @@ static struct saved_cmdlines_buffer *allocate_cmd=
+lines_buffer(unsigned int val)
+> > >  	int order;
+> > > =20
+> > >  	/* Figure out how much is needed to hold the given number of cmdlin=
+es */
+> > > -	orig_size =3D sizeof(*s) + val * TASK_COMM_LEN;
+> > > +	orig_size =3D sizeof(*s) + val * (TASK_COMM_LEN + sizeof(int)); =
+=20
+> >=20
+> > Strictly speaking, *map_cmdline_to_pid is unsigned int so it is more co=
+nsistent
+> > to use sizeof(unsigned) in line above.  But I'm nitpicking and I'm fine=
+ to
+> > leave it as is.
+>=20
+> I was thinking about making that into a macro as it is used in two places=
+.
+>=20
+> /* Holds the size of a cmdline and pid element */
+> #define SAVED_CMDLINE_MAP_ELEMENT_SIZE(s)		\
+> 	(TASK_COMM_LEN + sizeof((s)->map_cmdline_to_pid[0]))
+>=20
+> 	orig_size =3D sizeof(*s) + val * SAVED_CMDLINE_MAP_ELEMENT_SIZE(s);
+>=20
+>=20
 
-> @@ -1503,6 +1504,24 @@ int drm_mode_atomic_ioctl(struct drm_device *dev,
->  		drm_mode_object_put(obj);
->  	}
->  
-> +	if (trace_drm_mode_atomic_commit_enabled()) {
-> +		struct drm_crtc_state *crtc_state;
-> +		struct drm_crtc *crtc;
-> +		int *crtcs;
-> +		int i, num_crtcs;
-> +
-> +		crtcs = kcalloc(dev->mode_config.num_crtc, sizeof(int),
-> +				GFP_KERNEL);
+Looks good. This makes the code more readable.
 
-If the above allocation fails, this will cause a NULL kernel dereference.
-
--- Steve
-
-> +
-> +		num_crtcs = 0;
-> +		for_each_new_crtc_in_state(state, crtc, crtc_state, i)
-> +			crtcs[num_crtcs++] = drm_crtc_index(crtc);
-> +
-> +		trace_drm_mode_atomic_commit(file_priv, crtcs, num_crtcs, arg->flags);
-> +
-> +		kfree(crtcs);
-> +	}
-> +
->  	ret = prepare_signaling(dev, state, arg, file_priv, &fence_state,
->  				&num_fences);
->  	if (ret)
+Tim
