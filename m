@@ -1,382 +1,180 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2148A487B6
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Feb 2024 11:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A3F55C1A;
+	Tue, 13 Feb 2024 13:24:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707825066; cv=none; b=liKakNADeE5qortoSAwHckvpbKSTqvVuZqkzvxER5GJZn1q1Jmm4gvqrUb+XJGDAmoMOk51DK2+ilUHuX75iVE5rJm28Yu1LSfkEtZbJYEs5zEVZ0gYMzZUqLYWIxcm6IrCMKtx9gULEAQFh4tsaN2J4q1qGl3ahu499DS46FxQ=
+	t=1707830695; cv=none; b=YXUZY+haRnHMJ+QmeCo/zgTNsZztVvMUkuMCdINaMeWHGSXmxx4q4Dhu3DRK9Cjqo4z/ATfrLQTftXoZgZNqkVwYaKYP58ad/eFytvyrSf2w1/1eQilfclfqHcIBQFjTr6KmrrFD/F/2CmBxbHmGmMnHtK+Ki1l8A/+wgf3zLdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707825066; c=relaxed/simple;
-	bh=yF4snXCigsdD2V4iu9JXl93VeJuVdieGXDlgLcIwa4g=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=g0QJjq6u4ji0dfSb59Eyp5lRo4lIotSThYC0AJK1RDeInD972t5O/mYfkf0xFb4ynGAIl36E9SCvV633/ce3jJNmi6iiMYF1yxXL0Ho80yg4yj6dOYulPSMXu7qK2QWOJlMmz90pzc6wTD0+byXIK1d4x/od1F4RcCN00WIbmnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rIMT3LUm; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1707830695; c=relaxed/simple;
+	bh=59TqRRl9p0ZETIIG/FXzqG6eofAWlEzd0c94odzx7/0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UT0oyYDEGglUQ9TkWCsAZBc/bJwfjL5Y60rsLtGFRNPDIz1DBxf5Kjg1cjGDS21ZgoQ/L+SjBL0CZeb+PW6AYNNpq8CtFRG+sCVm6CWnF32FOa+7Wi9pRY9hgstJMt7qwzEJS6vuikbGER3K0Op2TVjrBdhW/0Alfmk+5Dy2HG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=btMYa1Ey; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rIMT3LUm"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-40d62d3ae0cso25888835e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Feb 2024 03:51:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="btMYa1Ey"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-55f0b2c79cdso6020915a12.3;
+        Tue, 13 Feb 2024 05:24:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707825062; x=1708429862; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gMbQC9Qrfc/CHbT/uyUQA9ufo0litTV7XPwdOdKcRAI=;
-        b=rIMT3LUmgu5EPtNstV3CacK8gf/2cFhDNJ4l4buXH8zHygIVsxzW46JOfQLTMNeASn
-         mRJXl8RX8Xx99+knDAFtGVkB/HvFtx0DesqRboqmO21AiK6Wdj15E+W2MgwmFXt/g7mo
-         XVFr67cgw4GguR2CUTGQNOwEm5m+fArjjzun7TSmrgaEb/DUVhGK77lN65vbxVlH+byB
-         P0MIqS+WTv9KTYI8YO1Tbg9f8QXCGz5cMrpzgdwOC7l9/4dLyQ5+mB4s2uYKWcLaJjPc
-         D77Efp0R2HqiHOtunA5/yqAUHBFcNUE50IoH6V1NNX5ehmvJnxOQbVLLbu585mrPaXVV
-         aXWg==
+        d=gmail.com; s=20230601; t=1707830692; x=1708435492; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0QyYjoH+AqqQf6ghl+XM6LALnTPi51ZlBkMJjWYJ7D0=;
+        b=btMYa1EyA4h8C8/eefQ7OTU5j8j9e3xUFMnq8DTLC6gOcE4FDjjf6fbOIj805oHxVT
+         AC3XcU4JhfD+k6qt78JwMvuO2QgW7i9II5nVNau2UUdK0iNqi/a7rTS5KzI9RJJeLkqI
+         BUSJPxCVzB1MlxH2bfDku6nbEdZY5HoUZyqlY/JWQIPFBtFiS/1GIzYKfH8QxW/4iorw
+         oDntrnRQSSu6SK/OBtabnvnuIi0xJ7N9/rpPa+UJzwBkOyK5LpmP6+6kcyCHYExZVrKH
+         xOoDZ3sZzFzL+oX/1Dw2dVGVF6JiH6mSr9qm6CaVUC6nmoIOuHmE5go6wfhzneQ5jFjZ
+         CoIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707825062; x=1708429862;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gMbQC9Qrfc/CHbT/uyUQA9ufo0litTV7XPwdOdKcRAI=;
-        b=V+VEh+TskRRjAeAcYyiQVJVcTK+AMRFfwumbtZu8bsf4TRQIKSg0wSU8lK/QIiwD6x
-         BacVJWvP1hWbv+6F0jAoaNvCHNsYWR0EJW9cY6p2Nx62tK0oBMXdKSu3QV15UVFSsa6M
-         MFe5oNn7kORjl3Hv+EkTZ+m1qd8fIIbwGqTlzbPeqQu61j5KWcMJSTeSTDbcjcStv98F
-         R1LQ1klclnUE5ta1nAdqntA2dNhK4NSi2hDyDu1w+FEJQo8QauY04rK84+jmgMdYkLWz
-         7dl1lktRBVGAc4iuUbgCFlAefp/j4ztC2IBNBKi3wuXaZ4kCWW5zDUC/1Y+2+BbXsK8h
-         BE7w==
-X-Gm-Message-State: AOJu0YxL7V66qKOoWEApXcAw5k6N93WDFLbjSsJA8uEquS91J36rzawr
-	/UnsduVIdvanZDnJH9ZR8DuWLA6CAGqxx53fHpI5yxD3rd/YJVU+QEVXl9ogNgqYqGrFQM12D/g
-	DsFtC5EfuVHjXRLgOZw==
-X-Google-Smtp-Source: AGHT+IHMpTEZmMMgHGFaYL8F6tI2hlVwTNkExlXpra2OxGyAQEIA6Ysj/qPVwo25XRtw0RJgsv+A5W+TTeoPZvQG
-X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:a05:600c:3d16:b0:411:c736:3a17 with
- SMTP id bh22-20020a05600c3d1600b00411c7363a17mr2807wmb.3.1707825062624; Tue,
- 13 Feb 2024 03:51:02 -0800 (PST)
-Date: Tue, 13 Feb 2024 11:49:45 +0000
-In-Reply-To: <20240213114945.3528801-1-vdonnefort@google.com>
+        d=1e100.net; s=20230601; t=1707830692; x=1708435492;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0QyYjoH+AqqQf6ghl+XM6LALnTPi51ZlBkMJjWYJ7D0=;
+        b=ug33i/csHo71ELSF2ut+fvS7ZIrrTnDF9Oar2FxC4A6h5YdgI8V+AJajGoxS4B28+3
+         vNGLYDNyMLD1yZyQixvBYKqtHbrWLoriPVwNiVeRg7G8YUYaj1ogNRA/NGABFsJNItaC
+         96qo5voPPkGCzhDR5aGQbQxRSW0Qi05a3IhjaDkwgE+Q1LnydGnx+GpeZoAYliszMw1q
+         KCzpU9F5HHaDrHy6lnA9SDGv3THOcYNV9zFOZPY0RA7a5n+tFBOu4LDviOza2DECl334
+         hhmsjSw3qmlH98+VkLUAuZe5jF3fEReg1Y15FTCmMqIx3HMYyHL0rSckJGHcJhBCiBZ1
+         ky9A==
+X-Forwarded-Encrypted: i=1; AJvYcCXcTHz3WqjquAloNpq27L1ro4BJc9TMrLlmA29DP0pwY7Xc/87lPeG2QRAN0nL72X90iIFeehuWAfRBDtv7fB3wDA/QDqG6Iiv1JQUNCkxj8w5H42atbcZLLxN/ip3OUUfB2ibr7MDvBnJJemp2Qcv2X7NZfucdiTud234BdQWtzgagIHZUSOvUFBQyKf6Fbu7CHcmqbcvWD1ZLzYxXkJ1LyJ0vF3NW/z12hKoOzekxbsoiMHKRjzc1qvbZbt+iry0n8k7QENTYRkTdLzrz1EgBDbc+6cSHOvjc+3XCAEaCd/JRUx/5AQ5GqgUlhD/Zaf/Hd1UddFodNbuAF+bHZER1Xfmew/vUHhHhQjVkE3Vs8yi+gdAtQsOFFOpxMngMvii9IHiBxgkjMtVdr/rUH/VfRA5o6oa6m3IFsO3IHImYG6hLGMeLrRUKZwgwjSnhyPzFx51AJGqLsy8A4SaAKc3xyKj3l2/tiso2RoBEH6fBQ4MhvPsILN1lgRY+q48BsDu9lTyfaQ==
+X-Gm-Message-State: AOJu0YyVIYs0xNrGamwG1iuQbyvTf6ChFKspADKrSw1XkyPIVcaerkDl
+	8v6dY1akdnIGC9YmTOn5Lno6n8ff+yjikQhjCZSn7p7IeG9DD0ar
+X-Google-Smtp-Source: AGHT+IEvOYZMro6HR8cOXNPUYT9ZgCc4vRcUyvz622HX4ZCDWHklO0ODmEGlx46UXe5UhrZ820A4mQ==
+X-Received: by 2002:a05:6402:3596:b0:55f:95ac:d698 with SMTP id y22-20020a056402359600b0055f95acd698mr7503927edc.32.1707830691640;
+        Tue, 13 Feb 2024 05:24:51 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVMeArKJi3EifAmOpZcv2Grgg9QOavC+wNyABJk3QLZgkNc7dOXBIDhbgy8vyOBMzsIrAMg6FrTdfqq7fwyR5rS+2iJZSxB/qmQAEIC1C1pB7TfSTnxP+fx13ldXqknLXUyTvQm3D6HdvE0YKiG62Us26JWt3npm8XPaqI9wVM7uGfq0QbE96JFT+LYhAB+W+FwwSi7bTZ4TRkyuc/9DU0cv2LVCr+rvOuhmUBAT4otlLbZm9JYT7Gb/SCjZ5OV5+ll1i1snATirzjnVrJzfPtE0/hYuUaVgoyNXCWtTnLPowekY81P9qkSPcVtd84PjsqjdGrsL2fNGFZEnbHcSvh5CYGQf2B2uGf2BofpqJJhDKcOT01XGpkxqj9v70H0Un4YGKaLxCfh1+5250VMj+waUOL6WvWcMrzfyseTPpoDkRBp4L8ZHuLLQyTJt4FrAuXja+bLhKwDQFwev99ad42GfufGTCKtRi+m6V9Ux+jhKo86FnyUr5R7cBp+NYO0fxy3F6DEGrQc8SH0ZYmIPlXq6OZwQfyJTz9KnKqFdKANS9Uq4VYesafVkDuF5CapSqUVXFTg+p/Pa13rAzk2q/FgOO5yacnYiIWg5S4Eaa4K1Ti+SgzjfQRV622HGf3+lNlZV+7iV3+J/sE+ft6cr/BtFGDVxlmic3zBJmpdlHqRckBqxyWOopqShkKQLpFgAEU5o38mRv70DSn/RNbvUKGe1mElMc/LkPbbHMDk+kjGEn7/Yq5UE7FDt6Zh5dz2rSrl+sKaHFhYVznDZR7n14ZcEylWSFsoa+g43I156d2UhVaNF8wOKD2fu7qIr3PHiNJfehYyF7Wmr84+QGesFaDSpvqEzEt2IIlKOd/KuWr45ctoOeN3EibzRaSdG4gXEubW5gJ0OEIifsXLv/HCy8Bxf0o/J5de6QM3zr4FijUzwJemHVQ/co7tmATUVldvLIICXf
+ CIP5qDmyEYTAWaO4M1rQ11q8jNdj7sP3/cdMu8dYlTxUfELhGwSQX7KdjeI1WJpQg9IC5oR+NcK3wbN5vegyuTGdzm7+auiSLWF8HnWsFY68PsWpIWtV/dd2ZclddAz8PGWZsCPlS/zjrJ0Ymurg5TU6+Er2DLD36rt+PwoT3ggtvpTxvStbhZ9qXxFRBlHJmeAWqFbYhvIsniswygmR+AN4MRbypKK/gViMQ6AnHEKWhunUMirCeA+XPlvApszlNpZj2b49UlEA/Fv2gSkf6qmnXSW4D30DtfHIBs8HNpgsABcttGxCFCxZTWjB5QMwq/atg923vuboIb3o4uMzyYRsNviYeiS2DqNkQTWanwr0qsbgu9C20qbo3/ehtFpDSHBPyen61sVJDmtcPjquAi7dLUy9cxtDcKyPLSvQZ4aNLL2wEe2nGMq5kSJDZtqOs7OOqDIgkH0Yd9NTB2oGen6uU/efOYA7h5WwZElwofslyM9YrCfiZcPkjEf6vtrIQOtlGoWwIJRgbpDkdG7opM4YrEmT8U8nBM9A1aEA12kcIyzQLW94+2lb7MJYHOg+PrKRZXZCFbEOD+lgbfQki9jGXan3k2jGZuppHdRIIf9y+suKZH2riCtWMNkvHFbKX+1v7X0xnJcapXJw7qEtF+5Dk67dDlKhHCOjdPG6YGEoRr/1jmt1J11viRTPtzb0mmjgRyRlnOPJchCv2Ysw/TI0r1H8a0ryGeSOkGhgtamEBDuUs86JnW4sT9WCzH4nO9TOErXZo7rBDnpYdVt0pganVoza54ZkelCxQUtzuQmd+hBPHU
+Received: from ?IPV6:2620:10d:c096:310::23d8? ([2620:10d:c092:600::1:a107])
+        by smtp.gmail.com with ESMTPSA id b6-20020aa7c906000000b00560ba66587csm3657441edt.13.2024.02.13.05.24.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Feb 2024 05:24:51 -0800 (PST)
+Message-ID: <94ff0733-5987-4bf5-a53c-011e03aa6323@gmail.com>
+Date: Tue, 13 Feb 2024 13:15:08 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240213114945.3528801-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-Message-ID: <20240213114945.3528801-7-vdonnefort@google.com>
-Subject: [PATCH v17 6/6] ring-buffer/selftest: Add ring-buffer mapping test
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	Vincent Donnefort <vdonnefort@google.com>, Shuah Khan <shuah@kernel.org>, 
-	Shuah Khan <skhan@linuxfoundation.org>, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH net-next v5 05/14] netdev: netdevice devmem allocator
+Content-Language: en-US
+To: Mina Almasry <almasrymina@google.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
+ <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Jesper Dangaard Brouer <hawk@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, David Ahern <dsahern@kernel.org>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>,
+ Harshitha Ramamurthy <hramamurthy@google.com>,
+ Shakeel Butt <shakeelb@google.com>, Jeroen de Borst <jeroendb@google.com>,
+ Praveen Kaligineedi <pkaligineedi@google.com>,
+ Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
+References: <20231218024024.3516870-1-almasrymina@google.com>
+ <20231218024024.3516870-6-almasrymina@google.com>
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <20231218024024.3516870-6-almasrymina@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This test maps a ring-buffer and validate the meta-page after reset and
-after emitting few events.
+On 12/18/23 02:40, Mina Almasry wrote:
+> Implement netdev devmem allocator. The allocator takes a given struct
+> netdev_dmabuf_binding as input and allocates net_iov from that
+> binding.
+> 
+> The allocation simply delegates to the binding's genpool for the
+> allocation logic and wraps the returned memory region in a net_iov
+> struct.
+> 
+> Signed-off-by: Willem de Bruijn <willemb@google.com>
+> Signed-off-by: Kaiyuan Zhang <kaiyuanz@google.com>
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> 
+> ---
+> 
+> v1:
+> - Rename devmem -> dmabuf (David).
+> 
+> ---
+>   include/net/devmem.h | 12 ++++++++++++
+>   include/net/netmem.h | 26 ++++++++++++++++++++++++++
+>   net/core/dev.c       | 38 ++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 76 insertions(+)
+> 
+...
+> diff --git a/include/net/netmem.h b/include/net/netmem.h
+> index 45eb42d9990b..7fce2efc8707 100644
+> --- a/include/net/netmem.h
+> +++ b/include/net/netmem.h
+> @@ -14,8 +14,34 @@
+>   
+>   struct net_iov {
+>   	struct dmabuf_genpool_chunk_owner *owner;
+> +	unsigned long dma_addr;
+>   };
+>   
+> +static inline struct dmabuf_genpool_chunk_owner *
+> +net_iov_owner(const struct net_iov *niov)
+> +{
+> +	return niov->owner;
+> +}
+> +
+> +static inline unsigned int net_iov_idx(const struct net_iov *niov)
+> +{
+> +	return niov - net_iov_owner(niov)->niovs;
+> +}
+> +
+> +static inline dma_addr_t net_iov_dma_addr(const struct net_iov *niov)
+> +{
+> +	struct dmabuf_genpool_chunk_owner *owner = net_iov_owner(niov);
+> +
+> +	return owner->base_dma_addr +
+> +	       ((dma_addr_t)net_iov_idx(niov) << PAGE_SHIFT);
 
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-kselftest@vger.kernel.org
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+Looks like it should have been niov->dma_addr
 
-diff --git a/tools/testing/selftests/ring-buffer/Makefile b/tools/testing/selftests/ring-buffer/Makefile
-new file mode 100644
-index 000000000000..627c5fa6d1ab
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/Makefile
-@@ -0,0 +1,8 @@
-+# SPDX-License-Identifier: GPL-2.0
-+CFLAGS += -Wl,-no-as-needed -Wall
-+CFLAGS += $(KHDR_INCLUDES)
-+CFLAGS += -D_GNU_SOURCE
-+
-+TEST_GEN_PROGS = map_test
-+
-+include ../lib.mk
-diff --git a/tools/testing/selftests/ring-buffer/config b/tools/testing/selftests/ring-buffer/config
-new file mode 100644
-index 000000000000..d936f8f00e78
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/config
-@@ -0,0 +1,2 @@
-+CONFIG_FTRACE=y
-+CONFIG_TRACER_SNAPSHOT=y
-diff --git a/tools/testing/selftests/ring-buffer/map_test.c b/tools/testing/selftests/ring-buffer/map_test.c
-new file mode 100644
-index 000000000000..56c44b29d998
---- /dev/null
-+++ b/tools/testing/selftests/ring-buffer/map_test.c
-@@ -0,0 +1,273 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Ring-buffer memory mapping tests
-+ *
-+ * Copyright (c) 2024 Vincent Donnefort <vdonnefort@google.com>
-+ */
-+#include <fcntl.h>
-+#include <sched.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+
-+#include <linux/trace_mmap.h>
-+
-+#include <sys/mman.h>
-+#include <sys/ioctl.h>
-+
-+#include "../user_events/user_events_selftests.h" /* share tracefs setup */
-+#include "../kselftest_harness.h"
-+
-+#define TRACEFS_ROOT "/sys/kernel/tracing"
-+
-+static int __tracefs_write(const char *path, const char *value)
-+{
-+	int fd, ret;
-+
-+	fd = open(path, O_WRONLY | O_TRUNC);
-+	if (fd < 0)
-+		return fd;
-+
-+	ret = write(fd, value, strlen(value));
-+
-+	close(fd);
-+
-+	return ret == -1 ? -errno : 0;
-+}
-+
-+static int __tracefs_write_int(const char *path, int value)
-+{
-+	char *str;
-+	int ret;
-+
-+	if (asprintf(&str, "%d", value) < 0)
-+		return -1;
-+
-+	ret = __tracefs_write(path, str);
-+
-+	free(str);
-+
-+	return ret;
-+}
-+
-+#define tracefs_write_int(path, value) \
-+	ASSERT_EQ(__tracefs_write_int((path), (value)), 0)
-+
-+#define tracefs_write(path, value) \
-+	ASSERT_EQ(__tracefs_write((path), (value)), 0)
-+
-+static int tracefs_reset(void)
-+{
-+	if (__tracefs_write_int(TRACEFS_ROOT"/tracing_on", 0))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/trace", ""))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/set_event", ""))
-+		return -1;
-+	if (__tracefs_write(TRACEFS_ROOT"/current_tracer", "nop"))
-+		return -1;
-+
-+	return 0;
-+}
-+
-+struct tracefs_cpu_map_desc {
-+	struct trace_buffer_meta	*meta;
-+	void				*data;
-+	int				cpu_fd;
-+};
-+
-+int tracefs_cpu_map(struct tracefs_cpu_map_desc *desc, int cpu)
-+{
-+	unsigned long meta_len, data_len;
-+	int page_size = getpagesize();
-+	char *cpu_path;
-+	void *map;
-+
-+	if (asprintf(&cpu_path,
-+		     TRACEFS_ROOT"/per_cpu/cpu%d/trace_pipe_raw",
-+		     cpu) < 0)
-+		return -ENOMEM;
-+
-+	desc->cpu_fd = open(cpu_path, O_RDONLY | O_NONBLOCK);
-+	free(cpu_path);
-+	if (desc->cpu_fd < 0)
-+		return -ENODEV;
-+
-+	map = mmap(NULL, page_size, PROT_READ, MAP_SHARED, desc->cpu_fd, 0);
-+	if (map == MAP_FAILED)
-+		return -errno;
-+
-+	desc->meta = (struct trace_buffer_meta *)map;
-+
-+	meta_len = desc->meta->meta_page_size;
-+	data_len = desc->meta->subbuf_size * desc->meta->nr_subbufs;
-+
-+	map = mmap(NULL, data_len, PROT_READ, MAP_SHARED, desc->cpu_fd, meta_len);
-+	if (map == MAP_FAILED) {
-+		munmap(desc->meta, desc->meta->meta_page_size);
-+		return -EINVAL;
-+	}
-+
-+	desc->data = map;
-+
-+	return 0;
-+}
-+
-+void tracefs_cpu_unmap(struct tracefs_cpu_map_desc *desc)
-+{
-+	munmap(desc->data, desc->meta->subbuf_size * desc->meta->nr_subbufs);
-+	munmap(desc->meta, desc->meta->meta_page_size);
-+	close(desc->cpu_fd);
-+}
-+
-+FIXTURE(map) {
-+	struct tracefs_cpu_map_desc	map_desc;
-+	bool				umount;
-+};
-+
-+FIXTURE_VARIANT(map) {
-+	int	subbuf_size;
-+};
-+
-+FIXTURE_VARIANT_ADD(map, subbuf_size_4k) {
-+	.subbuf_size = 4,
-+};
-+
-+FIXTURE_VARIANT_ADD(map, subbuf_size_8k) {
-+	.subbuf_size = 8,
-+};
-+
-+FIXTURE_SETUP(map)
-+{
-+	int cpu = sched_getcpu();
-+	cpu_set_t cpu_mask;
-+	bool fail, umount;
-+	char *message;
-+
-+	if (!tracefs_enabled(&message, &fail, &umount)) {
-+		if (fail) {
-+			TH_LOG("Tracefs setup failed: %s", message);
-+			ASSERT_FALSE(fail);
-+		}
-+		SKIP(return, "Skipping: %s", message);
-+	}
-+
-+	self->umount = umount;
-+
-+	ASSERT_GE(cpu, 0);
-+
-+	ASSERT_EQ(tracefs_reset(), 0);
-+
-+	tracefs_write_int(TRACEFS_ROOT"/buffer_subbuf_size_kb", variant->subbuf_size);
-+
-+	ASSERT_EQ(tracefs_cpu_map(&self->map_desc, cpu), 0);
-+
-+	/*
-+	 * Ensure generated events will be found on this very same ring-buffer.
-+	 */
-+	CPU_ZERO(&cpu_mask);
-+	CPU_SET(cpu, &cpu_mask);
-+	ASSERT_EQ(sched_setaffinity(0, sizeof(cpu_mask), &cpu_mask), 0);
-+}
-+
-+FIXTURE_TEARDOWN(map)
-+{
-+	tracefs_reset();
-+
-+	if (self->umount)
-+		tracefs_unmount();
-+
-+	tracefs_cpu_unmap(&self->map_desc);
-+}
-+
-+TEST_F(map, meta_page_check)
-+{
-+	struct tracefs_cpu_map_desc *desc = &self->map_desc;
-+	int cnt = 0;
-+
-+	ASSERT_EQ(desc->meta->entries, 0);
-+	ASSERT_EQ(desc->meta->overrun, 0);
-+	ASSERT_EQ(desc->meta->read, 0);
-+
-+	ASSERT_EQ(desc->meta->reader.id, 0);
-+	ASSERT_EQ(desc->meta->reader.read, 0);
-+
-+	ASSERT_EQ(ioctl(desc->cpu_fd, TRACE_MMAP_IOCTL_GET_READER), 0);
-+	ASSERT_EQ(desc->meta->reader.id, 0);
-+
-+	tracefs_write_int(TRACEFS_ROOT"/tracing_on", 1);
-+	for (int i = 0; i < 16; i++)
-+		tracefs_write_int(TRACEFS_ROOT"/trace_marker", i);
-+again:
-+	ASSERT_EQ(ioctl(desc->cpu_fd, TRACE_MMAP_IOCTL_GET_READER), 0);
-+
-+	ASSERT_EQ(desc->meta->entries, 16);
-+	ASSERT_EQ(desc->meta->overrun, 0);
-+	ASSERT_EQ(desc->meta->read, 16);
-+
-+	ASSERT_EQ(desc->meta->reader.id, 1);
-+
-+	if (!(cnt++))
-+		goto again;
-+}
-+
-+FIXTURE(snapshot) {
-+	bool	umount;
-+};
-+
-+FIXTURE_SETUP(snapshot)
-+{
-+	bool fail, umount;
-+	struct stat sb;
-+	char *message;
-+
-+	if (stat(TRACEFS_ROOT"/snapshot", &sb))
-+		SKIP(return, "Skipping: %s", "snapshot not available");
-+
-+	if (!tracefs_enabled(&message, &fail, &umount)) {
-+		if (fail) {
-+			TH_LOG("Tracefs setup failed: %s", message);
-+			ASSERT_FALSE(fail);
-+		}
-+		SKIP(return, "Skipping: %s", message);
-+	}
-+
-+	self->umount = umount;
-+}
-+
-+FIXTURE_TEARDOWN(snapshot)
-+{
-+	__tracefs_write(TRACEFS_ROOT"/events/sched/sched_switch/trigger",
-+			"!snapshot");
-+	tracefs_reset();
-+
-+	if (self->umount)
-+		tracefs_unmount();
-+}
-+
-+TEST_F(snapshot, excludes_map)
-+{
-+	struct tracefs_cpu_map_desc map_desc;
-+	int cpu = sched_getcpu();
-+
-+	ASSERT_GE(cpu, 0);
-+	tracefs_write(TRACEFS_ROOT"/events/sched/sched_switch/trigger",
-+		      "snapshot");
-+	ASSERT_EQ(tracefs_cpu_map(&map_desc, cpu), -EBUSY);
-+}
-+
-+TEST_F(snapshot, excluded_by_map)
-+{
-+	struct tracefs_cpu_map_desc map_desc;
-+	int cpu = sched_getcpu();
-+
-+	ASSERT_EQ(tracefs_cpu_map(&map_desc, cpu), 0);
-+
-+	ASSERT_EQ(__tracefs_write(TRACEFS_ROOT"/events/sched/sched_switch/trigger",
-+				  "snapshot"), -EBUSY);
-+	ASSERT_EQ(__tracefs_write(TRACEFS_ROOT"/snapshot",
-+				  "1"), -EBUSY);
-+}
-+
-+TEST_HARNESS_MAIN
+> +}
+> +
+> +static inline struct netdev_dmabuf_binding *
+> +net_iov_binding(const struct net_iov *niov)
+> +{
+> +	return net_iov_owner(niov)->binding;
+> +}
+> +
+>   /* netmem */
+>   
+>   struct netmem {
+...
+
 -- 
-2.43.0.687.g38aa6559b0-goog
-
+Pavel Begunkov
