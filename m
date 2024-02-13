@@ -1,97 +1,221 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4CA4C64;
-	Tue, 13 Feb 2024 00:12:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473FB374E6
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Feb 2024 11:50:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707783174; cv=none; b=PWU21QAeUOo1w0GhTXlVC8SPn42jdG3qraUfeE7N+NwERPQI05HuvVWHSxAQDG3yAz+lIMfL0bx6lTzJF4JHEoy4HHB+cpbbZoGD0Rl9TAfBSoRggWAbBFgKezDcMNmT4t3nJV5b8wDP8uo41zCKeK7QhBaBjh/UvZak8EqZeOM=
+	t=1707825050; cv=none; b=vCzkQqs//8E7PAcaOcP588vzmwYzWreScAL6GfPNnm01ssQ0gMpz1WTp1gwzSl+xq0vHRjlfEVHrJdgak0EAm2HXnaAhPoMxx7si7PaZcVPDaSnK/O5EzSW/XOI4wtgZN3vD6ecay7ltLlXxP3vB4Ois3UMdkxMxoJxLACs1VmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707783174; c=relaxed/simple;
-	bh=snpDxC/p4DzWPM0PkZK4dv4AVgd2kVSFn1TwirwJ8sI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=prao1NMHHAIUNhTWXpB7ZkCcoeXfcrRvCmZSjfa68reM8yDbqb4bmN0LGt2y3UO8ZYRuWYuDZ0XqPDO4ryv1tRzHyM/J5pVaNK86zIyOHerdKA1q6qhDX5/mpBrsddjEivJ9zVTaH16/TFCRCnBbEC1rG+61nOE2KHLwe6kSBPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 389C3C433C7;
-	Tue, 13 Feb 2024 00:12:53 +0000 (UTC)
-Date: Mon, 12 Feb 2024 19:13:36 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>, Vincent Donnefort
- <vdonnefort@google.com>, Sven Schnelle <svens@linux.ibm.com>, Mete Durlu
- <meted@linux.ibm.com>
-Subject: Re: [PATCH] tracing: Have saved_cmdlines arrays all in one
- allocation
-Message-ID: <20240212191336.5c502f78@gandalf.local.home>
-In-Reply-To: <ef94259e139e4579ee27db99975dc4cf397e2a06.camel@linux.intel.com>
-References: <20240212180941.379c419b@gandalf.local.home>
-	<ef94259e139e4579ee27db99975dc4cf397e2a06.camel@linux.intel.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1707825050; c=relaxed/simple;
+	bh=q7rVo2DSodMeezMaxn9Lr3Kuuut8KZT6AFuG5/W3D28=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=MKhxLVhqo5jyOhwrrTKq2gBJcWSEnncxF80dl7M0HwecClQZJYylJbVJeivTf6bDp57o76//Ju5TmqSjevCK8Xri1sbOrrwa7MiIdCf1BrxV00AxR9l+D9S8wH9kBMQpf44ytPe4002wVBnDyXWVIZQHkzWZ47WbbpyuEIN0BYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YTG+pM9u; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YTG+pM9u"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6047f0741e2so66209617b3.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Feb 2024 03:50:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707825048; x=1708429848; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VhwEbjlgus4cAtTtYuL3Yvg9paaVaIh1ewBwp/V7zco=;
+        b=YTG+pM9ugXfZWJarz0h/Hwn2Nv42z8Zsp2tmjd+qH+BSa4PD1ucj/JoXnE9MITKDBx
+         OMJ4P5Uo84/QtTMyiGiEKqKlZoqOTcbiriA8zH9atWY9BVyU8Tg9oXohNyKgpdiwyYcX
+         V9HeMF//F0fyDNTSA9l/EB6xd39ZnJS7pydN7DaK4t1al47y4/UccHtZm3iA+HZUO53x
+         CLzIO3aO3aBg46jyQ3a19z1G5jhwRMQtrs7bEwfCS50gHL9HyaH07eRxYf7Vw7C3rr0S
+         JMptwy+m72g9mRSM/trXlZsyS6rIqaxslVK4iOa8d0yB6y1YINZVWYF2QdhtueLcVGNJ
+         +IgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707825048; x=1708429848;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VhwEbjlgus4cAtTtYuL3Yvg9paaVaIh1ewBwp/V7zco=;
+        b=YYi2ymaGxcK6I0/aA5ZhlfAiH/WhTFO6GmjzBjy8X41/1Ib+Q85LYRWW23t35LEEl1
+         Fs8CZFYVMZSmyoK9pyveAPgqbicPWCy5qH8elSN87r5CplTsLcUnJVQfYE/onk6EelVa
+         ayJEVWm1cdICbMHdllroyJB7mEEi29anaXe/QE8GchgIrhsGgSyJMK63cMAaM1HQah/d
+         8k2wmsNsnKHxqwhzgZhfGRrGy8f/dUDk8qwKzRqj2l7Wg9Ml3PHBvTeOo0wJl9ycd1TB
+         WLkSZIay1i6vzNUFQ/wKmiiHutIjGWFv+kDCeb0RhENevRaa5A1c9Gfa5y8PLE27I3vj
+         TQvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUaItVfSp8Mskmc3Yd9Xo31GW+zIAdKc4g1QXi/CMM/+fysamzflXZD77dWIX7V+jJFBoJCgNGijsNX41li8u3bPrjYGgsjMYprqNSoJlBlfjX5
+X-Gm-Message-State: AOJu0YzLOPziEdBhniSnllCE6ocznQgUDVb6C/50lE/KQ9/6zHKmiNni
+	RCIZddA2WAPrzqqjQF6960J/cuvhxumB8NT0ALIOhfOkDuJ7Zhnpeqa0VoB0MSf2gcXuXtG90t4
+	Nq4rN/mthNj/Nt98nLw==
+X-Google-Smtp-Source: AGHT+IGQTH3uqdY7zkd0WzoLptet8DsRJBX2YKfahbExGkEkGenftm6HDxcB7Qj79KpI7l4aYIfY/dg943LJKe21
+X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
+ (user=vdonnefort job=sendgmr) by 2002:a05:690c:b8b:b0:604:4c5:7dc8 with SMTP
+ id ck11-20020a05690c0b8b00b0060404c57dc8mr2160949ywb.8.1707825048353; Tue, 13
+ Feb 2024 03:50:48 -0800 (PST)
+Date: Tue, 13 Feb 2024 11:49:39 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
+Message-ID: <20240213114945.3528801-1-vdonnefort@google.com>
+Subject: [PATCH v17 0/6] Introducing trace buffer mapping by user-space
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
+	Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 12 Feb 2024 15:39:03 -0800
-Tim Chen <tim.c.chen@linux.intel.com> wrote:
+The tracing ring-buffers can be stored on disk or sent to network
+without any copy via splice. However the later doesn't allow real time
+processing of the traces. A solution is to give userspace direct access
+to the ring-buffer pages via a mapping. An application can now become a
+consumer of the ring-buffer, in a similar fashion to what trace_pipe
+offers.
 
-> > diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
-> > index e4fbcc3bede5..210c74dcd016 100644
-> > --- a/kernel/trace/trace_sched_switch.c
-> > +++ b/kernel/trace/trace_sched_switch.c
-> > @@ -201,7 +201,7 @@ static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
-> >  	int order;
-> >  
-> >  	/* Figure out how much is needed to hold the given number of cmdlines */
-> > -	orig_size = sizeof(*s) + val * TASK_COMM_LEN;
-> > +	orig_size = sizeof(*s) + val * (TASK_COMM_LEN + sizeof(int));  
-> 
-> Strictly speaking, *map_cmdline_to_pid is unsigned int so it is more consistent
-> to use sizeof(unsigned) in line above.  But I'm nitpicking and I'm fine to
-> leave it as is.
+Support for this new feature can already be found in libtracefs from
+version 1.8, when built with EXTRA_CFLAGS=-DFORCE_MMAP_ENABLE.
 
-I was thinking about making that into a macro as it is used in two places.
+Vincent
 
-/* Holds the size of a cmdline and pid element */
-#define SAVED_CMDLINE_MAP_ELEMENT_SIZE(s)		\
-	(TASK_COMM_LEN + sizeof((s)->map_cmdline_to_pid[0]))
+v16 -> v17:
+  * Documentation and comments improvements.
+  * Create get/put_snapshot_map() for clearer code.
+  * Replace kzalloc with kcalloc.
+  * Fix -ENOMEM handling in rb_alloc_meta_page().
+  * Move flush(cpu_buffer->reader_page) behind the reader lock.
+  * Move all inc/dec of cpu_buffer->mapped behind reader lock and buffer
+    mutex. (removes READ_ONCE/WRITE_ONCE accesses).
 
-	orig_size = sizeof(*s) + val * SAVED_CMDLINE_MAP_ELEMENT_SIZE(s);
+v15 -> v16:
+  * Add comment for the dcache flush.
+  * Remove now unnecessary WRITE_ONCE for the meta-page.
 
-> 
-> >  	order = get_order(orig_size);
-> >  	size = 1 << (order + PAGE_SHIFT);
-> >  	page = alloc_pages(GFP_KERNEL, order);
-> > @@ -212,16 +212,11 @@ static struct saved_cmdlines_buffer *allocate_cmdlines_buffer(unsigned int val)
-> >  	memset(s, 0, sizeof(*s));
-> >  
-> >  	/* Round up to actual allocation */
-> > -	val = (size - sizeof(*s)) / TASK_COMM_LEN;
-> > +	val = (size - sizeof(*s)) / (TASK_COMM_LEN + sizeof(int));
+v14 -> v15:
+  * Add meta-page and reader-page flush. Intends to fix the mapping
+    for VIVT and aliasing-VIPT data caches.
+  * -EPERM on VM_EXEC.
+  * Fix build warning !CONFIG_TRACER_MAX_TRACE.
 
-	val = (size - sizeof(*s)) / SAVED_CMDLINE_MAP_ELEMENT_SIZE(s);
+v13 -> v14:
+  * All cpu_buffer->mapped readers use READ_ONCE (except for swap_cpu)
+  * on unmap, sync meta-page teardown with the reader_lock instead of
+    the synchronize_rcu.
+  * Add a dedicated spinlock for trace_array ->snapshot and ->mapped.
+    (intends to fix a lockdep issue)
+  * Add kerneldoc for flags and Reserved fields.
+  * Add kselftest for snapshot/map mutual exclusion.
 
--- Steve
+v12 -> v13:
+  * Swap subbufs_{touched,lost} for Reserved fields.
+  * Add a flag field in the meta-page.
+  * Fix CONFIG_TRACER_MAX_TRACE.
+  * Rebase on top of trace/urgent.
+  * Add a comment for try_unregister_trigger()
 
-> >  	s->cmdline_num = val;
-> >  
-> > -	s->map_cmdline_to_pid = kmalloc_array(val,
-> > -					      sizeof(*s->map_cmdline_to_pid),
-> > -					      GFP_KERNEL);
-> > -	if (!s->map_cmdline_to_pid) {
-> > -		free_saved_cmdlines_buffer(s);
-> > -		return NULL;
-> > -	}
-> > +	/* Place map_cmdline_to_pid array right after saved_cmdlines */
-> > +	s->map_cmdline_to_pid = (unsigned *)&s->saved_cmdlines[val * TASK_COMM_LEN];
-> >  
-> >  	s->cmdline_idx = 0;
-> >  	memset(&s->map_pid_to_cmdline, NO_CMDLINE_MAP,  
+v11 -> v12:
+  * Fix code sample mmap bug.
+  * Add logging in sample code.
+  * Reset tracer in selftest.
+  * Add a refcount for the snapshot users.
+  * Prevent mapping when there are snapshot users and vice versa.
+  * Refine the meta-page.
+  * Fix types in the meta-page.
+  * Collect Reviewed-by.
+
+v10 -> v11:
+  * Add Documentation and code sample.
+  * Add a selftest.
+  * Move all the update to the meta-page into a single
+    rb_update_meta_page().
+  * rb_update_meta_page() is now called from
+    ring_buffer_map_get_reader() to fix NOBLOCK callers.
+  * kerneldoc for struct trace_meta_page.
+  * Add a patch to zero all the ring-buffer allocations.
+
+v9 -> v10:
+  * Refactor rb_update_meta_page()
+  * In-loop declaration for foreach_subbuf_page()
+  * Check for cpu_buffer->mapped overflow
+
+v8 -> v9:
+  * Fix the unlock path in ring_buffer_map()
+  * Fix cpu_buffer cast with rb_work_rq->is_cpu_buffer
+  * Rebase on linux-trace/for-next (3cb3091138ca0921c4569bcf7ffa062519639b6a)
+
+v7 -> v8:
+  * Drop the subbufs renaming into bpages
+  * Use subbuf as a name when relevant
+
+v6 -> v7:
+  * Rebase onto lore.kernel.org/lkml/20231215175502.106587604@goodmis.org/
+  * Support for subbufs
+  * Rename subbufs into bpages
+
+v5 -> v6:
+  * Rebase on next-20230802.
+  * (unsigned long) -> (void *) cast for virt_to_page().
+  * Add a wait for the GET_READER_PAGE ioctl.
+  * Move writer fields update (overrun/pages_lost/entries/pages_touched)
+    in the irq_work.
+  * Rearrange id in struct buffer_page.
+  * Rearrange the meta-page.
+  * ring_buffer_meta_page -> trace_buffer_meta_page.
+  * Add meta_struct_len into the meta-page.
+
+v4 -> v5:
+  * Trivial rebase onto 6.5-rc3 (previously 6.4-rc3)
+
+v3 -> v4:
+  * Add to the meta-page:
+       - pages_lost / pages_read (allow to compute how full is the
+	 ring-buffer)
+       - read (allow to compute how many entries can be read)
+       - A reader_page struct.
+  * Rename ring_buffer_meta_header -> ring_buffer_meta
+  * Rename ring_buffer_get_reader_page -> ring_buffer_map_get_reader_page
+  * Properly consume events on ring_buffer_map_get_reader_page() with
+    rb_advance_reader().
+
+v2 -> v3:
+  * Remove data page list (for non-consuming read)
+    ** Implies removing order > 0 meta-page
+  * Add a new meta page field ->read
+  * Rename ring_buffer_meta_page_header into ring_buffer_meta_header
+
+v1 -> v2:
+  * Hide data_pages from the userspace struct
+  * Fix META_PAGE_MAX_PAGES
+  * Support for order > 0 meta-page
+  * Add missing page->mapping.
+
+Vincent Donnefort (6):
+  ring-buffer: Zero ring-buffer sub-buffers
+  ring-buffer: Introducing ring-buffer mapping functions
+  tracing: Add snapshot refcount
+  tracing: Allow user-space mapping of the ring-buffer
+  Documentation: tracing: Add ring-buffer mapping
+  ring-buffer/selftest: Add ring-buffer mapping test
+
+ Documentation/trace/index.rst                 |   1 +
+ Documentation/trace/ring-buffer-map.rst       | 106 +++++
+ include/linux/ring_buffer.h                   |   7 +
+ include/uapi/linux/trace_mmap.h               |  48 +++
+ kernel/trace/ring_buffer.c                    | 385 +++++++++++++++++-
+ kernel/trace/trace.c                          | 234 ++++++++++-
+ kernel/trace/trace.h                          |   9 +-
+ kernel/trace/trace_events_trigger.c           |  58 ++-
+ tools/testing/selftests/ring-buffer/Makefile  |   8 +
+ tools/testing/selftests/ring-buffer/config    |   2 +
+ .../testing/selftests/ring-buffer/map_test.c  | 273 +++++++++++++
+ 11 files changed, 1085 insertions(+), 46 deletions(-)
+ create mode 100644 Documentation/trace/ring-buffer-map.rst
+ create mode 100644 include/uapi/linux/trace_mmap.h
+ create mode 100644 tools/testing/selftests/ring-buffer/Makefile
+ create mode 100644 tools/testing/selftests/ring-buffer/config
+ create mode 100644 tools/testing/selftests/ring-buffer/map_test.c
+
+
+base-commit: ca185770db914869ff9fe773bac5e0e5e4165b83
+-- 
+2.43.0.687.g38aa6559b0-goog
 
