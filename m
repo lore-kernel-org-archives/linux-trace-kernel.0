@@ -1,116 +1,189 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C25C086644;
-	Wed, 14 Feb 2024 17:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1F3126F32;
+	Wed, 14 Feb 2024 18:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707933059; cv=none; b=iEtBrxkauEcGE4/aBoeuZJoDgnXKE5bjOxGHtKvXwWI6bhr3/Z+j47FGHC3iTsxewTKx738ton7zsNQmUPVwGli6/epmdRD/AZaorHtG2EWMaCxz2rj/WJKd1m2pAxsToxy3P8L2I3kwYGOJtcu77w3kPAg8kScqlF/lLlWwfe0=
+	t=1707933760; cv=none; b=jTZjPzO6WibUNW/vedvMur3p9v11KrVPqX2anYS+wluoIckU+MypWAgLaUnMYYFbzyOsaXbrndSY5BGo1badyD09VNlw6sY13aTCIyCKuOAM7FuIM3E/bfUCwWUStEoNxhn+xFZQXRpQ1v995LNF3j2s48Hcm9ioOKNs+QsQbfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707933059; c=relaxed/simple;
-	bh=1n+POexB4IxIKN4NogGOvLi6IfL+92Wk9tP/cRbJstg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tjjRrzwr7f8WjTxKaxv0IEGH6UErVg2QLfZVuY5NoyR4jY+2Eyd18DkEU8mcxyyZa/6M6gBviZP0vJH1YIe+7IlSB0rjLDEeiEft7GqX/NzAOMdEosmYYOnLKTWCVtF39DATXBYo5g2l7N9kROWz+LQtJaFkMZF5l+dP97btDD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=tGzDrNLn; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="tGzDrNLn"
-Received: from localhost.localdomain (unknown [4.155.48.117])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 59AB320B2004;
-	Wed, 14 Feb 2024 09:50:56 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 59AB320B2004
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1707933056;
-	bh=9VOCGDdI8wf7ppg3CttBYebJqIACHcsfFVDg2ERPXoo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tGzDrNLnvdm7wkDwXHHGty2XSx7A6lxBHg7yWMvzCC0UqI+U8U4e2wbJGTtOg3XB/
-	 RyKh3ul3asNW9w2nYqGIo8RnajGdnLV/4H3desJ8oatH+EB4pm/PlXaOW8DHN5EOkq
-	 e6pXtt2g9uuDLxBsAmBTsGpD4kImHeeEYObSBQVc=
-From: Beau Belgrave <beaub@linux.microsoft.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com
-Subject: [PATCH v3 4/4] tracing/user_events: Document multi-format flag
-Date: Wed, 14 Feb 2024 17:50:46 +0000
-Message-Id: <20240214175046.240-5-beaub@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240214175046.240-1-beaub@linux.microsoft.com>
-References: <20240214175046.240-1-beaub@linux.microsoft.com>
+	s=arc-20240116; t=1707933760; c=relaxed/simple;
+	bh=mi9PPom/j9dEgEqpLeXjgQGLWutzp/v4ktOkOCYFZx0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hs/Hm3IvXhFVJtEjJpHAwNyUQU5Td6Ej2ja69z1sKsRTqCMTIkbP1oubro2aNkuVflTCq1gCvwh37evGlG5J8EMHq97FX9OBPdcSqPtxIFoQ+5bgVCqn9aVLvNkoiQ7WVlD4ZLZ19lVB+OOnbeZwhYr6UmSypKzkL9EbhRYvJLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 245FFC433C7;
+	Wed, 14 Feb 2024 18:02:38 +0000 (UTC)
+Date: Wed, 14 Feb 2024 13:04:09 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
+ <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, Alexei
+ Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
+ <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v7 14/36] function_graph: Use a simple LRU for
+ fgraph_array index number
+Message-ID: <20240214130409.463ae408@gandalf.local.home>
+In-Reply-To: <170723220474.502590.7646977373091779892.stgit@devnote2>
+References: <170723204881.502590.11906735097521170661.stgit@devnote2>
+	<170723220474.502590.7646977373091779892.stgit@devnote2>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-User programs can now ask user_events to handle the synchronization of
-multiple different formats for an event with the same name via the new
-USER_EVENT_REG_MULTI_FORMAT flag.
+On Wed,  7 Feb 2024 00:10:04 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Add a section for USER_EVENT_REG_MULTI_FORMAT that explains the intended
-purpose and caveats of using it. Explain how deletion works in these
-cases and how to use /sys/kernel/tracing/dynamic_events for per-version
-deletion.
+> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+> index ae42de909845..323a74623543 100644
+> --- a/kernel/trace/fgraph.c
+> +++ b/kernel/trace/fgraph.c
+> @@ -99,10 +99,44 @@ enum {
+>  DEFINE_STATIC_KEY_FALSE(kill_ftrace_graph);
+>  int ftrace_graph_active;
+>  
+> -static int fgraph_array_cnt;
+> -
+>  static struct fgraph_ops *fgraph_array[FGRAPH_ARRAY_SIZE];
+>  
+> +/* LRU index table for fgraph_array */
+> +static int fgraph_lru_table[FGRAPH_ARRAY_SIZE];
+> +static int fgraph_lru_next;
+> +static int fgraph_lru_last;
+> +
+> +static void fgraph_lru_init(void)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < FGRAPH_ARRAY_SIZE; i++)
+> +		fgraph_lru_table[i] = i;
+> +}
+> +
+> +static int fgraph_lru_release_index(int idx)
+> +{
+> +	if (idx < 0 || idx >= FGRAPH_ARRAY_SIZE ||
+> +	    fgraph_lru_table[fgraph_lru_last] != -1)
 
-Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
----
- Documentation/trace/user_events.rst | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+Can fgraph_lru_table[fgraph_lru_last] != -1 ever happen? If not, we should
+probably add a:
 
-diff --git a/Documentation/trace/user_events.rst b/Documentation/trace/user_events.rst
-index d8f12442aaa6..1d5a7626e6a6 100644
---- a/Documentation/trace/user_events.rst
-+++ b/Documentation/trace/user_events.rst
-@@ -92,6 +92,24 @@ The following flags are currently supported.
-   process closes or unregisters the event. Requires CAP_PERFMON otherwise
-   -EPERM is returned.
- 
-++ USER_EVENT_REG_MULTI_FORMAT: The event can contain multiple formats. This
-+  allows programs to prevent themselves from being blocked when their event
-+  format changes and they wish to use the same name. When this flag is used the
-+  tracepoint name will be in the new format of "name.unique_id" vs the older
-+  format of "name". A tracepoint will be created for each unique pair of name
-+  and format. This means if several processes use the same name and format,
-+  they will use the same tracepoint. If yet another process uses the same name,
-+  but a different format than the other processes, it will use a different
-+  tracepoint with a new unique id. Recording programs need to scan tracefs for
-+  the various different formats of the event name they are interested in
-+  recording. The system name of the tracepoint will also use "user_events_multi"
-+  instead of "user_events". This prevents single-format event names conflicting
-+  with any multi-format event names within tracefs. The unique_id is output as
-+  a hex string. Recording programs should ensure the tracepoint name starts with
-+  the event name they registered and has a suffix that starts with . and only
-+  has hex characters. For example to find all versions of the event "test" you
-+  can use the regex "^test\.[0-9a-fA-F]+$".
-+
- Upon successful registration the following is set.
- 
- + write_index: The index to use for this file descriptor that represents this
-@@ -106,6 +124,9 @@ or perf record -e user_events:[name] when attaching/recording.
- **NOTE:** The event subsystem name by default is "user_events". Callers should
- not assume it will always be "user_events". Operators reserve the right in the
- future to change the subsystem name per-process to accommodate event isolation.
-+In addition if the USER_EVENT_REG_MULTI_FORMAT flag is used the tracepoint name
-+will have a unique id appended to it and the system name will be
-+"user_events_multi" as described above.
- 
- Command Format
- ^^^^^^^^^^^^^^
-@@ -156,7 +177,11 @@ to request deletes than the one used for registration due to this.
- to the event. If programs do not want auto-delete, they must use the
- USER_EVENT_REG_PERSIST flag when registering the event. Once that flag is used
- the event exists until DIAG_IOCSDEL is invoked. Both register and delete of an
--event that persists requires CAP_PERFMON, otherwise -EPERM is returned.
-+event that persists requires CAP_PERFMON, otherwise -EPERM is returned. When
-+there are multiple formats of the same event name, all events with the same
-+name will be attempted to be deleted. If only a specific version is wanted to
-+be deleted then the /sys/kernel/tracing/dynamic_events file should be used for
-+that specific format of the event.
- 
- Unregistering
- -------------
--- 
-2.34.1
+	    WARN_ON_ONCE(fgraph_lru_table[fgraph_lru_last] != -1))
+
+As the size of fgraph_lru_table is the same size as the available indexes,
+if we hit this I would think we had a fgraph_lru_relaese_index() without a
+fgraph_lru_alloc_index() associated with it.
+
+> +		return -1;
+> +
+> +	fgraph_lru_table[fgraph_lru_last] = idx;
+> +	fgraph_lru_last = (fgraph_lru_last + 1) % FGRAPH_ARRAY_SIZE;
+> +	return 0;
+> +}
+> +
+> +static int fgraph_lru_alloc_index(void)
+> +{
+> +	int idx = fgraph_lru_table[fgraph_lru_next];
+> +
+> +	if (idx == -1)
+> +		return -1;
+> +
+> +	fgraph_lru_table[fgraph_lru_next] = -1;
+> +	fgraph_lru_next = (fgraph_lru_next + 1) % FGRAPH_ARRAY_SIZE;
+> +	return idx;
+> +}
+> +
+>  static inline int get_ret_stack_index(struct task_struct *t, int offset)
+>  {
+>  	return t->ret_stack[offset] & FGRAPH_RET_INDEX_MASK;
+> @@ -367,7 +401,7 @@ int function_graph_enter(unsigned long ret, unsigned long func,
+>  	if (index < 0)
+>  		goto out;
+>  
+> -	for (i = 0; i < fgraph_array_cnt; i++) {
+> +	for (i = 0; i < FGRAPH_ARRAY_SIZE; i++) {
+>  		struct fgraph_ops *gops = fgraph_array[i];
+>  
+>  		if (gops == &fgraph_stub)
+> @@ -935,21 +969,17 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+>  		/* The array must always have real data on it */
+>  		for (i = 0; i < FGRAPH_ARRAY_SIZE; i++)
+>  			fgraph_array[i] = &fgraph_stub;
+> +		fgraph_lru_init();
+>  	}
+>  
+> -	/* Look for an available spot */
+> -	for (i = 0; i < FGRAPH_ARRAY_SIZE; i++) {
+> -		if (fgraph_array[i] == &fgraph_stub)
+> -			break;
+> -	}
+> -	if (i >= FGRAPH_ARRAY_SIZE) {
+> +	i = fgraph_lru_alloc_index();
+> +	if (i < 0 ||
+> +	    WARN_ON_ONCE(fgraph_array[i] != &fgraph_stub)) {
+
+The above can nicely fit on one column. No need to break it up:
+
+	if (i < 0 || WARN_ON_ONCE(fgraph_array[i] != &fgraph_stub)) {
+
+
+>  		ret = -EBUSY;
+>  		goto out;
+>  	}
+>  
+>  	fgraph_array[i] = gops;
+> -	if (i + 1 > fgraph_array_cnt)
+> -		fgraph_array_cnt = i + 1;
+>  	gops->idx = i;
+>  
+>  	ftrace_graph_active++;
+> @@ -979,25 +1009,22 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+>  void unregister_ftrace_graph(struct fgraph_ops *gops)
+>  {
+>  	int command = 0;
+> -	int i;
+>  
+>  	mutex_lock(&ftrace_lock);
+>  
+>  	if (unlikely(!ftrace_graph_active))
+>  		goto out;
+>  
+> -	if (unlikely(gops->idx < 0 || gops->idx >= fgraph_array_cnt))
+> +	if (unlikely(gops->idx < 0 || gops->idx >= FGRAPH_ARRAY_SIZE))
+> +		goto out;
+> +
+> +	if (WARN_ON_ONCE(fgraph_array[gops->idx] != gops))
+>  		goto out;
+>  
+> -	WARN_ON_ONCE(fgraph_array[gops->idx] != gops);
+> +	if (fgraph_lru_release_index(gops->idx) < 0)
+> +		goto out;
+
+Removing the above WARN_ON_ONCE() is more reason to add it to the release
+function.
+
+-- Steve
+
+
+>  
+>  	fgraph_array[gops->idx] = &fgraph_stub;
+> -	if (gops->idx + 1 == fgraph_array_cnt) {
+> -		i = gops->idx;
+> -		while (i >= 0 && fgraph_array[i] == &fgraph_stub)
+> -			i--;
+> -		fgraph_array_cnt = i + 1;
+> -	}
+>  
+>  	ftrace_graph_active--;
+>  
 
