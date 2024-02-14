@@ -1,83 +1,114 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7909A604AB;
-	Wed, 14 Feb 2024 18:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF5AB126F3E;
+	Wed, 14 Feb 2024 18:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707934327; cv=none; b=F5xIdvnyhTDElAuiGmDuqDlwtP8vzJKOK+4yMa1wJ0wytktN5TCyQEcluk3JQuQ14lmJIxX9RaAqIsfMa49fIOeoLM8vrSlklC5HfBXBu4bHXqhGeN6Iv1MCQ0vOyZGp9Ct21WO4qm5BZE+gqIWsJPJH+3/9pggEjVu2UGc/fOU=
+	t=1707934825; cv=none; b=dlQCG1zLvILkf6dOP2C/5uoX0xV+VgH1ZILQSV5rNSXVuNuTn7xs/SiVYM0kzETXaYcGYJStZ7D7+qLe1DgXA+Qmlxm5X0PinbXJxiG27PYz1Cif23S4U0c2n50A6vDBLzEm52vPNLOZ7xDpJRXdeL3whk4n/CTJ3NAP8/qJy1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707934327; c=relaxed/simple;
-	bh=vNYfVpzWs5mAwHw8U9Mt9fK2c5OOucTUa7lfyjm9HwM=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A3jSwPAqUhhUCtMOqI+y2U8seBNjpj7GzZGNjJEMpqWxCojMfdxhmq8+uO1kCiTxf7IetT5cL9vppY7lJjXGnXBcQSkvP3WMVETRIeZgRAYCpH+a89/Jq5FEWktbCJfR6ZYrXKXtclWifOeeR6pWxcYrNvS9w3PbfR/K9QymbBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TZmQq1ssPz6K8qR;
-	Thu, 15 Feb 2024 02:08:35 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id C3D7F1400CA;
-	Thu, 15 Feb 2024 02:12:01 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 14 Feb
- 2024 18:12:01 +0000
-Date: Wed, 14 Feb 2024 18:12:00 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+	s=arc-20240116; t=1707934825; c=relaxed/simple;
+	bh=PTX79Fr3Yf/DKhXSG/icIh5ogvuh9dWkZkc8teuKW4E=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=kqHtY5lKxoeC+jbiG2OY49JkLrXD0vx9qb6lyvkzb4NjblK2CvDWaKQMnmRLZDVGqXxknpI9uCz9abQZpXkkWIA1unVyNM9QRMHRRmfpMd+NvdM6tyksSAcU/BxklSx2a5/qUnNFOF+OkAiAH3zz7QXtoPrengIpBfkwShF8U2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f5CIfjXE; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f5CIfjXE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C2B9C433F1;
+	Wed, 14 Feb 2024 18:20:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707934825;
+	bh=PTX79Fr3Yf/DKhXSG/icIh5ogvuh9dWkZkc8teuKW4E=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=f5CIfjXEf/R3e29WGZgQL5Ic1GDWj9c9ATaExeXZTj1Z1BIbKf1vaupXlV0iZDvJu
+	 iSnhd5pygx5Rp9TkwUbMyUKk66RGhwUMhbfVUrrizT93QVLfxmTBfe4bA8DUF+t2nG
+	 2BMSD0wJRhr3W4jVBzjRLr0QBRMCA4PIBozcoRao9S0TSwt95rWk4452JQDJILgjKS
+	 jBGMddxBwpqjnqv1svtf7bbVhAenqlbtMqp8EQPRT5YQyqukTsZj3IUFCrwim5aTDb
+	 ser88cs2bmUhM08+gXSdG7iT7L0rMGsQsEmBB6cLEKUCpkPdrBik3pD7l8I7tXXCbj
+	 /zlg3wHVpeMKg==
+From: Kalle Valo <kvalo@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
-CC: Ira Weiny <ira.weiny@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>, "Smita Koralahalli"
-	<Smita.KoralahalliChannabasappa@amd.com>, <linux-acpi@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Dan Carpenter
-	<dan.carpenter@linaro.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>,
-	<linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] acpi/ghes: Prevent sleeping with spinlock held
-Message-ID: <20240214181200.0000500b@Huawei.com>
-In-Reply-To: <20240214102310.7ba53f3a@gandalf.local.home>
-References: <20240206-cxl-cper-smatch-v2-1-84ed07563c31@intel.com>
-	<20240214121153.00005c97@huawei.com>
-	<20240214102310.7ba53f3a@gandalf.local.home>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+Cc: LKML <linux-kernel@vger.kernel.org>,  Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>,  Masami Hiramatsu
+ <mhiramat@kernel.org>,  Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>,  Catalin Marinas
+ <catalin.marinas@arm.com>
+Subject: Re: [PATCH v2] tracing: Inform kmemleak of saved_cmdlines allocation
+References: <20240214112046.09a322d6@gandalf.local.home>
+Date: Wed, 14 Feb 2024 20:20:22 +0200
+In-Reply-To: <20240214112046.09a322d6@gandalf.local.home> (Steven Rostedt's
+	message of "Wed, 14 Feb 2024 11:20:46 -0500")
+Message-ID: <87h6iaewm1.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain
 
-On Wed, 14 Feb 2024 10:23:10 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Steven Rostedt <rostedt@goodmis.org> writes:
 
-> On Wed, 14 Feb 2024 12:11:53 +0000
-> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-> 
-> > So I'm thinking this is a won't fix - wait for the printk rework to land and
-> > assume this will be resolved as well?  
-> 
-> That pretty much sums up what I was about to say ;-)
-> 
-> tp_printk is more of a hack and not to be used sparingly. With the right
-> trace events it can hang the machine.
-> 
-> So, you can use your internal patch locally, but I would recommend waiting
-> for the new printk changes to land. I'm really hoping that will be soon!
-> 
-> -- Steve
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+>
+> The allocation of the struct saved_cmdlines_buffer structure changed from:
+>
+>         s = kmalloc(sizeof(*s), GFP_KERNEL);
+> 	s->saved_cmdlines = kmalloc_array(TASK_COMM_LEN, val, GFP_KERNEL);
+>
+> to:
+>
+> 	orig_size = sizeof(*s) + val * TASK_COMM_LEN;
+> 	order = get_order(orig_size);
+> 	size = 1 << (order + PAGE_SHIFT);
+> 	page = alloc_pages(GFP_KERNEL, order);
+> 	if (!page)
+> 		return NULL;
+>
+> 	s = page_address(page);
+> 	memset(s, 0, sizeof(*s));
+>
+> 	s->saved_cmdlines = kmalloc_array(TASK_COMM_LEN, val, GFP_KERNEL);
+>
+> Where that s->saved_cmdlines allocation looks to be a dangling allocation
+> to kmemleak. That's because kmemleak only keeps track of kmalloc()
+> allocations. For allocations that use page_alloc() directly, the kmemleak
+> needs to be explicitly informed about it.
+>
+> Add kmemleak_alloc() and kmemleak_free() around the page allocation so
+> that it doesn't give the following false positive:
+>
+> unreferenced object 0xffff8881010c8000 (size 32760):
+>   comm "swapper", pid 0, jiffies 4294667296
+>   hex dump (first 32 bytes):
+>     ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
+>     ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
+>   backtrace (crc ae6ec1b9):
+>     [<ffffffff86722405>] kmemleak_alloc+0x45/0x80
+>     [<ffffffff8414028d>] __kmalloc_large_node+0x10d/0x190
+>     [<ffffffff84146ab1>] __kmalloc+0x3b1/0x4c0
+>     [<ffffffff83ed7103>] allocate_cmdlines_buffer+0x113/0x230
+>     [<ffffffff88649c34>] tracer_alloc_buffers.isra.0+0x124/0x460
+>     [<ffffffff8864a174>] early_trace_init+0x14/0xa0
+>     [<ffffffff885dd5ae>] start_kernel+0x12e/0x3c0
+>     [<ffffffff885f5758>] x86_64_start_reservations+0x18/0x30
+>     [<ffffffff885f582b>] x86_64_start_kernel+0x7b/0x80
+>     [<ffffffff83a001c3>] secondary_startup_64_no_verify+0x15e/0x16b
+>
+> Link: https://lore.kernel.org/linux-trace-kernel/87r0hfnr9r.fsf@kernel.org/
+>
+> Fixes: 44dc5c41b5b1 ("tracing: Fix wasted memory in saved_cmdlines logic")
+> Reported-by: Kalle Valo <kvalo@kernel.org>
+> Tested-by: Kalle Valo <kvalo@kernel.org>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Thanks Steve,
+Applies cleanly to v6.8-rc4 and I don't see the leak anymore, thank you
+for fixing it so quickly!
 
-Ira's fix is needed for other valid locking reasons - this was 'just another'
-lock debugging report that came up whilst testing it.
+Tested-by: Kalle Valo <kvalo@kernel.org>
 
-For this patch (not a potential additional one that we aren't going to do ;)
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
