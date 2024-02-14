@@ -1,416 +1,281 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2053.outbound.protection.outlook.com [40.107.94.53])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D9F1B7F8;
-	Wed, 14 Feb 2024 12:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707912653; cv=fail; b=ZoYHhQIyEVsc5FUytdnYBzN3xTL1nBdkRxE10b3ikyA9yRVUBQPbXGnN3O5wxeL02JhBP5F7qsNaah4pmpFm2zCPlOdTbTlqVZkCXRzdPF41TkFGPwok+VON3F9XtUOsnKxSbD0h3uCM4yVbc1zEUoYxAuAobo/NlW0zvGMfgAA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707912653; c=relaxed/simple;
-	bh=B9LTgRsLgRTEc4CtsgBH6IaCTEpa/C62H9JD4Uc37nM=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=uCXRBaqKuvjShW8O4I80QSGdhPQz1V6rzmnLmM0PPHWqZfnMaSMezsWlQjOHMR1hFcrxikAqIkeRIv9kCSSyhSY2KE/zA0CjGINcjWqP1mUG+mAuZWwsqHJ9C4L95jAK+mlRmRGvzl4sHKWf1kKihK2l23ZfW5Vs11O9jgPKRVw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jwDsCnnz; arc=fail smtp.client-ip=40.107.94.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jwDsCnnz"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OIXBxZNeODV8mJnXHLn8bc6C18BvqZdCDDNVNwNYU3rmvDtkobhTEkswHzqT0qXD2gXShmynrf8jZjEnTUACf7F7Frv5SxQIqiBMj3822eU0KZuUdVq6jFoZ+UVpJM8GjlwD9RzhVa/J/HPf7f7K/ldv53zI9xaEPDcdZg8j2/bVCgABs/RMe4NaUJRqb1zzjZ4iqecJLBH1kS6dbwBmJDAIXH4eY46ij2Nt8QhOg4wZl7C7+edoe0LvMC4mvHB4AwV7v3iX1pmryOvsbq9D7WafCsiLc/Zypvewvuyl0eMqb+ntAuVotiBzOYH8jjl5JRmpGEfcPGKDfQ7Y5ANwOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7Ea50wnus8duH9Him96dfeWWE1NygmfEllaKmLVi/0A=;
- b=Xe/5O4G1KMHRrwaZvEM2KSU4Q2XFQCJKLr00RcFHIJoLCL/SWNTBvgYJjUT2cJ3cwlpc7iklJwdWyp8r5cl5HhAlgi5cZHxY+RMlWF81u9SWNvGKvH3uOSYR77NhTjJ79AxHVTDHiqf4ilz6bsN8AYQFX+apX/EjERgHw8xVpPVa6ZxV8aE4OX2WSnOXl/KXvRmmvzlGiG/z4IGzwnlvlxPqP+VX95JLRV7eOtmbj5t6mXvH6899CvzTztN+3k/1dUgCNQYRqjzIjD3KIgszyR7XvW7HEyzS2kL5gdPm/HdBTxFGOfuuhoIqODzUZg+HQ4iq1qv+HLtI7Hc+e7jT2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7Ea50wnus8duH9Him96dfeWWE1NygmfEllaKmLVi/0A=;
- b=jwDsCnnzdbgTBk+2VLBj5rQEtOpl3sKJ2YnAEf0rapi2L4FRUdNjHf452tcDloMk1DJ29eIGE/T1MOMXFnI66FVSs9WyhNqeYJMgux13873RQqRga/cVLpa8CGKiQ6Kh8ohTjT31+sO5BD08Ot3gu08aPv8DMh/LR71w8A0+pHg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by MN0PR12MB6247.namprd12.prod.outlook.com (2603:10b6:208:3c1::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.25; Wed, 14 Feb
- 2024 12:10:48 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::e1fb:4123:48b1:653]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::e1fb:4123:48b1:653%4]) with mapi id 15.20.7292.022; Wed, 14 Feb 2024
- 12:10:48 +0000
-Message-ID: <fdcb7378-1a51-4384-a6a4-b5442c0f7ba1@amd.com>
-Date: Wed, 14 Feb 2024 13:10:45 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/6] amdgpu: use trace_dma_fence_sync_to in
- amdgpu_fence_sync
-Content-Language: en-US
-To: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
- Sumit Semwal <sumit.semwal@linaro.org>, Gustavo Padovan
- <gustavo@padovan.org>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Alex Deucher
- <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org
-References: <20240117184329.479554-1-pierre-eric.pelloux-prayer@amd.com>
- <20240213155112.156537-1-pierre-eric.pelloux-prayer@amd.com>
- <20240213155112.156537-4-pierre-eric.pelloux-prayer@amd.com>
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <20240213155112.156537-4-pierre-eric.pelloux-prayer@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR4P281CA0102.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:cb::9) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EE118E1A;
+	Wed, 14 Feb 2024 12:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707912722; cv=none; b=UlZ1fyDxJdpsWqwHmYcOVucbMOmrYiZX4QcEjFbkP8CJXyq1VSRQcbBweuSFcxEPdbfjG7+k7ktGNKnAE50OlqyLtUziccc7yvwewGqgXV8dC0canYsFlKK5UZh9mkY7DnP0xZiymlsXTup+WuxwqreftUlOPvGKP0PImAzhg38=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707912722; c=relaxed/simple;
+	bh=j+XSQDp5gAB2zYgP/6g0xpngtgILZ2D4XzQghGi3R4Q=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nS+Ccvv2Ed2YeEIO+ybd45yxtSKIsEpEP9ECdk+lGE+wiGMobvjmPy/Fl0QfcF5ulOGaNDOjhhWugnq179T4Ws5fsjywEEZruE42Zp5GiyNZAwQCrgln9P/Au1+7yIG36X4zvLEmEGVgeB8cxp/WHujVSTvBqnJT3fikKS6BV9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TZcR16JDXz6899G;
+	Wed, 14 Feb 2024 20:08:13 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id C93E9140D1D;
+	Wed, 14 Feb 2024 20:11:54 +0800 (CST)
+Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 14 Feb
+ 2024 12:11:54 +0000
+Date: Wed, 14 Feb 2024 12:11:53 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Ira Weiny <ira.weiny@intel.com>
+CC: "Rafael J. Wysocki" <rafael@kernel.org>, Dan Williams
+	<dan.j.williams@intel.com>, Smita Koralahalli
+	<Smita.KoralahalliChannabasappa@amd.com>, <linux-acpi@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Dan Carpenter
+	<dan.carpenter@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, "Masami
+ Hiramatsu" <mhiramat@kernel.org>, Mathieu Desnoyers
+	<mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] acpi/ghes: Prevent sleeping with spinlock held
+Message-ID: <20240214121153.00005c97@huawei.com>
+In-Reply-To: <20240206-cxl-cper-smatch-v2-1-84ed07563c31@intel.com>
+References: <20240206-cxl-cper-smatch-v2-1-84ed07563c31@intel.com>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|MN0PR12MB6247:EE_
-X-MS-Office365-Filtering-Correlation-Id: c71f95d4-24f2-4926-970e-08dc2d55fad2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Oi5GnFIMRvXjsaLiYu5qurQI/xFhHm7pB9SSYGgKB4F5lYZKqbylFjNXh0ixc3SdifC5f/sEXSZTtg71YPmbgIw8vtDNQbNVFzLZ0u0dKNz9CIgDb02IujpRqdlz3wcM9a6zCyxfMJn0XQQ7zSr1kW76qCZr8G7kT9AyoUUn5n2Pnd8oFQUcT9h7rMVTTwW9y/IYuvFgbtBjwN86EQf9gpBDjJF4XW62kzOMgm3WZGsgdHOktKxZC6Y9GqUU3eg99iwSoLzf9F1lMO7H1/qW75EpmzVKonLeT7Ij13LVPPmJDCKMOLRgkKhkIRtEv5t044XM4ioC/CJ8iH4LolIDyohJFi7ThcAZ30S9fgwidNb/3y6zHGDHjzvZC7DiGHKpCMPppzhP9BzlNsbGQnPoR7MOT24BBHpkANM51rdaEovO5BzQkHFlfZgCrsNVEmt74HSY1X3meHU7DNyDPUtNcA1PH+gt4NOdVWg6tNHIU/ke1/9IurFCtheQcjhDIF6JnPvWsvbGqFDRDa+/q+d1cef4VV80LSp2LHRSMJUKH54I+86TzT9ywlrkUagzKsyoqeetQ0J7rDV/PPV5wcBX9A==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(366004)(376002)(136003)(396003)(230922051799003)(451199024)(64100799003)(1800799012)(186009)(86362001)(83380400001)(31696002)(110136005)(316002)(6506007)(38100700002)(6486002)(478600001)(966005)(26005)(2616005)(66946007)(66476007)(6666004)(66556008)(6512007)(921011)(36756003)(31686004)(2906002)(30864003)(8936002)(5660300002)(41300700001)(8676002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YWMxVG9wTFBpbWJpNWlNYU9KV0o3Rm5nci95MnJ6U2pPQkkxak9ERXBIcitn?=
- =?utf-8?B?NGFwMjR6OUFqNW51Mmd5R2Q5M0lCd2d3emR4ZG5WZ2ZHZDN2RFVtejlXVmgz?=
- =?utf-8?B?MmpTdU5VOHdoOEIzOTRHVUY5ZHR2bUFPQkJZZTVJcGNtVjF4dnlHVkVRTWtR?=
- =?utf-8?B?M2VHL3czWlpqYWJydGF5d1pGdzk0K1NQcDVNYkZIVHpxY2ZnNGdvN0xPUlRT?=
- =?utf-8?B?bTNyS1hlNjM2em05VXMwQ3dhdk9oWHBONlowSEV5WTdja3k3VmRvNWZNWm5T?=
- =?utf-8?B?Vnp0cjQvQjlIWVFKZ0FvNjRoUUNvckpjb0dLMzZKVVE4QmtZWVhGd2J1Z2pt?=
- =?utf-8?B?Uyt0T1FoTUIyZlpUOEhhSEFGTmhnRnF0SkNOTi8yNUZMS2dVK2JVTXFWZCtw?=
- =?utf-8?B?eHVQRHdSYS9uUElzblNVT2JuK2VQdVhlOHhXU3daZ1RhWTZ1VUJxNmJOL01M?=
- =?utf-8?B?L3QwM1VzaUZsV0EzSVRYOWNzMWc1eC9KNHhzZzdPSmh3ZzY4SnczWTB5UEJH?=
- =?utf-8?B?R3NqK1o0eWZPSUtnZ3RUbldVZU1CNDduRnEwQVBHYW5kTitMMVZMYjA3RThr?=
- =?utf-8?B?aWs1VXdzYnlISHBna283ZS9JRnZzVFVQME5QQjNieXVtc3lYUEN0RUtiRHJt?=
- =?utf-8?B?Qm94bkZLYnBtbXo0YlRZaVNwTXZLcG0yenhwd2dRaTMyb0VSODA0WWMxdG9O?=
- =?utf-8?B?VlhlZC9haEdCTkx5TTgxdTFFcmNEeks1S1NabUN0cUlkK0dvLzVpY2pHVWVG?=
- =?utf-8?B?bDU4MjJrbGxkZ1d4MnYwQ2V4QlYrL2ZZVFIrd3YvSWMwVHJyeSt4dHRZQ01R?=
- =?utf-8?B?TEdHVTRoY3I1bTc1S1RRdUNjcVlPVG8rcUd2YWcxSnVJVnVmV2xzT0E1QkVn?=
- =?utf-8?B?bmNXY1ZoelJGNDdLMENlRVJ2a2dIRmlIdWlNcUpmOXphOHdSWk8rdzZibUZo?=
- =?utf-8?B?eHJHSkY5d1I2SDVlNlhYalkxc2RyaWhsYlJMUkxsaElJV09vR1BuQUZZcnkv?=
- =?utf-8?B?NDg2OVg3eXFOaVQvemNaSkRnb2VEWCtCOW00VGQ0cGJuZ0hBWWxCYkZmS3pV?=
- =?utf-8?B?VGx2NFlqczhRS0wxRnFDL3F1ZElzTTZEMXl2V3pFMGJxeDRrVkp2Z3hrZkJD?=
- =?utf-8?B?UUtPUXJrQkdMTG1oQXFkcURUeWxwRGRUWE92c2dIZFJnZGMyckdrbXA1a0RZ?=
- =?utf-8?B?RDZzMGVjMkxSaThsQ2daelBzeHB5NlU4L2FaU2lDRGphL3VCODY1Nk1jQzRa?=
- =?utf-8?B?aWZWQkQ4VkNxRjlJd2N1ekZvekZQNGE3M2xSSGF3aVZjUVhtc3BrL2FiM1pa?=
- =?utf-8?B?bkVnaUZ3MmtjZTRLQjNoeHZFQWE3NzBUZDJvczR0UGR5ZlcvLy9uLzhrOFkw?=
- =?utf-8?B?WUg0SzBmRkNFYXZnaW40bVkyZERBSStmSXlKR0RSaGZqbldSMmVmTHM2YkZW?=
- =?utf-8?B?c0U3UEJEU0ROUExNeGJzV2l5eS9JdTlyYzEwRzBZbytyMmVUZEhFQUZXeS9n?=
- =?utf-8?B?anZnNUo4aUZpcU1FTzFtdXpjTzdQRnJFcmkzNXdMVlNIQ0NDenJsMjhRVjNk?=
- =?utf-8?B?UkVhM3UwMzJUWERmUmdYaDllRmczQmJXRzk3S2J2dmVuTjRmTE5EcHNKOStP?=
- =?utf-8?B?TGR2NWJBZzdLNHozaVN5bElIR05tWlA4TnNxb1pma3ZUbFVnOXA1Lzd1S1Fn?=
- =?utf-8?B?MHNXZEc4L3JzamcvemNVbFptVGVNbTYrZCtzTXVlYnZ2UWt3NjhIT2czWW1l?=
- =?utf-8?B?WlBTN0VYaS9OYmhGOXVwWHE1M1Y2WVhZTVA0NXYxbEdReFRZbkdNUzNBNmxq?=
- =?utf-8?B?amFxT2cwTGlLbjVVbmdRUTdkYzVTbUhJUkluQU1PdlBZVW9jVGhqQmIza1Jx?=
- =?utf-8?B?UldlYjR1ZXFVTnNwTkR1bTRzNVY1bW9uVDd1dUJmZ1JRNWZMZjhQQ2RkNGxL?=
- =?utf-8?B?bTVKVnJNUjQvSHdmUTIrb1VySDNCWHRwaitrYkFjNVYxblcyQWRzMVFHK1Bl?=
- =?utf-8?B?elVTM0tCcy9ROGZIU1crZ3YyTzdBZW5BZ3BtcTZWcmY3Mnl0RU5wcWtvQ0tq?=
- =?utf-8?B?YVR1NWxObkJOTzB5NVBTaDV5WFZITFpCS2haWHhIaEN3UmdnVzdZRVZyKzJ0?=
- =?utf-8?Q?RnMT0q0hxNzCm6RzNeCGTGS2d?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c71f95d4-24f2-4926-970e-08dc2d55fad2
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2024 12:10:48.7918
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Xq/UR72iESW4PqgvpDodggSsMYfsLo90mYpGTu45hHvRGZ3kk7qY2nLTNYJy0tmM
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6247
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
+On Tue, 06 Feb 2024 14:15:32 -0800
+Ira Weiny <ira.weiny@intel.com> wrote:
 
+> Smatch caught that cxl_cper_post_event() is called with a spinlock held
+> or preemption disabled.[1]  The callback takes the device lock to
+> perform address translation and therefore might sleep.  The record data
+> is released back to BIOS in ghes_clear_estatus() which requires it to be
+> copied for use in the workqueue.
+> 
+> Copy the record to a lockless list and schedule a work item to process
+> the record outside of atomic context.
+> 
+> [1] https://lore.kernel.org/all/b963c490-2c13-4b79-bbe7-34c6568423c7@moroto.mountain/
+> 
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Am 13.02.24 um 16:50 schrieb Pierre-Eric Pelloux-Prayer:
-> This makes it possible to understand the dependencies between jobs.
-> Possible usage of this trace:
-> * stuttering issues like Mesa !9189
-> * incorrect synchronization: I don't have a link for this one, but having
->    these events was very useful to debug a virtio-gpu / native-context /
->    radeonsi sync issue
->
-> I have prototype code using this in UMR, as can be see here:
->     https://gitlab.freedesktop.org/tomstdenis/umr/-/merge_requests/37
->
-> The 'reason' param currently uses __func__ but I didn't add a macro for
-> this because it'd be interesting to use more descriptive names for each
-> use of amdgpu_fence_sync.
->
-> Signed-off-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
++CC tracing folk for the splat below (the second one as first one is fixed!)
+
+Lock debugging is slow (on an emulated machine) :(
+Testing with my gitlab.com/jic23/qemu cxl-2024-02-05-draft branch
+which is only one I've put out with the FW first injection patches so far
+
+For reference without this patch I got a nice spat identifying the original bug.
+So far so good.
+
+With this patch (and tp_printk in command line and trace points enabled)
+[  193.048229] {1}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 1
+[  193.049636] {1}[Hardware Error]: event severity: recoverable
+[  193.050472] {1}[Hardware Error]:  Error 0, type: recoverable
+[  193.051337] {1}[Hardware Error]:   section type: unknown, fbcd0a77-c260-417f-85a9-088b1621eba6
+[  193.052270] {1}[Hardware Error]:   section length: 0x90
+[  193.053402] {1}[Hardware Error]:   00000000: 00000090 00000007 00000000 0d938086  ................
+[  193.055036] {1}[Hardware Error]:   00000010: 000e0000 00000000 00000005 00000000  ................
+[  193.058592] {1}[Hardware Error]:   00000020: 00000180 00000000 1626fa24 17b3b158  ........$.&.X...
+[  193.062289] {1}[Hardware Error]:   00000030: 00000000 00000000 00000000 00000000  ................
+[  193.065959] {1}[Hardware Error]:   00000040: 000007d0 00000000 0fc00307 05210300  ..............!.
+[  193.069782] {1}[Hardware Error]:   00000050: 72690000 6d207361 00326d65 00000000  ..iras mem2.....
+[  193.072760] {1}[Hardware Error]:   00000060: 00000000 00000000 00000000 00000000  ................
+[  193.074062] {1}[Hardware Error]:   00000070: 00000000 00000000 00000000 00000000  ................
+[  193.075346] {1}[Hardware Error]:   00000080: 00000000 00000000 00000000 00000000  ................
+
+I rebased after this so now we get the smaller print - but that's not really relevant here.
+
+[  193.086589] cxl_general_media: memdev=mem1 host=0000:0e:00.0 serial=5 log=Warning : time=1707903675590441508 uuid=fbcd0a77-c260-417f-85a9-088b1621eba6 len=128 flags='0x1' handle=0 related_handle=0 maint_op_class=0 : dpa=7c0 dpa_flags='0x10' descriptor='UNCORRECTABLE_EVENT|THRESHOLD_EVENT|POISON_LIST_OVERFLOW' type='0x3' transaction_type='0xc0' channel=3 rank=33 device=5 comp_id=69 72 61 73 20 6d 65 6d 32 00 00 00 00 00 00 00 validity_flags='CHANNEL|RANK|DEVICE|COMPONENT'
+[  193.087181]                                                                                                                                                                                                                                                      
+[  193.087361] =============================
+[  193.087399] [ BUG: Invalid wait context ]
+[  193.087504] 6.8.0-rc3 #1200 Not tainted
+[  193.087660] -----------------------------
+[  193.087858] kworker/3:0/31 is trying to lock:
+[  193.087966] ffff0000c0ce1898 (&port_lock_key){-.-.}-{3:3}, at: pl011_console_write+0x148/0x1c8
+[  193.089754] other info that might help us debug this:
+[  193.089820] context-{5:5}[  193.089900] 8 locks held by kworker/3:0/31:
+[  193.089990]  #0: ffff0000c0018738 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x154/0x500
+[  193.090439]  #1: ffff800083793de0 (cxl_cper_work){+.+.}-{0:0}, at: process_one_work+0x154/0x500
+[  193.090718]  #2: ffff800082883310 (cxl_cper_rw_sem){++++}-{4:4}, at: cxl_cper_work_fn+0x2c/0xb0
+[  193.091019]  #3: ffff0000c0a7b1a8 (&dev->mutex){....}-{4:4}, at: pci_dev_lock+0x28/0x48
+[  193.091431]  #4: ffff800082738f18 (tracepoint_iter_lock){....}-{2:2}, at: trace_event_buffer_commit+0xd8/0x2c8
+[  193.091772]  #5: ffff8000826b3ce8 (console_lock){+.+.}-{0:0}, at: vprintk_emit+0x124/0x398
+[  193.092031]  #6: ffff8000826b3d40 (console_srcu){....}-{0:0}, at: console_flush_all+0x88/0x4b0
+[  193.092363]  #7: ffff8000826b3ef8 (console_owner){....}-{0:0}, at: console_flush_all+0x1bc/0x4b0
+[  193.092799] stack backtrace:
+[  193.092973] CPU: 3 PID: 31 Comm: kworker/3:0 Not tainted 6.8.0-rc3 #1200
+[  193.093118] Hardware name: QEMU QEMU Virtual Machine, BIOS unknown unknown
+[  193.093468] Workqueue: events cxl_cper_work_fn
+[  193.093782] Call trace:
+[  193.094004]  dump_backtrace+0xa4/0x130
+[  193.094145]  show_stack+0x20/0x38
+[  193.094231]  dump_stack_lvl+0x60/0xb0
+[  193.094315]  dump_stack+0x18/0x28
+[  193.094395]  __lock_acquire+0x9e8/0x1ee8
+[  193.094477]  lock_acquire+0x118/0x2e8
+[  193.094557]  _raw_spin_lock+0x50/0x70
+[  193.094820]  pl011_console_write+0x148/0x1c8
+[  193.094904]  console_flush_all+0x218/0x4b0
+[  193.094985]  console_unlock+0x74/0x140
+[  193.095066]  vprintk_emit+0x230/0x398
+[  193.095146]  vprintk_default+0x40/0x58
+[  193.095226]  vprintk+0x98/0xb0
+[  193.095306]  _printk+0x64/0x98
+[  193.095385]  trace_event_buffer_commit+0x138/0x2c8
+[  193.095467]  trace_event_raw_event_cxl_general_media+0x1a8/0x280 [cxl_core]
+[  193.096191]  __traceiter_cxl_general_media+0x50/0x78 [cxl_core]
+[  193.096359]  cxl_event_trace_record+0x204/0x2d0 [cxl_core]
+[  193.096520]  cxl_cper_event_call+0xb0/0xe0 [cxl_pci]
+
+The rw_sem is held to protect the callback pointer.
+
+[  193.096713]  cxl_cper_work_fn+0x7c/0xb0
+[  193.096808]  process_one_work+0x1f4/0x500
+[  193.096891]  worker_thread+0x1f0/0x3f0
+[  193.096971]  kthread+0x110/0x120
+[  193.097052]  ret_from_fork+0x10/0x20
+
+So I'm not sure how to fix this or if we even want to.
+
+We could try and release locks before calling the tracepoint but that looks
+very fiddly and would require ghes.c to be able to see more of the
+CXL tracepoint infrastructure which isn't great.
+
+Just because I was feeling cheeky I did a quick test with following.
+I have a sneaky suspicion this won't got down well even though it 'fixes'
+our issue...  My google fu / lore search terms are failing to find
+much previous discussion of this.
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 9ff8a439d674..7ee45f22f56f 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -2957,7 +2957,7 @@ static void output_printk(struct trace_event_buffer *fbuffer)
+        iter->ent = fbuffer->entry;
+        event_call->event.funcs->trace(iter, 0, event);
+        trace_seq_putc(&iter->seq, 0);
+-       printk("%s", iter->seq.buffer);
++       printk_deferred("%s", iter->seq.buffer);
+
+        raw_spin_unlock_irqrestore(&tracepoint_iter_lock, flags);
+ }
+
+My assumption is similar views will apply here to Peter Zijlstra's comment on
+not using printk_deferred.
+
+https://lore.kernel.org/all/20231010141244.GM377@noisy.programming.kicks-ass.net/
+
+Note I also tried the hacks Peter links to from there. They trip issues in the initial
+CPER print - so I assume not appropriate here.
+
+So I'm thinking this is a won't fix - wait for the printk rework to land and
+assume this will be resolved as well?
+
+Jonathan
+
 > ---
->   drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c |  8 ++++----
->   drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c           | 14 +++++++-------
->   drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c          |  8 +++-----
->   drivers/gpu/drm/amd/amdgpu/amdgpu_mes.c          |  4 ++--
->   drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c         | 11 ++++++++---
->   drivers/gpu/drm/amd/amdgpu/amdgpu_sync.h         |  3 ++-
->   drivers/gpu/drm/amd/amdgpu/amdgpu_umsch_mm.c     |  4 ++--
->   7 files changed, 28 insertions(+), 24 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> index d17b2452cb1f..fde98e48c84b 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> @@ -491,7 +491,7 @@ static int vm_update_pds(struct amdgpu_vm *vm, struct amdgpu_sync *sync)
->   	if (ret)
->   		return ret;
->   
-> -	return amdgpu_sync_fence(sync, vm->last_update);
-> +	return amdgpu_sync_fence(sync, vm->last_update, __func__);
-
-__func__ is used so often that it probably deserves a macro.
-
-Regards,
-Christian.
-
->   }
->   
->   static uint64_t get_pte_flags(struct amdgpu_device *adev, struct kgd_mem *mem)
-> @@ -1251,7 +1251,7 @@ static void unmap_bo_from_gpuvm(struct kgd_mem *mem,
->   
->   	amdgpu_vm_clear_freed(adev, vm, &bo_va->last_pt_update);
->   
-> -	amdgpu_sync_fence(sync, bo_va->last_pt_update);
-> +	amdgpu_sync_fence(sync, bo_va->last_pt_update, __func__);
->   }
->   
->   static int update_gpuvm_pte(struct kgd_mem *mem,
-> @@ -1273,7 +1273,7 @@ static int update_gpuvm_pte(struct kgd_mem *mem,
->   		return ret;
->   	}
->   
-> -	return amdgpu_sync_fence(sync, bo_va->last_pt_update);
-> +	return amdgpu_sync_fence(sync, bo_va->last_pt_update, __func__);
->   }
->   
->   static int map_bo_to_gpuvm(struct kgd_mem *mem,
-> @@ -2910,7 +2910,7 @@ int amdgpu_amdkfd_gpuvm_restore_process_bos(void *info, struct dma_fence **ef)
->   		}
->   		dma_resv_for_each_fence(&cursor, bo->tbo.base.resv,
->   					DMA_RESV_USAGE_KERNEL, fence) {
-> -			ret = amdgpu_sync_fence(&sync_obj, fence);
-> +			ret = amdgpu_sync_fence(&sync_obj, fence, __func__);
->   			if (ret) {
->   				pr_debug("Memory eviction: Sync BO fence failed. Try again\n");
->   				goto validate_map_fail;
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-> index 6adeddfb3d56..6830892383c3 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-> @@ -423,7 +423,7 @@ static int amdgpu_cs_p2_dependencies(struct amdgpu_cs_parser *p,
->   			dma_fence_put(old);
->   		}
->   
-> -		r = amdgpu_sync_fence(&p->sync, fence);
-> +		r = amdgpu_sync_fence(&p->sync, fence, __func__);
->   		dma_fence_put(fence);
->   		if (r)
->   			return r;
-> @@ -445,7 +445,7 @@ static int amdgpu_syncobj_lookup_and_add(struct amdgpu_cs_parser *p,
->   		return r;
->   	}
->   
-> -	r = amdgpu_sync_fence(&p->sync, fence);
-> +	r = amdgpu_sync_fence(&p->sync, fence, __func__);
->   	dma_fence_put(fence);
->   	return r;
->   }
-> @@ -1101,7 +1101,7 @@ static int amdgpu_cs_vm_handling(struct amdgpu_cs_parser *p)
->   	if (r)
->   		return r;
->   
-> -	r = amdgpu_sync_fence(&p->sync, fpriv->prt_va->last_pt_update);
-> +	r = amdgpu_sync_fence(&p->sync, fpriv->prt_va->last_pt_update, __func__);
->   	if (r)
->   		return r;
->   
-> @@ -1112,7 +1112,7 @@ static int amdgpu_cs_vm_handling(struct amdgpu_cs_parser *p)
->   		if (r)
->   			return r;
->   
-> -		r = amdgpu_sync_fence(&p->sync, bo_va->last_pt_update);
-> +		r = amdgpu_sync_fence(&p->sync, bo_va->last_pt_update, __func__);
->   		if (r)
->   			return r;
->   	}
-> @@ -1131,7 +1131,7 @@ static int amdgpu_cs_vm_handling(struct amdgpu_cs_parser *p)
->   		if (r)
->   			return r;
->   
-> -		r = amdgpu_sync_fence(&p->sync, bo_va->last_pt_update);
-> +		r = amdgpu_sync_fence(&p->sync, bo_va->last_pt_update, __func__);
->   		if (r)
->   			return r;
->   	}
-> @@ -1144,7 +1144,7 @@ static int amdgpu_cs_vm_handling(struct amdgpu_cs_parser *p)
->   	if (r)
->   		return r;
->   
-> -	r = amdgpu_sync_fence(&p->sync, vm->last_update);
-> +	r = amdgpu_sync_fence(&p->sync, vm->last_update, __func__);
->   	if (r)
->   		return r;
->   
-> @@ -1225,7 +1225,7 @@ static int amdgpu_cs_sync_rings(struct amdgpu_cs_parser *p)
->   			continue;
->   		}
->   
-> -		r = amdgpu_sync_fence(&p->gang_leader->explicit_sync, fence);
-> +		r = amdgpu_sync_fence(&p->gang_leader->explicit_sync, fence, __func__);
->   		dma_fence_put(fence);
->   		if (r)
->   			return r;
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c
-> index ddd0891da116..96f68e025d8e 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c
-> @@ -309,7 +309,7 @@ static int amdgpu_vmid_grab_reserved(struct amdgpu_vm *vm,
->   	/* Good we can use this VMID. Remember this submission as
->   	* user of the VMID.
->   	*/
-> -	r = amdgpu_sync_fence(&(*id)->active, &job->base.s_fence->finished);
-> +	r = amdgpu_sync_fence(&(*id)->active, &job->base.s_fence->finished, __func__);
->   	if (r)
->   		return r;
->   
-> @@ -369,8 +369,7 @@ static int amdgpu_vmid_grab_used(struct amdgpu_vm *vm,
->   		/* Good, we can use this VMID. Remember this submission as
->   		 * user of the VMID.
->   		 */
-> -		r = amdgpu_sync_fence(&(*id)->active,
-> -				      &job->base.s_fence->finished);
-> +		r = amdgpu_sync_fence(&(*id)->active, &job->base.s_fence->finished, __func__);
->   		if (r)
->   			return r;
->   
-> @@ -421,8 +420,7 @@ int amdgpu_vmid_grab(struct amdgpu_vm *vm, struct amdgpu_ring *ring,
->   			id = idle;
->   
->   			/* Remember this submission as user of the VMID */
-> -			r = amdgpu_sync_fence(&id->active,
-> -					      &job->base.s_fence->finished);
-> +			r = amdgpu_sync_fence(&id->active, &job->base.s_fence->finished, __func__);
->   			if (r)
->   				goto error;
->   
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_mes.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_mes.c
-> index da48b6da0107..0f85370f69fa 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_mes.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_mes.c
-> @@ -1219,14 +1219,14 @@ int amdgpu_mes_ctx_map_meta_data(struct amdgpu_device *adev,
->   		DRM_ERROR("failed to do vm_bo_update on meta data\n");
->   		goto error_del_bo_va;
->   	}
-> -	amdgpu_sync_fence(&sync, bo_va->last_pt_update);
-> +	amdgpu_sync_fence(&sync, bo_va->last_pt_update, __func__);
->   
->   	r = amdgpu_vm_update_pdes(adev, vm, false);
->   	if (r) {
->   		DRM_ERROR("failed to update pdes on meta data\n");
->   		goto error_del_bo_va;
->   	}
-> -	amdgpu_sync_fence(&sync, vm->last_update);
-> +	amdgpu_sync_fence(&sync, vm->last_update, __func__);
->   
->   	amdgpu_sync_wait(&sync, false);
->   	drm_exec_fini(&exec);
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c
-> index 1b013a44ca99..b6538f73eee9 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c
-> @@ -30,6 +30,7 @@
->    */
->   
->   #include <linux/dma-fence-chain.h>
-> +#include <trace/events/dma_fence.h>
->   
->   #include "amdgpu.h"
->   #include "amdgpu_trace.h"
-> @@ -149,10 +150,12 @@ static bool amdgpu_sync_add_later(struct amdgpu_sync *sync, struct dma_fence *f)
->    *
->    * @sync: sync object to add fence to
->    * @f: fence to sync to
-> + * @reason: why do we sync to this fence
->    *
->    * Add the fence to the sync object.
->    */
-> -int amdgpu_sync_fence(struct amdgpu_sync *sync, struct dma_fence *f)
-> +int amdgpu_sync_fence(struct amdgpu_sync *sync, struct dma_fence *f,
-> +		      const char *reason)
->   {
->   	struct amdgpu_sync_entry *e;
->   
-> @@ -166,6 +169,8 @@ int amdgpu_sync_fence(struct amdgpu_sync *sync, struct dma_fence *f)
->   	if (!e)
->   		return -ENOMEM;
->   
-> +	trace_dma_fence_sync_to(f, reason);
+> Changes in v2:
+> - djbw: device_lock() sleeps so we need to call the callback in process context
+> - iweiny: create work queue to handle processing the callback
+> - Link to v1: https://lore.kernel.org/r/20240202-cxl-cper-smatch-v1-1-7a4103c7f5a0@intel.com
+> ---
+>  drivers/acpi/apei/ghes.c | 44 +++++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 41 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> index 7b7c605166e0..aa41e9128118 100644
+> --- a/drivers/acpi/apei/ghes.c
+> +++ b/drivers/acpi/apei/ghes.c
+> @@ -679,6 +679,12 @@ static void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
+>   */
+>  static DECLARE_RWSEM(cxl_cper_rw_sem);
+>  static cxl_cper_callback cper_callback;
+> +static LLIST_HEAD(cxl_cper_rec_list);
+> +struct cxl_cper_work_item {
+> +	struct llist_node node;
+> +	enum cxl_event_type event_type;
+> +	struct cxl_cper_event_rec rec;
+> +};
+>  
+>  /* CXL Event record UUIDs are formatted as GUIDs and reported in section type */
+>  
+> @@ -706,9 +712,34 @@ static cxl_cper_callback cper_callback;
+>  	GUID_INIT(0xfe927475, 0xdd59, 0x4339,				\
+>  		  0xa5, 0x86, 0x79, 0xba, 0xb1, 0x13, 0xb7, 0x74)
+>  
+> +static void cxl_cper_work_fn(struct work_struct *work)
+> +{
+> +	struct llist_node *entries, *cur, *n;
+> +	struct cxl_cper_work_item *wi;
 > +
->   	hash_add(sync->fences, &e->node, f->context);
->   	e->fence = dma_fence_get(f);
->   	return 0;
-> @@ -249,7 +254,7 @@ int amdgpu_sync_resv(struct amdgpu_device *adev, struct amdgpu_sync *sync,
->   			struct dma_fence *tmp = dma_fence_chain_contained(f);
->   
->   			if (amdgpu_sync_test_fence(adev, mode, owner, tmp)) {
-> -				r = amdgpu_sync_fence(sync, f);
-> +				r = amdgpu_sync_fence(sync, f, __func__);
->   				dma_fence_put(f);
->   				if (r)
->   					return r;
-> @@ -358,7 +363,7 @@ int amdgpu_sync_clone(struct amdgpu_sync *source, struct amdgpu_sync *clone)
->   	hash_for_each_safe(source->fences, i, tmp, e, node) {
->   		f = e->fence;
->   		if (!dma_fence_is_signaled(f)) {
-> -			r = amdgpu_sync_fence(clone, f);
-> +			r = amdgpu_sync_fence(clone, f, __func__);
->   			if (r)
->   				return r;
->   		} else {
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.h
-> index cf1e9e858efd..0c58d6120053 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.h
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.h
-> @@ -47,7 +47,8 @@ struct amdgpu_sync {
->   };
->   
->   void amdgpu_sync_create(struct amdgpu_sync *sync);
-> -int amdgpu_sync_fence(struct amdgpu_sync *sync, struct dma_fence *f);
-> +int amdgpu_sync_fence(struct amdgpu_sync *sync, struct dma_fence *f,
-> +		      const char *reason);
->   int amdgpu_sync_resv(struct amdgpu_device *adev, struct amdgpu_sync *sync,
->   		     struct dma_resv *resv, enum amdgpu_sync_mode mode,
->   		     void *owner);
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_umsch_mm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_umsch_mm.c
-> index bfbf59326ee1..5e30b371b956 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_umsch_mm.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_umsch_mm.c
-> @@ -117,13 +117,13 @@ static int map_ring_data(struct amdgpu_device *adev, struct amdgpu_vm *vm,
->   	if (r)
->   		goto error_del_bo_va;
->   
-> -	amdgpu_sync_fence(&sync, (*bo_va)->last_pt_update);
-> +	amdgpu_sync_fence(&sync, (*bo_va)->last_pt_update, __func__);
->   
->   	r = amdgpu_vm_update_pdes(adev, vm, false);
->   	if (r)
->   		goto error_del_bo_va;
->   
-> -	amdgpu_sync_fence(&sync, vm->last_update);
-> +	amdgpu_sync_fence(&sync, vm->last_update, __func__);
->   
->   	amdgpu_sync_wait(&sync, false);
->   	drm_exec_fini(&exec);
+> +	guard(rwsem_read)(&cxl_cper_rw_sem);
+> +
+> +	entries = llist_del_all(&cxl_cper_rec_list);
+> +	if (!entries)
+> +		return;
+
+Unfortunately the rw_sem is protecting the cper_callback itself
+so I'm not sure how to do this.
+
+Maybe a dance where cper_callback creates the record but returns
+the data to here so that we can release the lock and issue
+the tracepoint?
+
+> +	/* Process oldest to newest */
+> +	entries = llist_reverse_order(entries);
+> +	llist_for_each_safe(cur, n, entries) {
+> +		wi = llist_entry(cur, struct cxl_cper_work_item, node);
+> +
+> +		if (cper_callback)
+> +			cper_callback(wi->event_type, &wi->rec);
+> +		kfree(wi);
+> +	}
+> +}
+> +static DECLARE_WORK(cxl_cper_work, cxl_cper_work_fn);
+> +
+>  static void cxl_cper_post_event(enum cxl_event_type event_type,
+>  				struct cxl_cper_event_rec *rec)
+>  {
+> +	struct cxl_cper_work_item *wi;
+> +
+>  	if (rec->hdr.length <= sizeof(rec->hdr) ||
+>  	    rec->hdr.length > sizeof(*rec)) {
+>  		pr_err(FW_WARN "CXL CPER Invalid section length (%u)\n",
+> @@ -721,9 +752,16 @@ static void cxl_cper_post_event(enum cxl_event_type event_type,
+>  		return;
+>  	}
+>  
+> -	guard(rwsem_read)(&cxl_cper_rw_sem);
+> -	if (cper_callback)
+> -		cper_callback(event_type, rec);
+> +	wi = kmalloc(sizeof(*wi), GFP_ATOMIC);
+> +	if (!wi) {
+> +		pr_err(FW_WARN "CXL CPER failed to allocate work item\n");
+> +		return;
+> +	}
+> +
+> +	wi->event_type = event_type;
+> +	memcpy(&wi->rec, rec, sizeof(wi->rec));
+> +	llist_add(&wi->node, &cxl_cper_rec_list);
+> +	schedule_work(&cxl_cper_work);
+>  }
+>  
+>  int cxl_cper_register_callback(cxl_cper_callback callback)
+> 
+> ---
+> base-commit: 99bd3cb0d12e85d5114425353552121ec8f93adc
+> change-id: 20240201-cxl-cper-smatch-82b129498498
+> 
+> Best regards,
 
