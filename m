@@ -1,36 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07AB5BACE;
-	Wed, 14 Feb 2024 15:09:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258845D8F5;
+	Wed, 14 Feb 2024 15:21:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707923351; cv=none; b=eKYBMKxh3hJlGq6OXm1lVL9DdhgsjGaFVEQnfHzPQc/iiqIjrpqEoFaS/2GKaXNiz2wnfVMyNSY2n3LFH/0TJuO5D3LCe3tStilGuin9ZEE7NUX6Tzctnw4Dbhr1a2quxcWeLxQ68Wxb/ghy69zBjAZjm1IJ1e/oHhMrjeAom+Y=
+	t=1707924101; cv=none; b=lDrNm5QmHH0PIrNLekuOSkGsKgIS+iPX2Vj3WB3uAoH3uIhvDAjuJK/ZHwmjdETxs6KC6dXjP1kV4Ir4vD+ueR138fNblnkzKg56Y+xTLVzYJ0RRWUA61SXGQHwTlKiCZLrNgaNB2M2SLDq8cDCZzKOmIg66QYYFbc9doOuH57o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707923351; c=relaxed/simple;
-	bh=M0iGHrbEWM4bnET7RmnkPdaOveYygV+hRXmW2nqXDZ4=;
+	s=arc-20240116; t=1707924101; c=relaxed/simple;
+	bh=Y5qNsyPZ7LB9EL5+p5aaf86e06gBU3/WclTD7Z63ijk=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UMfQ5iJSjzNfFu5H2BdIyTrWO6lhk++5gpsF6TtlcqH6l9uNXhh/9kRTgxRmV7FPopPEs8kTjz0EbVrCMA6jB+aEa8Z5EeNFNgqfX4pr3kUnaoKECzWpcgaAf1h/TQvaxL+lHxcKHHWdfnpa11GZrNc9uhuLIS0pgcRgek48n3E=
+	 MIME-Version:Content-Type; b=VCFQXSHxs/2cM9wjN/TWrd8Su+8BcrKX/sG+Bubdy2fo/WklPFBK2OOvMCIfcRo33tWwARrdptjEe07yVJVlrRzwWs50Vjj2KzfMBa9ktJpDFTlE9+GtK5Dn0ts8kwK1FNy8rSrTYj5Byoc84fk+Smgj0IkJHJP0W3ZFacHx3EA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45F2EC433F1;
-	Wed, 14 Feb 2024 15:09:10 +0000 (UTC)
-Date: Wed, 14 Feb 2024 10:10:41 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5770BC433C7;
+	Wed, 14 Feb 2024 15:21:39 +0000 (UTC)
+Date: Wed, 14 Feb 2024 10:23:10 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>
-Cc: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>, Sumit
- Semwal <sumit.semwal@linaro.org>, Gustavo Padovan <gustavo@padovan.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, dri-devel@lists.freedesktop.org,
- linux-media@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Alex
- Deucher <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org
-Subject: Re: [PATCH v2 1/6] tracing, dma-buf: add a trace_dma_fence_sync_to
- event
-Message-ID: <20240214101041.2fbf9b87@gandalf.local.home>
-In-Reply-To: <137e8d79-bf19-4782-918e-0c09b029e3aa@amd.com>
-References: <20240117184329.479554-1-pierre-eric.pelloux-prayer@amd.com>
-	<20240213155112.156537-1-pierre-eric.pelloux-prayer@amd.com>
-	<20240213155112.156537-2-pierre-eric.pelloux-prayer@amd.com>
-	<137e8d79-bf19-4782-918e-0c09b029e3aa@amd.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Ira Weiny <ira.weiny@intel.com>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Dan Williams <dan.j.williams@intel.com>, Smita
+ Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+ <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] acpi/ghes: Prevent sleeping with spinlock held
+Message-ID: <20240214102310.7ba53f3a@gandalf.local.home>
+In-Reply-To: <20240214121153.00005c97@huawei.com>
+References: <20240206-cxl-cper-smatch-v2-1-84ed07563c31@intel.com>
+	<20240214121153.00005c97@huawei.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,33 +36,21 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 14 Feb 2024 13:00:16 +0100
-Christian K=C3=B6nig <christian.koenig@amd.com> wrote:
+On Wed, 14 Feb 2024 12:11:53 +0000
+Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 
-> > +DEFINE_EVENT(dma_fence_from, dma_fence_sync_to, =20
->=20
-> For a single event you should probably use TRACE_EVENT() instead of=20
-> declaring a class. A class is only used if you have multiple events with=
-=20
-> the same parameters.
+> So I'm thinking this is a won't fix - wait for the printk rework to land and
+> assume this will be resolved as well?
 
-FYI, TRACE_EVENT() is actually defined as:
+That pretty much sums up what I was about to say ;-)
 
-#define TRACE_EVENT(name, proto, args, tstruct, assign, print) \
-	DECLARE_EVENT_CLASS(name,			       \
-			     PARAMS(proto),		       \
-			     PARAMS(args),		       \
-			     PARAMS(tstruct),		       \
-			     PARAMS(assign),		       \
-			     PARAMS(print));		       \
-	DEFINE_EVENT(name, name, PARAMS(proto), PARAMS(args));
+tp_printk is more of a hack and not to be used sparingly. With the right
+trace events it can hang the machine.
 
-So basically, you could really just declare one TRACE_EVENT() and add
-DEFINE_EVENT()s on top of it ;)
-
-I never recommended that because I thought it would be confusing.
+So, you can use your internal patch locally, but I would recommend waiting
+for the new printk changes to land. I'm really hoping that will be soon!
 
 -- Steve
