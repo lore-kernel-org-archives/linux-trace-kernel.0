@@ -1,39 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F4654670;
-	Wed, 14 Feb 2024 13:22:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC7754670;
+	Wed, 14 Feb 2024 13:22:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707916938; cv=none; b=AwrpfOA+BZv/ArCWE3qNyIFcDbv0nFyIJRBFnYU6SRJ5Ce6s8flvAdC4TmQm7FW3tBy29wx4oBbnfg8GUCgM6ZDNyC7Uw++o6j6XO2ZkKWRBkshu9TBklP/mAAovKO3ymDPsle/fOh+M7byjs/VDPsjYysQvdz9dnWs3QT0xiJE=
+	t=1707916948; cv=none; b=KSvdU+fsRkmncM0lJZHgBxD9835P8RrjGeJQKTt5mUNQgM1XQCNNYERzxprzGdHK0Yw3DlRWTaqov9dbhX8gJUvJTNtFFTUF38z0SAxs1DZxjzFTlwFQXxmXHNaVMUUJF3RMIjzgQLze+5cB8F4qFMpBQJ9rX/D/5d735yiCzo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707916938; c=relaxed/simple;
-	bh=bBRoDlO2YKY1ltZI6iH4y3v5GP17SnYkawVDUuqF5FA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=bzL3w++1NrRKjC0m3w9HjT5PYsEDQVh1XML4ACuww11aCxgmpvhjAJdDX/3bEafeJywVCBZcTe95qBuH3AO/xAcbZ2I2/U2Wq6Z49Ca39llDUG1RVDJqMe5aHdS1mKZEdzsgOxnwFUZxKOCASB0uTN9AQHYltU1qKSgjS+9jgnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bIP2z1ZO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707916948; c=relaxed/simple;
+	bh=VG0MktVwabnUwipPLIf3jQPx5AW1d8Ms9iB0R5HsZLM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DpK0buTCf2ZXq4VtVWJJ20nvMQYAyCTk4KbU47unmgScskGHtmPCJy8edS3mCexj5HD+1ASoVfj3f+gTiJxuD7qzMVJuweIkVTQcpi5plZ5DPymYu0trzya1DLUGgFdfpPh5mecgkVA0MPC3zu5XAKH1pRsFmllmRTLY3faGikM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KhlP+mtw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bIP2z1ZO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E154C433C7;
-	Wed, 14 Feb 2024 13:22:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KhlP+mtw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60B9DC433F1;
+	Wed, 14 Feb 2024 13:22:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707916938;
-	bh=bBRoDlO2YKY1ltZI6iH4y3v5GP17SnYkawVDUuqF5FA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bIP2z1ZOkTF1YgpwaFaEpnlpasFryQboSHsOUKZGk+dpmRsNq/FL6pBiOb66gZG8W
-	 9YlM2MnLYEc9jkznARRMQ+2qH9r9320YErVQbCDMrAFuMSNNNKu+AlMKdskS+UysSq
-	 4R+Qz3YH46sDlXaYwtpaAdmp3kCxpHp9NcDtg/32luoxIygIo3gDQ1x5dT4pRYO8El
-	 0N5Lb/Z7K+UY5WbGLsDeiHUdqoaDmHeJffYQUCPZsVB/pYb+rAJz16hivsB4UrCk+O
-	 lnCqd38DXsd+rE7l0KhAWEcaPtvAeHzZW5xDLZT2gMoPVCZH0ZOM67imDLSpjdYc7N
-	 P5lxb0eQRIy0A==
+	s=k20201202; t=1707916947;
+	bh=VG0MktVwabnUwipPLIf3jQPx5AW1d8Ms9iB0R5HsZLM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=KhlP+mtw5Bf4V+dPyp3lg0cekg2L2ynWetLOiRWpvw9Abm+7ips+UHJ7N2BI6Sl71
+	 FdarhNIIPmOPBISl3ZDC0DFRfXj+xWD1UKSdsNj4522KYs4QZ+GT7Zp8O5E0UDbFDS
+	 qHxEWBTEqRlU78XLQkqvE0fD3p2zSZ+fhoTjodO4V8KLzL93rOvevt6CgwE3hpwA4Q
+	 Q5R89ZDItmQW/IL2L8cJwPrGn+xWPIIYTCxuq0R0JCDJ8tIHqzPbnFUW8RSHeZrrI6
+	 hmSB8tFbE7JvC8xjOOoKqdTSUbkdPvhT+85hYdY3tHBKqYgEDY+dofCHR4UKJ7dzp0
+	 uTzQMvb3K+uog==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: linux-trace-kernel@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
 	mhiramat@kernel.org
-Subject: [PATCH RFC 0/5] tracing/probes: Support function parameter access from return probe
-Date: Wed, 14 Feb 2024 22:22:14 +0900
-Message-Id: <170791693437.389532.6816883363982512874.stgit@devnote2>
+Subject: [PATCH RFC 1/5] tracing/probes: Fix to search structure fields correctly
+Date: Wed, 14 Feb 2024 22:22:23 +0900
+Message-Id: <170791694361.389532.10047514554799419688.stgit@devnote2>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <170791693437.389532.6816883363982512874.stgit@devnote2>
+References: <170791693437.389532.6816883363982512874.stgit@devnote2>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -44,57 +47,35 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Here is a series of patches to support accessing function entry data from
-function *return* probes (including kretprobe and fprobe-exit event).
+Fix to search a field from the structure which has anonymous union
+correctly.
+Since the reference `type` pointer was updated in the loop, the search
+loop suddenly aborted where it hits an anonymous union. Thus it can not
+find the field after the anonymous union. This avoids updating the
+cursor `type` pointer in the loop.
 
-This allows us to access the results of some functions, which returns the
-error code and its results are passed via function parameter, such as an
-structure-initialization function.
-
-For example, vfs_open() will link the file structure to the inode and update
-mode. Thus we can trace that changes.
-
- # echo 'f vfs_open mode=file->f_mode:x32 inode=file->f_inode:x64' >> dynamic_events
- # echo 'f vfs_open%return mode=file->f_mode:x32 inode=file->f_inode:x64' >> dynamic_events 
- # echo 1 > events/fprobes/enable 
- # cat trace
-              sh-131     [006] ...1.  1945.714346: vfs_open__entry: (vfs_open+0x4/0x40) mode=0x2 inode=0x0
-              sh-131     [006] ...1.  1945.714358: vfs_open__exit: (do_open+0x274/0x3d0 <- vfs_open) mode=0x4d801e inode=0xffff888008470168
-             cat-143     [007] ...1.  1945.717949: vfs_open__entry: (vfs_open+0x4/0x40) mode=0x1 inode=0x0
-             cat-143     [007] ...1.  1945.717956: vfs_open__exit: (do_open+0x274/0x3d0 <- vfs_open) mode=0x4a801d inode=0xffff888005f78d28
-             cat-143     [007] ...1.  1945.720616: vfs_open__entry: (vfs_open+0x4/0x40) mode=0x1 inode=0x0
-             cat-143     [007] ...1.  1945.728263: vfs_open__exit: (do_open+0x274/0x3d0 <- vfs_open) mode=0xa800d inode=0xffff888004ada8d8
-
-So as you can see those fields are initialized at exit.
-
-TODO:
- - update README file
- - add/update ftracetest
- - update documents
-
-Thank you,
-
+Fixes: 302db0f5b3d8 ("tracing/probes: Add a function to search a member of a struct/union")
+Cc: stable@vger.kernel.org
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
+ kernel/trace/trace_btf.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Masami Hiramatsu (Google) (5):
-      tracing/probes: Fix to search structure fields correctly
-      tracing/fprobe-event: cleanup: Fix a wrong comment in fprobe event
-      tracing/probes: Cleanup probe argument parser
-      tracing/probes: cleanup: Set trace_probe::nr_args at trace_probe_init
-      tracing/probes: Support $argN in return probe (kprobe and fprobe)
+diff --git a/kernel/trace/trace_btf.c b/kernel/trace/trace_btf.c
+index ca224d53bfdc..5bbdbcbbde3c 100644
+--- a/kernel/trace/trace_btf.c
++++ b/kernel/trace/trace_btf.c
+@@ -91,8 +91,8 @@ const struct btf_member *btf_find_struct_member(struct btf *btf,
+ 	for_each_member(i, type, member) {
+ 		if (!member->name_off) {
+ 			/* Anonymous union/struct: push it for later use */
+-			type = btf_type_skip_modifiers(btf, member->type, &tid);
+-			if (type && top < BTF_ANON_STACK_MAX) {
++			if (btf_type_skip_modifiers(btf, member->type, &tid) &&
++			    top < BTF_ANON_STACK_MAX) {
+ 				anon_stack[top].tid = tid;
+ 				anon_stack[top++].offset =
+ 					cur_offset + member->offset;
 
-
- kernel/trace/trace_btf.c        |    4 
- kernel/trace/trace_eprobe.c     |    8 -
- kernel/trace/trace_fprobe.c     |   59 ++++--
- kernel/trace/trace_kprobe.c     |   58 ++++-
- kernel/trace/trace_probe.c      |  417 ++++++++++++++++++++++++++++-----------
- kernel/trace/trace_probe.h      |   30 +++
- kernel/trace/trace_probe_tmpl.h |   10 -
- kernel/trace/trace_uprobe.c     |   14 +
- 8 files changed, 433 insertions(+), 167 deletions(-)
-
---
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
