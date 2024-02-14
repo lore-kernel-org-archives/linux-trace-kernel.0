@@ -1,98 +1,142 @@
-Received: from mail.damsy.net (mail.damsy.net [85.90.245.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4620A604AA;
-	Wed, 14 Feb 2024 16:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.90.245.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2DFD605BF
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Feb 2024 16:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707929694; cv=none; b=oiVJooyr2W8agYRXpySkB78O81qrisXbLuTrH8YErbqkav/P7JBqHPIEq3V27pOrW64AIm26L0ohUz0ygRI0DZFPBrnG8RfYQFPd7nUXfIwhfk4z36Wp3fEg+3td9TwXf3IrMCdjIBLZMr5aDkjyeYLfgN3D1nXHA9BdiuGZoug=
+	t=1707929934; cv=none; b=VZTOWM0Y5klL1IU3t7cqHnH5SNeKCgU0KsOefvLu45JnkTvldAbwU4EPxIryiZ0EReSFNWqfh8yI4wsWH/10uZZdQiwyPX+4TpGJBVBYKM+ceQmJWCFejnl5yi0Guz2d02yFAn7Mhn7YIqbKhIpKRwlTtyC5tRibyCH0eOQYlDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707929694; c=relaxed/simple;
-	bh=g/kxWZe49evQ9fXPrBwG290l6vZLeGrk5CcEjO7UbcM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J3iWboP2/dz4aCmE2LAtX9f+WBxpmxu6ULtSpNovn8k0EbBZc30P8NfhIUSIN1A7POJti1NHYipR3QMQFmMe8atvGQQobXBopzZlUHY4lqVhAr4EQsb+bhmJIQsQe/WeWEz9t/+yQX0hUEizYoqz/MjiCvNpTX9AegV6OUKIOqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=damsy.net; spf=pass smtp.mailfrom=damsy.net; dkim=pass (2048-bit key) header.d=damsy.net header.i=@damsy.net header.b=bom7zw32; arc=none smtp.client-ip=85.90.245.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=damsy.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=damsy.net
+	s=arc-20240116; t=1707929934; c=relaxed/simple;
+	bh=OSsaNG2FvzVU0LHsrYNC/eZp5qr5JVJ6bAlNSP1GGaI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=edj/MusEAzk7y2lV6rzIUvL8EHfTh5bRG5AUzOO6QxVLImD3m1jBCjYNkn/WfRX/JmdrkLh074FbX/x55iLig2eucFusK0Oxldd+eClWJ3WViBNQX0DtJhxt8bKviirpAzzyvhnVbHlGoykLECT1S5G4y9N0nF1/jpaypW+IFTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZF3d/G5z; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=damsy.net header.i=@damsy.net header.b="bom7zw32"
-Message-ID: <645c241d-21ae-4b03-82e0-84eac1355269@damsy.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=damsy.net; s=201803;
-	t=1707929689;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2nboMYgNDy9pIH3TJ4ZbKU0pYFKnkSMT1bkJGnsLyAY=;
-	b=bom7zw32pw8EoI/diDAPtBDqNqg2+pOmnom/tAJUIZQtXdqMGASvlqnKbRkkb+4uHVjMJw
-	PRr/eUK6Z2pHq5QDVv4IKWUMpH/SY0kzZpxVizw1eNnc7VAbimrcU9a9gYYBCFy6aAAyB9
-	JQZ7fnBX6zI7Bcwymv4EdUOsRI2ar6rpLpu2GiqDQu8aEo5y0P01idDCmYDDMkfDt+PHrG
-	eT+hV8GUX2Wv568vs7TJ7NHpmyjGXy4Ja+/8dRG9ryLHFvHx+vucwoGM5OE1eyjNobZGNf
-	9HRTFIhbdUAdNdFyqb9kS95IXv2PQVW0O95GfXmlPyW5QNDU7fmX1FT4A2mdRg==
-Date: Wed, 14 Feb 2024 17:54:48 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZF3d/G5z"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5639175bf70so5669a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Feb 2024 08:58:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1707929931; x=1708534731; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QyOK3EJeEyKJEt81jU19f6sSTlRmH4ZoITaYsVw9nEo=;
+        b=ZF3d/G5zDd+JCzwBb6Z0JSjev/gYAck3SRMrFgzDy7jip8jjj3ifVxsuS61A1IF1Ne
+         KrKN6PccBPXHoOtMNHLt+UaFzqAwHmgY085ezuWAddlXL20wMu59SwCVa6zygN3eUq7c
+         Su14HW9NP0bsm/CWe0hW8AM8biONOmKFOKR6Sawd+oa7CKf8oAn4gpPsWZqph7jrzZeh
+         7MHnxWGJ7mogYpXA+latifu9NVqnEriZxBckvy5LPr8ec+9ncAUh7TVHoztwb1DVyfKX
+         dc6mNQNge954Yl8/obotKSo4koZbU8dFmVXnp0VSbVwDOuUFmZ1PgjM6007KtVxyYh6Y
+         xQUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707929931; x=1708534731;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QyOK3EJeEyKJEt81jU19f6sSTlRmH4ZoITaYsVw9nEo=;
+        b=GzbcmUSw06x3gFtQ+bJuuru+nSpzDkitodvV8j4bPi1p/aNJyMim6YkFjIQMjK8GFN
+         u/s2OWeyr6Lhh4IZ3s2z9m78CZtIKhFryZgerBuiuZYiUrStiY7MzkLWir5LVgzEwqQi
+         psx9YvSdA32w5sBNATNgg3Fd4cDBQ+JCS5u52DHhCv3P7zJieCgsOy57WdVq7qSJuF34
+         nSADf2Hd/k+WGJVBfEVUiSlOEw2g1X5ibHSivT5Ocdl8qi8JLVkXqjfek7jmhlZ7MBHR
+         KC3IoM3ybAPcFFIwjMZIRapDvHacFINz31kv8jA5q2FfPzPV6Wk2A6OVU24sCiUpz7XA
+         N+aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWS1DFkxZzbJzcT+fY7N5McbFjQa1EB6cqF9hLB4dHB4N4IR1qKx6bVu8TU4pQ1bN6t+3Nq7xcETaq14gARQSen6l0ASYBmx/3YL1/XkuByD4MI
+X-Gm-Message-State: AOJu0YwXZB8kN/N0Ns0L7uCjvJZn4NSrjbIIr7ZBogbQV1EoBu3N0BTQ
+	6RGSOmWsXGC97ULBKBp8+Lh7ZwkV3//1ekAHHdl/yhPzVVjnXY1/CUTus31TLsEtLwasWn4Bf8Y
+	GccifIWzbOcNmF2nHn+aZvsHTFWKwpr+B9Rpd
+X-Google-Smtp-Source: AGHT+IE4tG1X1dYxzIYp2Bzh7QoWLOwjRxwWH/t/jCIoU3Yg+wA31sQ+QEU+t1UUq0hSu9m5cPhcEd5LSb+oOd0di18=
+X-Received: by 2002:a50:8d13:0:b0:560:1a1:eb8d with SMTP id
+ s19-20020a508d13000000b0056001a1eb8dmr205884eds.7.1707929930734; Wed, 14 Feb
+ 2024 08:58:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 1/6] tracing, dma-buf: add a trace_dma_fence_sync_to
- event
-Content-Language: fr
-To: Steven Rostedt <rostedt@goodmis.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
- Sumit Semwal <sumit.semwal@linaro.org>, Gustavo Padovan
- <gustavo@padovan.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Alex Deucher
- <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org
-References: <20240117184329.479554-1-pierre-eric.pelloux-prayer@amd.com>
- <20240213155112.156537-1-pierre-eric.pelloux-prayer@amd.com>
- <20240213155112.156537-2-pierre-eric.pelloux-prayer@amd.com>
- <137e8d79-bf19-4782-918e-0c09b029e3aa@amd.com>
- <20240214101041.2fbf9b87@gandalf.local.home>
-From: Pierre-Eric Pelloux-Prayer <pierre-eric@damsy.net>
-In-Reply-To: <20240214101041.2fbf9b87@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240202165315.2506384-1-leitao@debian.org> <CANn89iLWWDjp71R7zttfTcEvZEdmcA1qo47oXkAX5DuciYvOtQ@mail.gmail.com>
+ <20240213100457.6648a8e0@kernel.org> <ZczSEBFtq6E6APUJ@gmail.com>
+ <CANn89iJH5jpvBCw8csGux9U10HwM+ewnL1A7udBi6uwAX6VBYA@mail.gmail.com> <ZczvGJ90L7689F6J@gmail.com>
+In-Reply-To: <ZczvGJ90L7689F6J@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Wed, 14 Feb 2024 17:58:37 +0100
+Message-ID: <CANn89i+zF3k4OyhJsK3sg5zNsFzKAQ5G_ANYEaxOfc41B7S18w@mail.gmail.com>
+Subject: Re: [PATCH net-next v3] net: dqs: add NIC stall detector based on BQL
+To: Breno Leitao <leitao@debian.org>
+Cc: Jakub Kicinski <kuba@kernel.org>, davem@davemloft.net, pabeni@redhat.com, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	weiwan@google.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	horms@kernel.org, Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Johannes Berg <johannes.berg@intel.com>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Le 14/02/2024 à 16:10, Steven Rostedt a écrit :
-> On Wed, 14 Feb 2024 13:00:16 +0100
-> Christian König <christian.koenig@amd.com> wrote:
-> 
->>> +DEFINE_EVENT(dma_fence_from, dma_fence_sync_to,
->>
->> For a single event you should probably use TRACE_EVENT() instead of
->> declaring a class. A class is only used if you have multiple events with
->> the same parameters.
-> 
-> FYI, TRACE_EVENT() is actually defined as:
-> 
-> #define TRACE_EVENT(name, proto, args, tstruct, assign, print) \
-> 	DECLARE_EVENT_CLASS(name,			       \
-> 			     PARAMS(proto),		       \
-> 			     PARAMS(args),		       \
-> 			     PARAMS(tstruct),		       \
-> 			     PARAMS(assign),		       \
-> 			     PARAMS(print));		       \
-> 	DEFINE_EVENT(name, name, PARAMS(proto), PARAMS(args));
-> 
-> So basically, you could really just declare one TRACE_EVENT() and add
-> DEFINE_EVENT()s on top of it ;)
-> 
-> I never recommended that because I thought it would be confusing.
+On Wed, Feb 14, 2024 at 5:49=E2=80=AFPM Breno Leitao <leitao@debian.org> wr=
+ote:
+>
+> On Wed, Feb 14, 2024 at 04:41:36PM +0100, Eric Dumazet wrote:
+> > On Wed, Feb 14, 2024 at 3:45=E2=80=AFPM Breno Leitao <leitao@debian.org=
+> wrote:
+> > >
+> > > On Tue, Feb 13, 2024 at 10:04:57AM -0800, Jakub Kicinski wrote:
+> > > > On Tue, 13 Feb 2024 14:57:49 +0100 Eric Dumazet wrote:
+> > > > > Please note that adding other sysfs entries is expensive for work=
+loads
+> > > > > creating/deleting netdev and netns often.
+> > > > >
+> > > > > I _think_ we should find a way for not creating
+> > > > > /sys/class/net/<interface>/queues/tx-{Q}/byte_queue_limits  direc=
+tory
+> > > > > and files
+> > > > > for non BQL enabled devices (like loopback !)
+> > > >
+> > > > We should try, see if anyone screams. We could use IFF_NO_QUEUE, an=
+d
+> > > > NETIF_F_LLTX as a proxy for "device doesn't have a real queue so BQ=
+L
+> > > > would be pointless"? Obviously better to annotate the drivers which
+> > > > do have BQL support, but there's >50 of them on a quick count..
+> > >
+> > > Let me make sure I understand the suggestion above. We want to disabl=
+e
+> > > BQL completely for devices that has dev->features & NETIF_F_LLTX or
+> > > dev->priv_flags & IFF_NO_QUEUE, right?
+> > >
+> > > Maybe we can add a ->enabled field in struct dql, and set it accordin=
+g
+> > > to the features above. Then we can created the sysfs and process the =
+dql
+> > > operations based on that field. This should avoid some unnecessary ca=
+lls
+> > > also, if we are not display sysfs.
+> > >
+> > > Here is a very simple PoC to represent what I had in mind. Am I in th=
+e
+> > > right direction?
+> >
+> > No, this was really about sysfs entries (aka dql_group)
+> >
+> > Partial patch would be:
+>
+> That is simpler than what I imagined. Thanks!
+>
 
+>
+> for netdev_uses_bql(), would it be similar to what I proposed in the
+> previous message? Let me copy it here.
+>
+>         static bool netdev_uses_bql(struct net_device *dev)
+>         {
+>                if (dev->features & NETIF_F_LLTX ||
+>                    dev->priv_flags & IFF_NO_QUEUE)
+>                        return false;
+>
+>                return true;
+>         }
 
-Thanks Steve and Christian for your feedback.
-
-I'm integrating your suggestions in my branch and will re-send the series
-after more testing.
-
-
-Pierre-Eric
-
-
-> 
-> -- Steve
+I think this should be fine, yes.
