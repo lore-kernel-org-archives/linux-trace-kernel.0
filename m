@@ -1,72 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9702552F6D;
-	Wed, 14 Feb 2024 12:51:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F4654670;
+	Wed, 14 Feb 2024 13:22:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707915060; cv=none; b=JBe/3R4IZ97wG1dYfRs4idAYsAk2K1KhGt9EMWJ5ngJ0mYbUYWs33+2+lnLXDGBulMHt/fNNov518buOmIReebmnbHud4z4YWTcCdoJp/ObF9xZikPj16KpgAx1K/RCd73h0tBYo4O2RfRYtx+5uQujwr7g0PPRllpHMP9/v/1U=
+	t=1707916938; cv=none; b=AwrpfOA+BZv/ArCWE3qNyIFcDbv0nFyIJRBFnYU6SRJ5Ce6s8flvAdC4TmQm7FW3tBy29wx4oBbnfg8GUCgM6ZDNyC7Uw++o6j6XO2ZkKWRBkshu9TBklP/mAAovKO3ymDPsle/fOh+M7byjs/VDPsjYysQvdz9dnWs3QT0xiJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707915060; c=relaxed/simple;
-	bh=RWvrLf1KdKNmNFeac58ILq9M4ZuHDUel2ED6opH/yF0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TLj5G5r4NHifJ6cYqx4Gmjv+F0vfRxVz51mFrZ2kWM0NOvvgI0s+/MrDybch3sP8FZrtnRJvayTFNVCHe8Lz9AGV+nfUf/HrjGbafnIbXeOippc9q87DzXsIcgj5Hm41V9fyzvsf3w/MVljjeARmKS0bTXSfhgnOdPWSnrpGXh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GbHHB5YM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1707916938; c=relaxed/simple;
+	bh=bBRoDlO2YKY1ltZI6iH4y3v5GP17SnYkawVDUuqF5FA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=bzL3w++1NrRKjC0m3w9HjT5PYsEDQVh1XML4ACuww11aCxgmpvhjAJdDX/3bEafeJywVCBZcTe95qBuH3AO/xAcbZ2I2/U2Wq6Z49Ca39llDUG1RVDJqMe5aHdS1mKZEdzsgOxnwFUZxKOCASB0uTN9AQHYltU1qKSgjS+9jgnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bIP2z1ZO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GbHHB5YM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01DFDC433F1;
-	Wed, 14 Feb 2024 12:50:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bIP2z1ZO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E154C433C7;
+	Wed, 14 Feb 2024 13:22:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707915060;
-	bh=RWvrLf1KdKNmNFeac58ILq9M4ZuHDUel2ED6opH/yF0=;
+	s=k20201202; t=1707916938;
+	bh=bBRoDlO2YKY1ltZI6iH4y3v5GP17SnYkawVDUuqF5FA=;
 	h=From:To:Cc:Subject:Date:From;
-	b=GbHHB5YMLk9ThdE3OtsWaRdn22I5l5bLwWAedWKevCHc5W8yZd6L6/SWY4GkFQE++
-	 U+O2SIC/j63NEbYi5s1B03pgX6wanqWt6CHuTCP1RF47hGs0zDb01R7FeB/ej1r1Hr
-	 OTMs+FfCPJZl0MmyuiKEflyaFLgGxWipLa1S46wBFm7n9an5HleDce8BT1We13WJdB
-	 VKRjNyXPHfmqwZ2Ndv+TGv1BHVfug1ukdClnKVkrdZZ8zUeSdAs+JBNazv9CztW1rL
-	 LOQgPbZiKBLX1oB0F+bcNEs4roCyQp0sPYIiRGNvQkWfJqd2TpdwELVEhM3r7S3cm9
-	 Ulm2Os9SwpbVQ==
-From: Kalle Valo <kvalo@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Jeff Johnson
- <quic_jjohnson@quicinc.com>
-Subject: [regression] tracing: kmemleak warning in allocate_cmdlines_buffer()
-Date: Wed, 14 Feb 2024 14:50:56 +0200
-Message-ID: <87r0hfnr9r.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	b=bIP2z1ZOkTF1YgpwaFaEpnlpasFryQboSHsOUKZGk+dpmRsNq/FL6pBiOb66gZG8W
+	 9YlM2MnLYEc9jkznARRMQ+2qH9r9320YErVQbCDMrAFuMSNNNKu+AlMKdskS+UysSq
+	 4R+Qz3YH46sDlXaYwtpaAdmp3kCxpHp9NcDtg/32luoxIygIo3gDQ1x5dT4pRYO8El
+	 0N5Lb/Z7K+UY5WbGLsDeiHUdqoaDmHeJffYQUCPZsVB/pYb+rAJz16hivsB4UrCk+O
+	 lnCqd38DXsd+rE7l0KhAWEcaPtvAeHzZW5xDLZT2gMoPVCZH0ZOM67imDLSpjdYc7N
+	 P5lxb0eQRIy0A==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: linux-trace-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	mhiramat@kernel.org
+Subject: [PATCH RFC 0/5] tracing/probes: Support function parameter access from return probe
+Date: Wed, 14 Feb 2024 22:22:14 +0900
+Message-Id: <170791693437.389532.6816883363982512874.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Steven,
+Hi,
 
-I upgraded our ath11k test setup to v6.8-rc4 and noticed a new kmemleak
-warning in the log:
+Here is a series of patches to support accessing function entry data from
+function *return* probes (including kretprobe and fprobe-exit event).
 
-unreferenced object 0xffff8881010c8000 (size 32760):
-  comm "swapper", pid 0, jiffies 4294667296
-  hex dump (first 32 bytes):
-    ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-    ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
-  backtrace (crc ae6ec1b9):
-    [<ffffffff86722405>] kmemleak_alloc+0x45/0x80
-    [<ffffffff8414028d>] __kmalloc_large_node+0x10d/0x190
-    [<ffffffff84146ab1>] __kmalloc+0x3b1/0x4c0
-    [<ffffffff83ed7103>] allocate_cmdlines_buffer+0x113/0x230
-    [<ffffffff88649c34>] tracer_alloc_buffers.isra.0+0x124/0x460
-    [<ffffffff8864a174>] early_trace_init+0x14/0xa0
-    [<ffffffff885dd5ae>] start_kernel+0x12e/0x3c0
-    [<ffffffff885f5758>] x86_64_start_reservations+0x18/0x30
-    [<ffffffff885f582b>] x86_64_start_kernel+0x7b/0x80
-    [<ffffffff83a001c3>] secondary_startup_64_no_verify+0x15e/0x16b
+This allows us to access the results of some functions, which returns the
+error code and its results are passed via function parameter, such as an
+structure-initialization function.
 
-I don't see this warning in v6.8-rc3 and also reverting commit
-44dc5c41b5b1 ("tracing: Fix wasted memory in saved_cmdlines logic")
-makes the warning go away. Let me know if you need more info or help
-with testing, I see the warning every time so it's easy to reproduce.
+For example, vfs_open() will link the file structure to the inode and update
+mode. Thus we can trace that changes.
 
-Kalle
+ # echo 'f vfs_open mode=file->f_mode:x32 inode=file->f_inode:x64' >> dynamic_events
+ # echo 'f vfs_open%return mode=file->f_mode:x32 inode=file->f_inode:x64' >> dynamic_events 
+ # echo 1 > events/fprobes/enable 
+ # cat trace
+              sh-131     [006] ...1.  1945.714346: vfs_open__entry: (vfs_open+0x4/0x40) mode=0x2 inode=0x0
+              sh-131     [006] ...1.  1945.714358: vfs_open__exit: (do_open+0x274/0x3d0 <- vfs_open) mode=0x4d801e inode=0xffff888008470168
+             cat-143     [007] ...1.  1945.717949: vfs_open__entry: (vfs_open+0x4/0x40) mode=0x1 inode=0x0
+             cat-143     [007] ...1.  1945.717956: vfs_open__exit: (do_open+0x274/0x3d0 <- vfs_open) mode=0x4a801d inode=0xffff888005f78d28
+             cat-143     [007] ...1.  1945.720616: vfs_open__entry: (vfs_open+0x4/0x40) mode=0x1 inode=0x0
+             cat-143     [007] ...1.  1945.728263: vfs_open__exit: (do_open+0x274/0x3d0 <- vfs_open) mode=0xa800d inode=0xffff888004ada8d8
+
+So as you can see those fields are initialized at exit.
+
+TODO:
+ - update README file
+ - add/update ftracetest
+ - update documents
+
+Thank you,
+
+---
+
+Masami Hiramatsu (Google) (5):
+      tracing/probes: Fix to search structure fields correctly
+      tracing/fprobe-event: cleanup: Fix a wrong comment in fprobe event
+      tracing/probes: Cleanup probe argument parser
+      tracing/probes: cleanup: Set trace_probe::nr_args at trace_probe_init
+      tracing/probes: Support $argN in return probe (kprobe and fprobe)
+
+
+ kernel/trace/trace_btf.c        |    4 
+ kernel/trace/trace_eprobe.c     |    8 -
+ kernel/trace/trace_fprobe.c     |   59 ++++--
+ kernel/trace/trace_kprobe.c     |   58 ++++-
+ kernel/trace/trace_probe.c      |  417 ++++++++++++++++++++++++++++-----------
+ kernel/trace/trace_probe.h      |   30 +++
+ kernel/trace/trace_probe_tmpl.h |   10 -
+ kernel/trace/trace_uprobe.c     |   14 +
+ 8 files changed, 433 insertions(+), 167 deletions(-)
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
