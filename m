@@ -1,75 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6F014198B;
-	Wed, 14 Feb 2024 23:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1155114013;
+	Thu, 15 Feb 2024 09:25:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707954757; cv=none; b=gBFdz7X34TvYIn984oNkKQgdchNQTviHKKKZ9eRnPvEtmuQwXdgbAPvUIv8f7lJwYYpzXTyyAe1AOvg5Ttk2RY5lNgGDL/PjQ/GaBjG6e7nDifUj+x4kstPs3GinY5LXYyR0AMC8Pwrzviz6FLSUGObQguhoIPXzK0M88AnO2pY=
+	t=1707989134; cv=none; b=KpKYZaBxqmjOju2sRZYyl8dWcjQ5cb8VO39Nc65rz7/65QPs20/NOHiO53lfQfKemtUyxtZo5ILyANZ/W+EDjQPBRNRsJawgqHijDlNV2Uq7mHzQOq3mPTj3M3DjLd7RvZldv7/sjZ8dIPwTBqwaUyInn1ALUw40rpmBbPob+kU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707954757; c=relaxed/simple;
-	bh=se9iJglQFcY5m50dOQjnyAPWzoyiPZ756eq3L6hkD1U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KnNSw84g8CFHA0cdAWeUmcD33fzAWtu2LPtypmuceXnX8ZYWVWK0FgklrybneGbrqbUfsqU+R2lMNmgEwDgB/EtqjILDDB7hGJfsf2xFycEiFMeOWZAUjt69uYTvcFYq6nSD2cGhUK40AeObHNq8vPXSjyr50MfObtxgv/lkGEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F3A0C433C7;
-	Wed, 14 Feb 2024 23:52:35 +0000 (UTC)
-Date: Wed, 14 Feb 2024 18:54:07 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
- <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
- <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
- bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, Alexei
- Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
- Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
- <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
- Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v7 19/36] function_graph: Implement
- fgraph_reserve_data() and fgraph_retrieve_data()
-Message-ID: <20240214185407.767243b4@gandalf.local.home>
-In-Reply-To: <20240215084552.b72d6d22ce1b93bb8e04b70a@kernel.org>
-References: <170723204881.502590.11906735097521170661.stgit@devnote2>
-	<170723226123.502590.4924916690354403889.stgit@devnote2>
-	<20240214135958.23ed55e1@gandalf.local.home>
-	<20240215084552.b72d6d22ce1b93bb8e04b70a@kernel.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1707989134; c=relaxed/simple;
+	bh=YQURBqxlBmlrENS0OZmqjmiVnc+NlYI/vm/ZgXwKVRk=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ng4o5dUrIUYz2g7CnorV3B+AOu3MU6p2UWRnubBRvYCYBVBzr8dlqwgiDt140oPK4fBMknIBGkFlYrSpRPcGN4U8nIkxD54iI2qyX8R+99tqojTsS2rpUE5kz4ZIhz82jV9JOkQ5d2TtYmpoKuwrvdtrlkW+grndJvSLIhZAvu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tb8hn4wRHz6839B;
+	Thu, 15 Feb 2024 17:22:01 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 25CE91400CD;
+	Thu, 15 Feb 2024 17:25:29 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 15 Feb
+ 2024 09:25:28 +0000
+Date: Thu, 15 Feb 2024 09:25:27 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+CC: Ira Weiny <ira.weiny@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>, "Smita Koralahalli"
+	<Smita.KoralahalliChannabasappa@amd.com>, <linux-acpi@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Dan Carpenter
+	<dan.carpenter@linaro.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>,
+	<linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] acpi/ghes: Prevent sleeping with spinlock held
+Message-ID: <20240215092527.000055b9@Huawei.com>
+In-Reply-To: <20240214173318.2be1f3c9@gandalf.local.home>
+References: <20240206-cxl-cper-smatch-v2-1-84ed07563c31@intel.com>
+	<20240214121153.00005c97@huawei.com>
+	<20240214102310.7ba53f3a@gandalf.local.home>
+	<20240214181200.0000500b@Huawei.com>
+	<65cd3c671cf86_d552e294dd@iweiny-mobl.notmuch>
+	<20240214173318.2be1f3c9@gandalf.local.home>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, 15 Feb 2024 08:45:52 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Wed, 14 Feb 2024 17:33:18 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> > Hmm, the above is a fast path. I wonder if we should add a patch to make that into:
+> On Wed, 14 Feb 2024 14:19:19 -0800
+> Ira Weiny <ira.weiny@intel.com> wrote:
+> 
+> > > > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+> > > >     
+> > > > > So I'm thinking this is a won't fix - wait for the printk rework to land and
+> > > > > assume this will be resolved as well?      
+> > > > 
+> > > > That pretty much sums up what I was about to say ;-)
+> > > > 
+> > > > tp_printk is more of a hack and not to be used sparingly. With the right
+> > > > trace events it can hang the machine.
+> > > > 
+> > > > So, you can use your internal patch locally, but I would recommend waiting
+> > > > for the new printk changes to land.    
 > > 
-> > 	if (unlikely(size_bytes & (sizeof(long) - 1)))
-> > 		data_size = DIV_ROUND_UP(size_bytes, sizeof(long));
-> > 	else
-> > 		data_size = size_bytes >> (sizeof(long) == 4 ? 2 : 3);
-> > 
-> > to keep from doing the division.  
+> > Steven, Do you think that will land in 6.9?
+> >   
+> > > >
+> > > > I'm really hoping that will be soon!
+> > > >   
 > 
-> OK, I thought DIV_ROUND_UP was not much cost. Since sizeof(long) is
-> fixed 4 or 8, so 
+> I may be like Jon Corbet predicting RT will land in mainline if I do.
 > 
-> data_size = (size_bytes + sizeof(long) - 1) >> BITS_PER_LONG;
+> -- Steve
 > 
-> will this work?
 
-No, because BITS_PER_LONG is 32 or 64 ;-)
 
-But this should;
+Agreed. Don't wait on printk fixes landing. (Well unless you are sure
+it's the year of the Linux desktop.) Reverting is fine for 6.8
+if you and Dan feel it's unwise to take this forwards (all the distros
+will backport it anyway and 6.8 isn't an LTS so no great rush)
+so fine to just queue it up again for 6.9 with this fix.
 
-	data_size = (size_bytes + sizeof(long) - 1) >> (sizeof(long) == 4 ? 2 : 3);
+As Steve said, tp_printk is a hack (a very useful one) and
+hopefully no one runs it in production.
 
-As sizeof(long) is a constant, that conditional expression will be hard
-coded into either 2 or 3 by the compiler.
-
--- Steve
+Jonathan
