@@ -1,99 +1,92 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1155114013;
-	Thu, 15 Feb 2024 09:25:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE2B130AEC;
+	Thu, 15 Feb 2024 13:37:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707989134; cv=none; b=KpKYZaBxqmjOju2sRZYyl8dWcjQ5cb8VO39Nc65rz7/65QPs20/NOHiO53lfQfKemtUyxtZo5ILyANZ/W+EDjQPBRNRsJawgqHijDlNV2Uq7mHzQOq3mPTj3M3DjLd7RvZldv7/sjZ8dIPwTBqwaUyInn1ALUw40rpmBbPob+kU=
+	t=1708004256; cv=none; b=hqoVYiwbouHRB99X0B/BUvL2/acyPyspd6OjURFYhDF/ZEvIfEscx3xPxzvfEALqmEeDtmedE9jNpIw950rnxNBEgYyB+bm9Uahav7skKe9BYuhiYR4rh1keluzNQwbqm50qhl3/Gl4XGpe2L4RgJhNM1Dpn3m93vY8AyvzULWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707989134; c=relaxed/simple;
-	bh=YQURBqxlBmlrENS0OZmqjmiVnc+NlYI/vm/ZgXwKVRk=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ng4o5dUrIUYz2g7CnorV3B+AOu3MU6p2UWRnubBRvYCYBVBzr8dlqwgiDt140oPK4fBMknIBGkFlYrSpRPcGN4U8nIkxD54iI2qyX8R+99tqojTsS2rpUE5kz4ZIhz82jV9JOkQ5d2TtYmpoKuwrvdtrlkW+grndJvSLIhZAvu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tb8hn4wRHz6839B;
-	Thu, 15 Feb 2024 17:22:01 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 25CE91400CD;
-	Thu, 15 Feb 2024 17:25:29 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 15 Feb
- 2024 09:25:28 +0000
-Date: Thu, 15 Feb 2024 09:25:27 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-CC: Ira Weiny <ira.weiny@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>, "Smita Koralahalli"
-	<Smita.KoralahalliChannabasappa@amd.com>, <linux-acpi@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Dan Carpenter
-	<dan.carpenter@linaro.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>,
-	<linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] acpi/ghes: Prevent sleeping with spinlock held
-Message-ID: <20240215092527.000055b9@Huawei.com>
-In-Reply-To: <20240214173318.2be1f3c9@gandalf.local.home>
-References: <20240206-cxl-cper-smatch-v2-1-84ed07563c31@intel.com>
-	<20240214121153.00005c97@huawei.com>
-	<20240214102310.7ba53f3a@gandalf.local.home>
-	<20240214181200.0000500b@Huawei.com>
-	<65cd3c671cf86_d552e294dd@iweiny-mobl.notmuch>
-	<20240214173318.2be1f3c9@gandalf.local.home>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1708004256; c=relaxed/simple;
+	bh=dd8VzwiyY6PWQnftEh/QChhKebOTlXJhx+oLuoxNJuo=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=RbM3/TnYfTEItdWtvNJUQJs8LZyGCntaeRw7aZwqPWjX0HtJY0JMB7AYvWxFleJLSU+HihCBVhxVag/RM0H8dCOSCPbkHjYc+5MR3A5ftGwi80gzJIPaKMU9kReRB28qsC3Ai4plEEkDAoV0y5OJTHRqMEjxYLIUzQC3TS2Yuoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K5I3h011; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K5I3h011"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24777C433F1;
+	Thu, 15 Feb 2024 13:37:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708004255;
+	bh=dd8VzwiyY6PWQnftEh/QChhKebOTlXJhx+oLuoxNJuo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=K5I3h0116noauedXgGtpUofyQXu2ASXvS92ypx1O0oKqZ1pg2IBFLNBXXVv6gu9DK
+	 +xtk/Ly2f7EZDzgClXM8jKIzJ7rc8fghGjGB55R3OALwY0FVSCOdI/r4NDKuu4frKv
+	 IbsiX3owlZPX/zRosVS7D1iU5kjo0KlQwwB4jCZve7tq4bNvRnCx8InFwjzNe57k8w
+	 qZlUIK80SWH3NF4cU9cdFh9/sp+6Xae1EI6Yi5JGuvqS0L9YQTEuYZaUGbeGdkmuLZ
+	 fla1WUWA/KMbu9Mt4O/CmBfCqyXSwtsE0Ra2jQd4OmMfCgCHf9MJRLyLyxYyuTZgGY
+	 7k7l1TqffD9WQ==
+Date: Thu, 15 Feb 2024 22:37:31 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] synthetic tracing: Fix trace_string() return value
+Message-Id: <20240215223731.39f2ae9ab8657d5fe739bab5@kernel.org>
+In-Reply-To: <20240214220555.711598-1-thorsten.blum@toblux.com>
+References: <20240214220555.711598-1-thorsten.blum@toblux.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, 14 Feb 2024 17:33:18 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, 14 Feb 2024 23:05:56 +0100
+Thorsten Blum <thorsten.blum@toblux.com> wrote:
 
-> On Wed, 14 Feb 2024 14:19:19 -0800
-> Ira Weiny <ira.weiny@intel.com> wrote:
-> 
-> > > > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-> > > >     
-> > > > > So I'm thinking this is a won't fix - wait for the printk rework to land and
-> > > > > assume this will be resolved as well?      
-> > > > 
-> > > > That pretty much sums up what I was about to say ;-)
-> > > > 
-> > > > tp_printk is more of a hack and not to be used sparingly. With the right
-> > > > trace events it can hang the machine.
-> > > > 
-> > > > So, you can use your internal patch locally, but I would recommend waiting
-> > > > for the new printk changes to land.    
-> > 
-> > Steven, Do you think that will land in 6.9?
-> >   
-> > > >
-> > > > I'm really hoping that will be soon!
-> > > >   
-> 
-> I may be like Jon Corbet predicting RT will land in mainline if I do.
-> 
-> -- Steve
+> Fix trace_string() by assigning the string length to the return variable
+> which got lost in commit ddeea494a16f ("tracing/synthetic: Use union
+> instead of casts") and caused trace_string() to always return 0.
 > 
 
+Good catch!
 
-Agreed. Don't wait on printk fixes landing. (Well unless you are sure
-it's the year of the Linux desktop.) Reverting is fine for 6.8
-if you and Dan feel it's unwise to take this forwards (all the distros
-will backport it anyway and 6.8 isn't an LTS so no great rush)
-so fine to just queue it up again for 6.9 with this fix.
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-As Steve said, tp_printk is a hack (a very useful one) and
-hopefully no one runs it in production.
+Fixes: ddeea494a16f ("tracing/synthetic: Use union instead of casts")
+Cc: stable@vger.kernel.org
 
-Jonathan
+Thanks!
+
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+> ---
+>  kernel/trace/trace_events_synth.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+> index e7af286af4f1..c82b401a294d 100644
+> --- a/kernel/trace/trace_events_synth.c
+> +++ b/kernel/trace/trace_events_synth.c
+> @@ -441,8 +441,9 @@ static unsigned int trace_string(struct synth_trace_event *entry,
+>  	if (is_dynamic) {
+>  		union trace_synth_field *data = &entry->fields[*n_u64];
+>  
+> +		len = fetch_store_strlen((unsigned long)str_val);
+>  		data->as_dynamic.offset = struct_size(entry, fields, event->n_u64) + data_size;
+> -		data->as_dynamic.len = fetch_store_strlen((unsigned long)str_val);
+> +		data->as_dynamic.len = len;
+>  
+>  		ret = fetch_store_string((unsigned long)str_val, &entry->fields[*n_u64], entry);
+>  
+> -- 
+> 2.39.2
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
