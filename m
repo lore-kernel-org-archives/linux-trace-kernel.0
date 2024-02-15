@@ -1,92 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE2B130AEC;
-	Thu, 15 Feb 2024 13:37:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32D220B3D;
+	Thu, 15 Feb 2024 14:56:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708004256; cv=none; b=hqoVYiwbouHRB99X0B/BUvL2/acyPyspd6OjURFYhDF/ZEvIfEscx3xPxzvfEALqmEeDtmedE9jNpIw950rnxNBEgYyB+bm9Uahav7skKe9BYuhiYR4rh1keluzNQwbqm50qhl3/Gl4XGpe2L4RgJhNM1Dpn3m93vY8AyvzULWk=
+	t=1708008967; cv=none; b=e5jSyOTwRfoTCnI/vLEa+MR/2jw3AX+VN+RA12/mOA6IqNgQ17HnXdcUPDIQ+ZDQi6hEcqCZnIM2WVyWJgMmKnKZLp8BbJJ/+CgnKwjqmhznZTGzbePKXx0BHFWzfVmQp0tuH9CvCr5tr1mK0o6T51E+6J/YvFjkmzHWpWfl9I8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708004256; c=relaxed/simple;
-	bh=dd8VzwiyY6PWQnftEh/QChhKebOTlXJhx+oLuoxNJuo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=RbM3/TnYfTEItdWtvNJUQJs8LZyGCntaeRw7aZwqPWjX0HtJY0JMB7AYvWxFleJLSU+HihCBVhxVag/RM0H8dCOSCPbkHjYc+5MR3A5ftGwi80gzJIPaKMU9kReRB28qsC3Ai4plEEkDAoV0y5OJTHRqMEjxYLIUzQC3TS2Yuoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K5I3h011; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K5I3h011"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24777C433F1;
-	Thu, 15 Feb 2024 13:37:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708004255;
-	bh=dd8VzwiyY6PWQnftEh/QChhKebOTlXJhx+oLuoxNJuo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=K5I3h0116noauedXgGtpUofyQXu2ASXvS92ypx1O0oKqZ1pg2IBFLNBXXVv6gu9DK
-	 +xtk/Ly2f7EZDzgClXM8jKIzJ7rc8fghGjGB55R3OALwY0FVSCOdI/r4NDKuu4frKv
-	 IbsiX3owlZPX/zRosVS7D1iU5kjo0KlQwwB4jCZve7tq4bNvRnCx8InFwjzNe57k8w
-	 qZlUIK80SWH3NF4cU9cdFh9/sp+6Xae1EI6Yi5JGuvqS0L9YQTEuYZaUGbeGdkmuLZ
-	 fla1WUWA/KMbu9Mt4O/CmBfCqyXSwtsE0Ra2jQd4OmMfCgCHf9MJRLyLyxYyuTZgGY
-	 7k7l1TqffD9WQ==
-Date: Thu, 15 Feb 2024 22:37:31 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Thorsten Blum <thorsten.blum@toblux.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] synthetic tracing: Fix trace_string() return value
-Message-Id: <20240215223731.39f2ae9ab8657d5fe739bab5@kernel.org>
-In-Reply-To: <20240214220555.711598-1-thorsten.blum@toblux.com>
-References: <20240214220555.711598-1-thorsten.blum@toblux.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708008967; c=relaxed/simple;
+	bh=nH02mRbEf+x2rpYZvYmd3xMiMm7jKKeDp+ZWKf4JDmg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JvAjG50/LZFPKq5AAPMa6FGRw6i2ZRjarBJ3zHWoN161HMdlhOM9Q/hGP62q9x7cK1eW2/3LHtvU8A3FuijNhUvaBpcabF67fZmKpkXlQ61lGxylUtSuPmEQpxgZtqNJxOW5kMRvyIWCY2K4VLaZdEVda/o4cIzQ1d+Evj2OxqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 853DAC433F1;
+	Thu, 15 Feb 2024 14:56:05 +0000 (UTC)
+Date: Thu, 15 Feb 2024 09:57:39 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
+ <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, Alexei
+ Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
+ <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v7 20/36] function_graph: Improve push operation for
+ several interrupts
+Message-ID: <20240215095739.41a2fac7@gandalf.local.home>
+In-Reply-To: <170723227198.502590.10431025573751489041.stgit@devnote2>
+References: <170723204881.502590.11906735097521170661.stgit@devnote2>
+	<170723227198.502590.10431025573751489041.stgit@devnote2>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 14 Feb 2024 23:05:56 +0100
-Thorsten Blum <thorsten.blum@toblux.com> wrote:
+On Wed,  7 Feb 2024 00:11:12 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> Fix trace_string() by assigning the string length to the return variable
-> which got lost in commit ddeea494a16f ("tracing/synthetic: Use union
-> instead of casts") and caused trace_string() to always return 0.
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-
-Good catch!
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Fixes: ddeea494a16f ("tracing/synthetic: Use union instead of casts")
-Cc: stable@vger.kernel.org
-
-Thanks!
-
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
-> ---
->  kernel/trace/trace_events_synth.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> Improve push and data reserve operation on the shadow stack for
+> several sequencial interrupts.
 > 
-> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-> index e7af286af4f1..c82b401a294d 100644
-> --- a/kernel/trace/trace_events_synth.c
-> +++ b/kernel/trace/trace_events_synth.c
-> @@ -441,8 +441,9 @@ static unsigned int trace_string(struct synth_trace_event *entry,
->  	if (is_dynamic) {
->  		union trace_synth_field *data = &entry->fields[*n_u64];
->  
-> +		len = fetch_store_strlen((unsigned long)str_val);
->  		data->as_dynamic.offset = struct_size(entry, fields, event->n_u64) + data_size;
-> -		data->as_dynamic.len = fetch_store_strlen((unsigned long)str_val);
-> +		data->as_dynamic.len = len;
->  
->  		ret = fetch_store_string((unsigned long)str_val, &entry->fields[*n_u64], entry);
->  
-> -- 
-> 2.39.2
+> To push a ret_stack or data entry on the shadow stack, we need to
+> prepare an index (offset) entry before updating the stack pointer
+> (curr_ret_stack) so that unwinder from interrupts can find the
+> next return address from the shadow stack. Currently we do write index,
+> update the curr_ret_stack, and rewrite it again. But that is not enough
+> for the case if two interrupts happens and the first one breaks it.
+> For example,
 > 
+>  1. write reserved index entry at ret_stack[new_index - 1] and ret addr.
+>  2. interrupt comes.
+>     2.1. push new index and ret addr on ret_stack.
+>     2.2. pop it. (corrupt entries on new_index - 1)
+>  3. return from interrupt.
+>  4. update curr_ret_stack = new_index
+>  5. interrupt comes again.
+>     5.1. unwind <------ may not work.
+
+I'm curious if you saw this happen?
+
+That is, did you trigger this or only noticed it by inspection?
+
+This code is already quite complex, I would like to simplify it more before
+we try to fix rare race conditions that only affect the unwinder.
+
+Let's hold off on this change.
+
+-- Steve
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> To avoid this issue, this introduces a new rsrv_ret_stack stack
+> reservation pointer and a new push code (slow path) to commit
+> previous reserved code forcibly.
+> 
+>  0. update rsrv_ret_stack = new_index.
+>  1. write reserved index entry at ret_stack[new_index - 1] and ret addr.
+>  2. interrupt comes.
+>     2.0. if rsrv_ret_stack != curr_ret_stack, add reserved index
+>         entry on ret_stack[rsrv_ret_stack - 1] to point the previous
+> 	ret_stack pointed by ret_stack[curr_ret_stack - 1]. and
+> 	update curr_ret_stack = rsrv_ret_stack.
+>     2.1. push new index and ret addr on ret_stack.
+>     2.2. pop it. (corrupt entries on new_index - 1)
+>  3. return from interrupt.
+>  4. update curr_ret_stack = new_index
+>  5. interrupt comes again.
+>     5.1. unwind works, because curr_ret_stack points the previously
+>         saved ret_stack.
+>     5.2. this can do push/pop operations too.
+> 6. return from interrupt.
+> 7. rewrite reserved index entry at ret_stack[new_index] again.
+> 
+> This maybe a bit heavier but safer.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
