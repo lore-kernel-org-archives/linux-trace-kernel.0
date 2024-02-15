@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F947131E3D;
-	Thu, 15 Feb 2024 15:01:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883B1132481;
+	Thu, 15 Feb 2024 15:36:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708009283; cv=none; b=qJten8rPfNtTil7J6xT6AwRjUL3NyiSXj8q1/8Iz2wtG/HoFiKUTslrnjcebcxKZLSfqtjaG5NH2tlzFH+RcvJuCBKDBVhGZYTY6zoj9JOt8r/spuz2FKABA/oGeshO//ikcCgmROkPOxjLCeglGYfgJ4A8bYE5kagpJ7tzaBes=
+	t=1708011416; cv=none; b=gWM1VSsX5fnW+LUHuyPEI4UClnkR+9fPtbNWH3uBlYaMlgoAaVDH/clKxgdy5KhT73ak5Cr0b7qiJ/uEWxGLr7ADlpKvKwyDYY7bndwvYjroQqhdtlMZnsIyjchXYVP5PbsrkmtxO2GOs6dy2xjdewo5otnZ5103G2mBV7EgyOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708009283; c=relaxed/simple;
-	bh=idPar8TnYrcn1/ehunJjNHy7HB5Glf8ubsjkXlG3MF4=;
+	s=arc-20240116; t=1708011416; c=relaxed/simple;
+	bh=RRjgbqQNeV1LQqQ3WnLweLVY4UkjS1hhaS8MNsvQOJ0=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q7GVdUPhoW1MZ3jxQayIwDJnuCy3VtlaOaOvhhxuAPnfqMeP00mq58Ln5pZT9PpOO6CYmBOYP2ZG7tb32kaA8C1yrMrfVGXOM2Q1yP8XNSKJyA9EYdzvx04xfYMKh08Y0F+AyETv/7IJ0lB1mxD0P6hmVg30N05C68nYd22mJHo=
+	 MIME-Version:Content-Type; b=LgwxtWELGTVUvaasL6mVwQgm9+JqE3vIHMc2mMkMsETF8ukaDs7oz9khSgkKmt/qSEClCUwVu2KnjxOFu+jcvsUiDIG+KayaZ2h5bIZ8xJrkt3AsBbemWG72mF4HorudmOR036eAS0qzO3TGHSF4hIjDbHRjX4sQIOunLZB1+jw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9CB4C433F1;
-	Thu, 15 Feb 2024 15:01:20 +0000 (UTC)
-Date: Thu, 15 Feb 2024 10:02:54 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53C5DC433C7;
+	Thu, 15 Feb 2024 15:36:54 +0000 (UTC)
+Date: Thu, 15 Feb 2024 10:38:27 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
@@ -26,12 +26,12 @@ Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
  Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
  <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
  Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v7 21/36] function_graph: Add selftest for passing local
- variables
-Message-ID: <20240215100254.2891c5da@gandalf.local.home>
-In-Reply-To: <170723228217.502590.6615001674278328094.stgit@devnote2>
+Subject: Re: [PATCH v7 22/36] function_graph: Add a new entry handler with
+ parent_ip and ftrace_regs
+Message-ID: <20240215103827.2c7bd2bf@gandalf.local.home>
+In-Reply-To: <170723229401.502590.8644663781359457778.stgit@devnote2>
 References: <170723204881.502590.11906735097521170661.stgit@devnote2>
-	<170723228217.502590.6615001674278328094.stgit@devnote2>
+	<170723229401.502590.8644663781359457778.stgit@devnote2>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,85 +42,39 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed,  7 Feb 2024 00:11:22 +0900
+On Wed,  7 Feb 2024 00:11:34 +0900
 "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> Add boot up selftest that passes variables from a function entry to a
-> function exit, and make sure that they do get passed around.
+> Add a new entry handler to fgraph_ops as 'entryregfunc'  which takes
+> parent_ip and ftrace_regs. Note that the 'entryfunc' and 'entryregfunc'
+> are mutual exclusive. You can set only one of them.
 > 
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > ---
->  Changes in v2:
->   - Add reserved size test.
->   - Use pr_*() instead of printk(KERN_*).
-> ---
->  kernel/trace/trace_selftest.c |  169 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 169 insertions(+)
-> 
-> diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
-> index f0758afa2f7d..4d86cd4c8c8c 100644
-> --- a/kernel/trace/trace_selftest.c
-> +++ b/kernel/trace/trace_selftest.c
-> @@ -756,6 +756,173 @@ trace_selftest_startup_function(struct tracer *trace, struct trace_array *tr)
->  
+
 >  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
->  
-> +#ifdef CONFIG_DYNAMIC_FTRACE
-> +
-> +#define BYTE_NUMBER 123
-> +#define SHORT_NUMBER 12345
-> +#define WORD_NUMBER 1234567890
-> +#define LONG_NUMBER 1234567890123456789LL
-> +
-> +static int fgraph_store_size __initdata;
-> +static const char *fgraph_store_type_name __initdata;
-> +static char *fgraph_error_str __initdata;
-> +static char fgraph_error_str_buf[128] __initdata;
-> +
-> +static __init int store_entry(struct ftrace_graph_ent *trace,
-> +			      struct fgraph_ops *gops)
-> +{
-> +	const char *type = fgraph_store_type_name;
-> +	int size = fgraph_store_size;
-> +	void *p;
-> +
-> +	p = fgraph_reserve_data(gops->idx, size);
-> +	if (!p) {
-> +		snprintf(fgraph_error_str_buf, sizeof(fgraph_error_str_buf),
-> +			 "Failed to reserve %s\n", type);
-> +		fgraph_error_str = fgraph_error_str_buf;
-> +		return 0;
-> +	}
-> +
-> +	switch (fgraph_store_size) {
-> +	case 1:
-> +		*(char *)p = BYTE_NUMBER;
-> +		break;
-> +	case 2:
-> +		*(short *)p = SHORT_NUMBER;
-> +		break;
-> +	case 4:
-> +		*(int *)p = WORD_NUMBER;
-> +		break;
-> +	case 8:
-> +		*(long long *)p = LONG_NUMBER;
-> +		break;
-> +	}
-> +
+> @@ -1070,6 +1075,7 @@ extern int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace, struct fgraph
+>  struct fgraph_ops {
+>  	trace_func_graph_ent_t		entryfunc;
+>  	trace_func_graph_ret_t		retfunc;
+> +	trace_func_graph_regs_ent_t	entryregfunc;
 
-What would be an interesting test is to run all versions together. That is,
-to attach a callback that stores a byte, a callback that stores a short, a
-callback that stores a word and a callback that stores a long, and attach
-them all to the same function.
+if entryfunc and entryregfunc are mutually exclusive, then why not make them
+into a union?
 
-I guess we can add that as a separate patch.
+struct fgraph_ops {
+	union {
+		trace_func_graph_ent_t		entryfunc;
+		trace_func_graph_regs_ent_t	entryregfunc;
+	};
+	trace_func_graph_ret_t		retfunc;
 
 -- Steve
 
+	
 
-> +	return 1;
-> +}
-> +
+>  	struct ftrace_ops		ops; /* for the hash lists */
+>  	void				*private;
+>  	int				idx;
