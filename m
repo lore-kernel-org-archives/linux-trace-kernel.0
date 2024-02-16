@@ -1,165 +1,213 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2055.outbound.protection.outlook.com [40.107.220.55])
+Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F4F146903;
-	Fri, 16 Feb 2024 15:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708097424; cv=fail; b=OUY/PxEflKH1NPF/61l+5AO3hGW2B4Swdc/nqlM/QAtzjOfoE4/zJcCxA1I/FukP250j/8mxnM/JvnDJkFb0MNX+Qu+LNvt4aMZG6RpkR7aSGmhDXbmOi9CPxRszBh7nBhAO3HIWpXphnDV4LU+YdTyUbJvFfPr/MUwl5mKk42Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708097424; c=relaxed/simple;
-	bh=UbGxSn1tiYyPlL2VdghnyTQVsmDCoKJLRsiU4hRojdE=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=HZ6rlyL/qd2fB80IaBi6HLgUS4MUoSw5LPHv9flZ/6Nb+HnOhZO0t0nYCkErCHZ0i/2I+JkxrrwAwwddpOlSytpmdOCaiadFfhjBXNXyI3NRv7z7ZJQe5rIX1ZWM+IHSZrHMDs24O4I1A5sdqCfH+3ZrKJFfJ2yJVw2fohAvP1E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mBWKkgt0; arc=fail smtp.client-ip=40.107.220.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B9312FF81;
+	Fri, 16 Feb 2024 15:36:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708097794; cv=none; b=qy/3VXZjQlkQ7b7IXuYZ7p18427+d6shlcXZHrCuqGieWj9mculGURAjTUzET/IwvzVziVwnN6xaoYiADEq/UEaqEiiW1HtO9UkIaIGmSJUBAyFUAfOg2QNWaCv8qWPvbsO3209RmLCwSnkksHcqCxKXV06Jf7C0jzGVNqGdE+s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708097794; c=relaxed/simple;
+	bh=9X3M2Hi2BGu4LrBLQAuN+zc5VZRS6uyvkKa9xFV6lnk=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=FS/pYTb6N5qEtmvZVMYsH5pC9oaJ68qZPcVnxgVuaMZMYa5GRaErVKa10VUCS9L9mXOJNDGdc7jVjv+5brb0wG4Q6ZHTHrw7RuHbCW7VLrTVahgewPFfyYI0D8aXw3S6L+mlEdkj7XrhguYuBRzOiyJUMcxAv1/9MDgk8qWEMec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=QrhIENWD; arc=none smtp.client-ip=99.78.197.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mBWKkgt0"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P59e2C+X5h//RRSmiSA5Nw1TKxHvzTuz9PBe4P/9LDUTgerLPzbMpFNgqvP5EpG2JBHMpQlQPYcKyIAuVQ1FIg/ept5haoGnU4by2IJzGYS9zcGB8YAAKRaV4sQzyapUswCLXzDNj8mDxCRAB5RDgw9/ssiT1psjqWTIJjyP+fMb3H0J60+NTCcs3hlczDETcNeNNezJhjnPy2L1DFKjNqvlOZX7ZPDgUvKrSQxAbBBKIAw3i2S2Aokhn4fb+9Qh1q5TAnVnzrKKPUcUKOL7SWKS79DTVRthboC8woyNvUZQL7qN1TOg01tphFkYT2YBKhdUpDuc6m/gl9WvFrNRsA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=h9YmYyNK+k55qvxMCF4sj3X9ngK7nwjGReBncbKvqvk=;
- b=eD6Xq+gL0pL68OK2xPhrUPveKqExtL7nZuE3QIcmRn5vYoolBDpddmT5B0g1GEBpPqPqOcXBm1Q1fBpj+ZQI6BwMdm7dL+r23JLy0uq9fXl4ejS+4jj4QPwc6VwV0+ejqO913elIiZClF2sc441r1+3a4ZQ2B88y9olEOkRFFjjzOX2EYxPUq/T+SZgjD06MT0gwBzqIvf//Vd12yqwb51JSnzXjbFrID0JJqt3CjamPkoL/7OVCSGJKpL1deRG+nwhw/gCwS3K895bg4WhbMWqiv/l3XbMvZRP65TRdeD2ZtEftWgEiPN3AThRfiBAOCr+ZsInaoVI9JXXh7u7K1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h9YmYyNK+k55qvxMCF4sj3X9ngK7nwjGReBncbKvqvk=;
- b=mBWKkgt0shGzzu+b+y+NTi3W9CAZTMVS1qpTw81A2KDRqw9mSlNkAyPG/g9GeFVwNu840feUF/52uQYjQndSyZt9mfTr/xijT+/xw4JUoWO+aftUQk5YxF7/f6hIoeccUzuleTjQ07i9az6hUjIU7ced+Fgoulp+rKLahAJ+XFE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by DS0PR12MB7770.namprd12.prod.outlook.com (2603:10b6:8:138::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.12; Fri, 16 Feb
- 2024 15:30:17 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::e1fb:4123:48b1:653]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::e1fb:4123:48b1:653%4]) with mapi id 15.20.7292.022; Fri, 16 Feb 2024
- 15:30:17 +0000
-Message-ID: <7e3c0990-f5b2-47e1-9de8-bd84fc582be9@amd.com>
-Date: Fri, 16 Feb 2024 16:30:14 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/8] dma-buf/fence-chain: use trace_dma_fence_sync_to
-Content-Language: en-US
-To: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
- Sumit Semwal <sumit.semwal@linaro.org>, Gustavo Padovan
- <gustavo@padovan.org>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Alex Deucher
- <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org
-References: <20240216151006.475077-1-pierre-eric.pelloux-prayer@amd.com>
- <20240216151006.475077-3-pierre-eric.pelloux-prayer@amd.com>
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <20240216151006.475077-3-pierre-eric.pelloux-prayer@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR0P281CA0223.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:ac::16) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="QrhIENWD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1708097791; x=1739633791;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=zYEPhdOGwxfalucYYKXEQXA0b+MOVSC9pumogm3wVhQ=;
+  b=QrhIENWD4ZDj8t0DHE7YumF4mitFiDf9RNtQ4aHPib1iCDx4l0Q+yjQc
+   N+RRh1REJI8gk9ckrbDsOueXPLPlm/4EZnjpspCS6ElXQGnvcLIqvk5W+
+   pNXSuH3DshgB6EzWKRqlfq/P9QDxheSWgGzB85SEuLbqpfup8drIv+Ju0
+   8=;
+X-IronPort-AV: E=Sophos;i="6.06,165,1705363200"; 
+   d="scan'208";a="66561533"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 15:36:27 +0000
+Received: from EX19MTAUEC002.ant.amazon.com [10.0.29.78:36608]
+ by smtpin.naws.us-east-1.prod.farcaster.email.amazon.dev [10.0.0.197:2525] with esmtp (Farcaster)
+ id 14bd3545-92ef-44f2-844a-9c8f63002956; Fri, 16 Feb 2024 15:36:26 +0000 (UTC)
+X-Farcaster-Flow-ID: 14bd3545-92ef-44f2-844a-9c8f63002956
+Received: from EX19D008UEC003.ant.amazon.com (10.252.135.194) by
+ EX19MTAUEC002.ant.amazon.com (10.252.135.253) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 16 Feb 2024 15:36:06 +0000
+Received: from EX19MTAUEC001.ant.amazon.com (10.252.135.222) by
+ EX19D008UEC003.ant.amazon.com (10.252.135.194) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 16 Feb 2024 15:36:06 +0000
+Received: from dev-dsk-ptyadav-1c-37607b33.eu-west-1.amazon.com (10.15.11.255)
+ by mail-relay.amazon.com (10.252.135.200) with Microsoft SMTP Server id
+ 15.2.1118.40 via Frontend Transport; Fri, 16 Feb 2024 15:36:06 +0000
+Received: by dev-dsk-ptyadav-1c-37607b33.eu-west-1.amazon.com (Postfix, from userid 23027615)
+	id 0583720CE8; Fri, 16 Feb 2024 16:36:06 +0100 (CET)
+From: Pratyush Yadav <ptyadav@amazon.de>
+To: Alexander Graf <graf@amazon.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kexec@lists.infradead.org>,
+	<linux-doc@vger.kernel.org>, <x86@kernel.org>, Eric Biederman
+	<ebiederm@xmission.com>, "H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski
+	<luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt
+	<rostedt@goodmis.org>, Andrew Morton <akpm@linux-foundation.org>, "Mark
+ Rutland" <mark.rutland@arm.com>, Tom Lendacky <thomas.lendacky@amd.com>,
+	Ashish Kalra <ashish.kalra@amd.com>, James Gowans <jgowans@amazon.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, <arnd@arndb.de>,
+	<pbonzini@redhat.com>, <madvenka@linux.microsoft.com>, Anthony Yznaga
+	<anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, "David
+ Woodhouse" <dwmw@amazon.co.uk>, Benjamin Herrenschmidt
+	<benh@kernel.crashing.org>, Rob Herring <robh+dt@kernel.org>, "Krzysztof
+ Kozlowski" <krzk@kernel.org>
+Subject: Re: [PATCH v3 11/17] tracing: Introduce kho serialization
+In-Reply-To: <20240117144704.602-12-graf@amazon.com> (Alexander Graf's message
+	of "Wed, 17 Jan 2024 14:46:58 +0000")
+References: <20240117144704.602-1-graf@amazon.com>
+	<20240117144704.602-12-graf@amazon.com>
+Date: Fri, 16 Feb 2024 16:36:05 +0100
+Message-ID: <mafs0sf1s8lqy.fsf@amazon.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|DS0PR12MB7770:EE_
-X-MS-Office365-Filtering-Correlation-Id: 35ceda78-fb96-49ff-9696-08dc2f042dc4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	8Silih3XDTxaAJw6G7oOwFbm9+lI6jDuVilfFoX0aF6Fkpl8tAG5ixrK5XVtARad4CtKl/RhJzNzuBbNMbHdGbG42Jdc1WOiQ9D7ppEL+3qDISqNoS2AZaH1CMr7sEqBmwTJbAXAjrZrdftoPBDZSrKGstVQWuCsAiPqyKSykC6ZjvooE+A2lSvECixDnvYb44LyisS/A3C0T42nVRbmdq11Xy/9wy3P6fJbZY582ME2yUQERKId+xs3k61hnDziB17WcH5crLaYV6/njqyh40ONUJcwpadBsBheI9blpAKLBuB8DgC9dykl+F325FfXSYHJA4rlCUVEmas6QgkK5lo62zMBFpgwi3LpXEKnDgo1VWdjMRWjUVcOJQOfojbGDN5/TefwoOXR5lxtLJt16e7LvDVg7xS1pUwnIhkOmd232KghJnVrSMlgrNSmdvXgejyuWanMHkUeCiUtLsHQEW2I6poy1+tGmLjEOMACXu5RxJTgsTmFHfCF0sRDtCa4S5K/PNDQN6UwIh8mE9W3tk/AtBbxJ83NzbUWqlTnzWDwRi4AT7eaSoQWQePErTC6GEZ6jQnLilukZAicqfQYNkeOOUHUafUb4fEGX3a+kMg=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(136003)(346002)(39860400002)(376002)(366004)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(31686004)(6512007)(6506007)(6486002)(478600001)(2616005)(41300700001)(316002)(2906002)(5660300002)(8936002)(8676002)(66476007)(66556008)(66946007)(110136005)(6666004)(26005)(31696002)(36756003)(38100700002)(921011)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?c3Y0cG9lUFhMazl5U1hMODIySGpxRkN2cFU1cXNQcjY4cjhSM0R2NjJoUnA3?=
- =?utf-8?B?alRpY1V4ZlYvN0dKNXBZb3k0ZlN3U0I0TnN6R2xPckx1N2NoUExWZlZtbkpj?=
- =?utf-8?B?aDhDRFR4Uks0KzdWZTZWQnV5OU12MGdjVjJQcUJELzVBTXUrWEJnMjNUVlY2?=
- =?utf-8?B?UWVjaXMxQTBpemJFRjl3ajNEVWRiaWhMdWtCcTdGc085SDRUYmxSTzhnbFhp?=
- =?utf-8?B?c0k2V0R6R0pPMEdUdGFSeWpqNFZMREhPNXYyRDVBSnM1WDgxbzljR3piSjJj?=
- =?utf-8?B?Z25HUVVMZmxtNkRDOVYzUUZrZXVSN2VsUXhxNElJYitxUjFhMm00NzV0VWVI?=
- =?utf-8?B?dlVkR05NalVvdnNtb0F4aE5tRG4zeHN3S3djaHlkYi9EUjRiR3g3ZnhQdUE2?=
- =?utf-8?B?dU96aHRPS1gzSU4xQThXN2tPNG9KT0VHZG9iN0kvT1llZEZZUXM4dnpMUXh2?=
- =?utf-8?B?SGY2UE4zWEFzN00rOHRBdFQvNXhEakRtY21FQ01VTER4MGYyVkQ2WGpNL3NG?=
- =?utf-8?B?cHgrQml0cWU5ZmRXeXdKWDUyZWZpbm9INzFEakROYnVISytSR1NWbzhoaUpL?=
- =?utf-8?B?WjBuM3RUOEJjNEVlQm1YMVFkUjdBRk5lQ3pINzhkcGtDMDFoN2p1SkZNNFJS?=
- =?utf-8?B?V2hnVUp1cTk0UElBTGZ2Y1JVZW1NMis5YjcwRFBVRFpJT20walI0alBPOW9n?=
- =?utf-8?B?OXlIM2NZK2JZRUZJbE9kSndYZ1JEZWQ1Q1RnMHc4cm5zVndLVFFMTkNXWFgz?=
- =?utf-8?B?eWRTeWNWbGxwY3VoUTR4eTdPOFloS1o1RFpjdWNWdFk3UTdsN2Jrc2FBa2dW?=
- =?utf-8?B?WFBzbnJYeTY4NWU2OFFhNWJBS0N0aTBmR2JXNmttYzlqWmNYV1hWZjloNU1D?=
- =?utf-8?B?d0JpNm5sN2lzRmpKWExhK0djdzh5YUpvcnZnQVI2UThGNUp2Q2htRzlMT0lv?=
- =?utf-8?B?S3hTTlpSbzRrU3E3eGtyOEV1Z0dtZzgvNUVDZzgrVVZCZ1BXM0RDN3dnZWxQ?=
- =?utf-8?B?cDBCZ2xVWGFJYzdjaFdQck9KWHVRc21LdWdDTkZ4ZG5BVVdCZkpvWElkZDdG?=
- =?utf-8?B?TkxUb0hweFMxemhIYVZucVpFY3lNQjg1YVVSc2hBeWxGaE1RWlFwQUJZZlZ6?=
- =?utf-8?B?SjB2SG45eitBeGtBUXNyeU9ob09VSWZackR6aHFpbGtDTElGd2Z3Wk1ycVpX?=
- =?utf-8?B?VmswZnlvbnhXUTl6eVRxR3QvL1g2Wklkc0V3S1JQWUdLNTdIdXZOSmUvT3lT?=
- =?utf-8?B?WjArNUk4UTg2Q01rWXdYVXpDekN5REtuU3JucjNiMng1TmRxTHZVVk96aGRW?=
- =?utf-8?B?K2lPcUpoVVdua3QxcDR1YzhoeFNQWHM1QjJPS0dWNXRJckhBbExTWGdHQ01L?=
- =?utf-8?B?eGFTTFFidUlEWGZIOXkzT2hIQU5VN1lHdVd1VzhYM1FYaHpqSTF3Y0p3aDFL?=
- =?utf-8?B?bGJaZWJ4cjhHRHdydklReXRxZEIyUXBqbERlcjBJeklUMStueWNVWk1ZOWtn?=
- =?utf-8?B?SERYYUJNMkQ3VERuQjN5Q0xLN0RvVTFFSDFodWlTNmU1LzVJWWg1WlJOMEI1?=
- =?utf-8?B?MUZHUDY5b2t6aXNLcllwcm0zYmtyQStyZUZqL3RpNGRwd3hFKzFvWTdkcm81?=
- =?utf-8?B?NGV3NFZZTkI2MzA0M1pWekx2NVZUQXArKzhTdWljdlNYRHlPM29mZzZxNXdN?=
- =?utf-8?B?bStjZVI1RU11ZU1JbFFwVzJPcUdYNngxVS8yQjFCWXlVOXJrYjNFOXBac1B4?=
- =?utf-8?B?VTFGMmtMbUFJSHZyM2cyeldUemQyRndaZFhjZ3lzdFE0eGVGbFNreTR4QitU?=
- =?utf-8?B?TVhZM29rQVcvWFcyYks0eHE5bEJHejg5V2htWlRYQWpCZWl3VHdMN09NWmd4?=
- =?utf-8?B?dnZML1o3VStsRXcydldsZDY3NEZUSUlmUTFINWFNckJZYWFWNk1sMlN0d0lW?=
- =?utf-8?B?TTF4TjJ1NjNKUVFIZFQ2TDRvWmF1RTZ0MWNmdmRYNzdFa1dQNkxIM1F0TXR3?=
- =?utf-8?B?K1JEbUg2RG54bkNQVC83VUNrSmJSR3o5d3pLTVgzQm9SS0JMWmtQMEhJRVpB?=
- =?utf-8?B?OC9vZEgrcVZGb3RxQkZxTk4xc3BsV0RCYURiWWh2TFVJc2QzbUFTWE50d3p2?=
- =?utf-8?Q?WRO08e6PDT0aCMTrHDAAwEQxZ?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 35ceda78-fb96-49ff-9696-08dc2f042dc4
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2024 15:30:17.6605
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oucChysUYDPHa8flytTBi+BFgD8TMh9v236OKpco1sjlYmrx98bJu/anMtkCyU3c
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7770
+Content-Type: text/plain
 
-Am 16.02.24 um 16:09 schrieb Pierre-Eric Pelloux-Prayer:
-> To inform tools about the relationship between the fences.
+Hi,
+
+On Wed, Jan 17 2024, Alexander Graf wrote:
+
+> We want to be able to transfer ftrace state from one kernel to the next.
+> To start off with, let's establish all the boiler plate to get a write
+> hook when KHO wants to serialize and fill out basic data.
 >
-> Signed-off-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-
-Reviewed-by: Christian König <christian.koenig@amd.com>
-
+> Follow-up patches will fill in serialization of ring buffers and events.
+>
+> Signed-off-by: Alexander Graf <graf@amazon.com>
+>
 > ---
->   drivers/dma-buf/dma-fence-chain.c | 4 ++++
->   1 file changed, 4 insertions(+)
 >
-> diff --git a/drivers/dma-buf/dma-fence-chain.c b/drivers/dma-buf/dma-fence-chain.c
-> index 9663ba1bb6ac..3435078c45b7 100644
-> --- a/drivers/dma-buf/dma-fence-chain.c
-> +++ b/drivers/dma-buf/dma-fence-chain.c
-> @@ -9,6 +9,8 @@
->   
->   #include <linux/dma-fence-chain.h>
->   
-> +#include "trace/events/dma_fence.h"
+> v1 -> v2:
+>
+>   - Remove ifdefs
+> ---
+>  kernel/trace/trace.c | 47 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index a0defe156b57..9a0d96975c9c 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -32,6 +32,7 @@
+>  #include <linux/percpu.h>
+>  #include <linux/splice.h>
+>  #include <linux/kdebug.h>
+> +#include <linux/kexec.h>
+>  #include <linux/string.h>
+>  #include <linux/mount.h>
+>  #include <linux/rwsem.h>
+> @@ -866,6 +867,8 @@ static struct tracer		*trace_types __read_mostly;
+>   */
+>  DEFINE_MUTEX(trace_types_lock);
+>
+> +static bool trace_in_kho;
 > +
->   static bool dma_fence_chain_enable_signaling(struct dma_fence *fence);
->   
->   /**
-> @@ -251,6 +253,8 @@ void dma_fence_chain_init(struct dma_fence_chain *chain,
->   	chain->fence = fence;
->   	chain->prev_seqno = 0;
->   
-> +	trace_dma_fence_used_as_dependency(fence, __func__);
+>  /*
+>   * serialize the access of the ring buffer
+>   *
+> @@ -10574,12 +10577,56 @@ void __init early_trace_init(void)
+>  	init_events();
+>  }
+>
+> +static int trace_kho_notifier(struct notifier_block *self,
+> +			      unsigned long cmd,
+> +			      void *v)
+> +{
+> +	const char compatible[] = "ftrace-v1";
+> +	void *fdt = v;
+> +	int err = 0;
 > +
->   	/* Try to reuse the context of the previous chain node. */
->   	if (prev_chain && __dma_fence_is_later(seqno, prev->seqno, prev->ops)) {
->   		context = prev->context;
+> +	switch (cmd) {
+> +	case KEXEC_KHO_ABORT:
+> +		if (trace_in_kho)
+> +			mutex_unlock(&trace_types_lock);
+> +		trace_in_kho = false;
+> +		return NOTIFY_DONE;
+> +	case KEXEC_KHO_DUMP:
+> +		/* Handled below */
+> +		break;
+> +	default:
+> +		return NOTIFY_BAD;
+> +	}
+> +
+> +	if (unlikely(tracing_disabled))
+> +		return NOTIFY_DONE;
+> +
+> +	err |= fdt_begin_node(fdt, "ftrace");
+> +	err |= fdt_property(fdt, "compatible", compatible, sizeof(compatible));
+> +	err |= fdt_end_node(fdt);
+> +
+> +	if (!err) {
+> +		/* Hold all future allocations */
+> +		mutex_lock(&trace_types_lock);
+
+Say I do "echo 1 | tee /sys/kernel/kho/active". Then the lock is held by
+tee, which exits. Then I later I do "echo 0 | tee
+/sys/kernel/kho/active". This time another tee task unlocks the lock. So
+it is not being unlocked by the same task that locked it. The comment
+above mutex_lock() definition says:
+
+    The mutex must later on be released by the same task that acquired
+    it. Recursive locking is not allowed. The task may not exit without
+    first unlocking the mutex.
+
+I tested your code and it happens to work because the unlock always
+happened to take the fast path which does not sanity-check the owner.
+Still, this is not the correct thing to do.
+
+> +		trace_in_kho = true;
+> +	}
+> +
+> +	return err ? NOTIFY_BAD : NOTIFY_DONE;
+> +}
+> +
+> +static struct notifier_block trace_kho_nb = {
+> +	.notifier_call = trace_kho_notifier,
+> +};
+> +
+>  void __init trace_init(void)
+>  {
+>  	trace_event_init();
+>
+>  	if (boot_instance_index)
+>  		enable_instances();
+> +
+> +	if (IS_ENABLED(CONFIG_FTRACE_KHO))
+> +		register_kho_notifier(&trace_kho_nb);
+>  }
+>
+>  __init static void clear_boot_tracer(void)
+
+--
+Regards,
+Pratyush Yadav
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
 
