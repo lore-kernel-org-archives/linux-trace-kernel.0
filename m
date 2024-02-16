@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB1B14F64;
-	Fri, 16 Feb 2024 07:40:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B1A11C68C;
+	Fri, 16 Feb 2024 08:41:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708069214; cv=none; b=cXndlbxHPuiRxs/vf0PrrUJpiuJLBiVgPT1Lhc5UcXSSKffS9A+3Q8wf4Xiz2azE2UkDK1wP17q69fGdS2ajs+BEgzanCHSj6dauIbYg2uBgrGgXYWPEK0xIC+mvtHqzx7vL2n/ZKbnwhxypw2gR14p/C86NrCOUipKIFD6H9Cs=
+	t=1708072868; cv=none; b=D2PUcUjp6vwg8HPikGyjiiht+WFAUULdc3z6QhvwOesbrx3RaJCP7jSMe/BXVngFJJK2eB9uaIIhnYy67Ox9PvewBbnb18D+xkDarjZGHhF4r34S6BjmhsD9Zb7YQxeHVJ0nR+5VeNTeYbqX/M9JD1LBG+hHSddBxFh+b2Wmlrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708069214; c=relaxed/simple;
-	bh=icz55HJQfZZHEN/btHPRBr3cpgSXuR4YteZ6R/WPaGA=;
+	s=arc-20240116; t=1708072868; c=relaxed/simple;
+	bh=wZvqkkB1tvM0qT7Zjonl08Zz23unYjSrGtBfMOx3z84=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=LWV7mBLpwmVf2kLccfwyD1TjWVEgJNod7rYabSS7MIPWnAbIuWonw+DiBdeG494vi0GCCFqsSZfuiY3i8+rXaefJ49GkD8eeWb5jrUaWUY0V7QHSNkzMEe7fryi6bYz7/P+CQxdgu1Vgn7nY4Stfp3YCpN4IeVEHCkbAarye9KU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RHyoB/Zm; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=I4HXX4EgAuUKumU8dTd3+ctadyklikxxdsqCjUu89H8KDK/0dq/2JKH/IMU4H5GNGKBItN+ukC3xpaWBrl1o7UZfUeu3C8aC6GJMZf3+PofipXYW2L90meHvzRcEwWYBFjC1hsn7oiMxSvP8899FO50NAt30LfGx0tNgTRFTCp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QIyKWQZy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RHyoB/Zm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F255C433C7;
-	Fri, 16 Feb 2024 07:40:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QIyKWQZy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BA29C433F1;
+	Fri, 16 Feb 2024 08:41:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708069214;
-	bh=icz55HJQfZZHEN/btHPRBr3cpgSXuR4YteZ6R/WPaGA=;
+	s=k20201202; t=1708072867;
+	bh=wZvqkkB1tvM0qT7Zjonl08Zz23unYjSrGtBfMOx3z84=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RHyoB/Zm+aeCpXvsdcAkjZ/8IP0JIcV9o5cVs3hvqpviLm+GagX2Su7pi1IzmbFTI
-	 egsQDa7ec2GbV/tx00to1LvWI7cUqCtFZbVRCA+hJ6tEaXpXf2SXZaWIRZf9hW3P3V
-	 14k+yC+cS4EZoFOf1pkEXd7JEIlN1616BOSHmiot2zsknR6TT/hB3pcHYGCYALkUgq
-	 3/MpJEb5Qu0tMkq7dlDZKPDAoDxDeZCr3R26s2hBY9Z/0qPKuuYKzoFX4LlPpaNpZn
-	 GHCAEPY6d6nFk7ERFwPg2osOonvSBgwtQb0+uPgrFpnv9+JFklxoEmklr63HlMMVYR
-	 8BGq/CQgSk+6g==
-Date: Fri, 16 Feb 2024 16:40:07 +0900
+	b=QIyKWQZy97QNoYLS2HFfBQL3l9noxnfyWzsod9pJNgjZW4LcYOhLsWdHTeyw4TWfv
+	 Lrfae77Vhn8tQO2Q8w6uk7jiCRO1xbiwVf9k9DFXKwGCyBqBqgpDd1b/Ya03l6Th3E
+	 PzIpSbPg1pD1+jFEubNfnXoX3h57WrjhvXBTJTFv1pl7y5+O9rF3y42HoEj+cCn4GV
+	 pHYpX3ygmCjtyVaIKnqUq1wSekoverdcEVq2St8b0SfJ0OjpVl88DftniBy4jwSBIM
+	 a3H7CucAu/R3IBk29M18Cd6AB7cJCLX5SuFrGVr/YuhBOnvozin/fP6jH2bjIjeHek
+	 a9d/tYlN+1VRA==
+Date: Fri, 16 Feb 2024 17:41:01 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
@@ -38,15 +38,13 @@ Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
  Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
  <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
  Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v7 19/36] function_graph: Implement
- fgraph_reserve_data() and fgraph_retrieve_data()
-Message-Id: <20240216164007.2de685ce5c78cee69e168601@kernel.org>
-In-Reply-To: <20240214185407.767243b4@gandalf.local.home>
+Subject: Re: [PATCH v7 21/36] function_graph: Add selftest for passing local
+ variables
+Message-Id: <20240216174101.57c4e61a0d6b4ed21c2a22bd@kernel.org>
+In-Reply-To: <20240215100254.2891c5da@gandalf.local.home>
 References: <170723204881.502590.11906735097521170661.stgit@devnote2>
-	<170723226123.502590.4924916690354403889.stgit@devnote2>
-	<20240214135958.23ed55e1@gandalf.local.home>
-	<20240215084552.b72d6d22ce1b93bb8e04b70a@kernel.org>
-	<20240214185407.767243b4@gandalf.local.home>
+	<170723228217.502590.6615001674278328094.stgit@devnote2>
+	<20240215100254.2891c5da@gandalf.local.home>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -57,46 +55,97 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 14 Feb 2024 18:54:07 -0500
+On Thu, 15 Feb 2024 10:02:54 -0500
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Thu, 15 Feb 2024 08:45:52 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> On Wed,  7 Feb 2024 00:11:22 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 > 
-> > > Hmm, the above is a fast path. I wonder if we should add a patch to make that into:
-> > > 
-> > > 	if (unlikely(size_bytes & (sizeof(long) - 1)))
-> > > 		data_size = DIV_ROUND_UP(size_bytes, sizeof(long));
-> > > 	else
-> > > 		data_size = size_bytes >> (sizeof(long) == 4 ? 2 : 3);
-> > > 
-> > > to keep from doing the division.  
+> > From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 > > 
-> > OK, I thought DIV_ROUND_UP was not much cost. Since sizeof(long) is
-> > fixed 4 or 8, so 
+> > Add boot up selftest that passes variables from a function entry to a
+> > function exit, and make sure that they do get passed around.
 > > 
-> > data_size = (size_bytes + sizeof(long) - 1) >> BITS_PER_LONG;
+> > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > ---
+> >  Changes in v2:
+> >   - Add reserved size test.
+> >   - Use pr_*() instead of printk(KERN_*).
+> > ---
+> >  kernel/trace/trace_selftest.c |  169 +++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 169 insertions(+)
 > > 
-> > will this work?
+> > diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
+> > index f0758afa2f7d..4d86cd4c8c8c 100644
+> > --- a/kernel/trace/trace_selftest.c
+> > +++ b/kernel/trace/trace_selftest.c
+> > @@ -756,6 +756,173 @@ trace_selftest_startup_function(struct tracer *trace, struct trace_array *tr)
+> >  
+> >  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+> >  
+> > +#ifdef CONFIG_DYNAMIC_FTRACE
+> > +
+> > +#define BYTE_NUMBER 123
+> > +#define SHORT_NUMBER 12345
+> > +#define WORD_NUMBER 1234567890
+> > +#define LONG_NUMBER 1234567890123456789LL
+> > +
+> > +static int fgraph_store_size __initdata;
+> > +static const char *fgraph_store_type_name __initdata;
+> > +static char *fgraph_error_str __initdata;
+> > +static char fgraph_error_str_buf[128] __initdata;
+> > +
+> > +static __init int store_entry(struct ftrace_graph_ent *trace,
+> > +			      struct fgraph_ops *gops)
+> > +{
+> > +	const char *type = fgraph_store_type_name;
+> > +	int size = fgraph_store_size;
+> > +	void *p;
+> > +
+> > +	p = fgraph_reserve_data(gops->idx, size);
+> > +	if (!p) {
+> > +		snprintf(fgraph_error_str_buf, sizeof(fgraph_error_str_buf),
+> > +			 "Failed to reserve %s\n", type);
+> > +		fgraph_error_str = fgraph_error_str_buf;
+> > +		return 0;
+> > +	}
+> > +
+> > +	switch (fgraph_store_size) {
+> > +	case 1:
+> > +		*(char *)p = BYTE_NUMBER;
+> > +		break;
+> > +	case 2:
+> > +		*(short *)p = SHORT_NUMBER;
+> > +		break;
+> > +	case 4:
+> > +		*(int *)p = WORD_NUMBER;
+> > +		break;
+> > +	case 8:
+> > +		*(long long *)p = LONG_NUMBER;
+> > +		break;
+> > +	}
+> > +
 > 
-> No, because BITS_PER_LONG is 32 or 64 ;-)
+> What would be an interesting test is to run all versions together. That is,
+> to attach a callback that stores a byte, a callback that stores a short, a
+> callback that stores a word and a callback that stores a long, and attach
+> them all to the same function.
+> 
+> I guess we can add that as a separate patch.
 
-Oops indeed.
-
-> 
-> But this should;
-> 
-> 	data_size = (size_bytes + sizeof(long) - 1) >> (sizeof(long) == 4 ? 2 : 3);
-> 
-> As sizeof(long) is a constant, that conditional expression will be hard
-> coded into either 2 or 3 by the compiler.
-
-Yeah. OK, let me update it.
+Would you mean we should have different callbacks which stores the different
+size of data instead of using switch()?
 
 Thank you,
 
 > 
 > -- Steve
+> 
+> 
+> > +	return 1;
+> > +}
+> > +
 
 
 -- 
