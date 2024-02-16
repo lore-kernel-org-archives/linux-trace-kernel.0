@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D2A31B946;
-	Fri, 16 Feb 2024 08:54:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7C112883D;
+	Fri, 16 Feb 2024 12:49:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708073670; cv=none; b=JO3N3NEVOxOjbxUwjLbfcs9sx33vD752qVtpQJzGYHZVex0WtdLh4hxxMpbKlc2StXmjacxSvZlpXtyj4Pi2jZJcwusyfFo7JvW5HgBEScx5uWOGkwL+N7k6fpOQIxDop0BjdENQC1P8FvDUhQRwbElO+tVWQwI4YB2j7Ejy/7M=
+	t=1708087789; cv=none; b=T6ZSYqqVQqb8p342TLW5jWqD6xHxpM9WvDQcqxqZsQTSQCurwjYH+/JGxY/4bv8zk9GWe3Uv1h11E1m4ALNEzTEa7RUdl/yRcN4GckgUx21r/V5AvJU/aCETR1jy2mq3XcRFBk9VprcfUQhWEVCIGab88RZ+2kgaH6VyrimhSZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708073670; c=relaxed/simple;
-	bh=8yoLoVuMaVp/tWX6NtXM03pCFmXTbQbmXsQiE0p0b/A=;
+	s=arc-20240116; t=1708087789; c=relaxed/simple;
+	bh=pqG7w2RnbS8BjbrhNK5arbiLuDG9/PkGucdIlBTC7jQ=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=D6vxtixH3aJlOsmai392mjnf6nb1Ym8/LeueJayP4lV5sckdouJqH5NQ+YqvOUw9Gi3tkVSPwEBzn6Agi8Q4qG4cNU6H2C/AMOdeFECHGlDxJD0MyB9CtsUSLyM3D46BbVBedcyfQp4mzE2C2QdOKnVlyhmfr1t1QbCalD9GUiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hjza4dJc; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=VzUerZfRrZuvm1RpE2WVmVJwH5JSghCIz08ypAGr+Gx1uXInjc1sAmXaVtoFgU09bvH305tan7gjhLEbY8EvlQWrJMko0DZG+SSxW4Rf0hNSs410Wnm9FII+/HpCEs66HbW8070ryi8pvnuc/pDuXTajdQxTKgOAiFKncZPKvlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lYsvJKr6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hjza4dJc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7678C433F1;
-	Fri, 16 Feb 2024 08:54:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lYsvJKr6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A3A0C433F1;
+	Fri, 16 Feb 2024 12:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708073669;
-	bh=8yoLoVuMaVp/tWX6NtXM03pCFmXTbQbmXsQiE0p0b/A=;
+	s=k20201202; t=1708087789;
+	bh=pqG7w2RnbS8BjbrhNK5arbiLuDG9/PkGucdIlBTC7jQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Hjza4dJcDPk2BdpZ3yzVgVWVaslyT2Wn7Knq/7ZeALFYddcDeBm7KaW9L2YVVDVHe
-	 Y6JSuvyEevYLGUkf+4WXAiMlC0DI8WJCQETjx4Ruqh/5W8RFxUxQ+uZDM7p1IwM/62
-	 YqgXqK/RbNo7rrKmVbbBpa6qY41McsPsjpM2I46LH6g7RKa4VneWr77aj70zYvu6Qo
-	 qRzdy4UnBcovwBJCUuHDfHD6HVImBd0qkSuYn5tm0ZuTBB2pPyv9MNlFQ2oITaZQOC
-	 n13j7JX85t/kWyLpddo550Nwk4MJ4MuUnqSXj/vatzKXECnBRBtExeBnJofpiCM+SJ
-	 qzHPjso2tMXGQ==
-Date: Fri, 16 Feb 2024 17:54:23 +0900
+	b=lYsvJKr6f1cDQxULIAqOHGUjAPWhOUnOdn1C+TbA8lA3hxsduzPKxdBLGgwMBWB7M
+	 kiXdCnYEOkDVenej53oTYpjgJAbNbJMslgDuo74yB6I0Z09mVh1Hy3KIGvELHcNg5P
+	 PIoj+BzPZJWi0VNasRgsWJcxOHw0hP/SiKKfr7w/SCOZVtCkXYmWw3TQANXo4MvF9L
+	 QNCSQJQ8Xt8/QPm3ts66EB6M+k9HvH42s3MzbnbXOPE6LEhtYvY6ZGvEOsH+quo7XJ
+	 c9FCslRDZWKZesYSbUiKnMwQsS6/+c9d1LIdCL14Z8sM4lBx3V7aixtpy5NZI7WeDA
+	 El3dXqDQ7QqrQ==
+Date: Fri, 16 Feb 2024 21:49:27 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
@@ -38,12 +38,13 @@ Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
  Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
  <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
  Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v7 24/36] x86/ftrace: Enable HAVE_FUNCTION_GRAPH_FREGS
-Message-Id: <20240216175423.1a5d7a9762b5a693e273b40f@kernel.org>
-In-Reply-To: <20240215110808.752c9b67@gandalf.local.home>
+Subject: Re: [PATCH v7 25/36] arm64: ftrace: Enable
+ HAVE_FUNCTION_GRAPH_FREGS
+Message-Id: <20240216214927.9f25ba478d24883c72bdec81@kernel.org>
+In-Reply-To: <20240215111021.05163ba1@gandalf.local.home>
 References: <170723204881.502590.11906735097521170661.stgit@devnote2>
-	<170723231592.502590.12367006830540525214.stgit@devnote2>
-	<20240215110808.752c9b67@gandalf.local.home>
+	<170723232647.502590.10808588686838195094.stgit@devnote2>
+	<20240215111021.05163ba1@gandalf.local.home>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -54,123 +55,124 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 15 Feb 2024 11:08:08 -0500
+On Thu, 15 Feb 2024 11:10:21 -0500
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Wed,  7 Feb 2024 00:11:56 +0900
+> On Wed,  7 Feb 2024 00:12:06 +0900
 > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 > 
 > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > > 
-> > Support HAVE_FUNCTION_GRAPH_FREGS on x86-64, which saves ftrace_regs
-> > on the stack in ftrace_graph return trampoline so that the callbacks
-> > can access registers via ftrace_regs APIs.
-> > 
-> > Note that this only recovers 'rax' and 'rdx' registers because other
-> > registers are not used anymore and recovered by caller. 'rax' and
-> > 'rdx' will be used for passing the return value.
+> > Enable CONFIG_HAVE_FUNCTION_GRAPH_FREGS on arm64. Note that this
+> > depends on HAVE_DYNAMIC_FTRACE_WITH_ARGS which is enabled if the
+> > compiler supports "-fpatchable-function-entry=2". If not, it
+> > continue to use ftrace_ret_regs.
 > > 
 > > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > > ---
 > >  Changes in v3:
-> >   - Add a comment about rip.
-> >  Changes in v2:
-> >   - Save rsp register and drop clearing orig_ax.
+> >    - Newly added.
 > > ---
-> >  arch/x86/Kconfig            |    3 ++-
-> >  arch/x86/kernel/ftrace_64.S |   37 +++++++++++++++++++++++++++++--------
-> >  2 files changed, 31 insertions(+), 9 deletions(-)
+> >  arch/arm64/Kconfig               |    2 ++
+> >  arch/arm64/include/asm/ftrace.h  |    6 ++++++
+> >  arch/arm64/kernel/entry-ftrace.S |   28 ++++++++++++++++++++++++++++
+> >  3 files changed, 36 insertions(+)
 > > 
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > index 5edec175b9bf..ccf17d8b6f5f 100644
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -223,7 +223,8 @@ config X86
-> >  	select HAVE_FAST_GUP
-> >  	select HAVE_FENTRY			if X86_64 || DYNAMIC_FTRACE
-> >  	select HAVE_FTRACE_MCOUNT_RECORD
-> > -	select HAVE_FUNCTION_GRAPH_RETVAL	if HAVE_FUNCTION_GRAPH_TRACER
-> > +	select HAVE_FUNCTION_GRAPH_FREGS	if HAVE_DYNAMIC_FTRACE_WITH_ARGS
-> > +	select HAVE_FUNCTION_GRAPH_RETVAL	if !HAVE_DYNAMIC_FTRACE_WITH_ARGS
-> >  	select HAVE_FUNCTION_GRAPH_TRACER	if X86_32 || (X86_64 && DYNAMIC_FTRACE)
-> >  	select HAVE_FUNCTION_TRACER
-> >  	select HAVE_GCC_PLUGINS
-> > diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
-> > index 214f30e9f0c0..8a16f774604e 100644
-> > --- a/arch/x86/kernel/ftrace_64.S
-> > +++ b/arch/x86/kernel/ftrace_64.S
-> > @@ -348,21 +348,42 @@ STACK_FRAME_NON_STANDARD_FP(__fentry__)
-> >  SYM_CODE_START(return_to_handler)
-> >  	UNWIND_HINT_UNDEFINED
-> >  	ANNOTATE_NOENDBR
-> > -	subq  $24, %rsp
-> > +	/*
-> > +	 * Save the registers requires for ftrace_regs;
-> > +	 * rax, rcx, rdx, rdi, rsi, r8, r9 and rbp
-> > +	 */
-> > +	subq $(FRAME_SIZE), %rsp
-> > +	movq %rax, RAX(%rsp)
-> > +	movq %rcx, RCX(%rsp)
-> > +	movq %rdx, RDX(%rsp)
-> > +	movq %rsi, RSI(%rsp)
-> > +	movq %rdi, RDI(%rsp)
-> > +	movq %r8, R8(%rsp)
-> > +	movq %r9, R9(%rsp)
-> > +	movq %rbp, RBP(%rsp)
+> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > index aa7c1d435139..34becd41ae66 100644
+> > --- a/arch/arm64/Kconfig
+> > +++ b/arch/arm64/Kconfig
+> > @@ -194,6 +194,8 @@ config ARM64
+> >  	select HAVE_DYNAMIC_FTRACE
+> >  	select HAVE_DYNAMIC_FTRACE_WITH_ARGS \
+> >  		if $(cc-option,-fpatchable-function-entry=2)
+> > +	select HAVE_FUNCTION_GRAPH_FREGS \
+> > +		if HAVE_DYNAMIC_FTRACE_WITH_ARGS
+> >  	select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS \
+> >  		if DYNAMIC_FTRACE_WITH_ARGS && DYNAMIC_FTRACE_WITH_CALL_OPS
+> >  	select HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS \
+> > diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+> > index ab158196480c..efd5dbf74dd6 100644
+> > --- a/arch/arm64/include/asm/ftrace.h
+> > +++ b/arch/arm64/include/asm/ftrace.h
+> > @@ -131,6 +131,12 @@ ftrace_regs_set_return_value(struct ftrace_regs *fregs,
+> >  	fregs->regs[0] = ret;
+> >  }
+> >  
+> > +static __always_inline unsigned long
+> > +ftrace_regs_get_frame_pointer(struct ftrace_regs *fregs)
+> > +{
+> > +	return fregs->fp;
+> > +}
+> > +
+> >  static __always_inline void
+> >  ftrace_override_function_with_return(struct ftrace_regs *fregs)
+> >  {
+> > diff --git a/arch/arm64/kernel/entry-ftrace.S b/arch/arm64/kernel/entry-ftrace.S
+> > index f0c16640ef21..d87ccdb9e678 100644
+> > --- a/arch/arm64/kernel/entry-ftrace.S
+> > +++ b/arch/arm64/kernel/entry-ftrace.S
+> > @@ -328,6 +328,33 @@ SYM_FUNC_END(ftrace_stub_graph)
+> >   * Run ftrace_return_to_handler() before going back to parent.
+> >   * @fp is checked against the value passed by ftrace_graph_caller().
+> >   */
+> > +#ifdef CONFIG_HAVE_FUNCTION_GRAPH_FREGS
+> > +SYM_CODE_START(return_to_handler)
+> > +	/* save ftrace_regs except for PC */
+> > +	sub	sp, sp, #FREGS_SIZE
+> > +	stp	x0, x1, [sp, #FREGS_X0]
+> > +	stp	x2, x3, [sp, #FREGS_X2]
+> > +	stp	x4, x5, [sp, #FREGS_X4]
+> > +	stp	x6, x7, [sp, #FREGS_X6]
+> > +	str	x8,     [sp, #FREGS_X8]
+> > +	str	x29, [sp, #FREGS_FP]
+> > +	str	x9,  [sp, #FREGS_LR]
+> > +	str	x10, [sp, #FREGS_SP]
 > 
-> This unconditionally slows down function graph tracer for no good reason.
+> Here too. The above is just garbage.
 > 
-> Most of the above is going to be garbage anyway, except the rax and rdx.
+> Let's not fill in garbarge registers. The above is useless on return of a
+> function. Heck, adding zeros is better than this. But really, we need to
+> have ftrace regs to have some kind of flag that can state what it holds.
+> Right now I see three states:
 > 
-> I would recommend than we set something else in the ftrace regs that states
-> this only holds return values. Anything else will just get invalid.
+>  1 - holds all regs and pt_regs can be retrieved
+>  2 - only holds function entry regs (parameters and stack)
+>  3 - only holds function exit regs (return value and stack)
 > 
-> I'm really against saving garbage. The purpose of ftrace_regs is that it
-> can hold incomplete data.
+> Don't save anything else unless needed.
 
-Ah, OK. I misunderstood. I thought ftrace_regs was expected to be filled
-with reduced (arch-defined) register set. But it just ensures that holds
-some registers depends on the context.
+OK, it is reasonable to save the registers depending on the context.
 
-Thank you,
+Thanks,
 
 > 
 > -- Steve
 > 
-> 
-> > +	/*
-> > +	 * orig_ax is not cleared because it is used for indicating the direct
-> > +	 * trampoline in the fentry. And rip is not set because we don't know
-> > +	 * the correct return address here.
-> > +	 */
 > > +
-> > +	leaq FRAME_SIZE(%rsp), %rcx
-> > +	movq %rcx, RSP(%rsp)
-> >  
-> > -	/* Save the return values */
-> > -	movq %rax, (%rsp)
-> > -	movq %rdx, 8(%rsp)
-> > -	movq %rbp, 16(%rsp)
-> >  	movq %rsp, %rdi
-> >  
-> >  	call ftrace_return_to_handler
-> >  
-> >  	movq %rax, %rdi
-> > -	movq 8(%rsp), %rdx
-> > -	movq (%rsp), %rax
-> >  
-> > -	addq $24, %rsp
-> > +	/*
-> > +	 * Restore only rax and rdx because other registers are not used
-> > +	 * for return value nor callee saved. Caller will reuse/recover it.
-> > +	 */
-> > +	movq RDX(%rsp), %rdx
-> > +	movq RAX(%rsp), %rax
+> > +	mov	x0, sp
+> > +	bl	ftrace_return_to_handler	// addr = ftrace_return_to_hander(fregs);
+> > +	mov	x30, x0				// restore the original return address
 > > +
-> > +	addq $(FRAME_SIZE), %rsp
-> >  	/*
-> >  	 * Jump back to the old return address. This cannot be JMP_NOSPEC rdi
-> >  	 * since IBT would demand that contain ENDBR, which simply isn't so for
+> > +	/* restore return value regs */
+> > +	ldp x0, x1, [sp, #FREGS_X0]
+> > +	ldp x2, x3, [sp, #FREGS_X2]
+> > +	ldp x4, x5, [sp, #FREGS_X4]
+> > +	ldp x6, x7, [sp, #FREGS_X6]
+> > +	add sp, sp, #FREGS_SIZE
+> > +
+> > +	ret
+> > +SYM_CODE_END(return_to_handler)
+> > +#else /* !CONFIG_HAVE_FUNCTION_GRAPH_FREGS */
+> >  SYM_CODE_START(return_to_handler)
+> >  	/* save return value regs */
+> >  	sub sp, sp, #FGRET_REGS_SIZE
+> > @@ -350,4 +377,5 @@ SYM_CODE_START(return_to_handler)
+> >  
+> >  	ret
+> >  SYM_CODE_END(return_to_handler)
+> > +#endif /* CONFIG_HAVE_FUNCTION_GRAPH_FREGS */
+> >  #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
 > 
 
 
