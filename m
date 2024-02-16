@@ -1,253 +1,165 @@
-Received: from smtp-fw-33001.amazon.com (smtp-fw-33001.amazon.com [207.171.190.10])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2055.outbound.protection.outlook.com [40.107.220.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D89145B0C;
-	Fri, 16 Feb 2024 15:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.190.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708097418; cv=none; b=W+tpuClwCA0U67QSCysHspcAWbyTA9MRvnfI9sIifqfnEDy3aNzouskMHXmeF9pOgitTPL7Tc89eMFzntJmZh724YGXnIwIToybduA3kiVF+hr03ajo1j6MEBKL76J62ukqMDKTzNEao1A1JDt+v/YfT/Cj/n5YEf0H17D7b7hY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708097418; c=relaxed/simple;
-	bh=wVrW8kT4DejB28L712djWukexTnKvatq3YuM0neGVPs=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=srSb+uIhiOjNjTZIo8ZATc+ZCsMlNZcTcNvNKkrc12gn3bHvWqD44O3JuXFGsVFISclDTLQvY6+MQ7iaoPcXaXTXu3lwv+0Q8uWipr9hWXbRzsWMa2MJ7i/q6ygn9HSd0WRZgyi/Sx5qNSnctUGOTQ7HvQ6nvTwI9tdg7Ycc88I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=gIva1+X6; arc=none smtp.client-ip=207.171.190.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F4F146903;
+	Fri, 16 Feb 2024 15:30:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708097424; cv=fail; b=OUY/PxEflKH1NPF/61l+5AO3hGW2B4Swdc/nqlM/QAtzjOfoE4/zJcCxA1I/FukP250j/8mxnM/JvnDJkFb0MNX+Qu+LNvt4aMZG6RpkR7aSGmhDXbmOi9CPxRszBh7nBhAO3HIWpXphnDV4LU+YdTyUbJvFfPr/MUwl5mKk42Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708097424; c=relaxed/simple;
+	bh=UbGxSn1tiYyPlL2VdghnyTQVsmDCoKJLRsiU4hRojdE=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HZ6rlyL/qd2fB80IaBi6HLgUS4MUoSw5LPHv9flZ/6Nb+HnOhZO0t0nYCkErCHZ0i/2I+JkxrrwAwwddpOlSytpmdOCaiadFfhjBXNXyI3NRv7z7ZJQe5rIX1ZWM+IHSZrHMDs24O4I1A5sdqCfH+3ZrKJFfJ2yJVw2fohAvP1E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mBWKkgt0; arc=fail smtp.client-ip=40.107.220.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="gIva1+X6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1708097416; x=1739633416;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=F/Eio/BjkBDvnj7lgXtt9GlxdtOY8F3NsfX7BbAdrZU=;
-  b=gIva1+X6I8wbrO8J3Wy5M92hbu8ewGk7/u6aTPMRrOoc+Xo0s0QHBjtJ
-   p6WvO8NPOBH6aFqFcZdPAi2tCSdRqbxDrpHBek15CSjb6GHPYjr560d6y
-   bDM625LdVfDNMCzaeFFnln0wDZ8elztftXlpDIYBA2ODvuUHQ9c9UJc1q
-   w=;
-X-IronPort-AV: E=Sophos;i="6.06,165,1705363200"; 
-   d="scan'208";a="327439017"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-33001.sea14.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 15:29:52 +0000
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.38.20:25817]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.5.203:2525] with esmtp (Farcaster)
- id 745c92d6-d758-4d02-8839-5255b61b4613; Fri, 16 Feb 2024 15:29:51 +0000 (UTC)
-X-Farcaster-Flow-ID: 745c92d6-d758-4d02-8839-5255b61b4613
-Received: from EX19D020UWC001.ant.amazon.com (10.13.138.157) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 16 Feb 2024 15:29:44 +0000
-Received: from EX19MTAUWC001.ant.amazon.com (10.250.64.145) by
- EX19D020UWC001.ant.amazon.com (10.13.138.157) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 16 Feb 2024 15:29:44 +0000
-Received: from dev-dsk-ptyadav-1c-37607b33.eu-west-1.amazon.com (10.15.11.255)
- by mail-relay.amazon.com (10.250.64.145) with Microsoft SMTP Server id
- 15.2.1118.40 via Frontend Transport; Fri, 16 Feb 2024 15:29:44 +0000
-Received: by dev-dsk-ptyadav-1c-37607b33.eu-west-1.amazon.com (Postfix, from userid 23027615)
-	id A785620CE8; Fri, 16 Feb 2024 16:29:43 +0100 (CET)
-From: Pratyush Yadav <ptyadav@amazon.de>
-To: Alexander Graf <graf@amazon.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kexec@lists.infradead.org>,
-	<linux-doc@vger.kernel.org>, <x86@kernel.org>, Eric Biederman
-	<ebiederm@xmission.com>, "H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski
-	<luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt
-	<rostedt@goodmis.org>, Andrew Morton <akpm@linux-foundation.org>, "Mark
- Rutland" <mark.rutland@arm.com>, Tom Lendacky <thomas.lendacky@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>, James Gowans <jgowans@amazon.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, <arnd@arndb.de>,
-	<pbonzini@redhat.com>, <madvenka@linux.microsoft.com>, Anthony Yznaga
-	<anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, "David
- Woodhouse" <dwmw@amazon.co.uk>, Benjamin Herrenschmidt
-	<benh@kernel.crashing.org>, Rob Herring <robh+dt@kernel.org>, "Krzysztof
- Kozlowski" <krzk@kernel.org>
-Subject: Re: [PATCH v3 00/17] kexec: Allow preservation of ftrace buffers
-In-Reply-To: <20240117144704.602-1-graf@amazon.com> (Alexander Graf's message
-	of "Wed, 17 Jan 2024 14:46:47 +0000")
-References: <20240117144704.602-1-graf@amazon.com>
-Date: Fri, 16 Feb 2024 16:29:43 +0100
-Message-ID: <mafs0zfw08m1k.fsf@amazon.de>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mBWKkgt0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P59e2C+X5h//RRSmiSA5Nw1TKxHvzTuz9PBe4P/9LDUTgerLPzbMpFNgqvP5EpG2JBHMpQlQPYcKyIAuVQ1FIg/ept5haoGnU4by2IJzGYS9zcGB8YAAKRaV4sQzyapUswCLXzDNj8mDxCRAB5RDgw9/ssiT1psjqWTIJjyP+fMb3H0J60+NTCcs3hlczDETcNeNNezJhjnPy2L1DFKjNqvlOZX7ZPDgUvKrSQxAbBBKIAw3i2S2Aokhn4fb+9Qh1q5TAnVnzrKKPUcUKOL7SWKS79DTVRthboC8woyNvUZQL7qN1TOg01tphFkYT2YBKhdUpDuc6m/gl9WvFrNRsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=h9YmYyNK+k55qvxMCF4sj3X9ngK7nwjGReBncbKvqvk=;
+ b=eD6Xq+gL0pL68OK2xPhrUPveKqExtL7nZuE3QIcmRn5vYoolBDpddmT5B0g1GEBpPqPqOcXBm1Q1fBpj+ZQI6BwMdm7dL+r23JLy0uq9fXl4ejS+4jj4QPwc6VwV0+ejqO913elIiZClF2sc441r1+3a4ZQ2B88y9olEOkRFFjjzOX2EYxPUq/T+SZgjD06MT0gwBzqIvf//Vd12yqwb51JSnzXjbFrID0JJqt3CjamPkoL/7OVCSGJKpL1deRG+nwhw/gCwS3K895bg4WhbMWqiv/l3XbMvZRP65TRdeD2ZtEftWgEiPN3AThRfiBAOCr+ZsInaoVI9JXXh7u7K1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h9YmYyNK+k55qvxMCF4sj3X9ngK7nwjGReBncbKvqvk=;
+ b=mBWKkgt0shGzzu+b+y+NTi3W9CAZTMVS1qpTw81A2KDRqw9mSlNkAyPG/g9GeFVwNu840feUF/52uQYjQndSyZt9mfTr/xijT+/xw4JUoWO+aftUQk5YxF7/f6hIoeccUzuleTjQ07i9az6hUjIU7ced+Fgoulp+rKLahAJ+XFE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by DS0PR12MB7770.namprd12.prod.outlook.com (2603:10b6:8:138::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.12; Fri, 16 Feb
+ 2024 15:30:17 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::e1fb:4123:48b1:653]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::e1fb:4123:48b1:653%4]) with mapi id 15.20.7292.022; Fri, 16 Feb 2024
+ 15:30:17 +0000
+Message-ID: <7e3c0990-f5b2-47e1-9de8-bd84fc582be9@amd.com>
+Date: Fri, 16 Feb 2024 16:30:14 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/8] dma-buf/fence-chain: use trace_dma_fence_sync_to
+Content-Language: en-US
+To: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>, Gustavo Padovan
+ <gustavo@padovan.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Alex Deucher
+ <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org
+References: <20240216151006.475077-1-pierre-eric.pelloux-prayer@amd.com>
+ <20240216151006.475077-3-pierre-eric.pelloux-prayer@amd.com>
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <20240216151006.475077-3-pierre-eric.pelloux-prayer@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR0P281CA0223.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:ac::16) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|DS0PR12MB7770:EE_
+X-MS-Office365-Filtering-Correlation-Id: 35ceda78-fb96-49ff-9696-08dc2f042dc4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	8Silih3XDTxaAJw6G7oOwFbm9+lI6jDuVilfFoX0aF6Fkpl8tAG5ixrK5XVtARad4CtKl/RhJzNzuBbNMbHdGbG42Jdc1WOiQ9D7ppEL+3qDISqNoS2AZaH1CMr7sEqBmwTJbAXAjrZrdftoPBDZSrKGstVQWuCsAiPqyKSykC6ZjvooE+A2lSvECixDnvYb44LyisS/A3C0T42nVRbmdq11Xy/9wy3P6fJbZY582ME2yUQERKId+xs3k61hnDziB17WcH5crLaYV6/njqyh40ONUJcwpadBsBheI9blpAKLBuB8DgC9dykl+F325FfXSYHJA4rlCUVEmas6QgkK5lo62zMBFpgwi3LpXEKnDgo1VWdjMRWjUVcOJQOfojbGDN5/TefwoOXR5lxtLJt16e7LvDVg7xS1pUwnIhkOmd232KghJnVrSMlgrNSmdvXgejyuWanMHkUeCiUtLsHQEW2I6poy1+tGmLjEOMACXu5RxJTgsTmFHfCF0sRDtCa4S5K/PNDQN6UwIh8mE9W3tk/AtBbxJ83NzbUWqlTnzWDwRi4AT7eaSoQWQePErTC6GEZ6jQnLilukZAicqfQYNkeOOUHUafUb4fEGX3a+kMg=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(136003)(346002)(39860400002)(376002)(366004)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(31686004)(6512007)(6506007)(6486002)(478600001)(2616005)(41300700001)(316002)(2906002)(5660300002)(8936002)(8676002)(66476007)(66556008)(66946007)(110136005)(6666004)(26005)(31696002)(36756003)(38100700002)(921011)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?c3Y0cG9lUFhMazl5U1hMODIySGpxRkN2cFU1cXNQcjY4cjhSM0R2NjJoUnA3?=
+ =?utf-8?B?alRpY1V4ZlYvN0dKNXBZb3k0ZlN3U0I0TnN6R2xPckx1N2NoUExWZlZtbkpj?=
+ =?utf-8?B?aDhDRFR4Uks0KzdWZTZWQnV5OU12MGdjVjJQcUJELzVBTXUrWEJnMjNUVlY2?=
+ =?utf-8?B?UWVjaXMxQTBpemJFRjl3ajNEVWRiaWhMdWtCcTdGc085SDRUYmxSTzhnbFhp?=
+ =?utf-8?B?c0k2V0R6R0pPMEdUdGFSeWpqNFZMREhPNXYyRDVBSnM1WDgxbzljR3piSjJj?=
+ =?utf-8?B?Z25HUVVMZmxtNkRDOVYzUUZrZXVSN2VsUXhxNElJYitxUjFhMm00NzV0VWVI?=
+ =?utf-8?B?dlVkR05NalVvdnNtb0F4aE5tRG4zeHN3S3djaHlkYi9EUjRiR3g3ZnhQdUE2?=
+ =?utf-8?B?dU96aHRPS1gzSU4xQThXN2tPNG9KT0VHZG9iN0kvT1llZEZZUXM4dnpMUXh2?=
+ =?utf-8?B?SGY2UE4zWEFzN00rOHRBdFQvNXhEakRtY21FQ01VTER4MGYyVkQ2WGpNL3NG?=
+ =?utf-8?B?cHgrQml0cWU5ZmRXeXdKWDUyZWZpbm9INzFEakROYnVISytSR1NWbzhoaUpL?=
+ =?utf-8?B?WjBuM3RUOEJjNEVlQm1YMVFkUjdBRk5lQ3pINzhkcGtDMDFoN2p1SkZNNFJS?=
+ =?utf-8?B?V2hnVUp1cTk0UElBTGZ2Y1JVZW1NMis5YjcwRFBVRFpJT20walI0alBPOW9n?=
+ =?utf-8?B?OXlIM2NZK2JZRUZJbE9kSndYZ1JEZWQ1Q1RnMHc4cm5zVndLVFFMTkNXWFgz?=
+ =?utf-8?B?eWRTeWNWbGxwY3VoUTR4eTdPOFloS1o1RFpjdWNWdFk3UTdsN2Jrc2FBa2dW?=
+ =?utf-8?B?WFBzbnJYeTY4NWU2OFFhNWJBS0N0aTBmR2JXNmttYzlqWmNYV1hWZjloNU1D?=
+ =?utf-8?B?d0JpNm5sN2lzRmpKWExhK0djdzh5YUpvcnZnQVI2UThGNUp2Q2htRzlMT0lv?=
+ =?utf-8?B?S3hTTlpSbzRrU3E3eGtyOEV1Z0dtZzgvNUVDZzgrVVZCZ1BXM0RDN3dnZWxQ?=
+ =?utf-8?B?cDBCZ2xVWGFJYzdjaFdQck9KWHVRc21LdWdDTkZ4ZG5BVVdCZkpvWElkZDdG?=
+ =?utf-8?B?TkxUb0hweFMxemhIYVZucVpFY3lNQjg1YVVSc2hBeWxGaE1RWlFwQUJZZlZ6?=
+ =?utf-8?B?SjB2SG45eitBeGtBUXNyeU9ob09VSWZackR6aHFpbGtDTElGd2Z3Wk1ycVpX?=
+ =?utf-8?B?VmswZnlvbnhXUTl6eVRxR3QvL1g2Wklkc0V3S1JQWUdLNTdIdXZOSmUvT3lT?=
+ =?utf-8?B?WjArNUk4UTg2Q01rWXdYVXpDekN5REtuU3JucjNiMng1TmRxTHZVVk96aGRW?=
+ =?utf-8?B?K2lPcUpoVVdua3QxcDR1YzhoeFNQWHM1QjJPS0dWNXRJckhBbExTWGdHQ01L?=
+ =?utf-8?B?eGFTTFFidUlEWGZIOXkzT2hIQU5VN1lHdVd1VzhYM1FYaHpqSTF3Y0p3aDFL?=
+ =?utf-8?B?bGJaZWJ4cjhHRHdydklReXRxZEIyUXBqbERlcjBJeklUMStueWNVWk1ZOWtn?=
+ =?utf-8?B?SERYYUJNMkQ3VERuQjN5Q0xLN0RvVTFFSDFodWlTNmU1LzVJWWg1WlJOMEI1?=
+ =?utf-8?B?MUZHUDY5b2t6aXNLcllwcm0zYmtyQStyZUZqL3RpNGRwd3hFKzFvWTdkcm81?=
+ =?utf-8?B?NGV3NFZZTkI2MzA0M1pWekx2NVZUQXArKzhTdWljdlNYRHlPM29mZzZxNXdN?=
+ =?utf-8?B?bStjZVI1RU11ZU1JbFFwVzJPcUdYNngxVS8yQjFCWXlVOXJrYjNFOXBac1B4?=
+ =?utf-8?B?VTFGMmtMbUFJSHZyM2cyeldUemQyRndaZFhjZ3lzdFE0eGVGbFNreTR4QitU?=
+ =?utf-8?B?TVhZM29rQVcvWFcyYks0eHE5bEJHejg5V2htWlRYQWpCZWl3VHdMN09NWmd4?=
+ =?utf-8?B?dnZML1o3VStsRXcydldsZDY3NEZUSUlmUTFINWFNckJZYWFWNk1sMlN0d0lW?=
+ =?utf-8?B?TTF4TjJ1NjNKUVFIZFQ2TDRvWmF1RTZ0MWNmdmRYNzdFa1dQNkxIM1F0TXR3?=
+ =?utf-8?B?K1JEbUg2RG54bkNQVC83VUNrSmJSR3o5d3pLTVgzQm9SS0JMWmtQMEhJRVpB?=
+ =?utf-8?B?OC9vZEgrcVZGb3RxQkZxTk4xc3BsV0RCYURiWWh2TFVJc2QzbUFTWE50d3p2?=
+ =?utf-8?Q?WRO08e6PDT0aCMTrHDAAwEQxZ?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 35ceda78-fb96-49ff-9696-08dc2f042dc4
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2024 15:30:17.6605
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oucChysUYDPHa8flytTBi+BFgD8TMh9v236OKpco1sjlYmrx98bJu/anMtkCyU3c
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7770
 
-Hi Alex,
-
-On Wed, Jan 17 2024, Alexander Graf wrote:
-
-> Kexec today considers itself purely a boot loader: When we enter the new
-> kernel, any state the previous kernel left behind is irrelevant and the
-> new kernel reinitializes the system.
+Am 16.02.24 um 16:09 schrieb Pierre-Eric Pelloux-Prayer:
+> To inform tools about the relationship between the fences.
 >
-> However, there are use cases where this mode of operation is not what we
-> actually want. In virtualization hosts for example, we want to use kexec
-> to update the host kernel while virtual machine memory stays untouched.
-> When we add device assignment to the mix, we also need to ensure that
-> IOMMU and VFIO states are untouched. If we add PCIe peer to peer DMA, we
-> need to do the same for the PCI subsystem. If we want to kexec while an
-> SEV-SNP enabled virtual machine is running, we need to preserve the VM
-> context pages and physical memory. See James' and my Linux Plumbers
-> Conference 2023 presentation for details:
+> Signed-off-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
 
-I am working on handing userspace pages across kexec. This can be useful
-for applications with large in-memory state that can be time consuming
-to rebuild. If they can hand over their state over kexec, it allows for
-kernel upgrades with lower downtime. As a part of this problem, I have
-been looking at plugging all of this into CRIU [0] so I don't have to
-modify the applications to use this feature. I can just use CRIU to do
-the checkpoint and restore quickly over kexec.
+Reviewed-by: Christian König <christian.koenig@amd.com>
 
-I hacked together some patches for this (which are not yet polished
-enough to publish) and ended up implementing something like KHO in a
-much more crude way. I have since refactored my patches to use KHO and I
-find it quite useful. So thanks for working on this :-)
-
-It was easy enough to get KHO working with my patches though I had to
-look into your ftrace patches to get the whole picture. The
-documentation can be improved to show how it can be used from the
-driver/subsystem perspective. For example, I had to read your ftrace
-patches to figure out I should use kho_get_fdt(), or that I should
-register a notifier via kho_register_notifier(). I would be happy to
-contribute some documentation improvements.
-
-Have you done any analysis on the performance or memory overhead? If
-yes, it would be nice to look at some data. I have some concerns with
-performance and memory overhead, especially for more fragmented memory
-but I don't yet have numbers to present you.
-
-[0] https://github.com/checkpoint-restore/criu
-
+> ---
+>   drivers/dma-buf/dma-fence-chain.c | 4 ++++
+>   1 file changed, 4 insertions(+)
 >
->   https://lpc.events/event/17/contributions/1485/
->
-> To start us on the journey to support all the use cases above, this
-> patch implements basic infrastructure to allow hand over of kernel state
-> across kexec (Kexec HandOver, aka KHO). As example target, we use ftrace:
-> With this patch set applied, you can read ftrace records from the
-> pre-kexec environment in your post-kexec one. This creates a very powerful
-> debugging and performance analysis tool for kexec. It's also slightly
-> easier to reason about than full blown VFIO state preservation.
->
-> == Alternatives ==
->
-> There are alternative approaches to (parts of) the problems above:
->
->   * Memory Pools [1] - preallocated persistent memory region + allocator
->   * PRMEM [2] - resizable persistent memory regions with fixed metadata
->                 pointer on the kernel command line + allocator
->   * Pkernfs [3] - preallocated file system for in-kernel data with fixed
->                   address location on the kernel command line
->   * PKRAM [4] - handover of user space pages using a fixed metadata page
->                 specified via command line
-
-FYI, you forgot to paste the links in v3 but I can find them from v2.
-
-From all these options, PKRAM seems somewhat useful for my use case but
-with CRIU it would need to copy all the application pages to the PKRAM
-FS and would need at least as much free memory as application memory.
-
-Instead, I have built a simple system that gives an API to userspace to
-hand over its pages and to request them back. It then keeps track of the
-PID and PA -> VA mappings (essentially a page table). This lets me keep
-the pages in-place and avoid needing lots of free memory or expensive
-copying. KHO plays a crucial role there in handing those pages and page
-tables across to the next kernel.
-
-The FDT format works fairly well for my use case. Since page tables are
-a stable data structure, I don't need to worry about their format
-changing between kernel versions and can directly pass them through.
-This might not be true for many other data structures so subsystems
-using those either need to serialize them to FDT or invent their own
-serialization formats.
-
-I also wonder how the "mem" array will work for more fragmented
-allocations. It might grow very large with lots of scattered elements. I
-wonder how both KHO's parsing and memblock will behave in this case. I
-have not yet tried stressing it so I can't say for myself.
-
->
-> All of the approaches above fundamentally have the same problem: They
-> require the administrator to explicitly carve out a physical memory
-> location because they have no mechanism outside of the kernel command
-> line to pass data (including memory reservations) between kexec'ing
-> kernels.
->
-> KHO provides that base foundation. We will determine later whether we
-> still need any of the approaches above for fast bulk memory handover of for
-> example IOMMU page tables. But IMHO they would all be users of KHO, with
-> KHO providing the foundational primitive to pass metadata and bulk memory
-> reservations as well as provide easy versioning for data.
->
-> == Overview ==
->
-> We introduce a metadata file that the kernels pass between each other. How
-> they pass it is architecture specific. The file's format is a Flattened
-> Device Tree (fdt) which has a generator and parser already included in
-> Linux. When the root user enables KHO through /sys/kernel/kho/active, the
-> kernel invokes callbacks to every driver that supports KHO to serialize
-> its state. When the actual kexec happens, the fdt is part of the image
-> set that we boot into. In addition, we keep a "scratch region" available
-> for kexec: A physically contiguous memory region that is guaranteed to
-> not have any memory that KHO would preserve.  The new kernel bootstraps
-> itself using the scratch region and sets all handed over memory as in use.
-> When drivers initialize that support KHO, they introspect the fdt and
-> recover their state from it. This includes memory reservations, where the
-> driver can either discard or claim reservations.
->
-> == Limitations ==
->
-> I currently only implemented file based kexec. The kernel interfaces
-> in the patch set are already in place to support user space kexec as well,
-> but I have not implemented it yet inside kexec tools.
->
-> == How to Use ==
->
-> To use the code, please boot the kernel with the "kho_scratch=" command
-> line parameter set: "kho_scratch=512M". KHO requires a scratch region.
->
-> Make sure to fill ftrace with contents that you want to observe after
-> kexec.  Then, before you invoke file based "kexec -l", activate KHO:
->
->   # echo 1 > /sys/kernel/kho/active
->   # kexec -l Image --initrd=initrd -s
->   # kexec -e
->
-> The new kernel will boot up and contain the previous kernel's trace
-> buffers in /sys/kernel/debug/tracing/trace.
->
-[...]
-
-Overall, I think KHO is quite useful and I would be happy to see it
-evolve and eventually make it into the kernel. It would certainly make
-my life a lot easier.
-
-Since I have used it in my patches, I have done some basic testing for
-it. Nothing fancy, just handed a few pages across. It works as
-advertised. For that,
-
-Tested-by: Pratyush Yadav <ptyadav@amazon.de>
-
--- 
-Regards,
-Pratyush Yadav
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
+> diff --git a/drivers/dma-buf/dma-fence-chain.c b/drivers/dma-buf/dma-fence-chain.c
+> index 9663ba1bb6ac..3435078c45b7 100644
+> --- a/drivers/dma-buf/dma-fence-chain.c
+> +++ b/drivers/dma-buf/dma-fence-chain.c
+> @@ -9,6 +9,8 @@
+>   
+>   #include <linux/dma-fence-chain.h>
+>   
+> +#include "trace/events/dma_fence.h"
+> +
+>   static bool dma_fence_chain_enable_signaling(struct dma_fence *fence);
+>   
+>   /**
+> @@ -251,6 +253,8 @@ void dma_fence_chain_init(struct dma_fence_chain *chain,
+>   	chain->fence = fence;
+>   	chain->prev_seqno = 0;
+>   
+> +	trace_dma_fence_used_as_dependency(fence, __func__);
+> +
+>   	/* Try to reuse the context of the previous chain node. */
+>   	if (prev_chain && __dma_fence_is_later(seqno, prev->seqno, prev->ops)) {
+>   		context = prev->context;
 
