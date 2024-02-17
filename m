@@ -1,42 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24F281E;
-	Sat, 17 Feb 2024 12:27:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67B27B3CC;
+	Sat, 17 Feb 2024 15:54:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708172833; cv=none; b=b+So1pSmlP9HJM9jAyFwSWBYvUJZBfPv9x6Y41XVNiK/LzkaLAubJjNsSVkfov4vrXGsuFh3hwFZ5fJI+yO7VxPXj7e6eXB02bkBKALHrSI19Khj18P5Hq1ynTARWsv/iG7oZRAPtkhTKlLkMmMyCBItEfLSxloJTrQ1YW0gRcU=
+	t=1708185246; cv=none; b=LGREmAXrKkQ+75xEzivUm5btR12zkHtyvDLzx5uRbkBh4TN49y1TttazhMr9fBaqidrPI5d9hQJrhdXyShQhCdagr6p0jzG0BS4ij+ERzuRstZh/lHrJccdQ80CmdLCM4ftxuyYD8WGaKZ6DQMzTFE5mvi9N0Cm6MJc3suC03F0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708172833; c=relaxed/simple;
-	bh=CI+mga30EQ/XT42bpPPtbFN8gfOv0yqyoO4Q2QC2UnU=;
+	s=arc-20240116; t=1708185246; c=relaxed/simple;
+	bh=yG8vscJnWU0ovGCkwuzXNoGwaH1DWcjjYwxNQHJgFCo=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=qLgv3OYJaJJkpdObvs8alIZcKAjYy1K3jvCK3GiN+QhZRpGHIgHZ4qOzUxbVTGxgBy9+51WJckgkr9X1rC1k59wnNfOvZrEtpZMBohye9eXC+ufl0WE3zH5qRRfY0+vuBStTSsGowy217bgOr3fy3OFUV6ro4byqwpw/C0mECWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uYWRbN0U; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=hFJfgpD67KMUoLrxPkjXoH0dl0HRd9zJVp5hAyBQlimnwpM7Y5Yrf7d9wqBdG6dPo91aCJwfYf2eJT7yrh74m3GhlaTJcKam+NkBfQ7gHNUv7yPHupXnKAViwrazTwm7rYA83umLEQyoMKFSvJ9whC7hGaUKn+nTvMluFHn93rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AHw1PLJv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uYWRbN0U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35288C433F1;
-	Sat, 17 Feb 2024 12:27:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AHw1PLJv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE0C5C433C7;
+	Sat, 17 Feb 2024 15:54:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708172832;
-	bh=CI+mga30EQ/XT42bpPPtbFN8gfOv0yqyoO4Q2QC2UnU=;
+	s=k20201202; t=1708185246;
+	bh=yG8vscJnWU0ovGCkwuzXNoGwaH1DWcjjYwxNQHJgFCo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=uYWRbN0UXsln3U/B+qSgvZSSLiywEOyexYX7sGqT87Ev1/qMA6O0kxq4tMhALRQGy
-	 YvfPqu5+SFYI3avgq623xQJnIdyHLPHO+VP9eUOPTkxXhUxBh7fa6OJWb/V/4a4Xu8
-	 lnziGJZFJ+5wCztv99t93ultFEqKTF/jUNk2zAL34G1ZPbOns6HHoOiNTSAoiE650q
-	 C2PG6thz8pOnwlgGbRmkPH4T9Hf2efl3EE4R37P3gO/ccG2Hm72JZhFcYll4RYTLqj
-	 0n6TLDcoF2wsQCQoSNYm+xAA4Q/0KrVCR31kTtOVzXyqqx6/itaz2Vil2O400vbOZ5
-	 Ls0hQoNnVXQxg==
-Date: Sat, 17 Feb 2024 21:27:08 +0900
+	b=AHw1PLJvhfjZhLGK5KHkBIVj+9XeG0/PyI3CH36/yDz5FeAFPcjq87whLIvrbE6rj
+	 bwQOUkRIBYocELBbTrPp8Ys47/5ZB1h2vZPYOytZCoxea+gVWR4qlBj6CCvW9JmwGc
+	 NhVPtYg43u+MX8Axj7Kby5CBdNL2KHEmsrxCi05hW22h7TpFh2MPu12ReyBJvTDG/M
+	 5ff3BAlKcPp8Ya5WVMwFX8iv2hWxLr6rI4hpMf2tpmooememXcUqzpCAk5qInxOfBD
+	 /ztSkHZnSJAAWlkpXvvgtAQcu/t4Ad48T536TuTATHL5XK4CbCEtOrak10v/jT0+c3
+	 EJPC4KNSqf0Ww==
+Date: Sun, 18 Feb 2024 00:53:59 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Steven
- Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC 1/5] tracing/probes: Fix to search structure fields
- correctly
-Message-Id: <20240217212708.2e14a88e6c1e9733450459f6@kernel.org>
-In-Reply-To: <170791694361.389532.10047514554799419688.stgit@devnote2>
-References: <170791693437.389532.6816883363982512874.stgit@devnote2>
-	<170791694361.389532.10047514554799419688.stgit@devnote2>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
+ <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, Alexei
+ Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
+ <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v7 20/36] function_graph: Improve push operation for
+ several interrupts
+Message-Id: <20240218005359.7072c27c99bcfe426e2126b6@kernel.org>
+In-Reply-To: <20240215095739.41a2fac7@gandalf.local.home>
+References: <170723204881.502590.11906735097521170661.stgit@devnote2>
+	<170723227198.502590.10431025573751489041.stgit@devnote2>
+	<20240215095739.41a2fac7@gandalf.local.home>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,43 +55,84 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Let me pick this patch because this is a real bugfix.
+On Thu, 15 Feb 2024 09:57:39 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-On Wed, 14 Feb 2024 22:22:23 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> On Wed,  7 Feb 2024 00:11:12 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > Improve push and data reserve operation on the shadow stack for
+> > several sequencial interrupts.
+> > 
+> > To push a ret_stack or data entry on the shadow stack, we need to
+> > prepare an index (offset) entry before updating the stack pointer
+> > (curr_ret_stack) so that unwinder from interrupts can find the
+> > next return address from the shadow stack. Currently we do write index,
+> > update the curr_ret_stack, and rewrite it again. But that is not enough
+> > for the case if two interrupts happens and the first one breaks it.
+> > For example,
+> > 
+> >  1. write reserved index entry at ret_stack[new_index - 1] and ret addr.
+> >  2. interrupt comes.
+> >     2.1. push new index and ret addr on ret_stack.
+> >     2.2. pop it. (corrupt entries on new_index - 1)
+> >  3. return from interrupt.
+> >  4. update curr_ret_stack = new_index
+> >  5. interrupt comes again.
+> >     5.1. unwind <------ may not work.
+> 
+> I'm curious if you saw this happen?
+> 
+> That is, did you trigger this or only noticed it by inspection?
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+I just noticed this scenario while explaining why we write the same value
+twice to Jiri.
+
+https://lore.kernel.org/all/20231220004540.0af568c69ecaf9170430a383@kernel.org/
+
 > 
-> Fix to search a field from the structure which has anonymous union
-> correctly.
-> Since the reference `type` pointer was updated in the loop, the search
-> loop suddenly aborted where it hits an anonymous union. Thus it can not
-> find the field after the anonymous union. This avoids updating the
-> cursor `type` pointer in the loop.
+> This code is already quite complex, I would like to simplify it more before
+> we try to fix rare race conditions that only affect the unwinder.
 > 
-> Fixes: 302db0f5b3d8 ("tracing/probes: Add a function to search a member of a struct/union")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  kernel/trace/trace_btf.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Let's hold off on this change.
+
+OK, then drop this until someone hits the actual problem, maybe that
+should be rare case.
+
+Thank you,
+
 > 
-> diff --git a/kernel/trace/trace_btf.c b/kernel/trace/trace_btf.c
-> index ca224d53bfdc..5bbdbcbbde3c 100644
-> --- a/kernel/trace/trace_btf.c
-> +++ b/kernel/trace/trace_btf.c
-> @@ -91,8 +91,8 @@ const struct btf_member *btf_find_struct_member(struct btf *btf,
->  	for_each_member(i, type, member) {
->  		if (!member->name_off) {
->  			/* Anonymous union/struct: push it for later use */
-> -			type = btf_type_skip_modifiers(btf, member->type, &tid);
-> -			if (type && top < BTF_ANON_STACK_MAX) {
-> +			if (btf_type_skip_modifiers(btf, member->type, &tid) &&
-> +			    top < BTF_ANON_STACK_MAX) {
->  				anon_stack[top].tid = tid;
->  				anon_stack[top++].offset =
->  					cur_offset + member->offset;
+> -- Steve
 > 
+> 
+> > 
+> > To avoid this issue, this introduces a new rsrv_ret_stack stack
+> > reservation pointer and a new push code (slow path) to commit
+> > previous reserved code forcibly.
+> > 
+> >  0. update rsrv_ret_stack = new_index.
+> >  1. write reserved index entry at ret_stack[new_index - 1] and ret addr.
+> >  2. interrupt comes.
+> >     2.0. if rsrv_ret_stack != curr_ret_stack, add reserved index
+> >         entry on ret_stack[rsrv_ret_stack - 1] to point the previous
+> > 	ret_stack pointed by ret_stack[curr_ret_stack - 1]. and
+> > 	update curr_ret_stack = rsrv_ret_stack.
+> >     2.1. push new index and ret addr on ret_stack.
+> >     2.2. pop it. (corrupt entries on new_index - 1)
+> >  3. return from interrupt.
+> >  4. update curr_ret_stack = new_index
+> >  5. interrupt comes again.
+> >     5.1. unwind works, because curr_ret_stack points the previously
+> >         saved ret_stack.
+> >     5.2. this can do push/pop operations too.
+> > 6. return from interrupt.
+> > 7. rewrite reserved index entry at ret_stack[new_index] again.
+> > 
+> > This maybe a bit heavier but safer.
+> > 
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 
 -- 
