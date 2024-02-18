@@ -1,91 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B644C61;
-	Sun, 18 Feb 2024 02:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC4463A7;
+	Sun, 18 Feb 2024 08:45:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708224815; cv=none; b=E1z04ahW74ws/CmtgnuFlDxzfqloV7QprC4/MibyDh1gPkdhTzlFIH9f0K69Sxu5cVouP+RBoCAJctLapcC/LFNLSihDRXmi/2+gh2uSBkAr45JykkFHBtKDFyf8lsKwkNVdsQHEt1aCRRBg6s331SmO/8Vo8GIKHX+U3ZNu9x8=
+	t=1708245924; cv=none; b=X7EvG0AdlxC4+ht3x4DocXPazsrgCR+hBRsZAq25O9iy/eE/9PS4DR21GZezL7IF0NBDSHuWccmWUB5PJSr75LPN4mgZEv0aDPQVQPRYiUKc4wQeAhqkihsD5anrGVClxeDku2zswXGYQ+OooYsmsF21usfh8YVLDj64Ru7pFuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708224815; c=relaxed/simple;
-	bh=Z6mSyCCU4tKcRX0vOZ8fMtCaGQGjTOctfFH1c8VECVE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=hXu6oSP3tr+2cmX1sr46kri+5nwddqaTn69WoISPq0uolGVvuswcee5sVVt4MOnjBADtDAVG8KkBnfi7oyjcLJwYqElFeiaGLFELUEasfvTalZk878x75FhoxUW89WD38zFnJ5ePaohfVySlI6zGMv28cGcC7e4v8YfuYo7V2nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AM7W6DOu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708245924; c=relaxed/simple;
+	bh=s0e8d/D7C6nbPI5ya3os5qMDpMCA/WnNjDAq9XnA/K8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=fmZVtwPYKOLu8ejLC8w22Itx1Zhx9/W3TmFGwsy5u7j+rtN2tCSaUqSlCJVS/ULIU7tCRv0u/bPR/6mko9TASw+0zdyY45LFJOlOt7Cqy+qD2RW/zAWIfAYwVRlIhWdPQWwYS7WkNl4iMWdaioQC73TChBRnKChrajb5LNKsF3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=b+SldZ+f; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AM7W6DOu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 951ECC433F1;
-	Sun, 18 Feb 2024 02:53:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708224814;
-	bh=Z6mSyCCU4tKcRX0vOZ8fMtCaGQGjTOctfFH1c8VECVE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=AM7W6DOuPWCM8nwpxebXPBIStYkl1tK/Wg4hetT/X071PhOMwYVQPEkERxaH5/tYc
-	 OUwTejTp0QjRbQ4rA1PdgmMmykoapOuLzu7gjdb6y1PctfkjY4shg4sz7Rr6UmO0Hx
-	 gvYASVXqqGF/3S2lGHxKWWTtBzS6PpWphC2O0HMS52RLsLYhIIff1E/BunynmkVmKf
-	 joY+ua8+hAEY4DTcFelL5fM2vUhtzljgip7hPUCXUZoX4wqAUTm4pbr5s8HTBMwwaF
-	 Hn3pJUZ2uOwrSRHMs12Ie98tCU7Fw0PpT0KoURm7FRbMJm/GDJ2pgE0LpoV17x4osM
-	 n2waArNVXvXFA==
-Date: Sun, 18 Feb 2024 11:53:28 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Alexei Starovoitov
- <alexei.starovoitov@gmail.com>, Florent Revest <revest@chromium.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v7 23/36] function_graph: Add a new exit handler with
- parent_ip and ftrace_regs
-Message-Id: <20240218115328.c95bfe7001b7260071e6b674@kernel.org>
-In-Reply-To: <20240216175108.79a256a20c89ed1d672c7e14@kernel.org>
-References: <170723204881.502590.11906735097521170661.stgit@devnote2>
-	<170723230476.502590.16817817024423790038.stgit@devnote2>
-	<20240215110404.4e8c5a94@gandalf.local.home>
-	<20240216175108.79a256a20c89ed1d672c7e14@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="b+SldZ+f"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41I8jEvA024377;
+	Sun, 18 Feb 2024 08:45:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:to:cc; s=qcppdkim1; bh=kY1
+	NBOAgu/U1j9Fa6JABYuoNXSOLLP0J8W+rur07U+Q=; b=b+SldZ+fMZRrJk4/Gff
+	bDZ44zibb11s3RtrMZEbRUREnY/UzvUnkZNNzpIDDhHnRy7VYqQXJMu9814j8GiE
+	NNVrdq4rhSG15IgRl6BmFyrV61bQtepBDO9KWz/Ibow0xRfm7HOXBpUGptykXfvv
+	RhzTUyB/pPjzYQZjPjQiMEqz3fKH7pSFU+VJp2yTGflhenFqXes+xeD+QsOwKzpK
+	jj0F2mdStySvQdMbTPB0mJ5uBJ5dneEpH7veyRKN8ntUbEnHspVnny6sP9YxpCGd
+	BTVto7XYbFtwKMB386dwXeIaUvovbjuwGFw2dVM7ol//4V/icXosCknQ66r/ckR2
+	LXg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wan17hhnn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 18 Feb 2024 08:45:13 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41I8jDBH016301
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 18 Feb 2024 08:45:13 GMT
+Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Sun, 18 Feb 2024 00:45:09 -0800
+From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Date: Sun, 18 Feb 2024 14:13:39 +0530
+Subject: [PATCH] bus: mhi: host: Change the trace string for the userspace
+ tools mapping
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-ID: <20240218-ftrace_string-v1-1-27da85c1f844@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIADzD0WUC/x3MQQqAIBBA0avIrBPUQqOrRITYZLOxGCWC8O5Jy
+ 7f4/4WMTJhhEi8w3pTpTA26ExAOnyJK2prBKDMoo0e5F/YB11yYUpTOOues8d72AVpzMe70/L9
+ 5qfUDP0PxY18AAAA=
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Steven Rostedt
+	<rostedt@goodmis.org>
+CC: <linux-kernel@vger.kernel.org>, <mhi@lists.linux.dev>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <quic_vbadigan@quicinc.com>,
+        <quic_ramkri@quicinc.com>, <quic_nitegupt@quicinc.com>,
+        <quic_skananth@quicinc.com>, <quic_parass@quicinc.com>,
+        Krishna chaitanya chundru
+	<quic_krichai@quicinc.com>
+X-Mailer: b4 0.13-dev-83828
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708245908; l=2059;
+ i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
+ bh=s0e8d/D7C6nbPI5ya3os5qMDpMCA/WnNjDAq9XnA/K8=;
+ b=OWRiAqsu0nVhFU0aJFmTLUTPLcCmTsVx/NztAgu7GRyT3yw8kXW1O1ARRFwMfTgOwSANcluOt
+ DI3bWfEJ7XQDZ4lxAFHFM4Dk+cEFJjy4vj4FsBwB9ZS4LSD3UhhZ7Rh
+X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: c64ZYWOqttvm1mQxeQ6eQL5AHsR9l3xc
+X-Proofpoint-GUID: c64ZYWOqttvm1mQxeQ6eQL5AHsR9l3xc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-18_06,2024-02-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
+ spamscore=0 phishscore=0 bulkscore=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 suspectscore=0 malwarescore=0 impostorscore=0
+ mlxlogscore=956 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402180065
 
-On Fri, 16 Feb 2024 17:51:08 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+User space tools can't map strings if we use directly, as the string
+address is internal to kernel.
 
-> > > @@ -798,10 +798,6 @@ ftrace_pop_return_trace(struct ftrace_graph_ret *trace, unsigned long *ret,
-> > >  
-> > >  	*index += FGRAPH_RET_INDEX;
-> > >  	*ret = ret_stack->ret;
-> > > -	trace->func = ret_stack->func;
-> > > -	trace->calltime = ret_stack->calltime;
-> > > -	trace->overrun = atomic_read(&current->trace_overrun);
-> > > -	trace->depth = current->curr_ret_depth;
-> > 
-> > There's a lot of information stored in the trace structure. Why not pass
-> > that to the new retregfunc?
-> > 
-> > Then you don't need to separate this code out.
-> 
-> Sorry, I couldn't catch what you meant, Would you mean to call
-> ftrace_pop_return_trace() before calling retregfunc()?? because some of the
-> information are found from ret_stack, which is poped from shadow stack.
+So add trace point strings for the user space tools to map strings
+properly.
 
-Ah, sorry I got what you said. I think this `trace` is not usable for the new
-interface. Most of the information is only used for the function-graph tracer.
-For example, trace->calltime and trace->overrun, trace->depth are used only
-for the function-graph tracer, but not for the other tracers.
+Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+---
+ drivers/bus/mhi/host/main.c  | 4 ++--
+ drivers/bus/mhi/host/trace.h | 2 ++
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-But yeah, this idea is considerable. It also allows us to just update
-entryfunc() and retfunc() to pass fgraph_regs and return address.
+diff --git a/drivers/bus/mhi/host/main.c b/drivers/bus/mhi/host/main.c
+index 2d38f6005da6..15d657af9b5b 100644
+--- a/drivers/bus/mhi/host/main.c
++++ b/drivers/bus/mhi/host/main.c
+@@ -1340,7 +1340,7 @@ static int mhi_update_channel_state(struct mhi_controller *mhi_cntrl,
+ 	enum mhi_cmd_type cmd = MHI_CMD_NOP;
+ 	int ret;
+ 
+-	trace_mhi_channel_command_start(mhi_cntrl, mhi_chan, to_state, "Updating");
++	trace_mhi_channel_command_start(mhi_cntrl, mhi_chan, to_state, TPS("Updating"));
+ 	switch (to_state) {
+ 	case MHI_CH_STATE_TYPE_RESET:
+ 		write_lock_irq(&mhi_chan->lock);
+@@ -1407,7 +1407,7 @@ static int mhi_update_channel_state(struct mhi_controller *mhi_cntrl,
+ 		write_unlock_irq(&mhi_chan->lock);
+ 	}
+ 
+-	trace_mhi_channel_command_end(mhi_cntrl, mhi_chan, to_state, "Updated");
++	trace_mhi_channel_command_end(mhi_cntrl, mhi_chan, to_state, TPS("Updated"));
+ exit_channel_update:
+ 	mhi_cntrl->runtime_put(mhi_cntrl);
+ 	mhi_device_put(mhi_cntrl->mhi_dev);
+diff --git a/drivers/bus/mhi/host/trace.h b/drivers/bus/mhi/host/trace.h
+index d12a98d44272..368515dcb22d 100644
+--- a/drivers/bus/mhi/host/trace.h
++++ b/drivers/bus/mhi/host/trace.h
+@@ -84,6 +84,8 @@ DEV_ST_TRANSITION_LIST
+ #define dev_st_trans(a, b)		{ DEV_ST_TRANSITION_##a, b },
+ #define dev_st_trans_end(a, b)		{ DEV_ST_TRANSITION_##a, b }
+ 
++#define TPS(x)	tracepoint_string(x)
++
+ TRACE_EVENT(mhi_gen_tre,
+ 
+ 	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
 
-Thank you!
+---
+base-commit: ceeb64f41fe6a1eb9fc56d583983a81f8f3dd058
+change-id: 20240218-ftrace_string-7677762aa63c
 
+Best regards,
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Krishna chaitanya chundru <quic_krichai@quicinc.com>
+
