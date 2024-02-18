@@ -1,50 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67B27B3CC;
-	Sat, 17 Feb 2024 15:54:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B644C61;
+	Sun, 18 Feb 2024 02:53:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708185246; cv=none; b=LGREmAXrKkQ+75xEzivUm5btR12zkHtyvDLzx5uRbkBh4TN49y1TttazhMr9fBaqidrPI5d9hQJrhdXyShQhCdagr6p0jzG0BS4ij+ERzuRstZh/lHrJccdQ80CmdLCM4ftxuyYD8WGaKZ6DQMzTFE5mvi9N0Cm6MJc3suC03F0=
+	t=1708224815; cv=none; b=E1z04ahW74ws/CmtgnuFlDxzfqloV7QprC4/MibyDh1gPkdhTzlFIH9f0K69Sxu5cVouP+RBoCAJctLapcC/LFNLSihDRXmi/2+gh2uSBkAr45JykkFHBtKDFyf8lsKwkNVdsQHEt1aCRRBg6s331SmO/8Vo8GIKHX+U3ZNu9x8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708185246; c=relaxed/simple;
-	bh=yG8vscJnWU0ovGCkwuzXNoGwaH1DWcjjYwxNQHJgFCo=;
+	s=arc-20240116; t=1708224815; c=relaxed/simple;
+	bh=Z6mSyCCU4tKcRX0vOZ8fMtCaGQGjTOctfFH1c8VECVE=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=hFJfgpD67KMUoLrxPkjXoH0dl0HRd9zJVp5hAyBQlimnwpM7Y5Yrf7d9wqBdG6dPo91aCJwfYf2eJT7yrh74m3GhlaTJcKam+NkBfQ7gHNUv7yPHupXnKAViwrazTwm7rYA83umLEQyoMKFSvJ9whC7hGaUKn+nTvMluFHn93rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AHw1PLJv; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=hXu6oSP3tr+2cmX1sr46kri+5nwddqaTn69WoISPq0uolGVvuswcee5sVVt4MOnjBADtDAVG8KkBnfi7oyjcLJwYqElFeiaGLFELUEasfvTalZk878x75FhoxUW89WD38zFnJ5ePaohfVySlI6zGMv28cGcC7e4v8YfuYo7V2nM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AM7W6DOu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AHw1PLJv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE0C5C433C7;
-	Sat, 17 Feb 2024 15:54:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AM7W6DOu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 951ECC433F1;
+	Sun, 18 Feb 2024 02:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708185246;
-	bh=yG8vscJnWU0ovGCkwuzXNoGwaH1DWcjjYwxNQHJgFCo=;
+	s=k20201202; t=1708224814;
+	bh=Z6mSyCCU4tKcRX0vOZ8fMtCaGQGjTOctfFH1c8VECVE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=AHw1PLJvhfjZhLGK5KHkBIVj+9XeG0/PyI3CH36/yDz5FeAFPcjq87whLIvrbE6rj
-	 bwQOUkRIBYocELBbTrPp8Ys47/5ZB1h2vZPYOytZCoxea+gVWR4qlBj6CCvW9JmwGc
-	 NhVPtYg43u+MX8Axj7Kby5CBdNL2KHEmsrxCi05hW22h7TpFh2MPu12ReyBJvTDG/M
-	 5ff3BAlKcPp8Ya5WVMwFX8iv2hWxLr6rI4hpMf2tpmooememXcUqzpCAk5qInxOfBD
-	 /ztSkHZnSJAAWlkpXvvgtAQcu/t4Ad48T536TuTATHL5XK4CbCEtOrak10v/jT0+c3
-	 EJPC4KNSqf0Ww==
-Date: Sun, 18 Feb 2024 00:53:59 +0900
+	b=AM7W6DOuPWCM8nwpxebXPBIStYkl1tK/Wg4hetT/X071PhOMwYVQPEkERxaH5/tYc
+	 OUwTejTp0QjRbQ4rA1PdgmMmykoapOuLzu7gjdb6y1PctfkjY4shg4sz7Rr6UmO0Hx
+	 gvYASVXqqGF/3S2lGHxKWWTtBzS6PpWphC2O0HMS52RLsLYhIIff1E/BunynmkVmKf
+	 joY+ua8+hAEY4DTcFelL5fM2vUhtzljgip7hPUCXUZoX4wqAUTm4pbr5s8HTBMwwaF
+	 Hn3pJUZ2uOwrSRHMs12Ie98tCU7Fw0PpT0KoURm7FRbMJm/GDJ2pgE0LpoV17x4osM
+	 n2waArNVXvXFA==
+Date: Sun, 18 Feb 2024 11:53:28 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
- <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
- <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
- bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, Alexei
- Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
- Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
- <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
- Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v7 20/36] function_graph: Improve push operation for
- several interrupts
-Message-Id: <20240218005359.7072c27c99bcfe426e2126b6@kernel.org>
-In-Reply-To: <20240215095739.41a2fac7@gandalf.local.home>
+To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Alexei Starovoitov
+ <alexei.starovoitov@gmail.com>, Florent Revest <revest@chromium.org>,
+ linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
+ Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
+ Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v7 23/36] function_graph: Add a new exit handler with
+ parent_ip and ftrace_regs
+Message-Id: <20240218115328.c95bfe7001b7260071e6b674@kernel.org>
+In-Reply-To: <20240216175108.79a256a20c89ed1d672c7e14@kernel.org>
 References: <170723204881.502590.11906735097521170661.stgit@devnote2>
-	<170723227198.502590.10431025573751489041.stgit@devnote2>
-	<20240215095739.41a2fac7@gandalf.local.home>
+	<170723230476.502590.16817817024423790038.stgit@devnote2>
+	<20240215110404.4e8c5a94@gandalf.local.home>
+	<20240216175108.79a256a20c89ed1d672c7e14@kernel.org>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -55,85 +56,36 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 15 Feb 2024 09:57:39 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Fri, 16 Feb 2024 17:51:08 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> On Wed,  7 Feb 2024 00:11:12 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > @@ -798,10 +798,6 @@ ftrace_pop_return_trace(struct ftrace_graph_ret *trace, unsigned long *ret,
+> > >  
+> > >  	*index += FGRAPH_RET_INDEX;
+> > >  	*ret = ret_stack->ret;
+> > > -	trace->func = ret_stack->func;
+> > > -	trace->calltime = ret_stack->calltime;
+> > > -	trace->overrun = atomic_read(&current->trace_overrun);
+> > > -	trace->depth = current->curr_ret_depth;
 > > 
-> > Improve push and data reserve operation on the shadow stack for
-> > several sequencial interrupts.
+> > There's a lot of information stored in the trace structure. Why not pass
+> > that to the new retregfunc?
 > > 
-> > To push a ret_stack or data entry on the shadow stack, we need to
-> > prepare an index (offset) entry before updating the stack pointer
-> > (curr_ret_stack) so that unwinder from interrupts can find the
-> > next return address from the shadow stack. Currently we do write index,
-> > update the curr_ret_stack, and rewrite it again. But that is not enough
-> > for the case if two interrupts happens and the first one breaks it.
-> > For example,
-> > 
-> >  1. write reserved index entry at ret_stack[new_index - 1] and ret addr.
-> >  2. interrupt comes.
-> >     2.1. push new index and ret addr on ret_stack.
-> >     2.2. pop it. (corrupt entries on new_index - 1)
-> >  3. return from interrupt.
-> >  4. update curr_ret_stack = new_index
-> >  5. interrupt comes again.
-> >     5.1. unwind <------ may not work.
+> > Then you don't need to separate this code out.
 > 
-> I'm curious if you saw this happen?
-> 
-> That is, did you trigger this or only noticed it by inspection?
+> Sorry, I couldn't catch what you meant, Would you mean to call
+> ftrace_pop_return_trace() before calling retregfunc()?? because some of the
+> information are found from ret_stack, which is poped from shadow stack.
 
-I just noticed this scenario while explaining why we write the same value
-twice to Jiri.
+Ah, sorry I got what you said. I think this `trace` is not usable for the new
+interface. Most of the information is only used for the function-graph tracer.
+For example, trace->calltime and trace->overrun, trace->depth are used only
+for the function-graph tracer, but not for the other tracers.
 
-https://lore.kernel.org/all/20231220004540.0af568c69ecaf9170430a383@kernel.org/
+But yeah, this idea is considerable. It also allows us to just update
+entryfunc() and retfunc() to pass fgraph_regs and return address.
 
-> 
-> This code is already quite complex, I would like to simplify it more before
-> we try to fix rare race conditions that only affect the unwinder.
-> 
-> Let's hold off on this change.
-
-OK, then drop this until someone hits the actual problem, maybe that
-should be rare case.
-
-Thank you,
-
-> 
-> -- Steve
-> 
-> 
-> > 
-> > To avoid this issue, this introduces a new rsrv_ret_stack stack
-> > reservation pointer and a new push code (slow path) to commit
-> > previous reserved code forcibly.
-> > 
-> >  0. update rsrv_ret_stack = new_index.
-> >  1. write reserved index entry at ret_stack[new_index - 1] and ret addr.
-> >  2. interrupt comes.
-> >     2.0. if rsrv_ret_stack != curr_ret_stack, add reserved index
-> >         entry on ret_stack[rsrv_ret_stack - 1] to point the previous
-> > 	ret_stack pointed by ret_stack[curr_ret_stack - 1]. and
-> > 	update curr_ret_stack = rsrv_ret_stack.
-> >     2.1. push new index and ret addr on ret_stack.
-> >     2.2. pop it. (corrupt entries on new_index - 1)
-> >  3. return from interrupt.
-> >  4. update curr_ret_stack = new_index
-> >  5. interrupt comes again.
-> >     5.1. unwind works, because curr_ret_stack points the previously
-> >         saved ret_stack.
-> >     5.2. this can do push/pop operations too.
-> > 6. return from interrupt.
-> > 7. rewrite reserved index entry at ret_stack[new_index] again.
-> > 
-> > This maybe a bit heavier but safer.
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
+Thank you!
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
