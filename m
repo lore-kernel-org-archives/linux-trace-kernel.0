@@ -1,78 +1,30 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9BE224DA
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Feb 2024 09:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A4D34CFF;
+	Mon, 19 Feb 2024 11:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708333641; cv=none; b=HC9AQL2JBNJLpg/95sNhTadR/CjsK0ZXsuBmwenDsvr2fRDJ7vVplk7a3ob3hf3v0aSXT5uU9sl8iPk8ySkIoH+3tuRPyFwPh6qBVv/FVFpkntu7lyir3Re4XvbXRPISujEp1lg+q2Y0DZ5Q/jLSOqzAd6qtbwHbkL6DrQHeSUM=
+	t=1708343333; cv=none; b=plIHavBpDfdUik3Y5VIXI1RL1zjVQDlUFC0bUEPVptMRSnUp0v2/+TdEjaJiESCFHJ1QK/TpHboaR/OX28U2prneF1yf9yiBtWtecehkM2BALNFlzZeaQoE7fvwP252QTeWv11blvOUhicdCj9bW8rSA5/4yWLXtboKVePIJNu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708333641; c=relaxed/simple;
-	bh=d3ncpbbD/jIqmrr9YKmvODI4grcXh+LHI1qn0nheqY0=;
+	s=arc-20240116; t=1708343333; c=relaxed/simple;
+	bh=8vfBdAUdcC5/jUyUyf3YuQWzc34sXBUJ6eDjZ3kQmws=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KhK2Wcl2+Cim38k3OW0xCUDpLcIWvmUhtBo6DhGg2LMKQ5gUKvFXoN4o8G/o4Yemq75DFJWQVGwxBOefAdRADGGLqQC/vp0qh+uUNtl3potwPt+DJRt4fML8CYrzI5OJjGdh56myt0mXvNyHNkDLsm+AvBJ+nGLBtPDHrxuhl/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yl9dFohN; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yl9dFohN"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a3e4765c86eso149193266b.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Feb 2024 01:07:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708333638; x=1708938438; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tC1ZEm/yWZ4l2HBOpjXuJwNzMGpHf/k/betJFo2Hfaw=;
-        b=yl9dFohND7zz+17UZ1IZ5lzZ8J7+wRiT7gYOoiFhhZpGUGULpvWmAlGn2eiN33RmBI
-         sr0WG8BfNbuuYP+v+uDwijWajWQAAMxRCA5TUiOQFeY01S8WtIZpzFcR04n1+QSNTd1i
-         arfGyS+9ruV2f+Jq34JUTcikUnwtcH1JoECfLabNDXqzU2+v4qhDlYQBWHUdtYjNsnHn
-         hLIz91ac9E3jtNkdXsDczOeu29tJKuJe8wo0VTf/Wq2tudhCQ9E+Ruh0sQsiWweMI69d
-         2wXFvmvtNJUwUHVx6VuBhAzrBbj8RHzqCkCo7ZPpv5o+J3ATDYxC7zS4LslkMvxE66rz
-         OpAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708333638; x=1708938438;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tC1ZEm/yWZ4l2HBOpjXuJwNzMGpHf/k/betJFo2Hfaw=;
-        b=I7ch/ZFISnI4qoxV7LhLNJuGYensf9LMuRNggdOSp8/sMvuZefCOna5ECDrTMb7do0
-         UA3l9y6t+gEN1TaN6s6opFzShDL/6uNnf0a20E+pj034MD78BgemvxxHsZOeOWEE23Bx
-         fKb4xCvLqTllUeOKi0R+8EB7ZF1ZXxf+vxkYBqKc6Y+34o3Y5jX7Om0yo+uI7vgl7zG3
-         c8Oo093ai5W6IYulz6aZvZbXrOTGQNedxy1o4peV3eJ38RTGRbs24yEkVIA8ed54hNQY
-         tQLAWivssewJqWK0SVZcWKVu988iVqKmHRdS0NFhUBRgVNzZlF+IdcBBJq7RNl9uAv1z
-         xeVg==
-X-Forwarded-Encrypted: i=1; AJvYcCWclMSFsumD+hMOQG7qWKEyl/pfugJ4Lf1wDLpUoQFwlX5o9GW3it+Axar7Kx5vKPxZubYzOhCt9ihL/XHJF1+STBau4siKs/6PsLrQAsRwerNp
-X-Gm-Message-State: AOJu0Yw0bg8cTDqJge7BhX46paGSEolkisxGnnq6T6XcsK3vDGbJ/avN
-	kNQM+acCgbGzfBO38dmuhk4s/lWzzqLioF3rDWccJWNsl52Yfgv7t82MmHm6SrA=
-X-Google-Smtp-Source: AGHT+IFXr86gnM3CYEw6CwvqwgSKBh1+1CONJiQ5jWR3N5jH3cLVIYhSjpo8tuXQ5b5eV4kUF47BrQ==
-X-Received: by 2002:a17:906:649:b0:a3e:b869:11b3 with SMTP id t9-20020a170906064900b00a3eb86911b3mr685183ejb.55.1708333638283;
-        Mon, 19 Feb 2024 01:07:18 -0800 (PST)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id s8-20020a170906168800b00a3e7a2d9ac4sm1210148ejd.6.2024.02.19.01.07.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Feb 2024 01:07:18 -0800 (PST)
-Date: Mon, 19 Feb 2024 12:07:14 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	 Content-Type:Content-Disposition:In-Reply-To; b=auyxFxjl+cumNiLRCisM8cTxPMnR4TGnLYZQL/c/VOsyoAFO9n8WZfsmaLVTpEgkxSZtLHQshEaUt8wtlgbvZfQGEQnCj0Az5sABe5EtryzPNNQ+L/NCtTaqsj+RydR3NNwZxqoHt+JgDMXspQA9OHVLiaPTc958bcDairlX4vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EACBC433C7;
+	Mon, 19 Feb 2024 11:48:51 +0000 (UTC)
+Date: Mon, 19 Feb 2024 11:48:48 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] acpi/ghes: Prevent sleeping with spinlock held
-Message-ID: <8e6825b6-261b-439b-bb28-9fc585e50979@moroto.mountain>
-References: <20240206-cxl-cper-smatch-v2-1-84ed07563c31@intel.com>
- <20240214121153.00005c97@huawei.com>
- <20240214102310.7ba53f3a@gandalf.local.home>
- <20240214181200.0000500b@Huawei.com>
- <65cd3c671cf86_d552e294dd@iweiny-mobl.notmuch>
- <65cd4e1f69205_d5b4829463@iweiny-mobl.notmuch>
- <65d0092079c20_6c7452946@dwillia2-xfh.jf.intel.com.notmuch>
+	Kalle Valo <kvalo@kernel.org>
+Subject: Re: [PATCH] tracing: Inform kmemleak of saved_cmdlines allocation
+Message-ID: <ZdNAIJGSWqTItD6b@arm.com>
+References: <20240214102614.1a1405be@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,23 +33,59 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <65d0092079c20_6c7452946@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <20240214102614.1a1405be@gandalf.local.home>
 
-On Fri, Feb 16, 2024 at 05:17:20PM -0800, Dan Williams wrote:
-> > commit 807fbe9cac9b190dab83e3ff377a30d18859c8ab
-> > Author: Ira Weiny <ira.weiny@intel.com>
-> > Date:   Wed Feb 14 15:25:24 2024 -0800
-> > 
-> >     Revert "acpi/ghes: Process CXL Component Events"
-> >     
-> >     This reverts commit 671a794c33c6e048ca5cedd5ad6af44d52d5d7e5.
+On Wed, Feb 14, 2024 at 10:26:14AM -0500, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> Even reverts need changelogs, I can add one. I got conflicts trying to
-> apply this to current fixes branch. I think I am going to just
-> surgically backout the drivers/acpi/apei/ghes.c changes.
+> The allocation of the struct saved_cmdlines_buffer structure changed from:
+> 
+>         s = kmalloc(sizeof(*s), GFP_KERNEL);
+> 	s->saved_cmdlines = kmalloc_array(TASK_COMM_LEN, val, GFP_KERNEL);
+> 
+> to:
+> 
+> 	orig_size = sizeof(*s) + val * TASK_COMM_LEN;
+> 	order = get_order(orig_size);
+> 	size = 1 << (order + PAGE_SHIFT);
+> 	page = alloc_pages(GFP_KERNEL, order);
+> 	if (!page)
+> 		return NULL;
+> 
+> 	s = page_address(page);
+> 	memset(s, 0, sizeof(*s));
+> 
+> 	s->saved_cmdlines = kmalloc_array(TASK_COMM_LEN, val, GFP_KERNEL);
+> 
+> Where that s->saved_cmdlines allocation looks to be a dangling allocation
+> to kmemleak. That's because kmemleak only keeps track of kmalloc()
+> allocations. For allocations that use page_alloc() directly, the kmemleak
+> needs to be explicitly informed about it.
+> 
+> Add kmemleak_alloc() and kmemleak_free() around the page allocation so
+> that it doesn't give the following false positive:
+> 
+> unreferenced object 0xffff8881010c8000 (size 32760):
+>   comm "swapper", pid 0, jiffies 4294667296
+>   hex dump (first 32 bytes):
+>     ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
+>     ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
+>   backtrace (crc ae6ec1b9):
+>     [<ffffffff86722405>] kmemleak_alloc+0x45/0x80
+>     [<ffffffff8414028d>] __kmalloc_large_node+0x10d/0x190
+>     [<ffffffff84146ab1>] __kmalloc+0x3b1/0x4c0
+>     [<ffffffff83ed7103>] allocate_cmdlines_buffer+0x113/0x230
+>     [<ffffffff88649c34>] tracer_alloc_buffers.isra.0+0x124/0x460
+>     [<ffffffff8864a174>] early_trace_init+0x14/0xa0
+>     [<ffffffff885dd5ae>] start_kernel+0x12e/0x3c0
+>     [<ffffffff885f5758>] x86_64_start_reservations+0x18/0x30
+>     [<ffffffff885f582b>] x86_64_start_kernel+0x7b/0x80
+>     [<ffffffff83a001c3>] secondary_startup_64_no_verify+0x15e/0x16b
+> 
+> Link: https://lore.kernel.org/linux-trace-kernel/87r0hfnr9r.fsf@kernel.org/
+> 
+> Fixes: 44dc5c41b5b1 ("tracing: Fix wasted memory in saved_cmdlines logic")
+> Reported-by: Kalle Valo <kvalo@kernel.org>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-The `git revert` command comes from ancient times and it just sets
-people up for failure...  :/
-
-regards,
-dan carpenter
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
