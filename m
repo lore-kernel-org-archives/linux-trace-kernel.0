@@ -1,110 +1,148 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7380374CB;
-	Mon, 19 Feb 2024 14:04:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2573A8FB;
+	Mon, 19 Feb 2024 16:05:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708351483; cv=none; b=d3Zcq2zeX/op1fV0TYyKBhgP1We4ldPGk6ax4eDOOaFBKzey/QetTzhJGuuBN7fJk56LelK3oq/AoXoAe2S5Cno+K87db8EDD97B5lLUKQPraBZNY0+9lUbtFIUBeE8GCpvb+TDUP7aM3/prMBfJOhDd7Pza33ackTZJM9Ejp2s=
+	t=1708358724; cv=none; b=MX+8E0ND/AboiToynBW2/al1k5z3GQtBi/fYCP651u/xd+7MubxpxVCQxk84r+ivtWyVGxkLeoQfT1IsDpZQopc4EAc5AnbbQcRW0BNo8L9XJadsG3RCM0lDm0NHNXE8jjiUh+H16UkkY/rXLrCbcE6xEQZVlkfOcPS3kIDXktQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708351483; c=relaxed/simple;
-	bh=MIUwjUjiAAu1+q/+I/qDOmSpFjx0udf6D1AQ0UhEV0k=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Moko6YmUs9VBaJe3gswYATlz21uLWzHzJd6tGzdnuR2BppuRkoK3FoAFu/0C04n3/yikxEIfBBG9xXmCoTq8wRyPz5mjx/pdA0ZRnHjlbpK3PbGCJ2QRIUGTHk1qQCNXu1komn4YBTWZrIFAvupLeXd83BFax2Yvz9i+KLLeLLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jedCcVnU; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jedCcVnU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69997C433F1;
-	Mon, 19 Feb 2024 14:04:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708351482;
-	bh=MIUwjUjiAAu1+q/+I/qDOmSpFjx0udf6D1AQ0UhEV0k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jedCcVnUuRu7WsgBTsb7EkozXwzEc3q772jGzsuk/FFQmz1tgYk50Mc2U2wZx/91y
-	 WbyV4CYns7fJxNb3T8sbT12ZpsxAvz2UMK8HNJHAexd4YIf8Hs2kCUnCPh9LjJA5i9
-	 +hn23n7mOO5tHgEfkBrZgFCR2JEFmex5DzGDmSxO+YbV1llrm+6ORSDZrT3eMEfBRX
-	 agBkU5jq7zX0iCu9JbIUWEkodqBPYXRWjjT9cerlSRJrTQNy15NwcypdqVWi+pqJ0s
-	 garRRcf/WFr8bICdloI03C9IvteoR/FOsb4rhi1IkfFqsHafVmJeun6ny9xToBXma0
-	 5+xmyVcvS+AFA==
-Date: Mon, 19 Feb 2024 23:04:35 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Alexei Starovoitov
- <alexei.starovoitov@gmail.com>, Florent Revest <revest@chromium.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v7 23/36] function_graph: Add a new exit handler with
+	s=arc-20240116; t=1708358724; c=relaxed/simple;
+	bh=/dckHxJU8Um9rSbczYrIkkwQ4W5d5/C4/kuOUKIhTok=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=txD7BYYttdKICxqutmsqG/Np+7T9JXzRaGhnaI5qN0LwadVKuYXnSxywGonn0xfMCI/QvUTWarLYpr5C0DBPKk8yb3LtHohLEXF36BQLs6gUQZ7s6vhbAmgBKk2wkWx3TuAda2kg3PMfOowHo/MzAOP+7D/rHcTV+IstNLJAm2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87B9FC433C7;
+	Mon, 19 Feb 2024 16:05:22 +0000 (UTC)
+Date: Mon, 19 Feb 2024 11:07:05 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
+ <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, Alexei
+ Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
+ <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v7 22/36] function_graph: Add a new entry handler with
  parent_ip and ftrace_regs
-Message-Id: <20240219230435.3158a36f60c20dcf2112cf0f@kernel.org>
-In-Reply-To: <20240218115328.c95bfe7001b7260071e6b674@kernel.org>
+Message-ID: <20240219110705.0c1ffa9c@gandalf.local.home>
+In-Reply-To: <170723229401.502590.8644663781359457778.stgit@devnote2>
 References: <170723204881.502590.11906735097521170661.stgit@devnote2>
-	<170723230476.502590.16817817024423790038.stgit@devnote2>
-	<20240215110404.4e8c5a94@gandalf.local.home>
-	<20240216175108.79a256a20c89ed1d672c7e14@kernel.org>
-	<20240218115328.c95bfe7001b7260071e6b674@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	<170723229401.502590.8644663781359457778.stgit@devnote2>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi Steve,
+On Wed,  7 Feb 2024 00:11:34 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-On Sun, 18 Feb 2024 11:53:28 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-
-> On Fri, 16 Feb 2024 17:51:08 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> > > > @@ -798,10 +798,6 @@ ftrace_pop_return_trace(struct ftrace_graph_ret *trace, unsigned long *ret,
-> > > >  
-> > > >  	*index += FGRAPH_RET_INDEX;
-> > > >  	*ret = ret_stack->ret;
-> > > > -	trace->func = ret_stack->func;
-> > > > -	trace->calltime = ret_stack->calltime;
-> > > > -	trace->overrun = atomic_read(&current->trace_overrun);
-> > > > -	trace->depth = current->curr_ret_depth;
-> > > 
-> > > There's a lot of information stored in the trace structure. Why not pass
-> > > that to the new retregfunc?
-> > > 
-> > > Then you don't need to separate this code out.
-> > 
-> > Sorry, I couldn't catch what you meant, Would you mean to call
-> > ftrace_pop_return_trace() before calling retregfunc()?? because some of the
-> > information are found from ret_stack, which is poped from shadow stack.
+> Add a new entry handler to fgraph_ops as 'entryregfunc'  which takes
+> parent_ip and ftrace_regs. Note that the 'entryfunc' and 'entryregfunc'
+> are mutual exclusive. You can set only one of them.
 > 
-> Ah, sorry I got what you said. I think this `trace` is not usable for the new
-> interface. Most of the information is only used for the function-graph tracer.
-> For example, trace->calltime and trace->overrun, trace->depth are used only
-> for the function-graph tracer, but not for the other tracers.
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  Changes in v3:
+>   - Update for new multiple fgraph.
+> ---
+>  arch/arm64/kernel/ftrace.c               |    2 +
+>  arch/loongarch/kernel/ftrace_dyn.c       |    2 +
+>  arch/powerpc/kernel/trace/ftrace.c       |    2 +
+>  arch/powerpc/kernel/trace/ftrace_64_pg.c |   10 ++++---
+>  arch/x86/kernel/ftrace.c                 |   42 ++++++++++++++++--------------
+>  include/linux/ftrace.h                   |   19 +++++++++++---
+>  kernel/trace/fgraph.c                    |   30 +++++++++++++++++----
+>  7 files changed, 72 insertions(+), 35 deletions(-)
 > 
-> But yeah, this idea is considerable. It also allows us to just update
-> entryfunc() and retfunc() to pass fgraph_regs and return address.
+> diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
+> index b96740829798..779b975f03f5 100644
+> --- a/arch/arm64/kernel/ftrace.c
+> +++ b/arch/arm64/kernel/ftrace.c
+> @@ -497,7 +497,7 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+>  		return;
+>  
+>  	if (!function_graph_enter_ops(*parent, ip, frame_pointer,
+> -				      (void *)frame_pointer, gops))
+> +				      (void *)frame_pointer, fregs, gops))
 
-The reason why I didn't use the those for *regfunc() is not only those
-have unused information, but those does not have some params.
+I would like to replace that second frame_pointer with fregs.
 
- - ftrace_graph_ent only have current `func`, but entryregfunc()
-    needs `parent_ip` (== return address)
- - ftrace_graph_ret only have current `func`, but retregfunc()
-    needs `ret` (== return address) too.
 
-If I update the ftrace_graph_ent/ret to add 'retaddr', we can just pass
-ftrace_graph_ent/ret, ftrace_regs, and fgraph_ops to *regfunc().
-Moreover, maybe we don't need *regfunc, but just update entryfunc/retfunc
-to pass ftrace_regs *, which will be NULL if it is not supported.
+>  		*parent = (unsigned long)&return_to_handler;
+>  
+>  	ftrace_test_recursion_unlock(bit);
+> diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
+> index 81d18b911cc1..45d26c6e6564 100644
+> --- a/arch/loongarch/kernel/ftrace_dyn.c
+> +++ b/arch/loongarch/kernel/ftrace_dyn.c
+> @@ -250,7 +250,7 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+>  
+>  	old = *parent;
+>  
+> -	if (!function_graph_enter_ops(old, ip, 0, parent, gops))
+> +	if (!function_graph_enter_ops(old, ip, 0, parent, fregs, gops))
 
-Thank you,
+That is, to replace the parent with fregs, as the parent can be retrieved
+from fregs.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+We should add a fregs helper (something like):
+
+unsigned long *fregs_caller_addr(fregs) {
+	return (unsigned long *)(kernel_stack_pointer(fregs->regs) + PT_R1);
+}
+
+That returns the address that points to the parent caller on the stack.
+
+This was on my todo list to do. That is, replace the passing of the parent
+of the stack with fregs as it is redundant information.
+
+>  		*parent = return_hooker;
+>  }
+>  #else
+> diff --git a/arch/powerpc/kernel/trace/ftrace.c b/arch/powerpc/kernel/trace/ftrace.c
+> index 4ef8bf480279..eeaaa798f4f9 100644
+> --- a/arch/powerpc/kernel/trace/ftrace.c
+> +++ b/arch/powerpc/kernel/trace/ftrace.c
+> @@ -423,7 +423,7 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+>  	if (bit < 0)
+>  		goto out;
+>  
+> -	if (!function_graph_enter_ops(parent_ip, ip, 0, (unsigned long *)sp, gops))
+> +	if (!function_graph_enter_ops(parent_ip, ip, 0, (unsigned long *)sp, fregs, gops))
+>  		parent_ip = ppc_function_entry(return_to_handler);
+>  
+>  	ftrace_test_recursion_unlock(bit);
+> diff --git a/arch/powerpc/kernel/trace/ftrace_64_pg.c b/arch/powerpc/kernel/trace/ftrace_64_pg.c
+> index 7b85c3b460a3..43f6cfaaf7db 100644
+> --- a/arch/powerpc/kernel/trace/ftrace_64_pg.c
+> +++ b/arch/powerpc/kernel/trace/ftrace_64_pg.c
+> @@ -795,7 +795,8 @@ int ftrace_disable_ftrace_graph_caller(void)
+>   * in current thread info. Return the address we want to divert to.
+>   */
+>  static unsigned long
+> -__prepare_ftrace_return(unsigned long parent, unsigned long ip, unsigned long sp)
+> +__prepare_ftrace_return(unsigned long parent, unsigned long ip, unsigned long sp,
+> +			struct ftrace_regs *fregs)
+
+And sp shouldn't need to be passed in either, as hat should be part of the fregs.
+
+I really like to consolidate the parameters and not just keep adding to
+them. This all slows down the logic to load the parameters.
+
+-- Steve
+
+
+>  {
+>  	unsigned long return_hooker;
+>  	int bit;
