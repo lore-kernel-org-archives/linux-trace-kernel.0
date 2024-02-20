@@ -1,254 +1,224 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E97505A782;
-	Tue, 20 Feb 2024 07:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F7F41A80;
+	Tue, 20 Feb 2024 08:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708414985; cv=none; b=KHoaxEuXoSq8UuOJC3D6ILeuZoBkmOhW+dHGfJ/H0XMmPR8gzAY3wPnmPuqk3djCC9GZiwpQJ5y2z2n9Egov/FHinwfC50Cm25MV9AZHJVH8OrRJwuNIKoocwGSb17yTCN2lVp5SRaE88mm6UXLLEl8FfOb2RlnL+3er3GzF0lo=
+	t=1708416172; cv=none; b=ZgH1E1beliohxeCXmuwBgadXtjkwDznj6+btVh4XZAMlJrixl0FcljSjPx1CqX/GaRHNfVhztG60Ye6ShzMQgHYkAvYjDSmAoFfJXqRcOULVvlIhPE+/sJSncnIKljQgL/vVELtCDhWNP9KgTimDx2kOX1QXZLXvSmAmOQx+Pqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708414985; c=relaxed/simple;
-	bh=NnwxAWUgAPSEAG2tb9b/O+QUPnXmxs6KGqBYX1R/+Lg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BmnnSGDi7lTRtQ/nkoaKwCjV3EHTlQeoxzPtR7DzYnSA/ko9ursKkSmONTNWsjHwFQNN5sLDhc4AVuDhMt1xBEe/W65k9dkiZBNpRBqXRIQ//d+r4fyUhPBrdAPhtRnet64o0hz7jkzWmyRz+ZVyW5wTrsRTTixP+UBUgn2EHTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=nM4aQe9A; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Xxj75LFW; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=nM4aQe9A; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Xxj75LFW; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1708416172; c=relaxed/simple;
+	bh=fxVoHUQFZhiyBTFzOf4zVlfu+gBSNN2+n49uFhH6Reg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C9GJWJ/ODqwCYVVh7xgFRBMAp5CSAdXtCsxesKTtPAxn7xV2oqYOIqe6vv30Gy5cZX0pnwK6a1ezaZaZptmQcef9SfgInWcNEOeu4+MbxwAMnI8pX+6qtyGTqCGoriYPrbR/FqlwAdYI0TXGbYZzLM2Y0rS8FBfZBaWP1sbrbYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KnZSB6zL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="nM4aQe9A";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Xxj75LFW";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="nM4aQe9A";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Xxj75LFW"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1C22A21E83;
-	Tue, 20 Feb 2024 07:43:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1708414981; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YP75gQ+KuAUWIsBrrfVvGIwpBE4lZR/yaSnCbNK3JAo=;
-	b=nM4aQe9AUG8OB1eQInkY9Ey1DsyWYVDk188d6SvNNIgHsMFwsMVFV/MlTT+VWvxhX2+Sw5
-	WRlyzHHj0HD090JpMzTpZ4Hu2rG6F6aAQvrxSKMuSV+lqTkZqxQDTnbC7dINm+3BasLuim
-	8Vs5hjK9pKxdg/GIzHgCcwRTl++1lh4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1708414981;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YP75gQ+KuAUWIsBrrfVvGIwpBE4lZR/yaSnCbNK3JAo=;
-	b=Xxj75LFWc7tNaXnTr/HSZprPWtodjUnliFQX2qfQfv7XVJM4g6gsvO5QLb2fPQFULR4Yvd
-	/p4S2vmzdSK1zUBQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1708414981; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YP75gQ+KuAUWIsBrrfVvGIwpBE4lZR/yaSnCbNK3JAo=;
-	b=nM4aQe9AUG8OB1eQInkY9Ey1DsyWYVDk188d6SvNNIgHsMFwsMVFV/MlTT+VWvxhX2+Sw5
-	WRlyzHHj0HD090JpMzTpZ4Hu2rG6F6aAQvrxSKMuSV+lqTkZqxQDTnbC7dINm+3BasLuim
-	8Vs5hjK9pKxdg/GIzHgCcwRTl++1lh4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1708414981;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YP75gQ+KuAUWIsBrrfVvGIwpBE4lZR/yaSnCbNK3JAo=;
-	b=Xxj75LFWc7tNaXnTr/HSZprPWtodjUnliFQX2qfQfv7XVJM4g6gsvO5QLb2fPQFULR4Yvd
-	/p4S2vmzdSK1zUBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D05BC134E4;
-	Tue, 20 Feb 2024 07:43:00 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id DTs8MQRY1GVrSgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 20 Feb 2024 07:43:00 +0000
-Message-ID: <f8255302-24d8-4847-a17c-01353f0a39e5@suse.cz>
-Date: Tue, 20 Feb 2024 08:43:00 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KnZSB6zL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC5A4C433C7;
+	Tue, 20 Feb 2024 08:02:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708416171;
+	bh=fxVoHUQFZhiyBTFzOf4zVlfu+gBSNN2+n49uFhH6Reg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KnZSB6zLL0MB3Fsq93nzm1Qxc7vsALADfcIACZzkL6ifrGSFUNPYYhlu0oxAC8iVR
+	 xb06QDTwC6KgMcierHwSg/hcebTC3TnVN+wZ4c0KDAkI6E9cgfmyu/a52Yt6OuuhBw
+	 YS1Kmvb3R8tih2fNtgVAEbkXa4Wygf9BFUGbMzEWY/QC74M/THZ5n/mT6G0OFcFY5D
+	 +RPNjw6ptz47UBIx5Nf4bd7hh//kEJNfuwkkB3aK90iuClxC+z5W5Sbj8/t6nX2yJM
+	 XMfeid/RdBGFgFSzHvErXwnl3bcWVKekilVbQw8ya+iSLs2C4Rd4CBUoZl6ojEbKWH
+	 ZwCiW8UWqU46w==
+Date: Tue, 20 Feb 2024 09:02:46 +0100
+From: Carlos Maiolino <cem@kernel.org>
+To: Hugh Dickins <hughd@google.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Jan Kara <jack@suse.cz>, 
+	Ubisectech Sirius <bugreport@ubisectech.com>
+Subject: Re: WARNING in shmem_release_dquot
+Message-ID: <tkghmudytyld3fbyvtlq3tqj7pgbjuim6s5uqryduzmazyfdtv@hvmxxqlolgfh>
+References: <544b03a4-e317-499f-8c9f-29571be668dc.bugreport@ubisectech.com>
+ <6SwVP4lGjXmq_vTawOeZmXdpVFkj93Ca2PYVGJjWWeRa5wG3Yj9ehJ9AsjeUK_-QVN4COqy7DpdS6C8IRKHP_w==@protonmail.internalid>
+ <ae12d2ad-6f7f-09d4-30ba-03411c4dae66@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] mm: compaction: update the cc->nr_migratepages when
- allocating or freeing the freepages
-To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org
-Cc: mgorman@techsingularity.net, ziy@nvidia.com, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <6440493f18da82298152b6305d6b41c2962a3ce6.1708409245.git.baolin.wang@linux.alibaba.com>
-Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <6440493f18da82298152b6305d6b41c2962a3ce6.1708409245.git.baolin.wang@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=nM4aQe9A;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=Xxj75LFW
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.50 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 XM_UA_NO_VERSION(0.01)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	 MIME_GOOD(-0.10)[text/plain];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 BAYES_HAM(-3.00)[100.00%];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[10];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
-X-Spam-Score: -4.50
-X-Rspamd-Queue-Id: 1C22A21E83
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ae12d2ad-6f7f-09d4-30ba-03411c4dae66@google.com>
 
-On 2/20/24 07:16, Baolin Wang wrote:
-> Currently we will use 'cc->nr_freepages >= cc->nr_migratepages' comparison
-> to ensure that enough freepages are isolated in isolate_freepages(), however
-> it just decreases the cc->nr_freepages without updating cc->nr_migratepages
-> in compaction_alloc(), which will waste more CPU cycles and cause too many
-> freepages to be isolated.
+On Mon, Feb 19, 2024 at 08:26:20PM -0800, Hugh Dickins wrote:
+> On Mon, 29 Jan 2024, Ubisectech Sirius wrote:
 > 
-> So we should also update the cc->nr_migratepages when allocating or freeing
-> the freepages to avoid isolating excess freepages. And I can see fewer free
-> pages are scanned and isolated when running thpcompact on my Arm64 server:
->                                        k6.7         k6.7_patched
-> Ops Compaction pages isolated      120692036.00   118160797.00
-> Ops Compaction migrate scanned     131210329.00   154093268.00
-> Ops Compaction free scanned       1090587971.00  1080632536.00
-> Ops Compact scan efficiency               12.03          14.26
+> > Hello.
+> > We are Ubisectech Sirius Team, the vulnerability lab of China ValiantSec. Recently, our team has discovered a issue in Linux kernel 6.8.0-rc1-gecb1b8288dc7. Attached to the email were a POC file of the issue.
+> >
+> > Stack dump:
+> > [  246.195553][ T4096] ------------[ cut here ]------------
+> > [  246.196540][ T4096] quota id 16384 from dquot ffff888051bd3000, not in rb tree!
+> > [ 246.198829][ T4096] WARNING: CPU: 1 PID: 4096 at mm/shmem_quota.c:290 shmem_release_dquot (mm/shmem_quota.c:290 (discriminator 3))
+> > [  246.199955][ T4096] Modules linked in:
+> > [  246.200435][ T4096] CPU: 1 PID: 4096 Comm: kworker/u6:6 Not tainted 6.8.0-rc1-gecb1b8288dc7 #21
+> > [  246.201566][ T4096] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+> > [  246.202667][ T4096] Workqueue: events_unbound quota_release_workfn
+> > [ 246.203516][ T4096] RIP: 0010:shmem_release_dquot (mm/shmem_quota.c:290 (discriminator 3))
+> > [ 246.204276][ T4096] Code: e8 28 d9 18 00 e9 b3 f8 ff ff e8 6e e1 c2 ff c6 05 bf e8 1b 0d 01 90 48 c7 c7 80 f0 b8 8a 4c 89 ea 44 89 e6 e8 14 6d 89 ff 90 <0f> 0b 90 90 e9 18 fb ff ff e8 f5 d8 18 00 e9 a2 fa ff ff e8 0b d9
+> > All code
+> > ========
+> >    0:   e8 28 d9 18 00          call   0x18d92d
+> >    5:   e9 b3 f8 ff ff          jmp    0xfffffffffffff8bd
+> >    a:   e8 6e e1 c2 ff          call   0xffffffffffc2e17d
+> >    f:   c6 05 bf e8 1b 0d 01    movb   $0x1,0xd1be8bf(%rip)        # 0xd1be8d5
+> >   16:   90                      nop
+> >   17:   48 c7 c7 80 f0 b8 8a    mov    $0xffffffff8ab8f080,%rdi
+> >   1e:   4c 89 ea                mov    %r13,%rdx
+> >   21:   44 89 e6                mov    %r12d,%esi
+> >   24:   e8 14 6d 89 ff          call   0xffffffffff896d3d
+> >   29:   90                      nop
+> >   2a:*  0f 0b                   ud2             <-- trapping instruction
+> >   2c:   90                      nop
+> >   2d:   90                      nop
+> >   2e:   e9 18 fb ff ff          jmp    0xfffffffffffffb4b
+> >   33:   e8 f5 d8 18 00          call   0x18d92d
+> >   38:   e9 a2 fa ff ff          jmp    0xfffffffffffffadf
+> >   3d:   e8                      .byte 0xe8
+> >   3e:   0b d9                   or     %ecx,%ebx
+> >
+> > Code starting with the faulting instruction
+> > ===========================================
+> >    0:   0f 0b                   ud2
+> >    2:   90                      nop
+> >    3:   90                      nop
+> >    4:   e9 18 fb ff ff          jmp    0xfffffffffffffb21
+> >    9:   e8 f5 d8 18 00          call   0x18d903
+> >    e:   e9 a2 fa ff ff          jmp    0xfffffffffffffab5
+> >   13:   e8                      .byte 0xe8
+> >   14:   0b d9                   or     %ecx,%ebx
+> > [  246.206640][ T4096] RSP: 0018:ffffc9000604fbc0 EFLAGS: 00010286
+> > [  246.207403][ T4096] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff814c77da
+> > [  246.208514][ T4096] RDX: ffff888049a58000 RSI: ffffffff814c77e7 RDI: 0000000000000001
+> > [  246.209429][ T4096] RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
+> > [  246.210362][ T4096] R10: 0000000000000001 R11: 0000000000000001 R12: 0000000000004000
+> > [  246.211367][ T4096] R13: ffff888051bd3000 R14: dffffc0000000000 R15: ffff888051bd3040
+> > [  246.212327][ T4096] FS:  0000000000000000(0000) GS:ffff88807ec00000(0000) knlGS:0000000000000000
+> > [  246.213387][ T4096] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [  246.214232][ T4096] CR2: 00007ffee748ec80 CR3: 000000000cb78000 CR4: 0000000000750ef0
+> > [  246.215216][ T4096] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > [  246.216187][ T4096] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > [  246.217148][ T4096] PKRU: 55555554
+> > [  246.217615][ T4096] Call Trace:
+> > [  246.218090][ T4096]  <TASK>
+> > [ 246.218467][ T4096] ? show_regs (arch/x86/kernel/dumpstack.c:479)
+> > [ 246.218979][ T4096] ? __warn (kernel/panic.c:677)
+> > [ 246.219505][ T4096] ? shmem_release_dquot (mm/shmem_quota.c:290 (discriminator 3))
+> > [ 246.220197][ T4096] ? report_bug (lib/bug.c:201 lib/bug.c:219)
+> > [ 246.220775][ T4096] ? shmem_release_dquot (mm/shmem_quota.c:290 (discriminator 3))
+> > [ 246.221500][ T4096] ? handle_bug (arch/x86/kernel/traps.c:238)
+> > [ 246.222081][ T4096] ? exc_invalid_op (arch/x86/kernel/traps.c:259 (discriminator 1))
+> > [ 246.222687][ T4096] ? asm_exc_invalid_op (./arch/x86/include/asm/idtentry.h:568)
+> > [ 246.223296][ T4096] ? __warn_printk (./include/linux/context_tracking.h:155 kernel/panic.c:726)
+> > [ 246.223878][ T4096] ? __warn_printk (kernel/panic.c:717)
+> > [ 246.224460][ T4096] ? shmem_release_dquot (mm/shmem_quota.c:290 (discriminator 3))
+> > [ 246.225125][ T4096] quota_release_workfn (fs/quota/dquot.c:839)
+> > [ 246.225792][ T4096] ? dquot_release (fs/quota/dquot.c:810)
+> > [ 246.226401][ T4096] process_one_work (kernel/workqueue.c:2638)
+> > [ 246.227001][ T4096] ? lock_sync (kernel/locking/lockdep.c:5722)
+> > [ 246.227509][ T4096] ? workqueue_congested (kernel/workqueue.c:2542)
+> > [ 246.228266][ T4096] ? assign_work (kernel/workqueue.c:1102)
+> > [ 246.228846][ T4096] worker_thread (kernel/workqueue.c:2700 kernel/workqueue.c:2787)
+> > [ 246.229477][ T4096] ? lockdep_hardirqs_on (kernel/locking/lockdep.c:4423)
+> > [ 246.230150][ T4096] ? process_one_work (kernel/workqueue.c:2733)
+> > [ 246.230735][ T4096] kthread (kernel/kthread.c:388)
+> > [ 246.231247][ T4096] ? kthread_complete_and_exit (kernel/kthread.c:341)
+> > [ 246.231950][ T4096] ret_from_fork (arch/x86/kernel/process.c:153)
+> > [ 246.232465][ T4096] ? kthread_complete_and_exit (kernel/kthread.c:341)
+> > [ 246.233153][ T4096] ret_from_fork_asm (arch/x86/entry/entry_64.S:250)
+> > [  246.233783][ T4096]  </TASK>
+> > [  246.234175][ T4096] Kernel panic - not syncing: kernel: panic_on_warn set ...
+> > [  246.235087][ T4096] CPU: 1 PID: 4096 Comm: kworker/u6:6 Not tainted 6.8.0-rc1-gecb1b8288dc7 #21
+> > [  246.236174][ T4096] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+> > [  246.237207][ T4096] Workqueue: events_unbound quota_release_workfn
+> > [  246.237927][ T4096] Call Trace:
+> > [  246.238294][ T4096]  <TASK>
+> > [ 246.238619][ T4096] dump_stack_lvl (lib/dump_stack.c:107)
+> > [ 246.239144][ T4096] panic (kernel/panic.c:344)
+> > [ 246.239584][ T4096] ? panic_smp_self_stop+0xa0/0xa0
+> > [ 246.240154][ T4096] ? check_panic_on_warn (kernel/panic.c:236)
+> > [ 246.240714][ T4096] ? shmem_release_dquot (mm/shmem_quota.c:290 (discriminator 3))
+> > [ 246.241303][ T4096] check_panic_on_warn (kernel/panic.c:237)
+> > [ 246.241915][ T4096] __warn (./arch/x86/include/asm/current.h:42 kernel/panic.c:682)
+> > [ 246.242428][ T4096] ? shmem_release_dquot (mm/shmem_quota.c:290 (discriminator 3))
+> > [ 246.243117][ T4096] report_bug (lib/bug.c:201 lib/bug.c:219)
+> > [ 246.243688][ T4096] ? shmem_release_dquot (mm/shmem_quota.c:290 (discriminator 3))
+> > [ 246.244390][ T4096] handle_bug (arch/x86/kernel/traps.c:238)
+> > [ 246.244957][ T4096] exc_invalid_op (arch/x86/kernel/traps.c:259 (discriminator 1))
+> > [ 246.245551][ T4096] asm_exc_invalid_op (./arch/x86/include/asm/idtentry.h:568)
+> > [ 246.246189][ T4096] RIP: 0010:shmem_release_dquot (mm/shmem_quota.c:290 (discriminator 3))
+> > [ 246.246945][ T4096] Code: e8 28 d9 18 00 e9 b3 f8 ff ff e8 6e e1 c2 ff c6 05 bf e8 1b 0d 01 90 48 c7 c7 80 f0 b8 8a 4c 89 ea 44 89 e6 e8 14 6d 89 ff 90 <0f> 0b 90 90 e9 18 fb ff ff e8 f5 d8 18 00 e9 a2 fa ff ff e8 0b d9
+> > All code
+> > ========
+> >    0:   e8 28 d9 18 00          call   0x18d92d
+> >    5:   e9 b3 f8 ff ff          jmp    0xfffffffffffff8bd
+> >    a:   e8 6e e1 c2 ff          call   0xffffffffffc2e17d
+> >    f:   c6 05 bf e8 1b 0d 01    movb   $0x1,0xd1be8bf(%rip)        # 0xd1be8d5
+> >   16:   90                      nop
+> >   17:   48 c7 c7 80 f0 b8 8a    mov    $0xffffffff8ab8f080,%rdi
+> >   1e:   4c 89 ea                mov    %r13,%rdx
+> >   21:   44 89 e6                mov    %r12d,%esi
+> >   24:   e8 14 6d 89 ff          call   0xffffffffff896d3d
+> >   29:   90                      nop
+> >   2a:*  0f 0b                   ud2             <-- trapping instruction
+> >   2c:   90                      nop
+> >   2d:   90                      nop
+> >   2e:   e9 18 fb ff ff          jmp    0xfffffffffffffb4b
+> >   33:   e8 f5 d8 18 00          call   0x18d92d
+> >   38:   e9 a2 fa ff ff          jmp    0xfffffffffffffadf
+> >   3d:   e8                      .byte 0xe8
+> >   3e:   0b d9                   or     %ecx,%ebx
+> >
+> > Code starting with the faulting instruction
+> > ===========================================
+> >    0:   0f 0b                   ud2
+> >    2:   90                      nop
+> >    3:   90                      nop
+> >    4:   e9 18 fb ff ff          jmp    0xfffffffffffffb21
+> >    9:   e8 f5 d8 18 00          call   0x18d903
+> >    e:   e9 a2 fa ff ff          jmp    0xfffffffffffffab5
+> >   13:   e8                      .byte 0xe8
+> >   14:   0b d9                   or     %ecx,%ebx
+> > [  246.249288][ T4096] RSP: 0018:ffffc9000604fbc0 EFLAGS: 00010286
+> > [  246.250033][ T4096] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff814c77da
+> > [  246.251035][ T4096] RDX: ffff888049a58000 RSI: ffffffff814c77e7 RDI: 0000000000000001
+> > [  246.252036][ T4096] RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
+> > [  246.253028][ T4096] R10: 0000000000000001 R11: 0000000000000001 R12: 0000000000004000
+> > [  246.254060][ T4096] R13: ffff888051bd3000 R14: dffffc0000000000 R15: ffff888051bd3040
+> > [ 246.255058][ T4096] ? __warn_printk (./include/linux/context_tracking.h:155 kernel/panic.c:726)
+> > [ 246.255694][ T4096] ? __warn_printk (kernel/panic.c:717)
+> > [ 246.256256][ T4096] quota_release_workfn (fs/quota/dquot.c:839)
+> > [ 246.256877][ T4096] ? dquot_release (fs/quota/dquot.c:810)
+> > [ 246.257467][ T4096] process_one_work (kernel/workqueue.c:2638)
+> > [ 246.258126][ T4096] ? lock_sync (kernel/locking/lockdep.c:5722)
+> > [ 246.258718][ T4096] ? workqueue_congested (kernel/workqueue.c:2542)
+> > [ 246.259339][ T4096] ? assign_work (kernel/workqueue.c:1102)
+> > [ 246.259915][ T4096] worker_thread (kernel/workqueue.c:2700 kernel/workqueue.c:2787)
+> > [ 246.260529][ T4096] ? lockdep_hardirqs_on (kernel/locking/lockdep.c:4423)
+> > [ 246.261176][ T4096] ? process_one_work (kernel/workqueue.c:2733)
+> > [ 246.261855][ T4096] kthread (kernel/kthread.c:388)
+> > [ 246.262382][ T4096] ? kthread_complete_and_exit (kernel/kthread.c:341)
+> > [ 246.263077][ T4096] ret_from_fork (arch/x86/kernel/process.c:153)
+> > [ 246.263620][ T4096] ? kthread_complete_and_exit (kernel/kthread.c:341)
+> > [ 246.264331][ T4096] ret_from_fork_asm (arch/x86/entry/entry_64.S:250)
+> > [  246.264910][ T4096]  </TASK>
+> > [  246.265598][ T4096] Kernel Offset: disabled
+> > [  246.266259][ T4096] Rebooting in 86400 seconds..
+> >
+> > Thank you for taking the time to read this email and we look forward to working with you further.
 > 
-> Moreover, I did not see an obvious latency improvements, this is likely because
-> isolating freepages is not the bottleneck in the thpcompact test case.
->                               k6.7                  k6.7_patched
-> Amean     fault-both-1      1089.76 (   0.00%)     1080.16 *   0.88%*
-> Amean     fault-both-3      1616.48 (   0.00%)     1636.65 *  -1.25%*
-> Amean     fault-both-5      2266.66 (   0.00%)     2219.20 *   2.09%*
-> Amean     fault-both-7      2909.84 (   0.00%)     2801.90 *   3.71%*
-> Amean     fault-both-12     4861.26 (   0.00%)     4733.25 *   2.63%*
-> Amean     fault-both-18     7351.11 (   0.00%)     6950.51 *   5.45%*
-> Amean     fault-both-24     9059.30 (   0.00%)     9159.99 *  -1.11%*
-> Amean     fault-both-30    10685.68 (   0.00%)    11399.02 *  -6.68%*
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> Acked-by: Mel Gorman <mgorman@techsingularity.net>
+> Carlos, this looks like one for you to puzzle over -
+> thanks,
+> Hugh
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+I'll look into it, thanks!
 
-Thanks.
-
-> ---
-> Hi Andrew, please use this patch to replace below 2 old patches. Thanks.
-> https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/commit/?h=mm-everything-2024-02-20-04-19&id=cb30899d456d64fb83ee3e3d95cd9fbb18735d87
-> https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/commit/?h=mm-everything-2024-02-20-04-19&id=65713d1c4fc498d35dc1f7c1234ef815aa128429
-> 
-> Changes from v2:
->  - Add acked tag from Mel.
->  - Fix the mm_compaction_migratepages trace event.
-> Changes from v1:
->  - Rebased on the latest mm-unstable branch.
-> ---
->  include/trace/events/compaction.h |  6 +++---
->  mm/compaction.c                   | 12 ++++++++++--
->  2 files changed, 13 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/trace/events/compaction.h b/include/trace/events/compaction.h
-> index 2b2a975efd20..d05759d18538 100644
-> --- a/include/trace/events/compaction.h
-> +++ b/include/trace/events/compaction.h
-> @@ -78,10 +78,10 @@ DEFINE_EVENT(mm_compaction_isolate_template, mm_compaction_fast_isolate_freepage
->  #ifdef CONFIG_COMPACTION
->  TRACE_EVENT(mm_compaction_migratepages,
->  
-> -	TP_PROTO(struct compact_control *cc,
-> +	TP_PROTO(unsigned int nr_migratepages,
->  		unsigned int nr_succeeded),
->  
-> -	TP_ARGS(cc, nr_succeeded),
-> +	TP_ARGS(nr_migratepages, nr_succeeded),
->  
->  	TP_STRUCT__entry(
->  		__field(unsigned long, nr_migrated)
-> @@ -90,7 +90,7 @@ TRACE_EVENT(mm_compaction_migratepages,
->  
->  	TP_fast_assign(
->  		__entry->nr_migrated = nr_succeeded;
-> -		__entry->nr_failed = cc->nr_migratepages - nr_succeeded;
-> +		__entry->nr_failed = nr_migratepages - nr_succeeded;
->  	),
->  
->  	TP_printk("nr_migrated=%lu nr_failed=%lu",
-> diff --git a/mm/compaction.c b/mm/compaction.c
-> index 4494b2914386..218089b29f13 100644
-> --- a/mm/compaction.c
-> +++ b/mm/compaction.c
-> @@ -1798,6 +1798,7 @@ static struct folio *compaction_alloc(struct folio *src, unsigned long data)
->  	dst = list_entry(cc->freepages.next, struct folio, lru);
->  	list_del(&dst->lru);
->  	cc->nr_freepages--;
-> +	cc->nr_migratepages--;
->  
->  	return dst;
->  }
-> @@ -1813,6 +1814,7 @@ static void compaction_free(struct folio *dst, unsigned long data)
->  
->  	list_add(&dst->lru, &cc->freepages);
->  	cc->nr_freepages++;
-> +	cc->nr_migratepages++;
->  }
->  
->  /* possible outcome of isolate_migratepages */
-> @@ -2435,7 +2437,7 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
->  	unsigned long last_migrated_pfn;
->  	const bool sync = cc->mode != MIGRATE_ASYNC;
->  	bool update_cached;
-> -	unsigned int nr_succeeded = 0;
-> +	unsigned int nr_succeeded = 0, nr_migratepages;
->  
->  	/*
->  	 * These counters track activities during zone compaction.  Initialize
-> @@ -2553,11 +2555,17 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
->  				pageblock_start_pfn(cc->migrate_pfn - 1));
->  		}
->  
-> +		/*
-> +		 * Record the number of pages to migrate since the
-> +		 * compaction_alloc/free() will update cc->nr_migratepages
-> +		 * properly.
-> +		 */
-> +		nr_migratepages = cc->nr_migratepages;
->  		err = migrate_pages(&cc->migratepages, compaction_alloc,
->  				compaction_free, (unsigned long)cc, cc->mode,
->  				MR_COMPACTION, &nr_succeeded);
->  
-> -		trace_mm_compaction_migratepages(cc, nr_succeeded);
-> +		trace_mm_compaction_migratepages(nr_migratepages, nr_succeeded);
->  
->  		/* All pages were either migrated or will be released */
->  		cc->nr_migratepages = 0;
-
+Carlos
