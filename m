@@ -1,205 +1,99 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF4E762D7
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Feb 2024 15:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A557076031;
+	Tue, 20 Feb 2024 15:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708441206; cv=none; b=mQ4EQnNLwX7F9Kym9IXgISDqgCrZn1cJx7nCxxr7MnoKIs3y3u/fPeTMw8wVCecwBUTaeZZEw4hY6MJxTJ7CYlV0m7Y4VOXBOm0RtD9v1iVKHRYlAi5LBlBOIlpxq+E3LlRCCcukisjZDPDTMddselJQPUVwIcE6JiiAqa5xS0I=
+	t=1708443519; cv=none; b=HZnXLmdt580U3ZJTEO62hv1xmT5zGNQtHYjeJ5LoaZKpaR6QkSem1sGyMI1wK8zHiGd0nE3Vtr3HNcZaoHdmov3F7QKFeoGnOkS4GkjG/g1g7LP4pGCs2Rx/ESnzPXgbNPvvRARUD/4Ian1d1DaNLLt0klOgaPJtjVQzBzCDfZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708441206; c=relaxed/simple;
-	bh=uqPQzpqpW1oWCehvSp8LygvJhWA+5XoquTYQhMHNHrY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EEw5otm0d0W8RcdMU+lxpO+aO6B1U6E0NRFOz1QP2RWMwn+mHeJvwR/+RcIMSC2JpbJ3zusQq9+1fhs5C5zSPwUbAYcoySMpyh5DKKthKfdkqtAMSJp0FKIK+9xV6HlHM5g7Ql6X/qjrzM7WyxP6EeqyfbSLHU38hkEaalkrzrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sazZ+4Tz; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sazZ+4Tz"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-33d153254b7so2674339f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Feb 2024 07:00:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708441202; x=1709046002; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oXsi9e0ZJaTq8tCuJHkWD66aNk20DvqQuX0JKE5P0uc=;
-        b=sazZ+4TzSqBtwKqibBN7eNNt+F534BEttEcpvsXx28MOgZydOmxB+TYMci/emI0oTo
-         Kiq16rELs8Il8gwahnkE+6DdTbtDjURFDltN/20c/NcsMYBStRhsQuqueHpcSgsE0PAH
-         gqINnk1sPGoOcpzyqs4iKkpteQHA/URt/pE6l+7/wwPx/LQMvZVN6Tq3+UgKb24tKxQ8
-         qJ1bPaEDAcsMqYAdoKnkW+cNyWLlcNxrbeMliO0glXULrAG/0URL8cz8p0mYmwQYEi+8
-         0CK7bd0ZqU8fvVgFYtd0kP4jw5Zd5FLjLjFMW/oCpoSUr+3JrKZ8U6TsrctxzbhKuaMD
-         3egQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708441202; x=1709046002;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oXsi9e0ZJaTq8tCuJHkWD66aNk20DvqQuX0JKE5P0uc=;
-        b=k81mCfKLKB9TZp/9MS7AVVfhaEe7om8qtPL/y1oRC5LqwFFcSUMwO5Rxqy2dgklck1
-         JfrUdhLq753z+WMrtVmhfKXBRMXFIcryJcKCdmhhCxhKUeJPzDfLmgORyqAg3D9Hnrm/
-         2c+mUU5+eC/+p9+ZxhEUo94ze9j+6ipQ9sB8pEyUbob99bOXLb7fpn6/iONlAqfAOam4
-         RUQuXFpWWKCMfBlz4QzuUBcvkUdTLNcGVQgcyWhYXg9wDqfjRjQLFScGENBW20LzyJDD
-         OYn1LK7cMdAqANyaQ9+IJrFVgQOtSGKeb0aZt9n5eDR/KM2TsD3d0V+l+hFTOmir1OSh
-         WNBw==
-X-Forwarded-Encrypted: i=1; AJvYcCVKyjXy9jwQhfX3UArbt+uoXwRIwAkErgVU/5PAaJO3D0p6lhAk9Whm7jO37gWf4QtP1vQ/P1jZCBNEvEc3kgraDam12CSPgaubE5AeIYpgPtI5
-X-Gm-Message-State: AOJu0Yxs4E1DmXRFZhvP2qHggyX+OTlEoM3PbJiaVqlXdlhYw9CDXjNO
-	/sJioMQAVGRJPuwPI9PKDGcVxmCMnYyS4Z5w6wYi78tqb15lgxJ7yRDDMoO3yp4=
-X-Google-Smtp-Source: AGHT+IEGJuS9S6rDAwOVJ71L9m5a65+6iLz6u9I0qEZvXUIWtxH6o/5l2zVbIcoozPQzIagXT47Q0A==
-X-Received: by 2002:a05:6000:1a43:b0:33d:32ff:9629 with SMTP id t3-20020a0560001a4300b0033d32ff9629mr6355629wry.23.1708441202610;
-        Tue, 20 Feb 2024 07:00:02 -0800 (PST)
-Received: from vingu-book.. ([2a01:e0a:f:6020:8deb:bfb9:b028:6d5c])
-        by smtp.gmail.com with ESMTPSA id v4-20020a5d6784000000b0033d39626c27sm9304405wru.76.2024.02.20.07.00.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 07:00:01 -0800 (PST)
-From: Vincent Guittot <vincent.guittot@linaro.org>
-To: linux@armlinux.org.uk,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	sudeep.holla@arm.com,
-	rafael@kernel.org,
-	viresh.kumar@linaro.org,
-	agross@kernel.org,
-	andersson@kernel.org,
-	konrad.dybcio@linaro.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	bristot@redhat.com,
-	vschneid@redhat.com,
-	lukasz.luba@arm.com,
-	rui.zhang@intel.com,
-	mhiramat@kernel.org,
-	daniel.lezcano@linaro.org,
-	amit.kachhap@gmail.com,
-	corbet@lwn.net,
-	gregkh@linuxfoundation.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Cc: Vincent Guittot <vincent.guittot@linaro.org>,
-	Qais Yousef <qyousef@layalina.io>
-Subject: [PATCH v5 5/5] sched/pelt: Remove shift of thermal clock
-Date: Tue, 20 Feb 2024 15:59:47 +0100
-Message-Id: <20240220145947.1107937-6-vincent.guittot@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240220145947.1107937-1-vincent.guittot@linaro.org>
-References: <20240220145947.1107937-1-vincent.guittot@linaro.org>
+	s=arc-20240116; t=1708443519; c=relaxed/simple;
+	bh=+GWUaKj8l/UOXz/ZncL8CGObQZYYkF42lOpmXt3dqRA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=W2eVVX2V0bA+igMvwz2SpoqV8zi1sipwBuDKT35fgTWhLslLNl7PZSgY1j33ZYvsf70o/nPgZ8EwpPxCRGQEfaTYrM1QxOYvjjgLMORiOzIj0jqCPlZx8yA+VuAt3qCGiAaO1k/4stlMO+06oZFF02tyFYO+uiPjfE4wn9FDCYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 795D7C433F1;
+	Tue, 20 Feb 2024 15:38:38 +0000 (UTC)
+Date: Tue, 20 Feb 2024 10:40:23 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3] ring-buffer: Simplify reservation with try_cmpxchg()
+ loop
+Message-ID: <20240220104023.2182b5c3@gandalf.local.home>
+In-Reply-To: <168765ff-98ea-42a1-82f7-56178bfcf7ec@efficios.com>
+References: <20240219182032.2605d0a3@gandalf.local.home>
+	<20240220091922.45848d9a@gandalf.local.home>
+	<168765ff-98ea-42a1-82f7-56178bfcf7ec@efficios.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The optional shift of the clock used by thermal/hw load avg has been
-introduced to handle case where the signal was not always a high frequency
-hw signal. Now that cpufreq provides a signal for firmware and
-SW pressure, we can remove this exception and always keep this PELT signal
-aligned with other signals.
-Mark sysctl_sched_migration_cost boot parameter as deprecated
+On Tue, 20 Feb 2024 09:50:13 -0500
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Reviewed-by: Qais Yousef <qyousef@layalina.io>
----
- .../admin-guide/kernel-parameters.txt          |  1 +
- kernel/sched/core.c                            |  2 +-
- kernel/sched/fair.c                            | 10 ++--------
- kernel/sched/sched.h                           | 18 ------------------
- 4 files changed, 4 insertions(+), 27 deletions(-)
+> On 2024-02-20 09:19, Steven Rostedt wrote:
+> > On Mon, 19 Feb 2024 18:20:32 -0500
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> >   
+> >> Instead of using local_add_return() to reserve the ring buffer data,
+> >> Mathieu Desnoyers suggested using local_cmpxchg(). This would simplify the
+> >> reservation with the time keeping code.
+> >>
+> >> Although, it does not get rid of the double time stamps (before_stamp and
+> >> write_stamp), using cmpxchg() does get rid of the more complex case when
+> >> an interrupting event occurs between getting the timestamps and reserving
+> >> the data, as when that happens, it just tries again instead of dealing
+> >> with it.
+> >>
+> >> Before we had:
+> >>
+> >> 	w = local_read(&tail_page->write);
+> >> 	/* get time stamps */
+> >> 	write = local_add_return(length, &tail_page->write);
+> >> 	if (write - length == w) {
+> >> 		/* do simple case */
+> >> 	} else {
+> >> 		/* do complex case */
+> >> 	}
+> >>
+> >> By switching the local_add_return() to a local_try_cmpxchg() it can now be:
+> >>
+> >> 	 w = local_read(&tail_page->write);
+> >>   again:
+> >> 	/* get time stamps */
+> >> 	if (!local_try_cmpxchg(&tail_page->write, &w, w + length))
+> >> 		goto again;
+> >>
+> >> 	 /* do simple case */  
+> > 
+> > Something about this logic is causing __rb_next_reserve() to sometimes
+> > always return -EAGAIN and triggering the:
+> > 
+> >      RB_WARN_ON(cpu_buffer, ++nr_loops > 1000)
+> > 
+> > Which disables the ring buffer.
+> > 
+> > I'm not sure what it is, but until I do, I'm removing the patch from my
+> > queue.  
+> 
+> Try resetting the info->add_timestamp flags to add_ts_default on goto again
+> within __rb_reserve_next().
+>
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 31b3a25680d0..4dc54bd1bbf2 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5749,6 +5749,7 @@
- 			but is useful for debugging and performance tuning.
- 
- 	sched_thermal_decay_shift=
-+			[Deprecated]
- 			[KNL, SMP] Set a decay shift for scheduler thermal
- 			pressure signal. Thermal pressure signal follows the
- 			default decay period of other scheduler pelt
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 8bfe5ce4ccd3..b740dcdc86a0 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -5669,7 +5669,7 @@ void scheduler_tick(void)
- 
- 	update_rq_clock(rq);
- 	hw_pressure = arch_scale_hw_pressure(cpu_of(rq));
--	update_hw_load_avg(rq_clock_hw(rq), rq, hw_pressure);
-+	update_hw_load_avg(rq_clock_task(rq), rq, hw_pressure);
- 	curr->sched_class->task_tick(rq, curr, 0);
- 	if (sched_feat(LATENCY_WARN))
- 		resched_latency = cpu_resched_latency(rq);
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 8961d307f232..f7c2bf0eba65 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -78,15 +78,9 @@ static unsigned int normalized_sysctl_sched_base_slice	= 750000ULL;
- 
- const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
- 
--int sched_hw_decay_shift;
- static int __init setup_sched_thermal_decay_shift(char *str)
- {
--	int _shift = 0;
--
--	if (kstrtoint(str, 0, &_shift))
--		pr_warn("Unable to set scheduler thermal pressure decay shift parameter\n");
--
--	sched_hw_decay_shift = clamp(_shift, 0, 10);
-+	pr_warn("Ignoring the deprecated sched_thermal_decay_shift= option\n");
- 	return 1;
- }
- __setup("sched_thermal_decay_shift=", setup_sched_thermal_decay_shift);
-@@ -9296,7 +9290,7 @@ static bool __update_blocked_others(struct rq *rq, bool *done)
- 
- 	decayed = update_rt_rq_load_avg(now, rq, curr_class == &rt_sched_class) |
- 		  update_dl_rq_load_avg(now, rq, curr_class == &dl_sched_class) |
--		  update_hw_load_avg(rq_clock_hw(rq), rq, hw_pressure) |
-+		  update_hw_load_avg(now, rq, hw_pressure) |
- 		  update_irq_load_avg(rq, 0);
- 
- 	if (others_have_blocked(rq))
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 1f8799788cea..638c61efe19d 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1531,24 +1531,6 @@ static inline u64 rq_clock_task(struct rq *rq)
- 	return rq->clock_task;
- }
- 
--/**
-- * By default the decay is the default pelt decay period.
-- * The decay shift can change the decay period in
-- * multiples of 32.
-- *  Decay shift		Decay period(ms)
-- *	0			32
-- *	1			64
-- *	2			128
-- *	3			256
-- *	4			512
-- */
--extern int sched_hw_decay_shift;
--
--static inline u64 rq_clock_hw(struct rq *rq)
--{
--	return rq_clock_task(rq) >> sched_hw_decay_shift;
--}
--
- static inline void rq_clock_skip_update(struct rq *rq)
- {
- 	lockdep_assert_rq_held(rq);
--- 
-2.34.1
+I was looking at that too, but I don't know how it will make a difference.
 
+Note, the test that fails is in my test suite, and takes about a half hour
+to get there. Running that suite takes up resources (it's my main test
+suite for all changes). I'm currently testing other patches so I either
+need to figure it out through inspection, or this will need to wait a while.
+
+-- Steve
