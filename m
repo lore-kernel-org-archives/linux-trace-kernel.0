@@ -1,28 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95F154FA8;
-	Mon, 19 Feb 2024 23:18:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6FB4482D0
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Feb 2024 04:26:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708384729; cv=none; b=D46HUPDKp5LuTwGACnXylzWAD/QvsMDW+dTVCLGR14CpnLuilfMFh6feEk3/RgumIe7bdHuApP9JBG2D1EXCPky6H1FujZcSbvxTBEIwJYEvZoiG/tk4JWDzOhGBOCwbNq6UNaSxTip7+5ZeWBL4ey4Fz+nIwScZKlTfRMRa4Cw=
+	t=1708403185; cv=none; b=WNqxFgkPnAfYeatwmutR+1ljZNwoOejaMndpktblJ7LecSAOGnF/wiViuNlo4wXkAAaobXA1dvPw0DzNMr2KFAii6b3Fr7TbodYhIjCtVygsiLm1yN7+XPcZS217E42fIuEIC5Hyx5BV7xDo6XUJS9tEvum0LvxrnDIKKHcWsTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708384729; c=relaxed/simple;
-	bh=ieo1LD6zpA/ghJMMNhYNt1Dzh9yD4gVLvF+JYaQMH6w=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Yt1CqmvwNbf2fenpObjMKmDvHnCctoq4Vue+TgKS8WJ0WIDaw7xYJAOnvYiyAGRcT5ZVemFLJiEd1ZNTruiB+g2WpqaHDRVTNRW9ZCTJu3uDyYM0bhiEz0n7ODx0VrlfuoiU7JU32p+p/emRaU8MECremRLyfiRtfIZCytke9GM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12EDDC433F1;
-	Mon, 19 Feb 2024 23:18:48 +0000 (UTC)
-Date: Mon, 19 Feb 2024 18:20:32 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [PATCH v3] ring-buffer: Simplify reservation with try_cmpxchg()
- loop
-Message-ID: <20240219182032.2605d0a3@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708403185; c=relaxed/simple;
+	bh=KL6pB/FKvA43y8hgMncRFU+5Do+KO5Xj5Ci32oGfZgo=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=jvUyun0vlX7W4+afUuAqG5JMA4E3HCQN/z/fPs6a0mMkxORZmHZs5OMMk6VYnLiieIgYQBBZ2zGxXWmMAOwIdhQ9iCaN57C2UW4fB8XNKG3qntelHVuMZOpDeudVXtLb+T8VbdcMRx2hgwjXJodPaPps7VAL+jHnVWM+PTlIpPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1NFxu1Ei; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1NFxu1Ei"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dcbef31a9dbso3095009276.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Feb 2024 20:26:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708403183; x=1709007983; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=smOx0A+zJu8PfHoBnnMyvlup4aoJ6C96lfTmf7s2+Ds=;
+        b=1NFxu1EiEGZ6GkooiqrMl6CQUfqxBGNaJE1+DaMpD+BXCS7GgiCtLzEQj5FWtOCr3v
+         OA1TSoCmbbvhIVYawiroUs753xApnHuPV5y6f8vtCt0/GASLy7vmYyVbFZLNtVaO9/cI
+         C3qvGlB3fg2kdWOnaFAgcZscdspaMLC63L82ognb7VRKNV2X0G+4dIB/P8OrLjFWheX6
+         yV+vh4/FK07yq8ZvFh06LBRTBtYVwFcV/e0E1kgV5c39Tmd9LlqdEg3M+j673xQl1FdH
+         nY3a6p0PplFXyUwfN5bRigpbpAm6q8feSUYS7ZGKKs2B17QkQflTHgYzwdlXI7g6xSGx
+         WwSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708403183; x=1709007983;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=smOx0A+zJu8PfHoBnnMyvlup4aoJ6C96lfTmf7s2+Ds=;
+        b=CtJ8+PSuIGsGsRI1Aq6viUaFYRGULG0XcSsTX00VboLtk8qtFVFdhXYxLC/0i2YkFd
+         DvWJYQjyJq2xK4syuJXbmTr10fq0uvX4NtLUPHyVJ7pzwcsoQOvxVLFDqtSpNNTx1MK8
+         PQC5P2jtV6Fupq7gj8WlW17VolMjPo21yGV0grK68mcLEhZJ9Yw6hLrG7EINDRcdSlbC
+         yW9jUZGGsZMKqmWViEHL/dr/iGu+4Uf5YhvjDJzH2+fVBLIAyjT/HpAeZ97pk9XhihIH
+         NF072rrMcjSe2CRfKpHa3NXxnEPymdK7YKuKeSZIl2+ZJSh/FF98KEYqXON+52TcvamO
+         0ECA==
+X-Forwarded-Encrypted: i=1; AJvYcCVxgyiQakfaPPAd6LUjOLHF5OeeDBaGYe3tbEYnXlAvSUd2WNVAOeLm9c9Pmreo4b8+Xcmu8haWNoT4DqcOVCtQyy/VyzTIZxNq+nKTUI6Oa0V7
+X-Gm-Message-State: AOJu0YzK/55HxYH1Ad+KAK2Z6b+lVn4R+Ef9X5BxP0emn5q76enJwx1+
+	u3uoIqvvhHr7TolOW0mh8OwrJLw6MgdxBha9n3lF7CxbL16G6JuniXf4H7CERw==
+X-Google-Smtp-Source: AGHT+IFl3uj8zLGrwUtTVjvNj87B+o1zM6Igow4vTYalMP+FRBoXpaIChS0/9GSZNDPn5iTgGYrlQw==
+X-Received: by 2002:a25:74cc:0:b0:dc7:140:8c0c with SMTP id p195-20020a2574cc000000b00dc701408c0cmr13293994ybc.23.1708403182457;
+        Mon, 19 Feb 2024 20:26:22 -0800 (PST)
+Received: from darker.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id b3-20020a5b0083000000b00dcdbe11c243sm1754092ybp.1.2024.02.19.20.26.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Feb 2024 20:26:21 -0800 (PST)
+Date: Mon, 19 Feb 2024 20:26:20 -0800 (PST)
+From: Hugh Dickins <hughd@google.com>
+To: Carlos Maiolino <cem@kernel.org>
+cc: linux-kernel <linux-kernel@vger.kernel.org>, 
+    linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
+    linux-mm <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>, 
+    Hugh Dickins <hughd@google.com>, Jan Kara <jack@suse.cz>, 
+    Ubisectech Sirius <bugreport@ubisectech.com>
+Subject: Re: WARNING in shmem_release_dquot
+In-Reply-To: <544b03a4-e317-499f-8c9f-29571be668dc.bugreport@ubisectech.com>
+Message-ID: <ae12d2ad-6f7f-09d4-30ba-03411c4dae66@google.com>
+References: <544b03a4-e317-499f-8c9f-29571be668dc.bugreport@ubisectech.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -30,241 +69,173 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Mon, 29 Jan 2024, Ubisectech Sirius wrote:
 
-Instead of using local_add_return() to reserve the ring buffer data,
-Mathieu Desnoyers suggested using local_cmpxchg(). This would simplify the
-reservation with the time keeping code.
+> Hello.
+> We are Ubisectech Sirius Team, the vulnerability lab of China ValiantSec. Recently, our team has discovered a issue in Linux kernel 6.8.0-rc1-gecb1b8288dc7. Attached to the email were a POC file of the issue.
+> 
+> Stack dump:
+> [  246.195553][ T4096] ------------[ cut here ]------------
+> [  246.196540][ T4096] quota id 16384 from dquot ffff888051bd3000, not in rb tree!
+> [ 246.198829][ T4096] WARNING: CPU: 1 PID: 4096 at mm/shmem_quota.c:290 shmem_release_dquot (mm/shmem_quota.c:290 (discriminator 3))
+> [  246.199955][ T4096] Modules linked in:
+> [  246.200435][ T4096] CPU: 1 PID: 4096 Comm: kworker/u6:6 Not tainted 6.8.0-rc1-gecb1b8288dc7 #21
+> [  246.201566][ T4096] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+> [  246.202667][ T4096] Workqueue: events_unbound quota_release_workfn
+> [ 246.203516][ T4096] RIP: 0010:shmem_release_dquot (mm/shmem_quota.c:290 (discriminator 3))
+> [ 246.204276][ T4096] Code: e8 28 d9 18 00 e9 b3 f8 ff ff e8 6e e1 c2 ff c6 05 bf e8 1b 0d 01 90 48 c7 c7 80 f0 b8 8a 4c 89 ea 44 89 e6 e8 14 6d 89 ff 90 <0f> 0b 90 90 e9 18 fb ff ff e8 f5 d8 18 00 e9 a2 fa ff ff e8 0b d9
+> All code
+> ========
+>    0:   e8 28 d9 18 00          call   0x18d92d
+>    5:   e9 b3 f8 ff ff          jmp    0xfffffffffffff8bd
+>    a:   e8 6e e1 c2 ff          call   0xffffffffffc2e17d
+>    f:   c6 05 bf e8 1b 0d 01    movb   $0x1,0xd1be8bf(%rip)        # 0xd1be8d5
+>   16:   90                      nop
+>   17:   48 c7 c7 80 f0 b8 8a    mov    $0xffffffff8ab8f080,%rdi
+>   1e:   4c 89 ea                mov    %r13,%rdx
+>   21:   44 89 e6                mov    %r12d,%esi
+>   24:   e8 14 6d 89 ff          call   0xffffffffff896d3d
+>   29:   90                      nop
+>   2a:*  0f 0b                   ud2             <-- trapping instruction
+>   2c:   90                      nop
+>   2d:   90                      nop
+>   2e:   e9 18 fb ff ff          jmp    0xfffffffffffffb4b
+>   33:   e8 f5 d8 18 00          call   0x18d92d
+>   38:   e9 a2 fa ff ff          jmp    0xfffffffffffffadf
+>   3d:   e8                      .byte 0xe8
+>   3e:   0b d9                   or     %ecx,%ebx
+> 
+> Code starting with the faulting instruction
+> ===========================================
+>    0:   0f 0b                   ud2
+>    2:   90                      nop
+>    3:   90                      nop
+>    4:   e9 18 fb ff ff          jmp    0xfffffffffffffb21
+>    9:   e8 f5 d8 18 00          call   0x18d903
+>    e:   e9 a2 fa ff ff          jmp    0xfffffffffffffab5
+>   13:   e8                      .byte 0xe8
+>   14:   0b d9                   or     %ecx,%ebx
+> [  246.206640][ T4096] RSP: 0018:ffffc9000604fbc0 EFLAGS: 00010286
+> [  246.207403][ T4096] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff814c77da
+> [  246.208514][ T4096] RDX: ffff888049a58000 RSI: ffffffff814c77e7 RDI: 0000000000000001
+> [  246.209429][ T4096] RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
+> [  246.210362][ T4096] R10: 0000000000000001 R11: 0000000000000001 R12: 0000000000004000
+> [  246.211367][ T4096] R13: ffff888051bd3000 R14: dffffc0000000000 R15: ffff888051bd3040
+> [  246.212327][ T4096] FS:  0000000000000000(0000) GS:ffff88807ec00000(0000) knlGS:0000000000000000
+> [  246.213387][ T4096] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  246.214232][ T4096] CR2: 00007ffee748ec80 CR3: 000000000cb78000 CR4: 0000000000750ef0
+> [  246.215216][ T4096] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [  246.216187][ T4096] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [  246.217148][ T4096] PKRU: 55555554
+> [  246.217615][ T4096] Call Trace:
+> [  246.218090][ T4096]  <TASK>
+> [ 246.218467][ T4096] ? show_regs (arch/x86/kernel/dumpstack.c:479)
+> [ 246.218979][ T4096] ? __warn (kernel/panic.c:677)
+> [ 246.219505][ T4096] ? shmem_release_dquot (mm/shmem_quota.c:290 (discriminator 3))
+> [ 246.220197][ T4096] ? report_bug (lib/bug.c:201 lib/bug.c:219)
+> [ 246.220775][ T4096] ? shmem_release_dquot (mm/shmem_quota.c:290 (discriminator 3))
+> [ 246.221500][ T4096] ? handle_bug (arch/x86/kernel/traps.c:238)
+> [ 246.222081][ T4096] ? exc_invalid_op (arch/x86/kernel/traps.c:259 (discriminator 1))
+> [ 246.222687][ T4096] ? asm_exc_invalid_op (./arch/x86/include/asm/idtentry.h:568)
+> [ 246.223296][ T4096] ? __warn_printk (./include/linux/context_tracking.h:155 kernel/panic.c:726)
+> [ 246.223878][ T4096] ? __warn_printk (kernel/panic.c:717)
+> [ 246.224460][ T4096] ? shmem_release_dquot (mm/shmem_quota.c:290 (discriminator 3))
+> [ 246.225125][ T4096] quota_release_workfn (fs/quota/dquot.c:839)
+> [ 246.225792][ T4096] ? dquot_release (fs/quota/dquot.c:810)
+> [ 246.226401][ T4096] process_one_work (kernel/workqueue.c:2638)
+> [ 246.227001][ T4096] ? lock_sync (kernel/locking/lockdep.c:5722)
+> [ 246.227509][ T4096] ? workqueue_congested (kernel/workqueue.c:2542)
+> [ 246.228266][ T4096] ? assign_work (kernel/workqueue.c:1102)
+> [ 246.228846][ T4096] worker_thread (kernel/workqueue.c:2700 kernel/workqueue.c:2787)
+> [ 246.229477][ T4096] ? lockdep_hardirqs_on (kernel/locking/lockdep.c:4423)
+> [ 246.230150][ T4096] ? process_one_work (kernel/workqueue.c:2733)
+> [ 246.230735][ T4096] kthread (kernel/kthread.c:388)
+> [ 246.231247][ T4096] ? kthread_complete_and_exit (kernel/kthread.c:341)
+> [ 246.231950][ T4096] ret_from_fork (arch/x86/kernel/process.c:153)
+> [ 246.232465][ T4096] ? kthread_complete_and_exit (kernel/kthread.c:341)
+> [ 246.233153][ T4096] ret_from_fork_asm (arch/x86/entry/entry_64.S:250)
+> [  246.233783][ T4096]  </TASK>
+> [  246.234175][ T4096] Kernel panic - not syncing: kernel: panic_on_warn set ...
+> [  246.235087][ T4096] CPU: 1 PID: 4096 Comm: kworker/u6:6 Not tainted 6.8.0-rc1-gecb1b8288dc7 #21
+> [  246.236174][ T4096] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+> [  246.237207][ T4096] Workqueue: events_unbound quota_release_workfn
+> [  246.237927][ T4096] Call Trace:
+> [  246.238294][ T4096]  <TASK>
+> [ 246.238619][ T4096] dump_stack_lvl (lib/dump_stack.c:107)
+> [ 246.239144][ T4096] panic (kernel/panic.c:344)
+> [ 246.239584][ T4096] ? panic_smp_self_stop+0xa0/0xa0
+> [ 246.240154][ T4096] ? check_panic_on_warn (kernel/panic.c:236)
+> [ 246.240714][ T4096] ? shmem_release_dquot (mm/shmem_quota.c:290 (discriminator 3))
+> [ 246.241303][ T4096] check_panic_on_warn (kernel/panic.c:237)
+> [ 246.241915][ T4096] __warn (./arch/x86/include/asm/current.h:42 kernel/panic.c:682)
+> [ 246.242428][ T4096] ? shmem_release_dquot (mm/shmem_quota.c:290 (discriminator 3))
+> [ 246.243117][ T4096] report_bug (lib/bug.c:201 lib/bug.c:219)
+> [ 246.243688][ T4096] ? shmem_release_dquot (mm/shmem_quota.c:290 (discriminator 3))
+> [ 246.244390][ T4096] handle_bug (arch/x86/kernel/traps.c:238)
+> [ 246.244957][ T4096] exc_invalid_op (arch/x86/kernel/traps.c:259 (discriminator 1))
+> [ 246.245551][ T4096] asm_exc_invalid_op (./arch/x86/include/asm/idtentry.h:568)
+> [ 246.246189][ T4096] RIP: 0010:shmem_release_dquot (mm/shmem_quota.c:290 (discriminator 3))
+> [ 246.246945][ T4096] Code: e8 28 d9 18 00 e9 b3 f8 ff ff e8 6e e1 c2 ff c6 05 bf e8 1b 0d 01 90 48 c7 c7 80 f0 b8 8a 4c 89 ea 44 89 e6 e8 14 6d 89 ff 90 <0f> 0b 90 90 e9 18 fb ff ff e8 f5 d8 18 00 e9 a2 fa ff ff e8 0b d9
+> All code
+> ========
+>    0:   e8 28 d9 18 00          call   0x18d92d
+>    5:   e9 b3 f8 ff ff          jmp    0xfffffffffffff8bd
+>    a:   e8 6e e1 c2 ff          call   0xffffffffffc2e17d
+>    f:   c6 05 bf e8 1b 0d 01    movb   $0x1,0xd1be8bf(%rip)        # 0xd1be8d5
+>   16:   90                      nop
+>   17:   48 c7 c7 80 f0 b8 8a    mov    $0xffffffff8ab8f080,%rdi
+>   1e:   4c 89 ea                mov    %r13,%rdx
+>   21:   44 89 e6                mov    %r12d,%esi
+>   24:   e8 14 6d 89 ff          call   0xffffffffff896d3d
+>   29:   90                      nop
+>   2a:*  0f 0b                   ud2             <-- trapping instruction
+>   2c:   90                      nop
+>   2d:   90                      nop
+>   2e:   e9 18 fb ff ff          jmp    0xfffffffffffffb4b
+>   33:   e8 f5 d8 18 00          call   0x18d92d
+>   38:   e9 a2 fa ff ff          jmp    0xfffffffffffffadf
+>   3d:   e8                      .byte 0xe8
+>   3e:   0b d9                   or     %ecx,%ebx
+> 
+> Code starting with the faulting instruction
+> ===========================================
+>    0:   0f 0b                   ud2
+>    2:   90                      nop
+>    3:   90                      nop
+>    4:   e9 18 fb ff ff          jmp    0xfffffffffffffb21
+>    9:   e8 f5 d8 18 00          call   0x18d903
+>    e:   e9 a2 fa ff ff          jmp    0xfffffffffffffab5
+>   13:   e8                      .byte 0xe8
+>   14:   0b d9                   or     %ecx,%ebx
+> [  246.249288][ T4096] RSP: 0018:ffffc9000604fbc0 EFLAGS: 00010286
+> [  246.250033][ T4096] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff814c77da
+> [  246.251035][ T4096] RDX: ffff888049a58000 RSI: ffffffff814c77e7 RDI: 0000000000000001
+> [  246.252036][ T4096] RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
+> [  246.253028][ T4096] R10: 0000000000000001 R11: 0000000000000001 R12: 0000000000004000
+> [  246.254060][ T4096] R13: ffff888051bd3000 R14: dffffc0000000000 R15: ffff888051bd3040
+> [ 246.255058][ T4096] ? __warn_printk (./include/linux/context_tracking.h:155 kernel/panic.c:726)
+> [ 246.255694][ T4096] ? __warn_printk (kernel/panic.c:717)
+> [ 246.256256][ T4096] quota_release_workfn (fs/quota/dquot.c:839)
+> [ 246.256877][ T4096] ? dquot_release (fs/quota/dquot.c:810)
+> [ 246.257467][ T4096] process_one_work (kernel/workqueue.c:2638)
+> [ 246.258126][ T4096] ? lock_sync (kernel/locking/lockdep.c:5722)
+> [ 246.258718][ T4096] ? workqueue_congested (kernel/workqueue.c:2542)
+> [ 246.259339][ T4096] ? assign_work (kernel/workqueue.c:1102)
+> [ 246.259915][ T4096] worker_thread (kernel/workqueue.c:2700 kernel/workqueue.c:2787)
+> [ 246.260529][ T4096] ? lockdep_hardirqs_on (kernel/locking/lockdep.c:4423)
+> [ 246.261176][ T4096] ? process_one_work (kernel/workqueue.c:2733)
+> [ 246.261855][ T4096] kthread (kernel/kthread.c:388)
+> [ 246.262382][ T4096] ? kthread_complete_and_exit (kernel/kthread.c:341)
+> [ 246.263077][ T4096] ret_from_fork (arch/x86/kernel/process.c:153)
+> [ 246.263620][ T4096] ? kthread_complete_and_exit (kernel/kthread.c:341)
+> [ 246.264331][ T4096] ret_from_fork_asm (arch/x86/entry/entry_64.S:250)
+> [  246.264910][ T4096]  </TASK>
+> [  246.265598][ T4096] Kernel Offset: disabled
+> [  246.266259][ T4096] Rebooting in 86400 seconds..
+> 
+> Thank you for taking the time to read this email and we look forward to working with you further.
 
-Although, it does not get rid of the double time stamps (before_stamp and
-write_stamp), using cmpxchg() does get rid of the more complex case when
-an interrupting event occurs between getting the timestamps and reserving
-the data, as when that happens, it just tries again instead of dealing
-with it.
-
-Before we had:
-
-	w = local_read(&tail_page->write);
-	/* get time stamps */
-	write = local_add_return(length, &tail_page->write);
-	if (write - length == w) {
-		/* do simple case */
-	} else {
-		/* do complex case */
-	}
-
-By switching the local_add_return() to a local_try_cmpxchg() it can now be:
-
-	 w = local_read(&tail_page->write);
- again:
-	/* get time stamps */
-	if (!local_try_cmpxchg(&tail_page->write, &w, w + length))
-		goto again;
-
-	 /* do simple case */
-
-The benchmarks between the two showed no regressions when trying this:
-
- Enable: CONFIG_TRACEPOINT_BENCHMARK
-
- # trace-cmd record -m 800000 -e benchmark sleep 60
-
-Before the patch:
-
- # trace-cmd report | tail
- event_benchmark-944   [003]  1998.910191: benchmark_event:      last=150 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=150
- event_benchmark-944   [003]  1998.910192: benchmark_event:      last=149 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=149
- event_benchmark-944   [003]  1998.910193: benchmark_event:      last=150 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=150
- event_benchmark-944   [003]  1998.910193: benchmark_event:      last=150 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=150
- event_benchmark-944   [003]  1998.910194: benchmark_event:      last=136 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=136
- event_benchmark-944   [003]  1998.910194: benchmark_event:      last=138 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=138
- event_benchmark-944   [003]  1998.910195: benchmark_event:      last=150 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=150
- event_benchmark-944   [003]  1998.910196: benchmark_event:      last=151 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=151
- event_benchmark-944   [003]  1998.910196: benchmark_event:      last=150 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=150
- event_benchmark-944   [003]  1998.910197: benchmark_event:      last=152 first=3488 max=1199686 min=124 avg=208 std=39 std^2=1579 delta=152
-
-After the patch:
-
- # trace-cmd report | tail
- event_benchmark-848   [004]   171.414716: benchmark_event:      last=143 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=143
- event_benchmark-848   [004]   171.414717: benchmark_event:      last=142 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=142
- event_benchmark-848   [004]   171.414718: benchmark_event:      last=142 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=142
- event_benchmark-848   [004]   171.414718: benchmark_event:      last=141 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=141
- event_benchmark-848   [004]   171.414719: benchmark_event:      last=141 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=141
- event_benchmark-848   [004]   171.414719: benchmark_event:      last=141 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=141
- event_benchmark-848   [004]   171.414720: benchmark_event:      last=140 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=140
- event_benchmark-848   [004]   171.414721: benchmark_event:      last=142 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=142
- event_benchmark-848   [004]   171.414721: benchmark_event:      last=145 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=145
- event_benchmark-848   [004]   171.414722: benchmark_event:      last=144 first=14483 max=1155491 min=125 avg=189 std=16 std^2=264 delta=144
-
-It may have even improved!
-
-Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v2: https://lore.kernel.org/linux-trace-kernel/20240219173003.08339d54@gandalf.local.home
-
-- Fixed info.field to be info->field
-
- kernel/trace/ring_buffer.c | 103 ++++++++++++-------------------------
- 1 file changed, 34 insertions(+), 69 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index fd4bfe3ecf01..6809d085ae98 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -3455,9 +3455,11 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
- 	/* Don't let the compiler play games with cpu_buffer->tail_page */
- 	tail_page = info->tail_page = READ_ONCE(cpu_buffer->tail_page);
- 
-- /*A*/	w = local_read(&tail_page->write) & RB_WRITE_MASK;
-+ /*A*/	w = local_read(&tail_page->write);
- 	barrier();
- 	rb_time_read(&cpu_buffer->before_stamp, &info->before);
-+	/* Read before_stamp only the first time through */
-+ again:
- 	rb_time_read(&cpu_buffer->write_stamp, &info->after);
- 	barrier();
- 	info->ts = rb_time_stamp(cpu_buffer->buffer);
-@@ -3470,7 +3472,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
- 		 * absolute timestamp.
- 		 * Don't bother if this is the start of a new page (w == 0).
- 		 */
--		if (!w) {
-+		if (!(w & RB_WRITE_MASK)) {
- 			/* Use the sub-buffer timestamp */
- 			info->delta = 0;
- 		} else if (unlikely(info->before != info->after)) {
-@@ -3487,89 +3489,52 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
- 
-  /*B*/	rb_time_set(&cpu_buffer->before_stamp, info->ts);
- 
-- /*C*/	write = local_add_return(info->length, &tail_page->write);
-+ /*C*/	if (!local_try_cmpxchg(&tail_page->write, &w, w + info->length)) {
-+		if (info->add_timestamp & (RB_ADD_STAMP_FORCE | RB_ADD_STAMP_EXTEND))
-+			info->length -= RB_LEN_TIME_EXTEND;
-+		goto again;
-+	}
- 
--	/* set write to only the index of the write */
--	write &= RB_WRITE_MASK;
-+	/* Set write to the start of this event */
-+	write = w & RB_WRITE_MASK;
- 
--	tail = write - info->length;
-+	/* set tail to the end of the event */
-+	tail = write + info->length;
- 
- 	/* See if we shot pass the end of this buffer page */
--	if (unlikely(write > cpu_buffer->buffer->subbuf_size)) {
-+	if (unlikely(tail > cpu_buffer->buffer->subbuf_size)) {
- 		check_buffer(cpu_buffer, info, CHECK_FULL_PAGE);
--		return rb_move_tail(cpu_buffer, tail, info);
-+		return rb_move_tail(cpu_buffer, write, info);
- 	}
- 
--	if (likely(tail == w)) {
--		/* Nothing interrupted us between A and C */
-- /*D*/		rb_time_set(&cpu_buffer->write_stamp, info->ts);
--		/*
--		 * If something came in between C and D, the write stamp
--		 * may now not be in sync. But that's fine as the before_stamp
--		 * will be different and then next event will just be forced
--		 * to use an absolute timestamp.
--		 */
--		if (likely(!(info->add_timestamp &
--			     (RB_ADD_STAMP_FORCE | RB_ADD_STAMP_ABSOLUTE))))
--			/* This did not interrupt any time update */
--			info->delta = info->ts - info->after;
--		else
--			/* Just use full timestamp for interrupting event */
--			info->delta = info->ts;
--		check_buffer(cpu_buffer, info, tail);
--	} else {
--		u64 ts;
--		/* SLOW PATH - Interrupted between A and C */
--
--		/* Save the old before_stamp */
--		rb_time_read(&cpu_buffer->before_stamp, &info->before);
--
--		/*
--		 * Read a new timestamp and update the before_stamp to make
--		 * the next event after this one force using an absolute
--		 * timestamp. This is in case an interrupt were to come in
--		 * between E and F.
--		 */
--		ts = rb_time_stamp(cpu_buffer->buffer);
--		rb_time_set(&cpu_buffer->before_stamp, ts);
--
--		barrier();
-- /*E*/		rb_time_read(&cpu_buffer->write_stamp, &info->after);
--		barrier();
-- /*F*/		if (write == (local_read(&tail_page->write) & RB_WRITE_MASK) &&
--		    info->after == info->before && info->after < ts) {
--			/*
--			 * Nothing came after this event between C and F, it is
--			 * safe to use info->after for the delta as it
--			 * matched info->before and is still valid.
--			 */
--			info->delta = ts - info->after;
--		} else {
--			/*
--			 * Interrupted between C and F:
--			 * Lost the previous events time stamp. Just set the
--			 * delta to zero, and this will be the same time as
--			 * the event this event interrupted. And the events that
--			 * came after this will still be correct (as they would
--			 * have built their delta on the previous event.
--			 */
--			info->delta = 0;
--		}
--		info->ts = ts;
--		info->add_timestamp &= ~RB_ADD_STAMP_FORCE;
--	}
-+	/* Nothing interrupted us between A and C */
-+ /*D*/	rb_time_set(&cpu_buffer->write_stamp, info->ts);
-+	/*
-+	 * If something came in between C and D, the write stamp
-+	 * may now not be in sync. But that's fine as the before_stamp
-+	 * will be different and then next event will just be forced
-+	 * to use an absolute timestamp.
-+	 */
-+	if (likely(!(info->add_timestamp &
-+		     (RB_ADD_STAMP_FORCE | RB_ADD_STAMP_ABSOLUTE))))
-+		/* This did not interrupt any time update */
-+		info->delta = info->ts - info->after;
-+	else
-+		/* Just use full timestamp for interrupting event */
-+		info->delta = info->ts;
-+	check_buffer(cpu_buffer, info, write);
- 
- 	/*
- 	 * If this is the first commit on the page, then it has the same
- 	 * timestamp as the page itself.
- 	 */
--	if (unlikely(!tail && !(info->add_timestamp &
-+	if (unlikely(!write && !(info->add_timestamp &
- 				(RB_ADD_STAMP_FORCE | RB_ADD_STAMP_ABSOLUTE))))
- 		info->delta = 0;
- 
- 	/* We reserved something on the buffer */
- 
--	event = __rb_page_index(tail_page, tail);
-+	event = __rb_page_index(tail_page, write);
- 	rb_update_event(cpu_buffer, event, info);
- 
- 	local_inc(&tail_page->entries);
-@@ -3578,7 +3543,7 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
- 	 * If this is the first commit on the page, then update
- 	 * its timestamp.
- 	 */
--	if (unlikely(!tail))
-+	if (unlikely(!write))
- 		tail_page->page->time_stamp = info->ts;
- 
- 	/* account for these added bytes */
--- 
-2.43.0
-
+Carlos, this looks like one for you to puzzle over -
+thanks,
+Hugh
