@@ -1,30 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCB66A352;
-	Tue, 20 Feb 2024 14:17:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F4A4C60;
+	Tue, 20 Feb 2024 14:49:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708438658; cv=none; b=lskySCh9hvbNx9R0VgXt3KKl8++5ORviJjmomUcSDvkFwdGohdaIWfPVqKgQaECU8xBunKRMuQJtz7EyFc91F9nJoIslkwXp22dPZ/SczdTs5SNdKjEAufm96i48B/yvAmEr7IJs/ewcpIiX/xvdzYj+0AGhe9+8pV4dN+NF19g=
+	t=1708440568; cv=none; b=ckPovDbskSujhNS5+rKWj60UQgh3XzcWQDZxCRRRP/H1umk1Ovf0OewxmCWwSvd2DG7odNG2d9wVr2R0r8SQQZ4THtEofpj0NNjRvfN47NLMCJ5gizBGfy8ZtNJg/dsPtlblSnFs9QcbsRWLdgTdRGOIoZxTGBeAFq5QfB/nEQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708438658; c=relaxed/simple;
-	bh=qHlJwqessxV9XUwxNx0X6io3N2Cccxou6H8VwK7z4/4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LKdA15Nlf0xuyEkLxbe4P142Im3gOUg/x+Qsos8FSVyoRozxL6M/c9ccfeuTa2pde83RNX36ELN7SbJJ5TYjTfn9aaC+N+Ioeb1i2bPIxSNlVJRhN7KnzIh9KC15WzdXXUZ+hthgRMjlNiuHPdL3okHnMXYOglNGKGJo5PXghY4=
+	s=arc-20240116; t=1708440568; c=relaxed/simple;
+	bh=a8t1iPdBa56JOkXzwJ9TrVm3w5eJG4iLEzNgpIdy/e8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=TeXwDnhb0yW9GdUXCtHxxS6ZQD+hEyD9shNBiggy6R2JnaSdmz1JQmefJBQLH8gC8NrAaJJsymmOdwXf+059q/5Snyl/t8QNDLofY3XI2l7qM+TatWemGjEk4FPfl1kbGANlTGfwxV0JSHEJxlW1JdrxgWORbVK+T2UD/+DD1NE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55523C433C7;
-	Tue, 20 Feb 2024 14:17:37 +0000 (UTC)
-Date: Tue, 20 Feb 2024 09:19:22 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 733EAC433C7;
+	Tue, 20 Feb 2024 14:49:27 +0000 (UTC)
+Date: Tue, 20 Feb 2024 09:51:12 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH v3] ring-buffer: Simplify reservation with try_cmpxchg()
- loop
-Message-ID: <20240220091922.45848d9a@gandalf.local.home>
-In-Reply-To: <20240219182032.2605d0a3@gandalf.local.home>
-References: <20240219182032.2605d0a3@gandalf.local.home>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] ring-buffer: Do not let subbuf be bigger than write mask
+Message-ID: <20240220095112.77e9cb81@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -35,50 +31,36 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 19 Feb 2024 18:20:32 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> Instead of using local_add_return() to reserve the ring buffer data,
-> Mathieu Desnoyers suggested using local_cmpxchg(). This would simplify the
-> reservation with the time keeping code.
-> 
-> Although, it does not get rid of the double time stamps (before_stamp and
-> write_stamp), using cmpxchg() does get rid of the more complex case when
-> an interrupting event occurs between getting the timestamps and reserving
-> the data, as when that happens, it just tries again instead of dealing
-> with it.
-> 
-> Before we had:
-> 
-> 	w = local_read(&tail_page->write);
-> 	/* get time stamps */
-> 	write = local_add_return(length, &tail_page->write);
-> 	if (write - length == w) {
-> 		/* do simple case */
-> 	} else {
-> 		/* do complex case */
-> 	}
-> 
-> By switching the local_add_return() to a local_try_cmpxchg() it can now be:
-> 
-> 	 w = local_read(&tail_page->write);
->  again:
-> 	/* get time stamps */
-> 	if (!local_try_cmpxchg(&tail_page->write, &w, w + length))
-> 		goto again;
-> 
-> 	 /* do simple case */
+The data on the subbuffer is measured by a write variable that also
+contains status flags. The counter is just 20 bits in length. If the
+subbuffer is bigger than then counter, it will fail.
 
-Something about this logic is causing __rb_next_reserve() to sometimes
-always return -EAGAIN and triggering the:
+Make sure that the subbuffer can not be set to greater than the counter
+that keeps track of the data on the subbuffer.
 
-    RB_WARN_ON(cpu_buffer, ++nr_loops > 1000)
+Fixes: 2808e31ec12e5 ("ring-buffer: Add interface for configuring trace sub buffer size")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Which disables the ring buffer.
-
-I'm not sure what it is, but until I do, I'm removing the patch from my
-queue.
-
--- Steve
-
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index aa54266f5e1f..3852f3b001cc 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -5878,6 +5878,10 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+ 	if (psize <= BUF_PAGE_HDR_SIZE)
+ 		return -EINVAL;
+ 
++	/* Size of a subbuf cannot be greater than the write counter */
++	if (psize > RB_WRITE_MASK + 1)
++		return -EINVAL;
++
+ 	old_order = buffer->subbuf_order;
+ 	old_size = buffer->subbuf_size;
+ 
+-- 
+2.43.0
 
