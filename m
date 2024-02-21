@@ -1,122 +1,147 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904E73B187;
-	Wed, 21 Feb 2024 07:44:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4FD53B787;
+	Wed, 21 Feb 2024 07:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708501453; cv=none; b=T5bcxGeh3/XC5AOFBuW8aMTPfx9CorPe5xwuGUUUp7pjXIlwmg78Fk0TgnECPfUJwXT9jq2FzrouYODiyXTrOLfIoH4R7NXpkD7aHCGVzsNwtmnhtM0bKVFFk421mbhVzUBj0WnOvpP7wkYpB9XXj7nkm9kJdzHPHRued0/riFk=
+	t=1708502155; cv=none; b=TLy/pm3epXHdCTR9GoRTuC5ZoHJ4Lra/FHH7y4TSS4I2D/8H/9eLxpDIfbeY354deUoDQbIYZshQgwjKJBg13cotGbIt4QaCHNZfl94Whv1EGz7fI5RjaVQiWBHHDCDPcjKjG2opsFJTTizEAnkT8v5t9QWXxaJnQLKNyinOG8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708501453; c=relaxed/simple;
-	bh=rj3zLjFnMfv2OhoWX2qU1w327mhq2Hez7PD1Y5hzPlA=;
+	s=arc-20240116; t=1708502155; c=relaxed/simple;
+	bh=P4IowivBzoNIWBfFyDl62im4NWjMcpg9erihxXbDmVU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=srbErmtZjrntTFq5nt+Ovzeix9xM8ypgQs81XiyFe7UU6LOy20CJW30X+0yeeI6UyF9jTVIN6BBH+IWHUp+SqiWIb6AQHEvBN/5OhGB72sutgaSplVIUjwpgZIDR3gaufYM4BzCm8PI+DMtr59zu0MVzmP3W29q91RfBASQZExY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=DEJL3B37; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=DEJL3B37; arc=none smtp.client-ip=195.135.223.131
+	 Content-Type:Content-Disposition:In-Reply-To; b=m1wnBEU2B0ojX0HvBuarnfA9oJL9fGU8E8P+zBayRqjKIYiyBSgJH23CzWgAoRhZzE6gL85EwQyo5L9+ujoguYwdJYNjB029u95A6WZC5K55CoV0v62cJsVxLq+SNXxHtAnlqKM53SZ/40WAkuj4kyrMqUyjO9RZWP3FpKcBXD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=WaACTNG2; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=WaACTNG2; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="DEJL3B37";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="DEJL3B37"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="WaACTNG2";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="WaACTNG2"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 84DBC1FB46;
-	Wed, 21 Feb 2024 07:44:09 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id ADCC522224;
+	Wed, 21 Feb 2024 07:55:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1708501449; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1708502151; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=n/QEk4HUS4tR1rBRcACEpzWgLgUlK+CJgCIzsVAuTmA=;
-	b=DEJL3B37JhVkcQM8p6IeKRxEpLWZNprAWiP1qFyGeA7IST671NnPj1zW1Gc5x2S9Yzw8d5
-	EdRekehg1awR2rbCDDyCZ+oqEo6tJjO+rCrQA8hvOg6XWldFQ4Og59WszoLc7CzvBOTSp7
-	ARHr4dgNhkfOrXk/7bYEx32yhP/1RLU=
+	bh=PtbBQesguJw5L/5dujKSNhT2R4ZTGtPZub9PPAkUNuw=;
+	b=WaACTNG2/y8guzY3WY0wfs9CdWpKiwbXdw2pZfRoXwkCDPRrwEb12F0V/creKp7RrW8/do
+	ETwi0zyfpAZqWZQx/RyErjUL0gPr4D55+d2BxzBtUcanO905Nf0Nd9L0NDbAomPUnukkt8
+	Bkz2ZiPfhs6visJ1+k8WipKmXOYAFV0=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1708501449; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1708502151; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=n/QEk4HUS4tR1rBRcACEpzWgLgUlK+CJgCIzsVAuTmA=;
-	b=DEJL3B37JhVkcQM8p6IeKRxEpLWZNprAWiP1qFyGeA7IST671NnPj1zW1Gc5x2S9Yzw8d5
-	EdRekehg1awR2rbCDDyCZ+oqEo6tJjO+rCrQA8hvOg6XWldFQ4Og59WszoLc7CzvBOTSp7
-	ARHr4dgNhkfOrXk/7bYEx32yhP/1RLU=
+	bh=PtbBQesguJw5L/5dujKSNhT2R4ZTGtPZub9PPAkUNuw=;
+	b=WaACTNG2/y8guzY3WY0wfs9CdWpKiwbXdw2pZfRoXwkCDPRrwEb12F0V/creKp7RrW8/do
+	ETwi0zyfpAZqWZQx/RyErjUL0gPr4D55+d2BxzBtUcanO905Nf0Nd9L0NDbAomPUnukkt8
+	Bkz2ZiPfhs6visJ1+k8WipKmXOYAFV0=
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 65BD113A69;
-	Wed, 21 Feb 2024 07:44:09 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9562E13A69;
+	Wed, 21 Feb 2024 07:55:51 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MYn8Fcmp1WV9HAAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Wed, 21 Feb 2024 07:44:09 +0000
-Date: Wed, 21 Feb 2024 08:44:08 +0100
+	id G4NzIYes1WUaHwAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Wed, 21 Feb 2024 07:55:51 +0000
+Date: Wed, 21 Feb 2024 08:55:49 +0100
 From: Michal Hocko <mhocko@suse.com>
-To: Bixuan Cui <cuibixuan@vivo.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, akpm@linux-foundation.org,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+To: Carlos Galo <carlosgalo@google.com>
+Cc: rostedt@goodmis.org, akpm@linux-foundation.org, surenb@google.com,
+	android-mm@google.com, kernel-team@android.com,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org, opensource.kernel@vivo.com
-Subject: Re: [PATCH -next v6 0/2] Make memory reclamation measurable
-Message-ID: <ZdWpyN_8Z6dvDQ48@tiehlicka>
-References: <20240105013607.2868-1-cuibixuan@vivo.com>
- <fac8d079-100e-4b8d-9a35-db8219b28b51@vivo.com>
- <20240220212202.59ddc123@gandalf.local.home>
- <3d4f44ee-f533-446f-a9e6-7f58afc78d65@vivo.com>
+	linux-mm@kvack.org
+Subject: Re: [PATCH v2] mm: Update mark_victim tracepoints fields
+Message-ID: <ZdWshXSoLthv6J6b@tiehlicka>
+References: <20240111210539.636607-1-carlosgalo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3d4f44ee-f533-446f-a9e6-7f58afc78d65@vivo.com>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spamd-Result: default: False [0.39 / 50.00];
+In-Reply-To: <20240111210539.636607-1-carlosgalo@google.com>
+X-Spam-Level: ****
+X-Spamd-Bar: ++++
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=WaACTNG2
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [4.09 / 50.00];
 	 ARC_NA(0.00)[];
 	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	 BAYES_SPAM(5.10)[99.99%];
 	 FROM_HAS_DN(0.00)[];
 	 TO_DN_SOME(0.00)[];
 	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
 	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
 	 RCVD_COUNT_THREE(0.00)[3];
 	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 RCPT_COUNT_SEVEN(0.00)[9];
+	 DKIM_TRACE(0.00)[suse.com:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[11];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim];
 	 FUZZY_BLOCKED(0.00)[rspamd.com];
 	 FROM_EQ_ENVFROM(0.00)[];
 	 MIME_TRACE(0.00)[0:+];
 	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.01)[45.20%]
-X-Spam-Level: 
+	 RCVD_TLS_ALL(0.00)[]
+X-Spam-Score: 4.09
+X-Rspamd-Queue-Id: ADCC522224
 X-Spam-Flag: NO
-X-Spam-Score: 0.39
 
-On Wed 21-02-24 11:00:53, Bixuan Cui wrote:
+Hi,
+sorry I have missed this before.
+
+On Thu 11-01-24 21:05:30, Carlos Galo wrote:
+> The current implementation of the mark_victim tracepoint provides only
+> the process ID (pid) of the victim process. This limitation poses
+> challenges for userspace tools that need additional information
+> about the OOM victim. The association between pid and the additional
+> data may be lost after the kill, making it difficult for userspace to
+> correlate the OOM event with the specific process.
+
+You are correct that post OOM all per-process information is lost. On
+the other hand we do dump all this information to the kernel log. Could
+you explain why that is not suitable for your purpose?
+
+> In order to mitigate this limitation, add the following fields:
 > 
+> - UID
+>    In Android each installed application has a unique UID. Including
+>    the `uid` assists in correlating OOM events with specific apps.
 > 
-> 在 2024/2/21 10:22, Steven Rostedt 写道:
-> > It's up to the memory management folks to decide on this. -- Steve
-> Noted with thanks.
+> - Process Name (comm)
+>    Enables identification of the affected process.
+> 
+> - OOM Score
+>    Allows userspace to get additional insights of the relative kill
+>    priority of the OOM victim.
 
-It would be really helpful to have more details on why we need those
-trace points.
+What is the oom score useful for?
 
-It is my understanding that you would like to have a more fine grained
-numbers for the time duration of different parts of the reclaim process.
-I can imagine this could be useful in some cases but is it useful enough
-and for a wider variety of workloads? Is that worth a dedicated static
-tracepoints? Why an add-hoc dynamic tracepoints or BPF for a very
-special situation is not sufficient?
+Is there any reason to provide a different information from the one
+reported to the kernel log?
+__oom_kill_process:
+pr_err("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB, UID:%u pgtables:%lukB oom_score_adj:%hd\n",
+                message, task_pid_nr(victim), victim->comm, K(mm->total_vm),
+                K(get_mm_counter(mm, MM_ANONPAGES)),
+                K(get_mm_counter(mm, MM_FILEPAGES)),
+                K(get_mm_counter(mm, MM_SHMEMPAGES)),
+                from_kuid(&init_user_ns, task_uid(victim)),
+                mm_pgtables_bytes(mm) >> 10, victim->signal->oom_score_adj);
 
-In other words, tell us more about the usecases and why is this
-generally useful.
-
-Thanks!
 -- 
 Michal Hocko
 SUSE Labs
