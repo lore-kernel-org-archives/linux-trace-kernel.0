@@ -1,126 +1,120 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B5CA4D9FD;
-	Wed, 21 Feb 2024 17:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3DF33F7;
+	Wed, 21 Feb 2024 17:12:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708535059; cv=none; b=hcnc45N9MtGApp/oDPuvyXq1hGOVynFhzRHp71Si6sNSDwGovXfWDd4dDBMqdSvIwzVA1i274ugfFWQkW3Awg/QKf35hZQpAGU4QOM7ygNF07NDZFgjGDxhLbXa2LE1Wp9rbGCdJGT2P3SwLax2FNC4RxdaFMZHaRawJzpfuxt8=
+	t=1708535554; cv=none; b=RXILOlfODYqLsEfhpgafl//zy01pNt5UuTgBzVSMwE0mVm9kIakH1E1PyuWCrc7brMUt1JrbjMm47U2A2+GCgGayeFHBW9nchVBY5kSZclyYmbPf56SrME0C04eaEPa0IoqqZAdfZeKVJA4RJjWRGFNyciwcFKOoVuZivQtn1EY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708535059; c=relaxed/simple;
-	bh=wJjdBf0kDUo7w5pIahZt7IKBXLXXO6tr+OfriRn0oN0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H7ONivPhnIg4qW96YqKy2YzDClr306xzVdI+gm7My1PsaP7Ozy5or6m94oG2MbHd0Eaf1BenUvLu5bXF9pMV5o3GR/PrpiJ50eZNyw+YXa6GMLVl7H2AyyZCDMiXUKINCCqrSnH7qwy0N1BnLprVZxoEKLy0fnHmhjHQCdzSyEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Xa1OPKnv; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Xa1OPKnv"
-Received: from DESKTOP-4OLSCEK. (c-76-135-27-212.hsd1.wa.comcast.net [76.135.27.212])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 9510D20B2000;
-	Wed, 21 Feb 2024 09:04:17 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9510D20B2000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1708535057;
-	bh=1LmAN3rqQzMKWs2iC58seTXPu1/RSRwYx7zwf21mMFA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xa1OPKnv5IBxlOi15hxcaR16uj31FTD3RP3qzYr6DRqVPoqGIK6fZJe9R1r0JAH69
-	 7TiDxIpc//atSYqggEIYe0j6gL3TZDthbzkQoSKtnYq8LdA4/OF/wVgsq3E2n2UBPo
-	 iE2h7uAf4B1IIk+R+1rSyhsg83NkmWuYYwCCFnUQ=
-Date: Wed, 21 Feb 2024 09:04:15 -0800
-From: Beau Belgrave <beaub@linux.microsoft.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v3 1/4] tracing/user_events: Prepare find/delete for same
- name events
-Message-ID: <20240221170415.GC441-beaub@linux.microsoft.com>
-References: <20240214175046.240-1-beaub@linux.microsoft.com>
- <20240214175046.240-2-beaub@linux.microsoft.com>
- <20240221101721.4e81e9e5@gandalf.local.home>
+	s=arc-20240116; t=1708535554; c=relaxed/simple;
+	bh=6+K4JYURtxFMFUED4tSzJ/ogyXzPLhiyh8zwFpwmxJQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=k4hvpIJEUHyfQ+9K7QftnqcZ8qDdtoBONvZVRhF1F60WeSTKDouX1DFJklzeFy7vb18UK/YliYg2Q+2XJjL8450gynQM1aPD1a8Qy/9PhHyEKBG0yivhy+M0h1QbySviqpxVMosVcGca+8SmkgwUW/4QAqxPFvgffLYXIFhM75c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9847AC433F1;
+	Wed, 21 Feb 2024 17:12:32 +0000 (UTC)
+Date: Wed, 21 Feb 2024 12:14:20 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vilas Bhat <vilasbhat@google.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+ Len Brown <len.brown@intel.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Saravana Kannan
+ <saravanak@google.com>, kernel-team@android.com, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] PM: runtime: add tracepoint for runtime_status
+ changes
+Message-ID: <20240221121420.2e32fd00@gandalf.local.home>
+In-Reply-To: <20240221164112.846409-1-vilasbhat@google.com>
+References: <20240221164112.846409-1-vilasbhat@google.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240221101721.4e81e9e5@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 21, 2024 at 10:17:21AM -0500, Steven Rostedt wrote:
-> On Wed, 14 Feb 2024 17:50:43 +0000
-> Beau Belgrave <beaub@linux.microsoft.com> wrote:
-> 
-> So the patches look good, but since I gave you some updates, I'm now going
-> to go though "nits". Like grammar and such ;-)
-> 
+On Wed, 21 Feb 2024 16:41:10 +0000
+Vilas Bhat <vilasbhat@google.com> wrote:
 
-Sure thing.
 
-> > The current code for finding and deleting events assumes that there will
-> > never be cases when user_events are registered with the same name, but
-> > different formats. In the future this scenario will exist to ensure
-> 
-> > user programs can be updated or modify their events and run different
-> > versions of their programs side-by-side without being blocked.
-> 
-> Can you change the last sentence above. I read it three times and it's
-> still awkward to understand it. Particularly, the "user programs can be
-> updated or modify their events". That just doesn't want to compute.
-> 
+> diff --git a/include/trace/events/rpm.h b/include/trace/events/rpm.h
+> index 3c716214dab1..f1dc4e95dbce 100644
+> --- a/include/trace/events/rpm.h
+> +++ b/include/trace/events/rpm.h
+> @@ -101,6 +101,42 @@ TRACE_EVENT(rpm_return_int,
+>  		__entry->ret)
+>  );
+>  
+> +#define RPM_STATUS_STRINGS \
+> +	{ RPM_INVALID, "RPM_INVALID" }, \
+> +	{ RPM_ACTIVE, "RPM_ACTIVE" }, \
+> +	{ RPM_RESUMING, "RPM_RESUMING" }, \
+> +	{ RPM_SUSPENDED, "RPM_SUSPENDED" }, \
+> +	{ RPM_SUSPENDING, "RPM_SUSPENDING" }
+> +
+> +/*
+> + * ftrace's __print_symbolic requires that all enum values be wrapped in the
+> + * TRACE_DEFINE_ENUM macro so that the enum value can be encoded in the ftrace
+> + * ring buffer.
+> + */
+> +TRACE_DEFINE_ENUM(RPM_INVALID);
+> +TRACE_DEFINE_ENUM(RPM_ACTIVE);
+> +TRACE_DEFINE_ENUM(RPM_RESUMING);
+> +TRACE_DEFINE_ENUM(RPM_SUSPENDED);
+> +TRACE_DEFINE_ENUM(RPM_SUSPENDING);
 
-Yeah, I'll clean this up.
+You could do what everyone else does:
 
-> > 
-> > This change does not yet allow for multi-format events. If user_events
-> > are registered with the same name but different arguments the programs
-> > see the same return values as before. This change simply makes it
-> > possible to easily accomodate for this in future changes.
-> 
-> I think you can drop the "in future changes" part.
-> 
+#define RPM_STATUS_STRINGS			\
+	EM( RPM_INVALID, "RPM_INVALID" )	\
+	EM( RPM_ACTIVE, "RPM_ACTIVE" )		\
+	EM( RPM_RESUMING, "RPM_RESUMING" )	\
+	EM( RPM_SUSPENDED, "RPM_SUSPENDED" )	\
+	EMe( RPM_SUSPENDING, "RPM_SUSPENDING" )
 
-Agreed.
+#undef EM
+#undef EMe
+#define EM(a, b)	TRACE_DEFINE_ENUM(a);
+#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
 
-> > 
-> > Update find_user_event() to take in argument parameters and register
-> > flags to accomodate future multi-format event scenarios. Have find
-> > validate argument matching and return error pointers to cover address
-> > in use cases, or allocation errors. Update callers to handle error
-> 
->   "to cover address in use cases" ?
+RPM_STATUS_STRINGS
 
-Yeah, if the ABI is using a single-format event and it's already in use,
-we return -EADDRINUSE. It does not happen in multi-format event cases,
-since that is allowed.
+#undef EM
+#undef EMe
+#define EM(a, b)	{ a, b },
+#define EMe(a, b)	{ a, b }
 
-I'll try to clarify this a bit.
+> +
+> +TRACE_EVENT(rpm_status,
+> +	TP_PROTO(struct device *dev, enum rpm_status status),
+> +	TP_ARGS(dev, status),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name,	dev_name(dev))
+> +		__field(int,	status)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, dev_name(dev));
+> +		__entry->status = status;
+> +	),
+> +
+> +	TP_printk("%s status=%s", __get_str(name),
+> +		__print_symbolic(__entry->status, RPM_STATUS_STRINGS))
 
-> 
-> > pointer logic.
-> > 
-> > Move delete_user_event() to use hash walking directly now that find has
-> > changed. Delete all events found that match the register name, stop
-> 
-> "now that find has changed" ?  You mean the "find function"?
-> 
+This will be what you want with that last redefine of EM*()
 
-Yeah, I'll just use the function name here, find_user_event().
+-- Steve
 
-> > if an error occurs and report back to the user.
-> > 
-> > Update user_fields_match() to cover list_empty() scenarios instead of
-> > each callsite doing it now that find_user_event() uses it directly.
-> 
-> The above is a bit of a run-on sentence.
-> 
 
-I'll clean it up a bit.
+> +);
+> +
+>  #endif /* _TRACE_RUNTIME_POWER_H */
+>  
+>  /* This part must be outside protection */
 
-Thanks,
--Beau
-
-> -- Steve
-> 
-> > 
-> > Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
-> > ---
