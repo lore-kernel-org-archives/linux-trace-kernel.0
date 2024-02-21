@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8A07FBA9;
-	Wed, 21 Feb 2024 15:06:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC4B7BB01;
+	Wed, 21 Feb 2024 15:15:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708528006; cv=none; b=g9mhDgnbJwXOPzPWeI3c1s2v7gyinI+XrYim2flwOKjxuylV8RWXLjiM+S6T7gKzqzauwk7ZJVDv2prf6WZAg6bt3Yq46ANT5puo3z7sdl6T939Fdibs+xL555vokTI00WBCVq9+rog0fFqv6BV+lvqAovX8YzOkj1eCk+cca1g=
+	t=1708528534; cv=none; b=iJBWiUIkEE9OylVogaDe+vO7WD8Ffvtq4ZJ6K0NwhFLByDsE8tJbGaHcHncA0FuxtPI+6mdtxxP+oS05QlSefm1gnlRKpPEZLzC1KCgSlOPtUymqMOxxzewflAjp06FSsGXbZtSmumzgoxf6Th5aKVEYEt5sQxV0nmW3TYme8gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708528006; c=relaxed/simple;
-	bh=x4tyllg3kVsxkFGprOI8+rA4D5kFS9LnDsPy0r+Wi6w=;
+	s=arc-20240116; t=1708528534; c=relaxed/simple;
+	bh=YHrLnauaskQSbiH77/IAsX8WjkWduQA2X1JXcmvI0Ag=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OjeZGV1ngBqg0vrSQBpx3jwDneZDLu5Zjl2RZlHKcYFPLOZIMxPR25s/vFde6rKcopZL+FImmUOiVdzRkEAFdd5TpUfP1VztTMXO5Qx5IlD3qoH+wmsKA78CbiwM5+R5+UbM8B1RjSvCLbUobUtaVXkhHL/DVlupUpWCuhki8xc=
+	 MIME-Version:Content-Type; b=cDzvj+JVFj41imc6ZrcoD4ztgzipRlHpdrasf+1+c28quaA8e2tDqD5NbH0k6JJKfVbOdQFNo4GDENOV8IWmOxvR+DPTELuw5TMoElSwa4541iVNPIluNstSuFTzx3E9xLlZjxTuiHc6G7Zbw+5JdODgkqoQt2EAsa1p812hkeM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 707B6C43394;
-	Wed, 21 Feb 2024 15:06:45 +0000 (UTC)
-Date: Wed, 21 Feb 2024 10:08:33 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA850C43399;
+	Wed, 21 Feb 2024 15:15:33 +0000 (UTC)
+Date: Wed, 21 Feb 2024 10:17:21 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Beau Belgrave <beaub@linux.microsoft.com>
 Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v3 2/4] tracing/user_events: Introduce multi-format
- events
-Message-ID: <20240221100833.1eb5c254@gandalf.local.home>
-In-Reply-To: <20240214175046.240-3-beaub@linux.microsoft.com>
+Subject: Re: [PATCH v3 1/4] tracing/user_events: Prepare find/delete for
+ same name events
+Message-ID: <20240221101721.4e81e9e5@gandalf.local.home>
+In-Reply-To: <20240214175046.240-2-beaub@linux.microsoft.com>
 References: <20240214175046.240-1-beaub@linux.microsoft.com>
-	<20240214175046.240-3-beaub@linux.microsoft.com>
+	<20240214175046.240-2-beaub@linux.microsoft.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -35,144 +35,55 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 14 Feb 2024 17:50:44 +0000
+On Wed, 14 Feb 2024 17:50:43 +0000
 Beau Belgrave <beaub@linux.microsoft.com> wrote:
 
-> +static char *user_event_group_system_multi_name(void)
-> +{
-> +	char *system_name;
-> +	int len = sizeof(USER_EVENTS_MULTI_SYSTEM) + 1;
+So the patches look good, but since I gave you some updates, I'm now going
+to go though "nits". Like grammar and such ;-)
 
-FYI, the sizeof() will include the "\0" so no need for "+ 1", but I don't
-think this matters as for what I mention below.
+> The current code for finding and deleting events assumes that there will
+> never be cases when user_events are registered with the same name, but
+> different formats. In the future this scenario will exist to ensure
 
-> +
-> +	system_name = kmalloc(len, GFP_KERNEL);
-> +
-> +	if (!system_name)
-> +		return NULL;
-> +
-> +	snprintf(system_name, len, "%s", USER_EVENTS_MULTI_SYSTEM);
-> +
-> +	return system_name;
+> user programs can be updated or modify their events and run different
+> versions of their programs side-by-side without being blocked.
 
-Hmm, the above looks like an open coded version of:
+Can you change the last sentence above. I read it three times and it's
+still awkward to understand it. Particularly, the "user programs can be
+updated or modify their events". That just doesn't want to compute.
 
-	system_name = kstrdup(USER_EVENTS_MULTI_SYSTEM, GFP_KERNEL);
+> 
+> This change does not yet allow for multi-format events. If user_events
+> are registered with the same name but different arguments the programs
+> see the same return values as before. This change simply makes it
+> possible to easily accomodate for this in future changes.
 
+I think you can drop the "in future changes" part.
 
-> +}
-> +
->  static struct user_event_group *current_user_event_group(void)
->  {
->  	return init_group;
-> @@ -367,6 +390,11 @@ static struct user_event_group *user_event_group_create(void)
->  	if (!group->system_name)
->  		goto error;
->  
-> +	group->system_multi_name = user_event_group_system_multi_name();
-> +
-> +	if (!group->system_multi_name)
-> +		goto error;
-> +
->  	mutex_init(&group->reg_mutex);
->  	hash_init(group->register_table);
->  
-> @@ -1482,6 +1510,11 @@ static int destroy_user_event(struct user_event *user)
->  	hash_del(&user->node);
->  
->  	user_event_destroy_validators(user);
-> +
-> +	/* If we have different names, both must be freed */
-> +	if (EVENT_NAME(user) != EVENT_TP_NAME(user))
-> +		kfree(EVENT_TP_NAME(user));
-> +
->  	kfree(user->call.print_fmt);
->  	kfree(EVENT_NAME(user));
->  	kfree(user);
-> @@ -1504,12 +1537,24 @@ static struct user_event *find_user_event(struct user_event_group *group,
->  	*outkey = key;
->  
->  	hash_for_each_possible(group->register_table, user, node, key) {
-> +		/*
-> +		 * Single-format events shouldn't return multi-format
-> +		 * events. Callers expect the underlying tracepoint to match
-> +		 * the name exactly in these cases. Only check like-formats.
-> +		 */
-> +		if (EVENT_MULTI_FORMAT(flags) != EVENT_MULTI_FORMAT(user->reg_flags))
-> +			continue;
-> +
->  		if (strcmp(EVENT_NAME(user), name))
->  			continue;
->  
->  		if (user_fields_match(user, argc, argv))
->  			return user_event_get(user);
->  
-> +		/* Scan others if this is a multi-format event */
-> +		if (EVENT_MULTI_FORMAT(flags))
-> +			continue;
-> +
->  		return ERR_PTR(-EADDRINUSE);
->  	}
->  
-> @@ -1889,8 +1934,12 @@ static bool user_event_match(const char *system, const char *event,
->  	struct user_event *user = container_of(ev, struct user_event, devent);
->  	bool match;
->  
-> -	match = strcmp(EVENT_NAME(user), event) == 0 &&
-> -		(!system || strcmp(system, USER_EVENTS_SYSTEM) == 0);
-> +	match = strcmp(EVENT_NAME(user), event) == 0;
-> +
-> +	if (match && system) {
-> +		match = strcmp(system, user->group->system_name) == 0 ||
-> +			strcmp(system, user->group->system_multi_name) == 0;
-> +	}
->  
->  	if (match)
->  		match = user_fields_match(user, argc, argv);
-> @@ -1923,6 +1972,39 @@ static int user_event_trace_register(struct user_event *user)
->  	return ret;
->  }
->  
-> +static int user_event_set_tp_name(struct user_event *user)
-> +{
-> +	lockdep_assert_held(&user->group->reg_mutex);
-> +
-> +	if (EVENT_MULTI_FORMAT(user->reg_flags)) {
-> +		char *multi_name;
-> +		int len;
-> +
-> +		len = snprintf(NULL, 0, "%s.%llx", user->reg_name,
-> +			       user->group->multi_id) + 1;
-> +
-> +		multi_name = kzalloc(len, GFP_KERNEL_ACCOUNT);
-> +
-> +		if (!multi_name)
-> +			return -ENOMEM;
-> +
-> +		snprintf(multi_name, len, "%s.%llx", user->reg_name,
-> +			 user->group->multi_id);
+> 
+> Update find_user_event() to take in argument parameters and register
+> flags to accomodate future multi-format event scenarios. Have find
+> validate argument matching and return error pointers to cover address
+> in use cases, or allocation errors. Update callers to handle error
 
-I believe the above can be replaced with:
+  "to cover address in use cases" ?
 
-		multi_name = kasprintf(GFP_KERNEL_ACCOUNT, "%s.%llx", user->reg_name,
-				       user->group->multi_id);
-		if (!multi_name)
-			return -ENOMEM;
+> pointer logic.
+> 
+> Move delete_user_event() to use hash walking directly now that find has
+> changed. Delete all events found that match the register name, stop
+
+"now that find has changed" ?  You mean the "find function"?
+
+> if an error occurs and report back to the user.
+> 
+> Update user_fields_match() to cover list_empty() scenarios instead of
+> each callsite doing it now that find_user_event() uses it directly.
+
+The above is a bit of a run-on sentence.
 
 -- Steve
 
-> +
-> +		user->call.name = multi_name;
-> +		user->tracepoint.name = multi_name;
-> +
-> +		/* Inc to ensure unique multi-event name next time */
-> +		user->group->multi_id++;
-> +	} else {
-> +		/* Non Multi-format uses register name */
-> +		user->call.name = user->reg_name;
-> +		user->tracepoint.name = user->reg_name;
-> +	}
-> +
-> +	return 0;
-> +}
+> 
+> Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
+> ---
