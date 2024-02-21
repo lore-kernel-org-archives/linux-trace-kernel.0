@@ -1,40 +1,41 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8803A7FBC4;
-	Wed, 21 Feb 2024 16:56:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B5CA4D9FD;
+	Wed, 21 Feb 2024 17:04:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708534577; cv=none; b=Q+k1+eHlSXC4Smhq0S/Wyqfuaoces4Y/HwVcUTD5bHlyCKbmEPp0ob1K1PQZLRQUwYlxtodo3ce52hlERUiuQkcKAblklTOZJ+cy1dsRJGVavjIwSBPCYuNN0+ZiKbk7Se/WfZejCPwke3fFjuq59UyjqLvcbsDA8cx/F9Menqs=
+	t=1708535059; cv=none; b=hcnc45N9MtGApp/oDPuvyXq1hGOVynFhzRHp71Si6sNSDwGovXfWDd4dDBMqdSvIwzVA1i274ugfFWQkW3Awg/QKf35hZQpAGU4QOM7ygNF07NDZFgjGDxhLbXa2LE1Wp9rbGCdJGT2P3SwLax2FNC4RxdaFMZHaRawJzpfuxt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708534577; c=relaxed/simple;
-	bh=4NtW4aeUxD/AmECNuJyVZrOaIfeQcVURpE8RzhY/Eic=;
+	s=arc-20240116; t=1708535059; c=relaxed/simple;
+	bh=wJjdBf0kDUo7w5pIahZt7IKBXLXXO6tr+OfriRn0oN0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kuk2b0VgMvIbc8BUEshY3TQha8StHIpTFqwqwH8b2j8A9auwug2J6RiD4VD6eDKHEhGgRN3EWYFdela0BJnVO4nyaEDJ+Cifbzy6Nop74daW1MPAyMMXHwXV/Gl3jc4ib7gm7yFALtPc1M2cvHjW/MTcXjC4Dcm+McLmRWxM430=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=tGwfON4L; arc=none smtp.client-ip=13.77.154.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=H7ONivPhnIg4qW96YqKy2YzDClr306xzVdI+gm7My1PsaP7Ozy5or6m94oG2MbHd0Eaf1BenUvLu5bXF9pMV5o3GR/PrpiJ50eZNyw+YXa6GMLVl7H2AyyZCDMiXUKINCCqrSnH7qwy0N1BnLprVZxoEKLy0fnHmhjHQCdzSyEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Xa1OPKnv; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="tGwfON4L"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Xa1OPKnv"
 Received: from DESKTOP-4OLSCEK. (c-76-135-27-212.hsd1.wa.comcast.net [76.135.27.212])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1409A20B2000;
-	Wed, 21 Feb 2024 08:56:16 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1409A20B2000
+	by linux.microsoft.com (Postfix) with ESMTPSA id 9510D20B2000;
+	Wed, 21 Feb 2024 09:04:17 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9510D20B2000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1708534576;
-	bh=3WQ3mLec9Jebwe3nros1Bu7UOMPeSwJ2ljwzi0xUrEM=;
+	s=default; t=1708535057;
+	bh=1LmAN3rqQzMKWs2iC58seTXPu1/RSRwYx7zwf21mMFA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tGwfON4LA6b6vj30oKVfHe0c1NRyJXrBbMRCVNX6aj/Rx/W9MaIPU33YOUHIh9u2t
-	 fyoQYoKW3cJoUSPpkTmlLoj41Be/zgkcgwK2mGgvY6Rz+HTMu69iSKGKF6t52fy1S3
-	 c/E8uF68fx1kWSxQ9/coQqKdY5xoCqygUbyLaikI=
-Date: Wed, 21 Feb 2024 08:56:13 -0800
+	b=Xa1OPKnv5IBxlOi15hxcaR16uj31FTD3RP3qzYr6DRqVPoqGIK6fZJe9R1r0JAH69
+	 7TiDxIpc//atSYqggEIYe0j6gL3TZDthbzkQoSKtnYq8LdA4/OF/wVgsq3E2n2UBPo
+	 iE2h7uAf4B1IIk+R+1rSyhsg83NkmWuYYwCCFnUQ=
+Date: Wed, 21 Feb 2024 09:04:15 -0800
 From: Beau Belgrave <beaub@linux.microsoft.com>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v3 2/4] tracing/user_events: Introduce multi-format events
-Message-ID: <20240221165613.GB441-beaub@linux.microsoft.com>
+Subject: Re: [PATCH v3 1/4] tracing/user_events: Prepare find/delete for same
+ name events
+Message-ID: <20240221170415.GC441-beaub@linux.microsoft.com>
 References: <20240214175046.240-1-beaub@linux.microsoft.com>
- <20240214175046.240-3-beaub@linux.microsoft.com>
- <20240221100833.1eb5c254@gandalf.local.home>
+ <20240214175046.240-2-beaub@linux.microsoft.com>
+ <20240221101721.4e81e9e5@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -43,156 +44,83 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240221100833.1eb5c254@gandalf.local.home>
+In-Reply-To: <20240221101721.4e81e9e5@gandalf.local.home>
 
-On Wed, Feb 21, 2024 at 10:08:33AM -0500, Steven Rostedt wrote:
-> On Wed, 14 Feb 2024 17:50:44 +0000
+On Wed, Feb 21, 2024 at 10:17:21AM -0500, Steven Rostedt wrote:
+> On Wed, 14 Feb 2024 17:50:43 +0000
 > Beau Belgrave <beaub@linux.microsoft.com> wrote:
 > 
-> > +static char *user_event_group_system_multi_name(void)
-> > +{
-> > +	char *system_name;
-> > +	int len = sizeof(USER_EVENTS_MULTI_SYSTEM) + 1;
-> 
-> FYI, the sizeof() will include the "\0" so no need for "+ 1", but I don't
-> think this matters as for what I mention below.
-> 
-> > +
-> > +	system_name = kmalloc(len, GFP_KERNEL);
-> > +
-> > +	if (!system_name)
-> > +		return NULL;
-> > +
-> > +	snprintf(system_name, len, "%s", USER_EVENTS_MULTI_SYSTEM);
-> > +
-> > +	return system_name;
-> 
-> Hmm, the above looks like an open coded version of:
-> 
-> 	system_name = kstrdup(USER_EVENTS_MULTI_SYSTEM, GFP_KERNEL);
+> So the patches look good, but since I gave you some updates, I'm now going
+> to go though "nits". Like grammar and such ;-)
 > 
 
-That's much cleaner, I'll move to that.
+Sure thing.
 
+> > The current code for finding and deleting events assumes that there will
+> > never be cases when user_events are registered with the same name, but
+> > different formats. In the future this scenario will exist to ensure
 > 
-> > +}
-> > +
-> >  static struct user_event_group *current_user_event_group(void)
-> >  {
-> >  	return init_group;
-> > @@ -367,6 +390,11 @@ static struct user_event_group *user_event_group_create(void)
-> >  	if (!group->system_name)
-> >  		goto error;
-> >  
-> > +	group->system_multi_name = user_event_group_system_multi_name();
-> > +
-> > +	if (!group->system_multi_name)
-> > +		goto error;
-> > +
-> >  	mutex_init(&group->reg_mutex);
-> >  	hash_init(group->register_table);
-> >  
-> > @@ -1482,6 +1510,11 @@ static int destroy_user_event(struct user_event *user)
-> >  	hash_del(&user->node);
-> >  
-> >  	user_event_destroy_validators(user);
-> > +
-> > +	/* If we have different names, both must be freed */
-> > +	if (EVENT_NAME(user) != EVENT_TP_NAME(user))
-> > +		kfree(EVENT_TP_NAME(user));
-> > +
-> >  	kfree(user->call.print_fmt);
-> >  	kfree(EVENT_NAME(user));
-> >  	kfree(user);
-> > @@ -1504,12 +1537,24 @@ static struct user_event *find_user_event(struct user_event_group *group,
-> >  	*outkey = key;
-> >  
-> >  	hash_for_each_possible(group->register_table, user, node, key) {
-> > +		/*
-> > +		 * Single-format events shouldn't return multi-format
-> > +		 * events. Callers expect the underlying tracepoint to match
-> > +		 * the name exactly in these cases. Only check like-formats.
-> > +		 */
-> > +		if (EVENT_MULTI_FORMAT(flags) != EVENT_MULTI_FORMAT(user->reg_flags))
-> > +			continue;
-> > +
-> >  		if (strcmp(EVENT_NAME(user), name))
-> >  			continue;
-> >  
-> >  		if (user_fields_match(user, argc, argv))
-> >  			return user_event_get(user);
-> >  
-> > +		/* Scan others if this is a multi-format event */
-> > +		if (EVENT_MULTI_FORMAT(flags))
-> > +			continue;
-> > +
-> >  		return ERR_PTR(-EADDRINUSE);
-> >  	}
-> >  
-> > @@ -1889,8 +1934,12 @@ static bool user_event_match(const char *system, const char *event,
-> >  	struct user_event *user = container_of(ev, struct user_event, devent);
-> >  	bool match;
-> >  
-> > -	match = strcmp(EVENT_NAME(user), event) == 0 &&
-> > -		(!system || strcmp(system, USER_EVENTS_SYSTEM) == 0);
-> > +	match = strcmp(EVENT_NAME(user), event) == 0;
-> > +
-> > +	if (match && system) {
-> > +		match = strcmp(system, user->group->system_name) == 0 ||
-> > +			strcmp(system, user->group->system_multi_name) == 0;
-> > +	}
-> >  
-> >  	if (match)
-> >  		match = user_fields_match(user, argc, argv);
-> > @@ -1923,6 +1972,39 @@ static int user_event_trace_register(struct user_event *user)
-> >  	return ret;
-> >  }
-> >  
-> > +static int user_event_set_tp_name(struct user_event *user)
-> > +{
-> > +	lockdep_assert_held(&user->group->reg_mutex);
-> > +
-> > +	if (EVENT_MULTI_FORMAT(user->reg_flags)) {
-> > +		char *multi_name;
-> > +		int len;
-> > +
-> > +		len = snprintf(NULL, 0, "%s.%llx", user->reg_name,
-> > +			       user->group->multi_id) + 1;
-> > +
-> > +		multi_name = kzalloc(len, GFP_KERNEL_ACCOUNT);
-> > +
-> > +		if (!multi_name)
-> > +			return -ENOMEM;
-> > +
-> > +		snprintf(multi_name, len, "%s.%llx", user->reg_name,
-> > +			 user->group->multi_id);
+> > user programs can be updated or modify their events and run different
+> > versions of their programs side-by-side without being blocked.
 > 
-> I believe the above can be replaced with:
-> 
-> 		multi_name = kasprintf(GFP_KERNEL_ACCOUNT, "%s.%llx", user->reg_name,
-> 				       user->group->multi_id);
-> 		if (!multi_name)
-> 			return -ENOMEM;
+> Can you change the last sentence above. I read it three times and it's
+> still awkward to understand it. Particularly, the "user programs can be
+> updated or modify their events". That just doesn't want to compute.
 > 
 
-Great, I'll move to that as well and validate.
+Yeah, I'll clean this up.
+
+> > 
+> > This change does not yet allow for multi-format events. If user_events
+> > are registered with the same name but different arguments the programs
+> > see the same return values as before. This change simply makes it
+> > possible to easily accomodate for this in future changes.
+> 
+> I think you can drop the "in future changes" part.
+> 
+
+Agreed.
+
+> > 
+> > Update find_user_event() to take in argument parameters and register
+> > flags to accomodate future multi-format event scenarios. Have find
+> > validate argument matching and return error pointers to cover address
+> > in use cases, or allocation errors. Update callers to handle error
+> 
+>   "to cover address in use cases" ?
+
+Yeah, if the ABI is using a single-format event and it's already in use,
+we return -EADDRINUSE. It does not happen in multi-format event cases,
+since that is allowed.
+
+I'll try to clarify this a bit.
+
+> 
+> > pointer logic.
+> > 
+> > Move delete_user_event() to use hash walking directly now that find has
+> > changed. Delete all events found that match the register name, stop
+> 
+> "now that find has changed" ?  You mean the "find function"?
+> 
+
+Yeah, I'll just use the function name here, find_user_event().
+
+> > if an error occurs and report back to the user.
+> > 
+> > Update user_fields_match() to cover list_empty() scenarios instead of
+> > each callsite doing it now that find_user_event() uses it directly.
+> 
+> The above is a bit of a run-on sentence.
+> 
+
+I'll clean it up a bit.
 
 Thanks,
 -Beau
 
 > -- Steve
 > 
-> > +
-> > +		user->call.name = multi_name;
-> > +		user->tracepoint.name = multi_name;
-> > +
-> > +		/* Inc to ensure unique multi-event name next time */
-> > +		user->group->multi_id++;
-> > +	} else {
-> > +		/* Non Multi-format uses register name */
-> > +		user->call.name = user->reg_name;
-> > +		user->tracepoint.name = user->reg_name;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
+> > 
+> > Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
+> > ---
