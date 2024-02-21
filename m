@@ -1,158 +1,141 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B3412E1D6
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Feb 2024 19:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 803443BB4C
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Feb 2024 21:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708544989; cv=none; b=S8USJ5Os4mmlB0mzP7/XwdxSqFHpN1AnW+qVmPWXbmB5Cr98xX3N+Ra2I9jTfn3f+RWOOTaFScydiY2zob3WhD6H9+CVgHg7d1MoM2odpPedc0SYNFVDuxS8HLdXaM6dsIdVTWrNIggk9/T7Vtfty24RPTRISpzX9NCp4/2JchE=
+	t=1708551067; cv=none; b=iYHhOUp+1WdJMxMYfRbTG8+CAuxUfD28CJvg9f1JDep3x9TZZh2+W+A0H0op1zuVeWXSWislN+CcKOAEhjZFTorfdNLyOuzKI8NmzUNA1S0A+ryRSfoWDcOJRwRYoAMbzQG7z7dcCXEgWYz/TLJ+wN7yjV1uY8OroCy87jYBbQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708544989; c=relaxed/simple;
-	bh=dHsou/hd8ny3LwFZsjdRpHG0mjn9OJ8AgEw33Ge0uiQ=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=gg+IsmEf9mnahl0KQyEWtQW+AWG/xX9+3L9og3h5h+k/Fs1pFfGJiwlsn4UP0KIFxWAxZtoFiivPPMXd4Zd4Cjs3saoRql/MCmqS9iGJyp3k4YHajBSuEr+WYnjgPnlaoZl4Fy1eKwsvc1JhEIYAJKycKtAFLpPUYixDsJ9sHo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vilasbhat.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QtC+K8Ky; arc=none smtp.client-ip=209.85.219.201
+	s=arc-20240116; t=1708551067; c=relaxed/simple;
+	bh=vkGTScK5M6Sthovdj0M+72XV5UMq/lWO1wwEeMwIR1o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CvLaaBbmTZhLRl0nj2UY68kQNsTapqNHbztLjCJJGIX+wXdk+DOyyJtQFN19HtVPJHLkFndJCRC/rYMCzQqsVDmOD4bIBfS0HDWPqiaVatPIAavbTuVuI1Bx1CIOW1v8qSAubUeF5Mtry9mj5AUa6CLXxWnAcpulvKoumwekgn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Okuurdc1; arc=none smtp.client-ip=209.85.167.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vilasbhat.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QtC+K8Ky"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc657e9bdc4so9092241276.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Feb 2024 11:49:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Okuurdc1"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3bbbc6b4ed1so5263223b6e.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Feb 2024 13:31:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708544986; x=1709149786; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=dY3bbKQ8BuzJKDn9eA4y8nGoIVfjx/oyPxLya0zWCzo=;
-        b=QtC+K8KymGSyWXQXRZw3+gsPVh21/O9+nbP8grLN+uHSavHeKQCHvQNUug/kNhfSS8
-         fNeu1nEXtZGa7+dwqAHefeWs9Gq1iSCx8rbUe+o0KG4XWiecCgRgt4vPu+BELWj/Erqi
-         5LGC9rUkIhlLvz9mr1Zk+mLzF6ifW7DS4OI4kKZjJSANhES8wUtPp8czdn5c1mGkv7iS
-         YNC43CNLCei/n7MXxWvY4rv2xT6/7/aqjb6DXn2vNy26detZlE+tmmjTTQXupdbO2OEY
-         UfE9fHvOzBPOytn/v5Hx6SaxBtewSL+F7cJNE8r5IXDwNMKMaCdGfumRxvNxKITo/Zqe
-         VD2g==
+        d=google.com; s=20230601; t=1708551064; x=1709155864; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gyDvZIu7lyAMZr8iHtIW9gaK0zzbqkQ/ZarxVd+kbsw=;
+        b=Okuurdc17ebSBJG7qhyTr9oJhy3C7On7Xn1CRRLP73dXm9Zd0IoaeRPZn2T/m4A/1p
+         fO9vrZn8w9av70NWsDAuxnn8+HTGjTgpRIYYzJDrM85LDjhZp4L1ovNig38AntgOeL+G
+         Ddfj7XnTRf3qU7qcKuliJqUR4HBwWk+zm+cEHDoR1M3wdM/qwiN86MZ/EyMMPrHOrEHi
+         lVuQba0mQRqnpNllwCbTvbgdbL7h5trOZq8qh7A7XdGBAeL0gqrpRarm+BunqoaJ3MgE
+         gSRULSoqJGwFwdW7nQFa/kAHrb0tA4OFkNCVIHflzk7pgtZvsmcpd4gn/a9q35wu6De4
+         /ajw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708544986; x=1709149786;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dY3bbKQ8BuzJKDn9eA4y8nGoIVfjx/oyPxLya0zWCzo=;
-        b=TlIjeW8MeSM/mpdLAYDbyH5Lg98f9IfK33iEMaiK8btKjQ7LLPTC/OXGDoLt0Lu2li
-         uRFgvKrefe5wCYVmMTA5iV4jeqR03M1OjUm8xlShn6q/h2NuXVg/CQsMDg629P+7jodW
-         m8JLGoD9qpu/9MkGk1NWvRcglcFO6hIgiBJ/jBunn/7d/525ftHd23zuSbySxT2hhn6f
-         ypLhtHl62Gx+G9xS6N6LsVZEavckVHYt4rOdzsxrxoeEqS+EIhlug7puoTXtPpREA4Gl
-         4joYqsqTu9AusvrQOpHWwr7xicPGE/m/ybkmsh01ygkXllAz5XZUgH9HmTQ0xVfCB68M
-         1Btg==
-X-Forwarded-Encrypted: i=1; AJvYcCXrxSrPd5dCF9wUFawgEQi2FCBnGLvweUF80Mf7DbJJOpeQ7HN0b0abaw9m00Ull7BGEj0jiDztpuaJgDENx7s/oV1fXgWJoBJ2bDaCzOaQagYN
-X-Gm-Message-State: AOJu0YxuvL2nwN0ias2gyn6gGVsmq+jnJu1nquYANcGdLYE1npejOrdq
-	9T+zaNUM7VQFPXg4RAgNz7lTGjFubjwo9Y+lHO4SdoFh4zvdVHM7emDPnJAXKliwCQ7GtLG3WSo
-	EgmTcoUv1C5J+ww==
-X-Google-Smtp-Source: AGHT+IGVZJXwF6/QCuP/A9p4bu1a4NrgucjWHGMyzguHpAm/ajLSlOvbRCDMJ+PRNq41mWXAZmFOJh1k/WHVZQM=
-X-Received: from vilasbhat-emu.c.googlers.com ([fda3:e722:ac3:cc00:dc:567e:c0a8:8f2])
- (user=vilasbhat job=sendgmr) by 2002:a05:6902:701:b0:dc8:27e6:cde1 with SMTP
- id k1-20020a056902070100b00dc827e6cde1mr18718ybt.5.1708544986720; Wed, 21 Feb
- 2024 11:49:46 -0800 (PST)
-Date: Wed, 21 Feb 2024 19:47:53 +0000
+        d=1e100.net; s=20230601; t=1708551064; x=1709155864;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gyDvZIu7lyAMZr8iHtIW9gaK0zzbqkQ/ZarxVd+kbsw=;
+        b=sG7dhNN6KD6nTcBQf0mCAhBXR2vPZdah9DC4rRUyaakxdlHgL0p8/Xmvddw3QJOt6c
+         RS4pzGTVoz6bfL8uKkCNZheM8hx6dpI4ruCOX9PtkiyqpZrlwISfl9702Vp+6essko9T
+         sKavjsKCrcJYIn2i+U7fqKGCMrr5H1EHWl/2RQaDgyBG1SiY9ky/wlLP9efpf3M36U6B
+         tl8f7VxvkAl+OySW/f9osIqNm4GyEVefwOtKiIwc/LXgEHH6fIwKYJPxjP93LNvqsU0T
+         KBxY6yKEX3LL0YdaEvwkyFDO8FxzV/dGZa5EdjaU33jDmDQTnOdi/w1I3+5Vj6X+9Tgp
+         tS+A==
+X-Forwarded-Encrypted: i=1; AJvYcCWLuy5dFY7x99mCENWDzPjtgiR0zLUymI6g+WJiDSIQDOP6miI6vJHcAV/XJBmOGUc9TYoURTD6pFNGHrZZcarqqvXprhJoAiqySTCfnBEDaHzl
+X-Gm-Message-State: AOJu0YywaBX56IG66abcjQPM4cxp3g0WocxNF9SKHlklq0Gx+0MBE5Sd
+	/CKaBCmDdntUTwK7VyzJoNjQuFPf9q5pgkVkmDzLHi1ZvtGyFcYomKhqmyftMXrEpgxLUu4h8X0
+	Fu+gRiUmMz9RKltcjQttdSbEvsaDOB3TasnVu
+X-Google-Smtp-Source: AGHT+IG7j3+ZxAmTcECSokeLQXuBK0cuQtwLdGeOlZvOqznQYFNFe5YbgpRUaAFW0uN3IZ6N5EAeSRZ29mohF0it6i4=
+X-Received: by 2002:a05:6808:120e:b0:3c1:67d3:694 with SMTP id
+ a14-20020a056808120e00b003c167d30694mr6194946oil.30.1708551064423; Wed, 21
+ Feb 2024 13:31:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Message-ID: <20240221194754.986300-1-vilasbhat@google.com>
-Subject: [PATCH v2] PM: runtime: add tracepoint for runtime_status changes
-From: Vilas Bhat <vilasbhat@google.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Vilas Bhat <vilasbhat@google.com>, Saravana Kannan <saravanak@google.com>, kernel-team@android.com, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
+MIME-Version: 1.0
+References: <20240111210539.636607-1-carlosgalo@google.com> <ZdWshXSoLthv6J6b@tiehlicka>
+In-Reply-To: <ZdWshXSoLthv6J6b@tiehlicka>
+From: Carlos Galo <carlosgalo@google.com>
+Date: Wed, 21 Feb 2024 13:30:51 -0800
+Message-ID: <CABtOLR+gpU2BYxcGCCqccZGcRDF337z3JJ=7nvC47ANHmS1tNA@mail.gmail.com>
+Subject: Re: [PATCH v2] mm: Update mark_victim tracepoints fields
+To: Michal Hocko <mhocko@suse.com>
+Cc: rostedt@goodmis.org, akpm@linux-foundation.org, surenb@google.com, 
+	android-mm@google.com, kernel-team@android.com, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Existing runtime PM ftrace events (`rpm_suspend`, `rpm_resume`,
-`rpm_return_int`) offer limited visibility into the exact timing of device
-runtime power state transitions, particularly when asynchronous operations
-are involved. When the `rpm_suspend` or `rpm_resume` functions are invoked
-with the `RPM_ASYNC` flag, a return value of 0 i.e., success merely
-indicates that the device power state request has been queued, not that
-the device has yet transitioned.
+On Tue, Feb 20, 2024 at 11:55=E2=80=AFPM Michal Hocko <mhocko@suse.com> wro=
+te:
+>
+> Hi,
+> sorry I have missed this before.
+>
+> On Thu 11-01-24 21:05:30, Carlos Galo wrote:
+> > The current implementation of the mark_victim tracepoint provides only
+> > the process ID (pid) of the victim process. This limitation poses
+> > challenges for userspace tools that need additional information
+> > about the OOM victim. The association between pid and the additional
+> > data may be lost after the kill, making it difficult for userspace to
+> > correlate the OOM event with the specific process.
+>
+> You are correct that post OOM all per-process information is lost. On
+> the other hand we do dump all this information to the kernel log. Could
+> you explain why that is not suitable for your purpose?
 
-A new ftrace event, `rpm_status`, is introduced. This event directly logs
-the `power.runtime_status` value of a device whenever it changes providing
-granular tracking of runtime power state transitions regardless of
-synchronous or asynchronous `rpm_suspend` / `rpm_resume` usage.
+Userspace tools often need real-time visibility into OOM situations
+for userspace intervention. Our use case involves utilizing BPF
+programs, along with BPF ring buffers, to provide OOM notification to
+userspace. Parsing kernel logs would be significant overhead as
+opposed to the event based BPF approach.
 
-Signed-off-by: Vilas Bhat <vilasbhat@google.com>
----
-V1 -> V2: Modified enum value definition as per reviewer comments.
----
- drivers/base/power/runtime.c |  1 +
- include/trace/events/rpm.h   | 42 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 43 insertions(+)
+> > In order to mitigate this limitation, add the following fields:
+> >
+> > - UID
+> >    In Android each installed application has a unique UID. Including
+> >    the `uid` assists in correlating OOM events with specific apps.
+> >
+> > - Process Name (comm)
+> >    Enables identification of the affected process.
+> >
+> > - OOM Score
+> >    Allows userspace to get additional insights of the relative kill
+> >    priority of the OOM victim.
+>
+> What is the oom score useful for?
+>
+The OOM score provides us a measure of the victim's importance. On the
+android side, it allows us to identify if top or foreground apps are
+killed, which have user perceptible impact.
 
-diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-index 05793c9fbb84..d10354847878 100644
---- a/drivers/base/power/runtime.c
-+++ b/drivers/base/power/runtime.c
-@@ -94,6 +94,7 @@ static void update_pm_runtime_accounting(struct device *dev)
- static void __update_runtime_status(struct device *dev, enum rpm_status status)
- {
- 	update_pm_runtime_accounting(dev);
-+	trace_rpm_status(dev, status);
- 	dev->power.runtime_status = status;
- }
- 
-diff --git a/include/trace/events/rpm.h b/include/trace/events/rpm.h
-index 3c716214dab1..bd120e23ce12 100644
---- a/include/trace/events/rpm.h
-+++ b/include/trace/events/rpm.h
-@@ -101,6 +101,48 @@ TRACE_EVENT(rpm_return_int,
- 		__entry->ret)
- );
- 
-+#define RPM_STATUS_STRINGS \
-+	EM(RPM_INVALID, "RPM_INVALID") \
-+	EM(RPM_ACTIVE, "RPM_ACTIVE") \
-+	EM(RPM_RESUMING, "RPM_RESUMING") \
-+	EM(RPM_SUSPENDED, "RPM_SUSPENDED") \
-+	EMe(RPM_SUSPENDING, "RPM_SUSPENDING")
-+
-+/* Enums require being exported to userspace, for user tool parsing. */
-+#undef EM
-+#undef EMe
-+#define EM(a, b)	TRACE_DEFINE_ENUM(a);
-+#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
-+
-+RPM_STATUS_STRINGS
-+
-+/*
-+ * Now redefine the EM() and EMe() macros to map the enums to the strings that
-+ * will be printed in the output.
-+ */
-+#undef EM
-+#undef EMe
-+#define EM(a, b)	{ a, b },
-+#define EMe(a, b)	{ a, b }
-+
-+TRACE_EVENT(rpm_status,
-+	TP_PROTO(struct device *dev, enum rpm_status status),
-+	TP_ARGS(dev, status),
-+
-+	TP_STRUCT__entry(
-+		__string(name,	dev_name(dev))
-+		__field(int,	status)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(name, dev_name(dev));
-+		__entry->status = status;
-+	),
-+
-+	TP_printk("%s status=%s", __get_str(name),
-+		__print_symbolic(__entry->status, RPM_STATUS_STRINGS))
-+);
-+
- #endif /* _TRACE_RUNTIME_POWER_H */
- 
- /* This part must be outside protection */
--- 
-2.44.0.rc0.258.g7320e95886-goog
+> Is there any reason to provide a different information from the one
+> reported to the kernel log?
+> __oom_kill_process:
+> pr_err("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-r=
+ss:%lukB, shmem-rss:%lukB, UID:%u pgtables:%lukB oom_score_adj:%hd\n",
+>                 message, task_pid_nr(victim), victim->comm, K(mm->total_v=
+m),
+>                 K(get_mm_counter(mm, MM_ANONPAGES)),
+>                 K(get_mm_counter(mm, MM_FILEPAGES)),
+>                 K(get_mm_counter(mm, MM_SHMEMPAGES)),
+>                 from_kuid(&init_user_ns, task_uid(victim)),
+>                 mm_pgtables_bytes(mm) >> 10, victim->signal->oom_score_ad=
+j);
+>
 
+We added these fields we need (UID, process name, and OOM score), but
+we're open to adding the others if you prefer that for consistency
+with the kernel log.
+
+Thanks,
+Carlos
+
+> --
+> Michal Hocko
+> SUSE Labs
