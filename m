@@ -1,30 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586E280050;
-	Wed, 21 Feb 2024 15:19:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E6C7FBC0;
+	Wed, 21 Feb 2024 15:45:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708528758; cv=none; b=It16V+tRLy0efnQZHoaPpv7YyUrb30YELd//X1/C9zFXV3g1qul8r6y9NZ6Y8XnzOUFsiTpjiMk0F4hh8ZPCN1vNpeTNhcEVzCHk3ZtVzL0LPZG6PVRO6CVillRdJ8X4OpDYYak/teHVPEdMsHq6blP87wo5VOs+BKUuc/6Fr3Q=
+	t=1708530328; cv=none; b=tbsJ9eUxVOiP3hAgqlIxr6sdSjo4pOf7/ciAXMFIPzppCd2tHzNf28+5dS/RWmyRgYUYd1MFSD7KfbVmgKDwIQ4IhEqFqIcjiiEms1WIoHgKAlgxPS+zOAfxZhDcxrVQ7c/KjISApcNWXJt3cn9lrzESzZ3Hsj4WpeRRu6ZnkmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708528758; c=relaxed/simple;
-	bh=iKOHI6CLp4g2NCjQ6yWgSXnY2MzK0cTPEJKpWfebVYI=;
+	s=arc-20240116; t=1708530328; c=relaxed/simple;
+	bh=izx0Q7NNyB7voMGWRFN3PuhM1xFPObSAyP9CPSxruuw=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gB9x0vedJayTTdtSqBbJJ0tHkNtTmaLIFkG0vtO6y+bADDt2bO0r9IIW2kXm98bLLZ7I/6TkkAPvf9LydjvB8QOO18IDNeqrhyjr9ErmY760QZD3zxSup9meX/9/BYr8O3cICMtS6ILJRDLQWzEsPJvp801CVxkArRxMfAG4Hos=
+	 MIME-Version:Content-Type; b=HvuUiSmpsA5mEuL1sDqHGRC9CFXvBCTBc3pw9TpcDC+B+Bg297lBAvOSpVrRWhSZeyvlDD/6d1LCTEoYE2vvGZ5My6gl6LB9Fb/iknKpv3obCbpq5LYB7icOFo6x/BFss4nMEQKmBQ7suCfVrnuwnFQC1kQC6yppiCHz4ddzonA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04260C433A6;
-	Wed, 21 Feb 2024 15:19:16 +0000 (UTC)
-Date: Wed, 21 Feb 2024 10:21:04 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 907D2C433C7;
+	Wed, 21 Feb 2024 15:45:26 +0000 (UTC)
+Date: Wed, 21 Feb 2024 10:47:14 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Beau Belgrave <beaub@linux.microsoft.com>
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v3 2/4] tracing/user_events: Introduce multi-format
- events
-Message-ID: <20240221102104.6ab80e5a@gandalf.local.home>
-In-Reply-To: <20240214175046.240-3-beaub@linux.microsoft.com>
-References: <20240214175046.240-1-beaub@linux.microsoft.com>
-	<20240214175046.240-3-beaub@linux.microsoft.com>
+To: Dmitry Safonov <dima@arista.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Dmitry
+ Safonov <0x7f454c46@gmail.com>
+Subject: Re: [PATCH] Documentation/ftrace: Correct wording on trace_options
+ sharing
+Message-ID: <20240221104714.1f7bc208@gandalf.local.home>
+In-Reply-To: <1027d6bc-f4c7-4da5-bf46-3809b7c487d4@arista.com>
+References: <20240220-ftrace-options-docs-v1-1-95448f535056@arista.com>
+	<1027d6bc-f4c7-4da5-bf46-3809b7c487d4@arista.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -35,34 +38,35 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 14 Feb 2024 17:50:44 +0000
-Beau Belgrave <beaub@linux.microsoft.com> wrote:
+On Wed, 21 Feb 2024 01:59:53 +0000
+Dmitry Safonov <dima@arista.com> wrote:
 
-> Currently user_events supports 1 event with the same name and must have
-> the exact same format when referenced by multiple programs. This opens
-> an opportunity for malicous or poorly thought through programs to
-> create events that others use with different formats. Another scenario
-> is user programs wishing to use the same event name but add more fields
-> later when the software updates. Various versions of a program may be
-> running side-by-side, which is prevented by the current single format
-> requirement.
+> On 2/20/24 21:00, Dmitry Safonov wrote:
+> [..]
+> > diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+> > index 7e7b8ec17934..c79a6bcef3c9 100644
+> > --- a/Documentation/trace/ftrace.rst
+> > +++ b/Documentation/trace/ftrace.rst
+> > @@ -3603,9 +3603,9 @@ The files in the new directory work just like the files with the
+> >  same name in the tracing directory except the buffer that is used
+> >  is a separate and new buffer. The files affect that buffer but do not
+> >  affect the main buffer with the exception of trace_options. Currently,
+> > -the trace_options affect all instances and the top level buffer
+> > -the same, but this may change in future releases. That is, options
+> > -may become specific to the instance they reside in.
+> > +most of the options are specific to the instance they reside in, but
+> > +trace_printk, printk-msg-only and record-cmd are affecting all instances
+> > +and the top level buffer, but this may change in future releases.  
 > 
-> Add a new register flag (USER_EVENT_REG_MULTI_FORMAT) which indicates
-> the user program wishes to use the same user_event name, but may have
-> several different formats of the event in the future. When this flag is
+> Actually, it seems that at least on -next these 3 are not shared as
+> well? (if my tests aren't misbehaving)
+> 
+> So, just remove the part about trace_options exception?
+>
 
-"of the event in the future." Does it have to be in the future? Is there
-use case where an application might legitimately want the same event name
-with different formats?
+In reality, if we want to be specific. It should state that all options
+listed in the instance options directory are unique to the instance. If an
+option only exists in the top directory, then it is global or for a tracer
+that can only be used in the top directory.
 
 -- Steve
-
-> used, create the underlying tracepoint backing the user_event with a
-> unique name per-version of the format. It's important that existing ABI
-> users do not get this logic automatically, even if one of the multi
-> format events matches the format. This ensures existing programs that
-> create events and assume the tracepoint name will match exactly continue
-> to work as expected. Add logic to only check multi-format events with
-> other multi-format events and single-format events to only check
-> single-format events during find.
-> 
