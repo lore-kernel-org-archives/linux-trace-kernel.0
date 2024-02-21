@@ -1,34 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A9B69D38;
-	Wed, 21 Feb 2024 14:09:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4AA4C62;
+	Wed, 21 Feb 2024 14:21:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708524557; cv=none; b=Ps6S/DuRQibbDr5MF2V13//Y3guUp/DdnWduUm5CD0LuyYqtxm4TKs93wxPO+1lpMsTNBMhiYaffItx8fySGesuNdNfIR67C5nW8wxKVsdN/rXLmv9gvXz1aPUsTLvRBwbQdL8mzL2/yfNaSPIt2lLQ5zjMLWQiOhkA1KB0o3Vo=
+	t=1708525285; cv=none; b=AebVgJ4wICl2AU6Hc99XCoTx/X+is6obuieMng64xE4D8X8uA9JoIoLd/u/rfyvOi+v/ZTa85lAjtp1BtmcHAM/Xa0S2MvD5aMFyNxtLYxU87S73GGAEqZJPW0J5pRDMM3t2M73H/a/zYzCHVQzgR6/QzGcmU2wsGDSylkAwBig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708524557; c=relaxed/simple;
-	bh=o+Pf9FEYFHEjMXG9WRgtJ1Cj03FyG5XJoFFDXLwWgAk=;
+	s=arc-20240116; t=1708525285; c=relaxed/simple;
+	bh=A4HgXRGDVVWg5a5ZtE9lWeLwYz5CzwymEup8k2SG11U=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AKuoP4nsD02qK9DtvhjInNYNnnl2Sc5F9XBF4VK3cViFiQDbraxGKOpVIY2DwAQA1//oUGag3LB7XGpwppZFOSZhQSKEP2EUpXigc5ZYONzIT3a8CXq2PDls9WNQRVMW3LekoejWCiZKm3hKnQ+tpCtE7SPcPkdTBw7Ryqcqsvo=
+	 MIME-Version:Content-Type; b=BC1EJVHD3R0zZCKynpJKn/TwQ5ne0THN922PxXvtaceUwdvdEMmRRtplKQmiV+WP1ZYOLg2nifs4KXHMWFFXDQSd/VdfV4680Y+8XjyBgKpXuflhlD8YeO3U3etZWLEu9/q+FX+bcYQTvvl98XJK08QsLumgCgJG608aHmzmA/k=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30390C433C7;
-	Wed, 21 Feb 2024 14:09:16 +0000 (UTC)
-Date: Wed, 21 Feb 2024 09:11:03 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA07CC43390;
+	Wed, 21 Feb 2024 14:21:21 +0000 (UTC)
+Date: Wed, 21 Feb 2024 09:23:09 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Krishna chaitanya chundru <quic_krichai@quicinc.com>,
- linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
- linux-arm-msm@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
- quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
- quic_parass@quicinc.com
-Subject: Re: [PATCH] bus: mhi: host: Change the trace string for the
- userspace tools mapping
-Message-ID: <20240221091103.37497ed0@gandalf.local.home>
-In-Reply-To: <20240221061146.GF11693@thinkpad>
-References: <20240218-ftrace_string-v1-1-27da85c1f844@quicinc.com>
-	<20240221061146.GF11693@thinkpad>
+To: Metin Kaya <metin.kaya@arm.com>
+Cc: linux-kernel@vger.kernel.org, John Stultz <jstultz@google.com>, Joel
+ Fernandes <joelaf@google.com>, Qais Yousef <qyousef@google.com>, Ingo
+ Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri
+ Lelli <juri.lelli@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Valentin Schneider <vschneid@redhat.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Ben Segall <bsegall@google.com>, Zimuzo Ezeozue <zezeozue@google.com>,
+ Youssef Esmat <youssefesmat@google.com>, Mel Gorman <mgorman@suse.de>,
+ Daniel Bristot de Oliveira <bristot@redhat.com>, Will Deacon
+ <will@kernel.org>, Waiman Long <longman@redhat.com>, Boqun Feng
+ <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, Xuewen Yan
+ <xuewen.yan94@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, Thomas
+ Gleixner <tglx@linutronix.de>, kernel-team@android.com,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched: Add trace events for Proxy Execution (PE)
+Message-ID: <20240221092309.00432f37@gandalf.local.home>
+In-Reply-To: <20240202083338.1328060-1-metin.kaya@arm.com>
+References: <20240202083338.1328060-1-metin.kaya@arm.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,23 +46,41 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 21 Feb 2024 11:41:46 +0530
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
+On Fri,  2 Feb 2024 08:33:38 +0000
+Metin Kaya <metin.kaya@arm.com> wrote:
 
-> On Sun, Feb 18, 2024 at 02:13:39PM +0530, Krishna chaitanya chundru wrote:
-> > User space tools can't map strings if we use directly, as the string
-> > address is internal to kernel.
-> > 
-> > So add trace point strings for the user space tools to map strings
-> > properly.
-> > 
-> > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>  
+> Add sched_[start, finish]_task_selection trace events to measure the
+> latency of PE patches in task selection.
 > 
-> Reported-by: Steven Rostedt <rostedt@goodmis.org>
+> Moreover, introduce trace events for interesting events in PE:
+> 1. sched_pe_enqueue_sleeping_task: a task gets enqueued on wait queue of
+>    a sleeping task (mutex owner).
+> 2. sched_pe_cross_remote_cpu: dependency chain crosses remote CPU.
+> 3. sched_pe_task_is_migrating: mutex owner task migrates.
+> 
+> New trace events can be tested via this command:
+> $ perf trace \
+>   -e sched:sched_start_task_selection \
+>   -e sched:sched_finish_task_selection \
+>   -e sched:sched_pe_enqueue_sleeping_task \
+>   -e sched:sched_pe_cross_remote_cpu \
+>   -e sched:sched_pe_task_is_migrating
+> 
+> Notes:
+> 1. These trace events are not intended to merge upstream. Instead, they
+>    are only for making PE tests easier and will be converted to trace
+>    points once PE patches hit upstream.
 
-Suggested-by: may be more accurate?
+I wonder if the tracepoints should be added though? That is, not adding the
+trace_events that show up in tracefs, but just the tracepoints so that bpf
+or local modules could hook to them?
 
 -- Steve
 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+> 2. This patch is based on John's Proxy Execution v7 patch series (see
+>    the link below) which is also available at
+>    https://github.com/johnstultz-work/linux-dev/commits/proxy-exec-v7-6.7-rc6/.
+> 
+> Link: https://lore.kernel.org/linux-kernel/CANDhNCrHd+5twWVNqBAhVLfhMhkiO0KjxXBmwVgaCD4kAyFyWw@mail.gmail.com/
 
