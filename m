@@ -1,130 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96DD947F48;
-	Wed, 21 Feb 2024 11:51:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E73C6762C1;
+	Wed, 21 Feb 2024 13:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708516280; cv=none; b=hRN9nGOgZOyBbfH5LzTnc7LdVugLDyOpedLImZt6eqUpN0bFrtMbru2C8zYzwaCQFKdii3Tekv17I5FZAuLXsvp6toVIpOwGKyMM5TwP/0gssY1Jy/LMfpjAsrYN8PR/ADMuu+Z3MCi1x756PzqnxacMyhfpuASgHkG4ifaBbxA=
+	t=1708522121; cv=none; b=ChVxc5FeQ9+JBq+vkiFwuKvrUoOP0s1cmiJcqyKNCpKQXOnebi/VWh9GkP4vgbdS9/IlPSbGMYz3zH+O4oQ3ge92Ja5OchtcxqvEaevaOhf7KfHPQPOBSsLpqT4ZKlT6sTgqXq3tbCJUH9JskbWxUPJGbIzb0ehrYaQFobILGWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708516280; c=relaxed/simple;
-	bh=PcS6hrHc4zM3aNBPZPl5peXB3J4AeyjwDc6kvcBzBVo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ExMV64Y5LaOd/3aSYkGN6INzXlOrfS6MoRsAuUbm7QvCzwtTbntlLTFXWqITnQqb5y7oK4BBDniICighP7WLDvFtxglpUapAyK+fzedJybiRSLhewCd+T9aMdG2oZoh4W8TdDxMmEqIgHLIzFlGlTYOwygPDICP3/atmekp9yQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uZb+Yv0b; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uZb+Yv0b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 187B7C433C7;
-	Wed, 21 Feb 2024 11:51:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708516280;
-	bh=PcS6hrHc4zM3aNBPZPl5peXB3J4AeyjwDc6kvcBzBVo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uZb+Yv0bze9K9b2m2pBnmcCDMN3xiz2UfuqObd0Up/Gdbx5IMdRUoNWz1Lm8OuPez
-	 1K+2ShszHJAUT5gCfZj/KWuin1wCNA/NWbFE4oemNykMg6/DKJXX9HKiKKCW8l/dv7
-	 AHYkmHA2Nz/dzbD6byic6sjOhORt3wyzPJQsfgNO+VswUpcWc412gSeytiRlOAnjBI
-	 TaotDw4XLV9dSk/HdTb/FrOCaqCayokCknrp+KeUtr8pr/hhE9HrH/opvuxlJUWq7X
-	 lHaFy/wnHzjyWFDVhqxsWEsgFfRkclhIHbPDf+UXA2HFnhOfLB6bCryLkDNjPO+qx7
-	 /L2AYRXW7nuNA==
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d0bc402c8eso61756111fa.1;
-        Wed, 21 Feb 2024 03:51:20 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXKBdXj+yGfamHNRdXA0hVc/vqFwbQyTXxKJxtv/01x4sbGNe4j6+1/rzXwTlrGnK/043T9S5i6xb2L0nsq0yfUMvLgY7FiyPpaX3fQleKRF47bklI87kK78K4SJrIoCnnun3KxN81WP017DjqvlzePR3HiWUemqV8XcxyCNVI7dSrdn2PacIX+cw/GRmto/ltNViwc63PaZ8gObz6xpp/xaJxRcp/0
-X-Gm-Message-State: AOJu0Yy4/Bl8cPgbWv34zyk6X5LBPVlopNCs2hndnX524CQ9Dp15GhwN
-	Mbi+pcGusfJOoSbnSs7ws854Mlq1/Oy1wZPV3yRlAU9pdaIeCClfvxZRmKq/G7DB21yO5Ro87OA
-	SOnbYyJiNHedIFdplD6eLyvAtg7Y=
-X-Google-Smtp-Source: AGHT+IHKfswrSkZE04vm5563ZxASZgoT8zgTtXA+jAEWbIfCeJAq2Y75jiBuERvfVz9U4iCwNVgOA46fnzcgwpMpBwM=
-X-Received: by 2002:a2e:b747:0:b0:2d2:3a32:259a with SMTP id
- k7-20020a2eb747000000b002d23a32259amr2976534ljo.13.1708516278633; Wed, 21 Feb
- 2024 03:51:18 -0800 (PST)
+	s=arc-20240116; t=1708522121; c=relaxed/simple;
+	bh=jcM7Y8plT+9yKZcGSc7nmPeNy9idDPzXx63Ses56ZJk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=Lw9eWAaP8elQO9gCGBmpqE4E6QhHoCF9Q7LsllObyimR0lXMtInELo3jsRN4oi4J1rMBEbgE4FZi9d8MectE0CTfCaA4/Jtcs7ujglBB7Obf1BGmDQdqsMe942/ilosSrIl14Z0bv6EM+V60NcXxrVDEeuWqvx76joDF1/OZ2hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2AA85FEC;
+	Wed, 21 Feb 2024 05:29:16 -0800 (PST)
+Received: from [10.57.11.178] (unknown [10.57.11.178])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 95FE63F762;
+	Wed, 21 Feb 2024 05:28:32 -0800 (PST)
+Message-ID: <4e9603e9-4127-43f1-92be-6c2b59ff2fe0@arm.com>
+Date: Wed, 21 Feb 2024 13:28:48 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240131104851.2311358-1-john.g.garry@oracle.com>
- <CAK7LNATDMjzmgpBHZFTOJCkTCqpLPq8jEjdrwzEZ3uu7WMG7jg@mail.gmail.com>
- <23c67ffc-64a5-4e19-8fbd-ecb9bfe9d3ff@oracle.com> <CAK7LNASfTW+OMk1cJJWb4E6P+=k0FEsm_=6FDfDF_mTrxJCSMQ@mail.gmail.com>
- <3e2c2def-e7d6-458f-81b3-ab666b41ad21@oracle.com> <fb8d24cb-b5c4-41be-abf4-33bda08a1059@oracle.com>
-In-Reply-To: <fb8d24cb-b5c4-41be-abf4-33bda08a1059@oracle.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Wed, 21 Feb 2024 20:50:42 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ_r5yUjNpOppLkDBQ12sDxBYQTvRZGn1ng8D1POfZr_A@mail.gmail.com>
-Message-ID: <CAK7LNAQ_r5yUjNpOppLkDBQ12sDxBYQTvRZGn1ng8D1POfZr_A@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/4] Introduce uts_release
-To: John Garry <john.g.garry@oracle.com>
-Cc: mcgrof@kernel.org, russ.weight@linux.dev, gregkh@linuxfoundation.org, 
-	rafael@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, keescook@chromium.org, nathan@kernel.org, 
-	nicolas@fjasle.eu, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/5] Rework system pressure interface to the scheduler
+Content-Language: en-US
+To: Vincent Guittot <vincent.guittot@linaro.org>
+References: <20240220145947.1107937-1-vincent.guittot@linaro.org>
+Cc: konrad.dybcio@linaro.org, mhiramat@kernel.org, agross@kernel.org,
+ rafael@kernel.org, sudeep.holla@arm.com, will@kernel.org,
+ linux@armlinux.org.uk, bristot@redhat.com, mgorman@suse.de,
+ bsegall@google.com, rostedt@goodmis.org, andersson@kernel.org,
+ dietmar.eggemann@arm.com, juri.lelli@redhat.com, mingo@redhat.com,
+ linux-pm@vger.kernel.org, catalin.marinas@arm.com,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ corbet@lwn.net, amit.kachhap@gmail.com, daniel.lezcano@linaro.org,
+ peterz@infradead.org, linux-arm-msm@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ gregkh@linuxfoundation.org, vschneid@redhat.com, rui.zhang@intel.com,
+ viresh.kumar@linaro.org
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <20240220145947.1107937-1-vincent.guittot@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 21, 2024 at 6:01=E2=80=AFPM John Garry <john.g.garry@oracle.com=
-> wrote:
->
-> On 08/02/2024 10:08, John Garry wrote:
-> > On 05/02/2024 23:10, Masahiro Yamada wrote:
-> >>>> I think what you can contribute are:
-> >>>>
-> >>>>    - Explore the UTS_RELEASE users, and check if you can get rid of =
-it.
-> >>> Unfortunately I expect resistance for this. I also expect places like=
- FW
-> >>> loader it is necessary. And when this is used in sysfs, people will s=
-ay
-> >>> that it is part of the ABI now.
-> >>>
-> >>> How about I send the patch to update to use init_uts_ns and mention a=
-lso
-> >>> that it would be better to not use at all, if possible? I can cc you.
-> >>
-> >> OK.
-> >>
-> >>
-> >> As I mentioned in the previous reply, the replacement is safe
-> >> for builtin code.
-> >>
-> >> When you touch modular code, please pay a little more care,
-> >> because UTS_RELEASE and init_utsname()->release
-> >> may differ when CONFIG_MODVERSIONS=3Dy.
-> >>
-> >
-> > Are you saying that we may have a different release version kernel and
-> > module built with CONFIG_MODVERSIONS=3Dy, and the module was using
-> > UTS_RELEASE for something? That something may be like setting some info
-> > in a sysfs file, like in this example:
-> >
-> > static ssize_t target_core_item_version_show(struct config_item *item,
-> >          char *page)
-> > {
-> >      return sprintf(page, "Target Engine Core ConfigFS Infrastructure %=
-s"
-> >          " on %s/%s on "UTS_RELEASE"\n", TARGET_CORE_VERSION,
-> >          utsname()->sysname, utsname()->machine);
-> > }
-> >
-> > And the intention is to use the module codebase release version and not
-> > the kernel codebase release version. Hence utsname() is used for
-> > .sysname and .machine, but not .release .
->
-> Hi Masahiro,
->
-> Can you comment on whether I am right about CONFIG_MODVERSIONS, above?
->
-> Thanks,
-> John
+Hi Vincent,
+
+On 2/20/24 14:59, Vincent Guittot wrote:
+> Following the consolidation and cleanup of CPU capacity in [1], this serie
+> reworks how the scheduler gets the pressures on CPUs. We need to take into
+> account all pressures applied by cpufreq on the compute capacity of a CPU
+> for dozens of ms or more and not only cpufreq cooling device or HW
+> mitigiations. We split the pressure applied on CPU's capacity in 2 parts:
+> - one from cpufreq and freq_qos
+> - one from HW high freq mitigiation.
+> 
+> The next step will be to add a dedicated interface for long standing
+> capping of the CPU capacity (i.e. for seconds or more) like the
+> scaling_max_freq of cpufreq sysfs. The latter is already taken into
+> account by this serie but as a temporary pressure which is not always the
+> best choice when we know that it will happen for seconds or more.
+> 
+> [1] https://lore.kernel.org/lkml/20231211104855.558096-1-vincent.guittot@linaro.org/
+> 
+> Change since v4:
+> - Add READ_ONCE() in cpufreq_get_pressure()
+> - Add ack and reviewed tags
+> 
+> Change since v3:
+> - Fix uninitialized variables in cpufreq_update_pressure()
+> 
+> Change since v2:
+> - Rework cpufreq_update_pressure()
+> 
+> Change since v1:
+> - Use struct cpufreq_policy as parameter of cpufreq_update_pressure()
+> - Fix typos and comments
+> - Make sched_thermal_decay_shift boot param as deprecated
+> 
+> Vincent Guittot (5):
+>    cpufreq: Add a cpufreq pressure feedback for the scheduler
+>    sched: Take cpufreq feedback into account
+>    thermal/cpufreq: Remove arch_update_thermal_pressure()
+>    sched: Rename arch_update_thermal_pressure into
+>      arch_update_hw_pressure
+>    sched/pelt: Remove shift of thermal clock
+> 
+>   .../admin-guide/kernel-parameters.txt         |  1 +
+>   arch/arm/include/asm/topology.h               |  6 +-
+>   arch/arm64/include/asm/topology.h             |  6 +-
+>   drivers/base/arch_topology.c                  | 26 ++++----
+>   drivers/cpufreq/cpufreq.c                     | 36 +++++++++++
+>   drivers/cpufreq/qcom-cpufreq-hw.c             |  4 +-
+>   drivers/thermal/cpufreq_cooling.c             |  3 -
+>   include/linux/arch_topology.h                 |  8 +--
+>   include/linux/cpufreq.h                       | 10 +++
+>   include/linux/sched/topology.h                |  8 +--
+>   .../{thermal_pressure.h => hw_pressure.h}     | 14 ++---
+>   include/trace/events/sched.h                  |  2 +-
+>   init/Kconfig                                  | 12 ++--
+>   kernel/sched/core.c                           |  8 +--
+>   kernel/sched/fair.c                           | 63 +++++++++----------
+>   kernel/sched/pelt.c                           | 18 +++---
+>   kernel/sched/pelt.h                           | 16 ++---
+>   kernel/sched/sched.h                          | 22 +------
+>   18 files changed, 144 insertions(+), 119 deletions(-)
+>   rename include/trace/events/{thermal_pressure.h => hw_pressure.h} (55%)
+> 
 
 
+The code looks good and works as expected. The time delays in those
+old mechanisms that were important to me are good now. The boost is
+handled, cpufreq capping from sysfs - all good. Also the last patch
+which removes the shift and makes it obsolete. Thanks!
 
-Your understanding about CONFIG_MODVERSIONS is correct.
+Feel free to add to all patches:
 
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+Tested-by: Lukasz Luba <lukasz.luba@arm.com>
 
-
-
---=20
-Best Regards
-Masahiro Yamada
+Regards,
+Lukasz
