@@ -1,75 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D891482EA;
-	Thu, 22 Feb 2024 17:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0A71586CB
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Feb 2024 17:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708622800; cv=none; b=Kp8EmxvN0lVhsR10hKOvYE98GvOgln+0sIc6UsRGI7G4UzxLD/pgDs5fskObtQZvgHfN2YJcE5/voSn98RxRyF55yLQPlyBYmHoH4m0+YiyuuosD4qbSFlytsKjnlGhrmcUmI2yX+mYbzFl8AVrrG4tJwvNez1/Y/xybVU3DUUU=
+	t=1708624790; cv=none; b=OrH6h7MWeyTh2w8+uF02azpOux7CenFjmqrfCYdnaFA5IfXF6cZ1P9h02kdGD+VGwwdW0Edhwabwxi2RvdOh+8euyzBog09uwaMwlh+mLFBW5yQjrW7dD6g/z+OMTCTBEhaBpwuVpD0WGVu0uAw9g704vUGk0tQlNn1hRDJdLxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708622800; c=relaxed/simple;
-	bh=6g0prWZ7Mq8U3GlrMjmMcSvysWHUsBuonuNf4FT0a8Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=bFvMRJP38UBKezeFjz5vsHDykBSnOAvmHlEz/JPQ9jvpJYi/hSXyPOsiXcffGUkUK1A67bsvJjBasxmcy3QJ0KGRs+eBGOU5cad+Y22fAXfWO1s8EU7d6kP7OnaJwRiQ8Jw3lz3YTpvXXyqMkdsG0Rf9ZaGSpcu5P4K+kBCve84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6111C433C7;
-	Thu, 22 Feb 2024 17:26:38 +0000 (UTC)
-Date: Thu, 22 Feb 2024 12:28:28 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>, Jeff
- Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga Kornievskaia
- <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>
-Subject: [PATCH] NFSD: Fix nfsd_clid_class use of __string_len() macro
-Message-ID: <20240222122828.3d8d213c@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708624790; c=relaxed/simple;
+	bh=fvwsKYe0sii5hYFlzMGzO5Ryz+nnM+pKugmbYqz/abQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EDiuvUSPeRfpHTKf4boZd24R5v1UkVaxxzV+XyBgX2GZaK+gyptxnPekf62BHo/uhEfJnk/KMy80w6N1y2RiGea+LeO58qrUg4YhPtxTBmtZ4XyoaT0AO3RBL1rUGNtz6Q5fgaB9G6v67Cxzso6A5By8KXHoHeOpt4EJ92KKyiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KtqvEuLS; arc=none smtp.client-ip=209.85.217.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KtqvEuLS"
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-470455b5352so983315137.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Feb 2024 09:59:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708624788; x=1709229588; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lAfh0deUlctQewLM9rYvzLmpV0jruOlVqgBOdUhaXcI=;
+        b=KtqvEuLS+5Ie6g8HMyfv9ed1jJ2/tAIsuOpR/xsv5o2LIrQLEeCNLIZr9uXntaniX1
+         HfnrBAYU0qbtCLjMV/M3c/XLwQiYXEsxgCbpXsqbS3F/UhJgoeNmPtguinTWC6IgJbPU
+         +zEfwyk+ttsMuyUFk5TYaB99eGQ2tahZ8ZMhW3zB0YB7gp709vF1mGitR5jLpCmAx2UH
+         tH0LpZ0xpW1JlFDsc78HcN+jjBjy+D/zwz8BLj+KgB0NsDxVjVsDBqPwVCRiVsi21MlI
+         dJW7icCfhwyBIPzkQBJbZaSvPCQdkvjWRk/e74fi6yBbYe1tQ3GLNWCQEP2TCVtyZl8l
+         cMjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708624788; x=1709229588;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lAfh0deUlctQewLM9rYvzLmpV0jruOlVqgBOdUhaXcI=;
+        b=ftL4IpLTxvmGz+T+jhjnmq+KrkA59XAG53kQOe8zJJ4jM52w3gEWVDPZ2OJDJZgret
+         WycggePCsCGw8lo8bSfCMnjKiOyhWMNj6uhG63F/fgJOKLLSPYT5yXOmBqZqrsmzRJSp
+         HRjP4idMBhzWr8e2wZaRYnLSWlnqHPfq1WLx73BZcLAX7TTY0/J5B/x/P01BDgOqvQhl
+         Hvx7Rwy4b99kqSXSQNCOoKkP53HEM2xfIBOr0kzd5YNyZtepyopxmO4AbZdIcM6TFuq0
+         xPsMe6cUweWjFPo8b0teTimPThKLtTWv/qH9TcT9xv18jqbvSr9bujM/ljMCi70EdhKv
+         DBLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVY47JZ0hDReSqBBjR4QwfL1djpRUd6JaFRz89r/w2KLMzeQ7zGklw1hJ6ZDAdGTWbLzARxFZyL5M8fe9BoobjMMTeo9f0fR9+T7cKYywYS1MYv
+X-Gm-Message-State: AOJu0Yzio+7c8bcgvxg6efIiynNi4QGvNLjbqe8sg6TQLAxHXWoVg2rC
+	q94Z6gjNG5hyjnBhMAJ2kSKWvkCqR7RQqQJq7K/7O6k2iHsbPqgH4CFE/0qSw0BCnLYxg7QJ/wA
+	7hyLila4Z6geFBwhlvzgmp/N/lH+gyf8uw7QsMkxC0sF05m4pf2TL
+X-Google-Smtp-Source: AGHT+IFAcQHAiZ1fQ8mfYjH9A8yIg25e7KdgVRcZ1st9GcOueJ6vRhI4a0/vUzUq8j3sQqvTbwrNpNPCpjk0U2FyxTo=
+X-Received: by 2002:a67:fbd3:0:b0:470:5fdd:d5c with SMTP id
+ o19-20020a67fbd3000000b004705fdd0d5cmr12228729vsr.31.1708624787593; Thu, 22
+ Feb 2024 09:59:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240111210539.636607-1-carlosgalo@google.com>
+ <ZdWshXSoLthv6J6b@tiehlicka> <CABtOLR+gpU2BYxcGCCqccZGcRDF337z3JJ=7nvC47ANHmS1tNA@mail.gmail.com>
+ <ZddXLGdJ0QDZTvJS@tiehlicka>
+In-Reply-To: <ZddXLGdJ0QDZTvJS@tiehlicka>
+From: Carlos Galo <carlosgalo@google.com>
+Date: Thu, 22 Feb 2024 09:59:34 -0800
+Message-ID: <CABtOLR+G6jyfV_7YUabJnmt=oN12fzPHB7viq9fTJb44wtefiw@mail.gmail.com>
+Subject: Re: [PATCH v2] mm: Update mark_victim tracepoints fields
+To: Michal Hocko <mhocko@suse.com>
+Cc: rostedt@goodmis.org, akpm@linux-foundation.org, surenb@google.com, 
+	android-mm@google.com, kernel-team@android.com, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Thu, Feb 22, 2024 at 6:16=E2=80=AFAM Michal Hocko <mhocko@suse.com> wrot=
+e:
+>
+> On Wed 21-02-24 13:30:51, Carlos Galo wrote:
+> > On Tue, Feb 20, 2024 at 11:55=E2=80=AFPM Michal Hocko <mhocko@suse.com>=
+ wrote:
+> > >
+> > > Hi,
+> > > sorry I have missed this before.
+> > >
+> > > On Thu 11-01-24 21:05:30, Carlos Galo wrote:
+> > > > The current implementation of the mark_victim tracepoint provides o=
+nly
+> > > > the process ID (pid) of the victim process. This limitation poses
+> > > > challenges for userspace tools that need additional information
+> > > > about the OOM victim. The association between pid and the additiona=
+l
+> > > > data may be lost after the kill, making it difficult for userspace =
+to
+> > > > correlate the OOM event with the specific process.
+> > >
+> > > You are correct that post OOM all per-process information is lost. On
+> > > the other hand we do dump all this information to the kernel log. Cou=
+ld
+> > > you explain why that is not suitable for your purpose?
+> >
+> > Userspace tools often need real-time visibility into OOM situations
+> > for userspace intervention. Our use case involves utilizing BPF
+> > programs, along with BPF ring buffers, to provide OOM notification to
+> > userspace. Parsing kernel logs would be significant overhead as
+> > opposed to the event based BPF approach.
+>
+> Please put that into the changelog.
 
-I'm working on restructuring the __string* macros so that it doesn't need
-to recalculate the string twice. That is, it will save it off when
-processing __string() and the __assign_str() will not need to do the work
-again as it currently does.
+Will do.
 
-Currently __string_len(item, src, len) doesn't actually use "src", but my
-changes will require src to be correct as that is where the __assign_str()
-will get its value from.
+> > > > In order to mitigate this limitation, add the following fields:
+> > > >
+> > > > - UID
+> > > >    In Android each installed application has a unique UID. Includin=
+g
+> > > >    the `uid` assists in correlating OOM events with specific apps.
+> > > >
+> > > > - Process Name (comm)
+> > > >    Enables identification of the affected process.
+> > > >
+> > > > - OOM Score
+> > > >    Allows userspace to get additional insights of the relative kill
+> > > >    priority of the OOM victim.
+> > >
+> > > What is the oom score useful for?
+> > >
+> > The OOM score provides us a measure of the victim's importance. On the
+> > android side, it allows us to identify if top or foreground apps are
+> > killed, which have user perceptible impact.
+>
+> But the value on its own (wihtout knowing scores of other tasks) doesn't
+> really tell you anything, does it?
 
-The event class nfsd_clid_class has:
+Android uses the OOM adj_score ranges  to categorize app state
+(foreground, background, ...). I'll resend a v3 with the commit text
+updated to include details about this.
 
-  __string_len(name, name, clp->cl_name.len)
+> > > Is there any reason to provide a different information from the one
+> > > reported to the kernel log?
+> > > __oom_kill_process:
+> > > pr_err("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, fi=
+le-rss:%lukB, shmem-rss:%lukB, UID:%u pgtables:%lukB oom_score_adj:%hd\n",
+> > >                 message, task_pid_nr(victim), victim->comm, K(mm->tot=
+al_vm),
+> > >                 K(get_mm_counter(mm, MM_ANONPAGES)),
+> > >                 K(get_mm_counter(mm, MM_FILEPAGES)),
+> > >                 K(get_mm_counter(mm, MM_SHMEMPAGES)),
+> > >                 from_kuid(&init_user_ns, task_uid(victim)),
+> > >                 mm_pgtables_bytes(mm) >> 10, victim->signal->oom_scor=
+e_adj);
+> > >
+> >
+> > We added these fields we need (UID, process name, and OOM score), but
+> > we're open to adding the others if you prefer that for consistency
+> > with the kernel log.
+>
+> yes, I think the consistency would be better here. For one it reports
+> numbers which can tell quite a lot about the killed victim. It is a
+> superset of what you already asking for. With a notable exception of the
+> oom_score which is really dubious without a wider context.
 
-But the second "name" does not exist and causes my changes to fail to
-build. That second parameter should be: clp->cl_name.data.
+Sounds good, I'll resend a v3 that includes these fields as well.
 
-Fixes: d27b74a8675ca ("NFSD: Use new __string_len C macros for nfsd_clid_class")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- fs/nfsd/trace.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+Carlos
 
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index d1e8cf079b0f..2cd57033791f 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -843,7 +843,7 @@ DECLARE_EVENT_CLASS(nfsd_clid_class,
- 		__array(unsigned char, addr, sizeof(struct sockaddr_in6))
- 		__field(unsigned long, flavor)
- 		__array(unsigned char, verifier, NFS4_VERIFIER_SIZE)
--		__string_len(name, name, clp->cl_name.len)
-+		__string_len(name, clp->cl_name.data, clp->cl_name.len)
- 	),
- 	TP_fast_assign(
- 		__entry->cl_boot = clp->cl_clientid.cl_boot;
--- 
-2.43.0
-
+> --
+> Michal Hocko
+> SUSE Labs
