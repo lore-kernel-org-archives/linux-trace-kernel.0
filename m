@@ -1,72 +1,69 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541306FCC
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Feb 2024 05:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA763F9E0
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Feb 2024 05:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708578899; cv=none; b=B9RhuwnWKBfS/zvvIKIGMiuEk9/olWgqQWh0Wh3W2ITubjQxYROqpUFZ7qYG+LR8e+0ulULG+IcL3vaxArx627QA0TepJ06x/lwosBgshEzQcFjtkyDZ1xSdJcmqt7AD+E0El620h29q+4Q9iXSn66JXqO0On+daYOa0MorNSNA=
+	t=1708578992; cv=none; b=C2vP9Xd5lxYZQnaOXyj+z1+/idbW48djVrOy3p4Lxb3qSbW6PODQ4/hjarmZ0LeIxTCk1+fx355N7ydTRFV7ghzEYh+In4YdTk1ZurGXXvTeipzQAKqMoC8QkEsFvfM+8kSvfTNg0MaQZ6Sdmzw8Fuf4C8Pv418IBsu2OM17YSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708578899; c=relaxed/simple;
-	bh=3qny8yzuMmyJ1HQecd7Y6U83EBozIttdj4TJ16oo/RA=;
+	s=arc-20240116; t=1708578992; c=relaxed/simple;
+	bh=EYqco1GKfph2qvviCl2qwp3U+UCjcwLr0vJ5cMoQcXI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bf6daFW1UwmnGmljmzsGP+FgeIs5QI0D0MlWv91Los/QUPPCz8qDEh95ifB1LI5HryTQzTK82+qTSkR0fQ4LhY+eR2BgswNLW4WhzW2xkDYtkxMFtsbJ4yKQ5jEJVTQnFThQ7ASu/Kml1EE4aMjTBIFmYnHRyPtrrjef6YWhMdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nbQaCYzF; arc=none smtp.client-ip=209.85.215.177
+	 Content-Type:Content-Disposition:In-Reply-To; b=Onc0+1A4eL9MhGTHgNOrfm3/CGmBc9FezhuNklm/vbG12mVcwrJSWRLzSl6/5UjKX2yPntJfChKC0JjBphVkGIiTHhwVhfWxWHGglohS+XUT+k4bFODjnxPHdbFZrynL8l2ThZQ8jSTk7a8Hhwg2kCWlx6HIA4VhY202gAj9Sss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZQLXTAfk; arc=none smtp.client-ip=209.85.215.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nbQaCYzF"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5d8b887bb0cso6085544a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Feb 2024 21:14:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZQLXTAfk"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5dbcfa0eb5dso6964728a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Feb 2024 21:16:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708578898; x=1709183698; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708578990; x=1709183790; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=SjzQi95PdLFUOi++bhedl7ZKNdPeeAhvaDxnULICb2Q=;
-        b=nbQaCYzFHkSsh5xuQmilSY8caKzng7EsQVlrt0dnXkF0ss7nOHTAG5hGAOAWJvWpoI
-         NgKvwLyUV9VDTIz0RjIAdBrhQdxYX2DJo6jbri4kL8qc00JgB81yovWj8ZC0j14/2pNt
-         C8SSQWpgYZPydqS8B8ptc9VpTJ4xPaQB6rx0EIyJD0f9m/eBS+kNliKShqaVi+OKzDOV
-         fieXFpCRfs/VjpObzj2P5ZBlBhh2K4IcaLSnmsJdHJa81h61qAtkz2MMaPuNIvv/aJU5
-         B1rqQ28lMF1De2os6/HLPzuZM5k4mx7DdYjgYxPPZkWARBJ/uAalDSNV4769+tIHyPRt
-         r9/w==
+        bh=duIZxpvn6RingjjUFfVcxJVtZ2NkUSkNaC91pQVkegY=;
+        b=ZQLXTAfk0RvwuVmUULKeLpNK72O3zrBu5wE1qw3+2yR0JULUCbtWv8gI7vM34cq7BB
+         cxvlDNdpDt6w25riE3cK4aDqefh9ZoXIyIeU53K6P5ZKdsCBarecrUKVTeDMdaw2ff5U
+         tJe+UitS43xJ7zxgUQb8mQw4qtwPfr30WQCa3nXG2l4319NT6yG1FQ6EiJHXK9w8VKBj
+         WAfg5BMAdkMj6RH6NYBUIfTbHXTHchQkgOrjdUVHB8psQbEMG4lAfKJO6hQ13iidhH5G
+         oBwKYoVQFI8W1mAnM6j4t2Wo6/5g0uYPXnBnWBuXLby53HGl2R+es0dMmf4tvLRKSq9k
+         trTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708578898; x=1709183698;
+        d=1e100.net; s=20230601; t=1708578990; x=1709183790;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SjzQi95PdLFUOi++bhedl7ZKNdPeeAhvaDxnULICb2Q=;
-        b=Ltz5+rJNt04JatIPc5A/VmXqui8MulhIPx48XPP1dOR/SCUR3LEnUFIVcW7qzhSpq9
-         HHshTiqlnknQjmSZR2iyBlLkGqqb0BXLteP1s0PtJnt+XBQ85Ey8+rRSAL1neETwNvYk
-         u8HDEVu7bj1jkEk7vqW2FQFp2MhI3zgBEc4fvi08bTYDSeL9fnrGoaH66A4QszAbY4ag
-         NTJWrXyh8XivtvT4OdSHAXQkXw+E3apcy0OOgCzVwhATOH4ztoy2yedo12vGMIzlRCrD
-         mYiLtiy+eGEBDl0oOCbm7VIVbgxf3BQwz8uXHYvp2AJqzAz7dCbsi5OxFlfzOYNrY0S1
-         lHKA==
-X-Forwarded-Encrypted: i=1; AJvYcCV3xESOCw7m4OgNZxlWeM5Xe23v5klldTrbsDF/3cgi8jctk5A3GfJBMMhndXpLRn8r+aaRo1A1NjxqtawVUyJV4Z70gP/A7GQR/Hg4Vy0aSZSf
-X-Gm-Message-State: AOJu0Ywoe1SIhDlwWv47H9zQj+mxDWfQKN8p0sRDHxm6LtGBluOggMOd
-	VeNde5ea/BwMlAjn3+oq32/J2LG0S6lT4kZW38pr66KpYYJCn7Xh8JwjmDDjHw==
-X-Google-Smtp-Source: AGHT+IGu63MPfTR0XWOYa6xte+sdI5ID4/pSdH0NA8SBF3CrpzvthDgTRKHWJ6IOCsRKwwxCAnXzlQ==
-X-Received: by 2002:a05:6a20:d04c:b0:19e:9a59:20df with SMTP id hv12-20020a056a20d04c00b0019e9a5920dfmr26902478pzb.9.1708578897688;
-        Wed, 21 Feb 2024 21:14:57 -0800 (PST)
+        bh=duIZxpvn6RingjjUFfVcxJVtZ2NkUSkNaC91pQVkegY=;
+        b=S5rbbetdc4tQ012tw6vRKXIeLexT0JgtdkoBIN9JnByuKk1brM1nwifEFjcITByWhA
+         4j/vzZCt8FA9LIv4FqZjDk+DVT5cn7pvJlRbMBWkIIUeYmLYTNZIYQI6zinCW5nOG5Hh
+         BSZmphC6+Nq8V6iSMZi9yhMJH0/QeTw4Vv6YDwbDCXp2LpjJ4zw744a1EKBwGwIj9xql
+         aO6tRMuQfK6F/YiYgyvX5oJP3fK6Q9ndSbOLMzCbhDUkLCgQf8SxTMPy04SUJRGvvImA
+         3tHDUTkgfq3EQiFi5h6y17vvnYMlKhITjKN6UxFhkh2QKcVFuT9Tjud4GCVG6Oc+pr32
+         J4ww==
+X-Forwarded-Encrypted: i=1; AJvYcCXdA4/iTqXU6LMtPg2K4C0eYUu4T0JCvjSeesgLhQJenUlzWcHvDnkriL+4t7tYiSQeAZeua8Y/dXqcR2/rK+lxHlipFIKnzK4jktJVoRtd39OP
+X-Gm-Message-State: AOJu0Ywo+G7Yi1s0A0LHrzj0vsOKc5oSMY6xx4swseOcWVdIXFtaaBlU
+	zmMY9/u2nziL43Hgbfc6yYsPk54ctxqXgFFxczJbkSzhPARiQlQTSVF9uOzG+A==
+X-Google-Smtp-Source: AGHT+IF1BbQ0EnZKJMj1ATUyc9q4gcsnLCvpFzHDOMbytY3INdyz3p1P9lC6mFjFGyQVSpe1j4yvSg==
+X-Received: by 2002:a05:6a21:1693:b0:19e:b6e0:8d26 with SMTP id np19-20020a056a21169300b0019eb6e08d26mr19510388pzb.15.1708578990015;
+        Wed, 21 Feb 2024 21:16:30 -0800 (PST)
 Received: from thinkpad ([117.193.212.166])
-        by smtp.gmail.com with ESMTPSA id li7-20020a170903294700b001db35d8ea6esm7109815plb.294.2024.02.21.21.14.54
+        by smtp.gmail.com with ESMTPSA id p11-20020a170902bd0b00b001dc35e04b02sm1933206pls.32.2024.02.21.21.16.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 21:14:57 -0800 (PST)
-Date: Thu, 22 Feb 2024 10:44:50 +0530
+        Wed, 21 Feb 2024 21:16:29 -0800 (PST)
+Date: Thu, 22 Feb 2024 10:46:21 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-	linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
-	linux-arm-msm@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
-	quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-	quic_parass@quicinc.com
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
+	quic_ramkri@quicinc.com, quic_nitegupt@quicinc.com,
+	quic_skananth@quicinc.com, quic_parass@quicinc.com
 Subject: Re: [PATCH] bus: mhi: host: Change the trace string for the
  userspace tools mapping
-Message-ID: <20240222051450.GC3374@thinkpad>
+Message-ID: <20240222051621.GD3374@thinkpad>
 References: <20240218-ftrace_string-v1-1-27da85c1f844@quicinc.com>
- <20240221061146.GF11693@thinkpad>
- <20240221091103.37497ed0@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -76,33 +73,69 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240221091103.37497ed0@gandalf.local.home>
+In-Reply-To: <20240218-ftrace_string-v1-1-27da85c1f844@quicinc.com>
 
-On Wed, Feb 21, 2024 at 09:11:03AM -0500, Steven Rostedt wrote:
-> On Wed, 21 Feb 2024 11:41:46 +0530
-> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
+On Sun, Feb 18, 2024 at 02:13:39PM +0530, Krishna chaitanya chundru wrote:
+> User space tools can't map strings if we use directly, as the string
+> address is internal to kernel.
 > 
-> > On Sun, Feb 18, 2024 at 02:13:39PM +0530, Krishna chaitanya chundru wrote:
-> > > User space tools can't map strings if we use directly, as the string
-> > > address is internal to kernel.
-> > > 
-> > > So add trace point strings for the user space tools to map strings
-> > > properly.
-> > > 
-> > > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>  
-> > 
-> > Reported-by: Steven Rostedt <rostedt@goodmis.org>
+> So add trace point strings for the user space tools to map strings
+> properly.
 > 
-> Suggested-by: may be more accurate?
-> 
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 
-Sure. Will change it while applying.
+Applied to mhi-next!
 
 - Mani
 
-> -- Steve
+> ---
+>  drivers/bus/mhi/host/main.c  | 4 ++--
+>  drivers/bus/mhi/host/trace.h | 2 ++
+>  2 files changed, 4 insertions(+), 2 deletions(-)
 > 
-> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> diff --git a/drivers/bus/mhi/host/main.c b/drivers/bus/mhi/host/main.c
+> index 2d38f6005da6..15d657af9b5b 100644
+> --- a/drivers/bus/mhi/host/main.c
+> +++ b/drivers/bus/mhi/host/main.c
+> @@ -1340,7 +1340,7 @@ static int mhi_update_channel_state(struct mhi_controller *mhi_cntrl,
+>  	enum mhi_cmd_type cmd = MHI_CMD_NOP;
+>  	int ret;
+>  
+> -	trace_mhi_channel_command_start(mhi_cntrl, mhi_chan, to_state, "Updating");
+> +	trace_mhi_channel_command_start(mhi_cntrl, mhi_chan, to_state, TPS("Updating"));
+>  	switch (to_state) {
+>  	case MHI_CH_STATE_TYPE_RESET:
+>  		write_lock_irq(&mhi_chan->lock);
+> @@ -1407,7 +1407,7 @@ static int mhi_update_channel_state(struct mhi_controller *mhi_cntrl,
+>  		write_unlock_irq(&mhi_chan->lock);
+>  	}
+>  
+> -	trace_mhi_channel_command_end(mhi_cntrl, mhi_chan, to_state, "Updated");
+> +	trace_mhi_channel_command_end(mhi_cntrl, mhi_chan, to_state, TPS("Updated"));
+>  exit_channel_update:
+>  	mhi_cntrl->runtime_put(mhi_cntrl);
+>  	mhi_device_put(mhi_cntrl->mhi_dev);
+> diff --git a/drivers/bus/mhi/host/trace.h b/drivers/bus/mhi/host/trace.h
+> index d12a98d44272..368515dcb22d 100644
+> --- a/drivers/bus/mhi/host/trace.h
+> +++ b/drivers/bus/mhi/host/trace.h
+> @@ -84,6 +84,8 @@ DEV_ST_TRANSITION_LIST
+>  #define dev_st_trans(a, b)		{ DEV_ST_TRANSITION_##a, b },
+>  #define dev_st_trans_end(a, b)		{ DEV_ST_TRANSITION_##a, b }
+>  
+> +#define TPS(x)	tracepoint_string(x)
+> +
+>  TRACE_EVENT(mhi_gen_tre,
+>  
+>  	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+> 
+> ---
+> base-commit: ceeb64f41fe6a1eb9fc56d583983a81f8f3dd058
+> change-id: 20240218-ftrace_string-7677762aa63c
+> 
+> Best regards,
+> -- 
+> Krishna chaitanya chundru <quic_krichai@quicinc.com>
 > 
 
 -- 
