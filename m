@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8ED14B81E;
-	Thu, 22 Feb 2024 22:06:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46C073F20;
+	Thu, 22 Feb 2024 22:11:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708639609; cv=none; b=nOdza6Om5F1IdHbMmHE4T6qLu6Ja9H6KZf9FnLm7pNt5PA3PPOe1oQfT57UFWQiCRvVjPFHiShQwclniEZo9lODGlE3GaMSPnyDpW0C/ES36QPigKx/3uIGXCZGwIo1hmiAY8fSvKLv/kBV64m3NISdCY4j5EpVRGeFWTgklNqo=
+	t=1708639915; cv=none; b=M4Vi89pxeT8CKgOv0hHnndMUpzByY2r70O0Ir0sNfHE5klAYt1Nm03ilK9G06HBA1osWeS+6aOf9T7+j9uHmhGAqa+CMn9vTAdPE4r2uHKh3NFlptXQz3rltp+Gk4wH2EizPa0To1w/jiOLHuETuCFCCPjb3sRSxdV8vD+t3QY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708639609; c=relaxed/simple;
-	bh=CcqVXZKOZvvXSd+1YjEThyoYmIB+ItQXeZkjhL40xkw=;
+	s=arc-20240116; t=1708639915; c=relaxed/simple;
+	bh=p+8uhwqkWinqy5UVg9deOCr1wsUGH7ZlNzrnMxbpJCk=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=geZrlWdRg8qjYtsfKZAlCMcC1W105hnyzrFhsAuKpAZyZYK73bWwOe2kYyEeSHCUgsaPfdPI3YZZ3utuVvO+GOZviIcaW4dyr93oxsdtyw7vFwW6nRkh38jN8C7ux0cu1N3z8QhycaFx1SUK7r8U2tdJo+PgiXezrlGFGYIXCbM=
+	 MIME-Version:Content-Type; b=HbFrHna5KoxRWNvRIxCaYRqoFi4ZIFfm52b8lShWOGOXjtsTCxy3DOiphSdTa1oUb5BXmbWH8E9o7GxTktscmB2xsGwzrpFH17B6jdVX6QsE2gbV9HrR7IU4MNjl6sSeQnBSEZkHW0EYQ9KbpquPSZ7lRC41szybgvn6QmjN5OY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99E38C433F1;
-	Thu, 22 Feb 2024 22:06:48 +0000 (UTC)
-Date: Thu, 22 Feb 2024 17:08:39 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F909C433F1;
+	Thu, 22 Feb 2024 22:11:54 +0000 (UTC)
+Date: Thu, 22 Feb 2024 17:13:45 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Beau Belgrave <beaub@linux.microsoft.com>
 Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v4 1/4] tracing/user_events: Prepare find/delete for
- same name events
-Message-ID: <20240222170839.71c0b1bf@gandalf.local.home>
-In-Reply-To: <20240222001807.1463-2-beaub@linux.microsoft.com>
+Subject: Re: [PATCH v4 2/4] tracing/user_events: Introduce multi-format
+ events
+Message-ID: <20240222171345.25b1a289@gandalf.local.home>
+In-Reply-To: <20240222001807.1463-3-beaub@linux.microsoft.com>
 References: <20240222001807.1463-1-beaub@linux.microsoft.com>
-	<20240222001807.1463-2-beaub@linux.microsoft.com>
+	<20240222001807.1463-3-beaub@linux.microsoft.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -35,46 +35,66 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 22 Feb 2024 00:18:04 +0000
+On Thu, 22 Feb 2024 00:18:05 +0000
 Beau Belgrave <beaub@linux.microsoft.com> wrote:
 
-> The current code for finding and deleting events assumes that there will
-> never be cases when user_events are registered with the same name, but
-> different formats. Scenarios exist where programs want to use the same
-> name but have different formats. An example is multiple versions of a
-> program running side-by-side using the same event name, but with updated
-> formats in each version.
-> 
-> This change does not yet allow for multi-format events. If user_events
-> are registered with the same name but different arguments the programs
-> see the same return values as before. This change simply makes it
-> possible to easily accomodate for this.
+> Currently user_events supports 1 event with the same name and must have
+> the exact same format when referenced by multiple programs. This opens
+> an opportunity for malicous or poorly thought through programs to
 
- accommodate? ;-)
-
-> 
-> Update find_user_event() to take in argument parameters and register
-> flags to accomodate future multi-format event scenarios. Have find
-
-  accommodate
-
-> validate argument matching and return error pointers to cover when
-> an existing event has the same name but different format. Update
-> callers to handle error pointer logic.
-> 
-> Move delete_user_event() to use hash walking directly now that
-> find_user_event() has changed. Delete all events found that match the
-> register name, stop if an error occurs and report back to the user.
-> 
-> Update user_fields_match() to cover list_empty() scenarios now that
-> find_user_event() uses it directly. This makes the logic consistent
-> accross several callsites.
-
-  across ?
-
-I'll update this.
+  malicious? ;-)
 
 -- Steve
 
+> create events that others use with different formats. Another scenario
+> is user programs wishing to use the same event name but add more fields
+> later when the software updates. Various versions of a program may be
+> running side-by-side, which is prevented by the current single format
+> requirement.
+> 
+> Add a new register flag (USER_EVENT_REG_MULTI_FORMAT) which indicates
+> the user program wishes to use the same user_event name, but may have
+> several different formats of the event. When this flag is used, create
+> the underlying tracepoint backing the user_event with a unique name
+> per-version of the format. It's important that existing ABI users do
+> not get this logic automatically, even if one of the multi format
+> events matches the format. This ensures existing programs that create
+> events and assume the tracepoint name will match exactly continue to
+> work as expected. Add logic to only check multi-format events with
+> other multi-format events and single-format events to only check
+> single-format events during find.
+> 
+> Change system name of the multi-format event tracepoint to ensure that
+> multi-format events are isolated completely from single-format events.
+> This prevents single-format names from conflicting with multi-format
+> events if they end with the same suffix as the multi-format events.
+> 
+> Add a register_name (reg_name) to the user_event struct which allows for
+> split naming of events. We now have the name that was used to register
+> within user_events as well as the unique name for the tracepoint. Upon
+> registering events ensure matches based on first the reg_name, followed
+> by the fields and format of the event. This allows for multiple events
+> with the same registered name to have different formats. The underlying
+> tracepoint will have a unique name in the format of {reg_name}.{unique_id}.
+> 
+> For example, if both "test u32 value" and "test u64 value" are used with
+> the USER_EVENT_REG_MULTI_FORMAT the system would have 2 unique
+> tracepoints. The dynamic_events file would then show the following:
+>   u:test u64 count
+>   u:test u32 count
+> 
+> The actual tracepoint names look like this:
+>   test.0
+>   test.1
+> 
+> Both would be under the new user_events_multi system name to prevent the
+> older ABI from being used to squat on multi-formatted events and block
+> their use.
+> 
+> Deleting events via "!u:test u64 count" would only delete the first
+> tracepoint that matched that format. When the delete ABI is used all
+> events with the same name will be attempted to be deleted. If
+> per-version deletion is required, user programs should either not use
+> persistent events or delete them via dynamic_events.
 > 
 > Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
