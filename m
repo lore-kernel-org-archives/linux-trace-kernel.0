@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6FC0140377;
-	Thu, 22 Feb 2024 18:30:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3873073F21;
+	Thu, 22 Feb 2024 18:41:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708626603; cv=none; b=jSIAetVkdBnRU24eKKPpG9TzrismM2Fq/9ritCi7MIVnve9SKAl8ZpvUp500o/0TByj8MXC3t7HSJ3HWBCP6/cNOYUaTvrBx9dUMcV53cZh8+U/an01f6dBDBBXdaBZtuqSHb2Ff0ZDc4ED+33BzPVN6mzYbfWL7OLftje+9piU=
+	t=1708627320; cv=none; b=RQuAuC7cV1TXDnIAlL6ghx95h2g9k5cIevuH3/SginzmmAhn5NYZOhDnGfXPFC3Rhb3K5uEUmY4GuNDVwoxtJc4aOvjoZpSk6Kls8wdE7YT6hFmYk6eAlP8jP5jE+vElTMU3v4IG7F4NvUVhrBgla5uWnB9OGG0EImbRdfiSEWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708626603; c=relaxed/simple;
-	bh=Npnj8evtP1IDJMxVpAu3m1ovc7BdIp5IIXBqQcwayR0=;
+	s=arc-20240116; t=1708627320; c=relaxed/simple;
+	bh=hKALnhFJto5r+V30fxKC0f0D56pLx9xeU/sxkNovT80=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZurJ8YnUDgCZC5vIuVtGshWXynOYlJcKZ5t8Fh2s6cgVNAZJeIJUxhEG4p8LDEtbNVTCAK/ICQgC2wy7dltTcE6EKxjvS5CH97O3jiaaJjVw1wsW2hBS4EZgvl8VfVDvRAogjPC+QMMambvtrJrgKSrL0rwBx2o40I6sfPK03Lw=
+	 MIME-Version:Content-Type; b=UX4+qpSvrCxX3TjXFUBfDD92bh7+DpkhazUSR/vgbEz1tz/Y4Ce5w1HgbDBT5DGvSSFUK4YQO96FyxPwAMThBb2WxI1gCZURoIzQty7ilkxyhBFWVbcBxkr3Bc6HvvaktNBozmb+czGuc6Z/MinpV+DQ6wIGvXym5mPBCoZDebc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F3EBC433F1;
-	Thu, 22 Feb 2024 18:30:02 +0000 (UTC)
-Date: Thu, 22 Feb 2024 13:31:53 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6731C433C7;
+	Thu, 22 Feb 2024 18:41:58 +0000 (UTC)
+Date: Thu, 22 Feb 2024 13:43:49 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, linux-nfs@vger.kernel.org, Jeff
- Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga Kornievskaia
- <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>
-Subject: Re: [PATCH] NFSD: Fix nfsd_clid_class use of __string_len() macro
-Message-ID: <20240222133153.39260aa9@gandalf.local.home>
-In-Reply-To: <ZdeRnhXLhlXN4AqE@manet.1015granger.net>
-References: <20240222122828.3d8d213c@gandalf.local.home>
-	<ZdeRnhXLhlXN4AqE@manet.1015granger.net>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+ intel-gfx@lists.freedesktop.org, "Ville =?UTF-8?B?U3lyasOkbMOk?="
+ <ville.syrjala@linux.intel.com>, Daniel Vetter <daniel@ffwll.ch>, David
+ Airlie <airlied@gmail.com>
+Subject: Re: [PATCH] drm/i915: Add missing ; to __assign_str() macros in
+ tracepoint code
+Message-ID: <20240222134349.1e9a155d@gandalf.local.home>
+In-Reply-To: <20240222133057.2af72a19@gandalf.local.home>
+References: <20240222133057.2af72a19@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,19 +37,23 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 22 Feb 2024 13:25:34 -0500
-Chuck Lever <chuck.lever@oracle.com> wrote:
+On Thu, 22 Feb 2024 13:30:57 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-
-> Do you want me to take this through the nfsd tree, or would you like
-> an Ack from me so you can handle it as part of your clean up? Just
-> in case:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> Acked-by: Chuck Lever <chuck.lever@oracle.com>
+> I'm working on improving the __assign_str() and __string() macros to be
+> more efficient, and removed some unneeded semicolons. This triggered a bug
+> in the build as some of the __assign_str() macros in intel_display_trace
+> was missing a terminating semicolon.
 > 
+> Fixes: 2ceea5d88048b ("drm/i915: Print plane name in fbc tracepoints")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
 
-As my patches depend on this, I can take it with your ack.
-
-Thanks!
+Note, I have patches that depend on this fix, so if one of the maintainers
+would like to just give me an "Acked-by", I'll take it through my tree. I
+doubt it will have any conflicts, unless you are planning on changing the
+given effected events.
 
 -- Steve
