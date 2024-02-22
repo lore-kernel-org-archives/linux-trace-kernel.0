@@ -1,142 +1,117 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA763F9E0
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Feb 2024 05:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB095FB91;
+	Thu, 22 Feb 2024 12:15:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708578992; cv=none; b=C2vP9Xd5lxYZQnaOXyj+z1+/idbW48djVrOy3p4Lxb3qSbW6PODQ4/hjarmZ0LeIxTCk1+fx355N7ydTRFV7ghzEYh+In4YdTk1ZurGXXvTeipzQAKqMoC8QkEsFvfM+8kSvfTNg0MaQZ6Sdmzw8Fuf4C8Pv418IBsu2OM17YSw=
+	t=1708604118; cv=none; b=fFEHtHJqNPfWgbCdyvCAqQav9dB0fc3fvum8XS5om4eq107bTaQ3amlQ8jt0W8KQBJ6OSjHQQb4xMwpxSfjFS8/Zyd/wvzTL1EfeMncJNJuo4TGK2tXJWl54B4NsB3scbPLJoVZxnzKZT69WUC71B3y/5fMp3VkfJMsjIrF1ijA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708578992; c=relaxed/simple;
-	bh=EYqco1GKfph2qvviCl2qwp3U+UCjcwLr0vJ5cMoQcXI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Onc0+1A4eL9MhGTHgNOrfm3/CGmBc9FezhuNklm/vbG12mVcwrJSWRLzSl6/5UjKX2yPntJfChKC0JjBphVkGIiTHhwVhfWxWHGglohS+XUT+k4bFODjnxPHdbFZrynL8l2ThZQ8jSTk7a8Hhwg2kCWlx6HIA4VhY202gAj9Sss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZQLXTAfk; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708604118; c=relaxed/simple;
+	bh=aR0/iErweFnO6qcJO//a4sOh+50XSNo1DNj3Tma421I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=vFDeHYVzYDResBGTWYigC/zpH9MgEx676DaH+VcoLmbNR94so3I+WnBoaJX8JHVaYPfHO19D33DTUP2eyFuAWqTF3BPYeqEmm3ZA/nNyb7u9eapY5QtIersxPeXD1byq6xyWn5uSohoP3Gpt6lU5cFDiD2a3T5WdGLYuWJfuJXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Pf5Ugc6O; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZQLXTAfk"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5dbcfa0eb5dso6964728a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Feb 2024 21:16:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708578990; x=1709183790; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=duIZxpvn6RingjjUFfVcxJVtZ2NkUSkNaC91pQVkegY=;
-        b=ZQLXTAfk0RvwuVmUULKeLpNK72O3zrBu5wE1qw3+2yR0JULUCbtWv8gI7vM34cq7BB
-         cxvlDNdpDt6w25riE3cK4aDqefh9ZoXIyIeU53K6P5ZKdsCBarecrUKVTeDMdaw2ff5U
-         tJe+UitS43xJ7zxgUQb8mQw4qtwPfr30WQCa3nXG2l4319NT6yG1FQ6EiJHXK9w8VKBj
-         WAfg5BMAdkMj6RH6NYBUIfTbHXTHchQkgOrjdUVHB8psQbEMG4lAfKJO6hQ13iidhH5G
-         oBwKYoVQFI8W1mAnM6j4t2Wo6/5g0uYPXnBnWBuXLby53HGl2R+es0dMmf4tvLRKSq9k
-         trTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708578990; x=1709183790;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=duIZxpvn6RingjjUFfVcxJVtZ2NkUSkNaC91pQVkegY=;
-        b=S5rbbetdc4tQ012tw6vRKXIeLexT0JgtdkoBIN9JnByuKk1brM1nwifEFjcITByWhA
-         4j/vzZCt8FA9LIv4FqZjDk+DVT5cn7pvJlRbMBWkIIUeYmLYTNZIYQI6zinCW5nOG5Hh
-         BSZmphC6+Nq8V6iSMZi9yhMJH0/QeTw4Vv6YDwbDCXp2LpjJ4zw744a1EKBwGwIj9xql
-         aO6tRMuQfK6F/YiYgyvX5oJP3fK6Q9ndSbOLMzCbhDUkLCgQf8SxTMPy04SUJRGvvImA
-         3tHDUTkgfq3EQiFi5h6y17vvnYMlKhITjKN6UxFhkh2QKcVFuT9Tjud4GCVG6Oc+pr32
-         J4ww==
-X-Forwarded-Encrypted: i=1; AJvYcCXdA4/iTqXU6LMtPg2K4C0eYUu4T0JCvjSeesgLhQJenUlzWcHvDnkriL+4t7tYiSQeAZeua8Y/dXqcR2/rK+lxHlipFIKnzK4jktJVoRtd39OP
-X-Gm-Message-State: AOJu0Ywo+G7Yi1s0A0LHrzj0vsOKc5oSMY6xx4swseOcWVdIXFtaaBlU
-	zmMY9/u2nziL43Hgbfc6yYsPk54ctxqXgFFxczJbkSzhPARiQlQTSVF9uOzG+A==
-X-Google-Smtp-Source: AGHT+IF1BbQ0EnZKJMj1ATUyc9q4gcsnLCvpFzHDOMbytY3INdyz3p1P9lC6mFjFGyQVSpe1j4yvSg==
-X-Received: by 2002:a05:6a21:1693:b0:19e:b6e0:8d26 with SMTP id np19-20020a056a21169300b0019eb6e08d26mr19510388pzb.15.1708578990015;
-        Wed, 21 Feb 2024 21:16:30 -0800 (PST)
-Received: from thinkpad ([117.193.212.166])
-        by smtp.gmail.com with ESMTPSA id p11-20020a170902bd0b00b001dc35e04b02sm1933206pls.32.2024.02.21.21.16.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 21:16:29 -0800 (PST)
-Date: Thu, 22 Feb 2024 10:46:21 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
-	quic_ramkri@quicinc.com, quic_nitegupt@quicinc.com,
-	quic_skananth@quicinc.com, quic_parass@quicinc.com
-Subject: Re: [PATCH] bus: mhi: host: Change the trace string for the
- userspace tools mapping
-Message-ID: <20240222051621.GD3374@thinkpad>
-References: <20240218-ftrace_string-v1-1-27da85c1f844@quicinc.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Pf5Ugc6O"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1708604107; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=gbYCQh1oK43/frtg3H58A79hC36/GOmubLPeJsENmSk=;
+	b=Pf5Ugc6ORAETVoZYrBhQmOdJMn1E47i4SLMys9FkBqFnghME1IEEFcFa59qB/oNb32KTW6ihgSNQtugXZXz6Y1wl5qYhP611yQ+xryUO8SW1JsCHTVgypkiSmkj/PO6HyJw3qaosD/JKY68oRANMGY6SHBvjDcACuKANK0c7Xxo=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R931e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=xiangzao@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0W10zohM_1708604097;
+Received: from 30.178.67.169(mailfrom:xiangzao@linux.alibaba.com fp:SMTPD_---0W10zohM_1708604097)
+          by smtp.aliyun-inc.com;
+          Thu, 22 Feb 2024 20:15:06 +0800
+Message-ID: <7420f9b5-2283-419f-8c6b-705f8b0c53f6@linux.alibaba.com>
+Date: Thu, 22 Feb 2024 20:14:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240218-ftrace_string-v1-1-27da85c1f844@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests/ftrace: Limit length in subsystem-enable tests
+To: Steven Rostedt <rostedt@goodmis.org>,
+ Shuah Khan <skhan@linuxfoundation.org>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, shuah@kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20240205131233.13686-1-xiangzao@linux.alibaba.com>
+ <20240205082120.4144fb6f@rorschach.local.home>
+From: Yuanhe Shu <xiangzao@linux.alibaba.com>
+In-Reply-To: <20240205082120.4144fb6f@rorschach.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Feb 18, 2024 at 02:13:39PM +0530, Krishna chaitanya chundru wrote:
-> User space tools can't map strings if we use directly, as the string
-> address is internal to kernel.
-> 
-> So add trace point strings for the user space tools to map strings
-> properly.
-> 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 
-Applied to mhi-next!
 
-- Mani
-
-> ---
->  drivers/bus/mhi/host/main.c  | 4 ++--
->  drivers/bus/mhi/host/trace.h | 2 ++
->  2 files changed, 4 insertions(+), 2 deletions(-)
+On 2024/2/5 21:21, Steven Rostedt wrote:
+> On Mon,  5 Feb 2024 21:12:33 +0800
+> Yuanhe Shu <xiangzao@linux.alibaba.com> wrote:
 > 
-> diff --git a/drivers/bus/mhi/host/main.c b/drivers/bus/mhi/host/main.c
-> index 2d38f6005da6..15d657af9b5b 100644
-> --- a/drivers/bus/mhi/host/main.c
-> +++ b/drivers/bus/mhi/host/main.c
-> @@ -1340,7 +1340,7 @@ static int mhi_update_channel_state(struct mhi_controller *mhi_cntrl,
->  	enum mhi_cmd_type cmd = MHI_CMD_NOP;
->  	int ret;
->  
-> -	trace_mhi_channel_command_start(mhi_cntrl, mhi_chan, to_state, "Updating");
-> +	trace_mhi_channel_command_start(mhi_cntrl, mhi_chan, to_state, TPS("Updating"));
->  	switch (to_state) {
->  	case MHI_CH_STATE_TYPE_RESET:
->  		write_lock_irq(&mhi_chan->lock);
-> @@ -1407,7 +1407,7 @@ static int mhi_update_channel_state(struct mhi_controller *mhi_cntrl,
->  		write_unlock_irq(&mhi_chan->lock);
->  	}
->  
-> -	trace_mhi_channel_command_end(mhi_cntrl, mhi_chan, to_state, "Updated");
-> +	trace_mhi_channel_command_end(mhi_cntrl, mhi_chan, to_state, TPS("Updated"));
->  exit_channel_update:
->  	mhi_cntrl->runtime_put(mhi_cntrl);
->  	mhi_device_put(mhi_cntrl->mhi_dev);
-> diff --git a/drivers/bus/mhi/host/trace.h b/drivers/bus/mhi/host/trace.h
-> index d12a98d44272..368515dcb22d 100644
-> --- a/drivers/bus/mhi/host/trace.h
-> +++ b/drivers/bus/mhi/host/trace.h
-> @@ -84,6 +84,8 @@ DEV_ST_TRANSITION_LIST
->  #define dev_st_trans(a, b)		{ DEV_ST_TRANSITION_##a, b },
->  #define dev_st_trans_end(a, b)		{ DEV_ST_TRANSITION_##a, b }
->  
-> +#define TPS(x)	tracepoint_string(x)
-> +
->  TRACE_EVENT(mhi_gen_tre,
->  
->  	TP_PROTO(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
+>> While sched* events being traced and sched* events continuously happen,
+>> "[xx] event tracing - enable/disable with subsystem level files" would
+>> never stop as it cat an endless output.
+>> Select the first 100 lines of output would be enough to judge whether
+>> there are more than 3 types of sched events.
 > 
-> ---
-> base-commit: ceeb64f41fe6a1eb9fc56d583983a81f8f3dd058
-> change-id: 20240218-ftrace_string-7677762aa63c
+> It's not that it never stops but on some slower systems it does seem to
+> take forever.
 > 
-> Best regards,
-> -- 
-> Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> Acked-by: Steven Rostedt (Google) <rostedt@org>
+> 
+> Shuah,
+> 
+> Can you take this through your tree?
+> 
+> Thanks,
+> 
+> -- Steve
 > 
 
--- 
-மணிவண்ணன் சதாசிவம்
+Thanks for your ack but I found that I missed the 2nd and 3rd 'trace' 
+after 'head -n 100' in code. Should I resend a new patch to fix this and 
+meanwhile modify commit messages according to Steve's words?
+
+> 
+>>
+>> Signed-off-by: Yuanhe Shu <xiangzao@linux.alibaba.com>
+>> ---
+>>   .../selftests/ftrace/test.d/event/subsystem-enable.tc       | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc b/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
+>> index b1ede6249866..74c1114603a7 100644
+>> --- a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
+>> +++ b/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
+>> @@ -18,7 +18,7 @@ echo 'sched:*' > set_event
+>>   
+>>   yield
+>>   
+>> -count=`cat trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+>> +count=`head -n 100 trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+>>   if [ $count -lt 3 ]; then
+>>       fail "at least fork, exec and exit events should be recorded"
+>>   fi
+>> @@ -29,7 +29,7 @@ echo 1 > events/sched/enable
+>>   
+>>   yield
+>>   
+>> -count=`cat trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+>> +count=`head -n 100 | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+>>   if [ $count -lt 3 ]; then
+>>       fail "at least fork, exec and exit events should be recorded"
+>>   fi
+>> @@ -40,7 +40,7 @@ echo 0 > events/sched/enable
+>>   
+>>   yield
+>>   
+>> -count=`cat trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+>> +count=`head -n 100 | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+>>   if [ $count -ne 0 ]; then
+>>       fail "any of scheduler events should not be recorded"
+>>   fi
