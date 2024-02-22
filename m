@@ -1,25 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD0C73F30;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089F012D1F9;
 	Thu, 22 Feb 2024 21:12:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708636371; cv=none; b=qBHZUv/EiDLdd0hFyVrU2bOF2pPy6rXVV6wv95qs0IcP1ctKqM4P6hKFyRhYHvgLm+Gx51HiWWmyhi6MzI/p8M+4BtSMaW/L/z7metv72x+Qkvt10Dvx34bsYNxQJ5oQTjB3T0XGofKnx4SBwN+tzrfqeRmGIdQp7nDetND7ffs=
+	t=1708636372; cv=none; b=gHZnUNM7uCeJRP18DSFZ3IPImu5A4bFXYUiq1zROh26ec+RcpSLwHGLpPiNsAsWDTTPyy1DIO5CVD7Srk/LAdG78K4kFwD5N1UgODh26kgIaJLh0xw3eNWeD8XDvZDBdylS0W0k9yI6+QFLq/6wrJpma8BPOG4nDbKYhRazqNTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708636371; c=relaxed/simple;
-	bh=q2gN7JZMXEO4eGjTHjmn+gKip7svp7iLkDc5IBDr6N0=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=iu8wDECD0IRgxGB3eUHzM/xpR1nPPqntVuuWn/h4quvyIbhjXeeQrKgaXUsKbPSkyI+MQzjFYXVBYgHVCoPgOLeytw6BGBtiezRppg7+njMNgZcuvmO8A+J0FkYYbA15A00f/5kcrUuxxowLram5VLdPm4tcif6cc1iTsjrhnlY=
+	s=arc-20240116; t=1708636372; c=relaxed/simple;
+	bh=ASKKBEQ/kPwz5mh0vibiuZNuVaq8X/g1jUk/IeZwsxE=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=ak7iD70+I0Mk0DIRHsL0IgGl4vtilJglWGs+jkb4cGpqR3FwEo+6zqefTfqFybrbZzOoXs+2kUML0lpWQYDuk/njfs3gMwJddItdJw6sLzgHUHBf01ZZe1sVBedqSN3U+5DqBDZTlGsmm8uxPIB7Ua1bUkUnNn3RXDLUhm1V7Tw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71FC7C433F1;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B556DC433A6;
 	Thu, 22 Feb 2024 21:12:51 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rdGOw-00000006hpt-2X1q;
+	id 1rdGOw-00000006hqt-3tgc;
 	Thu, 22 Feb 2024 16:14:42 -0500
-Message-ID: <20240222211415.255659509@goodmis.org>
+Message-ID: <20240222211442.793074999@goodmis.org>
 User-Agent: quilt/0.67
-Date: Thu, 22 Feb 2024 16:14:15 -0500
+Date: Thu, 22 Feb 2024 16:14:17 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -30,12 +31,17 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
  Rodrigo Vivi <rodrigo.vivi@intel.com>,
  Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 0/4] tracing: Optimize __string()/__assign_str() processing
+Subject: [PATCH v2 2/4] tracing: Do not calculate strlen() twice for __string() fields
+References: <20240222211415.255659509@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
 The TRACE_EVENT() macro handles dynamic strings by having:
 
@@ -55,41 +61,47 @@ s->string is done twice. Once at the __string() and again in the
 __assign_str().
 
 The length of the string is calculated via a strlen(), not once, but
-twice (using strcpy). The length is actually already recorded in the data
-location from __string() and here's no reason to call strcpy() in
-__assign_str() as the length is already known.
+twice. Once during the __string() macro and again in __assign_str(). But
+the length is actually already recorded in the data location and here's no
+reason to call strlen() again.
 
-The __string() macro uses dynamic_array() which has a helper structure that
-is created holding the offsets and length of the string fields. Instead of
-finding the string twice, just save it off in another field in that helper
-structure, and have __assign_str() use that instead.
+Just use the saved length that was saved in the __string() code for the
+__assign_str() code.
 
-Changes since v1: https://lore.kernel.org/linux-trace-kernel/20240222195111.139824528@goodmis.org/
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/trace/stages/stage6_event_callback.h | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-- Both the __dynamic_array() and __rel_dynamic_array() macros end with
-  a semicolon and are used by __string() and __rel_string()
-  respectively. But __string() doesn't have a semicolon after
-  __dynamic_array() but __rel_string does have a semicolon after
-  __rel_dynamic_array() which is unneeded. Remove the unnecessary
-  semicolon to keep the two consistent.
+diff --git a/include/trace/stages/stage6_event_callback.h b/include/trace/stages/stage6_event_callback.h
+index b3e2f321e787..c0e5d097324e 100644
+--- a/include/trace/stages/stage6_event_callback.h
++++ b/include/trace/stages/stage6_event_callback.h
+@@ -32,8 +32,9 @@
+ 
+ #undef __assign_str
+ #define __assign_str(dst, src)						\
+-	strcpy(__get_str(dst), __data_offsets.dst##_ptr_ ?		\
+-	       __data_offsets.dst##_ptr_ : "(null)")
++	memcpy(__get_str(dst), __data_offsets.dst##_ptr_ ?		\
++	       __data_offsets.dst##_ptr_ : "(null)",			\
++	       __get_dynamic_array_len(dst))
+ 
+ #undef __assign_str_len
+ #define __assign_str_len(dst, src, len)					\
+@@ -94,8 +95,9 @@
+ 
+ #undef __assign_rel_str
+ #define __assign_rel_str(dst, src)					\
+-	strcpy(__get_rel_str(dst), __data_offsets.dst##_ptr_ ?		\
+-	       __data_offsets.dst##_ptr_ : "(null)")
++	memcpy(__get_rel_str(dst), __data_offsets.dst##_ptr_ ?		\
++	       __data_offsets.dst##_ptr_ : "(null)",			\
++	       __get_rel_dynamic_array_len(dst))
+ 
+ #undef __assign_rel_str_len
+ #define __assign_rel_str_len(dst, src, len)				\
+-- 
+2.43.0
 
-- Fixed __rel_string_len() that was incorrectly using __get_str() and
-  not __get_rel_str().
 
-- Added two cleanup patches. One to use the ?: shortcut and the other
-  to use the new macro EVENT_NULL_STR instead of open coding "(null)"
-  as the string must be consistent between __string() and __assign_str().
-
-Steven Rostedt (Google) (4):
-      tracing: Rework __assign_str() and __string() to not duplicate getting the string
-      tracing: Do not calculate strlen() twice for __string() fields
-      tracing: Use ? : shortcut in trace macros
-      tracing: Use EVENT_NULL_STR macro instead of open coding "(null)"
-
-----
- include/linux/trace_events.h                 |  3 +++
- include/trace/events/sunrpc.h                | 12 ++++++------
- include/trace/stages/stage2_data_offsets.h   |  4 ++--
- include/trace/stages/stage5_get_offsets.h    | 15 ++++++++++-----
- include/trace/stages/stage6_event_callback.h | 12 ++++++++----
- 5 files changed, 29 insertions(+), 17 deletions(-)
