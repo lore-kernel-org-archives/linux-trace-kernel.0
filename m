@@ -1,158 +1,76 @@
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D941C14B804;
-	Thu, 22 Feb 2024 19:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACEC6E5EC;
+	Thu, 22 Feb 2024 19:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708630152; cv=none; b=GcjEg1LQbQF01JzSWa2SKlO6zALuUjjLzLpuWNi4+gmXb42XrJcXU6F2jb6l5K9y9UjDc18iEBMHQGgWXsV+uC2PhVu7kaac4TMSTC68WnYGszbzMUfhb3L2nPOZWcRKznx6E2nYaDpFgGYsgZQhECQW70bGM0jG0/h9XOsITpE=
+	t=1708631415; cv=none; b=X2AFL0Ne0B91/qwn+v4KCKnLBIVNlbOQ2mPexNGIGXSC1FmrGenMupbmbLhLhAl+UB4uaYDPE63GUC5sgCf00o/doHiDkL9vn/h4yki46UwzFe5AjZZdu7U1NoKG5mvKw0GQb2InD1++5K6ADrxg7j9M9hz3WYEAwoSwm5JFsjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708630152; c=relaxed/simple;
-	bh=YgjkuxchnXOjDfgszCGMtWwsEo8UYhEcWPYKyGmmSgI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VWtcPQkSRHsndiBBXNp3IYuyMwVKiOA0iNk++12UQNjOGZtI6BSdwVdk08aBuWdq9BSb/z0PIjicyxQTQyCZ4T02/Yob6jI7v3F06zzkLmEoaIGJQiIdXc/L0HTu400MpHo2FDj7o3gmjo+F00kQ1mEZ0Z/k1+JRVlrseZMx+6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-59f9045d18dso17954eaf.0;
-        Thu, 22 Feb 2024 11:29:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708630150; x=1709234950;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pRYTvrV/sGoxnF4i005HgV0pmSUWvFLsiZ3PZkIgeCo=;
-        b=jqH4ws+6uLDWMLuJJr8pi8yyWNmnfIF/G8egMbziE6xkCHLLz+M1lfLmhs69PD9yCa
-         YA+VJ4hq0qHMSfw6JiCPFxl72+i7fkvu1ZVVTnhn5oBZTNhAd30ElM6j45lJR9YEsTGr
-         xUsO+NsVYP+vTTuv/fyAmWgU2UbmtOB6gKDtVPEXR9NJ/m8hGojD++RlRPRx2tApahih
-         DGFxUDBLjen0A0Vx7UOxWAzN5q2wmaXJvjbl9ZQBrF2k2mjc2EJZLixKtre3Sv+myupj
-         5MSdVBdzwPZL/KlygU77faZWNs9tFFOc1O47xqUDhp4kNuXFHLHBvLOYgNRbIUciJCD6
-         6pjg==
-X-Forwarded-Encrypted: i=1; AJvYcCW3kaqJHYJ0KvODftEJIwz2vb8UPdAzKeFyYAJ5LWuc52M2r0bpzB4XXFz3h+w5xgWTC25xyiFtouwydWUSSI+TJMki3E1LHX8ALFaSXG4pyRmvb5wd0EHTcpT8+lXCEQhBv+NNua0i//O6XAoTnrARA1tCsAS+45XXEiEyLvXKJJYAdWeWqWTg6UU=
-X-Gm-Message-State: AOJu0YzxLKV5Xl4zNjUdsirGMv/kPZocuM3QQIzTXJSaok5skBxGQ2P1
-	yYnyPKLaj3YtxnSgZG7e/fqgcK5wwZ2wxnYmlH8hZVz49tXzEAaCWixFeIVLcM2GBHKlBlFLO0u
-	HtcIN6H5tVfArwqIQFDGad4S2Ak4=
-X-Google-Smtp-Source: AGHT+IHacAAt04GBLc6BsHQ4gZjeD5H5Ok51Dk3K9JgCmLL0KZV1P6w9te0saUVsiE+RuDQtRM1pUJclhDL46ePbr6g=
-X-Received: by 2002:a4a:e713:0:b0:5a0:2cbe:43dd with SMTP id
- y19-20020a4ae713000000b005a02cbe43ddmr2343870oou.1.1708630149996; Thu, 22 Feb
- 2024 11:29:09 -0800 (PST)
+	s=arc-20240116; t=1708631415; c=relaxed/simple;
+	bh=9xM0zDSZnj/WQCIfmV1M1iafWnZdArwmz7MnQziBy8w=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=uVoutYr2WmIdEUkIi2eG8myLt5QnBcpgMEYyd/0T2Hy9qIZOiqYFsdiLq8sibwZ9yLv6P6e3eh96yVU9VJhJ0Heb2sZMQgJa+q8tJB56qd9SZQKThyTdiQXpN56+Zqt50XpW08adrPMol5V5tAFt4DeCiN0VuYDcdm0DGPWCZZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEA95C433C7;
+	Thu, 22 Feb 2024 19:50:14 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1rdF6z-00000006fXj-32Nl;
+	Thu, 22 Feb 2024 14:52:05 -0500
+Message-ID: <20240222195111.139824528@goodmis.org>
+User-Agent: quilt/0.67
+Date: Thu, 22 Feb 2024 14:51:11 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH 0/2] tracing: Optimize __string()/__assign_str() processing
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240221194754.986300-1-vilasbhat@google.com>
-In-Reply-To: <20240221194754.986300-1-vilasbhat@google.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 22 Feb 2024 20:28:59 +0100
-Message-ID: <CAJZ5v0j1trhHqzCaZOWMY-FghQw3EeaAciRwBmYUtKjBbKUNhQ@mail.gmail.com>
-Subject: Re: [PATCH v2] PM: runtime: add tracepoint for runtime_status changes
-To: Vilas Bhat <vilasbhat@google.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Saravana Kannan <saravanak@google.com>, kernel-team@android.com, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 21, 2024 at 8:49=E2=80=AFPM Vilas Bhat <vilasbhat@google.com> w=
-rote:
->
-> Existing runtime PM ftrace events (`rpm_suspend`, `rpm_resume`,
-> `rpm_return_int`) offer limited visibility into the exact timing of devic=
-e
-> runtime power state transitions, particularly when asynchronous operation=
-s
-> are involved. When the `rpm_suspend` or `rpm_resume` functions are invoke=
-d
-> with the `RPM_ASYNC` flag, a return value of 0 i.e., success merely
-> indicates that the device power state request has been queued, not that
-> the device has yet transitioned.
->
-> A new ftrace event, `rpm_status`, is introduced. This event directly logs
-> the `power.runtime_status` value of a device whenever it changes providin=
-g
-> granular tracking of runtime power state transitions regardless of
-> synchronous or asynchronous `rpm_suspend` / `rpm_resume` usage.
->
-> Signed-off-by: Vilas Bhat <vilasbhat@google.com>
-> ---
-> V1 -> V2: Modified enum value definition as per reviewer comments.
-> ---
->  drivers/base/power/runtime.c |  1 +
->  include/trace/events/rpm.h   | 42 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 43 insertions(+)
->
-> diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-> index 05793c9fbb84..d10354847878 100644
-> --- a/drivers/base/power/runtime.c
-> +++ b/drivers/base/power/runtime.c
-> @@ -94,6 +94,7 @@ static void update_pm_runtime_accounting(struct device =
-*dev)
->  static void __update_runtime_status(struct device *dev, enum rpm_status =
-status)
->  {
->         update_pm_runtime_accounting(dev);
-> +       trace_rpm_status(dev, status);
->         dev->power.runtime_status =3D status;
->  }
->
-> diff --git a/include/trace/events/rpm.h b/include/trace/events/rpm.h
-> index 3c716214dab1..bd120e23ce12 100644
-> --- a/include/trace/events/rpm.h
-> +++ b/include/trace/events/rpm.h
-> @@ -101,6 +101,48 @@ TRACE_EVENT(rpm_return_int,
->                 __entry->ret)
->  );
->
-> +#define RPM_STATUS_STRINGS \
-> +       EM(RPM_INVALID, "RPM_INVALID") \
-> +       EM(RPM_ACTIVE, "RPM_ACTIVE") \
-> +       EM(RPM_RESUMING, "RPM_RESUMING") \
-> +       EM(RPM_SUSPENDED, "RPM_SUSPENDED") \
-> +       EMe(RPM_SUSPENDING, "RPM_SUSPENDING")
-> +
-> +/* Enums require being exported to userspace, for user tool parsing. */
-> +#undef EM
-> +#undef EMe
-> +#define EM(a, b)       TRACE_DEFINE_ENUM(a);
-> +#define EMe(a, b)      TRACE_DEFINE_ENUM(a);
-> +
-> +RPM_STATUS_STRINGS
-> +
-> +/*
-> + * Now redefine the EM() and EMe() macros to map the enums to the string=
-s that
-> + * will be printed in the output.
-> + */
-> +#undef EM
-> +#undef EMe
-> +#define EM(a, b)       { a, b },
-> +#define EMe(a, b)      { a, b }
-> +
-> +TRACE_EVENT(rpm_status,
-> +       TP_PROTO(struct device *dev, enum rpm_status status),
-> +       TP_ARGS(dev, status),
-> +
-> +       TP_STRUCT__entry(
-> +               __string(name,  dev_name(dev))
-> +               __field(int,    status)
-> +       ),
-> +
-> +       TP_fast_assign(
-> +               __assign_str(name, dev_name(dev));
-> +               __entry->status =3D status;
-> +       ),
-> +
-> +       TP_printk("%s status=3D%s", __get_str(name),
-> +               __print_symbolic(__entry->status, RPM_STATUS_STRINGS))
-> +);
-> +
->  #endif /* _TRACE_RUNTIME_POWER_H */
->
->  /* This part must be outside protection */
-> --
 
-Applied as 6.9 material, thanks!
+The TRACE_EVENT() macro handles dynamic strings by having:
+
+  TP_PROTO(struct some_struct *s),
+  TP_ARGS(s),
+  TP_STRUCT__entry(
+        __string(my_string, s->string)
+ ),
+ TP_fast_assign(
+        __assign_str(my_string, s->string);
+ )
+ TP_printk("%s", __get_str(my_string))
+
+There's even some code that may call a function helper to find the
+s->string value. The problem with the above is that the work to get the
+s->string is done twice. Once at the __string() and again in the
+__assign_str().
+
+The length of the string is calculated via a strlen(), not once, but
+twice (using strcpy). The length is actually already recorded in the data
+location from __string() and here's no reason to call strcpy() in
+__assign_str() as the length is already known.
+
+The __string() macro uses dynamic_array() which has a helper structure that
+is created holding the offsets and length of the string fields. Instead of
+finding the string twice, just save it off in another field in that helper
+structure, and have __assign_str() use that instead.
+
+Steven Rostedt (Google) (2):
+      tracing: Rework __assign_str() and __string() to not duplicate getting the string
+      tracing: Do not calculate strlen() twice for __string() fields
+
+----
+ include/trace/stages/stage2_data_offsets.h   |  4 ++--
+ include/trace/stages/stage5_get_offsets.h    | 15 ++++++++++-----
+ include/trace/stages/stage6_event_callback.h | 14 ++++++++++----
+ 3 files changed, 22 insertions(+), 11 deletions(-)
