@@ -1,26 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E5B146E96;
-	Fri, 23 Feb 2024 20:26:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C27EAD2;
+	Fri, 23 Feb 2024 20:43:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708719995; cv=none; b=j0aX18qISt5sZdjy0G/QPxkmycampUByT3Rn81k807jAQYeVARywstS4aRpzKujX0Qr8D53j9EdVRtiUJ6jp03lGhl2Smrl3jGfRpgJdgFqjr65JxKPKbgYH0HH5kxUgrkpLjHS0lQvptlSMwoU2OWG2zM+0hVlVOM96TRBtU30=
+	t=1708721026; cv=none; b=f/Wx12iSHfpF7xf7NqVy2JgaNi+1zMpqr74k9EAiQTvTG90cOikuv1K9QrFHVTkyIJmjYffky1mvG0CUJfF6mhSMsYbJlduk0w3zTvdAPSh2XM27CHGGBDyr5Ge+Q06YeH86zVWiAUNktCug5SZh+reGq0AkFHyxDodnovurm4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708719995; c=relaxed/simple;
-	bh=BKjk2drUibhKGcus9h79n6m+U1rXszg3UpQTrvBjVCA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=J3bE/IUfKkFC9fyGzFlAYRFs3lE/0Z1LPdI35lhZMt558vRFqnnENp0rEOnFEqmiCICkQRMK9hF8H6BTJnDdygrSsRIyCeQzkPfOOKUSkko/BLDc38IxwnIeKw4pQP2+ThvtTgmhEc7p5iE2CtSIj43jN+tnDlSqbRlRhma6URw=
+	s=arc-20240116; t=1708721026; c=relaxed/simple;
+	bh=PvtLspH93t1y4HSID2+UQ++sl1bnWl4rFM9++eE9Kiw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jjkj4An0NsVm9VFkk6dIH9AjZE1Eek+qJgxBeFZ5ctXoJvzPfS8XnInFF7aqDkSuPWQGn0frWL6Snv6tyi6Sj8RWOAXiWPXSwrq3dyoI/zvfcv4o9TmF2DdbRO7CQrnaEzovU79DIoqZCMd0gXOIMq2/kurKenWiqSZqyAS/iZo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADCBFC43399;
-	Fri, 23 Feb 2024 20:26:34 +0000 (UTC)
-Date: Fri, 23 Feb 2024 15:28:27 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67DE0C43390;
+	Fri, 23 Feb 2024 20:43:39 +0000 (UTC)
+Date: Fri, 23 Feb 2024 15:45:32 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] tracing: Add __string_len() example
-Message-ID: <20240223152827.5f9f78e2@gandalf.local.home>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ <linuxppc-dev@lists.ozlabs.org>, <kvm@vger.kernel.org>,
+ <linux-block@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+ <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+ <amd-gfx@lists.freedesktop.org>, <intel-gfx@lists.freedesktop.org>,
+ <intel-xe@lists.freedesktop.org>, <linux-arm-msm@vger.kernel.org>,
+ <freedreno@lists.freedesktop.org>, <virtualization@lists.linux.dev>,
+ <linux-rdma@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+ <iommu@lists.linux.dev>, <linux-tegra@vger.kernel.org>,
+ <netdev@vger.kernel.org>, <linux-hyperv@vger.kernel.org>,
+ <ath10k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+ <ath11k@lists.infradead.org>, <ath12k@lists.infradead.org>,
+ <brcm80211@lists.linux.dev>, <brcm80211-dev-list.pdl@broadcom.com>,
+ <linux-usb@vger.kernel.org>, <linux-bcachefs@vger.kernel.org>,
+ <linux-nfs@vger.kernel.org>, <ocfs2-devel@lists.linux.dev>,
+ <linux-cifs@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
+ <linux-edac@vger.kernel.org>, <selinux@vger.kernel.org>,
+ <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+ <linux-f2fs-devel@lists.sourceforge.net>, <linux-hwmon@vger.kernel.org>,
+ <io-uring@vger.kernel.org>, <linux-sound@vger.kernel.org>,
+ <bpf@vger.kernel.org>, <linux-wpan@vger.kernel.org>, <dev@openvswitch.org>,
+ <linux-s390@vger.kernel.org>, <tipc-discussion@lists.sourceforge.net>,
+ Julia Lawall <Julia.Lawall@inria.fr>
+Subject: Re: [FYI][PATCH] tracing/treewide: Remove second parameter of
+ __assign_str()
+Message-ID: <20240223154532.76475d82@gandalf.local.home>
+In-Reply-To: <20240223134653.524a5c9e@gandalf.local.home>
+References: <20240223125634.2888c973@gandalf.local.home>
+	<0aed6cf2-17ae-45aa-b7ff-03da932ea4e0@quicinc.com>
+	<20240223134653.524a5c9e@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -31,53 +60,32 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Fri, 23 Feb 2024 13:46:53 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-There's no example code that uses __string_len(), and since the sample
-code is used for testing the event logic, add a use case.
+> Now one thing I could do is to not remove the parameter, but just add:
+> 
+> 	WARN_ON_ONCE((src) != __data_offsets->item##_ptr_);
+> 
+> in the __assign_str() macro to make sure that it's still the same that is
+> assigned. But I'm not sure how useful that is, and still causes burden to
+> have it. I never really liked the passing of the string in two places to
+> begin with.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- samples/trace_events/trace-events-sample.h | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Hmm, maybe I'll just add this patch for 6.9 and then in 6.10 do the
+parameter removal.
 
-diff --git a/samples/trace_events/trace-events-sample.h b/samples/trace_events/trace-events-sample.h
-index f2d2d56ce8e2..2dfaf7fc7bfa 100644
---- a/samples/trace_events/trace-events-sample.h
-+++ b/samples/trace_events/trace-events-sample.h
-@@ -303,6 +303,7 @@ TRACE_EVENT(foo_bar,
- 		__bitmask(	cpus,	num_possible_cpus()	)
- 		__cpumask(	cpum				)
- 		__vstring(	vstr,	fmt,	va		)
-+		__string_len(	lstr,	foo,	bar / 2 < strlen(foo) ? bar / 2 : strlen(foo) )
- 	),
- 
- 	TP_fast_assign(
-@@ -311,12 +312,13 @@ TRACE_EVENT(foo_bar,
- 		memcpy(__get_dynamic_array(list), lst,
- 		       __length_of(lst) * sizeof(int));
- 		__assign_str(str, string);
-+		__assign_str(lstr, foo);
- 		__assign_vstr(vstr, fmt, va);
- 		__assign_bitmask(cpus, cpumask_bits(mask), num_possible_cpus());
- 		__assign_cpumask(cpum, cpumask_bits(mask));
- 	),
- 
--	TP_printk("foo %s %d %s %s %s %s (%s) (%s) %s", __entry->foo, __entry->bar,
-+	TP_printk("foo %s %d %s %s %s %s %s (%s) (%s) %s", __entry->foo, __entry->bar,
- 
- /*
-  * Notice here the use of some helper functions. This includes:
-@@ -360,7 +362,8 @@ TRACE_EVENT(foo_bar,
- 		  __print_array(__get_dynamic_array(list),
- 				__get_dynamic_array_len(list) / sizeof(int),
- 				sizeof(int)),
--		  __get_str(str), __get_bitmask(cpus), __get_cpumask(cpum),
-+		  __get_str(str), __get_str(lstr),
-+		  __get_bitmask(cpus), __get_cpumask(cpum),
- 		  __get_str(vstr))
- );
- 
--- 
-2.43.0
+-- Steve
 
+diff --git a/include/trace/stages/stage6_event_callback.h b/include/trace/stages/stage6_event_callback.h
+index 0c0f50bcdc56..7372e2c2a0c4 100644
+--- a/include/trace/stages/stage6_event_callback.h
++++ b/include/trace/stages/stage6_event_callback.h
+@@ -35,6 +35,7 @@ #define __assign_str(dst, src)
+ 	do {								\
+ 		char *__str__ = __get_str(dst);				\
+ 		int __len__ = __get_dynamic_array_len(dst) - 1;		\
++		WARN_ON_ONCE((src) != __data_offsets.dst##_ptr_); 	\
+ 		memcpy(__str__, __data_offsets.dst##_ptr_ ? :		\
+ 		       EVENT_NULL_STR, __len__);			\
+ 		__str__[__len__] = '\0';				\
