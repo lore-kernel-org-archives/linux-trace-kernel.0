@@ -1,102 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D70C370;
-	Fri, 23 Feb 2024 00:26:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA869470;
+	Fri, 23 Feb 2024 01:31:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708647989; cv=none; b=D4XwvoS07DwQCZ4eOJeuaT+IN34KSA/wgDE2Gv0HZ+NSla8ltUgbnopaqNxN9ohS9mx7d2vKVUxbz4pupUw2WnvX0s9oTBV1mpXYPjA6JoOIrtR9wuAyiZOd854wc27/Q35hf1iK7GNMBF85TH5rkHnclwVSj+gZTfOiu/dgu9A=
+	t=1708651913; cv=none; b=mlcANNv6E+tcEBEiEBWhQVGwahnNBEW9KA9Z8vTbPupTxByir2d5Cb2cG2If0OowD8cpLxHX1vkSDcLcyjlOejH4TqTujtEDmu1lPzRXZ5TsBmfkup9MIMXBC42zs6+ZyCsnQRSWE6GWCmD4nj0tni2S4xxgfh12USltB6Aiiyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708647989; c=relaxed/simple;
-	bh=2zq8t2w/MxvWtYHu7VdFtzRLQDoWQp7+hxBDYINDmR0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dzMuE7QhoUQlSihOXlqb+Gg+CNj+k52zpaoNSXhxVT/I+xJUm8LvDo/VLT4wTelP7n4VVs6u1zwberx1tAyL8FzjeCMwMC5vc6m7d9ZYjXezAPMXMCeiBuw4wVi+osJ5YAL2idrAsde22Yq07n+I6l7sFDu7XGx6/t+8YGFptnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gmI/c/Mi; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gmI/c/Mi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6720AC433B1;
-	Fri, 23 Feb 2024 00:26:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708647989;
-	bh=2zq8t2w/MxvWtYHu7VdFtzRLQDoWQp7+hxBDYINDmR0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gmI/c/Miowmr1UpqRQQQoGics2HxdOzd8fXDF8ISzUC5IjbnXBd1ZybjLuCp1iIba
-	 4gU8Kshs121y8K7jCR7609eYif/bP7zqwCjA9oFYDsTG11FcwOyCft7EXNc3vn4paq
-	 8ID9r2qnpCHUdfeAMHBmn/7iA3AnRVbcHDBWEaKHRFjY3EVezdeu//7oP5Gvd+PIwn
-	 NBJfvHnT8Myev0TpkaX+Dcl66MVB5JYOz7MVJwWZapPIBSenFEDzRRdloVw0Yxq2d1
-	 nz1+q0vP3hAbBC3mRLQRSfhC/QJWOBI5pUvoWEglHQ62CkWRD5BPjwUxDJVLGHc8jJ
-	 1j1KmkuV50YNw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 0140ECE0DD4; Thu, 22 Feb 2024 16:26:28 -0800 (PST)
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: rcu@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	rostedt@goodmis.org,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org,
-	Ankur Arora <ankur.a.arora@oracle.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH rcu 4/4] tracing: Select new NEED_TASKS_RCU Kconfig option
-Date: Thu, 22 Feb 2024 16:26:27 -0800
-Message-Id: <20240223002627.1987886-4-paulmck@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <8c938bd5-6d62-4eff-9289-13b0d7ae8e17@paulmck-laptop>
-References: <8c938bd5-6d62-4eff-9289-13b0d7ae8e17@paulmck-laptop>
+	s=arc-20240116; t=1708651913; c=relaxed/simple;
+	bh=vsgQXvFzIGZYJuAH8O4F9NAg1U6Ack1SewN87diLNIQ=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=qCCjDARWqjME5ChLLdslkSliVt0qImv4cPs4eug14VPQqpDDGXfhpysmy+nNAerBKyFGt9/GAyRvJV6GvR+mHN23Uc8GDoW1TsXrLfHnyWcwhao6+fhONrAYhq2m+zeu80cKSjubIqw05daHp/BltmxgpSVx/M3E72b19UBvt7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02708C433C7;
+	Fri, 23 Feb 2024 01:31:52 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1rdKRc-00000006ofb-2Gce;
+	Thu, 22 Feb 2024 20:33:44 -0500
+Message-ID: <20240223013323.798805901@goodmis.org>
+User-Agent: quilt/0.67
+Date: Thu, 22 Feb 2024 20:33:23 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Vincent Donnefort <vdonnefort@google.com>
+Subject: [PATCH 0/2] tracing: Fix snapshot accounting
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Currently, if a Kconfig option depends on TASKS_RCU, it conditionally does
-"select TASKS_RCU if PREEMPTION".  This works, but requires any change in
-this enablement logic to be replicated across all such "select" clauses.
-A new NEED_TASKS_RCU Kconfig option has been created to allow this
-enablement logic to be in one place in kernel/rcu/Kconfig.
 
-Therefore, select the new NEED_TASKS_RCU Kconfig option instead of the
-old TASKS_RCU option.
+The ring buffer mapping test failed after running the ftrace tests.
+This was due to some mismatched snapshot accounting that left the
+snapshot counter enabled when it was not, which prevents the ring buffer
+from being mapped.
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: <linux-trace-kernel@vger.kernel.org>
-Cc: Ankur Arora <ankur.a.arora@oracle.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>
----
- kernel/trace/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Steven Rostedt (Google) (2):
+      tracing: Fix snapshot counter going between two tracers that use it
+      tracing: Decrement the snapshot if the snapshot trigger fails to register
 
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index 61c541c36596d..6cdc5ff919b09 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -163,7 +163,7 @@ config TRACING
- 	select BINARY_PRINTF
- 	select EVENT_TRACING
- 	select TRACE_CLOCK
--	select TASKS_RCU if PREEMPTION
-+	select NEED_TASKS_RCU
- 
- config GENERIC_TRACER
- 	bool
-@@ -204,7 +204,7 @@ config FUNCTION_TRACER
- 	select GENERIC_TRACER
- 	select CONTEXT_SWITCH_TRACER
- 	select GLOB
--	select TASKS_RCU if PREEMPTION
-+	select NEED_TASKS_RCU
- 	select TASKS_RUDE_RCU
- 	help
- 	  Enable the kernel to trace every kernel function. This is done
--- 
-2.40.1
-
+----
+ kernel/trace/trace.c                | 2 +-
+ kernel/trace/trace_events_trigger.c | 5 ++++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
