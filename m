@@ -1,37 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA482C9E;
-	Fri, 23 Feb 2024 01:31:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01ABAD53;
+	Fri, 23 Feb 2024 01:45:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708651913; cv=none; b=NVWNr7TBS7cuB1UlCsMQlKomQd+6B7uRMXdXELEmQGoLPNXHtm7p5ZbV6fQrUnVzwZ2gExHoTvr5vroW5SHuW1lOKjsm4HbN+ADiepkPZGOvNOJd2yynZzhR21OIIUzx2JdIAyJDislNxzMZIODo6r9YUBSM5g0OQ7+Ov2+rZM8=
+	t=1708652712; cv=none; b=cQgycTtw5w7fMyH80AD+0P8SguxmDZn6eirE0EaTVUZ26fRv9nLHKXJA04uUyO8KJVBSqK8kt0grthnvZ0bUp88L+PZ/fqAeHCiBfRRHZDykZicuIEGnZ9Q8GhGdzvQ3EsZ374k6k574lfN6TMwHEZrJU2a3yF33qCMoPwh6Vn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708651913; c=relaxed/simple;
-	bh=4NKBpeaolII1sBupq/IxTuoIHTKsguTYUdtlaE5KXXQ=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=WHPhmHMCVUaFXBdBSoW9KAK31QxLqpAQrqw1tX4C4Am8PqDxEwCEQihhBhbnS+AcPS0LBvRXtCkG//weOW7/zNEut5UDscK7K8noIptkO3mMKn0uHDoTi396D2hoStWL8qXQu+ri6rb2giGji2+fUYi6mNed/YCGK9MqG2kWvKs=
+	s=arc-20240116; t=1708652712; c=relaxed/simple;
+	bh=n6RPnC6yufWY3n3pn0vWSMZ9igCtwEYuAlgxz4yas28=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pnqhgnz1FFbs/Gt/Px/+2ZrSoWvMQh7e2wdf3hsBOeoBZM+EbdFmxnaAPOnh6fjgJN6ievapZ1JC/aWhXzgvswbr9vCj9HUck8/v2ECVemLJhda2X/hvnIvhMqlrcSKG791Ep8fGs0+YprOtq4scPGZR8wuzOzARrHeTCth2tVQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24CF8C43390;
-	Fri, 23 Feb 2024 01:31:53 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1rdKRc-00000006ogb-3daK;
-	Thu, 22 Feb 2024 20:33:44 -0500
-Message-ID: <20240223013344.729055907@goodmis.org>
-User-Agent: quilt/0.67
-Date: Thu, 22 Feb 2024 20:33:25 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F8AFC433C7;
+	Fri, 23 Feb 2024 01:45:10 +0000 (UTC)
+Date: Thu, 22 Feb 2024 20:47:01 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Vincent Donnefort <vdonnefort@google.com>
-Subject: [PATCH 2/2] tracing: Decrement the snapshot if the snapshot trigger fails to
- register
-References: <20240223013323.798805901@goodmis.org>
+To: Huang Yiwei <quic_hyiwei@quicinc.com>
+Cc: <mhiramat@kernel.org>, <mark.rutland@arm.com>, <mcgrof@kernel.org>,
+ <keescook@chromium.org>, <j.granados@samsung.com>,
+ <mathieu.desnoyers@efficios.com>, <corbet@lwn.net>,
+ <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+ <linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+ <quic_bjorande@quicinc.com>, <quic_tsoni@quicinc.com>,
+ <quic_satyap@quicinc.com>, <quic_aiquny@quicinc.com>, <kernel@quicinc.com>,
+ Ross Zwisler <zwisler@google.com>, Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH v5] tracing: Support to dump instance traces by
+ ftrace_dump_on_oops
+Message-ID: <20240222204701.6b9de71e@gandalf.local.home>
+In-Reply-To: <20240208131814.614691-1-quic_hyiwei@quicinc.com>
+References: <20240208131814.614691-1-quic_hyiwei@quicinc.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -39,45 +38,40 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Thu, 8 Feb 2024 21:18:14 +0800
+Huang Yiwei <quic_hyiwei@quicinc.com> wrote:
 
-Running the ftrace selftests caused the ring buffer mapping test to fail.
-Investigating, I found that the snapshot counter would be incremented
-every time a snapshot trigger was added, even if that snapshot trigger
-failed.
+> Currently ftrace only dumps the global trace buffer on an OOPs. For
+> debugging a production usecase, instance trace will be helpful to
+> check specific problems since global trace buffer may be used for
+> other purposes.
+>=20
+> This patch extend the ftrace_dump_on_oops parameter to dump a specific
+> or multiple trace instances:
+>=20
+>   - ftrace_dump_on_oops=3D0: as before -- don't dump
+>   - ftrace_dump_on_oops[=3D1]: as before -- dump the global trace buffer
+>   on all CPUs
+>   - ftrace_dump_on_oops=3D2 or =3Dorig_cpu: as before -- dump the global
+>   trace buffer on CPU that triggered the oops
+>   - ftrace_dump_on_oops=3D<instance_name>: new behavior -- dump the
+>   tracing instance matching <instance_name>
+>   - ftrace_dump_on_oops[=3D2/orig_cpu],<instance1_name>[=3D2/orig_cpu],
+>   <instrance2_name>[=3D2/orig_cpu]: new behavior -- dump the global trace
+>   buffer and multiple instance buffer on all CPUs, or only dump on CPU
+>   that triggered the oops if =3D2 or =3Dorig_cpu is given
+>=20
+> Also, the sysctl node can handle the input accordingly.
+>=20
+> Cc: Ross Zwisler <zwisler@google.com>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> Signed-off-by: Huang Yiwei <quic_hyiwei@quicinc.com>
 
- # cd /sys/kernel/tracing
- # echo "snapshot" > events/sched/sched_process_fork/trigger
- # echo "snapshot" > events/sched/sched_process_fork/trigger
- -bash: echo: write error: File exists
+This patch failed with the following warning:
 
-That second one that fails increments the snapshot counter but doesn't
-decrement it. It needs to be decremented when the snapshot fails.
+  kernel/trace/trace.c:10029:6: warning: no previous prototype for =E2=80=
+=98ftrace_dump_one=E2=80=99 [-Wmissing-prototypes]
 
-Fixes: 16f7e48ffc53a ("tracing: Add snapshot refcount")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_events_trigger.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index 62e4f58b8671..4bec043c8690 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -1491,7 +1491,10 @@ register_snapshot_trigger(char *glob,
- 	if (ret < 0)
- 		return ret;
- 
--	return register_trigger(glob, data, file);
-+	ret = register_trigger(glob, data, file);
-+	if (ret < 0)
-+		tracing_disarm_snapshot(file->tr);
-+	return ret;
- }
- 
- static void unregister_snapshot_trigger(char *glob,
--- 
-2.43.0
-
-
+-- Steve
