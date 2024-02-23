@@ -1,100 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46C073F20;
-	Thu, 22 Feb 2024 22:11:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D70C370;
+	Fri, 23 Feb 2024 00:26:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708639915; cv=none; b=M4Vi89pxeT8CKgOv0hHnndMUpzByY2r70O0Ir0sNfHE5klAYt1Nm03ilK9G06HBA1osWeS+6aOf9T7+j9uHmhGAqa+CMn9vTAdPE4r2uHKh3NFlptXQz3rltp+Gk4wH2EizPa0To1w/jiOLHuETuCFCCPjb3sRSxdV8vD+t3QY4=
+	t=1708647989; cv=none; b=D4XwvoS07DwQCZ4eOJeuaT+IN34KSA/wgDE2Gv0HZ+NSla8ltUgbnopaqNxN9ohS9mx7d2vKVUxbz4pupUw2WnvX0s9oTBV1mpXYPjA6JoOIrtR9wuAyiZOd854wc27/Q35hf1iK7GNMBF85TH5rkHnclwVSj+gZTfOiu/dgu9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708639915; c=relaxed/simple;
-	bh=p+8uhwqkWinqy5UVg9deOCr1wsUGH7ZlNzrnMxbpJCk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HbFrHna5KoxRWNvRIxCaYRqoFi4ZIFfm52b8lShWOGOXjtsTCxy3DOiphSdTa1oUb5BXmbWH8E9o7GxTktscmB2xsGwzrpFH17B6jdVX6QsE2gbV9HrR7IU4MNjl6sSeQnBSEZkHW0EYQ9KbpquPSZ7lRC41szybgvn6QmjN5OY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F909C433F1;
-	Thu, 22 Feb 2024 22:11:54 +0000 (UTC)
-Date: Thu, 22 Feb 2024 17:13:45 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Beau Belgrave <beaub@linux.microsoft.com>
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v4 2/4] tracing/user_events: Introduce multi-format
- events
-Message-ID: <20240222171345.25b1a289@gandalf.local.home>
-In-Reply-To: <20240222001807.1463-3-beaub@linux.microsoft.com>
-References: <20240222001807.1463-1-beaub@linux.microsoft.com>
-	<20240222001807.1463-3-beaub@linux.microsoft.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708647989; c=relaxed/simple;
+	bh=2zq8t2w/MxvWtYHu7VdFtzRLQDoWQp7+hxBDYINDmR0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=dzMuE7QhoUQlSihOXlqb+Gg+CNj+k52zpaoNSXhxVT/I+xJUm8LvDo/VLT4wTelP7n4VVs6u1zwberx1tAyL8FzjeCMwMC5vc6m7d9ZYjXezAPMXMCeiBuw4wVi+osJ5YAL2idrAsde22Yq07n+I6l7sFDu7XGx6/t+8YGFptnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gmI/c/Mi; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gmI/c/Mi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6720AC433B1;
+	Fri, 23 Feb 2024 00:26:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708647989;
+	bh=2zq8t2w/MxvWtYHu7VdFtzRLQDoWQp7+hxBDYINDmR0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=gmI/c/Miowmr1UpqRQQQoGics2HxdOzd8fXDF8ISzUC5IjbnXBd1ZybjLuCp1iIba
+	 4gU8Kshs121y8K7jCR7609eYif/bP7zqwCjA9oFYDsTG11FcwOyCft7EXNc3vn4paq
+	 8ID9r2qnpCHUdfeAMHBmn/7iA3AnRVbcHDBWEaKHRFjY3EVezdeu//7oP5Gvd+PIwn
+	 NBJfvHnT8Myev0TpkaX+Dcl66MVB5JYOz7MVJwWZapPIBSenFEDzRRdloVw0Yxq2d1
+	 nz1+q0vP3hAbBC3mRLQRSfhC/QJWOBI5pUvoWEglHQ62CkWRD5BPjwUxDJVLGHc8jJ
+	 1j1KmkuV50YNw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 0140ECE0DD4; Thu, 22 Feb 2024 16:26:28 -0800 (PST)
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: rcu@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	rostedt@goodmis.org,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	Ankur Arora <ankur.a.arora@oracle.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH rcu 4/4] tracing: Select new NEED_TASKS_RCU Kconfig option
+Date: Thu, 22 Feb 2024 16:26:27 -0800
+Message-Id: <20240223002627.1987886-4-paulmck@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <8c938bd5-6d62-4eff-9289-13b0d7ae8e17@paulmck-laptop>
+References: <8c938bd5-6d62-4eff-9289-13b0d7ae8e17@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Thu, 22 Feb 2024 00:18:05 +0000
-Beau Belgrave <beaub@linux.microsoft.com> wrote:
+Currently, if a Kconfig option depends on TASKS_RCU, it conditionally does
+"select TASKS_RCU if PREEMPTION".  This works, but requires any change in
+this enablement logic to be replicated across all such "select" clauses.
+A new NEED_TASKS_RCU Kconfig option has been created to allow this
+enablement logic to be in one place in kernel/rcu/Kconfig.
 
-> Currently user_events supports 1 event with the same name and must have
-> the exact same format when referenced by multiple programs. This opens
-> an opportunity for malicous or poorly thought through programs to
+Therefore, select the new NEED_TASKS_RCU Kconfig option instead of the
+old TASKS_RCU option.
 
-  malicious? ;-)
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: <linux-trace-kernel@vger.kernel.org>
+Cc: Ankur Arora <ankur.a.arora@oracle.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>
+---
+ kernel/trace/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
--- Steve
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 61c541c36596d..6cdc5ff919b09 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -163,7 +163,7 @@ config TRACING
+ 	select BINARY_PRINTF
+ 	select EVENT_TRACING
+ 	select TRACE_CLOCK
+-	select TASKS_RCU if PREEMPTION
++	select NEED_TASKS_RCU
+ 
+ config GENERIC_TRACER
+ 	bool
+@@ -204,7 +204,7 @@ config FUNCTION_TRACER
+ 	select GENERIC_TRACER
+ 	select CONTEXT_SWITCH_TRACER
+ 	select GLOB
+-	select TASKS_RCU if PREEMPTION
++	select NEED_TASKS_RCU
+ 	select TASKS_RUDE_RCU
+ 	help
+ 	  Enable the kernel to trace every kernel function. This is done
+-- 
+2.40.1
 
-> create events that others use with different formats. Another scenario
-> is user programs wishing to use the same event name but add more fields
-> later when the software updates. Various versions of a program may be
-> running side-by-side, which is prevented by the current single format
-> requirement.
-> 
-> Add a new register flag (USER_EVENT_REG_MULTI_FORMAT) which indicates
-> the user program wishes to use the same user_event name, but may have
-> several different formats of the event. When this flag is used, create
-> the underlying tracepoint backing the user_event with a unique name
-> per-version of the format. It's important that existing ABI users do
-> not get this logic automatically, even if one of the multi format
-> events matches the format. This ensures existing programs that create
-> events and assume the tracepoint name will match exactly continue to
-> work as expected. Add logic to only check multi-format events with
-> other multi-format events and single-format events to only check
-> single-format events during find.
-> 
-> Change system name of the multi-format event tracepoint to ensure that
-> multi-format events are isolated completely from single-format events.
-> This prevents single-format names from conflicting with multi-format
-> events if they end with the same suffix as the multi-format events.
-> 
-> Add a register_name (reg_name) to the user_event struct which allows for
-> split naming of events. We now have the name that was used to register
-> within user_events as well as the unique name for the tracepoint. Upon
-> registering events ensure matches based on first the reg_name, followed
-> by the fields and format of the event. This allows for multiple events
-> with the same registered name to have different formats. The underlying
-> tracepoint will have a unique name in the format of {reg_name}.{unique_id}.
-> 
-> For example, if both "test u32 value" and "test u64 value" are used with
-> the USER_EVENT_REG_MULTI_FORMAT the system would have 2 unique
-> tracepoints. The dynamic_events file would then show the following:
->   u:test u64 count
->   u:test u32 count
-> 
-> The actual tracepoint names look like this:
->   test.0
->   test.1
-> 
-> Both would be under the new user_events_multi system name to prevent the
-> older ABI from being used to squat on multi-formatted events and block
-> their use.
-> 
-> Deleting events via "!u:test u64 count" would only delete the first
-> tracepoint that matched that format. When the delete ABI is used all
-> events with the same name will be attempted to be deleted. If
-> per-version deletion is required, user programs should either not use
-> persistent events or delete them via dynamic_events.
-> 
-> Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
