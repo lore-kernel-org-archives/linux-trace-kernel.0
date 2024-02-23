@@ -1,55 +1,57 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDEAB78697
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Feb 2024 11:46:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F82F7A722
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Feb 2024 11:46:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708688812; cv=none; b=f6SrW/Kzc8MC3l7H1LPsQaisUutyLqhZ3J3BvKwTet0YE0NI3DGNmR3rCkhs3X1AdKk3GUgDD+jEU2iRA+iEvO9izlnSGFHjh+okZerMoDswq9/YowG8upO4RKTKJytv1ycp4CQy7SQQq5aCN+cUUqjAgP+cmeSqGd1mqo2s2Kg=
+	t=1708688813; cv=none; b=jlhCXytDOJ6lF/jRkxZAYDERmEPew2kcTaN5/XnxZLOSC9VJTJW8igOBc4uvCwbnTsxwoaVvp0PSWmJ4cL09W6haM4BLb0ZS8dCWbW5D23NFaHOT8g+C61n0pWx7YpVeNIdWR7t2ljMGxTNbOCWavHTG70jBsiK5hNZou/g0Z54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708688812; c=relaxed/simple;
-	bh=wKwKA0p4vt6AwTeHwXt7AVmIzq29IsV/+yie3gcAHZY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Iazr0PeJyb8u89KD5IGvt8ANAXx8PJHOh9ZSd3pua3lQZOlXq4/HC7lsf3WLdSw+nyiPdGnIU2DKqbu962Gu+4GBohXMLhLx6GYZnj0RjF0tL3YQKVt9by+ajLZg4Yh3bNy3q2eF3rNpmkBJz3FPG/Lc/UBqVCpoTxIA76VJUUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=waldekranz.com; spf=pass smtp.mailfrom=waldekranz.com; dkim=pass (2048-bit key) header.d=waldekranz-com.20230601.gappssmtp.com header.i=@waldekranz-com.20230601.gappssmtp.com header.b=lQfe4Xww; arc=none smtp.client-ip=209.85.167.49
+	s=arc-20240116; t=1708688813; c=relaxed/simple;
+	bh=n1GgHYtHsxsrAzgKRx3jPsMiLP1I7jvaanq3ckoFtwQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=uD9BrIkha9b9t7Zs6nkdMf7JzR4W2C/zDBrDkpRtdxeIjyG3CQ210eb6s34EhhjGmXuQMQeC0re1ZU+TfX22T6AWvwkPcjfVwUjiMut+nVyBsdrCiuDCv/uL588zIaiO+osCs77xg7udDGKkIzGW/RaHOHRBtHA7GBTBzx3Jg6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=waldekranz.com; spf=pass smtp.mailfrom=waldekranz.com; dkim=pass (2048-bit key) header.d=waldekranz-com.20230601.gappssmtp.com header.i=@waldekranz-com.20230601.gappssmtp.com header.b=aWN4KV54; arc=none smtp.client-ip=209.85.208.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=waldekranz.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=waldekranz.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=waldekranz-com.20230601.gappssmtp.com header.i=@waldekranz-com.20230601.gappssmtp.com header.b="lQfe4Xww"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-512ab55fde6so288808e87.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Feb 2024 03:46:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=waldekranz-com.20230601.gappssmtp.com header.i=@waldekranz-com.20230601.gappssmtp.com header.b="aWN4KV54"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d2531294faso11806531fa.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Feb 2024 03:46:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=waldekranz-com.20230601.gappssmtp.com; s=20230601; t=1708688808; x=1709293608; darn=vger.kernel.org;
-        h=content-transfer-encoding:organization:mime-version:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UYaGIlRWtlH5yr29hsAr3bMxvcE9aO0b9v1PXvyEfT0=;
-        b=lQfe4XwwYuj3CNqRizOTSiwVbCuyYjLZeWfzSXz7VCJFGiKvqOzTd4T/3jDR+6eTAo
-         rlGfO20Kq3cQzcBHZxC/ph5f47C4efBvH3mST2PLy9jmo8N2BEXfjmd2PGVDTngLuL+D
-         xyPKoqnw9yGqANqrHHO6fokmDJiqQTkEt0M0BHJdm/RFeWexKsJ+mwcEkcabiTJLw1zX
-         kuFpO7k83Ai4wNCYwUl3wz+1NFskHHoKGvkMj8y+aozOvcea5xGwQcIYdep84SQb8oFG
-         +5gmZatuQB5znoiRDR8IXswsfg04jvsxXs7L7sQ7MkyRJ3C/y6PrJaU7FxSZ4A+YMnGW
-         dyVw==
+        d=waldekranz-com.20230601.gappssmtp.com; s=20230601; t=1708688809; x=1709293609; darn=vger.kernel.org;
+        h=content-transfer-encoding:organization:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zkDAooeQBr5rThauoM1g1MywPOKO4Mf+GehhCfGa7To=;
+        b=aWN4KV54dKK9VHoKadGzpOckv2CcQOP0AXDE0QFfY9BUUnbjEB9EKgY2xmyPrQEQqM
+         bKWbBKk8lP6zq8udHmbwIgddbShCVyJOLOpV7D5PAahdReE4qioyCjvny/HQz0RQWWFG
+         NZ7TskyYTuhyvPTu06ubla7LabeXFX8Ep7cbdUsH1vqIAKD1qgg/lSLOTw+KFncgvO9d
+         MZ+of1MstLfc+XjLWqneGN5a3HVQ8474KniGVT/Ti4kqrvft6oS+Oh1RPUPnKKn73tHj
+         lTUTZOSCpKVDVFsMDWUt0argyPV7gt2Kt8qq2MqUTD9V/V7R4bUMnnyd7HltkkQ0HVHM
+         DWEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708688808; x=1709293608;
-        h=content-transfer-encoding:organization:mime-version:message-id:date
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UYaGIlRWtlH5yr29hsAr3bMxvcE9aO0b9v1PXvyEfT0=;
-        b=UB+P/Eo1pz7zcmLCiVHSFh6UwMceJb/fBkrUJqeveV0KPzsH32xQGe6C2nz7+82ufw
-         weCP90StZp7S8n65RdvlgWzfZtfOHSObtd+ifBKQ/XOVyn3sQ4ImYeto5Oxdxcd43y18
-         58ReYVT2GMJS4VLTdu2DnzLiRh3w8utzsw3366I/c8/QxBwbRwnz1umEs8BCLGj8bPo7
-         +rJXwf4c5DmTexNWnSBW2JABipbSHT0lbzm2eedZgEJ7pak15fE5UKmP2oeGyPnXE7aO
-         C1ChiDlfTaR44KtwVfdgAEAoiS+XZ4ZaK00UZan6gEht2mT+wt9Lx36adIP/G31MBJvg
-         tXGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWMSQ7QRhVSsiazAqoaUTMJrM00uTM4HmH2c8x0FGS/by/rt18Wh7wZ1sTieNB7F7dlSKzX/94wQMlS/6o4j1QBFpZASbBmlGBzWsdYk7ElET9E
-X-Gm-Message-State: AOJu0YwkQtt0cAjSIO7xc+jHUSd3MU+dvhb2cqUOIOkzXLBMHFl26RMc
-	s72WfAvc14ewfnYxOGfeML3Ob55ryeyf9A5ucoIliomb5+3ggt+LIaXvXGegJQs=
-X-Google-Smtp-Source: AGHT+IH2mdJq53bkBO5sog527xIQE+kgKnqpGPuW5eYY2m4q0AZgoHvbR0Xl071UF67OKiEa7BV+SA==
-X-Received: by 2002:ac2:58ce:0:b0:512:b437:4b06 with SMTP id u14-20020ac258ce000000b00512b4374b06mr1084775lfo.67.1708688807864;
-        Fri, 23 Feb 2024 03:46:47 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708688809; x=1709293609;
+        h=content-transfer-encoding:organization:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zkDAooeQBr5rThauoM1g1MywPOKO4Mf+GehhCfGa7To=;
+        b=JRObSS/JzXHRvLtsZkrcG+vmt/RdRqke75+j5CPU6pr+6UJjTHg9I0ResaSMBEp/WH
+         gOzs5AXr6gVt8rR/AJalKqRm92QOPeK2xNlCRbGZ8atsA0RndOgU5D52ZA2PApWxG1Mb
+         acEjZ6gqRSpOMx0NzLSR7IhiB3UK5OnPLY2be5pkpH5kxzj6p+eaCiAlwQF4cDVZYpFO
+         ESBEXeiyw5LYcfjWHUEyr9ZzoBVTljIj2Pghrb+ilbclhuzo0Tsp4epx8ZHz0daeTQRC
+         Ob/iP9r8y31cye2vf4CTuMlawZYIKugnDYWs7urfuGON6TD2toQjGcO7GmUm4ak1tysA
+         EboA==
+X-Forwarded-Encrypted: i=1; AJvYcCXg9+Tj+SdkGG6RtCXaAzGHPY0Ax/N9YvosuU/AUG4Zbth5XDltuSVZHo/xnYcNSJ/eW2+emtgPsiille/44GbIVJY9wYalN+RqD3r6obsvhiuL
+X-Gm-Message-State: AOJu0Yz6UcdlFWqMoJ6FlQbXGN795ZuRE0CUDy4hRm7XvjBCl0a0aRiB
+	QLP4l6VIhAMKJnA/ikz/4KuL6yIV+GZ9m2aEKfcbZmgHRd6vLbphkPy7dhxbgo0=
+X-Google-Smtp-Source: AGHT+IGDDaf54W831L5Ts8Flm3Ec9j0oLrGHQ4QMtQP0ylEjumhcZqW25LR2wJeBe/FFYgdBRSZ+Mg==
+X-Received: by 2002:ac2:4d03:0:b0:512:b24c:dba with SMTP id r3-20020ac24d03000000b00512b24c0dbamr1074063lfi.60.1708688809124;
+        Fri, 23 Feb 2024 03:46:49 -0800 (PST)
 Received: from wkz-x13.addiva.ad (a124.broadband3.quicknet.se. [46.17.184.124])
-        by smtp.gmail.com with ESMTPSA id 11-20020ac25f0b000000b00512d180fd3asm1011694lfq.144.2024.02.23.03.46.46
+        by smtp.gmail.com with ESMTPSA id 11-20020ac25f0b000000b00512d180fd3asm1011694lfq.144.2024.02.23.03.46.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Feb 2024 03:46:47 -0800 (PST)
+        Fri, 23 Feb 2024 03:46:48 -0800 (PST)
 From: Tobias Waldekranz <tobias@waldekranz.com>
 To: davem@davemloft.net,
 	kuba@kernel.org
@@ -62,10 +64,12 @@ Cc: roopa@nvidia.com,
 	rostedt@goodmis.org,
 	mhiramat@kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v3 net-next 0/4] net: switchdev: Tracepoints
-Date: Fri, 23 Feb 2024 12:44:49 +0100
-Message-Id: <20240223114453.335809-1-tobias@waldekranz.com>
+Subject: [PATCH v3 net-next 1/4] net: switchdev: Wrap enums in mapper macros
+Date: Fri, 23 Feb 2024 12:44:50 +0100
+Message-Id: <20240223114453.335809-2-tobias@waldekranz.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240223114453.335809-1-tobias@waldekranz.com>
+References: <20240223114453.335809-1-tobias@waldekranz.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -75,50 +79,159 @@ MIME-Version: 1.0
 Organization: Addiva Elektronik
 Content-Transfer-Encoding: 8bit
 
-Add a basic set of tracepoints to the switchdev layer that allows us
-to monitor all messages being passed between a bridge and the devices
-attached to it.
+In order to avoid having to maintain separate mappings from enum
+values to strings, wrap enumerators in mapper macros, so that
+enum-to-string tables can be generated.
 
-Deferred operations are additionally traced at the time they are
-enqueued. This is useful in situations where we want to inspect the
-conditions that lead to that message being generated, by looking at a
-stacktrace for example.
+This will make it easier to create helpers that convert switchdev
+objects to strings.
 
-Start off (1-2/4) by creating stringifiers for common switchdev
-objects. This will primarily be used by the tracepoints for decoding
-switchdev notifications, but drivers could also make use of them to
-provide richer debug/error messages.
+Signed-off-by: Tobias Waldekranz <tobias@waldekranz.com>
+---
+ include/net/switchdev.h | 113 ++++++++++++++++++++++++----------------
+ 1 file changed, 68 insertions(+), 45 deletions(-)
 
-Then (3/4) create a common function through which all replay calls
-pass, to create a natural point of instrumentation, before adding the
-tracepoints themselves (4/4).
-
-v2 -> v3:
-
-Take a more conservative approach to the refactoring of
-switchdev.c. In the end, I don't know that my previous attempt really
-improved the situation much.
-
-v1 -> v2:
-
-- Fixup kernel-doc comment for switchdev_call_replay
-
-Tobias Waldekranz (4):
-  net: switchdev: Wrap enums in mapper macros
-  net: switchdev: Add helpers to display switchdev objects as strings
-  net: switchdev: Relay all replay messages through a central function
-  net: switchdev: Add tracepoints
-
- include/net/switchdev.h          | 130 ++++++++++-----
- include/trace/events/switchdev.h |  74 ++++++++
- net/bridge/br_switchdev.c        |  10 +-
- net/switchdev/Makefile           |   2 +-
- net/switchdev/switchdev-str.c    | 278 +++++++++++++++++++++++++++++++
- net/switchdev/switchdev.c        |  87 +++++++++-
- 6 files changed, 521 insertions(+), 60 deletions(-)
- create mode 100644 include/trace/events/switchdev.h
- create mode 100644 net/switchdev/switchdev-str.c
-
+diff --git a/include/net/switchdev.h b/include/net/switchdev.h
+index 8346b0d29542..86298a21c6c8 100644
+--- a/include/net/switchdev.h
++++ b/include/net/switchdev.h
+@@ -16,21 +16,28 @@
+ #define SWITCHDEV_F_SKIP_EOPNOTSUPP	BIT(1)
+ #define SWITCHDEV_F_DEFER		BIT(2)
+ 
++#define SWITCHDEV_ATTR_ID_MAPPER(_fn)	\
++	_fn(UNDEFINED),			\
++	_fn(PORT_STP_STATE),		\
++	_fn(PORT_MST_STATE),		\
++	_fn(PORT_BRIDGE_FLAGS),		\
++	_fn(PORT_PRE_BRIDGE_FLAGS),	\
++	_fn(PORT_MROUTER),		\
++	_fn(BRIDGE_AGEING_TIME),	\
++	_fn(BRIDGE_VLAN_FILTERING),	\
++	_fn(BRIDGE_VLAN_PROTOCOL),	\
++	_fn(BRIDGE_MC_DISABLED),	\
++	_fn(BRIDGE_MROUTER),		\
++	_fn(BRIDGE_MST),		\
++	_fn(MRP_PORT_ROLE),		\
++	_fn(VLAN_MSTI),			\
++	/*  */
++
++#define SWITCHDEV_ATTR_ID_ENUMERATOR(_id) \
++	SWITCHDEV_ATTR_ID_ ## _id
++
+ enum switchdev_attr_id {
+-	SWITCHDEV_ATTR_ID_UNDEFINED,
+-	SWITCHDEV_ATTR_ID_PORT_STP_STATE,
+-	SWITCHDEV_ATTR_ID_PORT_MST_STATE,
+-	SWITCHDEV_ATTR_ID_PORT_BRIDGE_FLAGS,
+-	SWITCHDEV_ATTR_ID_PORT_PRE_BRIDGE_FLAGS,
+-	SWITCHDEV_ATTR_ID_PORT_MROUTER,
+-	SWITCHDEV_ATTR_ID_BRIDGE_AGEING_TIME,
+-	SWITCHDEV_ATTR_ID_BRIDGE_VLAN_FILTERING,
+-	SWITCHDEV_ATTR_ID_BRIDGE_VLAN_PROTOCOL,
+-	SWITCHDEV_ATTR_ID_BRIDGE_MC_DISABLED,
+-	SWITCHDEV_ATTR_ID_BRIDGE_MROUTER,
+-	SWITCHDEV_ATTR_ID_BRIDGE_MST,
+-	SWITCHDEV_ATTR_ID_MRP_PORT_ROLE,
+-	SWITCHDEV_ATTR_ID_VLAN_MSTI,
++	SWITCHDEV_ATTR_ID_MAPPER(SWITCHDEV_ATTR_ID_ENUMERATOR)
+ };
+ 
+ struct switchdev_mst_state {
+@@ -69,18 +76,25 @@ struct switchdev_attr {
+ 	} u;
+ };
+ 
++#define SWITCHDEV_OBJ_ID_MAPPER(_fn)	\
++	_fn(UNDEFINED),			\
++	_fn(PORT_VLAN),			\
++	_fn(PORT_MDB),			\
++	_fn(HOST_MDB),			\
++	_fn(MRP),			\
++	_fn(RING_TEST_MRP),		\
++	_fn(RING_ROLE_MRP),		\
++	_fn(RING_STATE_MRP),		\
++	_fn(IN_TEST_MRP),		\
++	_fn(IN_ROLE_MRP),		\
++	_fn(IN_STATE_MRP),		\
++	/*  */
++
++#define SWITCHDEV_OBJ_ID_ENUMERATOR(_id) \
++	SWITCHDEV_OBJ_ID_ ## _id
++
+ enum switchdev_obj_id {
+-	SWITCHDEV_OBJ_ID_UNDEFINED,
+-	SWITCHDEV_OBJ_ID_PORT_VLAN,
+-	SWITCHDEV_OBJ_ID_PORT_MDB,
+-	SWITCHDEV_OBJ_ID_HOST_MDB,
+-	SWITCHDEV_OBJ_ID_MRP,
+-	SWITCHDEV_OBJ_ID_RING_TEST_MRP,
+-	SWITCHDEV_OBJ_ID_RING_ROLE_MRP,
+-	SWITCHDEV_OBJ_ID_RING_STATE_MRP,
+-	SWITCHDEV_OBJ_ID_IN_TEST_MRP,
+-	SWITCHDEV_OBJ_ID_IN_ROLE_MRP,
+-	SWITCHDEV_OBJ_ID_IN_STATE_MRP,
++	SWITCHDEV_OBJ_ID_MAPPER(SWITCHDEV_OBJ_ID_ENUMERATOR)
+ };
+ 
+ struct switchdev_obj {
+@@ -209,27 +223,36 @@ struct switchdev_brport {
+ 	bool tx_fwd_offload;
+ };
+ 
++#define SWITCHDEV_TYPE_MAPPER(_fn)	\
++	_fn(UNKNOWN),			\
++					\
++	_fn(FDB_ADD_TO_BRIDGE),		\
++	_fn(FDB_DEL_TO_BRIDGE),		\
++	_fn(FDB_ADD_TO_DEVICE),		\
++	_fn(FDB_DEL_TO_DEVICE),		\
++	_fn(FDB_OFFLOADED),		\
++	_fn(FDB_FLUSH_TO_BRIDGE),	\
++					\
++	_fn(PORT_OBJ_ADD),		\
++	_fn(PORT_OBJ_DEL),		\
++	_fn(PORT_ATTR_SET),		\
++					\
++	_fn(VXLAN_FDB_ADD_TO_BRIDGE),	\
++	_fn(VXLAN_FDB_DEL_TO_BRIDGE),	\
++	_fn(VXLAN_FDB_ADD_TO_DEVICE),	\
++	_fn(VXLAN_FDB_DEL_TO_DEVICE),	\
++	_fn(VXLAN_FDB_OFFLOADED),	\
++					\
++	_fn(BRPORT_OFFLOADED),		\
++	_fn(BRPORT_UNOFFLOADED),	\
++	_fn(BRPORT_REPLAY),		\
++	/*  */
++
++#define SWITCHDEV_TYPE_ENUMERATOR(_id) \
++	SWITCHDEV_ ## _id
++
+ enum switchdev_notifier_type {
+-	SWITCHDEV_FDB_ADD_TO_BRIDGE = 1,
+-	SWITCHDEV_FDB_DEL_TO_BRIDGE,
+-	SWITCHDEV_FDB_ADD_TO_DEVICE,
+-	SWITCHDEV_FDB_DEL_TO_DEVICE,
+-	SWITCHDEV_FDB_OFFLOADED,
+-	SWITCHDEV_FDB_FLUSH_TO_BRIDGE,
+-
+-	SWITCHDEV_PORT_OBJ_ADD, /* Blocking. */
+-	SWITCHDEV_PORT_OBJ_DEL, /* Blocking. */
+-	SWITCHDEV_PORT_ATTR_SET, /* May be blocking . */
+-
+-	SWITCHDEV_VXLAN_FDB_ADD_TO_BRIDGE,
+-	SWITCHDEV_VXLAN_FDB_DEL_TO_BRIDGE,
+-	SWITCHDEV_VXLAN_FDB_ADD_TO_DEVICE,
+-	SWITCHDEV_VXLAN_FDB_DEL_TO_DEVICE,
+-	SWITCHDEV_VXLAN_FDB_OFFLOADED,
+-
+-	SWITCHDEV_BRPORT_OFFLOADED,
+-	SWITCHDEV_BRPORT_UNOFFLOADED,
+-	SWITCHDEV_BRPORT_REPLAY,
++	SWITCHDEV_TYPE_MAPPER(SWITCHDEV_TYPE_ENUMERATOR)
+ };
+ 
+ struct switchdev_notifier_info {
 -- 
 2.34.1
 
