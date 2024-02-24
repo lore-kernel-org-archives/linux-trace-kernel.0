@@ -1,87 +1,103 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDFD1947D
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 24 Feb 2024 09:31:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E975175AE
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 24 Feb 2024 09:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708767078; cv=none; b=LuuPonqMA2kroTDi8VtZ/fVICURFfR3+tjE1OhWMNCoKYgMcrENbz/Hj1DhnRBBUCYSKQqkD54Xm2zNY1SPIRygGEUqG9NWEdLfl6cShh22t4iPdghg59neH6CHXxYxDVy7aY7ZeXVFeBf/ULY19D5TPFXeiEiRCNyYCREJ7QTw=
+	t=1708767666; cv=none; b=Sj2BdPaUrHRMhN+PfNd2Tfl9AE3Go711uWga4Y8a2UkO/LqjLJ14ZiNDV86jQPKC4Td+kpXU88sfQkC/GcSdVR1nttAHGhWpuIPkKn9wLOTRjZ3itFBrbZTgpsN9faIL+xChrYqcS7FkUqAJBsU6RB0hsJir+NeX33XGRIFZj5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708767078; c=relaxed/simple;
-	bh=y2+xsbNA7nJA5AJAIiiYtBIFp5DHt0sr/WcAwRB23LY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l39uawZLOTRiQcuFSzjzAX+uyu6c75aujOjVF39jZ+6wHkp5M7Q/6Hx/Dvd0KiWsbTQ02xCfHOJ23eEPlM8TZQHti/e2LVG3i+C6Hsp/sa0OGCdENuAdB/jasJRfQIcUMhdo1JCyMEaBjoRObW2BnIq8jEUagGkJfEVP8LkQfhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y/e4ofWD; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1708767666; c=relaxed/simple;
+	bh=UEFxROxE6KP7hbsHlQuKhYmjvKut4tKaZLEG/90dHnY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TzhE1J/4V3KaISA7na3Zi9XObkqRvjZJSI0QrI+HvC3TsFsCyIBcYLV1KY1JnEgqgwR7C5041/VPsefLfDKbN8b8pS9f5ENfU/J2JBYQB7yJDGdMrDlkmM1tfcX3EFb9kVMWWL6zG3tz74Ekbwmantt860VSBSATjXebI5qb5Qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b=HmdkCEdD; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y/e4ofWD"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5650c27e352so6313a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 24 Feb 2024 01:31:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="HmdkCEdD"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-412988afac9so4075975e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 24 Feb 2024 01:41:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708767073; x=1709371873; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YmY5NkPyqyDzoEieFjYp7SW5hjVc2+Nb3/NQOzb8Ges=;
-        b=y/e4ofWD20vd3a1URnY4gVNi+xSV3qazdgGof9LdTOzGjqTop0P6aPamki0ZqSqYfB
-         8jzkcCaMNaIpmJ0G14woHpNmbJvu/21hSAOyxvWzlfcTyg1WSUuQxHDXvDvmN3lpxB02
-         ej0DLMEvAf8S1YVFIb61w0mDWMR793YdZ3YIHn9a7t7ZxU/4A0DVieYSU4KYgccZtO8C
-         W0d5MnLT7+WrmnZ9cJ135R76IUHgL2rqZSQ/h4LASdB8h2e0+uax9yjGIw31p4tuTRf1
-         OxfMDNLFpY3POZ0yl9X2ouDzGJLcC0KIZ1CnYoVGT2/hTwVoeF9ZgNt8JRMldLkqinZc
-         LK5Q==
+        d=arista.com; s=google; t=1708767663; x=1709372463; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9v4R1LcjkjY5cWdbqRcV+KS7qfSyvUTSBFeDxDIrljY=;
+        b=HmdkCEdDBEb0hUoPXbEx8PLuzMUGEp+YK5OOFbuDLvD4AuJz56an7hZApsCef3o7hH
+         XR4Q0+Hwt+ARkoS65145mXVm8QpemZUbVvdFURaLbm8KbK4CW+gE+M/gZab8REYL4kWI
+         Ja/EGOjPaXDjavbcZDaS310vFcCAUjUlu7Qc9HBYdvzy7eZEmLYu2hKHYiLNeNqsAM/R
+         FBq2NY7nNa3OS38RipInsdZ3xPVyY7op8qo+X4ssGXp/URVRWtuOAtM2p+XXDNN44KFo
+         lMKq6QdwffH31Wdsof+9MZRO/81LwWE3jNAWPSCcMQ7o1q5xSCKL8aA/0U0WyI22G54o
+         RxJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708767073; x=1709371873;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YmY5NkPyqyDzoEieFjYp7SW5hjVc2+Nb3/NQOzb8Ges=;
-        b=OtUX4g6K6cp1b7ImCT32byDtTWwoaek1VA+eKTp89jfuMIy9p/YTzmUCMN2uXvforq
-         H9raRpwIJjzQCrHGtxFr9EjOK9SS9WyD3v/+FPmzkuTy1vKHtPpqsNawHsJ4XOY0Maag
-         9EJlPXx44/0wwxasFceYkGObZgOXzSB8vlFD0XxOLeG6xvYUiVCM0nKQKuMOWQ2f7kOh
-         jT40mfBFrCrpkHToArf5ODZUZc2NRoAx6xOTro/7/3XSLvqV5R6rZCQaU59SVr1Tv52q
-         lIP1AhRqeyH5a23rVVMbazynnWPJn6Be17/Jna7YGddMt551/NygLj8HmGGdF0f8nrzT
-         NoMw==
-X-Forwarded-Encrypted: i=1; AJvYcCWt2DMGcgqmloRwuZuc+w8NrWUisjOtxUJaFizbFniOomFR3n+7r8/HmzOvgta2rtPCLILSqS4TRnSoNO02mL/six8EamsHnYWcRt5FxChP8rTI
-X-Gm-Message-State: AOJu0YyNyt3ahdsHsor+HJ90RKmHTv9xyFuRhFlXH8wHE+mqfqt+evfd
-	I+k7C5ck+ImuDQvS7cCGiHnxRw2iZugy3FP6bwX/56gS8j8gsIEhlS1535+3GWkrL1hKt6lAeH8
-	T2hQi0ORlbPIab6eW6/uTfSLfxrHXUn62ZGXJ
-X-Google-Smtp-Source: AGHT+IGOZl/nBisuhQ6zD6jxD83U4XFWrPSRI4XTF0ONfj1DyW3nznVrpeMbXo6M+AY0O65iMMFktnvrm6rpep/W1WI=
-X-Received: by 2002:a50:a6d7:0:b0:565:733d:2b30 with SMTP id
- f23-20020a50a6d7000000b00565733d2b30mr114515edc.4.1708767073364; Sat, 24 Feb
- 2024 01:31:13 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708767663; x=1709372463;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9v4R1LcjkjY5cWdbqRcV+KS7qfSyvUTSBFeDxDIrljY=;
+        b=jQadJosbA78Wnt1nxGCOwbVSwAocB7Dy+pNr9Av21pqDP68d+eCQAB6BZA8uC45ytC
+         f/WFiG2tI5rhyWQ0eJvlE05GXaiFPyn/prNEb4oFWCEtlmm8USVCpKCpp2GTE49d+gO1
+         j1aU7cAdJddiizSo5n3X+i5eOfvJh4MaghjVWJ0Nk+uB1SnC0BbJLxFqLloZqbpnYSAs
+         vIb6q0JGgjyOpixCFBIiXVJEZrwiQPwftD6bdgWlhP/NaitEhBYnM9iv1jRbn0m3/Irf
+         T706BdTzCzgkseV5+o1u6u45bW4cFt9VgUzYyfC0TP+lN9uJlvyOxnslbw388KYggLUb
+         tLHw==
+X-Forwarded-Encrypted: i=1; AJvYcCVIDR6NauzA4WYFoUnC+S4t4wgS0LTEm1vUsVHe5zcIpjHhmJC4dRYrW2DSGKyHsP8ycQAudBQWbMNqZq7RUg4IXC/AWo9lPtNIcOcKL2iWywr2
+X-Gm-Message-State: AOJu0Yz7+6Qz690n30AugxuNoUOwS8kR1jOH8R3IkGykOmN2sj1E1DGY
+	2LmBfuLRZIuwZ1ToH+JP+XqnhQebCgtafN32rWNcMT+9nvaMhaq/oPIipX/SgLW3O8SQaSvytnE
+	=
+X-Google-Smtp-Source: AGHT+IEyK9H6qTd17qmPlYqNBSh17XoUaXYRRxKBzbl5Zs/nMraTHjuqZ5EBJfQ2dbtVFWQsGALWug==
+X-Received: by 2002:a05:600c:1d07:b0:412:6015:3dc5 with SMTP id l7-20020a05600c1d0700b0041260153dc5mr1121291wms.14.1708767662930;
+        Sat, 24 Feb 2024 01:41:02 -0800 (PST)
+Received: from [10.83.37.178] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id f14-20020adff98e000000b0033cf60e268fsm1509225wrr.116.2024.02.24.01.41.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 24 Feb 2024 01:41:02 -0800 (PST)
+Message-ID: <ff642d38-17b8-4b12-b2ff-a819b193b2e6@arista.com>
+Date: Sat, 24 Feb 2024 09:40:55 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240224-tcp-ao-tracepoints-v1-0-15f31b7f30a7@arista.com> <20240224-tcp-ao-tracepoints-v1-3-15f31b7f30a7@arista.com>
-In-Reply-To: <20240224-tcp-ao-tracepoints-v1-3-15f31b7f30a7@arista.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Sat, 24 Feb 2024 10:30:59 +0100
-Message-ID: <CANn89iKB3ov_rthyscWn=h4yxmhReXAJzHu9+dOdpzPA8F=C-w@mail.gmail.com>
-Subject: Re: [PATCH net-next 03/10] net/tcp: Move tcp_inbound_hash() from headers
-To: Dmitry Safonov <dima@arista.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, David Ahern <dsahern@kernel.org>, Shuah Khan <shuah@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Dmitry Safonov <0x7f454c46@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 03/10] net/tcp: Move tcp_inbound_hash() from
+ headers
+To: Eric Dumazet <edumazet@google.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ David Ahern <dsahern@kernel.org>, Shuah Khan <shuah@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Dmitry Safonov <0x7f454c46@gmail.com>
+References: <20240224-tcp-ao-tracepoints-v1-0-15f31b7f30a7@arista.com>
+ <20240224-tcp-ao-tracepoints-v1-3-15f31b7f30a7@arista.com>
+ <CANn89iKB3ov_rthyscWn=h4yxmhReXAJzHu9+dOdpzPA8F=C-w@mail.gmail.com>
+Content-Language: en-US
+From: Dmitry Safonov <dima@arista.com>
+In-Reply-To: <CANn89iKB3ov_rthyscWn=h4yxmhReXAJzHu9+dOdpzPA8F=C-w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, Feb 24, 2024 at 10:04=E2=80=AFAM Dmitry Safonov <dima@arista.com> w=
-rote:
->
-> Two reasons:
-> 1. It's grown up enough
-> 2. In order to not do header spaghetti by including
->    <trace/events/tcp.h>, which is necessary for TCP tracepoints.
->
-> Signed-off-by: Dmitry Safonov <dima@arista.com>
+On 2/24/24 09:30, Eric Dumazet wrote:
+> On Sat, Feb 24, 2024 at 10:04 AM Dmitry Safonov <dima@arista.com> wrote:
+>>
+>> Two reasons:
+>> 1. It's grown up enough
+>> 2. In order to not do header spaghetti by including
+>>    <trace/events/tcp.h>, which is necessary for TCP tracepoints.
+>>
+>> Signed-off-by: Dmitry Safonov <dima@arista.com>
+> 
+> Okay, but what about CONFIG_IPV6=m ?
+> 
+> I do not see any EXPORT_SYMBOL() in this patch.
 
-Okay, but what about CONFIG_IPV6=3Dm ?
+Ouch. I keep forgetting about that case, will fix in v2.
 
-I do not see any EXPORT_SYMBOL() in this patch.
+Thanks,
+             Dmitry
+
