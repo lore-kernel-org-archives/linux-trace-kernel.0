@@ -1,103 +1,76 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E975175AE
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 24 Feb 2024 09:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9341646436
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 24 Feb 2024 13:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708767666; cv=none; b=Sj2BdPaUrHRMhN+PfNd2Tfl9AE3Go711uWga4Y8a2UkO/LqjLJ14ZiNDV86jQPKC4Td+kpXU88sfQkC/GcSdVR1nttAHGhWpuIPkKn9wLOTRjZ3itFBrbZTgpsN9faIL+xChrYqcS7FkUqAJBsU6RB0hsJir+NeX33XGRIFZj5A=
+	t=1708782740; cv=none; b=pvV9gSTZBX8Zjj9Th2lWO9NmTj6TGJ66UbY9lg9bM/LAaVeBaZORTOwHgbdtynLY6R48ew4QN5QIsTM48kNjZ3heHtqoFWDYZr58z1Xvmo+43LRcfcX48DVh8gbu3AxocPzbPod0Lhm0fmNmzJAJz3AU8yuQ0Bxy+eKyTRSAu/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708767666; c=relaxed/simple;
-	bh=UEFxROxE6KP7hbsHlQuKhYmjvKut4tKaZLEG/90dHnY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TzhE1J/4V3KaISA7na3Zi9XObkqRvjZJSI0QrI+HvC3TsFsCyIBcYLV1KY1JnEgqgwR7C5041/VPsefLfDKbN8b8pS9f5ENfU/J2JBYQB7yJDGdMrDlkmM1tfcX3EFb9kVMWWL6zG3tz74Ekbwmantt860VSBSATjXebI5qb5Qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b=HmdkCEdD; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
+	s=arc-20240116; t=1708782740; c=relaxed/simple;
+	bh=DWi/G6XObbnCjNhmKkVSdlq47mBz56V2FUFcf6XTH/A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=I5HzeRlotb004rlaMpOj4RE07n+E4QnPpzlNST73TizUA5h292P+wpjKs9OQPSaXnGpYoIksPNgUjvGZLfxNxl5Tv0RB9OdwoOB2KjKEYGwIJTgplBSlW8KR7VoJAPtGkIiSY+G6losI5h8+QXzMPRrnTWvB+eSsHHV2h0s1KKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kVMssjGL; arc=none smtp.client-ip=95.215.58.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="HmdkCEdD"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-412988afac9so4075975e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 24 Feb 2024 01:41:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=google; t=1708767663; x=1709372463; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9v4R1LcjkjY5cWdbqRcV+KS7qfSyvUTSBFeDxDIrljY=;
-        b=HmdkCEdDBEb0hUoPXbEx8PLuzMUGEp+YK5OOFbuDLvD4AuJz56an7hZApsCef3o7hH
-         XR4Q0+Hwt+ARkoS65145mXVm8QpemZUbVvdFURaLbm8KbK4CW+gE+M/gZab8REYL4kWI
-         Ja/EGOjPaXDjavbcZDaS310vFcCAUjUlu7Qc9HBYdvzy7eZEmLYu2hKHYiLNeNqsAM/R
-         FBq2NY7nNa3OS38RipInsdZ3xPVyY7op8qo+X4ssGXp/URVRWtuOAtM2p+XXDNN44KFo
-         lMKq6QdwffH31Wdsof+9MZRO/81LwWE3jNAWPSCcMQ7o1q5xSCKL8aA/0U0WyI22G54o
-         RxJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708767663; x=1709372463;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9v4R1LcjkjY5cWdbqRcV+KS7qfSyvUTSBFeDxDIrljY=;
-        b=jQadJosbA78Wnt1nxGCOwbVSwAocB7Dy+pNr9Av21pqDP68d+eCQAB6BZA8uC45ytC
-         f/WFiG2tI5rhyWQ0eJvlE05GXaiFPyn/prNEb4oFWCEtlmm8USVCpKCpp2GTE49d+gO1
-         j1aU7cAdJddiizSo5n3X+i5eOfvJh4MaghjVWJ0Nk+uB1SnC0BbJLxFqLloZqbpnYSAs
-         vIb6q0JGgjyOpixCFBIiXVJEZrwiQPwftD6bdgWlhP/NaitEhBYnM9iv1jRbn0m3/Irf
-         T706BdTzCzgkseV5+o1u6u45bW4cFt9VgUzYyfC0TP+lN9uJlvyOxnslbw388KYggLUb
-         tLHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVIDR6NauzA4WYFoUnC+S4t4wgS0LTEm1vUsVHe5zcIpjHhmJC4dRYrW2DSGKyHsP8ycQAudBQWbMNqZq7RUg4IXC/AWo9lPtNIcOcKL2iWywr2
-X-Gm-Message-State: AOJu0Yz7+6Qz690n30AugxuNoUOwS8kR1jOH8R3IkGykOmN2sj1E1DGY
-	2LmBfuLRZIuwZ1ToH+JP+XqnhQebCgtafN32rWNcMT+9nvaMhaq/oPIipX/SgLW3O8SQaSvytnE
-	=
-X-Google-Smtp-Source: AGHT+IEyK9H6qTd17qmPlYqNBSh17XoUaXYRRxKBzbl5Zs/nMraTHjuqZ5EBJfQ2dbtVFWQsGALWug==
-X-Received: by 2002:a05:600c:1d07:b0:412:6015:3dc5 with SMTP id l7-20020a05600c1d0700b0041260153dc5mr1121291wms.14.1708767662930;
-        Sat, 24 Feb 2024 01:41:02 -0800 (PST)
-Received: from [10.83.37.178] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id f14-20020adff98e000000b0033cf60e268fsm1509225wrr.116.2024.02.24.01.41.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 24 Feb 2024 01:41:02 -0800 (PST)
-Message-ID: <ff642d38-17b8-4b12-b2ff-a819b193b2e6@arista.com>
-Date: Sat, 24 Feb 2024 09:40:55 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kVMssjGL"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1708782736;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=YFtXqFDS+/V/pPxlyQ29yAaA1FKzrLsOqyZdEIxRYN0=;
+	b=kVMssjGLzngjIBFQ9FRjhikv4a2uzoSirFwYHZMbVlFcT7N0QQCxtPPwpZgXlmfXPCm7Oo
+	5V99R5ge64NI3xnA+A4h4hM43P5/iLVGF0lT/8uEGkvHfMzXl0wLEMnynqpbibMiLTHRR0
+	bW2fuW2DyaIMBf2+KwdE8LCc9F2cXQE=
+From: chengming.zhou@linux.dev
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	vbabka@suse.cz,
+	roman.gushchin@linux.dev,
+	Xiongwei.Song@windriver.com,
+	chengming.zhou@linux.dev,
+	Chengming Zhou <zhouchengming@bytedance.com>
+Subject: [PATCH] tracefs: remove SLAB_MEM_SPREAD flag usage
+Date: Sat, 24 Feb 2024 13:52:06 +0000
+Message-Id: <20240224135206.830300-1-chengming.zhou@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 03/10] net/tcp: Move tcp_inbound_hash() from
- headers
-To: Eric Dumazet <edumazet@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- David Ahern <dsahern@kernel.org>, Shuah Khan <shuah@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- Dmitry Safonov <0x7f454c46@gmail.com>
-References: <20240224-tcp-ao-tracepoints-v1-0-15f31b7f30a7@arista.com>
- <20240224-tcp-ao-tracepoints-v1-3-15f31b7f30a7@arista.com>
- <CANn89iKB3ov_rthyscWn=h4yxmhReXAJzHu9+dOdpzPA8F=C-w@mail.gmail.com>
-Content-Language: en-US
-From: Dmitry Safonov <dima@arista.com>
-In-Reply-To: <CANn89iKB3ov_rthyscWn=h4yxmhReXAJzHu9+dOdpzPA8F=C-w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 2/24/24 09:30, Eric Dumazet wrote:
-> On Sat, Feb 24, 2024 at 10:04 AM Dmitry Safonov <dima@arista.com> wrote:
->>
->> Two reasons:
->> 1. It's grown up enough
->> 2. In order to not do header spaghetti by including
->>    <trace/events/tcp.h>, which is necessary for TCP tracepoints.
->>
->> Signed-off-by: Dmitry Safonov <dima@arista.com>
-> 
-> Okay, but what about CONFIG_IPV6=m ?
-> 
-> I do not see any EXPORT_SYMBOL() in this patch.
+From: Chengming Zhou <zhouchengming@bytedance.com>
 
-Ouch. I keep forgetting about that case, will fix in v2.
+The SLAB_MEM_SPREAD flag is already a no-op as of 6.8-rc1, remove
+its usage so we can delete it from slab. No functional change.
 
-Thanks,
-             Dmitry
+Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+---
+ fs/tracefs/inode.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index d65ffad4c327..5545e6bf7d26 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -731,7 +731,6 @@ static int __init tracefs_init(void)
+ 	tracefs_inode_cachep = kmem_cache_create("tracefs_inode_cache",
+ 						 sizeof(struct tracefs_inode),
+ 						 0, (SLAB_RECLAIM_ACCOUNT|
+-						     SLAB_MEM_SPREAD|
+ 						     SLAB_ACCOUNT),
+ 						 init_once);
+ 	if (!tracefs_inode_cachep)
+-- 
+2.40.1
 
