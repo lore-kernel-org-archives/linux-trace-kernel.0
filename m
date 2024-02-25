@@ -1,41 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6211B951;
-	Sun, 25 Feb 2024 22:21:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE5018B1B;
+	Sun, 25 Feb 2024 22:31:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708899702; cv=none; b=bL6rU1K17YjfPfvzoCxe9I0tFRylbpm2abKACT0v06MEfF12a2wEjvwiI9VSfgjQyyBzYhFKPiN/3wT63kEVMpI0/rBHex84Vu4MVzMNzWLmSHJRcv6xvMTnJ4c+3Yp7rBd6Hty9wU1dzqLvV79i+4capa+RxwWn2Sc9hqpTtdw=
+	t=1708900265; cv=none; b=isytdxBDwHEQqFt13EZaISPUzR+OAI+brEat4ztG9KrAhaac/mHUwyynpXN0VoGqZgQK3iWmUS63pbvwNyb5Z2sOBRKkXSTklnH2U1HDzlvLnBieE8eHF2t1IonQlTH4wNZH8Ag0DqtqsycQZRYaPpuZJPIRzXKda8v0svLMtvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708899702; c=relaxed/simple;
-	bh=2rMIg+Hl+/TCyHRlXHHI/JIqctZyl4ljHu9l1dfMqOQ=;
+	s=arc-20240116; t=1708900265; c=relaxed/simple;
+	bh=O4RTJudC8dhdXwVBJwoOhnqRe04W05XJHkcn8rJWNQ4=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=nV8kMmP4YOJOuXrnFqWf6CTKSy98Mva1RgbAPD+Ez548HCRio95roZyUq2GATsevGOTBKf7NBtidHemtsfHu1JAadrKTJvcGhON4CDZbydmjToCpNDtAOD8Z0+RXw0g/caj9TDHfAnH9bJLdN1vbZXmMJOZE21vfAz4fcdjSEK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q53+PBEQ; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=mYzYaaOzuniag+1JjD5d8xnynj0lxrLgcBJ0O0jEO/d7FOhH4c3BN4JgafKDo0c2TQUMM1uJq7bltZiIBzKk4e3sSQ3DJFPqPzF3KV5Jic+6IRBz1KvUwe6NsHvttRY79ofbHSeGP7TfzUmJd3IGYkBxgNOEJl7SRRuFdEMgxBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K3HkDmtg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q53+PBEQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FE8EC433F1;
-	Sun, 25 Feb 2024 22:21:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K3HkDmtg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E205C433C7;
+	Sun, 25 Feb 2024 22:31:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708899702;
-	bh=2rMIg+Hl+/TCyHRlXHHI/JIqctZyl4ljHu9l1dfMqOQ=;
+	s=k20201202; t=1708900264;
+	bh=O4RTJudC8dhdXwVBJwoOhnqRe04W05XJHkcn8rJWNQ4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=q53+PBEQmjWGHh/ZkfbNDHl4KdKn3K+mhvTZfd82oI/0uvrSWV6RK+yIH/BfoqkHq
-	 uVoyraL1pkW2HUmoq8XnpsxvhtJf4+V7AhAxgxg+ry0Zkz2WvDrRsSHu4F1aSzGR6Y
-	 WodeVCe+Dm94lgvRqjwhm6c2wkcwDLCLPYfnKFcRC1aqMZmf4Xhqw2nzS/MhgkQfsa
-	 vMHXuT91b84YbEeJqU3+YxQujEd4N5RuTIasZmptczveAtUZNSBDdfug0V2IjTHVLq
-	 N9kBrwW4KiLDZqyVwqMyKkRts5lBrr7NmHGOoz/dRat6eK7D1X3UBiTtv0Pu4fAztk
-	 WxHhAnW+a9jGA==
-Date: Mon, 26 Feb 2024 07:21:37 +0900
+	b=K3HkDmtgDxqylZDyENqH3z+Xa6NVEcHQ50hLSBnTmV2fdif/el1XHPPbZobaKKizk
+	 SkL7qII/cWlmo29ZsGFkluc9tu/m1/Hqu1nDqJ0Q1eBSPXEmJrK+/iB7XVBfobY4fG
+	 ETHZDeV51hyx0tacQf+kVlDHpgr6ACBxN/2Ar8wvzjsCxIZ//2+p5MPvotjUMdRcK/
+	 Zy4qjv6fpaUEg5bQsL5hhhYamF5iitZQZVWWf09sylMFSOmhGfd/CqKFPzNcmiWHDm
+	 NDoMBGc/Jeg2aOXgQXaADgk6FIfsAlcNQwAJoY3dM/9nVdf0D86TPz6fUp42JeszR0
+	 RgnA4vpyX7/Ww==
+Date: Mon, 26 Feb 2024 07:30:59 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Thorsten Blum <thorsten.blum@toblux.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Use div64_u64() instead of do_div()
-Message-Id: <20240226072137.27e500b26ba2a7e1c42974f9@kernel.org>
-In-Reply-To: <20240225164507.232942-2-thorsten.blum@toblux.com>
-References: <20240225164507.232942-2-thorsten.blum@toblux.com>
+To: Yuanhe Shu <xiangzao@linux.alibaba.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Shuah Khan
+ <skhan@linuxfoundation.org>, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, shuah@kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] selftests/ftrace: Limit length in subsystem-enable
+ tests
+Message-Id: <20240226073059.ad066900241022e704f72955@kernel.org>
+In-Reply-To: <7420f9b5-2283-419f-8c6b-705f8b0c53f6@linux.alibaba.com>
+References: <20240205131233.13686-1-xiangzao@linux.alibaba.com>
+	<20240205082120.4144fb6f@rorschach.local.home>
+	<7420f9b5-2283-419f-8c6b-705f8b0c53f6@linux.alibaba.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,59 +51,82 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sun, 25 Feb 2024 17:45:08 +0100
-Thorsten Blum <thorsten.blum@toblux.com> wrote:
+On Thu, 22 Feb 2024 20:14:56 +0800
+Yuanhe Shu <xiangzao@linux.alibaba.com> wrote:
 
-> Fixes Coccinelle/coccicheck warnings reported by do_div.cocci.
 > 
-> Compared to do_div(), div64_u64() does not implicitly cast the divisor and
-> does not unnecessarily calculate the remainder.
 > 
-
-Looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks!
-
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
-> ---
->  kernel/trace/trace_benchmark.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
+> On 2024/2/5 21:21, Steven Rostedt wrote:
+> > On Mon,  5 Feb 2024 21:12:33 +0800
+> > Yuanhe Shu <xiangzao@linux.alibaba.com> wrote:
+> > 
+> >> While sched* events being traced and sched* events continuously happen,
+> >> "[xx] event tracing - enable/disable with subsystem level files" would
+> >> never stop as it cat an endless output.
+> >> Select the first 100 lines of output would be enough to judge whether
+> >> there are more than 3 types of sched events.
+> > 
+> > It's not that it never stops but on some slower systems it does seem to
+> > take forever.
+> > 
+> > Acked-by: Steven Rostedt (Google) <rostedt@org>
+> > 
+> > Shuah,
+> > 
+> > Can you take this through your tree?
+> > 
+> > Thanks,
+> > 
+> > -- Steve
+> > 
 > 
-> diff --git a/kernel/trace/trace_benchmark.c b/kernel/trace/trace_benchmark.c
-> index 54d5fa35c90a..811b08439406 100644
-> --- a/kernel/trace/trace_benchmark.c
-> +++ b/kernel/trace/trace_benchmark.c
-> @@ -92,7 +92,6 @@ static void trace_do_benchmark(void)
->  	bm_total += delta;
->  	bm_totalsq += delta * delta;
->  
-> -
->  	if (bm_cnt > 1) {
->  		/*
->  		 * Apply Welford's method to calculate standard deviation:
-> @@ -105,7 +104,7 @@ static void trace_do_benchmark(void)
->  		stddev = 0;
->  
->  	delta = bm_total;
-> -	do_div(delta, bm_cnt);
-> +	delta = div64_u64(delta, bm_cnt);
->  	avg = delta;
->  
->  	if (stddev > 0) {
-> @@ -127,7 +126,7 @@ static void trace_do_benchmark(void)
->  			seed = stddev;
->  			if (!last_seed)
->  				break;
-> -			do_div(seed, last_seed);
-> +			seed = div64_u64(seed, last_seed);
->  			seed += last_seed;
->  			do_div(seed, 2);
->  		} while (i++ < 10 && last_seed != seed);
-> -- 
-> 2.43.2
+> Thanks for your ack but I found that I missed the 2nd and 3rd 'trace' 
+> after 'head -n 100' in code. Should I resend a new patch to fix this and 
+> meanwhile modify commit messages according to Steve's words?
+
+Yeah, please fix that and resend. This also should have Cc: stable with Fixed: tag.
+
+Thank you,
+
 > 
+> > 
+> >>
+> >> Signed-off-by: Yuanhe Shu <xiangzao@linux.alibaba.com>
+> >> ---
+> >>   .../selftests/ftrace/test.d/event/subsystem-enable.tc       | 6 +++---
+> >>   1 file changed, 3 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc b/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
+> >> index b1ede6249866..74c1114603a7 100644
+> >> --- a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
+> >> +++ b/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
+> >> @@ -18,7 +18,7 @@ echo 'sched:*' > set_event
+> >>   
+> >>   yield
+> >>   
+> >> -count=`cat trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+> >> +count=`head -n 100 trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+> >>   if [ $count -lt 3 ]; then
+> >>       fail "at least fork, exec and exit events should be recorded"
+> >>   fi
+> >> @@ -29,7 +29,7 @@ echo 1 > events/sched/enable
+> >>   
+> >>   yield
+> >>   
+> >> -count=`cat trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+> >> +count=`head -n 100 | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+> >>   if [ $count -lt 3 ]; then
+> >>       fail "at least fork, exec and exit events should be recorded"
+> >>   fi
+> >> @@ -40,7 +40,7 @@ echo 0 > events/sched/enable
+> >>   
+> >>   yield
+> >>   
+> >> -count=`cat trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+> >> +count=`head -n 100 | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+> >>   if [ $count -ne 0 ]; then
+> >>       fail "any of scheduler events should not be recorded"
+> >>   fi
 
 
 -- 
