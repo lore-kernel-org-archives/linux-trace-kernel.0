@@ -1,45 +1,61 @@
-Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
+Received: from out203-205-221-191.mail.qq.com (out203-205-221-191.mail.qq.com [203.205.221.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9341646436
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 24 Feb 2024 13:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D7AA63A5;
+	Sun, 25 Feb 2024 03:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708782740; cv=none; b=pvV9gSTZBX8Zjj9Th2lWO9NmTj6TGJ66UbY9lg9bM/LAaVeBaZORTOwHgbdtynLY6R48ew4QN5QIsTM48kNjZ3heHtqoFWDYZr58z1Xvmo+43LRcfcX48DVh8gbu3AxocPzbPod0Lhm0fmNmzJAJz3AU8yuQ0Bxy+eKyTRSAu/Q=
+	t=1708830333; cv=none; b=D/ES1/qeGtRZKxREA7TChSTAn1b2jCKOnFV7CFIPuLnJMKgiCtEAC/dwFBjZ0OAQZzvZ08gTIjT50pftTStYMkLQzoNLZ6MXFc5CAr1De1puqroJozbyHU3dD4rSpnQcNiJZ3EmNrDVc2iuVj9FgPkvWe7QD3jJUxvQ8W+aMr2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708782740; c=relaxed/simple;
-	bh=DWi/G6XObbnCjNhmKkVSdlq47mBz56V2FUFcf6XTH/A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=I5HzeRlotb004rlaMpOj4RE07n+E4QnPpzlNST73TizUA5h292P+wpjKs9OQPSaXnGpYoIksPNgUjvGZLfxNxl5Tv0RB9OdwoOB2KjKEYGwIJTgplBSlW8KR7VoJAPtGkIiSY+G6losI5h8+QXzMPRrnTWvB+eSsHHV2h0s1KKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kVMssjGL; arc=none smtp.client-ip=95.215.58.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1708830333; c=relaxed/simple;
+	bh=L20Dun7FleQn4bkO5h+YiLlfoH0K6st2YbTELaAGEqM=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=iVm7ZdP0dGWMAWmzMOlGW+ot/FGaXoC3IeLWhOVonQq275X/rbVEpssWPFSxpPpWqE+lSmP8t5f2a6cEy5+kHNQIpx4YvYAqfGmC16+j8jZG9SdxXgmIk0PVH2eG4UJoaes92k7Obrg5po6U/pl5BnWljaF0qkTOYqIizemYUXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=mk/W/+vb; arc=none smtp.client-ip=203.205.221.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kVMssjGL"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1708782736;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=YFtXqFDS+/V/pPxlyQ29yAaA1FKzrLsOqyZdEIxRYN0=;
-	b=kVMssjGLzngjIBFQ9FRjhikv4a2uzoSirFwYHZMbVlFcT7N0QQCxtPPwpZgXlmfXPCm7Oo
-	5V99R5ge64NI3xnA+A4h4hM43P5/iLVGF0lT/8uEGkvHfMzXl0wLEMnynqpbibMiLTHRR0
-	bW2fuW2DyaIMBf2+KwdE8LCc9F2cXQE=
-From: chengming.zhou@linux.dev
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	vbabka@suse.cz,
-	roman.gushchin@linux.dev,
-	Xiongwei.Song@windriver.com,
-	chengming.zhou@linux.dev,
-	Chengming Zhou <zhouchengming@bytedance.com>
-Subject: [PATCH] tracefs: remove SLAB_MEM_SPREAD flag usage
-Date: Sat, 24 Feb 2024 13:52:06 +0000
-Message-Id: <20240224135206.830300-1-chengming.zhou@linux.dev>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="mk/W/+vb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1708830328; bh=HoHJVcHPbLUtsuObsC+KQhu8jDUrXcUZFTBUuEmCeaA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=mk/W/+vbGbtOzQQN6i5kEQAxaNlNJZ1/n4jYnPCu4GSW0NjfXAuSBUPS61digJoVd
+	 JqB3dwpgACXtFeNWeV1rPTTO9426b1GktJlN51qSxDF4CzQNm4tHq8yeCM8b682DNl
+	 0qgnTh2XioMUi1+PtEUT4URIeM5btqD6vjoZnNMI=
+Received: from localhost.localdomain ([153.3.164.50])
+	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
+	id 15A1B477; Sun, 25 Feb 2024 11:05:26 +0800
+X-QQ-mid: xmsmtpt1708830326tp7ufxdrg
+Message-ID: <tencent_5EC64EB49686EE61593AE541DB14CE490A08@qq.com>
+X-QQ-XMAILINFO: MmpliBmRb3iCgVxZIjut2UWdWGFmMiPQDVVN+2H3V+OxYT5Nqc+gbRQEf/z8pD
+	 9TWf4TPSWy5Xmdu/12ppK37qbc9/wJ1LqFOKIixGIOr8Fip2tn09TtwYcp35UARxggvJyveKRhXA
+	 qlHe+73mDD7q1qknJGDShXFcNbUcBWgRepwawvTaGIRcp9dt2jrYrOMUyBvRp7ajx0F1IGCuW4Zb
+	 +h/CweK4mNQXlZ2t6KGOse0OKaCcocegTrjSJS18tAWN/XIHxDnYk+0CgETK+vYmkEBCrWqU9M1C
+	 /e9GNcpAsbaX9T+wZF4jCem/XSbAjugQrH2kp4Q5FMDwkV+XKAJotN1SJkxTYnHaxok7AnkuKvcY
+	 qRUo+xN/lFq1JuC00khm6P4++pEseQo6/Pfy9gyxTqaPKrmQrk+0YmsDqfpjETsT48QX9CQxphmk
+	 /EDI/D03I43Lkv9YnQTEDdq8ldUkJHwq5OFFK7wdie01XzrkXeo5CCiHenXdKnegDZvF4sawuV+2
+	 TxAZRGCr4Kgz3AuX7/HvxZoKEKJsYB7gh8+IGNgXUfHcZhVBWg+B9hf0VBdi0CfNYpIR79thlOl2
+	 sbSJzJ+rgcDFnydIUcpJJu0nrYVg/SyZjcFdMgl7WMeO+R2tQG4yya6F3KsjgeTuW8ehjZgdGGQB
+	 +gqb3/b/HM5AxzZ+HzpVfJo3J6l4VEQhh2x/gUOjop38vg6mAVzpVUFwNkR1/j23C7LJ6oGf87ox
+	 tLyS6SNAEbaaJoXdOSRHo9+O4xpQCG8U+6O70bD9VT1MzxQd+MhFUqiMmxOz6J4Wt058x9FMRJZn
+	 Nv04yR/Bso4LpuXwTwgSj32QWJSV1SPSCiKRmpMgJ8xLmU9jXQMTmsrY7DbGLB48xgZxbMDcbbAL
+	 LZHfJEkfOkbG75gNxS74uVSsqra6nYZj3PdCdnwcHvlJIA05Q7Kgx5VMYzSeXfd/OZlmrM9BHb4k
+	 PWK/NGIW65EUURpT6ecCqYXf/x0FbJsYTZvQZdoiQHxjsjODJW3PX+mCbYkCDh1fejzaa8PBI=
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+From: linke li <lilinke99@qq.com>
+To: 
+Cc: lilinke99@qq.com,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] ring-buffer: use READ_ONCE() to read cpu_buffer->commit_page in concurrent environment
+Date: Sun, 25 Feb 2024 11:05:06 +0800
+X-OQ-MSGID: <20240225030507.97911-1-lilinke99@qq.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-145)
+In-Reply-To: <lilinke99@qq.com>
+References: <lilinke99@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -47,30 +63,43 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-From: Chengming Zhou <zhouchengming@bytedance.com>
+In function ring_buffer_iter_empty(), cpu_buffer->commit_page and
+curr_commit_page->page->time_stamp is read using READ_ONCE() in 
+line 4354, 4355
 
-The SLAB_MEM_SPREAD flag is already a no-op as of 6.8-rc1, remove
-its usage so we can delete it from slab. No functional change.
+4354    curr_commit_page = READ_ONCE(cpu_buffer->commit_page);
+4355    curr_commit_ts = READ_ONCE(curr_commit_page->page->time_stamp);
 
-Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+while they are read directly in line 4340, 4341
+
+4340    commit_page = cpu_buffer->commit_page;
+4341    commit_ts = commit_page->page->time_stamp;
+
+There is patch similar to this. commit c1c0ce31b242 ("r8169: fix the KCSAN reported data-race in rtl_tx() while reading tp->cur_tx")
+This patch find two read of same variable while one is protected, another
+is not. And READ_ONCE() is added to protect.
+
+Signed-off-by: linke li <lilinke99@qq.com>
 ---
- fs/tracefs/inode.c | 1 -
- 1 file changed, 1 deletion(-)
+ kernel/trace/ring_buffer.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-index d65ffad4c327..5545e6bf7d26 100644
---- a/fs/tracefs/inode.c
-+++ b/fs/tracefs/inode.c
-@@ -731,7 +731,6 @@ static int __init tracefs_init(void)
- 	tracefs_inode_cachep = kmem_cache_create("tracefs_inode_cache",
- 						 sizeof(struct tracefs_inode),
- 						 0, (SLAB_RECLAIM_ACCOUNT|
--						     SLAB_MEM_SPREAD|
- 						     SLAB_ACCOUNT),
- 						 init_once);
- 	if (!tracefs_inode_cachep)
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 0699027b4f4c..eb3fa629b837 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -4337,8 +4337,8 @@ int ring_buffer_iter_empty(struct ring_buffer_iter *iter)
+ 	cpu_buffer = iter->cpu_buffer;
+ 	reader = cpu_buffer->reader_page;
+ 	head_page = cpu_buffer->head_page;
+-	commit_page = cpu_buffer->commit_page;
+-	commit_ts = commit_page->page->time_stamp;
++	commit_page = READ_ONCE(cpu_buffer->commit_page);
++	commit_ts = READ_ONCE(commit_page->page->time_stamp);
+ 
+ 	/*
+ 	 * When the writer goes across pages, it issues a cmpxchg which
 -- 
-2.40.1
+2.39.3 (Apple Git-145)
 
