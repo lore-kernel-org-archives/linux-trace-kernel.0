@@ -1,124 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64C38C10;
-	Sun, 25 Feb 2024 20:03:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6211B951;
+	Sun, 25 Feb 2024 22:21:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708891385; cv=none; b=ZCzvkFjI5MFerBUNZ7kCd/nnjzLbPsHiPBhOP/X+hk9ZUEYDXzn4t/ppjEM5OPSm8BxQKCtR+BafFoT7MPkBrUGCv9ncps7eMuQzwrmqTfOAYhdepc/M+lC5NktRQNyN39TS5WzFsy13nVw2FyX3BuNwA6QYTqS3yFcWhsEsV3k=
+	t=1708899702; cv=none; b=bL6rU1K17YjfPfvzoCxe9I0tFRylbpm2abKACT0v06MEfF12a2wEjvwiI9VSfgjQyyBzYhFKPiN/3wT63kEVMpI0/rBHex84Vu4MVzMNzWLmSHJRcv6xvMTnJ4c+3Yp7rBd6Hty9wU1dzqLvV79i+4capa+RxwWn2Sc9hqpTtdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708891385; c=relaxed/simple;
-	bh=JdjL58AeruKy3wjRZCMa8HNnw48yFKwrynnIiyQwEXI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dA10lzhWNr3lP/9BBQvuD/Nr0jkJIIWclpVGqChbxkCDMkafhgm56yRyFHLMkvrtDgKLdFmfW+kDYa76utbFUjRkXzqlAtLJ1sv9h2mSVAlZczYGZVeoa1QVoVCABhBlUBEFshe5MX3fL3h+JxZtlUghFMsFNLSNOgCz8NLZ8NM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 343BAC433F1;
-	Sun, 25 Feb 2024 20:03:04 +0000 (UTC)
-Date: Sun, 25 Feb 2024 15:03:02 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linke li <lilinke99@qq.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+	s=arc-20240116; t=1708899702; c=relaxed/simple;
+	bh=2rMIg+Hl+/TCyHRlXHHI/JIqctZyl4ljHu9l1dfMqOQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=nV8kMmP4YOJOuXrnFqWf6CTKSy98Mva1RgbAPD+Ez548HCRio95roZyUq2GATsevGOTBKf7NBtidHemtsfHu1JAadrKTJvcGhON4CDZbydmjToCpNDtAOD8Z0+RXw0g/caj9TDHfAnH9bJLdN1vbZXmMJOZE21vfAz4fcdjSEK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q53+PBEQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q53+PBEQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FE8EC433F1;
+	Sun, 25 Feb 2024 22:21:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708899702;
+	bh=2rMIg+Hl+/TCyHRlXHHI/JIqctZyl4ljHu9l1dfMqOQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=q53+PBEQmjWGHh/ZkfbNDHl4KdKn3K+mhvTZfd82oI/0uvrSWV6RK+yIH/BfoqkHq
+	 uVoyraL1pkW2HUmoq8XnpsxvhtJf4+V7AhAxgxg+ry0Zkz2WvDrRsSHu4F1aSzGR6Y
+	 WodeVCe+Dm94lgvRqjwhm6c2wkcwDLCLPYfnKFcRC1aqMZmf4Xhqw2nzS/MhgkQfsa
+	 vMHXuT91b84YbEeJqU3+YxQujEd4N5RuTIasZmptczveAtUZNSBDdfug0V2IjTHVLq
+	 N9kBrwW4KiLDZqyVwqMyKkRts5lBrr7NmHGOoz/dRat6eK7D1X3UBiTtv0Pu4fAztk
+	 WxHhAnW+a9jGA==
+Date: Mon, 26 Feb 2024 07:21:37 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
  <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] ring-buffer: use READ_ONCE() to read
- cpu_buffer->commit_page in concurrent environment
-Message-ID: <20240225150302.23c3c3c2@rorschach.local.home>
-In-Reply-To: <tencent_5EC64EB49686EE61593AE541DB14CE490A08@qq.com>
-References: <lilinke99@qq.com>
-	<tencent_5EC64EB49686EE61593AE541DB14CE490A08@qq.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Subject: Re: [PATCH] tracing: Use div64_u64() instead of do_div()
+Message-Id: <20240226072137.27e500b26ba2a7e1c42974f9@kernel.org>
+In-Reply-To: <20240225164507.232942-2-thorsten.blum@toblux.com>
+References: <20240225164507.232942-2-thorsten.blum@toblux.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sun, 25 Feb 2024 11:05:06 +0800
-linke li <lilinke99@qq.com> wrote:
+On Sun, 25 Feb 2024 17:45:08 +0100
+Thorsten Blum <thorsten.blum@toblux.com> wrote:
 
-> In function ring_buffer_iter_empty(), cpu_buffer->commit_page and
-> curr_commit_page->page->time_stamp is read using READ_ONCE() in 
-> line 4354, 4355
+> Fixes Coccinelle/coccicheck warnings reported by do_div.cocci.
 > 
-> 4354    curr_commit_page = READ_ONCE(cpu_buffer->commit_page);
-> 4355    curr_commit_ts = READ_ONCE(curr_commit_page->page->time_stamp);
-> 
-> while they are read directly in line 4340, 4341
-> 
-> 4340    commit_page = cpu_buffer->commit_page;
-> 4341    commit_ts = commit_page->page->time_stamp;
-
-Just because it's used in one place does not mean it's required in
-another.
-
-> 
-> There is patch similar to this. commit c1c0ce31b242 ("r8169: fix the KCSAN reported data-race in rtl_tx() while reading tp->cur_tx")
-> This patch find two read of same variable while one is protected, another
-> is not. And READ_ONCE() is added to protect.
+> Compared to do_div(), div64_u64() does not implicitly cast the divisor and
+> does not unnecessarily calculate the remainder.
 > 
 
-Here's the entire code:
+Looks good to me.
 
-        cpu_buffer = iter->cpu_buffer;
-        reader = cpu_buffer->reader_page;
-        head_page = cpu_buffer->head_page;
-        commit_page = cpu_buffer->commit_page;
-        commit_ts = commit_page->page->time_stamp;
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-        /*
-         * When the writer goes across pages, it issues a cmpxchg which
-         * is a mb(), which will synchronize with the rmb here.
-         * (see rb_tail_page_update())
-         */
-        smp_rmb();
+Thanks!
 
-The above smp_rmb() is a full read barrier. The commit_page and
-timestamp are not going to be read again after this.
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+> ---
+>  kernel/trace/trace_benchmark.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_benchmark.c b/kernel/trace/trace_benchmark.c
+> index 54d5fa35c90a..811b08439406 100644
+> --- a/kernel/trace/trace_benchmark.c
+> +++ b/kernel/trace/trace_benchmark.c
+> @@ -92,7 +92,6 @@ static void trace_do_benchmark(void)
+>  	bm_total += delta;
+>  	bm_totalsq += delta * delta;
+>  
+> -
+>  	if (bm_cnt > 1) {
+>  		/*
+>  		 * Apply Welford's method to calculate standard deviation:
+> @@ -105,7 +104,7 @@ static void trace_do_benchmark(void)
+>  		stddev = 0;
+>  
+>  	delta = bm_total;
+> -	do_div(delta, bm_cnt);
+> +	delta = div64_u64(delta, bm_cnt);
+>  	avg = delta;
+>  
+>  	if (stddev > 0) {
+> @@ -127,7 +126,7 @@ static void trace_do_benchmark(void)
+>  			seed = stddev;
+>  			if (!last_seed)
+>  				break;
+> -			do_div(seed, last_seed);
+> +			seed = div64_u64(seed, last_seed);
+>  			seed += last_seed;
+>  			do_div(seed, 2);
+>  		} while (i++ < 10 && last_seed != seed);
+> -- 
+> 2.43.2
+> 
 
-        commit = rb_page_commit(commit_page);
-        /* We want to make sure that the commit page doesn't change */
-        smp_rmb();
 
-        /* Make sure commit page didn't change */
-        curr_commit_page = READ_ONCE(cpu_buffer->commit_page);
-        curr_commit_ts = READ_ONCE(curr_commit_page->page->time_stamp);
-
-Now the reason for the above READ_ONCE() is because the variables *are*
-going to be used again. We do *not* want the compiler to play any games
-with that.
-
-Thus, the first read of commit_page and time_stamp are read properly as
-the compiler will not do anything that can hurt us beyond that
-smp_rmb(). The second time we read those variables, we are using them
-in the below code.
-
-
-        /* If the commit page changed, then there's more data */
-        if (curr_commit_page != commit_page ||
-            curr_commit_ts != commit_ts)
-                return 0;
-
-        /* Still racy, as it may return a false positive, but that's OK */
-        return ((iter->head_page == commit_page && iter->head >= commit) ||
-                (iter->head_page == reader && commit_page == head_page &&
-                 head_page->read == commit &&
-                 iter->head == rb_page_commit(cpu_buffer->reader_page)));
-}
-
-*But* looking at this deeper, the commit_page may need a READ_ONCE()
-but not for the reason you suggested.
-
-        commit_page = cpu_buffer->commit_page;
-        commit_ts = commit_page->page->time_stamp;
-
-The commit_page above *is* used again, and we want commit_ts to be part
-of the commit_page that was originally read and not a second reading.
-
-So, I think for the commit_page we do need a READ_ONCE() but that's
-because it is referenced again just below it and we don't want the
-compiler to read the memory location again for the second reference.
-
--- Steve
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
