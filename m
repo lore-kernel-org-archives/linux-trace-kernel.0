@@ -1,31 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1CC12FB28;
-	Mon, 26 Feb 2024 16:55:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B31131748;
+	Mon, 26 Feb 2024 16:57:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708966529; cv=none; b=S6tz/8goQ5oe1X7xtJvIqCQAdeRrS4ZGUbItlR8gLaagyubt/0h2leeYL+v+YJCEbhHnhG60gA8BM2ol6EyGsduxiVN8ts22zD04t5KUlQzkCze/TdrEDidK8gxczTOBnfcpDWWNU3efkaHkTL9guk29dYRzFvjXjaQQ4l6/DAM=
+	t=1708966664; cv=none; b=OeD5MeNKEqYjGMSuOXISscCSEcIyRO+dit2MNsMYsC+1no0RZxDhtAkBQPz+mZFdOORHpMn5wZoeuwGJeAe1LXcPXfm7M3of5/lwGtuq/WvIEXR2GWWEcLkTDq4IFUYPbH3Y5DL0nxgzuyrBr5XIARFZBgrv54waRVll/x+leas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708966529; c=relaxed/simple;
-	bh=CjYlvF1PkcXdWh85XRVSTZMPR+ij0q27bHrWUczGxSA=;
+	s=arc-20240116; t=1708966664; c=relaxed/simple;
+	bh=HcRKm6vApqzrzvFikMkQEsVjpTXQNlTNc66ff3SA20M=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qmdvIDT6Zy/H/EPKpQnP5T0FfWopohx2mo56q2gnnWsXSRMedBSnIw4LEqWxeB08oBCY9cVl9+1J0c6+uvoIowq/D1+fHYITeCvHxQg3SK/qifbvnz/I+zTqrNL8Ij8UT+8ogvErMK3BRs6qpozTyc/vwo/LHs0GbDzeiylQMDg=
+	 MIME-Version:Content-Type; b=DVYRyjI3c9cEizL4vCl+AOIwLmIe6Avmfhh00Km6jMLuuuhgj19hM64fKqU67L3umTqAopLKZPKAYdq+2auwTNSCfUVAZSbI92fn4MNQLp3JUmH9F4An096iEGVs9Nho7dEGQsq7REE/ExKqanFfnuzRveCH1JKYyqj4rmbr+/Q=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 018A7C433F1;
-	Mon, 26 Feb 2024 16:55:27 +0000 (UTC)
-Date: Mon, 26 Feb 2024 11:57:27 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47C3FC433C7;
+	Mon, 26 Feb 2024 16:57:43 +0000 (UTC)
+Date: Mon, 26 Feb 2024 11:59:42 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH v2] tracing: Add warning if string in __assign_str()
- does not match __string()
-Message-ID: <20240226115727.09906783@gandalf.local.home>
-In-Reply-To: <20240226093328.3022e75eb1d349aca51029cd@kernel.org>
-References: <20240223161356.63b72403@gandalf.local.home>
-	<20240226093328.3022e75eb1d349aca51029cd@kernel.org>
+Cc: Yuanhe Shu <xiangzao@linux.alibaba.com>, Shuah Khan <shuah@kernel.org>,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH v2] selftests/ftrace: Limit length in subsystem-enable
+ tests
+Message-ID: <20240226115942.1213cff4@gandalf.local.home>
+In-Reply-To: <20240226150938.7f0d8fd639bab79199d8556b@kernel.org>
+References: <20240226031816.88715-1-xiangzao@linux.alibaba.com>
+	<20240226150938.7f0d8fd639bab79199d8556b@kernel.org>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -36,28 +37,27 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 26 Feb 2024 09:33:28 +0900
+On Mon, 26 Feb 2024 15:09:38 +0900
 Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> On Fri, 23 Feb 2024 16:13:56 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+> On Mon, 26 Feb 2024 11:18:16 +0800
+> Yuanhe Shu <xiangzao@linux.alibaba.com> wrote:
 > 
-> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> > 
-> > In preparation to remove the second parameter of __assign_str(), make sure
-> > it is really a duplicate of __string() by adding a WARN_ON_ONCE().
-> >   
+> > While sched* events being traced and sched* events continuously happen,
+> > "[xx] event tracing - enable/disable with subsystem level files" would
+> > not stop as on some slower systems it seems to take forever.
+> > Select the first 100 lines of output would be enough to judge whether
+> > there are more than 3 types of sched events.
 > 
-> Looks good to me. So eventually this is removed when the second parameter
-> is removed?
-
-Yes, I applied this after my other patches.
-
-
+> Looks good to me.
 > 
-> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Hi Shuah, can you pick this as a fix?
+> 
 
+Yes please.
 
-Thanks!
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
 -- Steve
