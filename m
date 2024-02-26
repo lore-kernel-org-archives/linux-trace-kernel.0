@@ -1,60 +1,161 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235FC12C53D;
-	Mon, 26 Feb 2024 18:52:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EADF1E878;
+	Mon, 26 Feb 2024 20:43:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708973531; cv=none; b=pzngrsuRnKSDtxbAE9DTA/+g/+qCoICNuR25Q+ULNFS8vvKFvqDwRZZWDC9uj1eI/sBF5+joqIdUSLZySpvhPwGunWS7c9PMxM765HrGJCenFoqScAgk1LTF8hbZgmF0dt1JuLT6HBvEHpQcNFPgVURp5hYc+NrPyPrb34e/xrc=
+	t=1708980197; cv=none; b=CdfJjekNh+rxCs5edzht5nSzVfvsckvfGn+9F/KPSSHVqC974eXmrvhzkxPtlJxJO5BEiR/VG1QrQ+ExaRz9TCp4YYUyibqoQwh0/5uKRsO3Vyv0TTTpKAXdP6GPTNBMxi+38POFhCy74pvO1WjhIJTHhhfNpKxzjrUn/s3VXl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708973531; c=relaxed/simple;
-	bh=3Gmla1nD+s6JL0VfGINBYQZbGiFVdJqDEG83H9jQ8uI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XPAcQImyXdffDIISkk/FGrQfmYZ0n4gZZQ28S30eLvQJFX72Y7gH0NCfKUXX8XtDPhJFdyDb9zGvG+QXHSZQURM/9+V/+gKOZm6RmhuVTG1p16bqLIV1D7N1Te+dK7/sljAEi2lI5wUdCVJrFw972V4R/1KdYYmA/2Z8Ht21VFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83819C433C7;
-	Mon, 26 Feb 2024 18:52:04 +0000 (UTC)
-Date: Mon, 26 Feb 2024 13:53:53 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linke li <lilinke99@qq.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] ring-buffer: use READ_ONCE() to read
- cpu_buffer->commit_page in concurrent environment
-Message-ID: <20240226135353.3103b360@gandalf.local.home>
-In-Reply-To: <20240225150302.23c3c3c2@rorschach.local.home>
-References: <lilinke99@qq.com>
-	<tencent_5EC64EB49686EE61593AE541DB14CE490A08@qq.com>
-	<20240225150302.23c3c3c2@rorschach.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708980197; c=relaxed/simple;
+	bh=MdpXJHvPFyl1RGvBDZHlVxvMYdSYQEzmwqbyhU9uefI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pllEUbQcNu5kfDFWYcoVSQG1kpnvMoibO3vFQbt3U2B92MjShMut4M4osFBxhVqbiW74QuLGPSTEkGpIe/M7YWmkFuDUtdeotifXzW2BErR2SZ/6dejajnwqMpKbJ1rGEl90amxZxWL6yWT2uIsOGXu+RU0XSLcCnrLLjjfQJuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mFTKedXe; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mFTKedXe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DBD2C433F1;
+	Mon, 26 Feb 2024 20:43:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708980197;
+	bh=MdpXJHvPFyl1RGvBDZHlVxvMYdSYQEzmwqbyhU9uefI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mFTKedXeGids3PFaNjc8pIdSTCfpY1rxt/VGX52eFORSwm45uc6U8Oly1UDpo09jC
+	 wTbTQrcU68F418dMHqJgghcgJeLiGFJyM6Uyvyc4+kOs3rzNrEal2u4J9dZPH87xjA
+	 679uJKZDD04T90Tn2sYH5JMv4RGiSa0d+OEUlICSJ89mBVtWQvvHuij2mPHyqpc4yQ
+	 u1LQQM9X/HNRt23aBUqs/qQw/INSsjexkrkXS5jf6JAE7nmOWP5qiczWIN1T4CdAMm
+	 3wzvIOMJo53sB3obX1HRSqbkiD7nbspgIgYdPSbxgsIiI5DJnfBK3SN9F/3kcogWp+
+	 tvsvsWXuRs7qw==
+Date: Mon, 26 Feb 2024 20:41:42 +0000
+From: Simon Horman <horms@kernel.org>
+To: Dmitry Safonov <dima@arista.com>
+Cc: Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	David Ahern <dsahern@kernel.org>, Shuah Khan <shuah@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Dmitry Safonov <0x7f454c46@gmail.com>
+Subject: Re: [PATCH net-next 03/10] net/tcp: Move tcp_inbound_hash() from
+ headers
+Message-ID: <20240226204142.GJ13129@kernel.org>
+References: <20240224-tcp-ao-tracepoints-v1-0-15f31b7f30a7@arista.com>
+ <20240224-tcp-ao-tracepoints-v1-3-15f31b7f30a7@arista.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240224-tcp-ao-tracepoints-v1-3-15f31b7f30a7@arista.com>
 
-On Sun, 25 Feb 2024 15:03:02 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> *But* looking at this deeper, the commit_page may need a READ_ONCE()
-> but not for the reason you suggested.
+On Sat, Feb 24, 2024 at 09:04:11AM +0000, Dmitry Safonov wrote:
+> Two reasons:
+> 1. It's grown up enough
+> 2. In order to not do header spaghetti by including
+>    <trace/events/tcp.h>, which is necessary for TCP tracepoints.
 > 
->         commit_page = cpu_buffer->commit_page;
->         commit_ts = commit_page->page->time_stamp;
-> 
-> The commit_page above *is* used again, and we want commit_ts to be part
-> of the commit_page that was originally read and not a second reading.
-> 
-> So, I think for the commit_page we do need a READ_ONCE() but that's
-> because it is referenced again just below it and we don't want the
-> compiler to read the memory location again for the second reference.
+> Signed-off-by: Dmitry Safonov <dima@arista.com>
 
-Care to send a v2 patch that just adds READ_ONCE() for the commit_page, and
-change the change log stating that it is to fix the possibility that the
-time_stamp may come from a different page.
+...
 
--- Steve
+> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+> index c82dc42f57c6..5fd61ae6bcc9 100644
+> --- a/net/ipv4/tcp.c
+> +++ b/net/ipv4/tcp.c
+> @@ -4485,6 +4485,78 @@ EXPORT_SYMBOL(tcp_inbound_md5_hash);
+>  
+>  #endif
+>  
+> +/* Called with rcu_read_lock() */
+> +enum skb_drop_reason
+> +tcp_inbound_hash(struct sock *sk, const struct request_sock *req,
+> +		 const struct sk_buff *skb,
+> +		 const void *saddr, const void *daddr,
+> +		 int family, int dif, int sdif)
+> +{
+> +	const struct tcphdr *th = tcp_hdr(skb);
+> +	const struct tcp_ao_hdr *aoh;
+> +	const __u8 *md5_location;
+> +	int l3index;
+> +
+> +	/* Invalid option or two times meet any of auth options */
+> +	if (tcp_parse_auth_options(th, &md5_location, &aoh)) {
+> +		tcp_hash_fail("TCP segment has incorrect auth options set",
+> +			      family, skb, "");
+> +		return SKB_DROP_REASON_TCP_AUTH_HDR;
+> +	}
+> +
+> +	if (req) {
+> +		if (tcp_rsk_used_ao(req) != !!aoh) {
+> +			u8 keyid, rnext, maclen;
+> +
+> +			if (aoh) {
+> +				keyid = aoh->keyid;
+> +				rnext = aoh->rnext_keyid;
+> +				maclen = tcp_ao_hdr_maclen(aoh);
+> +			} else {
+> +				keyid = rnext = maclen = 0;
+> +			}
+
+Hi Dmitry,
+
+it looks like keyid is set but otherwise unused.
+
+Flagged by W=1 builds with gcc-13 and clang-17.
+
+> +
+> +			NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPAOBAD);
+> +			tcp_hash_fail("TCP connection can't start/end using TCP-AO",
+> +				      family, skb, "%s",
+> +				      !aoh ? "missing AO" : "AO signed");
+> +			return SKB_DROP_REASON_TCP_AOFAILURE;
+> +		}
+> +	}
+> +
+> +	/* sdif set, means packet ingressed via a device
+> +	 * in an L3 domain and dif is set to the l3mdev
+> +	 */
+> +	l3index = sdif ? dif : 0;
+> +
+> +	/* Fast path: unsigned segments */
+> +	if (likely(!md5_location && !aoh)) {
+> +		/* Drop if there's TCP-MD5 or TCP-AO key with any rcvid/sndid
+> +		 * for the remote peer. On TCP-AO established connection
+> +		 * the last key is impossible to remove, so there's
+> +		 * always at least one current_key.
+> +		 */
+> +		if (tcp_ao_required(sk, saddr, family, l3index, true)) {
+> +			tcp_hash_fail("AO hash is required, but not found",
+> +					family, skb, "L3 index %d", l3index);
+> +			return SKB_DROP_REASON_TCP_AONOTFOUND;
+> +		}
+> +		if (unlikely(tcp_md5_do_lookup(sk, l3index, saddr, family))) {
+> +			NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPMD5NOTFOUND);
+> +			tcp_hash_fail("MD5 Hash not found",
+> +				      family, skb, "L3 index %d", l3index);
+> +			return SKB_DROP_REASON_TCP_MD5NOTFOUND;
+> +		}
+> +		return SKB_NOT_DROPPED_YET;
+> +	}
+> +
+> +	if (aoh)
+> +		return tcp_inbound_ao_hash(sk, skb, family, req, l3index, aoh);
+> +
+> +	return tcp_inbound_md5_hash(sk, skb, saddr, daddr, family,
+> +				    l3index, md5_location);
+> +}
+> +
+>  void tcp_done(struct sock *sk)
+>  {
+>  	struct request_sock *req;
+> 
+> -- 
+> 2.43.0
+> 
+> 
