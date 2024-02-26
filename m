@@ -1,100 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6593D1CA85;
-	Mon, 26 Feb 2024 03:59:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC2A1B968;
+	Mon, 26 Feb 2024 06:09:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708919948; cv=none; b=dKMmmJQnXDs59hzEghivmf2c9gTbDuYAtXjZmIxit9LZ6Y5Vb5UsgO4F713dR1dZIrunJHsGo18HTvWQy98XnroYHk111GA4+y5ShJneIv3JtlHb0InXTm0cNtI6UQxC2uxe6b5Lag1JtCV1udy4s6d498nJ5bXhi6R50iveX3E=
+	t=1708927783; cv=none; b=HWnigoYgZuo65Rua7v7ar/AkmJx3hI0ZojEMrNfObglieuqXavArT14341CL+WYh0kA4Zqu5lPq/5qtnpOLf66WBRWAZFgCh35gaJzrKxkiErjZQMvUsTP+GP6UWSu83SWyIz4uDpYK2Zpz2lOYFrg6cDWberUnWdvI8IPKDXjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708919948; c=relaxed/simple;
-	bh=+bUIR3Sr3KLkcoy88QRFGtdrGix9yzfmI6AvbnJxv5c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sg5/cTNYSQAIkGARZmNXS7LC7phiIGCQ73XSPK9+fHtZNr9f1aPzLydTSlcNGMfb29dNH86Kp+J2WzHhS8Lphc9BEEhcLQOy4G6SH+0K2Ln5wJspv17NSxr7kmhyHbv61zzgISnIXpzOKPO4axav/b2KPK34TPuuY4F/lOQWTOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hbazXW/n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708927783; c=relaxed/simple;
+	bh=Wg0yZ4YD42v7JFgC4GCKHPnWFfnRgGsgvkto9DA5mpg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=fkJAmbQUNi5I1rAzHZEpt/6TCc38k2oJXVVy8oTpJ8OfjGB4iRacwCrwkyjJvl9jKDET8sg8lwkG4fTCKve+YI/PE0WAc4CmsH7/LvcKazyOMfqBy5ZaBT1/wTZCkXsTlXeVtS6Z3KAbdJc+fMp9TG7cRPpzGNL2OIaXUDsIDcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NkhixDM4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hbazXW/n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26456C433F1;
-	Mon, 26 Feb 2024 03:59:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NkhixDM4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E751C433C7;
+	Mon, 26 Feb 2024 06:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708919947;
-	bh=+bUIR3Sr3KLkcoy88QRFGtdrGix9yzfmI6AvbnJxv5c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hbazXW/nYFyjtKHvoC+N5XOy84OIILjSUms/qyKqD3pgrhQb323DtqyYbVjIj80qH
-	 zFhwQu/yijQ17SmtTzGC2nSFVhCG/EvRgzsBIUlw1CQnrjnatKGo/0Mq/Rl94mNjTw
-	 uV37Fl4NXDg7EbYeIUPFVYHz4fcJZ/J0lJFwX1eVlj+gwpnhY0Kl1opVGZEUVdkHDg
-	 3V1e1w9mhWcc7Ax8IT9cl4M1xqbVdw7JQCrj7D97WOcWWpFbs1GU4ziKKX3oMeBMVC
-	 qrcalUf/Bx8GCwXl5m9dShcL9JEXJZhd5kDei5sNpwYFnbiIzootb+35alNXp4kAyh
-	 AFZRrA13v0Nsw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Jiri Olsa <jolsa@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mhiramat@kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v2 7/7] Documentation: tracing: Add entry argument access at function exit
-Date: Mon, 26 Feb 2024 12:59:03 +0900
-Message-Id: <170891994330.609861.9109792572425248438.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <170891987362.609861.6767830614537418260.stgit@devnote2>
-References: <170891987362.609861.6767830614537418260.stgit@devnote2>
-User-Agent: StGit/0.19
+	s=k20201202; t=1708927782;
+	bh=Wg0yZ4YD42v7JFgC4GCKHPnWFfnRgGsgvkto9DA5mpg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NkhixDM4clXdmyPifKygz4j+8mlYVFKXuWlUHCsap8pE/3CxfUcMA7zlQ9gjkyxLy
+	 Iv4TlijA9xZAQjIgBfU/gUL0uKcC2KdZ8vP8Y63SH/rMmULJFV982dYvrQMOmVHvFs
+	 krod4G3aGgoLVClGpryu4iCyZhd5xRg9/ncYvfsKTXYxA0e9fWXewK56PDP9urJrSU
+	 jV0g5KLYyIeB0giOvCK43Zpkl+/79BtrkDgCECZyPF5xSJkrf1MLAH2uYRBlc4Peih
+	 I3ivGxIqTSSurO9cJFGrZrDwuVW16oNWCmAGi2bM2hB2mGpcGohfkm7dHrWchA5iNa
+	 HpoO7UkPk/qxA==
+Date: Mon, 26 Feb 2024 15:09:38 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Yuanhe Shu <xiangzao@linux.alibaba.com>, Shuah Khan <shuah@kernel.org>
+Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com, shuah@kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] selftests/ftrace: Limit length in subsystem-enable
+ tests
+Message-Id: <20240226150938.7f0d8fd639bab79199d8556b@kernel.org>
+In-Reply-To: <20240226031816.88715-1-xiangzao@linux.alibaba.com>
+References: <20240226031816.88715-1-xiangzao@linux.alibaba.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Mon, 26 Feb 2024 11:18:16 +0800
+Yuanhe Shu <xiangzao@linux.alibaba.com> wrote:
 
-Add a notes about the entry argument access at function exit probes for
-kprobes and fprobe trace event.
+> While sched* events being traced and sched* events continuously happen,
+> "[xx] event tracing - enable/disable with subsystem level files" would
+> not stop as on some slower systems it seems to take forever.
+> Select the first 100 lines of output would be enough to judge whether
+> there are more than 3 types of sched events.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Documentation/trace/fprobetrace.rst |    7 +++++++
- Documentation/trace/kprobetrace.rst |    7 +++++++
- 2 files changed, 14 insertions(+)
+Looks good to me.
 
-diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
-index e35e6b18df40..ab71ebf178cb 100644
---- a/Documentation/trace/fprobetrace.rst
-+++ b/Documentation/trace/fprobetrace.rst
-@@ -70,6 +70,13 @@ Synopsis of fprobe-events
- 
- For the details of TYPE, see :ref:`kprobetrace documentation <kprobetrace_types>`.
- 
-+Function arguments at exit
-+--------------------------
-+Function arguments can be accessed at exit probe using $arg<N> fetcharg. This
-+is useful to record the function parameter and return value at once, and
-+trace the difference of structure fields (for debuging a function whether it
-+correctly updates the given data structure or not)
-+
- BTF arguments
- -------------
- BTF (BPF Type Format) argument allows user to trace function and tracepoint
-diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
-index bf9cecb69fc9..35a383f95746 100644
---- a/Documentation/trace/kprobetrace.rst
-+++ b/Documentation/trace/kprobetrace.rst
-@@ -70,6 +70,13 @@ Synopsis of kprobe_events
-   (\*3) this is useful for fetching a field of data structures.
-   (\*4) "u" means user-space dereference. See :ref:`user_mem_access`.
- 
-+Function arguments at kretprobe
-+-------------------------------
-+Function arguments can be accessed at kretprobe using $arg<N> fetcharg. This
-+is useful to record the function parameter and return value at once, and
-+trace the difference of structure fields (for debuging a function whether it
-+correctly updates the given data structure or not)
-+
- .. _kprobetrace_types:
- 
- Types
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
+Hi Shuah, can you pick this as a fix?
+
+Thank you,
+
+> 
+> Fixes: 815b18ea66d6 ("ftracetest: Add basic event tracing test cases")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Yuanhe Shu <xiangzao@linux.alibaba.com>
+> ---
+>  .../selftests/ftrace/test.d/event/subsystem-enable.tc       | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc b/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
+> index b1ede6249866..b7c8f29c09a9 100644
+> --- a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
+> @@ -18,7 +18,7 @@ echo 'sched:*' > set_event
+>  
+>  yield
+>  
+> -count=`cat trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+> +count=`head -n 100 trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+>  if [ $count -lt 3 ]; then
+>      fail "at least fork, exec and exit events should be recorded"
+>  fi
+> @@ -29,7 +29,7 @@ echo 1 > events/sched/enable
+>  
+>  yield
+>  
+> -count=`cat trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+> +count=`head -n 100 trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+>  if [ $count -lt 3 ]; then
+>      fail "at least fork, exec and exit events should be recorded"
+>  fi
+> @@ -40,7 +40,7 @@ echo 0 > events/sched/enable
+>  
+>  yield
+>  
+> -count=`cat trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+> +count=`head -n 100 trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+>  if [ $count -ne 0 ]; then
+>      fail "any of scheduler events should not be recorded"
+>  fi
+> -- 
+> 2.39.3
+> 
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
