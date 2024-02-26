@@ -1,222 +1,138 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76A07FBD8
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Feb 2024 13:05:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 583CA12A14A;
+	Mon, 26 Feb 2024 14:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708952725; cv=none; b=cF2SJm6PlFlpduPLtqj+jnTHKDl9CiSsyhbmGJMoND81XIjMM6j88t8hZmq9jkLMhSRJ0JrGh167qhl9kzLTX0YOz8iUiqTVr2aJEeIiT+RwF2RRF3vuY5fDz7NlI4NTOrMtt+etxccFKL85WN58gi+cPJUQiKaMirKtQ/g0Wt4=
+	t=1708956379; cv=none; b=IUGh9nU5qUeOmLHsYRjPdAE01R6O4/PP3nOehDM+/3gj7jLt2ItN+eOQKndGER6eFeHW77N/EMngRlTW84Wau9JX9fPzRErHErkUm4GHxb9x53pvwxBGdpb6Y8nyfXHXYQgI6f1QJih1vXRoDRx5qeBOWbMP0u0a/lExEybsD3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708952725; c=relaxed/simple;
-	bh=I9nudPBmH1+ABpCfIvC23xUTfEYS66YUpJFBesnh/ys=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=tyISvMhx9ky2ZvYbQWpsvL5eSwmmmNUKXOeo6OcoJtCF6DFvwNhEdLS4plJ7PX4JrjnFpF+iQwRQjTLvu8CD8cmwcfQEymK/CTMzatBpMoBycte6XR7IzVaBhBc3pa1x46zmtROipvDkL6j4BfvJg/ob1xs1dMKLl9DQ8TXhvOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=waldekranz.com; spf=pass smtp.mailfrom=waldekranz.com; dkim=pass (2048-bit key) header.d=waldekranz-com.20230601.gappssmtp.com header.i=@waldekranz-com.20230601.gappssmtp.com header.b=BMEnCvpI; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=waldekranz.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=waldekranz.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=waldekranz-com.20230601.gappssmtp.com header.i=@waldekranz-com.20230601.gappssmtp.com header.b="BMEnCvpI"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-512f5484a37so2058743e87.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Feb 2024 05:05:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=waldekranz-com.20230601.gappssmtp.com; s=20230601; t=1708952721; x=1709557521; darn=vger.kernel.org;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iXsjpaTb0bQigvYBS/pBWZ23VKwk/d7ZGal1Zt75OOY=;
-        b=BMEnCvpIi3Bob9oSLpK4G90pdRizkeOj6R+lrWLEJ8LUAOB7WJIjltvWw7mgcEwich
-         eO6zdJWLA8wCtCBMqQeH/EhvPaTLlsrsNAymOWF5CSzEVprgYiQuIu/ToIv1WzjiwPGp
-         sQY6xclG2z9Scslb894opZEU6Q1F9avgp3P2Z+H5O3gkqKjrbo3XyID6W/88xaPU/d2Y
-         nyRDGn/m4gRIVQhBBggr36NBJ/Pdy9Bi7yep1QC3slgIAwGhbjwkjMUV8vWt9JdyIkLX
-         +cjeuh+WfTcxwClxrh6mbk0BjvlTCrCBggUtW/2lRnvrkElW+sYTX+7JfMzqt+CUe1K7
-         GFXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708952721; x=1709557521;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iXsjpaTb0bQigvYBS/pBWZ23VKwk/d7ZGal1Zt75OOY=;
-        b=AOJMEGErFVDnlQgkKwRTIrHns0RXW8EJrxorsX90m2fFVHMdxcJp6UchmFc9OkZrYG
-         Qf4Fl6VnSWsaQi5gPvlaISREIFzAS6/02jvAk3boj/HQi62Mg+ddxf3whfzgvZXyYeoE
-         WCclVXsZ4rMx/NmP1xpGOPyWa0WhJPRarjHVmJ9eKMZO4O2Te+4dODfM2mVX9o1KgR+H
-         MfJnpbkTFmc1I0/NgnRYUMwi2vVtYkyz7Qy2cTnvK3X8fsfT0LH8BgaM4NEGf3BLhZgs
-         LbJXOg94EiYZvsiB3BvREBwfCrzmy6+32Lta//YeA0wn7UwBZQBEPol4W+TCNn7eJ6o/
-         Z6LA==
-X-Forwarded-Encrypted: i=1; AJvYcCXYokD0mnKl1RJsVKYAgoGckqw9bWNHXLBa5O8Y0Pkz74DiOTFWlztLz+AuGlCEbOriBo7HMQK3fka6crQYC/68Bp2jmXehTZM0Fw5onjT3c0qV
-X-Gm-Message-State: AOJu0Yxh89ob8pIukH3lgdyetPQzRjQc00xmepZ7KyGsR9SUlbY4W/q2
-	fwCdBmqIPEgdGvv6JCh9/Ta62RIKWj7eAdv2fe+oOFlR3wlwmcerbg0mmk/VpMn4hJjWV9+f4H/
-	L
-X-Google-Smtp-Source: AGHT+IG5hh7CurEjOaQi9heB+jROTX4JXnIOCWWtXdCKtxsZKsex4mK150b3mCJbu2almX5myN8AvQ==
-X-Received: by 2002:ac2:4da9:0:b0:512:f4bb:d3c5 with SMTP id h9-20020ac24da9000000b00512f4bbd3c5mr3875078lfe.7.1708952721378;
-        Mon, 26 Feb 2024 05:05:21 -0800 (PST)
-Received: from wkz-x13 (a124.broadband3.quicknet.se. [46.17.184.124])
-        by smtp.gmail.com with ESMTPSA id g11-20020ac24d8b000000b00512c9c3aefasm836795lfe.236.2024.02.26.05.05.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 05:05:20 -0800 (PST)
-From: Tobias Waldekranz <tobias@waldekranz.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: davem@davemloft.net, kuba@kernel.org, roopa@nvidia.com,
- razor@blackwall.org, bridge@lists.linux.dev, netdev@vger.kernel.org,
- jiri@resnulli.us, ivecera@redhat.com, mhiramat@kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 net-next 4/4] net: switchdev: Add tracepoints
-In-Reply-To: <20240223103815.35fdf430@gandalf.local.home>
-References: <20240223114453.335809-1-tobias@waldekranz.com>
- <20240223114453.335809-5-tobias@waldekranz.com>
- <20240223103815.35fdf430@gandalf.local.home>
-Date: Mon, 26 Feb 2024 14:05:20 +0100
-Message-ID: <87cysjgyun.fsf@waldekranz.com>
+	s=arc-20240116; t=1708956379; c=relaxed/simple;
+	bh=Ig1CU3NKL8/cdJN+rmc1e4GaDBcrnBkfyq6QFF/1g7U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=G8/0gnVdoWeg0h9p1ISwsgvd9dgak9cN0Xb2W9lgxjTbt+TcNWFktgr2tp1p4g6i1Kxj1DX13BD/VvODzQH+CkE4euCmUkniVa8zK0P6eYkyuYqmb5tTXYgSoSAbGATefGajivRjKeZKmvWPzH5D0DBIWFf+AwhIJkPnAR1mDIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d6dff70000001748-5d-65dc9ad5f17d
+From: Honggyu Kim <honggyu.kim@sk.com>
+To: sj@kernel.org,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org
+Cc: akpm@linux-foundation.org,
+	apopple@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	dave.jiang@intel.com,
+	honggyu.kim@sk.com,
+	hyeongtak.ji@sk.com,
+	kernel_team@skhynix.com,
+	linmiaohe@huawei.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	lizhijian@cn.fujitsu.com,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	rakie.kim@sk.com,
+	rostedt@goodmis.org,
+	surenb@google.com,
+	yangx.jy@fujitsu.com,
+	ying.huang@intel.com,
+	ziy@nvidia.com,
+	42.hyeyoo@gmail.com
+Subject: [PATCH v2 1/7] mm/damon: refactor DAMOS_PAGEOUT with migration_mode
+Date: Mon, 26 Feb 2024 23:05:47 +0900
+Message-ID: <20240226140555.1615-2-honggyu.kim@sk.com>
+X-Mailer: git-send-email 2.43.0.windows.1
+In-Reply-To: <20240226140555.1615-1-honggyu.kim@sk.com>
+References: <20240226140555.1615-1-honggyu.kim@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOIsWRmVeSWpSXmKPExsXC9ZZnoe61WXdSDRb+ZbSY2GNgMWf9GjaL
+	XTdCLP7vPcZo8eT/b1aLEzcb2Sw6vy9lsbi8aw6bxb01/1ktjqw/y2Kx7haQtfnsGWaLxcvV
+	LPZ1PGCyOPz1DZPF5EsL2CxeTDnDaHFy1mQWi9lH77E7CHv8PziJ2WPp6TdsHhuagMTOWXfZ
+	PVr23WL3WLCp1KPlyFtWj8V7XjJ5bFrVyeax6dMkdo8TM36zeOx8aOnxYvNMRo/e5ndsHp83
+	yQXwR3HZpKTmZJalFunbJXBlzGnYwFzQwlsx78catgbGK1xdjJwcEgImEjfmPmXqYuQAsxdv
+	1QIJswmoSVx5OQksLCLgILHqq0IXIxcHs0ADi8SPz5dYQGqEBXwk1v67wQ5iswioSvzaNB8s
+	zitgJvHoWC8jxHhNicfbf4LVcAqYS/w/3M4GMlMIqObobWaIckGJkzOfgLUyC8hLNG+dzQyy
+	S0LgFLvE3yvrWSHmSEocXHGDZQIj/ywkPbOQ9CxgZFrFKJSZV5abmJljopdRmZdZoZecn7uJ
+	ERh9y2r/RO9g/HQh+BCjAAejEg+vQ+2dVCHWxLLiytxDjBIczEoivOEyN1OFeFMSK6tSi/Lj
+	i0pzUosPMUpzsCiJ8xp9K08REkhPLEnNTk0tSC2CyTJxcEo1MDK+N4yt27RA9+y/ac7bG3rd
+	Dz+yUDrannj3QV6ted70+a3f/ZKifvgU12UsuB/YVTyxslSkL/lnqMwXP1sPWSGeB3JTFtmG
+	3z7qLOWYNm9R24NJbss36+yscjzc+K1eUO+lQNXsWZ2JgQd3xe8zfeywek10WvC1nbd1tSsZ
+	rr5e/Ffj2KdFS5RYijMSDbWYi4oTAbUWVdi6AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLIsWRmVeSWpSXmKPExsXCNUNLT/fqrDupBo0HdSwm9hhYzFm/hs1i
+	140Qi/97jzFaPPn/m9XixM1GNovPz14zW3Q++c5ocXjuSVaLzu9LWSwu75rDZnFvzX9WiyPr
+	z7JYrLsFZG0+e4bZYvFyNYtD156zWuzreMBkcfjrGyaLyZcWsFm8mHKG0eLkrMksFrOP3mN3
+	EPf4f3ASs8fS02/YPDY0AYmds+6ye7Tsu8XusWBTqUfLkbesHov3vGTy2LSqk81j06dJ7B4n
+	Zvxm8dj50NLjxeaZjB69ze/YPL7d9vBY/OIDU4BgFJdNSmpOZllqkb5dAlfGnIYNzAUtvBXz
+	fqxha2C8wtXFyMEhIWAisXirVhcjJwebgJrElZeTmEDCIgIOEqu+KnQxcnEwCzSwSPz4fIkF
+	pEZYwEdi7b8b7CA2i4CqxK9N88HivAJmEo+O9TKC2BICmhKPt/8Eq+EUMJf4f7idDWSmEFDN
+	0dvMEOWCEidnPgFrZRaQl2jeOpt5AiPPLCSpWUhSCxiZVjGKZOaV5SZm5pjqFWdnVOZlVugl
+	5+duYgRG2rLaPxN3MH657H6IUYCDUYmH16H2TqoQa2JZcWXuIUYJDmYlEd5wmZupQrwpiZVV
+	qUX58UWlOanFhxilOViUxHm9wlMThATSE0tSs1NTC1KLYLJMHJxSDYxhHAuf6dzr6NtyNJy7
+	13qtTeBhUWmln4dEykuTjp9kPrPYvdXukZi588M8jvz/Okuuvs5e+U/k4+zt36xcRG4WSjyW
+	j2Gbe+7GhJ35d3/qb7q6TXVr2Mlrj62Yb2bkL4n3/jzrYsN99qW/1PO3W39Rl/abUabYKMh2
+	/GZw+UrX89m3ys78F+1XYinOSDTUYi4qTgQATejUCbACAAA=
+X-CFilter-Loop: Reflected
 
-On fre, feb 23, 2024 at 10:38, Steven Rostedt <rostedt@goodmis.org> wrote:
-> On Fri, 23 Feb 2024 12:44:53 +0100
-> Tobias Waldekranz <tobias@waldekranz.com> wrote:
->
->> Add a basic set of tracepoints:
->> 
->> - switchdev_defer: Fires whenever an operation is enqueued to the
->>   switchdev workqueue for deferred delivery.
->> 
->> - switchdev_call_{atomic,blocking}: Fires whenever a notification is
->>   sent to the corresponding switchdev notifier chain.
->> 
->> - switchdev_call_replay: Fires whenever a notification is sent to a
->>   specific driver's notifier block, in response to a replay request.
->> 
->> Signed-off-by: Tobias Waldekranz <tobias@waldekranz.com>
->> ---
->>  include/trace/events/switchdev.h | 74 ++++++++++++++++++++++++++++++++
->>  net/switchdev/switchdev.c        | 71 +++++++++++++++++++++++++-----
->>  2 files changed, 135 insertions(+), 10 deletions(-)
->>  create mode 100644 include/trace/events/switchdev.h
->> 
->> diff --git a/include/trace/events/switchdev.h b/include/trace/events/switchdev.h
->> new file mode 100644
->> index 000000000000..dcaf6870d017
->> --- /dev/null
->> +++ b/include/trace/events/switchdev.h
->> @@ -0,0 +1,74 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +#undef TRACE_SYSTEM
->> +#define TRACE_SYSTEM	switchdev
->> +
->> +#if !defined(_TRACE_SWITCHDEV_H) || defined(TRACE_HEADER_MULTI_READ)
->> +#define _TRACE_SWITCHDEV_H
->> +
->> +#include <linux/tracepoint.h>
->> +#include <net/switchdev.h>
->> +
->> +#define SWITCHDEV_TRACE_MSG_MAX 128
->
-> 128 bytes is awfully big to waste on the ring buffer. What's the average
-> size of a string?
+This is a preparation patch that introduces migration modes.
 
-I would say the typical message is around 60-80 bytes. Some common examples:
+The damon_pa_pageout is renamed to damon_pa_migrate and it receives an
+extra argument for migration_mode.
 
-    PORT_OBJ_ADD PORT_VLAN(flags 0x0 orig br0) vid 1 flags 0x27
-    PORT_OBJ_DEL HOST_MDB(flags 0x0 orig br0) vid 100 addr 33:33:ff:ff:00:09
+No functional changes applied.
 
-The worst case I can think of currently is 95 characters:
+Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+---
+ mm/damon/paddr.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-    VXLAN_FDB_ADD_TO_DEVICE vid 1000 addr de:ad:be:ef:00:01 added_by_user is_local locked offloaded
+diff --git a/mm/damon/paddr.c b/mm/damon/paddr.c
+index 081e2a325778..277a1c4d833c 100644
+--- a/mm/damon/paddr.c
++++ b/mm/damon/paddr.c
+@@ -224,7 +224,12 @@ static bool damos_pa_filter_out(struct damos *scheme, struct folio *folio)
+ 	return false;
+ }
+ 
+-static unsigned long damon_pa_pageout(struct damon_region *r, struct damos *s)
++enum migration_mode {
++	MIG_PAGEOUT,
++};
++
++static unsigned long damon_pa_migrate(struct damon_region *r, struct damos *s,
++				      enum migration_mode mm)
+ {
+ 	unsigned long addr, applied;
+ 	LIST_HEAD(folio_list);
+@@ -249,7 +254,14 @@ static unsigned long damon_pa_pageout(struct damon_region *r, struct damos *s)
+ put_folio:
+ 		folio_put(folio);
+ 	}
+-	applied = reclaim_pages(&folio_list);
++	switch (mm) {
++	case MIG_PAGEOUT:
++		applied = reclaim_pages(&folio_list);
++		break;
++	default:
++		/* Unexpected migration mode. */
++		return 0;
++	}
+ 	cond_resched();
+ 	return applied * PAGE_SIZE;
+ }
+@@ -297,7 +309,7 @@ static unsigned long damon_pa_apply_scheme(struct damon_ctx *ctx,
+ {
+ 	switch (scheme->action) {
+ 	case DAMOS_PAGEOUT:
+-		return damon_pa_pageout(r, scheme);
++		return damon_pa_migrate(r, scheme, MIG_PAGEOUT);
+ 	case DAMOS_LRU_PRIO:
+ 		return damon_pa_mark_accessed(r, scheme);
+ 	case DAMOS_LRU_DEPRIO:
+-- 
+2.34.1
 
->> +
->> +DECLARE_EVENT_CLASS(switchdev_call,
->> +	TP_PROTO(unsigned long val,
->> +		 const struct switchdev_notifier_info *info,
->> +		 int err),
->> +
->> +	TP_ARGS(val, info, err),
->> +
->> +	TP_STRUCT__entry(
->> +		__field(unsigned long, val)
->> +		__string(dev, info->dev ? netdev_name(info->dev) : "(null)")
->> +		__field(const struct switchdev_notifier_info *, info)
->> +		__field(int, err)
->> +		__array(char, msg, SWITCHDEV_TRACE_MSG_MAX)
->> +	),
->> +
->> +	TP_fast_assign(
->> +		__entry->val = val;
->> +		__assign_str(dev, info->dev ? netdev_name(info->dev) : "(null)");
->> +		__entry->info = info;
->> +		__entry->err = err;
->> +		switchdev_notifier_str(val, info, __entry->msg, SWITCHDEV_TRACE_MSG_MAX);
->
-> Is it possible to just store the information in the trace event and then
-> call the above function in the read stage? There's helpers to pass strings
-> around (namely a struct trace_seq *p).
-
-I'm a complete novice when it comes to tracepoint internals. Am I right
-in assuming that TP_printk may execute at a much later time than
-TP_fast_assign? E.g., the object referenced by __entry->info may very
-well have been freed by that time? That at least seems to be what my
-naive refactor to replace __entry->msg with __get_buf() suggests :)
-
-If so, the layout of the switchdev_notifier_* structs makes it a bit
-cumbersome to clone the notification in the assign phase, as the size of
-a specific notification (e.g., switchdev_notifier_port_obj_info) is not
-known by the common notification (switchdev_notifier_info). In the case
-of switchdev objects, the problem repeats a second time. E.g., the size
-of switchdev_obj_port_vlan is not known by switchdev_obj.
-
-> It would require a plugin for libtraceevent if you want to expose it to
-> user space tools for trace-cmd and perf though.
->
-> Another possibility is if this event will not race with other events on he
-> same CPU, you could create a per-cpu buffer, write into that, and then use
-> __string() and __assign_str() to save it, as traces happen with preemption
-> disabled.
-
-But bottom halves are still enabled I suppose? Notifications can be
-generated both from process context (e.g., users configuring the bridge
-with iproute2), and from bridge packet processing (e.g., adding new
-neighbors to the FDB). So I don't think that would work in this case.
-
-> -- Steve
-
-Thanks for taking the time!
-
->> +	),
->> +
->> +	TP_printk("dev %s %s -> %d", __get_str(dev), __entry->msg, __entry->err)
->> +);
->> +
->> +DEFINE_EVENT(switchdev_call, switchdev_defer,
->> +	TP_PROTO(unsigned long val,
->> +		 const struct switchdev_notifier_info *info,
->> +		 int err),
->> +
->> +	TP_ARGS(val, info, err)
->> +);
->> +
->> +DEFINE_EVENT(switchdev_call, switchdev_call_atomic,
->> +	TP_PROTO(unsigned long val,
->> +		 const struct switchdev_notifier_info *info,
->> +		 int err),
->> +
->> +	TP_ARGS(val, info, err)
->> +);
->> +
->> +DEFINE_EVENT(switchdev_call, switchdev_call_blocking,
->> +	TP_PROTO(unsigned long val,
->> +		 const struct switchdev_notifier_info *info,
->> +		 int err),
->> +
->> +	TP_ARGS(val, info, err)
->> +);
->> +
->> +DEFINE_EVENT(switchdev_call, switchdev_call_replay,
->> +	TP_PROTO(unsigned long val,
->> +		 const struct switchdev_notifier_info *info,
->> +		 int err),
->> +
->> +	TP_ARGS(val, info, err)
->> +);
->> +
->> +#endif /* _TRACE_SWITCHDEV_H */
->> +
