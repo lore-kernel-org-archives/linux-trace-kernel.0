@@ -1,357 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9343F7460;
-	Mon, 26 Feb 2024 01:28:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA95DF4D;
+	Mon, 26 Feb 2024 03:18:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708910937; cv=none; b=IB4rccYR4yPMz9TcHrFszo9Sy7dVBls3Gax0h96D9pS5sxxujKcUjkHcTvddYGHEaL8WK/XTMaHkIYKexSiRqhVu9KT/j7dPLV9LXbHgVCWW+B7/pwtrfG4oBcy7vsS46m9gUHC+6DwvTiln2sPw168Zg0HMk0mBbfdF2GrZnyU=
+	t=1708917537; cv=none; b=VJhbp/j2ND0TLn7imVEMHmxEq7E1kzw+lheRQFO9lQdQCUnLfI/C0XPkHWep+PIoMdDLbMbyyxe3qCSjIGMZ78ib3YWr9vc/2IzYHfXQK/ih59o+aNq3C8wSTE/PyOPh0z+l1MaCeVGaACLh/bkDVicApqCgtY190gQL7klNh1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708910937; c=relaxed/simple;
-	bh=FoYSiwU/5QwT9UcnEGQpQwioRBlvUjbF1EOiLbM2BMw=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=qFwNqSlVhxVgwyUnL2c5tGW0MR7Rm0vpPMDNIEAEXuw5J5LCauWP5hkGyYZh41q8gjoeS3V0048xvqx7mb/qaO/b3C4c3eDe+trjZBLmZmwRIY4BdCMRyNvpfWtmmHivLlhuOuknOR0y3QY5JMAqcwa0uZJXSpNeeQA5ybj8NUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U4dBt2dK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708917537; c=relaxed/simple;
+	bh=MXL6VcPZBWyMQPrfjTrEpeHJCu9JL55Z5etYKoyrgX8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HJ+aeKup25ccyUetDkt7LRm+RWOCMWnrnHwAqT/fZvDoI0UIknjf+7NpZCg6vHOEIo6yqM8u4QvIewz5VDYztVc5ueEZ55kNAeEmLXbjXO8Qe0ZSIdPW8ZXu4zvaw0aLa0bkez3gef2/X6sH4hJ2Frd+h3SPDMg4l3HStg/YDSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=bq3sJS9V; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U4dBt2dK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31F01C433C7;
-	Mon, 26 Feb 2024 01:28:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708910937;
-	bh=FoYSiwU/5QwT9UcnEGQpQwioRBlvUjbF1EOiLbM2BMw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=U4dBt2dKN925byM02bTghulo99O2zRj82/wtqT7W/dYa4wvUr+JyHfNbZT48pgAWL
-	 xQIljhZuCobi09j/ljf/wBefTXgJmEEPfQYYUu3jZboqBAIm4mVBkwdo4A/8Gt9du+
-	 9Qnii0M1ZodUX0JC125n9ywNreyLau5YEuhUp6aGvpRfV4zm00o6bg+637CsWdPp4y
-	 3gkNIrSskpuFNenwjnQ2M1zG9SZOTWG+338EQcN4KGLZheUScrD00C2oo/7Ew+08QJ
-	 smVhMu2KWUwy2r6ala69cA19zB8CnGxXdnGsQOxsB98c2/2+i87WsOcAMDDFIA0RAt
-	 OXlign/pyCWVg==
-Date: Mon, 26 Feb 2024 10:28:52 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mark Rutland
- <mark.rutland@arm.com>, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] ftrace: fix most kernel-doc warnings
-Message-Id: <20240226102852.9cec155058e6e756515c126b@kernel.org>
-In-Reply-To: <20240223054833.15471-1-rdunlap@infradead.org>
-References: <20240223054833.15471-1-rdunlap@infradead.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="bq3sJS9V"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1708917531; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=mLCk/YbBkqEYhn5Q5sMxmBvYHKM1K5bF4wYuOkh2FwE=;
+	b=bq3sJS9ViK35UmFygOAgZqjsPFxl24/tn+mM3IZPLecktO654M8Zb+VPZLqbp9T8Ii+f6CsW/buReGZO37N9xeqYeQ5di6ddYzDb4dTdL5qcrJXsg+76NoK4XfTYA5qZR+5O5tNRpy4JUOPXeopu2d9mFfJhPyb9kdFR5jfuDFk=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=xiangzao@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0W1ACl3C_1708917520;
+Received: from localhost.localdomain(mailfrom:xiangzao@linux.alibaba.com fp:SMTPD_---0W1ACl3C_1708917520)
+          by smtp.aliyun-inc.com;
+          Mon, 26 Feb 2024 11:18:50 +0800
+From: Yuanhe Shu <xiangzao@linux.alibaba.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	shuah@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	xiangzao@linux.alibaba.com,
+	stable@vger.kernel.org
+Subject: [PATCH v2] selftests/ftrace: Limit length in subsystem-enable tests
+Date: Mon, 26 Feb 2024 11:18:16 +0800
+Message-Id: <20240226031816.88715-1-xiangzao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 22 Feb 2024 21:48:33 -0800
-Randy Dunlap <rdunlap@infradead.org> wrote:
+While sched* events being traced and sched* events continuously happen,
+"[xx] event tracing - enable/disable with subsystem level files" would
+not stop as on some slower systems it seems to take forever.
+Select the first 100 lines of output would be enough to judge whether
+there are more than 3 types of sched events.
 
-> Reduce the number of kernel-doc warnings from 52 down to 10, i.e.,
-> fix 42 kernel-doc warnings by (a) using the Returns: format for
-> function return values or (b) using "@var:" instead of "@var -"
-> for function parameter descriptions.
-> 
-> Fix one return values list so that it is formatted correctly when
-> rendered for output.
-> 
-> Spell "non-zero" with a hyphen in several places.
+Fixes: 815b18ea66d6 ("ftracetest: Add basic event tracing test cases")
+Cc: stable@vger.kernel.org
+Signed-off-by: Yuanhe Shu <xiangzao@linux.alibaba.com>
+---
+ .../selftests/ftrace/test.d/event/subsystem-enable.tc       | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks!
-
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Link: https://lore.kernel.org/oe-kbuild-all/202312180518.X6fRyDSN-lkp@intel.com/
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-trace-kernel@vger.kernel.org
-> ---
-> This patch addresses most of the reported kernel-doc warnings but does
-> not fix all of them, so I did not use "Closes:" for the Link: tag.
-> 
->  kernel/trace/ftrace.c |   90 ++++++++++++++++++++--------------------
->  1 file changed, 46 insertions(+), 44 deletions(-)
-> 
-> diff -- a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -1160,7 +1160,7 @@ __ftrace_lookup_ip(struct ftrace_hash *h
->   * Search a given @hash to see if a given instruction pointer (@ip)
->   * exists in it.
->   *
-> - * Returns the entry that holds the @ip if found. NULL otherwise.
-> + * Returns: the entry that holds the @ip if found. NULL otherwise.
->   */
->  struct ftrace_func_entry *
->  ftrace_lookup_ip(struct ftrace_hash *hash, unsigned long ip)
-> @@ -1282,7 +1282,7 @@ static void free_ftrace_hash_rcu(struct
->  
->  /**
->   * ftrace_free_filter - remove all filters for an ftrace_ops
-> - * @ops - the ops to remove the filters from
-> + * @ops: the ops to remove the filters from
->   */
->  void ftrace_free_filter(struct ftrace_ops *ops)
->  {
-> @@ -1587,7 +1587,7 @@ static struct dyn_ftrace *lookup_rec(uns
->   * @end: end of range to search (inclusive). @end points to the last byte
->   *	to check.
->   *
-> - * Returns rec->ip if the related ftrace location is a least partly within
-> + * Returns: rec->ip if the related ftrace location is a least partly within
->   * the given address range. That is, the first address of the instruction
->   * that is either a NOP or call to the function tracer. It checks the ftrace
->   * internal tables to determine if the address belongs or not.
-> @@ -1607,9 +1607,10 @@ unsigned long ftrace_location_range(unsi
->   * ftrace_location - return the ftrace location
->   * @ip: the instruction pointer to check
->   *
-> - * If @ip matches the ftrace location, return @ip.
-> - * If @ip matches sym+0, return sym's ftrace location.
-> - * Otherwise, return 0.
-> + * Returns:
-> + * * If @ip matches the ftrace location, return @ip.
-> + * * If @ip matches sym+0, return sym's ftrace location.
-> + * * Otherwise, return 0.
->   */
->  unsigned long ftrace_location(unsigned long ip)
->  {
-> @@ -1639,7 +1640,7 @@ out:
->   * @start: start of range to search
->   * @end: end of range to search (inclusive). @end points to the last byte to check.
->   *
-> - * Returns 1 if @start and @end contains a ftrace location.
-> + * Returns: 1 if @start and @end contains a ftrace location.
->   * That is, the instruction that is either a NOP or call to
->   * the function tracer. It checks the ftrace internal tables to
->   * determine if the address belongs or not.
-> @@ -2574,7 +2575,7 @@ static void call_direct_funcs(unsigned l
->   * wants to convert to a callback that saves all regs. If FTRACE_FL_REGS
->   * is not set, then it wants to convert to the normal callback.
->   *
-> - * Returns the address of the trampoline to set to
-> + * Returns: the address of the trampoline to set to
->   */
->  unsigned long ftrace_get_addr_new(struct dyn_ftrace *rec)
->  {
-> @@ -2615,7 +2616,7 @@ unsigned long ftrace_get_addr_new(struct
->   * a function that saves all the regs. Basically the '_EN' version
->   * represents the current state of the function.
->   *
-> - * Returns the address of the trampoline that is currently being called
-> + * Returns: the address of the trampoline that is currently being called
->   */
->  unsigned long ftrace_get_addr_curr(struct dyn_ftrace *rec)
->  {
-> @@ -2719,7 +2720,7 @@ struct ftrace_rec_iter {
->  /**
->   * ftrace_rec_iter_start - start up iterating over traced functions
->   *
-> - * Returns an iterator handle that is used to iterate over all
-> + * Returns: an iterator handle that is used to iterate over all
->   * the records that represent address locations where functions
->   * are traced.
->   *
-> @@ -2751,7 +2752,7 @@ struct ftrace_rec_iter *ftrace_rec_iter_
->   * ftrace_rec_iter_next - get the next record to process.
->   * @iter: The handle to the iterator.
->   *
-> - * Returns the next iterator after the given iterator @iter.
-> + * Returns: the next iterator after the given iterator @iter.
->   */
->  struct ftrace_rec_iter *ftrace_rec_iter_next(struct ftrace_rec_iter *iter)
->  {
-> @@ -2776,7 +2777,7 @@ struct ftrace_rec_iter *ftrace_rec_iter_
->   * ftrace_rec_iter_record - get the record at the iterator location
->   * @iter: The current iterator location
->   *
-> - * Returns the record that the current @iter is at.
-> + * Returns: the record that the current @iter is at.
->   */
->  struct dyn_ftrace *ftrace_rec_iter_record(struct ftrace_rec_iter *iter)
->  {
-> @@ -4010,6 +4011,8 @@ ftrace_avail_addrs_open(struct inode *in
->   * ftrace_notrace_write() if @flag has FTRACE_ITER_NOTRACE set.
->   * tracing_lseek() should be used as the lseek routine, and
->   * release must call ftrace_regex_release().
-> + *
-> + * Returns: 0 on success or a negative errno value on failure
->   */
->  int
->  ftrace_regex_open(struct ftrace_ops *ops, int flag,
-> @@ -4626,7 +4629,7 @@ struct ftrace_func_mapper {
->  /**
->   * allocate_ftrace_func_mapper - allocate a new ftrace_func_mapper
->   *
-> - * Returns a ftrace_func_mapper descriptor that can be used to map ips to data.
-> + * Returns: a ftrace_func_mapper descriptor that can be used to map ips to data.
->   */
->  struct ftrace_func_mapper *allocate_ftrace_func_mapper(void)
->  {
-> @@ -4646,7 +4649,7 @@ struct ftrace_func_mapper *allocate_ftra
->   * @mapper: The mapper that has the ip maps
->   * @ip: the instruction pointer to find the data for
->   *
-> - * Returns the data mapped to @ip if found otherwise NULL. The return
-> + * Returns: the data mapped to @ip if found otherwise NULL. The return
->   * is actually the address of the mapper data pointer. The address is
->   * returned for use cases where the data is no bigger than a long, and
->   * the user can use the data pointer as its data instead of having to
-> @@ -4672,7 +4675,7 @@ void **ftrace_func_mapper_find_ip(struct
->   * @ip: The instruction pointer address to map @data to
->   * @data: The data to map to @ip
->   *
-> - * Returns 0 on success otherwise an error.
-> + * Returns: 0 on success otherwise an error.
->   */
->  int ftrace_func_mapper_add_ip(struct ftrace_func_mapper *mapper,
->  			      unsigned long ip, void *data)
-> @@ -4701,7 +4704,7 @@ int ftrace_func_mapper_add_ip(struct ftr
->   * @mapper: The mapper that has the ip maps
->   * @ip: The instruction pointer address to remove the data from
->   *
-> - * Returns the data if it is found, otherwise NULL.
-> + * Returns: the data if it is found, otherwise NULL.
->   * Note, if the data pointer is used as the data itself, (see
->   * ftrace_func_mapper_find_ip(), then the return value may be meaningless,
->   * if the data pointer was set to zero.
-> @@ -5630,10 +5633,10 @@ EXPORT_SYMBOL_GPL(modify_ftrace_direct);
->  
->  /**
->   * ftrace_set_filter_ip - set a function to filter on in ftrace by address
-> - * @ops - the ops to set the filter with
-> - * @ip - the address to add to or remove from the filter.
-> - * @remove - non zero to remove the ip from the filter
-> - * @reset - non zero to reset all filters before applying this filter.
-> + * @ops: the ops to set the filter with
-> + * @ip: the address to add to or remove from the filter.
-> + * @remove: non zero to remove the ip from the filter
-> + * @reset: non zero to reset all filters before applying this filter.
->   *
->   * Filters denote which functions should be enabled when tracing is enabled
->   * If @ip is NULL, it fails to update filter.
-> @@ -5652,11 +5655,11 @@ EXPORT_SYMBOL_GPL(ftrace_set_filter_ip);
->  
->  /**
->   * ftrace_set_filter_ips - set functions to filter on in ftrace by addresses
-> - * @ops - the ops to set the filter with
-> - * @ips - the array of addresses to add to or remove from the filter.
-> - * @cnt - the number of addresses in @ips
-> - * @remove - non zero to remove ips from the filter
-> - * @reset - non zero to reset all filters before applying this filter.
-> + * @ops: the ops to set the filter with
-> + * @ips: the array of addresses to add to or remove from the filter.
-> + * @cnt: the number of addresses in @ips
-> + * @remove: non zero to remove ips from the filter
-> + * @reset: non zero to reset all filters before applying this filter.
->   *
->   * Filters denote which functions should be enabled when tracing is enabled
->   * If @ips array or any ip specified within is NULL , it fails to update filter.
-> @@ -5675,7 +5678,7 @@ EXPORT_SYMBOL_GPL(ftrace_set_filter_ips)
->  
->  /**
->   * ftrace_ops_set_global_filter - setup ops to use global filters
-> - * @ops - the ops which will use the global filters
-> + * @ops: the ops which will use the global filters
->   *
->   * ftrace users who need global function trace filtering should call this.
->   * It can set the global filter only if ops were not initialized before.
-> @@ -5699,10 +5702,10 @@ ftrace_set_regex(struct ftrace_ops *ops,
->  
->  /**
->   * ftrace_set_filter - set a function to filter on in ftrace
-> - * @ops - the ops to set the filter with
-> - * @buf - the string that holds the function filter text.
-> - * @len - the length of the string.
-> - * @reset - non zero to reset all filters before applying this filter.
-> + * @ops: the ops to set the filter with
-> + * @buf: the string that holds the function filter text.
-> + * @len: the length of the string.
-> + * @reset: non-zero to reset all filters before applying this filter.
->   *
->   * Filters denote which functions should be enabled when tracing is enabled.
->   * If @buf is NULL and reset is set, all functions will be enabled for tracing.
-> @@ -5721,10 +5724,10 @@ EXPORT_SYMBOL_GPL(ftrace_set_filter);
->  
->  /**
->   * ftrace_set_notrace - set a function to not trace in ftrace
-> - * @ops - the ops to set the notrace filter with
-> - * @buf - the string that holds the function notrace text.
-> - * @len - the length of the string.
-> - * @reset - non zero to reset all filters before applying this filter.
-> + * @ops: the ops to set the notrace filter with
-> + * @buf: the string that holds the function notrace text.
-> + * @len: the length of the string.
-> + * @reset: non-zero to reset all filters before applying this filter.
->   *
->   * Notrace Filters denote which functions should not be enabled when tracing
->   * is enabled. If @buf is NULL and reset is set, all functions will be enabled
-> @@ -5743,9 +5746,9 @@ int ftrace_set_notrace(struct ftrace_ops
->  EXPORT_SYMBOL_GPL(ftrace_set_notrace);
->  /**
->   * ftrace_set_global_filter - set a function to filter on with global tracers
-> - * @buf - the string that holds the function filter text.
-> - * @len - the length of the string.
-> - * @reset - non zero to reset all filters before applying this filter.
-> + * @buf: the string that holds the function filter text.
-> + * @len: the length of the string.
-> + * @reset: non-zero to reset all filters before applying this filter.
->   *
->   * Filters denote which functions should be enabled when tracing is enabled.
->   * If @buf is NULL and reset is set, all functions will be enabled for tracing.
-> @@ -5758,9 +5761,9 @@ EXPORT_SYMBOL_GPL(ftrace_set_global_filt
->  
->  /**
->   * ftrace_set_global_notrace - set a function to not trace with global tracers
-> - * @buf - the string that holds the function notrace text.
-> - * @len - the length of the string.
-> - * @reset - non zero to reset all filters before applying this filter.
-> + * @buf: the string that holds the function notrace text.
-> + * @len: the length of the string.
-> + * @reset: non-zero to reset all filters before applying this filter.
->   *
->   * Notrace Filters denote which functions should not be enabled when tracing
->   * is enabled. If @buf is NULL and reset is set, all functions will be enabled
-> @@ -7448,7 +7451,7 @@ NOKPROBE_SYMBOL(ftrace_ops_assist_func);
->   * have its own recursion protection, then it should call the
->   * ftrace_ops_assist_func() instead.
->   *
-> - * Returns the function that the trampoline should call for @ops.
-> + * Returns: the function that the trampoline should call for @ops.
->   */
->  ftrace_func_t ftrace_ops_get_func(struct ftrace_ops *ops)
->  {
-> @@ -7902,7 +7905,7 @@ void ftrace_kill(void)
->  /**
->   * ftrace_is_dead - Test if ftrace is dead or not.
->   *
-> - * Returns 1 if ftrace is "dead", zero otherwise.
-> + * Returns: 1 if ftrace is "dead", zero otherwise.
->   */
->  int ftrace_is_dead(void)
->  {
-> @@ -8147,8 +8150,7 @@ static int kallsyms_callback(void *data,
->   * @addrs array, which needs to be big enough to store at least @cnt
->   * addresses.
->   *
-> - * This function returns 0 if all provided symbols are found,
-> - * -ESRCH otherwise.
-> + * Returns: 0 if all provided symbols are found, -ESRCH otherwise.
->   */
->  int ftrace_lookup_symbols(const char **sorted_syms, size_t cnt, unsigned long *addrs)
->  {
-> 
-
-
+diff --git a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc b/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
+index b1ede6249866..b7c8f29c09a9 100644
+--- a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
++++ b/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
+@@ -18,7 +18,7 @@ echo 'sched:*' > set_event
+ 
+ yield
+ 
+-count=`cat trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
++count=`head -n 100 trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+ if [ $count -lt 3 ]; then
+     fail "at least fork, exec and exit events should be recorded"
+ fi
+@@ -29,7 +29,7 @@ echo 1 > events/sched/enable
+ 
+ yield
+ 
+-count=`cat trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
++count=`head -n 100 trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+ if [ $count -lt 3 ]; then
+     fail "at least fork, exec and exit events should be recorded"
+ fi
+@@ -40,7 +40,7 @@ echo 0 > events/sched/enable
+ 
+ yield
+ 
+-count=`cat trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
++count=`head -n 100 trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+ if [ $count -ne 0 ]; then
+     fail "any of scheduler events should not be recorded"
+ fi
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.39.3
+
