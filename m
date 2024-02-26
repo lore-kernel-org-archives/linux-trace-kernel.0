@@ -1,32 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2A8135A48;
-	Mon, 26 Feb 2024 17:05:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F46912CD9F
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Feb 2024 17:12:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708967130; cv=none; b=H8nDGFO7QaKhEwyku94EkmhLhU1lBMfk2l2LL2UpWTdYCzAbtVS/52jYTYqqMTFOjMX/oENyy1oTaP0TSC9lLVQ1aJzMNx/rZ8f4t4yIUA5g5pQMriFCjljQGLtiwkh4kYRr5oaG6xKSp0malSAlcOjIwHjlW36SyLWUM7/RamA=
+	t=1708967539; cv=none; b=aEJqmbK6SlLgGR4Pj60y3DN3yfQuZukZSoJ+zelc/4Oex/7/jHH3piaTDbXBsX1RwBhotG1eT/65U4628EKuCryLJYxioKkcWQoLm3cRB3466EAs10gjQR9C2dXgEuGigirS/d+p8v834aRKWGXywqI7lmN6/M0WQrvDsv3L34Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708967130; c=relaxed/simple;
-	bh=wx87YOEUXHlfv7Ll5FAldV+GhFRYXH7Cua1+myCejKI=;
+	s=arc-20240116; t=1708967539; c=relaxed/simple;
+	bh=OBEFZ/2JlXY9/LwXCtNPvNpQA2a3g4BKlYs/lUXAtDk=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Cu7kkMeyqi6C5OaWFT/Bt5i1WmgN4PE5iiDGMyQ7wjQTnxzqP8JNvXCZ1U0+FFewo4dRY+f0yrw7KrPqtLkbPYNR4sA9dIcBFFXU5gHmaXeLbB7gfOu+P+wRnr6m4nuNhqNMwkaxSZcvZkZM45w2fgeAxFmyL2v1dIB8W5Izirs=
+	 MIME-Version:Content-Type; b=q3xcCa62B7agbEG7wmLvkjVexWwEJpYZzi/Zd+z98dkaJz0STHAnNdMjHKsmNHQ1amr56xbKwaWmFKy/iieB30FIZrgbo7lbjs36S5NSWDGBxyfT+ClFcU/s1uR47tPN6D0LA36cZUiAuo5ptTOR2AvLkqQ8CrFWrhku2dmJWxk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2810C433F1;
-	Mon, 26 Feb 2024 17:05:28 +0000 (UTC)
-Date: Mon, 26 Feb 2024 12:07:28 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7974FC43390;
+	Mon, 26 Feb 2024 17:12:18 +0000 (UTC)
+Date: Mon, 26 Feb 2024 12:14:18 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Richard Chang <richardycc@google.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- akpm@linux-foundation.org, liumartin@google.com, surenb@google.com,
- minchan@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] mm: add alloc_contig_migrate_range allocation
- statistics
-Message-ID: <20240226120728.3f495fa7@gandalf.local.home>
-In-Reply-To: <20240226120629.0c371252@gandalf.local.home>
-References: <20240226100045.2083962-1-richardycc@google.com>
-	<20240226120629.0c371252@gandalf.local.home>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: =?UTF-8?B?0JzQsNC60YHQuNC8INCc0L7RgNGB0LrQvtCy?= <xxxa0c@mail.ru>, Linux
+ Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Subject: Re: tprobe event tracing error
+Message-ID: <20240226121418.5143c6d9@gandalf.local.home>
+In-Reply-To: <20240226234156.c6c647f5c005977327fde62c@kernel.org>
+References: <1708954589.808811792@f182.i.mail.ru>
+	<20240226234156.c6c647f5c005977327fde62c@kernel.org>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -34,216 +31,58 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 26 Feb 2024 12:06:29 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, 26 Feb 2024 23:41:56 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> On Mon, 26 Feb 2024 10:00:15 +0000
-> Richard Chang <richardycc@google.com> wrote:
-> 
-> > alloc_contig_migrate_range has every information to be able to
-> > understand big contiguous allocation latency. For example, how many
-> > pages are migrated, how many times they were needed to unmap from
-> > page tables.
-> > 
-> > This patch adds the trace event to collect the allocation statistics.
-> > In the field, it was quite useful to understand CMA allocation
-> > latency.
-> > 
-> > Signed-off-by: Richard Chang <richardycc@google.com>
-> > ---
-> >  include/trace/events/kmem.h | 39 +++++++++++++++++++++++++++++++++++++
-> >  mm/internal.h               |  3 ++-
-> >  mm/page_alloc.c             | 30 +++++++++++++++++++++++-----
-> >  mm/page_isolation.c         |  2 +-
-> >  4 files changed, 67 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
-> > index 58688768ef0f..964704d76f9f 100644
-> > --- a/include/trace/events/kmem.h
-> > +++ b/include/trace/events/kmem.h
-> > @@ -304,6 +304,45 @@ TRACE_EVENT(mm_page_alloc_extfrag,
-> >  		__entry->change_ownership)
-> >  );
-> >  
-> > +TRACE_EVENT(mm_alloc_contig_migrate_range_info,
-> > +
-> > +	TP_PROTO(unsigned long start,
-> > +		 unsigned long end,
-> > +		 int migratetype,
-> > +		 unsigned long nr_migrated,
-> > +		 unsigned long nr_reclaimed,
-> > +		 unsigned long nr_mapped),
-> > +
-> > +	TP_ARGS(start, end, migratetype,
-> > +		nr_migrated, nr_reclaimed, nr_mapped),
-> > +
-> > +	TP_STRUCT__entry(
-> > +		__field(unsigned long, start)
-> > +		__field(unsigned long, end)
-> > +		__field(int, migratetype)  
-> 
-> 
-> Please move the int to the end of the longs, as it will cause a 4 byte hole
-> in 64 bit machines otherwise.
-> 
-> 
-> > +		__field(unsigned long, nr_migrated)
-> > +		__field(unsigned long, nr_reclaimed)
-> > +		__field(unsigned long, nr_mapped)
-> > +	),
-> > +
-> > +	TP_fast_assign(
-> > +		__entry->start = start;
-> > +		__entry->end = end;
-> > +		__entry->migratetype = migratetype;
-> > +		__entry->nr_migrated = nr_migrated;
-> > +		__entry->nr_reclaimed = nr_reclaimed;
-> > +		__entry->nr_mapped = nr_mapped;
-> > +	),
-> > +
-> > +	TP_printk("start=0x%lx end=0x%lx migratetype=%d nr_migrated=%lu nr_reclaimed=%lu nr_mapped=%lu",
-> > +		  __entry->start,
-> > +		  __entry->end,
-> > +		  __entry->migratetype,
-> > +		  __entry->nr_migrated,
-> > +		  __entry->nr_reclaimed,
-> > +		  __entry->nr_mapped)
-> > +);
-> > +
-> >  /*
-> >   * Required for uniquely and securely identifying mm in rss_stat tracepoint.
-> >   */
-> > diff --git a/mm/internal.h b/mm/internal.h
-> > index f309a010d50f..e114c647e278 100644
-> > --- a/mm/internal.h
-> > +++ b/mm/internal.h
-> > @@ -537,7 +537,8 @@ isolate_migratepages_range(struct compact_control *cc,
-> >  			   unsigned long low_pfn, unsigned long end_pfn);
-> >  
-> >  int __alloc_contig_migrate_range(struct compact_control *cc,
-> > -					unsigned long start, unsigned long end);
-> > +					unsigned long start, unsigned long end,
-> > +					int migratetype);
-> >  
-> >  /* Free whole pageblock and set its migration type to MIGRATE_CMA. */
-> >  void init_cma_reserved_pageblock(struct page *page);
-> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> > index 150d4f23b010..f840bc785afa 100644
-> > --- a/mm/page_alloc.c
-> > +++ b/mm/page_alloc.c
-> > @@ -6219,9 +6219,14 @@ static void alloc_contig_dump_pages(struct list_head *page_list)
-> >  	}
-> >  }
-> >  
-> > -/* [start, end) must belong to a single zone. */
-> > +/*
-> > + * [start, end) must belong to a single zone.
-> > + * @migratetype: using migratetype to filter the type of migration in
-> > + *		trace_mm_alloc_contig_migrate_range_info.
-> > + */
-> >  int __alloc_contig_migrate_range(struct compact_control *cc,
-> > -					unsigned long start, unsigned long end)
-> > +					unsigned long start, unsigned long end,
-> > +					int migratetype)
-> >  {
-> >  	/* This function is based on compact_zone() from compaction.c. */
-> >  	unsigned int nr_reclaimed;
-> > @@ -6232,6 +6237,10 @@ int __alloc_contig_migrate_range(struct compact_control *cc,
-> >  		.nid = zone_to_nid(cc->zone),
-> >  		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
-> >  	};
-> > +	struct page *page;
-> > +	unsigned long total_mapped = 0;
-> > +	unsigned long total_migrated = 0;
-> > +	unsigned long total_reclaimed = 0;
-> >  
-> >  	lru_cache_disable();
-> >  
-> > @@ -6257,9 +6266,16 @@ int __alloc_contig_migrate_range(struct compact_control *cc,
-> >  							&cc->migratepages);
-> >  		cc->nr_migratepages -= nr_reclaimed;
-> >  
-> > +		total_reclaimed += nr_reclaimed;
-> > +		list_for_each_entry(page, &cc->migratepages, lru)
-> > +			total_mapped += page_mapcount(page);  
-> 
-> You're doing this calculation regardless of if tracing is enabled or not
-> and it's only used for tracing? Please add:
-> 
-> 		if (trace_mm_alloc_contig_migrate_range_info_enabled()) {
-> 			total_reclaimed += nr_reclaimed;
-> 			list_for_each_entry(page, &cc->migratepages, lru)
-> 				total_mapped += page_mapcount(page);
-> 		}
-> 
-> -- Steve
+> Hi,
+> (Cc: linux-kernel-trace ML for sharing this knowledge)
+>=20
+> On Mon, 26 Feb 2024 16:36:29 +0300
+> =D0=9C=D0=B0=D0=BA=D1=81=D0=B8=D0=BC =D0=9C=D0=BE=D1=80=D1=81=D0=BA=D0=BE=
+=D0=B2 <xxxa0c@mail.ru> wrote:
+>=20
+> >=20
+> > Hello, dear Masami.
+> > I am researching Linux event tracing subsystem in part of tprobes,
+> > and found interesting behavior in kernel version 6.6:
+> > =C2=A0
+> > echo  't:my_fchmodat sys_enter_fchmodat' |=20
+sudo tee =E2=80=98/sys/kernel/tracing/dynamic_events=E2=80=99
+> > bash: line 1: echo: write error: Invalid argument =20
+>=20
+> Yeah, I understand that you are confused by this behavior, but it is
+> actually expected behavior. syscalls:* events looks like trace events
+> based on tracepoint, but those are software generated trace event.
+>=20
+> You can find raw_syscalls:* trace events, that is based on the tracepoint,
+> and other syscalls:* are based on that raw_syscalls:* trace points.
+> (IOW, those are a kind of pre-compiled dynamic events)
+>=20
+> e.g.
+>=20
+> /sys/kernel/tracing # echo "t sys_enter \$arg*" >> dynamic_events=20
+> /sys/kernel/tracing # cat dynamic_events=20
+> t:tracepoints/sys_enter sys_enter regs=3Dregs id=3Did
+>=20
+> /sys/kernel/tracing # echo "t sys_enter_open \$arg*" >> dynamic_events=20
+> sh: write error: Invalid argument
+> /sys/kernel/tracing # cat error_log=20
+> [  227.981347] trace_fprobe: error: Tracepoint is not found
+>   Command: t sys_enter_open $arg*
+>              ^
+>=20
+> So, tprobe can not find the hard-coded tracepoints for those dynamically
+> generated syscall trace events. But raw_syscall sys_enter/sys_exit are OK.
 
-Oops, I forgot to remove this sig when I came back and added the below
-reply too.
+Ah, that's because "tprobes" are attached to tracepoints and not
+trace events. If you want to attach to trace events, you need to use eprobes
+(which I need to add documentation for!).
+
+ # echo 'e:my_fchmodat syscalls/sys_enter_fchmodat' > dynamic_events
+
+Works.
 
 -- Steve
-
-
-> 
-> > +
-> >  		ret = migrate_pages(&cc->migratepages, alloc_migration_target,
-> >  			NULL, (unsigned long)&mtc, cc->mode, MR_CONTIG_RANGE, NULL);
-> >  
-> > +		if (!ret)  
-> 
-> May want the above to be:
-> 
-> 		if (trace_mm_alloc_config_migrate_range_info_enabled() && !ret)
-> 
-> too.
-> 
-> -- Steve
-> 
-> > +			total_migrated += cc->nr_migratepages;
-> > +
-> >  		/*
-> >  		 * On -ENOMEM, migrate_pages() bails out right away. It is pointless
-> >  		 * to retry again over this error, so do the same here.
-> > @@ -6273,9 +6289,13 @@ int __alloc_contig_migrate_range(struct compact_control *cc,
-> >  		if (!(cc->gfp_mask & __GFP_NOWARN) && ret == -EBUSY)
-> >  			alloc_contig_dump_pages(&cc->migratepages);
-> >  		putback_movable_pages(&cc->migratepages);
-> > -		return ret;
-> >  	}
-> > -	return 0;
-> > +
-> > +	trace_mm_alloc_contig_migrate_range_info(start, end, migratetype,
-> > +						 total_migrated,
-> > +						 total_reclaimed,
-> > +						 total_mapped);
-> > +	return (ret < 0) ? ret : 0;
-> >  }
-> >  
-> >  /**
-> > @@ -6355,7 +6375,7 @@ int alloc_contig_range(unsigned long start, unsigned long end,
-> >  	 * allocated.  So, if we fall through be sure to clear ret so that
-> >  	 * -EBUSY is not accidentally used or returned to caller.
-> >  	 */
-> > -	ret = __alloc_contig_migrate_range(&cc, start, end);
-> > +	ret = __alloc_contig_migrate_range(&cc, start, end, migratetype);
-> >  	if (ret && ret != -EBUSY)
-> >  		goto done;
-> >  	ret = 0;
-> > diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-> > index cd0ea3668253..a5c8fa4c2a75 100644
-> > --- a/mm/page_isolation.c
-> > +++ b/mm/page_isolation.c
-> > @@ -434,7 +434,7 @@ static int isolate_single_pageblock(unsigned long boundary_pfn, int flags,
-> >  				}
-> >  
-> >  				ret = __alloc_contig_migrate_range(&cc, head_pfn,
-> > -							head_pfn + nr_pages);
-> > +							head_pfn + nr_pages, page_mt);
-> >  
-> >  				/*
-> >  				 * restore the page's migratetype so that it can  
-> 
-
