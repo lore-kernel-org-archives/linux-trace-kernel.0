@@ -1,30 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A921DFF4;
-	Mon, 26 Feb 2024 18:50:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235FC12C53D;
+	Mon, 26 Feb 2024 18:52:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708973409; cv=none; b=BN9/t1aD500XaF15UZT8BwILFcQoaD7PRuLq2gZ3mYjufS/gygbG5p2daonmerBiStFzrCVyjYVYE0T5xrsQ6M2QSYj0RY0vz+Q2TN5A4kAcbD5VVqs1rNKTo9vYtAkJ3luj+VWrJJGiwkUzKHFsbrocFhPMpAGXLpPUfUPG7As=
+	t=1708973531; cv=none; b=pzngrsuRnKSDtxbAE9DTA/+g/+qCoICNuR25Q+ULNFS8vvKFvqDwRZZWDC9uj1eI/sBF5+joqIdUSLZySpvhPwGunWS7c9PMxM765HrGJCenFoqScAgk1LTF8hbZgmF0dt1JuLT6HBvEHpQcNFPgVURp5hYc+NrPyPrb34e/xrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708973409; c=relaxed/simple;
-	bh=BDC8F9Mgjm+6KsQL/o0loxTaN3Zn4xNIrAfIu9/shdw=;
+	s=arc-20240116; t=1708973531; c=relaxed/simple;
+	bh=3Gmla1nD+s6JL0VfGINBYQZbGiFVdJqDEG83H9jQ8uI=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QJ09WHWWK/zdrbB3bV1HdAVNP7xXuuIeoQDzCNY42BC9nE/S/Vl5OX30LyeVf9yMpmnWhGBwHyd4vGLudHl6A/tj2+CKC3MnKheCTt5jI4vJNm5dhozbHRzuTQQoKKS4l+690BwU1aJelDGiwomvonwzpgPyFo0nMCDqUfDqoK4=
+	 MIME-Version:Content-Type; b=XPAcQImyXdffDIISkk/FGrQfmYZ0n4gZZQ28S30eLvQJFX72Y7gH0NCfKUXX8XtDPhJFdyDb9zGvG+QXHSZQURM/9+V/+gKOZm6RmhuVTG1p16bqLIV1D7N1Te+dK7/sljAEi2lI5wUdCVJrFw972V4R/1KdYYmA/2Z8Ht21VFI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 161E7C433F1;
-	Mon, 26 Feb 2024 18:50:07 +0000 (UTC)
-Date: Mon, 26 Feb 2024 13:52:07 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83819C433C7;
+	Mon, 26 Feb 2024 18:52:04 +0000 (UTC)
+Date: Mon, 26 Feb 2024 13:53:53 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: chengming.zhou@linux.dev
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org, vbabka@suse.cz, roman.gushchin@linux.dev,
- Xiongwei.Song@windriver.com, Chengming Zhou <zhouchengming@bytedance.com>
-Subject: Re: [PATCH] tracefs: remove SLAB_MEM_SPREAD flag usage
-Message-ID: <20240226135207.70a27f30@gandalf.local.home>
-In-Reply-To: <20240224135206.830300-1-chengming.zhou@linux.dev>
-References: <20240224135206.830300-1-chengming.zhou@linux.dev>
+To: linke li <lilinke99@qq.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] ring-buffer: use READ_ONCE() to read
+ cpu_buffer->commit_page in concurrent environment
+Message-ID: <20240226135353.3103b360@gandalf.local.home>
+In-Reply-To: <20240225150302.23c3c3c2@rorschach.local.home>
+References: <lilinke99@qq.com>
+	<tencent_5EC64EB49686EE61593AE541DB14CE490A08@qq.com>
+	<20240225150302.23c3c3c2@rorschach.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -35,36 +37,24 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sat, 24 Feb 2024 13:52:06 +0000
-chengming.zhou@linux.dev wrote:
+On Sun, 25 Feb 2024 15:03:02 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> From: Chengming Zhou <zhouchengming@bytedance.com>
+> *But* looking at this deeper, the commit_page may need a READ_ONCE()
+> but not for the reason you suggested.
 > 
-> The SLAB_MEM_SPREAD flag is already a no-op as of 6.8-rc1, remove
-> its usage so we can delete it from slab. No functional change.
+>         commit_page = cpu_buffer->commit_page;
+>         commit_ts = commit_page->page->time_stamp;
 > 
-> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+> The commit_page above *is* used again, and we want commit_ts to be part
+> of the commit_page that was originally read and not a second reading.
+> 
+> So, I think for the commit_page we do need a READ_ONCE() but that's
+> because it is referenced again just below it and we don't want the
+> compiler to read the memory location again for the second reference.
 
-Queued.
-
-Thanks!
+Care to send a v2 patch that just adds READ_ONCE() for the commit_page, and
+change the change log stating that it is to fix the possibility that the
+time_stamp may come from a different page.
 
 -- Steve
-
-> ---
->  fs/tracefs/inode.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-> index d65ffad4c327..5545e6bf7d26 100644
-> --- a/fs/tracefs/inode.c
-> +++ b/fs/tracefs/inode.c
-> @@ -731,7 +731,6 @@ static int __init tracefs_init(void)
->  	tracefs_inode_cachep = kmem_cache_create("tracefs_inode_cache",
->  						 sizeof(struct tracefs_inode),
->  						 0, (SLAB_RECLAIM_ACCOUNT|
-> -						     SLAB_MEM_SPREAD|
->  						     SLAB_ACCOUNT),
->  						 init_once);
->  	if (!tracefs_inode_cachep)
-
