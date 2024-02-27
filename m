@@ -1,108 +1,136 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D4D135A43
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Feb 2024 23:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3BC2916;
+	Tue, 27 Feb 2024 01:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708991522; cv=none; b=HVyvqbNMxjYCI+viVz+Gu4T/L5sFRCcSy+WtRXt9ztgRUFrGJw8Afv0QlD7qKmzm2rfcWf8jGPU9dVbZYA0FUn758lSF6QFMIeFK37sUTnV4ighjdkvDG5nctqaym34jmrsTNdPacaG6BoABs3MuxN4699Hru+qLUkTnmBVLXOA=
+	t=1708998359; cv=none; b=qaNfWJtHf/M9o9HJXZnDpl0QwsnBwz4FUy1zMZJV/ITIaWeFpqLKyIORATpwbPO6IfiP98qPz2kiqlDLefIm8pZFZiY4gbWq/PiFU12f1ayt7cOKE14wi2VY82c3oStYPB7n+mz2SHmGMff9U7SMEpX2V0pDmNN04QHeOjgmcH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708991522; c=relaxed/simple;
-	bh=8lUSqlHGMqI8I1r1rpRBEXkwRpZ7oqe4M8MCNf1etHA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HdwFaAn5sET2UmSuwGSGTdyBQwtnI4DIZS1WzHLkH8yGWg9M87h3z1+X2eYzHtDnHiwnKUJRnQ7zaaaPcBoNX0piKA8ubDLhZYXek9foBEE0+ShI0beaub26MaMMPA5Egovf2aokp8iJESbwzjrsqwYmG3Z7vDcnTpRxXO0Y238=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b=B6X5dYA3; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="B6X5dYA3"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dc09556599so32090035ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Feb 2024 15:52:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=google; t=1708991520; x=1709596320; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vyh7mdFRyjlmJV4fW69ox7tTTJCxGb5XPOBSz1bCTds=;
-        b=B6X5dYA3THgOp6st2c8F6tAXMRD1omasU5NmLQgv59huRvDdk544qAzWwMS1+dkokV
-         Z2aMZgwNAjX5NbwbNDjudPSys5kedeAn67NLAm8AUCM0jrckZ0l+qbSYUvrUy7EgkDc1
-         TOKRoMdkJnZ1nULU19ChI3FxdQ1yCIvUUIjc9Sf9zqvpPqeKueHG6Msr1BgA/TDROXK+
-         FpHCdJ4F8Fx36Zghr07QNGX+lIWpX4s2DX60dJ6guEdzK0K4MOXFdjTEn5Z6SMjGKwKE
-         qtyQGv0gfJTnxbKY2JsIWQEu9aOSaYfXP5mcPPCh0JL2M0ddPbNtTS8wPMyZnqeGaCaU
-         Hj7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708991520; x=1709596320;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vyh7mdFRyjlmJV4fW69ox7tTTJCxGb5XPOBSz1bCTds=;
-        b=USOA/wECHj2d34sZV4Q26BRi3Aut/ClBGQa8Nd+BMBnLZM8x8a6yYG9usNM8gzkO8B
-         bul8g5IvBKEQKIzxmVpvsEjTa6fIZaAII0RRRfeO9VkZdxiVYcRzIIcckhdgl2sIsUv+
-         xElBJn1UnybzLjv9FnJnQBWuXhr7qiIJ6zF7M0ZX+FQe2vcjZL1WRCvZ/kB+Viddvljw
-         gE+ZKHVgl31RFIApAD4VI1ivhAU7ZaVhw34439c25s6TMfnHD9mBMB/ujdhL9YAllXm4
-         ABJ9wQyp0C0XCN6dV6alvY8q/oT9MMtsun0ebEhK4Mca922FZNCunnejXhD68+4EOl56
-         F1UQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW4wTgKoYR5h1v6IvxWBdw3Vob/gLVf9abCjNjjgnL55S8lpDjs+kJkXC+7IGxncnatTDaPQVBUXMamR7KiqKR21/W3ALZnHQoEBWhbW5xt4QXy
-X-Gm-Message-State: AOJu0Yw8tbyhJaHSZPpIVobQjgpemZp6tqai+ox7xsJpL8yKvdAhcxA6
-	f0Ul/OYJOGhRKhYYlUZNmnbaRJT4fR4wIjavC4abOxghWC/Yk38EMZIc3tRUuzHWIJjQzN3xXvy
-	GesUzrOTyvIf4ilYEYs7OQB4EHpnMv6jktxk6
-X-Google-Smtp-Source: AGHT+IGcY9ko42XXIFbh54WiWMk6NMI+6vNUAaXKGgq93/tZ3zK1OHEtzgeAGptztw3FB17mOtXCnI7Z0xkxwMG3Vu8=
-X-Received: by 2002:a17:902:ebc6:b0:1dc:83b3:99a6 with SMTP id
- p6-20020a170902ebc600b001dc83b399a6mr9032283plg.41.1708991520569; Mon, 26 Feb
- 2024 15:52:00 -0800 (PST)
+	s=arc-20240116; t=1708998359; c=relaxed/simple;
+	bh=LuyC8MIBSY/6X2DV9kyguJMcgXgow64FfJ55DNaRInI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O+i56kCQXs5W5iL0+lwW2FrMlDhSxL0YgIUNKqQ6MmEAlG+ZY/76u4yYuJGamB3OjmmiGYhogclfPzRPcZue4sTK01ptkdgZClNhXjRfhiSFKJHrjbuQqmqPjPtzSciRCH+SbcC2SwNmI5/MUr1FbleT6GxQSXyUOwJH8PyX8Q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6A64C43390;
+	Tue, 27 Feb 2024 01:45:56 +0000 (UTC)
+Date: Mon, 26 Feb 2024 20:47:57 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Huang Yiwei <quic_hyiwei@quicinc.com>
+Cc: <mhiramat@kernel.org>, <mark.rutland@arm.com>, <mcgrof@kernel.org>,
+ <keescook@chromium.org>, <j.granados@samsung.com>,
+ <mathieu.desnoyers@efficios.com>, <corbet@lwn.net>,
+ <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+ <linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+ <quic_bjorande@quicinc.com>, <quic_tsoni@quicinc.com>,
+ <quic_satyap@quicinc.com>, <quic_aiquny@quicinc.com>, <kernel@quicinc.com>,
+ Ross Zwisler <zwisler@google.com>, Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH v5] tracing: Support to dump instance traces by
+ ftrace_dump_on_oops
+Message-ID: <20240226204757.1a968a10@gandalf.local.home>
+In-Reply-To: <20240208131814.614691-1-quic_hyiwei@quicinc.com>
+References: <20240208131814.614691-1-quic_hyiwei@quicinc.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240224-tcp-ao-tracepoints-v1-0-15f31b7f30a7@arista.com>
- <20240224-tcp-ao-tracepoints-v1-3-15f31b7f30a7@arista.com> <20240226204142.GJ13129@kernel.org>
-In-Reply-To: <20240226204142.GJ13129@kernel.org>
-From: Dmitry Safonov <dima@arista.com>
-Date: Mon, 26 Feb 2024 23:51:49 +0000
-Message-ID: <CAGrbwDTDfkwf40cTkXh6QgQwPpsAVVLWENYH=_eko5tHCKC5VQ@mail.gmail.com>
-Subject: Re: [PATCH net-next 03/10] net/tcp: Move tcp_inbound_hash() from headers
-To: Simon Horman <horms@kernel.org>
-Cc: Eric Dumazet <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, David Ahern <dsahern@kernel.org>, 
-	Shuah Khan <shuah@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Dmitry Safonov <0x7f454c46@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 26, 2024 at 8:43=E2=80=AFPM Simon Horman <horms@kernel.org> wro=
-te:
->
-> On Sat, Feb 24, 2024 at 09:04:11AM +0000, Dmitry Safonov wrote:
-[..]
-> > +     if (req) {
-> > +             if (tcp_rsk_used_ao(req) !=3D !!aoh) {
-> > +                     u8 keyid, rnext, maclen;
-> > +
-> > +                     if (aoh) {
-> > +                             keyid =3D aoh->keyid;
-> > +                             rnext =3D aoh->rnext_keyid;
-> > +                             maclen =3D tcp_ao_hdr_maclen(aoh);
-> > +                     } else {
-> > +                             keyid =3D rnext =3D maclen =3D 0;
-> > +                     }
->
-> Hi Dmitry,
->
-> it looks like keyid is set but otherwise unused.
->
-> Flagged by W=3D1 builds with gcc-13 and clang-17.
+On Thu, 8 Feb 2024 21:18:14 +0800
+Huang Yiwei <quic_hyiwei@quicinc.com> wrote:
 
-Hi Simon,
+> Currently ftrace only dumps the global trace buffer on an OOPs. For
+> debugging a production usecase, instance trace will be helpful to
+> check specific problems since global trace buffer may be used for
+> other purposes.
+> 
+> This patch extend the ftrace_dump_on_oops parameter to dump a specific
+> or multiple trace instances:
+> 
+>   - ftrace_dump_on_oops=0: as before -- don't dump
+>   - ftrace_dump_on_oops[=1]: as before -- dump the global trace buffer
+>   on all CPUs
+>   - ftrace_dump_on_oops=2 or =orig_cpu: as before -- dump the global
+>   trace buffer on CPU that triggered the oops
+>   - ftrace_dump_on_oops=<instance_name>: new behavior -- dump the
+>   tracing instance matching <instance_name>
+>   - ftrace_dump_on_oops[=2/orig_cpu],<instance1_name>[=2/orig_cpu],
+>   <instrance2_name>[=2/orig_cpu]: new behavior -- dump the global trace
+>   buffer and multiple instance buffer on all CPUs, or only dump on CPU
+>   that triggered the oops if =2 or =orig_cpu is given
 
-Yeah, I think I didn't notice it when I was splitting the WIP patch.
-It should be in the very next patch that uses them:
-+                       trace_tcp_ao_handshake_failure(sk, skb, keyid,
-rnext, maclen);
+So we need to add that the syntax is:
 
-Thanks for the report, going to fix in v2,
-             Dmitry
+ ftrace_dump_on_oops[=[<0|1|2|orig_cpu>,][<instance_name>[=<1|2|orig_cpu>][,...]]
+
+> 
+> Also, the sysctl node can handle the input accordingly.
+> 
+> Cc: Ross Zwisler <zwisler@google.com>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> Signed-off-by: Huang Yiwei <quic_hyiwei@quicinc.com>
+> ---
+>  .../admin-guide/kernel-parameters.txt         |  26 ++-
+>  Documentation/admin-guide/sysctl/kernel.rst   |  30 +++-
+>  include/linux/ftrace.h                        |   4 +-
+>  include/linux/kernel.h                        |   1 +
+>  kernel/sysctl.c                               |   4 +-
+>  kernel/trace/trace.c                          | 156 +++++++++++++-----
+>  kernel/trace/trace_selftest.c                 |   2 +-
+>  7 files changed, 168 insertions(+), 55 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 31b3a25680d0..3d6ea8e80c2f 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1561,12 +1561,28 @@
+>  			The above will cause the "foo" tracing instance to trigger
+>  			a snapshot at the end of boot up.
+>  
+> -	ftrace_dump_on_oops[=orig_cpu]
+> +	ftrace_dump_on_oops[=2(orig_cpu) | =<instance>][,<instance> |
+> +			  ,<instance>=2(orig_cpu)]
+>  			[FTRACE] will dump the trace buffers on oops.
+> -			If no parameter is passed, ftrace will dump
+> -			buffers of all CPUs, but if you pass orig_cpu, it will
+> -			dump only the buffer of the CPU that triggered the
+> -			oops.
+> +			If no parameter is passed, ftrace will dump global
+> +			buffers of all CPUs, if you pass 2 or orig_cpu, it
+> +			will dump only the buffer of the CPU that triggered
+> +			the oops, or the specific instance will be dumped if
+> +			its name is passed. Multiple instance dump is also
+> +			supported, and instances are separated by commas. Each
+> +			instance supports only dump on CPU that triggered the
+> +			oops by passing 2 or orig_cpu to it.
+> +
+> +			ftrace_dump_on_oops=foo=orig_cpu
+> +
+> +			The above will dump only the buffer of "foo" instance
+> +			on CPU that triggered the oops.
+> +
+> +			ftrace_dump_on_oops,foo,bar=orig_cpu
+
+I believe the above is incorrect. It should be:
+
+			ftrace_dump_on_oops=foo,bar=orig_cpu
+
+And you can add here as well:
+
+  ftrace_dump_on_oops[=[<0|1|2|orig_cpu>,][<instance_name>[=<1|2|orig_cpu>][,...]]
+
+
+Thanks,
+
+--Steve
+
+> +
+> +			The above will dump global buffer on all CPUs, the
+> +			buffer of "foo" instance on all CPUs and the buffer
+> +			of "bar" instance on CPU that triggered the oops.
+>  
+>  	ftrace_filter=[function-list]
