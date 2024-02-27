@@ -1,784 +1,379 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC871534F4;
-	Tue, 27 Feb 2024 22:23:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539295647B;
+	Tue, 27 Feb 2024 23:51:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709072595; cv=none; b=jLiXpOyn3ouJkE6lceSYngpj+jPeszA+olbITMInOD+PktrL86q3q7u5OcvOcta9zGJfX4S0GVHTYwlfuBuwBdBurz+iYh9jl3E/WgRo+1IXhKhL+UU7oUdW+xm5OIi/rRUctGkzg7x5rV6L+3/2YbJ9gmXolHuZQaf8ipgH8cw=
+	t=1709077884; cv=none; b=rk2uTxJCpb+9t7EMFU9Q2ua1sh4XFZ9iXpZoLm3rup7n8FWka8rozQr6CdXf4qhUWB4c2gtSMW/8Amb9Pk4qJHmt3P08cIefeVPWiGAjWOEKeE/dF1n0tv18gcNknJ1moGglRVV+2V+8DD9kWS6CjJ8VVVMkfbt88AnJCeIlPv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709072595; c=relaxed/simple;
-	bh=cYa790LN4uFzyEpG0nfySABkexUU7XOejAF1CJ/Tp6o=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=plT4jKFmGbWRFgijzhzZNZxZ4vc+IFzD/Of99ZiBGALLSPtt+751kguFxhVnCZxIsXHBCb/KI15Tr9I6TZHe80YhnxamjBXDZF4xCbrypR44YSeR5OLVITRfWwl071g2eI2Z4K/9Pr8gdfDo5kdh4XbcP0AF1ySTr+0lrAI7U9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h0ebS8+1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709077884; c=relaxed/simple;
+	bh=WVAAKQqrRnrV4SpBi+EW+XHsNxi3byUAf6Oa0vKcS3g=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=RfqI94e6YHVwx1UvsTarVTToYSde4juZsmyosmdgd1tFUEjfEBb+9bYU12czjyXfRGtJ34CKveMZuoXb0shHjmx63Yb9+w5Sym7bW+nEXF5NrX64of+IYDyTN92nPihisOFA9U8I7OApfPdAZdmRi3kU2Mr3Z3rnykIWMC67R+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G64+lhZF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h0ebS8+1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98460C433C7;
-	Tue, 27 Feb 2024 22:23:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G64+lhZF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39C12C433F1;
+	Tue, 27 Feb 2024 23:51:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709072595;
-	bh=cYa790LN4uFzyEpG0nfySABkexUU7XOejAF1CJ/Tp6o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=h0ebS8+1puIeFwLlIdFakookoyJZqZF0Iv6Cz9fYFYMN8LYI9xDhTMzQRcJOVN0Ay
-	 Uj6fN/55gXN6w/WEmf7ORWpHuOz3sOnFfc4ixq24bKLhkL9oda7mak8xvKQ1CnilR1
-	 UAOanRoLw/INx8GCeLD2+PmXk43mY2wIEPgd+C+1kltp+KjsKMDg0EtVvIwHo8qnvn
-	 7bXgM8pwQ9+En6Pxm/BEM/N6t78M3h9HxIZmzENJt4FN6LRiI/tMhBQ/sFRtmhSHnZ
-	 nZ4KRZwzrTPgiDAJPEDxrm0RPxljlFzX1jXbczXYXXIInOqaq55SKuPOQl10Vuo32C
-	 L5IW6gJ3LKVPg==
-Date: Wed, 28 Feb 2024 07:23:09 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt
- <rostedt@goodmis.org>, Florent Revest <revest@chromium.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>, Mark
- Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v8 31/35] fprobe: Rewrite fprobe on function-graph
- tracer
-Message-Id: <20240228072309.3cdac0a00c789e541ecee613@kernel.org>
-In-Reply-To: <ZdyKaRiI-PnG80Q0@krava>
-References: <170887410337.564249.6360118840946697039.stgit@devnote2>
-	<170887444346.564249.9630774181398892961.stgit@devnote2>
-	<ZdyKaRiI-PnG80Q0@krava>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1709077883;
+	bh=WVAAKQqrRnrV4SpBi+EW+XHsNxi3byUAf6Oa0vKcS3g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=G64+lhZFkCVEK8x7ceCZN2uq9u4pQhx8JJwoC8xWMPzE5kIVoVo29j1esgiVhgiL5
+	 6Aluj185YyW12Xnu5ga+Cp0eGoF31fmF+ggaC0ZeMetFvywu0lguPshAZg0bJWlHwx
+	 iqi0m0ngX2XoViauFLPor6VBJ1aGPFHoGKZiWqNkHpltMvEFIRqi+EYKF7xZwMRWVU
+	 85uJLX0kOFbYs/NFDCOALr8RiQtwxKhd98rYjsuoKWr9E86xwnsRslAfDSgTt32Kc2
+	 bVM86fcOKE5Tr0V6ZAEBeaLKizAR1yadZeN2vOI/NJJFB0kTKR4IRFoEVV33o/oLTP
+	 kzPkABn1w83ZA==
+From: SeongJae Park <sj@kernel.org>
+To: Honggyu Kim <honggyu.kim@sk.com>
+Cc: sj@kernel.org,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	apopple@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	dave.jiang@intel.com,
+	hyeongtak.ji@sk.com,
+	kernel_team@skhynix.com,
+	linmiaohe@huawei.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	lizhijian@cn.fujitsu.com,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	rakie.kim@sk.com,
+	rostedt@goodmis.org,
+	surenb@google.com,
+	yangx.jy@fujitsu.com,
+	ying.huang@intel.com,
+	ziy@nvidia.com,
+	42.hyeyoo@gmail.com
+Subject: Re: [RFC PATCH v2 0/7] DAMON based 2-tier memory management for CXL memory
+Date: Tue, 27 Feb 2024 15:51:20 -0800
+Message-Id: <20240227235121.153277-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240226140555.1615-1-honggyu.kim@sk.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 26 Feb 2024 13:56:09 +0100
-Jiri Olsa <olsajiri@gmail.com> wrote:
+On Mon, 26 Feb 2024 23:05:46 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
 
-> On Mon, Feb 26, 2024 at 12:20:43AM +0900, Masami Hiramatsu (Google) wrote:
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Rewrite fprobe implementation on function-graph tracer.
-> > Major API changes are:
-> >  -  'nr_maxactive' field is deprecated.
-> >  -  This depends on CONFIG_DYNAMIC_FTRACE_WITH_ARGS or
-> >     !CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS, and
-> >     CONFIG_HAVE_FUNCTION_GRAPH_FREGS. So currently works only
-> >     on x86_64.
-> >  -  Currently the entry size is limited in 15 * sizeof(long).
-> >  -  If there is too many fprobe exit handler set on the same
-> >     function, it will fail to probe.
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  Changes in v8:
-> >   - Use trace_func_graph_ret/ent_t for fgraph_ops.
-> >   - Update CONFIG_FPROBE dependencies.
-> >   - Add ftrace_regs_get_return_address() for each arch.
-> >  Changes in v3:
-> >   - Update for new reserve_data/retrieve_data API.
-> >   - Fix internal push/pop on fgraph data logic so that it can
-> >     correctly save/restore the returning fprobes.
-> >  Changes in v2:
-> >   - Add more lockdep_assert_held(fprobe_mutex)
-> >   - Use READ_ONCE() and WRITE_ONCE() for fprobe_hlist_node::fp.
-> >   - Add NOKPROBE_SYMBOL() for the functions which is called from
-> >     entry/exit callback.
-> > ---
-> >  arch/arm64/include/asm/ftrace.h     |    6 
-> >  arch/loongarch/include/asm/ftrace.h |    6 
-> >  arch/powerpc/include/asm/ftrace.h   |    6 
-> >  arch/s390/include/asm/ftrace.h      |    6 
-> >  arch/x86/include/asm/ftrace.h       |    6 
-> >  include/linux/fprobe.h              |   54 ++-
-> >  include/linux/ftrace.h              |    7 
-> >  kernel/trace/Kconfig                |    8 
-> >  kernel/trace/fprobe.c               |  638 +++++++++++++++++++++++++----------
-> >  lib/test_fprobe.c                   |   45 --
-> >  10 files changed, 536 insertions(+), 246 deletions(-)
-> > 
-> > diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
-> > index 95a8f349f871..800c75f46a13 100644
-> > --- a/arch/arm64/include/asm/ftrace.h
-> > +++ b/arch/arm64/include/asm/ftrace.h
-> > @@ -143,6 +143,12 @@ ftrace_regs_get_frame_pointer(const struct ftrace_regs *fregs)
-> >  	return fregs->fp;
-> >  }
-> >  
-> > +static __always_inline unsigned long
-> > +ftrace_regs_get_return_address(const struct ftrace_regs *fregs)
-> > +{
-> > +	return fregs->lr;
-> > +}
-> > +
-> >  static __always_inline struct pt_regs *
-> >  ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *regs)
-> >  {
-> > diff --git a/arch/loongarch/include/asm/ftrace.h b/arch/loongarch/include/asm/ftrace.h
-> > index 14a1576bf948..b8432b7cc9d4 100644
-> > --- a/arch/loongarch/include/asm/ftrace.h
-> > +++ b/arch/loongarch/include/asm/ftrace.h
-> > @@ -81,6 +81,12 @@ ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs, unsigned long ip)
-> >  #define ftrace_regs_get_frame_pointer(fregs) \
-> >  	((fregs)->regs.regs[22])
-> >  
-> > +static __always_inline unsigned long
-> > +ftrace_regs_get_return_address(struct ftrace_regs *fregs)
-> > +{
-> > +	return *(unsigned long *)(fregs->regs.regs[1]);
-> > +}
-> > +
-> >  #define ftrace_graph_func ftrace_graph_func
-> >  void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
-> >  		       struct ftrace_ops *op, struct ftrace_regs *fregs);
-> > diff --git a/arch/powerpc/include/asm/ftrace.h b/arch/powerpc/include/asm/ftrace.h
-> > index 773e9011cff1..7ac1bc3e7196 100644
-> > --- a/arch/powerpc/include/asm/ftrace.h
-> > +++ b/arch/powerpc/include/asm/ftrace.h
-> > @@ -85,6 +85,12 @@ ftrace_regs_get_instruction_pointer(struct ftrace_regs *fregs)
-> >  #define ftrace_regs_query_register_offset(name) \
-> >  	regs_query_register_offset(name)
-> >  
-> > +static __always_inline unsigned long
-> > +ftrace_regs_get_return_address(struct ftrace_regs *fregs)
-> > +{
-> > +	return fregs->regs.link;
-> > +}
-> > +
-> >  struct ftrace_ops;
-> >  
-> >  #define ftrace_graph_func ftrace_graph_func
-> > diff --git a/arch/s390/include/asm/ftrace.h b/arch/s390/include/asm/ftrace.h
-> > index e910924eee59..d434a0497683 100644
-> > --- a/arch/s390/include/asm/ftrace.h
-> > +++ b/arch/s390/include/asm/ftrace.h
-> > @@ -89,6 +89,12 @@ ftrace_regs_get_frame_pointer(struct ftrace_regs *fregs)
-> >  	return sp[0];	/* return backchain */
-> >  }
-> >  
-> > +static __always_inline unsigned long
-> > +ftrace_regs_get_return_address(const struct ftrace_regs *fregs)
-> > +{
-> > +	return fregs->regs.gprs[14];
-> > +}
-> > +
-> >  #define arch_ftrace_fill_perf_regs(fregs, _regs)	 do {		\
-> >  		(_regs)->psw.addr = (fregs)->regs.psw.addr;		\
-> >  		(_regs)->gprs[15] = (fregs)->regs.gprs[15];		\
-> > diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-> > index 7625887fc49b..979d3458a328 100644
-> > --- a/arch/x86/include/asm/ftrace.h
-> > +++ b/arch/x86/include/asm/ftrace.h
-> > @@ -82,6 +82,12 @@ arch_ftrace_get_regs(struct ftrace_regs *fregs)
-> >  #define ftrace_regs_get_frame_pointer(fregs) \
-> >  	frame_pointer(&(fregs)->regs)
-> >  
-> > +static __always_inline unsigned long
-> > +ftrace_regs_get_return_address(struct ftrace_regs *fregs)
-> > +{
-> > +	return *(unsigned long *)ftrace_regs_get_stack_pointer(fregs);
-> > +}
-> > +
-> >  struct ftrace_ops;
-> >  #define ftrace_graph_func ftrace_graph_func
-> >  void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
-> > diff --git a/include/linux/fprobe.h b/include/linux/fprobe.h
-> > index 879a30956009..08b37b0d1d05 100644
-> > --- a/include/linux/fprobe.h
-> > +++ b/include/linux/fprobe.h
-> > @@ -5,32 +5,56 @@
-> >  
-> >  #include <linux/compiler.h>
-> >  #include <linux/ftrace.h>
-> > -#include <linux/rethook.h>
-> > +#include <linux/rcupdate.h>
-> > +#include <linux/refcount.h>
-> > +#include <linux/slab.h>
-> > +
-> > +struct fprobe;
-> > +
-> > +/**
-> > + * strcut fprobe_hlist_node - address based hash list node for fprobe.
-> > + *
-> > + * @hlist: The hlist node for address search hash table.
-> > + * @addr: The address represented by this.
-> > + * @fp: The fprobe which owns this.
-> > + */
-> > +struct fprobe_hlist_node {
-> > +	struct hlist_node	hlist;
-> > +	unsigned long		addr;
-> > +	struct fprobe		*fp;
-> > +};
-> > +
-> > +/**
-> > + * struct fprobe_hlist - hash list nodes for fprobe.
-> > + *
-> > + * @hlist: The hlist node for existence checking hash table.
-> > + * @rcu: rcu_head for RCU deferred release.
-> > + * @fp: The fprobe which owns this fprobe_hlist.
-> > + * @size: The size of @array.
-> > + * @array: The fprobe_hlist_node for each address to probe.
-> > + */
-> > +struct fprobe_hlist {
-> > +	struct hlist_node		hlist;
-> > +	struct rcu_head			rcu;
-> > +	struct fprobe			*fp;
-> > +	int				size;
-> > +	struct fprobe_hlist_node	array[];
-> > +};
-> >  
-> >  /**
-> >   * struct fprobe - ftrace based probe.
-> > - * @ops: The ftrace_ops.
-> > + *
-> >   * @nmissed: The counter for missing events.
-> >   * @flags: The status flag.
-> > - * @rethook: The rethook data structure. (internal data)
-> >   * @entry_data_size: The private data storage size.
-> > - * @nr_maxactive: The max number of active functions.
-> > + * @nr_maxactive: The max number of active functions. (*deprecated)
-> >   * @entry_handler: The callback function for function entry.
-> >   * @exit_handler: The callback function for function exit.
-> > + * @hlist_array: The fprobe_hlist for fprobe search from IP hash table.
-> >   */
-> >  struct fprobe {
-> > -#ifdef CONFIG_FUNCTION_TRACER
-> > -	/*
-> > -	 * If CONFIG_FUNCTION_TRACER is not set, CONFIG_FPROBE is disabled too.
-> > -	 * But user of fprobe may keep embedding the struct fprobe on their own
-> > -	 * code. To avoid build error, this will keep the fprobe data structure
-> > -	 * defined here, but remove ftrace_ops data structure.
-> > -	 */
-> > -	struct ftrace_ops	ops;
-> > -#endif
-> >  	unsigned long		nmissed;
-> >  	unsigned int		flags;
-> > -	struct rethook		*rethook;
-> >  	size_t			entry_data_size;
-> >  	int			nr_maxactive;
-> >  
-> > @@ -40,6 +64,8 @@ struct fprobe {
-> >  	void (*exit_handler)(struct fprobe *fp, unsigned long entry_ip,
-> >  			     unsigned long ret_ip, struct ftrace_regs *fregs,
-> >  			     void *entry_data);
-> > +
-> > +	struct fprobe_hlist	*hlist_array;
-> >  };
-> >  
-> >  /* This fprobe is soft-disabled. */
-> > diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> > index d895767dcb93..2bb819f08725 100644
-> > --- a/include/linux/ftrace.h
-> > +++ b/include/linux/ftrace.h
-> > @@ -254,6 +254,13 @@ static __always_inline bool ftrace_regs_has_args(struct ftrace_regs *fregs)
-> >  	regs_query_register_offset(name)
-> >  #define ftrace_regs_get_frame_pointer(fregs) \
-> >  	frame_pointer(&(fregs)->regs)
-> > +
-> > +#ifdef CONFIG_HAVE_FUNCTION_GRAPH_FREGS
-> > +/* This function works correctly in ftrace entry function. */
-> > +static __always_inline unsigned long
-> > +ftrace_regs_get_return_address(struct ftrace_regs *fregs);
-> > +#endif
-> > +
-> >  #endif
-> >  
-> >  #ifdef CONFIG_HAVE_REGS_AND_STACK_ACCESS_API
-> > diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> > index 9056315d56ed..d2ee9e6f1561 100644
-> > --- a/kernel/trace/Kconfig
-> > +++ b/kernel/trace/Kconfig
-> > @@ -298,11 +298,9 @@ config DYNAMIC_FTRACE_WITH_ARGS
-> >  
-> >  config FPROBE
-> >  	bool "Kernel Function Probe (fprobe)"
-> > -	depends on FUNCTION_TRACER
-> > -	depends on DYNAMIC_FTRACE_WITH_REGS || DYNAMIC_FTRACE_WITH_ARGS
-> > -	depends on HAVE_PT_REGS_TO_FTRACE_REGS_CAST || !HAVE_DYNAMIC_FTRACE_WITH_ARGS
-> > -	depends on HAVE_RETHOOK
-> > -	select RETHOOK
-> > +	depends on FUNCTION_GRAPH_TRACER
-> > +	depends on HAVE_FUNCTION_GRAPH_FREGS && HAVE_FTRACE_GRAPH_FUNC
-> > +	depends on DYNAMIC_FTRACE_WITH_ARGS
-> >  	default n
-> >  	help
-> >  	  This option enables kernel function probe (fprobe) based on ftrace.
-> > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> > index 31210423efc3..845ac5af4aeb 100644
-> > --- a/kernel/trace/fprobe.c
-> > +++ b/kernel/trace/fprobe.c
-> > @@ -8,98 +8,193 @@
-> >  #include <linux/fprobe.h>
-> >  #include <linux/kallsyms.h>
-> >  #include <linux/kprobes.h>
-> > -#include <linux/rethook.h>
-> > +#include <linux/list.h>
-> > +#include <linux/mutex.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/sort.h>
-> >  
-> >  #include "trace.h"
-> >  
-> > -struct fprobe_rethook_node {
-> > -	struct rethook_node node;
-> > -	unsigned long entry_ip;
-> > -	unsigned long entry_parent_ip;
-> > -	char data[];
-> > -};
-> > +#define FPROBE_IP_HASH_BITS 8
-> > +#define FPROBE_IP_TABLE_SIZE (1 << FPROBE_IP_HASH_BITS)
-> >  
-> > -static inline void __fprobe_handler(unsigned long ip, unsigned long parent_ip,
-> > -			struct ftrace_ops *ops, struct ftrace_regs *fregs)
-> > -{
-> > -	struct fprobe_rethook_node *fpr;
-> > -	struct rethook_node *rh = NULL;
-> > -	struct fprobe *fp;
-> > -	void *entry_data = NULL;
-> > -	int ret = 0;
-> > +#define FPROBE_HASH_BITS 6
-> > +#define FPROBE_TABLE_SIZE (1 << FPROBE_HASH_BITS)
-> >  
-> > -	fp = container_of(ops, struct fprobe, ops);
-> > +/*
-> > + * fprobe_table: hold 'fprobe_hlist::hlist' for checking the fprobe still
-> > + *   exists. The key is the address of fprobe instance.
-> > + * fprobe_ip_table: hold 'fprobe_hlist::array[*]' for searching the fprobe
-> > + *   instance related to the funciton address. The key is the ftrace IP
-> > + *   address.
-> > + *
-> > + * When unregistering the fprobe, fprobe_hlist::fp and fprobe_hlist::array[*].fp
-> > + * are set NULL and delete those from both hash tables (by hlist_del_rcu).
-> > + * After an RCU grace period, the fprobe_hlist itself will be released.
-> > + *
-> > + * fprobe_table and fprobe_ip_table can be accessed from either
-> > + *  - Normal hlist traversal and RCU add/del under 'fprobe_mutex' is held.
-> > + *  - RCU hlist traversal under disabling preempt
-> > + */
-> > +static struct hlist_head fprobe_table[FPROBE_TABLE_SIZE];
-> > +static struct hlist_head fprobe_ip_table[FPROBE_IP_TABLE_SIZE];
-> > +static DEFINE_MUTEX(fprobe_mutex);
-> >  
-> > -	if (fp->exit_handler) {
-> > -		rh = rethook_try_get(fp->rethook);
-> > -		if (!rh) {
-> > -			fp->nmissed++;
-> > -			return;
-> > -		}
-> > -		fpr = container_of(rh, struct fprobe_rethook_node, node);
-> > -		fpr->entry_ip = ip;
-> > -		fpr->entry_parent_ip = parent_ip;
-> > -		if (fp->entry_data_size)
-> > -			entry_data = fpr->data;
-> > +/*
-> > + * Find first fprobe in the hlist. It will be iterated twice in the entry
-> > + * probe, once for correcting the total required size, the second time is
-> > + * calling back the user handlers.
-> > + * Thus the hlist in the fprobe_table must be sorted and new probe needs to
-> > + * be added *before* the first fprobe.
-> > + */
-> > +static struct fprobe_hlist_node *find_first_fprobe_node(unsigned long ip)
-> > +{
-> > +	struct fprobe_hlist_node *node;
-> > +	struct hlist_head *head;
-> > +
-> > +	head = &fprobe_ip_table[hash_ptr((void *)ip, FPROBE_IP_HASH_BITS)];
-> > +	hlist_for_each_entry_rcu(node, head, hlist,
-> > +				 lockdep_is_held(&fprobe_mutex)) {
-> > +		if (node->addr == ip)
-> > +			return node;
-> >  	}
-> > +	return NULL;
-> > +}
-> > +NOKPROBE_SYMBOL(find_first_fprobe_node);
-> >  
-> > -	if (fp->entry_handler)
-> > -		ret = fp->entry_handler(fp, ip, parent_ip, fregs, entry_data);
-> > +/* Node insertion and deletion requires the fprobe_mutex */
-> > +static void insert_fprobe_node(struct fprobe_hlist_node *node)
-> > +{
-> > +	unsigned long ip = node->addr;
-> > +	struct fprobe_hlist_node *next;
-> > +	struct hlist_head *head;
-> >  
-> > -	/* If entry_handler returns !0, nmissed is not counted. */
-> > -	if (rh) {
-> > -		if (ret)
-> > -			rethook_recycle(rh);
-> > -		else
-> > -			rethook_hook(rh, ftrace_get_regs(fregs), true);
-> > +	lockdep_assert_held(&fprobe_mutex);
-> > +
-> > +	next = find_first_fprobe_node(ip);
-> > +	if (next) {
-> > +		hlist_add_before_rcu(&node->hlist, &next->hlist);
-> > +		return;
-> >  	}
-> > +	head = &fprobe_ip_table[hash_ptr((void *)ip, FPROBE_IP_HASH_BITS)];
-> > +	hlist_add_head_rcu(&node->hlist, head);
-> >  }
-> >  
-> > -static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
-> > -		struct ftrace_ops *ops, struct ftrace_regs *fregs)
-> > +/* Return true if there are synonims */
-> > +static bool delete_fprobe_node(struct fprobe_hlist_node *node)
-> >  {
-> > -	struct fprobe *fp;
-> > -	int bit;
-> > +	lockdep_assert_held(&fprobe_mutex);
-> >  
-> > -	fp = container_of(ops, struct fprobe, ops);
-> > -	if (fprobe_disabled(fp))
-> > -		return;
-> > +	WRITE_ONCE(node->fp, NULL);
-> > +	hlist_del_rcu(&node->hlist);
-> > +	return !!find_first_fprobe_node(node->addr);
-> > +}
-> >  
-> > -	/* recursion detection has to go before any traceable function and
-> > -	 * all functions before this point should be marked as notrace
-> > -	 */
-> > -	bit = ftrace_test_recursion_trylock(ip, parent_ip);
-> > -	if (bit < 0) {
-> > -		fp->nmissed++;
-> > -		return;
-> > +/* Check existence of the fprobe */
-> > +static bool is_fprobe_still_exist(struct fprobe *fp)
-> > +{
-> > +	struct hlist_head *head;
-> > +	struct fprobe_hlist *fph;
-> > +
-> > +	head = &fprobe_table[hash_ptr(fp, FPROBE_HASH_BITS)];
-> > +	hlist_for_each_entry_rcu(fph, head, hlist,
-> > +				 lockdep_is_held(&fprobe_mutex)) {
-> > +		if (fph->fp == fp)
-> > +			return true;
-> >  	}
-> > -	__fprobe_handler(ip, parent_ip, ops, fregs);
-> > -	ftrace_test_recursion_unlock(bit);
-> > +	return false;
-> > +}
-> > +NOKPROBE_SYMBOL(is_fprobe_still_exist);
-> > +
-> > +static int add_fprobe_hash(struct fprobe *fp)
-> > +{
-> > +	struct fprobe_hlist *fph = fp->hlist_array;
-> > +	struct hlist_head *head;
-> > +
-> > +	lockdep_assert_held(&fprobe_mutex);
-> >  
-> > +	if (WARN_ON_ONCE(!fph))
-> > +		return -EINVAL;
-> > +
-> > +	if (is_fprobe_still_exist(fp))
-> > +		return -EEXIST;
-> > +
-> > +	head = &fprobe_table[hash_ptr(fp, FPROBE_HASH_BITS)];
-> > +	hlist_add_head_rcu(&fp->hlist_array->hlist, head);
-> > +	return 0;
-> >  }
-> > -NOKPROBE_SYMBOL(fprobe_handler);
-> >  
-> > -static void fprobe_kprobe_handler(unsigned long ip, unsigned long parent_ip,
-> > -				  struct ftrace_ops *ops, struct ftrace_regs *fregs)
-> > +static int del_fprobe_hash(struct fprobe *fp)
-> >  {
-> > -	struct fprobe *fp;
-> > -	int bit;
-> > +	struct fprobe_hlist *fph = fp->hlist_array;
-> >  
-> > -	fp = container_of(ops, struct fprobe, ops);
-> > -	if (fprobe_disabled(fp))
-> > -		return;
-> > +	lockdep_assert_held(&fprobe_mutex);
-> >  
-> > -	/* recursion detection has to go before any traceable function and
-> > -	 * all functions called before this point should be marked as notrace
-> > -	 */
-> > -	bit = ftrace_test_recursion_trylock(ip, parent_ip);
-> > -	if (bit < 0) {
-> > -		fp->nmissed++;
-> > -		return;
-> > +	if (WARN_ON_ONCE(!fph))
-> > +		return -EINVAL;
-> > +
-> > +	if (!is_fprobe_still_exist(fp))
-> > +		return -ENOENT;
-> > +
-> > +	fph->fp = NULL;
-> > +	hlist_del_rcu(&fph->hlist);
-> > +	return 0;
-> > +}
-> > +
-> > +/* The entry data size is 4 bits (=16) * sizeof(long) in maximum */
-> > +#define FPROBE_HEADER_SIZE_BITS		4
-> > +#define MAX_FPROBE_DATA_SIZE_WORD	((1L << FPROBE_HEADER_SIZE_BITS) - 1)
-> > +#define MAX_FPROBE_DATA_SIZE		(MAX_FPROBE_DATA_SIZE_WORD * sizeof(long))
-> > +#define FPROBE_HEADER_PTR_BITS		(BITS_PER_LONG - FPROBE_HEADER_SIZE_BITS)
-> > +#define FPROBE_HEADER_PTR_MASK		GENMASK(FPROBE_HEADER_PTR_BITS - 1, 0)
-> > +#define FPROBE_HEADER_SIZE		sizeof(unsigned long)
-> > +
-> > +static inline unsigned long encode_fprobe_header(struct fprobe *fp, int size_words)
-> > +{
-> > +	if (WARN_ON_ONCE(size_words > MAX_FPROBE_DATA_SIZE_WORD ||
-> > +	    ((unsigned long)fp & ~FPROBE_HEADER_PTR_MASK) !=
-> > +	    ~FPROBE_HEADER_PTR_MASK)) {
-> > +		return 0;
-> >  	}
-> > +	return ((unsigned long)size_words << FPROBE_HEADER_PTR_BITS) |
-> > +		((unsigned long)fp & FPROBE_HEADER_PTR_MASK);
-> > +}
-> > +
-> > +/* Return reserved data size in words */
-> > +static inline int decode_fprobe_header(unsigned long val, struct fprobe **fp)
-> > +{
-> > +	unsigned long ptr;
-> > +
-> > +	ptr = (val & FPROBE_HEADER_PTR_MASK) | ~FPROBE_HEADER_PTR_MASK;
-> > +	if (fp)
-> > +		*fp = (struct fprobe *)ptr;
-> > +	return val >> FPROBE_HEADER_PTR_BITS;
-> > +}
-> > +
-> > +/*
-> > + * fprobe shadow stack management:
-> > + * Since fprobe shares a single fgraph_ops, it needs to share the stack entry
-> > + * among the probes on the same function exit. Note that a new probe can be
-> > + * registered before a target function is returning, we can not use the hash
-> > + * table to find the corresponding probes. Thus the probe address is stored on
-> > + * the shadow stack with its entry data size.
-> > + *
-> > + */
-> > +static inline int __fprobe_handler(unsigned long ip, unsigned long parent_ip,
-> > +				   struct fprobe *fp, struct ftrace_regs *fregs,
-> > +				   void *data)
-> > +{
-> > +	if (!fp->entry_handler)
-> > +		return 0;
-> > +
-> > +	return fp->entry_handler(fp, ip, parent_ip, fregs, data);
-> > +}
-> >  
-> > +static inline int __fprobe_kprobe_handler(unsigned long ip, unsigned long parent_ip,
-> > +					  struct fprobe *fp, struct ftrace_regs *fregs,
-> > +					  void *data)
-> > +{
-> > +	int ret;
-> >  	/*
-> >  	 * This user handler is shared with other kprobes and is not expected to be
-> >  	 * called recursively. So if any other kprobe handler is running, this will
-> > @@ -108,45 +203,185 @@ static void fprobe_kprobe_handler(unsigned long ip, unsigned long parent_ip,
-> >  	 */
-> >  	if (unlikely(kprobe_running())) {
-> >  		fp->nmissed++;
-> > -		goto recursion_unlock;
-> > +		return 0;
-> >  	}
-> >  
-> >  	kprobe_busy_begin();
-> > -	__fprobe_handler(ip, parent_ip, ops, fregs);
-> > +	ret = __fprobe_handler(ip, parent_ip, fp, fregs, data);
-> >  	kprobe_busy_end();
-> > -
-> > -recursion_unlock:
-> > -	ftrace_test_recursion_unlock(bit);
-> > +	return ret;
-> >  }
-> >  
-> > -static void fprobe_exit_handler(struct rethook_node *rh, void *data,
-> > -				unsigned long ret_ip, struct pt_regs *regs)
-> > +static int fprobe_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
-> > +			struct ftrace_regs *fregs)
-> >  {
-> > -	struct fprobe *fp = (struct fprobe *)data;
-> > -	struct fprobe_rethook_node *fpr;
-> > -	struct ftrace_regs *fregs = (struct ftrace_regs *)regs;
-> > -	int bit;
-> > +	struct fprobe_hlist_node *node, *first;
-> > +	unsigned long *fgraph_data = NULL;
-> > +	unsigned long func = trace->func;
-> > +	unsigned long header, ret_ip;
-> > +	int reserved_words;
-> > +	struct fprobe *fp;
-> > +	int used, ret;
-> >  
-> > -	if (!fp || fprobe_disabled(fp))
-> > -		return;
-> > +	if (WARN_ON_ONCE(!fregs))
-> > +		return 0;
-> >  
-> > -	fpr = container_of(rh, struct fprobe_rethook_node, node);
-> > +	first = node = find_first_fprobe_node(func);
-> > +	if (unlikely(!first))
-> > +		return 0;
-> > +
-> > +	reserved_words = 0;
-> > +	hlist_for_each_entry_from_rcu(node, hlist) {
-> > +		if (node->addr != func)
-> > +			break;
-> > +		fp = READ_ONCE(node->fp);
-> > +		if (!fp || !fp->exit_handler)
-> > +			continue;
-> > +		/*
-> > +		 * Since fprobe can be enabled until the next loop, we ignore the
-> > +		 * fprobe's disabled flag in this loop.
-> > +		 */
-> > +		reserved_words +=
-> > +			DIV_ROUND_UP(fp->entry_data_size, sizeof(long)) + 1;
-> > +	}
-> > +	node = first;
-> > +	if (reserved_words) {
-> > +		fgraph_data = fgraph_reserve_data(gops->idx, reserved_words * sizeof(long));
-> > +		if (unlikely(!fgraph_data)) {
-> > +			hlist_for_each_entry_from_rcu(node, hlist) {
-> > +				if (node->addr != func)
-> > +					break;
-> > +				fp = READ_ONCE(node->fp);
-> > +				if (fp && !fprobe_disabled(fp))
-> > +					fp->nmissed++;
-> > +			}
-> > +			return 0;
-> > +		}
-> > +	}
-> >  
-> >  	/*
-> > -	 * we need to assure no calls to traceable functions in-between the
-> > -	 * end of fprobe_handler and the beginning of fprobe_exit_handler.
-> > +	 * TODO: recursion detection has been done in the fgraph. Thus we need
-> > +	 * to add a callback to increment missed counter.
-> >  	 */
-> > -	bit = ftrace_test_recursion_trylock(fpr->entry_ip, fpr->entry_parent_ip);
-> > -	if (bit < 0) {
-> > -		fp->nmissed++;
-> > +	ret_ip = ftrace_regs_get_return_address(fregs);
-> > +	used = 0;
-> > +	hlist_for_each_entry_from_rcu(node, hlist) {
-> > +		void *data;
-> > +
-> > +		if (node->addr != func)
-> > +			break;
-> > +		fp = READ_ONCE(node->fp);
-> > +		if (!fp || fprobe_disabled(fp))
-> > +			continue;
-> > +
-> > +		if (fp->entry_data_size && fp->exit_handler)
-> > +			data = fgraph_data + used + 1;
-> > +		else
-> > +			data = NULL;
-> > +
-> > +		if (fprobe_shared_with_kprobes(fp))
-> > +			ret = __fprobe_kprobe_handler(func, ret_ip, fp, fregs, data);
-> > +		else
-> > +			ret = __fprobe_handler(func, ret_ip, fp, fregs, data);
-> > +		/* If entry_handler returns !0, nmissed is not counted but skips exit_handler. */
-> > +		if (!ret && fp->exit_handler) {
-> > +			int size_words = DIV_ROUND_UP(fp->entry_data_size, sizeof(long));
-> > +
-> > +			header = encode_fprobe_header(fp, size_words);
-> > +			if (likely(header)) {
-> > +				fgraph_data[used] = header;
-> > +				used += size_words + 1;
-> > +			}
-> > +		}
-> > +	}
-> > +	if (used < reserved_words)
-> > +		memset(fgraph_data + used, 0, reserved_words - used);
-> > +
-> > +	/* If any exit_handler is set, data must be used. */
-> > +	return used != 0;
-> > +}
-> > +NOKPROBE_SYMBOL(fprobe_entry);
-> > +
-> > +static void fprobe_return(struct ftrace_graph_ret *trace,
-> > +			  struct fgraph_ops *gops,
-> > +			  struct ftrace_regs *fregs)
-> > +{
-> > +	unsigned long *fgraph_data = NULL;
-> > +	unsigned long ret_ip;
-> > +	unsigned long val;
-> > +	struct fprobe *fp;
-> > +	int size, curr;
-> > +	int size_words;
-> > +
-> > +	fgraph_data = (unsigned long *)fgraph_retrieve_data(gops->idx, &size);
-> > +	if (WARN_ON_ONCE(!fgraph_data))
-> >  		return;
-> > +	size_words = DIV_ROUND_UP(size, sizeof(long));
-> > +	ret_ip = ftrace_regs_get_instruction_pointer(fregs);
-> > +
-> > +	preempt_disable();
-> > +
-> > +	curr = 0;
-> > +	while (size_words > curr) {
-> > +		val = fgraph_data[curr++];
+> There was an RFC IDEA "DAMOS-based Tiered-Memory Management" previously
+> posted at [1].
 > 
-> hi,
-> the ++ in here -----------------------^^ screws the logic below,
-> I think we need the change below to properly access the stack data
-> 
-> I wrote bpf test on top of this that adds multiple fprobes attached
-> on single function and makes sure the fprobe gets its own data on
-> fentry/fexit callbacks and with the change below it seems to work
-> properly
-
-Thanks for finding the bug!
-
-> 
-> jirka
-> 
-> > +		if (!val)
-> > +			break;
-> > +
-> > +		size = decode_fprobe_header(val, &fp);
-> > +		if (fp && is_fprobe_still_exist(fp) && !fprobe_disabled(fp)) {
-> > +			if (WARN_ON_ONCE(curr + size > size_words))
-> > +				break;
-> > +			fp->exit_handler(fp, trace->func, ret_ip, fregs,
-> > +					 size ? fgraph_data + curr : NULL);
-> > +		}
-> > +		curr += size + 1;
-
-But I think the problem is here. We've already decoded header, so "cur += size" is enough.
-
-BTW, I also found that I used DIV_ROUND_UP(..., sizeof(long)) on hotpath.
-It should be changed.
-
-Thank you,
-
-> >  	}
-> > +	preempt_enable();
-> > +}
+> It says there is no implementation of the demote/promote DAMOS action
+> are made.  This RFC is about its implementation for physical address
+> space.
 > 
 > 
-> ---
-> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> index 845ac5af4aeb..bfe255e12a13 100644
-> --- a/kernel/trace/fprobe.c
-> +++ b/kernel/trace/fprobe.c
-> @@ -323,16 +323,16 @@ static void fprobe_return(struct ftrace_graph_ret *trace,
->  
->  	curr = 0;
->  	while (size_words > curr) {
-> -		val = fgraph_data[curr++];
-> +		val = fgraph_data[curr];
->  		if (!val)
->  			break;
->  
->  		size = decode_fprobe_header(val, &fp);
->  		if (fp && is_fprobe_still_exist(fp) && !fprobe_disabled(fp)) {
-> -			if (WARN_ON_ONCE(curr + size > size_words))
-> +			if (WARN_ON_ONCE(curr + size + 1 > size_words))
->  				break;
->  			fp->exit_handler(fp, trace->func, ret_ip, fregs,
-> -					 size ? fgraph_data + curr : NULL);
-> +					 size ? fgraph_data + curr + 1 : NULL);
->  		}
->  		curr += size + 1;
->  	}
+> Introduction
+> ============
+> 
+> With the advent of CXL/PCIe attached DRAM, which will be called simply
+> as CXL memory in this cover letter, some systems are becoming more
+> heterogeneous having memory systems with different latency and bandwidth
+> characteristics.  They are usually handled as different NUMA nodes in
+> separate memory tiers and CXL memory is used as slow tiers because of
+> its protocol overhead compared to local DRAM.
+> 
+> In this kind of systems, we need to be careful placing memory pages on
+> proper NUMA nodes based on the memory access frequency.  Otherwise, some
+> frequently accessed pages might reside on slow tiers and it makes
+> performance degradation unexpectedly.  Moreover, the memory access
+> patterns can be changed at runtime.
+> 
+> To handle this problem, we need a way to monitor the memory access
+> patterns and migrate pages based on their access temperature.  The
+> DAMON(Data Access MONitor) framework and its DAMOS(DAMON-based Operation
+> Schemes) can be useful features for monitoring and migrating pages.
+> DAMOS provides multiple actions based on DAMON monitoring results and it
+> can be used for proactive reclaim, which means swapping cold pages out
+> with DAMOS_PAGEOUT action, but it doesn't support migration actions such
+> as demotion and promotion between tiered memory nodes.
+> 
+> This series supports two new DAMOS actions; DAMOS_DEMOTE for demotion
+> from fast tiers and DAMOS_PROMOTE for promotion from slow tiers.  This
+> prevents hot pages from being stuck on slow tiers, which makes
+> performance degradation and cold pages can be proactively demoted to
+> slow tiers so that the system can increase the chance to allocate more
+> hot pages to fast tiers.
+> 
+> The DAMON provides various tuning knobs but we found that the proactive
+> demotion for cold pages is especially useful when the system is running
+> out of memory on its fast tier nodes.
+> 
+> Our evaluation result shows that it reduces the performance slowdown
+> compared to the default memory policy from 15~17% to 4~5% when the
+> system runs under high memory pressure on its fast tier DRAM nodes.
+> 
+> 
+> DAMON configuration
+> ===================
+> 
+> The specific DAMON configuration doesn't have to be in the scope of this
+> patch series, but some rough idea is better to be shared to explain the
+> evaluation result.
+> 
+> The DAMON provides many knobs for fine tuning but its configuration file
+> is generated by HMSDK[2].  It includes gen_config.py script that
+> generates a json file with the full config of DAMON knobs and it creates
+> multiple kdamonds for each NUMA node when the DAMON is enabled so that
+> it can run hot/cold based migration for tiered memory.
+
+I was feeling a bit confused from here since DAMON doesn't receive parameters
+via a file.  To my understanding, the 'configuration file' means the input file
+for DAMON user-space tool, damo, not DAMON.  Just a trivial thing, but making
+it clear if possible could help readers in my opinion.
+
+> 
+> 
+> Evaluation Workload
+> ===================
+> 
+> The performance evaluation is done with redis[3], which is a widely used
+> in-memory database and the memory access patterns are generated via
+> YCSB[4].  We have measured two different workloads with zipfian and
+> latest distributions but their configs are slightly modified to make
+> memory usage higher and execution time longer for better evaluation.
+> 
+> The idea of evaluation using these demote and promote actions covers
+> system-wide memory management rather than partitioning hot/cold pages of
+> a single workload.  The default memory allocation policy creates pages
+> to the fast tier DRAM node first, then allocates newly created pages to
+> the slow tier CXL node when the DRAM node has insufficient free space.
+> Once the page allocation is done then those pages never move between
+> NUMA nodes.  It's not true when using numa balancing, but it is not the
+> scope of this DAMON based 2-tier memory management support.
+> 
+> If the working set of redis can be fit fully into the DRAM node, then
+> the redis will access the fast DRAM only.  Since the performance of DRAM
+> only is faster than partially accessing CXL memory in slow tiers, this
+> environment is not useful to evaluate this patch series.
+> 
+> To make pages of redis be distributed across fast DRAM node and slow
+> CXL node to evaluate our demote and promote actions, we pre-allocate
+> some cold memory externally using mmap and memset before launching
+> redis-server.  We assumed that there are enough amount of cold memory in
+> datacenters as TMO[5] and TPP[6] papers mentioned.
+> 
+> The evaluation sequence is as follows.
+> 
+> 1. Turn on DAMON with DAMOS_DEMOTE action for DRAM node and
+>    DAMOS_PROMOTE action for CXL node.  It demotes cold pages on DRAM
+>    node and promotes hot pages on CXL node in a regular interval.
+> 2. Allocate a huge block of cold memory by calling mmap and memset at
+>    the fast tier DRAM node, then make the process sleep to make the fast
+>    tier has insufficient memory for redis-server.
+> 3. Launch redis-server and load prebaked snapshot image, dump.rdb.  The
+>    redis-server consumes 52GB of anon pages and 33GB of file pages, but
+>    due to the cold memory allocated at 2, it fails allocating the entire
+>    memory of redis-server on the fast tier DRAM node so it partially
+>    allocates the remaining on the slow tier CXL node.  The ratio of
+>    DRAM:CXL depends on the size of the pre-allocated cold memory.
+> 4. Run YCSB to make zipfian or latest distribution of memory accesses to
+>    redis-server, then measure its execution time when it's completed.
+> 5. Repeat 4 over 50 times to measure the average execution time for each
+>    run.
+> 6. Increase the cold memory size then repeat goes to 2.
+> 
+> For each test at 4 took about a minute so repeating it 50 times almost
+> took about 1 hour for each test with a specific cold memory from 440GB
+> to 500GB in 10GB increments for each evaluation.  So it took about more
+> than 10 hours for both zipfian and latest workloads to get the entire
+> evaluation results.  Repeating the same test set multiple times doesn't
+> show much difference so I think it might be enough to make the result
+> reliable.
+> 
+> 
+> Evaluation Results
+> ==================
+> 
+> All the result values are normalized to DRAM-only execution time because
+> the workload cannot be faster than DRAM-only unless the workload hits
+> the bandwidth peak but our redis test doesn't go beyond the bandwidth
+> limit.
+> 
+> So the DRAM-only execution time is the ideal result without affected by
+> the gap between DRAM and CXL performance difference.  The NUMA node
+> environment is as follows.
+> 
+>   node0 - local DRAM, 512GB with a CPU socket (fast tier)
+>   node1 - disabled
+>   node2 - CXL DRAM, 96GB, no CPU attached (slow tier)
+> 
+> The following is the result of generating zipfian distribution to
+> redis-server and the numbers are averaged by 50 times of execution.
+> 
+>   1. YCSB zipfian distribution read only workload
+>   memory pressure with cold memory on node0 with 512GB of local DRAM.
+>   =============+================================================+=========
+>                |       cold memory occupied by mmap and memset  |
+>                |   0G  440G  450G  460G  470G  480G  490G  500G |
+>   =============+================================================+=========
+>   Execution time normalized to DRAM-only values                 | GEOMEAN
+>   -------------+------------------------------------------------+---------
+>   DRAM-only    | 1.00     -     -     -     -     -     -     - | 1.00
+>   CXL-only     | 1.21     -     -     -     -     -     -     - | 1.21
+>   default      |    -  1.09  1.10  1.13  1.15  1.18  1.21  1.21 | 1.15
+>   DAMON 2-tier |    -  1.02  1.04  1.05  1.04  1.05  1.05  1.06 | 1.04
+>   =============+================================================+=========
+>   CXL usage of redis-server in GB                               | AVERAGE
+>   -------------+------------------------------------------------+---------
+>   DRAM-only    |  0.0     -     -     -     -     -     -     - |  0.0
+>   CXL-only     | 52.6     -     -     -     -     -     -     - | 52.6
+>   default      |    -  19.4  26.1  32.3  38.5  44.7  50.5  50.3 | 37.4
+>   DAMON 2-tier |    -   0.1   1.6   5.2   8.0   9.1  11.8  13.6 |  7.1
+>   =============+================================================+=========
+> 
+> Each test result is based on the exeuction environment as follows.
+> 
+>   DRAM-only   : redis-server uses only local DRAM memory.
+>   CXL-only    : redis-server uses only CXL memory.
+>   default     : default memory policy(MPOL_DEFAULT).
+>                 numa balancing disabled.
+>   DAMON 2-tier: DAMON enabled with DAMOS_DEMOTE for DRAM nodes and
+>                 DAMOS_PROMOTE for CXL nodes.
+> 
+> The above result shows the "default" execution time goes up as the size
+> of cold memory is increased from 440G to 500G because the more cold
+> memory used, the more CXL memory is used for the target redis workload
+> and this makes the execution time increase.
+> 
+> However, "DAMON 2-tier" result shows less slowdown because the
+> DAMOS_DEMOTE action at DRAM node proactively demotes pre-allocated cold
+> memory to CXL node and this free space at DRAM increases more chance to
+> allocate hot or warm pages of redis-server to fast DRAM node.  Moreover,
+> DEMOS_PROMOTE action at CXL node also promotes hot pages of redis-server
+> to DRAM node actively.
+> 
+> As a result, it makes more memory of redis-server stay in DRAM node
+> compared to "default" memory policy and this makes the performance
+> improvement.
+> 
+> The following result of latest distribution workload shows similar data.
+> 
+>   2. YCSB latest distribution read only workload
+>   memory pressure with cold memory on node0 with 512GB of local DRAM.
+>   =============+================================================+=========
+>                |       cold memory occupied by mmap and memset  |
+>                |   0G  440G  450G  460G  470G  480G  490G  500G |
+>   =============+================================================+=========
+>   Execution time normalized to DRAM-only values                 | GEOMEAN
+>   -------------+------------------------------------------------+---------
+>   DRAM-only    | 1.00     -     -     -     -     -     -     - | 1.00
+>   CXL-only     | 1.18     -     -     -     -     -     -     - | 1.18
+>   default      |    -  1.16  1.15  1.17  1.18  1.16  1.18  1.15 | 1.17
+>   DAMON 2-tier |    -  1.04  1.04  1.05  1.05  1.06  1.05  1.06 | 1.05
+>   =============+================================================+=========
+>   CXL usage of redis-server in GB                               | AVERAGE
+>   -------------+------------------------------------------------+---------
+>   DRAM-only    |  0.0     -     -     -     -     -     -     - |  0.0
+>   CXL-only     | 52.6     -     -     -     -     -     -     - | 52.6
+>   default      |    -  19.3  26.1  32.2  38.5  44.6  50.5  50.6 | 37.4
+>   DAMON 2-tier |    -   1.3   3.8   7.0   4.1   9.4  12.5  16.7 |  7.8
+>   =============+================================================+=========
+> 
+> In summary of both results, our evaluation shows that "DAMON 2-tier"
+> memory management reduces the performance slowdown compared to the
+> "default" memory policy from 15~17% to 4~5% when the system runs with
+> high memory pressure on its fast tier DRAM nodes.
+> 
+> The similar evaluation was done in another machine that has 256GB of
+> local DRAM and 96GB of CXL memory.  The performance slowdown is reduced
+> from 20~24% for "default" to 5~7% for "DAMON 2-tier".
+> 
+> Having these DAMOS_DEMOTE and DAMOS_PROMOTE actions can make 2-tier
+> memory systems run more efficiently under high memory pressures.
+
+Thank you for running the tests again with the new version of the patches and
+sharing the results!
+
+> 
+> Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+> Signed-off-by: Hyeongtak Ji <hyeongtak.ji@sk.com>
+> Signed-off-by: Rakie Kim <rakie.kim@sk.com>
+> 
+> [1] https://lore.kernel.org/damon/20231112195602.61525-1-sj@kernel.org
+> [2] https://github.com/skhynix/hmsdk
+> [3] https://github.com/redis/redis/tree/7.0.0
+> [4] https://github.com/brianfrankcooper/YCSB/tree/0.17.0
+> [5] https://dl.acm.org/doi/10.1145/3503222.3507731
+> [6] https://dl.acm.org/doi/10.1145/3582016.3582063
+> 
+> Changes from RFC:
+>   1. Move most of implementation from mm/vmscan.c to mm/damon/paddr.c.
+>   2. Simplify some functions of vmscan.c and used in paddr.c, but need
+>      to be reviewed more in depth.
+>   3. Refactor most functions for common usage for both promote and
+>      demote actions and introduce an enum migration_mode for its control.
+>   4. Add "target_nid" sysfs knob for migration destination node for both
+>      promote and demote actions.
+>   5. Move DAMOS_PROMOTE before DAMOS_DEMOTE and move then even above
+>      DAMOS_STAT.
+
+Thank you very much for addressing many of my comments.
+
+> 
+> Honggyu Kim (3):
+>   mm/damon: refactor DAMOS_PAGEOUT with migration_mode
+>   mm: make alloc_demote_folio externally invokable for migration
+>   mm/damon: introduce DAMOS_DEMOTE action for demotion
+> 
+> Hyeongtak Ji (4):
+>   mm/memory-tiers: add next_promotion_node to find promotion target
+>   mm/damon: introduce DAMOS_PROMOTE action for promotion
+>   mm/damon/sysfs-schemes: add target_nid on sysfs-schemes
+>   mm/damon/sysfs-schemes: apply target_nid for promote and demote
+>     actions
+
+Honggyu joined DAMON Beer/Coffee/Tea Chat[1] yesterday, and we discussed about
+this patchset in high level.  Sharing the summary here for open discussion.  As
+also discussed on the first version of this patchset[2], we want to make single
+action for general page migration with minimum changes, but would like to keep
+page level access re-check.  We also agreed the previously proposed DAMOS
+filter-based approach could make sense for the purpose.
+
+Because I was anyway planning making such DAMOS filter for not only
+promotion/demotion but other types of DAMOS action, I will start developing the
+page level access re-check results based DAMOS filter.  Once the implementation
+of the prototype is done, I will share the early implementation.  Then, Honggyu
+will adjust their implementation based on the filter, and run their tests again
+and share the results.
+
+[1] https://lore.kernel.org/damon/20220810225102.124459-1-sj@kernel.org/
+[2] https://lore.kernel.org/damon/20240118171756.80356-1-sj@kernel.org
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thanks,
+SJ
+
+> 
+>  include/linux/damon.h          |  15 +-
+>  include/linux/memory-tiers.h   |  11 ++
+>  include/linux/migrate_mode.h   |   1 +
+>  include/linux/vm_event_item.h  |   1 +
+>  include/trace/events/migrate.h |   3 +-
+>  mm/damon/core.c                |   5 +-
+>  mm/damon/dbgfs.c               |   2 +-
+>  mm/damon/lru_sort.c            |   3 +-
+>  mm/damon/paddr.c               | 282 ++++++++++++++++++++++++++++++++-
+>  mm/damon/reclaim.c             |   3 +-
+>  mm/damon/sysfs-schemes.c       |  39 ++++-
+>  mm/internal.h                  |   1 +
+>  mm/memory-tiers.c              |  43 +++++
+>  mm/vmscan.c                    |  10 +-
+>  mm/vmstat.c                    |   1 +
+>  15 files changed, 404 insertions(+), 16 deletions(-)
+> 
+> 
+> base-commit: 0dd3ee31125508cd67f7e7172247f05b7fd1753a
+> -- 
+> 2.34.1
