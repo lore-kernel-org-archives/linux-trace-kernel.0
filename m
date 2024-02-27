@@ -1,136 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3BC2916;
-	Tue, 27 Feb 2024 01:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82373610D;
+	Tue, 27 Feb 2024 02:58:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.251.27.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708998359; cv=none; b=qaNfWJtHf/M9o9HJXZnDpl0QwsnBwz4FUy1zMZJV/ITIaWeFpqLKyIORATpwbPO6IfiP98qPz2kiqlDLefIm8pZFZiY4gbWq/PiFU12f1ayt7cOKE14wi2VY82c3oStYPB7n+mz2SHmGMff9U7SMEpX2V0pDmNN04QHeOjgmcH8=
+	t=1709002694; cv=none; b=XNIJE4rGMdAzCe4cbsGIot1HsuDNZvtaNaKa1VQMgapl+Yc6yxP7duSz9nPfeqXzePRMr9yCzOSJTw6zCG+pT16M3BYcPSH7B83CTdlytbvxKfseMXVu26AEtstCqwopjDh2cAGn7UEgqFrWXQLU/LoXE/aVO5jMLHv8j9+3/bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708998359; c=relaxed/simple;
-	bh=LuyC8MIBSY/6X2DV9kyguJMcgXgow64FfJ55DNaRInI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O+i56kCQXs5W5iL0+lwW2FrMlDhSxL0YgIUNKqQ6MmEAlG+ZY/76u4yYuJGamB3OjmmiGYhogclfPzRPcZue4sTK01ptkdgZClNhXjRfhiSFKJHrjbuQqmqPjPtzSciRCH+SbcC2SwNmI5/MUr1FbleT6GxQSXyUOwJH8PyX8Q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6A64C43390;
-	Tue, 27 Feb 2024 01:45:56 +0000 (UTC)
-Date: Mon, 26 Feb 2024 20:47:57 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Huang Yiwei <quic_hyiwei@quicinc.com>
-Cc: <mhiramat@kernel.org>, <mark.rutland@arm.com>, <mcgrof@kernel.org>,
- <keescook@chromium.org>, <j.granados@samsung.com>,
- <mathieu.desnoyers@efficios.com>, <corbet@lwn.net>,
- <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
- <quic_bjorande@quicinc.com>, <quic_tsoni@quicinc.com>,
- <quic_satyap@quicinc.com>, <quic_aiquny@quicinc.com>, <kernel@quicinc.com>,
- Ross Zwisler <zwisler@google.com>, Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH v5] tracing: Support to dump instance traces by
- ftrace_dump_on_oops
-Message-ID: <20240226204757.1a968a10@gandalf.local.home>
-In-Reply-To: <20240208131814.614691-1-quic_hyiwei@quicinc.com>
-References: <20240208131814.614691-1-quic_hyiwei@quicinc.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1709002694; c=relaxed/simple;
+	bh=AaZ7qsvOSZA9cbUPNq84VziHt8N0O2Mp93ysaLF45VM=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=D2Tq0I5JA7WDgiJmLj3Km47ywXHcyCTNHRoaIlsC4iQVWzRFQ4xPZAbjkelhRwiUrfUMhgDnw6Bo7Gex8NzeCERhTf0WGeh4Oo6bSUORRQyet9wTTECGXUsMuHbeYM0CUU67jv87snIjqaZKhXOJXDr2ZGC7ZZBpX31AH1d95QQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=58.251.27.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mxde.zte.com.cn (unknown [10.35.20.121])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4TkMSC0LSwzCh15;
+	Tue, 27 Feb 2024 10:51:07 +0800 (CST)
+Received: from mxhk.zte.com.cn (unknown [192.168.250.137])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mxde.zte.com.cn (FangMail) with ESMTPS id 4TkMS20jVpzCHrX8;
+	Tue, 27 Feb 2024 10:50:58 +0800 (CST)
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4TkMRp0Q4Sz8XrRN;
+	Tue, 27 Feb 2024 10:50:46 +0800 (CST)
+Received: from xaxapp01.zte.com.cn ([10.88.99.176])
+	by mse-fl1.zte.com.cn with SMTP id 41R2oZRh081486;
+	Tue, 27 Feb 2024 10:50:35 +0800 (+08)
+	(envelope-from xu.xin16@zte.com.cn)
+Received: from mapi (xaxapp03[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Tue, 27 Feb 2024 10:50:36 +0800 (CST)
+Date: Tue, 27 Feb 2024 10:50:36 +0800 (CST)
+X-Zmail-TransId: 2afb65dd4dfc2c8-53c3e
+X-Mailer: Zmail v1.0
+Message-ID: <202402271050366715988@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+From: <xu.xin16@zte.com.cn>
+To: <davem@davemloft.net>
+Cc: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <dsahern@kernel.org>,
+        <edumazet@google.com>, <kuba@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <yang.yang29@zte.com.cn>,
+        <xu.xin16@zte.com.cn>, <he.peilin@zte.com.cn>, <liu.chun2@zte.com.cn>,
+        <jiang.xuexin@zte.com.cn>, <zhang.yunkai@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIXSBuZXQvaXB2NDogYWRkIHRyYWNlcG9pbnQgZm9yIGljbXBfc2VuZA==?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 41R2oZRh081486
+X-Fangmail-Gw-Spam-Type: 0
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 65DD4E19.000/4TkMSC0LSwzCh15
 
-On Thu, 8 Feb 2024 21:18:14 +0800
-Huang Yiwei <quic_hyiwei@quicinc.com> wrote:
+From: xu xin <xu.xin16@zte.com.cn>
 
-> Currently ftrace only dumps the global trace buffer on an OOPs. For
-> debugging a production usecase, instance trace will be helpful to
-> check specific problems since global trace buffer may be used for
-> other purposes.
-> 
-> This patch extend the ftrace_dump_on_oops parameter to dump a specific
-> or multiple trace instances:
-> 
->   - ftrace_dump_on_oops=0: as before -- don't dump
->   - ftrace_dump_on_oops[=1]: as before -- dump the global trace buffer
->   on all CPUs
->   - ftrace_dump_on_oops=2 or =orig_cpu: as before -- dump the global
->   trace buffer on CPU that triggered the oops
->   - ftrace_dump_on_oops=<instance_name>: new behavior -- dump the
->   tracing instance matching <instance_name>
->   - ftrace_dump_on_oops[=2/orig_cpu],<instance1_name>[=2/orig_cpu],
->   <instrance2_name>[=2/orig_cpu]: new behavior -- dump the global trace
->   buffer and multiple instance buffer on all CPUs, or only dump on CPU
->   that triggered the oops if =2 or =orig_cpu is given
+Introduce a tracepoint for icmp_send, which can help users to get more
+detail information conveniently when icmp abnormal events happen.
 
-So we need to add that the syntax is:
+1. Giving an usecase example:
+=============================
+When an application experiences packet loss due to an unreachable UDP
+destination port, the kernel will send an exception message through the
+icmp_send function. By adding a trace point for icmp_send, developers or
+system administrators can obtain the detailed information easily about the
+UDP packet loss, including the type, code, source address, destination
+address, source port, and destination port. This facilitates the
+trouble-shooting of packet loss issues especially for those complicated
+network-service applications.
 
- ftrace_dump_on_oops[=[<0|1|2|orig_cpu>,][<instance_name>[=<1|2|orig_cpu>][,...]]
+2. Operation Instructions:
+==========================
+Switch to the tracing directory.
+	cd /sys/kernel/debug/tracing
+Filter for destination port unreachable.
+	echo "type==3 && code==3" > events/icmp/icmp_send/filter
+Enable trace event.
+	echo 1 > events/icmp/icmp_send/enable
 
-> 
-> Also, the sysctl node can handle the input accordingly.
-> 
-> Cc: Ross Zwisler <zwisler@google.com>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> Signed-off-by: Huang Yiwei <quic_hyiwei@quicinc.com>
-> ---
->  .../admin-guide/kernel-parameters.txt         |  26 ++-
->  Documentation/admin-guide/sysctl/kernel.rst   |  30 +++-
->  include/linux/ftrace.h                        |   4 +-
->  include/linux/kernel.h                        |   1 +
->  kernel/sysctl.c                               |   4 +-
->  kernel/trace/trace.c                          | 156 +++++++++++++-----
->  kernel/trace/trace_selftest.c                 |   2 +-
->  7 files changed, 168 insertions(+), 55 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 31b3a25680d0..3d6ea8e80c2f 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -1561,12 +1561,28 @@
->  			The above will cause the "foo" tracing instance to trigger
->  			a snapshot at the end of boot up.
->  
-> -	ftrace_dump_on_oops[=orig_cpu]
-> +	ftrace_dump_on_oops[=2(orig_cpu) | =<instance>][,<instance> |
-> +			  ,<instance>=2(orig_cpu)]
->  			[FTRACE] will dump the trace buffers on oops.
-> -			If no parameter is passed, ftrace will dump
-> -			buffers of all CPUs, but if you pass orig_cpu, it will
-> -			dump only the buffer of the CPU that triggered the
-> -			oops.
-> +			If no parameter is passed, ftrace will dump global
-> +			buffers of all CPUs, if you pass 2 or orig_cpu, it
-> +			will dump only the buffer of the CPU that triggered
-> +			the oops, or the specific instance will be dumped if
-> +			its name is passed. Multiple instance dump is also
-> +			supported, and instances are separated by commas. Each
-> +			instance supports only dump on CPU that triggered the
-> +			oops by passing 2 or orig_cpu to it.
-> +
-> +			ftrace_dump_on_oops=foo=orig_cpu
-> +
-> +			The above will dump only the buffer of "foo" instance
-> +			on CPU that triggered the oops.
-> +
-> +			ftrace_dump_on_oops,foo,bar=orig_cpu
+3. Result View:
+================
+ udp_client_erro-11370   [002] ...s.12   124.728002:  icmp_send:
+icmp_send: type=3, code=3.From 127.0.0.1:41895 to 127.0.0.1:6666 ulen=23
+skbaddr=00000000589b167a
 
-I believe the above is incorrect. It should be:
+Signed-off-by: He Peilin <he.peilin@zte.com.cn>
+Reviewed-by: xu xin <xu.xin16@zte.com.cn>
+Reviewed-by: Yunkai Zhang <zhang.yunkai@zte.com.cn>
+Cc: Yang Yang <yang.yang29@zte.com.cn>
+Cc: Liu Chun <liu.chun2@zte.com.cn>
+Cc: Xuexin Jiang <jiang.xuexin@zte.com.cn>
+---
+ include/trace/events/icmp.h | 57 +++++++++++++++++++++++++++++++++++++++++++++
+ net/ipv4/icmp.c             |  4 ++++
+ 2 files changed, 61 insertions(+)
+ create mode 100644 include/trace/events/icmp.h
 
-			ftrace_dump_on_oops=foo,bar=orig_cpu
+diff --git a/include/trace/events/icmp.h b/include/trace/events/icmp.h
+new file mode 100644
+index 000000000000..3d9af5769bc3
+--- /dev/null
++++ b/include/trace/events/icmp.h
+@@ -0,0 +1,57 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM icmp
++
++#if !defined(_TRACE_ICMP_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_ICMP_H
++
++#include <linux/icmp.h>
++#include <linux/tracepoint.h>
++
++TRACE_EVENT(icmp_send,
++
++		TP_PROTO(const struct sk_buff *skb, int type, int code),
++
++		TP_ARGS(skb, type, code),
++
++		TP_STRUCT__entry(
++				__field(__u16, sport)
++				__field(__u16, dport)
++				__field(unsigned short, ulen)
++				__field(const void *, skbaddr)
++				__field(int, type)
++				__field(int, code)
++				__array(__u8, saddr, 4)
++				__array(__u8, daddr, 4)
++		),
++
++		TP_fast_assign(
++				// Get UDP header
++				struct udphdr *uh = udp_hdr(skb);
++				struct iphdr *iph = ip_hdr(skb);
++				__be32 *p32;
++
++				__entry->sport = ntohs(uh->source);
++				__entry->dport = ntohs(uh->dest);
++				__entry->ulen = ntohs(uh->len);
++				__entry->skbaddr = skb;
++				__entry->type = type;
++				__entry->code = code;
++
++				p32 = (__be32 *) __entry->saddr;
++				*p32 = iph->saddr;
++
++				p32 = (__be32 *) __entry->daddr;
++				*p32 =  iph->daddr;
++		),
++
++		TP_printk("icmp_send: type=%d, code=%d. From %pI4:%u to %pI4:%u ulen=%d skbaddr=%p",
++			__entry->type, __entry->code,
++			__entry->saddr, __entry->sport, __entry->daddr,
++			__entry->dport, __entry->ulen, __entry->skbaddr)
++);
++
++#endif /* _TRACE_ICMP_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
+index e63a3bf99617..437bdb7e2650 100644
+--- a/net/ipv4/icmp.c
++++ b/net/ipv4/icmp.c
+@@ -92,6 +92,8 @@
+ #include <net/inet_common.h>
+ #include <net/ip_fib.h>
+ #include <net/l3mdev.h>
++#define CREATE_TRACE_POINTS
++#include <trace/events/icmp.h>
 
-And you can add here as well:
+ /*
+  *	Build xmit assembly blocks
+@@ -599,6 +601,8 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
+ 	struct net *net;
+ 	struct sock *sk;
 
-  ftrace_dump_on_oops[=[<0|1|2|orig_cpu>,][<instance_name>[=<1|2|orig_cpu>][,...]]
++	trace_icmp_send(skb_in, type, code);
++
+ 	if (!rt)
+ 		goto out;
 
-
-Thanks,
-
---Steve
-
-> +
-> +			The above will dump global buffer on all CPUs, the
-> +			buffer of "foo" instance on all CPUs and the buffer
-> +			of "bar" instance on CPU that triggered the oops.
->  
->  	ftrace_filter=[function-list]
+-- 
+2.15.2
