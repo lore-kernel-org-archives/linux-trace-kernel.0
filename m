@@ -1,246 +1,91 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE99161B71
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Feb 2024 17:53:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33324085F;
+	Wed, 28 Feb 2024 17:58:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709142840; cv=none; b=rg5ZTCPgySPtpvXKAkIy+Gekd7Tbohly3rCa4W02WpWX08ccHDiH4WYGYguHirS+nmjMK+jJmaNWyi2MxO7Wg0eGbFC2yXep9XMu238bFPaUAzXe649zLFcQMubNu6BzWMNlk5vRRUiAA2VR1vmYJjaOdZI7x1cxhuNneQJbQ+0=
+	t=1709143120; cv=none; b=Am8p29rKF3l8XZsOgwZzjxLwcPfA1aB3BMJf3tSWKRKJNg7qMffMuYyS9sL4o6bpMlpXf7tTFxdIStKKDDGjsfd48xZ6EKcL4PrCGtmvw3d5FW3TV5BREgTQympFjFPoLr11YU/hwmdb1xjOhvmowGxY2oWM7HH5oxiE2s0crZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709142840; c=relaxed/simple;
-	bh=1Bd28xktdVPNsM8n0LsBzvjun5YufbV6tfnuehsJA7U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cNhBBpCJpcnL2OzLeugHJ7//Sho0XoOzSaageLmgkBA+bwan6eGTk5jYuGUjjQRRSTnQXvuHFW7UhofBP1ezxUD6GHZmTRR7DWEudbWYXe6Ofz6olC/QDzjm0F54/6J8CFvQ9DDQdWaO7ei9IObGTBCIBSNWbKasp8p4sfJHK14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=D2IrTjkj; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1709143120; c=relaxed/simple;
+	bh=xE+bf5+hKby7lhQQVgM0WkM7CD9AAijXpIxSLBRi39w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H7wiso2HXDqLmE6g5sLEeFfkJgE36NsQGTX8bZQpcJZKyAXZKF+2apVrtJjMzVVEHFgYP2O5DvNDxB1kvQJJBDHEKqdByEmLnX6Trl0j6IlrLFRwTS1o7DzB+Qi37+MqL+sV2yVdfHoI3nYkEK3mm0rS8MvwIxpVsHmAR884FC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gRBJ0nYM; arc=none smtp.client-ip=209.85.210.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="D2IrTjkj"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-412a3371133so76115e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Feb 2024 09:53:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gRBJ0nYM"
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6e2e5824687so2284230a34.0;
+        Wed, 28 Feb 2024 09:58:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1709142836; x=1709747636; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y2KLsPuh1XpNjZ2CAToQLQwQXyB2VEROM3hvTLFmqyk=;
-        b=D2IrTjkjDsw+RKk6jHaPEfsFKyrJOMcpjZfnctDFKLMJHzu/vzHLgb6BAX+Y9piSA+
-         vg2xGX/EnGpKh7FWvkTbCz4IL1Y1znrUR+u0372XlXpKYczQslLlEYhJ1qEbgZF2lGxp
-         85zMkCYpoIFsPiunabG4TkWEpw4wKBlTfuJ0mH08iioPGUulUWcfBv+ghqnSpbtl2Ze6
-         U+fGIpIsnA9hlVHiLXNTVd7L4ihI399UhRIn7JsZ6ILHztxWQ64HveUAadAGrEVD9RNC
-         25pXfKiuFpCdqq3el5BnwIO7LFrCugy0zB69AL07Ir2aGGrKvNthocvfQGFlIFxxTwht
-         qi9A==
+        d=gmail.com; s=20230601; t=1709143118; x=1709747918; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=r6+od4M7plalOCC+V2PcfYZk/imvHAERrD1XjnFHhGw=;
+        b=gRBJ0nYMcoxRTI2PEgh3F2wN5ZkRjQ7ECu85brewH4lwFFmA2JsU1X6FLwxceKjjXS
+         Vb7TuXTp6AEOna4QWkiqb8T+oFyzYyLHkmLeIWg7+UC7IIutx4dihRI7QHl3vcW43wMt
+         RhbrZ9Iw7g502BHMjAZm35yYTQ9RaCoIavAgW6zu7HE8ckF+vSuDw2khoUE5YoU6Atog
+         DjEMBS42DZ1O3M6qS9vcwljOrOj9+WxG/gRQqe9Xr9KDPdmQp/3l6N6JOhBfWJRhG6kJ
+         HzgnRw95VRd9OE4UloVek4HrPnOu3jv/8gwnsdTNXAJzrL8XTJH/1FLu4qizKQY+VfCK
+         etVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709142836; x=1709747636;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1709143118; x=1709747918;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Y2KLsPuh1XpNjZ2CAToQLQwQXyB2VEROM3hvTLFmqyk=;
-        b=TBWrzJnfS7LziI2muPNmY37AgLP2JCBLgs74zV2+TqndqRxCjiEOI+6rJi5UK4Dm2q
-         gt44fkTplCP9Wi2CMQmRCFqOEz7FNYqiFz2eexIiiDNJvMtH5VDm6YH7owQE+Kf7eqp1
-         Hcixx27fuiEvCUg/D7HsXQnU3nZhoySqVPGneuSy6Y2wLVoFd9uMbKv7VKMVg3RzKhUe
-         33ILDS1RSdCWMip1vKkvsg7p+l8TroMXZI4pGkaOHP6qtcSpL7yOhzvK16oNNPiQaeQk
-         YeQgg3UObghp0QolmEOVT0AamMdZ8k3Qiiu8UohdFaM7RtYYn0110cFOp9m81fbrZxKS
-         k5MA==
-X-Forwarded-Encrypted: i=1; AJvYcCXCYZmXGxxN+G6/Ml6yJ2eVGdY86tWl+iuRNqIcSAkH5MTSq/KaqR2lde24cJ03O0GJSTkm4xFexaPL0jVVe2jJc0mjXe83TjOy9RV3K/TtMQ5y
-X-Gm-Message-State: AOJu0YwJYkiVfrU5Y1K0XpzHs+CRl5p/gdBdQzmB8powbF3frr3pDryG
-	23DPhSoPHTqXnMqEmW+0By6yzz0GCQ0sdQZT5oquVBt8EnyOZCu9fqRjJyrzNV4=
-X-Google-Smtp-Source: AGHT+IFzsKFwkm6/PUuNhQXzmzQ00xQ91ajZbuZqPe2v3cVZIJEAYjZNYyL+734jbdq5mZCUaY5k7A==
-X-Received: by 2002:a05:600c:190a:b0:412:b15c:9769 with SMTP id j10-20020a05600c190a00b00412b15c9769mr174697wmq.25.1709142836667;
-        Wed, 28 Feb 2024 09:53:56 -0800 (PST)
-Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id n12-20020a05600c500c00b00412abfb0ed0sm2880142wmr.0.2024.02.28.09.53.55
+        bh=r6+od4M7plalOCC+V2PcfYZk/imvHAERrD1XjnFHhGw=;
+        b=vMcdO3EcMkomNNR1tCBVVCjJ5ODz9r6uZLRL8NlYilhzfNE5q/IN37lok57GPbIHYE
+         mWI4zX0Syqd8HtQPGYR5eWXMmY7nr6ReSWXH3+w21sJWx3ywpOuY/NGbjNHKm+V0LGxc
+         kLkmv65qWCpk4Bsx3LtyuqNCc1lqC0nmdX220A180Wz9uPp1g6fzuec2alyi1Jbv55tx
+         D4MW9aOufQ3dXWkosB0LvTUC9zhfDGyFXgcwn1yNFzN0zHUh3OjH8YxsdRPvxwzi6Tet
+         UTqv5UW3Jx+nDDWEHzC0qcrOKaxp6WayDDPJMDQxuVu2NTxZjVBTfCe1D1l72afQ9Jou
+         8pYA==
+X-Forwarded-Encrypted: i=1; AJvYcCW+++YoPFLD2oWgIxRKklQ8tb67Gl4iEOGDauVQyVAxzGoj9+vLgeem5v1/hUdJhBG0aNVMyiQetrgv+LZVRnW32V0gb93Pt8v4WsKGaL9d8huhVRwuwbW3wEqyFUsDxmUmWxAXGzsVLwNN3RuXL9Ix
+X-Gm-Message-State: AOJu0YyHNtec5yZYU7xxn4mw1srulyXyyhnruN07Qsvbfk88Zy+T5sT6
+	Dpw+KJ5WNGkzx+raARJZLAy4uZBpWUbbOhWLjIHUQOzwCZpvQt1a
+X-Google-Smtp-Source: AGHT+IH0zxVRYEXNk7dmlukPyuH258qRjzs1CtkYDOnVWA18uwWm9qtiPoMrJbhukJCNKjp0U126Jw==
+X-Received: by 2002:a05:6830:22da:b0:6e4:3228:4730 with SMTP id q26-20020a05683022da00b006e432284730mr314236otc.28.1709143117902;
+        Wed, 28 Feb 2024 09:58:37 -0800 (PST)
+Received: from google.com ([2620:0:1000:8411:eb4f:78c8:59f0:3de0])
+        by smtp.gmail.com with ESMTPSA id w189-20020a6262c6000000b006e58120c241sm202976pfb.191.2024.02.28.09.58.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Feb 2024 09:53:56 -0800 (PST)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Andrea Parri <andrea@rivosinc.com>,
-	Anup Patel <anup@brainfault.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>
-Subject: [PATCH 2/2] riscv: Fix text patching when IPI are used
-Date: Wed, 28 Feb 2024 18:51:49 +0100
-Message-Id: <20240228175149.162646-3-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240228175149.162646-1-alexghiti@rivosinc.com>
-References: <20240228175149.162646-1-alexghiti@rivosinc.com>
+        Wed, 28 Feb 2024 09:58:37 -0800 (PST)
+Sender: Minchan Kim <minchan.kim@gmail.com>
+Date: Wed, 28 Feb 2024 09:58:35 -0800
+From: Minchan Kim <minchan@kernel.org>
+To: Richard Chang <richardycc@google.com>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
+	liumartin@google.com, surenb@google.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH v2] mm: add alloc_contig_migrate_range allocation
+ statistics
+Message-ID: <Zd90S7RVgCfwtpxZ@google.com>
+References: <20240226120728.3f495fa7@gandalf.local.home>
+ <20240228051127.2859472-1-richardycc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240228051127.2859472-1-richardycc@google.com>
 
-For now, we use stop_machine() to patch the text and when we use IPIs for
-remote icache flushes (which is emitted in patch_text_nosync()), the system
-hangs.
+On Wed, Feb 28, 2024 at 05:11:17AM +0000, Richard Chang wrote:
+> alloc_contig_migrate_range has every information to be able to
+> understand big contiguous allocation latency. For example, how many
+> pages are migrated, how many times they were needed to unmap from
+> page tables.
+> 
+> This patch adds the trace event to collect the allocation statistics.
+> In the field, it was quite useful to understand CMA allocation
+> latency.
+> 
+> Signed-off-by: Richard Chang <richardycc@google.com>
 
-So instead, make sure every cpu executes the stop_machine() patching
-function and emit a local icache flush there.
-
-Co-developed-by: Björn Töpel <bjorn@rivosinc.com>
-Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/riscv/include/asm/patch.h |  1 +
- arch/riscv/kernel/ftrace.c     | 42 ++++++++++++++++++++++++++++++----
- arch/riscv/kernel/patch.c      | 18 +++++++++------
- 3 files changed, 50 insertions(+), 11 deletions(-)
-
-diff --git a/arch/riscv/include/asm/patch.h b/arch/riscv/include/asm/patch.h
-index e88b52d39eac..9f5d6e14c405 100644
---- a/arch/riscv/include/asm/patch.h
-+++ b/arch/riscv/include/asm/patch.h
-@@ -6,6 +6,7 @@
- #ifndef _ASM_RISCV_PATCH_H
- #define _ASM_RISCV_PATCH_H
- 
-+int patch_insn_write(void *addr, const void *insn, size_t len);
- int patch_text_nosync(void *addr, const void *insns, size_t len);
- int patch_text_set_nosync(void *addr, u8 c, size_t len);
- int patch_text(void *addr, u32 *insns, int ninsns);
-diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-index f5aa24d9e1c1..5654966c4e7d 100644
---- a/arch/riscv/kernel/ftrace.c
-+++ b/arch/riscv/kernel/ftrace.c
-@@ -8,6 +8,7 @@
- #include <linux/ftrace.h>
- #include <linux/uaccess.h>
- #include <linux/memory.h>
-+#include <linux/stop_machine.h>
- #include <asm/cacheflush.h>
- #include <asm/patch.h>
- 
-@@ -75,8 +76,7 @@ static int __ftrace_modify_call(unsigned long hook_pos, unsigned long target,
- 		make_call_t0(hook_pos, target, call);
- 
- 	/* Replace the auipc-jalr pair at once. Return -EPERM on write error. */
--	if (patch_text_nosync
--	    ((void *)hook_pos, enable ? call : nops, MCOUNT_INSN_SIZE))
-+	if (patch_insn_write((void *)hook_pos, enable ? call : nops, MCOUNT_INSN_SIZE))
- 		return -EPERM;
- 
- 	return 0;
-@@ -88,7 +88,7 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
- 
- 	make_call_t0(rec->ip, addr, call);
- 
--	if (patch_text_nosync((void *)rec->ip, call, MCOUNT_INSN_SIZE))
-+	if (patch_insn_write((void *)rec->ip, call, MCOUNT_INSN_SIZE))
- 		return -EPERM;
- 
- 	return 0;
-@@ -99,7 +99,7 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
- {
- 	unsigned int nops[2] = {NOP4, NOP4};
- 
--	if (patch_text_nosync((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
-+	if (patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
- 		return -EPERM;
- 
- 	return 0;
-@@ -134,6 +134,40 @@ int ftrace_update_ftrace_func(ftrace_func_t func)
- 
- 	return ret;
- }
-+
-+struct ftrace_modify_param {
-+	int command;
-+	atomic_t cpu_count;
-+};
-+
-+static int __ftrace_modify_code(void *data)
-+{
-+	struct ftrace_modify_param *param = data;
-+
-+	if (atomic_inc_return(&param->cpu_count) == num_online_cpus()) {
-+		ftrace_modify_all_code(param->command);
-+		/*
-+		 * Make sure the patching store is effective *before* we
-+		 * increment the counter which releases all waiting cpus
-+		 * by using the release version of atomic increment.
-+		 */
-+		atomic_inc_return_release(&param->cpu_count);
-+	} else {
-+		while (atomic_read(&param->cpu_count) <= num_online_cpus())
-+			cpu_relax();
-+	}
-+
-+	local_flush_icache_all();
-+
-+	return 0;
-+}
-+
-+void arch_ftrace_update_code(int command)
-+{
-+	struct ftrace_modify_param param = { command, ATOMIC_INIT(0) };
-+
-+	stop_machine(__ftrace_modify_code, &param, cpu_online_mask);
-+}
- #endif
- 
- #ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
-index 0b5c16dfe3f4..82d8508c765b 100644
---- a/arch/riscv/kernel/patch.c
-+++ b/arch/riscv/kernel/patch.c
-@@ -188,7 +188,7 @@ int patch_text_set_nosync(void *addr, u8 c, size_t len)
- }
- NOKPROBE_SYMBOL(patch_text_set_nosync);
- 
--static int patch_insn_write(void *addr, const void *insn, size_t len)
-+int patch_insn_write(void *addr, const void *insn, size_t len)
- {
- 	size_t patched = 0;
- 	size_t size;
-@@ -211,11 +211,9 @@ NOKPROBE_SYMBOL(patch_insn_write);
- 
- int patch_text_nosync(void *addr, const void *insns, size_t len)
- {
--	u32 *tp = addr;
- 	int ret;
- 
--	ret = patch_insn_write(tp, insns, len);
--
-+	ret = patch_insn_write(addr, insns, len);
- 	if (!ret)
- 		flush_icache_range((uintptr_t) tp, (uintptr_t) tp + len);
- 
-@@ -232,15 +230,21 @@ static int patch_text_cb(void *data)
- 	if (atomic_inc_return(&patch->cpu_count) == num_online_cpus()) {
- 		for (i = 0; ret == 0 && i < patch->ninsns; i++) {
- 			len = GET_INSN_LENGTH(patch->insns[i]);
--			ret = patch_text_nosync(patch->addr + i * len,
--						&patch->insns[i], len);
-+			ret = patch_insn_write(patch->addr + i * len, &patch->insns[i], len);
- 		}
--		atomic_inc(&patch->cpu_count);
-+		/*
-+		 * Make sure the patching store is effective *before* we
-+		 * increment the counter which releases all waiting cpus
-+		 * by using the release version of atomic increment.
-+		 */
-+		atomic_inc_return_release(&patch->cpu_count);
- 	} else {
- 		while (atomic_read(&patch->cpu_count) <= num_online_cpus())
- 			cpu_relax();
- 	}
- 
-+	local_flush_icache_all();
-+
- 	return ret;
- }
- NOKPROBE_SYMBOL(patch_text_cb);
--- 
-2.39.2
-
+Acked-by: Minchan Kim <minchan@kernel.org>
