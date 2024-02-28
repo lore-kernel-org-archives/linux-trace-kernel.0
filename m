@@ -1,32 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D44112E1DD;
-	Wed, 28 Feb 2024 14:45:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804D215B11F;
+	Wed, 28 Feb 2024 14:54:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709131501; cv=none; b=BUla82nyXzbb9sUBjfDnqYk8rnRLh87bBGommDEtIsoBeBtYqoyW1doHwd4eVFt8u4v40Zc7OGktsUnQgPhR1moHRUsU7USE5RQ+f6I3WF70Dx8jEDgq9Xo+X4FujF6Tv3i9x6ojaQ4CTm5okpDqZye23xOSkJpMyxuCggVF5ws=
+	t=1709132086; cv=none; b=HVAgoXsERvjHbvIsUY/fduWrUbB/rPMjcafiEuLnFKir+arxo5sFXdcH8nKRih38IMM6R6rJXzzj1Ou0oYz8ypKB9RAyegvJKo8sybeFAB8VbrovTgO8u4WD4Qy0dxoq6N+drJ4Ji3t1T8U8USAH2IbG5OP/7U3cSr5pt3GQuPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709131501; c=relaxed/simple;
-	bh=6mLpCvN3tUZqYmSTfdBCQXOuAi1GkNzVxWE3hU2gaoU=;
+	s=arc-20240116; t=1709132086; c=relaxed/simple;
+	bh=wW+rzE5/HSFl0GaMs1eCk+iBVbwVvAHBBLkAbYyERb0=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AUCX58J//+1FyJOnYVOSizF5cW6rQ0x4L1M0Cf7INLEaGtBCoG4hf0LNePuUDnasaf7wBtB/1e0FaZg2F6rQy7h3An2z6cKBhbReH+McFzj0QlGzlrzW4aoAqWZOMlLNVw+7GM7dFD9ZcyUHFjZibRwL0C5+NvhlB0K4dZtkthA=
+	 MIME-Version:Content-Type; b=OOVpxhBrbN29/tAibs7M74KeUuh8KRx24klGA+KDST3Y7ZTs7UYpBtXJYLyRkXLGFSaCitLBqbelpb3rdgDGMwiayUeSl44taic3bnQn/3Evv5NjlrqrDJ/g7EnYHMBBcSvadXAz5K4Uz7RatSs0ePMd4f5rqAszcTeJ4vmHzFA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C8FEC433C7;
-	Wed, 28 Feb 2024 14:44:59 +0000 (UTC)
-Date: Wed, 28 Feb 2024 09:47:03 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6D31C43390;
+	Wed, 28 Feb 2024 14:54:44 +0000 (UTC)
+Date: Wed, 28 Feb 2024 09:56:48 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Richard Chang <richardycc@google.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- akpm@linux-foundation.org, liumartin@google.com, surenb@google.com,
- minchan@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2] mm: add alloc_contig_migrate_range allocation
- statistics
-Message-ID: <20240228094703.0aeb5ae5@gandalf.local.home>
-In-Reply-To: <20240228051127.2859472-1-richardycc@google.com>
-References: <20240226120728.3f495fa7@gandalf.local.home>
-	<20240228051127.2859472-1-richardycc@google.com>
+To: Tobias Waldekranz <tobias@waldekranz.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, davem@davemloft.net, kuba@kernel.org,
+ roopa@nvidia.com, razor@blackwall.org, bridge@lists.linux.dev,
+ netdev@vger.kernel.org, jiri@resnulli.us, ivecera@redhat.com,
+ mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 net-next 4/4] net: switchdev: Add tracepoints
+Message-ID: <20240228095648.646a6f1a@gandalf.local.home>
+In-Reply-To: <87a5nkhnlv.fsf@waldekranz.com>
+References: <20240223114453.335809-1-tobias@waldekranz.com>
+	<20240223114453.335809-5-tobias@waldekranz.com>
+	<20240223103815.35fdf430@gandalf.local.home>
+	<4838ad92a359a10944487bbcb74690a51dd0a2f8.camel@redhat.com>
+	<87a5nkhnlv.fsf@waldekranz.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,64 +39,94 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 28 Feb 2024 05:11:17 +0000
-Richard Chang <richardycc@google.com> wrote:
+On Wed, 28 Feb 2024 11:47:24 +0100
+Tobias Waldekranz <tobias@waldekranz.com> wrote:
 
-> alloc_contig_migrate_range has every information to be able to
-> understand big contiguous allocation latency. For example, how many
-> pages are migrated, how many times they were needed to unmap from
-> page tables.
+> >> > +	TP_fast_assign(
+> >> > +		__entry->val = val;
+> >> > +		__assign_str(dev, info->dev ? netdev_name(info->dev) : "(null)");
+> >> > +		__entry->info = info;
+> >> > +		__entry->err = err;
+> >> > +		switchdev_notifier_str(val, info, __entry->msg, SWITCHDEV_TRACE_MSG_MAX);  
+> >> 
+> >> Is it possible to just store the information in the trace event and then
+> >> call the above function in the read stage?  
+> >
+> > I agree with Steven: it looks like that with the above code the
+> > tracepoint itself will become measurably costily in terms of CPU
+> > cycles: we want to avoid that.
+> >
+> > Perhaps using different tracepoints with different notifier_block type
+> > would help? so that each trace point could just copy a few specific
+> > fields.  
 > 
-> This patch adds the trace event to collect the allocation statistics.
-> In the field, it was quite useful to understand CMA allocation
-> latency.
-> 
-> Signed-off-by: Richard Chang <richardycc@google.com>
-> ---
-> * from v1 - https://lore.kernel.org/linux-mm/20240226100045.2083962-1-richardycc@google.com/
->   * Move the trace event int field to the end of the longs - rostedt
->   * Do the calculation only when tracing is enabled - rostedt
-> 
->  include/trace/events/kmem.h | 38 +++++++++++++++++++++++++++++++++++++
->  mm/internal.h               |  3 ++-
->  mm/page_alloc.c             | 32 ++++++++++++++++++++++++++-----
->  mm/page_isolation.c         |  2 +-
->  4 files changed, 68 insertions(+), 7 deletions(-)
-> 
-> diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
-> index 58688768ef0f..6e62cc64cd92 100644
-> --- a/include/trace/events/kmem.h
-> +++ b/include/trace/events/kmem.h
-> @@ -304,6 +304,44 @@ TRACE_EVENT(mm_page_alloc_extfrag,
->  		__entry->change_ownership)
->  );
->  
-> +TRACE_EVENT(mm_alloc_contig_migrate_range_info,
-> +
-> +	TP_PROTO(unsigned long start,
-> +		 unsigned long end,
-> +		 unsigned long nr_migrated,
-> +		 unsigned long nr_reclaimed,
-> +		 unsigned long nr_mapped,
-> +		 int migratetype),
+> This can be done, but you will end up having to duplicate the decoding
+> and formatting logic from switchdev-str.c, with the additional hurdle of
+> having to figure out the sizes of all referenced objects in order to
+> create flattened versions of every notification type.
 
-Well, you didn't need to change the order of the parameters.
+Would it help if you could pass a trace_seq to it? The TP_printk() has a
+"magical" trace_seq variable that trace events can use in the TP_printk()
+called "p".
 
-Anyway, from a tracing point of view:
+Look at:
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org.
+  include/trace/events/libata.h:
+
+const char *libata_trace_parse_status(struct trace_seq*, unsigned char);
+#define __parse_status(s) libata_trace_parse_status(p, s)
+
+Where we have:
+
+const char *
+libata_trace_parse_status(struct trace_seq *p, unsigned char status)
+{
+	const char *ret = trace_seq_buffer_ptr(p);
+
+	trace_seq_printf(p, "{ ");
+	if (status & ATA_BUSY)
+		trace_seq_printf(p, "BUSY ");
+	if (status & ATA_DRDY)
+		trace_seq_printf(p, "DRDY ");
+	if (status & ATA_DF)
+		trace_seq_printf(p, "DF ");
+	if (status & ATA_DSC)
+		trace_seq_printf(p, "DSC ");
+	if (status & ATA_DRQ)
+		trace_seq_printf(p, "DRQ ");
+	if (status & ATA_CORR)
+		trace_seq_printf(p, "CORR ");
+	if (status & ATA_SENSE)
+		trace_seq_printf(p, "SENSE ");
+	if (status & ATA_ERR)
+		trace_seq_printf(p, "ERR ");
+	trace_seq_putc(p, '}');
+	trace_seq_putc(p, 0);
+
+	return ret;
+}
+
+The "trace_seq p" is a pointer to trace_seq descriptor that can build
+strings, and then you can use it to print a custom string in the trace
+output.
+
+
+
+> 
+> What I like about the current approach is that when new notification and
+> object types are added, switchdev_notifier_str will automatically be
+> able to decode them and give you some rough idea of what is going on,
+> even if no new message specific decoding logic is added. It is also
+> reusable by drivers that might want to decode notifications or objects
+> in error messages.
+> 
+> Would some variant of (how I understand) Steven's suggestion to instead
+> store the formatted message in a dynamic array (__assign_str()), rather
+> than in the tracepoint entry, be acceptable?
+
+Matters if you could adapt using a trace_seq for the output. Or at least
+use a seq_buf, as that's what is under the covers of trace_seq. If you
+rather just use seq_buf, the above could pretty much be the same by passing
+in: &p->seq.
 
 -- Steve
-
-> +
-> +	TP_ARGS(start, end, nr_migrated, nr_reclaimed, nr_mapped, migratetype),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(unsigned long, start)
-> +		__field(unsigned long, end)
-> +		__field(unsigned long, nr_migrated)
-> +		__field(unsigned long, nr_reclaimed)
-> +		__field(unsigned long, nr_mapped)
-> +		__field(int, migratetype)
-> +	),
-> +
