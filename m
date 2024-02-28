@@ -1,280 +1,84 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F4340870
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Feb 2024 19:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411F55E074;
+	Wed, 28 Feb 2024 19:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709146971; cv=none; b=BlQlvDzcGE86Mx4k37sSnQyCpmZ35EgBGGOx5baUQ1JHxBdHFPDaHn3jMOSB2SSMG2oRrpbIMOObD/YOFkOgsQIamcfMC4zOB6Va0cD45mdmMHiNEkN2ocYaFbaYMSIKXw/In1RI37cVaVUIxRNXFaLXsMR40R1I6pkV7qdRmXA=
+	t=1709149110; cv=none; b=ixqUwtTl2ml/mM8JNU5ovjJX+35XW81gmD8QYFWfc0B9xZAb8YIbLL0S17Us4gHT0BpqyX2t4Gi7HMZb+9v0E4N5wW0g2laCetpq/frD4AnT5y3STD8YbpDVGtc9IxgT5Fxrfccsp4WK8PSV6S+sbjs8WbgfKOsKPsbgv2q05OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709146971; c=relaxed/simple;
-	bh=skFUv9Uol9+cRhzF1ak6ei4adRuspYQ8Rx2dU/hvc/c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sRyLIbABn1z2HdtSbUp4s7uzyJiXayS+s06jKc/rDWSe0SMTrQuEn3Yv+cQubJGObKoQdoGsNIMJW+J23T+9+o8qYNhgbDZQc8tJ5QiiqG5JdHHT9RQyRoX20W8rc3QvLYrEH71dJHxl1Jq+YY5zRvluHS08NUwaH5TKUtitSMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=za4ZdViA; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1709149110; c=relaxed/simple;
+	bh=HKsFoZKnJ34YSBFn9vTGSnBy8Xop5g9WIhcVbvX1B6E=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=PlLGcavv2I/hTYDkl/aDk6B7vHhQVQzPFCP3omfDXkgF5o2V9H3S8v72FbpplNEjAXvVAqAKR5qLkfOi2BcFUeNCVx4sTqZRj/IeHS059FTACkYCY/9DauiT0bM+zuIMi/+I6aseNuqEswKyCUdZ58HXssSgaCYPfiRKupOfao0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b1iFGEj+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="za4ZdViA"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a3e8c1e4aa7so18815466b.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Feb 2024 11:02:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1709146967; x=1709751767; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X8tVlwjS8losoKuCZ/fjzZ/9YF7qU0FgMHqFQ3Tqj9U=;
-        b=za4ZdViA1avUJ2A2Jnb0AV12V+8pVtq0+GTRtMo7OuicrLANFG6k2ypUb2iP9cCoGx
-         kG87Jg5UmQr5UNRgcKa6FgEfmNA+TJ1nZuKp/V+onmEGNGUxbNSn+I5BMOl8QNaYy5OO
-         iBLpcoBebRmvJFpvCEpTOeMt70BZ8sIihkB+fx3iEAzW0eiI9gaXG16J4CngluOcVzu/
-         1pWYXhnw+0nkUlOJrkISq8gwS3feEd+JJW9xihfCqWXDI4ZJnGOARboXrXYpqDVR/KpX
-         NlmzLSPYhluD9xDfTuML5dILInOlhfyzTDca0wuYgb7ONRIcDE9GQKkSiv6YYS9l7klY
-         peOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709146967; x=1709751767;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=X8tVlwjS8losoKuCZ/fjzZ/9YF7qU0FgMHqFQ3Tqj9U=;
-        b=Drn55zbxKTU1vKTzemkFdOeWFrwYB6ihFg64stuVLMgXYL5KtwXa42GuWR6na+v2sw
-         PALruhX5k8k9JXuzg9NmQLZnsYSgEXj8Gq7YbhJSUXQmlC9Pmn4zXJ9gX2w1kL9k1xuC
-         bEu/6v7JX/oaCVv5F3d1zIDJu36KNNbbXMKU4wuWLER1GpGlpnRRA5G011Q0ldTNQ8F7
-         qjmc2s19iqOipwgqRyehdTWZv8qbhc5MABKQAJpbEEvp/h1JIF6xAvT0YTPCMthmdkaP
-         XfnqUQrVC3otx0GLD9zNOKxhrt3TT50WXM+BBCUKHCnas/DvGe9562V4Rvlr/E6d+Pvm
-         5FHg==
-X-Forwarded-Encrypted: i=1; AJvYcCUAWqLcwV040DIboUg9b+pTjXv7o3GUHdBrsOH7e8Nalcj1Optd0+Rhg5ZTfpJL+LUsWMWaVsV1dsvKspTdiHU+ur2XBVD1u2e7xDi+V/PeXqK/
-X-Gm-Message-State: AOJu0Yycv7vtMoCWPrchtO4w1lRV/be3p6EpxwoeOYsSm1uQd2eNmh8T
-	H1hNE3/+oH68+PKiBAmKpzWrXryp28BrNgMsClSiCgwzWE0nyxDa5P+6IB7CK9pijTn1JtaMpr1
-	K3qaDaNTeJPX6ZSmt/9TXFDo6Wt6LyXDjP6h5Ow==
-X-Google-Smtp-Source: AGHT+IE3utn3vyJsWF2mAg/s87LAZC7cECKzA/OV3r5FZbp8dm6m45TbYz9+U3CBjLv2zPJfvrM9+hF0Z6dwrR4u53s=
-X-Received: by 2002:a17:906:1d59:b0:a3f:c6a6:3b79 with SMTP id
- o25-20020a1709061d5900b00a3fc6a63b79mr421674ejh.6.1709146967406; Wed, 28 Feb
- 2024 11:02:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b1iFGEj+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1245C433C7;
+	Wed, 28 Feb 2024 19:38:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709149109;
+	bh=HKsFoZKnJ34YSBFn9vTGSnBy8Xop5g9WIhcVbvX1B6E=;
+	h=Date:From:To:Cc:Subject:Reply-To:From;
+	b=b1iFGEj+idZwyXYGELoyOx0I31GFrOItcdTvZYjxdyO8tk9y57qABVza2+j3QCN0H
+	 A29rheh2pPAOD49LuBeKJpJIqBBsYQa97eta4qmyyyfNyNhFvTXmL1NiL27dQpYkeG
+	 FpR0WCG3KxMCRt9W3nG2R9CiBg5Rb7P7Sc7cgRW6Iy+mfGbB8MqdrCj2FFyqzbT6lj
+	 rDOscHOOnD6zgn+kJIvDlbEu+cxpOlQlplajPzfJvhTud8avA79bTKBaafKxVcxPVt
+	 i7k/NQc6vs8sA+USwz3sxgYWDkBsxqpEl7RKPqFcc8uqzEk1GRqzCp/XkOGbYlQz34
+	 BbIKnWc2aq51Q==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 4F340CE03F3; Wed, 28 Feb 2024 11:38:29 -0800 (PST)
+Date: Wed, 28 Feb 2024 11:38:29 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Ankur Arora <ankur.a.arora@oracle.com>,
+	Thomas Gleixner <tglx@linutronix.de>, kernel-team@meta.com
+Subject: [PATCH RFC ftrace] Chose RCU Tasks based on TASKS_RCU rather than
+ PREEMPTION
+Message-ID: <f6507b10-5bb5-4407-bd4d-c547193a5a28@paulmck-laptop>
+Reply-To: paulmck@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240228175149.162646-1-alexghiti@rivosinc.com>
- <20240228175149.162646-3-alexghiti@rivosinc.com> <74d7adee-8293-4fad-82c3-f4458b2e3960@sifive.com>
-In-Reply-To: <74d7adee-8293-4fad-82c3-f4458b2e3960@sifive.com>
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-Date: Wed, 28 Feb 2024 20:02:36 +0100
-Message-ID: <CAHVXubiiyYAdKeVpzEdiySk=xz3bs6sb70SHT6_zM9XWDxWp+Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] riscv: Fix text patching when IPI are used
-To: Samuel Holland <samuel.holland@sifive.com>
-Cc: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Andrea Parri <andrea@rivosinc.com>, 
-	Anup Patel <anup@brainfault.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, Feb 28, 2024 at 7:21=E2=80=AFPM Samuel Holland
-<samuel.holland@sifive.com> wrote:
->
-> Hi Alex,
->
-> On 2024-02-28 11:51 AM, Alexandre Ghiti wrote:
-> > For now, we use stop_machine() to patch the text and when we use IPIs f=
-or
-> > remote icache flushes (which is emitted in patch_text_nosync()), the sy=
-stem
-> > hangs.
-> >
-> > So instead, make sure every cpu executes the stop_machine() patching
-> > function and emit a local icache flush there.
-> >
-> > Co-developed-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
-> > Signed-off-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
-> > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> > ---
-> >  arch/riscv/include/asm/patch.h |  1 +
-> >  arch/riscv/kernel/ftrace.c     | 42 ++++++++++++++++++++++++++++++----
-> >  arch/riscv/kernel/patch.c      | 18 +++++++++------
-> >  3 files changed, 50 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/arch/riscv/include/asm/patch.h b/arch/riscv/include/asm/pa=
-tch.h
-> > index e88b52d39eac..9f5d6e14c405 100644
-> > --- a/arch/riscv/include/asm/patch.h
-> > +++ b/arch/riscv/include/asm/patch.h
-> > @@ -6,6 +6,7 @@
-> >  #ifndef _ASM_RISCV_PATCH_H
-> >  #define _ASM_RISCV_PATCH_H
-> >
-> > +int patch_insn_write(void *addr, const void *insn, size_t len);
-> >  int patch_text_nosync(void *addr, const void *insns, size_t len);
-> >  int patch_text_set_nosync(void *addr, u8 c, size_t len);
-> >  int patch_text(void *addr, u32 *insns, int ninsns);
-> > diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-> > index f5aa24d9e1c1..5654966c4e7d 100644
-> > --- a/arch/riscv/kernel/ftrace.c
-> > +++ b/arch/riscv/kernel/ftrace.c
-> > @@ -8,6 +8,7 @@
-> >  #include <linux/ftrace.h>
-> >  #include <linux/uaccess.h>
-> >  #include <linux/memory.h>
-> > +#include <linux/stop_machine.h>
-> >  #include <asm/cacheflush.h>
-> >  #include <asm/patch.h>
-> >
-> > @@ -75,8 +76,7 @@ static int __ftrace_modify_call(unsigned long hook_po=
-s, unsigned long target,
-> >               make_call_t0(hook_pos, target, call);
-> >
-> >       /* Replace the auipc-jalr pair at once. Return -EPERM on write er=
-ror. */
-> > -     if (patch_text_nosync
-> > -         ((void *)hook_pos, enable ? call : nops, MCOUNT_INSN_SIZE))
-> > +     if (patch_insn_write((void *)hook_pos, enable ? call : nops, MCOU=
-NT_INSN_SIZE))
-> >               return -EPERM;
-> >
-> >       return 0;
-> > @@ -88,7 +88,7 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned=
- long addr)
-> >
-> >       make_call_t0(rec->ip, addr, call);
-> >
-> > -     if (patch_text_nosync((void *)rec->ip, call, MCOUNT_INSN_SIZE))
-> > +     if (patch_insn_write((void *)rec->ip, call, MCOUNT_INSN_SIZE))
-> >               return -EPERM;
-> >
-> >       return 0;
-> > @@ -99,7 +99,7 @@ int ftrace_make_nop(struct module *mod, struct dyn_ft=
-race *rec,
-> >  {
-> >       unsigned int nops[2] =3D {NOP4, NOP4};
-> >
-> > -     if (patch_text_nosync((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
-> > +     if (patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
-> >               return -EPERM;
-> >
-> >       return 0;
-> > @@ -134,6 +134,40 @@ int ftrace_update_ftrace_func(ftrace_func_t func)
-> >
-> >       return ret;
-> >  }
-> > +
-> > +struct ftrace_modify_param {
-> > +     int command;
-> > +     atomic_t cpu_count;
-> > +};
-> > +
-> > +static int __ftrace_modify_code(void *data)
-> > +{
-> > +     struct ftrace_modify_param *param =3D data;
-> > +
-> > +     if (atomic_inc_return(&param->cpu_count) =3D=3D num_online_cpus()=
-) {
-> > +             ftrace_modify_all_code(param->command);
-> > +             /*
-> > +              * Make sure the patching store is effective *before* we
-> > +              * increment the counter which releases all waiting cpus
-> > +              * by using the release version of atomic increment.
-> > +              */
-> > +             atomic_inc_return_release(&param->cpu_count);
-> > +     } else {
-> > +             while (atomic_read(&param->cpu_count) <=3D num_online_cpu=
-s())
-> > +                     cpu_relax();
-> > +     }
-> > +
-> > +     local_flush_icache_all();
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +void arch_ftrace_update_code(int command)
-> > +{
-> > +     struct ftrace_modify_param param =3D { command, ATOMIC_INIT(0) };
-> > +
-> > +     stop_machine(__ftrace_modify_code, &param, cpu_online_mask);
-> > +}
-> >  #endif
-> >
-> >  #ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-> > diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
-> > index 0b5c16dfe3f4..82d8508c765b 100644
-> > --- a/arch/riscv/kernel/patch.c
-> > +++ b/arch/riscv/kernel/patch.c
-> > @@ -188,7 +188,7 @@ int patch_text_set_nosync(void *addr, u8 c, size_t =
-len)
-> >  }
-> >  NOKPROBE_SYMBOL(patch_text_set_nosync);
-> >
-> > -static int patch_insn_write(void *addr, const void *insn, size_t len)
-> > +int patch_insn_write(void *addr, const void *insn, size_t len)
-> >  {
-> >       size_t patched =3D 0;
-> >       size_t size;
-> > @@ -211,11 +211,9 @@ NOKPROBE_SYMBOL(patch_insn_write);
-> >
-> >  int patch_text_nosync(void *addr, const void *insns, size_t len)
-> >  {
-> > -     u32 *tp =3D addr;
-> >       int ret;
-> >
-> > -     ret =3D patch_insn_write(tp, insns, len);
-> > -
-> > +     ret =3D patch_insn_write(addr, insns, len);
-> >       if (!ret)
-> >               flush_icache_range((uintptr_t) tp, (uintptr_t) tp + len);
->
-> This only happens to compile because flush_icache_range() is a macro that
-> ignores its parameters. You could replace tp with addr in this line as we=
-ll, but
-> that seems like more of a cosmetic change and should be a separate patch =
-(like
-> in [1] which covers both related functions) if you respin this.
+The advent of CONFIG_PREEMPT_AUTO, AKA lazy preemption, will mean that
+even kernels built with CONFIG_PREEMPT_NONE or CONFIG_PREEMPT_VOLUNTARY
+might see the occasional preemption, and that this preemption just might
+happen within a trampoline.
 
-I'll respin a new version and won't touch the extra variables since
-you did. Your patchset is getting closer and closer in my todo list :)
+Therefore, update ftrace_shutdown() to invoke synchronize_rcu_tasks()
+based on CONFIG_TASKS_RCU instead of CONFIG_PREEMPTION.
 
-Thanks,
+Only build tested.
 
-Alex
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Ankur Arora <ankur.a.arora@oracle.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: <linux-trace-kernel@vger.kernel.org>
 
->
-> Regards,
-> Samuel
->
-> [1]:
-> https://lore.kernel.org/linux-riscv/20240212025529.1971876-8-samuel.holla=
-nd@sifive.com/
->
-> >
-> > @@ -232,15 +230,21 @@ static int patch_text_cb(void *data)
-> >       if (atomic_inc_return(&patch->cpu_count) =3D=3D num_online_cpus()=
-) {
-> >               for (i =3D 0; ret =3D=3D 0 && i < patch->ninsns; i++) {
-> >                       len =3D GET_INSN_LENGTH(patch->insns[i]);
-> > -                     ret =3D patch_text_nosync(patch->addr + i * len,
-> > -                                             &patch->insns[i], len);
-> > +                     ret =3D patch_insn_write(patch->addr + i * len, &=
-patch->insns[i], len);
-> >               }
-> > -             atomic_inc(&patch->cpu_count);
-> > +             /*
-> > +              * Make sure the patching store is effective *before* we
-> > +              * increment the counter which releases all waiting cpus
-> > +              * by using the release version of atomic increment.
-> > +              */
-> > +             atomic_inc_return_release(&patch->cpu_count);
-> >       } else {
-> >               while (atomic_read(&patch->cpu_count) <=3D num_online_cpu=
-s())
-> >                       cpu_relax();
-> >       }
-> >
-> > +     local_flush_icache_all();
-> > +
-> >       return ret;
-> >  }
-> >  NOKPROBE_SYMBOL(patch_text_cb);
->
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 2da4eaa2777d6..c9e6c69cf3446 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -3156,7 +3156,7 @@ int ftrace_shutdown(struct ftrace_ops *ops, int command)
+ 		 * synchronize_rcu_tasks() will wait for those tasks to
+ 		 * execute and either schedule voluntarily or enter user space.
+ 		 */
+-		if (IS_ENABLED(CONFIG_PREEMPTION))
++		if (IS_ENABLED(CONFIG_TASKS_RCU))
+ 			synchronize_rcu_tasks();
+ 
+ 		ftrace_trampoline_free(ops);
