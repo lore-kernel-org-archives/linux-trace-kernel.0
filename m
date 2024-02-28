@@ -1,84 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411F55E074;
-	Wed, 28 Feb 2024 19:38:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1085E082;
+	Wed, 28 Feb 2024 20:20:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709149110; cv=none; b=ixqUwtTl2ml/mM8JNU5ovjJX+35XW81gmD8QYFWfc0B9xZAb8YIbLL0S17Us4gHT0BpqyX2t4Gi7HMZb+9v0E4N5wW0g2laCetpq/frD4AnT5y3STD8YbpDVGtc9IxgT5Fxrfccsp4WK8PSV6S+sbjs8WbgfKOsKPsbgv2q05OQ=
+	t=1709151634; cv=none; b=j3PX9nVKWIJbRyAaeJc7t8eWw7sf0p5QOs10sxefchb4jon/s7Gl2Ge5tlZYwAa3yeh8u6R4qwQjy9RT0TTHpJ1a+Dyp/ztQuTfIIo6sUGj9JZ+q8tpVfxJ+7PTBSxZym1pic0tMPcPHrV5JXLV9NKFljm6ex1SU0LBrpIxAmO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709149110; c=relaxed/simple;
-	bh=HKsFoZKnJ34YSBFn9vTGSnBy8Xop5g9WIhcVbvX1B6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=PlLGcavv2I/hTYDkl/aDk6B7vHhQVQzPFCP3omfDXkgF5o2V9H3S8v72FbpplNEjAXvVAqAKR5qLkfOi2BcFUeNCVx4sTqZRj/IeHS059FTACkYCY/9DauiT0bM+zuIMi/+I6aseNuqEswKyCUdZ58HXssSgaCYPfiRKupOfao0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b1iFGEj+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b1iFGEj+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1245C433C7;
-	Wed, 28 Feb 2024 19:38:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709149109;
-	bh=HKsFoZKnJ34YSBFn9vTGSnBy8Xop5g9WIhcVbvX1B6E=;
-	h=Date:From:To:Cc:Subject:Reply-To:From;
-	b=b1iFGEj+idZwyXYGELoyOx0I31GFrOItcdTvZYjxdyO8tk9y57qABVza2+j3QCN0H
-	 A29rheh2pPAOD49LuBeKJpJIqBBsYQa97eta4qmyyyfNyNhFvTXmL1NiL27dQpYkeG
-	 FpR0WCG3KxMCRt9W3nG2R9CiBg5Rb7P7Sc7cgRW6Iy+mfGbB8MqdrCj2FFyqzbT6lj
-	 rDOscHOOnD6zgn+kJIvDlbEu+cxpOlQlplajPzfJvhTud8avA79bTKBaafKxVcxPVt
-	 i7k/NQc6vs8sA+USwz3sxgYWDkBsxqpEl7RKPqFcc8uqzEk1GRqzCp/XkOGbYlQz34
-	 BbIKnWc2aq51Q==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 4F340CE03F3; Wed, 28 Feb 2024 11:38:29 -0800 (PST)
-Date: Wed, 28 Feb 2024 11:38:29 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Ankur Arora <ankur.a.arora@oracle.com>,
-	Thomas Gleixner <tglx@linutronix.de>, kernel-team@meta.com
-Subject: [PATCH RFC ftrace] Chose RCU Tasks based on TASKS_RCU rather than
- PREEMPTION
-Message-ID: <f6507b10-5bb5-4407-bd4d-c547193a5a28@paulmck-laptop>
-Reply-To: paulmck@kernel.org
+	s=arc-20240116; t=1709151634; c=relaxed/simple;
+	bh=YAtFYPmb2SAHktjqVXsdcZBKF2SuuMbdEdsoHa6pIlA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EDn3YK63wpBA35MQwB/UBSFCyh2zQTLCYoIkCWwbADkxRtaPZIGVXdsNGW5b8OZpnxSQ2f66yMEIc5lXOA1ZwD3cXnL6XkR9Gew4gnqw7zkfFPeDj7zkyO92WlH1+0Kn8VqZsOKte0I1niKOEpHIA3q6HIu6ERErjntN9TF0vXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B551C433F1;
+	Wed, 28 Feb 2024 20:20:32 +0000 (UTC)
+Date: Wed, 28 Feb 2024 15:22:36 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Ankur Arora
+ <ankur.a.arora@oracle.com>, Thomas Gleixner <tglx@linutronix.de>,
+ kernel-team@meta.com
+Subject: Re: [PATCH RFC ftrace] Chose RCU Tasks based on TASKS_RCU rather
+ than PREEMPTION
+Message-ID: <20240228152236.7a4c9eec@gandalf.local.home>
+In-Reply-To: <f6507b10-5bb5-4407-bd4d-c547193a5a28@paulmck-laptop>
+References: <f6507b10-5bb5-4407-bd4d-c547193a5a28@paulmck-laptop>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The advent of CONFIG_PREEMPT_AUTO, AKA lazy preemption, will mean that
-even kernels built with CONFIG_PREEMPT_NONE or CONFIG_PREEMPT_VOLUNTARY
-might see the occasional preemption, and that this preemption just might
-happen within a trampoline.
+On Wed, 28 Feb 2024 11:38:29 -0800
+"Paul E. McKenney" <paulmck@kernel.org> wrote:
 
-Therefore, update ftrace_shutdown() to invoke synchronize_rcu_tasks()
-based on CONFIG_TASKS_RCU instead of CONFIG_PREEMPTION.
+> The advent of CONFIG_PREEMPT_AUTO, AKA lazy preemption, will mean that
+> even kernels built with CONFIG_PREEMPT_NONE or CONFIG_PREEMPT_VOLUNTARY
+> might see the occasional preemption, and that this preemption just might
+> happen within a trampoline.
+> 
+> Therefore, update ftrace_shutdown() to invoke synchronize_rcu_tasks()
+> based on CONFIG_TASKS_RCU instead of CONFIG_PREEMPTION.
+> 
+> Only build tested.
+> 
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Ankur Arora <ankur.a.arora@oracle.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: <linux-trace-kernel@vger.kernel.org>
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 2da4eaa2777d6..c9e6c69cf3446 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -3156,7 +3156,7 @@ int ftrace_shutdown(struct ftrace_ops *ops, int command)
+>  		 * synchronize_rcu_tasks() will wait for those tasks to
+>  		 * execute and either schedule voluntarily or enter user space.
+>  		 */
+> -		if (IS_ENABLED(CONFIG_PREEMPTION))
+> +		if (IS_ENABLED(CONFIG_TASKS_RCU))
+>  			synchronize_rcu_tasks();
 
-Only build tested.
+What happens if CONFIG_TASKS_RCU is not enabled? Does
+synchronize_rcu_tasks() do anything? Or is it just a synchronize_rcu()?
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Ankur Arora <ankur.a.arora@oracle.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: <linux-trace-kernel@vger.kernel.org>
+If that's the case, perhaps just remove the if statement and make it:
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 2da4eaa2777d6..c9e6c69cf3446 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -3156,7 +3156,7 @@ int ftrace_shutdown(struct ftrace_ops *ops, int command)
- 		 * synchronize_rcu_tasks() will wait for those tasks to
- 		 * execute and either schedule voluntarily or enter user space.
- 		 */
--		if (IS_ENABLED(CONFIG_PREEMPTION))
-+		if (IS_ENABLED(CONFIG_TASKS_RCU))
- 			synchronize_rcu_tasks();
- 
- 		ftrace_trampoline_free(ops);
+	synchronize_rcu_tasks();
+
+Not sure an extra synchronize_rcu() will hurt (especially after doing a
+synchronize_rcu_tasks_rude() just before hand!
+
+-- Steve
