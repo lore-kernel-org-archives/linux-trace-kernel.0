@@ -1,61 +1,45 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01FD40870;
-	Wed, 28 Feb 2024 18:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251B871EAE;
+	Wed, 28 Feb 2024 18:48:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709145170; cv=none; b=Yw7wWKtmOG2xz6SenbfZMI1aicyB2HYkXgext+uzLIizgRNApGfYTKoDkN4FqeQwBe73eZCW7/F/O1ZZx0SzVTnyK/wBp5m+p+36380ui9RxBIRHUKZNMAsAB6vXT1pMz1dN7D0EomKgSVhQezu+8WWSaj9y0whn6J2G/aKnKdM=
+	t=1709146113; cv=none; b=kbYvDlikFsKxANcYqPln4bLNfh350NLb2/pJbUsN/XQ/fPIphFZCpRMLKQwE/LkWBSoOf3cFZoHNL5lCNCQkKpqH3ZmYUmrSY2i+c4A6tlXiUAG5NX3my0TToRvAkGRn6yQGAehNTUlNK2zj2GKbO2YwtxuV5Lh1auDvXpyXOCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709145170; c=relaxed/simple;
-	bh=CxtHM2+ifmqjyDHFXrz3Up2ARI/1W7ba/SFCOaOgjQc=;
+	s=arc-20240116; t=1709146113; c=relaxed/simple;
+	bh=I1FvYieTX2lMCO6HW6oRx/DgD5ZUO5pYflH+dqxQSng=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pn6lnnr6OCYlLr2uuM3IAGK1F7KELOC37WuBmICxdFul2Tguz4vQogX++TULS2ySGq1k1Oa84Khc5aY6dl3cp6sf7+HHbEfYGJSLaKYvbXN9qp0fc7Bx+gekXtjvKJI0aufoh1PIIB+JZdOb+ZGvvFpLoA/rwkKj3GPuS2yqgm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Qlty9SIZ; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=pVINBu1JoJQE/qU3jFuSoYD85mWlMq2ni8q9AnHp+ILzYJendatO3h+ZlH5yvVXfbT8u69/xNrrARxFDe1RADWpvv008gxgPd9CFNwNrGnr3MjEbF2dmE9gPXEoDAb+ZNFNDDfXIP7ZVLcHptMN53i4ImXpU1gH7PszPsXP8oeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jqdIO8tH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Qlty9SIZ"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7C7D340E019B;
-	Wed, 28 Feb 2024 18:32:38 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 2J3gT-n2s5B8; Wed, 28 Feb 2024 18:32:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1709145155; bh=6pILoD7GK3GHs+nxCL00x2OzFQfjgERMsC8V26O4mzI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Qlty9SIZBohDm/u1rnFR4iIlAoDg9IdGAdodWVGP7xQs3tySAuQo2F8qdbZ0XUxk3
-	 CtCkBT2IRyrU8MSIVZXc8v2wZBOp+odwyuafumabGhq2OrnOUpabi7E6t6xxKkslqm
-	 1toTUE04pckz1ZTPqNF28sZwtlvsGNuYseFlIa2wqlHf/P8W8eR6KJ3RkdZYz+zslV
-	 xP8XfOmkfbiusstHPkS84yPRAeAH3d2INmoA2LM/7v+pY0ca0CoWBLFUA2jdyb/HmW
-	 1lOmFVT9r+Ug8pnYZ516491LQIKxanyVXJSp7QI2M9gvO14jUe2OUa8pcwzCVG23IN
-	 iM+rrDAf/X5NVLEgp0LnMtTWpyXwYq/4sWQvcoOYG5lmTlNhPML9M3vsHlP2DgkOgQ
-	 g9Y3QQj9aVvytSwqPwKrXe2kjPv8MybPM0P5e9fgqeBGr1Y1QR7PHEV5QTib3T2Kq1
-	 Tj4eTw5XKtAAAM3SqbyOriuSrzCytk4JezEjvXkRICIQOqHbTcSXXxngruu2CpQf+e
-	 1S5UlKUhId6C9OfEyYnoy7D2KUCvQBt2yOOM6eM15BaBO7FWRrFOOZ4+aJ7UYMzRj1
-	 Q+32gwgApd39xyG3tn3rntB/qp/2f+DYWX8jKwHH/p/ICZNPIBBN9IZ8A4Eb25JLXe
-	 WrW2S7rsW3xSu04m0/BlYU4Y=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CB88E40E0185;
-	Wed, 28 Feb 2024 18:32:27 +0000 (UTC)
-Date: Wed, 28 Feb 2024 19:32:20 +0100
-From: Borislav Petkov <bp@alien8.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jqdIO8tH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A71CC433C7;
+	Wed, 28 Feb 2024 18:48:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709146112;
+	bh=I1FvYieTX2lMCO6HW6oRx/DgD5ZUO5pYflH+dqxQSng=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=jqdIO8tHM3uGKe8pv5ysvLhoq4IOs9HFHDWQDhPTxG6BeA3vlZHY6OtcVIkA7VXbw
+	 M89Fs7z6k9gNnYIoSlr4sOcu/VUw1pBGeG177PNsJqSQdluOFLVNhn3cr6rHRHrV9w
+	 tTXazdvUHLxclGVvffSZfHqlCI35ScxuWDXorBj8gyC+CdQ/qcV76d21adR3hLSOc2
+	 TI6WQZU1LafFB5d1wAc/dnIrzFct+CoTLEWSCmQlypP27eDS75ddSiTEDM0JTXukiS
+	 HlmQmS73NFDLQniye+Vv8RbZHc7relEffN11zK1KrAiSxIZ+nA6Kkfmn1o0hC+BgLU
+	 4CUAlX9bzLH2g==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 13D5BCE0358; Wed, 28 Feb 2024 10:48:32 -0800 (PST)
+Date: Wed, 28 Feb 2024 10:48:32 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: LKML <linux-kernel@vger.kernel.org>,
 	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
 	Thomas Gleixner <tglx@linutronix.de>
 Subject: Re: [PATCH] tracepoints: Use WARN() and not WARN_ON() for warnings
-Message-ID: <20240228183220.GDZd98NEDTrzZBGdgi@fat_crate.local>
+Message-ID: <23ffccec-8fb5-4f44-a193-0d21eaf07d1b@paulmck-laptop>
+Reply-To: paulmck@kernel.org
 References: <20240228133112.0d64fb1b@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -63,7 +47,7 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20240228133112.0d64fb1b@gandalf.local.home>
 
@@ -91,24 +75,37 @@ On Wed, Feb 28, 2024 at 01:31:12PM -0500, Steven Rostedt wrote:
 > 
 > Reported-by: Borislav Petkov <bp@alien8.de>
 > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+
 > ---
 >  include/linux/tracepoint.h | 6 ++++--
 >  1 file changed, 4 insertions(+), 2 deletions(-)
-
-Tested-by: Borislav Petkov (AMD) <bp@alien8.de>
-
-meaning: tested that it really fires:
-
-[    1.196008] Running RCU Tasks wait API self tests
-[    1.200227] ------------[ cut here ]------------
-[    1.203899] RCU not watching for tracepoint
-[    1.203899] WARNING: CPU: 0 PID: 0 at include/trace/events/lock.h:24 lock_acquire+0x2d3/0x300
-...
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> 
+> diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+> index 88c0ba623ee6..689b6d71590e 100644
+> --- a/include/linux/tracepoint.h
+> +++ b/include/linux/tracepoint.h
+> @@ -199,7 +199,8 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+>  		if (!(cond))						\
+>  			return;						\
+>  									\
+> -		if (WARN_ON_ONCE(RCUIDLE_COND(rcuidle)))		\
+> +		if (WARN_ONCE(RCUIDLE_COND(rcuidle),			\
+> +			      "Bad RCU usage for tracepoint"))		\
+>  			return;						\
+>  									\
+>  		/* keep srcu and sched-rcu usage consistent */		\
+> @@ -259,7 +260,8 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+>  				TP_ARGS(args),				\
+>  				TP_CONDITION(cond), 0);			\
+>  		if (IS_ENABLED(CONFIG_LOCKDEP) && (cond)) {		\
+> -			WARN_ON_ONCE(!rcu_is_watching());		\
+> +			WARN_ONCE(!rcu_is_watching(),			\
+> +				  "RCU not watching for tracepoint");	\
+>  		}							\
+>  	}								\
+>  	__DECLARE_TRACE_RCU(name, PARAMS(proto), PARAMS(args),		\
+> -- 
+> 2.43.0
+> 
