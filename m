@@ -1,117 +1,90 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA49249ED;
-	Thu, 29 Feb 2024 00:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+Received: from mx9.didiglobal.com (mx9.didiglobal.com [111.202.70.124])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 192CA3A28D;
+	Thu, 29 Feb 2024 05:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.202.70.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709167381; cv=none; b=j6V0uTxUsrkcAyFaXg7zBppi/BKkH3xv2d2TP1ILqR0FaSv3GQSiedN+QLgpuoJaV1FQ1uCIEmp94u6B0Wgz79thw8b9vTqu56J8Xm8nO0YS6vZLW6wHMXn0UGE0jXWK+bxFjZnjfqUwYlzTATUqiFBiUaQFmLTqyFpOqykJzCc=
+	t=1709184706; cv=none; b=PFI/jDW9ISHqKRptjXoJM8KIjP1JlKhuClsm8yuP2Eh/KZgExR7eamvN9QWvkXfcvAx8ZHy6SfMSZ82/qa6XC94Ybnlpudowz3ECF5bmCBfoEdO68F7UtnMH8MPBVCCTXhyPlsrAOUi58wwmfyhC6/4pdMiJPD4SX2jVqY7+8ZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709167381; c=relaxed/simple;
-	bh=n4Tb5ua0L8EebpFdtEUvj5UmxXNuiua3ipJgiQdU48g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Td32P6si7yOxqG6U/6aWFbQGAEKdPU20FG028xF7EjH8smq0coWvTDCz5cFYzzDa6IdJIkajQFipobCnQlMJESaWF9N3wlsU0VRN+579th5heEfNIiKJ6hWhnIXzjQof+LXJhnOncaOiP4Kzoogdpe5rYuUIoHZK4a8/qvrS5iA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I1m9EYo9; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I1m9EYo9"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5669bf9013eso147174a12.1;
-        Wed, 28 Feb 2024 16:42:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709167378; x=1709772178; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ZmS4IRRjqluuahGyeQvOvUbUjo8O7pcJJoCmMytKQ98=;
-        b=I1m9EYo95nk9Rw75ArU5yrzTFVld24zxVvb1yjSJO1NecJglvxvGFlu9haaSimKrdo
-         yXjas5ZuzFuHAkJyPjyKY9KpuOzGu92bKmwhFtcgdJeB1ifvC5+ej55O8lCDVphw3v62
-         9fvFpRCaxc6P+koQ3lehbQMd0+H8yGQgd+tBQbqxt6FRwkHFreq74QMp06s/oiCoHXKf
-         uRb2O1SkQQ4WAByzCbWs4zxdwf46Q6h+rw9TYeocDeW3+IAgToxxiDJSmxZNTXqN5mpC
-         sdskjNhrgDOqdPo/ZaFDm1LSRrDp7Z4/2UukkAQ8+bZPmwb5eJgYznJeNJP+p9iRI7PB
-         53yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709167378; x=1709772178;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZmS4IRRjqluuahGyeQvOvUbUjo8O7pcJJoCmMytKQ98=;
-        b=eznj2uTqS5RkBUDLecCV748yXteNIIO2m0OWVvOOvhcrJQAJ7BLvH68mMDNmfFmT+4
-         HE1q6f9wnR3QHQrFLOYoHaor26midkGGFuaQhLnEfGtJx3DLk6DSOfqMvirV305jzxOy
-         9u/pUVbI+m7SW4f6gpZWoWDPZpUSw3J+eay85eQ1AufAahyOoPL/ItVo42tmdrPgzC2p
-         RJ5FyoyC9ioG4CXhpOYRi3I1OgD/g5OifQuCHeCRjkD7Pwi/IZuXSoFNE/EGcv9lpJRq
-         x5/zQMFuAlurxhjn6ovxH3gbKWJ6Q21tcmI8pbJCxFUXOaETEe2NiIFNPCHxJJEqFFmm
-         exYA==
-X-Forwarded-Encrypted: i=1; AJvYcCVeuThzUeTOVZqeYjLzoQMiLZTX0pBwL7xnYXNmQxEP4LgB5FpPOgpGq20ygbsbo4/IM30xOxAT+poL/rxLCRWWJoOGKeRXOevnetQpbRmcAlHr8sfwIxZH6B63X0AHYWHQydCycwoj3L8+eoewLNuG
-X-Gm-Message-State: AOJu0YxhyUf/csJ3kXePCXIcmMYjISEvABwXM9oYKHy6mSV0ICnkk+Uy
-	uaQA42txPiFWXW1FcZ/5hKhXge57/92YpZV+KHOnAlf9pmODcM/0
-X-Google-Smtp-Source: AGHT+IEdA/lIroyr34aN4pYdmsq1xe9ghJmBWdnL6YBNd1En/M75YkACZP1NP7ZEJ0WAd80er8iU0w==
-X-Received: by 2002:a05:6402:268d:b0:564:d715:1d67 with SMTP id w13-20020a056402268d00b00564d7151d67mr400310edd.17.1709167377835;
-        Wed, 28 Feb 2024 16:42:57 -0800 (PST)
-Received: from andrea ([31.189.122.3])
-        by smtp.gmail.com with ESMTPSA id i16-20020a50d750000000b005667b411c38sm74791edj.65.2024.02.28.16.42.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Feb 2024 16:42:57 -0800 (PST)
-Date: Thu, 29 Feb 2024 01:42:55 +0100
-From: Andrea Parri <parri.andrea@gmail.com>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Andrea Parri <andrea@rivosinc.com>,
-	Anup Patel <anup@brainfault.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>
-Subject: Re: [PATCH 2/2] riscv: Fix text patching when IPI are used
-Message-ID: <Zd/TDyyG/5sxrPWx@andrea>
-References: <20240228175149.162646-1-alexghiti@rivosinc.com>
- <20240228175149.162646-3-alexghiti@rivosinc.com>
+	s=arc-20240116; t=1709184706; c=relaxed/simple;
+	bh=ItNNI5PI2/YfqekAfeRz73Do4tEfWpAAJlwE9t9osO4=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=l5a/Y35iPu3p5DXLRl7KueenygWiVQnbUFUtbhBjFgcw8sijHxMmrdCwKI+6zEv95js3+xDuIfOUxS/JXEX/tXD3Eybxs+dKoK62+rd4ssFYWLJ1R6L7jKi1JIafpXBSxkgQCokGDq8EWr8ZLHQ+bQhqxePG0MwAmPaEnw7ZcpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com; spf=pass smtp.mailfrom=didiglobal.com; arc=none smtp.client-ip=111.202.70.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=didiglobal.com
+Received: from mail.didiglobal.com (unknown [10.79.65.12])
+	by mx9.didiglobal.com (MailData Gateway V2.8.8) with ESMTPS id 6D60D1875C42A1;
+	Thu, 29 Feb 2024 13:28:31 +0800 (CST)
+Received: from didi-ThinkCentre-M920t-N000 (10.79.64.101) by
+ ZJY02-ACTMBX-02.didichuxing.com (10.79.65.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 29 Feb 2024 13:28:30 +0800
+Date: Thu, 29 Feb 2024 13:28:22 +0800
+X-MD-Sfrom: fuyuanli@didiglobal.com
+X-MD-SrcIP: 10.79.65.12
+From: fuyuanli <fuyuanli@didiglobal.com>
+To: <edumazet@google.com>
+CC: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<mathieu.desnoyers@efficios.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<fuyuanli@didiglobal.com>
+Subject: [PATCH] tcp: Add skb addr and sock addr to arguments of tracepoint
+ tcp_probe.
+Message-ID: <20240229052813.GA23899@didi-ThinkCentre-M920t-N000>
+Mail-Followup-To: edumazet@google.com, rostedt@goodmis.org,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, fuyuanli@didiglobal.com
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240228175149.162646-3-alexghiti@rivosinc.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: ZJY02-PUBMBX-01.didichuxing.com (10.79.65.31) To
+ ZJY02-ACTMBX-02.didichuxing.com (10.79.65.12)
 
-On Wed, Feb 28, 2024 at 06:51:49PM +0100, Alexandre Ghiti wrote:
-> For now, we use stop_machine() to patch the text and when we use IPIs for
-> remote icache flushes (which is emitted in patch_text_nosync()), the system
-> hangs.
-> 
-> So instead, make sure every cpu executes the stop_machine() patching
-> function and emit a local icache flush there.
-> 
-> Co-developed-by: Björn Töpel <bjorn@rivosinc.com>
-> Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+It is useful to expose skb addr and sock addr to user in tracepoint
+tcp_probe, so that we can get more information while monitoring
+receiving of tcp data, by ebpf or other ways.
 
-Modulo the removal of the hunk discussed with Samuel,
+For example, we need to identify a packet by seq and end_seq when
+calculate transmit latency between lay 2 and lay 4 by ebpf, but which is
+not available in tcp_probe, so we can only use kprobe hooking
+tcp_rcv_esatblised to get them. But we can use tcp_probe directly if skb
+addr and sock addr are available, which is more efficient.
 
-Reviewed-by: Andrea Parri <parri.andrea@gmail.com>
+Signed-off-by: fuyuanli <fuyuanli@didiglobal.com>
+---
+ include/trace/events/tcp.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Some nits / amendments to the inline comments below:
+diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+index 7b1ddffa3dfc..096c15f64b92 100644
+--- a/include/trace/events/tcp.h
++++ b/include/trace/events/tcp.h
+@@ -258,6 +258,8 @@ TRACE_EVENT(tcp_probe,
+ 		__field(__u32, srtt)
+ 		__field(__u32, rcv_wnd)
+ 		__field(__u64, sock_cookie)
++		__field(const void *, skbaddr)
++		__field(const void *, skaddr)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -285,6 +287,9 @@ TRACE_EVENT(tcp_probe,
+ 		__entry->ssthresh = tcp_current_ssthresh(sk);
+ 		__entry->srtt = tp->srtt_us >> 3;
+ 		__entry->sock_cookie = sock_gen_cookie(sk);
++
++		__entry->skbaddr = skb;
++		__entry->skaddr = sk;
+ 	),
+ 
+ 	TP_printk("family=%s src=%pISpc dest=%pISpc mark=%#x data_len=%d snd_nxt=%#x snd_una=%#x snd_cwnd=%u ssthresh=%u snd_wnd=%u srtt=%u rcv_wnd=%u sock_cookie=%llx",
+-- 
+2.17.1
 
-
-> +		/*
-> +		 * Make sure the patching store is effective *before* we
-> +		 * increment the counter which releases all waiting cpus
-> +		 * by using the release version of atomic increment.
-> +		 */
-
-s/cpus/CPUs
-s/release version/release variant
-
-The comment could be amended with a description of the matching barrier(s), say,
-"The release pairs with the call to local_flush_icache_all() on the waiting CPU".
-
-(Same for the comment in patch_text_cb().)
-
-  Andrea
