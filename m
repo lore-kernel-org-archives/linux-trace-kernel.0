@@ -1,93 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DC0152DF1;
-	Thu, 29 Feb 2024 20:41:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA3E6D521;
+	Thu, 29 Feb 2024 21:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709239319; cv=none; b=f1oiklDK+oImpHdNHgGQAZNUcQ5mTylUaeU62nkZZemujFayqasL1EYVQ+ssTKEa94IPvUqLqFNcAl/RQEjraOGzPGSvOM5XOx9e7okVW7A0cDhXvav30RmHGEVMpCn+v58WRm8fj3mRkKq3/K9/nyQ8DgdwyyQxlCUsQYAWCZ0=
+	t=1709243939; cv=none; b=YiPskSYI3OcnkRPUcV9hFhJ9oHwcFvHPI6BRHXqiEcQxqEidDr+q2wTjyGDAnM/HSy9TSHgLM+cuP+qu9F5g6vNfbWaUZS93K5bAy/4bTDT6qHHoizQyPoixQ3vXKQ5WdEzWJ0ejNDrMMQLgkdsPLX+4xONLHhBUx2N9BIDC8+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709239319; c=relaxed/simple;
-	bh=w3wXilM/p6r1VZTb0UA83Y9zrU52YRn0KjPnNsyVecQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j8qpYR+jyHAzpXRxEqF1ESSP4igj0RgBTyVLWTjzFYW2lgliBSbMMXIj325nclAzSpZmkSKWlrV6G2cQrNssWcbNWvS4e4g3iIssp2lT8N1bb/Ldbqf/iM+s8aUO2PjK2E1uJaLEJRkvvyGQaCq4TSv4/+NXyieeivblpHPIaCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OvCSR7yt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709243939; c=relaxed/simple;
+	bh=u7emfAwG3izXFa50N+MC/c19/H8pMfUWBq0jlVhc5kc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MAmn2/IrAU/QhX5CsRkCs0Cp3qsjYYPgAei0UcG8ENL8O3zvrkZmDeRpMSwje4/MeS5tB8Ga7mGZOzstOuDz8l7X3nyY2QBlqrLJuVsz/9OqR7HSuq3YfzwHGM05uZML9tgeCmwkQVBWZLSo9GmSZ45v/3aF8cb90YNxxw5kgVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RqIhjWur; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OvCSR7yt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB3EAC43601;
-	Thu, 29 Feb 2024 20:41:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709239319;
-	bh=w3wXilM/p6r1VZTb0UA83Y9zrU52YRn0KjPnNsyVecQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OvCSR7ytxw+9JeyM3uzbfUB8awBz3Y6HzLsuABOarKbldqbarUjx2fpVM0N0cDHff
-	 U2XYkDQDVVWhgU1QE3FIF573XrxJBmKj2BpLkrkafS6amV4kH7yOESn9CBtOkXqB9i
-	 Pugl400wDUc/dDYTeBlINVrNCDwjH4hpjhyosVh0o9fkvALixTOeRm42TZjqfexATY
-	 WXcR09HpGxt8XXn7i4Jv5UGBGxYM7tGlhSgXTHiA4LCODvZHqDVbUiJtB0n7xOqRX9
-	 vwzWo5ktp6pEFcaxqIycdSJc8JQvBkffHRAH2ln+3PD0CT1SkpcrYbHETzAttNv9DV
-	 lsPf/aCZxgEqw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Max Kellermann <max.kellermann@ionos.com>,
-	Helge Deller <deller@gmx.de>,
-	Sasha Levin <sashal@kernel.org>,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	James.Bottomley@HansenPartnership.com,
-	linux-trace-kernel@vger.kernel.org,
-	linux-parisc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 4/6] parisc/ftrace: add missing CONFIG_DYNAMIC_FTRACE check
-Date: Thu, 29 Feb 2024 15:41:44 -0500
-Message-ID: <20240229204150.2862196-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240229204150.2862196-1-sashal@kernel.org>
-References: <20240229204150.2862196-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RqIhjWur"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a26ed1e05c7so265822266b.2;
+        Thu, 29 Feb 2024 13:58:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709243936; x=1709848736; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YLB+AEOoGVHORFz2CPSFygKm0JXbti6HkSl+J6gRIxA=;
+        b=RqIhjWurkRxbaRi4Yd7F9VZsarPBQsSLs/BmStXTXf0YhrSiXBR2KUBOX/55xOG52o
+         0sS8ifaJQ/xUw/G62GldgMY6Fay8pcsIsyeQcRCHA6KYgqOzEKgZ8VquVVYOn5ru19zc
+         s4U9XgUUdWJicLU1eVhekKR9pn7nq3y3G/i4wgRlFbf5/1zQr3wRBiIfNu3d7v0HqcEq
+         JvBg71qsIEf0ZeXjjiuGKaNxg6bd+oKa+Ogdc03u3v97O8qTio1eUHvHhl4kEvoIOb4t
+         XzDLWQ90vEA+EEcciv+7SvYKl61S26b+x2oQVpwExZ/YvUluABgiI1UiPgDcovn6u3vP
+         dp1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709243936; x=1709848736;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YLB+AEOoGVHORFz2CPSFygKm0JXbti6HkSl+J6gRIxA=;
+        b=V99pb5bkLxKq1jMauA8c7l6dTcgckA0gSDTsc+6It3a9POzmCYJjoi/etdWppxOlX2
+         LT+MapE9cKie/LLwy1LM8IaAehh/plJbnqpHMzhC2e34MNRk3S2SqrFaKTTGrgeO8sTT
+         u4uDD8d5Ofv9iww2eYYlhJ5VGcwnxC2RTobqBoLtrMvxT4cxrVj6uACyHY6GFlnSTuby
+         RBSP6MOUq/admwq0TM7enCz8hghIc6bX4RnGqvtbWnbyXP5JvpykCHixokBrvFuA0H2U
+         byzB4+a+pqYPf7repcZ4QGOogrb0fZuEcj45Sx+a6Fov4ItQP9W8qCLjlZC1IVo6vQ3O
+         qTpg==
+X-Forwarded-Encrypted: i=1; AJvYcCX0GBbiysMMkbfuo4sFw+StjoH8eCsnUaIExRVmUQfbQ0S+806r72kOwpVSizflsm9hqLJUs4L8Veb3y3P4fMq77rX8x9gIx8NG9ANClc6kUnGhIa0YoP3pVrCNsIcJ/cwOZndtm2wkVfwGxOWs+9Kv
+X-Gm-Message-State: AOJu0Yy1q7bNfziQ94Lgdnq0fhnnhsCXYKcX2jhNtR0X68Sy0xSfekGP
+	yrpDfbTJLJU3RPaRezF/xA+/ByiO5jEs/88GUZGvFkCGPNePfyHsH3qmoNwu
+X-Google-Smtp-Source: AGHT+IGYvPEPGx1GzuuMu3WIOb3s2/UGCtmhtiTQFmVB3GgBAz8SOjLpVIUdUFdzdb47NctxLQy4Iw==
+X-Received: by 2002:a17:906:1689:b0:a3d:e2e9:a7f7 with SMTP id s9-20020a170906168900b00a3de2e9a7f7mr118482ejd.27.1709243935911;
+        Thu, 29 Feb 2024 13:58:55 -0800 (PST)
+Received: from krava ([83.240.61.14])
+        by smtp.gmail.com with ESMTPSA id ty8-20020a170907c70800b00a3ed975968esm1072293ejc.28.2024.02.29.13.58.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Feb 2024 13:58:55 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 29 Feb 2024 22:58:54 +0100
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org, Jiri Olsa <olsajiri@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fprobe: Fix to allocate entry_data_size buffer with
+ rethook instances
+Message-ID: <ZeD-HkC7bsAn_YgK@krava>
+References: <170920576727.107552.638161246679734051.stgit@devnote2>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.269
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <170920576727.107552.638161246679734051.stgit@devnote2>
 
-From: Max Kellermann <max.kellermann@ionos.com>
+On Thu, Feb 29, 2024 at 08:22:47PM +0900, Masami Hiramatsu (Google) wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Fix to allocate fprobe::entry_data_size buffer with rethook instances.
+> If fprobe doesn't allocate entry_data_size buffer for each rethook instance,
+> fprobe entry handler can cause a buffer overrun when storing entry data in
+> entry handler.
+> 
+> Reported-by: Jiri Olsa <olsajiri@gmail.com>
 
-[ Upstream commit 250f5402e636a5cec9e0e95df252c3d54307210f ]
+Tested-by: Jiri Olsa <olsajiri@gmail.com>
 
-Fixes a bug revealed by -Wmissing-prototypes when
-CONFIG_FUNCTION_GRAPH_TRACER is enabled but not CONFIG_DYNAMIC_FTRACE:
+thanks,
+jirka
 
- arch/parisc/kernel/ftrace.c:82:5: error: no previous prototype for 'ftrace_enable_ftrace_graph_caller' [-Werror=missing-prototypes]
-    82 | int ftrace_enable_ftrace_graph_caller(void)
-       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- arch/parisc/kernel/ftrace.c:88:5: error: no previous prototype for 'ftrace_disable_ftrace_graph_caller' [-Werror=missing-prototypes]
-    88 | int ftrace_disable_ftrace_graph_caller(void)
-       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
-Signed-off-by: Helge Deller <deller@gmx.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/parisc/kernel/ftrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/parisc/kernel/ftrace.c b/arch/parisc/kernel/ftrace.c
-index b836fc61a24f4..f3a5c5e480cf0 100644
---- a/arch/parisc/kernel/ftrace.c
-+++ b/arch/parisc/kernel/ftrace.c
-@@ -80,7 +80,7 @@ void notrace __hot ftrace_function_trampoline(unsigned long parent,
- #endif
- }
- 
--#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-+#if defined(CONFIG_DYNAMIC_FTRACE) && defined(CONFIG_FUNCTION_GRAPH_TRACER)
- int ftrace_enable_ftrace_graph_caller(void)
- {
- 	return 0;
--- 
-2.43.0
-
+> Fixes: 4bbd93455659 ("kprobes: kretprobe scalability improvement")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  kernel/trace/fprobe.c |   14 ++++++--------
+>  1 file changed, 6 insertions(+), 8 deletions(-)
+> 
+> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> index 6cd2a4e3afb8..9ff018245840 100644
+> --- a/kernel/trace/fprobe.c
+> +++ b/kernel/trace/fprobe.c
+> @@ -189,9 +189,6 @@ static int fprobe_init_rethook(struct fprobe *fp, int num)
+>  {
+>  	int size;
+>  
+> -	if (num <= 0)
+> -		return -EINVAL;
+> -
+>  	if (!fp->exit_handler) {
+>  		fp->rethook = NULL;
+>  		return 0;
+> @@ -199,15 +196,16 @@ static int fprobe_init_rethook(struct fprobe *fp, int num)
+>  
+>  	/* Initialize rethook if needed */
+>  	if (fp->nr_maxactive)
+> -		size = fp->nr_maxactive;
+> +		num = fp->nr_maxactive;
+>  	else
+> -		size = num * num_possible_cpus() * 2;
+> -	if (size <= 0)
+> +		num *= num_possible_cpus() * 2;
+> +	if (num <= 0)
+>  		return -EINVAL;
+>  
+> +	size = sizeof(struct fprobe_rethook_node) + fp->entry_data_size;
+> +
+>  	/* Initialize rethook */
+> -	fp->rethook = rethook_alloc((void *)fp, fprobe_exit_handler,
+> -				sizeof(struct fprobe_rethook_node), size);
+> +	fp->rethook = rethook_alloc((void *)fp, fprobe_exit_handler, size, num);
+>  	if (IS_ERR(fp->rethook))
+>  		return PTR_ERR(fp->rethook);
+>  
+> 
