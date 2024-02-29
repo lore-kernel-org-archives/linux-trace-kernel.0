@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93F816838A;
-	Thu, 29 Feb 2024 20:41:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1930169E32;
+	Thu, 29 Feb 2024 20:41:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709239281; cv=none; b=uJEj6vv56UrZ4J2MQUoXgJfNngI3+hbFpe2xWeBqgVtqKT4CuWCHZRapVYmxmaMefuXtRZZlkxiMI36K/mjrhzK3wIT7ryhUU9wtUkZ3rz7dZTIoFZwmRpQwv7WMnA8hWUgcB7K6moOK7uqyGYwH2Hvju2GCE34Plb7y8MJlKb4=
+	t=1709239301; cv=none; b=p2i6DyYZJTYm8Vaz2XI+or6TVHEJbaL1u1jGT3Q/9Fyph2WmXKE9hy+DEEFPSdV59XAL0XdIJpLtHGhIaMRgi8ssa6O++np9ZCKjm3+i1DdP25VHce49h1WZaf9tRqNXpQ70Jg5yrPIRzTfrIhuZKX7VjKUDx5Uc4QB1zpHXkHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709239281; c=relaxed/simple;
-	bh=3VU3H4kuIe/rQdv1ZeQ5FiFnpIIR4BQFW/7JsgHKPno=;
+	s=arc-20240116; t=1709239301; c=relaxed/simple;
+	bh=Fg21IVBdDngt1etfWcnPSEvzp7Y5DXNt8psD2PSobPY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jcKJ0ZfuXEy3lI7Udb2fcOMteTKXuMDGIm+qSVEasmRIWMUvYSOjsXBpAr7fF6ojHFN9l5eFK9S2guGY/a5uxYNJHJ1PsqQ9m/TMIpFlMh+2Cwq80twYMQ+fQSZVmJ3FG/5BsmTB88WfgXinU1lAG1uPVOrI7UQs8CnmJ/xwx5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B5dX9m0Y; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Xv82ZxSoLlXd6Vqh0b+Qpul/apeQwDooGi8MdewG7P2ks3PKbx5rom51yiiOdgIIX5WWwJE/Ql7Fb4lAodL3EFwGbeN3l5dZoh5sG/+ls/lEzdywjK4c8Pqz+VVFyF81vliBlgS/GTv2IHYvrTs44mJxjyu7qHx5y1HySwHoevw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RaoBVYq7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B5dX9m0Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 921A9C433F1;
-	Thu, 29 Feb 2024 20:41:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RaoBVYq7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15B71C433F1;
+	Thu, 29 Feb 2024 20:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709239280;
-	bh=3VU3H4kuIe/rQdv1ZeQ5FiFnpIIR4BQFW/7JsgHKPno=;
+	s=k20201202; t=1709239301;
+	bh=Fg21IVBdDngt1etfWcnPSEvzp7Y5DXNt8psD2PSobPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=B5dX9m0YnpZ8ryW90PL68UbS53r1GIz1nJ7IVnji7py4bdV4QItk4ocf7DQvTa2Al
-	 sC/+Euf6tm1tGq8jDo7CeM1ASI4dFNaY/Yxz4fPdXuDVa+JB+yMoK9xOP8B4yNA7Wt
-	 Gbc17O06ywmGAHAALfjniRHUtOUrpNRauHLGYz/u1jpvj9vkMc2IKqzHyRgNnLuUaP
-	 24qVBj1s0qL1RpAWrPE6VA8ZtVC/Dg7TqcUmQEjS2YltW3Fz5NwTVhVQQf0bvabFd1
-	 aFYWOVqrFx3NwovlozH4eeqL8wlKHg07Gn0CjSABKaVtkl+DrhAe2BOLf/cBqQzeOV
-	 TGgSqYl5v4cRw==
+	b=RaoBVYq7BeVGjzC6CScbrJNQpU8mTKf7/73tiPZMT7Lfdh8FQHUrBluTXyX+dweU6
+	 jnlfFqQ9O+O4Dck9W5U/tVmf4/Ou48Zvc5yjpCKqUf4RqGvrAl8OkJGYk/HH8I7n+p
+	 WAK80Ck6nknxmozvulq0zbdF0GrNc/akNeRiGrER4duX1lm8l8cB2Kr0H6h+WbXuYA
+	 boBpbtFnNeusFdgSMB+lAiXUurj8PbxuxzxIGvoxIbMmBtFNq7Rbhr9pngrcYgijgS
+	 bgkvTIbLn+QZ+JYDnj2aJs7rvb+vLD1ZgGMZu2i8DPSg+bGPz4KP3rdpmVZuOQIZP8
+	 gAnHt3Wq9MDMQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -37,12 +37,12 @@ Cc: Max Kellermann <max.kellermann@ionos.com>,
 	James.Bottomley@HansenPartnership.com,
 	linux-trace-kernel@vger.kernel.org,
 	linux-parisc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 7/9] parisc/ftrace: add missing CONFIG_DYNAMIC_FTRACE check
-Date: Thu, 29 Feb 2024 15:41:03 -0500
-Message-ID: <20240229204107.2861780-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 6/8] parisc/ftrace: add missing CONFIG_DYNAMIC_FTRACE check
+Date: Thu, 29 Feb 2024 15:41:23 -0500
+Message-ID: <20240229204127.2861980-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240229204107.2861780-1-sashal@kernel.org>
-References: <20240229204107.2861780-1-sashal@kernel.org>
+In-Reply-To: <20240229204127.2861980-1-sashal@kernel.org>
+References: <20240229204127.2861980-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -51,7 +51,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.149
+X-stable-base: Linux 5.10.210
 Content-Transfer-Encoding: 8bit
 
 From: Max Kellermann <max.kellermann@ionos.com>
@@ -76,7 +76,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/parisc/kernel/ftrace.c b/arch/parisc/kernel/ftrace.c
-index 0a1e75af5382d..44d70fc30aae5 100644
+index 63e3ecb9da812..8538425cc43e0 100644
 --- a/arch/parisc/kernel/ftrace.c
 +++ b/arch/parisc/kernel/ftrace.c
 @@ -81,7 +81,7 @@ void notrace __hot ftrace_function_trampoline(unsigned long parent,
