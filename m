@@ -1,194 +1,149 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f194.google.com (mail-yb1-f194.google.com [209.85.219.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA60654F88;
-	Thu, 29 Feb 2024 09:12:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C507634F4;
+	Thu, 29 Feb 2024 10:02:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709197936; cv=none; b=rURpkmqOF8997QXr6jMye7gH6gpPkUmUEVrPu/89ZYBWYU/yOzoMHA7bukhItbj6qjTxKjfTrbvQ0sMwtAbfj89/EldL56c3kUeGKgTAYxMpG/NFr/3/0YPsWRaHpb6FivibyudPdsr8bhmn9t4m5/TzXvnFZ1aKvfVoA4K6Mh0=
+	t=1709200970; cv=none; b=beHzVVnimhnmgUz0FcYk3s3hLD9AYdvzU1Zz9Dn9XVhjTG8nPoTSABqYbOEFs5c6eRkjtB67/J+vPbdsOERsRWhbZnQIVN8TV1TEgaGm2GjlRx+2pMAJjN+8BO+0q0R27SZhiSz4rTNXvmdKnfohILXQBDS7VEJVf27e1k1PVK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709197936; c=relaxed/simple;
-	bh=U3Px1lJgZf8Wxf0bHQWvP3wOddXHoFh0xH9zCwn039M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=HOPstSPZIAggbVwEt59OoAz8IZyMODo+IprNd7YpG6d1yNF+yfJM5m0hGn+2b5QtZj8YtQJW7TU27BdWRgbaoQXa4kzUwZsmI4SMdbtRRetbC6NNYXWcHGWqFOgrNWbh9/qtdXI/3qZGWocDWgXPOBeLjf/gzEzsECOyMAJNSAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nxhvRwww; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1709200970; c=relaxed/simple;
+	bh=JFtlQtX08v24Ylx3dxXE35IPy+/hi1g6yJZ61zeJeQ4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=ez4yPgOJyrovEAP+yhwad6vPSS3vGmlaNqz8SdTlIpXCgbg1HQI15whzhA3F0gwoNkCNMRzs8pU9D/Nb4jiNVApNGGX6XkYymKhGF9qjFjLCSZTkwK+Axhi21t9bn+8q0f9MA5iBKuU+HwFbXI5lVlmxwCWWVOBtOorbWLFzaEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cHTpnWtR; arc=none smtp.client-ip=209.85.219.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nxhvRwww"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41T4l82R015512;
-	Thu, 29 Feb 2024 09:12:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=e6vxTqMVoE/Q+7XEzKgFJBUmLUJTol47fJlTs4K2EZw=; b=nx
-	hvRwwwfutOjznayqEiu1dcv5bmaGBCN7X2NxJh+9bb8N75RTCm30ur9Tg2hgMNQz
-	8JVl2atbD0LYAsGVZKJLpZo0Fh1EWPztLAuVnFnkM9DrsLh0eKnS1t0EUjEPHnuL
-	Teuez5HSV8HttArOFVa3E2P/xm3VMYFLnEmI2RS2g6Z6VR8xUqO3/2O1MIo4INyz
-	kBd1nOrXBWta9QlxFmBvqstebdpOSk4TIQ3ukiyMmSQsqngnWr3rfZbE5sdv1Jqe
-	Gkkg1v0SfIDQ7XO7VYKq3smu/t4WbizvIjjywnOV1FTzEG2bobMq1KMnS/Sxmlpq
-	vhOaDpCsp4xU5w50LGGw==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wja0eht36-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 Feb 2024 09:12:00 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41T9Bxtc008274
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 Feb 2024 09:11:59 GMT
-Received: from [10.239.132.50] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 29 Feb
- 2024 01:11:52 -0800
-Message-ID: <dbcd66cd-4d59-4246-88ab-db32abbd8e00@quicinc.com>
-Date: Thu, 29 Feb 2024 17:11:49 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cHTpnWtR"
+Received: by mail-yb1-f194.google.com with SMTP id 3f1490d57ef6-dcbef31a9dbso559214276.1;
+        Thu, 29 Feb 2024 02:02:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709200968; x=1709805768; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z5jta4vjvJ7/12MtOocaS6dVP2qRC6nZvFeLA6WW4lo=;
+        b=cHTpnWtRMCsFXVQEoH9nGFY5DFctFL9rkjidH9qqHKh9TvFD4FnUmh1JVr+FLaDLCj
+         +NL+XlR91hQIjc79OnleT3V7hw7CTlhacY6RvYoRrg+4kPCMuQcQVOlTtqIF/M/Yj5/L
+         2Sddq9ERMRCiRoiyRDlw8MHsNfP2eHu2CmH8ve5w7ls1YNhorIFmYjww+kZr9boXkH4H
+         +oXsL+9t3L1PXtkqfpi60RZVGGiicwXK6HznQjI/VWNHRFLj12Bgq5bsSUfQI5Z18Dz4
+         xwb8mL0X6tQS5+2SFpc3ZGEnYRTzyL3iIaADjIqp3Ea8edtovsfmFGebMpE29Z5E810O
+         /z4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709200968; x=1709805768;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z5jta4vjvJ7/12MtOocaS6dVP2qRC6nZvFeLA6WW4lo=;
+        b=IJtntGEcgCSAfzOpGu3lBARO6Qalm6/6NpV+G9BRHA+xfbMe+p9RxkIBcMm5iAxv5F
+         KBTTxtH7veiW7baFcuqPESXR0Aq2YgpPeTiQcjy394pF0PObHLhBl17HOuwt+YDmKRCT
+         CZ2PbdJsUevN0v3DDrwoe9c5QpRagtorhn1CvXbITgUQsjKHMca2R/xF+Pt9795jpZbm
+         dpl6+OlKegwPCdEFlAJnfwlU4fqgRAtAfc59ZHxarFbtkslMsxfk6h2kK3zpUFlsj9Nt
+         k/XjarXmNqMIDdwd/2Udqfa5/6hf9GpVPNk4D/nDlUHtRQpWu/EhVfvBIVtpPH8RpgeL
+         jsTw==
+X-Forwarded-Encrypted: i=1; AJvYcCVIVEKzdjnABZjzeJdjOZ0rBUegX9V/g1RJnifFLymwWhGzs6rfXObe2KiXF2gZwnuEPC2qPAsqLRfKUJCGOZhGt+gH18F3B9hJJT8SpvyUwIoZ
+X-Gm-Message-State: AOJu0Yz/4/P4gyOo88g0e9DUU7n/mi2hzP4h1BYlTMShzHtshnKIQJCs
+	PZYO0NLBSQ1RdtyxpvmG/LIY+DMtSn0jkUm17yJkLFKch8eOSgRHMNthS2CawbKbRuzKc+mr1N7
+	F2EYMhMyoBMeQTkN2Wo0YdJDgl6s05aGkTf4LGbo=
+X-Google-Smtp-Source: AGHT+IGpg8mHFo0bBKribtTNLgEIrGrGWWfVrwM66a2y/RkuD9oIEMUppJPT/MQ+5yHjy/3mnrfGURr3gl97Ob2UriI=
+X-Received: by 2002:a25:7506:0:b0:dcc:f5d4:8b43 with SMTP id
+ q6-20020a257506000000b00dccf5d48b43mr1790680ybc.9.1709200967984; Thu, 29 Feb
+ 2024 02:02:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] tracing: Support to dump instance traces by
- ftrace_dump_on_oops
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>
-CC: <mhiramat@kernel.org>, <mark.rutland@arm.com>, <mcgrof@kernel.org>,
-        <keescook@chromium.org>, <j.granados@samsung.com>,
-        <mathieu.desnoyers@efficios.com>, <corbet@lwn.net>,
-        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <quic_bjorande@quicinc.com>, <quic_tsoni@quicinc.com>,
-        <quic_satyap@quicinc.com>, <quic_aiquny@quicinc.com>,
-        <kernel@quicinc.com>, Ross Zwisler <zwisler@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-References: <20240208131814.614691-1-quic_hyiwei@quicinc.com>
- <20240226204757.1a968a10@gandalf.local.home>
-From: Huang Yiwei <quic_hyiwei@quicinc.com>
-In-Reply-To: <20240226204757.1a968a10@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: CXpUofEduj0UnN7KTEGwvuO0FKX5QSQx
-X-Proofpoint-ORIG-GUID: CXpUofEduj0UnN7KTEGwvuO0FKX5QSQx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-29_01,2024-02-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- lowpriorityscore=0 suspectscore=0 mlxscore=0 impostorscore=0 adultscore=0
- clxscore=1015 bulkscore=0 priorityscore=1501 spamscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
- definitions=main-2402290070
+References: <20240229052813.GA23899@didi-ThinkCentre-M920t-N000>
+ <CAL+tcoAhvFhXdr1WQU8mv_6ZX5nOoNpbOLAB6=C+DB-qXQ11Ew@mail.gmail.com> <CABbqxmdM+zbn+78rcB_amqfwFKXCTwyj2MPt2GVioQpR0Tj1Tg@mail.gmail.com>
+In-Reply-To: <CABbqxmdM+zbn+78rcB_amqfwFKXCTwyj2MPt2GVioQpR0Tj1Tg@mail.gmail.com>
+From: yuanli fu <fuyuanli0722@gmail.com>
+Date: Thu, 29 Feb 2024 18:02:35 +0800
+Message-ID: <CABbqxmcG1ZApeKLS5yfE7Bb-tgBwOLEn1-ixp89n3mKVJbmm6g@mail.gmail.com>
+Subject: Fwd: [PATCH] tcp: Add skb addr and sock addr to arguments of
+ tracepoint tcp_probe.
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+---------- Forwarded message ---------
+=E5=8F=91=E4=BB=B6=E4=BA=BA=EF=BC=9A yuanli fu <fuyuanli0722@gmail.com>
+Date: 2024=E5=B9=B42=E6=9C=8829=E6=97=A5=E5=91=A8=E5=9B=9B 16:27
+Subject: Re: [PATCH] tcp: Add skb addr and sock addr to arguments of
+tracepoint tcp_probe.
+To: Jason Xing <kerneljasonxing@gmail.com>
 
 
-
-On 2/27/2024 9:47 AM, Steven Rostedt wrote:
-> On Thu, 8 Feb 2024 21:18:14 +0800
-> Huang Yiwei <quic_hyiwei@quicinc.com> wrote:
-> 
->> Currently ftrace only dumps the global trace buffer on an OOPs. For
->> debugging a production usecase, instance trace will be helpful to
->> check specific problems since global trace buffer may be used for
->> other purposes.
->>
->> This patch extend the ftrace_dump_on_oops parameter to dump a specific
->> or multiple trace instances:
->>
->>    - ftrace_dump_on_oops=0: as before -- don't dump
->>    - ftrace_dump_on_oops[=1]: as before -- dump the global trace buffer
->>    on all CPUs
->>    - ftrace_dump_on_oops=2 or =orig_cpu: as before -- dump the global
->>    trace buffer on CPU that triggered the oops
->>    - ftrace_dump_on_oops=<instance_name>: new behavior -- dump the
->>    tracing instance matching <instance_name>
->>    - ftrace_dump_on_oops[=2/orig_cpu],<instance1_name>[=2/orig_cpu],
->>    <instrance2_name>[=2/orig_cpu]: new behavior -- dump the global trace
->>    buffer and multiple instance buffer on all CPUs, or only dump on CPU
->>    that triggered the oops if =2 or =orig_cpu is given
-> 
-> So we need to add that the syntax is:
-> 
->   ftrace_dump_on_oops[=[<0|1|2|orig_cpu>,][<instance_name>[=<1|2|orig_cpu>][,...]]
-> 
-Yeah, this is much more clear, will update the commit message and kernel 
-docs in new patchset.
->>
->> Also, the sysctl node can handle the input accordingly.
->>
->> Cc: Ross Zwisler <zwisler@google.com>
->> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
->> Signed-off-by: Huang Yiwei <quic_hyiwei@quicinc.com>
->> ---
->>   .../admin-guide/kernel-parameters.txt         |  26 ++-
->>   Documentation/admin-guide/sysctl/kernel.rst   |  30 +++-
->>   include/linux/ftrace.h                        |   4 +-
->>   include/linux/kernel.h                        |   1 +
->>   kernel/sysctl.c                               |   4 +-
->>   kernel/trace/trace.c                          | 156 +++++++++++++-----
->>   kernel/trace/trace_selftest.c                 |   2 +-
->>   7 files changed, 168 insertions(+), 55 deletions(-)
->>
->> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
->> index 31b3a25680d0..3d6ea8e80c2f 100644
->> --- a/Documentation/admin-guide/kernel-parameters.txt
->> +++ b/Documentation/admin-guide/kernel-parameters.txt
->> @@ -1561,12 +1561,28 @@
->>   			The above will cause the "foo" tracing instance to trigger
->>   			a snapshot at the end of boot up.
->>   
->> -	ftrace_dump_on_oops[=orig_cpu]
->> +	ftrace_dump_on_oops[=2(orig_cpu) | =<instance>][,<instance> |
->> +			  ,<instance>=2(orig_cpu)]
->>   			[FTRACE] will dump the trace buffers on oops.
->> -			If no parameter is passed, ftrace will dump
->> -			buffers of all CPUs, but if you pass orig_cpu, it will
->> -			dump only the buffer of the CPU that triggered the
->> -			oops.
->> +			If no parameter is passed, ftrace will dump global
->> +			buffers of all CPUs, if you pass 2 or orig_cpu, it
->> +			will dump only the buffer of the CPU that triggered
->> +			the oops, or the specific instance will be dumped if
->> +			its name is passed. Multiple instance dump is also
->> +			supported, and instances are separated by commas. Each
->> +			instance supports only dump on CPU that triggered the
->> +			oops by passing 2 or orig_cpu to it.
->> +
->> +			ftrace_dump_on_oops=foo=orig_cpu
->> +
->> +			The above will dump only the buffer of "foo" instance
->> +			on CPU that triggered the oops.
->> +
->> +			ftrace_dump_on_oops,foo,bar=orig_cpu
-> 
-> I believe the above is incorrect. It should be:
-> 
-> 			ftrace_dump_on_oops=foo,bar=orig_cpu
-> 
-> And you can add here as well:
-> 
->    ftrace_dump_on_oops[=[<0|1|2|orig_cpu>,][<instance_name>[=<1|2|orig_cpu>][,...]]
-> 
-> 
+Jason Xing <kerneljasonxing@gmail.com> =E4=BA=8E2024=E5=B9=B42=E6=9C=8829=
+=E6=97=A5=E5=91=A8=E5=9B=9B 15:30=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Thu, Feb 29, 2024 at 1:33=E2=80=AFPM fuyuanli <fuyuanli@didiglobal.com=
+> wrote:
+> >
+> > It is useful to expose skb addr and sock addr to user in tracepoint
+> > tcp_probe, so that we can get more information while monitoring
+> > receiving of tcp data, by ebpf or other ways.
+> >
+> > For example, we need to identify a packet by seq and end_seq when
+> > calculate transmit latency between lay 2 and lay 4 by ebpf, but which i=
+s
+> > not available in tcp_probe, so we can only use kprobe hooking
+> > tcp_rcv_esatblised to get them. But we can use tcp_probe directly if sk=
+b
+> > addr and sock addr are available, which is more efficient.
+> >
+> > Signed-off-by: fuyuanli <fuyuanli@didiglobal.com>
+>
+> Please target 'net-next' in the title of your v2 patch.
+Got it, thanks.
+>
+> > ---
+> >  include/trace/events/tcp.h | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+> > index 7b1ddffa3dfc..096c15f64b92 100644
+> > --- a/include/trace/events/tcp.h
+> > +++ b/include/trace/events/tcp.h
+> > @@ -258,6 +258,8 @@ TRACE_EVENT(tcp_probe,
+> >                 __field(__u32, srtt)
+> >                 __field(__u32, rcv_wnd)
+> >                 __field(__u64, sock_cookie)
+> > +               __field(const void *, skbaddr)
+> > +               __field(const void *, skaddr)
+> >         ),
+> >
+> >         TP_fast_assign(
+> > @@ -285,6 +287,9 @@ TRACE_EVENT(tcp_probe,
+> >                 __entry->ssthresh =3D tcp_current_ssthresh(sk);
+> >                 __entry->srtt =3D tp->srtt_us >> 3;
+> >                 __entry->sock_cookie =3D sock_gen_cookie(sk);
+> > +
+> > +               __entry->skbaddr =3D skb;
+> > +               __entry->skaddr =3D sk;
+> >         ),
+> >
+> >         TP_printk("family=3D%s src=3D%pISpc dest=3D%pISpc mark=3D%#x da=
+ta_len=3D%d snd_nxt=3D%#x snd_una=3D%#x snd_cwnd=3D%u ssthresh=3D%u snd_wnd=
+=3D%u srtt=3D%u rcv_wnd=3D%u sock_cookie=3D%llx",
+>
+> If they are useful, at least you should printk those two addresses
+> like what trace_kfree_skb() does.
+>
+Got it, I will add to printk
+> May I ask how it could be useful if there is no more function printing
+> such information in the receive path?
+We can get seq and end_seq by skbaddr in netif_receive_skb, so latency
+between l2->l4 can be calculated.
+>
 > Thanks,
-> 
-> --Steve
-> 
-The explanation is below, I think it's correct?
-  - "ftrace_dump_on_oops," means global buffer on all CPUs
-  - "foo," means foo instance on all CPUs
-  - "bar=orig_cpu" means bar instance on CPU that triggered the oops.
-
-I'm trying to make the example to cover more possibilities.
-
-Regards,
-Huang Yiwei
->> +
->> +			The above will dump global buffer on all CPUs, the
->> +			buffer of "foo" instance on all CPUs and the buffer
->> +			of "bar" instance on CPU that triggered the oops.
->>   
->>   	ftrace_filter=[function-list]
+> Jason
+> > --
+> > 2.17.1
+> >
+> >
+>
+thanks
+fuyuanli
