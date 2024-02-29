@@ -1,125 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC63454FA9;
-	Thu, 29 Feb 2024 08:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA60654F88;
+	Thu, 29 Feb 2024 09:12:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709196742; cv=none; b=owYsw1+F8bm6j8izg+D/Z/Q+BBESBQqwbGqxvyuQuSvBTKdmJwCH3zuNiXuEq0mYPUR+bCt2r/CTZqKi9p/X1fXq1kZUudTDiLhpADk5WZW7hp8UNxwL1O6PTlkYhsKpSt44kg7G3dznyKkJPgbFPe2a5KBd5YqmohQdTdlS0Zc=
+	t=1709197936; cv=none; b=rURpkmqOF8997QXr6jMye7gH6gpPkUmUEVrPu/89ZYBWYU/yOzoMHA7bukhItbj6qjTxKjfTrbvQ0sMwtAbfj89/EldL56c3kUeGKgTAYxMpG/NFr/3/0YPsWRaHpb6FivibyudPdsr8bhmn9t4m5/TzXvnFZ1aKvfVoA4K6Mh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709196742; c=relaxed/simple;
-	bh=h+PuR60VQc/pChn5sYT/Cgrh7xTZzneJkEBH+LhG32A=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=GAmtraSvhxoHkBrhSjAYxnwntz32AqE5EaydNcKkoo6G2cQM22S3CTEwX5I9/Sg3EWBjD3xR+WOunWktUrkG4ukOjIrUBya2Ms5+DwypwUjajYUOl+Lqi/JD/LxT6SfsDJd4R51ST9XdcWH/xl7C9v5TzlVnQZmR5NbwIwvYS8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qNexrZMo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709197936; c=relaxed/simple;
+	bh=U3Px1lJgZf8Wxf0bHQWvP3wOddXHoFh0xH9zCwn039M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=HOPstSPZIAggbVwEt59OoAz8IZyMODo+IprNd7YpG6d1yNF+yfJM5m0hGn+2b5QtZj8YtQJW7TU27BdWRgbaoQXa4kzUwZsmI4SMdbtRRetbC6NNYXWcHGWqFOgrNWbh9/qtdXI/3qZGWocDWgXPOBeLjf/gzEzsECOyMAJNSAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nxhvRwww; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qNexrZMo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD97AC43394;
-	Thu, 29 Feb 2024 08:52:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709196741;
-	bh=h+PuR60VQc/pChn5sYT/Cgrh7xTZzneJkEBH+LhG32A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qNexrZMoKDoA+1DL96h/s746iYZhicncl4TcZHi5yY/4ffvbifGSPwHxX9FfBhebE
-	 mbNHdhPCjXkAyKyemDbgdBGGlDMkah6Zdkah5W17aWF1UMAbje+8vWgFVQ0KArY0nk
-	 Oxfb9RyLZTkEPZ0ck80RicUdHVvVxgPZOxKMWwstb/CA7VNVbmuA3+yLRxUDMAnUS4
-	 w5gpw3dWvpfzet0SzyPlBLkQ415JXPCARdytJ8aAdJiAnZr8kUjv/qtlQPoUS/rTxR
-	 tU3prhQJQ0CmLrPm3emcsK9rHRm6AFJtgMlLqh9/qsoF03SiO94geK78G+9d/WptWI
-	 cFaVzYODZ3dJQ==
-Date: Thu, 29 Feb 2024 17:52:16 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 0/7] tracing/probes: Support function parameter
- access from return probe
-Message-Id: <20240229175216.96bb2e16b510f81e3802ef23@kernel.org>
-In-Reply-To: <20240229161320.978190f42dcc1a521c192e7d@kernel.org>
-References: <170891987362.609861.6767830614537418260.stgit@devnote2>
-	<Zd9eBn2FTQzYyg7L@krava>
-	<20240229145139.a215085c44add62302463312@kernel.org>
-	<20240229153855.6fe3fb454cf56eebc6ea9953@kernel.org>
-	<20240229161320.978190f42dcc1a521c192e7d@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nxhvRwww"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41T4l82R015512;
+	Thu, 29 Feb 2024 09:12:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=e6vxTqMVoE/Q+7XEzKgFJBUmLUJTol47fJlTs4K2EZw=; b=nx
+	hvRwwwfutOjznayqEiu1dcv5bmaGBCN7X2NxJh+9bb8N75RTCm30ur9Tg2hgMNQz
+	8JVl2atbD0LYAsGVZKJLpZo0Fh1EWPztLAuVnFnkM9DrsLh0eKnS1t0EUjEPHnuL
+	Teuez5HSV8HttArOFVa3E2P/xm3VMYFLnEmI2RS2g6Z6VR8xUqO3/2O1MIo4INyz
+	kBd1nOrXBWta9QlxFmBvqstebdpOSk4TIQ3ukiyMmSQsqngnWr3rfZbE5sdv1Jqe
+	Gkkg1v0SfIDQ7XO7VYKq3smu/t4WbizvIjjywnOV1FTzEG2bobMq1KMnS/Sxmlpq
+	vhOaDpCsp4xU5w50LGGw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wja0eht36-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 Feb 2024 09:12:00 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41T9Bxtc008274
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 Feb 2024 09:11:59 GMT
+Received: from [10.239.132.50] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 29 Feb
+ 2024 01:11:52 -0800
+Message-ID: <dbcd66cd-4d59-4246-88ab-db32abbd8e00@quicinc.com>
+Date: Thu, 29 Feb 2024 17:11:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] tracing: Support to dump instance traces by
+ ftrace_dump_on_oops
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>
+CC: <mhiramat@kernel.org>, <mark.rutland@arm.com>, <mcgrof@kernel.org>,
+        <keescook@chromium.org>, <j.granados@samsung.com>,
+        <mathieu.desnoyers@efficios.com>, <corbet@lwn.net>,
+        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <quic_bjorande@quicinc.com>, <quic_tsoni@quicinc.com>,
+        <quic_satyap@quicinc.com>, <quic_aiquny@quicinc.com>,
+        <kernel@quicinc.com>, Ross Zwisler <zwisler@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+References: <20240208131814.614691-1-quic_hyiwei@quicinc.com>
+ <20240226204757.1a968a10@gandalf.local.home>
+From: Huang Yiwei <quic_hyiwei@quicinc.com>
+In-Reply-To: <20240226204757.1a968a10@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: CXpUofEduj0UnN7KTEGwvuO0FKX5QSQx
+X-Proofpoint-ORIG-GUID: CXpUofEduj0UnN7KTEGwvuO0FKX5QSQx
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-29_01,2024-02-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ lowpriorityscore=0 suspectscore=0 mlxscore=0 impostorscore=0 adultscore=0
+ clxscore=1015 bulkscore=0 priorityscore=1501 spamscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
+ definitions=main-2402290070
 
-On Thu, 29 Feb 2024 16:13:20 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> On Thu, 29 Feb 2024 15:38:55 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+
+On 2/27/2024 9:47 AM, Steven Rostedt wrote:
+> On Thu, 8 Feb 2024 21:18:14 +0800
+> Huang Yiwei <quic_hyiwei@quicinc.com> wrote:
 > 
-> > Hmm, this seems arch_rethook_trampoline caused the issue.
-> > 
-> > And curiously, it depends on the number of stored data.
-> > 
-> > OK:
-> > /sys/kernel/tracing # echo 'f vfs_read%return $arg1 $arg2 $arg3' >> dynamic_events 
-> > /sys/kernel/tracing # echo 1 > events/fprobes/enable 
-> > 
-> > NG:
-> > /sys/kernel/tracing # echo 'f vfs_read%return $arg1 $arg2 $arg3 $arg4' >> dynamic_events 
-> > /sys/kernel/tracing # echo 1 > events/fprobes/enable 
-> > 
-> > I also confirmed that on 'vfs_write' caused the same result. 3 arguments(24 bytes) is OK,
-> > but 4 arguments (32bytes) is NG.
+>> Currently ftrace only dumps the global trace buffer on an OOPs. For
+>> debugging a production usecase, instance trace will be helpful to
+>> check specific problems since global trace buffer may be used for
+>> other purposes.
+>>
+>> This patch extend the ftrace_dump_on_oops parameter to dump a specific
+>> or multiple trace instances:
+>>
+>>    - ftrace_dump_on_oops=0: as before -- don't dump
+>>    - ftrace_dump_on_oops[=1]: as before -- dump the global trace buffer
+>>    on all CPUs
+>>    - ftrace_dump_on_oops=2 or =orig_cpu: as before -- dump the global
+>>    trace buffer on CPU that triggered the oops
+>>    - ftrace_dump_on_oops=<instance_name>: new behavior -- dump the
+>>    tracing instance matching <instance_name>
+>>    - ftrace_dump_on_oops[=2/orig_cpu],<instance1_name>[=2/orig_cpu],
+>>    <instrance2_name>[=2/orig_cpu]: new behavior -- dump the global trace
+>>    buffer and multiple instance buffer on all CPUs, or only dump on CPU
+>>    that triggered the oops if =2 or =orig_cpu is given
 > 
-> And this may be the fprobe bug. kretprobe events doesn't show this issue.
+> So we need to add that the syntax is:
 > 
-> OK:
-> /sys/kernel/tracing # echo 'r vfs_read $arg*' >> kprobe_events 
-> /sys/kernel/tracing # echo 1 > events/kprobes/enable 
+>   ftrace_dump_on_oops[=[<0|1|2|orig_cpu>,][<instance_name>[=<1|2|orig_cpu>][,...]]
 > 
-> But this is strange because both uses same rethook...
+Yeah, this is much more clear, will update the commit message and kernel 
+docs in new patchset.
+>>
+>> Also, the sysctl node can handle the input accordingly.
+>>
+>> Cc: Ross Zwisler <zwisler@google.com>
+>> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+>> Signed-off-by: Huang Yiwei <quic_hyiwei@quicinc.com>
+>> ---
+>>   .../admin-guide/kernel-parameters.txt         |  26 ++-
+>>   Documentation/admin-guide/sysctl/kernel.rst   |  30 +++-
+>>   include/linux/ftrace.h                        |   4 +-
+>>   include/linux/kernel.h                        |   1 +
+>>   kernel/sysctl.c                               |   4 +-
+>>   kernel/trace/trace.c                          | 156 +++++++++++++-----
+>>   kernel/trace/trace_selftest.c                 |   2 +-
+>>   7 files changed, 168 insertions(+), 55 deletions(-)
+>>
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index 31b3a25680d0..3d6ea8e80c2f 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -1561,12 +1561,28 @@
+>>   			The above will cause the "foo" tracing instance to trigger
+>>   			a snapshot at the end of boot up.
+>>   
+>> -	ftrace_dump_on_oops[=orig_cpu]
+>> +	ftrace_dump_on_oops[=2(orig_cpu) | =<instance>][,<instance> |
+>> +			  ,<instance>=2(orig_cpu)]
+>>   			[FTRACE] will dump the trace buffers on oops.
+>> -			If no parameter is passed, ftrace will dump
+>> -			buffers of all CPUs, but if you pass orig_cpu, it will
+>> -			dump only the buffer of the CPU that triggered the
+>> -			oops.
+>> +			If no parameter is passed, ftrace will dump global
+>> +			buffers of all CPUs, if you pass 2 or orig_cpu, it
+>> +			will dump only the buffer of the CPU that triggered
+>> +			the oops, or the specific instance will be dumped if
+>> +			its name is passed. Multiple instance dump is also
+>> +			supported, and instances are separated by commas. Each
+>> +			instance supports only dump on CPU that triggered the
+>> +			oops by passing 2 or orig_cpu to it.
+>> +
+>> +			ftrace_dump_on_oops=foo=orig_cpu
+>> +
+>> +			The above will dump only the buffer of "foo" instance
+>> +			on CPU that triggered the oops.
+>> +
+>> +			ftrace_dump_on_oops,foo,bar=orig_cpu
+> 
+> I believe the above is incorrect. It should be:
+> 
+> 			ftrace_dump_on_oops=foo,bar=orig_cpu
+> 
+> And you can add here as well:
+> 
+>    ftrace_dump_on_oops[=[<0|1|2|orig_cpu>,][<instance_name>[=<1|2|orig_cpu>][,...]]
+> 
+> 
+> Thanks,
+> 
+> --Steve
+> 
+The explanation is below, I think it's correct?
+  - "ftrace_dump_on_oops," means global buffer on all CPUs
+  - "foo," means foo instance on all CPUs
+  - "bar=orig_cpu" means bar instance on CPU that triggered the oops.
 
-Lol, I haven't allocate the entry data size when initialize rethook.
-That's a bug.
-Please try below.
+I'm trying to make the example to cover more possibilities.
 
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index 6cd2a4e3afb8..9ff018245840 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -189,9 +189,6 @@ static int fprobe_init_rethook(struct fprobe *fp, int num)
- {
- 	int size;
- 
--	if (num <= 0)
--		return -EINVAL;
--
- 	if (!fp->exit_handler) {
- 		fp->rethook = NULL;
- 		return 0;
-@@ -199,15 +196,16 @@ static int fprobe_init_rethook(struct fprobe *fp, int num)
- 
- 	/* Initialize rethook if needed */
- 	if (fp->nr_maxactive)
--		size = fp->nr_maxactive;
-+		num = fp->nr_maxactive;
- 	else
--		size = num * num_possible_cpus() * 2;
--	if (size <= 0)
-+		num *= num_possible_cpus() * 2;
-+	if (num <= 0)
- 		return -EINVAL;
- 
-+	size = sizeof(struct fprobe_rethook_node) + fp->entry_data_size;
-+
- 	/* Initialize rethook */
--	fp->rethook = rethook_alloc((void *)fp, fprobe_exit_handler,
--				sizeof(struct fprobe_rethook_node), size);
-+	fp->rethook = rethook_alloc((void *)fp, fprobe_exit_handler, size, num);
- 	if (IS_ERR(fp->rethook))
- 		return PTR_ERR(fp->rethook);
- 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Regards,
+Huang Yiwei
+>> +
+>> +			The above will dump global buffer on all CPUs, the
+>> +			buffer of "foo" instance on all CPUs and the buffer
+>> +			of "bar" instance on CPU that triggered the oops.
+>>   
+>>   	ftrace_filter=[function-list]
