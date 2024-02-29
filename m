@@ -1,66 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFE716FF21
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Feb 2024 22:03:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C019944362;
+	Thu, 29 Feb 2024 22:50:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709244185; cv=none; b=uuWPue80940udGc5ebpfNJUi713HKAb2C/DtsfCglRW3Y4GyEY9eL9O2I6HSTGD5xJozUzB+HB8UProXvQE20C8nDtc5ZYo/Z1F6PXvsfEJCQJ5yHqbG0B2clQpbhecL0zXUO05j/tZ//AyOlm3/qTxdzugd8EhVv5Td3T32wOI=
+	t=1709247014; cv=none; b=hZcwhClC14mEe0kcEPs3IX5aAbEXFloMNRbOQZZwbZYRjEXc+PS2/vHZoer2wH2tR2YTOWCZcK7kkDf9xq8FB+9BEPSwSgnvJhmNTueT3+9/O5/QFy4/HEGO2yBaEmBPAaAxN8orbUl2u2L+1Z9vxx475T7Xb2JacB/IZmt4Hkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709244185; c=relaxed/simple;
-	bh=t8ugEdHJ9c8d/9Jv/+nQw124fw+6JVjWqtoWTZHbq8E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PlrkXcD1DZK60QKDQKmEqg9i1kumuhPxIDKkk8YnV8rNjLxb2NbRBaWehuRxp1RtGmylNmQzEAr8c6QELN95g2kwHnsEaadWCrVZhYj5KtirOxlR3FLeUE8rOmCBfdFHt3Rfypsy5m8wJOs8KyL1MIj7AQy5JUCKY3jQQR4jPlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A610CC433C7;
-	Thu, 29 Feb 2024 22:03:04 +0000 (UTC)
-Date: Thu, 29 Feb 2024 17:05:11 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: David Howells <dhowells@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org
-Subject: Re: How to display a ktime value as trace timestamp in trace
- output?
-Message-ID: <20240229170511.045cc3d0@gandalf.local.home>
-In-Reply-To: <2217765.1706712451@warthog.procyon.org.uk>
-References: <2217765.1706712451@warthog.procyon.org.uk>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1709247014; c=relaxed/simple;
+	bh=ekfbDf15yCY6P//fpG4nQw5ky8qNnNsLRyFC6XWeW24=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=WANn5RsC+UeA74Pxc3o2Zwz4Tti7WdG9FGL9bqJ58oaYpYru2wdPVdbzhjrIFZyu2g/bCK2gqFYLySsL0yX+Hkuz86VAR+YlHsACFTu7QdNGlH+5Lx1No5TDaf+dCXDKDSo6QRNGmPP/wANRfEBhFnKAsbViQ8j5Bfy3cSm4+qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KEVfPUel; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KEVfPUel"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2EECC433F1;
+	Thu, 29 Feb 2024 22:50:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709247014;
+	bh=ekfbDf15yCY6P//fpG4nQw5ky8qNnNsLRyFC6XWeW24=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KEVfPUeldaXF3E1IEwQP9f527BXlLSYs5cR6lTWBiFCOLJbEjt6TinoMDEmiXxaBg
+	 tyoUxDnjI1fydNJM7j2Jq1RxNgjxX0joSdYDA0OXih74XKzIQ5kQy1XLwhTH9MUJFI
+	 AtHjZM8cLiuwVBnIjgEi+FsS8vA8UyQb9y2SYS/f/eabUTqL5Qb2tlR6+DapGsrDmX
+	 nQpMs0rzXUElKE1OxLrJPPMx/21vuW0ItcybFxJD2+7LeKJ4SQUSReWo/4WsGJ+tDW
+	 bYpaEFh8QpfUXX2eUVRKq+wrhGcGlkc0XJLBTeWvEwEvTkLZIXtZ1Nw9qXjcJMu9X2
+	 FYzEluqaAoYdw==
+Date: Fri, 1 Mar 2024 07:50:10 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fprobe: Fix to allocate entry_data_size buffer with
+ rethook instances
+Message-Id: <20240301075010.6125d953f6e109fe71cf9ffe@kernel.org>
+In-Reply-To: <ZeD-HkC7bsAn_YgK@krava>
+References: <170920576727.107552.638161246679734051.stgit@devnote2>
+	<ZeD-HkC7bsAn_YgK@krava>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 31 Jan 2024 14:47:31 +0000
-David Howells <dhowells@redhat.com> wrote:
+On Thu, 29 Feb 2024 22:58:54 +0100
+Jiri Olsa <olsajiri@gmail.com> wrote:
 
-> Hi Steven,
+> On Thu, Feb 29, 2024 at 08:22:47PM +0900, Masami Hiramatsu (Google) wrote:
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > Fix to allocate fprobe::entry_data_size buffer with rethook instances.
+> > If fprobe doesn't allocate entry_data_size buffer for each rethook instance,
+> > fprobe entry handler can cause a buffer overrun when storing entry data in
+> > entry handler.
+> > 
+> > Reported-by: Jiri Olsa <olsajiri@gmail.com>
+> 
+> Tested-by: Jiri Olsa <olsajiri@gmail.com>
 
-Hi David,
+Thanks for testing!
+Let me pick this to probe/fixes.
 
-Sorry, I just noticed this email as it was buried in other unread emails :-p
+Thank you,
 
 > 
-> I have a tracepoint in AF_RXRPC that displays information about a timeout I'm
-> going to set.  I have the timeout in a ktime_t as an absolute time.  Is there
-> a way to display this in the trace output such that it looks like a trace
-> timestamp and can be (roughly) correlated with the displayed timestamps?
-
-Have you tried the other clocks?
-
-	{ ktime_get_mono_fast_ns,	"mono",		1 },
-	{ ktime_get_raw_fast_ns,	"mono_raw",	1 },
-	{ ktime_get_boot_fast_ns,	"boot",		1 },
-
-The above are the functions used for the tracing timestamps.
-
--- Steve
-
+> thanks,
+> jirka
 > 
-> I tried subtracting ktime_get_read() - ktime_get_boottime() from it and
-> displaying the result, but it looked about one and a bit seconds out from the
-> trace timestamp.
-> 
+> > Fixes: 4bbd93455659 ("kprobes: kretprobe scalability improvement")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > ---
+> >  kernel/trace/fprobe.c |   14 ++++++--------
+> >  1 file changed, 6 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> > index 6cd2a4e3afb8..9ff018245840 100644
+> > --- a/kernel/trace/fprobe.c
+> > +++ b/kernel/trace/fprobe.c
+> > @@ -189,9 +189,6 @@ static int fprobe_init_rethook(struct fprobe *fp, int num)
+> >  {
+> >  	int size;
+> >  
+> > -	if (num <= 0)
+> > -		return -EINVAL;
+> > -
+> >  	if (!fp->exit_handler) {
+> >  		fp->rethook = NULL;
+> >  		return 0;
+> > @@ -199,15 +196,16 @@ static int fprobe_init_rethook(struct fprobe *fp, int num)
+> >  
+> >  	/* Initialize rethook if needed */
+> >  	if (fp->nr_maxactive)
+> > -		size = fp->nr_maxactive;
+> > +		num = fp->nr_maxactive;
+> >  	else
+> > -		size = num * num_possible_cpus() * 2;
+> > -	if (size <= 0)
+> > +		num *= num_possible_cpus() * 2;
+> > +	if (num <= 0)
+> >  		return -EINVAL;
+> >  
+> > +	size = sizeof(struct fprobe_rethook_node) + fp->entry_data_size;
+> > +
+> >  	/* Initialize rethook */
+> > -	fp->rethook = rethook_alloc((void *)fp, fprobe_exit_handler,
+> > -				sizeof(struct fprobe_rethook_node), size);
+> > +	fp->rethook = rethook_alloc((void *)fp, fprobe_exit_handler, size, num);
+> >  	if (IS_ERR(fp->rethook))
+> >  		return PTR_ERR(fp->rethook);
+> >  
+> > 
 
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
