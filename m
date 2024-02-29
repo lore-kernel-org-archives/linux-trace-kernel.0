@@ -1,82 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14855446B8;
-	Thu, 29 Feb 2024 07:13:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B2644C67;
+	Thu, 29 Feb 2024 07:30:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709190805; cv=none; b=p6lmd6WfsVkv8V8EhFuiCZd4qyXAR9UR4exEcOJIS9OrB55CBMVN0Zd1KbczT3HszLEhG+os1jT604Q/naEdnncUtK6DZVVPkad5jsTjHyLFe+4ll5abluIfQXC/hfHYiTZza8l/OkKQAe0pVhqcEWuXE6phoR7pSPgtWxahpTc=
+	t=1709191837; cv=none; b=S1unKXtLxeX3tzl/1czwSPr/cg10KPfO1G2zC48AhoPOhFRAUofLQbFrTD9o4aYQtYGC36VKFu1kH4Y12EpbQPNEXwE7EF2VACwUohAwrQxVhm7mn4r3XwQ42ygPUfOP2gVPhcCFC6+x8td2c00eHemALpRPAZ6X0FnW2jtqJoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709190805; c=relaxed/simple;
-	bh=sTFRZabajf/krYk3PM4o4UwGsA4jCPH/kYX/YIBaFFQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=rrou+qyt/mZB5i6rY5HjB2GFYmu6UMU3/LcpUhAgwEd4c9Zu4+zUl8aykqOr0l00V2QjOaY1o5AISgPbM5x+zONjMpQMkG6puRABdnaUn6RCS1g77m8sWIoVMsmshvVR9GH24SpsNrEPe0V7V3VsvjdV2CwDpeazsjhwQbiiw2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OUGlU738; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709191837; c=relaxed/simple;
+	bh=tEkNMsql6n7EmLjiIafb3HPwIpQRV25IrRm3wpHTFQ4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=ZEVxtTXST3huBClXegGDakScqQo1DDm/WaPRyhPvOJ8o1cBjaatGKU7lZXO5+1W9bO+dcJ7nlF367hIlaFO9HSf9XMyYVzf5MoSteX+fkG6J0b9tUlNM7iyJ/ipUkjmqeJx8nOkWL5F7kO8vckAS6ReW5fh8EC4a0kwAGJkyXLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XZ2Px/DE; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OUGlU738"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98225C433F1;
-	Thu, 29 Feb 2024 07:13:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709190804;
-	bh=sTFRZabajf/krYk3PM4o4UwGsA4jCPH/kYX/YIBaFFQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=OUGlU738hUpRVx01d84rqAhOzR10pyvcWXzBPl3tO/bB0Ve/kdCrehO4Nvx7CNknc
-	 zrpXNjLeKSA8R10DDUlU9Euuer0LPnly3RInbJbxAd3H7CTMDjQUXxjB6PzSbM64UQ
-	 94U86xoToN7HwCt8P917HtYwhQdXb1ENvc6Dj5pdtv/I0KC2QZfhVqYj8HyVtbBHtI
-	 L40MwM5UeB/+WMvCHr3E7OZ7koK23UXGBLX/alScaAmG5kFCKjKboruwtYlov6xQOa
-	 diSK0jIl+0u04MeA5uel3UHKZA8Cz6573rDBfoiZcAj0nZlS/+zZKnm1jFzoJffcKA
-	 tw+pk4LjuB1yg==
-Date: Thu, 29 Feb 2024 16:13:20 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 0/7] tracing/probes: Support function parameter
- access from return probe
-Message-Id: <20240229161320.978190f42dcc1a521c192e7d@kernel.org>
-In-Reply-To: <20240229153855.6fe3fb454cf56eebc6ea9953@kernel.org>
-References: <170891987362.609861.6767830614537418260.stgit@devnote2>
-	<Zd9eBn2FTQzYyg7L@krava>
-	<20240229145139.a215085c44add62302463312@kernel.org>
-	<20240229153855.6fe3fb454cf56eebc6ea9953@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XZ2Px/DE"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5648d92919dso1044823a12.1;
+        Wed, 28 Feb 2024 23:30:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709191834; x=1709796634; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DKPf0LgfDBQdcT2AOOktC0F3XZfRUjBLP/Wgrh2tUeI=;
+        b=XZ2Px/DEgNFeQNhVQM4RxnmW5aCL4w5gVzwlGT7E/e9Rip7LlrHokJ8vUbKEw5IknO
+         VPclmq7At+L3osgjNAtBqOWie4xwXi8VJ4ZEV+vusgC2wH/Uq4iIA0TEniHAgElYVHar
+         n8YelzC3gxABhtO/tqZXhsmGxzo00vvWLS1/a3S9u8yjCzuZkl1eprpf7gqhaDbPq/Z0
+         Pxa8yZNeJm4XHVWF9/tW/fAfbaFmWYbr7+8f/dQURSfWuXN2xHqyCiVyOvA8tbiLwH/l
+         vwRqt89iX/NzXy1U+ONrwrJKGmOQdiGKdnYR6UDmW/QOTtg6AcJUEjX9MXMdAWneK8Bf
+         +Hrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709191834; x=1709796634;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DKPf0LgfDBQdcT2AOOktC0F3XZfRUjBLP/Wgrh2tUeI=;
+        b=VaKfX6FDZL88N29aD6VYu6z+yL2RGiZAFKcGUbQ2clZsTD+iqFk7EbSZl+q0y9sj9D
+         Wo7qZDodAN+zl1NbHr4K5QtbpPDUiHT9nJ03FjTzmFTs6k9q8MG+g5+EVkWrhkNsA9bd
+         9mEaTRO4oEqEsxbuymSXU0FO4iIiy/Grs31x6y8O62fTH8n0B6JBEL7/+HvwXVIjUad3
+         9e4Q9n1IqwvhxDwXHzK98C1JtXwSx/CmSNDy3YhJB9puJHWKfhXfumLMYLqmlYRBAD+j
+         mOXhw4aZOWSIOceDM5keriRnRcAGKIIhSxm6M287bczpc7f1Y0TOzjTgIcMWPxlHb0Ml
+         4lVg==
+X-Forwarded-Encrypted: i=1; AJvYcCWQ7BzjeK3aTSDr++TIH4PNIaS7ew1/GQTWBsR7rn62qACwyQavGUqOMsGSklG0gfQmuIloZeujM4EiAsVoVHzDt0kTBgVJRv68gOruVW3GFAHjBZGPC/EfEQjw2rQFFUgoJA2UxB0nieFVsTETmXqJysTyHef14p0lXPYK4d7P1jW1aFtIU+Zr
+X-Gm-Message-State: AOJu0YzFtUrWJLWy7dR4xC8DxTZlxEclD/AxcETF73q/YUn/httHHczh
+	N53+nKvkKqFvPDav9uZ+dxjAqtllz6laM2eAnGn17idY23r4YMoTw/cpCFZKPwW1R4+9j+bV2tX
+	p6W7XwACg7jDU6vjuvDangWAxh2Q=
+X-Google-Smtp-Source: AGHT+IHoCqstq7TdVZ88Dk/71bmmKf5b9RkwknQU02aYiHxGF6OjB2trJyj9jkf88TO2KWMcDdIIMvUH+yEss8vkXFE=
+X-Received: by 2002:a17:906:e20b:b0:a44:fb7:d42 with SMTP id
+ gf11-20020a170906e20b00b00a440fb70d42mr774752ejb.2.1709191834050; Wed, 28 Feb
+ 2024 23:30:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20240229052813.GA23899@didi-ThinkCentre-M920t-N000>
+In-Reply-To: <20240229052813.GA23899@didi-ThinkCentre-M920t-N000>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Thu, 29 Feb 2024 15:29:56 +0800
+Message-ID: <CAL+tcoAhvFhXdr1WQU8mv_6ZX5nOoNpbOLAB6=C+DB-qXQ11Ew@mail.gmail.com>
+Subject: Re: [PATCH] tcp: Add skb addr and sock addr to arguments of
+ tracepoint tcp_probe.
+To: edumazet@google.com, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	fuyuanli@didiglobal.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 29 Feb 2024 15:38:55 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Thu, Feb 29, 2024 at 1:33=E2=80=AFPM fuyuanli <fuyuanli@didiglobal.com> =
+wrote:
+>
+> It is useful to expose skb addr and sock addr to user in tracepoint
+> tcp_probe, so that we can get more information while monitoring
+> receiving of tcp data, by ebpf or other ways.
+>
+> For example, we need to identify a packet by seq and end_seq when
+> calculate transmit latency between lay 2 and lay 4 by ebpf, but which is
+> not available in tcp_probe, so we can only use kprobe hooking
+> tcp_rcv_esatblised to get them. But we can use tcp_probe directly if skb
+> addr and sock addr are available, which is more efficient.
+>
+> Signed-off-by: fuyuanli <fuyuanli@didiglobal.com>
 
-> Hmm, this seems arch_rethook_trampoline caused the issue.
-> 
-> And curiously, it depends on the number of stored data.
-> 
-> OK:
-> /sys/kernel/tracing # echo 'f vfs_read%return $arg1 $arg2 $arg3' >> dynamic_events 
-> /sys/kernel/tracing # echo 1 > events/fprobes/enable 
-> 
-> NG:
-> /sys/kernel/tracing # echo 'f vfs_read%return $arg1 $arg2 $arg3 $arg4' >> dynamic_events 
-> /sys/kernel/tracing # echo 1 > events/fprobes/enable 
-> 
-> I also confirmed that on 'vfs_write' caused the same result. 3 arguments(24 bytes) is OK,
-> but 4 arguments (32bytes) is NG.
+Please target 'net-next' in the title of your v2 patch.
 
-And this may be the fprobe bug. kretprobe events doesn't show this issue.
+> ---
+>  include/trace/events/tcp.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+> index 7b1ddffa3dfc..096c15f64b92 100644
+> --- a/include/trace/events/tcp.h
+> +++ b/include/trace/events/tcp.h
+> @@ -258,6 +258,8 @@ TRACE_EVENT(tcp_probe,
+>                 __field(__u32, srtt)
+>                 __field(__u32, rcv_wnd)
+>                 __field(__u64, sock_cookie)
+> +               __field(const void *, skbaddr)
+> +               __field(const void *, skaddr)
+>         ),
+>
+>         TP_fast_assign(
+> @@ -285,6 +287,9 @@ TRACE_EVENT(tcp_probe,
+>                 __entry->ssthresh =3D tcp_current_ssthresh(sk);
+>                 __entry->srtt =3D tp->srtt_us >> 3;
+>                 __entry->sock_cookie =3D sock_gen_cookie(sk);
+> +
+> +               __entry->skbaddr =3D skb;
+> +               __entry->skaddr =3D sk;
+>         ),
+>
+>         TP_printk("family=3D%s src=3D%pISpc dest=3D%pISpc mark=3D%#x data=
+_len=3D%d snd_nxt=3D%#x snd_una=3D%#x snd_cwnd=3D%u ssthresh=3D%u snd_wnd=
+=3D%u srtt=3D%u rcv_wnd=3D%u sock_cookie=3D%llx",
 
-OK:
-/sys/kernel/tracing # echo 'r vfs_read $arg*' >> kprobe_events 
-/sys/kernel/tracing # echo 1 > events/kprobes/enable 
+If they are useful, at least you should printk those two addresses
+like what trace_kfree_skb() does.
 
-But this is strange because both uses same rethook...
+May I ask how it could be useful if there is no more function printing
+such information in the receive path?
 
-Thank you,
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thanks,
+Jason
+> --
+> 2.17.1
+>
+>
