@@ -1,30 +1,30 @@
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [195.130.132.53])
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [195.130.137.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E845A56B87
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  1 Mar 2024 21:02:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7D856B64
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  1 Mar 2024 21:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709326969; cv=none; b=f/efw0xQja2aC92/zdA2j0uhCUqNcrifPju+56SYFoqsncnu6Fa8juu6PwZopmScatYLHYvvHiuyzszuUi0jqSi9teNdWzspw2qAOdWCenHkyv/umnanmupwP3ADpcyD3emn7UcSw/Ovwlyi3L7QIb7SB4wirdl0X1AmSSijy7g=
+	t=1709326969; cv=none; b=G6vsHyiVweYve6u1na8rMhsIBhs5IvTyUYOWkso2QCqxoZuxtJ1SFH9JNrM9rojyv0V5wpPsY9WFvJTLb2p0ZwXJUY9c90NJN4x9q28xcWJyAPSDDPwK2LNWbAykYhydYFcav+2QE3nuh1EWQwF99OnPhIpAH65zucXsLCszZgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709326969; c=relaxed/simple;
-	bh=+1TX2uH6QO5tL1EOUSBU0x1mpJCfTuOWxVFI4K9w8AQ=;
+	bh=/tBZ2iSdN8OLbtFWmDoI6rwg+iFBUAwva2wRvq50svo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eHqzSWwMx9JxQq7lWdvoxY97cOLp5b3N2OCG3T0ZiwdzMLy2s/TitS9hb/6WFghfIAV37ILwpPFzbP7s33ok3G8Cldc6VDlxx7bk6rssN6ci7eWNEV1t72iUu7j1izB+jkySJKCRmi/wJbGzNh/Fz9iwHpH0GX1XIHJ0y5ioOfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.53
+	 MIME-Version; b=aLCcDVf2uy7mowLj7R//8P9zaDdgujJs0QVhbuSQfvfGTa+tspUC7+JMm7ojFn1zEfDwGz0bWyzCVzIX/qDNUqAxIJAvS0sDZYZ225xnS4J37zjhz5bd32Y2KeFznV7WGENvwcbYRgX0B/2zDac8t7keSBu/E4huG7mI5vyK234=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.90
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
 Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:db22:6af9:7d18:6ee8])
-	by andre.telenet-ops.be with bizsmtp
-	id tZ2e2B0041TWuYv01Z2emy; Fri, 01 Mar 2024 22:02:44 +0100
+	by albert.telenet-ops.be with bizsmtp
+	id tZ2e2B00D1TWuYv06Z2eSm; Fri, 01 Mar 2024 22:02:43 +0100
 Received: from rox.of.borg ([192.168.97.57])
 	by ramsan.of.borg with esmtp (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1rgA1T-0024gD-7H;
+	id 1rgA1T-0024gt-EB;
 	Fri, 01 Mar 2024 22:02:38 +0100
 Received: from geert by rox.of.borg with local (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1rgA1e-00D8rC-1c;
+	id 1rgA1e-00D8s0-8T;
 	Fri, 01 Mar 2024 22:02:38 +0100
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 To: Yoshinori Sato <ysato@users.sourceforge.jp>,
@@ -42,9 +42,9 @@ Cc: Steven Rostedt <rostedt@goodmis.org>,
 	linux-sh@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 04/20] sh: tlb: Add missing forward declaration for handle_tlbmiss()
-Date: Fri,  1 Mar 2024 22:02:18 +0100
-Message-Id: <23ec2c88168bd5b7e294828221531eed2f3eede8.1709326528.git.geert+renesas@glider.be>
+Subject: [PATCH 14/20] sh: sh7786: Remove unused sh7786_usb_use_exclock()
+Date: Fri,  1 Mar 2024 22:02:28 +0100
+Message-Id: <a87c6c0edcf81937b8eb2c899d286d82d71ad513.1709326528.git.geert+renesas@glider.be>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1709326528.git.geert+renesas@glider.be>
 References: <cover.1709326528.git.geert+renesas@glider.be>
@@ -54,44 +54,42 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-arch/sh/mm/tlbex_32.c:22:1: warning: no previous prototype for ‘handle_tlbmiss’ [-Wmissing-prototypes]
+arch/sh/kernel/cpu/sh4a/setup-sh7786.c:411:13: warning: no previous prototype for 'sh7786_usb_use_exclock' [-Wmissing-prototypes]
+
+Upstream never had a user of sh7786_usb_use_exclock(), remove it.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/sh/include/asm/tlb.h | 4 ++++
- arch/sh/mm/tlbex_32.c     | 1 +
- 2 files changed, 5 insertions(+)
+ arch/sh/kernel/cpu/sh4a/setup-sh7786.c | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-diff --git a/arch/sh/include/asm/tlb.h b/arch/sh/include/asm/tlb.h
-index aeb8915e92549609..ddf324bfb9a09721 100644
---- a/arch/sh/include/asm/tlb.h
-+++ b/arch/sh/include/asm/tlb.h
-@@ -24,6 +24,10 @@ static inline void tlb_unwire_entry(void)
- 	BUG();
- }
- #endif /* CONFIG_CPU_SH4 */
-+
-+asmlinkage int handle_tlbmiss(struct pt_regs *regs, unsigned long error_code,
-+			      unsigned long address);
-+
- #endif /* CONFIG_MMU */
- #endif /* __ASSEMBLY__ */
- #endif /* __ASM_SH_TLB_H */
-diff --git a/arch/sh/mm/tlbex_32.c b/arch/sh/mm/tlbex_32.c
-index 1c53868632ee4c69..7d58578c15f4ef55 100644
---- a/arch/sh/mm/tlbex_32.c
-+++ b/arch/sh/mm/tlbex_32.c
-@@ -14,6 +14,7 @@
- #include <linux/kdebug.h>
- #include <asm/mmu_context.h>
- #include <asm/thread_info.h>
-+#include <asm/tlb.h>
+diff --git a/arch/sh/kernel/cpu/sh4a/setup-sh7786.c b/arch/sh/kernel/cpu/sh4a/setup-sh7786.c
+index 74620f30b19badbd..c048842d8a589866 100644
+--- a/arch/sh/kernel/cpu/sh4a/setup-sh7786.c
++++ b/arch/sh/kernel/cpu/sh4a/setup-sh7786.c
+@@ -400,20 +400,6 @@ static struct platform_device *sh7786_devices[] __initdata = {
+ 	&usb_ohci_device,
+ };
  
- /*
-  * Called with interrupts disabled.
+-/*
+- * Please call this function if your platform board
+- * use external clock for USB
+- * */
+-#define USBCTL0		0xffe70858
+-#define CLOCK_MODE_MASK 0xffffff7f
+-#define EXT_CLOCK_MODE  0x00000080
+-
+-void __init sh7786_usb_use_exclock(void)
+-{
+-	u32 val = __raw_readl(USBCTL0) & CLOCK_MODE_MASK;
+-	__raw_writel(val | EXT_CLOCK_MODE, USBCTL0);
+-}
+-
+ #define USBINITREG1	0xffe70094
+ #define USBINITREG2	0xffe7009c
+ #define USBINITVAL1	0x00ff0040
 -- 
 2.34.1
 
