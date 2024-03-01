@@ -1,30 +1,30 @@
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [195.130.137.90])
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [195.130.137.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7D856B64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1765356B73
 	for <linux-trace-kernel@vger.kernel.org>; Fri,  1 Mar 2024 21:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.90
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709326969; cv=none; b=G6vsHyiVweYve6u1na8rMhsIBhs5IvTyUYOWkso2QCqxoZuxtJ1SFH9JNrM9rojyv0V5wpPsY9WFvJTLb2p0ZwXJUY9c90NJN4x9q28xcWJyAPSDDPwK2LNWbAykYhydYFcav+2QE3nuh1EWQwF99OnPhIpAH65zucXsLCszZgY=
+	t=1709326969; cv=none; b=eQr/3Q7lR9+4xR4hzJDjDBOh3Jl0D6IEF/MhrJuzLzeeJ1fTcrQvqXbzmq13UfvIjsnIHpYLV7Ea5YPVb1C8pJJE8kpph4HB3Sa+S8koIPFv2C5+xrqKS9zKcGGTtA13KgvXi06nfusEvOSke88XpI0QAUhYgdicnetbpG9oTL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709326969; c=relaxed/simple;
-	bh=/tBZ2iSdN8OLbtFWmDoI6rwg+iFBUAwva2wRvq50svo=;
+	bh=0aZULtYZ6GoD8AAl1crVNkmdHv9J+FA0BCcJ19VNsRA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aLCcDVf2uy7mowLj7R//8P9zaDdgujJs0QVhbuSQfvfGTa+tspUC7+JMm7ojFn1zEfDwGz0bWyzCVzIX/qDNUqAxIJAvS0sDZYZ225xnS4J37zjhz5bd32Y2KeFznV7WGENvwcbYRgX0B/2zDac8t7keSBu/E4huG7mI5vyK234=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.90
+	 MIME-Version:Content-Type; b=W233DwtrGEC7pATGI2HzXQa3+dGF1H/93ythj7PzunhQSFriBKFVWHZyy67iMzF+KElfhRPOYCSoVIGSO5YURWLBliG4qlfMqGUzrl7EhB00gQm8gISjE7z9SI5mv8K2x5ywm/SC5u0dI2pg8dm22tMZfBqqGHVa5W5amsyB+vY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.88
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
 Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:db22:6af9:7d18:6ee8])
-	by albert.telenet-ops.be with bizsmtp
-	id tZ2e2B00D1TWuYv06Z2eSm; Fri, 01 Mar 2024 22:02:43 +0100
+	by michel.telenet-ops.be with bizsmtp
+	id tZ2e2B0081TWuYv06Z2ewv; Fri, 01 Mar 2024 22:02:43 +0100
 Received: from rox.of.borg ([192.168.97.57])
 	by ramsan.of.borg with esmtp (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1rgA1T-0024gt-EB;
+	id 1rgA1T-0024gS-9a;
 	Fri, 01 Mar 2024 22:02:38 +0100
 Received: from geert by rox.of.borg with local (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1rgA1e-00D8s0-8T;
+	id 1rgA1e-00D8rP-3g;
 	Fri, 01 Mar 2024 22:02:38 +0100
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 To: Yoshinori Sato <ysato@users.sourceforge.jp>,
@@ -42,9 +42,9 @@ Cc: Steven Rostedt <rostedt@goodmis.org>,
 	linux-sh@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 14/20] sh: sh7786: Remove unused sh7786_usb_use_exclock()
-Date: Fri,  1 Mar 2024 22:02:28 +0100
-Message-Id: <a87c6c0edcf81937b8eb2c899d286d82d71ad513.1709326528.git.geert+renesas@glider.be>
+Subject: [PATCH 07/20] sh: hw_breakpoint: Add missing forward declaration for arch_bp_generic_fields()
+Date: Fri,  1 Mar 2024 22:02:21 +0100
+Message-Id: <566af354bf51ddc38e9eb95eac51ec00c4e42024.1709326528.git.geert+renesas@glider.be>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1709326528.git.geert+renesas@glider.be>
 References: <cover.1709326528.git.geert+renesas@glider.be>
@@ -54,42 +54,29 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-arch/sh/kernel/cpu/sh4a/setup-sh7786.c:411:13: warning: no previous prototype for 'sh7786_usb_use_exclock' [-Wmissing-prototypes]
-
-Upstream never had a user of sh7786_usb_use_exclock(), remove it.
+arch/sh/kernel/hw_breakpoint.c:135:5: warning: no previous prototype for ‘arch_bp_generic_fields’ [-Wmissing-prototypes]
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/sh/kernel/cpu/sh4a/setup-sh7786.c | 14 --------------
- 1 file changed, 14 deletions(-)
+ arch/sh/include/asm/hw_breakpoint.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/sh/kernel/cpu/sh4a/setup-sh7786.c b/arch/sh/kernel/cpu/sh4a/setup-sh7786.c
-index 74620f30b19badbd..c048842d8a589866 100644
---- a/arch/sh/kernel/cpu/sh4a/setup-sh7786.c
-+++ b/arch/sh/kernel/cpu/sh4a/setup-sh7786.c
-@@ -400,20 +400,6 @@ static struct platform_device *sh7786_devices[] __initdata = {
- 	&usb_ohci_device,
- };
+diff --git a/arch/sh/include/asm/hw_breakpoint.h b/arch/sh/include/asm/hw_breakpoint.h
+index 361a0f57bdebda6e..74a438cea6559efd 100644
+--- a/arch/sh/include/asm/hw_breakpoint.h
++++ b/arch/sh/include/asm/hw_breakpoint.h
+@@ -52,6 +52,8 @@ struct pmu;
  
--/*
-- * Please call this function if your platform board
-- * use external clock for USB
-- * */
--#define USBCTL0		0xffe70858
--#define CLOCK_MODE_MASK 0xffffff7f
--#define EXT_CLOCK_MODE  0x00000080
--
--void __init sh7786_usb_use_exclock(void)
--{
--	u32 val = __raw_readl(USBCTL0) & CLOCK_MODE_MASK;
--	__raw_writel(val | EXT_CLOCK_MODE, USBCTL0);
--}
--
- #define USBINITREG1	0xffe70094
- #define USBINITREG2	0xffe7009c
- #define USBINITVAL1	0x00ff0040
+ /* arch/sh/kernel/hw_breakpoint.c */
+ extern int arch_check_bp_in_kernelspace(struct arch_hw_breakpoint *hw);
++extern int arch_bp_generic_fields(int sh_len, int sh_type, int *gen_len,
++				  int *gen_type);
+ extern int hw_breakpoint_arch_parse(struct perf_event *bp,
+ 				    const struct perf_event_attr *attr,
+ 				    struct arch_hw_breakpoint *hw);
 -- 
 2.34.1
 
