@@ -1,30 +1,30 @@
 Received: from andre.telenet-ops.be (andre.telenet-ops.be [195.130.132.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98DEE56B7B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CF656B61
 	for <linux-trace-kernel@vger.kernel.org>; Fri,  1 Mar 2024 21:02:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709326969; cv=none; b=TAXxAxwFvlCiOYM+OWANe0wby2o1h0ZfVp/3zO1f3KxrQvO2mz3NlrcE0sZRrwZqHguUpaQYkWg0SeREyp02swyofOW3Gas0SQv/pvmQ2yYPLJmAqCsi86FDkrQXBe7MGTPNSA+5/M6GEr2sQeCiddL2ZSYAkvjps39Sw80lIrM=
+	t=1709326969; cv=none; b=W2zT8+VeMCfNMFXfnLrxsnOM+ytrsGO0k20L2sCSCR0VbGDy+LFK0amDLb0il0n9WMwaLOhn4UF7Fl5Fzy4eqnOllnQ9Zv+v1D30u38PEC+d/btixO5ZbEykd887kX0+/2hJWH7U9GKvGSmTFKzhVyaxohLb1iBPbYStmSx2XZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709326969; c=relaxed/simple;
-	bh=9LG2z7aDdp+/GoNUFPZ5luzTqo5E7LF1IVqFSiF/FFM=;
+	bh=EZEhIwE/QBgRULd7GoitNkRuUOEqvN0i53K34hNtFRY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZAfLOkLs1j6niwwj+biwdS4E/hT5yB2z/swPtv2uKKv0XQZNx2lcKq83UTwJi+u+7QdANzM8BHfJr98k44iINanni2LqyBRfCbOO+tmYl9EDDXEftc+iXta4m0NvEgUqqxHqb/1gGNA1Gdzb2GUsiMtWiDwKqNLhjwxyd3wWGoY=
+	 MIME-Version; b=cSfcfhC5/yKrZgKA4QjvbiZi0SItqUxuoeJfBnO5R+wtJyveitmOIU9a9uoA1Y7xseUfeyLlMpZHp3RnkuYsqfmquYScVDhksOQJ7t98Dm/74Q95lnBCZnih5kfB9/iWoMbobggYVdP5aXe915kfP8ApTXpIpIhNpMct51zF3gM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
 Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:db22:6af9:7d18:6ee8])
 	by andre.telenet-ops.be with bizsmtp
-	id tZ2e2B0051TWuYv01Z2emz; Fri, 01 Mar 2024 22:02:44 +0100
+	id tZ2e2B0091TWuYv01Z2en1; Fri, 01 Mar 2024 22:02:44 +0100
 Received: from rox.of.borg ([192.168.97.57])
 	by ramsan.of.borg with esmtp (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1rgA1T-0024gi-CF;
+	id 1rgA1T-0024h3-G7;
 	Fri, 01 Mar 2024 22:02:38 +0100
 Received: from geert by rox.of.borg with local (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1rgA1e-00D8rk-6Q;
+	id 1rgA1e-00D8sF-AS;
 	Fri, 01 Mar 2024 22:02:38 +0100
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 To: Yoshinori Sato <ysato@users.sourceforge.jp>,
@@ -42,9 +42,9 @@ Cc: Steven Rostedt <rostedt@goodmis.org>,
 	linux-sh@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 11/20] sh: math-emu: Add missing #include <asm/fpu.h>
-Date: Fri,  1 Mar 2024 22:02:25 +0100
-Message-Id: <cfda1ba2eadb75e2793e67d43df42fe4c04e4fcf.1709326528.git.geert+renesas@glider.be>
+Subject: [PATCH 17/20] sh: kprobes: Make trampoline_probe_handler() static
+Date: Fri,  1 Mar 2024 22:02:31 +0100
+Message-Id: <42f30b7f767ee1293f6e687a605f7d907ae2daa6.1709326528.git.geert+renesas@glider.be>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1709326528.git.geert+renesas@glider.be>
 References: <cover.1709326528.git.geert+renesas@glider.be>
@@ -56,25 +56,27 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-arch/sh/math-emu/math.c:492:5: warning: no previous prototype for 'do_fpu_inst' [-Wmissing-prototypes]
+arch/sh/kernel/kprobes.c:299:15: warning: no previous prototype for 'trampoline_probe_handler' [-Wmissing-prototypes]
+
+There are no users outside this file, so make it static.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/sh/math-emu/math.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/sh/kernel/kprobes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/sh/math-emu/math.c b/arch/sh/math-emu/math.c
-index cdaef6501d764a0c..b65703e065735663 100644
---- a/arch/sh/math-emu/math.c
-+++ b/arch/sh/math-emu/math.c
-@@ -15,6 +15,8 @@
- #include <linux/perf_event.h>
- 
- #include <linux/uaccess.h>
-+
-+#include <asm/fpu.h>
- #include <asm/processor.h>
- #include <asm/io.h>
+diff --git a/arch/sh/kernel/kprobes.c b/arch/sh/kernel/kprobes.c
+index 74051b8ddf3e7bf9..d8c2e399d6e50794 100644
+--- a/arch/sh/kernel/kprobes.c
++++ b/arch/sh/kernel/kprobes.c
+@@ -296,7 +296,7 @@ static void __used kretprobe_trampoline_holder(void)
+ /*
+  * Called when we hit the probe point at __kretprobe_trampoline
+  */
+-int __kprobes trampoline_probe_handler(struct kprobe *p, struct pt_regs *regs)
++static int __kprobes trampoline_probe_handler(struct kprobe *p, struct pt_regs *regs)
+ {
+ 	regs->pc = __kretprobe_trampoline_handler(regs, NULL);
  
 -- 
 2.34.1
