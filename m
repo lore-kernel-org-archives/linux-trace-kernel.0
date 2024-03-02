@@ -1,62 +1,50 @@
-Received: from out203-205-221-164.mail.qq.com (out203-205-221-164.mail.qq.com [203.205.221.164])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACD16FB5;
-	Sat,  2 Mar 2024 04:42:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.164
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62B371119A;
+	Sat,  2 Mar 2024 11:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709354552; cv=none; b=ugI0VIh7op+rMSNC+oL3fZ/Uc4l22nq92gC0lknMi9UKx42K/491eyCf2Te+fZs+wHp7X9skUxNVaKL7Abm4LpTgF4vXPe1vZQb5+CI5Sv0uJG88CF0Jn7hl9E6MBxG8FU9lOLgnsWmTozEQ/RnFFezHPm4beh3gAZ11ohSInBc=
+	t=1709377406; cv=none; b=qZVEfmSKHm6Dt/SyUU+Bymiu/O16Bkw8IArwDbpSuyNeZwZneg4lopEE9lk5I687cuWeN2ga4Y53Inmt0yGobui2bJ7df+Yww+3la/ReP2Hb8pTAs7S/U3q8axFlbO2myQDGGPgiD1qPV4DN7tzIGUXWixj2ZO9pivC88RQ5QOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709354552; c=relaxed/simple;
-	bh=AYNv0Qa+glncn08+EPqSMHZm6uafarEkSus+rf9dSuo=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=f0FbkAd151vgFZtR4hBGOtSOTyehD0ahDJLBIbDHkOffcbCqsIgwA6wTygQ2wu7c9kVe2qRH2vpOOnD5Sfj8LekSW9FGjiivzKEGU/0DVUszhm1n8HPluH++9VYmzSspcIhZqgZuPQvxIKn7jHHBALSHIe6jxU6O+JjGXE0Oy0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=YF0UOb8Q; arc=none smtp.client-ip=203.205.221.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1709377406; c=relaxed/simple;
+	bh=StM8jCcuLIUhEXyA+Kx/oOlysO2RAZR6KO06K2kCibA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=hBEEt23tUAN52/MIyqcI9FS2Py8IQD2Q5FpgSGYh6Mkt3BLN5d4w6q4e8uwpdM8bbwx56OYW16AB0Dpoahvn2IdsYwu7S5Xd5+4zkE6U+g85NupBhSgcC/Xa2P131QIWRk8tSI/O86O2mvCkUGX/olmPYBkeG6ZL/RXdRW7ZM8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=F1ruERiJ; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="YF0UOb8Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1709354545; bh=QAYg13vLJCBT7+EvsgOXj1+cDzAIKbXlvs3Jgvb8Qe8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=YF0UOb8QiOa4mahLo7PdXZXh1anjru25EfSN2td0e5jADQJ6t+D59+i3oespw+WAr
-	 xb5wGWAPuSFVbzxsf32QBSX7YpDXHp3fSOdctyhBrk4a+V1/utoQvMft7dNev4qFkh
-	 kkwXS1YE+vEgRerlUW73nskjYQyKUv9NqS0aASxA=
-Received: from localhost.localdomain ([218.94.142.74])
-	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
-	id A979A8DF; Sat, 02 Mar 2024 12:42:23 +0800
-X-QQ-mid: xmsmtpt1709354543t46hz37ko
-Message-ID: <tencent_DFF7D3561A0686B5E8FC079150A02505180A@qq.com>
-X-QQ-XMAILINFO: NXBlMEyQi3goJyrVn5XSQtitzC/kO4MLGqqSAWWC3LZ+U+w5hik6q17yobNOlr
-	 s1fH0FSQrI0Y26toV6TSEIisPbPeMSTtDMt/ybCuVc7ocX7laYTLReTRMRU410PWXKfo2VvxkEm4
-	 QUT8AaeoOcsNUpwvRFB0zulllc6W6f+gF2F7uh7/bgFfl5MpeJPGWDMEnxFNouZj7zgOMJ8ascF0
-	 KYXGwa+o+C30badC5YuM74S7xzS0jzAeNf3vaLQhkcWYHUAe+O5UX/BAKwbJLaQC6Z/AUEyCjLW7
-	 A5YiNe0q5sThH82vMGsqJ4hll4W2Ev8hpuXyMwwYjkpjqXPiVofplLPT/2n66Jb+eDdLeXeAfIhu
-	 9WwabG4z7SLZXh1fuYXUz0bpPWDcrK8MK21W634Z6qt0rwmznl8MRbHm3X7RcaPFN2PFK8KwNOhU
-	 M/djdlF0cjuJ3kb8hpmAakV+0gYhzZfZxH1itbFs+m12ynjb+0hQMtqyBx/9DjlaNXB2GYer8hrS
-	 He8KwbncIYyHklFPsjM+ZSqPLzGbYfLNie6pSIyDvyAYLtwSX8/1CGOa6fC/i55R0XtQSOyEIVam
-	 r2Mi41Pid4LlvW0ERygOBwgBHJaeE2P/sR3po4WpaclcWHmd5ev8GkO7z8rnbPJIF9m3bqxLIauS
-	 Rp5Y7C6lltieZoQtiBzZFMH/tyju+IsOXH+b71xY2AvphYZl30ILK2s/XvZ/SB/K2EdzYgowSnE7
-	 l+QvvDMAG/Y6JxLkI9JvZmn7XZ2emLeW8FgXzDEWr9PlKr4BxEhkaKUZox3M8lgDSV18giuSG8CR
-	 g4+Kg/DSq/1MtL0QYisYtj479KIeJwUx1x4KKAhSSAQ9/tmCvBwxgGeBNe9D5deYkQkQVTDnPboX
-	 i++HOT2VSrSqX3g8HiB2uE+9XLHO8TJXmGe/D8f72zc3tTMN5EKvlgggnW8MQuzwviTpOHJ7fkpK
-	 Sc9R5ETOk+kFtFld96Ver6rHL1ajNbA/Oq7ZaQ5qt2i0xLInWuYM7sZI5pWUo6zLgtArzhA09oan
-	 X9VTsAUTHcCOosOJEAFlurw7/+89rApd9M+Tnh3n61+I/fkSWD
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: linke li <lilinke99@qq.com>
-To: 
-Cc: lilinke99@qq.com,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="F1ruERiJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=5sI/Q
+	17YHnDgZ7jjFmoiztGvtNafvTpgOVQgThSAgDQ=; b=F1ruERiJH0Tl+SEoli0Py
+	UySZ7fSbsYc9uix3evr+rQXRMjHItzJ7a+9lLr6Sb6N69olegmH/fHSgF2QJ78SP
+	Ji6nEPVIa/7rlSuszGk9XUIHccE+fA1e4po6EhEmR10cJ2CbiYM42+uhN7+xY6qe
+	0IEZg3QEmIkE61N8VUH0bI=
+Received: from hpl-virtual-machine.. (unknown [117.173.176.146])
+	by gzga-smtp-mta-g2-0 (Coremail) with SMTP id _____wD3n8ozB+NlgyMPBg--.36598S2;
+	Sat, 02 Mar 2024 19:02:12 +0800 (CST)
+From: He Peilin <peilinhe2020@163.com>
+To: edumazet@google.com
+Cc: davem@davemloft.net,
+	dsahern@kernel.org,
+	he.peilin@zte.com.cn,
+	jiang.xuexin@zte.com.cn,
+	kuba@kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2] ring-buffer: use READ_ONCE() to read cpu_buffer->commit_page in concurrent environment
-Date: Sat,  2 Mar 2024 12:42:21 +0800
-X-OQ-MSGID: <20240302044221.49277-1-lilinke99@qq.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-145)
-In-Reply-To: <tencent_5EC64EB49686EE61593AE541DB14CE490A08@qq.com>
-References: <tencent_5EC64EB49686EE61593AE541DB14CE490A08@qq.com>
+	linux-trace-kernel@vger.kernel.org,
+	liu.chun2@zte.com.cn,
+	mhiramat@kernel.org,
+	netdev@vger.kernel.org,
+	rostedt@goodmis.org,
+	xu.xin16@zte.com.cn,
+	yang.yang29@zte.com.cn,
+	zhang.yunkai@zte.com.cn
+Subject: Re: Re: [PATCH] net/ipv4: add tracepoint for icmp_send
+Date: Sat,  2 Mar 2024 06:02:11 -0500
+Message-Id: <20240302110211.6967-1-peilinhe2020@163.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <CANn89iL-y9e_VFpdw=sZtRnKRu_tnUwqHuFQTJvJsv-nz1xPDw@mail.gmail.com>
+References: <CANn89iL-y9e_VFpdw=sZtRnKRu_tnUwqHuFQTJvJsv-nz1xPDw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -64,32 +52,122 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3n8ozB+NlgyMPBg--.36598S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAw4fWFy7Zw1ktF47Xw17trb_yoW5tw4rpF
+	1UAFZ5WFZ7Jr47u34fZw1fJ3Zav3y8uryUKrW2ga4jkF1vyr1xJrs2gr90kryrArs0krya
+	vF4jv345G3Z0q3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jfmi_UUUUU=
+X-CM-SenderInfo: xshlzxhqkhjiisq6il2tof0z/1tbiYxaVsWV4G2+JpQAAsU
 
-In function ring_buffer_iter_empty(), cpu_buffer->commit_page is read
-while other threads may change it. It may cause the time_stamp that read
-in the next line come from a different page. Use READ_ONCE() to avoid
-having to reason about compiler optimizations now and in future.
+> >  include/trace/events/icmp.h | 57 +++++++++++++++++++++++++++++++++++++++++++++
+> >  net/ipv4/icmp.c             |  4 ++++
+> >  2 files changed, 61 insertions(+)
+> >  create mode 100644 include/trace/events/icmp.h
+> >
+> > diff --git a/include/trace/events/icmp.h b/include/trace/events/icmp.h
+> > new file mode 100644
+> > index 000000000000..3d9af5769bc3
+> > --- /dev/null
+> > +++ b/include/trace/events/icmp.h
+> > @@ -0,0 +1,57 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#undef TRACE_SYSTEM
+> > +#define TRACE_SYSTEM icmp
+> > +
+> > +#if !defined(_TRACE_ICMP_H) || defined(TRACE_HEADER_MULTI_READ)
+> > +#define _TRACE_ICMP_H
+> > +
+> > +#include <linux/icmp.h>
+> > +#include <linux/tracepoint.h>
+> > +
+> > +TRACE_EVENT(icmp_send,
+> > +
+> > +               TP_PROTO(const struct sk_buff *skb, int type, int code),
+> > +
+> > +               TP_ARGS(skb, type, code),
+> > +
+> > +               TP_STRUCT__entry(
+> > +                               __field(__u16, sport)
+> > +                               __field(__u16, dport)
+> > +                               __field(unsigned short, ulen)
+> > +                               __field(const void *, skbaddr)
+> > +                               __field(int, type)
+> > +                               __field(int, code)
+> > +                               __array(__u8, saddr, 4)
+> > +                               __array(__u8, daddr, 4)
+> > +               ),
+> > +
+> > +               TP_fast_assign(
+> > +                               // Get UDP header
+> > +                               struct udphdr *uh = udp_hdr(skb);
+> > +                               struct iphdr *iph = ip_hdr(skb);
+> > +                               __be32 *p32;
+> > +
+> > +                               __entry->sport = ntohs(uh->source);
+> > +                               __entry->dport = ntohs(uh->dest);
+> > +                               __entry->ulen = ntohs(uh->len);
+> > +                               __entry->skbaddr = skb;
+> > +                               __entry->type = type;
+> > +                               __entry->code = code;
+> > +
+> > +                               p32 = (__be32 *) __entry->saddr;
+> > +                               *p32 = iph->saddr;
+> > +
+> > +                               p32 = (__be32 *) __entry->daddr;
+> > +                               *p32 =  iph->daddr;
+> > +               ),
+> > +
+> 
+> FYI, ICMP can be generated for many other protocols than UDP.
 
-Signed-off-by: linke li <lilinke99@qq.com>
----
-v1 -> v2: only add READ_ONCE() to read cpu_buffer->commit_page, make change log clear
+We have noted this issue. Therefore, a UDP judgment confition has been added in TP_fast_assign.This condition will only track abnormal messages when icmp_send is called with the UDP protocol. Otherwise, it will simply print the abnormal type and code.
 
- kernel/trace/ring_buffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+As follows:
+if(proto_4 == IPPROTO_UDP) {
+	struct udphdr *uh = udp_hdr(skb);
+	__entry->sport = nthos(uh->source);
+	__entry_dport = nthos(uh->dest);
+	__entry->ulen = nthos(uh->len);
+} else {
+	__entry->sport = 0;
+	__entry_dport = 0;
+	__entry->ulen = 0;
+}
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 0699027b4f4c..c7203a436d3c 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -4337,7 +4337,7 @@ int ring_buffer_iter_empty(struct ring_buffer_iter *iter)
- 	cpu_buffer = iter->cpu_buffer;
- 	reader = cpu_buffer->reader_page;
- 	head_page = cpu_buffer->head_page;
--	commit_page = cpu_buffer->commit_page;
-+	commit_page = READ_ONCE(cpu_buffer->commit_page);
- 	commit_ts = commit_page->page->time_stamp;
- 
- 	/*
--- 
-2.39.3 (Apple Git-145)
+> 
+> > +               TP_printk("icmp_send: type=%d, code=%d. From %pI4:%u to %pI4:%u ulen=%d skbaddr=%p",
+> > +                       __entry->type, __entry->code,
+> > +                       __entry->saddr, __entry->sport, __entry->daddr,
+> > +                       __entry->dport, __entry->ulen, __entry->skbaddr)
+> > +);
+> > +
+> > +#endif /* _TRACE_ICMP_H */
+> > +
+> > +/* This part must be outside protection */
+> > +#include <trace/define_trace.h>
+> > diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
+> > index e63a3bf99617..437bdb7e2650 100644
+> > --- a/net/ipv4/icmp.c
+> > +++ b/net/ipv4/icmp.c
+> > @@ -92,6 +92,8 @@
+> >  #include <net/inet_common.h>
+> >  #include <net/ip_fib.h>
+> >  #include <net/l3mdev.h>
+> > +#define CREATE_TRACE_POINTS
+> > +#include <trace/events/icmp.h>
+> >
+> >  /*
+> >   *     Build xmit assembly blocks
+> > @@ -599,6 +601,8 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
+> >         struct net *net;
+> >         struct sock *sk;
+> >
+> > +       trace_icmp_send(skb_in, type, code);
+> 
+> I think you missed many sanity checks between lines 622 and 676
+Thank you for the reminder. The next step is to move the trace point to line 676.
+
+> Honestly, a kprobe BPF based solution would be less risky, and less
+> maintenance for us.
+emm, yeah, but tracepoints has advantages on its convienice, especially for those Embedded Linux which doesn't support EBPF.
 
