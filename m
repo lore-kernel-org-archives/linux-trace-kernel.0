@@ -1,104 +1,103 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58EE182C7;
-	Mon,  4 Mar 2024 08:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02C0224E4;
+	Mon,  4 Mar 2024 09:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709541116; cv=none; b=ANbHEuBw12Bjbin3ajpW82dUAeTQu79DBalNnOF2s0di+z9CviJIxuAboKToNURrTljG1QAD6mgyFBkfJVbMBdJUXGXTHlRrYFoFUyutWU1wQdd+/TNXOfH8Qneg6iwX5AFUf5zM/3sJgjYvVKHPeWcCWkZkmaHqg5Pb5NKCoOY=
+	t=1709544582; cv=none; b=MW29bMqdxvVChAz0CWe4TErDf95X0Fu/p/VAK8HNWTzcdBZ46A/ZsS9lnL3FTzA3fZWuP9mriEnhpELR7UaVYVOrjDntg3wgdjqeCmBXr6+vQAha4oJDoc5/UuH7b9JRaCzSve4aiY7Hqg6cz3222uZcoCo9c5UqjumL4qzVcyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709541116; c=relaxed/simple;
-	bh=ZOwa8Z7GGncP2Db0DiRMjZf/egFZkRQsVqMtf43WGvE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ELhXNtI4LMzhQ3bmSF7Mk0ydejISLie0Oi4+o0qzyLFDN1rNdtyMZPEYkzBh6lyJ+mxl//QEAKrPW0STLxEGiA3stUFJDdXF37GA5hBUhppELy16fGoXFY2i4bzPZCevbSFIaHT+SngPJqvk+ysIeouYNrdDh5ES8o8czzrdcMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cT14GLak; arc=none smtp.client-ip=209.85.218.47
+	s=arc-20240116; t=1709544582; c=relaxed/simple;
+	bh=mHbB/pz1Pc+uA5rdtv/xbI1HZb5FjofQTuaoijdpJYY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=W3qefTl0QdEbOowqNpgAJMPx42N4rnGnrGwaYFsGvuQOnzSU2k4ff4VO2ZkaqGbesvcjCdv7AS35CDbGDjXOMk374+bEY8LJSDxnrPBdlDIbmgH/BL8NTDoXaIULgqohma82JKWG70mvKXP2TVIKOHQ6e7fu9BbnhQqQLe3EXss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U2E0ApFS; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cT14GLak"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a44e3176120so161622066b.1;
-        Mon, 04 Mar 2024 00:31:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2E0ApFS"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1dcd6a3da83so30705675ad.3;
+        Mon, 04 Mar 2024 01:29:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709541113; x=1710145913; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZOwa8Z7GGncP2Db0DiRMjZf/egFZkRQsVqMtf43WGvE=;
-        b=cT14GLakVbo4gvPnB61623dYKC99vF5HqfFjUyA5nNaCM3/uKDaXfNmKSIvwzAEiZc
-         hx/4oSQ5RL/AWgQK9ijuJxEyE2yTIgQrPoZ+6nEdzWeItcZAdPDobVzjORucPCcpcCTk
-         69PNPw7JXuwirx9XSXT0qNoklmG1fzLgEHzWJxvkXrWONW65Wz2S3hfXIt7b8IfXmOeV
-         J9UYiKDhkx4qG545/kwY3Y0nZvnlVkfUEJMV4vCezbIk3myXhbmYQ8/RWHpQbGgX+5qG
-         FWdyQHfc2auieQHqrfyjvVbBUtuQ3CtMmWnZq2mmTwUo6rweJwsqOfpmGx9FkwHxjM1w
-         UE2A==
+        d=gmail.com; s=20230601; t=1709544580; x=1710149380; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GNTwhnnAejbLrc1xpvb+XtY4lUjoQ+7/z31LBeJUkPY=;
+        b=U2E0ApFSKZ4eGy9YHPS8vNJ6MV+aX8W+azx3qLTTP5p51sdxgdrqDWjZaOe1UWgTEG
+         B7YOE3fyOdBRlCqpFKeN4zexV03qakDVg/ew7St+SCaYBPA2aU7Vy0z4vZJIBVCQ1WUB
+         Q2abdHu4YlQFRg06lZFRdVDpFeluMvPSd7wWVhPg1roUrFPS60qPjerkBJ0Vepsndazg
+         5JhNkA2LzN8wN4C+bF0QzL384GgKhOYR98r/Ju2k//PycIXdWyuPuNkY1FLTdn7649ad
+         OnsxCi3Cr1Ly05iCy7Ebab9XQWwBw5nXl4kgkxLQNY5n6vS3mcacTd7WRi2bgC6krw2t
+         aeyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709541113; x=1710145913;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZOwa8Z7GGncP2Db0DiRMjZf/egFZkRQsVqMtf43WGvE=;
-        b=RDUxX0gmCsg2ByvbrgG4yHRzXhamsXLoSSAoyg4KhQDuVJd8ZOc46PJh92ecU5QXF2
-         3rXPginZhEnML2L81kYgQZoFLDMWjyoKVmNlkNjEnlkKqWicfMOuiuoCgcds+T2wQ6hT
-         3TeDs4BUEYqSrmPlq7WX3PRAgEdk+6gfdh3t+JLSAkJtupO4YxvOKKP2AKqrLpUe34Kd
-         nB0hSScOSY1yR9bcF06NwtQgNSwZIBG9a/xUruEkFy+n7soHRwojXbtDI/c8DUNLaBfn
-         0Ay6tbFeweiiEthKpw/75k1G3tcX8H8NkqZMbppwoAqv7WfsOLxTZ4Pp5rlroMXpIn6j
-         FkIw==
-X-Forwarded-Encrypted: i=1; AJvYcCW1zlqRx0BmLrfE1ZvO1gQVcgKIrjPQpn+80iARoBnvFRmxmJ76Swrd1/i78K7DZGj3QTw8bsyXwsnwEfexf6BWQGxWdOahfKYkD/RausEMS4AEHsSwBmCeaOob6qHjYM0sSpgWMwk4WFm6
-X-Gm-Message-State: AOJu0Ywt7O7KmbzgQX7QzKLSur8yO9Yy7MUQ0u3M9VyikgydSUMnzGFT
-	StMleaGsh9ifJ5whpQohSlIpFuedL72Fhoc3QppB08oyR9zyH5UvO2Grl85l9ILVOwUhTb6DTUh
-	wePRg0q1niT3ZPjg5CkVV+T1uoUQ=
-X-Google-Smtp-Source: AGHT+IGarN2zv2XSX/B+JgY/zICtoDmmXH4CWrWNILQD1p+GfoRNpqa5lQjZCpLQ42QpBZK0HrIIScGEJFh1CcLq0eU=
-X-Received: by 2002:a17:906:c446:b0:a3d:7532:15ad with SMTP id
- ck6-20020a170906c44600b00a3d753215admr5626408ejb.39.1709541113064; Mon, 04
- Mar 2024 00:31:53 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709544580; x=1710149380;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GNTwhnnAejbLrc1xpvb+XtY4lUjoQ+7/z31LBeJUkPY=;
+        b=XfHvEjnGhhrtsN7yA4w9hGKbtbx6athlizcI8JwbUHfWSTxKndp+HuyJ3wLIf2izYp
+         EAbSOFdT/2lZahyjaLNXOcuObxex/4twLaEhrHUkdBEHQ/h/d4RrRHruoQwVDGMTLnUi
+         TdCP6cBgzKTndxppa1XpkyX64xz39Gw/lwdq9MyTomiUic+WFCeFs+k2ZkFTW2UHjQp3
+         vhQqVDmmONGIWYAQhqS4a4+0db/7Wcx9+84K1u21pWfWjv9C2nkPPq/BgYaQvNVDPHqq
+         yxvJVOPmiuyWQXAe4yypYxdQYjBqNkC1JCT5mSlncAXGLLnYKrnsQy1v0jcaKdYsUNiQ
+         Y29A==
+X-Forwarded-Encrypted: i=1; AJvYcCX6y41MbUjNJflVF9vQ9hPDIc6RW4Eg7e0WOHZr33IErSfnA6uItRnrF/RGMQvRIiTfdVlqDYidzU8HPsbUJUZkLoSw1bDLEcL4OoxFzMBmyUhv
+X-Gm-Message-State: AOJu0YxjiQqlCt9TwLyuHcdxxIg3YSYz4rmobviq2AbgQVcFxhHfFqbT
+	E9k6lPyZFchnh/lED8Mq7Fy3ft0DXqa6mcv/hWmiUKOlrcuixNQB
+X-Google-Smtp-Source: AGHT+IFlt47HdDF1BFH7UVxa3b3BCJK95IjRKsQTk0huYIvksQRHiuIYBvc0KiC4lx8cU9NmOX4oCg==
+X-Received: by 2002:a17:902:cec1:b0:1dc:3517:1486 with SMTP id d1-20020a170902cec100b001dc35171486mr11392864plg.49.1709544580230;
+        Mon, 04 Mar 2024 01:29:40 -0800 (PST)
+Received: from KERNELXING-MB0.tencent.com ([43.132.141.24])
+        by smtp.gmail.com with ESMTPSA id cp12-20020a170902e78c00b001dcfaab3457sm4095507plb.104.2024.03.04.01.29.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 01:29:39 -0800 (PST)
+From: Jason Xing <kerneljasonxing@gmail.com>
+To: edumazet@google.com,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	rostedt@goodmis.org,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	kerneljasonxing@gmail.com,
+	Jason Xing <kernelxing@tencent.com>
+Subject: [PATCH net-next v2 0/2] tcp: add two missing addresses when using trace
+Date: Mon,  4 Mar 2024 17:29:32 +0800
+Message-Id: <20240304092934.76698-1-kerneljasonxing@gmail.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240229170956.87290-1-kerneljasonxing@gmail.com>
- <20240229170956.87290-2-kerneljasonxing@gmail.com> <CANn89iJcScraKAUk1GzZFoOO20RtC9iXpiJ4LSOWT5RUAC_QQA@mail.gmail.com>
-In-Reply-To: <CANn89iJcScraKAUk1GzZFoOO20RtC9iXpiJ4LSOWT5RUAC_QQA@mail.gmail.com>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Mon, 4 Mar 2024 16:31:16 +0800
-Message-ID: <CAL+tcoCuyW+f2C_U0sgN=RmtjcbbaUVqpO--WZTzs_rsVWdGKw@mail.gmail.com>
-Subject: Re: [PATCH net-next 1/2] tcp: add tracing of skb/skaddr in
- tcp_event_sk_skb class
-To: Eric Dumazet <edumazet@google.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, rostedt@goodmis.org, 
-	netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Jason Xing <kernelxing@tencent.com>, Alexei Starovoitov <ast@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 4, 2024 at 4:24=E2=80=AFPM Eric Dumazet <edumazet@google.com> w=
-rote:
->
-> On Thu, Feb 29, 2024 at 6:10=E2=80=AFPM Jason Xing <kerneljasonxing@gmail=
-.com> wrote:
-> >
-> > From: Jason Xing <kernelxing@tencent.com>
-> >
-> > Prio to this patch, the trace function doesn't print addresses
-> > which might be forgotten. As we can see, it already fetches
-> > those, use it directly and it will print like below:
-> >
-> > ...tcp_retransmit_skb: skbaddr=3DXXX skaddr=3DXXX family=3DAF_INET...
->
-> It was not forgotten, but a recommendation from Alexei
->
-> https://yhbt.net/lore/all/20171010173821.6djxyvrggvaivqec@ast-mbp.dhcp.th=
-efacebook.com/
+From: Jason Xing <kernelxing@tencent.com>
 
-Thanks, Eric.
+When I reviewed other people's patch [1], I noticed that similar things
+also happen in tcp_event_skb class and tcp_event_sk_skb class. They
+don't print those two addrs of skb/sk which already exist.
 
-Oh, good to see the old threads. I have to change the description. The
-other reason why I chose to add address messages is we do have some
-useful information when using trace ss another thread[1] does: it also
-ships the trace with address printing.
+In this patch, I just do as other trace functions do, like
+trace_net_dev_start_xmit(), to know the exact flow or skb we would like
+to know in case some systems doesn't support BPF programs well or we
+have to use /sys/kernel/debug/tracing only for some reasons.
 
-[1]: https://lore.kernel.org/netdev/20240304034632.GA21357@didi-ThinkCentre=
--M920t-N000/
+[1]
+Link: https://lore.kernel.org/netdev/CAL+tcoAhvFhXdr1WQU8mv_6ZX5nOoNpbOLAB6=C+DB-qXQ11Ew@mail.gmail.com/
 
-Thanks,
-Jason
+v2
+Link: https://lore.kernel.org/netdev/CANn89iJcScraKAUk1GzZFoOO20RtC9iXpiJ4LSOWT5RUAC_QQA@mail.gmail.com/
+1. change the description.
+
+Jason Xing (2):
+  tcp: add tracing of skb/skaddr in tcp_event_sk_skb class
+  tcp: add tracing of skbaddr in tcp_event_skb class
+
+ include/trace/events/tcp.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+-- 
+2.37.3
+
