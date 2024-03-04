@@ -1,91 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA597BB0F;
-	Mon,  4 Mar 2024 22:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D8B1E4A2;
+	Mon,  4 Mar 2024 23:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709592114; cv=none; b=m+FatyIrmZ9GYAXAx6wFruMP/jeAUXHUv0FbnixqTpiC2BMBx4WWTM21nqh5MZM3MAp1V5JZ6dKfm/j04LL7GUg4McdCPjgjheoFVXBUM6tAFEBIge2f3DXgHxQXN+ohnVCO28IHtnMIGpRv7YN1Iv5oO6eTTcU527qZ18VX5Bk=
+	t=1709594628; cv=none; b=sehKkGC+GJmECeU56ZGtXKY7XL8BG/hV4hiYDYyQkVeggNYJ8akuESQYAchhuJx02Tipj0eMTLU8X5aefYgzHfgj4Zypuh/iBkbd1juxCf1r3w82zgQVTjEQvSQODX3iB79ZnEs3rvcn8N0vRvYHBUFlUAQRfHIBS69EBrPhnsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709592114; c=relaxed/simple;
-	bh=N86BZ3vurduX6ZYiqZPgoddJQ4lkNaFSYKU9x17lROo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=pQqzWbV4PpFbkArzaY5Z6Av/qx7Kzb6nTZq8zFmWQMdprBOywnKRU0kyBpw6xbfthbMUcHrffBd2ROAbAbrB+ZtxZ2owq+RRaASDily3QnrEcJp5I69fp9wIuw16qEDPS0S19g4/hrPkM5QaFnlFg8gKnB6OgSv6lG/+3tGQWTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2999CC433F1;
-	Mon,  4 Mar 2024 22:41:53 +0000 (UTC)
-Date: Mon, 4 Mar 2024 17:43:41 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, Sachin Sant <sachinp@linux.ibm.com>
-Subject: [PATCH] tracing: Remove precision vsnprintf() check from print
- event
-Message-ID: <20240304174341.2a561d9f@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1709594628; c=relaxed/simple;
+	bh=HEq5kgUP1ZPh6+iesZI1t0ZbH0sGN6VXjzGiLV0x70g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MbhMGMGmbAfARnsnmyCHObqOnEVAf3YlWw9cB5vMDtBWRhvFCt9I7g2OPvzd6xjZhIyF8SGUQbsuEX7RddI0oFazSgVL+2k0j0kXaCM/A5GJQTbzNat8V5TorfcKn+apUNJb7G/NVV28V9ViY/U6/QdjzqoPG29LcrMOIUH949Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=Lq7A1dKK; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Lq7A1dKK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1709594617;
+	bh=HEq5kgUP1ZPh6+iesZI1t0ZbH0sGN6VXjzGiLV0x70g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Lq7A1dKKdKHYGgVerwIPoaMP/oem/Sw4zYJEeh3Uh0vap4ivUuxdZdZ5MeZVpqtPY
+	 wzoZ5eF4Idl6zq4reEmNAnIlgTlle9lqOoHFdlGds7COD/U7SVktHdbzXjucH4FhTf
+	 ImtK22+NAE9igHG64k7rlYVaih1s2h8qU/iOQTBbD2F0fKUAOCWhOJwlzvf1ZwGYw4
+	 Tj0NBrVVr6sAg7uvFTAixQ78RTim+yHupOvNfgbuHWzsMOBLnOcNJZeG6TmWqvLd2x
+	 rw+dBL7d9aJ/dwTyhFBUX2mw5hbKe8LZGJ4dMK6FIIdIMu3zS8zki4/gLHd6Xp5kZu
+	 BFfMWQFryfsWQ==
+Received: from [IPV6:2606:6d00:100:4000:cacb:9855:de1f:ded2] (unknown [IPv6:2606:6d00:100:4000:cacb:9855:de1f:ded2])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TpZWY0lJBzfcS;
+	Mon,  4 Mar 2024 18:23:37 -0500 (EST)
+Message-ID: <b3803989-8465-4656-8ca3-678a92f9a140@efficios.com>
+Date: Mon, 4 Mar 2024 18:23:41 -0500
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tracing: Remove precision vsnprintf() check from print
+ event
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Sachin Sant <sachinp@linux.ibm.com>
+References: <20240304174341.2a561d9f@gandalf.local.home>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+In-Reply-To: <20240304174341.2a561d9f@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On 2024-03-04 17:43, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> This reverts 60be76eeabb3d ("tracing: Add size check when printing
+> trace_marker output"). The only reason the precision check was added
+> was because of a bug that miscalculated the write size of the string into
+> the ring buffer and it truncated it removing the terminating nul byte. On
+> reading the trace it crashed the kernel. But this was due to the bug in
+> the code that happened during development and should never happen in
+> practice. If anything, the precision can hide bugs where the string in the
+> ring buffer isn't nul terminated and it will not be checked.
+> 
+> Link: https://lore.kernel.org/all/C7E7AF1A-D30F-4D18-B8E5-AF1EF58004F5@linux.ibm.com/
+> Link: https://lore.kernel.org/linux-trace-kernel/20240227125706.04279ac2@gandalf.local.home
+> Link: https://lore.kernel.org/all/20240302111244.3a1674be@gandalf.local.home/
+> 
+> Reported-by: Sachin Sant <sachinp@linux.ibm.com>
+> Fixes: 60be76eeabb3d ("tracing: Add size check when printing trace_marker output")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-This reverts 60be76eeabb3d ("tracing: Add size check when printing
-trace_marker output"). The only reason the precision check was added
-was because of a bug that miscalculated the write size of the string into
-the ring buffer and it truncated it removing the terminating nul byte. On
-reading the trace it crashed the kernel. But this was due to the bug in
-the code that happened during development and should never happen in
-practice. If anything, the precision can hide bugs where the string in the
-ring buffer isn't nul terminated and it will not be checked.
+This is a step in the right direction IMHO.
 
-Link: https://lore.kernel.org/all/C7E7AF1A-D30F-4D18-B8E5-AF1EF58004F5@linux.ibm.com/
-Link: https://lore.kernel.org/linux-trace-kernel/20240227125706.04279ac2@gandalf.local.home
-Link: https://lore.kernel.org/all/20240302111244.3a1674be@gandalf.local.home/
+Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-Reported-by: Sachin Sant <sachinp@linux.ibm.com>
-Fixes: 60be76eeabb3d ("tracing: Add size check when printing trace_marker output")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_output.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Just out of curiosity, is there anything to prevent trace_marker from
+writing a huge string into the ring buffer in the first place ? Is this
+limit implicit and based on the page size of the architecture or is it
+a known fixed limit ? (e.g. 4kB strings).
 
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index 3e7fa44dc2b2..d8b302d01083 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -1587,12 +1587,11 @@ static enum print_line_t trace_print_print(struct trace_iterator *iter,
- {
- 	struct print_entry *field;
- 	struct trace_seq *s = &iter->seq;
--	int max = iter->ent_size - offsetof(struct print_entry, buf);
- 
- 	trace_assign_type(field, iter->ent);
- 
- 	seq_print_ip_sym(s, field->ip, flags);
--	trace_seq_printf(s, ": %.*s", max, field->buf);
-+	trace_seq_printf(s, ": %s", field->buf);
- 
- 	return trace_handle_return(s);
- }
-@@ -1601,11 +1600,10 @@ static enum print_line_t trace_print_raw(struct trace_iterator *iter, int flags,
- 					 struct trace_event *event)
- {
- 	struct print_entry *field;
--	int max = iter->ent_size - offsetof(struct print_entry, buf);
- 
- 	trace_assign_type(field, iter->ent);
- 
--	trace_seq_printf(&iter->seq, "# %lx %.*s", field->ip, max, field->buf);
-+	trace_seq_printf(&iter->seq, "# %lx %s", field->ip, field->buf);
- 
- 	return trace_handle_return(&iter->seq);
- }
+It appears to currently be limited by
+
+#define TRACE_SEQ_BUFFER_SIZE   (PAGE_SIZE * 2 - \
+         (sizeof(struct seq_buf) + sizeof(size_t) + sizeof(int)))
+
+checked within tracing_mark_write().
+
+I would have hoped for a simpler limit (e.g. 4kB) consistent across
+architectures. But that would belong to a separate change.
+
+Thanks,
+
+Mathieu
+
 -- 
-2.43.0
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
 
