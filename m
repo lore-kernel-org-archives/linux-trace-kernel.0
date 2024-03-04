@@ -1,82 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67AD05A0E6;
-	Sun,  3 Mar 2024 15:48:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5FC22F35;
+	Mon,  4 Mar 2024 03:40:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709480907; cv=none; b=hOAnwTvFfRjyIWDmvorp7NHlPY4EaVWqR0/FKjD/aDQvTeN45Mnl7yN6E0Xj5nTP8lZCNtKOGHgk7H1IWZi5Yo1CiOXo1UOAph0cGVN8FqpUZ2kY+Txy/czrc8SCRtizWZGV9PGbj15H2mU0FcTnWMZo6T5ZTrsAwZn8Ss/CQ3A=
+	t=1709523601; cv=none; b=uuIC5ZAvpG5we8OqiAlWq9usZvlCD5Cdb7HZCLWziXmqB5G4hADjJaLOhCf9iNgyaV7FQVf3IZWla8+9gs0Xq8RVLnhEk5S1KjNugeHmu2sWVV/stw3s5CVzkZcVlq4UDKeZuyZVnCt1qZSSTq4Pm0BUbcRaQfxIy+gFhYfodAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709480907; c=relaxed/simple;
-	bh=nLO2exXHSWbViJf+T8mA8tkfEsJX/bkWxp3QzPBeDG4=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=EfLnNn0th3vJ+qGkij0UmUVkcYxCV5iiCcWkWeNqn3bmJauYF5sEaoPmbyhDijEOWvymGJ1WvW7ryDLoiJvSSGp4lpoktWpFuqsOtBFdTsWbyKo6ZSwpQ3kaRg0gL/NCi+cageywUqGuwA7lSvAvuFX1V431LrEa0+nA7xo5Aus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QlgxNmwD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709523601; c=relaxed/simple;
+	bh=PSql8T+SB1nHve+XLIxaaalYKdBXrVJvU38xsLLMMdQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=W5L1KsMUV5p8LEW4fBWykLdN1Ff6W3OzohBPXRXnPUpmXShMi1Wm/Cv9KHFMinpSeuAY9FUWMTC0NGiA5Qh3CaZCdVTvKynjOtF/0hoOYlgzEdYiVgTN5iIifnqI17Ra3qqLqwijEYP1SU3RY/UoUe+CeAPu/iIwFpVqo69dPmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oh9wgkeq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QlgxNmwD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F45FC433C7;
-	Sun,  3 Mar 2024 15:48:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oh9wgkeq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70044C433C7;
+	Mon,  4 Mar 2024 03:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709480907;
-	bh=nLO2exXHSWbViJf+T8mA8tkfEsJX/bkWxp3QzPBeDG4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QlgxNmwDshBrhp2F9+AhsjUWAUrFy7uWOcAl+FSVqvWk/ArWfavTRR3G+eHGs85cy
-	 oURhlI6P5k1qroMHSslyfMizvCjuLoZZpfV+Zei1rgBEhQVLzZJ3QcZRS9ZuM/WGqm
-	 MNT85PZsrmanPWABjNU29Dhr9/biGJxvq1q95AhJEuzfFy1Ad2fGNZPoJFwipnnSiu
-	 9MtMlIulKiTgbm4aRa/IlQqOyhIb/cFshnGTFx+/R3x6M9++Z7OzTmuNmRky8yGHlu
-	 0MT7QXMb/4MVarLqjQCeBcnePh1oUQsaoFOfcq2kv0jFp/n1H32DdlzZB6KszIZhK/
-	 VEt213AyyN+dA==
-Date: Mon, 4 Mar 2024 00:48:23 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 3/7] tracing/probes: cleanup: Set
- trace_probe::nr_args at trace_probe_init
-Message-Id: <20240304004823.5c475262a5b0117a4a60be89@kernel.org>
-In-Reply-To: <20240229223753.0e6dce81@gandalf.local.home>
-References: <170891987362.609861.6767830614537418260.stgit@devnote2>
-	<170891990355.609861.2805086066595778818.stgit@devnote2>
-	<20240229223753.0e6dce81@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1709523601;
+	bh=PSql8T+SB1nHve+XLIxaaalYKdBXrVJvU38xsLLMMdQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Oh9wgkeqk/wDfQFQkSH8NnelRNo+gVDZoebrTJzmoK+9xli/KBi2D3cLwLdVWl0Cy
+	 +61oWLw5X1s5FgAVT0Y9jtvPu6bEljxwDCEDBVEvxM2wpEhaZ/UgQkoDJ7gxZKAnrB
+	 DEMP2I8FwCX/iFAajaMFQHEshpbjXboPsGprOJj8sU+MITr9yqjStN+UjGP+KM/09a
+	 YYWZYzZ5LgMAuQlHUo10UAc/+lpr4OUu8S3HUm8RWwYmysDD5Zje/kSI67MsU1rYLu
+	 g9pORQ9xEeedtgTn6pMwremyJO2Ua0a2rsZTkhshhiOpIetZScpHpCe7REFcgFOdx/
+	 MeRquWoyiuNQQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Jiri Olsa <jolsa@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	mhiramat@kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v3 0/8] tracing/probes: Support function parameter access from return probe
+Date: Mon,  4 Mar 2024 12:39:56 +0900
+Message-Id: <170952359657.229804.14867636035660590574.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 29 Feb 2024 22:37:53 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi,
 
-> On Mon, 26 Feb 2024 12:58:23 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Instead of incrementing the trace_probe::nr_args, init it at trace_probe_init().
-> > This is a cleanup, so the behavior is not changed.
-> 
-> The change is fine, but the change log does not say why this was done.
+Here is version 3 series of patches to support accessing function entry data
+from function *return* probes (including kretprobe and fprobe-exit event).
+The previous version is here;
 
-This change is to get the number of trace_probe arguments while parsing
-the argument strings.
+https://lore.kernel.org/all/170891987362.609861.6767830614537418260.stgit@devnote2/
+
+In this version, [1/8] is a bugfix patch (but note that this is already pushed to
+probes-fixes-v6.8-rc5, just for reference), updated [4/8] changelog and build error,
+fixes selftests error [6/8], update document[8/8] and added Steve's reviewed-by.
+
+
+This allows us to access the results of some functions, which returns the
+error code and its results are passed via function parameter, such as an
+structure-initialization function.
+
+For example, vfs_open() will link the file structure to the inode and update
+mode. Thus we can trace that changes.
+
+ # echo 'f vfs_open mode=file->f_mode:x32 inode=file->f_inode:x64' >> dynamic_events
+ # echo 'f vfs_open%return mode=file->f_mode:x32 inode=file->f_inode:x64' >> dynamic_events 
+ # echo 1 > events/fprobes/enable 
+ # cat trace
+              sh-131     [006] ...1.  1945.714346: vfs_open__entry: (vfs_open+0x4/0x40) mode=0x2 inode=0x0
+              sh-131     [006] ...1.  1945.714358: vfs_open__exit: (do_open+0x274/0x3d0 <- vfs_open) mode=0x4d801e inode=0xffff888008470168
+             cat-143     [007] ...1.  1945.717949: vfs_open__entry: (vfs_open+0x4/0x40) mode=0x1 inode=0x0
+             cat-143     [007] ...1.  1945.717956: vfs_open__exit: (do_open+0x274/0x3d0 <- vfs_open) mode=0x4a801d inode=0xffff888005f78d28
+             cat-143     [007] ...1.  1945.720616: vfs_open__entry: (vfs_open+0x4/0x40) mode=0x1 inode=0x0
+             cat-143     [007] ...1.  1945.728263: vfs_open__exit: (do_open+0x274/0x3d0 <- vfs_open) mode=0xa800d inode=0xffff888004ada8d8
+
+So as you can see those fields are initialized at exit.
+
+This series is based on v6.8-rc5 kernel or you can checkout from
+
+https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=topic/entry-data
 
 Thank you,
 
-> 
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> 
-> -- Steve
-> 
-> 
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
+---
+
+Masami Hiramatsu (Google) (8):
+      fprobe: Fix to allocate entry_data_size buffer with rethook instances
+      tracing/fprobe-event: cleanup: Fix a wrong comment in fprobe event
+      tracing/probes: Cleanup probe argument parser
+      tracing/probes: cleanup: Set trace_probe::nr_args at trace_probe_init
+      tracing: Remove redundant #else block for BTF args from README
+      tracing/probes: Support $argN in return probe (kprobe and fprobe)
+      selftests/ftrace: Add test cases for entry args at function exit
+      Documentation: tracing: Add entry argument access at function exit
 
 
--- 
+ Documentation/trace/fprobetrace.rst                |   31 +
+ Documentation/trace/kprobetrace.rst                |    9 
+ kernel/trace/fprobe.c                              |   14 -
+ kernel/trace/trace.c                               |    5 
+ kernel/trace/trace_eprobe.c                        |    8 
+ kernel/trace/trace_fprobe.c                        |   59 ++-
+ kernel/trace/trace_kprobe.c                        |   58 ++-
+ kernel/trace/trace_probe.c                         |  417 ++++++++++++++------
+ kernel/trace/trace_probe.h                         |   30 +
+ kernel/trace/trace_probe_tmpl.h                    |   10 
+ kernel/trace/trace_uprobe.c                        |   14 -
+ .../ftrace/test.d/dynevent/fprobe_entry_arg.tc     |   18 +
+ .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |    4 
+ .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |    2 
+ .../ftrace/test.d/kprobe/kretprobe_entry_arg.tc    |   18 +
+ 15 files changed, 521 insertions(+), 176 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/fprobe_entry_arg.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kretprobe_entry_arg.tc
+
+--
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
