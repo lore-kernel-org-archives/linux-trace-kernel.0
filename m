@@ -1,97 +1,87 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B6717583
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  4 Mar 2024 08:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6BC171C4
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  4 Mar 2024 08:24:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709540526; cv=none; b=pXVvUAcFEED8/2RICno5O92iUBaodZE2j/iVF8wqPInd5anelKdbZKPr7MqDz+uLSyAMsX2KHX/qMswEtTT1RjnQJ8z0VUmDci06YdXbYks/MavNXkTdC1VloDNRXtVqKV9LLVKw5r6X/Z2k09LditBSMJk8BEzuJ3i0QvW66EI=
+	t=1709540666; cv=none; b=aHgRsmTmWo5nKYyf2lib7ngJdzsvcWXO9+P566yDX9iwUAchU7il6Bc6SsBBNhXqsE2SPi8hKB6GOqhHLmz64aAesdLn2YsjfOnErP420bUVhYyxwB2U+12OqfOvsA5pAwMK34bd5/caCfNadXktqNQge29iV70IcPehBPu8CJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709540526; c=relaxed/simple;
-	bh=EoyygbLnI6vV+Uw7w1G/Xr29iq0XsQRIh4eFJ1Yd/oE=;
+	s=arc-20240116; t=1709540666; c=relaxed/simple;
+	bh=xuxYP6DP8Cdr/UAZq7ZNL5tg247ofyZcPoyR+xDjmfs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IqUTMJX5uXGsDFxhjJHJS3MBqnT0VgYn4rCPACptXHEBeJGxZe/8/SGoocZmkdIumeQoadt8jjUc0ADNrVqj+e5lv8H3Hc/E3wjtArMCVSZbvRwv8+rHDTWhIIdwcmGtXU0j50LUAEOKn4+MlsPJb55C+ZvKh3d+usVXOBfO2uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y/VsbF9A; arc=none smtp.client-ip=209.85.208.43
+	 To:Cc:Content-Type; b=lO2XRlQtNZE8uxQh5SbNTRIxEoTTuRYAOw4JyElmTC798jEWSabXpOpXmEUJXkzyJgrpAv6gYjNqjscEBErj520eROSKWv+UDCJSVi2TIY0zqp9v27X1uQ1NewA5HS/rM7BlMb95KbMP3CEJyYd4MBUqdyZLT0u3UXbAhqAFbIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OnufAxEZ; arc=none smtp.client-ip=209.85.208.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y/VsbF9A"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56693f0d235so19098a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 04 Mar 2024 00:22:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OnufAxEZ"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-56693f0d235so19119a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 04 Mar 2024 00:24:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709540523; x=1710145323; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1709540663; x=1710145463; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EoyygbLnI6vV+Uw7w1G/Xr29iq0XsQRIh4eFJ1Yd/oE=;
-        b=Y/VsbF9A20ihAkwV8YKT3c/nx5nd59ScEMev+9d154lp71rI4A8qDgt9z3YNmPTnzO
-         o/bIl3trMlhXfFjKIbM2F7Clrb3qenuWSMTsG0SrSlfY6n97zqfdz7D4wHLTXP4fvdev
-         L9zBI3epAjzJXtAuw1hJEOSonunXv+mxPinRiNK+Ce5aNsYmyVuPyuPJ4M6Vu4Co8b6E
-         PW28UYTXrMo03YeXn4hYuDaO5TVSub+EkWAaUBBWurX5omeSjrGjlSp6u3vQYgHA3DCn
-         7DXPjqVXClE4RePbvZX/ekm7BXUcjUYFX4XRMHcqvN5Xce+Tna1S38PUU+4BnU9oKgTy
-         rSfg==
+        bh=xuxYP6DP8Cdr/UAZq7ZNL5tg247ofyZcPoyR+xDjmfs=;
+        b=OnufAxEZqbM7M6QuuWBZYPj626AEXak7ODTyQDRFI9npS+NdxQH72pza8qK/fw32bb
+         3Ymj+yHJkJfLnRlfKKm2N5YHgLf+Aj2VpYqhNZKfT0kJk8sKLLwVWGgZRYwCzOVFl+jw
+         mDACCUgekNTyw2RrxWpr6J3czcEt3ZdMEZ6n/MmU57lPldKoHmnkql4DYgxMll/8ncl0
+         uFdXj5ZWsC5fCm9F4CSd7TKlJeF4tJg4zuiylzOk2JdcO8NoggtP6vMVlohv7/7DbaMw
+         Zn95Hd4e+Zg3La09EyAP4II/9K3apQexqF7C/bvFUkwL9YengIf+J/CDMjsnOZCVVLCG
+         7iUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709540523; x=1710145323;
+        d=1e100.net; s=20230601; t=1709540663; x=1710145463;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EoyygbLnI6vV+Uw7w1G/Xr29iq0XsQRIh4eFJ1Yd/oE=;
-        b=E37xUlLVjPXAqms+LAWxTQ/eXnwts3DHTRg0l+c4+6nvPHWDPoRLbUzI1zXor+SFAh
-         lASxgeBGYFw/dUa+t5M9AwmcEMfInwJVmaQmkfeG8SpinQsswGdVEeigN/hMYsiOUJK9
-         O9DXpl5HTzjZZnIEQh9Ebhtf9Fa8p8JPpRtY1UVRL/3nLVAYEKknb0pzmBurZ2SjTOns
-         gokFeDqIAnxB+6z3TAWrjVkE12wA0doLY27O457OwCgIhym1Ys2OXQOb2XQRFk2JtGzB
-         IpK7FdqZJ60yNDUe3Huh/6T6u0Fk28U/YnyXSmtT/i9cZ9raIzKrU9tkHS/V8Oz+9Vbu
-         89Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCUGRjC33wohuOekWw3dpW7nkCP5YnCEwcxdBY9fwYbMZB2QoD1juqLtYO3y1+H8+FW6vyNYKJHM0/gHa0PRrRXN4ckq+F02vMzzwh4UWRelF1Cg
-X-Gm-Message-State: AOJu0YyxFJ7svPKAEt+1LdZtA2f554DG4MX24CCqeV8d/UIGb7V3tzED
-	E7InCR2/ZYtiIphpt+Nxh3aJjhYIoGRm4a7vZ8ln5ugffkSprYnWR8vjBDo5WDGWkzsvU2JnWg7
-	Jt5dckCYGBVm96CHW/jCKRTI8sc8OQdbXAbTW
-X-Google-Smtp-Source: AGHT+IHIYRhnnjPqqmA79sgEwxplLI7CJumeOF9au9GyycW28mXDL31rveCzHd+JVDxCrDIYk4Vm2YGD+UM4CRz+Dh8=
-X-Received: by 2002:a05:6402:291:b0:566:b5f5:48cc with SMTP id
- l17-20020a056402029100b00566b5f548ccmr295449edv.5.1709540523254; Mon, 04 Mar
- 2024 00:22:03 -0800 (PST)
+        bh=xuxYP6DP8Cdr/UAZq7ZNL5tg247ofyZcPoyR+xDjmfs=;
+        b=xUhy6+W/16mzwOVydvKFPWrWYAVqGT2PXra09gfgMrcwFAo+vaFHzLmDsfjOqRuJKI
+         brNUyh8uZAc/SkDiKjSTmJ9zwURfQ9wnwbOX+zNcnpiw2DJyP6b/o+oXlpBjdQ39U5LZ
+         SqvMwh81LN4KtwKRndJL99jkLxPOJCxKOVxqj0s7lNyWPSS+TIRv4cFuM74N2AWEAZRE
+         oao1xzR2R1PGNBXgusYMqmmnam3D39loou8n3udppaBsP92ENtVtBTlfBam8eSPgPkRj
+         GwqjCw2ACGKUVt8O8l1vnYtKFBgwQXsxbdcd1hPU1MouzvCycl9qKnCpZQqVky+am7pv
+         Ihpw==
+X-Forwarded-Encrypted: i=1; AJvYcCVpd8s4ve1ED3O16ZyIQAIEyvbAWuLScXUsP4WWzPGmhND3Q4XRrykW32WitDsOw+bCUi7+JynkndMyfaawANTH+uCN5pNLAIXOJsag4+wKat77
+X-Gm-Message-State: AOJu0YzQIrdBfQc6ffw8ud44ff8E11oJPEPBxg/S23wYlU5JSP9VJ1oe
+	x9aQFSygl0HeAcBHvadwzLhggJr6qesp21FzZs/FSvieRpYxLKauvco2fgrn941FM9MpRQX2Ksf
+	FG3YR+vHYObbLWMpqrxeuePsIQd99PbtLchL4XuxLGOvfaCqFhkOz
+X-Google-Smtp-Source: AGHT+IGsrm+exERQpnzcTrgZMnftf2s2OAnI9eMhtFaLJa+VkZE16xQePWCjjedaR9AnUu1ThJ2DT7qdZrjK+Zcvkx0=
+X-Received: by 2002:a50:cb8c:0:b0:566:306:22b7 with SMTP id
+ k12-20020a50cb8c000000b00566030622b7mr289225edi.1.1709540662841; Mon, 04 Mar
+ 2024 00:24:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240229170956.87290-1-kerneljasonxing@gmail.com> <CAL+tcoBJy4a_wBQbwmvWZWZP7mwaby3xHy+45x-PTEbHsGAH6A@mail.gmail.com>
-In-Reply-To: <CAL+tcoBJy4a_wBQbwmvWZWZP7mwaby3xHy+45x-PTEbHsGAH6A@mail.gmail.com>
+References: <20240229170956.87290-1-kerneljasonxing@gmail.com> <20240229170956.87290-2-kerneljasonxing@gmail.com>
+In-Reply-To: <20240229170956.87290-2-kerneljasonxing@gmail.com>
 From: Eric Dumazet <edumazet@google.com>
-Date: Mon, 4 Mar 2024 09:21:51 +0100
-Message-ID: <CANn89iJPZ-B5yQeNbgxeW94OSL1XTacLgfbJTu8janT8qjWSvQ@mail.gmail.com>
-Subject: Re: [PATCH net-next 0/2] add two missing addresses when using trace
-To: Jason Xing <kerneljasonxing@gmail.com>, Alexei Starovoitov <ast@kernel.org>
+Date: Mon, 4 Mar 2024 09:24:11 +0100
+Message-ID: <CANn89iJcScraKAUk1GzZFoOO20RtC9iXpiJ4LSOWT5RUAC_QQA@mail.gmail.com>
+Subject: Re: [PATCH net-next 1/2] tcp: add tracing of skb/skaddr in
+ tcp_event_sk_skb class
+To: Jason Xing <kerneljasonxing@gmail.com>
 Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, rostedt@goodmis.org, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
 	netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Jason Xing <kernelxing@tencent.com>
+	Jason Xing <kernelxing@tencent.com>, Alexei Starovoitov <ast@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 4, 2024 at 8:01=E2=80=AFAM Jason Xing <kerneljasonxing@gmail.co=
-m> wrote:
+On Thu, Feb 29, 2024 at 6:10=E2=80=AFPM Jason Xing <kerneljasonxing@gmail.c=
+om> wrote:
 >
-> On Fri, Mar 1, 2024 at 1:10=E2=80=AFAM Jason Xing <kerneljasonxing@gmail.=
-com> wrote:
-> >
-> > From: Jason Xing <kernelxing@tencent.com>
-> >
-> > When I reviewed other people's patch [1], I noticed that similar thing
-> > also happens in tcp_event_skb class and tcp_event_sk_skb class. They
-> > don't print those two addrs of skb/sk which already exist.
-> >
-> > They are probably forgotten by the original authors, so this time I
-> > finish the work. Also, adding more trace about the socket/skb addr can
-> > help us sometime even though the chance is minor.
-> >
-> > I don't consider it is a bug, thus I chose to target net-next tree.
+> From: Jason Xing <kernelxing@tencent.com>
 >
-> Gentle ping...No rush. Just in case this simple patchset was lost for
-> some reason.
+> Prio to this patch, the trace function doesn't print addresses
+> which might be forgotten. As we can see, it already fetches
+> those, use it directly and it will print like below:
+>
+> ...tcp_retransmit_skb: skbaddr=3DXXX skaddr=3DXXX family=3DAF_INET...
 
-This was a conscious choice I think.
+It was not forgotten, but a recommendation from Alexei
 
 https://yhbt.net/lore/all/20171010173821.6djxyvrggvaivqec@ast-mbp.dhcp.thef=
 acebook.com/
