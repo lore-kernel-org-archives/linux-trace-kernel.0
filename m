@@ -1,80 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AAA14AEF9;
-	Mon,  4 Mar 2024 20:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF0C7AE71
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  4 Mar 2024 22:40:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709583853; cv=none; b=Y29Y2XPLEYlSUaCJdQ13hzTtBMfXbmfv292L7V4A0JSDrwh6siJ8HUDbQ3Hibc50JZHarqRU8UwBoiQ5DwvFWoL4sGmgmfwesg1Ycgh2LuIuEdMWAy/oXx/pdjSqaKyPchWTUe7RaU2XsEkXwG9jn9rOb1aElDVobHedN7hRlEs=
+	t=1709592056; cv=none; b=JJLiMH3BoRNMeHbqhTRh5Lpx6aL5gII66UT00YC6ZyGl0NPCO3VAz485ZbqeK3zO7xQPgAFIXVIIrZusYOkFrlh0gArGsXPkZEoX0Bui8IPArAiJr57irthiIsfvOJ8tdIADKbSvEsw5cXEGsBhavWPPL6zIPsKHEjRZ6YSX+zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709583853; c=relaxed/simple;
-	bh=uFdMSM3qZM+dt1Bib9NpBh7aRqMQlZ7L+ConpzhZ4zI=;
+	s=arc-20240116; t=1709592056; c=relaxed/simple;
+	bh=5XXHkM40iiZTjxlfUzE91RiBOCSflLc2nfbu/SaZ7VY=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=W63KibzYUp8pRyXoRIC9Rxkliu8FmolE4ryTDLPOACNT88DGrjJno8Rud6rhghNdKleDVO+yUevX7stgPu0XsFoAsCfcA/ELdHrCdUcY5a0OAzhflURriW4zQbFni0yMCf2PXR/jZ9Jh1NtJQX8+iCxmoWHDYrn2pb8QJy30At4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=esKk90ck; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=m9e1IXuiN1YZsgxtnn94axmC+84CvckY2WJvvAzBVUQuRSchitBWCqqVZmmrCfRx+Ect/fdysSo32KbyZoImGQVzagwuRT/hxl9de8/IjrF/0RIerVieyCX72u0uQTTByVoRTLuyaWtl4QKXhzmpucpo1p1JImO3gF5B75jOUQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=waldekranz.com; spf=pass smtp.mailfrom=waldekranz.com; dkim=pass (2048-bit key) header.d=waldekranz-com.20230601.gappssmtp.com header.i=@waldekranz-com.20230601.gappssmtp.com header.b=g0V6xPBK; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=waldekranz.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=waldekranz.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="esKk90ck"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A67DC433F1;
-	Mon,  4 Mar 2024 20:24:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709583852;
-	bh=uFdMSM3qZM+dt1Bib9NpBh7aRqMQlZ7L+ConpzhZ4zI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=esKk90ckOpB4uFBQnt/GYpn0GrhgyghLnGC7L0zw12stK+8uozpCBiKrOB4m1a0ZA
-	 pRMxW4h6bymwqgtxGEcA9Hif4E32M+6hzng349/9lt4ejmj6/LKjrMzzPLuvTecAd2
-	 CePkDGtzs8UDm+NCl/rBP5HAuAl27/VYYe1iv0WUDBNruGoOdjnsylp81rLl9ADv5v
-	 MxYyqkQTeNQ/lGDsVoYsfYpV001tkYqcXMeotIgkURA5k5NyEJzodV6euzmmG/syIX
-	 dwV4PjWi4j0mid1r6gLBZ2gHiKpHnnvxIXX0u4RerpFB+bC5vdX1iwkHdAJ/0IuuUG
-	 XnLhQXVAShCtQ==
-From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-To: Conor Dooley <conor@kernel.org>, Alexandre Ghiti
- <alexghiti@rivosinc.com>, Anup Patel <anup@brainfault.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Andrea Parri
- <andrea@rivosinc.com>, Samuel Holland <samuel.holland@sifive.com>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, Andrea Parri
- <parri.andrea@gmail.com>
-Subject: Re: [PATCH v3 2/2] riscv: Fix text patching when IPI are used
-In-Reply-To: <20240304-makeshift-bakeshop-26c9611de1a3@spud>
-References: <20240229121056.203419-1-alexghiti@rivosinc.com>
- <20240229121056.203419-3-alexghiti@rivosinc.com>
- <20240304-makeshift-bakeshop-26c9611de1a3@spud>
-Date: Mon, 04 Mar 2024 21:24:09 +0100
-Message-ID: <87msrdzqxi.fsf@all.your.base.are.belong.to.us>
+	dkim=pass (2048-bit key) header.d=waldekranz-com.20230601.gappssmtp.com header.i=@waldekranz-com.20230601.gappssmtp.com header.b="g0V6xPBK"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d28387db09so60084871fa.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 04 Mar 2024 14:40:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=waldekranz-com.20230601.gappssmtp.com; s=20230601; t=1709592052; x=1710196852; darn=vger.kernel.org;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cdh0FQGbsGzvigQxix/33N2xTkkyynvJysdSSvdUw/k=;
+        b=g0V6xPBKGqMQd1t2e0j8AyVjOnWOdsj2BpUredOU3YtjV7K5RVyQO/tV/6scMqWMDM
+         AukxZP88WjbvcASSw9bYUoDw4aecXlV1RZoQ0/kE8uQgKiX+ixhCY//2FNqwR/hoj6AH
+         ABPreEkHAnOQW/k8r4ROC2zr/8x18KufLKZNqtwaHLxHsh8AcZoHBMfrt/icuTa6c+mu
+         SxsixTrPEDz8hsYWCN8bqc1JIN9SI/wjGlu9BqyCye+wwuaYT3fCQWhU6RyNBCpSxbc+
+         eYdRbHP7QJv0uqkuGvsEs0oMsJ3bbl9P4I8+nZiyX8Ly34A+QEhjwfiGPcIkbwcL/T2Y
+         pTTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709592052; x=1710196852;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cdh0FQGbsGzvigQxix/33N2xTkkyynvJysdSSvdUw/k=;
+        b=smg+3IsdP5d5puewer9I7ZleqbkSLiPOmggZpCFH10U0F9j3AzcNIBLEwNd4WPdVOx
+         sRs0avUI72lOwaQoMsTpOMsGPcq4HEPCG60y3j+Lv9gooOofTn9VT117CuHWt8EI2crc
+         3UHgPBFfpx5JRrK9G8vcdSkzFgAA5za0GcOsEekwOlW0307btXZffvY0hKFNycC4ndHV
+         16TkEwenNxjTavN6KBupf4i4mtI1Wo6nfviZPEZSoBw8144ehPdUMi/jcGlulTcXBcHG
+         c+aU/GM30acwpMdVImTuLJfqS8Wh5slzrTIhtETZVWo8Nbw0H6I7B4WWC153qv9ZdszZ
+         yICQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVRLhnfPGpRO2ul2nW0zMrPdJIjalRDD6fBlYHJpaoGTWLsmjJg1s3DLBHfhrEZSRIjnNLcKkHW9Dfuw+usI+kBGEf68OHp6LB5MEDi0k3BgRXe
+X-Gm-Message-State: AOJu0YzNMoEb8lwcXO2gI8NQh5UwKqZXS/PRILEE2HbszU+/WqymJOsD
+	E/pbXv1AmVcHaQ7Rpms5f6JRYxLvFWk4v/uOIiJmFgwpF9k648KZt1ykOlrRYtDhW28b9/iTtxS
+	H
+X-Google-Smtp-Source: AGHT+IGg/uCC7hFxHYqui84BZlHHuBl0x+92dDxwC2cR3sRjEmRA8Zpl/zu6I+pg9ZhRpfixGDWZNQ==
+X-Received: by 2002:ac2:5e7c:0:b0:512:f5af:3bdf with SMTP id a28-20020ac25e7c000000b00512f5af3bdfmr75071lfr.68.1709592051651;
+        Mon, 04 Mar 2024 14:40:51 -0800 (PST)
+Received: from wkz-x13 (h-158-174-187-194.NA.cust.bahnhof.se. [158.174.187.194])
+        by smtp.gmail.com with ESMTPSA id i27-20020ac25b5b000000b005128cf5b323sm1913264lfp.251.2024.03.04.14.40.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 14:40:50 -0800 (PST)
+From: Tobias Waldekranz <tobias@waldekranz.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Paolo Abeni <pabeni@redhat.com>, davem@davemloft.net, kuba@kernel.org,
+ roopa@nvidia.com, razor@blackwall.org, bridge@lists.linux.dev,
+ netdev@vger.kernel.org, jiri@resnulli.us, ivecera@redhat.com,
+ mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 net-next 4/4] net: switchdev: Add tracepoints
+In-Reply-To: <20240228095648.646a6f1a@gandalf.local.home>
+References: <20240223114453.335809-1-tobias@waldekranz.com>
+ <20240223114453.335809-5-tobias@waldekranz.com>
+ <20240223103815.35fdf430@gandalf.local.home>
+ <4838ad92a359a10944487bbcb74690a51dd0a2f8.camel@redhat.com>
+ <87a5nkhnlv.fsf@waldekranz.com>
+ <20240228095648.646a6f1a@gandalf.local.home>
+Date: Mon, 04 Mar 2024 23:40:49 +0100
+Message-ID: <877cihhb7y.fsf@waldekranz.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Conor Dooley <conor@kernel.org> writes:
-
-> On Thu, Feb 29, 2024 at 01:10:56PM +0100, Alexandre Ghiti wrote:
->> For now, we use stop_machine() to patch the text and when we use IPIs for
->> remote icache flushes (which is emitted in patch_text_nosync()), the sys=
-tem
->> hangs.
->>=20
->> So instead, make sure every CPU executes the stop_machine() patching
->> function and emit a local icache flush there.
->>=20
->> Co-developed-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
->> Signed-off-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
->> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
->> Reviewed-by: Andrea Parri <parri.andrea@gmail.com>
+On ons, feb 28, 2024 at 09:56, Steven Rostedt <rostedt@goodmis.org> wrote:
+> On Wed, 28 Feb 2024 11:47:24 +0100
+> Tobias Waldekranz <tobias@waldekranz.com> wrote:
 >
-> What commit does this fix?
+>> >> > +	TP_fast_assign(
+>> >> > +		__entry->val = val;
+>> >> > +		__assign_str(dev, info->dev ? netdev_name(info->dev) : "(null)");
+>> >> > +		__entry->info = info;
+>> >> > +		__entry->err = err;
+>> >> > +		switchdev_notifier_str(val, info, __entry->msg, SWITCHDEV_TRACE_MSG_MAX);  
+>> >> 
+>> >> Is it possible to just store the information in the trace event and then
+>> >> call the above function in the read stage?  
+>> >
+>> > I agree with Steven: it looks like that with the above code the
+>> > tracepoint itself will become measurably costily in terms of CPU
+>> > cycles: we want to avoid that.
+>> >
+>> > Perhaps using different tracepoints with different notifier_block type
+>> > would help? so that each trace point could just copy a few specific
+>> > fields.  
+>> 
+>> This can be done, but you will end up having to duplicate the decoding
+>> and formatting logic from switchdev-str.c, with the additional hurdle of
+>> having to figure out the sizes of all referenced objects in order to
+>> create flattened versions of every notification type.
+>
+> Would it help if you could pass a trace_seq to it? The TP_printk() has a
+> "magical" trace_seq variable that trace events can use in the TP_printk()
+> called "p".
+>
+> Look at:
+>
+>   include/trace/events/libata.h:
+>
+> const char *libata_trace_parse_status(struct trace_seq*, unsigned char);
+> #define __parse_status(s) libata_trace_parse_status(p, s)
+>
+> Where we have:
+>
+> const char *
+> libata_trace_parse_status(struct trace_seq *p, unsigned char status)
+> {
+> 	const char *ret = trace_seq_buffer_ptr(p);
+>
+> 	trace_seq_printf(p, "{ ");
+> 	if (status & ATA_BUSY)
+> 		trace_seq_printf(p, "BUSY ");
+> 	if (status & ATA_DRDY)
+> 		trace_seq_printf(p, "DRDY ");
+> 	if (status & ATA_DF)
+> 		trace_seq_printf(p, "DF ");
+> 	if (status & ATA_DSC)
+> 		trace_seq_printf(p, "DSC ");
+> 	if (status & ATA_DRQ)
+> 		trace_seq_printf(p, "DRQ ");
+> 	if (status & ATA_CORR)
+> 		trace_seq_printf(p, "CORR ");
+> 	if (status & ATA_SENSE)
+> 		trace_seq_printf(p, "SENSE ");
+> 	if (status & ATA_ERR)
+> 		trace_seq_printf(p, "ERR ");
+> 	trace_seq_putc(p, '}');
+> 	trace_seq_putc(p, 0);
+>
+> 	return ret;
+> }
+>
+> The "trace_seq p" is a pointer to trace_seq descriptor that can build
+> strings, and then you can use it to print a custom string in the trace
+> output.
 
-Hmm. The bug is exposed when the AIA IPI are introduced, and used
-(instead of the firmware-based).
+Yes I managed to decode the hidden variable :) I also found
+trace_seq_acquire() (and its macro alter ego __get_buf()), which would
+let me keep the generic stringer functions. So far, so good.
 
-I'm not sure this is something we'd like backported, but rather a
-prerequisite to AIA.
+I think the foundational problem remains though: TP_printk() is not
+executed until a user reads from the trace_pipe; at which point the
+object referenced by __entry->info may already be dead and
+buried. Right?
 
-@Anup @Alex WDYT?
+>> 
+>> What I like about the current approach is that when new notification and
+>> object types are added, switchdev_notifier_str will automatically be
+>> able to decode them and give you some rough idea of what is going on,
+>> even if no new message specific decoding logic is added. It is also
+>> reusable by drivers that might want to decode notifications or objects
+>> in error messages.
+>> 
+>> Would some variant of (how I understand) Steven's suggestion to instead
+>> store the formatted message in a dynamic array (__assign_str()), rather
+>> than in the tracepoint entry, be acceptable?
+>
+> Matters if you could adapt using a trace_seq for the output. Or at least
+> use a seq_buf, as that's what is under the covers of trace_seq. If you
+> rather just use seq_buf, the above could pretty much be the same by passing
+> in: &p->seq.
+>
+> -- Steve
