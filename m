@@ -1,105 +1,108 @@
-Received: from mx10.didiglobal.com (mx10.didiglobal.com [111.202.70.125])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 2C3A9611A;
-	Mon,  4 Mar 2024 03:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.202.70.125
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8E91427F;
+	Mon,  4 Mar 2024 07:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709524004; cv=none; b=WSdyItodg234DPAitnCfBfAZlqqDQKb04Zpyu5p8VEeaFb8zN5KJDOyOTapA7AFyHydyhp9kVbgj7Dp07VDhg3inj2tsRfszj2N5welVCoz9g2jbY44XgN2esQIVWxJ/csCJR994GIYPnIBzDCfvccnm4tnnbgFbEHLFzP+8wnE=
+	t=1709535678; cv=none; b=fxtvjxx7AT6RchGHEUEke5w7oCpWGHSdNntcdWuUKJTwY7ps1ODYWAbbHZwcdrGbKJJTJf53QWD4FjXs5NHjZRT7i5WENCqwxhhQom3UUvOYc/UaUoc84jqP9/6RMDXyTsNPPGXTNMVp9xs86yPQlRmJAqVXP86VlV3b2F+d/SU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709524004; c=relaxed/simple;
-	bh=lzkyb7fMgaH03D4NRKlAE/xw349l58s0DtYj6e85f4g=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=qFWUjp86hgVui0woozHPqnaEF5HJrRprFAKZR2+Bxe1n+gBAHXRb95tYK19oDL5HIZg29hCs8ImiqS516m03mn64oaHXBB+XAJmn/397IeBl/+Batn1EO2L9X0DKHLmmOYtwjsusWQsWkO9IUj2CpAutVq1fZ7lzvL8QXxbeTQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com; spf=pass smtp.mailfrom=didiglobal.com; arc=none smtp.client-ip=111.202.70.125
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=didiglobal.com
-Received: from mail.didiglobal.com (unknown [10.79.65.12])
-	by mx10.didiglobal.com (MailData Gateway V2.8.8) with ESMTPS id 4898218B7B3663;
-	Mon,  4 Mar 2024 11:46:38 +0800 (CST)
-Received: from didi-ThinkCentre-M920t-N000 (10.79.64.101) by
- ZJY02-ACTMBX-02.didichuxing.com (10.79.65.12) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 4 Mar 2024 11:46:37 +0800
-Date: Mon, 4 Mar 2024 11:46:32 +0800
-X-MD-Sfrom: fuyuanli@didiglobal.com
-X-MD-SrcIP: 10.79.65.12
-From: fuyuanli <fuyuanli@didiglobal.com>
-To: <edumazet@google.com>, <rostedt@goodmis.org>, <mhiramat@kernel.org>
-CC: <mathieu.desnoyers@efficios.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<fuyuanli@didiglobal.com>
-Subject: [PATCH net-next v2] tcp: Add skb addr and sock addr to arguments of
- tracepoint tcp_probe.
-Message-ID: <20240304034632.GA21357@didi-ThinkCentre-M920t-N000>
-Mail-Followup-To: edumazet@google.com, rostedt@goodmis.org,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, fuyuanli@didiglobal.com
+	s=arc-20240116; t=1709535678; c=relaxed/simple;
+	bh=XQzTf+FSuP/WyHF9dIPZWrGYDsywtwr8k/e5yrdRIW0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K6WT3sOtWygeNJpkW7d4vuISSFtG9xjHxRomAH8/xWETHdik1zPl+HqCB8XJI09+kS5MTgNK+UP/nwIDlRylpNbluAhX6XATX3tbSaCZPCg1IUPPnxwE5Z5CLbZqKrqBbljKGfKP2HjK82E+DCWolSgpS1XngXjgdzFHPbD8sk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZiclgH5q; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZiclgH5q"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a450bedffdfso117542766b.3;
+        Sun, 03 Mar 2024 23:01:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709535675; x=1710140475; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MS2HQh2b725w1idcXlC3Ryn4jK3Wv0t/IfpeiTz5v0s=;
+        b=ZiclgH5qXeWaH3uZBBcaxRR41NY8dgYFFBFaa6bpJA+pBIcNiTn+tmDuwBMnOuW0mL
+         i1ZW3apqVFpjKyGrQy+3VrsZAe8RKE6rM1O2QQ0mHGMFmTm+tejnprOkKJb84VGvFvdg
+         fhhK+QuWwYKrexOlp+ce5DWK3JlUGLSvWKsyc4aBUALE0/UbdR7rVUHvy40KRQx4d52j
+         iRTCYhSnVQ4MdiuyMJ/WmFHsQvPegvCX0bg5swcImYfsM4kUlfLXt1eJ+7P9Ba5/OxOO
+         LoQ340NqS692czl7+EqgbuLvOAFsYg4dKcFbBTXE9duicoJis+VBgPKq403Ey7hflTQI
+         TYTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709535675; x=1710140475;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MS2HQh2b725w1idcXlC3Ryn4jK3Wv0t/IfpeiTz5v0s=;
+        b=ij5TYuCthiyxaBygLXYA5+qEAWWgSZeBUSAdyrKUE875T6UXOmQ32X5p0UrqKuMKFQ
+         2uWqqhVr/HvpOiQyi6WgS3rgMToR5qs2SAR61z03VP6VjyG4H5WQJcYJTUjsrDJLHraD
+         vNxSRytFjYVifakt1AIwLby92AZvhe55IvFERt3FRAcKHNU42VaqW9FylFDg8r83ZHF0
+         IoEOIPD36hGtERnYlwDMstIjQmBHCJhAEqkB0Yr8Cuz8eTDu1L2XeKToqtM3VrN+ZC8p
+         IHXVwcCy+N5hTgqMrdztp64nfEXApC9sK4FrrGuXrIMfWKwpi3wkZchaRmiWiOKuMYh5
+         KF9w==
+X-Forwarded-Encrypted: i=1; AJvYcCXy/3ZCKhPsa55i4e6DFIKsMDZ3kY0UMnDV/ZF8y7HiwPA/FEuYexLA4vUt+c+BMoJTPpjGs9ZF5m1PAwcfnidqvgDFIUSWgo3Ozl0K7EVN1K7v
+X-Gm-Message-State: AOJu0Yw50ynafmlq733CMJNP1jYDt+DWCI8FD8Ng9xaZP1fyCTX7cmck
+	vlEvedDzqH/QI7/7D2oCKoPr+jQVOHlT2PJv2+EUCV3HAxJJq3KhA/ezy+VAvU0c14SVS5zn/c1
+	ve3QJG+Ss8tu5Jg2HOr5TbCgEr0xSpPnfVEk=
+X-Google-Smtp-Source: AGHT+IHCC0CIxs4dY7yraefZEsX7xQyFzikT2RzAkMAE6yeTjfFvuk1DehdWhyoxP5jkT7mjH/pnd7e6QEVuadGoH7k=
+X-Received: by 2002:a17:907:367:b0:a43:39fe:b475 with SMTP id
+ rs7-20020a170907036700b00a4339feb475mr5129536ejb.45.1709535674758; Sun, 03
+ Mar 2024 23:01:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: ZJY02-PUBMBX-01.didichuxing.com (10.79.65.31) To
- ZJY02-ACTMBX-02.didichuxing.com (10.79.65.12)
+References: <20240229170956.87290-1-kerneljasonxing@gmail.com>
+In-Reply-To: <20240229170956.87290-1-kerneljasonxing@gmail.com>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Mon, 4 Mar 2024 15:00:38 +0800
+Message-ID: <CAL+tcoBJy4a_wBQbwmvWZWZP7mwaby3xHy+45x-PTEbHsGAH6A@mail.gmail.com>
+Subject: Re: [PATCH net-next 0/2] add two missing addresses when using trace
+To: edumazet@google.com, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	rostedt@goodmis.org, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Jason Xing <kernelxing@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-It is useful to expose skb addr and sock addr to user in tracepoint
-tcp_probe, so that we can get more information while monitoring
-receiving of tcp data, by ebpf or other ways.
+On Fri, Mar 1, 2024 at 1:10=E2=80=AFAM Jason Xing <kerneljasonxing@gmail.co=
+m> wrote:
+>
+> From: Jason Xing <kernelxing@tencent.com>
+>
+> When I reviewed other people's patch [1], I noticed that similar thing
+> also happens in tcp_event_skb class and tcp_event_sk_skb class. They
+> don't print those two addrs of skb/sk which already exist.
+>
+> They are probably forgotten by the original authors, so this time I
+> finish the work. Also, adding more trace about the socket/skb addr can
+> help us sometime even though the chance is minor.
+>
+> I don't consider it is a bug, thus I chose to target net-next tree.
 
-For example, we need to identify a packet by seq and end_seq when
-calculate transmit latency between lay 2 and lay 4 by ebpf, but which is
-not available in tcp_probe, so we can only use kprobe hooking
-tcp_rcv_esatblised to get them. But we can use tcp_probe directly if skb
-addr and sock addr are available, which is more efficient.
+Gentle ping...No rush. Just in case this simple patchset was lost for
+some reason.
 
-Signed-off-by: fuyuanli <fuyuanli@didiglobal.com>
-Link: https://lore.kernel.org/netdev/20240229052813.GA23899@didi-ThinkCentre-M920t-N000/
----
-v2:
-1) Add printing about those two addresses.
-2) Target "net-next" in the title of patch.
----
- include/trace/events/tcp.h | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Thanks,
+Jason
 
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 7b1ddffa3dfc..efb651683781 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -258,6 +258,8 @@ TRACE_EVENT(tcp_probe,
- 		__field(__u32, srtt)
- 		__field(__u32, rcv_wnd)
- 		__field(__u64, sock_cookie)
-+		__field(const void *, skbaddr)
-+		__field(const void *, skaddr)
- 	),
- 
- 	TP_fast_assign(
-@@ -285,14 +287,18 @@ TRACE_EVENT(tcp_probe,
- 		__entry->ssthresh = tcp_current_ssthresh(sk);
- 		__entry->srtt = tp->srtt_us >> 3;
- 		__entry->sock_cookie = sock_gen_cookie(sk);
-+
-+		__entry->skbaddr = skb;
-+		__entry->skaddr = sk;
- 	),
- 
--	TP_printk("family=%s src=%pISpc dest=%pISpc mark=%#x data_len=%d snd_nxt=%#x snd_una=%#x snd_cwnd=%u ssthresh=%u snd_wnd=%u srtt=%u rcv_wnd=%u sock_cookie=%llx",
-+	TP_printk("family=%s src=%pISpc dest=%pISpc mark=%#x data_len=%d snd_nxt=%#x snd_una=%#x snd_cwnd=%u ssthresh=%u snd_wnd=%u srtt=%u rcv_wnd=%u sock_cookie=%llx skbaddr=%p skaddr=%p",
- 		  show_family_name(__entry->family),
- 		  __entry->saddr, __entry->daddr, __entry->mark,
- 		  __entry->data_len, __entry->snd_nxt, __entry->snd_una,
- 		  __entry->snd_cwnd, __entry->ssthresh, __entry->snd_wnd,
--		  __entry->srtt, __entry->rcv_wnd, __entry->sock_cookie)
-+		  __entry->srtt, __entry->rcv_wnd, __entry->sock_cookie,
-+		  __entry->skbaddr, __entry->skaddr)
- );
- 
- #define TP_STORE_ADDR_PORTS_SKB_V4(__entry, skb)			\
--- 
-2.17.1
-
+>
+> [1]
+> Link: https://lore.kernel.org/netdev/CAL+tcoAhvFhXdr1WQU8mv_6ZX5nOoNpbOLA=
+B6=3DC+DB-qXQ11Ew@mail.gmail.com/
+>
+> Jason Xing (2):
+>   tcp: add tracing of skb/skaddr in tcp_event_sk_skb class
+>   tcp: add tracing of skbaddr in tcp_event_skb class
+>
+>  include/trace/events/tcp.h | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> --
+> 2.37.3
+>
