@@ -1,111 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DE77E10F
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  5 Mar 2024 07:16:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1B17E112;
+	Tue,  5 Mar 2024 08:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709623014; cv=none; b=acES+2LPv2lX4Mfqrz/3gDJ+SBc8lahshYmgyazh8t0lRtDCq1Qzj+aoAbnVZxqreMV403mu18/Ccj99hGoAGxE3600+187pq62yJ+BcK9T6PssDhQQraCCvE8gTSFHI1mZuOqSWr31vRe9Bcvo3buRSRp46p7P4Z0QYBa/qH58=
+	t=1709625644; cv=none; b=U4rC/ACO2n9DYvPZ4yhnkL0RPfEzGiQL8LlO/r25hHs5026kg6viKi4NtEII2qD0wnpmDZ1OSyUsCVEuaP4zft/Exj+OLusugU8EOJ7w5qtVnthaeZretryR7LKqMYSG0WyGI0oYhoakHybKpZo1km2gIVgkP+EPdRh/In45DSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709623014; c=relaxed/simple;
-	bh=+U3wbTm1fr0u7B7uauZt02Yd7hkkHWSl3gey4+61HxA=;
-	h=From:In-Reply-To:References:To:cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=R4Poy4XPXp1/lOBA5hOPypl/Fdwrd2TrNKhsQqfE+LmUJQ2/qkEgYGj5eevTzUHkXAlXiuvujN+a2tddFHAI5B6/ND47RslGa76kb1o0JoV3rtRA9/s2c3LMmpsW2ybp1jS38v1Q+7oLzeEwVe0C1sibWXDXAPLzzfaKvzynzs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ag6oYiKH; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709625644; c=relaxed/simple;
+	bh=gWFAJuQry3gzF9uH7O4D0aDTDmuwfZxjmqEXA+RPFLQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tHIYPS4rxGfLf7JWMXIlQ/Wer4AP6eT0VStuz81scm2X7BgVUWRY4beyPZxcjCs4Arzw2QouIboifsr2HyT6d2n0V/R9mTBGdaA2JgRKpfcbIXgcbXIi26TsKPVpsYyYMkHr8trYuySSMlFXBwnRSeaOxSNpKntaXv24S0+ScPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=opMY1aLN; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ag6oYiKH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709623012;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+U3wbTm1fr0u7B7uauZt02Yd7hkkHWSl3gey4+61HxA=;
-	b=ag6oYiKH5p2gI8i8COaCYFA0Odfo0IDmFsqoRNUEul4yZjY7wT84o0+EdcJVS/hwXUrWBl
-	PJyb6JHaj+YgvfsjcQWKNu7shg4aLz/Y1x9Bv6Sce+rBbzy/gwNAv47Z8wb3gooPr2Wk+e
-	SsfggpYwcLwi4RsYXxspEd5LkzPXf5A=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-187-b0x9YGyTODy3NOnbBYpGEA-1; Tue,
- 05 Mar 2024 02:16:46 -0500
-X-MC-Unique: b0x9YGyTODy3NOnbBYpGEA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2E352282D3D3;
-	Tue,  5 Mar 2024 07:16:46 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.114])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id ED1FB1C060A4;
-	Tue,  5 Mar 2024 07:16:37 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20240305020153.2787423-8-almasrymina@google.com>
-References: <20240305020153.2787423-8-almasrymina@google.com> <20240305020153.2787423-1-almasrymina@google.com>
-To: Mina Almasry <almasrymina@google.com>
-cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-    linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
-    linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-    sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-    linux-arch@vger.kernel.org, bpf@vger.kernel.org,
-    linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
-    dri-devel@lists.freedesktop.org,
-    "David S. Miller" <davem@davemloft.net>,
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-    Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
-    Richard Henderson <richard.henderson@linaro.org>,
-    Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-    Matt Turner <mattst88@gmail.com>,
-    Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-    "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-    Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
-    Jesper Dangaard Brouer <hawk@kernel.org>,
-    Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-    Steven Rostedt <rostedt@goodmis.org>,
-    Masami Hiramatsu <mhiramat@kernel.org>,
-    Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-    Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
-    Daniel Borkmann <daniel@iogearbox.net>,
-    Andrii Nakryiko <andrii@kernel.org>,
-    Martin KaFai Lau <martin.lau@linux.dev>,
-    Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-    Yonghong Song <yonghong.song@linux.dev>,
-    John Fastabend <john.fastabend@gmail.com>,
-    KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-    Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-    David Ahern <dsahern@kernel.org>,
-    Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-    Shuah Khan <shuah@kernel.org>,
-    Sumit Semwal <sumit.semwal@linaro.org>,
-    =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-    Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>,
-    Jason Gunthorpe <jgg@ziepe.ca>,
-    Yunsheng Lin <linyunsheng@huawei.com>,
-    Shailend Chand <shailend@google.com>,
-    Harshitha Ramamurthy <hramamurthy@google.com>,
-    Shakeel Butt <shakeelb@google.com>,
-    Jeroen de Borst <jeroendb@google.com>,
-    Praveen Kaligineedi <pkaligineedi@google.com>
-Subject: Re: [RFC PATCH net-next v6 07/15] page_pool: convert to use netmem
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="opMY1aLN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1709625642; x=1741161642;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gWFAJuQry3gzF9uH7O4D0aDTDmuwfZxjmqEXA+RPFLQ=;
+  b=opMY1aLNw84azCOOm8MEYFUR9SZu+S3Jh4uNPHhqXfHjqtH6yEWmcEiw
+   LBsMzMo0zZKVjq+OUSalP0h/X9mgVnfNAgD7wDQIGHa2SziI95xhErfmW
+   C7x6BnkI+nLz+BQ5gP60ekZ7zbmAZIfytiJhYHLhFQInuwhBkqALjjiYA
+   XF3kYa+PsSLH8I4+5h6fx4YgRPlcEfOG45yXzTacO8JyNDyAxA7f02nuZ
+   WTnDx/YHog+JOukD9Btfi5PjFvtwPCBuhejL88FEnzCeK4jXHIlv9+T6O
+   SYoUHg7qbMx8XHjjOYsKuenwHHDZ8xoIbsbOxm49eC45cyU8dnkEm2XBI
+   w==;
+X-CSE-ConnectionGUID: aFDr3hW/QMqfVKlnMUlmNA==
+X-CSE-MsgGUID: 6fJ54n74SV+WjGmrURhuaQ==
+X-IronPort-AV: E=Sophos;i="6.06,205,1705388400"; 
+   d="asc'?scan'208";a="18837278"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Mar 2024 01:00:35 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 5 Mar 2024 01:00:24 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex01.mchp-main.com (10.10.85.143)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Tue, 5 Mar 2024 01:00:21 -0700
+Date: Tue, 5 Mar 2024 07:59:37 +0000
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Anup Patel <apatel@ventanamicro.com>
+CC: =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>, Conor Dooley
+	<conor@kernel.org>, Alexandre Ghiti <alexghiti@rivosinc.com>, Anup Patel
+	<anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Andrea Parri
+	<andrea@rivosinc.com>, Samuel Holland <samuel.holland@sifive.com>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, <linux-riscv@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>, Andrea Parri
+	<parri.andrea@gmail.com>
+Subject: Re: [PATCH v3 2/2] riscv: Fix text patching when IPI are used
+Message-ID: <20240305-sarcasm-ending-0f7946490aea@wendy>
+References: <20240229121056.203419-1-alexghiti@rivosinc.com>
+ <20240229121056.203419-3-alexghiti@rivosinc.com>
+ <20240304-makeshift-bakeshop-26c9611de1a3@spud>
+ <87msrdzqxi.fsf@all.your.base.are.belong.to.us>
+ <CAK9=C2Xjgr9_H-sHkmAAc95dAm2jd+_dxLUxSM3RM3NrQJFKGQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Date: Tue, 05 Mar 2024 07:16:37 +0000
-Message-ID: <950858.1709622997@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ofyVMJD7bERZqUGb"
+Content-Disposition: inline
+In-Reply-To: <CAK9=C2Xjgr9_H-sHkmAAc95dAm2jd+_dxLUxSM3RM3NrQJFKGQ@mail.gmail.com>
 
+--ofyVMJD7bERZqUGb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi Mina,
+On Tue, Mar 05, 2024 at 08:33:30AM +0530, Anup Patel wrote:
+> On Tue, Mar 5, 2024 at 1:54=E2=80=AFAM Bj=C3=B6rn T=C3=B6pel <bjorn@kerne=
+l.org> wrote:
+> >
+> > Conor Dooley <conor@kernel.org> writes:
+> >
+> > > On Thu, Feb 29, 2024 at 01:10:56PM +0100, Alexandre Ghiti wrote:
+> > >> For now, we use stop_machine() to patch the text and when we use IPI=
+s for
+> > >> remote icache flushes (which is emitted in patch_text_nosync()), the=
+ system
+> > >> hangs.
+> > >>
+> > >> So instead, make sure every CPU executes the stop_machine() patching
+> > >> function and emit a local icache flush there.
+> > >>
+> > >> Co-developed-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+> > >> Signed-off-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+> > >> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> > >> Reviewed-by: Andrea Parri <parri.andrea@gmail.com>
+> > >
+> > > What commit does this fix?
+> >
+> > Hmm. The bug is exposed when the AIA IPI are introduced, and used
+> > (instead of the firmware-based).
+> >
+> > I'm not sure this is something we'd like backported, but rather a
+> > prerequisite to AIA.
+> >
+> > @Anup @Alex WDYT?
+> >
+>=20
+> The current text patching never considered IPIs being injected
+> directly in S-mode from hart to another so we are seeing this
+> issue now with AIA IPIs.
+>=20
+> We certainly don't need to backport this fix since it's more
+> of a preparatory fix for AIA IPIs.
 
-I recommend you cc linux-mm and Matthew Wilcox on these two patches also.
+Whether or not this is backportable, if it fixes a bug, it should get
+a Fixes: tag for the commit that it fixes. Fixes: isn't "the backport"
+tag, cc: stable is.
 
-David
+--ofyVMJD7bERZqUGb
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZebQ6QAKCRB4tDGHoIJi
+0qg3AQD+yvdHglvWYh8y5lWj9K/+QDa9GdWm0cjqVDuvHYScUgD9FI61pKq1ci91
+LXvSARs1oJvF0xK/zbm2iRwaXt4gCAw=
+=F+Fw
+-----END PGP SIGNATURE-----
+
+--ofyVMJD7bERZqUGb--
