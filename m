@@ -1,134 +1,155 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152D8AD5E;
-	Tue,  5 Mar 2024 05:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5AEC4500B;
+	Tue,  5 Mar 2024 07:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=153.127.30.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709617696; cv=none; b=PzFhQUFUakZnQDsLSoV0J871O/V6EtS7r4d4Qkd6PgTkw5e1avGN88SdTW4OAXSx2QE5lSXhhS30aiDeyC0JwdMYmr78cEzH/Ok4YoeGo31ILGqsFSxf7VEVeHVkD0tZdY0wlOTGbpO4V0Y7lp8suSyj7lsL4/a0Ute43/2osHo=
+	t=1709622335; cv=none; b=B1dEQxPcsnTitqb00w1gyDdsZ4TtEPwwjluLN5k2EIGDG2badXgeFIHvONpZj75/RqK+dNNuWvWMXjbP6XiWuSP6dUM0n6I7vUsFAK+xZGy9FnsVOT1ArKu2PLbXREgDHedeaA/9R7dpXrW6eVznGdR6s4QxzLtX5OqZlSJ+5i4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709617696; c=relaxed/simple;
-	bh=fAkvfoJdCmBA/dOW+GxOkuZlb2R5x+NWMQ8XkkvwPBE=;
-	h=Content-Type:Subject:From:In-Reply-To:Date:Cc:Message-Id:
-	 References:To:MIME-Version; b=eaTZxxptBBD015SRHFVSEdFq5uc6f43rXP71Q2WPapEGsDrAsk5sfjLOOkxVadIuvsVTxoZEKmZiiH+ckUdFiLXpiwbHvTVOpvbUlhHomKCeJ+GoCrF09O4/xnt+EG7RPQqaFkKv5BIy6KBZJZtwqcjWaJmosBzBymc7dt9rz5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NVqAOJDY; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NVqAOJDY"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4255ZVLG019594;
-	Tue, 5 Mar 2024 05:48:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
- from : in-reply-to : date : cc : message-id : references : to :
- content-transfer-encoding : mime-version; s=pp1;
- bh=KklhlwyuVBeNesq5FVkCo2afhv7RjYPRwek10Wa6HP4=;
- b=NVqAOJDYTAQiL/Og+Dq5jGEbNRINP+FB5OdtM4oiAb/gcG+ZRAaNiPbDBsI7vCPsIrfW
- RzjG3zYm/xxXRaqj5rXcHOUMBLKq7s3nhqS3QnG06ZNf/4NvHQNyibp9bcgow0b8IMgN
- Kw71r5Q+3+sicnxCP9e6yXYG23pKstmRnKlXI72+SNXAsO+pYohmhzTikmkXoEhPRkm5
- vzAWB4Wv/raexenYGx6W0754CSbPD5UNkIW0DMnaREPT3Qz1hI8El5oxBnQlJaKAkC9A
- srJbsC7lFW4SQjgar8A1Efq1dwt2rRUsjH9lDDL03zxZGOP0Hp/0O82AVWJUtyaW2reZ 6w== 
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wnvyb8vds-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Mar 2024 05:48:07 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4254S2Tb026251;
-	Tue, 5 Mar 2024 05:48:06 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wmfennh0v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Mar 2024 05:48:06 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4255m2wT9700006
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 5 Mar 2024 05:48:04 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 89F9720040;
-	Tue,  5 Mar 2024 05:48:02 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E1DD72005A;
-	Tue,  5 Mar 2024 05:48:00 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.110.47])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  5 Mar 2024 05:48:00 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
-Subject: Re: [PATCH] tracing: Remove precision vsnprintf() check from print
- event
-From: Sachin Sant <sachinp@linux.ibm.com>
-In-Reply-To: <20240304174341.2a561d9f@gandalf.local.home>
-Date: Tue, 5 Mar 2024 11:17:49 +0530
-Cc: LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Message-Id: <C6A44F79-8A0A-496C-82D2-2214BCC34C62@linux.ibm.com>
-References: <20240304174341.2a561d9f@gandalf.local.home>
-To: Steven Rostedt <rostedt@goodmis.org>
-X-Mailer: Apple Mail (2.3774.400.31)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 6v3BOyvB_pPa_8F5sr7aqSjU2BITv7tW
-X-Proofpoint-GUID: 6v3BOyvB_pPa_8F5sr7aqSjU2BITv7tW
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	s=arc-20240116; t=1709622335; c=relaxed/simple;
+	bh=XIzBUHoiVeCQAMPUCNXTA2fFmTK4/1wOs2592jH8r1U=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SByelEwC0M2pniIqF7jf+vXZoNWGcR3TOUbUQV74DnHWHg3AtcwNVK5dmF4zcy0m1grsq8gQTOSHqq5EX+df2na7drkbv4gTeKwIPYIC3jkM5kVESLKbtwd8YV/tZ2brsft8owq7PZ4zT3ahcoyA19sqyO+u0gD25Th/nFQHBNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp; spf=fail smtp.mailfrom=users.sourceforge.jp; arc=none smtp.client-ip=153.127.30.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=users.sourceforge.jp
+Received: from SIOS1075.ysato.ml (ZM005235.ppp.dion.ne.jp [222.8.5.235])
+	by sakura.ysato.name (Postfix) with ESMTPSA id 38F3D1C00A0;
+	Tue,  5 Mar 2024 15:56:29 +0900 (JST)
+Date: Tue, 05 Mar 2024 15:56:26 +0900
+Message-ID: <87bk7tjhet.wl-ysato@users.sourceforge.jp>
+From: Yoshinori Sato <ysato@users.sourceforge.jp>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Will Deacon <will@kernel.org>,
+	"Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Nick Piggin <npiggin@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	linux-sh@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/20] sh: boot: Add proper forward declarations
+In-Reply-To: <2614d991c816ece903ef47c715bcc53881d34f3f.1709326528.git.geert+renesas@glider.be>
+References: <cover.1709326528.git.geert+renesas@glider.be>
+	<2614d991c816ece903ef47c715bcc53881d34f3f.1709326528.git.geert+renesas@glider.be>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL-LB/10.8 EasyPG/1.0.0
+ Emacs/28.2 (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-05_03,2024-03-04_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
- priorityscore=1501 mlxscore=0 spamscore=0 malwarescore=0 phishscore=0
- lowpriorityscore=0 bulkscore=0 adultscore=0 mlxlogscore=999 suspectscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2403050043
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=ISO-8859-7
+Content-Transfer-Encoding: quoted-printable
 
-
-
-> On 05-Mar-2024, at 4:13=E2=80=AFAM, Steven Rostedt <rostedt@goodmis.org> =
-wrote:
+On Sat, 02 Mar 2024 06:02:22 +0900,
+Geert Uytterhoeven wrote:
 >=20
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> arch/sh/boot/compressed/cache.c:2:5: warning: no previous prototype for =
+=A1cache_control=A2 [-Wmissing-prototypes]
+> arch/sh/boot/compressed/misc.c:115:6: warning: no previous prototype for =
+=A1ftrace_stub=A2 [-Wmissing-prototypes]
+> arch/sh/boot/compressed/misc.c:118:6: warning: no previous prototype for =
+=A1arch_ftrace_ops_list_func=A2 [-Wmissing-prototypes]
+> arch/sh/boot/compressed/misc.c:128:6: warning: no previous prototype for =
+=A1decompress_kernel=A2 [-Wmissing-prototypes]
 >=20
-> This reverts 60be76eeabb3d ("tracing: Add size check when printing
-> trace_marker output"). The only reason the precision check was added
-> was because of a bug that miscalculated the write size of the string into
-> the ring buffer and it truncated it removing the terminating nul byte. On
-> reading the trace it crashed the kernel. But this was due to the bug in
-> the code that happened during development and should never happen in
-> practice. If anything, the precision can hide bugs where the string in the
-> ring buffer isn't nul terminated and it will not be checked.
->=20
-> Link: https://lore.kernel.org/all/C7E7AF1A-D30F-4D18-B8E5-AF1EF58004F5@li=
-nux.ibm.com/
-> Link: https://lore.kernel.org/linux-trace-kernel/20240227125706.04279ac2@=
-gandalf.local.home
-> Link: https://lore.kernel.org/all/20240302111244.3a1674be@gandalf.local.h=
-ome/
->=20
-> Reported-by: Sachin Sant <sachinp@linux.ibm.com>
-> Fixes: 60be76eeabb3d ("tracing: Add size check when printing trace_marker=
- output")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
+>  arch/sh/boot/compressed/cache.c |  3 +++
+>  arch/sh/boot/compressed/cache.h | 10 ++++++++++
+>  arch/sh/boot/compressed/misc.c  |  8 +++-----
+>  arch/sh/boot/compressed/misc.h  |  9 +++++++++
+>  4 files changed, 25 insertions(+), 5 deletions(-)
+>  create mode 100644 arch/sh/boot/compressed/cache.h
+>  create mode 100644 arch/sh/boot/compressed/misc.h
+>=20
+> diff --git a/arch/sh/boot/compressed/cache.c b/arch/sh/boot/compressed/ca=
+che.c
+> index 31e04ff4841ed084..95c1e73ccbb7e011 100644
+> --- a/arch/sh/boot/compressed/cache.c
+> +++ b/arch/sh/boot/compressed/cache.c
+> @@ -1,4 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> +
+> +#include "cache.h"
+> +
+>  int cache_control(unsigned int command)
+>  {
+>  	volatile unsigned int *p =3D (volatile unsigned int *) 0x80000000;
+> diff --git a/arch/sh/boot/compressed/cache.h b/arch/sh/boot/compressed/ca=
+che.h
+> new file mode 100644
+> index 0000000000000000..b622b68c87f59b97
+> --- /dev/null
+> +++ b/arch/sh/boot/compressed/cache.h
+> @@ -0,0 +1,10 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef CACHE_H
+> +#define CACHE_H
+> +
+> +#define CACHE_ENABLE	0
+> +#define CACHE_DISABLE	1
+> +
+> +int cache_control(unsigned int command);
+> +
+> +#endif /* CACHE_H */
+> diff --git a/arch/sh/boot/compressed/misc.c b/arch/sh/boot/compressed/mis=
+c.c
+> index ca05c99a3d5b488d..5178150ca6650dcf 100644
+> --- a/arch/sh/boot/compressed/misc.c
+> +++ b/arch/sh/boot/compressed/misc.c
+> @@ -16,6 +16,9 @@
+>  #include <asm/addrspace.h>
+>  #include <asm/page.h>
+> =20
+> +#include "cache.h"
+> +#include "misc.h"
+> +
+>  /*
+>   * gzip declarations
+>   */
+> @@ -26,11 +29,6 @@
+>  #undef memcpy
+>  #define memzero(s, n)     memset ((s), 0, (n))
+> =20
+> -/* cache.c */
+> -#define CACHE_ENABLE      0
+> -#define CACHE_DISABLE     1
+> -int cache_control(unsigned int command);
+> -
+>  extern char input_data[];
+>  extern int input_len;
+>  static unsigned char *output;
+> diff --git a/arch/sh/boot/compressed/misc.h b/arch/sh/boot/compressed/mis=
+c.h
+> new file mode 100644
+> index 0000000000000000..2b4534faa3052857
+> --- /dev/null
+> +++ b/arch/sh/boot/compressed/misc.h
+> @@ -0,0 +1,9 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef MISC_H
+> +#define MISC_H
+> +
+> +void arch_ftrace_ops_list_func(void);
+> +void decompress_kernel(void);
+> +void ftrace_stub(void);
+> +
+> +#endif /* MISC_H */
+> --=20
+> 2.34.1
+>=20
+>=20
 
-This fixes the reported problem for me.
+This cache control is from SH5, so it is no longer needed.
+I think it's better to simply delete chace.c and cache_control.
 
-All the ftrace selftests complete without any fails.
-# of passed:  121
-# of failed:  0
-# of unresolved:  6
-# of untested:  0
-# of unsupported:  7
-# of xfailed:  1
-# of undefined(test bug):  0
-
-Tested-by: Sachin Sant <sachinp@linux.ibm.com>
-
-
-=E2=80=94 Sachin
+--=20
+Yosinori Sato
