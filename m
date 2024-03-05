@@ -1,110 +1,111 @@
-Received: from mx9.didiglobal.com (mx9.didiglobal.com [111.202.70.124])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 891991865C;
-	Tue,  5 Mar 2024 03:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.202.70.124
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7DD28E23;
+	Tue,  5 Mar 2024 03:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709607873; cv=none; b=u1h44mBfRKffhqOpliaMv0f6XI2ywa0/RhotA0fBYqZQR+Z3skpagc3eVG5EurCSrq73ysfMOZp5OYVwHhDOQAoA/3OL5sr21lgqLKlrheANgGVgQE+GsYKCkoIfluGOjtcU7HJyDY8E0W9D5G8sd+19y3azucWEN9Vp2lOD5qI=
+	t=1709607967; cv=none; b=bio7mAbecqQyiWsspORaB+oWDsi0ugJWH3/VsFm+qC6xXJS159EZJKlKTtsUVZbxo70ltJb1w7sM6fvHzrswMixN6zcQO4Kk8rInIFtqLR6KrZaxxwAb1ri75BQDDB/+R/Qhuj+CYAppz2WT3TTjAS4Lu3w38TcH1PKQ3UK+Fmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709607873; c=relaxed/simple;
-	bh=7Hnw9hlX+4zSjf4KQl6x8LEy3mDpM4USWbEat1p4VjY=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=j5owLFYXOPbam41LQ0/8X5d6ImusjUQGTmNz+v+JKEkWePLkUvaXG/WIzk9AnqkyED0R0ohwEM6bxTvESut0C7X9wX+GRztob61lo/SZou7KBDC3sqGa+G8G5pQDUsWd6hKZyTXJzQuiQEh+shU2BzVGA1/mWiQXslH4dE+TIMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com; spf=pass smtp.mailfrom=didiglobal.com; arc=none smtp.client-ip=111.202.70.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=didiglobal.com
-Received: from mail.didiglobal.com (unknown [10.79.65.12])
-	by mx9.didiglobal.com (MailData Gateway V2.8.8) with ESMTPS id A4B0E1858BE7AE;
-	Tue,  5 Mar 2024 11:04:22 +0800 (CST)
-Received: from didi-ThinkCentre-M920t-N000 (10.79.64.101) by
- ZJY02-ACTMBX-02.didichuxing.com (10.79.65.12) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 5 Mar 2024 11:04:22 +0800
-Date: Tue, 5 Mar 2024 11:04:17 +0800
-X-MD-Sfrom: fuyuanli@didiglobal.com
-X-MD-SrcIP: 10.79.65.12
-From: fuyuanli <fuyuanli@didiglobal.com>
-To: <edumazet@google.com>, <rostedt@goodmis.org>, <mhiramat@kernel.org>
-CC: <mathieu.desnoyers@efficios.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<fuyuanli@didiglobal.com>
-Subject: [PATCH net-next v3] tcp: Add skb addr and sock addr to arguments of
- tracepoint tcp_probe.
-Message-ID: <20240305030358.GA13138@didi-ThinkCentre-M920t-N000>
-Mail-Followup-To: edumazet@google.com, rostedt@goodmis.org,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, fuyuanli@didiglobal.com
+	s=arc-20240116; t=1709607967; c=relaxed/simple;
+	bh=OSg9KgrWcCqYD+LVxjqxALYSgKaYs8OihzNp27f3IZo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=seMB0B9ePI8wGjo2JY03+18K/8tccQqFfLpWNVjPb6ydd+dMRkt4PpFvo7FgBdDIp6Dy6ah5YgYlw+5zvATLBHsEbXYBPt8/mQMk9Qx6JgT8YFrIi21jZJeXdzZIaIXPNQnOn+XNRRSoElxIxUQopkNVgESQ16Y4/MebrUnK5rY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16329C433C7;
+	Tue,  5 Mar 2024 03:06:05 +0000 (UTC)
+Date: Mon, 4 Mar 2024 22:07:54 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>,
+ Sachin Sant <sachinp@linux.ibm.com>
+Subject: Re: [PATCH] tracing: Have trace_marker writes be just half of
+ TRACE_SEQ_SIZE
+Message-ID: <20240304220754.4fbe3f34@gandalf.local.home>
+In-Reply-To: <c3051fd1-2aaa-485f-b23d-d98c3579e166@efficios.com>
+References: <20240304192710.4c99677c@gandalf.local.home>
+	<469d31a7-f358-4547-bb17-0979b3515924@efficios.com>
+	<20240304203516.45b7a551@gandalf.local.home>
+	<20240304204119.7503ab0b@gandalf.local.home>
+	<91f27ba1-15a4-402d-8301-e2b9d23f64b0@efficios.com>
+	<20240304205943.081bea96@gandalf.local.home>
+	<cef0b07e-f90d-4759-ae54-0f091e87edab@efficios.com>
+	<20240304213538.13fe1f3b@gandalf.local.home>
+	<20240304213750.1baef01d@gandalf.local.home>
+	<c3051fd1-2aaa-485f-b23d-d98c3579e166@efficios.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: ZJY02-PUBMBX-01.didichuxing.com (10.79.65.31) To
- ZJY02-ACTMBX-02.didichuxing.com (10.79.65.12)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-It is useful to expose skb addr and sock addr to user in tracepoint
-tcp_probe, so that we can get more information while monitoring
-receiving of tcp data, by ebpf or other ways.
+On Mon, 4 Mar 2024 21:48:44 -0500
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-For example, we need to identify a packet by seq and end_seq when
-calculate transmit latency between layer 2 and layer 4 by ebpf, but which is
-not available in tcp_probe, so we can only use kprobe hooking
-tcp_rcv_established to get them. But we can use tcp_probe directly if skb
-addr and sock addr are available, which is more efficient.
+> On 2024-03-04 21:37, Steven Rostedt wrote:
+> > On Mon, 4 Mar 2024 21:35:38 -0500
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> >   
+> >>> And it's not for debugging, it's for validation of assumptions
+> >>> made about an upper bound limit defined for a compile-time
+> >>> check, so as the code evolves issues are caught early.  
+> >>
+> >> validating is debugging.  
+> > 
+> > Did Linus put you up to this? To test me to see if I'm learning how to say "No" ;-)  
+> 
+> No, he did not. 
 
-Signed-off-by: fuyuanli <fuyuanli@didiglobal.com>
-Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
----
-v3
-Link: https://lore.kernel.org/netdev/20240304034632.GA21357@didi-ThinkCentre-M920t-N000/
-1) Fix some errors of spellchecking in commit message.
+I was being facetious.
 
-v2
-Link: https://lore.kernel.org/netdev/20240229052813.GA23899@didi-ThinkCentre-M920t-N000/
-1) Add printing about those two addresses.
-2) Target "net-next" in the title of patch.
----
- include/trace/events/tcp.h | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+> I genuinely think that validating size limits like
+> this either at compile time or, when they can vary at runtime like
+> in this case, with a dynamic check, decreases the cognitive
+> load on the reviewers. We can then assume that whatever limit
+> was put in place is actually enforced and not just wishful
+> thinking.
 
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 7b1ddffa3dfc..efb651683781 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -258,6 +258,8 @@ TRACE_EVENT(tcp_probe,
- 		__field(__u32, srtt)
- 		__field(__u32, rcv_wnd)
- 		__field(__u64, sock_cookie)
-+		__field(const void *, skbaddr)
-+		__field(const void *, skaddr)
- 	),
- 
- 	TP_fast_assign(
-@@ -285,14 +287,18 @@ TRACE_EVENT(tcp_probe,
- 		__entry->ssthresh = tcp_current_ssthresh(sk);
- 		__entry->srtt = tp->srtt_us >> 3;
- 		__entry->sock_cookie = sock_gen_cookie(sk);
-+
-+		__entry->skbaddr = skb;
-+		__entry->skaddr = sk;
- 	),
- 
--	TP_printk("family=%s src=%pISpc dest=%pISpc mark=%#x data_len=%d snd_nxt=%#x snd_una=%#x snd_cwnd=%u ssthresh=%u snd_wnd=%u srtt=%u rcv_wnd=%u sock_cookie=%llx",
-+	TP_printk("family=%s src=%pISpc dest=%pISpc mark=%#x data_len=%d snd_nxt=%#x snd_una=%#x snd_cwnd=%u ssthresh=%u snd_wnd=%u srtt=%u rcv_wnd=%u sock_cookie=%llx skbaddr=%p skaddr=%p",
- 		  show_family_name(__entry->family),
- 		  __entry->saddr, __entry->daddr, __entry->mark,
- 		  __entry->data_len, __entry->snd_nxt, __entry->snd_una,
- 		  __entry->snd_cwnd, __entry->ssthresh, __entry->snd_wnd,
--		  __entry->srtt, __entry->rcv_wnd, __entry->sock_cookie)
-+		  __entry->srtt, __entry->rcv_wnd, __entry->sock_cookie,
-+		  __entry->skbaddr, __entry->skaddr)
- );
- 
- #define TP_STORE_ADDR_PORTS_SKB_V4(__entry, skb)			\
--- 
-2.17.1
+I'm for that too. But the purpose of trace_seq was to be able to safely
+append strings on top of each other. It was written specifically for the
+trace file output. It should be long enough to print the entire string. If
+the trace_seq overflows, it will not add any more content. But this is
+checked at the end to see if everything did fit.
+
+I had the "half" size logic because it was still way more than enough to
+hold the write and the header, where the header should never be that big.
+
+It's not much different than vsnprintf() having a 32K precision field that
+warns if you go over it. If a header is 128 bytes then it is really a
+failure in output, as it will cause each line to overflow a normal 80
+character terminal screen before it even gets to the content of the event.
+
+Such a header is stupid and this is where I'm starting to understand Linus,
+where we don't need to write a bunch of debug code to make sure we don't
+have some huge header just because it may cause the content of the event
+from being visible.
+
+Oh! and yes, there are events that can be large (stack traces and such). If
+a header is created to be that big, you will likely drop actual real
+events that have nothing to do with trace_marker.
+
+> 
+> If the "header" size upper bound is not validated at runtime, there
+> is not much point in adding the BUILD_BUG_ON() based on that value
+> in the first place, and you should then just add a runtime check that
+> you don't overflow the output buffer before writing the output to it.
+
+
+OK, then I guess we don't need the checks. 4K for a trace_marker limit and
+8K for the trace_seq that will eventually hold its content, is a pretty
+simple concept. Do we need a bunch of logic to keep it from breaking?
+Especially since trace_marker is used a lot in testing the tracing code
+itself.
+
+-- Steve
 
