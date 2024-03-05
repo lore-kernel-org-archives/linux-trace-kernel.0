@@ -1,108 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wfout6-smtp.messagingengine.com (wfout6-smtp.messagingengine.com [64.147.123.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA337F7FF;
-	Tue,  5 Mar 2024 08:21:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C555C2E40B;
+	Tue,  5 Mar 2024 08:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709626871; cv=none; b=OcfJncda3fRnp+6YNpKj4yMnwZNN3a+K7+1r5YBA83guGtH/cB4z9B3nPVbE8GiZ3OGBLQadVbono2/5MsEex5gZVj2G+2tCUyHYRA0mTbznMl9hc5T9rAec8rK6Yem+PvNvaVpTCxZ+mBJ72qu6J0BH2Z/SQPbNItGrd9DHuXk=
+	t=1709628140; cv=none; b=IuDCgWE0ElNh4fAngvLvjgvKNuMF3zcxJrwP62yhKRmbcuLk1t2PN4oYWRondMDEhpcCH0TCtZcCEAFthcY4gPx5lTV4KVbaxmoCloCIWQFnK/F2qIOxovHYLm80BP6aQWne3RsubB6Fz8RzAxpUBpGmmuttloD9JR9aXARK3qk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709626871; c=relaxed/simple;
-	bh=WFgIUqss9TAdO9AjaUlgXXkzHAVPaeaf3euW2nSz/wM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=qbbkvcExg2WpiJY+AHXlW9JoeRd4MojeWkJPMiKXAxrRlfjRRfFgr41CMJxJqx4Xi6/aN8cv2oX44kd+F7O/tPnMoplspKKH1NRnWdfEWYKZOYDTaupKUUHqjGM0QRzEX3o9oLl0XvaSImxfrofSJGetYWGH3oz0OqAt5l+tcbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HOPPu2Rv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709628140; c=relaxed/simple;
+	bh=NmJCAuRJ199Nz8coLDr4s+3BbQ9AxZ5w+P+Jx63NVw4=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=KKQ27b7rQWyv1YzcEjRRSKF6uIk9CsJMtCEOwknbNukNVyrM1TulLEWP42KquIABrfI7Xav2nPz1uy6eG/99XGdLDJny/KzmRSVmEC+C18PkeUKPVz84vtmGPpBcBj4I9WcuXUXy8jeOv6T5CYR9Nq/BoKEOwHw8tLXOFt6JpEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=nFCUr8mh; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MeGRT64E; arc=none smtp.client-ip=64.147.123.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HOPPu2Rv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4607CC433F1;
-	Tue,  5 Mar 2024 08:21:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709626870;
-	bh=WFgIUqss9TAdO9AjaUlgXXkzHAVPaeaf3euW2nSz/wM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=HOPPu2Rv+RdmcOkgyYlgmMrXFdBSqx6Lvib1K4Tvnhn3J67hqN2RcG18v/LlVUFFh
-	 jpaJpRl+uuBbX9T2FNShyS6KtAkgkO8S7CyG4SY+uWlvHPbo2HFl6mGAW0LTKHqZ0F
-	 SWQ4zlsNDWXzN33UMPiKoKQdEJVlFhU2GYr2UmYwOAklK+kq1aaf+/7o6ER9xBqsLx
-	 fedo6DW/bucOVcaw5pOch3Pwrw7BRAQlPK//XqKgfh87mc0kD/3xjS2ezlOWPYjcrq
-	 bUca/5InbS+0ycCLRscWpkgSe1MY74qpIj8J6wVZmbTMRFn1LEJuttlgXICziEBbd2
-	 RXDwoQ2B7A0ww==
-From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-To: Conor Dooley <conor.dooley@microchip.com>, Anup Patel
- <apatel@ventanamicro.com>
-Cc: Conor Dooley <conor@kernel.org>, Alexandre Ghiti
- <alexghiti@rivosinc.com>, Anup Patel <anup@brainfault.org>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Andrea
- Parri <andrea@rivosinc.com>, Samuel Holland <samuel.holland@sifive.com>,
- Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, Andrea Parri
- <parri.andrea@gmail.com>
-Subject: Re: [PATCH v3 2/2] riscv: Fix text patching when IPI are used
-In-Reply-To: <20240305-sarcasm-ending-0f7946490aea@wendy>
-References: <20240229121056.203419-1-alexghiti@rivosinc.com>
- <20240229121056.203419-3-alexghiti@rivosinc.com>
- <20240304-makeshift-bakeshop-26c9611de1a3@spud>
- <87msrdzqxi.fsf@all.your.base.are.belong.to.us>
- <CAK9=C2Xjgr9_H-sHkmAAc95dAm2jd+_dxLUxSM3RM3NrQJFKGQ@mail.gmail.com>
- <20240305-sarcasm-ending-0f7946490aea@wendy>
-Date: Tue, 05 Mar 2024 09:21:07 +0100
-Message-ID: <87frx5ozrg.fsf@all.your.base.are.belong.to.us>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="nFCUr8mh";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MeGRT64E"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.west.internal (Postfix) with ESMTP id 1AD091C0009F;
+	Tue,  5 Mar 2024 03:42:16 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Tue, 05 Mar 2024 03:42:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1709628135; x=1709714535; bh=QeA3EPMJnw
+	t6NmNxY9VsOPm58VedM11auwf8kvd3l10=; b=nFCUr8mh4qirfdLiF7rJ3ln4Ee
+	ac3TZcBsBjTwt2v0sdIiovpLKYKyf84Jxe23adpiNL58TY/A6Un5jj6iESmOfBN+
+	NH3EgOLGaP2DQpO5LGujPp+1ACooTgAvYIJALYP/zB1DPOPdMHqcSl6pneGLIuSd
+	0k9KzYIWTlZUxiE5d/Z/VfhGrlYPtpIrvzzKaxh55J1YvHGR53svoOQw5rECchxc
+	E9ikW19OkQ636itot1R2TSnpEFaS+eT+JgKKFsBgMEmk8BlUWkauiXR3Ls5Vvsp5
+	YZii5Qv8k/VvvLOAqjcoX8BsdOlRwRXYH9ceE7QjJGsmut+vnb/zrjODKYag==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1709628135; x=1709714535; bh=QeA3EPMJnwt6NmNxY9VsOPm58Ved
+	M11auwf8kvd3l10=; b=MeGRT64EA+QDDWf22wqOrRSkQjCcngCXPFXQcuj7sKlb
+	fsKykmy6Wo/2udr6Dj45/3j5m0Am1YNFMh5ogK0TGmfT3J3p1lUk5UkjwIxfJ/Ci
+	Pk+CIVw/J74yah5SJbYvq+QLaOyKzQH6iNNSmcFd0y5fFCKb9E+Yfzt3yz+45LdK
+	9sFUcb6Fxl0Wjzf+1CiXDA/ghzeaVvr1VBLLs58vNnkiklddooZ4bWdiOUY+GqIR
+	hy0uslWehpOhOdN1+n7zG5X3CplnE4+mdGGx1Yzro47d/GdIV8wduDcs4mOaIpqy
+	CGRzWIXTXwbBC9s0rVJ0cHgCt/kyzi8t44pW07QIUA==
+X-ME-Sender: <xms:59rmZebHuiNKE7gBn9g7Zws1CrVENXbBVlU7KpglFLP7T_XtZaHvBg>
+    <xme:59rmZRbdHQpICUlzFZ9DMOnUcwCIgRZrUGHMk8EmzSdzq9snWlaZ46aLWKLTaTvHK
+    Cg5wi_afUGNXBIHc_8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrheekgdduvddtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:59rmZY8-Af8ZUR5f35jgIeJGVWX966qCxdxdr_0n3EPth7aYYPYY2Q>
+    <xmx:59rmZQqJc6RxhGOktKKAE7ByIoMRz8lUdJERuu3D_WLY5uFdFRGIxA>
+    <xmx:59rmZZoZzA-bUCffCtvffkklND4SVShkax7NIxvDvebcxKbcpR8E8A>
+    <xmx:59rmZdfoSPIHkIwIoZkPmTYx3CVSLM8Fpjgeg_PGly9T-_ds2f3zKnQLvGs>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 5045FB6008D; Tue,  5 Mar 2024 03:42:15 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-208-g3f1d79aedb-fm-20240301.002-g3f1d79ae
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Message-Id: <a2d926be-695a-484b-b2b5-098da47e372e@app.fastmail.com>
+In-Reply-To: <20240305020153.2787423-13-almasrymina@google.com>
+References: <20240305020153.2787423-1-almasrymina@google.com>
+ <20240305020153.2787423-13-almasrymina@google.com>
+Date: Tue, 05 Mar 2024 09:41:55 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Mina Almasry" <almasrymina@google.com>, Netdev <netdev@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: "David S . Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, "Jonathan Corbet" <corbet@lwn.net>,
+ "Richard Henderson" <richard.henderson@linaro.org>,
+ "Ivan Kokshaysky" <ink@jurassic.park.msu.ru>,
+ "Matt Turner" <mattst88@gmail.com>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Helge Deller" <deller@gmx.de>, "Andreas Larsson" <andreas@gaisler.com>,
+ "Jesper Dangaard Brouer" <hawk@kernel.org>,
+ "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
+ "Steven Rostedt" <rostedt@goodmis.org>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>,
+ "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
+ "Alexei Starovoitov" <ast@kernel.org>,
+ "Daniel Borkmann" <daniel@iogearbox.net>,
+ "Andrii Nakryiko" <andrii@kernel.org>,
+ "Martin KaFai Lau" <martin.lau@linux.dev>,
+ "Eduard Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>,
+ "Yonghong Song" <yonghong.song@linux.dev>,
+ "John Fastabend" <john.fastabend@gmail.com>,
+ "KP Singh" <kpsingh@kernel.org>, "Stanislav Fomichev" <sdf@google.com>,
+ "Hao Luo" <haoluo@google.com>, "Jiri Olsa" <jolsa@kernel.org>,
+ "David Ahern" <dsahern@kernel.org>,
+ "Willem de Bruijn" <willemdebruijn.kernel@gmail.com>,
+ shuah <shuah@kernel.org>, "Sumit Semwal" <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ "Pavel Begunkov" <asml.silence@gmail.com>, "David Wei" <dw@davidwei.uk>,
+ "Jason Gunthorpe" <jgg@ziepe.ca>,
+ "Yunsheng Lin" <linyunsheng@huawei.com>,
+ "Shailend Chand" <shailend@google.com>,
+ "Harshitha Ramamurthy" <hramamurthy@google.com>,
+ "Shakeel Butt" <shakeelb@google.com>,
+ "Jeroen de Borst" <jeroendb@google.com>,
+ "Praveen Kaligineedi" <pkaligineedi@google.com>,
+ "Willem de Bruijn" <willemb@google.com>,
+ "Kaiyuan Zhang" <kaiyuanz@google.com>
+Subject: Re: [RFC PATCH net-next v6 12/15] tcp: RX path for devmem TCP
+Content-Type: text/plain
 
-Conor Dooley <conor.dooley@microchip.com> writes:
+On Tue, Mar 5, 2024, at 03:01, Mina Almasry wrote:
+> --- a/arch/alpha/include/uapi/asm/socket.h
+> +++ b/arch/alpha/include/uapi/asm/socket.h
+>  #define SO_PEERPIDFD		77
+> +#define SO_DEVMEM_LINEAR	79
+> +#define SO_DEVMEM_DMABUF	80
+> --- a/arch/mips/include/uapi/asm/socket.h
+> +++ b/arch/mips/include/uapi/asm/socket.h
+>  #define SO_PEERPIDFD		77
+> +#define SO_DEVMEM_LINEAR	79
+> +#define SO_DEVMEM_DMABUF	80
+> --- a/arch/parisc/include/uapi/asm/socket.h
+> +++ b/arch/parisc/include/uapi/asm/socket.h
+>  #define SO_PEERPIDFD		0x404B
+> +#define SO_DEVMEM_LINEAR	98
+> +#define SO_DEVMEM_DMABUF	99
+> --- a/arch/sparc/include/uapi/asm/socket.h
+> +++ b/arch/sparc/include/uapi/asm/socket.h
+>  #define SO_PEERPIDFD             0x0056
+> +#define SO_DEVMEM_LINEAR         0x0058
+> +#define SO_DEVMEM_DMABUF         0x0059
+> --- a/include/uapi/asm-generic/socket.h
+> +++ b/include/uapi/asm-generic/socket.h
+> @@ -135,6 +135,11 @@
+>  #define SO_PEERPIDFD		77
+> +#define SO_DEVMEM_LINEAR	98
+> +#define SO_DEVMEM_DMABUF	99
 
-> On Tue, Mar 05, 2024 at 08:33:30AM +0530, Anup Patel wrote:
->> On Tue, Mar 5, 2024 at 1:54=E2=80=AFAM Bj=C3=B6rn T=C3=B6pel <bjorn@kern=
-el.org> wrote:
->> >
->> > Conor Dooley <conor@kernel.org> writes:
->> >
->> > > On Thu, Feb 29, 2024 at 01:10:56PM +0100, Alexandre Ghiti wrote:
->> > >> For now, we use stop_machine() to patch the text and when we use IP=
-Is for
->> > >> remote icache flushes (which is emitted in patch_text_nosync()), th=
-e system
->> > >> hangs.
->> > >>
->> > >> So instead, make sure every CPU executes the stop_machine() patching
->> > >> function and emit a local icache flush there.
->> > >>
->> > >> Co-developed-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
->> > >> Signed-off-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
->> > >> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
->> > >> Reviewed-by: Andrea Parri <parri.andrea@gmail.com>
->> > >
->> > > What commit does this fix?
->> >
->> > Hmm. The bug is exposed when the AIA IPI are introduced, and used
->> > (instead of the firmware-based).
->> >
->> > I'm not sure this is something we'd like backported, but rather a
->> > prerequisite to AIA.
->> >
->> > @Anup @Alex WDYT?
->> >
->>=20
->> The current text patching never considered IPIs being injected
->> directly in S-mode from hart to another so we are seeing this
->> issue now with AIA IPIs.
->>=20
->> We certainly don't need to backport this fix since it's more
->> of a preparatory fix for AIA IPIs.
->
-> Whether or not this is backportable, if it fixes a bug, it should get
-> a Fixes: tag for the commit that it fixes. Fixes: isn't "the backport"
-> tag, cc: stable is.
+These look inconsistent. I can see how you picked the
+alpha and mips numbers, but how did you come up with
+the generic and parisc ones? Can you follow the existing
+scheme instead?
 
-I guess the question is if this *is* a fix, or rather a change required
-for AIA (not a fix).
+> diff --git a/include/uapi/linux/uio.h b/include/uapi/linux/uio.h
+> index 059b1a9147f4..ad92e37699da 100644
+> --- a/include/uapi/linux/uio.h
+> +++ b/include/uapi/linux/uio.h
+> @@ -20,6 +20,16 @@ struct iovec
+>  	__kernel_size_t iov_len; /* Must be size_t (1003.1g) */
+>  };
+> 
+> +struct dmabuf_cmsg {
+> +	__u64 frag_offset;	/* offset into the dmabuf where the frag starts.
+> +				 */
+> +	__u32 frag_size;	/* size of the frag. */
+> +	__u32 frag_token;	/* token representing this frag for
+> +				 * DEVMEM_DONTNEED.
+> +				 */
+> +	__u32  dmabuf_id;	/* dmabuf id this frag belongs to. */
+> +};
+
+This structure requires a special compat handler to run
+x86-32 binaries on x86-64 because of the different alignment
+requirements. Any uapi-visible structures should be defined
+to avoid this and just have no holes in them. Maybe extend
+one of the __u32 members to __u64 or add another 32-bit padding field?
+
+       Arnd
