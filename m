@@ -1,87 +1,79 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1BA446A0;
-	Tue,  5 Mar 2024 00:43:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20F73210;
+	Tue,  5 Mar 2024 00:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709599432; cv=none; b=TvlgZieEbT1wZrV3m5JY8yPeBVOIpewntIa1/L/ozar809JEG+OF4NxDDwseSWo8vWsAwYX/FNr+JhTTXS/8JW8COVfknFUpXtQdOjVnyeblxYahvB8B8Z7ZyAgTmZRKWaR9rruX00vM0hn5ygi2wTEpGRALbULDgQ9BtIw9an0=
+	t=1709599640; cv=none; b=jZbT20p+zdZRWCJLsxrzhGbnfJWB7Tkpa7knX/ziT0BVN/4gydIkkrQ01DQ8azr9lMc86bp+qEZKRKAc9nUdwcaQTC5WUGm0ll1ptFoDGgtN8SCjoFE8QszneQrB/sAmYQ1p52z7wQpv+9e8pjCruyOsO15z5AW0Gu4m0vWgagM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709599432; c=relaxed/simple;
-	bh=sLNA+WUpbHvwjwTNEbjFW09PC+UWKmO+1c0w4EX9cQ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uUxM918EGjhA/QAUDEFmV3cNLOh2sf2C+dSQERp6ru3TzTxTQJ9USJBSmu9nFiaTqxreRvVsklQ4a05XUIYZp2YmBh5HUqgM38efiwkYmfAF5uMYUQCIQsb7ovrEbC4WRUwSQh9NxsYzPNepT27Lx0tE8vIpVyFaeYGqGHF4P88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=06WqZyJD; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="06WqZyJD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=mrNHejpABW2qV0pTfb65sdG5Bs9DxgQoXhT9qzQvG8k=; b=06WqZyJDiLi03sa1Xbf3MQfh60
-	vxIy33b5+UJO9HD6XWmczEzGRrj47NcF15+p2Iz7UoVzx6k8Rx+PwqLs17Pq2UvbWkXGki/jSkcJx
-	2tCxAuHrEevf7Ky0MbeWEaSt+8aQafD4BP5ZBydpTo64QOjLkTi/pFLIfHcZB+5lGNV7+Dxt98WuP
-	xzN1a2Wvs9cq0gNT2aUPoyxmqnRTBIlD7uo5FdDW1IIejmGLV8GucR/DVrUc8rfyTNRXwI+/Kjgij
-	MQcsMNLiopVhqJeKxe87D7ZFx4JsgWWgvSJMbb7Soa8CVqDt4m1zQJZsJZxiJoblu6TVGyvbs4MWB
-	Vb+3R8Dg==;
-Received: from [50.53.50.0] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rhIuK-0000000BGNW-1Gi5;
-	Tue, 05 Mar 2024 00:43:48 +0000
-Message-ID: <fa113c5c-07c7-417b-8287-c9bf5f9b42a1@infradead.org>
-Date: Mon, 4 Mar 2024 16:43:46 -0800
+	s=arc-20240116; t=1709599640; c=relaxed/simple;
+	bh=3DXoHz0jv23bY60mQlVYQKbh3ernvy1omqureJCjqks=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sMrBnBByDP8GR862qG7L049+1rv88GyDXEtfkLzfAUaVs6WmqiMNYuH4kxhe/AttYzhXk3ZHRkLI0p3nAfp4SpeOofCMOaQabJFKaRjTUPq/az97W59cyFfKIeG4fASaove2QLbt5TWylL/VrPnKb0hGfxYeGowHwQ68OIOQDD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98D05C433F1;
+	Tue,  5 Mar 2024 00:47:19 +0000 (UTC)
+Date: Mon, 4 Mar 2024 19:49:08 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Sachin Sant
+ <sachinp@linux.ibm.com>
+Subject: Re: [PATCH] tracing: Have trace_marker writes be just half of
+ TRACE_SEQ_SIZE
+Message-ID: <20240304194908.6d8d4fba@gandalf.local.home>
+In-Reply-To: <fa113c5c-07c7-417b-8287-c9bf5f9b42a1@infradead.org>
+References: <20240304192710.4c99677c@gandalf.local.home>
+	<fa113c5c-07c7-417b-8287-c9bf5f9b42a1@infradead.org>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing: Have trace_marker writes be just half of
- TRACE_SEQ_SIZE
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Sachin Sant <sachinp@linux.ibm.com>
-References: <20240304192710.4c99677c@gandalf.local.home>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20240304192710.4c99677c@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Mon, 4 Mar 2024 16:43:46 -0800
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 8198bfc54b58..d68544aef65f 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -7320,6 +7320,17 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
->  	if ((ssize_t)cnt < 0)
->  		return -EINVAL;
->  
-> +	/*
-> +	 * TRACE_SEQ_SIZE is the total size of trace_seq buffer used
-> +	 * for output. As the print event outputs more than just
-> +	 * the string written, keep it smaller than the trace_seq
-> +	 * as it could drop the event if the extra data makes it bigger
-> +	 * than what the trace_seq can hold. Half he TRACE_SEQ_SIZE
+> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> > index 8198bfc54b58..d68544aef65f 100644
+> > --- a/kernel/trace/trace.c
+> > +++ b/kernel/trace/trace.c
+> > @@ -7320,6 +7320,17 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
+> >  	if ((ssize_t)cnt < 0)
+> >  		return -EINVAL;
+> >  
+> > +	/*
+> > +	 * TRACE_SEQ_SIZE is the total size of trace_seq buffer used
+> > +	 * for output. As the print event outputs more than just
+> > +	 * the string written, keep it smaller than the trace_seq
+> > +	 * as it could drop the event if the extra data makes it bigger
+> > +	 * than what the trace_seq can hold. Half he TRACE_SEQ_SIZE  
+> 
+> 	                                          the
 
-	                                          the
+I honestly think my 't' key isn't triggering as much. At least when before
+hitting 'h', as I noticed I've been writing "he", "hey" and "here" a lot,
+and spell check isn't (obviously) catching it ;-)
 
-> +	 * is more than enough.
-> +	 */
-> +	if (cnt > TRACE_SEQ_SIZE / 2)
-> +		cnt = TRACE_SEQ_SIZE / 2;
-> +
->  	meta_size = sizeof(*entry) + 2;  /* add '\0' and possible '\n' */
->   again:
->  	size = cnt + meta_size;
+-- Steve
 
 
--- 
-#Randy
+> 
+> > +	 * is more than enough.
+> > +	 */
+> > +	if (cnt > TRACE_SEQ_SIZE / 2)
+> > +		cnt = TRACE_SEQ_SIZE / 2;
+> > +
+> >  	meta_size = sizeof(*entry) + 2;  /* add '\0' and possible '\n' */
+> >   again:
+> >  	size = cnt + meta_size;  
+> 
+> 
+
