@@ -1,96 +1,76 @@
-Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1DD173;
-	Wed,  6 Mar 2024 03:05:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D035DF15;
+	Wed,  6 Mar 2024 09:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709694328; cv=none; b=H9kgC9pQVQKE6N9cAhd04PHuPKjtQAxyfqNV0YSy1Txe+gYZRbWMjl1E0P22I512JcpEbiJkOc6Ocaf7M0oh3ezIg8tFNOuvNgJI6hLuCW3rllQ4TyV3Yi8kUf9L7KRhpzI1wqmltJ2z2Q9RtLHr3Iss9cQqWD900QIeIVCPsCc=
+	t=1709717417; cv=none; b=CchVU0PrZKGAp+yM7hSahj3Mj90M+40uNY28Iqph13fVX0t5hc3aqbOUbWpLW81mmgT4qGqReMy3dlEjlGSYo80IN9gb/u08YxbypLcomTMnCc8lZRatTMVvRctkNL5En4tqFveD6AS91gn33RDzhexYrXgvhd7smYgbUf8+dPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709694328; c=relaxed/simple;
-	bh=+6dHN2SSImxbZVsLMYu8GjPrXgMt14/8zzaKZLLtt6w=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=J9IoSGVGpwFJ90DlGnxTLa0hKormeHQoCBUVFJKFP7bv8tStMhLwpGyEWm/um2udnSqIqBSOBCxtxXl/p5vFv/KFj1RWKW7/2v+TH2Dq/vSQL6FQHGfW8PAAbpP06MNSpvrcwZWEQGlfeNvWG+saSurgl1zxl7kXTzscmGbTCKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=qAzJNIG1; arc=none smtp.client-ip=162.62.58.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1709717417; c=relaxed/simple;
+	bh=1QIofYlPLaZazIzFiSyKooWgjJyMBhb0LmNv+SCvwiM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fICNPjhfbnqeB6zwBt9DlDWIIPWWyJWKP7yg5nbyeS526z2UvfLqhxKNSklcHK0xZEnuHskC4o8jnz7fFOWA2MQeG1Dop4Y7eI+EYCuRAlbfMw6GUT8ly1LGnBqBt86zEjoOfe9vDx3Qk0iSlTFZdycKQViuAU/hzbXmfDHtGeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DlefIBq2; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="qAzJNIG1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1709694320; bh=C1CCOEGfxwvS0ORC18PbykbGWEcGm+e5TlS2qTiTC8M=;
-	h=From:To:Cc:Subject:Date;
-	b=qAzJNIG1GjapQ/ruL6Gk2OIxfzaaElejbgO/E8VXY5hUwN9fKxlPPROwXsKulo3Uh
-	 IYjvcl3cgBbv7cGIeQc26o9J7hSdgkWoq+Sj/qolWEjKuJvsoSobUkol/oNdnfE5w0
-	 MwM3OnbitvZbyR6uk3fFJV2iaZl4qqYYpv7ADxh8=
-Received: from localhost.localdomain ([218.94.142.74])
-	by newxmesmtplogicsvrsza7-0.qq.com (NewEsmtp) with SMTP
-	id EB629EBA; Wed, 06 Mar 2024 10:58:54 +0800
-X-QQ-mid: xmsmtpt1709693934tgba4zn3s
-Message-ID: <tencent_BA1473492BC618B473864561EA3AB1418908@qq.com>
-X-QQ-XMAILINFO: Mm/8i8/T4ynehAJEBEIWe8kG3QjwIOBAAFjtzj/bi2QqEXFKL/S0q3DtlSLDJP
-	 BSQ1mTkDMHeN2FDx2PpEyPWS+EZvcrvr9opjubjS1khLEHyACXUzhs6ImoJi3R+dcAxX5wuvQEhg
-	 bDc1CGQC+rNI+P0tEL7pFcI97ZZWuMK2hjcYuQ74eoEsEPmK656+dtO6EFYyY7xDkWV68PnC28F8
-	 QVcXabTYCVwWNfFlyq4hZNfxSxjvIf9hXTFfy+4z2ZIWLiKXLvBeZZIs9u5FJmT8uYU2AFi1d8ja
-	 WmQb1U24QeArVysoV7/afaOElbGEZptRK51F7dBKOTuxGBqz4sZxhkukVuRwZkr93r2vHyojzMuF
-	 K/5fvUetXJfqHmTLCpsmvHOQgaaMjW/i8lI12o4aHaM/W7hEsoMEZRrDE9qTuDQwERR+vzm0zS0G
-	 mgeuM08ijapmyO/Cb6QKWz7DrFtjpSAm89AZf2Rq7T7CNoifpgI7bEz0c1QKMoxntQzeI0zXd24F
-	 7KkudePX2InU0iabP2J6UHXS6swI1jHtMbrb3Ty1FHFYFaKD3zLKElG1bZDf3V9mc0PRqNkRVI5J
-	 SubW5Opks1Y+LMYWnxYJ9Qqyqm8XsROdZDVf5vKhUyT+vJZRYuDqHQ+r5h7X6XQk0eZXNlKXWFvS
-	 a5l9OsYQeNnOJIoRBxMChUnOGkpgXjatisEbgAwu6NeJVEtM7JD5Zd0i8e2Xv1fcjNbMmJI84EGc
-	 iHVWEWEaKAWWSKQxTbQm7ZUfkWk0pcYPEBzEHfLZ+lUyjvG0muxKfBF4lMFHhdh3ztBfqZ7VIi43
-	 3F7zaRgMUUDIR8J6UtH66Ik8zRQGKT2rXNdyRXvy+FQRwzZkKJ0yWd0AbvJMmGTIH0/l4BMowHtV
-	 +heYewETaagm7CfFxxek4zgMbHjYZxvrnAcWFfS7jxxGvZg0C4e4iTzxO+ddX9BKMP8eCvt48Rbz
-	 UTbfUusx93/iresHxmihJaNw2j4DpD6UxsPfoudIm587AI8qTxd/kBote8auyJOo+0FYCgb6n089
-	 7AcTDDnOohg7b9wPWXYYE0wexUbBtgbp2hfbCM+9SSgBQddk1VNpkYXfatTjE=
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: linke li <lilinke99@qq.com>
-To: 
-Cc: lilinke99@qq.com,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] ring-buffer: mark racy accesses on work->wait_index
-Date: Wed,  6 Mar 2024 10:55:34 +0800
-X-OQ-MSGID: <20240306025534.49139-1-lilinke99@qq.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-145)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DlefIBq2"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7205B1C0002;
+	Wed,  6 Mar 2024 09:30:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709717407;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=c+7c8y7LxrFjFPDV57l6DgLORtNVZf2nyVmNjPhP4A8=;
+	b=DlefIBq2nchZVKk30u2V3EzmpT/O/dKHoPzfiKr0ZuCMeZ5cz0A8JlMu6PBfeNa3Rj9dVK
+	un6wvQED+3xEcOOiQ8HFfJ41/+Tiz3R0QIk2iVx4rmK0Aa9tWcM3ikmnzGN2JJkrdW4ECK
+	Jz4QkmG7thxixu0pIbtW31+rXKqeMQ6eqTXSKcwNOzYMS0403Vjd3eVAnfduPrGS7GSGL9
+	2mfknCQQ1FdBv/eQ+MVczyxKNYCa2dMprBIPTzfosLMzVMpdJYXqlo1C/bo2Ci0a8A3lQP
+	6KfbPwdtRw3JjmEK74Z1MTMH1BEpKNVYQ6lfmv+2fbGBbvbB4gMT7MELQJn8Rg==
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Subject: [PATCH 0/2] ASoC: trace: trace more parameters in ASoC DAPM events
+Date: Wed, 06 Mar 2024 10:29:59 +0100
+Message-Id: <20240306-improve-asoc-trace-events-v1-0-edb252bbeb10@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJc36GUC/x3MQQqDMBBG4avIrB1IVRR6leIiJr/tLJrIjARBv
+ LvB5bd47ySDCozezUmKIiY5VbzahsLPpy9YYjV1rhtc70aW/6a5gL3lwLv6AEZB2o2nGJdx6Sd
+ EBKr9pljleN6f+bpuJefx+2sAAAA=
+To: Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-sound@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-Mark data races to work->wait_index as benign using READ_ONCE and WRITE_ONCE. These accesses are expected to be racy.
+This small series adds parameters to existing DAPM trace events to make
+them more informative.
 
-Signed-off-by: linke li <lilinke99@qq.com>
+Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 ---
- kernel/trace/ring_buffer.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Luca Ceresoli (2):
+      ASoC: trace: add component to set_bias_level trace events
+      ASoC: trace: add event to snd_soc_dapm trace events
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 0699027b4f4c..a47e9e9750cc 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -798,7 +798,7 @@ void ring_buffer_wake_waiters(struct trace_buffer *buffer, int cpu)
- 		rbwork = &cpu_buffer->irq_work;
- 	}
- 
--	rbwork->wait_index++;
-+	WRITE_ONCE(rbwork->wait_index, READ_ONCE(rbwork->wait_index) + 1);
- 	/* make sure the waiters see the new index */
- 	smp_wmb();
- 
-@@ -906,7 +906,7 @@ int ring_buffer_wait(struct trace_buffer *buffer, int cpu, int full)
- 
- 		/* Make sure to see the new wait index */
- 		smp_rmb();
--		if (wait_index != work->wait_index)
-+		if (wait_index != READ_ONCE(work->wait_index))
- 			break;
- 	}
- 
+ include/trace/events/asoc.h | 45 +++++++++++++++++++++++++--------------------
+ sound/soc/soc-dapm.c        |  8 ++++----
+ 2 files changed, 29 insertions(+), 24 deletions(-)
+---
+base-commit: e7cc5f08886d5a86cada34b421d75989413fdea6
+change-id: 20240306-improve-asoc-trace-events-7ddb6b37edec
+
+Best regards,
 -- 
-2.39.3 (Apple Git-145)
+Luca Ceresoli <luca.ceresoli@bootlin.com>
 
