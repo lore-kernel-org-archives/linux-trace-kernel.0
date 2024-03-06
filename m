@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7519D518;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6EDBD53F;
 	Wed,  6 Mar 2024 01:58:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709690294; cv=none; b=spD1ooTUAEMqD/0nu/QlxX5LlAZ231xOEO4SFGWToTvi78OWEkGUKc/ehHmxa5lvRWI3CDYfIJv7tt70QICyQelnObXWiGsTPbtpzZjjEKNRTS9WKLSi56ylZPcR3e8IdGg3wNvGMpbc3DZkmuTiJWBR/OOR2oJFQI8s4XTswVE=
+	t=1709690295; cv=none; b=YkGY7MutDRIZnjCKL981wh+Xs14VSQ4wjJnpD9c5HSFYRoyp8BCLQRFIQ+27jiDceOR/AWkTzUzlaPVbvn3pIppJsvH+UAy51lSlb8PB/daQTqJHQsDr2lcQUl1Ly0LubrhTWiAQ5EuqDUbzCECEuSzVEKUAK4p++xfs37Mg8TA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709690294; c=relaxed/simple;
-	bh=YbMoNGJoQ7LPWdY+QV7XwG6+ZinAIu9HNwmJVTQ9CoU=;
+	s=arc-20240116; t=1709690295; c=relaxed/simple;
+	bh=NjJZ7PbqyeYT2ESTwvoCVQwGM0ZlE/Evn2oRDxhoydQ=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=H8X1xqzlmZB0DAFcdDD17Hwh47Hj9bI13vAFjruXcBvmsJiqCsy2GqPBD7zSWChDS1eZqvCEbLn+4IqZMfvUHayOaLnoMLYYPsvmOuzMrcHyODHo4oplrlqPxTIU1qS4tG5w2u980w7PaaxgIECplzfFdBiZNQOAQFsOir2dSEE=
+	 Content-Type; b=gun/QVk+OGpXGKewca0NLzPEOKoQYMhzUEX8aZVMuaMOOYiAd2EDqetXwVSk0WwpOUX72NUM62BZKRTahyfU0Mdc+oyhvpTskeumgStyX9ulxJVs0XzlHD1UshKaPmBKmDCr5oPy5L8xI0MEDWHHqUa+am3sZByNsK4VagaRmUk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63663C43142;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC338C41679;
 	Wed,  6 Mar 2024 01:58:14 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rhgZh-00000000TBO-3sEl;
-	Tue, 05 Mar 2024 21:00:05 -0500
-Message-ID: <20240306020005.782553145@goodmis.org>
+	id 1rhgZi-00000000TCq-1ggX;
+	Tue, 05 Mar 2024 21:00:06 -0500
+Message-ID: <20240306020006.261750712@goodmis.org>
 User-Agent: quilt/0.67
-Date: Tue, 05 Mar 2024 20:59:13 -0500
+Date: Tue, 05 Mar 2024 20:59:16 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -43,7 +43,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Borislav Petkov <bp@alien8.de>,
  "Paul E. McKenney" <paulmck@kernel.org>,
  David Howells <dhowells@redhat.com>
-Subject: [PATCH 3/8] tracing: Create "boot_mapped" instance for memory mapped buffer
+Subject: [PATCH 6/8] ring-buffer: Add output of ring buffer meta page
 References: <20240306015910.766510873@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -55,194 +55,198 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Add two global variables trace_buffer_start and trace_buffer_size. If they
-are both set, then a "boot_mapped" instance will be created using the
-memory specified by these variables as its ring buffer.
+Add a buffer_meta per-cpu file for the trace instance that is mapped to
+boot memory. This shows the current meta-data and can be used by user
+space tools to record off the current mappings to help reconstruct the
+ring buffer after a reboot.
 
-The instance will exist in:
-
-  /sys/kernel/tracing/instances/boot_mapped
-
-Note, because the ring buffer is using a defined memory ranged, it will
-act just like a memory mapped ring buffer. It will not have a snapshot
-buffer, as it can't swap out the buffer. The snapshot files as well as any
-tracers that uses a snapshot will not be present in the boot_mapped
-instance.
+It does not expose any virtual addresses, just indexes into the sub-buffer
+pages.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/linux/trace.h |  7 +++++
- kernel/trace/trace.c  | 65 ++++++++++++++++++++++++++++++++++++-------
- kernel/trace/trace.h  |  3 ++
- 3 files changed, 65 insertions(+), 10 deletions(-)
+ kernel/trace/ring_buffer.c | 77 ++++++++++++++++++++++++++++++++++++++
+ kernel/trace/trace.c       | 30 ++++++++++++++-
+ kernel/trace/trace.h       |  2 +
+ 3 files changed, 107 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/trace.h b/include/linux/trace.h
-index fdcd76b7be83..75dab6bb88c9 100644
---- a/include/linux/trace.h
-+++ b/include/linux/trace.h
-@@ -33,6 +33,13 @@ struct trace_array;
- int register_ftrace_export(struct trace_export *export);
- int unregister_ftrace_export(struct trace_export *export);
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 5a90ada49366..1e06ebe36ad1 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -31,6 +31,8 @@
+ #include <asm/local64.h>
+ #include <asm/local.h>
  
-+/*
-+ * If the below are set, then a "boot_mapped" tracing instance will
-+ * be created using this memory for its ring buffer.
-+ */
-+extern unsigned long trace_buffer_start;
-+extern unsigned long trace_buffer_size;
++#include "trace.h"
 +
- /**
-  * trace_array_puts - write a constant string into the trace buffer.
-  * @tr:    The trace array to write to
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index ff0b0a999171..ff986d2a4bd0 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4900,6 +4900,11 @@ static int tracing_open(struct inode *inode, struct file *file)
- static bool
- trace_ok_for_array(struct tracer *t, struct trace_array *tr)
- {
-+#ifdef CONFIG_TRACER_SNAPSHOT
-+	/* arrays with mapped buffer range do not have snapshots */
-+	if (tr->range_addr_start && t->use_max_tr)
-+		return false;
-+#endif
- 	return (tr->flags & TRACE_ARRAY_FL_GLOBAL) || t->allow_instances;
- }
- 
-@@ -8670,11 +8675,13 @@ tracing_init_tracefs_percpu(struct trace_array *tr, long cpu)
- 				tr, cpu, &tracing_entries_fops);
- 
- #ifdef CONFIG_TRACER_SNAPSHOT
--	trace_create_cpu_file("snapshot", TRACE_MODE_WRITE, d_cpu,
--				tr, cpu, &snapshot_fops);
-+	if (!tr->range_addr_start) {
-+		trace_create_cpu_file("snapshot", TRACE_MODE_WRITE, d_cpu,
-+				      tr, cpu, &snapshot_fops);
- 
--	trace_create_cpu_file("snapshot_raw", TRACE_MODE_READ, d_cpu,
--				tr, cpu, &snapshot_raw_fops);
-+		trace_create_cpu_file("snapshot_raw", TRACE_MODE_READ, d_cpu,
-+				      tr, cpu, &snapshot_raw_fops);
-+	}
- #endif
- }
- 
-@@ -9211,7 +9218,18 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
- 
- 	buf->tr = tr;
- 
--	buf->buffer = ring_buffer_alloc(size, rb_flags);
-+	if (tr->range_addr_start && tr->range_addr_size) {
-+		buf->buffer = ring_buffer_alloc_range(size, rb_flags, 0,
-+						      tr->range_addr_start,
-+						      tr->range_addr_size);
-+		/*
-+		 * This is basically the same as a mapped buffer,
-+		 * with the same restrictions.
-+		 */
-+		tr->mapped++;
-+	} else {
-+		buf->buffer = ring_buffer_alloc(size, rb_flags);
-+	}
- 	if (!buf->buffer)
- 		return -ENOMEM;
- 
-@@ -9248,6 +9266,10 @@ static int allocate_trace_buffers(struct trace_array *tr, int size)
- 		return ret;
- 
- #ifdef CONFIG_TRACER_MAX_TRACE
-+	/* Fix mapped buffer trace arrays do not have snapshot buffers */
-+	if (tr->range_addr_start)
-+		return 0;
-+
- 	ret = allocate_trace_buffer(tr, &tr->max_buffer,
- 				    allocate_snapshot ? size : 1);
- 	if (MEM_FAIL(ret, "Failed to allocate trace buffer\n")) {
-@@ -9348,7 +9370,9 @@ static int trace_array_create_dir(struct trace_array *tr)
- }
- 
- static struct trace_array *
--trace_array_create_systems(const char *name, const char *systems)
-+trace_array_create_systems(const char *name, const char *systems,
-+			   unsigned long range_addr_start,
-+			   unsigned long range_addr_size)
- {
- 	struct trace_array *tr;
- 	int ret;
-@@ -9374,6 +9398,10 @@ trace_array_create_systems(const char *name, const char *systems)
- 			goto out_free_tr;
+ /*
+  * The "absolute" timestamp in the buffer is only 59 bits.
+  * If a clock has the 5 MSBs set, it needs to be saved and
+@@ -1582,6 +1584,81 @@ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
  	}
+ }
  
-+	/* Only for boot up memory mapped ring buffers */
-+	tr->range_addr_start = range_addr_start;
-+	tr->range_addr_size = range_addr_size;
++static void *rbm_start(struct seq_file *m, loff_t *pos)
++{
++	struct ring_buffer_per_cpu *cpu_buffer = m->private;
++	struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
++	unsigned long val;
 +
- 	tr->trace_flags = global_trace.trace_flags & ~ZEROED_TRACE_FLAGS;
- 
- 	cpumask_copy(tr->tracing_cpumask, cpu_all_mask);
-@@ -9431,9 +9459,24 @@ trace_array_create_systems(const char *name, const char *systems)
- 
- static struct trace_array *trace_array_create(const char *name)
- {
--	return trace_array_create_systems(name, NULL);
-+	return trace_array_create_systems(name, NULL, 0, 0);
++	if (!meta)
++		return NULL;
++
++	if (*pos > meta->nr_subbufs)
++		return NULL;
++
++	val = *pos;
++	val++;
++
++	return (void *)val;
 +}
 +
-+unsigned long trace_buffer_start;
-+unsigned long trace_buffer_size;
-+
-+static int __init trace_range_tr(void)
++static void *rbm_next(struct seq_file *m, void *v, loff_t *pos)
 +{
-+	if (!trace_buffer_start || !trace_buffer_size)
-+		return 0;
++	(*pos)++;
 +
-+	trace_array_create_systems("boot_mapped", NULL,
-+				   trace_buffer_start, trace_buffer_size);
++	return rbm_start(m, pos);
++}
++
++static int rb_meta_subbuf_idx(struct ring_buffer_meta *meta, void *subbuf);
++
++static int rbm_show(struct seq_file *m, void *v)
++{
++	struct ring_buffer_per_cpu *cpu_buffer = m->private;
++	struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
++	unsigned long val = (unsigned long)v;
++
++	if (val == 1) {
++		seq_printf(m, "head_buffer:   %d\n",
++			   rb_meta_subbuf_idx(meta, (void *)meta->head_buffer));
++		seq_printf(m, "commit_buffer: %d\n",
++			   rb_meta_subbuf_idx(meta, (void *)meta->commit_buffer));
++		seq_printf(m, "subbuf_size:   %d\n", meta->subbuf_size);
++		seq_printf(m, "nr_subbufs:    %d\n", meta->nr_subbufs);
++		return 0;
++	}
++
++	val -= 2;
++	seq_printf(m, "buffer[%ld]:    %d\n", val, meta->buffers[val]);
++
 +	return 0;
++}
++
++static void rbm_stop(struct seq_file *m, void *p)
++{
++}
++
++static const struct seq_operations rb_meta_seq_ops = {
++	.start		= rbm_start,
++	.next		= rbm_next,
++	.show		= rbm_show,
++	.stop		= rbm_stop,
++};
++
++int ring_buffer_meta_seq_init(struct file *file, struct trace_buffer *buffer, int cpu)
++{
++	struct seq_file *m;
++	int ret;
++
++	ret = seq_open(file, &rb_meta_seq_ops);
++	if (ret)
++		return ret;
++
++	m = file->private_data;
++	m->private = buffer->buffers[cpu];
++
++	return 0;
++}
++
+ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+ 		long nr_pages, struct list_head *pages)
+ {
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index ff986d2a4bd0..b4a7960aed98 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4997,7 +4997,7 @@ static int show_traces_open(struct inode *inode, struct file *file)
+ 	return 0;
  }
  
-+fs_initcall(trace_range_tr);
-+
- static int instance_mkdir(const char *name)
+-static int show_traces_release(struct inode *inode, struct file *file)
++static int tracing_seq_release(struct inode *inode, struct file *file)
  {
- 	struct trace_array *tr;
-@@ -9485,7 +9528,7 @@ struct trace_array *trace_array_get_by_name(const char *name, const char *system
- 			goto out_unlock;
- 	}
+ 	struct trace_array *tr = inode->i_private;
  
--	tr = trace_array_create_systems(name, systems);
-+	tr = trace_array_create_systems(name, systems, 0, 0);
+@@ -5038,7 +5038,7 @@ static const struct file_operations show_traces_fops = {
+ 	.open		= show_traces_open,
+ 	.read		= seq_read,
+ 	.llseek		= seq_lseek,
+-	.release	= show_traces_release,
++	.release	= tracing_seq_release,
+ };
  
- 	if (IS_ERR(tr))
- 		tr = NULL;
-@@ -9678,8 +9721,10 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
- 		MEM_FAIL(1, "Could not allocate function filter files");
+ static ssize_t
+@@ -6840,6 +6840,22 @@ tracing_total_entries_read(struct file *filp, char __user *ubuf,
+ 	return simple_read_from_buffer(ubuf, cnt, ppos, buf, r);
+ }
  
++static int tracing_buffer_meta_open(struct inode *inode, struct file *filp)
++{
++	struct trace_array *tr = inode->i_private;
++	int cpu = tracing_get_cpu(inode);
++	int ret;
++
++	ret = tracing_check_open_get_tr(tr);
++	if (ret)
++		return ret;
++
++	ret = ring_buffer_meta_seq_init(filp, tr->array_buffer.buffer, cpu);
++	if (ret < 0)
++		__trace_array_put(tr);
++	return ret;
++}
++
+ static ssize_t
+ tracing_free_buffer_write(struct file *filp, const char __user *ubuf,
+ 			  size_t cnt, loff_t *ppos)
+@@ -7416,6 +7432,13 @@ static const struct file_operations tracing_entries_fops = {
+ 	.release	= tracing_release_generic_tr,
+ };
+ 
++static const struct file_operations tracing_buffer_meta_fops = {
++	.open		= tracing_buffer_meta_open,
++	.read		= seq_read,
++	.llseek		= seq_lseek,
++	.release	= tracing_seq_release,
++};
++
+ static const struct file_operations tracing_total_entries_fops = {
+ 	.open		= tracing_open_generic_tr,
+ 	.read		= tracing_total_entries_read,
+@@ -8674,6 +8697,9 @@ tracing_init_tracefs_percpu(struct trace_array *tr, long cpu)
+ 	trace_create_cpu_file("buffer_size_kb", TRACE_MODE_READ, d_cpu,
+ 				tr, cpu, &tracing_entries_fops);
+ 
++	if (tr->range_addr_start)
++		trace_create_cpu_file("buffer_meta", TRACE_MODE_READ, d_cpu,
++				      tr, cpu, &tracing_buffer_meta_fops);
  #ifdef CONFIG_TRACER_SNAPSHOT
--	trace_create_file("snapshot", TRACE_MODE_WRITE, d_tracer,
--			  tr, &snapshot_fops);
-+	if (!tr->range_addr_start) {
-+		trace_create_file("snapshot", TRACE_MODE_WRITE, d_tracer,
-+				  tr, &snapshot_fops);
-+	}
- #endif
- 
- 	trace_create_file("error_log", TRACE_MODE_WRITE, d_tracer,
+ 	if (!tr->range_addr_start) {
+ 		trace_create_cpu_file("snapshot", TRACE_MODE_WRITE, d_cpu,
 diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 749a182dab48..d22d7c3b770a 100644
+index d22d7c3b770a..ccff4891c2ac 100644
 --- a/kernel/trace/trace.h
 +++ b/kernel/trace/trace.h
-@@ -338,6 +338,9 @@ struct trace_array {
- 	unsigned int		snapshot;
- 	unsigned int		mapped;
- 	unsigned long		max_latency;
-+	/* The below is for memory mapped ring buffer */
-+	unsigned long		range_addr_start;
-+	unsigned long		range_addr_size;
- #ifdef CONFIG_FSNOTIFY
- 	struct dentry		*d_max_latency;
- 	struct work_struct	fsnotify_work;
+@@ -644,6 +644,8 @@ trace_buffer_lock_reserve(struct trace_buffer *buffer,
+ 			  unsigned long len,
+ 			  unsigned int trace_ctx);
+ 
++int ring_buffer_meta_seq_init(struct file *file, struct trace_buffer *buffer, int cpu);
++
+ struct trace_entry *tracing_get_trace_entry(struct trace_array *tr,
+ 						struct trace_array_cpu *data);
+ 
 -- 
 2.43.0
 
