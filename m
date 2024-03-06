@@ -1,51 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA8FDF51;
-	Wed,  6 Mar 2024 01:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3C24C8F
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  6 Mar 2024 02:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709690396; cv=none; b=JFcw1Yj4DAuNvL3SErBRpWIlfMYGF27JXs1qc9d4FKwvacs71JGR+4zpn3q74GModEwUXU0PO5YhjyPy5UtDPLXy1TKz95RjbDoYGdLj11vNYS/2TJwJEQ3lLZ2RQ70K6B5mrkV7+K+AxDgrqIS3bz8hGU5Dxh45JrRmGOU1trY=
+	t=1709692136; cv=none; b=WYYBc6GX9j+xE7PmW82m2IbRFEhb+gAoN69u2NsOXhBj4+SQ04dr4fsBnsxq4WEb2VpJZALE+Ig2a72M/0pl7EBbhGFy/babiIX/IIt1n13++Pjh8P3L8cRcqL/F+ygJrg49dqjYohEbm4Obhh8hscZEIk1bbIU5uWNwsrm3b0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709690396; c=relaxed/simple;
-	bh=vlqplmEiuRi9zaL6P3HLiDmWdu8RoWyxiD2tS5NzYQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HROg+pwR+algOi44weUxQEybJnyWlnCVjPvjDFNFm3EWrvwE8oJ2c3yLvwmDvnZSGIQjzhBQXZnbIkWp/GLEWJyPjNxIUDXQXb1N0AXmLv+poIrWO15vdaO6z8hk2UPPh2g0RhwuXE+tThU04u4mn8aeF/GO+dRip6BNPteOxL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 508BAC43390;
-	Wed,  6 Mar 2024 01:59:53 +0000 (UTC)
-Date: Tue, 5 Mar 2024 21:01:44 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Vincent Donnefort
- <vdonnefort@google.com>, Joel Fernandes <joel@joelfernandes.org>, Daniel
- Bristot de Oliveira <bristot@redhat.com>, Ingo Molnar <mingo@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, suleiman@google.com, Thomas Gleixner
- <tglx@linutronix.de>, Vineeth Pillai <vineeth@bitbyteword.org>, Youssef
- Esmat <youssefesmat@google.com>, Beau Belgrave <beaub@linux.microsoft.com>,
- Alexander Graf <graf@amazon.com>, Baoquan He <bhe@redhat.com>, Borislav
- Petkov <bp@alien8.de>, "Paul E. McKenney" <paulmck@kernel.org>, David
- Howells <dhowells@redhat.com>
-Subject: [POC] !!! Re: [PATCH 0/8] tracing: Persistent traces across a
- reboot or crash
-Message-ID: <20240305210133.125a1643@gandalf.local.home>
-In-Reply-To: <20240306015910.766510873@goodmis.org>
-References: <20240306015910.766510873@goodmis.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1709692136; c=relaxed/simple;
+	bh=m/4/IJpnreuZGBCjDFZuh5CJChe0Zp0mf+/fUUyVNyY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k6mAvMKijx7370rp7k8oS85jrUZb3FzACVQdKmmkasW0Y2DVYAyUXCKtNJV74ciHmWjFkOAm72DaYozt/dMFhZZQ8vjyMGqfFaQsCIll5rg47Hy5smeGdA+fdlW0P0yD3z8JTQGTE5Abx9q6ZITB/P/Pi/+k5hX7vTE7GChguw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk; spf=none smtp.mailfrom=davidwei.uk; dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b=tXzN2w3m; arc=none smtp.client-ip=209.85.161.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=davidwei.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b="tXzN2w3m"
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5a11dea5bbaso298567eaf.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 05 Mar 2024 18:28:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=davidwei-uk.20230601.gappssmtp.com; s=20230601; t=1709692133; x=1710296933; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=n9CloCqaM+25WoaR2YknpneBnZb2s33DuZ5EXKAJgUk=;
+        b=tXzN2w3mIA42+kxiYmI+IfLVus4l/QCyp13ANiYCaN2AX0ORMGh8eFZyBZrHwi5+ui
+         zNdIkjkiBk4A/hgNMWzvhoZCVZgub5eQsDzmq3IH7LIsjQRrvMfh2CRMGVf8ialf+Rus
+         nghzApmYQfTLUlMYRSXbb4x6B6akvEuK4rNb6WwQoK4aLQOK0EG+oA4Ab7xlOOeaibDg
+         nJSUHhZ9ODRVCyFEvPMgBTKDGO9DRMtkgCfGe4EIFAsUKHZm1wpITxZLA3udaKd58MVY
+         6IouXTOA0w+XUEzqhiMWwJtLgVug5qR8dVcL0sonjarAz3MYOIYP8a1XnRJ4sV8i2/vC
+         ncEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709692133; x=1710296933;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=n9CloCqaM+25WoaR2YknpneBnZb2s33DuZ5EXKAJgUk=;
+        b=BTB7v8i8BnnJcTgPZnrJ1Ltg8wz9ZJJdzo8ppNPJc4M/Ldcja4DcucVwraJ4oJA7Ed
+         aZWovN/Mw85Ps7R7o2ECVD8Z6FHPtiWqNH/iyTu9vD/tgY39ILIRi5jhzRvF74aHp2Vo
+         cNv2qAv1HqCMPGVp8P11W4wNAzSMwat4oCQD6JLtAz8beXkrUJbW8GJ2jkVJ1i2LYrji
+         IMKEY8hYx76Ra/rgu22Rv4XT5ImLyPSCnSTpzU2DQoC5juRk/6MgmQbF2CTnbL59d2mK
+         OsOQ8aSlNr3A3ww4TR3d7hWkbvuQ0LhppvzqRTx8jl9sLsnSiHPYJ53mdGTPH2119nqx
+         1XEg==
+X-Forwarded-Encrypted: i=1; AJvYcCXd7i/uFwAcxiJuCtPZsbPqqMj/OrTZOfVp0x18CdMnQZdFZLuXRcEXw0bpP41Ux2601lvRHWprQdyFHJwRmQMXtmsS6gi8NpAtPhHVK2qrdx0w
+X-Gm-Message-State: AOJu0Yy0MSHmkfpL4Zv1XBjzVYlVDLgGGa/ghUGHOFRDISI3L8hkWZfA
+	7DrQzyMYisBGNUGdhT1RABUtkz+iRQpBEftojOvTcWvUM7Xu/QQdEMwHlISc6mc=
+X-Google-Smtp-Source: AGHT+IHKixed8Mkgk+0mpRfXfdBzYVdPnWZ0ptxrRYAk7Gk8YnML1zfyWGAr7RcPhYJE96tLslzelg==
+X-Received: by 2002:a05:6870:1786:b0:220:8d17:6ebd with SMTP id r6-20020a056870178600b002208d176ebdmr3863595oae.42.1709692133363;
+        Tue, 05 Mar 2024 18:28:53 -0800 (PST)
+Received: from [192.168.1.24] (71-212-18-124.tukw.qwest.net. [71.212.18.124])
+        by smtp.gmail.com with ESMTPSA id x35-20020a056a0018a300b006e5bdc19842sm7873904pfh.73.2024.03.05.18.28.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Mar 2024 18:28:52 -0800 (PST)
+Message-ID: <383c4870-167f-4123-bbf3-928db1463e01@davidwei.uk>
+Date: Tue, 5 Mar 2024 18:28:51 -0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH net-next v6 09/15] memory-provider: dmabuf devmem
+ memory provider
+Content-Language: en-GB
+To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
+ <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@kernel.org>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Pavel Begunkov <asml.silence@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>,
+ Harshitha Ramamurthy <hramamurthy@google.com>,
+ Jeroen de Borst <jeroendb@google.com>,
+ Praveen Kaligineedi <pkaligineedi@google.com>,
+ Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
+References: <20240305020153.2787423-1-almasrymina@google.com>
+ <20240305020153.2787423-10-almasrymina@google.com>
+From: David Wei <dw@davidwei.uk>
+In-Reply-To: <20240305020153.2787423-10-almasrymina@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240306020144.ooHL7DCfa8W1ewINOUH4Vq6MLIbyVY3t2fGQ7S_sVJc@z>
 
-I forgot to add [POC] to the subject :-p
+On 2024-03-04 18:01, Mina Almasry wrote:
+> +	if (pool->p.queue)
+> +		binding = READ_ONCE(pool->p.queue->binding);
+> +
+> +	if (binding) {
+> +		pool->mp_ops = &dmabuf_devmem_ops;
+> +		pool->mp_priv = binding;
+> +	}
 
-All these patches are a proof of concept.
+This is specific to TCP devmem. For ZC Rx we will need something more
+generic to let us pass our own memory provider backend down to the page
+pool.
 
--- Steve
+What about storing ops and priv void ptr in struct netdev_rx_queue
+instead? Then we can both use it.
