@@ -1,68 +1,68 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A6012838A
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  7 Mar 2024 11:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E08A12883C
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  7 Mar 2024 11:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709811390; cv=none; b=rwUD3L6dkf2slytWpjvKeUDc0BLvZESYDbXMyV9kJSH93OR1IoJZXNOmgYpM/SSPPtkjCs0bXQ2muvgHTt+qIjwUAo2PvujCpJl1CzmYEd8xn5U28VZlgEKcGO6gT8cU8SsCGK9uwiYCyhtzvOySKn9ocvsV1IHZ3fSQytHIc5g=
+	t=1709811414; cv=none; b=guB7qAL2Gc5ksziT5NmF9/MdgZbVMcighGjopTQhbTu2gy6ojMgslksyUYolj5KfRm0P1gRn7fJLXnHF94HyekABFALXj2mEDQYYvP2s0Q1K+zdAXQFTsOLqQ4gKGXwtaVgpU2ICxERdzBWcynNc9+qC3Z8ChHwpMGelMy5ii0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709811390; c=relaxed/simple;
-	bh=z/APOdaKVCW0nV+fzkJMoIJM49ECU0kgRk9+jVDwdgY=;
+	s=arc-20240116; t=1709811414; c=relaxed/simple;
+	bh=csE9+Fb1qbDL7EQ9gqnLFCsH8i1dvljsRV4NNfkRqIA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OBgVbDy+pf0677wT63ZTZ0LvI/BMe9Ks9me4f8HCau8j3Yj0240c45P8YUqRRKqgl01pl7V9mCZl5xBPFldT0vq17+mLF0rAbQJ/4jF/tCKXp1Y2/bP0U3UPxHinFYIiHhpJb6cEW9yUBfT0PYreoNpfVrqdPfGmYppT1VQUWKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p3/YH6w7; arc=none smtp.client-ip=209.85.208.43
+	 To:Cc:Content-Type; b=mOpob6omde0LMrE85m+ueBbT4pmx90nHOCLuc2R08oGkmtFqvn1JmG4Pbfmjjt49/UWw7l8OxTlFoiVhxo+wREv3zxzFH3HoLR5/ok1hmohDtbJV5qqBFjmqt0FllC618fZjHLkB0RUSXzRJpuA81yqM6DHoeIj/TAhOWLvJQfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pBRou20e; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p3/YH6w7"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5681b7f338aso3364a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 07 Mar 2024 03:36:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pBRou20e"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-566b160f6eeso9104a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 07 Mar 2024 03:36:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709811387; x=1710416187; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1709811411; x=1710416211; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=z/APOdaKVCW0nV+fzkJMoIJM49ECU0kgRk9+jVDwdgY=;
-        b=p3/YH6w7V3ni0kAfCB554OLE3gcBjcfTMFxfwadffcDXkPR4L+rRSSI0iJUaYNNp4W
-         FYmACN8wNxeIC046XUIc4BPXx9WAYEUyoBnQ2haXqgys/OWu/Z3gr/iBmxHbF9w2OTXS
-         ewPQrNZCiSi+mftOEHTMJyOvNMunw92QiSrPCLuEeYIACXxkR2ZWCjoF8hLDXpZ2gJMc
-         7RFRbH0hLRJliuoTG0D6Ks951o2bxg+nhA/x53J0ZdXQmpzRvmy28dOpDe7hKUJT3aR7
-         wnumfMvIBRzwFJXhc66m0xlhTZDjDv/IAUT4buWMz/IVRdaK+FgGDPLqenm84jJ9sE5/
-         O9/w==
+        bh=csE9+Fb1qbDL7EQ9gqnLFCsH8i1dvljsRV4NNfkRqIA=;
+        b=pBRou20eRvrRPp746txBjnKlQFWBt8vYvN75U4XCRO+Tci3eivtClA5fp6MSomAw4O
+         LNrJ2+L/sTDgbsrbqMF6Fv5zE+QwiMH3TbxScQ1ULbn26pwHqCTdcYTYGPzI5ZVBo6e/
+         obMMDCiXNtb9d1Xv4E1+2ppxBOLXFKHlksG1FmVSHZOJ5gSKQkUkIcb1708pdZ+UetnF
+         JxmJjNsk6VcVrMySB9sHtPWczffiwzUXc9HTEWB1Ilzb2Yq17NR1JnhO4VD/grW/lKI/
+         7pw1TOEjBHGNkbg0GjBUHyAMH/KQHeGXfKDYyVLR+PMepPCTBqhu4hEayxb+amQtwhRr
+         s5xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709811387; x=1710416187;
+        d=1e100.net; s=20230601; t=1709811411; x=1710416211;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=z/APOdaKVCW0nV+fzkJMoIJM49ECU0kgRk9+jVDwdgY=;
-        b=JiRYHI+STuN2PdCuomcHEWezZ9uFp6ACFLEu5VMzelzzzHzaXUXnyYMaS6+jjY7IxX
-         MaRLlG4ePPYxRhgNJiZpTT3EKH2gf1Mh88wWXA72d55Op9uxWKXikXk3yZea9bnAZtK1
-         u0tDGMzPISKTL//bt7EQDuBjm2MG9z9SpG/ORQ2lvigZ/oEjo2OiWBUBo9GL/M2KnXpO
-         OEYJzTDBRL9Z5Xez8ERe11ZOX1QtuzDxIYqkciwA3JJaYuKTAWvwJ+dLDXp9eimKS6iH
-         xnpSkKFxLQszuyolr/i/w/nmPA2HXu7dwNYdYYwEyPNTI3AOS+HhRSVHOFWEuZQqSOT1
-         crbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWTaX6a6gNtWMx92CTWKgqCupMQFu/unEYWUGyMqo4vJFRBK3PzahMoEpJEvxPfE5/IuB1e/SFZRV+pyqpWSrpUwbhZiNnkkBkXPdhYnahEphq+
-X-Gm-Message-State: AOJu0YwHp59o7smnrXia2tyzLAAyihjvlyjkE7vzhJD4is9xtkcLo6VQ
-	Fzxh2SGVd56nur5tS3Tyd4une3XR7mhkenBBQjEHOesQ2RGupIByfMhpb+pM6xaOOKBljYmQ57l
-	OIq3eVKUAl/Dd9lKi+nxr/GkP4yy3/QSqEaSH
-X-Google-Smtp-Source: AGHT+IGhKpaFISh6h77rzCFM8kMEcKQujZVf7FZR95JZO09BK+PBIzQ0T/DBA/25M6CBax+euiF805iv0p6iHRNTWsc=
+        bh=csE9+Fb1qbDL7EQ9gqnLFCsH8i1dvljsRV4NNfkRqIA=;
+        b=s4L14Eu/pRPcaMYlNEcIJ0c1GT9yZ5tu0k9SBGP6Y3fh7NkWtbuO7GWOU7IcKRKn8Y
+         DRtWUVxub0rEYagNkvnDd4JWcHMWDGJinBOlflDICeQWi8JVfo3l7wG2fenBCcHMYMpn
+         Gwz6xgDJs3KvDPB37d2VfsjhOSf2Qma07uzK+ObiWvIAX9xeCwiauaCWQtUA7RNMjZst
+         4l0+az81WIxAgYjiXK6g5qyqI74+6Ts+/JIHnBZDcLFYBbt4w/xKfDegrl2gxH2ohZry
+         6yHOlwoC7jVibFc6AkaRePqlaX1MYrym0lZGtmBtlqt5/IPM/XW1/OTe74qSQKL0fuMx
+         GXrA==
+X-Forwarded-Encrypted: i=1; AJvYcCWmpRpQCXJh4QMZkQN9lNYaPH2Y0UT1l55TasbSxTRIqETiloNznQ/o5xQaVOS/TwUMT38MxCiNK4qdElzb4xshyfz7/bE58eF5dOeF0exBYxbT
+X-Gm-Message-State: AOJu0YzJYmBnD6RhPdRRxiuTbx5Adz+kXzWgwl7dhBv0ADpDnl/Mr2NU
+	YnFUuS5NqIuzKMVAQ1qKQhYZ8ENp/9weV8kJ8/i2GpmOViBUr1GGIT5/0XglGTeMnrCBPG1iIZG
+	rqXoQsFZ41sJSsnkpN87hR0zdIRk3VCYaYIvV
+X-Google-Smtp-Source: AGHT+IFN+ugPG1MFVDNGu8EIOU8XjifORKg5Yakb5vpTZ17CLf2qhGejlG3OgPc/1FIj1oKxaSdO9DDiVGzlPE1EaXA=
 X-Received: by 2002:aa7:df92:0:b0:567:f511:3815 with SMTP id
- b18-20020aa7df92000000b00567f5113815mr149020edy.3.1709811386941; Thu, 07 Mar
- 2024 03:36:26 -0800 (PST)
+ b18-20020aa7df92000000b00567f5113815mr149183edy.3.1709811411456; Thu, 07 Mar
+ 2024 03:36:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240304092934.76698-1-kerneljasonxing@gmail.com> <20240304092934.76698-2-kerneljasonxing@gmail.com>
-In-Reply-To: <20240304092934.76698-2-kerneljasonxing@gmail.com>
+References: <20240304092934.76698-1-kerneljasonxing@gmail.com> <20240304092934.76698-3-kerneljasonxing@gmail.com>
+In-Reply-To: <20240304092934.76698-3-kerneljasonxing@gmail.com>
 From: Eric Dumazet <edumazet@google.com>
-Date: Thu, 7 Mar 2024 12:36:13 +0100
-Message-ID: <CANn89i+LCcumU32pHt2oUnpA19hvgy7YJ7us0brcpL7Szx8tcw@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 1/2] tcp: add tracing of skb/skaddr in
- tcp_event_sk_skb class
+Date: Thu, 7 Mar 2024 12:36:40 +0100
+Message-ID: <CANn89i+xg_rSeaVNo__FdZkV46_CEhM8c2Gpr+i-GsWnqatAiQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 2/2] tcp: add tracing of skbaddr in
+ tcp_event_skb class
 To: Jason Xing <kerneljasonxing@gmail.com>
 Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, rostedt@goodmis.org, 
 	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org, 
@@ -75,12 +75,8 @@ om> wrote:
 >
 > From: Jason Xing <kernelxing@tencent.com>
 >
-> Printing the addresses can help us identify the exact skb/sk
-> for those system in which it's not that easy to run BPF program.
-> As we can see, it already fetches those, then use it directly
-> and it will print like below:
->
-> ...tcp_retransmit_skb: skbaddr=3DXXX skaddr=3DXXX family=3DAF_INET...
+> Use the existing parameter and print the address of skbaddr
+> as other trace functions do.
 >
 > Signed-off-by: Jason Xing <kernelxing@tencent.com>
 
