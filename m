@@ -1,83 +1,184 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E08A12883C
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  7 Mar 2024 11:36:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC444129A7D;
+	Thu,  7 Mar 2024 12:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709811414; cv=none; b=guB7qAL2Gc5ksziT5NmF9/MdgZbVMcighGjopTQhbTu2gy6ojMgslksyUYolj5KfRm0P1gRn7fJLXnHF94HyekABFALXj2mEDQYYvP2s0Q1K+zdAXQFTsOLqQ4gKGXwtaVgpU2ICxERdzBWcynNc9+qC3Z8ChHwpMGelMy5ii0Q=
+	t=1709813739; cv=none; b=KPTA8dK7cCg52Bmpo5MmX+2VioQPz3kiPv+WhJu8tFCWRgsXL+BwiwKYFzO59ypyyTGwSI3Ip/Xnk7cxB/XSdQsJ0TcQS7N28uxpcg+qU1A5ewvzFk2MbbWKYCY4eBfw4O4JE637bhSlMaDnkq50c8nfDWd+fnW4SpmZKYVL3PU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709811414; c=relaxed/simple;
-	bh=csE9+Fb1qbDL7EQ9gqnLFCsH8i1dvljsRV4NNfkRqIA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mOpob6omde0LMrE85m+ueBbT4pmx90nHOCLuc2R08oGkmtFqvn1JmG4Pbfmjjt49/UWw7l8OxTlFoiVhxo+wREv3zxzFH3HoLR5/ok1hmohDtbJV5qqBFjmqt0FllC618fZjHLkB0RUSXzRJpuA81yqM6DHoeIj/TAhOWLvJQfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pBRou20e; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pBRou20e"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-566b160f6eeso9104a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 07 Mar 2024 03:36:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709811411; x=1710416211; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=csE9+Fb1qbDL7EQ9gqnLFCsH8i1dvljsRV4NNfkRqIA=;
-        b=pBRou20eRvrRPp746txBjnKlQFWBt8vYvN75U4XCRO+Tci3eivtClA5fp6MSomAw4O
-         LNrJ2+L/sTDgbsrbqMF6Fv5zE+QwiMH3TbxScQ1ULbn26pwHqCTdcYTYGPzI5ZVBo6e/
-         obMMDCiXNtb9d1Xv4E1+2ppxBOLXFKHlksG1FmVSHZOJ5gSKQkUkIcb1708pdZ+UetnF
-         JxmJjNsk6VcVrMySB9sHtPWczffiwzUXc9HTEWB1Ilzb2Yq17NR1JnhO4VD/grW/lKI/
-         7pw1TOEjBHGNkbg0GjBUHyAMH/KQHeGXfKDYyVLR+PMepPCTBqhu4hEayxb+amQtwhRr
-         s5xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709811411; x=1710416211;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=csE9+Fb1qbDL7EQ9gqnLFCsH8i1dvljsRV4NNfkRqIA=;
-        b=s4L14Eu/pRPcaMYlNEcIJ0c1GT9yZ5tu0k9SBGP6Y3fh7NkWtbuO7GWOU7IcKRKn8Y
-         DRtWUVxub0rEYagNkvnDd4JWcHMWDGJinBOlflDICeQWi8JVfo3l7wG2fenBCcHMYMpn
-         Gwz6xgDJs3KvDPB37d2VfsjhOSf2Qma07uzK+ObiWvIAX9xeCwiauaCWQtUA7RNMjZst
-         4l0+az81WIxAgYjiXK6g5qyqI74+6Ts+/JIHnBZDcLFYBbt4w/xKfDegrl2gxH2ohZry
-         6yHOlwoC7jVibFc6AkaRePqlaX1MYrym0lZGtmBtlqt5/IPM/XW1/OTe74qSQKL0fuMx
-         GXrA==
-X-Forwarded-Encrypted: i=1; AJvYcCWmpRpQCXJh4QMZkQN9lNYaPH2Y0UT1l55TasbSxTRIqETiloNznQ/o5xQaVOS/TwUMT38MxCiNK4qdElzb4xshyfz7/bE58eF5dOeF0exBYxbT
-X-Gm-Message-State: AOJu0YzJYmBnD6RhPdRRxiuTbx5Adz+kXzWgwl7dhBv0ADpDnl/Mr2NU
-	YnFUuS5NqIuzKMVAQ1qKQhYZ8ENp/9weV8kJ8/i2GpmOViBUr1GGIT5/0XglGTeMnrCBPG1iIZG
-	rqXoQsFZ41sJSsnkpN87hR0zdIRk3VCYaYIvV
-X-Google-Smtp-Source: AGHT+IFN+ugPG1MFVDNGu8EIOU8XjifORKg5Yakb5vpTZ17CLf2qhGejlG3OgPc/1FIj1oKxaSdO9DDiVGzlPE1EaXA=
-X-Received: by 2002:aa7:df92:0:b0:567:f511:3815 with SMTP id
- b18-20020aa7df92000000b00567f5113815mr149183edy.3.1709811411456; Thu, 07 Mar
- 2024 03:36:51 -0800 (PST)
+	s=arc-20240116; t=1709813739; c=relaxed/simple;
+	bh=33Uzy2N/rqj/7YQgQGuWOf/5Tv1toMJF0Qi0AcbhFw0=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=daHia+g5WZ7eODuIVAll5m8QwdGKqk00OLE0IvF8P6SZV7ETbWPIs2RfpKSz6iT7ggoEThqt1pPvRqiq3lSg0uJPztCHDmqMQnoSFsMn4ChBBZ9SznujZovIg76PZ12yj/2cv0iSKnwXhoarG6SjrIUj7nymYXGgpU8EkHdlcF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Tr7Vw2yQsz1Q9QH;
+	Thu,  7 Mar 2024 20:13:28 +0800 (CST)
+Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7C1EA14059C;
+	Thu,  7 Mar 2024 20:15:27 +0800 (CST)
+Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
+ (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 7 Mar
+ 2024 20:15:26 +0800
+Subject: Re: [RFC PATCH net-next v6 05/15] netdev: support binding dma-buf to
+ netdevice
+To: Mina Almasry <almasrymina@google.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-alpha@vger.kernel.org>,
+	<linux-mips@vger.kernel.org>, <linux-parisc@vger.kernel.org>,
+	<sparclinux@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <bpf@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <linux-media@vger.kernel.org>,
+	<dri-devel@lists.freedesktop.org>, "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Richard
+ Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky
+	<ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, Thomas
+ Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
+	<James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>,
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
+	<hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
+	<arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+	<daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+	<martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
+	<song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
+	<john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav Fomichev
+	<sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	David Ahern <dsahern@kernel.org>, Willem de Bruijn
+	<willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, Sumit
+ Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=c3=b6nig?=
+	<christian.koenig@amd.com>, Pavel Begunkov <asml.silence@gmail.com>, David
+ Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Shailend Chand
+	<shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel
+ Butt <shakeelb@google.com>, Jeroen de Borst <jeroendb@google.com>, Praveen
+ Kaligineedi <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>,
+	Kaiyuan Zhang <kaiyuanz@google.com>
+References: <20240305020153.2787423-1-almasrymina@google.com>
+ <20240305020153.2787423-6-almasrymina@google.com>
+ <da42cea9-c169-599e-f087-d38c419e3dab@huawei.com>
+ <CAHS8izM7GbvWHrH=h9q0oG0DMU649EjT1udNEW_8F-hGeC15EQ@mail.gmail.com>
+ <aa892723-7396-998d-db06-166c28fba1e0@huawei.com>
+ <CAHS8izNJFnKGn9nrJ3kRxGwhvjiDey_bfrxQNfsfj=S9hZR_UA@mail.gmail.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <76266a89-8ec1-6a4c-716b-da422f0b2cd5@huawei.com>
+Date: Thu, 7 Mar 2024 20:15:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240304092934.76698-1-kerneljasonxing@gmail.com> <20240304092934.76698-3-kerneljasonxing@gmail.com>
-In-Reply-To: <20240304092934.76698-3-kerneljasonxing@gmail.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Thu, 7 Mar 2024 12:36:40 +0100
-Message-ID: <CANn89i+xg_rSeaVNo__FdZkV46_CEhM8c2Gpr+i-GsWnqatAiQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 2/2] tcp: add tracing of skbaddr in
- tcp_event_skb class
-To: Jason Xing <kerneljasonxing@gmail.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, rostedt@goodmis.org, 
-	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Jason Xing <kernelxing@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAHS8izNJFnKGn9nrJ3kRxGwhvjiDey_bfrxQNfsfj=S9hZR_UA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemm500005.china.huawei.com (7.185.36.74)
 
-On Mon, Mar 4, 2024 at 10:29=E2=80=AFAM Jason Xing <kerneljasonxing@gmail.c=
-om> wrote:
->
-> From: Jason Xing <kernelxing@tencent.com>
->
-> Use the existing parameter and print the address of skbaddr
-> as other trace functions do.
->
-> Signed-off-by: Jason Xing <kernelxing@tencent.com>
+On 2024/3/7 6:10, Mina Almasry wrote:
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+...
+
+>>>>> +static int netdev_restart_rx_queue(struct net_device *dev, int rxq_idx)
+>>>>> +{
+>>>>> +     void *new_mem;
+>>>>> +     void *old_mem;
+>>>>> +     int err;
+>>>>> +
+>>>>> +     if (!dev || !dev->netdev_ops)
+>>>>> +             return -EINVAL;
+>>>>> +
+>>>>> +     if (!dev->netdev_ops->ndo_queue_stop ||
+>>>>> +         !dev->netdev_ops->ndo_queue_mem_free ||
+>>>>> +         !dev->netdev_ops->ndo_queue_mem_alloc ||
+>>>>> +         !dev->netdev_ops->ndo_queue_start)
+>>>>> +             return -EOPNOTSUPP;
+>>>>> +
+>>>>> +     new_mem = dev->netdev_ops->ndo_queue_mem_alloc(dev, rxq_idx);
+>>>>> +     if (!new_mem)
+>>>>> +             return -ENOMEM;
+>>>>> +
+>>>>> +     err = dev->netdev_ops->ndo_queue_stop(dev, rxq_idx, &old_mem);
+>>>>> +     if (err)
+>>>>> +             goto err_free_new_mem;
+>>>>> +
+>>>>> +     err = dev->netdev_ops->ndo_queue_start(dev, rxq_idx, new_mem);
+>>>>> +     if (err)
+>>>>> +             goto err_start_queue;
+>>>>> +
+>>>>> +     dev->netdev_ops->ndo_queue_mem_free(dev, old_mem);
+>>>>> +
+>>>>> +     return 0;
+>>>>> +
+>>>>> +err_start_queue:
+>>>>> +     dev->netdev_ops->ndo_queue_start(dev, rxq_idx, old_mem);
+>>>>
+>>>> It might worth mentioning why queue start with old_mem will always
+>>>> success here as the return value seems to be ignored here.
+>>>>
+>>>
+>>> So the old queue, we stopped it, and if we fail to bring up the new
+>>> queue, then we want to start the old queue back up to get the queue
+>>> back to a workable state.
+>>>
+>>> I don't see what we can do to recover if restarting the old queue
+>>> fails. Seems like it should be a requirement that the driver tries as
+>>> much as possible to keep the old queue restartable.
+>>
+>> Is it possible that we may have the 'old_mem' leaking if the driver
+>> fails to restart the old queue? how does the driver handle the
+>> firmware cmd failure for ndo_queue_start()? it seems a little
+>> tricky to implement it.
+>>
+> 
+> I'm not sure what we can do to meaningfully recover from failure to
+> restarting the old queue, except log it so the error is visible. In
+> theory because we have not modifying any queue configurations
+> restarting it would be straight forward, but since it's dealing with
+> hardware then any failures are possible.
+
+Yes, we may need to have a clear semantics of how should the driver
+implement the above interface, for example if the driver should free
+the memory when fail to start a queue or the driver should restart
+the queue when fail to stop a queue? Otherwise we may have different
+driver implementing different behavior.
+
+From the disscusion you mentioned below, does it make senses to
+modeling rdma subsystem by using create_queue/modify_queue/destroy_queue
+semantics instead?
+
+> 
+>>>
+>>> I can improve this by at least logging or warning if restarting the
+>>> old queue fails.
+>>
+>> Also the semantics of the above function seems odd that it is not
+>> only restarting rx queue, but also freeing and allocating memory
+>> despite the name only suggests 'restart', I am a litte afraid that
+>> it may conflict with future usecae when user only need the
+>> 'restart' part, perhaps rename it to a more appropriate name.
+>>
+> 
+> Oh, what we want here is just the 'restart' part. However, Jakub
+> mandates that if you restart a queue (or a driver), you do it like
+> this, hence the slightly more complicated implementation.
+> 
+> https://patchwork.kernel.org/project/netdevbpf/patch/20231106024413.2801438-13-almasrymina@google.com/#25590262
+> https://lore.kernel.org/netdev/20230815171638.4c057dcd@kernel.org/
+
+Thanks for the link.
+
+I like david's idea of "a more generic design where H/W queues are created
+and destroyed - e.g., queues unique to a process which makes the cleanup
+so much easier." , but it seems it is a lot of work for networking to
+implement that for now.
+
+> 
