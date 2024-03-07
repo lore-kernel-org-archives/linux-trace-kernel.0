@@ -1,84 +1,147 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E48A81C68F;
-	Thu,  7 Mar 2024 14:40:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8310B13664B;
+	Thu,  7 Mar 2024 19:27:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709822430; cv=none; b=CDaidSnxish/xWRxzoHWX35zsXH2Zwwxgw+YTS9gW8CrWGuxaHWNhwsrG59nEghT0aF71nGoZpb52VEEd3R3rPZRa5zEkgtn12H7gVt8bERs4NNIbmecKJVqSa2oW7NvqgAYJkLvhXjLpkv4BPUrCz2B2hhskWvlI79L8OOTJUU=
+	t=1709839664; cv=none; b=d2VpUvRUn5B7w3OicBS+6ZatStJBRnKk5DmqVDT7UwMenkexwkOVnGFUjpdhAlr16Du3/WW6lWkjM1F+a0F7tpB8tqcsDNKrTe6CEpEoxtMp+FTOa/xUb/OGlIqsZ9KsK1cKe6wt/wkRAcaMZFL2oAW0dxl/mT66Il8Dg3uhekQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709822430; c=relaxed/simple;
-	bh=7dxvCDxAGYQd595toSU98MFIATvFSxHwmTUQJkXbY1Y=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=PwBLQSkm04JWPyXchsZk/0G35PrGMzrbzg20LpO7e5a3YisPYXVSmRTU9Qd1gID6zARQpuG9kFXkpq/P0QcJlEG+LlS4HIZ9vRwyzYphLHUERYXIk++4jf2BQRxhFz+YCpxOwPFjjtWjHFpX/QjD8SzNv3TFpouLP40qHmHL17k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hhfu0pLq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709839664; c=relaxed/simple;
+	bh=wSn0lMhiUdEJLAQ/CSKSPIkdVmeocFWCR58yeTReo/c=;
+	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=CLXn5DSpxc1LuiGM84L8OOXNpoWg36jnu3DR7/nCMJkmbskBji/gD0wnysmHTN7U/XVKB9AQ9QmGJs12U0fLMkziE/H0n+OMUFDxP9S/CoAglSCBtAiwCsIFd6hrhMjR7Kf8kF/6Ziz5foI453frwM3llKthYE4mdVW61L8Iafg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=id5sNgCh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hhfu0pLq"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5869DC43390;
-	Thu,  7 Mar 2024 14:40:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="id5sNgCh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EB9AC433C7;
+	Thu,  7 Mar 2024 19:27:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709822429;
-	bh=7dxvCDxAGYQd595toSU98MFIATvFSxHwmTUQJkXbY1Y=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=hhfu0pLqmYL8+kXdelDYkAU/yLhG5fqBoPhRcQDveC8AkZJDgOQpn4V85DSktFYg1
-	 E5DRn1iU8KHUwzYROxyRa2IzIr2KBBKmlxEDHRnu5dVNzvrPr+kYNWFhgMuzUsffFI
-	 hMwr+sMoFwlBZ45meWI4nSBZtacJN89hiO+Bcs0bBTW10YsqmXc0tv2wW6Xwy8R0VN
-	 glv6Ex621FRM27GxCW616CGaTCeK/AjMgFRKo+mr11dd9qF8bcQZkK9ymGn5P/jp8f
-	 dk9J/zLSJPEBfE4MtljY6dg1c1Vh63GjQ+oEVSU7MFUu1/d8herE719lsUu7yMehH+
-	 bVlBco4OWjOzg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 40AD4D84BB7;
-	Thu,  7 Mar 2024 14:40:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1709839664;
+	bh=wSn0lMhiUdEJLAQ/CSKSPIkdVmeocFWCR58yeTReo/c=;
+	h=From:To:Subject:In-Reply-To:References:Date:From;
+	b=id5sNgChAhaoQLDntlupIrGJSiOWSOR4JIwhpsVeqDXWj/Dq+S2VSGsFNjQt6KOUr
+	 Wqiv0QK+W7Wjx6WK3ab84PxhhP9xOLYhHqg+tEneqwFVsK7tIRESRyeEE9DOBmLORB
+	 V9yZT0H+meLNW5IQ7oKJMIiRfove7Dv4nD/s/Pm+8+dHaA8O8nkYiiA9rraHhf/dPP
+	 U3j5GPHj5WwIZ6Jif74NqUVF122MJFxZqrkcvfnyHBVdSVDaaLiFzdD4udnWQSvoe8
+	 BjjX795BUeizOXtUNkfkfJL4y6jh0RBfMmKlzwGlkpRMVFC6hO5c5C4/5UvNQTMXWt
+	 ael/BswBzXpPA==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Puranjay Mohan <puranjay12@gmail.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Steven Rostedt <rostedt@goodmis.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sami
+ Tolvanen <samitolvanen@google.com>, Guo Ren <guoren@kernel.org>, Puranjay
+ Mohan <puranjay12@gmail.com>, Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+ Deepak Gupta <debug@rivosinc.com>, Sia Jee Heng
+ <jeeheng.sia@starfivetech.com>, =?utf-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@rivosinc.com>, Song
+ Shuai <suagrfillet@gmail.com>, =?utf-8?Q?Cl=C3=A9ment_L=C3=A9ger?=
+ <cleger@rivosinc.com>, Al
+ Viro <viro@zeniv.linux.org.uk>, Jisheng Zhang <jszhang@kernel.org>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
+In-Reply-To: <20240306165904.108141-1-puranjay12@gmail.com>
+References: <20240306165904.108141-1-puranjay12@gmail.com>
+Date: Thu, 07 Mar 2024 20:27:40 +0100
+Message-ID: <87ttlhdeqb.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v2 0/2] tcp: add two missing addresses when using
- trace
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170982242926.6102.7676342202788241551.git-patchwork-notify@kernel.org>
-Date: Thu, 07 Mar 2024 14:40:29 +0000
-References: <20240304092934.76698-1-kerneljasonxing@gmail.com>
-In-Reply-To: <20240304092934.76698-1-kerneljasonxing@gmail.com>
-To: Jason Xing <kerneljasonxing@gmail.com>
-Cc: edumazet@google.com, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- rostedt@goodmis.org, kuba@kernel.org, pabeni@redhat.com,
- netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kernelxing@tencent.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+Puranjay!
 
-This series was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+Puranjay Mohan <puranjay12@gmail.com> writes:
 
-On Mon,  4 Mar 2024 17:29:32 +0800 you wrote:
-> From: Jason Xing <kernelxing@tencent.com>
-> 
-> When I reviewed other people's patch [1], I noticed that similar things
-> also happen in tcp_event_skb class and tcp_event_sk_skb class. They
-> don't print those two addrs of skb/sk which already exist.
-> 
-> In this patch, I just do as other trace functions do, like
-> trace_net_dev_start_xmit(), to know the exact flow or skb we would like
-> to know in case some systems doesn't support BPF programs well or we
-> have to use /sys/kernel/debug/tracing only for some reasons.
-> 
-> [...]
+> This patch enables support for DYNAMIC_FTRACE_WITH_CALL_OPS on RISC-V.
+> This allows each ftrace callsite to provide an ftrace_ops to the common
+> ftrace trampoline, allowing each callsite to invoke distinct tracer
+> functions without the need to fall back to list processing or to
+> allocate custom trampolines for each callsite. This significantly speeds
+> up cases where multiple distinct trace functions are used and callsites
+> are mostly traced by a single tracer.
+>
+> The idea and most of the implementation is taken from the ARM64's
+> implementation of the same feature. The idea is to place a pointer to
+> the ftrace_ops as a literal at a fixed offset from the function entry
+> point, which can be recovered by the common ftrace trampoline.
 
-Here is the summary with links:
-  - [net-next,v2,1/2] tcp: add tracing of skb/skaddr in tcp_event_sk_skb class
-    https://git.kernel.org/netdev/net-next/c/4e441bb8aca1
-  - [net-next,v2,2/2] tcp: add tracing of skbaddr in tcp_event_skb class
-    https://git.kernel.org/netdev/net-next/c/0ab544b6f055
+Not really a review, but some more background; Another rationale (on-top
+of the improved per-call performance!) for CALL_OPS was to use it to
+build ftrace direct call support (which BPF uses a lot!). Mark, please
+correct me if I'm lying here!
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+On Arm64, CALL_OPS makes it possible to implement direct calls, while
+only patching one BL instruction -- nice!
+
+On RISC-V we cannot use use the same ideas as Arm64 straight off,
+because the range of jal (compare to BL) is simply too short (+/-1M).
+So, on RISC-V we need to use a full auipc/jal pair (the text patching
+story is another chapter, but let's leave that aside for now). Since we
+have to patch multiple instructions, the cmodx situation doesn't really
+improve with CALL_OPS.
+
+Let's say that we continue building on your patch and implement direct
+calls on CALL_OPS for RISC-V as well.
+
+From Florent's commit message for direct calls:
+
+  |    There are a few cases to distinguish:
+  |    - If a direct call ops is the only one tracing a function:
+  |      - If the direct called trampoline is within the reach of a BL
+  |        instruction
+  |         -> the ftrace patchsite jumps to the trampoline
+  |      - Else
+  |         -> the ftrace patchsite jumps to the ftrace_caller trampoline w=
+hich
+  |            reads the ops pointer in the patchsite and jumps to the dire=
+ct
+  |            call address stored in the ops
+  |    - Else
+  |      -> the ftrace patchsite jumps to the ftrace_caller trampoline and =
+its
+  |         ops literal points to ftrace_list_ops so it iterates over all
+  |         registered ftrace ops, including the direct call ops and calls =
+its
+  |         call_direct_funcs handler which stores the direct called
+  |         trampoline's address in the ftrace_regs and the ftrace_caller
+  |         trampoline will return to that address instead of returning to =
+the
+  |         traced function
+
+On RISC-V, where auipc/jalr is used, the direct called trampoline would
+always be reachable, and then first Else-clause would never be entered.
+This means the the performance for direct calls would be the same as the
+one we have today (i.e. no regression!).
+
+RISC-V does like x86 does (-ish) -- patch multiple instructions, long
+reach.
+
+Arm64 uses CALL_OPS and patch one instruction BL.
+
+Now, with this background in mind, compared to what we have today,
+CALL_OPS would give us (again assuming we're using it for direct calls):
+
+* Better performance for tracer per-call (faster ops lookup) GOOD
+* Larger text size (function alignment + extra nops) BAD
+* Same direct call performance NEUTRAL
+* Same complicated text patching required NEUTRAL
+
+It would be interesting to see how the per-call performance would
+improve on x86 with CALL_OPS! ;-)
+
+I'm trying to wrap my head if it makes sense to have it on RISC-V, given
+that we're a bit different from Arm64. Does the scale tip to the GOOD
+side?
+
+Oh, and we really need to see performance numbers on real HW! I have a
+VF2 that I could try this series on.
 
 
+Bj=C3=B6rn
