@@ -1,124 +1,117 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3B3219FD;
-	Fri,  8 Mar 2024 01:10:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF4523748;
+	Fri,  8 Mar 2024 01:30:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709860222; cv=none; b=cQ68fT0da4xeSw5H3Zk9WnCFL8ZELpvQeu21KqBXsjBwR7VJq6dHIwgRPBYRDdPT7gtTzQaKfYhdvKnU53ba82hNBfRj8Q5wo0lbgN3iTc13AgCj8TUzepy5L9RDIHv6T4JH6aHwAj+Di/stvq+i+FJA6nXWz/oq7tVnlXUTiXY=
+	t=1709861443; cv=none; b=acwvILkXcLHMUu0rcqAYldOMXb21DFHE2Q6OcwEuFaQeNd76YMSBoY0gzv4GLFngisTUnB2PMh4CM5iTT05LV0YeCdkjIxoc7gWuLyjQd5Ru2Fm4MAXvBYjKMrMDszZ1G0Ivv1ZysAQPeNgOJHX8vkEMzqV2f2EtnzTCj6u6QH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709860222; c=relaxed/simple;
-	bh=gsq1qaqDZuKtkZEjmhFcNJ0Oz98c/gwFuViMAOndml0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mMrbCnMbABD1sMJV8y4sJvmnol5VTAitZ4RcH9p7HBjIVcphz9ia9H41Nx2PaEvZzQkD8+BTWcyGWKFV7lrr0B4wp9qNFgKWkzT3w9F10+8evM2ih+dSTM7iZI0QuVZ0eLpPYRHYvEeavm5rSJInATOkrzhChZ6ovbGT1FKYLuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PKb8h0YU; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1709861443; c=relaxed/simple;
+	bh=pWLPfbMGjAqOMIxZXwrouf7NrYnQYoQSjURpmCc84iU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BUYzwCOWas4t/4pTxnKmSP76T6Pb26ePU3ArqJPJ23CzwBFvlyl4EjADLRoflsCUSV6SghsVn6Nf18MrvElfDi/41s15rTgcp2rZwjZk2xbyRzaGPGCedGSUHNvc4UfQozlkP45UYEvFdoHHrb4PR87jz6Lq47L/85nyHmYLeP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WuK2qD6w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PKb8h0YU"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4280iOKF018041;
-	Fri, 8 Mar 2024 01:10:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=qcppdkim1; bh=1FOBliT
-	XVZjNoR4w147dMcGdIAtKZY7dRZ/ierdbGAI=; b=PKb8h0YU/XHmVnTLthmIxcK
-	gns1wRl0DQHBboluNSOmW71kMYpUF8onH6cAeV9CUGI0dKlrJqueRsiMWwTMXaNF
-	Fizb8n8S+JCj6y8U5hrDrgPaLG3G5MWHzk69wbfs8SWtz8GSEJt9fm48aFlOGNYN
-	w1L29pYyRoQ73qIYOOWV9OPB6BJuquYr+u8d1ZYKFzv8oDPIwNiZ6KHmoAoMbb6v
-	AsGlgEwoFuLCEPy6UoRlsdP8fL4n/j2mh82ICjrcNc39sPPO/oAj/VhyFty1FpXO
-	EQc528JzF/cOOG6eX2tra80UZQ/oA2wvq/r/FCm4c2kgzN0IH9sohIPf4cfn9Yg=
-	=
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wqn8qgd4u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Mar 2024 01:10:08 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4281A7qV000484
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 8 Mar 2024 01:10:07 GMT
-Received: from maow2-gv.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 7 Mar 2024 17:10:05 -0800
-From: Kassey Li <quic_yingangl@quicinc.com>
-To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-        <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-CC: <quic_yingangl@quicinc.com>
-Subject: [PATCH] workqueue: add function in event of workqueue_activate_work
-Date: Fri, 8 Mar 2024 09:09:29 +0800
-Message-ID: <20240308010929.1955339-1-quic_yingangl@quicinc.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WuK2qD6w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AD44C433F1;
+	Fri,  8 Mar 2024 01:30:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709861442;
+	bh=pWLPfbMGjAqOMIxZXwrouf7NrYnQYoQSjURpmCc84iU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WuK2qD6wyzgEpkNGU94oUn6yHcPXxuUo3uJrLGDTiIGph4N/vCBqNc4nDv471KEn3
+	 sm7aoyIlj2FlbTUAzqmFeQZ3jZxx8uq02/lwxrUs6Fs5ne1P7sc9b+jogdt2cNh5om
+	 yy2pPOnMcP+HAkFrHyi8JDY6iodalicwb81v6rzeU0un9tw4HNH9vVQNofxBnlf4+6
+	 iDppG8XOmWfXjccjhAEBc5TroehEx0EzshUNRujMpMwMXGGAQ6kBNOJtKint9xVpy2
+	 SaraH4eSezKXfORbglRhjRO/jH8oAebaFTPdwegjG2bPLQMw9csoNK+YHGu0qpYXyY
+	 O/jGEtvZeHEeQ==
+Date: Thu, 7 Mar 2024 17:30:39 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>, Richard Henderson
+ <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+ Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer
+ <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
+ Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
+ <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
+ <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai
+ Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
+ <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
+ <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
+ Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa
+ <jolsa@kernel.org>, David Ahern <dsahern@kernel.org>, Willem de Bruijn
+ <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, Sumit
+ Semwal <sumit.semwal@linaro.org>, "Christian =?UTF-8?B?S8O2bmln?="
+ <christian.koenig@amd.com>, Pavel Begunkov <asml.silence@gmail.com>, David
+ Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
+ <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
+ Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeelb@google.com>,
+ Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
+ <pkaligineedi@google.com>
+Subject: Re: [RFC PATCH net-next v6 01/15] queue_api: define queue api
+Message-ID: <20240307173039.00e6fbb7@kernel.org>
+In-Reply-To: <20240305020153.2787423-2-almasrymina@google.com>
+References: <20240305020153.2787423-1-almasrymina@google.com>
+	<20240305020153.2787423-2-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: bLgoSJfrZTGi0izl7Ov7QcWYirb5-T75
-X-Proofpoint-ORIG-GUID: bLgoSJfrZTGi0izl7Ov7QcWYirb5-T75
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-07_18,2024-03-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 malwarescore=0 mlxlogscore=999 spamscore=0 phishscore=0
- priorityscore=1501 impostorscore=0 clxscore=1011 suspectscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403080007
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The trace event "workqueue_activate_work" only print work struct.
-However, function is the region of interest in a full sequence of work.
-Current workqueue_activate_work trace event output:
+On Mon,  4 Mar 2024 18:01:36 -0800 Mina Almasry wrote:
+> + * void *(*ndo_queue_mem_alloc)(struct net_device *dev, int idx);
+> + *	Allocate memory for an RX queue. The memory returned in the form of
+> + *	a void * can be passed to ndo_queue_mem_free() for freeing or to
+> + *	ndo_queue_start to create an RX queue with this memory.
+> + *
+> + * void	(*ndo_queue_mem_free)(struct net_device *dev, void *);
+> + *	Free memory from an RX queue.
+> + *
+> + * int (*ndo_queue_start)(struct net_device *dev, int idx, void *);
+> + *	Start an RX queue at the specified index.
+> + *
+> + * int (*ndo_queue_stop)(struct net_device *dev, int idx, void **);
+> + *	Stop the RX queue at the specified index.
+>   */
+>  struct net_device_ops {
+>  	int			(*ndo_init)(struct net_device *dev);
+> @@ -1679,6 +1693,16 @@ struct net_device_ops {
+>  	int			(*ndo_hwtstamp_set)(struct net_device *dev,
+>  						    struct kernel_hwtstamp_config *kernel_config,
+>  						    struct netlink_ext_ack *extack);
+> +	void *			(*ndo_queue_mem_alloc)(struct net_device *dev,
+> +						       int idx);
+> +	void			(*ndo_queue_mem_free)(struct net_device *dev,
+> +						      void *queue_mem);
+> +	int			(*ndo_queue_start)(struct net_device *dev,
+> +						   int idx,
+> +						   void *queue_mem);
+> +	int			(*ndo_queue_stop)(struct net_device *dev,
+> +						  int idx,
+> +						  void **out_queue_mem);
 
-    workqueue_activate_work: work struct ffffff88b4a0f450
+The queue configuration object was quite an integral part of the design,
+I'm slightly worried that it's not here :) Also we may want to rename
+the about-to-be-merged ops from netdev_stat_ops and netdev_queue_ops,
+and add these there?
 
-With this change, workqueue_activate_work will print the function name,
-align with workqueue_queue_work/execute_start/execute_end event.
+https://lore.kernel.org/all/20240306195509.1502746-2-kuba@kernel.org/
 
-checkpatch.pl will report below error for the space:
-
-	ERROR: space prohibited after that open parenthesis '('
-	#28: FILE: include/trace/events/workqueue.h:67:
-	+               __field( void *,        function)
-
-	total: 1 errors, 0 warnings, 16 lines checked
-
-fix this error.
-
-Signed-off-by: Kassey Li <quic_yingangl@quicinc.com>
----
- include/trace/events/workqueue.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/include/trace/events/workqueue.h b/include/trace/events/workqueue.h
-index 262d52021c23..a42c1a293459 100644
---- a/include/trace/events/workqueue.h
-+++ b/include/trace/events/workqueue.h
-@@ -63,14 +63,16 @@ TRACE_EVENT(workqueue_activate_work,
- 	TP_ARGS(work),
- 
- 	TP_STRUCT__entry(
--		__field( void *,	work	)
-+		__field(void *,	work)
-+		__field(void *,	function)
- 	),
- 
- 	TP_fast_assign(
- 		__entry->work		= work;
-+		__entry->function	= work->func;
- 	),
- 
--	TP_printk("work struct %p", __entry->work)
-+	TP_printk("work struct %p function=%ps ", __entry->work, __entry->function)
- );
- 
- /**
--- 
-2.25.1
-
+Very excited to hear that you made progress on this and ported GVE over!
