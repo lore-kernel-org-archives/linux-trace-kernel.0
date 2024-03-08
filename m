@@ -1,95 +1,162 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADAEA5D471
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  8 Mar 2024 21:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162103BBEF
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  8 Mar 2024 23:47:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709934140; cv=none; b=OQmSxCPhZpqyrU3mNqT77I9saACXJHRamKDkLBAOSTEgejq/Wlgiyi4Ii1wXR2QbX34BZomOoThbxuSfd2hSw8wGvCi5XQoQFWot4ZFiaM3eg4OGOMxQGNt/8Cujiq+PosY46SFjRv5tQB9efZ0jV8jh9RW3brF1n8qCbFx/qRw=
+	t=1709941679; cv=none; b=sg4ypiiMDVGCweAH95HPwytrpK35o/AEmci28HMCGpTjs4nXKS/FdoXPBi+Zcpx6/icC6g2xO302Rf7RAaD1kj4olXGWJSFw9vuK2A/Q03hJYFAZAk0YmrevY2OkM9iuQwQnMywS2JpyvxFgtPmSRGQqhn0VMZhKj2SqkLY3ZPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709934140; c=relaxed/simple;
-	bh=CYYr/NajUCCcjsIAOZaIwuy4+0QjCsXxLc8V7MKFSIc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bAgkwMeT5kaQE16Lr0nyex+BNJhAW3YDynXfzoQF+iFQk/nyX4KUUWKW5oNxAebgGZI1npOPKVBmFQGjA5SIDjvKmMBze4Wji1rXCC2iSXjOeRIF1f0L4VQU5PRuXJc0Z2paPjSdEibqGq2yKfe40V5vajHLUQ77cLDT2K9F9vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=PPbUiBZG; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1709941679; c=relaxed/simple;
+	bh=dchB7UCiRqdqw0lIYP5nDwZdV0ZR/CGk1fMQm9ZuI6c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cYG0ZGvRetL08qFVZBq0tqefhrICnPlWKDXB4XWn/19ylU92YY6MmdJ+keBmm5e7751wsDiywZpZIbSv1ZCOSVHwZNThyS+E2wO7i3NczUUUMb1xzW32DfSIP9eQZtcVzf+8Fo1u/14CVvGClreX19WlL48IahnKll3dPVoz5vY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk; spf=none smtp.mailfrom=davidwei.uk; dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b=L2SVzAze; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=davidwei.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="PPbUiBZG"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a45bdf6e9c2so310117766b.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 08 Mar 2024 13:42:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b="L2SVzAze"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2997a92e23bso996701a91.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 08 Mar 2024 15:47:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1709934137; x=1710538937; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6ZOJX8+ZYX9H0UL4MHKNxLD9n79jC8SKE/Gmx2LAZcI=;
-        b=PPbUiBZGnSxxFybsD1YKQ5TJY4gRPjZN5XEiWdIaBjGZ7Gs3xXIFAKXpsoifq8cO+O
-         0JMVGI2v9ly+mo3pg+HiqGscn+wcZBYqDhyNRh69C3fuQG1j2K3stSpt2fPGISi9HHH1
-         38BrD5WKQKQuC0pkBCHgSpqRLq6IA7NBTKcy8=
+        d=davidwei-uk.20230601.gappssmtp.com; s=20230601; t=1709941676; x=1710546476; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9az8igjncgnaY0U1W1wkJljIYsplkUiE6Xc4XiRbO+4=;
+        b=L2SVzAzePwXBRM6vqpB+QFbzZEMkhm600Z9LNU18bXT3rfz7fAe/P7ogRt60U4uG7i
+         HXLidI2y6SP+IL0S0e8jPXgk0ZTJpN0/8y7eullrSL868jS664cbUrjHCXR4O/6af6wp
+         ZFLM6nJH/aSwMmPRAQgT5BU9GqHvIXEaYVB8iHQqH1I3dbD8/HOv68ShDA3QuRuclBlr
+         9zrKlcKkyUVAbCme+7X6/7vFm8kDVZig93IjG7yddBQmcoZmtKttWjR3jTz/d2rjhG8X
+         +gu3mBdIQhOXdcGDqOlGqigx5LEmPztkJ7/Ngv2Sp4AYJ5m8wOa7K11omw88Hs+ppJ82
+         5Ogg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709934137; x=1710538937;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6ZOJX8+ZYX9H0UL4MHKNxLD9n79jC8SKE/Gmx2LAZcI=;
-        b=XkZsQ/jWrwrbsnnPKQ6QOf01/4MCSunsW1liCyq4FL+ixaA0ZbmADlBBbqMLcOV5q0
-         OJFQl2uH0LV7DYSOvD+CpK9mJUe9N+VknBTeeQjjOmrHbvQz0Q9FmXO12s6wKM1W6JVL
-         dFKx0GNR+g962wV5BXf/6KYtQ+tpYr0DUGd77/2yje0FQ6tTfWpJVSVsdkT2K8Ekt6EG
-         FrzvFAPP+sReT2fStuK9moSAX9M2X96ovvVMYQb3Uux4Oa+0VybcuIn+xrqRDZvnGD8f
-         J2/v5R2FsOwaMP7Ih4lR3ciFfLVslKxbXUUALKOjhZUIkvjZHQ3D7oJmrRy9oQQikPFs
-         BzoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXE1S5QqRQVDgrEMc5S6hMlyYHNwlsIB+a6l0K06VMPALsQ+wWNMkceg3YEbwfMRLQcp5bzm/Ncx+kfqCRY5LdMTqTmBuaiitqSyj/43ODxuC6m
-X-Gm-Message-State: AOJu0Yz2Jspc6k0kB+nZkBmBf/Plher0CVMgq/eD6MxUtRN4QOpCUuJG
-	8qZw4Qw1/v+cc+XevOuYI82Zo3wl4RNM5kbNCUistCFAAvfALefvRc8Jun3FcKuI5Ne4WVfG/q5
-	C/tz6dw==
-X-Google-Smtp-Source: AGHT+IEuDnywIbIAcg9zqIqk+P/i5k75ZNgHCok5s8MmMa23OhPGte8yuoUCwwLbznMW2vq41tap6A==
-X-Received: by 2002:a17:906:f0cb:b0:a45:446c:6beb with SMTP id dk11-20020a170906f0cb00b00a45446c6bebmr148530ejb.50.1709934136752;
-        Fri, 08 Mar 2024 13:42:16 -0800 (PST)
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com. [209.85.218.49])
-        by smtp.gmail.com with ESMTPSA id rp10-20020a170906d96a00b00a44d66a16efsm196242ejb.2.2024.03.08.13.42.16
-        for <linux-trace-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1709941676; x=1710546476;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9az8igjncgnaY0U1W1wkJljIYsplkUiE6Xc4XiRbO+4=;
+        b=FWhuC16rVK7L7lgFN8a3SU3ETVVqlxU+Uj+C137SyFuz70TxlbukRMsykBYTRcygvD
+         dBVjTt1euIuVxsceynn6hc32aFt4lqPCOmqBanlgV8BkxDnmXcs2Ws8sNgT2PA6Bi1k/
+         I5sCP2IQKtXdtc6QqvqH3xebtBRyU/cgN1CDJ4W67HSA8ocLOthAZm2RH9/wTn8LbEIm
+         EhIw6v6uAldIhzbw5UcmEbIED2Qy+Ts5MQYNSee0R9mMD8L3nAMgFiXl47+t4y/ZBRs4
+         FZ5mDCkppPHNeoqPiCqrV14b0u9MWAnzdVGZrLwAzbwv3IRbf1NYP4+gOpy8ZJgemA0b
+         uINQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXUdF73G2pAgPWQ8uyMQg153TSKLxcDqQJvmqXhnSyZQH4vp/sxblfgUKkk5befhacBmB5dQi29NXvxG7lm6Lc2+RhhJ0kO7rWG3C62ILlFvd3G
+X-Gm-Message-State: AOJu0YxqrupmkqWqQDKnvSPAs6mEbe4C31LAePQoimIAe5VJsfTuoblL
+	QyVM64PuFATHqmlej972l8cR2MZDgXiQlGbhxIVvgUpTOlD4H1ZnZCkzuMEG1CI=
+X-Google-Smtp-Source: AGHT+IF8a9eHGDem6IS2N02q+0T3yH36EZ/hJ5LpJRaMKjh8ZuXGZ+UFipKrEBkF+ws+Cz/PyRkACw==
+X-Received: by 2002:a17:90b:1286:b0:29a:e097:50be with SMTP id fw6-20020a17090b128600b0029ae09750bemr690309pjb.31.1709941676412;
+        Fri, 08 Mar 2024 15:47:56 -0800 (PST)
+Received: from ?IPV6:2a03:83e0:1156:1:1cbd:da2b:a9f2:881? ([2620:10d:c090:500::5:2342])
+        by smtp.gmail.com with ESMTPSA id d15-20020a17090ad98f00b0029bbf42daeesm265183pjv.30.2024.03.08.15.47.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Mar 2024 13:42:16 -0800 (PST)
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a449c5411e1so337837066b.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 08 Mar 2024 13:42:16 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVbdM3uZEHH17g8pfu9o/6VXDKPwNkIAk9SHyYKp2CWbtLPXrxLQLI5Zb6+rJFmh1106OH0SYq5caAKBNqjNFElIMF5WsuPGrs0tYs8YMYt+Ere
-X-Received: by 2002:a17:906:f0cb:b0:a45:446c:6beb with SMTP id
- dk11-20020a170906f0cb00b00a45446c6bebmr148512ejb.50.1709934135922; Fri, 08
- Mar 2024 13:42:15 -0800 (PST)
+        Fri, 08 Mar 2024 15:47:56 -0800 (PST)
+Message-ID: <54891f27-555a-4ed1-b92f-668813c18c37@davidwei.uk>
+Date: Fri, 8 Mar 2024 15:47:51 -0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240308183816.676883229@goodmis.org> <CAHk-=wgsNgewHFxZAJiAQznwPMqEtQmi1waeS2O1v6L4c_Um5A@mail.gmail.com>
- <20240308163528.3980c639@gandalf.local.home> <CAHk-=whaVBe14mbW4QWNuywBP_ZvGJYRZ3dbgx9-ebSxnNTXiQ@mail.gmail.com>
-In-Reply-To: <CAHk-=whaVBe14mbW4QWNuywBP_ZvGJYRZ3dbgx9-ebSxnNTXiQ@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 8 Mar 2024 13:41:59 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whWbhhNLCZgb97PP9Bo-XbNNMdPxqr0YRjYWXP5E3a1ug@mail.gmail.com>
-Message-ID: <CAHk-=whWbhhNLCZgb97PP9Bo-XbNNMdPxqr0YRjYWXP5E3a1ug@mail.gmail.com>
-Subject: Re: [PATCH 0/6] tracing/ring-buffer: Fix wakeup of ring buffer waiters
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	joel@joelfernandes.org, linke li <lilinke99@qq.com>, Rabin Vincent <rabin@rab.in>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH net-next v6 01/15] queue_api: define queue api
+Content-Language: en-GB
+To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+ linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
+ <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@kernel.org>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Pavel Begunkov <asml.silence@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>,
+ Harshitha Ramamurthy <hramamurthy@google.com>,
+ Jeroen de Borst <jeroendb@google.com>,
+ Praveen Kaligineedi <pkaligineedi@google.com>
+References: <20240305020153.2787423-1-almasrymina@google.com>
+ <20240305020153.2787423-2-almasrymina@google.com>
+From: David Wei <dw@davidwei.uk>
+In-Reply-To: <20240305020153.2787423-2-almasrymina@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 8 Mar 2024 at 13:39, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> So the above "complexity" is *literally* just changing the
->
->                   (new = atomic_read_acquire(&my->seq)) != old
->
-> condition to
->
->                   should_exit ||
->                   (new = atomic_read_acquire(&my->seq)) != old
+On 2024-03-04 18:01, Mina Almasry wrote:
+> This API enables the net stack to reset the queues used for devmem.
+> 
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> 
+> ---
+>  include/linux/netdevice.h | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> index c41019f34179..3105c586355d 100644
+> --- a/include/linux/netdevice.h
+> +++ b/include/linux/netdevice.h
+> @@ -1435,6 +1435,20 @@ struct netdev_net_notifier {
+>   *			   struct kernel_hwtstamp_config *kernel_config,
+>   *			   struct netlink_ext_ack *extack);
+>   *	Change the hardware timestamping parameters for NIC device.
+> + *
+> + * void *(*ndo_queue_mem_alloc)(struct net_device *dev, int idx);
+> + *	Allocate memory for an RX queue. The memory returned in the form of
+> + *	a void * can be passed to ndo_queue_mem_free() for freeing or to
+> + *	ndo_queue_start to create an RX queue with this memory.
+> + *
+> + * void	(*ndo_queue_mem_free)(struct net_device *dev, void *);
+> + *	Free memory from an RX queue.
+> + *
+> + * int (*ndo_queue_start)(struct net_device *dev, int idx, void *);
+> + *	Start an RX queue at the specified index.
+> + *
+> + * int (*ndo_queue_stop)(struct net_device *dev, int idx, void **);
+> + *	Stop the RX queue at the specified index.
+>   */
+>  struct net_device_ops {
+>  	int			(*ndo_init)(struct net_device *dev);
+> @@ -1679,6 +1693,16 @@ struct net_device_ops {
+>  	int			(*ndo_hwtstamp_set)(struct net_device *dev,
+>  						    struct kernel_hwtstamp_config *kernel_config,
+>  						    struct netlink_ext_ack *extack);
+> +	void *			(*ndo_queue_mem_alloc)(struct net_device *dev,
+> +						       int idx);
+> +	void			(*ndo_queue_mem_free)(struct net_device *dev,
+> +						      void *queue_mem);
+> +	int			(*ndo_queue_start)(struct net_device *dev,
+> +						   int idx,
+> +						   void *queue_mem);
+> +	int			(*ndo_queue_stop)(struct net_device *dev,
+> +						  int idx,
+> +						  void **out_queue_mem);
+>  };
 
-.. and obviously you'll need to add the exit condition to the actual
-"deal with events" loop too.
+I'm working to port bnxt over to using this API. What are your thoughts
+on maybe pulling this out and use bnxt to drive it?
 
-                Linus
+>  
+>  /**
