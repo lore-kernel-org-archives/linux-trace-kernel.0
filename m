@@ -1,76 +1,76 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9274322F19
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  8 Mar 2024 08:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9FB454F8D
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  8 Mar 2024 09:18:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709887747; cv=none; b=SCPsVhLBMsdQjvoA4mx7LNZ9ZzKXhoyUfyjbT9X+G8RBNvz6NCg57Ppx3RTAMiM2WOtPuLyrR5e0uoqG3aPOYZkn4hU1UD2cruNN8ssJjIPj5r/14tG9p0OPMesL49czh3yqBsq1RfUvW1E0xkU8m7CcKeqOW2mkTHk2ugOQiS0=
+	t=1709889515; cv=none; b=qippNT/17ywBIb+AvPv6zTbvVwbqYMXM211hWOQTyY0p4CphPvk9hSO7Bv0k3q8VVSitKKrgxICiQoz5znjxvrIQTUF/efyEgSjmGWqGcs3AfxSeAcBT6HYlnuvKtChR4/Zaq5JlO/FCJ+zaEa525miQyo+zkvwxvTDxNyFEKmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709887747; c=relaxed/simple;
-	bh=p1DGgTwhlI1P1zl4hSg/A5LZIfKJVRgVKiN/oCP3hBY=;
+	s=arc-20240116; t=1709889515; c=relaxed/simple;
+	bh=5ejNPiOaFWIbilrKYemDWxW9fOdMB7ZE3uNO640hRds=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qyOxSkiOiTOKcC/Cqt6N9ORqK5KrYS18VetDz/tUteMmM+WYr9H83BKdmmnolgUN+M74JL83XwsvfxjJyYypvbMF0I9eolEw0+lPBVmUiwcGbrZ7j2J69UJMV7M+JD59G05J9tJceJTJFd8diVo6uYMF8aFHrq0T5I70rQc9FFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=gvv0H5y9; arc=none smtp.client-ip=209.85.219.182
+	 To:Cc:Content-Type; b=KiGq0Q7bNrJoTF9OJqVvWAZZkl9+AnENFvDXTmNcRbDic+BmPNyi2cam5Di1ee87uubPVHbB8/Jzb9k8W+2uySMLn3J6gv2bl0cNGBjR5glRXvTpP5oIg+En5h3mRShdcbbsdUk7foqFzBolSPTaMHa1T0clEILqyrdqRwJRvRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=hTAUKyXS; arc=none smtp.client-ip=209.85.219.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="gvv0H5y9"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dc6dcd9124bso693992276.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 08 Mar 2024 00:49:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="hTAUKyXS"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-db3a09e96daso1747646276.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 08 Mar 2024 01:18:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1709887744; x=1710492544; darn=vger.kernel.org;
+        d=sifive.com; s=google; t=1709889513; x=1710494313; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AjMdeifauFFX0ztwHg+02PgyxXha91zTywHbRxorn20=;
-        b=gvv0H5y931hExaOcBzX1m8DAN9YPRj8/NqkJrYHfQuRdcTzHerVzdkYy3b1i+NVvm3
-         ThaNEUnOBsMUG9y9lWxOsLbvJOtT2E/YvnRLhvTXL3U5T+5mQCFFotx56866DtX3E9Sj
-         QUNAlngcASUpiS3CXye36AL+eJFBrmdGUyVhLSZOoxMi3mCR3VMpWiIh/dYgfGnJOmL1
-         vSRPi1CYnHFaSwuO7aJW29w/T/6dy2Ge3B5uEJm/AZ8h+jYJuXO+1TDY7FSjNXrbYZMg
-         cuJ1KqLYLUhMco2aAqxQPz1FiaH1RSmv74kq4tcLObAhQRM6oQd/qaFJeWbrjFTUjYEv
-         KlyA==
+        bh=oQfStgoadcJZ3LxQhxglAjLjX8LE9J04xgEnWvSiGZM=;
+        b=hTAUKyXSr8AmXU/jmCNq2ATNoLix+SLg/snzS5IV2bBx6vm2Q8onxuNL35VnJrlGVf
+         99kiYXZg6ngQbPIYLKZciSe0iaV7ghjlISrdl58YmkNGOU0urksHMw7qU0DRzbZpYwT4
+         d9uotmtV1sCAhdKEtpWhRL6U61Uhnfo0sUzFHZL8zbsShDOE67tAphAVKaKzJS+ledqA
+         7nmGmYbYoCgXfLaulyuGo8So/s2Pv8/zrP2u2tjqlMwI3LM8+PbjwKHvp8UG2xrGvubP
+         9fkB2P+iucgd+JjrxpLy7dpPE8xvQwHIR4r1b7t2j5FI2LM3Xe9stdOCG209B1+iflIE
+         Ozgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709887744; x=1710492544;
+        d=1e100.net; s=20230601; t=1709889513; x=1710494313;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AjMdeifauFFX0ztwHg+02PgyxXha91zTywHbRxorn20=;
-        b=kUZswVxDOjb7dv93G+XgxzORLEu+ZcsiWczGTFYhTgGbxkT3FsU/xtgwdVsE4F2NVa
-         7utjlDipVkvq753dMwUWOUUL35KWfANmA6qvIQBHtUTjcnsvEvJMbbWQePToYKx/Y6w3
-         f2ZUEYrZVJC6ZoxTZG/7ac4rO/s25c/xVDOnz31gkorN/RNFha0acJJiHEmGWzkCnX1K
-         wjE4CrT5GV2QQrIWeOK/FyvEiixwiDQ+AozVXaAGOXvelDA++X5whZIzGnrk8njfMiMo
-         fDvvRUbHHGujk6JBEpNZk9z1eTfNTYu6xM8MAmAd6Of7/Jscz1/MZ99AZdOxRRbwERe1
-         iSkA==
-X-Forwarded-Encrypted: i=1; AJvYcCVYMrdCwA5oJCocvyzszGzWw/18ifGqgpztCd1pG1pd0H7ZZyfXzEjNJ8Mz+Irf8N9ICzy5Pz4Tz047fJeerQ29MUFIcoxbG+HQR/9Z2vrwQYMD
-X-Gm-Message-State: AOJu0YymxwYgLJ/dqUW/tbko0fR+zmb4Gm8VF6Bn+w0AfaRLEHl0HQmx
-	u0dSoa76Oleo8PJys6CoDPRZvoJpmi3OKu1/0V4Mn3klm28MHs/tdIQko9BUdIsXJ0sBR7QLvLv
-	uuH6XE4ILtbwv0fdqQixPGauIpGJQLd4a3R2/mg==
-X-Google-Smtp-Source: AGHT+IFnaTedNwwzhlvVq+X0WG6IJ09kWtyousiLexTeokG9oBiFC/uLVZ6WGg6Am/YuzONgEMN9pIeoEwf/reRV5lU=
-X-Received: by 2002:a25:d697:0:b0:dc2:398b:fa08 with SMTP id
- n145-20020a25d697000000b00dc2398bfa08mr19391957ybg.31.1709887744419; Fri, 08
- Mar 2024 00:49:04 -0800 (PST)
+        bh=oQfStgoadcJZ3LxQhxglAjLjX8LE9J04xgEnWvSiGZM=;
+        b=Uhgm2gfiNa7iB7PHSFVUsgKfa8bylGiUyHboUVi3Z98QeYQE77bmVV+oi457ZXQHVl
+         +Q5jK/L2QW3M9s6j2OJDvPiQvLAN9wVtjPTkIFdooQDLIysYueRpePedZMpMWPHx2+ub
+         usvMxK8hyhxtPbgSSEI1qMw73+W/owUHZdqerLTq7XXbmFZU8GtrLGa8rTPjbOgvo3oH
+         UaFRkhfZ5sEtMfRG2zFDmOcVixfRcSiOLwypUuueBN1TjfcpX0EvniRMn6fl19zLqIKw
+         L0ohrIX/1EvVw7ttcn+RypXECdfjA8LBe1YSyHuCf8o1TOZwaBm9vnWhtMecthOSDefT
+         Pgtw==
+X-Forwarded-Encrypted: i=1; AJvYcCVzdy4iDXN7ORqdXoqD+vJSHfvziahNAh40d47PnsfUTAy+DGt2YV9FM6krKmIMz/PlEobKUZdYu/vm4MewLKN0/WR0q6bz3qfPc7aD929CwJAh
+X-Gm-Message-State: AOJu0Yw/OVZLOvXwo0LlJRQ1A6L/8AK+BBg7CXjn/Iv41eS2U+7XCm9y
+	7g6XCQ5rieYsDLCWY8aBpao2ka6sFvFr/unqkdJBzBZHcNufqQ1W3DjuYtX7UrOPPWqv0NHDQwr
+	JfYWYLK7N+w/fWd/tq3KjtKFg6sjytaj4Ay15NQ==
+X-Google-Smtp-Source: AGHT+IFOh/fbBZAoKlAXSCLWZ4Jp1GE+8bu4ic4VOQKef5vFu/0bqlMTN31Em7LyWY4axsAp+J3ERv4eJUIdxxYPPyE=
+X-Received: by 2002:a25:d34d:0:b0:dc7:45d3:ffd0 with SMTP id
+ e74-20020a25d34d000000b00dc745d3ffd0mr18528744ybf.1.1709889512914; Fri, 08
+ Mar 2024 01:18:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240306165904.108141-1-puranjay12@gmail.com> <34c9d54a-0f19-4671-8b05-9adf3b6c9a1a@ghiti.fr>
- <CANk7y0jO5dysnsazCq-r=G-EvWUPTwQaW257PcqEbq8SvVRf2Q@mail.gmail.com>
-In-Reply-To: <CANk7y0jO5dysnsazCq-r=G-EvWUPTwQaW257PcqEbq8SvVRf2Q@mail.gmail.com>
+References: <20240306165904.108141-1-puranjay12@gmail.com> <87ttlhdeqb.fsf@all.your.base.are.belong.to.us>
+ <CANk7y0gbQdYw0V+CEv-z8wFGXnki8KSn4c8+i0iZ1UFNCg7wJQ@mail.gmail.com>
+In-Reply-To: <CANk7y0gbQdYw0V+CEv-z8wFGXnki8KSn4c8+i0iZ1UFNCg7wJQ@mail.gmail.com>
 From: Andy Chiu <andy.chiu@sifive.com>
-Date: Fri, 8 Mar 2024 16:48:53 +0800
-Message-ID: <CABgGipUou53koSDuCODiB5gTs96iKZayCkqgQUbDngoT_b+ifA@mail.gmail.com>
+Date: Fri, 8 Mar 2024 17:18:21 +0800
+Message-ID: <CABgGipUJU_joVOjPi4WZ4JJM72zaSrCA1QUAaP8hob3+LXkS0g@mail.gmail.com>
 Subject: Re: [RFC PATCH] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
 To: Puranjay Mohan <puranjay12@gmail.com>
-Cc: Alexandre Ghiti <alex@ghiti.fr>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Guo Ren <guoren@kernel.org>, Ley Foon Tan <leyfoon.tan@starfivetech.com>, 
-	Deepak Gupta <debug@rivosinc.com>, Sia Jee Heng <jeeheng.sia@starfivetech.com>, 
-	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+Cc: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Sami Tolvanen <samitolvanen@google.com>, Guo Ren <guoren@kernel.org>, 
+	Ley Foon Tan <leyfoon.tan@starfivetech.com>, Deepak Gupta <debug@rivosinc.com>, 
+	Sia Jee Heng <jeeheng.sia@starfivetech.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
 	Song Shuai <suagrfillet@gmail.com>, =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
 	Al Viro <viro@zeniv.linux.org.uk>, Jisheng Zhang <jszhang@kernel.org>, 
 	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
@@ -78,17 +78,20 @@ Cc: Alexandre Ghiti <alex@ghiti.fr>, Paul Walmsley <paul.walmsley@sifive.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 7, 2024 at 8:19=E2=80=AFAM Puranjay Mohan <puranjay12@gmail.com=
+Hi Puranjay,
+
+On Fri, Mar 8, 2024 at 3:53=E2=80=AFAM Puranjay Mohan <puranjay12@gmail.com=
 > wrote:
 >
-> Hi Alex,
+> Hi Bj=C3=B6rn,
 >
-> On Wed, Mar 6, 2024 at 9:35=E2=80=AFPM Alexandre Ghiti <alex@ghiti.fr> wr=
-ote:
+> On Thu, Mar 7, 2024 at 8:27=E2=80=AFPM Bj=C3=B6rn T=C3=B6pel <bjorn@kerne=
+l.org> wrote:
 > >
-> > Hi Puranjay,
+> > Puranjay!
 > >
-> > On 06/03/2024 17:59, Puranjay Mohan wrote:
+> > Puranjay Mohan <puranjay12@gmail.com> writes:
+> >
 > > > This patch enables support for DYNAMIC_FTRACE_WITH_CALL_OPS on RISC-V=
 .
 > > > This allows each ftrace callsite to provide an ftrace_ops to the comm=
@@ -105,514 +108,122 @@ es
 > > > implementation of the same feature. The idea is to place a pointer to
 > > > the ftrace_ops as a literal at a fixed offset from the function entry
 > > > point, which can be recovered by the common ftrace trampoline.
-> > >
-> > > We use -fpatchable-function-entry to reserve 8 bytes above the functi=
-on
-> > > entry by emitting 2 4 byte or 4 2 byte  nops depending on the presenc=
-e of
-> > > CONFIG_RISCV_ISA_C. These 8 bytes are patched at runtime with a point=
+> >
+> > Not really a review, but some more background; Another rationale (on-to=
+p
+> > of the improved per-call performance!) for CALL_OPS was to use it to
+> > build ftrace direct call support (which BPF uses a lot!). Mark, please
+> > correct me if I'm lying here!
+> >
+> > On Arm64, CALL_OPS makes it possible to implement direct calls, while
+> > only patching one BL instruction -- nice!
+> >
+> > On RISC-V we cannot use use the same ideas as Arm64 straight off,
+> > because the range of jal (compare to BL) is simply too short (+/-1M).
+> > So, on RISC-V we need to use a full auipc/jal pair (the text patching
+> > story is another chapter, but let's leave that aside for now). Since we
+> > have to patch multiple instructions, the cmodx situation doesn't really
+> > improve with CALL_OPS.
+> >
+> > Let's say that we continue building on your patch and implement direct
+> > calls on CALL_OPS for RISC-V as well.
+> >
+> > From Florent's commit message for direct calls:
+> >
+> >   |    There are a few cases to distinguish:
+> >   |    - If a direct call ops is the only one tracing a function:
+> >   |      - If the direct called trampoline is within the reach of a BL
+> >   |        instruction
+> >   |         -> the ftrace patchsite jumps to the trampoline
+> >   |      - Else
+> >   |         -> the ftrace patchsite jumps to the ftrace_caller trampoli=
+ne which
+> >   |            reads the ops pointer in the patchsite and jumps to the =
+direct
+> >   |            call address stored in the ops
+> >   |    - Else
+> >   |      -> the ftrace patchsite jumps to the ftrace_caller trampoline =
+and its
+> >   |         ops literal points to ftrace_list_ops so it iterates over a=
+ll
+> >   |         registered ftrace ops, including the direct call ops and ca=
+lls its
+> >   |         call_direct_funcs handler which stores the direct called
+> >   |         trampoline's address in the ftrace_regs and the ftrace_call=
 er
-> > > to the associated ftrace_ops for that callsite. Functions are aligned=
- to
-> > > 8 bytes to make sure that the accesses to this literal are atomic.
-> > >
-> > > This approach allows for directly invoking ftrace_ops::func even for
-> > > ftrace_ops which are dynamically-allocated (or part of a module),
-> > > without going via ftrace_ops_list_func.
-> > >
-> > > I've benchamrked this with the ftrace_ops sample module on Qemu, with
-> > > the next version, I will provide benchmarks on real hardware:
-> > >
-> > > Without this patch:
-> > >
-> > > +-----------------------+-----------------+--------------------------=
---+
-> > > |  Number of tracers    | Total time (ns) | Per-call average time    =
-  |
-> > > |-----------------------+-----------------+--------------------------=
---|
-> > > | Relevant | Irrelevant |    100000 calls | Total (ns) | Overhead (ns=
-) |
-> > > |----------+------------+-----------------+------------+-------------=
---|
-> > > |        0 |          0 |        15615700 |        156 |             =
-- |
-> > > |        0 |          1 |        15917600 |        159 |             =
-- |
-> > > |        0 |          2 |        15668000 |        156 |             =
-- |
-> > > |        0 |         10 |        14971500 |        149 |             =
-- |
-> > > |        0 |        100 |        15417600 |        154 |             =
-- |
-> > > |        0 |        200 |        15387000 |        153 |             =
-- |
-> > > |----------+------------+-----------------+------------+-------------=
---|
-> > > |        1 |          0 |       119906800 |       1199 |          104=
-3 |
-> > > |        1 |          1 |       137428600 |       1374 |          121=
-8 |
-> > > |        1 |          2 |       159562400 |       1374 |          121=
-8 |
-> > > |        1 |         10 |       302099900 |       3020 |          286=
-4 |
-> > > |        1 |        100 |      2008785500 |      20087 |         1993=
-1 |
-> > > |        1 |        200 |      3965221900 |      39652 |         3949=
-6 |
-> > > |----------+------------+-----------------+------------+-------------=
---|
-> > > |        1 |          0 |       119166700 |       1191 |          103=
-5 |
-> > > |        2 |          0 |       157999900 |       1579 |          142=
-3 |
-> > > |       10 |          0 |       425370100 |       4253 |          409=
-7 |
-> > > |      100 |          0 |      3595252100 |      35952 |         3579=
-6 |
-> > > |      200 |          0 |      7023485700 |      70234 |         7007=
-8 |
-> > > +----------+------------+-----------------+------------+-------------=
---+
-> > >
-> > > Note: per-call overhead is estimated relative to the baseline case wi=
-th
-> > > 0 relevant tracers and 0 irrelevant tracers.
-> > >
-> > > With this patch:
-> > >
-> > > +-----------------------+-----------------+--------------------------=
---+
-> > > |   Number of tracers   | Total time (ns) | Per-call average time    =
-  |
-> > > |-----------------------+-----------------+--------------------------=
---|
-> > > | Relevant | Irrelevant |    100000 calls | Total (ns) | Overhead (ns=
-) |
-> > > |----------+------------+-----------------+------------+-------------=
---|
-> > > |        0 |          0 |        15254600 |        152 |             =
-- |
-> > > |        0 |          1 |        16136700 |        161 |             =
-- |
-> > > |        0 |          2 |        15329500 |        153 |             =
-- |
-> > > |        0 |         10 |        15148800 |        151 |             =
-- |
-> > > |        0 |        100 |        15746900 |        157 |             =
-- |
-> > > |        0 |        200 |        15737400 |        157 |             =
-- |
-> > > |----------+------------+-----------------+------------+-------------=
---|
-> > > |        1 |          0 |        47909000 |        479 |           32=
-7 |
-> > > |        1 |          1 |        48297400 |        482 |           33=
-0 |
-> > > |        1 |          2 |        47314100 |        473 |           32=
-1 |
-> > > |        1 |         10 |        47844900 |        478 |           32=
-6 |
-> > > |        1 |        100 |        46591900 |        465 |           31=
-3 |
-> > > |        1 |        200 |        47178900 |        471 |           31=
-9 |
-> > > |----------+------------+-----------------+------------+-------------=
---|
-> > > |        1 |          0 |        46715800 |        467 |           31=
-5 |
-> > > |        2 |          0 |       155134500 |       1551 |          139=
-9 |
-> > > |       10 |          0 |       442672800 |       4426 |          427=
-4 |
-> > > |      100 |          0 |      4092353900 |      40923 |         4077=
-1 |
-> > > |      200 |          0 |      7135796400 |      71357 |         7120=
-5 |
-> > > +----------+------------+-----------------+------------+-------------=
---+
-> > >
-> > > Note: per-call overhead is estimated relative to the baseline case wi=
-th
-> > > 0 relevant tracers and 0 irrelevant tracers.
-> > >
-> > > As can be seen from the above:
-> > >
-> > >   a) Whenever there is a single relevant tracer function associated w=
-ith a
-> > >      tracee, the overhead of invoking the tracer is constant, and doe=
-s not
-> > >      scale with the number of tracers which are *not* associated with=
- that
-> > >      tracee.
-> > >
-> > >   b) The overhead for a single relevant tracer has dropped to ~1/3 of=
- the
-> > >      overhead prior to this series (from 1035ns to 315ns). This is la=
-rgely
-> > >      due to permitting calls to dynamically-allocated ftrace_ops with=
-out
-> > >      going through ftrace_ops_list_func.
-> > >
-> > > Why is this patch a RFC patch:
-> > >   1. I saw some rcu stalls on Qemu and need to debug them and see if =
-they
-> > >      were introduced by this patch.
-> >
-> >
-> > FYI, I'm currently working on debugging such issues (and other) with th=
-e
-> > *current* ftrace implementation, so probably not caused by your
-> > patchset. But keep debugging too, maybe this introduces other issues or
-> > even better, you'll find the root cause :)
-> >
-> >
-> > >   2. This needs to be tested thoroughly on real hardware.
-> > >   3. Seeking reviews to fix any fundamental problems with this patch =
-that I
-> > >      might have missed due to my lack of RISC-V architecture knowledg=
-e.
-> > >   4. I would like to benchmark this on real hardware and put the resu=
-lts in
-> > >      the commit message.
-> > >
-> > > Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
-> > > ---
-> > >   arch/riscv/Kconfig              |  2 ++
-> > >   arch/riscv/Makefile             |  8 +++++
-> > >   arch/riscv/include/asm/ftrace.h |  3 ++
-> > >   arch/riscv/kernel/asm-offsets.c |  3 ++
-> > >   arch/riscv/kernel/ftrace.c      | 59 ++++++++++++++++++++++++++++++=
-+++
-> > >   arch/riscv/kernel/mcount-dyn.S  | 42 ++++++++++++++++++++---
-> > >   6 files changed, 112 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> > > index 0bfcfec67ed5..e474742e23b2 100644
-> > > --- a/arch/riscv/Kconfig
-> > > +++ b/arch/riscv/Kconfig
-> > > @@ -78,6 +78,7 @@ config RISCV
-> > >       select EDAC_SUPPORT
-> > >       select FRAME_POINTER if PERF_EVENTS || (FUNCTION_TRACER && !DYN=
-AMIC_FTRACE)
-> > >       select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY if DYNAMIC_FT=
-RACE
-> > > +     select FUNCTION_ALIGNMENT_8B if DYNAMIC_FTRACE_WITH_CALL_OPS
-> >
-> >
-> > A recent discussion [1] states that -falign-functions cannot guarantee
-> > this alignment for all code and that gcc developers came up with a new
-> > option [2]: WDYT? I have added Andy and Evgenii in +cc to help on that.
->
-> I saw arm64 uses the same and assumes this guarantee, maybe it is broken =
-too?
-> Will look into the discussion and try to use the other option. I am
-> currently using Clang to build the kernel.
-
-IIRC it should be fine if you're building with Clang. The
-"-falign-function" flag for gcc is not aligning cold functions. So I
-think we'd need some Kconfig checks for the difference.
-
->
-> >
-> > [1]
-> > https://lore.kernel.org/linux-riscv/4fe4567b-96be-4102-952b-7d39109b218=
-6@yadro.com/
-> > [2]
-> > https://gcc.gnu.org/git/gitweb.cgi?p=3Dgcc.git;h=3D0f5a9a00e3ab1fe96142=
-f304cfbcf3f63b15f326
-> >
-> >
-> > >       select GENERIC_ARCH_TOPOLOGY
-> > >       select GENERIC_ATOMIC64 if !64BIT
-> > >       select GENERIC_CLOCKEVENTS_BROADCAST if SMP
-> > > @@ -127,6 +128,7 @@ config RISCV
-> > >       select HAVE_DYNAMIC_FTRACE if !XIP_KERNEL && MMU && (CLANG_SUPP=
-ORTS_DYNAMIC_FTRACE || GCC_SUPPORTS_DYNAMIC_FTRACE)
-> > >       select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-> > >       select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
-> > > +     select HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS if (DYNAMIC_FTRACE_WIT=
-H_REGS && !CFI_CLANG)
-> > >       select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
-> > >       select HAVE_FUNCTION_GRAPH_TRACER
-> > >       select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
-> > > diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-> > > index 252d63942f34..875ad5dc3d32 100644
-> > > --- a/arch/riscv/Makefile
-> > > +++ b/arch/riscv/Makefile
-> > > @@ -14,12 +14,20 @@ endif
-> > >   ifeq ($(CONFIG_DYNAMIC_FTRACE),y)
-> > >       LDFLAGS_vmlinux +=3D --no-relax
-> > >       KBUILD_CPPFLAGS +=3D -DCC_USING_PATCHABLE_FUNCTION_ENTRY
-> > > +ifeq ($(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS), y)
-> > > +ifeq ($(CONFIG_RISCV_ISA_C),y)
-> > > +     CC_FLAGS_FTRACE :=3D -fpatchable-function-entry=3D8,4
-> > > +else
-> > > +     CC_FLAGS_FTRACE :=3D -fpatchable-function-entry=3D4,2
-> > > +endif
-> > > +else
-> > >   ifeq ($(CONFIG_RISCV_ISA_C),y)
-> > >       CC_FLAGS_FTRACE :=3D -fpatchable-function-entry=3D4
-> > >   else
-> > >       CC_FLAGS_FTRACE :=3D -fpatchable-function-entry=3D2
-> > >   endif
-> > >   endif
-> > > +endif
-> > >
-> > >   ifeq ($(CONFIG_CMODEL_MEDLOW),y)
-> > >   KBUILD_CFLAGS_MODULE +=3D -mcmodel=3Dmedany
-> > > diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm=
-/ftrace.h
-> > > index 329172122952..c9a84222c9ea 100644
-> > > --- a/arch/riscv/include/asm/ftrace.h
-> > > +++ b/arch/riscv/include/asm/ftrace.h
-> > > @@ -28,6 +28,9 @@
-> > >   void MCOUNT_NAME(void);
-> > >   static inline unsigned long ftrace_call_adjust(unsigned long addr)
-> > >   {
-> > > +     if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS))
-> > > +             return addr + 8;
-> > > +
-> > >       return addr;
-> > >   }
-> > >
-> > > diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-=
-offsets.c
-> > > index a03129f40c46..7d7c4b486852 100644
-> > > --- a/arch/riscv/kernel/asm-offsets.c
-> > > +++ b/arch/riscv/kernel/asm-offsets.c
-> > > @@ -488,4 +488,7 @@ void asm_offsets(void)
-> > >       DEFINE(STACKFRAME_SIZE_ON_STACK, ALIGN(sizeof(struct stackframe=
-), STACK_ALIGN));
-> > >       OFFSET(STACKFRAME_FP, stackframe, fp);
-> > >       OFFSET(STACKFRAME_RA, stackframe, ra);
-> > > +#ifdef CONFIG_FUNCTION_TRACER
-> > > +     DEFINE(FTRACE_OPS_FUNC,         offsetof(struct ftrace_ops, fun=
-c));
-> > > +#endif
-> > >   }
-> > > diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-> > > index f5aa24d9e1c1..e2e75e15d32e 100644
-> > > --- a/arch/riscv/kernel/ftrace.c
-> > > +++ b/arch/riscv/kernel/ftrace.c
-> > > @@ -82,9 +82,52 @@ static int __ftrace_modify_call(unsigned long hook=
-_pos, unsigned long target,
-> > >       return 0;
-> > >   }
-> > >
-> > > +#ifdef CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS
-> > > +static const struct ftrace_ops *riscv64_rec_get_ops(struct dyn_ftrac=
-e *rec)
-> > > +{
-> > > +     const struct ftrace_ops *ops =3D NULL;
-> > > +
-> > > +     if (rec->flags & FTRACE_FL_CALL_OPS_EN) {
-> > > +             ops =3D ftrace_find_unique_ops(rec);
-> > > +             WARN_ON_ONCE(!ops);
-> > > +     }
-> > > +
-> > > +     if (!ops)
-> > > +             ops =3D &ftrace_list_ops;
-> > > +
-> > > +     return ops;
-> > > +}
-> > > +
-> > > +static int ftrace_rec_set_ops(const struct dyn_ftrace *rec,
-> > > +                           const struct ftrace_ops *ops)
-> > > +{
-> > > +     unsigned long literal =3D rec->ip - 8;
-> > > +
-> > > +     return patch_text_nosync((void *)literal, &ops, sizeof(ops));
->
-> ^^
-> I will change this to use a new function that does a 64 bit write and
-> doesn't do flush_icache_range() as naturally aligned writes are
-> atomic and therefore synchronization is not required here.
-
-Yes, it's atomic. But it doesn't guarantee ordering if fence.i is not
-executed, IIUC. I am not sure if CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS
-assumes seeing the updated ftrace_rec argument right after the patch
-completes. If that is the case then probably a batched fence.i is
-needed on local + remote cores.
-
->
-> > > +}
-> > > +
-> > > +static int ftrace_rec_set_nop_ops(struct dyn_ftrace *rec)
-> > > +{
-> > > +     return ftrace_rec_set_ops(rec, &ftrace_nop_ops);
-> > > +}
-> > > +
-> > > +static int ftrace_rec_update_ops(struct dyn_ftrace *rec)
-> > > +{
-> > > +     return ftrace_rec_set_ops(rec, riscv64_rec_get_ops(rec));
-> > > +}
-> > > +#else
-> > > +static int ftrace_rec_set_nop_ops(struct dyn_ftrace *rec) { return 0=
-; }
-> > > +static int ftrace_rec_update_ops(struct dyn_ftrace *rec) { return 0;=
- }
-> > > +#endif
-> > > +
-> > >   int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
-> > >   {
-> > >       unsigned int call[2];
-> > > +     int ret;
-> > > +
-> > > +     ret =3D ftrace_rec_update_ops(rec);
-> > > +     if (ret)
-> > > +             return ret;
-> > >
-> > >       make_call_t0(rec->ip, addr, call);
-> > >
-> > > @@ -98,6 +141,11 @@ int ftrace_make_nop(struct module *mod, struct dy=
-n_ftrace *rec,
-> > >                   unsigned long addr)
-> > >   {
-> > >       unsigned int nops[2] =3D {NOP4, NOP4};
-> > > +     int ret;
-> > > +
-> > > +     ret =3D ftrace_rec_set_nop_ops(rec);
-> > > +     if (ret)
-> > > +             return ret;
-> > >
-> > >       if (patch_text_nosync((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
-> > >               return -EPERM;
-> > > @@ -125,6 +173,13 @@ int ftrace_init_nop(struct module *mod, struct d=
-yn_ftrace *rec)
-> > >
-> > >   int ftrace_update_ftrace_func(ftrace_func_t func)
-> > >   {
-> > > +     /*
-> > > +      * When using CALL_OPS, the function to call is associated with=
- the
-> > > +      * call site, and we don't have a global function pointer to up=
-date.
-> > > +      */
-> > > +     if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS))
-> > > +             return 0;
-> > > +
-> > >       int ret =3D __ftrace_modify_call((unsigned long)&ftrace_call,
-> > >                                      (unsigned long)func, true, true)=
-;
-> > >       if (!ret) {
-> > > @@ -147,6 +202,10 @@ int ftrace_modify_call(struct dyn_ftrace *rec, u=
-nsigned long old_addr,
-> > >       make_call_t0(caller, old_addr, call);
-> > >       ret =3D ftrace_check_current_call(caller, call);
-> > >
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     ret =3D ftrace_rec_update_ops(rec);
-> > >       if (ret)
-> > >               return ret;
-> > >
-> > > diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcoun=
-t-dyn.S
-> > > index b7561288e8da..cb241e36e514 100644
-> > > --- a/arch/riscv/kernel/mcount-dyn.S
-> > > +++ b/arch/riscv/kernel/mcount-dyn.S
-> > > @@ -191,11 +191,35 @@
-> > >       .endm
-> > >
-> > >       .macro PREPARE_ARGS
-> > > -     addi    a0, t0, -FENTRY_RA_OFFSET
-> > > +     addi    a0, t0, -FENTRY_RA_OFFSET       // ip (callsite's auipc=
- insn)
-> > > +#ifdef CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS
-> > > +     /*
-> > > +      * When CALL_OPS is enabled (2 or 4) nops [8B] are placed befor=
-e the
-> > > +      * function entry, these are later overwritten with the pointer=
+> >   |         trampoline will return to that address instead of returning=
  to the
-> > > +      * associated struct ftrace_ops.
-> > > +      *
-> > > +      * -8: &ftrace_ops of the associated tracer function.
-> > > +      *<ftrace enable>:
-> > > +      *  0: auipc  t0/ra, 0x?
-> > > +      *  4: jalr   t0/ra, ?(t0/ra)
-> > > +      *
-> > > +      * -8: &ftrace_nop_ops
-> > > +      *<ftrace disable>:
-> > > +      *  0: nop
-> > > +      *  4: nop
-> > > +      *
-> > > +      * t0 is set to ip+8 after the jalr is executed at the callsite=
-,
-> > > +      * so we find the associated op at t0-16.
-> > > +      */
-> > > +     mv      a1, ra                          // parent_ip
-> > > +     REG_L   a2, -16(t0)                     // op
-> > > +     REG_L   ra, FTRACE_OPS_FUNC(a2)         // op->func
-> > > +#else
-> > >       la      a1, function_trace_op
-> > > -     REG_L   a2, 0(a1)
-> > > -     mv      a1, ra
-> > > -     mv      a3, sp
-> > > +     REG_L   a2, 0(a1)                       // op
-> > > +     mv      a1, ra                          // parent_ip
-> > > +#endif
-> > > +     mv      a3, sp                          // regs
-> > >       .endm
-> > >
-> > >   #endif /* CONFIG_DYNAMIC_FTRACE_WITH_REGS */
-> > > @@ -233,8 +257,12 @@ SYM_FUNC_START(ftrace_regs_caller)
-> > >       SAVE_ABI_REGS 1
-> > >       PREPARE_ARGS
-> > >
-> > > +#ifdef CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS
-> > > +     jalr ra
-> > > +#else
-> > >   SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
-> > >       call    ftrace_stub
-> > > +#endif
-> > >
-> > >       RESTORE_ABI_REGS 1
-> > >       bnez    t1, .Ldirect
-> > > @@ -247,9 +275,13 @@ SYM_FUNC_START(ftrace_caller)
-> > >       SAVE_ABI_REGS 0
-> > >       PREPARE_ARGS
-> > >
-> > > -SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
->
-> ^^ this hunk is a mistake, I will fix it in the next version.
->
-> > > +#ifdef CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS
-> > > +     jalr ra
-> > > +#else
-> > > +SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
-> > >       call    ftrace_stub
-> > >
-> > > +#endif
-> > >       RESTORE_ABI_REGS 0
-> > >       jr      t0
-> > >   SYM_FUNC_END(ftrace_caller)
+> >   |         traced function
 > >
+> > On RISC-V, where auipc/jalr is used, the direct called trampoline would
+> > always be reachable, and then first Else-clause would never be entered.
+> > This means the the performance for direct calls would be the same as th=
+e
+> > one we have today (i.e. no regression!).
 > >
-> > As I'm diving into ftrace right now, I'll give a proper review soon. Bu=
-t
-> > as a note, I noticed that the function_graph tracer, when enabled, make=
-s
-> > the whole system unresponsive (but still up, just very slow). A fix I
-> > sent recently seems to really improve that if you're interested in
-> > testing it (I am :)). You can find it here:
-> > https://lore.kernel.org/linux-riscv/20240229121056.203419-1-alexghiti@r=
-ivosinc.com/
+> > RISC-V does like x86 does (-ish) -- patch multiple instructions, long
+> > reach.
+> >
+> > Arm64 uses CALL_OPS and patch one instruction BL.
+> >
+> > Now, with this background in mind, compared to what we have today,
+> > CALL_OPS would give us (again assuming we're using it for direct calls)=
+:
+> >
+> > * Better performance for tracer per-call (faster ops lookup) GOOD
 >
-> I saw the same issue where function_graph was making the system slow on Q=
-emu.
-> What hardware do you use for testing? or are you testing on Qemu as well?
+> ^ this was the only motivation for me to implement this patch.
 >
-> I tested your patch, it speeds up the process of patching the
-> instructions so the following
-> command completes ~2.5 seconds faster compared to without your patch.
-> $ time echo function_graph > current_tracer
+> I don't think implementing direct calls over call ops is fruitful for
+> RISC-V because once
+> the auipc/jalr can be patched atomically, the direct call trampoline
+> is always reachable.
+
+Yes, the auipc/jalr instruction pair can be patched atomically just as
+long as their size is naturally aligned on. However, we cannot prevent
+2 instructions from being fetched atomically :P
+
+> Solving the atomic text patching problem would be fun!! I am eager to
+> see how it will be
+> solved.
+
+I have a patch series to solve the atomic code patching issue, which I
+am about to respin [1]. The idea is to solve it with yet another layer
+of indirection. We add a 8-B aligned space at each function entry. The
+space is a pointer to the ftrace entry. During boot, each function
+entry code is updated to perform a load and then take the jump from
+the 8-B space. When ftrace is disabled, we patch the first 4B-aligned
+instruction to a jump so as to skip the ftrace entry.
+
+We are still discussing with Alex to see if we have a better way to do
+it. If not then I'd update the patchset and re-send it. There's a
+pending improvement in the series to reduce complexity. The 8-B
+aligned space can be added before the function entry (just like your
+patch).
+
 >
-> But at runtime the system is still slow and laggy with function_graph,
-> I guess because my
-> Qemu setup is not powerful enough to run function_graph.
+> > * Larger text size (function alignment + extra nops) BAD
+> > * Same direct call performance NEUTRAL
+> > * Same complicated text patching required NEUTRAL
+> >
+> > It would be interesting to see how the per-call performance would
+> > improve on x86 with CALL_OPS! ;-)
+>
+> If I remember from Steven's talk, x86 uses dynamically allocated trampoli=
+nes
+> for per callsite tracers, would CALL_OPS provide better performance than =
+that?
+>
+> >
+> > I'm trying to wrap my head if it makes sense to have it on RISC-V, give=
+n
+> > that we're a bit different from Arm64. Does the scale tip to the GOOD
+> > side?
+> >
+> > Oh, and we really need to see performance numbers on real HW! I have a
+> > VF2 that I could try this series on.
+>
+> It would be great if you can do it :D.
 >
 > Thanks,
 > Puranjay
@@ -621,3 +232,9 @@ emu.
 > linux-riscv mailing list
 > linux-riscv@lists.infradead.org
 > http://lists.infradead.org/mailman/listinfo/linux-riscv
+
+- [1] https://yhbt.net/lore/all/CAJF2gTSn3_cDYsF9D8dt-br2Wf_M8y02A09xgRq8kX=
+i91sN3Aw@mail.gmail.com/T/
+
+Regards,
+Andy
