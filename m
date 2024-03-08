@@ -1,271 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C695577A;
-	Fri,  8 Mar 2024 10:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7FF3DBBF;
+	Fri,  8 Mar 2024 14:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709895298; cv=none; b=TzdYEvabWUhewvgEbMcBbUvHk/rVB/8qO/cLNHMDii8Rn0fvPjonmPMaOHT/liwMJNNZPnz1ArnXamHEAEv4m1xBRot08g/c6oBeRysqwVcEBcg5XY8B/+z70vCNo72AXyXLPl2iGAt6rv/W3IvQva+wmEKSSuWzDkEuU6mUV0g=
+	t=1709907197; cv=none; b=F9J4g0rT/k0X41ORXMZzvnV0yY4uV9xFiAKqn2k7Ky+/lfP2J/dRLbETEkMhhC9TYegQpzXDWOqTmqhD0YpDMCJC5iHvYAYDdE6BZtsHpLbPl6SEp/lzYiGowXUGAtMhApnJfosl47nerkPVdtPeahsDSlfnHdMRNp5Vlngo0ME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709895298; c=relaxed/simple;
-	bh=j1ynKLY5env5mTcwYEWX+LZc3E3rIOPqHmFvLqb/PaU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tg08aZobJC46cZpyLnuCGSzo7+/F7t+IRuc3ZNJOiewPxgPr3NNl39QsBeG3VajvLbmyjHbKOB5Qcd7QpvWCowPVJg4VYCDHsAj3ne6YzAQdv8Dof0Cup7qLlwaPafaG7r7UhbzcoFcKEc8K263+Bg0bq3U1zOLzxkh+VD5mqCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ehSVVw7E; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709907197; c=relaxed/simple;
+	bh=TNAmhFzSeaD6wR6KJ/UAf/8iGn+xyB1175NpyMI2DQU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fiwdQOOXI1LYKElzv0xwwvoMszduA1b5gWZ8d8cPw6euvnGMIEW8vOn40+S2oU32OoMYIAe6ToKV+t8O+ACxBR7AvXU4s4oVvt5piw0A0Cp7kU7i4VzA5KOK4C8rCw3y4GrQeUi4unT9CNAN8S2hYhKw9VqDmmkqqEOO2C1DWGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OXDZfQWz; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ehSVVw7E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709895296; x=1741431296;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=j1ynKLY5env5mTcwYEWX+LZc3E3rIOPqHmFvLqb/PaU=;
-  b=ehSVVw7EHKj0v6ZB3CRzz4WD1UukwsB1kk5VFEEymqOetHqsAemeJ+nt
-   K6fDaaWmM9TB0Dll1n24OsM4oQwU4s3dx3oyizeyyuAvZfJ8OYmymgEY5
-   evl2+k9JDde//sC0CDoE/9Fcq3Wc7OxJNO5kUfOQLW8Hih52RPx/6OIBj
-   J9eO66i2DcSBilEAgJGvPKdYV4nxJX8GX/wqMpZHU/UBNehnTBYmm6yMM
-   uLEGWXtp901UAjU+O5Re/eU53wfy+Jf8six+eOaDDR4CH33BlF3dFMuQt
-   9km+BwqZq8hjXYnfargV05/vBD2ZV0mdjBm/FdM0OiKR1oKaaFb2FfeMn
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="4479459"
-X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
-   d="scan'208";a="4479459"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 02:54:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
-   d="scan'208";a="10874781"
-Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 08 Mar 2024 02:54:49 -0800
-Received: from kbuild by b21307750695 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1riXsD-0006JH-1g;
-	Fri, 08 Mar 2024 10:54:45 +0000
-Date: Fri, 8 Mar 2024 18:54:22 +0800
-From: kernel test robot <lkp@intel.com>
-To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Vincent Donnefort <vdonnefort@google.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, suleiman@google.com,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vineeth Pillai <vineeth@bitbyteword.org>,
-	Youssef Esmat <youssefesmat@google.com>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Alexander Graf <graf@amazon.com>, Baoquan He <bhe@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH 5/8] ring-buffer: Add ring_buffer_meta data
-Message-ID: <202403081843.QYKJKYk4-lkp@intel.com>
-References: <20240306020006.100449500@goodmis.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OXDZfQWz"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-512ed314881so2029132e87.2;
+        Fri, 08 Mar 2024 06:13:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709907194; x=1710511994; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=TNAmhFzSeaD6wR6KJ/UAf/8iGn+xyB1175NpyMI2DQU=;
+        b=OXDZfQWz2itWTN3kgtSyQUlI1ICxfmUBHnlYXXLoo6GiiAug2XvRF1zD3ulsuZNw3/
+         iqaGRKb6FU3q9Ayz8BpuaPvt1Ienqeryx/so52qMT1LacSOEjhBO95ym/DnHOceA1I+/
+         Awq08mTYa8pDJIto5xszUF13y3UpKGYzU69WMrqekgRhhl+O4dl4+GXJM7dawjBGij/M
+         RGBJFnaDroqA4vdLjsXQCsuYK6EAxcq5YzAV5Ii6+E24m4BZgRzhnZzGaMFS6DzZJepS
+         qjm7lPuKEDzbCXCx3Z3T/dEY5P+3p/E1hJxb4sfyQRuZhgMK/BF2ys9PMc3ZZxVefldy
+         yxtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709907194; x=1710511994;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TNAmhFzSeaD6wR6KJ/UAf/8iGn+xyB1175NpyMI2DQU=;
+        b=eas/bZ/7JJUQBcPoAE7D0iFU2aAxE+Myr+L9ttqaDdL0IaPQVNySEM+gqNr/TdS/qP
+         6v78qLDcYy/hOUoEeJYFdBaVQyPnT2vUYCKf89qRwv57IErc/Q+n0t4HT4yEKoeB+bvR
+         NlXfdleEoIDAfXxGNlvVgCM92Ey5ZkJQv4wrfV2SNTMsIqXMlyfVBq9q4nNC/XY4mHx2
+         9sA1vLrCnzgZM4O6BoVJZmg4+r9cZPCvyIT/GJtuiRaSnT63bywoJLmDCMjPja88b+lF
+         VRujQfiErHkpu4+im99xVUCjLnBXd+UefjRQymG4DPZAZC8eON85GoB7BlnZoLpGfIv+
+         9vSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV04dtsw9YuV8HZ/iNazD315DWjQkUeDmituA8MyBLpe5oGBjCkpqbOuo2TKXJYWyAcjQu8E96H2bEduv20471tk98NmgLVweaIPY7TBJMEFU/YtigIpcENzdauWxBULuS+kSSOCbK3O2GEfkGIicwd
+X-Gm-Message-State: AOJu0Yy7ygE7EFFIgp+qrSrHTnHxZlzP0ZonB3zRPTYSd+XGEcdqyhRN
+	26RVcJOLE5EPZmlWfqFCWk8PfNQV3n1FZ/qXjG0ZCKPHSfBK2CdSZARLTiJPgS2Gl9appAVfKSl
+	lQH5lFLteqxVN5NmJAxkXsIPOYnA=
+X-Google-Smtp-Source: AGHT+IEnpibiq1oTffEeY4LuZ+IiCvylw5bnXg1+82BI68jyD2wQItjBXAeOd2L90D++pDldD8hIGtGaEgQPFmXHTDw=
+X-Received: by 2002:a05:6512:3584:b0:513:8102:1a1e with SMTP id
+ m4-20020a056512358400b0051381021a1emr2786397lfr.50.1709907193455; Fri, 08 Mar
+ 2024 06:13:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240306020006.100449500@goodmis.org>
+References: <20240306165904.108141-1-puranjay12@gmail.com> <87ttlhdeqb.fsf@all.your.base.are.belong.to.us>
+ <CANk7y0gbQdYw0V+CEv-z8wFGXnki8KSn4c8+i0iZ1UFNCg7wJQ@mail.gmail.com> <CABgGipUJU_joVOjPi4WZ4JJM72zaSrCA1QUAaP8hob3+LXkS0g@mail.gmail.com>
+In-Reply-To: <CABgGipUJU_joVOjPi4WZ4JJM72zaSrCA1QUAaP8hob3+LXkS0g@mail.gmail.com>
+From: Puranjay Mohan <puranjay12@gmail.com>
+Date: Fri, 8 Mar 2024 15:13:02 +0100
+Message-ID: <CANk7y0hdntnN8x8keDvbQPfr1LLJwRSH5BX0dyC1tvL94sqn7A@mail.gmail.com>
+Subject: Re: [RFC PATCH] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
+To: Andy Chiu <andy.chiu@sifive.com>
+Cc: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Sami Tolvanen <samitolvanen@google.com>, Guo Ren <guoren@kernel.org>, 
+	Ley Foon Tan <leyfoon.tan@starfivetech.com>, Deepak Gupta <debug@rivosinc.com>, 
+	Sia Jee Heng <jeeheng.sia@starfivetech.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+	Song Shuai <suagrfillet@gmail.com>, =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Jisheng Zhang <jszhang@kernel.org>, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Steven,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on next-20240305]
-[cannot apply to tip/x86/core akpm-mm/mm-everything linus/master v6.8-rc7 v6.8-rc6 v6.8-rc5 v6.8-rc7]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/ring-buffer-Allow-mapped-field-to-be-set-without-mapping/20240306-100047
-base:   next-20240305
-patch link:    https://lore.kernel.org/r/20240306020006.100449500%40goodmis.org
-patch subject: [PATCH 5/8] ring-buffer: Add ring_buffer_meta data
-config: s390-defconfig (https://download.01.org/0day-ci/archive/20240308/202403081843.QYKJKYk4-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 503c55e17037436dcd45ac69dea8967e67e3f5e8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240308/202403081843.QYKJKYk4-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403081843.QYKJKYk4-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from kernel/trace/ring_buffer.c:8:
-   In file included from include/linux/trace_events.h:6:
-   In file included from include/linux/ring_buffer.h:5:
-   In file included from include/linux/mm.h:2208:
-   include/linux/vmstat.h:508:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     508 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     509 |                            item];
-         |                            ~~~~
-   include/linux/vmstat.h:515:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     515 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     516 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   include/linux/vmstat.h:527:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     527 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     528 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:536:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     536 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     537 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   In file included from kernel/trace/ring_buffer.c:8:
-   In file included from include/linux/trace_events.h:10:
-   In file included from include/linux/perf_event.h:62:
-   In file included from include/linux/security.h:35:
-   include/linux/bpf.h:736:48: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
-     736 |         ARG_PTR_TO_MAP_VALUE_OR_NULL    = PTR_MAYBE_NULL | ARG_PTR_TO_MAP_VALUE,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:737:43: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
-     737 |         ARG_PTR_TO_MEM_OR_NULL          = PTR_MAYBE_NULL | ARG_PTR_TO_MEM,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-   include/linux/bpf.h:738:43: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
-     738 |         ARG_PTR_TO_CTX_OR_NULL          = PTR_MAYBE_NULL | ARG_PTR_TO_CTX,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-   include/linux/bpf.h:739:45: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
-     739 |         ARG_PTR_TO_SOCKET_OR_NULL       = PTR_MAYBE_NULL | ARG_PTR_TO_SOCKET,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:740:44: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
-     740 |         ARG_PTR_TO_STACK_OR_NULL        = PTR_MAYBE_NULL | ARG_PTR_TO_STACK,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:741:45: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
-     741 |         ARG_PTR_TO_BTF_ID_OR_NULL       = PTR_MAYBE_NULL | ARG_PTR_TO_BTF_ID,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:745:38: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
-     745 |         ARG_PTR_TO_UNINIT_MEM           = MEM_UNINIT | ARG_PTR_TO_MEM,
-         |                                           ~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-   include/linux/bpf.h:747:45: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_arg_type') [-Wenum-enum-conversion]
-     747 |         ARG_PTR_TO_FIXED_SIZE_MEM       = MEM_FIXED_SIZE | ARG_PTR_TO_MEM,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-   include/linux/bpf.h:770:48: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_return_type') [-Wenum-enum-conversion]
-     770 |         RET_PTR_TO_MAP_VALUE_OR_NULL    = PTR_MAYBE_NULL | RET_PTR_TO_MAP_VALUE,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:771:45: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_return_type') [-Wenum-enum-conversion]
-     771 |         RET_PTR_TO_SOCKET_OR_NULL       = PTR_MAYBE_NULL | RET_PTR_TO_SOCKET,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:772:47: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_return_type') [-Wenum-enum-conversion]
-     772 |         RET_PTR_TO_TCP_SOCK_OR_NULL     = PTR_MAYBE_NULL | RET_PTR_TO_TCP_SOCK,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:773:50: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_return_type') [-Wenum-enum-conversion]
-     773 |         RET_PTR_TO_SOCK_COMMON_OR_NULL  = PTR_MAYBE_NULL | RET_PTR_TO_SOCK_COMMON,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:775:49: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_return_type') [-Wenum-enum-conversion]
-     775 |         RET_PTR_TO_DYNPTR_MEM_OR_NULL   = PTR_MAYBE_NULL | RET_PTR_TO_MEM,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-   include/linux/bpf.h:776:45: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_return_type') [-Wenum-enum-conversion]
-     776 |         RET_PTR_TO_BTF_ID_OR_NULL       = PTR_MAYBE_NULL | RET_PTR_TO_BTF_ID,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:777:43: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_return_type') [-Wenum-enum-conversion]
-     777 |         RET_PTR_TO_BTF_ID_TRUSTED       = PTR_TRUSTED    | RET_PTR_TO_BTF_ID,
-         |                                           ~~~~~~~~~~~    ^ ~~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:888:44: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_reg_type') [-Wenum-enum-conversion]
-     888 |         PTR_TO_MAP_VALUE_OR_NULL        = PTR_MAYBE_NULL | PTR_TO_MAP_VALUE,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:889:42: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_reg_type') [-Wenum-enum-conversion]
-     889 |         PTR_TO_SOCKET_OR_NULL           = PTR_MAYBE_NULL | PTR_TO_SOCKET,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~
-   include/linux/bpf.h:890:46: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_reg_type') [-Wenum-enum-conversion]
-     890 |         PTR_TO_SOCK_COMMON_OR_NULL      = PTR_MAYBE_NULL | PTR_TO_SOCK_COMMON,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~~~
-   include/linux/bpf.h:891:44: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_reg_type') [-Wenum-enum-conversion]
-     891 |         PTR_TO_TCP_SOCK_OR_NULL         = PTR_MAYBE_NULL | PTR_TO_TCP_SOCK,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~
-   include/linux/bpf.h:892:42: warning: bitwise operation between different enumeration types ('enum bpf_type_flag' and 'enum bpf_reg_type') [-Wenum-enum-conversion]
-     892 |         PTR_TO_BTF_ID_OR_NULL           = PTR_MAYBE_NULL | PTR_TO_BTF_ID,
-         |                                           ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~
->> kernel/trace/ring_buffer.c:3224:24: error: incompatible pointer to integer conversion assigning to 'unsigned long' from 'struct buffer_data_page *' [-Wint-conversion]
-    3224 |                         meta->commit_buffer = cpu_buffer->commit_page->page;
-         |                                             ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   25 warnings and 1 error generated.
+Hi Andy,
 
 
-vim +3224 kernel/trace/ring_buffer.c
+> >
+> > I don't think implementing direct calls over call ops is fruitful for
+> > RISC-V because once
+> > the auipc/jalr can be patched atomically, the direct call trampoline
+> > is always reachable.
+>
+> Yes, the auipc/jalr instruction pair can be patched atomically just as
+> long as their size is naturally aligned on. However, we cannot prevent
+> 2 instructions from being fetched atomically :P
+>
+> > Solving the atomic text patching problem would be fun!! I am eager to
+> > see how it will be
+> > solved.
+>
+> I have a patch series to solve the atomic code patching issue, which I
+> am about to respin [1]. The idea is to solve it with yet another layer
+> of indirection. We add a 8-B aligned space at each function entry. The
+> space is a pointer to the ftrace entry. During boot, each function
+> entry code is updated to perform a load and then take the jump from
+> the 8-B space. When ftrace is disabled, we patch the first 4B-aligned
+> instruction to a jump so as to skip the ftrace entry.
+>
+> We are still discussing with Alex to see if we have a better way to do
+> it. If not then I'd update the patchset and re-send it. There's a
+> pending improvement in the series to reduce complexity. The 8-B
+> aligned space can be added before the function entry (just like your
+> patch).
 
-  3192	
-  3193	static __always_inline void
-  3194	rb_set_commit_to_write(struct ring_buffer_per_cpu *cpu_buffer)
-  3195	{
-  3196		unsigned long max_count;
-  3197	
-  3198		/*
-  3199		 * We only race with interrupts and NMIs on this CPU.
-  3200		 * If we own the commit event, then we can commit
-  3201		 * all others that interrupted us, since the interruptions
-  3202		 * are in stack format (they finish before they come
-  3203		 * back to us). This allows us to do a simple loop to
-  3204		 * assign the commit to the tail.
-  3205		 */
-  3206	 again:
-  3207		max_count = cpu_buffer->nr_pages * 100;
-  3208	
-  3209		while (cpu_buffer->commit_page != READ_ONCE(cpu_buffer->tail_page)) {
-  3210			if (RB_WARN_ON(cpu_buffer, !(--max_count)))
-  3211				return;
-  3212			if (RB_WARN_ON(cpu_buffer,
-  3213				       rb_is_reader_page(cpu_buffer->tail_page)))
-  3214				return;
-  3215			/*
-  3216			 * No need for a memory barrier here, as the update
-  3217			 * of the tail_page did it for this page.
-  3218			 */
-  3219			local_set(&cpu_buffer->commit_page->page->commit,
-  3220				  rb_page_write(cpu_buffer->commit_page));
-  3221			rb_inc_page(&cpu_buffer->commit_page);
-  3222			if (cpu_buffer->ring_meta) {
-  3223				struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
-> 3224				meta->commit_buffer = cpu_buffer->commit_page->page;
-  3225			}
-  3226			/* add barrier to keep gcc from optimizing too much */
-  3227			barrier();
-  3228		}
-  3229		while (rb_commit_index(cpu_buffer) !=
-  3230		       rb_page_write(cpu_buffer->commit_page)) {
-  3231	
-  3232			/* Make sure the readers see the content of what is committed. */
-  3233			smp_wmb();
-  3234			local_set(&cpu_buffer->commit_page->page->commit,
-  3235				  rb_page_write(cpu_buffer->commit_page));
-  3236			RB_WARN_ON(cpu_buffer,
-  3237				   local_read(&cpu_buffer->commit_page->page->commit) &
-  3238				   ~RB_WRITE_MASK);
-  3239			barrier();
-  3240		}
-  3241	
-  3242		/* again, keep gcc from optimizing */
-  3243		barrier();
-  3244	
-  3245		/*
-  3246		 * If an interrupt came in just after the first while loop
-  3247		 * and pushed the tail page forward, we will be left with
-  3248		 * a dangling commit that will never go forward.
-  3249		 */
-  3250		if (unlikely(cpu_buffer->commit_page != READ_ONCE(cpu_buffer->tail_page)))
-  3251			goto again;
-  3252	}
-  3253	
+I briefly looked at the series and it looks promising. It looks similar to
+how BPF programs jump to trampolines on ARM64. If the choice has to
+be made about keeping the 8-B aligned space below or above the
+function entry and both choices are viable then I would prefer keeping
+the 8-B space below the function entry.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I am saying this because when nops are added above the function entry
+clang's kcfi[1] doesn't work properly.
+
+Thanks,
+Puranjay
+
+[1] https://clang.llvm.org/docs/ControlFlowIntegrity.html#fsanitize-kcfi
