@@ -1,71 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF4523748;
-	Fri,  8 Mar 2024 01:30:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D3142420B;
+	Fri,  8 Mar 2024 01:48:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709861443; cv=none; b=acwvILkXcLHMUu0rcqAYldOMXb21DFHE2Q6OcwEuFaQeNd76YMSBoY0gzv4GLFngisTUnB2PMh4CM5iTT05LV0YeCdkjIxoc7gWuLyjQd5Ru2Fm4MAXvBYjKMrMDszZ1G0Ivv1ZysAQPeNgOJHX8vkEMzqV2f2EtnzTCj6u6QH0=
+	t=1709862530; cv=none; b=F8X6ZiHyPQtH1PGGs1xMtgcrsQKdk8HxiIzEMTzuHONvWbc1Wa/SOu4kjTZT+JVSD8Oa24JPFfEpCBtGhvmtbprTBqhFgl/5YJ0UHuvh6WUzCmTsvJo5rmigFTbV9pMlsAvWLyYNMFo6L3IJk39ozn/m/AKrUbPawsRpzRZ1kWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709861443; c=relaxed/simple;
-	bh=pWLPfbMGjAqOMIxZXwrouf7NrYnQYoQSjURpmCc84iU=;
+	s=arc-20240116; t=1709862530; c=relaxed/simple;
+	bh=ofSIEp5CwaZZFkWkQrZ9LK1wrqP7l0qC/vb6L14yvhE=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BUYzwCOWas4t/4pTxnKmSP76T6Pb26ePU3ArqJPJ23CzwBFvlyl4EjADLRoflsCUSV6SghsVn6Nf18MrvElfDi/41s15rTgcp2rZwjZk2xbyRzaGPGCedGSUHNvc4UfQozlkP45UYEvFdoHHrb4PR87jz6Lq47L/85nyHmYLeP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WuK2qD6w; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WuK2qD6w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AD44C433F1;
-	Fri,  8 Mar 2024 01:30:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709861442;
-	bh=pWLPfbMGjAqOMIxZXwrouf7NrYnQYoQSjURpmCc84iU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WuK2qD6wyzgEpkNGU94oUn6yHcPXxuUo3uJrLGDTiIGph4N/vCBqNc4nDv471KEn3
-	 sm7aoyIlj2FlbTUAzqmFeQZ3jZxx8uq02/lwxrUs6Fs5ne1P7sc9b+jogdt2cNh5om
-	 yy2pPOnMcP+HAkFrHyi8JDY6iodalicwb81v6rzeU0un9tw4HNH9vVQNofxBnlf4+6
-	 iDppG8XOmWfXjccjhAEBc5TroehEx0EzshUNRujMpMwMXGGAQ6kBNOJtKint9xVpy2
-	 SaraH4eSezKXfORbglRhjRO/jH8oAebaFTPdwegjG2bPLQMw9csoNK+YHGu0qpYXyY
-	 O/jGEtvZeHEeQ==
-Date: Thu, 7 Mar 2024 17:30:39 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>, Richard Henderson
- <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
- Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer
- <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
- Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
- <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
- <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai
- Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
- <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
- <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
- Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa
- <jolsa@kernel.org>, David Ahern <dsahern@kernel.org>, Willem de Bruijn
- <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, Sumit
- Semwal <sumit.semwal@linaro.org>, "Christian =?UTF-8?B?S8O2bmln?="
- <christian.koenig@amd.com>, Pavel Begunkov <asml.silence@gmail.com>, David
- Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
- <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
- Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeelb@google.com>,
- Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
- <pkaligineedi@google.com>
-Subject: Re: [RFC PATCH net-next v6 01/15] queue_api: define queue api
-Message-ID: <20240307173039.00e6fbb7@kernel.org>
-In-Reply-To: <20240305020153.2787423-2-almasrymina@google.com>
-References: <20240305020153.2787423-1-almasrymina@google.com>
-	<20240305020153.2787423-2-almasrymina@google.com>
+	 MIME-Version:Content-Type; b=g0talkvn9mxUeL4qeX8lbLrT20eHFQlwnVkF0BRIxJyLoTYk3iZ8hWvOYSlTL7+gKI8KravHiU/QqykSEbAtdN2yK+c8rLRJYIrqO+rzzGttUxH/kH9RRefaafZKKOrH+H2jj/JMStVivc5tiPeMTn8m7N9j+ftwLsFIlbpSqnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60945C433C7;
+	Fri,  8 Mar 2024 01:48:49 +0000 (UTC)
+Date: Thu, 7 Mar 2024 20:50:44 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Kassey Li <quic_yingangl@quicinc.com>
+Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
+ <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH] workqueue: add function in event of
+ workqueue_activate_work
+Message-ID: <20240307205044.1caf9fe2@gandalf.local.home>
+In-Reply-To: <20240308010929.1955339-1-quic_yingangl@quicinc.com>
+References: <20240308010929.1955339-1-quic_yingangl@quicinc.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -75,43 +34,74 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon,  4 Mar 2024 18:01:36 -0800 Mina Almasry wrote:
-> + * void *(*ndo_queue_mem_alloc)(struct net_device *dev, int idx);
-> + *	Allocate memory for an RX queue. The memory returned in the form of
-> + *	a void * can be passed to ndo_queue_mem_free() for freeing or to
-> + *	ndo_queue_start to create an RX queue with this memory.
-> + *
-> + * void	(*ndo_queue_mem_free)(struct net_device *dev, void *);
-> + *	Free memory from an RX queue.
-> + *
-> + * int (*ndo_queue_start)(struct net_device *dev, int idx, void *);
-> + *	Start an RX queue at the specified index.
-> + *
-> + * int (*ndo_queue_stop)(struct net_device *dev, int idx, void **);
-> + *	Stop the RX queue at the specified index.
->   */
->  struct net_device_ops {
->  	int			(*ndo_init)(struct net_device *dev);
-> @@ -1679,6 +1693,16 @@ struct net_device_ops {
->  	int			(*ndo_hwtstamp_set)(struct net_device *dev,
->  						    struct kernel_hwtstamp_config *kernel_config,
->  						    struct netlink_ext_ack *extack);
-> +	void *			(*ndo_queue_mem_alloc)(struct net_device *dev,
-> +						       int idx);
-> +	void			(*ndo_queue_mem_free)(struct net_device *dev,
-> +						      void *queue_mem);
-> +	int			(*ndo_queue_start)(struct net_device *dev,
-> +						   int idx,
-> +						   void *queue_mem);
-> +	int			(*ndo_queue_stop)(struct net_device *dev,
-> +						  int idx,
-> +						  void **out_queue_mem);
+On Fri, 8 Mar 2024 09:09:29 +0800
+Kassey Li <quic_yingangl@quicinc.com> wrote:
 
-The queue configuration object was quite an integral part of the design,
-I'm slightly worried that it's not here :) Also we may want to rename
-the about-to-be-merged ops from netdev_stat_ops and netdev_queue_ops,
-and add these there?
+> The trace event "workqueue_activate_work" only print work struct.
+> However, function is the region of interest in a full sequence of work.
+> Current workqueue_activate_work trace event output:
+> 
+>     workqueue_activate_work: work struct ffffff88b4a0f450
+> 
+> With this change, workqueue_activate_work will print the function name,
+> align with workqueue_queue_work/execute_start/execute_end event.
+> 
+> checkpatch.pl will report below error for the space:
+> 
+> 	ERROR: space prohibited after that open parenthesis '('
+> 	#28: FILE: include/trace/events/workqueue.h:67:
+> 	+               __field( void *,        function)
+> 
+> 	total: 1 errors, 0 warnings, 16 lines checked
+> 
+> fix this error.
+> 
+> Signed-off-by: Kassey Li <quic_yingangl@quicinc.com>
+> ---
+>  include/trace/events/workqueue.h | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/trace/events/workqueue.h b/include/trace/events/workqueue.h
+> index 262d52021c23..a42c1a293459 100644
+> --- a/include/trace/events/workqueue.h
+> +++ b/include/trace/events/workqueue.h
+> @@ -63,14 +63,16 @@ TRACE_EVENT(workqueue_activate_work,
+>  	TP_ARGS(work),
+>  
+>  	TP_STRUCT__entry(
+> -		__field( void *,	work	)
+> +		__field(void *,	work)
+> +		__field(void *,	function)
 
-https://lore.kernel.org/all/20240306195509.1502746-2-kuba@kernel.org/
+Note, please do not follow checkpatch in TRACE_EVENT() macros. It simply
+doesn't understand it. The above is supposed to be similar to structure
+formatting.
 
-Very excited to hear that you made progress on this and ported GVE over!
+ie:
+	struct __entry {
+		void		*work;
+		void		*function;
+	};
+
+	TP_STRUCT__entry(
+		__field( void *,	work		)
+		__field( void *,	function	)
+  	),
+
+That looks much better.
+
+-- Steve
+
+
+>  
+>  	TP_fast_assign(
+>  		__entry->work		= work;
+> +		__entry->function	= work->func;
+>  	),
+>  
+> -	TP_printk("work struct %p", __entry->work)
+> +	TP_printk("work struct %p function=%ps ", __entry->work, __entry->function)
+>  );
+>  
+>  /**
+
