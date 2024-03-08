@@ -1,136 +1,147 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F2AA1CD3D;
-	Fri,  8 Mar 2024 08:31:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709886709; cv=none; b=X1Hdq5v7Gdmt4PukQqL7Pd2GfeXLec5lwA1S3SzJDyTLU+6UkFhAyjNmBDG40eqTs05j1LP5ycqxMwoAerTTUjRgM8macVCEGnTniuxJWt2VcPGJzMphkprJC0xUTYb3xFkEW/CAK6jO0VYbaRJpsCVxDRtKw5cnZNjepesSLdM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709886709; c=relaxed/simple;
-	bh=hDfMG2qxYuktOsweK4dW0+1dH+uTHvPFBUTxH/5FjMg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u1Kgf7yK38EwfmLSTRWAGyVjJFXWJ3gv6O3KKO2Ig4hUn8x/vzNGB+tu2aaCnjeohggQMxyIms+4OGuzbAePIu30mMaAQoX32nBzusnqhtHA5nCmASzvcrKQfRAC/PzbTi3JryD5V2fIUR0tUKa6XDUYCWNO7prWBXCigLDIBQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-7f-65eacce93237
-From: Honggyu Kim <honggyu.kim@sk.com>
-To: SeongJae Park <sj@kernel.org>
-Cc: Honggyu Kim <honggyu.kim@sk.com>,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	akpm@linux-foundation.org,
-	apopple@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	dave.jiang@intel.com,
-	hyeongtak.ji@sk.com,
-	kernel_team@skhynix.com,
-	linmiaohe@huawei.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	rakie.kim@sk.com,
-	rostedt@goodmis.org,
-	surenb@google.com,
-	yangx.jy@fujitsu.com,
-	ying.huang@intel.com,
-	ziy@nvidia.com,
-	42.hyeyoo@gmail.com
-Subject: Re: Re: [RFC PATCH v2 0/7] DAMON based 2-tier memory management for CXL memory
-Date: Fri,  8 Mar 2024 17:31:25 +0900
-Message-ID: <20240308083129.1796-1-honggyu.kim@sk.com>
-X-Mailer: git-send-email 2.43.0.windows.1
-In-Reply-To: <20240307030550.47095-1-sj@kernel.org>
-References: 
+Received: from HK2PR02CU002.outbound.protection.outlook.com (mail-eastasiaazon11012009.outbound.protection.outlook.com [52.101.128.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549DC846C;
+	Fri,  8 Mar 2024 08:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.128.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709887087; cv=fail; b=aWUVjfmEfmRKjsM/m6HBFStExzO/7PH0hpf0ESYHy0YUwiiHr4fldoljjvkyHYMWY4qvQEPExNqETb2Qb+t3N1ldaFMdGPPY9fS1i453BRwXyI07u6MQogefs+S69AMis7kOFGtUqOUJKSEg6DVA5KeQj/Od0e9p2LztqrCJRJ8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709887087; c=relaxed/simple;
+	bh=JimobX8zmyjDLsdZziJ0Qni647ZdQe1iV1VvzoSsglI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=YEGbwI2KGnizVXlk1e/yNT6sData1/FeMFBI84YO3UIK210I9Tq0GT/kzl4gECpUMdv61Wk3T3y/kS1PQhaVyoAwhV0wheF10i5+mNamPlXJJL9QyTaR05GMyk7HJqPk8kBRMsbihCby7Yo+JsjhbYEvJ7mNZp30P8YGWOEpxd8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=BMsenh1x; arc=fail smtp.client-ip=52.101.128.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="BMsenh1x"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hXRQfHuw8Rl2AACBDWikKI1yCthT9aI0jxGNcp8X+cq72FDI0AhK1TIbhFVM4VzDficwQsxaEdJo5j28hQGPIKl1SX9jDpOXZthKQEStsMfJlJhnoJ7QAYfm10WHIooQUhjq2FU0L78VVtaYEe1/ixtFWM9GzQ6phlFVRl9ZfKXnLKJWO5aZrbcw4Cq8MhzhQP3GH+lkxBxlRCCu0L0XmdCyMPpKoXNkkuP/XIz/d82BvdG6uOlF7vEgMe8JSZyte5E3O1ezcvSBmvkQSXfj5/WA2YsxAUcxPhiaupUwDlgDeDM5/8acVgRBok9Ng1X4jh4ZUI7S/2tAR9rzkZi79g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JimobX8zmyjDLsdZziJ0Qni647ZdQe1iV1VvzoSsglI=;
+ b=LMhiuPMQYsg9eMUG9DV3Rt5MTdMeHda4URNVV+/N0x1SdidLk5bOErLjvL/LkVjnFVrN5+obIrUPWjIqyUJZV8yIn6CBNi2YfoT8YgWlxDhnOsBFs1uZFEIx8tcSUjXWAm8sHTMN8Mcmf1NbK4Ippp6aZ00QYb5cZnuyI3mXsF2q+sA4FSwmi0E65wfyG8AecgeFkz1FGUJyGm4WJM62UIToeqp9WxS2Lzt/yAyWknrqG6Eowsf72+ck4Rk1RFzAsraJ4s8rcITKxmWJtvkhSbrdGHSYUyUj4N3QrOYx0MFO6I+qDuRbfyUaR0gZHMmJb4mvtVmMYKeeyDe/u9Cs1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JimobX8zmyjDLsdZziJ0Qni647ZdQe1iV1VvzoSsglI=;
+ b=BMsenh1x3BxDu1LpiL1V6DjVBxdDvZ86hLLQzXZphd82XYzHuXYrzl42O+5f0H8O5Onu/iQQJKbqm/8f4ni3P1lcbNHEe7niJnlwkwLlmCIFveBJbu9/ytokAf0t5GGFkugD0Bx+m8bc7Z6XxafQYgefRCfepVcj1reda0f36goxfpVCTanKZDNzG8y4jBJOJbOC/2mMsyk6duTdTMFOhPGqy8PxSoMRBjTckKPue60vlM/ug7BN0QdghPVscYhzfiTZWk47RX4njcTUDcGnE3jrgfNifCOVMVu+CcxfuAapzSAzdJt1aZSJjyn1zffv4onCxDY30Kw+zI/f4pqNhg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from PSAPR06MB4037.apcprd06.prod.outlook.com (2603:1096:301:33::10)
+ by TYUPR06MB6098.apcprd06.prod.outlook.com (2603:1096:400:358::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.24; Fri, 8 Mar
+ 2024 08:37:59 +0000
+Received: from PSAPR06MB4037.apcprd06.prod.outlook.com
+ ([fe80::d9b9:81b5:e5a8:d05a]) by PSAPR06MB4037.apcprd06.prod.outlook.com
+ ([fe80::d9b9:81b5:e5a8:d05a%4]) with mapi id 15.20.7362.024; Fri, 8 Mar 2024
+ 08:37:57 +0000
+Message-ID: <a78ec810-016a-4866-b19d-f7a4928bd0b2@vivo.com>
+Date: Fri, 8 Mar 2024 16:37:52 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next v6 0/2] Make memory reclamation measurable
+To: Michal Hocko <mhocko@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, akpm@linux-foundation.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org, opensource.kernel@vivo.com
+References: <20240105013607.2868-1-cuibixuan@vivo.com>
+ <fac8d079-100e-4b8d-9a35-db8219b28b51@vivo.com>
+ <20240220212202.59ddc123@gandalf.local.home>
+ <3d4f44ee-f533-446f-a9e6-7f58afc78d65@vivo.com> <ZdWpyN_8Z6dvDQ48@tiehlicka>
+ <a32030f0-b6f6-4bd6-8284-bb762ccf9205@vivo.com> <ZemIOtbIoMYqcf-V@tiehlicka>
+From: Bixuan Cui <cuibixuan@vivo.com>
+In-Reply-To: <ZemIOtbIoMYqcf-V@tiehlicka>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SG2PR01CA0183.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:189::16) To PSAPR06MB4037.apcprd06.prod.outlook.com
+ (2603:1096:301:33::10)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHIsWRmVeSWpSXmKPExsXC9ZZnoe6rM69SDX4sZbeY2GNgMWf9GjaL
-	XTdCLP7vPcZo8eT/b1aLEzcb2Sw6vy9lsbi8aw6bxb01/1ktjqw/y2Kx+ewZZovFy9Us9nU8
-	YLI4/PUNk8XkSwvYLF5MOcNocXLWZBaL2UfvsTsIeSw9/YbNY0MTkNg56y67R8u+W+weCzaV
-	erQcecvqsXjPSyaPTas62Tw2fZrE7nFixm8Wj50PLT1ebJ7J6NHb/I7N4/MmuQC+KC6blNSc
-	zLLUIn27BK6MqdubWAqeCVS8/vGKuYFxHW8XIyeHhICJxK47vWww9rJXN1hBbDYBNYkrLycx
-	gdgiAooS5x5fBIpzcTALLGSR6P2+ASwhLBAucarpNXMXIzsHi4CqxNZEkCivgJnEousTWCFG
-	ako83v6THcTmFDCWePnyPTOILSTAI/Fqw35GiHpBiZMzn7CA2MwC8hLNW2czg6ySEDjELrFz
-	1Q9GiEGSEgdX3GCZwMg/C0nPLCQ9CxiZVjEKZeaV5SZm5pjoZVTmZVboJefnbmIExtqy2j/R
-	Oxg/XQg+xCjAwajEw1tx92WqEGtiWXFl7iFGCQ5mJRFeFgugEG9KYmVValF+fFFpTmrxIUZp
-	DhYlcV6jb+UpQgLpiSWp2ampBalFMFkmDk6pBka2zmn+3wNOSZQfaj3AY3RF5k7IbMPCybt2
-	OSRmadsH7+SNmROrvP1k4d6vN1y2hB27fe3HFceag+xbOw1LW3bPe3Gq+xNf8r2zbt2eQZpb
-	IyZqXnDtXMIx56nh7IuG/9ddaFnwyOmKfn8/k9rtzb+7Az9zWcoGK7Xnch/eLKP35Fxv42n3
-	KxeVWIozEg21mIuKEwHxr/zSsQIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsXCNUNLT/flmVepBjvazSwm9hhYzFm/hs1i
-	140Qi/97jzFaPPn/m9XixM1GNovPz14zW3Q++c5ocXjuSVaLzu9LWSwu75rDZnFvzX9WiyPr
-	z7JYbD57htli8XI1i0PXnrNa7Ot4wGRx+OsbJovJlxawWbyYcobR4uSsySwWs4/eY3cQ81h6
-	+g2bx4YmILFz1l12j5Z9t9g9Fmwq9Wg58pbVY/Gel0wem1Z1snls+jSJ3ePEjN8sHjsfWnq8
-	2DyT0aO3+R2bx7fbHh6LX3xg8vi8SS5AIIrLJiU1J7MstUjfLoErY+r2JpaCZwIVr3+8Ym5g
-	XMfbxcjJISFgIrHs1Q1WEJtNQE3iystJTCC2iICixLnHF4HiXBzMAgtZJHq/bwBLCAuES5xq
-	es3cxcjOwSKgKrE1ESTKK2Amsej6BFaIkZoSj7f/ZAexOQWMJV6+fM8MYgsJ8Ei82rCfEaJe
-	UOLkzCcsIDazgLxE89bZzBMYeWYhSc1CklrAyLSKUSQzryw3MTPHVK84O6MyL7NCLzk/dxMj
-	ML6W1f6ZuIPxy2X3Q4wCHIxKPLwVd1+mCrEmlhVX5h5ilOBgVhLhZbEACvGmJFZWpRblxxeV
-	5qQWH2KU5mBREuf1Ck9NEBJITyxJzU5NLUgtgskycXBKNTD2e7KsOxDObuh5wr3bdqpo7+Wv
-	7x/XmBgqzDNsuqf398KjnYvPGl7wkH/O8fLv01zpNYfMzxix7tVsMbo+LSL5wcPz3+1YZCL9
-	Ky+FWka8WGJXzsNz2fJT8Yx0tQD9F6Lbv/OcU9Fluvh8q9PpAoN71zcefRu49adNX81Spbw8
-	vpl3mnewvipVYinOSDTUYi4qTgQAsqCBdasCAAA=
-X-CFilter-Loop: Reflected
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PSAPR06MB4037:EE_|TYUPR06MB6098:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6b0147fd-1e58-4c0e-102d-08dc3f4b0e47
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	4TPZHBFczDafrdLEmvyKI77hqCTZ54dPKVkRkuvLZUrXR75w/blSt+4NK6/2LbL2+/VE0OyferPtHtj0uMsIdu0QLEZSDiC4fW3F209cHzpUMGdqPtAwav+hsrTbRtiIwi32dsywFkU3UoBkVC1HT9XkHRBkSDvVSOQ1xjS1kuFPzd21+H2n3+ypVUwKaClTBcEYm2KeaYqjCD6ABbuVL/Row13GfmSRlgfFvs1oC6aVtVs1qFaqnENRj4c/LclNScyWAdOYj0Zr1BOqR6VUuLiN7diRtyPEquJ/PfE7CRCtYMXZvVHP+MyfP0B/EGt/QlqMWpSR/hDVylPwVcSmClYFyUE69MxBBh4Aw35f6cFFiRteHuz9vn0QOEdq5i/GqPZ896FmRcnymZrAy1UYjgVyol2amwYR0SCegFgiMecTOaIzJ+Qsc1FDmHsvo//81KDjK82CQa2J1hC8Ur9n62blHWtHovVU8OyygE1HTzBxZOZ/DukiPmDcc7S/9wUSWvTtDvovN4SL0FFiW6oKrlU+pqkHZSaFCaq0DdMM/JEAt/ZlYT32pOwICPAsJOMPCNFv0fBSxslQusjmRuBbLRoo5GxIT5NvnfB9qvOQkrMrCljIqTDfwlcalJSUKrhN6nj3AiGQx9S/ra0O3/W/kJANm6af81MmQSeto+6SAHtM9BDSamiHe7NnIvDsSphPV4WhLWzbumqX70l6vBHefWpJD2rCVsXNSP0EOyhrWLQ=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PSAPR06MB4037.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(52116005)(1800799015)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UlRldWpZdCtLTWFRRDNOMUducXcybVJXOHhrNk03ZnhseEZmb29VQ3h0YXRk?=
+ =?utf-8?B?eTQybDYzQXA1TTl5QXJrMmdVU0labHp4R0FRaDhndXo1UCtYc2FKejJZMHAv?=
+ =?utf-8?B?Nm5sYUM0bTB2TG9saXRSZyt2OFVjek4zOTNKUkNMd2Z2ZXJQV0dnUG0vbjJh?=
+ =?utf-8?B?L1lQU25Mcnk1R1c0czQvdHY0a01TcFdBUkRlZDZaTEM4NzA2TUEvSkxkTG1R?=
+ =?utf-8?B?ZHNBMHpUVzlxZW5DV2p1dHM0NGdvSmxsYTU0MTY0SlgxUEtOTzNGeTlqL2lT?=
+ =?utf-8?B?WTVpZTd0cTlLd3NjWnVMRXhDdzFUaU1wdWFjcExpa1ZFS25DVC9pTjY4d29z?=
+ =?utf-8?B?SVY1V1l5OGNidFNmOThBaDZ2WFJFemlIa2pQMjFHcTBhN2FNZ3lPeWFPZDVy?=
+ =?utf-8?B?L2JUQWNLVVJBRUNZZEJycnphQWFQNVMyUkI2ZnUwc3cxdlNwVzhzSitaYzJQ?=
+ =?utf-8?B?Zk5WWTVMS2lHalROU21BbDJSVWNpaXArQjhORmpPK2NVMEJqc0xFRGZ1ekhC?=
+ =?utf-8?B?R3Q0dkdlWXNqNlN3a1NMdFdKL3VuM0o5ZXpENEZVbnFkVmEvSzdkQVBRZGlJ?=
+ =?utf-8?B?V0IvNXA5MG92NTg0TG40cXJKYWNSTDlHWU16dGRUOVA1UlE1TmJrSm1ZM2hw?=
+ =?utf-8?B?ck9yamFBOFJBckFDZFhYWHVMUnNMM1FCUW5LWVhQTU11eUtvRld3T2JWQWtX?=
+ =?utf-8?B?cWZGZWw4bVNiWHFTVUxRVVQ0V0JOR29Sck1rcFlNV3R5NzRtUDBERk1BdFg2?=
+ =?utf-8?B?NkphSmN6a3U5OCt2QWozdHcvaEdaVTVwU3lScVR0cE9EZ3dDQ3VpYTJrSkFY?=
+ =?utf-8?B?RDA3QVowbzM2NXJWTHJxZG1LbHZQQ2p0elBVTitYM01xNjlTQWNkUTdEaEZS?=
+ =?utf-8?B?bldIWGVSS2htcHdGcHRZeWh1OW12ZXhXSUgzZ0doTnFBaldFR3BKdzVVVUlJ?=
+ =?utf-8?B?TlZxcmNQUTFKZXlXa0I3aVdLM0FxdWlGa1h1a2M5VzFlZHQ2OElScFE3NCtR?=
+ =?utf-8?B?TFphcFkxVW1qTk8zSDdpd1dJMVRjL0dzNGdHMlgxdmpxZ3NQRjd0aS9TY2Zk?=
+ =?utf-8?B?cWNBaGdwUStuQlExR1hONGZDNUZJSUxnTURKOWdVQUxLY05FL01LbDZGYjJN?=
+ =?utf-8?B?MjB2Nm1qekkvTDdSNUxDMUQ5WVR2clZVYUJIWXpLOERnc01ndnp0YlBzdk52?=
+ =?utf-8?B?SDk1WldVeEdqWW5vMEJEK1dPSHh3MFFoV3ZvWWI3YjQzeTZxVXpYaUR3bDRi?=
+ =?utf-8?B?Q0ZteXVndTYwN2VtNTFCMHVoUmRnbXJZN1A4K20vekhZa0JQa252anJjcHVu?=
+ =?utf-8?B?d1l2Q3dVZWRXSzlQcTNQUlFMcGdoTTBZRU1WaU0rU3FQMC9jT2Jvdjl2Z1ZP?=
+ =?utf-8?B?dGg3ZnF1SXErS1d5RDJvS1BGdFVVMHJ2T0JXYzNjVFE5MHBSWW1FeWVFMHFO?=
+ =?utf-8?B?WCtpMmhaeFVGRDUyWEJQWFNKWm9kanRoZ29RQ3V5aFczTWVYOHNGWWF0Qkcw?=
+ =?utf-8?B?QjBvbHJocnFvc0JHZSs1a2ZZeVg0Y3VEVDRnSzJwcVBLTitGTzcyRjdYUDNY?=
+ =?utf-8?B?cVYxUTBoalJVbG10VERDazFIbkhIcm50NFBMME9RbEpHMXNjNVNqNndVRmZ6?=
+ =?utf-8?B?NzVscVZjbUJ4RVZ1ZDNjWUhKMm16bHlWdDFXeUZydlZXT3JWWHl5Y2duWkd2?=
+ =?utf-8?B?S0xrcDIrSHpia1NObVYwb1NjWmFzenRFNytsK1lSc1pkcGVZdGFlQ3ZWZWU0?=
+ =?utf-8?B?TkFLb1Q4dDZRL2U2Q0trbW5FV1JNSFFJNm1qTHdqZHYxNENoMzBjRk5wbmZ3?=
+ =?utf-8?B?WVcwQ2ZsckRzYVRQLzdTMUtiaUdMdHRnOFBqbmRPNEJacERudVRiUlJ4ZXBY?=
+ =?utf-8?B?WnhkYWZPQ3R1SzV4ZkdEMnAzS01Hdk9RRHljeWcwZEJaTzlISklqSGptemlr?=
+ =?utf-8?B?a0sva1dFZllyaHNyNDhTZ3VQR0xaMWxvYlc4bDJNWFRlQk9raUZXV01ueGNR?=
+ =?utf-8?B?RDhJekx4b0xrem9FdXgxNzZzM3FYazdPV1lseFJiZmZ3SUFjQ1V2YmF0Zk04?=
+ =?utf-8?B?TTFkbnJtK0ord2U4QS9oeUVmdTJsSXVsd0xwRTY4Z0ZWbXk5Q3p3d2lkekFU?=
+ =?utf-8?Q?V7XBfpIanw5/op/Oj5A8X4abz?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b0147fd-1e58-4c0e-102d-08dc3f4b0e47
+X-MS-Exchange-CrossTenant-AuthSource: PSAPR06MB4037.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2024 08:37:57.6264
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QOQAoKGy+Jw2L8kmiTctRebruhDDDr6f63JCRkhJKlTj0g5bjIW+nNv4bwoV1C4Gbhe9sdD8GuC+2V3opPNaJQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYUPR06MB6098
 
-Hi SeongJae,
 
-I couldn't send email to LKML properly due to internal system issues,
-but it's better now so I will be able to communicate better.
 
-On Wed,  6 Mar 2024 19:05:50 -0800 SeongJae Park <sj@kernel.org> wrote:
-> 
-> Hello,
-> 
-> On Tue, 27 Feb 2024 15:51:20 -0800 SeongJae Park <sj@kernel.org> wrote:
-> 
-> > On Mon, 26 Feb 2024 23:05:46 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
-> > 
-> > > There was an RFC IDEA "DAMOS-based Tiered-Memory Management" previously
-> > > posted at [1].
-> > > 
-> > > It says there is no implementation of the demote/promote DAMOS action
-> > > are made.  This RFC is about its implementation for physical address
-> > > space.
-> [...]
-> > Honggyu joined DAMON Beer/Coffee/Tea Chat[1] yesterday, and we discussed about
-> > this patchset in high level.  Sharing the summary here for open discussion.  As
-> > also discussed on the first version of this patchset[2], we want to make single
-> > action for general page migration with minimum changes, but would like to keep
-> > page level access re-check.  We also agreed the previously proposed DAMOS
-> > filter-based approach could make sense for the purpose.
-> > 
-> > Because I was anyway planning making such DAMOS filter for not only
-> > promotion/demotion but other types of DAMOS action, I will start developing the
-> > page level access re-check results based DAMOS filter.  Once the implementation
-> > of the prototype is done, I will share the early implementation.  Then, Honggyu
-> > will adjust their implementation based on the filter, and run their tests again
-> > and share the results.
-> 
-> I just posted an RFC patchset for the page level access re-check DAMOS filter:
-> https://lore.kernel.org/r/20240307030013.47041-1-sj@kernel.org
-> 
-> I hope it to help you better understanding and testing the idea.
+在 2024/3/7 17:26, Michal Hocko 写道:
+>> The main reasons for adding static tracepoints are:
+>> 1. To subdivide the time spent in the shrinker->count_objects() and
+>> shrinker->scan_objects() functions within the do_shrink_slab function. Using
+>> BPF kprobe, we can only track the time spent in the do_shrink_slab function.
+>> 2. When tracing frequently called functions, static tracepoints (BPF
+>> tp/tracepoint) have lower performance impact compared to dynamic tracepoints
+>> (BPF kprobe).
+> You can track the time process has been preempted by other means, no? We
+> have context switching tracepoints in place. Have you considered that
+> option?
+Let me think about it...
 
-Thanks very much for your work! I will test it based on your changes.
-
-Thanks,
-Honggyu
-
-> 
-> > 
-> > [1] https://lore.kernel.org/damon/20220810225102.124459-1-sj@kernel.org/
-> > [2] https://lore.kernel.org/damon/20240118171756.80356-1-sj@kernel.org
-> 
-> 
-> Thanks,
-> SJ
-> 
-> [...]
-> 
-> 
-> 
+Thanks
+Bixuan Cui
