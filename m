@@ -1,201 +1,109 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED03B5A7BB
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  8 Mar 2024 19:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605542D60B;
+	Fri,  8 Mar 2024 20:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709927618; cv=none; b=HQg/svTD2Lp5w322xBgiYJMW/TnFXncrnri7w52JSs32sgSN07BpyhtbvIgWnEm+V6HPnx3Mg64rD6Ah+B+hmZwa9cAS7KQskhS/peMNNkJO81TJb3/dcpbo4qscRsXGt9nRQYOCLkHGHr0V87OJexxpfySfJUx8UMcDIzrHkSI=
+	t=1709929354; cv=none; b=R9FANjdopi8SDLS8vImykYCTjV02/cNPhGi3YVgR+0dGtMhwqtcHA44iSRPL37EscEuec9PXCbo7JQFv5Dqvs2/3DFbqrJw+5wbB4k2IZ9p8+nzq3T/NMvaJRbhu1tSwjr2ZL5RWBFieZrMJ4KAgjOUxve6DpJ2Ox6AcgwvnS30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709927618; c=relaxed/simple;
-	bh=+JPchmRbdEWp2hPvsQ8mwR8SsWihb9svN/keL3PqCmM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uNELoVriSqaXuxv7hJMESi54NuTYqmennM0Vn6KPWj8iI2xt/GZwzh+JExcZzQflZ1gU1AGiMa+vYfYc/7ck5LFn/S8a5/SfQTaf/FfZBVvmPtMKarWE2L+2sIlW39JteRJpjhuwyAYe4WZSFPyCI5Y9W5hYrCEa7ETSkaSe3KI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FQIcIjit; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FQIcIjit"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a45bdf6e9c2so301398066b.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 08 Mar 2024 11:53:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709927613; x=1710532413; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pd2ZoV00c/hvjjV6TuUocydSDT4SN2a80zpBvuI43a4=;
-        b=FQIcIjitCXslDz2GbbUrP/Dl2A1fHjodIwfcVwX7edPGJjzUe6ft0Dzx4S5sFwe1Vh
-         g88zviT2eLf5PmHmjVJB2aNpgv9n3ocJvS72MSrLxPfMODNwXkIqGml7VkVhyDJXPZ65
-         MjMUs4Lqmk59C5q9pviF7lrr5HVfpNnp9VtqWc7ZvnuMI0EGx3Q5NM/4uZGay3xcEJFy
-         qYcxb+eRfAcYnwP/UVfmW9ErY4qC/DPOwckI+rRsS39kszwhkv8lEpCyJ9PUorpE+Wmk
-         8YbTN6+zdx0SrM+L7muhYuk5uJr4h+Hit4pCKYkJfFmlBE74LLcVw8ZHHf4d82NY4qR1
-         jV5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709927613; x=1710532413;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Pd2ZoV00c/hvjjV6TuUocydSDT4SN2a80zpBvuI43a4=;
-        b=ud1RRm2h4PmI8f5MVP2AOegIVQU/X+UOHbzAS9SxvSXVmfhS6o/2hRiDR0VbpRpGCW
-         Ea+m3BtpWy2elkVI1mmde18keszIUBMEVxUrccWQ27kV4N/aKSbBvgQ+f1Pv15elXwa9
-         TtwWv8JJcr9CsZlf+Qk9uTJ4JoRwANTo/rBg8HdF00skYbu/qQboVLLvILAAGSn8SwHu
-         xbBER7n2YkLp3ZOQNUKTf2PHqK5qMkjjtK8lRNZ9/44w3Wx20srDcrYqXKCbbzlywx9F
-         OXItvZKkSVDZwO3SZ93MOYJdt5+dNOOGKJMjsLel/JC6KAXSAJXoUPu1LJQ2f5MHrFtq
-         vtYA==
-X-Forwarded-Encrypted: i=1; AJvYcCUICDEHnTeG2V1JiX1mrhwft13AJe/IHvlguH51/eFJKyyZeGdLRMZAIbycbPsWdy5afl6lWP1++4n8wxmpUiORxdAuZ/KcFO8PZ8b8+ZEXiQxA
-X-Gm-Message-State: AOJu0YwUD3RmRsub0eOgbudyCHDK6c4alixKawoIk3jCCw+ZGJUIIfN3
-	uPt7c+uXJGTCwqB/HletFTI1C1PDdH44tpNehHcC+DC8dxUof9Cq8fyDX4Q+/IJjrJquH7iK2Nz
-	12w3DM9GLn2+Ahq2Gu/PaCFWTHy2+QUgMhxek
-X-Google-Smtp-Source: AGHT+IGdfTizwHQnCpRk5GeSjOHjssHLcb+cVFlrr45NHBDRApEdAye6AN9i0+rO/lWinEjVvgcrkAuNBm/bbSNX5ic=
-X-Received: by 2002:a17:907:76d7:b0:a3e:9aa3:7024 with SMTP id
- kf23-20020a17090776d700b00a3e9aa37024mr57660ejc.34.1709927612751; Fri, 08 Mar
- 2024 11:53:32 -0800 (PST)
+	s=arc-20240116; t=1709929354; c=relaxed/simple;
+	bh=Bfcz+ch/WDp/CnGyCAsW9l/B8/ERIAXXzUoqKYlPxBU=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=oVGmeSgnGk4VdGS51nFuHDlx8+B4LCRZOzNwznGnn4pB+ulFzc5AC42pdm25BinOsXmFD14SLctSVjSu/4T/uBnsyr1pkV1sSOHxf0sxoYkuTsDcWGUK+2peZ+wqneGy7mFPjwcTrQhMRxV7ascrzXwBwh6noc365m819Y/yxuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7190C433C7;
+	Fri,  8 Mar 2024 20:22:33 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1riglb-00000000yq9-3DuL;
+	Fri, 08 Mar 2024 15:24:31 -0500
+Message-ID: <20240308202402.234176464@goodmis.org>
+User-Agent: quilt/0.67
+Date: Fri, 08 Mar 2024 15:24:02 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ joel@joelfernandes.org,
+ linke li <lilinke99@qq.com>,
+ Rabin Vincent <rabin@rab.in>
+Subject: [PATCH v2 0/6] tracing/ring-buffer: Fix wakeup of ring buffer waiters
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240305020153.2787423-1-almasrymina@google.com>
- <20240305020153.2787423-3-almasrymina@google.com> <15625bac-dfec-4c4e-a828-d11424f7aced@davidwei.uk>
-In-Reply-To: <15625bac-dfec-4c4e-a828-d11424f7aced@davidwei.uk>
-From: Mina Almasry <almasrymina@google.com>
-Date: Fri, 8 Mar 2024 11:53:18 -0800
-Message-ID: <CAHS8izMC=q_DuR94i-NCKFVsW0JadX7NEbDfyT8PfG3tBwPv-Q@mail.gmail.com>
-Subject: Re: [RFC PATCH net-next v6 02/15] net: page_pool: create hooks for
- custom page providers
-To: David Wei <dw@davidwei.uk>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Jeroen de Borst <jeroendb@google.com>, 
-	Praveen Kaligineedi <pkaligineedi@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 7, 2024 at 8:57=E2=80=AFPM David Wei <dw@davidwei.uk> wrote:
->
-> On 2024-03-04 18:01, Mina Almasry wrote:
-> > From: Jakub Kicinski <kuba@kernel.org>
-> >
-> > The page providers which try to reuse the same pages will
-> > need to hold onto the ref, even if page gets released from
-> > the pool - as in releasing the page from the pp just transfers
-> > the "ownership" reference from pp to the provider, and provider
-> > will wait for other references to be gone before feeding this
-> > page back into the pool.
-> >
-> > Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-> > Signed-off-by: Mina Almasry <almasrymina@google.com>
-> >
-> > ---
-> >
-> > This is implemented by Jakub in his RFC:
-> > https://lore.kernel.org/netdev/f8270765-a27b-6ccf-33ea-cda097168d79@red=
-hat.com/T/
-> >
-> > I take no credit for the idea or implementation; I only added minor
-> > edits to make this workable with device memory TCP, and removed some
-> > hacky test code. This is a critical dependency of device memory TCP
-> > and thus I'm pulling it into this series to make it revewable and
-> > mergeable.
-> >
-> > RFC v3 -> v1
-> > - Removed unusued mem_provider. (Yunsheng).
-> > - Replaced memory_provider & mp_priv with netdev_rx_queue (Jakub).
-> >
-> > ---
-> >  include/net/page_pool/types.h | 12 ++++++++++
-> >  net/core/page_pool.c          | 43 +++++++++++++++++++++++++++++++----
-> >  2 files changed, 50 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/include/net/page_pool/types.h b/include/net/page_pool/type=
-s.h
-> > index 5e43a08d3231..ffe5f31fb0da 100644
-> > --- a/include/net/page_pool/types.h
-> > +++ b/include/net/page_pool/types.h
-> > @@ -52,6 +52,7 @@ struct pp_alloc_cache {
-> >   * @dev:     device, for DMA pre-mapping purposes
-> >   * @netdev:  netdev this pool will serve (leave as NULL if none or mul=
-tiple)
-> >   * @napi:    NAPI which is the sole consumer of pages, otherwise NULL
-> > + * @queue:   struct netdev_rx_queue this page_pool is being created fo=
-r.
-> >   * @dma_dir: DMA mapping direction
-> >   * @max_len: max DMA sync memory size for PP_FLAG_DMA_SYNC_DEV
-> >   * @offset:  DMA sync address offset for PP_FLAG_DMA_SYNC_DEV
-> > @@ -64,6 +65,7 @@ struct page_pool_params {
-> >               int             nid;
-> >               struct device   *dev;
-> >               struct napi_struct *napi;
-> > +             struct netdev_rx_queue *queue;
-> >               enum dma_data_direction dma_dir;
-> >               unsigned int    max_len;
-> >               unsigned int    offset;
-> > @@ -126,6 +128,13 @@ struct page_pool_stats {
-> >  };
-> >  #endif
-> >
-> > +struct memory_provider_ops {
-> > +     int (*init)(struct page_pool *pool);
-> > +     void (*destroy)(struct page_pool *pool);
-> > +     struct page *(*alloc_pages)(struct page_pool *pool, gfp_t gfp);
-> > +     bool (*release_page)(struct page_pool *pool, struct page *page);
-> > +};
->
-> Separate question as I try to adapt bnxt to this and your queue
-> configuration API.
->
-> How does GVE handle the need to allocate kernel pages for headers and
-> dmabuf for payloads?
->
-> Reading the code, struct gve_rx_ring is the main per-ring object with a
-> page pool. gve_queue_page_lists are filled with page pool netmem
-> allocations from the page pool in gve_alloc_queue_page_list(). Are these
-> strictly used for payloads only?
->
 
-You're almost correct. We actually don't use the gve queue page lists
-for devmem TCP, that's an unrelated GVE feature/code path for low
-memory VMs. The code in effect is the !qpl code. In that code, for
-incoming RX packets we allocate a new or recycled netmem from the page
-pool in gve_alloc_page_dqo(). These buffers are used for payload only
-in the case where header split is enabled. In the case header split is
-disabled, these buffers are used for the entire incoming packet.
+A patch was sent to "fix" the wait_index variable that is used to help with
+waking of waiters on the ring buffer. The patch was rejected, but I started
+looking at associated code. Discussing it on IRC with Mathieu Desnoyers
+we discovered a design flaw.
 
-> I found a struct gve_header_buf in both gve_rx_ring and struct
-> gve_per_rx_queue_mem_dpo. This is allocated in gve_rx_queue_mem_alloc()
-> using dma_alloc_coherent(). Is this where GVE stores headers?
->
+The waiter reads "wait_index" then enters a "wait loop". After adding
+itself to the wait queue, if the buffer is filled or a signal is pending
+it will exit out. If wait_index is different, it will also exit out.
+(Note, I noticed that the check for wait_index was after the schedule()
+call and should have been before it, but that's besides the point).
 
-Yes, this is where GVE stores headers.
+The race is what happens if the waker updates the wait_index,
+a new waiter comes in and reads the updated wait_index before it adds
+itself to the queue, it will miss the update!
 
-> IOW, GVE only uses page pool to allocate memory for QPLs, and QPLs are
-> used by the device for split payloads. Is my understanding correct?
->
+This is a series of changes to fix the design, and other bugs found
+along the way.
 
---=20
-Thanks,
-Mina
+1) Remove the wait loop in the ring_buffer_wait() code. It doesn't
+   have enough context to know if it should continue to wait.
+
+2) Fix "shortest_full" accounting. When zero, it gets set to the
+   smallest percentage requested of the buffer before the writers need to
+   start waking up waiters. But after waiters are all woken up,
+   it never gets reset, so the smallest value will always be the
+   smallest value until the buffer itself is reset.
+
+3) The wake up of readers on close was incorrectly added to the
+   .release() callback and not the .flush(). That is, waiters
+   in the .read() call, will never be woken up because .release()
+   isn't called until all .read()s have finished. Move the wakeup
+   to .flush() which is called immediately by close().
+
+4) Add a "waking" field to the trace iterator that gets set when a
+   waker wants to wake up the readers. For the .flush() callback,
+   it is set and never cleared to make sure new readers do not block.
+
+5/6) Break up ring_buffer_wait() into three functions:
+
+  ring_buffer_prepare_to_wait()
+  ring_buffer_wait()
+  ring_buffer_finish_wait()
+
+    This allows the caller to add itself to the wait queue, check
+    if its own condition has been set (in this case: iter->waking)
+    and then sleep. Follows the same semantics as any other wait logic.
+
+
+Changes since v1: https://lore.kernel.org/lkml/20240308183816.676883229@goodmis.org/
+
+- My tests triggered a warning about calling a mutex_lock() after a
+  prepare_to_wait() that changed the task's state. Convert the affected
+  mutex over to a spinlock.
+
+Steven Rostedt (Google) (6):
+      ring-buffer: Fix waking up ring buffer readers
+      ring-buffer: Fix resetting of shortest_full
+      tracing: Use .flush() call to wake up readers
+      tracing: Fix waking up tracing readers
+      ring-buffer: Restructure ring_buffer_wait() to prepare for updates
+      tracing/ring-buffer: Fix wait_on_pipe() race
+
+----
+ include/linux/ring_buffer.h  |   4 +
+ include/linux/trace_events.h |   3 +-
+ kernel/trace/ring_buffer.c   | 251 +++++++++++++++++++++++++++----------------
+ kernel/trace/trace.c         | 131 ++++++++++++++++++----
+ 4 files changed, 272 insertions(+), 117 deletions(-)
