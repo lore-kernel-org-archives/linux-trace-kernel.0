@@ -1,217 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D856EC5;
-	Sun, 10 Mar 2024 01:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D9722618;
+	Sun, 10 Mar 2024 12:14:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710034681; cv=none; b=QHq0tVGHB6IzYbD70rpGhlqcCqtE5NLoP8J+kLo7JCdN/Q4P8SIRGoEiSqPRHN4cHiMi2eZ8sRYzLUY8QxnwRcWDd9pVVbYXFqfCp4hMkMLm8K14+rcnvYfJ9PaIUM+UVVIwMt9jFJV0D4r1rBM46b7CC5K3KJ4JRt4wQQHWTEk=
+	t=1710072860; cv=none; b=kcwes/kFTl7nuurZOpcHvSS92qFuEBJSVxIzALUYxrp5L/18qj9jCMoIhzB+cxoKsy3mJSeAGI9B0xTJGa0L68c+mdtsql5daXrxs7Ca1UOm6byCR/frSrRsNLVAg1ckAklY8Y0Gw7/1NnEPboam+hGXsfgocBPGNHQKZ7/lTrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710034681; c=relaxed/simple;
-	bh=mLysYKJMnp+csqFKfyy0BM0x56EkfLIUO0ZrRPScLJE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pw1AFhlLFUVXnlWpzOcJzbXrJ/V+bg2RHVt7QCdTe6YG8y86vI22/Oqly9WfRAOsN149gpWAmpCAypFVGO8ZbxNvchL9BYRQ9fJp0Eph6AdXKENNtWiXB7MvJIY9/ohMPX+dtnKHfJMxNeaAydcMRw2oKMVdWyYGpSoTxhUOTNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VI3jRqHX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710072860; c=relaxed/simple;
+	bh=teH38ASE4B1X90x37Shf8/P2G9yTLfaBtfwsGauPHPg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=L9TXteswBgWjJA6CbL91t9bCakGoeHhtODHiKXMzR7V5Xl1W04vkoYr3eCp74DHgncqFTLCWURoN5gGWUjDk+vK1+lcJ6BK8G5aj0BpXYrvRRWztgbaXgr55g9Rwqr2KwV00e8GRs+7P9WY5CJlT9lXp8+X6Y50XA0pozLLANlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IQTQEFQC; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VI3jRqHX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC111C433F1;
-	Sun, 10 Mar 2024 01:37:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710034680;
-	bh=mLysYKJMnp+csqFKfyy0BM0x56EkfLIUO0ZrRPScLJE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VI3jRqHX/kHfxrP0VnhRu3y7u0mu3xQ8TIoyJmBFZNx941GnzQV8toeJaP36FC+DH
-	 HEueSM7E64MbMnMr60kH22/WYUmzgioKEc/Nck9e5kAsV61lW2RiuCH/50nyRVMpcU
-	 znIT/4zIf/62xcCXme/FgoGoeQskQG4fvKXX79W9trkq69ZwsdfINM7xfySEoWrzmV
-	 z+dhzvqVLAGAGt6UV2HfoRBlb9oNXl+ocV/hT5MoXiN33gD9bgnzIeRrJjPQ2+dtQx
-	 qGH+rfFK4oaBpurYC0XVJDase4EAC8qoDeegclHz0svqH6+rftsXciktdh5Vn6vXCf
-	 bTWzAWA/P6V9A==
-Date: Sat, 9 Mar 2024 20:37:51 -0500
-From: Guo Ren <guoren@kernel.org>
-To: Andy Chiu <andy.chiu@sifive.com>
-Cc: Puranjay Mohan <puranjay12@gmail.com>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
-	Deepak Gupta <debug@rivosinc.com>,
-	Sia Jee Heng <jeeheng.sia@starfivetech.com>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	Song Shuai <suagrfillet@gmail.com>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Jisheng Zhang <jszhang@kernel.org>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
-Message-ID: <Ze0O77ze56DGffzD@gmail.com>
-References: <20240306165904.108141-1-puranjay12@gmail.com>
- <87ttlhdeqb.fsf@all.your.base.are.belong.to.us>
- <CANk7y0gbQdYw0V+CEv-z8wFGXnki8KSn4c8+i0iZ1UFNCg7wJQ@mail.gmail.com>
- <CABgGipUJU_joVOjPi4WZ4JJM72zaSrCA1QUAaP8hob3+LXkS0g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQTQEFQC"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e676ea4e36so1180113b3a.3;
+        Sun, 10 Mar 2024 05:14:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710072853; x=1710677653; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5XFLppo36Umvbtpc8RsHxYQfKcPgDsuGoxP0BP41l1g=;
+        b=IQTQEFQCO9fFj/pWVWc7C0FWGO+1mXeya2VIDzZfzFWpewwL7SsESOUWkh0cIg6BsE
+         ja83j2wKijpe0wthcK36Sii78035Oc4ne9RKIiS9sAemf76S4pCJkvVFO96v7rdG9WQm
+         /ogvK+5R/i4DBi2Qth0In5cMvYuDiYh8cbNX+Ze1aGjPxeuoMUtG8qcwPcBGf4ecC7Ct
+         ou14EPOVA1ix8kZlp1LPfwF4ulpwHCouT9LGFzKgF+O34T5ObXDwYDDhOaktn+BEuSRB
+         F01og3IqoR/aVMCzgx+bl+UgkORdxriUw1REdggvuBOBc9q7b/7u1rN4GviR5CYnro4N
+         gSpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710072853; x=1710677653;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5XFLppo36Umvbtpc8RsHxYQfKcPgDsuGoxP0BP41l1g=;
+        b=Vx/QsNEXFDdb7JPUeVYlFGxkTLVqWrrA9nDBpJnm8Ts4EKjdxptXlHJRJIffPF+6Fz
+         kMh4xhRx2Zooy1btwZ1rmc0vk7LUamzs9veXlXcPasX3WGLWX6IHwzw2QdhKBTpga0xc
+         9KhhC+FF2GE3AT648FZA3CMytug2qSkUcwjz1+s/CucGy+9QIC45xubL1r3tYyeUNbN+
+         gyoajtmz/UFd8PhsPQ5njDp4RDwxaY6MhZ6p9z2GuNUrG+Rwsk76s3EZzDMcp94unCOu
+         qhdIIPbP1nco2e1sqjfkSO9qx4P34weri/UAuuQNNlWac2tDWFIxuiQ6f7OgWuJCMNKm
+         5kOg==
+X-Forwarded-Encrypted: i=1; AJvYcCVGoXpkdMvwJ5ysBHWpCGw0JwI31GT1nh/jU1LgFrma6znARRIx7PqdYJntrvd00wqDEzZasrWd5WyCIchdMp0BNUbnR2v4M6bOyzhpgU/4Qv2a
+X-Gm-Message-State: AOJu0YzqavSVZHr9Oc8rDU7dooEnvVKmkpKra3XjXirM1fnkc56nvF2l
+	BRHFNhoyDzvB4h6C6uYNsN9CV11mAdjj7BxP3ULMwFl4sao33azs
+X-Google-Smtp-Source: AGHT+IE9r944WM4pE4W85E7di5LwaxCoRffX5uB1pIPfGE2E1x1fZ/IOcNQGSbKeu3F/zTwQYUYLng==
+X-Received: by 2002:a05:6a20:938e:b0:1a1:501e:814c with SMTP id x14-20020a056a20938e00b001a1501e814cmr2074931pzh.29.1710072853393;
+        Sun, 10 Mar 2024 05:14:13 -0700 (PDT)
+Received: from KERNELXING-MB0.tencent.com ([114.253.38.90])
+        by smtp.gmail.com with ESMTPSA id y30-20020aa793de000000b006e5a99942c6sm2485330pff.88.2024.03.10.05.14.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Mar 2024 05:14:12 -0700 (PDT)
+From: Jason Xing <kerneljasonxing@gmail.com>
+To: edumazet@google.com,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	rostedt@goodmis.org,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	davem@davemloft.net
+Cc: netdev@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	kerneljasonxing@gmail.com,
+	Jason Xing <kernelxing@tencent.com>
+Subject: [PATCH net-next 0/3] trace: use TP_STORE_ADDRS macro
+Date: Sun, 10 Mar 2024 20:14:03 +0800
+Message-Id: <20240310121406.17422-1-kerneljasonxing@gmail.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABgGipUJU_joVOjPi4WZ4JJM72zaSrCA1QUAaP8hob3+LXkS0g@mail.gmail.com>
 
-On Fri, Mar 08, 2024 at 05:18:21PM +0800, Andy Chiu wrote:
-> Hi Puranjay,
-> 
-> On Fri, Mar 8, 2024 at 3:53 AM Puranjay Mohan <puranjay12@gmail.com> wrote:
-> >
-> > Hi Björn,
-> >
-> > On Thu, Mar 7, 2024 at 8:27 PM Björn Töpel <bjorn@kernel.org> wrote:
-> > >
-> > > Puranjay!
-> > >
-> > > Puranjay Mohan <puranjay12@gmail.com> writes:
-> > >
-> > > > This patch enables support for DYNAMIC_FTRACE_WITH_CALL_OPS on RISC-V.
-> > > > This allows each ftrace callsite to provide an ftrace_ops to the common
-> > > > ftrace trampoline, allowing each callsite to invoke distinct tracer
-> > > > functions without the need to fall back to list processing or to
-> > > > allocate custom trampolines for each callsite. This significantly speeds
-> > > > up cases where multiple distinct trace functions are used and callsites
-> > > > are mostly traced by a single tracer.
-> > > >
-> > > > The idea and most of the implementation is taken from the ARM64's
-> > > > implementation of the same feature. The idea is to place a pointer to
-> > > > the ftrace_ops as a literal at a fixed offset from the function entry
-> > > > point, which can be recovered by the common ftrace trampoline.
-> > >
-> > > Not really a review, but some more background; Another rationale (on-top
-> > > of the improved per-call performance!) for CALL_OPS was to use it to
-> > > build ftrace direct call support (which BPF uses a lot!). Mark, please
-> > > correct me if I'm lying here!
-> > >
-> > > On Arm64, CALL_OPS makes it possible to implement direct calls, while
-> > > only patching one BL instruction -- nice!
-> > >
-> > > On RISC-V we cannot use use the same ideas as Arm64 straight off,
-> > > because the range of jal (compare to BL) is simply too short (+/-1M).
-> > > So, on RISC-V we need to use a full auipc/jal pair (the text patching
-> > > story is another chapter, but let's leave that aside for now). Since we
-> > > have to patch multiple instructions, the cmodx situation doesn't really
-> > > improve with CALL_OPS.
-> > >
-> > > Let's say that we continue building on your patch and implement direct
-> > > calls on CALL_OPS for RISC-V as well.
-> > >
-> > > From Florent's commit message for direct calls:
-> > >
-> > >   |    There are a few cases to distinguish:
-> > >   |    - If a direct call ops is the only one tracing a function:
-> > >   |      - If the direct called trampoline is within the reach of a BL
-> > >   |        instruction
-> > >   |         -> the ftrace patchsite jumps to the trampoline
-> > >   |      - Else
-> > >   |         -> the ftrace patchsite jumps to the ftrace_caller trampoline which
-> > >   |            reads the ops pointer in the patchsite and jumps to the direct
-> > >   |            call address stored in the ops
-> > >   |    - Else
-> > >   |      -> the ftrace patchsite jumps to the ftrace_caller trampoline and its
-> > >   |         ops literal points to ftrace_list_ops so it iterates over all
-> > >   |         registered ftrace ops, including the direct call ops and calls its
-> > >   |         call_direct_funcs handler which stores the direct called
-> > >   |         trampoline's address in the ftrace_regs and the ftrace_caller
-> > >   |         trampoline will return to that address instead of returning to the
-> > >   |         traced function
-> > >
-> > > On RISC-V, where auipc/jalr is used, the direct called trampoline would
-> > > always be reachable, and then first Else-clause would never be entered.
-> > > This means the the performance for direct calls would be the same as the
-> > > one we have today (i.e. no regression!).
-> > >
-> > > RISC-V does like x86 does (-ish) -- patch multiple instructions, long
-> > > reach.
-> > >
-> > > Arm64 uses CALL_OPS and patch one instruction BL.
-> > >
-> > > Now, with this background in mind, compared to what we have today,
-> > > CALL_OPS would give us (again assuming we're using it for direct calls):
-> > >
-> > > * Better performance for tracer per-call (faster ops lookup) GOOD
-> >
-> > ^ this was the only motivation for me to implement this patch.
-> >
-> > I don't think implementing direct calls over call ops is fruitful for
-> > RISC-V because once
-> > the auipc/jalr can be patched atomically, the direct call trampoline
-> > is always reachable.
-> 
-> Yes, the auipc/jalr instruction pair can be patched atomically just as
-> long as their size is naturally aligned on. However, we cannot prevent
-> 2 instructions from being fetched atomically :P
-There are some micro-arch optimization methods here, such as:
- - Disable interrupt when auipc retired.
- - When auipc -> auipc, the second one still could cause an
-   interruption.
+From: Jason Xing <kernelxing@tencent.com>
 
-> 
-> > Solving the atomic text patching problem would be fun!! I am eager to
-> > see how it will be
-> > solved.
-> 
-> I have a patch series to solve the atomic code patching issue, which I
-> am about to respin [1]. The idea is to solve it with yet another layer
-> of indirection. We add a 8-B aligned space at each function entry. The
-> space is a pointer to the ftrace entry. During boot, each function
-> entry code is updated to perform a load and then take the jump from
-> the 8-B space. When ftrace is disabled, we patch the first 4B-aligned
-> instruction to a jump so as to skip the ftrace entry.
-> 
-> We are still discussing with Alex to see if we have a better way to do
-> it. If not then I'd update the patchset and re-send it. There's a
-> pending improvement in the series to reduce complexity. The 8-B
-> aligned space can be added before the function entry (just like your
-> patch).
-> 
-> >
-> > > * Larger text size (function alignment + extra nops) BAD
-> > > * Same direct call performance NEUTRAL
-> > > * Same complicated text patching required NEUTRAL
-> > >
-> > > It would be interesting to see how the per-call performance would
-> > > improve on x86 with CALL_OPS! ;-)
-> >
-> > If I remember from Steven's talk, x86 uses dynamically allocated trampolines
-> > for per callsite tracers, would CALL_OPS provide better performance than that?
-> >
-> > >
-> > > I'm trying to wrap my head if it makes sense to have it on RISC-V, given
-> > > that we're a bit different from Arm64. Does the scale tip to the GOOD
-> > > side?
-> > >
-> > > Oh, and we really need to see performance numbers on real HW! I have a
-> > > VF2 that I could try this series on.
-> >
-> > It would be great if you can do it :D.
-> >
-> > Thanks,
-> > Puranjay
-> >
-> > _______________________________________________
-> > linux-riscv mailing list
-> > linux-riscv@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-riscv
-> 
-> - [1] https://yhbt.net/lore/all/CAJF2gTSn3_cDYsF9D8dt-br2Wf_M8y02A09xgRq8kXi91sN3Aw@mail.gmail.com/T/
-> 
-> Regards,
-> Andy
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+Using the macro for other tracepoints use to be more concise.
+No functional change.
+
+Jason Xing (3):
+  trace: move to TP_STORE_ADDRS related macro to net_probe_common.h
+  trace: use TP_STORE_ADDRS() macro in inet_sk_error_report()
+  trace: use TP_STORE_ADDRS() macro in inet_sock_set_state()
+
+ include/trace/events/net_probe_common.h | 29 ++++++++++++++++++++
+ include/trace/events/sock.h             | 35 ++++---------------------
+ include/trace/events/tcp.h              | 29 --------------------
+ 3 files changed, 34 insertions(+), 59 deletions(-)
+
+-- 
+2.37.3
+
