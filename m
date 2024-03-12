@@ -1,122 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ECAE7CF23;
-	Tue, 12 Mar 2024 15:38:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF617C6D6;
+	Tue, 12 Mar 2024 15:45:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710257927; cv=none; b=k7hdjEBI8Pk+tjkxqe7RL7SQA8Q4bStga6h409IafwLIq9/RltCleKaeOmWHujVSRq07PZVdKKoUyVyMksHuur/VIJCJaXgYou1Y7N9PSHosv9ogNX/6UHpOaEGkVM1CjgiD6fAznDv5+sipge92eF0ESUSnjSrAOtZTp6Kka48=
+	t=1710258357; cv=none; b=dhBxhzmkD/wNaPrmMeH+6OYk4ttkwL5/2ScFBjS5Rj1e8SSeggxqYK2fciXmF8MnZZ8ZdEMeXDWrQmYVcXnLd9hT40Lf1hb6AJUYEF8MF3CXQ+nB6Sk5AG1FAbpfgBIzHH/fSxJdPQoA+UXiHAuglVfavH3kDFWcvruA+wdA7pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710257927; c=relaxed/simple;
-	bh=KrjUr0fKLEMJXBr7/aqGGHUCFtbu9uuJVf+zBR7qhTk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=NcceKAtn3Cf/k1dkEx0aas0B79fF2GjzidveGSo/8OSwPRMzLXSPF6P8HsST12qXtuAUBZ2HZ6L7K0SdwkO8SouZJEdux2WKE+c/DlWhmIlyKt3GsccFwhUp1dbs7VOT4TmWMscciXYBcmbRxEfOgb/d9nPI3k+zMaXx5kTt3Qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eEAdbJPD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eEAdbJPD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8119C433F1;
-	Tue, 12 Mar 2024 15:38:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710257926;
-	bh=KrjUr0fKLEMJXBr7/aqGGHUCFtbu9uuJVf+zBR7qhTk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=eEAdbJPD0or1tO0Pg1cVnQNEZw4hTcLP7UWtv3SQdbx/U5qjgqIwRHpZt87aU70uP
-	 1S+7jTWMBmN9We2cbyzn8iiHoE8qdVN7slhrfmT7Z/NF5bsFse9vSTDGGVfQwbXA9m
-	 Viwvad3EibOsXZveqpqIVgxhgXFuTqYFgZREfvyPfWP5CEPDmK41keFeyXUru266pA
-	 FErtKyLsn0Kn3r8n/a+eSWtHmi657e+5MbK0otspcE8cvSkum4D5lZ6FCEkoTNgdpb
-	 Bn/BkEHEn2/IuRGTN8ix0rbztH3qmuvtquZVR+xWe8Dz78tmXJfigPhY3t5tnOFMts
-	 jD1RC+Yepao1w==
-Date: Wed, 13 Mar 2024 00:38:42 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>
+	s=arc-20240116; t=1710258357; c=relaxed/simple;
+	bh=YZABLRxVxCxF9aGGHVyLi1AfKTplDrrmVAnLthpELy4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UdiXV5Ooacn6Uk7ZALo5NRkiRZ+QaN24y4GgS27oL5XPs5EWMJXJDORd+8YNxFumXI5f7YepNa7kmTH++v7kTV6xNoCrwE8nIYwmluuqkzgx2ofkmlKIfsaDfPJBfoitykVXxMtfTx2o25yQVlmcuYUyZHK9qrG0GKxaSdPbMCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 060BEC433F1;
+	Tue, 12 Mar 2024 15:45:55 +0000 (UTC)
+Date: Tue, 12 Mar 2024 11:48:01 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
 Subject: Re: [PATCH v2 2/2] ring-buffer: Reuse rb_watermark_hit() for the
  poll logic
-Message-Id: <20240313003842.207e83107633bef0c4a798b4@kernel.org>
-In-Reply-To: <20240312131952.802267543@goodmis.org>
+Message-ID: <20240312114801.4b12c1fa@gandalf.local.home>
+In-Reply-To: <20240313003842.207e83107633bef0c4a798b4@kernel.org>
 References: <20240312131919.314231457@goodmis.org>
 	<20240312131952.802267543@goodmis.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	<20240313003842.207e83107633bef0c4a798b4@kernel.org>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 12 Mar 2024 09:19:21 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, 13 Mar 2024 00:38:42 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> On Tue, 12 Mar 2024 09:19:21 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> The check for knowing if the poll should wait or not is basically the
-> exact same logic as rb_watermark_hit(). The only difference is that
-> rb_watermark_hit() also handles the !full case. But for the full case, the
-> logic is the same. Just call that instead of duplicating the code in
-> ring_buffer_poll_wait().
+> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> > 
+> > The check for knowing if the poll should wait or not is basically the
+> > exact same logic as rb_watermark_hit(). The only difference is that
+> > rb_watermark_hit() also handles the !full case. But for the full case, the
+> > logic is the same. Just call that instead of duplicating the code in
+> > ring_buffer_poll_wait().
+> >   
 > 
+> This changes a bit (e.g. adding pagebusy check) but basically that should
+> be there. And new version appears to be consistent between ring_buffer_wait()
+> and ring_buffer_poll_wait(). So looks good to me.
 
-This changes a bit (e.g. adding pagebusy check) but basically that should
-be there. And new version appears to be consistent between ring_buffer_wait()
-and ring_buffer_poll_wait(). So looks good to me.
+The pagebusy check is an optimization. As if it is true, it means the
+writer is still on the reader_page and there's no sub-buffers available. It
+just prevents having to do the calculation of the buffer-percentage filled
+(what's done by the full_hit() logic).
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you,
-
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/ring_buffer.c | 21 +++++++--------------
->  1 file changed, 7 insertions(+), 14 deletions(-)
 > 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index adfe603a769b..857803e8cf07 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -959,25 +959,18 @@ __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
->  	}
->  
->  	if (full) {
-> -		unsigned long flags;
-> -
->  		poll_wait(filp, &rbwork->full_waiters, poll_table);
->  
-> -		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-> -		if (!cpu_buffer->shortest_full ||
-> -		    cpu_buffer->shortest_full > full)
-> -			cpu_buffer->shortest_full = full;
-> -		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
-> -		if (full_hit(buffer, cpu, full))
-> +		if (rb_watermark_hit(buffer, cpu, full))
->  			return EPOLLIN | EPOLLRDNORM;
->  		/*
->  		 * Only allow full_waiters_pending update to be seen after
-> -		 * the shortest_full is set. If the writer sees the
-> -		 * full_waiters_pending flag set, it will compare the
-> -		 * amount in the ring buffer to shortest_full. If the amount
-> -		 * in the ring buffer is greater than the shortest_full
-> -		 * percent, it will call the irq_work handler to wake up
-> -		 * this list. The irq_handler will reset shortest_full
-> +		 * the shortest_full is set (in rb_watermark_hit). If the
-> +		 * writer sees the full_waiters_pending flag set, it will
-> +		 * compare the amount in the ring buffer to shortest_full.
-> +		 * If the amount in the ring buffer is greater than the
-> +		 * shortest_full percent, it will call the irq_work handler
-> +		 * to wake up this list. The irq_handler will reset shortest_full
->  		 * back to zero. That's done under the reader_lock, but
->  		 * the below smp_mb() makes sure that the update to
->  		 * full_waiters_pending doesn't leak up into the above.
-> -- 
-> 2.43.0
-> 
-> 
-> 
+> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
 
+Thanks!
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+-- Steve
