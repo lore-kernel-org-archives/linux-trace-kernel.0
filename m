@@ -1,90 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8104279B9F;
-	Tue, 12 Mar 2024 11:53:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9336558207;
+	Tue, 12 Mar 2024 12:01:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710244417; cv=none; b=PJStqaoFdqHbWi8gK5x67FKXrEw1KyHiujavo5TXQgz+obyOF3xjvxCHa7Fg+BgEwab1JhHx0urkMp3GQoXJzYbj7yTBv5D2Osfddl3twvhjObbDdU8s6UduoR2pLflf1uM/AEQpVeuMYlKHexhxu04ZMsyXHwGzEPAHi2OlT1Y=
+	t=1710244895; cv=none; b=cvBUZGdHnicjJdwAmCe0zzI7tNX0+7C+tzeolAlcLv3q709SGlZhKxOsuuoiUeifYW7a5rtQ0kmpVoGHcpkKGqjeM8AEbKKeeqrzwlh6CeHghtcAx+pomFBeWnWJQTGEghlbbtP2pQHNkbSgvxlJ3MZxNFGi4rgHQBuE99Yv+PY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710244417; c=relaxed/simple;
-	bh=OFWQHarI5fCAkqHhPKoFup+10oTzUofGo9Ywf9n4jY4=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=pCGBp+A9lRbloSf35JLhKhGVYyIxYVPzXpJUcjVtNs8ZQ9Q7ekeYbpsoP1TZxfcGBiQri5G6i2ubXszwFUeu4VKitKn5Cuo25YcnO7xQX1qaZtINUlIj5oqYhbpsXSVjIACXH+5iruPWJZbgueH84JleQlYvbdgcTX89JG3nUvw=
+	s=arc-20240116; t=1710244895; c=relaxed/simple;
+	bh=PyhcmeEqpMLLpLqlTJwAk+iqEAYM+edKPATKaLpLegc=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=JxkP+5a7UVK0owum23m4ulFiQS/77RddAeYoKnrwScB0QuZPmrq/T+Efr/OmKYLrunjfaFwLaWFAWbtoJ2DhyD86iOunnpNy7+mgiUU2eLScimlEpdyr7lVu5J9Ky6VFdaO2WRWW5LctOtTyedy7Ea0dhZcC8t5/o52MAWMgceU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2600BC433C7;
-	Tue, 12 Mar 2024 11:53:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AB35C433C7;
+	Tue, 12 Mar 2024 12:01:35 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rk0jP-00000001u6w-2fLz;
-	Tue, 12 Mar 2024 07:55:43 -0400
-Message-ID: <20240312115543.500445373@goodmis.org>
+	id 1rk0r7-00000001uGd-2Jkx;
+	Tue, 12 Mar 2024 08:03:41 -0400
+Message-ID: <20240312120252.998983805@goodmis.org>
 User-Agent: quilt/0.67
-Date: Tue, 12 Mar 2024 07:54:57 -0400
+Date: Tue, 12 Mar 2024 08:02:53 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 2/2] ring-buffer: Reuse rb_watermark_hit() for the poll logic
-References: <20240312115455.666920175@goodmis.org>
+ Andrew Morton <akpm@linux-foundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ joel@joelfernandes.org,
+ linke li <lilinke99@qq.com>,
+ Rabin Vincent <rabin@rab.in>
+Subject: [PATCH v3 0/2] tracing/ring-buffer: Fix wakeup of ring buffer waiters
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-
-The check for knowing if the poll should wait or not is basically the
-exact same logic as rb_watermark_hit(). The only difference is that
-rb_watermark_hit() also handles the !full case. But for the full case, the
-logic is the same. Just call that instead of duplicating the code in
-ring_buffer_poll_wait().
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ring_buffer.c | 19 +++++++------------
- 1 file changed, 7 insertions(+), 12 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index adfe603a769b..6ef763f57c66 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -963,21 +963,16 @@ __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
- 
- 		poll_wait(filp, &rbwork->full_waiters, poll_table);
- 
--		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
--		if (!cpu_buffer->shortest_full ||
--		    cpu_buffer->shortest_full > full)
--			cpu_buffer->shortest_full = full;
--		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
--		if (full_hit(buffer, cpu, full))
-+		if (rb_watermark_hit(buffer, cpu, full))
- 			return EPOLLIN | EPOLLRDNORM;
- 		/*
- 		 * Only allow full_waiters_pending update to be seen after
--		 * the shortest_full is set. If the writer sees the
--		 * full_waiters_pending flag set, it will compare the
--		 * amount in the ring buffer to shortest_full. If the amount
--		 * in the ring buffer is greater than the shortest_full
--		 * percent, it will call the irq_work handler to wake up
--		 * this list. The irq_handler will reset shortest_full
-+		 * the shortest_full is set (in rb_watermark_hit). If the
-+		 * writer sees the full_waiters_pending flag set, it will
-+		 * compare the amount in the ring buffer to shortest_full.
-+		 * If the amount in the ring buffer is greater than the
-+		 * shortest_full percent, it will call the irq_work handler
-+		 * to wake up this list. The irq_handler will reset shortest_full
- 		 * back to zero. That's done under the reader_lock, but
- 		 * the below smp_mb() makes sure that the update to
- 		 * full_waiters_pending doesn't leak up into the above.
--- 
-2.43.0
 
 
+
+A patch was sent to "fix" the wait_index variable that is used to help with
+waking of waiters on the ring buffer. The patch was rejected, but I started
+looking at associated code. Discussing it on IRC with Mathieu Desnoyers
+we discovered a design flaw.
+
+The waiter reads "wait_index" then enters a "wait loop". After adding
+itself to the wait queue, if the buffer is filled or a signal is pending
+it will exit out. If wait_index is different, it will also exit out.
+(Note, I noticed that the check for wait_index was after the schedule()
+call and should have been before it, but that's besides the point).
+
+The race is what happens if the waker updates the wait_index,
+a new waiter comes in and reads the updated wait_index before it adds
+itself to the queue, it will miss the update!
+
+These patches fix the design by converting the ring_buffer_wait()
+to use the wait_event_interruptible() interface.
+
+Then the wait_to_pipe() caller will pass its own condition into
+the ring_buffer_wait() to be checked by the wait_event_interruptible().
+
+- The first patch restructures the ring_buffer_wait() to use the
+  wait_event_interruptible() logic. It does not change the interface,
+  but adds a local "cond" condition callback function that will be
+  what it defaults to in the second patch if NULL is passed in.
+
+  The default cond function is just a "wait once" function. That
+  is, the first time it is called (before the wait_event_interruptible()
+  calls schedule) will set the "once" variable to one and return
+  false. The next time it is called (after wait_event_interruptible()
+  wakes up) it will return true to break out of the loop.
+
+- The second patch changes the ring_buffer_wait() interface to allow
+  the caller to define its own "cond" callback. That will be checked
+  in wait_event_interruptible() along with checking if the proper
+  amount of data in the ring buffer has been hit.
+
+Changes since v2: https://lore.kernel.org/all/20240308202402.234176464@goodmis.org/
+
+- Patches 1-3 of v2 have been accepted.
+
+- Instead of breaking ring_buffer_wait() into three functions that do
+  a prepare_to_wait(), wait() and finish_wait(), have ring_buffer_wait()
+  take a condition callback function and a data parameter.
+
+  The ring_buffer_wait() now uses a wait_event_interruptible() code,
+  and added a helper function to do check its own conditions, and also
+  to call the passed in condition function and allow the caller to
+  specify other conditions to break out of the event loop.
+
+Changes since v1: https://lore.kernel.org/lkml/20240308183816.676883229@goodmis.org/
+
+- My tests triggered a warning about calling a mutex_lock() after a
+  prepare_to_wait() that changed the task's state. Convert the affected
+  mutex over to a spinlock.
+
+
+
+Steven Rostedt (Google) (2):
+      ring-buffer: Use wait_event_interruptible() in ring_buffer_wait()
+      tracing/ring-buffer: Fix wait_on_pipe() race
+
+----
+ include/linux/ring_buffer.h  |   4 +-
+ include/linux/trace_events.h |   5 +-
+ kernel/trace/ring_buffer.c   | 117 +++++++++++++++++++++++++------------------
+ kernel/trace/trace.c         |  43 +++++++++++-----
+ 4 files changed, 107 insertions(+), 62 deletions(-)
