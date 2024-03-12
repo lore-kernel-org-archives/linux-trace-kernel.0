@@ -1,160 +1,115 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A04E9468
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 12 Mar 2024 03:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6958978B4E;
+	Tue, 12 Mar 2024 11:53:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710213244; cv=none; b=VQ32NSq7unBL44ypWsyK5HXATAQTezcQ7Ov8bp+oPc91g5CbyWOpFnA9TgJR4nnmM5BC7UNRAO1nSvNAOMiZ3XxwoDQQugAFa72+jyZDUO/L/JRO66QixHmba7kVcUaREO6r3rogKJa+vzgISp5vUy37vKvHeHPVuy643NooAx0=
+	t=1710244417; cv=none; b=pAP+2Et6KGZvGPCnXvaBddMfebBCPbEA4rGG7F4XjH7GkTFF1rGsryfNrnRQ1ayx0+BTXqfZvBSBt+B0NEw0VxWNtm9ClpBFP/+sny7ATGjDvFdtvq8LYZnXtKuXFbzHW8p84sY46SQokqlqnqj0tOsDGbcM6bkpl6bF2lGHJZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710213244; c=relaxed/simple;
-	bh=rT7M/hhiO9hEYBPUu40z7VC7HSNxO+QXlUEwZKhhsYA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BkHbD8rbm746duGTQu5Wyl2ZvgEOMuIfgqucfcPDuDtG5N81qQPR6NmSRSVgR92x0fcvncpxswkEA++diEYqiQVqEfqLPlGh2jnnTwqe8mZe9GQTQB1jL8RY4FcF6rUMAcoyI46pjPwXztbhLjEpvwZ4A4H5jwy9k50ArFGITL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=lMRi1qrI; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="lMRi1qrI"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-29bbff1505dso1746210a91.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Mar 2024 20:14:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1710213241; x=1710818041; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OXlf8eE/kb9hUjEHRg6KiaZYrPX7zppIuDOk01qdNjA=;
-        b=lMRi1qrIRCns0bPtlKM0A/k5itTFpHl1DuVkHVNCT46WSmj7nS4EwljQKQXCbnJEFw
-         gTbZxAf6O3KNGvO+R0soX1XV6i71rwXQ2Hvv+yZ9vCbWXfp4voNJjqCUviAF0NW2hjKK
-         V4SjhNPWs58kLY/j7A80yZNSbLEUTDT+ZdG7BvvPa+qk746DYrrtup4eybnQy/RMTfdw
-         3FdGAcMsJRLSAABGojCYnl09fdXYyzVVoatY9TcNgSikiUNd3ivtCs/SmPTmUOZN3QYj
-         OynyxIF+ERdZXYtThelNKm/YnAzPCOFgpVDzcnfZJVAsjRV0rwbDc44PLeGqI0uhQ06e
-         1Iqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710213241; x=1710818041;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OXlf8eE/kb9hUjEHRg6KiaZYrPX7zppIuDOk01qdNjA=;
-        b=wT6yzTJPHsBQq+Pfjtqw3GPQO0l2dTP1v6W10l4n5TvPSqZtWu0plufazT9fPLG58t
-         YlL46GYLs6UdzUuiXqyb+aum4pMvUl8LiW2Z642TXQ8hS3faeZnb1L+w+c0jDX1RyeuD
-         ywCjxvLZdua/c/7Hwu4ITCwiYB5pdpoLYFeCSphnPBcGXKGipQevgtqxhMwomLKHhvvP
-         DScVMz4SvxnwTtO2FsaCYAli5ReiTHOtfxwJJDYoT4v5Uk8elNCGeVNnLGCJYv/Kag9K
-         DjjbHXaCg7Gd46LXyW0m4SaxjXRM6OFuiqm2jssSDOi0Qpg9g/CNZ8yZBaSaXJX++u6F
-         1sag==
-X-Forwarded-Encrypted: i=1; AJvYcCUW0jn2Onn1+nh/Xg4Wn0myPVL/DrUPfjKzP8JtNnrl+xZaBzV0WDpGpwL4FqCgA2P20nbvjLAsPvfT0R1lqMgboqiCjmYmg/yJ+BIR0MhVEGlK
-X-Gm-Message-State: AOJu0Yww1Gt/mYKV6LDubzVHkT2zdXEmaEkdQdBsHdIMgmii/5QdzWDt
-	eIxX+lJR+A7oYKnEQ8BC1fZpLWu7EWlF31bW/w5aC/cU7VY+xZQzp09eaOefP6ge/uAMnXTbTN7
-	Aohd2V62F009bJVilgkLujZdncj332pzvoFgm+A==
-X-Google-Smtp-Source: AGHT+IFrJd1b6cRe3N1bdjRPMDm6UQYIWuBJWFP813OtCjwvKtB/NBwZvIOHJ5+UKRNsfrlwra9CEE8kwZK9x+jxh4c=
-X-Received: by 2002:a17:90a:c684:b0:299:5b95:cd7d with SMTP id
- n4-20020a17090ac68400b002995b95cd7dmr5190887pjt.45.1710213241618; Mon, 11 Mar
- 2024 20:14:01 -0700 (PDT)
+	s=arc-20240116; t=1710244417; c=relaxed/simple;
+	bh=rZyhSi8bE+0iYHTmktYi/EfkEm5OdGcjGh0/xqml6bs=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=BPnxKCB28QX0ADoLcnvXFISdxwaP6DF3tPxF65njCM93V0uZGB8PVPCd46XBXW0HhPgT3EL1CnlkASIx6DHEif0b5TQxMw6WI/pqBL6pUNBB/tDrg2POxW847tLiVJvsNaN6VQz9AfIGElNeCG9ZKLYwc5LAoIXkeP3ICsRBqTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 055B1C433F1;
+	Tue, 12 Mar 2024 11:53:37 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1rk0jP-00000001u5w-1HqH;
+	Tue, 12 Mar 2024 07:55:43 -0400
+Message-ID: <20240312115455.666920175@goodmis.org>
+User-Agent: quilt/0.67
+Date: Tue, 12 Mar 2024 07:54:55 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH 0/2] ring-buffer: Fix poll wakeup logic
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240311093526.1010158-1-dongmenglong.8@bytedance.com>
- <20240311093526.1010158-6-dongmenglong.8@bytedance.com> <CAADnVQKw4HUbwvivysVBQPpA2MC2e56MwrvJy89qs8rx_ixOnw@mail.gmail.com>
-In-Reply-To: <CAADnVQKw4HUbwvivysVBQPpA2MC2e56MwrvJy89qs8rx_ixOnw@mail.gmail.com>
-From: =?UTF-8?B?5qKm6b6Z6JGj?= <dongmenglong.8@bytedance.com>
-Date: Tue, 12 Mar 2024 11:13:50 +0800
-Message-ID: <CALz3k9iiP5msNtL5c0ZhwRoYyEZtxZoWGbFiPrVcL3To6hj4wQ@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH bpf-next v2 5/9] bpf: verifier: add btf to
- the function args of bpf_check_attach_target
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	David Ahern <dsahern@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	X86 ML <x86@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Quentin Monnet <quentin@isovalent.com>, 
-	bpf <bpf@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, 
-	Network Development <netdev@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 12, 2024 at 9:51=E2=80=AFAM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Mon, Mar 11, 2024 at 2:35=E2=80=AFAM Menglong Dong
-> <dongmenglong.8@bytedance.com> wrote:
-> >
-> > Add target btf to the function args of bpf_check_attach_target(), then
-> > the caller can specify the btf to check.
-> >
-> > Signed-off-by: Menglong Dong <dongmenglong.8@bytedance.com>
-> > ---
-> >  include/linux/bpf_verifier.h | 1 +
-> >  kernel/bpf/syscall.c         | 6 ++++--
-> >  kernel/bpf/trampoline.c      | 1 +
-> >  kernel/bpf/verifier.c        | 8 +++++---
-> >  4 files changed, 11 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/include/linux/bpf_verifier.h b/include/linux/bpf_verifier.=
-h
-> > index 4b0f6600e499..6cb20efcfac3 100644
-> > --- a/include/linux/bpf_verifier.h
-> > +++ b/include/linux/bpf_verifier.h
-> > @@ -811,6 +811,7 @@ static inline void bpf_trampoline_unpack_key(u64 ke=
-y, u32 *obj_id, u32 *btf_id)
-> >  int bpf_check_attach_target(struct bpf_verifier_log *log,
-> >                             const struct bpf_prog *prog,
-> >                             const struct bpf_prog *tgt_prog,
-> > +                           struct btf *btf,
-> >                             u32 btf_id,
-> >                             struct bpf_attach_target_info *tgt_info);
-> >  void bpf_free_kfunc_btf_tab(struct bpf_kfunc_btf_tab *tab);
-> > diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> > index d1cd645ef9ac..6128c3131141 100644
-> > --- a/kernel/bpf/syscall.c
-> > +++ b/kernel/bpf/syscall.c
-> > @@ -3401,9 +3401,11 @@ static int bpf_tracing_prog_attach(struct bpf_pr=
-og *prog,
-> >                  * need a new trampoline and a check for compatibility
-> >                  */
-> >                 struct bpf_attach_target_info tgt_info =3D {};
-> > +               struct btf *btf;
-> >
-> > -               err =3D bpf_check_attach_target(NULL, prog, tgt_prog, b=
-tf_id,
-> > -                                             &tgt_info);
-> > +               btf =3D tgt_prog ? tgt_prog->aux->btf : prog->aux->atta=
-ch_btf;
->
-> I think it's better to keep this bit inside bpf_check_attach_target(),
-> since a lot of other code in there is working with if (tgt_prog) ...
-> so if the caller messes up passing tgt_prog->aux->btf with tgt_prog
-> the bug will be difficult to debug.
 
-In the previous version, I pass the attach_btf with the following
-way:
+After making a slight change to wakeups in ring_buffer_wait()
+the system would hang. Spending several hours going on a wild goose
+chase I found that the change only triggered the bug because it
+changed the timings. The bug was there before the update but never
+was triggered.
 
-+            origin_btf =3D prog->aux->attach_btf;
-+             /* use the new attach_btf to check the target */
-+             prog->aux->attach_btf =3D attach_btf;
-              err =3D bpf_check_attach_target(NULL, prog, tgt_prog, btf_id,
-                                            &tgt_info);
-+             prog->aux->attach_btf =3D origin_btf;
+The poll code has:
 
-And Jiri suggested to add the attach_btf to the function args
-of bpf_check_attach_target().
+  rbwork->full_waiters_pending = true;
+  if (!cpu_buffer->shortest_full ||
+      cpu_buffer->shortest_full > full)
+         cpu_buffer->shortest_full = full;
 
-Ennn....Should I convert to the old way?
+The writer will see full_waiters_pending and check if the ring buffer is
+filled over the percentage of the shortest_full value. If it is, it calls
+an irq_work to wake up all the waiters.
 
-Thanks!
-Menglong Dong
+But the code could get into a circular loop:
 
->
-> > +               err =3D bpf_check_attach_target(NULL, prog, tgt_prog, b=
-tf,
-> > +                                             btf_id, &tgt_info);
+        CPU 0                                   CPU 1
+        -----                                   -----
+ [ Poll ]
+   [ shortest_full = 0 ]
+   rbwork->full_waiters_pending = true;
+                                          if (rbwork->full_waiters_pending &&
+                                              [ buffer percent ] > shortest_full) {
+                                                 rbwork->wakeup_full = true;
+                                                 [ queue_irqwork ]
+
+   cpu_buffer->shortest_full = full;
+
+                                          [ IRQ work ]
+                                          if (rbwork->wakeup_full) {
+                                                cpu_buffer->shortest_full = 0;
+                                                wakeup poll waiters;
+  [woken]
+   if ([ buffer percent ] > full)
+      break;
+   rbwork->full_waiters_pending = true;
+                                          if (rbwork->full_waiters_pending &&
+                                              [ buffer percent ] > shortest_full) {
+                                                 rbwork->wakeup_full = true;
+                                                 [ queue_irqwork ]
+
+   cpu_buffer->shortest_full = full;
+
+                                          [ IRQ work ]
+                                          if (rbwork->wakeup_full) {
+                                                cpu_buffer->shortest_full = 0;
+                                                wakeup poll waiters;
+  [woken]
+
+ [ Wash, rinse, repeat! ]
+
+The race was triggered when running:
+
+  trace-cmd record -p function -m 5000
+
+Which enables function tracing and then creates two files it is writing
+into where each is 2500K in size. The -m is a "max file size". When
+trace-cmd writes 2500K to one file it then switches to the other, erasing
+the old data. To do this, trace-cmd switches between both poll and
+the reader using both methods of wake up. The change to the reader wakeup
+was able to change the way the poll was woken to trigger this bug.
+
+The second patch is a clean up and also a way to consolidate the logic
+of the shortest_full. The read wakeup uses rb_watermark_hit for both
+full wakeups and !full wakeups. But since poll uses the same logic for
+full wakeups it can just call that function with full set.
+
+
+Steven Rostedt (Google) (2):
+      ring-buffer: Fix full_waiters_pending in poll
+      ring-buffer: Reuse rb_watermark_hit() for the poll logic
+
+----
+ kernel/trace/ring_buffer.c | 30 +++++++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 11 deletions(-)
