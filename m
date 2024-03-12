@@ -1,139 +1,105 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF637A733;
-	Tue, 12 Mar 2024 16:11:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D94E7C6DE;
+	Tue, 12 Mar 2024 16:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710259916; cv=none; b=eInpm4tDVgOHP66sP3aTVBJg6RwNiKwwiq73lRLThnUFKZuhw5tAkasGPcLpNYHzyu+8fteOI54uGvtfs7V3Fr6/L18bFXLCOeVqm5ujSdNNML6iqcDA2u/yYgNQwpxXFXhafwAoAlOE2kR0zfB+yFrZW675i9i6UjWwOWtzPNg=
+	t=1710260040; cv=none; b=Pd2j0saP3e5PwPuFAESCKIXTScyas/EUaffYUOVSiGVzykHk2sZ+xpMDRF1aDyM8thcjJf02lkYraD64L9p6YXr/pFy8rW6OZxu3/X2gwOVbP6xymVygpC/wrwb8WSePfMZTCyEGhOoNsvSGI9Y/rAUHFuqqXQcQivV3U6wHhzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710259916; c=relaxed/simple;
-	bh=pK5/KZXV6dGLZcSbEQLvyxdyemAdcpgwpgjSR+FzciQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T9cJOC/ut3JGPGi0vjF6lJd2GPsmbv9vKQog2VFLsJJDxnjT7lrjkjyADjSGMIpXgwE4QkOecMYrT0h4YuA2YiuUupycb/RSoKvoth3H40wTECYEwxO9jPSPPZRKQ7KL/44EbrJN0JNweqWUnq43kJ3fd3Hyf2mgHw3VdLE3Y5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aQZF+FKV; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710260040; c=relaxed/simple;
+	bh=POYzrEHdQajIu9lkNDUq+dYvLkhAmYXGQT424dUgbDs=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Cvhgm+KtUjXM1p509r03DaT4xWxYQg1XIhUaGaCkOWf9zDWmqyIEzqn/lgvS3n5HPnl5facoa3wyndUWU6rAAwwp3pQ1+5miK9Wszh3Hd6HjuDZig2VQvVxhbG5XKdXaLf3Dl19bWOL1rndVHJFHoDVjYVJz2TLkjsrUJsUNkyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ET3wvV0M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQZF+FKV"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-33e99b639e0so1410165f8f.0;
-        Tue, 12 Mar 2024 09:11:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710259913; x=1710864713; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mlMGohocih4/vv8NN3ExYyD4aDTNUoH7ERTwZOWg+9o=;
-        b=aQZF+FKVulDD0cD6twny7vFQuct4bMGN7AEwkOwIR3HS+hs4inJmjoZg5bzKqLbGHp
-         0kuOsotVuQtutGuq4sR7//h5NP2HJw+Zam6DgZpluUiOH9d+KUgrQImpOMfo9TStuCF9
-         PFUP70DjifLJStO30F0BeNoJxjHfbd4/6Hq32nfz+8RRj5ix1+1zjuFrqio9hh11ApV+
-         tc2iHR2fiicsH8ls8POlBJb9PiVDPiF4lcVtqF/II6kFahdp3Qd8n7K36FZU38lU4LFY
-         4DxapN8kj9fn9Krh8JvFXoaHQak4wVIxd3hf+gaa6cc/zfzHSuXZoGx/EA/dltX0DpK2
-         mLfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710259913; x=1710864713;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mlMGohocih4/vv8NN3ExYyD4aDTNUoH7ERTwZOWg+9o=;
-        b=EJnhgzG+e2kx5raLIy1y7mWK5x855plVwFeTwqE8q/Qj7ueLFHBk5XPQriZSiFbylA
-         jX1sFx0ww94nWrVJj5VLyyWTjNt39sHTNnKRRQ1QYvzacOmAvLoOUniVEUe8U0iXXH38
-         Ol1tnt9XpJSAdeJpfcS3cR3+t163bwJHOV+yDLjcVFdlsxEJ4gw4hgeLYUke5PMEPPXO
-         1TcgZRf3e3tFx+YWodFJsW2oNOR3Ge3m+XzvNZMSgLk6dv7ONiSswWdXWYNS7YZXTPnq
-         ncwW8h1Z+pIQFtouenLiqVh17DLlVnMMErk+QjKzPEQ7dK0nqP7r+ghLbtI+ky9Y+spE
-         M86Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUPKXvDBXb3yAv7Tj4DYSdnjYksswD+BXRS7tNZb198Ky5/cbuSaNSfrS+3BP+YHc8bHzHjQaMRMvKVxCpWYgFVLnUvTyQ9NQbhpvZJla/H1Qo0x0Jy/x8pa1C9izyiTGDJYvcW2FC40puqPPauHlRshTtQsYpqImrEJxXUeA2bgIpoOk1WmfwM501N+oJVReIEuxamNLGy2nrY5aJPKSGLMlu6RK8ziJcay5WX3M29F7spwRiGS4IS6UTr0yqs9qgL17uoOufB6HnZ1bXJf6j5jxWlkRCQKPsE3A==
-X-Gm-Message-State: AOJu0YwR0ICy4wGJrRYu9dNdob3cmLuuh+oIGyQm4I001mDVoINHS45Y
-	54cMSmOfG9eje96VI/1IVz66AmhkCKXOjRATUcXuFh+sxKTeaefaffAE4FvsAn2v7Mh4z+4dnQs
-	7BdIMpK19V4A9MCsYg+DBQ4CHmnM=
-X-Google-Smtp-Source: AGHT+IEluJaPH2ZbEhOuqEk+ZR7WjEJU3XS86GzKec4PZE8B7+fsWbUJbxd+Mrhd/TndoYPK/al8v9EOlZQdZgQXq3Y=
-X-Received: by 2002:adf:f60a:0:b0:33c:e396:b035 with SMTP id
- t10-20020adff60a000000b0033ce396b035mr458814wrp.69.1710259912730; Tue, 12 Mar
- 2024 09:11:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ET3wvV0M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69CDEC43390;
+	Tue, 12 Mar 2024 16:13:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710260040;
+	bh=POYzrEHdQajIu9lkNDUq+dYvLkhAmYXGQT424dUgbDs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ET3wvV0Mp7+ILFL8o5hLW8Y+dbekfxr6qwl6XfVnrFF5mj9M83/YrWGCxzJZWrv6r
+	 /fvUKJ2irszA+7jIzRLpcO9v9kVDyMtGEOLwaFgGUBs+1r8y1b2oHVW+a9uJlTXPJX
+	 wTWmf6X0WLUq2sClCgVhGUWIyNw8wftxTEv9k4pvCOylOFLOnm6s9wO1x5+mIKxOVt
+	 2LLkI50pvYLmtA6gPJtGdjy/K8R6aTOfBr1yk2zXceqMWp6IGRZkXnlkLvRyCXyAXi
+	 NFtKZzUgNkrajiXjTPpfyDneYJBY6i7SthLZVd7xNer4ovKR2ssqVf8zWmc0bpz04H
+	 OZXiAHlMU7UrA==
+Date: Wed, 13 Mar 2024 01:13:55 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] ring-buffer: Do not set shortest_full when full target
+ is hit
+Message-Id: <20240313011355.7cc65a601f8074c778e39d7d@kernel.org>
+In-Reply-To: <20240312115641.6aa8ba08@gandalf.local.home>
+References: <20240312115641.6aa8ba08@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240311093526.1010158-1-dongmenglong.8@bytedance.com>
- <20240311093526.1010158-9-dongmenglong.8@bytedance.com> <CAADnVQK+s3XgSYhpSdh7_9Qhq4DimmSO-D9d5+EsSZQMX4TxxA@mail.gmail.com>
- <CALz3k9hZxsbUGoe5JoWpMEV0URykRwiKWLKZNj4nhvnXg3V=Zg@mail.gmail.com>
-In-Reply-To: <CALz3k9hZxsbUGoe5JoWpMEV0URykRwiKWLKZNj4nhvnXg3V=Zg@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 12 Mar 2024 09:11:41 -0700
-Message-ID: <CAADnVQJ87Ov6ny2hj-0_WymGB3TeuEZu373EmqmRJqZv-8Ze_Q@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH bpf-next v2 8/9] libbpf: add support for
- the multi-link of tracing
-To: =?UTF-8?B?5qKm6b6Z6JGj?= <dongmenglong.8@bytedance.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	David Ahern <dsahern@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	X86 ML <x86@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Quentin Monnet <quentin@isovalent.com>, 
-	bpf <bpf@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, 
-	Network Development <netdev@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 11, 2024 at 7:44=E2=80=AFPM =E6=A2=A6=E9=BE=99=E8=91=A3 <dongme=
-nglong.8@bytedance.com> wrote:
->
-> On Tue, Mar 12, 2024 at 9:56=E2=80=AFAM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> >
-> > On Mon, Mar 11, 2024 at 2:35=E2=80=AFAM Menglong Dong
-> > <dongmenglong.8@bytedance.com> wrote:
-> > >
-> > >
-> > > -               err =3D libbpf_find_attach_btf_id(prog, attach_name, =
-&btf_obj_fd, &btf_type_id);
-> > > +               name_end =3D strchr(attach_name, ',');
-> > > +               /* for multi-link tracing, use the first target symbo=
-l during
-> > > +                * loading.
-> > > +                */
-> > > +               if ((def & SEC_ATTACH_BTF_MULTI) && name_end) {
-> > > +                       int len =3D name_end - attach_name + 1;
-> > > +                       char *first_tgt;
-> > > +
-> > > +                       first_tgt =3D malloc(len);
-> > > +                       if (!first_tgt)
-> > > +                               return -ENOMEM;
-> > > +                       strncpy(first_tgt, attach_name, len);
-> > > +                       first_tgt[len - 1] =3D '\0';
-> > > +                       err =3D libbpf_find_attach_btf_id(prog, first=
-_tgt, &btf_obj_fd,
-> > > +                                                       &btf_type_id)=
-;
-> > > +                       free(first_tgt);
-> > > +               } else {
-> > > +                       err =3D libbpf_find_attach_btf_id(prog, attac=
-h_name, &btf_obj_fd,
-> > > +                                                       &btf_type_id)=
-;
-> > > +               }
-> >
-> > Pls use glob_match the way [ku]probe multi are doing
-> > instead of exact match.
->
-> Hello,
->
-> I'm a little suspecting the effect of glob_match. I seldom found
-> the use case that the kernel functions which we want to trace
-> have the same naming pattern. And the exact match seems more
-> useful.
->
-> Can we use both exact and glob match here?
+On Tue, 12 Mar 2024 11:56:41 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-exact is a subset of glob_match.
-Pls follow the pattern that[ku]probe multi established
-in terms of user interface expectations.
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> The rb_watermark_hit() checks if the amount of data in the ring buffer is
+> above the percentage level passed in by the "full" variable. If it is, it
+> returns true.
+> 
+> But it also sets the "shortest_full" field of the cpu_buffer that informs
+> writers that it needs to call the irq_work if the amount of data on the
+> ring buffer is above the requested amount.
+> 
+> The rb_watermark_hit() always sets the shortest_full even if the amount in
+> the ring buffer is what it wants. As it is not going to wait, because it
+> has what it wants, there's no reason to set shortest_full.
+> 
+
+Yeah, it should avoid setting if !ret. Looks good to me.
+
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thank you,
+
+> Cc: stable@vger.kernel.org
+> Fixes: 42fb0a1e84ff5 ("tracing/ring-buffer: Have polling block on watermark")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/ring_buffer.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 9b887d44b8d9..350607cce869 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -834,9 +834,10 @@ static bool rb_watermark_hit(struct trace_buffer *buffer, int cpu, int full)
+>  		pagebusy = cpu_buffer->reader_page == cpu_buffer->commit_page;
+>  		ret = !pagebusy && full_hit(buffer, cpu, full);
+>  
+> -		if (!cpu_buffer->shortest_full ||
+> -		    cpu_buffer->shortest_full > full)
+> -			cpu_buffer->shortest_full = full;
+> +		if (!ret && (!cpu_buffer->shortest_full ||
+> +			     cpu_buffer->shortest_full > full)) {
+> +		    cpu_buffer->shortest_full = full;
+> +		}
+>  		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+>  	}
+>  	return ret;
+> -- 
+> 2.43.0
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
