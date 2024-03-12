@@ -1,258 +1,194 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0EA22AE66;
-	Tue, 12 Mar 2024 13:42:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAAC17C099;
+	Tue, 12 Mar 2024 15:22:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710250961; cv=none; b=rBQ9c+YnnrZ5t5FnX1jeqakkiocaE/6ae95tBa/0xCdr8NTa0ZvUPWvqfc/FhjuQQule7Wm5exNdpAhBIFkh7RT9FDL2IkMvrmo+42Qpl27hXPgg8nDzpI2CEwDjd5Khj9CX2BLAR67JP5EOc3mPMuZgZ3uuFihQebzBAIYZjbk=
+	t=1710256934; cv=none; b=i5w1OeAaxsnr+7Y5+ahGz/zrHIm2mB0FQ3moSgUfQbqIiUQPm5X2VsY9KBe9W8HsIA/Qg6dx4CzsItomPH2PVPkGeaZHmd4Cu0kH3su95mfj3x+Z3JXMB3lj7ADgNhCJqqEHfi26m8mOzZnL30FQNmXGmZkKfFc+Ys+QmMRnvhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710250961; c=relaxed/simple;
-	bh=ObYGB8T5nuRNWsZgRFUd+ZoV0/TpnhIVjozczQJugAM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bDsSzfUmRjoaPAg4pEaRZrtLoVDiPn1vgTcfCi9mw6SdTxDxrWmSxNWmjl07KcNQrUyW1fEApSNw4jCxrJsoLZcjOWFtB5f4aBlsLnJLyKypEt4MTsXfZO5t7/T4SsslgLRxZICcKgf2M3Eu2TYnRVGgZOOoHzWIVfotfXbyj2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 31EAE1007;
-	Tue, 12 Mar 2024 06:43:15 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.69.97])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E9313F762;
-	Tue, 12 Mar 2024 06:42:34 -0700 (PDT)
-Date: Tue, 12 Mar 2024 13:42:28 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: "Bj\"orn T\"opel" <bjorn@kernel.org>
-Cc: Puranjay Mohan <puranjay12@gmail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Guo Ren <guoren@kernel.org>,
-	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
-	Deepak Gupta <debug@rivosinc.com>,
-	Sia Jee Heng <jeeheng.sia@starfivetech.com>,
-	"Bj\"orn T\"opel" <bjorn@rivosinc.com>,
-	Song Shuai <suagrfillet@gmail.com>,
-	Cl'ement L'eger <cleger@rivosinc.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Jisheng Zhang <jszhang@kernel.org>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
-Message-ID: <ZfBbxPDd0rz6FN2T@FVFF77S0Q05N>
-References: <20240306165904.108141-1-puranjay12@gmail.com>
- <87ttlhdeqb.fsf@all.your.base.are.belong.to.us>
+	s=arc-20240116; t=1710256934; c=relaxed/simple;
+	bh=MR5DHodX1dq6D6TC9p7fOu3i1TJ+/zPJQ7Lu7LaaNp8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=kd7Hb3fAjNY9ZwLzqxrpqhwRftq7LAk4ZTWFd2ZygUCo/Ca+StgUX4ONAbQJnOz1I4J5g5vDkNWQY1FUC2pKwTDd6l29790yV3L4vpVi80YJttYRD8YWN2sCQB7iEC9SG4UL0gls8m8Wl1LnRmlkljffhA2EDSg9OJdX5HvvU9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e5IQNKHp; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e5IQNKHp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93845C433A6;
+	Tue, 12 Mar 2024 15:22:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710256934;
+	bh=MR5DHodX1dq6D6TC9p7fOu3i1TJ+/zPJQ7Lu7LaaNp8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=e5IQNKHpkqJib/tvoSrz2+UbQ3mVBHHycqLRxzHwBR0wxnqbAgX2Yi3ET0PzbKNwl
+	 bQwOzxLar3wR5YXfPTOw1LIvCs50W5RAEugdfhgrYe3DhPTXv6jFRtHkY77391EA/z
+	 X5Abz+jR665BXDv8yg1E5tpbApbknQ1uvQSjHBAMVPX86igFWYzMdDP4cgIeThbEaO
+	 i3EtLPjRKR3O08JCUg3OAf3XVRPI01horu7T/laN9Q+nUoZKBvhRaY/ltq3a7CXXxw
+	 3IFgtXuTcR81QFsbndal5rEro4176Ez4XxZx6faRos+tCxW6N1O+1WK1OOon8i89iG
+	 sBeIVjTsI7+Vg==
+Date: Wed, 13 Mar 2024 00:22:10 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] ring-buffer: Fix full_waiters_pending in poll
+Message-Id: <20240313002210.d89600218f78a4c55f56b998@kernel.org>
+In-Reply-To: <20240312131952.630922155@goodmis.org>
+References: <20240312131919.314231457@goodmis.org>
+	<20240312131952.630922155@goodmis.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ttlhdeqb.fsf@all.your.base.are.belong.to.us>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Bjorn
+On Tue, 12 Mar 2024 09:19:20 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-(apologies, my corporate mail server has butchered your name here).
-
-There's a big info dump below; I realise this sounds like a sales pitch for
-CALL_OPS, but my intent is more to say "here are some dragons you may not have
-spotted".
-
-On Thu, Mar 07, 2024 at 08:27:40PM +0100, Bj"orn T"opel wrote:
-> Puranjay!
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> Puranjay Mohan <puranjay12@gmail.com> writes:
+> If a reader of the ring buffer is doing a poll, and waiting for the ring
+> buffer to hit a specific watermark, there could be a case where it gets
+> into an infinite ping-pong loop.
 > 
-> > This patch enables support for DYNAMIC_FTRACE_WITH_CALL_OPS on RISC-V.
-> > This allows each ftrace callsite to provide an ftrace_ops to the common
-> > ftrace trampoline, allowing each callsite to invoke distinct tracer
-> > functions without the need to fall back to list processing or to
-> > allocate custom trampolines for each callsite. This significantly speeds
-> > up cases where multiple distinct trace functions are used and callsites
-> > are mostly traced by a single tracer.
-> >
-> > The idea and most of the implementation is taken from the ARM64's
-> > implementation of the same feature. The idea is to place a pointer to
-> > the ftrace_ops as a literal at a fixed offset from the function entry
-> > point, which can be recovered by the common ftrace trampoline.
+> The poll code has:
 > 
-> Not really a review, but some more background; Another rationale (on-top
-> of the improved per-call performance!) for CALL_OPS was to use it to
-> build ftrace direct call support (which BPF uses a lot!). Mark, please
-> correct me if I'm lying here!
-
-Yep; it gives us the ability to do a number of per-callsite things, including
-direct calls.
-
-> On Arm64, CALL_OPS makes it possible to implement direct calls, while
-> only patching one BL instruction -- nice!
-
-The key thing here isn't that we patch a single instruction (since we have ot
-patch the ops pointer too!); it's that we can safely patch either of the ops
-pointer or BL/NOP at any time while threads are concurrently executing.
-
-If you have a multi-instruction sequence, then threads can be preempted
-mid-sequence, and it's very painful/complex to handle all of the races that
-entails.
-
-For example, if your callsites use a sequence:
-
-	AUIPC <tmp>, <funcptr>
-	JALR <tmp2>, <funcptr>(<tmp>)
-
-Using stop_machine() won't allow you to patch that safely as some threads
-could be stuck mid-sequence, e.g.
-
-	AUIPC <tmp>, <funcptr>
-	[ preempted here ]
-	JALR <tmp2>, <funcptr>(<tmp>)
-
-... and you can't update the JALR to use a new funcptr immediate until those
-have completed the sequence.
-
-There are ways around that, but they're complicated and/or expensive, e.g.
-
-* Use a sequence of multiple patches, starting with replacing the JALR with an
-  exception-generating instruction with a fixup handler, which is sort-of what
-  x86 does with UD2. This may require multiple passes with
-  synchronize_rcu_tasks() to make sure all threads have seen the latest
-  instructions, and that cannot be done under stop_machine(), so if you need
-  stop_machine() for CMODx reasons, you may need to use that several times with
-  intervening calls to synchronize_rcu_tasks().
-
-* Have the patching logic manually go over each thread and fix up the pt_regs
-  for the interrupted thread. This is pretty horrid since you could have nested
-  exceptions and a task could have several pt_regs which might require
-  updating.
-
-The CALL_OPS approach is a bit easier to deal with as we can patch the
-per-callsite pointer atomically, then we can (possibly) enable/disable the
-callsite's branch, then wait for threads to drain once. 
-
-As a heads-up, there are some latent/generic issues with DYNAMIC_FTRACE
-generally in this area (CALL_OPs happens to side-step those, but trampoline
-usage is currently affected):
-
-  https://lore.kernel.org/lkml/Zenx_Q0UiwMbSAdP@FVFF77S0Q05N/
-
-... I'm looking into fixing that at the moment, and it looks like that's likely
-to require some per-architecture changes.
-
-> On RISC-V we cannot use use the same ideas as Arm64 straight off,
-> because the range of jal (compare to BL) is simply too short (+/-1M).
-> So, on RISC-V we need to use a full auipc/jal pair (the text patching
-> story is another chapter, but let's leave that aside for now). Since we
-> have to patch multiple instructions, the cmodx situation doesn't really
-> improve with CALL_OPS.
-
-The branch range thing is annoying, but I think this boils down to the same
-problem as arm64 has with needing a "MOV <tmp>, LR" instruction that we have to
-patch in once at boot time. You could do the same and patch in the AUIPC once,
-e.g. have
-
-| 	NOP
-| 	NOP 
-| func:
-| 	AUIPC <tmp>, <common_ftrace_caller>
-| 	JALR <tmp2>, <common_ftrace_caller>(<tmp>) // patched with NOP
-
-... which'd look very similar to arm64's sequence:
-
-| 	NOP
-| 	NOP
-| func:
-| 	MOV X9, LR
-| 	BL ftrace_caller // patched with NOP
-
-... which I think means it *might* be better from a cmodx perspective?
-
-> Let's say that we continue building on your patch and implement direct
-> calls on CALL_OPS for RISC-V as well.
+>   rbwork->full_waiters_pending = true;
+>   if (!cpu_buffer->shortest_full ||
+>       cpu_buffer->shortest_full > full)
+>          cpu_buffer->shortest_full = full;
 > 
-> From Florent's commit message for direct calls:
+> The writer will see full_waiters_pending and check if the ring buffer is
+> filled over the percentage of the shortest_full value. If it is, it calls
+> an irq_work to wake up all the waiters.
 > 
->   |    There are a few cases to distinguish:
->   |    - If a direct call ops is the only one tracing a function:
->   |      - If the direct called trampoline is within the reach of a BL
->   |        instruction
->   |         -> the ftrace patchsite jumps to the trampoline
->   |      - Else
->   |         -> the ftrace patchsite jumps to the ftrace_caller trampoline which
->   |            reads the ops pointer in the patchsite and jumps to the direct
->   |            call address stored in the ops
->   |    - Else
->   |      -> the ftrace patchsite jumps to the ftrace_caller trampoline and its
->   |         ops literal points to ftrace_list_ops so it iterates over all
->   |         registered ftrace ops, including the direct call ops and calls its
->   |         call_direct_funcs handler which stores the direct called
->   |         trampoline's address in the ftrace_regs and the ftrace_caller
->   |         trampoline will return to that address instead of returning to the
->   |         traced function
+> But the code could get into a circular loop:
 > 
-> On RISC-V, where auipc/jalr is used, the direct called trampoline would
-> always be reachable, and then first Else-clause would never be entered.
-> This means the the performance for direct calls would be the same as the
-> one we have today (i.e. no regression!).
+> 	CPU 0					CPU 1
+> 	-----					-----
+>  [ Poll ]
+>    [ shortest_full = 0 ]
+>    rbwork->full_waiters_pending = true;
+> 					  if (rbwork->full_waiters_pending &&
+> 					      [ buffer percent ] > shortest_full) {
+> 					         rbwork->wakeup_full = true;
+> 					         [ queue_irqwork ]
+
+Oh, so `[ buffer percent ] > shortest_full` does not work because
+if this happens in this order, shortest_full may be 0.
+
 > 
-> RISC-V does like x86 does (-ish) -- patch multiple instructions, long
-> reach.
+>    cpu_buffer->shortest_full = full;
 > 
-> Arm64 uses CALL_OPS and patch one instruction BL.
+> 					  [ IRQ work ]
+> 					  if (rbwork->wakeup_full) {
+> 					        cpu_buffer->shortest_full = 0;
+> 					        wakeup poll waiters;
+>   [woken]
+>    if ([ buffer percent ] > full)
+>       break;
+>    rbwork->full_waiters_pending = true;
+> 					  if (rbwork->full_waiters_pending &&
+> 					      [ buffer percent ] > shortest_full) {
+> 					         rbwork->wakeup_full = true;
+> 					         [ queue_irqwork ]
 > 
-> Now, with this background in mind, compared to what we have today,
-> CALL_OPS would give us (again assuming we're using it for direct calls):
+>    cpu_buffer->shortest_full = full;
 > 
-> * Better performance for tracer per-call (faster ops lookup) GOOD
-> * Larger text size (function alignment + extra nops) BAD
-> * Same direct call performance NEUTRAL
-> * Same complicated text patching required NEUTRAL
+> 					  [ IRQ work ]
+> 					  if (rbwork->wakeup_full) {
+> 					        cpu_buffer->shortest_full = 0;
+> 					        wakeup poll waiters;
+>   [woken]
+> 
+>  [ Wash, rinse, repeat! ]
+> 
+> In the poll, the shortest_full needs to be set before the
+> full_pending_waiters, as once that is set, the writer will compare the
+> current shortest_full (which is incorrect) to decide to call the irq_work,
+> which will reset the shortest_full (expecting the readers to update it).
+> 
+> Also move the setting of full_waiters_pending after the check if the ring
+> buffer has the required percentage filled. There's no reason to tell the
+> writer to wake up waiters if there are no waiters.
+> 
 
-Is your current sequence safe for preemptible kernels (i.e. with PREEMPT_FULL=y
-or PREEMPT_DYNAMIC=y + "preempt=full" on the kernel cmdline) ?
+Looks good to me.
 
-Looking at v6.8, IIUC you have:
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-	// unpatched		//patched
-	NOP			AUIPC
-	NOP			JALR
+Thank you,
 
-What prevents a thread being preempted mid-sequence such that it executes:
 
-	NOP
-	[ preempted ]
-	[ stop_machine() used to patch text ]
-	[ restored ]
-	JALR
+> Cc: stable@vger.kernel.org
+> Fixes: 42fb0a1e84ff5 ("tracing/ring-buffer: Have polling block on watermark")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/ring_buffer.c | 27 ++++++++++++++++++++-------
+>  1 file changed, 20 insertions(+), 7 deletions(-)
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index aa332ace108b..adfe603a769b 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -964,16 +964,32 @@ __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
+>  		poll_wait(filp, &rbwork->full_waiters, poll_table);
+>  
+>  		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+> -		rbwork->full_waiters_pending = true;
+>  		if (!cpu_buffer->shortest_full ||
+>  		    cpu_buffer->shortest_full > full)
+>  			cpu_buffer->shortest_full = full;
+>  		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+> -	} else {
+> -		poll_wait(filp, &rbwork->waiters, poll_table);
+> -		rbwork->waiters_pending = true;
+> +		if (full_hit(buffer, cpu, full))
+> +			return EPOLLIN | EPOLLRDNORM;
+> +		/*
+> +		 * Only allow full_waiters_pending update to be seen after
+> +		 * the shortest_full is set. If the writer sees the
+> +		 * full_waiters_pending flag set, it will compare the
+> +		 * amount in the ring buffer to shortest_full. If the amount
+> +		 * in the ring buffer is greater than the shortest_full
+> +		 * percent, it will call the irq_work handler to wake up
+> +		 * this list. The irq_handler will reset shortest_full
+> +		 * back to zero. That's done under the reader_lock, but
+> +		 * the below smp_mb() makes sure that the update to
+> +		 * full_waiters_pending doesn't leak up into the above.
+> +		 */
+> +		smp_mb();
+> +		rbwork->full_waiters_pending = true;
+> +		return 0;
+>  	}
+>  
+> +	poll_wait(filp, &rbwork->waiters, poll_table);
+> +	rbwork->waiters_pending = true;
+> +
+>  	/*
+>  	 * There's a tight race between setting the waiters_pending and
+>  	 * checking if the ring buffer is empty.  Once the waiters_pending bit
+> @@ -989,9 +1005,6 @@ __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
+>  	 */
+>  	smp_mb();
+>  
+> -	if (full)
+> -		return full_hit(buffer, cpu, full) ? EPOLLIN | EPOLLRDNORM : 0;
+> -
+>  	if ((cpu == RING_BUFFER_ALL_CPUS && !ring_buffer_empty(buffer)) ||
+>  	    (cpu != RING_BUFFER_ALL_CPUS && !ring_buffer_empty_cpu(buffer, cpu)))
+>  		return EPOLLIN | EPOLLRDNORM;
+> -- 
+> 2.43.0
+> 
+> 
 
-... ?
 
-... or when changing the call:
-
-	AUIPC		// old funcptr
-	[ preempted ]
-	[ stop_machine() used to patch text ]
-	[ restored ]
-	JALR		// new funcptr
-... ?
-
-I suspect those might both be broken, but it's difficult to hit the race and so
-testing hasn't revealed that so far.
-
-> It would be interesting to see how the per-call performance would
-> improve on x86 with CALL_OPS! ;-)
-
-Heh. ;)
-
-> I'm trying to wrap my head if it makes sense to have it on RISC-V, given
-> that we're a bit different from Arm64. Does the scale tip to the GOOD
-> side?
->
-> Oh, and we really need to see performance numbers on real HW! I have a
-> VF2 that I could try this series on.
-
-I'll have to leave those two to you. I suspect the preempt/stop_machine()
-might just tip that from NEUTRAL to GOOD.
-
-Mark.
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
