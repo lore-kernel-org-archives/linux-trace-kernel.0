@@ -1,32 +1,27 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF617C6D6;
-	Tue, 12 Mar 2024 15:45:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4597CF01;
+	Tue, 12 Mar 2024 15:54:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710258357; cv=none; b=dhBxhzmkD/wNaPrmMeH+6OYk4ttkwL5/2ScFBjS5Rj1e8SSeggxqYK2fciXmF8MnZZ8ZdEMeXDWrQmYVcXnLd9hT40Lf1hb6AJUYEF8MF3CXQ+nB6Sk5AG1FAbpfgBIzHH/fSxJdPQoA+UXiHAuglVfavH3kDFWcvruA+wdA7pA=
+	t=1710258876; cv=none; b=HIWmYLa0/ptpEsjTphNqKFpt2JMHwnGhK9ifXlWLxPXnhw2W4rPxuD820r+Q3E6F/HaaN1NkMAoVHCgQGHKK8kCBGvxs4GvLkDCNga0KiUBo0lKxg7F+Zxr0XhRT9+mSLSYh+sIzU9yCVvKUt9kcLQ35+3x8stA8amPqAiAn5eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710258357; c=relaxed/simple;
-	bh=YZABLRxVxCxF9aGGHVyLi1AfKTplDrrmVAnLthpELy4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UdiXV5Ooacn6Uk7ZALo5NRkiRZ+QaN24y4GgS27oL5XPs5EWMJXJDORd+8YNxFumXI5f7YepNa7kmTH++v7kTV6xNoCrwE8nIYwmluuqkzgx2ofkmlKIfsaDfPJBfoitykVXxMtfTx2o25yQVlmcuYUyZHK9qrG0GKxaSdPbMCM=
+	s=arc-20240116; t=1710258876; c=relaxed/simple;
+	bh=v3POtPwN+9vwQRkEzWIsQmdDZ3vrID9kjRKzGYMx+2M=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=p7w0iPaXNpnaZZg9o19OSPdProi9Yud/8b//GB29fmPn6a4ZTk17QcWlYgzy+d/iI28D7wvNwYQKMxY6Vw6O4Xq3l/eJWv/pBu3iiYS7+79XTaXziA+t+xaSfrcal2qlfX7UG/G/WsmKso3sGKMwyy4lMUU8uGXGfPM/vns+ZKk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 060BEC433F1;
-	Tue, 12 Mar 2024 15:45:55 +0000 (UTC)
-Date: Tue, 12 Mar 2024 11:48:01 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 957DAC43394;
+	Tue, 12 Mar 2024 15:54:35 +0000 (UTC)
+Date: Tue, 12 Mar 2024 11:56:41 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2 2/2] ring-buffer: Reuse rb_watermark_hit() for the
- poll logic
-Message-ID: <20240312114801.4b12c1fa@gandalf.local.home>
-In-Reply-To: <20240313003842.207e83107633bef0c4a798b4@kernel.org>
-References: <20240312131919.314231457@goodmis.org>
-	<20240312131952.802267543@goodmis.org>
-	<20240313003842.207e83107633bef0c4a798b4@kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] ring-buffer: Do not set shortest_full when full target is
+ hit
+Message-ID: <20240312115641.6aa8ba08@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,34 +32,45 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 13 Mar 2024 00:38:42 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> On Tue, 12 Mar 2024 09:19:21 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> > 
-> > The check for knowing if the poll should wait or not is basically the
-> > exact same logic as rb_watermark_hit(). The only difference is that
-> > rb_watermark_hit() also handles the !full case. But for the full case, the
-> > logic is the same. Just call that instead of duplicating the code in
-> > ring_buffer_poll_wait().
-> >   
-> 
-> This changes a bit (e.g. adding pagebusy check) but basically that should
-> be there. And new version appears to be consistent between ring_buffer_wait()
-> and ring_buffer_poll_wait(). So looks good to me.
+The rb_watermark_hit() checks if the amount of data in the ring buffer is
+above the percentage level passed in by the "full" variable. If it is, it
+returns true.
 
-The pagebusy check is an optimization. As if it is true, it means the
-writer is still on the reader_page and there's no sub-buffers available. It
-just prevents having to do the calculation of the buffer-percentage filled
-(what's done by the full_hit() logic).
+But it also sets the "shortest_full" field of the cpu_buffer that informs
+writers that it needs to call the irq_work if the amount of data on the
+ring buffer is above the requested amount.
 
-> 
-> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->
+The rb_watermark_hit() always sets the shortest_full even if the amount in
+the ring buffer is what it wants. As it is not going to wait, because it
+has what it wants, there's no reason to set shortest_full.
 
-Thanks!
+Cc: stable@vger.kernel.org
+Fixes: 42fb0a1e84ff5 ("tracing/ring-buffer: Have polling block on watermark")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
--- Steve
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 9b887d44b8d9..350607cce869 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -834,9 +834,10 @@ static bool rb_watermark_hit(struct trace_buffer *buffer, int cpu, int full)
+ 		pagebusy = cpu_buffer->reader_page == cpu_buffer->commit_page;
+ 		ret = !pagebusy && full_hit(buffer, cpu, full);
+ 
+-		if (!cpu_buffer->shortest_full ||
+-		    cpu_buffer->shortest_full > full)
+-			cpu_buffer->shortest_full = full;
++		if (!ret && (!cpu_buffer->shortest_full ||
++			     cpu_buffer->shortest_full > full)) {
++		    cpu_buffer->shortest_full = full;
++		}
+ 		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ 	}
+ 	return ret;
+-- 
+2.43.0
+
