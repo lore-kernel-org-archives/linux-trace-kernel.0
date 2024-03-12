@@ -1,141 +1,186 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F7714402E;
-	Tue, 12 Mar 2024 21:02:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D38714375F;
+	Tue, 12 Mar 2024 21:51:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710277371; cv=none; b=emiKcXZuyTYSx1XjOL6AAbbSCxbRK6H2Rg9KGBeiamqU3drYnlUg26UWNnCiviHQPd5AA1KRizw49DI/CwhPfP/8h905lmZp5zWjgfeEFOr17oynh121GQAf4ToUaRX59HHVV1canpqjg0ruz/VZfIiLWi7ALy47M9vij1T7xpA=
+	t=1710280319; cv=none; b=YdtMriysrTzed8CB/haKJdrKBV4s7H++J91/CtDWDuR+rGnxymF+AadKhNvSQHCDPgpNW08ZOVBnnze0cncUbgGVSwZjTmb+KotMkm7CRksz3j4262tQeAxhTpkblTlB0BNlppcG+8+YHHCjC/m/hYpWrdbIV7mdB+jgZy/dN8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710277371; c=relaxed/simple;
-	bh=EELbV3h66cIZskNpLQcQx/zsk5PhRRxOElZqzCOVXZM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rG5+VQx8K2LEEo1SJRmZqlqapEzLVu6ONmKz6x+at4lvPJ0rSiZqTeuO8r9PFxamjKdpKbFY11VkAcvOof/RbgIVDeXtv9VEcRBnI8bALe5GDkkmZVWEM5s/wLiqBhxK9d9HtrK/w/Fn2+3pRVLFv6IiiSOT1rXXfBSKcw5K1ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=plCmbjZT; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="plCmbjZT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65AE1C433A6;
-	Tue, 12 Mar 2024 21:02:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710277370;
-	bh=EELbV3h66cIZskNpLQcQx/zsk5PhRRxOElZqzCOVXZM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=plCmbjZTvLXrpiMV1QNW0lVbw72+EXxcAKT1YY1bP64Nxj1jdcIAAshWXdWYfMiwW
-	 GYIVyAHEwI2eTALsmS+LkJHHQ1jQ3wQynU+/omMeYgwLYboKQAV9Qw5Pp32IywYtXt
-	 rfI8GGYtHzdzIyjp4wfnlj8mBOOaCPmF6V1PcfAt5k/PeEUiKM6l/7z+bfU76NE5xd
-	 dwyiTynE25A8tYC67+ruFJf5LHkz7UCuGCG5pTk7JDgwB4yhl7BhLS+38O8+jcyvGE
-	 ii4vQAa6lrEcI/9lGsaQa/rlF8XFsY98pTnz+P0BDRaiRLOVBS/6AhrNUB3ORI/hnP
-	 O9btGdQh6tlyQ==
-From: Andrii Nakryiko <andrii@kernel.org>
-To: linux-trace-kernel@vger.kernel.org,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: bpf@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	oleg@redhat.com,
-	Andrii Nakryiko <andrii@kernel.org>
-Subject: [PATCH bpf-next 3/3] uprobes: add speculative lockless system-wide uprobe filter check
-Date: Tue, 12 Mar 2024 14:02:33 -0700
-Message-ID: <20240312210233.1941599-4-andrii@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240312210233.1941599-1-andrii@kernel.org>
-References: <20240312210233.1941599-1-andrii@kernel.org>
+	s=arc-20240116; t=1710280319; c=relaxed/simple;
+	bh=Dz2aAXOKAnU/8r8PLH1oAU5mjx3wiu5j9YEMToKkNcY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=iV0OogPp1kvTMa/WS0kSy69HwAPRmUwt4pPvFgFiSGkwe1zt0Ewuf/4XEyUaOVGZEOpvYmmIeK08IZYRUC03L/RcTFsNYTM6jmKzoHltVQLQyA4MXLXTRUFJvu5lPWJ965zm7ariuJ8iAqLGO9YzTFVPsPRDZX3s6KyH2Rd9ejc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7781AC43390;
+	Tue, 12 Mar 2024 21:51:58 +0000 (UTC)
+Date: Tue, 12 Mar 2024 17:54:05 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
+Subject: [PATCH v4] ring-buffer: Have mmapped ring buffer keep track of
+ missed events
+Message-ID: <20240312175405.12fb6726@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-It's very common with BPF-based uprobe/uretprobe use cases to have
-a system-wide (not PID specific) probes used. In this case uprobe's
-trace_uprobe_filter->nr_systemwide counter is bumped at registration
-time, and actual filtering is short circuited at the time when
-uprobe/uretprobe is triggered.
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-This is a great optimization, and the only issue with it is that to even
-get to checking this counter uprobe subsystem is taking
-read-side trace_uprobe_filter->rwlock. This is actually noticeable in
-profiles and is just another point of contention when uprobe is
-triggered on multiple CPUs simultaneously.
+While testing libtracefs on the mmapped ring buffer, the test that checks
+if missed events are accounted for failed when using the mapped buffer.
+This is because the mapped page does not update the missed events that
+were dropped because the writer filled up the ring buffer before the
+reader could catch it.
 
-This patch adds a speculative check before grabbing that rwlock. If
-nr_systemwide is non-zero, lock is skipped and event is passed through.
-From examining existing logic it looks correct and safe to do. If
-nr_systemwide is being modified under rwlock in parallel, we have to
-consider basically just one important race condition: the case when
-nr_systemwide is dropped from one to zero (from
-trace_uprobe_filter_remove()) under filter->rwlock, but
-uprobe_perf_filter() raced and saw it as >0.
+Add the missed events to the reader page/sub-buffer when the IOCTL is done
+and a new reader page is acquired.
 
-In this case, we'll proceed with uprobe/uretprobe execution, while
-uprobe_perf_close() and uprobe_apply() will be blocked on trying to grab
-uprobe->register_rwsem as a writer. It will be blocked because
-uprobe_dispatcher() (and, similarly, uretprobe_dispatcher()) runs with
-uprobe->register_rwsem taken as a reader. So there is no real race
-besides uprobe/uretprobe might execute one last time before it's
-removed, which is fine because from user space perspective
-uprobe/uretprobe hasn't been yet deactivated.
+Note that all accesses to the reader_page via rb_page_commit() had to be
+switched to rb_page_size(), and rb_page_size() which was just a copy of
+rb_page_commit() but now it masks out the RB_MISSED bits. This is needed
+as the mapped reader page is still active in the ring buffer code and
+where it reads the commit field of the bpage for the size, it now must
+mask it otherwise the missed bits that are now set will corrupt the size
+returned.
 
-In case we speculatively read nr_systemwide as zero, while it was
-incremented in parallel, we'll proceed to grabbing filter->rwlock and
-re-doing the check, this time in lock-protected and non-racy way.
-
-As such, it looks safe to do a quick short circuiting check and save
-some performance in a very common system-wide case, not sacrificing hot
-path performance due to much rarer possibility of registration or
-unregistration of uprobes.
-
-Again, confirming with BPF selftests's based benchmarks.
-
-BEFORE (based on changes in previous patch)
-===========================================
-uprobe-nop     :    2.732 ± 0.022M/s
-uprobe-push    :    2.621 ± 0.016M/s
-uprobe-ret     :    1.105 ± 0.007M/s
-uretprobe-nop  :    1.396 ± 0.007M/s
-uretprobe-push :    1.347 ± 0.008M/s
-uretprobe-ret  :    0.800 ± 0.006M/s
-
-AFTER
-=====
-uprobe-nop     :    2.878 ± 0.017M/s (+5.5%, total +8.3%)
-uprobe-push    :    2.753 ± 0.013M/s (+5.3%, total +10.2%)
-uprobe-ret     :    1.142 ± 0.010M/s (+3.8%, total +3.8%)
-uretprobe-nop  :    1.444 ± 0.008M/s (+3.5%, total +6.5%)
-uretprobe-push :    1.410 ± 0.010M/s (+4.8%, total +7.1%)
-uretprobe-ret  :    0.816 ± 0.002M/s (+2.0%, total +3.9%)
-
-In the above, first percentage value is based on top of previous patch
-(lazy uprobe buffer optimization), while the "total" percentage is
-based on kernel without any of the changes in this patch set.
-
-As can be seen, we get about 4% - 10% speed up, in total, with both lazy
-uprobe buffer and speculative filter check optimizations.
-
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_uprobe.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Changes since v3: https://lore.kernel.org/linux-trace-kernel/20240109212702.5b8e6045@gandalf.local.home
 
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index f2875349d124..be28e6d0578e 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -1351,6 +1351,10 @@ static bool uprobe_perf_filter(struct uprobe_consumer *uc,
- 	tu = container_of(uc, struct trace_uprobe, consumer);
- 	filter = tu->tp.event->filter;
+- Almost forgot to add this, but one of my libtracefs tests failed due to it.
+
+- Rebased against the latest code.
+
+- Removed the zeroing out at the end of the page as the ring buffer is now
+  zeroed out when allocated. Not too worried about stale tracing data, but
+  having non tracing data would be a problem.
+
+ kernel/trace/ring_buffer.c | 53 +++++++++++++++++++++++++++++++++-----
+ 1 file changed, 47 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 13250856a3a8..abe21c47fb49 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -313,6 +313,8 @@ static u64 rb_event_time_stamp(struct ring_buffer_event *event)
+ /* Missed count stored at end */
+ #define RB_MISSED_STORED	(1 << 30)
  
-+	/* speculative check */
-+	if (READ_ONCE(filter->nr_systemwide))
-+		return true;
++#define RB_MISSED_MASK		(3 << 30)
 +
- 	read_lock(&filter->rwlock);
- 	ret = __uprobe_perf_filter(filter, mm);
- 	read_unlock(&filter->rwlock);
+ struct buffer_data_page {
+ 	u64		 time_stamp;	/* page time stamp */
+ 	local_t		 commit;	/* write committed index */
+@@ -2274,7 +2276,7 @@ rb_iter_head_event(struct ring_buffer_iter *iter)
+ /* Size is determined by what has been committed */
+ static __always_inline unsigned rb_page_size(struct buffer_page *bpage)
+ {
+-	return rb_page_commit(bpage);
++	return rb_page_commit(bpage) & ~RB_MISSED_MASK;
+ }
+ 
+ static __always_inline unsigned
+@@ -3901,7 +3903,7 @@ static bool rb_per_cpu_empty(struct ring_buffer_per_cpu *cpu_buffer)
+ 		return true;
+ 
+ 	/* Reader should exhaust content in reader page */
+-	if (reader->read != rb_page_commit(reader))
++	if (reader->read != rb_page_size(reader))
+ 		return false;
+ 
+ 	/*
+@@ -4372,7 +4374,7 @@ int ring_buffer_iter_empty(struct ring_buffer_iter *iter)
+ 	return ((iter->head_page == commit_page && iter->head >= commit) ||
+ 		(iter->head_page == reader && commit_page == head_page &&
+ 		 head_page->read == commit &&
+-		 iter->head == rb_page_commit(cpu_buffer->reader_page)));
++		 iter->head == rb_page_size(cpu_buffer->reader_page)));
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_iter_empty);
+ 
+@@ -5701,7 +5703,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+ 	event = rb_reader_event(cpu_buffer);
+ 
+ 	read = reader->read;
+-	commit = rb_page_commit(reader);
++	commit = rb_page_size(reader);
+ 
+ 	/* Check if any events were dropped */
+ 	missed_events = cpu_buffer->lost_events;
+@@ -5778,7 +5780,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+ 	} else {
+ 		/* update the entry counter */
+ 		cpu_buffer->read += rb_page_entries(reader);
+-		cpu_buffer->read_bytes += rb_page_commit(reader);
++		cpu_buffer->read_bytes += rb_page_size(reader);
+ 
+ 		/* swap the pages */
+ 		rb_init_page(bpage);
+@@ -6331,6 +6333,8 @@ struct page *ring_buffer_map_fault(struct trace_buffer *buffer, int cpu,
+ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
++	struct buffer_page *reader;
++	unsigned long missed_events;
+ 	unsigned long reader_size;
+ 	unsigned long flags;
+ 
+@@ -6356,9 +6360,46 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+ 		goto out;
+ 	}
+ 
+-	if (WARN_ON(!rb_get_reader_page(cpu_buffer)))
++	reader = rb_get_reader_page(cpu_buffer);
++	if (WARN_ON(!reader))
+ 		goto out;
+ 
++	/* Check if any events were dropped */
++	missed_events = cpu_buffer->lost_events;
++
++	if (cpu_buffer->reader_page != cpu_buffer->commit_page) {
++		if (missed_events) {
++			struct buffer_data_page *bpage = reader->page;
++			unsigned int commit;
++			/*
++			 * Use the real_end for the data size,
++			 * This gives us a chance to store the lost events
++			 * on the page.
++			 */
++			if (reader->real_end)
++				local_set(&bpage->commit, reader->real_end);
++			/*
++			 * If there is room at the end of the page to save the
++			 * missed events, then record it there.
++			 */
++			commit = rb_page_size(reader);
++			if (buffer->subbuf_size - commit >= sizeof(missed_events)) {
++				memcpy(&bpage->data[commit], &missed_events,
++				       sizeof(missed_events));
++				local_add(RB_MISSED_STORED, &bpage->commit);
++			}
++			local_add(RB_MISSED_EVENTS, &bpage->commit);
++		}
++	} else {
++		/*
++		 * There really shouldn't be any missed events if the commit
++		 * is on the reader page.
++		 */
++		WARN_ON_ONCE(missed_events);
++	}
++
++	cpu_buffer->lost_events = 0;
++
+ 	goto consume;
+ out:
+ 	/* Some archs do not have data cache coherency between kernel and user-space */
 -- 
 2.43.0
 
