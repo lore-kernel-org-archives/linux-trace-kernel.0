@@ -1,155 +1,119 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583096027C;
-	Wed, 13 Mar 2024 17:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783B551021;
+	Wed, 13 Mar 2024 17:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710349274; cv=none; b=H3R4Ye6kMXauyovk2159Z7l6gT6lnLURjfD73yR5BByLE4SaZw/TtasqLCeH81qx0H4nysVThoh0wnIAhegmolx9Hdev7Sja7bGAa4CgIfMgXY/VEiXA4kcZaCmh5yyYHjbnQ+sqOZMalnm1BbymQiUD4+I/K0TVjqHyXnBq4lI=
+	t=1710351223; cv=none; b=pAAW42x6CH2exDGDNHsmKZa5At3sGX9P2UyVsRpE7vR268eL9kXQIps3BDVwkzREyW/RiHgzjz59sMBPn63LULDdMYcQLITlej3oFaIIqNUspexNgjr36HjMKMXGWBi1/AClY9nEDob/S5iXK0+YSVQzQJCma1qiYqaV0OgauZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710349274; c=relaxed/simple;
-	bh=efq0+BVv6lDBikO5pTNyUvpb54N7jU6nicAO6peFQkg=;
+	s=arc-20240116; t=1710351223; c=relaxed/simple;
+	bh=t/meYn2//gmVYkp7P0vow+AvSYr+P2IoQgUqP9xrrMM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jKMKv+WsSn7Q8ZhQfeg6mXaikcePuGXaS33CtyaBXH84dLpuiCCGVVCxLyzRP79r3jtaMboF7OXNuu3KYgorygyqbAMaq90vGIpaHoBd7tsj3L62BhNoQIDyw+e2WbP7P7i4QvYggrsFJsx//tu9cbZjgNihw6LhHp2kp4Zun4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ePODYBR4; arc=none smtp.client-ip=209.85.216.51
+	 To:Cc:Content-Type; b=s82G+ZAYWd9hQUW/50RX+wJzPBTJdO3d7Hn0ia4We3/zU9nLnJuO0F1r0sJfZ84KGTbspD2aLu0VYqOxhkjfCjDIgpbjtPlfsiwXhodBt2kiFycW9dtu7gq01YRwg/ZZOVbL5BKoUs6L6bAGyVpyTKfCKwMiNSdfyUNNGZYddo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hj7zaRI5; arc=none smtp.client-ip=209.85.215.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ePODYBR4"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-29bd0669781so96367a91.1;
-        Wed, 13 Mar 2024 10:01:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hj7zaRI5"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5ce2aada130so49237a12.1;
+        Wed, 13 Mar 2024 10:33:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710349272; x=1710954072; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1710351221; x=1710956021; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=F/uM9hQvAYtcrq7dslWiWMyu+XMvN5FG8fC6yazcC8Y=;
-        b=ePODYBR4dpGGhn0cQmrgSWDpCy6E2Yki07/FdQiHD5+0IpYmxoq4X+JUWdd3neUw86
-         F+LXGWo7ofdDIVUp9X4XIkIf6hhVtR6w7T8o9WJwaxMPaOXrRHfuPtUQrdGLVN6G1GI9
-         AGCSZyLGvGKsgjvwOSh2KKyC3YgiiCZKPHyAAEP2v2wBwJh+hjHshcXdpDcsnYDZNi88
-         xIZxXFZs9c4X6yj00NkUcyBV6DQm6FOws8DoYa8/0EIXGytFfYOBYz4G5iGRYY/koTna
-         KbOZa7JyLBBZBtr4Wz8hIXadDjpDN7OgLQ/8KcnsbUAX/kcXVxmBnECVhiPsjVWmg4Un
-         Kh9g==
+        bh=44Vskwsk5gQiVM0kOdLBvtJVlmH+VOeRs73HeGYck7g=;
+        b=Hj7zaRI5dR9tsiv1bpGz4x4iHDhnAkMKkTirfN9RVw6fYvY45WQnWXNmkv0LiXwvjk
+         8Pyz/t8lUYXx6WxaKWbgTG1045QTCN8eeZ7tpok/NJ2LxLGxE2fQZxEn54roSw8/f3JK
+         VDq4vahLksp/USDzxMP5ASZorZlgSQ0Vk2xz6A/k4BIL54QIP5bBuWn3Nvx6uc0KgWLg
+         3+hqB1e1XvIdE6K9B1n8QB41Myu4Fo0uvGFQ9E/ur4eoqd9gnDYdpOf+bxe5J7HQ7dRB
+         +63Xzc6SGtlLhKEap8P0aO94uLDH3WITijB2nS5VSnVIxRjA4Lrv7iEFhuqiY/PalRUV
+         Xzxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710349272; x=1710954072;
+        d=1e100.net; s=20230601; t=1710351221; x=1710956021;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=F/uM9hQvAYtcrq7dslWiWMyu+XMvN5FG8fC6yazcC8Y=;
-        b=kJIgIZpHQmXp70o7l7eLgfVLJQTTAPZxWzz/cgj0fcW5dQ502Fjcq3Qd8KHpGSHxp1
-         yXyDzj1KFOXqWuMItw02tog+pFYOA1Ei1Y3sImuXlKDNzX9HSpW6V/QPd9MWUtKxQe18
-         kD6LzGQsN4LKPpYbiO9FwCnv9qPOEOl2nnRbi6oLv7bMpVbv53sTew/h48tuTJ1kcKLZ
-         ycKI5FkpQCAg95rZhmRpvH02WcmZakfzDrfjLlRstK1kV/2MZvvWGjpTKmlFabP2X5rN
-         c6fQ0LkEZF/U/h5zIA0IHFcDXxx7J+h0YW+GExQQnQmdOvDaAirVj8jDlLIYe8SHzSST
-         WQ3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW3NY27fqhmhX02cIGqAR/NHQGm6I9ktdglUaYCHzDIXGypEav7zGo1ZMoUmA6BkE1hHHZOE40YWn/H9phk11U5X9S7gUb73K9zPlJUUlrRtt9H7RXXdxQ3Atu8GMNscoMxFnRHXSl6TKc+IPOfhKQVgFWbxgxiDwMLR7zoBuS77Yo39j5Q
-X-Gm-Message-State: AOJu0Yxy8C9wS9SfFVSQAli8Yuxtk5xI85Rsx5k8OBWpCXbv5UFNDUWV
-	dhu7fpA/Ps1LBbI1Og8LROkok/4KhbXjVdmg8R0BZWW3L65q0ljWabj3pi9xBwFuGlsJZSZdqrT
-	uCAwIvNySNyclxVDcZbsnEVY+xiwcPVz9
-X-Google-Smtp-Source: AGHT+IHTE6X0LVH8ASvCKFEnF3zyk8i8X6E9Ba9T01S0m34UIrBolvIzYwfy2ssQWZdyAP2EhQNGTz/ngOSICO2Z68E=
-X-Received: by 2002:a17:90b:815:b0:29b:ed0d:60fa with SMTP id
- bk21-20020a17090b081500b0029bed0d60famr8682057pjb.19.1710349272412; Wed, 13
- Mar 2024 10:01:12 -0700 (PDT)
+        bh=44Vskwsk5gQiVM0kOdLBvtJVlmH+VOeRs73HeGYck7g=;
+        b=NemlnW7fxuZVoBp+993q2Umbxrq0WTpbRMcgVVx6ObIr+sq5KfqS/EyllZkfDvpA4C
+         XTuBlmUD1wg5CHFscSqTkNNAxKk++d1lWCtecNAg+WanaFrR1+ovFXzRsvnCkxFxAyVA
+         Rp3AYVYxjrO1LfKGk+/LFmX7v0MD8f/mwHCYCS49QrWFnGa2GcyIYTUmv0hzvAidDIuR
+         lC7J2pGDt4lMVcN8OjTsrA1NaPScvbuE3EffFlggoccLZiDHuHHUsJsoBJnD35CD96nY
+         5RZctM4Nzd7MPwSkADgOrbIvGyD/OhBB+rWrfDgChOoMVBK7P2sMmMDbz6K/yjBD6P07
+         v3/w==
+X-Forwarded-Encrypted: i=1; AJvYcCVqev5uUNlE2tlGaATKMiRBZRr6nMeY6Uyb679iukqa/QW1nPNXD+lQ6H2AHZ3c3dVKVPVSd4NX+ABoL9+a3nMhIB2vn20cqYEO+sD4gbQqzQFdPav35qiJ1Z62E1g0nKSCLMMS3AmeWz3k/e1Pbt6F3n0ozh7z9+9vd0A7xf4fy5lux+nB
+X-Gm-Message-State: AOJu0Yy3w9mDBbCrPWCOC2vSv0RC2FJ5slfWqYaFFKdNQbFjeNNALwA2
+	JWEhOqkyQYP8oRdQnULGkwxuu5q+69SG9SNrpT+2hdsLizT27o0eXRljdCwdjYRGDFjdyAQB7LC
+	1Xl+aF8jbQNEtLxzRxumBHRv/iRQ=
+X-Google-Smtp-Source: AGHT+IEbz15QjLVfbB/SxHmwa0IZioDlMthks84TvTvC9JdJERJmGOLeEMSPc1KUYOHSA48kWjfeKPg91JLDCX1+DNo=
+X-Received: by 2002:a17:90a:c386:b0:29c:7170:fa33 with SMTP id
+ h6-20020a17090ac38600b0029c7170fa33mr925284pjt.29.1710351220723; Wed, 13 Mar
+ 2024 10:33:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240312210233.1941599-1-andrii@kernel.org> <20240312210233.1941599-4-andrii@kernel.org>
- <20240313131926.GA19986@redhat.com>
-In-Reply-To: <20240313131926.GA19986@redhat.com>
+References: <20240312210233.1941599-1-andrii@kernel.org> <ZfF02HCzYLcuwmw9@krava>
+In-Reply-To: <ZfF02HCzYLcuwmw9@krava>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 13 Mar 2024 10:01:00 -0700
-Message-ID: <CAEf4BzbiDi8UOryvP_OHwbfF5VEBtGNzTnFRwuJ8PN+rBRxi+g@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 3/3] uprobes: add speculative lockless
- system-wide uprobe filter check
-To: Oleg Nesterov <oleg@redhat.com>
+Date: Wed, 13 Mar 2024 10:33:28 -0700
+Message-ID: <CAEf4BzaSy8wcuqmi6UqeH-UV8Kf4J_67TfP49Z334LmXrxoFpQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 0/3] uprobes: two common case speed ups
+To: Jiri Olsa <olsajiri@gmail.com>
 Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
 	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org, 
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, oleg@redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 13, 2024 at 6:20=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
-te:
+On Wed, Mar 13, 2024 at 2:41=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
+e:
 >
-> I forgot everything about this code, plus it has changed a lot since
-> I looked at it many years ago, but ...
->
-> I think this change is fine but the changelog looks a bit confusing
-> (overcomplicated) to me.
-
-It's a new piece of code and logic, so I tried to do my due diligence
-and argue why I think it's fine. I'll drop the overcomplicated
-explanation, as I agree with you that it's inherently racy even
-without my changes (and use-after-free safety is provided with
-uprobe->register_rwsem independent from all this).
-
->
-> On 03/12, Andrii Nakryiko wrote:
+> On Tue, Mar 12, 2024 at 02:02:30PM -0700, Andrii Nakryiko wrote:
+> > This patch set implements two speed ups for uprobe/uretprobe runtime ex=
+ecution
+> > path for some common scenarios: BPF-only uprobes (patches #1 and #2) an=
+d
+> > system-wide (non-PID-specific) uprobes (patch #3). Please see individua=
+l
+> > patches for details.
 > >
-> > This patch adds a speculative check before grabbing that rwlock. If
-> > nr_systemwide is non-zero, lock is skipped and event is passed through.
-> > From examining existing logic it looks correct and safe to do. If
-> > nr_systemwide is being modified under rwlock in parallel, we have to
-> > consider basically just one important race condition: the case when
-> > nr_systemwide is dropped from one to zero (from
-> > trace_uprobe_filter_remove()) under filter->rwlock, but
-> > uprobe_perf_filter() raced and saw it as >0.
->
-> Unless I am totally confused, there is nothing new. Even without
-> this change trace_uprobe_filter_remove() can clear nr_systemwide
-> right after uprobe_perf_filter() drops filter->rwlock.
->
-> And of course, trace_uprobe_filter_add() can change nr_systemwide
-> from 0 to 1. In this case uprobe_perf_func() can "wrongly" return
-> UPROBE_HANDLER_REMOVE but we can't avoid this and afaics this is
-> fine even if handler_chain() does unapply_uprobe(), uprobe_perf_open()
-> will do uprobe_apply() after that, we can rely on ->register_rwsem.
->
+> > Given I haven't worked with uprobe code before, I'm unfamiliar with
+> > conventions in this subsystem, including which kernel tree patches shou=
+ld be
+> > sent to. For now I based all the changes on top of bpf-next/master, whi=
+ch is
+> > where I tested and benchmarked everything anyways. Please advise what s=
+hould
+> > I use as a base for subsequent revision. Thanks.
 
-yep, agreed
+Steven, Masami,
 
-> > In case we speculatively read nr_systemwide as zero, while it was
-> > incremented in parallel, we'll proceed to grabbing filter->rwlock and
-> > re-doing the check, this time in lock-protected and non-racy way.
->
-> See above...
->
->
-> So I think uprobe_perf_filter() needs filter->rwlock only to iterate
-> the list, it can check nr_systemwide lockless and this means that you
-> can also remove the same check in __uprobe_perf_filter(), other callers
-> trace_uprobe_filter_add/remove check it themselves.
->
+Is this the kind of patches that should go through your tree(s)? Or
+you'd be fine with this going through bpf-next? I'd appreciate the
+link to the specific GIT repo I should use as a base in the former
+case, thank you!
 
-makes sense, will do
-
->
-> > --- a/kernel/trace/trace_uprobe.c
-> > +++ b/kernel/trace/trace_uprobe.c
-> > @@ -1351,6 +1351,10 @@ static bool uprobe_perf_filter(struct uprobe_con=
-sumer *uc,
-> >       tu =3D container_of(uc, struct trace_uprobe, consumer);
-> >       filter =3D tu->tp.event->filter;
 > >
-> > +     /* speculative check */
-> > +     if (READ_ONCE(filter->nr_systemwide))
-> > +             return true;
-> > +
-> >       read_lock(&filter->rwlock);
-> >       ret =3D __uprobe_perf_filter(filter, mm);
-> >       read_unlock(&filter->rwlock);
+> > Andrii Nakryiko (3):
+> >   uprobes: encapsulate preparation of uprobe args buffer
+> >   uprobes: prepare uprobe args buffer lazily
+> >   uprobes: add speculative lockless system-wide uprobe filter check
 >
-> ACK,
+> nice cleanup and speed up, lgtm
 >
-> but see above. I think the changelog should be simplified and the
-> filter->nr_systemwide check in __uprobe_perf_filter() should be
-> removed. But I won't insist and perhaps I missed something...
+> Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 >
-
-I think you are right, I'll move the check
-
-> Oleg.
+> jirka
 >
+> >
+> >  kernel/trace/trace_uprobe.c | 103 ++++++++++++++++++++++--------------
+> >  1 file changed, 63 insertions(+), 40 deletions(-)
+> >
+> > --
+> > 2.43.0
+> >
+> >
