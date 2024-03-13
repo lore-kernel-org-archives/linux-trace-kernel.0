@@ -1,108 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7A16FAE
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 13 Mar 2024 15:48:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E674A5F541;
+	Wed, 13 Mar 2024 16:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710344934; cv=none; b=hL9FTidlV4nHtJsVEdf/nV5hZmbdNE4Ct1Xj/jMwVqqAdfra/AFcBD/FxIdesxa/ZFBZzhtJqyCicAZosPzz+A3r85AmALMnzAqzHImwr+b4ZlkrgM32b0KhNXYdSDdsR6Y5BfEud07YbduhGKuJP/USU4+/1NLWeR2KLHhDym4=
+	t=1710348792; cv=none; b=P/FnVOQTz6D03c5s37f7HxqX0hyhh3+Qfbwmm88IhqCnLNpzO6ge3rRgwRjLmPqh4wSh2JDNje1IvoeWZzh/ESLrKHRpsY8GSfJThdCbN7xZepJlt7sfJRJIISSy60WFHX5IWWOtrOjOwVTh52FttHxaPrQypWv676wK7/B9Kl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710344934; c=relaxed/simple;
-	bh=COid3ls/H1cesG2EvzJHTyesfJFy9SOIgs/GvDa4P2c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I6P0jq0RC+quK68b6siBWupqYfXc3bAfrMvZ8vy8AD5DLyTrbHdzKh+7bYpBdpDCOCLWj3WK5gIEMBTSOCin6bMSOVxAkk5PWIOQdungHBIf8f5aSLHfugbk7n8tUO2q29vBkBFJQa1qGjf4ItmKnTlWGu/K1RzCadVGU+ftIyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U4dOlyXR; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710348792; c=relaxed/simple;
+	bh=xCzpgaA+HTbALS3/kwZcZ+auovGGgbqRsKa38fzJmHI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FYyziY+f4Czq2eDiX+rBM9o8IoVIVui4SwjsPDIY5tCf5B2dy6K+8KDHJuaGTX9su0PZ4387xaKKpyCr9AnRzSJcvdXEhNYj7tl5GxxKROubYTUJO+QBcCyqu+OVTyBpPKH11QYGSd7J24vM5uzZ0Z/FfxjYP78D533BeeULh5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f2SmWq1g; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U4dOlyXR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710344931;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JC1+HJbEXxxyJy+zyJokage5HbCPC99YdysgS1QcXZU=;
-	b=U4dOlyXRGlo4Yae42UPojrgLdKuP5PWyyV34V3ekHuQpbvXyzWnwFkhbKG/P30eqz29NIn
-	hnuBMKVcXgkQhBIbKo+mX62hhGt+0Vb1azCRw6+COgFAzbjZ0rn8yM1Nd5Kklrq/m5WRam
-	xweSQSCWFUjPl+Om1xeV+LQTLOI7cX8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-149-UZMDdUy_MgirT-qVdBpDWw-1; Wed, 13 Mar 2024 11:48:43 -0400
-X-MC-Unique: UZMDdUy_MgirT-qVdBpDWw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B27B18007AF;
-	Wed, 13 Mar 2024 15:48:40 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.233])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 14BF840C6DB7;
-	Wed, 13 Mar 2024 15:48:38 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 13 Mar 2024 16:47:19 +0100 (CET)
-Date: Wed, 13 Mar 2024 16:47:16 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, bpf@vger.kernel.org,
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next 2/3] uprobes: prepare uprobe args buffer lazily
-Message-ID: <20240313154716.GB25452@redhat.com>
-References: <20240312210233.1941599-1-andrii@kernel.org>
- <20240312210233.1941599-3-andrii@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f2SmWq1g"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-29bbff1505dso103129a91.0;
+        Wed, 13 Mar 2024 09:53:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710348789; x=1710953589; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/u8ZrY8sdFo2g+CmoHjb0TtVHcvA+5O3rJ7eccy6sco=;
+        b=f2SmWq1gAhW3BbvQQgboyimm+ZMdmYja/LyNaR85Ff/koVW57VgPhehnbLBk6CBHjT
+         6TacvkWrj8w6g719vbnzvvN0UIae3JqigehFM+ZBgyH6hEq0+o0eqUXcjH8Nf31cP/vz
+         XipVLr/AuKcm/dB31jQMlverAw+AUIRTN5frs37Hro/EurIuAlY/KAQfMz+ospO6s8Ug
+         Yqoz0sEqX457qL5C7NafgvnxQ0LYT6RZY4qczJyR1Kevp77BtLZt/56dOy30wwCKX881
+         nZgFSjjO7kPg6vS4rtTpUIrQLzdSNm1bZxQT3hzi7kXeTRPRLCJ2j1C6kOGetfwcYFam
+         xf4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710348789; x=1710953589;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/u8ZrY8sdFo2g+CmoHjb0TtVHcvA+5O3rJ7eccy6sco=;
+        b=JfI5K+M/4xj+IOs+JhEtxgEpgRBRd4vOsVrvUWvMmVg/WDE9MjDi/1UR8y0lSfC7dR
+         Q+zS6lZ0A0uvyMnLKyxvBVtVbLzRWxFWuyroDM0+zKi8ARFqLxictjBPfGumlO1mO0Vx
+         HdspDIEneXwbVLd2GsR8Qj3raDbeQp3kCgz4JvbdrHEG/VGZBXUw7mSp5Adzv27rBNd9
+         XWfL8rAkzEYS+d3YPvtEHnaQKMcanwcVj9f/Fmb5gRQR7MClB+iCg97v8R0dAUm7aHRH
+         Ad1cP43W9UPt6yyL1MQEoIT3zuMnWZgwQP+E7e8v4Bmr8tZVXQX29fLWHnOuw41jpsYj
+         F5ag==
+X-Forwarded-Encrypted: i=1; AJvYcCX7b59aSF4ADjWzvgz2/m1Y/zDYQ7XAPGL2xWK1xGImjuP4Ytp1Ac1LZsRYEfYkLC42mMERYxW9tv28lYYQJLfoLDVQmbtSNl0u2TICJ3FQQHA7Xy+xtb1M9LyPMsVKRtNwTiGOgOv50nalMdWhZ4Bt5aai/epT9Hce4y9uN0gMwR+aZKzg
+X-Gm-Message-State: AOJu0YxPmISrHVHEgv9yPEH1y02NgXqHIS/5BMwhVMhxkOSUf9eUCE86
+	I53lC7vzdsXi2hXU2nPe+iULtK3JugJs7PDKn3vUut+u1wIkCcRfQ4JieVztB3Ftp0a2H8HYl4+
+	ecxTkYWinKq2uY9FopbXWV7djQIhtr6Ss
+X-Google-Smtp-Source: AGHT+IEKjZFpcEzhNIwyrlO8/dl5vFNshA/6fBoRE3yJXIKiK1GOk90qYsxtCTPxpE386HMmh5WhBrtUik7VqjarrqE=
+X-Received: by 2002:a17:90a:a407:b0:29b:ab0e:4f03 with SMTP id
+ y7-20020a17090aa40700b0029bab0e4f03mr10231243pjp.37.1710348789075; Wed, 13
+ Mar 2024 09:53:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240312210233.1941599-3-andrii@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+References: <20240312210233.1941599-1-andrii@kernel.org> <20240312210233.1941599-2-andrii@kernel.org>
+ <20240313151507.GA25452@redhat.com>
+In-Reply-To: <20240313151507.GA25452@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 13 Mar 2024 09:52:56 -0700
+Message-ID: <CAEf4BzbXew_qC4NaA7vtqS5fFwkh6Hw-uKLq3UDD7GjGAP6UeQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/3] uprobes: encapsulate preparation of uprobe
+ args buffer
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org, 
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Again, looks good to me, but I have a minor nit. Feel free to ignore.
-
-On 03/12, Andrii Nakryiko wrote:
+On Wed, Mar 13, 2024 at 8:16=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+te:
 >
->  static void __uprobe_trace_func(struct trace_uprobe *tu,
->  				unsigned long func, struct pt_regs *regs,
-> -				struct uprobe_cpu_buffer *ucb,
-> +				struct uprobe_cpu_buffer **ucbp,
->  				struct trace_event_file *trace_file)
->  {
->  	struct uprobe_trace_entry_head *entry;
->  	struct trace_event_buffer fbuffer;
-> +	struct uprobe_cpu_buffer *ucb;
->  	void *data;
->  	int size, esize;
->  	struct trace_event_call *call = trace_probe_event_call(&tu->tp);
->  
-> +	ucb = *ucbp;
-> +	if (!ucb) {
-> +		ucb = prepare_uprobe_buffer(tu, regs);
-> +		*ucbp = ucb;
-> +	}
+> LGTM, one nit below.
+>
+> On 03/12, Andrii Nakryiko wrote:
+> >
+> > +static struct uprobe_cpu_buffer *prepare_uprobe_buffer(struct trace_up=
+robe *tu,
+> > +                                                    struct pt_regs *re=
+gs)
+> > +{
+> > +     struct uprobe_cpu_buffer *ucb;
+> > +     int dsize, esize;
+> > +
+> > +     esize =3D SIZEOF_TRACE_ENTRY(is_ret_probe(tu));
+> > +     dsize =3D __get_data_size(&tu->tp, regs);
+> > +
+> > +     ucb =3D uprobe_buffer_get();
+> > +     ucb->dsize =3D dsize;
+> > +
+> > +     store_trace_args(ucb->buf, &tu->tp, regs, esize, dsize);
+> > +
+> > +     return ucb;
+> > +}
+>
+> OK, but note that every user of ->dsize adds tp.size. So I think you can
+> simplify this code a bit more if you change prepare_uprobe_buffer() to do
+>
+>         ucb->dsize =3D tu->tp.size + dsize;
+>
+> and update the users.
+>
 
-perhaps it would be more clean to pass ucbp to prepare_uprobe_buffer()
-and change it to do
+makes sense, done
 
-	if (*ucbp)
-		return *ucbp;
-
-at the start. Then __uprobe_trace_func() and __uprobe_perf_func() can
-simply do
-
-	ucb = prepare_uprobe_buffer(tu, regs, ucbp);
-
-> -	uprobe_buffer_put(ucb);
-> +	if (ucb)
-> +		uprobe_buffer_put(ucb);
-
-Similarly, I think the "ucb != NULL" check should be shifted into
-uprobe_buffer_put().
-
-Oleg.
-
+> Oleg.
+>
