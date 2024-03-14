@@ -1,129 +1,165 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63CA5D8E1;
-	Thu, 14 Mar 2024 14:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87853DDD9;
+	Thu, 14 Mar 2024 15:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710427311; cv=none; b=p51c6XappAXUFw0mMX8iHFy0FccTpwcdrksmXdasehHlTSMNGcz2vjY9Gy+DCXATQUuJNfdKFr9E9XdwbB38C27l2S1PUhUcCoxHxeNVMtl/f3ewFuVboXjqqgGcYKV5X0pl2DZIvkrT/5k051YiWsEi7kjOutNKsKBD4XgMGQU=
+	t=1710428857; cv=none; b=SZ4ilK/PguZv6sZ0LkDcyztq7NGviH5+ziHB2rqOQj3xEj4vZutNRZnu96mNTzPfR3biSUSi29EFqer9pV2hEsKtXLZABd1gU+XiFk6s5c4pHCdQ2TfqTJhdYpqVdqBh8RDUTo9NLVl0vzmz9obILF0B0evKGS1n7YUe+2JtbGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710427311; c=relaxed/simple;
-	bh=xCKos6m+qO/1NTZ2a29UZtZ7oTOa927jk2hKnM8gv0E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lmN9ZPYANoArB/+hHIbIUDABjxcf7xK/ox0jDG/7BvbVZbMsHIrzFu+eMTPPQCucVmxYpgDL3mk/NAfG6LNZkmN5D+1c3mdkJVONg7B/eOVcWLdbuUZJ9ibwOIrL3Pitl+BfCWHU2yaTS2eQBu3PRnk7XjSw9l4M9vahlVVmMuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fbMyShOX; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1710428857; c=relaxed/simple;
+	bh=GTQVrWcs6XBMnV9a14mAay7RyQJOjR0XkVbs68SqZPM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=F0CKbxS9CbwAI4V1LblbZvVy5KOGq75UAGoKdxwRmRdvintycE6pAceu24mLE4TEJ4jOj0QxDLaQVHj/4IPcBaifgltVGOubC4ieoXd/53Y+gaud+ENJ/VO2bkjeDt6XIvHk1akc9tTRCEwL5uBDVcDK5Ck8KovSmdGD2EhhIJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gfl+o6Vt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fbMyShOX"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-563c403719cso1378756a12.2;
-        Thu, 14 Mar 2024 07:41:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710427308; x=1711032108; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=75BC6XDlPW+OQKaG6vOoT6p3GK8R3Ey/ersuUXrKyEo=;
-        b=fbMyShOXCTunAT8LeozXoXpY+2OOlGdxywM9GiYMUAqEH5fJf7OR0STy0IWyxBnU3B
-         glV8wyotVMCKAhaVso9EXazg4CJioFKnoKx/0x1okFB5p/Isr1AyzURmq34ySitG495B
-         PY82a5WiyPUcRjO+O+vRvtV0XJgq57h1a3OewhawK/8d/f36RDB2p7t6UkfNOOZqCwbc
-         fhi7YQHwf/b3YCDWWWFKmfW9MCboExb0E+Ayh3S0blWS3ukY3jIGwGbgCweC0SzVSYms
-         2gtGD3ezOywukLcMhqkGDfBlEEF+e5UP5F3kGJM4WtEvOMK0+C5V5BGMtMWWRHBYYHNO
-         hIXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710427308; x=1711032108;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=75BC6XDlPW+OQKaG6vOoT6p3GK8R3Ey/ersuUXrKyEo=;
-        b=XU7XpGzsxOb672trzJuvDDpjVl66N5wTyhfyywGDoxXLf1a8dRtjdTYedumrdtkr6b
-         jmpv08jbxoDMBVdc14IRNHmoC33XykYSBhwAxq3fKLyiTfs0IjsZEht4PDH+Ki09QRfc
-         1jdxDAYouS+O/RylgMeiBH3myYdvm342+TZFsBUGOCVsChxyvE2Ri9P/Crh0XyZhpGFt
-         F1ZszsNlGxocA0HxEiivi1Kh0iYiAMgH94+eMvfflu3e0D5Rz3M0rPTk0ERYKhZ7k6nO
-         UURPOjC4rZh9jMRVOoIcRPhSlfk7eJhCcrI9tUU8M0y41TYrqeVo2LYMPqk8HKSLG7vg
-         pr4w==
-X-Forwarded-Encrypted: i=1; AJvYcCX3rR9imic7C26TrP0+Spc+0P4fFEEqVzVulXDv6JoctoaBP8ZI0im7BnnaUcS65L1DSwCmQm/GSNBOF/6VKsFd6+l14jYjRcuRYWW9vWNfpKJsAf9ebrUVozNozxNpWNwi/24DgI1X/H7iqfThjfCi6Bspb2BdSjUMyOQE7nzq45oVI1GkQ9ekbDGh
-X-Gm-Message-State: AOJu0Yz4Wx6iT86o1H+oh5NgarihfIrV9ejaaOFQh+q1oY2GaJLQ6+35
-	lRQ0lJqMbIPlFUYeKQ4+VprGLL31ruVggk/sJjIddZTfjHpNENuA
-X-Google-Smtp-Source: AGHT+IHTqh9aG/rjW5FKqqfRc5+QuUQ4b1bMVoiK7Wo1Vj9FaO/R3di1Xw0hvyjU7Xs0/dNC6/c/7w==
-X-Received: by 2002:aa7:d409:0:b0:568:9f10:7d33 with SMTP id z9-20020aa7d409000000b005689f107d33mr951979edq.42.1710427307921;
-        Thu, 14 Mar 2024 07:41:47 -0700 (PDT)
-Received: from localhost.localdomain ([213.55.225.17])
-        by smtp.gmail.com with ESMTPSA id fg3-20020a056402548300b005682f47aea7sm769570edb.94.2024.03.14.07.41.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Mar 2024 07:41:47 -0700 (PDT)
-From: Ali Zahraee <ahzahraee@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	corbet@lwn.net
-Cc: Ali Zahraee <ahzahraee@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	javier.carrasco.cruz@gmail.com
-Subject: [PATCH] Documentation: tracing: update format of sched_wakeup in example
-Date: Thu, 14 Mar 2024 15:41:36 +0100
-Message-Id: <20240314144136.19727-1-ahzahraee@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gfl+o6Vt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92F50C433F1;
+	Thu, 14 Mar 2024 15:07:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710428857;
+	bh=GTQVrWcs6XBMnV9a14mAay7RyQJOjR0XkVbs68SqZPM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Gfl+o6VtDn9x2Fj955iyoM1+yBnt/TsF7oYp6foNPn9asCM6e9NsX2I9HbgeW5uI5
+	 fcoKb3FedKukBXX05fexGqKId3twgTL/3iq3jcYCxobZ48JHMiJZeVz6tNs+6+wtPk
+	 w0PHcqFQDARplTSrKVp2EpgNYKTWO/itjTRfg5WmqLw27khIRRf86AdB+DLL+0n6yq
+	 YuRRZ8GgUx+px5xHy1V2xBnnxhSwa01rK/mFRerJSP2rfaYES1mWmZYix4YtILbgy8
+	 IdhL0TkeHcMvr787XJOsXnCZPM+gUee6OTjB2Y6oT4qAy7EhvEt6PntEVMY5jSyrkk
+	 loOBoYle/+6mg==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Puranjay Mohan <puranjay12@gmail.com>, Mark Rutland
+ <mark.rutland@arm.com>, Andy Chiu <andy.chiu@sifive.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Sami Tolvanen <samitolvanen@google.com>,
+ Guo Ren <guoren@kernel.org>, Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+ Deepak Gupta <debug@rivosinc.com>, Sia Jee Heng
+ <jeeheng.sia@starfivetech.com>, Bjorn Topel <bjorn@rivosinc.com>, Song
+ Shuai <suagrfillet@gmail.com>, Cl'ement L'eger <cleger@rivosinc.com>, Al
+ Viro <viro@zeniv.linux.org.uk>, Jisheng Zhang <jszhang@kernel.org>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Robbin Ehn <rehn@rivosinc.com>
+Subject: Re: [RFC PATCH] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
+In-Reply-To: <mb61pplvw6grf.fsf@gmail.com>
+References: <20240306165904.108141-1-puranjay12@gmail.com>
+ <87ttlhdeqb.fsf@all.your.base.are.belong.to.us>
+ <ZfBbxPDd0rz6FN2T@FVFF77S0Q05N>
+ <8734suqsth.fsf@all.your.base.are.belong.to.us>
+ <mb61pplvw6grf.fsf@gmail.com>
+Date: Thu, 14 Mar 2024 16:07:33 +0100
+Message-ID: <87zfv0onre.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-The format of the sched_wakeup event is used as an example in the
-documentation. But the given format is obsolete. This patch updates the
-format in the example to match the current format of this event.
+Puranjay Mohan <puranjay12@gmail.com> writes:
 
-Signed-off-by: Ali Zahraee <ahzahraee@gmail.com>
----
- Documentation/trace/events.rst | 25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+> Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> writes:
+>
+>>
+>> Hmm, depending on RISC-V's CMODX path, the pro/cons CALL_OPS vs dynamic
+>> trampolines changes quite a bit.
+>>
+>> The more I look at the pains of patching two instruction ("split
+>> immediates"), the better "patch data" + one insn patching look.
+>
+> I was looking at how dynamic trampolines would be implemented for RISC-V.
+>
+> With CALL-OPS we need to patch the auipc+jalr at function entry only, the
+> ops pointer above the function can be patched atomically.
+>
+> With a dynamic trampoline we need a auipc+jalr pair at function entry to =
+jump
+> to the trampoline and then another auipc+jalr pair to jump from trampolin=
+e to
+> ops->func. When the ops->func is modified, we would need to update the
+> auipc+jalr at in the trampoline.
+>
+> So, I am not sure how to move forward here, CALL-OPS or Dynamic trampolin=
+es?
 
-diff --git a/Documentation/trace/events.rst b/Documentation/trace/events.rst
-index 759907c20e75..65fe205c95e6 100644
---- a/Documentation/trace/events.rst
-+++ b/Documentation/trace/events.rst
-@@ -129,24 +129,25 @@ event::
- 	# cat /sys/kernel/tracing/events/sched/sched_wakeup/format
- 
- 	name: sched_wakeup
--	ID: 60
-+	ID: 70
- 	format:
- 		field:unsigned short common_type;	offset:0;	size:2;
-+                	signed:0;
- 		field:unsigned char common_flags;	offset:2;	size:1;
--		field:unsigned char common_preempt_count;	offset:3;	size:1;
--		field:int common_pid;	offset:4;	size:4;
--		field:int common_tgid;	offset:8;	size:4;
-+                	signed:0;
-+		field:unsigned char common_preempt_count;	offset:3;
-+                	size:1; signed:0;
-+		field:int common_pid;	offset:4;	size:4;	signed:1;
- 
--		field:char comm[TASK_COMM_LEN];	offset:12;	size:16;
--		field:pid_t pid;	offset:28;	size:4;
--		field:int prio;	offset:32;	size:4;
--		field:int success;	offset:36;	size:4;
--		field:int cpu;	offset:40;	size:4;
-+		field:char comm[16];	offset:8;	size:16;	signed:0;
-+		field:pid_t pid;	offset:24;	size:4;	signed:1;
-+		field:int prio;	offset:28;	size:4;	signed:1;
-+		field:int target_cpu;	offset:32;	size:4;	signed:1;
- 
--	print fmt: "task %s:%d [%d] success=%d [%03d]", REC->comm, REC->pid,
--		   REC->prio, REC->success, REC->cpu
-+	print fmt: "comm=%s pid=%d prio=%d target_cpu=%03d", REC->comm, REC->pid,
-+        	        REC->prio, REC->target_cpu
- 
--This event contains 10 fields, the first 5 common and the remaining 5
-+This event contains 8 fields, the first 4 common and the remaining 4
- event-specific.  All the fields for this event are numeric, except for
- 'comm' which is a string, a distinction important for event filtering.
- 
--- 
-2.34.1
+Yeah. Honestly, we need to figure out the patching story prior
+choosing the path, so let's start there.
 
+After reading Mark's reply, and discussing with OpenJDK folks (who does
+the most crazy text patching on all platforms), having to patch multiple
+instructions (where the address materialization is split over multiple
+instructions) is a no-go. It's just a too big can of worms. So, if we
+can only patch one insn, it's CALL_OPS.
+
+A couple of options (in addition to Andy's), and all require a
+per-function landing address ala CALL_OPS) tweaking what Mark is doing
+on Arm (given the poor branch range).
+
+...and maybe we'll get RISC-V rainbows/unicorns in the future getting
+better reach (full 64b! ;-)).
+
+A) Use auipc/jalr, only patch jalr to take us to a common
+   dispatcher/trampoline
+=20=20
+ | <func_trace_target_data_8B> # probably on a data cache-line !=3D func .t=
+ext to avoid ping-pong
+ | ...
+ | func:
+ |   ...make sure ra isn't messed up...
+ |   aupic
+ |   nop <=3D> jalr # Text patch point -> common_dispatch
+ |   ACTUAL_FUNC
+ |=20
+ | common_dispatch:
+ |   load <func_trace_target_data_8B> based on ra
+ |   jalr
+ |   ...
+
+The auipc is never touched, and will be overhead. Also, we need a mv to
+store ra in a scratch register as well -- like Arm. We'll have two insn
+per-caller overhead for a disabled caller.
+
+B) Use jal, which can only take us +/-1M, and requires multiple
+   dispatchers (and tracking which one to use, and properly distribute
+   them. Ick.)
+
+ | <func_trace_target_data_8B> # probably on a data cache-line !=3D func .t=
+ext to avoid ping-pong
+ | ...
+ | func:
+ |   ...make sure ra isn't messed up...
+ |   nop <=3D> jal # Text patch point -> within_1M_to_func_dispatch
+ |   ACTUAL_FUNC
+ |=20
+ | within_1M_to_func_dispatch:
+ |   load <func_trace_target_data_8B> based on ra
+ |   jalr
+
+C) Use jal, which can only take us +/-1M, and use a per-function
+   trampoline requires multiple dispatchers (and tracking which one to
+   use). Blows up text size A LOT.
+
+ | <func_trace_target_data_8B> # somewhere, but probably on a different cac=
+heline than the .text to avoid ping-ongs
+ | ...
+ | per_func_dispatch
+ |   load <func_trace_target_data_8B> based on ra
+ |   jalr
+ | func:
+ |   ...make sure ra isn't messed up...
+ |   nop <=3D> jal # Text patch point -> per_func_dispatch
+ |   ACTUAL_FUNC
+
+It's a bit sad that we'll always have to have a dispatcher/trampoline,
+but it's still better than stop_machine(). (And we'll need a fencei IPI
+as well, but only one. ;-))
+
+Today, I'm leaning towards A (which is what Mark suggested, and also
+Robbin).. Any other options?
+
+[Now how do we implement OPTPROBES? I'm kidding. ;-)]
+
+
+Bj=C3=B6rn
