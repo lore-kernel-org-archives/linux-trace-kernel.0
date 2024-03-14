@@ -1,188 +1,110 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC146EB6D;
-	Thu, 14 Mar 2024 11:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9CA6FE02;
+	Thu, 14 Mar 2024 14:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710416927; cv=none; b=mEZAOY4V58FKAm3sUNz1AjhK6SD63nWe6ROfvx6QvZZIH7K+5Wsydry/c7i3/VQWv1iBEj+8cfr73AInzTlQtHymNz2NtRCFh2eXrz3mpTRD5vSv/Z+SfLV+SzDl7PuIP1ES2kngAgCLil0/p5+YiWXK2jgT7xyFRTXEhPzu6a4=
+	t=1710425771; cv=none; b=t4+o8/lB+o14O5d7kLv+tVHclPT1Qwe/TN//GAyMdIGXf4cQ8eUdgDQ/qYHB0PajBcd7opi41lPKTRxkW+6Cu1uN2lRcQrbkqG0GfkJ4qWwLKCs2QPK4K1v0TGTJlCSRWTND8QnMHYQl+s8aHDGIR2i2nBlkvHuHIGQewcM7kxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710416927; c=relaxed/simple;
-	bh=7ZiBPpdN/pRir9iGW2WDn9wd7ox5+ZWpl5rz4L8hPpM=;
-	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=HhNVcJuuK4QcruPysEGwnrJxJkIO/bEKUCZ1/pofYyJymEBZm9D2Lh05xnK8PI15L/wsu2M6JSUywL7LWgpMYo8rYmuJtnwARXZzIuEda8EQv0pV+QZjrvh8J2rqOaL3/quEghVIWK749GaaVJxj7IiWNAw4zRCE6RxeFhgdIrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TwQb24vv0z1xrD5;
-	Thu, 14 Mar 2024 19:46:54 +0800 (CST)
-Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
-	by mail.maildlp.com (Postfix) with ESMTPS id 18715180061;
-	Thu, 14 Mar 2024 19:48:41 +0800 (CST)
-Received: from [10.67.120.192] (10.67.120.192) by
- kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 14 Mar 2024 19:48:40 +0800
-Message-ID: <da60f9b8-0ea7-4580-ab45-f294801605f9@huawei.com>
-Date: Thu, 14 Mar 2024 19:48:39 +0800
+	s=arc-20240116; t=1710425771; c=relaxed/simple;
+	bh=bVGU/1nT0H0Si6zm/Sz0XZCYeGIcHvVz6AxiepPYAXg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=VGTKsUUtOObEJTRL2ubJb35Y46MUcT2tEuIK64KdXB0fhGkyNpzxe5+Ck2XsbN5qp2lYU5WeTblIHbJhzLrEjIpfNH4agqLSi9Opb164y1RndE1vXflVOvhb4U3VV+aINgavzV/BUfKlYUjwGW5x+IEP0pOPmUSmlPMQv0YQUAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HiXDBHTz; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HiXDBHTz"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-68f41af71ebso7812286d6.1;
+        Thu, 14 Mar 2024 07:16:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710425769; x=1711030569; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bVGU/1nT0H0Si6zm/Sz0XZCYeGIcHvVz6AxiepPYAXg=;
+        b=HiXDBHTzuwviFWvMBfXKXl/R5Uklrh4zWYXcF6Ie9rjblyrSTYDFnXKL6XZ6U6sxe7
+         sBh5iMEubWBz2y/JP0iOZuJpAatn7G/W5QoSv8BpaCnarKssRV+wSxq37DZIuzaI8bi3
+         YVenQird21t52bWnugumgFCiTNx9ygeMB7RjwOnsfuef8LWlyecRAKDaAnjy5BhHM9XJ
+         iUGahEk+247jP9qydMz+jSdmJe5+Kb9wXFZdi4wJw26Xzb9O/n9QzTEXbvQam0JPDWCC
+         QP4ibKT1U2OdHEht86l3Lc1Qz/qykMjyOsfa9Ai7dItSYEflx4RErvLUm8QA42ornb1Y
+         OORQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710425769; x=1711030569;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bVGU/1nT0H0Si6zm/Sz0XZCYeGIcHvVz6AxiepPYAXg=;
+        b=eIxLMwHxFduIFtTQ9YuXv+yUFLS7caH6rH4fuVeeO3QDiCMg1UV5s3rxxSv2Rubn+o
+         okNLikKnSFPzqdagfHHjUFr3M2Bd75HQMmWwb4PJ0L1ATTDZ3/vbqzbkeoEinYLI12Si
+         fcah1+cYfzU5DSXNao0ei36u01gSwMEEfHH1XO+YZKACRvchID/e+QDaQeEQYu0rJHj1
+         W8aEZcJp34pnKBNdpUUj3vr8Qs+K3Q/6FbmP88germkOQNEPaSyI6JQvWp3AXP1raDuJ
+         KWisg74SPXPVxN5dzXshyEqqX2U2F7OPPAnW5IL1AqUFedbWV16L4oxy9U9j5Rqh+Y62
+         pAeg==
+X-Forwarded-Encrypted: i=1; AJvYcCXCbB/JMJvhH4iFxpvBeERCfQmZ2nFDP9U5tS5mxHkBHLwpya1B6UT5fy9QZFC1Ul+XnyTpc80sKcTsHHfMnm12r/l3nldgPwVmSTGbRfsJ10ikizmEVFrfGLxWZzR8i4MD2nnuL+pKQ5OoEl3kFhLU
+X-Gm-Message-State: AOJu0Yx4+QqaBkDrfwSjBlhrkY9emcX4Tb5ALnDw28xwqMkLB1PVuMOA
+	ohCsHIHNl9D7kMR0ePfFJCc2RvFsqDbNQskgiq/TJFBNnwzREGMR
+X-Google-Smtp-Source: AGHT+IFXeFnBQdQlRURMStTP2QEs5eBWxgcZpvwyfw1K7G6sqYNL0c+PpV2nyZYeVsGMmtLdDAXx1A==
+X-Received: by 2002:a05:6214:2e11:b0:690:de5f:2127 with SMTP id mx17-20020a0562142e1100b00690de5f2127mr1939361qvb.36.1710425768813;
+        Thu, 14 Mar 2024 07:16:08 -0700 (PDT)
+Received: from localhost (54-240-197-231.amazon.com. [54.240.197.231])
+        by smtp.gmail.com with ESMTPSA id jx5-20020a0562142b0500b0068f4520e42dsm507705qvb.16.2024.03.14.07.16.07
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Mar 2024 07:16:08 -0700 (PDT)
+From: Puranjay Mohan <puranjay12@gmail.com>
+To: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Steven Rostedt
+ <rostedt@goodmis.org>, "Masami
+ Hiramatsu" <mhiramat@kernel.org>, Sami Tolvanen <samitolvanen@google.com>,
+ Guo Ren <guoren@kernel.org>, Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+ Deepak Gupta <debug@rivosinc.com>, Sia Jee Heng
+ <jeeheng.sia@starfivetech.com>, Bjorn Topel <bjorn@rivosinc.com>, "Song
+ Shuai" <suagrfillet@gmail.com>, Cl'ement L'eger <cleger@rivosinc.com>, "Al
+ Viro" <viro@zeniv.linux.org.uk>, Jisheng Zhang <jszhang@kernel.org>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Andy Chiu <andy.chiu@sifive.com>
+Subject: Re: [RFC PATCH] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
+In-Reply-To: <8734suqsth.fsf@all.your.base.are.belong.to.us>
+References: <20240306165904.108141-1-puranjay12@gmail.com>
+ <87ttlhdeqb.fsf@all.your.base.are.belong.to.us>
+ <ZfBbxPDd0rz6FN2T@FVFF77S0Q05N>
+ <8734suqsth.fsf@all.your.base.are.belong.to.us>
+Date: Thu, 14 Mar 2024 14:16:04 +0000
+Message-ID: <mb61pplvw6grf.fsf@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: <shaojijie@huawei.com>, Yisen Zhuang <yisen.zhuang@huawei.com>, Salil
- Mehta <salil.mehta@huawei.com>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Yufeng Mo <moyufeng@huawei.com>, Huazhong Tan
-	<tanhuazhong@huawei.com>
-Subject: Re: [PATCH] net: hns3: tracing: fix hclgevf trace event strings
-To: Steven Rostedt <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, netdev
-	<netdev@vger.kernel.org>
-References: <20240313093454.3909afe7@gandalf.local.home>
-From: Jijie Shao <shaojijie@huawei.com>
-In-Reply-To: <20240313093454.3909afe7@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600007.china.huawei.com (7.193.23.208)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Jijie Shao<shaojijie@huawei.com>
+Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> writes:
 
-on 2024/3/13 21:34, Steven Rostedt wrote:
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 >
-> [
->     Note, I need to take this patch through my tree, so I'm looking for acks.
->     This causes the build to fail when I add the __assign_str() check, which
->     I was about to push to Linus, but it breaks allmodconfig due to this error.
-> ]
+> Hmm, depending on RISC-V's CMODX path, the pro/cons CALL_OPS vs dynamic
+> trampolines changes quite a bit.
 >
-> The __string() and __assign_str() helper macros of the TRACE_EVENT() macro
-> are going through some optimizations where only the source string of
-> __string() will be used and the __assign_str() source will be ignored and
-> later removed.
->
-> To make sure that there's no issues, a new check is added between the
-> __string() src argument and the __assign_str() src argument that does a
-> strcmp() to make sure they are the same string.
->
-> The hclgevf trace events have:
->
->    __assign_str(devname, &hdev->nic.kinfo.netdev->name);
->
-> Which triggers the warning:
->
-> hclgevf_trace.h:34:39: error: passing argument 1 of ‘strcmp’ from incompatible pointer type [-Werror=incompatible-pointer-types]
->     34 |                 __assign_str(devname, &hdev->nic.kinfo.netdev->name);
->   [..]
-> arch/x86/include/asm/string_64.h:75:24: note: expected ‘const char *’ but argument is of type ‘char (*)[16]’
->     75 | int strcmp(const char *cs, const char *ct);
->        |            ~~~~~~~~~~~~^~
->
->
-> Because __assign_str() now has:
->
-> 	WARN_ON_ONCE(__builtin_constant_p(src) ?		\
-> 		     strcmp((src), __data_offsets.dst##_ptr_) :	\
-> 		     (src) != __data_offsets.dst##_ptr_);	\
->
-> The problem is the '&' on hdev->nic.kinfo.netdev->name. That's because
-> that name is:
->
-> 	char			name[IFNAMSIZ]
->
-> Where passing an address '&' of a char array is not compatible with strcmp().
->
-> The '&' is not necessary, remove it.
->
-> Fixes: d8355240cf8fb ("net: hns3: add trace event support for PF/VF mailbox")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->   drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_trace.h  | 8 ++++----
->   .../net/ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h    | 8 ++++----
->   2 files changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_trace.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_trace.h
-> index 8510b88d4982..f3cd5a376eca 100644
-> --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_trace.h
-> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_trace.h
-> @@ -24,7 +24,7 @@ TRACE_EVENT(hclge_pf_mbx_get,
->   		__field(u8, code)
->   		__field(u8, subcode)
->   		__string(pciname, pci_name(hdev->pdev))
-> -		__string(devname, &hdev->vport[0].nic.kinfo.netdev->name)
-> +		__string(devname, hdev->vport[0].nic.kinfo.netdev->name)
->   		__array(u32, mbx_data, PF_GET_MBX_LEN)
->   	),
->   
-> @@ -33,7 +33,7 @@ TRACE_EVENT(hclge_pf_mbx_get,
->   		__entry->code = req->msg.code;
->   		__entry->subcode = req->msg.subcode;
->   		__assign_str(pciname, pci_name(hdev->pdev));
-> -		__assign_str(devname, &hdev->vport[0].nic.kinfo.netdev->name);
-> +		__assign_str(devname, hdev->vport[0].nic.kinfo.netdev->name);
->   		memcpy(__entry->mbx_data, req,
->   		       sizeof(struct hclge_mbx_vf_to_pf_cmd));
->   	),
-> @@ -56,7 +56,7 @@ TRACE_EVENT(hclge_pf_mbx_send,
->   		__field(u8, vfid)
->   		__field(u16, code)
->   		__string(pciname, pci_name(hdev->pdev))
-> -		__string(devname, &hdev->vport[0].nic.kinfo.netdev->name)
-> +		__string(devname, hdev->vport[0].nic.kinfo.netdev->name)
->   		__array(u32, mbx_data, PF_SEND_MBX_LEN)
->   	),
->   
-> @@ -64,7 +64,7 @@ TRACE_EVENT(hclge_pf_mbx_send,
->   		__entry->vfid = req->dest_vfid;
->   		__entry->code = le16_to_cpu(req->msg.code);
->   		__assign_str(pciname, pci_name(hdev->pdev));
-> -		__assign_str(devname, &hdev->vport[0].nic.kinfo.netdev->name);
-> +		__assign_str(devname, hdev->vport[0].nic.kinfo.netdev->name);
->   		memcpy(__entry->mbx_data, req,
->   		       sizeof(struct hclge_mbx_pf_to_vf_cmd));
->   	),
-> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h
-> index 5d4895bb57a1..b259e95dd53c 100644
-> --- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h
-> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_trace.h
-> @@ -23,7 +23,7 @@ TRACE_EVENT(hclge_vf_mbx_get,
->   		__field(u8, vfid)
->   		__field(u16, code)
->   		__string(pciname, pci_name(hdev->pdev))
-> -		__string(devname, &hdev->nic.kinfo.netdev->name)
-> +		__string(devname, hdev->nic.kinfo.netdev->name)
->   		__array(u32, mbx_data, VF_GET_MBX_LEN)
->   	),
->   
-> @@ -31,7 +31,7 @@ TRACE_EVENT(hclge_vf_mbx_get,
->   		__entry->vfid = req->dest_vfid;
->   		__entry->code = le16_to_cpu(req->msg.code);
->   		__assign_str(pciname, pci_name(hdev->pdev));
-> -		__assign_str(devname, &hdev->nic.kinfo.netdev->name);
-> +		__assign_str(devname, hdev->nic.kinfo.netdev->name);
->   		memcpy(__entry->mbx_data, req,
->   		       sizeof(struct hclge_mbx_pf_to_vf_cmd));
->   	),
-> @@ -55,7 +55,7 @@ TRACE_EVENT(hclge_vf_mbx_send,
->   		__field(u8, code)
->   		__field(u8, subcode)
->   		__string(pciname, pci_name(hdev->pdev))
-> -		__string(devname, &hdev->nic.kinfo.netdev->name)
-> +		__string(devname, hdev->nic.kinfo.netdev->name)
->   		__array(u32, mbx_data, VF_SEND_MBX_LEN)
->   	),
->   
-> @@ -64,7 +64,7 @@ TRACE_EVENT(hclge_vf_mbx_send,
->   		__entry->code = req->msg.code;
->   		__entry->subcode = req->msg.subcode;
->   		__assign_str(pciname, pci_name(hdev->pdev));
-> -		__assign_str(devname, &hdev->nic.kinfo.netdev->name);
-> +		__assign_str(devname, hdev->nic.kinfo.netdev->name);
->   		memcpy(__entry->mbx_data, req,
->   		       sizeof(struct hclge_mbx_vf_to_pf_cmd));
->   	),
+> The more I look at the pains of patching two instruction ("split
+> immediates"), the better "patch data" + one insn patching look.
+
+I was looking at how dynamic trampolines would be implemented for RISC-V.
+
+With CALL-OPS we need to patch the auipc+jalr at function entry only, the
+ops pointer above the function can be patched atomically.
+
+With a dynamic trampoline we need a auipc+jalr pair at function entry to ju=
+mp
+to the trampoline and then another auipc+jalr pair to jump from trampoline =
+to
+ops->func. When the ops->func is modified, we would need to update the
+auipc+jalr at in the trampoline.
+
+So, I am not sure how to move forward here, CALL-OPS or Dynamic trampolines?
+
+Thanks,
+Puranjay
