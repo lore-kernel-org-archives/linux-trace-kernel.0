@@ -1,165 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87853DDD9;
-	Thu, 14 Mar 2024 15:07:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF360DDD9;
+	Thu, 14 Mar 2024 15:12:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710428857; cv=none; b=SZ4ilK/PguZv6sZ0LkDcyztq7NGviH5+ziHB2rqOQj3xEj4vZutNRZnu96mNTzPfR3biSUSi29EFqer9pV2hEsKtXLZABd1gU+XiFk6s5c4pHCdQ2TfqTJhdYpqVdqBh8RDUTo9NLVl0vzmz9obILF0B0evKGS1n7YUe+2JtbGY=
+	t=1710429157; cv=none; b=ZqF6NFL5f7lgovwRmzS+TUQcoXQI3CmMF6mzXAucdWqttzPudb9ijrLMwpYVeazb+JbCgz9ZMS/3RM25D5nAvYt+7vKyHFzT+EnHwtzKJFr1xLfyiqrJw4cpmK/3eKcGStPh50vK1PqYw6LEn6c5T++uFd+ckB0ucEmNIT3zV6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710428857; c=relaxed/simple;
-	bh=GTQVrWcs6XBMnV9a14mAay7RyQJOjR0XkVbs68SqZPM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=F0CKbxS9CbwAI4V1LblbZvVy5KOGq75UAGoKdxwRmRdvintycE6pAceu24mLE4TEJ4jOj0QxDLaQVHj/4IPcBaifgltVGOubC4ieoXd/53Y+gaud+ENJ/VO2bkjeDt6XIvHk1akc9tTRCEwL5uBDVcDK5Ck8KovSmdGD2EhhIJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gfl+o6Vt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710429157; c=relaxed/simple;
+	bh=Sq4BX5nCnQbeNMS1RtfpnrqJt/dcI2CBuZ/qi1DiqU4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=shQLooQqpLnbFnn+9AhpVdRqK0eA58lknOiS9FyfwtAb6JMchX4hfFtD8JcdLpWC+7O05C6rBwdpSv0uB0bzrk1PjWpTrmhVRxV4gx/Ns2w3iAW3uXqtRQwnB+Fgq3834S1S7tdLB8XeXk4oyP6pPM6aEEkbNP3sFvGE22yfvXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oack5M/W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gfl+o6Vt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92F50C433F1;
-	Thu, 14 Mar 2024 15:07:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oack5M/W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 084F6C43390;
+	Thu, 14 Mar 2024 15:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710428857;
-	bh=GTQVrWcs6XBMnV9a14mAay7RyQJOjR0XkVbs68SqZPM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Gfl+o6VtDn9x2Fj955iyoM1+yBnt/TsF7oYp6foNPn9asCM6e9NsX2I9HbgeW5uI5
-	 fcoKb3FedKukBXX05fexGqKId3twgTL/3iq3jcYCxobZ48JHMiJZeVz6tNs+6+wtPk
-	 w0PHcqFQDARplTSrKVp2EpgNYKTWO/itjTRfg5WmqLw27khIRRf86AdB+DLL+0n6yq
-	 YuRRZ8GgUx+px5xHy1V2xBnnxhSwa01rK/mFRerJSP2rfaYES1mWmZYix4YtILbgy8
-	 IdhL0TkeHcMvr787XJOsXnCZPM+gUee6OTjB2Y6oT4qAy7EhvEt6PntEVMY5jSyrkk
-	 loOBoYle/+6mg==
-From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-To: Puranjay Mohan <puranjay12@gmail.com>, Mark Rutland
- <mark.rutland@arm.com>, Andy Chiu <andy.chiu@sifive.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Steven Rostedt
- <rostedt@goodmis.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, Sami Tolvanen <samitolvanen@google.com>,
- Guo Ren <guoren@kernel.org>, Ley Foon Tan <leyfoon.tan@starfivetech.com>,
- Deepak Gupta <debug@rivosinc.com>, Sia Jee Heng
- <jeeheng.sia@starfivetech.com>, Bjorn Topel <bjorn@rivosinc.com>, Song
- Shuai <suagrfillet@gmail.com>, Cl'ement L'eger <cleger@rivosinc.com>, Al
- Viro <viro@zeniv.linux.org.uk>, Jisheng Zhang <jszhang@kernel.org>,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Robbin Ehn <rehn@rivosinc.com>
-Subject: Re: [RFC PATCH] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
-In-Reply-To: <mb61pplvw6grf.fsf@gmail.com>
-References: <20240306165904.108141-1-puranjay12@gmail.com>
- <87ttlhdeqb.fsf@all.your.base.are.belong.to.us>
- <ZfBbxPDd0rz6FN2T@FVFF77S0Q05N>
- <8734suqsth.fsf@all.your.base.are.belong.to.us>
- <mb61pplvw6grf.fsf@gmail.com>
-Date: Thu, 14 Mar 2024 16:07:33 +0100
-Message-ID: <87zfv0onre.fsf@all.your.base.are.belong.to.us>
+	s=k20201202; t=1710429156;
+	bh=Sq4BX5nCnQbeNMS1RtfpnrqJt/dcI2CBuZ/qi1DiqU4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Oack5M/WdKQ8fmUxvx5L4jrUbRLtqn47gAx6wV+xhim0Uspor2HZgxqimphibTCa7
+	 pLmpGC8UgeN8dk3E8ZEvFWeveoXa/qRj5jkAjVzkxOp4+07/6gevbU+YRhD8P6vN/y
+	 Emm59/VXoKAwW5xUqFVP4Ioi6HegcNpAh1916FFCvP55ohO+cKuH9F/JeZB7TlQCCp
+	 VGzQNf3tRt5gDz3OGI2S0i0jIAmdNaTEyB5dTygjQrmhND6t3/yDfkF3UhgwHjZ3o8
+	 Pi9HZSZinVwUEDaDtAJNkhY5WzJcyFO3jRy59CGl2U3Em5gEJkhzuflH3v6MQlXzMI
+	 9cvRE2fCcJkNw==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: Qiang Zhang <zzqq0103.hey@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Jinghao Jia <jinghao7@illinois.edu>,
+	Peter Zijlstra <peterz@infradead.org>,
+	x86@kernel.org
+Subject: [PATCH] kprobes/x86: Use copy_from_kernel_nofault() to read from unsafe address
+Date: Fri, 15 Mar 2024 00:12:30 +0900
+Message-Id: <171042914997.151113.2962249725455796854.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240315000753.a448251fce0291e041f76c13@kernel.org>
+References: <20240315000753.a448251fce0291e041f76c13@kernel.org>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Puranjay Mohan <puranjay12@gmail.com> writes:
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-> Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> writes:
->
->>
->> Hmm, depending on RISC-V's CMODX path, the pro/cons CALL_OPS vs dynamic
->> trampolines changes quite a bit.
->>
->> The more I look at the pains of patching two instruction ("split
->> immediates"), the better "patch data" + one insn patching look.
->
-> I was looking at how dynamic trampolines would be implemented for RISC-V.
->
-> With CALL-OPS we need to patch the auipc+jalr at function entry only, the
-> ops pointer above the function can be patched atomically.
->
-> With a dynamic trampoline we need a auipc+jalr pair at function entry to =
-jump
-> to the trampoline and then another auipc+jalr pair to jump from trampolin=
-e to
-> ops->func. When the ops->func is modified, we would need to update the
-> auipc+jalr at in the trampoline.
->
-> So, I am not sure how to move forward here, CALL-OPS or Dynamic trampolin=
-es?
-
-Yeah. Honestly, we need to figure out the patching story prior
-choosing the path, so let's start there.
-
-After reading Mark's reply, and discussing with OpenJDK folks (who does
-the most crazy text patching on all platforms), having to patch multiple
-instructions (where the address materialization is split over multiple
-instructions) is a no-go. It's just a too big can of worms. So, if we
-can only patch one insn, it's CALL_OPS.
-
-A couple of options (in addition to Andy's), and all require a
-per-function landing address ala CALL_OPS) tweaking what Mark is doing
-on Arm (given the poor branch range).
-
-...and maybe we'll get RISC-V rainbows/unicorns in the future getting
-better reach (full 64b! ;-)).
-
-A) Use auipc/jalr, only patch jalr to take us to a common
-   dispatcher/trampoline
-=20=20
- | <func_trace_target_data_8B> # probably on a data cache-line !=3D func .t=
-ext to avoid ping-pong
- | ...
- | func:
- |   ...make sure ra isn't messed up...
- |   aupic
- |   nop <=3D> jalr # Text patch point -> common_dispatch
- |   ACTUAL_FUNC
- |=20
- | common_dispatch:
- |   load <func_trace_target_data_8B> based on ra
- |   jalr
- |   ...
-
-The auipc is never touched, and will be overhead. Also, we need a mv to
-store ra in a scratch register as well -- like Arm. We'll have two insn
-per-caller overhead for a disabled caller.
-
-B) Use jal, which can only take us +/-1M, and requires multiple
-   dispatchers (and tracking which one to use, and properly distribute
-   them. Ick.)
-
- | <func_trace_target_data_8B> # probably on a data cache-line !=3D func .t=
-ext to avoid ping-pong
- | ...
- | func:
- |   ...make sure ra isn't messed up...
- |   nop <=3D> jal # Text patch point -> within_1M_to_func_dispatch
- |   ACTUAL_FUNC
- |=20
- | within_1M_to_func_dispatch:
- |   load <func_trace_target_data_8B> based on ra
- |   jalr
-
-C) Use jal, which can only take us +/-1M, and use a per-function
-   trampoline requires multiple dispatchers (and tracking which one to
-   use). Blows up text size A LOT.
-
- | <func_trace_target_data_8B> # somewhere, but probably on a different cac=
-heline than the .text to avoid ping-ongs
- | ...
- | per_func_dispatch
- |   load <func_trace_target_data_8B> based on ra
- |   jalr
- | func:
- |   ...make sure ra isn't messed up...
- |   nop <=3D> jal # Text patch point -> per_func_dispatch
- |   ACTUAL_FUNC
-
-It's a bit sad that we'll always have to have a dispatcher/trampoline,
-but it's still better than stop_machine(). (And we'll need a fencei IPI
-as well, but only one. ;-))
-
-Today, I'm leaning towards A (which is what Mark suggested, and also
-Robbin).. Any other options?
-
-[Now how do we implement OPTPROBES? I'm kidding. ;-)]
+Read from an unsafe address with copy_from_kernel_nofault() in
+arch_adjust_kprobe_addr() because this function is used before checking
+the address is in text or not. Syzcaller bot found a bug and reported
+the case if user specifies inaccessible data area,
+arch_adjust_kprobe_addr() will cause a kernel panic.
 
 
-Bj=C3=B6rn
+Reported-by: Qiang Zhang <zzqq0103.hey@gmail.com>
+Closes: https://lore.kernel.org/all/CAKHoSAs2rof6vQVBw_Lg_j3QNku0CANZR2qmy4eT7R5Lo8MFbg@mail.gmail.com/
+Fixes: cc66bb914578 ("x86/ibt,kprobes: Cure sym+0 equals fentry woes")
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ arch/x86/kernel/kprobes/core.c |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+index a0ce46c0a2d8..a885eea3bd34 100644
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -335,7 +335,16 @@ static int can_probe(unsigned long paddr)
+ kprobe_opcode_t *arch_adjust_kprobe_addr(unsigned long addr, unsigned long offset,
+ 					 bool *on_func_entry)
+ {
+-	if (is_endbr(*(u32 *)addr)) {
++	u32 insn;
++
++	/*
++	 * Since addr is not guaranteed to be safely accessed yet, use
++	 * copy_from_kernel_nofault() to get the instruction.
++	 */
++	if (copy_from_kernel_nofault(&insn, (void *)addr, sizeof(u32)))
++		return 0;
++
++	if (is_endbr(insn)) {
+ 		*on_func_entry = !offset || offset == 4;
+ 		if (*on_func_entry)
+ 			offset = 4;
+
