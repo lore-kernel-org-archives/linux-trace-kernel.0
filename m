@@ -1,168 +1,193 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39117350B;
-	Thu, 14 Mar 2024 18:32:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0DB2A1C7;
+	Thu, 14 Mar 2024 20:50:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710441121; cv=none; b=EZoUVEHF++UUYYt9fb4/hpjdkwvysB7w0VUIEI9O2BDkfjP0eTCf6ipD2zul41ZM0Vay59ZbvyxbNemQA6K2KZ/JiceRnVHizaFGaAt7qQxyvwHP8orXEaXHYptopGpdU5Qq6kM/b2cyAyj/DouG1jAfxb0+2g+ND+dPzIeYFjc=
+	t=1710449415; cv=none; b=chqMPv/ANUVoIOMwsjIOnh/AzDaQ/8fNm5hT6t5Q0nSqHqNeXWp2L8JAXmarnsrDhqCasjmGOZ8O1rCQ9i8I0rO3U1jnA9VMJ/1rTBm3V7u1cYgDLjC7NxKFuuUESOnHS4J2aNAtQUI80L4fqXt9/ocG5JcTfKd3C680YF3GHnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710441121; c=relaxed/simple;
-	bh=mvdnoLfy3ROkxmfR7t2H/wROfPIdheF/nBqPtCWPX4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=caLa/U/pxbHZR3c2cgLYTWNfRiA+6oquCYVT0Zmwd3BR/OrkH/rbhZk1lY5pP3oWRjph2JZwAmOZLHBdGaQYp7AYEQdESRFcyNEAwWBKfS3IFbfttuB+96ugNrUdTjPMYwMOfjTBCQ7G8BRIlMWMFp5hWA2G/VbK2/563kweVw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A243FC43390;
-	Thu, 14 Mar 2024 18:31:55 +0000 (UTC)
-Date: Thu, 14 Mar 2024 14:34:06 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
- linux-block@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
- freedreno@lists.freedesktop.org, virtualization@lists.linux.dev,
- linux-rdma@vger.kernel.org, linux-pm@vger.kernel.org,
- iommu@lists.linux.dev, linux-tegra@vger.kernel.org, netdev@vger.kernel.org,
- linux-hyperv@vger.kernel.org, ath10k@lists.infradead.org,
- linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
- ath12k@lists.infradead.org, brcm80211@lists.linux.dev,
- brcm80211-dev-list.pdl@broadcom.com, linux-usb@vger.kernel.org,
- linux-bcachefs@vger.kernel.org, linux-nfs@vger.kernel.org,
- ocfs2-devel@lists.linux.dev, linux-cifs@vger.kernel.org,
- linux-xfs@vger.kernel.org, linux-edac@vger.kernel.org,
- selinux@vger.kernel.org, linux-btrfs@vger.kernel.org,
- linux-erofs@lists.ozlabs.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-hwmon@vger.kernel.org, io-uring@vger.kernel.org,
- linux-sound@vger.kernel.org, bpf@vger.kernel.org,
- linux-wpan@vger.kernel.org, dev@openvswitch.org,
- linux-s390@vger.kernel.org, tipc-discussion@lists.sourceforge.net, Julia
- Lawall <Julia.Lawall@inria.fr>
-Subject: Re: [FYI][PATCH] tracing/treewide: Remove second parameter of
- __assign_str()
-Message-ID: <20240314143406.6289a060@gandalf.local.home>
-In-Reply-To: <ZfMslbCmCtyEaEWN@aschofie-mobl2>
-References: <20240223125634.2888c973@gandalf.local.home>
-	<ZfMslbCmCtyEaEWN@aschofie-mobl2>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1710449415; c=relaxed/simple;
+	bh=dkDMtvv2pEkypl9VNokAWmauFxTdX5cLHzL3XjbhbMw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=dqXiAYVFqBMPc4LvXx5I8dREpKHyQzAO3bdhvkekYzp2e0wCQ5Ma23ChouSl/EkcE+ClKCucyz1iC4mfZvEgCUBVX6+EdPApCxPPfBvdbzTcQ1qy6Q7ILodkmEZy7kcGZ16a/sy1As/etyLHWQNW2C2zZuBk+ybrSzVl3zmcBHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iTZXdwP6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iTZXdwP6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 530BAC433F1;
+	Thu, 14 Mar 2024 20:50:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710449414;
+	bh=dkDMtvv2pEkypl9VNokAWmauFxTdX5cLHzL3XjbhbMw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=iTZXdwP6aC7xzjJ8MgcLLrQ6/iIDqdEfmXRQNgIkp9Oau1qgT57pSLXX7sP1cseXV
+	 ER0FR23LtfY+R50uwGom+cHRiAn8/hp3TGEPVxJitlEigZqlpzB9qeeF38xACjfE0K
+	 fHfgJVxUU2wm9w3OsEB26AhNZiUQ35VIMZNVAkMgomTRGb4pJ+D25n6SeY5ZDtl2sC
+	 XduHyAmKFNOEoTGzs1ugIu+ksQALSr1qtPdnGxojMIUIuc4GtSCuyhomgglQrR6SL7
+	 AIDGNHpddNLwpUUySh34r20VVWDQFt9vnn2IcApEvWbZqyda5nzA2tSJdFVfrSpGoN
+	 guOU5J466Os3w==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Puranjay Mohan <puranjay12@gmail.com>, Mark Rutland
+ <mark.rutland@arm.com>, Andy Chiu <andy.chiu@sifive.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Sami Tolvanen <samitolvanen@google.com>,
+ Guo Ren <guoren@kernel.org>, Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+ Deepak Gupta <debug@rivosinc.com>, Sia Jee Heng
+ <jeeheng.sia@starfivetech.com>, Bjorn Topel <bjorn@rivosinc.com>, Song
+ Shuai <suagrfillet@gmail.com>, Cl'ement L'eger <cleger@rivosinc.com>, Al
+ Viro <viro@zeniv.linux.org.uk>, Jisheng Zhang <jszhang@kernel.org>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Robbin Ehn <rehn@rivosinc.com>,
+ 	Brendan Sweeney <brs@rivosinc.com>
+Subject: Re: [RFC PATCH] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
+In-Reply-To: <87zfv0onre.fsf@all.your.base.are.belong.to.us>
+References: <20240306165904.108141-1-puranjay12@gmail.com>
+ <87ttlhdeqb.fsf@all.your.base.are.belong.to.us>
+ <ZfBbxPDd0rz6FN2T@FVFF77S0Q05N>
+ <8734suqsth.fsf@all.your.base.are.belong.to.us>
+ <mb61pplvw6grf.fsf@gmail.com>
+ <87zfv0onre.fsf@all.your.base.are.belong.to.us>
+Date: Thu, 14 Mar 2024 21:50:11 +0100
+Message-ID: <87il1oedx8.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 14 Mar 2024 09:57:57 -0700
-Alison Schofield <alison.schofield@intel.com> wrote:
+Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> writes:
 
-> On Fri, Feb 23, 2024 at 12:56:34PM -0500, Steven Rostedt wrote:
-> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> > 
-> > [
-> >    This is a treewide change. I will likely re-create this patch again in
-> >    the second week of the merge window of v6.9 and submit it then. Hoping
-> >    to keep the conflicts that it will cause to a minimum.
-> > ]
+> Puranjay Mohan <puranjay12@gmail.com> writes:
+>
+>> Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> writes:
+>>
+>>>
+>>> Hmm, depending on RISC-V's CMODX path, the pro/cons CALL_OPS vs dynamic
+>>> trampolines changes quite a bit.
+>>>
+>>> The more I look at the pains of patching two instruction ("split
+>>> immediates"), the better "patch data" + one insn patching look.
+>>
+>> I was looking at how dynamic trampolines would be implemented for RISC-V.
+>>
+>> With CALL-OPS we need to patch the auipc+jalr at function entry only, the
+>> ops pointer above the function can be patched atomically.
+>>
+>> With a dynamic trampoline we need a auipc+jalr pair at function entry to=
+ jump
+>> to the trampoline and then another auipc+jalr pair to jump from trampoli=
+ne to
+>> ops->func. When the ops->func is modified, we would need to update the
+>> auipc+jalr at in the trampoline.
+>>
+>> So, I am not sure how to move forward here, CALL-OPS or Dynamic trampoli=
+nes?
+>
+> Yeah. Honestly, we need to figure out the patching story prior
+> choosing the path, so let's start there.
+>
+> After reading Mark's reply, and discussing with OpenJDK folks (who does
+> the most crazy text patching on all platforms), having to patch multiple
+> instructions (where the address materialization is split over multiple
+> instructions) is a no-go. It's just a too big can of worms. So, if we
+> can only patch one insn, it's CALL_OPS.
+>
+> A couple of options (in addition to Andy's), and all require a
+> per-function landing address ala CALL_OPS) tweaking what Mark is doing
+> on Arm (given the poor branch range).
+>
+> ...and maybe we'll get RISC-V rainbows/unicorns in the future getting
+> better reach (full 64b! ;-)).
+>
+> A) Use auipc/jalr, only patch jalr to take us to a common
+>    dispatcher/trampoline
+>=20=20=20
+>  | <func_trace_target_data_8B> # probably on a data cache-line !=3D func =
+.text to avoid ping-pong
+>  | ...
+>  | func:
+>  |   ...make sure ra isn't messed up...
+>  |   aupic
+>  |   nop <=3D> jalr # Text patch point -> common_dispatch
+>  |   ACTUAL_FUNC
+>  |=20
+>  | common_dispatch:
+>  |   load <func_trace_target_data_8B> based on ra
+>  |   jalr
+>  |   ...
+>
+> The auipc is never touched, and will be overhead. Also, we need a mv to
+> store ra in a scratch register as well -- like Arm. We'll have two insn
+> per-caller overhead for a disabled caller.
+>
+> B) Use jal, which can only take us +/-1M, and requires multiple
+>    dispatchers (and tracking which one to use, and properly distribute
+>    them. Ick.)
+>
+>  | <func_trace_target_data_8B> # probably on a data cache-line !=3D func =
+.text to avoid ping-pong
+>  | ...
+>  | func:
+>  |   ...make sure ra isn't messed up...
+>  |   nop <=3D> jal # Text patch point -> within_1M_to_func_dispatch
+>  |   ACTUAL_FUNC
+>  |=20
+>  | within_1M_to_func_dispatch:
+>  |   load <func_trace_target_data_8B> based on ra
+>  |   jalr
+>
+> C) Use jal, which can only take us +/-1M, and use a per-function
+>    trampoline requires multiple dispatchers (and tracking which one to
+>    use). Blows up text size A LOT.
+>
+>  | <func_trace_target_data_8B> # somewhere, but probably on a different c=
+acheline than the .text to avoid ping-ongs
+>  | ...
+>  | per_func_dispatch
+>  |   load <func_trace_target_data_8B> based on ra
+>  |   jalr
+>  | func:
+>  |   ...make sure ra isn't messed up...
+>  |   nop <=3D> jal # Text patch point -> per_func_dispatch
+>  |   ACTUAL_FUNC
 
-Note, change of plans. I plan on sending this in the next merge window, as
-this merge window I have this patch:
+Brendan proposed yet another option, "in-function dispatch":
 
-  https://lore.kernel.org/linux-trace-kernel/20240312113002.00031668@gandalf.local.home/
+D)=20
+  | <func_trace_target_data_8B_per_function> # idk somewhere
+  | ...
+  | func:
+  |    mv tmp1, ra
+  |    aupic tmp2, <func_trace_target_data_8B_per_function:upper>
+  |    mv tmp3, zero <=3D> ld tmp3, tmp2<func_trace_target_data_8B_per_func=
+tion:lower>
+  |    nop <=3D> jalr ra, tmp3
+  |    ACTUAL_FUNC
 
-That will warn if the source string of __string() is different than the
-source string of __assign_str(). I want to make sure they are identical
-before just dropping one of them.
+There are 4 CMODX possiblities:
+   mv, nop:  fully disabled, no problems
+   mv, jalr: We will jump to zero. We would need to have the inst
+             page/access fault handler take care of this case. Especially
+             if we align the instructions so that they can be patched
+             together, being interrupted in the middle and taking this
+             path will be rare.
+  ld, nop:   no problems
+  ld, jalr:  fully enabled, no problems
+
+Patching is a 64b store/sd, and we only need a fence.i at the end, since
+we can handle all 4 possibilities.
+
+For the disabled case we'll have:
+A) mv, aupic, nop
+D) mv, aupic, mv, nop.
+
+Puranjay, I've flipped. Let's go Mark's CALL_OPS together with a new
+text patch mechanism w/o stop_machine().
 
 
-> 
-> > diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-> > index bdf117a33744..07ba4e033347 100644
-> > --- a/drivers/cxl/core/trace.h
-> > +++ b/drivers/cxl/core/trace.h  
-> 
-> snip to poison
-> 
-> > @@ -668,8 +668,8 @@ TRACE_EVENT(cxl_poison,
-> >  	    ),
-> >  
-> >  	TP_fast_assign(
-> > -		__assign_str(memdev, dev_name(&cxlmd->dev));
-> > -		__assign_str(host, dev_name(cxlmd->dev.parent));
-> > +		__assign_str(memdev);
-> > +		__assign_str(host);  
-> 
-> I think I get that the above changes work because the TP_STRUCT__entry for
-> these did:
-> 	__string(memdev, dev_name(&cxlmd->dev))
-> 	__string(host, dev_name(cxlmd->dev.parent))
-
-That's the point. They have to be identical or you will likely bug.
-
-The __string(name, src) is used to find the string length of src which
-allocates the necessary length on the ring buffer. The __assign_str(name, src)
-will copy src into the ring buffer.
-
-Similar to:
-
-	len = strlen(src);
-	buf = malloc(len);
-	strcpy(buf, str);
-
-Where __string() is strlen() and __assign_str() is strcpy(). It doesn't
-make sense to use two different strings, and if you did, it would likely be
-a bug.
-
-But the magic behind __string() does much more than just get the length of
-the string, and it could easily save the pointer to the string (along with
-its length) and have it copy that in the __assign_str() call, making the
-src parameter of __assign_str() useless.
-
-> 
-> >  		__entry->serial = cxlmd->cxlds->serial;
-> >  		__entry->overflow_ts = cxl_poison_overflow(flags, overflow_ts);
-> >  		__entry->dpa = cxl_poison_record_dpa(record);
-> > @@ -678,12 +678,12 @@ TRACE_EVENT(cxl_poison,
-> >  		__entry->trace_type = trace_type;
-> >  		__entry->flags = flags;
-> >  		if (region) {
-> > -			__assign_str(region, dev_name(&region->dev));
-> > +			__assign_str(region);
-> >  			memcpy(__entry->uuid, &region->params.uuid, 16);
-> >  			__entry->hpa = cxl_trace_hpa(region, cxlmd,
-> >  						     __entry->dpa);
-> >  		} else {
-> > -			__assign_str(region, "");
-> > +			__assign_str(region);
-> >  			memset(__entry->uuid, 0, 16);
-> >  			__entry->hpa = ULLONG_MAX;  
-> 
-> For the above 2, there was no helper in TP_STRUCT__entry. A recently
-> posted patch is fixing that up to be __string(region, NULL) See [1],
-> with the actual assignment still happening in TP_fast_assign.
-
-__string(region, NULL) doesn't make sense. It's like:
-
-	len = strlen(NULL);
-	buf = malloc(len);
-	strcpy(buf, NULL);
-
-??
-
-I'll reply to that email.
-
--- Steve
-
-> 
-> Does that assign logic need to move to the TP_STRUCT__entry definition
-> when you merge these changes? I'm not clear how much logic is able to be
-> included, ie like 'C' style code in the TP_STRUCT__entry.
-> 
-> [1]
-> https://lore.kernel.org/linux-cxl/20240314044301.2108650-1-alison.schofield@intel.com/
+Bj=C3=B6rn
