@@ -1,294 +1,154 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 585B717584
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 15 Mar 2024 08:17:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7F51863E;
+	Fri, 15 Mar 2024 10:29:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710490647; cv=none; b=t5hUK0GH+EnGro22PTnyHhwR+XUTa8vUNkcMlTrQO7cbsaz0JR8+9VEZP4evPQzZZdtLpUtCIsvDhr25o8p7T8NA27MYaTMWNNrX59BZKFRUqtHn5fHZxzi+Tlnva/20UfTmMAQy/y7r8pefcD300IoNGQ50JDdHvC7XzjDf6pI=
+	t=1710498543; cv=none; b=up4H9MCdF+4d28NmCHdgjcxcYIs27gfbxYi82vymR8LWs72kjiB6Ze/0iNzBYjQpHZkppStWQM1GjMF/BtcTtPvQMDB+6AClEC3KsQA52It/obQO98F17SyEBWXWh3IKlnuKnhjQtRoj3Femx8h2QGVBVRCDu6VTfby5HjAU9cU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710490647; c=relaxed/simple;
-	bh=3Veip/OxCnGKCQ+Abe6TiS3hdoh9knWDIAqJQrDZQBc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Nt+jo6LcpTfnNlbQNfA7RD+RwB8UXDGub2XxoxxM2paXyXzywwsHuRtNe5PqSaJtQffJx0gPKNOI4wpWIk0xNnT1jmkc+TXqRThoVKKKYyOFBeiGpKfTNZY+bXZBQPxjXhBYOCIIvnGSPMRaS39CzVu/nmeZnKFr4fEhrEnIrUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=BnLnF6jp; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="BnLnF6jp"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-29c52a90417so1337355a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 15 Mar 2024 01:17:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1710490644; x=1711095444; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ux+mgvQeyHLipAJjQDCARUR07kgvWhujuDpfd9PKvNE=;
-        b=BnLnF6jpTf0M3GTFjcSWetvSvIQOQ369PIgwF3aG0VASfibFMiCxnhy8vtyqhOsjyx
-         4iCua5b7xLUAUwDsGjXK/pp/XgXWUnBG6c/CKGhyio9pC/GzFGLP2/VFJWSe+yw6/QC2
-         SLs4tMFzW1MrA6ts1TTFeTkDa7eHXNIoux2jcNUZcTWqGHBe6mTwr32HfYOFkkZcXOe2
-         z2RVX0Hq5om3SYzgJ9iR3RM98+/Fv0UMU7l6EP5buU4YPD8LDhyAIISras9vEeQp4wfc
-         3SPkE0rovMXGjiRmz7PzUbWxW1Z1HmnSlwKnklK6x/rX5v3TAVv47PoG9ldtlB1sAHTd
-         tnGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710490644; x=1711095444;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ux+mgvQeyHLipAJjQDCARUR07kgvWhujuDpfd9PKvNE=;
-        b=vClLGGYAlPUxExsGZE2JZFhyVUJFiko+1tWgFMErJyCxIavm4rVv/DOQX94jBTFrAU
-         BQ6kXYikuStSxZvEu5ADC4Cei9VL31P+LSCyX3RF17c4i74lwyheyxxT7UKM2orzLkKU
-         Mwgk69d4hcPtaLzF3Nm4aSU7KbEMTjasdNSpp8WTmzdRT14Cm494o03wgbvPGEmlo4xU
-         Sy+RNmummjU8nzr45q+moyEryiuC5vCZBi0lKVtMmUZpUyy/a+JAkdywqxNxloqbrhSZ
-         4VZw93rkori749YuicMNyJo6bzAveOpDyo+g4XlELw7i5aYuxyJQXTpdDqpLgH3q3uhg
-         7U+g==
-X-Forwarded-Encrypted: i=1; AJvYcCWD4mpyIAHGEorJ7q8mDmrWpN/EZ5Xb/3XH7hc8R0xB1MkbRtZQzK660KtV/m6GNcE1/t41I+v/nsuODOpkyusHJy1EUhtSop3bI1vwZZD0XSMI
-X-Gm-Message-State: AOJu0YyyYtlnQKzI1ULLvXivunJbcL5+kMmQP/JaU1Pdy48GZaHMAAhq
-	EkK/YBRRFlbkGmiHfRUJeOyR++89BDeZNKwl3dsqhd1yORV5lNz9UlEN3F9ic1zUcEkgYasU9wk
-	Bxl5C9zt/C6J+6dauyDYb+U6W0tCss0zUPp4wkQ==
-X-Google-Smtp-Source: AGHT+IH6WVj2QW6HVMnPZetJyxE6GBO3ARfmDCsMA75RFQoJ7vWKBd9vtLcWlAX1Fz+oArSrbQ03zFV2IWXrG37YkmE=
-X-Received: by 2002:a17:90a:fa18:b0:29c:735:a758 with SMTP id
- cm24-20020a17090afa1800b0029c0735a758mr6401475pjb.19.1710490643623; Fri, 15
- Mar 2024 01:17:23 -0700 (PDT)
+	s=arc-20240116; t=1710498543; c=relaxed/simple;
+	bh=3WPoU2IRaRoNJzkW982b30ioNCQ2MJj4TJ2/Ua8+G5Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=RecVqOeKdY1syKIyn57PcqgD49Ojy3Kl6R7bIRlM6zkFSaZPMTJ36sq35TyGQ2FrDmyCQTCUYXcpaHEg4l+gmSoRX5kHT3lLeLl0cjDhFx8J5TgZlnrwczs8+MD/pXzUrdS1eM2mIdNc5zCzoP1S3xdJJxfVHhJQnj/I6qBY8nc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCD7EC433C7;
+	Fri, 15 Mar 2024 10:29:02 +0000 (UTC)
+Date: Fri, 15 Mar 2024 06:31:15 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] ring-buffer: Make wake once of ring_buffer_wait() more
+ robust
+Message-ID: <20240315063115.6cb5d205@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240311093526.1010158-1-dongmenglong.8@bytedance.com>
- <20240311093526.1010158-2-dongmenglong.8@bytedance.com> <CAADnVQKQPS5NcvEouH4JqZ2fKgQAC+LtcwhX9iXYoiEkF_M94Q@mail.gmail.com>
- <CALz3k9i5G5wWi+rtvHPwVLOUAXVMCiU_8QUZs87TEYgR_0wpPA@mail.gmail.com>
- <CAADnVQJ_ZCzMmT1aBsNXEBFfYNSVBdBXmLocjR0PPEWtYQrQFw@mail.gmail.com>
- <CALz3k9icPePb0c4FE67q=u1U0hrePorN9gDpQrKTR_sXbLMfDA@mail.gmail.com>
- <CAADnVQLwgw8bQ7OHBbqLhcPJ2QpxiGw3fkMFur+2cjZpM_78oA@mail.gmail.com>
- <CALz3k9g9k7fEwdTZVLhrmGoXp8CE47Q+83r-AZDXrzzuR+CjVA@mail.gmail.com>
- <CAADnVQLHpi3J6cBJ0QBgCQ2aY6fWGnVvNGdfi3W-jmoa9d1eVQ@mail.gmail.com> <ZfKY6E8xhSgzYL1I@krava>
-In-Reply-To: <ZfKY6E8xhSgzYL1I@krava>
-From: =?UTF-8?B?5qKm6b6Z6JGj?= <dongmenglong.8@bytedance.com>
-Date: Fri, 15 Mar 2024 16:17:12 +0800
-Message-ID: <CALz3k9jM0eqgw1=RKQPFpn8nk4MZRadEC3ge0kRutfvN2WVbwg@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH bpf-next v2 1/9] bpf: tracing: add support
- to record and check the accessed args
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	David Ahern <dsahern@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	X86 ML <x86@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Quentin Monnet <quentin@isovalent.com>, 
-	bpf <bpf@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, 
-	Network Development <netdev@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 14, 2024 at 2:29=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com> wrot=
-e:
->
-> On Wed, Mar 13, 2024 at 05:25:35PM -0700, Alexei Starovoitov wrote:
-> > On Tue, Mar 12, 2024 at 6:53=E2=80=AFPM =E6=A2=A6=E9=BE=99=E8=91=A3 <do=
-ngmenglong.8@bytedance.com> wrote:
-> > >
-> > > On Wed, Mar 13, 2024 at 12:42=E2=80=AFAM Alexei Starovoitov
-> > > <alexei.starovoitov@gmail.com> wrote:
-> > > >
-> > > > On Mon, Mar 11, 2024 at 7:42=E2=80=AFPM =E6=A2=A6=E9=BE=99=E8=91=A3=
- <dongmenglong.8@bytedance.com> wrote:
-> > > > >
-> > > [......]
-> > > >
-> > > > I see.
-> > > > I thought you're sharing the trampoline across attachments.
-> > > > (since bpf prog is the same).
-> > >
-> > > That seems to be a good idea, which I hadn't thought before.
-> > >
-> > > > But above approach cannot possibly work with a shared trampoline.
-> > > > You need to create individual trampoline for all attachment
-> > > > and point them to single bpf prog.
-> > > >
-> > > > tbh I'm less excited about this feature now, since sharing
-> > > > the prog across different attachments is nice, but it won't scale
-> > > > to thousands of attachments.
-> > > > I assumed that there will be a single trampoline with max(argno)
-> > > > across attachments and attach/detach will scale to thousands.
-> > > >
-> > > > With individual trampoline this will work for up to a hundred
-> > > > attachments max.
-> > >
-> > > What does "a hundred attachments max" means? Can't I
-> > > trace thousands of kernel functions with a bpf program of
-> > > tracing multi-link?
-> >
-> > I mean what time does it take to attach one program
-> > to 100 fentry-s ?
-> > What is the time for 1k and for 10k ?
-> >
-> > The kprobe multi test attaches to pretty much all funcs in
-> > /sys/kernel/tracing/available_filter_functions
-> > and it's fast enough to run in test_progs on every commit in bpf CI.
-> > See get_syms() in prog_tests/kprobe_multi_test.c
-> >
-> > Can this new multi fentry do that?
-> > and at what speed?
-> > The answer will decide how applicable this api is going to be.
-> > Generating different trampolines for every attach point
-> > is an approach as well. Pls benchmark it too.
-> >
-> > > >
-> > > > Let's step back.
-> > > > What is the exact use case you're trying to solve?
-> > > > Not an artificial one as selftest in patch 9, but the real use case=
-?
-> > >
-> > > I have a tool, which is used to diagnose network problems,
-> > > and its name is "nettrace". It will trace many kernel functions, whos=
-e
-> > > function args contain "skb", like this:
-> > >
-> > > ./nettrace -p icmp
-> > > begin trace...
-> > > ***************** ffff889be8fbd500,ffff889be8fbcd00 ***************
-> > > [1272349.614564] [dev_gro_receive     ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614579] [__netif_receive_skb_core] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614585] [ip_rcv              ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614592] [ip_rcv_core         ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614599] [skb_clone           ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614616] [nf_hook_slow        ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614629] [nft_do_chain        ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614635] [ip_rcv_finish       ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614643] [ip_route_input_slow ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614647] [fib_validate_source ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614652] [ip_local_deliver    ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614658] [nf_hook_slow        ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614663] [ip_local_deliver_finish] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614666] [icmp_rcv            ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614671] [icmp_echo           ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614675] [icmp_reply          ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614715] [consume_skb         ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614722] [packet_rcv          ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > > [1272349.614725] [consume_skb         ] ICMP: 169.254.128.15 ->
-> > > 172.27.0.6 ping request, seq: 48220
-> > >
-> > > For now, I have to create a bpf program for every kernel
-> > > function that I want to trace, which is up to 200.
-> > >
-> > > With this multi-link, I only need to create 5 bpf program,
-> > > like this:
-> > >
-> > > int BPF_PROG(trace_skb_1, struct *skb);
-> > > int BPF_PROG(trace_skb_2, u64 arg0, struct *skb);
-> > > int BPF_PROG(trace_skb_3, u64 arg0, u64 arg1, struct *skb);
-> > > int BPF_PROG(trace_skb_4, u64 arg0, u64 arg1, u64 arg2, struct *skb);
-> > > int BPF_PROG(trace_skb_5, u64 arg0, u64 arg1, u64 arg2, u64 arg3, str=
-uct *skb);
-> > >
-> > > Then, I can attach trace_skb_1 to all the kernel functions that
-> > > I want to trace and whose first arg is skb; attach trace_skb_2 to ker=
-nel
-> > > functions whose 2nd arg is skb, etc.
-> > >
-> > > Or, I can create only one bpf program and store the index
-> > > of skb to the attachment cookie, and attach this program to all
-> > > the kernel functions that I want to trace.
-> > >
-> > > This is my use case. With the multi-link, now I only have
-> > > 1 bpf program, 1 bpf link, 200 trampolines, instead of 200
-> > > bpf programs, 200 bpf link and 200 trampolines.
-> >
-> > I see. The use case makes sense to me.
-> > Andrii's retsnoop is used to do similar thing before kprobe multi was
-> > introduced.
-> >
-> > > The shared trampoline you mentioned seems to be a
-> > > wonderful idea, which can make the 200 trampolines
-> > > to one. Let me have a look, we create a trampoline and
-> > > record the max args count of all the target functions, let's
-> > > mark it as arg_count.
-> > >
-> > > During generating the trampoline, we assume that the
-> > > function args count is arg_count. During attaching, we
-> > > check the consistency of all the target functions, just like
-> > > what we do now.
-> >
-> > For one trampoline to handle all attach points we might
-> > need some arch support, but we can start simple.
-> > Make btf_func_model with MAX_BPF_FUNC_REG_ARGS
-> > by calling btf_distill_func_proto() with func=3D=3DNULL.
-> > And use that to build a trampoline.
-> >
-> > The challenge is how to use minimal number of trampolines
-> > when bpf_progA is attached for func1, func2, func3
-> > and bpf_progB is attached to func3, func4, func5.
-> > We'd still need 3 trampolines:
-> > for func[12] to call bpf_progA,
-> > for func3 to call bpf_progA and bpf_progB,
-> > for func[45] to call bpf_progB.
-> >
-> > Jiri was trying to solve it in the past. His slides from LPC:
-> > https://lpc.events/event/16/contributions/1350/attachments/1033/1983/pl=
-umbers.pdf
-> >
-> > Pls study them and his prior patchsets to avoid stepping on the same ra=
-kes.
->
-> yep, I refrained from commenting not to take you down the same path
-> I did, but if you insist.. ;-)
->
-> I managed to forgot almost all of it, but the IIRC the main pain point
-> was that at some point I had to split existing trampoline which caused
-> the whole trampolines management and error paths to become a mess
->
-> I tried to explain things in [1] changelog and the latest patchset is in =
-[0]
->
-> feel free to use/take anything, but I advice strongly against it ;-)
-> please let me know if I can help
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-I have to say that I have not gone far enough to encounter
-this problem, and I didn't dig enough to be aware of the
-complexity.
+The default behavior of ring_buffer_wait() when passed a NULL "cond"
+parameter is to exit the function the first time it is woken up. The
+current implementation uses a counter that starts at zero and when it is
+greater than one it exits the wait_event_interruptible().
 
-I suspect that I can't overcome this challenge. The only thing that
-I thought when I hear about the "shared trampoline" is to fallback
-and not use the shared trampoline for the kernel functions who
-already have a trampoline.
+But this relies on the internal working of wait_event_interruptible() as
+that code basically has:
 
-Anyway, let's have a try on it, based on your research.
+  if (cond)
+    return;
+  prepare_to_wait();
+  if (!cond)
+    schedule();
+  finish_wait();
 
-Thanks!
-Menglong Dong
+That is, cond is called twice before it sleeps. The default cond of
+ring_buffer_wait() needs to account for that and wait for its counter to
+increment twice before exiting.
 
->
-> jirka
->
->
-> [0] https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git/log/?h=
-=3Dbpf/batch
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git/commit=
-/?h=3Dbpf/batch&id=3D52a1d4acdf55df41e99ca2cea51865e6821036ce
+Instead, use the seq/atomic_inc logic that is used by the tracing code
+that calls this function. Add an atomic_t seq to rb_irq_work and when cond
+is NULL, have the default callback take a descriptor as its data that
+holds the rbwork and the value of the seq when it started.
+
+The wakeups will now increment the rbwork->seq and the cond callback will
+simply check if that number is different, and no longer have to rely on
+the implementation of wait_event_interruptible().
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 34 +++++++++++++++++++++-------------
+ 1 file changed, 21 insertions(+), 13 deletions(-)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index f0f3577339b3..c8ff71d16a6e 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -388,6 +388,7 @@ struct rb_irq_work {
+ 	struct irq_work			work;
+ 	wait_queue_head_t		waiters;
+ 	wait_queue_head_t		full_waiters;
++	atomic_t			seq;
+ 	bool				waiters_pending;
+ 	bool				full_waiters_pending;
+ 	bool				wakeup_full;
+@@ -763,6 +764,9 @@ static void rb_wake_up_waiters(struct irq_work *work)
+ {
+ 	struct rb_irq_work *rbwork = container_of(work, struct rb_irq_work, work);
+ 
++	/* For waiters waiting for the first wake up */
++	(void)atomic_fetch_inc_release(&rbwork->seq);
++
+ 	wake_up_all(&rbwork->waiters);
+ 	if (rbwork->full_waiters_pending || rbwork->wakeup_full) {
+ 		/* Only cpu_buffer sets the above flags */
+@@ -891,20 +895,21 @@ rb_wait_cond(struct rb_irq_work *rbwork, struct trace_buffer *buffer,
+ 	return false;
+ }
+ 
++struct rb_wait_data {
++	struct rb_irq_work		*irq_work;
++	int				seq;
++};
++
+ /*
+  * The default wait condition for ring_buffer_wait() is to just to exit the
+  * wait loop the first time it is woken up.
+  */
+ static bool rb_wait_once(void *data)
+ {
+-	long *once = data;
++	struct rb_wait_data *rdata = data;
++	struct rb_irq_work *rbwork = rdata->irq_work;
+ 
+-	/* wait_event() actually calls this twice before scheduling*/
+-	if (*once > 1)
+-		return true;
+-
+-	(*once)++;
+-	return false;
++	return atomic_read_acquire(&rbwork->seq) != rdata->seq;
+ }
+ 
+ /**
+@@ -925,14 +930,9 @@ int ring_buffer_wait(struct trace_buffer *buffer, int cpu, int full,
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	struct wait_queue_head *waitq;
+ 	struct rb_irq_work *rbwork;
+-	long once = 0;
++	struct rb_wait_data rdata;
+ 	int ret = 0;
+ 
+-	if (!cond) {
+-		cond = rb_wait_once;
+-		data = &once;
+-	}
+-
+ 	/*
+ 	 * Depending on what the caller is waiting for, either any
+ 	 * data in any cpu buffer, or a specific buffer, put the
+@@ -954,6 +954,14 @@ int ring_buffer_wait(struct trace_buffer *buffer, int cpu, int full,
+ 	else
+ 		waitq = &rbwork->waiters;
+ 
++	/* Set up to exit loop as soon as it is woken */
++	if (!cond) {
++		cond = rb_wait_once;
++		rdata.irq_work = rbwork;
++		rdata.seq = atomic_read_acquire(&rbwork->seq);
++		data = &rdata;
++	}
++
+ 	ret = wait_event_interruptible((*waitq),
+ 				rb_wait_cond(rbwork, buffer, cpu, full, cond, data));
+ 
+-- 
+2.43.0
+
