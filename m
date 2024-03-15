@@ -1,36 +1,36 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D084713AE2;
-	Fri, 15 Mar 2024 06:54:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462A514A85;
+	Fri, 15 Mar 2024 06:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710485664; cv=none; b=B2foDgLtlngckAM0HG6GuC2bGiWruAEPH+mdlgxNc/I6XRuuWf72v7pTjBJ3MAOMX+Qu16ATKOxXurL9bHjxDXtGWe81x4lf8n9VnLRv5zIWikCJ7VtoBZ4xNgNWry0d6Qk3votuuZJWNRrdFixZ6xc3Yq5Ogh4uU3Q3VCQNLcg=
+	t=1710485664; cv=none; b=mTm2MqGjPXoSfpI8MT0jVAxQfgJfgJzSpcAv4YKRiXZBvmKkLV4NHpHmdttOA6C+MhW7WWEjPT5gXr+186dOFVxSs/dR/1uzWbravmXxnr7CKUUL9LJwd/iybcNdyrzFS2RYqxiQl3tjEPUNxyo/VLzpaajbTlLeYgMia5nFffU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710485664; c=relaxed/simple;
-	bh=QEHYEKZn/nfC/bCEp7pLWNVR586Kb/4ue5St/ROhyu4=;
+	bh=mm/LKOibx69xdWi9kZO3FwKzMXoZWR3O/2RiRcPvCZk=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hTa2ARUjDBVOwy5XS+f5YAkebGTTDLh2hMK+1IWzv1zAszttQbR3eZiY7dxMYpBYb+bq/tNelf/wczNYV0jqkucnYseK5IC2o2ZnUDWp1M2dbmvKyPgbHI/hkf9Cs5ORP4RyxOrD8R0zKP271NDnKwLpsKTZZzyOGMzMY8SKP0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+	 MIME-Version:Content-Type; b=ACnZ5z+N//vWOvf5IbCcuY6SHTLNXQPdv0fDBhtDw8AYUCd09PWHL1nxFk0AvEANMRWq+GZVVNGy03N5cgZ5aJJnVDOwM5bFva3tg213dDo9CL2FFttTvd3FQKmJsU2jVB2PYgq+J9PZ6U/wkqn0VJzM+DbQmtxbFaod7rt2A48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Tww2f3Q2nz1FMLf;
-	Fri, 15 Mar 2024 14:54:02 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Tww0y1KZ5z1xr44;
+	Fri, 15 Mar 2024 14:52:34 +0800 (CST)
 Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2B946140157;
-	Fri, 15 Mar 2024 14:54:20 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 763A61A0187;
+	Fri, 15 Mar 2024 14:54:21 +0800 (CST)
 Received: from huawei.com (10.175.127.227) by canpemm500010.china.huawei.com
  (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 15 Mar
- 2024 14:54:19 +0800
+ 2024 14:54:21 +0800
 From: Ye Bin <yebin10@huawei.com>
 To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
 	<mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <yebin10@huawei.com>
-Subject: [PATCH v6 5/8] tracing: add new type "%pd/%pD" in readme_msg[]
-Date: Fri, 15 Mar 2024 14:55:37 +0800
-Message-ID: <20240315065540.1181879-6-yebin10@huawei.com>
+Subject: [PATCH v6 8/8] selftests/ftrace: add fprobe test cases for VFS type "%pd" and "%pD"
+Date: Fri, 15 Mar 2024 14:55:40 +0800
+Message-ID: <20240315065540.1181879-9-yebin10@huawei.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20240315065540.1181879-1-yebin10@huawei.com>
 References: <20240315065540.1181879-1-yebin10@huawei.com>
@@ -45,24 +45,65 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  canpemm500010.china.huawei.com (7.192.105.118)
 
+This patch adds fprobe test cases for new print format type "%pd/%pD".The
+test cases test the following items:
+1. Test "%pd" type for dput();
+2. Test "%pD" type for vfs_read();
+
+This test case require enable CONFIG_HAVE_FUNCTION_ARG_ACCESS_API configuration.
+
 Signed-off-by: Ye Bin <yebin10@huawei.com>
 ---
- kernel/trace/trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../ftrace/test.d/dynevent/fprobe_args_vfs.tc | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/fprobe_args_vfs.tc
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index b12f8384a36a..831dfd0773a4 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5510,7 +5510,7 @@ static const char readme_msg[] =
- 	"\t           +|-[u]<offset>(<fetcharg>), \\imm-value, \\\"imm-string\"\n"
- 	"\t     type: s8/16/32/64, u8/16/32/64, x8/16/32/64, char, string, symbol,\n"
- 	"\t           b<bit-width>@<bit-offset>/<container-size>, ustring,\n"
--	"\t           symstr, <type>\\[<array-size>\\]\n"
-+	"\t           symstr, %pd/%pD, <type>\\[<array-size>\\]\n"
- #ifdef CONFIG_HIST_TRIGGERS
- 	"\t    field: <stype> <name>;\n"
- 	"\t    stype: u8/u16/u32/u64, s8/s16/s32/s64, pid_t,\n"
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_args_vfs.tc b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_args_vfs.tc
+new file mode 100644
+index 000000000000..49a833bf334c
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_args_vfs.tc
+@@ -0,0 +1,40 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: Fprobe event VFS type argument
++# requires: kprobe_events "%pd/%pD":README
++
++: "Test argument %pd with name for fprobe"
++echo 'f:testprobe dput name=$arg1:%pd' > dynamic_events
++echo 1 > events/fprobes/testprobe/enable
++grep -q "1" events/fprobes/testprobe/enable
++echo 0 > events/fprobes/testprobe/enable
++grep "dput" trace | grep -q "enable"
++echo "" > dynamic_events
++echo "" > trace
++
++: "Test argument %pd without name for fprobe"
++echo 'f:testprobe dput $arg1:%pd' > dynamic_events
++echo 1 > events/fprobes/testprobe/enable
++grep -q "1" events/fprobes/testprobe/enable
++echo 0 > events/fprobes/testprobe/enable
++grep "dput" trace | grep -q "enable"
++echo "" > dynamic_events
++echo "" > trace
++
++: "Test argument %pD with name for fprobe"
++echo 'f:testprobe vfs_read name=$arg1:%pD' > dynamic_events
++echo 1 > events/fprobes/testprobe/enable
++grep -q "1" events/fprobes/testprobe/enable
++echo 0 > events/fprobes/testprobe/enable
++grep "vfs_read" trace | grep -q "enable"
++echo "" > dynamic_events
++echo "" > trace
++
++: "Test argument %pD without name for fprobe"
++echo 'f:testprobe vfs_read $arg1:%pD' > dynamic_events
++echo 1 > events/fprobes/testprobe/enable
++grep -q "1"  events/fprobes/testprobe/enable
++echo 0 > events/fprobes/testprobe/enable
++grep "vfs_read" trace | grep -q "enable"
++echo "" > dynamic_events
++echo "" > trace
 -- 
 2.31.1
 
