@@ -1,36 +1,39 @@
 Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC721A38C2;
-	Fri, 15 Mar 2024 06:54:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E254DDDA6;
+	Fri, 15 Mar 2024 06:54:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710485663; cv=none; b=JZhO3tmBaTmroPvVAwht/WvBShKDgp7c/TAULUfZKnyGEhVrtlpqkm0i94xY5K/HBj51y81uRf3u8LFkybQQUyjwoQMPHQGG/e9sHA8UOLfRhdWVCjHg/RRBJuclJN4TM6YuJMlMtwadmG/2P2SK4uescgNKJ2pY0EQl9ZynLfU=
+	t=1710485663; cv=none; b=VctCWhAMSgZHglGT1dG3Jap7SRc113sROt+0YcCdt644mzDB/dDbV1s08X1HAV5tgCe6xlcqeQDYMQGCxJ/GLscSGDg9UtQ9LXmLM7nHB9WpCySyMBHxAOxwPiNxMk3Ds/yavUqEWai5qGJQo68nf0ciRzGgkStpriSvchlGWi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1710485663; c=relaxed/simple;
-	bh=9Odi8RNC11cgqp1TmCPx89Ln8pxVvJPm5eO/FxtZhKk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WJOepUlx8nf/8RMRsP35GoiT9f8izsFNntwTKINxcuDcEJul3Z1Za+YcdOx/J3r+yIEY/14SkqJ4mFMu660kPz+G7RPhyd8DkP0cw4FXVILRXYugmI7XO3LBceo7LoCoPmmzG+oSUrIY1sxwjDknyopGmoWQW8jkBgBZX95BNQw=
+	bh=GjRxippzJ1yVsG3/oTdISeBTK/MJfco3wGa3k6U3Uco=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OoAvUaMGpxGd1STkCPjBrZetKPx3PuX3XWERWNPaYLZEWmGo85MZT83zW515Wsft16FK483spZbkOH0aVnt2N2rhABhVAcv+wTkRq+nzNh7B4+aeDaBCUp0UsAMVpGCfTuN98orbwBXVvWcMUW68cI936qyhxbyOali+7l1KRXE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Tww050hs4z2Bg0p;
-	Fri, 15 Mar 2024 14:51:49 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Tww065wvKz2BgNP;
+	Fri, 15 Mar 2024 14:51:50 +0800 (CST)
 Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id 025AE1A0187;
-	Fri, 15 Mar 2024 14:54:18 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id B524B140485;
+	Fri, 15 Mar 2024 14:54:19 +0800 (CST)
 Received: from huawei.com (10.175.127.227) by canpemm500010.china.huawei.com
  (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 15 Mar
- 2024 14:54:17 +0800
+ 2024 14:54:19 +0800
 From: Ye Bin <yebin10@huawei.com>
 To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
 	<mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <yebin10@huawei.com>
-Subject: [PATCH v6 0/8] support '%pd' and '%pD' for print file name
-Date: Fri, 15 Mar 2024 14:55:32 +0800
-Message-ID: <20240315065540.1181879-1-yebin10@huawei.com>
+Subject: [PATCH v6 4/8] tracing/probes: support '%pD' type for print struct file's name
+Date: Fri, 15 Mar 2024 14:55:36 +0800
+Message-ID: <20240315065540.1181879-5-yebin10@huawei.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20240315065540.1181879-1-yebin10@huawei.com>
+References: <20240315065540.1181879-1-yebin10@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -42,63 +45,95 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  canpemm500010.china.huawei.com (7.192.105.118)
 
-Sorry for taking so long to post the V6 version. I thought my email was
-sent successfully. I checked the patchwork and it was not sent successfully.
+Similar to '%pD' for printk, use '%pD' for print struct file's name.
 
-During fault locating, the file name needs to be printed based on the
-dentry/file address. The offset needs to be calculated each time, which
-is troublesome. Similar to printk, kprobe supports printing file names
-for dentry/file addresses.
+Signed-off-by: Ye Bin <yebin10@huawei.com>
+---
+ kernel/trace/trace_probe.c | 57 +++++++++++++++++++++++---------------
+ 1 file changed, 35 insertions(+), 22 deletions(-)
 
-Diff v6 vs v5:
-1. Add const for 'bufsize' in PATCH [1];
-2. Move PATCH 'tracing/probes: support '%pd/%pD' type for fprobe' after
-PATCH "tracing/probes: support '%pd' type for print struct dentry's name".
-3. Add requires '"%pd/%pD":README' for testcase.
-
-Diff v5 vs v4:
-1. Use glob_match() instead of str_has_suffix(), so remove the first patch;
-2. Allocate buffer from heap for expand dentry;
-3. Support "%pd/%pD" print type for fprobe;
-4. Use $arg1 instead of origin register in test case;
-5. Add test case for fprobe;
-
-Diff v4 vs v3:
-1. Use "argv[i][idx + 3] == 'd'" instead of "argv[i][strlen(argv[i]) - 1] == 'd'"
-to judge print format in PATCH[4/7];
-
-Diff v3 vs v2:
-1. Return the index of where the suffix was found in str_has_suffix();
-
-Diff v2 vs v1:
-1. Use "%pd/%pD" print format instead of "pd/pD" print format;
-2. Add "%pd/%pD" in README;
-3. Expand "%pd/%pD" argument before parameter parsing;
-4. Add more detail information in ftrace documentation;
-5. Add test cases for new print format in selftests/ftrace;
-
-Ye Bin (8):
-  tracing/probes: add traceprobe_expand_dentry_args() helper
-  tracing/probes: support '%pd' type for print struct dentry's name
-  tracing/probes: support '%pd' type for fprobe
-  tracing/probes: support '%pD' type for print struct file's name
-  tracing: add new type "%pd/%pD" in readme_msg[]
-  Documentation: tracing: add new type '%pd' and '%pD' for kprobe
-  selftests/ftrace: add kprobe test cases for VFS type "%pd" and "%pD"
-  selftests/ftrace: add fprobe test cases for VFS type "%pd" and "%pD"
-
- Documentation/trace/kprobetrace.rst           |  8 ++-
- kernel/trace/trace.c                          |  2 +-
- kernel/trace/trace_fprobe.c                   |  6 ++
- kernel/trace/trace_kprobe.c                   |  6 ++
- kernel/trace/trace_probe.c                    | 63 +++++++++++++++++++
- kernel/trace/trace_probe.h                    |  2 +
- .../ftrace/test.d/dynevent/fprobe_args_vfs.tc | 40 ++++++++++++
- .../ftrace/test.d/kprobe/kprobe_args_vfs.tc   | 43 +++++++++++++
- 8 files changed, 167 insertions(+), 3 deletions(-)
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/fprobe_args_vfs.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
-
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index a27567e16c36..7bfc6c0d5436 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -12,6 +12,7 @@
+ #define pr_fmt(fmt)	"trace_probe: " fmt
+ 
+ #include <linux/bpf.h>
++#include <linux/fs.h>
+ #include "trace_btf.h"
+ 
+ #include "trace_probe.h"
+@@ -1581,35 +1582,47 @@ int traceprobe_expand_dentry_args(int argc, const char *argv[], char **buf)
+ 
+ 	used = 0;
+ 	for (i = 0; i < argc; i++) {
+-		if (glob_match("*:%pd", argv[i])) {
+-			char *tmp;
+-			char *equal;
+-
+-			if (!tmpbuf) {
+-				tmpbuf = kmalloc(bufsize, GFP_KERNEL);
+-				if (!tmpbuf)
+-					return -ENOMEM;
+-			}
++		char *tmp;
++		char *equal;
++		size_t arg_len;
+ 
+-			tmp = kstrdup(argv[i], GFP_KERNEL);
+-			if (!tmp)
+-				goto nomem;
++		if (!glob_match("*:%p[dD]", argv[i]))
++			continue;
+ 
+-			equal = strchr(tmp, '=');
+-			if (equal)
+-				*equal = '\0';
+-			tmp[strlen(argv[i]) - 4] = '\0';
++		if (!tmpbuf) {
++			tmpbuf = kmalloc(bufsize, GFP_KERNEL);
++			if (!tmpbuf)
++				return -ENOMEM;
++		}
++
++		tmp = kstrdup(argv[i], GFP_KERNEL);
++		if (!tmp)
++			goto nomem;
++
++		equal = strchr(tmp, '=');
++		if (equal)
++			*equal = '\0';
++		arg_len = strlen(argv[i]);
++		tmp[arg_len - 4] = '\0';
++		if (argv[i][arg_len - 1] == 'd')
+ 			ret = snprintf(tmpbuf + used, bufsize - used,
+ 				       "%s%s+0x0(+0x%zx(%s)):string",
+ 				       equal ? tmp : "", equal ? "=" : "",
+ 				       offsetof(struct dentry, d_name.name),
+ 				       equal ? equal + 1 : tmp);
+-			kfree(tmp);
+-			if (ret >= bufsize - used)
+-				goto nomem;
+-			argv[i] = tmpbuf + used;
+-			used += ret + 1;
+-		}
++		else
++			ret = snprintf(tmpbuf + used, bufsize - used,
++				       "%s%s+0x0(+0x%zx(+0x%zx(%s))):string",
++				       equal ? tmp : "", equal ? "=" : "",
++				       offsetof(struct dentry, d_name.name),
++				       offsetof(struct file, f_path.dentry),
++				       equal ? equal + 1 : tmp);
++
++		kfree(tmp);
++		if (ret >= bufsize - used)
++			goto nomem;
++		argv[i] = tmpbuf + used;
++		used += ret + 1;
+ 	}
+ 
+ 	*buf = tmpbuf;
 -- 
 2.31.1
 
