@@ -1,155 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C14211F94B;
-	Fri, 15 Mar 2024 18:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07AC51F19A;
+	Fri, 15 Mar 2024 19:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710529000; cv=none; b=lwjt/Jy0+5dGwPlgG4EZna46I012luTwqQw34f7HS9r7VjkBHA8ICk4WZM//MXiAVMLnKGrmg6HiIt90ICnerwdRB4YvYatBk03GITEXTNDodH1zs/1/ahtybvkEMzqGKxBYLKTEj1sMI0WoArxPcFqDP+D6v+WFJTgKuC1RI/g=
+	t=1710532438; cv=none; b=bKpil2xKIvvfm/aMudXERvs62ALVhslZBKR5dDDLxyUxxV65+S1NVDpTd7lBnmXQ0jXa7NHx3qd7mP0PLKjwEm7j7Pw4ozs8ere99EoAvr5b4U6AklhB0Q2j3w4gpVa3oHm0/VkM761J0u0AnRIImwDJnjxfyPuvnzqJzoC3aaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710529000; c=relaxed/simple;
-	bh=dPjJRTej2L6vDTjZl0tMzl13uN4xNcrNG6FfSYbLkUA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gbgWYu1tQTr+4APJ/Mt1Q7VqBI/xrxObHQ4iPu2FU+Z8q/U27v74OBF7tWuR45t7VIh1XrWHduHq8wzodcMJPGA38BXLBSWQxL1y9AZSz1KnUuAQ8jwNLXDjEa/TKpjdtteVknkVYCNtsTo2ntGPsS+2PYOLWDv9cCFD0MC6Wqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31DA5C433C7;
-	Fri, 15 Mar 2024 18:56:39 +0000 (UTC)
-Date: Fri, 15 Mar 2024 14:58:52 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: TP_printk() bug with %c, and more?
-Message-ID: <20240315145852.46125ac5@gandalf.local.home>
-In-Reply-To: <20240315190312.2bd6a198@booty>
-References: <20240315174900.14418f22@booty>
-	<20240315132146.29edf416@gandalf.local.home>
-	<20240315190312.2bd6a198@booty>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1710532438; c=relaxed/simple;
+	bh=4PT/OHwSdOfJ2L+egmu9PpH8a/jXfjVHm5TKyLyhmGo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NvLyqvtQiDZPGSznJHsqf9PWQMTteGmK9e1iyS59GTR8e2KFow4odmwic5rWDJ/STN0km/IDDAgY8LYRSFvJSKEWxgAP8drIzmQEj64JQppVtRFurNHSsRvG/35g0xBgFxwWvSpGacF9Sbx4ZTOsQ3rv8saK2xNEvYLuNO8A9pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JufaOikB; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JufaOikB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710532435; x=1742068435;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4PT/OHwSdOfJ2L+egmu9PpH8a/jXfjVHm5TKyLyhmGo=;
+  b=JufaOikBCm95igBsIhyHvehbCSFTvy41e6CffxWig66VOd3dFnJHO7nB
+   GltEhJuHCnjmf9h/S+U9QPzGzhjMHpqM9B2SJUpFONlwCZG9pQKVfR08L
+   wU2Ld9kUgVLxBArxIvDOd3uO6I/NpkR7JJNa/nY1CVtdn55+bvZdi5Qzb
+   PjgdKDyRR2gksIAGQhOFaHCKDVsj4MD/xhRoNdnnO7affU5HTt8HFf9m8
+   Pg72CcfYRKUG1ffL+1eVP+WsonWJllAPY7Ry56JdAYpeHpzMsA3uybkR1
+   6BE0pkMYTGAmu7A2xDqzYhX3Q4FwUbzCmx9lguzXXZEziz65eMrTsAOqJ
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11014"; a="5355577"
+X-IronPort-AV: E=Sophos;i="6.07,129,1708416000"; 
+   d="scan'208";a="5355577"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 12:53:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,129,1708416000"; 
+   d="scan'208";a="12699312"
+Received: from dmurray-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.29.31])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 12:53:54 -0700
+Date: Fri, 15 Mar 2024 12:53:52 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] tracing: Add __string_src() helper to help compilers not
+ to get confused
+Message-ID: <ZfSnUHp3PEqRTZMq@aschofie-mobl2>
+References: <20240314232754.345cea82@rorschach.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240314232754.345cea82@rorschach.local.home>
 
-On Fri, 15 Mar 2024 19:03:12 +0100
-Luca Ceresoli <luca.ceresoli@bootlin.com> wrote:
-
-> > > 
-> > > I've come across an unexpected behaviour in the kernel tracing
-> > > infrastructure that looks like a bug, or maybe two.
-> > > 
-> > > Cc-ing ASoC maintainers for as it appeared using ASoC traces, but it
-> > > does not look ASoC-specific.
-> > > 
-> > > It all started when using this trace-cmd sequence on an ARM64 board
-> > > running a mainline 6.8.0-rc7 kernel:
-> > > 
-> > >   trace-cmd record -e snd_soc_dapm_path ./my-play
-> > >   trace-cmd report
-> > > 
-> > > While this produces perfectly valid traces for other asoc events,
-> > > the snd_soc_dapm_path produces:
-> > > 
-> > >   snd_soc_dapm_path:    >c<* MIC1_EN <- (direct) <-
-> > > 
-> > > instead of the expected:
-> > > 
-> > >   snd_soc_dapm_path:    *MIC1 <- (direct) <- MIC1_EN
-> > > 
-> > > The originating macro is:
-> > > 
-> > > 	TP_printk("%c%s %s %s %s %s",
-> > > 		(int) __entry->path_node &&
-> > > 		(int) __entry->path_connect ? '*' : ' ',
-> > > 		__get_str(wname), DAPM_ARROW(__entry->path_dir),
-> > > 		__get_str(pname), DAPM_ARROW(__entry->path_dir),
-> > > 		__get_str(pnname))
-> > > 
-> > > It appears as if the %c placeholder always produces the three ">c<"
-> > > characters, the '*' or ' ' char is printed as the first %s, all the
-> > > other strings are shifted right by one position and the last string is
-> > > never printed.
-> > > 
-> > > On my x86_64 laptop running the default Ubuntu kernel (6.5) I'm able to
-> > > trace a few events having a '%c' in their TP_printk() macros and the
-> > > result is:
-> > > 
-> > >   intel_pipe_update_start: dev 0000:00:02.0, pipe >c<, frame=1,
-> > >   scanline=107856, min=2208, max=2154
-> > >     
-> > 
-> > What does /sys/kernel/tracing/trace show?  
+On Thu, Mar 14, 2024 at 11:27:54PM -0400, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> It is correct:
+> The __string() helper macro of the TRACE_EVENT() macro is used to
+> determine how much of the ring buffer needs to be allocated to fit the
+> given source string. Some trace events have a string that is dependent on
+> another variable that could be NULL, and in those cases the string is
+> passed in to be NULL.
 > 
->    intel_pipe_update_start: dev 0000:00:02.0, pipe B, frame=377644, scanline=1466, min=2154, max=2159
+> The __string() macro can handle being passed in a NULL pointer for which
+> it will turn it into "(null)". It does that with:
 > 
-> > If that's fine, then the bug is in libtraceevent and not the kernel.
-> > 
-> > I'm testing it out now, and I see %c not being processed properly by
-> > libtraceevent. I'll take a deeper look.  
+>   strlen((src) ? (const char *)(src) : "(null)") + 1
 > 
-> Thanks.
+> But if src itself has the same conditional type it can confuse the
+> compiler. That is:
 > 
-> > > originating from:
-> > > 
-> > >   TP_printk("dev %s, pipe %c, frame=%u, scanline=%u, min=%u, max=%u",
-> > > 
-> > > Here it looks like the %c produced ">c<" again, but apparently without
-> > > any shifting.
-> > > 
-> > > Back on the ARM64 board I found a couple interesting clues.
-> > > 
-> > > First, using the <debugfs>/tracing/ interface instead of trace-cmd, I'm
-> > > getting correctly formatted strings:
-> > > 
-> > > trace-cmd: snd_soc_dapm_path: >c<* HPOUT_L -> (direct) ->
-> > > debugfs:   snd_soc_dapm_path: *HPOUT_L <- (direct) <- HPOUT_POP_SOUND_L
-> > > 
-> > > Notice the arrows pointing to the opposite direction though. The correct
-> > > arrow is the one in the debugfs run.  
+>   __string(r ? dev(r)->name : NULL)
 > 
-> This other issue appears a separate bug however.
+> Would turn into:
+> 
+>  strlen((r ? dev(r)->name : NULL) ? (r ? dev(r)->name : NULL) : "(null)" + 1
+> 
+> For which the compiler thinks that NULL is being passed to strlen() and
+> gives this kind of warning:
+> 
+> ./include/trace/stages/stage5_get_offsets.h:50:21: warning: argument 1 null where non-null expected [-Wnonnull]
+>    50 |                     strlen((src) ? (const char *)(src) : "(null)") + 1)
+> 
+> Instead, create a static inline function that takes the src string and
+> will return the string if it is not NULL and will return "(null)" if it
+> is. This will then make the strlen() line:
+> 
+>  strlen(__string_src(src)) + 1
+> 
+> Where the compiler can see that strlen() will not end up with NULL and
+> does not warn about it.
+> 
+> Note that this depends on commit 51270d573a8d ("tracing/net_sched: Fix
+> tracepoints that save qdisc_dev() as a string") being applied, as passing
+> the qdisc_dev() into __string_src() will give an error.
+> 
+> Link: https://lore.kernel.org/all/ZfNmfCmgCs4Nc+EH@aschofie-mobl2/
 
-Can you make user you have the latest libtraceevent from:
 
-   git://git.kernel.org/pub/scm/libs/libtrace/libtraceevent.git
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
-And apply this patch.
 
-Thanks,
-
--- Steve
-
-diff --git a/src/event-parse.c b/src/event-parse.c
-index d607556..61b0966 100644
---- a/src/event-parse.c
-+++ b/src/event-parse.c
-@@ -3732,8 +3732,19 @@ process_arg_token(struct tep_event *event, struct tep_print_arg *arg,
- 		arg->atom.atom = atom;
- 		break;
- 
--	case TEP_EVENT_DQUOTE:
- 	case TEP_EVENT_SQUOTE:
-+		arg->type = TEP_PRINT_ATOM;
-+		/* Make characters into numbers */
-+		if (asprintf(&arg->atom.atom, "%d", token[0]) < 0) {
-+			free_token(token);
-+			*tok = NULL;
-+			arg->atom.atom = NULL;
-+			return TEP_EVENT_ERROR;
-+		}
-+		free_token(token);
-+		type = read_token_item(event->tep, &token);
-+		break;
-+	case TEP_EVENT_DQUOTE:
- 		arg->type = TEP_PRINT_ATOM;
- 		arg->atom.atom = token;
- 		type = read_token_item(event->tep, &token);
+> 
+> Reported-by: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  include/trace/stages/stage5_get_offsets.h | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/trace/stages/stage5_get_offsets.h b/include/trace/stages/stage5_get_offsets.h
+> index e6b96608f452..c6a62dfb18ef 100644
+> --- a/include/trace/stages/stage5_get_offsets.h
+> +++ b/include/trace/stages/stage5_get_offsets.h
+> @@ -9,6 +9,16 @@
+>  #undef __entry
+>  #define __entry entry
+>  
+> +#ifndef __STAGE5_STRING_SRC_H
+> +#define __STAGE5_STRING_SRC_H
+> +static inline const char *__string_src(const char *str)
+> +{
+> +       if (!str)
+> +	       return EVENT_NULL_STR;
+> +       return str;
+> +}
+> +#endif /* __STAGE5_STRING_SRC_H */
+> +
+>  /*
+>   * Fields should never declare an array: i.e. __field(int, arr[5])
+>   * If they do, it will cause issues in parsing and possibly corrupt the
+> @@ -47,7 +57,7 @@
+>  
+>  #undef __string
+>  #define __string(item, src) __dynamic_array(char, item,			\
+> -		    strlen((const char *)(src) ? : EVENT_NULL_STR) + 1)	\
+> +		    strlen(__string_src(src)) + 1)			\
+>  	__data_offsets->item##_ptr_ = src;
+>  
+>  #undef __string_len
+> @@ -70,7 +80,7 @@
+>  
+>  #undef __rel_string
+>  #define __rel_string(item, src) __rel_dynamic_array(char, item,		\
+> -		    strlen((const char *)(src) ? : EVENT_NULL_STR) + 1)	\
+> +		    strlen(__string_src(src)) + 1)			\
+>  	__data_offsets->item##_ptr_ = src;
+>  
+>  #undef __rel_string_len
+> -- 
+> 2.43.0
+> 
