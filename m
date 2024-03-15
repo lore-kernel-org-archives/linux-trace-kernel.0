@@ -1,36 +1,36 @@
 Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C42118637;
-	Fri, 15 Mar 2024 06:54:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99D918C1A;
+	Fri, 15 Mar 2024 06:54:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710485668; cv=none; b=AwxyT6X1hcKRNkQ3vJyWP0oOgiyGjl+typHq0JxrLTcxgpXf2/tuXYyM3MscX2nnPCa3CYX9aOItVKjW8WRUSFfLxfk0s6StPrsrInTk4SnfPTkq2BLGUBtwG7Xz5q/ddxCU9EvxjHKWGnHH5mKGOe01elEQyuvfLJhucQGGZq4=
+	t=1710485670; cv=none; b=cb7OEMGu9BmdVpaFYSf16VCVNHOF9ny5HuzsXd4U9P5ZwWyxts6/6gj37hQTvHmCoxmnqJEv0AMDD/DyqO7XhjJq9Dp57ygMuLAvwwdR3Dod597o2WkNUIKoxdpDMSANzlsCD0rMRQ/UO9WSCHa43VU3kAHX8UDx/+jY6qojGd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710485668; c=relaxed/simple;
-	bh=WuzOu1pbLK1l4Mw333eghX00jBYu4yVSy2f2BXI6kRU=;
+	s=arc-20240116; t=1710485670; c=relaxed/simple;
+	bh=erOBzZetGQeOc5+oyau5RI5nfAQAu9VK/IeB1+EeIo4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cO091kP9nJZmBy1tBtU88VEQss6p2YGvZYYFlh7vUjNSpdXWWvaMStOnVOMz7fpvoyictAYyTxZimXFW/TF01dm3CwqON23tUOeioejvNB9f8qX3l4qcwqYDF8HnJow9dleZzWk/bJCKljst/6U9LlJIjETyASmHjBCFfITcl/4=
+	 MIME-Version:Content-Type; b=g7KS1PM1on3NYrnjE3fuOr78pXtURBqKjE0O0ElJvTNDiPng90NiYrBNQ62U1oi7uD+DdeZySExi94AkZUAd34Rn08KRVB09RzIuknZhBOYuDbuxe5YWSb16UKXzzniJu8ahefsQncAhp2NibiG2+LOm+yZXmjpwPvyjR1z95PI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Tww0T74fLz1Q9gW;
-	Fri, 15 Mar 2024 14:52:09 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Tww0W2CXnz1Q9kS;
+	Fri, 15 Mar 2024 14:52:11 +0800 (CST)
 Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4858F1404F3;
-	Fri, 15 Mar 2024 14:54:19 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 9516118007C;
+	Fri, 15 Mar 2024 14:54:20 +0800 (CST)
 Received: from huawei.com (10.175.127.227) by canpemm500010.china.huawei.com
  (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 15 Mar
- 2024 14:54:18 +0800
+ 2024 14:54:20 +0800
 From: Ye Bin <yebin10@huawei.com>
 To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
 	<mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <yebin10@huawei.com>
-Subject: [PATCH v6 3/8] tracing/probes: support '%pd' type for fprobe
-Date: Fri, 15 Mar 2024 14:55:35 +0800
-Message-ID: <20240315065540.1181879-4-yebin10@huawei.com>
+Subject: [PATCH v6 6/8] Documentation: tracing: add new type '%pd' and '%pD' for kprobe
+Date: Fri, 15 Mar 2024 14:55:38 +0800
+Message-ID: <20240315065540.1181879-7-yebin10@huawei.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20240315065540.1181879-1-yebin10@huawei.com>
 References: <20240315065540.1181879-1-yebin10@huawei.com>
@@ -45,44 +45,40 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  canpemm500010.china.huawei.com (7.192.105.118)
 
-Support print type '%pd' for print dentry's or file's name.
+Similar to printk() '%pd' is for fetch dentry's name from struct dentry's
+pointer, and '%pD' is for fetch file's name from struct file's pointer.
 
 Signed-off-by: Ye Bin <yebin10@huawei.com>
 ---
- kernel/trace/trace_fprobe.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/trace/kprobetrace.rst | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-index 7d2ddbcfa377..988d68e906ad 100644
---- a/kernel/trace/trace_fprobe.c
-+++ b/kernel/trace/trace_fprobe.c
-@@ -976,6 +976,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
- 	char gbuf[MAX_EVENT_NAME_LEN];
- 	char sbuf[KSYM_NAME_LEN];
- 	char abuf[MAX_BTF_ARGS_LEN];
-+	char *dbuf = NULL;
- 	bool is_tracepoint = false;
- 	struct tracepoint *tpoint = NULL;
- 	struct traceprobe_parse_context ctx = {
-@@ -1086,6 +1087,10 @@ static int __trace_fprobe_create(int argc, const char *argv[])
- 		argv = new_argv;
- 	}
+diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
+index bf9cecb69fc9..f13f0fc11251 100644
+--- a/Documentation/trace/kprobetrace.rst
++++ b/Documentation/trace/kprobetrace.rst
+@@ -58,8 +58,9 @@ Synopsis of kprobe_events
+   NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
+   FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
+ 		  (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
+-		  (x8/x16/x32/x64), "char", "string", "ustring", "symbol", "symstr"
+-                  and bitfield are supported.
++		  (x8/x16/x32/x64), VFS layer common type(%pd/%pD), "char",
++                  "string", "ustring", "symbol", "symstr" and bitfield are
++                  supported.
  
-+	ret = traceprobe_expand_dentry_args(argc, argv, &dbuf);
-+	if (ret)
-+		goto out;
+   (\*1) only for the probe on function entry (offs == 0). Note, this argument access
+         is best effort, because depending on the argument type, it may be passed on
+@@ -113,6 +114,9 @@ With 'symstr' type, you can filter the event with wildcard pattern of the
+ symbols, and you don't need to solve symbol name by yourself.
+ For $comm, the default type is "string"; any other type is invalid.
+ 
++VFS layer common type(%pd/%pD) is a special type, which fetches dentry's or
++file's name from struct dentry's address or struct file's address.
 +
- 	/* setup a probe */
- 	tf = alloc_trace_fprobe(group, event, symbol, tpoint, maxactive,
- 				argc, is_return);
-@@ -1131,6 +1136,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
- 	trace_probe_log_clear();
- 	kfree(new_argv);
- 	kfree(symbol);
-+	kfree(dbuf);
- 	return ret;
+ .. _user_mem_access:
  
- parse_error:
+ User Memory Access
 -- 
 2.31.1
 
