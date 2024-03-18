@@ -1,153 +1,115 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5F0020315;
-	Mon, 18 Mar 2024 13:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4FC524BD;
+	Mon, 18 Mar 2024 15:43:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710768828; cv=none; b=EebzyFUlcb5NRx6t9SIxCuyUWQvhyJHJ/r4Xrzo5WMIDtiIctpj/qmCMx8HQVr1g6zEAE+MCPw8p2m+07+R0g6QXw5eFlRzAD1ASP6LHWS3MzVCfVW8kcLSnO4O7/DLqXpWRAfO6jrg5O6whckAWXdmRhhOweLR2XASdzL55BI0=
+	t=1710776584; cv=none; b=uegpGwZG+iwiA5YO1Zc0D0FZwjneWlUnjXFw0GzCTEanQQDnzGDYZTkp6KnIwgz8qyPV7CxOLHRZ8WAbpRyEjPuteobM7zuwtL+KTbb2075bY2H504/G2Wv3/JY9OPFeSDFD85sG5i26k5uHIJ6VcQ3sWPJObgK09diAaXsMWtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710768828; c=relaxed/simple;
-	bh=q0xLpqYTqkB9ibXN1mY5JqcfX9PKUlK+8T5l2q2RBq4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=On5KFJ0aRgxwuARNdyISbVdN1TCJMzLrcznfkdNX9dQlCwelS1AIZWP7HoiTVTk90gLYKETrCrWqg2hO0MVdshnNV5EBHaWOzNq3cB9a+qIKXiIisVc5EdTvwuUAjZlj7lGWWDRs6rLh0/Y3qBTCkjHabF8CSB1yo+K+iGKuZzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-7a-65f842b48e22
-From: Honggyu Kim <honggyu.kim@sk.com>
-To: SeongJae Park <sj@kernel.org>
-Cc: Honggyu Kim <honggyu.kim@sk.com>,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	akpm@linux-foundation.org,
-	apopple@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	dave.jiang@intel.com,
-	hyeongtak.ji@sk.com,
-	kernel_team@skhynix.com,
-	linmiaohe@huawei.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	rakie.kim@sk.com,
-	rostedt@goodmis.org,
-	surenb@google.com,
-	yangx.jy@fujitsu.com,
-	ying.huang@intel.com,
-	ziy@nvidia.com,
-	42.hyeyoo@gmail.com
-Subject: Re: [RFC PATCH v2 0/7] DAMON based 2-tier memory management for CXL memory
-Date: Mon, 18 Mar 2024 22:33:34 +0900
-Message-ID: <20240318133338.2135-1-honggyu.kim@sk.com>
-X-Mailer: git-send-email 2.43.0.windows.1
-In-Reply-To: <20240317191358.97578-1-sj@kernel.org>
-References: 
+	s=arc-20240116; t=1710776584; c=relaxed/simple;
+	bh=qhMgOtaICUkeTtfPcfP/CSjZBvXls4O81TYsjiRoEvQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MKVIf6fXhcqmosQBu4qN5b47art7EimJQ3a3CTZOS2LW2tMsCL2vYSMdmnmXmOeBD2lB6tXj0KFepau5CTv9pa+Xfy7lYveFRE9ki0HwFoblmYkk+hklHgFKM/A+mXzCwUP1FQS7XBI9/1mFAgrckK9gs2OwLMAgBNAQU8rHFn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q4vsvdxA; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q4vsvdxA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80050C433F1;
+	Mon, 18 Mar 2024 15:43:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710776584;
+	bh=qhMgOtaICUkeTtfPcfP/CSjZBvXls4O81TYsjiRoEvQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=q4vsvdxAU2l9z+ABU4RNeEHXMVDq+x6oeTzCY4PBlnTBwWbudF9cqa3JqwhJrZjiq
+	 cqasOHoiPvZRptYizIAOrw7xVPey3bDT7Tyjy5Ykrz9fRs5sgAoZMVCNcovf0uDzjk
+	 kp+PK/zTi4ecEIlvmiopxrMmztkLm/kriYVibp8QpGpN9ElLgrfgs7fOjH84T4MUH7
+	 L0ZgdVRhj4ay96G30DD5vPXI2AX36Y7E4HU/K8f656bzaZ4qQwmjksSBEvpbUazver
+	 GJcoyshDydV88jViUQBbX9r2PJZ+Jk80X5qdyUhKv21BctkaLQv3rDdgnfrem301EG
+	 Gk1NfGnFxDM8Q==
+Date: Mon, 18 Mar 2024 08:43:00 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Netdev <netdev@vger.kernel.org>,
+	clang-built-linux <llvm@lists.linux.dev>,
+	open list <linux-kernel@vger.kernel.org>,
+	lkft-triage@lists.linaro.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Eric Dumazet <edumazet@google.com>, rostedt@goodmis.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: net/sunrpc/sched.c: error: result of comparison against a string
+ literal is unspecified (use an explicit string comparison function instead)
+Message-ID: <20240318154300.GA816320@dev-arch.thelio-3990X>
+References: <CA+G9fYs=OTKAZS6g1P1Ewadfr0qoe6LgOVSohqkXmFXotEODdg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHIsWRmVeSWpSXmKPExsXC9ZZnke4Wpx+pBs+6lS0m9hhYzFm/hs1i
-	140Qi/97jzFaPPn/m9XixM1GNovO70tZLC7vmsNmcW/Nf1aLI+vPslhsPnuG2WLxcjWLfR0P
-	mCwOf33DZDH50gI2ixdTzjBanJw1mcVi9tF77A5CHktPv2Hz2NAEJHbOusvu0bLvFrvHgk2l
-	Hi1H3rJ6LN7zkslj06pONo9Nnyaxe5yY8ZvFY+dDS48Xm2cyevQ2v2Pz+LxJLoAvissmJTUn
-	syy1SN8ugStjxcu3zAVdEhX9J1ezNDBOF+pi5OSQEDCRWLf8NhuM/fBbNzuIzSagJnHl5SQm
-	EFtEQFHi3OOLrF2MXBzMAgtZJHq/bwBLCAsES8w9+5+xi5GDg0VAVeLGLl6QMK+AmcT+M8cZ
-	IWZqSjze/hNsJqeAscT6BU1gtpAAj8SrDfsZIeoFJU7OfMICYjMLyEs0b53NDNF7iF3i8npH
-	CFtS4uCKGywTGPlnIWmZhaRlASPTKkahzLyy3MTMHBO9jMq8zAq95PzcTYzAWFtW+yd6B+On
-	C8GHGAU4GJV4eA/o/EgVYk0sK67MPcQowcGsJMLrKvY1VYg3JbGyKrUoP76oNCe1+BCjNAeL
-	kjiv0bfyFCGB9MSS1OzU1ILUIpgsEwenVAOjQ/qcys2LU1YKRdSH1Jnf3rwkv2LdvdPdoV/8
-	5tgUq+5tzE9adfb0ksDtlRUFVmp/P7UfU2x/EzZlzr5CyYA1EbW3ud/vMmPiPdg/f1rJ7G/8
-	lxPFz59cP7tcRf1A/zvDbzI7y5u+Lm3P0moOfaka+cFQJ6Fn06SNL54vnfKwic272nravw/p
-	SizFGYmGWsxFxYkAt5lNN7ECAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsXCNUNLT3eL049Ug+5nIhYTewws5qxfw2ax
-	60aIxf+9xxgtnvz/zWpx4mYjm8XnZ6+ZLTqffGe0ODz3JKtF5/elLBaXd81hs7i35j+rxZH1
-	Z1ksNp89w2yxeLmaxaFrz1kt9nU8YLI4/PUNk8XkSwvYLF5MOcNocXLWZBaL2UfvsTuIeSw9
-	/YbNY0MTkNg56y67R8u+W+weCzaVerQcecvqsXjPSyaPTas62Tw2fZrE7nFixm8Wj50PLT1e
-	bJ7J6NHb/I7N49ttD4/FLz4weXzeJBcgEMVlk5Kak1mWWqRvl8CVseLlW+aCLomK/pOrWRoY
-	pwt1MXJySAiYSDz81s0OYrMJqElceTmJCcQWEVCUOPf4ImsXIxcHs8BCFone7xvAEsICwRJz
-	z/5n7GLk4GARUJW4sYsXJMwrYCax/8xxRoiZmhKPt/8Em8kpYCyxfkETmC0kwCPxasN+Roh6
-	QYmTM5+wgNjMAvISzVtnM09g5JmFJDULSWoBI9MqRpHMvLLcxMwcU73i7IzKvMwKveT83E2M
-	wAhbVvtn4g7GL5fdDzEKcDAq8fAe0PmRKsSaWFZcmXuIUYKDWUmE11Xsa6oQb0piZVVqUX58
-	UWlOavEhRmkOFiVxXq/w1AQhgfTEktTs1NSC1CKYLBMHp1QD4yR+9nk/bxYF/6qWNjOTrcy8
-	s+TuJYFpxy8edpookeYfaFbUp58d6rf1U+a3/gmrV7sEb+fLf9uTu1RrjYIOP8eWjsy66lUr
-	tEt32SX2vatL/dfM84FlZdbSlq0nP7H+2/vd7fVdrxdbT1jLv/s5TViMa+aqlFyOUBeZ8+3r
-	1rw2k5VNjbm8RYmlOCPRUIu5qDgRAHvKqbKsAgAA
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYs=OTKAZS6g1P1Ewadfr0qoe6LgOVSohqkXmFXotEODdg@mail.gmail.com>
 
-Hi SeongJae,
+Hi Naresh,
 
-On Sun, 17 Mar 2024 12:13:57 -0700 SeongJae Park <sj@kernel.org> wrote:
-> On Sun, 17 Mar 2024 08:31:44 -0700 SeongJae Park <sj@kernel.org> wrote:
+On Mon, Mar 18, 2024 at 02:55:54PM +0530, Naresh Kamboju wrote:
+> The following build warnings / errors noticed on x86 kselftests build with
+> clang nightly  / clang-17 on Linux  next tag next-20240318.
 > 
-> > Hi Honggyu,
-> > 
-> > On Sun, 17 Mar 2024 17:36:29 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
-> > 
-> > > Hi SeongJae,
-> > > 
-> > > Thanks for the confirmation.  I have a few comments on young filter so
-> > > please read the inline comments again.
-> > > 
-> > > On Wed, 12 Mar 2024 08:53:00 -0800 SeongJae Park <sj@kernel.org> wrote:
-> > > > Hi Honggyu,
-> [...]
-> > > Thanks.  I see that it works fine, but I would like to have more
-> > > discussion about "young" filter.  What I think about filter is that if I
-> > > apply "young" filter "true" for demotion, then the action applies only
-> > > for "young" pages, but the current implementation works opposite.
-> > > 
-> > > I understand the function name of internal implementation is
-> > > "damos_pa_filter_out" so the basic action is filtering out, but the
-> > > cgroup filter works in the opposite way for now.
-> > 
-> > Does memcg filter works in the opposite way?  I don't think so because
-> > __damos_pa_filter_out() sets 'matches' as 'true' only if the the given folio is
-> > contained in the given memcg.  'young' filter also simply sets 'matches' as
-> > 'true' only if the given folio is young.
-> > 
-> > If it works in the opposite way, it's a bug that need to be fixed.  Please let
-> > me know if I'm missing something.
+> This build config is generated from kselftest merge configs [1].
 > 
-> I just read the DAMOS filters part of the documentation for DAMON sysfs
-> interface again.  I believe it is explaining the meaning of 'matching' as I
-> intended to, as below:
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 > 
->     You can write ``Y`` or ``N`` to ``matching`` file to filter out pages that does
->     or does not match to the type, respectively.  Then, the scheme's action will
->     not be applied to the pages that specified to be filtered out.
-> 
-> But, I found the following example for memcg filter is wrong, as below:
-> 
->     For example, below restricts a DAMOS action to be applied to only non-anonymous
->     pages of all memory cgroups except ``/having_care_already``.::
->     
->         # echo 2 > nr_filters
->         # # filter out anonymous pages
->         echo anon > 0/type
->         echo Y > 0/matching
->         # # further filter out all cgroups except one at '/having_care_already'
->         echo memcg > 1/type
->         echo /having_care_already > 1/memcg_path
->         echo N > 1/matching
-> 
-> Specifically, the last line of the commands should write 'Y' instead of 'N' to
-> do what explained.  Without the fix, the action will be applied to only
-> non-anonymous pages of 'having_care_already' memcg.  This is definitely wrong.
-> I will fix this soon.  I'm unsure if this is what made you to believe memcg
-> DAMOS filter is working in the opposite way, though.
+> Build log:
+> -----------
+> In file included from net/sunrpc/sched.c:31:
+> In file included from include/trace/events/sunrpc.h:2524:
+> In file included from include/trace/define_trace.h:102:
+> In file included from include/trace/trace_events.h:419:
+> include/trace/events/sunrpc.h:707:4: error: result of comparison
+> against a string literal is unspecified (use an explicit string
+> comparison function instead) [-Werror,-Wstring-compare]
+>   667 |                         __assign_str(progname,
+>       |                         ~~~~~~~~~~~~~~~~~~~~~~
+>   668 |                                      task->tk_client->cl_program->name);
+>       |                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   669 |                         __entry->version = task->tk_client->cl_vers;
+>       |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   670 |                         __assign_str(procedure,
+> task->tk_msg.rpc_proc->p_name);
+>       |
 
-I got confused not because of this.  I just think it again that this
-user interface is better to be more intuitive as I mentioned in the
-previous thread.
+Thanks for the report. This is caused by commit 433e1d88a3be ("tracing:
+Add warning if string in __assign_str() does not match __string()") from
+the tracing tree, not a change on the netdev side (although I have left
+them on CC for this reply so they are aware of that).
 
-Thanks,
-Honggyu
+To resolve it, [1] needs to be applied then the following diff can be
+applied on top of that to fully clear it up (as __builtin_constant_p()
+does not influence diagnostics in the front end, so the warning still
+triggers on the else branch when it will really use strcmp(), as Steve
+tested at [2]).
 
-> 
-> Thanks,
-> SJ
-> 
-> [...]
+[1]: https://lore.kernel.org/20240312113002.00031668@gandalf.local.home/
+[2]: https://lore.kernel.org/20240313161420.3b668558@gandalf.local.home/
+
+diff --git a/include/trace/stages/stage6_event_callback.h b/include/trace/stages/stage6_event_callback.h
+index 83da83a0c14f..dbd27adb1b83 100644
+--- a/include/trace/stages/stage6_event_callback.h
++++ b/include/trace/stages/stage6_event_callback.h
+@@ -35,9 +35,14 @@
+ 	do {								\
+ 		char *__str__ = __get_str(dst);				\
+ 		int __len__ = __get_dynamic_array_len(dst) - 1;		\
++		__diag_push();						\
++		__diag_ignore(clang, 13, "-Wstring-compare",		\
++			      "__builtin_constant_p() ensures strcmp()"	\
++			      "will be used for string literals");	\
+ 		WARN_ON_ONCE(__builtin_constant_p(src) ?		\
+ 			     strcmp((src), __data_offsets.dst##_ptr_) :	\
+ 			     (src) != __data_offsets.dst##_ptr_);	\
++		__diag_pop();						\
+ 		memcpy(__str__, __data_offsets.dst##_ptr_ ? :		\
+ 		       EVENT_NULL_STR, __len__);			\
+ 		__str__[__len__] = '\0';				\
