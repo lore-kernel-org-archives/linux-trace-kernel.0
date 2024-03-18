@@ -1,138 +1,97 @@
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out28-193.mail.aliyun.com (out28-193.mail.aliyun.com [115.124.28.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59371EB55
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 Mar 2024 02:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753FC1CA89;
+	Mon, 18 Mar 2024 06:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710730189; cv=none; b=LoawB4pOHOgz7gZgoUBk8OiqI/tD0IqTOKJ6XMTp5sVVC66QUB0b76q2BZ619EQRTi2fBAW86zUNhuUgKPN4a/6zTdThm12Kc09pIwrqS2LkzUepet9erj0/7hi3Gq/uP3gpmJTioCxNf6oMq+PQqhVcISQz5dULVm7yaf9UVig=
+	t=1710744053; cv=none; b=cOcsSUDHTOO0W3OCfILPGXqXlzFhzGbaKsY2xZMOOsxh24gJDZe/bpk/6uR3vUVyAaVmuIrJBBaRSUlSh+8bzedw2I6knmg3efywNwzqI6+vc8a5wgJDnMAuw/2xjSVkaa8jrKc9igJj+rYEi43kxSbnpmOMhrGMJqa+ZErl3jI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710730189; c=relaxed/simple;
-	bh=ybVBqVNCXzGJGuz6lwF+tzdhl5wD9gmQp2PXPNadGZI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NmIgxwUeVZmC6sGF9z+y9S1y2lt2hyT6+66zVwVbk4YSAVyZ11twCz5uVkq8ivGJsbjOailot140811PVO2FZqOjMDXoZ8LkRI16QyVoR4xF7LN+Oqkq4WPmhGzkQIVigodjh16xmDLj83vNYJqv4wbEqskgGdKp39H14yN7Olo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk; spf=none smtp.mailfrom=davidwei.uk; dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b=iV4pzRO6; arc=none smtp.client-ip=209.85.167.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=davidwei.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b="iV4pzRO6"
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3c38b719ab5so21515b6e.2
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 17 Mar 2024 19:49:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=davidwei-uk.20230601.gappssmtp.com; s=20230601; t=1710730186; x=1711334986; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QE0CXFBu76tpBM6gpoJrOe0mC6QUf5XbAI8puJxCLjs=;
-        b=iV4pzRO6P3GXwlCKnBLXNP1M23gu1zQrspv6JPJ8fStuXR6pQ39ApKrDntPI5tx/uE
-         /MnuWm41o/lbyJAypmV8amaK7R/DY9hx5GRXs/0r9iXayTGjDZNX/3a3xzI+TRbmrgc5
-         CKaIjiPutwDoASk/sLDAWwavRiaWn0pBM9030+PUUupT3yeK7y4jPmhcyEMY7r4Hl52y
-         XWNfIYJJTMt5wTngWdOXFC2+N/RSAkoF1vsgGy7/X1ZW8EIw0zE/PfsaGzUF6O4qnNcM
-         v/ZuzSbzmtn0escS9ERzZ4uMFZQ9IggD068oFEU9q2JSyZaFtYe56f0HASQWjPvNI5se
-         3jpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710730186; x=1711334986;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QE0CXFBu76tpBM6gpoJrOe0mC6QUf5XbAI8puJxCLjs=;
-        b=AqFmvf1igcS9g6SbvBv+y3GgCAmQPMBrL0JTiGiPyZfZMOMq7SFU8vfM+1HJsz27mH
-         6DYpyYs4y9PC5Z8LaRIORRUdy4giDQJntG4tQjSHhpVydx+D5tukvEAmrX8tTMxmv+tN
-         hGeHXfGpUu2LEQrB183jB6iZvPuzxtIucUCqK3Cly8m2DAB32FR7mxHnh/VC4iqlkRTz
-         utzDByvNUx3ccOc+Qc90U0iQg+7tjRUBHGNZijwUU7pVRnvghI5g3ZErN3ktzzYDY50w
-         SKZQjNqgR6vkyYzzTqMaSiAvDKjmj4DSSEsFTe9g5zCPNCc388FD08avyMH6dpdVEN5P
-         S7+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVDeL2mnY3C6fqFYguvRQzMQjrElddmSc/+V7zaZq5WOm6kR827r04H+n+DlNmCfUDb71DO2oO+p93vD8+mAouHuMrlOMOhsOa3GfIGoiupf07N
-X-Gm-Message-State: AOJu0YwFvKJiNBt/dfxNJV5VDLu0VyTSxJSF8F4c+Ei46Y6fg4OPz1RT
-	c28sPMxQJ1B9B/RvTo/jn0XOBi0VEVRjFogTZXQaWir4m+a6WyqyXA4dIiaUGo4=
-X-Google-Smtp-Source: AGHT+IENq8waTwhUkJrEOrb8DEHjfl4QDem6FZJYYGTlmjRRGItMoHQ4P2wTQfIoEZJr502KAVnEEA==
-X-Received: by 2002:a05:6870:8e05:b0:222:d6a:9ae8 with SMTP id lw5-20020a0568708e0500b002220d6a9ae8mr10284561oab.35.1710730185882;
-        Sun, 17 Mar 2024 19:49:45 -0700 (PDT)
-Received: from [192.168.1.24] (71-212-18-124.tukw.qwest.net. [71.212.18.124])
-        by smtp.gmail.com with ESMTPSA id i189-20020a62c1c6000000b006e66a76d877sm7120229pfg.153.2024.03.17.19.49.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 17 Mar 2024 19:49:45 -0700 (PDT)
-Message-ID: <b938514c-61cc-41e6-b592-1003b8deccae@davidwei.uk>
-Date: Sun, 17 Mar 2024 19:49:43 -0700
+	s=arc-20240116; t=1710744053; c=relaxed/simple;
+	bh=lET+dV2s3vXLx1JgKudTV/IW94Mh55GR7FFuMfyGQe4=;
+	h=Date:From:To:Message-ID:Subject:MIME-Version:References:
+	 In-Reply-To:Content-Type; b=Au2GXJXT/NzMxluZFIQC71Yw/9MiuZqBkpdfZko5VpQEYOgyIbsBmLho412jB037umkHbRdx/fYWVfo+EdDVEoqqnJHJsj8TrpWeRAKj0g3fAeJgOZpM62JgtCcOFKOT7dwXzYu+kTCZY+d4pSbfh9doYZTgd0U0dUCzq+7x4Vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ubisectech.com; spf=pass smtp.mailfrom=ubisectech.com; arc=none smtp.client-ip=115.124.28.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ubisectech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ubisectech.com
+X-Alimail-AntiSpam:AC=CONTINUE;BC=0.0738943|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.00229654-6.04429e-05-0.997643;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047193;MF=bugreport@ubisectech.com;NM=1;PH=DW;RN=3;RT=3;SR=0;TI=W4_0.2.3_v5_21475FC9_1710743712799_o7001c80k;
+Received: from WS-web (bugreport@ubisectech.com[W4_0.2.3_v5_21475FC9_1710743712799_o7001c80k]) at Mon, 18 Mar 2024 14:35:25 +0800
+Date: Mon, 18 Mar 2024 14:35:25 +0800
+From: "Ubisectech Sirius" <bugreport@ubisectech.com>
+To: "Jens Axboe" <axboe@kernel.dk>,
+  "linux-kernel" <linux-kernel@vger.kernel.org>,
+  "linux-trace-kernel" <linux-trace-kernel@vger.kernel.org>
+Reply-To: "Ubisectech Sirius" <bugreport@ubisectech.com>
+Message-ID: <922a9ee9-9da6-4219-9e96-fe7d7198c0b6.bugreport@ubisectech.com>
+Subject: =?UTF-8?B?5Zue5aSN77yaS0FTQU46IG51bGwtcHRyLWRlcmVmIFdyaXRlIGluIHRjdHhfdGFza193b3Jr?=
+  =?UTF-8?B?X3J1bg==?=
+X-Mailer: [Alimail-Mailagent revision 13][W4_0.2.3][v5][Chrome]
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH net-next v6 02/15] net: page_pool: create hooks for
- custom page providers
-Content-Language: en-GB
-To: Christoph Hellwig <hch@infradead.org>,
- Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Richard Henderson <richard.henderson@linaro.org>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
- <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Pavel Begunkov <asml.silence@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Jeroen de Borst <jeroendb@google.com>,
- Praveen Kaligineedi <pkaligineedi@google.com>
-References: <20240305020153.2787423-1-almasrymina@google.com>
- <20240305020153.2787423-3-almasrymina@google.com>
- <ZfegzB341oNc_Ocz@infradead.org>
-From: David Wei <dw@davidwei.uk>
-In-Reply-To: <ZfegzB341oNc_Ocz@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <4fb30f6c-cd4c-4fcc-97ad-7132a503f7f7.bugreport@ubisectech.com>,<30d89cd2-7748-4285-a1c5-e1724bf5ec31@kernel.dk>
+x-aliyun-mail-creator: W4_0.2.3_v5_M3LTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEyMi4wLjAuMCBTYWZhcmkvNTM3LjM2vN
+In-Reply-To: <30d89cd2-7748-4285-a1c5-e1724bf5ec31@kernel.dk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-On 2024-03-17 19:02, Christoph Hellwig wrote:
-> On Mon, Mar 04, 2024 at 06:01:37PM -0800, Mina Almasry wrote:
->> From: Jakub Kicinski <kuba@kernel.org>
->>
->> The page providers which try to reuse the same pages will
->> need to hold onto the ref, even if page gets released from
->> the pool - as in releasing the page from the pp just transfers
->> the "ownership" reference from pp to the provider, and provider
->> will wait for other references to be gone before feeding this
->> page back into the pool.
-> 
-> The word hook always rings a giant warning bell for me, and looking into
-> this series I am concerned indeed.
-> 
-> The only provider provided here is the dma-buf one, and that basically
-> is the only sensible one for the documented design.  So instead of
-> adding hooks that random proprietary crap can hook into, why not hard
-> code the dma buf provide and just use a flag?  That'll also avoid
-> expensive indirect calls.
-
-I'm working on a similar proposal for zero copy Rx but to host memory
-and depend on this memory provider API.
-
-Jakub also designed this API for hugepages too IIRC. Basically there's
-going to be at least three fancy ways of providing pages (one of which
-isn't actually pages, hence the merged netmem_t series) to drivers.
-
-> 
+PiBJIHRoaW5rIHlvdSBzbmlwcGVkIHRoZSBmYXVsdCBpbmplY3Rpb24gdGhhdCBjYW1lIGJlZm9y
+ZSB0aGlzLiBJdCBsb29rcwo+IGxpa2UgYW4gYWxsb2NhdGlvbiBmYWlsdXJlLCBzbyB3ZSBkb24n
+dCBnZXQgdHNrLT5pb191cmluZyBzZXR1cCBmb3IgdGhlCj4gU1FQT0xMIHRocmVhZC4gTm90IGEg
+Z3JlYXQgd2F5IHRvIGhhbmRsZSB0aGlzLCBidXQgY2FuIHlvdSB0cnkgdGhlCj4gYmVsb3c/IFdv
+dWxkIGJlIG5pY2VyIGlmIHdlIGNvdWxkIGp1c3QgcHJ1bmUgdGhlIHRhc2sgcmF0aGVyIHRoYW4g
+d2FrZQo+IGl0IGFuZCBoYXZlIGl0IGVycm9yLgoKSGkuCiAgVGhlIGlzc3VlIGRvZXMgbm90IGFw
+cGVhciBhZ2FpbiB3aGVuIEkgYXBwbHkgdGhlIHBhdGNoIHRvIHRoZSBMaW51eCBrZXJuZWwuCgoK
+T24gMy8xNy8yNCA2OjU5IFBNLCBVYmlzZWN0ZWNoIFNpcml1cyB3cm90ZToKPiBIZWxsby4KPiBX
+ZSBhcmUgVWJpc2VjdGVjaCBTaXJpdXMgVGVhbSwgdGhlIHZ1bG5lcmFiaWxpdHkgbGFiIG9mIENo
+aW5hIFZhbGlhbnRTZWMuIFJlY2VudGx5LCBvdXIgdGVhbSBoYXMgZGlzY292ZXJlZCBhIGlzc3Vl
+IGluIExpbnV4IGtlcm5lbCA2LjguMC1nZTVlMDM4YjdhZTlkLiBBdHRhY2hlZCB0byB0aGUgZW1h
+aWwgd2VyZSBhIFBPQyBmaWxlIG9mIHRoZSBpc3N1ZS4KPiAKPiBTdGFjayBkdW1wOgo+IAo+ID09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PQo+IEJVRzogS0FTQU46IG51bGwtcHRyLWRlcmVmIGluIGluc3RydW1lbnRfYXRvbWlj
+X3JlYWRfd3JpdGUgaW5jbHVkZS9saW51eC9pbnN0cnVtZW50ZWQuaDo5NiBbaW5saW5lXQo+IEJV
+RzogS0FTQU46IG51bGwtcHRyLWRlcmVmIGluIGxsaXN0X2RlbF9hbGwgaW5jbHVkZS9saW51eC9s
+bGlzdC5oOjI2NiBbaW5saW5lXQo+IEJVRzogS0FTQU46IG51bGwtcHRyLWRlcmVmIGluIHRjdHhf
+dGFza193b3JrX3J1bisweDdkLzB4MzMwIGlvX3VyaW5nL2lvX3VyaW5nLmM6MTI2Nwo+IFdyaXRl
+IG9mIHNpemUgOCBhdCBhZGRyIDAwMDAwMDAwMDAwMDAxYzAgYnkgdGFzayBpb3Utc3FwLTIxNTYw
+My8yMTU2MDQKPiAKPiBDUFU6IDAgUElEOiAyMTU2MDQgQ29tbTogaW91LXNxcC0yMTU2MDMgTm90
+IHRhaW50ZWQgNi44LjAtZ2U1ZTAzOGI3YWU5ZCAjNDAKPiBIYXJkd2FyZSBuYW1lOiBRRU1VIFN0
+YW5kYXJkIFBDIChpNDQwRlggKyBQSUlYLCAxOTk2KSwgQklPUyAxLjE1LjAtMSAwNC8wMS8yMDE0
+Cj4gQ2FsbCBUcmFjZToKPiAgPFRBU0s+Cj4gIF9fZHVtcF9zdGFjayBsaWIvZHVtcF9zdGFjay5j
+Ojg4IFtpbmxpbmVdCj4gIGR1bXBfc3RhY2tfbHZsKzB4MTE2LzB4MWIwIGxpYi9kdW1wX3N0YWNr
+LmM6MTE0Cj4gIGthc2FuX3JlcG9ydCsweGJkLzB4ZjAgbW0va2FzYW4vcmVwb3J0LmM6NjAxCj4g
+IGNoZWNrX3JlZ2lvbl9pbmxpbmUgbW0va2FzYW4vZ2VuZXJpYy5jOjE4MyBbaW5saW5lXQo+ICBr
+YXNhbl9jaGVja19yYW5nZSsweGY0LzB4MWEwIG1tL2thc2FuL2dlbmVyaWMuYzoxODkKPiAgaW5z
+dHJ1bWVudF9hdG9taWNfcmVhZF93cml0ZSBpbmNsdWRlL2xpbnV4L2luc3RydW1lbnRlZC5oOjk2
+IFtpbmxpbmVdCj4gIGxsaXN0X2RlbF9hbGwgaW5jbHVkZS9saW51eC9sbGlzdC5oOjI2NiBbaW5s
+aW5lXQo+ICB0Y3R4X3Rhc2tfd29ya19ydW4rMHg3ZC8weDMzMCBpb191cmluZy9pb191cmluZy5j
+OjEyNjcKPiAgaW9fc3FfdHcrMHgxMmEvMHgxZDAgaW9fdXJpbmcvc3Fwb2xsLmM6MjQ1Cj4gIGlv
+X3NxX3RocmVhZCsweDhkNy8weDE4YTAgaW9fdXJpbmcvc3Fwb2xsLmM6MzA4Cj4gIHJldF9mcm9t
+X2ZvcmsrMHg0NS8weDgwIGFyY2gveDg2L2tlcm5lbC9wcm9jZXNzLmM6MTQ3Cj4gIHJldF9mcm9t
+X2ZvcmtfYXNtKzB4MWEvMHgzMCBhcmNoL3g4Ni9lbnRyeS9lbnRyeV82NC5TOjI0Mwo+ICA8L1RB
+U0s+Cj4gPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09Cj4gS2VybmVsIHBhbmljIC0gbm90IHN5bmNpbmc6IEtBU0FOOiBwYW5p
+Y19vbl93YXJuIHNldCAuLi4KPiBDUFU6IDAgUElEOiAyMTU2MDQgQ29tbTogaW91LXNxcC0yMTU2
+MDMgTm90IHRhaW50ZWQgNi44LjAtZ2U1ZTAzOGI3YWU5ZCAjNDAKPiBIYXJkd2FyZSBuYW1lOiBR
+RU1VIFN0YW5kYXJkIFBDIChpNDQwRlggKyBQSUlYLCAxOTk2KSwgQklPUyAxLjE1LjAtMSAwNC8w
+MS8yMDE0CgpJIHRoaW5rIHlvdSBzbmlwcGVkIHRoZSBmYXVsdCBpbmplY3Rpb24gdGhhdCBjYW1l
+IGJlZm9yZSB0aGlzLiBJdCBsb29rcwpsaWtlIGFuIGFsbG9jYXRpb24gZmFpbHVyZSwgc28gd2Ug
+ZG9uJ3QgZ2V0IHRzay0+aW9fdXJpbmcgc2V0dXAgZm9yIHRoZQpTUVBPTEwgdGhyZWFkLiBOb3Qg
+YSBncmVhdCB3YXkgdG8gaGFuZGxlIHRoaXMsIGJ1dCBjYW4geW91IHRyeSB0aGUKYmVsb3c/IFdv
+dWxkIGJlIG5pY2VyIGlmIHdlIGNvdWxkIGp1c3QgcHJ1bmUgdGhlIHRhc2sgcmF0aGVyIHRoYW4g
+d2FrZQppdCBhbmQgaGF2ZSBpdCBlcnJvci4KCmRpZmYgLS1naXQgYS9pb191cmluZy9zcXBvbGwu
+YyBiL2lvX3VyaW5nL3NxcG9sbC5jCmluZGV4IDM2MzA1MmI0ZWE3Ni4uZGI3YjBmZGZlMWNiIDEw
+MDY0NAotLS0gYS9pb191cmluZy9zcXBvbGwuYworKysgYi9pb191cmluZy9zcXBvbGwuYwpAQCAt
+Mjc0LDYgKzI3NCwxMCBAQCBzdGF0aWMgaW50IGlvX3NxX3RocmVhZCh2b2lkICpkYXRhKQogIGNo
+YXIgYnVmW1RBU0tfQ09NTV9MRU5dOwogIERFRklORV9XQUlUKHdhaXQpOwogCisgLyogb2ZmbG9h
+ZCBjb250ZXh0IGNyZWF0aW9uIGZhaWxlZCwganVzdCBleGl0ICovCisgaWYgKCFjdXJyZW50LT5p
+b191cmluZykgeworICBnb3RvIGVycl9vdXQ7CisKICBzbnByaW50ZihidWYsIHNpemVvZihidWYp
+LCAiaW91LXNxcC0lZCIsIHNxZC0+dGFza19waWQpOwogIHNldF90YXNrX2NvbW0oY3VycmVudCwg
+YnVmKTsKIApAQCAtMzcxLDcgKzM3NSw3IEBAIHN0YXRpYyBpbnQgaW9fc3FfdGhyZWFkKHZvaWQg
+KmRhdGEpCiAgIGF0b21pY19vcihJT1JJTkdfU1FfTkVFRF9XQUtFVVAsICZjdHgtPnJpbmdzLT5z
+cV9mbGFncyk7CiAgaW9fcnVuX3Rhc2tfd29yaygpOwogIG11dGV4X3VubG9jaygmc3FkLT5sb2Nr
+KTsKLQorZXJyX291dDoKICBjb21wbGV0ZSgmc3FkLT5leGl0ZWQpOwogIGRvX2V4aXQoMCk7CiB9
+CgotLSAKSmVucyBBeGJvZQoK
