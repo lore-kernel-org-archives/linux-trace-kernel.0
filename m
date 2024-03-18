@@ -1,277 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D721E52F;
-	Mon, 18 Mar 2024 19:07:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDAE45D8F7;
+	Mon, 18 Mar 2024 23:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710788845; cv=none; b=qCRu/s91H0ECVg651AfjhOh81GM2VVPT6m2YuWgvdydEJna96qpluWESUDcaSblnifgEqPkDa8HD+evfVD/txNYQC+Mtd46lvufgE4/R9ZxvQc4mqMcbnZVv0YsbCKEabH7Kc8WGE+vDxwEnGep7aWa8MDTqW/Qk5UkOldV0ruQ=
+	t=1710804139; cv=none; b=GJ+chdCpVJXfrmun+RkGBAP1Bk0mGiV1Ld4/l/HRHM3d0nahz7CioHd9s0ZD0JMhVr8rqv5O1xSdvZnm+qyWYnlpTq+CtVSksudUIWOY0cvcPT0xC+KFk3C+VurytszSGIkLbYXMSLLgY+a6CmJWHDujWt5T4DnOx04ahZCpn3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710788845; c=relaxed/simple;
-	bh=crlDe0LQdyFAPw+Ob2pqUFnMhq9i3YBhAXnA6BrWdOk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YtmbPc7Ka5+hOSrxzsFZoLn+4ufw/Q6CBf2m2QuD3zV5sCb/9X1PTRpPx6HV4HQGAuPH4CayrUQTkRsTlcxhAMfFvowAIm85FS9hNJ8IKza3RIj8bgcWncI7/ypSBiFiSF2REiX6kfJ4D6vOyk6/pmfVI8dTtMQkp9+p1z/GpRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j0M4QTAd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710804139; c=relaxed/simple;
+	bh=OotrFEDPSRJwIaQ3u4I4spUR/2JA32XkaDt3CDv0uYI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NJL9goQph5P3RkehC1N4hNVHRhCzi+/T7bb4PCOgIXzEUjaKs6QCmz/8iEeyyRjaeD+QUVyyl8mtsdLTytQ+ki0PCbqVwMGdTenJtXDmeCliXCNf8nNmQ5ChmhqVLNVIAYO+WeUVdLBmoYux5TzUoAZ76dqWTN5xgwmr6A5fm20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=U6+y+pDz; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j0M4QTAd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31146C433C7;
-	Mon, 18 Mar 2024 19:07:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710788844;
-	bh=crlDe0LQdyFAPw+Ob2pqUFnMhq9i3YBhAXnA6BrWdOk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j0M4QTAdmJE03FfauobXexJMJwG/HkoipIXA9CIs5F02BZXqOR3kwWb5DmzctyRfY
-	 jpqk4HHl+04/FKrPeHBWoYcCArIW/BM4bHV8zcFeHDr5SvjqKCqLSK3zcBiEURlC5o
-	 EbKnnXIljCGpJ63vPrj1L+TFS/Nm1KZcj/sNFVgyWeVMlzB7UEgtCP3Ly5HnFWxOp8
-	 UQxNUKp7oj8UqrJrT/a/yBQMGxpRX/X94HciY+en08jv+iLtGzWfOiLOHNxbrM70j8
-	 8kFEUp9os2ayya+gqgYqcx3ZdmRmMrPdD8MZTZqoItoZnqzp3hT2zW8sII0tQb4f3V
-	 6/Ri3Pdqa0pQQ==
-From: SeongJae Park <sj@kernel.org>
-To: Honggyu Kim <honggyu.kim@sk.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	akpm@linux-foundation.org,
-	apopple@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	dave.jiang@intel.com,
-	hyeongtak.ji@sk.com,
-	kernel_team@skhynix.com,
-	linmiaohe@huawei.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	rakie.kim@sk.com,
-	rostedt@goodmis.org,
-	surenb@google.com,
-	yangx.jy@fujitsu.com,
-	ying.huang@intel.com,
-	ziy@nvidia.com,
-	42.hyeyoo@gmail.com
-Subject: Re: [RFC PATCH v2 0/7] DAMON based 2-tier memory management for CXL memory
-Date: Mon, 18 Mar 2024 12:07:21 -0700
-Message-Id: <20240318190721.99659-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240318132749.2115-1-honggyu.kim@sk.com>
-References: 
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U6+y+pDz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=uDe90oU4m7kN4U29sr7WiiZQguijp+pDgJnuhirb2IY=; b=U6+y+pDzUahdjxZCjK02oc3MY0
+	jhjQNaWdPtpOUHeAQn3kyAp1Po1UThO3kSBTS0teWqL0zaNN0wzcr72e45m1tQR/NW4bsv7t93qOT
+	GIR1OlIoM597ZA5zMZBj2SWx3tJ185eBo4+ML7+NeW/6K1AgDTfPrXGaUtrA+ZdHvzJmEb1PwQTzO
+	KULWQZwts+KWeJGFjz2q2fzDEgcxB2JtvZ0qOih3gfF3HP/3w1vzhGrKf/74FyIryuVzfnUgk7UUi
+	nQfEygnz+caLPMXacklKQz5u9pHLYoW2cHy2stoESVq/FTDny7iHJSIKT1RY9D4ew/odWIo0+n6Ce
+	6xUA3AMg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rmMJ0-0000000AWy1-0ZBd;
+	Mon, 18 Mar 2024 23:22:10 +0000
+Date: Mon, 18 Mar 2024 16:22:10 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: David Wei <dw@davidwei.uk>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	David Ahern <dsahern@kernel.org>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Pavel Begunkov <asml.silence@gmail.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Yunsheng Lin <linyunsheng@huawei.com>,
+	Shailend Chand <shailend@google.com>,
+	Harshitha Ramamurthy <hramamurthy@google.com>,
+	Jeroen de Borst <jeroendb@google.com>,
+	Praveen Kaligineedi <pkaligineedi@google.com>
+Subject: Re: [RFC PATCH net-next v6 02/15] net: page_pool: create hooks for
+ custom page providers
+Message-ID: <ZfjMopBl27-7asBc@infradead.org>
+References: <20240305020153.2787423-1-almasrymina@google.com>
+ <20240305020153.2787423-3-almasrymina@google.com>
+ <ZfegzB341oNc_Ocz@infradead.org>
+ <b938514c-61cc-41e6-b592-1003b8deccae@davidwei.uk>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b938514c-61cc-41e6-b592-1003b8deccae@davidwei.uk>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Mon, 18 Mar 2024 22:27:45 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
+On Sun, Mar 17, 2024 at 07:49:43PM -0700, David Wei wrote:
+> I'm working on a similar proposal for zero copy Rx but to host memory
+> and depend on this memory provider API.
 
-> Hi SeongJae,
-> 
-> On Sun, 17 Mar 2024 08:31:44 -0700 SeongJae Park <sj@kernel.org> wrote:
-> > Hi Honggyu,
-> > 
-> > On Sun, 17 Mar 2024 17:36:29 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
-> > 
-> > > Hi SeongJae,
-> > > 
-> > > Thanks for the confirmation.  I have a few comments on young filter so
-> > > please read the inline comments again.
-> > > 
-> > > On Wed, 12 Mar 2024 08:53:00 -0800 SeongJae Park <sj@kernel.org> wrote:
-> > > > Hi Honggyu,
-> > > > 
-> > > > > > -----Original Message-----
-> > > > > > From: SeongJae Park <sj@kernel.org>
-> > > > > > Sent: Tuesday, March 12, 2024 3:33 AM
-> > > > > > To: Honggyu Kim <honggyu.kim@sk.com>
-> > > > > > Cc: SeongJae Park <sj@kernel.org>; kernel_team <kernel_team@skhynix.com>
-> > > > > > Subject: RE: Re: [RFC PATCH v2 0/7] DAMON based 2-tier memory management for CXL memory
-> > > > > >
-> > > > > > Hi Honggyu,
-> > > > > >
-> > > > > > On Mon, 11 Mar 2024 12:51:12 +0000 "honggyu.kim@sk.com" <honggyu.kim@sk.com> wrote:
-> > > > > >
-> > > > > > > Hi SeongJae,
-> > > > > > >
-> > > > > > > I've tested it again and found that "young" filter has to be set
-> > > > > > > differently as follows.
-> > > > > > > - demote action: set "young" filter with "matching" true
-> > > > > > > - promote action: set "young" filter with "matching" false
-> 
-> Thinking it again, I feel like "matching" true or false looks quite
-> vague to me as a general user.
-> 
-> Instead, I would like to have more meaningful names for "matching" as
-> follows.
-> 
-> - matching "true" can be either (filter) "out" or "skip".
-> - matching "false" can be either (filter) "in" or "apply".
+How do you need a different provider for that vs just udmabuf?
 
-I agree the naming could be done much better.  And thank you for the nice
-suggestions.  I have a few concerns, though.
+> Jakub also designed this API for hugepages too IIRC. Basically there's
+> going to be at least three fancy ways of providing pages (one of which
+> isn't actually pages, hence the merged netmem_t series) to drivers.
 
-Firstly, increasing the number of behavioral concepts.  DAMOS filter feature
-has only single behavior: excluding some types of memory from DAMOS action
-target.  The "matching" is to provide a flexible way for further specifying the
-target to exclude in a bit detail.  Without it, we would need non-variant for
-each filter type.  Comapred to the current terms, the new terms feel like
-implying there are two types of behaviors.  I think one behavior is easier to
-understand than two behaviors, and better match what internal code is doing.
+How do hugepages different from a normal page allocation?  They should
+just a different ordered passed to the page allocator.
 
-Secondly, ambiguity in "in" and "apply".  To me, the terms sound like _adding_
-something more than _excluding_.  I think that might confuse people in some
-cases.  Actually, I have used the term "filter-out" and "filter-in" on
-this  and several threads.  When saying about "filter-in" scenario, I had to
-emphasize the fact that it is not adding something but excluding others.  I now
-think that was not a good approach.
-
-Finally, "apply" sounds a bit deterministic.  I think it could be a bit
-confusing in some cases such as when using multiple filters in a combined way.
-For example, if we have two filters for 1) "apply" a memcg and 2) skip anon
-pages, the given DAMOS action will not be applied to anon pages of the memcg.
-I think this might be a bit confusing.
-
-> 
-> Internally, the type of "matching" can be boolean, but it'd be better
-> for general users have another ways to set it such as "out"/"in" or
-> "skip"/"apply" via sysfs interface.  I prefer "skip" and "apply" looks
-> more intuitive, but I don't have strong objection on "out" and "in" as
-> well.
-
-Unfortunately, DAMON sysfs interface is an ABI that we want to keep stable.  Of
-course we could make some changes on it if really required.  But I'm unsure if
-the problem of current naming and benefit of the sugegsted change are big
-enough to outweighs the stability risk and additional efforts.
-
-Also, DAMON sysfs interface is arguably not for _very_ general users.  DAMON
-user-space tool is the one for _more_ general users.  To quote DAMON usage
-document,
-
-    - *DAMON user space tool.*
-      `This <https://github.com/awslabs/damo>`_ is for privileged people such as
-      system administrators who want a just-working human-friendly interface.
-      [...]
-    - *sysfs interface.*
-      :ref:`This <sysfs_interface>` is for privileged user space programmers who
-      want more optimized use of DAMON. [...]
- 
-If the concept is that confused, I think we could improve the documentation, or
-the user space tool.  But for DAMON sysfs interface, I think we need more
-discussions for getting clear pros/cons that justifies the risk and the effort.
-
-> 
-> I also feel the filter name "young" is more for developers not for
-> general users.  I think this can be changed to "accessed" filter
-> instead.
-
-In my humble opinion, "accessed" might be confusing with the term that being
-used by DAMON, specifically, the concept of "nr_accesses".  I also thought
-about using more specific term such as "pg-accessed" or something else, but I
-felt it is still unclear or making it too verbose.
-
-I agree "young" sounds more for developers.  But, again, DAMON sysfs is for not
-_very_ general users.  And the term is used commonly on relcaimation part and
-LRU, so I think this is not too bad as long as we provide nice documentation or
-abstraction from user-space tool.
-
-> 
-> The demote and promote filters can be set as follows using these.
-> 
-> - demote action: set "accessed" filter with "matching" to "skip"
-> - promote action: set "accessed" filter with "matching" to "apply"
-> 
-> I also think that you can feel this is more complicated so I would like
-> to hear how you think about this.
-
-To my humble brain, this looks intuitive for this use case.  But as I also
-mentioned above, I worry if this could keep simple and intuitive in complicated
-filter usages.
-
-> 
-> > > > > >
-> > > > > > DAMOS filter is basically for filtering "out" memory regions that matches to
-> > > > > > the condition.
-> 
-> Right.  In other tools, I see filters are more used as filtering "in"
-> rather than filtering "out".  I feel this makes me more confused.
-
-I understand that the word, "filtering", can be used for both, and therefore
-can be confused.  I was also spending no small times at naming since I was
-thinking about both coffee filters and color filters (of photoshop or glasses).
-But it turned out that I'm more familiar with coffee filters, and might be same
-for DAMON community, since the community is having beer/coffee/tea chat series
-;) (https://lore.kernel.org/damon/20220810225102.124459-1-sj@kernel.org/)
-
-That said, I think we may be able to make this better documented, or add a
-layer of abstraction on DAMON user-space tool.
-
-[...]
-> > > > > Yes, I understand "promote non-non-young pages" means "promote young pages".
-> > > > > This might be understood as "young pages are NOT filtered out" for promotion
-> > > > > but it doesn't mean that "old pages are filtered out" instead.
-> > > > > And we just rely hot detection only on DAMOS logics such as access frequency
-> > > > > and age. Am I correct?
-> > > > 
-> > > > You're correct.
-> > > 
-> > > Ack.  But if it doesn't mean that "old pages are filtered out" instead,
-> > 
-> > It does mean that.  Here, filtering is exclusive.  Hence, "filter-in a type of
-> > pages" means "filter-out pages of other types".  At least that's the intention.
-> > To quote the documentation
-> > (https://docs.kernel.org/mm/damon/design.html#filters),
-> > 
-> >     Each filter specifies the type of target memory, and whether it should
-> >     exclude the memory of the type (filter-out), or all except the memory of
-> >     the type (filter-in).
-> 
-> Thanks for the correction.
-> 
-> > > then do we really need this filter for promotion?  If not, maybe should
-> > > we create another "old" filter for promotion?  As of now, the promotion
-> > > is mostly done inaccurately, but the accurate migration is done at
-> > > demotion level.
-> > 
-> > Is this based on your theory?  Or, a real behavior that you're seeing from your
-> > setup?  If this is a real behavior, I think that should be a bug that need to
-> > be fixed.
-> 
-> I have observed this in the hot_cold example, but I also found that the
-> promotion is done very quickly because the age for promote action is set
-> to 0 to max in my json setup.  It makes most pages of the region are
-> young because there is not enough time for those pages being old.  That
-> means I was wrong.
-[...]
-> > > I understand the function name of internal implementation is
-> > > "damos_pa_filter_out" so the basic action is filtering out, but the
-> > > cgroup filter works in the opposite way for now.
-> > 
-> > Does memcg filter works in the opposite way?  I don't think so because
-> > __damos_pa_filter_out() sets 'matches' as 'true' only if the the given folio is
-> > contained in the given memcg.  'young' filter also simply sets 'matches' as
-> > 'true' only if the given folio is young.
-> > 
-> > If it works in the opposite way, it's a bug that need to be fixed.  Please let
-> > me know if I'm missing something.
-> 
-> No, it was also my misunderstanding.  I used to set the matching false
-> using my script.
-
-Thank you for confirming.  I understand we found no bug at the moment.
-
-
-To summarize my opinion again,
-
-1. I agree the concept and names of DAMOS filters are confusing and not very
-   intuitive.
-2. However, it's unclear if the problem and the benefit from the suggested new
-   names are huge enough to take the risk and effort on changing ABI.
-3. We could improve documentation and/or user-space tool.
-
-Thank you again for the suggestion and confirmations to my questions.
-
-
-Thanks,
-SJ
-
-[...]
