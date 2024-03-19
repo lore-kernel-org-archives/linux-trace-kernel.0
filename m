@@ -1,120 +1,81 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F56085265;
-	Tue, 19 Mar 2024 16:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DFF1134CB;
+	Tue, 19 Mar 2024 17:37:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710865175; cv=none; b=FUMGnHXhrZrcKslYGUUO8sIGsOT6KSy8QTnbyfjKMxj4dE4eNvpeQ14jur/DNHlUkEB5qfplqFbY6KzisAJ0y/9uEEV8+Z0ZZnV40n1F9Ek+VC7p1frnZtGuhyYBVGOgx4q7kN5Hl3tXe4ZHuSmB3dOy6v/CpDfEV7XI7q1sWDQ=
+	t=1710869858; cv=none; b=s6TMmKYb9GrWV12952m4Bu82tJmudPdtgQLWR4Ii3TRTpDO6uvFcBbwkM7X5eWa46aIQra6eV/qdM+xJf48kdRncC9iCcUHh8v0b49ZGsAwLRxuTtJm/Myb+h43iyB0KJ9vuAUjUjbihdM5VBr+dVi1r608gl2BvJYOfgQMa9Mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710865175; c=relaxed/simple;
-	bh=VFaRQas0gSrfP0qC172CcOje6IBtZpzaLgn68X7typs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=avnVmbZOoVzlTYA3F7z5fS3qoWCfd9uB6Kwr263wlKO4FHPU8iE7GL23Z4kf07dnCtSu30XmYKPWfK8iDuZlvsErHPjUK+9q9HyzsmlS6xNTTM6y/8AEs8/oAxroZpixib9jFqL/FVVk+DF/CZuGftkgzkQBmkyE3mu56Ql3WSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jehr51D2; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jehr51D2"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1def142ae7bso39071395ad.3;
-        Tue, 19 Mar 2024 09:19:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710865171; x=1711469971; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Epr0Xv4Q3hfU6xbN2E2KtYBZZdf7JymwhQQwouieY7s=;
-        b=jehr51D2+XSPEUdph5sP1wCoe2sw8uZWkb9J0eQRrjyyKzveMA0oLS/w+JP/tX4Wi5
-         S7zc883Fg5Lr1LI8+Dq5aWTv3x1Q5xJC/XiO6rfvIjalmLOFK8Ll5qt2xumc76Hyp0D9
-         UciDCjCTsUV9gYDw8NOmWT+nOiuClhMjZKvRc30IQiuSr8D0W9oVbMImD7HF3jhstBHx
-         vjoJz4skasY2zMIsn3525jTYcB5JpGNvRI4HrYSv3fSeOnrHnCh3UGsQ1+bKboSPGtlA
-         K8Uwu247TDHxLzqUQKOOBp3ut4RCkIBogsSa5B2xARyApps9M/33v8nxDhKbHRhaHzZJ
-         VOqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710865171; x=1711469971;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Epr0Xv4Q3hfU6xbN2E2KtYBZZdf7JymwhQQwouieY7s=;
-        b=cRbNDCJKXENyv5l4MlI7uUsB4H1796ntuUn6Cqmc6RRpr4eGycQxwYq7ggx4U+3Wg8
-         JxEaSAcSeM7hWu0OdhZvV9ozR9FJzkpcUM0PZmyUeg/rSDRFmyJmzKr8OcxRrhlK7BW/
-         KR5voC6Xx9sdC1XcCoiP0oZLV7lYhuLhMdfoBLI0vF8SGUTVwxf/PZjS1/4pNImTP0PI
-         L8XjqHF3BVhG049MH0ds3FJKCzHTZoQak2KQPcrM/3o/cHw74coKnK8olyrHg0yqzxy9
-         1Pzh8h9BddseRAnW73eC8crpjkYG/ikrVxej5iV93dSmt4hqWoNCpDpDZcT5SCF2c6cI
-         kwxA==
-X-Forwarded-Encrypted: i=1; AJvYcCUYnUUi5Ze7gFWmPxXtfgQzjkVNjKtg+6i1yK4uNTJ6ByjbNPMndj5pYG22hVkBcjT5B7npRktATq/3GagtPhFLDMC076AjdKU0NDXIZNa35VuDm+L8Pewuzi6Y1YexuguOLHti2Oy3IoP0AjiOTnWQMDYnqAlF5/nHgJOsNYPE2pBXqL0v
-X-Gm-Message-State: AOJu0YzVb3YPk3vzH3myUM1RNAvDIV69JVvFagFf/nEpl22tS8OjU/mv
-	nI29m8/r/j3joQfx8MJbHN1T/wpEutAQejExYaz2LuLWUsUUxOMnqJuhM7HSiAI0sd3SXGrXNSl
-	k6tnmbH00FdAttsBwg9YWtBE85IF8lfCh
-X-Google-Smtp-Source: AGHT+IGFjpRbnCDyRCQ1z3277NWH9fPOrpACKz4p44EkTlkRUxbeqzQQ5mQ1iMoSUIughS59YHq7ZIPUJGj7zKNSrLA=
-X-Received: by 2002:a17:903:1c9:b0:1de:f32d:f5ba with SMTP id
- e9-20020a17090301c900b001def32df5bamr15251700plh.42.1710865171367; Tue, 19
- Mar 2024 09:19:31 -0700 (PDT)
+	s=arc-20240116; t=1710869858; c=relaxed/simple;
+	bh=rtuC/HT4xKteBC22K8GZi/JtBVYuPqSZjhgqWpvb4Zo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=uD0c5XV10W4qWdEcx6OQMcMQrO6smbcKdIURBwLsDYN3L4/0StS6TTJOYBO3bJDGW8MPkhYJSF7AVlXmlKG0FB7xmg6VSEEv1Ia9Wh4d/IBsxqP2ltqcT9hmBNw5ZH5M5yZUzOcuopghZq0HIga6+CPo9WWQ9arfiXh7lwJc5+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B9B7C433C7;
+	Tue, 19 Mar 2024 17:37:37 +0000 (UTC)
+Date: Tue, 19 Mar 2024 13:39:59 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Subject: [PATCH] tracing: Just use strcmp() for testing __string() and
+ __assign_str() match
+Message-ID: <20240319133959.349f5082@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240318181728.2795838-1-andrii@kernel.org> <20240319132057.78e60d15e4fd07dbef3b14a9@kernel.org>
-In-Reply-To: <20240319132057.78e60d15e4fd07dbef3b14a9@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 19 Mar 2024 09:19:19 -0700
-Message-ID: <CAEf4BzaFfQeD8TY7pXEyX4h5UeAg0HZpx8psJF=Z6GJmr3VF5w@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] uprobes: two common case speed ups
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	rostedt@goodmis.org, bpf@vger.kernel.org, mathieu.desnoyers@efficios.com, 
-	linux-kernel@vger.kernel.org, oleg@redhat.com, jolsa@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 18, 2024 at 9:21=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
-rg> wrote:
->
-> Hi,
->
-> On Mon, 18 Mar 2024 11:17:25 -0700
-> Andrii Nakryiko <andrii@kernel.org> wrote:
->
-> > This patch set implements two speed ups for uprobe/uretprobe runtime ex=
-ecution
-> > path for some common scenarios: BPF-only uprobes (patches #1 and #2) an=
-d
-> > system-wide (non-PID-specific) uprobes (patch #3). Please see individua=
-l
-> > patches for details.
->
-> This series looks good to me. Let me pick it on probes/for-next.
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Great, at least I guessed the Git repo right, if not the branch.
-Thanks for pulling it in! I assume some other uprobe-related follow up
-patches should be based on probes/for-next as well, right?
+As __assign_str() no longer uses its "src" parameter, there's a check to
+make sure nothing depends on it being different than what was passed to
+__string(). It originally just compared the pointer passed to __string()
+with the pointer passed into __assign_str() via the "src" parameter. But
+there's a couple of outliers that just pass in a quoted string constant,
+where comparing the pointers is UB to the compiler, as the compiler is
+free to create multiple copies of the same string constant.
 
->
-> Thanks!
->
-> >
-> > v1->v2:
-> >   - rebased onto trace/core branch of tracing tree, hopefully I guessed=
- right;
-> >   - simplified user_cpu_buffer usage further (Oleg Nesterov);
-> >   - simplified patch #3, just moved speculative check outside of lock (=
-Oleg);
-> >   - added Reviewed-by from Jiri Olsa.
-> >
-> > Andrii Nakryiko (3):
-> >   uprobes: encapsulate preparation of uprobe args buffer
-> >   uprobes: prepare uprobe args buffer lazily
-> >   uprobes: add speculative lockless system-wide uprobe filter check
-> >
-> >  kernel/trace/trace_uprobe.c | 103 +++++++++++++++++++++---------------
-> >  1 file changed, 59 insertions(+), 44 deletions(-)
-> >
-> > --
-> > 2.43.0
-> >
->
->
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Instead, just use strcmp(). It may slow down the trace event, but this
+will eventually be removed.
+
+Also, fix the issue of passing NULL to strcmp() by adding a WARN_ON() to
+make sure that both "src" and the pointer saved in __string() are either
+both NULL or have content, and then checking if "src" is not NULL before
+performing the strcmp().
+
+Link: https://lore.kernel.org/all/CAHk-=wjxX16kWd=uxG5wzqt=aXoYDf1BgWOKk+qVmAO0zh7sjA@mail.gmail.com/
+
+Fixes: b1afefa62ca9 ("tracing: Use strcmp() in __assign_str() WARN_ON() check")
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/trace/stages/stage6_event_callback.h | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/include/trace/stages/stage6_event_callback.h b/include/trace/stages/stage6_event_callback.h
+index 83da83a0c14f..3690e677263f 100644
+--- a/include/trace/stages/stage6_event_callback.h
++++ b/include/trace/stages/stage6_event_callback.h
+@@ -35,9 +35,8 @@
+ 	do {								\
+ 		char *__str__ = __get_str(dst);				\
+ 		int __len__ = __get_dynamic_array_len(dst) - 1;		\
+-		WARN_ON_ONCE(__builtin_constant_p(src) ?		\
+-			     strcmp((src), __data_offsets.dst##_ptr_) :	\
+-			     (src) != __data_offsets.dst##_ptr_);	\
++		WARN_ON_ONCE(!(void *)(src) != !(void *)__data_offsets.dst##_ptr_); \
++		WARN_ON_ONCE((src) && strcmp((src), __data_offsets.dst##_ptr_)); \
+ 		memcpy(__str__, __data_offsets.dst##_ptr_ ? :		\
+ 		       EVENT_NULL_STR, __len__);			\
+ 		__str__[__len__] = '\0';				\
+-- 
+2.43.0
+
