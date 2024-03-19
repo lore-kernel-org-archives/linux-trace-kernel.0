@@ -1,109 +1,84 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDAE45D8F7;
-	Mon, 18 Mar 2024 23:22:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7235D7BB1C;
+	Tue, 19 Mar 2024 04:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710804139; cv=none; b=GJ+chdCpVJXfrmun+RkGBAP1Bk0mGiV1Ld4/l/HRHM3d0nahz7CioHd9s0ZD0JMhVr8rqv5O1xSdvZnm+qyWYnlpTq+CtVSksudUIWOY0cvcPT0xC+KFk3C+VurytszSGIkLbYXMSLLgY+a6CmJWHDujWt5T4DnOx04ahZCpn3Q=
+	t=1710822063; cv=none; b=C2TbSoT7oi5cIYsrqvCyveNE04pGd8fBsjiyp7+ULZs2M3GdxxaLyTydC5CmEXvSxm51SotUoOfk4yCkpdI5P5mZ0unoSW69IIdl6puvPMSxHmyneRnTtnaTIDCvcJwdbkTtANGVMrT24GP95McpRtRAXZnzkvLgIXQdq7wTZxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710804139; c=relaxed/simple;
-	bh=OotrFEDPSRJwIaQ3u4I4spUR/2JA32XkaDt3CDv0uYI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NJL9goQph5P3RkehC1N4hNVHRhCzi+/T7bb4PCOgIXzEUjaKs6QCmz/8iEeyyRjaeD+QUVyyl8mtsdLTytQ+ki0PCbqVwMGdTenJtXDmeCliXCNf8nNmQ5ChmhqVLNVIAYO+WeUVdLBmoYux5TzUoAZ76dqWTN5xgwmr6A5fm20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=U6+y+pDz; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1710822063; c=relaxed/simple;
+	bh=EFq7mIqWfl+BjiP6nOSsSBppaKo1QaSeIi0ksZ/ZTFE=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=SK9zw2jGPfJvLiKujWDwP9H+rIJ1SrVfaE2/Y/3jYi2mvd19PeHCxwYM2zXv0UKy2ex50aBqJjiDtZsWn7Svv5X04Uxs4qtT2XL4g8sGkSS3QpMhrOymYllBB7rPUpMwZnxoIeAZtofvWJzTt1TSJgZqi8+qVHtAzkDTKinn0PI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FDtTeaUv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U6+y+pDz"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=uDe90oU4m7kN4U29sr7WiiZQguijp+pDgJnuhirb2IY=; b=U6+y+pDzUahdjxZCjK02oc3MY0
-	jhjQNaWdPtpOUHeAQn3kyAp1Po1UThO3kSBTS0teWqL0zaNN0wzcr72e45m1tQR/NW4bsv7t93qOT
-	GIR1OlIoM597ZA5zMZBj2SWx3tJ185eBo4+ML7+NeW/6K1AgDTfPrXGaUtrA+ZdHvzJmEb1PwQTzO
-	KULWQZwts+KWeJGFjz2q2fzDEgcxB2JtvZ0qOih3gfF3HP/3w1vzhGrKf/74FyIryuVzfnUgk7UUi
-	nQfEygnz+caLPMXacklKQz5u9pHLYoW2cHy2stoESVq/FTDny7iHJSIKT1RY9D4ew/odWIo0+n6Ce
-	6xUA3AMg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rmMJ0-0000000AWy1-0ZBd;
-	Mon, 18 Mar 2024 23:22:10 +0000
-Date: Mon, 18 Mar 2024 16:22:10 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: David Wei <dw@davidwei.uk>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-	Matt Turner <mattst88@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	David Ahern <dsahern@kernel.org>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Pavel Begunkov <asml.silence@gmail.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Yunsheng Lin <linyunsheng@huawei.com>,
-	Shailend Chand <shailend@google.com>,
-	Harshitha Ramamurthy <hramamurthy@google.com>,
-	Jeroen de Borst <jeroendb@google.com>,
-	Praveen Kaligineedi <pkaligineedi@google.com>
-Subject: Re: [RFC PATCH net-next v6 02/15] net: page_pool: create hooks for
- custom page providers
-Message-ID: <ZfjMopBl27-7asBc@infradead.org>
-References: <20240305020153.2787423-1-almasrymina@google.com>
- <20240305020153.2787423-3-almasrymina@google.com>
- <ZfegzB341oNc_Ocz@infradead.org>
- <b938514c-61cc-41e6-b592-1003b8deccae@davidwei.uk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FDtTeaUv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D003C433F1;
+	Tue, 19 Mar 2024 04:21:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710822063;
+	bh=EFq7mIqWfl+BjiP6nOSsSBppaKo1QaSeIi0ksZ/ZTFE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FDtTeaUvL7WF1Pnnna4HQWDXaRFsPsVf9iuGsGGEuguwiRz0uisp/Fkyvdzv33vuY
+	 8uDgcqdqb/JtpZJVVvjBHqR/99YAoIf5yxmXq1ezwUUpJI8OgXzyvS+fUjpuhydNsS
+	 uBnhz24tyjg6d6kdiq3N9W+Goj7brXfzL/EoaUdrK9YO5/7HgiCV9+iXOYAOTpR0Q6
+	 ddEbl+5QwuPSaH5wvCD+Zz/uO+ib/7XmkT3zG3xKKY0aD7jqbvb1XSY110ktRc9VYi
+	 LM1JLJjLZidac3ZaGXCnoYy+o9YYxbPl3R5zT5x8z/OJAYRUks+ijxTZnsjDBR2syA
+	 MPkYG1Bw3YpIw==
+Date: Tue, 19 Mar 2024 13:20:57 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+ bpf@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, oleg@redhat.com, jolsa@kernel.org
+Subject: Re: [PATCH v2 0/3] uprobes: two common case speed ups
+Message-Id: <20240319132057.78e60d15e4fd07dbef3b14a9@kernel.org>
+In-Reply-To: <20240318181728.2795838-1-andrii@kernel.org>
+References: <20240318181728.2795838-1-andrii@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b938514c-61cc-41e6-b592-1003b8deccae@davidwei.uk>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, Mar 17, 2024 at 07:49:43PM -0700, David Wei wrote:
-> I'm working on a similar proposal for zero copy Rx but to host memory
-> and depend on this memory provider API.
+Hi,
 
-How do you need a different provider for that vs just udmabuf?
+On Mon, 18 Mar 2024 11:17:25 -0700
+Andrii Nakryiko <andrii@kernel.org> wrote:
 
-> Jakub also designed this API for hugepages too IIRC. Basically there's
-> going to be at least three fancy ways of providing pages (one of which
-> isn't actually pages, hence the merged netmem_t series) to drivers.
+> This patch set implements two speed ups for uprobe/uretprobe runtime execution
+> path for some common scenarios: BPF-only uprobes (patches #1 and #2) and
+> system-wide (non-PID-specific) uprobes (patch #3). Please see individual
+> patches for details.
 
-How do hugepages different from a normal page allocation?  They should
-just a different ordered passed to the page allocator.
+This series looks good to me. Let me pick it on probes/for-next.
 
+Thanks!
+
+> 
+> v1->v2:
+>   - rebased onto trace/core branch of tracing tree, hopefully I guessed right;
+>   - simplified user_cpu_buffer usage further (Oleg Nesterov);
+>   - simplified patch #3, just moved speculative check outside of lock (Oleg);
+>   - added Reviewed-by from Jiri Olsa.
+> 
+> Andrii Nakryiko (3):
+>   uprobes: encapsulate preparation of uprobe args buffer
+>   uprobes: prepare uprobe args buffer lazily
+>   uprobes: add speculative lockless system-wide uprobe filter check
+> 
+>  kernel/trace/trace_uprobe.c | 103 +++++++++++++++++++++---------------
+>  1 file changed, 59 insertions(+), 44 deletions(-)
+> 
+> -- 
+> 2.43.0
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
