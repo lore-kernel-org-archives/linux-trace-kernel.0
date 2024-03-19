@@ -1,56 +1,62 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF488446C8
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 19 Mar 2024 05:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF3F50A67
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 19 Mar 2024 07:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710827405; cv=none; b=UNvLv1VyofKgmdWKD4mAQLL5SqwqQx2xjyUb4swDJX6S58v70oWwJnOPV+mzDce14GdJKGuOa/ulJQq+p/xH69aCW7zzehzm0aKHgpp0gLzgHjP7m1l1tmVcYBSvxDbq/s6KQMzHs/jCxyOD/SasNxmg5vkDKvlZ8Jd1/Ffa5Nc=
+	t=1710832757; cv=none; b=A7zgy2RB7ll0mLzfHe/I6OUjReLzTDcf7wfZZx+R6mfzf4Z/F+Z/Ofs2EA+48MGxe7FbtQrI0NM4Bz7lr4Bqcq9b+a7fxVLMWTCIp8U952aTYu1gaKlAzns//vcUJhUP+a3mIxIRCGtY4CzSEx1+fNHK3fzZPCuDfac0EZh0pCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710827405; c=relaxed/simple;
-	bh=d1vQtOKcuqHvKy4//qYVKUxTKEg/z7zK/5/AUEV34Mk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KpOyJUWjP1cJJ+Um/gK5UIIQtFAA9kwuWZ54TOUE6cAZb1gYxSW/gua/0r4UVXFFBONWlbMVjMz2kUT5R/52l1kze+vXLUJSU0fcs8kqG+zZxh87p+kJjDUH8O7bfWSHMkbBIMNEncW/ZRvhN6LiLlfhkrEYyQHI3iJ07h2VJTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AnwLIFkX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1710832757; c=relaxed/simple;
+	bh=uO7a5RSHom5olgldMLQaTTAudWCy0XAl0qtilTciP9U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=GQj+/7HNjJeaimJf0cEJzxieuxmXWBkba4kSBfRVcueyGWbSv/GnCr90rf+J5h3O3SWQoqBUnTxvHG+lFLb1gJDU1e4z7UnFX5wYxVYTJ4+MoexIcpOZMUWq8fUvcWRkdZuMSHFN0oYVhOxKdAlQMb4w/Q9FYpfnRrywwMaBds4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B7ubGowJ; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AnwLIFkX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710827402;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=905zz3+qAgtGYA95TFFZeQGypKJrD7b7ryqBKkxZsf0=;
-	b=AnwLIFkXgO6sXMSZ9G28hosbEBIiuLoUH1K0w7FcM5K+iTrebIuQo4fDuExli3s9/IYjDS
-	KP6S+3V8vtcrOui8+Db/XKaypIvngK32dKpHThMP/6hetpUVkP86kYB5r31WtVTtcQHIe4
-	PUwvqY+ewSXdnlRCVGCQntgaZTxAdLc=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-631-kmmv7S9POOydRLMIxWd24g-1; Tue,
- 19 Mar 2024 01:49:57 -0400
-X-MC-Unique: kmmv7S9POOydRLMIxWd24g-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4A5FC1C06500;
-	Tue, 19 Mar 2024 05:49:57 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.50])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 552393C20;
-	Tue, 19 Mar 2024 05:49:55 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 19 Mar 2024 06:48:35 +0100 (CET)
-Date: Tue, 19 Mar 2024 06:48:12 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, bpf@vger.kernel.org,
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
-	jolsa@kernel.org
-Subject: Re: [PATCH v2 0/3] uprobes: two common case speed ups
-Message-ID: <20240319054811.GA20287@redhat.com>
-References: <20240318181728.2795838-1-andrii@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B7ubGowJ"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-414618e6820so6074635e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 19 Mar 2024 00:19:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710832754; x=1711437554; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QVvgM7GGeSUf7bYuhFVhif5oXMSin2tIGGHRDZ4YN+s=;
+        b=B7ubGowJzIKASF99PhA/LefdPKn8/hNRsBmh4mMBf/xGPZMMvn2SC4PYhbRkNuumTw
+         4sdV1EE0apYazksppKFGNTrZ4pHt0rS2qxrFtjdh7NGNhy6Wv6ZhM2UW24Jeq8T5kDK9
+         jWITjtGf8c7nuhmYMu0ZI/5yTmFOkBy+wGcEfMRUmhpDBH+GneMlaSBhvH4WxX7sNJuF
+         ZFAX3qpX0LjJGaGSs3qCHcycLOWGWb45+hxz9VFIH2Z3L4tOCMx8bsZsQ5Cbw4Nx56nA
+         3H8SAv7t2S/SFaiOLwtUaqO3K3UNTvQdc8YbIie8xsrUG06pvgjKzONQxOIgSkt3PB9w
+         NuRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710832754; x=1711437554;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QVvgM7GGeSUf7bYuhFVhif5oXMSin2tIGGHRDZ4YN+s=;
+        b=P1pQqgBiamF3xx/gLPhYgv1F/0HVNwv0ujrHvYBgKncAajIbKtsaH9F/qvCTld1OCN
+         ny+bIF0XyQAFuSSbY5nw3jwIC/7QvwQZAD6y/joJIXY/5pNfXmrYMJ2MjJKnXdyW4Jur
+         qs5raBqXJ9s4QRXKZjQzpt37moFV9ymq7EqDET6VtlPAqnh0sfZajtbeD7i3WZtQ3kVd
+         obrJ6ErWFWTcLlUMRzcZtxATYZ6P/MKZZqco/h164OEImhG6y1gkI2ZYHzvxvFYmtjk2
+         E4JHANyj+VF6rrp3gNkiG/g1C7t8NcqDe+uvn1Ha7tEmci2LhQShIy+Maq3BqzR2vX+a
+         k4Jg==
+X-Gm-Message-State: AOJu0YyutM0wWHmg5j4/Z49/K9/XXB4kAeSY0jS4D5F8RfStRQuUB7JF
+	RYFG60j55i1/43t0zZYPcDeRstbXJ891elOQQ/uFFl0Rj+7p7KkiF7pzV7Sva5/Cl76h3N+zaur
+	a
+X-Google-Smtp-Source: AGHT+IHO3AGegTf8LybUwrtw17HeufgEeVf392mo/WzCCsJ1QdGG31N63l0U1zH3fdu3mOHP6Vwwkg==
+X-Received: by 2002:a05:600c:4449:b0:414:e63:4d20 with SMTP id v9-20020a05600c444900b004140e634d20mr1291978wmn.16.1710832754095;
+        Tue, 19 Mar 2024 00:19:14 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id f4-20020a5d5684000000b0033ec6c8e780sm11513458wrv.102.2024.03.19.00.19.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 00:19:13 -0700 (PDT)
+Date: Tue, 19 Mar 2024 10:19:09 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: mhiramat@kernel.org
+Cc: linux-trace-kernel@vger.kernel.org
+Subject: [bug report] tracing/probes: Support $argN in return probe (kprobe
+ and fprobe)
+Message-ID: <b010488e-68aa-407c-add0-3e059254aaa0@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -59,19 +65,42 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240318181728.2795838-1-andrii@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-On 03/18, Andrii Nakryiko wrote:
->
-> Andrii Nakryiko (3):
->   uprobes: encapsulate preparation of uprobe args buffer
->   uprobes: prepare uprobe args buffer lazily
->   uprobes: add speculative lockless system-wide uprobe filter check
->
->  kernel/trace/trace_uprobe.c | 103 +++++++++++++++++++++---------------
->  1 file changed, 59 insertions(+), 44 deletions(-)
+Hello Masami Hiramatsu (Google),
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+Commit 25f00e40ce79 ("tracing/probes: Support $argN in return probe
+(kprobe and fprobe)") from Mar 4, 2024 (linux-next), leads to the
+following Smatch static checker warning:
 
+	kernel/trace/trace_probe.c:856 store_trace_entry_data()
+	error: uninitialized symbol 'val'.
+
+kernel/trace/trace_probe.c
+    846                 return;
+    847 
+    848         for (i = 0; i < earg->size; i++) {
+    849                 struct fetch_insn *code = &earg->code[i];
+    850 
+    851                 switch (code->op) {
+    852                 case FETCH_OP_ARG:
+    853                         val = regs_get_kernel_argument(regs, code->param);
+    854                         break;
+    855                 case FETCH_OP_ST_EDATA:
+--> 856                         *(unsigned long *)((unsigned long)edata + code->offset) = val;
+
+Probably the earg->code[i] always has FETCH_OP_ARG before
+FETCH_OP_ST_EDATA but Smatch isn't smart enough to figure that out...
+
+    857                         break;
+    858                 case FETCH_OP_END:
+    859                         goto end;
+    860                 default:
+    861                         break;
+    862                 }
+    863         }
+    864 end:
+    865         return;
+    866 }
+
+regards,
+dan carpenter
