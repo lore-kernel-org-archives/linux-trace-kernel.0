@@ -1,90 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CCEA4F606;
-	Tue, 19 Mar 2024 22:27:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D69D5F86E;
+	Tue, 19 Mar 2024 23:00:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710887278; cv=none; b=SdOygk/roLoxvuh6Jc+ZnOUTNzzkeq+CllaYJB1exGewJ9p3KLSmRLwQZlNOwlDCdmvNLSKgun2YHSwvMBdjYxO6t64ljKuBSGDweAZ5PvKWL7TL/NuoXW3deiXJvUY4XANBYplVGxcc2O9No/eGbJMfsl4m1me9VJshTrHUHPU=
+	t=1710889237; cv=none; b=YR3XafHx2a4QANNiNju4N+ShYIR+QlRtTSRAl1hcVQVW87ueheM8ZZHrjI+TNhTk5Yh4jcb8iHhIDt0pYz+xjXe5xZNSRVSeS3QaIqsabO5kerK4wMWImS8XaA6msf3Y8tYKhVp66woOwSRYWirATbpq6T/v1wf6pWrLwxLcfSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710887278; c=relaxed/simple;
-	bh=3E4E8B7vm+Xxpff5SUOHKd788iBWU8C+tly9Ks6iqng=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E7+NrK0MSQJV1Ai0NHdc+6pLtlwStB6QTYgZ+IPt6qPGOS9TJJAyNLx3OX0YFEpWBUECLcJtfr0B9udCq0qUdJeZytHJ8BWx1KV5F8V9oJykDQv4A9g41ab37Pk/TSsrx/0/b+UBE2Kiu2cTP3J0cSiTPbhMUcP58+/93j/rheM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OCIYzZLs; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OCIYzZLs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04B96C433F1;
-	Tue, 19 Mar 2024 22:27:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710887277;
-	bh=3E4E8B7vm+Xxpff5SUOHKd788iBWU8C+tly9Ks6iqng=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OCIYzZLsEwiXAIUO83scjvMXK3REeSfhd8pwabkEDAAI3OxKGwblDsZnfhT8MOKd2
-	 EcZSSWXcWh5GBlU2yNNynUXHPY2IBJYuQquJeu9yv68zMunPq1YqLJrrOITrEo34I2
-	 y9M8jGInsTSr0Or4xiqWUbwbWPT+qOvMlY+rgrwwJ5ao/yky6TEyWXP0m2aT8jpjsS
-	 NSRTQPmFtbaSiwSZwtZX235vKAgnnaNrSXXpjc09DFtm4v5xVWB8MEKMr9llmiPHlD
-	 c1oQZZEdsbtZwb3liVaDq1kLSY+nAyC47R1vcgr25SFHNPSSbs3mEIZWAjXzCdkmop
-	 cAWqaxITwX/kw==
-Date: Tue, 19 Mar 2024 15:27:55 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	ndesaulniers@google.com, morbo@google.com, justinstitt@google.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, patches@lists.linux.dev,
-	Linux Kernel Functional Testing <lkft@linaro.org>
-Subject: Re: [PATCH 0/2] tracing: Fully silence instance of -Wstring-compare
-Message-ID: <20240319222755.GA2005262@dev-arch.thelio-3990X>
-References: <20240319-tracing-fully-silence-wstring-compare-v1-0-81adb44403f5@kernel.org>
- <20240319181509.25bacdc5@gandalf.local.home>
+	s=arc-20240116; t=1710889237; c=relaxed/simple;
+	bh=Rg9kLOe7EynCjlAo/kFPcMuXUbZElAONgC515/UjszU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d2vvZU7523glgpQSdDYipKngGMNnUyzVaKFe5iZ2y68GvLkADfiESU4l45qyshNSyA1gAbksWhdqSa7rT4hQPpXavxZaAU7tXObw2VBJd8USb3RDhWmAlmzRLiyT5ltmZXkZ4BY0Y96VOZLZNqeqO3ZdpWtTUOwNIqjii8wUf7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45471C433C7;
+	Tue, 19 Mar 2024 23:00:36 +0000 (UTC)
+Date: Tue, 19 Mar 2024 19:02:59 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Daniel Bristot de Oliveira <bristot@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] tracing/tools: Updates for 6.9
+Message-ID: <20240319190259.0086706f@gandalf.local.home>
+In-Reply-To: <20240318174116.420584-1-bristot@kernel.org>
+References: <20240318174116.420584-1-bristot@kernel.org>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240319181509.25bacdc5@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 19, 2024 at 06:15:09PM -0400, Steven Rostedt wrote:
-> On Tue, 19 Mar 2024 09:07:51 -0700
-> Nathan Chancellor <nathan@kernel.org> wrote:
+On Mon, 18 Mar 2024 18:41:13 +0100
+Daniel Bristot de Oliveira <bristot@kernel.org> wrote:
+
+> Steven,
 > 
-> > Hi all,
-> > 
-> > This series fully resolves the new instance of -Wstring-compare from
-> > within the __assign_str() macro. The first patch resolves a build
-> > failure with GCC that would be seen with just the second patch applied.
-> > The second patch actually hides the warning.
-> > 
-> > NOTE: This is based on trace/for-next, which does not contain the
-> > minimum LLVM version bump that occurred later in the current merge
-> > window, so this uses
-> > 
-> >   __diag_ignore(clang, 11, ...
-> > 
-> > instead of
-> > 
-> >   __diag_ignore(clang, 13, ...
-> > 
-> > which will be required when this is merged into Linus's tree. If you can
-> > base this series on a tree that has the merge commit e5eb28f6d1af ("Merge
-> > tag 'mm-nonmm-stable-2024-03-14-09-36' of
-> > git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm") in it, then that
-> > change can be done at application time, rather than merge time (or I can
-> > send a v2). It would be really nice for this to make the merge window so
-> > that this warning does not proliferate into other trees that base on
-> > -rc1.
-> > 
+> Tracing tooling updates for 6.9
 > 
-> I'm guessing this isn't needed with the last update.
+> Tracing:
+>         - Update makefiles for latency-collector and RTLA,
+>           using tools/build/ makefiles like perf does, inheriting
+>           its benefits. For example, having a proper way to
+>           handle dependencies.
+> 
+>         - The timerlat tracer has an interface for any tool to use.
+>           rtla timerlat tool uses this interface dispatching its
+>           own threads as workload. But, rtla timerlat could also be
+>           used for any other process. So, add 'rtla timerlat -U'
+>           option, allowing the timerlat tool to measure the latency of
+>           any task using the timerlat tracer interface.
+> 
+> Verification:
+>         - Update makefiles for verification/rv, using tools/build/
+>           makefiles like perf does, inheriting its benefits.
+>           For example, having a proper way to handle dependencies.
+> 
+> 
+> Please pull the latest trace-tools-v6.9 tree, which can be found at:
+> 
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/bristot/linux.git
+> trace-tools-v6.9
 
-Correct, this is resolved in Linus's tree and should be in -next
-tomorrow. The first patch may be worth sending standalone, I'll think
-about sending it later but that can go in via some other tree, not
-yours.
+Looks like you just built on top of a random commit from Linus's tree:
 
-Cheers,
-Nathan
+commit f6cef5f8c37f58a3bc95b3754c3ae98e086631ca
+Merge: 906a93befec8 8f06fb458539
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun Mar 17 16:59:33 2024 -0700
+
+    Merge tag 'i3c/for-6.9' of git://git.kernel.org/pub/scm/linux/kernel/git/i3c/linux
+
+Linus prefers basing off of real tags or previous pulls from us.
+
+Can you rebase your changes on v6.8 and resend?
+
+  $ git checkout v6.8
+  $ git cherry-pick f6cef5f8c37f58a3bc95b3754c3ae98e086631ca..trace-tools-v6.9
+
+Appears to work fine.
+
+Thanks!
+
+-- Steve
+
+
+> 
+> Tag SHA1: 2eb09a97c56af3c27bd9dcebccb495f70d56d5c0
+> Head SHA1: 9c63d9f58a42b979a42bcaed534d9246996ac0d9
+> 
+> 
+> Daniel Bristot de Oliveira (4):
+>       tools/tracing: Use tools/build makefiles on latency-collector
+>       tools/rtla: Use tools/build makefiles to build rtla
+>       tools/verification: Use tools/build makefiles on rv
+>       tools/rtla: Add -U/--user-load option to timerlat
+> 
+> ----
+>  .../tools/rtla/common_timerlat_options.rst         |   6 +
+>  tools/tracing/latency/.gitignore                   |   5 +-
+>  tools/tracing/latency/Build                        |   1 +
+>  tools/tracing/latency/Makefile                     | 105 ++++++++--
+>  tools/tracing/latency/Makefile.config              |  30 +++
+>  tools/tracing/rtla/.gitignore                      |   7 +-
+>  tools/tracing/rtla/Build                           |   1 +
+>  tools/tracing/rtla/Makefile                        | 217 +++++++--------------
+>  tools/tracing/rtla/Makefile.config                 |  47 +++++
+>  tools/tracing/rtla/Makefile.rtla                   |  80 ++++++++
+>  tools/tracing/rtla/Makefile.standalone             |  26 +++
+>  tools/tracing/rtla/sample/timerlat_load.py         |  74 +++++++
+>  tools/tracing/rtla/src/Build                       |  11 ++
+>  tools/tracing/rtla/src/timerlat_hist.c             |  16 +-
+>  tools/tracing/rtla/src/timerlat_top.c              |  14 +-
+>  tools/verification/rv/.gitignore                   |   6 +
+>  tools/verification/rv/Build                        |   1 +
+>  tools/verification/rv/Makefile                     | 207 +++++++-------------
+>  tools/verification/rv/Makefile.config              |  47 +++++
+>  tools/verification/rv/Makefile.rv                  |  51 +++++
+>  tools/verification/rv/src/Build                    |   4 +
+>  21 files changed, 650 insertions(+), 306 deletions(-)
+>  create mode 100644 tools/tracing/latency/Build
+>  create mode 100644 tools/tracing/latency/Makefile.config
+>  create mode 100644 tools/tracing/rtla/Build
+>  create mode 100644 tools/tracing/rtla/Makefile.config
+>  create mode 100644 tools/tracing/rtla/Makefile.rtla
+>  create mode 100644 tools/tracing/rtla/Makefile.standalone
+>  create mode 100644 tools/tracing/rtla/sample/timerlat_load.py
+>  create mode 100644 tools/tracing/rtla/src/Build
+>  create mode 100644 tools/verification/rv/.gitignore
+>  create mode 100644 tools/verification/rv/Build
+>  create mode 100644 tools/verification/rv/Makefile.config
+>  create mode 100644 tools/verification/rv/Makefile.rv
+>  create mode 100644 tools/verification/rv/src/Build
+> ---------------------------
+
