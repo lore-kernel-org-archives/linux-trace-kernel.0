@@ -1,248 +1,372 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD1115A5
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Mar 2024 16:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84B63EA64;
+	Wed, 20 Mar 2024 16:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710952944; cv=none; b=ie+BC+q/DHAJ4esJT0eN4O2zPjHLwqrYO20ZKpX5DF8L9YIiNrFmthI9HmIeHDTVYVzZ1gpT238MdmehSYtcG2a5He8VdxFInxJHn6WHXSg2NMalDhT4b2iYNcKLscQ0nyi+Dgz36l3iKa5Nm/AK78S8KZlPJooLvKOa+TKG024=
+	t=1710953783; cv=none; b=YVe4qfV1lrg8EPNxfqINGd7t72KbzQHpoXvX1qNrxn8Oi6B7SPo7Qvg4X9fkqoVL8kJPqB2Zy6cdqXtaOGHDS7r/C8tlW87Qz2pigX/ABU+13LHo/gxNpqXHqFzwo1iHeqL2mD6jJc51UNaHgB7/LyfcHjnl7rfEjNUNuhz8KE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710952944; c=relaxed/simple;
-	bh=n/qBSqnoCDaEZUwEdc6nE4mkAewNmm2ZujXyWNcmjVM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qteeJB30n9ubY0vZWFQtixwPb1ArAcRvmyAE4SotHYkFUUV26UPmVQ13sJr2vBOS9WmOfeqpFNfIQLeqP1V/T7IwDvQjkZgfL5Vys78+xQUjLiOTzRBL5zBYPgL5zXxLQBRpQ8F/WAbmzbPtmUgBNcUBv5DxTn+54Tpmr9dAPag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=TmtgrB8q; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1710953783; c=relaxed/simple;
+	bh=zu9ZgxVsggb5c9uyXDMMnA+IZ9Ir5Zxd+rhNipYo0b0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=DezI5WdVWRC/b0ugxIhRc5mM//5cz0eXLtiLe0jihtmz0RmyjgwP9GmRQRTr38vzc6P/AjJPAbda17Pq2EqBpa8bnSJ5QYlMxSn7fTXGCri9ALCTw6zXcH3iyjAE+wftIkI21A/pOvnOa2SAzYaPLIIfYL9P9wSclA+cB1Mf1b8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ik97f2GJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="TmtgrB8q"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-609f359b7b1so81260327b3.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Mar 2024 09:42:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1710952942; x=1711557742; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/C0go5GeoUF1aqwd5WJWdc0gTbFG3QELgzX8R+DzOuI=;
-        b=TmtgrB8qSmdhSIUJJmtXLRW8gm5340i+fgOoGBz8u+wZP7w+hm/8WtrBVwzcunYKFS
-         FnHeMbICSdBxLiVrwGudi4+B4C6lETQf1OnpfwlhS9ny+iFaUdlbjpNeDcV//aAoQVoa
-         3i0yzoux+iZChf5s3W24yPuvHZzxKBf4KVO9Z/TeXRN/36wKZPCPAueak45fuGwP76SR
-         x6pimA/KaYPNMMglSNoTxcAeQTn/b1vyN3IP+Q7l8motqWKYADKeZXmbn1kgFYrS86yZ
-         JhGvQeyzeUMzBEHDY7ptlW9yMZwDBtRMMrph8cGkEcxn28J7KT8xH4PhTTLv5IodGqUR
-         VLJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710952942; x=1711557742;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/C0go5GeoUF1aqwd5WJWdc0gTbFG3QELgzX8R+DzOuI=;
-        b=T14ghEq4qiNNTVVP/bTF3VzZOlyPnPiAvHoyL/+o2qzjhGoI+hq9GLhjCNKsNwFWhz
-         naYOhyMDl450iXtxeBzlGtu4/N5fKlNUKADUgLQc0BDQqG4xyBMPTPsewkIPMWLM+BCU
-         feGLuCCnGh7/OhJflxX8goGq/kdRo1CWld2WreEvKty8SixXbk/kQU5iegZ3LBnBqVVd
-         D2/7TTeMFJZhhpU+t64/6cmF3MRwq1qj374iEs/bKsCJ3DXkPuHpnP6NRG4lsOw6LvU3
-         goQmLjGYX1VSZ9lIFG68m/Nr9NwVpCPGXX1kKj5p96rD6AsREbjau/Ow0BfkgIWasAb/
-         A5iA==
-X-Forwarded-Encrypted: i=1; AJvYcCVOEfebNdBkKEABQM22hCNaqeveGtgSQDSKTA+/BOxYkb/uefqElLwl02fnkWysGf5hYrUzSs+CtDr6+c5Ek0Y7ToVej5t+xNl+qW7E090iXOFa
-X-Gm-Message-State: AOJu0YxVX7s01K3/4EBSHldEO6juPemDCzZAcmeu4BVx66ZLwU0g4Hc0
-	saNO7mRohpPuedRAN9nOLY65fw0gL/mM1KePNVLzhOvYhmvVqFKwc8yW/mGZjIyIQRe+Z2Xgnsl
-	XTmfGs4mFu2DaNonbs5zMWR2ClKmtzFBfLT1tbw==
-X-Google-Smtp-Source: AGHT+IGYNdFruVqknweeMZibIxK5wVlRKsW3ccyqWtS2kmgKboBe+PUMsfNihhXKHZf27wB2CGJ+gDtjeYC6VWYGmH8=
-X-Received: by 2002:a81:ab50:0:b0:60f:ed06:bee7 with SMTP id
- d16-20020a81ab50000000b0060fed06bee7mr6253031ywk.50.1710952942198; Wed, 20
- Mar 2024 09:42:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ik97f2GJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5524C43390;
+	Wed, 20 Mar 2024 16:56:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710953782;
+	bh=zu9ZgxVsggb5c9uyXDMMnA+IZ9Ir5Zxd+rhNipYo0b0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ik97f2GJUZArWdtgkM2jyo/Dm9KXMaqdIrmmmBR8EU0gUinrWw3L5tg7YEHrv9t/z
+	 +lW/9rM/ZZhw27PCF/E2pkmUd2yiwtcpOpQQAgta+Fyn7jG7idVCmVXCqjG0AZpHVi
+	 IWPbM9DcCqYKjQFpjis0xdZPAX7Y0mp+igUIofZr9qyBb1YCPiAtBtsEEDFyrVNU0K
+	 WIoBKlrcUaS9ZBpInEv0j47UxCZU69EbM+RbIQ2ysTtJ59BW8rvA1lKxjfQh18mo/L
+	 RAmIpYvN0sPojakMdCet3pU2+S60zxPZyGLcUDEaieaWOH2K3yUm6boWrk6oETbpB8
+	 oolTHWTgTaIVg==
+From: SeongJae Park <sj@kernel.org>
+To: Honggyu Kim <honggyu.kim@sk.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	apopple@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	dave.jiang@intel.com,
+	hyeongtak.ji@sk.com,
+	kernel_team@skhynix.com,
+	linmiaohe@huawei.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	rakie.kim@sk.com,
+	rostedt@goodmis.org,
+	surenb@google.com,
+	yangx.jy@fujitsu.com,
+	ying.huang@intel.com,
+	ziy@nvidia.com,
+	42.hyeyoo@gmail.com,
+	art.jeongseob@gmail.com
+Subject: Re: [RFC PATCH v2 0/7] DAMON based 2-tier memory management for CXL memory
+Date: Wed, 20 Mar 2024 09:56:19 -0700
+Message-Id: <20240320165619.71478-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240320070754.2165-1-honggyu.kim@sk.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240306165904.108141-1-puranjay12@gmail.com> <87ttlhdeqb.fsf@all.your.base.are.belong.to.us>
- <ZfBbxPDd0rz6FN2T@FVFF77S0Q05N> <8734suqsth.fsf@all.your.base.are.belong.to.us>
- <mb61pplvw6grf.fsf@gmail.com> <87zfv0onre.fsf@all.your.base.are.belong.to.us> <87il1oedx8.fsf@all.your.base.are.belong.to.us>
-In-Reply-To: <87il1oedx8.fsf@all.your.base.are.belong.to.us>
-From: Andy Chiu <andy.chiu@sifive.com>
-Date: Thu, 21 Mar 2024 00:41:00 +0800
-Message-ID: <CABgGipWPuvwi43v1+60-=0_MN_q_CD0ZGasxHHVWJ37cig5MmA@mail.gmail.com>
-Subject: Re: [RFC PATCH] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
-To: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-Cc: Puranjay Mohan <puranjay12@gmail.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Guo Ren <guoren@kernel.org>, Ley Foon Tan <leyfoon.tan@starfivetech.com>, 
-	Deepak Gupta <debug@rivosinc.com>, Sia Jee Heng <jeeheng.sia@starfivetech.com>, 
-	Bjorn Topel <bjorn@rivosinc.com>, Song Shuai <suagrfillet@gmail.com>, 
-	"Cl'ement L'eger" <cleger@rivosinc.com>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Jisheng Zhang <jszhang@kernel.org>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Robbin Ehn <rehn@rivosinc.com>, Brendan Sweeney <brs@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Bj=C3=B6rn,
+Hi Honggyu,
 
-On Fri, Mar 15, 2024 at 4:50=E2=80=AFAM Bj=C3=B6rn T=C3=B6pel <bjorn@kernel=
-.org> wrote:
->
-> Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> writes:
->
-> > Puranjay Mohan <puranjay12@gmail.com> writes:
-> >
-> >> Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> writes:
-> >>
-> >>>
-> >>> Hmm, depending on RISC-V's CMODX path, the pro/cons CALL_OPS vs dynam=
-ic
-> >>> trampolines changes quite a bit.
-> >>>
-> >>> The more I look at the pains of patching two instruction ("split
-> >>> immediates"), the better "patch data" + one insn patching look.
-> >>
-> >> I was looking at how dynamic trampolines would be implemented for RISC=
--V.
-> >>
-> >> With CALL-OPS we need to patch the auipc+jalr at function entry only, =
-the
-> >> ops pointer above the function can be patched atomically.
-> >>
-> >> With a dynamic trampoline we need a auipc+jalr pair at function entry =
-to jump
-> >> to the trampoline and then another auipc+jalr pair to jump from trampo=
-line to
-> >> ops->func. When the ops->func is modified, we would need to update the
-> >> auipc+jalr at in the trampoline.
-> >>
-> >> So, I am not sure how to move forward here, CALL-OPS or Dynamic trampo=
-lines?
-> >
-> > Yeah. Honestly, we need to figure out the patching story prior
-> > choosing the path, so let's start there.
-> >
-> > After reading Mark's reply, and discussing with OpenJDK folks (who does
-> > the most crazy text patching on all platforms), having to patch multipl=
-e
-> > instructions (where the address materialization is split over multiple
-> > instructions) is a no-go. It's just a too big can of worms. So, if we
-> > can only patch one insn, it's CALL_OPS.
-> >
-> > A couple of options (in addition to Andy's), and all require a
-> > per-function landing address ala CALL_OPS) tweaking what Mark is doing
-> > on Arm (given the poor branch range).
-> >
-> > ...and maybe we'll get RISC-V rainbows/unicorns in the future getting
-> > better reach (full 64b! ;-)).
-> >
-> > A) Use auipc/jalr, only patch jalr to take us to a common
-> >    dispatcher/trampoline
-> >
-> >  | <func_trace_target_data_8B> # probably on a data cache-line !=3D fun=
-c .text to avoid ping-pong
-> >  | ...
-> >  | func:
-> >  |   ...make sure ra isn't messed up...
-> >  |   aupic
-> >  |   nop <=3D> jalr # Text patch point -> common_dispatch
-> >  |   ACTUAL_FUNC
-> >  |
-> >  | common_dispatch:
-> >  |   load <func_trace_target_data_8B> based on ra
-> >  |   jalr
-> >  |   ...
-> >
-> > The auipc is never touched, and will be overhead. Also, we need a mv to
-> > store ra in a scratch register as well -- like Arm. We'll have two insn
-> > per-caller overhead for a disabled caller.
-> >
-> > B) Use jal, which can only take us +/-1M, and requires multiple
-> >    dispatchers (and tracking which one to use, and properly distribute
-> >    them. Ick.)
-> >
-> >  | <func_trace_target_data_8B> # probably on a data cache-line !=3D fun=
-c .text to avoid ping-pong
-> >  | ...
-> >  | func:
-> >  |   ...make sure ra isn't messed up...
-> >  |   nop <=3D> jal # Text patch point -> within_1M_to_func_dispatch
-> >  |   ACTUAL_FUNC
-> >  |
-> >  | within_1M_to_func_dispatch:
-> >  |   load <func_trace_target_data_8B> based on ra
-> >  |   jalr
-> >
-> > C) Use jal, which can only take us +/-1M, and use a per-function
-> >    trampoline requires multiple dispatchers (and tracking which one to
-> >    use). Blows up text size A LOT.
-> >
-> >  | <func_trace_target_data_8B> # somewhere, but probably on a different=
- cacheline than the .text to avoid ping-ongs
-> >  | ...
-> >  | per_func_dispatch
-> >  |   load <func_trace_target_data_8B> based on ra
-> >  |   jalr
-> >  | func:
-> >  |   ...make sure ra isn't messed up...
-> >  |   nop <=3D> jal # Text patch point -> per_func_dispatch
-> >  |   ACTUAL_FUNC
->
-> Brendan proposed yet another option, "in-function dispatch":
->
-> D)
->   | <func_trace_target_data_8B_per_function> # idk somewhere
->   | ...
->   | func:
->   |    mv tmp1, ra
->   |    aupic tmp2, <func_trace_target_data_8B_per_function:upper>
->   |    mv tmp3, zero <=3D> ld tmp3, tmp2<func_trace_target_data_8B_per_fu=
-nction:lower>
->   |    nop <=3D> jalr ra, tmp3
->   |    ACTUAL_FUNC
+On Wed, 20 Mar 2024 16:07:48 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
 
-My patch series takes a similar "in-function dispatch" approach. A
-difference is that the <func_trace_target_data_8B_per_function> is
-embedded within each function entry. I'd like to have it moved to a
-run-time allocated array to reduce total text size.
+> Hi SeongJae,
+> 
+> On Mon, 18 Mar 2024 12:07:21 -0700 SeongJae Park <sj@kernel.org> wrote:
+> > On Mon, 18 Mar 2024 22:27:45 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
+> > 
+> > > Hi SeongJae,
+> > > 
+> > > On Sun, 17 Mar 2024 08:31:44 -0700 SeongJae Park <sj@kernel.org> wrote:
+> > > > Hi Honggyu,
+> > > > 
+> > > > On Sun, 17 Mar 2024 17:36:29 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
+> > > > 
+> > > > > Hi SeongJae,
+> > > > > 
+> > > > > Thanks for the confirmation.  I have a few comments on young filter so
+> > > > > please read the inline comments again.
+> > > > > 
+> > > > > On Wed, 12 Mar 2024 08:53:00 -0800 SeongJae Park <sj@kernel.org> wrote:
+> > > > > > Hi Honggyu,
+> > > > > > 
+> > > > > > > > -----Original Message-----
+> > > > > > > > From: SeongJae Park <sj@kernel.org>
+> > > > > > > > Sent: Tuesday, March 12, 2024 3:33 AM
+> > > > > > > > To: Honggyu Kim <honggyu.kim@sk.com>
+> > > > > > > > Cc: SeongJae Park <sj@kernel.org>; kernel_team <kernel_team@skhynix.com>
+> > > > > > > > Subject: RE: Re: [RFC PATCH v2 0/7] DAMON based 2-tier memory management for CXL memory
+> > > > > > > >
+> > > > > > > > Hi Honggyu,
+> > > > > > > >
+> > > > > > > > On Mon, 11 Mar 2024 12:51:12 +0000 "honggyu.kim@sk.com" <honggyu.kim@sk.com> wrote:
+> > > > > > > >
+> > > > > > > > > Hi SeongJae,
+> > > > > > > > >
+> > > > > > > > > I've tested it again and found that "young" filter has to be set
+> > > > > > > > > differently as follows.
+> > > > > > > > > - demote action: set "young" filter with "matching" true
+> > > > > > > > > - promote action: set "young" filter with "matching" false
+> > > 
+> > > Thinking it again, I feel like "matching" true or false looks quite
+> > > vague to me as a general user.
+> > > 
+> > > Instead, I would like to have more meaningful names for "matching" as
+> > > follows.
+> > > 
+> > > - matching "true" can be either (filter) "out" or "skip".
+> > > - matching "false" can be either (filter) "in" or "apply".
+> > 
+> > I agree the naming could be done much better.  And thank you for the nice
+> > suggestions.  I have a few concerns, though.
+> 
+> I don't think my suggestion is best.  I just would like to have more
+> discussion about it.
 
-Another difference is that my series changes the first instruction to
-"j ACTUAL_FUNC" for the "ftrace disable" case. As long as the
-architecture guarantees the atomicity of the first instruction, then
-we are safe. For example, we are safe if the first instruction could
-only be "mv tmp, ra" or "j ACTUAL_FUNC". And since the loaded address is
-always valid, we can fix "mv + jalr" down so we don't have to
-play with the exception handler trick. The guarantee from arch would
-require ziccif (in RVA22) though, but I think it is the same for us
-(unless with stop_machine). For ziccif, I would rather call that out
-during boot than blindly assume.
+I also understand my naming sense is far from good :)  I'm grateful to have
+this constructive discussion!
 
-However, one thing I am not very sure is: do we need a destination
-address in a "per-function" manner? It seems like most of the time the
-destination address can only be ftrace_call, or ftrace_regs_call. If
-the number of destination addresses is very few, then we could
-potentially reduce the size of
-<func_trace_target_data_8B_per_function>.
+> 
+> > Firstly, increasing the number of behavioral concepts.  DAMOS filter feature
+> > has only single behavior: excluding some types of memory from DAMOS action
+> > target.  The "matching" is to provide a flexible way for further specifying the
+> > target to exclude in a bit detail.  Without it, we would need non-variant for
+> > each filter type.  Comapred to the current terms, the new terms feel like
+> > implying there are two types of behaviors.  I think one behavior is easier to
+> > understand than two behaviors, and better match what internal code is doing.
+> > 
+> > Secondly, ambiguity in "in" and "apply".  To me, the terms sound like _adding_
+> > something more than _excluding_.
+> 
+> I understood that young filter "matching" "false" means apply action
+> only to young pages.  Do I misunderstood something here?  If not,
 
->
-> There are 4 CMODX possiblities:
->    mv, nop:  fully disabled, no problems
->    mv, jalr: We will jump to zero. We would need to have the inst
->              page/access fault handler take care of this case. Especially
->              if we align the instructions so that they can be patched
->              together, being interrupted in the middle and taking this
->              path will be rare.
->   ld, nop:   no problems
->   ld, jalr:  fully enabled, no problems
->
-> Patching is a 64b store/sd, and we only need a fence.i at the end, since
-> we can handle all 4 possibilities.
->
-> For the disabled case we'll have:
-> A) mv, aupic, nop
-> D) mv, aupic, mv, nop.
->
-> Puranjay, I've flipped. Let's go Mark's CALL_OPS together with a new
-> text patch mechanism w/o stop_machine().
->
->
-> Bj=C3=B6rn
+Technically speaking, having a DAMOS filter with 'matching' parameter as
+'false' for 'young pages' type means you want DAMOS to "exclude pages that not
+young from the scheme's action target".  That's the only thing it truly does,
+and what it tries to guarantee.  Whether the action will be applied to young
+pages or not depends on more factors including additional filters and DAMOS
+parameter.  IOW, that's not what the simple setting promises.
 
-Cheers,
-Andy
+Of course, I know you are assuming there is only the single filter.  Hence,
+effectively you're correct.  And the sentence may be a better wording for end
+users.  However, it tooke me a bit time to understand your assumption and
+concluding whether your sentence is correct or not, since I had to think about
+the assumptions.
+
+I'd say this also reminds me the first concern that I raised on the previous
+mail.  IOW, I feel this sentence is introducing one more behavior and making it
+bit taking longer time to digest, for developers who should judge it based on
+the source code.  I'd suggest use only one behavioral term, "exclude", since it
+is what the code really does, unless it is wording for end users.
+
+> "apply" means _adding_ or _including_ only the matched pages for action.
+> It looks like you thought about _excluding_ non matched pages here.
+
+Yes.  I'd prefer using only single term, _excluding_.  It fits with the code,
+and require one word less that "adding" or "including", since "adding" or
+"including" require one more word, "only".
+
+Also, even with "only", the fact that there could be more filters makes me
+unsure what is the consequence of having it.  That is, if we have a filter that
+includes only pages of type A, but if there could be yet another filter that
+includes only pages of type B, would the consequence is the action being
+applied to pages of type A and B?  Or, type A or type B?
+
+In my opinion, exclusion based approach is simpler for understanding the
+consequence of such combinational usage.
+
+> 
+> > I think that might confuse people in some
+> > cases.  Actually, I have used the term "filter-out" and "filter-in" on
+> > this  and several threads.  When saying about "filter-in" scenario, I had to
+> > emphasize the fact that it is not adding something but excluding others.
+> 
+> Excluding others also means including matched pages.  I think we better
+> focus on what to do only for the matched pages.
+
+I agree that is true for the end-users in many cases.  But I think that depends
+on the case, and at least this specific case (kernel ABI level discussion about
+DAMOS filters), I don't really feel that's better.
+
+> 
+> > I now think that was not a good approach.
+> > 
+> > Finally, "apply" sounds a bit deterministic.  I think it could be a bit
+> > confusing in some cases such as when using multiple filters in a combined way.
+> > For example, if we have two filters for 1) "apply" a memcg and 2) skip anon
+> > pages, the given DAMOS action will not be applied to anon pages of the memcg.
+> > I think this might be a bit confusing.
+> 
+> No objection on this.  If so, I think "in" sounds better than "apply".
+
+Thanks for understanding.  I think allowlists or denylists might also been
+better names.
+
+> 
+> > > 
+> > > Internally, the type of "matching" can be boolean, but it'd be better
+> > > for general users have another ways to set it such as "out"/"in" or
+> > > "skip"/"apply" via sysfs interface.  I prefer "skip" and "apply" looks
+> > > more intuitive, but I don't have strong objection on "out" and "in" as
+> > > well.
+> > 
+> > Unfortunately, DAMON sysfs interface is an ABI that we want to keep stable.  Of
+> > course we could make some changes on it if really required.  But I'm unsure if
+> > the problem of current naming and benefit of the sugegsted change are big
+> > enough to outweighs the stability risk and additional efforts.
+> 
+> I don't ask to change the interface, but just provide another way for
+> the setting.  For example, the current "matching" accepts either 1,
+> true, or Y but internally keeps as "true" as a boolean type.
+> 
+>   $ cd /sys/kernel/mm/damon/admin/kdamonds/0/contexts/0/schemes/0/filters/0
+> 
+>   $ echo 1 | tee matching && cat matching
+>   1
+>   Y
+> 
+>   $ echo true | tee matching && cat matching
+>   true
+>   Y
+> 
+>   $ echo Y | tee matching && cat matching
+>   Y
+>   Y
+> 
+> I'm asking if it's okay making "matching" receive "out" or "skip" as
+> follows.
+> 
+>   $ echo out | tee matching && cat matching
+>   out
+>   Y
+> 
+>   $ echo skip | tee matching && cat matching
+>   skip
+>   Y
+
+I have no strong concern about this.  But also not seeing significant benefit
+of this change.  This will definitely not regress user experience.  But it will
+require introducing more kernel code, though the amount will be fairly small.
+And this new interface will be something that we need to keep maintain, so
+adding a tiny bit of maintenance burden.  I'd prefer improving the documents or
+user-space tool and keep the kernel code simple.
+
+IMHO, end users shouldn't deal directly with DAMOS filters at all, and kernel
+ABI document should be clear enough to avoid confusion.  But, if someone uses
+kernel ABI on production without reading the document, I'd say it might better
+to crash or OOPS to give clear warning and lessons.
+
+> 
+> > Also, DAMON sysfs interface is arguably not for _very_ general users.  DAMON
+> > user-space tool is the one for _more_ general users.  To quote DAMON usage
+> > document,
+> > 
+> >     - *DAMON user space tool.*
+> >       `This <https://github.com/awslabs/damo>`_ is for privileged people such as
+> >       system administrators who want a just-working human-friendly interface.
+> >       [...]
+> >     - *sysfs interface.*
+> >       :ref:`This <sysfs_interface>` is for privileged user space programmers who
+> >       want more optimized use of DAMON. [...]
+> >  
+> > If the concept is that confused, I think we could improve the documentation, or
+> > the user space tool.  But for DAMON sysfs interface, I think we need more
+> > discussions for getting clear pros/cons that justifies the risk and the effort.
+> 
+> If my suggestion is not what you want in sysfs interface, then "damo"
+> can receive these more meaningful names and translate to "true" or
+> "false" when writing to sysfs.
+
+Yes, I agree.  We could further hide filter concept at all.  For example, we
+could let damo user call "migrate" DAMOS action plus "non-young" filter as
+"promote" action.  Or, have a dedicated command for tiered-memory management.
+Similar to the gen_config.py of HMSDK
+(https://github.com/skhynix/hmsdk/blob/main/tools/gen_config.py).  But this
+would be something to further discuss on different threads.
+
+> 
+> > > 
+> > > I also feel the filter name "young" is more for developers not for
+> > > general users.  I think this can be changed to "accessed" filter
+> > > instead.
+> > 
+> > In my humble opinion, "accessed" might be confusing with the term that being
+> > used by DAMON, specifically, the concept of "nr_accesses".  I also thought
+> > about using more specific term such as "pg-accessed" or something else, but I
+> > felt it is still unclear or making it too verbose.
+> > 
+> > I agree "young" sounds more for developers.  But, again, DAMON sysfs is for not
+> > _very_ general users.
+> 
+> I worried the developer term is also going to be used for "damo" user
+> space tool as "young" filter.  But if you think it's good enough, then I
+> will follow the decision as I also think "accessed" is not the best term
+> for this.
+
+The line is not very clear, but I think the line for "damo" should be different
+from that for DAMON sysfs interface.
+
+[...]
+> > > > > > > > DAMOS filter is basically for filtering "out" memory regions that matches to
+> > > > > > > > the condition.
+> > > 
+> > > Right.  In other tools, I see filters are more used as filtering "in"
+> > > rather than filtering "out".  I feel this makes me more confused.
+> > 
+> > I understand that the word, "filtering", can be used for both, and therefore
+> > can be confused.  I was also spending no small times at naming since I was
+> > thinking about both coffee filters and color filters (of photoshop or glasses).
+> > But it turned out that I'm more familiar with coffee filters, and might be same
+> > for DAMON community, since the community is having beer/coffee/tea chat series
+> > ;) (https://lore.kernel.org/damon/20220810225102.124459-1-sj@kernel.org/)
+> 
+> Yeah, I thought about filter for including pages for given config as
+> follows.
+> 
+>     \    /
+>      \  /     only matched items pass this filter.
+>       ||
+> 
+> But the current DAMOS filter is about excluding pages for given config
+> as follows just like a strainer.
+>       ___
+>      /###\
+>     |#####|   matched items are excluded via this filter.
+>      \###/
+>       ---
+> 
+> I think I won't get confused after keeping this difference in mind.
+
+My mind model was describing it as "excluding" coffee beans, but I'd say these
+are just different perspectives, not a thing about right or wrong.  I'm
+grateful to learn one more perspective that is different from mine :)
+
+> 
+> > That said, I think we may be able to make this better documented, or add a
+> > layer of abstraction on DAMON user-space tool.
+> > 
+[...]
+> > To summarize my opinion again,
+> > 
+> > 1. I agree the concept and names of DAMOS filters are confusing and not very
+> >    intuitive.
+> > 2. However, it's unclear if the problem and the benefit from the suggested new
+> >    names are huge enough to take the risk and effort on changing ABI.
+> > 3. We could improve documentation and/or user-space tool.
+> 
+> I think improving "damo" can be a good solution.
+
+Looking forward to the discussion on it! :)
+
+> 
+> > Thank you again for the suggestion and confirmations to my questions.
+> 
+> Likewise, thank you for the explanation in details.
+
+My great pleasure, and thank you for patiently keeping this grateful
+discussion!
+
+
+Thanks,
+SJ
+
+[...]
