@@ -1,226 +1,122 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69A973D0A3;
-	Wed, 20 Mar 2024 12:00:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E09F4C63;
+	Wed, 20 Mar 2024 12:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710936004; cv=none; b=B+pJI3FukcA8O9P5p4JCroL30Dx3W1xyVaeOiIpjJjzq7jHPUINbZtTi/gtpdKTnLzZs7QO2pazMai8OcU9M8/tUhnX7Sc0l6dOi44e6YiaNrcx57lxT0oyfL/8fo0vufzEpSjeQjExYwDA1CVVeD/oVZ4NlAUfWQaEhuym8gkk=
+	t=1710938476; cv=none; b=uI1ffeqr36ikBFhe/7bLPhWuIEbhaihg0hLna2C8JDb3UGrQa0udw+9AWCUUd7F3KiVH4F4LszcKU5+GOj7vkFSzpeOl9jiYz7UcZ+D52zBn1EGNO4KgVT3g5fa2JlruxdtvIO37+Rtgn9WByVdFRHh9YdsTMrNlCeRlh8XHMSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710936004; c=relaxed/simple;
-	bh=aCNMI2Ts9LsYP23ZKHhYEPaahd+dgT55EZua9O1LiII=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BV7IkD/ZKctk9hjfGra3eYxQXmPXoiCbUhQ2LMqS2mo6WeRJbn496X+YssdmSZeAtZGbUsX2ODIjBkLUfTkCaXVz7NbkfkW8Valh8H4HxBPX43JIC+faYV7eSgVmQ64xOJacNPnJawm2FYUAeh4CTtEuezj+zxjdSKVgsWVrg1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=BnyhAii6; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1710938476; c=relaxed/simple;
+	bh=vnKuUeEoXYqV/fSDad4apteK1Y1+cY5KlsBtoY1K6a8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uA0tBWBzXVCtS+w1TcrmLXWWe7ANj4I9Hv4UcciiDq+d9zSF/qYzr2wvYU4Y6E/732IWEb5K9JDp0G2i2cP9iVrBiiPhhgb3/Q0kHQaQxM5RJBnY2tUzpXfXbg6CcRpEseJz9XVC7Vr9OCRlaxg/ai857bxJ8D4jE7tloO04nfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HViyvrjp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="BnyhAii6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=gnuuJ
-	lg8CyOIvFYxU93Jc0OBKTJisjjoUpkozAZz3Oo=; b=BnyhAii6r357MqKZ4AKxq
-	C8KLWqo2VAAideDH/7tRynsv0OYS4opFPL8CJE/nt5FHnVt22RE2K0/nUuwNy9/z
-	2TLQwfq2Xm6WNy9VTUMFn2Gx4S03CZ2Y3voMJqTRYIfajyCk1b0dD1ZhzLc9V18E
-	jz0gIGQu1uGhmkHtuYZv2w=
-Received: from hpl-virtual-machine.. (unknown [183.223.134.153])
-	by gzga-smtp-mta-g2-1 (Coremail) with SMTP id _____wD3Pxmjz_plKabBAw--.1525S2;
-	Wed, 20 Mar 2024 19:59:32 +0800 (CST)
-From: He Peilin <peilinhe2020@163.com>
-To: rostedt@goodmis.org
-Cc: davem@davemloft.net,
-	dsahern@kernel.org,
-	edumazet@google.com,
-	he.peilin@zte.com.cn,
-	jiang.xuexin@zte.com.cn,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	liu.chun2@zte.com.cn,
-	mhiramat@kernel.org,
-	netdev@vger.kernel.org,
-	xu.xin16@zte.com.cn,
-	yang.yang29@zte.com.cn,
-	zhang.yunkai@zte.com.cn
-Subject: Re: Re: [PATCH v2] net/ipv4: add tracepoint for icmp_send
-Date: Wed, 20 Mar 2024 07:59:30 -0400
-Message-Id: <20240320115930.7649-1-peilinhe2020@163.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240319102549.7f7f6f53@gandalf.local.home>
-References: <20240319102549.7f7f6f53@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HViyvrjp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25B1CC43390;
+	Wed, 20 Mar 2024 12:41:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710938476;
+	bh=vnKuUeEoXYqV/fSDad4apteK1Y1+cY5KlsBtoY1K6a8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HViyvrjp+OdBLONZAXNxmFTM7cjLT6CO7aD/YtTzx5k4pCy5gSJNGO5uj7UyCjVMQ
+	 CVex1+md5VnPIgwQTnLF+glj6I6nP40gFrNY7YOquNjYBAlCm7Wssrm64GxdB+xJYq
+	 brpIBS5x7Y3xWYm3XBm7/1j8UcgauP7h57nKlukMXhnL8xDqFD9bx4HyP4Q+TAjD/N
+	 D9gXnenJ9/cK6ZmSI15Fac/i0TwPYGhz2mG2l//y4YSm/AOhu2UD62xPah/PjyDZX5
+	 7k9zEUGd0gggr3Jfv6sclhfhautSVpSVkq86xyQ9oMcCY7ABsDaufnJoXrg+hl8tYh
+	 AncnnXvTEXYbA==
+Message-ID: <20f9d90e-454e-448c-989d-84900d380561@kernel.org>
+Date: Wed, 20 Mar 2024 13:41:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3Pxmjz_plKabBAw--.1525S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3WF1fAr1fCF15uFyrur4fGrg_yoW7AFy5pF
-	yDAFyfKrs7trW7C34fu34aqF15u348uryUKryIqw12k3Wvvr1Utr4jgrn0kFyrCrs0k34a
-	vF4qv345Gw1YqrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jIOJnUUUUU=
-X-CM-SenderInfo: xshlzxhqkhjiisq6il2tof0z/1tbiZQWnsWXAkoWOKQAAsj
+User-Agent: Mozilla Thunderbird
+Subject: Re: [GIT PULL] tracing/tools: Updates for 6.9
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20240318174116.420584-1-bristot@kernel.org>
+ <20240319190259.0086706f@gandalf.local.home>
+Content-Language: en-US, pt-BR, it-IT
+From: Daniel Bristot de Oliveira <bristot@kernel.org>
+In-Reply-To: <20240319190259.0086706f@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-> > From: Peilin He<he.peilin@zte.com.cn>
-> > 
-> > Introduce a tracepoint for icmp_send, which can help users to get more
-> > detail information conveniently when icmp abnormal events happen.
-> > 
-> > 1. Giving an usecase example:
-> > =============================
-> > When an application experiences packet loss due to an unreachable UDP
-> > destination port, the kernel will send an exception message through the
-> > icmp_send function. By adding a trace point for icmp_send, developers or
-> > system administrators can obtain detailed information about the UDP
-> > packet loss, including the type, code, source address, destination address,
-> > source port, and destination port. This facilitates the trouble-shooting
-> > of UDP packet loss issues especially for those network-service
-> > applications.
-> > 
-> > 2. Operation Instructions:
-> > ==========================
-> > Switch to the tracing directory.
-> >         cd /sys/kernel/debug/tracing
+On 3/20/24 00:02, Steven Rostedt wrote:
+> On Mon, 18 Mar 2024 18:41:13 +0100
+> Daniel Bristot de Oliveira <bristot@kernel.org> wrote:
 > 
-> FYI, that directory is obsolete. Please always reference /sys/kernel/tracing.
-OK. 
-> > Filter for destination port unreachable.
-> >         echo "type==3 && code==3" > events/icmp/icmp_send/filter
-> > Enable trace event.
-> >         echo 1 > events/icmp/icmp_send/enable
-> > 
-> > 3. Result View:
-> > ================
-> >  udp_client_erro-11370   [002] ...s.12   124.728002:
-> >  icmp_send: icmp_send: type=3, code=3.
-> >  From 127.0.0.1:41895 to 127.0.0.1:6666 ulen=23
-> >  skbaddr=00000000589b167a
-> > 
-> > v1->v2:
-> > Some fixes according to
-> > https://lore.kernel.org/all/CANn89iL-y9e_VFpdw=sZtRnKRu_tnUwqHuFQTJvJsv-nz1xPDw@mail.gmail.com/
-> > 	1. adjust the trace_icmp_send() to more protocols than UDP.
-> > 	2. move the calling of trace_icmp_send after sanity checks
-> > 	   in __icmp_send().
-> > 
-> > Signed-off-by: Peilin He<he.peilin@zte.com.cn>
-> > Reviewed-by: xu xin <xu.xin16@zte.com.cn>
-> > Reviewed-by: Yunkai Zhang <zhang.yunkai@zte.com.cn>
-> > Cc: Yang Yang <yang.yang29@zte.com.cn>
-> > Cc: Liu Chun <liu.chun2@zte.com.cn>
-> > Cc: Xuexin Jiang <jiang.xuexin@zte.com.cn>
-> > ---
-> >  include/trace/events/icmp.h | 64 +++++++++++++++++++++++++++++++++++++++++++++
-> >  net/ipv4/icmp.c             |  4 +++
-> >  2 files changed, 68 insertions(+)
-> >  create mode 100644 include/trace/events/icmp.h
-> > 
-> > diff --git a/include/trace/events/icmp.h b/include/trace/events/icmp.h
-> > new file mode 100644
-> > index 000000000000..c3dc337be7bc
-> > --- /dev/null
-> > +++ b/include/trace/events/icmp.h
-> > @@ -0,0 +1,64 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#undef TRACE_SYSTEM
-> > +#define TRACE_SYSTEM icmp
-> > +
-> > +#if !defined(_TRACE_ICMP_H) || defined(TRACE_HEADER_MULTI_READ)
-> > +#define _TRACE_ICMP_H
-> > +
-> > +#include <linux/icmp.h>
-> > +#include <linux/tracepoint.h>
-> > +
-> > +TRACE_EVENT(icmp_send,
-> > +
-> > +		TP_PROTO(const struct sk_buff *skb, int type, int code),
-> > +
-> > +		TP_ARGS(skb, type, code),
-> > +
-> > +		TP_STRUCT__entry(
-> > +			__field(__u16, sport)
-> > +			__field(__u16, dport)
-> > +			__field(int, type)
-> > +			__field(int, code)
-> > +			__array(__u8, saddr, 4)
-> > +			__array(__u8, daddr, 4)
-> > +                	__field(const void *, skbaddr)
-> > +			__field(unsigned short, ulen)
+>> Steven,
+>>
+>> Tracing tooling updates for 6.9
+>>
+>> Tracing:
+>>         - Update makefiles for latency-collector and RTLA,
+>>           using tools/build/ makefiles like perf does, inheriting
+>>           its benefits. For example, having a proper way to
+>>           handle dependencies.
+>>
+>>         - The timerlat tracer has an interface for any tool to use.
+>>           rtla timerlat tool uses this interface dispatching its
+>>           own threads as workload. But, rtla timerlat could also be
+>>           used for any other process. So, add 'rtla timerlat -U'
+>>           option, allowing the timerlat tool to measure the latency of
+>>           any task using the timerlat tracer interface.
+>>
+>> Verification:
+>>         - Update makefiles for verification/rv, using tools/build/
+>>           makefiles like perf does, inheriting its benefits.
+>>           For example, having a proper way to handle dependencies.
+>>
+>>
+>> Please pull the latest trace-tools-v6.9 tree, which can be found at:
+>>
+>>
+>>   git://git.kernel.org/pub/scm/linux/kernel/git/bristot/linux.git
+>> trace-tools-v6.9
 > 
-> Note, to prevent holes, I usually suggest pointers and longs go first,
-> followed by ints, and then end with char.
+> Looks like you just built on top of a random commit from Linus's tree:
+
+yeah :-/
+
+> commit f6cef5f8c37f58a3bc95b3754c3ae98e086631ca
+> Merge: 906a93befec8 8f06fb458539
+> Author: Linus Torvalds <torvalds@linux-foundation.org>
+> Date:   Sun Mar 17 16:59:33 2024 -0700
 > 
->                 	__field(const void *, skbaddr)
-> 			__field(int, type)
-> 			__field(int, code)
-> 			__array(__u8, saddr, 4)
-> 			__array(__u8, daddr, 4)
-> 			__field(__u16, sport)
-> 			__field(__u16, dport)
-> 			__field(unsigned short, ulen)
+>     Merge tag 'i3c/for-6.9' of git://git.kernel.org/pub/scm/linux/kernel/git/i3c/linux
+> 
+> Linus prefers basing off of real tags or previous pulls from us.
+
+Ack, took note. I will do on top v6.8 tag.
+
+> Can you rebase your changes on v6.8 and resend?
+> 
+>   $ git checkout v6.8
+>   $ git cherry-pick f6cef5f8c37f58a3bc95b3754c3ae98e086631ca..trace-tools-v6.9
+> 
+> Appears to work fine.
+
+questions: when something go wrong in a pull request....
+
+	- Should I keep the old tag, and then do another one with -2
+	  (it seems you do like this), or delete the old tag and send it again
+	  with the same name?
+
+	- Should I resend the PULL request with something in the log or
+	  at the Subject saying it is a v2 of the pull request?
+
+I could ask via chat, but I think it is good for the community to
+have access to these info.
+
+Thanks!
+-- Daniel
+
+> Thanks!
 > 
 > -- Steve
-Thank you very much for your suggestion. We will rearrange the parameters in TP_STRUCT_entry, prioritizing pointers and longs, followed by ints, and ending with char. This will be reflected in Patch v3.
-> 
-> 
-> > +		),
-> > +
-> > +		TP_fast_assign(
-> > +			struct iphdr *iph = ip_hdr(skb);
-> > +			int proto_4 = iph->protocol;
-> > +			__be32 *p32;
-> > +
-> > +			__entry->skbaddr = skb;
-> > +			__entry->type = type;
-> > +			__entry->code = code;
-> > +
-> > +			if (proto_4 == IPPROTO_UDP) {
-> > +				struct udphdr *uh = udp_hdr(skb);
-> > +				__entry->sport = ntohs(uh->source);
-> > +				__entry->dport = ntohs(uh->dest);
-> > +				__entry->ulen = ntohs(uh->len);
-> > +			} else {
-> > +				__entry->sport = 0;
-> > +				__entry->dport = 0;
-> > +				__entry->ulen = 0;
-> > +			}
-> > +
-> > +			p32 = (__be32 *) __entry->saddr;
-> > +			*p32 = iph->saddr;
-> > +
-> > +			p32 = (__be32 *) __entry->daddr;
-> > +			*p32 = iph->daddr;
-> > +		),
-> > +
-> > +		TP_printk("icmp_send: type=%d, code=%d. From %pI4:%u to %pI4:%u ulen=%d skbaddr=%p",
-> > +			__entry->type, __entry->code,
-> > +			__entry->saddr, __entry->sport, __entry->daddr,
-> > +			__entry->dport, __entry->ulen, __entry->skbaddr)
-> > +);
-> > +
-> > +#endif /* _TRACE_ICMP_H */
-> > +
-> > +/* This part must be outside protection */
-> > +#include <trace/define_trace.h>
-> > \ No newline at end of file
-> > diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
-> > index e63a3bf99617..21fb41257fe9 100644
-> > --- a/net/ipv4/icmp.c
-> > +++ b/net/ipv4/icmp.c
-> > @@ -92,6 +92,8 @@
-> >  #include <net/inet_common.h>
-> >  #include <net/ip_fib.h>
-> >  #include <net/l3mdev.h>
-> > +#define CREATE_TRACE_POINTS
-> > +#include <trace/events/icmp.h>
-> > 
-> >  /*
-> >   *	Build xmit assembly blocks
-> > @@ -672,6 +674,8 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
-> >  		}
-> >  	}
-> > 
-> > +	trace_icmp_send(skb_in, type, code);
-> > +
-> >  	/* Needed by both icmp_global_allow and icmp_xmit_lock */
-> >  	local_bh_disable();
-> > 
-
