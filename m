@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B901E10A26;
-	Wed, 20 Mar 2024 03:28:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F1A13AC0
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Mar 2024 03:44:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710905306; cv=none; b=WbsU9PYs3ONr+CpqDG3whnm14XjgrJgTKdFOocwrUUa5gFzpaLmyaPlZsCTiTeLpMdXs6E7j284x1h2vIj2UxWpmnjRs/hxFsFznBPGrn1qln1Q4zp+OkXUlpLubR0Slel2G5XzR2EGT9VA27BIDynR3CGfOLSPfuoIos/qHvEQ=
+	t=1710906267; cv=none; b=psUupubdlmDWQIamDw+BGRzpbcXy88aZ6Xx00InThJQASyRmi9vW5wUOTCmKuwEYPLQQa/qnWEQenX06//yZMnY1ct6OwOdpqBYpR476UiCYv2SuPOlX475LFrds8gDCIEBVKKssUKnMzOF/z31NDhllfE76vu+HJl1woXsqMuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710905306; c=relaxed/simple;
-	bh=Bd719awzmUDesPXDyzTkf/a6fUS4L0Q2LSPYF3fDvK0=;
+	s=arc-20240116; t=1710906267; c=relaxed/simple;
+	bh=333B+8NYzcR8ybiLlWgtlZDcGDpqQjlE1EWL2/4e6Y8=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=eLKTj9f9/rLYz/xLkxWB0EX3kjE3F76a49pUqtOzemDch5/0FbX/W8EyquG+MNcGTtnDo5xdUsTPFtyWdGmEvO+PP7NJa8FtWrJXq8eDzIZwuqxThlgLMZHFCrx3yjz1q64nr3mxPxLUl3rW9p9o+CFIpb8ID4fWZ5y55NKasGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aJW7Gk2e; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=uQ0AJC95ozKMCuPCWKSyNGSPfmb084h8DHGTB+brD/7tqM92LPXvpYBXcsOfCkGBnX6LA3x3XulY4yK0XhXOnw2P18H+234XkrKfya28yJtlWHudr3VYPz+8vl5sZMcNpvZsrIQIz1RI3J6DM8Nd8QLDivMtBFKU2V1Whacp7Gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yd6sGDLc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aJW7Gk2e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A338AC433F1;
-	Wed, 20 Mar 2024 03:28:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yd6sGDLc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98743C433C7;
+	Wed, 20 Mar 2024 03:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710905306;
-	bh=Bd719awzmUDesPXDyzTkf/a6fUS4L0Q2LSPYF3fDvK0=;
+	s=k20201202; t=1710906267;
+	bh=333B+8NYzcR8ybiLlWgtlZDcGDpqQjlE1EWL2/4e6Y8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=aJW7Gk2eCPGCyej4zpPE6W4UK56SX7SY3GpX7VuxAUfjE6eDeuXP60BwA77XlEOhP
-	 7h060w/OYXg/DLqcMh3R8dj2ofxEwHVLDrSx9CHysIvmvti7UV1K4T1XRwptfve6kK
-	 Yq+ThzUfRNf9aCoH6yfEQYn0VLB/7c4PrywcLN2VHgUAIzZmxD6KgzA1vlFCfRc14w
-	 bqpViOzuMYA+FaGSxHqS45Lke9bZtHx83QeVraOsm55WDpwM/NpAI1yzsteScLtCK6
-	 FtlZdilujzDH2wVkKSOHrFokxvHJE0TeY76xj6rO7Hug27e47d2NmNtOisF8fFmFuI
-	 XZ7tFtGPSZAdg==
-Date: Wed, 20 Mar 2024 12:28:22 +0900
+	b=Yd6sGDLcreFeoREUD3oWJARew7ibyz8gYRd+Yiv0kRgQaNfV5AiZ9+NcyIgLaAF+j
+	 jeFtvIpVBv7BR3Jq7LavDoFBAg6r/nVUM6e5Fsr6ossU+zFScsULr2RTjwEJc6Z1tf
+	 4oxmlNH9Ybt28woDm2ncQHB9RX02G1V3qzCbEjGHeQyiU5LU6q7z+PqWLtzZ9UxrQn
+	 NhA/tjR49vKDMz+egDN7HoChzBpTKKNOvhhDwVVPU0QA1T1bmrlxX1aYdEoKV1Kg1C
+	 VBUVjTp0PhluWebG0c2SmDjwc34qonKWQIL2esWPNwSZxDCjQVDiv0p7fDBl7lvtNf
+	 pPWUvKJBH2Igg==
+Date: Wed, 20 Mar 2024 12:44:23 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Ye Bin <yebin10@huawei.com>
-Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
- <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 7/8] selftests/ftrace: add kprobe test cases for VFS
- type "%pd" and "%pD"
-Message-Id: <20240320122822.50fd238753278798881464ae@kernel.org>
-In-Reply-To: <20240315065540.1181879-8-yebin10@huawei.com>
-References: <20240315065540.1181879-1-yebin10@huawei.com>
-	<20240315065540.1181879-8-yebin10@huawei.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, mhiramat@kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [bug report] tracing/probes: Support $argN in return probe
+ (kprobe and fprobe)
+Message-Id: <20240320124423.54cdb56dc8a07378fd09de38@kernel.org>
+In-Reply-To: <20240319101000.4dbe0cc5@gandalf.local.home>
+References: <b010488e-68aa-407c-add0-3e059254aaa0@moroto.mountain>
+	<20240319101000.4dbe0cc5@gandalf.local.home>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,91 +47,72 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi Ye,
+On Tue, 19 Mar 2024 10:10:00 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Sorry for replying late.
-
-On Fri, 15 Mar 2024 14:55:39 +0800
-Ye Bin <yebin10@huawei.com> wrote:
-
-> This patch adds test cases for new print format type "%pd/%pD".The test cases
-> test the following items:
-> 1. Test README if add "%pd/%pD" type;
-> 2. Test "%pd" type for dput();
-> 3. Test "%pD" type for vfs_read();
+> On Tue, 19 Mar 2024 10:19:09 +0300
+> Dan Carpenter <dan.carpenter@linaro.org> wrote:
 > 
-> This test case require enable CONFIG_HAVE_FUNCTION_ARG_ACCESS_API configuration.
+> > Hello Masami Hiramatsu (Google),
+> > 
+> > Commit 25f00e40ce79 ("tracing/probes: Support $argN in return probe
+> > (kprobe and fprobe)") from Mar 4, 2024 (linux-next), leads to the
+> > following Smatch static checker warning:
+> > 
+> > 	kernel/trace/trace_probe.c:856 store_trace_entry_data()
+> > 	error: uninitialized symbol 'val'.
+> > 
+> > kernel/trace/trace_probe.c
+> >     846                 return;
+> >     847 
+> >     848         for (i = 0; i < earg->size; i++) {
+> >     849                 struct fetch_insn *code = &earg->code[i];
+> >     850 
+> >     851                 switch (code->op) {
+> >     852                 case FETCH_OP_ARG:
+> >     853                         val = regs_get_kernel_argument(regs, code->param);
+> >     854                         break;
+> >     855                 case FETCH_OP_ST_EDATA:
+> > --> 856                         *(unsigned long *)((unsigned long)edata + code->offset) = val;  
+> > 
+> > Probably the earg->code[i] always has FETCH_OP_ARG before
+> > FETCH_OP_ST_EDATA but Smatch isn't smart enough to figure that out...
 > 
-> Signed-off-by: Ye Bin <yebin10@huawei.com>
-> ---
->  .../ftrace/test.d/kprobe/kprobe_args_vfs.tc   | 43 +++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
+> Looks that way:
 > 
-> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
-> new file mode 100644
-> index 000000000000..8bea9a75a331
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
-> @@ -0,0 +1,43 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +# description: Kprobe event VFS type argument
-> +# requires: kprobe_events "%pd/%pD":README
-> +
-> +: "Test argument %pd/%pD in README"
-> +grep -q "%pd/%pD" README
+> 		case FETCH_OP_END:
+> 			earg->code[i].op = FETCH_OP_ARG;
+> 			earg->code[i].param = argnum;
+> 			earg->code[i + 1].op = FETCH_OP_ST_EDATA;
+> 			earg->code[i + 1].offset = offset;
+> 			return offset;
+> 
+> But probably should still initialize val to zero or have a WARN_ON() if
+> that doesn't happen.
 
-If you put this check in "# requires" line, you don't need to check it again.
+OK, let's val = 0 in the store_trace_entry_data(), but WARN_ON() in this loop
+is a bit strange. I think we should have a verifiler.
 
-> +
-> +: "Test argument %pd with name"
-> +echo 'p:testprobe dput name=$arg1:%pd' > kprobe_events
-> +echo 1 > events/kprobes/testprobe/enable
-> +grep -q "1" events/kprobes/testprobe/enable
+Thank you,
 
-So accessing "enable" file here,
-
-> +echo 0 > events/kprobes/testprobe/enable
-> +grep "dput" trace | grep -q "enable"
-
-and check it.
-
-OK, the test case itself looks good to me.
-
-Thanks,
-
-> +echo "" > kprobe_events
-> +echo "" > trace
-> +
-> +: "Test argument %pd without name"
-> +echo 'p:testprobe dput $arg1:%pd' > kprobe_events
-> +echo 1 > events/kprobes/testprobe/enable
-> +grep -q "1" events/kprobes/testprobe/enable
-> +echo 0 > events/kprobes/testprobe/enable
-> +grep "dput" trace | grep -q "enable"
-> +echo "" > kprobe_events
-> +echo "" > trace
-> +
-> +: "Test argument %pD with name"
-> +echo 'p:testprobe vfs_read name=$arg1:%pD' > kprobe_events
-> +echo 1 > events/kprobes/testprobe/enable
-> +grep -q "1" events/kprobes/testprobe/enable
-> +echo 0 > events/kprobes/testprobe/enable
-> +grep "vfs_read" trace | grep -q "enable"
-> +echo "" > kprobe_events
-> +echo "" > trace
-> +
-> +: "Test argument %pD without name"
-> +echo 'p:testprobe vfs_read $arg1:%pD' > kprobe_events
-> +echo 1 > events/kprobes/testprobe/enable
-> +grep -q "1"  events/kprobes/testprobe/enable
-> +echo 0 > events/kprobes/testprobe/enable
-> +grep "vfs_read" trace | grep -q "enable"
-> +echo "" > kprobe_events
-> +echo "" > trace
-> -- 
-> 2.31.1
+> 
+> -- Steve
+> 
+> 
+> > 
+> >     857                         break;
+> >     858                 case FETCH_OP_END:
+> >     859                         goto end;
+> >     860                 default:
+> >     861                         break;
+> >     862                 }
+> >     863         }
+> >     864 end:
+> >     865         return;
+> >     866 }
+> > 
+> > regards,
+> > dan carpenter
 > 
 
 
