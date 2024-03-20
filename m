@@ -1,36 +1,41 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E57D441C84;
-	Wed, 20 Mar 2024 14:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23472481DD;
+	Wed, 20 Mar 2024 14:54:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710944333; cv=none; b=CJ3tVQCUX5g9mjX3eV/tOpy/62zvaC7T+fNmigz8vpN7IazA04OndL0hdvKEI0KRV7eksy0gZss6TwmPukHdnea3NLvRiSS85C2JDTiP9YyMTLEJNXLpZ3ctPFFbNjfzObfv0R4+YDB+HAco6xWzemZEXk9DrCpJ3/sfOY+CuCg=
+	t=1710946447; cv=none; b=S7rncgvQE65U/4x/cYz7c9GBwuLI6LKMgeeGET9Anbc3nhlY8SLKBwQel830YBvhTZwnQzxgxgDnHL7Dib/ngERs+utRhAZD4K1oSEOzFOXafns9zaGtfxpFFtnal+Pds8/QHc/h15xHbeeUKIge0Ek8EaE+ekLOTLV+JuaTqTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710944333; c=relaxed/simple;
-	bh=xmbyWobTD3RpSNLREBva1eUC9VLaDy7wqoqKn/PRejE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dBgKnOlnK4DJO4uifxKkt4ak+4RnA+Ege+o3eu9EJMHjbTl8zDhZBX9cFoIyA2LEl9jYxmGPhp+CU53C0K8/ZT/OwFBL5D349yCFnksErOUu/LQSOjewGegWl0DDpSPLndbQLUC9H07x1h3gfortN7Oyj9rk+peszvIGAfPk7PE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFD591007;
-	Wed, 20 Mar 2024 07:19:25 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8F3253F64C;
-	Wed, 20 Mar 2024 07:18:49 -0700 (PDT)
-From: Mark Rutland <mark.rutland@arm.com>
-To: linux-kernel@vger.kernel.org
-Cc: aishwarya.tcv@arm.com,
-	linux-kselftest@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	rostedt@goodmis.org,
-	shuah@kernel.org
-Subject: [PATCH] selftests/ftrace: Fix event filter target_func selection
-Date: Wed, 20 Mar 2024 14:18:44 +0000
-Message-Id: <20240320141844.1779984-1-mark.rutland@arm.com>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1710946447; c=relaxed/simple;
+	bh=loyUyYPPgYDAM4zA8eNu7gfFV9TKe1TcyUwp2cBWpKw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BXxcWeiaMnPvBtYDAVlLvbmQO4rhAT9l56d7Ku3m7S6DxgzP0K43A5gPY5SsdioWqvjOdlpFNZ+S/U4pin9uvEjFe3Kop4dsxKmyhq70xlpjDh2KH3zhRZ4TyVRiA8eT5XsFjIkCIMHRfLE7CYjXfUtYSx7YmkFgLR8hcYLGC6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RzvDEUdO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RzvDEUdO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EAC1C433C7;
+	Wed, 20 Mar 2024 14:54:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710946446;
+	bh=loyUyYPPgYDAM4zA8eNu7gfFV9TKe1TcyUwp2cBWpKw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RzvDEUdO+EOD2lFahaSQ4wKCF/jQQcyZT+FQ9V2lNPKMfmC3fjh4MPffwL4bX/JW4
+	 sUvLwUfsG55Iymz/sN/Zs+kWS1vXFBdCZaZhtYF4ON2JzWd6iTU0orBE6abjg0gAXX
+	 UwqgEcd+cDtnp/68KxTitIPU+fUekXhmVd/jwzjCs9CQqodq891TX5WzEs/XqWPeu3
+	 1tn82oGU5s5TSP/B0yCJVipY/DBLoA64OjYCI21XqphSE4mSUpOwsuul9YQ+3BVT+P
+	 xeoZjeTwlkKQNYzWpTD76DwPZYP0jvr5S4wckpQN8suSI8B7hN18FvMmp4U7lAUrdr
+	 qukbpJ/+jbnUA==
+From: Daniel Bristot de Oliveira <bristot@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [GIT PULL V2] tracing/tools: Updates for 6.9
+Date: Wed, 20 Mar 2024 15:54:00 +0100
+Message-ID: <20240320145402.650357-1-bristot@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -39,84 +44,81 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The event filter function test has been failing in our internal test
-farm:
+Steven,
 
-| # not ok 33 event filter function - test event filtering on functions
+[
+   I rebased my queue on top of the v6.8 tag.
+]
 
-Running the test in verbose mode indicates that this is because the test
-erroneously determines that kmem_cache_free() is the most common caller
-of kmem_cache_free():
+Tracing:
+        - Update makefiles for latency-collector and RTLA,
+          using tools/build/ makefiles like perf does, inheriting
+          its benefits. For example, having a proper way to
+          handle dependencies.
 
-  # # + cut -d: -f3 trace
-  # # + sed s/call_site=([^+]*)+0x.*/1/
-  # # + sort
-  # # + uniq -c
-  # # + sort
-  # # + tail -n 1
-  # # + sed s/^[ 0-9]*//
-  # # + target_func=kmem_cache_free
+        - The timerlat tracer has an interface for any tool to use.
+          rtla timerlat tool uses this interface dispatching its
+          own threads as workload. But, rtla timerlat could also be
+          used for any other process. So, add 'rtla timerlat -U'
+          option, allowing the timerlat tool to measure the latency of
+          any task using the timerlat tracer interface.
 
-... and as kmem_cache_free() doesn't call itself, setting this as the
-filter function for kmem_cache_free() results in no hits, and
-consequently the test fails:
+Verification:
+        - Update makefiles for verification/rv, using tools/build/
+          makefiles like perf does, inheriting its benefits.
+          For example, having a proper way to handle dependencies.
 
-  # # + grep kmem_cache_free trace
-  # # + grep kmem_cache_free
-  # # + wc -l
-  # # + hitcnt=0
-  # # + grep kmem_cache_free trace
-  # # + grep -v kmem_cache_free
-  # # + wc -l
-  # # + misscnt=0
-  # # + [ 0 -eq 0 ]
-  # # + exit_fail
 
-This seems to be because the system in question has tasks with ':' in
-their name (which a number of kernel worker threads have). These show up
-in the trace, e.g.
+Please pull the latest trace-tools-v6.9-2 tree, which can be found at:
 
-  test:.sh-1299    [004] .....  2886.040608: kmem_cache_free: call_site=putname+0xa4/0xc8 ptr=000000000f4d22f4 name=names_cache
 
-... and so when we try to extact the call_site with:
+  git://git.kernel.org/pub/scm/linux/kernel/git/bristot/linux.git
+trace-tools-v6.9-2
 
-  cut -d: -f3 trace | sed 's/call_site=\([^+]*\)+0x.*/\1/'
+Tag SHA1: e8d5e0f38601c3718874d95db2a0020ab1c454df
+Head SHA1: a23c05fd76cf4ad27e0c74f7a93e7b089e94a55c
 
-... the 'cut' command will extrace the column containing
-'kmem_cache_free' rather than the column containing 'call_site=...', and
-the 'sed' command will leave this unchanged. Consequently, the test will
-decide to use 'kmem_cache_free' as the filter function, resulting in the
-failure seen above.
 
-Fix this by matching the 'call_site=<func>' part specifically to extract
-the function name.
+Daniel Bristot de Oliveira (4):
+      tools/tracing: Use tools/build makefiles on latency-collector
+      tools/rtla: Use tools/build makefiles to build rtla
+      tools/verification: Use tools/build makefiles on rv
+      tools/rtla: Add -U/--user-load option to timerlat
 
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-kselftest@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org
----
- .../selftests/ftrace/test.d/filter/event-filter-function.tc     | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-index 2de7c61d1ae3..3f74c09c56b6 100644
---- a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-+++ b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-@@ -24,7 +24,7 @@ echo 0 > events/enable
- echo "Get the most frequently calling function"
- sample_events
- 
--target_func=`cut -d: -f3 trace | sed 's/call_site=\([^+]*\)+0x.*/\1/' | sort | uniq -c | sort | tail -n 1 | sed 's/^[ 0-9]*//'`
-+target_func=`cat trace | grep -o 'call_site=\([^+]*\)' | sed 's/call_site=//' | sort | uniq -c | sort | tail -n 1 | sed 's/^[ 0-9]*//'`
- if [ -z "$target_func" ]; then
-     exit_fail
- fi
--- 
-2.39.2
-
+----
+ .../tools/rtla/common_timerlat_options.rst         |   6 +
+ tools/tracing/latency/.gitignore                   |   5 +-
+ tools/tracing/latency/Build                        |   1 +
+ tools/tracing/latency/Makefile                     | 105 ++++++++--
+ tools/tracing/latency/Makefile.config              |  30 +++
+ tools/tracing/rtla/.gitignore                      |   7 +-
+ tools/tracing/rtla/Build                           |   1 +
+ tools/tracing/rtla/Makefile                        | 217 +++++++--------------
+ tools/tracing/rtla/Makefile.config                 |  47 +++++
+ tools/tracing/rtla/Makefile.rtla                   |  80 ++++++++
+ tools/tracing/rtla/Makefile.standalone             |  26 +++
+ tools/tracing/rtla/sample/timerlat_load.py         |  74 +++++++
+ tools/tracing/rtla/src/Build                       |  11 ++
+ tools/tracing/rtla/src/timerlat_hist.c             |  16 +-
+ tools/tracing/rtla/src/timerlat_top.c              |  14 +-
+ tools/verification/rv/.gitignore                   |   6 +
+ tools/verification/rv/Build                        |   1 +
+ tools/verification/rv/Makefile                     | 207 +++++++-------------
+ tools/verification/rv/Makefile.config              |  47 +++++
+ tools/verification/rv/Makefile.rv                  |  51 +++++
+ tools/verification/rv/src/Build                    |   4 +
+ 21 files changed, 650 insertions(+), 306 deletions(-)
+ create mode 100644 tools/tracing/latency/Build
+ create mode 100644 tools/tracing/latency/Makefile.config
+ create mode 100644 tools/tracing/rtla/Build
+ create mode 100644 tools/tracing/rtla/Makefile.config
+ create mode 100644 tools/tracing/rtla/Makefile.rtla
+ create mode 100644 tools/tracing/rtla/Makefile.standalone
+ create mode 100644 tools/tracing/rtla/sample/timerlat_load.py
+ create mode 100644 tools/tracing/rtla/src/Build
+ create mode 100644 tools/verification/rv/.gitignore
+ create mode 100644 tools/verification/rv/Build
+ create mode 100644 tools/verification/rv/Makefile.config
+ create mode 100644 tools/verification/rv/Makefile.rv
+ create mode 100644 tools/verification/rv/src/Build
+---------------------------
