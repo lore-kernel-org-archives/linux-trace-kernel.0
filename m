@@ -1,123 +1,248 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303175579F
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Mar 2024 16:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD1115A5
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Mar 2024 16:42:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710952215; cv=none; b=a3ijY79UKpT+dykDpESUqAmu5eRSS8gGTSa0KAG361grgNtcXELyD9fdEH2Q5zigxcUuMQW0eQ7t9GvvmOqx+8NeOV7W/INX9H+DxpjetjgVVc7s8gFsQ1Xd9mhXCeuam/L+12QPK+JWfryxDI/3+hJQzIUD0bTegEWYXsHAY2o=
+	t=1710952944; cv=none; b=ie+BC+q/DHAJ4esJT0eN4O2zPjHLwqrYO20ZKpX5DF8L9YIiNrFmthI9HmIeHDTVYVzZ1gpT238MdmehSYtcG2a5He8VdxFInxJHn6WHXSg2NMalDhT4b2iYNcKLscQ0nyi+Dgz36l3iKa5Nm/AK78S8KZlPJooLvKOa+TKG024=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710952215; c=relaxed/simple;
-	bh=fUUFMvg12Muu5FflNc842GDP64XjwobWVbannxmzVAw=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=bHdcOkQVbGyRTKs1DA+mZRs4Zca9pF4szajG6EwrYQ2q5xtp7NiX+cb8wQeSUM5WrATNcMy3XgcWHYx/hFQy87Blm5SPoPOKE8slf/oMPvWyt9swmXyFMmx+RQg34GvCv+jxRkSs7wN5qcccbzt5Xtc85VmVjDu1WXf4dzsc1mI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=VkiZxpiK; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1710952944; c=relaxed/simple;
+	bh=n/qBSqnoCDaEZUwEdc6nE4mkAewNmm2ZujXyWNcmjVM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qteeJB30n9ubY0vZWFQtixwPb1ArAcRvmyAE4SotHYkFUUV26UPmVQ13sJr2vBOS9WmOfeqpFNfIQLeqP1V/T7IwDvQjkZgfL5Vys78+xQUjLiOTzRBL5zBYPgL5zXxLQBRpQ8F/WAbmzbPtmUgBNcUBv5DxTn+54Tpmr9dAPag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=TmtgrB8q; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="VkiZxpiK"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a46f97b8a1bso428366b.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Mar 2024 09:30:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="TmtgrB8q"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-609f359b7b1so81260327b3.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Mar 2024 09:42:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1710952212; x=1711557012; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+        d=sifive.com; s=google; t=1710952942; x=1711557742; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=a0X7F8ZndwwFM/qfksRMIkR+4ps9Ffpk0s/ETQfTpx4=;
-        b=VkiZxpiKnV7DiLonc0jWIvzjHVMD2FIER6xNVrZG/JCvzoRxdRoTbp3jTdT9M0kzKJ
-         gh/SJwThnWy58MuA5r3vGieFzjpTnqsKrzYqKpNvZquaopg72p/x/wnlufLR/WUJSP0f
-         4Opc0kOGvks1UWuIv4M4Iy10Dw7nneqbGZ/ZtRrv1sR9bo0x1t2B+Z+Npn/uGYP6d/YM
-         VzjXxO0IE83+TQndLHdmPhJgAIaqT3E2+lZ0aJ70KIn+Mt6JjD55D/zwpqAYIcGxj7DD
-         rO9NZ/rcDDsBz5VHuyVJ/3HHlgIa1Wzgth5ozLSL787u6cvghnhS/oQFJ24kPBgqSfS7
-         B9FQ==
+        bh=/C0go5GeoUF1aqwd5WJWdc0gTbFG3QELgzX8R+DzOuI=;
+        b=TmtgrB8qSmdhSIUJJmtXLRW8gm5340i+fgOoGBz8u+wZP7w+hm/8WtrBVwzcunYKFS
+         FnHeMbICSdBxLiVrwGudi4+B4C6lETQf1OnpfwlhS9ny+iFaUdlbjpNeDcV//aAoQVoa
+         3i0yzoux+iZChf5s3W24yPuvHZzxKBf4KVO9Z/TeXRN/36wKZPCPAueak45fuGwP76SR
+         x6pimA/KaYPNMMglSNoTxcAeQTn/b1vyN3IP+Q7l8motqWKYADKeZXmbn1kgFYrS86yZ
+         JhGvQeyzeUMzBEHDY7ptlW9yMZwDBtRMMrph8cGkEcxn28J7KT8xH4PhTTLv5IodGqUR
+         VLJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710952212; x=1711557012;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1710952942; x=1711557742;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=a0X7F8ZndwwFM/qfksRMIkR+4ps9Ffpk0s/ETQfTpx4=;
-        b=NahPOpybLlw2QimlfU8ycOHDIb2Z9mZEqDgtrr2lcOAY0F0IbInZAvIJwbd6mYpnsZ
-         rrYRanuoDigwNTGya61BOQDfT0v/s2Xpw2+Y86wdskXdt6EwzQJyCP3rY4zKz3VCXK9D
-         gWtjBXZMdsn2i9r3G5FowarkC+n56+plrFBLebHFSck+UY6yS/DjkpnUPbG6ltV3f9oX
-         Phd3KK6anRfNgt6h0jhprTBnRpADkg9GZ0/i7tcG6GgxR2hPdmtRj+4IccAMD1R3Qhtv
-         ahilVcAjq3E8JFZKnSWpQjhFJGYt3Q3KGsr7Fk3PKSg1RvDeyf31gb3dYjzyhFzWMtBL
-         e68Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXqKj2B83MLdRP1t/ED2ZzC0RAk38k8WZvnKhZDONBdosu36s1d090CXAIC44I5CUfK+YHBeRWSw0HmIxnKCpVfZRvQ9ycz41D7W0qLY/2GB2kP
-X-Gm-Message-State: AOJu0YwVZVWuZwL5IbzfMrPlfMGC/D9YQ7pJNJjpXmlYyDok/nMEATxv
-	XDWZHWWfc3p5zZHy9C0p2AIBPAqDxKh+FT5KjPzf+7KhCtgnDJehX/Yne14GUWv++I0u0fnub0J
-	9
-X-Google-Smtp-Source: AGHT+IHsoD21j6ESUUF1khZHhnTDSCPP4x5//7u0Ai/223kW4lGWbdm1Xxg/oXN0xx9+KTFi4A1uuw==
-X-Received: by 2002:a17:906:264e:b0:a46:c11d:dd05 with SMTP id i14-20020a170906264e00b00a46c11ddd05mr4621131ejc.57.1710952212367;
-        Wed, 20 Mar 2024 09:30:12 -0700 (PDT)
-Received: from smtpclient.apple ([2001:a61:10c6:ce01:6198:fd02:45af:2ca2])
-        by smtp.gmail.com with ESMTPSA id vi2-20020a170907d40200b00a45c8b6e965sm7471416ejc.3.2024.03.20.09.30.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2024 09:30:12 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+        bh=/C0go5GeoUF1aqwd5WJWdc0gTbFG3QELgzX8R+DzOuI=;
+        b=T14ghEq4qiNNTVVP/bTF3VzZOlyPnPiAvHoyL/+o2qzjhGoI+hq9GLhjCNKsNwFWhz
+         naYOhyMDl450iXtxeBzlGtu4/N5fKlNUKADUgLQc0BDQqG4xyBMPTPsewkIPMWLM+BCU
+         feGLuCCnGh7/OhJflxX8goGq/kdRo1CWld2WreEvKty8SixXbk/kQU5iegZ3LBnBqVVd
+         D2/7TTeMFJZhhpU+t64/6cmF3MRwq1qj374iEs/bKsCJ3DXkPuHpnP6NRG4lsOw6LvU3
+         goQmLjGYX1VSZ9lIFG68m/Nr9NwVpCPGXX1kKj5p96rD6AsREbjau/Ow0BfkgIWasAb/
+         A5iA==
+X-Forwarded-Encrypted: i=1; AJvYcCVOEfebNdBkKEABQM22hCNaqeveGtgSQDSKTA+/BOxYkb/uefqElLwl02fnkWysGf5hYrUzSs+CtDr6+c5Ek0Y7ToVej5t+xNl+qW7E090iXOFa
+X-Gm-Message-State: AOJu0YxVX7s01K3/4EBSHldEO6juPemDCzZAcmeu4BVx66ZLwU0g4Hc0
+	saNO7mRohpPuedRAN9nOLY65fw0gL/mM1KePNVLzhOvYhmvVqFKwc8yW/mGZjIyIQRe+Z2Xgnsl
+	XTmfGs4mFu2DaNonbs5zMWR2ClKmtzFBfLT1tbw==
+X-Google-Smtp-Source: AGHT+IGYNdFruVqknweeMZibIxK5wVlRKsW3ccyqWtS2kmgKboBe+PUMsfNihhXKHZf27wB2CGJ+gDtjeYC6VWYGmH8=
+X-Received: by 2002:a81:ab50:0:b0:60f:ed06:bee7 with SMTP id
+ d16-20020a81ab50000000b0060fed06bee7mr6253031ywk.50.1710952942198; Wed, 20
+ Mar 2024 09:42:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
-Subject: Re: [PATCH] tracing: Explicitly cast divisor to fix Coccinelle
- warning
-From: Thorsten Blum <thorsten.blum@toblux.com>
-In-Reply-To: <EAA3D15D-F96D-48AC-B9C0-B2290E1B38AA@toblux.com>
-Date: Wed, 20 Mar 2024 17:30:00 +0100
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
+MIME-Version: 1.0
+References: <20240306165904.108141-1-puranjay12@gmail.com> <87ttlhdeqb.fsf@all.your.base.are.belong.to.us>
+ <ZfBbxPDd0rz6FN2T@FVFF77S0Q05N> <8734suqsth.fsf@all.your.base.are.belong.to.us>
+ <mb61pplvw6grf.fsf@gmail.com> <87zfv0onre.fsf@all.your.base.are.belong.to.us> <87il1oedx8.fsf@all.your.base.are.belong.to.us>
+In-Reply-To: <87il1oedx8.fsf@all.your.base.are.belong.to.us>
+From: Andy Chiu <andy.chiu@sifive.com>
+Date: Thu, 21 Mar 2024 00:41:00 +0800
+Message-ID: <CABgGipWPuvwi43v1+60-=0_MN_q_CD0ZGasxHHVWJ37cig5MmA@mail.gmail.com>
+Subject: Re: [RFC PATCH] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
+To: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+Cc: Puranjay Mohan <puranjay12@gmail.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	Guo Ren <guoren@kernel.org>, Ley Foon Tan <leyfoon.tan@starfivetech.com>, 
+	Deepak Gupta <debug@rivosinc.com>, Sia Jee Heng <jeeheng.sia@starfivetech.com>, 
+	Bjorn Topel <bjorn@rivosinc.com>, Song Shuai <suagrfillet@gmail.com>, 
+	"Cl'ement L'eger" <cleger@rivosinc.com>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Jisheng Zhang <jszhang@kernel.org>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Robbin Ehn <rehn@rivosinc.com>, Brendan Sweeney <brs@rivosinc.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <4E5A47C3-E9DD-4FD2-BDC4-BED67EF791F2@toblux.com>
-References: <20240318105243.117911-2-thorsten.blum@toblux.com>
- <20240320192715.22eeeba84c0fd3a8c2353c79@kernel.org>
- <EAA3D15D-F96D-48AC-B9C0-B2290E1B38AA@toblux.com>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-X-Mailer: Apple Mail (2.3774.500.171.1.1)
 
-On 20. Mar 2024, at 16:01, Thorsten Blum <thorsten.blum@toblux.com> =
-wrote:
->=20
-> Coccinelle also finds this one, but please ignore this patch as I just =
-realized
-> this was already fixed in another patch of mine from February.
->=20
-> Sorry for the inconvenience.
->=20
-> Link: =
-https://lore.kernel.org/linux-kernel/20240225164507.232942-2-thorsten.blum=
-@toblux.com/
+Hi Bj=C3=B6rn,
 
-Actually, I will submit a new patch to revert
+On Fri, Mar 15, 2024 at 4:50=E2=80=AFAM Bj=C3=B6rn T=C3=B6pel <bjorn@kernel=
+.org> wrote:
+>
+> Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> writes:
+>
+> > Puranjay Mohan <puranjay12@gmail.com> writes:
+> >
+> >> Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> writes:
+> >>
+> >>>
+> >>> Hmm, depending on RISC-V's CMODX path, the pro/cons CALL_OPS vs dynam=
+ic
+> >>> trampolines changes quite a bit.
+> >>>
+> >>> The more I look at the pains of patching two instruction ("split
+> >>> immediates"), the better "patch data" + one insn patching look.
+> >>
+> >> I was looking at how dynamic trampolines would be implemented for RISC=
+-V.
+> >>
+> >> With CALL-OPS we need to patch the auipc+jalr at function entry only, =
+the
+> >> ops pointer above the function can be patched atomically.
+> >>
+> >> With a dynamic trampoline we need a auipc+jalr pair at function entry =
+to jump
+> >> to the trampoline and then another auipc+jalr pair to jump from trampo=
+line to
+> >> ops->func. When the ops->func is modified, we would need to update the
+> >> auipc+jalr at in the trampoline.
+> >>
+> >> So, I am not sure how to move forward here, CALL-OPS or Dynamic trampo=
+lines?
+> >
+> > Yeah. Honestly, we need to figure out the patching story prior
+> > choosing the path, so let's start there.
+> >
+> > After reading Mark's reply, and discussing with OpenJDK folks (who does
+> > the most crazy text patching on all platforms), having to patch multipl=
+e
+> > instructions (where the address materialization is split over multiple
+> > instructions) is a no-go. It's just a too big can of worms. So, if we
+> > can only patch one insn, it's CALL_OPS.
+> >
+> > A couple of options (in addition to Andy's), and all require a
+> > per-function landing address ala CALL_OPS) tweaking what Mark is doing
+> > on Arm (given the poor branch range).
+> >
+> > ...and maybe we'll get RISC-V rainbows/unicorns in the future getting
+> > better reach (full 64b! ;-)).
+> >
+> > A) Use auipc/jalr, only patch jalr to take us to a common
+> >    dispatcher/trampoline
+> >
+> >  | <func_trace_target_data_8B> # probably on a data cache-line !=3D fun=
+c .text to avoid ping-pong
+> >  | ...
+> >  | func:
+> >  |   ...make sure ra isn't messed up...
+> >  |   aupic
+> >  |   nop <=3D> jalr # Text patch point -> common_dispatch
+> >  |   ACTUAL_FUNC
+> >  |
+> >  | common_dispatch:
+> >  |   load <func_trace_target_data_8B> based on ra
+> >  |   jalr
+> >  |   ...
+> >
+> > The auipc is never touched, and will be overhead. Also, we need a mv to
+> > store ra in a scratch register as well -- like Arm. We'll have two insn
+> > per-caller overhead for a disabled caller.
+> >
+> > B) Use jal, which can only take us +/-1M, and requires multiple
+> >    dispatchers (and tracking which one to use, and properly distribute
+> >    them. Ick.)
+> >
+> >  | <func_trace_target_data_8B> # probably on a data cache-line !=3D fun=
+c .text to avoid ping-pong
+> >  | ...
+> >  | func:
+> >  |   ...make sure ra isn't messed up...
+> >  |   nop <=3D> jal # Text patch point -> within_1M_to_func_dispatch
+> >  |   ACTUAL_FUNC
+> >  |
+> >  | within_1M_to_func_dispatch:
+> >  |   load <func_trace_target_data_8B> based on ra
+> >  |   jalr
+> >
+> > C) Use jal, which can only take us +/-1M, and use a per-function
+> >    trampoline requires multiple dispatchers (and tracking which one to
+> >    use). Blows up text size A LOT.
+> >
+> >  | <func_trace_target_data_8B> # somewhere, but probably on a different=
+ cacheline than the .text to avoid ping-ongs
+> >  | ...
+> >  | per_func_dispatch
+> >  |   load <func_trace_target_data_8B> based on ra
+> >  |   jalr
+> >  | func:
+> >  |   ...make sure ra isn't messed up...
+> >  |   nop <=3D> jal # Text patch point -> per_func_dispatch
+> >  |   ACTUAL_FUNC
+>
+> Brendan proposed yet another option, "in-function dispatch":
+>
+> D)
+>   | <func_trace_target_data_8B_per_function> # idk somewhere
+>   | ...
+>   | func:
+>   |    mv tmp1, ra
+>   |    aupic tmp2, <func_trace_target_data_8B_per_function:upper>
+>   |    mv tmp3, zero <=3D> ld tmp3, tmp2<func_trace_target_data_8B_per_fu=
+nction:lower>
+>   |    nop <=3D> jalr ra, tmp3
+>   |    ACTUAL_FUNC
 
-	delta =3D div64_u64(delta, bm_cnt);
+My patch series takes a similar "in-function dispatch" approach. A
+difference is that the <func_trace_target_data_8B_per_function> is
+embedded within each function entry. I'd like to have it moved to a
+run-time allocated array to reduce total text size.
 
-back to
+Another difference is that my series changes the first instruction to
+"j ACTUAL_FUNC" for the "ftrace disable" case. As long as the
+architecture guarantees the atomicity of the first instruction, then
+we are safe. For example, we are safe if the first instruction could
+only be "mv tmp, ra" or "j ACTUAL_FUNC". And since the loaded address is
+always valid, we can fix "mv + jalr" down so we don't have to
+play with the exception handler trick. The guarantee from arch would
+require ziccif (in RVA22) though, but I think it is the same for us
+(unless with stop_machine). For ziccif, I would rather call that out
+during boot than blindly assume.
 
-	do_div(delta, bm_cnt);
+However, one thing I am not very sure is: do we need a destination
+address in a "per-function" manner? It seems like most of the time the
+destination address can only be ftrace_call, or ftrace_regs_call. If
+the number of destination addresses is very few, then we could
+potentially reduce the size of
+<func_trace_target_data_8B_per_function>.
 
-but this time include an explicit cast to u32
+>
+> There are 4 CMODX possiblities:
+>    mv, nop:  fully disabled, no problems
+>    mv, jalr: We will jump to zero. We would need to have the inst
+>              page/access fault handler take care of this case. Especially
+>              if we align the instructions so that they can be patched
+>              together, being interrupted in the middle and taking this
+>              path will be rare.
+>   ld, nop:   no problems
+>   ld, jalr:  fully enabled, no problems
+>
+> Patching is a 64b store/sd, and we only need a fence.i at the end, since
+> we can handle all 4 possibilities.
+>
+> For the disabled case we'll have:
+> A) mv, aupic, nop
+> D) mv, aupic, mv, nop.
+>
+> Puranjay, I've flipped. Let's go Mark's CALL_OPS together with a new
+> text patch mechanism w/o stop_machine().
+>
+>
+> Bj=C3=B6rn
 
-	do_div(delta, (u32)bm_cnt);
-
-to remove the Coccinelle warning reported by do_div.cocci and to improve
-performance.
-
-The do_div() macro does a 64-by-32 division which is faster than the =
-64-by-64=20
-division done by div64_u64(). Casting the divisor bm_cnt to u32 is safe =
-since=20
-we return early from trace_do_benchmark() if bm_cnt > UINT_MAX =
-(something I=20
-missed in d6cb38e10810).
-
-This approach is already used when calculating the standard deviation:
-
-	do_div(stddev, (u32)bm_cnt);
-	do_div(stddev, (u32)bm_cnt - 1);
-
-Thanks,
-Thorsten=
+Cheers,
+Andy
