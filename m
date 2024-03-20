@@ -1,104 +1,133 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D92A48792
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Mar 2024 15:01:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5DC5474D;
+	Wed, 20 Mar 2024 16:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710946886; cv=none; b=RmeiD7lUL8qXZ5XUosMmPp4yeI+VkNytolXYJnFA15MIx8KKlzx1P+7anwowKGgQbEYIk+PAafqE2vcvJxuqqHqV8mB2tBki//xHtQRhKIgs2nYr/STAp5UZTHr5dqfDaqo9zSGwhURH/1ibGfwQC8DySnrb66IJyWoDT4g3RZ0=
+	t=1710951470; cv=none; b=KjpmVHTYbvEsxE1e3y4qyG9IhbM9Km88TJ7ebwRyveKw18AP4YvgQBMyqj05dD+RMuVq5Yj/J74c9r9eE8wSrbLHMgTaLiQHg1NQ4lKUA1E9P9CPOOc9Irazr02wwuXXJsQbO2WkdjNv7jv0YNndlPUVSWojBX9BOSAkfVACKsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710946886; c=relaxed/simple;
-	bh=QYn8wEwrd9F4hJD7q6hMGPoTg3d1RRAdEsqO+3Eu13k=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=sc0OtO+OSG6T2PxpJFg6HD/a/Ir8DVCIwlJdhZKGhgfm4O8MuyU6DJsmH9Iz7MZsbDCENTe8j+rcTcLV5aeaO4iH9HfbPn+A5dznIbGXQE2MHObA1bzdTFGLOFSJEC5irmLZtTCG+hMgUND/Ig3cUmTWi3Q4T/ZjOqyBjRwoXqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=HLR9STqi; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="HLR9STqi"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-513cf9bacf1so8603788e87.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Mar 2024 08:01:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1710946882; x=1711551682; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9vWgthiM1p7crGecz228u37xQ7MHayTxVxgS78EJVGE=;
-        b=HLR9STqi06aeHzo2WG4kI+lXAYGbJZNVFeQkTD76izmdp8Hk5Os5Ll64nucGVivLPs
-         ohqiAyhrIqme5cMLihF5PUjK5elFADY7G7hqmGSwlEZIJxJmyTzYtTGqGQgnd7b1p7si
-         vzOSPn+W0xjwBvMvRHEWZ4e7sYLKi5nI9xn8Yt672IFNLoP4tLKm+0VPFqnMRX/6ll8A
-         tYhCT1ABU/axn5luqOYrAPIuO36d+YuceJrxg2aN0wOm+xgMiSPR2x1yZKWcUqPKmQc+
-         hO/VS3MNsexRU43VyMUnUzr2Xql9bv2r3RHx0XY6b0KhcSsDiVqPQGvV/wMBQW8msEm+
-         tXTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710946882; x=1711551682;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9vWgthiM1p7crGecz228u37xQ7MHayTxVxgS78EJVGE=;
-        b=RKN1riEbChsFor1ZYh2qQQuoD7szJT4Jlgv8WV0oy2LLEs9nUy4aBace1IpODVsJEv
-         9ZNyqGIxDekLnenfHIW67BB9FG3FIm7h0F9ZlpZ8vJy/Z7s4bf5vX2z/eNtSlCqCcWQi
-         /bvGZNWjrnaLcMKZ7grSNJ1BqdNqK8bf8BQf/SqSi20CvuqtHKeEdIT8P0uGGbJ+VKpV
-         mKVXRdyqGLiRwvpY3QPVD2MhOWcb8/7IngM5Nkfdeem3GxEDEBS9qCAytugbz7jT++XE
-         6Oa3JFW6Rnf45X2ybM+hx/SaEkeHPSFpbHhe4HALlnf9oR+tW0heWk6V4TeuZ1castYk
-         bAFg==
-X-Forwarded-Encrypted: i=1; AJvYcCWGQPig/Kpg/EEXbttWX185cuH1GtgMS9uE2XF5CEBQ/Wz+QkVH7VYRz8o2c8z6filjxDyPM8/w8NZeneyu6X5cc9Kjb3fMI+v2V3RB/XO+aFui
-X-Gm-Message-State: AOJu0Yyu7oze91TyNypLY8x2aJ3/oJU9KdVao2/lu5Pt9Kw5QsynRHPS
-	NNTrJCNwB2BLJh7CBdGp5FegWXYwTeeUYv2M7xG2QtDofp2pg570Qn8Ami4kc+Q=
-X-Google-Smtp-Source: AGHT+IH28ox2ZKxLrWNtq84tgrFDOkL6Ztn0chSueQwh894ihTgGyWEffg6JNmV6hMqYn9YUSIJGfg==
-X-Received: by 2002:a19:690f:0:b0:513:ee27:2054 with SMTP id e15-20020a19690f000000b00513ee272054mr5625764lfc.42.1710946882374;
-        Wed, 20 Mar 2024 08:01:22 -0700 (PDT)
-Received: from smtpclient.apple ([2001:a61:10c6:ce01:6198:fd02:45af:2ca2])
-        by smtp.gmail.com with ESMTPSA id pv27-20020a170907209b00b00a44fcdf20d1sm7371801ejb.189.2024.03.20.08.01.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Mar 2024 08:01:21 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	s=arc-20240116; t=1710951470; c=relaxed/simple;
+	bh=MjsTErL++3mNSNQUdfMEPoHEWuqAralTC+D1xVnk5Gg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=SPqDanPLWdnW0ZHFV2yXkG6HQExKHIOUdmjT9nxHM8N0Kr4Arzpf9AsNvQsQnt79QP6Jz2aDWzIWQNEGGS/3Eq1Sth1QxhOSLbqByl4fk+Z2Zc5DtYF/ow9A9Dqa7PH7CsqrmGkIKc663mXrjeT5di3km/DPeBmVmA/YsxZ4214=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38AC6C433F1;
+	Wed, 20 Mar 2024 16:17:48 +0000 (UTC)
+Date: Wed, 20 Mar 2024 12:20:12 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Daniel Bristot de Oliveira
+ <bristot@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Will Deacon
+ <will@kernel.org>, Waiman Long <longman@redhat.com>, Boqun Feng
+ <boqun.feng@gmail.com>, linux-rt-users <linux-rt-users@vger.kernel.org>
+Subject: [RFC][PATCH] tracing: Introduce restart_critical_timings()
+Message-ID: <20240320122012.2c1f461f@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
-Subject: Re: [PATCH] tracing: Explicitly cast divisor to fix Coccinelle
- warning
-From: Thorsten Blum <thorsten.blum@toblux.com>
-In-Reply-To: <20240320192715.22eeeba84c0fd3a8c2353c79@kernel.org>
-Date: Wed, 20 Mar 2024 16:01:10 +0100
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <EAA3D15D-F96D-48AC-B9C0-B2290E1B38AA@toblux.com>
-References: <20240318105243.117911-2-thorsten.blum@toblux.com>
- <20240320192715.22eeeba84c0fd3a8c2353c79@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-X-Mailer: Apple Mail (2.3774.500.171.1.1)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 20. Mar 2024, at 11:27, Masami Hiramatsu (Google) =
-<mhiramat@kernel.org> wrote:
->=20
-> Hmm, strange, trace_do_benchmark() has another do_div(u64, u64).=20
->=20
->                do {
->                        last_seed =3D seed;
->                        seed =3D stddev;
->                        if (!last_seed)
->                                break;
->                        do_div(seed, last_seed);
->                        seed +=3D last_seed;
->                        do_div(seed, 2);
->                } while (i++ < 10 && last_seed !=3D seed);
->=20
-> Didn't Coccinelle find that?
+From: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Coccinelle also finds this one, but please ignore this patch as I just =
-realized
-this was already fixed in another patch of mine from February.
+I'm debugging some latency issues on a Chromebook and the preemptirqsoff
+tracer hit this:
 
-Sorry for the inconvenience.
+# tracer: preemptirqsoff
+#
+# preemptirqsoff latency trace v1.1.5 on 5.15.148-21853-g165fd2387469-dirty
+# --------------------------------------------------------------------
+# latency: 7813 us, #60/60, CPU#1 | (M:preempt VP:0, KP:0, SP:0 HP:0 #P:2)
+#    -----------------
+#    | task: init-1 (uid:0 nice:0 policy:0 rt_prio:0)
+#    -----------------
+#  => started at: rwsem_optimistic_spin
+#  => ended at:   rwsem_optimistic_spin
+#
+#
+#                    _------=> CPU#            
+#                   / _-----=> irqs-off        
+#                  | / _----=> need-resched    
+#                  || / _---=> hardirq/softirq 
+#                  ||| / _--=> preempt-depth   
+#                  |||| / _-=> migrate-disable 
+#                  ||||| /     delay           
+#  cmd     pid     |||||| time  |   caller     
+#     \   /        ||||||  \    |    /       
+   <...>-1         1...1.    0us!: rwsem_optimistic_spin+0x20/0x194 <-rwsem_optimistic_spin+0x20/0x194
+   <...>-1         1.N.1. 7813us : rwsem_optimistic_spin+0x140/0x194 <-rwsem_optimistic_spin+0x140/0x194
+   <...>-1         1.N.1. 7814us+: tracer_preempt_on+0x4c/0x6a <-rwsem_optimistic_spin+0x140/0x194
+   <...>-1         1.N.1. 7824us : <stack trace>
+ => rwsem_optimistic_spin+0x140/0x194
+ => rwsem_down_write_slowpath+0xc9/0x3fe
+ => copy_process+0xd08/0x1b8a
+ => kernel_clone+0x94/0x256
+ => __x64_sys_clone+0x7a/0x9a
+ => do_syscall_64+0x51/0xa1
+ => entry_SYSCALL_64_after_hwframe+0x5c/0xc6
 
-Link: =
-https://lore.kernel.org/linux-kernel/20240225164507.232942-2-thorsten.blum=
-@toblux.com/=
+Which isn't a real issue, as it's in the rwsem_optimistic_spin() code that
+spins with interrupts enabled, preempt disabled, and checks for
+need_resched(). If it is true, it breaks out and schedules.
+
+Hence, it's hiding real issues, because it can spin for a very long time
+and this is not the source of the latency I'm tracking down.
+
+I would like to introduce restart_critical_timings() and place it in
+locations that have this behavior.
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
+index 147feebd508c..e9f97f60bfc0 100644
+--- a/include/linux/irqflags.h
++++ b/include/linux/irqflags.h
+@@ -145,6 +145,13 @@ do {						\
+ # define start_critical_timings() do { } while (0)
+ #endif
+ 
++/* Used in spins that check need_resched() with preemption disabled */
++static inline void restart_critical_timings(void)
++{
++	stop_critical_timings();
++	start_critical_timings();
++}
++
+ #ifdef CONFIG_DEBUG_IRQFLAGS
+ extern void warn_bogus_irq_restore(void);
+ #define raw_check_bogus_irq_restore()			\
+diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+index 2340b6d90ec6..fa7b43e53d20 100644
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -27,6 +27,7 @@
+ #include <linux/export.h>
+ #include <linux/rwsem.h>
+ #include <linux/atomic.h>
++#include <linux/irqflags.h>
+ #include <trace/events/lock.h>
+ 
+ #ifndef CONFIG_PREEMPT_RT
+@@ -780,6 +781,7 @@ rwsem_spin_on_owner(struct rw_semaphore *sem)
+ 		 */
+ 		barrier();
+ 
++		restart_critical_timings();
+ 		if (need_resched() || !owner_on_cpu(owner)) {
+ 			state = OWNER_NONSPINNABLE;
+ 			break;
+@@ -912,6 +914,7 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
+ 		 * a writer, need_resched() check needs to be done here.
+ 		 */
+ 		if (owner_state != OWNER_WRITER) {
++			restart_critical_timings();
+ 			if (need_resched())
+ 				break;
+ 			if (rt_task(current) &&
