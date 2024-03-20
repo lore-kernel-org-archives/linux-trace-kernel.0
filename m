@@ -1,89 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212EA4C7E;
-	Wed, 20 Mar 2024 00:41:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D64F101EC;
+	Wed, 20 Mar 2024 03:17:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710895310; cv=none; b=aPuzcQqELS4/8bxoerH/piexXK28VNweC5ooAoAw4ptT2/Da7axFQLfnIePoj5vCMx5H+pwvsNNNj6c2Nkqn6mEJ7HRCzgkgSGgpj5sYyMcSjPdkHaf5GWm1X/ue02O2LHaJku6QBK2baGkhVhVQFJbX5LAKxzjqqJH9F6a6QeM=
+	t=1710904644; cv=none; b=TzrNzQbRs86Cmk5lFzdfYVIhd3tyPoz3+WZE2UFu4ae1mBrEQ243c/XyXX9wSg5VmTXdI3Af9mY/hplFC2sS1EnXJwLxhuX9OKv2SfMsNNOBTtm0h5yr6WPxP+ceWGLCQKscS46hDEb8hBglB422NddbgSvVfW0oHb4tfDULDkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710895310; c=relaxed/simple;
-	bh=ajojewtS5GOwYcGGsxv3U2sYM7eoNoLJkIimpLEMk7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LT2hN8FjCHqGayNtmxp2lqAfmDDEMQrIwWq46tjLrFjECqj+HmNqf3Aj/YqprObr0DYuL+Hn+eE0oZq88tROdFZcGY+Vo0y7kcn1IKaWfxaXJujRc0zZZzC2upAmv7+voyRd4xRbpgLagYD9mUZBOoyjuxhamDiPG5ebWI0UsWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A464C433F1;
-	Wed, 20 Mar 2024 00:41:47 +0000 (UTC)
-Date: Tue, 19 Mar 2024 20:44:10 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Joel
- Fernandes <joel@joelfernandes.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>,
- Daniel Bristot de Oliveira <bristot@redhat.com>, Ingo Molnar
- <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- suleiman@google.com, Thomas Gleixner <tglx@linutronix.de>, Vineeth Pillai
- <vineeth@bitbyteword.org>, Youssef Esmat <youssefesmat@google.com>, Beau
- Belgrave <beaub@linux.microsoft.com>, Alexander Graf <graf@amazon.com>,
- Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>, "Paul E.
- McKenney" <paulmck@kernel.org>, David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH 0/8] tracing: Persistent traces across a reboot or crash
-Message-ID: <20240319204410.6cb9842b@gandalf.local.home>
-In-Reply-To: <202403091234.DE25C77028@keescook>
-References: <20240306015910.766510873@goodmis.org>
- <202403091016.5CDF0E2EE@keescook>
- <20240309135116.40f65cee@rorschach.local.home>
- <202403091234.DE25C77028@keescook>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1710904644; c=relaxed/simple;
+	bh=FHEe1pX8Lh1a2rackEtx2e+ZX13Jt6G1A6UdQ/Ju+3g=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Oyehk7uCsDq8KwBh2K9dx70fjDSQAgOIDPuafbmydo8IK1oqnZrDnhz5mwDGSjhB70tgNmDTirvOOF1mktBcA7QQ95hAVHLeg8oPXrwEhJbTiCcK64L+xDMS/VjIaqU+JWGuqvSG1xUBsoRL9T6RJRhW4TnDI+752dZvXp8Ra/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AYwkd9zr; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AYwkd9zr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57857C433F1;
+	Wed, 20 Mar 2024 03:17:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710904642;
+	bh=FHEe1pX8Lh1a2rackEtx2e+ZX13Jt6G1A6UdQ/Ju+3g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=AYwkd9zrRDoLsoiO+ozA12ei/PoImRASKbJ1GHi0THgDhXHEmpD0R+NT2mB1h9otg
+	 9IUJABMpdYLtAMHoB75EgGVRQar/Uk01T9z0qWK7CLPHE8zLy5kVQrfgtTFNNgTK0b
+	 Xi1W3CSTtcxuOyWKd95eqXdizb0O/UJds6F8azMGlmcGK/EN2g4dntbSkGjGdI1rDa
+	 lF7fcGlfwkpHZkSof0rG4M+ZgpUiaBDaqEUMAuqSeOdovVOL0hsaSKzIVTe7+OFNs0
+	 z19wuQmZwt1jHzL8H3cTh1xz3yVtlm++6MZxf4NGqtpCLatq9DvdiF+3ZcZ+XDdVl1
+	 K5Dz/5ZuzFajg==
+Date: Wed, 20 Mar 2024 12:17:17 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
+ rostedt@goodmis.org, bpf@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, oleg@redhat.com, jolsa@kernel.org
+Subject: Re: [PATCH v2 0/3] uprobes: two common case speed ups
+Message-Id: <20240320121717.eda8ecd602d8d153925e2236@kernel.org>
+In-Reply-To: <CAEf4BzaFfQeD8TY7pXEyX4h5UeAg0HZpx8psJF=Z6GJmr3VF5w@mail.gmail.com>
+References: <20240318181728.2795838-1-andrii@kernel.org>
+	<20240319132057.78e60d15e4fd07dbef3b14a9@kernel.org>
+	<CAEf4BzaFfQeD8TY7pXEyX4h5UeAg0HZpx8psJF=Z6GJmr3VF5w@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, 9 Mar 2024 12:40:51 -0800
-Kees Cook <keescook@chromium.org> wrote:
+On Tue, 19 Mar 2024 09:19:19 -0700
+Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
 
-> The part I'd like to get wired up sanely is having pstore find the
-> nvdimm area automatically, but it never quite happened:
-> https://lore.kernel.org/lkml/CAGXu5jLtmb3qinZnX3rScUJLUFdf+pRDVPjy=CS4KUtW9tLHtw@mail.gmail.com/
+> On Mon, Mar 18, 2024 at 9:21 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >
+> > Hi,
+> >
+> > On Mon, 18 Mar 2024 11:17:25 -0700
+> > Andrii Nakryiko <andrii@kernel.org> wrote:
+> >
+> > > This patch set implements two speed ups for uprobe/uretprobe runtime execution
+> > > path for some common scenarios: BPF-only uprobes (patches #1 and #2) and
+> > > system-wide (non-PID-specific) uprobes (patch #3). Please see individual
+> > > patches for details.
+> >
+> > This series looks good to me. Let me pick it on probes/for-next.
+> 
+> Great, at least I guessed the Git repo right, if not the branch.
+> Thanks for pulling it in! I assume some other uprobe-related follow up
+> patches should be based on probes/for-next as well, right?
 
-The automatic detection is what I'm looking for.
+Yes, I'll pick those on linux-trace tree's probes/* branchs
+(if there is an urgent patch, it will go through probes/fixes)
+
+Thank you! 
 
 > 
-> > Thanks for the info. We use pstore on ChromeOS, but it is currently
-> > restricted to 1MB which is too small for the tracing buffers. From what
-> > I understand, it's also in a specific location where there's only 1MB
-> > available for contiguous memory.  
-> 
-> That's the area that is specifically hardware backed with persistent
-> RAM.
-> 
-> > I'm looking at finding a way to get consistent memory outside that
-> > range. That's what I'll be doing next week ;-)
-> > 
-> > But this code was just to see if I could get a single contiguous range
-> > of memory mapped to ftrace, and this patch set does exactly that.  
-> 
-> Well, please take a look at pstore. It should be able to do everything
-> you mention already; it just needs a way to define multiple regions if
-> you want to use an area outside of the persistent ram area defined by
-> Chrome OS's platform driver.
+> >
+> > Thanks!
+> >
+> > >
+> > > v1->v2:
+> > >   - rebased onto trace/core branch of tracing tree, hopefully I guessed right;
+> > >   - simplified user_cpu_buffer usage further (Oleg Nesterov);
+> > >   - simplified patch #3, just moved speculative check outside of lock (Oleg);
+> > >   - added Reviewed-by from Jiri Olsa.
+> > >
+> > > Andrii Nakryiko (3):
+> > >   uprobes: encapsulate preparation of uprobe args buffer
+> > >   uprobes: prepare uprobe args buffer lazily
+> > >   uprobes: add speculative lockless system-wide uprobe filter check
+> > >
+> > >  kernel/trace/trace_uprobe.c | 103 +++++++++++++++++++++---------------
+> > >  1 file changed, 59 insertions(+), 44 deletions(-)
+> > >
+> > > --
+> > > 2.43.0
+> > >
+> >
+> >
+> > --
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-I'm not exactly sure how to use pstore here. At boot up I just need some
-consistent memory reserved for the tracing buffer. It just needs to be the
-same location at every boot up.
 
-I don't need a front end. If you mean a way to access it from user space.
-The front end is the tracefs directory, as I need all the features that the
-tracefs directory gives.
-
-I'm going to look to see how pstore is set up in ChromeOS and see if I can
-use whatever it does to allocate another location.
-
--- Steve
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
