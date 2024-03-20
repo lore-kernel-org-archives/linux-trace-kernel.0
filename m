@@ -1,104 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7783FE23;
-	Wed, 20 Mar 2024 12:46:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4E247F47
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Mar 2024 13:20:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710938812; cv=none; b=fkvXVtgKvCkyEln0HpFkRitpIrFl8kZu8wmj0hIoC5mB64+HNdwfrMeVZ5BTBJxgvPKH9iXsxKWN3DAGkG0JJeu8QyYx0hQ1cK3dEVnzQ2HL3VG1Fa2R2L4yW3E3Ar3nlyZQcUpPxKk40Z5TZJFjavykrSsSyyNROCfuL3HPs8c=
+	t=1710940829; cv=none; b=iydEAftRUlruo5Dc3yYKVi0CCwEYwdX+0AQjRSHWbb1cB2QjtQX/hYit/hs4ATrQPyUSw5pXIJZB5FLUTZIPAHlXPYYRdC1lD7iMBM9+1Lto/71frLSTjZwE6nVxSa1UnCjkU0kItKExvxnX9pG1eSMx1yhJg4Duys+05T8HZX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710938812; c=relaxed/simple;
-	bh=/7p8GXU57n2CqgDBwvg1L0/7Jk+R2NftaczecrTwYJE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=cE48WxAmVNXouTBm9GYzSMPcIIVAX3VQJRVg+oZLT0vwXQVgik/JzVyqBBfBGE37vPC67N231smizS6P2DaLDeJZnBqe7WxqoFDEqx4G+9dLWU/d+Jb3T/Mhkv0so9Fcc7o87Dm/B/auUOIKTPUTR2BaXN8Fo6FUuKQidX4VyiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C+pEt8aL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C+pEt8aL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86D05C43390;
-	Wed, 20 Mar 2024 12:46:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710938812;
-	bh=/7p8GXU57n2CqgDBwvg1L0/7Jk+R2NftaczecrTwYJE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=C+pEt8aLs3Hd/KuKXxjjepyLmcPVeBXwPeOyFEfpDSc4joKEUKFzxoDelaOyP57pI
-	 lkh9HfHFERU2KT5PjtbjQ1l6wuIWu4/SoHtJ23jNau6FqFCLwGVBwlDB13wL8aGFdP
-	 WOvbeg4uK9IT4OZkihQ1/g7RXi6qqu6YIBM/EgbRhEKY3V71ANSV9kqWxlc8CY5bh1
-	 nmoZ7WrgHRmkowYxGlNHdt7RtsLr55Kse0/IEM/axjuwSItXcqD1tAKHlar/CTQMyc
-	 DwuiFwemIUk43lQixezmqQo0fumOV0ZoPjxwALGrCMPZfGmMgLo52XkcIdAVbIhELk
-	 /mWtzjPKbLq+g==
-Date: Wed, 20 Mar 2024 21:46:48 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Ye Bin <yebin10@huawei.com>
-Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
- <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 3/8] tracing/probes: support '%pd' type for fprobe
-Message-Id: <20240320214648.a805dbd31fef4452b87d70c1@kernel.org>
-In-Reply-To: <20240315065540.1181879-4-yebin10@huawei.com>
-References: <20240315065540.1181879-1-yebin10@huawei.com>
-	<20240315065540.1181879-4-yebin10@huawei.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1710940829; c=relaxed/simple;
+	bh=81VC+3P/9ZBqPVP9KVAptwC7drQ509/J1S7L1Foa8iE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EJneCdQqVfQfPJ1WIK8s8dCyyK+2s4B6Qs7JDaEIGcD2NDwbKzuTBrAFFc9CsAyudk5kPAKD424BK70i+wiJdRpYJKAbVVeBYL2I3L4P0VqBb4+IUFoFFXai5DAscXdaQP8j0uGeK/wUM+/YsqVcfTIugnyz+ndcgF8kD9VcpWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30891C433C7;
+	Wed, 20 Mar 2024 13:20:29 +0000 (UTC)
+Date: Wed, 20 Mar 2024 09:22:53 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [bug report] tracing/probes: Support $argN in return probe
+ (kprobe and fprobe)
+Message-ID: <20240320092253.2423ec30@gandalf.local.home>
+In-Reply-To: <20240320124423.54cdb56dc8a07378fd09de38@kernel.org>
+References: <b010488e-68aa-407c-add0-3e059254aaa0@moroto.mountain>
+	<20240319101000.4dbe0cc5@gandalf.local.home>
+	<20240320124423.54cdb56dc8a07378fd09de38@kernel.org>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi Ye,
+On Wed, 20 Mar 2024 12:44:23 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-BTW, if you have a chance, please squash [1/8] to [3/8] patches
-into 1 patch. There is no reason to split these since these are
-a local(= the same subsystem) function implementation and callers.
-
-Thank you,
-
-On Fri, 15 Mar 2024 14:55:35 +0800
-Ye Bin <yebin10@huawei.com> wrote:
-
-> Support print type '%pd' for print dentry's or file's name.
+> > > kernel/trace/trace_probe.c
+> > >     846                 return;
+> > >     847 
+> > >     848         for (i = 0; i < earg->size; i++) {
+> > >     849                 struct fetch_insn *code = &earg->code[i];
+> > >     850 
+> > >     851                 switch (code->op) {
+> > >     852                 case FETCH_OP_ARG:
+> > >     853                         val = regs_get_kernel_argument(regs, code->param);
+> > >     854                         break;
+> > >     855                 case FETCH_OP_ST_EDATA:  
+> > > --> 856                         *(unsigned long *)((unsigned long)edata + code->offset) = val;    
+> > > 
+> > > Probably the earg->code[i] always has FETCH_OP_ARG before
+> > > FETCH_OP_ST_EDATA but Smatch isn't smart enough to figure that out...  
+> > 
+> > Looks that way:
+> > 
+> > 		case FETCH_OP_END:
+> > 			earg->code[i].op = FETCH_OP_ARG;
+> > 			earg->code[i].param = argnum;
+> > 			earg->code[i + 1].op = FETCH_OP_ST_EDATA;
+> > 			earg->code[i + 1].offset = offset;
+> > 			return offset;
+> > 
+> > But probably should still initialize val to zero or have a WARN_ON() if
+> > that doesn't happen.  
 > 
-> Signed-off-by: Ye Bin <yebin10@huawei.com>
-> ---
->  kernel/trace/trace_fprobe.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-> index 7d2ddbcfa377..988d68e906ad 100644
-> --- a/kernel/trace/trace_fprobe.c
-> +++ b/kernel/trace/trace_fprobe.c
-> @@ -976,6 +976,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
->  	char gbuf[MAX_EVENT_NAME_LEN];
->  	char sbuf[KSYM_NAME_LEN];
->  	char abuf[MAX_BTF_ARGS_LEN];
-> +	char *dbuf = NULL;
->  	bool is_tracepoint = false;
->  	struct tracepoint *tpoint = NULL;
->  	struct traceprobe_parse_context ctx = {
-> @@ -1086,6 +1087,10 @@ static int __trace_fprobe_create(int argc, const char *argv[])
->  		argv = new_argv;
->  	}
->  
-> +	ret = traceprobe_expand_dentry_args(argc, argv, &dbuf);
-> +	if (ret)
-> +		goto out;
-> +
->  	/* setup a probe */
->  	tf = alloc_trace_fprobe(group, event, symbol, tpoint, maxactive,
->  				argc, is_return);
-> @@ -1131,6 +1136,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
->  	trace_probe_log_clear();
->  	kfree(new_argv);
->  	kfree(symbol);
-> +	kfree(dbuf);
->  	return ret;
->  
->  parse_error:
-> -- 
-> 2.31.1
-> 
+> OK, let's val = 0 in the store_trace_entry_data(), but WARN_ON() in this loop
+> is a bit strange. I think we should have a verifiler.
 
+Initializing to zero is fine.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+-- Steve
