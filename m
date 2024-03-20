@@ -1,39 +1,36 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D6140BFD;
-	Wed, 20 Mar 2024 13:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E57D441C84;
+	Wed, 20 Mar 2024 14:18:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710941303; cv=none; b=VUZQ7ovE3q+SMKQSSNzZ8PwhfLbN56EfQrUcRx3Ba++wIp5xTnZLf1xkIRkENCFTZIjaVLuQa48EjhE/KlemHobzUgyVOyAR2MH96veV4sGbll6u/pmxx1hR9otHGxFhIthqbwdKX8pK+xoS+t8eWWcxANOBj7LJWM/fQTwKSns=
+	t=1710944333; cv=none; b=CJ3tVQCUX5g9mjX3eV/tOpy/62zvaC7T+fNmigz8vpN7IazA04OndL0hdvKEI0KRV7eksy0gZss6TwmPukHdnea3NLvRiSS85C2JDTiP9YyMTLEJNXLpZ3ctPFFbNjfzObfv0R4+YDB+HAco6xWzemZEXk9DrCpJ3/sfOY+CuCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710941303; c=relaxed/simple;
-	bh=gvy8zKYkHQrm2onFaLP191TLnQ4xoumRxMNImZv0AyM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qxoy7+9rkGwDtwK+EZfDReZZ/7u0K7qErKRcJuvi4XPGkx/VfcsVHBSRMmgWser4p4ordRhqsyhPfqMbIV8peeOjzxwPXdMeoVNqEvn8KkOVklgbmsYNv6z4rWVgKHYWRFIF5oCCjTRo42tIDja0vCg2h/7A3EFXWaTvckJA8s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4V08VB614xzwPgR;
-	Wed, 20 Mar 2024 21:25:38 +0800 (CST)
-Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id A237C14040D;
-	Wed, 20 Mar 2024 21:28:11 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by canpemm500010.china.huawei.com
- (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 20 Mar
- 2024 21:28:11 +0800
-From: Ye Bin <yebin10@huawei.com>
-To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-	<mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <yebin10@huawei.com>
-Subject: [PATCH v7 2/5] tracing/probes: support '%pD' type for print struct file's name
-Date: Wed, 20 Mar 2024 21:29:21 +0800
-Message-ID: <20240320132924.2802187-3-yebin10@huawei.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240320132924.2802187-1-yebin10@huawei.com>
-References: <20240320132924.2802187-1-yebin10@huawei.com>
+	s=arc-20240116; t=1710944333; c=relaxed/simple;
+	bh=xmbyWobTD3RpSNLREBva1eUC9VLaDy7wqoqKn/PRejE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dBgKnOlnK4DJO4uifxKkt4ak+4RnA+Ege+o3eu9EJMHjbTl8zDhZBX9cFoIyA2LEl9jYxmGPhp+CU53C0K8/ZT/OwFBL5D349yCFnksErOUu/LQSOjewGegWl0DDpSPLndbQLUC9H07x1h3gfortN7Oyj9rk+peszvIGAfPk7PE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFD591007;
+	Wed, 20 Mar 2024 07:19:25 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8F3253F64C;
+	Wed, 20 Mar 2024 07:18:49 -0700 (PDT)
+From: Mark Rutland <mark.rutland@arm.com>
+To: linux-kernel@vger.kernel.org
+Cc: aishwarya.tcv@arm.com,
+	linux-kselftest@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	rostedt@goodmis.org,
+	shuah@kernel.org
+Subject: [PATCH] selftests/ftrace: Fix event filter target_func selection
+Date: Wed, 20 Mar 2024 14:18:44 +0000
+Message-Id: <20240320141844.1779984-1-mark.rutland@arm.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,113 +38,85 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- canpemm500010.china.huawei.com (7.192.105.118)
 
-Similar to '%pD' for printk, use '%pD' for print struct file's name.
+The event filter function test has been failing in our internal test
+farm:
 
-Signed-off-by: Ye Bin <yebin10@huawei.com>
+| # not ok 33 event filter function - test event filtering on functions
+
+Running the test in verbose mode indicates that this is because the test
+erroneously determines that kmem_cache_free() is the most common caller
+of kmem_cache_free():
+
+  # # + cut -d: -f3 trace
+  # # + sed s/call_site=([^+]*)+0x.*/1/
+  # # + sort
+  # # + uniq -c
+  # # + sort
+  # # + tail -n 1
+  # # + sed s/^[ 0-9]*//
+  # # + target_func=kmem_cache_free
+
+... and as kmem_cache_free() doesn't call itself, setting this as the
+filter function for kmem_cache_free() results in no hits, and
+consequently the test fails:
+
+  # # + grep kmem_cache_free trace
+  # # + grep kmem_cache_free
+  # # + wc -l
+  # # + hitcnt=0
+  # # + grep kmem_cache_free trace
+  # # + grep -v kmem_cache_free
+  # # + wc -l
+  # # + misscnt=0
+  # # + [ 0 -eq 0 ]
+  # # + exit_fail
+
+This seems to be because the system in question has tasks with ':' in
+their name (which a number of kernel worker threads have). These show up
+in the trace, e.g.
+
+  test:.sh-1299    [004] .....  2886.040608: kmem_cache_free: call_site=putname+0xa4/0xc8 ptr=000000000f4d22f4 name=names_cache
+
+... and so when we try to extact the call_site with:
+
+  cut -d: -f3 trace | sed 's/call_site=\([^+]*\)+0x.*/\1/'
+
+... the 'cut' command will extrace the column containing
+'kmem_cache_free' rather than the column containing 'call_site=...', and
+the 'sed' command will leave this unchanged. Consequently, the test will
+decide to use 'kmem_cache_free' as the filter function, resulting in the
+failure seen above.
+
+Fix this by matching the 'call_site=<func>' part specifically to extract
+the function name.
+
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org
 ---
- kernel/trace/trace.c       |  2 +-
- kernel/trace/trace_probe.c | 57 +++++++++++++++++++++++---------------
- 2 files changed, 36 insertions(+), 23 deletions(-)
+ .../selftests/ftrace/test.d/filter/event-filter-function.tc     | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index ac26b8446337..831dfd0773a4 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5510,7 +5510,7 @@ static const char readme_msg[] =
- 	"\t           +|-[u]<offset>(<fetcharg>), \\imm-value, \\\"imm-string\"\n"
- 	"\t     type: s8/16/32/64, u8/16/32/64, x8/16/32/64, char, string, symbol,\n"
- 	"\t           b<bit-width>@<bit-offset>/<container-size>, ustring,\n"
--	"\t           symstr, %pd, <type>\\[<array-size>\\]\n"
-+	"\t           symstr, %pd/%pD, <type>\\[<array-size>\\]\n"
- #ifdef CONFIG_HIST_TRIGGERS
- 	"\t    field: <stype> <name>;\n"
- 	"\t    stype: u8/u16/u32/u64, s8/s16/s32/s64, pid_t,\n"
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index a27567e16c36..7bfc6c0d5436 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -12,6 +12,7 @@
- #define pr_fmt(fmt)	"trace_probe: " fmt
+diff --git a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
+index 2de7c61d1ae3..3f74c09c56b6 100644
+--- a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
++++ b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
+@@ -24,7 +24,7 @@ echo 0 > events/enable
+ echo "Get the most frequently calling function"
+ sample_events
  
- #include <linux/bpf.h>
-+#include <linux/fs.h>
- #include "trace_btf.h"
- 
- #include "trace_probe.h"
-@@ -1581,35 +1582,47 @@ int traceprobe_expand_dentry_args(int argc, const char *argv[], char **buf)
- 
- 	used = 0;
- 	for (i = 0; i < argc; i++) {
--		if (glob_match("*:%pd", argv[i])) {
--			char *tmp;
--			char *equal;
--
--			if (!tmpbuf) {
--				tmpbuf = kmalloc(bufsize, GFP_KERNEL);
--				if (!tmpbuf)
--					return -ENOMEM;
--			}
-+		char *tmp;
-+		char *equal;
-+		size_t arg_len;
- 
--			tmp = kstrdup(argv[i], GFP_KERNEL);
--			if (!tmp)
--				goto nomem;
-+		if (!glob_match("*:%p[dD]", argv[i]))
-+			continue;
- 
--			equal = strchr(tmp, '=');
--			if (equal)
--				*equal = '\0';
--			tmp[strlen(argv[i]) - 4] = '\0';
-+		if (!tmpbuf) {
-+			tmpbuf = kmalloc(bufsize, GFP_KERNEL);
-+			if (!tmpbuf)
-+				return -ENOMEM;
-+		}
-+
-+		tmp = kstrdup(argv[i], GFP_KERNEL);
-+		if (!tmp)
-+			goto nomem;
-+
-+		equal = strchr(tmp, '=');
-+		if (equal)
-+			*equal = '\0';
-+		arg_len = strlen(argv[i]);
-+		tmp[arg_len - 4] = '\0';
-+		if (argv[i][arg_len - 1] == 'd')
- 			ret = snprintf(tmpbuf + used, bufsize - used,
- 				       "%s%s+0x0(+0x%zx(%s)):string",
- 				       equal ? tmp : "", equal ? "=" : "",
- 				       offsetof(struct dentry, d_name.name),
- 				       equal ? equal + 1 : tmp);
--			kfree(tmp);
--			if (ret >= bufsize - used)
--				goto nomem;
--			argv[i] = tmpbuf + used;
--			used += ret + 1;
--		}
-+		else
-+			ret = snprintf(tmpbuf + used, bufsize - used,
-+				       "%s%s+0x0(+0x%zx(+0x%zx(%s))):string",
-+				       equal ? tmp : "", equal ? "=" : "",
-+				       offsetof(struct dentry, d_name.name),
-+				       offsetof(struct file, f_path.dentry),
-+				       equal ? equal + 1 : tmp);
-+
-+		kfree(tmp);
-+		if (ret >= bufsize - used)
-+			goto nomem;
-+		argv[i] = tmpbuf + used;
-+		used += ret + 1;
- 	}
- 
- 	*buf = tmpbuf;
+-target_func=`cut -d: -f3 trace | sed 's/call_site=\([^+]*\)+0x.*/\1/' | sort | uniq -c | sort | tail -n 1 | sed 's/^[ 0-9]*//'`
++target_func=`cat trace | grep -o 'call_site=\([^+]*\)' | sed 's/call_site=//' | sort | uniq -c | sort | tail -n 1 | sed 's/^[ 0-9]*//'`
+ if [ -z "$target_func" ]; then
+     exit_fail
+ fi
 -- 
-2.31.1
+2.39.2
 
