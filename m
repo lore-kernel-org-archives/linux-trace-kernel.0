@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7613BBFD;
-	Wed, 20 Mar 2024 10:09:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63703D0A4;
+	Wed, 20 Mar 2024 10:20:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710929369; cv=none; b=A5Ig5hLin3hBuXIrO767e7lk+rKM6tre0jHv4QqJO7ZCPRAUjqKQThmNUpwqeiAN8MVVfRgVoD82WHduWsmgvdRISiUBY6BU/TGFR764DRGp+6HxHcCnuW0KBL7SB16RhSVQYBcrvVn1sosb1PfuMWbf04BbOjjBg2i49Nsrk2w=
+	t=1710930060; cv=none; b=ePpUB9gnah4Hkj3yxvEQK/nU36dfSgKqpjbVhvSXhbr43UxxZV8UChoiLOz7SCYbbaXTFXWNNme5hFp/4LQXKWp5ysepAV2GQx/s4qL9jt5hPLe7L2RjA+0YdsWnHCXXDGgVTvOKNa+uwLWYPHPCOc5sgVKHjBPHeNPf9jsO6MI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710929369; c=relaxed/simple;
-	bh=Ayfv7sOH9+/jMv+oBB6PGU32y7pnnX4B0L2yy0LZzQE=;
+	s=arc-20240116; t=1710930060; c=relaxed/simple;
+	bh=tdQOp6foDlbWDYweV3ONMvZuCnYtnfRlJkFwHm8RCQI=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=IKJkiCIW9GMFmGP0GAj3uwvNJU26TX3zNerN2bWSpk4ssGmsTKAvK15nfDvtvTE4CfmejfG2BgcqH1TbnCt9uAGq6c6kzvaV7Y0kE9XUEPNDSb9ZrpUyIxAtfn7swmPh/dOROTn1XRll1RfAclJ5pNK4ITASrRo5DmrvM6bfWE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kH/k5sXQ; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=S8/sd6lKUPKmKCKO30IB1qNBcDgiG2cIPgjId8D4Z7fmqRuRb/W4NpMtS3quvHQerX9iZT7aeIkxHxFw6TzBMK3fM2E0K0KPudrcm+y7jEdsN4wNCmTS61+R8O66x4O+me6nBe66TyRM+aGsAh3F9NUOHz/xG+gyQsQ0vy2EBXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rBWP56XL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kH/k5sXQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1626C433F1;
-	Wed, 20 Mar 2024 10:09:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rBWP56XL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14957C433F1;
+	Wed, 20 Mar 2024 10:20:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710929369;
-	bh=Ayfv7sOH9+/jMv+oBB6PGU32y7pnnX4B0L2yy0LZzQE=;
+	s=k20201202; t=1710930059;
+	bh=tdQOp6foDlbWDYweV3ONMvZuCnYtnfRlJkFwHm8RCQI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kH/k5sXQdXbYMr3qonhINs97CLFbkkiaJHOL/mrd0rQ6p8DnhNU2c4KeSfZcW7R0M
-	 ckKff6eMZdSQbqwm5DZxDk5Whrj9eoFQ0xtpiM3iFVy3eddpaNxocRFVh3qQCAY2Zu
-	 L8rH+W0fJt0PWIVPNk/h6DsK+4TRhQEixaszu9lH20Q3QGK8HmnmkDjhvT07CoidAm
-	 vEZ60H+OEiCOF/nDXivm0Uhl4ETqU52Ls77epw1IVND/VDgghVXMfk8HAAwayjAv0T
-	 lOXn3NjBXEkQuyi86dZdmI4tDe/SHZuOHqhzq3DBgBgc2WMEA7cpMjs/LUF60QlME4
-	 lFx/drFxqy99g==
-Date: Wed, 20 Mar 2024 19:09:25 +0900
+	b=rBWP56XLr8eHE+WgSL7Yi0JuOAl3pl5EIuWUMZeRsTAwN2P28BjhEEIWUegp6vVlh
+	 OfCfDvKGfWAoO/VK7pSENXg03nXGwyo4ahzwjgG6K3nvDPO0e261GecqVV+ExLN/3l
+	 bUR53JtUvw/sWkZmHkKmKWJQhSKep1w8iMdSiWkDcwcGhiHe01oawuJr1kIr0lu6VU
+	 bP3U+UWJailPQzgfojRptVHMhakRAvpmjDDyWtyDtSuIlRqmvxXcG2NQ9vV25OTqXX
+	 xF7dpfMS3KIcYMteJ4KhVmvDZQ/Zz2ZwnGw88bfHCu/uwmRSSUVmYbaITdiGaZp3Qg
+	 d8ScXY1/cViPw==
+Date: Wed, 20 Mar 2024 19:20:55 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Ye Bin <yebin10@huawei.com>
 Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
  <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 5/8] tracing: add new type "%pd/%pD" in readme_msg[]
-Message-Id: <20240320190925.eb67348ecd08ed73d58cdc2d@kernel.org>
-In-Reply-To: <20240315065540.1181879-6-yebin10@huawei.com>
+Subject: Re: [PATCH v6 0/8] support '%pd' and '%pD' for print file name
+Message-Id: <20240320192055.6b149d90ca3af255aa7738ab@kernel.org>
+In-Reply-To: <20240315065540.1181879-1-yebin10@huawei.com>
 References: <20240315065540.1181879-1-yebin10@huawei.com>
-	<20240315065540.1181879-6-yebin10@huawei.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -48,47 +47,74 @@ Content-Transfer-Encoding: 7bit
 
 Hi Ye,
 
-Can you split this into 
+On Fri, 15 Mar 2024 14:55:32 +0800
+Ye Bin <yebin10@huawei.com> wrote:
 
-(1)
-> -	"\t           symstr, <type>\\[<array-size>\\]\n"
-> +	"\t           symstr, %pd, <type>\\[<array-size>\\]\n"
+> Sorry for taking so long to post the V6 version. I thought my email was
+> sent successfully. I checked the patchwork and it was not sent successfully.
+> 
+> During fault locating, the file name needs to be printed based on the
+> dentry/file address. The offset needs to be calculated each time, which
+> is troublesome. Similar to printk, kprobe supports printing file names
+> for dentry/file addresses.
 
-and 
+Thanks for updating the series.
 
-(2)
-> -	"\t           symstr, %pd, <type>\\[<array-size>\\]\n"
-> +	"\t           symstr, %pd/%pD, <type>\\[<array-size>\\]\n"
-
-And merge (1) into [PATCH 3/8], (2) into [PATCH 5/8], so that
-the feature patch itself updates the readme text?
-
-This is because even if one of the patch drops, others can
-show its feature on readme.
+There are some nits, but basically this is good to me.
+Could you update this series?
 
 Thank you,
 
-On Fri, 15 Mar 2024 14:55:37 +0800
-Ye Bin <yebin10@huawei.com> wrote:
-
-> Signed-off-by: Ye Bin <yebin10@huawei.com>
-> ---
->  kernel/trace/trace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index b12f8384a36a..831dfd0773a4 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -5510,7 +5510,7 @@ static const char readme_msg[] =
->  	"\t           +|-[u]<offset>(<fetcharg>), \\imm-value, \\\"imm-string\"\n"
->  	"\t     type: s8/16/32/64, u8/16/32/64, x8/16/32/64, char, string, symbol,\n"
->  	"\t           b<bit-width>@<bit-offset>/<container-size>, ustring,\n"
-> -	"\t           symstr, <type>\\[<array-size>\\]\n"
-> +	"\t           symstr, %pd/%pD, <type>\\[<array-size>\\]\n"
->  #ifdef CONFIG_HIST_TRIGGERS
->  	"\t    field: <stype> <name>;\n"
->  	"\t    stype: u8/u16/u32/u64, s8/s16/s32/s64, pid_t,\n"
+> Diff v6 vs v5:
+> 1. Add const for 'bufsize' in PATCH [1];
+> 2. Move PATCH 'tracing/probes: support '%pd/%pD' type for fprobe' after
+> PATCH "tracing/probes: support '%pd' type for print struct dentry's name".
+> 3. Add requires '"%pd/%pD":README' for testcase.
+> 
+> Diff v5 vs v4:
+> 1. Use glob_match() instead of str_has_suffix(), so remove the first patch;
+> 2. Allocate buffer from heap for expand dentry;
+> 3. Support "%pd/%pD" print type for fprobe;
+> 4. Use $arg1 instead of origin register in test case;
+> 5. Add test case for fprobe;
+> 
+> Diff v4 vs v3:
+> 1. Use "argv[i][idx + 3] == 'd'" instead of "argv[i][strlen(argv[i]) - 1] == 'd'"
+> to judge print format in PATCH[4/7];
+> 
+> Diff v3 vs v2:
+> 1. Return the index of where the suffix was found in str_has_suffix();
+> 
+> Diff v2 vs v1:
+> 1. Use "%pd/%pD" print format instead of "pd/pD" print format;
+> 2. Add "%pd/%pD" in README;
+> 3. Expand "%pd/%pD" argument before parameter parsing;
+> 4. Add more detail information in ftrace documentation;
+> 5. Add test cases for new print format in selftests/ftrace;
+> 
+> Ye Bin (8):
+>   tracing/probes: add traceprobe_expand_dentry_args() helper
+>   tracing/probes: support '%pd' type for print struct dentry's name
+>   tracing/probes: support '%pd' type for fprobe
+>   tracing/probes: support '%pD' type for print struct file's name
+>   tracing: add new type "%pd/%pD" in readme_msg[]
+>   Documentation: tracing: add new type '%pd' and '%pD' for kprobe
+>   selftests/ftrace: add kprobe test cases for VFS type "%pd" and "%pD"
+>   selftests/ftrace: add fprobe test cases for VFS type "%pd" and "%pD"
+> 
+>  Documentation/trace/kprobetrace.rst           |  8 ++-
+>  kernel/trace/trace.c                          |  2 +-
+>  kernel/trace/trace_fprobe.c                   |  6 ++
+>  kernel/trace/trace_kprobe.c                   |  6 ++
+>  kernel/trace/trace_probe.c                    | 63 +++++++++++++++++++
+>  kernel/trace/trace_probe.h                    |  2 +
+>  .../ftrace/test.d/dynevent/fprobe_args_vfs.tc | 40 ++++++++++++
+>  .../ftrace/test.d/kprobe/kprobe_args_vfs.tc   | 43 +++++++++++++
+>  8 files changed, 167 insertions(+), 3 deletions(-)
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/fprobe_args_vfs.tc
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
+> 
 > -- 
 > 2.31.1
 > 
