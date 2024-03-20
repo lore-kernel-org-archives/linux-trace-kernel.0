@@ -1,133 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5DC5474D;
-	Wed, 20 Mar 2024 16:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303175579F
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Mar 2024 16:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710951470; cv=none; b=KjpmVHTYbvEsxE1e3y4qyG9IhbM9Km88TJ7ebwRyveKw18AP4YvgQBMyqj05dD+RMuVq5Yj/J74c9r9eE8wSrbLHMgTaLiQHg1NQ4lKUA1E9P9CPOOc9Irazr02wwuXXJsQbO2WkdjNv7jv0YNndlPUVSWojBX9BOSAkfVACKsI=
+	t=1710952215; cv=none; b=a3ijY79UKpT+dykDpESUqAmu5eRSS8gGTSa0KAG361grgNtcXELyD9fdEH2Q5zigxcUuMQW0eQ7t9GvvmOqx+8NeOV7W/INX9H+DxpjetjgVVc7s8gFsQ1Xd9mhXCeuam/L+12QPK+JWfryxDI/3+hJQzIUD0bTegEWYXsHAY2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710951470; c=relaxed/simple;
-	bh=MjsTErL++3mNSNQUdfMEPoHEWuqAralTC+D1xVnk5Gg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=SPqDanPLWdnW0ZHFV2yXkG6HQExKHIOUdmjT9nxHM8N0Kr4Arzpf9AsNvQsQnt79QP6Jz2aDWzIWQNEGGS/3Eq1Sth1QxhOSLbqByl4fk+Z2Zc5DtYF/ow9A9Dqa7PH7CsqrmGkIKc663mXrjeT5di3km/DPeBmVmA/YsxZ4214=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38AC6C433F1;
-	Wed, 20 Mar 2024 16:17:48 +0000 (UTC)
-Date: Wed, 20 Mar 2024 12:20:12 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Daniel Bristot de Oliveira
- <bristot@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Will Deacon
- <will@kernel.org>, Waiman Long <longman@redhat.com>, Boqun Feng
- <boqun.feng@gmail.com>, linux-rt-users <linux-rt-users@vger.kernel.org>
-Subject: [RFC][PATCH] tracing: Introduce restart_critical_timings()
-Message-ID: <20240320122012.2c1f461f@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1710952215; c=relaxed/simple;
+	bh=fUUFMvg12Muu5FflNc842GDP64XjwobWVbannxmzVAw=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=bHdcOkQVbGyRTKs1DA+mZRs4Zca9pF4szajG6EwrYQ2q5xtp7NiX+cb8wQeSUM5WrATNcMy3XgcWHYx/hFQy87Blm5SPoPOKE8slf/oMPvWyt9swmXyFMmx+RQg34GvCv+jxRkSs7wN5qcccbzt5Xtc85VmVjDu1WXf4dzsc1mI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=VkiZxpiK; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="VkiZxpiK"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a46f97b8a1bso428366b.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 20 Mar 2024 09:30:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1710952212; x=1711557012; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a0X7F8ZndwwFM/qfksRMIkR+4ps9Ffpk0s/ETQfTpx4=;
+        b=VkiZxpiKnV7DiLonc0jWIvzjHVMD2FIER6xNVrZG/JCvzoRxdRoTbp3jTdT9M0kzKJ
+         gh/SJwThnWy58MuA5r3vGieFzjpTnqsKrzYqKpNvZquaopg72p/x/wnlufLR/WUJSP0f
+         4Opc0kOGvks1UWuIv4M4Iy10Dw7nneqbGZ/ZtRrv1sR9bo0x1t2B+Z+Npn/uGYP6d/YM
+         VzjXxO0IE83+TQndLHdmPhJgAIaqT3E2+lZ0aJ70KIn+Mt6JjD55D/zwpqAYIcGxj7DD
+         rO9NZ/rcDDsBz5VHuyVJ/3HHlgIa1Wzgth5ozLSL787u6cvghnhS/oQFJ24kPBgqSfS7
+         B9FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710952212; x=1711557012;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a0X7F8ZndwwFM/qfksRMIkR+4ps9Ffpk0s/ETQfTpx4=;
+        b=NahPOpybLlw2QimlfU8ycOHDIb2Z9mZEqDgtrr2lcOAY0F0IbInZAvIJwbd6mYpnsZ
+         rrYRanuoDigwNTGya61BOQDfT0v/s2Xpw2+Y86wdskXdt6EwzQJyCP3rY4zKz3VCXK9D
+         gWtjBXZMdsn2i9r3G5FowarkC+n56+plrFBLebHFSck+UY6yS/DjkpnUPbG6ltV3f9oX
+         Phd3KK6anRfNgt6h0jhprTBnRpADkg9GZ0/i7tcG6GgxR2hPdmtRj+4IccAMD1R3Qhtv
+         ahilVcAjq3E8JFZKnSWpQjhFJGYt3Q3KGsr7Fk3PKSg1RvDeyf31gb3dYjzyhFzWMtBL
+         e68Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXqKj2B83MLdRP1t/ED2ZzC0RAk38k8WZvnKhZDONBdosu36s1d090CXAIC44I5CUfK+YHBeRWSw0HmIxnKCpVfZRvQ9ycz41D7W0qLY/2GB2kP
+X-Gm-Message-State: AOJu0YwVZVWuZwL5IbzfMrPlfMGC/D9YQ7pJNJjpXmlYyDok/nMEATxv
+	XDWZHWWfc3p5zZHy9C0p2AIBPAqDxKh+FT5KjPzf+7KhCtgnDJehX/Yne14GUWv++I0u0fnub0J
+	9
+X-Google-Smtp-Source: AGHT+IHsoD21j6ESUUF1khZHhnTDSCPP4x5//7u0Ai/223kW4lGWbdm1Xxg/oXN0xx9+KTFi4A1uuw==
+X-Received: by 2002:a17:906:264e:b0:a46:c11d:dd05 with SMTP id i14-20020a170906264e00b00a46c11ddd05mr4621131ejc.57.1710952212367;
+        Wed, 20 Mar 2024 09:30:12 -0700 (PDT)
+Received: from smtpclient.apple ([2001:a61:10c6:ce01:6198:fd02:45af:2ca2])
+        by smtp.gmail.com with ESMTPSA id vi2-20020a170907d40200b00a45c8b6e965sm7471416ejc.3.2024.03.20.09.30.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 Mar 2024 09:30:12 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
+Subject: Re: [PATCH] tracing: Explicitly cast divisor to fix Coccinelle
+ warning
+From: Thorsten Blum <thorsten.blum@toblux.com>
+In-Reply-To: <EAA3D15D-F96D-48AC-B9C0-B2290E1B38AA@toblux.com>
+Date: Wed, 20 Mar 2024 17:30:00 +0100
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <4E5A47C3-E9DD-4FD2-BDC4-BED67EF791F2@toblux.com>
+References: <20240318105243.117911-2-thorsten.blum@toblux.com>
+ <20240320192715.22eeeba84c0fd3a8c2353c79@kernel.org>
+ <EAA3D15D-F96D-48AC-B9C0-B2290E1B38AA@toblux.com>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
 
-From: Steven Rostedt (Google) <rostedt@goodmis.org>
+On 20. Mar 2024, at 16:01, Thorsten Blum <thorsten.blum@toblux.com> =
+wrote:
+>=20
+> Coccinelle also finds this one, but please ignore this patch as I just =
+realized
+> this was already fixed in another patch of mine from February.
+>=20
+> Sorry for the inconvenience.
+>=20
+> Link: =
+https://lore.kernel.org/linux-kernel/20240225164507.232942-2-thorsten.blum=
+@toblux.com/
 
-I'm debugging some latency issues on a Chromebook and the preemptirqsoff
-tracer hit this:
+Actually, I will submit a new patch to revert
 
-# tracer: preemptirqsoff
-#
-# preemptirqsoff latency trace v1.1.5 on 5.15.148-21853-g165fd2387469-dirty
-# --------------------------------------------------------------------
-# latency: 7813 us, #60/60, CPU#1 | (M:preempt VP:0, KP:0, SP:0 HP:0 #P:2)
-#    -----------------
-#    | task: init-1 (uid:0 nice:0 policy:0 rt_prio:0)
-#    -----------------
-#  => started at: rwsem_optimistic_spin
-#  => ended at:   rwsem_optimistic_spin
-#
-#
-#                    _------=> CPU#            
-#                   / _-----=> irqs-off        
-#                  | / _----=> need-resched    
-#                  || / _---=> hardirq/softirq 
-#                  ||| / _--=> preempt-depth   
-#                  |||| / _-=> migrate-disable 
-#                  ||||| /     delay           
-#  cmd     pid     |||||| time  |   caller     
-#     \   /        ||||||  \    |    /       
-   <...>-1         1...1.    0us!: rwsem_optimistic_spin+0x20/0x194 <-rwsem_optimistic_spin+0x20/0x194
-   <...>-1         1.N.1. 7813us : rwsem_optimistic_spin+0x140/0x194 <-rwsem_optimistic_spin+0x140/0x194
-   <...>-1         1.N.1. 7814us+: tracer_preempt_on+0x4c/0x6a <-rwsem_optimistic_spin+0x140/0x194
-   <...>-1         1.N.1. 7824us : <stack trace>
- => rwsem_optimistic_spin+0x140/0x194
- => rwsem_down_write_slowpath+0xc9/0x3fe
- => copy_process+0xd08/0x1b8a
- => kernel_clone+0x94/0x256
- => __x64_sys_clone+0x7a/0x9a
- => do_syscall_64+0x51/0xa1
- => entry_SYSCALL_64_after_hwframe+0x5c/0xc6
+	delta =3D div64_u64(delta, bm_cnt);
 
-Which isn't a real issue, as it's in the rwsem_optimistic_spin() code that
-spins with interrupts enabled, preempt disabled, and checks for
-need_resched(). If it is true, it breaks out and schedules.
+back to
 
-Hence, it's hiding real issues, because it can spin for a very long time
-and this is not the source of the latency I'm tracking down.
+	do_div(delta, bm_cnt);
 
-I would like to introduce restart_critical_timings() and place it in
-locations that have this behavior.
+but this time include an explicit cast to u32
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+	do_div(delta, (u32)bm_cnt);
 
-diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
-index 147feebd508c..e9f97f60bfc0 100644
---- a/include/linux/irqflags.h
-+++ b/include/linux/irqflags.h
-@@ -145,6 +145,13 @@ do {						\
- # define start_critical_timings() do { } while (0)
- #endif
- 
-+/* Used in spins that check need_resched() with preemption disabled */
-+static inline void restart_critical_timings(void)
-+{
-+	stop_critical_timings();
-+	start_critical_timings();
-+}
-+
- #ifdef CONFIG_DEBUG_IRQFLAGS
- extern void warn_bogus_irq_restore(void);
- #define raw_check_bogus_irq_restore()			\
-diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index 2340b6d90ec6..fa7b43e53d20 100644
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -27,6 +27,7 @@
- #include <linux/export.h>
- #include <linux/rwsem.h>
- #include <linux/atomic.h>
-+#include <linux/irqflags.h>
- #include <trace/events/lock.h>
- 
- #ifndef CONFIG_PREEMPT_RT
-@@ -780,6 +781,7 @@ rwsem_spin_on_owner(struct rw_semaphore *sem)
- 		 */
- 		barrier();
- 
-+		restart_critical_timings();
- 		if (need_resched() || !owner_on_cpu(owner)) {
- 			state = OWNER_NONSPINNABLE;
- 			break;
-@@ -912,6 +914,7 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
- 		 * a writer, need_resched() check needs to be done here.
- 		 */
- 		if (owner_state != OWNER_WRITER) {
-+			restart_critical_timings();
- 			if (need_resched())
- 				break;
- 			if (rt_task(current) &&
+to remove the Coccinelle warning reported by do_div.cocci and to improve
+performance.
+
+The do_div() macro does a 64-by-32 division which is faster than the =
+64-by-64=20
+division done by div64_u64(). Casting the divisor bm_cnt to u32 is safe =
+since=20
+we return early from trace_do_benchmark() if bm_cnt > UINT_MAX =
+(something I=20
+missed in d6cb38e10810).
+
+This approach is already used when calculating the standard deviation:
+
+	do_div(stddev, (u32)bm_cnt);
+	do_div(stddev, (u32)bm_cnt - 1);
+
+Thanks,
+Thorsten=
