@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63703D0A4;
-	Wed, 20 Mar 2024 10:20:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E2920DCC;
+	Wed, 20 Mar 2024 10:27:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710930060; cv=none; b=ePpUB9gnah4Hkj3yxvEQK/nU36dfSgKqpjbVhvSXhbr43UxxZV8UChoiLOz7SCYbbaXTFXWNNme5hFp/4LQXKWp5ysepAV2GQx/s4qL9jt5hPLe7L2RjA+0YdsWnHCXXDGgVTvOKNa+uwLWYPHPCOc5sgVKHjBPHeNPf9jsO6MI=
+	t=1710930439; cv=none; b=e0nS/NrsCrPO908cuuXLk40DWCnBgVjYaL1U/6wQpktjIlJMlca0Du6+UnC8Oplt7Kt7hkrc1PBRGVS9IS5JBS++R+3pvw3vkziNdfa5GZ82odG1wRcqKR8VfojoisA28FaNZARCkOzSw3TXsn0y0/GA5dpbYVrvTJtt0HwyAIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710930060; c=relaxed/simple;
-	bh=tdQOp6foDlbWDYweV3ONMvZuCnYtnfRlJkFwHm8RCQI=;
+	s=arc-20240116; t=1710930439; c=relaxed/simple;
+	bh=m+ppsTnGG/Ma89URp1KraJSSqmWDFSiBo+T3M7bu1o8=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=S8/sd6lKUPKmKCKO30IB1qNBcDgiG2cIPgjId8D4Z7fmqRuRb/W4NpMtS3quvHQerX9iZT7aeIkxHxFw6TzBMK3fM2E0K0KPudrcm+y7jEdsN4wNCmTS61+R8O66x4O+me6nBe66TyRM+aGsAh3F9NUOHz/xG+gyQsQ0vy2EBXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rBWP56XL; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=UGg7cg4O3zaA+zfISkWiOXbbdCrNimnIBWNpaL9E2mZPXLGkdQGvzogHDD3aAzX91CSblHNgnsf91GMq2A+yOqX/Gz8lQVD4EUBj0ggZwUZxehtUOEfQH0ya+a7aXV1155/oMKfnUvNC7NcIJjXS81Y2rIXQjq8qXCVQ4RTfPqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mWHJny5Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rBWP56XL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14957C433F1;
-	Wed, 20 Mar 2024 10:20:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mWHJny5Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95D84C433C7;
+	Wed, 20 Mar 2024 10:27:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710930059;
-	bh=tdQOp6foDlbWDYweV3ONMvZuCnYtnfRlJkFwHm8RCQI=;
+	s=k20201202; t=1710930439;
+	bh=m+ppsTnGG/Ma89URp1KraJSSqmWDFSiBo+T3M7bu1o8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rBWP56XLr8eHE+WgSL7Yi0JuOAl3pl5EIuWUMZeRsTAwN2P28BjhEEIWUegp6vVlh
-	 OfCfDvKGfWAoO/VK7pSENXg03nXGwyo4ahzwjgG6K3nvDPO0e261GecqVV+ExLN/3l
-	 bUR53JtUvw/sWkZmHkKmKWJQhSKep1w8iMdSiWkDcwcGhiHe01oawuJr1kIr0lu6VU
-	 bP3U+UWJailPQzgfojRptVHMhakRAvpmjDDyWtyDtSuIlRqmvxXcG2NQ9vV25OTqXX
-	 xF7dpfMS3KIcYMteJ4KhVmvDZQ/Zz2ZwnGw88bfHCu/uwmRSSUVmYbaITdiGaZp3Qg
-	 d8ScXY1/cViPw==
-Date: Wed, 20 Mar 2024 19:20:55 +0900
+	b=mWHJny5ZLy9yEA/AkzesaYpVIzr+sIW4vhtLD4fFv7bDtLaFaZ6rEnWsFv0ESydIx
+	 mQsA0l01rrgK+qB7QbkqYYyQMr0WSG/ObQt0PZtggUE9WRaWbV268Y2OdP76WtGIBU
+	 3lJWwT6RjVE28qYB8b1e8qZ0HAYRTLji9nm9YkWGd5FV2OP/r9ymmwF5vYNChq6r3E
+	 Wg5UJ+LqJVJzqMPCPm5GW3TqCj/t8879o5Xgbx9RYDskVmoydZxFHuOVY/wU+juMd3
+	 WbBYwi7cPYLTh4arX8x236cUDqH9tq7aRgBvatbtWVCKzQoDhxOU1AtVOImzIKE5Zh
+	 gUbdJLtfX41/Q==
+Date: Wed, 20 Mar 2024 19:27:15 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Ye Bin <yebin10@huawei.com>
-Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
- <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 0/8] support '%pd' and '%pD' for print file name
-Message-Id: <20240320192055.6b149d90ca3af255aa7738ab@kernel.org>
-In-Reply-To: <20240315065540.1181879-1-yebin10@huawei.com>
-References: <20240315065540.1181879-1-yebin10@huawei.com>
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Explicitly cast divisor to fix Coccinelle
+ warning
+Message-Id: <20240320192715.22eeeba84c0fd3a8c2353c79@kernel.org>
+In-Reply-To: <20240318105243.117911-2-thorsten.blum@toblux.com>
+References: <20240318105243.117911-2-thorsten.blum@toblux.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,78 +47,49 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi Ye,
+On Mon, 18 Mar 2024 11:52:44 +0100
+Thorsten Blum <thorsten.blum@toblux.com> wrote:
 
-On Fri, 15 Mar 2024 14:55:32 +0800
-Ye Bin <yebin10@huawei.com> wrote:
-
-> Sorry for taking so long to post the V6 version. I thought my email was
-> sent successfully. I checked the patchwork and it was not sent successfully.
+> Explicitly cast the divisor to u32 to fix a Coccinelle/coccicheck warning
+> reported by do_div.cocci.
 > 
-> During fault locating, the file name needs to be printed based on the
-> dentry/file address. The offset needs to be calculated each time, which
-> is troublesome. Similar to printk, kprobe supports printing file names
-> for dentry/file addresses.
 
-Thanks for updating the series.
+Hmm, strange, trace_do_benchmark() has another do_div(u64, u64). 
 
-There are some nits, but basically this is good to me.
-Could you update this series?
+                do {
+                        last_seed = seed;
+                        seed = stddev;
+                        if (!last_seed)
+                                break;
+                        do_div(seed, last_seed);
+                        seed += last_seed;
+                        do_div(seed, 2);
+                } while (i++ < 10 && last_seed != seed);
+
+Didn't Coccinelle find that?
 
 Thank you,
 
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+> ---
+>  kernel/trace/trace_benchmark.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Diff v6 vs v5:
-> 1. Add const for 'bufsize' in PATCH [1];
-> 2. Move PATCH 'tracing/probes: support '%pd/%pD' type for fprobe' after
-> PATCH "tracing/probes: support '%pd' type for print struct dentry's name".
-> 3. Add requires '"%pd/%pD":README' for testcase.
-> 
-> Diff v5 vs v4:
-> 1. Use glob_match() instead of str_has_suffix(), so remove the first patch;
-> 2. Allocate buffer from heap for expand dentry;
-> 3. Support "%pd/%pD" print type for fprobe;
-> 4. Use $arg1 instead of origin register in test case;
-> 5. Add test case for fprobe;
-> 
-> Diff v4 vs v3:
-> 1. Use "argv[i][idx + 3] == 'd'" instead of "argv[i][strlen(argv[i]) - 1] == 'd'"
-> to judge print format in PATCH[4/7];
-> 
-> Diff v3 vs v2:
-> 1. Return the index of where the suffix was found in str_has_suffix();
-> 
-> Diff v2 vs v1:
-> 1. Use "%pd/%pD" print format instead of "pd/pD" print format;
-> 2. Add "%pd/%pD" in README;
-> 3. Expand "%pd/%pD" argument before parameter parsing;
-> 4. Add more detail information in ftrace documentation;
-> 5. Add test cases for new print format in selftests/ftrace;
-> 
-> Ye Bin (8):
->   tracing/probes: add traceprobe_expand_dentry_args() helper
->   tracing/probes: support '%pd' type for print struct dentry's name
->   tracing/probes: support '%pd' type for fprobe
->   tracing/probes: support '%pD' type for print struct file's name
->   tracing: add new type "%pd/%pD" in readme_msg[]
->   Documentation: tracing: add new type '%pd' and '%pD' for kprobe
->   selftests/ftrace: add kprobe test cases for VFS type "%pd" and "%pD"
->   selftests/ftrace: add fprobe test cases for VFS type "%pd" and "%pD"
-> 
->  Documentation/trace/kprobetrace.rst           |  8 ++-
->  kernel/trace/trace.c                          |  2 +-
->  kernel/trace/trace_fprobe.c                   |  6 ++
->  kernel/trace/trace_kprobe.c                   |  6 ++
->  kernel/trace/trace_probe.c                    | 63 +++++++++++++++++++
->  kernel/trace/trace_probe.h                    |  2 +
->  .../ftrace/test.d/dynevent/fprobe_args_vfs.tc | 40 ++++++++++++
->  .../ftrace/test.d/kprobe/kprobe_args_vfs.tc   | 43 +++++++++++++
->  8 files changed, 167 insertions(+), 3 deletions(-)
->  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/fprobe_args_vfs.tc
->  create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
-> 
+> diff --git a/kernel/trace/trace_benchmark.c b/kernel/trace/trace_benchmark.c
+> index 54d5fa35c90a..218b40050629 100644
+> --- a/kernel/trace/trace_benchmark.c
+> +++ b/kernel/trace/trace_benchmark.c
+> @@ -105,7 +105,7 @@ static void trace_do_benchmark(void)
+>  		stddev = 0;
+>  
+>  	delta = bm_total;
+> -	do_div(delta, bm_cnt);
+> +	do_div(delta, (u32)bm_cnt);
+>  	avg = delta;
+>  
+>  	if (stddev > 0) {
 > -- 
-> 2.31.1
+> 2.44.0
 > 
 
 
