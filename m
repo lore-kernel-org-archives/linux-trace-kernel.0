@@ -1,122 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E09F4C63;
-	Wed, 20 Mar 2024 12:41:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7783FE23;
+	Wed, 20 Mar 2024 12:46:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710938476; cv=none; b=uI1ffeqr36ikBFhe/7bLPhWuIEbhaihg0hLna2C8JDb3UGrQa0udw+9AWCUUd7F3KiVH4F4LszcKU5+GOj7vkFSzpeOl9jiYz7UcZ+D52zBn1EGNO4KgVT3g5fa2JlruxdtvIO37+Rtgn9WByVdFRHh9YdsTMrNlCeRlh8XHMSc=
+	t=1710938812; cv=none; b=fkvXVtgKvCkyEln0HpFkRitpIrFl8kZu8wmj0hIoC5mB64+HNdwfrMeVZ5BTBJxgvPKH9iXsxKWN3DAGkG0JJeu8QyYx0hQ1cK3dEVnzQ2HL3VG1Fa2R2L4yW3E3Ar3nlyZQcUpPxKk40Z5TZJFjavykrSsSyyNROCfuL3HPs8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710938476; c=relaxed/simple;
-	bh=vnKuUeEoXYqV/fSDad4apteK1Y1+cY5KlsBtoY1K6a8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uA0tBWBzXVCtS+w1TcrmLXWWe7ANj4I9Hv4UcciiDq+d9zSF/qYzr2wvYU4Y6E/732IWEb5K9JDp0G2i2cP9iVrBiiPhhgb3/Q0kHQaQxM5RJBnY2tUzpXfXbg6CcRpEseJz9XVC7Vr9OCRlaxg/ai857bxJ8D4jE7tloO04nfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HViyvrjp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710938812; c=relaxed/simple;
+	bh=/7p8GXU57n2CqgDBwvg1L0/7Jk+R2NftaczecrTwYJE=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=cE48WxAmVNXouTBm9GYzSMPcIIVAX3VQJRVg+oZLT0vwXQVgik/JzVyqBBfBGE37vPC67N231smizS6P2DaLDeJZnBqe7WxqoFDEqx4G+9dLWU/d+Jb3T/Mhkv0so9Fcc7o87Dm/B/auUOIKTPUTR2BaXN8Fo6FUuKQidX4VyiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C+pEt8aL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HViyvrjp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25B1CC43390;
-	Wed, 20 Mar 2024 12:41:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C+pEt8aL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86D05C43390;
+	Wed, 20 Mar 2024 12:46:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710938476;
-	bh=vnKuUeEoXYqV/fSDad4apteK1Y1+cY5KlsBtoY1K6a8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HViyvrjp+OdBLONZAXNxmFTM7cjLT6CO7aD/YtTzx5k4pCy5gSJNGO5uj7UyCjVMQ
-	 CVex1+md5VnPIgwQTnLF+glj6I6nP40gFrNY7YOquNjYBAlCm7Wssrm64GxdB+xJYq
-	 brpIBS5x7Y3xWYm3XBm7/1j8UcgauP7h57nKlukMXhnL8xDqFD9bx4HyP4Q+TAjD/N
-	 D9gXnenJ9/cK6ZmSI15Fac/i0TwPYGhz2mG2l//y4YSm/AOhu2UD62xPah/PjyDZX5
-	 7k9zEUGd0gggr3Jfv6sclhfhautSVpSVkq86xyQ9oMcCY7ABsDaufnJoXrg+hl8tYh
-	 AncnnXvTEXYbA==
-Message-ID: <20f9d90e-454e-448c-989d-84900d380561@kernel.org>
-Date: Wed, 20 Mar 2024 13:41:12 +0100
+	s=k20201202; t=1710938812;
+	bh=/7p8GXU57n2CqgDBwvg1L0/7Jk+R2NftaczecrTwYJE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=C+pEt8aLs3Hd/KuKXxjjepyLmcPVeBXwPeOyFEfpDSc4joKEUKFzxoDelaOyP57pI
+	 lkh9HfHFERU2KT5PjtbjQ1l6wuIWu4/SoHtJ23jNau6FqFCLwGVBwlDB13wL8aGFdP
+	 WOvbeg4uK9IT4OZkihQ1/g7RXi6qqu6YIBM/EgbRhEKY3V71ANSV9kqWxlc8CY5bh1
+	 nmoZ7WrgHRmkowYxGlNHdt7RtsLr55Kse0/IEM/axjuwSItXcqD1tAKHlar/CTQMyc
+	 DwuiFwemIUk43lQixezmqQo0fumOV0ZoPjxwALGrCMPZfGmMgLo52XkcIdAVbIhELk
+	 /mWtzjPKbLq+g==
+Date: Wed, 20 Mar 2024 21:46:48 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Ye Bin <yebin10@huawei.com>
+Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
+ <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 3/8] tracing/probes: support '%pd' type for fprobe
+Message-Id: <20240320214648.a805dbd31fef4452b87d70c1@kernel.org>
+In-Reply-To: <20240315065540.1181879-4-yebin10@huawei.com>
+References: <20240315065540.1181879-1-yebin10@huawei.com>
+	<20240315065540.1181879-4-yebin10@huawei.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL] tracing/tools: Updates for 6.9
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20240318174116.420584-1-bristot@kernel.org>
- <20240319190259.0086706f@gandalf.local.home>
-Content-Language: en-US, pt-BR, it-IT
-From: Daniel Bristot de Oliveira <bristot@kernel.org>
-In-Reply-To: <20240319190259.0086706f@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 3/20/24 00:02, Steven Rostedt wrote:
-> On Mon, 18 Mar 2024 18:41:13 +0100
-> Daniel Bristot de Oliveira <bristot@kernel.org> wrote:
+Hi Ye,
+
+BTW, if you have a chance, please squash [1/8] to [3/8] patches
+into 1 patch. There is no reason to split these since these are
+a local(= the same subsystem) function implementation and callers.
+
+Thank you,
+
+On Fri, 15 Mar 2024 14:55:35 +0800
+Ye Bin <yebin10@huawei.com> wrote:
+
+> Support print type '%pd' for print dentry's or file's name.
 > 
->> Steven,
->>
->> Tracing tooling updates for 6.9
->>
->> Tracing:
->>         - Update makefiles for latency-collector and RTLA,
->>           using tools/build/ makefiles like perf does, inheriting
->>           its benefits. For example, having a proper way to
->>           handle dependencies.
->>
->>         - The timerlat tracer has an interface for any tool to use.
->>           rtla timerlat tool uses this interface dispatching its
->>           own threads as workload. But, rtla timerlat could also be
->>           used for any other process. So, add 'rtla timerlat -U'
->>           option, allowing the timerlat tool to measure the latency of
->>           any task using the timerlat tracer interface.
->>
->> Verification:
->>         - Update makefiles for verification/rv, using tools/build/
->>           makefiles like perf does, inheriting its benefits.
->>           For example, having a proper way to handle dependencies.
->>
->>
->> Please pull the latest trace-tools-v6.9 tree, which can be found at:
->>
->>
->>   git://git.kernel.org/pub/scm/linux/kernel/git/bristot/linux.git
->> trace-tools-v6.9
+> Signed-off-by: Ye Bin <yebin10@huawei.com>
+> ---
+>  kernel/trace/trace_fprobe.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> Looks like you just built on top of a random commit from Linus's tree:
-
-yeah :-/
-
-> commit f6cef5f8c37f58a3bc95b3754c3ae98e086631ca
-> Merge: 906a93befec8 8f06fb458539
-> Author: Linus Torvalds <torvalds@linux-foundation.org>
-> Date:   Sun Mar 17 16:59:33 2024 -0700
+> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
+> index 7d2ddbcfa377..988d68e906ad 100644
+> --- a/kernel/trace/trace_fprobe.c
+> +++ b/kernel/trace/trace_fprobe.c
+> @@ -976,6 +976,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+>  	char gbuf[MAX_EVENT_NAME_LEN];
+>  	char sbuf[KSYM_NAME_LEN];
+>  	char abuf[MAX_BTF_ARGS_LEN];
+> +	char *dbuf = NULL;
+>  	bool is_tracepoint = false;
+>  	struct tracepoint *tpoint = NULL;
+>  	struct traceprobe_parse_context ctx = {
+> @@ -1086,6 +1087,10 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+>  		argv = new_argv;
+>  	}
+>  
+> +	ret = traceprobe_expand_dentry_args(argc, argv, &dbuf);
+> +	if (ret)
+> +		goto out;
+> +
+>  	/* setup a probe */
+>  	tf = alloc_trace_fprobe(group, event, symbol, tpoint, maxactive,
+>  				argc, is_return);
+> @@ -1131,6 +1136,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+>  	trace_probe_log_clear();
+>  	kfree(new_argv);
+>  	kfree(symbol);
+> +	kfree(dbuf);
+>  	return ret;
+>  
+>  parse_error:
+> -- 
+> 2.31.1
 > 
->     Merge tag 'i3c/for-6.9' of git://git.kernel.org/pub/scm/linux/kernel/git/i3c/linux
-> 
-> Linus prefers basing off of real tags or previous pulls from us.
 
-Ack, took note. I will do on top v6.8 tag.
 
-> Can you rebase your changes on v6.8 and resend?
-> 
->   $ git checkout v6.8
->   $ git cherry-pick f6cef5f8c37f58a3bc95b3754c3ae98e086631ca..trace-tools-v6.9
-> 
-> Appears to work fine.
-
-questions: when something go wrong in a pull request....
-
-	- Should I keep the old tag, and then do another one with -2
-	  (it seems you do like this), or delete the old tag and send it again
-	  with the same name?
-
-	- Should I resend the PULL request with something in the log or
-	  at the Subject saying it is a v2 of the pull request?
-
-I could ask via chat, but I think it is good for the community to
-have access to these info.
-
-Thanks!
--- Daniel
-
-> Thanks!
-> 
-> -- Steve
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
