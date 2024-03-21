@@ -1,189 +1,174 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC0E84A5A;
-	Thu, 21 Mar 2024 14:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0F785943;
+	Thu, 21 Mar 2024 15:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711033061; cv=none; b=L/fHaGI0uH4J3K7MZFHIK2ass6/GAlGDZEqSG+fudVGFRGyHpKjzwHgDk5yjifOXWGAFWchgPyrVjawkCU/X5ea4BTEirIb4TvoFqr5IvvdQXM6OzvNOo9Ki3D+yLFr2bAXAcIBuhHfmQZgjp1H2RUwEx1n/Br8Lqz583eg4frE=
+	t=1711033683; cv=none; b=di7mZM8oNIJshm0AGpaudQhl6X5ZaoPyHjCZAyRZjIe/nhvJ5F1zMRvj/goFy8YjCPUNcD4KrT7HoRFjUQBWK3BAS8/gp+jySBNdLRaQc7uytZY7iN/sNFUnzbzj3oM/nccS9dj+G1WumMIY5toR5Ix1V7oVd328Et2ffJ6RYno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711033061; c=relaxed/simple;
-	bh=OP5rImtzJo8ufuiNRhbyyhSsEnw8dl1VEzRpPhWVrTY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mOikl5PJxRoqeRTTLEU8PVCGcDdOa2wLmA9EzNakwsDUKGJ6Vrn7mCQlnjOculhXXN+FJ3rJZhSPlUnz/HghfyeHcwWrOapE+qW3z5Sb9VQCs4o7PYI4UzVkNJJ/xpZLPYY+FB1QEpXQn5rowBWxPfzf/cCW8EhqmNs4mjZXcRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KWLffW4Y; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711033683; c=relaxed/simple;
+	bh=kczXDJweyGTIC8tzWtWD2AZb+o9Us2JG2kLARbHa5cQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Xl80bmu2UlcdAanNCdTyv0JuUfqdkuNwV6SRBWyKKqaMGWs/WtO+ihcimxHLkf4VX/NobgvrgWw5qsmBIkcwVA1f/QBsY+BZNI6fzgY0CJFbCPn1ohMt2QzRZuyCglbMswDdqKQJMUfYBEKP+fKutRvkJ8HF457fO/fROSKqoXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V45EFkmi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KWLffW4Y"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a2f22bfb4e6so149327866b.0;
-        Thu, 21 Mar 2024 07:57:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711033057; x=1711637857; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vPAsjljvq9spN9J6oarTkPbOp/uQy9Vt5YZP8TNCUI4=;
-        b=KWLffW4Y0k8TAYZLhfd3ckpCmSf4dq6adWwlGES2BIvnsVHp/rP+Yrl+jEJvv0wgv/
-         s0zpqPbTTYlo8oWvmEHeUdNcDqDKfJ0E2xk1oKhrcISTK8O3MKCIneilfpvcWUxNnP8W
-         fUUZ05aUWGehnbWVuKVbYgwZpzL/YzrIsehqYhAz447LFtQ9qNXgBg/O5bPqmWHdUUkI
-         tgXMLs3Bf+IBZASrihwPp3bHpawhhqRcaRXbyEEItAqGBbb3xVIUPWGJsmNsiE0bbrCG
-         aQOWO897OzhxL2JiKRcIiYasQhbaZFOYKELzscLWLLnSOlXPITNbKKjNjfpm+hNYANhk
-         e7iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711033057; x=1711637857;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vPAsjljvq9spN9J6oarTkPbOp/uQy9Vt5YZP8TNCUI4=;
-        b=r7FA0CFQ5bzO9twkeUTwwHwwdMh8RpgyV0p8yjuCgVykQrAM9unuJtrIQD2tjGAf+I
-         9lWf2qCwCkzkwAcmeYWSseau2uTomTMBtEEdFpEtjJ8kEjEtlx695ZgSLufnSkEjnmwt
-         tA2W7EBShXJa9pALZWUFGKNlkHVyDiQZF3QB1he6pw/5q+4mzJwt7tc2GCRdZ73Kr/Nd
-         US57+iRJconO3WiroJMfQ8RR9q7gqrIrR15Kb+X46af4SalV2ianHbSMjGMdB6vpwigN
-         ZdaSpdebInlSjvDzTRAyofsj+iP3VDNKjFooDOfktx2jpW1mk0PdrcNGKC8Q38hwgymS
-         VFbg==
-X-Forwarded-Encrypted: i=1; AJvYcCWlsZM2+8foCDQf5msT5KgjwNdoTEVK6ZAJ7CIg35jvOwBcHMt0AD3ZE7y7FjxMEoqBevahE0sCemHG4p6Ht0X5uzuM/AbQR+F44KeLMPbFHhD0H38Qi2fE0BwHe5F5dIBIx8y6SilW9fcKcb6FwENiF5pTX0hkv6XwfsI8gSDRM77kYA==
-X-Gm-Message-State: AOJu0YxgwN3ZqXfd3D/zO5rKiqh1SGNciZ2xGYLN6QsIXSK6/07fK54w
-	zs+cuc4Uls3iDN0IuT7Z/1Ew6ZfY4bKX6BNu9J8Aeij8u42J5Ae0l0i6+0ewbNGyEw==
-X-Google-Smtp-Source: AGHT+IFSqXkh2+8koR7VIEtj/qcJxmLHIngN30f6gr+BZ7rBiR3MmUYzBMVJ2N8B2BhwCtIBXUJa3w==
-X-Received: by 2002:a17:907:86a4:b0:a47:1d3f:b321 with SMTP id qa36-20020a17090786a400b00a471d3fb321mr650778ejc.8.1711033057333;
-        Thu, 21 Mar 2024 07:57:37 -0700 (PDT)
-Received: from localhost (fwdproxy-lla-005.fbsv.net. [2a03:2880:30ff:5::face:b00c])
-        by smtp.gmail.com with ESMTPSA id bm19-20020a170906c05300b00a44180ab871sm5831ejb.50.2024.03.21.07.57.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 07:57:36 -0700 (PDT)
-From: Jonathan Haslam <jonathan.haslam@gmail.com>
-To: linux-trace-kernel@vger.kernel.org
-Cc: jonathan.haslam@gmail.com,
-	andrii@kernel.org,
-	bpf@vger.kernel.org,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] uprobes: reduce contention on uprobes_tree access
-Date: Thu, 21 Mar 2024 07:57:35 -0700
-Message-ID: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V45EFkmi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F182C433C7;
+	Thu, 21 Mar 2024 15:08:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711033683;
+	bh=kczXDJweyGTIC8tzWtWD2AZb+o9Us2JG2kLARbHa5cQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=V45EFkmiuP2VpKwzezCuW5lPt2r4tM7xH52efB91sQJKIZwTAjaPnR3kUelvFPhPW
+	 24NiVWe+Dy+ONOiL8OkYxlyPeXPglplFry7sJsWMnw5eycG0iMwvQ7BWL8O/tgafJd
+	 LcTL23WnTtAO8dsNH8pe3GZqav19DU8FNn8VZITXTQoM7B6XaeICBtq8HB0WoL1tjH
+	 +URtM/OuvbNNY3/DuBtIQ/GbGlAt85lfgbWuMaGM9h8eV+RJecWZwVPcZmGvGxkiNG
+	 k1HGzhYMmf1/GP2AwOiOQRjWRXxq7ldaUCcgiFL+oguNWKc442sxxgMGzX56Fn8vNt
+	 3HY3BPZeN8SUw==
+Date: Fri, 22 Mar 2024 00:07:59 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ye Bin <yebin10@huawei.com>, <mhiramat@kernel.org>,
+ <mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 1/5] tracing/probes: support '%pd' type for print
+ struct dentry's name
+Message-Id: <20240322000759.ec04bca3bb2afdfaef37a545@kernel.org>
+In-Reply-To: <20240321101547.1f4e68ab@gandalf.local.home>
+References: <20240320132924.2802187-1-yebin10@huawei.com>
+	<20240320132924.2802187-2-yebin10@huawei.com>
+	<20240321101547.1f4e68ab@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Active uprobes are stored in an RB tree and accesses to this tree are
-dominated by read operations. Currently these accesses are serialized by
-a spinlock but this leads to enormous contention when large numbers of
-threads are executing active probes.
+On Thu, 21 Mar 2024 10:15:47 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-This patch converts the spinlock used to serialize access to the
-uprobes_tree RB tree into a reader-writer spinlock. This lock type
-aligns naturally with the overwhelmingly read-only nature of the tree
-usage here. Although the addition of reader-writer spinlocks are
-discouraged [0], this fix is proposed as an interim solution while an
-RCU based approach is implemented (that work is in a nascent form). This
-fix also has the benefit of being trivial, self contained and therefore
-simple to backport.
+> On Wed, 20 Mar 2024 21:29:20 +0800
+> Ye Bin <yebin10@huawei.com> wrote:
+> 
+> > Support print type '%pd' for print dentry's  name.
+> > 
+> 
+> The above is not a very detailed change log. A change log should state not
+> only what the change is doing, but also why.
+> 
+> Having examples of before and after would be useful in the change log.
 
-This change has been tested against production workloads that exhibit
-significant contention on the spinlock and an almost order of magnitude
-reduction for mean uprobe execution time is observed (28 -> 3.5 microsecs).
+Hm, OK. Ye, something like this.
+-----
+Support print type '%pd' for print dentry's name. For example "name=$arg1:%pd"
+casts the `$arg1` as (struct dentry *), dereferences the "d_name.name" field
+and stores it to "name" argument as a kernel string. Here is an example;
 
-[0] https://docs.kernel.org/locking/spinlocks.html
+echo 'p:testprobe dput name=$arg1:%pd' > kprobe_events 
+echo 1 > events/kprobes/testprobe/enable 
+cat trace
+...
+              sh-132     [004] .....   333.333051: testprobe: (dput+0x4/0x20) name="enable"
 
-Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
----
- kernel/events/uprobes.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 929e98c62965..42bf9b6e8bc0 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -39,7 +39,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
-  */
- #define no_uprobe_events()	RB_EMPTY_ROOT(&uprobes_tree)
- 
--static DEFINE_SPINLOCK(uprobes_treelock);	/* serialize rbtree access */
-+static DEFINE_RWLOCK(uprobes_treelock);	/* serialize rbtree access */
- 
- #define UPROBES_HASH_SZ	13
- /* serialize uprobe->pending_list */
-@@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
- {
- 	struct uprobe *uprobe;
- 
--	spin_lock(&uprobes_treelock);
-+	read_lock(&uprobes_treelock);
- 	uprobe = __find_uprobe(inode, offset);
--	spin_unlock(&uprobes_treelock);
-+	read_unlock(&uprobes_treelock);
- 
- 	return uprobe;
- }
-@@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
- {
- 	struct uprobe *u;
- 
--	spin_lock(&uprobes_treelock);
-+	write_lock(&uprobes_treelock);
- 	u = __insert_uprobe(uprobe);
--	spin_unlock(&uprobes_treelock);
-+	write_unlock(&uprobes_treelock);
- 
- 	return u;
- }
-@@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
- 	if (WARN_ON(!uprobe_is_active(uprobe)))
- 		return;
- 
--	spin_lock(&uprobes_treelock);
-+	write_lock(&uprobes_treelock);
- 	rb_erase(&uprobe->rb_node, &uprobes_tree);
--	spin_unlock(&uprobes_treelock);
-+	write_unlock(&uprobes_treelock);
- 	RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
- 	put_uprobe(uprobe);
- }
-@@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
- 	min = vaddr_to_offset(vma, start);
- 	max = min + (end - start) - 1;
- 
--	spin_lock(&uprobes_treelock);
-+	read_lock(&uprobes_treelock);
- 	n = find_node_in_range(inode, min, max);
- 	if (n) {
- 		for (t = n; t; t = rb_prev(t)) {
-@@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
- 			get_uprobe(u);
- 		}
- 	}
--	spin_unlock(&uprobes_treelock);
-+	read_unlock(&uprobes_treelock);
- }
- 
- /* @vma contains reference counter, not the probed instruction. */
-@@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
- 	min = vaddr_to_offset(vma, start);
- 	max = min + (end - start) - 1;
- 
--	spin_lock(&uprobes_treelock);
-+	read_lock(&uprobes_treelock);
- 	n = find_node_in_range(inode, min, max);
--	spin_unlock(&uprobes_treelock);
-+	read_unlock(&uprobes_treelock);
- 
- 	return !!n;
- }
+Note that this expects the given argument (e.g. $arg1) is an address of struct
+dentry. User must ensure it.
+-----
+
+And add similar changelog on [2/5]. 
+
+Thank you,
+
+> 
+> > Signed-off-by: Ye Bin <yebin10@huawei.com>
+> > ---
+> >  kernel/trace/trace.c        |  2 +-
+> >  kernel/trace/trace_fprobe.c |  6 +++++
+> >  kernel/trace/trace_kprobe.c |  6 +++++
+> >  kernel/trace/trace_probe.c  | 50 +++++++++++++++++++++++++++++++++++++
+> >  kernel/trace/trace_probe.h  |  2 ++
+> >  5 files changed, 65 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> > index b12f8384a36a..ac26b8446337 100644
+> > --- a/kernel/trace/trace.c
+> > +++ b/kernel/trace/trace.c
+> 
+> 
+> > +/* @buf: *buf must be equal to NULL. Caller must to free *buf */
+> > +int traceprobe_expand_dentry_args(int argc, const char *argv[], char **buf)
+> > +{
+> > +	int i, used, ret;
+> > +	const int bufsize = MAX_DENTRY_ARGS_LEN;
+> > +	char *tmpbuf = NULL;
+> > +
+> > +	if (*buf)
+> > +		return -EINVAL;
+> > +
+> > +	used = 0;
+> > +	for (i = 0; i < argc; i++) {
+> > +		if (glob_match("*:%pd", argv[i])) {
+> > +			char *tmp;
+> > +			char *equal;
+> > +
+> > +			if (!tmpbuf) {
+> > +				tmpbuf = kmalloc(bufsize, GFP_KERNEL);
+> > +				if (!tmpbuf)
+> > +					return -ENOMEM;
+> > +			}
+> > +
+> > +			tmp = kstrdup(argv[i], GFP_KERNEL);
+> > +			if (!tmp)
+> > +				goto nomem;
+> > +
+> > +			equal = strchr(tmp, '=');
+> > +			if (equal)
+> > +				*equal = '\0';
+> > +			tmp[strlen(argv[i]) - 4] = '\0';
+> > +			ret = snprintf(tmpbuf + used, bufsize - used,
+> > +				       "%s%s+0x0(+0x%zx(%s)):string",
+> > +				       equal ? tmp : "", equal ? "=" : "",
+> > +				       offsetof(struct dentry, d_name.name),
+> > +				       equal ? equal + 1 : tmp);
+> 
+> What would be really useful is if we had a way to expose BTF here. Something like:
+> 
+>  "%pB:<struct>:<field>"
+> 
+> The "%pB" would mean to look up the struct/field offsets and types via BTF,
+> and create the appropriate command to find and print it.
+
+Would you mean casing the pointer to "<struct>"?
+
+
+> 
+> That would be much more flexible and useful as it would allow reading any
+> field from any structure without having to use gdb.
+> 
+> -- Steve
+> 
+> 
+> > +			kfree(tmp);
+> > +			if (ret >= bufsize - used)
+> > +				goto nomem;
+> > +			argv[i] = tmpbuf + used;
+> > +			used += ret + 1;
+> > +		}
+> > +	}
+> > +
+> > +	*buf = tmpbuf;
+> > +	return 0;
+> > +nomem:
+> > +	kfree(tmpbuf);
+> > +	return -ENOMEM;
+> > +}
+> 
+
+
 -- 
-2.43.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
