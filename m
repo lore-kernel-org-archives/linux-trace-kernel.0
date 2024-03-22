@@ -1,40 +1,39 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9512C2C6;
-	Fri, 22 Mar 2024 06:26:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5009912E4E;
+	Fri, 22 Mar 2024 06:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711088771; cv=none; b=XNZasAUyvlYgpFxf/Oq0gZJpDFVTZTQ+CTpD88+aeUhji+yu9bSMzwlQqLs3SSD4hs5mz9U5jq5SP68xUJi71e0onrYChyFaq4KgmzttaWLhXwPoiIHYO/4gqowOa4y+BEjJU/GuTjmW+Fphie0aiJJU40QCLkOE1Y9aCzST74Q=
+	t=1711089722; cv=none; b=D0cfg3sLuy3QZZ39oxRUdcFuXE9jejnmP4r51cxc7XWdITYotwOgvmgjI04DsezUPhGiI9IzaceJwkVbD7j6AqTD1udZ9N6SjWuIx1fI/Qc14rifa3ObQrEivLzVzTk136hMeD328S5wEg0FAm4ua3Jgw7hwiJfNR16vxUehJqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711088771; c=relaxed/simple;
-	bh=dpNeus9MZz3Kq1LqiaXo/h2R9XFASoUytjEW6p+eLTs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PHqm1ccKEJY7CJgIQihnvxmAL69KyglFDDMJnnDzjXWj7ZpA2Kz3cxSkhb9JBndaLIrnoBMQx/lVlJrXUi0fnHvYSa+PTyXSkZJ0oLGqWuUDRbq2Ec3Gc7ILDFdM6u7IPWsooho/QMJHLKwFqWo9rQgnkbM/AmBP6286d87Th88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=OBKzas+f; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="OBKzas+f"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1711088766; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=FivtUkUPmOXFXKbd7Bw4dBN6HJGl3UTcNMbU+QD0qKw=;
-	b=OBKzas+fq/9kIZPltQ6guEc5nAd0VM1Rkc/1jFCtdNlOl5cQTj3EjNABRCfuKJgEMbIoW4d8zcs9c0uQlENSdSTiLCOkKUEfujp4XSSJ/TNYQqivLSJ+DcDoWwduDuamJPJXXWy71nQYMRfaSZf4t1m7EznlpNC9+Nr3qcT5+1c=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R991e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=yang.lee@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W31BTa5_1711088765;
-Received: from localhost(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0W31BTa5_1711088765)
-          by smtp.aliyun-inc.com;
-          Fri, 22 Mar 2024 14:26:05 +0800
-From: Yang Li <yang.lee@linux.alibaba.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Yang Li <yang.lee@linux.alibaba.com>
-Subject: [PATCH -next] fs: Fix kernel-doc comments to functions
-Date: Fri, 22 Mar 2024 14:26:04 +0800
-Message-Id: <20240322062604.28862-1-yang.lee@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+	s=arc-20240116; t=1711089722; c=relaxed/simple;
+	bh=ABUHxKws4avAJz+YGWjTdqpUD07z3KyEgfMh8LEm8rw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dFia2xjV7YxubNOnojJjhixfW+DQ6qw7E7IOn2rQ0yLhzAn/y9/Gb64TICFtwd7VAv3YoAbaY6UVm5NgS4rTiAnrKSbihFq+vB/5I2UyIW3WM6uSra8kTMVHuXoF/SifDJ829jijHD3Oj7LtbJ62qFOZiood7pBlu1m5KZaXOdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4V1CNQ3994zXjTV;
+	Fri, 22 Mar 2024 14:39:18 +0800 (CST)
+Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
+	by mail.maildlp.com (Postfix) with ESMTPS id BDADC140336;
+	Fri, 22 Mar 2024 14:41:57 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by canpemm500010.china.huawei.com
+ (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 22 Mar
+ 2024 14:41:57 +0800
+From: Ye Bin <yebin10@huawei.com>
+To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <yebin10@huawei.com>
+Subject: [PATCH v8 2/5] tracing/probes: support '%pD' type for print struct file's name
+Date: Fri, 22 Mar 2024 14:43:05 +0800
+Message-ID: <20240322064308.284457-3-yebin10@huawei.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20240322064308.284457-1-yebin10@huawei.com>
+References: <20240322064308.284457-1-yebin10@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -42,61 +41,126 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ canpemm500010.china.huawei.com (7.192.105.118)
 
-This commit fix kernel-doc style comments with complete parameter
-descriptions for the lookup_file(),lookup_dir_entry() and
-lookup_file_dentry().
+As like previous patch, this patch support print type '%pD' for print file's
+name. For example "name=$arg1:%pD" casts the `$arg1` as (struct file*),
+dereferences the "file.f_path.dentry.d_name.name" field and stores it to
+"name" argument as a kernel string.
+Here is an example:
+[tracing]# echo 'p:testprobe vfs_read name=$arg1:%pD' > kprobe_event
+[tracing]# echo 1 > events/kprobes/testprobe/enable
+[tracing]# grep -q "1" events/kprobes/testprobe/enable
+[tracing]# echo 0 > events/kprobes/testprobe/enable
+[tracing]# grep "vfs_read" trace | grep "enable"
+            grep-15108   [003] .....  5228.328609: testprobe: (vfs_read+0x4/0xbb0) name="enable"
 
-Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+Note that this expects the given argument (e.g. $arg1) is an address of struct
+file. User must ensure it.
+
+Signed-off-by: Ye Bin <yebin10@huawei.com>
 ---
- fs/tracefs/event_inode.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ kernel/trace/trace.c       |  2 +-
+ kernel/trace/trace_probe.c | 57 +++++++++++++++++++++++---------------
+ 2 files changed, 36 insertions(+), 23 deletions(-)
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index dc067eeb6387..894c6ca1e500 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -336,6 +336,7 @@ static void update_inode_attr(struct dentry *dentry, struct inode *inode,
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index ac26b8446337..831dfd0773a4 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -5510,7 +5510,7 @@ static const char readme_msg[] =
+ 	"\t           +|-[u]<offset>(<fetcharg>), \\imm-value, \\\"imm-string\"\n"
+ 	"\t     type: s8/16/32/64, u8/16/32/64, x8/16/32/64, char, string, symbol,\n"
+ 	"\t           b<bit-width>@<bit-offset>/<container-size>, ustring,\n"
+-	"\t           symstr, %pd, <type>\\[<array-size>\\]\n"
++	"\t           symstr, %pd/%pD, <type>\\[<array-size>\\]\n"
+ #ifdef CONFIG_HIST_TRIGGERS
+ 	"\t    field: <stype> <name>;\n"
+ 	"\t    stype: u8/u16/u32/u64, s8/s16/s32/s64, pid_t,\n"
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index a27567e16c36..7bfc6c0d5436 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -12,6 +12,7 @@
+ #define pr_fmt(fmt)	"trace_probe: " fmt
  
- /**
-  * lookup_file - look up a file in the tracefs filesystem
-+ * @parent_ei: Pointer to the eventfs_inode that represents parent of the file
-  * @dentry: the dentry to look up
-  * @mode: the permission that the file should have.
-  * @attr: saved attributes changed by user
-@@ -389,6 +390,7 @@ static struct dentry *lookup_file(struct eventfs_inode *parent_ei,
- /**
-  * lookup_dir_entry - look up a dir in the tracefs filesystem
-  * @dentry: the directory to look up
-+ * @pei: Pointer to the parent eventfs_inode if available
-  * @ei: the eventfs_inode that represents the directory to create
-  *
-  * This function will look up a dentry for a directory represented by
-@@ -478,16 +480,20 @@ void eventfs_d_release(struct dentry *dentry)
+ #include <linux/bpf.h>
++#include <linux/fs.h>
+ #include "trace_btf.h"
  
- /**
-  * lookup_file_dentry - create a dentry for a file of an eventfs_inode
-+ * @dentry: The parent dentry under which the new file's dentry will be created
-  * @ei: the eventfs_inode that the file will be created under
-  * @idx: the index into the entry_attrs[] of the @ei
-- * @parent: The parent dentry of the created file.
-- * @name: The name of the file to create
-  * @mode: The mode of the file.
-  * @data: The data to use to set the inode of the file with on open()
-  * @fops: The fops of the file to be created.
-  *
-- * Create a dentry for a file of an eventfs_inode @ei and place it into the
-- * address located at @e_dentry.
-+ * This function creates a dentry for a file associated with an
-+ * eventfs_inode @ei. It uses the entry attributes specified by @idx,
-+ * if available. The file will have the specified @mode and its inode will be
-+ * set up with @data upon open. The file operations will be set to @fops.
-+ *
-+ * Return: Returns a pointer to the newly created file's dentry or an error
-+ * pointer.
-  */
- static struct dentry *
- lookup_file_dentry(struct dentry *dentry,
+ #include "trace_probe.h"
+@@ -1581,35 +1582,47 @@ int traceprobe_expand_dentry_args(int argc, const char *argv[], char **buf)
+ 
+ 	used = 0;
+ 	for (i = 0; i < argc; i++) {
+-		if (glob_match("*:%pd", argv[i])) {
+-			char *tmp;
+-			char *equal;
+-
+-			if (!tmpbuf) {
+-				tmpbuf = kmalloc(bufsize, GFP_KERNEL);
+-				if (!tmpbuf)
+-					return -ENOMEM;
+-			}
++		char *tmp;
++		char *equal;
++		size_t arg_len;
+ 
+-			tmp = kstrdup(argv[i], GFP_KERNEL);
+-			if (!tmp)
+-				goto nomem;
++		if (!glob_match("*:%p[dD]", argv[i]))
++			continue;
+ 
+-			equal = strchr(tmp, '=');
+-			if (equal)
+-				*equal = '\0';
+-			tmp[strlen(argv[i]) - 4] = '\0';
++		if (!tmpbuf) {
++			tmpbuf = kmalloc(bufsize, GFP_KERNEL);
++			if (!tmpbuf)
++				return -ENOMEM;
++		}
++
++		tmp = kstrdup(argv[i], GFP_KERNEL);
++		if (!tmp)
++			goto nomem;
++
++		equal = strchr(tmp, '=');
++		if (equal)
++			*equal = '\0';
++		arg_len = strlen(argv[i]);
++		tmp[arg_len - 4] = '\0';
++		if (argv[i][arg_len - 1] == 'd')
+ 			ret = snprintf(tmpbuf + used, bufsize - used,
+ 				       "%s%s+0x0(+0x%zx(%s)):string",
+ 				       equal ? tmp : "", equal ? "=" : "",
+ 				       offsetof(struct dentry, d_name.name),
+ 				       equal ? equal + 1 : tmp);
+-			kfree(tmp);
+-			if (ret >= bufsize - used)
+-				goto nomem;
+-			argv[i] = tmpbuf + used;
+-			used += ret + 1;
+-		}
++		else
++			ret = snprintf(tmpbuf + used, bufsize - used,
++				       "%s%s+0x0(+0x%zx(+0x%zx(%s))):string",
++				       equal ? tmp : "", equal ? "=" : "",
++				       offsetof(struct dentry, d_name.name),
++				       offsetof(struct file, f_path.dentry),
++				       equal ? equal + 1 : tmp);
++
++		kfree(tmp);
++		if (ret >= bufsize - used)
++			goto nomem;
++		argv[i] = tmpbuf + used;
++		used += ret + 1;
+ 	}
+ 
+ 	*buf = tmpbuf;
 -- 
-2.20.1.7.g153144c
+2.31.1
 
