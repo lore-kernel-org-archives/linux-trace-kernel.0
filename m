@@ -1,99 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21F3495F0;
-	Fri, 22 Mar 2024 16:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0775FBBB
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 22 Mar 2024 17:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711125557; cv=none; b=hFTi7/h1pTwcyXcwOtKCdl6i0TuUtqxcqmdNguwB+aPn/1txUec7WrkIcXbmVBpeKick52ryoiuQ8uA2hDxgcqO5/lHoc4mEcvjbX6O97WCL+BskzOa7JhRlNrU19PaADBwovKJ3bZRbVPbtWfvpt/EJMyGUeo/cBzvVudgd1xE=
+	t=1711129243; cv=none; b=cSiFtjc6aQNxURVlJLumdtnXRJlTClD6JTB0hoQG3FF1a+1M5SvIBq8FUAL3Dcw3cPNpkgAfdwSU4es2QGs1TckQxi03Z2mq9dkkwgl30dVq14P43YE7t08qQ5Rqt8Xfyztlj19+hC7MV0oP+UWKgr87/fNLFOr4WS+w06lQn3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711125557; c=relaxed/simple;
-	bh=2geR0ApH0yInHgP7oRxLLRxqBIVI0b8whSqETq2TB0Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rATrQNPiGC/O1a7uMMahRnXz3AfVhDGaskIzku0Sr+Cqr3Pkw608+7Wk04UWp35k2O/JP7RlUFrDMMnSiSOKfVOZ/qRuAR+lsH7wdvx5GGuhdRVjiaQ4eFRiC6ODr12Uw8uuJ14bWMxsWFzvFfQb0olvkdrOwMoBCJJ6NrfNVjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aT6ZfUcI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711129243; c=relaxed/simple;
+	bh=7T0QYgj6Z0QWJ7WZghtr6Q0zZ77ROAwtyZEJQAtnJrY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A8FI7NXMr68e7sdpmDWAJjuCRtjZsOMfTE0XEMO4dxd9CCgsQ82NGEYJ/s+HsMqTIwr088rcABgZDsipBdcJFM+TtnDvhQpfEFVe10PMIth0+RdkXPs8Zt/h/Abfd8HwVanliuTqm1eRlajeoyPkSApL1xgCO+cGxGaKKJSypbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NuAiMh/M; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aT6ZfUcI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7106C433C7;
-	Fri, 22 Mar 2024 16:39:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711125557;
-	bh=2geR0ApH0yInHgP7oRxLLRxqBIVI0b8whSqETq2TB0Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aT6ZfUcIAa38sOwvHURZmqZl0YLgUbXs7mQpV09jufoZNhvHq1LKPrVGPTn5UMYlY
-	 hyyAZUU39eS83Bx2dJr4BiAloL6veZwgE85ZAbCKbl99gjOsz91wa6nMCAy959FruF
-	 XqcM/CUfS+aT9+rtpXyWjDAdhd8brQS/dSVAXCEl0ik616uDQ3LK8xKJ6MHnfw6+UN
-	 ZKfMA5yhQFLWRaiSuRONKa4g8BkS3vSvyxEzbKzhZlt7wmocqIoCThRDJjkSDgleW0
-	 Mz5GGoWAhUDcTn2QHx0NoI2WKQmxLjNQ+jTUubWkkQUe9lNc2Qiez5XgzDocGaEh1X
-	 a8JJRWAh6UWPQ==
-From: SeongJae Park <sj@kernel.org>
-To: Honggyu Kim <honggyu.kim@sk.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	akpm@linux-foundation.org,
-	apopple@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	dave.jiang@intel.com,
-	hyeongtak.ji@sk.com,
-	kernel_team@skhynix.com,
-	linmiaohe@huawei.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	rakie.kim@sk.com,
-	rostedt@goodmis.org,
-	surenb@google.com,
-	yangx.jy@fujitsu.com,
-	ying.huang@intel.com,
-	ziy@nvidia.com,
-	42.hyeyoo@gmail.com,
-	art.jeongseob@gmail.com
-Subject: Re: [RFC PATCH v2 0/7] DAMON based 2-tier memory management for CXL memory
-Date: Fri, 22 Mar 2024 09:39:14 -0700
-Message-Id: <20240322163914.68475-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240322082742.2233-1-honggyu.kim@sk.com>
-References: 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NuAiMh/M"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a46a7208eedso341385966b.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 22 Mar 2024 10:40:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1711129239; x=1711734039; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7YM4J2ObtCNq8IqrJeUkrlLZCafy3cmXh0Ri66R+dm4=;
+        b=NuAiMh/MosGpuJph6/CXhnqgtnF7qTB4wgozIjMxlP7xwIMTBUkxGp7jiLeBJeNUA8
+         uf3RbWvwApbMZFE+1zAiSE/rUFH1AmO4Inn/LeR4eLLIyJhCb6kAZF5e/IqWygoVbAS0
+         YNddRISS5xPN/6moDsAN0RJLCFP7BYfwoyTBXRz81dPr4VwAGpuAx4kKX1ddy3i+i8J0
+         GW8CtvhZyNMxHOAbds+zU9+r9Ux6hPYEAFI7Xi+I0b4x9bRWTLPNpPCI2wo9BHwHpm54
+         90xv2NndkuSs6tCPxxNLMeQMMbA9UkVREUUY00h8sSJNFZUydz03W+30nass1/Zv6OwQ
+         wtCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711129239; x=1711734039;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7YM4J2ObtCNq8IqrJeUkrlLZCafy3cmXh0Ri66R+dm4=;
+        b=F6EqLbW5c2Y3v9dq7gWZyG2q++apYB+X44HQIdUSuW1Zk0gtHkNZCtQA4NIbrEJmfq
+         7IyXUwHp6wPAU4BvCVP47vzkPV2gL4aZm3I8AcVL266ZrYO6Rp225sjNw4+kf7g6nrHx
+         +wunb6IyiIA2KrrYwPtSeN2x4EljGQmOh1Nhi7S92QIG22J6wyhK/GuyiefHNhofhPaw
+         qMFWp+rxklZCy++FFU1rqb3q1/SeI1GzMPBx3jTqolT8F2BsYLZEqG6oGeJfNscsnqkl
+         YcaWWPJu+LRUO0LkVvL04OjT7OfamzJCRc98V0x3NcNzYndxnYgnTPtF2uWuOYWActEC
+         WQRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUwLrDPxCOyji7iVXUhSYyr+uKnhEcd9e0aYxlo7HV1zmQbWCBRZ6/Yjsba+KYXPiqMidgi1MG46EELf4yvEcvHyGq2uPMtfCfFXGGtWh6g1Cpa
+X-Gm-Message-State: AOJu0Yw+kK67NSoK0+FimrSggYJED5llKKrrVuoG7fSr+Vl8qtr5Xoe8
+	LKi6548BqmZxWM0t18pdz9O0yqMHXX/lgMVXUOhGoFxdbKAaPf53AMJSWdcyan8GPMNt+n3HVci
+	z0gVGX3XSq8YDkFvSp+QnROoZegs99TGm+3AW
+X-Google-Smtp-Source: AGHT+IH25NX6qQBoFnVnA4psBCYCRYBaiXOTPUtbfU8ggcYNeDelzQNuP6wH36Jj0kmkf8kYIMZ+vwfa54Dm4tCqR3s=
+X-Received: by 2002:a17:906:c2d4:b0:a46:befa:f0b0 with SMTP id
+ ch20-20020a170906c2d400b00a46befaf0b0mr293662ejb.45.1711129238808; Fri, 22
+ Mar 2024 10:40:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240305020153.2787423-1-almasrymina@google.com>
+ <20240305020153.2787423-3-almasrymina@google.com> <ZfegzB341oNc_Ocz@infradead.org>
+ <b938514c-61cc-41e6-b592-1003b8deccae@davidwei.uk> <ZfjMopBl27-7asBc@infradead.org>
+In-Reply-To: <ZfjMopBl27-7asBc@infradead.org>
+From: Mina Almasry <almasrymina@google.com>
+Date: Fri, 22 Mar 2024 10:40:26 -0700
+Message-ID: <CAHS8izMT1Smz6UWu2uwAQRqgZPU7jTfS3GKiA_sDw9KLqoP-JA@mail.gmail.com>
+Subject: Re: [RFC PATCH net-next v6 02/15] net: page_pool: create hooks for
+ custom page providers
+To: Christoph Hellwig <hch@infradead.org>
+Cc: David Wei <dw@davidwei.uk>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Pavel Begunkov <asml.silence@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
+	Harshitha Ramamurthy <hramamurthy@google.com>, Jeroen de Borst <jeroendb@google.com>, 
+	Praveen Kaligineedi <pkaligineedi@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 22 Mar 2024 17:27:34 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
+Hi Christoph,
 
-[...]
-> OK. It could be a matter of preference and the current filter is already
-> in the mainline so I won't insist more.
+Sorry for the late reply, I've been out for a few days.
 
-Thank you for accepting my humble suggestion.
+On Mon, Mar 18, 2024 at 4:22=E2=80=AFPM Christoph Hellwig <hch@infradead.or=
+g> wrote:
+>
+> On Sun, Mar 17, 2024 at 07:49:43PM -0700, David Wei wrote:
+> > I'm working on a similar proposal for zero copy Rx but to host memory
+> > and depend on this memory provider API.
+>
+> How do you need a different provider for that vs just udmabuf?
+>
 
-[...]
-> > I'd prefer improving the documents or
-> > user-space tool and keep the kernel code simple.
-> 
-> OK. I will see if there is a way to improve damo tool for this instead
-> of making changes on the kernel side.
+This was discussed on the io_uring ZC RFC in one of the earliest RFCs.
+Here is a link to Pavel's response:
 
-Looking forward!
+https://patchwork.kernel.org/project/netdevbpf/patch/20231106024413.2801438=
+-6-almasrymina@google.com/#25589471
 
-[...]
-> Yeah, I made this thread too much about filter naming discussion rather
-> than tiered memory support.
+The UAPI of wrapping io_uring memory into a udmabuf just to use it
+with devmem TCP only for the user to have to unwrap it is undesirable
+to him.
 
-No problem at all.  Thank you for keeping this productive discussion.
+> > Jakub also designed this API for hugepages too IIRC. Basically there's
+> > going to be at least three fancy ways of providing pages (one of which
+> > isn't actually pages, hence the merged netmem_t series) to drivers.
+>
+> How do hugepages different from a normal page allocation?  They should
+> just a different ordered passed to the page allocator.
+>
 
-[...]
-> Thanks again for your feedback.
+Yes, that's more-or-less what's what the hugepage memory provider
+Jakub proposed does. The memory provider would allocate a hugepage and
+hold a reference to it. Then when the page_pool needs a page, it would
+allocate a PAGE_SIZE page from said hugepage region and provide it to
+the page_pool, and the pool back to the driver. This allows the
+hugepages to work without the page_pool and driver to be hugepage
+aware and to insert huge page specific processing in it.
 
-That's my pleasure :)
+Other designs for this hugepage use case are possible, I'm just
+describing Jakub's idea for it as a potential use-case for these
+hooks. For example technically the page_pool at the moment does
+support non-0 order allocations, but most drivers simply set the order
+to 0 and use the page pool only for PAGE_SIZE allocations. An
+alternative design could be to use this support in the page pool, but
+that requires every driver to adopt this rather than a core networking
+change that can apply transparently (to a large extent) to all
+page_pool drivers.
 
-
+--=20
 Thanks,
-SJ
-
-[...]
+Mina
