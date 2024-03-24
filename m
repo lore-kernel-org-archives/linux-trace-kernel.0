@@ -1,70 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F83581E;
-	Sun, 24 Mar 2024 02:09:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892961A38DE;
+	Sun, 24 Mar 2024 03:28:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711246181; cv=none; b=SujF9aZDfiE7s03MEaqwiFoSWa9GCB21WIp493rQ8KZX82U9x6COBfyi33/K2K+nDsUeKmzHUx+Dtol7WABDb6fsONf/h1SPBxcT4mGZ0gStMfusPO/SfSM6gNxAAxMXhBJ7tX6NDz+SE0AtWDKeP/m2/j0xa7ym8BrPKwGeyAY=
+	t=1711250941; cv=none; b=flAPVYt8JMZ/omHGYb1wJDyjAFYdHyPtw09X0Z6SyUE7MWcQhkPSSUrOM66J+LHzZ/DYgx7NYtrgYnWW4dnSSuPsT+Z5vIGCJ8ph/91Xa85ruPmxyEFob49KYhf/xrAvt9fno73gcYax7p09kxsECB2gOHAj0CWoK1Nn5bPuXU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711246181; c=relaxed/simple;
-	bh=xLFaz7y9iLJbenBgB0XSOQ7OAJTa+9SPB03yg2l70K4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=bBpjMGTPEcIBE4aHqglHV2/k5QaNSc21OrBvX/VmZb2XS6eeza3sc/chLv+jVy0R5y4ObuaGhMVCqgqoVg3lh4LogFHBXVNj/vm4eZbgadn274/ZzRyGqRm1kkaSLosm4i4fu/2OOKN0N1WldbmdLm5QyV2M/bzgs+abJA0bSuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l4USRb7l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711250941; c=relaxed/simple;
+	bh=p/DG45cfaW8SBZRy9Pe2lFJhbWEPNRh2Wm9whP/pLtA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y3nUIq1pOtyNvJJPp28saU8UcpsQxL0KoitSURGh3gWwDdRyRWeru8SeAQqXScUX7KwJ9Ys6g6/neoShokOQWl6/XA2S1Gzs5dVbd98CyPrp9kFh+lke6yuEzMJ2WpsDIOyEIqfnDC5QH/r+SFZztOnJsKXBY+2ukZwHMTdgBv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jxp8dy49; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l4USRb7l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60F56C433C7;
-	Sun, 24 Mar 2024 02:09:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711246180;
-	bh=xLFaz7y9iLJbenBgB0XSOQ7OAJTa+9SPB03yg2l70K4=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=l4USRb7l32g9v7Lkc9P2AyB3UUtf7sayKNOxlLtFvzeUmTi5an51pxlE+M+tezxqh
-	 feKB8/Zh+/TPPQm2gIrcJ8f3WkUIPXcSovyIb4gf1sjH7oguPpsQMVXYwFVUB8N7AN
-	 uwphr1NNMu8kB2MwBIsoDwBTeU6h2/guGX4/0Jma5Clu6HKmyPbOBgxPNzv1Pr9q7p
-	 7OuwWyrlmLgIpaOZbtl7vDidi5HTyUGJKT6hiw4RKuZ3gzUwcQJPAYZDMgqYZFM15x
-	 b34WTOWTyYUkMRZHjnJ936PU4sAmgTG6SpNQBx+m6jNYPdm8EykPflDBsk0jt60+te
-	 lUAY0G6IeDA1g==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jxp8dy49"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a450bedffdfso384451066b.3;
+        Sat, 23 Mar 2024 20:28:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711250938; x=1711855738; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PydOQ1bmmSNTs+e+O2bAUybHfmosF+9k+V6RWawPtKc=;
+        b=jxp8dy49SfyG6ag9wCvfzZqyPWSCIetUKySrBJo0YJ4Zxv7kR3TFojC32FVWKi4qIK
+         hPn7zhEgDp2ZQco+110VCEJUwCHqRcGQtWgX2c2aLWMTiyreX7a7UtW46nkdFHtxBhDy
+         qglsS4HoaQU23Hb0pdeN8372kdhji+dVDWjyt1/+1A4F/y/+iyQ7NfGtj1uTyBMhdXBi
+         44/DFMl0ojEbgpDKEK2/nP4HOMoH1fF2yBTMUtsM5nOo9jS1GpdJm+T05D+Ch7+oZxyt
+         lxhTpp6EU8ixNBpsSPdFzT4YhLmfBVRuQzmTnGmHNTTH9xtWRe4HqCXMUAssVMtcukst
+         vV3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711250938; x=1711855738;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PydOQ1bmmSNTs+e+O2bAUybHfmosF+9k+V6RWawPtKc=;
+        b=XfyrkSmvoltaSrnqqjmOj2CxojvxKZ+ZJebNVzEwDDNH2hUATZBKLoqF0c1RELyBxV
+         pdOJbySSrRu0pTyymvwboBetjQjhLBOULGWL5tUgrRwK8jH0iHihaD3HL1cXxlJM0Oyr
+         qGpFtnBn/RnQw5rFrgZhzj9Ydu9aLczwVIklevg1l9Fdxzz9LlepQcBBAEqdnAunobFq
+         nEX3YnNUej2uzpzDQVY8TFRLSY9Sqa8fvU0qkzQFbfw0oUGLCHQEchF44DaqpL5xMu4R
+         rwWFpRnCG/u5hCmGa43izCDm49yf+q/ZVHf4aa4++a69D0wFY2hqBVMVH50alucK5PFP
+         Splw==
+X-Forwarded-Encrypted: i=1; AJvYcCV3cQHZnq10WI4g9dGlPC9yowgjhygnrKppkAvwCto+gETmh1DdK9pF7WW4x339vAzrrTftwTllhn0Jsh4i1zkBirsfSIDiirckk/fnAcmetdAcLAxsrGeo9A+BptWNL1m883MeCyNvPutT3OKHJM5fnhVhaVj3GKkb9TG3QQeWpnBcxQ==
+X-Gm-Message-State: AOJu0YzfaG5tAB8Fdosnb2y7P3efyUt+TMDFMrDvk30lm46K7KIiBYfg
+	ukfZB51EEHBinuNExuHmqx+YJ+LnqakEo+TyC7rsxZYKRVpeZql2
+X-Google-Smtp-Source: AGHT+IFYFSWVv9IbQXjyThKPy1Mf+JJKlcuWw9dw4i0KwdZYpMQbYV1jMgqIe6gUkzqi38r666YnYw==
+X-Received: by 2002:a17:906:f2da:b0:a47:2f8c:7614 with SMTP id gz26-20020a170906f2da00b00a472f8c7614mr2228259ejb.43.1711250937491;
+        Sat, 23 Mar 2024 20:28:57 -0700 (PDT)
+Received: from gmail.com (195-38-112-2.pool.digikabel.hu. [195.38.112.2])
+        by smtp.gmail.com with ESMTPSA id hg24-20020a1709072cd800b00a4750705a07sm413706ejc.190.2024.03.23.20.28.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 Mar 2024 20:28:56 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Sun, 24 Mar 2024 04:28:54 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Jonathan Haslam <jonathan.haslam@gmail.com>
+Cc: linux-trace-kernel@vger.kernel.org, andrii@kernel.org,
+	bpf@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
+Message-ID: <Zf+d9twfyIDosINf@gmail.com>
+References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 24 Mar 2024 04:09:36 +0200
-Message-Id: <D01M54N1B35C.2SDKQ5GG2CJP@kernel.org>
-Cc: "Paul Walmsley" <paul.walmsley@sifive.com>, "Palmer Dabbelt"
- <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
- <linux-kernel@vger.kernel.org>, "Naveen N . Rao"
- <naveen.n.rao@linux.ibm.com>, "Anil S Keshavamurthy"
- <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>,
- "Masami Hiramatsu" <mhiramat@kernel.org>,
- <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] arch/riscv: Enable kprobes when CONFIG_MODULES=n
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Randy Dunlap" <rdunlap@infradead.org>,
- <linux-riscv@lists.infradead.org>
-X-Mailer: aerc 0.17.0
-References: <20240323232908.13261-1-jarkko@kernel.org>
- <40c96057-4bd8-4743-bea1-5d848f0e0c84@infradead.org>
-In-Reply-To: <40c96057-4bd8-4743-bea1-5d848f0e0c84@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
 
-On Sun Mar 24, 2024 at 2:37 AM EET, Randy Dunlap wrote:
->
->
-> On 3/23/24 16:29, Jarkko Sakkinen wrote:
-> > +config HAVE_KPROBES_ALLOC
-> > +	bool
-> > +	help
-> > +	  Architectures that select this option are capable of allocating mem=
-ory
-> > +	  for kprobes withou the kernel module allocator.
->
-> 	              without
 
-Thanks, will fix.
+* Jonathan Haslam <jonathan.haslam@gmail.com> wrote:
 
-BR, Jarkko
+> Active uprobes are stored in an RB tree and accesses to this tree are
+> dominated by read operations. Currently these accesses are serialized by
+> a spinlock but this leads to enormous contention when large numbers of
+> threads are executing active probes.
+> 
+> This patch converts the spinlock used to serialize access to the
+> uprobes_tree RB tree into a reader-writer spinlock. This lock type
+> aligns naturally with the overwhelmingly read-only nature of the tree
+> usage here. Although the addition of reader-writer spinlocks are
+> discouraged [0], this fix is proposed as an interim solution while an
+> RCU based approach is implemented (that work is in a nascent form). This
+> fix also has the benefit of being trivial, self contained and therefore
+> simple to backport.
+> 
+> This change has been tested against production workloads that exhibit
+> significant contention on the spinlock and an almost order of magnitude
+> reduction for mean uprobe execution time is observed (28 -> 3.5 microsecs).
+
+Have you considered/measured per-CPU RW semaphores?
+
+Thanks,
+
+	Ingo
