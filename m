@@ -1,80 +1,46 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E8713173E;
-	Mon, 25 Mar 2024 10:29:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38324184EF3;
+	Mon, 25 Mar 2024 12:01:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711362569; cv=none; b=SYTMfAXRujtQyGuiLqBL3tG6kfPveJ1wgcjtNvsn2zjXhSWIm8/DPMsTFZNpZKSPEU8HgfJJhWXNZqlLl6nkN8IebDV9SurkxZoyeWTTyTlZUPFjf8/G+zxpFpNGHXfrGcFwdS9vnZS9qxA9/tiOxtuCb2/hBUgS4RTaH4ai1L8=
+	t=1711368083; cv=none; b=lc71AeqMdtAQBfr0i69YqOV9vV46c0nWYUtNg6ncic6LvhPi9MMSZqm0/SVSim/hJax2Q2YWcDxBxb1Zr4fuX50XfJlLUe78/eYW0Nf/gU8ZzurJqIVaogZCeW9PWpI44MSq+OiNgEL4uJjyUM2M9cdhVhYIihJQOT73aBXsLVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711362569; c=relaxed/simple;
-	bh=9GVBUu/FfME7hJnTGLJoojIPT623ugOT1Rgx4WBw8tA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cIyzz6RpIPbUkANTIr+4hsT6iFJ8eBhxMmkXnOqNJHNF2Kp0Alp8SQ1My3We3Kj0NNbzSk3+XsDCRzOKQMZMvk3N5Xx1VkDcScL9c4qzylPUFu2RqzO+nrinKYhkURNkhCBmbob5njB9Hzhs/xXvTrvVx+kx7Oa4U1lVCu484VQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NOtrIZRQ; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NOtrIZRQ"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-33fd8a2a3e6so2820130f8f.0;
-        Mon, 25 Mar 2024 03:29:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711362566; x=1711967366; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vmp26Wyrh5R6YY4RQvUCX7nV7M7UVvO0NSBIsiSwspA=;
-        b=NOtrIZRQbolTWYBWUwpidr4vrC3LjkcAjyZfR/Qj8PWM8LUOHz7PLEEXbSyBS4QmoL
-         4g4p5+OW8OJ75JHfQhOFO5iRAeQzS7bWIOw67XbiVbWyrwTSjqkyuVb505m/QZgcbxpN
-         svO/rWNpbuaYzshcjTVKyeO6VmvrfIzgKYqMbCLdyFHZ7zPEAWdXmfa0a3llvSkqtqjX
-         n7QgbT9P7FWLgrYi9I496+Lia0XboZV58QYjvlfdxfo2wP2WrhxtKwcpMwsS6ubfOD57
-         1/yOIBmGyU5zK6PgA1ozCEVdTUyXsLh0RR0LzopIXq5+RfheN7W9zp9NAEIR/9c29ngE
-         YMGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711362566; x=1711967366;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vmp26Wyrh5R6YY4RQvUCX7nV7M7UVvO0NSBIsiSwspA=;
-        b=JZqRJ50EJ4B6OOnECHq3Wreacs6rC2fUOzxMAMynb84h6DDRJQLHZbgT43KEyMvMPm
-         JQJ3T5bLMmcMLPDt4NzZqtHfgypwwtsiG/4o3nsfXA385WY3uSkZqw/7eOjDD6BEVGNr
-         Bi9YGXrMygXEZxeLD2sZcGKbb7O+PgiueupEt/a5xQ76HBIlqkTNgrqfONKQJKWhn2YW
-         zHmrDEXyjxNT9EOlyKNnrWuY3HCl4i5Wr0OxTWtRs79YYX5wuFHJnMQFteTlmgrLglX+
-         awln48ztoFZ0czUMYnQgTyfwsfx1A6ScLkwitKzV/LP+5AkXrGSIm5ooZ3YViPfm2iv+
-         IHAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX+ztUn/kyxr1VqGwU6CxkoXZ9OjWtaI1vs/tXQF53tlbCQwxIPQFTIFcfV3NtoXJLkXq8jM+x3QrZ0wdJo+0vGtkqP1lTw2DPoB8HUfYzk9YvFsl5GGotYMKq6oFbM4Cwvp3uXwETpKveuSkau8Pr2TcYPQizy6F1UOjpAEIPd/XKYa+SQNUDx
-X-Gm-Message-State: AOJu0YwuNiTe9e/kuMzdS+KCqakJBGq9bcieEVIgeUPTWAF/KyvaR/ga
-	T7VPdlmceGeYOh3GOWOWfWz6loBxaYT12NacZx5Z0UvH2uGuEHbO
-X-Google-Smtp-Source: AGHT+IEVlCOJjAaIAB+mb/cq3ZaQVF2CjGfbd2m+A6Gjn+L/66qfIIAX3D+oMoiIrwo0dRcDtHOY8A==
-X-Received: by 2002:adf:f60f:0:b0:33e:6db4:e89f with SMTP id t15-20020adff60f000000b0033e6db4e89fmr4364206wrp.22.1711362565745;
-        Mon, 25 Mar 2024 03:29:25 -0700 (PDT)
-Received: from localhost.localdomain (91-83-10-45.pool.digikabel.hu. [91.83.10.45])
-        by smtp.gmail.com with ESMTPSA id bq22-20020a5d5a16000000b00341d0458950sm1394958wrb.15.2024.03.25.03.29.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 03:29:25 -0700 (PDT)
-From: Balazs Scheidler <bazsi77@gmail.com>
-X-Google-Original-From: Balazs Scheidler <balazs.scheidler@axoflow.com>
-To: kerneljasonxing@gmail.com,
-	kuniyu@amazon.com,
-	netdev@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Balazs Scheidler <balazs.scheidler@axoflow.com>,
+	s=arc-20240116; t=1711368083; c=relaxed/simple;
+	bh=xNG1ygbpXGYY1nx407tvVJZqYfru8GJYQcuUl1vrWco=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rGcMEBnyntzyNh9cqtKC9oZ56G0QJ7B5WALOSPo7ethtU4WK+/JZRKSNr7kUfCUD0zKOHT1+wEyu/Maoy84rzCsz60ui3UAt8bTfn/g+cgvfWNRe554fro7JEU9q+oEsKcN4QIhqeAmYq+aPWWDP7Yzm6a0FchKTwkwgKhTMkEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d6dff70000001748-72-660167861140
+From: Honggyu Kim <honggyu.kim@sk.com>
+To: SeongJae Park <sj@kernel.org>
+Cc: damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	apopple@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	dave.jiang@intel.com,
+	hyeongtak.ji@sk.com,
+	kernel_team@skhynix.com,
+	linmiaohe@huawei.com,
 	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH net-next v3 2/2] net: udp: add IP/port data to the tracepoint udp/udp_fail_queue_rcv_skb
-Date: Mon, 25 Mar 2024 11:29:18 +0100
-Message-Id: <34a9c221a6d644f18c826a1beddba58af6b7a64c.1711361723.git.balazs.scheidler@axoflow.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1711361723.git.balazs.scheidler@axoflow.com>
-References: <cover.1711361723.git.balazs.scheidler@axoflow.com>
+	linux-trace-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	rakie.kim@sk.com,
+	rostedt@goodmis.org,
+	surenb@google.com,
+	yangx.jy@fujitsu.com,
+	ying.huang@intel.com,
+	ziy@nvidia.com,
+	42.hyeyoo@gmail.com
+Subject: Re: [RFC PATCH v2 0/7] DAMON based 2-tier memory management for CXL memory
+Date: Mon, 25 Mar 2024 21:01:04 +0900
+Message-ID: <20240325120108.2328-1-honggyu.kim@sk.com>
+X-Mailer: git-send-email 2.43.0.windows.1
+In-Reply-To: <20240322163223.68414-1-sj@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -82,107 +48,135 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPIsWRmVeSWpSXmKPExsXC9ZZnoW5bOmOawZwnKhYTewws5qxfw2ax
+	60aIxf+9xxgtnvz/zWpx4mYjm0Xn96UsFpd3zWGzuLfmP6vFkfVnWSw2nz3DbLF4uZrFvo4H
+	TBaHv75hsph8aQGbxYspZxgtTs6azGIx++g9dgchj6Wn37B5bGgCEjtn3WX3aNl3i91jwaZS
+	j5Yjb1k9Fu95yeSxaVUnm8emT5PYPU7M+M3isfOhpceLzTMZPXqb37F5fN4kF8AXxWWTkpqT
+	WZZapG+XwJXx/MwJloI7KhUr3nA0ML6Q6WLk5JAQMJG4t+EQI4z9dFoXO4jNJqAmceXlJCYQ
+	W0RAUeLc44usXYxcHMwCf5klXs85xwaSEBYIlph79j9YM4uAqsT8u9fAbF4BM4lnvz6yQAzV
+	lHi8/SfYUE4BY4kNsx+BDRUS4JF4tWE/VL2gxMmZT8DqmQXkJZq3zmYGWSYhsItdomfeMWaI
+	QZISB1fcYJnAyD8LSc8sJD0LGJlWMQpl5pXlJmbmmOhlVOZlVugl5+duYgRG27LaP9E7GD9d
+	CD7EKMDBqMTDa5HAmCbEmlhWXJl7iFGCg1lJhLflC0OaEG9KYmVValF+fFFpTmrxIUZpDhYl
+	cV6jb+UpQgLpiSWp2ampBalFMFkmDk6pBkZFxeuTvJh2Zpe4qGqUCsiem78gLsH3WqxioqDS
+	3itKiR+sF35yYmaYl+vx5cyxgrvPXKd0PKl95Km7O/1ez51Vhr+8JT7sOXDi8tR5m5K6DVeI
+	7++8unPH8oN9CsmLZx1b/zj5zK0ow4i9zRts6m50hF74vmblrS7Xicve6eTfCys+am90Ofm2
+	EktxRqKhFnNRcSIAQ1tOFbICAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCIsWRmVeSWpSXmKPExsXCNUNLT7ctnTHNoPuMiMXEHgOLOevXsFns
+	uhFi8X/vMUaLJ/9/s1qcuNnIZtH55DujxeG5J1ktOr8vZbG4vGsOm8W9Nf9ZLY6sP8tisfns
+	GWaLxcvVLA5de85qsa/jAZPF4a9vmCwmX1rAZvFiyhlGi5OzJrNYzD56j91B1GPp6TdsHhua
+	gMTOWXfZPVr23WL3WLCp1KPlyFtWj8V7XjJ5bFrVyeax6dMkdo8TM36zeOx8aOnxYvNMRo/e
+	5ndsHt9ue3gsfvGByePzJrkAgSgum5TUnMyy1CJ9uwSujOdnTrAU3FGpWPGGo4HxhUwXIyeH
+	hICJxNNpXewgNpuAmsSVl5OYQGwRAUWJc48vsnYxcnEwC/xllng95xwbSEJYIFhi7tn/jCA2
+	i4CqxPy718BsXgEziWe/PrJADNWUeLz9J9hQTgFjiQ2zH4ENFRLgkXi1YT9UvaDEyZlPwOqZ
+	BeQlmrfOZp7AyDMLSWoWktQCRqZVjCKZeWW5iZk5pnrF2RmVeZkVesn5uZsYgXG1rPbPxB2M
+	Xy67H2IU4GBU4uG1SGBME2JNLCuuzD3EKMHBrCTC2/KFIU2INyWxsiq1KD++qDQntfgQozQH
+	i5I4r1d4aoKQQHpiSWp2ampBahFMlomDU6qBcceZj8t03hbOPG5lN+XxY9blBzlSa8+IzS/8
+	ez7Tfd63FdxyTopy7crhkc+lZ5089dJ0zVJpj0UMKT8eG3+NTvpw9N7Dz5uc2z51563Z2+Us
+	xnhnY3tX+HfF8xcidVcFWSds1vM1qn09z1k9xMN9mdQZpkezF7e7XQtddTP48+dMV/1HP5xr
+	3imxFGckGmoxFxUnAgC6+TBEpwIAAA==
+X-CFilter-Loop: Reflected
 
-The udp_fail_queue_rcv_skb() tracepoint lacks any details on the source
-and destination IP/port whereas this information can be critical in case
-of UDP/syslog.
+Hi SeongJae,
 
-Signed-off-by: Balazs Scheidler <balazs.scheidler@axoflow.com>
----
- include/trace/events/udp.h | 29 ++++++++++++++++++++++++-----
- net/ipv4/udp.c             |  2 +-
- net/ipv6/udp.c             |  3 ++-
- 3 files changed, 27 insertions(+), 7 deletions(-)
+On Fri, 22 Mar 2024 09:32:23 -0700 SeongJae Park <sj@kernel.org> wrote:
+> On Fri, 22 Mar 2024 18:02:23 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
+> 
+> > Hi SeongJae,
+> > 
+> > On Tue, 27 Feb 2024 15:51:20 -0800 SeongJae Park <sj@kernel.org> wrote:
+> > > On Mon, 26 Feb 2024 23:05:46 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
+> > > 
+> > > > There was an RFC IDEA "DAMOS-based Tiered-Memory Management" previously
+> > > > posted at [1].
+> > > > 
+> > > > It says there is no implementation of the demote/promote DAMOS action
+> > > > are made.  This RFC is about its implementation for physical address
+> > > > space.
+> > > > 
+> > > > 
+> [...]
+> > > Thank you for running the tests again with the new version of the patches and
+> > > sharing the results!
+> > 
+> > It's a bit late answer, but the result was from the previous evaluation.
+> > I ran it again with RFC v2, but didn't see much difference so just
+> > pasted the same result here.
+> 
+> No problem, thank you for clarifying :)
+> 
+> [...]
+> > > > Honggyu Kim (3):
+> > > >   mm/damon: refactor DAMOS_PAGEOUT with migration_mode
+> > > >   mm: make alloc_demote_folio externally invokable for migration
+> > > >   mm/damon: introduce DAMOS_DEMOTE action for demotion
+> > > > 
+> > > > Hyeongtak Ji (4):
+> > > >   mm/memory-tiers: add next_promotion_node to find promotion target
+> > > >   mm/damon: introduce DAMOS_PROMOTE action for promotion
+> > > >   mm/damon/sysfs-schemes: add target_nid on sysfs-schemes
+> > > >   mm/damon/sysfs-schemes: apply target_nid for promote and demote
+> > > >     actions
+> > > 
+> > > Honggyu joined DAMON Beer/Coffee/Tea Chat[1] yesterday, and we discussed about
+> > > this patchset in high level.  Sharing the summary here for open discussion.  As
+> > > also discussed on the first version of this patchset[2], we want to make single
+> > > action for general page migration with minimum changes, but would like to keep
+> > > page level access re-check.  We also agreed the previously proposed DAMOS
+> > > filter-based approach could make sense for the purpose.
+> > 
+> > Thanks very much for the summary.  I have been trying to merge promote
+> > and demote actions into a single migrate action, but I found an issue
+> > regarding damon_pa_scheme_score.  It currently calls damon_cold_score()
+> > for demote action and damon_hot_score() for promote action, but what
+> > should we call when we use a single migrate action?
+> 
+> Good point!  This is what I didn't think about when suggesting that.  Thank you
+> for letting me know this gap!  I think there could be two approach, off the top
+> of my head.
+> 
+> The first one would be extending the interface so that the user can select the
+> score function.  This would let flexible usage, but I'm bit concerned if this
+> could make things unnecessarily complex, and would really useful in many
+> general use case.
 
-diff --git a/include/trace/events/udp.h b/include/trace/events/udp.h
-index 336fe272889f..9c5abe23d0f5 100644
---- a/include/trace/events/udp.h
-+++ b/include/trace/events/udp.h
-@@ -7,24 +7,43 @@
- 
- #include <linux/udp.h>
- #include <linux/tracepoint.h>
-+#include <trace/events/net_probe_common.h>
- 
- TRACE_EVENT(udp_fail_queue_rcv_skb,
- 
--	TP_PROTO(int rc, struct sock *sk),
-+	TP_PROTO(int rc, struct sock *sk, struct sk_buff *skb),
- 
--	TP_ARGS(rc, sk),
-+	TP_ARGS(rc, sk, skb),
- 
- 	TP_STRUCT__entry(
- 		__field(int, rc)
--		__field(__u16, lport)
-+
-+		__field(__u16, sport)
-+		__field(__u16, dport)
-+		__field(__u16, family)
-+		__array(__u8, saddr, sizeof(struct sockaddr_in6))
-+		__array(__u8, daddr, sizeof(struct sockaddr_in6))
- 	),
- 
- 	TP_fast_assign(
-+		const struct udphdr *uh = (const struct udphdr *)udp_hdr(skb);
-+
- 		__entry->rc = rc;
--		__entry->lport = inet_sk(sk)->inet_num;
-+		
-+		/* for filtering use */
-+		__entry->sport = ntohs(uh->source);
-+		__entry->dport = ntohs(uh->dest);
-+		__entry->family = sk->sk_family;
-+
-+                memset(__entry->saddr, 0, sizeof(struct sockaddr_in6));
-+                memset(__entry->daddr, 0, sizeof(struct sockaddr_in6));
-+
-+		TP_STORE_ADDR_PORTS_SKB(__entry, skb, uh);
- 	),
- 
--	TP_printk("rc=%d port=%hu", __entry->rc, __entry->lport)
-+	TP_printk("rc=%d family=%s src=%pISpc dest=%pISpc", __entry->rc,
-+		  show_family_name(__entry->family),
-+		  __entry->saddr, __entry->daddr)
- );
- 
- #endif /* _TRACE_UDP_H */
-diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
-index 661d0e0d273f..531882f321f2 100644
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -2049,8 +2049,8 @@ static int __udp_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
- 			drop_reason = SKB_DROP_REASON_PROTO_MEM;
- 		}
- 		UDP_INC_STATS(sock_net(sk), UDP_MIB_INERRORS, is_udplite);
-+		trace_udp_fail_queue_rcv_skb(rc, sk, skb);
- 		kfree_skb_reason(skb, drop_reason);
--		trace_udp_fail_queue_rcv_skb(rc, sk);
- 		return -1;
- 	}
- 
-diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
-index 7c1e6469d091..2e4dc5e6137b 100644
---- a/net/ipv6/udp.c
-+++ b/net/ipv6/udp.c
-@@ -34,6 +34,7 @@
- #include <linux/slab.h>
- #include <linux/uaccess.h>
- #include <linux/indirect_call_wrapper.h>
-+#include <trace/events/udp.h>
- 
- #include <net/addrconf.h>
- #include <net/ndisc.h>
-@@ -658,8 +659,8 @@ static int __udpv6_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
- 			drop_reason = SKB_DROP_REASON_PROTO_MEM;
- 		}
- 		UDP6_INC_STATS(sock_net(sk), UDP_MIB_INERRORS, is_udplite);
-+		trace_udp_fail_queue_rcv_skb(rc, sk, skb);
- 		kfree_skb_reason(skb, drop_reason);
--		trace_udp_fail_queue_rcv_skb(rc, sk);
- 		return -1;
- 	}
- 
--- 
-2.40.1
+I also think this looks complicated and may not be useful for general
+users.
 
+> The second approach would be letting DAMON infer the intention.  In this case,
+> I think we could know the intention is the demotion if the scheme has a youg
+> pages exclusion filter.  Then, we could use the cold_score().  And vice versa.
+> To cover a case that there is no filter at all, I think we could have one
+> assumption.  My humble intuition says the new action (migrate) may be used more
+> for promotion use case.  So, in damon_pa_scheme_score(), if the action of the
+> given scheme is the new one (say, MIGRATE), the function will further check if
+> the scheme has a filter for excluding young pages.  If so, the function will
+> use cold_score().  Otherwise, the function will use hot_score().
+
+Thanks for suggesting many ideas but I'm afraid that I feel this doesn't
+look good.  Thinking it again, I think we can think about keep using
+DAMOS_PROMOTE and DAMOS_DEMOTE, but I can make them directly call
+damon_folio_young() for access check instead of using young filter.
+
+And we can internally handle the complicated combination such as demote
+action sets "young" filter with "matching" true and promote action sets
+"young" filter with "matching" false.  IMHO, this will make the usage
+simpler.
+
+I would like to hear how you think about this.
+
+> So I'd more prefer the second approach.  I think it would be not too late to
+> consider the first approach after waiting for it turns out more actions have
+> such ambiguity and need more general interface for explicitly set the score
+> function.
+
+I will join the DAMON Beer/Coffee/Tea Chat tomorrow as scheduled so I
+can talk more about this issue.
+
+Thanks,
+Honggyu
+
+> 
+> Thanks,
+> SJ
+> 
+> [...]
