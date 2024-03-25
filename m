@@ -1,182 +1,124 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38324184EF3;
-	Mon, 25 Mar 2024 12:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF4116B447
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711368083; cv=none; b=lc71AeqMdtAQBfr0i69YqOV9vV46c0nWYUtNg6ncic6LvhPi9MMSZqm0/SVSim/hJax2Q2YWcDxBxb1Zr4fuX50XfJlLUe78/eYW0Nf/gU8ZzurJqIVaogZCeW9PWpI44MSq+OiNgEL4uJjyUM2M9cdhVhYIihJQOT73aBXsLVw=
+	t=1711371025; cv=none; b=eamQeLO99UsiwZ52kSpveirKaha5B1wC1Gx6PXpERUlnun41K9+obiNZQ02ui8ySRHXXDwL+F2V4veC+LQVCGqcR/SK37S2SZyicwxjqTsjiIHEQoRRb+0c40tiot4j/CAeYa6TKJ8tFB/wl5XvpjaBHftTigjKeyzTZgwlbDWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711368083; c=relaxed/simple;
-	bh=xNG1ygbpXGYY1nx407tvVJZqYfru8GJYQcuUl1vrWco=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rGcMEBnyntzyNh9cqtKC9oZ56G0QJ7B5WALOSPo7ethtU4WK+/JZRKSNr7kUfCUD0zKOHT1+wEyu/Maoy84rzCsz60ui3UAt8bTfn/g+cgvfWNRe554fro7JEU9q+oEsKcN4QIhqeAmYq+aPWWDP7Yzm6a0FchKTwkwgKhTMkEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d6dff70000001748-72-660167861140
-From: Honggyu Kim <honggyu.kim@sk.com>
-To: SeongJae Park <sj@kernel.org>
-Cc: damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	akpm@linux-foundation.org,
-	apopple@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	dave.jiang@intel.com,
-	hyeongtak.ji@sk.com,
-	kernel_team@skhynix.com,
-	linmiaohe@huawei.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	rakie.kim@sk.com,
-	rostedt@goodmis.org,
-	surenb@google.com,
-	yangx.jy@fujitsu.com,
-	ying.huang@intel.com,
-	ziy@nvidia.com,
-	42.hyeyoo@gmail.com
-Subject: Re: [RFC PATCH v2 0/7] DAMON based 2-tier memory management for CXL memory
-Date: Mon, 25 Mar 2024 21:01:04 +0900
-Message-ID: <20240325120108.2328-1-honggyu.kim@sk.com>
-X-Mailer: git-send-email 2.43.0.windows.1
-In-Reply-To: <20240322163223.68414-1-sj@kernel.org>
-References: 
+	s=arc-20240116; t=1711371025; c=relaxed/simple;
+	bh=5RyxoVFw8iV/PhK2kQZFnetLsvcimHQCr4aKA83CIbw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LuLtJooVEwEulmLIgehlxlPcGuCXiry46uyP3/juVlY8l7CtaMmrEHoN2/XaOnwoEhJOwIbkYY2/PZlrrIQkAWnDx/JqGDZI8JkDC0qTQ3p/fB7YXxKxvVqYzwtRh1tKO0l7XEbZf2l7ApyLZzDKVdeyH7+BhUqD5wimJ0Ws07s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=a4TNHSkf; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="a4TNHSkf"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5dca1efad59so2434553a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 25 Mar 2024 05:50:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1711371023; x=1711975823; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5RyxoVFw8iV/PhK2kQZFnetLsvcimHQCr4aKA83CIbw=;
+        b=a4TNHSkf345sgU+AhOU4z07DoeTKHgfhTOtCntVFlL5JUPIJD/s/wbEYk8XiPkG5nT
+         eRFKk/ZWgWFH2CzOAStB5sGfJQbQoRmqsv9dUgBiS9bz9s8u02qszMcDF90mG9m7JOX8
+         ilAaOOg16Ec8Ky13yUBtua2gFPSRhLWISNT6X4Hu23ivWGSsYc6nx2+nGOgpKk8CDD6E
+         kSLSVTFKpttG3ROgenDsIv3lXFgwQMEnDCvKn0NJcOSePd9jovd9u3TXBMvFBRyyYBey
+         659DD7xK7+6xGDbySP5Z5MzwVGainNWCQtMukMKLXSFNAloigdk76z4/arVERypC4FrW
+         YnHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711371023; x=1711975823;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5RyxoVFw8iV/PhK2kQZFnetLsvcimHQCr4aKA83CIbw=;
+        b=XvOQescTTE4rR7ujIjkVL7E6F6Z0BNP7LiKt/mCXlon9GfC4Ll+COTyD4MAdhuxZoM
+         4OeNnGcpIEvbmkzEF1TqaS894tVXdEQxUDSf5PhmyyEWT76uw5mE11B4VnMbDrWfOUFY
+         +3gRB4ObYD7Y6EVanrDiMPePbRAV5FBzornUAyQGHnyKGEkQYbFI0QvpzfXcZBmwRYqL
+         OoVGliTpBNjxhnqPYyHMxVTpULxD1NlomtXmTeSIRVzUi4bMRw5/pTHrb+1282G9uEGk
+         GXMCz2D4BuqDd0ZkqYcPI3fp6VOAFTU1vJhN3HHOU/yUicwYut3IcOjWA9P9IHOKcnPc
+         A6Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCU3m9g10R6Sqvju7i7TTjJe6yFYU7lT1d0ingvPhoyRBApx5BsPtfB0guCrvFzXVI/0JFUsBE6K5LawjlPtIGTLx5J6B8yBxsUGCKMgc/6eEvdQ
+X-Gm-Message-State: AOJu0Yzzn9GW5J9Vb3DH7EsMjGnYBGL100UoOiUsiwNfxxkwa7T0AZ9c
+	arSuM0j+d/IpH7rfaFzGhJCRQJq/5nfcU4MiLc/60eUHFktMussCwNiOfdvA+0MSsuYQUa2Jz/L
+	ibLGWpD8Yve45AtpbATqkkz64YdksrRCRvP3BLQ==
+X-Google-Smtp-Source: AGHT+IFavvihRisV9kCaSJXWkP5NlMeM+2ciaavifWQ9HNV1hzqkvuSD7eRB5OdriFQR916iQBclkPwrahehtGboVyQ=
+X-Received: by 2002:a17:90a:b30c:b0:29c:5c56:ffea with SMTP id
+ d12-20020a17090ab30c00b0029c5c56ffeamr4730905pjr.6.1711371023055; Mon, 25 Mar
+ 2024 05:50:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPIsWRmVeSWpSXmKPExsXC9ZZnoW5bOmOawZwnKhYTewws5qxfw2ax
-	60aIxf+9xxgtnvz/zWpx4mYjm0Xn96UsFpd3zWGzuLfmP6vFkfVnWSw2nz3DbLF4uZrFvo4H
-	TBaHv75hsph8aQGbxYspZxgtTs6azGIx++g9dgchj6Wn37B5bGgCEjtn3WX3aNl3i91jwaZS
-	j5Yjb1k9Fu95yeSxaVUnm8emT5PYPU7M+M3isfOhpceLzTMZPXqb37F5fN4kF8AXxWWTkpqT
-	WZZapG+XwJXx/MwJloI7KhUr3nA0ML6Q6WLk5JAQMJG4t+EQI4z9dFoXO4jNJqAmceXlJCYQ
-	W0RAUeLc44usXYxcHMwCf5klXs85xwaSEBYIlph79j9YM4uAqsT8u9fAbF4BM4lnvz6yQAzV
-	lHi8/SfYUE4BY4kNsx+BDRUS4JF4tWE/VL2gxMmZT8DqmQXkJZq3zmYGWSYhsItdomfeMWaI
-	QZISB1fcYJnAyD8LSc8sJD0LGJlWMQpl5pXlJmbmmOhlVOZlVugl5+duYgRG27LaP9E7GD9d
-	CD7EKMDBqMTDa5HAmCbEmlhWXJl7iFGCg1lJhLflC0OaEG9KYmVValF+fFFpTmrxIUZpDhYl
-	cV6jb+UpQgLpiSWp2ampBalFMFkmDk6pBkZFxeuTvJh2Zpe4qGqUCsiem78gLsH3WqxioqDS
-	3itKiR+sF35yYmaYl+vx5cyxgrvPXKd0PKl95Km7O/1ez51Vhr+8JT7sOXDi8tR5m5K6DVeI
-	7++8unPH8oN9CsmLZx1b/zj5zK0ow4i9zRts6m50hF74vmblrS7Xicve6eTfCys+am90Ofm2
-	EktxRqKhFnNRcSIAQ1tOFbICAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCIsWRmVeSWpSXmKPExsXCNUNLT7ctnTHNoPuMiMXEHgOLOevXsFns
-	uhFi8X/vMUaLJ/9/s1qcuNnIZtH55DujxeG5J1ktOr8vZbG4vGsOm8W9Nf9ZLY6sP8tisfns
-	GWaLxcvVLA5de85qsa/jAZPF4a9vmCwmX1rAZvFiyhlGi5OzJrNYzD56j91B1GPp6TdsHhua
-	gMTOWXfZPVr23WL3WLCp1KPlyFtWj8V7XjJ5bFrVyeax6dMkdo8TM36zeOx8aOnxYvNMRo/e
-	5ndsHt9ue3gsfvGByePzJrkAgSgum5TUnMyy1CJ9uwSujOdnTrAU3FGpWPGGo4HxhUwXIyeH
-	hICJxNNpXewgNpuAmsSVl5OYQGwRAUWJc48vsnYxcnEwC/xllng95xwbSEJYIFhi7tn/jCA2
-	i4CqxPy718BsXgEziWe/PrJADNWUeLz9J9hQTgFjiQ2zH4ENFRLgkXi1YT9UvaDEyZlPwOqZ
-	BeQlmrfOZp7AyDMLSWoWktQCRqZVjCKZeWW5iZk5pnrF2RmVeZkVesn5uZsYgXG1rPbPxB2M
-	Xy67H2IU4GBU4uG1SGBME2JNLCuuzD3EKMHBrCTC2/KFIU2INyWxsiq1KD++qDQntfgQozQH
-	i5I4r1d4aoKQQHpiSWp2ampBahFMlomDU6qBcceZj8t03hbOPG5lN+XxY9blBzlSa8+IzS/8
-	ez7Tfd63FdxyTopy7crhkc+lZ5089dJ0zVJpj0UMKT8eG3+NTvpw9N7Dz5uc2z51563Z2+Us
-	xnhnY3tX+HfF8xcidVcFWSds1vM1qn09z1k9xMN9mdQZpkezF7e7XQtddTP48+dMV/1HP5xr
-	3imxFGckGmoxFxUnAgC6+TBEpwIAAA==
-X-CFilter-Loop: Reflected
+References: <20240306165904.108141-1-puranjay12@gmail.com> <87ttlhdeqb.fsf@all.your.base.are.belong.to.us>
+ <ZfBbxPDd0rz6FN2T@FVFF77S0Q05N> <8734suqsth.fsf@all.your.base.are.belong.to.us>
+ <mb61pplvw6grf.fsf@gmail.com> <87zfv0onre.fsf@all.your.base.are.belong.to.us>
+ <87il1oedx8.fsf@all.your.base.are.belong.to.us> <CABgGipWPuvwi43v1+60-=0_MN_q_CD0ZGasxHHVWJ37cig5MmA@mail.gmail.com>
+ <87msqsotr8.fsf@all.your.base.are.belong.to.us> <CABgGipUayONdvaH0nexBJUai=qT3yqURhinTbDWxORfMDQ_5pw@mail.gmail.com>
+In-Reply-To: <CABgGipUayONdvaH0nexBJUai=qT3yqURhinTbDWxORfMDQ_5pw@mail.gmail.com>
+From: Robbin Ehn <rehn@rivosinc.com>
+Date: Mon, 25 Mar 2024 13:50:11 +0100
+Message-ID: <CAEEvPLB0eVXwRxucKDtc4mG11BwueV4pk4g9Zi82MPeTaP41uw@mail.gmail.com>
+Subject: Re: [RFC PATCH] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
+To: Andy Chiu <andy.chiu@sifive.com>
+Cc: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
+	Puranjay Mohan <puranjay12@gmail.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	Guo Ren <guoren@kernel.org>, Ley Foon Tan <leyfoon.tan@starfivetech.com>, 
+	Deepak Gupta <debug@rivosinc.com>, Sia Jee Heng <jeeheng.sia@starfivetech.com>, 
+	Bjorn Topel <bjorn@rivosinc.com>, Song Shuai <suagrfillet@gmail.com>, 
+	"Cl'ement L'eger" <cleger@rivosinc.com>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Jisheng Zhang <jszhang@kernel.org>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Brendan Sweeney <brs@rivosinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi SeongJae,
+Hey,
 
-On Fri, 22 Mar 2024 09:32:23 -0700 SeongJae Park <sj@kernel.org> wrote:
-> On Fri, 22 Mar 2024 18:02:23 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
-> 
-> > Hi SeongJae,
-> > 
-> > On Tue, 27 Feb 2024 15:51:20 -0800 SeongJae Park <sj@kernel.org> wrote:
-> > > On Mon, 26 Feb 2024 23:05:46 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
-> > > 
-> > > > There was an RFC IDEA "DAMOS-based Tiered-Memory Management" previously
-> > > > posted at [1].
-> > > > 
-> > > > It says there is no implementation of the demote/promote DAMOS action
-> > > > are made.  This RFC is about its implementation for physical address
-> > > > space.
-> > > > 
-> > > > 
-> [...]
-> > > Thank you for running the tests again with the new version of the patches and
-> > > sharing the results!
-> > 
-> > It's a bit late answer, but the result was from the previous evaluation.
-> > I ran it again with RFC v2, but didn't see much difference so just
-> > pasted the same result here.
-> 
-> No problem, thank you for clarifying :)
-> 
-> [...]
-> > > > Honggyu Kim (3):
-> > > >   mm/damon: refactor DAMOS_PAGEOUT with migration_mode
-> > > >   mm: make alloc_demote_folio externally invokable for migration
-> > > >   mm/damon: introduce DAMOS_DEMOTE action for demotion
-> > > > 
-> > > > Hyeongtak Ji (4):
-> > > >   mm/memory-tiers: add next_promotion_node to find promotion target
-> > > >   mm/damon: introduce DAMOS_PROMOTE action for promotion
-> > > >   mm/damon/sysfs-schemes: add target_nid on sysfs-schemes
-> > > >   mm/damon/sysfs-schemes: apply target_nid for promote and demote
-> > > >     actions
-> > > 
-> > > Honggyu joined DAMON Beer/Coffee/Tea Chat[1] yesterday, and we discussed about
-> > > this patchset in high level.  Sharing the summary here for open discussion.  As
-> > > also discussed on the first version of this patchset[2], we want to make single
-> > > action for general page migration with minimum changes, but would like to keep
-> > > page level access re-check.  We also agreed the previously proposed DAMOS
-> > > filter-based approach could make sense for the purpose.
-> > 
-> > Thanks very much for the summary.  I have been trying to merge promote
-> > and demote actions into a single migrate action, but I found an issue
-> > regarding damon_pa_scheme_score.  It currently calls damon_cold_score()
-> > for demote action and damon_hot_score() for promote action, but what
-> > should we call when we use a single migrate action?
-> 
-> Good point!  This is what I didn't think about when suggesting that.  Thank you
-> for letting me know this gap!  I think there could be two approach, off the top
-> of my head.
-> 
-> The first one would be extending the interface so that the user can select the
-> score function.  This would let flexible usage, but I'm bit concerned if this
-> could make things unnecessarily complex, and would really useful in many
-> general use case.
+> <index-in-dispatch-list>
+> func_symbol:
+> auipc t0, common_dispatch:high <=3D> j actual_func:
+> jalr t0, common_dispatch:low(t0)
+>
 
-I also think this looks complicated and may not be useful for general
-users.
+If you are patching in a jump, I don't see why you wouldn't jump over
+ld+jalr? (no need for common dispatch)
+Patching jalr with nop, and keeping auipc, addresses the issue with
+having to jump in the disabled case.
+But needs either common dispatch or per func dispatch.
 
-> The second approach would be letting DAMON infer the intention.  In this case,
-> I think we could know the intention is the demotion if the scheme has a youg
-> pages exclusion filter.  Then, we could use the cold_score().  And vice versa.
-> To cover a case that there is no filter at all, I think we could have one
-> assumption.  My humble intuition says the new action (migrate) may be used more
-> for promotion use case.  So, in damon_pa_scheme_score(), if the action of the
-> given scheme is the new one (say, MIGRATE), the function will further check if
-> the scheme has a filter for excluding young pages.  If so, the function will
-> use cold_score().  Otherwise, the function will use hot_score().
+Thanks, Robbin
 
-Thanks for suggesting many ideas but I'm afraid that I feel this doesn't
-look good.  Thinking it again, I think we can think about keep using
-DAMOS_PROMOTE and DAMOS_DEMOTE, but I can make them directly call
-damon_folio_young() for access check instead of using young filter.
-
-And we can internally handle the complicated combination such as demote
-action sets "young" filter with "matching" true and promote action sets
-"young" filter with "matching" false.  IMHO, this will make the usage
-simpler.
-
-I would like to hear how you think about this.
-
-> So I'd more prefer the second approach.  I think it would be not too late to
-> consider the first approach after waiting for it turns out more actions have
-> such ambiguity and need more general interface for explicitly set the score
-> function.
-
-I will join the DAMON Beer/Coffee/Tea Chat tomorrow as scheduled so I
-can talk more about this issue.
-
-Thanks,
-Honggyu
-
-> 
-> Thanks,
-> SJ
-> 
-> [...]
+> common_dispatch:
+> load t1, index + dispatch-list
+> ld t1, 0(t1)
+> jr t1
+>
+>
+> >
+> > > However, one thing I am not very sure is: do we need a destination
+> > > address in a "per-function" manner? It seems like most of the time th=
+e
+> > > destination address can only be ftrace_call, or ftrace_regs_call. If
+> > > the number of destination addresses is very few, then we could
+> > > potentially reduce the size of
+> > > <func_trace_target_data_8B_per_function>.
+> >
+> > Yes, we do need a per-function manner. BPF, e.g., uses
+> > dynamically/JIT:ed trampolines/targets.
+> >
+> >
+> >
+> > Bj=C3=B6rn
+>
+> Cheers,
+> Andy
