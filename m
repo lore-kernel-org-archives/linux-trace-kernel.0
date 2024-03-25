@@ -1,124 +1,92 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF4116B447
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 25 Mar 2024 12:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9AA741A85;
+	Mon, 25 Mar 2024 16:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711371025; cv=none; b=eamQeLO99UsiwZ52kSpveirKaha5B1wC1Gx6PXpERUlnun41K9+obiNZQ02ui8ySRHXXDwL+F2V4veC+LQVCGqcR/SK37S2SZyicwxjqTsjiIHEQoRRb+0c40tiot4j/CAeYa6TKJ8tFB/wl5XvpjaBHftTigjKeyzTZgwlbDWg=
+	t=1711383475; cv=none; b=Wpr4/AD1y8VN/QGHsk+YpvnkRccPSxl/HqaTDr2zZ4J+pJI7khlKWTAg4Vh7ZiFHPNgdwubC3F+7+RZ7Eey0QHxjty0e2IrIh3N06SscvBZJLOF6qgP0NZz7T2ILz2lVrp2CCQJIZikzWj58q9uNRvYXRgb+K6V3bHrXEDUbIRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711371025; c=relaxed/simple;
-	bh=5RyxoVFw8iV/PhK2kQZFnetLsvcimHQCr4aKA83CIbw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LuLtJooVEwEulmLIgehlxlPcGuCXiry46uyP3/juVlY8l7CtaMmrEHoN2/XaOnwoEhJOwIbkYY2/PZlrrIQkAWnDx/JqGDZI8JkDC0qTQ3p/fB7YXxKxvVqYzwtRh1tKO0l7XEbZf2l7ApyLZzDKVdeyH7+BhUqD5wimJ0Ws07s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=a4TNHSkf; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1711383475; c=relaxed/simple;
+	bh=d8LARACfnquRpxUsYeteRURYDSj2tOGCZwlTBTxdixk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=h4IKEsJD7BJudFDfC/spqAnhW62XS7mxn5H+T+nGLUZMeIB0ZxC291zdHFoJDa+V3eI+Ku0nSP6OD+hrVKdY/H6xlGULdYpjCIZPQKhjMtpZvfY2+DpN6Phuax8DekhAppFskk3qf7LOpQfSzzsXfGU2o7wp5GICaJ5V0zvjzqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kPB3dDB9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="a4TNHSkf"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5dca1efad59so2434553a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 25 Mar 2024 05:50:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1711371023; x=1711975823; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5RyxoVFw8iV/PhK2kQZFnetLsvcimHQCr4aKA83CIbw=;
-        b=a4TNHSkf345sgU+AhOU4z07DoeTKHgfhTOtCntVFlL5JUPIJD/s/wbEYk8XiPkG5nT
-         eRFKk/ZWgWFH2CzOAStB5sGfJQbQoRmqsv9dUgBiS9bz9s8u02qszMcDF90mG9m7JOX8
-         ilAaOOg16Ec8Ky13yUBtua2gFPSRhLWISNT6X4Hu23ivWGSsYc6nx2+nGOgpKk8CDD6E
-         kSLSVTFKpttG3ROgenDsIv3lXFgwQMEnDCvKn0NJcOSePd9jovd9u3TXBMvFBRyyYBey
-         659DD7xK7+6xGDbySP5Z5MzwVGainNWCQtMukMKLXSFNAloigdk76z4/arVERypC4FrW
-         YnHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711371023; x=1711975823;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5RyxoVFw8iV/PhK2kQZFnetLsvcimHQCr4aKA83CIbw=;
-        b=XvOQescTTE4rR7ujIjkVL7E6F6Z0BNP7LiKt/mCXlon9GfC4Ll+COTyD4MAdhuxZoM
-         4OeNnGcpIEvbmkzEF1TqaS894tVXdEQxUDSf5PhmyyEWT76uw5mE11B4VnMbDrWfOUFY
-         +3gRB4ObYD7Y6EVanrDiMPePbRAV5FBzornUAyQGHnyKGEkQYbFI0QvpzfXcZBmwRYqL
-         OoVGliTpBNjxhnqPYyHMxVTpULxD1NlomtXmTeSIRVzUi4bMRw5/pTHrb+1282G9uEGk
-         GXMCz2D4BuqDd0ZkqYcPI3fp6VOAFTU1vJhN3HHOU/yUicwYut3IcOjWA9P9IHOKcnPc
-         A6Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCU3m9g10R6Sqvju7i7TTjJe6yFYU7lT1d0ingvPhoyRBApx5BsPtfB0guCrvFzXVI/0JFUsBE6K5LawjlPtIGTLx5J6B8yBxsUGCKMgc/6eEvdQ
-X-Gm-Message-State: AOJu0Yzzn9GW5J9Vb3DH7EsMjGnYBGL100UoOiUsiwNfxxkwa7T0AZ9c
-	arSuM0j+d/IpH7rfaFzGhJCRQJq/5nfcU4MiLc/60eUHFktMussCwNiOfdvA+0MSsuYQUa2Jz/L
-	ibLGWpD8Yve45AtpbATqkkz64YdksrRCRvP3BLQ==
-X-Google-Smtp-Source: AGHT+IFavvihRisV9kCaSJXWkP5NlMeM+2ciaavifWQ9HNV1hzqkvuSD7eRB5OdriFQR916iQBclkPwrahehtGboVyQ=
-X-Received: by 2002:a17:90a:b30c:b0:29c:5c56:ffea with SMTP id
- d12-20020a17090ab30c00b0029c5c56ffeamr4730905pjr.6.1711371023055; Mon, 25 Mar
- 2024 05:50:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kPB3dDB9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DFA0C433F1;
+	Mon, 25 Mar 2024 16:17:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711383474;
+	bh=d8LARACfnquRpxUsYeteRURYDSj2tOGCZwlTBTxdixk=;
+	h=From:Subject:Date:To:Cc:From;
+	b=kPB3dDB9/JuMhfVeH0Ic2u9UcxixPymt1LwUE/RgcJujGIvkxfoVIiw91BJZudMoV
+	 7JMXlazSv4+JHvmS4bt2e5MdB23JUnfjFB+1jHK3vyKzkdBrqroiTOQsQkQTVBgPHT
+	 y8rdC3hEK0OC+cAkKNOWX4FN5Q/bGOcf37+uGj0FPjpPqQbKmyU0PLvZzUyi7EgzXr
+	 0insZRxjgoE4E98e24JOcMrTaapTGqR6NeM0hLEPaWG22eOlzbq20DbPuBFDiDaoBP
+	 Je2hY2H9XVKLTSdFTaXchuaGAdZOnIPUcGvSSD3tBdfMux1dMeDPgF6+wQJ9flHXey
+	 hqR4C4Cf2twbA==
+From: Mark Brown <broonie@kernel.org>
+Subject: [PATCH 0/2] tracing/selftests: Verbosity improvements to KTAP
+ output
+Date: Mon, 25 Mar 2024 16:15:49 +0000
+Message-Id: <20240325-kselftest-ftrace-ktap-verbose-v1-0-3785199809da@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240306165904.108141-1-puranjay12@gmail.com> <87ttlhdeqb.fsf@all.your.base.are.belong.to.us>
- <ZfBbxPDd0rz6FN2T@FVFF77S0Q05N> <8734suqsth.fsf@all.your.base.are.belong.to.us>
- <mb61pplvw6grf.fsf@gmail.com> <87zfv0onre.fsf@all.your.base.are.belong.to.us>
- <87il1oedx8.fsf@all.your.base.are.belong.to.us> <CABgGipWPuvwi43v1+60-=0_MN_q_CD0ZGasxHHVWJ37cig5MmA@mail.gmail.com>
- <87msqsotr8.fsf@all.your.base.are.belong.to.us> <CABgGipUayONdvaH0nexBJUai=qT3yqURhinTbDWxORfMDQ_5pw@mail.gmail.com>
-In-Reply-To: <CABgGipUayONdvaH0nexBJUai=qT3yqURhinTbDWxORfMDQ_5pw@mail.gmail.com>
-From: Robbin Ehn <rehn@rivosinc.com>
-Date: Mon, 25 Mar 2024 13:50:11 +0100
-Message-ID: <CAEEvPLB0eVXwRxucKDtc4mG11BwueV4pk4g9Zi82MPeTaP41uw@mail.gmail.com>
-Subject: Re: [RFC PATCH] riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
-To: Andy Chiu <andy.chiu@sifive.com>
-Cc: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
-	Puranjay Mohan <puranjay12@gmail.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Guo Ren <guoren@kernel.org>, Ley Foon Tan <leyfoon.tan@starfivetech.com>, 
-	Deepak Gupta <debug@rivosinc.com>, Sia Jee Heng <jeeheng.sia@starfivetech.com>, 
-	Bjorn Topel <bjorn@rivosinc.com>, Song Shuai <suagrfillet@gmail.com>, 
-	"Cl'ement L'eger" <cleger@rivosinc.com>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Jisheng Zhang <jszhang@kernel.org>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Brendan Sweeney <brs@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADWjAWYC/x3MQQqDMBAF0KvIrDtgkpZgr1K6SO1PHRSVmSAF8
+ e4Gl2/zdjKowOjZ7KTYxGSZK9ytoX5I8w8s32ryrb+3wXU8GqZcYIVz0dSDx5JW3qCfxcDRI8T
+ uEeFdoHqsiiz/63+9j+MEbmoH/28AAAA=
+To: Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, 
+ Aishwarya TCV <aishwarya.tcv@arm.com>, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1129; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=d8LARACfnquRpxUsYeteRURYDSj2tOGCZwlTBTxdixk=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmAaOthF+NZ9+e9WfJ08NlmbdUWMzywsrAN4vMy4FD
+ KyPNduuJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZgGjrQAKCRAk1otyXVSH0LEYB/
+ 4pKD/4WfQ6kWqz6gWfkXSAQOh+VNI/zMROqw8K4SSUEfrOAMY8c0adso9m3oj7lfWRR67YIqmgxzSL
+ mP73DyMc/bXFN6cdqSyYzUzujXHMlbOeEl2v/zggBq1kMFwp9DAUMb6eOHvS/OkOWCURzQdi/5XGtf
+ Z5S0KduXN2iI19BpC2ocBNhKuVNSOghsxIZ9oXWoUFNZMUhnn+vCVRgI70tGm02BiMKan7sGURqTo6
+ yAFwOi86XFWMwgsOBVnE2HvdpJ3vK4c6nXXPHxDdfBoxvyJCoUQCAuJ3QcAosG1vnh61rv4WUkjNwS
+ OLmN+oA3kcEr2Bf6ZMrHstGm5rYD1F
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-Hey,
+This series aims to improve the usability of the ftrace selftests when
+running as part of the kselftest runner, mainly for use with automated
+systems.  It fixes the output of verbose mode when run in KTAP output
+mode and then enables verbose mode by default when invoked from the
+kselftest runner so that the diagnostic information is there by default
+when run in automated systems.
 
-> <index-in-dispatch-list>
-> func_symbol:
-> auipc t0, common_dispatch:high <=3D> j actual_func:
-> jalr t0, common_dispatch:low(t0)
->
+I've split this into two patches in case there is a concern with one
+part but not the other, especially given the verbosity of the verbose
+output when it triggers.
 
-If you are patching in a jump, I don't see why you wouldn't jump over
-ld+jalr? (no need for common dispatch)
-Patching jalr with nop, and keeping auipc, addresses the issue with
-having to jump in the disabled case.
-But needs either common dispatch or per func dispatch.
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+Mark Brown (2):
+      tracing/selftests: Support log output when generating KTAP output
+      tracing/selftests: Default to verbose mode when running in kselftest
 
-Thanks, Robbin
+ tools/testing/selftests/ftrace/ftracetest      | 8 +++++++-
+ tools/testing/selftests/ftrace/ftracetest-ktap | 2 +-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+---
+base-commit: 4cece764965020c22cff7665b18a012006359095
+change-id: 20240319-kselftest-ftrace-ktap-verbose-72e37957e213
 
-> common_dispatch:
-> load t1, index + dispatch-list
-> ld t1, 0(t1)
-> jr t1
->
->
-> >
-> > > However, one thing I am not very sure is: do we need a destination
-> > > address in a "per-function" manner? It seems like most of the time th=
-e
-> > > destination address can only be ftrace_call, or ftrace_regs_call. If
-> > > the number of destination addresses is very few, then we could
-> > > potentially reduce the size of
-> > > <func_trace_target_data_8B_per_function>.
-> >
-> > Yes, we do need a per-function manner. BPF, e.g., uses
-> > dynamically/JIT:ed trampolines/targets.
-> >
-> >
-> >
-> > Bj=C3=B6rn
->
-> Cheers,
-> Andy
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
+
