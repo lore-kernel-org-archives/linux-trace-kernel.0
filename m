@@ -1,79 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03CDF1CAAA;
-	Mon, 25 Mar 2024 19:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E721418645;
+	Mon, 25 Mar 2024 19:29:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711394220; cv=none; b=AVG4jf3vGOrJryF8nu9vSKYRfttdD3xiIB70rIMNFhhb1wOSfFPE8+8isgzDCbHJ5Os5SKleOKBx6IM/CMcd5H0g0NiJXcVVQRRQYmtIgBTFUPklSHSZJV3XYJ/eU8sGF0B8wcHAbJUsq/2fbx5TKLF/LQ42J1mVd7c3KvT0RVg=
+	t=1711394994; cv=none; b=BEN5F4gV4y7510qsrP2i4WZLYBPfJGQxIGbXhIY5M/sLb1oQ8hShlAcrbeuLsMSfcUeozLxoJ5VNVj7B2RSjLDLEnwJyvDb404Upem/LwOG0yZc3zInwk6VHUvv1nnS4y7nyxZ9PWwbBYXUBGPM8sBpaQNrh6KN/SlDkRG/+OH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711394220; c=relaxed/simple;
-	bh=hii92yni5m4VfZz2P67wncTjXZJRmTHvfpwyMPi4358=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=BM7ILefssegu7/EisV1x66dkfwY+aLy8b9iysp2iJdL1QSJc5pLi0oC7dE6B/5l5ezY2SRt/6qdyEtB3ys0gUu/LjlvQryd0LdDj0AkVJJFUlugp+dCHZAlPZfWF11/i0cnGDp447rm6Yoo3Kv3xzibpjwO/+Wgb6X7mtBJXtrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gvHK54vC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711394994; c=relaxed/simple;
+	bh=t2HprRa2B2t5YmXHJgyVl/WrmR/Vf6vSPJfY9UUtXHI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oQy8ok3j5cFNm1D6m8bvZbYt+qxcNrh6Hi7S5cjwnJo3cySOy1EgV8tFQKBxdV2g9DmzLdGpVatw8nnJ0WW8ZOt02I286Qsji5mrZnJOdFm/fye67dBjKEzq488fBOBp2ALf1roVkdO7eG+n67QcEDElg6kc0BM5wbSq1gyLnCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G0jZTIix; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gvHK54vC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25FEDC433C7;
-	Mon, 25 Mar 2024 19:16:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711394219;
-	bh=hii92yni5m4VfZz2P67wncTjXZJRmTHvfpwyMPi4358=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gvHK54vCdibf8Bx3wsJsAhxLlpKrBU2MsRU/IPvCTu6oTcuXEieM7ySmo+I/P16YC
-	 /DdrWdwGtdEN5Q5T12edc/DsKmVXyuiWybT/F9vnLo9t+zrDP9e4E1BK6qw0K4j+aZ
-	 OmDi+tUZ7HmB9qQPQ8i7epvDcgkX/G4cC0jPiy1nsWBNAGndu+kQdJlHsKOLZ9vJUK
-	 3F2xfv/uj+L8hL++3pnZtwWAVmYQjKG2iI5g8uu4CmtfeVBtGAbS/XWo92bbRT4aSG
-	 PLdDhVg5aIR938fsKUCBoiodr3ZQ3xPoFvE42SkRe/nQW4ppf6bleuUOBQaLXPoeUs
-	 Snh0j5cU67dMQ==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G0jZTIix"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5ce2aada130so3325074a12.1;
+        Mon, 25 Mar 2024 12:29:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711394992; x=1711999792; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2JzHvz1vTFg5px0RsXOPwrY1sy3X4aM34u9RnZMcwC0=;
+        b=G0jZTIixe39nKHl+nBvGX1qj3JGmWiKkZSAYmFpy7jj+wzDbHl5n21d7gPxUNyJ7nk
+         pXP54UQhIjOFHb4jUcpfE3a875HPSaY/TGWox4Ham9rTqCAe9xIhLOkiM04m1LwdjA47
+         o9yQpgPn5hWCW+7z88hb5aAFwEJwjwY+o3Sp88GCuKh0ngQ3Dsv0lEtedezKJEicEdBV
+         u9JXdPMgyBbVxsziZJOD9t9nR1DHcMvnTeBEdRPyYsMHLRQdPGCc2lItKAP71H7aSto/
+         9IE6Uw2T38lTxL0OkGXVwpfUVuCumQSZdIoqHEs6qHE8ljRxA8W6IOA5Os8TPWa7JvyQ
+         lxZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711394992; x=1711999792;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2JzHvz1vTFg5px0RsXOPwrY1sy3X4aM34u9RnZMcwC0=;
+        b=DCx4W+CYahsCs4EAw/t2BBD6HjIlIYXKVxqSMkcUOIHangf6VxeeGcxIhMfyCkb+XN
+         E+kHGhSAATFXaWSjL3RkEnKDG1olithwOs8BDxH+XC5k7uAxO91QGtitEHkGEyenuwae
+         xJzpG7S60HFlvHEK9LFiMrZZw2VosHG2BfaPTmltvg0SbJw/bZc5Q/sHcnOHV4kWWDtT
+         xxGEctCfGVDY2fBivNYgBSpVGXuN8WWnOGKHbcNS3EP5q2HQzOs2u+RwySae7kvkL2KA
+         c/87bVGbPOpTrczYQBLvQEoHj5Wrva02Uk3K+JHSgEE+6C3uN+NEdjOqwYkZFywCrabe
+         OU5g==
+X-Forwarded-Encrypted: i=1; AJvYcCXDjz1DBMxysKBKqolbggQ5RIAZrH2WtSOqyK+mRYYAi6kERjljLeW5aBsgTVg4jUlaLXcsFjo/c4dB+BGpTP/p+XAsBkJyjqDDtI7x4Sgacf5rpN5hPd00AaggUIiuVtUCXH4v79R7iVEzwwWbGmu/
+X-Gm-Message-State: AOJu0YyNWUhQvqC28CjZwByfzoablAReQ+OommpLlNicUiOcoe1Q5pVg
+	xuyAn/3+InJ1CD24Wph3dnNmxmOCM6LPMKSz161/owM8fWgoPxt2
+X-Google-Smtp-Source: AGHT+IHrRxMlqu/mW8f/g5Kg/anRmyz5qD9ZlaLAWCYg7mFYOm7otlce5JDjU8cGc9IA1fnA+MNb6w==
+X-Received: by 2002:a05:6a21:6d84:b0:1a3:bd7e:c42c with SMTP id wl4-20020a056a216d8400b001a3bd7ec42cmr932225pzb.8.1711394992130;
+        Mon, 25 Mar 2024 12:29:52 -0700 (PDT)
+Received: from localhost (dhcp-141-239-158-86.hawaiiantel.net. [141.239.158.86])
+        by smtp.gmail.com with ESMTPSA id u4-20020a17090341c400b001def777afc5sm5067765ple.77.2024.03.25.12.29.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Mar 2024 12:29:51 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Mon, 25 Mar 2024 09:29:50 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Kassey Li <quic_yingangl@quicinc.com>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] workqueue: add function in event of
+ workqueue_activate_work
+Message-ID: <ZgHQrtqIr8CYu7yf@slm.duckdns.org>
+References: <20240308021818.2306176-1-quic_yingangl@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 25 Mar 2024 21:16:55 +0200
-Message-Id: <D032M8W5K5M5.1ZBHEIJFFNTCI@kernel.org>
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Masami Hiramatsu"
- <mhiramat@kernel.org>
-Cc: <linux-riscv@lists.infradead.org>, "Paul Walmsley"
- <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert
- Ou" <aou@eecs.berkeley.edu>, <linux-kernel@vger.kernel.org>, "Naveen N .
- Rao" <naveen.n.rao@linux.ibm.com>, "Anil S Keshavamurthy"
- <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>,
- <linux-trace-kernel@vger.kernel.org>, "Calvin Owens"
- <jcalvinowens@gmail.com>
-Subject: Re: [PATCH v2] arch/riscv: Enable kprobes when CONFIG_MODULES=n
-X-Mailer: aerc 0.17.0
-References: <20240323232908.13261-1-jarkko@kernel.org>
- <20240325115632.04e37297491cadfbbf382767@kernel.org>
- <D031SE4QN1CG.18GY6AS20QF1J@kernel.org>
- <D032IFOPKJI8.3TKDPQQI9I6LG@kernel.org>
-In-Reply-To: <D032IFOPKJI8.3TKDPQQI9I6LG@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240308021818.2306176-1-quic_yingangl@quicinc.com>
 
-On Mon Mar 25, 2024 at 9:11 PM EET, Jarkko Sakkinen wrote:
-> On Mon Mar 25, 2024 at 8:37 PM EET, Jarkko Sakkinen wrote:
-> > > You also should consider using IS_ENABLED(CONFIG_MODULE) in the code =
-to
-> > > avoid using #ifdefs.
->
-> Hmm... I need make a couple of remarks but open for feedback ofc.
->
-> First, trace_kprobe_module_exist depends on find_module()
->
-> Second, there is a notifier callback that heavily binds to the module
-> subsystem.
->
-> In both cases using IS_ENABLED would emit a lot of compilation errors.
+On Fri, Mar 08, 2024 at 10:18:18AM +0800, Kassey Li wrote:
+> The trace event "workqueue_activate_work" only print work struct.
+> However, function is the region of interest in a full sequence of work.
+> Current workqueue_activate_work trace event output:
+> 
+>     workqueue_activate_work: work struct ffffff88b4a0f450
+> 
+> With this change, workqueue_activate_work will print the function name,
+> align with workqueue_queue_work/execute_start/execute_end event.
+> 
+>     workqueue_activate_work: work struct ffffff80413a78b8 function=vmstat_update
+> 
+> Signed-off-by: Kassey Li <quic_yingangl@quicinc.com>
 
-Also I think adding 'gfp' makes sense exactly at the point as it has
-a use case, i.e. two call sites with differing flags. It makes sense
-but should be IMHO added exactly at that time.
+Applied to wq/for-6.10.
 
-Leaving it from my patch set does not do any measurable harm but please
-correct if I'm missing something.
+Thanks.
 
-BR, Jarkko
+-- 
+tejun
