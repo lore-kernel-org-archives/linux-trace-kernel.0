@@ -1,75 +1,52 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734CC156C5F;
-	Mon, 25 Mar 2024 06:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.219])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF9961552F2;
+	Mon, 25 Mar 2024 07:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711348131; cv=none; b=U1x7jvGGKDUrLQX7aKDhTLb0/v2tV04To3CIimKcsuiDdNUPPbMtvuEXqQTvoF6LbakdJSFF2ZVuOOW1VV1ZaNUILPYQWt71V/scdLKlYVE5EgjAdrNvhG85CKsIGYkZ3ekcFGPHFhniCYfoHkdooLJqYpaeQQGuL7w2BFP0DRs=
+	t=1711353508; cv=none; b=iHb8okMgwTXi77nQj67To8S4jzdc9TeeZh1DAZsV9wPVsID4y2OFnYMmJITW0K3+drNkx+U36BgIK4z9a4hsPwxdL3BehtNHUYtqG0Ejzozu9NgDYedmiBqAGZtQt1BSvjsKMUyBkaHkyQtp9SvqOJ2sAvF7WGUZckqBZZdX+ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711348131; c=relaxed/simple;
-	bh=3e+bKGS7nVCM9PafOTPvFasjLkFs4xeF2YQpN+kaq04=;
+	s=arc-20240116; t=1711353508; c=relaxed/simple;
+	bh=qAMdxk9ji2QCFFg8RS2v2wmwbMlv3YUwfuW6++YvFMM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ga+Cv0ymTsOGthZppcdkSYVTLabGW+DUVNRJePG+OnNVExIXjcojILnHUMtwpfJg432BUZxfsLCCRL/D9wJUJ+ySgMbzJ68+nM142PmcRTycnq/DQ/bf7PjU8IMjJTFVdiBdy2W0sWq7/wAxvxwbkKr1ZONkXLA4kn19pMDwwcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YqE2oUkj; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=sLEiB6FlmpWTf2bB9AV7pLwKgmOwM14yvle1Av1POxeip/PxzDe1Xp0y1zpEY7TimjtwH1QDQH6CbZdu7VEWSKZSnFAWgn0gaEGXBDT58fZ59IFgiaDvLE9VQ8K3hg9nUfReXmrEOtEVqlrnvYFiDkXd4Pmc8iZHh2Y7F3rVF2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=YJPR8d88; arc=none smtp.client-ip=45.254.50.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YqE2oUkj"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-60a3c48e70fso41355757b3.1;
-        Sun, 24 Mar 2024 23:28:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711348128; x=1711952928; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w8tlSAyV4jJqvA7JB/3bzev+6NIo6ODATMwDvyBATkc=;
-        b=YqE2oUkjt75Y0uI7xxpnTDtqKllgU7SETcSCe8j0yXlArS8Q4b8s0dTpoUHLBhiadW
-         k06OGIN+s3zPLdzCEA//TrRcws/UgQ0RsgsStvCCKg0KE+QYUXpOxdIgtaPgCMaq/SjL
-         K7vhD5R/oXv5nRTjo4aahrElKKfJBdWK1p0OH0SuH8nUfyZba9wZaIbb88AUub1eVDJj
-         jRmRh74hi8aPdVrt7XpxFwC8lcV0HPb/fbAMXe6+0PxtmC7yjM3aM3XgizcyLjKvzsEh
-         lzHiLrincgbbi07DVoQGkz0v6af7lgGJpAy8LKDvIKlT2vXP/jM9YHn4roywwsB+pILR
-         LeZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711348128; x=1711952928;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w8tlSAyV4jJqvA7JB/3bzev+6NIo6ODATMwDvyBATkc=;
-        b=bBmcu8I7DxhwTWNbcoG+OzK4sYAiYGUE333UizJcKV0wCLgiAW3vugv3iCE6v5zzli
-         1C952tPneJmb8hGZGxBSEMtUJihu1nlNoinr63KN0nY6UIHPqyPUaeK4QA0f6XRYn6vG
-         hXXCSI397+7glalJUfV8Thk1ZYbVBBEmXNQOXoq4lguE2WmNnaZnDdFUEwRpfaiZ0o6u
-         +PWOaczluue/aVGyOVNJE69SR0At3hl8bpNwNrZda1QeXhy1hiZRTXFKI5uTwfHSiGML
-         IQxwCyizNY/LyddTGvkmCu1yy8WPaPVWLS/DEp8royBMFCWypr3E4Usr0RKcOwRt5Lmq
-         2LXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVAeLaPvneqRSed9mCFnbiBj6o5Ca4NRtpv+gU0kPqAYyzvzWMXn7NprBkuZPDTSpZiqXjrm0ZfI8N78YFIuEg7b1fjz8LHR9PzGSgmF9X3UbHh
-X-Gm-Message-State: AOJu0YzKeNpfM111EmHlsBeOobEhgqnhHulNeY652w2W3GyvRJt3p7oT
-	JHIX7qLzLxIGK53bpGRnSbJyQ5B2BTelEsE3lxIA/N9vq/C5VmF5TRS6TYTt
-X-Google-Smtp-Source: AGHT+IF1kzeNUWm31FACJIzIuh9WTQatwj1HVeXuF2LwlipBd82E6t2tVA2ipRQ3Qp71T2TKgcURrg==
-X-Received: by 2002:a81:6d4a:0:b0:611:27ce:9bb0 with SMTP id i71-20020a816d4a000000b0061127ce9bb0mr5231703ywc.4.1711348128487;
-        Sun, 24 Mar 2024 23:28:48 -0700 (PDT)
-Received: from KERNELXING-MB0.tencent.com ([43.132.141.20])
-        by smtp.gmail.com with ESMTPSA id p1-20020aa78601000000b006e697bd5285sm3520253pfn.203.2024.03.24.23.28.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Mar 2024 23:28:47 -0700 (PDT)
-From: Jason Xing <kerneljasonxing@gmail.com>
-To: edumazet@google.com,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	rostedt@goodmis.org,
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="YJPR8d88"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=dGjTw
+	JPlvMOsZV0qWvG51AfogZ0hB5BsOVHV486tDN4=; b=YJPR8d88hAiP31sTpq8Le
+	/sli5Vpp4k4aUGrProrKXLKra7NRVVQFA6wp6ehYDAVrRsRpjeqEtL9ILS8Ac7Ws
+	MP/BIhpKugrZrwvOl6i7tPWXapOXVeo0xOhm+wEt70e8I/nWx+Y2iTvKU4hmaotu
+	dcF34Bu6mcWytX2CQCtCW0=
+Received: from localhost.localdomain (unknown [193.203.214.57])
+	by gzga-smtp-mta-g0-2 (Coremail) with SMTP id _____wD3X6p5LgFmwnu9Bw--.57921S2;
+	Mon, 25 Mar 2024 15:57:47 +0800 (CST)
+From: Peilin He <peilinhe2020@163.com>
+To: kerneljasonxing@gmail.com
+Cc: davem@davemloft.net,
+	dsahern@kernel.org,
+	edumazet@google.com,
+	he.peilin@zte.com.cn,
+	jiang.xuexin@zte.com.cn,
 	kuba@kernel.org,
-	pabeni@redhat.com,
-	davem@davemloft.net
-Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	kerneljasonxing@gmail.com,
-	Jason Xing <kernelxing@tencent.com>
-Subject: [PATCH net-next v2 3/3] tcp: add location into reset trace process
-Date: Mon, 25 Mar 2024 14:28:31 +0800
-Message-Id: <20240325062831.48675-4-kerneljasonxing@gmail.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20240325062831.48675-1-kerneljasonxing@gmail.com>
-References: <20240325062831.48675-1-kerneljasonxing@gmail.com>
+	liu.chun2@zte.com.cn,
+	mhiramat@kernel.org,
+	netdev@vger.kernel.org,
+	peilinhe2020@163.com,
+	rostedt@goodmis.org,
+	xu.xin16@zte.com.cn,
+	yang.yang29@zte.com.cn,
+	zhang.yunkai@zte.com.cn
+Subject: Re: Re: Re: [PATCH v3 resend] net/ipv4: add tracepoint for icmp_send
+Date: Mon, 25 Mar 2024 07:57:45 +0000
+Message-Id: <20240325075745.3777528-1-peilinhe2020@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <CAL+tcoCOywxJ9VFs6PD4Wdsq1HvQ18YVhYX3DA5MfTSXA+Htug@mail.gmail.com>
+References: <CAL+tcoCOywxJ9VFs6PD4Wdsq1HvQ18YVhYX3DA5MfTSXA+Htug@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -77,105 +54,187 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3X6p5LgFmwnu9Bw--.57921S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxtryDJw1DuryUXw48JFy8uFg_yoW7uryrpF
+	yDAF1rKw4ktr17Cw1S9w1aqFnIq3yrCryjgr12gw1akrnFqF17tr42qrn8CFykArs8Krya
+	vF1jv343GFyYqrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRG2NtUUUUU=
+X-CM-SenderInfo: xshlzxhqkhjiisq6il2tof0z/1tbiThyssWVOB6CFMgAAs0
 
-From: Jason Xing <kernelxing@tencent.com>
-
-In addition to knowing the 4-tuple of the flow which generates RST,
-the reason why it does so is very important because we have some
-cases where the RST should be sent and have no clue which one
-exactly.
-
-Adding location of reset process can help us more, like what
-trace_kfree_skb does.
-
-Signed-off-by: Jason Xing <kernelxing@tencent.com>
----
- include/trace/events/tcp.h | 14 ++++++++++----
- net/ipv4/tcp_ipv4.c        |  2 +-
- net/ipv4/tcp_output.c      |  2 +-
- net/ipv6/tcp_ipv6.c        |  2 +-
- 4 files changed, 13 insertions(+), 7 deletions(-)
-
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index a13eb2147a02..8f6c1a07503c 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -109,13 +109,17 @@ DEFINE_EVENT(tcp_event_sk_skb, tcp_retransmit_skb,
-  */
- TRACE_EVENT(tcp_send_reset,
- 
--	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
-+	TP_PROTO(
-+		const struct sock *sk,
-+		const struct sk_buff *skb,
-+		void *location),
- 
--	TP_ARGS(sk, skb),
-+	TP_ARGS(sk, skb, location),
- 
- 	TP_STRUCT__entry(
- 		__field(const void *, skbaddr)
- 		__field(const void *, skaddr)
-+		__field(void *, location)
- 		__field(int, state)
- 		__array(__u8, saddr, sizeof(struct sockaddr_in6))
- 		__array(__u8, daddr, sizeof(struct sockaddr_in6))
-@@ -141,12 +145,14 @@ TRACE_EVENT(tcp_send_reset,
- 			 */
- 			TP_STORE_ADDR_PORTS_SKB(skb, entry->daddr, entry->saddr);
- 		}
-+		__entry->location = location;
- 	),
- 
--	TP_printk("skbaddr=%p skaddr=%p src=%pISpc dest=%pISpc state=%s",
-+	TP_printk("skbaddr=%p skaddr=%p src=%pISpc dest=%pISpc state=%s location=%pS",
- 		  __entry->skbaddr, __entry->skaddr,
- 		  __entry->saddr, __entry->daddr,
--		  __entry->state ? show_tcp_state_name(__entry->state) : "UNKNOWN")
-+		  __entry->state ? show_tcp_state_name(__entry->state) : "UNKNOWN",
-+		  __entry->location)
- );
- 
- /*
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index d5c4a969c066..fec54cfc4fb3 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -870,7 +870,7 @@ static void tcp_v4_send_reset(const struct sock *sk, struct sk_buff *skb)
- 		arg.bound_dev_if = sk->sk_bound_dev_if;
- 	}
- 
--	trace_tcp_send_reset(sk, skb);
-+	trace_tcp_send_reset(sk, skb,  __builtin_return_address(0));
- 
- 	BUILD_BUG_ON(offsetof(struct sock, sk_bound_dev_if) !=
- 		     offsetof(struct inet_timewait_sock, tw_bound_dev_if));
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index e3167ad96567..fb613582817e 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -3608,7 +3608,7 @@ void tcp_send_active_reset(struct sock *sk, gfp_t priority)
- 	/* skb of trace_tcp_send_reset() keeps the skb that caused RST,
- 	 * skb here is different to the troublesome skb, so use NULL
- 	 */
--	trace_tcp_send_reset(sk, NULL);
-+	trace_tcp_send_reset(sk, NULL,  __builtin_return_address(0));
- }
- 
- /* Send a crossed SYN-ACK during socket establishment.
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index 8e9c59b6c00c..7eba9c3d69f1 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -1128,7 +1128,7 @@ static void tcp_v6_send_reset(const struct sock *sk, struct sk_buff *skb)
- 			label = ip6_flowlabel(ipv6h);
- 	}
- 
--	trace_tcp_send_reset(sk, skb);
-+	trace_tcp_send_reset(sk, skb,  __builtin_return_address(0));
- 
- 	tcp_v6_send_response(sk, skb, seq, ack_seq, 0, 0, 0, oif, 1,
- 			     ipv6_get_dsfield(ipv6h), label, priority, txhash,
--- 
-2.37.3
+>> >> ---------
+>> >> v2->v3:
+>> >> Some fixes according to
+>> >> https://lore.kernel.org/all/20240319102549.7f7f6f53@gandalf.local.home=
+>/
+>> >> 1. Change the tracking directory to/sys/kernel/tracking.
+>> >> 2. Adjust the layout of the TP-STRUCT_entry parameter structure.
+>> >>
+>> >> v1->v2:
+>> >> Some fixes according to
+>> >> https://lore.kernel.org/all/CANn89iL-y9e_VFpdw=3D3DsZtRnKRu_tnUwqHuFQT=
+>JvJsv=3D
+>> >-nz1xPDw@mail.gmail.com/
+>> >> 1. adjust the trace_icmp_send() to more protocols than UDP.
+>> >> 2. move the calling of trace_icmp_send after sanity checks
+>> >> in __icmp_send().
+>> >>
+>> >> Signed-off-by: Peilin He<he.peilin@zte.com.cn>
+>> >> Reviewed-by: xu xin <xu.xin16@zte.com.cn>
+>> >> Reviewed-by: Yunkai Zhang <zhang.yunkai@zte.com.cn>
+>> >> Cc: Yang Yang <yang.yang29@zte.com.cn>
+>> >> Cc: Liu Chun <liu.chun2@zte.com.cn>
+>> >> Cc: Xuexin Jiang <jiang.xuexin@zte.com.cn>
+>> >
+>> >I think it would be better to target net-next tree since it's not a
+>> >fix or something else important.
+>> >
+>> OK. I would target it for net-next.
+>> >> ---
+>> >>  include/trace/events/icmp.h | 64 ++++++++++++++++++++++++++++++++++++=
+>+
+>> >>  net/ipv4/icmp.c             |  4 +++
+>> >>  2 files changed, 68 insertions(+)
+>> >>  create mode 100644 include/trace/events/icmp.h
+>> >>
+>> >> diff --git a/include/trace/events/icmp.h b/include/trace/events/icmp.h
+>> >> new file mode 100644
+>> >> index 000000000000..2098d4b1b12e
+>> >> --- /dev/null
+>> >> +++ b/include/trace/events/icmp.h
+>> >> @@ -0,0 +1,64 @@
+>> >> +/* SPDX-License-Identifier: GPL-2.0 */
+>> >> +#undef TRACE_SYSTEM
+>> >> +#define TRACE_SYSTEM icmp
+>> >> +
+>> >> +#if !defined(_TRACE_ICMP_H) || defined(TRACE_HEADER_MULTI_READ)
+>> >> +#define _TRACE_ICMP_H
+>> >> +
+>> >> +#include <linux/icmp.h>
+>> >> +#include <linux/tracepoint.h>
+>> >> +
+>> >> +TRACE_EVENT(icmp_send,
+>> >> +
+>> >> +               TP_PROTO(const struct sk_buff *skb, int type, int code=
+>),
+>> >> +
+>> >> +               TP_ARGS(skb, type, code),
+>> >> +
+>> >> +               TP_STRUCT__entry(
+>> >> +                       __field(const void *, skbaddr)
+>> >> +                       __field(int, type)
+>> >> +                       __field(int, code)
+>> >> +                       __array(__u8, saddr, 4)
+>> >> +                       __array(__u8, daddr, 4)
+>> >> +                       __field(__u16, sport)
+>> >> +                       __field(__u16, dport)
+>> >> +                       __field(unsigned short, ulen)
+>> >> +               ),
+>> >> +
+>> >> +               TP_fast_assign(
+>> >> +                       struct iphdr *iph =3D3D ip_hdr(skb);
+>> >> +                       int proto_4 =3D3D iph->protocol;
+>> >> +                       __be32 *p32;
+>> >> +
+>> >> +                       __entry->skbaddr =3D3D skb;
+>> >> +                       __entry->type =3D3D type;
+>> >> +                       __entry->code =3D3D code;
+>> >> +
+>> >> +                       if (proto_4 =3D3D=3D3D IPPROTO_UDP) {
+>> >> +                               struct udphdr *uh =3D3D udp_hdr(skb);
+>> >> +                               __entry->sport =3D3D ntohs(uh->source)=
+>;
+>> >> +                               __entry->dport =3D3D ntohs(uh->dest);
+>> >> +                               __entry->ulen =3D3D ntohs(uh->len);
+>> >> +                       } else {
+>> >> +                               __entry->sport =3D3D 0;
+>> >> +                               __entry->dport =3D3D 0;
+>> >> +                               __entry->ulen =3D3D 0;
+>> >> +                       }
+>> >
+>> >What about using the TP_STORE_ADDR_PORTS_SKB macro to record the sport
+>> >and dport like the patch[1] did through extending the use of header
+>> >for TCP and UDP?
+>> >
+>> I believe patch[1] is a good idea as it moves the TCP protocol parsing
+>> previously done inside the TP_STORE_ADDR_PORTS_SKB macro to TP_fast_assig=
+>n,
+>> and extracts the TP_STORE_ADDR_PORTS_SKB macro into a common file,
+>> enabling support for both UDP and TCP protocol parsing simultaneously.
+>>
+>> However, patch[1] only extracts the source and destination addresses of
+>> the packet, but does not extract the source port and destination port,
+>> which limits the significance of my submitted patch.
+>
+>No, please take a look at TP_STORE_ADDR_PORTS_SKB() macro again. It
+>records 4-tuples of the flow.
+>
+>Thanks,
+>Jason
+>
+Okay, after patch [1] is merged, we will propose an optimization patch based on it.
+>>
+>> Perhaps the patch[1] could be referenced for integration after it is merg=
+>ed.
+>> >And, I wonder what the use of tracing ulen of that skb?
+>> >
+>> The tracking of ulen is primarily aimed at ensuring the legality of recei=
+>ved
+>> UDP packets and providing developers with more detailed information
+>> on exceptions. See net/ipv4/udp.c:2494-2501.
+>> >[1]: https://lore.kernel.org/all/1c7156a3f164eb33ef3a25b8432e359f0bb60a8=
+>e.1=3D
+>> >710866188.git.balazs.scheidler@axoflow.com/
+>> >
+>> >Thanks,
+>> >Jason
+>> >
+>> >> +
+>> >> +                       p32 =3D3D (__be32 *) __entry->saddr;
+>> >> +                       *p32 =3D3D iph->saddr;
+>> >> +
+>> >> +                       p32 =3D3D (__be32 *) __entry->daddr;
+>> >> +                       *p32 =3D3D iph->daddr;
+>> >> +               ),
+>> >> +
+>> >> +               TP_printk("icmp_send: type=3D3D%d, code=3D3D%d. From %=
+>pI4:%u =3D
+>> >to %pI4:%u ulen=3D3D%d skbaddr=3D3D%p",
+>> >> +                       __entry->type, __entry->code,
+>> >> +                       __entry->saddr, __entry->sport, __entry->daddr=
+>,
+>> >> +                       __entry->dport, __entry->ulen, __entry->skbadd=
+>r)
+>> >> +);
+>> >> +
+>> >> +#endif /* _TRACE_ICMP_H */
+>> >> +
+>> >> +/* This part must be outside protection */
+>> >> +#include <trace/define_trace.h>
+>> >> \ No newline at end of file
+>> >> diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
+>> >> index e63a3bf99617..21fb41257fe9 100644
+>> >> --- a/net/ipv4/icmp.c
+>> >> +++ b/net/ipv4/icmp.c
+>> >> @@ -92,6 +92,8 @@
+>> >>  #include <net/inet_common.h>
+>> >>  #include <net/ip_fib.h>
+>> >>  #include <net/l3mdev.h>
+>> >> +#define CREATE_TRACE_POINTS
+>> >> +#include <trace/events/icmp.h>
+>> >>
+>> >>  /*
+>> >>   *     Build xmit assembly blocks
+>> >> @@ -672,6 +674,8 @@ void __icmp_send(struct sk_buff *skb_in, int type,=
+> in=3D
+>> >t code, __be32 info,
+>> >>                 }
+>> >>         }
+>> >>
+>> >> +       trace_icmp_send(skb_in, type, code);
+>> >> +
+>> >>         /* Needed by both icmp_global_allow and icmp_xmit_lock */
+>> >>         local_bh_disable();
+>> >>
+>> >> --
+>> >> 2.44.0
 
