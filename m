@@ -1,116 +1,131 @@
-Received: from fhigh8-smtp.messagingengine.com (fhigh8-smtp.messagingengine.com [103.168.172.159])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F3117BA0;
-	Tue, 26 Mar 2024 17:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6803C20B20;
+	Tue, 26 Mar 2024 17:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711473057; cv=none; b=bbClJaACa3tu6dhjN2Wex65gzvxpVSgxi3HBwq9t3T94NNFIfHuJM1BWkTzhpjFa9CFzDS0ce9GS92IoiQp5dm7ekCYrPaYeSTs85riXJGpln2DnlHRnkBxcrNkFuveJ5BaoYZvNNwp002hvYLyFw4uikeGyBuGnntqWIMHaCmc=
+	t=1711473111; cv=none; b=RLgKf8+ZU1sBU0s6J7RL9l2JFJSnAfcCdQ/hOIkTkGrcifTeW3KyCOx46Kx7ErPZkq8wV27/6Rth9uG2kwhXOZXoAymKNi7xNPZzwIe5m5MAFOnFL8O75QIwJR/WN+b0L5RfNHhUVB0VV8sQu+zdwWi/UGHG/VKTnajk6xp2sKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711473057; c=relaxed/simple;
-	bh=80jd1OM0DPKB0ZHLY6XE8+mL/8W0WhAcOu/YBlVELGE=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=TzllBUrTo5AXJ6xTQixICJscaWI71bY17sxlIhLSfkVpOozMj60rHL6uCWYzieoyHkVGCjAf8YzZKcf7co54/L93186kfZvdsik55G9ZUnoidZBypBxFiEhLTv/jvV9DpMabpEC5B4sPjQuk55AkiQr/13Ym/ECQcqckUKD1WX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=l8bnMJH7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hEy2AotN; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1711473111; c=relaxed/simple;
+	bh=SHSbPddnUrZNJUnZQETz0axiiuHhU56cJ/TyjxOm3LE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=FVTFyClDiLqdmA8HOooMYgCGkAk6do3bl6vomI2aQ6r2/cVnx//qBuSt7PLnJGY3rqnI9yuPPCAakSxL9w4lEI/ZKrMOmBkGnuzypiyQ9QVT3tMLpe5w6IDpk9egETSzkwfs8eT8SNs9QEGAEpH4uLYNgVd+4tPEDiEk1VkSyz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k9DczX69; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="l8bnMJH7";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hEy2AotN"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 3DCB81140127;
-	Tue, 26 Mar 2024 13:10:54 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 26 Mar 2024 13:10:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1711473054; x=1711559454; bh=52dnMPHzEu
-	6IHQ/9AU3OAfVPLFSNsoup+66vLokUHSI=; b=l8bnMJH7gWp7dTGLqLG4q7nyPX
-	ZSutsf8+bN+5Jw/XZYFp0votPDUK4/ZRwNpC3yzNXrfZcY08RvbUU/sFxjJta5Af
-	/BAv51LnAMjhdFyPeJdBYJtfUD6V279meMgR07QvchH8FZRHPIAXaLmZgHoLigoG
-	R0Dux0lskgmnpZHxRUtrVFARZjnX9DMwy20fcauilsRChyqB7YkhT402ISK4Pq85
-	+is0NpGdHluaAWMeSi9a5SiJZBMflIN6Ta6vCmoVYXlJcrMNKV/v4W+CfJ88OJs6
-	CQBAiocSVpTHOaQtvKwdnuwbDcMuiohNJyOjBgcZAzOB/B8uI5Mj8ANLtkSA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1711473054; x=1711559454; bh=52dnMPHzEu6IHQ/9AU3OAfVPLFSN
-	soup+66vLokUHSI=; b=hEy2AotNdk4tfs2/Ualepk74pmsHfeoOk1BhLH/8ZEUd
-	aMvxJ3W+0dlKwyfQxMfMYAwG9O4FxCw+gXArMGIWjXLGMap7oGf8+WML2lvArZQR
-	S/BclxWlqNQHjknB9hivQXFS17RrOdZ/syOPBuFP/hTvExpjIfZxfElBHoQs7cOW
-	nfuef6zo0Xi9ZkomTo20fkgRzi8X8M+STuEd3e4UrftHFhrgjWt5Sg8oc5rBtPGE
-	UhTxZadD31ravTdA/3Qh/8cNHdk8tLuZve9P3jDMtB7GKwvok8rtDs9abE+JfQKR
-	TxrkoMnRjRCxrUTtPzUCl6zkE3LHEEDaIZQxxdNNiw==
-X-ME-Sender: <xms:nQEDZuPyYWmllRZXVuHR3FgLMjh3Ot2kJoF0CFtdnlJnbW6ti0x-Dw>
-    <xme:nQEDZs94JurkJCLqcH76QddhOH1HfFjaTJHmRclI4t1RHuerQ8mOrBgUl3JVZnNfU
-    TvRihSddEH9jy40gjQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddufedgleekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:nQEDZlTCHxug5ZVhGWiF04DUY0etbW2NNQWG_s5lHAgLgu63Z4-47w>
-    <xmx:nQEDZuuhcFex9DoJb_wOTTm0iHepgJCctECDzO2Zf-6mrYgKsPOBMw>
-    <xmx:nQEDZmfXVbe9lvhdzFYhEG3AJuyNTy4sb51-lhfa61wjzVTD86il6w>
-    <xmx:nQEDZi3d7ZT4x5w85YpaqRW3I58-M7bxoveMxlxUcfhB-ft3qvEPSQ>
-    <xmx:ngEDZjD_zNvLiOWPTjyuMhDSuCPU58uPTYWECwQVqDOwBhoTTGFjzQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 0B5F4B6008F; Tue, 26 Mar 2024 13:10:52 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-328-gc998c829b7-fm-20240325.002-gc998c829
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k9DczX69"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68446C43399;
+	Tue, 26 Mar 2024 17:11:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711473110;
+	bh=SHSbPddnUrZNJUnZQETz0axiiuHhU56cJ/TyjxOm3LE=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=k9DczX69FvUQ6wdICAIJXiq1qaqYzNybKX/V+0hbSEhTZO6Q/IDyUfO+T0mZbLFoU
+	 2JHkuWbGZdLCAZSmiLl89L9xs/BUDMV+wis1wiXB9+tw6CMioewzz6Xxg7iHfyIeer
+	 MV7OmEh/I3M8FcPpapn0tWIkyR9n0nE1+sudyLFMOdzX9z4KNEqDFHBYHa4chU9MtF
+	 ooPpKMvpI0iVPfvhZ1Gx4+7AAnNvVhp2bxMgj5z5687GC8kmpz2DOnm3nPo8qHH++t
+	 Jo5FPJqDXtzFwnMxVzuIkhqAzH9pIgUsca/G/irikJZYMdpRStUUUmdmw9PYHR3rkB
+	 SfVjRo212/Ptg==
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-Id: <d8e28bc4-f7b9-4e17-ae6c-bbe6166190b4@app.fastmail.com>
-In-Reply-To: <20240326130647.7bfb1d92@gandalf.local.home>
-References: <20240326144741.3094687-1-arnd@kernel.org>
- <20240326145348.3318887-2-arnd@kernel.org>
- <20240326130647.7bfb1d92@gandalf.local.home>
-Date: Tue, 26 Mar 2024 18:10:32 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Steven Rostedt" <rostedt@goodmis.org>, "Arnd Bergmann" <arnd@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, "Masahiro Yamada" <masahiroy@kernel.org>,
- "Alexei Starovoitov" <ast@kernel.org>,
- "Daniel Borkmann" <daniel@iogearbox.net>,
- "Andrii Nakryiko" <andrii@kernel.org>,
- "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Luis Chamberlain" <mcgrof@kernel.org>, "Nicolas Schier" <nicolas@fjasle.eu>,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Eduard Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>,
- "Yonghong Song" <yonghong.song@linux.dev>,
- "Kees Cook" <keescook@chromium.org>, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-modules@vger.kernel.org
-Subject: Re: [PATCH 11/12] [v4] kallsyms: rework symbol lookup return codes
-Content-Type: text/plain
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 26 Mar 2024 19:11:46 +0200
+Message-Id: <D03UKZ3OIEXX.2PCKOX8NOLMKT@kernel.org>
+Cc: <linux-riscv@lists.infradead.org>, "Paul Walmsley"
+ <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert
+ Ou" <aou@eecs.berkeley.edu>, <linux-kernel@vger.kernel.org>, "Naveen N .
+ Rao" <naveen.n.rao@linux.ibm.com>, "Anil S Keshavamurthy"
+ <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>,
+ <linux-trace-kernel@vger.kernel.org>, "Calvin Owens"
+ <jcalvinowens@gmail.com>
+Subject: Re: [PATCH v2] arch/riscv: Enable kprobes when CONFIG_MODULES=n
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Mark Rutland" <mark.rutland@arm.com>, "Masami Hiramatsu"
+ <mhiramat@kernel.org>
+X-Mailer: aerc 0.17.0
+References: <20240323232908.13261-1-jarkko@kernel.org>
+ <20240325115632.04e37297491cadfbbf382767@kernel.org>
+ <ZgLfsvbCZj2S6fRE@FVFF77S0Q05N.cambridge.arm.com>
+ <20240327002403.62649aee45508b7a16caedba@kernel.org>
+ <ZgL5779MIS61GpV6@FVFF77S0Q05N.cambridge.arm.com>
+In-Reply-To: <ZgL5779MIS61GpV6@FVFF77S0Q05N.cambridge.arm.com>
 
-On Tue, Mar 26, 2024, at 18:06, Steven Rostedt wrote:
-> On Tue, 26 Mar 2024 15:53:38 +0100
-> Arnd Bergmann <arnd@kernel.org> wrote:
+On Tue Mar 26, 2024 at 6:38 PM EET, Mark Rutland wrote:
+> On Wed, Mar 27, 2024 at 12:24:03AM +0900, Masami Hiramatsu wrote:
+> > On Tue, 26 Mar 2024 14:46:10 +0000
+> > Mark Rutland <mark.rutland@arm.com> wrote:
+> > >=20
+> > > On Mon, Mar 25, 2024 at 11:56:32AM +0900, Masami Hiramatsu wrote:
+> > > > I think, we'd better to introduce `alloc_execmem()`,
+> > > > CONFIG_HAVE_ALLOC_EXECMEM and CONFIG_ALLOC_EXECMEM at first
+> > > >=20
+> > > >   config HAVE_ALLOC_EXECMEM
+> > > > 	bool
+> > > >=20
+> > > >   config ALLOC_EXECMEM
+> > > > 	bool "Executable trampline memory allocation"
+> > > > 	depends on MODULES || HAVE_ALLOC_EXECMEM
+> > > >=20
+> > > > And define fallback macro to module_alloc() like this.
+> > > >=20
+> > > > #ifndef CONFIG_HAVE_ALLOC_EXECMEM
+> > > > #define alloc_execmem(size, gfp)	module_alloc(size)
+> > > > #endif
+> > >=20
+> > > Please can we *not* do this? I think this is abstracting at the wrong=
+ level (as
+> > > I mentioned on the prior execmem proposals).
+> > >=20
+> > > Different exectuable allocations can have different requirements. For=
+ example,
+> > > on arm64 modules need to be within 2G of the kernel image, but the kp=
+robes XOL
+> > > areas can be anywhere in the kernel VA space.
+> > >=20
+> > > Forcing those behind the same interface makes things *harder* for arc=
+hitectures
+> > > and/or makes the common code more complicated (if that ends up having=
+ to track
+> > > all those different requirements). From my PoV it'd be much better to=
+ have
+> > > separate kprobes_alloc_*() functions for kprobes which an architectur=
+e can then
+> > > choose to implement using a common library if it wants to.
+> > >=20
+> > > I took a look at doing that using the core ifdeffery fixups from Jark=
+ko's v6,
+> > > and it looks pretty clean to me (and works in testing on arm64):
+> > >=20
+> > >   https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/=
+?h=3Dkprobes/without-modules
+> > >=20
+> > > Could we please start with that approach, with kprobe-specific alloc/=
+free code
+> > > provided by the architecture?
+> >=20
+> > OK, as far as I can read the code, this method also works and neat!=20
+> > (and minimum intrusion). I actually found that exposing CONFIG_ALLOC_EX=
+ECMEM
+> > to user does not help, it should be an internal change. So hiding this =
+change
+> > from user is better choice. Then there is no reason to introduce the ne=
+w
+> > alloc_execmem, but just expand kprobe_alloc_insn_page() is reasonable.
+> >=20
+> > Mark, can you send this series here, so that others can review/test it?
 >
->> -const char *
->> +int
->>  ftrace_mod_address_lookup(unsigned long addr, unsigned long *size,
->>  		   unsigned long *off, char **modname, char *sym)
->>  {
->>  	struct ftrace_mod_map *mod_map;
->> -	const char *ret = NULL;
->> +	int ret;
+> I've written up a cover letter and sent that out:
+>  =20
+>   https://lore.kernel.org/lkml/20240326163624.3253157-1-mark.rutland@arm.=
+com/
 >
-> This needs to be ret = 0;
+> Mark.
 
-Fixed now, thanks!
+Ya, saw it thanks!
 
-I'll send a v5 in a few days 
-
-    Arnd
+BR, Jarkko
