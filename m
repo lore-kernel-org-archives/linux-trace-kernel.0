@@ -1,131 +1,215 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6803C20B20;
-	Tue, 26 Mar 2024 17:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F05CB1B28D;
+	Tue, 26 Mar 2024 18:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711473111; cv=none; b=RLgKf8+ZU1sBU0s6J7RL9l2JFJSnAfcCdQ/hOIkTkGrcifTeW3KyCOx46Kx7ErPZkq8wV27/6Rth9uG2kwhXOZXoAymKNi7xNPZzwIe5m5MAFOnFL8O75QIwJR/WN+b0L5RfNHhUVB0VV8sQu+zdwWi/UGHG/VKTnajk6xp2sKc=
+	t=1711476357; cv=none; b=bSepqGO/rrte/PYaaDx+vx5OHRcZNK1/qldDcWVtVqr55OravYoH+nVWWg8aN4VoLUwzarM6iycbjMFrUg4CLhqBnuBBM7c9vC7HUkJ94QI/vtqxWnT9g33xET2tBBIpyFpHntGChu0R9Tfx8ggsti2faX+JHvVFxfF7NlZ87No=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711473111; c=relaxed/simple;
-	bh=SHSbPddnUrZNJUnZQETz0axiiuHhU56cJ/TyjxOm3LE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=FVTFyClDiLqdmA8HOooMYgCGkAk6do3bl6vomI2aQ6r2/cVnx//qBuSt7PLnJGY3rqnI9yuPPCAakSxL9w4lEI/ZKrMOmBkGnuzypiyQ9QVT3tMLpe5w6IDpk9egETSzkwfs8eT8SNs9QEGAEpH4uLYNgVd+4tPEDiEk1VkSyz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k9DczX69; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711476357; c=relaxed/simple;
+	bh=WVwmfLFTjN/pZJB2PZOy2F3bp1qYpZXyLRMujyUYXzY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=sQLE3wKiqASjZc1IOyA3aW8+NFdst8aE9kp4YF/n0nigq6FQvEVhDTyvkh3OQVoQ4hO9vLkrphY0eWcqctKcm4NeMHPkkTPfT/+Eg5tJLKEFHFAo0odaMGUTBa5VsSHcs67ktC7/NmPYehSdIehGlf85VITqwjcUEwAapmpl5ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=idPN9GsJ; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k9DczX69"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68446C43399;
-	Tue, 26 Mar 2024 17:11:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711473110;
-	bh=SHSbPddnUrZNJUnZQETz0axiiuHhU56cJ/TyjxOm3LE=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=k9DczX69FvUQ6wdICAIJXiq1qaqYzNybKX/V+0hbSEhTZO6Q/IDyUfO+T0mZbLFoU
-	 2JHkuWbGZdLCAZSmiLl89L9xs/BUDMV+wis1wiXB9+tw6CMioewzz6Xxg7iHfyIeer
-	 MV7OmEh/I3M8FcPpapn0tWIkyR9n0nE1+sudyLFMOdzX9z4KNEqDFHBYHa4chU9MtF
-	 ooPpKMvpI0iVPfvhZ1Gx4+7AAnNvVhp2bxMgj5z5687GC8kmpz2DOnm3nPo8qHH++t
-	 Jo5FPJqDXtzFwnMxVzuIkhqAzH9pIgUsca/G/irikJZYMdpRStUUUmdmw9PYHR3rkB
-	 SfVjRo212/Ptg==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="idPN9GsJ"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d46dd8b0b8so75197861fa.2;
+        Tue, 26 Mar 2024 11:05:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711476354; x=1712081154; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s5/Cgp9uewUmDlAlZ60jx5hmzzPypTIAxJ1cc0TNCps=;
+        b=idPN9GsJ6psAiuL18D5HGrhOwpg+F8AIW+nz6lV4P4LCYvSaE440YS0FCiqvpJaP1x
+         M9bVKu7HkTAvIFVCeN32/ZM5mIMs7iLYxxlqmn1PaZFjqoCdN/EoJZjw20pa1whgM6BK
+         nylZPO0WkSGR5ViPGw/Ixqvw81dULFgfHjixzMXpI0K8W4VU98lmHGfhuM8Gdwfyk2gL
+         fUcaKEXoQxfWUKHfnmGpxO5XAFtbRdW167MD9JAjTEX6uj54ryLQ9dzTiS4nihaO8dRb
+         qdYXIB3LDrX6fvnrASF9Zl4Ssz5GqzbX6ueZFgi3B+Z4JLT1pyWuAnr+wdl+n8YxQMRG
+         4fCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711476354; x=1712081154;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s5/Cgp9uewUmDlAlZ60jx5hmzzPypTIAxJ1cc0TNCps=;
+        b=cOpMhyLaNPRIqCIkwrlPdS671CJQ9Tfa3vKRTeCnKEBrfSvdtzwFbReOerEHKUbuX+
+         6SAXMkVqql6M1ZwplKMkUGAhKP6t+hxj0C6WGa0bj97WkEFgUCeIKuVqdDcSvghp/uIK
+         GM0ICg4P3UEDXCi3/uWTKxude3rz+Av7wPuYsBcgcPoV6xH61KdeNCDhtSxK1AqccMsk
+         vkIgdpYFh7rtuR8Hcqjkqn1/bbWZAi34G5QSfFlW0TJzWoQgO8tifDk6UC0FgEbFY2BU
+         dh93o0fIArB9spisaYt+HfCTHXMO0hSGOsxE186GA6w9SyxbeFY+H/WIM5ZUXKdUTdCc
+         ZJ1w==
+X-Forwarded-Encrypted: i=1; AJvYcCWhdJvyMxOOEOgBQYI+YNRJ9AviGouzMCWEcjZKgpl7JTJXwniEBsxudtX0dWzRroM2rUXVRssNcHS87vJWU5YNtj+14mn8k84uYSu814mv/NnT+N8hbIKfwu9bqD8+3g0bkRO3xuE+Q8BBtRVCiBqmD0Fi1jqXfkhf4AbsnsRlWyy0T83E0tnB
+X-Gm-Message-State: AOJu0YxSnGxrMeEL3BcUvZpY5a7q8uu/VX+NDb0pz/MNXlg/WC98d51C
+	5ktJqANtIvV64kRhBdkKTaMYHy9IaVhX7EM6/aijbLdk9EYxBgwN
+X-Google-Smtp-Source: AGHT+IHYBm858QXQHIQg6skcaogKllaGjroPEkdwzIRGVNz52r+XzelyPsebqZKuVxRZse98NPQHhg==
+X-Received: by 2002:a05:651c:613:b0:2d6:957e:10a9 with SMTP id k19-20020a05651c061300b002d6957e10a9mr1894685lje.16.1711476353948;
+        Tue, 26 Mar 2024 11:05:53 -0700 (PDT)
+Received: from localhost.localdomain (91-83-10-45.pool.digikabel.hu. [91.83.10.45])
+        by smtp.gmail.com with ESMTPSA id fa7-20020a056000258700b00341c6b53358sm8275523wrb.66.2024.03.26.11.05.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 11:05:53 -0700 (PDT)
+From: Balazs Scheidler <bazsi77@gmail.com>
+X-Google-Original-From: Balazs Scheidler <balazs.scheidler@axoflow.com>
+To: kerneljasonxing@gmail.com,
+	kuniyu@amazon.com,
+	netdev@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Eric Dumazet <edumazet@google.com>
+Cc: Balazs Scheidler <balazs.scheidler@axoflow.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH net-next v4 1/2] net: port TP_STORE_ADDR_PORTS_SKB macro to be tcp/udp independent
+Date: Tue, 26 Mar 2024 19:05:46 +0100
+Message-Id: <9e306f78260dfbbdc7353ba5f864cc027a409540.1711475011.git.balazs.scheidler@axoflow.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <cover.1711475011.git.balazs.scheidler@axoflow.com>
+References: <cover.1711475011.git.balazs.scheidler@axoflow.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 26 Mar 2024 19:11:46 +0200
-Message-Id: <D03UKZ3OIEXX.2PCKOX8NOLMKT@kernel.org>
-Cc: <linux-riscv@lists.infradead.org>, "Paul Walmsley"
- <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert
- Ou" <aou@eecs.berkeley.edu>, <linux-kernel@vger.kernel.org>, "Naveen N .
- Rao" <naveen.n.rao@linux.ibm.com>, "Anil S Keshavamurthy"
- <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>,
- <linux-trace-kernel@vger.kernel.org>, "Calvin Owens"
- <jcalvinowens@gmail.com>
-Subject: Re: [PATCH v2] arch/riscv: Enable kprobes when CONFIG_MODULES=n
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Mark Rutland" <mark.rutland@arm.com>, "Masami Hiramatsu"
- <mhiramat@kernel.org>
-X-Mailer: aerc 0.17.0
-References: <20240323232908.13261-1-jarkko@kernel.org>
- <20240325115632.04e37297491cadfbbf382767@kernel.org>
- <ZgLfsvbCZj2S6fRE@FVFF77S0Q05N.cambridge.arm.com>
- <20240327002403.62649aee45508b7a16caedba@kernel.org>
- <ZgL5779MIS61GpV6@FVFF77S0Q05N.cambridge.arm.com>
-In-Reply-To: <ZgL5779MIS61GpV6@FVFF77S0Q05N.cambridge.arm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue Mar 26, 2024 at 6:38 PM EET, Mark Rutland wrote:
-> On Wed, Mar 27, 2024 at 12:24:03AM +0900, Masami Hiramatsu wrote:
-> > On Tue, 26 Mar 2024 14:46:10 +0000
-> > Mark Rutland <mark.rutland@arm.com> wrote:
-> > >=20
-> > > On Mon, Mar 25, 2024 at 11:56:32AM +0900, Masami Hiramatsu wrote:
-> > > > I think, we'd better to introduce `alloc_execmem()`,
-> > > > CONFIG_HAVE_ALLOC_EXECMEM and CONFIG_ALLOC_EXECMEM at first
-> > > >=20
-> > > >   config HAVE_ALLOC_EXECMEM
-> > > > 	bool
-> > > >=20
-> > > >   config ALLOC_EXECMEM
-> > > > 	bool "Executable trampline memory allocation"
-> > > > 	depends on MODULES || HAVE_ALLOC_EXECMEM
-> > > >=20
-> > > > And define fallback macro to module_alloc() like this.
-> > > >=20
-> > > > #ifndef CONFIG_HAVE_ALLOC_EXECMEM
-> > > > #define alloc_execmem(size, gfp)	module_alloc(size)
-> > > > #endif
-> > >=20
-> > > Please can we *not* do this? I think this is abstracting at the wrong=
- level (as
-> > > I mentioned on the prior execmem proposals).
-> > >=20
-> > > Different exectuable allocations can have different requirements. For=
- example,
-> > > on arm64 modules need to be within 2G of the kernel image, but the kp=
-robes XOL
-> > > areas can be anywhere in the kernel VA space.
-> > >=20
-> > > Forcing those behind the same interface makes things *harder* for arc=
-hitectures
-> > > and/or makes the common code more complicated (if that ends up having=
- to track
-> > > all those different requirements). From my PoV it'd be much better to=
- have
-> > > separate kprobes_alloc_*() functions for kprobes which an architectur=
-e can then
-> > > choose to implement using a common library if it wants to.
-> > >=20
-> > > I took a look at doing that using the core ifdeffery fixups from Jark=
-ko's v6,
-> > > and it looks pretty clean to me (and works in testing on arm64):
-> > >=20
-> > >   https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/=
-?h=3Dkprobes/without-modules
-> > >=20
-> > > Could we please start with that approach, with kprobe-specific alloc/=
-free code
-> > > provided by the architecture?
-> >=20
-> > OK, as far as I can read the code, this method also works and neat!=20
-> > (and minimum intrusion). I actually found that exposing CONFIG_ALLOC_EX=
-ECMEM
-> > to user does not help, it should be an internal change. So hiding this =
-change
-> > from user is better choice. Then there is no reason to introduce the ne=
-w
-> > alloc_execmem, but just expand kprobe_alloc_insn_page() is reasonable.
-> >=20
-> > Mark, can you send this series here, so that others can review/test it?
->
-> I've written up a cover letter and sent that out:
->  =20
->   https://lore.kernel.org/lkml/20240326163624.3253157-1-mark.rutland@arm.=
-com/
->
-> Mark.
+This patch moves TP_STORE_ADDR_PORTS_SKB() to a common header and removes
+the TCP specific implementation details.
 
-Ya, saw it thanks!
+Previously the macro assumed the skb passed as an argument is a
+TCP packet, the implementation now uses an argument to the L4 header and
+uses that to extract the source/destination ports, which happen
+to be named the same in "struct tcphdr" and "struct udphdr"
 
-BR, Jarkko
+Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
+Signed-off-by: Balazs Scheidler <balazs.scheidler@axoflow.com>
+---
+ include/trace/events/net_probe_common.h | 40 ++++++++++++++++++++++
+ include/trace/events/tcp.h              | 45 ++-----------------------
+ 2 files changed, 42 insertions(+), 43 deletions(-)
+
+diff --git a/include/trace/events/net_probe_common.h b/include/trace/events/net_probe_common.h
+index b1f9a4d3ee13..5e33f91bdea3 100644
+--- a/include/trace/events/net_probe_common.h
++++ b/include/trace/events/net_probe_common.h
+@@ -70,4 +70,44 @@
+ 	TP_STORE_V4MAPPED(__entry, saddr, daddr)
+ #endif
+ 
++#define TP_STORE_ADDR_PORTS_SKB_V4(__entry, skb, protoh)		\
++	do {								\
++		struct sockaddr_in *v4 = (void *)__entry->saddr;	\
++									\
++		v4->sin_family = AF_INET;				\
++		v4->sin_port = protoh->source;				\
++		v4->sin_addr.s_addr = ip_hdr(skb)->saddr;		\
++		v4 = (void *)__entry->daddr;				\
++		v4->sin_family = AF_INET;				\
++		v4->sin_port = protoh->dest;				\
++		v4->sin_addr.s_addr = ip_hdr(skb)->daddr;		\
++	} while (0)
++
++#if IS_ENABLED(CONFIG_IPV6)
++
++#define TP_STORE_ADDR_PORTS_SKB(__entry, skb, protoh)			\
++	do {								\
++		const struct iphdr *iph = ip_hdr(skb);			\
++									\
++		if (iph->version == 6) {				\
++			struct sockaddr_in6 *v6 = (void *)__entry->saddr; \
++									\
++			v6->sin6_family = AF_INET6;			\
++			v6->sin6_port = protoh->source;			\
++			v6->sin6_addr = ipv6_hdr(skb)->saddr;		\
++			v6 = (void *)__entry->daddr;			\
++			v6->sin6_family = AF_INET6;			\
++			v6->sin6_port = protoh->dest;			\
++			v6->sin6_addr = ipv6_hdr(skb)->daddr;		\
++		} else							\
++			TP_STORE_ADDR_PORTS_SKB_V4(__entry, skb, protoh); \
++	} while (0)
++
++#else
++
++#define TP_STORE_ADDR_PORTS_SKB(__entry, skb, protoh)		\
++	TP_STORE_ADDR_PORTS_SKB_V4(__entry, skb, protoh)
++
++#endif
++
+ #endif
+diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+index 3c08a0846c47..1db95175c1e5 100644
+--- a/include/trace/events/tcp.h
++++ b/include/trace/events/tcp.h
+@@ -273,48 +273,6 @@ TRACE_EVENT(tcp_probe,
+ 		  __entry->skbaddr, __entry->skaddr)
+ );
+ 
+-#define TP_STORE_ADDR_PORTS_SKB_V4(__entry, skb)			\
+-	do {								\
+-		const struct tcphdr *th = (const struct tcphdr *)skb->data; \
+-		struct sockaddr_in *v4 = (void *)__entry->saddr;	\
+-									\
+-		v4->sin_family = AF_INET;				\
+-		v4->sin_port = th->source;				\
+-		v4->sin_addr.s_addr = ip_hdr(skb)->saddr;		\
+-		v4 = (void *)__entry->daddr;				\
+-		v4->sin_family = AF_INET;				\
+-		v4->sin_port = th->dest;				\
+-		v4->sin_addr.s_addr = ip_hdr(skb)->daddr;		\
+-	} while (0)
+-
+-#if IS_ENABLED(CONFIG_IPV6)
+-
+-#define TP_STORE_ADDR_PORTS_SKB(__entry, skb)				\
+-	do {								\
+-		const struct iphdr *iph = ip_hdr(skb);			\
+-									\
+-		if (iph->version == 6) {				\
+-			const struct tcphdr *th = (const struct tcphdr *)skb->data; \
+-			struct sockaddr_in6 *v6 = (void *)__entry->saddr; \
+-									\
+-			v6->sin6_family = AF_INET6;			\
+-			v6->sin6_port = th->source;			\
+-			v6->sin6_addr = ipv6_hdr(skb)->saddr;		\
+-			v6 = (void *)__entry->daddr;			\
+-			v6->sin6_family = AF_INET6;			\
+-			v6->sin6_port = th->dest;			\
+-			v6->sin6_addr = ipv6_hdr(skb)->daddr;		\
+-		} else							\
+-			TP_STORE_ADDR_PORTS_SKB_V4(__entry, skb);	\
+-	} while (0)
+-
+-#else
+-
+-#define TP_STORE_ADDR_PORTS_SKB(__entry, skb)		\
+-	TP_STORE_ADDR_PORTS_SKB_V4(__entry, skb)
+-
+-#endif
+-
+ /*
+  * tcp event with only skb
+  */
+@@ -331,12 +289,13 @@ DECLARE_EVENT_CLASS(tcp_event_skb,
+ 	),
+ 
+ 	TP_fast_assign(
++		const struct tcphdr *th = (const struct tcphdr *)skb->data;
+ 		__entry->skbaddr = skb;
+ 
+ 		memset(__entry->saddr, 0, sizeof(struct sockaddr_in6));
+ 		memset(__entry->daddr, 0, sizeof(struct sockaddr_in6));
+ 
+-		TP_STORE_ADDR_PORTS_SKB(__entry, skb);
++		TP_STORE_ADDR_PORTS_SKB(__entry, skb, th);
+ 	),
+ 
+ 	TP_printk("skbaddr=%p src=%pISpc dest=%pISpc",
+-- 
+2.40.1
+
