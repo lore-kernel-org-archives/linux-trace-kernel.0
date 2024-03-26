@@ -1,108 +1,182 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9B1FED9;
-	Tue, 26 Mar 2024 14:46:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2EFED9;
+	Tue, 26 Mar 2024 14:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711464384; cv=none; b=XebUICckSYSqEMxoOXKYVeQlt3UTnArdT1YBGvKXbOoIlNq0EjUPMR/KpfDCxi+YMVpBxrlaBuCEn+E+oLomyezyrAkBTeP/3B1eOE4qyCrziiKj+g1DYf/4QnV2QE2QHLktreXBRROJJfkmVd295ABiqy8acC6KpCMG0CQHHcc=
+	t=1711464475; cv=none; b=PAfCurn4xudZRybbuD85+d1vw6LsFdeT7zqCxPDo39QLV7XhXMOJGm1k1yxRKqyi/JSfoG5+YLF4ugZ6nQjqqvREPql0L07GKtHxjbtZpDu9b+lkaM+lIs+RJpyd7A7k6CQ1yWwUuidiIwpPiYFOs/JkpbbCUNCgv3waKKlOwc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711464384; c=relaxed/simple;
-	bh=7P7H1Co+Rl3zjj/dyl7b91+RN3DmNLupMXf8qxmlhzc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tmOj6rfhk3yHxFszwD5ltrCK4EfXne84/OxaSZiSzTQuvC4ksWztW+LED6rM51S3gLy/Qa5kiXF2VqohGFKf1/TtbdkamPC/g0pM5dKePiFXDPbK/wUn+Q9TqM8oSH5c59VlMbH4rYDA0bgDEe2uKChNu3APYuQHdByvhB0yusw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DB30339;
-	Tue, 26 Mar 2024 07:46:55 -0700 (PDT)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.35.184])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F2EC3F694;
-	Tue, 26 Mar 2024 07:46:20 -0700 (PDT)
-Date: Tue, 26 Mar 2024 14:46:10 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>, linux-riscv@lists.infradead.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org,
-	"Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	"David S . Miller" <davem@davemloft.net>,
+	s=arc-20240116; t=1711464475; c=relaxed/simple;
+	bh=2VRodtLYji0E2iO14KF37hDwen2VjVMAvwAcrcgPpT4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RP8DQWyViGOgZmbG2QgzfPgzfywKA/8kNopgnvNdc4T6EGj7lUY4r7gXw1Opte+0uc+fUuisIXtCDlUPqjnQW03IOAW28kHepgtmA8eSrcorHK9W+3xOlMOLutz9UQHP5vIMjzlkvWulGnlVHp5NSC5gpQjGL6gYvjuJAQ743BE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E4BQDDTk; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E4BQDDTk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C54DC433F1;
+	Tue, 26 Mar 2024 14:47:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711464475;
+	bh=2VRodtLYji0E2iO14KF37hDwen2VjVMAvwAcrcgPpT4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=E4BQDDTkgrdwdIkmMvielkRpTAsqHIEG3dNSrY21fnxwoLYvLOoCje+XGKi0Q6+lb
+	 vXFNIViLU9NTXcLVTR3XwdRIIouf6xWYpzwnmHI2t5ZxiCoyK5CtJGLAMaMQhP4GqM
+	 LFJItP61E8WSzWQOgV3iidHNLT5C63yxLkS/wCtha2CzziKBhSzJgJ8mdUJnDc4MsM
+	 mHMWnrCmz0M9BMr26mXQL/Ot8TdiiiLpbc7Z6ykNI9wEj4r4WuyvPMGjqE0R7U0B4a
+	 JYlh8463XR1dZ+1yi/iNsx2NnACkLOIgc70LBf5p2SbJ28JbOOieq3jHp29R//i1VX
+	 XyBZZot1G0W0w==
+From: Arnd Bergmann <arnd@kernel.org>
+To: linux-kbuild@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>
+Cc: Nicolas Schier <nicolas@fjasle.eu>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Bill Metzenthen <billm@melbpc.org.au>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	x86@kernel.org,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Jean Delvare <jdelvare@suse.com>,
+	Harry Wentland <harry.wentland@amd.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	"Manoj N. Kumar" <manoj@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Greg Kroah-Hartman <gregkh@suse.de>,
+	linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org,
+	netdev@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-scsi@vger.kernel.org,
+	bpf@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	Calvin Owens <jcalvinowens@gmail.com>
-Subject: Re: [PATCH v2] arch/riscv: Enable kprobes when CONFIG_MODULES=n
-Message-ID: <ZgLfsvbCZj2S6fRE@FVFF77S0Q05N.cambridge.arm.com>
-References: <20240323232908.13261-1-jarkko@kernel.org>
- <20240325115632.04e37297491cadfbbf382767@kernel.org>
+	linux-modules@vger.kernel.org,
+	linux-mm@kvack.org,
+	llvm@lists.linux.dev
+Subject: [PATCH 00/12] kbuild: enable some -Wextra warnings by default
+Date: Tue, 26 Mar 2024 15:47:15 +0100
+Message-Id: <20240326144741.3094687-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240325115632.04e37297491cadfbbf382767@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-Hi Masami,
+From: Arnd Bergmann <arnd@arndb.de>
 
-On Mon, Mar 25, 2024 at 11:56:32AM +0900, Masami Hiramatsu wrote:
-> Hi Jarkko,
-> 
-> On Sun, 24 Mar 2024 01:29:08 +0200
-> Jarkko Sakkinen <jarkko@kernel.org> wrote:
-> 
-> > Tracing with kprobes while running a monolithic kernel is currently
-> > impossible due the kernel module allocator dependency.
-> > 
-> > Address the issue by allowing architectures to implement module_alloc()
-> > and module_memfree() independent of the module subsystem. An arch tree
-> > can signal this by setting HAVE_KPROBES_ALLOC in its Kconfig file.
-> > 
-> > Realize the feature on RISC-V by separating allocator to module_alloc.c
-> > and implementing module_memfree().
-> 
-> Even though, this involves changes in arch-independent part. So it should
-> be solved by generic way. Did you checked Calvin's thread?
-> 
-> https://lore.kernel.org/all/cover.1709676663.git.jcalvinowens@gmail.com/
-> 
-> I think, we'd better to introduce `alloc_execmem()`,
-> CONFIG_HAVE_ALLOC_EXECMEM and CONFIG_ALLOC_EXECMEM at first
-> 
->   config HAVE_ALLOC_EXECMEM
-> 	bool
-> 
->   config ALLOC_EXECMEM
-> 	bool "Executable trampline memory allocation"
-> 	depends on MODULES || HAVE_ALLOC_EXECMEM
-> 
-> And define fallback macro to module_alloc() like this.
-> 
-> #ifndef CONFIG_HAVE_ALLOC_EXECMEM
-> #define alloc_execmem(size, gfp)	module_alloc(size)
-> #endif
+This is a follow-up on a couple of patch series I sent in the past,
+enabling -Wextra (aside from stuff that is explicitly disabled),
+-Wcast-function-pointer-strict and -Wrestrict.
 
-Please can we *not* do this? I think this is abstracting at the wrong level (as
-I mentioned on the prior execmem proposals).
+I have tested these on 'defconfig' and 'allmodconfig' builds across
+all architectures, as well as many 'randconfig' builds on x86, arm and
+arm64. It would be nice to have all the Makefile.extrawarn changes in
+v6.10, hopefully with the driver fixes going in before that through
+the respective subsystem trees.
 
-Different exectuable allocations can have different requirements. For example,
-on arm64 modules need to be within 2G of the kernel image, but the kprobes XOL
-areas can be anywhere in the kernel VA space.
+     Arnd
 
-Forcing those behind the same interface makes things *harder* for architectures
-and/or makes the common code more complicated (if that ends up having to track
-all those different requirements). From my PoV it'd be much better to have
-separate kprobes_alloc_*() functions for kprobes which an architecture can then
-choose to implement using a common library if it wants to.
+Arnd Bergmann (12):
+  kbuild: make -Woverride-init warnings more consistent
+  [v3] parport: mfc3: avoid empty-body warning
+  kbuild: turn on -Wextra by default
+  kbuild: remove redundant extra warning flags
+  firmware: dmi-id: add a release callback function
+  nouveau: fix function cast warning
+  cxlflash: fix function pointer cast warnings
+  x86: math-emu: fix function cast warnings
+  kbuild: enable -Wcast-function-type-strict unconditionally
+  sata: sx4: fix pdc20621_get_from_dimm() on 64-bit
+  [v4] kallsyms: rework symbol lookup return codes
+  kbuild: turn on -Wrestrict by default
 
-I took a look at doing that using the core ifdeffery fixups from Jarkko's v6,
-and it looks pretty clean to me (and works in testing on arm64):
+ arch/x86/math-emu/fpu_etc.c                   |  9 +++--
+ arch/x86/math-emu/fpu_trig.c                  |  6 ++--
+ arch/x86/math-emu/reg_constant.c              |  7 +++-
+ drivers/ata/sata_sx4.c                        |  6 ++--
+ drivers/firmware/dmi-id.c                     |  7 +++-
+ .../gpu/drm/amd/display/dc/dce110/Makefile    |  2 +-
+ .../gpu/drm/amd/display/dc/dce112/Makefile    |  2 +-
+ .../gpu/drm/amd/display/dc/dce120/Makefile    |  2 +-
+ drivers/gpu/drm/amd/display/dc/dce60/Makefile |  2 +-
+ drivers/gpu/drm/amd/display/dc/dce80/Makefile |  2 +-
+ drivers/gpu/drm/i915/Makefile                 |  6 ++--
+ .../drm/nouveau/nvkm/subdev/bios/shadowof.c   |  7 +++-
+ drivers/gpu/drm/xe/Makefile                   |  4 +--
+ drivers/net/ethernet/renesas/sh_eth.c         |  2 +-
+ drivers/parport/parport_mfc3.c                |  3 +-
+ drivers/pinctrl/aspeed/Makefile               |  2 +-
+ drivers/scsi/cxlflash/lunmgt.c                |  4 +--
+ drivers/scsi/cxlflash/main.c                  | 14 ++++----
+ drivers/scsi/cxlflash/superpipe.c             | 34 +++++++++----------
+ drivers/scsi/cxlflash/superpipe.h             | 11 +++---
+ drivers/scsi/cxlflash/vlun.c                  |  7 ++--
+ fs/proc/Makefile                              |  2 +-
+ include/linux/filter.h                        | 14 ++++----
+ include/linux/ftrace.h                        |  6 ++--
+ include/linux/module.h                        | 14 ++++----
+ kernel/bpf/Makefile                           |  2 +-
+ kernel/bpf/core.c                             |  7 ++--
+ kernel/kallsyms.c                             | 23 +++++++------
+ kernel/module/kallsyms.c                      | 26 +++++++-------
+ kernel/trace/ftrace.c                         | 13 +++----
+ mm/Makefile                                   |  3 +-
+ scripts/Makefile.extrawarn                    | 33 ++++--------------
+ 32 files changed, 134 insertions(+), 148 deletions(-)
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=kprobes/without-modules
+-- 
+2.39.2
 
-Could we please start with that approach, with kprobe-specific alloc/free code
-provided by the architecture?
-
-Thanks,
-Mark.
+Cc: Bill Metzenthen <billm@melbpc.org.au>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86@kernel.org
+Cc: Damien Le Moal <dlemoal@kernel.org>
+Cc: Jean Delvare <jdelvare@suse.com>
+Cc: Harry Wentland <harry.wentland@amd.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Sergey Shtylyov <s.shtylyov@omp.ru>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc: Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: "Manoj N. Kumar" <manoj@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nicolas Schier <nicolas@fjasle.eu>
+Cc: Greg Kroah-Hartman <gregkh@suse.de>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-ide@vger.kernel.org
+Cc: amd-gfx@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: intel-gfx@lists.freedesktop.org
+Cc: nouveau@lists.freedesktop.org
+Cc: intel-xe@lists.freedesktop.org
+Cc: netdev@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-scsi@vger.kernel.org
+Cc: bpf@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org
+Cc: linux-modules@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-kbuild@vger.kernel.org
+Cc: llvm@lists.linux.dev
