@@ -1,41 +1,43 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 489173DAC0F;
-	Tue, 26 Mar 2024 16:38:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE30D4A0A;
+	Tue, 26 Mar 2024 16:45:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711471093; cv=none; b=OQ4H8oXosRQ66njrzRAMQACwG2mt2LjiYmN8tGDi1cz2/vIgMHRi6fkMYffmKlXId+ONiojOUY01cOpioZQagichW1GV2sJEPEQeth0yo1nBfV4kk2bBI9Vj5+Hty38CRnKMh9rVLBb7KSXDJqRtLHL6YUpn6asgy64x8SoNicY=
+	t=1711471527; cv=none; b=E1zO2qCVZ5Ma7JnpmtadBhuW0Xb9e5qDpWOECITCGD9Eu6RHaXEhSDnnZEXYv07OqbqYr9HqlbZt1KaUJwjZOtOcsloB6BPFmENpZLoGH7eaPpJaW4Lvxev65GakBSPEv1V40SMGVkoUBdCptXWK1wgImGJDerJmr6lL5jfJjKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711471093; c=relaxed/simple;
-	bh=1VUl5T3Hy9/wKjGM7Ekj16noT58ordY8L5XY+CsT5wE=;
+	s=arc-20240116; t=1711471527; c=relaxed/simple;
+	bh=e95uhVBTfAzZnFOKr0O1j5p3MLRuxzZEWptMHK7NSpA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OAMvyH0vVZDZ4ABlXPwhZ3fvIZAhEdf/MLjS7QFO4H47WGd1u6WwpskeHxpcC5/+8m6cmfbOX6z3GihZOBP73WOa3Fb4RjW472PawNKnkUBiejljHQZabbB+DxPRErE5ERhzvZGhVQn3X5h4YEET84q4AxjkgyELNcXm+3lV24A=
+	 Content-Type:Content-Disposition:In-Reply-To; b=H7WfTXi0r/0u6fRQxwC+iyRYBOlvhfytFHiJK69sRd9+W6khzEK7dhB+bLyliRagaAGzOdOEi6sRWBcpsaqLAqhZ6N7KgxJ5afTjMiq4yegHH097pOZNTwVx2gV5ub92nbYEfUxrk+k0A+JApuMRRYdRGQJOyKRBvDOY34Vv7q4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E6452F4;
-	Tue, 26 Mar 2024 09:38:45 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8D5F2F4;
+	Tue, 26 Mar 2024 09:45:58 -0700 (PDT)
 Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.35.184])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A34C3F694;
-	Tue, 26 Mar 2024 09:38:10 -0700 (PDT)
-Date: Tue, 26 Mar 2024 16:38:07 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B7D93F694;
+	Tue, 26 Mar 2024 09:45:23 -0700 (PDT)
+Date: Tue, 26 Mar 2024 16:45:20 +0000
 From: Mark Rutland <mark.rutland@arm.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>, linux-riscv@lists.infradead.org,
+To: Calvin Owens <jcalvinowens@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	linux-riscv@lists.infradead.org,
 	Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
 	Albert Ou <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org,
 	"Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
 	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
 	"David S . Miller" <davem@davemloft.net>,
-	linux-trace-kernel@vger.kernel.org,
-	Calvin Owens <jcalvinowens@gmail.com>
+	linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH v2] arch/riscv: Enable kprobes when CONFIG_MODULES=n
-Message-ID: <ZgL5779MIS61GpV6@FVFF77S0Q05N.cambridge.arm.com>
+Message-ID: <ZgL7oG5EfLGYDGRS@FVFF77S0Q05N.cambridge.arm.com>
 References: <20240323232908.13261-1-jarkko@kernel.org>
  <20240325115632.04e37297491cadfbbf382767@kernel.org>
  <ZgLfsvbCZj2S6fRE@FVFF77S0Q05N.cambridge.arm.com>
  <20240327002403.62649aee45508b7a16caedba@kernel.org>
+ <ZgL0ks5gikCG7NBN@debian-BULLSEYE-live-builder-AMD64>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -44,60 +46,54 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240327002403.62649aee45508b7a16caedba@kernel.org>
+In-Reply-To: <ZgL0ks5gikCG7NBN@debian-BULLSEYE-live-builder-AMD64>
 
-On Wed, Mar 27, 2024 at 12:24:03AM +0900, Masami Hiramatsu wrote:
-> On Tue, 26 Mar 2024 14:46:10 +0000
-> Mark Rutland <mark.rutland@arm.com> wrote:
-> > 
-> > On Mon, Mar 25, 2024 at 11:56:32AM +0900, Masami Hiramatsu wrote:
-> > > I think, we'd better to introduce `alloc_execmem()`,
-> > > CONFIG_HAVE_ALLOC_EXECMEM and CONFIG_ALLOC_EXECMEM at first
+On Tue, Mar 26, 2024 at 09:15:14AM -0700, Calvin Owens wrote:
+> On Wednesday 03/27 at 00:24 +0900, Masami Hiramatsu wrote:
+> > On Tue, 26 Mar 2024 14:46:10 +0000
+> > Mark Rutland <mark.rutland@arm.com> wrote:
+> > > Different exectuable allocations can have different requirements. For example,
+> > > on arm64 modules need to be within 2G of the kernel image, but the kprobes XOL
+> > > areas can be anywhere in the kernel VA space.
 > > > 
-> > >   config HAVE_ALLOC_EXECMEM
-> > > 	bool
+> > > Forcing those behind the same interface makes things *harder* for architectures
+> > > and/or makes the common code more complicated (if that ends up having to track
+> > > all those different requirements). From my PoV it'd be much better to have
+> > > separate kprobes_alloc_*() functions for kprobes which an architecture can then
+> > > choose to implement using a common library if it wants to.
 > > > 
-> > >   config ALLOC_EXECMEM
-> > > 	bool "Executable trampline memory allocation"
-> > > 	depends on MODULES || HAVE_ALLOC_EXECMEM
+> > > I took a look at doing that using the core ifdeffery fixups from Jarkko's v6,
+> > > and it looks pretty clean to me (and works in testing on arm64):
 > > > 
-> > > And define fallback macro to module_alloc() like this.
+> > >   https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=kprobes/without-modules
 > > > 
-> > > #ifndef CONFIG_HAVE_ALLOC_EXECMEM
-> > > #define alloc_execmem(size, gfp)	module_alloc(size)
-> > > #endif
-> > 
-> > Please can we *not* do this? I think this is abstracting at the wrong level (as
-> > I mentioned on the prior execmem proposals).
-> > 
-> > Different exectuable allocations can have different requirements. For example,
-> > on arm64 modules need to be within 2G of the kernel image, but the kprobes XOL
-> > areas can be anywhere in the kernel VA space.
-> > 
-> > Forcing those behind the same interface makes things *harder* for architectures
-> > and/or makes the common code more complicated (if that ends up having to track
-> > all those different requirements). From my PoV it'd be much better to have
-> > separate kprobes_alloc_*() functions for kprobes which an architecture can then
-> > choose to implement using a common library if it wants to.
-> > 
-> > I took a look at doing that using the core ifdeffery fixups from Jarkko's v6,
-> > and it looks pretty clean to me (and works in testing on arm64):
-> > 
-> >   https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=kprobes/without-modules
-> > 
-> > Could we please start with that approach, with kprobe-specific alloc/free code
-> > provided by the architecture?
+> > > Could we please start with that approach, with kprobe-specific alloc/free code
+> > > provided by the architecture?
 > 
-> OK, as far as I can read the code, this method also works and neat! 
-> (and minimum intrusion). I actually found that exposing CONFIG_ALLOC_EXECMEM
-> to user does not help, it should be an internal change. So hiding this change
-> from user is better choice. Then there is no reason to introduce the new
-> alloc_execmem, but just expand kprobe_alloc_insn_page() is reasonable.
+> Heh, I also noticed that dead !RWX branch in arm64 patch_map(), I was
+> about to send a patch to remove it.
 > 
-> Mark, can you send this series here, so that others can review/test it?
+> > OK, as far as I can read the code, this method also works and neat! 
+> > (and minimum intrusion). I actually found that exposing CONFIG_ALLOC_EXECMEM
+> > to user does not help, it should be an internal change. So hiding this change
+> > from user is better choice. Then there is no reason to introduce the new
+> > alloc_execmem, but just expand kprobe_alloc_insn_page() is reasonable.
+> 
+> I'm happy with this, it solves the first half of my problem. But I want
+> eBPF to work in the !MODULES case too.
+> 
+> I think Mark's approach can work for bpf as well, without needing to
+> touch module_alloc() at all? So I might be able to drop that first patch
+> entirely.
 
-I've written up a cover letter and sent that out:
-  
-  https://lore.kernel.org/lkml/20240326163624.3253157-1-mark.rutland@arm.com/
+I'd be very happy with eBPF following the same approach, with BPF-specific
+alloc/free functions that we can implement in arch code.
 
+IIUC eBPF code *does* want to be within range of the core kernel image, so for
+arm64 we'd want to factor some common logic out of module_alloc() and into
+something that module_alloc() and "bpf_alloc()" (or whatever it would be
+called) could use. So I don't think we'd necessarily save on touching
+module_alloc(), but I think the resulting split would be better.
+
+Thanks,
 Mark.
