@@ -1,117 +1,89 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7CA84D29;
-	Tue, 26 Mar 2024 07:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636FC132C1A;
+	Tue, 26 Mar 2024 07:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711437961; cv=none; b=IMf5QXRsnAaZdfZ7stMPxhxiP6oJOHHKC8n01imG9ZgAUInAmGjrm1T68NvK62D52r46juCoNhA0DwK4Zfaj59dXwTrFwOOCGx/ZYLxOQeTUBkBMR9VZo6XRX1X491YaN9NIBE6d3zBydQ51qFHbWXaZXHJZ8/1uLVfNbPFDLxw=
+	t=1711438840; cv=none; b=JYQVpcBJBnq7XK6OLSdzSp/0xG6nxQL483E8qC5mXrfYh4K2NHtnHQugT3rx95OFkm5UiwXaSGBJsj1UCch9qK5wvLeq2IPVtN4rJxlbOZhT8eMqEd+SkbXODeNGeZGTeV4xlBb9Qbq7vJQ0aTxp58a8E0q0Z9rVKh8CLRVOdig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711437961; c=relaxed/simple;
-	bh=SeCIcmLMOaUBgNiXSvNudTBS9oS1ouW0sGgPTGoroXg=;
+	s=arc-20240116; t=1711438840; c=relaxed/simple;
+	bh=OAj5vxYqi6Ox2sML1jx38TUCq3UEOLTHQ91aVzdlpNg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=egFdSA9Jj3dtWmMVcEJfBXKIkTE2lOw2bRAacU7ApKrMX+tv1zhe85GuoqCLWgahdo1yBXAvumhIyu6BRhgPaLM80WNSYzTrOOHDYGP7w5NI4YMgPeEZgBFQ8Etg3hPTM9D0gBfPxSwfNIt4tMdXnNbG7XZKNiIX1FqVI2jM5Rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KH8Ar3YA; arc=none smtp.client-ip=209.85.208.50
+	 To:Cc:Content-Type; b=ObFnfSaza4APr5ftHr0onZDZmikvwWovzcW9aWQnjGA+P3XLk2F9CLXaNxwTDKo8PVCmqX9UU9N1UG8/wz2HSV2nPW+0+gxh6tFfuqZbO6Sqdp6xJ2PvQWiAbv/PLNozBllTLj4rES537i5S1HrkrAZkHv0SIlj8QZvPg1ZcQI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YumBn6wW; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KH8Ar3YA"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-565c6cf4819so10363679a12.1;
-        Tue, 26 Mar 2024 00:25:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YumBn6wW"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a468226e135so611068166b.0;
+        Tue, 26 Mar 2024 00:40:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711437958; x=1712042758; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1711438836; x=1712043636; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=r4hi5QonY0g+Isq5nzA/ob2FDC2jX5Rj8a6cVlwQSo4=;
-        b=KH8Ar3YAOqJQsv7FpVJtZk9PpVZT4f8NeqIv1ZIaafrBac6x1vklaFd2UUvWOcPNRI
-         YRXdleNkEsngFueCoAAEYZbK9BDUBsf3TiuNBLlr2vvhi3cXYE4+brKVNv2xIw63ejTh
-         M163g6GCv9WtJyGnCuft8EEs0H8Dkm5O+C3E2cFPwduKeWije36GA3g9ZuR9V5TyH7Kh
-         sJbNMb2oROw91yOztBZ/JVBsvtRQxlbbPolqYmQzUEdJD4VZG4FidGXN/lMv+yPH0CUn
-         P+hkXJlGJbiCk0etQ6WF2sLKtO1zRqufRdMrC/3EO69fedM9UWXbTqHEMhpF1iRGnYRr
-         M7hg==
+        bh=OAj5vxYqi6Ox2sML1jx38TUCq3UEOLTHQ91aVzdlpNg=;
+        b=YumBn6wWfNNSkEFDvbiReFlVYZttlcO51m/C3OvjH8jfT9GtpegrcrjpopFMWIbrKI
+         AMf8KWHMcdpLWI+TZcZ/YXqVZfati0j+Kbz9tZPs6gVmU/B4tU/vAuUoRNxsKwNTLd8+
+         t1Qn2os57NDdjQBNPHKwZDDiEjDQXHSrXEEAwsUrKdCc+tdfHVWaPJzPmOQCmlnEnhKr
+         E7tq1VgIpRoMjtRWkLhicyx5vTEuJB2xiMMCba2fC+N6z+PPN5JMh+ZsP/rtmEVyb/6B
+         FtQ4+F9EJMtoNuSo3LQ67NLNMR19M5PyZmTcqiBNJUsHfKC5m4AMgBLkZNg49ueUzUAJ
+         KJQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711437958; x=1712042758;
+        d=1e100.net; s=20230601; t=1711438836; x=1712043636;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=r4hi5QonY0g+Isq5nzA/ob2FDC2jX5Rj8a6cVlwQSo4=;
-        b=iC/2jRhNaNPQk9p8MgoJC+ZIrlpamSn5ZlLVkG0AWCaC0L5JHirlHPOp+/kxlrzEQa
-         JvZ8lMD5wvZwY60UqkjNLJc/r41m/P2fCjK8gMe2PgWvLxhHxF4WI6KRKJKLb+4EqHkv
-         zliF4hVb33WbEF723miiGeIIVEGNMsUb3B/+9OxGBiNiXA7EQfXCV9fufvYTWUYj1yma
-         b2Ezr+/M/cpDu3e/AgiTG2EenJbkgzzbgTrkr+/UzuNB/+JeEpnlOSJT+YdrWbJD2tTf
-         ubYJRUAJKAC1e7DAr6SYZHKXc8h8rrxGPcrCcBgLhjVW4hNs9QwaSKRIKzjf1/yszYIe
-         jCbA==
-X-Forwarded-Encrypted: i=1; AJvYcCXCxrnC0JJsACBdQD7GvQw8FjZ2KvACzLvpmw9yVMjR9D4Tm80Bqfl4R072g+x84okf6bJeYkvtu0QdSjnlsbY0tO3muVdHp34aznjjcEgY5jkQvfTE6YlyFVrjOYqjeoOVsh5Chy27eyNAfIX0b2k1iKjF89JS1T0INuP44NcVi2cVZgUGIBUj
-X-Gm-Message-State: AOJu0YwsZq6+70gXVKKnG7yuIvvXiPmalnCRi6J24105H75IhEO7dpzG
-	94gDK9ebE5ihIYJDl2HoVgGZMf2KYPPEyupTO+L8F5MBCT6Dhj9MZzp0DzfUJW3WwRJUHCup3q1
-	p/peMKgxZGGhpwzsrc27DjB0uBAs=
-X-Google-Smtp-Source: AGHT+IFYsWLrSSReNHOvPWayY/EjNwUNTMWpQJa/7aPbmuCl5KR+IqtJTsrAErsRVn1dbGfKDXHMYxGjGNbT8pQoL+M=
-X-Received: by 2002:a17:906:b10d:b0:a46:ebe6:742e with SMTP id
- u13-20020a170906b10d00b00a46ebe6742emr469183ejy.23.1711437957891; Tue, 26 Mar
- 2024 00:25:57 -0700 (PDT)
+        bh=OAj5vxYqi6Ox2sML1jx38TUCq3UEOLTHQ91aVzdlpNg=;
+        b=pLy6IC4HgL1E/7MplhAafzvWiVjjkE+bEzoWGk7w1BEO03ipnjUR4rxc9SbVst/lDj
+         p8iI7PFH2muVCmglSKy5ZqU5j8mO9O5v2a5DpdNTyxuBajDzR9X8s42EYVfJgPlNwaQi
+         DvzB8TAyPZNrGSXsCsepF+Fd/MbAANZYvb3hr14OJupUjrmB57euqGko/62RT1RVF4Si
+         2cR76Fxc9IEOUqiXHzpWoIyzuXy5aMgUrxkAQMzAbn8mTdamqTEvpF/sL3QVuICctUSh
+         /9pFm6AM7XgqEw1U90Jyn9OP3olQgIdXYbiIcgHPBXehXocJtExD81V+LhJ4JP0KL1r2
+         iOhw==
+X-Forwarded-Encrypted: i=1; AJvYcCX0RNgZtDVlm4CUL76rEtOqGxvutS5xM93lvDRs9P47FWX5GJkGoRH8LOIqeXME+ZQ4aaSMlc8EmxQcZpKI6dUEq2YYVF3NjZSdsomuvtjqUdouS80iPSyZjUKILBqS4fXG4G2gmomRMiyOTve/4evHko7l9SwpE4YEbFhYV5atFrgbInqz3tLq
+X-Gm-Message-State: AOJu0YyM93us54ziIfMbz9HBzY00lTU4x8ebFypNat7V4Iu0Jo20VRZe
+	SjTljFZ2xOiRgtRfscqmkavc1oVFXGGc779wASg4N0Na8XAnxQhb56Oeb46/gyI1Rq/hYYIOtrM
+	FoEzplp2WKHJbdAYfJ001JwxiKkw=
+X-Google-Smtp-Source: AGHT+IHbX3kmzaNoi1M3/W6E/dw1Eaqf4aZjwDqSHfT7En//8qJqco2N34zqAyns+BUh/I9QdZy4LnL3WpYehcgpQ8c=
+X-Received: by 2002:a17:906:52ca:b0:a46:be82:f478 with SMTP id
+ w10-20020a17090652ca00b00a46be82f478mr1191938ejn.68.1711438836491; Tue, 26
+ Mar 2024 00:40:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1711361723.git.balazs.scheidler@axoflow.com>
- <34a9c221a6d644f18c826a1beddba58af6b7a64c.1711361723.git.balazs.scheidler@axoflow.com>
- <20240325192855.1fb3c331@kernel.org>
-In-Reply-To: <20240325192855.1fb3c331@kernel.org>
+References: <cover.1711361723.git.balazs.scheidler@axoflow.com> <394f9d55197681e910d104dbd35e62fb4098712b.1711361723.git.balazs.scheidler@axoflow.com>
+In-Reply-To: <394f9d55197681e910d104dbd35e62fb4098712b.1711361723.git.balazs.scheidler@axoflow.com>
 From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Tue, 26 Mar 2024 15:25:21 +0800
-Message-ID: <CAL+tcoDXHSMmqUeuMSSObco=_2Vr5tDSRFzXUSsAneOP314jqg@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 2/2] net: udp: add IP/port data to the
- tracepoint udp/udp_fail_queue_rcv_skb
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Balazs Scheidler <bazsi77@gmail.com>, kuniyu@amazon.com, netdev@vger.kernel.org, 
+Date: Tue, 26 Mar 2024 15:39:59 +0800
+Message-ID: <CAL+tcoAy1VU6-pMOsqSCU8EUkyo5q9SEkM=GeDWjW9Mw6os=RQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 1/2] net: port TP_STORE_ADDR_PORTS_SKB macro
+ to be tcp/udp independent
+To: Balazs Scheidler <bazsi77@gmail.com>
+Cc: kuniyu@amazon.com, netdev@vger.kernel.org, 
 	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
-	David Ahern <dsahern@kernel.org>, Eric Dumazet <edumazet@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Balazs Scheidler <balazs.scheidler@axoflow.com>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Eric Dumazet <edumazet@google.com>, 
+	Balazs Scheidler <balazs.scheidler@axoflow.com>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 26, 2024 at 10:28=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> w=
-rote:
+On Mon, Mar 25, 2024 at 6:29=E2=80=AFPM Balazs Scheidler <bazsi77@gmail.com=
+> wrote:
 >
-> On Mon, 25 Mar 2024 11:29:18 +0100 Balazs Scheidler wrote:
-> > +                memset(__entry->saddr, 0, sizeof(struct sockaddr_in6))=
-;
-> > +                memset(__entry->daddr, 0, sizeof(struct sockaddr_in6))=
-;
+> This patch moves TP_STORE_ADDR_PORTS_SKB() to a common header and removes
+> the TCP specific implementation details.
 >
-> Indent with tabs please, checkpatch says:
+> Previously the macro assumed the skb passed as an argument is a
+> TCP packet, the implementation now uses an argument to the L4 header and
+> uses that to extract the source/destination ports, which happen
+> to be named the same in "struct tcphdr" and "struct udphdr"
 >
-> ERROR: code indent should use tabs where possible
-> #59: FILE: include/trace/events/udp.h:38:
-> +                memset(__entry->saddr, 0, sizeof(struct sockaddr_in6));$
->
-> WARNING: please, no spaces at the start of a line
-> #59: FILE: include/trace/events/udp.h:38:
-> +                memset(__entry->saddr, 0, sizeof(struct sockaddr_in6));$
->
-> ERROR: code indent should use tabs where possible
-> #60: FILE: include/trace/events/udp.h:39:
-> +                memset(__entry->daddr, 0, sizeof(struct sockaddr_in6));$
->
-> WARNING: please, no spaces at the start of a line
-> #60: FILE: include/trace/events/udp.h:39:
-> +                memset(__entry->daddr, 0, sizeof(struct sockaddr_in6));$
+> Signed-off-by: Balazs Scheidler <balazs.scheidler@axoflow.com>
 
-More than this, it would be better to put "From Balazs Scheidler
-<balazs.scheidler@axoflow.com>" in the first line of each patch to
-eliminate the mismatched email address warning.
-
-Link (Jakub referred to):
-https://patchwork.kernel.org/project/netdevbpf/patch/34a9c221a6d644f18c826a=
-1beddba58af6b7a64c.1711361723.git.balazs.scheidler@axoflow.com/
-Detailed info: https://netdev.bots.linux.dev/static/nipa/837832/13601927/ch=
-eckpatch/stdout
-
-> --
-> pw-bot: cr
+The patch itself looks good to me, feel free to add:
+Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
