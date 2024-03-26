@@ -1,196 +1,103 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D166CDD9;
-	Tue, 26 Mar 2024 16:16:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 489173DAC0F;
+	Tue, 26 Mar 2024 16:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711469809; cv=none; b=qrJkzt5qZroCngKU0EcL1SPlKBoj9A4wZd1IxY/7a6UyKQwOuMa2pWPF7rUvNWVbMD2NivqFidoklk7Bq11qMqg7BhfNvg/wy2ZUOV3H+S1AbVOyb906eugE4RVxeK/PTXuWV6OrswqN2nkrcNcv5a+nJT7eb+DV52gwlRp800o=
+	t=1711471093; cv=none; b=OQ4H8oXosRQ66njrzRAMQACwG2mt2LjiYmN8tGDi1cz2/vIgMHRi6fkMYffmKlXId+ONiojOUY01cOpioZQagichW1GV2sJEPEQeth0yo1nBfV4kk2bBI9Vj5+Hty38CRnKMh9rVLBb7KSXDJqRtLHL6YUpn6asgy64x8SoNicY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711469809; c=relaxed/simple;
-	bh=Hu751i6KRZc0EauBOtfdQ3K2MwbwDVkz3AtJAI1/HCY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rfT/QL5JfV+b3V+FTDh4Hf+dZNMHc4mS6zboTXnhPr4rink0FmvLfc4Yh9KECfXa9XUOTDjhSxri15MahYST7SNyUAQX4li/u3oXcfKOAnyXa32z2EmYXm9y58H2nrhG4yt7gjbsOaDwJmqAc0q+6W7QH6UBdWpsMo4yn2RVSYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M1L2huhj; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M1L2huhj"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e0b213efa3so20252935ad.0;
-        Tue, 26 Mar 2024 09:16:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711469805; x=1712074605; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=elq26VvqKMTOYoZX8ejkefRVkYcEJb3PZ8dLMFD5KMY=;
-        b=M1L2huhj2wsuRuEYbvx+ZINm4yBVbMP2xe3FtPhn78EuTEnOMFhE1HR9X00dFZJh/h
-         Vs5qTLpOznGmw/ma+xYpe4ziKToWAJAUfjvJLlHPuhwllBD2XBU96vTc1ifCoXKT4xPt
-         zlw72hyc6Npes83zBu7B/fZ02EUiiyWZt08zsRFfr0FmblQrNJuK9nT4NWRChK/qGL5r
-         YEPg4npufRwJa+w5E8ONCPu3+QGwb8SLWPCszoRTZ16krE98OkDJyhvsxqjTN2bGLYJF
-         9hFWzjRyke28NcoETiOlM3bqqm+/SFWeCoSrR5Dam3P0YBw1677WaB7L9XiicAwrJ4xK
-         AnhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711469805; x=1712074605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=elq26VvqKMTOYoZX8ejkefRVkYcEJb3PZ8dLMFD5KMY=;
-        b=upSTKtGLe2Bd7onGx+JM9F5R8eVx4blx6h3rXO1ddpmz69GKq+gvHOGKRmfvtNBBbk
-         jVabaXYXFOuw3okylbfmH+21UrsO/Uh9cjmcZB6RRdwru/VXdvZKMlBHi6ApobasrfyJ
-         E2AU5vPmLJsMNxnK2mUKZJZp57nhXTe7p1Feklqws8JkAW2OnUvDWAhYyX6QgH90RLHE
-         1WhbAm/EPWiUui9vjRoY13tabNZC1YWbyqjzQkigLYb9rew15wDUOZiL+qKPR81rICX0
-         JXwwslb3kcGyB0vOu7RwHeacWtiupeAFnFYoXSaO0xXgYX87yBugXlp0/3X3QPJ6HKdz
-         l2cQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX9z0VghgL9BdtWF2E8vzGwA0mmK2tLzAjopwJgYbUkxlkD90b+5U7zUhnwAbxnn0P8uMDQjAXGOze4jwOfZPrSNe7al+dQp7DoDS9WwverfWrCsG2gl/b+C6ZWvhuSSxDSGstS0ige
-X-Gm-Message-State: AOJu0YyyPpZBKMeccJrcAvyadh/vQv/WUXFsoS8xEmA+jLZMI2SgOABI
-	Ww6NZm+c2efEfSHLK3VI11CIwlvSjUdG0disXGSC6OeYPjbWSCo0lGSaaqwUf5SoTHCzzjMP58+
-	YOPQp4bvSgeQ3mN1Yby01v38Q3sI/4462
-X-Google-Smtp-Source: AGHT+IGcGbVKO4Mp0HgLCsCrJhDWTqluZ8ZhttodhRfazx1mj/6+60HSyIhNiI2N9kw75dPF4YAjsL5DTsrId6wDmsI=
-X-Received: by 2002:a17:902:e806:b0:1e0:f51b:12e2 with SMTP id
- u6-20020a170902e80600b001e0f51b12e2mr1764536plg.2.1711469805327; Tue, 26 Mar
- 2024 09:16:45 -0700 (PDT)
+	s=arc-20240116; t=1711471093; c=relaxed/simple;
+	bh=1VUl5T3Hy9/wKjGM7Ekj16noT58ordY8L5XY+CsT5wE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OAMvyH0vVZDZ4ABlXPwhZ3fvIZAhEdf/MLjS7QFO4H47WGd1u6WwpskeHxpcC5/+8m6cmfbOX6z3GihZOBP73WOa3Fb4RjW472PawNKnkUBiejljHQZabbB+DxPRErE5ERhzvZGhVQn3X5h4YEET84q4AxjkgyELNcXm+3lV24A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E6452F4;
+	Tue, 26 Mar 2024 09:38:45 -0700 (PDT)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.35.184])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A34C3F694;
+	Tue, 26 Mar 2024 09:38:10 -0700 (PDT)
+Date: Tue, 26 Mar 2024 16:38:07 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>, linux-riscv@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org,
+	"Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	linux-trace-kernel@vger.kernel.org,
+	Calvin Owens <jcalvinowens@gmail.com>
+Subject: Re: [PATCH v2] arch/riscv: Enable kprobes when CONFIG_MODULES=n
+Message-ID: <ZgL5779MIS61GpV6@FVFF77S0Q05N.cambridge.arm.com>
+References: <20240323232908.13261-1-jarkko@kernel.org>
+ <20240325115632.04e37297491cadfbbf382767@kernel.org>
+ <ZgLfsvbCZj2S6fRE@FVFF77S0Q05N.cambridge.arm.com>
+ <20240327002403.62649aee45508b7a16caedba@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240322160323.2463329-1-andrii@kernel.org> <20240325113848.32a70948d1cdb0fa76225690@kernel.org>
- <20240325181338.39376089@gandalf.local.home>
-In-Reply-To: <20240325181338.39376089@gandalf.local.home>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 26 Mar 2024 09:16:33 -0700
-Message-ID: <CAEf4BzazyWqLRmruj6XPXMYSYrrFPRAJRizWGhKtTt9A8zWE3A@mail.gmail.com>
-Subject: Re: [PATCH] ftrace: make extra rcu_is_watching() validation check optional
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, jolsa@kernel.org, 
-	"Paul E . McKenney" <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240327002403.62649aee45508b7a16caedba@kernel.org>
 
-On Mon, Mar 25, 2024 at 3:11=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Mon, 25 Mar 2024 11:38:48 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
->
-> > On Fri, 22 Mar 2024 09:03:23 -0700
-> > Andrii Nakryiko <andrii@kernel.org> wrote:
-> >
-> > > Introduce CONFIG_FTRACE_VALIDATE_RCU_IS_WATCHING config option to
-> > > control whether ftrace low-level code performs additional
-> > > rcu_is_watching()-based validation logic in an attempt to catch noins=
-tr
-> > > violations.
-> > >
-> > > This check is expected to never be true in practice and would be best
-> > > controlled with extra config to let users decide if they are willing =
-to
-> > > pay the price.
-> >
-> > Hmm, for me, it sounds like "WARN_ON(something) never be true in practi=
-ce
-> > so disable it by default". I think CONFIG_FTRACE_VALIDATE_RCU_IS_WATCHI=
-NG
-> > is OK, but tht should be set to Y by default. If you have already verif=
-ied
-> > that your system never make it true and you want to optimize your ftrac=
-e
-> > path, you can manually set it to N at your own risk.
-> >
->
-> Really, it's for debugging. I would argue that it should *not* be default=
- y.
-> Peter added this to find all the locations that could be called where RCU
-> is not watching. But the issue I have is that this is that it *does cause
-> overhead* with function tracing.
->
-> I believe we found pretty much all locations that were an issue, and we
-> should now just make it an option for developers.
->
-> It's no different than lockdep. Test boxes should have it enabled, but
-> there's no reason to have this enabled in a production system.
->
+On Wed, Mar 27, 2024 at 12:24:03AM +0900, Masami Hiramatsu wrote:
+> On Tue, 26 Mar 2024 14:46:10 +0000
+> Mark Rutland <mark.rutland@arm.com> wrote:
+> > 
+> > On Mon, Mar 25, 2024 at 11:56:32AM +0900, Masami Hiramatsu wrote:
+> > > I think, we'd better to introduce `alloc_execmem()`,
+> > > CONFIG_HAVE_ALLOC_EXECMEM and CONFIG_ALLOC_EXECMEM at first
+> > > 
+> > >   config HAVE_ALLOC_EXECMEM
+> > > 	bool
+> > > 
+> > >   config ALLOC_EXECMEM
+> > > 	bool "Executable trampline memory allocation"
+> > > 	depends on MODULES || HAVE_ALLOC_EXECMEM
+> > > 
+> > > And define fallback macro to module_alloc() like this.
+> > > 
+> > > #ifndef CONFIG_HAVE_ALLOC_EXECMEM
+> > > #define alloc_execmem(size, gfp)	module_alloc(size)
+> > > #endif
+> > 
+> > Please can we *not* do this? I think this is abstracting at the wrong level (as
+> > I mentioned on the prior execmem proposals).
+> > 
+> > Different exectuable allocations can have different requirements. For example,
+> > on arm64 modules need to be within 2G of the kernel image, but the kprobes XOL
+> > areas can be anywhere in the kernel VA space.
+> > 
+> > Forcing those behind the same interface makes things *harder* for architectures
+> > and/or makes the common code more complicated (if that ends up having to track
+> > all those different requirements). From my PoV it'd be much better to have
+> > separate kprobes_alloc_*() functions for kprobes which an architecture can then
+> > choose to implement using a common library if it wants to.
+> > 
+> > I took a look at doing that using the core ifdeffery fixups from Jarkko's v6,
+> > and it looks pretty clean to me (and works in testing on arm64):
+> > 
+> >   https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=kprobes/without-modules
+> > 
+> > Could we please start with that approach, with kprobe-specific alloc/free code
+> > provided by the architecture?
+> 
+> OK, as far as I can read the code, this method also works and neat! 
+> (and minimum intrusion). I actually found that exposing CONFIG_ALLOC_EXECMEM
+> to user does not help, it should be an internal change. So hiding this change
+> from user is better choice. Then there is no reason to introduce the new
+> alloc_execmem, but just expand kprobe_alloc_insn_page() is reasonable.
+> 
+> Mark, can you send this series here, so that others can review/test it?
 
-I tend to agree with Steven here (which is why I sent this patch as it
-is), but I'm happy to do it as an opt-out, if Masami insists. Please
-do let me know if I need to send v2 or this one is actually the one
-we'll end up using. Thanks!
+I've written up a cover letter and sent that out:
+  
+  https://lore.kernel.org/lkml/20240326163624.3253157-1-mark.rutland@arm.com/
 
-> -- Steve
->
->
-> > >
-> > > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > > Cc: Paul E. McKenney <paulmck@kernel.org>
-> > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> > > ---
-> > >  include/linux/trace_recursion.h |  2 +-
-> > >  kernel/trace/Kconfig            | 13 +++++++++++++
-> > >  2 files changed, 14 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/include/linux/trace_recursion.h b/include/linux/trace_re=
-cursion.h
-> > > index d48cd92d2364..24ea8ac049b4 100644
-> > > --- a/include/linux/trace_recursion.h
-> > > +++ b/include/linux/trace_recursion.h
-> > > @@ -135,7 +135,7 @@ extern void ftrace_record_recursion(unsigned long=
- ip, unsigned long parent_ip);
-> > >  # define do_ftrace_record_recursion(ip, pip)       do { } while (0)
-> > >  #endif
-> > >
-> > > -#ifdef CONFIG_ARCH_WANTS_NO_INSTR
-> > > +#ifdef CONFIG_FTRACE_VALIDATE_RCU_IS_WATCHING
-> > >  # define trace_warn_on_no_rcu(ip)                                  \
-> > >     ({                                                              \
-> > >             bool __ret =3D !rcu_is_watching();                       =
- \
-> >
-> > BTW, maybe we can add "unlikely" in the next "if" line?
-> >
-> > > diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> > > index 61c541c36596..19bce4e217d6 100644
-> > > --- a/kernel/trace/Kconfig
-> > > +++ b/kernel/trace/Kconfig
-> > > @@ -974,6 +974,19 @@ config FTRACE_RECORD_RECURSION_SIZE
-> > >       This file can be reset, but the limit can not change in
-> > >       size at runtime.
-> > >
-> > > +config FTRACE_VALIDATE_RCU_IS_WATCHING
-> > > +   bool "Validate RCU is on during ftrace recursion check"
-> > > +   depends on FUNCTION_TRACER
-> > > +   depends on ARCH_WANTS_NO_INSTR
-> >
-> >       default y
-> >
-> > > +   help
-> > > +     All callbacks that attach to the function tracing have some sor=
-t
-> > > +     of protection against recursion. This option performs additiona=
-l
-> > > +     checks to make sure RCU is on when ftrace callbacks recurse.
-> > > +
-> > > +     This will add more overhead to all ftrace-based invocations.
-> >
-> >       ... invocations, but keep it safe.
-> >
-> > > +
-> > > +     If unsure, say N
-> >
-> >       If unsure, say Y
-> >
-> > Thank you,
-> >
-> > > +
-> > >  config RING_BUFFER_RECORD_RECURSION
-> > >     bool "Record functions that recurse in the ring buffer"
-> > >     depends on FTRACE_RECORD_RECURSION
-> > > --
-> > > 2.43.0
-> > >
-> >
-> >
->
+Mark.
