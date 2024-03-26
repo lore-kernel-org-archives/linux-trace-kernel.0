@@ -1,135 +1,221 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9786E757FD;
-	Tue, 26 Mar 2024 15:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784D22574B;
+	Tue, 26 Mar 2024 16:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711466650; cv=none; b=jqwWqlabetayMt6p3r3JKJIkIaLTg6Y/grJCE6vVzyWhI/9UfMytw420b+H9pN+/f6wBlkVaUDtGgLaTwyKGYvtMRP4aNfV4nK+71Wrc2JsKPoDa94vpaCTewhYEi23FAr5s8I5YuRYJ3Ym99lFTBnRyMp3wneBuomHFavv+sIE=
+	t=1711468923; cv=none; b=kcpIp+7zWp/Mv55on3hZsV9BTNCOgMvCjpuNoUUGWZYmGTCKWvU9VMXUuhnOXGBLnMyK/T6zWFiRXZxcR6aQj0a1DOjBI1CF4ZSZfKPJTsET6FR5IbYvQ2qrXlLVHntK5cPCuMhdmgN6JVQVXCSeZ+UH/y2afyd1wcLdyHIYjgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711466650; c=relaxed/simple;
-	bh=ujR0rPXLZBsE/QY8uXI1pDCWebcjJRNm9iHPbJUo0Ss=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=rEgZXA734K8l8IhsRNEZCG5ZCqXddexOEw8vGFjmZmvevHCGnGcRH0d8O+EubYWx5H2s54+ioOMvCwKu5+9veh4hYNLORrorxJzFuIVUv4zZh2V6QdiBWKueNWh0AOOs7f2ZyrFru3t92ZFjBKxnEdJeV5nGqd9QNzur+0J7W9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZM51zYNl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711468923; c=relaxed/simple;
+	bh=IjbfE8tFOdfjNx4MkilscMXL9i5JKvzYqCkq93qx1DI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Zf5WFUFs7oZtBkbymupksJMDJybJRaTyr9w2hwOcqYhdjSwITBs52Kb3mRkThvz07TDrWen+eerCvo6NG5Glqx4BEIyyiwEtN/lmt+4RLCQudPzKUp5akd5lb+XRGCC+1kgga6bAubw5LBpvRTuKlw/DU8TU9TZoK0tJZrKBdyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I+AVg4pM; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZM51zYNl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F539C433C7;
-	Tue, 26 Mar 2024 15:24:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711466649;
-	bh=ujR0rPXLZBsE/QY8uXI1pDCWebcjJRNm9iHPbJUo0Ss=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ZM51zYNl1VjBdBbarCQPT4o8P7JTUjymm1ldrFKsskdIQUDl75XGY0h3MFLabpNf2
-	 9zL2Bu9qLsM8u54povk/MhiUucL53tjN5IS7Fq82hnjo7gJxZHI8EDJleWKsf60eNn
-	 qGlxpvC1VxhVsR2dgvcNLy1NNI77sjwxejRMFx2J6Y0g39I+Ng9ZkV0j38Zq3cEmlr
-	 RfN9BDIAOTeD7Yy3Jxn4aVxkCw8WdesRqiLw9nsypvJLPkVzgEggqnlwGugr8n3ZWV
-	 XUxSbVBtahoDBvjZASK0h5m/5ZIwZHI6FHIPEFqFXvbgRLpJGDi2JrmX80Dtl6rZr+
-	 7/0qXV7dIPJaA==
-Date: Wed, 27 Mar 2024 00:24:03 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>, linux-riscv@lists.infradead.org,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- linux-kernel@vger.kernel.org, "Naveen N . Rao"
- <naveen.n.rao@linux.ibm.com>, Anil S Keshavamurthy
- <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>,
- linux-trace-kernel@vger.kernel.org, Calvin Owens <jcalvinowens@gmail.com>
-Subject: Re: [PATCH v2] arch/riscv: Enable kprobes when CONFIG_MODULES=n
-Message-Id: <20240327002403.62649aee45508b7a16caedba@kernel.org>
-In-Reply-To: <ZgLfsvbCZj2S6fRE@FVFF77S0Q05N.cambridge.arm.com>
-References: <20240323232908.13261-1-jarkko@kernel.org>
-	<20240325115632.04e37297491cadfbbf382767@kernel.org>
-	<ZgLfsvbCZj2S6fRE@FVFF77S0Q05N.cambridge.arm.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I+AVg4pM"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1e0f2798b47so5211775ad.1;
+        Tue, 26 Mar 2024 09:02:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711468920; x=1712073720; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aQJPy88vBYo4nQyyX6JO+jPm5JtOURILAq3nriLwYbQ=;
+        b=I+AVg4pMGd1gzfEoz6Uq8v/9YC+YvYSeTaAiyRhtTnNeYvxqaxCXtahDtSH0Yzxl0b
+         dPokTHz6GZQWZ6JqdpOrNc8I7LabJejcpMu8vuxFYRiZLuXgtt8bU6ZIKP3hmgB02A20
+         8QrbargXJ2GlhYvGsxEespqzME3YB4IorZq46woaCh5JVeRiZTqcQ0JbTwU1w+VFi//2
+         Max75S5+Ya+pdOpTe67owOLHLSlM6IMdvG7CG2+1ONmjT8BpM0Wttev6gV8GnFC0KbSB
+         64ztF3PZTfkkJ3LzW6ieamFi1X+wHyVdPlA+VXzR3nK+tglXrmzZsj2UEVVB2BFdzTwu
+         ZJHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711468920; x=1712073720;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aQJPy88vBYo4nQyyX6JO+jPm5JtOURILAq3nriLwYbQ=;
+        b=wTWmj+E0pMc+2kBqXP/5Sh6+hjiM0ob1QgOaOEujSgKmgt/5iwRTpesSGUOY4kg/kU
+         2/nfjGdq0wMqqxF8p88iayWs1IijDFrdtVM2IReM61NvUkCJceMdH7F/gze1HiVcetWg
+         K+zdF2cWIgpJaDXCAxi5TvGG4OivweCiHV7c13KO/mCvbGryQbXeH7ekRo9sGrnjOTVd
+         S/83Gl33d9VbnUqgelQS3R8Wzg3tqBYeqVtj3xP92XBEN17Q69gTOuxbo6oJunck9lCE
+         jWr1KVyFlFDAs0fHIy3F7h8jZ52jcOuBJYcU6jn/iEn95l8VXnxt23C8M3UaHDm/yXoU
+         JM2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVuGvkc4rfpLe5NHyZtl36fj8QLiRmT0XBcj9YV3vBf6iW5YG7XOUoMu+VpTLMLZ+qlaCRC/eDY8pmQDMpm0U6/Hl5XFAG0rNDjpx8K6BUFf/phLszpVpK7E5KVZd6yQfTmGdvRVhZ7PVwQURSPhx6NJak5xElLK/E7W8zRfJZzb32B7IB8UZLgnI2uTcKmn2RUpTik/tju2qYjT6aLs1toZNzIs+B2mA==
+X-Gm-Message-State: AOJu0YxI2Ua17tn5tN/pxuvLnoKanWJFlgh70WAFA18jE6OjwksuHhwX
+	NJIEvI5zHk7dx4kdB+uAS5W24qDC/hg7cEE8y9ByFEmQx7F1JiOuum2Kpt2Bkx+TtuzfwUW9lqZ
+	+Ho+VwnvMcbxATsqZ3C8tsWwpk+w=
+X-Google-Smtp-Source: AGHT+IHtfConeE4djnAj96ZFcg6gNNv5l9VculGG8dY053dAspbyKZxpxh/zkIuAVWRiJAqk6iJIDniUnCwGli8dbQg=
+X-Received: by 2002:a17:902:e748:b0:1e0:e011:e3cb with SMTP id
+ p8-20020a170902e74800b001e0e011e3cbmr3326261plf.15.1711468919504; Tue, 26 Mar
+ 2024 09:01:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20240321145736.2373846-1-jonathan.haslam@gmail.com> <20240325120323.ec3248d330b2755e73a6571e@kernel.org>
+In-Reply-To: <20240325120323.ec3248d330b2755e73a6571e@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 26 Mar 2024 09:01:47 -0700
+Message-ID: <CAEf4BzZS_QCsSY0oGY_3pGveGfXKK_TkVURyNq=UQXVXSqi2Fw@mail.gmail.com>
+Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jonathan Haslam <jonathan.haslam@gmail.com>, linux-trace-kernel@vger.kernel.org, 
+	andrii@kernel.org, bpf@vger.kernel.org, rostedt@goodmis.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 26 Mar 2024 14:46:10 +0000
-Mark Rutland <mark.rutland@arm.com> wrote:
+On Sun, Mar 24, 2024 at 8:03=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
+rg> wrote:
+>
+> On Thu, 21 Mar 2024 07:57:35 -0700
+> Jonathan Haslam <jonathan.haslam@gmail.com> wrote:
+>
+> > Active uprobes are stored in an RB tree and accesses to this tree are
+> > dominated by read operations. Currently these accesses are serialized b=
+y
+> > a spinlock but this leads to enormous contention when large numbers of
+> > threads are executing active probes.
+> >
+> > This patch converts the spinlock used to serialize access to the
+> > uprobes_tree RB tree into a reader-writer spinlock. This lock type
+> > aligns naturally with the overwhelmingly read-only nature of the tree
+> > usage here. Although the addition of reader-writer spinlocks are
+> > discouraged [0], this fix is proposed as an interim solution while an
+> > RCU based approach is implemented (that work is in a nascent form). Thi=
+s
+> > fix also has the benefit of being trivial, self contained and therefore
+> > simple to backport.
+> >
+> > This change has been tested against production workloads that exhibit
+> > significant contention on the spinlock and an almost order of magnitude
+> > reduction for mean uprobe execution time is observed (28 -> 3.5 microse=
+cs).
+>
+> Looks good to me.
+>
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-> Hi Masami,
-> 
-> On Mon, Mar 25, 2024 at 11:56:32AM +0900, Masami Hiramatsu wrote:
-> > Hi Jarkko,
-> > 
-> > On Sun, 24 Mar 2024 01:29:08 +0200
-> > Jarkko Sakkinen <jarkko@kernel.org> wrote:
-> > 
-> > > Tracing with kprobes while running a monolithic kernel is currently
-> > > impossible due the kernel module allocator dependency.
-> > > 
-> > > Address the issue by allowing architectures to implement module_alloc()
-> > > and module_memfree() independent of the module subsystem. An arch tree
-> > > can signal this by setting HAVE_KPROBES_ALLOC in its Kconfig file.
-> > > 
-> > > Realize the feature on RISC-V by separating allocator to module_alloc.c
-> > > and implementing module_memfree().
-> > 
-> > Even though, this involves changes in arch-independent part. So it should
-> > be solved by generic way. Did you checked Calvin's thread?
-> > 
-> > https://lore.kernel.org/all/cover.1709676663.git.jcalvinowens@gmail.com/
-> > 
-> > I think, we'd better to introduce `alloc_execmem()`,
-> > CONFIG_HAVE_ALLOC_EXECMEM and CONFIG_ALLOC_EXECMEM at first
-> > 
-> >   config HAVE_ALLOC_EXECMEM
-> > 	bool
-> > 
-> >   config ALLOC_EXECMEM
-> > 	bool "Executable trampline memory allocation"
-> > 	depends on MODULES || HAVE_ALLOC_EXECMEM
-> > 
-> > And define fallback macro to module_alloc() like this.
-> > 
-> > #ifndef CONFIG_HAVE_ALLOC_EXECMEM
-> > #define alloc_execmem(size, gfp)	module_alloc(size)
-> > #endif
-> 
-> Please can we *not* do this? I think this is abstracting at the wrong level (as
-> I mentioned on the prior execmem proposals).
-> 
-> Different exectuable allocations can have different requirements. For example,
-> on arm64 modules need to be within 2G of the kernel image, but the kprobes XOL
-> areas can be anywhere in the kernel VA space.
-> 
-> Forcing those behind the same interface makes things *harder* for architectures
-> and/or makes the common code more complicated (if that ends up having to track
-> all those different requirements). From my PoV it'd be much better to have
-> separate kprobes_alloc_*() functions for kprobes which an architecture can then
-> choose to implement using a common library if it wants to.
-> 
-> I took a look at doing that using the core ifdeffery fixups from Jarkko's v6,
-> and it looks pretty clean to me (and works in testing on arm64):
-> 
->   https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=kprobes/without-modules
-> 
-> Could we please start with that approach, with kprobe-specific alloc/free code
-> provided by the architecture?
+Masami,
 
-OK, as far as I can read the code, this method also works and neat! 
-(and minimum intrusion). I actually found that exposing CONFIG_ALLOC_EXECMEM
-to user does not help, it should be an internal change. So hiding this change
-from user is better choice. Then there is no reason to introduce the new
-alloc_execmem, but just expand kprobe_alloc_insn_page() is reasonable.
+Given the discussion around per-cpu rw semaphore and need for
+(internal) batched attachment API for uprobes, do you think you can
+apply this patch as is for now? We can then gain initial improvements
+in scalability that are also easy to backport, and Jonathan will work
+on a more complete solution based on per-cpu RW semaphore, as
+suggested by Ingo.
 
-Mark, can you send this series here, so that others can review/test it?
-
-Thank you!
-
-
-> 
-> Thanks,
-> Mark.
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
+> BTW, how did you measure the overhead? I think spinlock overhead
+> will depend on how much lock contention happens.
+>
+> Thank you,
+>
+> >
+> > [0] https://docs.kernel.org/locking/spinlocks.html
+> >
+> > Signed-off-by: Jonathan Haslam <jonathan.haslam@gmail.com>
+> > ---
+> >  kernel/events/uprobes.c | 22 +++++++++++-----------
+> >  1 file changed, 11 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > index 929e98c62965..42bf9b6e8bc0 100644
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -39,7 +39,7 @@ static struct rb_root uprobes_tree =3D RB_ROOT;
+> >   */
+> >  #define no_uprobe_events()   RB_EMPTY_ROOT(&uprobes_tree)
+> >
+> > -static DEFINE_SPINLOCK(uprobes_treelock);    /* serialize rbtree acces=
+s */
+> > +static DEFINE_RWLOCK(uprobes_treelock);      /* serialize rbtree acces=
+s */
+> >
+> >  #define UPROBES_HASH_SZ      13
+> >  /* serialize uprobe->pending_list */
+> > @@ -669,9 +669,9 @@ static struct uprobe *find_uprobe(struct inode *ino=
+de, loff_t offset)
+> >  {
+> >       struct uprobe *uprobe;
+> >
+> > -     spin_lock(&uprobes_treelock);
+> > +     read_lock(&uprobes_treelock);
+> >       uprobe =3D __find_uprobe(inode, offset);
+> > -     spin_unlock(&uprobes_treelock);
+> > +     read_unlock(&uprobes_treelock);
+> >
+> >       return uprobe;
+> >  }
+> > @@ -701,9 +701,9 @@ static struct uprobe *insert_uprobe(struct uprobe *=
+uprobe)
+> >  {
+> >       struct uprobe *u;
+> >
+> > -     spin_lock(&uprobes_treelock);
+> > +     write_lock(&uprobes_treelock);
+> >       u =3D __insert_uprobe(uprobe);
+> > -     spin_unlock(&uprobes_treelock);
+> > +     write_unlock(&uprobes_treelock);
+> >
+> >       return u;
+> >  }
+> > @@ -935,9 +935,9 @@ static void delete_uprobe(struct uprobe *uprobe)
+> >       if (WARN_ON(!uprobe_is_active(uprobe)))
+> >               return;
+> >
+> > -     spin_lock(&uprobes_treelock);
+> > +     write_lock(&uprobes_treelock);
+> >       rb_erase(&uprobe->rb_node, &uprobes_tree);
+> > -     spin_unlock(&uprobes_treelock);
+> > +     write_unlock(&uprobes_treelock);
+> >       RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
+> >       put_uprobe(uprobe);
+> >  }
+> > @@ -1298,7 +1298,7 @@ static void build_probe_list(struct inode *inode,
+> >       min =3D vaddr_to_offset(vma, start);
+> >       max =3D min + (end - start) - 1;
+> >
+> > -     spin_lock(&uprobes_treelock);
+> > +     read_lock(&uprobes_treelock);
+> >       n =3D find_node_in_range(inode, min, max);
+> >       if (n) {
+> >               for (t =3D n; t; t =3D rb_prev(t)) {
+> > @@ -1316,7 +1316,7 @@ static void build_probe_list(struct inode *inode,
+> >                       get_uprobe(u);
+> >               }
+> >       }
+> > -     spin_unlock(&uprobes_treelock);
+> > +     read_unlock(&uprobes_treelock);
+> >  }
+> >
+> >  /* @vma contains reference counter, not the probed instruction. */
+> > @@ -1407,9 +1407,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsig=
+ned long start, unsigned long e
+> >       min =3D vaddr_to_offset(vma, start);
+> >       max =3D min + (end - start) - 1;
+> >
+> > -     spin_lock(&uprobes_treelock);
+> > +     read_lock(&uprobes_treelock);
+> >       n =3D find_node_in_range(inode, min, max);
+> > -     spin_unlock(&uprobes_treelock);
+> > +     read_unlock(&uprobes_treelock);
+> >
+> >       return !!n;
+> >  }
+> > --
+> > 2.43.0
+> >
+>
+>
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
