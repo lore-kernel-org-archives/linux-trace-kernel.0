@@ -1,149 +1,220 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F6013D25B
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Mar 2024 19:24:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D4D127B4D
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Mar 2024 20:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711481092; cv=none; b=nuyyQubky2aEfsqcZTGBJEbRtDGX4a69YFiOsLb6GApdcyi0jVZBu4KKYZJ6jW0B/+9hHmcjs1FCBayHTeXslpYHei5xhR6js33ZkTl/3KcMj0gVVCBjp4PyCV2DWtqeSCVIz4AiqFwbPBX5UXgiiqMghMEY+AxgWdsk9IEgfII=
+	t=1711484097; cv=none; b=N/x/O9ZvG8cpS65OdBx5ayNg1wJdp8QMCVvRdVL4UWbaA7miTrJPfGGUMECfOlUMDhET4A/pN70MPAsB751dEFVDQIN/TWc+H8+naWs+hdQXMU652nR+oXc5yjy8xfzdNR24jGHQO/zYyI9NKKPv1cRPZ6Gw7DoH/A2+lWR9l4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711481092; c=relaxed/simple;
-	bh=nJEBYeRpGreh1QGrVI8xb2lqButvSZ322Cq+521//Gw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XuSUX8EQHfiNFlMwyrBYrMZPpRufegU0tc6rTitM0zcX53YOHDEYO5klBqBjwugAk/G3766EYhI82T3xpSKmIHshg81Q5Betl7zEMjAbNo3Qe7zjVekkJrFsjyMn21FV8fP71a9c+njorQgB/rfa1lRvYLfeXFUk8W1uGpDBEOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=B273VRIJ; arc=none smtp.client-ip=209.85.166.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1711484097; c=relaxed/simple;
+	bh=6jKpOWJ+LWFlZC4DPjtJM6QnKsaH5cXRpUTLZjP2Byk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jk5sbgt7jXowXDITc7QvIprpigqfv4o4E323/4hmx+dUqxKvXv8+iSOLOHjW9yxwyvI7XKviTksAfo+Rs8FOFQEalDDdTTQMUVqDFU1mUGjD1DcCTxpNEA2QpoEde6lAhDq+6RDOt1A1xi12BSg+AG4CNJR4qiwRr5LlxoPeCXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KPvLO7qA; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="B273VRIJ"
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7cc0e831e11so85594839f.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Mar 2024 12:24:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KPvLO7qA"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56829f41f81so7420945a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Mar 2024 13:14:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1711481089; x=1712085889; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ldMsiEP3mMIpydboV2AKm9Ciyx4AVPzGnmoIpfuSLAY=;
-        b=B273VRIJvuaLdT0PcUdpfdXj7ikTwf5++cK/1AeEyiFcAP4cxK4mM7r95Uv9GLcZ9U
-         mdmMmEax/pay4QZNK4/JPbS19fCH7XICDqc7KX39MGMT6xIS4xNdZvO999PyU0uR0s5P
-         TynnZLio/9xEancMrDWcP4XAzEBgBsKQoq1qw=
+        d=google.com; s=20230601; t=1711484093; x=1712088893; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6jKpOWJ+LWFlZC4DPjtJM6QnKsaH5cXRpUTLZjP2Byk=;
+        b=KPvLO7qAkCiHfLM+7yYD85XG5SeVblySb+Qyp5kGaAjTA/hczmDKSHgcVEPlfaUlGr
+         IMmaSRtqEP4EjGQdyLe0fIEy9yBSIXzWsYF76hwt339EjpdwJlc6+it4Bke1Cz158+wK
+         JvahVWgtv+0XsyS/8WtGkD57oDyuWnLXOxkCQBFeVRxIDY58YBosEToyALwz5grXmRUM
+         DagkNt9M3oVW1iS5Q+0NBO7V9VuGzfw/4IEU7WFUJhMAuG9s910IAyvv6jkVM49kKGzP
+         aDV+E70H6fI9HFQoiVX93VpTbD1PryU9FIvU2TvI+ioykPDls2+kiOH16gPBBnSBRN+V
+         ancA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711481089; x=1712085889;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ldMsiEP3mMIpydboV2AKm9Ciyx4AVPzGnmoIpfuSLAY=;
-        b=BPJ+7FlWL1S3lH8oVTzfmbORvKJKnwKpposR7nVF3FOItdJ+/DldiV8Cqld8S0H4sj
-         utc+y+KqsCDbNFO3nZIwcyhr/EoNwTjZbywadHY+7AeVkdGt/yU0MognbEFFPo5waouK
-         5WBz5TsQosmQtt8o4XthnsqPoq3mN3TwfGn7BJJa24N10A/S3IkUvKFCbHNNqZ5ucevK
-         jU82LGp+162k6LTfPOjTg+heC7Vw3Su+CC1Gekx4xJXCsy4p9Vs6VOT6Uq+ze/z0bHWz
-         xrOUpKAYPY1Ri6gdMnrrbP3HgzWDycTZh6ELqG7lJJGieJc4zdUGmJKTl2Wh3sm5k7We
-         ttdg==
-X-Forwarded-Encrypted: i=1; AJvYcCV+1IzGerQryR05wS1cvUzA95l875bTD58KTEcauMuXsfDozAZFqSIfUx0Q4LsscDV2s/dpj0ShPZwgLJE1BXPaJ5ku3HEt3RpDKDNu+4Fl/ml4
-X-Gm-Message-State: AOJu0Yxq3amuIN9UV80cPt2JCTzY9buebeBHY3/R25/N8BmOK96wF7xN
-	Pk4NL/9Oaxs7WC6HbyCkMH64W+80BvvnHV9zW4a1U3JxTccIAEbfr1Hg2Md0bZc=
-X-Google-Smtp-Source: AGHT+IFUHe5xOEXL/Du4BCSSxq1iQ4534XkkfdPWlPWgaWBt+Z+AC8GWX/FuKYk9lSWgJA/RBthZ0w==
-X-Received: by 2002:a92:dc4f:0:b0:368:a917:168f with SMTP id x15-20020a92dc4f000000b00368a917168fmr1220395ilq.3.1711481088841;
-        Tue, 26 Mar 2024 12:24:48 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id v12-20020a92d24c000000b00366bb13bd89sm3115775ilg.41.2024.03.26.12.24.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Mar 2024 12:24:48 -0700 (PDT)
-Message-ID: <54e5ac2c-d844-47c2-b811-03d949554515@linuxfoundation.org>
-Date: Tue, 26 Mar 2024 13:24:47 -0600
+        d=1e100.net; s=20230601; t=1711484093; x=1712088893;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6jKpOWJ+LWFlZC4DPjtJM6QnKsaH5cXRpUTLZjP2Byk=;
+        b=ROmuxKTrlEvsegvYn3YhDK0aoLUEj8OPg6t/PzjoWOBCoZ4aRuAj61lJ/uAA8+/wMm
+         2UuPlGrTr/td6swex0kGLQZHoTi57LBT/aVbTbYJUzzhJ/QhLBVq5gdpdTbeh/yypZdR
+         x8xcS8o36aqgQ+BeK76ppVAPQ53BDEt7w384c5ktMsJMOVbg5dswD1f4uEwJsNoUq3Ow
+         flj5gUieS6NLFjVjHx8VvHGVqLeItWysZ/fIHbJHimzj5JlqHyM1wVvqFuLoLP3k3nIF
+         jo1A8z9KkEv1Ndq0Wiuhw47nVWy6JhGrN7/ihaSGHNwJVyCZrG5AZANNJFbYDUu+0bCE
+         eI7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXbj5BvMF8nkff8wpWlISOoF8/7ZT74OrqXmTy8qBKOMOAXs+Gf3ucBmIQMSzNg9GKu2jsNmBllVoarhuwJIrMA/JI4814ddnv/umXB7V/C/A8I
+X-Gm-Message-State: AOJu0YzfhfPUZOZ5A/QiO07AG26fOBLdOFDL/8+FIDqvJEHHstPpKoWr
+	gu0EHNVNzPnxVpCkCnXHg8NRNZeevwP7FZmHuvlhIdE+mNEnJddQO7e30zl3/dTWJdij2hY40Z+
+	5y+RnO48h/wZ2jbvkOlphTgTjWxIyptQMOYL4
+X-Google-Smtp-Source: AGHT+IHNbZvU94ocsPuARsH8Mie4+EyFLOQLiJ99ddFMOV+2ee5fWO0HjR082QS+izq6JTEydRhhd/UQfdi1W0fksuE=
+X-Received: by 2002:a17:907:76f2:b0:a47:32b3:18c5 with SMTP id
+ kg18-20020a17090776f200b00a4732b318c5mr521341ejc.68.1711484092750; Tue, 26
+ Mar 2024 13:14:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/ftrace: Fix event filter target_func selection
-Content-Language: en-US
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, aishwarya.tcv@arm.com,
- linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- mathieu.desnoyers@efficios.com, rostedt@goodmis.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20240320141844.1779984-1-mark.rutland@arm.com>
- <20240321090950.f96e6b3918bb2dfd121db138@kernel.org>
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240321090950.f96e6b3918bb2dfd121db138@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240305020153.2787423-1-almasrymina@google.com>
+ <6208950d-6453-e797-7fc3-1dcf15b49dbe@huawei.com> <CAHS8izMwTRyqUS0iRtErfAqDVsXRia5Ajx9PRK3vcfo8utJoUA@mail.gmail.com>
+ <CAHS8izPR+SioMKNv3=2ajK=GGOE26BTaxOMykHJfjttqYjx1wQ@mail.gmail.com> <ca9ab650-3f77-509c-7a29-6d7dd775b6d1@huawei.com>
+In-Reply-To: <ca9ab650-3f77-509c-7a29-6d7dd775b6d1@huawei.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Tue, 26 Mar 2024 13:14:39 -0700
+Message-ID: <CAHS8izPPiyNQNKSGfZ22DU3ta2vmq6pZOJPPGqxD_5hNpuJU+Q@mail.gmail.com>
+Subject: Re: [RFC PATCH net-next v6 00/15] Device Memory TCP
+To: Yunsheng Lin <linyunsheng@huawei.com>, shakeel.butt@linux.dev
+Cc: YiFei Zhu <zhuyifei@google.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/20/24 18:09, Masami Hiramatsu (Google) wrote:
-> On Wed, 20 Mar 2024 14:18:44 +0000
-> Mark Rutland <mark.rutland@arm.com> wrote:
-> 
->> The event filter function test has been failing in our internal test
->> farm:
->>
->> | # not ok 33 event filter function - test event filtering on functions
->>
->> Running the test in verbose mode indicates that this is because the test
->> erroneously determines that kmem_cache_free() is the most common caller
->> of kmem_cache_free():
->>
->>    # # + cut -d: -f3 trace
->>    # # + sed s/call_site=([^+]*)+0x.*/1/
->>    # # + sort
->>    # # + uniq -c
->>    # # + sort
->>    # # + tail -n 1
->>    # # + sed s/^[ 0-9]*//
->>    # # + target_func=kmem_cache_free
->>
->> .. and as kmem_cache_free() doesn't call itself, setting this as the
->> filter function for kmem_cache_free() results in no hits, and
->> consequently the test fails:
->>
->>    # # + grep kmem_cache_free trace
->>    # # + grep kmem_cache_free
->>    # # + wc -l
->>    # # + hitcnt=0
->>    # # + grep kmem_cache_free trace
->>    # # + grep -v kmem_cache_free
->>    # # + wc -l
->>    # # + misscnt=0
->>    # # + [ 0 -eq 0 ]
->>    # # + exit_fail
->>
->> This seems to be because the system in question has tasks with ':' in
->> their name (which a number of kernel worker threads have). These show up
->> in the trace, e.g.
->>
->>    test:.sh-1299    [004] .....  2886.040608: kmem_cache_free: call_site=putname+0xa4/0xc8 ptr=000000000f4d22f4 name=names_cache
->>
->> .. and so when we try to extact the call_site with:
->>
->>    cut -d: -f3 trace | sed 's/call_site=\([^+]*\)+0x.*/\1/'
->>
->> .. the 'cut' command will extrace the column containing
->> 'kmem_cache_free' rather than the column containing 'call_site=...', and
->> the 'sed' command will leave this unchanged. Consequently, the test will
->> decide to use 'kmem_cache_free' as the filter function, resulting in the
->> failure seen above.
->>
->> Fix this by matching the 'call_site=<func>' part specifically to extract
->> the function name.
->>
-> 
-> Looks good to me.
-> 
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> I think this should be a fix because test task name can have ':'.
-> 
-> Fixes: eb50d0f250e9 ("selftests/ftrace: Choose target function for filter test from samples")
-> Cc: stable@vger.kernel.org
-> 
-> Shuah, can you pick this as a fix?
-> 
+On Tue, Mar 26, 2024 at 5:47=E2=80=AFAM Yunsheng Lin <linyunsheng@huawei.co=
+m> wrote:
+>
+> On 2024/3/26 8:28, Mina Almasry wrote:
+> > On Tue, Mar 5, 2024 at 11:38=E2=80=AFAM Mina Almasry <almasrymina@googl=
+e.com> wrote:
+> >>
+> >> On Tue, Mar 5, 2024 at 4:54=E2=80=AFAM Yunsheng Lin <linyunsheng@huawe=
+i.com> wrote:
+> >>>
+> >>> On 2024/3/5 10:01, Mina Almasry wrote:
+> >>>
+> >>> ...
+> >>>
+> >>>>
+> >>>> Perf - page-pool benchmark:
+> >>>> ---------------------------
+> >>>>
+> >>>> bench_page_pool_simple.ko tests with and without these changes:
+> >>>> https://pastebin.com/raw/ncHDwAbn
+> >>>>
+> >>>> AFAIK the number that really matters in the perf tests is the
+> >>>> 'tasklet_page_pool01_fast_path Per elem'. This one measures at about=
+ 8
+> >>>> cycles without the changes but there is some 1 cycle noise in some
+> >>>> results.
+> >>>>
+> >>>> With the patches this regresses to 9 cycles with the changes but the=
+re
+> >>>> is 1 cycle noise occasionally running this test repeatedly.
+> >>>>
+> >>>> Lastly I tried disable the static_branch_unlikely() in
+> >>>> netmem_is_net_iov() check. To my surprise disabling the
+> >>>> static_branch_unlikely() check reduces the fast path back to 8 cycle=
+s,
+> >>>> but the 1 cycle noise remains.
+> >>>>
+> >>>
+> >>> The last sentence seems to be suggesting the above 1 ns regresses is =
+caused
+> >>> by the static_branch_unlikely() checking?
+> >>
+> >> Note it's not a 1ns regression, it's looks like maybe a 1 cycle
+> >> regression (slightly less than 1ns if I'm reading the output of the
+> >> test correctly):
+> >>
+> >> # clean net-next
+> >> time_bench: Type:tasklet_page_pool01_fast_path Per elem: 8 cycles(tsc)
+> >> 2.993 ns (step:0)
+> >>
+> >> # with patches
+> >> time_bench: Type:tasklet_page_pool01_fast_path Per elem: 9 cycles(tsc)
+> >> 3.679 ns (step:0)
+> >>
+> >> # with patches and with diff that disables static branching:
+> >> time_bench: Type:tasklet_page_pool01_fast_path Per elem: 8 cycles(tsc)
+> >> 3.248 ns (step:0)
+> >>
+> >> I do see noise in the test results between run and run, and any
+> >> regression (if any) is slightly obfuscated by the noise, so it's a bit
+> >> hard to make confident statements. So far it looks like a ~0.25ns
+> >> regression without static branch and about ~0.65ns with static branch.
+> >>
+> >> Honestly when I saw all 3 results were within some noise I did not
+> >> investigate more, but if this looks concerning to you I can dig
+> >> further. I likely need to gather a few test runs to filter out the
+> >> noise and maybe investigate the assembly my compiler is generating to
+> >> maybe narrow down what changes there.
+> >>
+> >
+> > I did some more investigation here to gather more data to filter out
+> > the noise, and recorded the summary here:
+> >
+> > https://pastebin.com/raw/v5dYRg8L
+> >
+> > Long story short, the page_pool benchmark results are consistent with
+> > some outlier noise results that I'm discounting here. Currently
+> > page_pool fast path is at 8 cycles
+> >
+> > [ 2115.724510] time_bench: Type:tasklet_page_pool01_fast_path Per
+> > elem: 8 cycles(tsc) 3.187 ns (step:0) - (measurement period
+> > time:0.031870585 sec time_interval:31870585) - (invoke count:10000000
+> > tsc_interval:86043192)
+> >
+> > and with this patch series it degrades to 10 cycles, or about a 0.7ns
+> > degradation or so:
+>
+> Even if the absolute value for the overhead is small, we seems have a
+> degradation of about 20% for tasklet_page_pool01_fast_path testcase,
+> which seems scary.
+>
+> I am assuming that every page is recyclable for tasklet_page_pool01_fast_=
+path
+> testcase, and that code path matters for page_pool, it would be good to
+> remove any additional checking for that code path.
+>
 
-Applied to linux-ksleftest fixes for next rc
+We can remove the usage of static_branch_unlikely in the net_iov
+check, which reduces the overhead to 1 cycle (8->9), only 12.5%
+overhead. The addition of the static_branch_unlikely is not improving
+the performance of devmem TCP anyway. From previous discussions with
+Jesper he deemed a 1 cycle degradation acceptable, but he hasn't
+commented in a while, he may have changed his mind but so far no
+complaints.
 
-thanks,
--- Shuah
+We can additionally only add the check only if
+CONFIG_SHARED_DMA_BUFFER is enabled. I've tested that and the fast
+path goes back to 8 cycles (0 overhead). If CONFIG_SHARED_DMA_BUFFER
+is not enabled then netmem can't be dmabuf anyway, so no reason to
+check.
 
+> And we already have pool->has_init_callback checking when we have to use
+> a new page, it may make sense to refactor that to share the same checking
+> for provider to avoid the overhead as much as possible.
+>
+> Also, I am not sure if it really matter that much, as with the introducin=
+g
+> of netmem_is_net_iov() checking spreading in the networking, the overhead
+> might add up for other case too.
+
+
+--=20
+Thanks,
+Mina
