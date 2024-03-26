@@ -1,83 +1,80 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1142513D2B4
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Mar 2024 20:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B1413DDDE
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Mar 2024 22:50:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711484377; cv=none; b=rIFfOA9ZRTdOOFHhAcmvdE/aTAak2c6yqYY4/7TWWoUvWNjrfn+fNob9KgBt4Gz/s59ZVfouZwg6uTqDO2E4mapbEBc7ypG9cxDa9FVu/0ZlkEZe6ocJsmOZfc57KYVIw8/t1F9xlBGQM7JF/PTMtNchoR1lJRZhi5RZ5P2hV+U=
+	t=1711493461; cv=none; b=m6oe/zdUrAp4sMqA0Dd5pd7IrPayGRyZlW9PnzSv/Q2c5OMorgb7GmdOVrKNNysWpBkb0SHg3xz0qfezPT1Zx9bctdchMFNci9z0yRNhVKe+/EuQqW1a/l/RaYPot1zO1vXbkGKyziZK6vntpCNxyisSYTX92fW+D17ob1fhJ6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711484377; c=relaxed/simple;
-	bh=/HolUtBGOSvO7vytyqHWVK1okzyRfH/uWmvtvWb27FA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VkpydVnmN0rU9Kv6NBAqSaOTly2U70IQmsEC+so+dhFwj2vPSCL9yEACN3sGwXVE6ivtGHcSb4972moCS8EdW8oyz6LXTrgktd7prrMo5F3JBhCakRNcExjKQIPFYRaEmEB3IMt0VBMAhsdY4WiBUPtS3jrkC/edYMbDi0JjwcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1gm41FVZ; arc=none smtp.client-ip=209.85.208.45
+	s=arc-20240116; t=1711493461; c=relaxed/simple;
+	bh=HwXV7niH/WxHc7jazaZuD951dDYxvnrXLKJ5aOXzXpw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ko5J0+043R1ZfR0JV3jWP4hJPsI2yyGdg1XAbNf/1H0NCIhOL8oYvoiyKTCl92QgNfl7EQL2h2F615X423nEGxt6TpxzBV4yOX8GGU++Jisr4pOpqt+HJBnH8kthyT3MORZrScAx8fZPJ/59oskVKOo0xsMcT3AyiHHhLzRYdMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x6D+IDhp; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1gm41FVZ"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-56bb22ff7baso7064071a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Mar 2024 13:19:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x6D+IDhp"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60cbba6f571so111280757b3.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Mar 2024 15:50:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711484373; x=1712089173; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/HolUtBGOSvO7vytyqHWVK1okzyRfH/uWmvtvWb27FA=;
-        b=1gm41FVZkSn4Ai7WlX1D0mAvsiIhXcNKLG0Z0iVMbEyuhSc6lAFnYsQce/3uLx2VOQ
-         F13pVTO9dMRWzS/d7sfOBXIkS3ngp/9f5y9jWOoAa6189WcyF2NonArWAQ719WFAi114
-         zU2eBR/j4Sp8dRmx3JNiO0l7Z06mGs29qV6F7W7oAwBVZ4wOXL0SG4oZfOKMR4pofar8
-         GukfmgjQtDxSyZ4EeIfkAX4mF4CDBv3LOIhV1e4bHqCsqkAZkHkXbxpNT7BTyqBDSwo0
-         t6V0x1PQN7YCjKQ72LzuDlwkJ2sQ1fUKugFapN4Dt5u28GWEdnMNP+fAmqirbn6HeFth
-         mCEw==
+        d=google.com; s=20230601; t=1711493457; x=1712098257; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=g7wPvg5SzHg3djrLO0jF0y6HKK/VaWsWbJGTmJoXohw=;
+        b=x6D+IDhpGqjgzwRWj5fpWKi+7i3QZkp1IEDjB1Qht3yOOKH/VaiTKAYKk0R5I603OM
+         t8L7+P2cVN7YCO2ENWLslUaz3Wt5Ub8UGxiK1CnEQt7A+qRozSX3M31IgguKAY6jZJw+
+         LSzyZ74AWYo8T8vPppF0g51kCPRajl4ZAM2YZ0CcWsFmFjHpGZ1UK+1/djvdkW4KvwJe
+         97+MTstmMPVNj/zWYAY902/7tbetoYKV2/LacWPHJzEkDO33w0Jf8bzOrAjAP2nrbNOx
+         LiQz1FQl1cprHZuOKN0V5HnKIDSqzQfN556rGH7/lhFMvzDRbqvzJSzc7y5HA0+T+wSy
+         8vig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711484373; x=1712089173;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/HolUtBGOSvO7vytyqHWVK1okzyRfH/uWmvtvWb27FA=;
-        b=O2A7WgqRhawTRKjsz13DlBc3qV/HN1cksM50NRRB4kmg5D7rX1Zs5jHYejU2up9EHm
-         8nFTx8AwWLwKyuh/+syuyResI84eSjIq5kacDcC8f8mfLdw/nylllEG4EIhZWvKQ0PL2
-         h90+Sx7xoZ1GCqYwhfEIrBQgZF8vUAMlA+NLQnTPjYAOH39Wasn5cc+hX3OwzjgqhkU4
-         4Dvcn2Jt8n5NDgYBQRBz/eofzRKWgtmGfX6Zt8zH+ddramGjUa4Nk2kHFQNrjAfT87b2
-         Qzak1pTnY8CR6v3Gryb7jQJl/7jVWvbDyL4Vi/LHME2LjM26DpjEnJv+8e1we+8LtEGW
-         HTsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUDIkYOJuaUMJIqB2FLcX2L/bWXYS6soa7j9sT7GnjFp2dr7HM2H1+HLvo3fapRS+y/zUSle09o2yPxTUCmaTxsQ1BPD26WS7TZGduDZAQW59+G
-X-Gm-Message-State: AOJu0YwbN5LAsxcMvYFJq9o7mNhhHyd1Cdb9Yi1lBTXULFkt9Wq7YPgs
-	fs3AnMAABTFWyVjuRr4nmEY+XTZSbQnT5np4N0fiZB8Rq7Yqq1J13Vp1EsU3ER8SUyyAL/GT7qd
-	KaxKAXTOd/SxsiVZMpfnaLkdmzrKiVSX0Pc15
-X-Google-Smtp-Source: AGHT+IFjAY/eoFDY4BwdVzDOePbePtoPltk1wuczOVWu/9VSVvPKPc9DWk1TgGZAdfUjGFfCBB9+wtsJgpHCZYEgPKU=
-X-Received: by 2002:a17:906:2dc9:b0:a46:70d1:dda6 with SMTP id
- h9-20020a1709062dc900b00a4670d1dda6mr1426517eji.28.1711484372999; Tue, 26 Mar
- 2024 13:19:32 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711493457; x=1712098257;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g7wPvg5SzHg3djrLO0jF0y6HKK/VaWsWbJGTmJoXohw=;
+        b=wZHgTii853lBdFc/ZFB0cmeOcB272s69T28TR+dukeCJw30wiJB4Se+gOQ/KdNWs+o
+         1SgkRW59+0xBBCMPIqpDY2xoDhYR92r70hpbpnTAEs1WWKjgMyg5uSaBLJohXAATIkqh
+         Gbpd1qxSG+OFiOuZkg/ZuK0ELa4i3ZrCMv+WfQkT5/hcB3mHgYhpRiEsmkEjxz1+wz0i
+         1VvXQwci6RmU+t3fl2N7JwfybRJoSsweDQQY0Y8bxmDYswDYDcsofH0of6dmK5W2511y
+         owHkFEHkgXElG3KEuW2RerhSNH5HsTkWON//jq+tTN+bJ4iX0b3Xqv2TVbuHCx6Ve1k4
+         KSWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWTL4FDSXl5Wqbpy0zvBAyIGr7QFyjDdiDhqIMdSQRlk9nMIzMYOqBCeH/tXEht+nwzaFMo+d+BW6JGW5uhRvVCrOvrvMnSteNnZjN7VG16Ej2A
+X-Gm-Message-State: AOJu0YyhxcegmNFqbKtG8gH5vSW9s9B84a8611LXLvxaaPhqEYYfCadd
+	iwFp9vHpVEXWlglNvIpO7mHxPWK4OVM7TTuTV0Yd9dSyjhqg3RAULi2yae2Ck5WUDbZNUYnn5L5
+	3+dNg37ymsQTyIbfpO43Szg==
+X-Google-Smtp-Source: AGHT+IGoJ91B2ro4NgPyk1e74NGmWSPhPzZUW0Q71qZOWUIfAfkK/24SBynuxXqxxickdOKVfZBEkC7HXTaNllUdCA==
+X-Received: from almasrymina.svl.corp.google.com ([2620:15c:2c4:200:c51e:bdd0:7cc8:695c])
+ (user=almasrymina job=sendgmr) by 2002:a05:6902:220a:b0:dcc:f01f:65e1 with
+ SMTP id dm10-20020a056902220a00b00dccf01f65e1mr3555213ybb.8.1711493457318;
+ Tue, 26 Mar 2024 15:50:57 -0700 (PDT)
+Date: Tue, 26 Mar 2024 15:50:32 -0700
+In-Reply-To: <20240326225048.785801-1-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240305020153.2787423-1-almasrymina@google.com>
- <20240305020153.2787423-3-almasrymina@google.com> <ZfegzB341oNc_Ocz@infradead.org>
- <CAHS8izOUi6qGp=LSQb_o5oph-EnhNOuhLkPSfbQRU3eniZvbdA@mail.gmail.com> <ZgC5JoSiWAYf3IgX@infradead.org>
-In-Reply-To: <ZgC5JoSiWAYf3IgX@infradead.org>
+Mime-Version: 1.0
+References: <20240326225048.785801-1-almasrymina@google.com>
+X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
+Message-ID: <20240326225048.785801-2-almasrymina@google.com>
+Subject: [RFC PATCH net-next v7 01/14] queue_api: define queue api
 From: Mina Almasry <almasrymina@google.com>
-Date: Tue, 26 Mar 2024 13:19:20 -0700
-Message-ID: <CAHS8izO5-giYhM1bVCLLOXRXq-Xd0=pi0kPq5E1-R=3i=XihmQ@mail.gmail.com>
-Subject: Re: [RFC PATCH net-next v6 02/15] net: page_pool: create hooks for
- custom page providers
-To: Christoph Hellwig <hch@infradead.org>, shakeel.butt@linux.dev
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
 	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
 	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
 	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
 	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
+	dri-devel@lists.freedesktop.org
+Cc: Mina Almasry <almasrymina@google.com>, "David S. Miller" <davem@davemloft.net>, 
 	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
 	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
 	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
 	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>, 
 	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
 	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
 	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
@@ -86,52 +83,85 @@ Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
 	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
 	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@kernel.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
 	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Jeroen de Borst <jeroendb@google.com>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, 
+	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, Pavel Begunkov <asml.silence@gmail.com>, 
+	David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
+	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
 	Praveen Kaligineedi <pkaligineedi@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 24, 2024 at 4:37=E2=80=AFPM Christoph Hellwig <hch@infradead.or=
-g> wrote:
->
-> On Fri, Mar 22, 2024 at 10:54:54AM -0700, Mina Almasry wrote:
-> > Sorry I don't mean to argue but as David mentioned, there are some
-> > plans in the works and ones not in the works to extend this to other
-> > memory types. David mentioned io_uring & Jakub's huge page use cases
-> > which may want to re-use this design. I have an additional one in
-> > mind, which is extending devmem TCP for storage devices. Currently
-> > storage devices do not support dmabuf and my understanding is that
-> > it's very hard to do so, and NVMe uses pci_p2pdma instead. I wonder if
-> > it's possible to extend devmem TCP in the future to support pci_p2pdma
-> > to support nvme devices in the future.
->
-> The block layer needs to suppotr dmabuf for this kind of I/O.
-> Any special netdev to block side channel will be NAKed before you can
-> even send it out.
+This API enables the net stack to reset the queues used for devmem TCP.
 
-Thanks, a few questions if you have time to help me understand the
-potential of extending this to storage devices.
+Signed-off-by: Mina Almasry <almasrymina@google.com>
 
-Are you envisioning that dmabuf support would be added to the block
-layer (which I understand is part of the VFS and not driver specific),
-or as part of the specific storage driver (like nvme for example)? If
-we can add dmabuf support to the block layer itself that sounds
-awesome. We may then be able to do devmem TCP on all/most storage
-devices without having to modify each individual driver.
+---
+ include/linux/netdevice.h   |  3 +++
+ include/net/netdev_queues.h | 27 +++++++++++++++++++++++++++
+ 2 files changed, 30 insertions(+)
 
-In your estimation, is adding dmabuf support to the block layer
-something technically feasible & acceptable upstream? I notice you
-suggested it so I'm guessing yes to both, but I thought I'd confirm.
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index e41d30ebaca6..3d3af8f7f9c9 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -1956,6 +1956,7 @@ enum netdev_reg_state {
+  *	@sysfs_rx_queue_group:	Space for optional per-rx queue attributes
+  *	@rtnl_link_ops:	Rtnl_link_ops
+  *	@stat_ops:	Optional ops for queue-aware statistics
++ *	@queue_mgmt_ops:	Optional ops for queue management
+  *
+  *	@gso_max_size:	Maximum size of generic segmentation offload
+  *	@tso_max_size:	Device (as in HW) limit on the max TSO request size
+@@ -2338,6 +2339,8 @@ struct net_device {
+ 
+ 	const struct netdev_stat_ops *stat_ops;
+ 
++	const struct netdev_queue_mgmt_ops *queue_mgmt_ops;
++
+ 	/* for setting kernel sock attribute on TCP connection setup */
+ #define GSO_MAX_SEGS		65535u
+ #define GSO_LEGACY_MAX_SIZE	65536u
+diff --git a/include/net/netdev_queues.h b/include/net/netdev_queues.h
+index 1ec408585373..337df0860ae6 100644
+--- a/include/net/netdev_queues.h
++++ b/include/net/netdev_queues.h
+@@ -60,6 +60,33 @@ struct netdev_stat_ops {
+ 			       struct netdev_queue_stats_tx *tx);
+ };
+ 
++/**
++ * struct netdev_queue_mgmt_ops - netdev ops for queue management
++ *
++ * @ndo_queue_mem_alloc: Allocate memory for an RX queue. The memory returned
++ *			 in the form of a void* can be passed to
++ *			 ndo_queue_mem_free() for freeing or to ndo_queue_start
++ *			 to create an RX queue with this memory.
++ *
++ * @ndo_queue_mem_free:	Free memory from an RX queue.
++ *
++ * @ndo_queue_start:	Start an RX queue at the specified index.
++ *
++ * @ndo_queue_stop:	Stop the RX queue at the specified index.
++ */
++struct netdev_queue_mgmt_ops {
++	void *			(*ndo_queue_mem_alloc)(struct net_device *dev,
++						       int idx);
++	void			(*ndo_queue_mem_free)(struct net_device *dev,
++						      void *queue_mem);
++	int			(*ndo_queue_start)(struct net_device *dev,
++						   int idx,
++						   void *queue_mem);
++	int			(*ndo_queue_stop)(struct net_device *dev,
++						  int idx,
++						  void **out_queue_mem);
++};
++
+ /**
+  * DOC: Lockless queue stopping / waking helpers.
+  *
+-- 
+2.44.0.396.g6e790dbe36-goog
 
-Worthy of note this is all pertaining to potential follow up use
-cases, nothing in this particular proposal is trying to do any of this
-yet.
-
---=20
-Thanks,
-Mina
