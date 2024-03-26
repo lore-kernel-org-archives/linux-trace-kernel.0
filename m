@@ -1,66 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB121CA96;
-	Tue, 26 Mar 2024 01:30:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5751804F;
+	Tue, 26 Mar 2024 02:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711416635; cv=none; b=XVYx32sjn6isO0pc6bq1OlPkicZEEo+4xieLTn/vWhebcoftMdNyEBn1pLcuBlzwbNG6+Qo/Pso4cJnG8Vebttg4ea1/672GoWk0u7AZvK1lwa0nGl9bn7t3LsYyhKAqY3fXVccdVn18vTSoLOuZHONlqsSdpHZ234fQvv9Qtpg=
+	t=1711419275; cv=none; b=ZXosnZv3NK58u57NkeWDmz+8AHS5ofl29iJn1p+81ulWZ++zxN8G76KmDqo1LNdkdEstnNOGrQc1simTBhIu6Ao3McyOTgoKwxDWiJnS8dv3x/boxbu4kpEw5Xswi/4cUogL+zbSeS+hXJQ9pCZl1hMRf47iwtlnvcNgwxFPbu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711416635; c=relaxed/simple;
-	bh=A7gVtYCFt0xAUbhnOYYUoYd7+54i22DMCpKxd2a5Gvs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bBUTFgF6RzXiO3pfrIhMc/fF4fy03g5CbW4CeAjPaedILOh8yn7RB42l8EDmfsvByqg8F5JtLSLs2JhdfLyEqEUsV8Kip9mq2bAB5sGV+8Ktcpz0CZk0Arb51IGlUqvoX4QoEh+wRNKwWHXBAI3vUhr7+Km76uEA1Udt9FwME10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gZ3oEmqK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711419275; c=relaxed/simple;
+	bh=pQWj4IDTv0Tzb16Gn0NHU5OIUmfcIXNQkGbwR7mW3p4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TXJxxWI7GpKedRtdbExyUOymmYaDS2uUSYc5cktXNVMvjWkjO2P5dEjwS1DCnlLCPD8b+aORamzzYzUQ/ZyrVnw0F6BDW+BHUWXw5biVLmdVUvTDtz0IRvj0B60tvevLPt4/7o9W6NlM/mswZ9Z7022yH92Ymne3LjbbgRtgyvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eznz2EgL; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gZ3oEmqK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A02DC433F1;
-	Tue, 26 Mar 2024 01:30:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711416635;
-	bh=A7gVtYCFt0xAUbhnOYYUoYd7+54i22DMCpKxd2a5Gvs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=gZ3oEmqKdjmZbJ/Nsxh0guna2tGEVT/DEHDW1NQAdgrmj3rlNB5r4hg0OWsELbPB4
-	 vVkDj1IEswFNUGlk3/ewJW6t7vzqQstruzJ/3nxAXEEhKjf8vcCYj9nkuTn8wxp8TZ
-	 30W/Ww/PKoAYNMYK27sIEENDBe2RNnK6jn6IXFRhWEIsC/ch5jyo+yAIqHmXn5ik+i
-	 KeL1BmXP7lEtpDkAPcv0kTlnbp2H31dSew2CenDLu/cWuldXvU9my5lNkHbhkQPZcD
-	 UkIreiC3dGdhIDavXDuPHjx9fCvxPd+eXGkPmi+YqIokOA/zPWWXZlRP9X+6jQUBFD
-	 loSROqTvgyCdg==
-Date: Mon, 25 Mar 2024 18:30:33 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jason Xing <kerneljasonxing@gmail.com>
-Cc: edumazet@google.com, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, rostedt@goodmis.org, pabeni@redhat.com,
- davem@davemloft.net, netdev@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Jason Xing <kernelxing@tencent.com>
-Subject: Re: [PATCH net-next v2 0/3] tcp: make trace of reset logic complete
-Message-ID: <20240325183033.79107f1d@kernel.org>
-In-Reply-To: <20240325062831.48675-1-kerneljasonxing@gmail.com>
-References: <20240325062831.48675-1-kerneljasonxing@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eznz2EgL"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-515a86daf09so2736400e87.3;
+        Mon, 25 Mar 2024 19:14:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711419272; x=1712024072; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pQWj4IDTv0Tzb16Gn0NHU5OIUmfcIXNQkGbwR7mW3p4=;
+        b=eznz2EgLIr0nX5LCwnvV+KrwBL/dohomgIP7p0bVOTLzING2RMrB6t2la6nTGz+eOL
+         in7jjSVn1TWgKA6UbqzCXmxx6wiqVYmqzZP+P1Q0fpz0of2W00Dx6JuE6laPkPdEPhvH
+         KAlUseCIKIZIpqdzGaWpj4vuvADQKnN9H2wseMhWZn6rlXhPBCvtWndUmBDiziTYLF1j
+         CIGW5amTv7GhW7FdMIWsZyZx64r+sIrFdxYxcfcKUPVD8UVbqSUt5eaosKmVOEjh9+QT
+         wwbIlIdv7yA6qki6hnLt9tp1l2CZOg95eZ5oa+W8i95gSEJ4JJ/CaMJxRyErnvdMEirY
+         t5Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711419272; x=1712024072;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pQWj4IDTv0Tzb16Gn0NHU5OIUmfcIXNQkGbwR7mW3p4=;
+        b=BWEVbkMW/SUq4sry6xF9ijHGDz0KuVSlp2GsCU2Rrq7fSPbfK2UzkkUhLLEkmPf3jN
+         s0iGq1IhzAvKiVyYTos+dQ8oBNPiRVs09MFgMXOSQSkKbnlPIq/SJwWIwTOFUE4TZkmi
+         5Jszz+8cmaY5UHMFZ0gUExsbaTW8Og3ueYTBMKw/e9CVe0eHQSd3ObndJnDHrL2JsGv3
+         oG1BUx99WMQ2b525eOTCPCeZesk6BP58HgxVzu5k2eFHk7X4d/L8UoRtl/UjZrSsaD/d
+         XxAxwQzQ7ZymlOkRH7leSJeYSAauHq+ogdUhRS2B73iO0vB3eYpb7Yp+FsCrDXiXDSYh
+         ITpg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJu419WMJirJXR3DyCT1OeVlBSbFd0hR5gf0fZZqUS07lQjtKdfjnBN5+SKrO3EGl0MEmUQ/rjdwbHkRTDsQfYtsEkhPxOiCf9JNpGEfloauFq7tQOymZqtoKc7RrmlAik1465krTV8R4L
+X-Gm-Message-State: AOJu0YzIlTg20ONFiFpiwyRk5ia7CT0ZFlkG53fMGzMNW5gEfv5ge+DB
+	SzTvyA86krnrUVciYTcKHm7WLXa0y0otkyT+P8oBcqr7XfrbP/D3xVNwtzTuDknelAUEWA+rrHL
+	SZGzc5A7t9PMfCs3TIOLB8A3yqbA=
+X-Google-Smtp-Source: AGHT+IFSHRVh/TYgqUgrp3HlIvCxetPN4ZzL/ZlYxrXsjGMr51KACqt8b9HG2jqI+07FLNNBx5XY0iImkg90H13o+sM=
+X-Received: by 2002:ac2:4c38:0:b0:513:2011:3d2f with SMTP id
+ u24-20020ac24c38000000b0051320113d2fmr5618995lfq.9.1711419272383; Mon, 25 Mar
+ 2024 19:14:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240325062831.48675-1-kerneljasonxing@gmail.com> <20240325183033.79107f1d@kernel.org>
+In-Reply-To: <20240325183033.79107f1d@kernel.org>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Tue, 26 Mar 2024 10:13:55 +0800
+Message-ID: <CAL+tcoAXCagwnNNwcP95JcW3Wx-5Zzu87+YFOaaecH5XMS6sMQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 0/3] tcp: make trace of reset logic complete
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: edumazet@google.com, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	rostedt@goodmis.org, pabeni@redhat.com, davem@davemloft.net, 
+	netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Jason Xing <kernelxing@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 25 Mar 2024 14:28:28 +0800 Jason Xing wrote:
-> Before this, we miss some cases where the TCP layer could send rst but
-> we cannot trace it. So I decided to complete it :)
-> 
-> v2
-> 1. fix spelling mistakes
+On Tue, Mar 26, 2024 at 9:30=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wr=
+ote:
+>
+> On Mon, 25 Mar 2024 14:28:28 +0800 Jason Xing wrote:
+> > Before this, we miss some cases where the TCP layer could send rst but
+> > we cannot trace it. So I decided to complete it :)
+> >
+> > v2
+> > 1. fix spelling mistakes
+>
+> Not only do you post it before we "officially" open net-next but
+> also ignoring the 24h wait period.
+>
+> https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#tl-dr
+>
+> The main goal of the 24h rule is to stop people from bombarding us with
+> new versions for silly reasons.
 
-Not only do you post it before we "officially" open net-next but
-also ignoring the 24h wait period.
+Sorry, I don't understand what you mean. I definitely know the rules.
+But the first version of this patch series was sent about two weeks
+ago (see link [1])
 
-https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#tl-dr
+Yesterday, I posted two series to do two kinds of things. They are not
+the same. Maybe you get me wrong :S
 
-The main goal of the 24h rule is to stop people from bombarding us with
-new versions for silly reasons.
+link [1]: https://patchwork.kernel.org/project/netdevbpf/list/?series=3D834=
+178&state=3D*
 
-You show know better than this, it's hardly your first contribution :(
--- 
-pv-bot: 24h
+Thanks,
+Jason
+
+>
+> You show know better than this, it's hardly your first contribution :(
+> --
+> pv-bot: 24h
