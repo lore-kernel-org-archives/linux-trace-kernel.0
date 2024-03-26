@@ -1,119 +1,229 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AED482D90;
-	Mon, 25 Mar 2024 23:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BC2ED9
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Mar 2024 00:28:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711408472; cv=none; b=W7erh6GZmNnDMh2RKt8Ooi3/+Ydv0ZIRKAuOGLbDnP3NaO/hmRkmVnNNtxKl0HAC/YEIcBZ45ij9PpmIhRKkZQ/yo13/bUxjfPYls/d3o5nVId/p2HNT8MeIavLwl34WuAQnGrqLM2Oq4yGAZJzxPjL+xsMq53l+su7g5+72QeI=
+	t=1711412910; cv=none; b=LiflczLelZ3cAvS6HwafgadH/gSyYROA4VP+6fPm0Y8kNz5GDRT0kwXo/YvwroM7D2DBzSTWLw+0HpQqikxTnhWm82L3x5GzAVduIUXX3ygyHI+22tHoq3Pl2OOqRKbJEkNHUnqR56FX+6uKeBhwGh8/WcaTb+s5mIAvwrFCqp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711408472; c=relaxed/simple;
-	bh=06TOXQCi5RKMcovaZsXCGquZGkXuqjIcnKZqO3Wu4Ro=;
+	s=arc-20240116; t=1711412910; c=relaxed/simple;
+	bh=q9rJFj0LGRVbIR7Im5V+4jATTEQF0xUdYxt97RfhsCY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ItLOPO1wYUGjcwtF/dptXBvDNQytHeAEm8Xan2lj5mCFy4Lxqe/cYeoeQe9ucMjuAhpdy/mwrltSo59fRQmkA2MeWvYo+vetFSo/8EVV9tPv4dUnPE8IYnbPtwRN8ud9KIbhj0KTbbd18pJQR/Af+3kUmSqXGKv2dtv4WUBRFng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iieNI8fM; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=GzGoyV5/DaCDkrm0GGn1IvRReRZXsrk56w0mH9i4hMugu6i4dO/Qhfp51fIikKxxMpz2S+9qoO2+6dXYBqfXV1deYVMst+1DqpbxJGCciRjf73Hr3XvWuTbxk/PapWieN1WJJI0sSs7kCZ6Q/jNk37Gylgw9gmWJduseLm+DAFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jwc72MJc; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iieNI8fM"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1def3340682so40200955ad.1;
-        Mon, 25 Mar 2024 16:14:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jwc72MJc"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-515b69e8f38so162278e87.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 25 Mar 2024 17:28:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711408470; x=1712013270; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1711412906; x=1712017706; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5NA+R3becyndYRGT5f8sRZeSnD9n4TKt3ID9pBHYfjo=;
-        b=iieNI8fMf+U7/f6xvIY/x3uJJ6gAqOUfnDAnwU4TYSeJOSKq4+HixgseY6BAz8Z55D
-         4axv4Q89DF7t8R1sK+HM5xPBLxD55CxniU4sotk5vxu0jyN0A7XZtaQbjADu88lPjqNG
-         9srCw1/AnqPsCCRSnf8/62Y+4/Z2ONS0heiGUW7DYeRDV+aX+AyaGXsyCGxEdEAfFWlf
-         R/iXRAS+dBLQA56it0hn+6+Ftnha0gABxB9fsD+5UeMTeRmAMhELBj4KF10AXN7awOzT
-         mxxsSnb7YmN+PehmW/zR7ua6WVExqYXt+6A31L1bUxyWFh9UriduT/Dhe0074frjEodZ
-         BjDg==
+        bh=6AS6qRiVlQsc1+zZ8NlPzKQQkZa8BexCVQalpdaPfxc=;
+        b=jwc72MJcbOv3kNXMWOzcqkprlIA0kzQenPVePAM+2MCIOWNpyQlr6Bod5r9PGyvAtH
+         W6MB0rm6nc8gi1c90MEweCLFgqrpGJGagH8d9WJ+/WPLaNmtIo9qwAX7olhxp7p1+eyd
+         DcyyHKRIsnQpuHfXC265pgCXIuHYOQ18/yzNq9b12LEYr0kPYRM0GpIGdh8sOyaD9+kR
+         qvdPyYoNIACwyhXeSLQae4+A4idpRdC3nULounqP9EtnB1V1RPwCNZ4w4UvOv+JUb4FC
+         0pIfwgms3iFSJGJuud3CMLeDpCdI+yUp2mJeizZI7bwQ90Mb/sYG+eprzKPZ3MZUedo+
+         6zIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711408470; x=1712013270;
+        d=1e100.net; s=20230601; t=1711412906; x=1712017706;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5NA+R3becyndYRGT5f8sRZeSnD9n4TKt3ID9pBHYfjo=;
-        b=QoOJB44E+iyTqJVk/p3TXAugqRQN31UIZpP07lk7LB93zDT3yqkbW1ihr4RfM/62/7
-         9JDy2MmoKGB25Im+nyH487TvyDHTh7IhNv/shjtgVhSfNKiSTs+65sJV+jtCg3lyyWyN
-         IQ/U86/42WL9uHdSjhlOf76Odfve7tQAV4WCGcSR/ZLTzvUA+CCgOF4m977lEhoHtc96
-         +ekvnD9M51cXNnI/xakVXP49QCRfLP6iTcAKNZrIUu2ZQL6tRTRqHpuLmzB+fsA8lhtF
-         m66UTXO8q3ek7cYP1TZBowm4B5tmVxD3XC9o7ZIiW+OdrT0yYd6KCSMlEvddXGcvM2Qa
-         SDkw==
-X-Forwarded-Encrypted: i=1; AJvYcCWOHmnhJ3F8oesh6LhVh7T9TNrjWBR03gVBXZAeSdiBhZlGO45Mco7ptgmM6ufAqgC3R7JWeIQ1PtKnAOL2hKKo3NuXhNLeQBNtQ2BaKMU5JaO+wzkoyeehxgPVizrxjDqB3CGEI68efBFPTWpeQhnduGlLwzJnrXUsHjhtPnPwdy69zIW8gmcXL0Ajv6aQfvqpmsj9RHSsnAAv5QtPcELhdYTZll5Uyw==
-X-Gm-Message-State: AOJu0YzJdlkUb3LlodBbswYaq+LXX4JTLyHOOhN/Mj6H49fzcPz5KTxi
-	ZVjEAel96YBWPLf26rji4xinf2L1I7OUmiVu8/PRSvzJTTU7pW8rwhF+J01z2QAiFkVNXC/NLKa
-	hg+ykcHWWvePZ7tHMPoUybpOjJuk=
-X-Google-Smtp-Source: AGHT+IFxtJvxausC+t3c2Ddd3qmq7+4yC5kPd5b9eF5t4jHFtC+2YDB2Ym3wRBE6w7MeUZl3AFK1b7sboD4SM2UzNxc=
-X-Received: by 2002:a17:902:dac3:b0:1e0:bd8e:5a66 with SMTP id
- q3-20020a170902dac300b001e0bd8e5a66mr5770221plx.8.1711408470124; Mon, 25 Mar
- 2024 16:14:30 -0700 (PDT)
+        bh=6AS6qRiVlQsc1+zZ8NlPzKQQkZa8BexCVQalpdaPfxc=;
+        b=uLpafSCVlaDo1BwW2IpROEaG3Fcy2ryjsPPVX39uylezfKykIKmWOBD4V1ZcbreAA0
+         fPR3lqg91H2U3ioXH+csFD9zxGiFyF/K4OJIO3/KjMcmkrtCMx3rNUfuNKNg8cdFbfNU
+         R/C/Nf9iGOZ7rnyxC5ErukcgsNqarOJc9MgEQyE4S4N4AtDCP5neLu5mrSeCqZQTwQws
+         lQXmR6cWijAtJihOrXo1NdrZPux75Nsl+ITp6J+SWvDvTBCphGXJloppR9C/j6n9/Fri
+         pnpyCj0x/oGH8mQzlhZV9EQWgTpfUO5fFO0bZa/a6yjkbiNiphPOSD+1Eobae1xjY2W6
+         DlZg==
+X-Forwarded-Encrypted: i=1; AJvYcCWvgEUvOQq2UpWRKQwqtNXjt2LDK9M+Ek6d8QyvC/Yrg4RTPZJErxVKQ6vnaU6RldqQ6TTXuZCohibN5QfBSPxxT/C00v/6neCEwO0vZ6g200eM
+X-Gm-Message-State: AOJu0Yxt5QjLcyGIzTYlxZhVkACGNNxsn/dS8t9AC2YXeJvbLQucjNix
+	QJm5mOucZasimz0bF8rOBGvVluIp1jTjsOkALD5wDIpr1mo65WF0aJjG8C3vlzdufvau+wgp4Bf
+	DF9AHBVkkfSN42wdModWGaFgSRAVpRt5o15iK
+X-Google-Smtp-Source: AGHT+IF9aQZZlm3m7qhQmoIyJ6RkPwr/Dop+uoHu7fO/1Q5QVzyOPH34BhQ7Hc1bMJCfX+wA5X9L6ZhSH1TjcEziOMA=
+X-Received: by 2002:a05:6512:456:b0:513:2b35:2520 with SMTP id
+ y22-20020a056512045600b005132b352520mr5371798lfk.58.1711412905481; Mon, 25
+ Mar 2024 17:28:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240321145736.2373846-1-jonathan.haslam@gmail.com>
- <Zf+d9twfyIDosINf@gmail.com> <syviklbpdblcwr3l2seuwyzfrg2hy2shx5f6ho6yf4s4ce63tc@nbo4by247y6z>
-In-Reply-To: <syviklbpdblcwr3l2seuwyzfrg2hy2shx5f6ho6yf4s4ce63tc@nbo4by247y6z>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 25 Mar 2024 16:14:18 -0700
-Message-ID: <CAEf4BzZnUcFEk+7r39n8=zopBeK96wfQ4Vtndd2tY2ymqOpCtA@mail.gmail.com>
-Subject: Re: [PATCH] uprobes: reduce contention on uprobes_tree access
-To: Jonthan Haslam <jonathan.haslam@gmail.com>
-Cc: Ingo Molnar <mingo@kernel.org>, linux-trace-kernel@vger.kernel.org, andrii@kernel.org, 
-	bpf@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240305020153.2787423-1-almasrymina@google.com>
+ <6208950d-6453-e797-7fc3-1dcf15b49dbe@huawei.com> <CAHS8izMwTRyqUS0iRtErfAqDVsXRia5Ajx9PRK3vcfo8utJoUA@mail.gmail.com>
+In-Reply-To: <CAHS8izMwTRyqUS0iRtErfAqDVsXRia5Ajx9PRK3vcfo8utJoUA@mail.gmail.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Mon, 25 Mar 2024 17:28:12 -0700
+Message-ID: <CAHS8izPR+SioMKNv3=2ajK=GGOE26BTaxOMykHJfjttqYjx1wQ@mail.gmail.com>
+Subject: Re: [RFC PATCH net-next v6 00/15] Device Memory TCP
+To: Yunsheng Lin <linyunsheng@huawei.com>, YiFei Zhu <zhuyifei@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Shakeel Butt <shakeelb@google.com>, Jeroen de Borst <jeroendb@google.com>, 
+	Praveen Kaligineedi <pkaligineedi@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 25, 2024 at 12:12=E2=80=AFPM Jonthan Haslam
-<jonathan.haslam@gmail.com> wrote:
+On Tue, Mar 5, 2024 at 11:38=E2=80=AFAM Mina Almasry <almasrymina@google.co=
+m> wrote:
 >
-> Hi Ingo,
->
-> > > This change has been tested against production workloads that exhibit
-> > > significant contention on the spinlock and an almost order of magnitu=
-de
-> > > reduction for mean uprobe execution time is observed (28 -> 3.5 micro=
-secs).
+> On Tue, Mar 5, 2024 at 4:54=E2=80=AFAM Yunsheng Lin <linyunsheng@huawei.c=
+om> wrote:
 > >
-> > Have you considered/measured per-CPU RW semaphores?
+> > On 2024/3/5 10:01, Mina Almasry wrote:
+> >
+> > ...
+> >
+> > >
+> > > Perf - page-pool benchmark:
+> > > ---------------------------
+> > >
+> > > bench_page_pool_simple.ko tests with and without these changes:
+> > > https://pastebin.com/raw/ncHDwAbn
+> > >
+> > > AFAIK the number that really matters in the perf tests is the
+> > > 'tasklet_page_pool01_fast_path Per elem'. This one measures at about =
+8
+> > > cycles without the changes but there is some 1 cycle noise in some
+> > > results.
+> > >
+> > > With the patches this regresses to 9 cycles with the changes but ther=
+e
+> > > is 1 cycle noise occasionally running this test repeatedly.
+> > >
+> > > Lastly I tried disable the static_branch_unlikely() in
+> > > netmem_is_net_iov() check. To my surprise disabling the
+> > > static_branch_unlikely() check reduces the fast path back to 8 cycles=
+,
+> > > but the 1 cycle noise remains.
+> > >
+> >
+> > The last sentence seems to be suggesting the above 1 ns regresses is ca=
+used
+> > by the static_branch_unlikely() checking?
 >
-> No I hadn't but thanks hugely for suggesting it! In initial measurements
-> it seems to be between 20-100% faster than the RW spinlocks! Apologies fo=
-r
-> all the exclamation marks but I'm very excited. I'll do some more testing
-> tomorrow but so far it's looking very good.
+> Note it's not a 1ns regression, it's looks like maybe a 1 cycle
+> regression (slightly less than 1ns if I'm reading the output of the
+> test correctly):
+>
+> # clean net-next
+> time_bench: Type:tasklet_page_pool01_fast_path Per elem: 8 cycles(tsc)
+> 2.993 ns (step:0)
+>
+> # with patches
+> time_bench: Type:tasklet_page_pool01_fast_path Per elem: 9 cycles(tsc)
+> 3.679 ns (step:0)
+>
+> # with patches and with diff that disables static branching:
+> time_bench: Type:tasklet_page_pool01_fast_path Per elem: 8 cycles(tsc)
+> 3.248 ns (step:0)
+>
+> I do see noise in the test results between run and run, and any
+> regression (if any) is slightly obfuscated by the noise, so it's a bit
+> hard to make confident statements. So far it looks like a ~0.25ns
+> regression without static branch and about ~0.65ns with static branch.
+>
+> Honestly when I saw all 3 results were within some noise I did not
+> investigate more, but if this looks concerning to you I can dig
+> further. I likely need to gather a few test runs to filter out the
+> noise and maybe investigate the assembly my compiler is generating to
+> maybe narrow down what changes there.
 >
 
-Documentation ([0]) says that locking for writing calls
-synchronize_rcu(), is that right? If that's true, attaching multiple
-uprobes (including just attaching a single BPF multi-uprobe) will take
-a really long time. We need to confirm we are not significantly
-regressing this. And if we do, we need to take measures in the BPF
-multi-uprobe attachment code path to make sure that a single
-multi-uprobe attachment is still fast.
+I did some more investigation here to gather more data to filter out
+the noise, and recorded the summary here:
 
-If my worries above turn out to be true, it still feels like a first
-good step should be landing this patch as is (and get it backported to
-older kernels), and then have percpu rw-semaphore as a final (and a
-bit more invasive) solution (it's RCU-based, so feels like a good
-primitive to settle on), making sure to not regress multi-uprobes
-(we'll probably will need some batched API for multiple uprobes).
+https://pastebin.com/raw/v5dYRg8L
 
-Thoughts?
+Long story short, the page_pool benchmark results are consistent with
+some outlier noise results that I'm discounting here. Currently
+page_pool fast path is at 8 cycles
 
-  [0] https://docs.kernel.org/locking/percpu-rw-semaphore.html
+[ 2115.724510] time_bench: Type:tasklet_page_pool01_fast_path Per
+elem: 8 cycles(tsc) 3.187 ns (step:0) - (measurement period
+time:0.031870585 sec time_interval:31870585) - (invoke count:10000000
+tsc_interval:86043192)
 
-> Thanks again for the input.
->
-> Jon.
+and with this patch series it degrades to 10 cycles, or about a 0.7ns
+degradation or so:
+
+[  498.226127] time_bench: Type:tasklet_page_pool01_fast_path Per
+elem: 10 cycles(tsc) 3.944 ns (step:0) - (measurement period
+time:0.039442539 sec time_interval:39442539) - (invoke count:10000000
+tsc_interval:106485268)
+
+I took the time to dig into where the degradation comes from, and to
+my surprise we can shave off 1 cycle in perf by removing the
+static_branch_unlikely check in netmem_is_net_iov() like so:
+
+diff --git a/include/net/netmem.h b/include/net/netmem.h
+index fe354d11a421..2b4310ac1115 100644
+--- a/include/net/netmem.h
++++ b/include/net/netmem.h
+@@ -122,8 +122,7 @@ typedef unsigned long __bitwise netmem_ref;
+ static inline bool netmem_is_net_iov(const netmem_ref netmem)
+ {
+ #ifdef CONFIG_PAGE_POOL
+-       return static_branch_unlikely(&page_pool_mem_providers) &&
+-              (__force unsigned long)netmem & NET_IOV;
++       return (__force unsigned long)netmem & NET_IOV;
+ #else
+        return false;
+ #endif
+
+With this change, the fast path is 9 cycles, only  a 1 cycle (~0.35ns)
+regression:
+
+[  199.184429] time_bench: Type:tasklet_page_pool01_fast_path Per
+elem: 9 cycles(tsc) 3.552 ns (step:0) - (measurement period
+time:0.035524013 sec time_interval:35524013) - (invoke count:10000000
+tsc_interval:95907775)
+
+I did some digging with YiFei on why the static_branch_unlikely
+appears to be causing a 1 cycle regression, but could not get an
+answer that makes sense. The # of instructions in
+page_pool_return_page() with the static_branch_unlikely and without is
+about the same in the compiled .o file, and my understanding is that
+static_branch will cause code re-writing anyway so looking at the
+compiled code may not be representative.
+
+Worthy of note is that I get ~95% line rate of devmem TCP regardless
+of the static_branch_unlikely() or not, so impact of the static_branch
+is not large enough to be measurable end-to-end. I'm thinking I want
+to drop the static_branch_unlikely() in the next RFC since it doesn't
+improve the end-to-end throughput number and is resulting in a
+measurable improvement in the page pool benchmark.
+
+--=20
+Thanks,
+Mina
